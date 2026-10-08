@@ -1,0 +1,105 @@
+{
+  "atoms": 65970,
+  "contacts": 182995,
+  "plate_um": 19.1455,
+  "box_um": [
+    100.0,
+    100.0
+  ],
+  "negative_area": [
+    [
+      31,
+      29241,
+      -0.186036,
+      1.05114
+    ],
+    [
+      38,
+      29241,
+      -0.186264,
+      1.0512
+    ]
+  ],
+  "channels": {
+    "ionic_hertzian": {
+      "value": [
+        0.1704582413153875,
+        0.0003263508259103751
+      ],
+      "status": "computed",
+      "reason": null,
+      "conservation_rel": 3.0024201089821724e-09,
+      "residual_rel": 9.838873256790492e-11,
+      "intersection": []
+    },
+    "ionic_physics": {
+      "value": [
+        0.189207513265139,
+        0.00036224724452177176
+      ],
+      "status": "computed",
+      "reason": null,
+      "conservation_rel": 6.322933781612321e-09,
+      "residual_rel": 9.556129760264176e-11,
+      "intersection": []
+    },
+    "electronic_hertzian": {
+      "value": [
+        null,
+        null
+      ],
+      "status": "not_computed",
+      "reason": "boundary_overlap",
+      "conservation_rel": null,
+      "residual_rel": null,
+      "intersection": [
+        24,
+        40,
+        57,
+        103
+      ]
+    },
+    "electronic_physics": {
+      "value": [
+        null,
+        null
+      ],
+      "status": "not_computed",
+      "reason": "boundary_overlap",
+      "conservation_rel": null,
+      "residual_rel": null,
+      "intersection": [
+        24,
+        40,
+        57,
+        103
+      ]
+    },
+    "thermal_hertzian": {
+      "value": [
+        null,
+        null
+      ],
+      "status": "not_computed",
+      "reason": "boundary_overlap",
+      "conservation_rel": null,
+      "residual_rel": null,
+      "intersection": [
+        24,
+        40,
+        57,
+        103
+      ]
+    },
+    "thermal_physics": {
+      "error": "ValueError: physics_g2: 간선 (31, 29241) — ligg_area < 0 (-0.186036)"
+    }
+  },
+  "raw_sha256": {
+    "atom_v4_1710000.liggghts": "f40f69eccd793ca96c7ba823914180e879b2c14c1c9a57f4c15af3393fce608f",
+    "contact_v4_1710000.liggghts": "180140701ef4dfd34bbda6c236837d267502d35a0372824c8720d7d8731b1b4d",
+    "mesh_v4_1710000.stl": "2868f0898a9056375c74ea24f2be1d46cb5f06f2411b01c21fa77c96836c053b",
+    "input_case15.liggghts": "172953c78a07c4da16bd6b2bc6b02111c144f5ba257f800349193cc92de4dc60"
+  },
+  "snapshot_missing_files": []
+}

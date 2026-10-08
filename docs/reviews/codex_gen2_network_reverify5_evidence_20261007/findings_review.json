@@ -1,0 +1,20 @@
+{
+  "schema": "review_delivery/v1",
+  "pin": "aa7ec7fe98e8684f1a2138665f9eba978366c229",
+  "verdict": "HOLD",
+  "new_p1": 0,
+  "source_changed": false,
+  "production194_run": false,
+  "registration_proposals_ratified": false,
+  "findings": [
+    {"id":"G2RR5-01","severity":"P2","status":"open","file":"scripts/lhs_release_build.py","line":1340,"title":"단계 결합 시도 값이 null/불일치여도 배포 관문 통과","scope":"fresh build/check의 관측 상세 검증; 감사 CLI와 제출 시범의 정상성은 부정하지 않음"},
+    {"id":"G2RR5-02","severity":"P2","status":"open","file":"scripts/wsl_network_smoke.py","line":568,"title":"망 하위 프로세스 PermissionError를 기대된 case15 음성대조로 수용","scope":"실제 스모크 실패 원인 결합; 수치 모형 변경 요구 아님"},
+    {"id":"G2RR5-03","severity":"P2","status":"open","file":"scripts/g2_network_reread.py","line":552,"title":"S0b가 원자료 실패·누락 상세·중복 PASS 요약을 수용","scope":"smoke-root 소비자; production194 launcher-root와 구별"},
+    {"id":"G2RR5-04","severity":"P3","status":"open","file":"docs/reviews/lhs_network_batch_registration_20261007_g2.md","line":217,"title":"전체 시작=끝·완료/결합194 등식을 무재시도 실행으로 한정할 것","scope":"등록 문구; 정상 재시도 감사 코드의 결함 아님"}
+  ],
+  "previous": [
+    {"id":"G2RR4-01","status":"partial","note":"원래 반례 닫힘; 새 단계 상세 수용은 G2RR5-01"},
+    {"id":"G2RR4-02","status":"closed_in_audit_producer","note":"기존 영수증 쌍 결손 거부와 정상/생략/재시도 통과; downstream은 G2RR5-01"},
+    {"id":"G2RR4-03","status":"partial","note":"코드 관측 필수화 닫힘; 저자 비준 미결, 추가 스모크 경계 G2RR5-02/03"}
+  ]
+}

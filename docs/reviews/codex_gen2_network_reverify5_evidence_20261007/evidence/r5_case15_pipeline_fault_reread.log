@@ -1,0 +1,7 @@
+══ 세대 2 망 게시 다시 읽기 — 기대 세대 'g2' · 케이스 3
+  ✓ S0 스모크 망 정지 케이스 전부 done (3 · 음성 대조 1 제외)
+  ✓ S0b 스모크 음성 대조 (1) = 게시 없음 · 지정한 원인 발화 · 이온 정상 (스모크 [음성 대조] 판정 · G2RR4-03 · 등록 §9-4 제안)
+  ✓  through — 세대 'g2' · τ {'hertz': 'OK', 'physics': 'OK', 'hertz_h12': 'OK'} · σ_ratio {'hertz': 0.00400538, 'physics': 0.00692755, 'hertz_h12': 0.00513502} · CF/협착 {'hertz': {'bulk_only': 'computed', 'constriction_only': 'computed'}, 'physics': {'bulk_only': 'computed', 'constriction_only': 'computed'}, 'hertz_h12': {'bulk_only': 'computed', 'constriction_only': 'computed'}}
+  ✓  nonthrough — 세대 'g2' · τ {'hertz': 'NOT_PERCOLATING', 'physics': 'NOT_PERCOLATING', 'hertz_h12': 'NOT_PERCOLATING'} · σ_ratio {'hertz': None, 'physics': None, 'hertz_h12': None} · CF/협착 {'hertz': {'bulk_only': 'valid_zero', 'constriction_only': 'valid_zero'}, 'physics': {'bulk_only': 'valid_zero', 'constriction_only': 'valid_zero'}, 'hertz_h12': {'bulk_only': 'valid_zero', 'constriction_only': 'valid_zero'}}
+  ✓  clamp — 세대 'g2' · τ {'hertz': 'OK', 'physics': 'OK', 'hertz_h12': 'OK'} · σ_ratio {'hertz': 0.00419986, 'physics': 0.00730349, 'hertz_h12': 0.00542576} · CF/협착 {'hertz': {'bulk_only': 'computed', 'constriction_only': 'computed'}, 'physics': {'bulk_only': 'computed', 'constriction_only': 'not_computed'}, 'hertz_h12': {'bulk_only': 'computed', 'constriction_only': 'not_computed'}}
+  ✓ 전부 통과

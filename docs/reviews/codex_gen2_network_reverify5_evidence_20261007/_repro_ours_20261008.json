@@ -1,0 +1,380 @@
+{
+ "schema": "g2rr5_repro_ours/v1",
+ "tree": "claude/stoic-knuth-NObVQ HEAD 342b18a18 (worktree) — source/ = git archive of the 469 source_manifest paths",
+ "differs_from_codex_pin_aa7ec7fe9": [
+  "docs/reviews/lhs_network_batch_registration_20261007_g2.md",
+  "docs/reviews/selftest_inventory.tsv",
+  "scripts/check_all.sh",
+  "scripts/network_current.py",
+  "scripts/plot_stress_z_distribution.py",
+  "scripts/viewer3d_data.py",
+  "webapp/static/js/viewer3d.js"
+ ],
+ "environment": {
+  "platform": "Linux-6.18.44-fc-v80-x86_64-with-glibc2.39",
+  "python": "3.11.15",
+  "packages": {
+   "numpy": "2.4.6",
+   "scipy": "1.17.1",
+   "networkx": "3.6.1",
+   "Flask": "3.1.3",
+   "matplotlib": "3.11.2"
+  }
+ },
+ "driver": "our driver (probes under python -I -X utf8 -B; boot adds only probes/, source/scripts, source/webapp and the user site-packages library path; tests run like the bundle run_checks.py); probe files unmodified; evidence/ started empty",
+ "environment_incident": "first r5_release_contract run under -I failed before any gate (matplotlib -> python-dateutil lives in the user site-packages which -I drops): control build ModuleNotFoundError; outputs set aside, rerun with the library path restored — counted as an environment failure of our driver, not a probe result",
+ "results": {
+  "submitted_verify": "61/61",
+  "observation_staged": "17/17",
+  "observation_retry": "4/4",
+  "fork_census": {
+   "census": [],
+   "os_aliases": 3,
+   "inert_detected": {
+    "canonical_os_fork": true,
+    "multiprocessing": true,
+    "from_os_import_fork": false,
+    "aliased_os_fork": false,
+    "getattr_os_fork": false
+   }
+  },
+  "release_contract": {
+   "control": {
+    "accepted": true,
+    "check": []
+   },
+   "reread_M2_false": {
+    "accepted": false,
+    "check": null
+   },
+   "reread_empty_cases": {
+    "accepted": false,
+    "check": null
+   },
+   "reread_empty_checks": {
+    "accepted": false,
+    "check": null
+   },
+   "reread_ok_integer": {
+    "accepted": false,
+    "check": null
+   },
+   "reread_unknown_check": {
+    "accepted": false,
+    "check": null
+   },
+   "reread_duplicate_meta": {
+    "accepted": false,
+    "check": null
+   },
+   "reread_wrong_cohort": {
+    "accepted": false,
+    "check": null
+   },
+   "reread_M3_inconsistent": {
+    "accepted": false,
+    "check": null
+   },
+   "observation_inner_problem": {
+    "accepted": false,
+    "check": null
+   },
+   "observation_outside": {
+    "accepted": false,
+    "check": null
+   },
+   "binding_attempt_missing": {
+    "accepted": false,
+    "check": null
+   },
+   "binding_payload_null": {
+    "accepted": true,
+    "check": []
+   },
+   "binding_parser_absent": {
+    "accepted": true,
+    "check": []
+   },
+   "binding_parser_zero": {
+    "accepted": true,
+    "check": []
+   },
+   "binding_unplanned_process": {
+    "accepted": true,
+    "check": []
+   },
+   "binding_count_bool": {
+    "accepted": true,
+    "check": []
+   },
+   "observation_finalized_zero": {
+    "accepted": true,
+    "check": []
+   }
+  },
+  "release_real_binding": {
+   "real_failure_summary_present": {
+    "accepted": false,
+    "check": null
+   },
+   "only_top_failure_list_cleared": {
+    "accepted": true,
+    "check": []
+   }
+  },
+  "case15_s0b": {
+   "positive": {
+    "rc": 0,
+    "n_fail": 0
+   },
+   "marker_missing": {
+    "rc": 1,
+    "n_fail": 1
+   },
+   "marker_unknown": {
+    "rc": 0,
+    "n_fail": 0
+   },
+   "checks_missing": {
+    "rc": 1,
+    "n_fail": 1
+   },
+   "checks_three": {
+    "rc": 1,
+    "n_fail": 1
+   },
+   "check_fail": {
+    "rc": 1,
+    "n_fail": 1
+   },
+   "one_check_repeated_four": {
+    "rc": 0,
+    "n_fail": 0
+   },
+   "negctl_missing": {
+    "rc": 0,
+    "n_fail": 0
+   },
+   "tau_numeric": {
+    "rc": 0,
+    "n_fail": 0
+   },
+   "ionic_residual_bad": {
+    "rc": 0,
+    "n_fail": 0
+   },
+   "raw_sha_fail": {
+    "rc": 0,
+    "n_fail": 0
+   },
+   "unexpected_failure_record": {
+    "rc": 0,
+    "n_fail": 0
+   },
+   "real_failure_path_synthetic_input": {
+    "rc": 0,
+    "n_fail": 0
+   }
+  },
+  "case15_pipeline_fault": {
+   "denied": 1,
+   "status": "failed",
+   "network_stage_rc": [
+    1
+   ],
+   "checks_pass": 6,
+   "checks": 6
+  },
+  "case15_fault_reread": {
+   "n_fail": 0,
+   "meta": [
+    [
+     "S0 ",
+     true
+    ],
+    [
+     "S0b",
+     true
+    ]
+   ]
+  },
+  "tests": {
+   "reread --selftest": [
+    "✓ 전부 통과"
+   ],
+   "publication": [
+    "test_gen2_publication_handover: 32/32 PASS"
+   ],
+   "role": [
+    "test_gen2_role_contract: 44/44 PASS"
+   ],
+   "release": [
+    "172 PASS · 1 FAIL",
+    "  - V16a 발사 기록 = 지금 파일 → 봉인 다름 0 · 인계 도구 다름 0 · 봉인 파일 수 · git HEAD (40 자리)"
+   ]
+  }
+ },
+ "comparison_with_codex": {
+  "evidence/submitted_verify.json": {
+   "n_diff": 0,
+   "diff_paths": [],
+   "n_float_diff": 0,
+   "max_float_rel": 0.0,
+   "float_diffs": [],
+   "n_str_equal_at_8_significant_digits": 0
+  },
+  "evidence/policy_scope.json": {
+   "n_diff": 0,
+   "diff_paths": [],
+   "n_float_diff": 0,
+   "max_float_rel": 0.0,
+   "float_diffs": [],
+   "n_str_equal_at_8_significant_digits": 0
+  },
+  "evidence/r5_observation_run2/results.json": {
+   "n_diff": 0,
+   "diff_paths": [],
+   "n_float_diff": 0,
+   "max_float_rel": 0.0,
+   "float_diffs": [],
+   "n_str_equal_at_8_significant_digits": 0
+  },
+  "evidence/r5_observation_retry/results.json": {
+   "n_diff": 0,
+   "diff_paths": [],
+   "n_float_diff": 0,
+   "max_float_rel": 0.0,
+   "float_diffs": [],
+   "n_str_equal_at_8_significant_digits": 0
+  },
+  "evidence/r5_release_contract/results.json": {
+   "n_diff": 0,
+   "diff_paths": [],
+   "n_float_diff": 0,
+   "max_float_rel": 0.0,
+   "float_diffs": [],
+   "n_str_equal_at_8_significant_digits": 0
+  },
+  "evidence/r5_release_real_binding/results.json": {
+   "n_diff": 0,
+   "diff_paths": [],
+   "n_float_diff": 0,
+   "max_float_rel": 0.0,
+   "float_diffs": [],
+   "n_str_equal_at_8_significant_digits": 0
+  },
+  "evidence/r5_case15_raw.json": {
+   "n_diff": 0,
+   "diff_paths": [],
+   "n_float_diff": 8,
+   "max_float_rel": 0.36718260094669597,
+   "float_diffs": [
+    [
+     "/channels/ionic_hertzian/conservation_rel",
+     3.0024201089821724e-09,
+     1.899983684231436e-09
+    ],
+    [
+     "/channels/ionic_physics/conservation_rel",
+     6.322933781612321e-09,
+     5.087356705432166e-09
+    ],
+    [
+     "/channels/ionic_physics/residual_rel",
+     9.556129760264176e-11,
+     9.411786725961204e-11
+    ],
+    [
+     "/channels/ionic_hertzian/residual_rel",
+     9.838873256790492e-11,
+     9.825340313851229e-11
+    ],
+    [
+     "/channels/ionic_physics/value[1]",
+     0.00036224724452177176,
+     0.00036224724407936984
+    ],
+    [
+     "/channels/ionic_physics/value[0]",
+     0.189207513265139,
+     0.1892075130340654
+    ]
+   ],
+   "n_str_equal_at_8_significant_digits": 0
+  },
+  "evidence/r5_case15_results.json": {
+   "n_diff": 13,
+   "diff_paths": [
+    "/observations/real_failure_path/attempt/input_digests/atoms.csv",
+    "/observations/real_failure_path/attempt/input_digests/contacts.csv",
+    "/producer/check_fail/checks[2]/detail",
+    "/producer/checks_missing/checks[2]/detail",
+    "/producer/checks_three/checks[2]/detail",
+    "/producer/independent_raw_positive/checks[2]/detail",
+    "/producer/ionic_residual_bad/checks[2]/detail",
+    "/producer/ionic_residual_bad/failures[0]/detail",
+    "/producer/one_check_repeated_four/checks[2]/detail",
+    "/producer/raw_sha_fail/checks[2]/detail",
+    "/producer/real_failure_path_synthetic_input/checks[2]/detail",
+    "/producer/tau_numeric/checks[2]/detail",
+    "/producer/unexpected_failure_record/checks[2]/detail"
+   ],
+   "n_float_diff": 0,
+   "max_float_rel": 0.0,
+   "float_diffs": [],
+   "n_str_equal_at_8_significant_digits": 0
+  },
+  "evidence/r5_case15_pipeline_fault.json": {
+   "n_diff": 4,
+   "diff_paths": [
+    "/checks[2]/detail",
+    "/denied_calls[0][0]",
+    "/report/attempt/input_digests/atoms.csv",
+    "/report/attempt/input_digests/contacts.csv"
+   ],
+   "n_float_diff": 8,
+   "max_float_rel": 0.36718260094669597,
+   "float_diffs": [
+    [
+     "/report/negctl/channels/ionic_hertzian/conservation_rel",
+     3.0024201089821724e-09,
+     1.899983684231436e-09
+    ],
+    [
+     "/report/negctl/channels/ionic_physics/conservation_rel",
+     6.322933781612321e-09,
+     5.087356705432166e-09
+    ],
+    [
+     "/report/negctl/channels/ionic_physics/residual_rel",
+     9.556129760264176e-11,
+     9.411786725961204e-11
+    ],
+    [
+     "/report/negctl/channels/ionic_hertzian/residual_rel",
+     9.838873256790492e-11,
+     9.825340313851229e-11
+    ],
+    [
+     "/report/negctl/channels/ionic_physics/value[1]",
+     0.00036224724452177176,
+     0.00036224724407936984
+    ],
+    [
+     "/report/negctl/channels/ionic_physics/value[0]",
+     0.189207513265139,
+     0.1892075130340654
+    ]
+   ],
+   "n_str_equal_at_8_significant_digits": 0
+  },
+  "evidence/r5_case15_pipeline_fault_reread.json": {
+   "n_diff": 0,
+   "diff_paths": [],
+   "n_float_diff": 0,
+   "max_float_rel": 0.0,
+   "float_diffs": [],
+   "n_str_equal_at_8_significant_digits": 8
+  }
+ }
+}

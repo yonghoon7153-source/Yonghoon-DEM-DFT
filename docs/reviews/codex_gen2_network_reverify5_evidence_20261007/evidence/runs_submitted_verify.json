@@ -1,0 +1,13 @@
+[
+  {
+    "name": "submitted_verify",
+    "argv": [
+      "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\gen2_network_reverify5_20261007\\probes\\submitted_verify.py"
+    ],
+    "rc": 0,
+    "seconds": 0.4369999999180436,
+    "tail": [
+      "{\"passed\": 61, \"total\": 61, \"failed\": []}"
+    ]
+  }
+]

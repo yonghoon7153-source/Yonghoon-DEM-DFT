@@ -1,0 +1,552 @@
+{
+  "checks": [
+    {
+      "name": "32 code bytes equal manifest",
+      "ok": true,
+      "detail": 32
+    },
+    {
+      "name": "seal code_fp independent recompute",
+      "ok": true,
+      "detail": "e8b2496b9c2ecf6edad8c6b52d32a2514c96dd54c9a20823c300639249ecae71"
+    },
+    {
+      "name": "received rc old_audit",
+      "ok": true,
+      "detail": "0"
+    },
+    {
+      "name": "received rc old_reread",
+      "ok": true,
+      "detail": "0"
+    },
+    {
+      "name": "received rc pilot",
+      "ok": true,
+      "detail": "0"
+    },
+    {
+      "name": "received rc pilot_audit",
+      "ok": true,
+      "detail": "0"
+    },
+    {
+      "name": "received rc pilot_reread",
+      "ok": true,
+      "detail": "0"
+    },
+    {
+      "name": "received rc smoke",
+      "ok": true,
+      "detail": "0"
+    },
+    {
+      "name": "received rc smoke_reread",
+      "ok": true,
+      "detail": "0"
+    },
+    {
+      "name": "received rc st_reread",
+      "ok": true,
+      "detail": "0"
+    },
+    {
+      "name": "received rc st_runner",
+      "ok": true,
+      "detail": "0"
+    },
+    {
+      "name": "received rc st_smoke",
+      "ok": true,
+      "detail": "0"
+    },
+    {
+      "name": "receipt pair 1530887-58a3fdf1",
+      "ok": true,
+      "detail": null
+    },
+    {
+      "name": "run identity 1530887-58a3fdf1",
+      "ok": true,
+      "detail": null
+    },
+    {
+      "name": "receipt pair 1530906-a423806b",
+      "ok": true,
+      "detail": null
+    },
+    {
+      "name": "run identity 1530906-a423806b",
+      "ok": true,
+      "detail": null
+    },
+    {
+      "name": "receipt pair 1530925-04e3779a",
+      "ok": true,
+      "detail": null
+    },
+    {
+      "name": "run identity 1530925-04e3779a",
+      "ok": true,
+      "detail": null
+    },
+    {
+      "name": "receipt pair 1530980-3b792e81",
+      "ok": true,
+      "detail": null
+    },
+    {
+      "name": "run identity 1530980-3b792e81",
+      "ok": true,
+      "detail": null
+    },
+    {
+      "name": "receipt pair 1530981-25d4e7ec",
+      "ok": true,
+      "detail": null
+    },
+    {
+      "name": "run identity 1530981-25d4e7ec",
+      "ok": true,
+      "detail": null
+    },
+    {
+      "name": "receipt pair 1530982-8a5e72b9",
+      "ok": true,
+      "detail": null
+    },
+    {
+      "name": "run identity 1530982-8a5e72b9",
+      "ok": true,
+      "detail": null
+    },
+    {
+      "name": "receipt pair 1530983-04e353fd",
+      "ok": true,
+      "detail": null
+    },
+    {
+      "name": "run identity 1530983-04e353fd",
+      "ok": true,
+      "detail": null
+    },
+    {
+      "name": "receipt pair 1530984-6bbe4db4",
+      "ok": true,
+      "detail": null
+    },
+    {
+      "name": "run identity 1530984-6bbe4db4",
+      "ok": true,
+      "detail": null
+    },
+    {
+      "name": "receipt pair 1530985-72cc75a0",
+      "ok": true,
+      "detail": null
+    },
+    {
+      "name": "run identity 1530985-72cc75a0",
+      "ok": true,
+      "detail": null
+    },
+    {
+      "name": "receipt pair 1531558-8f02e2d2",
+      "ok": true,
+      "detail": null
+    },
+    {
+      "name": "run identity 1531558-8f02e2d2",
+      "ok": true,
+      "detail": null
+    },
+    {
+      "name": "receipt pair 1531883-a06283da",
+      "ok": true,
+      "detail": null
+    },
+    {
+      "name": "run identity 1531883-a06283da",
+      "ok": true,
+      "detail": null
+    },
+    {
+      "name": "receipt pair 1531884-206fc6c1",
+      "ok": true,
+      "detail": null
+    },
+    {
+      "name": "run identity 1531884-206fc6c1",
+      "ok": true,
+      "detail": null
+    },
+    {
+      "name": "receipt pair 1531887-10659a44",
+      "ok": true,
+      "detail": null
+    },
+    {
+      "name": "run identity 1531887-10659a44",
+      "ok": true,
+      "detail": null
+    },
+    {
+      "name": "receipt pair 1531926-b7ebf485",
+      "ok": true,
+      "detail": null
+    },
+    {
+      "name": "run identity 1531926-b7ebf485",
+      "ok": true,
+      "detail": null
+    },
+    {
+      "name": "receipt pair 1531927-bc023383",
+      "ok": true,
+      "detail": null
+    },
+    {
+      "name": "run identity 1531927-bc023383",
+      "ok": true,
+      "detail": null
+    },
+    {
+      "name": "15 distinct pairs",
+      "ok": true,
+      "detail": 15
+    },
+    {
+      "name": "observed module subset",
+      "ok": true,
+      "detail": {
+        "n": 30,
+        "outside": []
+      }
+    },
+    {
+      "name": "record sha lhsx_007",
+      "ok": true,
+      "detail": "b883c76e0b9ce75ea2f86123294c15e497687643c70424d9e532a40b9331e8a6"
+    },
+    {
+      "name": "attempt stage snapshot lhsx_007",
+      "ok": true,
+      "detail": null
+    },
+    {
+      "name": "actual stage inventory lhsx_007",
+      "ok": true,
+      "detail": {
+        "expected": {
+          "worker": 1,
+          "scripts/parse_liggghts.py": 1,
+          "scripts/analyze_contacts_bimodal.py": 1,
+          "scripts/coverage_physics_vs_hertzian.py": 1,
+          "scripts/network_conductivity.py": 1
+        },
+        "observed": {
+          "worker": 1,
+          "scripts/parse_liggghts.py": 1,
+          "scripts/analyze_contacts_bimodal.py": 1,
+          "scripts/coverage_physics_vs_hertzian.py": 1,
+          "scripts/network_conductivity.py": 1
+        }
+      }
+    },
+    {
+      "name": "audit counts match raw receipts lhsx_007",
+      "ok": true,
+      "detail": null
+    },
+    {
+      "name": "record sha lhs00_055",
+      "ok": true,
+      "detail": "770b74de8579446ed418835a93736dc9312dd5f1bfcfe87808af193fac2309ac"
+    },
+    {
+      "name": "attempt stage snapshot lhs00_055",
+      "ok": true,
+      "detail": null
+    },
+    {
+      "name": "actual stage inventory lhs00_055",
+      "ok": true,
+      "detail": {
+        "expected": {
+          "worker": 1,
+          "scripts/parse_liggghts.py": 1,
+          "scripts/analyze_contacts_bimodal.py": 1,
+          "scripts/coverage_physics_vs_hertzian.py": 1,
+          "scripts/network_conductivity.py": 1
+        },
+        "observed": {
+          "worker": 1,
+          "scripts/parse_liggghts.py": 1,
+          "scripts/analyze_contacts_bimodal.py": 1,
+          "scripts/coverage_physics_vs_hertzian.py": 1,
+          "scripts/network_conductivity.py": 1
+        }
+      }
+    },
+    {
+      "name": "audit counts match raw receipts lhs00_055",
+      "ok": true,
+      "detail": null
+    },
+    {
+      "name": "record sha lhs00_128",
+      "ok": true,
+      "detail": "b6d6620ea36b0fe8f36a92f9fbd0375d79b3bae45a8faff4250e7fc128563736"
+    },
+    {
+      "name": "attempt stage snapshot lhs00_128",
+      "ok": true,
+      "detail": null
+    },
+    {
+      "name": "actual stage inventory lhs00_128",
+      "ok": true,
+      "detail": {
+        "expected": {
+          "worker": 1,
+          "scripts/parse_liggghts.py": 1,
+          "scripts/analyze_contacts.py": 1,
+          "scripts/coverage_physics_vs_hertzian.py": 1,
+          "scripts/network_conductivity.py": 1
+        },
+        "observed": {
+          "worker": 1,
+          "scripts/parse_liggghts.py": 1,
+          "scripts/analyze_contacts.py": 1,
+          "scripts/coverage_physics_vs_hertzian.py": 1,
+          "scripts/network_conductivity.py": 1
+        }
+      }
+    },
+    {
+      "name": "audit counts match raw receipts lhs00_128",
+      "ok": true,
+      "detail": null
+    },
+    {
+      "name": "no failed reread leaves",
+      "ok": true,
+      "detail": null
+    },
+    {
+      "name": "fresh detailed contract",
+      "ok": true,
+      "detail": []
+    },
+    {
+      "name": "old detailed contract",
+      "ok": true,
+      "detail": []
+    },
+    {
+      "name": "old three fallback plans",
+      "ok": true,
+      "detail": null
+    },
+    {
+      "name": "fresh three snapshot plans",
+      "ok": true,
+      "detail": null
+    }
+  ],
+  "case_details": [
+    {
+      "case": "lhsx_007",
+      "raw_sha": {
+        "atom": "875b69b227ee0f35c0a3e3c7d9d8200c82d626011f014a138ebaa38b936124db",
+        "contact": "76f0f8747415589edac622e77d3c8dc42531bd4be98e36af86ffd95851df1df6",
+        "mesh": "f7f61533d5b4898b2afb935a1194fbf0697819f1d26b5bd103d8c24f2076e468",
+        "deck": "06190854acfb213abcdf18c3aab3ee8db850cac24006f45d0cb49352da5ff5ee"
+      },
+      "record_sha": "b883c76e0b9ce75ea2f86123294c15e497687643c70424d9e532a40b9331e8a6",
+      "stages": [
+        {
+          "step": "Parse",
+          "rc": 0,
+          "ok": true
+        },
+        {
+          "step": "Bimodal Contact Analysis",
+          "rc": 0,
+          "ok": true
+        },
+        {
+          "step": "Coverage Physics vs Hertzian",
+          "rc": 0,
+          "ok": true
+        },
+        {
+          "step": "Network Solver (both modes)",
+          "rc": 0,
+          "ok": true
+        },
+        {
+          "step": "Network channel verdict (ionic/electronic/thermal)",
+          "rc": 0,
+          "ok": true
+        },
+        {
+          "step": "Network stop contract (stop_after=network)",
+          "rc": 0,
+          "ok": true
+        },
+        {
+          "step": "Network ionic record check (승격 전 공용 기술 검사 · RGLR2-01)",
+          "rc": 0,
+          "ok": true
+        },
+        {
+          "step": "Network Merge",
+          "rc": 0,
+          "ok": null
+        }
+      ],
+      "process_count": 5
+    },
+    {
+      "case": "lhs00_055",
+      "raw_sha": {
+        "atom": "8474787170fe74319afb52c7def7a5c732913bbe19ec50478a85cfd4b0d0ad4c",
+        "contact": "30cd7bbd8cea03be88ec978f6755018a93ff22ef40dfb95d8298606e80fc8460",
+        "mesh": "5525d4be53238a9ffd42935a27478889117fa61bc3f3c9c5733a81f97fbf8e12",
+        "deck": "29c515402359df42d599bc1df2919026641c9cae3a6a50628baa02c260cb5d05"
+      },
+      "record_sha": "770b74de8579446ed418835a93736dc9312dd5f1bfcfe87808af193fac2309ac",
+      "stages": [
+        {
+          "step": "Parse",
+          "rc": 0,
+          "ok": true
+        },
+        {
+          "step": "Bimodal Contact Analysis",
+          "rc": 0,
+          "ok": true
+        },
+        {
+          "step": "Coverage Physics vs Hertzian",
+          "rc": 0,
+          "ok": true
+        },
+        {
+          "step": "Network Solver (both modes)",
+          "rc": 0,
+          "ok": true
+        },
+        {
+          "step": "Network channel verdict (ionic/electronic/thermal)",
+          "rc": 0,
+          "ok": true
+        },
+        {
+          "step": "Network stop contract (stop_after=network)",
+          "rc": 0,
+          "ok": true
+        },
+        {
+          "step": "Network ionic record check (승격 전 공용 기술 검사 · RGLR2-01)",
+          "rc": 0,
+          "ok": true
+        },
+        {
+          "step": "Network Merge",
+          "rc": 0,
+          "ok": null
+        }
+      ],
+      "process_count": 5
+    },
+    {
+      "case": "lhs00_128",
+      "raw_sha": {
+        "atom": "638cb80677a69b0edf4b3f426828964944efe2301e387a2c14f4c6e93c2a0ff2",
+        "contact": "3fa7d258dd0dbc3d1ea3a9f24e2ee769e1635cdc40c8fda9874c04bbc32aebf8",
+        "mesh": "e20be56cf4f59c633454853a7f94613eb58c130e5ae242881296d1fc33a10b05",
+        "deck": "00ddd41898fb93164895eb46ad635ffcd95a535f5e1a282a6e4be116886e9d14"
+      },
+      "record_sha": "b6d6620ea36b0fe8f36a92f9fbd0375d79b3bae45a8faff4250e7fc128563736",
+      "stages": [
+        {
+          "step": "Parse",
+          "rc": 0,
+          "ok": true
+        },
+        {
+          "step": "Contact Analysis",
+          "rc": 0,
+          "ok": true
+        },
+        {
+          "step": "Coverage Physics vs Hertzian",
+          "rc": 0,
+          "ok": true
+        },
+        {
+          "step": "Network Solver (both modes)",
+          "rc": 0,
+          "ok": true
+        },
+        {
+          "step": "Network channel verdict (ionic/electronic/thermal)",
+          "rc": 0,
+          "ok": true
+        },
+        {
+          "step": "Network stop contract (stop_after=network)",
+          "rc": 0,
+          "ok": true
+        },
+        {
+          "step": "Network ionic record check (승격 전 공용 기술 검사 · RGLR2-01)",
+          "rc": 0,
+          "ok": true
+        },
+        {
+          "step": "Network Merge",
+          "rc": 0,
+          "ok": null
+        }
+      ],
+      "process_count": 5
+    }
+  ],
+  "module_inventory": [
+    "scripts/analyze_contacts.py",
+    "scripts/analyze_contacts_bimodal.py",
+    "scripts/coverage_physics_vs_hertzian.py",
+    "scripts/dem_analysis_core.py",
+    "scripts/export_master_csv.py",
+    "scripts/fracture_model.py",
+    "scripts/grade_engine.py",
+    "scripts/lens_geometry.py",
+    "scripts/lhs_descriptor_harvest.py",
+    "scripts/lhs_harvest_batch.py",
+    "scripts/lhs_perc_extract.py",
+    "scripts/lhs_union_webapp.py",
+    "scripts/lhs_webapp_batch.py",
+    "scripts/metrics_json.py",
+    "scripts/ml_design_structure.py",
+    "scripts/network_conductivity.py",
+    "scripts/parse_liggghts.py",
+    "scripts/plastic_coverage.py",
+    "scripts/press_units.py",
+    "scripts/se_material.py",
+    "scripts/tau_flux.py",
+    "scripts/type_map_resolve.py",
+    "webapp/app.py",
+    "webapp/ledger_view.py",
+    "webapp/mpm_lab_register.py",
+    "webapp/pipeline_service.py",
+    "webapp/predictor_engine.py",
+    "webapp/security.py",
+    "webapp/storage_sync.py",
+    "webapp/structure_predictor.py"
+  ],
+  "passed": 61,
+  "total": 61
+}

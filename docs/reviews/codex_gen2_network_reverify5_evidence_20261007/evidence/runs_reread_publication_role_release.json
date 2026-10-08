@@ -1,0 +1,59 @@
+[
+  {
+    "name": "reread",
+    "argv": [
+      "scripts/g2_network_reread.py",
+      "--selftest"
+    ],
+    "rc": 0,
+    "seconds": 22.186999999918044,
+    "tail": [
+      "  ✓ ★ G2RR4-01 — 생산 194 (합성) 판정 JSON 의 상세 = 상세 계약 통과 (194 케이스 × K1–K7 · meta 열 · 재계수 0 = n_fail 0)",
+      "  ✓ ★ G2RR4-03 스모크 음성 대조 (case15) — 게시 없음 + [음성 대조] 판정 PASS = S0 · S0b 통과 rc 0 (0, {'S0': True, 'S0b': True}) · 게시됨 = S0b 실패 (1, {'S0': True, 'S0b': False}) · [음성 대조] 판정 FAIL = S0b 실패 (1, {'S0': True, 'S0b': False}) · 표지 없는 failed = S0 실패 (이름 면제 없음) (1, {'S0': False})",
+      "",
+      "✓ 전부 통과"
+    ]
+  },
+  {
+    "name": "publication",
+    "argv": [
+      "webapp/test_gen2_publication_handover.py"
+    ],
+    "rc": 0,
+    "seconds": 17.843000000109896,
+    "tail": [
+      "  PASS ⑧ ★ raise — 게시 done · H0 CF = not_computed / solve_failed · 값 없음 · 증서가 해를 주장하지 않음 · 시도 ['spsolve'] ['exception'] · FULL q 0.00400538 = 정상 0.00400538 · physics · H12 CF 그대로 {'physics': 'computed', 'hertz_h12': 'computed'} · 인계 통과 (τ 세 모드 OK) · 다시 읽기 K1–K7 · H1 통과 []",
+      "  PASS ⑧ ★ bad_solve — 게시 done · H0 CF = not_computed / current_conservation_failed · 값 없음 · 증서가 해를 주장하지 않음 · 시도 ['spsolve', 'cg+jacobi', 'gmres+ilu'] ['certificate_failed', 'certificate_failed', 'certificate_failed'] · FULL q 0.00400538 = 정상 0.00400538 · physics · H12 CF 그대로 {'physics': 'computed', 'hertz_h12': 'computed'} · 인계 통과 (τ 세 모드 OK) · 다시 읽기 K1–K7 · H1 통과 []",
+      "",
+      "test_gen2_publication_handover: 32/32 PASS"
+    ]
+  },
+  {
+    "name": "role",
+    "argv": [
+      "scripts/test_gen2_role_contract.py"
+    ],
+    "rc": 0,
+    "seconds": 7.078999999910593,
+    "tail": [
+      "  PASS  W1 ★ 열 사전 H12 판정 = 쌍대응 시나리오 · 구간 아님 (괄호로 읽는다 문구 없음) · 부록 전용 유지",
+      "  PASS  W2 ★ 설계 기록 ±5 % = 시험한 기하 한정 + 구 사슬 반례 (G2R-04)",
+      "",
+      "test_gen2_role_contract: 44/44 PASS"
+    ]
+  },
+  {
+    "name": "release",
+    "argv": [
+      "scripts/test_lhs_release_v13.py"
+    ],
+    "rc": 1,
+    "seconds": 46.70300000021234,
+    "tail": [
+      "findfont: Font family 'Liberation Sans' not found.",
+      "findfont: Font family 'Liberation Sans' not found.",
+      "findfont: Font family 'Liberation Sans' not found.",
+      "findfont: Font family 'Liberation Sans' not found."
+    ]
+  }
+]

@@ -1,0 +1,18 @@
+[
+  {
+    "name": "r5_release_real_binding",
+    "argv": [
+      "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\gen2_network_reverify5_20261007\\probes\\r5_release_real_binding.py",
+      "--output-name",
+      "r5_release_real_binding_portable"
+    ],
+    "rc": 0,
+    "seconds": 3.7660000000614673,
+    "tail": [
+      "      \"output_exists\": true",
+      "    }",
+      "  ]",
+      "}"
+    ]
+  }
+]

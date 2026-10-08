@@ -1,0 +1,318 @@
+{
+  "name": "g2rr5_839dbac6b_1007_2224.tar.gz",
+  "sha256": "41a755974d99aa0d1c8315cf3454cd15a7eeabdca31062c999f25c67118d2939",
+  "members": [
+    {
+      "name": "g2pre_pilot_839dbac6b_1007_2224/cases/lhs00_055/log.txt",
+      "size": 1085
+    },
+    {
+      "name": "g2pre_pilot_839dbac6b_1007_2224/cases/lhs00_055/out/status.json",
+      "size": 2143
+    },
+    {
+      "name": "g2pre_pilot_839dbac6b_1007_2224/cases/lhs00_055/worker.json",
+      "size": 3811
+    },
+    {
+      "name": "g2pre_pilot_839dbac6b_1007_2224/cases/lhs00_128/log.txt",
+      "size": 1085
+    },
+    {
+      "name": "g2pre_pilot_839dbac6b_1007_2224/cases/lhs00_128/out/status.json",
+      "size": 2317
+    },
+    {
+      "name": "g2pre_pilot_839dbac6b_1007_2224/cases/lhs00_128/worker.json",
+      "size": 3802
+    },
+    {
+      "name": "g2pre_pilot_839dbac6b_1007_2224/cases/lhsx_007/log.txt",
+      "size": 1103
+    },
+    {
+      "name": "g2pre_pilot_839dbac6b_1007_2224/cases/lhsx_007/out/status.json",
+      "size": 2163
+    },
+    {
+      "name": "g2pre_pilot_839dbac6b_1007_2224/cases/lhsx_007/worker.json",
+      "size": 3828
+    },
+    {
+      "name": "g2pre_pilot_839dbac6b_1007_2224/import_obs",
+      "size": 0
+    },
+    {
+      "name": "g2pre_pilot_839dbac6b_1007_2224/import_obs/log",
+      "size": 0
+    },
+    {
+      "name": "g2pre_pilot_839dbac6b_1007_2224/import_obs/log/1531558-8f02e2d2.txt",
+      "size": 579
+    },
+    {
+      "name": "g2pre_pilot_839dbac6b_1007_2224/import_obs/log/1531558-8f02e2d2.start.json",
+      "size": 536
+    },
+    {
+      "name": "g2pre_pilot_839dbac6b_1007_2224/import_obs/log/1530983-04e353fd.txt",
+      "size": 336
+    },
+    {
+      "name": "g2pre_pilot_839dbac6b_1007_2224/import_obs/log/1531883-a06283da.txt",
+      "size": 723
+    },
+    {
+      "name": "g2pre_pilot_839dbac6b_1007_2224/import_obs/log/1530887-58a3fdf1.start.json",
+      "size": 1259
+    },
+    {
+      "name": "g2pre_pilot_839dbac6b_1007_2224/import_obs/log/1530887-58a3fdf1.txt",
+      "size": 1555
+    },
+    {
+      "name": "g2pre_pilot_839dbac6b_1007_2224/import_obs/log/1530906-a423806b.txt",
+      "size": 1556
+    },
+    {
+      "name": "g2pre_pilot_839dbac6b_1007_2224/import_obs/log/1530925-04e3779a.txt",
+      "size": 1556
+    },
+    {
+      "name": "g2pre_pilot_839dbac6b_1007_2224/import_obs/log/1531884-206fc6c1.start.json",
+      "size": 536
+    },
+    {
+      "name": "g2pre_pilot_839dbac6b_1007_2224/import_obs/log/1531926-b7ebf485.txt",
+      "size": 578
+    },
+    {
+      "name": "g2pre_pilot_839dbac6b_1007_2224/import_obs/log/1530980-3b792e81.start.json",
+      "size": 1568
+    },
+    {
+      "name": "g2pre_pilot_839dbac6b_1007_2224/import_obs/log/1530985-72cc75a0.start.json",
+      "size": 1173
+    },
+    {
+      "name": "g2pre_pilot_839dbac6b_1007_2224/import_obs/log/1530982-8a5e72b9.start.json",
+      "size": 1148
+    },
+    {
+      "name": "g2pre_pilot_839dbac6b_1007_2224/import_obs/log/1531887-10659a44.start.json",
+      "size": 1226
+    },
+    {
+      "name": "g2pre_pilot_839dbac6b_1007_2224/import_obs/log/1530906-a423806b.start.json",
+      "size": 1226
+    },
+    {
+      "name": "g2pre_pilot_839dbac6b_1007_2224/import_obs/log/1530983-04e353fd.start.json",
+      "size": 1545
+    },
+    {
+      "name": "g2pre_pilot_839dbac6b_1007_2224/import_obs/log/1531887-10659a44.txt",
+      "size": 723
+    },
+    {
+      "name": "g2pre_pilot_839dbac6b_1007_2224/import_obs/log/1530980-3b792e81.txt",
+      "size": 337
+    },
+    {
+      "name": "g2pre_pilot_839dbac6b_1007_2224/import_obs/log/1530981-25d4e7ec.start.json",
+      "size": 1568
+    },
+    {
+      "name": "g2pre_pilot_839dbac6b_1007_2224/import_obs/log/1530985-72cc75a0.txt",
+      "size": 681
+    },
+    {
+      "name": "g2pre_pilot_839dbac6b_1007_2224/import_obs/log/1530984-6bbe4db4.start.json",
+      "size": 1186
+    },
+    {
+      "name": "g2pre_pilot_839dbac6b_1007_2224/import_obs/log/1531927-bc023383.txt",
+      "size": 722
+    },
+    {
+      "name": "g2pre_pilot_839dbac6b_1007_2224/import_obs/log/1531927-bc023383.start.json",
+      "size": 1213
+    },
+    {
+      "name": "g2pre_pilot_839dbac6b_1007_2224/import_obs/log/1530981-25d4e7ec.txt",
+      "size": 337
+    },
+    {
+      "name": "g2pre_pilot_839dbac6b_1007_2224/import_obs/log/1531883-a06283da.start.json",
+      "size": 1212
+    },
+    {
+      "name": "g2pre_pilot_839dbac6b_1007_2224/import_obs/log/1530925-04e3779a.start.json",
+      "size": 1226
+    },
+    {
+      "name": "g2pre_pilot_839dbac6b_1007_2224/import_obs/log/1531926-b7ebf485.start.json",
+      "size": 533
+    },
+    {
+      "name": "g2pre_pilot_839dbac6b_1007_2224/import_obs/log/1530982-8a5e72b9.txt",
+      "size": 611
+    },
+    {
+      "name": "g2pre_pilot_839dbac6b_1007_2224/import_obs/log/1531884-206fc6c1.txt",
+      "size": 579
+    },
+    {
+      "name": "g2pre_pilot_839dbac6b_1007_2224/import_obs/log/1530984-6bbe4db4.txt",
+      "size": 682
+    },
+    {
+      "name": "g2pre_pilot_839dbac6b_1007_2224/import_obs/hook",
+      "size": 0
+    },
+    {
+      "name": "g2pre_pilot_839dbac6b_1007_2224/import_obs/hook/sitecustomize.py",
+      "size": 2519
+    },
+    {
+      "name": "g2pre_pilot_839dbac6b_1007_2224/manifest.json",
+      "size": 9197
+    },
+    {
+      "name": "g2pre_pilot_839dbac6b_1007_2224/merged/merge_report.json",
+      "size": 1632
+    },
+    {
+      "name": "g2pre_pilot_839dbac6b_1007_2224/progress.tsv",
+      "size": 401
+    },
+    {
+      "name": "g2pre_pilot_839dbac6b_1007_2224/reread.json",
+      "size": 23440
+    },
+    {
+      "name": "g2pre_pilot_839dbac6b_1007_2224/runs",
+      "size": 0
+    },
+    {
+      "name": "g2pre_pilot_839dbac6b_1007_2224/runs/run_001.json",
+      "size": 848
+    },
+    {
+      "name": "g2pre_pilot_839dbac6b_1007_2224/seal_audit.json",
+      "size": 17534
+    },
+    {
+      "name": "g2pre_pilot_839dbac6b_1007_2224/seal_audit.tsv",
+      "size": 634
+    },
+    {
+      "name": "g2pre_smoke_839dbac6b_1007_2224/reread.json",
+      "size": 30260
+    },
+    {
+      "name": "g2pre_smoke_839dbac6b_1007_2224/smoke_report.json",
+      "size": 68576
+    },
+    {
+      "name": "g2pre_smoke_839dbac6b_1007_2224/smoke_summary.txt",
+      "size": 3484
+    },
+    {
+      "name": "g2rr5_839dbac6b_1007_2224",
+      "size": 0
+    },
+    {
+      "name": "g2rr5_839dbac6b_1007_2224/smoke.stdout",
+      "size": 5151
+    },
+    {
+      "name": "g2rr5_839dbac6b_1007_2224/env.txt",
+      "size": 182
+    },
+    {
+      "name": "g2rr5_839dbac6b_1007_2224/pilot.rc",
+      "size": 2
+    },
+    {
+      "name": "g2rr5_839dbac6b_1007_2224/st_runner.stdout",
+      "size": 71340
+    },
+    {
+      "name": "g2rr5_839dbac6b_1007_2224/old_audit.stdout",
+      "size": 1294
+    },
+    {
+      "name": "g2rr5_839dbac6b_1007_2224/st_smoke.stdout",
+      "size": 1925
+    },
+    {
+      "name": "g2rr5_839dbac6b_1007_2224/st_smoke.rc",
+      "size": 2
+    },
+    {
+      "name": "g2rr5_839dbac6b_1007_2224/st_reread.stdout",
+      "size": 3681
+    },
+    {
+      "name": "g2rr5_839dbac6b_1007_2224/pilot_reread.rc",
+      "size": 2
+    },
+    {
+      "name": "g2rr5_839dbac6b_1007_2224/smoke_reread.stdout",
+      "size": 1997
+    },
+    {
+      "name": "g2rr5_839dbac6b_1007_2224/st_runner.rc",
+      "size": 2
+    },
+    {
+      "name": "g2rr5_839dbac6b_1007_2224/old_reread.stdout",
+      "size": 2178
+    },
+    {
+      "name": "g2rr5_839dbac6b_1007_2224/pilot_reread.stdout",
+      "size": 2178
+    },
+    {
+      "name": "g2rr5_839dbac6b_1007_2224/old_audit.json",
+      "size": 17588
+    },
+    {
+      "name": "g2rr5_839dbac6b_1007_2224/old_reread.rc",
+      "size": 2
+    },
+    {
+      "name": "g2rr5_839dbac6b_1007_2224/pilot_audit.stdout",
+      "size": 1294
+    },
+    {
+      "name": "g2rr5_839dbac6b_1007_2224/pilot_audit.rc",
+      "size": 2
+    },
+    {
+      "name": "g2rr5_839dbac6b_1007_2224/smoke_reread.rc",
+      "size": 2
+    },
+    {
+      "name": "g2rr5_839dbac6b_1007_2224/old_reread.json",
+      "size": 23440
+    },
+    {
+      "name": "g2rr5_839dbac6b_1007_2224/st_reread.rc",
+      "size": 2
+    },
+    {
+      "name": "g2rr5_839dbac6b_1007_2224/old_audit.rc",
+      "size": 2
+    },
+    {
+      "name": "g2rr5_839dbac6b_1007_2224/pilot.stdout",
+      "size": 11204
+    },
+    {
+      "name": "g2rr5_839dbac6b_1007_2224/smoke.rc",
+      "size": 2
+    }
+  ]
+}

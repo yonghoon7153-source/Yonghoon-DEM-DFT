@@ -1,0 +1,59 @@
+{
+  "pinned_production_census": [],
+  "pinned_ast_relevant_imports": [
+    {
+      "file": "scripts/audit_constriction_deleted.py",
+      "line": 511,
+      "module": "os",
+      "alias": "_os"
+    },
+    {
+      "file": "webapp/app.py",
+      "line": 5428,
+      "module": "os",
+      "alias": "_os"
+    },
+    {
+      "file": "scripts/grade_engine.py",
+      "line": 1857,
+      "module": "os",
+      "alias": "_os"
+    }
+  ],
+  "pinned_ast_process_attributes": [],
+  "inert_examples": [
+    {
+      "label": "canonical_os_fork",
+      "detected": [
+        [
+          "scripts/lhs_webapp_batch.py",
+          2,
+          "os.fork()"
+        ]
+      ]
+    },
+    {
+      "label": "multiprocessing",
+      "detected": [
+        [
+          "scripts/lhs_webapp_batch.py",
+          1,
+          "import multiprocessing"
+        ]
+      ]
+    },
+    {
+      "label": "from_os_import_fork",
+      "detected": []
+    },
+    {
+      "label": "aliased_os_fork",
+      "detected": []
+    },
+    {
+      "label": "getattr_os_fork",
+      "detected": []
+    }
+  ],
+  "interpretation": "Pinned CODE_FILES have three os aliases (inspected uses are files/environment), no fork/spawn attributes or from imports. Regex guard is not a general proof against arbitrarily introduced Python fork code."
+}

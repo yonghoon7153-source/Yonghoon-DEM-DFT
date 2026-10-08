@@ -1,0 +1,345 @@
+{
+  "scope": "Independent review-only gate probes. No numeric certification and no production run.\n\nUses the committed detailed test fixture; only v13_reread_tau is stubbed, as in\nthe previous review. All release/build/check gates are unmodified source code.\n",
+  "variants": [
+    {
+      "label": "control",
+      "direct_gate": [],
+      "build_accepted": true,
+      "check": [],
+      "output_exists": true
+    },
+    {
+      "label": "reread_M2_false",
+      "direct_gate": [
+        "reread.json — 상세 (G2RR4-01) — 상세 실패 재계수 1 ≠ n_fail 0 — 요약이 상세를 덮는다 (또는 상세가 요약을 뒷받침하지 않는다)",
+        "reread.json — 상세 (G2RR4-01) — 상세 실패 1 — 첫 ['M2 lhs 전 케이스 done · partial'] (전부 통과여야)"
+      ],
+      "build_accepted": false,
+      "error": "ReleaseError: 배치 관문 증거 문제 2 (G2RR3-01 — 등록 §5-2 ⓪ 감사 · §5-3 ⓪b 다시 읽기) — reread.json — 상세 (G2RR4-01) — 상세 실패 재계수 1 ≠ n_fail 0 — 요약이 상세를 덮는다 (또는 상세가 요약을 뒷받침하지 않는다) | reread.json — 상세 (G2RR4-01) — 상세 실패 1 — 첫 ['M2 lhs 전 케이스 done · partial'] (전부 통과여야) — 실제 배포는 두 기록이 이 배치 뿌리 · manifest · 발사 봉인 지문에 대해 통과여야 한다 (옛 · 부분 기록을 들여다볼 때만 --diagnostic-batch-gate · NOT FOR RELEASE)",
+      "output_exists": false
+    },
+    {
+      "label": "reread_empty_cases",
+      "direct_gate": [
+        "reread.json — 상세 (G2RR4-01) — 상세 (케이스, 코호트) 고유 0 ≠ 등록 집합 'production194' (194) — 빠진 [('lhs00_000', 'lhs'), ('lhs00_001', 'lhs'), ('lhs00_002', 'lhs')] · 남는 []",
+        "reread.json — 상세 (G2RR4-01) — 상세 케이스 0 ≠ read_n 194 — 읽었다는 수를 상세가 뒷받침하지 않는다"
+      ],
+      "build_accepted": false,
+      "error": "ReleaseError: 배치 관문 증거 문제 2 (G2RR3-01 — 등록 §5-2 ⓪ 감사 · §5-3 ⓪b 다시 읽기) — reread.json — 상세 (G2RR4-01) — 상세 (케이스, 코호트) 고유 0 ≠ 등록 집합 'production194' (194) — 빠진 [('lhs00_000', 'lhs'), ('lhs00_001', 'lhs'), ('lhs00_002', 'lhs')] · 남는 [] | reread.json — 상세 (G2RR4-01) — 상세 케이스 0 ≠ read_n 194 — 읽었다는 수를 상세가 뒷받침하지 않는다 — 실제 배포는 두 기록이 이 배치 뿌리 · manifest · 발사 봉인 지문에 대해 통과여야 한다 (옛 · 부분 기록을 들여다볼 때만 --diagnostic-batch-gate · NOT FOR RELEASE)",
+      "output_exists": false
+    },
+    {
+      "label": "reread_empty_checks",
+      "direct_gate": [
+        "reread.json — 상세 (G2RR4-01) — 케이스 1 에서 검사 ID 가 한 번씩이 아니다 — 케이스마다 K1·K2·K3·K4·K5·K6·K7 한 번씩 (빈 checks = 공집합 PASS 금지) · 첫 [('lhs00_000', {'K1': 0, 'K2': 0, 'K3': 0, 'K4': 0, 'K5': 0, 'K6': 0, 'K7': 0})]"
+      ],
+      "build_accepted": false,
+      "error": "ReleaseError: 배치 관문 증거 문제 1 (G2RR3-01 — 등록 §5-2 ⓪ 감사 · §5-3 ⓪b 다시 읽기) — reread.json — 상세 (G2RR4-01) — 케이스 1 에서 검사 ID 가 한 번씩이 아니다 — 케이스마다 K1·K2·K3·K4·K5·K6·K7 한 번씩 (빈 checks = 공집합 PASS 금지) · 첫 [('lhs00_000', {'K1': 0, 'K2': 0, 'K3': 0, 'K4': 0, 'K5': 0, 'K6': 0, 'K7': 0})] — 실제 배포는 두 기록이 이 배치 뿌리 · manifest · 발사 봉인 지문에 대해 통과여야 한다 (옛 · 부분 기록을 들여다볼 때만 --diagnostic-batch-gate · NOT FOR RELEASE)",
+      "output_exists": false
+    },
+    {
+      "label": "reread_ok_integer",
+      "direct_gate": [
+        "reread.json — 상세 (G2RR4-01) — 검사 항목 꼴 1 — name 문자열 · ok bool (정수 · 문자열 ok 를 통과로 읽지 않는다) · cases 는 case · cohort · checks 목록 · 첫 [\"lhs00_000 checks[0] {'name': 'K1 게시 — solver success · 도장 valid/success · run id (도장 = full_metrics \"]",
+        "reread.json — 상세 (G2RR4-01) — 케이스 1 에서 검사 ID 가 한 번씩이 아니다 — 케이스마다 K1·K2·K3·K4·K5·K6·K7 한 번씩 (빈 checks = 공집합 PASS 금지) · 첫 [('lhs00_000', {'K1': 0})]",
+        "reread.json — 상세 (G2RR4-01) — 상세 실패 재계수 1 ≠ n_fail 0 — 요약이 상세를 덮는다 (또는 상세가 요약을 뒷받침하지 않는다)",
+        "reread.json — 상세 (G2RR4-01) — 상세 실패 1 — 첫 ['lhs00_000: K1 게시 — solver success · 도장 valid/success · run id (도장 = ful'] (전부 통과여야)"
+      ],
+      "build_accepted": false,
+      "error": "ReleaseError: 배치 관문 증거 문제 4 (G2RR3-01 — 등록 §5-2 ⓪ 감사 · §5-3 ⓪b 다시 읽기) — reread.json — 상세 (G2RR4-01) — 검사 항목 꼴 1 — name 문자열 · ok bool (정수 · 문자열 ok 를 통과로 읽지 않는다) · cases 는 case · cohort · checks 목록 · 첫 [\"lhs00_000 checks[0] {'name': 'K1 게시 — solver success · 도장 valid/success · run id (도장 = full_metrics \"] | reread.json — 상세 (G2RR4-01) — 케이스 1 에서 검사 ID 가 한 번씩이 아니다 — 케이스마다 K1·K2·K3·K4·K5·K6·K7 한 번씩 (빈 checks = 공집합 PASS 금지) · 첫 [('lhs00_000', {'K1': 0})] | reread.json — 상세 (G2RR4-01) — 상세 실패 재계수 1 ≠ n_fail 0 — 요약이 상세를 덮는다 (또는 상세가 요약을 뒷받침하지 않는다) | reread.json — 상세 (G2RR4-01) — 상세 실패 1 — 첫 ['lhs00_000: K1 게시 — solver success · 도장 valid/success · run id (도장 = ful'] (전부 통과여야) — 실제 배포는 두 기록이 이 배치 뿌리 · manifest · 발사 봉인 지문에 대해 통과여야 한다 (옛 · 부분 기록을 들여다볼 때만 --diagnostic-batch-gate · NOT FOR RELEASE)",
+      "output_exists": false
+    },
+    {
+      "label": "reread_unknown_check",
+      "direct_gate": [
+        "reread.json — 상세 (G2RR4-01) — 모르는 검사 1 — 상세 계약 (LAUNCHER_META_IDS · LAUNCHER_COHORT_META_IDS · CASE_CHECK_IDS) 밖 · 첫 [\"lhs00_000 'Z99'\"]"
+      ],
+      "build_accepted": false,
+      "error": "ReleaseError: 배치 관문 증거 문제 1 (G2RR3-01 — 등록 §5-2 ⓪ 감사 · §5-3 ⓪b 다시 읽기) — reread.json — 상세 (G2RR4-01) — 모르는 검사 1 — 상세 계약 (LAUNCHER_META_IDS · LAUNCHER_COHORT_META_IDS · CASE_CHECK_IDS) 밖 · 첫 [\"lhs00_000 'Z99'\"] — 실제 배포는 두 기록이 이 배치 뿌리 · manifest · 발사 봉인 지문에 대해 통과여야 한다 (옛 · 부분 기록을 들여다볼 때만 --diagnostic-batch-gate · NOT FOR RELEASE)",
+      "output_exists": false
+    },
+    {
+      "label": "reread_duplicate_meta",
+      "direct_gate": [
+        "reread.json — 상세 (G2RR4-01) — meta 검사 ID 가 한 번씩이 아니다 {'M0': 2} — 상세 계약: M0 · M-plan · M-reg · M3 한 번 + 코호트 ['lhs', 'lhsx'] 마다 M1 · M2 · H1 한 번"
+      ],
+      "build_accepted": false,
+      "error": "ReleaseError: 배치 관문 증거 문제 1 (G2RR3-01 — 등록 §5-2 ⓪ 감사 · §5-3 ⓪b 다시 읽기) — reread.json — 상세 (G2RR4-01) — meta 검사 ID 가 한 번씩이 아니다 {'M0': 2} — 상세 계약: M0 · M-plan · M-reg · M3 한 번 + 코호트 ['lhs', 'lhsx'] 마다 M1 · M2 · H1 한 번 — 실제 배포는 두 기록이 이 배치 뿌리 · manifest · 발사 봉인 지문에 대해 통과여야 한다 (옛 · 부분 기록을 들여다볼 때만 --diagnostic-batch-gate · NOT FOR RELEASE)",
+      "output_exists": false
+    },
+    {
+      "label": "reread_wrong_cohort",
+      "direct_gate": [
+        "reread.json — 상세 (G2RR4-01) — 상세 (케이스, 코호트) 고유 194 ≠ 등록 집합 'production194' (194) — 빠진 [('lhs00_000', 'lhs')] · 남는 [('lhs00_000', 'lhsx')]"
+      ],
+      "build_accepted": false,
+      "error": "ReleaseError: 배치 관문 증거 문제 1 (G2RR3-01 — 등록 §5-2 ⓪ 감사 · §5-3 ⓪b 다시 읽기) — reread.json — 상세 (G2RR4-01) — 상세 (케이스, 코호트) 고유 194 ≠ 등록 집합 'production194' (194) — 빠진 [('lhs00_000', 'lhs')] · 남는 [('lhs00_000', 'lhsx')] — 실제 배포는 두 기록이 이 배치 뿌리 · manifest · 발사 봉인 지문에 대해 통과여야 한다 (옛 · 부분 기록을 들여다볼 때만 --diagnostic-batch-gate · NOT FOR RELEASE)",
+      "output_exists": false
+    },
+    {
+      "label": "reread_M3_inconsistent",
+      "direct_gate": [
+        "reread.json — 상세 (G2RR4-01) — M3 항목 ↔ 최상위 요약 다름 {'read_n': (193, 194)} — 요약이 M3 상세와 어긋난다"
+      ],
+      "build_accepted": false,
+      "error": "ReleaseError: 배치 관문 증거 문제 1 (G2RR3-01 — 등록 §5-2 ⓪ 감사 · §5-3 ⓪b 다시 읽기) — reread.json — 상세 (G2RR4-01) — M3 항목 ↔ 최상위 요약 다름 {'read_n': (193, 194)} — 요약이 M3 상세와 어긋난다 — 실제 배포는 두 기록이 이 배치 뿌리 · manifest · 발사 봉인 지문에 대해 통과여야 한다 (옛 · 부분 기록을 들여다볼 때만 --diagnostic-batch-gate · NOT FOR RELEASE)",
+      "output_exists": false
+    },
+    {
+      "label": "observation_inner_problem",
+      "direct_gate": [
+        "seal_audit.json — import_observation.problems 1 — ['truncated receipt'] (빈 목록이어야 · G2RR4-01)",
+        "seal_audit.json — 관측 내부 문제 · 봉인 밖 모듈 1 이 최상위 import_observation_problems 에 없다 ['truncated receipt'] — 요약이 상세를 덮는다 (G2RR4-01)"
+      ],
+      "build_accepted": false,
+      "error": "ReleaseError: 배치 관문 증거 문제 2 (G2RR3-01 — 등록 §5-2 ⓪ 감사 · §5-3 ⓪b 다시 읽기) — seal_audit.json — import_observation.problems 1 — ['truncated receipt'] (빈 목록이어야 · G2RR4-01) | seal_audit.json — 관측 내부 문제 · 봉인 밖 모듈 1 이 최상위 import_observation_problems 에 없다 ['truncated receipt'] — 요약이 상세를 덮는다 (G2RR4-01) — 실제 배포는 두 기록이 이 배치 뿌리 · manifest · 발사 봉인 지문에 대해 통과여야 한다 (옛 · 부분 기록을 들여다볼 때만 --diagnostic-batch-gate · NOT FOR RELEASE)",
+      "output_exists": false
+    },
+    {
+      "label": "observation_outside",
+      "direct_gate": [
+        "seal_audit.json — import_observation.outside ['scripts/unsealed.py'] — 봉인 밖 모듈을 실제로 읽었다 (빈 목록이어야 · G2RR4-01)",
+        "seal_audit.json — 관측 내부 문제 · 봉인 밖 모듈 1 이 최상위 import_observation_problems 에 없다 ['scripts/unsealed.py'] — 요약이 상세를 덮는다 (G2RR4-01)"
+      ],
+      "build_accepted": false,
+      "error": "ReleaseError: 배치 관문 증거 문제 2 (G2RR3-01 — 등록 §5-2 ⓪ 감사 · §5-3 ⓪b 다시 읽기) — seal_audit.json — import_observation.outside ['scripts/unsealed.py'] — 봉인 밖 모듈을 실제로 읽었다 (빈 목록이어야 · G2RR4-01) | seal_audit.json — 관측 내부 문제 · 봉인 밖 모듈 1 이 최상위 import_observation_problems 에 없다 ['scripts/unsealed.py'] — 요약이 상세를 덮는다 (G2RR4-01) — 실제 배포는 두 기록이 이 배치 뿌리 · manifest · 발사 봉인 지문에 대해 통과여야 한다 (옛 · 부분 기록을 들여다볼 때만 --diagnostic-batch-gate · NOT FOR RELEASE)",
+      "output_exists": false
+    },
+    {
+      "label": "binding_attempt_missing",
+      "direct_gate": [
+        "seal_audit.json — import_observation.stage_binding 시도 193 ≠ 관측된 완료 시도 194 (결합만 [] · 완료만 ['lhs00_000|1|1']) — 완료 시도마다 결합 기록이 있어야 (G2RR4-02)"
+      ],
+      "build_accepted": false,
+      "error": "ReleaseError: 배치 관문 증거 문제 1 (G2RR3-01 — 등록 §5-2 ⓪ 감사 · §5-3 ⓪b 다시 읽기) — seal_audit.json — import_observation.stage_binding 시도 193 ≠ 관측된 완료 시도 194 (결합만 [] · 완료만 ['lhs00_000|1|1']) — 완료 시도마다 결합 기록이 있어야 (G2RR4-02) — 실제 배포는 두 기록이 이 배치 뿌리 · manifest · 발사 봉인 지문에 대해 통과여야 한다 (옛 · 부분 기록을 들여다볼 때만 --diagnostic-batch-gate · NOT FOR RELEASE)",
+      "output_exists": false
+    },
+    {
+      "label": "binding_payload_null",
+      "direct_gate": [],
+      "build_accepted": true,
+      "check": [],
+      "output_exists": true
+    },
+    {
+      "label": "binding_parser_absent",
+      "direct_gate": [],
+      "build_accepted": true,
+      "check": [],
+      "output_exists": true
+    },
+    {
+      "label": "binding_parser_zero",
+      "direct_gate": [],
+      "build_accepted": true,
+      "check": [],
+      "output_exists": true
+    },
+    {
+      "label": "binding_unplanned_process",
+      "direct_gate": [],
+      "build_accepted": true,
+      "check": [],
+      "output_exists": true
+    },
+    {
+      "label": "binding_count_bool",
+      "direct_gate": [],
+      "build_accepted": true,
+      "check": [],
+      "output_exists": true
+    },
+    {
+      "label": "observation_finalized_zero",
+      "direct_gate": [],
+      "build_accepted": true,
+      "check": [],
+      "output_exists": true
+    }
+  ],
+  "rechecks": [
+    {
+      "label": "reread_M2_false",
+      "original_cache": [
+        "빌드 manifest 의 배치 관문 기록 ≠ 지금 배치 뿌리 ['reread.json'] (sha256 · 판정 필드) — 빌드 뒤 증거가 바뀌었거나 기록이 고쳐졌다 (G2RR3-01)",
+        "배치 관문 (G2RR3-01) reread.json — 상세 (G2RR4-01) — 상세 실패 재계수 1 ≠ n_fail 0 — 요약이 상세를 덮는다 (또는 상세가 요약을 뒷받침하지 않는다)",
+        "배치 관문 (G2RR3-01) reread.json — 상세 (G2RR4-01) — 상세 실패 1 — 첫 ['M2 lhs 전 케이스 done · partial'] (전부 통과여야)"
+      ],
+      "refreshed_cache": [
+        "배치 관문 (G2RR3-01) reread.json — 상세 (G2RR4-01) — 상세 실패 재계수 1 ≠ n_fail 0 — 요약이 상세를 덮는다 (또는 상세가 요약을 뒷받침하지 않는다)",
+        "배치 관문 (G2RR3-01) reread.json — 상세 (G2RR4-01) — 상세 실패 1 — 첫 ['M2 lhs 전 케이스 done · partial'] (전부 통과여야)"
+      ]
+    },
+    {
+      "label": "reread_empty_cases",
+      "original_cache": [
+        "빌드 manifest 의 배치 관문 기록 ≠ 지금 배치 뿌리 ['reread.json'] (sha256 · 판정 필드) — 빌드 뒤 증거가 바뀌었거나 기록이 고쳐졌다 (G2RR3-01)",
+        "배치 관문 (G2RR3-01) reread.json — 상세 (G2RR4-01) — 상세 (케이스, 코호트) 고유 0 ≠ 등록 집합 'production194' (194) — 빠진 [('lhs00_000', 'lhs'), ('lhs00_001', 'lhs'), ('lhs00_002', 'lhs')] · 남는 []",
+        "배치 관문 (G2RR3-01) reread.json — 상세 (G2RR4-01) — 상세 케이스 0 ≠ read_n 194 — 읽었다는 수를 상세가 뒷받침하지 않는다"
+      ],
+      "refreshed_cache": [
+        "배치 관문 (G2RR3-01) reread.json — 상세 (G2RR4-01) — 상세 (케이스, 코호트) 고유 0 ≠ 등록 집합 'production194' (194) — 빠진 [('lhs00_000', 'lhs'), ('lhs00_001', 'lhs'), ('lhs00_002', 'lhs')] · 남는 []",
+        "배치 관문 (G2RR3-01) reread.json — 상세 (G2RR4-01) — 상세 케이스 0 ≠ read_n 194 — 읽었다는 수를 상세가 뒷받침하지 않는다"
+      ]
+    },
+    {
+      "label": "reread_empty_checks",
+      "original_cache": [
+        "빌드 manifest 의 배치 관문 기록 ≠ 지금 배치 뿌리 ['reread.json'] (sha256 · 판정 필드) — 빌드 뒤 증거가 바뀌었거나 기록이 고쳐졌다 (G2RR3-01)",
+        "배치 관문 (G2RR3-01) reread.json — 상세 (G2RR4-01) — 케이스 1 에서 검사 ID 가 한 번씩이 아니다 — 케이스마다 K1·K2·K3·K4·K5·K6·K7 한 번씩 (빈 checks = 공집합 PASS 금지) · 첫 [('lhs00_000', {'K1': 0, 'K2': 0, 'K3': 0, 'K4': 0, 'K5': 0, 'K6': 0, 'K7': 0})]"
+      ],
+      "refreshed_cache": [
+        "배치 관문 (G2RR3-01) reread.json — 상세 (G2RR4-01) — 케이스 1 에서 검사 ID 가 한 번씩이 아니다 — 케이스마다 K1·K2·K3·K4·K5·K6·K7 한 번씩 (빈 checks = 공집합 PASS 금지) · 첫 [('lhs00_000', {'K1': 0, 'K2': 0, 'K3': 0, 'K4': 0, 'K5': 0, 'K6': 0, 'K7': 0})]"
+      ]
+    },
+    {
+      "label": "reread_ok_integer",
+      "original_cache": [
+        "빌드 manifest 의 배치 관문 기록 ≠ 지금 배치 뿌리 ['reread.json'] (sha256 · 판정 필드) — 빌드 뒤 증거가 바뀌었거나 기록이 고쳐졌다 (G2RR3-01)",
+        "배치 관문 (G2RR3-01) reread.json — 상세 (G2RR4-01) — 검사 항목 꼴 1 — name 문자열 · ok bool (정수 · 문자열 ok 를 통과로 읽지 않는다) · cases 는 case · cohort · checks 목록 · 첫 [\"lhs00_000 checks[0] {'name': 'K1 게시 — solver success · 도장 valid/success · run id (도장 = full_metrics \"]",
+        "배치 관문 (G2RR3-01) reread.json — 상세 (G2RR4-01) — 케이스 1 에서 검사 ID 가 한 번씩이 아니다 — 케이스마다 K1·K2·K3·K4·K5·K6·K7 한 번씩 (빈 checks = 공집합 PASS 금지) · 첫 [('lhs00_000', {'K1': 0})]",
+        "배치 관문 (G2RR3-01) reread.json — 상세 (G2RR4-01) — 상세 실패 재계수 1 ≠ n_fail 0 — 요약이 상세를 덮는다 (또는 상세가 요약을 뒷받침하지 않는다)",
+        "배치 관문 (G2RR3-01) reread.json — 상세 (G2RR4-01) — 상세 실패 1 — 첫 ['lhs00_000: K1 게시 — solver success · 도장 valid/success · run id (도장 = ful'] (전부 통과여야)"
+      ],
+      "refreshed_cache": [
+        "배치 관문 (G2RR3-01) reread.json — 상세 (G2RR4-01) — 검사 항목 꼴 1 — name 문자열 · ok bool (정수 · 문자열 ok 를 통과로 읽지 않는다) · cases 는 case · cohort · checks 목록 · 첫 [\"lhs00_000 checks[0] {'name': 'K1 게시 — solver success · 도장 valid/success · run id (도장 = full_metrics \"]",
+        "배치 관문 (G2RR3-01) reread.json — 상세 (G2RR4-01) — 케이스 1 에서 검사 ID 가 한 번씩이 아니다 — 케이스마다 K1·K2·K3·K4·K5·K6·K7 한 번씩 (빈 checks = 공집합 PASS 금지) · 첫 [('lhs00_000', {'K1': 0})]",
+        "배치 관문 (G2RR3-01) reread.json — 상세 (G2RR4-01) — 상세 실패 재계수 1 ≠ n_fail 0 — 요약이 상세를 덮는다 (또는 상세가 요약을 뒷받침하지 않는다)",
+        "배치 관문 (G2RR3-01) reread.json — 상세 (G2RR4-01) — 상세 실패 1 — 첫 ['lhs00_000: K1 게시 — solver success · 도장 valid/success · run id (도장 = ful'] (전부 통과여야)"
+      ]
+    },
+    {
+      "label": "reread_unknown_check",
+      "original_cache": [
+        "빌드 manifest 의 배치 관문 기록 ≠ 지금 배치 뿌리 ['reread.json'] (sha256 · 판정 필드) — 빌드 뒤 증거가 바뀌었거나 기록이 고쳐졌다 (G2RR3-01)",
+        "배치 관문 (G2RR3-01) reread.json — 상세 (G2RR4-01) — 모르는 검사 1 — 상세 계약 (LAUNCHER_META_IDS · LAUNCHER_COHORT_META_IDS · CASE_CHECK_IDS) 밖 · 첫 [\"lhs00_000 'Z99'\"]"
+      ],
+      "refreshed_cache": [
+        "배치 관문 (G2RR3-01) reread.json — 상세 (G2RR4-01) — 모르는 검사 1 — 상세 계약 (LAUNCHER_META_IDS · LAUNCHER_COHORT_META_IDS · CASE_CHECK_IDS) 밖 · 첫 [\"lhs00_000 'Z99'\"]"
+      ]
+    },
+    {
+      "label": "reread_duplicate_meta",
+      "original_cache": [
+        "빌드 manifest 의 배치 관문 기록 ≠ 지금 배치 뿌리 ['reread.json'] (sha256 · 판정 필드) — 빌드 뒤 증거가 바뀌었거나 기록이 고쳐졌다 (G2RR3-01)",
+        "배치 관문 (G2RR3-01) reread.json — 상세 (G2RR4-01) — meta 검사 ID 가 한 번씩이 아니다 {'M0': 2} — 상세 계약: M0 · M-plan · M-reg · M3 한 번 + 코호트 ['lhs', 'lhsx'] 마다 M1 · M2 · H1 한 번"
+      ],
+      "refreshed_cache": [
+        "배치 관문 (G2RR3-01) reread.json — 상세 (G2RR4-01) — meta 검사 ID 가 한 번씩이 아니다 {'M0': 2} — 상세 계약: M0 · M-plan · M-reg · M3 한 번 + 코호트 ['lhs', 'lhsx'] 마다 M1 · M2 · H1 한 번"
+      ]
+    },
+    {
+      "label": "reread_wrong_cohort",
+      "original_cache": [
+        "빌드 manifest 의 배치 관문 기록 ≠ 지금 배치 뿌리 ['reread.json'] (sha256 · 판정 필드) — 빌드 뒤 증거가 바뀌었거나 기록이 고쳐졌다 (G2RR3-01)",
+        "배치 관문 (G2RR3-01) reread.json — 상세 (G2RR4-01) — 상세 (케이스, 코호트) 고유 194 ≠ 등록 집합 'production194' (194) — 빠진 [('lhs00_000', 'lhs')] · 남는 [('lhs00_000', 'lhsx')]"
+      ],
+      "refreshed_cache": [
+        "배치 관문 (G2RR3-01) reread.json — 상세 (G2RR4-01) — 상세 (케이스, 코호트) 고유 194 ≠ 등록 집합 'production194' (194) — 빠진 [('lhs00_000', 'lhs')] · 남는 [('lhs00_000', 'lhsx')]"
+      ]
+    },
+    {
+      "label": "reread_M3_inconsistent",
+      "original_cache": [
+        "빌드 manifest 의 배치 관문 기록 ≠ 지금 배치 뿌리 ['reread.json'] (sha256 · 판정 필드) — 빌드 뒤 증거가 바뀌었거나 기록이 고쳐졌다 (G2RR3-01)",
+        "배치 관문 (G2RR3-01) reread.json — 상세 (G2RR4-01) — M3 항목 ↔ 최상위 요약 다름 {'read_n': (193, 194)} — 요약이 M3 상세와 어긋난다"
+      ],
+      "refreshed_cache": [
+        "배치 관문 (G2RR3-01) reread.json — 상세 (G2RR4-01) — M3 항목 ↔ 최상위 요약 다름 {'read_n': (193, 194)} — 요약이 M3 상세와 어긋난다"
+      ]
+    },
+    {
+      "label": "observation_inner_problem",
+      "original_cache": [
+        "빌드 manifest 의 배치 관문 기록 ≠ 지금 배치 뿌리 ['seal_audit.json'] (sha256 · 판정 필드) — 빌드 뒤 증거가 바뀌었거나 기록이 고쳐졌다 (G2RR3-01)",
+        "배치 관문 (G2RR3-01) seal_audit.json — import_observation.problems 1 — ['truncated receipt'] (빈 목록이어야 · G2RR4-01)",
+        "배치 관문 (G2RR3-01) seal_audit.json — 관측 내부 문제 · 봉인 밖 모듈 1 이 최상위 import_observation_problems 에 없다 ['truncated receipt'] — 요약이 상세를 덮는다 (G2RR4-01)"
+      ],
+      "refreshed_cache": [
+        "배치 관문 (G2RR3-01) seal_audit.json — import_observation.problems 1 — ['truncated receipt'] (빈 목록이어야 · G2RR4-01)",
+        "배치 관문 (G2RR3-01) seal_audit.json — 관측 내부 문제 · 봉인 밖 모듈 1 이 최상위 import_observation_problems 에 없다 ['truncated receipt'] — 요약이 상세를 덮는다 (G2RR4-01)"
+      ]
+    },
+    {
+      "label": "observation_outside",
+      "original_cache": [
+        "빌드 manifest 의 배치 관문 기록 ≠ 지금 배치 뿌리 ['seal_audit.json'] (sha256 · 판정 필드) — 빌드 뒤 증거가 바뀌었거나 기록이 고쳐졌다 (G2RR3-01)",
+        "배치 관문 (G2RR3-01) seal_audit.json — import_observation.outside ['scripts/unsealed.py'] — 봉인 밖 모듈을 실제로 읽었다 (빈 목록이어야 · G2RR4-01)",
+        "배치 관문 (G2RR3-01) seal_audit.json — 관측 내부 문제 · 봉인 밖 모듈 1 이 최상위 import_observation_problems 에 없다 ['scripts/unsealed.py'] — 요약이 상세를 덮는다 (G2RR4-01)"
+      ],
+      "refreshed_cache": [
+        "배치 관문 (G2RR3-01) seal_audit.json — import_observation.outside ['scripts/unsealed.py'] — 봉인 밖 모듈을 실제로 읽었다 (빈 목록이어야 · G2RR4-01)",
+        "배치 관문 (G2RR3-01) seal_audit.json — 관측 내부 문제 · 봉인 밖 모듈 1 이 최상위 import_observation_problems 에 없다 ['scripts/unsealed.py'] — 요약이 상세를 덮는다 (G2RR4-01)"
+      ]
+    },
+    {
+      "label": "binding_attempt_missing",
+      "original_cache": [
+        "빌드 manifest 의 배치 관문 기록 ≠ 지금 배치 뿌리 ['seal_audit.json'] (sha256 · 판정 필드) — 빌드 뒤 증거가 바뀌었거나 기록이 고쳐졌다 (G2RR3-01)",
+        "배치 관문 (G2RR3-01) seal_audit.json — import_observation.stage_binding 시도 193 ≠ 관측된 완료 시도 194 (결합만 [] · 완료만 ['lhs00_000|1|1']) — 완료 시도마다 결합 기록이 있어야 (G2RR4-02)"
+      ],
+      "refreshed_cache": [
+        "배치 관문 (G2RR3-01) seal_audit.json — import_observation.stage_binding 시도 193 ≠ 관측된 완료 시도 194 (결합만 [] · 완료만 ['lhs00_000|1|1']) — 완료 시도마다 결합 기록이 있어야 (G2RR4-02)"
+      ]
+    },
+    {
+      "label": "binding_payload_null",
+      "original_cache": [
+        "빌드 manifest 의 배치 관문 기록 ≠ 지금 배치 뿌리 ['seal_audit.json'] (sha256 · 판정 필드) — 빌드 뒤 증거가 바뀌었거나 기록이 고쳐졌다 (G2RR3-01)"
+      ],
+      "refreshed_cache": []
+    },
+    {
+      "label": "binding_parser_absent",
+      "original_cache": [
+        "빌드 manifest 의 배치 관문 기록 ≠ 지금 배치 뿌리 ['seal_audit.json'] (sha256 · 판정 필드) — 빌드 뒤 증거가 바뀌었거나 기록이 고쳐졌다 (G2RR3-01)"
+      ],
+      "refreshed_cache": []
+    },
+    {
+      "label": "binding_parser_zero",
+      "original_cache": [
+        "빌드 manifest 의 배치 관문 기록 ≠ 지금 배치 뿌리 ['seal_audit.json'] (sha256 · 판정 필드) — 빌드 뒤 증거가 바뀌었거나 기록이 고쳐졌다 (G2RR3-01)"
+      ],
+      "refreshed_cache": []
+    },
+    {
+      "label": "binding_unplanned_process",
+      "original_cache": [
+        "빌드 manifest 의 배치 관문 기록 ≠ 지금 배치 뿌리 ['seal_audit.json'] (sha256 · 판정 필드) — 빌드 뒤 증거가 바뀌었거나 기록이 고쳐졌다 (G2RR3-01)"
+      ],
+      "refreshed_cache": []
+    },
+    {
+      "label": "binding_count_bool",
+      "original_cache": [
+        "빌드 manifest 의 배치 관문 기록 ≠ 지금 배치 뿌리 ['seal_audit.json'] (sha256 · 판정 필드) — 빌드 뒤 증거가 바뀌었거나 기록이 고쳐졌다 (G2RR3-01)"
+      ],
+      "refreshed_cache": []
+    },
+    {
+      "label": "observation_finalized_zero",
+      "original_cache": [
+        "빌드 manifest 의 배치 관문 기록 ≠ 지금 배치 뿌리 ['seal_audit.json'] (sha256 · 판정 필드) — 빌드 뒤 증거가 바뀌었거나 기록이 고쳐졌다 (G2RR3-01)"
+      ],
+      "refreshed_cache": []
+    }
+  ],
+  "control_restored": [],
+  "actual_submitted_detail": [
+    {
+      "path": "submitted/g2rr5_839dbac6b_1007_2224/old_reread.json",
+      "meta": 10,
+      "cases": 3,
+      "n_fail": 0,
+      "problems": []
+    },
+    {
+      "path": "submitted/g2pre_pilot_839dbac6b_1007_2224/reread.json",
+      "meta": 10,
+      "cases": 3,
+      "n_fail": 0,
+      "problems": []
+    }
+  ]
+}

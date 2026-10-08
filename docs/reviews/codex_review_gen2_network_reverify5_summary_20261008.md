@@ -1,3 +1,5 @@
+> ★ **10-08 밤 원본 반입 — 이 요지는 대체됐다 (superseded · 파일은 기록으로 둔다).**  판정문 원본 = `docs/reviews/codex_review_gen2_network_reverify5_20261007.md` (slim ZIP 안 바이트 그대로) · 증거 · 요지 ↔ 원본 대조 = `docs/reviews/codex_gen2_network_reverify5_evidence_20261007/_README_reproduction.md` §2 (ID · 등급 · 자리 · 직전 항목 상태 같음 · 요지가 뺀 한정어 목록) · 원장 G2RR5-01 ~ 04 등재.
+
 # Codex 재검증 5 판정 요지 — 세대 2 접촉망 (10-08 수신)
 
 > **이 파일은 요지다 — 판정문 원본이 아니다.**  1저자가 10-08 에 붙여 넣은 Codex 판정 화면을 내가 옮겨 적은 것이다 (스크래치에만 있으면 컨테이너 재시작 때 사라지므로 리포에 둔다).  원본 = Codex ZIP 안의 판정문 (`codex_review_gen2_network_reverify5_20261007` · ZIP sha256 `75d3ed51d19a8f03b7201e5e1a8af192d10de7aabd5014e2116fecc18e3ddd91` · 49,805,570 B · 2,997 파일).  ⬜ 1저자가 slim ZIP 을 올리면 원본을 바이트 그대로 반입하고 원장 (G2RR5-01–04) 에 등재한다 — 그때 이 요지와 원본을 대조한다.

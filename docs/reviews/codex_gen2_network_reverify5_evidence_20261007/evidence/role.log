@@ -1,0 +1,46 @@
+  PASS  K1 표지 키 오라클 — 실 생산자 세 레코드에 다 있다 · 역사 레코드 194 (194 폴더) 에는 하나도 없다
+  PASS  K2 ★ 도우미 표지 키 (tau_flux.G2_MARKER_KEYS) = 오라클 (실 생산자 ↔ 역사 차) — 하나라도 빠지면 그 키만 남긴 부분 결손을 옛 세대로 추론한다
+  PASS  K3 역사 레코드 모양 — hertz (maxwell · hertzian · legacy_divide) · physics (mikic · physics · legacy_divide) · H12 없음
+  PASS  T1 ★ 세대 2 계약 표 (tau_flux.G2_MODE_CONTRACT) = 생산자 상수 — H0 = Maxwell + 원기둥 + dirichlet · H12 = ψ 곱 + 구 조각 + dirichlet · physics = ψ 곱 + physics_g2 + 원기둥 + dirichlet
+  PASS  T2 실 생산자 세 레코드의 표기 = 계약 표 (키 없음 = None)
+  PASS  P1 ★ 실 생산자 세 모드 → 세대 g2 · 문제 없음 · 행 세대 칸 'g2' · 세 모드 OK · 행 계약 문제 없음
+  PASS  P2 ★ 진짜 역사 레코드 194 (v1.2 배치 원천) → 세대 inferred_legacy (계약 · 행 칸) · 문제 0 · v1.2 인계표 τ 칸 그대로 재현 (공통 칸 차이 0) {('inferred_legacy', 'inferred_legacy')} · 문제 0 · 어긋남 []
+  PASS  P3 역사 레코드의 세대 표기 = 이력 사실로 **추론** (virtual_source_legacy · physics_g1 · cylinder_half_d · mikic_psi_divide) — 세대 칸이 추론임을 말한다
+  PASS  P4 역사 코호트 194 (lhs · lhsx) 를 한 판정에 — 세대 섞임 없음 · 행 계약 문제 없음
+  PASS  P5 생산자 실패 레코드 (H12 풀이 예외 · 표기 일부만) → 세대 계약 위반 아님 · H12 = NOT_COMPUTED (그 모드의 기술적 실패 — invalid_input 아님) · 주 두 모드 OK
+  PASS  R1 ★ Codex 변이 넷 (h12_as_primary · bad_psi · bad_electrode · partial_missing_g2) → 세대 invalid · 세 모드 NOT_COMPUTED (invalid_input) · 값 빈칸 · 행 계약 위반 (옛: 넷 다 OK · 주 tau2 그대로 실림) 
+  PASS  R2 ★ h12_as_primary — 주 Hertz 행 표기가 H12 를 드러낸다 (협착 mikic_psi_multiply · bulk sphere_segment) · 사유에 hertz 역할 · 옛 σ +28.2 % 가 실리지 않는다
+  PASS  R3 ★ partial_missing_g2 — 세대 2 표지가 남은 레코드의 빈 ψ · 면적을 옛 기본값 (mikic_psi_divide · physics_g1) 으로 채우지 않는다
+  PASS  R4 bad_psi — 모르는 ψ 는 'unknown:mikic/…' 로 보이고 (빈 축으로 사라지지 않는다) 세대 invalid
+  PASS  R5 ★ 더 — H12 없음 · 채널 표기 오타 · 명시 ψ 분모 연구 팔 · H12 자리에 H0 메타 · physics 자리에 Hertz · 모르는 면적 · 주 Hertz 민감도 표지 → 세대 invalid · 주 두 모드 NOT_COMPUTED 
+  PASS  R6 표지를 전부 뺀 레코드 (역사 모양) → inferred_legacy · 주 두 모드 OK · H12 = NOT_COMPUTED (missing_input · 그 세대에 없는 열)
+  PASS  R7 ★ 표지 하나만 남은 레코드 (전극 · 진단 키 · 채널 표기 · ψ multiply) → invalid (옛 세대로 추론하지 않는다 · 부분 결손) {'electrode_model': 'invalid', 'n_clamp_zero': 'invalid', 'h_film_nm': 'invalid', 'thermal_area_rule': 'invalid', 'solve_method_full': 'invalid', 'ψ multiply (Hertz)': 'invalid'}
+  PASS  R8 옛 세대 모양인데 역할이 틀림 (Hertz 자리 mikic · 모르는 ψ) → invalid (옛 세대 표도 닫힌 열거)
+  PASS  M1 ★ 같은 결함만 모인 코호트 (둘 다 같은 변이) → 거부 (옛: 동질이라 통과) {'h12_as_primary': True, 'bad_psi': True, 'bad_electrode': True, 'partial_missing_g2': True}
+  PASS  M2 ★ 정상 + 결함 한 행 ([baseline, h12_as_primary] · [baseline, bad_psi]) → 거부 (옛: 둘 다 통과) {'h12_as_primary': True, 'bad_psi': True}
+  PASS  M3 양성 — 세대 2 끼리 · 옛 세대끼리 통과 · 세대 2 + 옛 세대 = 거부 · 레코드 없는 행 (모든 표기 빈칸) 은 판정 밖
+  PASS  M4 세대 축 = 세대 · ψ · physics 면적 · 전극 + 모드별 협착 · bulk (Codex: 주 Hertz 의 bulk · 협착이 축 밖이었다)
+  PASS  M5 직렬화 칸 — 정상 통과 · 세대 칸 없는 행에서 주 Hertz bulk = 구 조각이면 거부 (세대 칸 없이도 표기가 역할을 증명해야)
+  PASS  C1 ★ tau_flux CLI — 같은 결함 (bad_psi) 폴더 둘 → rc 2 · 표 안 씀 · 사유에 세대 계약 (옛: rc 0) · 정상 폴더 하나 → rc 0
+  PASS  X1 실 생산자 세 모드 레코드에 FULL 증서가 있고 (증서 문제 없음) 계약 g2 · 문제 없음
+  PASS  X2 ★ 주 Hertz FULL 증서 삭제 → 세대 invalid (부분 결손 — 증서도 세대 2 필수 필드)
+  PASS  X3 ★ physics 증서의 전류 보존 실패 (기록값은 자기일관) → invalid · 사유에 보존
+  PASS  X4 ★ H12 레코드 증서 삭제 → invalid
+  PASS  X5 ★ 지운 방법 (cg+ilu · SPD 아닌 전처리 CG) 의 증서 → invalid
+  PASS  X6 표지 · 증서를 다 뺀 역사 모양 → inferred_legacy (증서 키도 세대 2 표지)
+  PASS  Y0 양성 — 실 생산자 레코드 (세 모드 · 이온 · 전자 · 열) = g2 · 문제 없음 · 세 모드 OK · 주 FULL 증서에 결합 키 (가지 · 채널 · 역할 · 전극 · ΔV · 기하 · G→q · σ₀) 가 있다
+  PASS  Y1 ★ 증서 결합 변이 18 종 (CF → FULL · H12 → H0 · 채널 · 기하 인자 · ΔV · 숫자만 · CF 진단 증서 · 결합 키 없음) → 세대 invalid · 세 모드 NOT_COMPUTED (invalid_input) · 주 tau2 빈칸 (옛: CF → FULL · H12 → H0 · 기하 · 숫자만 · CF 진단 넷 = g2 · OK) 
+  PASS  Y2 ★ 사유가 무엇을 어겼는지 말한다 — CF → FULL = 가지 · H12 → H0 = 역할 · 전자 → 이온 = 채널 · 위장 CF = 기하 · 숫자만 = 재구성 · 결합 키 없음 = G2RR-02 이전 증서
+  PASS  Y3 ★ 양성 GEN2-01 — 협착-only R_c = 0 (physics · H12) = NOT_COMPUTED zero_resistance_requires_contraction · 그 증서는 해를 주장하지 않는다 · 세대 g2 · 문제 없음 · 세 모드 OK (FULL 유지 — 없는 수렴 증서를 요구하지 않는다)
+  PASS  Y4 ★ 해 없는 협착-only 자리에 수렴 증서 (FULL 증서를 가지만 바꿔) → invalid (거짓 수렴으로 채우지 않는다)
+  PASS  Y5 ★ 양성 진짜 비관통 — 세 가지 모두 숫자 없음 · valid_zero (no_through_path) · 증서는 해를 주장하지 않는다 → g2 · 문제 없음 · 세 모드 NOT_PERCOLATING
+  PASS  Y6 ★ CF 모형 과전도 (상자 1 × 1 · q > 1.5 · model_over_conduction) — 그 CF 숫자도 결합 증서 검사를 통과해야 한다: 정상 = g2 · 문제 없음 · 같은 증서의 보존을 깨면 invalid (표지는 증서 면제가 아니다)
+  PASS  Y7 옛 기록 정책 — 표지 · 증서를 다 뺀 역사 모양은 inferred_legacy 그대로 (결합 검사 대상 아님 · 역사 194 = P2) · 결합 키만 없는 세대 2 증서는 invalid (Y1) — 결합 키를 지워 옛 증서로 위장할 수 없다
+  PASS  Z1 ★ G2RR2-04 · 05 변이 12 종 (증서 σ₀ 넷 · 부모 σ₀ · 온도 규약 · 전자 · 열 채널 기준 · 가지 기록 결손 · 사유 없음 · 모르는 상태) → 세대 invalid · 세 모드 NOT_COMPUTED (invalid_input) · 주 tau2 빈칸 (옛: σ₀ 변이 · 채널 · 결손 = g2 · OK) 
+  PASS  Z2 ★ 사유 — σ₀ 변이 = G2RR2-04 · 결손 · 사유 없음 · 모르는 상태 = G2RR2-05
+  PASS  Z3 ★ 양성 — 정직한 CF 실패 (값 없음 · not_computed · 사유 solve_failed / current_conservation_failed · 해를 주장하지 않는 증서) = g2 · 문제 없음 · 세 모드 OK (FULL 유지) · 다시 읽기 K7 이 쓰는 공용 가지 표도 [] · 전자 증서 σ_bulk (채널 기준 0.05) ≠ 이온 σ₀ 인 정상 레코드 = 문제 없음
+  PASS  Z4 양성 — 정상 온도 적용 (생산자 temp_c 60) = g2 · 문제 없음 · 부모 σ₀ = 증서 σ₀ = 60 °C 규약값 0.014355301874382767 · 온도 규약 대조 없음
+  PASS  W1 ★ 열 사전 H12 판정 = 쌍대응 시나리오 · 구간 아님 (괄호로 읽는다 문구 없음) · 부록 전용 유지
+  PASS  W2 ★ 설계 기록 ±5 % = 시험한 기하 한정 + 구 사슬 반례 (G2R-04)
+
+test_gen2_role_contract: 44/44 PASS

@@ -1,0 +1,15 @@
+{
+  "production194": {
+    "n": 194,
+    "is_production": true,
+    "flag_false": "생산 194 계획 (등록 production194) 인데 import 관측을 끈 실행 — 생산 194 는 관측 필수 (`run --observe-imports` · G2RR4-03 · 등록 §4) · 관측 없이 돈 생산 배치는 v1.3 배포 관문이 받지 않는다",
+    "flag_true": null
+  },
+  "pilot3": {
+    "n": 3,
+    "is_production": false,
+    "flag_false": null,
+    "flag_true": null
+  },
+  "fork_census_pinned": []
+}

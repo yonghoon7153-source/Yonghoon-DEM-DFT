@@ -1,0 +1,1158 @@
+{
+  "source_sha": "aa7ec7fe98e8684f1a2138665f9eba978366c229",
+  "observations": {
+    "real_failure_path": {
+      "status": "failed",
+      "failed": [
+        {
+          "step": "Network Solver (both modes)",
+          "stdout": "",
+          "stderr": "PermissionError: solver executable denied\n★ 내용 검증 실패 (게시 전 차단): hertzian: 파일 없음; physics: 파일 없음; per-mode 산출물이 하나도 없다",
+          "rc": 2,
+          "ok": false,
+          "required": true,
+          "missing_outputs": [
+            "network_conductivity.json",
+            "network_conductivity_hertzian.json",
+            "network_conductivity_physics.json",
+            "network_conductivity_dual.json"
+          ],
+          "stale_outputs": [],
+          "verify_failed": true
+        }
+      ],
+      "stages": [
+        {
+          "step": "Network Solver (both modes)",
+          "stdout": "",
+          "stderr": "PermissionError: solver executable denied\n★ 내용 검증 실패 (게시 전 차단): hertzian: 파일 없음; physics: 파일 없음; per-mode 산출물이 하나도 없다",
+          "rc": 2,
+          "ok": false,
+          "required": true,
+          "missing_outputs": [
+            "network_conductivity.json",
+            "network_conductivity_hertzian.json",
+            "network_conductivity_physics.json",
+            "network_conductivity_dual.json"
+          ],
+          "stale_outputs": [],
+          "verify_failed": true
+        }
+      ],
+      "attempt": {
+        "schema": "network_attempt/v2",
+        "network_attempt_run_id": "20261007T233851-e5620a1a",
+        "solver_status": "failed",
+        "latest_attempt_status": "failed",
+        "failure_kind": "solver",
+        "reason": "PermissionError: solver executable denied\n★ 내용 검증 실패 (게시 전 차단): hertzian: 파일 없음; physics: 파일 없음; per-mode 산출물이 하나도 없다",
+        "stage": "Network Solver (both modes)",
+        "active_network_run_id": null,
+        "active_status": "none",
+        "previous_generation_kept": false,
+        "input_digests": {
+          "atoms.csv": "d8965a296bef61a0",
+          "contacts.csv": "d8886e55a0205e3d"
+        },
+        "code_sha": "unknown",
+        "attempted_at": "2026-10-07T23:38:51",
+        "argv": {
+          "type_map": "1:SE",
+          "scale": 1,
+          "contact_mode": "both"
+        }
+      },
+      "tau": {
+        "case": "case15_network",
+        "f_ion_hertz": null,
+        "f_ion_hertz_gap": null,
+        "tau2_ion_hertz": null,
+        "tau_ion_hertz": null,
+        "ion_net_status_hertz": "NOT_COMPUTED",
+        "ion_net_status_reason_hertz": "missing_input",
+        "f_ion_physics": null,
+        "f_ion_physics_gap": null,
+        "tau2_ion_physics": null,
+        "tau_ion_physics": null,
+        "ion_net_status_physics": "NOT_COMPUTED",
+        "ion_net_status_reason_physics": "missing_input",
+        "f_ion_hertz_h12": null,
+        "f_ion_hertz_h12_gap": null,
+        "tau2_ion_hertz_h12": null,
+        "tau_ion_hertz_h12": null,
+        "ion_net_status_hertz_h12": "NOT_COMPUTED",
+        "ion_net_status_reason_hertz_h12": "missing_input"
+      },
+      "caveat": "Synthetic CSV stage fixture; raw case15 probe is independent, from pinned raw data."
+    }
+  },
+  "s0b": {
+    "positive": {
+      "rc": 0,
+      "n_fail": 0,
+      "meta": [
+        {
+          "name": "S0 스모크 망 정지 케이스 전부 done (3 · 음성 대조 1 제외)",
+          "ok": true,
+          "detail": [
+            "through",
+            "nonthrough",
+            "clamp"
+          ]
+        },
+        {
+          "name": "S0b 스모크 음성 대조 (1) = 게시 없음 · 지정한 원인 발화 · 이온 정상 (스모크 [음성 대조] 판정 · G2RR4-03 · 등록 §9-4 제안)",
+          "ok": true,
+          "detail": [
+            "case15_network"
+          ]
+        }
+      ],
+      "normal": [
+        {
+          "case": "through",
+          "failures": []
+        },
+        {
+          "case": "nonthrough",
+          "failures": []
+        },
+        {
+          "case": "clamp",
+          "failures": []
+        }
+      ]
+    },
+    "marker_missing": {
+      "rc": 1,
+      "n_fail": 1,
+      "meta": [
+        {
+          "name": "S0 스모크 망 정지 케이스 전부 done (4 · 음성 대조 0 제외)",
+          "ok": false,
+          "detail": {
+            "case15_network": "failed"
+          }
+        }
+      ],
+      "normal": [
+        {
+          "case": "through",
+          "failures": []
+        },
+        {
+          "case": "nonthrough",
+          "failures": []
+        },
+        {
+          "case": "clamp",
+          "failures": []
+        }
+      ]
+    },
+    "marker_unknown": {
+      "rc": 0,
+      "n_fail": 0,
+      "meta": [
+        {
+          "name": "S0 스모크 망 정지 케이스 전부 done (3 · 음성 대조 1 제외)",
+          "ok": true,
+          "detail": [
+            "through",
+            "nonthrough",
+            "clamp"
+          ]
+        },
+        {
+          "name": "S0b 스모크 음성 대조 (1) = 게시 없음 · 지정한 원인 발화 · 이온 정상 (스모크 [음성 대조] 판정 · G2RR4-03 · 등록 §9-4 제안)",
+          "ok": true,
+          "detail": [
+            "case15_network"
+          ]
+        }
+      ],
+      "normal": [
+        {
+          "case": "through",
+          "failures": []
+        },
+        {
+          "case": "nonthrough",
+          "failures": []
+        },
+        {
+          "case": "clamp",
+          "failures": []
+        }
+      ]
+    },
+    "checks_missing": {
+      "rc": 1,
+      "n_fail": 1,
+      "meta": [
+        {
+          "name": "S0 스모크 망 정지 케이스 전부 done (3 · 음성 대조 1 제외)",
+          "ok": true,
+          "detail": [
+            "through",
+            "nonthrough",
+            "clamp"
+          ]
+        },
+        {
+          "name": "S0b 스모크 음성 대조 (1) = 게시 없음 · 지정한 원인 발화 · 이온 정상 (스모크 [음성 대조] 판정 · G2RR4-03 · 등록 §9-4 제안)",
+          "ok": false,
+          "detail": {
+            "case15_network": [
+              "스모크 [음성 대조] 판정 [] — 넷 이상 전부 PASS 여야"
+            ]
+          }
+        }
+      ],
+      "normal": [
+        {
+          "case": "through",
+          "failures": []
+        },
+        {
+          "case": "nonthrough",
+          "failures": []
+        },
+        {
+          "case": "clamp",
+          "failures": []
+        }
+      ]
+    },
+    "checks_three": {
+      "rc": 1,
+      "n_fail": 1,
+      "meta": [
+        {
+          "name": "S0 스모크 망 정지 케이스 전부 done (3 · 음성 대조 1 제외)",
+          "ok": true,
+          "detail": [
+            "through",
+            "nonthrough",
+            "clamp"
+          ]
+        },
+        {
+          "name": "S0b 스모크 음성 대조 (1) = 게시 없음 · 지정한 원인 발화 · 이온 정상 (스모크 [음성 대조] 판정 · G2RR4-03 · 등록 §9-4 제안)",
+          "ok": false,
+          "detail": {
+            "case15_network": [
+              "스모크 [음성 대조] 판정 [('[음성 대조] 게시 차단 — failed ·', 'PASS'), ('[음성 대조] 인계 숫자 비노출 — τ 세 ', 'PASS'), ('[음성 대조] 원인 발화 (원덤프 직접 6 ', 'PASS')] — 넷 이상 전부 PASS 여야"
+            ]
+          }
+        }
+      ],
+      "normal": [
+        {
+          "case": "through",
+          "failures": []
+        },
+        {
+          "case": "nonthrough",
+          "failures": []
+        },
+        {
+          "case": "clamp",
+          "failures": []
+        }
+      ]
+    },
+    "check_fail": {
+      "rc": 1,
+      "n_fail": 1,
+      "meta": [
+        {
+          "name": "S0 스모크 망 정지 케이스 전부 done (3 · 음성 대조 1 제외)",
+          "ok": true,
+          "detail": [
+            "through",
+            "nonthrough",
+            "clamp"
+          ]
+        },
+        {
+          "name": "S0b 스모크 음성 대조 (1) = 게시 없음 · 지정한 원인 발화 · 이온 정상 (스모크 [음성 대조] 판정 · G2RR4-03 · 등록 §9-4 제안)",
+          "ok": false,
+          "detail": {
+            "case15_network": [
+              "스모크 [음성 대조] 판정 [('[음성 대조] 게시 차단 — failed ·', 'PASS'), ('[음성 대조] 인계 숫자 비노출 — τ 세 ', 'PASS'), ('[음성 대조] 원인 발화 (원덤프 직접 6 ', 'PASS'), ('[음성 대조] 이온 정상 — 두 모드 com', 'FAIL')] — 넷 이상 전부 PASS 여야"
+            ]
+          }
+        }
+      ],
+      "normal": [
+        {
+          "case": "through",
+          "failures": []
+        },
+        {
+          "case": "nonthrough",
+          "failures": []
+        },
+        {
+          "case": "clamp",
+          "failures": []
+        }
+      ]
+    },
+    "one_check_repeated_four": {
+      "rc": 0,
+      "n_fail": 0,
+      "meta": [
+        {
+          "name": "S0 스모크 망 정지 케이스 전부 done (3 · 음성 대조 1 제외)",
+          "ok": true,
+          "detail": [
+            "through",
+            "nonthrough",
+            "clamp"
+          ]
+        },
+        {
+          "name": "S0b 스모크 음성 대조 (1) = 게시 없음 · 지정한 원인 발화 · 이온 정상 (스모크 [음성 대조] 판정 · G2RR4-03 · 등록 §9-4 제안)",
+          "ok": true,
+          "detail": [
+            "case15_network"
+          ]
+        }
+      ],
+      "normal": [
+        {
+          "case": "through",
+          "failures": []
+        },
+        {
+          "case": "nonthrough",
+          "failures": []
+        },
+        {
+          "case": "clamp",
+          "failures": []
+        }
+      ]
+    },
+    "negctl_missing": {
+      "rc": 0,
+      "n_fail": 0,
+      "meta": [
+        {
+          "name": "S0 스모크 망 정지 케이스 전부 done (3 · 음성 대조 1 제외)",
+          "ok": true,
+          "detail": [
+            "through",
+            "nonthrough",
+            "clamp"
+          ]
+        },
+        {
+          "name": "S0b 스모크 음성 대조 (1) = 게시 없음 · 지정한 원인 발화 · 이온 정상 (스모크 [음성 대조] 판정 · G2RR4-03 · 등록 §9-4 제안)",
+          "ok": true,
+          "detail": [
+            "case15_network"
+          ]
+        }
+      ],
+      "normal": [
+        {
+          "case": "through",
+          "failures": []
+        },
+        {
+          "case": "nonthrough",
+          "failures": []
+        },
+        {
+          "case": "clamp",
+          "failures": []
+        }
+      ]
+    },
+    "tau_numeric": {
+      "rc": 0,
+      "n_fail": 0,
+      "meta": [
+        {
+          "name": "S0 스모크 망 정지 케이스 전부 done (3 · 음성 대조 1 제외)",
+          "ok": true,
+          "detail": [
+            "through",
+            "nonthrough",
+            "clamp"
+          ]
+        },
+        {
+          "name": "S0b 스모크 음성 대조 (1) = 게시 없음 · 지정한 원인 발화 · 이온 정상 (스모크 [음성 대조] 판정 · G2RR4-03 · 등록 §9-4 제안)",
+          "ok": true,
+          "detail": [
+            "case15_network"
+          ]
+        }
+      ],
+      "normal": [
+        {
+          "case": "through",
+          "failures": []
+        },
+        {
+          "case": "nonthrough",
+          "failures": []
+        },
+        {
+          "case": "clamp",
+          "failures": []
+        }
+      ]
+    },
+    "ionic_residual_bad": {
+      "rc": 0,
+      "n_fail": 0,
+      "meta": [
+        {
+          "name": "S0 스모크 망 정지 케이스 전부 done (3 · 음성 대조 1 제외)",
+          "ok": true,
+          "detail": [
+            "through",
+            "nonthrough",
+            "clamp"
+          ]
+        },
+        {
+          "name": "S0b 스모크 음성 대조 (1) = 게시 없음 · 지정한 원인 발화 · 이온 정상 (스모크 [음성 대조] 판정 · G2RR4-03 · 등록 §9-4 제안)",
+          "ok": true,
+          "detail": [
+            "case15_network"
+          ]
+        }
+      ],
+      "normal": [
+        {
+          "case": "through",
+          "failures": []
+        },
+        {
+          "case": "nonthrough",
+          "failures": []
+        },
+        {
+          "case": "clamp",
+          "failures": []
+        }
+      ]
+    },
+    "raw_sha_fail": {
+      "rc": 0,
+      "n_fail": 0,
+      "meta": [
+        {
+          "name": "S0 스모크 망 정지 케이스 전부 done (3 · 음성 대조 1 제외)",
+          "ok": true,
+          "detail": [
+            "through",
+            "nonthrough",
+            "clamp"
+          ]
+        },
+        {
+          "name": "S0b 스모크 음성 대조 (1) = 게시 없음 · 지정한 원인 발화 · 이온 정상 (스모크 [음성 대조] 판정 · G2RR4-03 · 등록 §9-4 제안)",
+          "ok": true,
+          "detail": [
+            "case15_network"
+          ]
+        }
+      ],
+      "normal": [
+        {
+          "case": "through",
+          "failures": []
+        },
+        {
+          "case": "nonthrough",
+          "failures": []
+        },
+        {
+          "case": "clamp",
+          "failures": []
+        }
+      ]
+    },
+    "unexpected_failure_record": {
+      "rc": 0,
+      "n_fail": 0,
+      "meta": [
+        {
+          "name": "S0 스모크 망 정지 케이스 전부 done (3 · 음성 대조 1 제외)",
+          "ok": true,
+          "detail": [
+            "through",
+            "nonthrough",
+            "clamp"
+          ]
+        },
+        {
+          "name": "S0b 스모크 음성 대조 (1) = 게시 없음 · 지정한 원인 발화 · 이온 정상 (스모크 [음성 대조] 판정 · G2RR4-03 · 등록 §9-4 제안)",
+          "ok": true,
+          "detail": [
+            "case15_network"
+          ]
+        }
+      ],
+      "normal": [
+        {
+          "case": "through",
+          "failures": []
+        },
+        {
+          "case": "nonthrough",
+          "failures": []
+        },
+        {
+          "case": "clamp",
+          "failures": []
+        }
+      ]
+    },
+    "real_failure_path_synthetic_input": {
+      "rc": 0,
+      "n_fail": 0,
+      "meta": [
+        {
+          "name": "S0 스모크 망 정지 케이스 전부 done (3 · 음성 대조 1 제외)",
+          "ok": true,
+          "detail": [
+            "through",
+            "nonthrough",
+            "clamp"
+          ]
+        },
+        {
+          "name": "S0b 스모크 음성 대조 (1) = 게시 없음 · 지정한 원인 발화 · 이온 정상 (스모크 [음성 대조] 판정 · G2RR4-03 · 등록 §9-4 제안)",
+          "ok": true,
+          "detail": [
+            "case15_network"
+          ]
+        }
+      ],
+      "normal": [
+        {
+          "case": "through",
+          "failures": []
+        },
+        {
+          "case": "nonthrough",
+          "failures": []
+        },
+        {
+          "case": "clamp",
+          "failures": []
+        }
+      ]
+    }
+  },
+  "producer": {
+    "submitted_positive": {
+      "n": 6,
+      "failures": [],
+      "checks": [
+        {
+          "group": "A",
+          "name": "case15_network: 자식 프로세스 정상 종료 · 보고서 있음",
+          "verdict": "PASS",
+          "detail": "rc 0 "
+        },
+        {
+          "group": "A",
+          "name": "case15_network: 원자료 sha256 = README 표 (압축 푼 바이트)",
+          "verdict": "PASS",
+          "detail": "{'atom_v4_1710000.liggghts': ['f40f69eccd79', 'f40f69eccd79'], 'contact_v4_1710000.liggghts': ['180140701ef4', '180140701ef4'], 'mesh_v4_1710000.stl': ['2868f0898a90', '2868f0898a90'], 'input_case15.liggghts': ['172953c78a07', '172953c78a07']}"
+        },
+        {
+          "group": "A",
+          "name": "case15_network: [음성 대조] 게시 차단 — failed · 실패 단계 Network Solver (both modes) · Stage E 안 돌았다 · 반환 run id 없음 (옛 성공 산출물 재사용 없음)",
+          "verdict": "PASS",
+          "detail": "status failed · 실패 단계 ['Network Solver (both modes)'] · Stage E False · run id None"
+        },
+        {
+          "group": "A",
+          "name": "case15_network: [음성 대조] 인계 숫자 비노출 — τ 세 모드 NOT_COMPUTED · 숫자 칸 없음",
+          "verdict": "PASS",
+          "detail": "{'hertz': 'NOT_COMPUTED', 'physics': 'NOT_COMPUTED', 'hertz_h12': 'NOT_COMPUTED'} · 숫자 {}"
+        },
+        {
+          "group": "A",
+          "name": "case15_network: [음성 대조] 원인 발화 (원덤프 직접 6 조합) — 전자 두 모드 · Hertz 열 boundary_overlap · B∩T = 입자 ID [24, 40, 57, 103] · Physics 열 음수 원자료 면적 거부 · 음수 행 2",
+          "verdict": "PASS",
+          "detail": "겹침 {'electronic_hertzian': ('boundary_overlap', [24, 40, 57, 103]), 'electronic_physics': ('boundary_overlap', [24, 40, 57, 103]), 'thermal_hertzian': ('boundary_overlap', [24, 40, 57, 103])} · Physics 열 'ValueError: physics_g2: 간선 (31, 29241) — ligg_area < 0 (-0.186036)' · 음수 행 [(31, 29241), (38, 29241)] · 증거 오류 None"
+        },
+        {
+          "group": "A",
+          "name": "case15_network: [음성 대조] 이온 정상 — 두 모드 computed · σ_ratio 참고 8 자리 {'hertzian': 0.00032635, 'physics': 0.00036225} · 증서 보존 · 잔차 < 1e-06",
+          "verdict": "PASS",
+          "detail": "{'hertzian': ('computed', 0.00032635, 2.4032031929133505e-09, 9.760010783051247e-11), 'physics': ('computed', 0.00036225, 4.984454649176648e-09, 9.943326652498563e-11)}"
+        }
+      ]
+    },
+    "independent_raw_positive": {
+      "n": 6,
+      "failures": [],
+      "checks": [
+        {
+          "group": "A",
+          "name": "case15_network: 자식 프로세스 정상 종료 · 보고서 있음",
+          "verdict": "PASS",
+          "detail": "rc 0 "
+        },
+        {
+          "group": "A",
+          "name": "case15_network: 원자료 sha256 = README 표 (압축 푼 바이트)",
+          "verdict": "PASS",
+          "detail": "{'atom_v4_1710000.liggghts': ['f40f69eccd79', 'f40f69eccd79'], 'contact_v4_1710000.liggghts': ['180140701ef4', '180140701ef4'], 'mesh_v4_1710000.stl': ['2868f0898a90', '2868f0898a90'], 'input_case15.liggghts': ['172953c78a07', '172953c78a07']}"
+        },
+        {
+          "group": "A",
+          "name": "case15_network: [음성 대조] 게시 차단 — failed · 실패 단계 Network Solver (both modes) · Stage E 안 돌았다 · 반환 run id 없음 (옛 성공 산출물 재사용 없음)",
+          "verdict": "PASS",
+          "detail": "status failed · 실패 단계 ['Network Solver (both modes)'] · Stage E False · run id None"
+        },
+        {
+          "group": "A",
+          "name": "case15_network: [음성 대조] 인계 숫자 비노출 — τ 세 모드 NOT_COMPUTED · 숫자 칸 없음",
+          "verdict": "PASS",
+          "detail": "{'hertz': 'NOT_COMPUTED', 'physics': 'NOT_COMPUTED', 'hertz_h12': 'NOT_COMPUTED'} · 숫자 {}"
+        },
+        {
+          "group": "A",
+          "name": "case15_network: [음성 대조] 원인 발화 (원덤프 직접 6 조합) — 전자 두 모드 · Hertz 열 boundary_overlap · B∩T = 입자 ID [24, 40, 57, 103] · Physics 열 음수 원자료 면적 거부 · 음수 행 2",
+          "verdict": "PASS",
+          "detail": "겹침 {'electronic_hertzian': ('boundary_overlap', [24, 40, 57, 103]), 'electronic_physics': ('boundary_overlap', [24, 40, 57, 103]), 'thermal_hertzian': ('boundary_overlap', [24, 40, 57, 103])} · Physics 열 'ValueError: physics_g2: 간선 (31, 29241) — ligg_area < 0 (-0.186036)' · 음수 행 [(31, 29241), (38, 29241)] · 증거 오류 None"
+        },
+        {
+          "group": "A",
+          "name": "case15_network: [음성 대조] 이온 정상 — 두 모드 computed · σ_ratio 참고 8 자리 {'hertzian': 0.00032635, 'physics': 0.00036225} · 증서 보존 · 잔차 < 1e-06",
+          "verdict": "PASS",
+          "detail": "{'hertzian': ('computed', 0.00032635, 3.0024201089821724e-09, 9.838873256790492e-11), 'physics': ('computed', 0.00036225, 6.322933781612321e-09, 9.556129760264176e-11)}"
+        }
+      ]
+    },
+    "marker_missing": {
+      "n": 3,
+      "failures": [
+        {
+          "group": "A",
+          "name": "case15_network: stop_after=network → done · Stage E 안 돌았다 · 망 정지 계약 통과",
+          "verdict": "FAIL",
+          "detail": "status failed · 실패 단계 ['Network Solver (both modes)'] · 필수 실패 ['Network Solver (both modes)'] · Stage E False"
+        }
+      ],
+      "checks": [
+        {
+          "group": "A",
+          "name": "case15_network: 자식 프로세스 정상 종료 · 보고서 있음",
+          "verdict": "PASS",
+          "detail": "rc 0 "
+        },
+        {
+          "group": "A",
+          "name": "case15_network: 원자료 sha256 = README 표 (압축 푼 바이트)",
+          "verdict": "PASS",
+          "detail": "{'atom_v4_1710000.liggghts': ['f40f69eccd79', 'f40f69eccd79'], 'contact_v4_1710000.liggghts': ['180140701ef4', '180140701ef4'], 'mesh_v4_1710000.stl': ['2868f0898a90', '2868f0898a90'], 'input_case15.liggghts': ['172953c78a07', '172953c78a07']}"
+        },
+        {
+          "group": "A",
+          "name": "case15_network: stop_after=network → done · Stage E 안 돌았다 · 망 정지 계약 통과",
+          "verdict": "FAIL",
+          "detail": "status failed · 실패 단계 ['Network Solver (both modes)'] · 필수 실패 ['Network Solver (both modes)'] · Stage E False"
+        }
+      ]
+    },
+    "marker_unknown": {
+      "n": 3,
+      "failures": [
+        {
+          "group": "A",
+          "name": "case15_network: stop_after=network → done · Stage E 안 돌았다 · 망 정지 계약 통과",
+          "verdict": "FAIL",
+          "detail": "status failed · 실패 단계 ['Network Solver (both modes)'] · 필수 실패 ['Network Solver (both modes)'] · Stage E False"
+        }
+      ],
+      "checks": [
+        {
+          "group": "A",
+          "name": "case15_network: 자식 프로세스 정상 종료 · 보고서 있음",
+          "verdict": "PASS",
+          "detail": "rc 0 "
+        },
+        {
+          "group": "A",
+          "name": "case15_network: 원자료 sha256 = README 표 (압축 푼 바이트)",
+          "verdict": "PASS",
+          "detail": "{'atom_v4_1710000.liggghts': ['f40f69eccd79', 'f40f69eccd79'], 'contact_v4_1710000.liggghts': ['180140701ef4', '180140701ef4'], 'mesh_v4_1710000.stl': ['2868f0898a90', '2868f0898a90'], 'input_case15.liggghts': ['172953c78a07', '172953c78a07']}"
+        },
+        {
+          "group": "A",
+          "name": "case15_network: stop_after=network → done · Stage E 안 돌았다 · 망 정지 계약 통과",
+          "verdict": "FAIL",
+          "detail": "status failed · 실패 단계 ['Network Solver (both modes)'] · 필수 실패 ['Network Solver (both modes)'] · Stage E False"
+        }
+      ]
+    },
+    "checks_missing": {
+      "n": 6,
+      "failures": [],
+      "checks": [
+        {
+          "group": "A",
+          "name": "case15_network: 자식 프로세스 정상 종료 · 보고서 있음",
+          "verdict": "PASS",
+          "detail": "rc 0 "
+        },
+        {
+          "group": "A",
+          "name": "case15_network: 원자료 sha256 = README 표 (압축 푼 바이트)",
+          "verdict": "PASS",
+          "detail": "{'atom_v4_1710000.liggghts': ['f40f69eccd79', 'f40f69eccd79'], 'contact_v4_1710000.liggghts': ['180140701ef4', '180140701ef4'], 'mesh_v4_1710000.stl': ['2868f0898a90', '2868f0898a90'], 'input_case15.liggghts': ['172953c78a07', '172953c78a07']}"
+        },
+        {
+          "group": "A",
+          "name": "case15_network: [음성 대조] 게시 차단 — failed · 실패 단계 Network Solver (both modes) · Stage E 안 돌았다 · 반환 run id 없음 (옛 성공 산출물 재사용 없음)",
+          "verdict": "PASS",
+          "detail": "status failed · 실패 단계 ['Network Solver (both modes)'] · Stage E False · run id None"
+        },
+        {
+          "group": "A",
+          "name": "case15_network: [음성 대조] 인계 숫자 비노출 — τ 세 모드 NOT_COMPUTED · 숫자 칸 없음",
+          "verdict": "PASS",
+          "detail": "{'hertz': 'NOT_COMPUTED', 'physics': 'NOT_COMPUTED', 'hertz_h12': 'NOT_COMPUTED'} · 숫자 {}"
+        },
+        {
+          "group": "A",
+          "name": "case15_network: [음성 대조] 원인 발화 (원덤프 직접 6 조합) — 전자 두 모드 · Hertz 열 boundary_overlap · B∩T = 입자 ID [24, 40, 57, 103] · Physics 열 음수 원자료 면적 거부 · 음수 행 2",
+          "verdict": "PASS",
+          "detail": "겹침 {'electronic_hertzian': ('boundary_overlap', [24, 40, 57, 103]), 'electronic_physics': ('boundary_overlap', [24, 40, 57, 103]), 'thermal_hertzian': ('boundary_overlap', [24, 40, 57, 103])} · Physics 열 'ValueError: physics_g2: 간선 (31, 29241) — ligg_area < 0 (-0.186036)' · 음수 행 [(31, 29241), (38, 29241)] · 증거 오류 None"
+        },
+        {
+          "group": "A",
+          "name": "case15_network: [음성 대조] 이온 정상 — 두 모드 computed · σ_ratio 참고 8 자리 {'hertzian': 0.00032635, 'physics': 0.00036225} · 증서 보존 · 잔차 < 1e-06",
+          "verdict": "PASS",
+          "detail": "{'hertzian': ('computed', 0.00032635, 3.0024201089821724e-09, 9.838873256790492e-11), 'physics': ('computed', 0.00036225, 6.322933781612321e-09, 9.556129760264176e-11)}"
+        }
+      ]
+    },
+    "checks_three": {
+      "n": 6,
+      "failures": [],
+      "checks": [
+        {
+          "group": "A",
+          "name": "case15_network: 자식 프로세스 정상 종료 · 보고서 있음",
+          "verdict": "PASS",
+          "detail": "rc 0 "
+        },
+        {
+          "group": "A",
+          "name": "case15_network: 원자료 sha256 = README 표 (압축 푼 바이트)",
+          "verdict": "PASS",
+          "detail": "{'atom_v4_1710000.liggghts': ['f40f69eccd79', 'f40f69eccd79'], 'contact_v4_1710000.liggghts': ['180140701ef4', '180140701ef4'], 'mesh_v4_1710000.stl': ['2868f0898a90', '2868f0898a90'], 'input_case15.liggghts': ['172953c78a07', '172953c78a07']}"
+        },
+        {
+          "group": "A",
+          "name": "case15_network: [음성 대조] 게시 차단 — failed · 실패 단계 Network Solver (both modes) · Stage E 안 돌았다 · 반환 run id 없음 (옛 성공 산출물 재사용 없음)",
+          "verdict": "PASS",
+          "detail": "status failed · 실패 단계 ['Network Solver (both modes)'] · Stage E False · run id None"
+        },
+        {
+          "group": "A",
+          "name": "case15_network: [음성 대조] 인계 숫자 비노출 — τ 세 모드 NOT_COMPUTED · 숫자 칸 없음",
+          "verdict": "PASS",
+          "detail": "{'hertz': 'NOT_COMPUTED', 'physics': 'NOT_COMPUTED', 'hertz_h12': 'NOT_COMPUTED'} · 숫자 {}"
+        },
+        {
+          "group": "A",
+          "name": "case15_network: [음성 대조] 원인 발화 (원덤프 직접 6 조합) — 전자 두 모드 · Hertz 열 boundary_overlap · B∩T = 입자 ID [24, 40, 57, 103] · Physics 열 음수 원자료 면적 거부 · 음수 행 2",
+          "verdict": "PASS",
+          "detail": "겹침 {'electronic_hertzian': ('boundary_overlap', [24, 40, 57, 103]), 'electronic_physics': ('boundary_overlap', [24, 40, 57, 103]), 'thermal_hertzian': ('boundary_overlap', [24, 40, 57, 103])} · Physics 열 'ValueError: physics_g2: 간선 (31, 29241) — ligg_area < 0 (-0.186036)' · 음수 행 [(31, 29241), (38, 29241)] · 증거 오류 None"
+        },
+        {
+          "group": "A",
+          "name": "case15_network: [음성 대조] 이온 정상 — 두 모드 computed · σ_ratio 참고 8 자리 {'hertzian': 0.00032635, 'physics': 0.00036225} · 증서 보존 · 잔차 < 1e-06",
+          "verdict": "PASS",
+          "detail": "{'hertzian': ('computed', 0.00032635, 3.0024201089821724e-09, 9.838873256790492e-11), 'physics': ('computed', 0.00036225, 6.322933781612321e-09, 9.556129760264176e-11)}"
+        }
+      ]
+    },
+    "check_fail": {
+      "n": 6,
+      "failures": [],
+      "checks": [
+        {
+          "group": "A",
+          "name": "case15_network: 자식 프로세스 정상 종료 · 보고서 있음",
+          "verdict": "PASS",
+          "detail": "rc 0 "
+        },
+        {
+          "group": "A",
+          "name": "case15_network: 원자료 sha256 = README 표 (압축 푼 바이트)",
+          "verdict": "PASS",
+          "detail": "{'atom_v4_1710000.liggghts': ['f40f69eccd79', 'f40f69eccd79'], 'contact_v4_1710000.liggghts': ['180140701ef4', '180140701ef4'], 'mesh_v4_1710000.stl': ['2868f0898a90', '2868f0898a90'], 'input_case15.liggghts': ['172953c78a07', '172953c78a07']}"
+        },
+        {
+          "group": "A",
+          "name": "case15_network: [음성 대조] 게시 차단 — failed · 실패 단계 Network Solver (both modes) · Stage E 안 돌았다 · 반환 run id 없음 (옛 성공 산출물 재사용 없음)",
+          "verdict": "PASS",
+          "detail": "status failed · 실패 단계 ['Network Solver (both modes)'] · Stage E False · run id None"
+        },
+        {
+          "group": "A",
+          "name": "case15_network: [음성 대조] 인계 숫자 비노출 — τ 세 모드 NOT_COMPUTED · 숫자 칸 없음",
+          "verdict": "PASS",
+          "detail": "{'hertz': 'NOT_COMPUTED', 'physics': 'NOT_COMPUTED', 'hertz_h12': 'NOT_COMPUTED'} · 숫자 {}"
+        },
+        {
+          "group": "A",
+          "name": "case15_network: [음성 대조] 원인 발화 (원덤프 직접 6 조합) — 전자 두 모드 · Hertz 열 boundary_overlap · B∩T = 입자 ID [24, 40, 57, 103] · Physics 열 음수 원자료 면적 거부 · 음수 행 2",
+          "verdict": "PASS",
+          "detail": "겹침 {'electronic_hertzian': ('boundary_overlap', [24, 40, 57, 103]), 'electronic_physics': ('boundary_overlap', [24, 40, 57, 103]), 'thermal_hertzian': ('boundary_overlap', [24, 40, 57, 103])} · Physics 열 'ValueError: physics_g2: 간선 (31, 29241) — ligg_area < 0 (-0.186036)' · 음수 행 [(31, 29241), (38, 29241)] · 증거 오류 None"
+        },
+        {
+          "group": "A",
+          "name": "case15_network: [음성 대조] 이온 정상 — 두 모드 computed · σ_ratio 참고 8 자리 {'hertzian': 0.00032635, 'physics': 0.00036225} · 증서 보존 · 잔차 < 1e-06",
+          "verdict": "PASS",
+          "detail": "{'hertzian': ('computed', 0.00032635, 3.0024201089821724e-09, 9.838873256790492e-11), 'physics': ('computed', 0.00036225, 6.322933781612321e-09, 9.556129760264176e-11)}"
+        }
+      ]
+    },
+    "one_check_repeated_four": {
+      "n": 6,
+      "failures": [],
+      "checks": [
+        {
+          "group": "A",
+          "name": "case15_network: 자식 프로세스 정상 종료 · 보고서 있음",
+          "verdict": "PASS",
+          "detail": "rc 0 "
+        },
+        {
+          "group": "A",
+          "name": "case15_network: 원자료 sha256 = README 표 (압축 푼 바이트)",
+          "verdict": "PASS",
+          "detail": "{'atom_v4_1710000.liggghts': ['f40f69eccd79', 'f40f69eccd79'], 'contact_v4_1710000.liggghts': ['180140701ef4', '180140701ef4'], 'mesh_v4_1710000.stl': ['2868f0898a90', '2868f0898a90'], 'input_case15.liggghts': ['172953c78a07', '172953c78a07']}"
+        },
+        {
+          "group": "A",
+          "name": "case15_network: [음성 대조] 게시 차단 — failed · 실패 단계 Network Solver (both modes) · Stage E 안 돌았다 · 반환 run id 없음 (옛 성공 산출물 재사용 없음)",
+          "verdict": "PASS",
+          "detail": "status failed · 실패 단계 ['Network Solver (both modes)'] · Stage E False · run id None"
+        },
+        {
+          "group": "A",
+          "name": "case15_network: [음성 대조] 인계 숫자 비노출 — τ 세 모드 NOT_COMPUTED · 숫자 칸 없음",
+          "verdict": "PASS",
+          "detail": "{'hertz': 'NOT_COMPUTED', 'physics': 'NOT_COMPUTED', 'hertz_h12': 'NOT_COMPUTED'} · 숫자 {}"
+        },
+        {
+          "group": "A",
+          "name": "case15_network: [음성 대조] 원인 발화 (원덤프 직접 6 조합) — 전자 두 모드 · Hertz 열 boundary_overlap · B∩T = 입자 ID [24, 40, 57, 103] · Physics 열 음수 원자료 면적 거부 · 음수 행 2",
+          "verdict": "PASS",
+          "detail": "겹침 {'electronic_hertzian': ('boundary_overlap', [24, 40, 57, 103]), 'electronic_physics': ('boundary_overlap', [24, 40, 57, 103]), 'thermal_hertzian': ('boundary_overlap', [24, 40, 57, 103])} · Physics 열 'ValueError: physics_g2: 간선 (31, 29241) — ligg_area < 0 (-0.186036)' · 음수 행 [(31, 29241), (38, 29241)] · 증거 오류 None"
+        },
+        {
+          "group": "A",
+          "name": "case15_network: [음성 대조] 이온 정상 — 두 모드 computed · σ_ratio 참고 8 자리 {'hertzian': 0.00032635, 'physics': 0.00036225} · 증서 보존 · 잔차 < 1e-06",
+          "verdict": "PASS",
+          "detail": "{'hertzian': ('computed', 0.00032635, 3.0024201089821724e-09, 9.838873256790492e-11), 'physics': ('computed', 0.00036225, 6.322933781612321e-09, 9.556129760264176e-11)}"
+        }
+      ]
+    },
+    "negctl_missing": {
+      "n": 6,
+      "failures": [
+        {
+          "group": "A",
+          "name": "case15_network: [음성 대조] 원인 발화 (원덤프 직접 6 조합) — 전자 두 모드 · Hertz 열 boundary_overlap · B∩T = 입자 ID [24, 40, 57, 103] · Physics 열 음수 원자료 면적 거부 · 음수 행 2",
+          "verdict": "FAIL",
+          "detail": "겹침 {'electronic_hertzian': (None, None), 'electronic_physics': (None, None), 'thermal_hertzian': (None, None)} · Physics 열 '' · 음수 행 [] · 증거 오류 None"
+        },
+        {
+          "group": "A",
+          "name": "case15_network: [음성 대조] 이온 정상 — 두 모드 computed · σ_ratio 참고 8 자리 {'hertzian': 0.00032635, 'physics': 0.00036225} · 증서 보존 · 잔차 < 1e-06",
+          "verdict": "FAIL",
+          "detail": "{'hertzian': (None, None, None, None), 'physics': (None, None, None, None)}"
+        }
+      ],
+      "checks": [
+        {
+          "group": "A",
+          "name": "case15_network: 자식 프로세스 정상 종료 · 보고서 있음",
+          "verdict": "PASS",
+          "detail": "rc 0 "
+        },
+        {
+          "group": "A",
+          "name": "case15_network: 원자료 sha256 = README 표 (압축 푼 바이트)",
+          "verdict": "PASS",
+          "detail": "{'atom_v4_1710000.liggghts': ['f40f69eccd79', 'f40f69eccd79'], 'contact_v4_1710000.liggghts': ['180140701ef4', '180140701ef4'], 'mesh_v4_1710000.stl': ['2868f0898a90', '2868f0898a90'], 'input_case15.liggghts': ['172953c78a07', '172953c78a07']}"
+        },
+        {
+          "group": "A",
+          "name": "case15_network: [음성 대조] 게시 차단 — failed · 실패 단계 Network Solver (both modes) · Stage E 안 돌았다 · 반환 run id 없음 (옛 성공 산출물 재사용 없음)",
+          "verdict": "PASS",
+          "detail": "status failed · 실패 단계 ['Network Solver (both modes)'] · Stage E False · run id None"
+        },
+        {
+          "group": "A",
+          "name": "case15_network: [음성 대조] 인계 숫자 비노출 — τ 세 모드 NOT_COMPUTED · 숫자 칸 없음",
+          "verdict": "PASS",
+          "detail": "{'hertz': 'NOT_COMPUTED', 'physics': 'NOT_COMPUTED', 'hertz_h12': 'NOT_COMPUTED'} · 숫자 {}"
+        },
+        {
+          "group": "A",
+          "name": "case15_network: [음성 대조] 원인 발화 (원덤프 직접 6 조합) — 전자 두 모드 · Hertz 열 boundary_overlap · B∩T = 입자 ID [24, 40, 57, 103] · Physics 열 음수 원자료 면적 거부 · 음수 행 2",
+          "verdict": "FAIL",
+          "detail": "겹침 {'electronic_hertzian': (None, None), 'electronic_physics': (None, None), 'thermal_hertzian': (None, None)} · Physics 열 '' · 음수 행 [] · 증거 오류 None"
+        },
+        {
+          "group": "A",
+          "name": "case15_network: [음성 대조] 이온 정상 — 두 모드 computed · σ_ratio 참고 8 자리 {'hertzian': 0.00032635, 'physics': 0.00036225} · 증서 보존 · 잔차 < 1e-06",
+          "verdict": "FAIL",
+          "detail": "{'hertzian': (None, None, None, None), 'physics': (None, None, None, None)}"
+        }
+      ]
+    },
+    "tau_numeric": {
+      "n": 6,
+      "failures": [
+        {
+          "group": "A",
+          "name": "case15_network: [음성 대조] 인계 숫자 비노출 — τ 세 모드 NOT_COMPUTED · 숫자 칸 없음",
+          "verdict": "FAIL",
+          "detail": "{'hertz': 'NOT_COMPUTED', 'physics': 'NOT_COMPUTED', 'hertz_h12': 'NOT_COMPUTED'} · 숫자 {'tau_ion_hertz': 1.0}"
+        }
+      ],
+      "checks": [
+        {
+          "group": "A",
+          "name": "case15_network: 자식 프로세스 정상 종료 · 보고서 있음",
+          "verdict": "PASS",
+          "detail": "rc 0 "
+        },
+        {
+          "group": "A",
+          "name": "case15_network: 원자료 sha256 = README 표 (압축 푼 바이트)",
+          "verdict": "PASS",
+          "detail": "{'atom_v4_1710000.liggghts': ['f40f69eccd79', 'f40f69eccd79'], 'contact_v4_1710000.liggghts': ['180140701ef4', '180140701ef4'], 'mesh_v4_1710000.stl': ['2868f0898a90', '2868f0898a90'], 'input_case15.liggghts': ['172953c78a07', '172953c78a07']}"
+        },
+        {
+          "group": "A",
+          "name": "case15_network: [음성 대조] 게시 차단 — failed · 실패 단계 Network Solver (both modes) · Stage E 안 돌았다 · 반환 run id 없음 (옛 성공 산출물 재사용 없음)",
+          "verdict": "PASS",
+          "detail": "status failed · 실패 단계 ['Network Solver (both modes)'] · Stage E False · run id None"
+        },
+        {
+          "group": "A",
+          "name": "case15_network: [음성 대조] 인계 숫자 비노출 — τ 세 모드 NOT_COMPUTED · 숫자 칸 없음",
+          "verdict": "FAIL",
+          "detail": "{'hertz': 'NOT_COMPUTED', 'physics': 'NOT_COMPUTED', 'hertz_h12': 'NOT_COMPUTED'} · 숫자 {'tau_ion_hertz': 1.0}"
+        },
+        {
+          "group": "A",
+          "name": "case15_network: [음성 대조] 원인 발화 (원덤프 직접 6 조합) — 전자 두 모드 · Hertz 열 boundary_overlap · B∩T = 입자 ID [24, 40, 57, 103] · Physics 열 음수 원자료 면적 거부 · 음수 행 2",
+          "verdict": "PASS",
+          "detail": "겹침 {'electronic_hertzian': ('boundary_overlap', [24, 40, 57, 103]), 'electronic_physics': ('boundary_overlap', [24, 40, 57, 103]), 'thermal_hertzian': ('boundary_overlap', [24, 40, 57, 103])} · Physics 열 'ValueError: physics_g2: 간선 (31, 29241) — ligg_area < 0 (-0.186036)' · 음수 행 [(31, 29241), (38, 29241)] · 증거 오류 None"
+        },
+        {
+          "group": "A",
+          "name": "case15_network: [음성 대조] 이온 정상 — 두 모드 computed · σ_ratio 참고 8 자리 {'hertzian': 0.00032635, 'physics': 0.00036225} · 증서 보존 · 잔차 < 1e-06",
+          "verdict": "PASS",
+          "detail": "{'hertzian': ('computed', 0.00032635, 3.0024201089821724e-09, 9.838873256790492e-11), 'physics': ('computed', 0.00036225, 6.322933781612321e-09, 9.556129760264176e-11)}"
+        }
+      ]
+    },
+    "ionic_residual_bad": {
+      "n": 6,
+      "failures": [
+        {
+          "group": "A",
+          "name": "case15_network: [음성 대조] 이온 정상 — 두 모드 computed · σ_ratio 참고 8 자리 {'hertzian': 0.00032635, 'physics': 0.00036225} · 증서 보존 · 잔차 < 1e-06",
+          "verdict": "FAIL",
+          "detail": "{'hertzian': ('computed', 0.00032635, 3.0024201089821724e-09, 9.838873256790492e-11), 'physics': ('computed', 0.00036225, 6.322933781612321e-09, 0.1)}"
+        }
+      ],
+      "checks": [
+        {
+          "group": "A",
+          "name": "case15_network: 자식 프로세스 정상 종료 · 보고서 있음",
+          "verdict": "PASS",
+          "detail": "rc 0 "
+        },
+        {
+          "group": "A",
+          "name": "case15_network: 원자료 sha256 = README 표 (압축 푼 바이트)",
+          "verdict": "PASS",
+          "detail": "{'atom_v4_1710000.liggghts': ['f40f69eccd79', 'f40f69eccd79'], 'contact_v4_1710000.liggghts': ['180140701ef4', '180140701ef4'], 'mesh_v4_1710000.stl': ['2868f0898a90', '2868f0898a90'], 'input_case15.liggghts': ['172953c78a07', '172953c78a07']}"
+        },
+        {
+          "group": "A",
+          "name": "case15_network: [음성 대조] 게시 차단 — failed · 실패 단계 Network Solver (both modes) · Stage E 안 돌았다 · 반환 run id 없음 (옛 성공 산출물 재사용 없음)",
+          "verdict": "PASS",
+          "detail": "status failed · 실패 단계 ['Network Solver (both modes)'] · Stage E False · run id None"
+        },
+        {
+          "group": "A",
+          "name": "case15_network: [음성 대조] 인계 숫자 비노출 — τ 세 모드 NOT_COMPUTED · 숫자 칸 없음",
+          "verdict": "PASS",
+          "detail": "{'hertz': 'NOT_COMPUTED', 'physics': 'NOT_COMPUTED', 'hertz_h12': 'NOT_COMPUTED'} · 숫자 {}"
+        },
+        {
+          "group": "A",
+          "name": "case15_network: [음성 대조] 원인 발화 (원덤프 직접 6 조합) — 전자 두 모드 · Hertz 열 boundary_overlap · B∩T = 입자 ID [24, 40, 57, 103] · Physics 열 음수 원자료 면적 거부 · 음수 행 2",
+          "verdict": "PASS",
+          "detail": "겹침 {'electronic_hertzian': ('boundary_overlap', [24, 40, 57, 103]), 'electronic_physics': ('boundary_overlap', [24, 40, 57, 103]), 'thermal_hertzian': ('boundary_overlap', [24, 40, 57, 103])} · Physics 열 'ValueError: physics_g2: 간선 (31, 29241) — ligg_area < 0 (-0.186036)' · 음수 행 [(31, 29241), (38, 29241)] · 증거 오류 None"
+        },
+        {
+          "group": "A",
+          "name": "case15_network: [음성 대조] 이온 정상 — 두 모드 computed · σ_ratio 참고 8 자리 {'hertzian': 0.00032635, 'physics': 0.00036225} · 증서 보존 · 잔차 < 1e-06",
+          "verdict": "FAIL",
+          "detail": "{'hertzian': ('computed', 0.00032635, 3.0024201089821724e-09, 9.838873256790492e-11), 'physics': ('computed', 0.00036225, 6.322933781612321e-09, 0.1)}"
+        }
+      ]
+    },
+    "raw_sha_fail": {
+      "n": 6,
+      "failures": [
+        {
+          "group": "A",
+          "name": "case15_network: 원자료 sha256 = README 표 (압축 푼 바이트)",
+          "verdict": "FAIL",
+          "detail": "{'atom_v4_1710000.liggghts': ['f40f69eccd79', 'f40f69eccd79'], 'contact_v4_1710000.liggghts': ['180140701ef4', '180140701ef4'], 'mesh_v4_1710000.stl': ['2868f0898a90', '2868f0898a90'], 'input_case15.liggghts': ['172953c78a07', '172953c78a07']}"
+        }
+      ],
+      "checks": [
+        {
+          "group": "A",
+          "name": "case15_network: 자식 프로세스 정상 종료 · 보고서 있음",
+          "verdict": "PASS",
+          "detail": "rc 0 "
+        },
+        {
+          "group": "A",
+          "name": "case15_network: 원자료 sha256 = README 표 (압축 푼 바이트)",
+          "verdict": "FAIL",
+          "detail": "{'atom_v4_1710000.liggghts': ['f40f69eccd79', 'f40f69eccd79'], 'contact_v4_1710000.liggghts': ['180140701ef4', '180140701ef4'], 'mesh_v4_1710000.stl': ['2868f0898a90', '2868f0898a90'], 'input_case15.liggghts': ['172953c78a07', '172953c78a07']}"
+        },
+        {
+          "group": "A",
+          "name": "case15_network: [음성 대조] 게시 차단 — failed · 실패 단계 Network Solver (both modes) · Stage E 안 돌았다 · 반환 run id 없음 (옛 성공 산출물 재사용 없음)",
+          "verdict": "PASS",
+          "detail": "status failed · 실패 단계 ['Network Solver (both modes)'] · Stage E False · run id None"
+        },
+        {
+          "group": "A",
+          "name": "case15_network: [음성 대조] 인계 숫자 비노출 — τ 세 모드 NOT_COMPUTED · 숫자 칸 없음",
+          "verdict": "PASS",
+          "detail": "{'hertz': 'NOT_COMPUTED', 'physics': 'NOT_COMPUTED', 'hertz_h12': 'NOT_COMPUTED'} · 숫자 {}"
+        },
+        {
+          "group": "A",
+          "name": "case15_network: [음성 대조] 원인 발화 (원덤프 직접 6 조합) — 전자 두 모드 · Hertz 열 boundary_overlap · B∩T = 입자 ID [24, 40, 57, 103] · Physics 열 음수 원자료 면적 거부 · 음수 행 2",
+          "verdict": "PASS",
+          "detail": "겹침 {'electronic_hertzian': ('boundary_overlap', [24, 40, 57, 103]), 'electronic_physics': ('boundary_overlap', [24, 40, 57, 103]), 'thermal_hertzian': ('boundary_overlap', [24, 40, 57, 103])} · Physics 열 'ValueError: physics_g2: 간선 (31, 29241) — ligg_area < 0 (-0.186036)' · 음수 행 [(31, 29241), (38, 29241)] · 증거 오류 None"
+        },
+        {
+          "group": "A",
+          "name": "case15_network: [음성 대조] 이온 정상 — 두 모드 computed · σ_ratio 참고 8 자리 {'hertzian': 0.00032635, 'physics': 0.00036225} · 증서 보존 · 잔차 < 1e-06",
+          "verdict": "PASS",
+          "detail": "{'hertzian': ('computed', 0.00032635, 3.0024201089821724e-09, 9.838873256790492e-11), 'physics': ('computed', 0.00036225, 6.322933781612321e-09, 9.556129760264176e-11)}"
+        }
+      ]
+    },
+    "unexpected_failure_record": {
+      "n": 6,
+      "failures": [],
+      "checks": [
+        {
+          "group": "A",
+          "name": "case15_network: 자식 프로세스 정상 종료 · 보고서 있음",
+          "verdict": "PASS",
+          "detail": "rc 0 "
+        },
+        {
+          "group": "A",
+          "name": "case15_network: 원자료 sha256 = README 표 (압축 푼 바이트)",
+          "verdict": "PASS",
+          "detail": "{'atom_v4_1710000.liggghts': ['f40f69eccd79', 'f40f69eccd79'], 'contact_v4_1710000.liggghts': ['180140701ef4', '180140701ef4'], 'mesh_v4_1710000.stl': ['2868f0898a90', '2868f0898a90'], 'input_case15.liggghts': ['172953c78a07', '172953c78a07']}"
+        },
+        {
+          "group": "A",
+          "name": "case15_network: [음성 대조] 게시 차단 — failed · 실패 단계 Network Solver (both modes) · Stage E 안 돌았다 · 반환 run id 없음 (옛 성공 산출물 재사용 없음)",
+          "verdict": "PASS",
+          "detail": "status failed · 실패 단계 ['Network Solver (both modes)'] · Stage E False · run id None"
+        },
+        {
+          "group": "A",
+          "name": "case15_network: [음성 대조] 인계 숫자 비노출 — τ 세 모드 NOT_COMPUTED · 숫자 칸 없음",
+          "verdict": "PASS",
+          "detail": "{'hertz': 'NOT_COMPUTED', 'physics': 'NOT_COMPUTED', 'hertz_h12': 'NOT_COMPUTED'} · 숫자 {}"
+        },
+        {
+          "group": "A",
+          "name": "case15_network: [음성 대조] 원인 발화 (원덤프 직접 6 조합) — 전자 두 모드 · Hertz 열 boundary_overlap · B∩T = 입자 ID [24, 40, 57, 103] · Physics 열 음수 원자료 면적 거부 · 음수 행 2",
+          "verdict": "PASS",
+          "detail": "겹침 {'electronic_hertzian': ('boundary_overlap', [24, 40, 57, 103]), 'electronic_physics': ('boundary_overlap', [24, 40, 57, 103]), 'thermal_hertzian': ('boundary_overlap', [24, 40, 57, 103])} · Physics 열 'ValueError: physics_g2: 간선 (31, 29241) — ligg_area < 0 (-0.186036)' · 음수 행 [(31, 29241), (38, 29241)] · 증거 오류 None"
+        },
+        {
+          "group": "A",
+          "name": "case15_network: [음성 대조] 이온 정상 — 두 모드 computed · σ_ratio 참고 8 자리 {'hertzian': 0.00032635, 'physics': 0.00036225} · 증서 보존 · 잔차 < 1e-06",
+          "verdict": "PASS",
+          "detail": "{'hertzian': ('computed', 0.00032635, 3.0024201089821724e-09, 9.838873256790492e-11), 'physics': ('computed', 0.00036225, 6.322933781612321e-09, 9.556129760264176e-11)}"
+        }
+      ]
+    },
+    "real_failure_path_synthetic_input": {
+      "n": 6,
+      "failures": [],
+      "checks": [
+        {
+          "group": "A",
+          "name": "case15_network: 자식 프로세스 정상 종료 · 보고서 있음",
+          "verdict": "PASS",
+          "detail": "rc 0 "
+        },
+        {
+          "group": "A",
+          "name": "case15_network: 원자료 sha256 = README 표 (압축 푼 바이트)",
+          "verdict": "PASS",
+          "detail": "{'atom_v4_1710000.liggghts': ['f40f69eccd79', 'f40f69eccd79'], 'contact_v4_1710000.liggghts': ['180140701ef4', '180140701ef4'], 'mesh_v4_1710000.stl': ['2868f0898a90', '2868f0898a90'], 'input_case15.liggghts': ['172953c78a07', '172953c78a07']}"
+        },
+        {
+          "group": "A",
+          "name": "case15_network: [음성 대조] 게시 차단 — failed · 실패 단계 Network Solver (both modes) · Stage E 안 돌았다 · 반환 run id 없음 (옛 성공 산출물 재사용 없음)",
+          "verdict": "PASS",
+          "detail": "status failed · 실패 단계 ['Network Solver (both modes)'] · Stage E False · run id None"
+        },
+        {
+          "group": "A",
+          "name": "case15_network: [음성 대조] 인계 숫자 비노출 — τ 세 모드 NOT_COMPUTED · 숫자 칸 없음",
+          "verdict": "PASS",
+          "detail": "{'hertz': 'NOT_COMPUTED', 'physics': 'NOT_COMPUTED', 'hertz_h12': 'NOT_COMPUTED'} · 숫자 {}"
+        },
+        {
+          "group": "A",
+          "name": "case15_network: [음성 대조] 원인 발화 (원덤프 직접 6 조합) — 전자 두 모드 · Hertz 열 boundary_overlap · B∩T = 입자 ID [24, 40, 57, 103] · Physics 열 음수 원자료 면적 거부 · 음수 행 2",
+          "verdict": "PASS",
+          "detail": "겹침 {'electronic_hertzian': ('boundary_overlap', [24, 40, 57, 103]), 'electronic_physics': ('boundary_overlap', [24, 40, 57, 103]), 'thermal_hertzian': ('boundary_overlap', [24, 40, 57, 103])} · Physics 열 'ValueError: physics_g2: 간선 (31, 29241) — ligg_area < 0 (-0.186036)' · 음수 행 [(31, 29241), (38, 29241)] · 증거 오류 None"
+        },
+        {
+          "group": "A",
+          "name": "case15_network: [음성 대조] 이온 정상 — 두 모드 computed · σ_ratio 참고 8 자리 {'hertzian': 0.00032635, 'physics': 0.00036225} · 증서 보존 · 잔차 < 1e-06",
+          "verdict": "PASS",
+          "detail": "{'hertzian': ('computed', 0.00032635, 3.0024201089821724e-09, 9.838873256790492e-11), 'physics': ('computed', 0.00036225, 6.322933781612321e-09, 9.556129760264176e-11)}"
+        }
+      ]
+    }
+  }
+}

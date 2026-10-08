@@ -1,0 +1,51 @@
+{
+  "scope": "Review gate test using a genuine audit-produced stage mismatch payload.\n\nThe real audit is a synthetic one-case launcher audit CLI (rc 1), supplied by\nthe independent observation probe. Graft its emitted binding payload into the\ndetailed production194 gate fixture; no actual production194 claim is made.\n",
+  "actual_failed_audit": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\gen2_network_reverify5_20261007\\evidence\\r5_observation_run2\\pair_missing_parse_liggghts\\audit.json",
+  "actual_binding": {
+    "plan_source": "worker.json attempts[].stage_plan (그 시도가 쓴 케이스 기록의 단계)",
+    "mode": "bimodal",
+    "executed": [
+      "parser",
+      "contact_bimodal",
+      "coverage",
+      "network_cli"
+    ],
+    "skipped": [],
+    "in_process": 4,
+    "expected": {
+      "worker": 1,
+      "scripts/parse_liggghts.py": 1,
+      "scripts/analyze_contacts_bimodal.py": 1,
+      "scripts/coverage_physics_vs_hertzian.py": 1,
+      "scripts/network_conductivity.py": 1
+    },
+    "observed": {
+      "worker": 1,
+      "scripts/analyze_contacts_bimodal.py": 1,
+      "scripts/coverage_physics_vs_hertzian.py": 1,
+      "scripts/network_conductivity.py": 1
+    }
+  },
+  "actual_obs_problems": [],
+  "actual_top_problems": [
+    "lhs00_000 (run 1 · 시도 1): 실행된 단계의 끝맺은 프로세스 영수증 (시작 · 끝) 이 모자란다 {'scripts/parse_liggghts.py': '0/1'} (관측/계획) — 두 영수증이 함께 사라졌거나 그 단계가 훅 없이 돌았다 (G2RR4-02)"
+  ],
+  "cases": [
+    {
+      "label": "real_failure_summary_present",
+      "gate_problems": [
+        "seal_audit.json — import_observation_problems 1 — [\"lhs00_000 (run 1 · 시도 1): 실행된 단계의 끝맺은 프로세스 영수증 (시작 · 끝) 이 모자란다 {'scripts/parse_liggghts.py': '0/1'} (관측/계획) — 두 영수증이 함께 사라졌거나 그 단계가 훅 없이 돌았다 (G2RR4-02)\"] (빈 목록이어야)"
+      ],
+      "build_accepted": false,
+      "error": "ReleaseError: 배치 관문 증거 문제 1 (G2RR3-01 — 등록 §5-2 ⓪ 감사 · §5-3 ⓪b 다시 읽기) — seal_audit.json — import_observation_problems 1 — [\"lhs00_000 (run 1 · 시도 1): 실행된 단계의 끝맺은 프로세스 영수증 (시작 · 끝) 이 모자란다 {'scripts/parse_liggghts.py': '0/1'} (관측/계획) — 두 영수증이 함께 사라졌거나 그 단계가 훅 없이 돌았다 (G2RR4-02)\"] (빈 목록이어야) — 실제 배포는 두 기록이 이 배치 뿌리 · manifest · 발사 봉인 지문에 대해 통과여야 한다 (옛 · 부분 기록을 들여다볼 때만 --diagnostic-batch-gate · NOT FOR RELEASE)",
+      "output_exists": false
+    },
+    {
+      "label": "only_top_failure_list_cleared",
+      "gate_problems": [],
+      "build_accepted": true,
+      "check": [],
+      "output_exists": true
+    }
+  ]
+}

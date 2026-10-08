@@ -1,0 +1,44 @@
+[Storage] NOT configured - SUPABASE_URL=False SUPABASE_KEY=False
+[Security] WARNING: auth OFF - local/private only. For public deploy set WEBAPP_REQUIRE_AUTH=1 + WEBAPP_AUTH_TOKEN.
+① 게시 — 실 생산자 + Codex 변이 → 망 정지 계약 (정지 경로) · 공용 기록 검사 (일반 경로)
+  PASS ①a 양성 — baseline (실 생산자 세 모드 그대로) = done · 활성 세대 = 이번 실행 (done)
+  PASS ①b ★ 정지 경로 — h12_as_primary · bad_psi · bad_electrode · partial_missing_g2 · 표지 없는 옛 모양 → failed · 활성 세대 없음 · 망 JSON 안 남음 · 최근 시도 candidate_rejected (옛: 다섯 다 done) 
+  PASS ①c 거부 사유 = 세대 계약 (⑨ · 주 Hertz 자리 · 모르는 값 · 부분 결손 · 옛 세대 추론 불가) — 사유가 보인다
+  PASS ①d ★ 일반 경로 (Stage E 앞 승격) — baseline done · h12_as_primary · bad_psi · 표지 없는 옛 모양 = failed (승격 전 공용 기록 검사 · RGLR2-01 과 같은 자리) {'baseline': ('done', False, ''), 'h12_as_primary': ('failed', True, "★ 공용 기술 검사 실패 (승격 전 · 게시 안 함): 세대 계약 (G2R-01 · 02) network_conductivity_dual.json: hertz: H0 (Maxwell 협착 + 원기둥 bulk) 역할 표기가 아니다 — resistance_model='mikic' ≠ 'ma"), 'bad_psi': ('failed', True, '★ 공용 기술 검사 실패 (승격 전 · 게시 안 함): 세대 계약 (G2R-01 · 02) network_conductivity_dual.json: physics: 세대 2 physics (ψ 곱 + physics_g2 + 원기둥 bulk) 역할 표기가 아니다 — psi_placemen'), 'legacy_shape': ('failed', True, '★ 공용 기술 검사 실패 (승격 전 · 게시 안 함): 세대 계약 network_conductivity_dual.json: 세대 2 표기가 하나도 없는 후보 (inferred_legacy) — 현행 생산물은 세대 2 표기를 전부 싣는다 (G2R-02); 세대 계약 network_cond')}
+② 인계 — 디스크에 강제로 남긴 폴더 → load_tau_results (출처 관문 P0–P4)
+  PASS ②a 대조 — 같은 강제 절차 (복사 · 투영 · 도장) 로 만든 변이 없는 폴더는 통과 (P0–P4) · 세 모드 OK
+  PASS ②a2 ★ 통과한 행의 세대 칸 = 'g2' (인계표 소비자가 세대를 본다)
+  PASS ②b ★ 강제 폴더 — 단독 넷 · [baseline, h12_as_primary] · [baseline, bad_psi] · [bad_psi, bad_psi] (같은 결함 코호트) → 전부 거부 (τ P4 세대 계약 · 옛: 일곱 다 통과) 
+③ 옛 세대 추론 자격 — 표지 없는 레코드 ↔ 도장
+  PASS ③a ★ 표지 없는 레코드 + 세대 2 를 말하는 도장 (게시 뒤 표기만 지운 폴더) → 거부 (옛 세대 추론 자격 없음 · 옛: 통과)
+  PASS ③b 양성 — 같은 레코드 + 세대 2 키 없는 옛 도장 모양 → 통과 · 세대 칸 'inferred_legacy' · 주 두 모드 OK · H12 = NOT_COMPUTED (missing_input)
+  PASS ③c ★ 세대 2 표기 레코드 + 세대 키 없는 옛 도장 (역사 폴더에 표기만 덧붙인 모양) → 거부 (세대 2 로 싣지 않는다 · 옛: 통과)
+④ 표 만들 때 (build_handover) — 같은 결함만 모인 원천도 거부 (행마다 먼저)
+  PASS ④a 양성 — 실 배치 케이스 둘 + baseline 폴더 → load_tau_results · build_handover 통과 · 두 행 세대 칸 g2
+  PASS ④b ★ 다른 길로 들어온 원천 — 두 행 다 같은 결함 (주 Hertz 칸 = H12 표기) → build_handover 거부 (τ 세대 · 옛: 동질이라 통과)
+⑤ ★ G2RR-02 — 증서 ↔ 가지 · 역할 · 발행값 결합 (실 생산자 → 정지 계약 · 일반 경로 → τ 소비자 → 인계 · Codex probes/acceptance.py)
+  PASS ⑤a ★ 정지 경로 — 증서 결합 변이 9 종 (CF → FULL · H12 → H0 · 기하 인자 · 위장 CF · 숫자만 · CF 보존 실패 · CF · 협착-only 증서 삭제 · 결합 키 없음) → failed · 활성 세대 없음 · 망 JSON 안 남음 · candidate_rejected (옛: 아홉 다 done · Codex 표 넷 재현) 
+  PASS ⑤a2 거부 사유 = 정지 계약 ⑨ 의 수치 증서 · 결합 (G2RR-02) — 사유가 보인다
+  PASS ⑤b ★ 일반 경로 (Stage E 앞 승격) — CF → FULL · H12 → H0 · 숫자만 = failed (승격 전 공용 기록 검사) {'full_cert_from_cf': ('failed', True, '★ 공용 기술 검사 실패 (승격 전 · 게시 안 함): 세대 계약 (G2R-01 · 02) network_conductivity_dual.json: hertz: 수치 증서 · 결합 (G2R-03 · G2RR-02 — 가지 · 역할 · 발행값) — solve_certificate_full'), 'full_cert_from_h12': ('failed', True, '★ 공용 기술 검사 실패 (승격 전 · 게시 안 함): 세대 계약 (G2R-01 · 02) network_conductivity_dual.json: hertz: 수치 증서 · 결합 (G2R-03 · G2RR-02 — 가지 · 역할 · 발행값) — solve_certificate_full'), 'numbers_only': ('failed', True, '★ 공용 기술 검사 실패 (승격 전 · 게시 안 함): 세대 계약 (G2R-01 · 02) network_conductivity_dual.json: hertz: 수치 증서 · 결합 (G2R-03 · G2RR-02 — 가지 · 역할 · 발행값) — solve_certificate_full')}
+  PASS ⑤c ★ τ 소비자 (tau_flux.case_row) — 디스크에 강제로 남긴 변이 폴더 9 (복사 · 투영 · 도장) → 세 모드 NOT_COMPUTED (invalid_input) · 세대 invalid · 주 tau2 빈칸 (옛: CF → FULL 이 tau2 10.98 OK) 
+  PASS ⑤d ★ 인계 (load_tau_results) — 같은 강제 폴더 9 → 전부 거부 (τ P4 세대 계약 · 수치 증서 · 결합 G2RR-02 · 옛: 통과) 
+  PASS ⑤e ★ 양성 — 진짜 비관통 = done · τ 세 모드 NOT_PERCOLATING · 인계 통과 / GEN2-01 (physics · H12 협착-only NOT_COMPUTED zero_resistance · 숫자 없음) = done · τ 세 모드 OK · 인계 통과 — 해 없는 가지에 수렴 증서를 요구하지 않는다 {'비관통': ('done', ('NOT_PERCOLATING', 'NOT_PERCOLATING', 'NOT_PERCOLATING'), 'g2', '', ('NOT_PERCOLATING', 'NOT_PERCOLATING', 'NOT_PERCOLATING')), 'GEN2-01': ('done', ('OK', 'OK', 'OK'), 'g2', '', ('OK', 'OK', 'OK'))} {'physics': 'zero_resistance_requires_contraction', 'hertz_h12': 'zero_resistance_requires_contraction'}
+⑥ ★ G2RR2-04 — 증서 σ₀ ↔ 부모 σ₀ · 실행 온도 규약 (실 생산자 → 정지 · 일반 경로 → 강제 폴더 → τ 소비자 → 인계 → 다시 읽기)
+  PASS ⑥0 고정점 — 실 생산자 H0 CF q 0.03926991 · σ_dim 0.11781 mS/cm · 증서 σ₀ ×2 로 다시 계산하면 0.235619 (Codex 표 0.117810 → 0.235619) · FULL q 0.00400538 (Codex 0.00400538) · 증서 σ₀ = 부모 σ₀ 0.003
+  PASS ⑥a ★ 정지 경로 — CF 증서 σ₀ ×2 (+ CF 차원값 재계산) · FULL 증서 σ₀ ×2 · CF 증서 σ₀ = 60 °C 값 · 부모 온도 규약만 60 °C → failed · 활성 세대 없음 · 망 JSON 안 남음 · candidate_rejected (옛: 넷 다 done) 
+  PASS ⑥a2 거부 사유에 G2RR2-04 (증서 σ₀ ↔ 부모 σ₀ · 온도 규약) 가 보인다
+  PASS ⑥b ★ 일반 경로 (Stage E 앞 승격) — 같은 변이 셋 = failed (승격 전 공용 기록 검사 · 투영 σ₀ 짝) {'cf_cert_sigma0_x2': ('failed', True, '★ σ₀ 결합 (G2RR2-04 — 증서 σ₀ ↔ 부모 σ₀ · 온도 규약): hertzian: solve_certificate_bulk_net: 증서 σ₀ (sigma_bulk_S_cm) 0.006 ≠ 부모 σ₀ (sigma_grain_S_cm) 0.003 — 이온 가지 증서는 그 실'), 'full_cert_sigma0_x2': ('failed', True, '★ σ₀ 결합 (G2RR2-04 — 증서 σ₀ ↔ 부모 σ₀ · 온도 규약): hertzian: solve_certificate_full: 증서 σ₀ (sigma_bulk_S_cm) 0.006 ≠ 부모 σ₀ (sigma_grain_S_cm) 0.003 — 이온 가지 증서는 그 실행의 σ'), 'parent_T_C_changed': ('failed', True, "★ σ₀ 결합 (G2RR2-04 — 증서 σ₀ ↔ 부모 σ₀ · 온도 규약): hertzian: σ₀ ↔ 온도 규약 (G2RR2-04): T_dependence 'NOT_MODELLED' ≠ 'ARRHENIUS' (T_C 60.0) · sigma_ion_T_factor 1.0 ≠ 규약 ")}
+  PASS ⑥c ★ τ 소비자 (case_row) — 강제 폴더 넷 → 세 모드 NOT_COMPUTED · 세대 invalid · 주 tau2 빈칸 (옛: OK) 
+  PASS ⑥d ★ 인계 (load_tau_results) — 강제 폴더 넷 → 전부 거부 (τ P4 · G2RR2-04 · 옛: 통과) 
+  PASS ⑥e ★ 다시 읽기 (g2_network_reread) — 강제 폴더 넷 → K2 · K4 · H1 실패 (옛: K1–K7 · H1 전부 통과) 
+  PASS ⑥f 양성 — 정상 온도 적용 (--temp-c 60) = done · 부모 σ₀ = 증서 σ₀ (아홉) = 60 °C 규약값 0.014355301874382767 · 인계 통과 · τ 세 모드 OK · σ₀ 메타 60 °C · 다시 읽기 전부 통과 ('done', 'valid')  []
+⑦ ★ G2RR2-05 — 진단 가지 기록 통째 결손 ≠ 정직한 실패 (공용 계약이 가른다 · 다시 읽기 K7 은 그 결과를 그대로 쓴다)
+  PASS ⑦a ★ 정지 경로 — 주 Hertz CF 다섯 키 (값 · 차원값 · 상태 · 사유 · 증서) 삭제 → failed · candidate_rejected · 사유 G2RR2-05 (옛: done) ('failed', 'missing', False, 'candidate_rejected')
+  PASS ⑦b ★ 일반 경로 — 같은 변이 → failed (승격 전 공용 기록 검사) (failed)
+  PASS ⑦c ★ 인계 — 강제 폴더 → 거부 (τ P4 · G2RR2-05 · 옛: 통과)
+  PASS ⑦d ★ 다시 읽기 — K2 · K7 실패 · K7 사유 = 공용 계약 (tau_flux.branch_table_problems) 의 결과 그대로 (별도 자격 없음) ['H1', 'K2', 'K3', 'K4', 'K5', 'K6', 'K7']
+⑧ ★ 정직한 가지 실패 양성 (Codex §7 Q2 — 실 생산자 SciPy 풀이에 H0 이온 CF 만 결함 주입 · 상주 시험)
+  PASS ⑧ ★ raise — 게시 done · H0 CF = not_computed / solve_failed · 값 없음 · 증서가 해를 주장하지 않음 · 시도 ['spsolve'] ['exception'] · FULL q 0.00400538 = 정상 0.00400538 · physics · H12 CF 그대로 {'physics': 'computed', 'hertz_h12': 'computed'} · 인계 통과 (τ 세 모드 OK) · 다시 읽기 K1–K7 · H1 통과 []
+  PASS ⑧ ★ bad_solve — 게시 done · H0 CF = not_computed / current_conservation_failed · 값 없음 · 증서가 해를 주장하지 않음 · 시도 ['spsolve', 'cg+jacobi', 'gmres+ilu'] ['certificate_failed', 'certificate_failed', 'certificate_failed'] · FULL q 0.00400538 = 정상 0.00400538 · physics · H12 CF 그대로 {'physics': 'computed', 'hertz_h12': 'computed'} · 인계 통과 (τ 세 모드 OK) · 다시 읽기 K1–K7 · H1 통과 []
+
+test_gen2_publication_handover: 32/32 PASS
