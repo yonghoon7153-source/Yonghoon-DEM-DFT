@@ -9028,6 +9028,19 @@
       ],
       "claimed_fixed_sha": "7ff7997ab",
       "verification_note": "7ff7997ab: 덱 다섯 재생성 (run 뒤 읽는 값을 정의 바로 다음 줄에서 얼림 · T0_SERVO = br_Fz_E) · selftest ⑭a 고치기 전 t0 6 곳 → 0 · arm 0 → 0 · ⑭b 다섯 덱 위반 → 0 · ⑭c 10-07 덱에서 g_ke · t0_Fs 재검출 · 러너 모의 9/9.  닫힘 조건 = ibb t0 2 회 PASS (가드 정지 경로 끝 BRANCH_SCRIPT_END · T0_SERVO PASS)."
+    },
+    {
+      "id": "WEB-07",
+      "severity": "P3",
+      "status": "open",
+      "owner": "claude",
+      "found_by": "에이전트 코드 읽기 (10-08 · AM 만 보기 접촉마다 구현 중 · 화면 미확인)",
+      "opened_in": "webapp/static/js/viewer3d.js",
+      "title": "Brittle Hotspots (surface gradient) 의 cap 페이드 (t²) 가 높이를 반경으로 나누지 않는다 — 반경 1.06 µm 이상 (20° cap) 에서 cap 이 사실상 불투명 · 주석 'fades smoothly' 와 다르다 · brittle_pairs 는 AM_P–AM_P 만이라 그 보기의 cap 은 전부 불투명",
+      "note": "코드 읽기로만 확인 (관찰 · 화면 시험 전).  새 '접촉마다' cap (45431979b · d0d0aefc1) 은 반경으로 나눠 이 문제가 없다.  고칠지 = 다음 웹앱 묶음.",
+      "evidence_tests": [
+        "webapp/static/js/viewer3d.js (mode === 'brittle_surface' cap 페이드)"
+      ]
     }
   ]
 }
