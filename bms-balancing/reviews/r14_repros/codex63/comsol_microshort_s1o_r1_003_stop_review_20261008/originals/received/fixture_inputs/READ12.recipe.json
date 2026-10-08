@@ -1,0 +1,1 @@
+{"id":"READ12","input_id":"READ12:01","calls":[{"function":"profile_rows","canonical_bytes":73107,"sha256":"2e73de75413cb2f41147133535c4f4d7df8f7b03fc1b3dd0908194280842241a"}],"recipe":"missing profile row","expected":"PROFILE_MISSING","scope":"actual derived input canonical hashes; full expanded replicas not persisted; exact own generator and shared seeds sealed"}

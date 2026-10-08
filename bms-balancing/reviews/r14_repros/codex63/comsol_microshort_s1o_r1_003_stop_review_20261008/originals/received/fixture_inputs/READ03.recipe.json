@@ -1,0 +1,1 @@
+{"id":"READ03","input_id":"READ03:01","calls":[{"function":"read_csv_bytes","canonical_bytes":371,"sha256":"6d027ee5de74cf7ad4f784455965c6cfb059155af294e236ab155675ef0329d4"}],"recipe":"unit mismatch","expected":"UNIT_EVIDENCE","scope":"actual derived input canonical hashes; full expanded replicas not persisted; exact own generator and shared seeds sealed"}

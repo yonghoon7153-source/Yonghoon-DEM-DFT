@@ -1,0 +1,702 @@
+{
+  "kind": "S1O_R1_002_FIRST_SEAL_POWER_SHELL_RECIPES",
+  "case_count": 31,
+  "source_parent_sha256": "e9f8d366ca9931b84ded5753a560369b72fea8737a77075bc2b80ec771bc56ff",
+  "normalization": "raw UTF8 decode; CRLF->LF; function span trailing LF excluded",
+  "extraction_spans": [
+    {
+      "source": "candidate/Parent.ps1.inactive.txt",
+      "name": "S1Has",
+      "start_line": 6,
+      "end_line": 10,
+      "normalization": "CRLF->LF; exact function start through final closing brace; trailing LF excluded; no evaluation",
+      "sha256": "f6dc8c12dfa2c7f8ae89415b0e4f75ea5be8391d52f7f1463d705c1ed76cf983"
+    },
+    {
+      "source": "candidate/Parent.ps1.inactive.txt",
+      "name": "S1Struct",
+      "start_line": 11,
+      "end_line": 15,
+      "normalization": "CRLF->LF; exact function start through final closing brace; trailing LF excluded; no evaluation",
+      "sha256": "0b90669aa6fae4e89236495af73b31262001ada7ee1223622bcc0651ef10307f"
+    },
+    {
+      "source": "candidate/Parent.ps1.inactive.txt",
+      "name": "S1Number",
+      "start_line": 16,
+      "end_line": 22,
+      "normalization": "CRLF->LF; exact function start through final closing brace; trailing LF excluded; no evaluation",
+      "sha256": "b7251aa4a08a8cca7f02f3234a1103ee6542075afda098d0ec46f664b43201bc"
+    },
+    {
+      "source": "candidate/Parent.ps1.inactive.txt",
+      "name": "S1Sha",
+      "start_line": 23,
+      "end_line": 23,
+      "normalization": "CRLF->LF; exact function start through final closing brace; trailing LF excluded; no evaluation",
+      "sha256": "13c6456b30805e3b02063ca8cb804b201d948c5518bf01b102610297236d8eed",
+      "bytes": 90
+    },
+    {
+      "source": "candidate/Parent.ps1.inactive.txt",
+      "name": "S1Failure",
+      "start_line": 24,
+      "end_line": 26,
+      "normalization": "CRLF->LF; exact function start through final closing brace; trailing LF excluded; no evaluation",
+      "sha256": "3ed6a49f46e52ff5b8edfa2b824e7d24fe12cd2c71430ea07b583a40eaa382a4"
+    },
+    {
+      "source": "candidate/Parent.ps1.inactive.txt",
+      "name": "S1ExactDecimal",
+      "start_line": 27,
+      "end_line": 50,
+      "normalization": "CRLF->LF; exact function start through final closing brace; trailing LF excluded; no evaluation",
+      "sha256": "56d56e31306ef5a1aac5bce5f59feff5fa938f5ce594be3ddeba8303d7dd2cb5"
+    },
+    {
+      "source": "candidate/Parent.ps1.inactive.txt",
+      "name": "S1ExactCompare",
+      "start_line": 51,
+      "end_line": 58,
+      "normalization": "CRLF->LF; exact function start through final closing brace; trailing LF excluded; no evaluation",
+      "sha256": "377e9f3e20fb3657b07729e121f92d8d17d0acefe5f484517ac2e5e90631d275"
+    },
+    {
+      "source": "candidate/Parent.ps1.inactive.txt",
+      "name": "S1TimeVector",
+      "start_line": 59,
+      "end_line": 68,
+      "normalization": "CRLF->LF; exact function start through final closing brace; trailing LF excluded; no evaluation",
+      "sha256": "3a565c77f2f8f8063bab684a1bc008d9efd18c8aa75c39ed972aa9d7446ad832"
+    },
+    {
+      "source": "candidate/Parent.ps1.inactive.txt",
+      "name": "S1Coverage",
+      "start_line": 69,
+      "end_line": 107,
+      "normalization": "CRLF->LF; exact function start through final closing brace; trailing LF excluded; no evaluation",
+      "sha256": "20365c99d8771bc3203ae7f15a2c6e7f42949cbc213b898656309083794480a1"
+    },
+    {
+      "source": "candidate/Parent.ps1.inactive.txt",
+      "name": "S1ChargeFields",
+      "start_line": 108,
+      "end_line": 155,
+      "normalization": "CRLF->LF; exact function start through final closing brace; trailing LF excluded; no evaluation",
+      "sha256": "2786f0b5137fe732d95e308c14291a8ac639ebfbc943f54c23f28a52cbd36487"
+    },
+    {
+      "source": "candidate/Parent.ps1.inactive.txt",
+      "name": "S1ComparisonNumerics",
+      "start_line": 156,
+      "end_line": 169,
+      "normalization": "CRLF->LF; exact function start through final closing brace; trailing LF excluded; no evaluation",
+      "sha256": "c4861945e67275bb469492a536118c3e5307b4fe821e43600907fa53e31f3fcb"
+    },
+    {
+      "source": "candidate/Parent.ps1.inactive.txt",
+      "name": "S1NativeAxis",
+      "start_line": 170,
+      "end_line": 217,
+      "normalization": "CRLF->LF; exact function start through final closing brace; trailing LF excluded; no evaluation",
+      "sha256": "57ebfaa4c6926c84626845b90eacbe266fffb658991e9ab9e4928a97297da6f5"
+    },
+    {
+      "source": "candidate/Parent.ps1.inactive.txt",
+      "name": "S1Fields",
+      "start_line": 218,
+      "end_line": 295,
+      "normalization": "CRLF->LF; exact function start through final closing brace; trailing LF excluded; no evaluation",
+      "sha256": "80f08b574f7c9581aa4e44de3103c75e495121de9372c256a831cbddbacc5266"
+    },
+    {
+      "source": "candidate/Parent.ps1.inactive.txt",
+      "name": "S1Decision",
+      "start_line": 296,
+      "end_line": 338,
+      "normalization": "CRLF->LF; exact function start through final closing brace; trailing LF excluded; no evaluation",
+      "sha256": "1df66e6a7551aa05070ad39e7aa5ba14c9559f31418f03ee0cb764c6053368d7"
+    },
+    {
+      "source": "candidate/Parent.ps1.inactive.txt",
+      "name": "S1FinalReturn",
+      "start_line": 339,
+      "end_line": 374,
+      "normalization": "CRLF->LF; exact function start through final closing brace; trailing LF excluded; no evaluation",
+      "sha256": "0db9f410c53a630ae5bdc98892c02c72a430fb6804e5ef359fcca36e375405a9"
+    }
+  ],
+  "cases": [
+    {
+      "id": "PARENT01",
+      "input_id": "PARENT01:01",
+      "producer_id": "CHARGE01",
+      "producer_path": "results/producers/CHARGE01.json",
+      "context_path": "results/producers/CHARGE01.context.json",
+      "input_kind": "ACTUAL_PYTHON_PRODUCER_PLUS_DECLARED_MUTATIONS",
+      "target": "S1Decision",
+      "mutations": [],
+      "expected": "AWAITING_S1_LIMITED_EXTERNAL_REVIEW",
+      "expected_field_path": "return_value.status",
+      "required_reach": "S1Decision",
+      "positive_control_case_id": "PARENT01",
+      "extra_invocations": 0,
+      "result_summary_handwritten": false
+    },
+    {
+      "id": "PARENT02",
+      "input_id": "PARENT02:01",
+      "producer_id": "POLICY03",
+      "producer_path": "results/producers/POLICY03.json",
+      "context_path": "results/producers/POLICY03.context.json",
+      "input_kind": "ACTUAL_PYTHON_PRODUCER_PLUS_DECLARED_MUTATIONS",
+      "target": "S1Decision",
+      "mutations": [],
+      "expected": "AWAITING_S1_LIMITED_EXTERNAL_REVIEW",
+      "expected_field_path": "return_value.status",
+      "required_reach": "S1Decision",
+      "positive_control_case_id": "PARENT01",
+      "extra_invocations": 0,
+      "result_summary_handwritten": false
+    },
+    {
+      "id": "PARENT03",
+      "input_id": "PARENT03:01",
+      "producer_id": "CHARGE_R109",
+      "producer_path": "results/producers/CHARGE_R109.json",
+      "context_path": "results/producers/CHARGE_R109.context.json",
+      "input_kind": "ACTUAL_PYTHON_PRODUCER_PLUS_DECLARED_MUTATIONS",
+      "target": "S1Decision",
+      "mutations": [],
+      "expected": "PROTECTIVE_STOP_INCOMPLETE",
+      "expected_field_path": "return_value.status",
+      "required_reach": "S1Decision -> S1NativeAxis -> S1Fields -> final PROTECTIVE_STOP branch",
+      "positive_control_case_id": "PARENT01",
+      "extra_invocations": 0,
+      "result_summary_handwritten": false
+    },
+    {
+      "id": "PARENT04",
+      "input_id": "PARENT04:01",
+      "producer_id": "CHARGE01",
+      "producer_path": "results/producers/CHARGE01.json",
+      "context_path": "results/producers/CHARGE01.context.json",
+      "input_kind": "ACTUAL_PYTHON_PRODUCER_PLUS_DECLARED_MUTATIONS",
+      "target": "S1Decision",
+      "mutations": [
+        "Native.rc:integer0->string0"
+      ],
+      "expected": "NATIVE_INVOCATION_OR_FATAL",
+      "expected_field_path": "return_value.reason",
+      "required_reach": "S1NativeAxis",
+      "positive_control_case_id": "PARENT01",
+      "extra_invocations": 0,
+      "result_summary_handwritten": false
+    },
+    {
+      "id": "PARENT05",
+      "input_id": "PARENT05:01",
+      "producer_id": "CHARGE01",
+      "producer_path": "results/producers/CHARGE01.json",
+      "context_path": "results/producers/CHARGE01.context.json",
+      "input_kind": "ACTUAL_PYTHON_PRODUCER_PLUS_DECLARED_MUTATIONS",
+      "target": "S1Decision",
+      "mutations": [
+        "Native.fatal:false->true"
+      ],
+      "expected": "NATIVE_INVOCATION_OR_FATAL",
+      "expected_field_path": "return_value.reason",
+      "required_reach": "S1NativeAxis",
+      "positive_control_case_id": "PARENT01",
+      "extra_invocations": 0,
+      "result_summary_handwritten": false
+    },
+    {
+      "id": "PARENT06",
+      "input_id": "PARENT06:01",
+      "producer_id": "CHARGE01",
+      "producer_path": "results/producers/CHARGE01.json",
+      "context_path": "results/producers/CHARGE01.context.json",
+      "input_kind": "ACTUAL_PYTHON_PRODUCER_PLUS_DECLARED_MUTATIONS",
+      "target": "S1Decision",
+      "mutations": [
+        "remove Result.comparison_details"
+      ],
+      "expected": "EVIDENCE_AXIS_MISSING:comparison_details",
+      "expected_field_path": "return_value.reason",
+      "required_reach": "S1Fields",
+      "positive_control_case_id": "PARENT01",
+      "extra_invocations": 0,
+      "result_summary_handwritten": false
+    },
+    {
+      "id": "PARENT07",
+      "input_id": "PARENT07:01",
+      "producer_id": "CHARGE01",
+      "producer_path": "results/producers/CHARGE01.json",
+      "context_path": "results/producers/CHARGE01.context.json",
+      "input_kind": "ACTUAL_PYTHON_PRODUCER_PLUS_DECLARED_MUTATIONS",
+      "target": "S1Decision",
+      "mutations": [
+        "Result.comparison:WITHIN_LIMITS_THIS_WINDOW->EXCEEDS_LIMITS"
+      ],
+      "expected": "COMPARISON_SUMMARY_CONTRADICTION",
+      "expected_field_path": "return_value.reason",
+      "required_reach": "S1Fields",
+      "positive_control_case_id": "PARENT01",
+      "extra_invocations": 0,
+      "result_summary_handwritten": false
+    },
+    {
+      "id": "PARENT08",
+      "input_id": "PARENT08:01",
+      "producer_id": "CHARGE01",
+      "producer_path": "results/producers/CHARGE01.json",
+      "context_path": "results/producers/CHARGE01.context.json",
+      "input_kind": "ACTUAL_PYTHON_PRODUCER_PLUS_DECLARED_MUTATIONS",
+      "target": "S1Decision",
+      "mutations": [
+        "Result.effective_coefficients.grade:INSTALLED_EQUATION_AND_NUMERICAL_READBACK->CONFIG_ONLY"
+      ],
+      "expected": "INITIALIZATION_OR_ACTUAL_COEFFICIENT_UNVERIFIED",
+      "expected_field_path": "return_value.reason",
+      "required_reach": "S1Fields",
+      "positive_control_case_id": "PARENT01",
+      "extra_invocations": 0,
+      "result_summary_handwritten": false
+    },
+    {
+      "id": "PARENT09",
+      "input_id": "PARENT09:01",
+      "producer_id": "CHARGE01",
+      "producer_path": "results/producers/CHARGE01.json",
+      "context_path": "results/producers/CHARGE01.context.json",
+      "input_kind": "CACHED_ACTUAL_PARENT01_DECISION_PLUS_INERT_ADAPTERS",
+      "target": "S1FinalReturn",
+      "mutations": [
+        "Writer:throw INERT_WRITER_FAILURE"
+      ],
+      "expected": "INCOMPLETE",
+      "expected_field_path": "return_value.limited",
+      "required_reach": "S1FinalReturn",
+      "positive_control_case_id": "PARENT12",
+      "extra_invocations": 0,
+      "result_summary_handwritten": false
+    },
+    {
+      "id": "PARENT10",
+      "input_id": "PARENT10:01",
+      "producer_id": "CHARGE01",
+      "producer_path": "results/producers/CHARGE01.json",
+      "context_path": "results/producers/CHARGE01.context.json",
+      "input_kind": "CACHED_ACTUAL_PARENT01_DECISION_PLUS_INERT_ADAPTERS",
+      "target": "S1FinalReturn",
+      "mutations": [
+        "Clock:[99,100.1]",
+        "OverallLimit:100",
+        "DeliveryStart:90",
+        "DeliveryLimit:20"
+      ],
+      "expected": "INCOMPLETE",
+      "expected_field_path": "return_value.limited",
+      "required_reach": "S1FinalReturn",
+      "positive_control_case_id": "PARENT12",
+      "extra_invocations": 0,
+      "result_summary_handwritten": false
+    },
+    {
+      "id": "PARENT11",
+      "input_id": "PARENT11:01",
+      "producer_id": "CHARGE01",
+      "producer_path": "results/producers/CHARGE01.json",
+      "context_path": "results/producers/CHARGE01.context.json",
+      "input_kind": "CACHED_ACTUAL_PARENT01_DECISION_PLUS_INERT_ADAPTERS",
+      "target": "S1FinalReturn",
+      "mutations": [
+        "Clock:[99,100.1]",
+        "OverallLimit:200",
+        "DeliveryStart:90",
+        "DeliveryLimit:10"
+      ],
+      "expected": "INCOMPLETE",
+      "expected_field_path": "return_value.limited",
+      "required_reach": "S1FinalReturn",
+      "positive_control_case_id": "PARENT12",
+      "extra_invocations": 0,
+      "result_summary_handwritten": false
+    },
+    {
+      "id": "PARENT12",
+      "input_id": "PARENT12:01",
+      "producer_id": "CHARGE01",
+      "producer_path": "results/producers/CHARGE01.json",
+      "context_path": "results/producers/CHARGE01.context.json",
+      "input_kind": "CACHED_ACTUAL_PARENT01_DECISION_PLUS_INERT_ADAPTERS",
+      "target": "S1FinalReturn",
+      "mutations": [
+        "Clock:[99,100]",
+        "OverallLimit:100",
+        "DeliveryStart:90",
+        "DeliveryLimit:10"
+      ],
+      "expected": "AWAITING_S1_LIMITED_EXTERNAL_REVIEW",
+      "expected_field_path": "return_value.limited",
+      "required_reach": "S1FinalReturn",
+      "positive_control_case_id": "PARENT12",
+      "extra_invocations": 0,
+      "result_summary_handwritten": false
+    },
+    {
+      "id": "PARENT13",
+      "input_id": "PARENT13:01",
+      "producer_id": "CHARGE01",
+      "producer_path": "results/producers/CHARGE01.json",
+      "context_path": "results/producers/CHARGE01.context.json",
+      "input_kind": "ACTUAL_PYTHON_PRODUCER_PLUS_DECLARED_MUTATIONS",
+      "target": "S1Decision",
+      "mutations": [
+        "remove Expected.end_s"
+      ],
+      "expected": "EXPECTED_REQUIRED_FIELDS",
+      "expected_field_path": "return_value.reason",
+      "required_reach": "S1Decision",
+      "positive_control_case_id": "PARENT01",
+      "extra_invocations": 0,
+      "result_summary_handwritten": false
+    },
+    {
+      "id": "PARENT14",
+      "input_id": "PARENT14:01",
+      "producer_id": "CHARGE03",
+      "producer_path": "results/producers/CHARGE03.json",
+      "context_path": "results/producers/CHARGE03.context.json",
+      "input_kind": "ACTUAL_PYTHON_PRODUCER_PLUS_DECLARED_MUTATIONS",
+      "target": "S1Decision",
+      "mutations": [],
+      "expected": "INCOMPLETE",
+      "expected_field_path": "return_value.status",
+      "required_reach": "S1Decision",
+      "positive_control_case_id": "PARENT01",
+      "extra_invocations": 0,
+      "result_summary_handwritten": false
+    },
+    {
+      "id": "PARENT15",
+      "input_id": "PARENT15:01",
+      "producer_id": "CHARGE01",
+      "producer_path": "results/producers/CHARGE01.json",
+      "context_path": "results/producers/CHARGE01.context.json",
+      "input_kind": "ACTUAL_PYTHON_PRODUCER_PLUS_DECLARED_MUTATIONS",
+      "target": "S1Decision",
+      "mutations": [
+        "remove Result.initial_profile"
+      ],
+      "expected": "EVIDENCE_AXIS_MISSING:initial_profile",
+      "expected_field_path": "return_value.reason",
+      "required_reach": "S1Fields",
+      "positive_control_case_id": "PARENT01",
+      "extra_invocations": 0,
+      "result_summary_handwritten": false
+    },
+    {
+      "id": "PARENT16",
+      "input_id": "PARENT16:01",
+      "producer_id": "CHARGE01",
+      "producer_path": "results/producers/CHARGE01.json",
+      "context_path": "results/producers/CHARGE01.context.json",
+      "input_kind": "CACHED_ACTUAL_PARENT01_DECISION_PLUS_INERT_ADAPTERS",
+      "target": "S1FinalReturn",
+      "mutations": [
+        "Clock:[99,100]",
+        "OverallLimit:100",
+        "DeliveryStart:100",
+        "DeliveryLimit:10"
+      ],
+      "expected": "INCOMPLETE",
+      "expected_field_path": "return_value.limited",
+      "required_reach": "S1FinalReturn",
+      "positive_control_case_id": "PARENT12",
+      "extra_invocations": 0,
+      "result_summary_handwritten": false
+    },
+    {
+      "id": "PARENT_R101",
+      "input_id": "PARENT_R101:01",
+      "producer_id": "CHARGE01",
+      "producer_path": "results/producers/CHARGE01.json",
+      "context_path": "results/producers/CHARGE01.context.json",
+      "input_kind": "ACTUAL_PYTHON_PRODUCER_PLUS_DECLARED_MUTATIONS",
+      "target": "S1Decision",
+      "mutations": [
+        "Result.comparison_details.coverage.comparison_times[2]:0.0002->0.0001"
+      ],
+      "expected": "COMPARISON_TIME_ORDER_OR_RANGE",
+      "expected_field_path": "return_value.reason",
+      "required_reach": "S1Decision -> S1Fields -> S1Coverage",
+      "positive_control_case_id": "PARENT01",
+      "extra_invocations": 0,
+      "result_summary_handwritten": false
+    },
+    {
+      "id": "PARENT_R102",
+      "input_id": "PARENT_R102:01",
+      "producer_id": "CHARGE01",
+      "producer_path": "results/producers/CHARGE01.json",
+      "context_path": "results/producers/CHARGE01.context.json",
+      "input_kind": "ACTUAL_PYTHON_PRODUCER_PLUS_DECLARED_MUTATIONS",
+      "target": "S1Decision",
+      "mutations": [
+        "Result.comparison_details.coverage.comparison_times[2]:0.0002->0.00025"
+      ],
+      "expected": "COMPARISON_TIME_CONTENT",
+      "expected_field_path": "return_value.reason",
+      "required_reach": "S1Decision -> S1Fields -> S1Coverage",
+      "positive_control_case_id": "PARENT01",
+      "extra_invocations": 0,
+      "result_summary_handwritten": false
+    },
+    {
+      "id": "PARENT_R103",
+      "input_id": "PARENT_R103:01",
+      "producer_id": "CHARGE01",
+      "producer_path": "results/producers/CHARGE01.json",
+      "context_path": "results/producers/CHARGE01.context.json",
+      "input_kind": "ACTUAL_PYTHON_PRODUCER_PLUS_DECLARED_MUTATIONS",
+      "target": "S1Decision",
+      "mutations": [
+        "Result.comparison_details.coverage.comparison_times[2]:0.0002->NaN"
+      ],
+      "expected": "DECIMAL_TRANSPORT_FORMAT",
+      "expected_field_path": "return_value.reason",
+      "required_reach": "S1Decision -> S1Fields -> S1Coverage",
+      "positive_control_case_id": "PARENT01",
+      "extra_invocations": 0,
+      "result_summary_handwritten": false
+    },
+    {
+      "id": "PARENT_R104",
+      "input_id": "PARENT_R104:01",
+      "producer_id": "CHARGE01",
+      "producer_path": "results/producers/CHARGE01.json",
+      "context_path": "results/producers/CHARGE01.context.json",
+      "input_kind": "ACTUAL_PYTHON_PRODUCER_PLUS_DECLARED_MUTATIONS",
+      "target": "S1Decision",
+      "mutations": [
+        "Result.comparison_details.coverage.comparison_times[-1]:120->120.1"
+      ],
+      "expected": "COMPARISON_TIME_ORDER_OR_RANGE",
+      "expected_field_path": "return_value.reason",
+      "required_reach": "S1Decision -> S1Fields -> S1Coverage",
+      "positive_control_case_id": "PARENT01",
+      "extra_invocations": 0,
+      "result_summary_handwritten": false
+    },
+    {
+      "id": "PARENT_R105",
+      "input_id": "PARENT_R105:01",
+      "producer_id": "CHARGE_R109",
+      "producer_path": "results/producers/CHARGE_R109.json",
+      "context_path": "results/producers/CHARGE_R109.context.json",
+      "input_kind": "ACTUAL_PYTHON_PRODUCER_PLUS_DECLARED_MUTATIONS",
+      "target": "S1Decision",
+      "mutations": [
+        "Result.comparison_details.coverage.comparison_times[-1]:90->90.1"
+      ],
+      "expected": "COMPARISON_TIME_ORDER_OR_RANGE",
+      "expected_field_path": "return_value.reason",
+      "required_reach": "S1Decision -> S1Fields -> S1Coverage",
+      "positive_control_case_id": "PARENT03",
+      "extra_invocations": 0,
+      "result_summary_handwritten": false
+    },
+    {
+      "id": "PARENT_R106",
+      "input_id": "PARENT_R106:01",
+      "producer_id": "CHARGE01",
+      "producer_path": "results/producers/CHARGE01.json",
+      "context_path": "results/producers/CHARGE01.context.json",
+      "input_kind": "ACTUAL_PYTHON_PRODUCER_PLUS_DECLARED_MUTATIONS",
+      "target": "S1Decision",
+      "mutations": [
+        "swap Result.comparison_details.coverage.comparison_times[1],[2]"
+      ],
+      "expected": "COMPARISON_TIME_ORDER_OR_RANGE",
+      "expected_field_path": "return_value.reason",
+      "required_reach": "S1Decision -> S1Fields -> S1Coverage",
+      "positive_control_case_id": "PARENT01",
+      "extra_invocations": 0,
+      "result_summary_handwritten": false
+    },
+    {
+      "id": "PARENT_R107",
+      "input_id": "PARENT_R107:01",
+      "producer_id": "CHARGE01",
+      "producer_path": "results/producers/CHARGE01.json",
+      "context_path": "results/producers/CHARGE01.context.json",
+      "input_kind": "ACTUAL_PYTHON_PRODUCER_PLUS_DECLARED_MUTATIONS",
+      "target": "S1Decision",
+      "mutations": [
+        "Result.comparison_details.coverage.full_intersection[1]:0.0001->0.00015"
+      ],
+      "expected": "COMPARISON_NOT_INTERSECTION_SUBSET",
+      "expected_field_path": "return_value.reason",
+      "required_reach": "S1Decision -> S1Fields -> S1Coverage",
+      "positive_control_case_id": "PARENT01",
+      "extra_invocations": 0,
+      "result_summary_handwritten": false
+    },
+    {
+      "id": "PARENT_R108",
+      "input_id": "PARENT_R108:01",
+      "producer_id": "CHARGE_R109",
+      "producer_path": "results/producers/CHARGE_R109.json",
+      "context_path": "results/producers/CHARGE_R109.context.json",
+      "input_kind": "ACTUAL_PYTHON_PRODUCER_PLUS_DECLARED_MUTATIONS",
+      "target": "S1Decision",
+      "mutations": [
+        "Result.comparison_details.coverage.common_requested_count:249->255",
+        "Result.comparison_details.coverage.comparison_count:249->255",
+        "Result.comparison_details.coverage.comparison_times:Expected.common_requested_times_s"
+      ],
+      "expected": "COMPARISON_COVERAGE",
+      "expected_field_path": "return_value.reason",
+      "required_reach": "S1Decision -> S1Fields -> S1Coverage",
+      "positive_control_case_id": "PARENT03",
+      "extra_invocations": 0,
+      "result_summary_handwritten": false
+    },
+    {
+      "id": "PARENT_R109",
+      "input_id": "PARENT_R109:01",
+      "producer_id": "CHARGE01",
+      "producer_path": "results/producers/CHARGE01.json",
+      "context_path": "results/producers/CHARGE01.context.json",
+      "input_kind": "ACTUAL_PYTHON_PRODUCER_PLUS_DECLARED_MUTATIONS",
+      "target": "S1Decision",
+      "mutations": [
+        "Result.charge_budget.grid_binding.actual_end_s:120->119.9"
+      ],
+      "expected": "CHARGE_ENDPOINT_BINDING",
+      "expected_field_path": "return_value.reason",
+      "required_reach": "S1Decision -> S1Fields -> S1ChargeFields",
+      "positive_control_case_id": "PARENT01",
+      "extra_invocations": 0,
+      "result_summary_handwritten": false
+    },
+    {
+      "id": "PARENT_R110",
+      "input_id": "PARENT_R110:01",
+      "producer_id": "CHARGE01",
+      "producer_path": "results/producers/CHARGE01.json",
+      "context_path": "results/producers/CHARGE01.context.json",
+      "input_kind": "ACTUAL_PYTHON_PRODUCER_PLUS_DECLARED_MUTATIONS",
+      "target": "S1Decision",
+      "mutations": [
+        "Result.charge_budget.records[1].t_s:0.0001->0.000000015"
+      ],
+      "expected": "CHARGE_RECORD_TIME_BINDING",
+      "expected_field_path": "return_value.reason",
+      "required_reach": "S1Decision -> S1Fields -> S1ChargeFields",
+      "positive_control_case_id": "PARENT01",
+      "extra_invocations": 0,
+      "result_summary_handwritten": false
+    },
+    {
+      "id": "PARENT_R111",
+      "input_id": "PARENT_R111:01",
+      "producer_id": "CHARGE01",
+      "producer_path": "results/producers/CHARGE01.json",
+      "context_path": "results/producers/CHARGE01.context.json",
+      "input_kind": "ACTUAL_PYTHON_PRODUCER_PLUS_DECLARED_MUTATIONS",
+      "target": "S1Decision",
+      "mutations": [
+        "Result.charge_budget.grid_binding.global_identity.sha256:f*64"
+      ],
+      "expected": "CHARGE_SOURCE_NOT_REGISTERED",
+      "expected_field_path": "return_value.reason",
+      "required_reach": "S1Decision -> S1Fields -> S1ChargeFields",
+      "positive_control_case_id": "PARENT01",
+      "extra_invocations": 0,
+      "result_summary_handwritten": false
+    },
+    {
+      "id": "PARENT_R112",
+      "input_id": "PARENT_R112:01",
+      "producer_id": "CHARGE01",
+      "producer_path": "results/producers/CHARGE01.json",
+      "context_path": "results/producers/CHARGE01.context.json",
+      "input_kind": "ACTUAL_PYTHON_PRODUCER_PLUS_DECLARED_MUTATIONS",
+      "target": "S1Decision",
+      "mutations": [
+        "remove Result.charge_budget.grid_binding"
+      ],
+      "expected": "CHARGE_GRID_SCHEMA",
+      "expected_field_path": "return_value.reason",
+      "required_reach": "S1Decision -> S1Fields -> S1ChargeFields",
+      "positive_control_case_id": "PARENT01",
+      "extra_invocations": 0,
+      "result_summary_handwritten": false
+    },
+    {
+      "id": "PARENT_R113",
+      "input_id": "PARENT_R113:01",
+      "producer_id": "POLICY02",
+      "producer_path": "results/producers/POLICY02.json",
+      "context_path": "results/producers/POLICY02.context.json",
+      "input_kind": "ACTUAL_PYTHON_PRODUCER_PLUS_DECLARED_MUTATIONS",
+      "target": "S1Decision",
+      "mutations": [
+        "single raw JSON token Result.comparison_details.maxima.voltage_V.value:string0.001->number0.001",
+        "parse mutated JSON and require CLR Double before target"
+      ],
+      "expected": "DECIMAL_TRANSPORT_PRECISION",
+      "expected_field_path": "return_value.reason",
+      "required_reach": "S1Decision -> S1Fields -> S1ComparisonNumerics",
+      "positive_control_case_id": "PARENT_R115",
+      "extra_invocations": 0,
+      "result_summary_handwritten": false
+    },
+    {
+      "id": "PARENT_R114",
+      "input_id": "PARENT_R114:01",
+      "producer_id": "POLICY03",
+      "producer_path": "results/producers/POLICY03.json",
+      "context_path": "results/producers/POLICY03.context.json",
+      "input_kind": "ACTUAL_PYTHON_PRODUCER_PLUS_DECLARED_MUTATIONS",
+      "target": "S1Decision",
+      "mutations": [
+        "Result.comparison:EXCEEDS_LIMITS->WITHIN_LIMITS_THIS_WINDOW",
+        "Result.comparison_details.status:EXCEEDS_LIMITS->WITHIN_LIMITS_THIS_WINDOW"
+      ],
+      "expected": "COMPARISON_SUMMARY_CONTRADICTION",
+      "expected_field_path": "return_value.reason",
+      "required_reach": "S1Decision -> S1Fields",
+      "positive_control_case_id": "PARENT02",
+      "extra_invocations": 0,
+      "result_summary_handwritten": false
+    },
+    {
+      "id": "PARENT_R115",
+      "input_id": "PARENT_R115:01",
+      "producer_id": "POLICY02",
+      "producer_path": "results/producers/POLICY02.json",
+      "context_path": "results/producers/POLICY02.context.json",
+      "input_kind": "ACTUAL_PYTHON_PRODUCER_PLUS_DECLARED_MUTATIONS",
+      "target": "S1Decision",
+      "mutations": [],
+      "expected": "AWAITING_S1_LIMITED_EXTERNAL_REVIEW",
+      "expected_field_path": "return_value.status",
+      "required_reach": "S1Decision",
+      "positive_control_case_id": "PARENT01",
+      "extra_invocations": 0,
+      "result_summary_handwritten": false
+    }
+  ],
+  "second_seal_required": "results/PS_PRODUCER_SEAL.json after actual Python99 PASS and before any PS function load",
+  "producer_dependent_bytes": "5 actual analyze JSON plus5 context files from registered Python cases; sizes/hash matched by second seal; mutations derived only from fixed first-sealed recipes",
+  "native_process_gate_Job_calls": 0,
+  "planned_sessions": 1,
+  "session_limit_s": 300,
+  "first_failure": "stop remaining cases, preserve outputs, no retry",
+  "functional_validation": "NOT_RUN"
+}

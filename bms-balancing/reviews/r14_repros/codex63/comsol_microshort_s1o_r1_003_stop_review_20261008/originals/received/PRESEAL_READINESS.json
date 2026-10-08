@@ -1,0 +1,17 @@
+{
+  "status": "READY",
+  "registered_inputs": 130,
+  "consumer_inputs": 68,
+  "control_object_keys": 31,
+  "ps_inputs": 31,
+  "unresolved": [],
+  "candidate_function_calls_before_seal": 0,
+  "source_edits": 0,
+  "native_ready": false,
+  "producer_rule": "five actual Python analyze outputs plus contexts; second seal before PS",
+  "read_only_ps_audit": "15 extraction ranges and31 recipes matched; no execution",
+  "init02": "target0.001 observed0.001000001 abs1e-9 rel1e-6",
+  "prior_harness_reuse": "R1_002 artifacts; no prior functional engine calls; prior stops preserved",
+  "runner": "phase/global remaining capped; owned harness only; postwrite final precedence",
+  "created_utc": "2026-10-08T13:54:50.5214911Z"
+}

@@ -1,0 +1,1 @@
+{"id":"PAIRED05","input_id":"PAIRED05:01","calls":[{"function":"paired_classification","canonical_bytes":761,"sha256":"ef68957d1fbbee6e273478fb86ef7e3411cc2e550d85c9bbed604cee28a65bf9"}],"recipe":"one Kaxis missing","expected":"K_INCOMPLETE","scope":"actual derived input canonical hashes; full expanded replicas not persisted; exact own generator and shared seeds sealed"}

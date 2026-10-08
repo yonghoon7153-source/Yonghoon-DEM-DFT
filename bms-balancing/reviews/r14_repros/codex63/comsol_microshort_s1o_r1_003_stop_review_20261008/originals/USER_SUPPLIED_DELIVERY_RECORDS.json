@@ -1,0 +1,23 @@
+{
+  "provenance": "Semantic transcription of structured records in the user's message. Not the original receipt file bytes and not independent remote OS observation.",
+  "zip": {"bytes":876456,"sha256":"11a27f3034fed763442ccce9730f7e008058b819bfbffd9d58a5d2994b875d4b"},
+  "manifest": {"bytes":25683,"sha256":"9a7b73e50223c152c87af3250e1ee955263837ae873dabcaffcee0d82653a5c4"},
+  "payload_count":153,
+  "receipt_reported_file": {"bytes":1165,"sha256":"31f5437283e10d9eb5b9de47be2d26a42992e9d6cbd76a16e01faeec499509a3","original_bytes_received":false},
+  "receipt_snapshot": {"overall_s":862.1513943001628,"delivery_s":165.72055730014108,"boundary":"after ZIP reread/hash before receipt write and tool return"},
+  "packaging_return": {
+    "source":"User-provided subsequent transcription of actual exec_command return; not independent OS audit",
+    "chunk_id":"0a81fc","wall_time_seconds":7.1100966,"exit_code":0,"original_token_count":244,
+    "reported_output_kind":"PACKAGE_FINAL_RETURN",
+    "reported_counts":{"PASS":127,"HARNESS_FAILURE_BEFORE_TARGET":1,"NOT_RUN_AFTER_FIRST_FAILURE":2},
+    "overall_snapshot_s":862.1651496000122,
+    "delivery_snapshot_s":165.73431279999204,
+    "within_time_limits":true,
+    "snapshot_boundary":"after receipt reread; before this tool return"
+  },
+  "limits_s":{"overall":1860,"delivery":300},
+  "fixture_bytes_reported":10656109,
+  "recipient":null,
+  "native_ready":false,
+  "result":"INCOMPLETE_FIRST_UNEXPECTED_HARNESS_FAILURE"
+}

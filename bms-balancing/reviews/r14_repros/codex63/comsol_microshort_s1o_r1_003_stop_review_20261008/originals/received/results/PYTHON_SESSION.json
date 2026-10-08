@@ -1,0 +1,38 @@
+{
+  "engine": "python",
+  "utc_start": "2026-10-08T13:55:08.5951667Z",
+  "utc_end": "2026-10-08T13:57:57.8596401Z",
+  "pid_owned": 90948,
+  "argv": [
+    "C:\\Users\\BML\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\python.exe",
+    "-I",
+    "-B",
+    "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\outputs\\microshort_s1o_r1_20261008\\future_validation_fixture_R1_003\\harness\\python_harness.py"
+  ],
+  "cwd": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\outputs\\microshort_s1o_r1_20261008\\future_validation_fixture_R1_003",
+  "rc": 0,
+  "timed_out": false,
+  "elapsed_s": 169.2547576,
+  "limit_s": 420,
+  "overall_snapshot_s": 576.5348597,
+  "overall_limit_s": 1860.0,
+  "engine_overall_deadline_s": 1740.0,
+  "closeout_reserve_s": 120.0,
+  "effective_wait_budget_s": 419.8977327,
+  "within_limits": true,
+  "start_or_collection_error": null,
+  "cleanup_error": null,
+  "stdout": {
+    "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\outputs\\microshort_s1o_r1_20261008\\future_validation_fixture_R1_003\\results\\PYTHON_STDOUT.txt",
+    "bytes": 53384,
+    "sha256": "93b82532747850ace2975971e69319dbfbb38946356b98ddf4a087b9ca77f1ea"
+  },
+  "stderr": {
+    "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\outputs\\microshort_s1o_r1_20261008\\future_validation_fixture_R1_003\\results\\PYTHON_STDERR.txt",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "status": "ENGINE_RETURNED_RC0",
+  "raw_process_exit_observed": true,
+  "observation_phase": "PRE_SESSION_RECORD_WRITE"
+}

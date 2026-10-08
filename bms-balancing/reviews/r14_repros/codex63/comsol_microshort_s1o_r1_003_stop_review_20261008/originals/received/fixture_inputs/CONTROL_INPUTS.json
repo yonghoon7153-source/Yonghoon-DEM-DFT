@@ -1,0 +1,4512 @@
+{
+  "AUTH01": {
+    "id": "AUTH01",
+    "input_id": "AUTH01:01",
+    "fixture_only": true,
+    "route": "execute_once",
+    "arguments": {
+      "binding": {
+        "schema": "S1O_EXECUTION_BINDING_V1",
+        "native_ready": true,
+        "adapter_status": "IMPLEMENTED_VALIDATED_ACCEPTED",
+        "open_blockers": [],
+        "unit": {
+          "run_id": "FIXTURE_NO_NATIVE",
+          "variant_id": "P0",
+          "sigma_short_S_m": "1.7e-6",
+          "initialization_id": "FIXTURE_ONLY",
+          "physical_window_s": [
+            0,
+            120
+          ],
+          "commands": {
+            "status": "NATIVE_COMMANDS_FROZEN",
+            "cwd": "fixture://cwd",
+            "argv": [
+              "INERT_NO_EXEC"
+            ],
+            "parent_argv": [
+              "INERT_NO_PARENT"
+            ],
+            "native_compile_argv": [
+              "INERT_NO_COMPILE"
+            ],
+            "native_batch_argv": [
+              "INERT_NO_BATCH"
+            ],
+            "native_cwd": "fixture://cwd"
+          },
+          "paths": {
+            "status": "FROZEN_NATIVE_PATHS",
+            "source_root": "fixture://source",
+            "proposed_native_root": "fixture://no-runtime",
+            "must_be_absent": [
+              "fixture://never-created"
+            ],
+            "approval_path": "fixture://no-approval",
+            "release_path": "fixture://no-release",
+            "user_decision_path": "fixture://no-user-decision"
+          },
+          "counts": {
+            "compile": 1,
+            "batch": 1,
+            "solve": 1,
+            "control": 0,
+            "retry": 0,
+            "separate_initialization_solve": 0,
+            "fresh_direct_challenges": 2
+          },
+          "resource_contract_sha256": "4444444444444444444444444444444444444444444444444444444444444444",
+          "phase_limits_s": {
+            "native": 7200,
+            "cleanup": 120
+          },
+          "overall_limit_s": 9000
+        },
+        "engine_pins": [
+          {
+            "path": "fixture://S1O_CONTROL/engine-not-executable",
+            "bytes": 1,
+            "sha256": "1111111111111111111111111111111111111111111111111111111111111111"
+          }
+        ],
+        "dependency_pins": [
+          {
+            "path": "fixture://S1O_CONTROL/dependency-not-imported",
+            "bytes": 1,
+            "sha256": "2222222222222222222222222222222222222222222222222222222222222222"
+          }
+        ],
+        "policy_pin": {
+          "changes_allowed": false,
+          "source_prefs": {
+            "path": "fixture://S1O_CONTROL/prefs-not-read",
+            "bytes": 1,
+            "sha256": "3333333333333333333333333333333333333333333333333333333333333333"
+          }
+        }
+      },
+      "manifest": {
+        "schema": "S1O_CODE_MANIFEST_V1",
+        "native_ready": true,
+        "files": [
+          {
+            "path": "fixture://S1O_CONTROL/candidate-not-loaded",
+            "bytes": 1,
+            "sha256": "5555555555555555555555555555555555555555555555555555555555555555"
+          }
+        ]
+      },
+      "acceptance": {
+        "status": "ACCEPTED_CHANGED_BRANCH_VALIDATION",
+        "manifest_sha256": "6666666666666666666666666666666666666666666666666666666666666666",
+        "execution_binding_sha256": "cd2b061e1a2de20d5cef29df0b5be25d34641f731d5331544d4e1ed1d2aa526c",
+        "evidence_sha256": "7777777777777777777777777777777777777777777777777777777777777777"
+      },
+      "approval": {
+        "approved": true,
+        "usable": true,
+        "kind": "SEPARATE_NATIVE_ONE_RUN_APPROVAL",
+        "manifest_sha256": "6666666666666666666666666666666666666666666666666666666666666666",
+        "execution_binding_sha256": "cd2b061e1a2de20d5cef29df0b5be25d34641f731d5331544d4e1ed1d2aa526c",
+        "validation_evidence_sha256": "7777777777777777777777777777777777777777777777777777777777777777",
+        "user_statement_sha256": "8888888888888888888888888888888888888888888888888888888888888888",
+        "unit": {
+          "run_id": "FIXTURE_NO_NATIVE",
+          "variant_id": "P0",
+          "sigma_short_S_m": "1.7e-6",
+          "initialization_id": "FIXTURE_ONLY",
+          "physical_window_s": [
+            0,
+            120
+          ],
+          "commands": {
+            "status": "NATIVE_COMMANDS_FROZEN",
+            "cwd": "fixture://cwd",
+            "argv": [
+              "INERT_NO_EXEC"
+            ],
+            "parent_argv": [
+              "INERT_NO_PARENT"
+            ],
+            "native_compile_argv": [
+              "INERT_NO_COMPILE"
+            ],
+            "native_batch_argv": [
+              "INERT_NO_BATCH"
+            ],
+            "native_cwd": "fixture://cwd"
+          },
+          "paths": {
+            "status": "FROZEN_NATIVE_PATHS",
+            "source_root": "fixture://source",
+            "proposed_native_root": "fixture://no-runtime",
+            "must_be_absent": [
+              "fixture://never-created"
+            ],
+            "approval_path": "fixture://no-approval",
+            "release_path": "fixture://no-release",
+            "user_decision_path": "fixture://no-user-decision"
+          },
+          "counts": {
+            "compile": 1,
+            "batch": 1,
+            "solve": 1,
+            "control": 0,
+            "retry": 0,
+            "separate_initialization_solve": 0,
+            "fresh_direct_challenges": 2
+          },
+          "resource_contract_sha256": "4444444444444444444444444444444444444444444444444444444444444444",
+          "phase_limits_s": {
+            "native": 7200,
+            "cleanup": 120
+          },
+          "overall_limit_s": 9000
+        },
+        "policy_pin": {
+          "changes_allowed": false,
+          "source_prefs": {
+            "path": "fixture://S1O_CONTROL/prefs-not-read",
+            "bytes": 1,
+            "sha256": "3333333333333333333333333333333333333333333333333333333333333333"
+          }
+        }
+      },
+      "observed": {
+        "manifest_sha256": "6666666666666666666666666666666666666666666666666666666666666666",
+        "payload": [
+          {
+            "path": "fixture://S1O_CONTROL/candidate-not-loaded",
+            "bytes": 1,
+            "sha256": "5555555555555555555555555555555555555555555555555555555555555555"
+          }
+        ],
+        "engines": [
+          {
+            "path": "fixture://S1O_CONTROL/engine-not-executable",
+            "bytes": 1,
+            "sha256": "1111111111111111111111111111111111111111111111111111111111111111"
+          }
+        ],
+        "dependencies": [
+          {
+            "path": "fixture://S1O_CONTROL/dependency-not-imported",
+            "bytes": 1,
+            "sha256": "2222222222222222222222222222222222222222222222222222222222222222"
+          }
+        ],
+        "cwd": "fixture://cwd",
+        "argv": [
+          "INERT_NO_EXEC"
+        ],
+        "path_absence": [
+          "fixture://never-created"
+        ],
+        "path_collisions": [],
+        "path_resolution": "NO_REPARSE_NO_ESCAPE",
+        "pending_owned_runs": [],
+        "other_comsol_work": [],
+        "policy": {
+          "changes_allowed": false,
+          "source_prefs": {
+            "path": "fixture://S1O_CONTROL/prefs-not-read",
+            "bytes": 1,
+            "sha256": "3333333333333333333333333333333333333333333333333333333333333333"
+          }
+        },
+        "elevated": false,
+        "attempt_history": [],
+        "adapter_identity_verified": true,
+        "resource_enforcement_ready": true
+      }
+    },
+    "expected": "AUTHORIZED_ONE_RUN",
+    "expected_detail": {
+      "actual_authorization_status": "AUTHORIZED_ONE_RUN",
+      "adapter_events": [
+        "recheck_authorization_readonly",
+        "create_exclusive_evidence_and_reserve_one_attempt",
+        "obtain_two_fresh_direct_user_challenges_same_python",
+        "stage_exact_authorized_bytes_and_prefs_copy",
+        "require_previous_owned_job_empty",
+        "require_time_and_resources_with_stop_reserve:compile",
+        "run_one_monitored_owned_phase:compile",
+        "require_previous_owned_job_empty",
+        "require_time_and_resources_with_stop_reserve:batch",
+        "run_one_monitored_owned_phase:batch",
+        "require_time_for_analysis_and_delivery",
+        "analyze_existing_evidence_once",
+        "verify_owned_cleanup_and_preservation",
+        "final_write_readback_postwrite_budget"
+      ]
+    },
+    "mutation_leaves": [],
+    "positive_control_case_id": "AUTH01",
+    "real_native_calls": 0,
+    "actual_user_input_calls": 0
+  },
+  "AUTH02": {
+    "id": "AUTH02",
+    "input_id": "AUTH02:01",
+    "fixture_only": true,
+    "route": "authorize_execution",
+    "arguments": {
+      "binding": {
+        "schema": "S1O_EXECUTION_BINDING_V1",
+        "native_ready": true,
+        "adapter_status": "IMPLEMENTED_VALIDATED_ACCEPTED",
+        "open_blockers": [],
+        "unit": {
+          "run_id": "FIXTURE_NO_NATIVE",
+          "variant_id": "P0",
+          "sigma_short_S_m": "1.7e-6",
+          "initialization_id": "FIXTURE_ONLY",
+          "physical_window_s": [
+            0,
+            120
+          ],
+          "commands": {
+            "status": "NATIVE_COMMANDS_FROZEN",
+            "cwd": "fixture://cwd",
+            "argv": [
+              "INERT_NO_EXEC"
+            ],
+            "parent_argv": [
+              "INERT_NO_PARENT"
+            ],
+            "native_compile_argv": [
+              "INERT_NO_COMPILE"
+            ],
+            "native_batch_argv": [
+              "INERT_NO_BATCH"
+            ],
+            "native_cwd": "fixture://cwd"
+          },
+          "paths": {
+            "status": "FROZEN_NATIVE_PATHS",
+            "source_root": "fixture://source",
+            "proposed_native_root": "fixture://no-runtime",
+            "must_be_absent": [
+              "fixture://never-created"
+            ],
+            "approval_path": "fixture://no-approval",
+            "release_path": "fixture://no-release",
+            "user_decision_path": "fixture://no-user-decision"
+          },
+          "counts": {
+            "compile": 1,
+            "batch": 1,
+            "solve": 1,
+            "control": 0,
+            "retry": 0,
+            "separate_initialization_solve": 0,
+            "fresh_direct_challenges": 2
+          },
+          "resource_contract_sha256": "4444444444444444444444444444444444444444444444444444444444444444",
+          "phase_limits_s": {
+            "native": 7200,
+            "cleanup": 120
+          },
+          "overall_limit_s": 9000
+        },
+        "engine_pins": [
+          {
+            "path": "fixture://S1O_CONTROL/engine-not-executable",
+            "bytes": 1,
+            "sha256": "1111111111111111111111111111111111111111111111111111111111111111"
+          }
+        ],
+        "dependency_pins": [
+          {
+            "path": "fixture://S1O_CONTROL/dependency-not-imported",
+            "bytes": 1,
+            "sha256": "2222222222222222222222222222222222222222222222222222222222222222"
+          }
+        ],
+        "policy_pin": {
+          "changes_allowed": false,
+          "source_prefs": {
+            "path": "fixture://S1O_CONTROL/prefs-not-read",
+            "bytes": 1,
+            "sha256": "3333333333333333333333333333333333333333333333333333333333333333"
+          }
+        }
+      },
+      "manifest": {
+        "schema": "S1O_CODE_MANIFEST_V1",
+        "native_ready": true,
+        "files": [
+          {
+            "path": "fixture://S1O_CONTROL/candidate-not-loaded",
+            "bytes": 1,
+            "sha256": "5555555555555555555555555555555555555555555555555555555555555555"
+          }
+        ]
+      },
+      "acceptance": {
+        "status": "ACCEPTED_CHANGED_BRANCH_VALIDATION",
+        "manifest_sha256": "6666666666666666666666666666666666666666666666666666666666666666",
+        "execution_binding_sha256": "cd2b061e1a2de20d5cef29df0b5be25d34641f731d5331544d4e1ed1d2aa526c",
+        "evidence_sha256": "7777777777777777777777777777777777777777777777777777777777777777"
+      },
+      "approval": {},
+      "observed": {
+        "manifest_sha256": "6666666666666666666666666666666666666666666666666666666666666666",
+        "payload": [
+          {
+            "path": "fixture://S1O_CONTROL/candidate-not-loaded",
+            "bytes": 1,
+            "sha256": "5555555555555555555555555555555555555555555555555555555555555555"
+          }
+        ],
+        "engines": [
+          {
+            "path": "fixture://S1O_CONTROL/engine-not-executable",
+            "bytes": 1,
+            "sha256": "1111111111111111111111111111111111111111111111111111111111111111"
+          }
+        ],
+        "dependencies": [
+          {
+            "path": "fixture://S1O_CONTROL/dependency-not-imported",
+            "bytes": 1,
+            "sha256": "2222222222222222222222222222222222222222222222222222222222222222"
+          }
+        ],
+        "cwd": "fixture://cwd",
+        "argv": [
+          "INERT_NO_EXEC"
+        ],
+        "path_absence": [
+          "fixture://never-created"
+        ],
+        "path_collisions": [],
+        "path_resolution": "NO_REPARSE_NO_ESCAPE",
+        "pending_owned_runs": [],
+        "other_comsol_work": [],
+        "policy": {
+          "changes_allowed": false,
+          "source_prefs": {
+            "path": "fixture://S1O_CONTROL/prefs-not-read",
+            "bytes": 1,
+            "sha256": "3333333333333333333333333333333333333333333333333333333333333333"
+          }
+        },
+        "elevated": false,
+        "attempt_history": [],
+        "adapter_identity_verified": true,
+        "resource_enforcement_ready": true
+      }
+    },
+    "expected": "SEPARATE_NATIVE_APPROVAL_REQUIRED",
+    "expected_detail": {
+      "exception_stage": "authorization"
+    },
+    "mutation_leaves": [
+      "approval={}; empty object preserves object-type gate"
+    ],
+    "positive_control_case_id": "AUTH01",
+    "real_native_calls": 0,
+    "actual_user_input_calls": 0
+  },
+  "AUTH03": {
+    "id": "AUTH03",
+    "input_id": "AUTH03:01",
+    "fixture_only": true,
+    "route": "authorize_execution",
+    "arguments": {
+      "binding": {
+        "schema": "S1O_EXECUTION_BINDING_V1",
+        "native_ready": true,
+        "adapter_status": "IMPLEMENTED_VALIDATED_ACCEPTED",
+        "open_blockers": [],
+        "unit": {
+          "run_id": "FIXTURE_NO_NATIVE",
+          "variant_id": "P0",
+          "sigma_short_S_m": "1.7e-6",
+          "initialization_id": "FIXTURE_ONLY",
+          "physical_window_s": [
+            0,
+            120
+          ],
+          "commands": {
+            "status": "NATIVE_COMMANDS_FROZEN",
+            "cwd": "fixture://cwd",
+            "argv": [
+              "INERT_NO_EXEC"
+            ],
+            "parent_argv": [
+              "INERT_NO_PARENT"
+            ],
+            "native_compile_argv": [
+              "INERT_NO_COMPILE"
+            ],
+            "native_batch_argv": [
+              "INERT_NO_BATCH"
+            ],
+            "native_cwd": "fixture://cwd"
+          },
+          "paths": {
+            "status": "FROZEN_NATIVE_PATHS",
+            "source_root": "fixture://source",
+            "proposed_native_root": "fixture://no-runtime",
+            "must_be_absent": [
+              "fixture://never-created"
+            ],
+            "approval_path": "fixture://no-approval",
+            "release_path": "fixture://no-release",
+            "user_decision_path": "fixture://no-user-decision"
+          },
+          "counts": {
+            "compile": 1,
+            "batch": 1,
+            "solve": 1,
+            "control": 0,
+            "retry": 0,
+            "separate_initialization_solve": 0,
+            "fresh_direct_challenges": 2
+          },
+          "resource_contract_sha256": "4444444444444444444444444444444444444444444444444444444444444444",
+          "phase_limits_s": {
+            "native": 7200,
+            "cleanup": 120
+          },
+          "overall_limit_s": 9000
+        },
+        "engine_pins": [
+          {
+            "path": "fixture://S1O_CONTROL/engine-not-executable",
+            "bytes": 1,
+            "sha256": "1111111111111111111111111111111111111111111111111111111111111111"
+          }
+        ],
+        "dependency_pins": [
+          {
+            "path": "fixture://S1O_CONTROL/dependency-not-imported",
+            "bytes": 1,
+            "sha256": "2222222222222222222222222222222222222222222222222222222222222222"
+          }
+        ],
+        "policy_pin": {
+          "changes_allowed": false,
+          "source_prefs": {
+            "path": "fixture://S1O_CONTROL/prefs-not-read",
+            "bytes": 1,
+            "sha256": "3333333333333333333333333333333333333333333333333333333333333333"
+          }
+        }
+      },
+      "manifest": {
+        "schema": "S1O_CODE_MANIFEST_V1",
+        "native_ready": true,
+        "files": [
+          {
+            "path": "fixture://S1O_CONTROL/candidate-not-loaded",
+            "bytes": 1,
+            "sha256": "5555555555555555555555555555555555555555555555555555555555555555"
+          }
+        ]
+      },
+      "acceptance": {
+        "status": "ACCEPTED_CHANGED_BRANCH_VALIDATION",
+        "manifest_sha256": "6666666666666666666666666666666666666666666666666666666666666666",
+        "execution_binding_sha256": "cd2b061e1a2de20d5cef29df0b5be25d34641f731d5331544d4e1ed1d2aa526c",
+        "evidence_sha256": "7777777777777777777777777777777777777777777777777777777777777777"
+      },
+      "approval": {
+        "approved": true,
+        "usable": true,
+        "kind": "SEPARATE_NATIVE_ONE_RUN_APPROVAL",
+        "manifest_sha256": "6666666666666666666666666666666666666666666666666666666666666666",
+        "execution_binding_sha256": "cd2b061e1a2de20d5cef29df0b5be25d34641f731d5331544d4e1ed1d2aa526c",
+        "validation_evidence_sha256": "7777777777777777777777777777777777777777777777777777777777777777",
+        "user_statement_sha256": "8888888888888888888888888888888888888888888888888888888888888888",
+        "unit": {
+          "run_id": "FIXTURE_NO_NATIVE",
+          "variant_id": "P0",
+          "sigma_short_S_m": "1.7e-6",
+          "initialization_id": "FIXTURE_ONLY",
+          "physical_window_s": [
+            0,
+            120
+          ],
+          "commands": {
+            "status": "NATIVE_COMMANDS_FROZEN",
+            "cwd": "fixture://cwd",
+            "argv": [
+              "INERT_NO_EXEC"
+            ],
+            "parent_argv": [
+              "INERT_NO_PARENT"
+            ],
+            "native_compile_argv": [
+              "INERT_NO_COMPILE"
+            ],
+            "native_batch_argv": [
+              "INERT_NO_BATCH"
+            ],
+            "native_cwd": "fixture://cwd"
+          },
+          "paths": {
+            "status": "FROZEN_NATIVE_PATHS",
+            "source_root": "fixture://source",
+            "proposed_native_root": "fixture://no-runtime",
+            "must_be_absent": [
+              "fixture://never-created"
+            ],
+            "approval_path": "fixture://no-approval",
+            "release_path": "fixture://no-release",
+            "user_decision_path": "fixture://no-user-decision"
+          },
+          "counts": {
+            "compile": 1,
+            "batch": 1,
+            "solve": 1,
+            "control": 0,
+            "retry": 0,
+            "separate_initialization_solve": 0,
+            "fresh_direct_challenges": 2
+          },
+          "resource_contract_sha256": "4444444444444444444444444444444444444444444444444444444444444444",
+          "phase_limits_s": {
+            "native": 7200,
+            "cleanup": 120
+          },
+          "overall_limit_s": 9000
+        },
+        "policy_pin": {
+          "changes_allowed": false,
+          "source_prefs": {
+            "path": "fixture://S1O_CONTROL/prefs-not-read",
+            "bytes": 1,
+            "sha256": "3333333333333333333333333333333333333333333333333333333333333333"
+          }
+        }
+      },
+      "observed": {
+        "manifest_sha256": "6666666666666666666666666666666666666666666666666666666666666666",
+        "payload": [
+          {
+            "path": "fixture://S1O_CONTROL/candidate-not-loaded",
+            "bytes": 1,
+            "sha256": "9999999999999999999999999999999999999999999999999999999999999999"
+          }
+        ],
+        "engines": [
+          {
+            "path": "fixture://S1O_CONTROL/engine-not-executable",
+            "bytes": 1,
+            "sha256": "1111111111111111111111111111111111111111111111111111111111111111"
+          }
+        ],
+        "dependencies": [
+          {
+            "path": "fixture://S1O_CONTROL/dependency-not-imported",
+            "bytes": 1,
+            "sha256": "2222222222222222222222222222222222222222222222222222222222222222"
+          }
+        ],
+        "cwd": "fixture://cwd",
+        "argv": [
+          "INERT_NO_EXEC"
+        ],
+        "path_absence": [
+          "fixture://never-created"
+        ],
+        "path_collisions": [],
+        "path_resolution": "NO_REPARSE_NO_ESCAPE",
+        "pending_owned_runs": [],
+        "other_comsol_work": [],
+        "policy": {
+          "changes_allowed": false,
+          "source_prefs": {
+            "path": "fixture://S1O_CONTROL/prefs-not-read",
+            "bytes": 1,
+            "sha256": "3333333333333333333333333333333333333333333333333333333333333333"
+          }
+        },
+        "elevated": false,
+        "attempt_history": [],
+        "adapter_identity_verified": true,
+        "resource_enforcement_ready": true
+      }
+    },
+    "expected": "SOURCE_IDENTITY",
+    "expected_detail": {
+      "exception_stage": "authorization"
+    },
+    "mutation_leaves": [
+      "observed.payload[0].sha256"
+    ],
+    "positive_control_case_id": "AUTH01",
+    "real_native_calls": 0,
+    "actual_user_input_calls": 0
+  },
+  "AUTH04": {
+    "id": "AUTH04",
+    "input_id": "AUTH04:01",
+    "fixture_only": true,
+    "route": "authorize_execution",
+    "arguments": {
+      "binding": {
+        "schema": "S1O_EXECUTION_BINDING_V1",
+        "native_ready": true,
+        "adapter_status": "IMPLEMENTED_VALIDATED_ACCEPTED",
+        "open_blockers": [],
+        "unit": {
+          "run_id": "FIXTURE_NO_NATIVE",
+          "variant_id": "P0",
+          "sigma_short_S_m": "1.7e-6",
+          "initialization_id": "FIXTURE_ONLY",
+          "physical_window_s": [
+            0,
+            120
+          ],
+          "commands": {
+            "status": "NATIVE_COMMANDS_FROZEN",
+            "cwd": "fixture://cwd",
+            "argv": [
+              "INERT_NO_EXEC"
+            ],
+            "parent_argv": [
+              "INERT_NO_PARENT"
+            ],
+            "native_compile_argv": [
+              "INERT_NO_COMPILE"
+            ],
+            "native_batch_argv": [
+              "INERT_NO_BATCH"
+            ],
+            "native_cwd": "fixture://cwd"
+          },
+          "paths": {
+            "status": "FROZEN_NATIVE_PATHS",
+            "source_root": "fixture://source",
+            "proposed_native_root": "fixture://no-runtime",
+            "must_be_absent": [
+              "fixture://never-created"
+            ],
+            "approval_path": "fixture://no-approval",
+            "release_path": "fixture://no-release",
+            "user_decision_path": "fixture://no-user-decision"
+          },
+          "counts": {
+            "compile": 1,
+            "batch": 1,
+            "solve": 1,
+            "control": 0,
+            "retry": 0,
+            "separate_initialization_solve": 0,
+            "fresh_direct_challenges": 2
+          },
+          "resource_contract_sha256": "4444444444444444444444444444444444444444444444444444444444444444",
+          "phase_limits_s": {
+            "native": 7200,
+            "cleanup": 120
+          },
+          "overall_limit_s": 9000
+        },
+        "engine_pins": [
+          {
+            "path": "fixture://S1O_CONTROL/engine-not-executable",
+            "bytes": 1,
+            "sha256": "1111111111111111111111111111111111111111111111111111111111111111"
+          }
+        ],
+        "dependency_pins": [
+          {
+            "path": "fixture://S1O_CONTROL/dependency-not-imported",
+            "bytes": 1,
+            "sha256": "2222222222222222222222222222222222222222222222222222222222222222"
+          }
+        ],
+        "policy_pin": {
+          "changes_allowed": false,
+          "source_prefs": {
+            "path": "fixture://S1O_CONTROL/prefs-not-read",
+            "bytes": 1,
+            "sha256": "3333333333333333333333333333333333333333333333333333333333333333"
+          }
+        }
+      },
+      "manifest": {
+        "schema": "S1O_CODE_MANIFEST_V1",
+        "native_ready": true,
+        "files": [
+          {
+            "path": "fixture://S1O_CONTROL/candidate-not-loaded",
+            "bytes": 1,
+            "sha256": "5555555555555555555555555555555555555555555555555555555555555555"
+          }
+        ]
+      },
+      "acceptance": {
+        "status": "ACCEPTED_CHANGED_BRANCH_VALIDATION",
+        "manifest_sha256": "6666666666666666666666666666666666666666666666666666666666666666",
+        "execution_binding_sha256": "cd2b061e1a2de20d5cef29df0b5be25d34641f731d5331544d4e1ed1d2aa526c",
+        "evidence_sha256": "7777777777777777777777777777777777777777777777777777777777777777"
+      },
+      "approval": {
+        "approved": true,
+        "usable": true,
+        "kind": "SEPARATE_NATIVE_ONE_RUN_APPROVAL",
+        "manifest_sha256": "6666666666666666666666666666666666666666666666666666666666666666",
+        "execution_binding_sha256": "cd2b061e1a2de20d5cef29df0b5be25d34641f731d5331544d4e1ed1d2aa526c",
+        "validation_evidence_sha256": "7777777777777777777777777777777777777777777777777777777777777777",
+        "user_statement_sha256": "8888888888888888888888888888888888888888888888888888888888888888",
+        "unit": {
+          "run_id": "FIXTURE_NO_NATIVE",
+          "variant_id": "P0",
+          "sigma_short_S_m": "1.7e-6",
+          "initialization_id": "FIXTURE_ONLY",
+          "physical_window_s": [
+            0,
+            120
+          ],
+          "commands": {
+            "status": "NATIVE_COMMANDS_FROZEN",
+            "cwd": "fixture://cwd",
+            "argv": [
+              "INERT_NO_EXEC"
+            ],
+            "parent_argv": [
+              "INERT_NO_PARENT"
+            ],
+            "native_compile_argv": [
+              "INERT_NO_COMPILE"
+            ],
+            "native_batch_argv": [
+              "INERT_NO_BATCH"
+            ],
+            "native_cwd": "fixture://cwd"
+          },
+          "paths": {
+            "status": "FROZEN_NATIVE_PATHS",
+            "source_root": "fixture://source",
+            "proposed_native_root": "fixture://no-runtime",
+            "must_be_absent": [
+              "fixture://never-created"
+            ],
+            "approval_path": "fixture://no-approval",
+            "release_path": "fixture://no-release",
+            "user_decision_path": "fixture://no-user-decision"
+          },
+          "counts": {
+            "compile": 1,
+            "batch": 1,
+            "solve": 1,
+            "control": 0,
+            "retry": 0,
+            "separate_initialization_solve": 0,
+            "fresh_direct_challenges": 2
+          },
+          "resource_contract_sha256": "4444444444444444444444444444444444444444444444444444444444444444",
+          "phase_limits_s": {
+            "native": 7200,
+            "cleanup": 120
+          },
+          "overall_limit_s": 9000
+        },
+        "policy_pin": {
+          "changes_allowed": false,
+          "source_prefs": {
+            "path": "fixture://S1O_CONTROL/prefs-not-read",
+            "bytes": 1,
+            "sha256": "3333333333333333333333333333333333333333333333333333333333333333"
+          }
+        }
+      },
+      "observed": {
+        "manifest_sha256": "6666666666666666666666666666666666666666666666666666666666666666",
+        "payload": [
+          {
+            "path": "fixture://S1O_CONTROL/candidate-not-loaded",
+            "bytes": 1,
+            "sha256": "5555555555555555555555555555555555555555555555555555555555555555"
+          }
+        ],
+        "engines": [
+          {
+            "path": "fixture://S1O_CONTROL/engine-not-executable",
+            "bytes": 1,
+            "sha256": "9999999999999999999999999999999999999999999999999999999999999999"
+          }
+        ],
+        "dependencies": [
+          {
+            "path": "fixture://S1O_CONTROL/dependency-not-imported",
+            "bytes": 1,
+            "sha256": "2222222222222222222222222222222222222222222222222222222222222222"
+          }
+        ],
+        "cwd": "fixture://cwd",
+        "argv": [
+          "INERT_NO_EXEC"
+        ],
+        "path_absence": [
+          "fixture://never-created"
+        ],
+        "path_collisions": [],
+        "path_resolution": "NO_REPARSE_NO_ESCAPE",
+        "pending_owned_runs": [],
+        "other_comsol_work": [],
+        "policy": {
+          "changes_allowed": false,
+          "source_prefs": {
+            "path": "fixture://S1O_CONTROL/prefs-not-read",
+            "bytes": 1,
+            "sha256": "3333333333333333333333333333333333333333333333333333333333333333"
+          }
+        },
+        "elevated": false,
+        "attempt_history": [],
+        "adapter_identity_verified": true,
+        "resource_enforcement_ready": true
+      }
+    },
+    "expected": "ENGINE_OR_DEPENDENCY_IDENTITY",
+    "expected_detail": {
+      "exception_stage": "authorization"
+    },
+    "mutation_leaves": [
+      "observed.engines[0].sha256"
+    ],
+    "positive_control_case_id": "AUTH01",
+    "real_native_calls": 0,
+    "actual_user_input_calls": 0
+  },
+  "AUTH05": {
+    "id": "AUTH05",
+    "input_id": "AUTH05:01",
+    "fixture_only": true,
+    "route": "authorize_execution",
+    "arguments": {
+      "binding": {
+        "schema": "S1O_EXECUTION_BINDING_V1",
+        "native_ready": true,
+        "adapter_status": "IMPLEMENTED_VALIDATED_ACCEPTED",
+        "open_blockers": [],
+        "unit": {
+          "run_id": "FIXTURE_NO_NATIVE",
+          "variant_id": "P0",
+          "sigma_short_S_m": "1.7e-6",
+          "initialization_id": "FIXTURE_ONLY",
+          "physical_window_s": [
+            0,
+            120
+          ],
+          "commands": {
+            "status": "NATIVE_COMMANDS_FROZEN",
+            "cwd": "fixture://cwd",
+            "argv": [
+              "INERT_NO_EXEC"
+            ],
+            "parent_argv": [
+              "INERT_NO_PARENT"
+            ],
+            "native_compile_argv": [
+              "INERT_NO_COMPILE"
+            ],
+            "native_batch_argv": [
+              "INERT_NO_BATCH"
+            ],
+            "native_cwd": "fixture://cwd"
+          },
+          "paths": {
+            "status": "FROZEN_NATIVE_PATHS",
+            "source_root": "fixture://source",
+            "proposed_native_root": "fixture://no-runtime",
+            "must_be_absent": [
+              "fixture://never-created"
+            ],
+            "approval_path": "fixture://no-approval",
+            "release_path": "fixture://no-release",
+            "user_decision_path": "fixture://no-user-decision"
+          },
+          "counts": {
+            "compile": 1,
+            "batch": 1,
+            "solve": 1,
+            "control": 0,
+            "retry": 0,
+            "separate_initialization_solve": 0,
+            "fresh_direct_challenges": 2
+          },
+          "resource_contract_sha256": "4444444444444444444444444444444444444444444444444444444444444444",
+          "phase_limits_s": {
+            "native": 7200,
+            "cleanup": 120
+          },
+          "overall_limit_s": 9000
+        },
+        "engine_pins": [
+          {
+            "path": "fixture://S1O_CONTROL/engine-not-executable",
+            "bytes": 1,
+            "sha256": "1111111111111111111111111111111111111111111111111111111111111111"
+          }
+        ],
+        "dependency_pins": [
+          {
+            "path": "fixture://S1O_CONTROL/dependency-not-imported",
+            "bytes": 1,
+            "sha256": "2222222222222222222222222222222222222222222222222222222222222222"
+          }
+        ],
+        "policy_pin": {
+          "changes_allowed": false,
+          "source_prefs": {
+            "path": "fixture://S1O_CONTROL/prefs-not-read",
+            "bytes": 1,
+            "sha256": "3333333333333333333333333333333333333333333333333333333333333333"
+          }
+        }
+      },
+      "manifest": {
+        "schema": "S1O_CODE_MANIFEST_V1",
+        "native_ready": true,
+        "files": [
+          {
+            "path": "fixture://S1O_CONTROL/candidate-not-loaded",
+            "bytes": 1,
+            "sha256": "5555555555555555555555555555555555555555555555555555555555555555"
+          }
+        ]
+      },
+      "acceptance": {
+        "status": "ACCEPTED_CHANGED_BRANCH_VALIDATION",
+        "manifest_sha256": "9999999999999999999999999999999999999999999999999999999999999999",
+        "execution_binding_sha256": "cd2b061e1a2de20d5cef29df0b5be25d34641f731d5331544d4e1ed1d2aa526c",
+        "evidence_sha256": "7777777777777777777777777777777777777777777777777777777777777777"
+      },
+      "approval": {
+        "approved": true,
+        "usable": true,
+        "kind": "SEPARATE_NATIVE_ONE_RUN_APPROVAL",
+        "manifest_sha256": "6666666666666666666666666666666666666666666666666666666666666666",
+        "execution_binding_sha256": "cd2b061e1a2de20d5cef29df0b5be25d34641f731d5331544d4e1ed1d2aa526c",
+        "validation_evidence_sha256": "7777777777777777777777777777777777777777777777777777777777777777",
+        "user_statement_sha256": "8888888888888888888888888888888888888888888888888888888888888888",
+        "unit": {
+          "run_id": "FIXTURE_NO_NATIVE",
+          "variant_id": "P0",
+          "sigma_short_S_m": "1.7e-6",
+          "initialization_id": "FIXTURE_ONLY",
+          "physical_window_s": [
+            0,
+            120
+          ],
+          "commands": {
+            "status": "NATIVE_COMMANDS_FROZEN",
+            "cwd": "fixture://cwd",
+            "argv": [
+              "INERT_NO_EXEC"
+            ],
+            "parent_argv": [
+              "INERT_NO_PARENT"
+            ],
+            "native_compile_argv": [
+              "INERT_NO_COMPILE"
+            ],
+            "native_batch_argv": [
+              "INERT_NO_BATCH"
+            ],
+            "native_cwd": "fixture://cwd"
+          },
+          "paths": {
+            "status": "FROZEN_NATIVE_PATHS",
+            "source_root": "fixture://source",
+            "proposed_native_root": "fixture://no-runtime",
+            "must_be_absent": [
+              "fixture://never-created"
+            ],
+            "approval_path": "fixture://no-approval",
+            "release_path": "fixture://no-release",
+            "user_decision_path": "fixture://no-user-decision"
+          },
+          "counts": {
+            "compile": 1,
+            "batch": 1,
+            "solve": 1,
+            "control": 0,
+            "retry": 0,
+            "separate_initialization_solve": 0,
+            "fresh_direct_challenges": 2
+          },
+          "resource_contract_sha256": "4444444444444444444444444444444444444444444444444444444444444444",
+          "phase_limits_s": {
+            "native": 7200,
+            "cleanup": 120
+          },
+          "overall_limit_s": 9000
+        },
+        "policy_pin": {
+          "changes_allowed": false,
+          "source_prefs": {
+            "path": "fixture://S1O_CONTROL/prefs-not-read",
+            "bytes": 1,
+            "sha256": "3333333333333333333333333333333333333333333333333333333333333333"
+          }
+        }
+      },
+      "observed": {
+        "manifest_sha256": "6666666666666666666666666666666666666666666666666666666666666666",
+        "payload": [
+          {
+            "path": "fixture://S1O_CONTROL/candidate-not-loaded",
+            "bytes": 1,
+            "sha256": "5555555555555555555555555555555555555555555555555555555555555555"
+          }
+        ],
+        "engines": [
+          {
+            "path": "fixture://S1O_CONTROL/engine-not-executable",
+            "bytes": 1,
+            "sha256": "1111111111111111111111111111111111111111111111111111111111111111"
+          }
+        ],
+        "dependencies": [
+          {
+            "path": "fixture://S1O_CONTROL/dependency-not-imported",
+            "bytes": 1,
+            "sha256": "2222222222222222222222222222222222222222222222222222222222222222"
+          }
+        ],
+        "cwd": "fixture://cwd",
+        "argv": [
+          "INERT_NO_EXEC"
+        ],
+        "path_absence": [
+          "fixture://never-created"
+        ],
+        "path_collisions": [],
+        "path_resolution": "NO_REPARSE_NO_ESCAPE",
+        "pending_owned_runs": [],
+        "other_comsol_work": [],
+        "policy": {
+          "changes_allowed": false,
+          "source_prefs": {
+            "path": "fixture://S1O_CONTROL/prefs-not-read",
+            "bytes": 1,
+            "sha256": "3333333333333333333333333333333333333333333333333333333333333333"
+          }
+        },
+        "elevated": false,
+        "attempt_history": [],
+        "adapter_identity_verified": true,
+        "resource_enforcement_ready": true
+      }
+    },
+    "expected": "VALIDATION_ACCEPTANCE_BINDING",
+    "expected_detail": {
+      "exception_stage": "authorization"
+    },
+    "mutation_leaves": [
+      "acceptance.manifest_sha256"
+    ],
+    "positive_control_case_id": "AUTH01",
+    "real_native_calls": 0,
+    "actual_user_input_calls": 0
+  },
+  "AUTH06": {
+    "id": "AUTH06",
+    "input_id": "AUTH06:01",
+    "fixture_only": true,
+    "route": "authorize_execution",
+    "arguments": {
+      "binding": {
+        "schema": "S1O_EXECUTION_BINDING_V1",
+        "native_ready": true,
+        "adapter_status": "IMPLEMENTED_VALIDATED_ACCEPTED",
+        "open_blockers": [],
+        "unit": {
+          "run_id": "FIXTURE_NO_NATIVE",
+          "variant_id": "P0",
+          "sigma_short_S_m": "1.7e-6",
+          "initialization_id": "FIXTURE_ONLY",
+          "physical_window_s": [
+            0,
+            120
+          ],
+          "commands": {
+            "status": "NATIVE_COMMANDS_FROZEN",
+            "cwd": "fixture://cwd",
+            "argv": [
+              "INERT_NO_EXEC"
+            ],
+            "parent_argv": [
+              "INERT_NO_PARENT"
+            ],
+            "native_compile_argv": [
+              "INERT_NO_COMPILE"
+            ],
+            "native_batch_argv": [
+              "INERT_NO_BATCH"
+            ],
+            "native_cwd": "fixture://cwd"
+          },
+          "paths": {
+            "status": "FROZEN_NATIVE_PATHS",
+            "source_root": "fixture://source",
+            "proposed_native_root": "fixture://no-runtime",
+            "must_be_absent": [
+              "fixture://never-created"
+            ],
+            "approval_path": "fixture://no-approval",
+            "release_path": "fixture://no-release",
+            "user_decision_path": "fixture://no-user-decision"
+          },
+          "counts": {
+            "compile": 1,
+            "batch": 1,
+            "solve": 1,
+            "control": 0,
+            "retry": 0,
+            "separate_initialization_solve": 0,
+            "fresh_direct_challenges": 2
+          },
+          "resource_contract_sha256": "4444444444444444444444444444444444444444444444444444444444444444",
+          "phase_limits_s": {
+            "native": 7200,
+            "cleanup": 120
+          },
+          "overall_limit_s": 9000
+        },
+        "engine_pins": [
+          {
+            "path": "fixture://S1O_CONTROL/engine-not-executable",
+            "bytes": 1,
+            "sha256": "1111111111111111111111111111111111111111111111111111111111111111"
+          }
+        ],
+        "dependency_pins": [
+          {
+            "path": "fixture://S1O_CONTROL/dependency-not-imported",
+            "bytes": 1,
+            "sha256": "2222222222222222222222222222222222222222222222222222222222222222"
+          }
+        ],
+        "policy_pin": {
+          "changes_allowed": false,
+          "source_prefs": {
+            "path": "fixture://S1O_CONTROL/prefs-not-read",
+            "bytes": 1,
+            "sha256": "3333333333333333333333333333333333333333333333333333333333333333"
+          }
+        }
+      },
+      "manifest": {
+        "schema": "S1O_CODE_MANIFEST_V1",
+        "native_ready": true,
+        "files": [
+          {
+            "path": "fixture://S1O_CONTROL/candidate-not-loaded",
+            "bytes": 1,
+            "sha256": "5555555555555555555555555555555555555555555555555555555555555555"
+          }
+        ]
+      },
+      "acceptance": {
+        "status": "ACCEPTED_CHANGED_BRANCH_VALIDATION",
+        "manifest_sha256": "6666666666666666666666666666666666666666666666666666666666666666",
+        "execution_binding_sha256": "cd2b061e1a2de20d5cef29df0b5be25d34641f731d5331544d4e1ed1d2aa526c",
+        "evidence_sha256": "7777777777777777777777777777777777777777777777777777777777777777"
+      },
+      "approval": {
+        "approved": true,
+        "usable": true,
+        "kind": "SEPARATE_NATIVE_ONE_RUN_APPROVAL",
+        "manifest_sha256": "6666666666666666666666666666666666666666666666666666666666666666",
+        "execution_binding_sha256": "cd2b061e1a2de20d5cef29df0b5be25d34641f731d5331544d4e1ed1d2aa526c",
+        "validation_evidence_sha256": "7777777777777777777777777777777777777777777777777777777777777777",
+        "user_statement_sha256": "8888888888888888888888888888888888888888888888888888888888888888",
+        "unit": {
+          "run_id": "FIXTURE_NO_NATIVE",
+          "variant_id": "P0",
+          "sigma_short_S_m": "1.7e-7",
+          "initialization_id": "FIXTURE_ONLY",
+          "physical_window_s": [
+            0,
+            120
+          ],
+          "commands": {
+            "status": "NATIVE_COMMANDS_FROZEN",
+            "cwd": "fixture://cwd",
+            "argv": [
+              "INERT_NO_EXEC"
+            ],
+            "parent_argv": [
+              "INERT_NO_PARENT"
+            ],
+            "native_compile_argv": [
+              "INERT_NO_COMPILE"
+            ],
+            "native_batch_argv": [
+              "INERT_NO_BATCH"
+            ],
+            "native_cwd": "fixture://cwd"
+          },
+          "paths": {
+            "status": "FROZEN_NATIVE_PATHS",
+            "source_root": "fixture://source",
+            "proposed_native_root": "fixture://no-runtime",
+            "must_be_absent": [
+              "fixture://never-created"
+            ],
+            "approval_path": "fixture://no-approval",
+            "release_path": "fixture://no-release",
+            "user_decision_path": "fixture://no-user-decision"
+          },
+          "counts": {
+            "compile": 1,
+            "batch": 1,
+            "solve": 1,
+            "control": 0,
+            "retry": 0,
+            "separate_initialization_solve": 0,
+            "fresh_direct_challenges": 2
+          },
+          "resource_contract_sha256": "4444444444444444444444444444444444444444444444444444444444444444",
+          "phase_limits_s": {
+            "native": 7200,
+            "cleanup": 120
+          },
+          "overall_limit_s": 9000
+        },
+        "policy_pin": {
+          "changes_allowed": false,
+          "source_prefs": {
+            "path": "fixture://S1O_CONTROL/prefs-not-read",
+            "bytes": 1,
+            "sha256": "3333333333333333333333333333333333333333333333333333333333333333"
+          }
+        }
+      },
+      "observed": {
+        "manifest_sha256": "6666666666666666666666666666666666666666666666666666666666666666",
+        "payload": [
+          {
+            "path": "fixture://S1O_CONTROL/candidate-not-loaded",
+            "bytes": 1,
+            "sha256": "5555555555555555555555555555555555555555555555555555555555555555"
+          }
+        ],
+        "engines": [
+          {
+            "path": "fixture://S1O_CONTROL/engine-not-executable",
+            "bytes": 1,
+            "sha256": "1111111111111111111111111111111111111111111111111111111111111111"
+          }
+        ],
+        "dependencies": [
+          {
+            "path": "fixture://S1O_CONTROL/dependency-not-imported",
+            "bytes": 1,
+            "sha256": "2222222222222222222222222222222222222222222222222222222222222222"
+          }
+        ],
+        "cwd": "fixture://cwd",
+        "argv": [
+          "INERT_NO_EXEC"
+        ],
+        "path_absence": [
+          "fixture://never-created"
+        ],
+        "path_collisions": [],
+        "path_resolution": "NO_REPARSE_NO_ESCAPE",
+        "pending_owned_runs": [],
+        "other_comsol_work": [],
+        "policy": {
+          "changes_allowed": false,
+          "source_prefs": {
+            "path": "fixture://S1O_CONTROL/prefs-not-read",
+            "bytes": 1,
+            "sha256": "3333333333333333333333333333333333333333333333333333333333333333"
+          }
+        },
+        "elevated": false,
+        "attempt_history": [],
+        "adapter_identity_verified": true,
+        "resource_enforcement_ready": true
+      }
+    },
+    "expected": "APPROVED_RUN_UNIT_MISMATCH",
+    "expected_detail": {
+      "exception_stage": "authorization"
+    },
+    "mutation_leaves": [
+      "approval.unit.sigma_short_S_m"
+    ],
+    "positive_control_case_id": "AUTH01",
+    "real_native_calls": 0,
+    "actual_user_input_calls": 0
+  },
+  "AUTH07": {
+    "id": "AUTH07",
+    "input_id": "AUTH07:01",
+    "fixture_only": true,
+    "route": "authorize_execution",
+    "arguments": {
+      "binding": {
+        "schema": "S1O_EXECUTION_BINDING_V1",
+        "native_ready": true,
+        "adapter_status": "IMPLEMENTED_VALIDATED_ACCEPTED",
+        "open_blockers": [],
+        "unit": {
+          "run_id": "FIXTURE_NO_NATIVE",
+          "variant_id": "P0",
+          "sigma_short_S_m": "1.7e-6",
+          "initialization_id": "FIXTURE_ONLY",
+          "physical_window_s": [
+            0,
+            120
+          ],
+          "commands": {
+            "status": "NATIVE_COMMANDS_FROZEN",
+            "cwd": "fixture://cwd",
+            "argv": [
+              "INERT_NO_EXEC"
+            ],
+            "parent_argv": [
+              "INERT_NO_PARENT"
+            ],
+            "native_compile_argv": [
+              "INERT_NO_COMPILE"
+            ],
+            "native_batch_argv": [
+              "INERT_NO_BATCH"
+            ],
+            "native_cwd": "fixture://cwd"
+          },
+          "paths": {
+            "status": "FROZEN_NATIVE_PATHS",
+            "source_root": "fixture://source",
+            "proposed_native_root": "fixture://no-runtime",
+            "must_be_absent": [
+              "fixture://never-created"
+            ],
+            "approval_path": "fixture://no-approval",
+            "release_path": "fixture://no-release",
+            "user_decision_path": "fixture://no-user-decision"
+          },
+          "counts": {
+            "compile": 1,
+            "batch": 1,
+            "solve": 2,
+            "control": 0,
+            "retry": 0,
+            "separate_initialization_solve": 0,
+            "fresh_direct_challenges": 2
+          },
+          "resource_contract_sha256": "4444444444444444444444444444444444444444444444444444444444444444",
+          "phase_limits_s": {
+            "native": 7200,
+            "cleanup": 120
+          },
+          "overall_limit_s": 9000
+        },
+        "engine_pins": [
+          {
+            "path": "fixture://S1O_CONTROL/engine-not-executable",
+            "bytes": 1,
+            "sha256": "1111111111111111111111111111111111111111111111111111111111111111"
+          }
+        ],
+        "dependency_pins": [
+          {
+            "path": "fixture://S1O_CONTROL/dependency-not-imported",
+            "bytes": 1,
+            "sha256": "2222222222222222222222222222222222222222222222222222222222222222"
+          }
+        ],
+        "policy_pin": {
+          "changes_allowed": false,
+          "source_prefs": {
+            "path": "fixture://S1O_CONTROL/prefs-not-read",
+            "bytes": 1,
+            "sha256": "3333333333333333333333333333333333333333333333333333333333333333"
+          }
+        }
+      },
+      "manifest": {
+        "schema": "S1O_CODE_MANIFEST_V1",
+        "native_ready": true,
+        "files": [
+          {
+            "path": "fixture://S1O_CONTROL/candidate-not-loaded",
+            "bytes": 1,
+            "sha256": "5555555555555555555555555555555555555555555555555555555555555555"
+          }
+        ]
+      },
+      "acceptance": {
+        "status": "ACCEPTED_CHANGED_BRANCH_VALIDATION",
+        "manifest_sha256": "6666666666666666666666666666666666666666666666666666666666666666",
+        "execution_binding_sha256": "ffcc48c43fdf7739a43cd97f7cb9b350937638e2f20b0e8537129360f37fcf07",
+        "evidence_sha256": "7777777777777777777777777777777777777777777777777777777777777777"
+      },
+      "approval": {
+        "approved": true,
+        "usable": true,
+        "kind": "SEPARATE_NATIVE_ONE_RUN_APPROVAL",
+        "manifest_sha256": "6666666666666666666666666666666666666666666666666666666666666666",
+        "execution_binding_sha256": "ffcc48c43fdf7739a43cd97f7cb9b350937638e2f20b0e8537129360f37fcf07",
+        "validation_evidence_sha256": "7777777777777777777777777777777777777777777777777777777777777777",
+        "user_statement_sha256": "8888888888888888888888888888888888888888888888888888888888888888",
+        "unit": {
+          "run_id": "FIXTURE_NO_NATIVE",
+          "variant_id": "P0",
+          "sigma_short_S_m": "1.7e-6",
+          "initialization_id": "FIXTURE_ONLY",
+          "physical_window_s": [
+            0,
+            120
+          ],
+          "commands": {
+            "status": "NATIVE_COMMANDS_FROZEN",
+            "cwd": "fixture://cwd",
+            "argv": [
+              "INERT_NO_EXEC"
+            ],
+            "parent_argv": [
+              "INERT_NO_PARENT"
+            ],
+            "native_compile_argv": [
+              "INERT_NO_COMPILE"
+            ],
+            "native_batch_argv": [
+              "INERT_NO_BATCH"
+            ],
+            "native_cwd": "fixture://cwd"
+          },
+          "paths": {
+            "status": "FROZEN_NATIVE_PATHS",
+            "source_root": "fixture://source",
+            "proposed_native_root": "fixture://no-runtime",
+            "must_be_absent": [
+              "fixture://never-created"
+            ],
+            "approval_path": "fixture://no-approval",
+            "release_path": "fixture://no-release",
+            "user_decision_path": "fixture://no-user-decision"
+          },
+          "counts": {
+            "compile": 1,
+            "batch": 1,
+            "solve": 2,
+            "control": 0,
+            "retry": 0,
+            "separate_initialization_solve": 0,
+            "fresh_direct_challenges": 2
+          },
+          "resource_contract_sha256": "4444444444444444444444444444444444444444444444444444444444444444",
+          "phase_limits_s": {
+            "native": 7200,
+            "cleanup": 120
+          },
+          "overall_limit_s": 9000
+        },
+        "policy_pin": {
+          "changes_allowed": false,
+          "source_prefs": {
+            "path": "fixture://S1O_CONTROL/prefs-not-read",
+            "bytes": 1,
+            "sha256": "3333333333333333333333333333333333333333333333333333333333333333"
+          }
+        }
+      },
+      "observed": {
+        "manifest_sha256": "6666666666666666666666666666666666666666666666666666666666666666",
+        "payload": [
+          {
+            "path": "fixture://S1O_CONTROL/candidate-not-loaded",
+            "bytes": 1,
+            "sha256": "5555555555555555555555555555555555555555555555555555555555555555"
+          }
+        ],
+        "engines": [
+          {
+            "path": "fixture://S1O_CONTROL/engine-not-executable",
+            "bytes": 1,
+            "sha256": "1111111111111111111111111111111111111111111111111111111111111111"
+          }
+        ],
+        "dependencies": [
+          {
+            "path": "fixture://S1O_CONTROL/dependency-not-imported",
+            "bytes": 1,
+            "sha256": "2222222222222222222222222222222222222222222222222222222222222222"
+          }
+        ],
+        "cwd": "fixture://cwd",
+        "argv": [
+          "INERT_NO_EXEC"
+        ],
+        "path_absence": [
+          "fixture://never-created"
+        ],
+        "path_collisions": [],
+        "path_resolution": "NO_REPARSE_NO_ESCAPE",
+        "pending_owned_runs": [],
+        "other_comsol_work": [],
+        "policy": {
+          "changes_allowed": false,
+          "source_prefs": {
+            "path": "fixture://S1O_CONTROL/prefs-not-read",
+            "bytes": 1,
+            "sha256": "3333333333333333333333333333333333333333333333333333333333333333"
+          }
+        },
+        "elevated": false,
+        "attempt_history": [],
+        "adapter_identity_verified": true,
+        "resource_enforcement_ready": true
+      }
+    },
+    "expected": "CALL_COUNTS_NOT_APPROVED",
+    "expected_detail": {
+      "exception_stage": "authorization"
+    },
+    "mutation_leaves": [
+      "binding.unit.counts.solve",
+      "derived approval.unit",
+      "derived binding digest pins"
+    ],
+    "positive_control_case_id": "AUTH01",
+    "real_native_calls": 0,
+    "actual_user_input_calls": 0
+  },
+  "AUTH08": {
+    "id": "AUTH08",
+    "input_id": "AUTH08:01",
+    "fixture_only": true,
+    "route": "authorize_execution",
+    "arguments": {
+      "binding": {
+        "schema": "S1O_EXECUTION_BINDING_V1",
+        "native_ready": true,
+        "adapter_status": "IMPLEMENTED_VALIDATED_ACCEPTED",
+        "open_blockers": [],
+        "unit": {
+          "run_id": "FIXTURE_NO_NATIVE",
+          "variant_id": "P0",
+          "sigma_short_S_m": "1.7e-6",
+          "initialization_id": "FIXTURE_ONLY",
+          "physical_window_s": [
+            0,
+            120
+          ],
+          "commands": {
+            "status": "NATIVE_COMMANDS_FROZEN",
+            "cwd": "fixture://cwd",
+            "argv": [
+              "INERT_NO_EXEC"
+            ],
+            "parent_argv": [
+              "INERT_NO_PARENT"
+            ],
+            "native_compile_argv": [
+              "INERT_NO_COMPILE"
+            ],
+            "native_batch_argv": [
+              "INERT_NO_BATCH"
+            ],
+            "native_cwd": "fixture://cwd"
+          },
+          "paths": {
+            "status": "FROZEN_NATIVE_PATHS",
+            "source_root": "fixture://source",
+            "proposed_native_root": "fixture://no-runtime",
+            "must_be_absent": [
+              "fixture://never-created"
+            ],
+            "approval_path": "fixture://no-approval",
+            "release_path": "fixture://no-release",
+            "user_decision_path": "fixture://no-user-decision"
+          },
+          "counts": {
+            "compile": 1,
+            "batch": 1,
+            "solve": 1,
+            "control": 0,
+            "retry": 0,
+            "separate_initialization_solve": 0,
+            "fresh_direct_challenges": 2
+          },
+          "resource_contract_sha256": "4444444444444444444444444444444444444444444444444444444444444444",
+          "phase_limits_s": {
+            "native": 7200,
+            "cleanup": 120
+          },
+          "overall_limit_s": 9000
+        },
+        "engine_pins": [
+          {
+            "path": "fixture://S1O_CONTROL/engine-not-executable",
+            "bytes": 1,
+            "sha256": "1111111111111111111111111111111111111111111111111111111111111111"
+          }
+        ],
+        "dependency_pins": [
+          {
+            "path": "fixture://S1O_CONTROL/dependency-not-imported",
+            "bytes": 1,
+            "sha256": "2222222222222222222222222222222222222222222222222222222222222222"
+          }
+        ],
+        "policy_pin": {
+          "changes_allowed": false,
+          "source_prefs": {
+            "path": "fixture://S1O_CONTROL/prefs-not-read",
+            "bytes": 1,
+            "sha256": "3333333333333333333333333333333333333333333333333333333333333333"
+          }
+        }
+      },
+      "manifest": {
+        "schema": "S1O_CODE_MANIFEST_V1",
+        "native_ready": true,
+        "files": [
+          {
+            "path": "fixture://S1O_CONTROL/candidate-not-loaded",
+            "bytes": 1,
+            "sha256": "5555555555555555555555555555555555555555555555555555555555555555"
+          }
+        ]
+      },
+      "acceptance": {
+        "status": "ACCEPTED_CHANGED_BRANCH_VALIDATION",
+        "manifest_sha256": "6666666666666666666666666666666666666666666666666666666666666666",
+        "execution_binding_sha256": "cd2b061e1a2de20d5cef29df0b5be25d34641f731d5331544d4e1ed1d2aa526c",
+        "evidence_sha256": "7777777777777777777777777777777777777777777777777777777777777777"
+      },
+      "approval": {
+        "approved": true,
+        "usable": true,
+        "kind": "SEPARATE_NATIVE_ONE_RUN_APPROVAL",
+        "manifest_sha256": "6666666666666666666666666666666666666666666666666666666666666666",
+        "execution_binding_sha256": "cd2b061e1a2de20d5cef29df0b5be25d34641f731d5331544d4e1ed1d2aa526c",
+        "validation_evidence_sha256": "7777777777777777777777777777777777777777777777777777777777777777",
+        "user_statement_sha256": "8888888888888888888888888888888888888888888888888888888888888888",
+        "unit": {
+          "run_id": "FIXTURE_NO_NATIVE",
+          "variant_id": "P0",
+          "sigma_short_S_m": "1.7e-6",
+          "initialization_id": "FIXTURE_ONLY",
+          "physical_window_s": [
+            0,
+            120
+          ],
+          "commands": {
+            "status": "NATIVE_COMMANDS_FROZEN",
+            "cwd": "fixture://cwd",
+            "argv": [
+              "INERT_NO_EXEC"
+            ],
+            "parent_argv": [
+              "INERT_NO_PARENT"
+            ],
+            "native_compile_argv": [
+              "INERT_NO_COMPILE"
+            ],
+            "native_batch_argv": [
+              "INERT_NO_BATCH"
+            ],
+            "native_cwd": "fixture://cwd"
+          },
+          "paths": {
+            "status": "FROZEN_NATIVE_PATHS",
+            "source_root": "fixture://source",
+            "proposed_native_root": "fixture://no-runtime",
+            "must_be_absent": [
+              "fixture://never-created"
+            ],
+            "approval_path": "fixture://no-approval",
+            "release_path": "fixture://no-release",
+            "user_decision_path": "fixture://no-user-decision"
+          },
+          "counts": {
+            "compile": 1,
+            "batch": 1,
+            "solve": 1,
+            "control": 0,
+            "retry": 0,
+            "separate_initialization_solve": 0,
+            "fresh_direct_challenges": 2
+          },
+          "resource_contract_sha256": "4444444444444444444444444444444444444444444444444444444444444444",
+          "phase_limits_s": {
+            "native": 7200,
+            "cleanup": 120
+          },
+          "overall_limit_s": 9000
+        },
+        "policy_pin": {
+          "changes_allowed": false,
+          "source_prefs": {
+            "path": "fixture://S1O_CONTROL/prefs-not-read",
+            "bytes": 1,
+            "sha256": "3333333333333333333333333333333333333333333333333333333333333333"
+          }
+        }
+      },
+      "observed": {
+        "manifest_sha256": "6666666666666666666666666666666666666666666666666666666666666666",
+        "payload": [
+          {
+            "path": "fixture://S1O_CONTROL/candidate-not-loaded",
+            "bytes": 1,
+            "sha256": "5555555555555555555555555555555555555555555555555555555555555555"
+          }
+        ],
+        "engines": [
+          {
+            "path": "fixture://S1O_CONTROL/engine-not-executable",
+            "bytes": 1,
+            "sha256": "1111111111111111111111111111111111111111111111111111111111111111"
+          }
+        ],
+        "dependencies": [
+          {
+            "path": "fixture://S1O_CONTROL/dependency-not-imported",
+            "bytes": 1,
+            "sha256": "2222222222222222222222222222222222222222222222222222222222222222"
+          }
+        ],
+        "cwd": "fixture://wrong-cwd",
+        "argv": [
+          "INERT_NO_EXEC"
+        ],
+        "path_absence": [
+          "fixture://never-created"
+        ],
+        "path_collisions": [],
+        "path_resolution": "NO_REPARSE_NO_ESCAPE",
+        "pending_owned_runs": [],
+        "other_comsol_work": [],
+        "policy": {
+          "changes_allowed": false,
+          "source_prefs": {
+            "path": "fixture://S1O_CONTROL/prefs-not-read",
+            "bytes": 1,
+            "sha256": "3333333333333333333333333333333333333333333333333333333333333333"
+          }
+        },
+        "elevated": false,
+        "attempt_history": [],
+        "adapter_identity_verified": true,
+        "resource_enforcement_ready": true
+      }
+    },
+    "expected": "COMMAND_OR_CWD_MISMATCH",
+    "expected_detail": {
+      "exception_stage": "authorization"
+    },
+    "mutation_leaves": [
+      "observed.cwd"
+    ],
+    "positive_control_case_id": "AUTH01",
+    "real_native_calls": 0,
+    "actual_user_input_calls": 0
+  },
+  "AUTH09": {
+    "id": "AUTH09",
+    "input_id": "AUTH09:01",
+    "fixture_only": true,
+    "route": "authorize_execution",
+    "arguments": {
+      "binding": {
+        "schema": "S1O_EXECUTION_BINDING_V1",
+        "native_ready": true,
+        "adapter_status": "IMPLEMENTED_VALIDATED_ACCEPTED",
+        "open_blockers": [],
+        "unit": {
+          "run_id": "FIXTURE_NO_NATIVE",
+          "variant_id": "P0",
+          "sigma_short_S_m": "1.7e-6",
+          "initialization_id": "FIXTURE_ONLY",
+          "physical_window_s": [
+            0,
+            120
+          ],
+          "commands": {
+            "status": "NATIVE_COMMANDS_FROZEN",
+            "cwd": "fixture://cwd",
+            "argv": [
+              "INERT_NO_EXEC"
+            ],
+            "parent_argv": [
+              "INERT_NO_PARENT"
+            ],
+            "native_compile_argv": [
+              "INERT_NO_COMPILE"
+            ],
+            "native_batch_argv": [
+              "INERT_NO_BATCH"
+            ],
+            "native_cwd": "fixture://cwd"
+          },
+          "paths": {
+            "status": "FROZEN_NATIVE_PATHS",
+            "source_root": "fixture://source",
+            "proposed_native_root": "fixture://no-runtime",
+            "must_be_absent": [
+              "fixture://never-created"
+            ],
+            "approval_path": "fixture://no-approval",
+            "release_path": "fixture://no-release",
+            "user_decision_path": "fixture://no-user-decision"
+          },
+          "counts": {
+            "compile": 1,
+            "batch": 1,
+            "solve": 1,
+            "control": 0,
+            "retry": 0,
+            "separate_initialization_solve": 0,
+            "fresh_direct_challenges": 2
+          },
+          "resource_contract_sha256": "4444444444444444444444444444444444444444444444444444444444444444",
+          "phase_limits_s": {
+            "native": 7200,
+            "cleanup": 120
+          },
+          "overall_limit_s": 9000
+        },
+        "engine_pins": [
+          {
+            "path": "fixture://S1O_CONTROL/engine-not-executable",
+            "bytes": 1,
+            "sha256": "1111111111111111111111111111111111111111111111111111111111111111"
+          }
+        ],
+        "dependency_pins": [
+          {
+            "path": "fixture://S1O_CONTROL/dependency-not-imported",
+            "bytes": 1,
+            "sha256": "2222222222222222222222222222222222222222222222222222222222222222"
+          }
+        ],
+        "policy_pin": {
+          "changes_allowed": false,
+          "source_prefs": {
+            "path": "fixture://S1O_CONTROL/prefs-not-read",
+            "bytes": 1,
+            "sha256": "3333333333333333333333333333333333333333333333333333333333333333"
+          }
+        }
+      },
+      "manifest": {
+        "schema": "S1O_CODE_MANIFEST_V1",
+        "native_ready": true,
+        "files": [
+          {
+            "path": "fixture://S1O_CONTROL/candidate-not-loaded",
+            "bytes": 1,
+            "sha256": "5555555555555555555555555555555555555555555555555555555555555555"
+          }
+        ]
+      },
+      "acceptance": {
+        "status": "ACCEPTED_CHANGED_BRANCH_VALIDATION",
+        "manifest_sha256": "6666666666666666666666666666666666666666666666666666666666666666",
+        "execution_binding_sha256": "cd2b061e1a2de20d5cef29df0b5be25d34641f731d5331544d4e1ed1d2aa526c",
+        "evidence_sha256": "7777777777777777777777777777777777777777777777777777777777777777"
+      },
+      "approval": {
+        "approved": true,
+        "usable": true,
+        "kind": "SEPARATE_NATIVE_ONE_RUN_APPROVAL",
+        "manifest_sha256": "6666666666666666666666666666666666666666666666666666666666666666",
+        "execution_binding_sha256": "cd2b061e1a2de20d5cef29df0b5be25d34641f731d5331544d4e1ed1d2aa526c",
+        "validation_evidence_sha256": "7777777777777777777777777777777777777777777777777777777777777777",
+        "user_statement_sha256": "8888888888888888888888888888888888888888888888888888888888888888",
+        "unit": {
+          "run_id": "FIXTURE_NO_NATIVE",
+          "variant_id": "P0",
+          "sigma_short_S_m": "1.7e-6",
+          "initialization_id": "FIXTURE_ONLY",
+          "physical_window_s": [
+            0,
+            120
+          ],
+          "commands": {
+            "status": "NATIVE_COMMANDS_FROZEN",
+            "cwd": "fixture://cwd",
+            "argv": [
+              "INERT_NO_EXEC"
+            ],
+            "parent_argv": [
+              "INERT_NO_PARENT"
+            ],
+            "native_compile_argv": [
+              "INERT_NO_COMPILE"
+            ],
+            "native_batch_argv": [
+              "INERT_NO_BATCH"
+            ],
+            "native_cwd": "fixture://cwd"
+          },
+          "paths": {
+            "status": "FROZEN_NATIVE_PATHS",
+            "source_root": "fixture://source",
+            "proposed_native_root": "fixture://no-runtime",
+            "must_be_absent": [
+              "fixture://never-created"
+            ],
+            "approval_path": "fixture://no-approval",
+            "release_path": "fixture://no-release",
+            "user_decision_path": "fixture://no-user-decision"
+          },
+          "counts": {
+            "compile": 1,
+            "batch": 1,
+            "solve": 1,
+            "control": 0,
+            "retry": 0,
+            "separate_initialization_solve": 0,
+            "fresh_direct_challenges": 2
+          },
+          "resource_contract_sha256": "4444444444444444444444444444444444444444444444444444444444444444",
+          "phase_limits_s": {
+            "native": 7200,
+            "cleanup": 120
+          },
+          "overall_limit_s": 9000
+        },
+        "policy_pin": {
+          "changes_allowed": false,
+          "source_prefs": {
+            "path": "fixture://S1O_CONTROL/prefs-not-read",
+            "bytes": 1,
+            "sha256": "3333333333333333333333333333333333333333333333333333333333333333"
+          }
+        }
+      },
+      "observed": {
+        "manifest_sha256": "6666666666666666666666666666666666666666666666666666666666666666",
+        "payload": [
+          {
+            "path": "fixture://S1O_CONTROL/candidate-not-loaded",
+            "bytes": 1,
+            "sha256": "5555555555555555555555555555555555555555555555555555555555555555"
+          }
+        ],
+        "engines": [
+          {
+            "path": "fixture://S1O_CONTROL/engine-not-executable",
+            "bytes": 1,
+            "sha256": "1111111111111111111111111111111111111111111111111111111111111111"
+          }
+        ],
+        "dependencies": [
+          {
+            "path": "fixture://S1O_CONTROL/dependency-not-imported",
+            "bytes": 1,
+            "sha256": "2222222222222222222222222222222222222222222222222222222222222222"
+          }
+        ],
+        "cwd": "fixture://cwd",
+        "argv": [
+          "INERT_NO_EXEC"
+        ],
+        "path_absence": [
+          "fixture://never-created"
+        ],
+        "path_collisions": [
+          "fixture://never-created"
+        ],
+        "path_resolution": "NO_REPARSE_NO_ESCAPE",
+        "pending_owned_runs": [],
+        "other_comsol_work": [],
+        "policy": {
+          "changes_allowed": false,
+          "source_prefs": {
+            "path": "fixture://S1O_CONTROL/prefs-not-read",
+            "bytes": 1,
+            "sha256": "3333333333333333333333333333333333333333333333333333333333333333"
+          }
+        },
+        "elevated": false,
+        "attempt_history": [],
+        "adapter_identity_verified": true,
+        "resource_enforcement_ready": true
+      }
+    },
+    "expected": "PATH_OR_CONCURRENT_WORK",
+    "expected_detail": {
+      "exception_stage": "authorization"
+    },
+    "mutation_leaves": [
+      "observed.path_collisions"
+    ],
+    "positive_control_case_id": "AUTH01",
+    "real_native_calls": 0,
+    "actual_user_input_calls": 0
+  },
+  "AUTH10": {
+    "id": "AUTH10",
+    "input_id": "AUTH10:01",
+    "fixture_only": true,
+    "route": "authorize_execution",
+    "arguments": {
+      "binding": {
+        "schema": "S1O_EXECUTION_BINDING_V1",
+        "native_ready": true,
+        "adapter_status": "IMPLEMENTED_VALIDATED_ACCEPTED",
+        "open_blockers": [],
+        "unit": {
+          "run_id": "FIXTURE_NO_NATIVE",
+          "variant_id": "P0",
+          "sigma_short_S_m": "1.7e-6",
+          "initialization_id": "FIXTURE_ONLY",
+          "physical_window_s": [
+            0,
+            120
+          ],
+          "commands": {
+            "status": "NATIVE_COMMANDS_FROZEN",
+            "cwd": "fixture://cwd",
+            "argv": [
+              "INERT_NO_EXEC"
+            ],
+            "parent_argv": [
+              "INERT_NO_PARENT"
+            ],
+            "native_compile_argv": [
+              "INERT_NO_COMPILE"
+            ],
+            "native_batch_argv": [
+              "INERT_NO_BATCH"
+            ],
+            "native_cwd": "fixture://cwd"
+          },
+          "paths": {
+            "status": "FROZEN_NATIVE_PATHS",
+            "source_root": "fixture://source",
+            "proposed_native_root": "fixture://no-runtime",
+            "must_be_absent": [
+              "fixture://never-created"
+            ],
+            "approval_path": "fixture://no-approval",
+            "release_path": "fixture://no-release",
+            "user_decision_path": "fixture://no-user-decision"
+          },
+          "counts": {
+            "compile": 1,
+            "batch": 1,
+            "solve": 1,
+            "control": 0,
+            "retry": 0,
+            "separate_initialization_solve": 0,
+            "fresh_direct_challenges": 2
+          },
+          "resource_contract_sha256": "4444444444444444444444444444444444444444444444444444444444444444",
+          "phase_limits_s": {
+            "native": 7200,
+            "cleanup": 120
+          },
+          "overall_limit_s": 9000
+        },
+        "engine_pins": [
+          {
+            "path": "fixture://S1O_CONTROL/engine-not-executable",
+            "bytes": 1,
+            "sha256": "1111111111111111111111111111111111111111111111111111111111111111"
+          }
+        ],
+        "dependency_pins": [
+          {
+            "path": "fixture://S1O_CONTROL/dependency-not-imported",
+            "bytes": 1,
+            "sha256": "2222222222222222222222222222222222222222222222222222222222222222"
+          }
+        ],
+        "policy_pin": {
+          "changes_allowed": false,
+          "source_prefs": {
+            "path": "fixture://S1O_CONTROL/prefs-not-read",
+            "bytes": 1,
+            "sha256": "3333333333333333333333333333333333333333333333333333333333333333"
+          }
+        }
+      },
+      "manifest": {
+        "schema": "S1O_CODE_MANIFEST_V1",
+        "native_ready": true,
+        "files": [
+          {
+            "path": "fixture://S1O_CONTROL/candidate-not-loaded",
+            "bytes": 1,
+            "sha256": "5555555555555555555555555555555555555555555555555555555555555555"
+          }
+        ]
+      },
+      "acceptance": {
+        "status": "ACCEPTED_CHANGED_BRANCH_VALIDATION",
+        "manifest_sha256": "6666666666666666666666666666666666666666666666666666666666666666",
+        "execution_binding_sha256": "cd2b061e1a2de20d5cef29df0b5be25d34641f731d5331544d4e1ed1d2aa526c",
+        "evidence_sha256": "7777777777777777777777777777777777777777777777777777777777777777"
+      },
+      "approval": {
+        "approved": true,
+        "usable": true,
+        "kind": "SEPARATE_NATIVE_ONE_RUN_APPROVAL",
+        "manifest_sha256": "6666666666666666666666666666666666666666666666666666666666666666",
+        "execution_binding_sha256": "cd2b061e1a2de20d5cef29df0b5be25d34641f731d5331544d4e1ed1d2aa526c",
+        "validation_evidence_sha256": "7777777777777777777777777777777777777777777777777777777777777777",
+        "user_statement_sha256": "8888888888888888888888888888888888888888888888888888888888888888",
+        "unit": {
+          "run_id": "FIXTURE_NO_NATIVE",
+          "variant_id": "P0",
+          "sigma_short_S_m": "1.7e-6",
+          "initialization_id": "FIXTURE_ONLY",
+          "physical_window_s": [
+            0,
+            120
+          ],
+          "commands": {
+            "status": "NATIVE_COMMANDS_FROZEN",
+            "cwd": "fixture://cwd",
+            "argv": [
+              "INERT_NO_EXEC"
+            ],
+            "parent_argv": [
+              "INERT_NO_PARENT"
+            ],
+            "native_compile_argv": [
+              "INERT_NO_COMPILE"
+            ],
+            "native_batch_argv": [
+              "INERT_NO_BATCH"
+            ],
+            "native_cwd": "fixture://cwd"
+          },
+          "paths": {
+            "status": "FROZEN_NATIVE_PATHS",
+            "source_root": "fixture://source",
+            "proposed_native_root": "fixture://no-runtime",
+            "must_be_absent": [
+              "fixture://never-created"
+            ],
+            "approval_path": "fixture://no-approval",
+            "release_path": "fixture://no-release",
+            "user_decision_path": "fixture://no-user-decision"
+          },
+          "counts": {
+            "compile": 1,
+            "batch": 1,
+            "solve": 1,
+            "control": 0,
+            "retry": 0,
+            "separate_initialization_solve": 0,
+            "fresh_direct_challenges": 2
+          },
+          "resource_contract_sha256": "4444444444444444444444444444444444444444444444444444444444444444",
+          "phase_limits_s": {
+            "native": 7200,
+            "cleanup": 120
+          },
+          "overall_limit_s": 9000
+        },
+        "policy_pin": {
+          "changes_allowed": false,
+          "source_prefs": {
+            "path": "fixture://S1O_CONTROL/prefs-not-read",
+            "bytes": 1,
+            "sha256": "3333333333333333333333333333333333333333333333333333333333333333"
+          }
+        }
+      },
+      "observed": {
+        "manifest_sha256": "6666666666666666666666666666666666666666666666666666666666666666",
+        "payload": [
+          {
+            "path": "fixture://S1O_CONTROL/candidate-not-loaded",
+            "bytes": 1,
+            "sha256": "5555555555555555555555555555555555555555555555555555555555555555"
+          }
+        ],
+        "engines": [
+          {
+            "path": "fixture://S1O_CONTROL/engine-not-executable",
+            "bytes": 1,
+            "sha256": "1111111111111111111111111111111111111111111111111111111111111111"
+          }
+        ],
+        "dependencies": [
+          {
+            "path": "fixture://S1O_CONTROL/dependency-not-imported",
+            "bytes": 1,
+            "sha256": "2222222222222222222222222222222222222222222222222222222222222222"
+          }
+        ],
+        "cwd": "fixture://cwd",
+        "argv": [
+          "INERT_NO_EXEC"
+        ],
+        "path_absence": [
+          "fixture://never-created"
+        ],
+        "path_collisions": [],
+        "path_resolution": "NO_REPARSE_NO_ESCAPE",
+        "pending_owned_runs": [],
+        "other_comsol_work": [],
+        "policy": {
+          "changes_allowed": false,
+          "source_prefs": {
+            "path": "fixture://S1O_CONTROL/prefs-not-read",
+            "bytes": 1,
+            "sha256": "3333333333333333333333333333333333333333333333333333333333333333"
+          }
+        },
+        "elevated": true,
+        "attempt_history": [],
+        "adapter_identity_verified": true,
+        "resource_enforcement_ready": true
+      }
+    },
+    "expected": "POLICY_OR_PRIVILEGE_MISMATCH",
+    "expected_detail": {
+      "exception_stage": "authorization"
+    },
+    "mutation_leaves": [
+      "observed.elevated"
+    ],
+    "positive_control_case_id": "AUTH01",
+    "real_native_calls": 0,
+    "actual_user_input_calls": 0
+  },
+  "AUTH11": {
+    "id": "AUTH11",
+    "input_id": "AUTH11:01",
+    "fixture_only": true,
+    "route": "authorize_execution",
+    "arguments": {
+      "binding": {
+        "schema": "S1O_EXECUTION_BINDING_V1",
+        "native_ready": true,
+        "adapter_status": "IMPLEMENTED_VALIDATED_ACCEPTED",
+        "open_blockers": [],
+        "unit": {
+          "run_id": "FIXTURE_NO_NATIVE",
+          "variant_id": "P0",
+          "sigma_short_S_m": "1.7e-6",
+          "initialization_id": "FIXTURE_ONLY",
+          "physical_window_s": [
+            0,
+            120
+          ],
+          "commands": {
+            "status": "NATIVE_COMMANDS_FROZEN",
+            "cwd": "fixture://cwd",
+            "argv": [
+              "INERT_NO_EXEC"
+            ],
+            "parent_argv": [
+              "INERT_NO_PARENT"
+            ],
+            "native_compile_argv": [
+              "INERT_NO_COMPILE"
+            ],
+            "native_batch_argv": [
+              "INERT_NO_BATCH"
+            ],
+            "native_cwd": "fixture://cwd"
+          },
+          "paths": {
+            "status": "FROZEN_NATIVE_PATHS",
+            "source_root": "fixture://source",
+            "proposed_native_root": "fixture://no-runtime",
+            "must_be_absent": [
+              "fixture://never-created"
+            ],
+            "approval_path": "fixture://no-approval",
+            "release_path": "fixture://no-release",
+            "user_decision_path": "fixture://no-user-decision"
+          },
+          "counts": {
+            "compile": 1,
+            "batch": 1,
+            "solve": 1,
+            "control": 0,
+            "retry": 0,
+            "separate_initialization_solve": 0,
+            "fresh_direct_challenges": 2
+          },
+          "resource_contract_sha256": "4444444444444444444444444444444444444444444444444444444444444444",
+          "phase_limits_s": {
+            "native": 7200,
+            "cleanup": 120
+          },
+          "overall_limit_s": 9000
+        },
+        "engine_pins": [
+          {
+            "path": "fixture://S1O_CONTROL/engine-not-executable",
+            "bytes": 1,
+            "sha256": "1111111111111111111111111111111111111111111111111111111111111111"
+          }
+        ],
+        "dependency_pins": [
+          {
+            "path": "fixture://S1O_CONTROL/dependency-not-imported",
+            "bytes": 1,
+            "sha256": "2222222222222222222222222222222222222222222222222222222222222222"
+          }
+        ],
+        "policy_pin": {
+          "changes_allowed": false,
+          "source_prefs": {
+            "path": "fixture://S1O_CONTROL/prefs-not-read",
+            "bytes": 1,
+            "sha256": "3333333333333333333333333333333333333333333333333333333333333333"
+          }
+        }
+      },
+      "manifest": {
+        "schema": "S1O_CODE_MANIFEST_V1",
+        "native_ready": true,
+        "files": [
+          {
+            "path": "fixture://S1O_CONTROL/candidate-not-loaded",
+            "bytes": 1,
+            "sha256": "5555555555555555555555555555555555555555555555555555555555555555"
+          }
+        ]
+      },
+      "acceptance": {
+        "status": "ACCEPTED_CHANGED_BRANCH_VALIDATION",
+        "manifest_sha256": "6666666666666666666666666666666666666666666666666666666666666666",
+        "execution_binding_sha256": "cd2b061e1a2de20d5cef29df0b5be25d34641f731d5331544d4e1ed1d2aa526c",
+        "evidence_sha256": "7777777777777777777777777777777777777777777777777777777777777777"
+      },
+      "approval": {
+        "approved": true,
+        "usable": true,
+        "kind": "SEPARATE_NATIVE_ONE_RUN_APPROVAL",
+        "manifest_sha256": "6666666666666666666666666666666666666666666666666666666666666666",
+        "execution_binding_sha256": "cd2b061e1a2de20d5cef29df0b5be25d34641f731d5331544d4e1ed1d2aa526c",
+        "validation_evidence_sha256": "7777777777777777777777777777777777777777777777777777777777777777",
+        "user_statement_sha256": "8888888888888888888888888888888888888888888888888888888888888888",
+        "unit": {
+          "run_id": "FIXTURE_NO_NATIVE",
+          "variant_id": "P0",
+          "sigma_short_S_m": "1.7e-6",
+          "initialization_id": "FIXTURE_ONLY",
+          "physical_window_s": [
+            0,
+            120
+          ],
+          "commands": {
+            "status": "NATIVE_COMMANDS_FROZEN",
+            "cwd": "fixture://cwd",
+            "argv": [
+              "INERT_NO_EXEC"
+            ],
+            "parent_argv": [
+              "INERT_NO_PARENT"
+            ],
+            "native_compile_argv": [
+              "INERT_NO_COMPILE"
+            ],
+            "native_batch_argv": [
+              "INERT_NO_BATCH"
+            ],
+            "native_cwd": "fixture://cwd"
+          },
+          "paths": {
+            "status": "FROZEN_NATIVE_PATHS",
+            "source_root": "fixture://source",
+            "proposed_native_root": "fixture://no-runtime",
+            "must_be_absent": [
+              "fixture://never-created"
+            ],
+            "approval_path": "fixture://no-approval",
+            "release_path": "fixture://no-release",
+            "user_decision_path": "fixture://no-user-decision"
+          },
+          "counts": {
+            "compile": 1,
+            "batch": 1,
+            "solve": 1,
+            "control": 0,
+            "retry": 0,
+            "separate_initialization_solve": 0,
+            "fresh_direct_challenges": 2
+          },
+          "resource_contract_sha256": "4444444444444444444444444444444444444444444444444444444444444444",
+          "phase_limits_s": {
+            "native": 7200,
+            "cleanup": 120
+          },
+          "overall_limit_s": 9000
+        },
+        "policy_pin": {
+          "changes_allowed": false,
+          "source_prefs": {
+            "path": "fixture://S1O_CONTROL/prefs-not-read",
+            "bytes": 1,
+            "sha256": "3333333333333333333333333333333333333333333333333333333333333333"
+          }
+        }
+      },
+      "observed": {
+        "manifest_sha256": "6666666666666666666666666666666666666666666666666666666666666666",
+        "payload": [
+          {
+            "path": "fixture://S1O_CONTROL/candidate-not-loaded",
+            "bytes": 1,
+            "sha256": "5555555555555555555555555555555555555555555555555555555555555555"
+          }
+        ],
+        "engines": [
+          {
+            "path": "fixture://S1O_CONTROL/engine-not-executable",
+            "bytes": 1,
+            "sha256": "1111111111111111111111111111111111111111111111111111111111111111"
+          }
+        ],
+        "dependencies": [
+          {
+            "path": "fixture://S1O_CONTROL/dependency-not-imported",
+            "bytes": 1,
+            "sha256": "2222222222222222222222222222222222222222222222222222222222222222"
+          }
+        ],
+        "cwd": "fixture://cwd",
+        "argv": [
+          "INERT_NO_EXEC"
+        ],
+        "path_absence": [
+          "fixture://never-created"
+        ],
+        "path_collisions": [],
+        "path_resolution": "NO_REPARSE_NO_ESCAPE",
+        "pending_owned_runs": [],
+        "other_comsol_work": [],
+        "policy": {
+          "changes_allowed": false,
+          "source_prefs": {
+            "path": "fixture://S1O_CONTROL/prefs-not-read",
+            "bytes": 1,
+            "sha256": "3333333333333333333333333333333333333333333333333333333333333333"
+          }
+        },
+        "elevated": false,
+        "attempt_history": [
+          "fixture-prior-attempt"
+        ],
+        "adapter_identity_verified": true,
+        "resource_enforcement_ready": true
+      }
+    },
+    "expected": "NO_RETRY_EXISTING_ATTEMPT",
+    "expected_detail": {
+      "exception_stage": "authorization"
+    },
+    "mutation_leaves": [
+      "observed.attempt_history"
+    ],
+    "positive_control_case_id": "AUTH01",
+    "real_native_calls": 0,
+    "actual_user_input_calls": 0
+  },
+  "AUTH12": {
+    "id": "AUTH12",
+    "input_id": "AUTH12:01",
+    "fixture_only": true,
+    "route": "authorize_execution",
+    "arguments": {
+      "binding": {
+        "schema": "S1O_EXECUTION_BINDING_V1",
+        "native_ready": true,
+        "adapter_status": "IMPLEMENTED_VALIDATED_ACCEPTED",
+        "open_blockers": [],
+        "unit": {
+          "run_id": "FIXTURE_NO_NATIVE",
+          "variant_id": "P0",
+          "sigma_short_S_m": "1.7e-6",
+          "initialization_id": "FIXTURE_ONLY",
+          "physical_window_s": [
+            0,
+            120
+          ],
+          "commands": {
+            "status": "NATIVE_COMMANDS_FROZEN",
+            "cwd": "fixture://cwd",
+            "argv": [
+              "INERT_NO_EXEC"
+            ],
+            "parent_argv": [
+              "INERT_NO_PARENT"
+            ],
+            "native_compile_argv": [
+              "INERT_NO_COMPILE"
+            ],
+            "native_batch_argv": [
+              "INERT_NO_BATCH"
+            ],
+            "native_cwd": "fixture://cwd"
+          },
+          "paths": {
+            "status": "FROZEN_NATIVE_PATHS",
+            "source_root": "fixture://source",
+            "proposed_native_root": "fixture://no-runtime",
+            "must_be_absent": [
+              "fixture://never-created"
+            ],
+            "approval_path": "fixture://no-approval",
+            "release_path": "fixture://no-release",
+            "user_decision_path": "fixture://no-user-decision"
+          },
+          "counts": {
+            "compile": 1,
+            "batch": 1,
+            "solve": 1,
+            "control": 0,
+            "retry": 0,
+            "separate_initialization_solve": 0,
+            "fresh_direct_challenges": 2
+          },
+          "resource_contract_sha256": "4444444444444444444444444444444444444444444444444444444444444444",
+          "phase_limits_s": {
+            "native": 7200,
+            "cleanup": 120
+          },
+          "overall_limit_s": 9000
+        },
+        "engine_pins": [
+          {
+            "path": "fixture://S1O_CONTROL/engine-not-executable",
+            "bytes": 1,
+            "sha256": "1111111111111111111111111111111111111111111111111111111111111111"
+          }
+        ],
+        "dependency_pins": [
+          {
+            "path": "fixture://S1O_CONTROL/dependency-not-imported",
+            "bytes": 1,
+            "sha256": "2222222222222222222222222222222222222222222222222222222222222222"
+          }
+        ],
+        "policy_pin": {
+          "changes_allowed": false,
+          "source_prefs": {
+            "path": "fixture://S1O_CONTROL/prefs-not-read",
+            "bytes": 1,
+            "sha256": "3333333333333333333333333333333333333333333333333333333333333333"
+          }
+        }
+      },
+      "manifest": {
+        "schema": "S1O_CODE_MANIFEST_V1",
+        "native_ready": false,
+        "files": [
+          {
+            "path": "fixture://S1O_CONTROL/candidate-not-loaded",
+            "bytes": 1,
+            "sha256": "5555555555555555555555555555555555555555555555555555555555555555"
+          }
+        ]
+      },
+      "acceptance": {
+        "status": "ACCEPTED_CHANGED_BRANCH_VALIDATION",
+        "manifest_sha256": "6666666666666666666666666666666666666666666666666666666666666666",
+        "execution_binding_sha256": "cd2b061e1a2de20d5cef29df0b5be25d34641f731d5331544d4e1ed1d2aa526c",
+        "evidence_sha256": "7777777777777777777777777777777777777777777777777777777777777777"
+      },
+      "approval": {
+        "approved": true,
+        "usable": true,
+        "kind": "SEPARATE_NATIVE_ONE_RUN_APPROVAL",
+        "manifest_sha256": "6666666666666666666666666666666666666666666666666666666666666666",
+        "execution_binding_sha256": "cd2b061e1a2de20d5cef29df0b5be25d34641f731d5331544d4e1ed1d2aa526c",
+        "validation_evidence_sha256": "7777777777777777777777777777777777777777777777777777777777777777",
+        "user_statement_sha256": "8888888888888888888888888888888888888888888888888888888888888888",
+        "unit": {
+          "run_id": "FIXTURE_NO_NATIVE",
+          "variant_id": "P0",
+          "sigma_short_S_m": "1.7e-6",
+          "initialization_id": "FIXTURE_ONLY",
+          "physical_window_s": [
+            0,
+            120
+          ],
+          "commands": {
+            "status": "NATIVE_COMMANDS_FROZEN",
+            "cwd": "fixture://cwd",
+            "argv": [
+              "INERT_NO_EXEC"
+            ],
+            "parent_argv": [
+              "INERT_NO_PARENT"
+            ],
+            "native_compile_argv": [
+              "INERT_NO_COMPILE"
+            ],
+            "native_batch_argv": [
+              "INERT_NO_BATCH"
+            ],
+            "native_cwd": "fixture://cwd"
+          },
+          "paths": {
+            "status": "FROZEN_NATIVE_PATHS",
+            "source_root": "fixture://source",
+            "proposed_native_root": "fixture://no-runtime",
+            "must_be_absent": [
+              "fixture://never-created"
+            ],
+            "approval_path": "fixture://no-approval",
+            "release_path": "fixture://no-release",
+            "user_decision_path": "fixture://no-user-decision"
+          },
+          "counts": {
+            "compile": 1,
+            "batch": 1,
+            "solve": 1,
+            "control": 0,
+            "retry": 0,
+            "separate_initialization_solve": 0,
+            "fresh_direct_challenges": 2
+          },
+          "resource_contract_sha256": "4444444444444444444444444444444444444444444444444444444444444444",
+          "phase_limits_s": {
+            "native": 7200,
+            "cleanup": 120
+          },
+          "overall_limit_s": 9000
+        },
+        "policy_pin": {
+          "changes_allowed": false,
+          "source_prefs": {
+            "path": "fixture://S1O_CONTROL/prefs-not-read",
+            "bytes": 1,
+            "sha256": "3333333333333333333333333333333333333333333333333333333333333333"
+          }
+        }
+      },
+      "observed": {
+        "manifest_sha256": "6666666666666666666666666666666666666666666666666666666666666666",
+        "payload": [
+          {
+            "path": "fixture://S1O_CONTROL/candidate-not-loaded",
+            "bytes": 1,
+            "sha256": "5555555555555555555555555555555555555555555555555555555555555555"
+          }
+        ],
+        "engines": [
+          {
+            "path": "fixture://S1O_CONTROL/engine-not-executable",
+            "bytes": 1,
+            "sha256": "1111111111111111111111111111111111111111111111111111111111111111"
+          }
+        ],
+        "dependencies": [
+          {
+            "path": "fixture://S1O_CONTROL/dependency-not-imported",
+            "bytes": 1,
+            "sha256": "2222222222222222222222222222222222222222222222222222222222222222"
+          }
+        ],
+        "cwd": "fixture://cwd",
+        "argv": [
+          "INERT_NO_EXEC"
+        ],
+        "path_absence": [
+          "fixture://never-created"
+        ],
+        "path_collisions": [],
+        "path_resolution": "NO_REPARSE_NO_ESCAPE",
+        "pending_owned_runs": [],
+        "other_comsol_work": [],
+        "policy": {
+          "changes_allowed": false,
+          "source_prefs": {
+            "path": "fixture://S1O_CONTROL/prefs-not-read",
+            "bytes": 1,
+            "sha256": "3333333333333333333333333333333333333333333333333333333333333333"
+          }
+        },
+        "elevated": false,
+        "attempt_history": [],
+        "adapter_identity_verified": true,
+        "resource_enforcement_ready": true
+      }
+    },
+    "expected": "OFFLINE_NATIVE_NOT_READY",
+    "expected_detail": {
+      "exception_stage": "authorization"
+    },
+    "mutation_leaves": [
+      "manifest.native_ready"
+    ],
+    "positive_control_case_id": "AUTH01",
+    "real_native_calls": 0,
+    "actual_user_input_calls": 0
+  },
+  "AUTH13": {
+    "id": "AUTH13",
+    "input_id": "AUTH13:01",
+    "fixture_only": true,
+    "route": "authorize_execution",
+    "arguments": {
+      "binding": {
+        "schema": "S1O_EXECUTION_BINDING_V1",
+        "native_ready": true,
+        "adapter_status": "IMPLEMENTED_VALIDATED_ACCEPTED",
+        "open_blockers": [],
+        "unit": {
+          "run_id": "FIXTURE_NO_NATIVE",
+          "variant_id": "P0",
+          "sigma_short_S_m": "1.7e-6",
+          "initialization_id": "FIXTURE_ONLY",
+          "physical_window_s": [
+            0,
+            120
+          ],
+          "commands": {
+            "status": "NATIVE_COMMANDS_FROZEN",
+            "cwd": "fixture://cwd",
+            "argv": [
+              "INERT_NO_EXEC"
+            ],
+            "parent_argv": [
+              "INERT_NO_PARENT"
+            ],
+            "native_compile_argv": null,
+            "native_batch_argv": [
+              "INERT_NO_BATCH"
+            ],
+            "native_cwd": "fixture://cwd"
+          },
+          "paths": {
+            "status": "FROZEN_NATIVE_PATHS",
+            "source_root": "fixture://source",
+            "proposed_native_root": "fixture://no-runtime",
+            "must_be_absent": [
+              "fixture://never-created"
+            ],
+            "approval_path": "fixture://no-approval",
+            "release_path": "fixture://no-release",
+            "user_decision_path": "fixture://no-user-decision"
+          },
+          "counts": {
+            "compile": 1,
+            "batch": 1,
+            "solve": 1,
+            "control": 0,
+            "retry": 0,
+            "separate_initialization_solve": 0,
+            "fresh_direct_challenges": 2
+          },
+          "resource_contract_sha256": "4444444444444444444444444444444444444444444444444444444444444444",
+          "phase_limits_s": {
+            "native": 7200,
+            "cleanup": 120
+          },
+          "overall_limit_s": 9000
+        },
+        "engine_pins": [
+          {
+            "path": "fixture://S1O_CONTROL/engine-not-executable",
+            "bytes": 1,
+            "sha256": "1111111111111111111111111111111111111111111111111111111111111111"
+          }
+        ],
+        "dependency_pins": [
+          {
+            "path": "fixture://S1O_CONTROL/dependency-not-imported",
+            "bytes": 1,
+            "sha256": "2222222222222222222222222222222222222222222222222222222222222222"
+          }
+        ],
+        "policy_pin": {
+          "changes_allowed": false,
+          "source_prefs": {
+            "path": "fixture://S1O_CONTROL/prefs-not-read",
+            "bytes": 1,
+            "sha256": "3333333333333333333333333333333333333333333333333333333333333333"
+          }
+        }
+      },
+      "manifest": {
+        "schema": "S1O_CODE_MANIFEST_V1",
+        "native_ready": true,
+        "files": [
+          {
+            "path": "fixture://S1O_CONTROL/candidate-not-loaded",
+            "bytes": 1,
+            "sha256": "5555555555555555555555555555555555555555555555555555555555555555"
+          }
+        ]
+      },
+      "acceptance": {
+        "status": "ACCEPTED_CHANGED_BRANCH_VALIDATION",
+        "manifest_sha256": "6666666666666666666666666666666666666666666666666666666666666666",
+        "execution_binding_sha256": "cf5c087812fad1ad2e2adb9a9d568d2dfdec1dc158618b5a8c6174744d5c7599",
+        "evidence_sha256": "7777777777777777777777777777777777777777777777777777777777777777"
+      },
+      "approval": {
+        "approved": true,
+        "usable": true,
+        "kind": "SEPARATE_NATIVE_ONE_RUN_APPROVAL",
+        "manifest_sha256": "6666666666666666666666666666666666666666666666666666666666666666",
+        "execution_binding_sha256": "cf5c087812fad1ad2e2adb9a9d568d2dfdec1dc158618b5a8c6174744d5c7599",
+        "validation_evidence_sha256": "7777777777777777777777777777777777777777777777777777777777777777",
+        "user_statement_sha256": "8888888888888888888888888888888888888888888888888888888888888888",
+        "unit": {
+          "run_id": "FIXTURE_NO_NATIVE",
+          "variant_id": "P0",
+          "sigma_short_S_m": "1.7e-6",
+          "initialization_id": "FIXTURE_ONLY",
+          "physical_window_s": [
+            0,
+            120
+          ],
+          "commands": {
+            "status": "NATIVE_COMMANDS_FROZEN",
+            "cwd": "fixture://cwd",
+            "argv": [
+              "INERT_NO_EXEC"
+            ],
+            "parent_argv": [
+              "INERT_NO_PARENT"
+            ],
+            "native_compile_argv": null,
+            "native_batch_argv": [
+              "INERT_NO_BATCH"
+            ],
+            "native_cwd": "fixture://cwd"
+          },
+          "paths": {
+            "status": "FROZEN_NATIVE_PATHS",
+            "source_root": "fixture://source",
+            "proposed_native_root": "fixture://no-runtime",
+            "must_be_absent": [
+              "fixture://never-created"
+            ],
+            "approval_path": "fixture://no-approval",
+            "release_path": "fixture://no-release",
+            "user_decision_path": "fixture://no-user-decision"
+          },
+          "counts": {
+            "compile": 1,
+            "batch": 1,
+            "solve": 1,
+            "control": 0,
+            "retry": 0,
+            "separate_initialization_solve": 0,
+            "fresh_direct_challenges": 2
+          },
+          "resource_contract_sha256": "4444444444444444444444444444444444444444444444444444444444444444",
+          "phase_limits_s": {
+            "native": 7200,
+            "cleanup": 120
+          },
+          "overall_limit_s": 9000
+        },
+        "policy_pin": {
+          "changes_allowed": false,
+          "source_prefs": {
+            "path": "fixture://S1O_CONTROL/prefs-not-read",
+            "bytes": 1,
+            "sha256": "3333333333333333333333333333333333333333333333333333333333333333"
+          }
+        }
+      },
+      "observed": {
+        "manifest_sha256": "6666666666666666666666666666666666666666666666666666666666666666",
+        "payload": [
+          {
+            "path": "fixture://S1O_CONTROL/candidate-not-loaded",
+            "bytes": 1,
+            "sha256": "5555555555555555555555555555555555555555555555555555555555555555"
+          }
+        ],
+        "engines": [
+          {
+            "path": "fixture://S1O_CONTROL/engine-not-executable",
+            "bytes": 1,
+            "sha256": "1111111111111111111111111111111111111111111111111111111111111111"
+          }
+        ],
+        "dependencies": [
+          {
+            "path": "fixture://S1O_CONTROL/dependency-not-imported",
+            "bytes": 1,
+            "sha256": "2222222222222222222222222222222222222222222222222222222222222222"
+          }
+        ],
+        "cwd": "fixture://cwd",
+        "argv": [
+          "INERT_NO_EXEC"
+        ],
+        "path_absence": [
+          "fixture://never-created"
+        ],
+        "path_collisions": [],
+        "path_resolution": "NO_REPARSE_NO_ESCAPE",
+        "pending_owned_runs": [],
+        "other_comsol_work": [],
+        "policy": {
+          "changes_allowed": false,
+          "source_prefs": {
+            "path": "fixture://S1O_CONTROL/prefs-not-read",
+            "bytes": 1,
+            "sha256": "3333333333333333333333333333333333333333333333333333333333333333"
+          }
+        },
+        "elevated": false,
+        "attempt_history": [],
+        "adapter_identity_verified": true,
+        "resource_enforcement_ready": true
+      }
+    },
+    "expected": "NATIVE_COMMANDS_UNRESOLVED",
+    "expected_detail": {
+      "exception_stage": "authorization"
+    },
+    "mutation_leaves": [
+      "binding.unit.commands.native_compile_argv",
+      "derived approval.unit",
+      "derived binding digest pins"
+    ],
+    "positive_control_case_id": "AUTH01",
+    "real_native_calls": 0,
+    "actual_user_input_calls": 0
+  },
+  "AUTH14": {
+    "id": "AUTH14",
+    "input_id": "AUTH14:01",
+    "fixture_only": true,
+    "route": "authorize_execution",
+    "arguments": {
+      "binding": {
+        "schema": "S1O_EXECUTION_BINDING_V1",
+        "native_ready": true,
+        "adapter_status": "IMPLEMENTED_VALIDATED_ACCEPTED",
+        "open_blockers": [],
+        "unit": {
+          "run_id": "FIXTURE_NO_NATIVE",
+          "variant_id": "P0",
+          "sigma_short_S_m": "1.7e-6",
+          "initialization_id": "FIXTURE_ONLY",
+          "physical_window_s": [
+            0,
+            120
+          ],
+          "commands": {
+            "status": "NATIVE_COMMANDS_FROZEN",
+            "cwd": "fixture://cwd",
+            "argv": [
+              "INERT_NO_EXEC"
+            ],
+            "parent_argv": [
+              "INERT_NO_PARENT"
+            ],
+            "native_compile_argv": [
+              "INERT_NO_COMPILE"
+            ],
+            "native_batch_argv": [
+              "INERT_NO_BATCH"
+            ],
+            "native_cwd": "fixture://cwd"
+          },
+          "paths": {
+            "status": "FROZEN_NATIVE_PATHS",
+            "source_root": "fixture://source",
+            "proposed_native_root": null,
+            "must_be_absent": [
+              "fixture://never-created"
+            ],
+            "approval_path": "fixture://no-approval",
+            "release_path": "fixture://no-release",
+            "user_decision_path": "fixture://no-user-decision"
+          },
+          "counts": {
+            "compile": 1,
+            "batch": 1,
+            "solve": 1,
+            "control": 0,
+            "retry": 0,
+            "separate_initialization_solve": 0,
+            "fresh_direct_challenges": 2
+          },
+          "resource_contract_sha256": "4444444444444444444444444444444444444444444444444444444444444444",
+          "phase_limits_s": {
+            "native": 7200,
+            "cleanup": 120
+          },
+          "overall_limit_s": 9000
+        },
+        "engine_pins": [
+          {
+            "path": "fixture://S1O_CONTROL/engine-not-executable",
+            "bytes": 1,
+            "sha256": "1111111111111111111111111111111111111111111111111111111111111111"
+          }
+        ],
+        "dependency_pins": [
+          {
+            "path": "fixture://S1O_CONTROL/dependency-not-imported",
+            "bytes": 1,
+            "sha256": "2222222222222222222222222222222222222222222222222222222222222222"
+          }
+        ],
+        "policy_pin": {
+          "changes_allowed": false,
+          "source_prefs": {
+            "path": "fixture://S1O_CONTROL/prefs-not-read",
+            "bytes": 1,
+            "sha256": "3333333333333333333333333333333333333333333333333333333333333333"
+          }
+        }
+      },
+      "manifest": {
+        "schema": "S1O_CODE_MANIFEST_V1",
+        "native_ready": true,
+        "files": [
+          {
+            "path": "fixture://S1O_CONTROL/candidate-not-loaded",
+            "bytes": 1,
+            "sha256": "5555555555555555555555555555555555555555555555555555555555555555"
+          }
+        ]
+      },
+      "acceptance": {
+        "status": "ACCEPTED_CHANGED_BRANCH_VALIDATION",
+        "manifest_sha256": "6666666666666666666666666666666666666666666666666666666666666666",
+        "execution_binding_sha256": "a32b55a7f5d0c6f820bcecc9a2290ff94a23d31baac96abf7465b60002792ecd",
+        "evidence_sha256": "7777777777777777777777777777777777777777777777777777777777777777"
+      },
+      "approval": {
+        "approved": true,
+        "usable": true,
+        "kind": "SEPARATE_NATIVE_ONE_RUN_APPROVAL",
+        "manifest_sha256": "6666666666666666666666666666666666666666666666666666666666666666",
+        "execution_binding_sha256": "a32b55a7f5d0c6f820bcecc9a2290ff94a23d31baac96abf7465b60002792ecd",
+        "validation_evidence_sha256": "7777777777777777777777777777777777777777777777777777777777777777",
+        "user_statement_sha256": "8888888888888888888888888888888888888888888888888888888888888888",
+        "unit": {
+          "run_id": "FIXTURE_NO_NATIVE",
+          "variant_id": "P0",
+          "sigma_short_S_m": "1.7e-6",
+          "initialization_id": "FIXTURE_ONLY",
+          "physical_window_s": [
+            0,
+            120
+          ],
+          "commands": {
+            "status": "NATIVE_COMMANDS_FROZEN",
+            "cwd": "fixture://cwd",
+            "argv": [
+              "INERT_NO_EXEC"
+            ],
+            "parent_argv": [
+              "INERT_NO_PARENT"
+            ],
+            "native_compile_argv": [
+              "INERT_NO_COMPILE"
+            ],
+            "native_batch_argv": [
+              "INERT_NO_BATCH"
+            ],
+            "native_cwd": "fixture://cwd"
+          },
+          "paths": {
+            "status": "FROZEN_NATIVE_PATHS",
+            "source_root": "fixture://source",
+            "proposed_native_root": null,
+            "must_be_absent": [
+              "fixture://never-created"
+            ],
+            "approval_path": "fixture://no-approval",
+            "release_path": "fixture://no-release",
+            "user_decision_path": "fixture://no-user-decision"
+          },
+          "counts": {
+            "compile": 1,
+            "batch": 1,
+            "solve": 1,
+            "control": 0,
+            "retry": 0,
+            "separate_initialization_solve": 0,
+            "fresh_direct_challenges": 2
+          },
+          "resource_contract_sha256": "4444444444444444444444444444444444444444444444444444444444444444",
+          "phase_limits_s": {
+            "native": 7200,
+            "cleanup": 120
+          },
+          "overall_limit_s": 9000
+        },
+        "policy_pin": {
+          "changes_allowed": false,
+          "source_prefs": {
+            "path": "fixture://S1O_CONTROL/prefs-not-read",
+            "bytes": 1,
+            "sha256": "3333333333333333333333333333333333333333333333333333333333333333"
+          }
+        }
+      },
+      "observed": {
+        "manifest_sha256": "6666666666666666666666666666666666666666666666666666666666666666",
+        "payload": [
+          {
+            "path": "fixture://S1O_CONTROL/candidate-not-loaded",
+            "bytes": 1,
+            "sha256": "5555555555555555555555555555555555555555555555555555555555555555"
+          }
+        ],
+        "engines": [
+          {
+            "path": "fixture://S1O_CONTROL/engine-not-executable",
+            "bytes": 1,
+            "sha256": "1111111111111111111111111111111111111111111111111111111111111111"
+          }
+        ],
+        "dependencies": [
+          {
+            "path": "fixture://S1O_CONTROL/dependency-not-imported",
+            "bytes": 1,
+            "sha256": "2222222222222222222222222222222222222222222222222222222222222222"
+          }
+        ],
+        "cwd": "fixture://cwd",
+        "argv": [
+          "INERT_NO_EXEC"
+        ],
+        "path_absence": [
+          "fixture://never-created"
+        ],
+        "path_collisions": [],
+        "path_resolution": "NO_REPARSE_NO_ESCAPE",
+        "pending_owned_runs": [],
+        "other_comsol_work": [],
+        "policy": {
+          "changes_allowed": false,
+          "source_prefs": {
+            "path": "fixture://S1O_CONTROL/prefs-not-read",
+            "bytes": 1,
+            "sha256": "3333333333333333333333333333333333333333333333333333333333333333"
+          }
+        },
+        "elevated": false,
+        "attempt_history": [],
+        "adapter_identity_verified": true,
+        "resource_enforcement_ready": true
+      }
+    },
+    "expected": "NATIVE_PATHS_UNRESOLVED",
+    "expected_detail": {
+      "exception_stage": "authorization"
+    },
+    "mutation_leaves": [
+      "binding.unit.paths.proposed_native_root",
+      "derived approval.unit",
+      "derived binding digest pins"
+    ],
+    "positive_control_case_id": "AUTH01",
+    "real_native_calls": 0,
+    "actual_user_input_calls": 0
+  },
+  "AUTH15": {
+    "id": "AUTH15",
+    "input_id": "AUTH15:01",
+    "fixture_only": true,
+    "route": "authorize_execution",
+    "arguments": {
+      "binding": {
+        "schema": "S1O_EXECUTION_BINDING_V1",
+        "native_ready": true,
+        "adapter_status": "IMPLEMENTED_VALIDATED_ACCEPTED",
+        "open_blockers": [],
+        "unit": {
+          "run_id": "FIXTURE_NO_NATIVE",
+          "variant_id": "P0",
+          "sigma_short_S_m": "1.7e-6",
+          "initialization_id": "FIXTURE_ONLY",
+          "physical_window_s": [
+            0,
+            120
+          ],
+          "commands": {
+            "status": "NATIVE_COMMANDS_FROZEN",
+            "cwd": "fixture://cwd",
+            "argv": [
+              "INERT_NO_EXEC"
+            ],
+            "parent_argv": [
+              "INERT_NO_PARENT"
+            ],
+            "native_compile_argv": [
+              "INERT_NO_COMPILE"
+            ],
+            "native_batch_argv": [
+              "INERT_NO_BATCH"
+            ],
+            "native_cwd": "fixture://cwd"
+          },
+          "paths": {
+            "status": "FROZEN_NATIVE_PATHS",
+            "source_root": "fixture://source",
+            "proposed_native_root": "fixture://no-runtime",
+            "must_be_absent": [
+              "fixture://never-created"
+            ],
+            "approval_path": "fixture://no-approval",
+            "release_path": "fixture://no-release",
+            "user_decision_path": "fixture://no-user-decision"
+          },
+          "counts": {
+            "compile": 1,
+            "batch": 1,
+            "solve": 1,
+            "control": 0,
+            "retry": 0,
+            "separate_initialization_solve": 0,
+            "fresh_direct_challenges": 2
+          },
+          "resource_contract_sha256": "4444444444444444444444444444444444444444444444444444444444444444",
+          "phase_limits_s": {
+            "native": 7200,
+            "cleanup": 120
+          },
+          "overall_limit_s": 9000
+        },
+        "engine_pins": [
+          {
+            "path": "fixture://S1O_CONTROL/engine-not-executable",
+            "bytes": 1,
+            "sha256": "1111111111111111111111111111111111111111111111111111111111111111"
+          }
+        ],
+        "dependency_pins": [
+          {
+            "path": "fixture://S1O_CONTROL/dependency-not-imported",
+            "bytes": 1,
+            "sha256": "2222222222222222222222222222222222222222222222222222222222222222"
+          }
+        ],
+        "policy_pin": null
+      },
+      "manifest": {
+        "schema": "S1O_CODE_MANIFEST_V1",
+        "native_ready": true,
+        "files": [
+          {
+            "path": "fixture://S1O_CONTROL/candidate-not-loaded",
+            "bytes": 1,
+            "sha256": "5555555555555555555555555555555555555555555555555555555555555555"
+          }
+        ]
+      },
+      "acceptance": {
+        "status": "ACCEPTED_CHANGED_BRANCH_VALIDATION",
+        "manifest_sha256": "6666666666666666666666666666666666666666666666666666666666666666",
+        "execution_binding_sha256": "2834910c7ea9edb940b52d5c35b06eaf2c2c117328501bdc8b340d822f457f4c",
+        "evidence_sha256": "7777777777777777777777777777777777777777777777777777777777777777"
+      },
+      "approval": {
+        "approved": true,
+        "usable": true,
+        "kind": "SEPARATE_NATIVE_ONE_RUN_APPROVAL",
+        "manifest_sha256": "6666666666666666666666666666666666666666666666666666666666666666",
+        "execution_binding_sha256": "2834910c7ea9edb940b52d5c35b06eaf2c2c117328501bdc8b340d822f457f4c",
+        "validation_evidence_sha256": "7777777777777777777777777777777777777777777777777777777777777777",
+        "user_statement_sha256": "8888888888888888888888888888888888888888888888888888888888888888",
+        "unit": {
+          "run_id": "FIXTURE_NO_NATIVE",
+          "variant_id": "P0",
+          "sigma_short_S_m": "1.7e-6",
+          "initialization_id": "FIXTURE_ONLY",
+          "physical_window_s": [
+            0,
+            120
+          ],
+          "commands": {
+            "status": "NATIVE_COMMANDS_FROZEN",
+            "cwd": "fixture://cwd",
+            "argv": [
+              "INERT_NO_EXEC"
+            ],
+            "parent_argv": [
+              "INERT_NO_PARENT"
+            ],
+            "native_compile_argv": [
+              "INERT_NO_COMPILE"
+            ],
+            "native_batch_argv": [
+              "INERT_NO_BATCH"
+            ],
+            "native_cwd": "fixture://cwd"
+          },
+          "paths": {
+            "status": "FROZEN_NATIVE_PATHS",
+            "source_root": "fixture://source",
+            "proposed_native_root": "fixture://no-runtime",
+            "must_be_absent": [
+              "fixture://never-created"
+            ],
+            "approval_path": "fixture://no-approval",
+            "release_path": "fixture://no-release",
+            "user_decision_path": "fixture://no-user-decision"
+          },
+          "counts": {
+            "compile": 1,
+            "batch": 1,
+            "solve": 1,
+            "control": 0,
+            "retry": 0,
+            "separate_initialization_solve": 0,
+            "fresh_direct_challenges": 2
+          },
+          "resource_contract_sha256": "4444444444444444444444444444444444444444444444444444444444444444",
+          "phase_limits_s": {
+            "native": 7200,
+            "cleanup": 120
+          },
+          "overall_limit_s": 9000
+        },
+        "policy_pin": null
+      },
+      "observed": {
+        "manifest_sha256": "6666666666666666666666666666666666666666666666666666666666666666",
+        "payload": [
+          {
+            "path": "fixture://S1O_CONTROL/candidate-not-loaded",
+            "bytes": 1,
+            "sha256": "5555555555555555555555555555555555555555555555555555555555555555"
+          }
+        ],
+        "engines": [
+          {
+            "path": "fixture://S1O_CONTROL/engine-not-executable",
+            "bytes": 1,
+            "sha256": "1111111111111111111111111111111111111111111111111111111111111111"
+          }
+        ],
+        "dependencies": [
+          {
+            "path": "fixture://S1O_CONTROL/dependency-not-imported",
+            "bytes": 1,
+            "sha256": "2222222222222222222222222222222222222222222222222222222222222222"
+          }
+        ],
+        "cwd": "fixture://cwd",
+        "argv": [
+          "INERT_NO_EXEC"
+        ],
+        "path_absence": [
+          "fixture://never-created"
+        ],
+        "path_collisions": [],
+        "path_resolution": "NO_REPARSE_NO_ESCAPE",
+        "pending_owned_runs": [],
+        "other_comsol_work": [],
+        "policy": null,
+        "elevated": false,
+        "attempt_history": [],
+        "adapter_identity_verified": true,
+        "resource_enforcement_ready": true
+      }
+    },
+    "expected": "CURRENT_POLICY_PIN_UNRESOLVED",
+    "expected_detail": {
+      "exception_stage": "authorization"
+    },
+    "mutation_leaves": [
+      "binding.policy_pin",
+      "derived approval/observed policy",
+      "derived binding digest pins"
+    ],
+    "positive_control_case_id": "AUTH01",
+    "real_native_calls": 0,
+    "actual_user_input_calls": 0
+  },
+  "RESOURCE01": {
+    "id": "RESOURCE01",
+    "input_id": "RESOURCE01:01",
+    "fixture_only": true,
+    "route": "assess_resources",
+    "arguments": {
+      "sample": {
+        "status": "MEASURED",
+        "counter_errors": [],
+        "scope": "EXACT_PRIVATE_JOB_MEMBERS_PLUS_OWNED_OUTPUT_TREE",
+        "job_identity": "fixture-private-job",
+        "rss_aggregation": "SUM_UNIQUE_MEMBER_WORKING_SETS_NO_JOB_TOTAL_ADD",
+        "commit_aggregation": "JOB_ACCOUNTING_TOTAL_NO_MEMBER_TOTAL_ADD",
+        "monotonic_s": 100,
+        "native_elapsed_s": 10,
+        "overall_elapsed_s": 20,
+        "sample_gap_s": 5,
+        "sampling_duration_s": 0.1,
+        "job_rss_bytes": 1073741824,
+        "job_private_commit_bytes": 2147483648,
+        "host_commit_available_bytes": 4294967296,
+        "host_available_ram_bytes": 4294967296,
+        "owned_output_growth_bytes": 0,
+        "volume_free_bytes": 17179869184
+      },
+      "ownership": {
+        "status": "VERIFIED_PRIVATE_JOB",
+        "assigned_before_resume": true,
+        "identity_fresh": true,
+        "job_identity": "fixture-private-job",
+        "root_pid": 100,
+        "root_creation_filetime": 1,
+        "member_pid_creation_pairs": [
+          [
+            100,
+            1
+          ]
+        ]
+      },
+      "contract": {
+        "proposal_limits": {
+          "maximum_sample_gap_s": 6,
+          "maximum_sampling_duration_s": 1,
+          "rss_early_stop_bytes": 8589934592,
+          "commit_early_stop_bytes": 10737418240,
+          "output_early_stop_bytes": 5368709120,
+          "host_commit_reserve_bytes": 2147483648,
+          "host_ram_reserve_bytes": 2147483648,
+          "volume_free_reserve_bytes": 8589934592,
+          "native_wall_limit_s": 7200,
+          "overall_wall_limit_s": 9000,
+          "stop_reserve_s": 120
+        }
+      }
+    },
+    "expected": "CONTINUE_WITHIN_SAMPLED_LIMITS",
+    "expected_detail": {
+      "reasons": []
+    },
+    "mutation_leaves": [],
+    "positive_control_case_id": "RESOURCE01",
+    "real_native_calls": 0,
+    "actual_user_input_calls": 0
+  },
+  "RESOURCE02": {
+    "id": "RESOURCE02",
+    "input_id": "RESOURCE02:01",
+    "fixture_only": true,
+    "route": "assess_resources",
+    "arguments": {
+      "sample": {
+        "status": "MEASURED",
+        "counter_errors": [],
+        "scope": "EXACT_PRIVATE_JOB_MEMBERS_PLUS_OWNED_OUTPUT_TREE",
+        "job_identity": "fixture-private-job",
+        "rss_aggregation": "SUM_UNIQUE_MEMBER_WORKING_SETS_NO_JOB_TOTAL_ADD",
+        "commit_aggregation": "JOB_ACCOUNTING_TOTAL_NO_MEMBER_TOTAL_ADD",
+        "monotonic_s": 100,
+        "native_elapsed_s": 10,
+        "overall_elapsed_s": 20,
+        "sample_gap_s": 5,
+        "sampling_duration_s": 0.1,
+        "job_private_commit_bytes": 2147483648,
+        "host_commit_available_bytes": 4294967296,
+        "host_available_ram_bytes": 4294967296,
+        "owned_output_growth_bytes": 0,
+        "volume_free_bytes": 17179869184
+      },
+      "ownership": {
+        "status": "VERIFIED_PRIVATE_JOB",
+        "assigned_before_resume": true,
+        "identity_fresh": true,
+        "job_identity": "fixture-private-job",
+        "root_pid": 100,
+        "root_creation_filetime": 1,
+        "member_pid_creation_pairs": [
+          [
+            100,
+            1
+          ]
+        ]
+      },
+      "contract": {
+        "proposal_limits": {
+          "maximum_sample_gap_s": 6,
+          "maximum_sampling_duration_s": 1,
+          "rss_early_stop_bytes": 8589934592,
+          "commit_early_stop_bytes": 10737418240,
+          "output_early_stop_bytes": 5368709120,
+          "host_commit_reserve_bytes": 2147483648,
+          "host_ram_reserve_bytes": 2147483648,
+          "volume_free_reserve_bytes": 8589934592,
+          "native_wall_limit_s": 7200,
+          "overall_wall_limit_s": 9000,
+          "stop_reserve_s": 120
+        }
+      }
+    },
+    "expected": "STOP_REQUIRED",
+    "expected_detail": {
+      "reasons": [
+        "COUNTER_MISSING_OR_NONFINITE:job_rss_bytes"
+      ]
+    },
+    "mutation_leaves": [
+      "sample.job_rss_bytes removed"
+    ],
+    "positive_control_case_id": "RESOURCE01",
+    "real_native_calls": 0,
+    "actual_user_input_calls": 0
+  },
+  "RESOURCE03": {
+    "id": "RESOURCE03",
+    "input_id": "RESOURCE03:01",
+    "fixture_only": true,
+    "route": "assess_resources",
+    "arguments": {
+      "sample": {
+        "status": "MEASURED",
+        "counter_errors": [],
+        "scope": "EXACT_PRIVATE_JOB_MEMBERS_PLUS_OWNED_OUTPUT_TREE",
+        "job_identity": "fixture-private-job",
+        "rss_aggregation": "SUM_UNIQUE_MEMBER_WORKING_SETS_NO_JOB_TOTAL_ADD",
+        "commit_aggregation": "JOB_ACCOUNTING_TOTAL_NO_MEMBER_TOTAL_ADD",
+        "monotonic_s": 100,
+        "native_elapsed_s": 10,
+        "overall_elapsed_s": 20,
+        "sample_gap_s": 5,
+        "sampling_duration_s": 0.1,
+        "job_rss_bytes": {
+          "fixture_float": "NaN"
+        },
+        "job_private_commit_bytes": 2147483648,
+        "host_commit_available_bytes": 4294967296,
+        "host_available_ram_bytes": 4294967296,
+        "owned_output_growth_bytes": 0,
+        "volume_free_bytes": 17179869184
+      },
+      "ownership": {
+        "status": "VERIFIED_PRIVATE_JOB",
+        "assigned_before_resume": true,
+        "identity_fresh": true,
+        "job_identity": "fixture-private-job",
+        "root_pid": 100,
+        "root_creation_filetime": 1,
+        "member_pid_creation_pairs": [
+          [
+            100,
+            1
+          ]
+        ]
+      },
+      "contract": {
+        "proposal_limits": {
+          "maximum_sample_gap_s": 6,
+          "maximum_sampling_duration_s": 1,
+          "rss_early_stop_bytes": 8589934592,
+          "commit_early_stop_bytes": 10737418240,
+          "output_early_stop_bytes": 5368709120,
+          "host_commit_reserve_bytes": 2147483648,
+          "host_ram_reserve_bytes": 2147483648,
+          "volume_free_reserve_bytes": 8589934592,
+          "native_wall_limit_s": 7200,
+          "overall_wall_limit_s": 9000,
+          "stop_reserve_s": 120
+        }
+      }
+    },
+    "expected": "STOP_REQUIRED",
+    "expected_detail": {
+      "reasons": [
+        "COUNTER_MISSING_OR_NONFINITE:job_rss_bytes"
+      ]
+    },
+    "mutation_leaves": [
+      "sample.job_rss_bytes tagged NaN; decode this leaf only"
+    ],
+    "positive_control_case_id": "RESOURCE01",
+    "real_native_calls": 0,
+    "actual_user_input_calls": 0
+  },
+  "RESOURCE04": {
+    "id": "RESOURCE04",
+    "input_id": "RESOURCE04:01",
+    "fixture_only": true,
+    "route": "assess_resources",
+    "arguments": {
+      "sample": {
+        "status": "MEASURED",
+        "counter_errors": [],
+        "scope": "EXACT_PRIVATE_JOB_MEMBERS_PLUS_OWNED_OUTPUT_TREE",
+        "job_identity": "fixture-private-job",
+        "rss_aggregation": "SUM_UNIQUE_MEMBER_WORKING_SETS_NO_JOB_TOTAL_ADD",
+        "commit_aggregation": "JOB_ACCOUNTING_TOTAL_NO_MEMBER_TOTAL_ADD",
+        "monotonic_s": 100,
+        "native_elapsed_s": 10,
+        "overall_elapsed_s": 20,
+        "sample_gap_s": 5,
+        "sampling_duration_s": 0.1,
+        "job_rss_bytes": 1073741824,
+        "job_private_commit_bytes": 2147483648,
+        "host_commit_available_bytes": 4294967296,
+        "host_available_ram_bytes": 4294967296,
+        "owned_output_growth_bytes": 0,
+        "volume_free_bytes": 17179869184
+      },
+      "ownership": {
+        "status": "UNVERIFIED",
+        "assigned_before_resume": true,
+        "identity_fresh": true,
+        "job_identity": "fixture-private-job",
+        "root_pid": 100,
+        "root_creation_filetime": 1,
+        "member_pid_creation_pairs": [
+          [
+            100,
+            1
+          ]
+        ]
+      },
+      "contract": {
+        "proposal_limits": {
+          "maximum_sample_gap_s": 6,
+          "maximum_sampling_duration_s": 1,
+          "rss_early_stop_bytes": 8589934592,
+          "commit_early_stop_bytes": 10737418240,
+          "output_early_stop_bytes": 5368709120,
+          "host_commit_reserve_bytes": 2147483648,
+          "host_ram_reserve_bytes": 2147483648,
+          "volume_free_reserve_bytes": 8589934592,
+          "native_wall_limit_s": 7200,
+          "overall_wall_limit_s": 9000,
+          "stop_reserve_s": 120
+        }
+      }
+    },
+    "expected": "STOP_REQUIRED",
+    "expected_detail": {
+      "reasons": [
+        "OWNERSHIP_UNVERIFIED"
+      ]
+    },
+    "mutation_leaves": [
+      "ownership.status"
+    ],
+    "positive_control_case_id": "RESOURCE01",
+    "real_native_calls": 0,
+    "actual_user_input_calls": 0
+  },
+  "RESOURCE05": {
+    "id": "RESOURCE05",
+    "input_id": "RESOURCE05:01",
+    "fixture_only": true,
+    "route": "assess_resources",
+    "arguments": {
+      "sample": {
+        "status": "MEASURED",
+        "counter_errors": [],
+        "scope": "EXACT_PRIVATE_JOB_MEMBERS_PLUS_OWNED_OUTPUT_TREE",
+        "job_identity": "fixture-private-job",
+        "rss_aggregation": "SUM_MEMBERS_PLUS_JOB_TOTAL",
+        "commit_aggregation": "JOB_ACCOUNTING_TOTAL_NO_MEMBER_TOTAL_ADD",
+        "monotonic_s": 100,
+        "native_elapsed_s": 10,
+        "overall_elapsed_s": 20,
+        "sample_gap_s": 5,
+        "sampling_duration_s": 0.1,
+        "job_rss_bytes": 1073741824,
+        "job_private_commit_bytes": 2147483648,
+        "host_commit_available_bytes": 4294967296,
+        "host_available_ram_bytes": 4294967296,
+        "owned_output_growth_bytes": 0,
+        "volume_free_bytes": 17179869184
+      },
+      "ownership": {
+        "status": "VERIFIED_PRIVATE_JOB",
+        "assigned_before_resume": true,
+        "identity_fresh": true,
+        "job_identity": "fixture-private-job",
+        "root_pid": 100,
+        "root_creation_filetime": 1,
+        "member_pid_creation_pairs": [
+          [
+            100,
+            1
+          ]
+        ]
+      },
+      "contract": {
+        "proposal_limits": {
+          "maximum_sample_gap_s": 6,
+          "maximum_sampling_duration_s": 1,
+          "rss_early_stop_bytes": 8589934592,
+          "commit_early_stop_bytes": 10737418240,
+          "output_early_stop_bytes": 5368709120,
+          "host_commit_reserve_bytes": 2147483648,
+          "host_ram_reserve_bytes": 2147483648,
+          "volume_free_reserve_bytes": 8589934592,
+          "native_wall_limit_s": 7200,
+          "overall_wall_limit_s": 9000,
+          "stop_reserve_s": 120
+        }
+      }
+    },
+    "expected": "STOP_REQUIRED",
+    "expected_detail": {
+      "reasons": [
+        "RSS_DOUBLE_COUNT_OR_UNKNOWN"
+      ]
+    },
+    "mutation_leaves": [
+      "sample.rss_aggregation"
+    ],
+    "positive_control_case_id": "RESOURCE01",
+    "real_native_calls": 0,
+    "actual_user_input_calls": 0
+  },
+  "RESOURCE06": {
+    "id": "RESOURCE06",
+    "input_id": "RESOURCE06:01",
+    "fixture_only": true,
+    "route": "assess_resources",
+    "arguments": {
+      "sample": {
+        "status": "MEASURED",
+        "counter_errors": [],
+        "scope": "EXACT_PRIVATE_JOB_MEMBERS_PLUS_OWNED_OUTPUT_TREE",
+        "job_identity": "fixture-private-job",
+        "rss_aggregation": "SUM_UNIQUE_MEMBER_WORKING_SETS_NO_JOB_TOTAL_ADD",
+        "commit_aggregation": "JOB_ACCOUNTING_TOTAL_NO_MEMBER_TOTAL_ADD",
+        "monotonic_s": 100,
+        "native_elapsed_s": 10,
+        "overall_elapsed_s": 20,
+        "sample_gap_s": 5,
+        "sampling_duration_s": 0.1,
+        "job_rss_bytes": 8589934593,
+        "job_private_commit_bytes": 2147483648,
+        "host_commit_available_bytes": 4294967296,
+        "host_available_ram_bytes": 4294967296,
+        "owned_output_growth_bytes": 0,
+        "volume_free_bytes": 17179869184
+      },
+      "ownership": {
+        "status": "VERIFIED_PRIVATE_JOB",
+        "assigned_before_resume": true,
+        "identity_fresh": true,
+        "job_identity": "fixture-private-job",
+        "root_pid": 100,
+        "root_creation_filetime": 1,
+        "member_pid_creation_pairs": [
+          [
+            100,
+            1
+          ]
+        ]
+      },
+      "contract": {
+        "proposal_limits": {
+          "maximum_sample_gap_s": 6,
+          "maximum_sampling_duration_s": 1,
+          "rss_early_stop_bytes": 8589934592,
+          "commit_early_stop_bytes": 10737418240,
+          "output_early_stop_bytes": 5368709120,
+          "host_commit_reserve_bytes": 2147483648,
+          "host_ram_reserve_bytes": 2147483648,
+          "volume_free_reserve_bytes": 8589934592,
+          "native_wall_limit_s": 7200,
+          "overall_wall_limit_s": 9000,
+          "stop_reserve_s": 120
+        }
+      }
+    },
+    "expected": "STOP_REQUIRED",
+    "expected_detail": {
+      "reasons": [
+        "RESOURCE_THRESHOLD:job_rss_bytes"
+      ]
+    },
+    "mutation_leaves": [
+      "sample.job_rss_bytes"
+    ],
+    "positive_control_case_id": "RESOURCE01",
+    "real_native_calls": 0,
+    "actual_user_input_calls": 0
+  },
+  "RESOURCE07": {
+    "id": "RESOURCE07",
+    "input_id": "RESOURCE07:01",
+    "fixture_only": true,
+    "route": "assess_resources",
+    "arguments": {
+      "sample": {
+        "status": "MEASURED",
+        "counter_errors": [],
+        "scope": "EXACT_PRIVATE_JOB_MEMBERS_PLUS_OWNED_OUTPUT_TREE",
+        "job_identity": "fixture-private-job",
+        "rss_aggregation": "SUM_UNIQUE_MEMBER_WORKING_SETS_NO_JOB_TOTAL_ADD",
+        "commit_aggregation": "JOB_ACCOUNTING_TOTAL_NO_MEMBER_TOTAL_ADD",
+        "monotonic_s": 100,
+        "native_elapsed_s": 10,
+        "overall_elapsed_s": 20,
+        "sample_gap_s": 6.0001,
+        "sampling_duration_s": 0.1,
+        "job_rss_bytes": 1073741824,
+        "job_private_commit_bytes": 2147483648,
+        "host_commit_available_bytes": 4294967296,
+        "host_available_ram_bytes": 4294967296,
+        "owned_output_growth_bytes": 0,
+        "volume_free_bytes": 17179869184
+      },
+      "ownership": {
+        "status": "VERIFIED_PRIVATE_JOB",
+        "assigned_before_resume": true,
+        "identity_fresh": true,
+        "job_identity": "fixture-private-job",
+        "root_pid": 100,
+        "root_creation_filetime": 1,
+        "member_pid_creation_pairs": [
+          [
+            100,
+            1
+          ]
+        ]
+      },
+      "contract": {
+        "proposal_limits": {
+          "maximum_sample_gap_s": 6,
+          "maximum_sampling_duration_s": 1,
+          "rss_early_stop_bytes": 8589934592,
+          "commit_early_stop_bytes": 10737418240,
+          "output_early_stop_bytes": 5368709120,
+          "host_commit_reserve_bytes": 2147483648,
+          "host_ram_reserve_bytes": 2147483648,
+          "volume_free_reserve_bytes": 8589934592,
+          "native_wall_limit_s": 7200,
+          "overall_wall_limit_s": 9000,
+          "stop_reserve_s": 120
+        }
+      }
+    },
+    "expected": "STOP_REQUIRED",
+    "expected_detail": {
+      "reasons": [
+        "RESOURCE_THRESHOLD:sample_gap_s"
+      ]
+    },
+    "mutation_leaves": [
+      "sample.sample_gap_s"
+    ],
+    "positive_control_case_id": "RESOURCE01",
+    "real_native_calls": 0,
+    "actual_user_input_calls": 0
+  },
+  "RESOURCE08": {
+    "id": "RESOURCE08",
+    "input_id": "RESOURCE08:01",
+    "fixture_only": true,
+    "route": "assess_resources",
+    "arguments": {
+      "sample": {
+        "status": "MEASURED",
+        "counter_errors": [],
+        "scope": "EXACT_PRIVATE_JOB_MEMBERS_PLUS_OWNED_OUTPUT_TREE",
+        "job_identity": "fixture-private-job",
+        "rss_aggregation": "SUM_UNIQUE_MEMBER_WORKING_SETS_NO_JOB_TOTAL_ADD",
+        "commit_aggregation": "JOB_ACCOUNTING_TOTAL_NO_MEMBER_TOTAL_ADD",
+        "monotonic_s": 100,
+        "native_elapsed_s": 7080.0001,
+        "overall_elapsed_s": 20,
+        "sample_gap_s": 5,
+        "sampling_duration_s": 0.1,
+        "job_rss_bytes": 1073741824,
+        "job_private_commit_bytes": 2147483648,
+        "host_commit_available_bytes": 4294967296,
+        "host_available_ram_bytes": 4294967296,
+        "owned_output_growth_bytes": 0,
+        "volume_free_bytes": 17179869184
+      },
+      "ownership": {
+        "status": "VERIFIED_PRIVATE_JOB",
+        "assigned_before_resume": true,
+        "identity_fresh": true,
+        "job_identity": "fixture-private-job",
+        "root_pid": 100,
+        "root_creation_filetime": 1,
+        "member_pid_creation_pairs": [
+          [
+            100,
+            1
+          ]
+        ]
+      },
+      "contract": {
+        "proposal_limits": {
+          "maximum_sample_gap_s": 6,
+          "maximum_sampling_duration_s": 1,
+          "rss_early_stop_bytes": 8589934592,
+          "commit_early_stop_bytes": 10737418240,
+          "output_early_stop_bytes": 5368709120,
+          "host_commit_reserve_bytes": 2147483648,
+          "host_ram_reserve_bytes": 2147483648,
+          "volume_free_reserve_bytes": 8589934592,
+          "native_wall_limit_s": 7200,
+          "overall_wall_limit_s": 9000,
+          "stop_reserve_s": 120
+        }
+      }
+    },
+    "expected": "STOP_REQUIRED",
+    "expected_detail": {
+      "reasons": [
+        "STOP_RESERVE_ENTERED:native_elapsed_s"
+      ]
+    },
+    "mutation_leaves": [
+      "sample.native_elapsed_s"
+    ],
+    "positive_control_case_id": "RESOURCE01",
+    "real_native_calls": 0,
+    "actual_user_input_calls": 0
+  },
+  "RESOURCE09": {
+    "id": "RESOURCE09",
+    "input_id": "RESOURCE09:01",
+    "fixture_only": true,
+    "route": "advance_stop",
+    "arguments": {
+      "state": {
+        "status": "STOP_REQUESTED",
+        "last_monotonic_s": 0,
+        "cleanup_deadline_s": 120,
+        "overall_deadline_s": 1000
+      },
+      "event": {
+        "monotonic_s": 10,
+        "ownership_verified": true,
+        "job_empty": true,
+        "root_signaled": true,
+        "exit_query_succeeded": true,
+        "remaining_members": [],
+        "unattributed_processes": [],
+        "handle_errors": [],
+        "force_attempts": 1,
+        "force_call_succeeded": true
+      },
+      "capabilities": {
+        "cooperative_stop": "SUPPORTED_VERIFIED",
+        "cooperative_wait_s": 15,
+        "force_verify_reserve_s": 90,
+        "force_only_explicitly_approved": false
+      }
+    },
+    "expected": "WAITING_COOPERATIVE",
+    "expected_detail": {
+      "next_action": "REQUEST_COOPERATIVE_ONCE",
+      "wait_until_s": 25
+    },
+    "mutation_leaves": [],
+    "positive_control_case_id": "RESOURCE09",
+    "real_native_calls": 0,
+    "actual_user_input_calls": 0
+  },
+  "RESOURCE10": {
+    "id": "RESOURCE10",
+    "input_id": "RESOURCE10:01",
+    "fixture_only": true,
+    "route": "advance_stop",
+    "arguments": {
+      "state": {
+        "status": "STOP_REQUESTED",
+        "last_monotonic_s": 0,
+        "cleanup_deadline_s": 120,
+        "overall_deadline_s": 1000
+      },
+      "event": {
+        "monotonic_s": 10,
+        "ownership_verified": true,
+        "job_empty": true,
+        "root_signaled": true,
+        "exit_query_succeeded": true,
+        "remaining_members": [],
+        "unattributed_processes": [],
+        "handle_errors": [],
+        "force_attempts": 1,
+        "force_call_succeeded": true
+      },
+      "capabilities": {
+        "cooperative_stop": "UNAVAILABLE",
+        "cooperative_wait_s": 15,
+        "force_verify_reserve_s": 90,
+        "force_only_explicitly_approved": false
+      }
+    },
+    "expected": "UNRESOLVED",
+    "expected_detail": {
+      "next_action": "NONE",
+      "error": "STOP_METHOD_NOT_APPROVED"
+    },
+    "mutation_leaves": [
+      "capabilities.cooperative_stop",
+      "capabilities.force_only_explicitly_approved"
+    ],
+    "positive_control_case_id": "RESOURCE11",
+    "real_native_calls": 0,
+    "actual_user_input_calls": 0
+  },
+  "RESOURCE11": {
+    "id": "RESOURCE11",
+    "input_id": "RESOURCE11:01",
+    "fixture_only": true,
+    "route": "advance_stop",
+    "arguments": {
+      "state": {
+        "status": "STOP_REQUESTED",
+        "last_monotonic_s": 0,
+        "cleanup_deadline_s": 120,
+        "overall_deadline_s": 1000
+      },
+      "event": {
+        "monotonic_s": 10,
+        "ownership_verified": true,
+        "job_empty": true,
+        "root_signaled": true,
+        "exit_query_succeeded": true,
+        "remaining_members": [],
+        "unattributed_processes": [],
+        "handle_errors": [],
+        "force_attempts": 1,
+        "force_call_succeeded": true
+      },
+      "capabilities": {
+        "cooperative_stop": "UNAVAILABLE",
+        "cooperative_wait_s": 15,
+        "force_verify_reserve_s": 90,
+        "force_only_explicitly_approved": true
+      }
+    },
+    "expected": "FORCE_PENDING",
+    "expected_detail": {
+      "next_action": "FORCE_OWNED_JOB_ONCE",
+      "cooperative_status": "UNAVAILABLE_DECLARED"
+    },
+    "mutation_leaves": [
+      "capabilities.cooperative_stop",
+      "capabilities.force_only_explicitly_approved"
+    ],
+    "positive_control_case_id": "RESOURCE11",
+    "real_native_calls": 0,
+    "actual_user_input_calls": 0
+  },
+  "RESOURCE12": {
+    "id": "RESOURCE12",
+    "input_id": "RESOURCE12:01",
+    "fixture_only": true,
+    "route": "advance_stop",
+    "arguments": {
+      "state": {
+        "status": "WAITING_COOPERATIVE",
+        "last_monotonic_s": 0,
+        "cleanup_deadline_s": 120,
+        "overall_deadline_s": 1000,
+        "wait_until_s": 10
+      },
+      "event": {
+        "monotonic_s": 10,
+        "ownership_verified": true,
+        "job_empty": false,
+        "root_signaled": false,
+        "exit_query_succeeded": true,
+        "remaining_members": [],
+        "unattributed_processes": [],
+        "handle_errors": [],
+        "force_attempts": 1,
+        "force_call_succeeded": true
+      },
+      "capabilities": {
+        "cooperative_stop": "SUPPORTED_VERIFIED",
+        "cooperative_wait_s": 15,
+        "force_verify_reserve_s": 90,
+        "force_only_explicitly_approved": false
+      }
+    },
+    "expected": "FORCE_PENDING",
+    "expected_detail": {
+      "next_action": "FORCE_OWNED_JOB_ONCE"
+    },
+    "mutation_leaves": [
+      "state.status",
+      "state.wait_until_s",
+      "event.job_empty",
+      "event.root_signaled"
+    ],
+    "positive_control_case_id": "RESOURCE12",
+    "real_native_calls": 0,
+    "actual_user_input_calls": 0
+  },
+  "RESOURCE13": {
+    "id": "RESOURCE13",
+    "input_id": "RESOURCE13:01",
+    "fixture_only": true,
+    "route": "advance_stop",
+    "arguments": {
+      "state": {
+        "status": "FORCE_PENDING",
+        "last_monotonic_s": 0,
+        "cleanup_deadline_s": 120,
+        "overall_deadline_s": 1000
+      },
+      "event": {
+        "monotonic_s": 10,
+        "ownership_verified": true,
+        "job_empty": true,
+        "root_signaled": true,
+        "exit_query_succeeded": true,
+        "remaining_members": [],
+        "unattributed_processes": [],
+        "handle_errors": [],
+        "force_attempts": 1,
+        "force_call_succeeded": true
+      },
+      "capabilities": {
+        "cooperative_stop": "SUPPORTED_VERIFIED",
+        "cooperative_wait_s": 15,
+        "force_verify_reserve_s": 90,
+        "force_only_explicitly_approved": false
+      }
+    },
+    "expected": "VERIFY_PENDING",
+    "expected_detail": {
+      "next_action": "VERIFY_TERMINATION"
+    },
+    "mutation_leaves": [
+      "state.status"
+    ],
+    "positive_control_case_id": "RESOURCE13",
+    "real_native_calls": 0,
+    "actual_user_input_calls": 0
+  },
+  "RESOURCE14": {
+    "id": "RESOURCE14",
+    "input_id": "RESOURCE14:01",
+    "fixture_only": true,
+    "route": "advance_stop",
+    "arguments": {
+      "state": {
+        "status": "VERIFY_PENDING",
+        "last_monotonic_s": 0,
+        "cleanup_deadline_s": 120,
+        "overall_deadline_s": 1000
+      },
+      "event": {
+        "monotonic_s": 10,
+        "ownership_verified": true,
+        "job_empty": true,
+        "root_signaled": true,
+        "exit_query_succeeded": true,
+        "remaining_members": [
+          [
+            100,
+            1
+          ]
+        ],
+        "unattributed_processes": [],
+        "handle_errors": [],
+        "force_attempts": 1,
+        "force_call_succeeded": true
+      },
+      "capabilities": {
+        "cooperative_stop": "SUPPORTED_VERIFIED",
+        "cooperative_wait_s": 15,
+        "force_verify_reserve_s": 90,
+        "force_only_explicitly_approved": false
+      }
+    },
+    "expected": "UNRESOLVED",
+    "expected_detail": {
+      "next_action": "NONE",
+      "error": "TERMINATION_UNCONFIRMED"
+    },
+    "mutation_leaves": [
+      "state.status",
+      "event.remaining_members"
+    ],
+    "positive_control_case_id": "RESOURCE15",
+    "real_native_calls": 0,
+    "actual_user_input_calls": 0
+  },
+  "RESOURCE15": {
+    "id": "RESOURCE15",
+    "input_id": "RESOURCE15:01",
+    "fixture_only": true,
+    "route": "advance_stop",
+    "arguments": {
+      "state": {
+        "status": "VERIFY_PENDING",
+        "last_monotonic_s": 0,
+        "cleanup_deadline_s": 120,
+        "overall_deadline_s": 1000
+      },
+      "event": {
+        "monotonic_s": 10,
+        "ownership_verified": true,
+        "job_empty": true,
+        "root_signaled": true,
+        "exit_query_succeeded": true,
+        "remaining_members": [],
+        "unattributed_processes": [],
+        "handle_errors": [],
+        "force_attempts": 1,
+        "force_call_succeeded": true
+      },
+      "capabilities": {
+        "cooperative_stop": "SUPPORTED_VERIFIED",
+        "cooperative_wait_s": 15,
+        "force_verify_reserve_s": 90,
+        "force_only_explicitly_approved": false
+      }
+    },
+    "expected": "TERMINATED_VERIFIED",
+    "expected_detail": {
+      "next_action": "CLOSE_OWNED_HANDLES_AND_RECORD"
+    },
+    "mutation_leaves": [
+      "state.status"
+    ],
+    "positive_control_case_id": "RESOURCE15",
+    "real_native_calls": 0,
+    "actual_user_input_calls": 0
+  },
+  "RESOURCE16": {
+    "id": "RESOURCE16",
+    "input_id": "RESOURCE16:01",
+    "fixture_only": true,
+    "route": "execute_once",
+    "arguments": {
+      "binding": {
+        "schema": "S1O_EXECUTION_BINDING_V1",
+        "native_ready": true,
+        "adapter_status": "IMPLEMENTED_VALIDATED_ACCEPTED",
+        "open_blockers": [],
+        "unit": {
+          "run_id": "FIXTURE_NO_NATIVE",
+          "variant_id": "P0",
+          "sigma_short_S_m": "1.7e-6",
+          "initialization_id": "FIXTURE_ONLY",
+          "physical_window_s": [
+            0,
+            120
+          ],
+          "commands": {
+            "status": "NATIVE_COMMANDS_FROZEN",
+            "cwd": "fixture://cwd",
+            "argv": [
+              "INERT_NO_EXEC"
+            ],
+            "parent_argv": [
+              "INERT_NO_PARENT"
+            ],
+            "native_compile_argv": [
+              "INERT_NO_COMPILE"
+            ],
+            "native_batch_argv": [
+              "INERT_NO_BATCH"
+            ],
+            "native_cwd": "fixture://cwd"
+          },
+          "paths": {
+            "status": "FROZEN_NATIVE_PATHS",
+            "source_root": "fixture://source",
+            "proposed_native_root": "fixture://no-runtime",
+            "must_be_absent": [
+              "fixture://never-created"
+            ],
+            "approval_path": "fixture://no-approval",
+            "release_path": "fixture://no-release",
+            "user_decision_path": "fixture://no-user-decision"
+          },
+          "counts": {
+            "compile": 1,
+            "batch": 1,
+            "solve": 1,
+            "control": 0,
+            "retry": 0,
+            "separate_initialization_solve": 0,
+            "fresh_direct_challenges": 2
+          },
+          "resource_contract_sha256": "4444444444444444444444444444444444444444444444444444444444444444",
+          "phase_limits_s": {
+            "native": 7200,
+            "cleanup": 120
+          },
+          "overall_limit_s": 9000
+        },
+        "engine_pins": [
+          {
+            "path": "fixture://S1O_CONTROL/engine-not-executable",
+            "bytes": 1,
+            "sha256": "1111111111111111111111111111111111111111111111111111111111111111"
+          }
+        ],
+        "dependency_pins": [
+          {
+            "path": "fixture://S1O_CONTROL/dependency-not-imported",
+            "bytes": 1,
+            "sha256": "2222222222222222222222222222222222222222222222222222222222222222"
+          }
+        ],
+        "policy_pin": {
+          "changes_allowed": false,
+          "source_prefs": {
+            "path": "fixture://S1O_CONTROL/prefs-not-read",
+            "bytes": 1,
+            "sha256": "3333333333333333333333333333333333333333333333333333333333333333"
+          }
+        }
+      },
+      "manifest": {
+        "schema": "S1O_CODE_MANIFEST_V1",
+        "native_ready": false,
+        "files": [
+          {
+            "path": "fixture://S1O_CONTROL/candidate-not-loaded",
+            "bytes": 1,
+            "sha256": "5555555555555555555555555555555555555555555555555555555555555555"
+          }
+        ]
+      },
+      "acceptance": {
+        "status": "ACCEPTED_CHANGED_BRANCH_VALIDATION",
+        "manifest_sha256": "6666666666666666666666666666666666666666666666666666666666666666",
+        "execution_binding_sha256": "cd2b061e1a2de20d5cef29df0b5be25d34641f731d5331544d4e1ed1d2aa526c",
+        "evidence_sha256": "7777777777777777777777777777777777777777777777777777777777777777"
+      },
+      "approval": {
+        "approved": true,
+        "usable": true,
+        "kind": "SEPARATE_NATIVE_ONE_RUN_APPROVAL",
+        "manifest_sha256": "6666666666666666666666666666666666666666666666666666666666666666",
+        "execution_binding_sha256": "cd2b061e1a2de20d5cef29df0b5be25d34641f731d5331544d4e1ed1d2aa526c",
+        "validation_evidence_sha256": "7777777777777777777777777777777777777777777777777777777777777777",
+        "user_statement_sha256": "8888888888888888888888888888888888888888888888888888888888888888",
+        "unit": {
+          "run_id": "FIXTURE_NO_NATIVE",
+          "variant_id": "P0",
+          "sigma_short_S_m": "1.7e-6",
+          "initialization_id": "FIXTURE_ONLY",
+          "physical_window_s": [
+            0,
+            120
+          ],
+          "commands": {
+            "status": "NATIVE_COMMANDS_FROZEN",
+            "cwd": "fixture://cwd",
+            "argv": [
+              "INERT_NO_EXEC"
+            ],
+            "parent_argv": [
+              "INERT_NO_PARENT"
+            ],
+            "native_compile_argv": [
+              "INERT_NO_COMPILE"
+            ],
+            "native_batch_argv": [
+              "INERT_NO_BATCH"
+            ],
+            "native_cwd": "fixture://cwd"
+          },
+          "paths": {
+            "status": "FROZEN_NATIVE_PATHS",
+            "source_root": "fixture://source",
+            "proposed_native_root": "fixture://no-runtime",
+            "must_be_absent": [
+              "fixture://never-created"
+            ],
+            "approval_path": "fixture://no-approval",
+            "release_path": "fixture://no-release",
+            "user_decision_path": "fixture://no-user-decision"
+          },
+          "counts": {
+            "compile": 1,
+            "batch": 1,
+            "solve": 1,
+            "control": 0,
+            "retry": 0,
+            "separate_initialization_solve": 0,
+            "fresh_direct_challenges": 2
+          },
+          "resource_contract_sha256": "4444444444444444444444444444444444444444444444444444444444444444",
+          "phase_limits_s": {
+            "native": 7200,
+            "cleanup": 120
+          },
+          "overall_limit_s": 9000
+        },
+        "policy_pin": {
+          "changes_allowed": false,
+          "source_prefs": {
+            "path": "fixture://S1O_CONTROL/prefs-not-read",
+            "bytes": 1,
+            "sha256": "3333333333333333333333333333333333333333333333333333333333333333"
+          }
+        }
+      },
+      "observed": {
+        "manifest_sha256": "6666666666666666666666666666666666666666666666666666666666666666",
+        "payload": [
+          {
+            "path": "fixture://S1O_CONTROL/candidate-not-loaded",
+            "bytes": 1,
+            "sha256": "5555555555555555555555555555555555555555555555555555555555555555"
+          }
+        ],
+        "engines": [
+          {
+            "path": "fixture://S1O_CONTROL/engine-not-executable",
+            "bytes": 1,
+            "sha256": "1111111111111111111111111111111111111111111111111111111111111111"
+          }
+        ],
+        "dependencies": [
+          {
+            "path": "fixture://S1O_CONTROL/dependency-not-imported",
+            "bytes": 1,
+            "sha256": "2222222222222222222222222222222222222222222222222222222222222222"
+          }
+        ],
+        "cwd": "fixture://cwd",
+        "argv": [
+          "INERT_NO_EXEC"
+        ],
+        "path_absence": [
+          "fixture://never-created"
+        ],
+        "path_collisions": [],
+        "path_resolution": "NO_REPARSE_NO_ESCAPE",
+        "pending_owned_runs": [],
+        "other_comsol_work": [],
+        "policy": {
+          "changes_allowed": false,
+          "source_prefs": {
+            "path": "fixture://S1O_CONTROL/prefs-not-read",
+            "bytes": 1,
+            "sha256": "3333333333333333333333333333333333333333333333333333333333333333"
+          }
+        },
+        "elevated": false,
+        "attempt_history": [],
+        "adapter_identity_verified": true,
+        "resource_enforcement_ready": true
+      }
+    },
+    "expected": "OFFLINE_NATIVE_NOT_READY",
+    "expected_detail": {
+      "exception_stage": "authorization",
+      "adapter_events": []
+    },
+    "mutation_leaves": [
+      "manifest.native_ready"
+    ],
+    "positive_control_case_id": "AUTH01",
+    "real_native_calls": 0,
+    "actual_user_input_calls": 0
+  }
+}

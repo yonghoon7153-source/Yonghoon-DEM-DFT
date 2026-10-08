@@ -1,0 +1,21 @@
+{
+  "utc": "2026-10-08T13:48:21.3047021Z",
+  "local": "2026-10-08T22:48:21.3148580+09:00",
+  "monotonic_ticks": 19663030423837,
+  "frequency": 10000000,
+  "total_limit_s": 1860,
+  "phase_limits_s": {
+    "preseal": 720,
+    "powershell": 300,
+    "preservation_delivery": 300,
+    "incomplete_closeout": 120,
+    "python": 420
+  },
+  "fixture_limit_bytes": 1073741824,
+  "delivery_limit_bytes": 52428800,
+  "scope": "User explicitly approved R1_003 same conditions via request_user_input_async",
+  "prior_activity": "Previous turns and current pre-approval read-only audit are separate; no candidate calls then",
+  "start_free_bytes": 107117105152,
+  "source_root": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\outputs\\microshort_s1o_r1_20261008",
+  "fixture_root": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\outputs\\microshort_s1o_r1_20261008\\future_validation_fixture_R1_003"
+}

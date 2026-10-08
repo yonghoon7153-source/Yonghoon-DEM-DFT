@@ -1,0 +1,1484 @@
+{
+  "kind": "STATIC_PLAN_CORRECTIONS",
+  "production_changed": false,
+  "functional_calls": 0,
+  "changes": [
+    {
+      "id": "R1-V1",
+      "field": "extraction_spans.S1Sha",
+      "before": "23-22, empty SHA",
+      "after": "23-23, LF normalized trailing LF excluded, 90 bytes",
+      "reason": "Reviewed exact production function; production bytes unchanged"
+    },
+    {
+      "id": "PARENT12",
+      "field": "expected_field_path",
+      "before": "return_value.status",
+      "after": "return_value.limited",
+      "reason": "R1-V2 actual final return field"
+    },
+    {
+      "id": "PARENT12",
+      "field": "observation_mode",
+      "before": "powershell_return_classification",
+      "after": "post_write_final_boundary_return",
+      "reason": "Observe final return and boundary, not prior decision status"
+    },
+    {
+      "id": "INIT07",
+      "field": "positive_control_case_id",
+      "before": "INIT01",
+      "after": "INIT09",
+      "reason": "Same verify_coefficient_evidence source/function positive"
+    },
+    {
+      "id": "INIT08",
+      "field": "positive_control_case_id",
+      "before": "INIT01",
+      "after": "INIT09",
+      "reason": "Same verify_coefficient_evidence source/function positive"
+    },
+    {
+      "id": "INIT09",
+      "field": "positive_control_case_id",
+      "before": "INIT01",
+      "after": "INIT09",
+      "reason": "Same verify_coefficient_evidence source/function positive"
+    },
+    {
+      "id": "INIT10",
+      "field": "positive_control_case_id",
+      "before": "INIT01",
+      "after": "INIT09",
+      "reason": "Same verify_coefficient_evidence source/function positive"
+    },
+    {
+      "id": "PARENT09",
+      "field": "positive_control_case_id",
+      "before": "PARENT01",
+      "after": "PARENT12",
+      "reason": "Same S1FinalReturn exact-boundary positive"
+    },
+    {
+      "id": "PARENT10",
+      "field": "positive_control_case_id",
+      "before": "PARENT01",
+      "after": "PARENT12",
+      "reason": "Same S1FinalReturn exact-boundary positive"
+    },
+    {
+      "id": "PARENT11",
+      "field": "positive_control_case_id",
+      "before": "PARENT01",
+      "after": "PARENT12",
+      "reason": "Same S1FinalReturn exact-boundary positive"
+    },
+    {
+      "id": "PARENT12",
+      "field": "positive_control_case_id",
+      "before": "PARENT01",
+      "after": "PARENT12",
+      "reason": "Same S1FinalReturn exact-boundary positive"
+    },
+    {
+      "id": "PARENT16",
+      "field": "positive_control_case_id",
+      "before": "PARENT01",
+      "after": "PARENT12",
+      "reason": "Same S1FinalReturn exact-boundary positive"
+    },
+    {
+      "id": "CHARGE03",
+      "field": "target_functions",
+      "before": [
+        "charge_balance"
+      ],
+      "after": [
+        "analyze",
+        "charge_balance"
+      ],
+      "reason": "Registered input producer route clarification; not an extra producer invocation"
+    },
+    {
+      "id": "CHARGE03",
+      "field": "required_reach",
+      "before": "charge_balance",
+      "after": "analyze -> charge_balance -> analyze return",
+      "reason": "Actual analyze INCONCLUSIVE producer for registered PARENT14"
+    },
+    {
+      "id": "CHARGE03",
+      "field": "expected_field_path",
+      "before": "return_value.status",
+      "after": "result.charge_budget.status",
+      "reason": "Actual analyze wrapper carries INCONCLUSIVE"
+    },
+    {
+      "id": "CHARGE03",
+      "field": "fixture_mutation",
+      "before": "unknown quadrature bound",
+      "after": "Use CHARGE01 complete normal-end fixture with only readbacks.quadrature_bound_C_m2=null; invoke actual analyze once and persist its raw JSON for PARENT14. No extra producer input.",
+      "reason": "Exact one leaf and actual producer route"
+    },
+    {
+      "id": "PARENT14",
+      "field": "producer_case_id",
+      "before": null,
+      "after": "CHARGE03",
+      "reason": "Registered actual analyze INCONCLUSIVE producer"
+    },
+    {
+      "id": "READ01",
+      "field": "target_functions",
+      "before": [
+        "read_csv_bytes"
+      ],
+      "after": [
+        "read_csv_bytes",
+        "timed_rows",
+        "coverage",
+        "profile_rows"
+      ],
+      "reason": "Original valid raw CSV then exact-profile prose made explicit; same registered composite input"
+    },
+    {
+      "id": "READ01",
+      "field": "required_reach",
+      "before": "read_csv_bytes",
+      "after": "read_csv_bytes -> timed_rows -> coverage -> profile_rows",
+      "reason": "All shared READ negative controls must reach same real function on same valid fixture"
+    },
+    {
+      "id": "INIT01",
+      "field": "target_functions",
+      "before": [
+        "compare_initialization"
+      ],
+      "after": [
+        "compare_initialization",
+        "compare_initialization_pair"
+      ],
+      "reason": "Composite positive using same exact-target fixture as both paired sides; no new input"
+    },
+    {
+      "id": "INIT01",
+      "field": "required_reach",
+      "before": "compare_initialization",
+      "after": "compare_initialization_pair -> compare_initialization(left) and compare_initialization(right)",
+      "reason": "Pair positive verifies individual and pair initialization; no extra hidden input"
+    },
+    {
+      "id": "INIT11",
+      "field": "positive_control_case_id",
+      "before": "INIT01",
+      "after": "INIT01",
+      "reason": "INIT01 now explicitly reaches pair initialization with same base fixture"
+    },
+    {
+      "id": "INIT12",
+      "field": "positive_control_case_id",
+      "before": "INIT01",
+      "after": "CHARGE01",
+      "reason": "Actual normal analyze producer reaches initial_profile_uniformity; profile seals must match before allowing reuse"
+    },
+    {
+      "id": "POLICY06",
+      "field": "positive_control_case_id",
+      "before": "POLICY01",
+      "after": "CHARGE01",
+      "reason": "Actual analyze normal producer invokes invariants; matching global/N/P fixture required"
+    },
+    {
+      "id": "POLICY07",
+      "field": "positive_control_case_id",
+      "before": "POLICY01",
+      "after": "CHARGE01",
+      "reason": "Actual analyze normal producer invokes invariants; matching global/N/P fixture required"
+    },
+    {
+      "id": "POLICY02",
+      "field": "positive_control_case_id",
+      "before": "POLICY01",
+      "after": "CHARGE01",
+      "reason": "Actual analyze normal producer reaches the same wrapper and compare_policy; only sealed numerical mutation differs"
+    },
+    {
+      "id": "POLICY03",
+      "field": "positive_control_case_id",
+      "before": "POLICY01",
+      "after": "CHARGE01",
+      "reason": "Actual analyze normal producer reaches the same wrapper and compare_policy; only sealed numerical mutation differs"
+    },
+    {
+      "id": "CHARGE_R116",
+      "field": "positive_control_case_id",
+      "before": "CHARGE01",
+      "after": "CHARGE_R109",
+      "reason": "Protective native/grid fixture must match registered protective producer; only safe_end_s is altered"
+    },
+    {
+      "id": "RESOURCE09",
+      "field": "positive_control_case_id",
+      "before": "RESOURCE01",
+      "after": "RESOURCE09",
+      "reason": "Registered transition classification is itself a positive; exact prestate/event/capabilities and reason must be sealed"
+    },
+    {
+      "id": "RESOURCE11",
+      "field": "positive_control_case_id",
+      "before": "RESOURCE01",
+      "after": "RESOURCE11",
+      "reason": "Registered transition classification is itself a positive; exact prestate/event/capabilities and reason must be sealed"
+    },
+    {
+      "id": "RESOURCE12",
+      "field": "positive_control_case_id",
+      "before": "RESOURCE01",
+      "after": "RESOURCE12",
+      "reason": "Registered transition classification is itself a positive; exact prestate/event/capabilities and reason must be sealed"
+    },
+    {
+      "id": "RESOURCE13",
+      "field": "positive_control_case_id",
+      "before": "RESOURCE01",
+      "after": "RESOURCE13",
+      "reason": "Registered transition classification is itself a positive; exact prestate/event/capabilities and reason must be sealed"
+    },
+    {
+      "id": "RESOURCE15",
+      "field": "positive_control_case_id",
+      "before": "RESOURCE01",
+      "after": "RESOURCE15",
+      "reason": "Registered transition classification is itself a positive; exact prestate/event/capabilities and reason must be sealed"
+    },
+    {
+      "id": "RESOURCE10",
+      "field": "positive_control_case_id",
+      "before": "RESOURCE01",
+      "after": "RESOURCE11",
+      "reason": "Same STOP_REQUESTED and unsupported cooperative state; force_only_explicitly_approved is the differing leaf"
+    },
+    {
+      "id": "RESOURCE14",
+      "field": "positive_control_case_id",
+      "before": "RESOURCE01",
+      "after": "RESOURCE15",
+      "reason": "Same VERIFY_PENDING and successful query fixture; remaining_members is the differing leaf"
+    },
+    {
+      "id": "RESOURCE16",
+      "field": "positive_control_case_id",
+      "before": "RESOURCE01",
+      "after": null,
+      "reason": "No existing registered successful execute_once input has yet been sealed; do not pretend assess_resources is same-function control"
+    },
+    {
+      "id": "AUTH01",
+      "field": "target_functions",
+      "before": [
+        "authorize_execution"
+      ],
+      "after": [
+        "execute_once",
+        "authorize_execution"
+      ],
+      "reason": "One registered input explicitly reaches inert execute_once positive and captures actual authorization argument."
+    },
+    {
+      "id": "AUTH01",
+      "field": "required_reach",
+      "before": "authorize_execution",
+      "after": "execute_once -> authorize_execution -> exactly fourteen registered inert adapter events",
+      "reason": "No hidden additional input; authorization is the actual inner return passed to adapter."
+    },
+    {
+      "id": "AUTH01",
+      "field": "expected_field_path",
+      "before": "return_value.status",
+      "after": "actual_authorization.status",
+      "reason": "Observed actual candidate authorization return; not a fabricated summary."
+    },
+    {
+      "id": "AUTH01",
+      "field": "fixture_mutation",
+      "before": "complete future fixture only",
+      "after": "Complete synthetic AUTH01 tuple; call actual execute_once once with declared in-memory adapter. Assert actual auth status, exactly fourteen adapter events, empty errors, simulated compile/batch counters1, and preserved overall/native INCOMPLETE.",
+      "reason": "Positive function reach expansion permitted by reviewed plan clarification."
+    },
+    {
+      "id": "RESOURCE16",
+      "field": "positive_control_case_id",
+      "before": null,
+      "after": "AUTH01",
+      "reason": "Same execute_once base tuple; manifest.native_ready=false is only differing leaf."
+    },
+    {
+      "id": "RESOURCE16",
+      "field": "preseal_blocker",
+      "before": "MISSING_REGISTERED_EXECUTE_ONCE_POSITIVE_CONTROL",
+      "after": null,
+      "reason": "Registered AUTH01 inert same-function positive now authored, subject to global preseal review and actual single-session test."
+    },
+    {
+      "id": "AUTH01",
+      "field": "concrete_fixture",
+      "before": null,
+      "after": {
+        "path": "fixture_inputs/CONTROL_INPUTS.json",
+        "record": "AUTH01",
+        "record_sha256": "a769004476e28465bc38afe3618412160a9590073160767e717220157eda4d57"
+      },
+      "reason": "Exact materialized input definition; raw aggregate file seal additionally required."
+    },
+    {
+      "id": "AUTH01",
+      "field": "exact_mutation_leaves",
+      "before": null,
+      "after": [],
+      "reason": "Single concrete input and deterministic derived binding pins."
+    },
+    {
+      "id": "AUTH01",
+      "field": "expected_detail",
+      "before": null,
+      "after": {
+        "actual_authorization_status": "AUTHORIZED_ONE_RUN",
+        "adapter_events": [
+          "recheck_authorization_readonly",
+          "create_exclusive_evidence_and_reserve_one_attempt",
+          "obtain_two_fresh_direct_user_challenges_same_python",
+          "stage_exact_authorized_bytes_and_prefs_copy",
+          "require_previous_owned_job_empty",
+          "require_time_and_resources_with_stop_reserve:compile",
+          "run_one_monitored_owned_phase:compile",
+          "require_previous_owned_job_empty",
+          "require_time_and_resources_with_stop_reserve:batch",
+          "run_one_monitored_owned_phase:batch",
+          "require_time_for_analysis_and_delivery",
+          "analyze_existing_evidence_once",
+          "verify_owned_cleanup_and_preservation",
+          "final_write_readback_postwrite_budget"
+        ]
+      },
+      "reason": "Check first reason/stage or exact resource reason/action, not status alone."
+    },
+    {
+      "id": "AUTH01",
+      "field": "positive_control_case_id",
+      "before": "AUTH01",
+      "after": "AUTH01",
+      "reason": "Exact declared matching function/input control."
+    },
+    {
+      "id": "AUTH02",
+      "field": "concrete_fixture",
+      "before": null,
+      "after": {
+        "path": "fixture_inputs/CONTROL_INPUTS.json",
+        "record": "AUTH02",
+        "record_sha256": "270ee7c2e3f3b4ad86420371d4f71c503bbe7f496f7cadb3e6f0fcfe8a309ded"
+      },
+      "reason": "Exact materialized input definition; raw aggregate file seal additionally required."
+    },
+    {
+      "id": "AUTH02",
+      "field": "exact_mutation_leaves",
+      "before": null,
+      "after": [
+        "approval={}; empty object preserves object-type gate"
+      ],
+      "reason": "Single concrete input and deterministic derived binding pins."
+    },
+    {
+      "id": "AUTH02",
+      "field": "expected_detail",
+      "before": null,
+      "after": {
+        "exception_stage": "authorization"
+      },
+      "reason": "Check first reason/stage or exact resource reason/action, not status alone."
+    },
+    {
+      "id": "AUTH02",
+      "field": "positive_control_case_id",
+      "before": "AUTH01",
+      "after": "AUTH01",
+      "reason": "Exact declared matching function/input control."
+    },
+    {
+      "id": "AUTH03",
+      "field": "concrete_fixture",
+      "before": null,
+      "after": {
+        "path": "fixture_inputs/CONTROL_INPUTS.json",
+        "record": "AUTH03",
+        "record_sha256": "928da7be83ff312a8cd7c351e0b137b4f05883f6d88f1480650554b962e83f7e"
+      },
+      "reason": "Exact materialized input definition; raw aggregate file seal additionally required."
+    },
+    {
+      "id": "AUTH03",
+      "field": "exact_mutation_leaves",
+      "before": null,
+      "after": [
+        "observed.payload[0].sha256"
+      ],
+      "reason": "Single concrete input and deterministic derived binding pins."
+    },
+    {
+      "id": "AUTH03",
+      "field": "expected_detail",
+      "before": null,
+      "after": {
+        "exception_stage": "authorization"
+      },
+      "reason": "Check first reason/stage or exact resource reason/action, not status alone."
+    },
+    {
+      "id": "AUTH03",
+      "field": "positive_control_case_id",
+      "before": "AUTH01",
+      "after": "AUTH01",
+      "reason": "Exact declared matching function/input control."
+    },
+    {
+      "id": "AUTH04",
+      "field": "concrete_fixture",
+      "before": null,
+      "after": {
+        "path": "fixture_inputs/CONTROL_INPUTS.json",
+        "record": "AUTH04",
+        "record_sha256": "067a4f870c3206af494ae56c2a7cdc031345e9ae62fa94cd1d88afa006aac419"
+      },
+      "reason": "Exact materialized input definition; raw aggregate file seal additionally required."
+    },
+    {
+      "id": "AUTH04",
+      "field": "exact_mutation_leaves",
+      "before": null,
+      "after": [
+        "observed.engines[0].sha256"
+      ],
+      "reason": "Single concrete input and deterministic derived binding pins."
+    },
+    {
+      "id": "AUTH04",
+      "field": "expected_detail",
+      "before": null,
+      "after": {
+        "exception_stage": "authorization"
+      },
+      "reason": "Check first reason/stage or exact resource reason/action, not status alone."
+    },
+    {
+      "id": "AUTH04",
+      "field": "positive_control_case_id",
+      "before": "AUTH01",
+      "after": "AUTH01",
+      "reason": "Exact declared matching function/input control."
+    },
+    {
+      "id": "AUTH05",
+      "field": "concrete_fixture",
+      "before": null,
+      "after": {
+        "path": "fixture_inputs/CONTROL_INPUTS.json",
+        "record": "AUTH05",
+        "record_sha256": "c4459cff65b78a46bb17b540034163c74f5194d395f91f5f4ef1d279d4fc4438"
+      },
+      "reason": "Exact materialized input definition; raw aggregate file seal additionally required."
+    },
+    {
+      "id": "AUTH05",
+      "field": "exact_mutation_leaves",
+      "before": null,
+      "after": [
+        "acceptance.manifest_sha256"
+      ],
+      "reason": "Single concrete input and deterministic derived binding pins."
+    },
+    {
+      "id": "AUTH05",
+      "field": "expected_detail",
+      "before": null,
+      "after": {
+        "exception_stage": "authorization"
+      },
+      "reason": "Check first reason/stage or exact resource reason/action, not status alone."
+    },
+    {
+      "id": "AUTH05",
+      "field": "positive_control_case_id",
+      "before": "AUTH01",
+      "after": "AUTH01",
+      "reason": "Exact declared matching function/input control."
+    },
+    {
+      "id": "AUTH06",
+      "field": "concrete_fixture",
+      "before": null,
+      "after": {
+        "path": "fixture_inputs/CONTROL_INPUTS.json",
+        "record": "AUTH06",
+        "record_sha256": "ff42d990f7bd5712519c2f1516fd075d88236c5f7467916e152c792e5265e2b8"
+      },
+      "reason": "Exact materialized input definition; raw aggregate file seal additionally required."
+    },
+    {
+      "id": "AUTH06",
+      "field": "exact_mutation_leaves",
+      "before": null,
+      "after": [
+        "approval.unit.sigma_short_S_m"
+      ],
+      "reason": "Single concrete input and deterministic derived binding pins."
+    },
+    {
+      "id": "AUTH06",
+      "field": "expected_detail",
+      "before": null,
+      "after": {
+        "exception_stage": "authorization"
+      },
+      "reason": "Check first reason/stage or exact resource reason/action, not status alone."
+    },
+    {
+      "id": "AUTH06",
+      "field": "positive_control_case_id",
+      "before": "AUTH01",
+      "after": "AUTH01",
+      "reason": "Exact declared matching function/input control."
+    },
+    {
+      "id": "AUTH07",
+      "field": "concrete_fixture",
+      "before": null,
+      "after": {
+        "path": "fixture_inputs/CONTROL_INPUTS.json",
+        "record": "AUTH07",
+        "record_sha256": "f7c644e745367a754f8b6f7e813c09ae76cab850e49289172a922a250259d59e"
+      },
+      "reason": "Exact materialized input definition; raw aggregate file seal additionally required."
+    },
+    {
+      "id": "AUTH07",
+      "field": "exact_mutation_leaves",
+      "before": null,
+      "after": [
+        "binding.unit.counts.solve",
+        "derived approval.unit",
+        "derived binding digest pins"
+      ],
+      "reason": "Single concrete input and deterministic derived binding pins."
+    },
+    {
+      "id": "AUTH07",
+      "field": "expected_detail",
+      "before": null,
+      "after": {
+        "exception_stage": "authorization"
+      },
+      "reason": "Check first reason/stage or exact resource reason/action, not status alone."
+    },
+    {
+      "id": "AUTH07",
+      "field": "positive_control_case_id",
+      "before": "AUTH01",
+      "after": "AUTH01",
+      "reason": "Exact declared matching function/input control."
+    },
+    {
+      "id": "AUTH08",
+      "field": "concrete_fixture",
+      "before": null,
+      "after": {
+        "path": "fixture_inputs/CONTROL_INPUTS.json",
+        "record": "AUTH08",
+        "record_sha256": "9f2f4f285329472b2f6ca21dc18cf49caf4310cab14692d56e3879b4d23db540"
+      },
+      "reason": "Exact materialized input definition; raw aggregate file seal additionally required."
+    },
+    {
+      "id": "AUTH08",
+      "field": "exact_mutation_leaves",
+      "before": null,
+      "after": [
+        "observed.cwd"
+      ],
+      "reason": "Single concrete input and deterministic derived binding pins."
+    },
+    {
+      "id": "AUTH08",
+      "field": "expected_detail",
+      "before": null,
+      "after": {
+        "exception_stage": "authorization"
+      },
+      "reason": "Check first reason/stage or exact resource reason/action, not status alone."
+    },
+    {
+      "id": "AUTH08",
+      "field": "positive_control_case_id",
+      "before": "AUTH01",
+      "after": "AUTH01",
+      "reason": "Exact declared matching function/input control."
+    },
+    {
+      "id": "AUTH09",
+      "field": "concrete_fixture",
+      "before": null,
+      "after": {
+        "path": "fixture_inputs/CONTROL_INPUTS.json",
+        "record": "AUTH09",
+        "record_sha256": "62d4ac2d9448d6f24ff489c4ad175709089945035f13ca0937d5a45d8cf03cb9"
+      },
+      "reason": "Exact materialized input definition; raw aggregate file seal additionally required."
+    },
+    {
+      "id": "AUTH09",
+      "field": "exact_mutation_leaves",
+      "before": null,
+      "after": [
+        "observed.path_collisions"
+      ],
+      "reason": "Single concrete input and deterministic derived binding pins."
+    },
+    {
+      "id": "AUTH09",
+      "field": "expected_detail",
+      "before": null,
+      "after": {
+        "exception_stage": "authorization"
+      },
+      "reason": "Check first reason/stage or exact resource reason/action, not status alone."
+    },
+    {
+      "id": "AUTH09",
+      "field": "positive_control_case_id",
+      "before": "AUTH01",
+      "after": "AUTH01",
+      "reason": "Exact declared matching function/input control."
+    },
+    {
+      "id": "AUTH10",
+      "field": "concrete_fixture",
+      "before": null,
+      "after": {
+        "path": "fixture_inputs/CONTROL_INPUTS.json",
+        "record": "AUTH10",
+        "record_sha256": "c093cf9e922a7fe373c44d341e364f1610a3b3f4aa337afd9e43540539557698"
+      },
+      "reason": "Exact materialized input definition; raw aggregate file seal additionally required."
+    },
+    {
+      "id": "AUTH10",
+      "field": "exact_mutation_leaves",
+      "before": null,
+      "after": [
+        "observed.elevated"
+      ],
+      "reason": "Single concrete input and deterministic derived binding pins."
+    },
+    {
+      "id": "AUTH10",
+      "field": "expected_detail",
+      "before": null,
+      "after": {
+        "exception_stage": "authorization"
+      },
+      "reason": "Check first reason/stage or exact resource reason/action, not status alone."
+    },
+    {
+      "id": "AUTH10",
+      "field": "positive_control_case_id",
+      "before": "AUTH01",
+      "after": "AUTH01",
+      "reason": "Exact declared matching function/input control."
+    },
+    {
+      "id": "AUTH11",
+      "field": "concrete_fixture",
+      "before": null,
+      "after": {
+        "path": "fixture_inputs/CONTROL_INPUTS.json",
+        "record": "AUTH11",
+        "record_sha256": "854314cb292ca9ba252f1555991df3d2fcb1b6b667192ec1f696801656755b81"
+      },
+      "reason": "Exact materialized input definition; raw aggregate file seal additionally required."
+    },
+    {
+      "id": "AUTH11",
+      "field": "exact_mutation_leaves",
+      "before": null,
+      "after": [
+        "observed.attempt_history"
+      ],
+      "reason": "Single concrete input and deterministic derived binding pins."
+    },
+    {
+      "id": "AUTH11",
+      "field": "expected_detail",
+      "before": null,
+      "after": {
+        "exception_stage": "authorization"
+      },
+      "reason": "Check first reason/stage or exact resource reason/action, not status alone."
+    },
+    {
+      "id": "AUTH11",
+      "field": "positive_control_case_id",
+      "before": "AUTH01",
+      "after": "AUTH01",
+      "reason": "Exact declared matching function/input control."
+    },
+    {
+      "id": "AUTH12",
+      "field": "concrete_fixture",
+      "before": null,
+      "after": {
+        "path": "fixture_inputs/CONTROL_INPUTS.json",
+        "record": "AUTH12",
+        "record_sha256": "01e22cadb488bae3b802a4bb7f8252a7dcf1f330bc555173dc5eedd88b4f7f02"
+      },
+      "reason": "Exact materialized input definition; raw aggregate file seal additionally required."
+    },
+    {
+      "id": "AUTH12",
+      "field": "exact_mutation_leaves",
+      "before": null,
+      "after": [
+        "manifest.native_ready"
+      ],
+      "reason": "Single concrete input and deterministic derived binding pins."
+    },
+    {
+      "id": "AUTH12",
+      "field": "expected_detail",
+      "before": null,
+      "after": {
+        "exception_stage": "authorization"
+      },
+      "reason": "Check first reason/stage or exact resource reason/action, not status alone."
+    },
+    {
+      "id": "AUTH12",
+      "field": "positive_control_case_id",
+      "before": "AUTH01",
+      "after": "AUTH01",
+      "reason": "Exact declared matching function/input control."
+    },
+    {
+      "id": "AUTH13",
+      "field": "concrete_fixture",
+      "before": null,
+      "after": {
+        "path": "fixture_inputs/CONTROL_INPUTS.json",
+        "record": "AUTH13",
+        "record_sha256": "486b30b23db2691672481473a6fb11b203b85c638d8d93af795cb241d112955b"
+      },
+      "reason": "Exact materialized input definition; raw aggregate file seal additionally required."
+    },
+    {
+      "id": "AUTH13",
+      "field": "exact_mutation_leaves",
+      "before": null,
+      "after": [
+        "binding.unit.commands.native_compile_argv",
+        "derived approval.unit",
+        "derived binding digest pins"
+      ],
+      "reason": "Single concrete input and deterministic derived binding pins."
+    },
+    {
+      "id": "AUTH13",
+      "field": "expected_detail",
+      "before": null,
+      "after": {
+        "exception_stage": "authorization"
+      },
+      "reason": "Check first reason/stage or exact resource reason/action, not status alone."
+    },
+    {
+      "id": "AUTH13",
+      "field": "positive_control_case_id",
+      "before": "AUTH01",
+      "after": "AUTH01",
+      "reason": "Exact declared matching function/input control."
+    },
+    {
+      "id": "AUTH14",
+      "field": "concrete_fixture",
+      "before": null,
+      "after": {
+        "path": "fixture_inputs/CONTROL_INPUTS.json",
+        "record": "AUTH14",
+        "record_sha256": "e904a2527c0d288aa4af4547611dc6e113c444854302a5f7d1243e0693d26b10"
+      },
+      "reason": "Exact materialized input definition; raw aggregate file seal additionally required."
+    },
+    {
+      "id": "AUTH14",
+      "field": "exact_mutation_leaves",
+      "before": null,
+      "after": [
+        "binding.unit.paths.proposed_native_root",
+        "derived approval.unit",
+        "derived binding digest pins"
+      ],
+      "reason": "Single concrete input and deterministic derived binding pins."
+    },
+    {
+      "id": "AUTH14",
+      "field": "expected_detail",
+      "before": null,
+      "after": {
+        "exception_stage": "authorization"
+      },
+      "reason": "Check first reason/stage or exact resource reason/action, not status alone."
+    },
+    {
+      "id": "AUTH14",
+      "field": "positive_control_case_id",
+      "before": "AUTH01",
+      "after": "AUTH01",
+      "reason": "Exact declared matching function/input control."
+    },
+    {
+      "id": "AUTH15",
+      "field": "concrete_fixture",
+      "before": null,
+      "after": {
+        "path": "fixture_inputs/CONTROL_INPUTS.json",
+        "record": "AUTH15",
+        "record_sha256": "b7ca44a0d9f4739df66f27f2780da3e1ce87e77309c26f1365f5a6fbfc6e58b6"
+      },
+      "reason": "Exact materialized input definition; raw aggregate file seal additionally required."
+    },
+    {
+      "id": "AUTH15",
+      "field": "exact_mutation_leaves",
+      "before": null,
+      "after": [
+        "binding.policy_pin",
+        "derived approval/observed policy",
+        "derived binding digest pins"
+      ],
+      "reason": "Single concrete input and deterministic derived binding pins."
+    },
+    {
+      "id": "AUTH15",
+      "field": "expected_detail",
+      "before": null,
+      "after": {
+        "exception_stage": "authorization"
+      },
+      "reason": "Check first reason/stage or exact resource reason/action, not status alone."
+    },
+    {
+      "id": "AUTH15",
+      "field": "positive_control_case_id",
+      "before": "AUTH01",
+      "after": "AUTH01",
+      "reason": "Exact declared matching function/input control."
+    },
+    {
+      "id": "RESOURCE01",
+      "field": "concrete_fixture",
+      "before": null,
+      "after": {
+        "path": "fixture_inputs/CONTROL_INPUTS.json",
+        "record": "RESOURCE01",
+        "record_sha256": "fa5d5b377eb092135ffb6157de0c872cfe6b927939e5b96c36fd017e5ddeac8b"
+      },
+      "reason": "Exact materialized input definition; raw aggregate file seal additionally required."
+    },
+    {
+      "id": "RESOURCE01",
+      "field": "exact_mutation_leaves",
+      "before": null,
+      "after": [],
+      "reason": "Single concrete input and deterministic derived binding pins."
+    },
+    {
+      "id": "RESOURCE01",
+      "field": "expected_detail",
+      "before": null,
+      "after": {
+        "reasons": []
+      },
+      "reason": "Check first reason/stage or exact resource reason/action, not status alone."
+    },
+    {
+      "id": "RESOURCE01",
+      "field": "positive_control_case_id",
+      "before": "RESOURCE01",
+      "after": "RESOURCE01",
+      "reason": "Exact declared matching function/input control."
+    },
+    {
+      "id": "RESOURCE02",
+      "field": "concrete_fixture",
+      "before": null,
+      "after": {
+        "path": "fixture_inputs/CONTROL_INPUTS.json",
+        "record": "RESOURCE02",
+        "record_sha256": "2744cdb17961c0b9b883ddcd82a28a0fff065c186549c57dac026ced2e5e489b"
+      },
+      "reason": "Exact materialized input definition; raw aggregate file seal additionally required."
+    },
+    {
+      "id": "RESOURCE02",
+      "field": "exact_mutation_leaves",
+      "before": null,
+      "after": [
+        "sample.job_rss_bytes removed"
+      ],
+      "reason": "Single concrete input and deterministic derived binding pins."
+    },
+    {
+      "id": "RESOURCE02",
+      "field": "expected_detail",
+      "before": null,
+      "after": {
+        "reasons": [
+          "COUNTER_MISSING_OR_NONFINITE:job_rss_bytes"
+        ]
+      },
+      "reason": "Check first reason/stage or exact resource reason/action, not status alone."
+    },
+    {
+      "id": "RESOURCE02",
+      "field": "positive_control_case_id",
+      "before": "RESOURCE01",
+      "after": "RESOURCE01",
+      "reason": "Exact declared matching function/input control."
+    },
+    {
+      "id": "RESOURCE03",
+      "field": "concrete_fixture",
+      "before": null,
+      "after": {
+        "path": "fixture_inputs/CONTROL_INPUTS.json",
+        "record": "RESOURCE03",
+        "record_sha256": "b80964ec831f40a8879b9b89f11ad1add802194f2a15052b1ba2d8a26373e6e0"
+      },
+      "reason": "Exact materialized input definition; raw aggregate file seal additionally required."
+    },
+    {
+      "id": "RESOURCE03",
+      "field": "exact_mutation_leaves",
+      "before": null,
+      "after": [
+        "sample.job_rss_bytes tagged NaN; decode this leaf only"
+      ],
+      "reason": "Single concrete input and deterministic derived binding pins."
+    },
+    {
+      "id": "RESOURCE03",
+      "field": "expected_detail",
+      "before": null,
+      "after": {
+        "reasons": [
+          "COUNTER_MISSING_OR_NONFINITE:job_rss_bytes"
+        ]
+      },
+      "reason": "Check first reason/stage or exact resource reason/action, not status alone."
+    },
+    {
+      "id": "RESOURCE03",
+      "field": "positive_control_case_id",
+      "before": "RESOURCE01",
+      "after": "RESOURCE01",
+      "reason": "Exact declared matching function/input control."
+    },
+    {
+      "id": "RESOURCE04",
+      "field": "concrete_fixture",
+      "before": null,
+      "after": {
+        "path": "fixture_inputs/CONTROL_INPUTS.json",
+        "record": "RESOURCE04",
+        "record_sha256": "736cd182f465cb244479a698dfa619547c18ffc61b761fd477653c5bc9b2c7a9"
+      },
+      "reason": "Exact materialized input definition; raw aggregate file seal additionally required."
+    },
+    {
+      "id": "RESOURCE04",
+      "field": "exact_mutation_leaves",
+      "before": null,
+      "after": [
+        "ownership.status"
+      ],
+      "reason": "Single concrete input and deterministic derived binding pins."
+    },
+    {
+      "id": "RESOURCE04",
+      "field": "expected_detail",
+      "before": null,
+      "after": {
+        "reasons": [
+          "OWNERSHIP_UNVERIFIED"
+        ]
+      },
+      "reason": "Check first reason/stage or exact resource reason/action, not status alone."
+    },
+    {
+      "id": "RESOURCE04",
+      "field": "positive_control_case_id",
+      "before": "RESOURCE01",
+      "after": "RESOURCE01",
+      "reason": "Exact declared matching function/input control."
+    },
+    {
+      "id": "RESOURCE05",
+      "field": "concrete_fixture",
+      "before": null,
+      "after": {
+        "path": "fixture_inputs/CONTROL_INPUTS.json",
+        "record": "RESOURCE05",
+        "record_sha256": "440ba4b1a8d683eb38a4e4778c42975905ee26d65053440ae70027e59a902f70"
+      },
+      "reason": "Exact materialized input definition; raw aggregate file seal additionally required."
+    },
+    {
+      "id": "RESOURCE05",
+      "field": "exact_mutation_leaves",
+      "before": null,
+      "after": [
+        "sample.rss_aggregation"
+      ],
+      "reason": "Single concrete input and deterministic derived binding pins."
+    },
+    {
+      "id": "RESOURCE05",
+      "field": "expected_detail",
+      "before": null,
+      "after": {
+        "reasons": [
+          "RSS_DOUBLE_COUNT_OR_UNKNOWN"
+        ]
+      },
+      "reason": "Check first reason/stage or exact resource reason/action, not status alone."
+    },
+    {
+      "id": "RESOURCE05",
+      "field": "positive_control_case_id",
+      "before": "RESOURCE01",
+      "after": "RESOURCE01",
+      "reason": "Exact declared matching function/input control."
+    },
+    {
+      "id": "RESOURCE06",
+      "field": "concrete_fixture",
+      "before": null,
+      "after": {
+        "path": "fixture_inputs/CONTROL_INPUTS.json",
+        "record": "RESOURCE06",
+        "record_sha256": "ffc2448310c869fb58b89aeaf82b67409bbe821bdb1f54179cf62dbb45b068c5"
+      },
+      "reason": "Exact materialized input definition; raw aggregate file seal additionally required."
+    },
+    {
+      "id": "RESOURCE06",
+      "field": "exact_mutation_leaves",
+      "before": null,
+      "after": [
+        "sample.job_rss_bytes"
+      ],
+      "reason": "Single concrete input and deterministic derived binding pins."
+    },
+    {
+      "id": "RESOURCE06",
+      "field": "expected_detail",
+      "before": null,
+      "after": {
+        "reasons": [
+          "RESOURCE_THRESHOLD:job_rss_bytes"
+        ]
+      },
+      "reason": "Check first reason/stage or exact resource reason/action, not status alone."
+    },
+    {
+      "id": "RESOURCE06",
+      "field": "positive_control_case_id",
+      "before": "RESOURCE01",
+      "after": "RESOURCE01",
+      "reason": "Exact declared matching function/input control."
+    },
+    {
+      "id": "RESOURCE07",
+      "field": "concrete_fixture",
+      "before": null,
+      "after": {
+        "path": "fixture_inputs/CONTROL_INPUTS.json",
+        "record": "RESOURCE07",
+        "record_sha256": "58ff44ff4a6f13f25b1e82775244d52f731df32a8e46c12ff2af98d7f19f5c07"
+      },
+      "reason": "Exact materialized input definition; raw aggregate file seal additionally required."
+    },
+    {
+      "id": "RESOURCE07",
+      "field": "exact_mutation_leaves",
+      "before": null,
+      "after": [
+        "sample.sample_gap_s"
+      ],
+      "reason": "Single concrete input and deterministic derived binding pins."
+    },
+    {
+      "id": "RESOURCE07",
+      "field": "expected_detail",
+      "before": null,
+      "after": {
+        "reasons": [
+          "RESOURCE_THRESHOLD:sample_gap_s"
+        ]
+      },
+      "reason": "Check first reason/stage or exact resource reason/action, not status alone."
+    },
+    {
+      "id": "RESOURCE07",
+      "field": "positive_control_case_id",
+      "before": "RESOURCE01",
+      "after": "RESOURCE01",
+      "reason": "Exact declared matching function/input control."
+    },
+    {
+      "id": "RESOURCE08",
+      "field": "concrete_fixture",
+      "before": null,
+      "after": {
+        "path": "fixture_inputs/CONTROL_INPUTS.json",
+        "record": "RESOURCE08",
+        "record_sha256": "267a3105c9102107591e793e9644cf66db5998fc4a758d127bfbcce2da54a78c"
+      },
+      "reason": "Exact materialized input definition; raw aggregate file seal additionally required."
+    },
+    {
+      "id": "RESOURCE08",
+      "field": "exact_mutation_leaves",
+      "before": null,
+      "after": [
+        "sample.native_elapsed_s"
+      ],
+      "reason": "Single concrete input and deterministic derived binding pins."
+    },
+    {
+      "id": "RESOURCE08",
+      "field": "expected_detail",
+      "before": null,
+      "after": {
+        "reasons": [
+          "STOP_RESERVE_ENTERED:native_elapsed_s"
+        ]
+      },
+      "reason": "Check first reason/stage or exact resource reason/action, not status alone."
+    },
+    {
+      "id": "RESOURCE08",
+      "field": "positive_control_case_id",
+      "before": "RESOURCE01",
+      "after": "RESOURCE01",
+      "reason": "Exact declared matching function/input control."
+    },
+    {
+      "id": "RESOURCE09",
+      "field": "concrete_fixture",
+      "before": null,
+      "after": {
+        "path": "fixture_inputs/CONTROL_INPUTS.json",
+        "record": "RESOURCE09",
+        "record_sha256": "1819813a2f5280d00ea56e666863396fc501161c6afdde3168cec875a8f2e487"
+      },
+      "reason": "Exact materialized input definition; raw aggregate file seal additionally required."
+    },
+    {
+      "id": "RESOURCE09",
+      "field": "exact_mutation_leaves",
+      "before": null,
+      "after": [],
+      "reason": "Single concrete input and deterministic derived binding pins."
+    },
+    {
+      "id": "RESOURCE09",
+      "field": "expected_detail",
+      "before": null,
+      "after": {
+        "next_action": "REQUEST_COOPERATIVE_ONCE",
+        "wait_until_s": 25
+      },
+      "reason": "Check first reason/stage or exact resource reason/action, not status alone."
+    },
+    {
+      "id": "RESOURCE09",
+      "field": "positive_control_case_id",
+      "before": "RESOURCE09",
+      "after": "RESOURCE09",
+      "reason": "Exact declared matching function/input control."
+    },
+    {
+      "id": "RESOURCE10",
+      "field": "concrete_fixture",
+      "before": null,
+      "after": {
+        "path": "fixture_inputs/CONTROL_INPUTS.json",
+        "record": "RESOURCE10",
+        "record_sha256": "48ed709c750ffe9fbc51b77fad6046c17b6937d3fa2396ecd4b066df3bc54d24"
+      },
+      "reason": "Exact materialized input definition; raw aggregate file seal additionally required."
+    },
+    {
+      "id": "RESOURCE10",
+      "field": "exact_mutation_leaves",
+      "before": null,
+      "after": [
+        "capabilities.cooperative_stop",
+        "capabilities.force_only_explicitly_approved"
+      ],
+      "reason": "Single concrete input and deterministic derived binding pins."
+    },
+    {
+      "id": "RESOURCE10",
+      "field": "expected_detail",
+      "before": null,
+      "after": {
+        "next_action": "NONE",
+        "error": "STOP_METHOD_NOT_APPROVED"
+      },
+      "reason": "Check first reason/stage or exact resource reason/action, not status alone."
+    },
+    {
+      "id": "RESOURCE10",
+      "field": "positive_control_case_id",
+      "before": "RESOURCE11",
+      "after": "RESOURCE11",
+      "reason": "Exact declared matching function/input control."
+    },
+    {
+      "id": "RESOURCE11",
+      "field": "concrete_fixture",
+      "before": null,
+      "after": {
+        "path": "fixture_inputs/CONTROL_INPUTS.json",
+        "record": "RESOURCE11",
+        "record_sha256": "e18b0c78c160e701710bde65e1558270dcbb17e8c4661deb3e02023240c3ef28"
+      },
+      "reason": "Exact materialized input definition; raw aggregate file seal additionally required."
+    },
+    {
+      "id": "RESOURCE11",
+      "field": "exact_mutation_leaves",
+      "before": null,
+      "after": [
+        "capabilities.cooperative_stop",
+        "capabilities.force_only_explicitly_approved"
+      ],
+      "reason": "Single concrete input and deterministic derived binding pins."
+    },
+    {
+      "id": "RESOURCE11",
+      "field": "expected_detail",
+      "before": null,
+      "after": {
+        "next_action": "FORCE_OWNED_JOB_ONCE",
+        "cooperative_status": "UNAVAILABLE_DECLARED"
+      },
+      "reason": "Check first reason/stage or exact resource reason/action, not status alone."
+    },
+    {
+      "id": "RESOURCE11",
+      "field": "positive_control_case_id",
+      "before": "RESOURCE11",
+      "after": "RESOURCE11",
+      "reason": "Exact declared matching function/input control."
+    },
+    {
+      "id": "RESOURCE12",
+      "field": "concrete_fixture",
+      "before": null,
+      "after": {
+        "path": "fixture_inputs/CONTROL_INPUTS.json",
+        "record": "RESOURCE12",
+        "record_sha256": "3694785d9d8cd8cd602cd90714123f5d425fa3aca4b204c45ba7aa04f521d19e"
+      },
+      "reason": "Exact materialized input definition; raw aggregate file seal additionally required."
+    },
+    {
+      "id": "RESOURCE12",
+      "field": "exact_mutation_leaves",
+      "before": null,
+      "after": [
+        "state.status",
+        "state.wait_until_s",
+        "event.job_empty",
+        "event.root_signaled"
+      ],
+      "reason": "Single concrete input and deterministic derived binding pins."
+    },
+    {
+      "id": "RESOURCE12",
+      "field": "expected_detail",
+      "before": null,
+      "after": {
+        "next_action": "FORCE_OWNED_JOB_ONCE"
+      },
+      "reason": "Check first reason/stage or exact resource reason/action, not status alone."
+    },
+    {
+      "id": "RESOURCE12",
+      "field": "positive_control_case_id",
+      "before": "RESOURCE12",
+      "after": "RESOURCE12",
+      "reason": "Exact declared matching function/input control."
+    },
+    {
+      "id": "RESOURCE13",
+      "field": "concrete_fixture",
+      "before": null,
+      "after": {
+        "path": "fixture_inputs/CONTROL_INPUTS.json",
+        "record": "RESOURCE13",
+        "record_sha256": "ac859e64964699a48e496f8e7891d3688be4ce39e8b87e82ff5cc96fbee5d851"
+      },
+      "reason": "Exact materialized input definition; raw aggregate file seal additionally required."
+    },
+    {
+      "id": "RESOURCE13",
+      "field": "exact_mutation_leaves",
+      "before": null,
+      "after": [
+        "state.status"
+      ],
+      "reason": "Single concrete input and deterministic derived binding pins."
+    },
+    {
+      "id": "RESOURCE13",
+      "field": "expected_detail",
+      "before": null,
+      "after": {
+        "next_action": "VERIFY_TERMINATION"
+      },
+      "reason": "Check first reason/stage or exact resource reason/action, not status alone."
+    },
+    {
+      "id": "RESOURCE13",
+      "field": "positive_control_case_id",
+      "before": "RESOURCE13",
+      "after": "RESOURCE13",
+      "reason": "Exact declared matching function/input control."
+    },
+    {
+      "id": "RESOURCE14",
+      "field": "concrete_fixture",
+      "before": null,
+      "after": {
+        "path": "fixture_inputs/CONTROL_INPUTS.json",
+        "record": "RESOURCE14",
+        "record_sha256": "ae65d4af5e6954ea35c1a8d390d75545d24dc0c0e4722d0cf7a3a04b7fae3b58"
+      },
+      "reason": "Exact materialized input definition; raw aggregate file seal additionally required."
+    },
+    {
+      "id": "RESOURCE14",
+      "field": "exact_mutation_leaves",
+      "before": null,
+      "after": [
+        "state.status",
+        "event.remaining_members"
+      ],
+      "reason": "Single concrete input and deterministic derived binding pins."
+    },
+    {
+      "id": "RESOURCE14",
+      "field": "expected_detail",
+      "before": null,
+      "after": {
+        "next_action": "NONE",
+        "error": "TERMINATION_UNCONFIRMED"
+      },
+      "reason": "Check first reason/stage or exact resource reason/action, not status alone."
+    },
+    {
+      "id": "RESOURCE14",
+      "field": "positive_control_case_id",
+      "before": "RESOURCE15",
+      "after": "RESOURCE15",
+      "reason": "Exact declared matching function/input control."
+    },
+    {
+      "id": "RESOURCE15",
+      "field": "concrete_fixture",
+      "before": null,
+      "after": {
+        "path": "fixture_inputs/CONTROL_INPUTS.json",
+        "record": "RESOURCE15",
+        "record_sha256": "911fa6e619c28d00b13901eb811dfc22cf858641dbdbbcee6933e17368b4ed2d"
+      },
+      "reason": "Exact materialized input definition; raw aggregate file seal additionally required."
+    },
+    {
+      "id": "RESOURCE15",
+      "field": "exact_mutation_leaves",
+      "before": null,
+      "after": [
+        "state.status"
+      ],
+      "reason": "Single concrete input and deterministic derived binding pins."
+    },
+    {
+      "id": "RESOURCE15",
+      "field": "expected_detail",
+      "before": null,
+      "after": {
+        "next_action": "CLOSE_OWNED_HANDLES_AND_RECORD"
+      },
+      "reason": "Check first reason/stage or exact resource reason/action, not status alone."
+    },
+    {
+      "id": "RESOURCE15",
+      "field": "positive_control_case_id",
+      "before": "RESOURCE15",
+      "after": "RESOURCE15",
+      "reason": "Exact declared matching function/input control."
+    },
+    {
+      "id": "RESOURCE16",
+      "field": "concrete_fixture",
+      "before": null,
+      "after": {
+        "path": "fixture_inputs/CONTROL_INPUTS.json",
+        "record": "RESOURCE16",
+        "record_sha256": "eca964236b76efbfc9a224cb9fd03bebccad66e259b98a32226a7ef3c8d1f6b6"
+      },
+      "reason": "Exact materialized input definition; raw aggregate file seal additionally required."
+    },
+    {
+      "id": "RESOURCE16",
+      "field": "exact_mutation_leaves",
+      "before": null,
+      "after": [
+        "manifest.native_ready"
+      ],
+      "reason": "Single concrete input and deterministic derived binding pins."
+    },
+    {
+      "id": "RESOURCE16",
+      "field": "expected_detail",
+      "before": null,
+      "after": {
+        "exception_stage": "authorization",
+        "adapter_events": []
+      },
+      "reason": "Check first reason/stage or exact resource reason/action, not status alone."
+    },
+    {
+      "id": "RESOURCE16",
+      "field": "positive_control_case_id",
+      "before": "AUTH01",
+      "after": "AUTH01",
+      "reason": "Exact declared matching function/input control."
+    }
+  ],
+  "pending_control_blocker": null,
+  "R1_002_control_update": "AUTH01 explicit inert execute_once route is same registered input; RESOURCE16 control now declared. No functional result claimed."
+}

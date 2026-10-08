@@ -1,0 +1,21 @@
+{
+  "source": "Later transcription of actual exec tool returns; not raw OS audit",
+  "python": {
+    "completion_chunk": "596519",
+    "tool_exit_code": 0,
+    "tool_wait_wall_seconds": 1.52e-05,
+    "engine_elapsed_s": 169.2741394,
+    "post_session_overall_snapshot_s": 576.5540182,
+    "within_limits": true
+  },
+  "powershell": {
+    "completion_chunk": "003995",
+    "tool_exit_code": 1,
+    "tool_wait_wall_seconds": 1.42e-05,
+    "engine_elapsed_s": 30.3085736,
+    "post_session_overall_snapshot_s": 666.6853731,
+    "within_limits": false,
+    "reason": "EARLIER_ENGINE_FAILURE_PRESERVED"
+  },
+  "note": "Engine within_limits combines success and time conditions. PowerShell false is caused by rc1;30.309s is below300s. Poll wall times are not whole process time."
+}

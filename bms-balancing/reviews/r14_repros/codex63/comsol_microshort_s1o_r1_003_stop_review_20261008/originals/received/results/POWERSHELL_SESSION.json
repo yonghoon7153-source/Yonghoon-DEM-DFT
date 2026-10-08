@@ -1,0 +1,40 @@
+{
+  "engine": "powershell",
+  "utc_start": "2026-10-08T13:58:57.6942829Z",
+  "utc_end": "2026-10-08T13:59:27.9903340Z",
+  "pid_owned": 31700,
+  "argv": [
+    "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe",
+    "-NoLogo",
+    "-NoProfile",
+    "-NonInteractive",
+    "-File",
+    "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\outputs\\microshort_s1o_r1_20261008\\future_validation_fixture_R1_003\\harness\\ps_harness.ps1"
+  ],
+  "cwd": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\outputs\\microshort_s1o_r1_20261008\\future_validation_fixture_R1_003",
+  "rc": 1,
+  "timed_out": false,
+  "elapsed_s": 30.2902513,
+  "limit_s": 300,
+  "overall_snapshot_s": 666.667302,
+  "overall_limit_s": 1860.0,
+  "engine_overall_deadline_s": 1740.0,
+  "closeout_reserve_s": 120.0,
+  "effective_wait_budget_s": 299.8853219,
+  "within_limits": false,
+  "start_or_collection_error": null,
+  "cleanup_error": null,
+  "stdout": {
+    "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\outputs\\microshort_s1o_r1_20261008\\future_validation_fixture_R1_003\\results\\POWERSHELL_STDOUT.txt",
+    "bytes": 117012,
+    "sha256": "4f204f518b0c88753eae41120a03596b7516f87eb6ae3c4e2c8cf6fcf4a5fc20"
+  },
+  "stderr": {
+    "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\outputs\\microshort_s1o_r1_20261008\\future_validation_fixture_R1_003\\results\\POWERSHELL_STDERR.txt",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "status": "FIRST_UNEXPECTED_ENGINE_FAILURE",
+  "raw_process_exit_observed": true,
+  "observation_phase": "PRE_SESSION_RECORD_WRITE"
+}

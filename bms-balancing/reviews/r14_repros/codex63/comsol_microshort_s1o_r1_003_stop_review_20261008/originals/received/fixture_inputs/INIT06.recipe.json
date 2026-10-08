@@ -1,0 +1,1 @@
+{"id":"INIT06","input_id":"INIT06:01","calls":[{"function":"compare_initialization","canonical_bytes":589,"sha256":"88394c527e2d2e7e471dbd2a56e269d94179b505746cd40c2900326d838536b6"}],"recipe":"initial wrong unit","expected":"INITIAL_UNIT","scope":"actual derived input canonical hashes; full expanded replicas not persisted; exact own generator and shared seeds sealed"}

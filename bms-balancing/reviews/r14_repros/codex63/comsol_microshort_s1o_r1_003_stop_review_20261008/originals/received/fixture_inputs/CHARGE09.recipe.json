@@ -1,0 +1,1 @@
+{"id":"CHARGE09","input_id":"CHARGE09:01","calls":[{"function":"charge_balance","canonical_bytes":172857,"sha256":"31a73298182a48fe745d9ef2d21976a9afc5099c5be661fc83394221febd537e"}],"recipe":"qN-qP exceeds","expected":"SOLID_TRANSFER_BALANCE","scope":"actual derived input canonical hashes; full expanded replicas not persisted; exact own generator and shared seeds sealed"}

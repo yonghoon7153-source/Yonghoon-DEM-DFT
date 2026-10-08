@@ -1,0 +1,1 @@
+{"id":"POLICY07","input_id":"POLICY07:01","calls":[{"function":"invariants","canonical_bytes":179094,"sha256":"e0a5ded477e36ce1017329e96a8856cc4f16bb802aff3aa838df19bbbc585b95"}],"recipe":"decomposition above1e-8","expected":"VOLTAGE_IDENTITY","scope":"actual derived input canonical hashes; full expanded replicas not persisted; exact own generator and shared seeds sealed"}

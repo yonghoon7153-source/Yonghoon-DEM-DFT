@@ -1,0 +1,190 @@
+{
+  "schema": "S1O_COEFFICIENT_READBACK_V1",
+  "status": "OFFLINE_CONTRACT_ACTUAL_CONSUMPTION_OPEN",
+  "native_ready": false,
+  "approved": false,
+  "usable": false,
+  "source_java_sha256": "a90d1e66db796f6b8077fa1d158620d1ec548265a1508b698e35da8ef6e3492c",
+  "evidence_levels": [
+    "SOURCE_CONFIGURED",
+    "NATIVE_SETTING_READBACK",
+    "GENERATED_EQUATION_LINKED",
+    "ACTUAL_COEFFICIENT_EVALUATED"
+  ],
+  "no_level_implied_by_lower_level": true,
+  "adapter_projection": null,
+  "adapter_projection_status": "OPEN_NOT_DIRECT_INPUT_TO_verify_coefficient_evidence",
+  "adapter_projection_required_shape": {
+    "configured": "Exact expected normalized settings keyed by feature/domain/property, bound to this contract and installed mapping",
+    "consumed": "Nonempty installed coefficient mapping; each key has value, unit, abs_tol derived from reviewer-fixed limits",
+    "runtime_evidence": "Raw equation/value artifact identity plus installed mapping SHA, checked by upstream adapter before consumer",
+    "rule": "This rich contract is a design specification, not the configured/consumed adapter object. No automatic fabricated mapping from source settings. Missing mapping blocks native readiness."
+  },
+  "configured_electronic": [
+    {
+      "feature": "comp1.liion.pcb1",
+      "domain": 2,
+      "epss": ".55",
+      "epsl": ".45",
+      "ElectricCorrModel": "NoCorr",
+      "sigma_mat": "userdef",
+      "sigma_expression": "diag(sigma_short)",
+      "sigma_unit": "S/m",
+      "proposed_multiplier": "1",
+      "expected_effective_sigma": "sigma_short",
+      "forbidden_double_factors": [
+        ".55^1.5",
+        ".45^1.5"
+      ],
+      "actual_consumed_expression": null,
+      "actual_consumed_variable": null,
+      "status": "OPEN",
+      "source": "reference/s0/candidate/MicroshortS1RestCandidate.java.inactive.txt:682"
+    },
+    {
+      "feature": "comp1.liion.pce1",
+      "domain": 1,
+      "ElectricCorrModel": "userdef",
+      "fs_expression": "epsl_el^2.5",
+      "sigma_expression": "K_gr",
+      "sigma_S_m": "100",
+      "inferred_effective_sigma_S_m": "4.3368456767714550434399281102242738623340258438131",
+      "status": "FORMULA_CANDIDATE_PENDING_GENERATED_EQUATION",
+      "source": "reference/s0/candidate/MicroshortS1RestCandidate.java.inactive.txt:98"
+    },
+    {
+      "feature": "comp1.liion.pce2",
+      "domain": 3,
+      "ElectricCorrModel": "userdef",
+      "fs_expression": "epsl_pos^b_PE_brugg",
+      "sigma_expression": "K_NCM",
+      "sigma_S_m": ".17",
+      "inferred_effective_sigma_S_m": "0.014771963857355333885050182653515017216260584628256",
+      "status": "FORMULA_CANDIDATE_PENDING_GENERATED_EQUATION",
+      "source": "reference/s0/candidate/MicroshortS1RestCandidate.java.inactive.txt:98"
+    }
+  ],
+  "configured_electrolyte": [
+    {
+      "feature": "pce1",
+      "domain": 1,
+      "epsl": "0.285016227458136",
+      "factor_expression": "epsl_el^2.5",
+      "factor_expected": "0.043368456767714550434399281102242738623340258438131"
+    },
+    {
+      "feature": "pcb1",
+      "domain": 2,
+      "epsl": ".45",
+      "factor_expression": "epsl_sep^b_sep",
+      "factor_expected": "0.30186917696247160901523844527872229178448347854756"
+    },
+    {
+      "feature": "pce2",
+      "domain": 3,
+      "epsl": "0.329399105824326",
+      "factor_expression": "epsl_pos^b_PE_brugg",
+      "factor_expected": "0.086893905043266669912059897961853042448591674283860"
+    }
+  ],
+  "electrolyte_properties": {
+    "IonicCorrModel": "userdef",
+    "fl": "factor_expression [1]",
+    "DiffusionCorrModel": "userdef",
+    "fDl": "factor_expression [1]",
+    "Migration": "userdef",
+    "fmob": "factor_expression [1]",
+    "Dl_mat": "userdef",
+    "D_e_m2_s": "7.5e-11",
+    "transpNum_mat": "userdef",
+    "t_plus": ".363",
+    "temperature_K": "298.15",
+    "ionic_material_conductivity_expression": "sigmal_int1(c/1[mol/m^3])*exp(4000/8.314*(1/(T_ref2/1[K])-1/(T3/1[K])))",
+    "ionic_material_unit": "S/m",
+    "material_reference_source": "reference/s0/candidate/MicroshortS1RestCandidate.java.inactive.txt:227",
+    "configuration_source": "reference/s0/candidate/MicroshortS1RestCandidate.java.inactive.txt:75"
+  },
+  "candidate_transport_values": [
+    {
+      "domain": 1,
+      "D_e_times_fDl_m2_s": "3.2526342575785912825799460826682053967505193828598E-12",
+      "D_dynamic_if_divided_by_epsl_m2_s": "1.1412101993583321568731795303906312756712258638350E-11",
+      "claim": "arithmetic candidate only; generated equation determines placement and storage epsl, no extra epsl assumption"
+    },
+    {
+      "domain": 2,
+      "D_e_times_fDl_m2_s": "2.2640188272185370676142883395904171883836260891067E-11",
+      "D_dynamic_if_divided_by_epsl_m2_s": "5.031152949374526816920640754645371529741391309126E-11",
+      "claim": "arithmetic candidate only; generated equation determines placement and storage epsl, no extra epsl assumption"
+    },
+    {
+      "domain": 3,
+      "D_e_times_fDl_m2_s": "6.5170428782450002434044923471389781836443755712895E-12",
+      "D_dynamic_if_divided_by_epsl_m2_s": "1.9784640465055321590528606086239652785330997026749E-11",
+      "claim": "arithmetic candidate only; generated equation determines placement and storage epsl, no extra epsl assumption"
+    }
+  ],
+  "required_observation_record": {
+    "phase": [
+      "configured_pre_solve",
+      "consistent_initialization",
+      "completed_result"
+    ],
+    "fields": [
+      "run_id",
+      "variant",
+      "source_manifest_sha256",
+      "domain",
+      "feature_tag",
+      "raw_property",
+      "raw_expression",
+      "evaluated_value",
+      "unit",
+      "coefficient_symbol",
+      "equation_or_weak_term",
+      "equation_export_sha256",
+      "dependency_chain",
+      "observation_time_s",
+      "native_evaluation_source"
+    ],
+    "missing": "OPEN_COEFFICIENT_BINDING_NOT_PASS"
+  },
+  "units_required": {
+    "epss": "1",
+    "epsl": "1",
+    "fl": "1",
+    "fDl": "1",
+    "fmob": "1",
+    "sigma": "S/m",
+    "D_transport": "m^2/s",
+    "cl": "mol/m^3",
+    "phis": "V",
+    "Isx": "A/m^2",
+    "ivtot": "A/m^3"
+  },
+  "equality_proposals": {
+    "factor_abs": "1e-12",
+    "factor_rel": "1e-10",
+    "sigma_abs_S_m": "1e-16",
+    "sigma_rel": "1e-6",
+    "relative_rule": "max(abs(expected), abs_floor), AND absolute/relative appropriate scale threshold; no arbitrary unit conversion",
+    "source_literal_strings": "exact and SI numeric comparison"
+  },
+  "separator_flux_crosscheck": {
+    "formula": "j_expected = sigma_short*(phis_boundary3-phis_boundary2)/L_sep",
+    "status": "INFERRED_CONSTITUTIVE_CROSSCHECK_NOT_GENERATED_EQUATION_PROOF",
+    "current_tolerance_ref": "CHARGE_BALANCE.json/current_balance",
+    "scope": "source-free separator, uniform fixed sigma, NoCorr; actual generated equation and settings must agree",
+    "never_substitute_terminal_voltage": true,
+    "inverse_sigma_not_research_output": true
+  },
+  "installed_api_mapping": {
+    "audit_featureInfo_existing_source": "reference/s0/candidate/MicroshortS1RestCandidate.java.inactive.txt:114",
+    "source_audited_features": "original preflightAudit currently exports reaction per1, not whole pcb1 transport; cannot claim existing export proves binder coefficient",
+    "complete_electrolyte_and_binder_equation_export_available": false,
+    "actual_installed_variable_names": null,
+    "actual_cdi_property_key": null,
+    "status": "OPEN_REQUIRES_PINNED_INSTALLED_EQUATION_OR_API_EVIDENCE_BEFORE_NATIVE_READY"
+  },
+  "mismatch_action": "STOP_AND_PRESERVE, no correction factor edits, no treating configured readback as actual consumption."
+}

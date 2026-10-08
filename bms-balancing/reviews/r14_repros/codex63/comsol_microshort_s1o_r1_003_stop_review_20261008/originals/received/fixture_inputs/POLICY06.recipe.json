@@ -1,0 +1,1 @@
+{"id":"POLICY06","input_id":"POLICY06:01","calls":[{"function":"invariants","canonical_bytes":179091,"sha256":"935426ed4a2bd92f684d0a938e3fec3731fde0d86a2bf4ed3c20fff9a23ec81d"}],"recipe":"individual Li drift above1e-6","expected":"LI_DRIFT","scope":"actual derived input canonical hashes; full expanded replicas not persisted; exact own generator and shared seeds sealed"}

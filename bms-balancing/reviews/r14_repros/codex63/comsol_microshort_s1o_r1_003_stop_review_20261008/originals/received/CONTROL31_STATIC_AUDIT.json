@@ -1,0 +1,367 @@
+{
+  "kind": "CONTROL31_STATIC_MATERIALIZATION_AUDIT",
+  "candidate_imports": 0,
+  "candidate_calls": 0,
+  "status": "STATIC_MATCH_FUNCTIONAL_NOT_RUN",
+  "source_identity": {
+    "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\outputs\\microshort_s1o_r1_20261008\\candidate\\control.py.inactive.txt",
+    "bytes": 18304,
+    "sha256": "8ec75e57336c4ffa33e61d513076fb1facd1cf90430b1e1ce1c15f9bb57ac00d"
+  },
+  "registered_inputs": 31,
+  "AUTH01_declared_inert_event_count": 14,
+  "RESOURCE16_exact_mutation": [
+    "arguments.manifest.native_ready"
+  ],
+  "records": [
+    {
+      "id": "AUTH01",
+      "registered_positive": "AUTH01",
+      "exact_argument_delta_from_control": [],
+      "route": "execute_once",
+      "positive_route": "execute_once",
+      "same_input_family": true,
+      "same_input_family_basis": "AUTH01 actual execute_once invokes authorize_execution exactly once; negative AUTH direct calls same source gate. Other routes match exactly."
+    },
+    {
+      "id": "AUTH02",
+      "registered_positive": "AUTH01",
+      "exact_argument_delta_from_control": [
+        "arguments.approval.approved",
+        "arguments.approval.execution_binding_sha256",
+        "arguments.approval.kind",
+        "arguments.approval.manifest_sha256",
+        "arguments.approval.policy_pin",
+        "arguments.approval.unit",
+        "arguments.approval.usable",
+        "arguments.approval.user_statement_sha256",
+        "arguments.approval.validation_evidence_sha256"
+      ],
+      "route": "authorize_execution",
+      "positive_route": "execute_once",
+      "same_input_family": true,
+      "same_input_family_basis": "AUTH01 actual execute_once invokes authorize_execution exactly once; negative AUTH direct calls same source gate. Other routes match exactly."
+    },
+    {
+      "id": "AUTH03",
+      "registered_positive": "AUTH01",
+      "exact_argument_delta_from_control": [
+        "arguments.observed.payload[0].sha256"
+      ],
+      "route": "authorize_execution",
+      "positive_route": "execute_once",
+      "same_input_family": true,
+      "same_input_family_basis": "AUTH01 actual execute_once invokes authorize_execution exactly once; negative AUTH direct calls same source gate. Other routes match exactly."
+    },
+    {
+      "id": "AUTH04",
+      "registered_positive": "AUTH01",
+      "exact_argument_delta_from_control": [
+        "arguments.observed.engines[0].sha256"
+      ],
+      "route": "authorize_execution",
+      "positive_route": "execute_once",
+      "same_input_family": true,
+      "same_input_family_basis": "AUTH01 actual execute_once invokes authorize_execution exactly once; negative AUTH direct calls same source gate. Other routes match exactly."
+    },
+    {
+      "id": "AUTH05",
+      "registered_positive": "AUTH01",
+      "exact_argument_delta_from_control": [
+        "arguments.acceptance.manifest_sha256"
+      ],
+      "route": "authorize_execution",
+      "positive_route": "execute_once",
+      "same_input_family": true,
+      "same_input_family_basis": "AUTH01 actual execute_once invokes authorize_execution exactly once; negative AUTH direct calls same source gate. Other routes match exactly."
+    },
+    {
+      "id": "AUTH06",
+      "registered_positive": "AUTH01",
+      "exact_argument_delta_from_control": [
+        "arguments.approval.unit.sigma_short_S_m"
+      ],
+      "route": "authorize_execution",
+      "positive_route": "execute_once",
+      "same_input_family": true,
+      "same_input_family_basis": "AUTH01 actual execute_once invokes authorize_execution exactly once; negative AUTH direct calls same source gate. Other routes match exactly."
+    },
+    {
+      "id": "AUTH07",
+      "registered_positive": "AUTH01",
+      "exact_argument_delta_from_control": [
+        "arguments.acceptance.execution_binding_sha256",
+        "arguments.approval.execution_binding_sha256",
+        "arguments.approval.unit.counts.solve",
+        "arguments.binding.unit.counts.solve"
+      ],
+      "route": "authorize_execution",
+      "positive_route": "execute_once",
+      "same_input_family": true,
+      "same_input_family_basis": "AUTH01 actual execute_once invokes authorize_execution exactly once; negative AUTH direct calls same source gate. Other routes match exactly."
+    },
+    {
+      "id": "AUTH08",
+      "registered_positive": "AUTH01",
+      "exact_argument_delta_from_control": [
+        "arguments.observed.cwd"
+      ],
+      "route": "authorize_execution",
+      "positive_route": "execute_once",
+      "same_input_family": true,
+      "same_input_family_basis": "AUTH01 actual execute_once invokes authorize_execution exactly once; negative AUTH direct calls same source gate. Other routes match exactly."
+    },
+    {
+      "id": "AUTH09",
+      "registered_positive": "AUTH01",
+      "exact_argument_delta_from_control": [
+        "arguments.observed.path_collisions"
+      ],
+      "route": "authorize_execution",
+      "positive_route": "execute_once",
+      "same_input_family": true,
+      "same_input_family_basis": "AUTH01 actual execute_once invokes authorize_execution exactly once; negative AUTH direct calls same source gate. Other routes match exactly."
+    },
+    {
+      "id": "AUTH10",
+      "registered_positive": "AUTH01",
+      "exact_argument_delta_from_control": [
+        "arguments.observed.elevated"
+      ],
+      "route": "authorize_execution",
+      "positive_route": "execute_once",
+      "same_input_family": true,
+      "same_input_family_basis": "AUTH01 actual execute_once invokes authorize_execution exactly once; negative AUTH direct calls same source gate. Other routes match exactly."
+    },
+    {
+      "id": "AUTH11",
+      "registered_positive": "AUTH01",
+      "exact_argument_delta_from_control": [
+        "arguments.observed.attempt_history"
+      ],
+      "route": "authorize_execution",
+      "positive_route": "execute_once",
+      "same_input_family": true,
+      "same_input_family_basis": "AUTH01 actual execute_once invokes authorize_execution exactly once; negative AUTH direct calls same source gate. Other routes match exactly."
+    },
+    {
+      "id": "AUTH12",
+      "registered_positive": "AUTH01",
+      "exact_argument_delta_from_control": [
+        "arguments.manifest.native_ready"
+      ],
+      "route": "authorize_execution",
+      "positive_route": "execute_once",
+      "same_input_family": true,
+      "same_input_family_basis": "AUTH01 actual execute_once invokes authorize_execution exactly once; negative AUTH direct calls same source gate. Other routes match exactly."
+    },
+    {
+      "id": "AUTH13",
+      "registered_positive": "AUTH01",
+      "exact_argument_delta_from_control": [
+        "arguments.acceptance.execution_binding_sha256",
+        "arguments.approval.execution_binding_sha256",
+        "arguments.approval.unit.commands.native_compile_argv",
+        "arguments.binding.unit.commands.native_compile_argv"
+      ],
+      "route": "authorize_execution",
+      "positive_route": "execute_once",
+      "same_input_family": true,
+      "same_input_family_basis": "AUTH01 actual execute_once invokes authorize_execution exactly once; negative AUTH direct calls same source gate. Other routes match exactly."
+    },
+    {
+      "id": "AUTH14",
+      "registered_positive": "AUTH01",
+      "exact_argument_delta_from_control": [
+        "arguments.acceptance.execution_binding_sha256",
+        "arguments.approval.execution_binding_sha256",
+        "arguments.approval.unit.paths.proposed_native_root",
+        "arguments.binding.unit.paths.proposed_native_root"
+      ],
+      "route": "authorize_execution",
+      "positive_route": "execute_once",
+      "same_input_family": true,
+      "same_input_family_basis": "AUTH01 actual execute_once invokes authorize_execution exactly once; negative AUTH direct calls same source gate. Other routes match exactly."
+    },
+    {
+      "id": "AUTH15",
+      "registered_positive": "AUTH01",
+      "exact_argument_delta_from_control": [
+        "arguments.acceptance.execution_binding_sha256",
+        "arguments.approval.execution_binding_sha256",
+        "arguments.approval.policy_pin",
+        "arguments.binding.policy_pin",
+        "arguments.observed.policy"
+      ],
+      "route": "authorize_execution",
+      "positive_route": "execute_once",
+      "same_input_family": true,
+      "same_input_family_basis": "AUTH01 actual execute_once invokes authorize_execution exactly once; negative AUTH direct calls same source gate. Other routes match exactly."
+    },
+    {
+      "id": "RESOURCE01",
+      "registered_positive": "RESOURCE01",
+      "exact_argument_delta_from_control": [],
+      "route": "assess_resources",
+      "positive_route": "assess_resources",
+      "same_input_family": true,
+      "same_input_family_basis": "AUTH01 actual execute_once invokes authorize_execution exactly once; negative AUTH direct calls same source gate. Other routes match exactly."
+    },
+    {
+      "id": "RESOURCE02",
+      "registered_positive": "RESOURCE01",
+      "exact_argument_delta_from_control": [
+        "arguments.sample.job_rss_bytes"
+      ],
+      "route": "assess_resources",
+      "positive_route": "assess_resources",
+      "same_input_family": true,
+      "same_input_family_basis": "AUTH01 actual execute_once invokes authorize_execution exactly once; negative AUTH direct calls same source gate. Other routes match exactly."
+    },
+    {
+      "id": "RESOURCE03",
+      "registered_positive": "RESOURCE01",
+      "exact_argument_delta_from_control": [
+        "arguments.sample.job_rss_bytes"
+      ],
+      "route": "assess_resources",
+      "positive_route": "assess_resources",
+      "same_input_family": true,
+      "same_input_family_basis": "AUTH01 actual execute_once invokes authorize_execution exactly once; negative AUTH direct calls same source gate. Other routes match exactly."
+    },
+    {
+      "id": "RESOURCE04",
+      "registered_positive": "RESOURCE01",
+      "exact_argument_delta_from_control": [
+        "arguments.ownership.status"
+      ],
+      "route": "assess_resources",
+      "positive_route": "assess_resources",
+      "same_input_family": true,
+      "same_input_family_basis": "AUTH01 actual execute_once invokes authorize_execution exactly once; negative AUTH direct calls same source gate. Other routes match exactly."
+    },
+    {
+      "id": "RESOURCE05",
+      "registered_positive": "RESOURCE01",
+      "exact_argument_delta_from_control": [
+        "arguments.sample.rss_aggregation"
+      ],
+      "route": "assess_resources",
+      "positive_route": "assess_resources",
+      "same_input_family": true,
+      "same_input_family_basis": "AUTH01 actual execute_once invokes authorize_execution exactly once; negative AUTH direct calls same source gate. Other routes match exactly."
+    },
+    {
+      "id": "RESOURCE06",
+      "registered_positive": "RESOURCE01",
+      "exact_argument_delta_from_control": [
+        "arguments.sample.job_rss_bytes"
+      ],
+      "route": "assess_resources",
+      "positive_route": "assess_resources",
+      "same_input_family": true,
+      "same_input_family_basis": "AUTH01 actual execute_once invokes authorize_execution exactly once; negative AUTH direct calls same source gate. Other routes match exactly."
+    },
+    {
+      "id": "RESOURCE07",
+      "registered_positive": "RESOURCE01",
+      "exact_argument_delta_from_control": [
+        "arguments.sample.sample_gap_s"
+      ],
+      "route": "assess_resources",
+      "positive_route": "assess_resources",
+      "same_input_family": true,
+      "same_input_family_basis": "AUTH01 actual execute_once invokes authorize_execution exactly once; negative AUTH direct calls same source gate. Other routes match exactly."
+    },
+    {
+      "id": "RESOURCE08",
+      "registered_positive": "RESOURCE01",
+      "exact_argument_delta_from_control": [
+        "arguments.sample.native_elapsed_s"
+      ],
+      "route": "assess_resources",
+      "positive_route": "assess_resources",
+      "same_input_family": true,
+      "same_input_family_basis": "AUTH01 actual execute_once invokes authorize_execution exactly once; negative AUTH direct calls same source gate. Other routes match exactly."
+    },
+    {
+      "id": "RESOURCE09",
+      "registered_positive": "RESOURCE09",
+      "exact_argument_delta_from_control": [],
+      "route": "advance_stop",
+      "positive_route": "advance_stop",
+      "same_input_family": true,
+      "same_input_family_basis": "AUTH01 actual execute_once invokes authorize_execution exactly once; negative AUTH direct calls same source gate. Other routes match exactly."
+    },
+    {
+      "id": "RESOURCE10",
+      "registered_positive": "RESOURCE11",
+      "exact_argument_delta_from_control": [
+        "arguments.capabilities.force_only_explicitly_approved"
+      ],
+      "route": "advance_stop",
+      "positive_route": "advance_stop",
+      "same_input_family": true,
+      "same_input_family_basis": "AUTH01 actual execute_once invokes authorize_execution exactly once; negative AUTH direct calls same source gate. Other routes match exactly."
+    },
+    {
+      "id": "RESOURCE11",
+      "registered_positive": "RESOURCE11",
+      "exact_argument_delta_from_control": [],
+      "route": "advance_stop",
+      "positive_route": "advance_stop",
+      "same_input_family": true,
+      "same_input_family_basis": "AUTH01 actual execute_once invokes authorize_execution exactly once; negative AUTH direct calls same source gate. Other routes match exactly."
+    },
+    {
+      "id": "RESOURCE12",
+      "registered_positive": "RESOURCE12",
+      "exact_argument_delta_from_control": [],
+      "route": "advance_stop",
+      "positive_route": "advance_stop",
+      "same_input_family": true,
+      "same_input_family_basis": "AUTH01 actual execute_once invokes authorize_execution exactly once; negative AUTH direct calls same source gate. Other routes match exactly."
+    },
+    {
+      "id": "RESOURCE13",
+      "registered_positive": "RESOURCE13",
+      "exact_argument_delta_from_control": [],
+      "route": "advance_stop",
+      "positive_route": "advance_stop",
+      "same_input_family": true,
+      "same_input_family_basis": "AUTH01 actual execute_once invokes authorize_execution exactly once; negative AUTH direct calls same source gate. Other routes match exactly."
+    },
+    {
+      "id": "RESOURCE14",
+      "registered_positive": "RESOURCE15",
+      "exact_argument_delta_from_control": [
+        "arguments.event.remaining_members"
+      ],
+      "route": "advance_stop",
+      "positive_route": "advance_stop",
+      "same_input_family": true,
+      "same_input_family_basis": "AUTH01 actual execute_once invokes authorize_execution exactly once; negative AUTH direct calls same source gate. Other routes match exactly."
+    },
+    {
+      "id": "RESOURCE15",
+      "registered_positive": "RESOURCE15",
+      "exact_argument_delta_from_control": [],
+      "route": "advance_stop",
+      "positive_route": "advance_stop",
+      "same_input_family": true,
+      "same_input_family_basis": "AUTH01 actual execute_once invokes authorize_execution exactly once; negative AUTH direct calls same source gate. Other routes match exactly."
+    },
+    {
+      "id": "RESOURCE16",
+      "registered_positive": "AUTH01",
+      "exact_argument_delta_from_control": [
+        "arguments.manifest.native_ready"
+      ],
+      "route": "execute_once",
+      "positive_route": "execute_once",
+      "same_input_family": true,
+      "same_input_family_basis": "AUTH01 actual execute_once invokes authorize_execution exactly once; negative AUTH direct calls same source gate. Other routes match exactly."
+    }
+  ],
+  "scope": "Synthetic fixture identity and argument construction only. Does not demonstrate actual authorization, OS resources, native calls, or runtime behavior."
+}

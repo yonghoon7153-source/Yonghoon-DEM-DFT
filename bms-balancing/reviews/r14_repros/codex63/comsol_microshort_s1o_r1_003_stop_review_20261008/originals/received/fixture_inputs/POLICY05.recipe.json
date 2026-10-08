@@ -1,0 +1,1 @@
+{"id":"POLICY05","input_id":"POLICY05:01","calls":[{"function":"compare_policy","canonical_bytes":61453268,"sha256":"a41f7cf5369f9899ce03bb495d518e6d2670befb13da9c6a03603098b4468bd2"}],"recipe":"surface above1e-4","expected":"EXCEEDS_LIMITS","scope":"actual derived input canonical hashes; full expanded replicas not persisted; exact own generator and shared seeds sealed"}

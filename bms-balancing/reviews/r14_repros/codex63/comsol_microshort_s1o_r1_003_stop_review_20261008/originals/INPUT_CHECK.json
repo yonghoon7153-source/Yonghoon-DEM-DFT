@@ -1,0 +1,14 @@
+{
+  "kind": "INDEPENDENT_ARCHIVE_DATA_CHECK",
+  "archive": {
+    "file": "COMSOL_MICROSHORT_S1O_R1_003_VALIDATION_STOP_20261008.zip",
+    "bytes": 876456,
+    "sha256": "11a27f3034fed763442ccce9730f7e008058b819bfbffd9d58a5d2994b875d4b"
+  },
+  "payload_count": 153,
+  "entries": 154,
+  "exact_set_size_sha_crc_paths": true,
+  "source_manifest_members": 21,
+  "source_manifest_matches_previous_accepted_R1": true,
+  "received_programs_executed": 0
+}

@@ -1,0 +1,1897 @@
+{
+  "status": "CONTROL31_MATERIALIZED_FUNCTIONAL_NOT_RUN_GLOBAL_PRESEAL_PENDING",
+  "inputs": 130,
+  "controls": [
+    {
+      "id": "AUTH01",
+      "input_id": "AUTH01:01",
+      "engine": "Python",
+      "target_functions": [
+        "execute_once",
+        "authorize_execution"
+      ],
+      "required_reach": "execute_once -> authorize_execution -> exactly fourteen registered inert adapter events",
+      "positive_control_case_id": "AUTH01",
+      "producer_case_id": null,
+      "required": "Same source bytes, matching base fixture and actual reached function; no extra unregistered inputs",
+      "status": "DECLARED_MATERIALIZED_PENDING_GLOBAL_SEAL_AND_EXECUTION",
+      "concrete_fixture": {
+        "path": "fixture_inputs/CONTROL_INPUTS.json",
+        "record": "AUTH01",
+        "record_sha256": "a769004476e28465bc38afe3618412160a9590073160767e717220157eda4d57"
+      }
+    },
+    {
+      "id": "AUTH02",
+      "input_id": "AUTH02:01",
+      "engine": "Python",
+      "target_functions": [
+        "authorize_execution"
+      ],
+      "required_reach": "authorize_execution",
+      "positive_control_case_id": "AUTH01",
+      "producer_case_id": null,
+      "required": "Same source bytes, matching base fixture and actual reached function; no extra unregistered inputs",
+      "status": "DECLARED_MATERIALIZED_PENDING_GLOBAL_SEAL_AND_EXECUTION",
+      "concrete_fixture": {
+        "path": "fixture_inputs/CONTROL_INPUTS.json",
+        "record": "AUTH02",
+        "record_sha256": "270ee7c2e3f3b4ad86420371d4f71c503bbe7f496f7cadb3e6f0fcfe8a309ded"
+      }
+    },
+    {
+      "id": "AUTH03",
+      "input_id": "AUTH03:01",
+      "engine": "Python",
+      "target_functions": [
+        "authorize_execution"
+      ],
+      "required_reach": "authorize_execution",
+      "positive_control_case_id": "AUTH01",
+      "producer_case_id": null,
+      "required": "Same source bytes, matching base fixture and actual reached function; no extra unregistered inputs",
+      "status": "DECLARED_MATERIALIZED_PENDING_GLOBAL_SEAL_AND_EXECUTION",
+      "concrete_fixture": {
+        "path": "fixture_inputs/CONTROL_INPUTS.json",
+        "record": "AUTH03",
+        "record_sha256": "928da7be83ff312a8cd7c351e0b137b4f05883f6d88f1480650554b962e83f7e"
+      }
+    },
+    {
+      "id": "AUTH04",
+      "input_id": "AUTH04:01",
+      "engine": "Python",
+      "target_functions": [
+        "authorize_execution"
+      ],
+      "required_reach": "authorize_execution",
+      "positive_control_case_id": "AUTH01",
+      "producer_case_id": null,
+      "required": "Same source bytes, matching base fixture and actual reached function; no extra unregistered inputs",
+      "status": "DECLARED_MATERIALIZED_PENDING_GLOBAL_SEAL_AND_EXECUTION",
+      "concrete_fixture": {
+        "path": "fixture_inputs/CONTROL_INPUTS.json",
+        "record": "AUTH04",
+        "record_sha256": "067a4f870c3206af494ae56c2a7cdc031345e9ae62fa94cd1d88afa006aac419"
+      }
+    },
+    {
+      "id": "AUTH05",
+      "input_id": "AUTH05:01",
+      "engine": "Python",
+      "target_functions": [
+        "authorize_execution"
+      ],
+      "required_reach": "authorize_execution",
+      "positive_control_case_id": "AUTH01",
+      "producer_case_id": null,
+      "required": "Same source bytes, matching base fixture and actual reached function; no extra unregistered inputs",
+      "status": "DECLARED_MATERIALIZED_PENDING_GLOBAL_SEAL_AND_EXECUTION",
+      "concrete_fixture": {
+        "path": "fixture_inputs/CONTROL_INPUTS.json",
+        "record": "AUTH05",
+        "record_sha256": "c4459cff65b78a46bb17b540034163c74f5194d395f91f5f4ef1d279d4fc4438"
+      }
+    },
+    {
+      "id": "AUTH06",
+      "input_id": "AUTH06:01",
+      "engine": "Python",
+      "target_functions": [
+        "authorize_execution"
+      ],
+      "required_reach": "authorize_execution",
+      "positive_control_case_id": "AUTH01",
+      "producer_case_id": null,
+      "required": "Same source bytes, matching base fixture and actual reached function; no extra unregistered inputs",
+      "status": "DECLARED_MATERIALIZED_PENDING_GLOBAL_SEAL_AND_EXECUTION",
+      "concrete_fixture": {
+        "path": "fixture_inputs/CONTROL_INPUTS.json",
+        "record": "AUTH06",
+        "record_sha256": "ff42d990f7bd5712519c2f1516fd075d88236c5f7467916e152c792e5265e2b8"
+      }
+    },
+    {
+      "id": "AUTH07",
+      "input_id": "AUTH07:01",
+      "engine": "Python",
+      "target_functions": [
+        "authorize_execution"
+      ],
+      "required_reach": "authorize_execution",
+      "positive_control_case_id": "AUTH01",
+      "producer_case_id": null,
+      "required": "Same source bytes, matching base fixture and actual reached function; no extra unregistered inputs",
+      "status": "DECLARED_MATERIALIZED_PENDING_GLOBAL_SEAL_AND_EXECUTION",
+      "concrete_fixture": {
+        "path": "fixture_inputs/CONTROL_INPUTS.json",
+        "record": "AUTH07",
+        "record_sha256": "f7c644e745367a754f8b6f7e813c09ae76cab850e49289172a922a250259d59e"
+      }
+    },
+    {
+      "id": "AUTH08",
+      "input_id": "AUTH08:01",
+      "engine": "Python",
+      "target_functions": [
+        "authorize_execution"
+      ],
+      "required_reach": "authorize_execution",
+      "positive_control_case_id": "AUTH01",
+      "producer_case_id": null,
+      "required": "Same source bytes, matching base fixture and actual reached function; no extra unregistered inputs",
+      "status": "DECLARED_MATERIALIZED_PENDING_GLOBAL_SEAL_AND_EXECUTION",
+      "concrete_fixture": {
+        "path": "fixture_inputs/CONTROL_INPUTS.json",
+        "record": "AUTH08",
+        "record_sha256": "9f2f4f285329472b2f6ca21dc18cf49caf4310cab14692d56e3879b4d23db540"
+      }
+    },
+    {
+      "id": "AUTH09",
+      "input_id": "AUTH09:01",
+      "engine": "Python",
+      "target_functions": [
+        "authorize_execution"
+      ],
+      "required_reach": "authorize_execution",
+      "positive_control_case_id": "AUTH01",
+      "producer_case_id": null,
+      "required": "Same source bytes, matching base fixture and actual reached function; no extra unregistered inputs",
+      "status": "DECLARED_MATERIALIZED_PENDING_GLOBAL_SEAL_AND_EXECUTION",
+      "concrete_fixture": {
+        "path": "fixture_inputs/CONTROL_INPUTS.json",
+        "record": "AUTH09",
+        "record_sha256": "62d4ac2d9448d6f24ff489c4ad175709089945035f13ca0937d5a45d8cf03cb9"
+      }
+    },
+    {
+      "id": "AUTH10",
+      "input_id": "AUTH10:01",
+      "engine": "Python",
+      "target_functions": [
+        "authorize_execution"
+      ],
+      "required_reach": "authorize_execution",
+      "positive_control_case_id": "AUTH01",
+      "producer_case_id": null,
+      "required": "Same source bytes, matching base fixture and actual reached function; no extra unregistered inputs",
+      "status": "DECLARED_MATERIALIZED_PENDING_GLOBAL_SEAL_AND_EXECUTION",
+      "concrete_fixture": {
+        "path": "fixture_inputs/CONTROL_INPUTS.json",
+        "record": "AUTH10",
+        "record_sha256": "c093cf9e922a7fe373c44d341e364f1610a3b3f4aa337afd9e43540539557698"
+      }
+    },
+    {
+      "id": "AUTH11",
+      "input_id": "AUTH11:01",
+      "engine": "Python",
+      "target_functions": [
+        "authorize_execution"
+      ],
+      "required_reach": "authorize_execution",
+      "positive_control_case_id": "AUTH01",
+      "producer_case_id": null,
+      "required": "Same source bytes, matching base fixture and actual reached function; no extra unregistered inputs",
+      "status": "DECLARED_MATERIALIZED_PENDING_GLOBAL_SEAL_AND_EXECUTION",
+      "concrete_fixture": {
+        "path": "fixture_inputs/CONTROL_INPUTS.json",
+        "record": "AUTH11",
+        "record_sha256": "854314cb292ca9ba252f1555991df3d2fcb1b6b667192ec1f696801656755b81"
+      }
+    },
+    {
+      "id": "AUTH12",
+      "input_id": "AUTH12:01",
+      "engine": "Python",
+      "target_functions": [
+        "authorize_execution"
+      ],
+      "required_reach": "authorize_execution",
+      "positive_control_case_id": "AUTH01",
+      "producer_case_id": null,
+      "required": "Same source bytes, matching base fixture and actual reached function; no extra unregistered inputs",
+      "status": "DECLARED_MATERIALIZED_PENDING_GLOBAL_SEAL_AND_EXECUTION",
+      "concrete_fixture": {
+        "path": "fixture_inputs/CONTROL_INPUTS.json",
+        "record": "AUTH12",
+        "record_sha256": "01e22cadb488bae3b802a4bb7f8252a7dcf1f330bc555173dc5eedd88b4f7f02"
+      }
+    },
+    {
+      "id": "AUTH13",
+      "input_id": "AUTH13:01",
+      "engine": "Python",
+      "target_functions": [
+        "authorize_execution"
+      ],
+      "required_reach": "authorize_execution",
+      "positive_control_case_id": "AUTH01",
+      "producer_case_id": null,
+      "required": "Same source bytes, matching base fixture and actual reached function; no extra unregistered inputs",
+      "status": "DECLARED_MATERIALIZED_PENDING_GLOBAL_SEAL_AND_EXECUTION",
+      "concrete_fixture": {
+        "path": "fixture_inputs/CONTROL_INPUTS.json",
+        "record": "AUTH13",
+        "record_sha256": "486b30b23db2691672481473a6fb11b203b85c638d8d93af795cb241d112955b"
+      }
+    },
+    {
+      "id": "AUTH14",
+      "input_id": "AUTH14:01",
+      "engine": "Python",
+      "target_functions": [
+        "authorize_execution"
+      ],
+      "required_reach": "authorize_execution",
+      "positive_control_case_id": "AUTH01",
+      "producer_case_id": null,
+      "required": "Same source bytes, matching base fixture and actual reached function; no extra unregistered inputs",
+      "status": "DECLARED_MATERIALIZED_PENDING_GLOBAL_SEAL_AND_EXECUTION",
+      "concrete_fixture": {
+        "path": "fixture_inputs/CONTROL_INPUTS.json",
+        "record": "AUTH14",
+        "record_sha256": "e904a2527c0d288aa4af4547611dc6e113c444854302a5f7d1243e0693d26b10"
+      }
+    },
+    {
+      "id": "AUTH15",
+      "input_id": "AUTH15:01",
+      "engine": "Python",
+      "target_functions": [
+        "authorize_execution"
+      ],
+      "required_reach": "authorize_execution",
+      "positive_control_case_id": "AUTH01",
+      "producer_case_id": null,
+      "required": "Same source bytes, matching base fixture and actual reached function; no extra unregistered inputs",
+      "status": "DECLARED_MATERIALIZED_PENDING_GLOBAL_SEAL_AND_EXECUTION",
+      "concrete_fixture": {
+        "path": "fixture_inputs/CONTROL_INPUTS.json",
+        "record": "AUTH15",
+        "record_sha256": "b7ca44a0d9f4739df66f27f2780da3e1ce87e77309c26f1365f5a6fbfc6e58b6"
+      }
+    },
+    {
+      "id": "READ01",
+      "input_id": "READ01:01",
+      "engine": "Python",
+      "target_functions": [
+        "read_csv_bytes",
+        "timed_rows",
+        "coverage",
+        "profile_rows"
+      ],
+      "required_reach": "read_csv_bytes -> timed_rows -> coverage -> profile_rows",
+      "positive_control_case_id": "READ01",
+      "producer_case_id": null,
+      "required": "Same source bytes, matching base fixture and actual reached function; no extra unregistered inputs",
+      "status": "PROPOSED_PENDING_HARNESS_SEAL"
+    },
+    {
+      "id": "READ02",
+      "input_id": "READ02:01",
+      "engine": "Python",
+      "target_functions": [
+        "read_csv_bytes"
+      ],
+      "required_reach": "read_csv_bytes",
+      "positive_control_case_id": "READ01",
+      "producer_case_id": null,
+      "required": "Same source bytes, matching base fixture and actual reached function; no extra unregistered inputs",
+      "status": "PROPOSED_PENDING_HARNESS_SEAL"
+    },
+    {
+      "id": "READ03",
+      "input_id": "READ03:01",
+      "engine": "Python",
+      "target_functions": [
+        "read_csv_bytes"
+      ],
+      "required_reach": "read_csv_bytes",
+      "positive_control_case_id": "READ01",
+      "producer_case_id": null,
+      "required": "Same source bytes, matching base fixture and actual reached function; no extra unregistered inputs",
+      "status": "PROPOSED_PENDING_HARNESS_SEAL"
+    },
+    {
+      "id": "READ04",
+      "input_id": "READ04:01",
+      "engine": "Python",
+      "target_functions": [
+        "read_csv_bytes"
+      ],
+      "required_reach": "read_csv_bytes",
+      "positive_control_case_id": "READ01",
+      "producer_case_id": null,
+      "required": "Same source bytes, matching base fixture and actual reached function; no extra unregistered inputs",
+      "status": "PROPOSED_PENDING_HARNESS_SEAL"
+    },
+    {
+      "id": "READ05",
+      "input_id": "READ05:01",
+      "engine": "Python",
+      "target_functions": [
+        "read_csv_bytes"
+      ],
+      "required_reach": "read_csv_bytes",
+      "positive_control_case_id": "READ01",
+      "producer_case_id": null,
+      "required": "Same source bytes, matching base fixture and actual reached function; no extra unregistered inputs",
+      "status": "PROPOSED_PENDING_HARNESS_SEAL"
+    },
+    {
+      "id": "READ06",
+      "input_id": "READ06:01",
+      "engine": "Python",
+      "target_functions": [
+        "read_csv_bytes"
+      ],
+      "required_reach": "read_csv_bytes",
+      "positive_control_case_id": "READ01",
+      "producer_case_id": null,
+      "required": "Same source bytes, matching base fixture and actual reached function; no extra unregistered inputs",
+      "status": "PROPOSED_PENDING_HARNESS_SEAL"
+    },
+    {
+      "id": "READ07",
+      "input_id": "READ07:01",
+      "engine": "Python",
+      "target_functions": [
+        "read_csv_bytes"
+      ],
+      "required_reach": "read_csv_bytes",
+      "positive_control_case_id": "READ01",
+      "producer_case_id": null,
+      "required": "Same source bytes, matching base fixture and actual reached function; no extra unregistered inputs",
+      "status": "PROPOSED_PENDING_HARNESS_SEAL"
+    },
+    {
+      "id": "READ08",
+      "input_id": "READ08:01",
+      "engine": "Python",
+      "target_functions": [
+        "timed_rows"
+      ],
+      "required_reach": "timed_rows",
+      "positive_control_case_id": "READ01",
+      "producer_case_id": null,
+      "required": "Same source bytes, matching base fixture and actual reached function; no extra unregistered inputs",
+      "status": "PROPOSED_PENDING_HARNESS_SEAL"
+    },
+    {
+      "id": "READ09",
+      "input_id": "READ09:01",
+      "engine": "Python",
+      "target_functions": [
+        "coverage"
+      ],
+      "required_reach": "coverage",
+      "positive_control_case_id": "READ01",
+      "producer_case_id": null,
+      "required": "Same source bytes, matching base fixture and actual reached function; no extra unregistered inputs",
+      "status": "PROPOSED_PENDING_HARNESS_SEAL"
+    },
+    {
+      "id": "READ10",
+      "input_id": "READ10:01",
+      "engine": "Python",
+      "target_functions": [
+        "coverage"
+      ],
+      "required_reach": "coverage",
+      "positive_control_case_id": "READ01",
+      "producer_case_id": null,
+      "required": "Same source bytes, matching base fixture and actual reached function; no extra unregistered inputs",
+      "status": "PROPOSED_PENDING_HARNESS_SEAL"
+    },
+    {
+      "id": "READ11",
+      "input_id": "READ11:01",
+      "engine": "Python",
+      "target_functions": [
+        "profile_rows"
+      ],
+      "required_reach": "profile_rows",
+      "positive_control_case_id": "READ01",
+      "producer_case_id": null,
+      "required": "Same source bytes, matching base fixture and actual reached function; no extra unregistered inputs",
+      "status": "PROPOSED_PENDING_HARNESS_SEAL"
+    },
+    {
+      "id": "READ12",
+      "input_id": "READ12:01",
+      "engine": "Python",
+      "target_functions": [
+        "profile_rows"
+      ],
+      "required_reach": "profile_rows",
+      "positive_control_case_id": "READ01",
+      "producer_case_id": null,
+      "required": "Same source bytes, matching base fixture and actual reached function; no extra unregistered inputs",
+      "status": "PROPOSED_PENDING_HARNESS_SEAL"
+    },
+    {
+      "id": "INIT01",
+      "input_id": "INIT01:01",
+      "engine": "Python",
+      "target_functions": [
+        "compare_initialization",
+        "compare_initialization_pair"
+      ],
+      "required_reach": "compare_initialization_pair -> compare_initialization(left) and compare_initialization(right)",
+      "positive_control_case_id": "INIT01",
+      "producer_case_id": null,
+      "required": "Same source bytes, matching base fixture and actual reached function; no extra unregistered inputs",
+      "status": "PROPOSED_PENDING_HARNESS_SEAL"
+    },
+    {
+      "id": "INIT02",
+      "input_id": "INIT02:01",
+      "engine": "Python",
+      "target_functions": [
+        "compare_initialization"
+      ],
+      "required_reach": "compare_initialization",
+      "positive_control_case_id": "INIT01",
+      "producer_case_id": null,
+      "required": "Same source bytes, matching base fixture and actual reached function; no extra unregistered inputs",
+      "status": "PROPOSED_PENDING_HARNESS_SEAL"
+    },
+    {
+      "id": "INIT03",
+      "input_id": "INIT03:01",
+      "engine": "Python",
+      "target_functions": [
+        "compare_initialization"
+      ],
+      "required_reach": "compare_initialization",
+      "positive_control_case_id": "INIT01",
+      "producer_case_id": null,
+      "required": "Same source bytes, matching base fixture and actual reached function; no extra unregistered inputs",
+      "status": "PROPOSED_PENDING_HARNESS_SEAL"
+    },
+    {
+      "id": "INIT04",
+      "input_id": "INIT04:01",
+      "engine": "Python",
+      "target_functions": [
+        "compare_initialization"
+      ],
+      "required_reach": "compare_initialization",
+      "positive_control_case_id": "INIT01",
+      "producer_case_id": null,
+      "required": "Same source bytes, matching base fixture and actual reached function; no extra unregistered inputs",
+      "status": "PROPOSED_PENDING_HARNESS_SEAL"
+    },
+    {
+      "id": "INIT05",
+      "input_id": "INIT05:01",
+      "engine": "Python",
+      "target_functions": [
+        "compare_initialization"
+      ],
+      "required_reach": "compare_initialization",
+      "positive_control_case_id": "INIT01",
+      "producer_case_id": null,
+      "required": "Same source bytes, matching base fixture and actual reached function; no extra unregistered inputs",
+      "status": "PROPOSED_PENDING_HARNESS_SEAL"
+    },
+    {
+      "id": "INIT06",
+      "input_id": "INIT06:01",
+      "engine": "Python",
+      "target_functions": [
+        "compare_initialization"
+      ],
+      "required_reach": "compare_initialization",
+      "positive_control_case_id": "INIT01",
+      "producer_case_id": null,
+      "required": "Same source bytes, matching base fixture and actual reached function; no extra unregistered inputs",
+      "status": "PROPOSED_PENDING_HARNESS_SEAL"
+    },
+    {
+      "id": "INIT07",
+      "input_id": "INIT07:01",
+      "engine": "Python",
+      "target_functions": [
+        "verify_coefficient_evidence"
+      ],
+      "required_reach": "verify_coefficient_evidence",
+      "positive_control_case_id": "INIT09",
+      "producer_case_id": null,
+      "required": "Same source bytes, matching base fixture and actual reached function; no extra unregistered inputs",
+      "status": "PROPOSED_PENDING_HARNESS_SEAL"
+    },
+    {
+      "id": "INIT08",
+      "input_id": "INIT08:01",
+      "engine": "Python",
+      "target_functions": [
+        "verify_coefficient_evidence"
+      ],
+      "required_reach": "verify_coefficient_evidence",
+      "positive_control_case_id": "INIT09",
+      "producer_case_id": null,
+      "required": "Same source bytes, matching base fixture and actual reached function; no extra unregistered inputs",
+      "status": "PROPOSED_PENDING_HARNESS_SEAL"
+    },
+    {
+      "id": "INIT09",
+      "input_id": "INIT09:01",
+      "engine": "Python",
+      "target_functions": [
+        "verify_coefficient_evidence"
+      ],
+      "required_reach": "verify_coefficient_evidence",
+      "positive_control_case_id": "INIT09",
+      "producer_case_id": null,
+      "required": "Same source bytes, matching base fixture and actual reached function; no extra unregistered inputs",
+      "status": "PROPOSED_PENDING_HARNESS_SEAL"
+    },
+    {
+      "id": "INIT10",
+      "input_id": "INIT10:01",
+      "engine": "Python",
+      "target_functions": [
+        "verify_coefficient_evidence"
+      ],
+      "required_reach": "verify_coefficient_evidence",
+      "positive_control_case_id": "INIT09",
+      "producer_case_id": null,
+      "required": "Same source bytes, matching base fixture and actual reached function; no extra unregistered inputs",
+      "status": "PROPOSED_PENDING_HARNESS_SEAL"
+    },
+    {
+      "id": "INIT11",
+      "input_id": "INIT11:01",
+      "engine": "Python",
+      "target_functions": [
+        "compare_initialization_pair"
+      ],
+      "required_reach": "compare_initialization_pair",
+      "positive_control_case_id": "INIT01",
+      "producer_case_id": null,
+      "required": "Same source bytes, matching base fixture and actual reached function; no extra unregistered inputs",
+      "status": "PROPOSED_PENDING_HARNESS_SEAL"
+    },
+    {
+      "id": "INIT12",
+      "input_id": "INIT12:01",
+      "engine": "Python",
+      "target_functions": [
+        "initial_profile_uniformity"
+      ],
+      "required_reach": "initial_profile_uniformity",
+      "positive_control_case_id": "CHARGE01",
+      "producer_case_id": null,
+      "required": "Same source bytes, matching base fixture and actual reached function; no extra unregistered inputs",
+      "status": "PROPOSED_PENDING_HARNESS_SEAL"
+    },
+    {
+      "id": "POLICY01",
+      "input_id": "POLICY01:01",
+      "engine": "Python",
+      "target_functions": [
+        "compare_policy"
+      ],
+      "required_reach": "compare_policy",
+      "positive_control_case_id": "POLICY01",
+      "producer_case_id": null,
+      "required": "Same source bytes, matching base fixture and actual reached function; no extra unregistered inputs",
+      "status": "PROPOSED_PENDING_HARNESS_SEAL"
+    },
+    {
+      "id": "POLICY02",
+      "input_id": "POLICY02:01",
+      "engine": "Python",
+      "target_functions": [
+        "analyze",
+        "compare_policy"
+      ],
+      "required_reach": "analyze -> compare_policy -> analyze return",
+      "positive_control_case_id": "CHARGE01",
+      "producer_case_id": null,
+      "required": "Same source bytes, matching base fixture and actual reached function; no extra unregistered inputs",
+      "status": "PROPOSED_PENDING_HARNESS_SEAL"
+    },
+    {
+      "id": "POLICY03",
+      "input_id": "POLICY03:01",
+      "engine": "Python",
+      "target_functions": [
+        "analyze",
+        "compare_policy"
+      ],
+      "required_reach": "analyze -> compare_policy -> analyze return",
+      "positive_control_case_id": "CHARGE01",
+      "producer_case_id": null,
+      "required": "Same source bytes, matching base fixture and actual reached function; no extra unregistered inputs",
+      "status": "PROPOSED_PENDING_HARNESS_SEAL"
+    },
+    {
+      "id": "POLICY04",
+      "input_id": "POLICY04:01",
+      "engine": "Python",
+      "target_functions": [
+        "compare_policy"
+      ],
+      "required_reach": "compare_policy",
+      "positive_control_case_id": "POLICY01",
+      "producer_case_id": null,
+      "required": "Same source bytes, matching base fixture and actual reached function; no extra unregistered inputs",
+      "status": "PROPOSED_PENDING_HARNESS_SEAL"
+    },
+    {
+      "id": "POLICY05",
+      "input_id": "POLICY05:01",
+      "engine": "Python",
+      "target_functions": [
+        "compare_policy"
+      ],
+      "required_reach": "compare_policy",
+      "positive_control_case_id": "POLICY01",
+      "producer_case_id": null,
+      "required": "Same source bytes, matching base fixture and actual reached function; no extra unregistered inputs",
+      "status": "PROPOSED_PENDING_HARNESS_SEAL"
+    },
+    {
+      "id": "POLICY06",
+      "input_id": "POLICY06:01",
+      "engine": "Python",
+      "target_functions": [
+        "invariants"
+      ],
+      "required_reach": "invariants",
+      "positive_control_case_id": "CHARGE01",
+      "producer_case_id": null,
+      "required": "Same source bytes, matching base fixture and actual reached function; no extra unregistered inputs",
+      "status": "PROPOSED_PENDING_HARNESS_SEAL"
+    },
+    {
+      "id": "POLICY07",
+      "input_id": "POLICY07:01",
+      "engine": "Python",
+      "target_functions": [
+        "invariants"
+      ],
+      "required_reach": "invariants",
+      "positive_control_case_id": "CHARGE01",
+      "producer_case_id": null,
+      "required": "Same source bytes, matching base fixture and actual reached function; no extra unregistered inputs",
+      "status": "PROPOSED_PENDING_HARNESS_SEAL"
+    },
+    {
+      "id": "POLICY08",
+      "input_id": "POLICY08:01",
+      "engine": "Python",
+      "target_functions": [
+        "compare_policy"
+      ],
+      "required_reach": "compare_policy",
+      "positive_control_case_id": "POLICY01",
+      "producer_case_id": null,
+      "required": "Same source bytes, matching base fixture and actual reached function; no extra unregistered inputs",
+      "status": "PROPOSED_PENDING_HARNESS_SEAL"
+    },
+    {
+      "id": "CHARGE01",
+      "input_id": "CHARGE01:01",
+      "engine": "Python",
+      "target_functions": [
+        "analyze",
+        "charge_balance"
+      ],
+      "required_reach": "analyze -> charge_balance -> analyze return",
+      "positive_control_case_id": "CHARGE01",
+      "producer_case_id": null,
+      "required": "Same source bytes, matching base fixture and actual reached function; no extra unregistered inputs",
+      "status": "PROPOSED_PENDING_HARNESS_SEAL"
+    },
+    {
+      "id": "CHARGE02",
+      "input_id": "CHARGE02:01",
+      "engine": "Python",
+      "target_functions": [
+        "charge_balance"
+      ],
+      "required_reach": "charge_balance",
+      "positive_control_case_id": "CHARGE01",
+      "producer_case_id": null,
+      "required": "Same source bytes, matching base fixture and actual reached function; no extra unregistered inputs",
+      "status": "PROPOSED_PENDING_HARNESS_SEAL"
+    },
+    {
+      "id": "CHARGE03",
+      "input_id": "CHARGE03:01",
+      "engine": "Python",
+      "target_functions": [
+        "analyze",
+        "charge_balance"
+      ],
+      "required_reach": "analyze -> charge_balance -> analyze return",
+      "positive_control_case_id": "CHARGE01",
+      "producer_case_id": null,
+      "required": "Same source bytes, matching base fixture and actual reached function; no extra unregistered inputs",
+      "status": "PROPOSED_PENDING_HARNESS_SEAL"
+    },
+    {
+      "id": "CHARGE04",
+      "input_id": "CHARGE04:01",
+      "engine": "Python",
+      "target_functions": [
+        "charge_balance"
+      ],
+      "required_reach": "charge_balance",
+      "positive_control_case_id": "CHARGE01",
+      "producer_case_id": null,
+      "required": "Same source bytes, matching base fixture and actual reached function; no extra unregistered inputs",
+      "status": "PROPOSED_PENDING_HARNESS_SEAL"
+    },
+    {
+      "id": "CHARGE05",
+      "input_id": "CHARGE05:01",
+      "engine": "Python",
+      "target_functions": [
+        "charge_balance"
+      ],
+      "required_reach": "charge_balance",
+      "positive_control_case_id": "CHARGE01",
+      "producer_case_id": null,
+      "required": "Same source bytes, matching base fixture and actual reached function; no extra unregistered inputs",
+      "status": "PROPOSED_PENDING_HARNESS_SEAL"
+    },
+    {
+      "id": "CHARGE06",
+      "input_id": "CHARGE06:01",
+      "engine": "Python",
+      "target_functions": [
+        "charge_balance"
+      ],
+      "required_reach": "charge_balance",
+      "positive_control_case_id": "CHARGE01",
+      "producer_case_id": null,
+      "required": "Same source bytes, matching base fixture and actual reached function; no extra unregistered inputs",
+      "status": "PROPOSED_PENDING_HARNESS_SEAL"
+    },
+    {
+      "id": "CHARGE07",
+      "input_id": "CHARGE07:01",
+      "engine": "Python",
+      "target_functions": [
+        "charge_balance"
+      ],
+      "required_reach": "charge_balance",
+      "positive_control_case_id": "CHARGE01",
+      "producer_case_id": null,
+      "required": "Same source bytes, matching base fixture and actual reached function; no extra unregistered inputs",
+      "status": "PROPOSED_PENDING_HARNESS_SEAL"
+    },
+    {
+      "id": "CHARGE08",
+      "input_id": "CHARGE08:01",
+      "engine": "Python",
+      "target_functions": [
+        "charge_balance"
+      ],
+      "required_reach": "charge_balance",
+      "positive_control_case_id": "CHARGE01",
+      "producer_case_id": null,
+      "required": "Same source bytes, matching base fixture and actual reached function; no extra unregistered inputs",
+      "status": "PROPOSED_PENDING_HARNESS_SEAL"
+    },
+    {
+      "id": "CHARGE09",
+      "input_id": "CHARGE09:01",
+      "engine": "Python",
+      "target_functions": [
+        "charge_balance"
+      ],
+      "required_reach": "charge_balance",
+      "positive_control_case_id": "CHARGE01",
+      "producer_case_id": null,
+      "required": "Same source bytes, matching base fixture and actual reached function; no extra unregistered inputs",
+      "status": "PROPOSED_PENDING_HARNESS_SEAL"
+    },
+    {
+      "id": "CHARGE10",
+      "input_id": "CHARGE10:01",
+      "engine": "Python",
+      "target_functions": [
+        "charge_balance"
+      ],
+      "required_reach": "charge_balance",
+      "positive_control_case_id": "CHARGE01",
+      "producer_case_id": null,
+      "required": "Same source bytes, matching base fixture and actual reached function; no extra unregistered inputs",
+      "status": "PROPOSED_PENDING_HARNESS_SEAL"
+    },
+    {
+      "id": "CHARGE11",
+      "input_id": "CHARGE11:01",
+      "engine": "Python",
+      "target_functions": [
+        "charge_balance"
+      ],
+      "required_reach": "charge_balance",
+      "positive_control_case_id": "CHARGE01",
+      "producer_case_id": null,
+      "required": "Same source bytes, matching base fixture and actual reached function; no extra unregistered inputs",
+      "status": "PROPOSED_PENDING_HARNESS_SEAL"
+    },
+    {
+      "id": "CHARGE12",
+      "input_id": "CHARGE12:01",
+      "engine": "Python",
+      "target_functions": [
+        "charge_balance"
+      ],
+      "required_reach": "charge_balance",
+      "positive_control_case_id": "CHARGE01",
+      "producer_case_id": null,
+      "required": "Same source bytes, matching base fixture and actual reached function; no extra unregistered inputs",
+      "status": "PROPOSED_PENDING_HARNESS_SEAL"
+    },
+    {
+      "id": "PAIRED01",
+      "input_id": "PAIRED01:01",
+      "engine": "Python",
+      "target_functions": [
+        "paired_classification"
+      ],
+      "required_reach": "paired_classification",
+      "positive_control_case_id": "PAIRED01",
+      "producer_case_id": null,
+      "required": "Same source bytes, matching base fixture and actual reached function; no extra unregistered inputs",
+      "status": "PROPOSED_PENDING_HARNESS_SEAL"
+    },
+    {
+      "id": "PAIRED02",
+      "input_id": "PAIRED02:01",
+      "engine": "Python",
+      "target_functions": [
+        "paired_classification"
+      ],
+      "required_reach": "paired_classification",
+      "positive_control_case_id": "PAIRED01",
+      "producer_case_id": null,
+      "required": "Same source bytes, matching base fixture and actual reached function; no extra unregistered inputs",
+      "status": "PROPOSED_PENDING_HARNESS_SEAL"
+    },
+    {
+      "id": "PAIRED03",
+      "input_id": "PAIRED03:01",
+      "engine": "Python",
+      "target_functions": [
+        "paired_classification"
+      ],
+      "required_reach": "paired_classification",
+      "positive_control_case_id": "PAIRED01",
+      "producer_case_id": null,
+      "required": "Same source bytes, matching base fixture and actual reached function; no extra unregistered inputs",
+      "status": "PROPOSED_PENDING_HARNESS_SEAL"
+    },
+    {
+      "id": "PAIRED04",
+      "input_id": "PAIRED04:01",
+      "engine": "Python",
+      "target_functions": [
+        "paired_classification"
+      ],
+      "required_reach": "paired_classification",
+      "positive_control_case_id": "PAIRED01",
+      "producer_case_id": null,
+      "required": "Same source bytes, matching base fixture and actual reached function; no extra unregistered inputs",
+      "status": "PROPOSED_PENDING_HARNESS_SEAL"
+    },
+    {
+      "id": "PAIRED05",
+      "input_id": "PAIRED05:01",
+      "engine": "Python",
+      "target_functions": [
+        "paired_classification"
+      ],
+      "required_reach": "paired_classification",
+      "positive_control_case_id": "PAIRED01",
+      "producer_case_id": null,
+      "required": "Same source bytes, matching base fixture and actual reached function; no extra unregistered inputs",
+      "status": "PROPOSED_PENDING_HARNESS_SEAL"
+    },
+    {
+      "id": "PAIRED06",
+      "input_id": "PAIRED06:01",
+      "engine": "Python",
+      "target_functions": [
+        "paired_classification"
+      ],
+      "required_reach": "paired_classification",
+      "positive_control_case_id": "PAIRED01",
+      "producer_case_id": null,
+      "required": "Same source bytes, matching base fixture and actual reached function; no extra unregistered inputs",
+      "status": "PROPOSED_PENDING_HARNESS_SEAL"
+    },
+    {
+      "id": "PAIRED07",
+      "input_id": "PAIRED07:01",
+      "engine": "Python",
+      "target_functions": [
+        "paired_classification"
+      ],
+      "required_reach": "paired_classification",
+      "positive_control_case_id": "PAIRED01",
+      "producer_case_id": null,
+      "required": "Same source bytes, matching base fixture and actual reached function; no extra unregistered inputs",
+      "status": "PROPOSED_PENDING_HARNESS_SEAL"
+    },
+    {
+      "id": "RESOURCE01",
+      "input_id": "RESOURCE01:01",
+      "engine": "Python",
+      "target_functions": [
+        "assess_resources"
+      ],
+      "required_reach": "assess_resources",
+      "positive_control_case_id": "RESOURCE01",
+      "producer_case_id": null,
+      "required": "Same source bytes, matching base fixture and actual reached function; no extra unregistered inputs",
+      "status": "DECLARED_MATERIALIZED_PENDING_GLOBAL_SEAL_AND_EXECUTION",
+      "concrete_fixture": {
+        "path": "fixture_inputs/CONTROL_INPUTS.json",
+        "record": "RESOURCE01",
+        "record_sha256": "fa5d5b377eb092135ffb6157de0c872cfe6b927939e5b96c36fd017e5ddeac8b"
+      }
+    },
+    {
+      "id": "RESOURCE02",
+      "input_id": "RESOURCE02:01",
+      "engine": "Python",
+      "target_functions": [
+        "assess_resources"
+      ],
+      "required_reach": "assess_resources",
+      "positive_control_case_id": "RESOURCE01",
+      "producer_case_id": null,
+      "required": "Same source bytes, matching base fixture and actual reached function; no extra unregistered inputs",
+      "status": "DECLARED_MATERIALIZED_PENDING_GLOBAL_SEAL_AND_EXECUTION",
+      "concrete_fixture": {
+        "path": "fixture_inputs/CONTROL_INPUTS.json",
+        "record": "RESOURCE02",
+        "record_sha256": "2744cdb17961c0b9b883ddcd82a28a0fff065c186549c57dac026ced2e5e489b"
+      }
+    },
+    {
+      "id": "RESOURCE03",
+      "input_id": "RESOURCE03:01",
+      "engine": "Python",
+      "target_functions": [
+        "assess_resources"
+      ],
+      "required_reach": "assess_resources",
+      "positive_control_case_id": "RESOURCE01",
+      "producer_case_id": null,
+      "required": "Same source bytes, matching base fixture and actual reached function; no extra unregistered inputs",
+      "status": "DECLARED_MATERIALIZED_PENDING_GLOBAL_SEAL_AND_EXECUTION",
+      "concrete_fixture": {
+        "path": "fixture_inputs/CONTROL_INPUTS.json",
+        "record": "RESOURCE03",
+        "record_sha256": "b80964ec831f40a8879b9b89f11ad1add802194f2a15052b1ba2d8a26373e6e0"
+      }
+    },
+    {
+      "id": "RESOURCE04",
+      "input_id": "RESOURCE04:01",
+      "engine": "Python",
+      "target_functions": [
+        "assess_resources"
+      ],
+      "required_reach": "assess_resources",
+      "positive_control_case_id": "RESOURCE01",
+      "producer_case_id": null,
+      "required": "Same source bytes, matching base fixture and actual reached function; no extra unregistered inputs",
+      "status": "DECLARED_MATERIALIZED_PENDING_GLOBAL_SEAL_AND_EXECUTION",
+      "concrete_fixture": {
+        "path": "fixture_inputs/CONTROL_INPUTS.json",
+        "record": "RESOURCE04",
+        "record_sha256": "736cd182f465cb244479a698dfa619547c18ffc61b761fd477653c5bc9b2c7a9"
+      }
+    },
+    {
+      "id": "RESOURCE05",
+      "input_id": "RESOURCE05:01",
+      "engine": "Python",
+      "target_functions": [
+        "assess_resources"
+      ],
+      "required_reach": "assess_resources",
+      "positive_control_case_id": "RESOURCE01",
+      "producer_case_id": null,
+      "required": "Same source bytes, matching base fixture and actual reached function; no extra unregistered inputs",
+      "status": "DECLARED_MATERIALIZED_PENDING_GLOBAL_SEAL_AND_EXECUTION",
+      "concrete_fixture": {
+        "path": "fixture_inputs/CONTROL_INPUTS.json",
+        "record": "RESOURCE05",
+        "record_sha256": "440ba4b1a8d683eb38a4e4778c42975905ee26d65053440ae70027e59a902f70"
+      }
+    },
+    {
+      "id": "RESOURCE06",
+      "input_id": "RESOURCE06:01",
+      "engine": "Python",
+      "target_functions": [
+        "assess_resources"
+      ],
+      "required_reach": "assess_resources",
+      "positive_control_case_id": "RESOURCE01",
+      "producer_case_id": null,
+      "required": "Same source bytes, matching base fixture and actual reached function; no extra unregistered inputs",
+      "status": "DECLARED_MATERIALIZED_PENDING_GLOBAL_SEAL_AND_EXECUTION",
+      "concrete_fixture": {
+        "path": "fixture_inputs/CONTROL_INPUTS.json",
+        "record": "RESOURCE06",
+        "record_sha256": "ffc2448310c869fb58b89aeaf82b67409bbe821bdb1f54179cf62dbb45b068c5"
+      }
+    },
+    {
+      "id": "RESOURCE07",
+      "input_id": "RESOURCE07:01",
+      "engine": "Python",
+      "target_functions": [
+        "assess_resources"
+      ],
+      "required_reach": "assess_resources",
+      "positive_control_case_id": "RESOURCE01",
+      "producer_case_id": null,
+      "required": "Same source bytes, matching base fixture and actual reached function; no extra unregistered inputs",
+      "status": "DECLARED_MATERIALIZED_PENDING_GLOBAL_SEAL_AND_EXECUTION",
+      "concrete_fixture": {
+        "path": "fixture_inputs/CONTROL_INPUTS.json",
+        "record": "RESOURCE07",
+        "record_sha256": "58ff44ff4a6f13f25b1e82775244d52f731df32a8e46c12ff2af98d7f19f5c07"
+      }
+    },
+    {
+      "id": "RESOURCE08",
+      "input_id": "RESOURCE08:01",
+      "engine": "Python",
+      "target_functions": [
+        "assess_resources"
+      ],
+      "required_reach": "assess_resources",
+      "positive_control_case_id": "RESOURCE01",
+      "producer_case_id": null,
+      "required": "Same source bytes, matching base fixture and actual reached function; no extra unregistered inputs",
+      "status": "DECLARED_MATERIALIZED_PENDING_GLOBAL_SEAL_AND_EXECUTION",
+      "concrete_fixture": {
+        "path": "fixture_inputs/CONTROL_INPUTS.json",
+        "record": "RESOURCE08",
+        "record_sha256": "267a3105c9102107591e793e9644cf66db5998fc4a758d127bfbcce2da54a78c"
+      }
+    },
+    {
+      "id": "RESOURCE09",
+      "input_id": "RESOURCE09:01",
+      "engine": "Python",
+      "target_functions": [
+        "advance_stop"
+      ],
+      "required_reach": "advance_stop",
+      "positive_control_case_id": "RESOURCE09",
+      "producer_case_id": null,
+      "required": "Same source bytes, matching base fixture and actual reached function; no extra unregistered inputs",
+      "status": "DECLARED_MATERIALIZED_PENDING_GLOBAL_SEAL_AND_EXECUTION",
+      "concrete_fixture": {
+        "path": "fixture_inputs/CONTROL_INPUTS.json",
+        "record": "RESOURCE09",
+        "record_sha256": "1819813a2f5280d00ea56e666863396fc501161c6afdde3168cec875a8f2e487"
+      }
+    },
+    {
+      "id": "RESOURCE10",
+      "input_id": "RESOURCE10:01",
+      "engine": "Python",
+      "target_functions": [
+        "advance_stop"
+      ],
+      "required_reach": "advance_stop",
+      "positive_control_case_id": "RESOURCE11",
+      "producer_case_id": null,
+      "required": "Same source bytes, matching base fixture and actual reached function; no extra unregistered inputs",
+      "status": "DECLARED_MATERIALIZED_PENDING_GLOBAL_SEAL_AND_EXECUTION",
+      "concrete_fixture": {
+        "path": "fixture_inputs/CONTROL_INPUTS.json",
+        "record": "RESOURCE10",
+        "record_sha256": "48ed709c750ffe9fbc51b77fad6046c17b6937d3fa2396ecd4b066df3bc54d24"
+      }
+    },
+    {
+      "id": "RESOURCE11",
+      "input_id": "RESOURCE11:01",
+      "engine": "Python",
+      "target_functions": [
+        "advance_stop"
+      ],
+      "required_reach": "advance_stop",
+      "positive_control_case_id": "RESOURCE11",
+      "producer_case_id": null,
+      "required": "Same source bytes, matching base fixture and actual reached function; no extra unregistered inputs",
+      "status": "DECLARED_MATERIALIZED_PENDING_GLOBAL_SEAL_AND_EXECUTION",
+      "concrete_fixture": {
+        "path": "fixture_inputs/CONTROL_INPUTS.json",
+        "record": "RESOURCE11",
+        "record_sha256": "e18b0c78c160e701710bde65e1558270dcbb17e8c4661deb3e02023240c3ef28"
+      }
+    },
+    {
+      "id": "RESOURCE12",
+      "input_id": "RESOURCE12:01",
+      "engine": "Python",
+      "target_functions": [
+        "advance_stop"
+      ],
+      "required_reach": "advance_stop",
+      "positive_control_case_id": "RESOURCE12",
+      "producer_case_id": null,
+      "required": "Same source bytes, matching base fixture and actual reached function; no extra unregistered inputs",
+      "status": "DECLARED_MATERIALIZED_PENDING_GLOBAL_SEAL_AND_EXECUTION",
+      "concrete_fixture": {
+        "path": "fixture_inputs/CONTROL_INPUTS.json",
+        "record": "RESOURCE12",
+        "record_sha256": "3694785d9d8cd8cd602cd90714123f5d425fa3aca4b204c45ba7aa04f521d19e"
+      }
+    },
+    {
+      "id": "RESOURCE13",
+      "input_id": "RESOURCE13:01",
+      "engine": "Python",
+      "target_functions": [
+        "advance_stop"
+      ],
+      "required_reach": "advance_stop",
+      "positive_control_case_id": "RESOURCE13",
+      "producer_case_id": null,
+      "required": "Same source bytes, matching base fixture and actual reached function; no extra unregistered inputs",
+      "status": "DECLARED_MATERIALIZED_PENDING_GLOBAL_SEAL_AND_EXECUTION",
+      "concrete_fixture": {
+        "path": "fixture_inputs/CONTROL_INPUTS.json",
+        "record": "RESOURCE13",
+        "record_sha256": "ac859e64964699a48e496f8e7891d3688be4ce39e8b87e82ff5cc96fbee5d851"
+      }
+    },
+    {
+      "id": "RESOURCE14",
+      "input_id": "RESOURCE14:01",
+      "engine": "Python",
+      "target_functions": [
+        "advance_stop"
+      ],
+      "required_reach": "advance_stop",
+      "positive_control_case_id": "RESOURCE15",
+      "producer_case_id": null,
+      "required": "Same source bytes, matching base fixture and actual reached function; no extra unregistered inputs",
+      "status": "DECLARED_MATERIALIZED_PENDING_GLOBAL_SEAL_AND_EXECUTION",
+      "concrete_fixture": {
+        "path": "fixture_inputs/CONTROL_INPUTS.json",
+        "record": "RESOURCE14",
+        "record_sha256": "ae65d4af5e6954ea35c1a8d390d75545d24dc0c0e4722d0cf7a3a04b7fae3b58"
+      }
+    },
+    {
+      "id": "RESOURCE15",
+      "input_id": "RESOURCE15:01",
+      "engine": "Python",
+      "target_functions": [
+        "advance_stop"
+      ],
+      "required_reach": "advance_stop",
+      "positive_control_case_id": "RESOURCE15",
+      "producer_case_id": null,
+      "required": "Same source bytes, matching base fixture and actual reached function; no extra unregistered inputs",
+      "status": "DECLARED_MATERIALIZED_PENDING_GLOBAL_SEAL_AND_EXECUTION",
+      "concrete_fixture": {
+        "path": "fixture_inputs/CONTROL_INPUTS.json",
+        "record": "RESOURCE15",
+        "record_sha256": "911fa6e619c28d00b13901eb811dfc22cf858641dbdbbcee6933e17368b4ed2d"
+      }
+    },
+    {
+      "id": "RESOURCE16",
+      "input_id": "RESOURCE16:01",
+      "engine": "Python",
+      "target_functions": [
+        "execute_once"
+      ],
+      "required_reach": "execute_once",
+      "positive_control_case_id": "AUTH01",
+      "producer_case_id": null,
+      "required": "Same source bytes, matching base fixture and actual reached function; no extra unregistered inputs",
+      "status": "DECLARED_MATERIALIZED_PENDING_GLOBAL_SEAL_AND_EXECUTION",
+      "concrete_fixture": {
+        "path": "fixture_inputs/CONTROL_INPUTS.json",
+        "record": "RESOURCE16",
+        "record_sha256": "eca964236b76efbfc9a224cb9fd03bebccad66e259b98a32226a7ef3c8d1f6b6"
+      }
+    },
+    {
+      "id": "PARENT01",
+      "input_id": "PARENT01:01",
+      "engine": "Windows PowerShell5.1",
+      "target_functions": [
+        "S1Decision"
+      ],
+      "required_reach": "S1Decision",
+      "positive_control_case_id": "PARENT01",
+      "producer_case_id": "CHARGE01",
+      "required": "Same source bytes, matching base fixture and actual reached function; no extra unregistered inputs",
+      "status": "PROPOSED_PENDING_HARNESS_SEAL"
+    },
+    {
+      "id": "PARENT02",
+      "input_id": "PARENT02:01",
+      "engine": "Windows PowerShell5.1",
+      "target_functions": [
+        "S1Decision"
+      ],
+      "required_reach": "S1Decision",
+      "positive_control_case_id": "PARENT01",
+      "producer_case_id": "POLICY03 via actual analyze with otherwise complete charge evidence",
+      "required": "Same source bytes, matching base fixture and actual reached function; no extra unregistered inputs",
+      "status": "PROPOSED_PENDING_HARNESS_SEAL"
+    },
+    {
+      "id": "PARENT03",
+      "input_id": "PARENT03:01",
+      "engine": "Windows PowerShell5.1",
+      "target_functions": [
+        "S1Decision"
+      ],
+      "required_reach": "S1Decision -> S1NativeAxis -> S1Fields -> final PROTECTIVE_STOP branch",
+      "positive_control_case_id": "PARENT01",
+      "producer_case_id": "CHARGE_R109",
+      "required": "Same source bytes, matching base fixture and actual reached function; no extra unregistered inputs",
+      "status": "PROPOSED_PENDING_HARNESS_SEAL"
+    },
+    {
+      "id": "PARENT04",
+      "input_id": "PARENT04:01",
+      "engine": "Windows PowerShell5.1",
+      "target_functions": [
+        "S1NativeAxis"
+      ],
+      "required_reach": "S1NativeAxis",
+      "positive_control_case_id": "PARENT01",
+      "producer_case_id": null,
+      "required": "Same source bytes, matching base fixture and actual reached function; no extra unregistered inputs",
+      "status": "PROPOSED_PENDING_HARNESS_SEAL"
+    },
+    {
+      "id": "PARENT05",
+      "input_id": "PARENT05:01",
+      "engine": "Windows PowerShell5.1",
+      "target_functions": [
+        "S1NativeAxis"
+      ],
+      "required_reach": "S1NativeAxis",
+      "positive_control_case_id": "PARENT01",
+      "producer_case_id": null,
+      "required": "Same source bytes, matching base fixture and actual reached function; no extra unregistered inputs",
+      "status": "PROPOSED_PENDING_HARNESS_SEAL"
+    },
+    {
+      "id": "PARENT06",
+      "input_id": "PARENT06:01",
+      "engine": "Windows PowerShell5.1",
+      "target_functions": [
+        "S1Fields"
+      ],
+      "required_reach": "S1Fields",
+      "positive_control_case_id": "PARENT01",
+      "producer_case_id": null,
+      "required": "Same source bytes, matching base fixture and actual reached function; no extra unregistered inputs",
+      "status": "PROPOSED_PENDING_HARNESS_SEAL"
+    },
+    {
+      "id": "PARENT07",
+      "input_id": "PARENT07:01",
+      "engine": "Windows PowerShell5.1",
+      "target_functions": [
+        "S1Fields"
+      ],
+      "required_reach": "S1Fields",
+      "positive_control_case_id": "PARENT01",
+      "producer_case_id": null,
+      "required": "Same source bytes, matching base fixture and actual reached function; no extra unregistered inputs",
+      "status": "PROPOSED_PENDING_HARNESS_SEAL"
+    },
+    {
+      "id": "PARENT08",
+      "input_id": "PARENT08:01",
+      "engine": "Windows PowerShell5.1",
+      "target_functions": [
+        "S1Fields"
+      ],
+      "required_reach": "S1Fields",
+      "positive_control_case_id": "PARENT01",
+      "producer_case_id": null,
+      "required": "Same source bytes, matching base fixture and actual reached function; no extra unregistered inputs",
+      "status": "PROPOSED_PENDING_HARNESS_SEAL"
+    },
+    {
+      "id": "PARENT09",
+      "input_id": "PARENT09:01",
+      "engine": "Windows PowerShell5.1",
+      "target_functions": [
+        "S1FinalReturn"
+      ],
+      "required_reach": "S1FinalReturn",
+      "positive_control_case_id": "PARENT12",
+      "producer_case_id": null,
+      "required": "Same source bytes, matching base fixture and actual reached function; no extra unregistered inputs",
+      "status": "PROPOSED_PENDING_HARNESS_SEAL"
+    },
+    {
+      "id": "PARENT10",
+      "input_id": "PARENT10:01",
+      "engine": "Windows PowerShell5.1",
+      "target_functions": [
+        "S1FinalReturn"
+      ],
+      "required_reach": "S1FinalReturn",
+      "positive_control_case_id": "PARENT12",
+      "producer_case_id": null,
+      "required": "Same source bytes, matching base fixture and actual reached function; no extra unregistered inputs",
+      "status": "PROPOSED_PENDING_HARNESS_SEAL"
+    },
+    {
+      "id": "PARENT11",
+      "input_id": "PARENT11:01",
+      "engine": "Windows PowerShell5.1",
+      "target_functions": [
+        "S1FinalReturn"
+      ],
+      "required_reach": "S1FinalReturn",
+      "positive_control_case_id": "PARENT12",
+      "producer_case_id": null,
+      "required": "Same source bytes, matching base fixture and actual reached function; no extra unregistered inputs",
+      "status": "PROPOSED_PENDING_HARNESS_SEAL"
+    },
+    {
+      "id": "PARENT12",
+      "input_id": "PARENT12:01",
+      "engine": "Windows PowerShell5.1",
+      "target_functions": [
+        "S1FinalReturn"
+      ],
+      "required_reach": "S1FinalReturn",
+      "positive_control_case_id": "PARENT12",
+      "producer_case_id": null,
+      "required": "Same source bytes, matching base fixture and actual reached function; no extra unregistered inputs",
+      "status": "PROPOSED_PENDING_HARNESS_SEAL"
+    },
+    {
+      "id": "PARENT13",
+      "input_id": "PARENT13:01",
+      "engine": "Windows PowerShell5.1",
+      "target_functions": [
+        "S1Decision"
+      ],
+      "required_reach": "S1Decision",
+      "positive_control_case_id": "PARENT01",
+      "producer_case_id": null,
+      "required": "Same source bytes, matching base fixture and actual reached function; no extra unregistered inputs",
+      "status": "PROPOSED_PENDING_HARNESS_SEAL"
+    },
+    {
+      "id": "PARENT14",
+      "input_id": "PARENT14:01",
+      "engine": "Windows PowerShell5.1",
+      "target_functions": [
+        "S1Decision"
+      ],
+      "required_reach": "S1Decision",
+      "positive_control_case_id": "PARENT01",
+      "producer_case_id": "CHARGE03",
+      "required": "Same source bytes, matching base fixture and actual reached function; no extra unregistered inputs",
+      "status": "PROPOSED_PENDING_HARNESS_SEAL"
+    },
+    {
+      "id": "PARENT15",
+      "input_id": "PARENT15:01",
+      "engine": "Windows PowerShell5.1",
+      "target_functions": [
+        "S1Fields"
+      ],
+      "required_reach": "S1Fields",
+      "positive_control_case_id": "PARENT01",
+      "producer_case_id": null,
+      "required": "Same source bytes, matching base fixture and actual reached function; no extra unregistered inputs",
+      "status": "PROPOSED_PENDING_HARNESS_SEAL"
+    },
+    {
+      "id": "PARENT16",
+      "input_id": "PARENT16:01",
+      "engine": "Windows PowerShell5.1",
+      "target_functions": [
+        "S1FinalReturn"
+      ],
+      "required_reach": "S1FinalReturn",
+      "positive_control_case_id": "PARENT12",
+      "producer_case_id": null,
+      "required": "Same source bytes, matching base fixture and actual reached function; no extra unregistered inputs",
+      "status": "PROPOSED_PENDING_HARNESS_SEAL"
+    },
+    {
+      "id": "CHARGE_R101",
+      "input_id": "CHARGE_R101:01",
+      "engine": "Python",
+      "target_functions": [
+        "analyze",
+        "charge_balance"
+      ],
+      "required_reach": "analyze -> charge_balance",
+      "positive_control_case_id": "CHARGE01",
+      "producer_case_id": null,
+      "required": "Same source bytes, matching base fixture and actual reached function; no extra unregistered inputs",
+      "status": "PROPOSED_PENDING_HARNESS_SEAL"
+    },
+    {
+      "id": "CHARGE_R102",
+      "input_id": "CHARGE_R102:01",
+      "engine": "Python",
+      "target_functions": [
+        "analyze",
+        "charge_balance"
+      ],
+      "required_reach": "analyze -> charge_balance",
+      "positive_control_case_id": "CHARGE01",
+      "producer_case_id": null,
+      "required": "Same source bytes, matching base fixture and actual reached function; no extra unregistered inputs",
+      "status": "PROPOSED_PENDING_HARNESS_SEAL"
+    },
+    {
+      "id": "CHARGE_R103",
+      "input_id": "CHARGE_R103:01",
+      "engine": "Python",
+      "target_functions": [
+        "analyze",
+        "charge_balance"
+      ],
+      "required_reach": "analyze -> charge_balance",
+      "positive_control_case_id": "CHARGE01",
+      "producer_case_id": null,
+      "required": "Same source bytes, matching base fixture and actual reached function; no extra unregistered inputs",
+      "status": "PROPOSED_PENDING_HARNESS_SEAL"
+    },
+    {
+      "id": "CHARGE_R104",
+      "input_id": "CHARGE_R104:01",
+      "engine": "Python",
+      "target_functions": [
+        "analyze",
+        "charge_balance"
+      ],
+      "required_reach": "analyze -> charge_balance",
+      "positive_control_case_id": "CHARGE01",
+      "producer_case_id": null,
+      "required": "Same source bytes, matching base fixture and actual reached function; no extra unregistered inputs",
+      "status": "PROPOSED_PENDING_HARNESS_SEAL"
+    },
+    {
+      "id": "CHARGE_R105",
+      "input_id": "CHARGE_R105:01",
+      "engine": "Python",
+      "target_functions": [
+        "analyze"
+      ],
+      "required_reach": "analyze",
+      "positive_control_case_id": "CHARGE01",
+      "producer_case_id": null,
+      "required": "Same source bytes, matching base fixture and actual reached function; no extra unregistered inputs",
+      "status": "PROPOSED_PENDING_HARNESS_SEAL"
+    },
+    {
+      "id": "CHARGE_R106",
+      "input_id": "CHARGE_R106:01",
+      "engine": "Python",
+      "target_functions": [
+        "analyze"
+      ],
+      "required_reach": "analyze",
+      "positive_control_case_id": "CHARGE01",
+      "producer_case_id": null,
+      "required": "Same source bytes, matching base fixture and actual reached function; no extra unregistered inputs",
+      "status": "PROPOSED_PENDING_HARNESS_SEAL"
+    },
+    {
+      "id": "CHARGE_R107",
+      "input_id": "CHARGE_R107:01",
+      "engine": "Python",
+      "target_functions": [
+        "analyze",
+        "charge_balance"
+      ],
+      "required_reach": "analyze -> charge_balance",
+      "positive_control_case_id": "CHARGE01",
+      "producer_case_id": null,
+      "required": "Same source bytes, matching base fixture and actual reached function; no extra unregistered inputs",
+      "status": "PROPOSED_PENDING_HARNESS_SEAL"
+    },
+    {
+      "id": "CHARGE_R108",
+      "input_id": "CHARGE_R108:01",
+      "engine": "Python",
+      "target_functions": [
+        "analyze"
+      ],
+      "required_reach": "analyze",
+      "positive_control_case_id": "CHARGE01",
+      "producer_case_id": null,
+      "required": "Same source bytes, matching base fixture and actual reached function; no extra unregistered inputs",
+      "status": "PROPOSED_PENDING_HARNESS_SEAL"
+    },
+    {
+      "id": "CHARGE_R109",
+      "input_id": "CHARGE_R109:01",
+      "engine": "Python",
+      "target_functions": [
+        "analyze"
+      ],
+      "required_reach": "analyze",
+      "positive_control_case_id": "CHARGE01",
+      "producer_case_id": null,
+      "required": "Same source bytes, matching base fixture and actual reached function; no extra unregistered inputs",
+      "status": "PROPOSED_PENDING_HARNESS_SEAL"
+    },
+    {
+      "id": "CHARGE_R110",
+      "input_id": "CHARGE_R110:01",
+      "engine": "Python",
+      "target_functions": [
+        "analyze",
+        "charge_balance"
+      ],
+      "required_reach": "analyze -> charge_balance",
+      "positive_control_case_id": "CHARGE01",
+      "producer_case_id": null,
+      "required": "Same source bytes, matching base fixture and actual reached function; no extra unregistered inputs",
+      "status": "PROPOSED_PENDING_HARNESS_SEAL"
+    },
+    {
+      "id": "CHARGE_R111",
+      "input_id": "CHARGE_R111:01",
+      "engine": "Python",
+      "target_functions": [
+        "analyze",
+        "charge_balance"
+      ],
+      "required_reach": "analyze -> charge_balance",
+      "positive_control_case_id": "CHARGE01",
+      "producer_case_id": null,
+      "required": "Same source bytes, matching base fixture and actual reached function; no extra unregistered inputs",
+      "status": "PROPOSED_PENDING_HARNESS_SEAL"
+    },
+    {
+      "id": "CHARGE_R112",
+      "input_id": "CHARGE_R112:01",
+      "engine": "Python",
+      "target_functions": [
+        "charge_balance"
+      ],
+      "required_reach": "charge_balance",
+      "positive_control_case_id": "CHARGE02",
+      "producer_case_id": null,
+      "required": "Same source bytes, matching base fixture and actual reached function; no extra unregistered inputs",
+      "status": "PROPOSED_PENDING_HARNESS_SEAL"
+    },
+    {
+      "id": "CHARGE_R113",
+      "input_id": "CHARGE_R113:01",
+      "engine": "Python",
+      "target_functions": [
+        "charge_balance"
+      ],
+      "required_reach": "charge_balance",
+      "positive_control_case_id": "CHARGE02",
+      "producer_case_id": null,
+      "required": "Same source bytes, matching base fixture and actual reached function; no extra unregistered inputs",
+      "status": "PROPOSED_PENDING_HARNESS_SEAL"
+    },
+    {
+      "id": "CHARGE_R114",
+      "input_id": "CHARGE_R114:01",
+      "engine": "Python",
+      "target_functions": [
+        "analyze",
+        "charge_balance"
+      ],
+      "required_reach": "analyze -> charge_balance",
+      "positive_control_case_id": "CHARGE01",
+      "producer_case_id": null,
+      "required": "Same source bytes, matching base fixture and actual reached function; no extra unregistered inputs",
+      "status": "PROPOSED_PENDING_HARNESS_SEAL"
+    },
+    {
+      "id": "CHARGE_R115",
+      "input_id": "CHARGE_R115:01",
+      "engine": "Python",
+      "target_functions": [
+        "analyze",
+        "charge_balance"
+      ],
+      "required_reach": "analyze -> charge_balance",
+      "positive_control_case_id": "CHARGE01",
+      "producer_case_id": null,
+      "required": "Same source bytes, matching base fixture and actual reached function; no extra unregistered inputs",
+      "status": "PROPOSED_PENDING_HARNESS_SEAL"
+    },
+    {
+      "id": "CHARGE_R116",
+      "input_id": "CHARGE_R116:01",
+      "engine": "Python",
+      "target_functions": [
+        "analyze"
+      ],
+      "required_reach": "analyze",
+      "positive_control_case_id": "CHARGE_R109",
+      "producer_case_id": null,
+      "required": "Same source bytes, matching base fixture and actual reached function; no extra unregistered inputs",
+      "status": "PROPOSED_PENDING_HARNESS_SEAL"
+    },
+    {
+      "id": "CHARGE_R117",
+      "input_id": "CHARGE_R117:01",
+      "engine": "Python",
+      "target_functions": [
+        "analyze",
+        "charge_balance"
+      ],
+      "required_reach": "analyze -> charge_balance",
+      "positive_control_case_id": "CHARGE01",
+      "producer_case_id": null,
+      "required": "Same source bytes, matching base fixture and actual reached function; no extra unregistered inputs",
+      "status": "PROPOSED_PENDING_HARNESS_SEAL"
+    },
+    {
+      "id": "PARENT_R101",
+      "input_id": "PARENT_R101:01",
+      "engine": "Windows PowerShell5.1",
+      "target_functions": [
+        "S1Decision",
+        "S1Fields",
+        "S1Coverage"
+      ],
+      "required_reach": "S1Decision -> S1Fields -> S1Coverage",
+      "positive_control_case_id": "PARENT01",
+      "producer_case_id": null,
+      "required": "Same source bytes, matching base fixture and actual reached function; no extra unregistered inputs",
+      "status": "PROPOSED_PENDING_HARNESS_SEAL"
+    },
+    {
+      "id": "PARENT_R102",
+      "input_id": "PARENT_R102:01",
+      "engine": "Windows PowerShell5.1",
+      "target_functions": [
+        "S1Decision",
+        "S1Fields",
+        "S1Coverage"
+      ],
+      "required_reach": "S1Decision -> S1Fields -> S1Coverage",
+      "positive_control_case_id": "PARENT01",
+      "producer_case_id": null,
+      "required": "Same source bytes, matching base fixture and actual reached function; no extra unregistered inputs",
+      "status": "PROPOSED_PENDING_HARNESS_SEAL"
+    },
+    {
+      "id": "PARENT_R103",
+      "input_id": "PARENT_R103:01",
+      "engine": "Windows PowerShell5.1",
+      "target_functions": [
+        "S1Decision",
+        "S1Fields",
+        "S1Coverage"
+      ],
+      "required_reach": "S1Decision -> S1Fields -> S1Coverage",
+      "positive_control_case_id": "PARENT01",
+      "producer_case_id": null,
+      "required": "Same source bytes, matching base fixture and actual reached function; no extra unregistered inputs",
+      "status": "PROPOSED_PENDING_HARNESS_SEAL"
+    },
+    {
+      "id": "PARENT_R104",
+      "input_id": "PARENT_R104:01",
+      "engine": "Windows PowerShell5.1",
+      "target_functions": [
+        "S1Decision",
+        "S1Fields",
+        "S1Coverage"
+      ],
+      "required_reach": "S1Decision -> S1Fields -> S1Coverage",
+      "positive_control_case_id": "PARENT01",
+      "producer_case_id": null,
+      "required": "Same source bytes, matching base fixture and actual reached function; no extra unregistered inputs",
+      "status": "PROPOSED_PENDING_HARNESS_SEAL"
+    },
+    {
+      "id": "PARENT_R105",
+      "input_id": "PARENT_R105:01",
+      "engine": "Windows PowerShell5.1",
+      "target_functions": [
+        "S1Decision",
+        "S1Fields",
+        "S1Coverage"
+      ],
+      "required_reach": "S1Decision -> S1Fields -> S1Coverage",
+      "positive_control_case_id": "PARENT03",
+      "producer_case_id": null,
+      "required": "Same source bytes, matching base fixture and actual reached function; no extra unregistered inputs",
+      "status": "PROPOSED_PENDING_HARNESS_SEAL"
+    },
+    {
+      "id": "PARENT_R106",
+      "input_id": "PARENT_R106:01",
+      "engine": "Windows PowerShell5.1",
+      "target_functions": [
+        "S1Decision",
+        "S1Fields",
+        "S1Coverage"
+      ],
+      "required_reach": "S1Decision -> S1Fields -> S1Coverage",
+      "positive_control_case_id": "PARENT01",
+      "producer_case_id": null,
+      "required": "Same source bytes, matching base fixture and actual reached function; no extra unregistered inputs",
+      "status": "PROPOSED_PENDING_HARNESS_SEAL"
+    },
+    {
+      "id": "PARENT_R107",
+      "input_id": "PARENT_R107:01",
+      "engine": "Windows PowerShell5.1",
+      "target_functions": [
+        "S1Decision",
+        "S1Fields",
+        "S1Coverage"
+      ],
+      "required_reach": "S1Decision -> S1Fields -> S1Coverage",
+      "positive_control_case_id": "PARENT01",
+      "producer_case_id": null,
+      "required": "Same source bytes, matching base fixture and actual reached function; no extra unregistered inputs",
+      "status": "PROPOSED_PENDING_HARNESS_SEAL"
+    },
+    {
+      "id": "PARENT_R108",
+      "input_id": "PARENT_R108:01",
+      "engine": "Windows PowerShell5.1",
+      "target_functions": [
+        "S1Decision",
+        "S1Fields",
+        "S1Coverage"
+      ],
+      "required_reach": "S1Decision -> S1Fields -> S1Coverage",
+      "positive_control_case_id": "PARENT03",
+      "producer_case_id": null,
+      "required": "Same source bytes, matching base fixture and actual reached function; no extra unregistered inputs",
+      "status": "PROPOSED_PENDING_HARNESS_SEAL"
+    },
+    {
+      "id": "PARENT_R109",
+      "input_id": "PARENT_R109:01",
+      "engine": "Windows PowerShell5.1",
+      "target_functions": [
+        "S1Decision",
+        "S1Fields",
+        "S1ChargeFields"
+      ],
+      "required_reach": "S1Decision -> S1Fields -> S1ChargeFields",
+      "positive_control_case_id": "PARENT01",
+      "producer_case_id": null,
+      "required": "Same source bytes, matching base fixture and actual reached function; no extra unregistered inputs",
+      "status": "PROPOSED_PENDING_HARNESS_SEAL"
+    },
+    {
+      "id": "PARENT_R110",
+      "input_id": "PARENT_R110:01",
+      "engine": "Windows PowerShell5.1",
+      "target_functions": [
+        "S1Decision",
+        "S1Fields",
+        "S1ChargeFields"
+      ],
+      "required_reach": "S1Decision -> S1Fields -> S1ChargeFields",
+      "positive_control_case_id": "PARENT01",
+      "producer_case_id": null,
+      "required": "Same source bytes, matching base fixture and actual reached function; no extra unregistered inputs",
+      "status": "PROPOSED_PENDING_HARNESS_SEAL"
+    },
+    {
+      "id": "PARENT_R111",
+      "input_id": "PARENT_R111:01",
+      "engine": "Windows PowerShell5.1",
+      "target_functions": [
+        "S1Decision",
+        "S1Fields",
+        "S1ChargeFields"
+      ],
+      "required_reach": "S1Decision -> S1Fields -> S1ChargeFields",
+      "positive_control_case_id": "PARENT01",
+      "producer_case_id": null,
+      "required": "Same source bytes, matching base fixture and actual reached function; no extra unregistered inputs",
+      "status": "PROPOSED_PENDING_HARNESS_SEAL"
+    },
+    {
+      "id": "PARENT_R112",
+      "input_id": "PARENT_R112:01",
+      "engine": "Windows PowerShell5.1",
+      "target_functions": [
+        "S1Decision",
+        "S1Fields",
+        "S1ChargeFields"
+      ],
+      "required_reach": "S1Decision -> S1Fields -> S1ChargeFields",
+      "positive_control_case_id": "PARENT01",
+      "producer_case_id": null,
+      "required": "Same source bytes, matching base fixture and actual reached function; no extra unregistered inputs",
+      "status": "PROPOSED_PENDING_HARNESS_SEAL"
+    },
+    {
+      "id": "PARENT_R113",
+      "input_id": "PARENT_R113:01",
+      "engine": "Windows PowerShell5.1",
+      "target_functions": [
+        "S1Decision",
+        "S1Fields",
+        "S1ComparisonNumerics"
+      ],
+      "required_reach": "S1Decision -> S1Fields -> S1ComparisonNumerics",
+      "positive_control_case_id": "PARENT_R115",
+      "producer_case_id": "POLICY02",
+      "required": "Same source bytes, matching base fixture and actual reached function; no extra unregistered inputs",
+      "status": "PROPOSED_PENDING_HARNESS_SEAL"
+    },
+    {
+      "id": "PARENT_R114",
+      "input_id": "PARENT_R114:01",
+      "engine": "Windows PowerShell5.1",
+      "target_functions": [
+        "S1Decision",
+        "S1Fields"
+      ],
+      "required_reach": "S1Decision -> S1Fields",
+      "positive_control_case_id": "PARENT02",
+      "producer_case_id": "POLICY03",
+      "required": "Same source bytes, matching base fixture and actual reached function; no extra unregistered inputs",
+      "status": "PROPOSED_PENDING_HARNESS_SEAL"
+    },
+    {
+      "id": "PARENT_R115",
+      "input_id": "PARENT_R115:01",
+      "engine": "Windows PowerShell5.1",
+      "target_functions": [
+        "S1Decision"
+      ],
+      "required_reach": "S1Decision",
+      "positive_control_case_id": "PARENT01",
+      "producer_case_id": "POLICY02",
+      "required": "Same source bytes, matching base fixture and actual reached function; no extra unregistered inputs",
+      "status": "PROPOSED_PENDING_HARNESS_SEAL"
+    }
+  ]
+}

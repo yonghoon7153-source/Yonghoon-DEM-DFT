@@ -1,0 +1,10 @@
+{
+  "scope": "Reviewer-owned data inspection, not submitted functional test",
+  "first_call": {"chunk_id":"05c467","exit_code":1,"wall_time_seconds":1.0401508},
+  "error": "UnicodeDecodeError: utf-8 codec cannot decode byte 0xc0 in position 58252",
+  "file": "received/results/POWERSHELL_STDOUT.txt",
+  "correction": "Read same original bytes using strict CP949 for this stdout file; keep other JSON as UTF8",
+  "received_files_modified": false,
+  "received_code_executed": false,
+  "original_inspection_source": "notes/audit_records_attempt_01.py.txt"
+}

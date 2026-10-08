@@ -1,0 +1,9 @@
+{
+  "id": "STATIC_N4_01",
+  "mode": "text_only_not_functional",
+  "tout_tsteps": true,
+  "accepted_stored_summary": true,
+  "requested_tlist_summary_absent": true,
+  "java_compile_or_jvm": 0,
+  "interpretation": "Existing accepted tsteps storage summary and tout=tsteps literal; no new compatibility claim"
+}

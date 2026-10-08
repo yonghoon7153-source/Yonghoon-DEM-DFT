@@ -1,0 +1,71 @@
+{
+  "kind": "S1O_R1_PS_PRODUCER_SECOND_SEAL",
+  "python_status": "PASS",
+  "python_case_count": 99,
+  "source_manifest_sha256": "4ce5c08dbde5153027819b5a651e3995ec82417b4429b9bb0f789082b440f5da",
+  "harness_sha256": "36479c721efac2f14d29292f55d6e2d991fba52eed1914dd41ee95b73d389bb2",
+  "files": [
+    {
+      "path": "results/producers/CHARGE01.json",
+      "bytes": 122636,
+      "sha256": "02b188da35e8a18fc5e6c8738185fdc9d865e9a35bfeea33d47883c68eefd920"
+    },
+    {
+      "path": "results/producers/CHARGE01.context.json",
+      "bytes": 4551,
+      "sha256": "e95566791534d8ddb59ea54ca9d1da60fee00a2358f91a4af13ecab4c0000c47"
+    },
+    {
+      "path": "results/producers/CHARGE03.json",
+      "bytes": 122641,
+      "sha256": "030a74d4181c37d70d24c0f1b2b769ac7fc9af11fc9a972aa5ade40a1635316c"
+    },
+    {
+      "path": "results/producers/CHARGE03.context.json",
+      "bytes": 4551,
+      "sha256": "7c0420b35298c6fe65f3264f6ee7b5d888c0eb8201cc838e6b93c5ea75cb6898"
+    },
+    {
+      "path": "results/producers/CHARGE_R109.json",
+      "bytes": 119824,
+      "sha256": "6d26eb6dae850cf205f7c5191f0519e3c5bf52a0bd39373cdc1e82b6136a1dd2"
+    },
+    {
+      "path": "results/producers/CHARGE_R109.context.json",
+      "bytes": 4579,
+      "sha256": "edaa0f2d5e9f8de51dc9e132e555d47f58888b9b0cd958bb180b6b82d163d14e"
+    },
+    {
+      "path": "results/producers/POLICY02.json",
+      "bytes": 122640,
+      "sha256": "254164ec95da7af50e734baff70f6c804c28eb7854898912261699e8cb8c0880"
+    },
+    {
+      "path": "results/producers/POLICY02.context.json",
+      "bytes": 4551,
+      "sha256": "e5422aaa3ccfb23f0080d22ea80dd251dd16a34c3f7dc556e9578efd70d78611"
+    },
+    {
+      "path": "results/producers/POLICY03.json",
+      "bytes": 122637,
+      "sha256": "34e41940de1bb99d359b41b824bb86a9e6ba3c8c56083c5c1e2c739bac8d4ddc"
+    },
+    {
+      "path": "results/producers/POLICY03.context.json",
+      "bytes": 4551,
+      "sha256": "fa996873b02d9138aee3b54fe5d1551b1ce98649488635b2d48a159b0af4f18d"
+    }
+  ],
+  "python_results": {
+    "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\outputs\\microshort_s1o_r1_20261008\\future_validation_fixture_R1_003\\results\\PYTHON_RESULTS.json",
+    "bytes": 50052,
+    "sha256": "f16367f2d068939acf7b7fc9fcd7cb8f970dcb0d7ff922aa2aa2533bf084b657"
+  },
+  "python_session": {
+    "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\outputs\\microshort_s1o_r1_20261008\\future_validation_fixture_R1_003\\results\\PYTHON_SESSION.json",
+    "bytes": 1766,
+    "sha256": "e83a3954088682adc47146d9c8b5109e9c699eada136043c2e7fd2fb833a31a5"
+  },
+  "utc": "2026-10-08T13:58:37.6083103Z",
+  "native_ready": false
+}

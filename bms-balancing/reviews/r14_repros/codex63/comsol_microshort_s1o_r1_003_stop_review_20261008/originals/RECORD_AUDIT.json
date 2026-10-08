@@ -1,0 +1,53 @@
+{
+  "scope": "Data-only audit of submitted records, not received test execution or remote machine observation",
+  "case_counts": {
+    "PASS": 127,
+    "HARNESS_FAILURE_BEFORE_TARGET": 1,
+    "NOT_RUN_AFTER_FIRST_FAILURE": 2
+  },
+  "python_stdout_equals_case_results": true,
+  "powershell_stdout_first_28_equals_results": true,
+  "first_failure": "HARNESS_FIXTURE_OR_ASSERTION:R113_DOUBLE_AFTER_JSON_PARSE",
+  "first_failure_id": "PARENT_R113",
+  "target_reached_for_failed_case": false,
+  "later_not_run": [
+    "PARENT_R114",
+    "PARENT_R115"
+  ],
+  "first_seal_records": 123,
+  "after_records_match_first_seal": true,
+  "received_sealed_members_rehashed": 121,
+  "external_engine_identities_not_reobserved": [
+    {
+      "path": "C:\\Users\\BML\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\python.exe",
+      "bytes": 107312,
+      "sha256": "b7a12c3af0b4db44191eec14ea095eba731b7328917f570806183093d19ddca2"
+    },
+    {
+      "path": "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe",
+      "bytes": 495616,
+      "sha256": "8bb6fa8c283b4d92120b1ef249a9b311b0f804d4cabbe9981159976c8be76a5e"
+    }
+  ],
+  "extraction_spans_nonempty_sha_match": 43,
+  "producer_context_files_sha_match": 10,
+  "source_code_manifest_sha256": "4ce5c08dbde5153027819b5a651e3995ec82417b4429b9bb0f789082b440f5da",
+  "raw_PASS_records_preserved": 127,
+  "READ_matching_baseline_control_gap_ids": [
+    "READ02",
+    "READ03",
+    "READ04",
+    "READ05",
+    "READ06",
+    "READ07",
+    "READ08",
+    "READ09",
+    "READ10",
+    "READ11",
+    "READ12"
+  ],
+  "type_at_failed_assertion": "UNRECORDED; only not-Double assertion failure observed",
+  "reviewer_data_read_correction": "Initial own audit assumed UTF8 for PS stdout and stopped before results write; corrected to strict CP949 decoding. Source bytes unchanged; not a candidate test or rerun.",
+  "received_code_executed": 0,
+  "COMSOL_calls": 0
+}

@@ -1,0 +1,1 @@
+{"id":"INIT01","input_id":"INIT01:01","calls":[{"function":"compare_initialization_pair","canonical_bytes":1004,"sha256":"8175acf45c1e9a962197d32ec8c03b8e8ec1f371ca99db3fac1346c0754ff93d"}],"recipe":"all initial targets exact","expected":"PASS","scope":"actual derived input canonical hashes; full expanded replicas not persisted; exact own generator and shared seeds sealed"}

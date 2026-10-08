@@ -1,0 +1,2348 @@
+{
+  "counts": {
+    "PASS": 127,
+    "HARNESS_FAILURE_BEFORE_TARGET": 1,
+    "NOT_RUN_AFTER_FIRST_FAILURE": 2
+  },
+  "cases": [
+    {
+      "id": "AUTH01",
+      "input_id": "AUTH01:01",
+      "engine": "Python",
+      "expected": "AUTHORIZED_ONE_RUN",
+      "expected_stage": "execute_once",
+      "observed": "AUTHORIZED_ONE_RUN",
+      "observed_stage": "execute_once",
+      "reached_functions": [
+        "execute_once",
+        "authorize_execution"
+      ],
+      "positive_control_case_id": "AUTH01",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "id": "AUTH02",
+      "input_id": "AUTH02:01",
+      "engine": "Python",
+      "expected": "SEPARATE_NATIVE_APPROVAL_REQUIRED",
+      "expected_stage": "authorization",
+      "observed": "SEPARATE_NATIVE_APPROVAL_REQUIRED",
+      "observed_stage": "authorization",
+      "reached_functions": [
+        "authorize_execution"
+      ],
+      "positive_control_case_id": "AUTH01",
+      "status": "PASS",
+      "reason": {
+        "reason": "SEPARATE_NATIVE_APPROVAL_REQUIRED",
+        "stage": "authorization",
+        "details": null
+      }
+    },
+    {
+      "id": "AUTH03",
+      "input_id": "AUTH03:01",
+      "engine": "Python",
+      "expected": "SOURCE_IDENTITY",
+      "expected_stage": "authorization",
+      "observed": "SOURCE_IDENTITY",
+      "observed_stage": "authorization",
+      "reached_functions": [
+        "authorize_execution"
+      ],
+      "positive_control_case_id": "AUTH01",
+      "status": "PASS",
+      "reason": {
+        "reason": "SOURCE_IDENTITY",
+        "stage": "authorization",
+        "details": null
+      }
+    },
+    {
+      "id": "AUTH04",
+      "input_id": "AUTH04:01",
+      "engine": "Python",
+      "expected": "ENGINE_OR_DEPENDENCY_IDENTITY",
+      "expected_stage": "authorization",
+      "observed": "ENGINE_OR_DEPENDENCY_IDENTITY",
+      "observed_stage": "authorization",
+      "reached_functions": [
+        "authorize_execution"
+      ],
+      "positive_control_case_id": "AUTH01",
+      "status": "PASS",
+      "reason": {
+        "reason": "ENGINE_OR_DEPENDENCY_IDENTITY",
+        "stage": "authorization",
+        "details": null
+      }
+    },
+    {
+      "id": "AUTH05",
+      "input_id": "AUTH05:01",
+      "engine": "Python",
+      "expected": "VALIDATION_ACCEPTANCE_BINDING",
+      "expected_stage": "authorization",
+      "observed": "VALIDATION_ACCEPTANCE_BINDING",
+      "observed_stage": "authorization",
+      "reached_functions": [
+        "authorize_execution"
+      ],
+      "positive_control_case_id": "AUTH01",
+      "status": "PASS",
+      "reason": {
+        "reason": "VALIDATION_ACCEPTANCE_BINDING",
+        "stage": "authorization",
+        "details": null
+      }
+    },
+    {
+      "id": "AUTH06",
+      "input_id": "AUTH06:01",
+      "engine": "Python",
+      "expected": "APPROVED_RUN_UNIT_MISMATCH",
+      "expected_stage": "authorization",
+      "observed": "APPROVED_RUN_UNIT_MISMATCH",
+      "observed_stage": "authorization",
+      "reached_functions": [
+        "authorize_execution"
+      ],
+      "positive_control_case_id": "AUTH01",
+      "status": "PASS",
+      "reason": {
+        "reason": "APPROVED_RUN_UNIT_MISMATCH",
+        "stage": "authorization",
+        "details": null
+      }
+    },
+    {
+      "id": "AUTH07",
+      "input_id": "AUTH07:01",
+      "engine": "Python",
+      "expected": "CALL_COUNTS_NOT_APPROVED",
+      "expected_stage": "authorization",
+      "observed": "CALL_COUNTS_NOT_APPROVED",
+      "observed_stage": "authorization",
+      "reached_functions": [
+        "authorize_execution"
+      ],
+      "positive_control_case_id": "AUTH01",
+      "status": "PASS",
+      "reason": {
+        "reason": "CALL_COUNTS_NOT_APPROVED",
+        "stage": "authorization",
+        "details": null
+      }
+    },
+    {
+      "id": "AUTH08",
+      "input_id": "AUTH08:01",
+      "engine": "Python",
+      "expected": "COMMAND_OR_CWD_MISMATCH",
+      "expected_stage": "authorization",
+      "observed": "COMMAND_OR_CWD_MISMATCH",
+      "observed_stage": "authorization",
+      "reached_functions": [
+        "authorize_execution"
+      ],
+      "positive_control_case_id": "AUTH01",
+      "status": "PASS",
+      "reason": {
+        "reason": "COMMAND_OR_CWD_MISMATCH",
+        "stage": "authorization",
+        "details": null
+      }
+    },
+    {
+      "id": "AUTH09",
+      "input_id": "AUTH09:01",
+      "engine": "Python",
+      "expected": "PATH_OR_CONCURRENT_WORK",
+      "expected_stage": "authorization",
+      "observed": "PATH_OR_CONCURRENT_WORK",
+      "observed_stage": "authorization",
+      "reached_functions": [
+        "authorize_execution"
+      ],
+      "positive_control_case_id": "AUTH01",
+      "status": "PASS",
+      "reason": {
+        "reason": "PATH_OR_CONCURRENT_WORK",
+        "stage": "authorization",
+        "details": null
+      }
+    },
+    {
+      "id": "AUTH10",
+      "input_id": "AUTH10:01",
+      "engine": "Python",
+      "expected": "POLICY_OR_PRIVILEGE_MISMATCH",
+      "expected_stage": "authorization",
+      "observed": "POLICY_OR_PRIVILEGE_MISMATCH",
+      "observed_stage": "authorization",
+      "reached_functions": [
+        "authorize_execution"
+      ],
+      "positive_control_case_id": "AUTH01",
+      "status": "PASS",
+      "reason": {
+        "reason": "POLICY_OR_PRIVILEGE_MISMATCH",
+        "stage": "authorization",
+        "details": null
+      }
+    },
+    {
+      "id": "AUTH11",
+      "input_id": "AUTH11:01",
+      "engine": "Python",
+      "expected": "NO_RETRY_EXISTING_ATTEMPT",
+      "expected_stage": "authorization",
+      "observed": "NO_RETRY_EXISTING_ATTEMPT",
+      "observed_stage": "authorization",
+      "reached_functions": [
+        "authorize_execution"
+      ],
+      "positive_control_case_id": "AUTH01",
+      "status": "PASS",
+      "reason": {
+        "reason": "NO_RETRY_EXISTING_ATTEMPT",
+        "stage": "authorization",
+        "details": null
+      }
+    },
+    {
+      "id": "AUTH12",
+      "input_id": "AUTH12:01",
+      "engine": "Python",
+      "expected": "OFFLINE_NATIVE_NOT_READY",
+      "expected_stage": "authorization",
+      "observed": "OFFLINE_NATIVE_NOT_READY",
+      "observed_stage": "authorization",
+      "reached_functions": [
+        "authorize_execution"
+      ],
+      "positive_control_case_id": "AUTH01",
+      "status": "PASS",
+      "reason": {
+        "reason": "OFFLINE_NATIVE_NOT_READY",
+        "stage": "authorization",
+        "details": null
+      }
+    },
+    {
+      "id": "AUTH13",
+      "input_id": "AUTH13:01",
+      "engine": "Python",
+      "expected": "NATIVE_COMMANDS_UNRESOLVED",
+      "expected_stage": "authorization",
+      "observed": "NATIVE_COMMANDS_UNRESOLVED",
+      "observed_stage": "authorization",
+      "reached_functions": [
+        "authorize_execution"
+      ],
+      "positive_control_case_id": "AUTH01",
+      "status": "PASS",
+      "reason": {
+        "reason": "NATIVE_COMMANDS_UNRESOLVED",
+        "stage": "authorization",
+        "details": null
+      }
+    },
+    {
+      "id": "AUTH14",
+      "input_id": "AUTH14:01",
+      "engine": "Python",
+      "expected": "NATIVE_PATHS_UNRESOLVED",
+      "expected_stage": "authorization",
+      "observed": "NATIVE_PATHS_UNRESOLVED",
+      "observed_stage": "authorization",
+      "reached_functions": [
+        "authorize_execution"
+      ],
+      "positive_control_case_id": "AUTH01",
+      "status": "PASS",
+      "reason": {
+        "reason": "NATIVE_PATHS_UNRESOLVED",
+        "stage": "authorization",
+        "details": null
+      }
+    },
+    {
+      "id": "AUTH15",
+      "input_id": "AUTH15:01",
+      "engine": "Python",
+      "expected": "CURRENT_POLICY_PIN_UNRESOLVED",
+      "expected_stage": "authorization",
+      "observed": "CURRENT_POLICY_PIN_UNRESOLVED",
+      "observed_stage": "authorization",
+      "reached_functions": [
+        "authorize_execution"
+      ],
+      "positive_control_case_id": "AUTH01",
+      "status": "PASS",
+      "reason": {
+        "reason": "CURRENT_POLICY_PIN_UNRESOLVED",
+        "stage": "authorization",
+        "details": null
+      }
+    },
+    {
+      "id": "READ01",
+      "input_id": "READ01:01",
+      "engine": "Python",
+      "expected": "RETURN_VALID_ROWS",
+      "expected_stage": "profile_rows",
+      "observed": "RETURN_VALID_ROWS",
+      "observed_stage": "profile_rows",
+      "reached_functions": [
+        "read_csv_bytes",
+        "timed_rows",
+        "coverage",
+        "profile_rows"
+      ],
+      "positive_control_case_id": "READ01",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "id": "READ02",
+      "input_id": "READ02:01",
+      "engine": "Python",
+      "expected": "CSV_IDENTITY",
+      "expected_stage": "read_csv_bytes",
+      "observed": "CSV_IDENTITY",
+      "observed_stage": "read_csv_bytes",
+      "reached_functions": [
+        "read_csv_bytes"
+      ],
+      "positive_control_case_id": "READ01",
+      "status": "PASS",
+      "reason": {
+        "reason": "CSV_IDENTITY",
+        "stage": "read_csv_bytes",
+        "details": null
+      }
+    },
+    {
+      "id": "READ03",
+      "input_id": "READ03:01",
+      "engine": "Python",
+      "expected": "UNIT_EVIDENCE",
+      "expected_stage": "read_csv_bytes",
+      "observed": "UNIT_EVIDENCE",
+      "observed_stage": "read_csv_bytes",
+      "reached_functions": [
+        "read_csv_bytes"
+      ],
+      "positive_control_case_id": "READ01",
+      "status": "PASS",
+      "reason": {
+        "reason": "UNIT_EVIDENCE",
+        "stage": "read_csv_bytes",
+        "details": null
+      }
+    },
+    {
+      "id": "READ04",
+      "input_id": "READ04:01",
+      "engine": "Python",
+      "expected": "CSV_HEADER",
+      "expected_stage": "read_csv_bytes",
+      "observed": "CSV_HEADER",
+      "observed_stage": "read_csv_bytes",
+      "reached_functions": [
+        "read_csv_bytes"
+      ],
+      "positive_control_case_id": "READ01",
+      "status": "PASS",
+      "reason": {
+        "reason": "CSV_HEADER",
+        "stage": "read_csv_bytes",
+        "details": null
+      }
+    },
+    {
+      "id": "READ05",
+      "input_id": "READ05:01",
+      "engine": "Python",
+      "expected": "CSV_WIDTH",
+      "expected_stage": "read_csv_bytes",
+      "observed": "CSV_WIDTH",
+      "observed_stage": "read_csv_bytes",
+      "reached_functions": [
+        "read_csv_bytes"
+      ],
+      "positive_control_case_id": "READ01",
+      "status": "PASS",
+      "reason": {
+        "reason": "CSV_WIDTH",
+        "stage": "read_csv_bytes",
+        "details": null
+      }
+    },
+    {
+      "id": "READ06",
+      "input_id": "READ06:01",
+      "engine": "Python",
+      "expected": "NONFINITE",
+      "expected_stage": "read_csv_bytes",
+      "observed": "NONFINITE",
+      "observed_stage": "read_csv_bytes",
+      "reached_functions": [
+        "read_csv_bytes"
+      ],
+      "positive_control_case_id": "READ01",
+      "status": "PASS",
+      "reason": {
+        "reason": "NONFINITE",
+        "stage": "read_csv_bytes",
+        "details": null
+      }
+    },
+    {
+      "id": "READ07",
+      "input_id": "READ07:01",
+      "engine": "Python",
+      "expected": "EMPTY_CSV",
+      "expected_stage": "read_csv_bytes",
+      "observed": "EMPTY_CSV",
+      "observed_stage": "read_csv_bytes",
+      "reached_functions": [
+        "read_csv_bytes"
+      ],
+      "positive_control_case_id": "READ01",
+      "status": "PASS",
+      "reason": {
+        "reason": "EMPTY_CSV",
+        "stage": "read_csv_bytes",
+        "details": null
+      }
+    },
+    {
+      "id": "READ08",
+      "input_id": "READ08:01",
+      "engine": "Python",
+      "expected": "DUPLICATE_OR_UNORDERED_TIME",
+      "expected_stage": "timed_rows",
+      "observed": "DUPLICATE_OR_UNORDERED_TIME",
+      "observed_stage": "timed_rows",
+      "reached_functions": [
+        "timed_rows"
+      ],
+      "positive_control_case_id": "READ01",
+      "status": "PASS",
+      "reason": {
+        "reason": "DUPLICATE_OR_UNORDERED_TIME",
+        "stage": "timed_rows",
+        "details": null
+      }
+    },
+    {
+      "id": "READ09",
+      "input_id": "READ09:01",
+      "engine": "Python",
+      "expected": "REQUIRED_TIME_MISSING",
+      "expected_stage": "coverage",
+      "observed": "REQUIRED_TIME_MISSING",
+      "observed_stage": "coverage",
+      "reached_functions": [
+        "coverage"
+      ],
+      "positive_control_case_id": "READ01",
+      "status": "PASS",
+      "reason": {
+        "reason": "REQUIRED_TIME_MISSING",
+        "stage": "coverage",
+        "details": null
+      }
+    },
+    {
+      "id": "READ10",
+      "input_id": "READ10:01",
+      "engine": "Python",
+      "expected": "EMPTY_OR_ZERO_ONLY_COMPARISON",
+      "expected_stage": "coverage",
+      "observed": "EMPTY_OR_ZERO_ONLY_COMPARISON",
+      "observed_stage": "coverage",
+      "reached_functions": [
+        "coverage"
+      ],
+      "positive_control_case_id": "READ01",
+      "status": "PASS",
+      "reason": {
+        "reason": "EMPTY_OR_ZERO_ONLY_COMPARISON",
+        "stage": "coverage",
+        "details": null
+      }
+    },
+    {
+      "id": "READ11",
+      "input_id": "READ11:01",
+      "engine": "Python",
+      "expected": "COORDINATE_DOMAIN",
+      "expected_stage": "profile_rows",
+      "observed": "COORDINATE_DOMAIN",
+      "observed_stage": "profile_rows",
+      "reached_functions": [
+        "profile_rows"
+      ],
+      "positive_control_case_id": "READ01",
+      "status": "PASS",
+      "reason": {
+        "reason": "COORDINATE_DOMAIN",
+        "stage": "profile_rows",
+        "details": null
+      }
+    },
+    {
+      "id": "READ12",
+      "input_id": "READ12:01",
+      "engine": "Python",
+      "expected": "PROFILE_MISSING",
+      "expected_stage": "profile_rows",
+      "observed": "PROFILE_MISSING",
+      "observed_stage": "profile_rows",
+      "reached_functions": [
+        "profile_rows"
+      ],
+      "positive_control_case_id": "READ01",
+      "status": "PASS",
+      "reason": {
+        "reason": "PROFILE_MISSING",
+        "stage": "profile_rows",
+        "details": null
+      }
+    },
+    {
+      "id": "INIT01",
+      "input_id": "INIT01:01",
+      "engine": "Python",
+      "expected": "PASS",
+      "expected_stage": "compare_initialization_pair",
+      "observed": "PASS",
+      "observed_stage": "compare_initialization_pair",
+      "reached_functions": [
+        "compare_initialization_pair",
+        "compare_initialization"
+      ],
+      "positive_control_case_id": "INIT01",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "id": "INIT02",
+      "input_id": "INIT02:01",
+      "engine": "Python",
+      "expected": "PASS",
+      "expected_stage": "compare_initialization",
+      "observed": "PASS",
+      "observed_stage": "compare_initialization",
+      "reached_functions": [
+        "compare_initialization"
+      ],
+      "positive_control_case_id": "INIT01",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "id": "INIT03",
+      "input_id": "INIT03:01",
+      "engine": "Python",
+      "expected": "INITIAL_INVENTORY_OR_COMPOSITION",
+      "expected_stage": "compare_initialization",
+      "observed": "INITIAL_INVENTORY_OR_COMPOSITION",
+      "observed_stage": "compare_initialization",
+      "reached_functions": [
+        "compare_initialization"
+      ],
+      "positive_control_case_id": "INIT01",
+      "status": "PASS",
+      "reason": {
+        "reason": "INITIAL_INVENTORY_OR_COMPOSITION",
+        "stage": "compare_initialization",
+        "details": null
+      }
+    },
+    {
+      "id": "INIT04",
+      "input_id": "INIT04:01",
+      "engine": "Python",
+      "expected": "INITIAL_TIME_NOT_EXACT_ZERO",
+      "expected_stage": "compare_initialization",
+      "observed": "INITIAL_TIME_NOT_EXACT_ZERO",
+      "observed_stage": "compare_initialization",
+      "reached_functions": [
+        "compare_initialization"
+      ],
+      "positive_control_case_id": "INIT01",
+      "status": "PASS",
+      "reason": {
+        "reason": "INITIAL_TIME_NOT_EXACT_ZERO",
+        "stage": "compare_initialization",
+        "details": null
+      }
+    },
+    {
+      "id": "INIT05",
+      "input_id": "INIT05:01",
+      "engine": "Python",
+      "expected": "INITIAL_PROVENANCE_OR_TARGETS",
+      "expected_stage": "compare_initialization",
+      "observed": "INITIAL_PROVENANCE_OR_TARGETS",
+      "observed_stage": "compare_initialization",
+      "reached_functions": [
+        "compare_initialization"
+      ],
+      "positive_control_case_id": "INIT01",
+      "status": "PASS",
+      "reason": {
+        "reason": "INITIAL_PROVENANCE_OR_TARGETS",
+        "stage": "compare_initialization",
+        "details": null
+      }
+    },
+    {
+      "id": "INIT06",
+      "input_id": "INIT06:01",
+      "engine": "Python",
+      "expected": "INITIAL_UNIT",
+      "expected_stage": "compare_initialization",
+      "observed": "INITIAL_UNIT",
+      "observed_stage": "compare_initialization",
+      "reached_functions": [
+        "compare_initialization"
+      ],
+      "positive_control_case_id": "INIT01",
+      "status": "PASS",
+      "reason": {
+        "reason": "INITIAL_UNIT",
+        "stage": "compare_initialization",
+        "details": null
+      }
+    },
+    {
+      "id": "INIT07",
+      "input_id": "INIT07:01",
+      "engine": "Python",
+      "expected": "COEFFICIENT_SETTINGS",
+      "expected_stage": "verify_coefficient_evidence",
+      "observed": "COEFFICIENT_SETTINGS",
+      "observed_stage": "verify_coefficient_evidence",
+      "reached_functions": [
+        "verify_coefficient_evidence"
+      ],
+      "positive_control_case_id": "INIT09",
+      "status": "PASS",
+      "reason": {
+        "reason": "COEFFICIENT_SETTINGS",
+        "stage": "verify_coefficient_evidence",
+        "details": null
+      }
+    },
+    {
+      "id": "INIT08",
+      "input_id": "INIT08:01",
+      "engine": "Python",
+      "expected": "EFFECTIVE_COEFFICIENT_OPEN",
+      "expected_stage": "verify_coefficient_evidence",
+      "observed": "EFFECTIVE_COEFFICIENT_OPEN",
+      "observed_stage": "verify_coefficient_evidence",
+      "reached_functions": [
+        "verify_coefficient_evidence"
+      ],
+      "positive_control_case_id": "INIT09",
+      "status": "PASS",
+      "reason": {
+        "reason": "EFFECTIVE_COEFFICIENT_OPEN",
+        "stage": "verify_coefficient_evidence",
+        "details": null
+      }
+    },
+    {
+      "id": "INIT09",
+      "input_id": "INIT09:01",
+      "engine": "Python",
+      "expected": "PASS",
+      "expected_stage": "verify_coefficient_evidence",
+      "observed": "PASS",
+      "observed_stage": "verify_coefficient_evidence",
+      "reached_functions": [
+        "verify_coefficient_evidence"
+      ],
+      "positive_control_case_id": "INIT09",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "id": "INIT10",
+      "input_id": "INIT10:01",
+      "engine": "Python",
+      "expected": "COEFFICIENT_CONSUMPTION",
+      "expected_stage": "verify_coefficient_evidence",
+      "observed": "COEFFICIENT_CONSUMPTION",
+      "observed_stage": "verify_coefficient_evidence",
+      "reached_functions": [
+        "verify_coefficient_evidence"
+      ],
+      "positive_control_case_id": "INIT09",
+      "status": "PASS",
+      "reason": {
+        "reason": "COEFFICIENT_CONSUMPTION",
+        "stage": "verify_coefficient_evidence",
+        "details": null
+      }
+    },
+    {
+      "id": "INIT11",
+      "input_id": "INIT11:01",
+      "engine": "Python",
+      "expected": "PAIR_INITIAL_STATE_MISMATCH",
+      "expected_stage": "compare_initialization_pair",
+      "observed": "PAIR_INITIAL_STATE_MISMATCH",
+      "observed_stage": "compare_initialization_pair",
+      "reached_functions": [
+        "compare_initialization_pair",
+        "compare_initialization"
+      ],
+      "positive_control_case_id": "INIT01",
+      "status": "PASS",
+      "reason": {
+        "reason": "PAIR_INITIAL_STATE_MISMATCH",
+        "stage": "compare_initialization_pair",
+        "details": null
+      }
+    },
+    {
+      "id": "INIT12",
+      "input_id": "INIT12:01",
+      "engine": "Python",
+      "expected": "INITIAL_PROFILE_NONUNIFORM",
+      "expected_stage": "initial_profile_uniformity",
+      "observed": "INITIAL_PROFILE_NONUNIFORM",
+      "observed_stage": "initial_profile_uniformity",
+      "reached_functions": [
+        "initial_profile_uniformity"
+      ],
+      "positive_control_case_id": "CHARGE01",
+      "status": "PASS",
+      "reason": {
+        "reason": "INITIAL_PROFILE_NONUNIFORM",
+        "stage": "initial_profile_uniformity",
+        "details": null
+      }
+    },
+    {
+      "id": "POLICY01",
+      "input_id": "POLICY01:01",
+      "engine": "Python",
+      "expected": "WITHIN_LIMITS_THIS_WINDOW",
+      "expected_stage": "compare_policy",
+      "observed": "WITHIN_LIMITS_THIS_WINDOW",
+      "observed_stage": "compare_policy",
+      "reached_functions": [
+        "compare_policy",
+        "coverage",
+        "invariants"
+      ],
+      "positive_control_case_id": "POLICY01",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "id": "POLICY02",
+      "input_id": "POLICY02:01",
+      "engine": "Python",
+      "expected": "WITHIN_LIMITS_THIS_WINDOW",
+      "expected_stage": "analyze",
+      "observed": "WITHIN_LIMITS_THIS_WINDOW",
+      "observed_stage": "analyze",
+      "reached_functions": [
+        "analyze",
+        "compare_initialization",
+        "initial_profile_uniformity",
+        "verify_coefficient_evidence",
+        "invariants",
+        "charge_balance",
+        "compare_policy",
+        "coverage"
+      ],
+      "positive_control_case_id": "CHARGE01",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "id": "POLICY03",
+      "input_id": "POLICY03:01",
+      "engine": "Python",
+      "expected": "EXCEEDS_LIMITS",
+      "expected_stage": "analyze",
+      "observed": "EXCEEDS_LIMITS",
+      "observed_stage": "analyze",
+      "reached_functions": [
+        "analyze",
+        "compare_initialization",
+        "initial_profile_uniformity",
+        "verify_coefficient_evidence",
+        "invariants",
+        "charge_balance",
+        "compare_policy",
+        "coverage"
+      ],
+      "positive_control_case_id": "CHARGE01",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "id": "POLICY04",
+      "input_id": "POLICY04:01",
+      "engine": "Python",
+      "expected": "WITHIN_LIMITS_THIS_WINDOW",
+      "expected_stage": "compare_policy",
+      "observed": "WITHIN_LIMITS_THIS_WINDOW",
+      "observed_stage": "compare_policy",
+      "reached_functions": [
+        "compare_policy",
+        "coverage",
+        "invariants"
+      ],
+      "positive_control_case_id": "POLICY01",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "id": "POLICY05",
+      "input_id": "POLICY05:01",
+      "engine": "Python",
+      "expected": "EXCEEDS_LIMITS",
+      "expected_stage": "compare_policy",
+      "observed": "EXCEEDS_LIMITS",
+      "observed_stage": "compare_policy",
+      "reached_functions": [
+        "compare_policy",
+        "coverage",
+        "invariants"
+      ],
+      "positive_control_case_id": "POLICY01",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "id": "POLICY06",
+      "input_id": "POLICY06:01",
+      "engine": "Python",
+      "expected": "LI_DRIFT",
+      "expected_stage": "invariants",
+      "observed": "LI_DRIFT",
+      "observed_stage": "invariants",
+      "reached_functions": [
+        "invariants"
+      ],
+      "positive_control_case_id": "CHARGE01",
+      "status": "PASS",
+      "reason": {
+        "reason": "LI_DRIFT",
+        "stage": "invariants",
+        "details": null
+      }
+    },
+    {
+      "id": "POLICY07",
+      "input_id": "POLICY07:01",
+      "engine": "Python",
+      "expected": "VOLTAGE_IDENTITY",
+      "expected_stage": "invariants",
+      "observed": "VOLTAGE_IDENTITY",
+      "observed_stage": "invariants",
+      "reached_functions": [
+        "invariants"
+      ],
+      "positive_control_case_id": "CHARGE01",
+      "status": "PASS",
+      "reason": {
+        "reason": "VOLTAGE_IDENTITY",
+        "stage": "invariants",
+        "details": null
+      }
+    },
+    {
+      "id": "POLICY08",
+      "input_id": "POLICY08:01",
+      "engine": "Python",
+      "expected": "COORDINATE_DOMAIN",
+      "expected_stage": "compare_policy",
+      "observed": "COORDINATE_DOMAIN",
+      "observed_stage": "compare_policy",
+      "reached_functions": [
+        "compare_policy",
+        "coverage",
+        "invariants"
+      ],
+      "positive_control_case_id": "POLICY01",
+      "status": "PASS",
+      "reason": {
+        "reason": "COORDINATE_DOMAIN",
+        "stage": "compare_policy",
+        "details": null
+      }
+    },
+    {
+      "id": "CHARGE01",
+      "input_id": "CHARGE01:01",
+      "engine": "Python",
+      "expected": "CONSISTENT",
+      "expected_stage": "analyze",
+      "observed": "CONSISTENT",
+      "observed_stage": "analyze",
+      "reached_functions": [
+        "analyze",
+        "compare_initialization",
+        "initial_profile_uniformity",
+        "verify_coefficient_evidence",
+        "invariants",
+        "charge_balance",
+        "compare_policy",
+        "coverage"
+      ],
+      "positive_control_case_id": "CHARGE01",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "id": "CHARGE02",
+      "input_id": "CHARGE02:01",
+      "engine": "Python",
+      "expected": "INCONCLUSIVE",
+      "expected_stage": "charge_balance",
+      "observed": "INCONCLUSIVE",
+      "observed_stage": "charge_balance",
+      "reached_functions": [
+        "charge_balance"
+      ],
+      "positive_control_case_id": "CHARGE01",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "id": "CHARGE03",
+      "input_id": "CHARGE03:01",
+      "engine": "Python",
+      "expected": "INCONCLUSIVE",
+      "expected_stage": "analyze",
+      "observed": "INCONCLUSIVE",
+      "observed_stage": "analyze",
+      "reached_functions": [
+        "analyze",
+        "compare_initialization",
+        "initial_profile_uniformity",
+        "verify_coefficient_evidence",
+        "invariants",
+        "charge_balance",
+        "compare_policy",
+        "coverage"
+      ],
+      "positive_control_case_id": "CHARGE01",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "id": "CHARGE04",
+      "input_id": "CHARGE04:01",
+      "engine": "Python",
+      "expected": "INCONCLUSIVE",
+      "expected_stage": "charge_balance",
+      "observed": "INCONCLUSIVE",
+      "observed_stage": "charge_balance",
+      "reached_functions": [
+        "charge_balance"
+      ],
+      "positive_control_case_id": "CHARGE01",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "id": "CHARGE05",
+      "input_id": "CHARGE05:01",
+      "engine": "Python",
+      "expected": "REVERSE_CURRENT",
+      "expected_stage": "charge_balance",
+      "observed": "REVERSE_CURRENT",
+      "observed_stage": "charge_balance",
+      "reached_functions": [
+        "charge_balance"
+      ],
+      "positive_control_case_id": "CHARGE01",
+      "status": "PASS",
+      "reason": {
+        "reason": "REVERSE_CURRENT",
+        "stage": "charge_balance",
+        "details": null
+      }
+    },
+    {
+      "id": "CHARGE06",
+      "input_id": "CHARGE06:01",
+      "engine": "Python",
+      "expected": "REACTION_CURRENT_BALANCE",
+      "expected_stage": "charge_balance",
+      "observed": "REACTION_CURRENT_BALANCE",
+      "observed_stage": "charge_balance",
+      "reached_functions": [
+        "charge_balance"
+      ],
+      "positive_control_case_id": "CHARGE01",
+      "status": "PASS",
+      "reason": {
+        "reason": "REACTION_CURRENT_BALANCE",
+        "stage": "charge_balance",
+        "details": null
+      }
+    },
+    {
+      "id": "CHARGE07",
+      "input_id": "CHARGE07:01",
+      "engine": "Python",
+      "expected": "CURRENT_AREA_CONVERSION",
+      "expected_stage": "charge_balance",
+      "observed": "CURRENT_AREA_CONVERSION",
+      "observed_stage": "charge_balance",
+      "reached_functions": [
+        "charge_balance"
+      ],
+      "positive_control_case_id": "CHARGE01",
+      "status": "PASS",
+      "reason": {
+        "reason": "CURRENT_AREA_CONVERSION",
+        "stage": "charge_balance",
+        "details": null
+      }
+    },
+    {
+      "id": "CHARGE08",
+      "input_id": "CHARGE08:01",
+      "engine": "Python",
+      "expected": "REVERSE_LI_TRANSFER",
+      "expected_stage": "charge_balance",
+      "observed": "REVERSE_LI_TRANSFER",
+      "observed_stage": "charge_balance",
+      "reached_functions": [
+        "charge_balance"
+      ],
+      "positive_control_case_id": "CHARGE01",
+      "status": "PASS",
+      "reason": {
+        "reason": "REVERSE_LI_TRANSFER",
+        "stage": "charge_balance",
+        "details": {
+          "first_violation": {
+            "t_minus_s": "0",
+            "t_plus_s": "0.0001",
+            "dqN_C_m2": "-0.9648533212",
+            "dqP_C_m2": "-0.9648533212",
+            "deadband_C_m2": "0.0002",
+            "violated_electrodes": [
+              "N",
+              "P"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": "CHARGE09",
+      "input_id": "CHARGE09:01",
+      "engine": "Python",
+      "expected": "SOLID_TRANSFER_BALANCE",
+      "expected_stage": "charge_balance",
+      "observed": "SOLID_TRANSFER_BALANCE",
+      "observed_stage": "charge_balance",
+      "reached_functions": [
+        "charge_balance"
+      ],
+      "positive_control_case_id": "CHARGE01",
+      "status": "PASS",
+      "reason": {
+        "reason": "SOLID_TRANSFER_BALANCE",
+        "stage": "charge_balance",
+        "details": null
+      }
+    },
+    {
+      "id": "CHARGE10",
+      "input_id": "CHARGE10:01",
+      "engine": "Python",
+      "expected": "INTEGRATED_CHARGE_BALANCE",
+      "expected_stage": "charge_balance",
+      "observed": "INTEGRATED_CHARGE_BALANCE",
+      "observed_stage": "charge_balance",
+      "reached_functions": [
+        "charge_balance"
+      ],
+      "positive_control_case_id": "CHARGE01",
+      "status": "PASS",
+      "reason": {
+        "reason": "INTEGRATED_CHARGE_BALANCE",
+        "stage": "charge_balance",
+        "details": null
+      }
+    },
+    {
+      "id": "CHARGE11",
+      "input_id": "CHARGE11:01",
+      "engine": "Python",
+      "expected": "CHARGE_GRID_BINDING",
+      "expected_stage": "charge_balance",
+      "observed": "CHARGE_GRID_BINDING",
+      "observed_stage": "charge_balance",
+      "reached_functions": [
+        "charge_balance"
+      ],
+      "positive_control_case_id": "CHARGE01",
+      "status": "PASS",
+      "reason": {
+        "reason": "CHARGE_GRID_BINDING",
+        "stage": "charge_balance",
+        "details": null
+      }
+    },
+    {
+      "id": "CHARGE12",
+      "input_id": "CHARGE12:01",
+      "engine": "Python",
+      "expected": "LI_DRIFT",
+      "expected_stage": "charge_balance",
+      "observed": "LI_DRIFT",
+      "observed_stage": "charge_balance",
+      "reached_functions": [
+        "charge_balance"
+      ],
+      "positive_control_case_id": "CHARGE01",
+      "status": "PASS",
+      "reason": {
+        "reason": "LI_DRIFT",
+        "stage": "charge_balance",
+        "details": null
+      }
+    },
+    {
+      "id": "PAIRED01",
+      "input_id": "PAIRED01:01",
+      "engine": "Python",
+      "expected": "DISTINGUISHABLE_AT_REST",
+      "expected_stage": "paired_classification",
+      "observed": "DISTINGUISHABLE_AT_REST",
+      "observed_stage": "paired_classification",
+      "reached_functions": [
+        "paired_classification"
+      ],
+      "positive_control_case_id": "PAIRED01",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "id": "PAIRED02",
+      "input_id": "PAIRED02:01",
+      "engine": "Python",
+      "expected": "NOT_DISTINGUISHABLE_WITHIN_T",
+      "expected_stage": "paired_classification",
+      "observed": "NOT_DISTINGUISHABLE_WITHIN_T",
+      "observed_stage": "paired_classification",
+      "reached_functions": [
+        "paired_classification"
+      ],
+      "positive_control_case_id": "PAIRED01",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "id": "PAIRED03",
+      "input_id": "PAIRED03:01",
+      "engine": "Python",
+      "expected": "INCONCLUSIVE",
+      "expected_stage": "paired_classification",
+      "observed": "INCONCLUSIVE",
+      "observed_stage": "paired_classification",
+      "reached_functions": [
+        "paired_classification"
+      ],
+      "positive_control_case_id": "PAIRED01",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "id": "PAIRED04",
+      "input_id": "PAIRED04:01",
+      "engine": "Python",
+      "expected": "INCONCLUSIVE",
+      "expected_stage": "paired_classification",
+      "observed": "INCONCLUSIVE",
+      "observed_stage": "paired_classification",
+      "reached_functions": [
+        "paired_classification"
+      ],
+      "positive_control_case_id": "PAIRED01",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "id": "PAIRED05",
+      "input_id": "PAIRED05:01",
+      "engine": "Python",
+      "expected": "K_INCOMPLETE",
+      "expected_stage": "paired_classification",
+      "observed": "K_INCOMPLETE",
+      "observed_stage": "paired_classification",
+      "reached_functions": [
+        "paired_classification"
+      ],
+      "positive_control_case_id": "PAIRED01",
+      "status": "PASS",
+      "reason": {
+        "reason": "K_INCOMPLETE",
+        "stage": "paired_classification",
+        "details": null
+      }
+    },
+    {
+      "id": "PAIRED06",
+      "input_id": "PAIRED06:01",
+      "engine": "Python",
+      "expected": "UNMATCHED_K_PAIR",
+      "expected_stage": "paired_classification",
+      "observed": "UNMATCHED_K_PAIR",
+      "observed_stage": "paired_classification",
+      "reached_functions": [
+        "paired_classification"
+      ],
+      "positive_control_case_id": "PAIRED01",
+      "status": "PASS",
+      "reason": {
+        "reason": "UNMATCHED_K_PAIR",
+        "stage": "paired_classification",
+        "details": null
+      }
+    },
+    {
+      "id": "PAIRED07",
+      "input_id": "PAIRED07:01",
+      "engine": "Python",
+      "expected": "PAIRED_ENDPOINT_MISSING",
+      "expected_stage": "paired_classification",
+      "observed": "PAIRED_ENDPOINT_MISSING",
+      "observed_stage": "paired_classification",
+      "reached_functions": [
+        "paired_classification"
+      ],
+      "positive_control_case_id": "PAIRED01",
+      "status": "PASS",
+      "reason": {
+        "reason": "PAIRED_ENDPOINT_MISSING",
+        "stage": "paired_classification",
+        "details": null
+      }
+    },
+    {
+      "id": "RESOURCE01",
+      "input_id": "RESOURCE01:01",
+      "engine": "Python",
+      "expected": "CONTINUE_WITHIN_SAMPLED_LIMITS",
+      "expected_stage": "assess_resources",
+      "observed": "CONTINUE_WITHIN_SAMPLED_LIMITS",
+      "observed_stage": "assess_resources",
+      "reached_functions": [
+        "assess_resources"
+      ],
+      "positive_control_case_id": "RESOURCE01",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "id": "RESOURCE02",
+      "input_id": "RESOURCE02:01",
+      "engine": "Python",
+      "expected": "STOP_REQUIRED",
+      "expected_stage": "assess_resources",
+      "observed": "STOP_REQUIRED",
+      "observed_stage": "assess_resources",
+      "reached_functions": [
+        "assess_resources"
+      ],
+      "positive_control_case_id": "RESOURCE01",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "id": "RESOURCE03",
+      "input_id": "RESOURCE03:01",
+      "engine": "Python",
+      "expected": "STOP_REQUIRED",
+      "expected_stage": "assess_resources",
+      "observed": "STOP_REQUIRED",
+      "observed_stage": "assess_resources",
+      "reached_functions": [
+        "assess_resources"
+      ],
+      "positive_control_case_id": "RESOURCE01",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "id": "RESOURCE04",
+      "input_id": "RESOURCE04:01",
+      "engine": "Python",
+      "expected": "STOP_REQUIRED",
+      "expected_stage": "assess_resources",
+      "observed": "STOP_REQUIRED",
+      "observed_stage": "assess_resources",
+      "reached_functions": [
+        "assess_resources"
+      ],
+      "positive_control_case_id": "RESOURCE01",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "id": "RESOURCE05",
+      "input_id": "RESOURCE05:01",
+      "engine": "Python",
+      "expected": "STOP_REQUIRED",
+      "expected_stage": "assess_resources",
+      "observed": "STOP_REQUIRED",
+      "observed_stage": "assess_resources",
+      "reached_functions": [
+        "assess_resources"
+      ],
+      "positive_control_case_id": "RESOURCE01",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "id": "RESOURCE06",
+      "input_id": "RESOURCE06:01",
+      "engine": "Python",
+      "expected": "STOP_REQUIRED",
+      "expected_stage": "assess_resources",
+      "observed": "STOP_REQUIRED",
+      "observed_stage": "assess_resources",
+      "reached_functions": [
+        "assess_resources"
+      ],
+      "positive_control_case_id": "RESOURCE01",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "id": "RESOURCE07",
+      "input_id": "RESOURCE07:01",
+      "engine": "Python",
+      "expected": "STOP_REQUIRED",
+      "expected_stage": "assess_resources",
+      "observed": "STOP_REQUIRED",
+      "observed_stage": "assess_resources",
+      "reached_functions": [
+        "assess_resources"
+      ],
+      "positive_control_case_id": "RESOURCE01",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "id": "RESOURCE08",
+      "input_id": "RESOURCE08:01",
+      "engine": "Python",
+      "expected": "STOP_REQUIRED",
+      "expected_stage": "assess_resources",
+      "observed": "STOP_REQUIRED",
+      "observed_stage": "assess_resources",
+      "reached_functions": [
+        "assess_resources"
+      ],
+      "positive_control_case_id": "RESOURCE01",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "id": "RESOURCE09",
+      "input_id": "RESOURCE09:01",
+      "engine": "Python",
+      "expected": "WAITING_COOPERATIVE",
+      "expected_stage": "advance_stop",
+      "observed": "WAITING_COOPERATIVE",
+      "observed_stage": "advance_stop",
+      "reached_functions": [
+        "advance_stop"
+      ],
+      "positive_control_case_id": "RESOURCE09",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "id": "RESOURCE10",
+      "input_id": "RESOURCE10:01",
+      "engine": "Python",
+      "expected": "UNRESOLVED",
+      "expected_stage": "advance_stop",
+      "observed": "UNRESOLVED",
+      "observed_stage": "advance_stop",
+      "reached_functions": [
+        "advance_stop"
+      ],
+      "positive_control_case_id": "RESOURCE11",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "id": "RESOURCE11",
+      "input_id": "RESOURCE11:01",
+      "engine": "Python",
+      "expected": "FORCE_PENDING",
+      "expected_stage": "advance_stop",
+      "observed": "FORCE_PENDING",
+      "observed_stage": "advance_stop",
+      "reached_functions": [
+        "advance_stop"
+      ],
+      "positive_control_case_id": "RESOURCE11",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "id": "RESOURCE12",
+      "input_id": "RESOURCE12:01",
+      "engine": "Python",
+      "expected": "FORCE_PENDING",
+      "expected_stage": "advance_stop",
+      "observed": "FORCE_PENDING",
+      "observed_stage": "advance_stop",
+      "reached_functions": [
+        "advance_stop"
+      ],
+      "positive_control_case_id": "RESOURCE12",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "id": "RESOURCE13",
+      "input_id": "RESOURCE13:01",
+      "engine": "Python",
+      "expected": "VERIFY_PENDING",
+      "expected_stage": "advance_stop",
+      "observed": "VERIFY_PENDING",
+      "observed_stage": "advance_stop",
+      "reached_functions": [
+        "advance_stop"
+      ],
+      "positive_control_case_id": "RESOURCE13",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "id": "RESOURCE14",
+      "input_id": "RESOURCE14:01",
+      "engine": "Python",
+      "expected": "UNRESOLVED",
+      "expected_stage": "advance_stop",
+      "observed": "UNRESOLVED",
+      "observed_stage": "advance_stop",
+      "reached_functions": [
+        "advance_stop"
+      ],
+      "positive_control_case_id": "RESOURCE15",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "id": "RESOURCE15",
+      "input_id": "RESOURCE15:01",
+      "engine": "Python",
+      "expected": "TERMINATED_VERIFIED",
+      "expected_stage": "advance_stop",
+      "observed": "TERMINATED_VERIFIED",
+      "observed_stage": "advance_stop",
+      "reached_functions": [
+        "advance_stop"
+      ],
+      "positive_control_case_id": "RESOURCE15",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "id": "RESOURCE16",
+      "input_id": "RESOURCE16:01",
+      "engine": "Python",
+      "expected": "OFFLINE_NATIVE_NOT_READY",
+      "expected_stage": "authorization",
+      "observed": "OFFLINE_NATIVE_NOT_READY",
+      "observed_stage": "authorization",
+      "reached_functions": [
+        "execute_once",
+        "authorize_execution"
+      ],
+      "positive_control_case_id": "AUTH01",
+      "status": "PASS",
+      "reason": {
+        "reason": "OFFLINE_NATIVE_NOT_READY",
+        "stage": "authorization",
+        "details": null
+      }
+    },
+    {
+      "id": "PARENT01",
+      "input_id": "PARENT01:01",
+      "engine": "Windows PowerShell5.1",
+      "expected": "AWAITING_S1_LIMITED_EXTERNAL_REVIEW",
+      "expected_stage": "S1Decision",
+      "observed": "AWAITING_S1_LIMITED_EXTERNAL_REVIEW",
+      "observed_stage": null,
+      "reached_functions": [
+        "S1Decision",
+        "S1NativeAxis",
+        "S1Fields",
+        "S1ChargeFields",
+        "S1Coverage",
+        "S1ComparisonNumerics"
+      ],
+      "positive_control_case_id": "PARENT01",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "id": "PARENT02",
+      "input_id": "PARENT02:01",
+      "engine": "Windows PowerShell5.1",
+      "expected": "AWAITING_S1_LIMITED_EXTERNAL_REVIEW",
+      "expected_stage": "S1Decision",
+      "observed": "AWAITING_S1_LIMITED_EXTERNAL_REVIEW",
+      "observed_stage": null,
+      "reached_functions": [
+        "S1Decision",
+        "S1NativeAxis",
+        "S1Fields",
+        "S1ChargeFields",
+        "S1Coverage",
+        "S1ComparisonNumerics"
+      ],
+      "positive_control_case_id": "PARENT01",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "id": "PARENT03",
+      "input_id": "PARENT03:01",
+      "engine": "Windows PowerShell5.1",
+      "expected": "PROTECTIVE_STOP_INCOMPLETE",
+      "expected_stage": "S1Decision -> S1NativeAxis -> S1Fields -> final PROTECTIVE_STOP branch",
+      "observed": "PROTECTIVE_STOP_INCOMPLETE",
+      "observed_stage": null,
+      "reached_functions": [
+        "S1Decision",
+        "S1NativeAxis",
+        "S1Fields",
+        "S1ChargeFields",
+        "S1Coverage",
+        "S1ComparisonNumerics"
+      ],
+      "positive_control_case_id": "PARENT01",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "id": "PARENT04",
+      "input_id": "PARENT04:01",
+      "engine": "Windows PowerShell5.1",
+      "expected": "NATIVE_INVOCATION_OR_FATAL",
+      "expected_stage": "S1NativeAxis",
+      "observed": "NATIVE_INVOCATION_OR_FATAL",
+      "observed_stage": null,
+      "reached_functions": [
+        "S1Decision",
+        "S1NativeAxis"
+      ],
+      "positive_control_case_id": "PARENT01",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "id": "PARENT05",
+      "input_id": "PARENT05:01",
+      "engine": "Windows PowerShell5.1",
+      "expected": "NATIVE_INVOCATION_OR_FATAL",
+      "expected_stage": "S1NativeAxis",
+      "observed": "NATIVE_INVOCATION_OR_FATAL",
+      "observed_stage": null,
+      "reached_functions": [
+        "S1Decision",
+        "S1NativeAxis"
+      ],
+      "positive_control_case_id": "PARENT01",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "id": "PARENT06",
+      "input_id": "PARENT06:01",
+      "engine": "Windows PowerShell5.1",
+      "expected": "EVIDENCE_AXIS_MISSING:comparison_details",
+      "expected_stage": "S1Fields",
+      "observed": "EVIDENCE_AXIS_MISSING:comparison_details",
+      "observed_stage": null,
+      "reached_functions": [
+        "S1Decision",
+        "S1NativeAxis",
+        "S1Fields"
+      ],
+      "positive_control_case_id": "PARENT01",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "id": "PARENT07",
+      "input_id": "PARENT07:01",
+      "engine": "Windows PowerShell5.1",
+      "expected": "COMPARISON_SUMMARY_CONTRADICTION",
+      "expected_stage": "S1Fields",
+      "observed": "COMPARISON_SUMMARY_CONTRADICTION",
+      "observed_stage": null,
+      "reached_functions": [
+        "S1Decision",
+        "S1NativeAxis",
+        "S1Fields",
+        "S1ChargeFields",
+        "S1Coverage",
+        "S1ComparisonNumerics"
+      ],
+      "positive_control_case_id": "PARENT01",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "id": "PARENT08",
+      "input_id": "PARENT08:01",
+      "engine": "Windows PowerShell5.1",
+      "expected": "INITIALIZATION_OR_ACTUAL_COEFFICIENT_UNVERIFIED",
+      "expected_stage": "S1Fields",
+      "observed": "INITIALIZATION_OR_ACTUAL_COEFFICIENT_UNVERIFIED",
+      "observed_stage": null,
+      "reached_functions": [
+        "S1Decision",
+        "S1NativeAxis",
+        "S1Fields"
+      ],
+      "positive_control_case_id": "PARENT01",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "id": "PARENT09",
+      "input_id": "PARENT09:01",
+      "engine": "Windows PowerShell5.1",
+      "expected": "INCOMPLETE",
+      "expected_stage": "S1FinalReturn",
+      "observed": "INCOMPLETE",
+      "observed_stage": null,
+      "reached_functions": [
+        "S1FinalReturn"
+      ],
+      "positive_control_case_id": "PARENT12",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "id": "PARENT10",
+      "input_id": "PARENT10:01",
+      "engine": "Windows PowerShell5.1",
+      "expected": "INCOMPLETE",
+      "expected_stage": "S1FinalReturn",
+      "observed": "INCOMPLETE",
+      "observed_stage": null,
+      "reached_functions": [
+        "S1FinalReturn"
+      ],
+      "positive_control_case_id": "PARENT12",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "id": "PARENT11",
+      "input_id": "PARENT11:01",
+      "engine": "Windows PowerShell5.1",
+      "expected": "INCOMPLETE",
+      "expected_stage": "S1FinalReturn",
+      "observed": "INCOMPLETE",
+      "observed_stage": null,
+      "reached_functions": [
+        "S1FinalReturn"
+      ],
+      "positive_control_case_id": "PARENT12",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "id": "PARENT12",
+      "input_id": "PARENT12:01",
+      "engine": "Windows PowerShell5.1",
+      "expected": "AWAITING_S1_LIMITED_EXTERNAL_REVIEW",
+      "expected_stage": "S1FinalReturn",
+      "observed": "AWAITING_S1_LIMITED_EXTERNAL_REVIEW",
+      "observed_stage": null,
+      "reached_functions": [
+        "S1FinalReturn"
+      ],
+      "positive_control_case_id": "PARENT12",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "id": "PARENT13",
+      "input_id": "PARENT13:01",
+      "engine": "Windows PowerShell5.1",
+      "expected": "EXPECTED_REQUIRED_FIELDS",
+      "expected_stage": "S1Decision",
+      "observed": "EXPECTED_REQUIRED_FIELDS",
+      "observed_stage": null,
+      "reached_functions": [
+        "S1Decision"
+      ],
+      "positive_control_case_id": "PARENT01",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "id": "PARENT14",
+      "input_id": "PARENT14:01",
+      "engine": "Windows PowerShell5.1",
+      "expected": "INCOMPLETE",
+      "expected_stage": "S1Decision",
+      "observed": "INCOMPLETE",
+      "observed_stage": null,
+      "reached_functions": [
+        "S1Decision",
+        "S1NativeAxis",
+        "S1Fields",
+        "S1ChargeFields",
+        "S1Coverage",
+        "S1ComparisonNumerics"
+      ],
+      "positive_control_case_id": "PARENT01",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "id": "PARENT15",
+      "input_id": "PARENT15:01",
+      "engine": "Windows PowerShell5.1",
+      "expected": "EVIDENCE_AXIS_MISSING:initial_profile",
+      "expected_stage": "S1Fields",
+      "observed": "EVIDENCE_AXIS_MISSING:initial_profile",
+      "observed_stage": null,
+      "reached_functions": [
+        "S1Decision",
+        "S1NativeAxis",
+        "S1Fields"
+      ],
+      "positive_control_case_id": "PARENT01",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "id": "PARENT16",
+      "input_id": "PARENT16:01",
+      "engine": "Windows PowerShell5.1",
+      "expected": "INCOMPLETE",
+      "expected_stage": "S1FinalReturn",
+      "observed": "INCOMPLETE",
+      "observed_stage": null,
+      "reached_functions": [
+        "S1FinalReturn"
+      ],
+      "positive_control_case_id": "PARENT12",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "id": "CHARGE_R101",
+      "input_id": "CHARGE_R101:01",
+      "engine": "Python",
+      "expected": "CHARGE_GRID_BINDING",
+      "expected_stage": "charge_balance",
+      "observed": "CHARGE_GRID_BINDING",
+      "observed_stage": "charge_balance",
+      "reached_functions": [
+        "analyze",
+        "compare_initialization",
+        "initial_profile_uniformity",
+        "verify_coefficient_evidence",
+        "invariants",
+        "charge_balance"
+      ],
+      "positive_control_case_id": "CHARGE01",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "id": "CHARGE_R102",
+      "input_id": "CHARGE_R102:01",
+      "engine": "Python",
+      "expected": "CHARGE_GRID_BINDING",
+      "expected_stage": "charge_balance",
+      "observed": "CHARGE_GRID_BINDING",
+      "observed_stage": "charge_balance",
+      "reached_functions": [
+        "analyze",
+        "compare_initialization",
+        "initial_profile_uniformity",
+        "verify_coefficient_evidence",
+        "invariants",
+        "charge_balance"
+      ],
+      "positive_control_case_id": "CHARGE01",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "id": "CHARGE_R103",
+      "input_id": "CHARGE_R103:01",
+      "engine": "Python",
+      "expected": "CHARGE_GRID_BINDING",
+      "expected_stage": "charge_balance",
+      "observed": "CHARGE_GRID_BINDING",
+      "observed_stage": "charge_balance",
+      "reached_functions": [
+        "analyze",
+        "compare_initialization",
+        "initial_profile_uniformity",
+        "verify_coefficient_evidence",
+        "invariants",
+        "charge_balance"
+      ],
+      "positive_control_case_id": "CHARGE01",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "id": "CHARGE_R104",
+      "input_id": "CHARGE_R104:01",
+      "engine": "Python",
+      "expected": "CHARGE_GLOBAL_LI_MISMATCH",
+      "expected_stage": "charge_balance",
+      "observed": "CHARGE_GLOBAL_LI_MISMATCH",
+      "observed_stage": "charge_balance",
+      "reached_functions": [
+        "analyze",
+        "compare_initialization",
+        "initial_profile_uniformity",
+        "verify_coefficient_evidence",
+        "invariants",
+        "charge_balance"
+      ],
+      "positive_control_case_id": "CHARGE01",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "id": "CHARGE_R105",
+      "input_id": "CHARGE_R105:01",
+      "engine": "Python",
+      "expected": "CHARGE_SOURCE_BINDING",
+      "expected_stage": "analyze",
+      "observed": "CHARGE_SOURCE_BINDING",
+      "observed_stage": "analyze",
+      "reached_functions": [
+        "analyze",
+        "compare_initialization",
+        "initial_profile_uniformity",
+        "verify_coefficient_evidence",
+        "invariants"
+      ],
+      "positive_control_case_id": "CHARGE01",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "id": "CHARGE_R106",
+      "input_id": "CHARGE_R106:01",
+      "engine": "Python",
+      "expected": "CHARGE_SOURCE_BINDING",
+      "expected_stage": "analyze",
+      "observed": "CHARGE_SOURCE_BINDING",
+      "observed_stage": "analyze",
+      "reached_functions": [
+        "analyze",
+        "compare_initialization",
+        "initial_profile_uniformity",
+        "verify_coefficient_evidence",
+        "invariants"
+      ],
+      "positive_control_case_id": "CHARGE01",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "id": "CHARGE_R107",
+      "input_id": "CHARGE_R107:01",
+      "engine": "Python",
+      "expected": "CHARGE_GRID_BINDING",
+      "expected_stage": "charge_balance",
+      "observed": "CHARGE_GRID_BINDING",
+      "observed_stage": "charge_balance",
+      "reached_functions": [
+        "analyze",
+        "compare_initialization",
+        "initial_profile_uniformity",
+        "verify_coefficient_evidence",
+        "invariants",
+        "charge_balance"
+      ],
+      "positive_control_case_id": "CHARGE01",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "id": "CHARGE_R108",
+      "input_id": "CHARGE_R108:01",
+      "engine": "Python",
+      "expected": "NATIVE_END_TIME",
+      "expected_stage": "analyze",
+      "observed": "NATIVE_END_TIME",
+      "observed_stage": "analyze",
+      "reached_functions": [
+        "analyze"
+      ],
+      "positive_control_case_id": "CHARGE01",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "id": "CHARGE_R109",
+      "input_id": "CHARGE_R109:01",
+      "engine": "Python",
+      "expected": "PROTECTIVE_STOP",
+      "expected_stage": "analyze",
+      "observed": "PROTECTIVE_STOP",
+      "observed_stage": "analyze",
+      "reached_functions": [
+        "analyze",
+        "compare_initialization",
+        "initial_profile_uniformity",
+        "verify_coefficient_evidence",
+        "invariants",
+        "charge_balance",
+        "compare_policy",
+        "coverage"
+      ],
+      "positive_control_case_id": "CHARGE01",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "id": "CHARGE_R110",
+      "input_id": "CHARGE_R110:01",
+      "engine": "Python",
+      "expected": "REVERSE_LI_INCREMENT",
+      "expected_stage": "charge_balance",
+      "observed": "REVERSE_LI_INCREMENT",
+      "observed_stage": "charge_balance",
+      "reached_functions": [
+        "analyze",
+        "compare_initialization",
+        "initial_profile_uniformity",
+        "verify_coefficient_evidence",
+        "invariants",
+        "charge_balance"
+      ],
+      "positive_control_case_id": "CHARGE01",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "id": "CHARGE_R111",
+      "input_id": "CHARGE_R111:01",
+      "engine": "Python",
+      "expected": "REVERSE_LI_INCREMENT",
+      "expected_stage": "charge_balance",
+      "observed": "REVERSE_LI_INCREMENT",
+      "observed_stage": "charge_balance",
+      "reached_functions": [
+        "analyze",
+        "compare_initialization",
+        "initial_profile_uniformity",
+        "verify_coefficient_evidence",
+        "invariants",
+        "charge_balance"
+      ],
+      "positive_control_case_id": "CHARGE01",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "id": "CHARGE_R112",
+      "input_id": "CHARGE_R112:01",
+      "engine": "Python",
+      "expected": "INCONCLUSIVE",
+      "expected_stage": "charge_balance return",
+      "observed": "INCONCLUSIVE",
+      "observed_stage": "charge_balance return",
+      "reached_functions": [
+        "charge_balance"
+      ],
+      "positive_control_case_id": "CHARGE02",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "id": "CHARGE_R113",
+      "input_id": "CHARGE_R113:01",
+      "engine": "Python",
+      "expected": "INCONCLUSIVE",
+      "expected_stage": "charge_balance return",
+      "observed": "INCONCLUSIVE",
+      "observed_stage": "charge_balance return",
+      "reached_functions": [
+        "charge_balance"
+      ],
+      "positive_control_case_id": "CHARGE02",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "id": "CHARGE_R114",
+      "input_id": "CHARGE_R114:01",
+      "engine": "Python",
+      "expected": "REVERSE_LI_INCREMENT",
+      "expected_stage": "charge_balance",
+      "observed": "REVERSE_LI_INCREMENT",
+      "observed_stage": "charge_balance",
+      "reached_functions": [
+        "analyze",
+        "compare_initialization",
+        "initial_profile_uniformity",
+        "verify_coefficient_evidence",
+        "invariants",
+        "charge_balance"
+      ],
+      "positive_control_case_id": "CHARGE01",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "id": "CHARGE_R115",
+      "input_id": "CHARGE_R115:01",
+      "engine": "Python",
+      "expected": "CHARGE_UNIT_BINDING",
+      "expected_stage": "charge_balance",
+      "observed": "CHARGE_UNIT_BINDING",
+      "observed_stage": "charge_balance",
+      "reached_functions": [
+        "analyze",
+        "compare_initialization",
+        "initial_profile_uniformity",
+        "verify_coefficient_evidence",
+        "invariants",
+        "charge_balance"
+      ],
+      "positive_control_case_id": "CHARGE01",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "id": "CHARGE_R116",
+      "input_id": "CHARGE_R116:01",
+      "engine": "Python",
+      "expected": "COMPARISON_WINDOW_OR_REQUEST_BINDING",
+      "expected_stage": "analyze",
+      "observed": "COMPARISON_WINDOW_OR_REQUEST_BINDING",
+      "observed_stage": "analyze",
+      "reached_functions": [
+        "analyze"
+      ],
+      "positive_control_case_id": "CHARGE_R109",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "id": "CHARGE_R117",
+      "input_id": "CHARGE_R117:01",
+      "engine": "Python",
+      "expected": "CHARGE_TIME",
+      "expected_stage": "charge_balance",
+      "observed": "CHARGE_TIME",
+      "observed_stage": "charge_balance",
+      "reached_functions": [
+        "analyze",
+        "compare_initialization",
+        "initial_profile_uniformity",
+        "verify_coefficient_evidence",
+        "invariants",
+        "charge_balance"
+      ],
+      "positive_control_case_id": "CHARGE01",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "id": "PARENT_R101",
+      "input_id": "PARENT_R101:01",
+      "engine": "Windows PowerShell5.1",
+      "expected": "COMPARISON_TIME_ORDER_OR_RANGE",
+      "expected_stage": "coverage",
+      "observed": "COMPARISON_TIME_ORDER_OR_RANGE",
+      "observed_stage": null,
+      "reached_functions": [
+        "S1Decision",
+        "S1NativeAxis",
+        "S1Fields",
+        "S1ChargeFields",
+        "S1Coverage"
+      ],
+      "positive_control_case_id": "PARENT01",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "id": "PARENT_R102",
+      "input_id": "PARENT_R102:01",
+      "engine": "Windows PowerShell5.1",
+      "expected": "COMPARISON_TIME_CONTENT",
+      "expected_stage": "coverage",
+      "observed": "COMPARISON_TIME_CONTENT",
+      "observed_stage": null,
+      "reached_functions": [
+        "S1Decision",
+        "S1NativeAxis",
+        "S1Fields",
+        "S1ChargeFields",
+        "S1Coverage"
+      ],
+      "positive_control_case_id": "PARENT01",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "id": "PARENT_R103",
+      "input_id": "PARENT_R103:01",
+      "engine": "Windows PowerShell5.1",
+      "expected": "DECIMAL_TRANSPORT_FORMAT",
+      "expected_stage": "coverage",
+      "observed": "DECIMAL_TRANSPORT_FORMAT",
+      "observed_stage": null,
+      "reached_functions": [
+        "S1Decision",
+        "S1NativeAxis",
+        "S1Fields",
+        "S1ChargeFields",
+        "S1Coverage"
+      ],
+      "positive_control_case_id": "PARENT01",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "id": "PARENT_R104",
+      "input_id": "PARENT_R104:01",
+      "engine": "Windows PowerShell5.1",
+      "expected": "COMPARISON_TIME_ORDER_OR_RANGE",
+      "expected_stage": "coverage",
+      "observed": "COMPARISON_TIME_ORDER_OR_RANGE",
+      "observed_stage": null,
+      "reached_functions": [
+        "S1Decision",
+        "S1NativeAxis",
+        "S1Fields",
+        "S1ChargeFields",
+        "S1Coverage"
+      ],
+      "positive_control_case_id": "PARENT01",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "id": "PARENT_R105",
+      "input_id": "PARENT_R105:01",
+      "engine": "Windows PowerShell5.1",
+      "expected": "COMPARISON_TIME_ORDER_OR_RANGE",
+      "expected_stage": "coverage",
+      "observed": "COMPARISON_TIME_ORDER_OR_RANGE",
+      "observed_stage": null,
+      "reached_functions": [
+        "S1Decision",
+        "S1NativeAxis",
+        "S1Fields",
+        "S1ChargeFields",
+        "S1Coverage"
+      ],
+      "positive_control_case_id": "PARENT03",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "id": "PARENT_R106",
+      "input_id": "PARENT_R106:01",
+      "engine": "Windows PowerShell5.1",
+      "expected": "COMPARISON_TIME_ORDER_OR_RANGE",
+      "expected_stage": "coverage",
+      "observed": "COMPARISON_TIME_ORDER_OR_RANGE",
+      "observed_stage": null,
+      "reached_functions": [
+        "S1Decision",
+        "S1NativeAxis",
+        "S1Fields",
+        "S1ChargeFields",
+        "S1Coverage"
+      ],
+      "positive_control_case_id": "PARENT01",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "id": "PARENT_R107",
+      "input_id": "PARENT_R107:01",
+      "engine": "Windows PowerShell5.1",
+      "expected": "COMPARISON_NOT_INTERSECTION_SUBSET",
+      "expected_stage": "coverage",
+      "observed": "COMPARISON_NOT_INTERSECTION_SUBSET",
+      "observed_stage": null,
+      "reached_functions": [
+        "S1Decision",
+        "S1NativeAxis",
+        "S1Fields",
+        "S1ChargeFields",
+        "S1Coverage"
+      ],
+      "positive_control_case_id": "PARENT01",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "id": "PARENT_R108",
+      "input_id": "PARENT_R108:01",
+      "engine": "Windows PowerShell5.1",
+      "expected": "COMPARISON_COVERAGE",
+      "expected_stage": "coverage",
+      "observed": "COMPARISON_COVERAGE",
+      "observed_stage": null,
+      "reached_functions": [
+        "S1Decision",
+        "S1NativeAxis",
+        "S1Fields",
+        "S1ChargeFields",
+        "S1Coverage"
+      ],
+      "positive_control_case_id": "PARENT03",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "id": "PARENT_R109",
+      "input_id": "PARENT_R109:01",
+      "engine": "Windows PowerShell5.1",
+      "expected": "CHARGE_ENDPOINT_BINDING",
+      "expected_stage": "charge_fields",
+      "observed": "CHARGE_ENDPOINT_BINDING",
+      "observed_stage": null,
+      "reached_functions": [
+        "S1Decision",
+        "S1NativeAxis",
+        "S1Fields",
+        "S1ChargeFields"
+      ],
+      "positive_control_case_id": "PARENT01",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "id": "PARENT_R110",
+      "input_id": "PARENT_R110:01",
+      "engine": "Windows PowerShell5.1",
+      "expected": "CHARGE_RECORD_TIME_BINDING",
+      "expected_stage": "charge_fields",
+      "observed": "CHARGE_RECORD_TIME_BINDING",
+      "observed_stage": null,
+      "reached_functions": [
+        "S1Decision",
+        "S1NativeAxis",
+        "S1Fields",
+        "S1ChargeFields"
+      ],
+      "positive_control_case_id": "PARENT01",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "id": "PARENT_R111",
+      "input_id": "PARENT_R111:01",
+      "engine": "Windows PowerShell5.1",
+      "expected": "CHARGE_SOURCE_NOT_REGISTERED",
+      "expected_stage": "charge_fields",
+      "observed": "CHARGE_SOURCE_NOT_REGISTERED",
+      "observed_stage": null,
+      "reached_functions": [
+        "S1Decision",
+        "S1NativeAxis",
+        "S1Fields",
+        "S1ChargeFields"
+      ],
+      "positive_control_case_id": "PARENT01",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "id": "PARENT_R112",
+      "input_id": "PARENT_R112:01",
+      "engine": "Windows PowerShell5.1",
+      "expected": "CHARGE_GRID_SCHEMA",
+      "expected_stage": "charge_fields",
+      "observed": "CHARGE_GRID_SCHEMA",
+      "observed_stage": null,
+      "reached_functions": [
+        "S1Decision",
+        "S1NativeAxis",
+        "S1Fields",
+        "S1ChargeFields"
+      ],
+      "positive_control_case_id": "PARENT01",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "id": "PARENT_R113",
+      "input_id": "PARENT_R113:01",
+      "engine": "Windows PowerShell5.1",
+      "expected": "DECIMAL_TRANSPORT_PRECISION",
+      "expected_stage": "comparison_numerics",
+      "observed": "HARNESS_FIXTURE_OR_ASSERTION:R113_DOUBLE_AFTER_JSON_PARSE",
+      "observed_stage": "fixture JSON transport type assertion",
+      "reached_functions": [],
+      "positive_control_case_id": "PARENT_R115",
+      "status": "HARNESS_FAILURE_BEFORE_TARGET",
+      "reason": "HARNESS_FIXTURE_OR_ASSERTION:R113_DOUBLE_AFTER_JSON_PARSE"
+    },
+    {
+      "id": "PARENT_R114",
+      "input_id": "PARENT_R114:01",
+      "engine": "Windows PowerShell5.1",
+      "expected": "COMPARISON_SUMMARY_CONTRADICTION",
+      "expected_stage": "fields",
+      "observed": null,
+      "observed_stage": null,
+      "reached_functions": [],
+      "positive_control_case_id": "PARENT02",
+      "status": "NOT_RUN_AFTER_FIRST_FAILURE",
+      "reason": "First failure stop"
+    },
+    {
+      "id": "PARENT_R115",
+      "input_id": "PARENT_R115:01",
+      "engine": "Windows PowerShell5.1",
+      "expected": "AWAITING_S1_LIMITED_EXTERNAL_REVIEW",
+      "expected_stage": "S1Decision",
+      "observed": null,
+      "observed_stage": null,
+      "reached_functions": [],
+      "positive_control_case_id": "PARENT01",
+      "status": "NOT_RUN_AFTER_FIRST_FAILURE",
+      "reason": "First failure stop"
+    }
+  ],
+  "static_N4_separate": true,
+  "no_assertion_double_count": true
+}

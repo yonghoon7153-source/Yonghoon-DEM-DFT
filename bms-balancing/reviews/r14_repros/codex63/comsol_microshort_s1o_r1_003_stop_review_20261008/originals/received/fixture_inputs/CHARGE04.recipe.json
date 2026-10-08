@@ -1,0 +1,1 @@
+{"id":"CHARGE04","input_id":"CHARGE04:01","calls":[{"function":"charge_balance","canonical_bytes":172755,"sha256":"c7f43334ae3b4f8842e83180dc0d1f93621fdb515b8baf7adfbbdbd7082fbb70"}],"recipe":"bound above quarter allocation","expected":"INCONCLUSIVE","scope":"actual derived input canonical hashes; full expanded replicas not persisted; exact own generator and shared seeds sealed"}

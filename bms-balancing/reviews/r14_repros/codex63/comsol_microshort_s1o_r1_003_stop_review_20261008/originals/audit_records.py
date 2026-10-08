@@ -1,0 +1,77 @@
+"""Independent JSON/text/hash audit; never evaluates received source."""
+from pathlib import Path
+import json, hashlib, collections
+ROOT=Path(__file__).resolve().parent
+R=ROOT/'received'
+def sha(b):return hashlib.sha256(b).hexdigest()
+def read(n):return json.loads((R/n).read_text(encoding='utf-8-sig'))
+def stream(n):
+    # PS5.1 redirected stdout includes CP949 stack text; preserve raw bytes.
+    encoding='cp949' if n=='results/POWERSHELL_STDOUT.txt' else 'utf-8-sig'
+    return [json.loads(s) for s in (R/n).read_text(encoding=encoding).splitlines() if s.strip()]
+plan=read('VALIDATION_PLAN_CORRECTED.json')
+cases=plan['cases']; assert len(cases)==len({c['id'] for c in cases})==130
+py=read('results/PYTHON_RESULTS.json'); ps=read('results/ps_first_failure.json'); mapping=read('CASE_RESULT_MAP.json')
+assert len(py['cases'])==99 and all(c['status']=='PASS' for c in py['cases'])
+assert len(ps['cases'])==28 and all(c['result']=='PASS' for c in ps['cases'])
+assert stream('results/PYTHON_STDOUT.txt')==py['cases']
+psstdout=stream('results/POWERSHELL_STDOUT.txt')
+assert psstdout[:-1]==ps['cases']
+assert psstdout[-1]['first_error']==ps['first_error']
+assert ps['current_case']=='PARENT_R113' and ps['case_count']==28
+assert set(c['id'] for c in py['cases']).isdisjoint(c['id'] for c in ps['cases'])
+assert len(mapping['cases'])==len({c['id'] for c in mapping['cases']})==130
+counts=dict(collections.Counter(c['status'] for c in mapping['cases']))
+assert counts=={'PASS':127,'HARNESS_FAILURE_BEFORE_TARGET':1,'NOT_RUN_AFTER_FIRST_FAILURE':2}
+passed={c['id'] for c in py['cases']}|{c['id'] for c in ps['cases']}
+assert passed=={c['id'] for c in mapping['cases'] if c['status']=='PASS'}
+assert {c['id'] for c in cases}-passed=={'PARENT_R113','PARENT_R114','PARENT_R115'}
+
+origin=read('ORIGIN.json'); first=read('FIRST_SEAL.json'); after=read('SELECTED_SOURCES_AFTER.json')
+assert len(first['files'])==len(after['items'])==123
+key=lambda s:s.replace('\\','/').casefold()
+firstmap={key(x['path']):x for x in first['files']}
+assert len(firstmap)==123
+for item in after['items']:
+    before=item['before']; aft=item['after']
+    assert before==aft and before==firstmap[key(before['path'])] and item['match'] is True
+mapped=[]; external=[]
+for e in first['files']:
+    absolute=e['path'].replace('\\','/')
+    fr=origin['fixture_root'].replace('\\','/').rstrip('/')+'/'
+    sr=origin['source_root'].replace('\\','/').rstrip('/')+'/'
+    if absolute.startswith(fr):relative=absolute[len(fr):]
+    elif absolute.startswith(sr):relative='source/'+absolute[len(sr):]
+    else:external.append(e);continue
+    b=(R/relative).read_bytes();assert len(b)==e['bytes'] and sha(b)==e['sha256'],relative
+    mapped.append(relative)
+assert len(mapped)==121 and len(external)==2
+second=read('results/PS_PRODUCER_SEAL.json')
+for e in second['files']:
+    b=(R/e['path']).read_bytes(); assert len(b)==e['bytes'] and sha(b)==e['sha256'],e['path']
+assert len(second['files'])==10
+assert second['harness_sha256']==sha((R/'harness/ps_harness.ps1').read_bytes())
+for attr, rel in [('python_results','results/PYTHON_RESULTS.json'),('python_session','results/PYTHON_SESSION.json')]:
+    e=second[attr];b=(R/rel).read_bytes();assert e['bytes']==len(b) and e['sha256']==sha(b)
+for e in read('EXTRACTION_SEAL.json')['spans']:
+    b=(R/'source'/e['source']).read_bytes(); assert sha(b)==e['raw_source_sha256']
+    lines=b.decode('utf-8-sig').replace('\r\n','\n').split('\n')
+    assert 1<=e['start_line']<=e['end_line']<=len(lines)
+    extracted='\n'.join(lines[e['start_line']-1:e['end_line']]).encode('utf-8')
+    assert extracted and len(extracted)==e['bytes'] and sha(extracted)==e['sha256']
+
+result={
+    'scope':'Data-only audit of submitted records, not received test execution or remote machine observation',
+    'case_counts':counts,'python_stdout_equals_case_results':True,'powershell_stdout_first_28_equals_results':True,
+    'first_failure':'HARNESS_FIXTURE_OR_ASSERTION:R113_DOUBLE_AFTER_JSON_PARSE',
+    'first_failure_id':'PARENT_R113','target_reached_for_failed_case':False,'later_not_run':['PARENT_R114','PARENT_R115'],
+    'first_seal_records':123,'after_records_match_first_seal':True,'received_sealed_members_rehashed':121,
+    'external_engine_identities_not_reobserved':external,'extraction_spans_nonempty_sha_match':43,
+    'producer_context_files_sha_match':10,'source_code_manifest_sha256':sha((R/'source/CODE_MANIFEST.json').read_bytes()),
+    'raw_PASS_records_preserved':127,'READ_matching_baseline_control_gap_ids':['READ%02d'%i for i in range(2,13)],
+    'type_at_failed_assertion':'UNRECORDED; only not-Double assertion failure observed',
+    'reviewer_data_read_correction':'Initial own audit assumed UTF8 for PS stdout and stopped before results write; corrected to strict CP949 decoding. Source bytes unchanged; not a candidate test or rerun.',
+    'received_code_executed':0,'COMSOL_calls':0
+}
+with (ROOT/'RECORD_AUDIT.json').open('x',encoding='utf-8') as f:json.dump(result,f,ensure_ascii=False,indent=2)
+print(json.dumps(result,ensure_ascii=False))

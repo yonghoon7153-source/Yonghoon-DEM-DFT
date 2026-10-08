@@ -1,0 +1,1 @@
+{"id":"CHARGE12","input_id":"CHARGE12:01","calls":[{"function":"charge_balance","canonical_bytes":172761,"sha256":"74a2d8769a5fd80b5744e13b7a9eacab1c87b5e2c32a39ba29c2eae36daf684d"}],"recipe":"totalLi drift","expected":"LI_DRIFT","scope":"actual derived input canonical hashes; full expanded replicas not persisted; exact own generator and shared seeds sealed"}

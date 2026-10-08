@@ -1,0 +1,19 @@
+{
+  "engine": "python",
+  "utc": "2026-10-08T13:55:08.5951667Z",
+  "tick": 19667103218900,
+  "argv": [
+    "C:\\Users\\BML\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\python.exe",
+    "-I",
+    "-B",
+    "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\outputs\\microshort_s1o_r1_20261008\\future_validation_fixture_R1_003\\harness\\python_harness.py"
+  ],
+  "cwd": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\outputs\\microshort_s1o_r1_20261008\\future_validation_fixture_R1_003",
+  "limit_s": 420,
+  "first_seal": {
+    "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\outputs\\microshort_s1o_r1_20261008\\future_validation_fixture_R1_003\\FIRST_SEAL.json",
+    "bytes": 42562,
+    "sha256": "ee1ea9831b716d6c69e3d21f2aff7144d5f0b747f0d88549e62ae84f5bc8e1f8"
+  },
+  "retry": 0
+}

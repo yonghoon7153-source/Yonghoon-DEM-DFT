@@ -1,0 +1,1 @@
+{"id":"READ11","input_id":"READ11:01","calls":[{"function":"profile_rows","canonical_bytes":73319,"sha256":"2982f06fde48da94c87440395ad2a444d0ab271462c2921367c10df4430b16c4"}],"recipe":"wrong coordinate/domain","expected":"COORDINATE_DOMAIN","scope":"actual derived input canonical hashes; full expanded replicas not persisted; exact own generator and shared seeds sealed"}

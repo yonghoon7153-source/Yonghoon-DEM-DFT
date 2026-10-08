@@ -1,0 +1,1329 @@
+[
+  {
+    "id": "READ01",
+    "input_id": "READ01:01",
+    "calls": [
+      {
+        "function": "read_csv_bytes",
+        "canonical_bytes": 4905422,
+        "sha256": "8e115333340a42ad191305bdcb57d16d4db5b6da3cf6e5d0cbca0c47dc26db9d"
+      },
+      {
+        "function": "read_csv_bytes",
+        "canonical_bytes": 4873462,
+        "sha256": "ae1e6a7fb5b881823c039f99fb8aa27b7a49c7a01afb3887e24f26a0d9853d3d"
+      },
+      {
+        "function": "timed_rows",
+        "canonical_bytes": 20836,
+        "sha256": "a1b90cdc91cdf4bd88cbd343918185cd56fb3f60850769f4620a0a8d077be1b9"
+      },
+      {
+        "function": "coverage",
+        "canonical_bytes": 59025,
+        "sha256": "33a96503ba8c565e3c588cd527c920a22ddc07f7761244ff769768ca6ab2c424"
+      },
+      {
+        "function": "profile_rows",
+        "canonical_bytes": 15190817,
+        "sha256": "cf862a564585ae705b7ce2f255d8c99044b809e0dd335a793031ac5b56b3c7f8"
+      },
+      {
+        "function": "profile_rows",
+        "canonical_bytes": 15166753,
+        "sha256": "8585e79a2c2cef3f3c9f532963a5eb37e53ac51a5397bf3f7e40610518048589"
+      }
+    ],
+    "recipe": "valid raw CSV+units then exact profile",
+    "expected": "RETURN_VALID_ROWS",
+    "scope": "actual derived input canonical hashes; full expanded replicas not persisted; exact own generator and shared seeds sealed",
+    "recipe_identity": {
+      "path": "fixture_inputs\\READ01.recipe.json",
+      "bytes": 1036,
+      "sha256": "02c2571f06daeeb26edb2ea3995f69f7a5dcbecadd20c097c5f60a39c55ed4e5"
+    }
+  },
+  {
+    "id": "READ02",
+    "input_id": "READ02:01",
+    "calls": [
+      {
+        "function": "read_csv_bytes",
+        "canonical_bytes": 370,
+        "sha256": "4a685f0099366d2f2b947ea83c6399bc4b7f3bac50c608c0ef0ff665fd2784ac"
+      }
+    ],
+    "recipe": "raw SHA mismatch",
+    "expected": "CSV_IDENTITY",
+    "scope": "actual derived input canonical hashes; full expanded replicas not persisted; exact own generator and shared seeds sealed",
+    "recipe_identity": {
+      "path": "fixture_inputs\\READ02.recipe.json",
+      "bytes": 361,
+      "sha256": "5a8677a37604600343f7e2a227547ff103806fbf5663699b4093721f989a90dd"
+    }
+  },
+  {
+    "id": "READ03",
+    "input_id": "READ03:01",
+    "calls": [
+      {
+        "function": "read_csv_bytes",
+        "canonical_bytes": 371,
+        "sha256": "6d027ee5de74cf7ad4f784455965c6cfb059155af294e236ab155675ef0329d4"
+      }
+    ],
+    "recipe": "unit mismatch",
+    "expected": "UNIT_EVIDENCE",
+    "scope": "actual derived input canonical hashes; full expanded replicas not persisted; exact own generator and shared seeds sealed",
+    "recipe_identity": {
+      "path": "fixture_inputs\\READ03.recipe.json",
+      "bytes": 359,
+      "sha256": "0bc038cde100241774fd583dd261c08889f835a804e2aa29aaed8dbb0a0e3f51"
+    }
+  },
+  {
+    "id": "READ04",
+    "input_id": "READ04:01",
+    "calls": [
+      {
+        "function": "read_csv_bytes",
+        "canonical_bytes": 369,
+        "sha256": "c6c55d4acf066d2fe4dbb2ac0f0102214e08c9f5e49899adadb46723a58eb45a"
+      }
+    ],
+    "recipe": "wrong header",
+    "expected": "CSV_HEADER",
+    "scope": "actual derived input canonical hashes; full expanded replicas not persisted; exact own generator and shared seeds sealed",
+    "recipe_identity": {
+      "path": "fixture_inputs\\READ04.recipe.json",
+      "bytes": 355,
+      "sha256": "d07ca7a225bbde261447a32f66949d2a07642283ed153d73c47fd8d627122b30"
+    }
+  },
+  {
+    "id": "READ05",
+    "input_id": "READ05:01",
+    "calls": [
+      {
+        "function": "read_csv_bytes",
+        "canonical_bytes": 362,
+        "sha256": "50342ca592c42098407c082370318d2639ec72c2182ea839707d8ad2a4f66c41"
+      }
+    ],
+    "recipe": "short row",
+    "expected": "CSV_WIDTH",
+    "scope": "actual derived input canonical hashes; full expanded replicas not persisted; exact own generator and shared seeds sealed",
+    "recipe_identity": {
+      "path": "fixture_inputs\\READ05.recipe.json",
+      "bytes": 351,
+      "sha256": "3f975e19236393efa2aaf0a578dd3dacdfc5456f4a9f3f6cea0d65262318dbd0"
+    }
+  },
+  {
+    "id": "READ06",
+    "input_id": "READ06:01",
+    "calls": [
+      {
+        "function": "read_csv_bytes",
+        "canonical_bytes": 370,
+        "sha256": "2d56f2d427a8f8692f804de117bcba7eb293f91cb12c09b0f818e5881d26baae"
+      }
+    ],
+    "recipe": "NaN numeric",
+    "expected": "NONFINITE",
+    "scope": "actual derived input canonical hashes; full expanded replicas not persisted; exact own generator and shared seeds sealed",
+    "recipe_identity": {
+      "path": "fixture_inputs\\READ06.recipe.json",
+      "bytes": 353,
+      "sha256": "bd1eea2aecc541ec7694ae09c2972179784fff035b74240d603f6d6ba697e7bd"
+    }
+  },
+  {
+    "id": "READ07",
+    "input_id": "READ07:01",
+    "calls": [
+      {
+        "function": "read_csv_bytes",
+        "canonical_bytes": 362,
+        "sha256": "b930f10ecfb043dc599750aa3a7d63a8dfe00579b92cfce6a3b2bddd21c8b454"
+      }
+    ],
+    "recipe": "empty numeric CSV",
+    "expected": "EMPTY_CSV",
+    "scope": "actual derived input canonical hashes; full expanded replicas not persisted; exact own generator and shared seeds sealed",
+    "recipe_identity": {
+      "path": "fixture_inputs\\READ07.recipe.json",
+      "bytes": 359,
+      "sha256": "a04486f69ddbc805825af94a7c3e8aa088980d38cc69436dcae6d497e77f4456"
+    }
+  },
+  {
+    "id": "READ08",
+    "input_id": "READ08:01",
+    "calls": [
+      {
+        "function": "timed_rows",
+        "canonical_bytes": 166,
+        "sha256": "9a79b1887c9ebacbc47bb5bbf67817901aef67cbb5dd0ec1ff0f6a6e62825f58"
+      }
+    ],
+    "recipe": "duplicate time",
+    "expected": "DUPLICATE_OR_UNORDERED_TIME",
+    "scope": "actual derived input canonical hashes; full expanded replicas not persisted; exact own generator and shared seeds sealed",
+    "recipe_identity": {
+      "path": "fixture_inputs\\READ08.recipe.json",
+      "bytes": 370,
+      "sha256": "57e758421a1c8ece5c7b168a624597290ddb681831462a0476e08ac9cdddcde2"
+    }
+  },
+  {
+    "id": "READ09",
+    "input_id": "READ09:01",
+    "calls": [
+      {
+        "function": "coverage",
+        "canonical_bytes": 158,
+        "sha256": "b54dfbe1971b3e3bd7fdaebf91b366b1ba7c28d9c416d53edcba1c36de36c6cf"
+      }
+    ],
+    "recipe": "required positive time missing",
+    "expected": "REQUIRED_TIME_MISSING",
+    "scope": "actual derived input canonical hashes; full expanded replicas not persisted; exact own generator and shared seeds sealed",
+    "recipe_identity": {
+      "path": "fixture_inputs\\READ09.recipe.json",
+      "bytes": 378,
+      "sha256": "5824e83ef1dbd7fdb204e7fe267abe15fd3f9ffa0b917654bf215388aea38639"
+    }
+  },
+  {
+    "id": "READ10",
+    "input_id": "READ10:01",
+    "calls": [
+      {
+        "function": "coverage",
+        "canonical_bytes": 126,
+        "sha256": "99780bbb8022466acde474dc014beca0692f571049ef8037c7e95863fe30d155"
+      }
+    ],
+    "recipe": "Both current/reference and common requested comparison contain exactly t=0 only; reject at coverage.",
+    "expected": "EMPTY_OR_ZERO_ONLY_COMPARISON",
+    "scope": "actual derived input canonical hashes; full expanded replicas not persisted; exact own generator and shared seeds sealed",
+    "recipe_identity": {
+      "path": "fixture_inputs\\READ10.recipe.json",
+      "bytes": 456,
+      "sha256": "d3d0cfb061735f9d0b8ebcfbc1562d9668726f29817d137e9239c943f8c9e502"
+    }
+  },
+  {
+    "id": "READ11",
+    "input_id": "READ11:01",
+    "calls": [
+      {
+        "function": "profile_rows",
+        "canonical_bytes": 73319,
+        "sha256": "2982f06fde48da94c87440395ad2a444d0ab271462c2921367c10df4430b16c4"
+      }
+    ],
+    "recipe": "wrong coordinate/domain",
+    "expected": "COORDINATE_DOMAIN",
+    "scope": "actual derived input canonical hashes; full expanded replicas not persisted; exact own generator and shared seeds sealed",
+    "recipe_identity": {
+      "path": "fixture_inputs\\READ11.recipe.json",
+      "bytes": 373,
+      "sha256": "445d0d197a95d54e4d80074c906e55f67ae5dbf8adc86b42f6cfce7fddfae7ec"
+    }
+  },
+  {
+    "id": "READ12",
+    "input_id": "READ12:01",
+    "calls": [
+      {
+        "function": "profile_rows",
+        "canonical_bytes": 73107,
+        "sha256": "2e73de75413cb2f41147133535c4f4d7df8f7b03fc1b3dd0908194280842241a"
+      }
+    ],
+    "recipe": "missing profile row",
+    "expected": "PROFILE_MISSING",
+    "scope": "actual derived input canonical hashes; full expanded replicas not persisted; exact own generator and shared seeds sealed",
+    "recipe_identity": {
+      "path": "fixture_inputs\\READ12.recipe.json",
+      "bytes": 367,
+      "sha256": "0b1f07bf54332d482adabab4fea459bcc3a6c5baa8c835e59f2807533ca7ea62"
+    }
+  },
+  {
+    "id": "INIT01",
+    "input_id": "INIT01:01",
+    "calls": [
+      {
+        "function": "compare_initialization_pair",
+        "canonical_bytes": 1004,
+        "sha256": "8175acf45c1e9a962197d32ec8c03b8e8ec1f371ca99db3fac1346c0754ff93d"
+      }
+    ],
+    "recipe": "all initial targets exact",
+    "expected": "PASS",
+    "scope": "actual derived input canonical hashes; full expanded replicas not persisted; exact own generator and shared seeds sealed",
+    "recipe_identity": {
+      "path": "fixture_inputs\\INIT01.recipe.json",
+      "bytes": 376,
+      "sha256": "8bafb49ea5407493fbe8cba2a8ce798ead870f347909a07c3fbc2e70eab2a87e"
+    }
+  },
+  {
+    "id": "INIT02",
+    "input_id": "INIT02:01",
+    "calls": [
+      {
+        "function": "compare_initialization",
+        "canonical_bytes": 607,
+        "sha256": "712ff26d1dafab80b79f12e272f75df7461441dd33251ffb30c2e7ffe992a5cb"
+      }
+    ],
+    "recipe": "fixed abs_tol=1e-9 mol/m^2 and rel_tol=1e-6; target=0.001 mol/m^2; observed=0.001000001 mol/m^2; exact simultaneous absolute and relative boundaries",
+    "expected": "PASS",
+    "scope": "actual derived input canonical hashes; full expanded replicas not persisted; exact own generator and shared seeds sealed",
+    "scalar_proof": {
+      "precision": 50,
+      "target_mol_m2": "0.001",
+      "observed_mol_m2": "0.001000001",
+      "abs_tol_mol_m2": "1e-9",
+      "rel_tol": "1e-6",
+      "absolute_delta_mol_m2": "1E-9",
+      "relative_delta": "0.000001",
+      "candidate_calls": 0
+    },
+    "recipe_identity": {
+      "path": "fixture_inputs/INIT02.recipe.json",
+      "bytes": 701,
+      "sha256": "1f95d7f6296f1ab8d192e3f70e478a8c64ac5e3b0b35a81372b43ed4ec091420"
+    }
+  },
+  {
+    "id": "INIT03",
+    "input_id": "INIT03:01",
+    "calls": [
+      {
+        "function": "compare_initialization",
+        "canonical_bytes": 604,
+        "sha256": "502610d898da2746bac59369ea1a427940b2ec1664067d2a047f6cc43e3417ea"
+      }
+    ],
+    "recipe": "inventory boundary excess",
+    "expected": "INITIAL_INVENTORY_OR_COMPOSITION",
+    "scope": "actual derived input canonical hashes; full expanded replicas not persisted; exact own generator and shared seeds sealed",
+    "recipe_identity": {
+      "path": "fixture_inputs\\INIT03.recipe.json",
+      "bytes": 398,
+      "sha256": "2dc9f76f4d6a61631f589529695222e0dd965e8a727b6ac4758d3d12066d44e6"
+    }
+  },
+  {
+    "id": "INIT04",
+    "input_id": "INIT04:01",
+    "calls": [
+      {
+        "function": "compare_initialization",
+        "canonical_bytes": 594,
+        "sha256": "b667fce79f8782b34fdba65fbc2e93719f951c4ae5ca98c1bc1a622faa5dd75a"
+      }
+    ],
+    "recipe": "first positive sample substituted for0",
+    "expected": "INITIAL_TIME_NOT_EXACT_ZERO",
+    "scope": "actual derived input canonical hashes; full expanded replicas not persisted; exact own generator and shared seeds sealed",
+    "recipe_identity": {
+      "path": "fixture_inputs\\INIT04.recipe.json",
+      "bytes": 406,
+      "sha256": "949337c428571b72bdaab49046fb7b8fc7536a3873ce57d7b75d0a6539b9e41b"
+    }
+  },
+  {
+    "id": "INIT05",
+    "input_id": "INIT05:01",
+    "calls": [
+      {
+        "function": "compare_initialization",
+        "canonical_bytes": 386,
+        "sha256": "0e8d744df0e48c2aa0eec89cd1e3b3d70a3f929184719b18e287755fd596bb44"
+      }
+    ],
+    "recipe": "no postconsistency proof",
+    "expected": "INITIAL_PROVENANCE_OR_TARGETS",
+    "scope": "actual derived input canonical hashes; full expanded replicas not persisted; exact own generator and shared seeds sealed",
+    "recipe_identity": {
+      "path": "fixture_inputs\\INIT05.recipe.json",
+      "bytes": 394,
+      "sha256": "74ede679c874a6aab0e67e762f0af78063bdc9b241ebf03629fca9e8c10af858"
+    }
+  },
+  {
+    "id": "INIT06",
+    "input_id": "INIT06:01",
+    "calls": [
+      {
+        "function": "compare_initialization",
+        "canonical_bytes": 589,
+        "sha256": "88394c527e2d2e7e471dbd2a56e269d94179b505746cd40c2900326d838536b6"
+      }
+    ],
+    "recipe": "initial wrong unit",
+    "expected": "INITIAL_UNIT",
+    "scope": "actual derived input canonical hashes; full expanded replicas not persisted; exact own generator and shared seeds sealed",
+    "recipe_identity": {
+      "path": "fixture_inputs\\INIT06.recipe.json",
+      "bytes": 371,
+      "sha256": "c730fbbb0fe868f7d1896f515f2358dca85282486dd8d49f902e082a9d1865ba"
+    }
+  },
+  {
+    "id": "INIT07",
+    "input_id": "INIT07:01",
+    "calls": [
+      {
+        "function": "verify_coefficient_evidence",
+        "canonical_bytes": 703,
+        "sha256": "5053bef322af1c5f4603abdc6bdc913f7679b9e69765b8dc89636b3227e74cf6"
+      }
+    ],
+    "recipe": "configured coefficient mismatch",
+    "expected": "COEFFICIENT_SETTINGS",
+    "scope": "actual derived input canonical hashes; full expanded replicas not persisted; exact own generator and shared seeds sealed",
+    "recipe_identity": {
+      "path": "fixture_inputs\\INIT07.recipe.json",
+      "bytes": 397,
+      "sha256": "fb64e258f9f0617d90c46a10fb49f89b7107ec47d4a8dea9d114214b6786d904"
+    }
+  },
+  {
+    "id": "INIT08",
+    "input_id": "INIT08:01",
+    "calls": [
+      {
+        "function": "verify_coefficient_evidence",
+        "canonical_bytes": 675,
+        "sha256": "f57f04247bb396d04aaba86ba26c1b48193b7e6a0da067ee90f3335801f121c1"
+      }
+    ],
+    "recipe": "settings only consumption claim",
+    "expected": "EFFECTIVE_COEFFICIENT_OPEN",
+    "scope": "actual derived input canonical hashes; full expanded replicas not persisted; exact own generator and shared seeds sealed",
+    "recipe_identity": {
+      "path": "fixture_inputs\\INIT08.recipe.json",
+      "bytes": 403,
+      "sha256": "6db076d1002d758a908c858a2147e8e5e42583f9823a0a5972efca535764ea8b"
+    }
+  },
+  {
+    "id": "INIT09",
+    "input_id": "INIT09:01",
+    "calls": [
+      {
+        "function": "verify_coefficient_evidence",
+        "canonical_bytes": 703,
+        "sha256": "2c4c77703b7105839e96b145409b07c7c92bd710c6e7ba16758b15ce9ea32f0c"
+      }
+    ],
+    "recipe": "matched installed mapping fixture",
+    "expected": "PASS",
+    "scope": "actual derived input canonical hashes; full expanded replicas not persisted; exact own generator and shared seeds sealed",
+    "recipe_identity": {
+      "path": "fixture_inputs\\INIT09.recipe.json",
+      "bytes": 383,
+      "sha256": "8fe6ddc2021156804e2b8db30a22ef1ca5ac7969011c37cf4bd53d537eb49e88"
+    }
+  },
+  {
+    "id": "INIT10",
+    "input_id": "INIT10:01",
+    "calls": [
+      {
+        "function": "verify_coefficient_evidence",
+        "canonical_bytes": 703,
+        "sha256": "7362d94cd91e3cf1668e3bb9cb1b37c2db72ac7f9798f1c04f9a7229bd3db7f1"
+      }
+    ],
+    "recipe": "actual coefficient exceeds fixed tolerance",
+    "expected": "COEFFICIENT_CONSUMPTION",
+    "scope": "actual derived input canonical hashes; full expanded replicas not persisted; exact own generator and shared seeds sealed",
+    "recipe_identity": {
+      "path": "fixture_inputs\\INIT10.recipe.json",
+      "bytes": 411,
+      "sha256": "8f721335cea325327186c273d6b8a1a2365879dd0b3ea2fb2cd556fc68ce1d4a"
+    }
+  },
+  {
+    "id": "INIT11",
+    "input_id": "INIT11:01",
+    "calls": [
+      {
+        "function": "compare_initialization_pair",
+        "canonical_bytes": 1023,
+        "sha256": "6feb7b14b19b9b3bd1b79af34896f2286701b9012a4f0fa857e5a714cef2a12e"
+      }
+    ],
+    "recipe": "both valid individual initialstates butpairdifferenceexceeds",
+    "expected": "PAIR_INITIAL_STATE_MISMATCH",
+    "scope": "actual derived input canonical hashes; full expanded replicas not persisted; exact own generator and shared seeds sealed",
+    "recipe_identity": {
+      "path": "fixture_inputs\\INIT11.recipe.json",
+      "bytes": 434,
+      "sha256": "09b807d4463baa71b78c727dd03908730d70e37883630e2fefdeb6621aa9dc7d"
+    }
+  },
+  {
+    "id": "INIT12",
+    "input_id": "INIT12:01",
+    "calls": [
+      {
+        "function": "initial_profile_uniformity",
+        "canonical_bytes": 117814,
+        "sha256": "c9573abb5a476a7dc66b7b41052dc6e65fdae3162c8b6170fcabcc5fa00dde14"
+      }
+    ],
+    "recipe": "particleaverage nonuniformatoneinitialcoordinate",
+    "expected": "INITIAL_PROFILE_NONUNIFORM",
+    "scope": "actual derived input canonical hashes; full expanded replicas not persisted; exact own generator and shared seeds sealed",
+    "recipe_identity": {
+      "path": "fixture_inputs\\INIT12.recipe.json",
+      "bytes": 422,
+      "sha256": "d6bcca05a6ea8f2307ba4cd955bc6e1c1a7439d1da04a240c4242082ba741918"
+    }
+  },
+  {
+    "id": "POLICY01",
+    "input_id": "POLICY01:01",
+    "calls": [
+      {
+        "function": "compare_policy",
+        "canonical_bytes": 61574647,
+        "sha256": "59336ecf3e6923043faba62dd4deb5e71a2d4144dffbd43209afad4916bab799"
+      }
+    ],
+    "recipe": "255 exact requests and extra common states",
+    "expected": "WITHIN_LIMITS_THIS_WINDOW",
+    "scope": "actual derived input canonical hashes; full expanded replicas not persisted; exact own generator and shared seeds sealed",
+    "recipe_identity": {
+      "path": "fixture_inputs\\POLICY01.recipe.json",
+      "bytes": 409,
+      "sha256": "0152a812a676f5fa8787752bf833b33434f6955e240c5293e0900d754d45d4e1"
+    }
+  },
+  {
+    "id": "POLICY02",
+    "input_id": "POLICY02:01",
+    "calls": [
+      {
+        "function": "analyze",
+        "canonical_bytes": 61462145,
+        "sha256": "57406e982ee5a8639ba26429f49fa5f3d89e2e7f47ceda96b58e17531aa170b9"
+      }
+    ],
+    "recipe": "Actual analyze returns full valid evidence with voltage difference exactly0.001 V; surface and Li below limits.",
+    "expected": "WITHIN_LIMITS_THIS_WINDOW",
+    "scope": "actual derived input canonical hashes; full expanded replicas not persisted; exact own generator and shared seeds sealed",
+    "recipe_identity": {
+      "path": "fixture_inputs\\POLICY02.recipe.json",
+      "bytes": 471,
+      "sha256": "8cdbbfa2716273843990e4b9da4a51da605c2043f6d0d00727a6fb583a0b7c41"
+    }
+  },
+  {
+    "id": "POLICY03",
+    "input_id": "POLICY03:01",
+    "calls": [
+      {
+        "function": "analyze",
+        "canonical_bytes": 61471835,
+        "sha256": "9994e95aaafd65f66cbdc4b68ff73fe55264b240928294848089b1c5c6451b7e"
+      }
+    ],
+    "recipe": "Actual analyze returns full valid evidence with voltage difference0.0010000000000000000001 V; surface and Li below limits. Keep exact Decimal string in JSON.",
+    "expected": "EXCEEDS_LIMITS",
+    "scope": "actual derived input canonical hashes; full expanded replicas not persisted; exact own generator and shared seeds sealed",
+    "recipe_identity": {
+      "path": "fixture_inputs\\POLICY03.recipe.json",
+      "bytes": 506,
+      "sha256": "be6df2e423efb9333e19c706e2c1e5ceed1d7dc7a70f82d76f522bb6b1d8bf82"
+    }
+  },
+  {
+    "id": "POLICY04",
+    "input_id": "POLICY04:01",
+    "calls": [
+      {
+        "function": "compare_policy",
+        "canonical_bytes": 61453260,
+        "sha256": "afd0963923e301f2881b67d213fc6841595a8ec9465a7be512492a673d7aa79e"
+      }
+    ],
+    "recipe": "surface exactly1e-4",
+    "expected": "WITHIN_LIMITS_THIS_WINDOW",
+    "scope": "actual derived input canonical hashes; full expanded replicas not persisted; exact own generator and shared seeds sealed",
+    "recipe_identity": {
+      "path": "fixture_inputs\\POLICY04.recipe.json",
+      "bytes": 386,
+      "sha256": "19f101cde147540f9c961182e437a6f2a1131ca1b306abbe0bd24464e5603d3e"
+    }
+  },
+  {
+    "id": "POLICY05",
+    "input_id": "POLICY05:01",
+    "calls": [
+      {
+        "function": "compare_policy",
+        "canonical_bytes": 61453268,
+        "sha256": "a41f7cf5369f9899ce03bb495d518e6d2670befb13da9c6a03603098b4468bd2"
+      }
+    ],
+    "recipe": "surface above1e-4",
+    "expected": "EXCEEDS_LIMITS",
+    "scope": "actual derived input canonical hashes; full expanded replicas not persisted; exact own generator and shared seeds sealed",
+    "recipe_identity": {
+      "path": "fixture_inputs\\POLICY05.recipe.json",
+      "bytes": 373,
+      "sha256": "d94bfba0be729dbb83bdd7f861f5628708e85d3bdb20feff3fb0e72d33fb87e0"
+    }
+  },
+  {
+    "id": "POLICY06",
+    "input_id": "POLICY06:01",
+    "calls": [
+      {
+        "function": "invariants",
+        "canonical_bytes": 179091,
+        "sha256": "935426ed4a2bd92f684d0a938e3fec3731fde0d86a2bf4ed3c20fff9a23ec81d"
+      }
+    ],
+    "recipe": "individual Li drift above1e-6",
+    "expected": "LI_DRIFT",
+    "scope": "actual derived input canonical hashes; full expanded replicas not persisted; exact own generator and shared seeds sealed",
+    "recipe_identity": {
+      "path": "fixture_inputs\\POLICY06.recipe.json",
+      "bytes": 373,
+      "sha256": "3df9f3d514d3a54ce6734d91468aca5e29f047989a599ef8c3847ed9de1c14ae"
+    }
+  },
+  {
+    "id": "POLICY07",
+    "input_id": "POLICY07:01",
+    "calls": [
+      {
+        "function": "invariants",
+        "canonical_bytes": 179094,
+        "sha256": "e0a5ded477e36ce1017329e96a8856cc4f16bb802aff3aa838df19bbbc585b95"
+      }
+    ],
+    "recipe": "decomposition above1e-8",
+    "expected": "VOLTAGE_IDENTITY",
+    "scope": "actual derived input canonical hashes; full expanded replicas not persisted; exact own generator and shared seeds sealed",
+    "recipe_identity": {
+      "path": "fixture_inputs\\POLICY07.recipe.json",
+      "bytes": 375,
+      "sha256": "b7a331c1f8601ffd2b73bfe30b5d38efc655dea2ec6c340d77d6d7e02ab827cb"
+    }
+  },
+  {
+    "id": "POLICY08",
+    "input_id": "POLICY08:01",
+    "calls": [
+      {
+        "function": "compare_policy",
+        "canonical_bytes": 61453259,
+        "sha256": "5d254b0d4c95b91abb6b73f316708559b614e1066e4b80113b5771bf7380fee6"
+      }
+    ],
+    "recipe": "matched count but wrong coordinate",
+    "expected": "COORDINATE_DOMAIN",
+    "scope": "actual derived input canonical hashes; full expanded replicas not persisted; exact own generator and shared seeds sealed",
+    "recipe_identity": {
+      "path": "fixture_inputs\\POLICY08.recipe.json",
+      "bytes": 393,
+      "sha256": "42e883db8720b39dbbb515067d038b75989719393cb432919409062ddf94da9a"
+    }
+  },
+  {
+    "id": "CHARGE01",
+    "input_id": "CHARGE01:01",
+    "calls": [
+      {
+        "function": "analyze",
+        "canonical_bytes": 61460105,
+        "sha256": "6e429a71baedae6f8d101c5d5f0f9f999ac2a3cfcfc3a3c8b39227dfdb3ee40f"
+      }
+    ],
+    "recipe": "Complete NORMAL_END actual charge/global/native grid from initialized0 through120, all exact source/units/Li bindings, nonnegative increments, resolved final direction, adequate verified quadrature bound; call actual analyze then seal complete producer JSON.",
+    "expected": "CONSISTENT",
+    "scope": "actual derived input canonical hashes; full expanded replicas not persisted; exact own generator and shared seeds sealed",
+    "recipe_identity": {
+      "path": "fixture_inputs\\CHARGE01.recipe.json",
+      "bytes": 603,
+      "sha256": "bf4b3af5b1fdf4c2f98e059635cdfbd9f333aedce1d81fdff56d117ca9a89f56"
+    }
+  },
+  {
+    "id": "CHARGE02",
+    "input_id": "CHARGE02:01",
+    "calls": [
+      {
+        "function": "charge_balance",
+        "canonical_bytes": 114618,
+        "sha256": "5f368c106f64964d04a9148f31443c94ad6bee9cb0d8c8c390e9bddd4251d9d2"
+      }
+    ],
+    "recipe": "nearzero signal includingt0",
+    "expected": "INCONCLUSIVE",
+    "scope": "actual derived input canonical hashes; full expanded replicas not persisted; exact own generator and shared seeds sealed",
+    "recipe_identity": {
+      "path": "fixture_inputs\\CHARGE02.recipe.json",
+      "bytes": 379,
+      "sha256": "4796b45889996999dd7fb5b978c1710a8f82fe37da7169ba0731b697706b2374"
+    }
+  },
+  {
+    "id": "CHARGE03",
+    "input_id": "CHARGE03:01",
+    "calls": [
+      {
+        "function": "analyze",
+        "canonical_bytes": 61460106,
+        "sha256": "16fd68ddd5aef9663626b5f173f11d923601f73a72b5bae32379e39522922765"
+      }
+    ],
+    "recipe": "Use CHARGE01 complete normal-end fixture with only readbacks.quadrature_bound_C_m2=null; invoke actual analyze once and persist its raw JSON for PARENT14. No extra producer input.",
+    "expected": "INCONCLUSIVE",
+    "scope": "actual derived input canonical hashes; full expanded replicas not persisted; exact own generator and shared seeds sealed",
+    "recipe_identity": {
+      "path": "fixture_inputs\\CHARGE03.recipe.json",
+      "bytes": 526,
+      "sha256": "0017500c56b031c5cbd2cc4941fd8fb33117ac420c3f534d93cdd710a241be43"
+    }
+  },
+  {
+    "id": "CHARGE04",
+    "input_id": "CHARGE04:01",
+    "calls": [
+      {
+        "function": "charge_balance",
+        "canonical_bytes": 172755,
+        "sha256": "c7f43334ae3b4f8842e83180dc0d1f93621fdb515b8baf7adfbbdbd7082fbb70"
+      }
+    ],
+    "recipe": "bound above quarter allocation",
+    "expected": "INCONCLUSIVE",
+    "scope": "actual derived input canonical hashes; full expanded replicas not persisted; exact own generator and shared seeds sealed",
+    "recipe_identity": {
+      "path": "fixture_inputs\\CHARGE04.recipe.json",
+      "bytes": 382,
+      "sha256": "dc150fdfcfd5954f2f60fb94a7c89981a70eac7b0da23452e0fc902695b6194c"
+    }
+  },
+  {
+    "id": "CHARGE05",
+    "input_id": "CHARGE05:01",
+    "calls": [
+      {
+        "function": "charge_balance",
+        "canonical_bytes": 172733,
+        "sha256": "949693de70e1029d2ab15084f8ae15ca89c331f4223611f9da4aac37d9200690"
+      }
+    ],
+    "recipe": "reverse current beyonddeadband",
+    "expected": "REVERSE_CURRENT",
+    "scope": "actual derived input canonical hashes; full expanded replicas not persisted; exact own generator and shared seeds sealed",
+    "recipe_identity": {
+      "path": "fixture_inputs\\CHARGE05.recipe.json",
+      "bytes": 385,
+      "sha256": "246eedf8f01358655732613f0c718cbd4b61243d66e7f04051fd888371fd8ce0"
+    }
+  },
+  {
+    "id": "CHARGE06",
+    "input_id": "CHARGE06:01",
+    "calls": [
+      {
+        "function": "charge_balance",
+        "canonical_bytes": 172750,
+        "sha256": "cef6d3b979cc23bbee7318bf84a11d86699983b296f5beaba0bb8d581a974a26"
+      }
+    ],
+    "recipe": "RN/RP inconsistency",
+    "expected": "REACTION_CURRENT_BALANCE",
+    "scope": "actual derived input canonical hashes; full expanded replicas not persisted; exact own generator and shared seeds sealed",
+    "recipe_identity": {
+      "path": "fixture_inputs\\CHARGE06.recipe.json",
+      "bytes": 383,
+      "sha256": "4c409372ed29633562fbe5cb18798ab61db6ee5580b20e307a493d18adfb384b"
+    }
+  },
+  {
+    "id": "CHARGE07",
+    "input_id": "CHARGE07:01",
+    "calls": [
+      {
+        "function": "charge_balance",
+        "canonical_bytes": 172750,
+        "sha256": "46aafc584c74d3f654e50af5cf29e3e8e2ba79d0490143a766c79c0b7969af62"
+      }
+    ],
+    "recipe": "I vsA*j mismatch",
+    "expected": "CURRENT_AREA_CONVERSION",
+    "scope": "actual derived input canonical hashes; full expanded replicas not persisted; exact own generator and shared seeds sealed",
+    "recipe_identity": {
+      "path": "fixture_inputs\\CHARGE07.recipe.json",
+      "bytes": 379,
+      "sha256": "343fa253135eb9d580257b008f25b9bd5a79dc8a09b359883c1ea0f5e89e245d"
+    }
+  },
+  {
+    "id": "CHARGE08",
+    "input_id": "CHARGE08:01",
+    "calls": [
+      {
+        "function": "charge_balance",
+        "canonical_bytes": 172577,
+        "sha256": "6009f5c755caf5ec7e451f3d6f6ccbe8f5aa6af9e0f54dc247126ae5a8f8c0f5"
+      }
+    ],
+    "recipe": "reverse Li transfer beyonddeadband",
+    "expected": "REVERSE_LI_TRANSFER",
+    "scope": "actual derived input canonical hashes; full expanded replicas not persisted; exact own generator and shared seeds sealed",
+    "recipe_identity": {
+      "path": "fixture_inputs\\CHARGE08.recipe.json",
+      "bytes": 393,
+      "sha256": "b070e19fa412c53c05121c8ce4fc7e409593e6e26e74b5190f6af6110381e859"
+    }
+  },
+  {
+    "id": "CHARGE09",
+    "input_id": "CHARGE09:01",
+    "calls": [
+      {
+        "function": "charge_balance",
+        "canonical_bytes": 172857,
+        "sha256": "31a73298182a48fe745d9ef2d21976a9afc5099c5be661fc83394221febd537e"
+      }
+    ],
+    "recipe": "qN-qP exceeds",
+    "expected": "SOLID_TRANSFER_BALANCE",
+    "scope": "actual derived input canonical hashes; full expanded replicas not persisted; exact own generator and shared seeds sealed",
+    "recipe_identity": {
+      "path": "fixture_inputs\\CHARGE09.recipe.json",
+      "bytes": 375,
+      "sha256": "319eb4bcb16682f76878a21a607ef8c367afc5d6342c80854265bdaca9d38da6"
+    }
+  },
+  {
+    "id": "CHARGE10",
+    "input_id": "CHARGE10:01",
+    "calls": [
+      {
+        "function": "charge_balance",
+        "canonical_bytes": 172755,
+        "sha256": "78bcb52141930838c384c47e4bdbcee8d98a1a9dca09984d7810d732704e54cd"
+      }
+    ],
+    "recipe": "integral residual plus bound exceeds fixedlimit",
+    "expected": "INTEGRATED_CHARGE_BALANCE",
+    "scope": "actual derived input canonical hashes; full expanded replicas not persisted; exact own generator and shared seeds sealed",
+    "recipe_identity": {
+      "path": "fixture_inputs\\CHARGE10.recipe.json",
+      "bytes": 412,
+      "sha256": "cbce7680aedcaf98a7a41a2d263000a395fddc1c344cf40ac885bd4de1f27679"
+    }
+  },
+  {
+    "id": "CHARGE11",
+    "input_id": "CHARGE11:01",
+    "calls": [
+      {
+        "function": "charge_balance",
+        "canonical_bytes": 172755,
+        "sha256": "afb847c3f03bcb1ce434e1a1f556d632056cac9552a5ecc723becad2a648a0b3"
+      }
+    ],
+    "recipe": "Reorder two charge time rows, leaving native/global canonical grid untouched; R1 full-grid check is now intended first rejection.",
+    "expected": "CHARGE_GRID_BINDING",
+    "scope": "actual derived input canonical hashes; full expanded replicas not persisted; exact own generator and shared seeds sealed",
+    "recipe_identity": {
+      "path": "fixture_inputs\\CHARGE11.recipe.json",
+      "bytes": 488,
+      "sha256": "962300d65556ac6104f8662c71d598c36b8532fff2609b0ba6176598777f6600"
+    }
+  },
+  {
+    "id": "CHARGE12",
+    "input_id": "CHARGE12:01",
+    "calls": [
+      {
+        "function": "charge_balance",
+        "canonical_bytes": 172761,
+        "sha256": "74a2d8769a5fd80b5744e13b7a9eacab1c87b5e2c32a39ba29c2eae36daf684d"
+      }
+    ],
+    "recipe": "totalLi drift",
+    "expected": "LI_DRIFT",
+    "scope": "actual derived input canonical hashes; full expanded replicas not persisted; exact own generator and shared seeds sealed",
+    "recipe_identity": {
+      "path": "fixture_inputs\\CHARGE12.recipe.json",
+      "bytes": 361,
+      "sha256": "120f94d294da45f41cd58b75d7cff149398148b30990a1843b33d3140ed2040a"
+    }
+  },
+  {
+    "id": "PAIRED01",
+    "input_id": "PAIRED01:01",
+    "calls": [
+      {
+        "function": "paired_classification",
+        "canonical_bytes": 1381,
+        "sha256": "07f78e9865eaa68923cf3df962bd7fc68440602a3978e029501c4c98e2d71a2d"
+      }
+    ],
+    "recipe": "D,S strictly above5E andabsolute thresholds",
+    "expected": "DISTINGUISHABLE_AT_REST",
+    "scope": "actual derived input canonical hashes; full expanded replicas not persisted; exact own generator and shared seeds sealed",
+    "recipe_identity": {
+      "path": "fixture_inputs\\PAIRED01.recipe.json",
+      "bytes": 411,
+      "sha256": "a4cb9620a43353a2d82569f619fc08fbc2b949b324b0a999eb54d9653885e8fb"
+    }
+  },
+  {
+    "id": "PAIRED02",
+    "input_id": "PAIRED02:01",
+    "calls": [
+      {
+        "function": "paired_classification",
+        "canonical_bytes": 1387,
+        "sha256": "0d541e84400434511c131ea0fa8b231aa99f5c0b3f9630751631333fee5e59fd"
+      }
+    ],
+    "recipe": "smallD/S smallE",
+    "expected": "NOT_DISTINGUISHABLE_WITHIN_T",
+    "scope": "actual derived input canonical hashes; full expanded replicas not persisted; exact own generator and shared seeds sealed",
+    "recipe_identity": {
+      "path": "fixture_inputs\\PAIRED02.recipe.json",
+      "bytes": 388,
+      "sha256": "1e812bcf2607297287f3ea21ca4d4d7b49f8cc0fc0907713a3a46b4042f52d36"
+    }
+  },
+  {
+    "id": "PAIRED03",
+    "input_id": "PAIRED03:01",
+    "calls": [
+      {
+        "function": "paired_classification",
+        "canonical_bytes": 1382,
+        "sha256": "1e1bf6344b5c6df5aa552e4b84c4116b8e1a684c32cfb411da3c3905f593fd39"
+      }
+    ],
+    "recipe": "large numerical sensitivity masks signal",
+    "expected": "INCONCLUSIVE",
+    "scope": "actual derived input canonical hashes; full expanded replicas not persisted; exact own generator and shared seeds sealed",
+    "recipe_identity": {
+      "path": "fixture_inputs\\PAIRED03.recipe.json",
+      "bytes": 397,
+      "sha256": "9374786681d6756daf3d5c18fee194501a49330f9c3f176009c47aebed8e2466"
+    }
+  },
+  {
+    "id": "PAIRED04",
+    "input_id": "PAIRED04:01",
+    "calls": [
+      {
+        "function": "paired_classification",
+        "canonical_bytes": 1385,
+        "sha256": "12f9033f5538f25ebc810f2340b3383f5511e28e4b8a488e7c640346020aaef0"
+      }
+    ],
+    "recipe": "Pin all D,S,E_D,E_S: D=.001 V, S=.002 V/h, E_D=0 V,E_S=0 V/h. Base voltages at0/2700/3600 all0; finite=0/-.0005/-.001; all valid matched K controls repeat same curves. D equals theta_D but S exceeds theta_S: neither strict both-above nor both-small, hence INCONCLUSIVE.",
+    "expected": "INCONCLUSIVE",
+    "scope": "actual derived input canonical hashes; full expanded replicas not persisted; exact own generator and shared seeds sealed",
+    "recipe_identity": {
+      "path": "fixture_inputs\\PAIRED04.recipe.json",
+      "bytes": 626,
+      "sha256": "a47fa9f86a13188337f8987c7f482ae62e3fbe58ace4295fc9e6823ba7fc43e1"
+    }
+  },
+  {
+    "id": "PAIRED05",
+    "input_id": "PAIRED05:01",
+    "calls": [
+      {
+        "function": "paired_classification",
+        "canonical_bytes": 761,
+        "sha256": "ef68957d1fbbee6e273478fb86ef7e3411cc2e550d85c9bbed604cee28a65bf9"
+      }
+    ],
+    "recipe": "one Kaxis missing",
+    "expected": "K_INCOMPLETE",
+    "scope": "actual derived input canonical hashes; full expanded replicas not persisted; exact own generator and shared seeds sealed",
+    "recipe_identity": {
+      "path": "fixture_inputs\\PAIRED05.recipe.json",
+      "bytes": 373,
+      "sha256": "16ead1c9b73330a16d344f1a092c5b4b7f8ff107f408079a156da5f03ae43320"
+    }
+  },
+  {
+    "id": "PAIRED06",
+    "input_id": "PAIRED06:01",
+    "calls": [
+      {
+        "function": "paired_classification",
+        "canonical_bytes": 1382,
+        "sha256": "b246f5a33d96869b7a29f2ca6881062d09cd55d057b44a29f7e9898abd9af757"
+      }
+    ],
+    "recipe": "same-sigma pairing false",
+    "expected": "UNMATCHED_K_PAIR",
+    "scope": "actual derived input canonical hashes; full expanded replicas not persisted; exact own generator and shared seeds sealed",
+    "recipe_identity": {
+      "path": "fixture_inputs\\PAIRED06.recipe.json",
+      "bytes": 385,
+      "sha256": "f888536f4c2ada48b7ad32d68e38684af2a92adc9946a88f983a71dc250593fd"
+    }
+  },
+  {
+    "id": "PAIRED07",
+    "input_id": "PAIRED07:01",
+    "calls": [
+      {
+        "function": "paired_classification",
+        "canonical_bytes": 1331,
+        "sha256": "2299ae46bc66b171ea6a91d43390bff09781db957ef8203f471ff6dcc23801aa"
+      }
+    ],
+    "recipe": "2700endpoint missing",
+    "expected": "PAIRED_ENDPOINT_MISSING",
+    "scope": "actual derived input canonical hashes; full expanded replicas not persisted; exact own generator and shared seeds sealed",
+    "recipe_identity": {
+      "path": "fixture_inputs\\PAIRED07.recipe.json",
+      "bytes": 388,
+      "sha256": "3ea73cfc56dc39da72db517b7eacf5e7f508b36962f0e8bc4c1a42fad5cfdaee"
+    }
+  },
+  {
+    "id": "CHARGE_R101",
+    "input_id": "CHARGE_R101:01",
+    "calls": [
+      {
+        "function": "analyze",
+        "canonical_bytes": 61459738,
+        "sha256": "2c3ae5059617f05e3840924602267ef72850d87c78535d62808d2f26f3d9a588"
+      }
+    ],
+    "recipe": "Remove final charge row only; global/native retain120.",
+    "expected": "CHARGE_GRID_BINDING",
+    "scope": "actual derived input canonical hashes; full expanded replicas not persisted; exact own generator and shared seeds sealed",
+    "recipe_identity": {
+      "path": "fixture_inputs\\CHARGE_R101.recipe.json",
+      "bytes": 414,
+      "sha256": "c55afe725e35ab6951aa4349756f26366f14c397ea3592846e23df587b69b4af"
+    }
+  },
+  {
+    "id": "CHARGE_R102",
+    "input_id": "CHARGE_R102:01",
+    "calls": [
+      {
+        "function": "analyze",
+        "canonical_bytes": 61459735,
+        "sha256": "3b22b523640b889602411e776835acb91d904c47f4a001d7fccf5582d4b5b7cf"
+      }
+    ],
+    "recipe": "Remove one interior charge row only; global/native unchanged.",
+    "expected": "CHARGE_GRID_BINDING",
+    "scope": "actual derived input canonical hashes; full expanded replicas not persisted; exact own generator and shared seeds sealed",
+    "recipe_identity": {
+      "path": "fixture_inputs\\CHARGE_R102.recipe.json",
+      "bytes": 421,
+      "sha256": "07a3c8609c79075bef0cb5b46ef1c9426373cbb62c85bcda9e241e226d0d21c4"
+    }
+  },
+  {
+    "id": "CHARGE_R103",
+    "input_id": "CHARGE_R103:01",
+    "calls": [
+      {
+        "function": "analyze",
+        "canonical_bytes": 61460107,
+        "sha256": "bdb8a07e98f71626ae7dc03e8e941e1005988cf05925aecfe19e025287e11e9a"
+      }
+    ],
+    "recipe": "Replace one interior charge time by a different finite increasing time, preserving row count and endpoints.",
+    "expected": "CHARGE_GRID_BINDING",
+    "scope": "actual derived input canonical hashes; full expanded replicas not persisted; exact own generator and shared seeds sealed",
+    "recipe_identity": {
+      "path": "fixture_inputs\\CHARGE_R103.recipe.json",
+      "bytes": 467,
+      "sha256": "584f9721cb6a4f931cbb599635d72e612baa1fad76015b8ddf73ae65b6e21e8d"
+    }
+  },
+  {
+    "id": "CHARGE_R104",
+    "input_id": "CHARGE_R104:01",
+    "calls": [
+      {
+        "function": "analyze",
+        "canonical_bytes": 61460104,
+        "sha256": "682ed35a9dca92308b12d6ce48777c8047359f3311f6c3b5d309828b4fd65530"
+      }
+    ],
+    "recipe": "Alter charge LiN at one retained exact time while leaving matching global LiN unchanged.",
+    "expected": "CHARGE_GLOBAL_LI_MISMATCH",
+    "scope": "actual derived input canonical hashes; full expanded replicas not persisted; exact own generator and shared seeds sealed",
+    "recipe_identity": {
+      "path": "fixture_inputs\\CHARGE_R104.recipe.json",
+      "bytes": 454,
+      "sha256": "c4a925511fff79887e0367c2fe2d0c865ddca9b37cecbe7c0cbc251eda8210c4"
+    }
+  },
+  {
+    "id": "CHARGE_R105",
+    "input_id": "CHARGE_R105:01",
+    "calls": [
+      {
+        "function": "analyze",
+        "canonical_bytes": 61460105,
+        "sha256": "28d541cba8b61e4a512bad8f8e06c4fec371c410b232dc2a30ee1f2b321e8f15"
+      }
+    ],
+    "recipe": "Mutate charge provenance global SHA to another valid64hex value, while verified global identity/source list remain fixed.",
+    "expected": "CHARGE_SOURCE_BINDING",
+    "scope": "actual derived input canonical hashes; full expanded replicas not persisted; exact own generator and shared seeds sealed",
+    "recipe_identity": {
+      "path": "fixture_inputs\\CHARGE_R105.recipe.json",
+      "bytes": 483,
+      "sha256": "cb55acebb9d81da385b9d241b7461ea490d771b7052230847e6a775d968ecd5b"
+    }
+  },
+  {
+    "id": "CHARGE_R106",
+    "input_id": "CHARGE_R106:01",
+    "calls": [
+      {
+        "function": "analyze",
+        "canonical_bytes": 61459940,
+        "sha256": "09a1fc8168c1a0fbfaa0a5a6f11d616f74f17d75e0fc6483c2443bfe10665754"
+      }
+    ],
+    "recipe": "Remove native grid identity from charge provenance only.",
+    "expected": "CHARGE_SOURCE_BINDING",
+    "scope": "actual derived input canonical hashes; full expanded replicas not persisted; exact own generator and shared seeds sealed",
+    "recipe_identity": {
+      "path": "fixture_inputs\\CHARGE_R106.recipe.json",
+      "bytes": 418,
+      "sha256": "ce054b6a642f19396e61b2a46022b75b55f8071e5b13b93a6c5bdd157602c4f5"
+    }
+  },
+  {
+    "id": "CHARGE_R107",
+    "input_id": "CHARGE_R107:01",
+    "calls": [
+      {
+        "function": "analyze",
+        "canonical_bytes": 61460107,
+        "sha256": "5bb1c43a6bfd6de2b3ea19021345b4ece241ab843cfe37f299451e1f8797ef7f"
+      }
+    ],
+    "recipe": "Mutate native stored time vector one interior time; global and charge remain original.",
+    "expected": "CHARGE_GRID_BINDING",
+    "scope": "actual derived input canonical hashes; full expanded replicas not persisted; exact own generator and shared seeds sealed",
+    "recipe_identity": {
+      "path": "fixture_inputs\\CHARGE_R107.recipe.json",
+      "bytes": 446,
+      "sha256": "d0872985085dcfc41bfcee355a0e640a0c40cfdcc31c81aeedb6fccea6ac07bd"
+    }
+  },
+  {
+    "id": "CHARGE_R108",
+    "input_id": "CHARGE_R108:01",
+    "calls": [
+      {
+        "function": "analyze",
+        "canonical_bytes": 61460107,
+        "sha256": "17b0e9f7d694eac13be74451609b74e0a3541c33f65b63d3d363dcefed6e39a6"
+      }
+    ],
+    "recipe": "NORMAL_END claims actual_end119.9 with configured120; all data still end120.",
+    "expected": "NATIVE_END_TIME",
+    "scope": "actual derived input canonical hashes; full expanded replicas not persisted; exact own generator and shared seeds sealed",
+    "recipe_identity": {
+      "path": "fixture_inputs\\CHARGE_R108.recipe.json",
+      "bytes": 432,
+      "sha256": "3773f079df44408d64fe0811861e9c4379dce2b13eced78926567d35e8cd419e"
+    }
+  },
+  {
+    "id": "CHARGE_R109",
+    "input_id": "CHARGE_R109:01",
+    "calls": [
+      {
+        "function": "analyze",
+        "canonical_bytes": 60740383,
+        "sha256": "bf7c687eb725e795b8ef22714eb1f24f5df0870e2ad672443b93ebe111256bb8"
+      }
+    ],
+    "recipe": "Valid protective t_minus90,t_plus90.1 configured120; global/native/charge all end90.1. Compare registered request prefix<=90 only; complete source/units/Li/quad evidence.",
+    "expected": "PROTECTIVE_STOP",
+    "scope": "actual derived input canonical hashes; full expanded replicas not persisted; exact own generator and shared seeds sealed",
+    "recipe_identity": {
+      "path": "fixture_inputs\\CHARGE_R109.recipe.json",
+      "bytes": 526,
+      "sha256": "eeb6e33f030298d34674269c189c5f4728e6e5c4993d6e8e2299a5083ad6cb58"
+    }
+  },
+  {
+    "id": "CHARGE_R110",
+    "input_id": "CHARGE_R110:01",
+    "calls": [
+      {
+        "function": "analyze",
+        "canonical_bytes": 61460207,
+        "sha256": "c33e3d89c14c4c8855450a8ead498de50bb7f55a9f7147ec1f95bf2bf660d2d6"
+      }
+    ],
+    "recipe": "Positive cumulative qN=25.001 at100 then25.00025 at100.001; N increment=-.00075 exceeds reverse deadband; adjust same-time global consistently and keep P non-reversing so only N is violated.",
+    "expected": "REVERSE_LI_INCREMENT",
+    "scope": "actual derived input canonical hashes; full expanded replicas not persisted; exact own generator and shared seeds sealed",
+    "recipe_identity": {
+      "path": "fixture_inputs\\CHARGE_R110.recipe.json",
+      "bytes": 551,
+      "sha256": "d546753c8a5700f28f84827af19d1e83e86f55c6082166d399555017bc0c626a"
+    }
+  },
+  {
+    "id": "CHARGE_R111",
+    "input_id": "CHARGE_R111:01",
+    "calls": [
+      {
+        "function": "analyze",
+        "canonical_bytes": 61460205,
+        "sha256": "94849eed56c74ced378979555704dcdfb9b60d730f6d9bdad9e07e156d36a51e"
+      }
+    ],
+    "recipe": "Positive cumulative qP=25.001 at100 then25.00025 at100.001; P increment=-.00075; adjust global consistently and keep N non-reversing.",
+    "expected": "REVERSE_LI_INCREMENT",
+    "scope": "actual derived input canonical hashes; full expanded replicas not persisted; exact own generator and shared seeds sealed",
+    "recipe_identity": {
+      "path": "fixture_inputs\\CHARGE_R111.recipe.json",
+      "bytes": 494,
+      "sha256": "42fb922c2dbcc7f70dbda24b2f70f538c88f0fbe9a04251eb3b39c105138c7d0"
+    }
+  },
+  {
+    "id": "CHARGE_R112",
+    "input_id": "CHARGE_R112:01",
+    "calls": [
+      {
+        "function": "charge_balance",
+        "canonical_bytes": 2125,
+        "sha256": "1a1e812754183e2ebcceb664a88552e6a5ffec7383447086b4dc60da7b3399b1"
+      }
+    ],
+    "recipe": "Direct actual charge_balance with synthetic nonnegative LiN0=0\u2192r, LiP0=r\u21920,LiE=1 constant, current/reaction0, bound0, times0/1; full native/global/source binding valid. qN=qP=-F*r equals negative boundary or lies within; no cancellation through an order1 solid inventory. Final direction unresolved is INCONCLUSIVE, never falsely CONSISTENT.",
+    "expected": "INCONCLUSIVE",
+    "scope": "actual derived input canonical hashes; full expanded replicas not persisted; exact own generator and shared seeds sealed",
+    "recipe_identity": {
+      "path": "fixture_inputs\\CHARGE_R112.recipe.json",
+      "bytes": 701,
+      "sha256": "515359a1020a82be16687c0f5df169a3344ccd23ad20ac12fcbe971f1df43990"
+    }
+  },
+  {
+    "id": "CHARGE_R113",
+    "input_id": "CHARGE_R113:01",
+    "calls": [
+      {
+        "function": "charge_balance",
+        "canonical_bytes": 2125,
+        "sha256": "700f7eeb4702bae890bb3ce14fb54e8da11d5f64a510f4f50c7f8672e2587499"
+      }
+    ],
+    "recipe": "Direct actual charge_balance with synthetic nonnegative LiN0=0\u2192r, LiP0=r\u21920,LiE=1 constant, current/reaction0, bound0, times0/1; full native/global/source binding valid. qN=qP=-F*r equals negative boundary or lies within; no cancellation through an order1 solid inventory. Final direction unresolved is INCONCLUSIVE, never falsely CONSISTENT.",
+    "expected": "INCONCLUSIVE",
+    "scope": "actual derived input canonical hashes; full expanded replicas not persisted; exact own generator and shared seeds sealed",
+    "recipe_identity": {
+      "path": "fixture_inputs\\CHARGE_R113.recipe.json",
+      "bytes": 701,
+      "sha256": "3787d30faed52c47711665e2897eb128ae81066668824fab9ebe28ae21f45ec1"
+    }
+  },
+  {
+    "id": "CHARGE_R114",
+    "input_id": "CHARGE_R114:01",
+    "calls": [
+      {
+        "function": "analyze",
+        "canonical_bytes": 61460207,
+        "sha256": "6bed86af27012f24fac8100524d99d5401710a6159ae9081c3c6dae456d17f7e"
+      }
+    ],
+    "recipe": "Adjacent signed N increment -.0002000001 C/m2, P no reversal; cumulative q positive, only N exceeds negative deadband.",
+    "expected": "REVERSE_LI_INCREMENT",
+    "scope": "actual derived input canonical hashes; full expanded replicas not persisted; exact own generator and shared seeds sealed",
+    "recipe_identity": {
+      "path": "fixture_inputs\\CHARGE_R114.recipe.json",
+      "bytes": 479,
+      "sha256": "f9205f01b0711c740240889eea0c7125bf3364cd65e320e95d2dcf17e0576d0e"
+    }
+  },
+  {
+    "id": "CHARGE_R115",
+    "input_id": "CHARGE_R115:01",
+    "calls": [
+      {
+        "function": "analyze",
+        "canonical_bytes": 61460101,
+        "sha256": "1b3ed44cd8585a11295a16263fd2fd9cccb464401f6dfff73c76c5cc8f0e4f20"
+      }
+    ],
+    "recipe": "Charge unit record LiN changed from mol/m^2 to mol; source identity context otherwise complete.",
+    "expected": "CHARGE_UNIT_BINDING",
+    "scope": "actual derived input canonical hashes; full expanded replicas not persisted; exact own generator and shared seeds sealed",
+    "recipe_identity": {
+      "path": "fixture_inputs\\CHARGE_R115.recipe.json",
+      "bytes": 455,
+      "sha256": "a212c560197e02a7a4531f332a33500e060ebfe9fae65e6671ee97260aeef048"
+    }
+  },
+  {
+    "id": "CHARGE_R116",
+    "input_id": "CHARGE_R116:01",
+    "calls": [
+      {
+        "function": "analyze",
+        "canonical_bytes": 60740385,
+        "sha256": "056dcbf82392c757843798c666b8d28ddf5ad524891cbd394b6c0f2435dd9b3c"
+      }
+    ],
+    "recipe": "Valid protective native t_minus90/t_plus90.1 but comparison safe_end wrongly90.1.",
+    "expected": "COMPARISON_WINDOW_OR_REQUEST_BINDING",
+    "scope": "actual derived input canonical hashes; full expanded replicas not persisted; exact own generator and shared seeds sealed",
+    "recipe_identity": {
+      "path": "fixture_inputs\\CHARGE_R116.recipe.json",
+      "bytes": 458,
+      "sha256": "b9fe0e9a23bc6879b082d50110ebb94c34b7b7282be22de093fdc1950292e903"
+    }
+  },
+  {
+    "id": "CHARGE_R117",
+    "input_id": "CHARGE_R117:01",
+    "calls": [
+      {
+        "function": "analyze",
+        "canonical_bytes": 61459841,
+        "sha256": "a617b3b01c6809915be5f47659ac60ae8e90565643bada8f47be9e305515820c"
+      }
+    ],
+    "recipe": "Charge starts at first positive time after removing exact0; global/native retain0.",
+    "expected": "CHARGE_TIME",
+    "scope": "actual derived input canonical hashes; full expanded replicas not persisted; exact own generator and shared seeds sealed",
+    "recipe_identity": {
+      "path": "fixture_inputs\\CHARGE_R117.recipe.json",
+      "bytes": 434,
+      "sha256": "0855afdab37c4660918dc5eb315b07e03f2a039f8146e7ed42286ec9b7555c01"
+    }
+  }
+]

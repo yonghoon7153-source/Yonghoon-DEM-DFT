@@ -1,0 +1,1 @@
+{"id":"READ04","input_id":"READ04:01","calls":[{"function":"read_csv_bytes","canonical_bytes":369,"sha256":"c6c55d4acf066d2fe4dbb2ac0f0102214e08c9f5e49899adadb46723a58eb45a"}],"recipe":"wrong header","expected":"CSV_HEADER","scope":"actual derived input canonical hashes; full expanded replicas not persisted; exact own generator and shared seeds sealed"}
