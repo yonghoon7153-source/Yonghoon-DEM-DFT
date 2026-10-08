@@ -4282,3 +4282,21 @@ gate INCOMPLETE · 실효 정책 UNVERIFIED · native 미승인 · 게이트 리
   "accepted tsteps storage" (분기 정확성은 검토 몫 — 이름 존재만 확인).
 - 관찰 (결함 판정 아님): 승인 근거 파일 `USER_OFFLINE_SCOPE.txt` 는 v2 §0 전문이 아니라 한 문장 요약이다 ("S1O-N1–N4의 R1 오프라인 정정·정적 확인·검증안 갱신 1건을 최대 2,700초로 승인합니다…") — v2 전문은 sha 로 결속.
 - 다음: 검토 담당 Codex 소스 검토 (발송 프롬프트 `docs/COMSOL_MICROSHORT_S1O_R1_REVIEW_SEND_20261008.md` · 첨부 3 — 셋째는 실행 PC 의 원 파일) → 회신 → 기능 검증 (130 사례 · 1,860 s) 별도 승인. 이 절은 승인이 아니다.
+
+## 80. S1O-R1 소스 검토 회신 접수 — N1–N4 정적 수용 · 검증안 정정 R1-V1–V3 필요 · 기능 검증 승인 초안 (2026-10-08 · 실행 0)
+
+- 보존: `reviews/r14_repros/codex63/comsol_microshort_s1o_r1_source_review_20261008/` — zip 871,352 B · sha256 `4a30055f50990df5265ca2944ac3320966aff850d5efb35d78038e0f4a6da48f` · 압축 해제 137 ·
+  manifest 136 / 136 · 비밀 0 · 동봉 스크립트 · 받은 코드 실행 0. 규칙 `595cd4d4f` → 보존 `7414bddc8`.
+- 판정 (`DECISION.json` 사본): `SOURCE_CORRECTIONS_STATICALLY_ACCEPTED_VALIDATION_PLAN_CORRECTIONS_REQUIRED` · N1–N3 정적 수용 · N4 역치환 원바이트 일치 · 새 생산 소스 차단 0 · 검증안 `NOT_READY_AS_SUBMITTED` ·
+  기능 NOT_RUN · native_ready false. 전달 종결은 `PARTIAL` — `SUPPLEMENT_FINAL_TOOL_RETURN.json` · `SUPPLEMENT_CLOSEOUT.json` 원파일 미수신 (확인된 값은 보존 snapshot 1,465.4422 s · 1,541.319 / 1,541.2375 s 는 미확인 산문) ·
+  `USER_OFFLINE_SCOPE.txt` 는 v2 전문 채택의 직접 관측이 아닌 요약.
+- **회신의 세 검증안 결함 — 이 저장소에서 R1 정정본 (§79 보존본) 으로 정적 확인 (실행 0):**
+  - R1-V1: `VALIDATION_PLAN_R1.json` 5231–5236 — S1Sha 추출 `start_line 23 · end_line 22` · 적힌 sha `e3b0c442…b855` 는 **빈 문자열의 SHA-256**. 실제 Parent 23 행 (LF 정규화) = 90 B · `13c6456b…8eed` (회신 값과 같음).
+    빈 추출이 봉인된 채 정적 계획 감사가 통과했다 — 감사가 범위의 비어 있음을 보지 않았다.
+  - R1-V2: 2914 행 PARENT12 `expected_field_path: return_value.status` — 실제 `S1FinalReturn` (Parent 339–) 의 반환 객체는 `kind · observation_phase · limited · overall …` 이고 `status` 가 없다.
+  - R1-V3: INIT07 · 08 · 10 (대상 `verify_coefficient_evidence`) 의 양성 대조 = INIT01 (대상 `compare_initialization` — 다른 함수) · 같은 함수의 양성은 INIT09 (기대 PASS) /
+    `S1FinalReturn` 대상 PARENT09 · 10 · 11 · 12 · 16 의 양성 대조 = PARENT01 (대상 `S1Decision` — 다른 함수).
+- 다음 (사용자 결정): 검증안 정정 (R1-V1–V3) · 사전 봉인 + 변경부 한정 기능 검증 1 건 — 새 원점 1,860 s (하네스 · 봉인 720 · Python 99 사례 1 세션 420 · PowerShell 5.1 31 사례 1 세션 300 ·
+  보존 · 전달 300 · 미완 정리 120) · 130 고유 입력 · 생산 코드 불변 · 첫 실패에서 중지 (수정 · 재시험 · fallback 없음) · COMSOL / JVM / compile / native 0. 채택 문구 · 발송 프롬프트
+  `docs/COMSOL_MICROSHORT_S1O_R1_VALIDATION_SEND_20261008.md` (세부 = 회신 `VALIDATION_APPROVAL_DRAFT_KO.md` sha256 `4b32d38a…3910`). **이 검증은 실행 PC 에서 후보 Python / PowerShell 함수를
+  합성 fixture 로 실제로 부르는 첫 단계다** (COMSOL 아님). 이 절은 승인이 아니다.
