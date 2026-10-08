@@ -207,12 +207,27 @@ def own_p95(src, step):
     return float(np.percentile(vm[ok], 95))
 
 
+def top_arg(v):
+    """--top 값 — 'pooled' · 'maxown' 또는 양의 유한한 숫자 (MPa · 10-08 1저자 "0~400 으로 범례 맞추고 넘는 것은 상한 색")."""
+    if v in ('pooled', 'maxown'):
+        return v
+    try:
+        x = float(v)
+    except (TypeError, ValueError):
+        raise argparse.ArgumentTypeError(f'--top {v!r} — pooled · maxown · 양의 숫자 (MPa)')
+    if not (math.isfinite(x) and x > 0):
+        raise argparse.ArgumentTypeError(f'--top {v!r} — 양의 유한한 숫자여야 한다')
+    return x
+
+
 def run(src, out, px=1400, scale='log', top='pooled'):
     meta = json.load(open(os.path.join(src, 'vm_moments.json'), encoding='utf-8'))
     cr = meta['colour_range_MPa']
     lo, hi = float(cr['vmin']), float(cr['vmax'])
     if top == 'maxown':                                        # 위쪽 = 시점마다 p95 중 가장 큰 값 (모은 p95 는 낮은 시점이 끌어내려 센 시점이 10 % 넘게 잘렸다)
         hi = max(own_p95(src, m['step']) for m in meta['moments'])
+    elif isinstance(top, (int, float)):                        # 위쪽 = 정한 숫자 (MPa) — 넘는 입자는 colours() 의 clip 으로 맨 위 색
+        hi = float(top)
     if scale == 'linear':
         lo = 0.0                                               # 선형 = 0 … 모은 p95 (1저자 10-08 "그냥 이등분")
     os.makedirs(out, exist_ok=True)
@@ -299,6 +314,23 @@ def selftest():
     chk('R6 구 바깥 = 투명 (알파 0)', rgba[2, 2, 3] == 0.0 and rgba[-3, -3, 3] == 0.0)
     rgba2 = render(xyz[::-1], rad[::-1], cols[::-1], 160, 1, (lo_b, hi_b))
     chk('R7 그리는 순서를 뒤집어도 같은 그림 (z-버퍼)', np.allclose(rgba, rgba2))
+    # 10-08 1저자 "0~400 으로 범례 맞추고 그거 너머는 다 가장 상한값의 색" — 위쪽을 숫자로 · 넘는 입자 = 맨 위 색 (범례 = 숫자 셋 · '≥' 없음)
+    try:
+        ta = [top_arg('400'), top_arg('pooled'), top_arg('maxown'), top_arg('576.5')]
+        bad = []
+        for v in ('0', '-5', 'abc', 'nan'):
+            try:
+                top_arg(v)
+                bad.append(v)
+            except (argparse.ArgumentTypeError, ValueError):
+                pass
+    except NameError:
+        ta, bad = None, ['top_arg 없음']
+    chk(f'R8 --top = pooled · maxown · 양의 숫자 (MPa) · 0 · 음수 · 글자 · NaN 거부 ({ta} · 통과한 잘못된 값 {bad})',
+        ta == [400.0, 'pooled', 'maxown', 576.5] and not bad)
+    cc = colours(np.array([0.0, 200.0, 400.0, 576.0, 1e4]), np.zeros(5, bool), 0.0, 400.0, scale='linear')
+    chk('R9 선형 0 … 400 — 200 → 가운데 색 · 400 · 576 · 10⁴ → 모두 맨 위 색 (넘는 입자 = 상한 색)',
+        np.allclose(cc[1], jet8(0.5)) and np.allclose(cc[2], jet8(1.0)) and np.allclose(cc[3], jet8(1.0)) and np.allclose(cc[4], jet8(1.0)))
     print(f'\n{ok} PASS · {len(fail)} FAIL')
     return 0 if not fail else 1
 
@@ -309,7 +341,8 @@ def main(argv=None):
     ap.add_argument('out', nargs='?', help='그림 폴더')
     ap.add_argument('--px', type=int, default=1400)
     ap.add_argument('--scale', choices=('log', 'linear'), default='log', help='색 눈금 — linear = 0 … 위쪽 · 범례 이등분')
-    ap.add_argument('--top', choices=('pooled', 'maxown'), default='pooled', help='위쪽 끝 — pooled = 네 시점 모은 p95 · maxown = 시점마다 p95 중 최대')
+    ap.add_argument('--top', type=top_arg, default='pooled',
+                    help='위쪽 끝 — pooled = 네 시점 모은 p95 · maxown = 시점마다 p95 중 최대 · 숫자 = 그 MPa (넘는 입자 = 맨 위 색)')
     ap.add_argument('--selftest', action='store_true')
     a = ap.parse_args(argv)
     if a.selftest:
