@@ -1,0 +1,27 @@
+# 1저자 WSL 화면 (10-07 23:5x KST · 붙여 넣은 그대로) — scripts/plane_load_share.py 새 판 (Q1 · Q2 · 21eecbea1) 의 ps45 다섯 조성 다시 실행 (README §4)
+# 코드 = afda0d7ab (detached · ~/dem-audit) · 입력 = ~/ps45_network_20261006 (10-06 망 배치 작업 폴더 · 첫 실행과 같은 덤프) · 출력 = ~/ps45_plane_load_20261007_v2
+# ⚠ α 값 = 화면 3 자리 — 정본은 묶음 (sha256 97f97cdb9b209555e3478ec3d1f094a45b67e4f54b6562a3fbd85993abeabec8) 의 stress_reduction_slide.csv · 반입 전
+실행 중인 배치 없음
+afda0d7ab (HEAD, origin/claude/stoic-knuth-NObVQ) 원장 SELF-96 → claimed_fixed (21eecbea1) · 진행 기록 — Q1 · Q2 병합 (Contribution to σ_zz · α) · ps45 α = WSL 재실행 대기
+plane_load_share selftest 54/54
+  Loaded 553453 contacts from contacts.csv
+  Loaded 558388 contacts from contacts.csv
+  Loaded 558496 contacts from contacts.csv
+  Loaded 562646 contacts from contacts.csv
+  Loaded 535427 contacts from contacts.csv
+PC:SC  상태       σzz MPa       보존        평형   Contribution to σzz (21 단면 평균) AM–AM · AM–SE · SE–SE   (가운데 단면) · (|F| 합 몫)
+0:10   CHECK     158.25   1.0222  2.07e-04   59.56 · 31.01 · 9.43   (64.4 · 25.9 · 9.7) · (33.1 · 37.2 · 29.7)
+         ⚠ 보존 검사 — 단면 하중 최대 ÷ 최소 = 1.0222 > 1 + 0.02
+         α (σ_zz) AM_P  · AM_S 1.291 · SE 0.448 · AM 1.291 · 닫힘 1.000000000 · LW 창 합 ÷ 21 단면 = 1.0037 (창 안 두 입자 155.21 · 가장자리 LW 3.63 ↔ 적분 3.04 · 창 전체 걸침 0.00 MPa)
+3:7    OK        159.93   1.0176  1.65e-04   54.63 · 34.66 · 10.71   (55.6 · 34.6 · 9.8) · (25.4 · 38.3 · 36.3)
+         α (σ_zz) AM_P 1.329 · AM_S 1.245 · SE 0.486 · AM 1.270 · 닫힘 1.000000000 · LW 창 합 ÷ 21 단면 = 0.9969 (창 안 두 입자 154.56 · 가장자리 LW 4.88 ↔ 적분 5.37 · 창 전체 걸침 0.00 MPa)
+5:5    OK        164.44   1.0196  2.05e-04   52.37 · 36.22 · 11.41   (51.5 · 35.7 · 12.8) · (21.2 · 37.9 · 40.9)
+         α (σ_zz) AM_P 1.403 · AM_S 1.132 · SE 0.484 · AM 1.270 · 닫힘 1.000000000 · LW 창 합 ÷ 21 단면 = 1.0056 (창 안 두 입자 158.77 · 가장자리 LW 6.60 ↔ 적분 5.67 · 창 전체 걸침 0.00 MPa)
+7:3    OK        167.14   1.0187  1.87e-04   48.46 · 39.14 · 12.39   (46.4 · 39.5 · 14.2) · (17.0 · 36.4 · 46.6)
+         α (σ_zz) AM_P 1.336 · AM_S 1.086 · SE 0.505 · AM 1.261 · 닫힘 1.000000000 · LW 창 합 ÷ 21 단면 = 1.0006 (창 안 두 입자 160.13 · 가장자리 LW 7.10 ↔ 적분 7.01 · 창 전체 걸침 0.00 MPa)
+10:0   OK        175.48   1.0177  2.26e-04   56.91 · 32.95 · 10.13   (52.0 · 36.7 · 11.3) · (19.8 · 30.5 · 49.6)
+         α (σ_zz) AM_P 1.316 · AM_S  · SE 0.384 · AM 1.316 · 닫힘 1.000000000 · LW 창 합 ÷ 21 단면 = 1.0150 (창 안 두 입자 167.38 · 가장자리 LW 10.73 ↔ 적분 8.10 · 창 전체 걸침 0.00 MPa)
+→ /home/yonghoon71/ps45_plane_load_20261007_v2 · 상태 OK 4 / 5 (OK 아님: 0:10)
+rc=2
+슬라이드 = 커밋본 (같은 바이트)
+97f97cdb9b209555e3478ec3d1f094a45b67e4f54b6562a3fbd85993abeabec8  /home/yonghoon71/ps45_plane_load_20261007_v2.tgz
