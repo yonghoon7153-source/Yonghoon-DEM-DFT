@@ -1,0 +1,866 @@
+{
+ "schema": "g2rr5_01_residual_probe_rerun/v1",
+ "finding": "G2RR5-01 잔여 (분류 밖 단계 · 1저자 Q6 (가))",
+ "fixed_commit": "7153a7d6a17104688c1e3fd7e560c59d2f64f279",
+ "base_commit": "93d1370d1",
+ "previous_fix_commit": "8b6453671d3a17e3ab53046e57d42fbe0af1f4b8",
+ "codex_pin": "aa7ec7fe98e8684f1a2138665f9eba978366c229",
+ "binding_schema": {
+  "now": "np194_import_obs/stage_binding/v2",
+  "retired": [
+   "np194_import_obs/stage_binding/v1"
+  ],
+  "keys": [
+   "plan_source",
+   "mode",
+   "executed",
+   "skipped",
+   "in_process",
+   "expected",
+   "observed",
+   "unclassified"
+  ]
+ },
+ "probes_unchanged": true,
+ "commands": {
+  "placeholders": {
+   "S": "메인 세션 스크래치 (리포 밖)",
+   "R": "새 빈 재현 뿌리 (스크래치 · setup_repro 가 만든다)",
+   "WT": "이 worktree"
+  },
+  "steps": [
+   "python3 -I $S/r5tools/setup_repro.py $S/r5x/slim/gen2_network_reverify5_20261007 $R $WT 7153a7d6a17104688c1e3fd7e560c59d2f64f279",
+   "python3 -I $S/r5tools/run_repro.py $R r5_release_contract",
+   "python3 -I $S/r5tools/run_repro.py $R r5_observation",
+   "python3 -I $S/r5tools/run_repro.py $R r5_release_real_binding",
+   "python3 -I compare_residual_rerun.py $WT $R 7153a7d6a17104688c1e3fd7e560c59d2f64f279 93d1370d1 8b6453671d3a17e3ab53046e57d42fbe0af1f4b8 probe_rerun_summary_residual.json   (스크래치 · 읽기만)"
+  ]
+ },
+ "runs": [
+  {
+   "probe": "r5_release_contract",
+   "rc": 0,
+   "seconds": 18.1
+  },
+  {
+   "probe": "r5_observation",
+   "rc": 0,
+   "seconds": 8.7
+  },
+  {
+   "probe": "r5_release_real_binding",
+   "rc": 0,
+   "seconds": 0.7
+  }
+ ],
+ "release_contract": {
+  "variants": [
+   {
+    "label": "control",
+    "pin": {
+     "build_accepted": true,
+     "gate_problems": 0,
+     "gate_has_G2RR5_01": false,
+     "check": [],
+     "output_exists": true
+    },
+    "fixed": {
+     "build_accepted": true,
+     "gate_problems": 0,
+     "gate_has_G2RR5_01": false,
+     "check": [],
+     "output_exists": true
+    }
+   },
+   {
+    "label": "reread_M2_false",
+    "pin": {
+     "build_accepted": false,
+     "gate_problems": 2,
+     "gate_has_G2RR5_01": false,
+     "check": null,
+     "output_exists": false
+    },
+    "fixed": {
+     "build_accepted": false,
+     "gate_problems": 2,
+     "gate_has_G2RR5_01": false,
+     "check": null,
+     "output_exists": false
+    }
+   },
+   {
+    "label": "reread_empty_cases",
+    "pin": {
+     "build_accepted": false,
+     "gate_problems": 2,
+     "gate_has_G2RR5_01": false,
+     "check": null,
+     "output_exists": false
+    },
+    "fixed": {
+     "build_accepted": false,
+     "gate_problems": 2,
+     "gate_has_G2RR5_01": false,
+     "check": null,
+     "output_exists": false
+    }
+   },
+   {
+    "label": "reread_empty_checks",
+    "pin": {
+     "build_accepted": false,
+     "gate_problems": 1,
+     "gate_has_G2RR5_01": false,
+     "check": null,
+     "output_exists": false
+    },
+    "fixed": {
+     "build_accepted": false,
+     "gate_problems": 1,
+     "gate_has_G2RR5_01": false,
+     "check": null,
+     "output_exists": false
+    }
+   },
+   {
+    "label": "reread_ok_integer",
+    "pin": {
+     "build_accepted": false,
+     "gate_problems": 4,
+     "gate_has_G2RR5_01": false,
+     "check": null,
+     "output_exists": false
+    },
+    "fixed": {
+     "build_accepted": false,
+     "gate_problems": 4,
+     "gate_has_G2RR5_01": false,
+     "check": null,
+     "output_exists": false
+    }
+   },
+   {
+    "label": "reread_unknown_check",
+    "pin": {
+     "build_accepted": false,
+     "gate_problems": 1,
+     "gate_has_G2RR5_01": false,
+     "check": null,
+     "output_exists": false
+    },
+    "fixed": {
+     "build_accepted": false,
+     "gate_problems": 1,
+     "gate_has_G2RR5_01": false,
+     "check": null,
+     "output_exists": false
+    }
+   },
+   {
+    "label": "reread_duplicate_meta",
+    "pin": {
+     "build_accepted": false,
+     "gate_problems": 1,
+     "gate_has_G2RR5_01": false,
+     "check": null,
+     "output_exists": false
+    },
+    "fixed": {
+     "build_accepted": false,
+     "gate_problems": 1,
+     "gate_has_G2RR5_01": false,
+     "check": null,
+     "output_exists": false
+    }
+   },
+   {
+    "label": "reread_wrong_cohort",
+    "pin": {
+     "build_accepted": false,
+     "gate_problems": 1,
+     "gate_has_G2RR5_01": false,
+     "check": null,
+     "output_exists": false
+    },
+    "fixed": {
+     "build_accepted": false,
+     "gate_problems": 1,
+     "gate_has_G2RR5_01": false,
+     "check": null,
+     "output_exists": false
+    }
+   },
+   {
+    "label": "reread_M3_inconsistent",
+    "pin": {
+     "build_accepted": false,
+     "gate_problems": 1,
+     "gate_has_G2RR5_01": false,
+     "check": null,
+     "output_exists": false
+    },
+    "fixed": {
+     "build_accepted": false,
+     "gate_problems": 1,
+     "gate_has_G2RR5_01": false,
+     "check": null,
+     "output_exists": false
+    }
+   },
+   {
+    "label": "observation_inner_problem",
+    "pin": {
+     "build_accepted": false,
+     "gate_problems": 2,
+     "gate_has_G2RR5_01": false,
+     "check": null,
+     "output_exists": false
+    },
+    "fixed": {
+     "build_accepted": false,
+     "gate_problems": 2,
+     "gate_has_G2RR5_01": false,
+     "check": null,
+     "output_exists": false
+    }
+   },
+   {
+    "label": "observation_outside",
+    "pin": {
+     "build_accepted": false,
+     "gate_problems": 2,
+     "gate_has_G2RR5_01": false,
+     "check": null,
+     "output_exists": false
+    },
+    "fixed": {
+     "build_accepted": false,
+     "gate_problems": 2,
+     "gate_has_G2RR5_01": false,
+     "check": null,
+     "output_exists": false
+    }
+   },
+   {
+    "label": "binding_attempt_missing",
+    "pin": {
+     "build_accepted": false,
+     "gate_problems": 1,
+     "gate_has_G2RR5_01": false,
+     "check": null,
+     "output_exists": false
+    },
+    "fixed": {
+     "build_accepted": false,
+     "gate_problems": 1,
+     "gate_has_G2RR5_01": false,
+     "check": null,
+     "output_exists": false
+    }
+   },
+   {
+    "label": "binding_payload_null",
+    "pin": {
+     "build_accepted": true,
+     "gate_problems": 0,
+     "gate_has_G2RR5_01": false,
+     "check": [],
+     "output_exists": true
+    },
+    "fixed": {
+     "build_accepted": false,
+     "gate_problems": 1,
+     "gate_has_G2RR5_01": true,
+     "check": null,
+     "output_exists": false
+    }
+   },
+   {
+    "label": "binding_parser_absent",
+    "pin": {
+     "build_accepted": true,
+     "gate_problems": 0,
+     "gate_has_G2RR5_01": false,
+     "check": [],
+     "output_exists": true
+    },
+    "fixed": {
+     "build_accepted": false,
+     "gate_problems": 1,
+     "gate_has_G2RR5_01": true,
+     "check": null,
+     "output_exists": false
+    }
+   },
+   {
+    "label": "binding_parser_zero",
+    "pin": {
+     "build_accepted": true,
+     "gate_problems": 0,
+     "gate_has_G2RR5_01": false,
+     "check": [],
+     "output_exists": true
+    },
+    "fixed": {
+     "build_accepted": false,
+     "gate_problems": 1,
+     "gate_has_G2RR5_01": true,
+     "check": null,
+     "output_exists": false
+    }
+   },
+   {
+    "label": "binding_unplanned_process",
+    "pin": {
+     "build_accepted": true,
+     "gate_problems": 0,
+     "gate_has_G2RR5_01": false,
+     "check": [],
+     "output_exists": true
+    },
+    "fixed": {
+     "build_accepted": false,
+     "gate_problems": 2,
+     "gate_has_G2RR5_01": true,
+     "check": null,
+     "output_exists": false
+    }
+   },
+   {
+    "label": "binding_count_bool",
+    "pin": {
+     "build_accepted": true,
+     "gate_problems": 0,
+     "gate_has_G2RR5_01": false,
+     "check": [],
+     "output_exists": true
+    },
+    "fixed": {
+     "build_accepted": false,
+     "gate_problems": 1,
+     "gate_has_G2RR5_01": true,
+     "check": null,
+     "output_exists": false
+    }
+   },
+   {
+    "label": "observation_finalized_zero",
+    "pin": {
+     "build_accepted": true,
+     "gate_problems": 0,
+     "gate_has_G2RR5_01": false,
+     "check": [],
+     "output_exists": true
+    },
+    "fixed": {
+     "build_accepted": false,
+     "gate_problems": 1,
+     "gate_has_G2RR5_01": true,
+     "check": null,
+     "output_exists": false
+    }
+   }
+  ],
+  "rechecks": [
+   {
+    "label": "reread_M2_false",
+    "pin_refreshed": 2,
+    "fixed_refreshed": 2,
+    "fixed_refreshed_has_G2RR5_01": false
+   },
+   {
+    "label": "reread_empty_cases",
+    "pin_refreshed": 2,
+    "fixed_refreshed": 2,
+    "fixed_refreshed_has_G2RR5_01": false
+   },
+   {
+    "label": "reread_empty_checks",
+    "pin_refreshed": 1,
+    "fixed_refreshed": 1,
+    "fixed_refreshed_has_G2RR5_01": false
+   },
+   {
+    "label": "reread_ok_integer",
+    "pin_refreshed": 4,
+    "fixed_refreshed": 4,
+    "fixed_refreshed_has_G2RR5_01": false
+   },
+   {
+    "label": "reread_unknown_check",
+    "pin_refreshed": 1,
+    "fixed_refreshed": 1,
+    "fixed_refreshed_has_G2RR5_01": false
+   },
+   {
+    "label": "reread_duplicate_meta",
+    "pin_refreshed": 1,
+    "fixed_refreshed": 1,
+    "fixed_refreshed_has_G2RR5_01": false
+   },
+   {
+    "label": "reread_wrong_cohort",
+    "pin_refreshed": 1,
+    "fixed_refreshed": 1,
+    "fixed_refreshed_has_G2RR5_01": false
+   },
+   {
+    "label": "reread_M3_inconsistent",
+    "pin_refreshed": 1,
+    "fixed_refreshed": 1,
+    "fixed_refreshed_has_G2RR5_01": false
+   },
+   {
+    "label": "observation_inner_problem",
+    "pin_refreshed": 2,
+    "fixed_refreshed": 2,
+    "fixed_refreshed_has_G2RR5_01": false
+   },
+   {
+    "label": "observation_outside",
+    "pin_refreshed": 2,
+    "fixed_refreshed": 2,
+    "fixed_refreshed_has_G2RR5_01": false
+   },
+   {
+    "label": "binding_attempt_missing",
+    "pin_refreshed": 1,
+    "fixed_refreshed": 1,
+    "fixed_refreshed_has_G2RR5_01": false
+   },
+   {
+    "label": "binding_payload_null",
+    "pin_refreshed": 0,
+    "fixed_refreshed": 1,
+    "fixed_refreshed_has_G2RR5_01": true
+   },
+   {
+    "label": "binding_parser_absent",
+    "pin_refreshed": 0,
+    "fixed_refreshed": 1,
+    "fixed_refreshed_has_G2RR5_01": true
+   },
+   {
+    "label": "binding_parser_zero",
+    "pin_refreshed": 0,
+    "fixed_refreshed": 1,
+    "fixed_refreshed_has_G2RR5_01": true
+   },
+   {
+    "label": "binding_unplanned_process",
+    "pin_refreshed": 0,
+    "fixed_refreshed": 2,
+    "fixed_refreshed_has_G2RR5_01": true
+   },
+   {
+    "label": "binding_count_bool",
+    "pin_refreshed": 0,
+    "fixed_refreshed": 1,
+    "fixed_refreshed_has_G2RR5_01": true
+   },
+   {
+    "label": "observation_finalized_zero",
+    "pin_refreshed": 0,
+    "fixed_refreshed": 1,
+    "fixed_refreshed_has_G2RR5_01": true
+   }
+  ],
+  "control_restored": {
+   "pin": [],
+   "fixed": []
+  },
+  "submitted_detail_fixed": [
+   [
+    "submitted/g2rr5_839dbac6b_1007_2224/old_reread.json",
+    []
+   ],
+   [
+    "submitted/g2pre_pilot_839dbac6b_1007_2224/reread.json",
+    []
+   ]
+  ]
+ },
+ "release_real_binding": {
+  "fixed_binding_unclassified": [],
+  "binding_equal_pin_except_v2": true,
+  "cases": [
+   {
+    "label": "real_failure_summary_present",
+    "pin": {
+     "build_accepted": false,
+     "gate_problems": 1,
+     "gate_has_G2RR5_01": false,
+     "check": null,
+     "output_exists": false
+    },
+    "fixed": {
+     "build_accepted": false,
+     "gate_problems": 2,
+     "gate_has_G2RR5_01": true,
+     "check": null,
+     "output_exists": false
+    }
+   },
+   {
+    "label": "only_top_failure_list_cleared",
+    "pin": {
+     "build_accepted": true,
+     "gate_problems": 0,
+     "gate_has_G2RR5_01": false,
+     "check": [],
+     "output_exists": true
+    },
+    "fixed": {
+     "build_accepted": false,
+     "gate_problems": 1,
+     "gate_has_G2RR5_01": true,
+     "check": null,
+     "output_exists": false
+    }
+   }
+  ]
+ },
+ "observation": {
+  "n": 17,
+  "passed_fixed": 17,
+  "rc_equal": 17,
+  "problems_bytes_equal": 17,
+  "verdicts_equal": 17,
+  "binding_equal_except_v2": 17,
+  "rc0_rows": 5,
+  "rc0_rows_with_contract_problems": 0,
+  "rows": [
+   {
+    "label": "control_old_fallback",
+    "expected_rc": 0,
+    "rc_pin": 0,
+    "rc_fixed": 0,
+    "passed_fixed": true,
+    "problems_bytes_equal": true,
+    "verdicts_equal": true,
+    "schema_pin": "np194_import_obs/stage_binding/v1",
+    "schema_fixed": "np194_import_obs/stage_binding/v2",
+    "binding_equal_except_v2": true,
+    "unclassified": {
+     "lhs00_000|1|1": []
+    },
+    "contract_attempts_with_problems": 0,
+    "contract_first": null
+   },
+   {
+    "label": "control_new_plan",
+    "expected_rc": 0,
+    "rc_pin": 0,
+    "rc_fixed": 0,
+    "passed_fixed": true,
+    "problems_bytes_equal": true,
+    "verdicts_equal": true,
+    "schema_pin": "np194_import_obs/stage_binding/v1",
+    "schema_fixed": "np194_import_obs/stage_binding/v2",
+    "binding_equal_except_v2": true,
+    "unclassified": {
+     "lhs00_000|1|1": []
+    },
+    "contract_attempts_with_problems": 0,
+    "contract_first": null
+   },
+   {
+    "label": "pair_missing_parse_liggghts",
+    "expected_rc": 1,
+    "rc_pin": 1,
+    "rc_fixed": 1,
+    "passed_fixed": true,
+    "problems_bytes_equal": true,
+    "verdicts_equal": true,
+    "schema_pin": "np194_import_obs/stage_binding/v1",
+    "schema_fixed": "np194_import_obs/stage_binding/v2",
+    "binding_equal_except_v2": true,
+    "unclassified": {
+     "lhs00_000|1|1": []
+    },
+    "contract_attempts_with_problems": 1,
+    "contract_first": "stage_binding 시도 'lhs00_000|1|1': observed ≠ expected — 모자람 {'scripts/parse_liggghts.py': '0/1'} · 많음 {} · 계획 밖 {} (관측/계획 · 0 개도 결손) — 실행된 단계마다 끝맺은 프로세스가 정확히 그 수여야 (G2RR5-01)"
+   },
+   {
+    "label": "pair_missing_analyze_contacts_bimodal",
+    "expected_rc": 1,
+    "rc_pin": 1,
+    "rc_fixed": 1,
+    "passed_fixed": true,
+    "problems_bytes_equal": true,
+    "verdicts_equal": true,
+    "schema_pin": "np194_import_obs/stage_binding/v1",
+    "schema_fixed": "np194_import_obs/stage_binding/v2",
+    "binding_equal_except_v2": true,
+    "unclassified": {
+     "lhs00_000|1|1": []
+    },
+    "contract_attempts_with_problems": 1,
+    "contract_first": "stage_binding 시도 'lhs00_000|1|1': observed ≠ expected — 모자람 {'scripts/analyze_contacts_bimodal.py': '0/1'} · 많음 {} · 계획 밖 {} (관측/계획 · 0 개도 결손) — 실행된 단계마다 끝맺은 프로세스가 정확히 그 수여야 (G2RR5"
+   },
+   {
+    "label": "pair_missing_coverage_physics_vs_hertzian",
+    "expected_rc": 1,
+    "rc_pin": 1,
+    "rc_fixed": 1,
+    "passed_fixed": true,
+    "problems_bytes_equal": true,
+    "verdicts_equal": true,
+    "schema_pin": "np194_import_obs/stage_binding/v1",
+    "schema_fixed": "np194_import_obs/stage_binding/v2",
+    "binding_equal_except_v2": true,
+    "unclassified": {
+     "lhs00_000|1|1": []
+    },
+    "contract_attempts_with_problems": 1,
+    "contract_first": "stage_binding 시도 'lhs00_000|1|1': observed ≠ expected — 모자람 {'scripts/coverage_physics_vs_hertzian.py': '0/1'} · 많음 {} · 계획 밖 {} (관측/계획 · 0 개도 결손) — 실행된 단계마다 끝맺은 프로세스가 정확히 그 수여야 (G"
+   },
+   {
+    "label": "pair_missing_network_conductivity",
+    "expected_rc": 1,
+    "rc_pin": 1,
+    "rc_fixed": 1,
+    "passed_fixed": true,
+    "problems_bytes_equal": true,
+    "verdicts_equal": true,
+    "schema_pin": "np194_import_obs/stage_binding/v1",
+    "schema_fixed": "np194_import_obs/stage_binding/v2",
+    "binding_equal_except_v2": true,
+    "unclassified": {
+     "lhs00_000|1|1": []
+    },
+    "contract_attempts_with_problems": 1,
+    "contract_first": "stage_binding 시도 'lhs00_000|1|1': observed ≠ expected — 모자람 {'scripts/network_conductivity.py': '0/1'} · 많음 {} · 계획 밖 {} (관측/계획 · 0 개도 결손) — 실행된 단계마다 끝맺은 프로세스가 정확히 그 수여야 (G2RR5-01)"
+   },
+   {
+    "label": "pair_missing_lhs_webapp_batch",
+    "expected_rc": 1,
+    "rc_pin": 1,
+    "rc_fixed": 1,
+    "passed_fixed": true,
+    "problems_bytes_equal": true,
+    "verdicts_equal": true,
+    "schema_pin": "np194_import_obs/stage_binding/v1",
+    "schema_fixed": "np194_import_obs/stage_binding/v2",
+    "binding_equal_except_v2": true,
+    "unclassified": {
+     "lhs00_000|1|1": []
+    },
+    "contract_attempts_with_problems": 1,
+    "contract_first": "stage_binding 시도 'lhs00_000|1|1': observed ≠ expected — 모자람 {'worker': '0/1'} · 많음 {} · 계획 밖 {} (관측/계획 · 0 개도 결손) — 실행된 단계마다 끝맺은 프로세스가 정확히 그 수여야 (G2RR5-01)"
+   },
+   {
+    "label": "parser_final_missing",
+    "expected_rc": 1,
+    "rc_pin": 1,
+    "rc_fixed": 1,
+    "passed_fixed": true,
+    "problems_bytes_equal": true,
+    "verdicts_equal": true,
+    "schema_pin": "np194_import_obs/stage_binding/v1",
+    "schema_fixed": "np194_import_obs/stage_binding/v2",
+    "binding_equal_except_v2": true,
+    "unclassified": {
+     "lhs00_000|1|1": []
+    },
+    "contract_attempts_with_problems": 1,
+    "contract_first": "stage_binding 시도 'lhs00_000|1|1': observed ≠ expected — 모자람 {'scripts/parse_liggghts.py': '0/1'} · 많음 {} · 계획 밖 {} (관측/계획 · 0 개도 결손) — 실행된 단계마다 끝맺은 프로세스가 정확히 그 수여야 (G2RR5-01)"
+   },
+   {
+    "label": "coverage_pair_missing_contact_duplicate",
+    "expected_rc": 1,
+    "rc_pin": 1,
+    "rc_fixed": 1,
+    "passed_fixed": true,
+    "problems_bytes_equal": true,
+    "verdicts_equal": true,
+    "schema_pin": "np194_import_obs/stage_binding/v1",
+    "schema_fixed": "np194_import_obs/stage_binding/v2",
+    "binding_equal_except_v2": true,
+    "unclassified": {
+     "lhs00_000|1|1": []
+    },
+    "contract_attempts_with_problems": 1,
+    "contract_first": "stage_binding 시도 'lhs00_000|1|1': observed ≠ expected — 모자람 {'scripts/coverage_physics_vs_hertzian.py': '0/1'} · 많음 {'scripts/analyze_contacts_bimodal.py': '2/1'} · 계획 밖 {} (관측/계획 "
+   },
+   {
+    "label": "unexpected_duplicate_parser",
+    "expected_rc": 1,
+    "rc_pin": 1,
+    "rc_fixed": 1,
+    "passed_fixed": true,
+    "problems_bytes_equal": true,
+    "verdicts_equal": true,
+    "schema_pin": "np194_import_obs/stage_binding/v1",
+    "schema_fixed": "np194_import_obs/stage_binding/v2",
+    "binding_equal_except_v2": true,
+    "unclassified": {
+     "lhs00_000|1|1": []
+    },
+    "contract_attempts_with_problems": 1,
+    "contract_first": "stage_binding 시도 'lhs00_000|1|1': observed ≠ expected — 모자람 {} · 많음 {'scripts/parse_liggghts.py': '2/1'} · 계획 밖 {} (관측/계획 · 0 개도 결손) — 실행된 단계마다 끝맺은 프로세스가 정확히 그 수여야 (G2RR5-01)"
+   },
+   {
+    "label": "only_worker_solver",
+    "expected_rc": 1,
+    "rc_pin": 1,
+    "rc_fixed": 1,
+    "passed_fixed": true,
+    "problems_bytes_equal": true,
+    "verdicts_equal": true,
+    "schema_pin": "np194_import_obs/stage_binding/v1",
+    "schema_fixed": "np194_import_obs/stage_binding/v2",
+    "binding_equal_except_v2": true,
+    "unclassified": {
+     "lhs00_000|1|1": []
+    },
+    "contract_attempts_with_problems": 1,
+    "contract_first": "stage_binding 시도 'lhs00_000|1|1': observed ≠ expected — 모자람 {'scripts/parse_liggghts.py': '0/1', 'scripts/analyze_contacts_bimodal.py': '0/1', 'scripts/coverage_physics_vs_hertzian"
+   },
+   {
+    "label": "plan_mismatch",
+    "expected_rc": 1,
+    "rc_pin": 1,
+    "rc_fixed": 1,
+    "passed_fixed": true,
+    "problems_bytes_equal": true,
+    "verdicts_equal": true,
+    "schema_pin": "np194_import_obs/stage_binding/v1",
+    "schema_fixed": "np194_import_obs/stage_binding/v2",
+    "binding_equal_except_v2": true,
+    "unclassified": {
+     "lhs00_000|1|1": []
+    },
+    "contract_attempts_with_problems": 1,
+    "contract_first": "stage_binding 시도 'lhs00_000|1|1': observed ≠ expected — 모자람 {} · 많음 {} · 계획 밖 {'scripts/coverage_physics_vs_hertzian.py': 1} (관측/계획 · 0 개도 결손) — 실행된 단계마다 끝맺은 프로세스가 정확히 그 수여야 (G2RR5"
+   },
+   {
+    "label": "plan_missing_current_fallback",
+    "expected_rc": 0,
+    "rc_pin": 0,
+    "rc_fixed": 0,
+    "passed_fixed": true,
+    "problems_bytes_equal": true,
+    "verdicts_equal": true,
+    "schema_pin": "np194_import_obs/stage_binding/v1",
+    "schema_fixed": "np194_import_obs/stage_binding/v2",
+    "binding_equal_except_v2": true,
+    "unclassified": {
+     "lhs00_000|1|1": []
+    },
+    "contract_attempts_with_problems": 0,
+    "contract_first": null
+   },
+   {
+    "label": "unknown_stage",
+    "expected_rc": 1,
+    "rc_pin": 1,
+    "rc_fixed": 1,
+    "passed_fixed": true,
+    "problems_bytes_equal": true,
+    "verdicts_equal": true,
+    "schema_pin": "np194_import_obs/stage_binding/v1",
+    "schema_fixed": "np194_import_obs/stage_binding/v2",
+    "binding_equal_except_v2": true,
+    "unclassified": {
+     "lhs00_000|1|1": [
+      "Mystery Stage"
+     ]
+    },
+    "contract_attempts_with_problems": 1,
+    "contract_first": "stage_binding 시도 'lhs00_000|1|1': 분류 밖 단계 ['Mystery Stage'] — 실행 단계 ↔ 영수증 표 밖 단계가 돈 시도 (실행기 audit 의 같은 사유 · 최상위 요약이 비어도 · G2RR5-01)"
+   },
+   {
+    "label": "stage_e_out_of_scope",
+    "expected_rc": 1,
+    "rc_pin": 1,
+    "rc_fixed": 1,
+    "passed_fixed": true,
+    "problems_bytes_equal": true,
+    "verdicts_equal": true,
+    "schema_pin": "np194_import_obs/stage_binding/v1",
+    "schema_fixed": "np194_import_obs/stage_binding/v2",
+    "binding_equal_except_v2": true,
+    "unclassified": {
+     "lhs00_000|1|1": [
+      "Stage E (literature-grounded grain corrections)"
+     ]
+    },
+    "contract_attempts_with_problems": 1,
+    "contract_first": "stage_binding 시도 'lhs00_000|1|1': 분류 밖 단계 ['Stage E (literature-grounded grain corrections)'] — 실행 단계 ↔ 영수증 표 밖 단계가 돈 시도 (실행기 audit 의 같은 사유 · 최상위 요약이 비어도 · G2RR5-01)"
+   },
+   {
+    "label": "csv_fallback_legitimate",
+    "expected_rc": 0,
+    "rc_pin": 0,
+    "rc_fixed": 0,
+    "passed_fixed": true,
+    "problems_bytes_equal": true,
+    "verdicts_equal": true,
+    "schema_pin": "np194_import_obs/stage_binding/v1",
+    "schema_fixed": "np194_import_obs/stage_binding/v2",
+    "binding_equal_except_v2": true,
+    "unclassified": {
+     "lhs00_000|1|1": []
+    },
+    "contract_attempts_with_problems": 0,
+    "contract_first": null
+   },
+   {
+    "label": "noncompleted_unfinalized",
+    "expected_rc": 0,
+    "rc_pin": 0,
+    "rc_fixed": 0,
+    "passed_fixed": true,
+    "problems_bytes_equal": true,
+    "verdicts_equal": true,
+    "schema_pin": "np194_import_obs/stage_binding/v1",
+    "schema_fixed": "np194_import_obs/stage_binding/v2",
+    "binding_equal_except_v2": true,
+    "unclassified": {
+     "lhs00_000|1|1": []
+    },
+    "contract_attempts_with_problems": 0,
+    "contract_first": null
+   }
+  ]
+ },
+ "residual_closed": [
+  {
+   "label": "unknown_stage",
+   "audit_rc": 1,
+   "unclassified": [
+    "Mystery Stage"
+   ],
+   "fixed_gate_problems_with_top_cleared": 1,
+   "fixed_gate_has_G2RR5_01": true,
+   "first": "import_observation.stage_binding 시도 1/194 의 값이 실행기 결합 계약과 다르다 (첫 [\"stage_binding 시도 'lhs00_000|1|1': 분류 밖 단계 ['Mystery Stage'] — 실행 단계 ↔ 영수증 표 밖 단계가 돈 시도 (실행기 audit 의 같은 사유 · 최상위 요약이 비어도 · G2RR5-01)\"]) — 시도마다 expected = "
+  },
+  {
+   "label": "stage_e_out_of_scope",
+   "audit_rc": 1,
+   "unclassified": [
+    "Stage E (literature-grounded grain corrections)"
+   ],
+   "fixed_gate_problems_with_top_cleared": 1,
+   "fixed_gate_has_G2RR5_01": true,
+   "first": "import_observation.stage_binding 시도 1/194 의 값이 실행기 결합 계약과 다르다 (첫 [\"stage_binding 시도 'lhs00_000|1|1': 분류 밖 단계 ['Stage E (literature-grounded grain corrections)'] — 실행 단계 ↔ 영수증 표 밖 단계가 돈 시도 (실행기 audit 의 같은 사유 · 최상위 요약이 비어도"
+  },
+  {
+   "label": "pair_missing_parse_liggghts",
+   "audit_rc": 1,
+   "unclassified": [],
+   "fixed_gate_problems_with_top_cleared": 1,
+   "fixed_gate_has_G2RR5_01": true,
+   "first": "import_observation.stage_binding 시도 1/194 의 값이 실행기 결합 계약과 다르다 (첫 [\"stage_binding 시도 'lhs00_000|1|1': observed ≠ expected — 모자람 {'scripts/parse_liggghts.py': '0/1'} · 많음 {} · 계획 밖 {} (관측/계획 · 0 개도 결손) — 실행된 단계마다 끝맺은 프로세스가"
+  }
+ ],
+ "old_schema_gate": {
+  "fixture": "상세 194 픽스처 · 스키마 v1 · 시도 기록 unclassified 없음 (고치기 전 실행기의 정상 감사 꼴)",
+  "gate_problems": 1,
+  "has_rerun_message": true,
+  "first": "import_observation.stage_binding 스키마 'np194_import_obs/stage_binding/v1' = 옛 결합 기록 (시도 기록에 분류 밖 단계 칸 (unclassified) 이 없다 — 분류 밖 단계만으로 실패한 시도를 최상위 요약 없이 가를 수 없다 (G2RR5-01 잔여)) — 고친 실행기로 감사를 다시 돌릴 것 (re-run audit with the fixed runner · 읽기 전용 — `run_network_194_"
+ },
+ "fixture_normal_gate_problems": 0
+}

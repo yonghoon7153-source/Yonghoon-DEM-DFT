@@ -74,7 +74,10 @@
     ⓜ ★ 10-08 G2RR5-01 (Codex 세대 2 재검증 5 §1) — 결합 기록 **시도 값의 생산자 계약** = 한 함수 `stage_binding_record_problems` (키 · 계획 출처 · 단계 열쇠 ·
        정수 (bool 아님) · expected = 실행 단계에서 다시 유도 · 필수 역할 · observed = expected) — v1.3 배포 관문이 시도마다 부른다 (+ 합계 Σ observed ≤
        n_finalized ≤ n_started ≤ n_processes).  옛 배포 관문은 키 집합만 봤다 (값 null · 결손 · 0 · 계획 밖 · bool · 최상위 요약만 [] 인 실제 실패 결합이 통과).
-       audit (`cmd_audit` · `import_observation_problems`) 는 그대로 — 실패 결합을 내고 rc 1 로 잡는 것이 정상.
+       audit 판정 (`cmd_audit` · `import_observation_problems` 의 rc · 사유) 은 그대로 — 실패 결합을 내고 rc 1 로 잡는 것이 정상.
+       ★ 10-08 잔여 (1저자 Q6 (가)) — 결합 기록 v2: 시도 기록마다 분류 밖 단계 이름 (unclassified · 정상 = []) — 분류 밖 단계만으로 실패한 감사 (사유가 그것 하나)
+       의 결합 값이 v1 에서는 자기모순 없이 맞아 최상위 요약만 비우면 배포 관문을 지나갔다.  계약이 빈 목록을 요구 · 옛 v1 (IMPORT_OBS_STAGE_SCHEMA_RETIRED) 감사 =
+       배포 관문이 "고친 실행기로 audit 을 다시" 로 거부 (읽기 전용 감사 · 계산 재실행 불요) · audit 의 판정 · 사유 문구는 그대로 (결합 기록에 칸 하나만 더해진다).
 
 설정 (전부 `manifest.json` 에 남는다)
 ───────────────────────────────────────────────────────────────────────────────
@@ -326,7 +329,13 @@ IMPORT_OBS_HARNESS = ('scripts/wsl_network_smoke.py', 'webapp/test_pipeline_prov
 #:   계획에 없는 프로세스 = 문제).  표 밖 단계 이름 = 분류 밖 (거부 — 파이프라인에 새 단계가 생기면 이 표를 먼저 고친다 · selftest 가 app.py 문자열과 대조).
 #:   ⚠ 남는 한정: fork 뒤 import 는 영수증이 없다 — 봉인 경로에 fork API 가 없음을 발사 사전 점검이 정적으로 확인한다 (`OBS_FORK_PATTERNS`) · -I · -E · -S 로 뜬 단계는
 #:   영수증이 없어 위 결합이 결손으로 잡는다.
-IMPORT_OBS_STAGE_SCHEMA = 'np194_import_obs/stage_binding/v1'       # audit JSON import_observation.stage_binding (v1.3 배포 관문이 생산 194 에 요구한다)
+IMPORT_OBS_STAGE_SCHEMA = 'np194_import_obs/stage_binding/v2'       # audit JSON import_observation.stage_binding (v1.3 배포 관문이 생산 194 에 요구한다)
+#: ★ 10-08 G2RR5-01 잔여 (1저자 Q6 (가)) — v2 = 완료 시도 기록마다 분류 밖 단계 이름 (unclassified · 정상 = []) 을 싣는다 (v1 은 그 칸이 없어 분류 밖 단계만으로
+#:   실패한 시도의 결합 값이 자기모순 없이 맞았다 → 최상위 요약만 비우면 배포 관문 통과).  옛 스키마 → 왜 옛것인가: v1.3 배포 관문이 "고친 실행기로 audit 을 다시"
+#:   로 거부한다 (audit 는 읽기 전용 — 같은 ROOT 에 다시 돌리면 v2 기록 · 계산 재실행 불요).
+IMPORT_OBS_STAGE_SCHEMA_RETIRED = {
+    'np194_import_obs/stage_binding/v1': '시도 기록에 분류 밖 단계 칸 (unclassified) 이 없다 — 분류 밖 단계만으로 실패한 시도를 최상위 요약 없이 가를 수 없다 (G2RR5-01 잔여)',
+}
 IMPORT_OBS_STAGE_PLAN_SCHEMA = 'np194_stage_plan/v1'                # worker.json attempts[].stage_plan
 #: 단계 이름 (app.run_pipeline 의 step) → (단계 열쇠, 그 단계 하위 프로세스의 __main__ 스크립트)
 IMPORT_OBS_STAGE_MAIN = {
@@ -628,8 +637,9 @@ def import_observation_problems(root: Path, man: dict, obs: dict, rows=()) -> li
             probs.append(f'{tag}: 단계 프로세스가 계획보다 많다 {dup} (관측/계획) — 같은 단계의 중복 영수증은 다른 단계의 결손을 메우지 못한다 (G2RR4-02)')
         if extra:
             probs.append(f'{tag}: 실행 단계 계획에 없는 프로세스 {extra} — 어느 단계의 기록인지 모른다 (G2RR4-02)')
+        #  ★ 10-08 G2RR5-01 잔여 — 분류 밖 단계 이름도 결합 기록에 (unclassified · 위 사유와 같은 목록 · 정상 = []) — 배포 관문이 최상위 요약 없이도 가른다
         binding[f'{k[0]}|{k[1]}|{k[2]}'] = dict(plan_source=pl[1], mode=(pl[0] or {}).get('mode'), executed=se['executed'], skipped=se['skipped'],
-                                                in_process=se['in_process'], expected=dict(want), observed=dict(seen))
+                                                in_process=se['in_process'], expected=dict(want), observed=dict(seen), unclassified=list(se['unknown']))
     obs['completed_attempts'] = [list(k) for k in sorted(completed)]
     obs['unfinalized_noncompleted'] = info
     obs['stage_binding'] = dict(schema=IMPORT_OBS_STAGE_SCHEMA, attempts=binding)
@@ -639,8 +649,8 @@ def import_observation_problems(root: Path, man: dict, obs: dict, rows=()) -> li
 
 #: ★ 10-08 G2RR5-01 (Codex 세대 2 재검증 5 §1) — 위 `import_observation_problems` 가 완료 시도마다 stage_binding.attempts['케이스|run|시도'] 에 싣는 dict 의
 #:   키 · 계획 출처 (그 함수가 쓰는 두 문자열 그대로 — 시도 사본 · 지금 케이스 기록).  그 함수의 문자열을 바꾸면 여기도 고친다 — selftest ㉟i 가 실제 audit
-#:   출력의 두 출처와 대조한다 (audit 는 이 표를 쓰지 않는다 · 감사 출력은 그대로).
-IMPORT_OBS_STAGE_BINDING_KEYS = ('plan_source', 'mode', 'executed', 'skipped', 'in_process', 'expected', 'observed')
+#:   출력의 두 출처와 대조한다 (audit 는 이 표를 쓰지 않는다).  ★ 10-08 잔여 — 키 unclassified (결합 기록 v2 · ㉟j 가 실제 audit 출력으로 대조).
+IMPORT_OBS_STAGE_BINDING_KEYS = ('plan_source', 'mode', 'executed', 'skipped', 'in_process', 'expected', 'observed', 'unclassified')
 IMPORT_OBS_STAGE_PLAN_SOURCES = ('worker.json attempts[].stage_plan (그 시도가 쓴 케이스 기록의 단계)',
                                  'out/status.json 케이스 기록 stages (지금 기록을 쓴 시도 — 봉인 판정 record_sha)')
 
@@ -655,8 +665,9 @@ def stage_binding_record_problems(key, rec) -> list:
       · expected · observed = {키: 정수 (bool 아님)} · 키 ⊆ {'worker'} ∪ 단계 스크립트 (IMPORT_OBS_STAGE_MAIN 값의 둘째)
       · expected = {'worker': 1} + executed 를 스크립트로 바꾼 Counter (다시 유도해 같아야 — 상세 자기모순 거부) · 필수 역할 (IMPORT_OBS_ROLES) 워커 1 · 망 솔버 ≥ 1
       · observed = expected (정확히 — 결손 · 0 · 중복 · 계획 밖 = 문제 · 실행기 audit 가 같은 시도에 내는 사유와 같은 판정)
-    열쇠 집합 (= 관측된 완료 시도) 대조 · 합계 (Σ observed ≤ n_finalized ≤ n_started ≤ n_processes) 는 부르는 쪽.  재시도 · 미완료 시도의 영수증 (Q2) 은
-    대상이 아니다 (완료 시도의 결합 기록 하나만 본다)."""
+      · ★ 10-08 잔여 (결합 기록 v2) — unclassified = 문자열 목록 · **빈 목록** (분류 밖 단계 이름이 있으면 = 문제 · 실행기 audit 의 '분류 밖 단계' 사유와 같은 판정)
+    열쇠 집합 (= 관측된 완료 시도) 대조 · 합계 (Σ observed ≤ n_finalized ≤ n_started ≤ n_processes) · 옛 스키마 (IMPORT_OBS_STAGE_SCHEMA_RETIRED) 는 부르는 쪽.
+    재시도 · 미완료 시도의 영수증 (Q2) 은 대상이 아니다 (완료 시도의 결합 기록 하나만 본다)."""
     tag = f'stage_binding 시도 {key!r}'
     if not isinstance(rec, dict):
         return [f'{tag}: 값 {type(rec).__name__} — 시도 결합 기록 (dict) 이 아니다 (G2RR5-01)']
@@ -678,6 +689,12 @@ def stage_binding_record_problems(key, rec) -> list:
     sk = rec.get('skipped')
     if not (isinstance(sk, list) and all(isinstance(x, str) for x in sk)):
         p.append(f'{tag}: skipped {str(sk)[:120]} — 문자열 목록이 아니다 (G2RR5-01)')
+    if 'unclassified' in rec:                                           # 없는 칸 = 위 키 집합 문제 (옛 v1 꼴)
+        uc = rec['unclassified']
+        if not (isinstance(uc, list) and all(isinstance(x, str) for x in uc)):
+            p.append(f'{tag}: unclassified {str(uc)[:120]} — 분류 밖 단계 이름 (문자열) 목록이 아니다 (G2RR5-01)')
+        elif uc:
+            p.append(f'{tag}: 분류 밖 단계 {uc[:3]} — 실행 단계 ↔ 영수증 표 밖 단계가 돈 시도 (실행기 audit 의 같은 사유 · 최상위 요약이 비어도 · G2RR5-01)')
     ip = rec.get('in_process')
     if not (_n(ip) and ip >= 0):
         p.append(f'{tag}: in_process {ip!r} — 0 이상 정수 (bool 아님) 가 아니다 (G2RR5-01)')
@@ -4352,6 +4369,62 @@ def _selftest() -> int:
                 repr((callable(fn_), isinstance(base_, dict), [(nm_, ps_[:1]) for nm_, ps_ in mres_])))
 
         _scenario('㉟i G2RR5-01 결합 기록 시도 값 계약 시나리오', _s35i)
+
+        # ═══ ㉟j ★ 10-08 G2RR5-01 잔여 (1저자 Q6 (가)) — 분류 밖 단계만으로 실패한 감사의 결합 기록에 그 단계 이름이 실린다 (결합 기록 v2 · 반례 먼저) ════════════
+        #   ㉟i 의 계약 (결합 기록 v1 · 7 키) 은 분류 밖 단계를 몰랐다 — Codex r5_observation 의 unknown_stage · stage_e_out_of_scope 꼴 (단계 계획 · 케이스 기록 둘 다
+        #   그 단계 · record_sha 다시 결합 = 사유가 그것 하나) 의 결합 값은 계약 문제 0 → 최상위 요약만 비우면 v1.3 배포 관문 통과.  고친 판: audit 가 시도마다 분류 밖
+        #   단계 이름을 결합 기록 (unclassified) 에 싣고 (스키마 v2 · 사유 문구 · 판정은 그대로) 계약이 빈 목록을 요구한다 · 옛 v1 = 이름 표 (배포 관문이 "감사를 다시").
+        def _s35j():
+            fn_ = _G.get('stage_binding_record_problems')
+            Ro = tmp / 'run_obs'
+            pos_ = next((aj_ for lab_, _rc, aj_ in _S35G.get('ok', []) if lab_ == '㉟g 양성 (5/5)'), None) or {}
+            res_ = []
+            for j_, step_ in enumerate(('Mystery Stage', 'Stage E (literature-grounded grain corrections)')):
+                r_ = tmp / f'obs35j_{j_}'
+                shutil.copytree(Ro, r_, symlinks=True)
+                rec_ = None
+                for sp_ in (case_dir(r_, 'lhsx_900') / 'out' / 'status.json', r_ / 'merged' / 'lhsx' / 'status.json'):
+                    st_ = read_json(sp_)
+                    rec_ = st_['cases']['lhsx_900']
+                    rec_['stages'] = list(rec_['stages']) + [dict(step=step_, rc=0, ok=True)]
+                    write_json(sp_, st_)
+                wp_ = case_dir(r_, 'lhsx_900') / 'worker.json'
+                w_ = read_json(wp_)
+                w_['attempts'][-1]['seal']['record_sha'] = _rec_sha(rec_)            # 케이스 기록 = 그 시도가 쓴 기록 (봉인 판정 · merged 그대로)
+                w_['attempts'][-1]['stage_plan'] = stage_plan_of(rec_)                 # 시도 단계 계획 = 케이스 기록 (계획 ↔ 기록 다름 사유 없음)
+                write_json(wp_, w_)
+                with _patch(git_info=_git_fake()):
+                    rc_, aj_, _o = _audit_json(r_)
+                res_.append((step_, rc_, aj_))
+            for step_, rc_, aj_ in res_:
+                sb_ = (aj_.get('import_observation') or {}).get('stage_binding') or {}
+                at_ = (sb_.get('attempts') or {}).get('lhsx_900|1|1') or {}
+                want_ = [f'lhsx_900 (run 1 · 시도 1): 분류 밖 단계 [{step_!r}] — 실행 단계 ↔ 영수증 표 (IMPORT_OBS_STAGE_MAIN · IMPORT_OBS_STAGE_SKIP · '
+                         'IMPORT_OBS_INPROC_STEPS) 를 먼저 고칠 것 (G2RR4-02)']
+                same_ = bool(pos_) and all(aj_.get(k_) == pos_.get(k_) for k_ in ('verdicts', 'merged', 'generation_problems', 'input_problems'))
+                cp_ = fn_('lhsx_900|1|1', at_) if callable(fn_) and at_ else None
+                chk(f'㉟j ★ G2RR5-01 잔여 — 분류 밖 단계 {step_!r} 만으로 실패한 실제 audit CLI (단계 계획 · 케이스 기록 둘 다 · record_sha 다시 결합) → rc 1 · '
+                    '관측 문제 = 그 사유 하나 (문자 그대로) · 봉인 판정 · merged · 세대 · 입력 = ㉟g 양성과 같음 · 결합 기록 스키마 = 지금 · 그 시도 unclassified = '
+                    '[그 단계] · 계약 문제',
+                    rc_ == 1 and aj_.get('import_observation_problems') == want_ and same_ and sb_.get('schema') == _G.get('IMPORT_OBS_STAGE_SCHEMA')
+                    and at_.get('unclassified') == [step_] and bool(cp_) and any('분류 밖 단계' in str(x_) for x_ in cp_ or []),
+                    repr((rc_, aj_.get('import_observation_problems'), same_, sb_.get('schema'), at_.get('unclassified'), (cp_ or [])[:2])))
+            at0_ = ((((res_[0][2].get('import_observation') or {}).get('stage_binding') or {}).get('attempts') or {}).get('lhsx_900|1|1') or {}) if res_ else {}
+            emp_ = fn_('lhsx_900|1|1', dict(at0_, unclassified=[])) if callable(fn_) and at0_ else None
+            drp_ = fn_('lhsx_900|1|1', {k_: v_ for k_, v_ in at0_.items() if k_ != 'unclassified'}) if callable(fn_) and at0_ else None
+            chk('㉟j ★ 결합 기록 값 — 같은 시도에서 unclassified 만 [] 로 바꾸면 계약 문제 0 (그 칸 하나가 실패를 말한다) · 그 칸을 뺀 옛 꼴 (v1 · 7 키) = 계약 문제 '
+                '(키 결손)',
+                emp_ == [] and bool(drp_) and any('unclassified' in str(x_) for x_ in drp_ or []), repr((emp_, (drp_ or [])[:2])))
+            ret_ = _G.get('IMPORT_OBS_STAGE_SCHEMA_RETIRED') or {}
+            psb_ = (pos_.get('import_observation') or {}).get('stage_binding') or {}
+            pat_ = (psb_.get('attempts') or {}).get('lhsx_900|1|1') or {}
+            chk('㉟j ★ 결합 기록 스키마 = v2 (np194_import_obs/stage_binding/v2) · 옛 v1 = 이름 표 (IMPORT_OBS_STAGE_SCHEMA_RETIRED — 배포 관문이 "감사를 다시" 로 거부) · '
+                '㉟g 양성 감사 = v2 · 그 시도 unclassified = [] (새 칸 · 정상 = 빈 목록)',
+                _G.get('IMPORT_OBS_STAGE_SCHEMA') == 'np194_import_obs/stage_binding/v2' and 'np194_import_obs/stage_binding/v1' in ret_
+                and psb_.get('schema') == 'np194_import_obs/stage_binding/v2' and pat_.get('unclassified') == [],
+                repr((_G.get('IMPORT_OBS_STAGE_SCHEMA'), sorted(ret_), psb_.get('schema'), pat_.get('unclassified'))))
+
+        _scenario('㉟j G2RR5-01 잔여 분류 밖 단계 결합 기록 시나리오', _s35j)
     finally:
         for k, v in env_keep.items():
             if v is None:
