@@ -1,0 +1,193 @@
+{
+ "tool": "vm_moments",
+ "definition": "Love–Weber 입자 응력 (봉인 calc_love_weber_stress · return_arrays · arrays_vm = 대칭부 VM) × scale / 1e6 = MPa · 벽 접촉 입자 제외 · 평균 = 부피 가중 · 위 / 아래 1/3 = 판 높이 기준",
+ "meta": "/home/yonghoon71/ps73_snap_3100000/ana_meta.json",
+ "moments": [
+  {
+   "step": 1000000,
+   "dir": "/home/yonghoon71/ps73_snap_1000000/ana",
+   "lw_status": "OK",
+   "lw_definition": "love_weber_branch_full_tensor_v1",
+   "plate_z_um": 132.302,
+   "box_um": [
+    50.0,
+    50.0
+   ],
+   "n_atoms": 160420,
+   "n_contacts": 451249,
+   "inputs_sha256": {
+    "atoms.csv": "a39bbcef4737567e2960cd55ab9cadee6be6f5f8544c44ccec356800cd6698c1",
+    "contacts.csv": "56ff616dd78c050d8168aa1ed1cd8231913e82f5072791f0f194d0402f383a09",
+    "mesh_info.json": "20811b795303d06d5fc6463fdee75f78e665e46edd017e795f32e4620df43afe",
+    "input_params.json": "9042dc5d67a46ef4cb0178341ce5645bb99f97e3e33e463410187d4c5a91e6d2"
+   },
+   "mean_vm_all_MPa": 19.865738634568213,
+   "AM": {
+    "n": 1656,
+    "n_wall": 17,
+    "n_zero": 0,
+    "mean_vm_MPa": 11.1967852411864,
+    "median_vm_MPa": 12.500958784763732,
+    "top_third_mean_vm_MPa": 5.432325459141388,
+    "bottom_third_mean_vm_MPa": 16.097596998961013,
+    "top_over_bottom": 0.33746188698176544
+   },
+   "SE": {
+    "n": 158764,
+    "n_wall": 1784,
+    "n_zero": 0,
+    "mean_vm_MPa": 19.888759706105613,
+    "median_vm_MPa": 9.564017786970894,
+    "top_third_mean_vm_MPa": 9.779580816241346,
+    "bottom_third_mean_vm_MPa": 28.42929207038438,
+    "top_over_bottom": 0.3439966353023971
+   },
+   "label": "First plate contact",
+   "time_s": 1.0,
+   "plate_pressure_MPa": 0.44918528999999996
+  },
+  {
+   "step": 2200000,
+   "dir": "/home/yonghoon71/ps73_snap_2200000/ana",
+   "lw_status": "OK",
+   "lw_definition": "love_weber_branch_full_tensor_v1",
+   "plate_z_um": 120.302,
+   "box_um": [
+    50.0,
+    50.0
+   ],
+   "n_atoms": 160420,
+   "n_contacts": 487331,
+   "inputs_sha256": {
+    "atoms.csv": "35689e494a960e40cd6dc6e7357c234e8ac3ed965cadd84392ff519cb050c8d1",
+    "contacts.csv": "f5894f71f2f22d323de2618289df148219f8d9184bd62da7b1465887cbeba810",
+    "mesh_info.json": "ea3df0cc0a534ad4ae88766e675ec6f955f873214e13a1332e69a85690044eb6",
+    "input_params.json": "9042dc5d67a46ef4cb0178341ce5645bb99f97e3e33e463410187d4c5a91e6d2"
+   },
+   "mean_vm_all_MPa": 54.42357659513515,
+   "AM": {
+    "n": 1656,
+    "n_wall": 41,
+    "n_zero": 0,
+    "mean_vm_MPa": 59.619470025794186,
+    "median_vm_MPa": 38.713982768878815,
+    "top_third_mean_vm_MPa": 110.33873635641851,
+    "bottom_third_mean_vm_MPa": 22.649605216604723,
+    "top_over_bottom": 4.871552298647914
+   },
+   "SE": {
+    "n": 158764,
+    "n_wall": 3532,
+    "n_zero": 0,
+    "mean_vm_MPa": 54.65614978562382,
+    "median_vm_MPa": 37.26216405776511,
+    "top_third_mean_vm_MPa": 81.3704488488626,
+    "bottom_third_mean_vm_MPa": 32.19339489744727,
+    "top_over_bottom": 2.527551042941257
+   },
+   "label": "Mid-compression",
+   "time_s": 2.1999999999999997,
+   "plate_pressure_MPa": 151.51759
+  },
+  {
+   "step": 3100000,
+   "dir": "/home/yonghoon71/ps73_snap_3100000/ana",
+   "lw_status": "OK",
+   "lw_definition": "love_weber_branch_full_tensor_v1",
+   "plate_z_um": 111.30199999999999,
+   "box_um": [
+    50.0,
+    50.0
+   ],
+   "n_atoms": 160420,
+   "n_contacts": 559470,
+   "inputs_sha256": {
+    "atoms.csv": "00ddd74c39c09202b32f0fdd7bdf9cf0b620850351bc52fd9223f73b23bc5ff1",
+    "contacts.csv": "fd0b80f3a593a491d26852d5ae66ab5ce9db581abb3b6ef9793f1a0a235411df",
+    "mesh_info.json": "6bc80b09c39dc50048fa78bc3d0235e8bf8a2c7972839d6be29fcad44f4526e1",
+    "input_params.json": "9042dc5d67a46ef4cb0178341ce5645bb99f97e3e33e463410187d4c5a91e6d2"
+   },
+   "mean_vm_all_MPa": 113.00605293586291,
+   "AM": {
+    "n": 1656,
+    "n_wall": 56,
+    "n_zero": 0,
+    "mean_vm_MPa": 196.80093244212958,
+    "median_vm_MPa": 121.2961485356179,
+    "top_third_mean_vm_MPa": 259.08680281009237,
+    "bottom_third_mean_vm_MPa": 140.58126539978605,
+    "top_over_bottom": 1.842968208269426
+   },
+   "SE": {
+    "n": 158764,
+    "n_wall": 3782,
+    "n_zero": 0,
+    "mean_vm_MPa": 113.05624844081856,
+    "median_vm_MPa": 91.08766074077758,
+    "top_third_mean_vm_MPa": 132.02191931552338,
+    "bottom_third_mean_vm_MPa": 92.61136738753773,
+    "top_over_bottom": 1.4255476734629116
+   },
+   "label": "Just before the stop",
+   "time_s": 3.0999999999999996,
+   "plate_pressure_MPa": 296.17081
+  },
+  {
+   "step": 3220000,
+   "dir": "/home/yonghoon71/ps45_network_20261006/work/results/260925_000559_082983",
+   "lw_status": "OK",
+   "lw_definition": "love_weber_branch_full_tensor_v1",
+   "plate_z_um": 111.05199999999999,
+   "box_um": [
+    50.0,
+    50.0
+   ],
+   "n_atoms": 160417,
+   "n_contacts": 562646,
+   "inputs_sha256": {
+    "atoms.csv": "fd394a58b91c9bf57eb88266fa881eb16d9a462ef89c3702453d993dbec12447",
+    "contacts.csv": "d9685d0342193a0ff1567928d8e34b92b2b8450cc69d32058964fc0fd1e95341",
+    "mesh_info.json": "9e2c611c45c00125b70ee5a8021a4088b0f66a53e8353a9bfe2cc13fc9fa3aa6",
+    "input_params.json": "0956fde424f4c4e24447695a24396444e8eb15456b4aef465f858920edae97be"
+   },
+   "mean_vm_all_MPa": 112.70949540494836,
+   "AM": {
+    "n": 1656,
+    "n_wall": 54,
+    "n_zero": 0,
+    "mean_vm_MPa": 173.99812167088447,
+    "median_vm_MPa": 114.68977453309057,
+    "top_third_mean_vm_MPa": 168.59810843301497,
+    "bottom_third_mean_vm_MPa": 173.8076690806449,
+    "top_over_bottom": 0.9700268654704025
+   },
+   "SE": {
+    "n": 158761,
+    "n_wall": 3728,
+    "n_zero": 0,
+    "mean_vm_MPa": 113.07681152769712,
+    "median_vm_MPa": 91.7341962199977,
+    "top_third_mean_vm_MPa": 114.81115076453526,
+    "bottom_third_mean_vm_MPa": 109.75873077691963,
+    "top_over_bottom": 1.046032055508044
+   },
+   "label": "Relaxed end",
+   "time_s": 3.2199999999999998,
+   "plate_pressure_MPa": 165.30183000000002
+  }
+ ],
+ "colour_range_MPa": {
+  "rule": "p5p95",
+  "vmin": 5.941510937329037,
+  "vmax": 412.8735281675839,
+  "scale": "log",
+  "pooled": "AM 입자 (벽 아님 · σ_VM > 0) 네 시점"
+ },
+ "colour_range_ratio": {
+  "rule": "p5p95",
+  "vmin": 0.22801319174693144,
+  "vmax": 4.103742743900984,
+  "scale": "log"
+ },
+ "status": "OK"
+}
