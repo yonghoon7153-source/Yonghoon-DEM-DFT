@@ -335,6 +335,7 @@ def section_viewer(pay):
         except (ValueError, AssertionError):
             miss.append(n)
     m_tops = re.search(r'const NETCUR_TOPS = \[[^\]]*\];', js)
+    m_widths = re.search(r'const NETCUR_WIDTHS = \[[^\]]*\];', js)      # 10-08 굵기 고르기 (조작판이 쓴다 · 옛 코드엔 없음)
     if not chk(f'D5a viewer3d.js 에서 함수 · 상수를 잘라 냈다 (없음 {miss})', not miss and m_tops is not None):
         return
     if not chk('D5b 경로 자료 (전류 밀도) 가 있다', bool(pay and pay.get('edges') and pay.get('density'))):
@@ -343,7 +344,7 @@ def section_viewer(pay):
     pay5 = dict(pay, edges=pay['edges'][:5], top=5, n_returned=5)
     nc1 = copy.deepcopy(pay5)
     nc1['density']['c1'] = {'status': 'unavailable', 'reason': 'full_metrics.json 에 thickness_um 없음 <b>x</b>', 'factor': None}
-    script = '\n'.join(parts) + '\n' + m_tops.group(0) + '\n' + r"""
+    script = '\n'.join(parts) + '\n' + m_tops.group(0) + '\n' + (m_widths.group(0) + '\n' if m_widths else '') + r"""
 const PAY = __PAY__, PAY5 = __PAY5__, NC1 = __NC1__;
 const out = {};
 out.fmt = [37.0344, 0.0123, 1.5e-5, 2.0e4, 1, 0.5, 999.6, 1e-3, 0.0998, 123.4, 0];

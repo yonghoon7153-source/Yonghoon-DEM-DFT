@@ -556,11 +556,12 @@ def section_viewer(payload_all):
         except (ValueError, AssertionError):
             miss.append(n)
     m_tops = re.search(r'const NETCUR_TOPS = \[[^\]]*\];', js)
+    m_widths = re.search(r'const NETCUR_WIDTHS = \[[^\]]*\];', js)      # 10-08 굵기 고르기 (조작판이 쓴다 · 옛 코드엔 없음)
     if not chk(f'④h viewer3d.js 에서 함수 · 상수를 잘라 냈다 (없음 {miss})', not miss and m_tops is not None):
         return
     pay = copy.deepcopy(payload_all)
     pay5 = dict(pay, edges=pay['edges'][:5], top=5, n_returned=5)
-    script = '\n'.join(parts) + '\n' + m_tops.group(0) + '\n' + r"""
+    script = '\n'.join(parts) + '\n' + m_tops.group(0) + '\n' + (m_widths.group(0) + '\n' if m_widths else '') + r"""
 const PAY = __PAY__, PAY5 = __PAY5__;
 const out = {};
 out.url = [
@@ -670,6 +671,62 @@ console.log(JSON.stringify(out));
     chk(f'④y top 고르기 {res["tops"]}', res['tops'] == [500, 1000, 2000, 5000, 10000, 20000])
 
 
+def section_viewer_width():
+    """④z 관 굵기 — 1저자 10-08 *"이거 크기 좀더 얇게 가능한가?"* (전자 AM–AM 상위 20000 · 관이 굵어 망이 뭉쳐 보인다).
+    반경 = 굵기 배율 × (0.10 + 0.40 t) × 망 입자 반경 중앙값 — 배율 1 = 옛 그림 그대로 (rMin 0.10 · rMax 0.50 r_ref) · 고르기 ×1 · ×0.5 · ×0.25 · ×0.1 ·
+    잘못된 배율 (0 · 음수 · NaN · 없음) = 1 · 바꾸면 다시 받지 않고 다시 그린다 (같은 자료) · 화살표도 같은 반경을 따른다."""
+    print('[④z] 뷰어 — 관 굵기 고르기 (node)')
+    js = open(VIEWER_JS, encoding='utf-8').read()
+    parts, miss = [], []
+    for n in ('netCurrentRadius', 'netCurrentControlsHtml'):
+        try:
+            parts.append(js_fn(js, n))
+        except (ValueError, AssertionError):
+            miss.append(n)
+    m_w = re.search(r'const NETCUR_WIDTHS = \[[^\]]*\];', js)
+    m_tops = re.search(r'const NETCUR_TOPS = \[[^\]]*\];', js)
+    if not chk(f'④z1 viewer3d.js 에 netCurrentRadius · NETCUR_WIDTHS (없음 {miss} · 상수 {m_w is not None})',
+               not miss and m_w is not None and m_tops is not None):
+        return
+    script = '\n'.join(parts) + '\n' + m_w.group(0) + '\n' + m_tops.group(0) + '\n' + r"""
+const out = {};
+out.widths = NETCUR_WIDTHS;
+out.r1 = [netCurrentRadius(0, 2, 1), netCurrentRadius(1, 2, 1), netCurrentRadius(0.5, 2, 1)];
+out.rq = [netCurrentRadius(0, 2, 0.25), netCurrentRadius(1, 2, 0.25)];
+out.rBad = [netCurrentRadius(1, 2, 0), netCurrentRadius(1, 2, -1), netCurrentRadius(1, 2, NaN), netCurrentRadius(1, 2, undefined),
+            netCurrentRadius(1, 2, 'x')];
+out.ctl = netCurrentControlsHtml({channel: 'electronic', mode: 'physics', top: 20000, width: 0.25});
+out.ctlDef = netCurrentControlsHtml({channel: 'ionic', mode: 'hertzian', top: 5000});
+console.log(JSON.stringify(out));
+"""
+    res = run_node(script)
+    if not chk('④z2 node 실행', res is not None):
+        return
+    chk(f'④z3 굵기 고르기 = ×1 · ×0.5 · ×0.25 · ×0.1 ({res["widths"]})', res['widths'] == [1, 0.5, 0.25, 0.1])
+    chk(f'④z4 배율 1 = 옛 그림 그대로 (t 0 → 0.10 r_ref · t 1 → 0.50 r_ref · t 0.5 → 0.30 r_ref) {res["r1"]}',
+        [round(x, 12) for x in res['r1']] == [0.2, 1.0, 0.6])
+    chk(f'④z5 배율 0.25 = 반경 4 분의 1 {res["rq"]}', [round(x, 12) for x in res['rq']] == [0.05, 0.25])
+    chk(f'④z6 잘못된 배율 (0 · 음수 · NaN · 없음 · 문자) = 1 {res["rBad"]}', [round(x, 12) for x in res['rBad']] == [1.0] * 5)
+    ctl = res['ctl']
+    chk('④z7 조작판에 굵기 고르기 (id netcur-width) · 고른 값 표시 (×0.25 selected) · 기본 = ×1',
+        'id="netcur-width"' in ctl and re.search(r'<option value="0\.25" selected>[^<]*0\.25', ctl) is not None
+        and re.search(r'<option value="1" selected>', res['ctlDef']) is not None, ctl[:300])
+    try:
+        rnc = js_fn(js, 'renderNetCurrent')
+        wl = js_fn(js, 'netCurrentWireLegend')
+        anm = js_fn(js, 'applyNetCurrentMode')
+    except (ValueError, AssertionError):
+        rnc = wl = anm = ''
+    chk('④z8 그리기 = netCurrentRadius(t, rRef, opt.width) (관 · 화살표 같은 반경)',
+        re.search(r'netCurrentRadius\(\s*t\s*,\s*rRef\s*,\s*opt\.width\s*\)', rnc) is not None
+        and 'rMin + (rMax - rMin) * t' not in rnc)
+    chk('④z9 굵기를 바꾸면 다시 받지 않고 다시 그린다 (renderNetCurrent · 같은 자료)',
+        re.search(r"on\('netcur-width', 'change', ev => \{ opt\.width = \+ev\.target\.value; if \(pay\) renderNetCurrent\(state, pay\); \}\)",
+                  wl) is not None)
+    chk("④z10 기본 옵션에 width: 1 (경로 기본 top 정규식은 그대로)",
+        re.search(r"_netCurOpt = \{ channel: 'ionic', mode: 'hertzian', top: \d+, arrows: false, width: 1 \}", anm) is not None)
+
+
 def section_registration():
     print('[⑤] check_all 배선')
     s = open(CHECK_ALL, encoding='utf-8').read()
@@ -701,6 +758,7 @@ def main():
         except Exception as e:                                   # noqa: BLE001
             chk('③ 경로 절 실행', False, f'{type(e).__name__}: {e}')
         section_viewer(payload)
+        section_viewer_width()
         section_registration()
     finally:
         shutil.rmtree(tmp, ignore_errors=True)

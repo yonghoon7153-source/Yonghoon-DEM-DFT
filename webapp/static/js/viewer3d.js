@@ -5206,6 +5206,7 @@ function renderSeStatsCardPNG(state, corpusRows) {
  *   옛 몫 (|I_간선| / I_전체 %) 으로 칠하던 것은 없앴다 (몫 s 는 자료에만).
  * 모델의 접촉망 풀이 (Kirchhoff · 접촉마다 Holm 협착) — 측정 전류도 충방전 방향도 아니다. */
 const NETCUR_TOPS = [500, 1000, 2000, 5000, 10000, 20000];
+const NETCUR_WIDTHS = [1, 0.5, 0.25, 0.1];             // 관 굵기 배율 — 1저자 10-08 "크기 좀더 얇게" (전자 상위 20000 이 뭉쳐 보였다)
 const NETCUR_CHANNELS = {
   ionic: '이온 (SE–SE 접촉망)',
   electronic: '전자 (AM–AM 접촉망)',
@@ -5242,6 +5243,13 @@ function netCurrentT(s, lo, hi) {
   const span = hi - lo;
   if (!(span > 1e-9)) return 1;
   return Math.max(0, Math.min(1, (Math.log10(s) - lo) / span));
+}
+
+/* 관 반경 (µm) = 굵기 배율 × (0.10 + 0.40 t) × r_ref (망 입자 반경 중앙값) — 배율 1 = 옛 그림 그대로 (rMin 0.10 · rMax 0.50 r_ref) ·
+ * 잘못된 배율 (0 · 음수 · NaN · 없음) = 1.  화살표 (원뿔) 도 이 반경을 따른다. */
+function netCurrentRadius(t, rRef, width) {
+  const w = (+width > 0 && isFinite(+width)) ? +width : 1;
+  return w * (0.10 + 0.40 * t) * rRef;
 }
 
 /* 눈금 · 범례 숫자 (A cm⁻² · µN · 비) — 0.01 ≤ v < 1000 은 유효 2 자리 (꼬리 0 없음) · 그 밖 = m×10ⁿ (지수 · 천 단위 콤마 없음 —
@@ -5346,16 +5354,18 @@ function netCurrentColorbarSpec(pay, opt, lo, hi, frame) {
   };
 }
 
-/* 범례 위 조작 — 채널 · 상위 N · 접촉 면적 모드 */
+/* 범례 위 조작 — 채널 · 상위 N · 접촉 면적 모드 · 관 굵기 배율 */
 function netCurrentControlsHtml(opt) {
   const css = 'background:#16192e;color:#e4e6f0;border:1px solid #2a2d3e;border-radius:4px;padding:1px 2px;font-size:11px';
   const sel = (id, cur, opts) => '<select id="' + id + '" style="' + css + '">'
     + opts.map(o => '<option value="' + o[0] + '"' + (String(o[0]) === String(cur) ? ' selected' : '') + '>' + o[1] + '</option>').join('')
     + '</select>';
+  const w = (+opt.width > 0 && isFinite(+opt.width)) ? +opt.width : 1;
   return '<div style="display:flex;flex-wrap:wrap;gap:3px;align-items:center;margin:3px 0">'
     + sel('netcur-channel', opt.channel, [['ionic', '이온 (SE–SE)'], ['electronic', '전자 (AM–AM)']])
     + sel('netcur-top', opt.top, NETCUR_TOPS.map(n => [n, '상위 ' + n]))
     + sel('netcur-mode', opt.mode, [['hertzian', 'Hertz (주)'], ['physics', 'Physics (민감도)']])
+    + sel('netcur-width', w, NETCUR_WIDTHS.map(x => [x, '굵기 ×' + x]))
     + '</div>';
 }
 
@@ -5479,6 +5489,7 @@ function netCurrentWireLegend(state, pay) {
   on('netcur-top', 'change', ev => { opt.top = +ev.target.value; applyNetCurrentMode(state); });
   on('netcur-mode', 'change', ev => { opt.mode = ev.target.value; applyNetCurrentMode(state); });
   on('netcur-arrows', 'change', ev => { opt.arrows = ev.target.checked; if (pay) renderNetCurrent(state, pay); });
+  on('netcur-width', 'change', ev => { opt.width = +ev.target.value; if (pay) renderNetCurrent(state, pay); });
   on('netcur-retry', 'click', () => applyNetCurrentMode(state));          // 오류는 캐시하지 않는다 — 다시 fetch
   //  컬러바 둘 — @1V (탐침) · @1C (운전 환산) · 같은 색 막대 · 다른 숫자 (A cm⁻²)
   on('netcur-cbar-1v', 'click', () => {
@@ -5494,7 +5505,7 @@ function netCurrentWireLegend(state, pay) {
 }
 
 function applyNetCurrentMode(state) {
-  const opt = state._netCurOpt || (state._netCurOpt = { channel: 'ionic', mode: 'hertzian', top: 5000, arrows: false });   // top = 경로 기본 (TOP_DEFAULT)
+  const opt = state._netCurOpt || (state._netCurOpt = { channel: 'ionic', mode: 'hertzian', top: 5000, arrows: false, width: 1 });   // top = 경로 기본 (TOP_DEFAULT) · width = 관 굵기 배율
   netCurrentTeardown(state);
   const tok = state._netCurToken;
   const ionic = opt.channel === 'ionic';
@@ -5541,7 +5552,6 @@ function renderNetCurrent(state, pay) {
   edges.forEach(e => { if (e.ra > 0) radii.push(e.ra); if (e.rb > 0) radii.push(e.rb); });
   radii.sort((u, v) => u - v);
   const rRef = radii.length ? radii[Math.floor(radii.length / 2)] : 1;      // 망 입자 반경 중앙값 (이온 = SE · 전자 = AM)
-  const rMin = 0.10 * rRef, rMax = 0.50 * rRef;
   const group = new THREE.Group();
   if (draw.length) {
     const tubes = new THREE.InstancedMesh(new THREE.CylinderGeometry(1, 1, 1, 12, 1, false),
@@ -5557,7 +5567,7 @@ function renderNetCurrent(state, pay) {
       d.subVectors(B, A);
       const len = d.length();
       const hasJ = !!(rngJ && e.j > 0);
-      const t = hasJ ? netCurrentT(e.j, lo, hi) : 0.5, r = rMin + (rMax - rMin) * t;
+      const t = hasJ ? netCurrentT(e.j, lo, hi) : 0.5, r = netCurrentRadius(t, rRef, opt.width);   // 굵기 배율 (범례 고르기)
       if (len > 0) d.divideScalar(len); else d.copy(up);
       q.setFromUnitVectors(up, d);
       mid.addVectors(A, B).multiplyScalar(0.5);
