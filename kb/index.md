@@ -1,16 +1,17 @@
 # kb 카탈로그 (생성물 — 손으로 고치지 말 것)
 
-> `python3 tools/kb_wiki.py index` 가 만든다 · 2026-10-08 · managed-files: 515
+> `python3 tools/kb_wiki.py index` 가 만든다 · 2026-10-08 · managed-files: 516
 
 규칙: kb/SCHEMA.md · 코드 체계: kb/CODES.md · 열린 질문: kb/questions/ · 논지 카드: kb/syntheses/ · 원장: kb/open_items.md · 문헌: litdb/INDEX.md
 
 값 = `db/properties/canonical_registry.json` · 금지 = `db/properties/citation_hazards.json` · 판정 = `db/governance/decisions.json` · 리뷰 = `kb/reviews/INDEX.md`
 
-## 최근 갱신 상위 20 (frontmatter `updated` 기준 · 전체 310건)
+## 최근 갱신 상위 20 (frontmatter `updated` 기준 · 전체 311건)
 - 2026-10-08 · `kb/reviews/INDEX.md` — 리뷰 사슬 색인 — 프롬프트↔회신 (자동 생성) · 자동생성
 - 2026-10-08 · `kb/reviews/codex_CT_reply_cascade_v7_main_runner_2026_10_08.md` — CT 회신 — cascade v7 본 라운드 러너: 조건부 GO · P0 없음 · P1 셋 (판독 입력 결박 · 미정산 시간 · 자식 생성 직후 정리) · P2 (이어받기 대조 · partial · watcher --log) · 수령 2026-10-08 (사용자 붙여넣기 · 원문 보존 · 마크다운…
 - 2026-10-08 · `kb/reviews/codex_CU_reply_wad_agc_graphite_k9_closure_2026_10_08.md` — CU 회신 — P1b Ag(111)|흑연 3층 k9 마감 사후 감사: 조건부 GO · 값 유지 · P1 '기판만' 정정 (셀 c·영상 간격도 다름) · P2 라벨 좁히기 · 집계기 신원 검사 공백 · 수령 2026-10-08 (사용자 붙여넣기 · 원문 보존 · 마크다운…
 - 2026-10-08 · `kb/reviews/codex_CV_reply_cei_easy_story_2026_10_08.md` — CV 회신 — CEI 쉬운 스토리: 조건부 GO · 숫자 재현 · P0 '먼저 잡는다'·'계면에 남는 층' 교체 · P1 그림 대조군·조성 라벨·황산염 분류 오류·정수 반올림 · 추천 한 장 = NMC811 금속별 표 · 수령 2026-10-08 (사용자 붙여넣기 · 원문 보존 · 마크다운…
+- 2026-10-08 · `kb/projects/wad_v5_vasp_r1_request_2026_10_08.md` — V5 VASP 외주 — far_i r1 재시도 승인 + 남은 잡 상시 승인 (VASP 5.x NELM 소진 판정 버그) · 전달 프롬프트 · 발송 대기 (사용자 2026-10-08 '전달할 프롬프트 부탁' = …
 - 2026-10-07 · `kb/reviews/codex_CT_prompt_cascade_v7_main_runner_2026_10_07.md` — CT 프롬프트 — cascade D_rel v7 본 라운드 러너 (--main) 코드 리뷰: 이미 돌고 있는 40 런 · 조용히 틀린 경로 · 판정까지 이어지는가 · 확인 요청 여섯 · 발송 완료 2026-10-08 · ✅ 회신 수령 2026-10-08 …
 - 2026-10-07 · `kb/reviews/codex_CU_prompt_wad_agc_graphite_k9_closure_2026_10_07.md` — CU 프롬프트 — P1b Ag(111)|흑연 3층 W_sep 마감 교체 (k9 넷 · 사전 규칙 REPLACE) 사후 감사: DEM 이 Ag–C 기본값으로 채택한 뒤 · 다음 DEM 편지 전 · 확인 요청 다섯 · 발송 2026-10-08 · ✅ 회신 수령 2026-10-08 → `…
 - 2026-10-07 · `kb/reviews/codex_CV_prompt_cei_easy_story_2026_10_07.md` — CV 프롬프트 — CEI 쉬운 스토리 4 단계 (P 가 양극 금속을 끌어가고 Nd 가 P 를 먼저 잡는다) + 그림 여섯: 계산이 받치는 범위를 넘는가 · 확인 요청 다섯 · 발송 2026-10-08 · ✅ 회신 수령 2026-10-08 → `…
@@ -26,7 +27,6 @@
 - 2026-10-04 · `kb/reviews/li2s1a_CO_reply_li2s_glass_v2_card_2026_10_04.md` — 회신 CO — 외부 1저자 (li2s 소셀 유리 MD v2 카드): Q-CO-1~6 · 800 ps σ 도 여전히 하한 · 두 온도 공통 b = 256 열 · 끝 두 b 판정 갈리면 경계 · near-miss σ 거리 다섯 · 대조 계 후보 a-Li₃PS₄ 유리 · 골격 게이트 숫자를 지금 · 보조 창 50–200 ps 기록 열 · 수령 (2026-10-04 · 사용자 붙여넣기) — 회신 원문 · 고…
 - 2026-10-04 · `kb/reviews/li2s1a_CQ_prompt_li2s_glass_v2_readout_2026_10_04.md` — CQ 프롬프트 — li2s 소셀 유리 MD v2 판독: 회신 CO 규칙을 결과 전에 넣고 한 번 판독 · 갈래 v2-2 (규칙 적용) · near-miss · 보조 창 · 골격 기록 · 확인 요청 다섯 (외부 1저자에게) · 초안 (2026-10-04) — 사용자 검토 · 발송 대기
 - 2026-10-04 · `kb/reports/weekly_2026_10_04.md` — 주간 정리 2026-09-28 ~ 10-04 (주간보고 초안) · 초안 (2026-10-04 · 도는 계산은 10-04 17:59 실측…
-- 2026-10-04 · `kb/projects/cascade_rebuild_log_2026_09.md` — cascade 재건 일지 — 2026-09 (누적) · open
 
 ⚠ frontmatter 없는 레거시 문서는 이 목록에 안 뜬다 (날짜를 기계로 읽을 수 없다 — SCHEMA 상 소급하지 않는다).
 
@@ -426,7 +426,7 @@
 - `kb/reports/weekly_2026_09_27.md` — 주간 정리 2026-09-21 ~ 09-27 (주간보고 초안)  (2026-09-28 · 완료 (2026-09-28 · 다음 주 문서는 새 파일))
 - `kb/reports/weekly_2026_10_04.md` — 주간 정리 2026-09-28 ~ 10-04 (주간보고 초안)  (2026-10-04 · 초안 (2026-10-04 · 도는 계산은 10-04 17:59 실측…)
 
-## projects/ (45)
+## projects/ (46)
 - `kb/projects/HANDOFF_2026_08_31_session.md` — 인수인계 — 2026-08-31 세션 (외주 C-12 AR→AV · 폴라론 S0 · nscf 사고)  (2026-09-03 · 활성)
 - `kb/projects/MULTI_CATEGORY_BATCH_PLAN_v22.md` — Multi-Category Multi-Compound Batch Plan — Paper #2 (v4.5.18)
 - `kb/projects/MUST_READ_digital_twin_north_star.md` — 🚨🚨🚨 MUST READ — AI 계산 스크리닝 플랫폼 North Star (구: Digital Twin)
@@ -471,6 +471,7 @@
 - `kb/projects/wad_dem_reply_9_send_2026_10_06.md` — wad_dem_reply_9_send_2026_10_06
 - `kb/projects/wad_dem_reply_draft_2026_09_23.md` — DEM 쪽 회신 초안 — Ag–C 점착일 요청: 착수 전 질문 3개 답 · 바뀐 점 · 확인 요청  (2026-10-01 · 회신 4 발송 완료 (09-25) · DEM 4차 회신 수령 (09-…)
 - `kb/projects/wad_lpscl_agc_vgcf_plan_2026_09_23.md` — LPSCl | Ag–C | VGCF 점착일(W_ad) — 계획 v4 (Codex BX 뒤 파이프라인 재편 · v3 = Fable · Codex BV 반영) · 보고량 카드 초안  (2026-09-25 · 계획 v4 — SE|SE 4층 대조 끝(경보 v2 유지 · Codex…)
+- `kb/projects/wad_v5_vasp_r1_request_2026_10_08.md` — V5 VASP 외주 — far_i r1 재시도 승인 + 남은 잡 상시 승인 (VASP 5.x NELM 소진 판정 버그) · 전달 프롬프트  (2026-10-08 · 발송 대기 (사용자 2026-10-08 '전달할 프롬프트 부탁' = …)
 - `kb/projects/zn_alzib_dft_md_contribution_2026_09_03.md` — Zn ALZIB 세미나(2026-09-02) — 우리가 DFT/MD 로 기여할 수 있는 지점  (2026-09-27 · 진행)
 
 ## questions/ (12)
