@@ -11,7 +11,8 @@
    `dump dmp_contact_snap all local 5000 ${out}/snap/contact_*.liggghts` (c_cpl[1]…c_cpl[26]) · `dump_modify dmp_contact_snap first yes` · `run 0` ·
    `print "SNAP_DONE"`.
 2. `lmp_serial -in in.snap.liggghts -var ckpt …/restart_compress_3100000.bin -var out $O -var plate_stl $O/plate_branch3100000.stl`
-   → `post/atom_3100000.liggghts` (21,416,859 B) · `post/mesh_3100000.stl` · `snap/contact_3100000.liggghts` (148,856,647 B · 접촉 559,470).
+   → 1저자 WSL `~/ps73_snap_3100000/post/atom_3100000.liggghts` (21,416,859 B) · `~/ps73_snap_3100000/post/mesh_3100000.stl` ·
+   `~/ps73_snap_3100000/snap/contact_3100000.liggghts` (148,856,647 B · 접촉 559,470) — 리포 밖 (크기 때문에 반입 안 함).
 3. 웹앱 파서로 읽기 → `scripts/plane_load_share.py --case <ana> --meta <ana_meta.json> --label snap_3100000 --out <plane>`
    (도구 code sha256 `a1d95cb9…` · 입력 sha256 은 `plane/plane_load.json` 의 `inputs_sha256`).
 4. 결과 묶음 = `raw/ps73_snap_3100000_plane.tgz` (sha256 `312a66f3…` · 9,093 B) — `plane/` 다섯 파일은 그 묶음과 바이트가 같다 (반입 때 sha256 대조).
