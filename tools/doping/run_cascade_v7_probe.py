@@ -147,6 +147,50 @@ def _on_signal(signum, _frame):
     raise _Stop(signal.Signals(signum).name)
 
 
+_SIGS = (signal.SIGTERM, signal.SIGHUP, signal.SIGINT)
+
+
+def _sigmask(how) -> None:
+    """정리·정산 구간에서 중단 신호를 미룬다 (회신 CT P1-3). 막아 둔 신호는 풀 때 배달된다."""
+    signal.pthread_sigmask(how, _SIGS)
+
+
+def _child_unmask() -> None:
+    """자식(드라이버)은 막힌 신호 마스크를 물려받는다 — exec 전에 풀어 SIGTERM 으로 죽일 수 있게 한다."""
+    signal.pthread_sigmask(signal.SIG_UNBLOCK, _SIGS)
+
+
+def _pid_is_driver(pid, driver) -> bool:
+    """PID 가 살아 있고 명령줄에 드라이버가 있나. 권한 오류는 '살아 있다' 로 본다 (보수)."""
+    try:
+        os.kill(int(pid), 0)
+    except (ProcessLookupError, TypeError, ValueError):
+        return False
+    except PermissionError:
+        return True
+    try:
+        cmd = Path(f"/proc/{int(pid)}/cmdline").read_bytes().replace(b"\0", b" ").decode("utf-8", "ignore")
+    except OSError:
+        return True
+    return Path(str(driver)).name in cmd
+
+
+def parse_settle(items) -> tuple[dict, list[str]]:
+    """--settle TAG=GPU_H:근거 → {태그: (시간, 근거)}. 시간은 양의 유한수 · 근거는 비면 안 된다."""
+    out, errs = {}, []
+    for it in items or []:
+        try:
+            tag, rest = it.split("=", 1)
+            h, why = rest.split(":", 1)
+            h = float(h)
+            if not (h > 0 and h < 1e4) or not why.strip() or not tag.strip():
+                raise ValueError
+            out[tag.strip()] = (h, why.strip())
+        except ValueError:
+            errs.append(f"--settle {it!r} 형식 오류 — TAG=<양의 GPU-h>:<근거>")
+    return out, errs
+
+
 def ts() -> str:
     return time.strftime("%F %T")
 
@@ -668,6 +712,14 @@ def show_judge(d) -> None:
 
 # ── 한 런 ────────────────────────────────────────────────────────────────────
 def run_one(ctx, budget, T, s, seed) -> int:
+    """한 런. 정리·정산 구간에서 막아 둔 신호는 여기서 풀린다 (배달되면 호출자의 중단 경로로 간다)."""
+    try:
+        return _run_one(ctx, budget, T, s, seed)
+    finally:
+        _sigmask(signal.SIG_UNBLOCK)
+
+
+def _run_one(ctx, budget, T, s, seed) -> int:
     out_root = ctx["out_root"]
     tag = tag_of(T, s, seed)
     root = out_root / "md" / tag
@@ -707,11 +759,19 @@ def run_one(ctx, budget, T, s, seed) -> int:
     say(f"▶ {tag} (GPU 합계 {tot} MiB · 디스크 {free_gb:.0f} GB) — 드라이버 출력은 logs/{tag}.log (⛔ tail 하지 않는다 · D 가 찍힌다)")
     t0 = time.time()
     code, why, gmax = None, None, tot or 0
+    proc = None
     with open(out_root / "logs" / f"{tag}.log", "w", encoding="utf-8") as fh:
-        proc = subprocess.Popen(cmd, stdout=fh, stderr=subprocess.STDOUT)
-        step["pid"] = proc.pid
-        _write_json(ctx["budget_path"], budget)
         try:
+            # 회신 CT P1-3 — 자식 생성부터 정리까지 한 블록. 생성·PID 기록 사이에는 신호를 미룬다.
+            _sigmask(signal.SIG_BLOCK)
+            try:
+                proc = subprocess.Popen(cmd, stdout=fh, stderr=subprocess.STDOUT, preexec_fn=_child_unmask)
+                step["pid"] = proc.pid
+                _write_json(ctx["budget_path"], budget)
+            finally:
+                _sigmask(signal.SIG_UNBLOCK)
+            if ctx.get("stop_after_popen"):
+                raise _Stop("시험 주입 — 자식 생성 직후")
             meta_ok = mode_ok = dt_ok = False
             t_meta, last_g, last_hb = None, 0.0, t0
             while True:
@@ -769,21 +829,24 @@ def run_one(ctx, budget, T, s, seed) -> int:
                     code, why = 9, f"md.log 시간 간격 {dt} ps ≠ dt {DT_FS / 1000.0:.4f} ps (또는 md.log 없음)"
         except (KeyboardInterrupt, _Stop) as e:
             code, why = 130, f"사람이 중단 ({type(e).__name__} {e})"
-        if code is not None and proc.poll() is None:
-            kill_tree(proc)
-        elif proc.poll() is None:
-            proc.wait()
+        finally:
+            _sigmask(signal.SIG_BLOCK)      # 정리·정산이 끝날 때까지 신호를 미룬다 (run_one 이 푼다)
+            # 정상 경로는 자식이 끝났거나 code 가 정해진 뒤에만 여기 온다 — 살아 있으면 중단·예외 경로다: 우리 런만 죽인다.
+            # (예상 밖 예외로 빠지면 아래 정산은 안 된다 → budget 에 시작만 남고, 이어받기가 --settle 을 요구한다)
+            if proc is not None and proc.poll() is None:
+                kill_tree(proc)
     gpu_h = (time.time() - t0) / 3600.0
     budget["used_gpu_h"] = float(budget.get("used_gpu_h") or 0.0) + gpu_h
-    step.update({"end_utc": utc(), "rc": proc.returncode, "gpu_h": round(gpu_h, 4),
+    step.update({"end_utc": utc(), "rc": proc.returncode if proc is not None else None, "gpu_h": round(gpu_h, 4),
                  "used_after": round(budget["used_gpu_h"], 4), "gpu_total_mib_max_sampled": gmax})
     if code is not None:
         step["stopped"] = why
         _write_json(ctx["budget_path"], budget)
         say(f"⛔ {tag}: {why} — 우리 런만 멈췄다 · {gpu_h:.2f} GPU-h · 누적 {budget['used_gpu_h']:.2f} (rc {code})")
         return code
-    errs = [] if proc.returncode == 0 else [f"드라이버 rc {proc.returncode}"]
-    errs += post_run_errors(rdir, T) if proc.returncode == 0 else []
+    rc_child = proc.returncode if proc is not None else None
+    errs = [] if rc_child == 0 else [f"드라이버 rc {rc_child}"]
+    errs += post_run_errors(rdir, T) if rc_child == 0 else []
     if errs:
         step["failed"] = errs
         _write_json(ctx["budget_path"], budget)
@@ -815,6 +878,12 @@ def preflight(a) -> tuple[dict, list[str]]:
                                          ("repo", a._repo)) if v}
     ctx["budget_path"] = ctx["out_root"] / "budget.json"
     ctx["main"] = bool(getattr(a, "main", False))
+    ctx["settle"], e = parse_settle(getattr(a, "settle", None)); errs += e
+    if ctx["settle"] and not a.resume:
+        errs.append("--settle 은 --resume 에서만 쓴다")
+    ctx["stop_after_popen"] = bool(getattr(a, "_stop_after_popen", False))
+    if ctx["stop_after_popen"]:
+        ctx["injected"]["stop_after_popen"] = True
     errs += constant_errors()
     structures = PROBE_STRUCTURES
     if ctx["main"]:
@@ -908,9 +977,42 @@ def resume_check(ctx) -> tuple[dict | None, list[str]]:
     for s, row in (m.get("prep") or {}).items():
         if (ctx["prep"].get(s) or {}).get("sha256") != row.get("sha256"):
             errs.append(f"{s}: 준비 원본 해시가 manifest 와 다르다")
+    if ctx.get("main") and m.get("roster") != [tag_of(*x) for x in ctx.get("roster", [])]:
+        errs.append("명단·순서가 manifest 와 다르다 — 다른 버전으로 이어받지 않는다 (회신 CT P2)")
     b = _read_json(ctx["budget_path"])
     if b is None:
         errs.append("budget.json 을 못 읽는다 — 누적을 승계할 수 없다")
+        return b, errs
+    # 회신 CT P1-2 — 시작 기록만 있고 종료·정산이 없는 시도 (SIGKILL · 전원 장애) 는 자동 재개하지 않는다
+    settle = ctx.get("settle") or {}
+    todo, seen = [], set()
+    for st in b.get("steps", []):
+        if "start_utc" not in st or "end_utc" in st or "settled" in st:
+            continue
+        tg = st.get("tag")
+        seen.add(tg)
+        if _pid_is_driver(st.get("pid"), ctx["driver"]):
+            errs.append(f"{tg}: 미정산 시도의 드라이버 PID {st.get('pid')} 가 아직 살아 있다 — 먼저 그 PID 를 정리한다")
+        elif tg in settle:
+            todo.append((st, *settle[tg]))
+        else:
+            errs.append(f"{tg}: 시작 기록 ({st.get('start_utc')} · PID {st.get('pid')}) 만 있고 종료·정산이 없다 — 러너가 정리 없이 "
+                        f"끝났다. 확인한 경과 시간과 근거로 정산한다: --settle {tg}=<GPU-h>:<근거> (현재 시각 − 시작은 꺼져 있던 "
+                        f"시간까지 세므로 그대로 쓰지 않는다)")
+    for tg in sorted(set(settle) - seen):
+        errs.append(f"--settle {tg}: 정산할 미종료 시도가 없다")
+    jsha = (m.get("judge") or {}).get("sha256")
+    if errs:
+        return b, errs
+    for st, h, why in todo:
+        b["used_gpu_h"] = float(b.get("used_gpu_h") or 0.0) + h
+        st.update({"gpu_h": round(h, 4), "used_after": round(b["used_gpu_h"], 4),
+                   "settled": {"gpu_h": h, "why": why, "at_utc": utc(), "by": "사람 --settle (회신 CT P1-2)"}})
+    if jsha and jsha != ctx.get("judge_sha256"):
+        b.setdefault("judge_sha_changes", []).append({"at_utc": utc(), "manifest": jsha, "now": ctx.get("judge_sha256"),
+                                                     "note": "판독기는 런 사이에 안 쓰인다 — 기록만 (회신 CT P2)"})
+    if todo or (jsha and jsha != ctx.get("judge_sha256")):
+        _write_json(ctx["budget_path"], b)
     return b, errs
 
 
@@ -1036,7 +1138,7 @@ def run_probe(a) -> int:
             if rc != 0:
                 return rc
     except (KeyboardInterrupt, _Stop) as e:
-        say(f"⛔ 사람이 중단 ({type(e).__name__}) — 돌던 런은 없었다 (rc 130)")
+        say(f"⛔ 사람이 중단 ({type(e).__name__}) — 돌던 런이 있었다면 정리·정산했다 (budget.json) (rc 130)")
         return 130
     finally:
         os.close(lock)
@@ -1145,7 +1247,7 @@ def run_main(a) -> int:
         print(f"     {a.python} {ctx['judge']} --card v7 --probe_json {ctx['probe_json']} --out_root {out_root}", flush=True)
         return 0
     except (KeyboardInterrupt, _Stop) as e:
-        say(f"⛔ 사람이 중단 ({type(e).__name__}) — 돌던 런은 없었다 (rc 130)")
+        say(f"⛔ 사람이 중단 ({type(e).__name__}) — 돌던 런이 있었다면 정리·정산했다 (budget.json) (rc 130)")
         return 130
     finally:
         os.close(lock)
@@ -1166,10 +1268,11 @@ def status(a) -> int:
           f"{[round(float(st['gpu_h']), 2) for st in done]}")
     for st in steps:
         state = ("✔" if st.get("ok") else "⛔ " + str(st.get("stopped") or st.get("failed")) if ("rc" in st or "stopped" in st)
-                 else "▶ 도는 중")
+                 else "⛔ 정산됨 (정리 없이 끝난 시도 · --settle)" if "settled" in st
+                 else "▶ 도는 중 (또는 정리 없이 끝남 — 러너가 살아 있는지 본다)")
         print(f"  {st.get('tag')}: {state} · {st.get('gpu_h', '—')} GPU-h · 시작 {st.get('start_utc', st.get('at_utc', '—'))}"
               + (f" · 생산 T {st['mdlog_T_production']}" if st.get("mdlog_T_production") else ""))
-        if "rc" not in st and "stopped" not in st and st.get("T_K"):
+        if "rc" not in st and "stopped" not in st and "settled" not in st and st.get("T_K"):
             tl = mdlog_tail(out_root / "md" / st["tag"] / SUBDIR / f"T{st['T_K']}" / "md.log")
             if tl:
                 print(f"     md.log t {tl[0]:.1f} / {R.EQUILIB_PS + PROD_PS:g} ps ({100 * tl[0] / (R.EQUILIB_PS + PROD_PS):.0f} %) · T {tl[1]:.0f} K")
@@ -1459,6 +1562,10 @@ def _selftest() -> int:
         ck("이어받기: 같은 (T, 구조, 시드) 로 다시 → T* 800 · 죽인 런 시간도 누적 (단조 증가)",
            rc == 0 and (_read_json(o / "cascade_v7_probe.json") or {}).get("T_star_K") == 800
            and ua == sorted(ua) and any(st.get("stopped") for st in b.get("steps", [])))
+        ck("이어받기 숫자 (회신 CT 시험 공백): 누적 = 모든 시도 gpu_h 합 · 죽인 시도에도 종료·gpu_h 기록",
+           abs(float(b.get("used_gpu_h") or 0) - sum(float(st.get("gpu_h") or 0) for st in b.get("steps", []))) < 6e-5 * (1 + len(b.get("steps", [])))
+           and all("gpu_h" in st and "end_utc" in st for st in b.get("steps", []) if st.get("stopped") and "start_utc" in st)
+           and any(st.get("stopped") and "start_utc" in st for st in b.get("steps", [])))
         m = _read_json(o / "manifest.json"); m["frozen"]["prod_ps"] = 200.0; _write_json(o / "manifest.json", m)
         rc, txt = run(o, "--resume")
         ck("⛔음성 이어받기인데 frozen 이 다르다 (200 ps) → 2", rc == 2 and "frozen" in txt)
@@ -1470,6 +1577,22 @@ def _selftest() -> int:
             early = not alive(o, tg) and not (o / "md" / tg / SUBDIR / "T800" / "msd.json").exists()
             ck(f"⛔음성 드라이버 {kind} → {want_rc}" + (" · 도는 중에 잡아 우리 런을 죽였다 (msd.json 없음)" if want_rc == 9 else ""),
                rc == want_rc and (want_rc != 9 or early))
+
+        o = tmp / "popen_stop"
+        tg = tag_of(800, "H0_host", 1)
+        rc, txt = run(o, "--_stop_after_popen", env={"FAKE_SLEEP": "20"})
+        b = _read_json(o / "budget.json") or {}
+        st0 = (b.get("steps") or [{}])[0]
+        def pid_alive(pid):
+            try:
+                os.kill(int(pid), 0)
+                return True
+            except (OSError, TypeError, ValueError):
+                return False
+        ck("⛔음성 (회신 CT P1-3) 자식 생성 직후 중단 → 130 · 그 PID 를 죽였다 · 종료 시각·gpu_h 기록 · 누적 = 그 시간",
+           rc == 130 and st0.get("pid") and not pid_alive(st0["pid"]) and "end_utc" in st0
+           and float(st0.get("gpu_h") if st0.get("gpu_h") is not None else -1) >= 0
+           and abs(float(b.get("used_gpu_h") or -1) - float(st0.get("gpu_h") or 0)) < 1e-4)
 
         o = tmp / "late"
         tg = tag_of(800, "H0_host", 1)
@@ -1622,10 +1745,60 @@ def _selftest() -> int:
         ck("이어받기: 같은 런부터 다시 → rc 0 · 40 런 · 끝난 5 런은 다시 안 돈다 · 죽인 런 시간도 누적",
            rc == 0 and sorted(oks) == sorted(tag_of(*x) for x in ro) and len(oks) == 40
            and any(st.get("stopped") for st in (_read_json(o / "budget.json") or {}).get("steps", [])))
+        b = _read_json(o / "budget.json") or {}
+        ck("이어받기 숫자 (본 라운드): 누적 = 모든 시도 gpu_h 합 (회신 CT 시험 공백)",
+           abs(float(b.get("used_gpu_h") or 0) - sum(float(st.get("gpu_h") or 0) for st in b.get("steps", []))) < 6e-5 * (1 + len(b.get("steps", []))))
         rc = subprocess.run([sys.executable, str(Path(__file__).resolve()), "--status", "--out_root", str(o)],
                             capture_output=True, text=True)
         ck("--status 본 라운드: rc 0 · '본 라운드' 표시 · D 없음", rc.returncode == 0 and "본 라운드" in rc.stdout
            and "1.234e-06" not in rc.stdout)
+        ck("본 라운드 산출물 → 판독기 결박 (실행 기록 대조) 통과 — 러너·판독기 계약",
+           J.v7_main_binding_errors(o, 1000, pj, {(st, T, sd) for T, st, sd in ro},
+                                    J.scan(str(o))) == [])
+        mp = o / "md" / tag_of(*ro[0]) / "run_meta.json"; keep = mp.read_text()
+        mp.write_text(json.dumps({**json.loads(keep), "seed": 3}))
+        ck("⛔음성 계약: run_meta 시드를 바꾸면 판독기 결박이 잡는다",
+           J.v7_main_binding_errors(o, 1000, pj, {(st, T, sd) for T, st, sd in ro}, J.scan(str(o))) != [])
+        mp.write_text(keep)
+
+        print("── 정리 없이 끝난 시도 (SIGKILL · 전원) — 회신 CT P1-2 ──")
+        o = tmp / "m_unset"
+        tg = tag_of(*ro[2])
+        rc, txt = runm(o, env={"FAKE_BAD": f"{tg}=seed"})
+        b = _read_json(o / "budget.json") or {}
+        for st in b["steps"]:
+            if st.get("tag") == tg and "start_utc" in st:      # 정리 경로를 못 탄 것처럼: 시작 기록만 남긴다
+                b["used_gpu_h"] = float(b["used_gpu_h"]) - float(st.get("gpu_h") or 0)
+                for x in ("end_utc", "rc", "gpu_h", "used_after", "stopped", "gpu_total_mib_max_sampled"):
+                    st.pop(x, None)
+        _write_json(o / "budget.json", b)
+        used0 = float(b["used_gpu_h"])
+        (o / "attic").mkdir(); (o / "md" / tg).rename(o / "attic" / tg)
+        rc, txt = runm(o, "--resume")
+        ck("⛔음성 미정산 시도가 있으면 attic 으로 옮겨도 재개 거부 → 2 · --settle 안내", rc == 2 and "--settle" in txt)
+        rc, txt = runm(o, "--resume", "--settle", "NOPE__T1000__s1=1:x")
+        ck("⛔음성 --settle 대상이 미종료 시도가 아니다 → 2", rc == 2 and "정산할 미종료 시도가 없다" in txt)
+        rc, txt = runm(o, "--resume", "--settle", f"{tg}=0:x")
+        ck("⛔음성 --settle 0 GPU-h → 2 (형식 오류)", rc == 2 and "형식 오류" in txt)
+        zz = subprocess.Popen([sys.executable, "-c", "import time; time.sleep(60)", str(drv)])
+        try:
+            b = _read_json(o / "budget.json"); [st.update(pid=zz.pid) for st in b["steps"] if st.get("tag") == tg and "start_utc" in st]
+            _write_json(o / "budget.json", b)
+            time.sleep(0.2)
+            rc, txt = runm(o, "--resume", "--settle", f"{tg}=0.5:시험")
+            ck("⛔음성 미정산 시도의 드라이버 PID 가 살아 있다 → 2 (정산 전에 그 PID 를 정리)", rc == 2 and "살아 있다" in txt)
+        finally:
+            zz.kill(); zz.wait()
+        rc, txt = runm(o, "--resume", "--settle", f"{tg}=0.5:시험")
+        b = _read_json(o / "budget.json") or {}
+        ss = [st for st in b.get("steps", []) if "settled" in st]
+        ck("정산 → 재개 rc 0 · 40 런 · 정산 0.5 h 가 누적에 들어갔다 · 누적 = 모든 시도 gpu_h 합",
+           rc == 0 and len([1 for st in b["steps"] if st.get("ok")]) == 40 and len(ss) == 1 and ss[0]["gpu_h"] == 0.5
+           and float(b["used_gpu_h"]) >= used0 + 0.5
+           and abs(float(b["used_gpu_h"]) - sum(float(st.get("gpu_h") or 0) for st in b["steps"])) < 6e-5 * (1 + len(b["steps"])))
+        m = _read_json(o / "manifest.json"); m["roster"] = m["roster"][1:] + m["roster"][:1]; _write_json(o / "manifest.json", m)
+        rc, txt = runm(o, "--resume")
+        ck("⛔음성 (회신 CT P2) manifest 명단 순서가 다르면 이어받기 거부 → 2", rc == 2 and "명단" in txt)
     finally:
         shutil.rmtree(tmp, ignore_errors=True)
     print(f"selftest {'PASS' if not fails else 'FAIL'} ({len(fails)} 실패)")
@@ -1657,6 +1830,9 @@ def main() -> int:
     ap.add_argument("--main", action="store_true", help="본 라운드 (고정 명단 40 런 · 결정 " + DECISION_MAIN + ")")
     ap.add_argument("--probe_json", default=None,
                     help="--main: 탐침 산출물 (기본 repo 사본 db/raw/cascade_v7_probe_2026_10_03/cascade_v7_probe.json)")
+    ap.add_argument("--settle", action="append", default=[], metavar="TAG=GPU_H:근거",
+                    help="--resume: 정리 없이 끝난 시도(시작 기록만 있음)를 확인한 경과 시간으로 정산 (회신 CT P1-2)")
+    ap.add_argument("--_stop_after_popen", action="store_true", help=argparse.SUPPRESS)  # 시험 주입 (회신 CT P1-3)
     ap.add_argument("--selftest", action="store_true")
     for k in ("--_decisions", "--_judge", "--_driver", "--_struct_dir", "--_nvidia_smi", "--_repo"):
         ap.add_argument(k, help=argparse.SUPPRESS)  # 시험 주입 — 쓰이면 화면·manifest 에 남는다

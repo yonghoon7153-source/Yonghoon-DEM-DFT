@@ -146,8 +146,12 @@ def parse_tag(tag: str):
     return (m.group(1), int(m.group(2))) if m else (None, None)
 
 
-def scan(out_root):
-    """out_root/md/**/T*/msd.json → {(구조, 온도, 시드): 기록}. ⛔ 고르지 않는다 — 전부 담는다."""
+def scan(out_root, dups=None):
+    """out_root/md/**/T*/msd.json → {(구조, 온도, 시드): 기록}. ⛔ 고르지 않는다 — 전부 담는다.
+
+    ⚠ 같은 키의 산출물이 둘 이상이면 (런 폴더 안의 백업 등) 사전순 마지막이 이긴다 — 조용히 고른다.
+      `dups` (dict) 를 주면 그 키와 경로들을 모은다 → 호출자가 **거부**해야 한다 (v7 본 라운드 · 회신 CT P1-1 ①).
+    """
     runs = {}
     for f in sorted(glob.glob(os.path.join(out_root, "md", "*", "*", "T*", "msd.json"))):
         tag = Path(f).relative_to(Path(out_root) / "md").parts[0]
@@ -155,7 +159,10 @@ def scan(out_root):
         if st is None:
             continue
         d = json.load(open(f))
-        runs[(st, int(d["T_K"]), sd)] = {
+        key = (st, int(d["T_K"]), sd)
+        if dups is not None and key in runs:
+            dups.setdefault(key, [runs[key]["path"]]).append(f)
+        runs[key] = {
             "path": f, "tag": tag, "D": float(d["D_Li_cm2_s"]),
             "t": d["times_ps"], "y": d["msd_Li_A2"],
             "n_Li": d.get("n_Li"), "fit_window_ps": d.get("fit_window_ps"),
@@ -769,12 +776,86 @@ V7_CLAIM_SCOPE = ("사전 지정된 탐침 규칙으로 선택한 T* K에서, UM
                   "T* 는 '확산이 시작되는 최저 온도' 가 아니라 지정 사다리·시드에서 운영 기준을 통과한 온도다.")
 
 
+V7_MAIN_SCHEMA = "cascade_v7_main_round/v1"
+
+
+def _sha256(p):
+    import hashlib
+    h = hashlib.sha256()
+    with open(p, "rb") as fh:
+        for b in iter(lambda: fh.read(1 << 20), b""):
+            h.update(b)
+    return h.hexdigest()
+
+
+def v7_main_binding_errors(out_root, T, probe_json, want, runs) -> list[str]:
+    """회신 CT P1-1 ② — 판독 대상이 **승인된 그 실행**의 자료인가. 태그만 맞는다고 받지 않는다.
+
+    · manifest.json: 본 라운드 schema · T* · 탐침 산출물 해시 (= --probe_json 파일) · 고정 명단 = 판독 대상 집합
+    · budget.json: 판독 대상 런마다 완료(ok) 기록
+    · md/<태그>/run_meta.json: 라벨 cv7main_<구조> · 시드 · 온도 [T*] · 생산 길이 · 추론 모드 default · 궤적 저장
+    · 판독 대상 런의 폴더 태그가 키와 같다
+    ⛔ 못 하는 것: 파일 내용이 진짜 MD 의 산물인지는 모른다 (기록끼리의 일치만 본다).
+    """
+    errs = []
+    root = Path(out_root)
+    tag = lambda k: f"{k[0]}__T{int(k[1])}__s{int(k[2])}"
+    try:
+        m = json.loads((root / "manifest.json").read_text(encoding="utf-8"))
+    except (OSError, ValueError):
+        return [f"{root}/manifest.json 을 못 읽는다 — 어느 실행의 자료인지 결박할 수 없다"]
+    if m.get("schema") != V7_MAIN_SCHEMA:
+        errs.append(f"manifest schema {m.get('schema')!r} ≠ {V7_MAIN_SCHEMA!r}")
+    if not _same(m.get("T_star_K") if m.get("T_star_K") is not None else -1, T):
+        errs.append(f"manifest T* {m.get('T_star_K')!r} ≠ 탐침 산출물 T* {T}")
+    try:
+        want_sha = _sha256(probe_json)
+    except OSError:
+        want_sha = None
+    if (m.get("probe_json") or {}).get("sha256") != want_sha:
+        errs.append("manifest 의 탐침 산출물 해시 ≠ --probe_json 파일 해시")
+    roster = set(m.get("roster") or [])
+    if roster != {tag(k) for k in want}:
+        errs.append(f"manifest 명단 {len(roster)} ≠ 판독 대상 {len(want)} (집합이 다르다)")
+    try:
+        b = json.loads((root / "budget.json").read_text(encoding="utf-8"))
+        ok = {st.get("tag") for st in b.get("steps", []) if st.get("ok")}
+    except (OSError, ValueError, AttributeError):
+        ok = None
+        errs.append(f"{root}/budget.json 을 못 읽는다 — 완료 기록을 대조할 수 없다")
+    for k in sorted(want):
+        t = tag(k)
+        if ok is not None and t not in ok:
+            errs.append(f"{t}: budget 에 완료 기록이 없다")
+        r = runs.get(k)
+        if r is not None and r.get("tag") != t:
+            errs.append(f"{t}: 산출물 폴더 태그 {r.get('tag')!r} 가 다르다")
+        try:
+            meta = json.loads((root / "md" / t / "run_meta.json").read_text(encoding="utf-8"))
+        except (OSError, ValueError):
+            errs.append(f"{t}: run_meta.json 을 못 읽는다")
+            continue
+        exp = {"label": f"cv7main_{k[0]}", "seed": int(k[2]), "uma_inference_mode": "default", "save_traj": True}
+        bad = [f"{x} {meta.get(x)!r}" for x, v in exp.items() if meta.get(x) != v or isinstance(meta.get(x), bool) != isinstance(v, bool)]
+        temps = meta.get("temperatures") or []
+        if len(temps) != 1 or not _same(temps[0], T):
+            bad.append(f"temperatures {temps!r}")
+        if not _same(meta.get("prod_ps") if meta.get("prod_ps") is not None else -1, V7_PROTOCOL["prod_ps"]):
+            bad.append(f"prod_ps {meta.get('prod_ps')!r}")
+        if bad:
+            errs.append(f"{t}: run_meta 불일치 — " + " · ".join(bad))
+    return errs
+
+
 def main_v7(a) -> int:
     """카드 v7 + 개정 CP — 본 라운드 판정 (부모 10 × 처방 2 × 시드 1·2 = 40 런 · T* · 결속 + 경보 거부권 · v6 §4 집계)."""
     try:
         sys.stdout.reconfigure(line_buffering=True)
     except Exception:
         pass
+    if getattr(a, "allow_partial", False):
+        print("⛔ v7 은 --allow_partial 을 받지 않는다 — 40 런 전 중간 집계 금지 (카드 §5 · 회신 CT P2)")
+        return 2
     if not a.probe_json:
         print("⛔ --probe_json (탐침 산출물 cascade_v7_probe.json) 이 없다 — T* 를 자유 인자로 받지 않는다")
         return 2
@@ -783,7 +864,13 @@ def main_v7(a) -> int:
         print(f"⛔ {why} — 본 라운드를 판정하지 않는다")
         return 4
     pairs = load_v6_pairs()
-    runs, probe_only = v7_main_runs(scan(a.out_root), T)
+    dups = {}
+    runs, probe_only = v7_main_runs(scan(a.out_root, dups=dups), T)
+    if dups:
+        print(f"⛔ 같은 런 키에 산출물이 둘 이상 — 고르지 않는다 (회신 CT P1-1 ①) · 백업은 런 폴더 밖 (attic) 으로:")
+        for k, ps in sorted(dups.items()):
+            print(f"    {k[0]}__T{k[1]}__s{k[2]}: " + " · ".join(ps))
+        return 5
     print(f"카드 v7 + 개정 CP · T* = {T} K (탐침: {why}) · 부모 {len(pairs)} · 시드 {list(V7_MAIN_SEEDS)} · 런 {len(runs)} 개 · "
           f"프로토콜 {V7_PROTOCOL} · out_root {a.out_root}")
     if probe_only:
@@ -797,6 +884,12 @@ def main_v7(a) -> int:
             return 3
         print("  ⛔ --allow_partial — 아래는 **중간 집계**다. 인용·판정에 쓰지 않는다")
     want = {(st, T, sd) for k in pairs for st in pairs[k] for sd in V7_MAIN_SEEDS}
+    berr = v7_main_binding_errors(a.out_root, T, a.probe_json, want, runs)
+    if berr:
+        print(f"⛔ 실행 기록 결박 실패 {len(berr)} 건 — 승인된 그 실행의 자료라고 확인할 수 없다 (회신 CT P1-1 ②):")
+        for e in berr[:20]:
+            print(f"    · {e}")
+        return 5
     jj = judge_runs_card({k: v for k, v in runs.items() if k in want}, ignore_eligibility=a.ignore_eligibility,
                          binding={"ladder": (T,), "protocol": V7_PROTOCOL}, alarm=True)
     ok = sum(1 for r in jj.values() if r["eligible"])
@@ -815,7 +908,11 @@ def main_v7(a) -> int:
                           "binding": "온도(msd·aimd·폴더·태그·T*)·prod·dt·save·시간축 끝", "framework_alarm": "거부권만"}
     res["rows"] = [{"structure": k[0], "T_K": k[1], "seed": k[2], "tag": r["tag"], "D": r["D"], "eligible": r["eligible"],
                     "framework_alarm": r.get("framework_alarm"), "events_per_run": r["events_per_run"],
-                    "reasons": r["reasons"]} for k, r in sorted(jj.items())]
+                    "reasons": r["reasons"], "msd_path": runs[k]["path"], "msd_sha256": _sha256(runs[k]["path"])}
+                   for k, r in sorted(jj.items())]
+    res["inputs"] = {"probe_json_sha256": _sha256(a.probe_json),
+                     "manifest_sha256": _sha256(os.path.join(a.out_root, "manifest.json")),
+                     "budget_sha256": _sha256(os.path.join(a.out_root, "budget.json"))}
     p = res["primary"]
     print(f"1차: {p.get('verdict', p.get('⛔'))}")
     q = a.out_json or os.path.join(a.out_root, "cascade_v7_judgement.json")
@@ -1166,6 +1263,94 @@ def _selftest() -> int:
     import types as _ty
     chk(main_v7(_ty.SimpleNamespace(probe_json=None)) == 2,
         "⛔음성: --probe_json 없이 v7 본 라운드 판정 → 거부 (T* 를 자유 인자로 안 받는다)")
+    chk(main_v7(_ty.SimpleNamespace(probe_json="x.json", allow_partial=True)) == 2,
+        "⛔음성 (회신 CT P2): v7 은 --allow_partial 을 거부한다 (중간 집계 금지)")
+    #: ── 회신 CT P1-1 — 중복 산출물 거부 · 실행 기록 결박 (판독 대상이 승인된 그 실행의 자료인가) ──
+    with _tf.TemporaryDirectory() as tdb:
+        rb = Path(tdb)
+        pj = rb / "probe.json"; pj.write_text('{"T_star_K": 1000}')
+        want = {("P1_Al2O3_A", 1000, 1), ("P2_Al2S3_A", 1000, 1)}
+        tg = lambda k: f"{k[0]}__T{k[1]}__s{k[2]}"
+        for k in want:
+            d = rb / "md" / tg(k) / "d0.00_cfg0" / "T1000"; d.mkdir(parents=True)
+            (d / "msd.json").write_text(json.dumps({"T_K": 1000, "D_Li_cm2_s": 1e-6, "times_ps": [0.1, 0.2], "msd_Li_A2": [0, 1]}))
+            (rb / "md" / tg(k) / "run_meta.json").write_text(json.dumps({
+                "label": f"cv7main_{k[0]}", "seed": k[2], "temperatures": [1000.0], "prod_ps": 400.0,
+                "uma_inference_mode": "default", "save_traj": True}))
+
+        def wman(**kw):
+            m = {"schema": V7_MAIN_SCHEMA, "T_star_K": 1000, "probe_json": {"sha256": _sha256(pj)},
+                 "roster": sorted(tg(k) for k in want)}
+            m.update(kw); (rb / "manifest.json").write_text(json.dumps(m))
+
+        def wbud(tags):
+            (rb / "budget.json").write_text(json.dumps({"steps": [{"tag": t, "ok": True} for t in tags]}))
+        wman(); wbud([tg(k) for k in want])
+        dd = {}
+        rr = scan(str(rb), dups=dd)
+        chk(dd == {} and set(rr) == {(k[0], 1000, k[2]) for k in want}, "scan: 중복 없음 → dups 비어 있음")
+        chk(v7_main_binding_errors(rb, 1000, pj, {(k[0], 1000, k[2]) for k in want}, rr) == [],
+            "[양성] 실행 기록 결박: manifest · budget · run_meta 가 맞으면 통과")
+        W = {(k[0], 1000, k[2]) for k in want}
+        for name, act in (("manifest schema 탐침", lambda: wman(schema="cascade_v7_probe_round/v1")),
+                          ("manifest T* 800", lambda: wman(T_star_K=800)),
+                          ("탐침 해시 다름", lambda: wman(probe_json={"sha256": "0" * 64})),
+                          ("명단 다름", lambda: wman(roster=[tg(sorted(want)[0])])),
+                          ("budget 완료 기록 없음", lambda: wbud([tg(sorted(want)[0])]))):
+            wman(); wbud([tg(k) for k in want]); act()
+            chk(v7_main_binding_errors(rb, 1000, pj, W, rr) != [], f"⛔음성 결박: {name} → 거부")
+        wman(); wbud([tg(k) for k in want])
+        k0 = sorted(want)[0]; mp = rb / "md" / tg(k0) / "run_meta.json"; keep = mp.read_text()
+        for name, mut in (("seed 3", {"seed": 3}), ("turbo", {"uma_inference_mode": "turbo"}),
+                          ("라벨 H0", {"label": "cv7main_H0_host"}), ("온도 800", {"temperatures": [800.0]}),
+                          ("200 ps", {"prod_ps": 200.0}), ("seed True", {"seed": True})):
+            mp.write_text(json.dumps({**json.loads(keep), **mut}))
+            chk(v7_main_binding_errors(rb, 1000, pj, W, rr) != [], f"⛔음성 결박: run_meta {name} → 거부")
+        mp.write_text(keep)
+        b = rb / "md" / tg(k0) / "d0.00_cfg0_backup" / "T1000"; b.mkdir(parents=True)
+        (b / "msd.json").write_text(json.dumps({"T_K": 1000, "D_Li_cm2_s": 2e-6, "times_ps": [0.1], "msd_Li_A2": [0]}))
+        dd = {}
+        scan(str(rb), dups=dd)
+        chk(list(dd) == [(k0[0], 1000, k0[2])] and len(dd[(k0[0], 1000, k0[2])]) == 2,
+            "⛔음성 (회신 CT 재현): 런 폴더 안 백업 msd.json → 같은 키 두 경로를 잡는다")
+    #: main_v7 배선 — 결박·중복 검사가 실제 판정 경로에서 막는가 (함수만 시험하면 호출부가 빠져도 초록이다)
+    with _tf.TemporaryDirectory() as tdw:
+        rw = Path(tdw); pj = rw / "probe.json"
+        pj.write_text(json.dumps({"T_star_K": 1000, "protocol": V7_PROTOCOL, "pair_parent": V7_PAIR_PARENT, "why": "시험"}))
+        pairs_w = load_v6_pairs()
+        want_w = [(st, 1000, sd) for k in pairs_w for st in pairs_w[k] for sd in V7_MAIN_SEEDS]
+        tg = lambda k: f"{k[0]}__T{k[1]}__s{k[2]}"
+        for k in want_w:
+            d = rw / "md" / tg(k) / "d0.00_cfg0" / "T1000"; d.mkdir(parents=True)
+            (d / "msd.json").write_text(json.dumps({"T_K": 1000, "D_Li_cm2_s": 1e-6, "times_ps": [0.1 * i for i in range(50)],
+                                                    "msd_Li_A2": [0.1 * i for i in range(50)]}))
+            (rw / "md" / tg(k) / "run_meta.json").write_text(json.dumps({
+                "label": f"cv7main_{k[0]}", "seed": k[2], "temperatures": [1000.0], "prod_ps": 400.0,
+                "uma_inference_mode": "default", "save_traj": True}))
+        (rw / "manifest.json").write_text(json.dumps({"schema": V7_MAIN_SCHEMA, "T_star_K": 1000,
+                                                      "probe_json": {"sha256": _sha256(pj)}, "roster": [tg(k) for k in want_w]}))
+        (rw / "budget.json").write_text(json.dumps({"steps": [{"tag": tg(k), "ok": True} for k in want_w]}))
+        ns = _ty.SimpleNamespace(probe_json=str(pj), out_root=str(rw), allow_partial=False, ignore_eligibility=False,
+                                 out_json=str(rw / "j.json"))
+        import contextlib as _cl, io as _io
+        with _cl.redirect_stdout(_io.StringIO()):
+            rc0 = main_v7(ns)
+        jo = json.loads((rw / "j.json").read_text()) if (rw / "j.json").exists() else {}
+        chk(rc0 == 0 and len(jo.get("rows", [])) == 40 and all(len(r.get("msd_sha256", "")) == 64 for r in jo["rows"])
+            and set(jo.get("inputs", {})) == {"probe_json_sha256", "manifest_sha256", "budget_sha256"},
+            "[양성] main_v7 배선: 결박 통과 → 판정 · 행마다 입력 경로·해시 · 입력 해시 셋 기록")
+        (rw / "j.json").unlink(missing_ok=True)
+        mp = rw / "md" / tg(want_w[7]) / "run_meta.json"; keep = mp.read_text()
+        mp.write_text(json.dumps({**json.loads(keep), "seed": 3}))
+        with _cl.redirect_stdout(_io.StringIO()):
+            rc1 = main_v7(ns)
+        chk(rc1 == 5 and not (rw / "j.json").exists(), "⛔음성 main_v7 배선: run_meta 시드 불일치 → 5 · 산출물 안 씀")
+        mp.write_text(keep)
+        bk = rw / "md" / tg(want_w[3]) / "d0.00_cfg0_backup" / "T1000"; bk.mkdir(parents=True)
+        (bk / "msd.json").write_text((rw / "md" / tg(want_w[3]) / "d0.00_cfg0" / "T1000" / "msd.json").read_text())
+        with _cl.redirect_stdout(_io.StringIO()):
+            rc2 = main_v7(ns)
+        chk(rc2 == 5 and not (rw / "j.json").exists(), "⛔음성 main_v7 배선: 런 폴더 안 백업 msd.json → 5 (고르지 않는다)")
     if have_ase:
         with _tf.TemporaryDirectory() as tdp:
             rd = Path(tdp) / "md" / "H0_host__T800__s1" / "eprime_H0_host_d0.00_c0" / "T800"; rd.mkdir(parents=True)

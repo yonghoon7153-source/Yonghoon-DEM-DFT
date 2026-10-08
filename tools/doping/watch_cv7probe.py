@@ -140,6 +140,12 @@ def report(out_root, log=None, now=None, nvsmi="nvidia-smi", tmux="tmux") -> tup
     if not out_root.is_dir():
         return 2, L + ["⛔ out_root 가 없다 — 러너가 아직 안 떴거나 경로가 다르다 (--out_root)"]
     state, _ = runner_state(out_root)
+    # 회신 CT P2 — --log 로 out_root 안 (드라이버 로그 · D 가 찍힌다) 을 가리키면 열지 않는다
+    try:                                   # ⚠ kgy 의 시스템 python3 는 3.8 — Path.is_relative_to (3.9+) 를 안 쓴다
+        lr, orr = str(log.resolve()), str(out_root.resolve())
+        log_bad = lr == orr or lr.startswith(orr.rstrip(os.sep) + os.sep)
+    except (OSError, ValueError):
+        log_bad = True
     sess = _sh([tmux, "ls", "-F", "#S"])
     names = sess.split() if sess else []
     shown = [f"{session} {'✓' if session in names else '⚠ 없음'}"] + \
@@ -147,7 +153,11 @@ def report(out_root, log=None, now=None, nvsmi="nvidia-smi", tmux="tmux") -> tup
     rest = len([n for n in names if n != session and n not in others])
     L.append(f"① {state} · tmux " + (" · ".join(shown) + (f" · 그 밖 {rest} 개" if rest else "") if sess is not None
                                      else f"못 읽음 (⚠ {session} 없음)"))
+    if log_bad:
+        L.append(f"   ⛔ --log {log} 는 out_root 안이다 (드라이버 로그 자리 · D) — 열지 않는다 · 러너 로그는 <out_root>.log")
     try:
+        if log_bad:
+            raise OSError
         age = (now - log.stat().st_mtime) / 60.0
         L.append(f"   러너 로그 {log.name} · 마지막 갱신 {age:.0f} 분 전 (러너는 30 분마다 진행 줄을 쓴다)")
     except OSError:
@@ -207,6 +217,8 @@ def report(out_root, log=None, now=None, nvsmi="nvidia-smi", tmux="tmux") -> tup
     g = _sh([nvsmi, "--query-gpu=memory.used,memory.total,utilization.gpu", "--format=csv,noheader"])
     L.append(f"⑥ GPU {g or '못 읽음'} ({'단독 예정' if main else 'P1b pw.x 와 공유'} · 프로세스별은 못 본다)")
     try:
+        if log_bad:
+            raise OSError
         tail = Path(log).read_text(encoding="utf-8", errors="ignore").splitlines()[-3:]
         L += ["⑦ 러너 로그 끝:"] + [f"   {x[:200]}" for x in tail]
     except OSError:
@@ -327,6 +339,11 @@ def _selftest() -> int:
         ck("⛔음성 본 라운드: 판독 산출물이 있어도 안 읽는다 (자격·사건·사유가 화면에 없다)",
            "SHOULD_NOT_SHOW" not in txt and "사건 777" not in txt and "판독 없음 (40 런 뒤" in txt and "⑤" not in txt)
         ck("본 라운드: 도는 런 100.0 / 405 ps", "▶ P1_Al2O3_B__T1000__s1 · md.log 100.0 / 405 ps" in txt)
+        (mo / "logs").mkdir(); (mo / "logs" / "x.log").write_text("D_Li=7.77e-06 cm2/s\n")
+        _, L = report(mo, log=mo / "logs" / "x.log", now=now, nvsmi="/bin/false", tmux=str(ft))
+        txt = "\n".join(L)
+        ck("⛔음성 (회신 CT P2) --log 가 out_root 안 드라이버 로그 → 열지 않는다 (D 안 나옴)",
+           "7.77" not in txt and "D_Li" not in txt and "열지 않는다" in txt)
     finally:
         import shutil
         shutil.rmtree(tmp, ignore_errors=True)

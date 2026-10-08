@@ -52,5 +52,28 @@
   "GPU": "800 MiB · 39 % (시작 문턱 16000)",
   "디스크": "286 GB 여유",
   "첫_명령": "… --label cv7main_P1_Al2O3_A --out_root ~/work/runs/cascade_v7_main_1007/md/P1_Al2O3_A__T1000__s1 --temperatures 1000 --equilib_ps 5.0 --prod_ps 400.0 --timestep_fs 2.0 --friction 0.02 --save_fs 100.0 --fit_window_ps 2.0 50.0 --save_traj --seed 1 --uma_model uma-s-1p1 --uma_task omat --device cuda (turbo 없음)"
+ },
+ "📩_회신_CT_2026_10_08": {
+  "원문": "kb/reviews/codex_CT_reply_cascade_v7_main_runner_2026_10_08.md",
+  "판정": "조건부 GO · P0 없음 · 도는 MD 계속 (Codex 는 d283ce5 · cd014ec · ac06894 기준 · 서버·실제 MD·D 접근 없음)",
+  "P1": [
+   "① 최종 판독 경계 — 같은 런 키 산출물 둘 이상이면 사전순 마지막을 조용히 고름 · 실행 기록 (manifest · budget · run_meta) 과 결박 안 함",
+   "② 정리 없이 끝난 시도 (SIGKILL·전원) 는 비용이 안 쌓인 채 attic 이동 뒤 재개됨 · 시험 '죽인 런 시간도 누적' 이 숫자를 안 봤다",
+   "③ 자식 생성·PID 기록이 try 밖 — 그 사이 중단이면 자식이 살아남고 비용 0"
+  ],
+  "P2": [
+   "이어받기가 판독기 해시·명단 순서를 안 봄",
+   "v7 --allow_partial 이 중간 집계를 실제로 함",
+   "watcher --log 로 드라이버 로그를 열 수 있음",
+   "v7_probe_t_star 는 runs 자격으로 T* 를 재확인 안 함 (이번 탐침은 22 해시·기록 일치 — 철회 근거 아님)"
+  ],
+  "이행_2026_10_08": {
+   "judge_eprime.py": "scan(dups) · v7_main_binding_errors (manifest schema·T*·탐침 해시·명단 집합 / budget 완료 / run_meta 라벨·시드·온도·생산·default·궤적) · main_v7: 중복 → rc 5 · 결박 실패 → rc 5 · --allow_partial 거부 · 행마다 msd 경로·sha256 + 입력 해시 셋 · selftest PASS (결박·중복·배선 합성 40 런) · 깨기 6/6 빨강",
+   "run_cascade_v7_probe.py": "자식 생성부터 정리까지 한 블록 (생성·PID 기록 구간과 정리·정산 구간은 신호 미룸 · 자식은 exec 전에 마스크 해제 · finally 에서 살아 있는 우리 자식 죽임) · resume_check: 시작 기록만 있는 시도는 재개 거부 → --settle TAG=GPU-h:근거 로 정산 (드라이버 PID 가 살아 있으면 거부) · 본 라운드 명단·순서 대조 · 판독기 해시 변경은 기록만 · 시험 숫자 검사 (누적 = 모든 시도 gpu_h 합) · selftest 115 ✓ · 깨기 6/6 빨강",
+   "watch_cv7probe.py": "--log 가 out_root 안이면 열지 않음 (python 3.8 호환 비교) · selftest PASS · 깨기 1/1",
+   "안_한_것": "v7_probe_t_star 의 runs 재확인 (P2 · 이번 탐침 기록 일치 · 다음 카드 때)"
+  },
+  "⭐_적용_방식": "도는 러너 (d283ce52 · PID 1283841) 는 **교체하지 않는다** — 정상 경로는 Codex 도 일치 확인 · 고친 곳은 비정상 종료 복구와 최종 판독에서만 쓰인다. ⇒ ① 비정상 종료가 나면: 새 worktree (이 커밋 이후) 에서 --resume — 시작 기록만 남은 시도가 있으면 러너가 거부하고 --settle 을 요구한다 (경과 시간은 md.log 마지막 시각·로그로 확인 · 현재 시각 − 시작 은 그대로 쓰지 않는다) ② 40 런 뒤 판정은 새 worktree 의 judge_eprime 으로 (결박·중복 검사 포함) ③ 감시 파일은 다음 fetch 때 새 판",
+  "⛔": "비정상 종료 뒤 attic 이동만 하고 옛 worktree 로 바로 --resume 하지 않는다 (회신 CT Q-CT-6 ②)"
  }
 }
