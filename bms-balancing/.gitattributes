@@ -145,3 +145,5 @@ reviews/r14_repros/codex63/comsol_microshort_s1o_r1_scope_review_20261008/** -te
 reviews/r14_repros/codex63/comsol_microshort_s1o_r1_corrections_20261008/** -text
 # 2026-10-08: 미세단락 S1O-R1 정정본 소스 검토 회신 (N1–N4 정적 수용 · 검증안 R1-V1–V3) — bytes 그대로
 reviews/r14_repros/codex63/comsol_microshort_s1o_r1_source_review_20261008/** -text
+# 2026-10-08: 미세단락 S1O-R1 기능 검증 R1_003 중지 검토 회신 (127 PASS · R113 하네스 전제 중지 · received/ = R1_003 결과 펼친 사본) — bytes 그대로
+reviews/r14_repros/codex63/comsol_microshort_s1o_r1_003_stop_review_20261008/** -text
