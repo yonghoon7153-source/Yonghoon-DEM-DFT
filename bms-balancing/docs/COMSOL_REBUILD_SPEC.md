@@ -4256,3 +4256,14 @@ gate INCOMPLETE · 실효 정책 UNVERIFIED · native 미승인 · 게이트 리
   `C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/microshort_s1o_r1_20261008` — 지난 S1-O 준비 폴더 (`…/outputs/microshort_s1o_20261007_133011` · 준비본 `START.json`) 와 같은 실행 PC · 같은 `outputs/` 규칙.
   경로는 사용자가 채택할 때 확정한다 (바꾸면 v2 의 그 한 줄만 바꾼다).
 - 다음: 사용자 채택 (v2 §0) → 실행 담당 Codex (COMSOL PC) 에 v2 + 준비본 검토 회신 zip (`dee50be8…`) 발송 → R1 정정본 제출 · 멈춤 → R1 소스 검토 → 기능 검증 별도 승인. 이 절은 착수 승인이 아니다.
+
+## 78. S1O-R1 착수 승인 — v2 발송 (2026-10-08 · 오프라인 정정 · solve 0)
+
+- 사용자 원문 (2026-10-08): "보냈어용" — §77 에서 "보내시면 S1O-R1 착수 승인으로 기록" 으로 안내한 대로, `docs/COMSOL_MICROSHORT_S1O_R1_SEND_TO_CODEX_v2_20261008.md`
+  (sha256 `eac2eb0adbc39b608a65b8db154947dc9ee5a8cb9f40bddc7644d42f9b227499`) 를 준비본 검토 회신 zip (`dee50be8…`) 과 함께 **실행 담당 Codex (COMSOL PC)** 에 보냈다.
+- 승인 범위 = v2 §0 채택 문구 그대로: N1–N4 만 정정 · 대상 준비본 zip `0cae7acc…` / CODE_MANIFEST `54c61d10…` · 새 폴더
+  `C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/microshort_s1o_r1_20261008` (있으면 중지 · 삭제 / 재사용 / 자동 우회 없음) · 허용치 · deadband · 물리 · 초기조건 · σ · OCP ·
+  해상도 · cap · 출력 API 불변 · 정적 확인만 (후보 / 받은 코드 함수 · 기능 시험 · Java 컴파일 · JVM · COMSOL 0 · approval / release / runtime / token 생성 0) · 1 회 · 총 2,700 s (작성 1,200 · 정적 600 ·
+  검증안 600 · 전달 300 · 이전 예산 재사용 없음) · 제출 뒤 멈춤.
+- 승인이 아닌 것: 갱신 검증안의 기능 검증 · S1-P · M · N · native · 960 s / 12 h · 실험 비교 · 설치본 / 어댑터 OPEN 의 종결.
+- 다음: R1 정정본 수신 → 받은 바이트 그대로 보존 → R1 소스 검토 (사용자 결정 시 검토 담당 Codex) → 기능 검증 별도 승인.
