@@ -317,7 +317,7 @@ def section_sigma0(tmp, bed_rd):
 #  [D5] 뷰어 (node)
 # ══════════════════════════════════════════════════════════════════════════════
 JS_NAMES = ('netCurrentFmtJ', 'netCurrentLogRange', 'netCurrentT', 'netCurrentPct', 'netCurrentTicks', 'netCurrentFrame',
-            'netCurrentColorbarSpec', 'netCurrentControlsHtml', 'netCurrentLegendHtml', 'jeEscH', 'jetColor')
+            'netCurrentColorbarSpec', 'netCurrentControlsHtml', 'netCurrentTopOptions', 'netCurrentLegendHtml', 'jeEscH', 'jetColor')
 
 
 def section_viewer(pay):
@@ -335,7 +335,8 @@ def section_viewer(pay):
         except (ValueError, AssertionError):
             miss.append(n)
     m_tops = re.search(r'const NETCUR_TOPS = \[[^\]]*\];', js)
-    m_widths = re.search(r'const NETCUR_WIDTHS = \[[^\]]*\];', js)      # 10-08 굵기 고르기 (조작판이 쓴다 · 옛 코드엔 없음)
+    # 10-08 조작판이 쓰는 한 줄 상수 — 굵기 (NETCUR_WIDTHS) · 전류 몫 고르기 (NETCUR_SHARES) · 색 위쪽 (NETCUR_CAPS) (옛 코드엔 없음)
+    more = [m.group(0) for m in (re.search(r'const ' + n + r' = [^;]*;', js) for n in ('NETCUR_WIDTHS', 'NETCUR_SHARES', 'NETCUR_CAPS')) if m]
     if not chk(f'D5a viewer3d.js 에서 함수 · 상수를 잘라 냈다 (없음 {miss})', not miss and m_tops is not None):
         return
     if not chk('D5b 경로 자료 (전류 밀도) 가 있다', bool(pay and pay.get('edges') and pay.get('density'))):
@@ -344,7 +345,7 @@ def section_viewer(pay):
     pay5 = dict(pay, edges=pay['edges'][:5], top=5, n_returned=5)
     nc1 = copy.deepcopy(pay5)
     nc1['density']['c1'] = {'status': 'unavailable', 'reason': 'full_metrics.json 에 thickness_um 없음 <b>x</b>', 'factor': None}
-    script = '\n'.join(parts) + '\n' + m_tops.group(0) + '\n' + (m_widths.group(0) + '\n' if m_widths else '') + r"""
+    script = '\n'.join(parts + [m_tops.group(0)] + more) + '\n' + r"""
 const PAY = __PAY__, PAY5 = __PAY5__, NC1 = __NC1__;
 const out = {};
 out.fmt = [37.0344, 0.0123, 1.5e-5, 2.0e4, 1, 0.5, 999.6, 1e-3, 0.0998, 123.4, 0];
@@ -437,8 +438,11 @@ console.log(JSON.stringify(out));
         wl = ''
     chk('D5r 컬러바 단추 둘 = exportColorbarPNG(netCurrentColorbarSpec(…, \'1V\' · \'1C\')) · 파일 이름 _1V · _1C',
         "netCurrentColorbarSpec(l.pay, opt, l.st.lo, l.st.hi, '1V')" in wl and "netCurrentColorbarSpec(l.pay, opt, l.st.lo, l.st.hi, '1C')" in wl
-        and ("'_1V.png'" in wl or "'_1V' + (opt.scale === 'linear' ? '_linear' : '') + '.png'" in wl)
-        and ("'_1C.png'" in wl or "'_1C' + (opt.scale === 'linear' ? '_linear' : '') + '.png'" in wl), wl[:400])   # 10-08 선형 눈금이면 _linear 꼬리
+        and any(f in wl for f in ("'_1V.png'", "'_1V' + (opt.scale === 'linear' ? '_linear' : '') + '.png'",
+                                  "'_1V' + (opt.scale === 'linear' ? '_linear' : '') + netCurrentCapTag(opt) + '.png'"))
+        and any(f in wl for f in ("'_1C.png'", "'_1C' + (opt.scale === 'linear' ? '_linear' : '') + '.png'",
+                                  "'_1C' + (opt.scale === 'linear' ? '_linear' : '') + netCurrentCapTag(opt) + '.png'")), wl[:400])
+    # ↑ 10-08 선형 눈금이면 _linear 꼬리 · 색 위쪽 p99 · p95 면 _p99 · _p95 꼬리 (netCurrentCapTag)
     try:
         rnc = js_fn(js, 'renderNetCurrent')
     except (ValueError, AssertionError):

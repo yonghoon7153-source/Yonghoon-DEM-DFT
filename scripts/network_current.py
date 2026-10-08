@@ -34,8 +34,17 @@
   · 소산 몫 Σ_N I²R / Σ I²R (Tellegen: Σ I²R = ΔV · I_전체 → 검산)
   · 0 전류 간선 (|I| ≤ 1e-12 · I_전체 — 한 띠 안 두 노드 등) 은 돌려주지 않고 센다
   · 게시 σ 대조 (해의 σ/σ₀ 8 자리 = 게시 sigma_full · electronic_sigma_full) · 세대 대조 (manifest run id = 활성 도장 run id · 활성 세대 유효)
+  · ★ 10-08 고르기 (1저자 *"애초에 상위 20000 으로만 한 이유 · 좀더 모델 최적화로 숫자 조절"* → Q1 · Q2 권고대로) — `top` 하나로 받는다
+    (webapp/app.py = 194 봉인 파일 · 문자열을 그대로 넘긴다):
+      정수 N        = 옛 뜻 그대로 (상위 N · 1 … TOP_MAX 로 자름 · 옛 꼴 `edges` · 옛 키 값 무변경 — 키 `selection` 하나만 더함)
+      'shareP'      = 전류 몫 P % (1–99) — |I| 큰 순으로 세어 상위 k 접촉의 단면 몫 (32 단면 평균 · 위 z-단면 몫과 같은 잣대) 이 처음 P % 에
+                      닿는 k (그 케이스의 전류 분포가 정하는 숫자 · 단면이 없는 해면 경로 기본 TOP_DEFAULT 로 그리고 사유를 적는다)
+      'all'         = 0 아닌 전류 접촉 전부
+    이름 고르기 (share · all) 는 압축 꼴 (`packing` nodes_v1) — 입자 표 `nodes` (id · x · y · z · r — 옛 꼴과 같은 반올림) 한 번 +
+    `edges_c` (a · b = 입자 표 번호 · j) — 값은 옛 꼴과 같고 싣는 꼴만 다르다 (옛 꼴은 접촉마다 양 끝 좌표를 따로 실어 ps45 이온 전부 ≈ 40 만
+    접촉 = 101 MB · 압축 꼴 ≈ 19 MB).  `selection` = 고르기 종류 · 개수 · 세 몫 (SHARE_CHOICES) 의 개수 (share_n) · 0 아닌 전류 접촉 수.
 
-  python3 scripts/network_current.py show <케이스 결과 폴더> [--channel ionic] [--mode hertzian] [--top 2000]   # 경로가 낼 요약 (브라우저 없이)
+  python3 scripts/network_current.py show <케이스 결과 폴더> [--channel ionic] [--mode hertzian] [--top 2000 | share80 | all]   # 경로가 낼 요약
 """
 from __future__ import annotations
 
@@ -65,8 +74,11 @@ MANIFEST = 'manifest.json'
 SCHEMA = 'network_current_dump/v1'
 CHANNELS = ('ionic', 'electronic')
 MODES = ('hertzian', 'physics')
-TOP_DEFAULT = 5000                     # 뷰어 기본 (viewer3d.js applyNetCurrentMode 의 top 과 같은 값 — 시험이 대조) · real14 이온 = 단면 전류 평균 36 %
-TOP_MAX = 20000
+TOP_DEFAULT = 5000                     # 경로 기본 (top 없음 · CLI) · real14 이온 = 단면 전류 평균 36 % · 10-08 전까지 뷰어 기본이기도 했다
+TOP_MAX = 20000                        # 정수 고르기 상한 (옛 꼴 그대로 · 10-06 에 근거 기록 없이 정한 값 — 이름 고르기 share · all 은 이 상한 밖)
+SHARE_CHOICES = (50, 80, 95)           # 뷰어가 보이는 전류 몫 (%) — 10-08 1저자 Q1 권고대로
+VIEWER_DEFAULT = 'share50'             # 뷰어 기본 (viewer3d.js applyNetCurrentMode 의 top 과 같은 값 — 시험이 대조) · 1저자 Q2 = 전류 50 %
+PACKING_COMPACT = 'nodes_v1'           # 이름 고르기의 꼴 — 입자 표 한 번 + 접촉 = 입자 번호 둘 + j
 ZCUT_PLANES = 32
 ZERO_REL = 1e-12                       # |I| ≤ ZERO_REL · I_전체 = 0 전류 간선 (띠 안 · 막다른 가지)
 CLOSE_REL = 1e-9                       # 게시 JSON 대조 — 수치만 이 상대차 안이면 close (같은 해 · 마지막 자리)
@@ -521,19 +533,43 @@ def c1_scaling(results_dir, j_mean_1V):
     return out
 
 
+def parse_top(top):
+    """`top` → ('count', N) · ('share', P) · ('all', None) · None (잘못된 값).
+    정수 = 옛 뜻 그대로 (None · '' = 경로 기본 TOP_DEFAULT · 1 … TOP_MAX 로 자름) · 'shareP' = 전류 몫 P % (P = 1–99 정수) · 'all' = 전부."""
+    if top in (None, ''):
+        return ('count', TOP_DEFAULT)
+    if isinstance(top, str):
+        s = top.strip()
+        if s == 'all':
+            return ('all', None)
+        if s.startswith('share'):
+            d = s[5:]
+            if d.isascii() and d.isdigit() and len(d) <= 2 and 1 <= int(d) <= 99:
+                return ('share', int(d))
+            return None
+    try:
+        n = int(top)
+    except (TypeError, ValueError):
+        return None
+    return ('count', max(1, min(TOP_MAX, n)))
+
+
 def current_payload(results_dir, channel='ionic', mode='hertzian', top=None, scale=1000.0):
-    """경로 본문 → (HTTP 상태, dict).  덤프 없음 = 404 (만드는 명령) · 잘못된 인자 = 400."""
+    """경로 본문 → (HTTP 상태, dict).  덤프 없음 = 404 (만드는 명령) · 잘못된 인자 = 400.
+    `top` = 정수 (옛 꼴 · 상위 N) · 'shareP' (전류 몫 P %) · 'all' — `parse_top` · 모듈 머리 10-08 고르기 절."""
     import numpy as np
     import pandas as pd
     if channel not in CHANNELS:
         return _err(400, 'bad_channel', f'채널 {channel!r} — 이 보기는 {CHANNELS} (열 채널 · 다른 망은 범위 밖)')
     if mode not in MODES:
         return _err(400, 'bad_mode', f'모드 {mode!r} — {MODES}')
-    try:
-        top = TOP_DEFAULT if top in (None, '') else int(top)
-    except (TypeError, ValueError):
-        return _err(400, 'bad_top', f'top {top!r} — 정수')
-    top = max(1, min(TOP_MAX, top))
+    parsed = parse_top(top)
+    if parsed is None:
+        return _err(400, 'bad_top', f'top {top!r} — 정수 (상위 N) · shareP (전류 몫 P % · P = 1–99) · all')
+    requested = None if top in (None, '') else str(top).strip()
+    kind, kval = parsed
+    compact = kind in ('share', 'all')                            # 이름 고르기 = 압축 꼴 (단면이 없어 경로 기본으로 그려도 꼴은 요청대로)
+    top = kval if kind == 'count' else None
     try:
         scale = float(scale)
     except (TypeError, ValueError):
@@ -606,8 +642,30 @@ def current_payload(results_dir, channel='ionic', mode='hertzian', top=None, sca
     n_zero = int((~nz).sum())
     order = np.lexsort((id2, id1, -aI))                          # |I| 내림차순 · 동률 = (id1, id2)
     order = order[nz[order]]
+    n_nz = int(len(order))
+    # ★ 10-08 전류 몫 사다리 — 상위 k 접촉의 단면 몫 (32 단면 평균 · 아래 zcut.share_mean 과 같은 잣대) = Σ_{i<k} (간선 i 의 단면 평균 순 흐름) / I_전체.
+    #   단면 평균은 간선마다 미리 평균해도 같다 (선형) — n × 32 사본 없이 n 길이 누적 하나.  단면이 없는 해 (띠 없음 · 겹침) = None.
+    ladder = (np.cumsum(flux.mean(axis=1)[order]) / I_tot) if (flux is not None and n_nz) else None
+
+    def _n_share(p):
+        if ladder is None:
+            return None
+        hit = np.flatnonzero(ladder >= p / 100.0)
+        return int(hit[0]) + 1 if hit.size else n_nz          # 끝까지 못 닿으면 (수치 잔차) 전부
+    fallback = None
+    if kind == 'share':
+        top = _n_share(kval)
+        if top is None:
+            fallback = (f'전류 몫 잣대 (높이 단면) 를 정할 수 없는 해 — 전류가 흐르는 전극 띠 노드가 없거나 두 띠가 겹친다 · '
+                        f'경로 기본 (상위 {TOP_DEFAULT}) 으로 그림')
+            kind, kval, top = 'count', TOP_DEFAULT, TOP_DEFAULT
+    elif kind == 'all':
+        top = n_nz
     sel = order[:top]
     seld = sel[~wrap[sel]]
+    selection = {'kind': kind, 'requested': requested, 'share_pct': kval if kind == 'share' else None, 'n': int(len(sel)),
+                 'n_nonzero': n_nz, 'share_n': ({str(p): _n_share(p) for p in SHARE_CHOICES} if ladder is not None else None),
+                 'fallback': fallback, 'packing': PACKING_COMPACT if compact else 'edges'}
     if zcut is not None:
         sh = flux[sel].sum(axis=0) / I_tot
         shd = flux[seld].sum(axis=0) / I_tot
@@ -634,16 +692,38 @@ def current_payload(results_dir, channel='ionic', mode='hertzian', top=None, sca
 
     def _p(k):
         return [round(float(X[k]) * scale, 6), round(float(Y[k]) * scale, 6), round(float(Z[k]) * scale, 6)]
-    edges = []
-    for k in sel:
-        fwd = V1[k] >= V2[k]                                     # a = 높은 전위 끝 (전류 a → b)
-        ka, kb = (i1[k], i2[k]) if fwd else (i2[k], i1[k])
-        jk, ak = _jc(k)
-        edges.append({'a': _p(ka), 'b': _p(kb), 'ra': round(float(RAD[ka]) * scale, 6), 'rb': round(float(RAD[kb]) * scale, 6),
-                      'ia': int(id1[k] if fwd else id2[k]), 'ib': int(id2[k] if fwd else id1[k]),
-                      's': float(aI[k] / I_tot), 'va': float(V1[k] if fwd else V2[k]), 'vb': float(V2[k] if fwd else V1[k]),
-                      'w': int(bool(wrap[k])), 'j': jk, 'ac': ak})
-    jj = [x['j'] for x in edges if x['j'] is not None and x['j'] > 0]
+    edges = nodes_c = edges_c = None
+    if not compact:                                              # 옛 꼴 — 접촉마다 dict (정수 고르기 · 옛 키 값 그대로)
+        edges = []
+        for k in sel:
+            fwd = V1[k] >= V2[k]                                 # a = 높은 전위 끝 (전류 a → b)
+            ka, kb = (i1[k], i2[k]) if fwd else (i2[k], i1[k])
+            jk, ak = _jc(k)
+            edges.append({'a': _p(ka), 'b': _p(kb), 'ra': round(float(RAD[ka]) * scale, 6), 'rb': round(float(RAD[kb]) * scale, 6),
+                          'ia': int(id1[k] if fwd else id2[k]), 'ib': int(id2[k] if fwd else id1[k]),
+                          's': float(aI[k] / I_tot), 'va': float(V1[k] if fwd else V2[k]), 'vb': float(V2[k] if fwd else V1[k]),
+                          'w': int(bool(wrap[k])), 'j': jk, 'ac': ak})
+        jv = [x['j'] for x in edges]
+    else:                                                        # 압축 꼴 — 입자 표 한 번 + 접촉 = 입자 번호 둘 + j (옛 꼴과 같은 식 · 같은 반올림)
+        fw = V1[sel] >= V2[sel]
+        ka_, kb_ = np.where(fw, i1[sel], i2[sel]), np.where(fw, i2[sel], i1[sel])
+        uniq, inv = np.unique(np.concatenate([ka_, kb_]), return_inverse=True)
+        inv = np.asarray(inv).reshape(-1)
+        m = len(sel)
+        nid = nd['id'].to_numpy(dtype=np.int64)
+        nodes_c = {'id': [int(v) for v in nid[uniq]],
+                   'x': [round(float(X[k]) * scale, 6) for k in uniq], 'y': [round(float(Y[k]) * scale, 6) for k in uniq],
+                   'z': [round(float(Z[k]) * scale, 6) for k in uniq], 'r': [round(float(RAD[k]) * scale, 6) for k in uniq]}
+        if j_reason is not None:
+            jv = [None] * m
+        else:
+            a_ = AC[sel]
+            ok_a = np.isfinite(a_) & (a_ > 0)
+            with np.errstate(divide='ignore', invalid='ignore'):
+                jarr = aI[sel] * sigma0 * J_PER_NORM / a_                # _jc 와 같은 연산 순서 (같은 비트)
+            jv = [float(v) if o else None for v, o in zip(jarr, ok_a)]
+        edges_c = {'a': inv[:m].tolist(), 'b': inv[m:].tolist(), 'j': jv}
+    jj = [x for x in jv if x is not None and x > 0]
     density = {
         'unit': J_UNIT, 'rule': J_RULE, 'probe': '1 V (바닥 띠 1 V → 위 띠 0 V · 정확 Dirichlet)',
         'area_column': 'A_used' if AC is not None else None,
@@ -651,13 +731,13 @@ def current_payload(results_dir, channel='ionic', mode='hertzian', top=None, sca
         'box_area_um2': a_box, 'box_source': box_src,
         'j_mean_1V': j_mean,
         'j_min_1V': min(jj) if jj else None, 'j_max_1V': max(jj) if jj else None,
-        'n_no_area': int(sum(1 for x in edges if x['j'] is None)) if j_reason is None else 0,
+        'n_no_area': int(sum(1 for x in jv if x is None)) if j_reason is None else 0,
         'reason': j_reason,
         'c1': c1_scaling(rd, j_mean),
     }
     body = {
-        'ok': True, 'channel': channel, 'mode': mode, 'top': top, 'scale': scale,
-        'n_perc_edges': n_perc, 'n_perc_nodes': int(len(nd)), 'n_returned': len(edges), 'n_zero_current': n_zero,
+        'ok': True, 'channel': channel, 'mode': mode, 'top': top, 'selection': selection, 'scale': scale,
+        'n_perc_edges': n_perc, 'n_perc_nodes': int(len(nd)), 'n_returned': int(len(sel)), 'n_zero_current': n_zero,
         'n_missing_position': n_missing, 'n_wrap_returned': int(wrap[sel].sum()),
         'I_total': I_tot, 'I_total_source': f'solution_{t}.json:G_eff (ΔV = 1)',
         'share_max': float(aI[sel].max() / I_tot) if len(sel) else None,
@@ -674,8 +754,11 @@ def current_payload(results_dir, channel='ionic', mode='hertzian', top=None, sca
                  if man else None),
         'probe': '1 V 프로브 FULL 해 — 바닥 띠 1 V · 위 띠 0 V (정확 Dirichlet) · R_total = R_bulk + R_c',
         'density': density,
-        'edges': edges,
     }
+    if compact:
+        body.update(packing=PACKING_COMPACT, nodes=nodes_c, edges_c=edges_c)
+    else:
+        body['edges'] = edges
     return 200, body
 
 
@@ -710,8 +793,17 @@ def _cmd_show(a):
         print(json.dumps(body, ensure_ascii=False, indent=2))
         return 1
     z = body.get('zcut') or {}
+    sl = body.get('selection') or {}
     print(f"{body['channel']} · {body['mode']} · 관통 간선 {body['n_perc_edges']} · 돌려준 {body['n_returned']} "
           f"(0 전류 {body['n_zero_current']} · 주기 경계 {body['n_wrap_returned']})")
+    if sl.get('kind') == 'share':
+        print(f"고르기: 전류 {sl['share_pct']} % → 상위 {sl['n']} 접촉 (0 아닌 전류 접촉 {sl['n_nonzero']} · 꼴 {sl['packing']})")
+    elif sl.get('kind') == 'all':
+        print(f"고르기: 전부 {sl['n']} 접촉 (꼴 {sl['packing']})")
+    else:
+        print(f"고르기: 상위 {body['top']}" + (f"  ⚠ {sl['fallback']}" if sl.get('fallback') else ''))
+    if sl.get('share_n'):
+        print('전류 몫 → 접촉 수: ' + ' · '.join(f'{p} % = {n}' for p, n in sl['share_n'].items()))
     print(f"I_전체 {body['I_total']:.6g} · 단면 몫 평균 {z.get('share_mean')} (최소 {z.get('share_min')} · 최대 {z.get('share_max')}) · "
           f"보존 편차 {z.get('identity_max_dev')} · 소산 몫 {body['power_share']} · Tellegen {body['power_identity_rel']:.2e}")
     print(f"게시 σ 대조 {body['sigma_check']} · 세대 {body['generation']}")
@@ -754,7 +846,8 @@ def main(argv=None):
     s.add_argument('results_dir')
     s.add_argument('--channel', default='ionic', choices=CHANNELS)
     s.add_argument('--mode', default='hertzian', choices=MODES)
-    s.add_argument('--top', type=int, default=TOP_DEFAULT)
+    s.add_argument('--top', default=str(TOP_DEFAULT),
+                   help='정수 N (상위 N 접촉) · shareP (전류 몫 P 퍼센트 · P = 1–99 · 예 share80) · all (전부)')
     s.add_argument('--scale', type=float, default=1000.0, help='표시 좌표 배율 (meta.json scale)')
     a = ap.parse_args(argv)
     return _cmd_dump(a) if a.cmd == 'dump' else _cmd_show(a)

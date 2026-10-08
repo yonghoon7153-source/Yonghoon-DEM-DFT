@@ -5199,7 +5199,10 @@ function renderSeStatsCardPNG(state, corpusRows) {
  * 1저자 요청 *"전류가 보이게"* (보고 슬라이드 그림).  자료 = `/network-current` (scripts/network_current.py 가 읽는 케이스 폴더
  * network_raw_dump/ — 같은 망 풀이의 1 V 프로브 FULL 해.  웹앱 망 단계는 간선 전류를 남기지 않아 케이스마다 한 번 `dump` 로 만든다).
  * 간선 = 접촉 하나 (SE–SE = 이온 · AM–AM = 전자).  상위 N 개 (|I| 내림차순) 를 굵기 · 색 = log₁₀ j 원기둥으로 그린다
- * (InstancedMesh 하나 — 20000 간선도 한 번에).  주기 경계를 넘는 간선은 상자를 가로지르는 직선이 되므로 그리지 않고 센다 (Stress Chain 과
+ * (InstancedMesh 하나).  ★ 10-08 고르기 (1저자 *"애초에 상위 20000 으로만 한 이유 · 좀더 모델 최적화로 숫자 조절"* → Q1 · Q2 권고대로) —
+ *   전류 50 · 80 · 95 % (그 케이스 전류 분포가 정하는 개수 · 서버 network_current.parse_top) · 상위 N (그 케이스 접촉 수보다 작은 것만) · 전부 ·
+ *   기본 = 전류 50 % · 이름 고르기는 압축 꼴 (netCurrentDecode) · 많이 그리면 관을 가볍게 (NETCUR_LOD_N) · 색 위쪽 (최대 · p99 · p95).
+ *   주기 경계를 넘는 간선은 상자를 가로지르는 직선이 되므로 그리지 않고 센다 (Stress Chain 과
  * 같은 반폭 규칙 · 서버 표지 w 와 같은 답).  색 사상 = jetColor(t) (감마 없음) = 컬러바 ⬇ 의 사상.
  * ★ 10-07 (1저자 결정 · 웹앱 묶음 #17) — 색 · 굵기 = 접촉 전류 밀도 j = |I_c| / A_c (A cm⁻² · A_c = 같은 풀이의 접촉 면적 · 서버
  *   density 묶음) · 컬러바 둘 = @1V (탐침 · 원고 S16 · S17 규약) · @1C (운전 환산 = × I_1C / I_1V · 선형 — 같은 색 · 다른 숫자).
@@ -5207,6 +5210,10 @@ function renderSeStatsCardPNG(state, corpusRows) {
  * 모델의 접촉망 풀이 (Kirchhoff · 접촉마다 Holm 협착) — 측정 전류도 충방전 방향도 아니다. */
 const NETCUR_TOPS = [500, 1000, 2000, 5000, 10000, 20000];
 const NETCUR_WIDTHS = [1, 0.5, 0.25, 0.1];             // 관 굵기 배율 — 1저자 10-08 "크기 좀더 얇게" (전자 상위 20000 이 뭉쳐 보였다)
+const NETCUR_SHARES = [50, 80, 95];                     // 전류 몫 고르기 (%) — 1저자 10-08 Q1 · Q2 권고대로 (기본 50 · 서버 SHARE_CHOICES 와 같다)
+const NETCUR_CAPS = [['max', '위쪽 최대'], ['p99', '위쪽 p99'], ['p95', '위쪽 p95']];   // 색 위쪽 — 범례 · 컬러바 = 숫자 셋 그대로 ('≥' · ▲ 없음)
+const NETCUR_CACHE_MAX = 4;                             // 받은 자료 기억 — 전부 (수십만 접촉) 자료가 쌓여 메모리를 잡지 않게 최근 넷만
+const NETCUR_LOD_N = 20000;                             // 이보다 많이 그리면 관 6 각 · 뚜껑 없음 (삼각형 4 배 적게) — 이하 = 옛 12 각 그대로
 const NETCUR_CHANNELS = {
   ionic: '이온 (SE–SE 접촉망)',
   electronic: '전자 (AM–AM 접촉망)',
@@ -5216,11 +5223,55 @@ const NETCUR_MODES = {
   physics: 'Physics FULL (면적 + 협착 결합 민감도 · 기본 아님)',
 };
 
-/* '/results/<id>/3d-data' · '/archive/results/<folder>/3d-data' → 같은 자리의 '/network-current?…' (질의문은 버린다) */
+/* '/results/<id>/3d-data' · '/archive/results/<folder>/3d-data' → 같은 자리의 '/network-current?…' (질의문은 버린다).
+ * top = 이름 (shareP · all — 그대로) 또는 정수 (옛 그대로 · 잘못된 값 = 5000). */
 function netCurrentUrl(dataUrl, opt) {
   const base = String(dataUrl || '').split('?')[0].replace(/\/3d-data$/, '/network-current');
-  return base + '?channel=' + encodeURIComponent(opt.channel) + '&mode=' + encodeURIComponent(opt.mode)
-    + '&top=' + Math.max(1, Math.round(+opt.top || 5000));
+  const t = String(opt.top);
+  const top = (t === 'all' || /^share[1-9]\d?$/.test(t)) ? t : String(Math.max(1, Math.round(+opt.top || 5000)));
+  return base + '?channel=' + encodeURIComponent(opt.channel) + '&mode=' + encodeURIComponent(opt.mode) + '&top=' + top;
+}
+
+/* 압축 꼴 (서버 packing 'nodes_v1' — 이름 고르기 전류 몫 · 전부) → 옛 꼴 간선 객체 {a, b, ra, rb, ia, ib, j} (값 그대로 · 같은 순서).
+ * 풀고 나면 압축 칸 (nodes · edges_c) 은 지운다 (메모리) — 그 뒤는 옛 꼴과 같은 길 (범위 · 그리기 · 범례).  옛 꼴 · 이미 푼 자료는 그대로. */
+function netCurrentDecode(pay) {
+  if (!pay || pay.packing !== 'nodes_v1' || !pay.edges_c || !pay.nodes) return pay;
+  const nd = pay.nodes, ec = pay.edges_c;
+  const A = ec.a || [], B = ec.b || [], J = ec.j || [];
+  const out = new Array(A.length);
+  for (let i = 0; i < A.length; i++) {
+    const ka = A[i], kb = B[i];
+    out[i] = { a: [nd.x[ka], nd.y[ka], nd.z[ka]], b: [nd.x[kb], nd.y[kb], nd.z[kb]], ra: nd.r[ka], rb: nd.r[kb],
+               ia: nd.id[ka], ib: nd.id[kb], j: J[i] };
+  }
+  pay.edges = out;
+  delete pay.edges_c;
+  delete pay.nodes;
+  return pay;
+}
+
+/* 고르기 칸 — 전류 50 · 80 · 95 % (그 케이스 개수) · 상위 N (그 케이스 0 아닌 전류 접촉 수보다 작은 것만) · 전부 (개수).
+ * 자료 (pay.selection) 가 없으면 (오류 범례) 개수 없이 · 상위 N 전부.  지금 고른 값이 목록에 없으면 (예: 상위 20000 인데 접촉 645) 끝에 붙여
+ * 칸이 실제로 고른 것을 보이게 한다.  → [[값, 표시], …] */
+function netCurrentTopOptions(opt, pay) {
+  const sl = (pay && pay.selection) || null;
+  const sn = (sl && sl.share_n) || null;
+  const nAll = (sl && +sl.n_nonzero > 0) ? +sl.n_nonzero : null;
+  const o = NETCUR_SHARES.map(p => ['share' + p, '전류 ' + p + ' %' + (sn && sn[p] != null ? ' (' + sn[p] + ' 개)' : '')]);
+  NETCUR_TOPS.forEach(n => { if (nAll == null || n < nAll) o.push([n, '상위 ' + n]); });
+  o.push(['all', '전부' + (nAll != null ? ' (' + nAll + ' 개)' : '')]);
+  const cur = (opt && opt.top != null) ? opt.top : null;
+  if (cur != null && !o.some(x => String(x[0]) === String(cur))) o.push([cur, /^\d+$/.test(String(cur)) ? '상위 ' + cur : String(cur)]);
+  return o;
+}
+
+/* 받은 자료 기억 (url → 자료) 을 최근 NETCUR_CACHE_MAX 개로 — 방금 쓴 url 은 맨 뒤로 옮기고 지우지 않는다 · 오래된 것부터 지운다. */
+function netCurrentCacheTrim(cache, url) {
+  if (!cache) return cache;
+  if (Object.prototype.hasOwnProperty.call(cache, url)) { const v = cache[url]; delete cache[url]; cache[url] = v; }
+  const keys = Object.keys(cache);
+  for (let i = 0; i < keys.length - NETCUR_CACHE_MAX; i++) if (keys[i] !== url) delete cache[keys[i]];
+  return cache;
 }
 
 /* 주기 경계를 넘는 간선 — a · b = data 좌표 [x, y, z] (µm) · 반폭 = 상자 x · y 의 절반.  z 는 주기가 아니다 (판 · 바닥). */
@@ -5261,6 +5312,36 @@ function netCurrentTv(j, lo, hi, scale) {
   const span = hi - lo;
   if (!(span > 0)) return 1;
   return Math.max(0, Math.min(1, (j - lo) / span));
+}
+
+/* 백분위 — 선형 보간 (numpy 기본 'linear' 와 같은 정의) · a = 오름차순으로 정렬된 수 · q ∈ [0, 1] */
+function netCurrentQuantile(a, q) {
+  const n = a.length;
+  if (!n) return NaN;
+  const pos = (n - 1) * Math.max(0, Math.min(1, q));
+  const lo = Math.floor(pos), hi = Math.ceil(pos);
+  return a[lo] + (a[hi] - a[lo]) * (pos - lo);
+}
+
+/* 색 위쪽 고르기 (1저자 10-08 — 선형 눈금에서 꼬리 때문에 거의 남색) — 'max' (기본 · 옛 그림) = 범위 그대로 · 'p99' · 'p95' = 위쪽을
+ * 고른 접촉 j (0 · 없음 제외) 의 99 · 95 % 값으로 (log 면 log₁₀).  넘는 접촉은 netCurrentTv 가 1 로 잘라 맨 위 색 · 굵기.
+ * 범례 · 컬러바 숫자 = 그 값 그대로 (평범한 숫자 셋 · '≥' · ▲ 없음 — 1저자 "이런 우리만 아는 표시는 필요없어") · 백분위는 방법 메모
+ * (범례 회색 줄 · 컬러바 아래 작은 글) 에만. */
+function netCurrentCap(rng, edges, scale, cap) {
+  if (!rng || (cap !== 'p99' && cap !== 'p95')) return rng;
+  const js = [];
+  (edges || []).forEach(e => { if (e && e.j > 0) js.push(+e.j); });
+  if (!js.length) return rng;
+  js.sort((u, v) => u - v);
+  const q = netCurrentQuantile(js, cap === 'p99' ? 0.99 : 0.95);
+  const hi = scale === 'linear' ? q : Math.log10(q);
+  return [rng[0], Math.max(rng[0], hi)];
+}
+
+/* 컬러바 파일 이름 꼬리 — 위쪽을 고른 그림이 최대 그림을 덮어쓰지 않게 ('_p99' · '_p95' · 최대 = 없음) */
+function netCurrentCapTag(opt) {
+  const c = opt && opt.cap;
+  return (c === 'p99' || c === 'p95') ? '_' + c : '';
 }
 
 /* 관 반경 (µm) = 굵기 배율 × (0.10 + 0.40 t) × r_ref (망 입자 반경 중앙값) — 배율 1 = 옛 그림 그대로 (rMin 0.10 · rMax 0.50 r_ref) ·
@@ -5358,13 +5439,18 @@ function netCurrentColorbarSpec(pay, opt, lo, hi, frame) {
   const sh = Math.log10(f);
   const d = pay.density || {};
   const q = (d.c1 || {}).Q_areal_mAh_cm2;
+  const capP = opt && opt.cap === 'p99' ? 99 : (opt && opt.cap === 'p95' ? 95 : 0);   // 색 위쪽 — 눈금은 숫자 그대로 · 방법은 아래 작은 글에만
   const base = 'j = |I_c| / A_c (A_c = contact area of the same solve · ' + (pay.mode === 'physics' ? 'Physics gen-2 area' : 'c_cpl[22] disc')
     + ').  Model contact-network solve (Kirchhoff · Holm constriction per contact) — not a measured current.  '
-    + (lin ? 'Linear colour scale (middle tick = (min + max) / 2).' : 'Log colour scale.');
+    + (lin ? 'Linear colour scale (middle tick = (min + max) / 2).' : 'Log colour scale.')
+    + (capP ? '  Top of the colour scale = ' + capP + 'th percentile of the selected contacts\' j (higher values use the top colour).' : '');
+  const sl = pay.selection || {};
+  const nR = pay.n_returned || 0;
+  const selT = sl.kind === 'share' ? 'top ' + nR + ' contacts (' + sl.share_pct + ' % of the current)'
+    : (sl.kind === 'all' ? 'all ' + nR + ' current-carrying contacts' : 'top ' + nR + ' contacts');
   return {
     map: 'jet',
-    title: 'Contact current density (A cm⁻²) ' + (c1 ? '@1C (operating)' : '@1V probe') + ' — ' + ch + ' · ' + md
-      + ' · top ' + (pay.n_returned || 0) + ' contacts',
+    title: 'Contact current density (A cm⁻²) ' + (c1 ? '@1C (operating)' : '@1V probe') + ' — ' + ch + ' · ' + md + ' · ' + selT,
     ticks: lin ? [{ p: 0, label: netCurrentFmtJ(lo * f) }, { p: 0.5, label: netCurrentFmtJ(0.5 * (lo + hi) * f) }, { p: 1, label: netCurrentFmtJ(hi * f) }]
                : netCurrentTicks(lo + sh, hi + sh, netCurrentFmtJ),
     sub: c1
@@ -5375,8 +5461,8 @@ function netCurrentColorbarSpec(pay, opt, lo, hi, frame) {
   };
 }
 
-/* 범례 위 조작 — 채널 · 상위 N · 접촉 면적 모드 · 관 굵기 배율 */
-function netCurrentControlsHtml(opt) {
+/* 범례 위 조작 — 채널 · 고르기 (전류 몫 · 상위 N · 전부 — pay 가 있으면 그 케이스 개수) · 접촉 면적 모드 · 관 굵기 배율 · 눈금 · 색 위쪽 */
+function netCurrentControlsHtml(opt, pay) {
   const css = 'background:#16192e;color:#e4e6f0;border:1px solid #2a2d3e;border-radius:4px;padding:1px 2px;font-size:11px';
   const sel = (id, cur, opts) => '<select id="' + id + '" style="' + css + '">'
     + opts.map(o => '<option value="' + o[0] + '"' + (String(o[0]) === String(cur) ? ' selected' : '') + '>' + o[1] + '</option>').join('')
@@ -5384,10 +5470,11 @@ function netCurrentControlsHtml(opt) {
   const w = (+opt.width > 0 && isFinite(+opt.width)) ? +opt.width : 1;
   return '<div style="display:flex;flex-wrap:wrap;gap:3px;align-items:center;margin:3px 0">'
     + sel('netcur-channel', opt.channel, [['ionic', '이온 (SE–SE)'], ['electronic', '전자 (AM–AM)']])
-    + sel('netcur-top', opt.top, NETCUR_TOPS.map(n => [n, '상위 ' + n]))
+    + sel('netcur-top', opt.top, netCurrentTopOptions(opt, pay))
     + sel('netcur-mode', opt.mode, [['hertzian', 'Hertz (주)'], ['physics', 'Physics (민감도)']])
     + sel('netcur-width', w, NETCUR_WIDTHS.map(x => [x, '굵기 ×' + x]))
     + sel('netcur-scale', opt.scale === 'linear' ? 'linear' : 'log', [['log', 'log 눈금'], ['linear', '선형 눈금 (이등분)']])
+    + sel('netcur-cap', NETCUR_CAPS.some(c => c[0] === opt.cap) ? opt.cap : 'max', NETCUR_CAPS)
     + '</div>';
 }
 
@@ -5408,15 +5495,21 @@ function netCurrentLegendHtml(pay, opt, st) {
   const val = v => (lin ? v : Math.pow(10, v));
   const L = [];
   L.push('<b>⚡ 전류 흐름 — 접촉 전류 밀도 (A cm⁻²) · 접촉망 해</b>');
-  L.push(netCurrentControlsHtml(opt));
+  L.push(netCurrentControlsHtml(opt, pay));
   L.push('채널: ' + (NETCUR_CHANNELS[pay.channel] || esc(pay.channel)) + ' · ' + (NETCUR_MODES[pay.mode] || esc(pay.mode)));
-  L.push('<b>색 · 굵기 = 접촉 전류 밀도 j = |I| / A_c (' + (lin ? '선형' : 'log₁₀') + ') · 상위 ' + n + ' 접촉 (|I| 큰 순)</b>');
+  const sl = pay.selection || {};                             // 10-08 고르기 — 전류 몫 · 전부 · 상위 N (옛 자료 = 상위 N)
+  const selTxt = sl.kind === 'share' ? '전류 ' + sl.share_pct + ' % 를 나르는 상위 ' + n + ' 접촉 (|I| 큰 순)'
+    : (sl.kind === 'all' ? '전류가 흐르는 접촉 전부 (' + n + ' 개)' : '상위 ' + n + ' 접촉 (|I| 큰 순)');
+  L.push('<b>색 · 굵기 = 접촉 전류 밀도 j = |I| / A_c (' + (lin ? '선형' : 'log₁₀') + ') · ' + selTxt + '</b>');
+  if (sl.fallback) L.push('<span style="color:#fbbf24">⚠ ' + esc(sl.fallback) + '</span>');
+  const capP = opt && opt.cap === 'p99' ? 99 : (opt && opt.cap === 'p95' ? 95 : 0);
   if (f1.ok) {
     const stops = [0, 0.25, 0.5, 0.75, 1].map(v => '#' + jetColor(v).toString(16).padStart(6, '0'));
     L.push('<div style="margin:3px 0 1px 0;height:9px;border-radius:3px;background:linear-gradient(90deg,' + stops.join(',') + ')"></div>');
     L.push('@1V (탐침 · 원고 S16 · S17 규약): <b>' + fj(val(st.lo)) + ' … ' + fj(val(st.hi)) + ' A cm⁻²</b>'
       + (lin ? ' <span style="color:#9ca3af">(선형 눈금 · 가운데 ' + fj(0.5 * (val(st.lo) + val(st.hi))) + ')</span>' : '')
       + (d.j_mean_1V > 0 ? ' <span style="color:#9ca3af">(단면 평균 ⟨J⟩ ' + fj(d.j_mean_1V) + ')</span>' : ''));
+    if (capP) L.push('<span style="color:#9ca3af">색 위쪽 = 고른 접촉 j 의 ' + capP + ' % 값 — 그보다 큰 접촉은 맨 위 색 · 굵기</span>');
     if (fc.ok) {
       L.push('@1C (운전 환산 × ' + fj(fc.factor) + ' = I_1C / I_1V): <b>' + fj(val(st.lo) * fc.factor) + ' … '
         + fj(val(st.hi) * fc.factor) + ' A cm⁻²</b>' + (lin ? ' <span style="color:#9ca3af">(가운데 ' + fj(0.5 * (val(st.lo) + val(st.hi)) * fc.factor) + ')</span>' : '')
@@ -5512,27 +5605,28 @@ function netCurrentWireLegend(state, pay) {
   const opt = state._netCurOpt;
   const on = (id, ev, fn) => { const x = el.querySelector('#' + id); if (x) x.addEventListener(ev, fn); };
   on('netcur-channel', 'change', ev => { opt.channel = ev.target.value; applyNetCurrentMode(state); });
-  on('netcur-top', 'change', ev => { opt.top = +ev.target.value; applyNetCurrentMode(state); });
+  on('netcur-top', 'change', ev => { const v = ev.target.value; opt.top = /^\d+$/.test(v) ? +v : v; applyNetCurrentMode(state); });
   on('netcur-mode', 'change', ev => { opt.mode = ev.target.value; applyNetCurrentMode(state); });
   on('netcur-arrows', 'change', ev => { opt.arrows = ev.target.checked; if (pay) renderNetCurrent(state, pay); });
   on('netcur-width', 'change', ev => { opt.width = +ev.target.value; if (pay) renderNetCurrent(state, pay); });
   on('netcur-scale', 'change', ev => { opt.scale = ev.target.value; if (pay) renderNetCurrent(state, pay); });
+  on('netcur-cap', 'change', ev => { opt.cap = ev.target.value; if (pay) renderNetCurrent(state, pay); });
   on('netcur-retry', 'click', () => applyNetCurrentMode(state));          // 오류는 캐시하지 않는다 — 다시 fetch
   //  컬러바 둘 — @1V (탐침) · @1C (운전 환산) · 같은 색 막대 · 다른 숫자 (A cm⁻²)
   on('netcur-cbar-1v', 'click', () => {
     const l = state._netCurLast;
     if (l) exportColorbarPNG(netCurrentColorbarSpec(l.pay, opt, l.st.lo, l.st.hi, '1V'),
-                             'colorbar_net_current_' + l.pay.channel + '_' + l.pay.mode + '_1V' + (opt.scale === 'linear' ? '_linear' : '') + '.png');
+                             'colorbar_net_current_' + l.pay.channel + '_' + l.pay.mode + '_1V' + (opt.scale === 'linear' ? '_linear' : '') + netCurrentCapTag(opt) + '.png');
   });
   on('netcur-cbar-1c', 'click', () => {
     const l = state._netCurLast;
     if (l) exportColorbarPNG(netCurrentColorbarSpec(l.pay, opt, l.st.lo, l.st.hi, '1C'),
-                             'colorbar_net_current_' + l.pay.channel + '_' + l.pay.mode + '_1C' + (opt.scale === 'linear' ? '_linear' : '') + '.png');
+                             'colorbar_net_current_' + l.pay.channel + '_' + l.pay.mode + '_1C' + (opt.scale === 'linear' ? '_linear' : '') + netCurrentCapTag(opt) + '.png');
   });
 }
 
 function applyNetCurrentMode(state) {
-  const opt = state._netCurOpt || (state._netCurOpt = { channel: 'ionic', mode: 'hertzian', top: 5000, arrows: false, width: 1, scale: 'log' });   // top = 경로 기본 (TOP_DEFAULT) · width = 관 굵기 배율
+  const opt = state._netCurOpt || (state._netCurOpt = { channel: 'ionic', mode: 'hertzian', top: 'share50', arrows: false, width: 1, scale: 'log', cap: 'max' });   // top = 서버 VIEWER_DEFAULT (전류 50 % · 1저자 10-08 Q2) · width = 관 굵기 배율 · cap = 색 위쪽
   netCurrentTeardown(state);
   const tok = state._netCurToken;
   const ionic = opt.channel === 'ionic';
@@ -5560,7 +5654,9 @@ function applyNetCurrentMode(state) {
       netCurrentWireLegend(state, null);
       return;
     }
+    netCurrentDecode(res.body);                                 // 압축 꼴 (전류 몫 · 전부) → 간선 객체 — 그 뒤는 옛 꼴과 같은 길
     cache[url] = res.body;
+    netCurrentCacheTrim(cache, url);                            // 최근 NETCUR_CACHE_MAX 개만 기억
     renderNetCurrent(state, res.body);
   });
 }
@@ -5572,7 +5668,7 @@ function renderNetCurrent(state, pay) {
   const box = pay.box || {};
   const hx = (+box.x > 0 ? +box.x : Infinity) / 2, hy = (+box.y > 0 ? +box.y : Infinity) / 2;
   const sc = opt.scale === 'linear' ? 'linear' : 'log';         // 눈금 — log (기본) · 선형 (1저자 10-08)
-  const rngJ = netCurrentRange(edges, sc);                    // log₁₀ j 또는 j (A cm⁻² @1V) — 없으면 (σ₀ · 면적 미확인) 회색 · 중간 굵기
+  const rngJ = netCurrentCap(netCurrentRange(edges, sc), edges, sc, opt.cap);   // log₁₀ j 또는 j (A cm⁻² @1V) · 위쪽 = 최대 · p99 · p95 — 없으면 (σ₀ · 면적 미확인) 회색 · 중간 굵기
   const rng = rngJ || (sc === 'linear' ? [0, 1] : [-1, 0]);
   const lo = rng[0], hi = rng[1];
   const draw = edges.filter(e => !netCurrentWrap(e.a, e.b, hx, hy));
@@ -5582,9 +5678,10 @@ function renderNetCurrent(state, pay) {
   const rRef = radii.length ? radii[Math.floor(radii.length / 2)] : 1;      // 망 입자 반경 중앙값 (이온 = SE · 전자 = AM)
   const group = new THREE.Group();
   if (draw.length) {
-    const tubes = new THREE.InstancedMesh(new THREE.CylinderGeometry(1, 1, 1, 12, 1, false),
+    const big = draw.length > NETCUR_LOD_N;                   // 많이 그리면 가볍게 (6 각 · 뚜껑 없음 = 삼각형 4 배 적게) — 이하 = 옛 그림 그대로
+    const tubes = new THREE.InstancedMesh(big ? new THREE.CylinderGeometry(1, 1, 1, 6, 1, true) : new THREE.CylinderGeometry(1, 1, 1, 12, 1, false),
                                           new THREE.MeshLambertMaterial({ color: 0xffffff }), draw.length);
-    const cones = opt.arrows ? new THREE.InstancedMesh(new THREE.ConeGeometry(1, 1, 12),
+    const cones = opt.arrows ? new THREE.InstancedMesh(new THREE.ConeGeometry(1, 1, big ? 6 : 12),
                                                        new THREE.MeshLambertMaterial({ color: 0xffffff }), draw.length) : null;
     const up = new THREE.Vector3(0, 1, 0), A = new THREE.Vector3(), B = new THREE.Vector3(), d = new THREE.Vector3();
     const q = new THREE.Quaternion(), m4 = new THREE.Matrix4(), sc = new THREE.Vector3(), mid = new THREE.Vector3();

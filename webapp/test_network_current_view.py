@@ -18,6 +18,10 @@
      모드 전환 정리 · 늦은 응답 무시.
      ★ 10-07 (1저자 결정 · 웹앱 묶음 #17) — 색 · 굵기 = 접촉 전류 밀도 j (A cm⁻²) · 컬러바 @1V + @1C · 옛 몫 (|I|/I_전체 %) 표시 없음.
        전류 밀도 자체 (단위 · 손 계산 · @1C 환산) 는 webapp/test_net_current_density.py.
+  ⑥ 고르기 (10-08 · 1저자 Q1 · Q2 권고대로) — 전류 몫 50 · 80 · 95 % (독립 재계산과 같은 개수 · 가장 적은 개수) · 전부 · 압축 꼴 (값 · 순서 그대로 ·
+     절반 이하 크기) · 정수 고르기 = 옛 키 + selection · 잘못된 이름 400 · 단면 없는 해 = 경로 기본 + 사유 · 경로 · CLI.
+  ④c 뷰어 고르기 칸 (개수 · 그 케이스보다 작은 상위 N 만) · 압축 꼴 풀기 · 색 위쪽 (최대 · p99 · p95 · 범례 = 숫자 셋 · '≥' · ▲ 없음) · 가볍게 그리기 ·
+     받은 자료 기억 4 개 · 기본 = 전류 50 %.
 
   python3 webapp/test_network_current_view.py        # 종료코드 0 = PASS
 """
@@ -495,8 +499,14 @@ def section_routes(tmp, pub_rd, rid):
 #  ④ 뷰어 (node)
 # ══════════════════════════════════════════════════════════════════════════════
 JS_NAMES = ('netCurrentUrl', 'netCurrentWrap', 'netCurrentLogRange', 'netCurrentT', 'netCurrentPct', 'netCurrentFmtJ', 'netCurrentTicks',
-            'netCurrentFrame', 'netCurrentColorbarSpec', 'netCurrentControlsHtml', 'netCurrentLegendHtml', 'netCurrentErrorHtml', 'jeEscH',
-            'jetColor')
+            'netCurrentFrame', 'netCurrentColorbarSpec', 'netCurrentControlsHtml', 'netCurrentTopOptions', 'netCurrentLegendHtml',
+            'netCurrentErrorHtml', 'jeEscH', 'jetColor')
+NETCUR_CONST_NAMES = ('NETCUR_TOPS', 'NETCUR_WIDTHS', 'NETCUR_SHARES', 'NETCUR_CAPS')   # 조작판이 쓰는 한 줄 상수 (10-08 고르기 · 위쪽 더함)
+
+
+def netcur_consts(js, names=NETCUR_CONST_NAMES):
+    """viewer3d.js 의 전류 흐름 한 줄 상수 — 있는 것만 (옛 코드엔 없는 것도 있다)."""
+    return [m.group(0) for m in (re.search(r'const ' + n + r' = [^;]*;', js) for n in names) if m]
 
 
 def section_viewer(payload_all):
@@ -534,12 +544,13 @@ def section_viewer(payload_all):
         'exportColorbarPNG(netCurrentColorbarSpec(' in js)
     try:
         import network_current as _ncur
-        td = _ncur.TOP_DEFAULT
+        td = getattr(_ncur, 'VIEWER_DEFAULT', None)
     except Exception:                                            # noqa: BLE001 — 옛 코드 (모듈 없음)
         td = None
-    m_def = re.search(r"_netCurOpt = \{ channel: 'ionic', mode: 'hertzian', top: (\d+)", anm)
-    chk(f'④g2 뷰어 기본 top = 경로 기본 TOP_DEFAULT ({m_def.group(1) if m_def else None} · {td})',
-        m_def is not None and td is not None and int(m_def.group(1)) == td)
+    #  10-08 1저자 Q2 *"권고대로"* — 뷰어 기본 = 전류 50 % (서버 VIEWER_DEFAULT).  옛 판은 경로 기본 TOP_DEFAULT (5000) 와 대조했다.
+    m_def = re.search(r"_netCurOpt = \{ channel: 'ionic', mode: 'hertzian', top: '([^']+)'", anm)
+    chk(f'④g2 뷰어 기본 top = 서버 VIEWER_DEFAULT (전류 50 %) ({m_def.group(1) if m_def else None} · {td})',
+        m_def is not None and td is not None and m_def.group(1) == td)
     if not (payload_all and payload_all.get('edges')):
         chk('④h–④y node 시험 — 경로 자료 (③) 가 없어 건너뜀', False)
         return
@@ -555,13 +566,12 @@ def section_viewer(payload_all):
             parts.append(js_const(js, n))
         except (ValueError, AssertionError):
             miss.append(n)
-    m_tops = re.search(r'const NETCUR_TOPS = \[[^\]]*\];', js)
-    m_widths = re.search(r'const NETCUR_WIDTHS = \[[^\]]*\];', js)      # 10-08 굵기 고르기 (조작판이 쓴다 · 옛 코드엔 없음)
+    m_tops = re.search(r'const NETCUR_TOPS = \[[^\]]*\];', js)          # 나머지 한 줄 상수 (굵기 · 전류 몫 · 위쪽) = netcur_consts
     if not chk(f'④h viewer3d.js 에서 함수 · 상수를 잘라 냈다 (없음 {miss})', not miss and m_tops is not None):
         return
     pay = copy.deepcopy(payload_all)
     pay5 = dict(pay, edges=pay['edges'][:5], top=5, n_returned=5)
-    script = '\n'.join(parts) + '\n' + m_tops.group(0) + '\n' + (m_widths.group(0) + '\n' if m_widths else '') + r"""
+    script = '\n'.join(parts + netcur_consts(js)) + '\n' + r"""
 const PAY = __PAY__, PAY5 = __PAY5__;
 const out = {};
 out.url = [
@@ -678,7 +688,7 @@ def section_viewer_width():
     print('[④z] 뷰어 — 관 굵기 고르기 (node)')
     js = open(VIEWER_JS, encoding='utf-8').read()
     parts, miss = [], []
-    for n in ('netCurrentRadius', 'netCurrentControlsHtml'):
+    for n in ('netCurrentRadius', 'netCurrentControlsHtml', 'netCurrentTopOptions'):
         try:
             parts.append(js_fn(js, n))
         except (ValueError, AssertionError):
@@ -688,7 +698,7 @@ def section_viewer_width():
     if not chk(f'④z1 viewer3d.js 에 netCurrentRadius · NETCUR_WIDTHS (없음 {miss} · 상수 {m_w is not None})',
                not miss and m_w is not None and m_tops is not None):
         return
-    script = '\n'.join(parts) + '\n' + m_w.group(0) + '\n' + m_tops.group(0) + '\n' + r"""
+    script = '\n'.join(parts + netcur_consts(js)) + '\n' + r"""
 const out = {};
 out.widths = NETCUR_WIDTHS;
 out.r1 = [netCurrentRadius(0, 2, 1), netCurrentRadius(1, 2, 1), netCurrentRadius(0.5, 2, 1)];
@@ -723,8 +733,9 @@ console.log(JSON.stringify(out));
     chk('④z9 굵기를 바꾸면 다시 받지 않고 다시 그린다 (renderNetCurrent · 같은 자료)',
         re.search(r"on\('netcur-width', 'change', ev => \{ opt\.width = \+ev\.target\.value; if \(pay\) renderNetCurrent\(state, pay\); \}\)",
                   wl) is not None)
-    chk("④z10 기본 옵션에 width: 1 (경로 기본 top 정규식은 그대로)",
-        re.search(r"_netCurOpt = \{ channel: 'ionic', mode: 'hertzian', top: \d+, arrows: false, width: 1, scale: 'log' \}", anm) is not None)
+    chk("④z10 기본 옵션에 width: 1 (top = 숫자 또는 전류 몫 이름 · 10-08 위쪽 cap: 'max' 더함)",
+        re.search(r"_netCurOpt = \{ channel: 'ionic', mode: 'hertzian', top: (?:\d+|'share\d+'), arrows: false, width: 1, scale: 'log', "
+                  r"cap: 'max' \}", anm) is not None)
 
 
 def section_viewer_scale():
@@ -734,7 +745,8 @@ def section_viewer_scale():
     print('[④s] 뷰어 — 선형 눈금 · 이등분 범례 (node)')
     js = open(VIEWER_JS, encoding='utf-8').read()
     names = ('netCurrentRange', 'netCurrentTv', 'netCurrentLogRange', 'netCurrentT', 'netCurrentFmtJ', 'netCurrentTicks', 'netCurrentFrame',
-             'netCurrentColorbarSpec', 'netCurrentControlsHtml', 'netCurrentLegendHtml', 'netCurrentPct', 'jeEscH', 'jetColor')
+             'netCurrentColorbarSpec', 'netCurrentControlsHtml', 'netCurrentTopOptions', 'netCurrentLegendHtml', 'netCurrentPct', 'jeEscH',
+             'jetColor')
     parts, miss = [], []
     for n in names:
         try:
@@ -746,8 +758,9 @@ def section_viewer_scale():
             parts.append(js_const(js, n))
         except (ValueError, AssertionError):
             miss.append(n)
-    consts = [m.group(0) for m in (re.search(r'const NETCUR_TOPS = \[[^\]]*\];', js), re.search(r'const NETCUR_WIDTHS = \[[^\]]*\];', js)) if m]
-    if not chk(f'④s1 viewer3d.js 에 netCurrentRange · netCurrentTv (없음 {miss})', not miss and len(consts) == 2):
+    consts = netcur_consts(js)
+    if not chk(f'④s1 viewer3d.js 에 netCurrentRange · netCurrentTv (없음 {miss})',
+               not miss and any('NETCUR_TOPS' in c for c in consts) and any('NETCUR_WIDTHS' in c for c in consts)):
         return
     script = '\n'.join(parts + consts) + '\n' + r"""
 const E = [{j: 1}, {j: 2}, {j: 5}, {j: 0}];
@@ -798,6 +811,361 @@ console.log(JSON.stringify(out));
         re.search(r"on\('netcur-scale', 'change', ev => \{ opt\.scale = ev\.target\.value; if \(pay\) renderNetCurrent\(state, pay\); \}\)", wl) is not None)
 
 
+# ══════════════════════════════════════════════════════════════════════════════
+#  ⑥ 고르기 — 전류 몫 (50 · 80 · 95 %) · 전부 · 압축 꼴.  1저자 10-08 *"애초에 상위 20000 으로만 한 이유 · 좀더 모델 최적화로 숫자
+#     조절해주면 안되나?"* → Q1 · Q2 *"권고대로"* (기본 = 전류 50 %).  20000 은 근거 기록 없는 상한이었다 — real14 전자 645 접촉이면
+#     1000 … 20000 이 같은 그림 · ps45 이온 35–44 만 접촉이면 5 % 만.  ⇒ 숫자를 그 케이스의 전류 분포가 정한다 (|I| 큰 순으로 세어
+#     높이 32 단면 평균 전류 몫이 처음 X 에 닿는 개수).  정수 고르기 = 옛 자료 그대로 (키 selection 하나만 더함).  이름 고르기 = 압축 꼴
+#     (입자 표 한 번 + 접촉 = 입자 번호 둘 + j · 값 그대로).  webapp/app.py (194 봉인) 는 고치지 않는다 — top 문자열을 그대로 넘긴다.
+# ══════════════════════════════════════════════════════════════════════════════
+OLD_KEYS = {'ok', 'channel', 'mode', 'top', 'scale', 'n_perc_edges', 'n_perc_nodes', 'n_returned', 'n_zero_current',
+            'n_missing_position', 'n_wrap_returned', 'I_total', 'I_total_source', 'share_max', 'share_min', 'zcut', 'power_share',
+            'power_identity_rel', 'sum_abs_share', 'box', 'sigma_check', 'generation', 'dump', 'probe', 'density', 'edges'}
+EDGE_VIEW_KEYS = ('a', 'b', 'ra', 'rb', 'ia', 'ib', 'j')           # 뷰어가 쓰는 칸 (압축 꼴이 싣는 것)
+
+
+def ref_share_ladder(raw, mode='hertzian', channel='ionic', planes=32):
+    """독립 재계산 (순수 파이썬 · 덤프 CSV) — 0 아닌 전류 간선을 |I| 큰 순 (동률 id1 · id2) 으로 세며, 간선마다 단면 평균 순 흐름 / I_전체
+    를 누적한다.  단면 = 전극 띠 (전류가 흐르는 V = 1 · V = 0 노드) 사이 평면 32 개 (경로 정의 그대로).  → (누적 목록 · I_전체 · 0 아닌 수)."""
+    t = f'{mode}_{channel}'
+    sol = json.load(open(os.path.join(raw, f'solution_{t}.json')))
+    I_tot = float(sol['G_eff'])
+    nodes = {int(r['id']): r for r in read_csv_rows(dump_file(raw, f'nodes_{t}'))}
+    E = []
+    for r in read_csv_rows(dump_file(raw, f'edges_{t}')):
+        a, b = int(r['id1']), int(r['id2'])
+        if a in nodes and b in nodes:
+            E.append((a, b, float(r['I'])))
+    inc = {}
+    for a, b, I in E:
+        inc[a] = inc.get(a, 0.0) + abs(I)
+        inc[b] = inc.get(b, 0.0) + abs(I)
+    act = {k for k, v in inc.items() if v > 1e-12 * I_tot}
+    nzE = sorted((e for e in E if abs(e[2]) > 1e-12 * I_tot), key=lambda e: (-abs(e[2]), e[0], e[1]))
+    zb = [float(nodes[k]['z']) for k in act if float(nodes[k]['V']) == 1.0]
+    zt = [float(nodes[k]['z']) for k in act if float(nodes[k]['V']) == 0.0]
+    if not zb or not zt or min(zt) <= max(zb):
+        return None, I_tot, len(nzE)
+    z_lo, z_hi = max(zb), min(zt)
+    P = [z_lo + (k + 0.5) * (z_hi - z_lo) / planes for k in range(planes)]
+    ladder, cum = [], 0.0
+    for a, b, I in nzE:
+        z1, z2 = float(nodes[a]['z']), float(nodes[b]['z'])
+        cum += sum((I if z1 <= p < z2 else 0.0) - (I if z2 <= p < z1 else 0.0) for p in P) / planes
+        ladder.append(cum / I_tot)
+    return ladder, I_tot, len(nzE)
+
+
+def ref_n(ladder, x, n_all):
+    """누적이 처음 x 에 닿는 개수 (끝까지 못 닿으면 전부)."""
+    for i, v in enumerate(ladder):
+        if v >= x:
+            return i + 1
+    return n_all
+
+
+def decode_compact(b):
+    """압축 꼴 (packing nodes_v1) → 간선 dict 목록 (뷰어 칸) — 뷰어 netCurrentDecode 와 같은 규칙 (시험의 독립 판)."""
+    nd, ec = b.get('nodes') or {}, b.get('edges_c') or {}
+    out = []
+    for ka, kb, jv in zip(ec.get('a') or [], ec.get('b') or [], ec.get('j') or []):
+        out.append({'a': [nd['x'][ka], nd['y'][ka], nd['z'][ka]], 'b': [nd['x'][kb], nd['y'][kb], nd['z'][kb]],
+                    'ra': nd['r'][ka], 'rb': nd['r'][kb], 'ia': nd['id'][ka], 'ib': nd['id'][kb], 'j': jv})
+    return out
+
+
+def section_selection(tmp, pub_rd):
+    print('[⑥] 고르기 — 전류 몫 · 전부 · 압축 꼴 (상위 20000 상한 대신 모델이 정한 숫자 · 1저자 10-08)')
+    import network_current as _ncur
+    raw = os.path.join(pub_rd, DUMP)
+    ladder, I_tot, n_nz = ref_share_ladder(raw)
+    if not chk(f'⑥a 독립 재계산 — 단면이 있고 0 아닌 전류 간선이 있다 ({n_nz})', ladder is not None and n_nz > 10):
+        return {}
+    chk(f'⑥b 상수 — 전류 몫 고르기 {getattr(_ncur, "SHARE_CHOICES", None)} · 뷰어 기본 {getattr(_ncur, "VIEWER_DEFAULT", None)} '
+        f'(1저자 Q2 = 전류 50 %) · 경로 기본 (top 없음) 은 그대로 5000', getattr(_ncur, 'SHARE_CHOICES', None) == (50, 80, 95)
+        and getattr(_ncur, 'VIEWER_DEFAULT', None) == 'share50' and _ncur.TOP_DEFAULT == 5000)
+
+    def pay(top, rd=pub_rd, channel='ionic'):
+        try:
+            return _ncur.current_payload(rd, channel, 'hertzian', top, 1000)
+        except Exception as e:                                   # noqa: BLE001 — 옛 코드 (int('share50') ValueError 밖으로)
+            return None, {'exc': repr(e)}
+    got = {}
+    for p in (50, 80, 95):
+        x = p / 100.0
+        st, b = pay(f'share{p}')
+        sel = b.get('selection') or {}
+        n = sel.get('n')
+        lo_n, hi_n = ref_n(ladder, x - 1e-9, n_nz), ref_n(ladder, x + 1e-9, n_nz)
+        got[p] = (st, b, n)
+        chk(f'⑥c share{p} → 200 · 고르기 = 전류 몫 {p} % · 개수 {n} = 독립 재계산 [{lo_n}, {hi_n}] · 돌려준 수 · top = 그 개수',
+            st == 200 and sel.get('kind') == 'share' and sel.get('share_pct') == p and isinstance(n, int)
+            and lo_n <= n <= hi_n and b.get('n_returned') == n and b.get('top') == n, repr(sel)[:300] + repr(b.get('exc'))[:200])
+        zc = b.get('zcut') or {}
+        st_m, b_m = pay(n - 1) if isinstance(n, int) and n > 1 else (None, {})
+        zc_m = b_m.get('zcut') or {}
+        chk(f'⑥d share{p} = 가장 적은 개수 — 단면 몫 평균 {zc.get("share_mean")} ≥ {x} · 하나 덜면 (상위 {None if n is None else n - 1}) '
+            f'{zc_m.get("share_mean")} < {x}',
+            isinstance(zc.get('share_mean'), float) and zc['share_mean'] >= x - 1e-9
+            and (n == 1 or (isinstance(zc_m.get('share_mean'), float) and zc_m['share_mean'] < x + 1e-9)))
+    ns = [got[p][2] for p in (50, 80, 95)]
+    chk(f'⑥e 50 ≤ 80 ≤ 95 % ≤ 전부 ({ns} · 0 아닌 전류 {n_nz})', all(isinstance(v, int) for v in ns) and ns[0] <= ns[1] <= ns[2] <= n_nz)
+    sel50 = (got[50][1].get('selection') or {})
+    chk(f'⑥f 고르기 정보 — 세 몫의 개수 (share_n) · 0 아닌 전류 접촉 수 (n_nonzero) ({sel50.get("share_n")} · {sel50.get("n_nonzero")})',
+        sel50.get('share_n') == {'50': ns[0], '80': ns[1], '95': ns[2]} and sel50.get('n_nonzero') == n_nz)
+    st_a, b_a = pay('all')
+    sel_a = b_a.get('selection') or {}
+    zc_a = b_a.get('zcut') or {}
+    chk(f'⑥g all → 0 아닌 전류 접촉 전부 ({b_a.get("n_returned")} = {n_nz}) · 단면 몫 = 1 · 소산 몫 = 1',
+        st_a == 200 and sel_a.get('kind') == 'all' and b_a.get('n_returned') == n_nz and sel_a.get('n') == n_nz
+        and abs((zc_a.get('share_mean') or 0) - 1) < 1e-9 and abs((b_a.get('power_share') or 0) - 1) < 1e-9)
+    b80 = got[80][1]
+    chk('⑥h 이름 고르기 = 압축 꼴 (packing nodes_v1 · 입자 표 nodes · 접촉 edges_c · edges 없음)',
+        b80.get('packing') == 'nodes_v1' and 'edges' not in b80 and isinstance(b80.get('nodes'), dict)
+        and isinstance(b80.get('edges_c'), dict) and b_a.get('packing') == 'nodes_v1' and 'edges' not in b_a)
+    n80 = ns[1]
+    st_i, b_i = pay(n80 if isinstance(n80, int) else 5)
+    sel_i = b_i.get('selection') or {}
+    chk(f'⑥i 정수 고르기 = 옛 꼴 그대로 (edges 목록 · 키 = 옛 키 + selection 하나 · 고르기 = 개수 · 꼴 edges) — 더한 키 '
+        f'{sorted(set(b_i) - OLD_KEYS)} · 빠진 키 {sorted(OLD_KEYS - set(b_i))}',
+        st_i == 200 and set(b_i) == OLD_KEYS | {'selection'} and sel_i.get('kind') == 'count' and sel_i.get('packing') == 'edges'
+        and isinstance(b_i.get('edges'), list) and 'packing' not in b_i)
+    chk(f'⑥j 정수 고르기에도 세 몫의 개수 · 0 아닌 수 (뷰어가 고르기 칸에 개수를 적는다) ({sel_i.get("share_n")})',
+        sel_i.get('share_n') == {'50': ns[0], '80': ns[1], '95': ns[2]} and sel_i.get('n_nonzero') == n_nz)
+    dec = decode_compact(b80)
+    old = [{k: e.get(k) for k in EDGE_VIEW_KEYS} for e in (b_i.get('edges') or [])]
+    chk(f'⑥k 압축 꼴을 풀면 같은 개수 정수 고르기의 간선과 값 · 순서 그대로 (위치 · 반경 · 번호 · j 정확히 같음 · {len(dec)} 개)',
+        bool(dec) and dec == old, (repr(dec[:1]) + ' vs ' + repr(old[:1]))[:400])
+    same = all(b80.get(k) == b_i.get(k) for k in ('zcut', 'power_share', 'share_max', 'share_min', 'sum_abs_share', 'n_wrap_returned',
+                                                  'n_returned', 'top', 'density', 'I_total', 'n_perc_edges', 'n_zero_current'))
+    chk('⑥l 요약 값도 같다 (단면 몫 · 소산 몫 · 몫 최대 · 최소 · 주기 경계 수 · 전류 밀도 묶음 · I_전체)', same)
+    st_big, b_big = pay(100000)                                  # 옛 상한 20000 → 이 침대에서는 전부 (옛 꼴)
+    nb = max(1, len(b_big.get('edges') or []))
+    by_old = len(json.dumps(b_big.get('edges'), separators=(',', ':'))) / nb
+    by_new = len(json.dumps({'nodes': b_a.get('nodes'), 'edges_c': b_a.get('edges_c')}, separators=(',', ':'))) / max(1, b_a.get('n_returned') or 1)
+    chk(f'⑥m 압축 꼴이 가볍다 — 접촉당 {by_new:.0f} B ↔ 옛 꼴 {by_old:.0f} B (절반 이하 · 같은 간선 수)',
+        b_a.get('packing') == 'nodes_v1' and bool((b_a.get('nodes') or {}).get('id')) and len((b_a.get('edges_c') or {}).get('a') or []) == nb
+        and 0 < by_new <= 0.5 * by_old)
+    for tok in ('share0', 'share100', 'share', 'shareabc', 'share5.5', 'al', 'ALL'):
+        st_b, b_b = pay(tok)
+        chk(f'⑥n top={tok} → 400 (잘못된 고르기 · {st_b} · {b_b.get("error")})', st_b == 400 and b_b.get('error') == 'bad_top')
+    # 전극 띠 노드가 없어 단면을 못 정하는 해 — 전류 몫 잣대가 없다 → 경로 기본 (상위 5000) 으로 그리고 사유를 적는다
+    rd_nz = os.path.join(tmp, 'pub_nozcut')
+    shutil.copytree(pub_rd, rd_nz)
+    nf = dump_file(os.path.join(rd_nz, DUMP), 'nodes_hertzian_ionic')
+    rows = read_csv_rows(nf)
+    hdr = list(rows[0].keys())
+    with gzip.open(nf, 'wt', encoding='utf-8') if nf.endswith('.gz') else open(nf, 'w') as f:
+        f.write(','.join(hdr) + '\n')
+        for r in rows:
+            if float(r['V']) == 1.0:
+                r['V'] = '0.999999'
+            f.write(','.join(r[h] for h in hdr) + '\n')
+    st_f, b_f = pay('share50', rd=rd_nz)
+    sel_f = b_f.get('selection') or {}
+    chk(f'⑥o 단면을 못 정하는 해 → share50 은 경로 기본 (상위 {_ncur.TOP_DEFAULT}) 으로 · 사유 (fallback) · 세 몫 개수 없음 '
+        f'({st_f} · {sel_f.get("kind")} · {sel_f.get("fallback")})',
+        st_f == 200 and b_f.get('zcut') is None and sel_f.get('kind') == 'count' and sel_f.get('requested') == 'share50'
+        and bool(sel_f.get('fallback')) and sel_f.get('share_n') is None and b_f.get('n_returned') == min(_ncur.TOP_DEFAULT, n_nz))
+    # 경로 — app.py 는 top 문자열을 그대로 넘긴다 (194 봉인 파일 · 고치지 않는다)
+    import app as A
+    c = A.app.test_client()
+    up, rs = A.app.config['UPLOAD_FOLDER'], A.app.config['RESULTS_FOLDER']
+    cid = '261008_000001_select'
+    os.makedirs(os.path.join(up, cid), exist_ok=True)
+    with open(os.path.join(up, cid, 'meta.json'), 'w') as f:
+        json.dump({'name': cid, 'status': 'done', 'type_map': TYPE_MAP, 'scale': 1000, 'mode': 'standard'}, f)
+    shutil.copytree(pub_rd, os.path.join(rs, cid))
+    r = c.get(f'/results/{cid}/network-current?channel=ionic&mode=hertzian&top=share50')
+    jr = r.get_json(silent=True) or {}
+    chk(f'⑥p 경로 ?top=share50 → 200 · 고르기 전류 50 % · 같은 개수 ({r.status_code} · {(jr.get("selection") or {}).get("n")} = {ns[0]})',
+        r.status_code == 200 and (jr.get('selection') or {}).get('kind') == 'share' and (jr.get('selection') or {}).get('n') == ns[0])
+    app_src = open(os.path.join(HERE, 'app.py'), encoding='utf-8').read()
+    chk("⑥q webapp/app.py 무변경 꼴 — top 문자열을 그대로 넘긴다 (top=request.args.get('top'))",
+        "top=request.args.get('top')" in app_src)
+    rc, out = run_tool('show', pub_rd, '--top', 'share80')
+    chk(f'⑥r CLI show --top share80 → rc 0 · 고르기 줄 (전류 80 % · 개수 {n80})', rc == 0 and '전류 80 %' in out and str(n80) in out, out[-400:])
+    return {'share80': b80, 'int80': b_i, 'all': b_a, 'n': dict(zip(('50', '80', '95'), ns)), 'n_nz': n_nz}
+
+
+def section_viewer_select(sel):
+    """④c 뷰어 — 고르기 칸 (전류 몫 · 상위 N · 전부 · 개수 표시) · 압축 꼴 풀기 · 색 위쪽 (최대 · p99 · p95) · 큰 N 가볍게 그리기 · 기억 4 개.
+    1저자 10-08 Q1 · Q2 권고대로 + 이미 비준된 위쪽 고르기 (범례 = 숫자 셋 · '≥ X' · ▲ 없음 · 백분위는 방법 메모에만)."""
+    print('[④c] 뷰어 — 고르기 · 압축 꼴 · 색 위쪽 · 가볍게 그리기 (node)')
+    js = open(VIEWER_JS, encoding='utf-8').read()
+    if not chk('④c0 서버 고르기 자료 (⑥) 가 있다', bool(sel and sel.get('share80') and sel.get('int80'))):
+        return
+    names = ('netCurrentDecode', 'netCurrentUrl', 'netCurrentTopOptions', 'netCurrentControlsHtml', 'netCurrentCap', 'netCurrentQuantile',
+             'netCurrentCapTag', 'netCurrentCacheTrim', 'netCurrentLegendHtml', 'netCurrentColorbarSpec', 'netCurrentRange', 'netCurrentLogRange',
+             'netCurrentTicks', 'netCurrentFrame', 'netCurrentFmtJ', 'netCurrentPct', 'jeEscH', 'jetColor')
+    parts, miss = [], []
+    for n in names:
+        try:
+            parts.append(js_fn(js, n))
+        except (ValueError, AssertionError):
+            miss.append(n)
+    for n in ('NETCUR_CHANNELS', 'NETCUR_MODES'):
+        try:
+            parts.append(js_const(js, n))
+        except (ValueError, AssertionError):
+            miss.append(n)
+    consts = {}
+    for n in ('NETCUR_TOPS', 'NETCUR_WIDTHS', 'NETCUR_SHARES', 'NETCUR_CAPS', 'NETCUR_CACHE_MAX', 'NETCUR_LOD_N'):
+        m = re.search(r'const ' + n + r' = [^;]*;', js)
+        if m:
+            consts[n] = m.group(0)
+        else:
+            miss.append(n)
+    if not chk(f'④c1 viewer3d.js 에서 함수 · 상수를 잘라 냈다 (없음 {miss})', not miss):
+        return
+    n = sel['n']
+    script = '\n'.join(parts + list(consts.values())) + r"""
+const C = __C__, D = __D__, AL = __AL__;
+const out = {};
+const pick = e => [e.a, e.b, e.ra, e.rb, e.ia, e.ib, e.j];
+const dc = netCurrentDecode(JSON.parse(JSON.stringify(C)));
+out.dec = dc.edges.map(pick); out.dict = D.edges.map(pick);
+out.decGone = !('edges_c' in dc) && !('nodes' in dc);
+const dd = netCurrentDecode(JSON.parse(JSON.stringify(D)));
+out.decIdem = dd.edges.length === D.edges.length && JSON.stringify(dd.edges) === JSON.stringify(D.edges);
+out.url = ['share50', 'share80', 'share95', 'all', 2000, 'abc', 'share100'].map(t =>
+  netCurrentUrl('/results/abc/3d-data', {channel: 'ionic', mode: 'hertzian', top: t}));
+const opt = {channel: 'ionic', mode: 'hertzian', top: 'share50', width: 1, scale: 'log', cap: 'max'};
+out.optPay = netCurrentTopOptions(opt, dc);
+out.optNoPay = netCurrentTopOptions(opt);
+const small = {selection: {kind: 'count', n_nonzero: 645, share_n: {'50': 40, '80': 200, '95': 400}}};
+out.optSmall = netCurrentTopOptions(Object.assign({}, opt, {top: 20000}), small);
+out.ctlPay = netCurrentControlsHtml(opt, dc);
+out.ctlNoPay = netCurrentControlsHtml(opt);
+out.ctlCap = netCurrentControlsHtml(Object.assign({}, opt, {cap: 'p95'}), dc);
+const al = netCurrentDecode(JSON.parse(JSON.stringify(AL)));
+const st = {nDrawn: 3, nWrapSkipped: 0, lo: -1, hi: 0, scale: 'log'};
+out.legShare = netCurrentLegendHtml(dc, opt, st);
+out.legAll = netCurrentLegendHtml(al, Object.assign({}, opt, {top: 'all'}), st);
+out.legCount = netCurrentLegendHtml(dd, Object.assign({}, opt, {top: dd.n_returned}), st);
+const fb = JSON.parse(JSON.stringify(dd));
+fb.selection = {kind: 'count', requested: 'share50', fallback: '단면 없음 <b>x</b>', n: dd.n_returned, packing: 'edges'};
+out.legFallback = netCurrentLegendHtml(fb, opt, st);
+const E = [{j: 1}, {j: 2}, {j: 3}, {j: 4}, {j: 100}, {j: 0}, {j: null}];
+out.cap = [netCurrentCap([1, 100], E, 'linear', 'max'), netCurrentCap([1, 100], E, 'linear', 'p99'), netCurrentCap([1, 100], E, 'linear', 'p95'),
+           netCurrentCap([0, 2], E, 'log', 'p99'), netCurrentCap([1, 100], E, 'linear', 'bogus'), netCurrentCap(null, E, 'linear', 'p99'),
+           netCurrentCap([1, 100], E, 'linear', undefined)];
+out.q = [netCurrentQuantile([1, 2, 3, 4, 100], 0.99), netCurrentQuantile([5], 0.95), netCurrentQuantile([1, 3], 0.5)];
+out.tag = [netCurrentCapTag({cap: 'p99'}), netCurrentCapTag({cap: 'p95'}), netCurrentCapTag({cap: 'max'}), netCurrentCapTag({}), netCurrentCapTag(null)];
+const PJ = JSON.parse(JSON.stringify(dd));
+const lin99 = Object.assign({}, opt, {scale: 'linear', cap: 'p99'});
+out.legCap = netCurrentLegendHtml(PJ, lin99, {nDrawn: 3, nWrapSkipped: 0, lo: 1, hi: 96.16, scale: 'linear'});
+out.legNoCap = netCurrentLegendHtml(PJ, Object.assign({}, lin99, {cap: 'max'}), {nDrawn: 3, nWrapSkipped: 0, lo: 1, hi: 100, scale: 'linear'});
+out.specCap = netCurrentColorbarSpec(PJ, lin99, 1, 96.16, '1V');
+out.specLogCap = netCurrentColorbarSpec(PJ, Object.assign({}, opt, {cap: 'p95'}), 0, Math.log10(80.8), '1V');
+out.specMax = netCurrentColorbarSpec(PJ, Object.assign({}, lin99, {cap: 'max'}), 1, 100, '1V');
+out.specShare = netCurrentColorbarSpec(dc, opt, -1, 0, '1V');
+out.specAll = netCurrentColorbarSpec(al, Object.assign({}, opt, {top: 'all'}), -1, 0, '1V');
+out.fj = [netCurrentFmtJ(1), netCurrentFmtJ(0.5 * (1 + 96.16)), netCurrentFmtJ(96.16)];
+const cache = {};
+['u1', 'u2', 'u3', 'u4', 'u5'].forEach(u => { cache[u] = {}; netCurrentCacheTrim(cache, u); });
+out.cache = Object.keys(cache);
+cache.u2 = {x: 1}; netCurrentCacheTrim(cache, 'u2');
+out.cacheKeep = Object.keys(cache);
+out.consts = {shares: NETCUR_SHARES, caps: NETCUR_CAPS.map(c => c[0]), cacheMax: NETCUR_CACHE_MAX, lod: NETCUR_LOD_N, tops: NETCUR_TOPS};
+console.log(JSON.stringify(out));
+""".replace('__C__', json.dumps(sel['share80'], ensure_ascii=False)).replace('__D__', json.dumps(sel['int80'], ensure_ascii=False)) \
+        .replace('__AL__', json.dumps(sel['all'], ensure_ascii=False))
+    res = run_node(script)
+    if not chk('④c2 node 실행', res is not None):
+        return
+    cs = res['consts']
+    chk(f'④c3 상수 — 전류 몫 {cs["shares"]} · 위쪽 {cs["caps"]} · 기억 {cs["cacheMax"]} · 가볍게 그리기 문턱 {cs["lod"]} · 상위 N 목록 그대로',
+        cs['shares'] == [50, 80, 95] and cs['caps'] == ['max', 'p99', 'p95'] and cs['cacheMax'] == 4 and cs['lod'] == 20000
+        and cs['tops'] == [500, 1000, 2000, 5000, 10000, 20000])
+    chk(f'④c4 압축 꼴 풀기 = 같은 개수 정수 고르기의 간선 (위치 · 반경 · 번호 · j · 순서 정확히 같음 · {len(res["dec"])} 개) · 푼 뒤 압축 칸은 지운다',
+        bool(res['dec']) and res['dec'] == res['dict'] and res['decGone'])
+    chk('④c5 옛 꼴 (edges) 은 풀기가 손대지 않는다 (같은 객체 그대로)', res['decIdem'])
+    chk(f'④c6 URL — 이름 고르기는 그대로 (share50 · share80 · share95 · all) · 정수는 옛 그대로 · 잘못된 것 = 5000 {res["url"]}', res['url'] == [
+        '/results/abc/network-current?channel=ionic&mode=hertzian&top=share50',
+        '/results/abc/network-current?channel=ionic&mode=hertzian&top=share80',
+        '/results/abc/network-current?channel=ionic&mode=hertzian&top=share95',
+        '/results/abc/network-current?channel=ionic&mode=hertzian&top=all',
+        '/results/abc/network-current?channel=ionic&mode=hertzian&top=2000',
+        '/results/abc/network-current?channel=ionic&mode=hertzian&top=5000',
+        '/results/abc/network-current?channel=ionic&mode=hertzian&top=5000'])
+    nz = sel['n_nz']
+    want = [['share50', f'전류 50 % ({n["50"]} 개)'], ['share80', f'전류 80 % ({n["80"]} 개)'], ['share95', f'전류 95 % ({n["95"]} 개)']] \
+        + [[t, f'상위 {t}'] for t in (500, 1000, 2000, 5000, 10000, 20000) if t < nz] + [['all', f'전부 ({nz} 개)']]
+    chk(f'④c7 고르기 칸 (자료 있음) = 전류 50 · 80 · 95 % (개수) · 그 케이스 접촉 수보다 작은 상위 N 만 · 전부 (개수) {res["optPay"]}',
+        res['optPay'] == want, repr(want))
+    chk(f'④c8 자료 없을 때 (오류 범례) = 개수 없이 · 상위 N 전부 · 전부 {res["optNoPay"]}', res['optNoPay'] == (
+        [['share50', '전류 50 %'], ['share80', '전류 80 %'], ['share95', '전류 95 %']]
+        + [[t, f'상위 {t}'] for t in (500, 1000, 2000, 5000, 10000, 20000)] + [['all', '전부']]))
+    chk(f'④c9 접촉 645 침대 — 상위 500 만 남고 전부 (645 개) · 지금 고른 상위 20000 은 지워지지 않고 보인다 {res["optSmall"]}', res['optSmall'] == [
+        ['share50', '전류 50 % (40 개)'], ['share80', '전류 80 % (200 개)'], ['share95', '전류 95 % (400 개)'], [500, '상위 500'],
+        ['all', '전부 (645 개)'], [20000, '상위 20000']])
+    cp = res['ctlPay']
+    chk('④c10 조작판 — 고르기 (id netcur-top) 기본 = 전류 50 % selected · 개수 표시 · 위쪽 고르기 (id netcur-cap) 기본 = 최대',
+        'id="netcur-top"' in cp and re.search(r'<option value="share50" selected>전류 50 % \(\d+ 개\)</option>', cp) is not None
+        and 'id="netcur-cap"' in cp and re.search(r'<option value="max" selected>', cp) is not None
+        and re.search(r'<option value="p95" selected>', res['ctlCap']) is not None
+        and re.search(r'<option value="share50" selected>전류 50 %</option>', res['ctlNoPay']) is not None, cp[:500])
+    ls, la, lc, lf = res['legShare'], res['legAll'], res['legCount'], res['legFallback']
+    def sel_line(h):                                             # 범례의 고르기 줄 (굵은 '색 · 굵기 = …') — 조작판 칸 글자는 빼고 본다
+        m = re.search(r'<b>색 · 굵기 = [^<]*</b>', h)
+        return m.group(0) if m else ''
+    lsl, lal, lcl = sel_line(ls), sel_line(la), sel_line(lc)
+    chk(f'④c11 범례 고르기 줄 — 전류 80 % 를 나르는 상위 {n["80"]} 접촉 · 전부 {nz} 개 · 정수 = 옛 문구 (상위 N 접촉 · |I| 큰 순) '
+        f'[{lsl} / {lal} / {lcl}]',
+        f'전류 80 % 를 나르는 상위 {n["80"]} 접촉' in lsl and '|I|' in lsl and f'전류가 흐르는 접촉 전부 ({nz} 개)' in lal
+        and f'상위 {n["80"]} 접촉 (|I| 큰 순)' in lcl and '전류 80 %' not in lcl)
+    chk('④c12 단면을 못 정한 해 → 범례 ⚠ 사유 (서버 문자열 이스케이프) · 상위 N 문구', '⚠' in lf and '단면 없음' in lf and '<b>x</b>' not in lf
+        and '&lt;b&gt;x&lt;/b&gt;' in lf and '상위 ' in lf)
+    cap = res['cap']
+    chk(f'④c13 색 위쪽 — 최대 = 그대로 · p99 · p95 = 고른 접촉 j (0 · 없음 제외) 의 백분위 (선형 보간 · numpy 기본과 같은 정의) · log = log₁₀ · '
+        f'잘못된 값 · 없음 = 그대로 {cap}',
+        cap[0] == [1, 100] and abs(cap[1][1] - 96.16) < 1e-9 and cap[1][0] == 1 and abs(cap[2][1] - 80.8) < 1e-9
+        and abs(cap[3][1] - math.log10(96.16)) < 1e-12 and cap[3][0] == 0 and cap[4] == [1, 100] and cap[5] is None and cap[6] == [1, 100])
+    chk(f'④c14 백분위 함수 {res["q"]}', abs(res['q'][0] - 96.16) < 1e-9 and res['q'][1] == 5 and res['q'][2] == 2)
+    chk(f'④c15 컬러바 파일 이름 꼬리 — p99 → _p99 · p95 → _p95 · 최대 · 없음 → 꼬리 없음 {res["tag"]}', res['tag'] == ['_p99', '_p95', '', '', ''])
+    lcap, lno = res['legCap'], res['legNoCap']
+    fj = res['fj']
+    chk(f'④c16 범례 숫자 = 평범한 숫자 셋 ({fj[0]} … {fj[2]} · 가운데 {fj[1]}) · "≥" · ▲ 없음 · 위쪽 고른 것은 회색 방법 메모 (99 % 값)',
+        f'{fj[0]} … {fj[2]} A cm⁻²' in lcap and f'가운데 {fj[1]}' in lcap and '≥' not in lcap and '▲' not in lcap
+        and '99 % 값' in lcap and '99 % 값' not in lno and '≥' not in lno, lcap[:500])
+    sc_, sl_, sm_ = res['specCap'], res['specLogCap'], res['specMax']
+    chk(f'④c17 컬러바 PNG 눈금 = 숫자 셋 그대로 ({[t["label"] for t in sc_["ticks"]]}) · "≥" · ▲ 없음 · 위쪽 고르기는 아래 작은 글 (방법) 에만 '
+        f'(99th · 95th percentile) · 최대면 그 글 없음',
+        [t['label'] for t in sc_['ticks']] == fj and not any(('≥' in t['label'] or '▲' in t['label']) for t in sc_['ticks'] + sl_['ticks'])
+        and '99th percentile' in sc_['sub'] and '95th percentile' in sl_['sub'] and 'percentile' not in sm_['sub']
+        and '≥' not in sc_['title'] + sc_['sub'] and '▲' not in sc_['title'] + sc_['sub'], repr(sc_)[:400])
+    chk('④c18 컬러바 제목 — 전류 몫 = "top N contacts (80 % of the current)" · 전부 = "all N current-carrying contacts"',
+        f'top {n["80"]} contacts (80 % of the current)' in res['specShare']['title']
+        and f'all {nz} current-carrying contacts' in res['specAll']['title'], res['specShare']['title'] + ' / ' + res['specAll']['title'])
+    chk(f'④c19 받은 자료 기억 = 최근 4 개 (전부 자료가 쌓여 메모리를 잡지 않게) · 다시 쓴 것은 맨 뒤로 (지우지 않는다) {res["cache"]} · '
+        f'{res["cacheKeep"]}', res['cache'] == ['u2', 'u3', 'u4', 'u5'] and res['cacheKeep'] == ['u3', 'u4', 'u5', 'u2'])
+    try:
+        rnc = js_fn(js, 'renderNetCurrent')
+        wl = js_fn(js, 'netCurrentWireLegend')
+        anm = js_fn(js, 'applyNetCurrentMode')
+    except (ValueError, AssertionError):
+        rnc = wl = anm = ''
+    chk('④c20 그리기 = 위쪽을 고른 범위 (netCurrentCap(netCurrentRange(edges, sc), edges, sc, opt.cap)) · 접촉이 많으면 (> NETCUR_LOD_N) 6 각 · '
+        '뚜껑 없는 관 (삼각형 4 배 적게) · 아니면 옛 12 각 그대로',
+        'netCurrentCap(netCurrentRange(edges, sc), edges, sc, opt.cap)' in rnc and 'draw.length > NETCUR_LOD_N' in rnc
+        and 'new THREE.CylinderGeometry(1, 1, 1, 6, 1, true)' in rnc and 'new THREE.CylinderGeometry(1, 1, 1, 12, 1, false)' in rnc)
+    chk('④c21 받기 = 압축 꼴을 풀고 (netCurrentDecode) 기억 (cache[url]) 뒤 4 개로 자른다 (netCurrentCacheTrim) — 오류 범례가 먼저',
+        'netCurrentDecode(res.body)' in anm and 'netCurrentCacheTrim(cache, url)' in anm
+        and anm.index('netCurrentErrorHtml') < anm.index('netCurrentDecode(res.body)') < anm.index('cache[url] = res.body')
+        < anm.index('netCurrentCacheTrim(cache, url)'))
+    chk('④c22 고르기 바꾸기 — 숫자는 숫자로 · 이름 (share · all) 은 그대로 · 위쪽을 바꾸면 다시 받지 않고 다시 그린다',
+        re.search(r"on\('netcur-top', 'change', ev => \{ const v = ev\.target\.value; opt\.top = /\^\\d\+\$/\.test\(v\) \? \+v : v; "
+                  r"applyNetCurrentMode\(state\); \}\)", wl) is not None
+        and re.search(r"on\('netcur-cap', 'change', ev => \{ opt\.cap = ev\.target\.value; if \(pay\) renderNetCurrent\(state, pay\); \}\)", wl)
+        is not None)
+    chk("④c23 컬러바 단추 둘의 파일 이름 = … + netCurrentCapTag(opt) + '.png' (위쪽을 고른 그림이 최대 그림을 덮어쓰지 않게)",
+        wl.count("netCurrentCapTag(opt) + '.png'") == 2)
+    chk("④c24 기본 옵션 = 전류 50 % (1저자 Q2) · 위쪽 최대 — { channel: 'ionic', mode: 'hertzian', top: 'share50', arrows: false, width: 1, "
+        "scale: 'log', cap: 'max' }",
+        "_netCurOpt = { channel: 'ionic', mode: 'hertzian', top: 'share50', arrows: false, width: 1, scale: 'log', cap: 'max' }" in anm)
+
+
 def section_registration():
     print('[⑤] check_all 배선')
     s = open(CHECK_ALL, encoding='utf-8').read()
@@ -831,6 +1199,12 @@ def main():
         section_viewer(payload)
         section_viewer_width()
         section_viewer_scale()
+        sel = {}
+        try:
+            sel = section_selection(tmp, pub)
+        except Exception as e:                                   # noqa: BLE001 — 옛 코드 (고르기 없음) 에서도 나머지를 돈다
+            chk('⑥ 고르기 절 실행', False, f'{type(e).__name__}: {e}')
+        section_viewer_select(sel)
         section_registration()
     finally:
         shutil.rmtree(tmp, ignore_errors=True)
