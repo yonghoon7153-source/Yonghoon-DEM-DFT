@@ -6,7 +6,7 @@ date: 2026-10-07
 track: cei
 channel: codex
 kind: prompt
-status: 발송 대기 (사용자 2026-10-07 '쉬운 스토리 구상 해줘라')
+status: 발송 2026-10-08 (사용자 'cv도 줘요' · 청중용 그림은 설계안만 Q-CV-6 · 초안 전) · 회신 대기
 confidence: medium
 verificationStatus: verified
 verifiedAt: 2026-10-07
