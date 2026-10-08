@@ -9041,6 +9041,21 @@
       "evidence_tests": [
         "webapp/static/js/viewer3d.js (mode === 'brittle_surface' cap 페이드)"
       ]
+    },
+    {
+      "id": "SELF-99",
+      "severity": "P2",
+      "status": "claimed_fixed",
+      "owner": "claude",
+      "found_by": "1저자 10-08 ps45 화면 — AM 만 보기 '접촉마다' AM–SE 가 거의 빨강 (*\"얘는 거의 빨간색인 이유\"* · *\"전부가 30000으로 lock 된거야?\"*) · 조정자 진단 (3D 자료 행 상한 ↔ 범위 기준 대조)",
+      "opened_in": "webapp/static/js/viewer3d.js",
+      "title": "AM 만 보기 '접촉마다' AM–SE 의 색 범위를 그린 접촉이 아니라 압축 AM–SE 전체 (서버 q_uN) 로 냈다 — 3D 자료는 상위 30000 행만 싣는데 범위는 ps45 ≈ 0.9–1.9×10⁵ 전체 기준이라 그린 접촉이 눈금 위끝에 몰려 거의 빨강 · AM–AM 은 AM–SE 기본 상위 5000 을 받아 ps45 0:10 (AM–AM 8970) 을 범례에 전체 수 없이 상위 5000 만 그렸다 · 내 Q1 권고 ('압축 전체 기준 유지') 도 ps45 에서 틀렸다",
+      "note": "자리: viewer3d.js amOnlyContactRange (d0d0aefc1 판 — 범위 = 서버 q_uN 그대로).  처방 (1저자 10-08 *\"(1) 상한 유지 + 색 범위 '그린 것 기준' … 권고 사항으로\"* · *\"일단 그렇게 패치해봐\"*): 기본 = 그린 접촉의 가장 가까운 순위 p5–p95 · 최소–최대 (상위 N 을 바꾸면 다시 계산) · '압축 접촉 전체 (옛)' 고르기 · 범례 · 컬러바 PNG 가 기준을 적는다 · AM–AM 은 상위 N 을 받지 않는다 (늘 압축 전부).  상한 30000 · cap 20° 는 그대로 (1저자 Q2 · Q3 권고 유지).  시험 먼저 9db66f7ae (지금 코드 128 PASS · 13 FAIL) → 구현 ac56afad8 (141/141) · 병합 c9dcd2e56 (봉인 32 무변경 · app.py 무변경).  ps45 꼴 합성 (실은 행 100 ≪ 압축 1108): 그린 접촉의 t ≥ 0.75 몫 1.00 → 0.10 · t ≤ 0.25 몫 0.00 → 0.55 · 브라우저 스모크 (real14 를 실은 행 3000 으로 자른 ps45 꼴 · 소프트웨어 그래픽) 그린 것 240 … 540 µN ↔ 옛 0.35 … 320 µN.  실 ps45 화면 확인 전.",
+      "evidence_tests": [
+        "webapp/test_viewer_load_view.py (141/141 · 고치기 전 128 PASS · 13 FAIL)"
+      ],
+      "claimed_fixed_sha": "ac56afad8",
+      "verification_note": "ac56afad8 (병합 c9dcd2e56): 색 범위 기준 = 그린 것 (기본) · 옛 기준 고르기 · 기준 문구 · AM–AM 상위 N 무시.  닫힘 조건 = 1저자 :5002 ps45 화면에서 AM–SE 색이 퍼지는지 (git pull 뒤 Ctrl+Shift+R)."
     }
   ]
 }
