@@ -9146,6 +9146,34 @@
       "opened_in": "docs/reviews/codex_review_model_validation_20261008.md",
       "title": "스냅숏 README 의 '몫 · α (비) 는 ±3 %p · ±0.03 안' 이 저장값과 맞지 않는다 — 3.1M → 이완 끝 재계산 AM–AM 몫 −3.28564 %p · α_SE +0.034467 (상대 +7.3205 %) · α_PC −0.031422",
       "note": "판정문 §2 MV-09.  자리: docs/data/ps73_damping_branch_20261007/snap_3100000_20261008/README.md 50 행.  재계산 (probes/mv_stress_probe.py · 저장 JSON 산술 = docs/data/ps45_plane_load_20261007/ps45_v2/plane_load.json 7:3 ↔ snap_3100000_20261008/plane/plane_load.json).  상대값이 항상 크게 틀린다는 증거가 아니다 — '비는 거의 안 변하니 안전' 을 받치는 수치가 제출된 기록 자체에서 벗어났다는 뜻.  무너지는 결론: ±3 %p · ±0.03 을 엄밀한 경계로 인용하는 것.  해제 = 해당 문장과 인용 수정 (새 런 불요 — 판정문).  우리 트리 재현: −3.2856423729379074 · +0.034467257234485016 (+7.320533186629907 %) · −0.03142247718500868 같음 — docs/reviews/codex_model_validation_review_evidence_20261008/_README_reproduction.md."
+    },
+    {
+      "id": "WEB-08",
+      "severity": "P3",
+      "status": "open",
+      "owner": "claude",
+      "found_by": "1저자 WSL ps45 다섯 케이스 웹앱 재분석 (10-08 밤 · POST /analyze force_network) — 상태 done · partial",
+      "opened_in": "docs/session_20260923_progress.md",
+      "title": "웹앱 분석의 선택 단계 스크립트 7 개가 리포에 없다 — 단일 AM (generate_figures.py · advanced_analysis.py · generate_advanced_figures.py) 과 bimodal (generate_figures_bimodal.py · advanced_analysis_bimodal.py · generate_advanced_figures_bimodal.py · bimodal_specific_analysis.py) 단계가 늘 실패해 케이스 상태가 partial 이 된다",
+      "note": "계산 무관 — 망 · σ · Stage E 값은 정상 (ps45 다섯 케이스 = 세대 2 와 6 자리 같음).  자리: webapp/app.py 의 Basic Figures · Advanced Analysis · Advanced Figures · Bimodal Specific 단계 (required=False).  원래 빈자리 (이번 수정 무관).  해제 = 스크립트를 들이거나 단계를 빼는 결정 (1저자) — 194 봉인 app.py 를 건드리면 재봉인 대상.  1저자 10-08 밤 등재 비준 (권고대로).",
+      "evidence_tests": [
+        "docs/session_20260923_progress.md (10-08 밤 ps45 다섯 케이스 줄 · 7:3 줄)"
+      ]
+    },
+    {
+      "id": "DEMP-02",
+      "severity": "P3",
+      "status": "open",
+      "owner": "claude",
+      "found_by": "ps73 원 런 atom 덤프 565 장 스캔 (1저자 ibb 10-08 밤 · atom_top_scan.py · early_ckpt/scan_v2.py) — 원자 최대 높이 ↔ 같은 step 판 메시 대조",
+      "opened_in": "docs/data/ps73_compaction_curve_20261006/README.md",
+      "title": "ps73 압축 중 입자가 판 메시를 뚫고 나간다 — 1,825,000 step 부터 맨 위 입자의 중심이 판 위 (판 위 입자 0 → 최대 11 개 · 3,115,000) · 원자 기준 두께가 판보다 최대 1.491 µm 높다 · 이완 시작 (3,125,000 → 3,130,000) 때 원자 3 개가 사라진다 (160,420 → 160,417)",
+      "note": "모델 관찰 (기전 미확인 — 무른 SE 입자가 판 메시 접촉을 지나 빠져나간 것으로 보임 · 이완 시작 때 감쇠 0.5 → 1e-5 로 판 위 입자가 튕겨 나간 것으로 보임 · 둘 다 추정).  웹앱 7:3 프레임 atom_3220000 도 160,417 개.  영향: 원자 기준 두께 (보고 그림) · 판 위 입자는 침대 밖인데 분석에는 들어간다 (11 / 160,417 — 크기 작음 · 미정량).  다른 194 침대에서 같은 일이 있는지 미확인.  1저자 10-08 밤 등재 비준 (권고대로).",
+      "evidence_tests": [
+        "docs/data/ps73_compaction_curve_20261006/raw/ps73_atom_top_20261008.csv (원 덤프 스캔 · 맨 위 입자 id · 원자 수)",
+        "docs/data/ps73_compaction_curve_20261006/README.md §7-1 (판 위 입자 수 · 원자 수 감소)",
+        "docs/data/ps73_compaction_curve_20261006/key_numbers_ms.json (scan · atom_count_changes · first_step_top_center_above_plate)"
+      ]
     }
   ]
 }
