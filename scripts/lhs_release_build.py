@@ -1290,7 +1290,9 @@ def v13_audit_observation_problems(a, ident, expect_set=V13_REREAD_SET):
     (`import_observation_problems`) · 관측 필수 배치 (등록 집합 ∈ V13_IMPORT_OBS_REQUIRED) 의 관측 결손 → 문제 목록.
     옛 관문은 최상위 요약 목록만 봤다 — 관측 객체 안의 problems · outside 가 있어도 최상위 [] 면 통과 · 관측 객체가 없어도 · observe_imports false 여도 통과.
       · 객체가 있으면: dict · problems · outside = 목록 · 둘 다 빈 목록 · 그 내용이 최상위 요약에 다 실렸다 (요약이 상세를 덮지 않는다) · 프로세스 수 셋 = 정수
-      · 관측 필수 배치: 배치 manifest observe_imports true · 객체 있음 · 프로세스 > 0 · 관측된 완료 시도 (케이스) ⊇ 등록 케이스 전부"""
+      · 관측 필수 배치: 배치 manifest observe_imports true · 객체 있음 · 프로세스 > 0 · 관측된 완료 시도 (케이스) ⊇ 등록 케이스 전부 ·
+        실행 단계 ↔ 영수증 결합 기록 (스키마 · 시도 열쇠 = 관측된 완료 시도 · G2RR4-02) · ★ G2RR5-01 시도마다 값 = 실행기 계약
+        (`run_network_194_parallel.stage_binding_record_problems`) · 합계 Σ observed ≤ n_finalized ≤ n_started ≤ n_processes"""
     p = []
     req = expect_set in V13_IMPORT_OBS_REQUIRED
     oi = (ident or {}).get('observe_imports')
@@ -1348,6 +1350,23 @@ def v13_audit_observation_problems(a, ident, expect_set=V13_REREAD_SET):
                 if bound != comp:
                     p.append(f'import_observation.stage_binding 시도 {len(bound)} ≠ 관측된 완료 시도 {len(comp)} (결합만 {sorted(bound - comp)[:3]} · 완료만 '
                              f'{sorted(comp - bound)[:3]}) — 완료 시도마다 결합 기록이 있어야 (G2RR4-02)')
+                #  ★ 10-08 G2RR5-01 (Codex 세대 2 재검증 5 §1) — 시도마다 **값** = 실행기 결합 계약 (`stage_binding_record_problems` — 생산자 정본 한 함수:
+                #    키 · 계획 출처 · 정수 (bool 아님) · expected = 실행 단계에서 다시 유도 · 필수 역할 · observed = expected) + 합계 (Σ_시도 Σ observed ≤
+                #    n_finalized ≤ n_started ≤ n_processes).  옛 관문은 키 집합만 봤다 — 값 null · parser 결손 · 0 · 계획 밖 · bool · n_finalized 0 · 실제 audit
+                #    CLI 의 실패 결합 + 최상위 요약 [] 이 통과했다.  전체 started = finalized 는 요구하지 않는다 (재시도 · 죽은 시도의 미최종 영수증 = Q2 정보).
+                fn_ = _np194().stage_binding_record_problems
+                bad = [(k_, pr_) for k_, pr_ in ((k_, fn_(k_, rec_)) for k_, rec_ in sb['attempts'].items()) if pr_]
+                if bad:
+                    first = [x for _k, pr_ in bad[:3] for x in pr_[:2]]
+                    p.append(f'import_observation.stage_binding 시도 {len(bad)}/{len(sb["attempts"])} 의 값이 실행기 결합 계약과 다르다 (첫 {first!r:.700}) — '
+                             '시도마다 expected = 실행 단계에서 다시 유도 · observed = expected · 정수 (bool 아님) — 최상위 import_observation_problems 가 '
+                             '비어도 (G2RR5-01)')
+                n_obs = sum(v for rec_ in sb['attempts'].values() if isinstance(rec_, dict) and isinstance(rec_.get('observed'), dict)
+                            for v in rec_['observed'].values() if _v13_int(v))
+                nf, ns, npr = (io_.get(k) for k in ('n_finalized', 'n_started', 'n_processes'))
+                if all(_v13_int(x) for x in (nf, ns, npr)) and not (n_obs <= nf <= ns <= npr):
+                    p.append(f'import_observation 합계 — 결합된 끝맺은 프로세스 Σ observed {n_obs} ≤ n_finalized {nf} ≤ n_started {ns} ≤ n_processes {npr} 가 '
+                             '아니다 (영수증 수가 결합 기록보다 적거나 거꾸로 — G2RR5-01 · 전체 시작 = 끝맺음은 요구하지 않는다: 재시도 Q2)')
     return p
 
 

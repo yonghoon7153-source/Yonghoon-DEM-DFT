@@ -32,6 +32,10 @@ v1.3 = 세대 2 망 값 + #1 ML 표 (빈칸 뜻대로) · #2 f 타깃 · 관통 
   V18 ★ 10-07 G2RR4-01 (Codex 세대 2 재검증 4 §2) — 다시 읽기 상세 (meta · cases · checks) ↔ 요약: 상세 명시 실패를 n_fail 0 이 덮는 기록 · cases=[] · meta=[] ·
       빈 checks (공집합 PASS) · 검사 ID 결손 · 타입 · 중복 · 코호트 · 케이스 수 ≠ read_n · M3 ≠ 최상위 = 거부 / 감사 import 관측 내부 problems · outside 를 최상위 []
       가 덮는 기록 · 관측 객체 없음 · observe_imports false · 완료 시도가 등록 194 를 안 덮음 = 거부 (생산 194 = 관측 필수 · G2RR4-03) · build · check 둘 다
+  V19 ★ 10-07 G2RR4-02 — 감사의 실행 단계 ↔ 영수증 결합 기록 (import_observation.stage_binding) 없음 · 스키마 · 시도 키 집합 ≠ 관측된 완료 시도 = 거부
+  V20 ★ 10-08 G2RR5-01 (Codex 세대 2 재검증 5 §1) — 결합 기록의 **시도별 값** (생산자 계약 `run_network_194_parallel.stage_binding_record_problems`) ·
+      합계 Σ observed ≤ n_finalized ≤ n_started ≤ n_processes: 값 null · parser 결손 · 0 · 계획 밖 · bool · n_finalized 0 · expected 자기모순 ·
+      실제 audit CLI 실패 binding (최상위 요약 [] · 유지) = 거부 (build · check) / 정상 · 재시도 이력 (started > finalized) = 통과 (과잉차단 금지)
 
   python3 scripts/test_lhs_release_v13.py
 """
@@ -248,8 +252,10 @@ def obs_bound(pairs=None):
     pairs = pairs if pairs is not None else PROD194
     #  ★ G2RR4-02 — 완료 시도마다 실행 단계 ↔ 영수증 결합 기록 (실행기 audit 의 import_observation.stage_binding · 스키마 = 실행기 정본 상수 (옛 실행기면 손 값) ·
     #    열쇠 꼴 '케이스|run|시도')
+    #  ★ 10-08 G2RR5-01 — 시도 값 = 생산자 계약 그대로 (배포 관문이 시도마다 읽는다): plan_source = 실행기가 쓰는 출처 문자열 **전체** 의 손 사본
+    #    (옛 픽스처의 'worker.json attempts[].stage_plan' 은 그 앞부분만 — 실행기가 쓰지 않는 값)
     sb = dict(schema=getattr(NP194, 'IMPORT_OBS_STAGE_SCHEMA', 'np194_import_obs/stage_binding/v1'),
-              attempts={f'{c}|1|1': dict(plan_source='worker.json attempts[].stage_plan', mode='bimodal',
+              attempts={f'{c}|1|1': dict(plan_source='worker.json attempts[].stage_plan (그 시도가 쓴 케이스 기록의 단계)', mode='bimodal',
                                          executed=['parser', 'contact_bimodal', 'coverage', 'network_cli'], skipped=[], in_process=4,
                                          expected={'worker': 1, 'scripts/parse_liggghts.py': 1, 'scripts/analyze_contacts_bimodal.py': 1,
                                                    'scripts/coverage_physics_vs_hertzian.py': 1, 'scripts/network_conductivity.py': 1},
@@ -1485,6 +1491,172 @@ if not r19.get('build'):
     chk('V19a (변이 만들기 시험 못 함)', False, r19)
 chk('V19b 결합 기록이 있는 감사 (스키마 = 실행기 IMPORT_OBS_STAGE_SCHEMA · 시도 = 완료 시도 194) → 감사 판정 문제 0',
     r19.get('good_au') == [] and getattr(NP194, 'IMPORT_OBS_STAGE_SCHEMA', None) == 'np194_import_obs/stage_binding/v1', r19.get('good_au'))
+
+# ═══ V20 ★ 10-08 G2RR5-01 — 배포 관문이 stage_binding 의 시도별 값 · 합계를 읽는다 (build · check) ═══════════════════════════════════════════
+#   Codex 세대 2 재검증 5 §1 (`docs/reviews/codex_review_gen2_network_reverify5_20261007.md` · 탐침 r5_release_contract.py · r5_release_real_binding.py) —
+#   옛 관문은 stage_binding 의 스키마 · attempts 가 dict 인지 · 키 집합 = 관측된 완료 시도만 봤다: 시도 값이 null · parser 결손 · parser 0 · 계획 밖 프로세스 ·
+#   bool 개수 · n_finalized 0 이어도, 실제 audit CLI 가 낸 실패 binding 에서 최상위 요약 목록 하나만 [] 로 바꿔도 build_v13 이 묶음을 만들고 check_v13 문제 0.
+#   변이 = 상세 production194 정상 픽스처 (obs_bound) 위 감사 JSON 만 · [C] = Codex 변이 그대로 · c = 재시도 이력 (과잉차단 금지 — 전체 started = finalized 를
+#   요구하지 않는다 · 판정문 §1 · §4 · Q2).  check 쪽 = V17c · V18c 꼴 (좋은 묶음의 감사를 바꿔 다시 판정 + 빌드 manifest 의 캐시 sha256 을 지금 파일에 맞춘 위조).
+print('V20 감사 stage_binding 시도별 값 · 합계 (G2RR5-01)')
+
+#: 실제 audit CLI (Codex r5_observation · 한 케이스 합성 감사 · parser 시작 · 끝 영수증 쌍 삭제 · rc 1) 가 낸 감사 JSON — 리포에 커밋된 증거 (읽기만)
+V20_REAL_AUDIT = os.path.join(ROOT, 'docs', 'reviews', 'codex_gen2_network_reverify5_evidence_20261007', 'evidence', 'r5_observation_run2',
+                              'pair_missing_parse_liggghts', 'audit.json')
+
+
+def _v20_first(fn):
+    """감사 통과 기록 (깊은 사본) 의 첫 결합 시도 (열쇠 순서 첫째) 를 fn(attempts, 열쇠) 로 고치는 변이."""
+    def f(a):
+        a = json.loads(json.dumps(a))
+        at_ = a['import_observation']['stage_binding']['attempts']
+        fn(at_, next(iter(at_)))
+        return a
+    return f
+
+
+def _v20_real():
+    """실제 실패 감사 → (원 열쇠, 실패 binding, 최상위 문제 목록)."""
+    real = json.load(open(V20_REAL_AUDIT, encoding='utf-8'))
+    k0, bad = next(iter(real['import_observation']['stage_binding']['attempts'].items()))
+    return k0, bad, real['import_observation_problems']
+
+
+def _v20_graft(keep_top):
+    """실제 실패 binding 을 첫 결합 시도 자리에 이식 (Codex r5_release_real_binding 과 같은 꼴) — keep_top 이면 그 감사의 최상위 문제 목록도
+    (케이스 이름만 바꿔) 싣고, 아니면 최상위 목록 하나만 [] (요약이 상세와 모순)."""
+    def f(a):
+        a = json.loads(json.dumps(a))
+        k0, bad, top = _v20_real()
+        at_ = a['import_observation']['stage_binding']['attempts']
+        k_ = next(iter(at_))
+        at_[k_] = bad
+        c0, c_ = k0.split('|')[0], k_.split('|')[0]
+        a['import_observation_problems'] = [s.replace(c0, c_) for s in top] if keep_top else []
+        return a
+    return f
+
+
+def _v20_retry(a):
+    """재시도 이력 (Q2 · 판정문 §4 표) — 한 케이스에 완료 시도 둘 (run 1 · 시도 1 + run 2 · 시도 2 · 둘 다 결합 · expected = observed) + 죽은 시도
+    (run 3 · 시도 3) 의 미최종 시작 영수증 하나 (정보) → n_started = n_processes > n_finalized = Σ observed."""
+    a = json.loads(json.dumps(a))
+    io_ = a['import_observation']
+    at_ = io_['stage_binding']['attempts']
+    k_ = next(iter(at_))
+    c_ = k_.split('|')[0]
+    at_[f'{c_}|2|2'] = json.loads(json.dumps(at_[k_]))
+    io_['completed_attempts'] = sorted(io_['completed_attempts'] + [[c_, '2', '2']])
+    io_['unfinalized_noncompleted'] = [dict(proc='4242-0badc0de', case=c_, run='3', attempt='3')]
+    n_ = sum(sum(b_['observed'].values()) for b_ in at_.values())
+    io_.update(n_processes=n_ + 1, n_started=n_ + 1, n_finalized=n_)
+    return a
+
+
+V20_PARSER = 'scripts/parse_liggghts.py'
+V20_VARIANTS = (
+    #  (ID, 이름, make_batch_root 인자, 거부 메시지 · check 문제에 있어야 할 꼬리표, Codex 변이 표지)
+    ('a00', '첫 시도 binding 값 = null', dict(audit=_v20_first(lambda at_, k_: at_.__setitem__(k_, None))), 'G2RR5-01', 'C'),
+    ('a01', 'expected parser 1 · observed parser 키 삭제', dict(audit=_v20_first(lambda at_, k_: at_[k_]['observed'].pop(V20_PARSER))), 'G2RR5-01', 'C'),
+    ('a02', 'observed parser = 0', dict(audit=_v20_first(lambda at_, k_: at_[k_]['observed'].__setitem__(V20_PARSER, 0))), 'G2RR5-01', 'C'),
+    ('a03', "observed 에 계획 밖 'scripts/unplanned.py': 1", dict(audit=_v20_first(lambda at_, k_: at_[k_]['observed'].__setitem__('scripts/unplanned.py', 1))),
+     'G2RR5-01', 'C'),
+    ('a04', 'observed parser = True (bool)', dict(audit=_v20_first(lambda at_, k_: at_[k_]['observed'].__setitem__(V20_PARSER, True))), 'G2RR5-01', 'C'),
+    ('a05', 'n_finalized = 0 (binding 그대로)', dict(audit=_obs_mut(n_finalized=0)), 'G2RR5-01', 'C'),
+    ('a06', 'expected 에서 parser 삭제 (executed 에는 parser 그대로 — 상세 자기모순)', dict(audit=_v20_first(lambda at_, k_: at_[k_]['expected'].pop(V20_PARSER))),
+     'G2RR5-01', ''),
+    ('a07', '실제 audit CLI 실패 binding (expected parser 1 · observed 없음) + 최상위 목록 [] (요약만 비움)', dict(audit=_v20_graft(False)), 'G2RR5-01', 'C'),
+    ('a08', '같은 실패 binding + 최상위 목록 유지 (회귀 — 지금도 거부)', dict(audit=_v20_graft(True)), 'import_observation_problems', 'C'),
+)
+
+r20 = {}
+with tempfile.TemporaryDirectory() as td:
+    hd20 = safe(lambda: make_g2_handover_dir(os.path.join(td, 'handover')))
+    ver20 = os.path.join(td, 'go.md')
+    open(ver20, 'w', encoding='utf-8').write('# GO (합성)\n')
+    if _orig_rr is not None and not is_err(hd20):
+        LRB.v13_reread_tau = lambda *a: []
+        try:
+            #  (b) 정상 대조 — 상세 194 · 시도마다 expected = observed → 만들기 · check_v13 문제 0
+            b_ok = make_batch_root(os.path.join(td, 'b20_ok'))
+            o_ok = os.path.join(td, 'o20_ok')
+            r20['good'] = safe(lambda: LRB.build_v13(out_dir=o_ok, handover_dir=hd20, batch_root=b_ok, date=DATE, codex_verdict=ver20))
+            if isinstance(r20['good'], dict):
+                r20['good_check'] = safe(lambda: LRB.check_v13(o_ok, hd20))
+            #  (c) 재시도 이력 → 만들기 · check_v13 문제 0 (과잉차단 금지)
+            b_rt = make_batch_root(os.path.join(td, 'b20_retry'), audit=_v20_retry)
+            o_rt = os.path.join(td, 'o20_retry')
+            r20['retry_io'] = {k_: (json.load(open(os.path.join(b_rt, 'seal_audit.json'), encoding='utf-8'))['import_observation'] or {}).get(k_)
+                               for k_ in ('n_processes', 'n_started', 'n_finalized')}
+            r20['retry'] = safe(lambda: LRB.build_v13(out_dir=o_rt, handover_dir=hd20, batch_root=b_rt, date=DATE, codex_verdict=ver20))
+            if isinstance(r20['retry'], dict):
+                r20['retry_check'] = safe(lambda: LRB.check_v13(o_rt, hd20))
+            #  (a) 변이마다 build_v13 거부 · 산출 폴더 없음
+            r20['build'] = []
+            for vid, nm, kw, tag, cx in V20_VARIANTS:
+                b_ = make_batch_root(os.path.join(td, f'b20_{vid}'), **kw)
+                o_ = os.path.join(td, f'o20_{vid}')
+                m_ = refusal_msg(lambda: LRB.build_v13(out_dir=o_, handover_dir=hd20, batch_root=b_, date=DATE, codex_verdict=ver20))
+                r20['build'].append((vid, nm, tag, cx, m_, os.path.exists(o_)))
+            #  (a') check_v13 — 좋은 묶음의 감사를 변이로 바꾸면 문제 · 빌드 manifest 의 기록 (캐시 sha256) 을 지금 파일에 맞춰 위조해도 문제 (같은 관문을 다시 돈다)
+            r20['check'] = []
+            if isinstance(r20['good'], dict):
+                keep = {n_: open(os.path.join(b_ok, n_), 'rb').read() for n_ in ('reread.json', 'seal_audit.json', 'manifest.json')}
+                mp20 = os.path.join(o_ok, 'v13_build_manifest.json')
+                bak20 = open(mp20, encoding='utf-8').read()
+                for vid, nm, kw, tag, cx in V20_VARIANTS:
+                    _put_gate(b_ok, kw.get('reread', GOOD), kw.get('audit', GOOD))
+                    pc = safe(lambda: LRB.check_v13(o_ok, hd20))
+                    mj = json.loads(bak20)
+                    mj['batch_gate_files'] = safe(lambda: LRB.v13_batch_gate_files(b_ok), {})
+                    open(mp20, 'w', encoding='utf-8').write(json.dumps(mj, ensure_ascii=False, indent=1, sort_keys=True) + '\n')
+                    forged = safe(lambda: LRB.check_v13(o_ok, hd20))
+                    open(mp20, 'w', encoding='utf-8', newline='').write(bak20)
+                    for n_, b in keep.items():
+                        open(os.path.join(b_ok, n_), 'wb').write(b)
+                    r20['check'].append((vid, nm, tag, cx, pc, forged))
+                r20['check_restored'] = safe(lambda: LRB.check_v13(o_ok, hd20))
+            #  (e) 배포 관문이 실행기의 한 함수를 부른다 — 그 함수 (대역) 가 문제를 내면 감사 관측 판정에 그 문제가 실린다
+            _f0 = getattr(NP194, 'stage_binding_record_problems', None)
+            if _f0 is not None:
+                NP194.stage_binding_record_problems = lambda k_, rec_: ['합성 시도 계약 문제 (같은 함수 시험)']
+                try:
+                    r20['same_fn'] = safe(lambda: LRB.v13_audit_observation_problems(
+                        json.load(open(os.path.join(b_ok, 'seal_audit.json'), encoding='utf-8')), {'observe_imports': True}))
+                finally:
+                    NP194.stage_binding_record_problems = _f0
+        finally:
+            LRB.v13_reread_tau = _orig_rr
+
+chk('V20b 정상 대조 — 상세 194 · 시도마다 expected = observed (생산자 계약 꼴) → 만들기 · check_v13 문제 0',
+    isinstance(r20.get('good'), dict) and r20.get('good_check') == [],
+    (r20.get('good') if not isinstance(r20.get('good'), dict) else r20.get('good_check')))
+_rio = r20.get('retry_io') or {}
+chk('V20c 재시도 이력 (한 케이스 완료 시도 2 · 결합 2 · 죽은 시도의 미최종 시작 영수증 1 → n_started > n_finalized) → 만들기 · check_v13 문제 0 '
+    '(과잉차단 금지 — 판정문 §1 · Q2)',
+    isinstance(r20.get('retry'), dict) and r20.get('retry_check') == [] and isinstance(_rio.get('n_started'), int)
+    and _rio['n_started'] > (_rio.get('n_finalized') or 0),
+    (_rio, r20.get('retry') if not isinstance(r20.get('retry'), dict) else r20.get('retry_check')))
+for vid, nm, tag, cx, m_, made in r20.get('build', []):
+    chk(f'V20{vid} [build] {"[Codex] " if cx else ""}{nm} → build_v13 거부 (메시지에 {tag!r}) · 산출 폴더 없음',
+        m_ is not None and not m_.startswith('OTHER') and tag in m_ and not made, (m_ or 'BUILT (거부 없음)')[:400])
+if not r20.get('build'):
+    chk('V20a (변이 만들기 시험 못 함)', False, r20)
+for vid, nm, tag, cx, pc, forged in r20.get('check', []):
+    chk(f'V20{vid} [check] {"[Codex] " if cx else ""}{nm} — 좋은 묶음의 감사를 이것으로 바꾸면 check_v13 문제 · 빌드 manifest 기록을 지금 파일에 맞춰 '
+        f'위조해도 문제 (같은 관문을 배치 뿌리에서 다시 판정 · 문제에 {tag!r})',
+        isinstance(pc, list) and bool(pc) and isinstance(forged, list) and any(tag in p_ for p_ in forged), (pc, forged))
+if not r20.get('check'):
+    chk('V20a (재판정 시험 못 함 — 좋은 묶음 없음)', False, r20.get('good'))
+chk('V20d 되돌린 뒤 check_v13 문제 0', r20.get('check_restored') == [], r20.get('check_restored'))
+_sbp = getattr(NP194, 'stage_binding_record_problems', None)
+_v20k, _v20bad, _v20top = safe(_v20_real, (None, None, None))
+_v20ok = obs_bound()['stage_binding']['attempts']
+chk('V20e 시도 값 계약 = 실행기 한 함수 (run_network_194_parallel.stage_binding_record_problems) — 픽스처 정상 시도 194 = 문제 0 · 실제 audit CLI 실패 '
+    'binding = 문제 · 배포 관문 (v13_audit_observation_problems) 이 그 함수를 부른다 (대역이 낸 문제가 판정에 실린다)',
+    callable(_sbp) and all(_sbp(k_, v_) == [] for k_, v_ in _v20ok.items()) and _v20bad is not None and bool(_sbp(_v20k, _v20bad))
+    and isinstance(r20.get('same_fn'), list) and any('합성 시도 계약 문제' in str(p_) for p_ in r20['same_fn']),
+    (callable(_sbp), _sbp(_v20k, _v20bad) if callable(_sbp) and _v20bad is not None else None, r20.get('same_fn')))
 
 print(f'\n{_ok} PASS · {len(_fail)} FAIL')
 if _fail:
