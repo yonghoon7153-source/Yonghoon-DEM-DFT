@@ -119,6 +119,8 @@ PERF_BOOL = ("LPLANE", "LSCALU", "LSCALAPACK")
 PERF_TAGS = PERF_INT + PERF_BOOL
 RESCUE = {"AMIX": "0.1", "BMIX": "0.01", "NELM": "300"}
 R1_ELIGIBLE = ("EXECUTION_FAILED", "NOT_TERMINATED", "SCF_NOT_CONVERGED")
+#: INCAR 의 EDIFF (incar_text) — 수렴은 OSZICAR 마지막 전자 스텝의 |dE|·|d eps| 가 이 값 이하일 때만 (아래 oszicar_last)
+EDIFF_V5 = 1e-6
 DIP_MIN_CLEAR_A = 4.0
 D3_REL_TOL = 0.01                                                   # Edisp vs ref — 큰 오설정 탐지용 (오차 예산 아님)
 D3_PAIR_BUDGET, D3_G3_BUDGET = 0.005, 0.001                         # J/m² — 운영 예산: G5 표본 문턱의 5 % · G3 문턱의 10 % (결과 전 제안 · 1저자 비준 대상)
@@ -684,6 +686,22 @@ def _strip_incar_echo(text):
     return "".join(out), n
 
 
+def oszicar_last(text):
+    """OSZICAR 전자 스텝 줄 (DAV/RMM/CG/SDA) → (스텝 수, 마지막 dE, 마지막 d eps). 못 읽으면 값 자리는 None.
+
+    ⚠ 2026-10-08 외주 감사 — VASP 5.4.4 는 **NELM 을 다 써서 끝나도** OUTCAR 에 'aborting loop because EDIFF is reached'
+      를 찍는다 ('EDIFF was not reached' 경고는 VASP 6 부터). OUTCAR 문구만으로는 5.x 의 NELM 소진을 못 거른다 →
+      V5_s_outer_A_G3_c2_far_i (200 스텝 = NELM · 마지막 |dE| 2.3e-3) 를 수렴으로 읽었다. 그래서 OSZICAR 값으로 다시 본다.
+    """
+    rows = [ln.split() for ln in text.splitlines() if re.match(r"\s*(DAV|RMM|CG|SDA):", ln)]
+    if not rows:
+        return 0, None, None
+    try:
+        return len(rows), float(rows[-1][3]), float(rows[-1][4])
+    except (IndexError, ValueError):
+        return len(rows), None, None
+
+
 def parse_outcar(text):
     body, n_echo = _strip_incar_echo(text)
     heads = _HEADER.findall(body)
@@ -885,6 +903,17 @@ def check_job(job, pkgdir, attdir, attempt="0", pp_registry=None):
         return done("NOT_TERMINATED")
     if not o["converged"]:
         return done("SCF_NOT_CONVERGED")
+    try:
+        n_el, d_e, d_eps = oszicar_last(open(os.path.join(attdir, "OSZICAR"), encoding="utf-8", errors="replace").read())
+    except OSError:
+        n_el, d_e, d_eps = 0, None, None
+    r["oszicar_last"] = {"n_elec_steps": n_el, "dE": d_e, "d_eps": d_eps}
+    if d_e is None or d_eps is None:
+        return done("SCF_NOT_CONVERGED", "OSZICAR 마지막 전자 스텝의 dE·d eps 를 못 읽는다 — 수렴을 확인할 수 없다 (VASP 5.x 는 OUTCAR 문구로 못 가른다)")
+    if abs(d_e) > EDIFF_V5 or abs(d_eps) > EDIFF_V5:
+        nelm = int(RESCUE["NELM"]) if attempt == "r1" else 200
+        return done("SCF_NOT_CONVERGED", f"OSZICAR 마지막 스텝 |dE| {abs(d_e):.2e} · |d eps| {abs(d_eps):.2e} > EDIFF {EDIFF_V5:g} "
+                    f"(스텝 {n_el}{' = NELM 소진' if n_el >= nelm else ''}) — OUTCAR 의 'EDIFF is reached' 는 VASP 5.x 에서 NELM 소진에도 찍힌다")
     # ── ③ 완결성 — 성공한 실행만 · 결측 = 미검증 ──
     r["settings_sources"] = src
     if not o["outcar_titel"]:
@@ -1214,6 +1243,13 @@ def collect_exit(rec):
 DEFAULT_FAKE_VERSION = "vasp.6.4.2 20Jul23 (build Nov  1 2023) complex"
 
 
+def _fake_oszicar(n=20, last_dE=-3.1e-8, last_deps=-1.2e-8):
+    """시험용 OSZICAR — 실제 형식 (DAV: 스텝 E dE d_eps ncg rms rms(c)). 마지막 줄의 dE·d eps 로 수렴을 정한다."""
+    rows = [f"DAV: {i:4d}   -0.674751601463E+03   -0.32458E-03   -0.64467E-05  9016   0.341E-03  0.267E-01" for i in range(1, n)]
+    rows.append(f"DAV: {n:4d}   -0.674752277326E+03   {last_dE: .5E}   {last_deps: .5E}  7312   0.572E-03")
+    return "\n".join(rows) + "\n"
+
+
 def _fake_outcar(job, E, Ed, *, conv=True, term=True, edisp=True, extra_run=False, encut=None, drop=(), efield=None, titel_override=None,
                  version=DEFAULT_FAKE_VERSION, ngzf=400, min_pos="auto", dipol_line=False, incar_echo=(), final_toten=None,
                  extra_final_toten=None, vdw=None, final_block=True):
@@ -1281,7 +1317,7 @@ fj = {"nions": sum(nn), "nelect_expected": sum(z * n for z, n in zip(zv, nn)), "
       "dipol_z": float(inc["DIPOL"].split()[2]), "pp_expected_titel": titel}
 conv = not (mode == "noconv_unless_amix" and "AMIX" not in inc)
 B._write("OUTCAR", B._fake_outcar(fj, -1000.0 - 0.01 * len(job), ref, conv=conv, term=(mode != "noterm")))
-B._write("OSZICAR", "DAV:   1\n" * 10)
+B._write("OSZICAR", B._fake_oszicar(10) if conv else B._fake_oszicar(200, 2.2678e-3, -3.2575e-5))
 for f in ("WAVECAR", "CHGCAR", "CHG", "vasprun.xml", "IBZKPT", "EIGENVAL"):   # 실물처럼 큰 산출물도 쓴다 — 묶음 허용 목록 시험용
     B._write(f, f"FAKE {f} DO_NOT_SHIP\n")
 sys.exit(1 if mode == "rc1" else 0)
@@ -1413,7 +1449,7 @@ def _selftest():
         SPSHA = {p: hashlib.sha256(p.encode()).hexdigest() for p in POTCAR_MAP.values()}
         PERF_OK = "NCORE = 16\nKPAR = 2\nLPLANE = .TRUE.\n"                     # 기본 시도 = 허용 성능 태그 3 개 붙은 정상 실행
         JI = {n: i + 1 for i, n in enumerate(sorted(J))}
-        def mk(n, att="0", *, outcar=None, incar_extra=PERF_OK, incar=None, rc=0, titel=None, spsha=None, psha_override=None, drop=(), no_out=False,
+        def mk(n, att="0", *, outcar=None, osz=None, incar_extra=PERF_OK, incar=None, rc=0, titel=None, spsha=None, psha_override=None, drop=(), no_out=False,
                tamper_after=None, **kw):
             # run_id 는 잡·시도마다 고정 — 같은 내용으로 다시 만들면 같은 실행 기록이 된다 (파일럿 봉인 결속 시험이 이 성질을 쓴다)
             j = J[n]; d = os.path.join(run, n if att == "0" else n + "_r1"); shutil.rmtree(d, ignore_errors=True); os.makedirs(d)
@@ -1422,7 +1458,7 @@ def _selftest():
                 shutil.copy(os.path.join(src, f), d)
             _write(os.path.join(d, "INCAR"), incar if incar is not None else open(os.path.join(src, "INCAR.r1" if att == "r1" else "INCAR")).read() + incar_extra)
             if not no_out:
-                _write(os.path.join(d, "OSZICAR"), "DAV:   1\n" * 20)
+                _write(os.path.join(d, "OSZICAR"), osz if osz is not None else _fake_oszicar(20))
                 _write(os.path.join(d, "OUTCAR"), outcar if outcar is not None else _fake_outcar(j, E[n], ED[n], **kw))
             sp_ = spsha or SPSHA
             _write(os.path.join(d, "POTCAR.titel"), "".join(f"   TITEL  = {t}\n   POMASS = 1; ZVAL   = {z:8.3f}    mass and valenz\n   LEXCH  = PE\n"
@@ -1493,6 +1529,19 @@ def _selftest():
         good_outcar = _fake_outcar(J[F_], E[F_], ED[F_])
         mk(F_, rc=1, no_out=True, tamper_after=lambda d: (_write(os.path.join(d, "OUTCAR"), good_outcar), _write(os.path.join(d, "OSZICAR"), "DAV: 1\n")))
         ck(st(F_) == "ATTEMPT_MISMATCH", "⛔음성 CE P0-2 실패한 실행(OUTCAR 없음) 뒤에 지난 정상 OUTCAR 를 넣음 → ATTEMPT_MISMATCH")
+        # ── 2026-10-08 외주 감사 재현: VASP 5.4.4 는 NELM 소진에도 'EDIFF is reached' 를 찍는다 (G3_c2_far_i · 200 스텝 · |dE| 2.3e-3) ──
+        mk(F_, osz=_fake_oszicar(200, 2.2678e-3, -3.2575e-5))
+        ck(st(F_) == "SCF_NOT_CONVERGED", "⛔음성 (10-08 외주 감사) OUTCAR 'EDIFF is reached' 인데 OSZICAR 200 스텝 · |dE| 2.3e-3 → SCF_NOT_CONVERGED")
+        mk(F_, osz=_fake_oszicar(37, 4.0e-7, -2.1e-6))
+        ck(st(F_) == "SCF_NOT_CONVERGED", "⛔음성 |dE| 는 작아도 |d eps| 2.1e-6 > EDIFF → SCF_NOT_CONVERGED")
+        mk(F_, osz="DAV: 1\n")
+        ck(st(F_) == "SCF_NOT_CONVERGED", "⛔음성 OSZICAR 마지막 스텝 dE 를 못 읽음 → SCF_NOT_CONVERGED (못 읽음 ≠ 수렴)")
+        mk(F_, osz=_fake_oszicar(200, 2.2678e-3, -3.2575e-5)); mk(F_, "r1", osz=_fake_oszicar(240))
+        rr = check(out, ret, msha, None)[1][F_]
+        ck(rr["status"] == "OK" and rr["attempt"] == "r1" and rr.get("first_attempt") == "SCF_NOT_CONVERGED",
+           "NELM 소진 첫 시도 + 정상 r1 → r1 채택 · first_attempt SCF_NOT_CONVERGED (사전등록 재시도 경로)")
+        shutil.rmtree(os.path.join(run, F_ + "_r1")); mk(F_)
+        ck(st(F_) == "OK" and check(out, ret, msha, None)[1][F_]["oszicar_last"]["n_elec_steps"] == 20, "[양성] 수렴 OSZICAR (|dE|·|d eps| < EDIFF) → OK · 스텝 수 기록")
         mk(F_, extra_run=True)
         ck(st(F_) == "MULTIPLE_RUNS", "⛔음성 CE P0-2 두 번째 미완결 실행 붙임 → MULTIPLE_RUNS")
         mk(F_, encut=400.0)
