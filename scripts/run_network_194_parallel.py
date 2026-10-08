@@ -71,6 +71,10 @@
        훅 밖 단계 계획 (worker.json attempts[].stage_plan = 워커 케이스 기록 stages 의 사본 · 옛 ROOT = 지금 기록을 쓴 시도의 기록) 의 실행 단계마다 그 스크립트가
        __main__ 인 끝맺은 프로세스 정확히 그 수 (+ 워커 하나 — 모자람 · 중복 · 계획 밖 = 문제) · 정당한 생략 (`Parse (CSV fallback)`) 은 표지 · 분류 밖 단계 이름 = 거부 ·
        결합 기록 = audit JSON import_observation.stage_binding (v1.3 배포 관문이 생산 194 에 요구) · 완료 아닌 시도 (Q2) 는 결합하지 않는다 · fork API = 발사 사전 점검이 막는다.
+    ⓜ ★ 10-08 G2RR5-01 (Codex 세대 2 재검증 5 §1) — 결합 기록 **시도 값의 생산자 계약** = 한 함수 `stage_binding_record_problems` (키 · 계획 출처 · 단계 열쇠 ·
+       정수 (bool 아님) · expected = 실행 단계에서 다시 유도 · 필수 역할 · observed = expected) — v1.3 배포 관문이 시도마다 부른다 (+ 합계 Σ observed ≤
+       n_finalized ≤ n_started ≤ n_processes).  옛 배포 관문은 키 집합만 봤다 (값 null · 결손 · 0 · 계획 밖 · bool · 최상위 요약만 [] 인 실제 실패 결합이 통과).
+       audit (`cmd_audit` · `import_observation_problems`) 는 그대로 — 실패 결합을 내고 rc 1 로 잡는 것이 정상.
 
 설정 (전부 `manifest.json` 에 남는다)
 ───────────────────────────────────────────────────────────────────────────────
@@ -631,6 +635,85 @@ def import_observation_problems(root: Path, man: dict, obs: dict, rows=()) -> li
     obs['stage_binding'] = dict(schema=IMPORT_OBS_STAGE_SCHEMA, attempts=binding)
     probs += [f'봉인 밖 모듈을 실제로 읽었다: {f}' for f in obs['outside']]
     return probs
+
+
+#: ★ 10-08 G2RR5-01 (Codex 세대 2 재검증 5 §1) — 위 `import_observation_problems` 가 완료 시도마다 stage_binding.attempts['케이스|run|시도'] 에 싣는 dict 의
+#:   키 · 계획 출처 (그 함수가 쓰는 두 문자열 그대로 — 시도 사본 · 지금 케이스 기록).  그 함수의 문자열을 바꾸면 여기도 고친다 — selftest ㉟i 가 실제 audit
+#:   출력의 두 출처와 대조한다 (audit 는 이 표를 쓰지 않는다 · 감사 출력은 그대로).
+IMPORT_OBS_STAGE_BINDING_KEYS = ('plan_source', 'mode', 'executed', 'skipped', 'in_process', 'expected', 'observed')
+IMPORT_OBS_STAGE_PLAN_SOURCES = ('worker.json attempts[].stage_plan (그 시도가 쓴 케이스 기록의 단계)',
+                                 'out/status.json 케이스 기록 stages (지금 기록을 쓴 시도 — 봉인 판정 record_sha)')
+
+
+def stage_binding_record_problems(key, rec) -> list:
+    """★ 10-08 G2RR5-01 (Codex 세대 2 재검증 5 §1) — stage_binding 시도 기록 하나 (열쇠 '케이스|run|시도' · 값 = `import_observation_problems` 가 싣는 dict)
+    의 **생산자 계약** → 문제 목록 ([] = 이 실행기가 관측 문제 없이 쓰는 꼴).  v1.3 배포 관문 (`lhs_release_build.v13_audit_observation_problems` —
+    build_v13 · 단계 A · check_v13) 이 시도마다 부른다.  옛 관문은 결합 기록의 키 집합만 봤다 — 값이 null · parser 결손 · 0 · 계획 밖 · bool 이어도,
+    실제 감사가 낸 실패 결합에서 최상위 요약 목록 하나만 비워도 통과했다.
+      · rec = dict · 키 = IMPORT_OBS_STAGE_BINDING_KEYS 정확히 · plan_source ∈ IMPORT_OBS_STAGE_PLAN_SOURCES · mode = 기록만 (검사 안 함)
+      · executed = 단계 열쇠 (IMPORT_OBS_STAGE_MAIN 값의 첫째) 목록 · skipped = 문자열 목록 · in_process = 0 이상 정수 (bool 아님)
+      · expected · observed = {키: 정수 (bool 아님)} · 키 ⊆ {'worker'} ∪ 단계 스크립트 (IMPORT_OBS_STAGE_MAIN 값의 둘째)
+      · expected = {'worker': 1} + executed 를 스크립트로 바꾼 Counter (다시 유도해 같아야 — 상세 자기모순 거부) · 필수 역할 (IMPORT_OBS_ROLES) 워커 1 · 망 솔버 ≥ 1
+      · observed = expected (정확히 — 결손 · 0 · 중복 · 계획 밖 = 문제 · 실행기 audit 가 같은 시도에 내는 사유와 같은 판정)
+    열쇠 집합 (= 관측된 완료 시도) 대조 · 합계 (Σ observed ≤ n_finalized ≤ n_started ≤ n_processes) 는 부르는 쪽.  재시도 · 미완료 시도의 영수증 (Q2) 은
+    대상이 아니다 (완료 시도의 결합 기록 하나만 본다)."""
+    tag = f'stage_binding 시도 {key!r}'
+    if not isinstance(rec, dict):
+        return [f'{tag}: 값 {type(rec).__name__} — 시도 결합 기록 (dict) 이 아니다 (G2RR5-01)']
+
+    def _n(x):
+        return isinstance(x, int) and not isinstance(x, bool)
+    p = []
+    have, want_k = set(rec), set(IMPORT_OBS_STAGE_BINDING_KEYS)
+    if have != want_k:
+        p.append(f'{tag}: 키 빠짐 {sorted(want_k - have)} · 남음 {sorted(str(k) for k in have - want_k)} — 실행기가 쓰는 키 '
+                 f'{list(IMPORT_OBS_STAGE_BINDING_KEYS)} (G2RR5-01)')
+    if rec.get('plan_source') not in IMPORT_OBS_STAGE_PLAN_SOURCES:
+        p.append(f'{tag}: plan_source {str(rec.get("plan_source"))[:80]!r} — 실행기의 두 계획 출처 (시도 사본 · 지금 케이스 기록) 가 아니다 (G2RR5-01)')
+    k2s = {k_: s_ for k_, s_ in IMPORT_OBS_STAGE_MAIN.values()}            # 단계 열쇠 → 그 단계 하위 프로세스의 __main__ 스크립트
+    ex = rec.get('executed')
+    ex_ok = isinstance(ex, list) and all(isinstance(x, str) and x in k2s for x in ex)
+    if not ex_ok:
+        p.append(f'{tag}: executed {str(ex)[:120]} — 단계 열쇠 {sorted(k2s)} 목록이 아니다 (G2RR5-01)')
+    sk = rec.get('skipped')
+    if not (isinstance(sk, list) and all(isinstance(x, str) for x in sk)):
+        p.append(f'{tag}: skipped {str(sk)[:120]} — 문자열 목록이 아니다 (G2RR5-01)')
+    ip = rec.get('in_process')
+    if not (_n(ip) and ip >= 0):
+        p.append(f'{tag}: in_process {ip!r} — 0 이상 정수 (bool 아님) 가 아니다 (G2RR5-01)')
+    allowed = {'worker'} | set(k2s.values())
+    cnt = {}
+    for nm in ('expected', 'observed'):
+        d = rec.get(nm)
+        if not isinstance(d, dict):
+            p.append(f'{tag}: {nm} {type(d).__name__} — {{워커 · 단계 스크립트: 개수}} dict 가 아니다 (G2RR5-01)')
+            continue
+        bad_n = {str(k): v for k, v in d.items() if not _n(v)}
+        unk = sorted(str(k) for k in d if not (isinstance(k, str) and k in allowed))
+        if bad_n:
+            p.append(f'{tag}: {nm} 개수가 정수가 아니다 (bool · 문자열 · null) {bad_n!r:.160} (G2RR5-01)')
+        if unk:
+            p.append(f'{tag}: {nm} 에 계획 밖 프로세스 {unk[:4]} — 워커 · 단계 스크립트만 (G2RR5-01)')
+        if not bad_n and not unk:
+            cnt[nm] = d
+    e_, o_ = cnt.get('expected'), cnt.get('observed')
+    if e_ is not None and ex_ok:
+        want = collections.Counter({'worker': 1}) + collections.Counter(k2s[x] for x in ex)
+        if dict(want) != e_:
+            p.append(f'{tag}: expected {e_} ≠ 실행 단계 (executed {ex}) 에서 다시 유도한 {dict(want)} — 상세 자기모순 (G2RR5-01)')
+    if e_ is not None:
+        for role, core in IMPORT_OBS_ROLES.items():
+            rk = 'worker' if role == 'worker' else core
+            n_ = e_.get(rk, 0)
+            if (n_ != 1) if role == 'worker' else (n_ < 1):
+                p.append(f'{tag}: expected 의 필수 역할 {role} ({rk}) {n_} — 워커 1 · 망 솔버 ≥ 1 이어야 (IMPORT_OBS_ROLES · G2RR5-01)')
+    if e_ is not None and o_ is not None and o_ != e_:
+        miss = {s: f'{o_.get(s, 0)}/{n}' for s, n in e_.items() if o_.get(s, 0) < n}
+        dup = {s: f'{o_[s]}/{n}' for s, n in e_.items() if o_.get(s, 0) > n}
+        extra = {s: n for s, n in o_.items() if s not in e_}
+        p.append(f'{tag}: observed ≠ expected — 모자람 {miss} · 많음 {dup} · 계획 밖 {extra} (관측/계획 · 0 개도 결손) — 실행된 단계마다 끝맺은 프로세스가 '
+                 '정확히 그 수여야 (G2RR5-01)')
+    return p
 
 #: ★ 10-07 G2RR-01 · §7-3 — 발사 봉인의 기대 망 세대.  키 = 인계 생성기 `lhs_design_dataset.TAU_MANIFEST_GENERATION_KEY` (`tau_manifest_expected_generation` ·
 #:   CLI `--tau-batch-manifest` 가 읽는다 · 없으면 거부) · 같은 값을 manifest.seal 안에도 둔다 (retry · audit 가 둘을 대조).  값은 손으로 적지 않는다 —
@@ -4144,11 +4227,13 @@ def _selftest() -> int:
             )
             res_ = []
             for i_, (nm_, ed_, want_, tag_) in enumerate(cases_):
+                _aj = {}
                 try:
                     rc_, pr_, _aj = _variant(i_, ed_)
                 except Exception as e:                       # noqa: BLE001 — 변이를 못 만들면 (옛 실행기 — 단계 계획 없음) ✗ 로 남긴다
                     rc_, pr_ = 'ERR', [f'{type(e).__name__}: {e}']
                 res_.append((nm_, rc_, pr_, want_, tag_))
+                _S35G.setdefault('variants', []).append((nm_, want_, rc_, _aj))      # ★ ㉟i (G2RR5-01) 가 이 실제 감사 기록의 결합 시도를 다시 읽는다
             for nm_, rc_, pr_, want_, tag_ in res_:
                 if want_:
                     chk(f'㉟g ★ G2RR4-02 {nm_} → 실제 audit CLI rc 1 · 관측 문제' + (f' (사유에 {tag_!r})' if tag_ else ''),
@@ -4185,13 +4270,16 @@ def _selftest() -> int:
                 repr((rc_s, rc_sa, (aj_s.get('import_observation_problems') or [])[:3], at_s)))
             #  Q2 — 죽은 시도 (SIGKILL · 미최종) + 정상 재시도 (㉟f run_obs_crash) = rc 0 · 그 재시도 (run 2 · 시도 2) 의 결합 = 실행 단계 넷
             with _patch(git_info=_git_fake()):
-                aj_k2 = _audit_json(tmp / 'run_obs_crash')[1] if (tmp / 'run_obs_crash').exists() else {}
+                rc_k2, aj_k2, _o = _audit_json(tmp / 'run_obs_crash') if (tmp / 'run_obs_crash').exists() else (None, {}, '')
             sbk = (((aj_k2.get('import_observation') or {}).get('stage_binding') or {}).get('attempts') or {})
             chk('㉟g Q2 — 실패한 시도의 미최종 영수증 (정보) + 정상 재시도 = audit 관측 문제 0 · 재시도만 결합 (완료 시도) · 실패 시도는 결합 대상 아님',
                 (tmp / 'run_obs_crash').exists() and not aj_k2.get('import_observation_problems') and list(sbk) == ['lhsx_900|2|2']
                 and len(sbk['lhsx_900|2|2'].get('executed') or []) == 4,
                 repr((aj_k2.get('import_observation_problems'), sbk)))
+            #  ★ ㉟i (G2RR5-01) — 관측 문제 0 인 실제 감사 기록 셋 (양성 5/5 · 파서 정당한 생략 · Q2 재시도) 을 넘긴다
+            _S35G['ok'] = [('㉟g 양성 (5/5)', rc_g, aj_g), ('㉟g 파서 정당한 생략', rc_sa, aj_s), ('㉟g Q2 재시도', rc_k2, aj_k2)]
 
+        _S35G = {}
         _scenario('㉟g G2RR4-02 실행 단계 ↔ 영수증 결합 시나리오', _s35g)
 
         # ═══ ㉟h ★ 10-07 Codex 세대 2 재검증 4 §4 Q3 G2RR4-03 — 생산 194 발사 = import 관측 필수 (반례 먼저) ═════════════════════════════════════════════
@@ -4216,6 +4304,54 @@ def _selftest() -> int:
                 and _pop(dict(plan=p1, observe_imports=False)) is None, repr(callable(_pop) and _pop(m_off)))
 
         _scenario('㉟h G2RR4-03 생산 194 관측 필수 시나리오', _s35h)
+
+        # ═══ ㉟i ★ 10-08 Codex 세대 2 재검증 5 §1 G2RR5-01 — 결합 기록 시도 값의 생산자 계약 (v1.3 배포 관문이 부르는 공용 함수 · 반례 먼저) ═════════════
+        #   옛 배포 관문은 stage_binding 의 키 집합만 봤다 → 시도 값이 null · parser 결손 · 0 · 계획 밖 · bool 이어도 · 실제 실패 결합에서 최상위 요약만 비워도 통과
+        #   (Codex r5_release_contract · r5_release_real_binding).  계약 = 이 실행기의 한 함수 `stage_binding_record_problems` — ㉟g 의 실제 audit CLI 기록으로:
+        #   관측 문제 0 감사 (rc 0) 의 시도 = 계약 문제 0 (두 계획 출처 모두 — 계약의 출처 표 = 실제 출력) · 단계 영수증 결손 · 중복 감사 (rc 1) 의 시도 = 계약 문제 ·
+        #   실제 정상 시도를 null · bool · 계획 밖 … 으로 바꾸면 계약 문제.
+        def _s35i():
+            fn_ = _G.get('stage_binding_record_problems')
+            srcs_ = tuple(_G.get('IMPORT_OBS_STAGE_PLAN_SOURCES') or ())
+
+            def _att(aj_):
+                return list(((((aj_ or {}).get('import_observation') or {}).get('stage_binding') or {}).get('attempts') or {}).items())
+            pos_ = list(_S35G.get('ok', [])) + [(nm_, rc_, aj_) for nm_, want_, rc_, aj_ in _S35G.get('variants', []) if not want_]
+            pos_att = [(lab_, k_, v_) for lab_, rc_, aj_ in pos_ if rc_ == 0 and not aj_.get('import_observation_problems') for k_, v_ in _att(aj_)]
+            pos_res = [(lab_, k_, fn_(k_, v_)) for lab_, k_, v_ in pos_att] if callable(fn_) else []
+            chk('㉟i ★ G2RR5-01 관측 문제 0 감사 (rc 0 — ㉟g 양성 5/5 · 옛 ROOT 꼴 · 파서 정당한 생략 · Q2 재시도) 의 실제 결합 시도 = 계약 문제 0 · '
+                '계약의 계획 출처 둘 (시도 사본 · 지금 케이스 기록) = 실제 출력의 출처',
+                callable(fn_) and len(pos_) == 4 and len({lab_ for lab_, _k, _v in pos_att}) == 4 and all(not ps_ for _l, _k, ps_ in pos_res)
+                and len(srcs_) == 2 and {v_.get('plan_source') for _l, _k, v_ in pos_att} == set(srcs_),
+                repr((callable(fn_), [(lab_, rc_) for lab_, rc_, _a in pos_], [(lab_, k_, ps_[:2]) for lab_, k_, ps_ in pos_res if ps_],
+                      sorted({str(v_.get('plan_source')) for _l, _k, v_ in pos_att}))))
+            #  실행기 audit 가 그 시도에 결손 · 중복 ('(관측/계획)') · 계획 밖 프로세스 사유를 낸 감사 = 결합 값이 개수 불일치인 감사
+            neg_ = [(nm_, aj_) for nm_, want_, rc_, aj_ in _S35G.get('variants', [])
+                    if want_ and rc_ == 1 and any(('(관측/계획)' in str(x_) or '계획에 없는 프로세스' in str(x_)) for x_ in aj_.get('import_observation_problems') or [])]
+            neg_res = [(nm_, [fn_(k_, v_) for k_, v_ in _att(aj_)]) for nm_, aj_ in neg_] if callable(fn_) else []
+            chk('㉟i ★ G2RR5-01 단계 영수증 결손 · 중복 · 계획 밖 감사 (rc 1 — ㉟g [Codex] 파서 끝만 · 파서 쌍 · 워커 + 솔버만 · 분석 · 피복 쌍 · 중복 메우기 · '
+                '계획 ↔ 지금 기록 다름) 의 실제 결합 시도 = 계약 문제 (observed ≠ expected — 최상위 요약을 비워도 시도 값이 실패를 말한다)',
+                callable(fn_) and len(neg_) >= 7 and len(neg_res) == len(neg_) and all(rs_ and all(bool(ps_) for ps_ in rs_) for _n, rs_ in neg_res),
+                repr((callable(fn_), len(neg_), [(nm_, [len(ps_) for ps_ in rs_]) for nm_, rs_ in neg_res])))
+            base_ = next((v_ for lab_, k_, v_ in pos_att if lab_ == '㉟g 양성 (5/5)'), None)
+            _P = 'scripts/parse_liggghts.py'
+            muts_ = (('값 null', lambda v: None),
+                     ('observed parser True (bool)', lambda v: dict(v, observed=dict(v['observed'], **{_P: True}))),
+                     ("observed 계획 밖 'scripts/unplanned.py': 1", lambda v: dict(v, observed=dict(v['observed'], **{'scripts/unplanned.py': 1}))),
+                     ('observed parser 0', lambda v: dict(v, observed=dict(v['observed'], **{_P: 0}))),
+                     ('expected parser 삭제 (executed 에는 parser — 자기모순)', lambda v: dict(v, expected={s_: n_ for s_, n_ in v['expected'].items() if s_ != _P})),
+                     ('plan_source = 실행기가 쓰지 않는 문자열 (옛 픽스처의 앞부분)', lambda v: dict(v, plan_source='worker.json attempts[].stage_plan')),
+                     ('키 결손 (mode 없음)', lambda v: {k_: x_ for k_, x_ in v.items() if k_ != 'mode'}),
+                     ('in_process -1', lambda v: dict(v, in_process=-1)))
+            mres_ = ([(nm_, fn_('lhsx_900|1|1', mf_(json.loads(json.dumps(base_))))) for nm_, mf_ in muts_]
+                     if callable(fn_) and isinstance(base_, dict) else [])
+            chk('㉟i ★ G2RR5-01 실제 정상 시도 (㉟g 양성) 를 바꾸면 계약 문제 — 값 null · observed bool · 계획 밖 프로세스 · parser 0 · expected 자기모순 · '
+                '모르는 계획 출처 · 키 결손 · in_process 음수 (원본 = 문제 0)',
+                callable(fn_) and isinstance(base_, dict) and fn_('lhsx_900|1|1', base_) == [] and len(mres_) == len(muts_)
+                and all(bool(ps_) for _n, ps_ in mres_),
+                repr((callable(fn_), isinstance(base_, dict), [(nm_, ps_[:1]) for nm_, ps_ in mres_])))
+
+        _scenario('㉟i G2RR5-01 결합 기록 시도 값 계약 시나리오', _s35i)
     finally:
         for k, v in env_keep.items():
             if v is None:
