@@ -6,7 +6,7 @@ date: 2026-10-07
 track: wad
 channel: codex
 kind: prompt
-status: 발송 대기 (사용자 2026-10-07 '필요한 codex 리뷰 다 받자')
+status: 발송 2026-10-08 (사용자 '다음 CU 줘봐') · 회신 대기
 confidence: medium
 verificationStatus: verified
 verifiedAt: 2026-10-07
