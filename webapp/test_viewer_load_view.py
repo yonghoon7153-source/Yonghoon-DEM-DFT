@@ -24,7 +24,15 @@
   [J] 뷰어 (node) — 드롭다운 이름 · AM 만 보기 함수 (양 · 범위 = AM 만 · 벽 회색 · 컬러바) · 최대 접촉 압력 범례 (압축만 / 옛 계산 경고 · 툴팁) ·
       자료 없음 안내 (발사 뒤 패치).
   [Z] Z-profile 이름 정정 (탭 · PNG 제목 — 값은 옛 계산 그대로 · "당김 포함" 표기 · 압축만으로 바꾸는 것은 다음 묶음).
-  [P] 발사 뒤 패치 — 적용 확인 · 패치한 app 의 /3d-data (live · archive · 캐시 HIT · 옛 스키마 12 → 다시 계산).
+  [K] ★ 10-08 (1저자 *"그 버전도 좋을거 같은데"*) AM–AM 접촉마다 — load_view.am.contacts (AM–AM 행만 · |Fn| µN · 압축 표지 · 방향 =
+      접촉점 또는 중심 최소영상) · 압축 행의 입자별 최대 = fn_max_uN · real14 (AM–AM 행 전수 · 독립 셈) · ps45 크기 예산 (0:10 = AM–AM
+      8970 행 · 합성 격자 9312 행 = 잘림 없음 · JSON ≤ 1 MB) · 뷰어 (cap 패치 = Brittle surface 꼴 · AM 기본색 · SE 숨김 · AM–SE · SE–SE
+      접촉은 그리지 않는다 · 당김 수 · 범위 · 컬러바) · 캐시 스키마 14 (옛 패치의 13 캐시 = 다시 계산).
+  [K-SE] ★ 10-08 (1저자 *"ㄱㄱ해봐"*) AM–SE 접촉마다 — 따로 고르는 양 (AM–AM 과 한 색 눈금에 섞지 않는다) · load_view.am.contacts_se
+      (id1 = AM · id2 = SE — 덤프가 SE 먼저면 뒤집는다 · 같은 규칙 · cap = AM 표면에만) · 상한 (상위 N 행 = 압축 |Fn| 큰 순) · 전체 압축
+      셈 · 합 · 백분위 (색 범위 · 힘 몫) = 상한과 무관 · real14 (31299 행 = case_master area_AM전체_SE_n) · ps45 크기 (0:10 = 194558 행 →
+      상한 · gzip 예산) · 뷰어 (상위 N 고르기 · 그린 것 / 전체 · 힘 몫 · 자기 컬러바).
+  [P] 발사 뒤 패치 — 적용 확인 · 패치한 app 의 /3d-data (live · archive · 캐시 HIT · 옛 스키마 12 · 13 → 다시 계산).
   [X] check_all 배선.
 
   python3 webapp/test_viewer_load_view.py        # 종료코드 0 = PASS
@@ -47,7 +55,7 @@ CHECK_ALL = os.path.join(SCRIPTS, 'check_all.sh')
 PATCH = os.path.join(ROOT, 'docs', 'reviews', 'webapp_load_view_deferred_20261007.patch')
 sys.path.insert(0, HERE)
 sys.path.insert(0, SCRIPTS)
-from test_closed_param_labels import js_fn, run_node   # noqa: E402  (렌더된 JS 를 잘라 node 로 — 같은 도구)
+from test_closed_param_labels import js_const, js_fn, run_node   # noqa: E402  (렌더된 JS 를 잘라 node 로 — 같은 도구)
 
 _ok, _fail = 0, []
 TM = {1: 'AM_P', 2: 'AM_S', 3: 'SE'}
@@ -86,8 +94,8 @@ def ikeys(d):
 # ══════════════════════════════════════════════════════════════════════════════
 BOX, PLATE = 0.05, 0.03
 RAD = {1: 0.006, 2: 0.002, 3: 0.002, 4: 0.002, 5: 0.002, 10: 0.0005, 11: 0.0005, 12: 0.0005, 13: 0.0005,
-       14: 0.0005, 15: 0.002, 16: 0.002}
-TYPE = {1: 1, 2: 2, 3: 2, 4: 2, 5: 2, 10: 3, 11: 3, 12: 3, 13: 3, 14: 3, 15: 2, 16: 2}
+       14: 0.0005, 15: 0.002, 16: 0.002, 17: 0.0005}
+TYPE = {1: 1, 2: 2, 3: 2, 4: 2, 5: 2, 10: 3, 11: 3, 12: 3, 13: 3, 14: 3, 15: 2, 16: 2, 17: 3}
 
 
 def _mi(d):
@@ -117,6 +125,7 @@ def synth_bed():
     P[14] = [0.040, 0.010, PLATE - 0.0003]                                    # 판 (z + r > 판)
     P[15] = [0.010, 0.040, 0.0015]                                            # AM_S 바닥 (접촉 없음)
     P[16] = [0.010, 0.040, PLATE - 0.0015]                                    # AM_S 판 (접촉 없음)
+    P[17] = [P[3][0], P[3][1], P[3][2] + RAD[3] + RAD[17] - dl]               # SE 17 — AM 3 위 (+z) · 덤프 행은 SE 가 id1 (10-08 AM–SE 목록 · 순서 바꿈)
     rows = []
 
     def con(i, j, mag, sign, area, delta, d_geom=dl):
@@ -132,6 +141,7 @@ def synth_bed():
     con(1, 11, 0.004, +1, 5e-8, dl)
     con(1, 11, 0.0, +1, 1e-8, dl)                                           # 힘 0 행
     con(12, 13, 0.001, +1, 2e-8, dl)
+    con(17, 3, 0.006, +1, 4e-8, dl)                                         # SE–AM (id1 = SE) 압축 — AM–SE 목록에서 id1 = AM 으로 뒤집는다
     return P, rows
 
 
@@ -207,7 +217,7 @@ def section_synth(tmp):
     want = {}
     for r in rows:
         mag = math.sqrt(sum(x * x for x in r['fn']))
-        comp = (r['id1'], r['id2']) in ((1, 2), (4, 5), (1, 11), (12, 13))
+        comp = (r['id1'], r['id2']) in ((1, 2), (4, 5), (1, 11), (12, 13), (17, 3))
         if comp and r['area'] > 0 and r['delta'] > 0 and mag > 0:
             p = mag / r['area'] * conv
             for i in (r['id1'], r['id2']):
@@ -215,9 +225,9 @@ def section_synth(tmp):
     got = ikeys(pr.get('max_MPa'))
     chk(f'W2 입자별 최대 압력 = 압축 접촉만 손 계산 (당김 1–10 · 2–3 · δ = 0 행 · 힘 0 행 제외 · 전 입자 맵 = 유효 6 자리) ({len(got)} 입자)',
         set(got) == set(want) and all(rel(got[i], want[i]) < 1e-6 for i in want), repr((got, want))[:400])
-    chk(f'W3 셈 — 압축 4 · 당김 2 · 판정 불가 0 · 겹침 없음 / 면적 0 / 힘 0 = 2 ({pr.get("n_used")} · {pr.get("n_excluded_attractive")} · '
+    chk(f'W3 셈 — 압축 5 · 당김 2 · 판정 불가 0 · 겹침 없음 / 면적 0 / 힘 0 = 2 ({pr.get("n_used")} · {pr.get("n_excluded_attractive")} · '
         f'{pr.get("n_excluded_unknown")} · {pr.get("n_excluded_no_overlap")})',
-        pr.get('n_used') == 4 and pr.get('n_excluded_attractive') == 2 and pr.get('n_excluded_unknown') == 0
+        pr.get('n_used') == 5 and pr.get('n_excluded_attractive') == 2 and pr.get('n_excluded_unknown') == 0
         and pr.get('n_excluded_no_overlap') == 2)
     # 옛 stress_max (aggregate_particle_metrics) — 바뀌지 않는다 (당김 포함 · 부호 없음)
     import pandas as pd
@@ -300,6 +310,256 @@ def section_synth(tmp):
 
 
 # ══════════════════════════════════════════════════════════════════════════════
+#  [K] AM–AM 접촉마다 — 합성 침대 (손 계산)
+# ══════════════════════════════════════════════════════════════════════════════
+CONTACT_FIELDS = ['id1', 'id2', 'fn_uN', 'flag', 'ux', 'uy', 'uz']
+
+
+def contact_rows(lv, key='contacts'):
+    """load_view.am.<key> (contacts = AM–AM · contacts_se = AM–SE) → [{필드: 값}] (fields 순서대로)."""
+    c = ((lv or {}).get('am') or {}).get(key) or {}
+    f = c.get('fields') or []
+    return [dict(zip(f, r)) for r in (c.get('rows') or [])]
+
+
+def check_fn_max_matches_rows(lv):
+    """입자별 최대 AM–AM 힘 = 그 입자가 낀 압축 (flag 1) 행 |Fn| 의 최대 — (맞는 입자 수, 전체 AM 값 수, 어긋난 예).
+    행의 |Fn| 은 유효 6 자리 (JSON 크기) — 상대 1e-5 안이면 같다."""
+    want = {}
+    for r in contact_rows(lv):
+        if r['flag'] == 1:
+            for i in (int(r['id1']), int(r['id2'])):
+                want[i] = max(want.get(i, 0.0), float(r['fn_uN']))
+    got = ikeys(((lv or {}).get('am') or {}).get('fn_max_uN'))
+    bad = [(i, got.get(i), want.get(i)) for i in set(got) | set(want) if rel(got.get(i), want.get(i)) > 1e-5]
+    return len(set(got) & set(want)) - len(bad), len(got), bad[:5]
+
+
+def nearest_rank_q(vals):
+    """amOnlyRange (viewer3d.js) 와 같은 규칙 — 양수만 정렬 · v[floor(p (n − 1))] · µN 그대로 (log 아님)."""
+    v = sorted(x for x in vals if x > 0 and math.isfinite(x))
+    if not v:
+        return None
+    pct = lambda p: v[max(0, min(len(v) - 1, int(math.floor(p * (len(v) - 1)))))]   # noqa: E731
+    return {'p5': pct(0.05), 'p95': pct(0.95), 'min': v[0], 'max': v[-1]}
+
+
+def q_close(a, b, tol=1e-5):
+    return bool(a) and bool(b) and all(rel(a.get(k), b.get(k)) <= tol for k in ('p5', 'p95', 'min', 'max'))
+
+
+def section_contacts_synth(tmp, lv):
+    print('[K] AM–AM 접촉마다 (합성 침대) — 행 · 표지 · 방향 · 입자별 최대와의 대조')
+    c = ((lv or {}).get('am') or {}).get('contacts')
+    if not chk('K0 load_view.am.contacts 가 있다', isinstance(c, dict)):
+        return
+    chk(f'K1 열 = {CONTACT_FIELDS} ({c.get("fields")})', c.get('fields') == CONTACT_FIELDS)
+    chk(f'K2 셈 — AM–AM 행 4 (압축 2 · 당김 1 · 겹침 없음 등 1) · 보낸 행 4 · 잘림 없음 ({c.get("n_total")} · {c.get("n_rows")} · '
+        f'{c.get("n_compressive")} · {c.get("n_tension")} · {c.get("n_other")} · {c.get("truncated")})',
+        c.get('n_total') == 4 and c.get('n_rows') == 4 and c.get('n_compressive') == 2 and c.get('n_tension') == 1
+        and c.get('n_other') == 1 and c.get('truncated') is False and c.get('compressive_complete') is True
+        and c.get('n_compressive_sent') == 2)
+    R = contact_rows(lv)
+    got = [(int(r['id1']), int(r['id2']), round(float(r['fn_uN']), 6), int(r['flag'])) for r in R]
+    chk(f'K3 행 = 압축 먼저 (|Fn| 큰 순) · 그다음 당김 · 겹침 없음 — 1–2 20 µN · 4–5 10 µN · 2–3 500 µN (당김) · 4–5 δ = 0 50 µN ({got})',
+        got == [(1, 2, 20.0, 1), (4, 5, 10.0, 1), (2, 3, 500.0, -1), (4, 5, 50.0, 0)])
+    dirs = [(round(r['ux'], 4), round(r['uy'], 4), round(r['uz'], 4)) for r in R]
+    chk(f'K4 방향 = id1 → 상대 쪽 단위 벡터 (주기 경계 너머 4–5 도 최소영상 +x · 2–3 = +y) ({dirs})',
+        dirs == [(1.0, 0.0, 0.0), (1.0, 0.0, 0.0), (0.0, 1.0, 0.0), (1.0, 0.0, 0.0)])
+    n_ok, n_all, bad = check_fn_max_matches_rows(lv)
+    chk(f'K5 입자별 최대 AM–AM 힘 (fn_max_uN) = 그 입자의 압축 접촉 행 |Fn| 최대 ({n_ok}/{n_all} · 어긋남 {bad})',
+        n_all == 4 and n_ok == n_all and not bad)
+    ids = {int(r['id1']) for r in R} | {int(r['id2']) for r in R}
+    chk(f'K6 AM–AM 행만 (SE id 없음 · AM–SE · SE–SE 는 이 목록에 싣지 않는다) · JSON 직렬화 ({sorted(ids)})',
+        ids <= {1, 2, 3, 4, 5, 15, 16} and json.loads(json.dumps(c)) == c)
+    chk('K7 규칙 문구 — AM–AM · |Fn| × 1e6 / scale · 압축만 칠함 · 당김 · 겹침 없음 표지 · 방향 (접촉점 · 중심 최소영상) · 하중 분담 아님',
+        all(x in str(c.get('rule')) for x in ('AM–AM', '1e6 / scale', '압축', '당김', '접촉점', '최소영상', '하중 분담')))
+    chk(f'K8 방향 출처 셈 (접촉점 {c.get("n_dir_contact_point")} · 중심 {c.get("n_dir_centres")} · 없음 {c.get("n_dir_none")}) = 보낸 행 수',
+        (c.get('n_dir_contact_point') or 0) + (c.get('n_dir_centres') or 0) + (c.get('n_dir_none') or 0) == 4
+        and c.get('n_dir_contact_point') == 4)
+    chk(f'K9 전체 압축 합 · 백분위 (색 범위 · 가장 가까운 순위) — 합 30 µN · q = 10 · 10 · 10 · 20 ({c.get("sum_fn_compressive_uN")} · '
+        f'{c.get("q_uN")})', rel(c.get('sum_fn_compressive_uN'), 30.0) < 1e-12
+        and q_close(c.get('q_uN'), {'p5': 10.0, 'p95': 10.0, 'min': 10.0, 'max': 20.0}, 1e-12))
+
+    print('[K-SE] AM–SE 접촉마다 (합성 침대) — id1 = AM 으로 뒤집기 · 표지 · 방향 · 상한 · 합 · 백분위 (AM–AM 과 따로)')
+    cs = ((lv or {}).get('am') or {}).get('contacts_se')
+    if not chk('KS0 load_view.am.contacts_se 가 있다 (AM–AM 목록과 따로)', isinstance(cs, dict)):
+        return
+    chk(f'KS1 열 = {CONTACT_FIELDS} (AM–AM 과 같은 꼴)', cs.get('fields') == CONTACT_FIELDS)
+    chk(f'KS2 셈 — AM–SE 행 4 (압축 2 · 당김 1 · 그 밖 1 = 힘 0 행) · 보낸 4 · 잘림 없음 · 압축 전부 보냄 ({cs.get("n_total")} · '
+        f'{cs.get("n_rows")} · {cs.get("n_compressive")} · {cs.get("n_tension")} · {cs.get("n_other")} · {cs.get("truncated")})',
+        cs.get('n_total') == 4 and cs.get('n_rows') == 4 and cs.get('n_compressive') == 2 and cs.get('n_tension') == 1
+        and cs.get('n_other') == 1 and cs.get('truncated') is False and cs.get('compressive_complete') is True
+        and cs.get('n_compressive_sent') == 2)
+    RS = contact_rows(lv, 'contacts_se')
+    got = [(int(r['id1']), int(r['id2']), round(float(r['fn_uN']), 6), int(r['flag'])) for r in RS]
+    chk(f'KS3 행 = 3–17 6 µN (덤프는 SE 17 이 id1 → id1 = AM 3 으로 뒤집었다) · 1–11 4 µN · 1–10 3 µN (당김) · 1–11 힘 0 (그 밖) ({got})',
+        got == [(3, 17, 6.0, 1), (1, 11, 4.0, 1), (1, 10, 3.0, -1), (1, 11, 0.0, 0)])
+    dirs = [(round(r['ux'], 4), round(r['uy'], 4), round(r['uz'], 4)) for r in RS]
+    chk(f'KS4 방향 = AM 중심 → SE 쪽 (뒤집은 3–17 = +z · 1–11 = −y · 1–10 = +z) ({dirs})',
+        dirs == [(0.0, 0.0, 1.0), (0.0, -1.0, 0.0), (0.0, 0.0, 1.0), (0.0, -1.0, 0.0)])
+    chk('KS5 id1 은 모두 AM · id2 는 모두 SE (cap 은 AM 표면에만 그린다)',
+        bool(RS) and all('AM' in TM[TYPE[int(r['id1'])]] for r in RS) and all(TM[TYPE[int(r['id2'])]] == 'SE' for r in RS))
+    chk(f'KS6 AM–SE 합 10 µN · q = 4 · 4 · 4 · 6 — AM–AM (30 · 10–20) 과 따로 (한 색 눈금에 섞지 않는다) ({cs.get("sum_fn_compressive_uN")} · '
+        f'{cs.get("q_uN")})', rel(cs.get('sum_fn_compressive_uN'), 10.0) < 1e-12
+        and q_close(cs.get('q_uN'), {'p5': 4.0, 'p95': 4.0, 'min': 4.0, 'max': 6.0}, 1e-12))
+    chk('KS7 규칙 문구 — AM–SE · id1 = AM · |Fn| × 1e6 / scale · 압축 · 당김 · 접촉점 · 최소영상 · 상위 (상한) · 하중 분담 아님',
+        all(x in str(cs.get('rule')) for x in ('AM–SE', 'id1 = AM', '1e6 / scale', '압축', '당김', '접촉점', '최소영상', '상위', '하중 분담')))
+    chk(f'KS8 상한 기본값 ≥ 20000 (AM–SE {cs.get("cap")} · AM–AM {c.get("cap")})', (cs.get('cap') or 0) >= 20000 and (c.get('cap') or 0) >= 20000)
+    import viewer3d_data as V
+    d = os.path.join(tmp, 'synth')
+    try:
+        lv1 = V.particle_load_view_for_case(d, TM, SCALE, contact_cap=1)
+    except TypeError as e:
+        chk('KS9 particle_load_view_for_case(…, contact_cap=) 인자', False, str(e))
+        return
+    c1, cs1 = (lv1.get('am') or {}).get('contacts') or {}, (lv1.get('am') or {}).get('contacts_se') or {}
+    g1 = [(int(r['id1']), int(r['id2']), round(float(r['fn_uN']), 6), int(r['flag'])) for r in contact_rows(lv1, 'contacts_se')]
+    chk(f'KS9 상한 1 → AM–SE 가장 센 압축 1 행만 · 잘림 · 압축 일부 · 전체 셈 · 합 · 백분위는 상한과 무관 ({g1} · {cs1.get("truncated")} · '
+        f'{cs1.get("n_compressive_sent")} · {cs1.get("compressive_complete")})',
+        g1 == [(3, 17, 6.0, 1)] and cs1.get('n_rows') == 1 and cs1.get('cap') == 1 and cs1.get('truncated') is True
+        and cs1.get('n_compressive_sent') == 1 and cs1.get('compressive_complete') is False and cs1.get('n_total') == 4
+        and cs1.get('n_compressive') == 2 and cs1.get('q_uN') == cs.get('q_uN') and cs1.get('sum_fn_compressive_uN') == cs.get('sum_fn_compressive_uN'))
+    g2 = [(int(r['id1']), int(r['id2']), round(float(r['fn_uN']), 6), int(r['flag'])) for r in contact_rows(lv1)]
+    chk(f'KS10 AM–AM 도 같은 상한 (1–2 1 행) · 입자별 최대 (fn_max_uN) 는 상한과 무관 (전 행으로 계산) ({g2})',
+        g2 == [(1, 2, 20.0, 1)] and c1.get('truncated') is True
+        and ikeys((lv1.get('am') or {}).get('fn_max_uN')) == ikeys(lv['am'].get('fn_max_uN')))
+
+
+def lattice_am_bed(d, nx=16, ny=16, nz=13, r=0.002, dl=1e-5):
+    """ps45 0:10 크기 예산 — AM_S 단순입방 격자 (세 축 이웃 접촉만 · 압축) · nx·ny·nz = 3328 입자 · 접촉 9312."""
+    a = 2 * r - dl
+    P, idx, k = {}, {}, 0
+    for iz in range(nz):
+        for iy in range(ny):
+            for ix in range(nx):
+                k += 1
+                idx[(ix, iy, iz)] = k
+                P[k] = [(ix + 0.5) * a, (iy + 0.5) * a, r + 0.0005 + iz * a]
+    os.makedirs(d, exist_ok=True)
+    with open(os.path.join(d, 'atoms.csv'), 'w') as f:
+        f.write('id,type,x,y,z,radius\n')
+        for i in sorted(P):
+            f.write(f'{i},2,{P[i][0]!r},{P[i][1]!r},{P[i][2]!r},{r!r}\n')
+    n = 0
+    with open(os.path.join(d, 'contacts.csv'), 'w') as f:
+        f.write('p1_x,p1_y,p1_z,p2_x,p2_y,p2_z,id1,id2,periodic_flag,fx,fy,fz,fn_x,fn_y,fn_z,ft_x,ft_y,ft_z,'
+                'torque_x,torque_y,torque_z,contact_area,delta,cp_x,cp_y,cp_z\n')
+        for (ix, iy, iz), i in idx.items():
+            for dx, dy, dz in ((1, 0, 0), (0, 1, 0), (0, 0, 1)):
+                j = idx.get((ix + dx, iy + dy, iz + dz))
+                if j is None:
+                    continue
+                u = [-dx, -dy, -dz]                                   # id1 → id2 반대 (id1 이 받는 밀어냄)
+                mag = 0.001 * (1 + (n % 97) / 10.0)
+                fn = [mag * x for x in u]
+                cp = [P[i][q] + (r - dl / 2) * (dx, dy, dz)[q] for q in range(3)]
+                f.write(','.join(repr(float(x)) for x in (*P[i], *P[j])) + f',{i},{j},0,'
+                        + ','.join(repr(float(x)) for x in (*fn, *fn, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1e-7, dl, *cp)) + '\n')
+                n += 1
+    with open(os.path.join(d, 'mesh_info.json'), 'w') as f:
+        json.dump({'plate_z': r + 0.0005 + (nz - 1) * a + r + 0.0005}, f)
+    with open(os.path.join(d, 'input_params.json'), 'w') as f:
+        json.dump({'box_x': nx * a, 'box_y': ny * a}, f)
+    return n
+
+
+PS45_AM_SE_0_10 = 194558      # ps45 0:10 의 AM–SE 접촉 (full_metrics area_AM전체_SE_n · docs/data/ps45_force_stress_20261007 묶음) — 다섯 조성 중 최대
+
+
+def am_se_bed(d, n_am=32427, k=6, seed=20261008):
+    """ps45 0:10 AM–SE 크기 — AM_S n_am 개 (격자) · AM 마다 SE k 개가 무작위 방향에서 닿는다 (접촉 n_am·k ≥ 194558) · 힘 = 로그정규 ·
+    당김 ≈ 8 % (real14 AM–SE 2619 / 31299) · 덤프 행 순서 (AM 먼저 / SE 먼저) 반반 · id 6 자리.  → (접촉 수, 압축 |Fn| µN 배열)."""
+    import numpy as np
+    rng = np.random.default_rng(seed)
+    r_am, r_se, dl = 0.002, 0.0005, 1e-5
+    a = 2 * (r_am + 2 * r_se) + 0.001
+    nx = int(math.ceil(n_am ** (1.0 / 3.0)))
+    g = np.stack(np.meshgrid(np.arange(nx), np.arange(nx), np.arange(nx), indexing='ij'), -1).reshape(-1, 3)[:n_am]
+    c_am = (g + 0.5) * a
+    nvec = rng.normal(size=(n_am, k, 3))
+    nvec /= np.linalg.norm(nvec, axis=2, keepdims=True)
+    c_se = c_am[:, None, :] + (r_am + r_se - dl) * nvec
+    cp = c_am[:, None, :] + (r_am - dl / 2) * nvec
+    am_id = 100001 + np.arange(n_am)
+    se_id = 200001 + np.arange(n_am * k).reshape(n_am, k)
+    os.makedirs(d, exist_ok=True)
+    at = np.concatenate([np.column_stack([am_id, np.full(n_am, 2), c_am, np.full(n_am, r_am)]),
+                         np.column_stack([se_id.reshape(-1), np.full(n_am * k, 3), c_se.reshape(-1, 3), np.full(n_am * k, r_se)])])
+    with open(os.path.join(d, 'atoms.csv'), 'w') as f:
+        f.write('id,type,x,y,z,radius\n')
+        np.savetxt(f, at, delimiter=',', fmt=['%d', '%d', '%.9g', '%.9g', '%.9g', '%.9g'])
+    m = n_am * k
+    mag = 1e-4 * np.exp(rng.normal(0.0, 0.8, size=m))                     # |Fn| (sim) — µN = × 1e6 / 1000 = 0.1 · e^N(0, 0.8)
+    tens = rng.random(m) < 0.08
+    se_first = rng.random(m) < 0.5
+    pa, ps = np.repeat(c_am, k, axis=0), c_se.reshape(-1, 3)
+    ia, is_ = np.repeat(am_id, k), se_id.reshape(-1)
+    p1 = np.where(se_first[:, None], ps, pa)
+    p2 = np.where(se_first[:, None], pa, ps)
+    i1, i2 = np.where(se_first, is_, ia), np.where(se_first, ia, is_)
+    u = (p1 - p2) / np.linalg.norm(p1 - p2, axis=1, keepdims=True)
+    fn = np.where(tens[:, None], -1.0, 1.0) * mag[:, None] * u
+    z = np.zeros(m)
+    arr = np.column_stack([p1, p2, i1, i2, z, fn, fn, z, z, z, z, z, z, np.full(m, 1e-7), np.full(m, dl), cp.reshape(-1, 3)])
+    with open(os.path.join(d, 'contacts.csv'), 'w') as f:
+        f.write('p1_x,p1_y,p1_z,p2_x,p2_y,p2_z,id1,id2,periodic_flag,fx,fy,fz,fn_x,fn_y,fn_z,ft_x,ft_y,ft_z,'
+                'torque_x,torque_y,torque_z,contact_area,delta,cp_x,cp_y,cp_z\n')
+        np.savetxt(f, arr, delimiter=',', fmt=['%.9g'] * 6 + ['%d', '%d', '%d'] + ['%.9g'] * 17)
+    with open(os.path.join(d, 'mesh_info.json'), 'w') as f:
+        json.dump({'plate_z': float(nx * a)}, f)
+    with open(os.path.join(d, 'input_params.json'), 'w') as f:
+        json.dump({'box_x': float(nx * a), 'box_y': float(nx * a)}, f)
+    return m, mag[~tens] * 1e6 / SCALE
+
+
+def section_contacts_budget(tmp):
+    import gzip
+    print('[K-B] ps45 크기 예산 — AM–AM 접촉 9312 행 (ps45 0:10 = 8970 · 3:7 = 5794 · real14 = 660) · 잘림 없음 · JSON 크기')
+    import viewer3d_data as V
+    d = os.path.join(tmp, 'lat_am')
+    n = lattice_am_bed(d)
+    lv = V.particle_load_view_for_case(d, {2: 'AM_S'}, SCALE)
+    c = ((lv.get('am') or {}).get('contacts')) or {}
+    size = len(json.dumps(c, separators=(',', ':')))
+    gz = len(gzip.compress(json.dumps(c, separators=(',', ':')).encode(), 6))
+    chk(f'KB1 격자 AM–AM 접촉 {n} 행 ≥ ps45 0:10 의 8970 → 전부 실림 (잘림 없음 · 상한 {c.get("cap")}) ({c.get("n_rows")} · '
+        f'{c.get("truncated")})', n >= 8970 and c.get('n_rows') == n and c.get('truncated') is False and (c.get('cap') or 0) >= 20000)
+    chk(f'KB2 JSON {size / 1e6:.2f} MB ≤ 1 MB · gzip {gz / 1e6:.3f} MB (3D 데이터에 얹는 양 · 행당 {size / max(n, 1):.0f} B · gzip {gz / max(n, 1):.1f} B)',
+        0 < size <= 1_000_000)
+    n_ok, n_all, bad = check_fn_max_matches_rows(lv)
+    chk(f'KB3 입자별 최대 = 압축 행 최대 ({n_ok}/{n_all})', n_all == 3328 and n_ok == n_all and not bad)
+
+    print(f'[K-B-SE] ps45 크기 예산 — AM–SE 접촉 ≥ {PS45_AM_SE_0_10} 행 (ps45 0:10 · 3:7 = 171518 · 10:0 = 92268 · real14 = 31299) → 상한 · gzip')
+    d2 = os.path.join(tmp, 'am_se')
+    m, comp_f = am_se_bed(d2)
+    lv2 = V.particle_load_view_for_case(d2, {2: 'AM_S', 3: 'SE'}, SCALE, row_budget=1000)   # LW 는 이 시험 밖 (예산으로 끈다)
+    cs = ((lv2.get('am') or {}).get('contacts_se')) or {}
+    cap = cs.get('cap') or 0
+    chk(f'KB4 AM–SE {m} 행 ≥ {PS45_AM_SE_0_10} → 보낸 행 = 상한 {cap} · 잘림 · 압축 일부 · 전체 셈 = 덤프 ({cs.get("n_total")} · '
+        f'{cs.get("n_rows")} · {cs.get("n_compressive")} / {len(comp_f)})',
+        m >= PS45_AM_SE_0_10 and cs.get('n_total') == m and cs.get('n_rows') == cap > 0 and cs.get('truncated') is True
+        and cs.get('n_compressive') == len(comp_f) and cs.get('n_compressive_sent') == cap and cs.get('compressive_complete') is False)
+    rows = contact_rows(lv2, 'contacts_se')
+    fs = [float(r['fn_uN']) for r in rows]
+    srt = sorted(comp_f, reverse=True)
+    chk(f'KB5 보낸 행 = 압축 |Fn| 상위 {cap} 개 (큰 순 · 가장 작은 보낸 값 = {cap} 번째 큰 압축 값 · 유효 6 자리) ({fs[-1] if fs else None} · '
+        f'{srt[cap - 1] if cap and len(srt) >= cap else None})',
+        len(fs) == cap and all(fs[i] >= fs[i + 1] for i in range(len(fs) - 1)) and all(int(r['flag']) == 1 for r in rows)
+        and rel(fs[-1], srt[cap - 1]) < 1e-5 and rel(fs[0], srt[0]) < 1e-5)
+    chk(f'KB6 전체 압축 합 · 백분위 = 덤프 전체 (상한과 무관) ({cs.get("sum_fn_compressive_uN")} · {cs.get("q_uN")})',
+        rel(cs.get('sum_fn_compressive_uN'), float(sum(comp_f))) < 1e-6 and q_close(cs.get('q_uN'), nearest_rank_q(list(comp_f))))
+    raw = json.dumps(cs, separators=(',', ':')).encode()
+    g = len(gzip.compress(raw, 6))
+    per_row = len(raw) / max(len(rows), 1)
+    full_est = per_row * m
+    chk(f'KB7 AM–SE 목록 JSON {len(raw) / 1e6:.2f} MB ≤ 1.5 MB · gzip {g / 1e6:.3f} MB ≤ 0.6 MB (상한 없이 {m} 행 전부면 ≈ {full_est / 1e6:.1f} MB · '
+        f'gzip ≈ {g / max(len(rows), 1) * m / 1e6:.1f} MB 추정 — 상한을 둔 까닭)', len(raw) <= 1_500_000 and g <= 600_000)
+    share = sum(fs) / float(sum(comp_f)) if len(comp_f) else 0.0
+    chk(f'KB8 보낸 상위 {cap} 의 힘 몫 = {share:.3f} (0 < 몫 < 1 — 범례가 그린 것의 힘 몫을 적는다)', 0.0 < share < 1.0)
+
+
+# ══════════════════════════════════════════════════════════════════════════════
 #  [R] real14
 # ══════════════════════════════════════════════════════════════════════════════
 def section_real14(tmp):
@@ -364,14 +624,59 @@ def section_real14(tmp):
     fm = ikeys(am.get('fn_max_uN'))
     chk(f'R7 최대 AM–AM 힘 — AM 457 개 중 {len(fm)} 개 (압축 AM–AM 접촉 있는 AM) · 최대 {max(fm.values()) if fm else 0:.0f} µN',
         0 < len(fm) <= 457 and am.get('n_am') == 457)
+
+    # [K] · [K-SE] 접촉마다 — 독립 셈 (이 시험의 부호 s · 면적 · δ · 힘) · 보고값 (case_master: am_am_n_contacts · area_AM전체_SE_n)
+    import csv
+    import gzip
+    cm = next((r for r in csv.DictReader(open(os.path.join(ROOT, 'docs', 'data', 'case_master.csv'), encoding='utf-8'))
+               if r.get('name') == 'input_2mAh_real_14'), {})
+    n_aa_rep, n_as_rep = int(float(cm.get('am_am_n_contacts') or -1)), int(float(cm.get('area_AM전체_SE_n') or -1))
+    t1 = np.array([TM[int(t)] for t in cdf['id1'].map(dict(zip(adf['id'], adf['type'])))])
+    t2 = np.array([TM[int(t)] for t in cdf['id2'].map(dict(zip(adf['id'], adf['type'])))])
+    a1, a2 = np.char.find(t1.astype(str), 'AM') >= 0, np.char.find(t2.astype(str), 'AM') >= 0
+    s1, s2 = t1 == 'SE', t2 == 'SE'
+    use = ok & (cdf['delta'].to_numpy(float) > 0)
+    aa, ase = a1 & a2, (a1 & s2) | (s1 & a2)
+    c, cs = am.get('contacts') or {}, am.get('contacts_se') or {}
+    chk(f'R8 AM–AM 행 = 덤프 AM–AM 전수 {int(aa.sum())} = case_master am_am_n_contacts {n_aa_rep} · 압축 {int((aa & use & (s > 0)).sum())} · '
+        f'당김 {int((aa & use & (s < 0)).sum())} (독립 셈) · 전부 보냄 ({c.get("n_total")} · {c.get("n_rows")} · {c.get("n_compressive")} · '
+        f'{c.get("n_tension")})',
+        c.get('n_total') == int(aa.sum()) == n_aa_rep and c.get('n_rows') == n_aa_rep and c.get('truncated') is False
+        and c.get('n_compressive') == int((aa & use & (s > 0)).sum()) and c.get('n_tension') == int((aa & use & (s < 0)).sum()))
+    n_ok, n_all, bad = check_fn_max_matches_rows(lv)
+    chk(f'R9 입자별 최대 AM–AM 힘 = 그 입자의 압축 행 최대 ({n_ok}/{n_all} · 어긋남 {bad})', n_all == len(fm) > 0 and n_ok == n_all and not bad)
+    RS = contact_rows(lv, 'contacts_se')
+    tid = dict(zip(adf['id'], adf['type']))
+    chk(f'R10 AM–SE 행 = 덤프 AM–SE 전수 {int(ase.sum())} = case_master area_AM전체_SE_n {n_as_rep} · 압축 {int((ase & use & (s > 0)).sum())} · '
+        f'당김 {int((ase & use & (s < 0)).sum())} (독립 셈) · 보낸 {cs.get("n_rows")} (상한 {cs.get("cap")}) · 압축 전부 보냄 '
+        f'({cs.get("n_compressive_sent")} · {cs.get("compressive_complete")})',
+        cs.get('n_total') == int(ase.sum()) == n_as_rep and cs.get('n_compressive') == int((ase & use & (s > 0)).sum())
+        and cs.get('n_tension') == int((ase & use & (s < 0)).sum()) and cs.get('n_rows') == min(n_as_rep, cs.get('cap') or 0)
+        and cs.get('compressive_complete') is True and cs.get('n_compressive_sent') == cs.get('n_compressive'))
+    chk('R11 AM–SE 행 — id1 은 모두 AM · id2 는 모두 SE (덤프 순서와 무관) · 방향 = 접촉점 (전부)',
+        bool(RS) and all('AM' in TM[int(tid[int(r['id1'])])] for r in RS) and all(TM[int(tid[int(r['id2'])])] == 'SE' for r in RS)
+        and cs.get('n_dir_contact_point') == len(RS))
+    comp_rows = [float(r['fn_uN']) for r in RS if int(r['flag']) == 1]
+    chk(f'R12 AM–SE 백분위 (서버 = 전체 압축) = 보낸 압축 행의 가장 가까운 순위 (압축 전부 보냈으니 같다 · amOnlyRange 규칙) · 합 = 보낸 압축 합 '
+        f'({cs.get("q_uN")})', q_close(cs.get('q_uN'), nearest_rank_q(comp_rows))
+        and rel(cs.get('sum_fn_compressive_uN'), sum(comp_rows)) < 1e-5)
+    blob = json.dumps({'contacts': c, 'contacts_se': cs}, separators=(',', ':')).encode()
+    g = len(gzip.compress(blob, 6))
+    top = sorted(comp_rows, reverse=True)
+    sh = {n_: sum(top[:n_]) / sum(top) for n_ in (1000, 5000, 10000, 20000)} if top else {}
+    chk(f'R13 크기 — 두 목록 JSON {len(blob) / 1e6:.2f} MB · gzip {g / 1e6:.3f} MB ≤ 0.6 MB · 상위 N 의 AM–SE 힘 몫 '
+        + ' · '.join(f'{k} {v:.3f}' for k, v in sh.items()), g <= 600_000 and bool(sh))
     return lv
 
 
 # ══════════════════════════════════════════════════════════════════════════════
 #  [J] 뷰어 (node)
 # ══════════════════════════════════════════════════════════════════════════════
-JS_NAMES = ('netCurrentFmtJ', 'netCurrentT', 'netCurrentTicks', 'jeEscH', 'jetColor', 'coolwarmColor', 'loadViewAmMetric', 'amOnlyRange',
-            'amOnlyLegendHtml', 'amOnlyMissingHtml', 'amOnlyColorbarSpec', 'pressureViewTip', 'pressureViewInfo', 'pressureLegendHtml')
+JS_NAMES = ('netCurrentFmtJ', 'netCurrentT', 'netCurrentTicks', 'netCurrentPct', 'jeEscH', 'jetColor', 'coolwarmColor', 'loadViewAmMetric',
+            'amOnlyRange', 'amOnlyLegendHtml', 'amOnlyMissingHtml', 'amOnlyColorbarSpec', 'pressureViewTip', 'pressureViewInfo',
+            'pressureLegendHtml', 'loadViewAmContacts', 'amOnlyContactRange', 'amOnlyContactLegendHtml', 'amOnlyContactColorbarSpec',
+            '_amOnlyControlsHtml')
+JS_CONSTS = ('AMONLY_CONTACT_OPT',)
 
 
 def section_js(lv):
@@ -409,6 +714,11 @@ def section_js(lv):
     chk("J5 'stress' · 'stress_brittle' 둘 다 pressureViewInfo(aux) 로 (같은 자료 · 같은 규칙)",
         len(re.findall(r'pressureViewInfo\(aux\)', avm)) >= 2)
     parts, miss = [], []
+    for n in JS_CONSTS:
+        try:
+            parts.append(js_const(js, n))
+        except (ValueError, AssertionError):
+            miss.append(n)
     for n in JS_NAMES:
         try:
             parts.append(js_fn(js, n))
@@ -442,6 +752,26 @@ out.pNew = pressureViewInfo({stress_max: {1: 5}, load_view: LV});
 out.pOld = pressureViewInfo({stress_max: {1: 5, 2: 1e6}});
 out.legNew = pressureLegendHtml(out.pNew, 22.5, 447.8, 666.0);
 out.legOld = pressureLegendHtml(out.pOld, 22.5, 447.8, 666.0);
+// ★ 10-08 접촉마다 — AM–AM ('contact') · AM–SE ('contact_se') · 따로 고르는 양 · 따로 색 눈금
+out.opt = AMONLY_CONTACT_OPT;
+out.clA = loadViewAmContacts(LV, 'contact', 'all');
+out.clS = loadViewAmContacts(LV, 'contact_se', 'all');
+out.clS1 = loadViewAmContacts(LV, 'contact_se', 1);
+out.clX = loadViewAmContacts(LV, 'lw', 'all');
+out.rA = amOnlyContactRange(out.clA, 'minmax');
+out.rAp = amOnlyContactRange(out.clA, 'p5p95');
+out.rS = amOnlyContactRange(out.clS, 'minmax');
+const noQ = JSON.parse(JSON.stringify(LV)); delete noQ.am.contacts_se.q_uN;
+out.rSnoQ = amOnlyContactRange(loadViewAmContacts(noQ, 'contact_se', 'all'), 'minmax');
+const noC = JSON.parse(JSON.stringify(LV)); delete noC.am.contacts; delete noC.am.contacts_se;
+out.clMiss = loadViewAmContacts(noC, 'contact_se', 'all');
+const uiC = {metric: 'contact', range: 'minmax', wall: true, top: 'all'};
+const uiS = {metric: 'contact_se', range: 'p5p95', wall: true, top: 1};
+out.legC = amOnlyLegendHtml(LV, uiC, {nCaps: 4, nSkipped: 0, lo: out.rA[0], hi: out.rA[1]});
+out.legS = amOnlyLegendHtml(LV, uiS, {nCaps: 1, nSkipped: 0, lo: Math.log10(4), hi: Math.log10(4)});
+out.legMiss = amOnlyLegendHtml(noC, uiS, {nCaps: 0, nSkipped: 0, lo: 0, hi: 1});
+out.specC = amOnlyColorbarSpec(LV, uiC, out.rA[0], out.rA[1], out.clA);
+out.specS = amOnlyColorbarSpec(LV, uiS, Math.log10(4), Math.log10(6), out.clS1);
 console.log(JSON.stringify(out));
 """.replace('__LV__', json.dumps(lv, ensure_ascii=False))
     res = run_node(script)
@@ -498,6 +828,80 @@ console.log(JSON.stringify(out));
         m_tab is not None and 'Max contact pressure' in m_tab.group(1) and 'Stress hotspots' not in js
         and re.search(r'data-tab="stress"[^>]*title="[^"]*당김[^"]*하중이 아니다', js) is not None)
 
+    # ★ 10-08 접촉마다 (AM–AM · AM–SE)
+    chk('J25 양 고르기에 AM–AM 접촉마다 (법선력 µN) · AM–SE 접촉마다 (법선력 µN) — 따로 고르는 둘 (contact · contact_se)',
+        re.search(r'<option value="contact"[^>]*>AM–AM 접촉마다 \(법선력 µN\)</option>', leg) is not None
+        and re.search(r'<option value="contact_se"[^>]*>AM–SE 접촉마다 \(법선력 µN\)</option>', leg) is not None, leg[:400])
+    opt = res.get('opt') or {}
+    chk(f'J26 AM–SE 상위 N 목록 = 전류 흐름 보기와 같은 꼴 (500 … 20000) · 기본 5000 · cap 반각 20° (Brittle surface microcrack 과 같은 꼴) ({opt})',
+        opt.get('tops') == [500, 1000, 2000, 5000, 10000, 20000] and opt.get('topDefault') == 5000 and opt.get('halfAngleDeg') == 20)
+    ca, cs_, cs1 = res.get('clA') or {}, res.get('clS') or {}, res.get('clS1') or {}
+    rowsA = [(r['a'], r['b'], round(r['f'], 6)) for r in ca.get('rows') or []]
+    chk(f'J27 AM–AM — 그릴 행 = 압축만 (|Fn| 큰 순) · 접촉마다 cap 둘 (두 AM 표면) · 당김 1 · 그 밖 1 · 몫 1 ({rowsA} · {ca.get("capsPerContact")})',
+        ca.get('ok') is True and rowsA == [(1, 2, 20.0), (4, 5, 10.0)] and ca.get('capsPerContact') == 2 and ca.get('nComp') == 2
+        and ca.get('nTension') == 1 and ca.get('nOther') == 1 and ca.get('nDrawn') == 2 and abs((ca.get('share') or 0) - 1) < 1e-9
+        and ca.get('pair') == 'AM–AM')
+    rowsS = [(r['a'], r['b'], round(r['f'], 6)) for r in cs_.get('rows') or []]
+    chk(f'J28 AM–SE — 그릴 행 = 압축만 · cap 하나 (AM 표면 = id1) · 방향 = 서버 u ({rowsS} · {cs_.get("capsPerContact")})',
+        cs_.get('ok') is True and rowsS == [(3, 17, 6.0), (1, 11, 4.0)] and cs_.get('capsPerContact') == 1 and cs_.get('pair') == 'AM–SE'
+        and [tuple(r['u']) for r in cs_.get('rows') or []] == [(0, 0, 1), (0, -1, 0)])
+    chk(f'J29 AM–SE 상위 1 → 그린 것 1 / 압축 전체 2 · 힘 몫 = 6 / 10 = 0.6 ({cs1.get("nDrawn")} · {cs1.get("nComp")} · {cs1.get("share")})',
+        cs1.get('ok') is True and cs1.get('nDrawn') == 1 and cs1.get('nComp') == 2 and abs((cs1.get('share') or 0) - 0.6) < 1e-9
+        and [(r['a'], r['b']) for r in cs1.get('rows') or []] == [(3, 17)])
+    chk('J30 lw · fn 양에는 접촉 목록을 쓰지 않는다 (ok false)', (res.get('clX') or {}).get('ok') is False)
+    rA, rAp, rS, rSq = res.get('rA'), res.get('rAp'), res.get('rS'), res.get('rSnoQ')
+    chk(f'J31 색 범위 = 그 목록의 압축 전체 (서버 q_uN) — AM–AM 최소–최대 = 10 … 20 µN · p5–p95 = 10 … 10 · AM–SE 최소–최대 = 4 … 6 µN '
+        f'(두 목록 따로 · 한 눈금에 섞지 않는다) ({rA} · {rAp} · {rS}) · q 없으면 보낸 압축 행으로 ({rSq})',
+        bool(rA) and abs(rA[0] - 1) < 1e-12 and abs(rA[1] - math.log10(20)) < 1e-12 and bool(rAp) and abs(rAp[0] - 1) < 1e-12
+        and abs(rAp[1] - 1) < 1e-12 and bool(rS) and abs(rS[0] - math.log10(4)) < 1e-12 and abs(rS[1] - math.log10(6)) < 1e-12
+        and bool(rSq) and abs(rSq[0] - math.log10(4)) < 1e-12 and abs(rSq[1] - math.log10(6)) < 1e-12)
+    cm_ = res.get('clMiss') or {}
+    chk(f'J32 접촉 목록 없음 (옛 캐시 · 옛 패치 = 스키마 13) → ok false · 사유에 캐시 스키마 14 ({cm_.get("reason")})',
+        cm_.get('ok') is False and '스키마 14' in str(cm_.get('reason')))
+    lc, ls = res.get('legC') or '', res.get('legS') or ''
+    chk('J33 AM–AM 범례 — 접촉마다 · SE 숨김 · AM 기본색 · 그린 접촉 2 · cap 4 · 당김 1 개 뺌 · 범위 µN · 모델 접촉력 (덱 축척) · 하중 분담 아님 · '
+        'cap 크기 고정 (접촉 면적 아님) · 벽 표지 조작 없음 · 컬러바 ⬇',
+        all(x in lc for x in ('AM–AM 접촉마다', 'SE 숨김', 'AM 기본색', '그린 접촉 2', 'cap 4', '당김 1', 'µN', '덱 축척', '하중 분담',
+                              '접촉 면적이 아니다', 'id="amonly-cbar"', 'id="amonly-metric"', 'id="amonly-range"'))
+        and 'id="amonly-wall"' not in lc and 'id="amonly-topn"' not in lc, lc[:900])
+    chk('J34 AM–SE 범례 — 상위 N 고르기 (amonly-topn · 500 … 20000 · 전부) · 그린 것 / 전체 (압축) = 1 / 2 · 힘 몫 60 % · 당김 1 개 뺌 · '
+        'cap = AM 표면에만 · 색 범위 = 압축 AM–SE 전체 (상위 N 과 무관)',
+        'id="amonly-topn"' in ls and all(f'value="{n}"' in ls for n in (500, 5000, 20000)) and 'value="all"' in ls
+        and re.search(r'그린 것 / 전체 \(압축\) = 1 / 2', ls) is not None and '힘 몫 60 %' in ls and '당김 1' in ls
+        and 'AM 표면에만' in ls and '상위 N 과 무관' in ls and 'id="amonly-wall"' not in ls, ls[:900])
+    lm = res.get('legMiss') or ''
+    chk('J35 목록 없음 범례 — ⚠ · 캐시 스키마 14 · 칠하지 않는다', '⚠' in lm and '스키마 14' in lm and '칠하지 않' in lm, lm[:400])
+    sc, ss = res.get('specC') or {}, res.get('specS') or {}
+    chk('J36 컬러바 (AM–AM) — 영문 제목 AM–AM contact normal force |Fn| (µN) · 부제 compressive contacts only · not a load share · model',
+        sc.get('map') == 'jet' and 'AM–AM contact normal force |Fn| (µN)' in sc.get('title', '') and 'compressive contacts only' in sc.get('sub', '')
+        and 'not a load share' in sc.get('sub', '') and 'model' in sc.get('sub', '') and len(sc.get('ticks') or []) >= 2, repr(sc)[:400])
+    chk('J37 컬러바 (AM–SE) — 제목 AM–SE · 부제 top 1 of 2 compressive contacts drawn · force share 60 % · range = all compressive AM–SE contacts',
+        'AM–SE contact normal force |Fn| (µN)' in ss.get('title', '') and 'top 1 of 2' in ss.get('sub', '')
+        and 'force share 60 %' in ss.get('sub', '') and 'all compressive AM–SE contacts' in ss.get('sub', ''), repr(ss)[:400])
+    try:
+        rc = js_fn(js, 'renderAmOnlyContactCaps')
+    except (ValueError, AssertionError):
+        rc = ''
+    chk('J38 그리기 — InstancedMesh 하나 (cap 기하 = SphereGeometry 단면 · 꼭지 → 테두리 RGBA 투명 · depthWrite false) · 인스턴스 색 = jet · '
+        'frustumCulled false · 단면 자르기 (applyClip) · AM–AM = −u 로 상대 AM 에도 · state.amOnlyCapGroup',
+        all(x in rc for x in ('InstancedMesh', 'SphereGeometry', 'setColorAt', 'jetColor', 'depthWrite: false', 'frustumCulled = false',
+                              'applyClip', 'amOnlyCapGroup', 'capsPerContact', '-r.u[0]')), rc[:300])
+    td = js_fn(js, '_amOnlyTeardown') if 'function _amOnlyTeardown(' in js else ''
+    cd = js_fn(js, '_amOnlyCapDispose') if 'function _amOnlyCapDispose(' in js else ''
+    i_cap, i_ret = td.find('_amOnlyCapDispose(state)'), td.find('if (!state._amOnlyHidSE)')
+    try:
+        ao2 = js_fn(js, 'applyAmOnlyView')
+    except (ValueError, AssertionError):
+        ao2 = ''
+    chk('J39 떠날 때 (applyViewMode 머리) cap 묶음을 치운다 — _amOnlyCapDispose (amOnlyCapGroup · InstancedMesh dispose) 를 SE 되돌림보다 먼저 '
+        '(SE 를 숨기지 않았어도) · 다시 그릴 때 (applyAmOnlyView 머리) 도',
+        i_cap >= 0 and (i_ret < 0 or i_cap < i_ret) and 'amOnlyCapGroup' in cd and 'dispose' in cd
+        and '_amOnlyCapDispose(state)' in ao2[:900], td[:400])
+    chk('J39b 접촉마다 가지 — AM 은 기본색 (base) · 색은 cap 에만 · SE 숨김 · 두 목록 = 따로 고른 양 (ui.metric)',
+        re.search(r"ui\.metric === 'contact' \|\| ui\.metric === 'contact_se'\) \{[^}]*base\(\);", ao2) is not None
+        and 'renderAmOnlyContactCaps(state, cl' in ao2 and re.search(r'SE\.visible\s*=\s*false', ao2) is not None, ao2[:300])
+    chk('J40 자료 없음 안내 — 캐시 스키마 14 (옛 패치의 13 캐시는 다시 계산)', '캐시 스키마 14' in res['miss'], res['miss'][:400])
+
 
 def section_zprofile_title(tmp):
     print('[Z] Z-profile 그림 제목 — 이름 정정 (값 = 옛 계산 그대로 · 당김 포함 표기)')
@@ -550,6 +954,15 @@ blob['_schema'] = 12
 blob.pop('load_view', None)
 json.dump(blob, open(cache, 'w'))
 out['live_old'] = aux_of(f'/results/{cid}/3d-data').get('load_view')
+blob = json.load(open(cache))
+blob['_schema'] = 13
+lv13 = json.loads(json.dumps(blob.get('load_view') or {}))
+(lv13.get('am') or {}).pop('contacts', None)
+(lv13.get('am') or {}).pop('contacts_se', None)
+blob['load_view'] = lv13
+json.dump(blob, open(cache, 'w'))
+out['live_13'] = aux_of(f'/results/{cid}/3d-data').get('load_view')
+out['cache_schema_after13'] = json.load(open(cache)).get('_schema')
 af = os.path.join(ar, 'lv_case')
 shutil.copytree(case_src, af)
 json.dump(meta, open(os.path.join(af, 'meta.json'), 'w'))
@@ -597,10 +1010,11 @@ def section_patch(tmp):
         r = subprocess.run(['git', 'apply', PATCH], cwd=tree, capture_output=True, text=True)
         chk('P3 임시 사본에 적용', r.returncode == 0, r.stderr[-400:])
     src = open(os.path.join(tree, 'webapp', 'app.py'), encoding='utf-8').read()
-    n13 = len(re.findall(r"_schema'\)\s*==\s*13\b", src))
-    w13 = len(re.findall(r"\['_schema'\]\s*=\s*13\b", src))
-    n12 = len(re.findall(r"_schema'\)\s*==\s*12\b", src)) + len(re.findall(r"\['_schema'\]\s*=\s*12\b", src))
-    chk(f'P4 패치한 app — 두 경로 캐시 스키마 13 읽기 · 쓰기 · 12 는 남지 않는다 ({n13} · {w13} · {n12})', n13 == 2 and w13 == 2 and n12 == 0)
+    n14 = len(re.findall(r"_schema'\)\s*==\s*14\b", src))
+    w14 = len(re.findall(r"\['_schema'\]\s*=\s*14\b", src))
+    n_old = sum(len(re.findall(rf"_schema'\)\s*==\s*{v}\b", src)) + len(re.findall(rf"\['_schema'\]\s*=\s*{v}\b", src)) for v in (12, 13))
+    chk(f'P4 패치한 app — 두 경로 캐시 스키마 14 (10-08 접촉마다 목록) 읽기 · 쓰기 · 12 · 13 은 남지 않는다 ({n14} · {w14} · {n_old})',
+        n14 == 2 and w14 == 2 and n_old == 0)
     P, rows = synth_bed()
     case_src = os.path.join(tmp, 'p_case')
     write_bed(case_src, P, rows)
@@ -616,13 +1030,16 @@ def section_patch(tmp):
         return
     out = json.loads(m.group(1))
     l1 = out.get('live1') or {}
-    chk(f'P6 live /3d-data → aux.load_view (스키마 {l1.get("schema")} · 압축만 최대 압력 · AM LW · 힘 · 벽)',
+    chk(f'P6 live /3d-data → aux.load_view (스키마 {l1.get("schema")} · 압축만 최대 압력 · AM LW · 힘 · 벽 · 접촉마다 AM–AM · AM–SE)',
         l1.get('schema') == 'particle_load_view/v1' and bool((l1.get('pressure') or {}).get('max_MPa'))
-        and (l1.get('am') or {}).get('lw_status') == 'OK' and bool((l1.get('am') or {}).get('fn_max_uN')))
-    chk(f'P7 캐시 = 스키마 13 · load_view 를 담는다 ({out.get("cache_schema")} · {out.get("cache_has_lv")})',
-        out.get('cache_schema') == 13 and out.get('cache_has_lv') is True)
+        and (l1.get('am') or {}).get('lw_status') == 'OK' and bool((l1.get('am') or {}).get('fn_max_uN'))
+        and ((l1.get('am') or {}).get('contacts') or {}).get('n_rows') == 4 and ((l1.get('am') or {}).get('contacts_se') or {}).get('n_rows') == 4)
+    chk(f'P7 캐시 = 스키마 14 · load_view 를 담는다 ({out.get("cache_schema")} · {out.get("cache_has_lv")})',
+        out.get('cache_schema') == 14 and out.get('cache_has_lv') is True)
     chk('P8 두 번째 요청 (캐시 HIT) 도 같은 load_view (live)', out.get('live2') == out.get('live1') and bool(out.get('live1')))
     chk('P9 옛 캐시 (스키마 12 · load_view 없음) → 다시 계산 · load_view 산다', out.get('live_old') == out.get('live1'))
+    chk(f'P9b 옛 패치 캐시 (스키마 13 · load_view 에 접촉 목록 없음 — 1저자 :5002 의 10-07 판) → 다시 계산 · 접촉 목록 산다 · 캐시 = 14 '
+        f'({out.get("cache_schema_after13")})', out.get('live_13') == out.get('live1') and out.get('cache_schema_after13') == 14)
     a1, a2 = out.get('arch1') or {}, out.get('arch2') or {}
     chk('P10 archive 경로도 load_view (첫 요청 = 계산 · 캐시 HIT = 같은 값 — archive 의 키 목록 복원에 더했다)',
         a1.get('schema') == 'particle_load_view/v1' and a2 == a1)
@@ -651,6 +1068,14 @@ def main():
             lv = section_synth(tmp)
         except Exception as e:                                   # noqa: BLE001
             chk('section_synth 실행', False, f'{type(e).__name__}: {e}')
+        try:
+            section_contacts_synth(tmp, lv)
+        except Exception as e:                                   # noqa: BLE001
+            chk('section_contacts_synth 실행', False, f'{type(e).__name__}: {e}')
+        try:
+            section_contacts_budget(tmp)
+        except Exception as e:                                   # noqa: BLE001
+            chk('section_contacts_budget 실행', False, f'{type(e).__name__}: {e}')
         try:
             section_real14(tmp)
         except Exception as e:                                   # noqa: BLE001

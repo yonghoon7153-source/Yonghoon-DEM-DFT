@@ -1058,7 +1058,8 @@ def am_contact_closeup(idx: dict, type_map: dict, am_id: int, *, scale=1000.0, b
 #  (full_metrics stress_ratio_<상>_lw 를 만든 그 함수 · return_arrays) · 힘 환산 = calc_contact_force_distribution 의 1e6/scale ·
 #  압력 환산 = calc_contact_pressure · aggregate_particle_metrics 의 scale/1e6.
 #  ⚠ 3D 데이터 (/3d-data aux) 에 싣는 것은 webapp/app.py (194 봉인) 의 일이다 — 봉인 중에는 그 파일을 바꾸지 않고 발사 뒤 패치
-#    docs/reviews/webapp_load_view_deferred_20261007.patch 로 aux['load_view'] = particle_load_view_for_case(…) + 캐시 스키마 13.
+#    docs/reviews/webapp_load_view_deferred_20261007.patch 로 aux['load_view'] = particle_load_view_for_case(…) + 캐시 스키마 14
+#    (10-08 접촉마다 목록 am.contacts · am.contacts_se — 10-07 판 (스키마 13) 캐시는 다시 계산).
 
 LOAD_VIEW_SCHEMA = 'particle_load_view/v1'
 #: LW 는 접촉 행을 dict 목록으로 읽는다 (생산 읽기 그대로 · 행당 ~1 kB) — 이보다 많으면 LW 만 계산하지 않는다 (압력 · 힘은 열 배열로 계산)
@@ -1078,6 +1079,38 @@ LW_VIEW_RULE = ('Love–Weber 입자 응력 = dem_analysis_core.calc_love_weber_
                 'MPa = × scale / 1e6 (모델 단위) · 벽 (바닥 · 판) 에 닿은 입자는 벽 힘이 없다 (접촉 덤프에 벽 접촉이 없다 — 그 입자의 값은 불완전)')
 WALL_RULE = ('벽 표지 = calc_love_weber_stress 와 같은 규칙: 바닥 = z − r < 0 · 판 = z + r > plate_z (plate_z 가 mesh_info.json 의 판일 때만)')
 
+# ── 10-08 접촉마다 (1저자 *"그 버전도 좋을거 같은데"* · *"ㄱㄱ해봐"*) — AM 만 보기의 접촉 cap (Brittle surface 꼴) 자료 ─────────────
+#  AM–AM (am.contacts) · AM–SE (am.contacts_se) 두 목록 — 뷰어는 둘을 따로 고르는 양으로 그리고 한 색 눈금에 섞지 않는다.
+#  행 = [id1, id2, |Fn| µN (유효 6 자리), flag, ux, uy, uz] · 정렬 = 압축 (|Fn| 큰 순) → 당김 → 그 밖 · 상한 LOAD_VIEW_CONTACT_CAP 행.
+#  셈 · 합 · 백분위 (색 범위 · 힘 몫) 는 상한과 무관하게 그 목록의 전 행 (압축 전체) 으로 낸다.
+#  크기 (10-08 실측): 행당 JSON ≈ 40 B · gzip ≈ 15 B — real14 AM–SE 31299 행 = 1.27 MB · gzip 0.47 MB · ps45 0:10 AM–SE 194558 행
+#  (full_metrics area_AM전체_SE_n) 이면 ≈ 7.9 MB · gzip ≈ 2.9 MB 라 3D 데이터 (캐시) 에 다 싣지 않고 상위 30000 행 (≈ 1.2 MB ·
+#  gzip ≈ 0.45 MB) 만 싣는다 — 따로 부르는 길 (새 경로) 은 봉인 파일 app.py 에 경로를 더해야 해서 쓰지 않았다 (더 큰 위험).
+LOAD_VIEW_CONTACT_CAP = 30000
+CONTACT_LIST_FIELDS = ['id1', 'id2', 'fn_uN', 'flag', 'ux', 'uy', 'uz']
+_CONTACT_COMMON_RULE = ('|Fn| = 덤프 법선력 (c_cpl[13–15]) 의 크기 × 1e6 / scale = µN (calc_contact_force_distribution · fn_max_uN 과 같은 환산 · '
+                        '유효 6 자리) · flag 1 = 압축 (δ > 0 · 면적 > 0 · |Fn| > 0 · 밀어냄 — fn_max_uN · Max contact pressure 와 같은 행 · '
+                        '이것만 칠한다) · −1 = 당김 (접착 — 칠하지 않고 센다) · 0 = 그 밖 (δ ≤ 0 · 면적 0 · 힘 0 · 부호 판정 불가) · '
+                        '방향 u = id1 중심 → 접촉점 (최소영상 · |x_c − x_id1| ≤ 1.05 r) · 접촉점이 없거나 멀면 id1 중심 → id2 중심 (최소영상) · '
+                        '셈 · 합 (sum_fn_compressive_uN) · 백분위 (q_uN = 가장 가까운 순위 p5 · p95 · 최소 · 최대 — 뷰어 amOnlyRange 와 같은 규칙) = '
+                        '상한과 무관한 압축 전체 · 모델 접촉력 (덱 축척 환산 — 조성 비교 절대값에 쓰지 않는다) · 하중 분담이 아니다')
+AM_AM_CONTACTS_RULE = ('AM–AM 접촉마다 = 접촉 덤프의 AM–AM 행 (덤프 순서 id1 · id2 — 뷰어는 두 AM 표면에 cap 을 하나씩: id1 은 u · id2 는 −u) · '
+                       + _CONTACT_COMMON_RULE)
+AM_SE_CONTACTS_RULE = ('AM–SE 접촉마다 = 접촉 덤프의 AM–SE 행 (id1 = AM · id2 = SE — 덤프가 SE 먼저면 뒤집는다 · 뷰어는 AM 표면에만 cap · SE 는 숨김) · '
+                       '보낸 행 = 상위 (압축 |Fn| 큰 순) 상한까지 — 그린 것 / 전체 · 힘 몫은 뷰어 범례 · ' + _CONTACT_COMMON_RULE)
+
+
+def _min_image_xy(d, box_xy):
+    """(n, 3) 차이 벡터의 x · y 최소영상 (상자 = box_xy · 없거나 0 이하이면 그대로) — 사본을 돌려준다."""
+    import numpy as np
+    d = np.array(d, dtype=float, copy=True)
+    if box_xy is not None:
+        for ax, L in ((0, box_xy[0]), (1, box_xy[1])):
+            L = float(L)
+            if math.isfinite(L) and L > 0:
+                d[:, ax] -= L * np.round(d[:, ax] / L)
+    return d
+
 
 def contact_force_sign(fn, p1, p2, r1, r2, box_xy=None, cp=None):
     """접촉 법선력의 부호 (열 배열) → int8 배열: +1 압축 (밀어냄) · −1 당김 (접착) · 0 판정 불가 · 힘 0 (CONTACT_SIGN_RULE).
@@ -1096,13 +1129,7 @@ def contact_force_sign(fn, p1, p2, r1, r2, box_xy=None, cp=None):
         return out
 
     def _mi(d):
-        d = d.copy()
-        if box_xy is not None:
-            for ax, L in ((0, box_xy[0]), (1, box_xy[1])):
-                L = float(L)
-                if math.isfinite(L) and L > 0:
-                    d[:, ax] -= L * np.round(d[:, ax] / L)
-        return d
+        return _min_image_xy(d, box_xy)
     with np.errstate(invalid='ignore', over='ignore'):
         fmag = np.linalg.norm(fn, axis=1)
         d = _mi(p1 - p2)
@@ -1135,8 +1162,55 @@ def _sig6(x):
     return float(f'{v:.6g}') if v is not None else None
 
 
+def _contact_list(sel, flip, k1, k2, ids, pos, rad, f_uN, flag, cp, box_xy, cap, rule):
+    """접촉마다 목록 (load_view.am.contacts · contacts_se) — sel = 그 쌍 유형의 행 (bool) · flip = 그 행에서 id2 를 id1 (host) 로
+    뒤집을지 (AM–SE 의 SE 먼저 행) · f_uN = |Fn| µN · flag = 1 압축 · −1 당김 · 0 그 밖 · cp = 접촉점 (n, 3) 또는 None."""
+    import numpy as np
+    j = np.flatnonzero(sel)
+    a = np.where(flip[j], k2[j], k1[j])
+    b = np.where(flip[j], k1[j], k2[j])
+    f, fl = f_uN[j], flag[j]
+    rank = np.where(fl == 1, 0, np.where(fl == -1, 1, 2))
+    order = np.lexsort((-f, rank))                     # 압축 (큰 순) → 당김 (큰 순) → 그 밖 (큰 순) · 같은 값은 덤프 순서
+    cap = max(0, int(cap))
+    o = order[:cap]
+    ha, hb = a[o], b[o]
+
+    def _mi(d):
+        return _min_image_xy(d, box_xy)
+    u = np.zeros((len(o), 3))
+    src_cp = np.zeros(len(o), dtype=bool)
+    with np.errstate(invalid='ignore', over='ignore', divide='ignore'):
+        if cp is not None and len(o):
+            bv = _mi(cp[j[o]] - pos[ha])
+            nb = np.linalg.norm(bv, axis=1)
+            src_cp = np.isfinite(nb) & (nb > 0) & (nb <= 1.05 * rad[ha])
+            u[src_cp] = bv[src_cp] / nb[src_cp, None]
+        cv = _mi(pos[hb] - pos[ha]) if len(o) else np.zeros((0, 3))
+        nc = np.linalg.norm(cv, axis=1)
+    src_c = ~src_cp & np.isfinite(nc) & (nc > 0)
+    u[src_c] = cv[src_c] / nc[src_c, None]
+    rows = [[int(ids[ha[i]]), int(ids[hb[i]]), _sig6(f[o[i]]) or 0.0, int(fl[o[i]]),
+             round(float(u[i, 0]), 3) + 0.0, round(float(u[i, 1]), 3) + 0.0, round(float(u[i, 2]), 3) + 0.0] for i in range(len(o))]
+    comp = f[fl == 1]
+    comp = comp[np.isfinite(comp) & (comp > 0)]
+    q = None
+    if len(comp):
+        v = np.sort(comp)
+        pct = (lambda p: float(v[max(0, min(len(v) - 1, int(math.floor(p * (len(v) - 1)))))]))
+        q = {'p5': _sig6(pct(0.05)), 'p95': _sig6(pct(0.95)), 'min': _sig6(v[0]), 'max': _sig6(v[-1])}
+    n_comp_sent = int((fl[o] == 1).sum())
+    return {'fields': list(CONTACT_LIST_FIELDS), 'rows': rows, 'cap': cap,
+            'n_total': int(len(j)), 'n_rows': int(len(o)), 'truncated': bool(len(o) < len(j)),
+            'n_compressive': int((fl == 1).sum()), 'n_tension': int((fl == -1).sum()), 'n_other': int((fl == 0).sum()),
+            'n_compressive_sent': n_comp_sent, 'compressive_complete': bool(n_comp_sent == int((fl == 1).sum())),
+            'sum_fn_compressive_uN': float(comp.sum()) if len(comp) else 0.0, 'q_uN': q,
+            'n_dir_contact_point': int(src_cp.sum()), 'n_dir_centres': int(src_c.sum()),
+            'n_dir_none': int((~src_cp & ~src_c).sum()), 'rule': rule}
+
+
 def particle_load_view(cdf, atoms_raw, type_map, *, scale=1000.0, box_xy=None, box_source=None, plate_z=None,
-                       plate_z_source=None, contacts_raw=None, lw_skip_reason=None):
+                       plate_z_source=None, contacts_raw=None, lw_skip_reason=None, contact_cap=LOAD_VIEW_CONTACT_CAP):
     """입자 하중 보기 자료 (aux['load_view']) — 열 배열 (cdf: contacts.csv 표) 로 압력 · 힘 · 벽 · 부호, contacts_raw (생산 읽기
     dict 목록) 가 있으면 LW (정본 calc_love_weber_stress).  모든 맵의 키 = 원자 id (JSON 에서 문자열).  값 없는 칸은 0 으로 채우지 않는다.
 
@@ -1146,7 +1220,9 @@ def particle_load_view(cdf, atoms_raw, type_map, *, scale=1000.0, box_xy=None, b
                 n_particles · n_particles_legacy_higher (옛 stress_max 가 더 큰 입자 — 당김 · δ ≤ 0 · 힘 0 행에서 온 최대) · legacy_rule} ·
       am {n_am · n_am_by_type · fn_max_uN {AM id: µN} · fn_rule · n_am_without_am_contact · lw_status · lw_definition · lw_contract ·
           lw_quantity · lw_vm_MPa {AM id} · lw_ratio {AM id} · lw_mean_all_MPa · lw_type_ratio {상} · lw_rule · wall {AM id: floor · plate ·
-          floor+plate} · wall_rule · wall_counts {n_floor · n_plate (전 입자)} · wall_counts_match_lw}."""
+          floor+plate} · wall_rule · wall_counts {n_floor · n_plate (전 입자)} · wall_counts_match_lw ·
+          contacts (AM–AM 접촉마다) · contacts_se (AM–SE 접촉마다 · id1 = AM) {fields · rows · cap · n_total · n_rows · truncated · n_compressive ·
+          n_tension · n_other · n_compressive_sent · compressive_complete · sum_fn_compressive_uN · q_uN · n_dir_* · rule} (10-08 · _contact_list)}."""
     import numpy as np
     import pandas as pd
     s = float(scale)
@@ -1157,6 +1233,7 @@ def particle_load_view(cdf, atoms_raw, type_map, *, scale=1000.0, box_xy=None, b
     rad = np.array([a.get('radius') for a in vals], dtype=float)
     lbl = np.array([str(type_map.get(int(a.get('type', -1)), '')) for a in vals], dtype=object)
     is_am = np.array(['AM' in x for x in lbl], dtype=bool)
+    is_se = np.array([x == 'SE' for x in lbl], dtype=bool)
     n = len(ids)
     has_cp = all(c in cdf.columns for c in ('cp_x', 'cp_y', 'cp_z'))
     out['inputs'] = {'n_atoms': int(n), 'n_rows': int(len(cdf)), 'scale': s,
@@ -1230,6 +1307,16 @@ def particle_load_view(cdf, atoms_raw, type_map, *, scale=1000.0, box_xy=None, b
           'fn_max_uN': {int(ids[k]): float(fmax[k]) for k in am_k if fmax[k] > 0}, 'fn_rule': FN_MAX_RULE,
           'n_am_without_am_contact': int(sum(1 for k in am_k if not fmax[k] > 0))}
 
+    # ── 10-08 접촉마다 — AM–AM · AM–SE (같은 부호 · 같은 환산 · 압축 = fn_max_uN 과 같은 행)
+    f_uN = np.where(np.isfinite(fmag), fmag * fconv, 0.0)
+    flag = np.where(comp, 1, np.where(attr, -1, 0)).astype(np.int8)
+    no_flip = np.zeros(len(k1), dtype=bool)
+    am.update(
+        contacts=_contact_list(is_am[k1] & is_am[k2], no_flip, k1, k2, ids, pos, rad, f_uN, flag, cp, box_xy, contact_cap,
+                               AM_AM_CONTACTS_RULE),
+        contacts_se=_contact_list((is_am[k1] & is_se[k2]) | (is_se[k1] & is_am[k2]), is_se[k1], k1, k2, ids, pos, rad, f_uN, flag, cp,
+                                  box_xy, contact_cap, AM_SE_CONTACTS_RULE))
+
     # ── 벽 표지 (calc_love_weber_stress 의 규칙)
     pz = _fin(plate_z)
     floor = (pos[:, 2] - rad) < 0.0
@@ -1280,7 +1367,7 @@ def particle_load_view(cdf, atoms_raw, type_map, *, scale=1000.0, box_xy=None, b
     return out
 
 
-def particle_load_view_for_case(results_dir, type_map, scale=1000.0, row_budget=LW_VIEW_ROW_BUDGET):
+def particle_load_view_for_case(results_dir, type_map, scale=1000.0, row_budget=LW_VIEW_ROW_BUDGET, contact_cap=LOAD_VIEW_CONTACT_CAP):
     """케이스 폴더 → particle_load_view (생산 분석기와 같은 읽기 · 같은 판 높이 · 같은 상자).  /3d-data 가 aux['load_view'] 로 싣는다
     (발사 뒤 패치).  contacts.csv 행 수가 row_budget 보다 많으면 LW 만 계산하지 않는다 (상태 = NOT_COMPUTED (예산))."""
     import os
@@ -1312,4 +1399,4 @@ def particle_load_view_for_case(results_dir, type_map, scale=1000.0, row_budget=
     except (OSError, ValueError, TypeError):
         pass
     return particle_load_view(cdf, atoms_raw, type_map, scale=scale, box_xy=box, box_source=box_src, plate_z=plate_z,
-                              plate_z_source=pz_src, contacts_raw=contacts_raw, lw_skip_reason=lw_skip)
+                              plate_z_source=pz_src, contacts_raw=contacts_raw, lw_skip_reason=lw_skip, contact_cap=contact_cap)
