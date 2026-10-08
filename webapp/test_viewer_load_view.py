@@ -32,6 +32,13 @@
       (id1 = AM · id2 = SE — 덤프가 SE 먼저면 뒤집는다 · 같은 규칙 · cap = AM 표면에만) · 상한 (상위 N 행 = 압축 |Fn| 큰 순) · 전체 압축
       셈 · 합 · 백분위 (색 범위 · 힘 몫) = 상한과 무관 · real14 (31299 행 = case_master area_AM전체_SE_n) · ps45 크기 (0:10 = 194558 행 →
       상한 · gzip 예산) · 뷰어 (상위 N 고르기 · 그린 것 / 전체 · 힘 몫 · 자기 컬러바).
+  [K-R] ★ 10-08 저녁 (1저자 *"(1) 권고 사항으로"*) AM–SE 색 범위 기준 — ps45 에서 거의 빨강이었다: 3D 데이터에는 AM–SE 상위 30000 행만
+      실리는데 (LOAD_VIEW_CONTACT_CAP) 범위 (p5–p95) 는 압축 AM–SE 전체 (ps45 ≈ 0.9–1.9 ×10⁵) 로 냈다 → '전부' 도 가장 센 ~15–33 % 라
+      눈금 위끝.  기본 = 그린 것 (상위 N · '전부' = 실은 압축 행) 의 p5–p95 · 최소–최대 · 옛 '압축 접촉 전체 기준' = 고르는 선택지.
+      ps45 꼴 합성 (실은 행 100 ≪ 압축 ≈ 1100 · 같은 생산자) 으로: 그린 것 기준은 그린 값에 걸쳐 퍼진다 · 전체 기준 = 옛 범위 그대로
+      (그린 접촉이 위끝에 몰림) · 상위 N 을 바꾸면 다시 계산 · 범례 · 컬러바 PNG 가 기준을 적는다.  AM–AM 은 압축 전부를 그리므로 두 기준이
+      같은 값 · 그리고 AM–AM 은 상위 N 을 받지 않는다 (고침 — ps45 0:10 AM–AM 8970 이 AM–SE 기본 상위 5000 에 조용히 잘리던 결함).
+      발사 뒤 패치 · 봉인 파일 · app.py · test_viewer_coordination.py 는 그대로 (뷰어 · 시험만).
   [P] 발사 뒤 패치 — 적용 확인 · 패치한 app 의 /3d-data (live · archive · 캐시 HIT · 옛 스키마 12 · 13 → 다시 계산).
   [X] check_all 배선.
 
@@ -660,6 +667,9 @@ def section_real14(tmp):
     chk(f'R12 AM–SE 백분위 (서버 = 전체 압축) = 보낸 압축 행의 가장 가까운 순위 (압축 전부 보냈으니 같다 · amOnlyRange 규칙) · 합 = 보낸 압축 합 '
         f'({cs.get("q_uN")})', q_close(cs.get('q_uN'), nearest_rank_q(comp_rows))
         and rel(cs.get('sum_fn_compressive_uN'), sum(comp_rows)) < 1e-5)
+    comp_aa = [float(r['fn_uN']) for r in contact_rows(lv) if int(r['flag']) == 1]
+    chk(f'R12b AM–AM — 서버 백분위 (압축 전체) = 실은 압축 행 {len(comp_aa)} 개 (= 그린 것 · 압축 전부) 의 가장 가까운 순위 → 두 기준이 같은 범위 '
+        f'(10-08 저녁 · AM–AM 결과 그대로)', len(comp_aa) == c.get('n_compressive') and q_close(c.get('q_uN'), nearest_rank_q(comp_aa)))
     blob = json.dumps({'contacts': c, 'contacts_se': cs}, separators=(',', ':')).encode()
     g = len(gzip.compress(blob, 6))
     top = sorted(comp_rows, reverse=True)
@@ -679,9 +689,18 @@ JS_NAMES = ('netCurrentFmtJ', 'netCurrentT', 'netCurrentTicks', 'netCurrentPct',
 JS_CONSTS = ('AMONLY_CONTACT_OPT',)
 
 
-def section_js(lv):
+def ps_like_load_view(tmp):
+    """ps45 꼴 — 실은 AM–SE 행 (상한 100) ≪ 압축 AM–SE 전체 (≈ 1100) · 같은 생산자 (particle_load_view_for_case · contact_cap=100)."""
+    import viewer3d_data as V
+    d = os.path.join(tmp, 'ps_like')
+    am_se_bed(d, n_am=200, k=6, seed=20261009)
+    return V.particle_load_view_for_case(d, {2: 'AM_S', 3: 'SE'}, SCALE, row_budget=1000, contact_cap=100)
+
+
+def section_js(lv, tmp=None):
     print('[J] 뷰어 — 드롭다운 · AM 만 보기 · 최대 접촉 압력 범례 (node)')
     js = open(VIEWER_JS, encoding='utf-8').read()
+    ps_lv = ps_like_load_view(tmp) if tmp else {}
     try:
         bc = js_fn(js, 'buildControls')
     except (ValueError, AssertionError):
@@ -772,8 +791,39 @@ out.legS = amOnlyLegendHtml(LV, uiS, {nCaps: 1, nSkipped: 0, lo: Math.log10(4), 
 out.legMiss = amOnlyLegendHtml(noC, uiS, {nCaps: 0, nSkipped: 0, lo: 0, hi: 1});
 out.specC = amOnlyColorbarSpec(LV, uiC, out.rA[0], out.rA[1], out.clA);
 out.specS = amOnlyColorbarSpec(LV, uiS, Math.log10(4), Math.log10(6), out.clS1);
+// ★ 10-08 저녁 (1저자 "(1) 권고 사항으로") — 색 범위 기준: 기본 = 그린 것 (상위 N · '전부' = 실은 압축 행) · 선택 = 압축 접촉 전체 (옛)
+const PS = __PS__;                                          // ps45 꼴: 실은 행 100 (상한) ≪ 압축 전체 ≈ 1100
+const pAll = loadViewAmContacts(PS, 'contact_se', 'all');
+const p10 = loadViewAmContacts(PS, 'contact_se', 10);
+const ps = {nComp: pAll.nComp, nSent: pAll.nSent, nDrawn: pAll.nDrawn, nDrawn10: p10.nDrawn, cap: pAll.cap, q: pAll.q,
+            fAll: pAll.rows.map(r => r.f), f10: p10.rows.map(r => r.f), share: pAll.share};
+ps.rDrawn = amOnlyContactRange(pAll, 'p5p95', 'drawn');
+ps.rDrawnMM = amOnlyContactRange(pAll, 'minmax', 'drawn');
+ps.rDefault = amOnlyContactRange(pAll, 'p5p95');
+ps.rDrawn10 = amOnlyContactRange(p10, 'p5p95', 'drawn');
+ps.rAll = amOnlyContactRange(pAll, 'p5p95', 'all');
+ps.rAll10 = amOnlyContactRange(p10, 'p5p95', 'all');
+ps.tDrawn = ps.rDrawn ? pAll.rows.map(r => netCurrentT(r.f, ps.rDrawn[0], ps.rDrawn[1])) : [];
+ps.tAll = ps.rAll ? pAll.rows.map(r => netCurrentT(r.f, ps.rAll[0], ps.rAll[1])) : [];
+const uiPd = {metric: 'contact_se', range: 'p5p95', wall: true, top: 'all', basis: 'drawn'};
+const uiPa = {metric: 'contact_se', range: 'p5p95', wall: true, top: 'all', basis: 'all'};
+const uiP0 = {metric: 'contact_se', range: 'p5p95', wall: true, top: 'all'};            // 기준 안 고름 = 기본
+const rD = ps.rDrawn || [0, 1], rAl = ps.rAll || [0, 1];
+ps.legD = amOnlyLegendHtml(PS, uiPd, {nCaps: 100, nSkipped: 0, lo: rD[0], hi: rD[1]});
+ps.legA = amOnlyLegendHtml(PS, uiPa, {nCaps: 100, nSkipped: 0, lo: rAl[0], hi: rAl[1]});
+ps.leg0 = amOnlyLegendHtml(PS, uiP0, {nCaps: 100, nSkipped: 0, lo: rD[0], hi: rD[1]});
+ps.specD = amOnlyColorbarSpec(PS, uiPd, rD[0], rD[1], pAll);
+ps.specA = amOnlyColorbarSpec(PS, uiPa, rAl[0], rAl[1], pAll);
+ps.spec0 = amOnlyColorbarSpec(PS, uiP0, rD[0], rD[1], pAll);
+out.ps = ps;
+// AM–AM — 상위 N 을 받지 않는다 (늘 압축 전부) · 두 기준이 같은 값
+out.clA1 = loadViewAmContacts(LV, 'contact', 1);
+out.rAd = amOnlyContactRange(out.clA, 'p5p95', 'drawn');
+out.rAa = amOnlyContactRange(out.clA, 'p5p95', 'all');
+out.rAdm = amOnlyContactRange(out.clA, 'minmax', 'drawn');
+out.rAam = amOnlyContactRange(out.clA, 'minmax', 'all');
 console.log(JSON.stringify(out));
-""".replace('__LV__', json.dumps(lv, ensure_ascii=False))
+""".replace('__LV__', json.dumps(lv, ensure_ascii=False)).replace('__PS__', json.dumps(ps_lv, ensure_ascii=False))
     res = run_node(script)
     if not chk('J8 node 실행', res is not None):
         return
@@ -864,20 +914,24 @@ console.log(JSON.stringify(out));
         all(x in lc for x in ('AM–AM 접촉마다', 'SE 숨김', 'AM 기본색', '그린 접촉 2', 'cap 4', '당김 1', 'µN', '덱 축척', '하중 분담',
                               '접촉 면적이 아니다', 'id="amonly-cbar"', 'id="amonly-metric"', 'id="amonly-range"'))
         and 'id="amonly-wall"' not in lc and 'id="amonly-topn"' not in lc, lc[:900])
-    chk('J34 AM–SE 범례 — 상위 N 고르기 (amonly-topn · 500 … 20000 · 전부) · 그린 것 / 전체 (압축) = 1 / 2 · 힘 몫 60 % · 당김 1 개 뺌 · '
-        'cap = AM 표면에만 · 색 범위 = 압축 AM–SE 전체 (상위 N 과 무관)',
+    chk('J34 AM–SE 범례 — 상위 N 고르기 (amonly-topn · 500 … 20000 · 전부) · 범위 기준 고르기 (amonly-basis) · 그린 것 / 전체 (압축) = 1 / 2 · '
+        '힘 몫 60 % · 당김 1 개 뺌 · cap = AM 표면에만 · 색 범위 = 그린 1 개의 p5–p95 (기본 = 그린 것 기준 · 10-08 저녁 1저자 결정으로 기대 바꿈)',
         'id="amonly-topn"' in ls and all(f'value="{n}"' in ls for n in (500, 5000, 20000)) and 'value="all"' in ls
+        and 'id="amonly-basis"' in ls
         and re.search(r'그린 것 / 전체 \(압축\) = 1 / 2', ls) is not None and '힘 몫 60 %' in ls and '당김 1' in ls
-        and 'AM 표면에만' in ls and '상위 N 과 무관' in ls and 'id="amonly-wall"' not in ls, ls[:900])
+        and 'AM 표면에만' in ls and '색 범위 = 그린 1 개의 p5–p95 (|Fn| 상위 1 / 압축 2 · 실은 행 상한 30000)' in ls
+        and 'id="amonly-wall"' not in ls, ls[:900])
     lm = res.get('legMiss') or ''
     chk('J35 목록 없음 범례 — ⚠ · 캐시 스키마 14 · 칠하지 않는다', '⚠' in lm and '스키마 14' in lm and '칠하지 않' in lm, lm[:400])
     sc, ss = res.get('specC') or {}, res.get('specS') or {}
     chk('J36 컬러바 (AM–AM) — 영문 제목 AM–AM contact normal force |Fn| (µN) · 부제 compressive contacts only · not a load share · model',
         sc.get('map') == 'jet' and 'AM–AM contact normal force |Fn| (µN)' in sc.get('title', '') and 'compressive contacts only' in sc.get('sub', '')
         and 'not a load share' in sc.get('sub', '') and 'model' in sc.get('sub', '') and len(sc.get('ticks') or []) >= 2, repr(sc)[:400])
-    chk('J37 컬러바 (AM–SE) — 제목 AM–SE · 부제 top 1 of 2 compressive contacts drawn · force share 60 % · range = all compressive AM–SE contacts',
-        'AM–SE contact normal force |Fn| (µN)' in ss.get('title', '') and 'top 1 of 2' in ss.get('sub', '')
-        and 'force share 60 %' in ss.get('sub', '') and 'all compressive AM–SE contacts' in ss.get('sub', ''), repr(ss)[:400])
+    chk('J37 컬러바 (AM–SE) — 제목 AM–SE · 부제 = 그린 것 기준 (기본 · 10-08 저녁 기대 바꿈) "p5–p95 of the 1 drawn contacts (top 1 by |Fn| of 2 '
+        'compressive; loaded rows capped at 30000)" · Drawn / total compressive = 1 / 2 · force share 60 %',
+        'AM–SE contact normal force |Fn| (µN)' in ss.get('title', '')
+        and 'Colour range = p5–p95 of the 1 drawn contacts (top 1 by |Fn| of 2 compressive; loaded rows capped at 30000)' in ss.get('sub', '')
+        and 'Drawn / total compressive = 1 / 2' in ss.get('sub', '') and 'force share 60 %' in ss.get('sub', ''), repr(ss)[:400])
     try:
         rc = js_fn(js, 'renderAmOnlyContactCaps')
     except (ValueError, AssertionError):
@@ -901,6 +955,75 @@ console.log(JSON.stringify(out));
         re.search(r"ui\.metric === 'contact' \|\| ui\.metric === 'contact_se'\) \{[^}]*base\(\);", ao2) is not None
         and 'renderAmOnlyContactCaps(state, cl' in ao2 and re.search(r'SE\.visible\s*=\s*false', ao2) is not None, ao2[:300])
     chk('J40 자료 없음 안내 — 캐시 스키마 14 (옛 패치의 13 캐시는 다시 계산)', '캐시 스키마 14' in res['miss'], res['miss'][:400])
+
+    # ★ 10-08 저녁 — AM–SE 색 범위 기준 (1저자 "(1) 권고 사항으로")
+    ps = res.get('ps') or {}
+    fAll, f10, q = ps.get('fAll') or [], ps.get('f10') or [], ps.get('q') or {}
+    lg = math.log10
+
+    def nr(v, p_):
+        v = sorted(v)
+        return v[max(0, min(len(v) - 1, int(math.floor(p_ * (len(v) - 1)))))]
+
+    def close(a, b):
+        return bool(a) and bool(b) and abs(a[0] - b[0]) < 1e-12 and abs(a[1] - b[1]) < 1e-12
+    want_d = [lg(nr(fAll, 0.05)), lg(nr(fAll, 0.95))] if fAll else None
+    want_d10 = [lg(nr(f10, 0.05)), lg(nr(f10, 0.95))] if f10 else None
+    want_a = [lg(q['p5']), lg(q['p95'])] if q.get('p5') and q.get('p95') else None
+    M = ps.get('nComp')
+    chk(f'J41 ps45 꼴 합성 (같은 생산자 · contact_cap 100) — 실은 행 {ps.get("nSent")} (= 상한 {ps.get("cap")}) ≪ 압축 전체 {M} · '
+        f'그린 것 = 실은 압축 행 전부 (전부 {ps.get("nDrawn")}) · 상위 10 ({ps.get("nDrawn10")})',
+        ps.get('nSent') == 100 and ps.get('cap') == 100 and (M or 0) >= 1000 and ps.get('nDrawn') == 100 and ps.get('nDrawn10') == 10)
+    tA, tD = ps.get('tAll') or [], ps.get('tDrawn') or []
+    chk(f'J42 옛 기준 (압축 접촉 전체) = 서버 q_uN 의 p5–p95 그대로 (옛 범위 재현) · 상위 N 과 무관 · 그린 접촉이 눈금 위끝에 몰린다 '
+        f'(최소 t {min(tA) if tA else None} ≥ 0.8 — 1저자가 ps45 에서 본 "거의 빨강")',
+        close(ps.get('rAll'), want_a) and close(ps.get('rAll10'), want_a) and bool(tA) and min(tA) >= 0.8)
+    hi_frac = sum(1 for t in tD if t >= 0.75) / len(tD) if tD else 1.0
+    lo_frac = sum(1 for t in tD if t <= 0.25) / len(tD) if tD else 0.0
+    chk(f'J43 새 기본 (그린 것 기준) = 그린 접촉의 가장 가까운 순위 p5–p95 — 눈금 양 끝이 그린 값 안 · 색이 퍼진다 (t ≥ 0.75 몫 {hi_frac:.2f} ≤ 0.5 · '
+        f't ≤ 0.25 몫 {lo_frac:.2f} ≥ 0.05 · 최소 t 0 · 최대 t 1)',
+        close(ps.get('rDrawn'), want_d) and bool(fAll) and min(fAll) <= 10 ** ps['rDrawn'][0] <= 10 ** ps['rDrawn'][1] <= max(fAll)
+        and hi_frac <= 0.5 and lo_frac >= 0.05 and min(tD) == 0 and max(tD) == 1)
+    chk('J44 기준을 안 고르면 = 그린 것 (기본) · 최소–최대 (그린 것) = 그린 값의 최소 · 최대',
+        close(ps.get('rDefault'), want_d) and bool(fAll) and close(ps.get('rDrawnMM'), [lg(min(fAll)), lg(max(fAll))]))
+    chk(f'J45 상위 N 을 바꾸면 범위가 다시 계산된다 — 상위 10 = 그 10 개의 p5–p95 ({ps.get("rDrawn10")}) ≠ 상위 100 ({ps.get("rDrawn")}) · '
+        f'옛 기준은 N 과 무관', close(ps.get('rDrawn10'), want_d10) and not close(ps.get('rDrawn10'), ps.get('rDrawn'))
+        and close(ps.get('rAll10'), ps.get('rAll')))
+    legD, legA, leg0 = ps.get('legD') or '', ps.get('legA') or '', ps.get('leg0') or ''
+    chk(f'J46 범례 (그린 것 기준) — "색 범위 = 그린 100 개의 p5–p95 (|Fn| 상위 100 / 압축 {M} · 실은 행 상한 100)" · 그린 것 / 전체 (압축) = 100 / {M} · '
+        '힘 몫 · 기준 고르기 (amonly-basis: 그린 것 · 압축 전체 — 그린 것 선택)',
+        f'색 범위 = 그린 100 개의 p5–p95 (|Fn| 상위 100 / 압축 {M} · 실은 행 상한 100)' in legD and f'그린 것 / 전체 (압축) = 100 / {M}' in legD
+        and '힘 몫' in legD and re.search(r'<select id="amonly-basis"[^>]*><option value="drawn" selected>[^<]*</option><option value="all">', legD)
+        is not None, legD[:900])
+    chk(f'J47 범례 (압축 접촉 전체 기준 · 옛) — "색 범위 = 압축 접촉 전체 {M} 개의 p5–p95 (상위 N 과 무관 …)" · 고르기 = 압축 전체 선택',
+        f'색 범위 = 압축 접촉 전체 {M} 개의 p5–p95 (상위 N 과 무관' in legA and '<option value="all" selected>' in legA.split('id="amonly-basis"')[-1][:300],
+        legA[:900])
+    chk('J48 기준을 안 고른 범례 = 그린 것 기준 (기본)', '색 범위 = 그린 100 개의 p5–p95' in leg0, leg0[:600])
+    sD, sA, s0 = ps.get('specD') or {}, ps.get('specA') or {}, ps.get('spec0') or {}
+    chk(f'J49 컬러바 PNG (그린 것) — "Colour range = p5–p95 of the 100 drawn contacts (top 100 by |Fn| of {M} compressive; loaded rows capped at 100)" · '
+        'drawn / total · force share · 기준 안 고름 = 같은 글',
+        f'Colour range = p5–p95 of the 100 drawn contacts (top 100 by |Fn| of {M} compressive; loaded rows capped at 100)' in sD.get('sub', '')
+        and f'Drawn / total compressive = 100 / {M}' in sD.get('sub', '') and 'force share' in sD.get('sub', '') and s0.get('sub') == sD.get('sub'),
+        repr(sD)[:500])
+    chk(f'J50 컬러바 PNG (압축 전체 · 옛) — "Colour range = p5–p95 of all {M} compressive AM–SE contacts (independent of top-N; loaded rows capped at 100)"',
+        f'Colour range = p5–p95 of all {M} compressive AM–SE contacts (independent of top-N; loaded rows capped at 100)' in sA.get('sub', ''),
+        repr(sA)[:500])
+    ca1 = res.get('clA1') or {}
+    chk(f'J51 AM–AM 은 상위 N 을 받지 않는다 — 상위 1 을 줘도 압축 전부 2 개 (10-08 저녁 고침: ps45 0:10 AM–AM 8970 이 AM–SE 기본 상위 5000 에 '
+        f'조용히 잘리던 것) ({ca1.get("nDrawn")})', ca1.get('nDrawn') == 2 and len(ca1.get('rows') or []) == 2)
+    chk('J52 AM–AM 두 기준 같은 값 (압축 전부를 그리므로 결과 그대로) · p5–p95 · 최소–최대',
+        close(res.get('rAd'), res.get('rAa')) and close(res.get('rAdm'), res.get('rAam')))
+    chk('J53 AM–AM 범례 — 기준 고르기 없음 (결과가 같다) · 색 범위 = 그린 2 개 (압축 전부) 의 최소–최대',
+        'id="amonly-basis"' not in lc and '색 범위 = 그린 2 개 (압축 전부) 의 최소–최대' in lc, lc[:900])
+    try:
+        ao3 = js_fn(js, 'applyAmOnlyView')
+        wl = js_fn(js, '_amOnlyWireLegend')
+    except (ValueError, AssertionError):
+        ao3 = wl = ''
+    chk('J54 그리기 경로 — applyAmOnlyView 가 ui.top 으로 목록을 만들고 그 목록 · ui.basis 로 범위 (상위 N · 기준을 바꾸면 다시 그린다 = 다시 계산) · '
+        '기준 고르기 배선 · 컬러바 파일 이름에 기준',
+        re.search(r'loadViewAmContacts\(lv, ui\.metric, ui\.top\);\s*const crng = cl\.ok \? amOnlyContactRange\(cl, ui\.range, _amOnlyBasis\(ui\)\)', ao3)
+        is not None and "on('amonly-basis'" in wl and "on('amonly-topn'" in wl and '_amOnlyBasis(l.ui)' in wl, wl[:300])
 
 
 def section_zprofile_title(tmp):
@@ -1081,7 +1204,7 @@ def main():
         except Exception as e:                                   # noqa: BLE001
             chk('section_real14 실행', False, f'{type(e).__name__}: {e}')
         try:
-            section_js(lv)
+            section_js(lv, tmp)
         except Exception as e:                                   # noqa: BLE001
             chk('section_js 실행', False, f'{type(e).__name__}: {e}')
         try:
