@@ -4244,3 +4244,15 @@ gate INCOMPLETE · 실효 정책 UNVERIFIED · native 미승인 · 게이트 리
   포장 반환 (chunk `892caf` · rc 0 · 2,299.13 s) 은 사용자 메시지 전사이지 원 sidecar 바이트 · 실행 PC 독립 관측이 아니다 (회신 `USER_SUPPLEMENT_AS_REPORTED.json`).
 - **다음 (사용자 결정):** 좁은 오프라인 정정 S1O-R1 (N1–N4 · 새 폴더 · 1 회 · 총 2,700 s — 작성 1,200 · 정적 600 · 검증안 600 · 전달 300 · 이전 예산 재사용 없음) — 채택 문구 · 발송 프롬프트
   `docs/COMSOL_MICROSHORT_S1O_R1_SEND_TO_CODEX_20261007.md` (승인 뒤에만 발송). 그 뒤 정정본 검토 → 98 (+α) 사례 기능 검증 별도 승인 → S1-P 별도 승인. 이 절은 어떤 실행의 승인도 아니다.
+
+## 77. S1O-R1 발송문 범위 검토 회신 접수 — 수용 · 새 차단 0 · 승인문 명확화 4 → v2 (2026-10-08 · 실행 0)
+
+- 보존: `reviews/r14_repros/codex63/comsol_microshort_s1o_r1_scope_review_20261008/` — zip 772,466 B · sha256 `0c27b5f6c4fd386f161a029bf531dc8d125a181f1f1d1138c63b475ed4ded9ce` · 압축 해제 9 ·
+  manifest 8 / 8 · 비밀 0 · 동봉 `package_review.py` 실행 0. 규칙 `919ec4281` → 보존 `258316fee`. 검토 대상 발송문 (`reference/`) = v1 (sha256 `6e3a9ca3…` · cmp 동일) · 동봉한 이전 회신 zip = `dee50be8…` (cmp 동일).
+- 판정 (`DECISION.json` 사본): `R1_NARROW_OFFLINE_CORRECTION_SCOPE_ACCEPTED` · N1–N4 `MATCH` · 새 차단 0 · 구현 종결 아님 · 기능 검증 NOT_RUN · 착수 승인 아님 · native_ready false.
+- 비차단 명확화 넷 (회신): ① 승인문에 새 폴더 **절대경로** 한 줄 · 있으면 중지 (삭제 · 재사용 · 자동 우회 없음) · 새 monotonic 원점 · 단계 경계 · 포장 뒤 snapshot 과 반환 전사 범위를 `TIMING.json` 에 구분
+  ② "98 사례 기능 검증" → "갱신 검증안의 기능 검증 (기존 98 ID 대응 · 새 실제 사례 수 명시)" ③ N3 의 원소 검사에 "범위" ④ "실행 0" 은 후보 / 받은 코드 함수 · 기능 시험 · COMSOL / JVM 대상 — 정적 parse · 해시 · 포장 도구 사용과 구분.
+- 반영: v1 은 그대로 두고 `docs/COMSOL_MICROSHORT_S1O_R1_SEND_TO_CODEX_v2_20261008.md` (v1 에서 해당 문장만 치환). 새 폴더 제안 =
+  `C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/microshort_s1o_r1_20261008` — 지난 S1-O 준비 폴더 (`…/outputs/microshort_s1o_20261007_133011` · 준비본 `START.json`) 와 같은 실행 PC · 같은 `outputs/` 규칙.
+  경로는 사용자가 채택할 때 확정한다 (바꾸면 v2 의 그 한 줄만 바꾼다).
+- 다음: 사용자 채택 (v2 §0) → 실행 담당 Codex (COMSOL PC) 에 v2 + 준비본 검토 회신 zip (`dee50be8…`) 발송 → R1 정정본 제출 · 멈춤 → R1 소스 검토 → 기능 검증 별도 승인. 이 절은 착수 승인이 아니다.
