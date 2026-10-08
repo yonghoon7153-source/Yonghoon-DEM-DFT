@@ -4267,3 +4267,18 @@ gate INCOMPLETE · 실효 정책 UNVERIFIED · native 미승인 · 게이트 리
   검증안 600 · 전달 300 · 이전 예산 재사용 없음) · 제출 뒤 멈춤.
 - 승인이 아닌 것: 갱신 검증안의 기능 검증 · S1-P · M · N · native · 960 s / 12 h · 실험 비교 · 설치본 / 어댑터 OPEN 의 종결.
 - 다음: R1 정정본 수신 → 받은 바이트 그대로 보존 → R1 소스 검토 (사용자 결정 시 검토 담당 Codex) → 기능 검증 별도 승인.
+
+## 79. S1O-R1 오프라인 정정본 수신 — N1–N4 정정 · 검증안 130 사례 · 기능 검증 미실행 (2026-10-08 · 실행 0)
+
+- 보존: `reviews/r14_repros/codex63/comsol_microshort_s1o_r1_corrections_20261008/` — 본체 zip 813,053 B · sha256 `0a18cb64f8bcbcd4725b45088ee310f85e9292a1ffdced2332b5102f5fd6f9dc` · 117 항목 ·
+  PACKAGE_MANIFEST 116 / 116 · 새 CODE_MANIFEST (sha256 `4ce5c08d…40f5da`) 21 / 21 / 전달 보충 zip 3,750 B · sha256 `4cfd310ae5c019cce63a2ce012debfa9307f44ac739c1253cc07a5cf0c8d73b2` · 5 항목 · 4 / 4 ·
+  비밀 0 · 받은 코드 · 도구 (`tools/r1_*.py` · `.ps1`) 실행 0. 규칙 `918832ea7` → 보존 `868e7eb1b`. 두 zip 의 크기 · sha256 = 실행 Codex 종결 기록 (사용자 채팅 전사).
+- 마지막 반환 · 종결 (`SUPPLEMENT_FINAL_TOOL_RETURN.json`) 은 **사용자 채팅 전사만** 받았다 — 원 파일 바이트 없음. 전사의 값: 반환 chunk `aa3991` · rc 0 · closeout 1,888 B · sha256 `a386eb3b…46ef` ·
+  snapshot 1,465.49 s (전달 36.4 s) · `post_return_capture` 1,541.2375 s / 2,700 s. 사용자 메시지의 "1,541.319 / 2,700 초" 는 그 값과 다르다 — 다른 시점의 기록일 수 있어 판단하지 않는다.
+- 정정본 (`DECISION.json` 사본): `OFFLINE_CORRECTIONS_COMPLETE_PENDING_RECIPIENT_REVIEW` · N1–N4 `fixed` (근거 정적 · 기능 미검증) · 정적 확인 소스 240 / 계획 57 · 검증안 8 군 130 ID (Python 99 · PowerShell 5.1 31 ·
+  옛 98 + 새 32) · 제안 검증 예산 1,860 s (미승인) · 후보 import · 호출 · 기능 시험 · COMSOL · JVM · compile 0 · native_ready false · OPEN 6 그대로. 단계: 작성 693.8 · 정적 343.3 · 봉인 392.0 · 전달 36.4 s (상한 이내).
+- **이 저장소의 데이터 대조 (실행 0):** 바뀐 파일 7 (consumer · Parent · P0 diff / java · `CHARGE_BALANCE` · `EXECUTION_BINDING` · `SOURCE_CONTRACT_LINKS`) 의 "이전" sha 7 / 7 = §76 에 보존한 준비본 원본 ·
+  바뀌지 않은 코드 13 파일 준비본과 바이트 동일 · 지시문 사본 (`reference/R1_DIRECTIVE_v2_KO.md`) = v2 (`eac2eb0a…`) · 작업 폴더 = §78 의 승인 경로 · N1 · N2 · N3 의 새 판정 이유 코드 생김 · N4 P0 439 문구
+  "accepted tsteps storage" (분기 정확성은 검토 몫 — 이름 존재만 확인).
+- 관찰 (결함 판정 아님): 승인 근거 파일 `USER_OFFLINE_SCOPE.txt` 는 v2 §0 전문이 아니라 한 문장 요약이다 ("S1O-N1–N4의 R1 오프라인 정정·정적 확인·검증안 갱신 1건을 최대 2,700초로 승인합니다…") — v2 전문은 sha 로 결속.
+- 다음: 검토 담당 Codex 소스 검토 (발송 프롬프트 `docs/COMSOL_MICROSHORT_S1O_R1_REVIEW_SEND_20261008.md` · 첨부 3 — 셋째는 실행 PC 의 원 파일) → 회신 → 기능 검증 (130 사례 · 1,860 s) 별도 승인. 이 절은 승인이 아니다.
