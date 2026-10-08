@@ -5212,7 +5212,7 @@ function renderSeStatsCardPNG(state, corpusRows) {
 const NETCUR_TOPS = [500, 1000, 2000, 5000, 10000, 20000];
 const NETCUR_WIDTHS = [1, 0.5, 0.25, 0.1];             // 관 굵기 배율 — 1저자 10-08 "크기 좀더 얇게" (전자 상위 20000 이 뭉쳐 보였다)
 const NETCUR_SHARES = [50, 80, 95];                     // 전류 몫 고르기 (%) — 1저자 10-08 Q1 · Q2 권고대로 (기본 50 · 서버 SHARE_CHOICES 와 같다)
-const NETCUR_CAPS = [['max', '위쪽 최대'], ['p99', '위쪽 p99'], ['p95', '위쪽 p95']];   // 색 위쪽 — 범례 · 컬러바 = 숫자 셋 그대로 ('≥' · ▲ 없음)
+const NETCUR_CAPS = [['max', '위쪽 최대'], ['p99', '위쪽 p99'], ['p95', '위쪽 p95'], ['p75', '위쪽 p75'], ['p50', '위쪽 p50']];   // 색 위쪽 — 범례 · 컬러바 = 숫자 셋 그대로 ('≥' · ▲ 없음)
 const NETCUR_CACHE_MAX = 4;                             // 받은 자료 기억 — 전부 (수십만 접촉) 자료가 쌓여 메모리를 잡지 않게 최근 넷만
 const NETCUR_LOD_N = 20000;                             // 이보다 많이 그리면 관 6 각 · 뚜껑 없음 (삼각형 4 배 적게) — 이하 = 옛 12 각 그대로
 const NETCUR_BIG_N = 20000;                             // 큰 자료 (접촉 > 이 수) = 보는 동안만 기억 · 나가면 비움 — 1저자 10-08 "나갈 때 휘발" (40 만 접촉 ≈ 119 MB)
@@ -5345,20 +5345,26 @@ function netCurrentQuantile(a, q) {
  * 범례 · 컬러바 숫자 = 그 값 그대로 (평범한 숫자 셋 · '≥' · ▲ 없음 — 1저자 "이런 우리만 아는 표시는 필요없어") · 백분위는 방법 메모
  * (범례 회색 줄 · 컬러바 아래 작은 글) 에만. */
 function netCurrentCap(rng, edges, scale, cap) {
-  if (!rng || (cap !== 'p99' && cap !== 'p95')) return rng;
+  const pc = netCurrentCapPct(cap);                            // 99 · 95 · 75 · 50 (1저자 10-08 "p50, p75 를 추가") · 그 밖 = 그대로
+  if (!rng || !pc) return rng;
   const js = [];
   (edges || []).forEach(e => { if (e && e.j > 0) js.push(+e.j); });
   if (!js.length) return rng;
   js.sort((u, v) => u - v);
-  const q = netCurrentQuantile(js, cap === 'p99' ? 0.99 : 0.95);
+  const q = netCurrentQuantile(js, pc / 100);
   const hi = scale === 'linear' ? q : Math.log10(q);
   return [rng[0], Math.max(rng[0], hi)];
+}
+
+/* 위쪽 고르기 → 백분위 (99 · 95 · 75 · 50) · 'max' · 모르는 값 = 0 (그대로) — NETCUR_CAPS 에 있는 것만 */
+function netCurrentCapPct(cap) {
+  return (NETCUR_CAPS.some(c => c[0] === cap) && /^p\d{2}$/.test(cap)) ? +cap.slice(1) : 0;
 }
 
 /* 컬러바 파일 이름 꼬리 — 위쪽을 고른 그림이 최대 그림을 덮어쓰지 않게 ('_p99' · '_p95' · 최대 = 없음) */
 function netCurrentCapTag(opt) {
   const c = opt && opt.cap;
-  return (c === 'p99' || c === 'p95') ? '_' + c : '';
+  return netCurrentCapPct(c) ? '_' + c : '';
 }
 
 /* 관 반경 (µm) = 굵기 배율 × (0.10 + 0.40 t) × r_ref (망 입자 반경 중앙값) — 배율 1 = 옛 그림 그대로 (rMin 0.10 · rMax 0.50 r_ref) ·
@@ -5469,7 +5475,7 @@ function netCurrentColorbarSpec(pay, opt, lo, hi, frame) {
   const sh = Math.log10(f);
   const d = pay.density || {};
   const q = (+(d.c1 || {}).Q_areal_mAh_cm2) * (c1 ? (fr.capScale || 1) : 1);   // 고른 비용량으로 환산한 Q_areal (= 전극 평균 j_1C mA cm⁻²)
-  const capP = opt && opt.cap === 'p99' ? 99 : (opt && opt.cap === 'p95' ? 95 : 0);   // 색 위쪽 — 눈금은 숫자 그대로 · 방법은 아래 작은 글에만
+  const capP = netCurrentCapPct(opt && opt.cap);   // 색 위쪽 — 눈금은 숫자 그대로 · 방법은 아래 작은 글에만
   const base = 'j = |I_c| / A_c (A_c = contact area of the same solve · ' + (pay.mode === 'physics' ? 'Physics gen-2 area' : 'c_cpl[22] disc')
     + ').  Model contact-network solve (Kirchhoff · Holm constriction per contact) — not a measured current.  '
     + (lin ? 'Linear colour scale (middle tick = (min + max) / 2).' : 'Log colour scale.')
@@ -5534,7 +5540,7 @@ function netCurrentLegendHtml(pay, opt, st) {
     : (sl.kind === 'all' ? '전류가 흐르는 접촉 전부 (' + n + ' 개)' : '상위 ' + n + ' 접촉 (|I| 큰 순)');
   L.push('<b>색 · 굵기 = 접촉 전류 밀도 j = |I| / A_c (' + (lin ? '선형' : 'log₁₀') + ') · ' + selTxt + '</b>');
   if (sl.fallback) L.push('<span style="color:#fbbf24">⚠ ' + esc(sl.fallback) + '</span>');
-  const capP = opt && opt.cap === 'p99' ? 99 : (opt && opt.cap === 'p95' ? 95 : 0);
+  const capP = netCurrentCapPct(opt && opt.cap);
   if (f1.ok) {
     const stops = [0, 0.25, 0.5, 0.75, 1].map(v => '#' + jetColor(v).toString(16).padStart(6, '0'));
     L.push('<div style="margin:3px 0 1px 0;height:9px;border-radius:3px;background:linear-gradient(90deg,' + stops.join(',') + ')"></div>');

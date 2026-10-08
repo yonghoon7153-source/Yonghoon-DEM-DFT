@@ -320,7 +320,7 @@ def section_sigma0(tmp, bed_rd):
 #  [D5] 뷰어 (node)
 # ══════════════════════════════════════════════════════════════════════════════
 JS_NAMES = ('netCurrentFmtJ', 'netCurrentLogRange', 'netCurrentT', 'netCurrentPct', 'netCurrentTicks', 'netCurrentFrame',
-            'netCurrentColorbarSpec', 'netCurrentControlsHtml', 'netCurrentTopOptions', 'netCurrentLegendHtml', 'jeEscH', 'jetColor')
+            'netCurrentColorbarSpec', 'netCurrentCapPct', 'netCurrentControlsHtml', 'netCurrentTopOptions', 'netCurrentLegendHtml', 'jeEscH', 'jetColor')
 
 
 def section_viewer(pay):

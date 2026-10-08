@@ -499,7 +499,7 @@ def section_routes(tmp, pub_rd, rid):
 #  ④ 뷰어 (node)
 # ══════════════════════════════════════════════════════════════════════════════
 JS_NAMES = ('netCurrentUrl', 'netCurrentWrap', 'netCurrentLogRange', 'netCurrentT', 'netCurrentPct', 'netCurrentFmtJ', 'netCurrentTicks',
-            'netCurrentFrame', 'netCurrentColorbarSpec', 'netCurrentControlsHtml', 'netCurrentTopOptions', 'netCurrentLegendHtml',
+            'netCurrentFrame', 'netCurrentColorbarSpec', 'netCurrentCapPct', 'netCurrentControlsHtml', 'netCurrentTopOptions', 'netCurrentLegendHtml',
             'netCurrentErrorHtml', 'jeEscH', 'jetColor')
 NETCUR_CONST_NAMES = ('NETCUR_TOPS', 'NETCUR_WIDTHS', 'NETCUR_SHARES', 'NETCUR_CAPS',
                       'NETCUR_CAPACITIES')   # 조작판이 쓰는 한 줄 상수 (10-08 고르기 · 위쪽 · 비용량 더함)
@@ -746,7 +746,7 @@ def section_viewer_scale():
     print('[④s] 뷰어 — 선형 눈금 · 이등분 범례 (node)')
     js = open(VIEWER_JS, encoding='utf-8').read()
     names = ('netCurrentRange', 'netCurrentTv', 'netCurrentLogRange', 'netCurrentT', 'netCurrentFmtJ', 'netCurrentTicks', 'netCurrentFrame',
-             'netCurrentColorbarSpec', 'netCurrentControlsHtml', 'netCurrentTopOptions', 'netCurrentLegendHtml', 'netCurrentPct', 'jeEscH',
+             'netCurrentColorbarSpec', 'netCurrentCapPct', 'netCurrentControlsHtml', 'netCurrentTopOptions', 'netCurrentLegendHtml', 'netCurrentPct', 'jeEscH',
              'jetColor')
     parts, miss = [], []
     for n in names:
@@ -997,7 +997,7 @@ def section_viewer_select(sel):
     if not chk('④c0 서버 고르기 자료 (⑥) 가 있다', bool(sel and sel.get('share80') and sel.get('int80'))):
         return
     names = ('netCurrentDecode', 'netCurrentUrl', 'netCurrentTopOptions', 'netCurrentControlsHtml', 'netCurrentCap', 'netCurrentQuantile',
-             'netCurrentCapTag', 'netCurrentCacheTrim', 'netCurrentIsBig', 'netCurrentCacheLeave', 'netCurrentLegendHtml', 'netCurrentColorbarSpec',
+             'netCurrentCapTag', 'netCurrentCacheTrim', 'netCurrentIsBig', 'netCurrentCacheLeave', 'netCurrentLegendHtml', 'netCurrentColorbarSpec', 'netCurrentCapPct',
              'netCurrentRange', 'netCurrentLogRange', 'netCurrentTicks', 'netCurrentFrame', 'netCurrentFmtJ', 'netCurrentPct', 'jeEscH', 'jetColor')
     parts, miss = [], []
     for n in names:
@@ -1051,10 +1051,13 @@ out.legFallback = netCurrentLegendHtml(fb, opt, st);
 const E = [{j: 1}, {j: 2}, {j: 3}, {j: 4}, {j: 100}, {j: 0}, {j: null}];
 out.cap = [netCurrentCap([1, 100], E, 'linear', 'max'), netCurrentCap([1, 100], E, 'linear', 'p99'), netCurrentCap([1, 100], E, 'linear', 'p95'),
            netCurrentCap([0, 2], E, 'log', 'p99'), netCurrentCap([1, 100], E, 'linear', 'bogus'), netCurrentCap(null, E, 'linear', 'p99'),
-           netCurrentCap([1, 100], E, 'linear', undefined)];
-out.q = [netCurrentQuantile([1, 2, 3, 4, 100], 0.99), netCurrentQuantile([5], 0.95), netCurrentQuantile([1, 3], 0.5)];
-out.tag = [netCurrentCapTag({cap: 'p99'}), netCurrentCapTag({cap: 'p95'}), netCurrentCapTag({cap: 'max'}), netCurrentCapTag({}), netCurrentCapTag(null)];
+           netCurrentCap([1, 100], E, 'linear', undefined), netCurrentCap([1, 100], E, 'linear', 'p75'), netCurrentCap([1, 100], E, 'linear', 'p50')];
+out.q =[netCurrentQuantile([1, 2, 3, 4, 100], 0.99), netCurrentQuantile([5], 0.95), netCurrentQuantile([1, 3], 0.5)];
+out.tag = [netCurrentCapTag({cap: 'p99'}), netCurrentCapTag({cap: 'p95'}), netCurrentCapTag({cap: 'max'}), netCurrentCapTag({}), netCurrentCapTag(null),
+           netCurrentCapTag({cap: 'p75'}), netCurrentCapTag({cap: 'p50'})];
 const PJ = JSON.parse(JSON.stringify(dd));
+out.legP50 = netCurrentLegendHtml(PJ, Object.assign({}, opt, {scale: 'linear', cap: 'p50'}), {nDrawn: 3, nWrapSkipped: 0, lo: 1, hi: 3, scale: 'linear'});
+out.specP75 = netCurrentColorbarSpec(PJ, Object.assign({}, opt, {scale: 'linear', cap: 'p75'}), 1, 4, '1V');
 const lin99 = Object.assign({}, opt, {scale: 'linear', cap: 'p99'});
 out.legCap = netCurrentLegendHtml(PJ, lin99, {nDrawn: 3, nWrapSkipped: 0, lo: 1, hi: 96.16, scale: 'linear'});
 out.legNoCap = netCurrentLegendHtml(PJ, Object.assign({}, lin99, {cap: 'max'}), {nDrawn: 3, nWrapSkipped: 0, lo: 1, hi: 100, scale: 'linear'});
@@ -1090,7 +1093,7 @@ console.log(JSON.stringify(out));
         return
     cs = res['consts']
     chk(f'④c3 상수 — 전류 몫 {cs["shares"]} · 위쪽 {cs["caps"]} · 기억 {cs["cacheMax"]} · 가볍게 그리기 문턱 {cs["lod"]} · 상위 N 목록 그대로',
-        cs['shares'] == [50, 80, 95] and cs['caps'] == ['max', 'p99', 'p95'] and cs['cacheMax'] == 4 and cs['lod'] == 20000
+        cs['shares'] == [50, 80, 95] and cs['caps'] == ['max', 'p99', 'p95', 'p75', 'p50'] and cs['cacheMax'] == 4 and cs['lod'] == 20000
         and cs['tops'] == [500, 1000, 2000, 5000, 10000, 20000])
     chk(f'④c4 압축 꼴 풀기 = 같은 개수 정수 고르기의 간선 (위치 · 반경 · 번호 · j · 순서 정확히 같음 · {len(res["dec"])} 개) · 푼 뒤 압축 칸은 지운다',
         bool(res['dec']) and res['dec'] == res['dict'] and res['decGone'])
@@ -1136,8 +1139,13 @@ console.log(JSON.stringify(out));
         f'잘못된 값 · 없음 = 그대로 {cap}',
         cap[0] == [1, 100] and abs(cap[1][1] - 96.16) < 1e-9 and cap[1][0] == 1 and abs(cap[2][1] - 80.8) < 1e-9
         and abs(cap[3][1] - math.log10(96.16)) < 1e-12 and cap[3][0] == 0 and cap[4] == [1, 100] and cap[5] is None and cap[6] == [1, 100])
+    chk(f'④c13b 1저자 10-08 "p50, p75 를 추가" — p75 = 4 (정렬 [1, 2, 3, 4, 100] 의 4 번째) · p50 = 3 (중앙값) · 범례 회색 메모 50 % 값 · '
+        f'컬러바 아래 글 75th percentile {cap[7:9]}',
+        len(cap) >= 9 and cap[7] == [1, 4] and cap[8] == [1, 3] and '50 % 값' in res.get('legP50', '')
+        and '75th percentile' in (res.get('specP75') or {}).get('sub', ''))
     chk(f'④c14 백분위 함수 {res["q"]}', abs(res['q'][0] - 96.16) < 1e-9 and res['q'][1] == 5 and res['q'][2] == 2)
-    chk(f'④c15 컬러바 파일 이름 꼬리 — p99 → _p99 · p95 → _p95 · 최대 · 없음 → 꼬리 없음 {res["tag"]}', res['tag'] == ['_p99', '_p95', '', '', ''])
+    chk(f'④c15 컬러바 파일 이름 꼬리 — p99 → _p99 · p95 → _p95 · p75 → _p75 · p50 → _p50 · 최대 · 없음 → 꼬리 없음 {res["tag"]}',
+        res['tag'] == ['_p99', '_p95', '', '', '', '_p75', '_p50'])
     lcap, lno = res['legCap'], res['legNoCap']
     fj = res['fj']
     chk(f'④c16 범례 숫자 = 평범한 숫자 셋 ({fj[0]} … {fj[2]} · 가운데 {fj[1]}) · "≥" · ▲ 없음 · 위쪽 고른 것은 회색 방법 메모 (99 % 값)',
@@ -1197,7 +1205,7 @@ def section_viewer_capacity():
     않는다).  @1V 는 비용량과 무관 · 색 분포도 무관 (같은 배율).  범례 · 컬러바 글 = 고른 비용량 · 전극 평균 전류 밀도 이름 · 케이스 표 (175) 와 다르면 그 사실."""
     print('[④k] 뷰어 — 비용량 고르기 (175 · 200 mAh/g · node)')
     js = open(VIEWER_JS, encoding='utf-8').read()
-    names = ('netCurrentFrame', 'netCurrentCapacityTag', 'netCurrentLegendHtml', 'netCurrentColorbarSpec', 'netCurrentControlsHtml',
+    names = ('netCurrentFrame', 'netCurrentCapacityTag', 'netCurrentLegendHtml', 'netCurrentColorbarSpec', 'netCurrentCapPct', 'netCurrentControlsHtml',
              'netCurrentTopOptions', 'netCurrentTicks', 'netCurrentFmtJ', 'netCurrentPct', 'jeEscH', 'jetColor')
     parts, miss = [], []
     for n in names:
