@@ -8932,7 +8932,7 @@
     {
       "id": "G2RR4-03",
       "severity": "P3",
-      "status": "open",
+      "status": "claimed_fixed",
       "owner": "claude",
       "found_by": "codex 10-07 세대 2 재검증 4 (핀 87f0906a2 · 고유 blob 446 대조 · 실제 build_v13 → check_v13 (상위 τ 재독해만 대역) · 실제 audit CLI · WSL pilot3 제출 영수증 재독해 · case15 원덤프 직접 build/solve · Windows Python 3.12.14 NumPy 2.5.3 SciPy 1.16.3 — 194 · DEM · S3 미실행)",
       "opened_in": "docs/reviews/codex_review_gen2_network_reverify4_20261007.md",
@@ -8942,9 +8942,10 @@
         "scripts/run_network_194_parallel.py --selftest (㉟h — 옛 코드 114/117 → 117/117 · 생산 194 dry-run 관측 없음 = ⛔ · 관측을 끈 생산 manifest 감사 rc 1 · 역사 형식 면제)",
         "scripts/wsl_network_smoke.py --selftest (11/14 → 14/14 · case15 [음성 대조] 넷 · 커밋된 case15 원자료 직접 6 조합)",
         "scripts/g2_network_reread.py --selftest (19/20 → 20/20 · 스모크 음성 대조 S0b)",
-        "docs/reviews/lhs_network_batch_registration_20261007_g2.md (§3b · §4 · §9-2 · §9-4 — 제안 표지 · ⬜ 1저자 비준)"
+        "docs/reviews/lhs_network_batch_registration_20261007_g2.md (§3b · §4 · §9-2 · §9-4 — 제안 표지 · ⬜ 1저자 비준)",
+        "docs/reviews/lhs_network_batch_registration_20261007_g2.md (§4 덧붙임 · §9-6 비준 · 비준 뒤 활성 명령 표)"
       ],
-      "claimed_fixed_sha": "a51e61b05"
+      "claimed_fixed_sha": "5a00125d2"
     },
     {
       "id": "SELF-94",
@@ -9216,14 +9217,15 @@
       "found_by": "codex 10-07 세대 2 재검증 5 (리뷰 핀 aa7ec7fe9 · WSL 사전 점검 핀 839dbac6b · 독립 사본 469 파일 git blob 대조 · 실제 build_v13 → check_v13 (상위 τ 재독해만 대역) · 실제 audit CLI (합성 1 케이스 ROOT · staged 17 · retry 4) · 제출 WSL 묶음 독립 대조 61/61 · case15 원덤프 CPU 후처리 + 망 하위 프로세스 호출 거부 주입 · Windows Python 3.12.14 NumPy 2.5.3 SciPy 1.16.3 — 194 · DEM · MPM · S3 미실행)",
       "opened_in": "docs/reviews/codex_review_gen2_network_reverify5_20261007.md",
       "title": "case15 스모크 음성 대조가 망 하위 프로세스 실행 실패 (PermissionError) 를 지정한 내용 거부와 가르지 않는다 — 실제 case15 child_case 에서 망 CLI 호출 한 곳만 PermissionError 로 막아도 (Parse · Contact · Coverage = 원 코드 rc 0 · Network rc 1 · per-mode 산출물 없음) 평가기 6/6 PASS (자식 정상 종료 · 원자료 SHA + [음성 대조] 넷) · 다시 읽기 S0 · S0b PASS",
-      "note": "판정문 §2 (findings_review.json 범위: 실제 스모크 실패 원인 결합 · 수치 모형 변경 요구 아님).  무너지는 결론: \"case15 음성대조 PASS 가 이번 생산 파이프라인에서 지정된 거부 원인이 실제 발화했음을 증명한다\" — 별도 함수 (원자료 탐침) 에서 원인을 재현한다는 더 좁은 결론은 산다.  자리 (핀 aa7ec7fe9 · HEAD 같은 줄): scripts/wsl_network_smoke.py:568–595 negative_control_checks (① failed · 실패 단계 이름 · Stage E 없음 · 반환 run id 없음만 · ③④ = 파이프라인 뒤 별도 원자료 탐침) · :617–619 (evaluate 가 음성 대조 표지면 그 판정만) · :325–328 (child_case 의 원자료 탐침 호출 — 실제 시도와 결합 없음).  제출 WSL 실행 무효 아님 (받은 case15 단계 · 시도 기록 = 망 CLI rc 0 · 내용 검증 거부 · boundary_overlap · Physics 열 음수 면적 거부) · 수치 솔버 · 194 경계 규약 변경 근거 아님.  최소 해결 증거 (판정문 §2 · §7-2): 원자료 탐침 유지 + 실제 시도에도 구분 가능한 결과 — 지정된 입력/채널 거부 ↔ PermissionError · 실행파일 없음 · timeout · traceback 등 실행 실패를 다른 상태로 · 후자 = TECH/FAIL · 이번 시도 신원 · 입력과 결합된 구조화 사유/산출 증거 · 잘린 300 자 문자열을 늘려 grep 하는 것은 의미 계약이 아니다 (WEB-05 와 구분) · 정상 case15 / 호출 거부 / 누락 산출물 / 다른 예외 각각 회귀 (지정 거부만 PASS).  우리 트리 재현 (10-08 · HEAD 342b18a18 · 469 경로 git archive (핀과 다른 7 파일 = 이 탐침 경로 밖) · 탐침 무변경 · python -I) = 판정값 차이 0 (docs/reviews/codex_gen2_network_reverify5_evidence_20261007/_README_reproduction.md §3) — 거부 호출 1 · Network rc 1 · 검사 6/6 PASS · 다시 읽기 rc 0 (S0 · S0b) · 차이 = 환경만 (이온 CG 끝자리 · Windows CSV 개행에서 온 입력 지문 — 우리 지문 e140e28d3daf3ad7 · bcb53e13d2cc69be 는 WSL 제출 기록과 같다).  수정 계획 = docs/reviews/g2rr5_fix_plan_20261008.md §2.  ★ 10-08 밤 claimed_fixed (`72879744e` · 봉인 밖 (가) — pipeline_service._RUNNER 를 그대로 통과시키는 기록기 · 단계 결과 구조 필드 보존 · 봉인 32 무변경) — 실제 case15 토큰 고정: 이온 H · P computed · 전자 H · P · 열 H failed (boundary_overlap) · 열 P failed \"ligg_area < 0 (-0.186036)\" · 입력 digest = WSL 같음 · ⚠ 스모크 selftest 125–136 s (등재 fast · --run-fast 제한 180 s — 1저자 Q7).",
+      "note": "판정문 §2 (findings_review.json 범위: 실제 스모크 실패 원인 결합 · 수치 모형 변경 요구 아님).  무너지는 결론: \"case15 음성대조 PASS 가 이번 생산 파이프라인에서 지정된 거부 원인이 실제 발화했음을 증명한다\" — 별도 함수 (원자료 탐침) 에서 원인을 재현한다는 더 좁은 결론은 산다.  자리 (핀 aa7ec7fe9 · HEAD 같은 줄): scripts/wsl_network_smoke.py:568–595 negative_control_checks (① failed · 실패 단계 이름 · Stage E 없음 · 반환 run id 없음만 · ③④ = 파이프라인 뒤 별도 원자료 탐침) · :617–619 (evaluate 가 음성 대조 표지면 그 판정만) · :325–328 (child_case 의 원자료 탐침 호출 — 실제 시도와 결합 없음).  제출 WSL 실행 무효 아님 (받은 case15 단계 · 시도 기록 = 망 CLI rc 0 · 내용 검증 거부 · boundary_overlap · Physics 열 음수 면적 거부) · 수치 솔버 · 194 경계 규약 변경 근거 아님.  최소 해결 증거 (판정문 §2 · §7-2): 원자료 탐침 유지 + 실제 시도에도 구분 가능한 결과 — 지정된 입력/채널 거부 ↔ PermissionError · 실행파일 없음 · timeout · traceback 등 실행 실패를 다른 상태로 · 후자 = TECH/FAIL · 이번 시도 신원 · 입력과 결합된 구조화 사유/산출 증거 · 잘린 300 자 문자열을 늘려 grep 하는 것은 의미 계약이 아니다 (WEB-05 와 구분) · 정상 case15 / 호출 거부 / 누락 산출물 / 다른 예외 각각 회귀 (지정 거부만 PASS).  우리 트리 재현 (10-08 · HEAD 342b18a18 · 469 경로 git archive (핀과 다른 7 파일 = 이 탐침 경로 밖) · 탐침 무변경 · python -I) = 판정값 차이 0 (docs/reviews/codex_gen2_network_reverify5_evidence_20261007/_README_reproduction.md §3) — 거부 호출 1 · Network rc 1 · 검사 6/6 PASS · 다시 읽기 rc 0 (S0 · S0b) · 차이 = 환경만 (이온 CG 끝자리 · Windows CSV 개행에서 온 입력 지문 — 우리 지문 e140e28d3daf3ad7 · bcb53e13d2cc69be 는 WSL 제출 기록과 같다).  수정 계획 = docs/reviews/g2rr5_fix_plan_20261008.md §2.  ★ 10-08 밤 claimed_fixed (`72879744e` · 봉인 밖 (가) — pipeline_service._RUNNER 를 그대로 통과시키는 기록기 · 단계 결과 구조 필드 보존 · 봉인 32 무변경) — 실제 case15 토큰 고정: 이온 H · P computed · 전자 H · P · 열 H failed (boundary_overlap) · 열 P failed \"ligg_area < 0 (-0.186036)\" · 입력 digest = WSL 같음 · ⚠ 스모크 selftest 125–136 s (등재 fast · --run-fast 제한 180 s — 1저자 Q7).  ★ 10-09 Q7 반영 (`7928ff0de` · 1저자 비준) — 실제 case15 묶음 (원자료 6 조합 · 파이프라인 두 판 · --smoke-root) = `--selftest-real` (slow · 4/4 · 118.7 s · WSL 사전 점검에서 돌린다) · `--selftest` 16/16 · 12.5 s (fast) · 시험 20 개 조건 그대로 (자리만 옮김).",
       "evidence_tests": [
         "docs/reviews/codex_gen2_network_reverify5_evidence_20261007/evidence/r5_case15_pipeline_fault.json (실제 case15 child_case · 망 CLI 호출 거부 1 · Network rc 1 · 검사 6/6 PASS)",
         "docs/reviews/codex_gen2_network_reverify5_evidence_20261007/evidence/r5_case15_pipeline_fault_reread.json (다시 읽기 rc 0 · S0 · S0b PASS)",
         "docs/reviews/codex_gen2_network_reverify5_evidence_20261007/probes/r5_case15_pipeline_fault.py",
         "docs/reviews/codex_gen2_network_reverify5_evidence_20261007/probes/r5_case15_fault_reread.py",
         "scripts/wsl_network_smoke.py --selftest (G2RR5-02 — 14 → 고치기 전 코드 15/19 (합성 시도 변이 10 = 6/6 PASS · 실제 case15 + 망 CLI PermissionError = 6/6 PASS · smoke rc 0) → 19/19 · 새 검사 case15.nc5_attempt = 실제 시도 1 회 · rc 0 · per-mode 둘 · 실패 채널 정확히 등록 넷 · 예외 · rc≠0 · 산출 없음 = TECH)",
-        "docs/reviews/codex_g2rr5_fix_probe_rerun_20261008/case15/README.md (Codex 탐침 무변경 재실행 — r5_case15_pipeline_fault = 7 검사 · nc5_attempt TECH · smoke rc 1 (핀 6/6 PASS) · 결과 rerun_summary.json)"
+        "docs/reviews/codex_g2rr5_fix_probe_rerun_20261008/case15/README.md (Codex 탐침 무변경 재실행 — r5_case15_pipeline_fault = 7 검사 · nc5_attempt TECH · smoke rc 1 (핀 6/6 PASS) · 결과 rerun_summary.json)",
+        "scripts/wsl_network_smoke.py --selftest-real (실제 case15 · 4/4 · slow — docs/reviews/selftest_inventory.tsv)"
       ],
       "claimed_fixed_sha": "72879744e"
     },
@@ -9248,7 +9250,7 @@
     {
       "id": "G2RR5-04",
       "severity": "P3",
-      "status": "open",
+      "status": "claimed_fixed",
       "owner": "claude",
       "found_by": "codex 10-07 세대 2 재검증 5 (리뷰 핀 aa7ec7fe9 · WSL 사전 점검 핀 839dbac6b · 독립 사본 469 파일 git blob 대조 · 실제 build_v13 → check_v13 (상위 τ 재독해만 대역) · 실제 audit CLI (합성 1 케이스 ROOT · staged 17 · retry 4) · 제출 WSL 묶음 독립 대조 61/61 · case15 원덤프 CPU 후처리 + 망 하위 프로세스 호출 거부 주입 · Windows Python 3.12.14 NumPy 2.5.3 SciPy 1.16.3 — 194 · DEM · MPM · S3 미실행)",
       "opened_in": "docs/reviews/codex_review_gen2_network_reverify5_20261007.md",
@@ -9257,8 +9259,10 @@
       "evidence_tests": [
         "docs/reviews/codex_gen2_network_reverify5_evidence_20261007/evidence/r5_observation_retry/results.json (interrupted_then_done rc 0 · two_completed_with_copies rc 0 · two_completed_current_fallback rc 0 · two_completed_missing_prior_plan rc 1)",
         "docs/reviews/codex_gen2_network_reverify5_evidence_20261007/probes/r5_observation_retry.py",
-        "docs/reviews/lhs_network_batch_registration_20261007_g2.md (§4 제안 블록 — 핀 217 행 · HEAD 219 행)"
-      ]
+        "docs/reviews/lhs_network_batch_registration_20261007_g2.md (§4 제안 블록 — 핀 217 행 · HEAD 219 행)",
+        "docs/reviews/lhs_network_batch_registration_20261007_g2.md (§4 덧붙임 · §9-6 비준 · 비준 뒤 활성 명령 표)"
+      ],
+      "claimed_fixed_sha": "5a00125d2"
     },
     {
       "id": "RB-01",

@@ -57,6 +57,6 @@ python3 -I $S/r5tools/run_repro.py $S/g2rr5_0203/repro_A r5_case15_fault_reread
 - 탐침이 직접 만든 스모크 보고는 `timings` 를 싣지 않는다 — 소비자는 자식 프로세스 검사를 다시 판정할 상세가 없으니 실패로 본다 (상세 결손 = FAIL · 실제 `run_smoke` 보고는
   늘 `timings` 를 싣는다).  그래서 변이마다 **제 사유로** 거부되는지는 탐침 대신 시험이 보인다:
   `scripts/g2_network_reread.py --selftest` (양성 = 실제 case15 값의 기록 + 고친 스모크 생산자 evaluate 의 검사 일곱 · timings — Codex 변이 일곱 · 회귀 다섯 · 신원 · ID 넷 ·
-  23/23) · `scripts/wsl_network_smoke.py --selftest` 마지막 묶음 (실제 case15 (a) 망 CLI 만 PermissionError = TECH · rc 1 / (b) 주입 없음 = rc 0 · 7/7 → 이 도구
+  23/23) · `scripts/wsl_network_smoke.py --selftest-real` (10-09 Q7 로 `--selftest` 에서 나눔 · 이 README 첫 판의 "--selftest 마지막 묶음" = 나누기 전) (실제 case15 (a) 망 CLI 만 PermissionError = TECH · rc 1 / (b) 주입 없음 = rc 0 · 7/7 → 이 도구
   `--smoke-root` rc 0 · 20/20).
 - 판정 근거 · 범위: 이 재실행은 **Codex 탐침이 고친 트리에서 어떻게 끝나는가**의 확인이다 — 194 생산 · WSL 실덤프 · S3 · DEM/MPM 을 다시 돌린 것이 아니다 · 봉인 32 무변경.
