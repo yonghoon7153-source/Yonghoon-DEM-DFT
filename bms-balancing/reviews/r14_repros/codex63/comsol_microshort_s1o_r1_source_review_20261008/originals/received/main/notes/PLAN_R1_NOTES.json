@@ -1,0 +1,83 @@
+{
+  "kind": "R1_PLAN_AUTHORING_NOT_FUNCTIONAL_TEST",
+  "utc": "2026-10-08T05:31:55.317014+00:00",
+  "original_case_count": 98,
+  "new_cases": 32,
+  "actual_functional_cases": 130,
+  "functional_groups": 8,
+  "Python": 99,
+  "PowerShell5.1": 31,
+  "static_checks_separate": 1,
+  "candidate_imports": 0,
+  "candidate_calls": 0,
+  "functional_engine_sessions": 0,
+  "tool_scope": "new author-owned JSON/text read/write and independent scalar request-prefix arithmetic only",
+  "draft_status": "FINAL_STATIC_TEXT_ALIGNED_NOT_EXECUTED",
+  "original_plan_untouched": true,
+  "source_bindings": [
+    {
+      "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\outputs\\microshort_s1o_r1_20261008\\candidate\\consumer.py.inactive.txt",
+      "relative_path": "candidate/consumer.py.inactive.txt",
+      "bytes": 27987,
+      "sha256": "0cb1aa3cc4593dcb041115baf208c4dd09186fcc75055ddcde53c68086cc6b79",
+      "scope": "currentR1rawsourcebinding; noimport/call"
+    },
+    {
+      "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\outputs\\microshort_s1o_r1_20261008\\candidate\\control.py.inactive.txt",
+      "relative_path": "candidate/control.py.inactive.txt",
+      "bytes": 18304,
+      "sha256": "8ec75e57336c4ffa33e61d513076fb1facd1cf90430b1e1ce1c15f9bb57ac00d",
+      "scope": "currentR1rawsourcebinding; noimport/call"
+    },
+    {
+      "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\outputs\\microshort_s1o_r1_20261008\\candidate\\Parent.ps1.inactive.txt",
+      "relative_path": "candidate/Parent.ps1.inactive.txt",
+      "bytes": 25787,
+      "sha256": "e9f8d366ca9931b84ded5753a560369b72fea8737a77075bc2b80ec771bc56ff",
+      "scope": "currentR1rawsourcebinding; noimport/call"
+    }
+  ],
+  "extraction_span_count": 43,
+  "old_cases_updated": 31,
+  "old_cases_retained": 67,
+  "documentation_read_issue": {
+    "tool_chunk": "c5b89f",
+    "rc": 1,
+    "wall_seconds": 6.5138458,
+    "target": "notes/PHYSICS_REVIEW.md",
+    "operation": "optional read after two successful contract reads",
+    "raw_error": "suppressed by -ErrorAction SilentlyContinue; tool emitted rc1, not candidate trace",
+    "scope": "documentation read only; no function test or candidate failure"
+  },
+  "first_authoring_error": {
+    "tool_chunk": "dd8091",
+    "rc": 1,
+    "wall_seconds": 6.8040694,
+    "raw": "Traceback (most recent call last):\n  File \"<stdin>\", line 76, in <module>\n  File \"C:\\Users\\BML\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\Lib\\pathlib.py\", line 1028, in read_text\n    return f.read()\n           ^^^^^^^^\nUnicodeDecodeError: 'cp949' codec can't decode byte 0x80 in position 11: illegal multibyte sequence\n",
+    "timing": "revised JSON written; Korean MD read failed before MD/notes write",
+    "correction": "explicit UTF8 for own document reads; no candidate or functional test retry",
+    "preserved": true
+  },
+  "independent_scalar_check": {
+    "tool_chunk": "15ebce",
+    "rc": 0,
+    "precision": 50,
+    "input": "r=Decimal(0.0002)/Decimal(96485.33212)",
+    "r": "2.0728539313235459275942014552916273881402482340339E-9",
+    "F_times_r": "0.00020000000000000000000000000000000000000000000000000",
+    "candidate_call": false
+  },
+  "final_root_static_review_corrections": {
+    "scope": "plan only, no production/test changes",
+    "changes": [
+      "CHARGE_R112/113 target_abs_increment_C_m2 distinguished from unchanged production_deadband_C_m2=0.0002",
+      "Per-case direct exception/direct return/analyze producer/PowerShell return observation modes and field paths fixed",
+      "Static source read confirmed control exception ContractError and execute_once authorization failure precedes try/result construction; explicit paths use caught_ContractError.reason/stage.",
+      "Parent audit R113 pins POLICY02 string0.001 to numeric0.001 and verifies double transport before targetcall, preventing integer0 bypass.",
+      "R115 removes nonexistent successful-return stage field; uses instrumented reach.",
+      "R107 pins native-only non-request replacement absent intersection and between surviving neighbors, excluding duplicate/order earlier rejection."
+    ],
+    "functional_count_unchanged": 130,
+    "utc": "2026-10-08T05:40:03.104007+00:00"
+  }
+}

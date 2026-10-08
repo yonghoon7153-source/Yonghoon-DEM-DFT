@@ -1,0 +1,18 @@
+{
+  "scope": "Read-only byte identities for tools used in this authorized static preparation; not native or functional compatibility evidence",
+  "tools": [
+    {
+      "path": "C:\\Users\\BML\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\python.exe",
+      "bytes": 107312,
+      "sha256": "b7a12c3af0b4db44191eec14ea095eba731b7328917f570806183093d19ddca2"
+    },
+    {
+      "path": "C:\\Users\\BML\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\native\\powershell\\pwsh.exe",
+      "bytes": 301368,
+      "sha256": "362a356ce7f0940ec74f73a8fc2c990a2cc24a38a11c90bbd8eca947110ad139"
+    }
+  ],
+  "candidate_executed": false,
+  "COMSOL": 0,
+  "JVM": 0
+}

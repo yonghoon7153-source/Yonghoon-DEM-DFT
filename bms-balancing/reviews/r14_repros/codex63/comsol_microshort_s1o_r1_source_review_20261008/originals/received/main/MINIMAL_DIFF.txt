@@ -1,0 +1,600 @@
+--- original/candidate/consumer.py.inactive.txt
++++ R1/candidate/consumer.py.inactive.txt
+@@ -215,9 +215,53 @@
+     return {'status':'PASS','grade':consumed['grade'],'raw_identity':consumed['raw_identity']}
+ 
+ @decimal_context
+-def charge_balance(rows, area_m2, quadrature_bound_C_m2=None):
++def charge_balance(rows, area_m2, quadrature_bound_C_m2=None, *, global_rows,
++                   native_times_s, configured_end_s, actual_end_s, safe_end_s,
++                   native_reason, source_binding):
+     stage='charge_balance'
+     require(len(rows)>1 and rows[0]['time_s']==0,'CHARGE_TIME',stage)
++    # These are independently normalized raw-native/global inputs, not a grid
++    # inferred from the charge rows or the shorter comparison prefix. The raw
++    # adapter remains OPEN; absent identities/grid/units fail closed here.
++    require(isinstance(native_times_s,list) and len(native_times_s)>1,
++            'CHARGE_GRID_BINDING',stage)
++    native_times=[number(t,stage) for t in native_times_s]
++    require(native_times[0]==0 and all(b>a for a,b in zip(native_times,native_times[1:])),
++            'CHARGE_GRID_BINDING',stage)
++    actual,configured,safe=number(actual_end_s,stage),number(configured_end_s,stage),number(safe_end_s,stage)
++    require(native_times[-1]==actual and 0<actual<=configured and
++            ((native_reason=='NORMAL_END' and actual==configured and safe==actual) or
++             (native_reason=='GUARD_STOP' and 0<=safe<actual<configured and safe==native_times[-2])),
++            'CHARGE_ENDPOINT_BINDING',stage)
++    require([row['time_s'] for row in rows]==native_times and
++            list(global_rows)==native_times,'CHARGE_GRID_BINDING',stage)
++    expected_units={'time_s':'s','j':'A/m^2','RN':'A/m^2','RP':'A/m^2',
++                    'I':'A','LiN':'mol/m^2','LiP':'mol/m^2','LiE':'mol/m^2'}
++    require(isinstance(source_binding,dict) and
++            source_binding.get('normalized_units')==expected_units and
++            source_binding.get('global_li_unit')=='mol/m^2', 'CHARGE_UNIT_BINDING',stage)
++    identities={}
++    for key in ('native_grid_identity','global_identity','charge_identity'):
++        identity=source_binding.get(key)
++        require(isinstance(identity,dict) and set(identity)=={'path','bytes','sha256'} and
++                isinstance(identity['path'],str) and bool(identity['path'].strip()) and
++                type(identity['bytes']) is int and identity['bytes']>0 and
++                isinstance(identity['sha256'],str) and len(identity['sha256'])==64 and
++                all(c in '0123456789abcdef' for c in identity['sha256']),
++                'CHARGE_SOURCE_BINDING',stage)
++        identities[key]=dict(identity)
++    for row in rows:
++        require(set(row)==set(expected_units),'CHARGE_ROW_SCHEMA',stage)
++        g=global_rows[row['time_s']]
++        require(g.get('time_s')==row['time_s'],'CHARGE_GLOBAL_TIME',stage)
++        require(all(row[local]==g.get(raw) for local,raw in (
++                    ('LiN','Li_N_mol_m2'),('LiP','Li_P_mol_m2'),
++                    ('LiE','Li_electrolyte_mol_m2'))),'CHARGE_GLOBAL_LI_MISMATCH',stage)
++    grid_binding={'status':'PASS','times_s':[str(t) for t in native_times],
++        'count':len(native_times),'start_s':'0','actual_end_s':str(actual),
++        'configured_end_s':str(configured),'comparison_safe_end_s':str(safe),
++        'native_reason':native_reason,'units_status':'MATCHED',
++        'global_li_status':'EXACT_MATCH_ALL_TIMES',**identities}
+     area=number(area_m2); require(area>0,'AREA',stage)
+     F=Decimal('96485.33212'); qI=qRN=qRP=Decimal(0)
+     j_abs=Decimal('1e-8'); q_abs=Decimal('2e-4'); rel=Decimal('1e-4')
+@@ -235,6 +279,26 @@
+             qRN+=dt*(prior['RN']+rn)/2
+             qRP-=dt*(prior['RP']+rp)/2
+         qN=F*(initial['LiN']-row['LiN']); qP=F*(row['LiP']-initial['LiP'])
++        dqN=dqP=None; interval_sign='NOT_APPLICABLE_AT_T0'
++        if prior is not None:
++            dqN=F*(prior['LiN']-row['LiN']);dqP=F*(row['LiP']-prior['LiP'])
++            violated=[name for name,value in (('N',dqN),('P',dqP)) if value < -q_abs]
++            if violated:
++                first={'t_minus_s':str(prior['time_s']),'t_plus_s':str(t),
++                    'dqN_C_m2':str(dqN),'dqP_C_m2':str(dqP),
++                    'deadband_C_m2':str(q_abs),'violated_electrodes':violated}
++                # Preserve the old cumulative reason when it also fails, but
++                # retain the newly required first adjacent violation evidence.
++                reason='REVERSE_LI_TRANSFER' if qN < -q_abs or qP < -q_abs else 'REVERSE_LI_INCREMENT'
++                error=EvidenceError(reason,stage)
++                error.details={'first_violation':first}
++                error.charge_budget={'schema':'S1O_CHARGE_BUDGET_R1','status':'INVALID',
++                    'reason':error.reason,'grid_binding':grid_binding,'records':records,
++                    'interval_direction':{'status':'REVERSED_BEYOND_DEADBAND',
++                        'deadband_C_m2':str(q_abs),'checked_intervals':len(records),
++                        'first_violation':first}}
++                raise error
++            interval_sign='RESOLUTION_LIMITED' if dqN<=q_abs or dqP<=q_abs else 'RESOLVED_EXPECTED_DIRECTION'
+         require(qN>=-q_abs and qP>=-q_abs,'REVERSE_LI_TRANSFER',stage)
+         total0=initial['LiN']+initial['LiP']+initial['LiE']
+         require(total0>0 and abs((row['LiN']+row['LiP']+row['LiE'])/total0-1)<=Decimal('1e-6'),'LI_DRIFT',stage)
+@@ -249,10 +313,16 @@
+             if bound>limit/4: unresolved=True
+             else: require(all(abs(a-b)+bound<=limit for a,b in ((qI,qN),(qI,qP),(qRN,qN),(qRP,qP))),'INTEGRATED_CHARGE_BALANCE',stage)
+         sign='NOT_APPLICABLE_AT_T0' if t==0 else ('RESOLUTION_LIMITED' if deadband else 'CONSISTENT')
+-        records.append({'t_s':str(t),'qI_C_m2':str(qI),'qRN_C_m2':str(qRN),'qRP_C_m2':str(qRP),'qN_C_m2':str(qN),'qP_C_m2':str(qP),'sign':sign})
++        records.append({'t_s':str(t),'qI_C_m2':str(qI),'qRN_C_m2':str(qRN),'qRP_C_m2':str(qRP),'qN_C_m2':str(qN),'qP_C_m2':str(qP),'sign':sign,
++            'interval_start_s':None if prior is None else str(prior['time_s']),
++            'dqN_C_m2':None if dqN is None else str(dqN),
++            'dqP_C_m2':None if dqP is None else str(dqP),'interval_sign':interval_sign})
+         prior=row
+     unresolved = unresolved or records[-1]['sign']=='RESOLUTION_LIMITED'
+-    return {'status':'INCONCLUSIVE' if unresolved or quadrature_bound_C_m2 is None else 'CONSISTENT','records':records,'quadrature':'trapezoid actual ordered stored grid','quadrature_error_bound_C_m2':None if quadrature_bound_C_m2 is None else str(number(quadrature_bound_C_m2)),'reason':'UNRESOLVED_SIGN_OR_QUADRATURE' if unresolved or quadrature_bound_C_m2 is None else None}
++    return {'schema':'S1O_CHARGE_BUDGET_R1','status':'INCONCLUSIVE' if unresolved or quadrature_bound_C_m2 is None else 'CONSISTENT',
++        'grid_binding':grid_binding,'interval_direction':{'status':'WITHIN_DEADBAND_OR_EXPECTED',
++            'deadband_C_m2':str(q_abs),'checked_intervals':len(rows)-1,'first_violation':None},
++        'records':records,'quadrature':'trapezoid actual ordered stored grid','quadrature_error_bound_C_m2':None if quadrature_bound_C_m2 is None else str(number(quadrature_bound_C_m2)),'reason':'UNRESOLVED_SIGN_OR_QUADRATURE' if unresolved or quadrature_bound_C_m2 is None else None}
+ 
+ @decimal_context
+ def paired_classification(base, finite, controls, expected_control_ids, validity):
+@@ -298,18 +368,36 @@
+         expected_safe=end if native['reason']=='NORMAL_END' else number(native['guard_pair']['t_minus'])
+         require(safe==expected_safe and comparison_spec['common_requests']==binding['common_requested_times_s'],
+                 'COMPARISON_WINDOW_OR_REQUEST_BINDING','analyze')
++        if native['reason']=='GUARD_STOP':
++            require(number(native['guard_pair']['t_plus'])==final and 0<=safe<final<end,
++                    'CHARGE_ENDPOINT_BINDING','analyze')
+         result['native_completion']='NORMAL_WINDOW_COMPLETED' if native['reason']=='NORMAL_END' else 'PROTECTIVE_STOP'
+         require(readbacks.get('source_evidence') and readbacks.get('units_status')=='PASS' and readbacks.get('guard_status')=='PASS','READBACK_EVIDENCE','analyze')
+         result['initialization']=compare_initialization(readbacks['initial'],readbacks['initial_targets'])
+         result['initial_profile']=initial_profile_uniformity(data['profile_N'][Decimal(0)],data['profile_P'][Decimal(0)],readbacks['xN_target'],readbacks['xP_target'])
+         result['effective_coefficients']=verify_coefficient_evidence(readbacks['configured'],readbacks['consumed'],readbacks['coefficient_expected'])
+         result['invariants']=invariants(data['global'],data['N'],data['P'])
++        charge_proof=readbacks.get('charge_provenance',{})
++        sources=data.get('source_identities',{})
++        require(isinstance(charge_proof,dict) and isinstance(sources,dict) and
++                charge_proof.get('run_id')==binding['run_id'] and
++                charge_proof.get('manifest_sha256')==binding['manifest_sha256'],
++                'CHARGE_SOURCE_BINDING','analyze')
++        for key,expected in (('charge_identity',sources.get('charge')),
++                             ('global_identity',sources.get('global')),
++                             ('native_grid_identity',native.get('stored_grid_identity'))):
++            require(isinstance(expected,dict) and charge_proof.get(key)==expected and
++                    expected in readbacks['source_evidence'],'CHARGE_SOURCE_BINDING','analyze')
+         if readbacks.get('quadrature_bound_C_m2') is not None:
+             proof=readbacks.get('quadrature_provenance',{})
+             require(proof.get('uniform_over_all_prefixes') is True and proof.get('integrands')==['j','RN','-RP'] and
+-                proof.get('bound_method_verified') is True and proof.get('raw_identity') and proof.get('grid_sha256'),
++                proof.get('bound_method_verified') is True and proof.get('raw_identity') and
++                proof.get('grid_sha256')==charge_proof['native_grid_identity'].get('sha256'),
+                 'QUADRATURE_BOUND_PROVENANCE','analyze')
+-        result['charge_budget']=charge_balance(data['charge'],readbacks['area_m2'],readbacks.get('quadrature_bound_C_m2'))
++        result['charge_budget']=charge_balance(data['charge'],readbacks['area_m2'],readbacks.get('quadrature_bound_C_m2'),
++            global_rows=data['global'],native_times_s=native.get('stored_times_s'),
++            configured_end_s=end,actual_end_s=final,safe_end_s=safe,
++            native_reason=native['reason'],source_binding=charge_proof)
+         result['comparison_details']=compare_policy(data,comparison_spec['reference'],comparison_spec['requests_current'],comparison_spec['requests_reference'],comparison_spec['common_requests'],comparison_spec['safe_end_s'])
+         result['comparison']=result['comparison_details']['status']
+         result['source_evidence']=readbacks['source_evidence']
+@@ -318,6 +406,8 @@
+             result['limited_result']='AWAITING_S1_LIMITED_EXTERNAL_REVIEW'
+     except EvidenceError as exc:
+         result['errors'].append({'reason':exc.reason,'stage':exc.stage});result['evidence_validity']='INVALID'
++        if hasattr(exc,'details'): result['errors'][-1]['details']=exc.details
++        if hasattr(exc,'charge_budget'): result['charge_budget']=exc.charge_budget
+     except Exception as exc:
+         result['errors'].append({'reason':'UNEXPECTED_CONSUMER_EXCEPTION','type':type(exc).__name__,'detail':str(exc)});result['evidence_validity']='INCOMPLETE'
+     return result
+--- original/candidate/Parent.ps1.inactive.txt
++++ R1/candidate/Parent.ps1.inactive.txt
+@@ -24,6 +24,149 @@
+ function S1Failure([string]$Reason,[string]$Stage) {
+     return @{status='INCOMPLETE';reason=$Reason;stage=$Stage;overall='INCOMPLETE';normal_gate='INCOMPLETE'}
+ }
++function S1ExactDecimal($Value) {
++    # Decimal strings cross Python->JSON->PS without a binary-double conversion.
++    # A floating/decimal CLR value has already lost the original lexical evidence.
++    if ($Value -is [string]) { $text=$Value }
++    elseif ($Value -is [byte] -or $Value -is [sbyte] -or $Value -is [int16] -or
++        $Value -is [uint16] -or $Value -is [int32] -or $Value -is [uint32] -or
++        $Value -is [int64] -or $Value -is [uint64]) {
++        $text=$Value.ToString([Globalization.CultureInfo]::InvariantCulture)
++    } else { throw 'DECIMAL_TRANSPORT_PRECISION' }
++    $m=[regex]::Match($text,'^([+-]?)(?:([0-9]+)(?:\.([0-9]*))?|\.([0-9]+))(?:[eE]([+-]?[0-9]+))?$')
++    if (-not $m.Success) { throw 'DECIMAL_TRANSPORT_FORMAT' }
++    $whole=$m.Groups[2].Value
++    $fraction=$(if ($m.Groups[4].Success) {$m.Groups[4].Value} else {$m.Groups[3].Value})
++    $exponent=0
++    if ($m.Groups[5].Success -and -not [int]::TryParse($m.Groups[5].Value,
++            [Globalization.NumberStyles]::AllowLeadingSign,[Globalization.CultureInfo]::InvariantCulture,[ref]$exponent)) {
++        throw 'DECIMAL_TRANSPORT_EXPONENT'
++    }
++    $digits=$whole+$fraction; $trimmed=$digits.TrimStart([char]'0')
++    if ($trimmed.Length -eq 0) { return @{sign=0;digits='0';position=[long]0} }
++    $leading=$digits.Length-$trimmed.Length
++    return @{sign=$(if ($m.Groups[1].Value -ceq '-') {-1} else {1});
++        digits=$trimmed.TrimEnd([char]'0');position=([long]$whole.Length+[long]$exponent-[long]$leading)}
++}
++function S1ExactCompare($Left,$Right) {
++    $a=S1ExactDecimal $Left; $b=S1ExactDecimal $Right
++    if ($a.sign -ne $b.sign) { return [Math]::Sign($a.sign-$b.sign) }
++    if ($a.sign -eq 0) { return 0 }
++    if ($a.position -ne $b.position) { return ($a.sign*[Math]::Sign($a.position-$b.position)) }
++    $length=[Math]::Max($a.digits.Length,$b.digits.Length)
++    return ($a.sign*[Math]::Sign([string]::CompareOrdinal($a.digits.PadRight($length,'0'),$b.digits.PadRight($length,'0'))))
++}
++function S1TimeVector($Values,$Upper,[string]$Reason) {
++    if ($Values -isnot [array] -or @($Values).Count -lt 2) { throw $Reason }
++    $prior=$null
++    foreach ($value in $Values) {
++        if ((S1ExactCompare $value 0) -lt 0 -or (S1ExactCompare $value $Upper) -gt 0 -or
++            ($null -ne $prior -and (S1ExactCompare $value $prior) -le 0)) { throw $Reason }
++        $prior=$value
++    }
++    if ((S1ExactCompare $Values[0] 0) -ne 0) { throw $Reason }
++}
++function S1Coverage($Coverage,$Expected,$NativeAxis) {
++    try {
++        # Fixed registered vector, never the producer's reported count, defines the prefix.
++        S1TimeVector $Expected.common_requested_times_s $Expected.end_s 'EXPECTED_REQUEST_VECTOR'
++        if ($Expected.required_count -ne @($Expected.common_requested_times_s).Count) { throw 'EXPECTED_REQUEST_COUNT' }
++        $required=@($Expected.common_requested_times_s | Where-Object {
++            (S1ExactCompare $_ $NativeAxis.safe_end_s) -le 0
++        })
++        if ($required.Count -lt 2) { throw 'EMPTY_OR_ZERO_ONLY_COMPARISON' }
++        if (-not (S1Struct $Coverage) -or $Coverage.status -cne 'PASS' -or
++            $Coverage.missing_a -isnot [array] -or @($Coverage.missing_a).Count -ne 0 -or
++            $Coverage.missing_b -isnot [array] -or @($Coverage.missing_b).Count -ne 0 -or
++            $Coverage.common_requested_count -isnot [int] -or $Coverage.common_requested_count -ne $required.Count -or
++            $Coverage.comparison_count -isnot [int] -or $Coverage.comparison_count -ne $required.Count -or
++            $Coverage.full_intersection_count -isnot [int] -or
++            $Coverage.full_intersection_count -ne @($Coverage.full_intersection).Count) { throw 'COMPARISON_COVERAGE' }
++        S1TimeVector $Coverage.comparison_times $NativeAxis.safe_end_s 'COMPARISON_TIME_ORDER_OR_RANGE'
++        S1TimeVector $Coverage.full_intersection $NativeAxis.actual_end_s 'INTERSECTION_TIME_ORDER_OR_RANGE'
++        if (@($Coverage.comparison_times).Count -ne $required.Count) { throw 'COMPARISON_TIME_COUNT' }
++        for ($i=0;$i -lt $required.Count;$i++) {
++            if ((S1ExactCompare $Coverage.comparison_times[$i] $required[$i]) -ne 0) { throw 'COMPARISON_TIME_CONTENT' }
++        }
++        if ((S1ExactCompare $Coverage.first $required[0]) -ne 0 -or
++            (S1ExactCompare $Coverage.last $required[-1]) -ne 0) { throw 'COMPARISON_ENDPOINT_CONTENT' }
++        # All common states remain visible, including protective t_plus beyond the safe prefix.
++        # Comparison times must belong to full intersection; full intersection must belong to native grid.
++        $j=0
++        foreach ($t in $Coverage.full_intersection) {
++            while ($j -lt @($NativeAxis.stored_times_s).Count -and (S1ExactCompare $NativeAxis.stored_times_s[$j] $t) -lt 0) { $j++ }
++            if ($j -ge @($NativeAxis.stored_times_s).Count -or (S1ExactCompare $NativeAxis.stored_times_s[$j] $t) -ne 0) { throw 'INTERSECTION_NOT_NATIVE_SUBSET' }
++        }
++        $j=0
++        foreach ($t in $required) {
++            while ($j -lt @($Coverage.full_intersection).Count -and (S1ExactCompare $Coverage.full_intersection[$j] $t) -lt 0) { $j++ }
++            if ($j -ge @($Coverage.full_intersection).Count -or (S1ExactCompare $Coverage.full_intersection[$j] $t) -ne 0) { throw 'COMPARISON_NOT_INTERSECTION_SUBSET' }
++        }
++        return @{status='PASS';expected_prefix_count=$required.Count;safe_end_s=$NativeAxis.safe_end_s}
++    } catch { return S1Failure $_.Exception.Message 'coverage' }
++}
++function S1ChargeFields($Charge,$Expected,$NativeAxis,$Sources) {
++    try {
++        if ($Charge.schema -cne 'S1O_CHARGE_BUDGET_R1' -or $Charge.status -cnotin @('CONSISTENT','INCONCLUSIVE') -or
++            $Charge.records -isnot [array] -or @($Charge.records).Count -lt 2) { throw 'CHARGE_RECORD_SCHEMA' }
++        $g=$Charge.grid_binding; $direction=$Charge.interval_direction
++        if (-not (S1Struct $g) -or $g.status -cne 'PASS' -or $g.units_status -cne 'MATCHED' -or
++            $g.global_li_status -cne 'EXACT_MATCH_ALL_TIMES' -or $g.count -isnot [int] -or
++            $g.count -ne @($Charge.records).Count -or $g.count -ne @($NativeAxis.stored_times_s).Count -or
++            @($g.times_s).Count -ne $g.count -or $g.native_reason -cne $NativeAxis.native_reason) { throw 'CHARGE_GRID_SCHEMA' }
++        S1TimeVector $g.times_s $NativeAxis.actual_end_s 'CHARGE_GRID_TIME_ORDER_OR_RANGE'
++        if ((S1ExactCompare $g.start_s 0) -ne 0 -or (S1ExactCompare $g.actual_end_s $NativeAxis.actual_end_s) -ne 0 -or
++            (S1ExactCompare $g.configured_end_s $Expected.end_s) -ne 0 -or
++            (S1ExactCompare $g.comparison_safe_end_s $NativeAxis.safe_end_s) -ne 0) { throw 'CHARGE_ENDPOINT_BINDING' }
++        foreach ($name in @('native_grid_identity','global_identity','charge_identity')) {
++            $id=$g.$name
++            if (-not (S1Struct $id) -or -not (S1Sha $id.sha256) -or $id.path -isnot [string] -or
++                [string]::IsNullOrWhiteSpace($id.path) -or -not (S1Number $id.bytes 1 ([double]::MaxValue))) { throw 'CHARGE_SOURCE_IDENTITY' }
++            $matched=@($Sources | Where-Object {$_.path -ceq $id.path -and $_.sha256 -ceq $id.sha256 -and $_.bytes -eq $id.bytes})
++            if ($matched.Count -ne 1) { throw 'CHARGE_SOURCE_NOT_REGISTERED' }
++        }
++        foreach ($key in @('path','bytes','sha256')) {
++            if ($g.native_grid_identity.$key -cne $NativeAxis.stored_grid_identity.$key) { throw 'CHARGE_NATIVE_GRID_IDENTITY' }
++        }
++        if (-not (S1Struct $direction) -or $direction.status -cne 'WITHIN_DEADBAND_OR_EXPECTED' -or
++            (S1ExactCompare $direction.deadband_C_m2 '0.0002') -ne 0 -or
++            $direction.checked_intervals -isnot [int] -or $direction.checked_intervals -ne ($g.count-1) -or
++            -not (S1Has $direction 'first_violation') -or $null -ne $direction.first_violation) { throw 'CHARGE_INTERVAL_SCHEMA' }
++        for ($i=0;$i -lt $g.count;$i++) {
++            $r=$Charge.records[$i]
++            if (-not (S1Struct $r) -or (S1ExactCompare $g.times_s[$i] $NativeAxis.stored_times_s[$i]) -ne 0 -or
++                (S1ExactCompare $r.t_s $g.times_s[$i]) -ne 0) { throw 'CHARGE_RECORD_TIME_BINDING' }
++            foreach ($key in @('qI_C_m2','qRN_C_m2','qRP_C_m2','qN_C_m2','qP_C_m2')) { $null=S1ExactDecimal $r.$key }
++            if ($i -eq 0) {
++                if ($r.interval_sign -cne 'NOT_APPLICABLE_AT_T0' -or $null -ne $r.interval_start_s -or
++                    $null -ne $r.dqN_C_m2 -or $null -ne $r.dqP_C_m2) { throw 'CHARGE_T0_INTERVAL' }
++            } else {
++                if ((S1ExactCompare $r.interval_start_s $g.times_s[$i-1]) -ne 0 -or
++                    (S1ExactCompare $r.dqN_C_m2 '-0.0002') -lt 0 -or
++                    (S1ExactCompare $r.dqP_C_m2 '-0.0002') -lt 0 -or
++                    $r.interval_sign -cnotin @('RESOLUTION_LIMITED','RESOLVED_EXPECTED_DIRECTION')) { throw 'CHARGE_INTERVAL_DIRECTION' }
++                $intervalSign=$(if ((S1ExactCompare $r.dqN_C_m2 '0.0002') -le 0 -or
++                    (S1ExactCompare $r.dqP_C_m2 '0.0002') -le 0) {'RESOLUTION_LIMITED'} else {'RESOLVED_EXPECTED_DIRECTION'})
++                if ($r.interval_sign -cne $intervalSign) { throw 'CHARGE_INTERVAL_SIGN_CONTRADICTION' }
++            }
++        }
++        return @{status='PASS'}
++    } catch { return S1Failure $_.Exception.Message 'charge_fields' }
++}
++function S1ComparisonNumerics($Details,$NativeAxis) {
++    try {
++        $within=$true; $limits=@{voltage_V='0.001';surface_x='0.0001';Li_relative='0.000001'}
++        foreach ($key in @('voltage_V','surface_x','Li_relative')) {
++            $row=$Details.maxima.$key
++            if (-not (S1Struct $row) -or (S1ExactCompare $row.value 0) -lt 0 -or
++                (S1ExactCompare $row.time_s 0) -lt 0 -or (S1ExactCompare $row.time_s $NativeAxis.safe_end_s) -gt 0) {
++                throw ('NUMERIC_FIELD_INVALID:'+ $key)
++            }
++            if ((S1ExactCompare $row.value $limits[$key]) -gt 0) { $within=$false }
++        }
++        return @{status='PASS';comparison=$(if ($within) {'WITHIN_LIMITS_THIS_WINDOW'} else {'EXCEEDS_LIMITS'})}
++    } catch { return S1Failure $_.Exception.Message 'comparison_numerics' }
++}
+ function S1NativeAxis($Native,$Expected) {
+     if (-not (S1Struct $Native)) { return S1Failure 'NATIVE_RECORD_MISSING' 'native' }
+     foreach ($key in @('returned','invocation_succeeded','new_error','within_limits')) {
+@@ -38,21 +181,41 @@
+         -not (S1Number $Native.elapsed_s 0 $Expected.phase_limits_s.native)) {
+         return S1Failure 'NATIVE_BINDING_OR_TIME' 'native'
+     }
++    try {
++        S1TimeVector $Native.stored_times_s $Expected.end_s 'NATIVE_STORED_GRID'
++        if ((S1ExactCompare $Native.stored_times_s[-1] $Native.final_time_s) -ne 0 -or
++            -not (S1Struct $Native.stored_grid_identity) -or -not (S1Sha $Native.stored_grid_identity.sha256) -or
++            $Native.stored_grid_identity.path -isnot [string] -or [string]::IsNullOrWhiteSpace($Native.stored_grid_identity.path) -or
++            -not (S1Number $Native.stored_grid_identity.bytes 1 ([double]::MaxValue))) { throw 'NATIVE_STORED_GRID_BINDING' }
++        $normalEnd=(S1ExactCompare $Native.final_time_s $Expected.end_s) -eq 0
++        $protectivePair=$false
++        if ($Native.termination -ceq 'PROTECTIVE_STOP_MATCHED') {
++            $pair=$Native.guard_pair
++            if (-not (S1Struct $pair) -or (S1ExactCompare $pair.t_minus 0) -lt 0 -or
++                (S1ExactCompare $pair.t_minus $pair.t_plus) -ge 0 -or
++                (S1ExactCompare $pair.t_plus $Native.final_time_s) -ne 0 -or
++                (S1ExactCompare $pair.t_plus $Expected.end_s) -ge 0 -or
++                (S1ExactCompare $Native.stored_times_s[-2] $pair.t_minus) -ne 0) { throw 'NATIVE_STOP_PAIR_TIMES' }
++            $protectivePair=$true
++        }
++    } catch { return S1Failure $_.Exception.Message 'native' }
+     if ($Native.termination -ceq 'NORMAL_END_MATCHED' -and
+-        (S1Number $Native.final_time_s $Expected.end_s $Expected.end_s) -and
++        $normalEnd -and
+         $Native.active_guards -is [array] -and @($Native.active_guards).Count -eq 0) {
+-        return @{status='NORMAL_WINDOW_COMPLETED';reason=$null;stage='native'}
++        return @{status='NORMAL_WINDOW_COMPLETED';reason=$null;stage='native';native_reason='NORMAL_END';
++            actual_end_s=$Native.final_time_s;safe_end_s=$Expected.end_s;stored_times_s=$Native.stored_times_s;stored_grid_identity=$Native.stored_grid_identity}
+     }
+     if ($Native.termination -ceq 'PROTECTIVE_STOP_MATCHED' -and
+-        (S1Number $Native.final_time_s 0 $Expected.end_s) -and [double]$Native.final_time_s -lt $Expected.end_s -and
++        $protectivePair -and
+         $Native.active_guards -is [array] -and @($Native.active_guards).Count -gt 0 -and
+         $Native.stop_pair_status -ceq 'MATCHED_SAME_OPERATOR_UNITS_DOMAIN' -and
+         $Native.no_post_stop_integration -is [bool] -and $Native.no_post_stop_integration) {
+-        return @{status='PROTECTIVE_STOP';reason=$Native.stop_reason;stage='native'}
++        return @{status='PROTECTIVE_STOP';reason=$Native.stop_reason;stage='native';native_reason='GUARD_STOP';
++            actual_end_s=$Native.final_time_s;safe_end_s=$Native.guard_pair.t_minus;stored_times_s=$Native.stored_times_s;stored_grid_identity=$Native.stored_grid_identity}
+     }
+     return S1Failure 'NATIVE_END_EVIDENCE' 'native'
+ }
+-function S1Fields($Result,$Expected) {
++function S1Fields($Result,$Expected,$NativeAxis) {
+     if (-not (S1Struct $Result) -or $Result.schema -cne 'S1O_CONSUMER_V1' -or
+         $Result.run_id -cne $Expected.run_id -or $Result.variant_id -cne $Expected.variant_id -or
+         $Result.manifest_sha256 -cne $Expected.manifest_sha256 -or
+@@ -106,28 +269,17 @@
+         }
+         $initialNames[$row.name]=$true
+     }
+-    if ($Result.charge_budget.status -cnotin @('CONSISTENT','INCONCLUSIVE')) {
+-        return S1Failure 'CHARGE_BUDGET_INVALID' 'fields'
+-    }
+-    if ($Result.charge_budget.records -isnot [array] -or @($Result.charge_budget.records).Count -lt 2) {
+-        return S1Failure 'CHARGE_RECORDS_MISSING' 'fields'
+-    }
++    $charge=S1ChargeFields $Result.charge_budget $Expected $NativeAxis $Result.source_evidence
++    if ($charge.status -ceq 'INCOMPLETE') { return $charge }
+     $d=$Result.comparison_details
+     $coverage=$d.coverage
+-    if (-not (S1Struct $coverage) -or $coverage.status -cne 'PASS' -or
+-        -not (S1Number $coverage.common_requested_count $Expected.required_count $Expected.required_count) -or
+-        -not (S1Number $coverage.comparison_count $Expected.required_count ([double]::MaxValue)) -or
+-        $coverage.missing_a -isnot [array] -or @($coverage.missing_a).Count -ne 0 -or
+-        $coverage.missing_b -isnot [array] -or @($coverage.missing_b).Count -ne 0 -or
+-        $coverage.comparison_times -isnot [array] -or @($coverage.comparison_times).Count -ne $coverage.comparison_count -or
+-        $coverage.full_intersection -isnot [array] -or @($coverage.full_intersection).Count -lt $coverage.comparison_count -or
+-        -not (S1Number $d.coordinates_per_electrode 241 241) -or $d.interpolated -isnot [bool] -or $d.interpolated) {
++    $covered=S1Coverage $coverage $Expected $NativeAxis
++    if ($covered.status -ceq 'INCOMPLETE') { return $covered }
++    if (-not (S1Number $d.coordinates_per_electrode 241 241) -or $d.interpolated -isnot [bool] -or $d.interpolated) {
+         return S1Failure 'COMPARISON_COVERAGE' 'fields'
+     }
+-    foreach ($key in @('voltage_V','surface_x','Li_relative')) {
+-        if (-not (S1Struct $d.maxima.$key) -or -not (S1Number $d.maxima.$key.value 0 ([double]::MaxValue)) -or
+-            -not (S1Number $d.maxima.$key.time_s 0 $Expected.end_s)) { return S1Failure ('NUMERIC_FIELD_INVALID:'+ $key) 'fields' }
+-    }
++    $numeric=S1ComparisonNumerics $d $NativeAxis
++    if ($numeric.status -ceq 'INCOMPLETE') { return $numeric }
+     # Same fixed geometry as S0 Java L_el=52um, L_sep=25um, L_pos=44um.
+     $surface=$d.maxima.surface_x
+     if ($surface.electrode -cnotin @('N','P')) { return S1Failure 'SURFACE_MAXIMUM_LOCATION' 'fields' }
+@@ -137,9 +289,7 @@
+         return S1Failure 'SURFACE_MAXIMUM_LOCATION' 'fields'
+     }
+     if (-not (S1Number $d.max_decomposition_residual_V 0 0.00000001)) { return S1Failure 'DECOMPOSITION_INVALID' 'fields' }
+-    $within=([double]$d.maxima.voltage_V.value -le 0.001 -and [double]$d.maxima.surface_x.value -le 0.0001 -and
+-        [double]$d.maxima.Li_relative.value -le 0.000001)
+-    $expectedComparison=$(if ($within) {'WITHIN_LIMITS_THIS_WINDOW'} else {'EXCEEDS_LIMITS'})
++    $expectedComparison=$numeric.comparison
+     if ($Result.comparison -cne $expectedComparison -or $d.status -cne $expectedComparison) { return S1Failure 'COMPARISON_SUMMARY_CONTRADICTION' 'fields' }
+     return @{status='VALID_FIELDS';comparison=$expectedComparison;charge_budget=$Result.charge_budget.status;stage='fields'}
+ }
+@@ -165,7 +315,7 @@
+         -not (S1Number $Analysis.elapsed_s 0 $Expected.phase_limits_s.analysis)) {
+         return S1Failure 'ANALYSIS_RC_OR_TIME' 'parent'
+     }
+-    $fields=S1Fields $Result $Expected
++    $fields=S1Fields $Result $Expected $nativeAxis
+     if ($fields.status -ceq 'INCOMPLETE') { return $fields }
+     if ($Result.native_completion -cne $nativeAxis.status) { return S1Failure 'NATIVE_CONSUMER_CONTRADICTION' 'parent' }
+     $expectedLimited=$(if ($nativeAxis.status -ceq 'NORMAL_WINDOW_COMPLETED' -and $fields.charge_budget -ceq 'CONSISTENT') {
+--- original/candidate/variants/P0.diff.txt
++++ R1/candidate/variants/P0.diff.txt
+@@ -1,5 +1,5 @@
+---- S0_inactive
+-+++ P0.java.inactive.txt
++--- reference/s0/candidate/MicroshortS1RestCandidate.java.inactive.txt
+++++ candidate/variants/P0.java.inactive.txt
+ @@ -14,11 +14,11 @@
+  public class MicroshortS1RestCandidateINACTIVE {
+      // REVIEW ONLY. No launcher is supplied. This file is deliberately named .txt.
+@@ -24,11 +24,13 @@
+          m.sol(sol).feature(time).set("tstepsstore",1);
+          m.sol(sol).feature(time).set("tstepsbdf","strict");
+          m.sol(sol).feature(time).set("eventout","on");
+-@@ -437,7 +437,7 @@
++@@ -436,8 +436,8 @@
++         System.out.println("ELECTROLYTE_THRESHOLD_EXPRESSION="+m.param().get("ce_stop_threshold"));
+          System.out.println("ELECTROLYTE_THRESHOLD_SI="+m.param().evaluate("ce_stop_threshold"));
+          System.out.println("PREFLIGHT_GUARD="+guard);
+-         System.out.println("S1_PROPOSED_TIME=maxstep_expression="+MAXSTEP_S1+"|inactive_constant_slot_s=0.1|initialstep_s=1e-5|rtol=1e-6|strict|requested tlist storage|eventout|consistency="+m.sol(sol).feature(time).getString("consistent"));
++-        System.out.println("S1_PROPOSED_TIME=maxstep_expression="+MAXSTEP_S1+"|inactive_constant_slot_s=0.1|initialstep_s=1e-5|rtol=1e-6|strict|requested tlist storage|eventout|consistency="+m.sol(sol).feature(time).getString("consistent"));
+ -        System.out.println("INACTIVE_S1_PROPOSAL=uniform concentration rest 0..3600 s; one sigma per future approved run");
+++        System.out.println("S1_PROPOSED_TIME=maxstep_expression="+MAXSTEP_S1+"|inactive_constant_slot_s=0.1|initialstep_s=1e-5|rtol=1e-6|strict|accepted tsteps storage|eventout|consistency="+m.sol(sol).feature(time).getString("consistent"));
+ +        System.out.println("INACTIVE_S1_PROPOSAL=P0 uniform concentration rest 0..120 s; one sigma per future approved run");
+          runtimeSettings(m,sol,time);
+          stage="solve";
+--- original/candidate/variants/P0.java.inactive.txt
++++ R1/candidate/variants/P0.java.inactive.txt
+@@ -436,7 +436,7 @@
+         System.out.println("ELECTROLYTE_THRESHOLD_EXPRESSION="+m.param().get("ce_stop_threshold"));
+         System.out.println("ELECTROLYTE_THRESHOLD_SI="+m.param().evaluate("ce_stop_threshold"));
+         System.out.println("PREFLIGHT_GUARD="+guard);
+-        System.out.println("S1_PROPOSED_TIME=maxstep_expression="+MAXSTEP_S1+"|inactive_constant_slot_s=0.1|initialstep_s=1e-5|rtol=1e-6|strict|requested tlist storage|eventout|consistency="+m.sol(sol).feature(time).getString("consistent"));
++        System.out.println("S1_PROPOSED_TIME=maxstep_expression="+MAXSTEP_S1+"|inactive_constant_slot_s=0.1|initialstep_s=1e-5|rtol=1e-6|strict|accepted tsteps storage|eventout|consistency="+m.sol(sol).feature(time).getString("consistent"));
+         System.out.println("INACTIVE_S1_PROPOSAL=P0 uniform concentration rest 0..120 s; one sigma per future approved run");
+         runtimeSettings(m,sol,time);
+         stage="solve";
+--- original/contracts/CHARGE_BALANCE.json
++++ R1/contracts/CHARGE_BALANCE.json
+@@ -1,5 +1,5 @@
+ {
+-  "schema": "S1O_CHARGE_BALANCE_V1",
++  "schema": "S1O_CHARGE_BALANCE_R1",
+   "status": "PROPOSED_LIMITS_AND_CONSUMER_RULES",
+   "native_ready": false,
+   "approved": false,
+@@ -139,5 +139,40 @@
+     "numerical_comparison"
+   ],
+   "threshold_change_policy": "Never fitted to S0 predictions or native results; exceedances remain measured outcomes, no auto rerun.",
+-  "scientific_limits": "Uniform finite-sigma conductivity model; balance not proof of true Fe filament physics, experimental cell validity or spatial/temporal convergence."
+-}
++  "scientific_limits": "Uniform finite-sigma conductivity model; balance not proof of true Fe filament physics, experimental cell validity or spatial/temporal convergence.",
++  "r1_full_grid_binding": {
++    "input_native": "native.stored_times_s is the independently normalized actual native stored vector, not reconstructed from charge or comparison rows; native.stored_grid_identity identifies its immutable raw source",
++    "exact_equality": "charge row time_s vector == ordered global table keys == native.stored_times_s using Decimal equality; all vectors start exactly 0, strictly increase, contain every actual state, and end at native.last_stored_s",
++    "normal_end": "actual_end == configured_end == comparison_safe_end",
++    "protective_end": "0 <= guard_pair.t_minus == comparison_safe_end == penultimate actual stored time < guard_pair.t_plus == actual_end == last actual stored time < configured_end; full charge includes the stop-post state and is never truncated to the comparison prefix",
++    "global_li_equality": "At every identical time, charge.LiN == global.Li_N_mol_m2; charge.LiP == global.Li_P_mol_m2; charge.LiE == global.Li_electrolyte_mol_m2; global.time_s must equal its key. Equality is exact normalized Decimal equality, with no new tolerance or interpolation.",
++    "raw_adapter_status": "OPEN_UNIMPLEMENTED: caller summaries or manufactured identities cannot prove a raw native read. A future separately reviewed raw adapter must validate raw byte identities and units before supplying normalized data. Missing required identities, unit records or full native grid fail closed in this R1 consumer.",
++    "source_inputs": {
++      "data.source_identities": ["global", "charge"],
++      "readbacks.charge_provenance": ["run_id", "manifest_sha256", "global_identity", "charge_identity", "native_grid_identity", "normalized_units", "global_li_unit"],
++      "identity_shape": {"path": "nonempty string", "bytes": "positive integer, not bool", "sha256": "64 lowercase hex characters"},
++      "identity_binding": "charge/global identities must equal data.source_identities and native-grid identity must equal native.stored_grid_identity; each complete identity must be an exact member of readbacks.source_evidence; run and manifest equal analyze binding",
++      "normalized_units": "exact normalized_series_schema.units mapping; global_li_unit must be mol/m^2",
++      "quadrature_grid": "When an independent scalar bound is supplied, quadrature_provenance.grid_sha256 must equal native_grid_identity.sha256 in addition to all original prefix/integrand/provenance requirements."
++    },
++    "result_schema": {
++      "schema": "S1O_CHARGE_BUDGET_R1",
++      "grid_binding": ["status", "times_s", "count", "start_s", "actual_end_s", "configured_end_s", "comparison_safe_end_s", "native_reason", "native_grid_identity", "global_identity", "charge_identity", "units_status", "global_li_status"],
++      "checked_status_values": {"status": "PASS", "units_status": "MATCHED", "global_li_status": "EXACT_MATCH_ALL_TIMES"},
++      "parent_consumption": "Parent must compare full times, endpoints and native-grid identity with its independently validated native axis, bind source identities to result.source_evidence, and keep configured end / actual end / comparison safe end distinct."
++    }
++  },
++  "r1_adjacent_direction": {
++    "delta_qN_C_m2": "F_ref * (LiN[i-1] - LiN[i])",
++    "delta_qP_C_m2": "F_ref * (LiP[i] - LiP[i-1])",
++    "scope": "Every adjacent pair of the full actual native stored vector, including the protective stop-post interval, independently of cumulative q being positive",
++    "unchanged_deadband_C_m2": "2e-4",
++    "rule": "Any delta strictly less than -2e-4 rejects. Both deltas strictly greater than +2e-4 resolve expected direction; otherwise the accepted interval remains RESOLUTION_LIMITED. Exact +/-2e-4 is inclusive deadband; no division by dt or new rate threshold.",
++    "first_violation": ["t_minus_s", "t_plus_s", "dqN_C_m2", "dqP_C_m2", "deadband_C_m2", "violated_electrodes"],
++    "failure_preservation": "Raise REVERSE_LI_INCREMENT when cumulative charges remain allowed; preserve existing REVERSE_LI_TRANSFER priority when cumulative also fails. Both carry first_violation in errors[].details and partial charge_budget.interval_direction; analysis stops at the first violation and never fabricates later records.",
++    "success_summary": {"status": "WITHIN_DEADBAND_OR_EXPECTED", "checked_intervals": "full row count - 1", "first_violation": null},
++    "per_row_additions": ["interval_start_s", "dqN_C_m2", "dqP_C_m2", "interval_sign"],
++    "zero_time": "interval_start_s and both deltas null; interval_sign NOT_APPLICABLE_AT_T0",
++    "separate_resolution": "An unresolved small interval does not by itself invalidate good conservation or require every interval to resolve leakage. Existing final cumulative/current sign and quadrature conditions remain unchanged."
++  }
++}
+--- original/contracts/EXECUTION_BINDING.json
++++ R1/contracts/EXECUTION_BINDING.json
+@@ -17,7 +17,7 @@
+     ],
+     "commands": {
+       "status": "INACTIVE_INTERFACE_ONLY_NO_NATIVE_ADAPTER",
+-      "cwd": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/microshort_s1o_20261007_133011",
++      "cwd": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/microshort_s1o_r1_20261008",
+       "argv": [
+         "C:/Users/BML/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/python.exe",
+         "-I",
+@@ -25,7 +25,7 @@
+         "-B",
+         "-X",
+         "utf8",
+-        "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/microshort_s1o_20261007_133011/candidate/control.py.inactive.txt"
++        "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/microshort_s1o_r1_20261008/candidate/control.py.inactive.txt"
+       ],
+       "parent_argv": [
+         "C:/WINDOWS/System32/WindowsPowerShell/v1.0/powershell.exe",
+@@ -33,7 +33,7 @@
+         "-NoProfile",
+         "-NoExit",
+         "-File",
+-        "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/microshort_s1o_20261007_133011/candidate/Parent.ps1.inactive.txt"
++        "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/microshort_s1o_r1_20261008/candidate/Parent.ps1.inactive.txt"
+       ],
+       "native_compile_argv": null,
+       "native_batch_argv": null,
+@@ -42,7 +42,7 @@
+     },
+     "paths": {
+       "status": "PROPOSED_ONLY_NO_DIRECTORIES_CREATED",
+-      "source_root": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/microshort_s1o_20261007_133011",
++      "source_root": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/microshort_s1o_r1_20261008",
+       "proposed_native_root": null,
+       "must_be_absent": null,
+       "approval_path": null,
+@@ -147,7 +147,7 @@
+     "not_claimed": "No whole-workflow reuse PASS, no actual initial/physics/resource/native validation in S1-O"
+   },
+   "current_validation_engine_observation": {
+-    "source": "VALIDATION_PLAN.json",
++    "source": "reference/ORIGINAL_VALIDATION_PLAN.json (historical observation; not re-observed as functional-engine evidence in R1)",
+     "scope": "Python and PS executable bytes read for future validation only; no engine version/native probe",
+     "engines": [
+       {
+@@ -161,5 +161,30 @@
+         "sha256": "8bb6fa8c283b4d92120b1ef249a9b311b0f804d4cabbe9981159976c8be76a5e"
+       }
+     ]
++  },
++  "r1_scope": {
++    "id": "S1O-R1-N1-N4",
++    "functional_validation": "NOT_RUN",
++    "current_plan": "VALIDATION_PLAN_R1.json",
++    "original_manifest_sha256": "54c61d10b3bb11e0501e9933b220eca76d9f7cee503953a6f909185e04f965fe",
++    "inactive_path_update": "Source-interface paths point to this R1 copy only. No operational native command, output or authorization path was created."
++  },
++  "r1_parent_projection": {
++    "status": "STATIC_CONTRACT_ONLY_ADAPTER_OPEN",
++    "Expected": {
++      "common_requested_times_s": "Full fixed registered vector from POLICY_VARIANTS.request_vectors[comparison.expected_common_request_vector].tokens_s; immutable binding, canonical decimal strings; never copied from result count",
++      "required_count": "Count of full registered vector, NOT safe-prefix count",
++      "end_s": "Fixed exact configured endpoint"
++    },
++    "Native": {
++      "stored_times_s": "Actual complete raw-native saved vector; strictly increasing finite decimal strings, from0 through actual end",
++      "stored_grid_identity": "Raw saved-grid evidence path/positive integer bytes/SHA; same registered source identity consumed by Python",
++      "final_time_s": "Actual final saved time; exact",
++      "guard_pair": "For PROTECTIVE_STOP_MATCHED: t_minus/t_plus, t_plus=actual endpoint<configured end, pair are last two stored states; retain stop operator/units/domain/no-post-integration proof"
++    },
++    "consumer_native_projection": "Same immutable raw evidence projected as native.stored_times_s/stored_grid_identity/last_stored_s/reason/guard_pair. Schema conversion is not native verification; adapter remains OPEN.",
++    "comparison": "Normal: fixed complete vector. Protective: derive fixed vector prefix <= verified t_minus. Comparison grid must exactly match; full intersection remains separate, strictly ordered, includes every compared time and is subset of actual native grid (may include t_plus).",
++    "charge": "S1O_CHARGE_BUDGET_R1 in CHARGE_BALANCE.json; full actual native grid, not safe comparison prefix; source/global Li binding and signed adjacent intervals consumed.",
++    "precision": "Exact decimal strings and integers for new grid and comparison checks; float/double/CLR decimal transport rejected as precision-ambiguous. No tolerance change. Existing budget double checks unchanged."
+   }
+ }
+--- original/SOURCE_CONTRACT_LINKS.json
++++ R1/SOURCE_CONTRACT_LINKS.json
+@@ -7,12 +7,12 @@
+     "initial_profile_uniformity": "validated profile_rows geometry,241each,t0; xN/xP fromINITIALIZATION",
+     "compare_initialization_pair": "run cohort same registered concentration andinventory; required beforepairedclassification",
+     "verify_coefficient_evidence": "COEFFICIENT_READBACK adapter_projection OPEN; no installedvariablemapping invented",
+-    "charge_balance": "CHARGE_BALANCE time_s/j/RN/RP/I/LiN/LiP/LiE; rawboundprovenance required in analyze",
++    "charge_balance": "CHARGE_BALANCE R1: mandatory complete native grid/global rows/same-source identities/endpoints/units; exact same-time Li; cumulative balance plus adjacent signed dqN/dqP with unchanged deadband. Raw adapter OPEN.",
+     "compare_policy": "POLICY_VARIANTS selectedvariant requests; exactlyregistered255grid plus separate fullintersection",
+     "paired_classification": "K_DESIGN futurefrozenK hashes projectedintoexpected_k_settings; nativecohortassemblerOPEN",
+-    "analyze": "normalizednativeproof/readbacks/data/safe_end from future immutable rawadapter; adapter OPEN"
++    "analyze": "R1 normalized native grid/readbacks/data identities bound to run+manifest; full charge interval includes protective t_plus, comparison safe prefix ends t_minus. Raw adapter OPEN."
+   },
+-  "parent": "S1Fields/S1Decision consume actual analyze output; S1FinalReturn uses inertwriter/clock in futurevalidation",
++  "parent": "S1NativeAxis validates full actual grid and stop pair; S1Fields->S1ChargeFields and S1Coverage consume analyze evidence. Expected common grid is fixed independently; normal/full vs safe prefix distinguished. S1FinalReturn unchanged.",
+   "control": "authorize_execution before adapter firstsideeffect; execute_once default adapter raises; native_readyfalse",
+   "not_provided": [
+     "installed COMSOL readback mapping",
+@@ -21,5 +21,7 @@
+     "executable native commands/approval paths/currentprefs",
+     "future validation harness/fixtures"
+   ],
+-  "precision": "consumer Decimal50; parent double schema/check projection is not an independent arbitraryprecisionrecalculation. Futureboundaryfixtures must examine conversion and rejectcontradictions; no claimexactdecimalprooffromPS."
++  "precision": "Consumer Decimal50; parent R1 time/grid/comparison decisions use exact decimal lexemes and reject binary floating/CLR decimal transport. Existing budgets retain double. Functional boundary evidence is NOT_RUN; future exact fixtures required.",
++  "current_validation_plan": "VALIDATION_PLAN_R1.json",
++  "original_validation_plan": "reference/ORIGINAL_VALIDATION_PLAN.json"
+ }

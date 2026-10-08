@@ -1,0 +1,66 @@
+{
+  "schema": "S1O_R1_OFFLINE_DECISION",
+  "r1_status": "OFFLINE_CORRECTIONS_COMPLETE_PENDING_RECIPIENT_REVIEW",
+  "findings": {
+    "S1O-N1": {
+      "status": "fixed",
+      "basis": "STATIC_SOURCE_AND_CONTRACT_REVIEW_ONLY",
+      "functional_verification": "NOT_RUN"
+    },
+    "S1O-N2": {
+      "status": "fixed",
+      "basis": "STATIC_SOURCE_AND_CONTRACT_REVIEW_ONLY",
+      "functional_verification": "NOT_RUN"
+    },
+    "S1O-N3": {
+      "status": "fixed",
+      "basis": "STATIC_SOURCE_AND_CONTRACT_REVIEW_ONLY",
+      "functional_verification": "NOT_RUN"
+    },
+    "S1O-N4": {
+      "status": "fixed",
+      "basis": "STATIC_SOURCE_AND_CONTRACT_REVIEW_ONLY",
+      "functional_verification": "NOT_RUN"
+    }
+  },
+  "static_source_checks": 240,
+  "static_plan_checks": 57,
+  "functional_validation": "NOT_RUN",
+  "functional_case_proposal": {
+    "groups": 8,
+    "unique_ids": 130,
+    "inputs": 130,
+    "Python": 99,
+    "PowerShell5.1": 31,
+    "proposed_separate_budget_s": 1860,
+    "approved": false
+  },
+  "code_manifest_sha256": "4ce5c08dbde5153027819b5a651e3995ec82417b4429b9bb0f789082b440f5da",
+  "approved": false,
+  "usable": false,
+  "native_ready": false,
+  "candidate_imports": 0,
+  "candidate_function_calls": 0,
+  "received_code_calls": 0,
+  "functional_tests": 0,
+  "COMSOL": 0,
+  "JVM": 0,
+  "Java_compile": 0,
+  "input_gate": 0,
+  "native_approval_runtime_token_release_created": 0,
+  "static_tool_use": "New own Python/PowerShell JSON, byte hash, AST/parser, scalar arithmetic, report and packaging tools used. This is not a claim that no process executed.",
+  "overall_gate": "INCOMPLETE_UNCHANGED",
+  "normal_gate": "INCOMPLETE_UNCHANGED",
+  "effective_policy": "UNVERIFIED_UNCHANGED",
+  "actual_cores": "UNVERIFIED_UNCHANGED",
+  "open": [
+    "Installed post-consistency t0 extraction",
+    "Installed coefficient consumption mapping",
+    "Raw/native adapter and operational command publication",
+    "OS resource sampling/owned stop adapter",
+    "Functional verification and acceptance",
+    "Separate P/M/N native approval"
+  ],
+  "original_state_modified": false,
+  "recipient": null
+}

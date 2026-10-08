@@ -1,0 +1,30 @@
+{
+  "scope": "Data-only archive inspection",
+  "archives": [
+    {
+      "label": "main",
+      "file": "COMSOL_MICROSHORT_S1O_R1_OFFLINE_CORRECTIONS_20261008 (1).zip",
+      "bytes": 813053,
+      "sha256": "0a18cb64f8bcbcd4725b45088ee310f85e9292a1ffdced2332b5102f5fd6f9dc",
+      "payload": 116,
+      "entries": 117,
+      "manifest_bytes": 20825,
+      "manifest_sha256": "027375361a4c1fe0af1ce5906033ddbdd84b5dc64ff7e4f4ea0457f746923e36",
+      "exact_set_size_sha_crc_paths": true
+    },
+    {
+      "label": "supplement",
+      "file": "COMSOL_MICROSHORT_S1O_R1_DELIVERY_SUPPLEMENT_20261008 (1).zip",
+      "bytes": 3750,
+      "sha256": "4cfd310ae5c019cce63a2ce012debfa9307f44ac739c1253cc07a5cf0c8d73b2",
+      "payload": 4,
+      "entries": 5,
+      "manifest_bytes": 948,
+      "manifest_sha256": "2f062b080db93c4797ee8115109b01fa592d7868e3d9b727915026dfc6d24b9a",
+      "exact_set_size_sha_crc_paths": true
+    }
+  ],
+  "code_manifest_count": 21,
+  "all_code_manifest_entries_match": true,
+  "received_programs_executed": 0
+}

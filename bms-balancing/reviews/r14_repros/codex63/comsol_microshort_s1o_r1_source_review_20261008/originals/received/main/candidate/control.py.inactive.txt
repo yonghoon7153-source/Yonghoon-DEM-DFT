@@ -1,0 +1,330 @@
+"""S1-O inactive source: pure authorization/resource logic and adapter orchestration.
+
+No native/OS adapter is supplied. No top-level I/O, imports of received programs,
+process start, console input or runtime-directory creation occurs. This source is
+not executed or imported in S1-O. Future executable publication changes bytes and
+requires its own manifest, changed-branch validation and separate native approval.
+"""
+from copy import deepcopy
+from hashlib import sha256
+import json
+from math import isfinite
+
+
+class ContractError(ValueError):
+    def __init__(self, reason, stage):
+        self.reason, self.stage = reason, stage
+        super().__init__(reason + "@" + stage)
+
+
+def reject(reason, stage):
+    raise ContractError(reason, stage)
+
+
+def canonical_hash(value):
+    return sha256(json.dumps(value, sort_keys=True, separators=(",", ":"),
+                             ensure_ascii=False, allow_nan=False).encode("utf-8")).hexdigest()
+
+
+def finite_number(value, minimum=0):
+    return type(value) in (int, float) and isfinite(value) and value >= minimum
+
+
+def is_sha(value):
+    return isinstance(value, str) and len(value) == 64 and all(c in "0123456789abcdef" for c in value)
+
+
+def require_refs(refs, stage):
+    if not isinstance(refs, list) or not refs:
+        reject("MISSING_FILE_IDENTITIES", stage)
+    paths = []
+    for ref in refs:
+        if (not isinstance(ref, dict) or not isinstance(ref.get("path"), str)
+                or not ref["path"] or type(ref.get("bytes")) is not int
+                or ref["bytes"] < 0 or not is_sha(ref.get("sha256"))):
+            reject("INVALID_FILE_IDENTITY", stage)
+        paths.append(ref["path"].replace("\\", "/").casefold())
+    if len(paths) != len(set(paths)):
+        reject("DUPLICATE_FILE_IDENTITY", stage)
+
+
+def authorize_execution(binding, manifest, acceptance, approval, observed):
+    """Pure gate. Caller supplies read-only measurements, never success defaults.
+
+    `manifest` describes the bytes that were read; external approval must contain
+    that hash. The manifest must omit itself from its payload. All side-effecting
+    adapter calls occur only after this function returns. Unknown/unimplemented
+    native adapter and coefficient/initialization contracts remain blockers.
+    """
+    stage = "authorization"
+    for obj in (binding, manifest, acceptance, approval, observed):
+        if not isinstance(obj, dict):
+            reject("MISSING_AUTH_OBJECT", stage)
+    if binding.get("schema") != "S1O_EXECUTION_BINDING_V1":
+        reject("BINDING_SCHEMA", stage)
+    digest = canonical_hash(binding)
+    msha = observed.get("manifest_sha256")  # read-only loader hashes original manifest bytes
+    if not is_sha(msha):
+        reject("MANIFEST_IDENTITY", stage)
+    if manifest.get("schema") != "S1O_CODE_MANIFEST_V1":
+        reject("MANIFEST_SCHEMA", stage)
+    require_refs(manifest.get("files"), stage)
+    if observed.get("payload") != manifest["files"]:
+        reject("SOURCE_IDENTITY", stage)
+    require_refs(observed.get("engines"), stage)
+    require_refs(observed.get("dependencies"), stage)
+    if (observed["engines"] != binding.get("engine_pins")
+            or observed["dependencies"] != binding.get("dependency_pins")):
+        reject("ENGINE_OR_DEPENDENCY_IDENTITY", stage)
+    if (acceptance.get("status") != "ACCEPTED_CHANGED_BRANCH_VALIDATION"
+            or acceptance.get("manifest_sha256") != msha
+            or acceptance.get("execution_binding_sha256") != digest
+            or not is_sha(acceptance.get("evidence_sha256"))):
+        reject("VALIDATION_ACCEPTANCE_BINDING", stage)
+    if (approval.get("approved") is not True or approval.get("usable") is not True
+            or approval.get("kind") != "SEPARATE_NATIVE_ONE_RUN_APPROVAL"
+            or approval.get("manifest_sha256") != msha
+            or approval.get("execution_binding_sha256") != digest
+            or approval.get("validation_evidence_sha256") != acceptance["evidence_sha256"]
+            or not is_sha(approval.get("user_statement_sha256"))):
+        reject("SEPARATE_NATIVE_APPROVAL_REQUIRED", stage)
+    unit = approval.get("unit")
+    if not isinstance(unit, dict) or unit != binding.get("unit"):
+        reject("APPROVED_RUN_UNIT_MISMATCH", stage)
+    required_unit = {"run_id", "variant_id", "sigma_short_S_m", "initialization_id",
+                     "physical_window_s", "commands", "paths", "counts",
+                     "resource_contract_sha256", "phase_limits_s", "overall_limit_s"}
+    if set(unit) != required_unit or any(unit[key] is None for key in required_unit):
+        reject("RUN_UNIT_INCOMPLETE", stage)
+    commands, paths, policy = unit["commands"], unit["paths"], binding.get("policy_pin")
+    if (not isinstance(commands, dict) or commands.get("status") != "NATIVE_COMMANDS_FROZEN"
+            or any(not isinstance(commands.get(k), list) or not commands[k]
+                   for k in ("argv", "parent_argv", "native_compile_argv", "native_batch_argv"))
+            or not isinstance(commands.get("native_cwd"), str) or not commands["native_cwd"]):
+        reject("NATIVE_COMMANDS_UNRESOLVED", stage)
+    if (not isinstance(paths, dict) or paths.get("status") != "FROZEN_NATIVE_PATHS"
+            or not isinstance(paths.get("must_be_absent"), list) or not paths["must_be_absent"]
+            or any(not isinstance(paths.get(k), str) or not paths[k]
+                   for k in ("source_root", "proposed_native_root", "approval_path", "release_path", "user_decision_path"))):
+        reject("NATIVE_PATHS_UNRESOLVED", stage)
+    if not isinstance(policy, dict) or policy.get("changes_allowed") is not False:
+        reject("CURRENT_POLICY_PIN_UNRESOLVED", stage)
+    require_refs([policy.get("source_prefs")], stage)
+    if (unit["counts"] != {"compile": 1, "batch": 1, "solve": 1, "control": 0,
+                          "retry": 0, "separate_initialization_solve": 0,
+                          "fresh_direct_challenges": 2}):
+        reject("CALL_COUNTS_NOT_APPROVED", stage)
+    if (observed.get("cwd") != unit["commands"].get("cwd")
+            or observed.get("argv") != unit["commands"].get("argv")):
+        reject("COMMAND_OR_CWD_MISMATCH", stage)
+    if (observed.get("path_absence") != unit["paths"].get("must_be_absent")
+            or observed.get("path_collisions") != []
+            or observed.get("path_resolution") != "NO_REPARSE_NO_ESCAPE"
+            or observed.get("pending_owned_runs") != []
+            or observed.get("other_comsol_work") != []):
+        reject("PATH_OR_CONCURRENT_WORK", stage)
+    if (observed.get("policy") != binding.get("policy_pin")
+            or approval.get("policy_pin") != binding.get("policy_pin")
+            or observed.get("elevated") is not False):
+        reject("POLICY_OR_PRIVILEGE_MISMATCH", stage)
+    if observed.get("attempt_history") != []:
+        reject("NO_RETRY_EXISTING_ATTEMPT", stage)
+    if (manifest.get("native_ready") is not True or binding.get("native_ready") is not True or binding.get("open_blockers") != []
+            or binding.get("adapter_status") != "IMPLEMENTED_VALIDATED_ACCEPTED"
+            or observed.get("adapter_identity_verified") is not True
+            or observed.get("resource_enforcement_ready") is not True):
+        reject("OFFLINE_NATIVE_NOT_READY", stage)
+    return {"status": "AUTHORIZED_ONE_RUN", "manifest_sha256": msha,
+            "execution_binding_sha256": digest, "unit": deepcopy(unit),
+            "acceptance_evidence_sha256": acceptance["evidence_sha256"],
+            "user_statement_sha256": approval["user_statement_sha256"]}
+
+
+def assess_resources(sample, ownership, contract):
+    """Pure sampled threshold decision; not an OS sampler and not a hard cap.
+
+    Equality is admitted. Early-stop thresholds deliberately precede declared
+    ceilings. Missing counters or stale ownership stop work; never substitute 0.
+    Job totals already include root/children, so totals must not be added again.
+    """
+    errors = []
+    if not isinstance(sample, dict) or not isinstance(ownership, dict):
+        return {"status": "STOP_REQUIRED", "reasons": ["MEASUREMENT_MISSING"]}
+    if (ownership.get("status") != "VERIFIED_PRIVATE_JOB"
+            or ownership.get("assigned_before_resume") is not True
+            or ownership.get("identity_fresh") is not True
+            or not ownership.get("job_identity")
+            or type(ownership.get("root_pid")) is not int
+            or type(ownership.get("root_creation_filetime")) is not int
+            or not isinstance(ownership.get("member_pid_creation_pairs"), list)):
+        errors.append("OWNERSHIP_UNVERIFIED")
+    required = ("monotonic_s", "native_elapsed_s", "overall_elapsed_s", "sample_gap_s",
+                "sampling_duration_s", "job_rss_bytes", "job_private_commit_bytes",
+                "host_commit_available_bytes", "host_available_ram_bytes",
+                "owned_output_growth_bytes", "volume_free_bytes")
+    for key in required:
+        if not finite_number(sample.get(key)):
+            errors.append("COUNTER_MISSING_OR_NONFINITE:" + key)
+    if sample.get("status") != "MEASURED" or sample.get("counter_errors") != []:
+        errors.append("SAMPLING_FAILURE")
+    if sample.get("scope") != "EXACT_PRIVATE_JOB_MEMBERS_PLUS_OWNED_OUTPUT_TREE":
+        errors.append("COUNTER_SCOPE")
+    if sample.get("job_identity") != ownership.get("job_identity"):
+        errors.append("SAMPLE_OWNERSHIP_MISMATCH")
+    if sample.get("rss_aggregation") != "SUM_UNIQUE_MEMBER_WORKING_SETS_NO_JOB_TOTAL_ADD":
+        errors.append("RSS_DOUBLE_COUNT_OR_UNKNOWN")
+    if sample.get("commit_aggregation") != "JOB_ACCOUNTING_TOTAL_NO_MEMBER_TOTAL_ADD":
+        errors.append("COMMIT_DOUBLE_COUNT_OR_UNKNOWN")
+    if errors:
+        return {"status": "STOP_REQUIRED", "reasons": errors,
+                "sampled_max_is_os_peak": False}
+    limits = contract["proposal_limits"]
+    maxima = {"job_rss_bytes": "rss_early_stop_bytes",
+              "job_private_commit_bytes": "commit_early_stop_bytes",
+              "owned_output_growth_bytes": "output_early_stop_bytes",
+              "sample_gap_s": "maximum_sample_gap_s",
+              "sampling_duration_s": "maximum_sampling_duration_s"}
+    for field, limit in maxima.items():
+        if sample[field] > limits[limit]:
+            errors.append("RESOURCE_THRESHOLD:" + field)
+    minima = {"host_commit_available_bytes": "host_commit_reserve_bytes",
+              "host_available_ram_bytes": "host_ram_reserve_bytes",
+              "volume_free_bytes": "volume_free_reserve_bytes"}
+    for field, limit in minima.items():
+        if sample[field] < limits[limit]:
+            errors.append("RESOURCE_RESERVE:" + field)
+    for field, limit in (("native_elapsed_s", "native_wall_limit_s"),
+                         ("overall_elapsed_s", "overall_wall_limit_s")):
+        if sample[field] > limits[limit] - limits["stop_reserve_s"]:
+            errors.append("STOP_RESERVE_ENTERED:" + field)
+    return {"status": "STOP_REQUIRED" if errors else "CONTINUE_WITHIN_SAMPLED_LIMITS",
+            "reasons": errors, "observed_monotonic_s": sample["monotonic_s"],
+            "sampled_max_is_os_peak": False, "sampled_threshold_is_hard_cap": False}
+
+
+def advance_stop(state, event, capabilities):
+    """Pure stop state machine. All actions remain instructions to a future adapter.
+
+    Event times must be monotonic and within cleanup/overall deadlines. An OS
+    ownership query failure never authorizes process-name kill. Unsupported
+    cooperative stopping requires explicit force-only acceptance before start.
+    """
+    stage = "owned_stop"
+    out = deepcopy(state)
+    now = event.get("monotonic_s")
+    if (not finite_number(now) or not finite_number(out.get("last_monotonic_s"))
+            or now < out["last_monotonic_s"]):
+        reject("STOP_CLOCK_INVALID", stage)
+    out["last_monotonic_s"] = now
+    if event.get("ownership_verified") is not True:
+        out.update(status="UNRESOLVED", next_action="NO_KILL_WITHOUT_OWNERSHIP",
+                   error="STOP_OWNERSHIP_LOST")
+        return out
+    if now > min(out["cleanup_deadline_s"], out["overall_deadline_s"]):
+        out.update(status="UNRESOLVED", next_action="NONE", error="STOP_DEADLINE_EXCEEDED")
+        return out
+    status = out["status"]
+    if status == "STOP_REQUESTED":
+        if capabilities.get("cooperative_stop") == "SUPPORTED_VERIFIED":
+            wait_until = min(now + capabilities["cooperative_wait_s"],
+                             out["cleanup_deadline_s"] - capabilities["force_verify_reserve_s"],
+                             out["overall_deadline_s"] - capabilities["force_verify_reserve_s"])
+            if wait_until <= now:
+                out.update(status="FORCE_PENDING", next_action="FORCE_OWNED_JOB_ONCE",
+                           cooperative_status="SKIPPED_NO_SAFE_WAIT_RESERVE")
+            else:
+                out.update(status="WAITING_COOPERATIVE", next_action="REQUEST_COOPERATIVE_ONCE", wait_until_s=wait_until)
+        elif capabilities.get("force_only_explicitly_approved") is True:
+            out.update(status="FORCE_PENDING", next_action="FORCE_OWNED_JOB_ONCE",
+                       cooperative_status="UNAVAILABLE_DECLARED")
+        else:
+            out.update(status="UNRESOLVED", next_action="NONE", error="STOP_METHOD_NOT_APPROVED")
+    elif status == "WAITING_COOPERATIVE":
+        if event.get("job_empty") is True and event.get("root_signaled") is True:
+            out.update(status="VERIFY_PENDING", next_action="VERIFY_TERMINATION")
+        elif event.get("cooperative_request_failed") is True or now >= out["wait_until_s"]:
+            out.update(status="FORCE_PENDING", next_action="FORCE_OWNED_JOB_ONCE")
+        else:
+            out.update(next_action="WAIT_WITHIN_BOUND")
+    elif status == "FORCE_PENDING":
+        if event.get("force_attempts") != 1:
+            out.update(status="UNRESOLVED", next_action="NONE", error="FORCE_ATTEMPT_COUNT")
+        elif event.get("force_call_succeeded") is True:
+            out.update(status="VERIFY_PENDING", next_action="VERIFY_TERMINATION")
+        else:
+            out.update(status="UNRESOLVED", next_action="NONE", error="OWNED_FORCE_FAILED")
+    elif status == "VERIFY_PENDING":
+        if (event.get("job_empty") is True and event.get("root_signaled") is True
+                and event.get("exit_query_succeeded") is True
+                and event.get("remaining_members") == []
+                and event.get("unattributed_processes") == []
+                and event.get("handle_errors") == []):
+            out.update(status="TERMINATED_VERIFIED", next_action="CLOSE_OWNED_HANDLES_AND_RECORD")
+        else:
+            out.update(status="UNRESOLVED", next_action="NONE", error="TERMINATION_UNCONFIRMED")
+    else:
+        reject("STOP_STATE_NOT_TRANSITIONABLE", stage)
+    return out
+
+
+class UnavailableNativeAdapter:
+    """No OS implementation exists in this submission. Default is fail-closed."""
+    def __getattr__(self, name):
+        reject("NATIVE_ADAPTER_UNIMPLEMENTED:" + name, "adapter")
+
+
+def execute_once(binding, manifest, acceptance, approval, observed, adapter=None):
+    """Future orchestration scaffold. Not called, not validated, not native-ready.
+
+    The adapter contract is substantive: exclusive create/reserve, revalidate
+    read-only identities against authorization immediately before side effects,
+    monitor during each native phase, force only owned Job, immutable append
+    errors, and phase+overall deadline enforcement. No legacy launcher is invoked.
+    Reusing the legacy launcher wholesale would reintroduce policy-change phases.
+    """
+    auth = authorize_execution(binding, manifest, acceptance, approval, observed)
+    native = adapter if adapter is not None else UnavailableNativeAdapter()
+    result = {"schema": "S1O_EXECUTION_RESULT_V1", "overall": "INCOMPLETE",
+              "normal_gate": "INCOMPLETE", "native_completion": "INCOMPLETE",
+              "evidence_validity": "INCOMPLETE", "comparison": "INCONCLUSIVE",
+              "process_cleanup": "INCOMPLETE", "errors": [], "calls": {"compile": 0, "batch": 0},
+              "manifest_sha256": auth["manifest_sha256"],
+              "run_id": auth["unit"]["run_id"], "variant_id": auth["unit"]["variant_id"]}
+    prepared = False
+    try:
+        native.recheck_authorization_readonly(auth)
+        # The FIRST side effect is after the full gate, and creates with no overwrite.
+        native.create_exclusive_evidence_and_reserve_one_attempt(auth)
+        prepared = True
+        native.obtain_two_fresh_direct_user_challenges_same_python(auth)
+        native.stage_exact_authorized_bytes_and_prefs_copy(auth)
+        for phase in ("compile", "batch"):
+            native.require_previous_owned_job_empty(auth)
+            native.require_time_and_resources_with_stop_reserve(auth, phase)
+            result["calls"][phase] += 1
+            record = native.run_one_monitored_owned_phase(auth, phase)
+            result[phase] = record
+            if (not isinstance(record, dict) or type(record.get("rc")) is not int
+                    or record["rc"] != 0 or record.get("record_errors") != []
+                    or record.get("cleanup") != "PASS" or record.get("within_limits") is not True):
+                reject("NATIVE_PHASE_INCOMPLETE:" + phase, "execute")
+        native.require_time_for_analysis_and_delivery(auth)
+        result["analysis"] = native.analyze_existing_evidence_once(auth)
+    except Exception as exc:
+        result["errors"].append({"order": "FIRST", "reason": getattr(exc, "reason", str(exc)),
+                                 "stage": getattr(exc, "stage", "adapter")})
+    finally:
+        if prepared:
+            try:
+                result["process_cleanup"] = native.verify_owned_cleanup_and_preservation(auth)
+            except Exception as exc:
+                result["errors"].append({"order": "FOLLOWUP", "reason": str(exc), "stage": "cleanup"})
+            try:
+                result["final_record"] = native.final_write_readback_postwrite_budget(auth, result)
+            except Exception as exc:
+                result["errors"].append({"order": "FOLLOWUP", "reason": str(exc), "stage": "final_record"})
+    return result
+
+
+if __name__ == "__main__":
+    raise SystemExit("S1O_OFFLINE_ONLY_NO_EXECUTABLE_ENTRYPOINT")

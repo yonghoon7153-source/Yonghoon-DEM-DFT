@@ -1,0 +1,32 @@
+{
+  "kind": "R1_DELIVERY_SUPPLEMENT",
+  "self_excluded": true,
+  "files": [
+    {
+      "path": "TIMING.json",
+      "bytes": 2393,
+      "sha256": "8aa258d16196701c0ba7e71c130855183cb7418192e8473ef8f43bc04d2c8b58"
+    },
+    {
+      "path": "DELIVERY_RECEIPT.json",
+      "bytes": 941,
+      "sha256": "7173354716792f6488227829aab0608d801402b00d846cefcf62e414c74f55df"
+    },
+    {
+      "path": "FINAL_PACKAGE_TOOL_RETURN.json",
+      "bytes": 1086,
+      "sha256": "ad4aac683306787bb85adeab157c001bcc812d1b3e4470853cfddd84fcb8f18d"
+    },
+    {
+      "path": "POST_PACKAGE_ORIGINALS_CHECK.json",
+      "bytes": 383,
+      "sha256": "b3ae14f41c6122b0f0f7b01e42c2b01f304791ddbdeb8b2a89f503d3b9848d59"
+    }
+  ],
+  "main_zip": {
+    "path": "COMSOL_MICROSHORT_S1O_R1_OFFLINE_CORRECTIONS_20261008.zip",
+    "bytes": 813053,
+    "sha256": "0a18cb64f8bcbcd4725b45088ee310f85e9292a1ffdced2332b5102f5fd6f9dc"
+  },
+  "functional_validation": "NOT_RUN"
+}

@@ -1,0 +1,341 @@
+{
+  "candidate/consumer.py.inactive.txt": {
+    "EvidenceError": {
+      "start_line": 10,
+      "end_line": 13,
+      "bytes": 153,
+      "sha256": "6bf4160b887e923bcbb13312c643bca3929f4470b87b5c68f3251f0ea7c5e9ba"
+    },
+    "require": {
+      "start_line": 15,
+      "end_line": 17,
+      "bytes": 90,
+      "sha256": "24f836a5656fa04a76bca1e79da47eccee6022f41116557efa3370ea53a9311f"
+    },
+    "number": {
+      "start_line": 19,
+      "end_line": 26,
+      "bytes": 316,
+      "sha256": "af74e5cae395da71a0474c22edd0c167a27ac352babe8bff82bb408a1504ee1c"
+    },
+    "decimal_context": {
+      "start_line": 28,
+      "end_line": 33,
+      "bytes": 199,
+      "sha256": "89d4fcb0f1f7ece261087947fc33194400a3209c46a925a06bd700f71d8e20d1"
+    },
+    "read_csv_bytes": {
+      "start_line": 35,
+      "end_line": 51,
+      "bytes": 1034,
+      "sha256": "49e25059f534a1705b06e3a8175f95ff6751e71e730a7dcd57a70aa2bc7af968"
+    },
+    "timed_rows": {
+      "start_line": 53,
+      "end_line": 64,
+      "bytes": 539,
+      "sha256": "a52c380c83f9d99c075e50f8c31c5192218afa369f1fd8ea4bd9bbb68723b0b6"
+    },
+    "coverage": {
+      "start_line": 66,
+      "end_line": 83,
+      "bytes": 1220,
+      "sha256": "ba6d1e59b697f87737a496c41586b267cbb71180763d503fb18302aa82283cf8"
+    },
+    "profile_rows": {
+      "start_line": 85,
+      "end_line": 103,
+      "bytes": 1192,
+      "sha256": "fe5a48013e98b78578a48fa45f68c5c58ed181ad2772144ae6522edff34cc646"
+    },
+    "compare_initialization": {
+      "start_line": 105,
+      "end_line": 127,
+      "bytes": 1483,
+      "sha256": "44d64a511d4769b5c57736aee18ffef35f0343acc8a5f6c80a81958eab8ea0eb"
+    },
+    "invariants": {
+      "start_line": 129,
+      "end_line": 146,
+      "bytes": 1027,
+      "sha256": "7d69fa5d77b4b6f05f0be37c61991666adf25961ab2492e4c35326c18ff9f3d4"
+    },
+    "compare_initialization_pair": {
+      "start_line": 148,
+      "end_line": 159,
+      "bytes": 789,
+      "sha256": "e6d5abdef26e7f15617c00897508306f185069ba5a465ca9f9480104c3ac09cc"
+    },
+    "initial_profile_uniformity": {
+      "start_line": 161,
+      "end_line": 174,
+      "bytes": 902,
+      "sha256": "6168119f63cad158c2c057dc4f2d35bd986dccad25ac91b40271a47b9499ad8d"
+    },
+    "compare_policy": {
+      "start_line": 176,
+      "end_line": 204,
+      "bytes": 2508,
+      "sha256": "3204c8039155a2657b914551a1e6de9bdf427585f49740cd476fb2e934d91882"
+    },
+    "verify_coefficient_evidence": {
+      "start_line": 206,
+      "end_line": 215,
+      "bytes": 884,
+      "sha256": "9d86c882b583098348834732c297fbec79ce7cbbeb15b309fafde9bd07dba685"
+    },
+    "charge_balance": {
+      "start_line": 217,
+      "end_line": 325,
+      "bytes": 7710,
+      "sha256": "efbf6bcd9a51b24cc37403252000a4f0eff437a838b100832876ca5f72dbccb0"
+    },
+    "paired_classification": {
+      "start_line": 327,
+      "end_line": 353,
+      "bytes": 2184,
+      "sha256": "9a6f28e4a897371004d268cbba0004dddbc29caf9061829ba40077b206181690"
+    },
+    "analyze": {
+      "start_line": 355,
+      "end_line": 413,
+      "bytes": 5316,
+      "sha256": "f571fa84e8ef4d20b2325257f98c9177d1862957d153478a78a97899c7a1ad9b"
+    }
+  },
+  "candidate/control.py.inactive.txt": {
+    "ContractError": {
+      "start_line": 14,
+      "end_line": 17,
+      "bytes": 167,
+      "sha256": "2481926a9bc8340058acb977a88d8453781a4aef59edb52d5b6b3e41d63c9fad"
+    },
+    "reject": {
+      "start_line": 20,
+      "end_line": 21,
+      "bytes": 66,
+      "sha256": "7e5fee4fb0915017b63c8001cf2011efe28d1599cda57a9882b46ed126a90c2b"
+    },
+    "canonical_hash": {
+      "start_line": 24,
+      "end_line": 26,
+      "bytes": 197,
+      "sha256": "a5205e58000b4981b427a6d51f4edf33308e34ee3064cc661963d0004851ea59"
+    },
+    "finite_number": {
+      "start_line": 29,
+      "end_line": 30,
+      "bytes": 117,
+      "sha256": "c7bb8a058bdc0c48b5fc464724898bb2d5ff6728051ae454939306a4d2b0fc9c"
+    },
+    "is_sha": {
+      "start_line": 33,
+      "end_line": 34,
+      "bytes": 122,
+      "sha256": "ce19198b974ec83fce7d580825d833f14ef6a314acd604ee1c7332c5baf090a2"
+    },
+    "require_refs": {
+      "start_line": 37,
+      "end_line": 48,
+      "bytes": 586,
+      "sha256": "eb5a82842fd6c0ad99a34db3062b0907e919162d9d2aef4ff7366e9c67a3cf36"
+    },
+    "authorize_execution": {
+      "start_line": 51,
+      "end_line": 140,
+      "bytes": 5783,
+      "sha256": "7bd76ea20a151be3f2c2b90dd2fd78f8442d7e79b66341233ffc1d9249f24b98"
+    },
+    "assess_resources": {
+      "start_line": 143,
+      "end_line": 202,
+      "bytes": 3622,
+      "sha256": "0be2af60ed3114cb415aa10c4a13165b0d80d07419c9e374965f587ca26732b8"
+    },
+    "advance_stop": {
+      "start_line": 205,
+      "end_line": 267,
+      "bytes": 3635,
+      "sha256": "8f51f1f10f38daa8a388ceaed6058fc25f8e928e3e3e44b7eb781c891e47dfb2"
+    },
+    "UnavailableNativeAdapter": {
+      "start_line": 270,
+      "end_line": 273,
+      "bytes": 213,
+      "sha256": "2eb829727846002e59ddfc0504c98715814ee78c1083691b076bd8e6547041d2"
+    },
+    "execute_once": {
+      "start_line": 276,
+      "end_line": 326,
+      "bytes": 3168,
+      "sha256": "d3ccdad5a53e2e3eaf8941e8d57bfb25e65a129f9fdd9d0807c0e18c34e7ebc3"
+    }
+  },
+  "candidate/Parent.ps1.inactive.txt": [
+    {
+      "name": "S1Has",
+      "start_line": 6,
+      "end_line": 10,
+      "start_utf16": 309,
+      "end_utf16_exclusive": 540,
+      "start_byte": 309,
+      "bytes": 231,
+      "sha256": "f6dc8c12dfa2c7f8ae89415b0e4f75ea5be8391d52f7f1463d705c1ed76cf983",
+      "extraction_rule": "UTF-8 bytes of source substring from FunctionDefinitionAst start inclusive to end exclusive; final closing brace included, following newline excluded; no line-ending normalization"
+    },
+    {
+      "name": "S1Struct",
+      "start_line": 11,
+      "end_line": 15,
+      "start_utf16": 541,
+      "end_utf16_exclusive": 789,
+      "start_byte": 541,
+      "bytes": 248,
+      "sha256": "0b90669aa6fae4e89236495af73b31262001ada7ee1223622bcc0651ef10307f",
+      "extraction_rule": "UTF-8 bytes of source substring from FunctionDefinitionAst start inclusive to end exclusive; final closing brace included, following newline excluded; no line-ending normalization"
+    },
+    {
+      "name": "S1Number",
+      "start_line": 16,
+      "end_line": 22,
+      "start_utf16": 790,
+      "end_utf16_exclusive": 1176,
+      "start_byte": 790,
+      "bytes": 386,
+      "sha256": "b7251aa4a08a8cca7f02f3234a1103ee6542075afda098d0ec46f664b43201bc",
+      "extraction_rule": "UTF-8 bytes of source substring from FunctionDefinitionAst start inclusive to end exclusive; final closing brace included, following newline excluded; no line-ending normalization"
+    },
+    {
+      "name": "S1Sha",
+      "start_line": 23,
+      "end_line": 23,
+      "start_utf16": 1177,
+      "end_utf16_exclusive": 1267,
+      "start_byte": 1177,
+      "bytes": 90,
+      "sha256": "13c6456b30805e3b02063ca8cb804b201d948c5518bf01b102610297236d8eed",
+      "extraction_rule": "UTF-8 bytes of source substring from FunctionDefinitionAst start inclusive to end exclusive; final closing brace included, following newline excluded; no line-ending normalization"
+    },
+    {
+      "name": "S1Failure",
+      "start_line": 24,
+      "end_line": 26,
+      "start_utf16": 1268,
+      "end_utf16_exclusive": 1430,
+      "start_byte": 1268,
+      "bytes": 162,
+      "sha256": "3ed6a49f46e52ff5b8edfa2b824e7d24fe12cd2c71430ea07b583a40eaa382a4",
+      "extraction_rule": "UTF-8 bytes of source substring from FunctionDefinitionAst start inclusive to end exclusive; final closing brace included, following newline excluded; no line-ending normalization"
+    },
+    {
+      "name": "S1ExactDecimal",
+      "start_line": 27,
+      "end_line": 50,
+      "start_utf16": 1431,
+      "end_utf16_exclusive": 2931,
+      "start_byte": 1431,
+      "bytes": 1500,
+      "sha256": "56d56e31306ef5a1aac5bce5f59feff5fa938f5ce594be3ddeba8303d7dd2cb5",
+      "extraction_rule": "UTF-8 bytes of source substring from FunctionDefinitionAst start inclusive to end exclusive; final closing brace included, following newline excluded; no line-ending normalization"
+    },
+    {
+      "name": "S1ExactCompare",
+      "start_line": 51,
+      "end_line": 58,
+      "start_utf16": 2932,
+      "end_utf16_exclusive": 3413,
+      "start_byte": 2932,
+      "bytes": 481,
+      "sha256": "377e9f3e20fb3657b07729e121f92d8d17d0acefe5f484517ac2e5e90631d275",
+      "extraction_rule": "UTF-8 bytes of source substring from FunctionDefinitionAst start inclusive to end exclusive; final closing brace included, following newline excluded; no line-ending normalization"
+    },
+    {
+      "name": "S1TimeVector",
+      "start_line": 59,
+      "end_line": 68,
+      "start_utf16": 3414,
+      "end_utf16_exclusive": 3871,
+      "start_byte": 3414,
+      "bytes": 457,
+      "sha256": "3a565c77f2f8f8063bab684a1bc008d9efd18c8aa75c39ed972aa9d7446ad832",
+      "extraction_rule": "UTF-8 bytes of source substring from FunctionDefinitionAst start inclusive to end exclusive; final closing brace included, following newline excluded; no line-ending normalization"
+    },
+    {
+      "name": "S1Coverage",
+      "start_line": 69,
+      "end_line": 107,
+      "start_utf16": 3872,
+      "end_utf16_exclusive": 6915,
+      "start_byte": 3872,
+      "bytes": 3043,
+      "sha256": "20365c99d8771bc3203ae7f15a2c6e7f42949cbc213b898656309083794480a1",
+      "extraction_rule": "UTF-8 bytes of source substring from FunctionDefinitionAst start inclusive to end exclusive; final closing brace included, following newline excluded; no line-ending normalization"
+    },
+    {
+      "name": "S1ChargeFields",
+      "start_line": 108,
+      "end_line": 155,
+      "start_utf16": 6916,
+      "end_utf16_exclusive": 10765,
+      "start_byte": 6916,
+      "bytes": 3849,
+      "sha256": "2786f0b5137fe732d95e308c14291a8ac639ebfbc943f54c23f28a52cbd36487",
+      "extraction_rule": "UTF-8 bytes of source substring from FunctionDefinitionAst start inclusive to end exclusive; final closing brace included, following newline excluded; no line-ending normalization"
+    },
+    {
+      "name": "S1ComparisonNumerics",
+      "start_line": 156,
+      "end_line": 169,
+      "start_utf16": 10766,
+      "end_utf16_exclusive": 11583,
+      "start_byte": 10766,
+      "bytes": 817,
+      "sha256": "c4861945e67275bb469492a536118c3e5307b4fe821e43600907fa53e31f3fcb",
+      "extraction_rule": "UTF-8 bytes of source substring from FunctionDefinitionAst start inclusive to end exclusive; final closing brace included, following newline excluded; no line-ending normalization"
+    },
+    {
+      "name": "S1NativeAxis",
+      "start_line": 170,
+      "end_line": 217,
+      "start_utf16": 11584,
+      "end_utf16_exclusive": 15119,
+      "start_byte": 11584,
+      "bytes": 3535,
+      "sha256": "57ebfaa4c6926c84626845b90eacbe266fffb658991e9ab9e4928a97297da6f5",
+      "extraction_rule": "UTF-8 bytes of source substring from FunctionDefinitionAst start inclusive to end exclusive; final closing brace included, following newline excluded; no line-ending normalization"
+    },
+    {
+      "name": "S1Fields",
+      "start_line": 218,
+      "end_line": 295,
+      "start_utf16": 15120,
+      "end_utf16_exclusive": 20062,
+      "start_byte": 15120,
+      "bytes": 4942,
+      "sha256": "80f08b574f7c9581aa4e44de3103c75e495121de9372c256a831cbddbacc5266",
+      "extraction_rule": "UTF-8 bytes of source substring from FunctionDefinitionAst start inclusive to end exclusive; final closing brace included, following newline excluded; no line-ending normalization"
+    },
+    {
+      "name": "S1Decision",
+      "start_line": 296,
+      "end_line": 338,
+      "start_utf16": 20063,
+      "end_utf16_exclusive": 23090,
+      "start_byte": 20063,
+      "bytes": 3027,
+      "sha256": "1df66e6a7551aa05070ad39e7aa5ba14c9559f31418f03ee0cb764c6053368d7",
+      "extraction_rule": "UTF-8 bytes of source substring from FunctionDefinitionAst start inclusive to end exclusive; final closing brace included, following newline excluded; no line-ending normalization"
+    },
+    {
+      "name": "S1FinalReturn",
+      "start_line": 339,
+      "end_line": 374,
+      "start_utf16": 23091,
+      "end_utf16_exclusive": 25728,
+      "start_byte": 23091,
+      "bytes": 2637,
+      "sha256": "0db9f410c53a630ae5bdc98892c02c72a430fb6804e5ef359fcca36e375405a9",
+      "extraction_rule": "UTF-8 bytes of source substring from FunctionDefinitionAst start inclusive to end exclusive; final closing brace included, following newline excluded; no line-ending normalization"
+    }
+  ]
+}

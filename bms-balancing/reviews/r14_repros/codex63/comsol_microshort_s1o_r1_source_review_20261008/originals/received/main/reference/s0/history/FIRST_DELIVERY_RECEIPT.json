@@ -1,0 +1,30 @@
+{
+  "status": "S0_PACKAGE_VERIFIED_NOT_NATIVE_APPROVAL",
+  "created_utc": "2026-10-07T11:13:57.037758+00:00",
+  "zip": {
+    "file": "COMSOL_MICROSHORT_S0_DEEP_REVIEW_20261007.zip",
+    "bytes": 411349,
+    "sha256": "9e919cf8cab9e5fa2286b27def7fbac1a07a661be3379968105dbdf9a2378863"
+  },
+  "payload_count": 33,
+  "manifest": {
+    "bytes": 5579,
+    "sha256": "560424965bf75fc944eced85e5fb0417be97cb4c070a6eba849d73ef49b7fd49"
+  },
+  "checks": [
+    "exact_set",
+    "casefold_collisions",
+    "relative_safe_paths",
+    "no_symlinks",
+    "member_size_sha256",
+    "CRC",
+    "manifest_readback",
+    "local_payload_unchanged"
+  ],
+  "source_git_blob_matches": 1,
+  "incoming_originals_byte_matches": 0,
+  "recipient": null,
+  "approved": false,
+  "native_calls": 0,
+  "elapsed_snapshot_before_receipt_write_and_tool_return_s": 0.1015812000259757
+}

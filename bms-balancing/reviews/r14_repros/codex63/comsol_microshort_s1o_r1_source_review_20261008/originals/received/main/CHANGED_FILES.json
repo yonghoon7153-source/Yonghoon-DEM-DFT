@@ -1,0 +1,51 @@
+[
+  {
+    "path": "candidate/consumer.py.inactive.txt",
+    "old_bytes": 21695,
+    "old_sha256": "710a1816d9bce518f2eb69ffff51f122655d50f36848dff0ecd70cb4ef1800d1",
+    "new_bytes": 27987,
+    "new_sha256": "0cb1aa3cc4593dcb041115baf208c4dd09186fcc75055ddcde53c68086cc6b79"
+  },
+  {
+    "path": "candidate/Parent.ps1.inactive.txt",
+    "old_bytes": 15237,
+    "old_sha256": "7fdd3df5b50317e92309f283f91ca5acf878821ec1e5ac063a5bd64c25cee760",
+    "new_bytes": 25787,
+    "new_sha256": "e9f8d366ca9931b84ded5753a560369b72fea8737a77075bc2b80ec771bc56ff"
+  },
+  {
+    "path": "candidate/variants/P0.diff.txt",
+    "old_bytes": 11269,
+    "old_sha256": "03ac53030fcf7b86c15758cbbccffe184573d1228d0e7783bc8ab1801831c075",
+    "new_bytes": 11687,
+    "new_sha256": "6525d92016083c6c99fc65ae48b8b0b4bca3c9f7e5323ff9685d1ccfff9ab97b"
+  },
+  {
+    "path": "candidate/variants/P0.java.inactive.txt",
+    "old_bytes": 81976,
+    "old_sha256": "20c1acc9aa8287ed71363ea12dbea3d54a6a211a4752493560e21f85bc6f6d95",
+    "new_bytes": 81976,
+    "new_sha256": "6d10c8910e3b7301778112b676be604eccc22aae41fa87cb719a94218e2384fa"
+  },
+  {
+    "path": "contracts/CHARGE_BALANCE.json",
+    "old_bytes": 7298,
+    "old_sha256": "8768ace821125d94409369df15636b962610059dff877e55056610ac3e3030a7",
+    "new_bytes": 12042,
+    "new_sha256": "6ce428333b98bc219e99d8fd4de173d28680489d0e86ec630213cc2a709fe66c"
+  },
+  {
+    "path": "contracts/EXECUTION_BINDING.json",
+    "old_bytes": 8747,
+    "old_sha256": "596b33f7befe252d6a8040ed246e9ba34fd9bf6684f857178e236c08879e3689",
+    "new_bytes": 11180,
+    "new_sha256": "21c88db625f798a85c5a6c79d41da1a15a618797278d6c26e1f149eb22af178b"
+  },
+  {
+    "path": "SOURCE_CONTRACT_LINKS.json",
+    "old_bytes": 1920,
+    "old_sha256": "6f9f247eee7682a9b7d5368fef102afbf807b19d60aad13dbf10db8183b5397a",
+    "new_bytes": 2414,
+    "new_sha256": "5425fa91e4579b9785bb80b92bab755358fd1c24df933aeeae00172182acf7ff"
+  }
+]

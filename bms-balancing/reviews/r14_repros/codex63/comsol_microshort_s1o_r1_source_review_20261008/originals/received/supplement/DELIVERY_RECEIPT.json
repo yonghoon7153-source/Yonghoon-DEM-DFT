@@ -1,0 +1,23 @@
+{
+  "kind": "R1_PACKAGE_DELIVERY_RECEIPT",
+  "recipient": null,
+  "zip": {
+    "path": "COMSOL_MICROSHORT_S1O_R1_OFFLINE_CORRECTIONS_20261008.zip",
+    "bytes": 813053,
+    "sha256": "0a18cb64f8bcbcd4725b45088ee310f85e9292a1ffdced2332b5102f5fd6f9dc"
+  },
+  "payload_count": 116,
+  "entries": 117,
+  "package_manifest_sha256": "027375361a4c1fe0af1ce5906033ddbdd84b5dc64ff7e4f4ea0457f746923e36",
+  "code_manifest_sha256": "4ce5c08dbde5153027819b5a651e3995ec82417b4429b9bb0f789082b440f5da",
+  "timing_identity": {
+    "path": "TIMING.json",
+    "bytes": 2393,
+    "sha256": "8aa258d16196701c0ba7e71c130855183cb7418192e8473ef8f43bc04d2c8b58"
+  },
+  "snapshot_elapsed_s": 1436.6251596000511,
+  "total_limit_s": 2700,
+  "functional_validation": "NOT_RUN",
+  "native_ready": false,
+  "tool_return": "Generated after this tool returns, in FINAL_PACKAGE_TOOL_RETURN.json; later transcription, not self-observed OS evidence."
+}

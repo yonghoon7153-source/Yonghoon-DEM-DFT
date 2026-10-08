@@ -1,0 +1,57 @@
+{
+  "origin": {
+    "utc": "2026-10-08T05:24:26.7873978Z",
+    "local": "2026-10-08T14:24:26.7987496+09:00",
+    "monotonic_ticks": 19360688988129,
+    "frequency": 10000000,
+    "total_limit_seconds": 2700,
+    "phase_limits": {
+      "correction": 1200,
+      "static": 600,
+      "plan_seal": 600,
+      "delivery": 300
+    },
+    "authorization": "USER_OFFLINE_SCOPE.txt — user message adopting S1O-N1–N4 R1 offline corrections only",
+    "source": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\outputs\\microshort_s1o_20261007_133011",
+    "target": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\outputs\\microshort_s1o_r1_20261008",
+    "first_call_chunk": "4b5f4b",
+    "functional_tests_authorized": false,
+    "native_authorized": false
+  },
+  "phase_events": [
+    {
+      "phase": "correction",
+      "start_elapsed_s": 0,
+      "limit_s": 1200,
+      "end_elapsed_s": 693.7773478999734,
+      "duration_s": 693.7773478999734,
+      "within_limit": true
+    },
+    {
+      "phase": "static",
+      "start_elapsed_s": 693.7773478999734,
+      "limit_s": 600,
+      "end_elapsed_s": 1037.0816319000442,
+      "duration_s": 343.30428400007077,
+      "within_limit": true
+    },
+    {
+      "phase": "plan_seal",
+      "start_elapsed_s": 1037.0816319000442,
+      "limit_s": 600,
+      "end_elapsed_s": 1429.1216340998653,
+      "duration_s": 392.0400021998212,
+      "within_limit": true
+    },
+    {
+      "phase": "delivery",
+      "start_elapsed_s": 1429.1216340998653,
+      "limit_s": 300
+    }
+  ],
+  "snapshot_elapsed_s": 1435.647587100044,
+  "scope": "PRE_PACKAGE snapshot; current source/plan sealing complete, delivery still open",
+  "parallel_work_accounting": "Phase wall-time counted once, no addition of worker times; plan drafting overlapped correction/static while final seal/reporting is plan_seal",
+  "total_limit_s": 2700,
+  "all_completed_phases_within_limit": true
+}

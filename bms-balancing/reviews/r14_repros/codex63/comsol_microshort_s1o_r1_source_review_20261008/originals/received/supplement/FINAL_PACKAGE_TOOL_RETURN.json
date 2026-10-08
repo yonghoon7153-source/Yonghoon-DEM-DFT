@@ -1,0 +1,12 @@
+{
+  "provenance": "FOLLOWUP_TRANSCRIPTION_OF_ACTUAL_TOOL_RETURN",
+  "tool": "exec_command",
+  "scope": "Saved after tool 7feedf returned; exact output string preserved, not independent remote OS observation",
+  "tool_result": {
+    "chunk_id": "7feedf",
+    "wall_time_seconds": 7.2927658,
+    "exit_code": 0,
+    "original_token_count": 169,
+    "output": "{\"kind\": \"R1_PACKAGE_FINAL_RETURN\", \"status\": \"OFFLINE_PREPARATION_DELIVERED_PENDING_REVIEW\", \"zip\": {\"path\": \"COMSOL_MICROSHORT_S1O_R1_OFFLINE_CORRECTIONS_20261008.zip\", \"bytes\": 813053, \"sha256\": \"0a18cb64f8bcbcd4725b45088ee310f85e9292a1ffdced2332b5102f5fd6f9dc\"}, \"payload_count\": 116, \"entries\": 117, \"code_manifest_sha256\": \"4ce5c08dbde5153027819b5a651e3995ec82417b4429b9bb0f789082b440f5da\", \"snapshot_elapsed_s\": 1436.6484087998979, \"total_limit_s\": 2700, \"delivery_elapsed_s\": 7.526774700032547, \"observation_scope\": \"AFTER ZIP/receipt/TIMING write and reread, BEFORE tool return; not end-to-end OS audit\", \"functional_validation\": \"NOT_RUN\", \"native_ready\": false}\r\n"
+  }
+}
