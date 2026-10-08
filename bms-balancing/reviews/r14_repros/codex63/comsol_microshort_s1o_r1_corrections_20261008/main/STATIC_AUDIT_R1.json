@@ -1,0 +1,1234 @@
+{
+  "status": "PASS_STATIC_ONLY",
+  "utc": "2026-10-08T05:37:46.796812+00:00",
+  "checks": [
+    {
+      "name": "original_pin:candidate/consumer.py.inactive.txt",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "authorized_changed_file:candidate/consumer.py.inactive.txt",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "original_pin:candidate/control.py.inactive.txt",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "unchanged:candidate/control.py.inactive.txt",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "original_pin:candidate/Parent.ps1.inactive.txt",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "authorized_changed_file:candidate/Parent.ps1.inactive.txt",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "original_pin:candidate/variants/P0.diff.txt",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "authorized_changed_file:candidate/variants/P0.diff.txt",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "original_pin:candidate/variants/P0.java.inactive.txt",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "authorized_changed_file:candidate/variants/P0.java.inactive.txt",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "original_pin:candidate/variants/P1.diff.txt",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "unchanged:candidate/variants/P1.diff.txt",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "original_pin:candidate/variants/P1.java.inactive.txt",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "unchanged:candidate/variants/P1.java.inactive.txt",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "original_pin:candidate/variants/P2.diff.txt",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "unchanged:candidate/variants/P2.diff.txt",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "original_pin:candidate/variants/P2.java.inactive.txt",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "unchanged:candidate/variants/P2.java.inactive.txt",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "original_pin:candidate/variants/P3.diff.txt",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "unchanged:candidate/variants/P3.diff.txt",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "original_pin:candidate/variants/P3.java.inactive.txt",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "unchanged:candidate/variants/P3.java.inactive.txt",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "original_pin:contracts/CHARGE_BALANCE.json",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "authorized_changed_file:contracts/CHARGE_BALANCE.json",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "original_pin:contracts/COEFFICIENT_READBACK.json",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "unchanged:contracts/COEFFICIENT_READBACK.json",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "original_pin:contracts/COST_MODEL.json",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "unchanged:contracts/COST_MODEL.json",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "original_pin:contracts/EXECUTION_BINDING.json",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "authorized_changed_file:contracts/EXECUTION_BINDING.json",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "original_pin:contracts/INITIALIZATION.json",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "unchanged:contracts/INITIALIZATION.json",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "original_pin:contracts/K_DESIGN.json",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "unchanged:contracts/K_DESIGN.json",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "original_pin:contracts/POLICY_VARIANTS.json",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "unchanged:contracts/POLICY_VARIANTS.json",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "original_pin:contracts/RESOURCE_CONTRACT.json",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "unchanged:contracts/RESOURCE_CONTRACT.json",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "original_pin:SOURCE_CONTRACT_LINKS.json",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "authorized_changed_file:SOURCE_CONTRACT_LINKS.json",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "python_static_parse:candidate/consumer.py.inactive.txt",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "python_no_unexpected_function_set:candidate/consumer.py.inactive.txt",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "unchanged_function:EvidenceError",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "unchanged_function:require",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "unchanged_function:number",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "unchanged_function:decimal_context",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "unchanged_function:read_csv_bytes",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "unchanged_function:timed_rows",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "unchanged_function:coverage",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "unchanged_function:profile_rows",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "unchanged_function:compare_initialization",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "unchanged_function:invariants",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "unchanged_function:compare_initialization_pair",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "unchanged_function:initial_profile_uniformity",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "unchanged_function:compare_policy",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "unchanged_function:verify_coefficient_evidence",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "unchanged_function:paired_classification",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "Decimal_literal_set_unchanged",
+      "pass": true,
+      "detail": [
+        ".0001",
+        ".001",
+        ".2228930343076256",
+        ".98",
+        ".983245033354389",
+        "0",
+        "0",
+        "1e-15",
+        "1e-4",
+        "1e-6",
+        "1e-8",
+        "2700",
+        "2e-4",
+        "3600",
+        "96485.33212"
+      ]
+    },
+    {
+      "name": "N1_N2_required_text:safe==native_times[-2]",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "N1_N2_required_text:list(global_rows)==native_times",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "N1_N2_required_text:'CHARGE_GLOBAL_LI_MISMATCH'",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "N1_N2_required_text:value < -q_abs",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "N1_N2_required_text:error.details={'first_violation':first}",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "N1_N2_required_text:source_binding=charge_proof",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "python_static_parse:candidate/control.py.inactive.txt",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "python_no_unexpected_function_set:candidate/control.py.inactive.txt",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "unchanged_function:ContractError",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "unchanged_function:reject",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "unchanged_function:canonical_hash",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "unchanged_function:finite_number",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "unchanged_function:is_sha",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "unchanged_function:require_refs",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "unchanged_function:authorize_execution",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "unchanged_function:assess_resources",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "unchanged_function:advance_stop",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "unchanged_function:UnavailableNativeAdapter",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "unchanged_function:execute_once",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "unchanged_parent_function:S1Has",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "unchanged_parent_function:S1Struct",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "unchanged_parent_function:S1Number",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "unchanged_parent_function:S1Sha",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "unchanged_parent_function:S1Failure",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "unchanged_parent_function:S1FinalReturn",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "parent_parser_no_errors",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "parent_parser_bound_to_current",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "P0_only_log_literal_reverse",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "P0_tout_setting_unchanged",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "untouched_contract:INITIALIZATION",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "untouched_contract:COEFFICIENT_READBACK",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "untouched_contract:COST_MODEL",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "untouched_contract:K_DESIGN",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "untouched_contract:POLICY_VARIANTS",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "untouched_contract:RESOURCE_CONTRACT",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "unchanged_charge_physics_or_limits:F_C_mol",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "unchanged_charge_physics_or_limits:A_c_m2",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "unchanged_charge_physics_or_limits:L_sep_m",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "unchanged_charge_physics_or_limits:current_balance",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "unchanged_charge_physics_or_limits:charge_definitions",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "unchanged_charge_physics_or_limits:charge_balance",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "unchanged_charge_physics_or_limits:total_li",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "unchanged_charge_physics_or_limits:sign_deadbands",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "unchanged_charge_physics_or_limits:threshold_change_policy",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "contract_json_parse:CHARGE_BALANCE.json",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "contract_not_activated:CHARGE_BALANCE.json",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "contract_json_parse:COEFFICIENT_READBACK.json",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "contract_not_activated:COEFFICIENT_READBACK.json",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "contract_json_parse:COST_MODEL.json",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "contract_not_activated:COST_MODEL.json",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "contract_json_parse:EXECUTION_BINDING.json",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "contract_not_activated:EXECUTION_BINDING.json",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "contract_json_parse:INITIALIZATION.json",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "contract_not_activated:INITIALIZATION.json",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "contract_json_parse:K_DESIGN.json",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "contract_not_activated:K_DESIGN.json",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "contract_json_parse:POLICY_VARIANTS.json",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "contract_not_activated:POLICY_VARIANTS.json",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "contract_json_parse:RESOURCE_CONTRACT.json",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "contract_not_activated:RESOURCE_CONTRACT.json",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "native_proposal_unchanged:phase_limits_s",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "native_proposal_unchanged:overall_limit_s",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "native_proposal_unchanged:counts",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "native_proposal_unchanged:resource_contract_sha256",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "native_adapters_still_open",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "no_runtime_dirs",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "original_preserved:CODE_MANIFEST.json",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "original_preserved:COMSOL_MICROSHORT_S1O_OFFLINE_PREPARATION_20261007.zip",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "original_preserved:DECISION.json",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "original_preserved:DELIVERY_RECEIPT.json",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "original_preserved:DESIGN_CLOSEOUT.json",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "original_preserved:FINAL_PACKAGE_TOOL_RETURN.json",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "original_preserved:finalize_design_static.py",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "original_preserved:INPUTS_BEFORE.json",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "original_preserved:intake_static.py",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "original_preserved:MANIFEST.json",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "original_preserved:NATIVE_P_REQUEST_INACTIVE_KO.md",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "original_preserved:package_static.py",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "original_preserved:PARENT_STATIC_PARSE.json",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "original_preserved:parse_parent_static.ps1",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "original_preserved:PHYSICS_ARITHMETIC_TOOL_RETURN.json",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "original_preserved:PHYSICS_ARITHMETIC.json",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "original_preserved:PHYSICS_CLOSEOUT.json",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "original_preserved:physics_contract_arithmetic.py",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "original_preserved:PREPARATION_EVENTS.json",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "original_preserved:preserve_selected.py",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "original_preserved:S1O_REPORT_KO.md",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "original_preserved:S1O_SUMMARY_KO.md",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "original_preserved:SELECTED_ORIGINALS_AFTER.json",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "original_preserved:SELECTED_ORIGINALS_BEFORE.json",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "original_preserved:SOURCE_CONTRACT_LINKS.json",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "original_preserved:SOURCE_INDEX.json",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "original_preserved:START.json",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "original_preserved:STATIC_AUDIT.json",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "original_preserved:static_audit.py",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "original_preserved:STATIC_PHASE_CLOSEOUT.json",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "original_preserved:STATIC_TOOL_RETURNS.json",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "original_preserved:TIMING.json",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "original_preserved:VALIDATION_PLAN_KO.md",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "original_preserved:validation_plan_static.py",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "original_preserved:VALIDATION_PLAN.json",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "original_preserved:VARIANT_STATIC_RESULT.json",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "original_preserved:variant_static.py",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "original_preserved:WRITING_CLOSEOUT.json",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "original_preserved:analysis\\build_policy_design.py",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "original_preserved:analysis\\POLICY_DESIGN_POST_CORRECTION.json",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "original_preserved:analysis\\POLICY_DESIGN_STATIC_OUTPUT.json",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "original_preserved:audit_history\\FIRST_STATIC_ERROR.json",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "original_preserved:audit_history\\static_audit_v1_failed.py",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "original_preserved:candidate\\consumer.py.inactive.txt",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "original_preserved:candidate\\control.py.inactive.txt",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "original_preserved:candidate\\Parent.ps1.inactive.txt",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "original_preserved:candidate\\variants\\P0.diff.txt",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "original_preserved:candidate\\variants\\P0.java.inactive.txt",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "original_preserved:candidate\\variants\\P1.diff.txt",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "original_preserved:candidate\\variants\\P1.java.inactive.txt",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "original_preserved:candidate\\variants\\P2.diff.txt",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "original_preserved:candidate\\variants\\P2.java.inactive.txt",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "original_preserved:candidate\\variants\\P3.diff.txt",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "original_preserved:candidate\\variants\\P3.java.inactive.txt",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "original_preserved:contracts\\CHARGE_BALANCE.json",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "original_preserved:contracts\\COEFFICIENT_READBACK.json",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "original_preserved:contracts\\COST_MODEL.json",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "original_preserved:contracts\\EXECUTION_BINDING.json",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "original_preserved:contracts\\INITIALIZATION.json",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "original_preserved:contracts\\K_DESIGN.json",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "original_preserved:contracts\\POLICY_VARIANTS.json",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "original_preserved:contracts\\RESOURCE_CONTRACT.json",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "original_preserved:notes\\EXECUTION_RESOURCE_KO.md",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "original_preserved:notes\\PHYSICS_CONTRACT_KO.md",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "original_preserved:notes\\POLICY_K_COST_KO.md",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "original_preserved:reference\\COMSOL_MICROSHORT_S1O_EXEC_COVER_20261007 (1).md",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "original_preserved:reference\\COMSOL_MICROSHORT_S1O_SEND_TO_CODEX_v2_20261007 (1).md",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "original_preserved:reference\\legacy\\b020_profile_unit_stages_20260927\\src\\launcher.py",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "original_preserved:reference\\legacy\\b020_profile_unit_stages_20260927\\src\\winjob.py",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "original_preserved:reference\\legacy\\normal480_offline_preparation_20261001\\CODE_MANIFEST.json",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "original_preserved:reference\\legacy\\normal480_offline_preparation_20261001\\COMMAND_MAP.json",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "original_preserved:reference\\legacy\\normal480_offline_preparation_20261001\\CONTRACT.json",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "original_preserved:reference\\legacy\\normal480_offline_preparation_20261001\\NATIVE_APPROVAL_FIELD_SPEC.json",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "original_preserved:reference\\legacy\\normal480_offline_preparation_20261001\\PARENT_COMMAND.ps1",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "original_preserved:reference\\legacy\\normal480_offline_preparation_20261001\\src\\candidate_entry.py",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "original_preserved:reference\\legacy\\normal480_offline_preparation_20261001\\src\\diagnostic_consumer.py",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "original_preserved:reference\\legacy\\normal480_offline_preparation_20261001\\src\\Normal480Candidate.java",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "original_preserved:reference\\s0\\CLAUDE_REPLY_KO.md",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "original_preserved:reference\\s0\\DECISION.json",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "original_preserved:reference\\s0\\finalize_handoff.py",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "original_preserved:reference\\s0\\MANIFEST.json",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "original_preserved:reference\\s0\\package_review.py",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "original_preserved:reference\\s0\\README_KO.md",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "original_preserved:reference\\s0\\REVIEW_AUDIT_KO.md",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "original_preserved:reference\\s0\\S0_REPORT_KO.md",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "original_preserved:reference\\s0\\S0_SUMMARY_KO.md",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "original_preserved:reference\\s0\\S1_SCOPE_DRAFT_KO.md",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "original_preserved:reference\\s0\\SOURCE_COPY_NOTE_KO.md",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "original_preserved:reference\\s0\\SOURCE_IDENTITIES.json",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "original_preserved:reference\\s0\\SOURCE_PROVENANCE_EXPECTED.json",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "original_preserved:reference\\s0\\SOURCE_TEXT_EQUIVALENCE.json",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "original_preserved:reference\\s0\\STATIC_ARTIFACT_AUDIT.json",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "original_preserved:reference\\s0\\analysis\\ANALYTIC_RESULT.json",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "original_preserved:reference\\s0\\analysis\\ARITHMETIC_TOOL_RETURN.json",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "original_preserved:reference\\s0\\analysis\\s0_analytic.py",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "original_preserved:reference\\s0\\candidate\\LIMITED_STATIC_REVIEW_PLAN.md",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "original_preserved:reference\\s0\\candidate\\LITERAL_CHANGE_MAP.json",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "original_preserved:reference\\s0\\candidate\\MicroshortS1RestCandidate.java.inactive.txt",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "original_preserved:reference\\s0\\candidate\\README_INACTIVE.md",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "original_preserved:reference\\s0\\candidate\\REQUESTED_TIMES_S1_3600.txt",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "original_preserved:reference\\s0\\candidate\\S1_REVIEW_ONLY.diff.txt",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "original_preserved:reference\\s0\\candidate\\SOURCE_PROVENANCE.json",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "original_preserved:reference\\s0\\history\\FIRST_DELIVERY_RECEIPT.json",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "original_preserved:reference\\s0\\history\\PRELIMINARY_PACKAGE_TOOL_RETURN.json",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "original_preserved:reference\\s0\\notes\\COST_AND_DESIGN.md",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "original_preserved:reference\\s0\\notes\\LITERATURE_AND_ADVERSARIAL.md",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "original_preserved:reference\\s0\\notes\\PHYSICS_CANDIDATE.md",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "original_preserved:reference\\s0\\sources\\COMSOL_EXPERIMENT_CORRESPONDENCE_v2_20261004.md",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "original_preserved:reference\\s0\\sources\\COMSOL_MICROSHORT_PHYSICS_REQUEST_DRAFT_20261007.md",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "original_preserved:reference\\s0\\sources\\COMSOL_MICROSHORT_S0_SEND_TO_CODEX_v2_DEEP_20261007.md",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "original_preserved:reference\\s0\\sources\\COMSOL_NEXT_PLAN_20261004.md",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "original_preserved:reference\\s0\\sources\\COMSOL_REBUILD_SPEC.md",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "original_preserved:reference\\s0\\sources\\MICROSHORT_MPH_REVIEW.md",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "original_preserved:reference\\s0\\sources\\MSC_SEMINAR_2026-09-23_APPLICATION.md",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "original_preserved:reference\\s0\\sources\\NEXT_MODEL_READINESS_DECISION.md",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "original_preserved:reference\\s0\\sources\\Normal480Candidate.java.txt",
+      "pass": true,
+      "detail": null
+    }
+  ],
+  "count": 240,
+  "functional_validation": "NOT_RUN",
+  "candidate_imports": 0,
+  "candidate_function_calls": 0,
+  "COMSOL": 0,
+  "JVM": 0,
+  "original_files_checked": 116,
+  "static_scope": "AST parse, raw byte equality, text and JSON checks only; no execution of fixtures or candidate functions",
+  "python_executable": {
+    "path": "C:\\Users\\BML\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\python.exe",
+    "sha256": "b7a12c3af0b4db44191eec14ea095eba731b7328917f570806183093d19ddca2"
+  }
+}

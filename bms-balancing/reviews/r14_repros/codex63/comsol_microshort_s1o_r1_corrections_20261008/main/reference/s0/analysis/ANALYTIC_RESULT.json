@@ -1,0 +1,337 @@
+{
+  "kind": "S0_PIECEWISE_ANALYTIC_SCENARIO_NOT_COMSOL_RESULT",
+  "source_java_text_sha256": "c70526cf6884eabc57b63dd43dce4b47fb0decf59af68d3f550f1b987d053797",
+  "source_lines": {
+    "ocpN": 142,
+    "entropyN": 151,
+    "ocpP": 272,
+    "entropyP": 281,
+    "parameters": "587-607"
+  },
+  "interpolation": "piecewise linear, bounded, entropy N V/K and P mV/K; T=298.15K, reference298K",
+  "method": "exact exponential per OCP/entropy segment of dq/dt=(sigma/L)*U(q); no reaction/ohmic/diffusion polarization",
+  "parameters": {
+    "AN_mol_m2": 1.0075672735167782,
+    "AP_mol_m2": 1.2730897943100403,
+    "stock_solid_mol_m2": 1.1882256785342784,
+    "CN_C_m2": 97215.46301850924,
+    "CP_C_m2": 122834.49162258673,
+    "Q_Ah_m2": 25.035995286543443,
+    "i01_A_m2": 2.503599528654344
+  },
+  "initial_state_comparison": [
+    {
+      "xN": 0.01172068149,
+      "xP": 0.9240638866948168,
+      "U_V": 2.165333326500238,
+      "UN_V": 1.4130534479220864,
+      "UP_V": 3.578386774422324,
+      "UN_slope_V_per_x": -62.69732640588234,
+      "UP_slope_V_per_x": -0.5365831478519519,
+      "k_V_per_C_m2": 0.000649299966267497,
+      "slope_V_per_nominal_SOC": 58.521135222093136
+    },
+    {
+      "xN": 0.105,
+      "xP": 0.8502394093903232,
+      "U_V": 3.3964664771650828,
+      "UN_V": 0.23171297738235294,
+      "UP_V": 3.6281794545474355,
+      "UN_slope_V_per_x": -1.3787862058823526,
+      "UP_slope_V_per_x": -0.8226417126501016,
+      "k_V_per_C_m2": 2.0879942683021698e-05,
+      "slope_V_per_nominal_SOC": 1.8819005277435426
+    },
+    {
+      "xN": 0.205,
+      "xP": 0.7710959524228721,
+      "U_V": 3.5517365373943273,
+      "UN_V": 0.13954435350000002,
+      "UP_V": 3.691280890894327,
+      "UN_slope_V_per_x": -0.5333572714285744,
+      "UP_slope_V_per_x": -0.7038353426681764,
+      "k_V_per_C_m2": 1.1216290692019534e-05,
+      "slope_V_per_nominal_SOC": 1.0109196032324477
+    },
+    {
+      "xN": 0.315,
+      "xP": 0.6840381497586758,
+      "U_V": 3.6344760440317208,
+      "UN_V": 0.1148641915,
+      "UP_V": 3.749340235531721,
+      "UN_slope_V_per_x": -0.000382700000001179,
+      "UP_slope_V_per_x": -0.6490205549329138,
+      "k_V_per_C_m2": 5.287636222083043e-06,
+      "slope_V_per_nominal_SOC": 0.47657244791889886
+    },
+    {
+      "xN": 0.445,
+      "xP": 0.5811516557009895,
+      "U_V": 3.7237215063428213,
+      "UN_V": 0.10990761500000001,
+      "UP_V": 3.8336291213428213,
+      "UN_slope_V_per_x": -0.10770679999999995,
+      "UP_slope_V_per_x": -1.1608736876216101,
+      "k_V_per_C_m2": 1.0558632706546275e-05,
+      "slope_V_per_nominal_SOC": 0.9516451632243694
+    },
+    {
+      "xN": 0.495,
+      "xP": 0.541579927217264,
+      "U_V": 3.7864247108354565,
+      "UN_V": 0.096616937,
+      "UP_V": 3.8830416478354564,
+      "UN_slope_V_per_x": -0.4498745999999994,
+      "UP_slope_V_per_x": -1.398515529061674,
+      "k_V_per_C_m2": 1.6012968385797415e-05,
+      "slope_V_per_nominal_SOC": 1.4432421637094157
+    },
+    {
+      "xN": 0.705,
+      "xP": 0.3753786675856167,
+      "U_V": 4.007496800603911,
+      "UN_V": 0.077207707,
+      "UP_V": 4.084704507603911,
+      "UN_slope_V_per_x": -0.00742599999999926,
+      "UP_slope_V_per_x": -1.4625007335346523,
+      "k_V_per_C_m2": 1.1982657928316027e-05,
+      "slope_V_per_nominal_SOC": 1.079991962688897
+    }
+  ],
+  "chosen_state": {
+    "xN": 0.445,
+    "xP": 0.5811516557009895,
+    "U_V": 3.7237215063428213,
+    "UN_V": 0.10990761500000001,
+    "UP_V": 3.8336291213428213,
+    "UN_slope_V_per_x": -0.10770679999999995,
+    "UP_slope_V_per_x": -1.1608736876216101,
+    "k_V_per_C_m2": 1.0558632706546275e-05,
+    "slope_V_per_nominal_SOC": 0.9516451632243694
+  },
+  "ladder": [
+    {
+      "sigma_S_m": 1e-20,
+      "j0_A_m2": 1.4894886025371285e-15,
+      "r0_vs_0p1C": 5.949388412521835e-16,
+      "C_rate_leak_per_h": 5.949388412521836e-17,
+      "dUdt_initial_mV_per_h": -5.661706706919515e-14,
+      "tau_capacity_h": 1.6808450392905488e+16,
+      "tau_voltage_s": 2.3677308127689854e+20,
+      "nominal_1h_loss_constant_U_percent": 5.949388412521836e-15,
+      "at_1800s": {
+        "time_s": 1800,
+        "requested_time_s": 1800,
+        "within_table": true,
+        "q_C_m2": 2.6810794845668307e-12,
+        "nominal_SOC_loss_percent": 2.9746942062609167e-15,
+        "delta_U_mV": 0.0,
+        "U_final_V": 3.7237215063428213,
+        "xN_final": 0.445,
+        "xP_final": 0.5811516557009895,
+        "dUdt_final_mV_per_h": -5.6617067069195137e-14,
+        "analytic_segments": 1
+      },
+      "at_3600s": {
+        "time_s": 3600,
+        "requested_time_s": 3600,
+        "within_table": true,
+        "q_C_m2": 5.3621589691336614e-12,
+        "nominal_SOC_loss_percent": 5.9493884125218334e-15,
+        "delta_U_mV": 0.0,
+        "U_final_V": 3.7237215063428213,
+        "xN_final": 0.44499999999999995,
+        "xP_final": 0.5811516557009896,
+        "dUdt_final_mV_per_h": -5.6617067069195137e-14,
+        "analytic_segments": 1
+      }
+    },
+    {
+      "sigma_S_m": 1.7e-08,
+      "j0_A_m2": 0.002532130624313118,
+      "r0_vs_0p1C": 0.001011396030128712,
+      "C_rate_leak_per_h": 0.0001011396030128712,
+      "dUdt_initial_mV_per_h": -0.09624901401763175,
+      "tau_capacity_h": 9887.323760532641,
+      "tau_voltage_s": 139278283.10405794,
+      "nominal_1h_loss_constant_U_percent": 0.010113960301287118,
+      "at_1800s": {
+        "time_s": 1800,
+        "requested_time_s": 1800,
+        "within_table": true,
+        "q_C_m2": 4.557805671692201,
+        "nominal_SOC_loss_percent": 0.0050569474731691705,
+        "delta_U_mV": -0.04812419603528184,
+        "U_final_V": 3.723673382146786,
+        "xN_final": 0.4449531164535952,
+        "xP_final": 0.5811887609603633,
+        "dUdt_final_mV_per_h": -0.0962477701258931,
+        "analytic_segments": 1
+      },
+      "at_3600s": {
+        "time_s": 3600,
+        "requested_time_s": 3600,
+        "within_table": true,
+        "q_C_m2": 9.115552439749084,
+        "nominal_SOC_loss_percent": 0.01011382959195265,
+        "delta_U_mV": -0.09624777012895436,
+        "U_final_V": 3.7236252585726923,
+        "xN_final": 0.4449062335130985,
+        "xP_final": 0.5812258657402003,
+        "dUdt_final_mV_per_h": -0.0962465262502301,
+        "analytic_segments": 1
+      }
+    },
+    {
+      "sigma_S_m": 1.7e-07,
+      "j0_A_m2": 0.025321306243131184,
+      "r0_vs_0p1C": 0.01011396030128712,
+      "C_rate_leak_per_h": 0.001011396030128712,
+      "dUdt_initial_mV_per_h": -0.9624901401763175,
+      "tau_capacity_h": 988.732376053264,
+      "tau_voltage_s": 13927828.310405796,
+      "nominal_1h_loss_constant_U_percent": 0.10113960301287121,
+      "at_1800s": {
+        "time_s": 1800,
+        "requested_time_s": 1800,
+        "within_table": true,
+        "q_C_m2": 45.57540614468087,
+        "nominal_SOC_loss_percent": 0.05056653388568756,
+        "delta_U_mV": -0.48121397393341425,
+        "U_final_V": 3.723240292368888,
+        "xN_final": 0.44453119180087636,
+        "xP_final": 0.5815226867163228,
+        "dUdt_final_mV_per_h": -0.9623657582362509,
+        "analytic_segments": 1
+      },
+      "at_3600s": {
+        "time_s": 3600,
+        "requested_time_s": 3600,
+        "within_table": true,
+        "q_C_m2": 91.14492261091313,
+        "nominal_SOC_loss_percent": 0.10112653309291494,
+        "delta_U_mV": -0.9623657609152403,
+        "U_final_V": 3.722759140581906,
+        "xN_final": 0.4440624441855144,
+        "xP_final": 0.5818936697835727,
+        "dUdt_final_mV_per_h": -0.9622413923699774,
+        "analytic_segments": 1
+      }
+    },
+    {
+      "sigma_S_m": 1.7e-06,
+      "j0_A_m2": 0.25321306243131186,
+      "r0_vs_0p1C": 0.10113960301287121,
+      "C_rate_leak_per_h": 0.010113960301287122,
+      "dUdt_initial_mV_per_h": -9.624901401763175,
+      "tau_capacity_h": 98.8732376053264,
+      "tau_voltage_s": 1392782.8310405794,
+      "nominal_1h_loss_constant_U_percent": 1.0113960301287122,
+      "at_1800s": {
+        "time_s": 1800,
+        "requested_time_s": 1800,
+        "within_table": true,
+        "q_C_m2": 455.4891160036135,
+        "nominal_SOC_loss_percent": 0.5053713782789127,
+        "delta_U_mV": -4.809371114635752,
+        "U_final_V": 3.7189121352281855,
+        "xN_final": 0.440314643351368,
+        "xP_final": 0.5848598089239712,
+        "dUdt_final_mV_per_h": -9.612553291577827,
+        "analytic_segments": 2
+      },
+      "at_3600s": {
+        "time_s": 3600,
+        "requested_time_s": 3600,
+        "within_table": true,
+        "q_C_m2": 910.3961602944792,
+        "nominal_SOC_loss_percent": 1.0100969400643172,
+        "delta_U_mV": -9.503693761823584,
+        "U_final_V": 3.7142178125809977,
+        "xN_final": 0.4356352741423333,
+        "xP_final": 0.5885632234802717,
+        "dUdt_final_mV_per_h": -9.367033466730177,
+        "analytic_segments": 3
+      }
+    },
+    {
+      "sigma_S_m": 1.7e-05,
+      "j0_A_m2": 2.532130624313118,
+      "r0_vs_0p1C": 1.011396030128712,
+      "C_rate_leak_per_h": 0.10113960301287118,
+      "dUdt_initial_mV_per_h": -96.24901401763174,
+      "tau_capacity_h": 9.887323760532642,
+      "tau_voltage_s": 139278.28310405795,
+      "nominal_1h_loss_constant_U_percent": 10.113960301287118,
+      "at_1800s": {
+        "time_s": 1800,
+        "requested_time_s": 1800,
+        "within_table": true,
+        "q_C_m2": 4531.194065494307,
+        "nominal_SOC_loss_percent": 5.027421533624353,
+        "delta_U_mV": -40.539373178002606,
+        "U_final_V": 3.6831821331648187,
+        "xN_final": 0.3983901920044181,
+        "xP_final": 0.6180402690345845,
+        "dUdt_final_mV_per_h": -66.87910960934947,
+        "analytic_segments": 10
+      },
+      "at_3600s": {
+        "time_s": 3600,
+        "requested_time_s": 3600,
+        "within_table": true,
+        "q_C_m2": 9021.909441876342,
+        "nominal_SOC_loss_percent": 10.009931410331243,
+        "delta_U_mV": -68.80828354371671,
+        "U_final_V": 3.6549132227991046,
+        "xN_final": 0.35219676518787324,
+        "xP_final": 0.6545993439089276,
+        "dUdt_final_mV_per_h": -58.92073337848504,
+        "analytic_segments": 20
+      }
+    }
+  ],
+  "relaxation": {
+    "sphere_tau_N_s": 392.3848111338158,
+    "sphere_tau_P_s": 49.5276828275572,
+    "electrolyte_layer_estimates": [
+      {
+        "L_m": 5.2e-05,
+        "eps": 0.28501622745813604,
+        "D_dyn_m2_s": 1.1412101993583323e-11,
+        "L2_over_Ddyn_s": 236.94145053386103,
+        "slab_first_mode_s": 24.007188222023224
+      },
+      {
+        "L_m": 2.5e-05,
+        "eps": 0.45,
+        "D_dyn_m2_s": 5.031152949374527e-11,
+        "L2_over_Ddyn_s": 12.422599874998832,
+        "slab_first_mode_s": 1.2586725232500389
+      },
+      {
+        "L_m": 4.4e-05,
+        "eps": 0.32939910582432597,
+        "D_dyn_m2_s": 1.9784640465055314e-11,
+        "L2_over_Ddyn_s": 97.85368621782469,
+        "slab_first_mode_s": 9.914651311355913
+      }
+    ],
+    "electrolyte_fullcell_L2_pi2_Ddyn_range_s": [
+      29.48515906064611,
+      129.9886252805629
+    ],
+    "sigma_for_tau_voltage_equal_tauN_S_m": 0.006034206079300845,
+    "sigma_for_capacity_time_equal_tauN_S_m": 0.0015421193608287699
+  },
+  "own_arithmetic_checks": {
+    "inventory_reproduces_historical_xP": true,
+    "historical_OCV": true,
+    "r0p01_is_0p001C": true,
+    "positive_temperature_unit": true,
+    "monotone_ladder": true,
+    "all_proposed_within_table": true
+  },
+  "COMSOL_calls": 0,
+  "provided_program_executions": 0
+}

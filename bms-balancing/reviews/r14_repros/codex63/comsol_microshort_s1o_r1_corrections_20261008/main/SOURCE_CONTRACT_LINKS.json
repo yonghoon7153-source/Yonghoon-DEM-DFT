@@ -1,0 +1,27 @@
+{
+  "kind": "OFFLINE_SOURCE_TO_CONTRACT_LINK_MAP",
+  "functional_tests": 0,
+  "consumer_inputs": {
+    "read_csv_bytes": "raw bytes identity+exactheader+configured/evaluatedunit record; normalized Decimal rows",
+    "compare_initialization": "INITIALIZATION.consumer_projection.targets; postconsistency exact0 proof",
+    "initial_profile_uniformity": "validated profile_rows geometry,241each,t0; xN/xP fromINITIALIZATION",
+    "compare_initialization_pair": "run cohort same registered concentration andinventory; required beforepairedclassification",
+    "verify_coefficient_evidence": "COEFFICIENT_READBACK adapter_projection OPEN; no installedvariablemapping invented",
+    "charge_balance": "CHARGE_BALANCE R1: mandatory complete native grid/global rows/same-source identities/endpoints/units; exact same-time Li; cumulative balance plus adjacent signed dqN/dqP with unchanged deadband. Raw adapter OPEN.",
+    "compare_policy": "POLICY_VARIANTS selectedvariant requests; exactlyregistered255grid plus separate fullintersection",
+    "paired_classification": "K_DESIGN futurefrozenK hashes projectedintoexpected_k_settings; nativecohortassemblerOPEN",
+    "analyze": "R1 normalized native grid/readbacks/data identities bound to run+manifest; full charge interval includes protective t_plus, comparison safe prefix ends t_minus. Raw adapter OPEN."
+  },
+  "parent": "S1NativeAxis validates full actual grid and stop pair; S1Fields->S1ChargeFields and S1Coverage consume analyze evidence. Expected common grid is fixed independently; normal/full vs safe prefix distinguished. S1FinalReturn unchanged.",
+  "control": "authorize_execution before adapter firstsideeffect; execute_once default adapter raises; native_readyfalse",
+  "not_provided": [
+    "installed COMSOL readback mapping",
+    "native raw log/schema normalization adapter",
+    "OSresource sampler/hardJobcommit adapter",
+    "executable native commands/approval paths/currentprefs",
+    "future validation harness/fixtures"
+  ],
+  "precision": "Consumer Decimal50; parent R1 time/grid/comparison decisions use exact decimal lexemes and reject binary floating/CLR decimal transport. Existing budgets retain double. Functional boundary evidence is NOT_RUN; future exact fixtures required.",
+  "current_validation_plan": "VALIDATION_PLAN_R1.json",
+  "original_validation_plan": "reference/ORIGINAL_VALIDATION_PLAN.json"
+}

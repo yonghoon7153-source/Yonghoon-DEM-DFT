@@ -1,0 +1,46 @@
+{
+  "commit": "fd7ce941a7c4d3989f80a133271189d67a6a0074",
+  "entries": [
+    {
+      "repository_path": "bms-balancing/docs/COMSOL_REBUILD_SPEC.md",
+      "local_path": "sources/COMSOL_REBUILD_SPEC.md",
+      "git_blob_sha": "f4c3a38e8843755e0462501d53f22b42a42d1dce",
+      "url": "https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT/blob/fd7ce941a7c4d3989f80a133271189d67a6a0074/bms-balancing/docs/COMSOL_REBUILD_SPEC.md"
+    },
+    {
+      "repository_path": "bms-balancing/docs/COMSOL_EXPERIMENT_CORRESPONDENCE_v2_20261004.md",
+      "local_path": "sources/COMSOL_EXPERIMENT_CORRESPONDENCE_v2_20261004.md",
+      "git_blob_sha": "0f7c708e9465a26d6b03501ea07ef2a56135b822",
+      "url": "https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT/blob/fd7ce941a7c4d3989f80a133271189d67a6a0074/bms-balancing/docs/COMSOL_EXPERIMENT_CORRESPONDENCE_v2_20261004.md"
+    },
+    {
+      "repository_path": "bms-balancing/docs/COMSOL_NEXT_PLAN_20261004.md",
+      "local_path": "sources/COMSOL_NEXT_PLAN_20261004.md",
+      "git_blob_sha": "adedc53ba0284dd7033551bc0b6e36c088cf4437",
+      "url": "https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT/blob/fd7ce941a7c4d3989f80a133271189d67a6a0074/bms-balancing/docs/COMSOL_NEXT_PLAN_20261004.md"
+    },
+    {
+      "repository_path": "bms-balancing/docs/MICROSHORT_MPH_REVIEW.md",
+      "local_path": "sources/MICROSHORT_MPH_REVIEW.md",
+      "git_blob_sha": "181f544daac2fea32f65d964a4b86acfe163498e",
+      "url": "https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT/blob/fd7ce941a7c4d3989f80a133271189d67a6a0074/bms-balancing/docs/MICROSHORT_MPH_REVIEW.md"
+    },
+    {
+      "repository_path": "bms-balancing/docs/MSC_SEMINAR_2026-09-23_APPLICATION.md",
+      "local_path": "sources/MSC_SEMINAR_2026-09-23_APPLICATION.md",
+      "git_blob_sha": "2a178833639590e89725a1b5f95fed1baa4c4e7d",
+      "url": "https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT/blob/fd7ce941a7c4d3989f80a133271189d67a6a0074/bms-balancing/docs/MSC_SEMINAR_2026-09-23_APPLICATION.md"
+    },
+    {
+      "repository_path": "bms-balancing/reviews/r14_repros/codex63/electrolyte_guard/outputs/NEXT_MODEL_READINESS_DECISION.md",
+      "local_path": "sources/NEXT_MODEL_READINESS_DECISION.md",
+      "git_blob_sha": "d82acd88a1432fc1d3e1cdd33a74ab83bc9517cd",
+      "url": "https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT/blob/fd7ce941a7c4d3989f80a133271189d67a6a0074/bms-balancing/reviews/r14_repros/codex63/electrolyte_guard/outputs/NEXT_MODEL_READINESS_DECISION.md"
+    },
+    {
+      "repository_path": "bms-balancing/comsol_candidates/bmin_particle640_20261004/basis/source480/candidate/src/Normal480Candidate.java",
+      "local_path": "sources/Normal480Candidate.java.txt",
+      "git_blob_sha": "bed6441afcc841a9bdbe030d3d3a29f5acb97cce"
+    }
+  ]
+}

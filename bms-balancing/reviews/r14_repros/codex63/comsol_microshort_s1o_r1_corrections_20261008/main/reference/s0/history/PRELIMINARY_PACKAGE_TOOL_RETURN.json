@@ -1,0 +1,11 @@
+{
+  "kind": "SUBSEQUENT_TOOL_RETURN_SERIALIZATION",
+  "provenance": "Own first artifact packaging tool return, transcribed after receipt; not independent OS audit.",
+  "result": {
+    "chunk_id": "06fbe1",
+    "wall_time_seconds": 1.1258486,
+    "exit_code": 0,
+    "original_token_count": 242,
+    "output": "{\r\n  \"status\": \"S0_PACKAGE_VERIFIED_NOT_NATIVE_APPROVAL\",\r\n  \"created_utc\": \"2026-10-07T11:13:57.037758+00:00\",\r\n  \"zip\": {\r\n    \"file\": \"COMSOL_MICROSHORT_S0_DEEP_REVIEW_20261007.zip\",\r\n    \"bytes\": 411349,\r\n    \"sha256\": \"9e919cf8cab9e5fa2286b27def7fbac1a07a661be3379968105dbdf9a2378863\"\r\n  },\r\n  \"payload_count\": 33,\r\n  \"manifest\": {\r\n    \"bytes\": 5579,\r\n    \"sha256\": \"560424965bf75fc944eced85e5fb0417be97cb4c070a6eba849d73ef49b7fd49\"\r\n  },\r\n  \"checks\": [\r\n    \"exact_set\",\r\n    \"casefold_collisions\",\r\n    \"relative_safe_paths\",\r\n    \"no_symlinks\",\r\n    \"member_size_sha256\",\r\n    \"CRC\",\r\n    \"manifest_readback\",\r\n    \"local_payload_unchanged\"\r\n  ],\r\n  \"source_git_blob_matches\": 1,\r\n  \"incoming_originals_byte_matches\": 0,\r\n  \"recipient\": null,\r\n  \"approved\": false,\r\n  \"native_calls\": 0,\r\n  \"elapsed_snapshot_before_receipt_write_and_tool_return_s\": 0.1015812000259757,\r\n  \"final_snapshot_after_receipt_readback_before_tool_return_s\": 0.10602080007083714\r\n}\r\n"
+  }
+}

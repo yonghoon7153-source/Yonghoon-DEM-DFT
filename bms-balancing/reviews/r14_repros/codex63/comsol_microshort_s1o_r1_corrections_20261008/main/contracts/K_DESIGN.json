@@ -1,0 +1,867 @@
+{
+  "kind": "S1O_PREREGISTERED_MATCHED_NUMERICAL_CONTROL_DESIGN",
+  "approved": false,
+  "usable": false,
+  "native_ready": false,
+  "freeze_rule": "Freeze exact axis choices/values/sigmas/windows/interpretation and dedup keys after P cost review but before viewing any M ladder result. This full four-axis draft is recommended; no result-dependent selection of favorable sigma or axis.",
+  "baseline": {
+    "policy_variant": "P3 extended only to3600 via exact sparse_0_3600",
+    "rtol": "1e-6",
+    "cap": "if(t<0.1[s],0.000125[s],if(t<5[s],0.1[s],if(t<30[s],0.5[s],if(t<300[s],5[s],30[s]))))",
+    "physical_N_sep_P": [
+      120,
+      60,
+      120
+    ],
+    "particle_N_P": [
+      320,
+      320
+    ],
+    "initialstep_s": "1e-5",
+    "tout": "tlist",
+    "strict": true,
+    "requested_count": 401
+  },
+  "axes": [
+    {
+      "axis_id": "RTOL",
+      "only_change": "Time.rtol",
+      "baseline": "1e-6",
+      "candidate": "1e-7",
+      "must_not_change": [
+        "Study rtol string",
+        "scaled/factor",
+        "initialstep",
+        "cap",
+        "mesh",
+        "storage"
+      ]
+    },
+    {
+      "axis_id": "CAP",
+      "only_change": "Time.maxstepexpressionbdf",
+      "baseline": "if(t<0.1[s],0.000125[s],if(t<5[s],0.1[s],if(t<30[s],0.5[s],if(t<300[s],5[s],30[s]))))",
+      "candidate": "if(t<0.1[s],0.0000625[s],if(t<5[s],0.05[s],if(t<30[s],0.25[s],if(t<300[s],2.5[s],15[s]))))",
+      "must_not_change": [
+        "rtol",
+        "initialstep",
+        "mesh",
+        "requests",
+        "storage"
+      ]
+    },
+    {
+      "axis_id": "PARTICLE",
+      "only_change": "pce1/pin1.Nel and pce2/pin1.Nel",
+      "baseline": [
+        320,
+        320
+      ],
+      "candidate": [
+        640,
+        640
+      ],
+      "must_not_change": [
+        "physical mesh",
+        "rtol",
+        "cap",
+        "requests",
+        "storage"
+      ]
+    },
+    {
+      "axis_id": "PHYSICAL",
+      "only_change": "mesh1/edg1/dis1..3.numelem",
+      "baseline": [
+        120,
+        60,
+        120
+      ],
+      "candidate": [
+        240,
+        120,
+        240
+      ],
+      "must_not_change": [
+        "particle mesh",
+        "rtol",
+        "cap",
+        "requests",
+        "storage"
+      ]
+    }
+  ],
+  "sigmas_S_m": [
+    "1e-20",
+    "1.7e-8",
+    "1.7e-7",
+    "1.7e-6"
+  ],
+  "run_inventory": [
+    {
+      "run_id": "M_BASE_Z",
+      "phase": "M",
+      "axis": "BASE",
+      "sigma_S_m": "1e-20",
+      "fresh_window_s": [
+        "0",
+        "3600"
+      ],
+      "request_count": 401,
+      "budget": {
+        "status": "UNAPPROVED_PLANNING_CEILING_REQUIRES_PILOT_COST_AND_RESOURCE_REVIEW",
+        "preflight_s": 300,
+        "compile_batch_s": 7200,
+        "owned_cleanup_s": 120,
+        "analysis_s": 600,
+        "preservation_s": 180,
+        "local_delivery_s": 600,
+        "overall_s": 9000,
+        "output_growth_GiB_proposed": 6,
+        "start_disk_free_GiB_proposed": 16,
+        "resource_binding": "RESOURCE_CONTRACT.json; S0 numbers do not override future stricter contract or measured cumulative reservation"
+      },
+      "reuse": "same one baseline used by all four axes; no extra baseline solves"
+    },
+    {
+      "run_id": "M_BASE_L",
+      "phase": "M",
+      "axis": "BASE",
+      "sigma_S_m": "1.7e-8",
+      "fresh_window_s": [
+        "0",
+        "3600"
+      ],
+      "request_count": 401,
+      "budget": {
+        "status": "UNAPPROVED_PLANNING_CEILING_REQUIRES_PILOT_COST_AND_RESOURCE_REVIEW",
+        "preflight_s": 300,
+        "compile_batch_s": 7200,
+        "owned_cleanup_s": 120,
+        "analysis_s": 600,
+        "preservation_s": 180,
+        "local_delivery_s": 600,
+        "overall_s": 9000,
+        "output_growth_GiB_proposed": 6,
+        "start_disk_free_GiB_proposed": 16,
+        "resource_binding": "RESOURCE_CONTRACT.json; S0 numbers do not override future stricter contract or measured cumulative reservation"
+      },
+      "reuse": "same one baseline used by all four axes; no extra baseline solves"
+    },
+    {
+      "run_id": "M_BASE_M",
+      "phase": "M",
+      "axis": "BASE",
+      "sigma_S_m": "1.7e-7",
+      "fresh_window_s": [
+        "0",
+        "3600"
+      ],
+      "request_count": 401,
+      "budget": {
+        "status": "UNAPPROVED_PLANNING_CEILING_REQUIRES_PILOT_COST_AND_RESOURCE_REVIEW",
+        "preflight_s": 300,
+        "compile_batch_s": 7200,
+        "owned_cleanup_s": 120,
+        "analysis_s": 600,
+        "preservation_s": 180,
+        "local_delivery_s": 600,
+        "overall_s": 9000,
+        "output_growth_GiB_proposed": 6,
+        "start_disk_free_GiB_proposed": 16,
+        "resource_binding": "RESOURCE_CONTRACT.json; S0 numbers do not override future stricter contract or measured cumulative reservation"
+      },
+      "reuse": "same one baseline used by all four axes; no extra baseline solves"
+    },
+    {
+      "run_id": "M_BASE_H",
+      "phase": "M",
+      "axis": "BASE",
+      "sigma_S_m": "1.7e-6",
+      "fresh_window_s": [
+        "0",
+        "3600"
+      ],
+      "request_count": 401,
+      "budget": {
+        "status": "UNAPPROVED_PLANNING_CEILING_REQUIRES_PILOT_COST_AND_RESOURCE_REVIEW",
+        "preflight_s": 300,
+        "compile_batch_s": 7200,
+        "owned_cleanup_s": 120,
+        "analysis_s": 600,
+        "preservation_s": 180,
+        "local_delivery_s": 600,
+        "overall_s": 9000,
+        "output_growth_GiB_proposed": 6,
+        "start_disk_free_GiB_proposed": 16,
+        "resource_binding": "RESOURCE_CONTRACT.json; S0 numbers do not override future stricter contract or measured cumulative reservation"
+      },
+      "reuse": "same one baseline used by all four axes; no extra baseline solves"
+    },
+    {
+      "run_id": "N_RTOL_Z",
+      "phase": "N",
+      "axis": "RTOL",
+      "sigma_S_m": "1e-20",
+      "fresh_window_s": [
+        "0",
+        "3600"
+      ],
+      "request_count": 401,
+      "budget": {
+        "status": "UNAPPROVED_PLANNING_CEILING_REQUIRES_PILOT_COST_AND_RESOURCE_REVIEW",
+        "preflight_s": 300,
+        "compile_batch_s": 7200,
+        "owned_cleanup_s": 120,
+        "analysis_s": 600,
+        "preservation_s": 180,
+        "local_delivery_s": 600,
+        "overall_s": 9000,
+        "output_growth_GiB_proposed": 6,
+        "start_disk_free_GiB_proposed": 16,
+        "resource_binding": "RESOURCE_CONTRACT.json; S0 numbers do not override future stricter contract or measured cumulative reservation"
+      }
+    },
+    {
+      "run_id": "N_RTOL_L",
+      "phase": "N",
+      "axis": "RTOL",
+      "sigma_S_m": "1.7e-8",
+      "fresh_window_s": [
+        "0",
+        "3600"
+      ],
+      "request_count": 401,
+      "budget": {
+        "status": "UNAPPROVED_PLANNING_CEILING_REQUIRES_PILOT_COST_AND_RESOURCE_REVIEW",
+        "preflight_s": 300,
+        "compile_batch_s": 7200,
+        "owned_cleanup_s": 120,
+        "analysis_s": 600,
+        "preservation_s": 180,
+        "local_delivery_s": 600,
+        "overall_s": 9000,
+        "output_growth_GiB_proposed": 6,
+        "start_disk_free_GiB_proposed": 16,
+        "resource_binding": "RESOURCE_CONTRACT.json; S0 numbers do not override future stricter contract or measured cumulative reservation"
+      }
+    },
+    {
+      "run_id": "N_RTOL_M",
+      "phase": "N",
+      "axis": "RTOL",
+      "sigma_S_m": "1.7e-7",
+      "fresh_window_s": [
+        "0",
+        "3600"
+      ],
+      "request_count": 401,
+      "budget": {
+        "status": "UNAPPROVED_PLANNING_CEILING_REQUIRES_PILOT_COST_AND_RESOURCE_REVIEW",
+        "preflight_s": 300,
+        "compile_batch_s": 7200,
+        "owned_cleanup_s": 120,
+        "analysis_s": 600,
+        "preservation_s": 180,
+        "local_delivery_s": 600,
+        "overall_s": 9000,
+        "output_growth_GiB_proposed": 6,
+        "start_disk_free_GiB_proposed": 16,
+        "resource_binding": "RESOURCE_CONTRACT.json; S0 numbers do not override future stricter contract or measured cumulative reservation"
+      }
+    },
+    {
+      "run_id": "N_RTOL_H",
+      "phase": "N",
+      "axis": "RTOL",
+      "sigma_S_m": "1.7e-6",
+      "fresh_window_s": [
+        "0",
+        "3600"
+      ],
+      "request_count": 401,
+      "budget": {
+        "status": "UNAPPROVED_PLANNING_CEILING_REQUIRES_PILOT_COST_AND_RESOURCE_REVIEW",
+        "preflight_s": 300,
+        "compile_batch_s": 7200,
+        "owned_cleanup_s": 120,
+        "analysis_s": 600,
+        "preservation_s": 180,
+        "local_delivery_s": 600,
+        "overall_s": 9000,
+        "output_growth_GiB_proposed": 6,
+        "start_disk_free_GiB_proposed": 16,
+        "resource_binding": "RESOURCE_CONTRACT.json; S0 numbers do not override future stricter contract or measured cumulative reservation"
+      }
+    },
+    {
+      "run_id": "N_CAP_Z",
+      "phase": "N",
+      "axis": "CAP",
+      "sigma_S_m": "1e-20",
+      "fresh_window_s": [
+        "0",
+        "3600"
+      ],
+      "request_count": 401,
+      "budget": {
+        "status": "UNAPPROVED_PLANNING_CEILING_REQUIRES_PILOT_COST_AND_RESOURCE_REVIEW",
+        "preflight_s": 300,
+        "compile_batch_s": 7200,
+        "owned_cleanup_s": 120,
+        "analysis_s": 600,
+        "preservation_s": 180,
+        "local_delivery_s": 600,
+        "overall_s": 9000,
+        "output_growth_GiB_proposed": 6,
+        "start_disk_free_GiB_proposed": 16,
+        "resource_binding": "RESOURCE_CONTRACT.json; S0 numbers do not override future stricter contract or measured cumulative reservation"
+      }
+    },
+    {
+      "run_id": "N_CAP_L",
+      "phase": "N",
+      "axis": "CAP",
+      "sigma_S_m": "1.7e-8",
+      "fresh_window_s": [
+        "0",
+        "3600"
+      ],
+      "request_count": 401,
+      "budget": {
+        "status": "UNAPPROVED_PLANNING_CEILING_REQUIRES_PILOT_COST_AND_RESOURCE_REVIEW",
+        "preflight_s": 300,
+        "compile_batch_s": 7200,
+        "owned_cleanup_s": 120,
+        "analysis_s": 600,
+        "preservation_s": 180,
+        "local_delivery_s": 600,
+        "overall_s": 9000,
+        "output_growth_GiB_proposed": 6,
+        "start_disk_free_GiB_proposed": 16,
+        "resource_binding": "RESOURCE_CONTRACT.json; S0 numbers do not override future stricter contract or measured cumulative reservation"
+      }
+    },
+    {
+      "run_id": "N_CAP_M",
+      "phase": "N",
+      "axis": "CAP",
+      "sigma_S_m": "1.7e-7",
+      "fresh_window_s": [
+        "0",
+        "3600"
+      ],
+      "request_count": 401,
+      "budget": {
+        "status": "UNAPPROVED_PLANNING_CEILING_REQUIRES_PILOT_COST_AND_RESOURCE_REVIEW",
+        "preflight_s": 300,
+        "compile_batch_s": 7200,
+        "owned_cleanup_s": 120,
+        "analysis_s": 600,
+        "preservation_s": 180,
+        "local_delivery_s": 600,
+        "overall_s": 9000,
+        "output_growth_GiB_proposed": 6,
+        "start_disk_free_GiB_proposed": 16,
+        "resource_binding": "RESOURCE_CONTRACT.json; S0 numbers do not override future stricter contract or measured cumulative reservation"
+      }
+    },
+    {
+      "run_id": "N_CAP_H",
+      "phase": "N",
+      "axis": "CAP",
+      "sigma_S_m": "1.7e-6",
+      "fresh_window_s": [
+        "0",
+        "3600"
+      ],
+      "request_count": 401,
+      "budget": {
+        "status": "UNAPPROVED_PLANNING_CEILING_REQUIRES_PILOT_COST_AND_RESOURCE_REVIEW",
+        "preflight_s": 300,
+        "compile_batch_s": 7200,
+        "owned_cleanup_s": 120,
+        "analysis_s": 600,
+        "preservation_s": 180,
+        "local_delivery_s": 600,
+        "overall_s": 9000,
+        "output_growth_GiB_proposed": 6,
+        "start_disk_free_GiB_proposed": 16,
+        "resource_binding": "RESOURCE_CONTRACT.json; S0 numbers do not override future stricter contract or measured cumulative reservation"
+      }
+    },
+    {
+      "run_id": "N_PARTICLE_Z",
+      "phase": "N",
+      "axis": "PARTICLE",
+      "sigma_S_m": "1e-20",
+      "fresh_window_s": [
+        "0",
+        "3600"
+      ],
+      "request_count": 401,
+      "budget": {
+        "status": "UNAPPROVED_PLANNING_CEILING_REQUIRES_PILOT_COST_AND_RESOURCE_REVIEW",
+        "preflight_s": 300,
+        "compile_batch_s": 7200,
+        "owned_cleanup_s": 120,
+        "analysis_s": 600,
+        "preservation_s": 180,
+        "local_delivery_s": 600,
+        "overall_s": 9000,
+        "output_growth_GiB_proposed": 6,
+        "start_disk_free_GiB_proposed": 16,
+        "resource_binding": "RESOURCE_CONTRACT.json; S0 numbers do not override future stricter contract or measured cumulative reservation"
+      }
+    },
+    {
+      "run_id": "N_PARTICLE_L",
+      "phase": "N",
+      "axis": "PARTICLE",
+      "sigma_S_m": "1.7e-8",
+      "fresh_window_s": [
+        "0",
+        "3600"
+      ],
+      "request_count": 401,
+      "budget": {
+        "status": "UNAPPROVED_PLANNING_CEILING_REQUIRES_PILOT_COST_AND_RESOURCE_REVIEW",
+        "preflight_s": 300,
+        "compile_batch_s": 7200,
+        "owned_cleanup_s": 120,
+        "analysis_s": 600,
+        "preservation_s": 180,
+        "local_delivery_s": 600,
+        "overall_s": 9000,
+        "output_growth_GiB_proposed": 6,
+        "start_disk_free_GiB_proposed": 16,
+        "resource_binding": "RESOURCE_CONTRACT.json; S0 numbers do not override future stricter contract or measured cumulative reservation"
+      }
+    },
+    {
+      "run_id": "N_PARTICLE_M",
+      "phase": "N",
+      "axis": "PARTICLE",
+      "sigma_S_m": "1.7e-7",
+      "fresh_window_s": [
+        "0",
+        "3600"
+      ],
+      "request_count": 401,
+      "budget": {
+        "status": "UNAPPROVED_PLANNING_CEILING_REQUIRES_PILOT_COST_AND_RESOURCE_REVIEW",
+        "preflight_s": 300,
+        "compile_batch_s": 7200,
+        "owned_cleanup_s": 120,
+        "analysis_s": 600,
+        "preservation_s": 180,
+        "local_delivery_s": 600,
+        "overall_s": 9000,
+        "output_growth_GiB_proposed": 6,
+        "start_disk_free_GiB_proposed": 16,
+        "resource_binding": "RESOURCE_CONTRACT.json; S0 numbers do not override future stricter contract or measured cumulative reservation"
+      }
+    },
+    {
+      "run_id": "N_PARTICLE_H",
+      "phase": "N",
+      "axis": "PARTICLE",
+      "sigma_S_m": "1.7e-6",
+      "fresh_window_s": [
+        "0",
+        "3600"
+      ],
+      "request_count": 401,
+      "budget": {
+        "status": "UNAPPROVED_PLANNING_CEILING_REQUIRES_PILOT_COST_AND_RESOURCE_REVIEW",
+        "preflight_s": 300,
+        "compile_batch_s": 7200,
+        "owned_cleanup_s": 120,
+        "analysis_s": 600,
+        "preservation_s": 180,
+        "local_delivery_s": 600,
+        "overall_s": 9000,
+        "output_growth_GiB_proposed": 6,
+        "start_disk_free_GiB_proposed": 16,
+        "resource_binding": "RESOURCE_CONTRACT.json; S0 numbers do not override future stricter contract or measured cumulative reservation"
+      }
+    },
+    {
+      "run_id": "N_PHYSICAL_Z",
+      "phase": "N",
+      "axis": "PHYSICAL",
+      "sigma_S_m": "1e-20",
+      "fresh_window_s": [
+        "0",
+        "3600"
+      ],
+      "request_count": 401,
+      "budget": {
+        "status": "UNAPPROVED_PLANNING_CEILING_REQUIRES_PILOT_COST_AND_RESOURCE_REVIEW",
+        "preflight_s": 300,
+        "compile_batch_s": 7200,
+        "owned_cleanup_s": 120,
+        "analysis_s": 600,
+        "preservation_s": 180,
+        "local_delivery_s": 600,
+        "overall_s": 9000,
+        "output_growth_GiB_proposed": 6,
+        "start_disk_free_GiB_proposed": 16,
+        "resource_binding": "RESOURCE_CONTRACT.json; S0 numbers do not override future stricter contract or measured cumulative reservation"
+      }
+    },
+    {
+      "run_id": "N_PHYSICAL_L",
+      "phase": "N",
+      "axis": "PHYSICAL",
+      "sigma_S_m": "1.7e-8",
+      "fresh_window_s": [
+        "0",
+        "3600"
+      ],
+      "request_count": 401,
+      "budget": {
+        "status": "UNAPPROVED_PLANNING_CEILING_REQUIRES_PILOT_COST_AND_RESOURCE_REVIEW",
+        "preflight_s": 300,
+        "compile_batch_s": 7200,
+        "owned_cleanup_s": 120,
+        "analysis_s": 600,
+        "preservation_s": 180,
+        "local_delivery_s": 600,
+        "overall_s": 9000,
+        "output_growth_GiB_proposed": 6,
+        "start_disk_free_GiB_proposed": 16,
+        "resource_binding": "RESOURCE_CONTRACT.json; S0 numbers do not override future stricter contract or measured cumulative reservation"
+      }
+    },
+    {
+      "run_id": "N_PHYSICAL_M",
+      "phase": "N",
+      "axis": "PHYSICAL",
+      "sigma_S_m": "1.7e-7",
+      "fresh_window_s": [
+        "0",
+        "3600"
+      ],
+      "request_count": 401,
+      "budget": {
+        "status": "UNAPPROVED_PLANNING_CEILING_REQUIRES_PILOT_COST_AND_RESOURCE_REVIEW",
+        "preflight_s": 300,
+        "compile_batch_s": 7200,
+        "owned_cleanup_s": 120,
+        "analysis_s": 600,
+        "preservation_s": 180,
+        "local_delivery_s": 600,
+        "overall_s": 9000,
+        "output_growth_GiB_proposed": 6,
+        "start_disk_free_GiB_proposed": 16,
+        "resource_binding": "RESOURCE_CONTRACT.json; S0 numbers do not override future stricter contract or measured cumulative reservation"
+      }
+    },
+    {
+      "run_id": "N_PHYSICAL_H",
+      "phase": "N",
+      "axis": "PHYSICAL",
+      "sigma_S_m": "1.7e-6",
+      "fresh_window_s": [
+        "0",
+        "3600"
+      ],
+      "request_count": 401,
+      "budget": {
+        "status": "UNAPPROVED_PLANNING_CEILING_REQUIRES_PILOT_COST_AND_RESOURCE_REVIEW",
+        "preflight_s": 300,
+        "compile_batch_s": 7200,
+        "owned_cleanup_s": 120,
+        "analysis_s": 600,
+        "preservation_s": 180,
+        "local_delivery_s": 600,
+        "overall_s": 9000,
+        "output_growth_GiB_proposed": 6,
+        "start_disk_free_GiB_proposed": 16,
+        "resource_binding": "RESOURCE_CONTRACT.json; S0 numbers do not override future stricter contract or measured cumulative reservation"
+      }
+    }
+  ],
+  "matched_pairs": [
+    {
+      "finite_sigma_S_m": "1.7e-8",
+      "axis": "RTOL",
+      "base_pair": [
+        "M_BASE_Z",
+        "M_BASE_L"
+      ],
+      "control_pair": [
+        "N_RTOL_Z",
+        "N_RTOL_L"
+      ]
+    },
+    {
+      "finite_sigma_S_m": "1.7e-7",
+      "axis": "RTOL",
+      "base_pair": [
+        "M_BASE_Z",
+        "M_BASE_M"
+      ],
+      "control_pair": [
+        "N_RTOL_Z",
+        "N_RTOL_M"
+      ]
+    },
+    {
+      "finite_sigma_S_m": "1.7e-6",
+      "axis": "RTOL",
+      "base_pair": [
+        "M_BASE_Z",
+        "M_BASE_H"
+      ],
+      "control_pair": [
+        "N_RTOL_Z",
+        "N_RTOL_H"
+      ]
+    },
+    {
+      "finite_sigma_S_m": "1.7e-8",
+      "axis": "CAP",
+      "base_pair": [
+        "M_BASE_Z",
+        "M_BASE_L"
+      ],
+      "control_pair": [
+        "N_CAP_Z",
+        "N_CAP_L"
+      ]
+    },
+    {
+      "finite_sigma_S_m": "1.7e-7",
+      "axis": "CAP",
+      "base_pair": [
+        "M_BASE_Z",
+        "M_BASE_M"
+      ],
+      "control_pair": [
+        "N_CAP_Z",
+        "N_CAP_M"
+      ]
+    },
+    {
+      "finite_sigma_S_m": "1.7e-6",
+      "axis": "CAP",
+      "base_pair": [
+        "M_BASE_Z",
+        "M_BASE_H"
+      ],
+      "control_pair": [
+        "N_CAP_Z",
+        "N_CAP_H"
+      ]
+    },
+    {
+      "finite_sigma_S_m": "1.7e-8",
+      "axis": "PARTICLE",
+      "base_pair": [
+        "M_BASE_Z",
+        "M_BASE_L"
+      ],
+      "control_pair": [
+        "N_PARTICLE_Z",
+        "N_PARTICLE_L"
+      ]
+    },
+    {
+      "finite_sigma_S_m": "1.7e-7",
+      "axis": "PARTICLE",
+      "base_pair": [
+        "M_BASE_Z",
+        "M_BASE_M"
+      ],
+      "control_pair": [
+        "N_PARTICLE_Z",
+        "N_PARTICLE_M"
+      ]
+    },
+    {
+      "finite_sigma_S_m": "1.7e-6",
+      "axis": "PARTICLE",
+      "base_pair": [
+        "M_BASE_Z",
+        "M_BASE_H"
+      ],
+      "control_pair": [
+        "N_PARTICLE_Z",
+        "N_PARTICLE_H"
+      ]
+    },
+    {
+      "finite_sigma_S_m": "1.7e-8",
+      "axis": "PHYSICAL",
+      "base_pair": [
+        "M_BASE_Z",
+        "M_BASE_L"
+      ],
+      "control_pair": [
+        "N_PHYSICAL_Z",
+        "N_PHYSICAL_L"
+      ]
+    },
+    {
+      "finite_sigma_S_m": "1.7e-7",
+      "axis": "PHYSICAL",
+      "base_pair": [
+        "M_BASE_Z",
+        "M_BASE_M"
+      ],
+      "control_pair": [
+        "N_PHYSICAL_Z",
+        "N_PHYSICAL_M"
+      ]
+    },
+    {
+      "finite_sigma_S_m": "1.7e-6",
+      "axis": "PHYSICAL",
+      "base_pair": [
+        "M_BASE_Z",
+        "M_BASE_H"
+      ],
+      "control_pair": [
+        "N_PHYSICAL_Z",
+        "N_PHYSICAL_H"
+      ]
+    }
+  ],
+  "run_counts": {
+    "policy_P": 4,
+    "main_M_base": 4,
+    "controls_N": 16,
+    "unique_full3600": 20,
+    "total_P_M_N": 24,
+    "all_proposed_not_approved": true,
+    "maximum_COMSOL_solves_per_run": 1,
+    "maximum_compile_per_run": 1,
+    "maximum_batch_per_run": 1,
+    "automatic_retry": 0
+  },
+  "sequence": [
+    {
+      "step": 1,
+      "runs": [
+        "P0",
+        "P1",
+        "P2",
+        "P3"
+      ],
+      "pause": "each policy result accepted before next; P only120s"
+    },
+    {
+      "step": 2,
+      "action": "review pilot measured cost, close resource/API blockers, freeze K/source variants/counts/budgets before M, separate approvals"
+    },
+    {
+      "step": 3,
+      "runs": [
+        "M_BASE_Z",
+        "M_BASE_H",
+        "N_CAP_Z",
+        "N_CAP_H"
+      ],
+      "pause": "review full3600 same-sigma cap and late2700-3600 evidence before remaining ladder; these four already counted in M4/N16, not extraP"
+    },
+    {
+      "step": 4,
+      "runs": [
+        "M_BASE_L",
+        "M_BASE_M"
+      ],
+      "pause": "separate per-run approval; do not tune sigma based on high result"
+    },
+    {
+      "step": 5,
+      "runs": [
+        "N_RTOL_Z",
+        "N_RTOL_L",
+        "N_RTOL_M",
+        "N_RTOL_H",
+        "N_CAP_L",
+        "N_CAP_M",
+        "N_PARTICLE_Z",
+        "N_PARTICLE_L",
+        "N_PARTICLE_M",
+        "N_PARTICLE_H",
+        "N_PHYSICAL_Z",
+        "N_PHYSICAL_L",
+        "N_PHYSICAL_M",
+        "N_PHYSICAL_H"
+      ],
+      "pause": "same pre-frozen twelve remaining non-CAP and two low/midCAP controls; bounded individually"
+    }
+  ],
+  "dedup_key": [
+    "sigma",
+    "initialization/source and material/physics hashes",
+    "axis settings",
+    "request list and storage",
+    "time window",
+    "required output/evidence schema",
+    "engines/policy/resource contract"
+  ],
+  "dedup_rule": "M_BASE_Z shared by all3finite and4axes; each N_AXIS_Z shared by3finite only within same axis. P3_120 cannot replace M_BASE_H_3600. Previous NORMAL480/rtol30/B-min have different initial/protocol and cannot be K baselines. A run is reused only if complete key identical and required data complete.",
+  "observation": {
+    "terminal_voltage_V": "phis_boundary4 - phis_boundary1",
+    "D_sigma_V": "(V_Z(t)-V_Z(0))-(V_sigma(t)-V_sigma(0)); positive is extra finite-sigma terminal voltage drop",
+    "S_sigma_V_per_h": "(D_sigma(3600)-D_sigma(2700))*3600/900",
+    "E_D_V": "max_axis abs(D_axis(3600)-D_BASE(3600)) using matching Z at each axis",
+    "E_S_V_per_h": "max_axis abs(S_axis-S_BASE) using matching Z at each axis",
+    "delta_D_V": "0.001",
+    "delta_S_V_per_h": "0.001",
+    "multiplier": 5,
+    "classification": {
+      "DISTINGUISHABLE_AT_REST": "valid+Kcomplete+resolved_current_inventory_signs; D>max(deltaD,5ED) AND S>max(deltaS,5ES)",
+      "NOT_DISTINGUISHABLE_WITHIN_T": "valid+Kcomplete; abs(D)<=deltaD AND abs(S)<=deltaS AND 5ED<=deltaD AND 5ES<=deltaS; unresolved nearzero sign recorded not strict-positive failure",
+      "INCONCLUSIVE": "all other cases; no change of thresholds after seeing outputs"
+    },
+    "meaning": "observed sensitivity over this registered K, not rigorous discretization-error bound or experimental detectability; no full-convergence PASS"
+  },
+  "late_cap_evidence": {
+    "required_windows_s": [
+      [
+        "300",
+        "3600"
+      ],
+      [
+        "2700",
+        "3600"
+      ]
+    ],
+    "record": [
+      "accepted-step sequence",
+      "actual dt min/max/count by0-.1/.1-5/5-30/30-300/300-2700/2700-3600",
+      "rejected step/Tfail/NLfail with log definitions",
+      "cap readback for baseline and control",
+      "stored and requested times independently"
+    ],
+    "inactive_cap": "If actual dt never reaches restrictive half-cap, report cap non-binding/limited exercise; matching settings alone does not prove stronger integration. Retain observed D/S difference but leave blanket late-cap qualification OPEN unless independent time-resolution evidence supports it.",
+    "no_short_substitute": true
+  },
+  "cost_reduction": {
+    "before_M_only": "drop an axis or sigma control only by explicit revised fixed scope, same-sigma Z retained; record exactly missing K; no silently filled ED/ES=0",
+    "after_M": "budget stop/abandon preserves existing data; full registered classification remains INCONCLUSIVE for incomplete affected sigma",
+    "minimum_lean_example": {
+      "runs": [
+        "M_BASE_Z",
+        "M_BASE_H",
+        "N_CAP_Z",
+        "N_CAP_H"
+      ],
+      "new_total_including_P": 8,
+      "what_can_be_said": "high sigma cap-only contrast over3600",
+      "what_remains": "all three final ladder classifications under four-axisK INCONCLUSIVE; weak/mid and rtol/space untested"
+    }
+  },
+  "nominal_ceiling_arithmetic": {
+    "P4_plus_M4_N16_at9000_s": 216000,
+    "hours": 60,
+    "20_full3600_at9000_s": 180000,
+    "not_a_blanket_approval_or_forecast": true
+  },
+  "status": "DRAFT_FIXED_COUNTS_AND_AXES__PILOT_COST_AND_USER_SCOPE_DECISION_PENDING"
+}

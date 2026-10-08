@@ -1,0 +1,17 @@
+{
+  "review_zip": {
+    "path": "C:\\Users\\BML\\Desktop\\COMSOL_MICROSHORT_S1O_PREPARATION_REVIEW_20261007 (1).zip",
+    "bytes": 805653,
+    "sha256": "dee50be8d7dd1bcfd14323878deaeda1d31729f4f850cda5d6158bf64dfda46f",
+    "crc_checked": true
+  },
+  "base_zip": {
+    "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\outputs\\microshort_s1o_20261007_133011\\COMSOL_MICROSHORT_S1O_OFFLINE_PREPARATION_20261007.zip",
+    "sha256": "0cae7accaf26397d883e0d8b732357fc2dc640553c603825a6a155bf8d4aaf53"
+  },
+  "directive": {
+    "path": "reference/R1_DIRECTIVE_v2_KO.md",
+    "sha256": "eac2eb0adbc39b608a65b8db154947dc9ee5a8cb9f40bddc7644d42f9b227499"
+  },
+  "candidate_executed": false
+}

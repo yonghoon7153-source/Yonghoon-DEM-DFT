@@ -1,0 +1,78 @@
+{
+  "kind": "S1O_R1_PARENT_STATIC_NOTES",
+  "candidate_sha256": "e9f8d366ca9931b84ded5753a560369b72fea8737a77075bc2b80ec771bc56ff",
+  "candidate_function_executions": 0,
+  "functional_validation": "NOT_RUN",
+  "static_scope": "text edit, source span compare, SHA only; parser handled separately by root",
+  "unchanged_function_spans": [
+    {
+      "name": "S1Has",
+      "exact_bytes_equal": true,
+      "sha256": "38577c9fe65a65e90aca8058d378e5a8ecb018e9ed5a982c99c56dd61d3603ef",
+      "rule": "UTF-8 raw function span starting function through blank lines before next function or top-level throw"
+    },
+    {
+      "name": "S1Struct",
+      "exact_bytes_equal": true,
+      "sha256": "cef9af89a102887f19f8a099332161f2b191bda48afd495498a820c69b8beab4",
+      "rule": "UTF-8 raw function span starting function through blank lines before next function or top-level throw"
+    },
+    {
+      "name": "S1Number",
+      "exact_bytes_equal": true,
+      "sha256": "9374e6e932b581d375da5925a310a6f6df5e539117d0b2c20ffaf044b4dccfbb",
+      "rule": "UTF-8 raw function span starting function through blank lines before next function or top-level throw"
+    },
+    {
+      "name": "S1Sha",
+      "exact_bytes_equal": true,
+      "sha256": "80fe825334a1b2974f0d235d52068bd1adfe0f1d786da3ebc32b147118689fa0",
+      "rule": "UTF-8 raw function span starting function through blank lines before next function or top-level throw"
+    },
+    {
+      "name": "S1Failure",
+      "exact_bytes_equal": true,
+      "sha256": "4a910bd8d562ff6f8ca41e83eeaa6da1d4b276b8a37a556e7abdafd975789224",
+      "rule": "UTF-8 raw function span starting function through blank lines before next function or top-level throw"
+    },
+    {
+      "name": "S1FinalReturn",
+      "exact_bytes_equal": true,
+      "sha256": "f23a99bba9d54e0edfabef95687c0f025b29c2d8e16042e30f5c2c9eee934476",
+      "rule": "UTF-8 raw function span starting function through blank lines before next function or top-level throw"
+    }
+  ],
+  "changed_functions": [
+    "S1NativeAxis",
+    "S1Fields",
+    "S1Decision"
+  ],
+  "added_functions": [
+    "S1ExactDecimal",
+    "S1ExactCompare",
+    "S1TimeVector",
+    "S1Coverage",
+    "S1ChargeFields",
+    "S1ComparisonNumerics"
+  ],
+  "expected_fields": [
+    "common_requested_times_s fixed full vector of decimal strings",
+    "required_count full vector count, not safe-prefix count",
+    "end_s exact decimal string or integer"
+  ],
+  "native_fields": [
+    "stored_times_s exact raw-native normalized decimal-string vector",
+    "stored_grid_identity path/bytes/SHA",
+    "guard_pair t_minus/t_plus for protective stop",
+    "final_time_s exact decimal string or integer"
+  ],
+  "schema": "S1O_CHARGE_BUDGET_R1",
+  "scope_limits": [
+    "raw/native adapter remains OPEN",
+    "no CSV numerical re-analysis in parent",
+    "no new operational entrypoint",
+    "no budget, resource, threshold or policy changes"
+  ],
+  "precision_rule": "Exact lexical sign/significant-digits/decimal-position compare; CLR float/double/decimal transport rejected, strings/integers allowed; no double coercion of time/coverage/comparison thresholds",
+  "protective_prefix": "Derived independently from fixed common_requested_times_s <= verified guard_pair.t_minus. Preserve actual_end=guard_pair.t_plus and full native grid through actual end. Full intersection may contain t_plus beyond safe prefix."
+}

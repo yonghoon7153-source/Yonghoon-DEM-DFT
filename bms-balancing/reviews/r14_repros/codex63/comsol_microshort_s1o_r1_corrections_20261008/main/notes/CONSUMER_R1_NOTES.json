@@ -1,0 +1,18 @@
+{
+  "schema": "S1O_R1_CONSUMER_CHANGE_NOTES",
+  "status": "SOURCE_CORRECTED_FUNCTIONAL_VALIDATION_NOT_RUN",
+  "scope": ["S1O-N1", "S1O-N2"],
+  "files": [
+    {"path": "candidate/consumer.py.inactive.txt", "sha256": "0cb1aa3cc4593dcb041115baf208c4dd09186fcc75055ddcde53c68086cc6b79", "changed_functions": ["charge_balance", "analyze"]},
+    {"path": "contracts/CHARGE_BALANCE.json", "sha256": "6ce428333b98bc219e99d8fd4de173d28680489d0e86ec630213cc2a709fe66c"}
+  ],
+  "new_reasons": ["CHARGE_GRID_BINDING", "CHARGE_ENDPOINT_BINDING", "CHARGE_GLOBAL_TIME", "CHARGE_GLOBAL_LI_MISMATCH", "CHARGE_SOURCE_BINDING", "CHARGE_UNIT_BINDING", "CHARGE_ROW_SCHEMA", "REVERSE_LI_INCREMENT"],
+  "unchanged_limits": {"current_A_m2": "1e-8", "charge_C_m2": "2e-4", "relative_current_charge": "1e-4", "Li_relative": "1e-6"},
+  "raw_native_adapter": "OPEN_UNIMPLEMENTED",
+  "functional_validation": "NOT_RUN",
+  "candidate_function_calls": 0,
+  "received_code_imports": 0,
+  "COMSOL_JVM_compile": 0,
+  "static_tools": ["PowerShell text reads", "PowerShell Get-FileHash", "apply_patch"],
+  "observation_error": {"chunk": "b83eb1", "rc": 1, "wall_time_seconds": 6.8695128, "reason": "notes directory absent during read-only Get-ChildItem; no candidate execution; parent subsequently created notes", "classification": "PREPARATION_TOOL_ERROR_NOT_FUNCTIONAL_TEST"}
+}

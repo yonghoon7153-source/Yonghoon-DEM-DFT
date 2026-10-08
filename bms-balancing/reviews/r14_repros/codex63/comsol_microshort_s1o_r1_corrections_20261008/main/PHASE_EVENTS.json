@@ -1,0 +1,31 @@
+[
+  {
+    "phase": "correction",
+    "start_elapsed_s": 0,
+    "limit_s": 1200,
+    "end_elapsed_s": 693.7773478999734,
+    "duration_s": 693.7773478999734,
+    "within_limit": true
+  },
+  {
+    "phase": "static",
+    "start_elapsed_s": 693.7773478999734,
+    "limit_s": 600,
+    "end_elapsed_s": 1037.0816319000442,
+    "duration_s": 343.30428400007077,
+    "within_limit": true
+  },
+  {
+    "phase": "plan_seal",
+    "start_elapsed_s": 1037.0816319000442,
+    "limit_s": 600,
+    "end_elapsed_s": 1429.1216340998653,
+    "duration_s": 392.0400021998212,
+    "within_limit": true
+  },
+  {
+    "phase": "delivery",
+    "start_elapsed_s": 1429.1216340998653,
+    "limit_s": 300
+  }
+]

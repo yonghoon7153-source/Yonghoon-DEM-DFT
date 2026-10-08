@@ -1,0 +1,80 @@
+{
+  "scope": "Exact byte transformations for static reading copies only. No source file rewritten. Not native preservation evidence.",
+  "comparisons": [
+    {
+      "path": "sources/COMSOL_REBUILD_SPEC.md",
+      "transform_for_identity_comparison_only": "remove exactly one trailing LF",
+      "local_bytes": 480347,
+      "reconstructed_original_bytes": 480346,
+      "reconstructed_original_sha256": "0e31001af162783ef53dfe1ff1e00ea00a4d179154cf396d728ab1f6aa773a56",
+      "git_blob_match": true
+    },
+    {
+      "path": "sources/COMSOL_EXPERIMENT_CORRESPONDENCE_v2_20261004.md",
+      "transform_for_identity_comparison_only": "remove exactly one trailing LF",
+      "local_bytes": 19330,
+      "reconstructed_original_bytes": 19329,
+      "reconstructed_original_sha256": "d4e3b051160e0b12650cd9a42acbd73777412dda8e44507c980a39794bfa7a6f",
+      "git_blob_match": true
+    },
+    {
+      "path": "sources/COMSOL_NEXT_PLAN_20261004.md",
+      "transform_for_identity_comparison_only": "remove exactly one trailing LF",
+      "local_bytes": 19071,
+      "reconstructed_original_bytes": 19070,
+      "reconstructed_original_sha256": "7ac2264f160394bfaa8631c815277ea5f1e4a4d0c2a7f6de30b2b2ee825d9533",
+      "git_blob_match": true
+    },
+    {
+      "path": "sources/MICROSHORT_MPH_REVIEW.md",
+      "transform_for_identity_comparison_only": "remove exactly one trailing LF",
+      "local_bytes": 42699,
+      "reconstructed_original_bytes": 42698,
+      "reconstructed_original_sha256": "9fb2ecef37c831c57a7dcb3c4f264919fd920db30fa51efa448278b6c9f54a8a",
+      "git_blob_match": true
+    },
+    {
+      "path": "sources/MSC_SEMINAR_2026-09-23_APPLICATION.md",
+      "transform_for_identity_comparison_only": "remove exactly one trailing LF",
+      "local_bytes": 75085,
+      "reconstructed_original_bytes": 75084,
+      "reconstructed_original_sha256": "7da14a26f8b3f9b721776827dea23e4ecee20bbcb9d7cd55cdb46939a6accfd3",
+      "git_blob_match": true
+    },
+    {
+      "path": "sources/NEXT_MODEL_READINESS_DECISION.md",
+      "transform_for_identity_comparison_only": "remove exactly one trailing LF then convert LF to CRLF",
+      "local_bytes": 25397,
+      "reconstructed_original_bytes": 25512,
+      "reconstructed_original_sha256": "e6c4fea43c9a9d1e2601cb229fdad804733b676d9c6174335e91f85bfdf14726",
+      "git_blob_match": true
+    },
+    {
+      "path": "sources/Normal480Candidate.java.txt",
+      "transform_for_identity_comparison_only": "identity",
+      "local_bytes": 99959,
+      "reconstructed_original_bytes": 99959,
+      "reconstructed_original_sha256": "c70526cf6884eabc57b63dd43dce4b47fb0decf59af68d3f550f1b987d053797",
+      "git_blob_match": true
+    },
+    {
+      "path": "sources/COMSOL_MICROSHORT_S0_SEND_TO_CODEX_v2_DEEP_20261007.md",
+      "transform_for_identity_comparison_only": "remove exactly one trailing LF",
+      "local_bytes": 11067,
+      "original_bytes": 11066,
+      "original_sha256": "25099c8407e58267cb54e4a8ed4926f2a73ef77993f8355fa2565828ac8517df",
+      "original_byte_comparison": true
+    },
+    {
+      "path": "sources/COMSOL_MICROSHORT_PHYSICS_REQUEST_DRAFT_20261007.md",
+      "transform_for_identity_comparison_only": "remove exactly one trailing LF",
+      "local_bytes": 8954,
+      "original_bytes": 8953,
+      "original_sha256": "149ea647d5b53ebdb67b1a3af1983f003d85a5c8304e579f121ffc15f889f78b",
+      "original_byte_comparison": true
+    }
+  ],
+  "all_nine_comparisons_pass": true,
+  "candidate_changed": false,
+  "scientific_arithmetic_rerun": false
+}

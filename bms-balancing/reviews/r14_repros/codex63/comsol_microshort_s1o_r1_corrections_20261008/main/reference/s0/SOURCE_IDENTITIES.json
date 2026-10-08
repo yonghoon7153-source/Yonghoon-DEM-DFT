@@ -1,0 +1,95 @@
+{
+  "scope": "Current source copies vs pinned Git blobs and current incoming originals vs earlier reading copies. Not a remote-machine preservation audit.",
+  "commit": "fd7ce941a7c4d3989f80a133271189d67a6a0074",
+  "repository_sources": [
+    {
+      "repository_path": "bms-balancing/docs/COMSOL_REBUILD_SPEC.md",
+      "local_path": "sources/COMSOL_REBUILD_SPEC.md",
+      "git_blob_sha": "f4c3a38e8843755e0462501d53f22b42a42d1dce",
+      "url": "https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT/blob/fd7ce941a7c4d3989f80a133271189d67a6a0074/bms-balancing/docs/COMSOL_REBUILD_SPEC.md",
+      "bytes": 480347,
+      "sha256": "fe074a939d96bc25bf8e70c963af4b9ea0e055f80e77bfa1954dadb6576cb020",
+      "observed_git_blob": "ce1373459d7b83378edf2d5dbe146c4f64c1234e",
+      "exact_git_blob_match": false
+    },
+    {
+      "repository_path": "bms-balancing/docs/COMSOL_EXPERIMENT_CORRESPONDENCE_v2_20261004.md",
+      "local_path": "sources/COMSOL_EXPERIMENT_CORRESPONDENCE_v2_20261004.md",
+      "git_blob_sha": "0f7c708e9465a26d6b03501ea07ef2a56135b822",
+      "url": "https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT/blob/fd7ce941a7c4d3989f80a133271189d67a6a0074/bms-balancing/docs/COMSOL_EXPERIMENT_CORRESPONDENCE_v2_20261004.md",
+      "bytes": 19330,
+      "sha256": "aa2380b3e3d95e0fb2af78571246c976d1e510de19da712e4aa0ec544845d305",
+      "observed_git_blob": "e13645a415c03d9591ef1bdd947c72887b3bbeca",
+      "exact_git_blob_match": false
+    },
+    {
+      "repository_path": "bms-balancing/docs/COMSOL_NEXT_PLAN_20261004.md",
+      "local_path": "sources/COMSOL_NEXT_PLAN_20261004.md",
+      "git_blob_sha": "adedc53ba0284dd7033551bc0b6e36c088cf4437",
+      "url": "https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT/blob/fd7ce941a7c4d3989f80a133271189d67a6a0074/bms-balancing/docs/COMSOL_NEXT_PLAN_20261004.md",
+      "bytes": 19071,
+      "sha256": "a839795b500075bfe90c8d9530cf6d4b96e216702839b7eb3e864cf0586a5f97",
+      "observed_git_blob": "d95c8ee8af900652a126e41835721b4725a69f68",
+      "exact_git_blob_match": false
+    },
+    {
+      "repository_path": "bms-balancing/docs/MICROSHORT_MPH_REVIEW.md",
+      "local_path": "sources/MICROSHORT_MPH_REVIEW.md",
+      "git_blob_sha": "181f544daac2fea32f65d964a4b86acfe163498e",
+      "url": "https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT/blob/fd7ce941a7c4d3989f80a133271189d67a6a0074/bms-balancing/docs/MICROSHORT_MPH_REVIEW.md",
+      "bytes": 42699,
+      "sha256": "b0b665ff88c67c3a71e9bdb45f09d52e9b0bba48dd548b4ae95e66582ced8133",
+      "observed_git_blob": "5c0753b986a5eaac052f67ce6c8d5140e27d932c",
+      "exact_git_blob_match": false
+    },
+    {
+      "repository_path": "bms-balancing/docs/MSC_SEMINAR_2026-09-23_APPLICATION.md",
+      "local_path": "sources/MSC_SEMINAR_2026-09-23_APPLICATION.md",
+      "git_blob_sha": "2a178833639590e89725a1b5f95fed1baa4c4e7d",
+      "url": "https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT/blob/fd7ce941a7c4d3989f80a133271189d67a6a0074/bms-balancing/docs/MSC_SEMINAR_2026-09-23_APPLICATION.md",
+      "bytes": 75085,
+      "sha256": "5c6fd2fb1b7448b682cd5045d85e4f561f2c30a68d2eb0c55216d679bb40ee20",
+      "observed_git_blob": "f97448deb644c45761eb78fe377fea9fd55ebe33",
+      "exact_git_blob_match": false
+    },
+    {
+      "repository_path": "bms-balancing/reviews/r14_repros/codex63/electrolyte_guard/outputs/NEXT_MODEL_READINESS_DECISION.md",
+      "local_path": "sources/NEXT_MODEL_READINESS_DECISION.md",
+      "git_blob_sha": "d82acd88a1432fc1d3e1cdd33a74ab83bc9517cd",
+      "url": "https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT/blob/fd7ce941a7c4d3989f80a133271189d67a6a0074/bms-balancing/reviews/r14_repros/codex63/electrolyte_guard/outputs/NEXT_MODEL_READINESS_DECISION.md",
+      "bytes": 25397,
+      "sha256": "78fed903f442a2a54d4a97a7ab656bd99e402c9fd3d58aa51150a94749c2ad59",
+      "observed_git_blob": "8d9f43af843088db4b1846b131c56c92878b85a8",
+      "exact_git_blob_match": false
+    },
+    {
+      "repository_path": "bms-balancing/comsol_candidates/bmin_particle640_20261004/basis/source480/candidate/src/Normal480Candidate.java",
+      "local_path": "sources/Normal480Candidate.java.txt",
+      "git_blob_sha": "bed6441afcc841a9bdbe030d3d3a29f5acb97cce",
+      "bytes": 99959,
+      "sha256": "c70526cf6884eabc57b63dd43dce4b47fb0decf59af68d3f550f1b987d053797",
+      "observed_git_blob": "bed6441afcc841a9bdbe030d3d3a29f5acb97cce",
+      "exact_git_blob_match": true
+    }
+  ],
+  "incoming_originals": [
+    {
+      "path": "C:\\Users\\Administrator\\Downloads\\COMSOL_MICROSHORT_S0_SEND_TO_CODEX_v2_DEEP_20261007.md",
+      "bytes": 11066,
+      "sha256": "25099c8407e58267cb54e4a8ed4926f2a73ef77993f8355fa2565828ac8517df",
+      "reading_copy_sha256": "db1dc3080da8871b32a85e8d66603cc914a3e7e8d8d9af7a050be9afbfe91ad5",
+      "byte_match_to_reading_copy": false,
+      "utf8_text_match_normalized_line_endings": false
+    },
+    {
+      "path": "C:\\Users\\Administrator\\Downloads\\COMSOL_MICROSHORT_PHYSICS_REQUEST_DRAFT_20261007.md",
+      "bytes": 8953,
+      "sha256": "149ea647d5b53ebdb67b1a3af1983f003d85a5c8304e579f121ffc15f889f78b",
+      "reading_copy_sha256": "9d989f5117da97145f5a8faeccd86f8f33e9fef4c341476c7df13e06d9c23c43",
+      "byte_match_to_reading_copy": false,
+      "utf8_text_match_normalized_line_endings": false
+    }
+  ],
+  "all_git_blobs_match": false,
+  "all_incoming_bytes_match": false
+}

@@ -1,0 +1,243 @@
+{
+  "status": "PASS_STATIC_ONLY",
+  "checks": [
+    {
+      "name": "130_unique_IDs_inputs",
+      "pass": true
+    },
+    {
+      "name": "8_groups",
+      "pass": true
+    },
+    {
+      "name": "engine_counts",
+      "pass": true
+    },
+    {
+      "name": "all_old98_mapped",
+      "pass": true
+    },
+    {
+      "name": "32_new_IDs",
+      "pass": true
+    },
+    {
+      "name": "all_not_run",
+      "pass": true
+    },
+    {
+      "name": "budget1860_sum",
+      "pass": true
+    },
+    {
+      "name": "source_pin:candidate/consumer.py.inactive.txt",
+      "pass": true
+    },
+    {
+      "name": "source_pin:candidate/control.py.inactive.txt",
+      "pass": true
+    },
+    {
+      "name": "source_pin:candidate/Parent.ps1.inactive.txt",
+      "pass": true
+    },
+    {
+      "name": "span:candidate/consumer.py.inactive.txt:EvidenceError",
+      "pass": true
+    },
+    {
+      "name": "span:candidate/consumer.py.inactive.txt:require",
+      "pass": true
+    },
+    {
+      "name": "span:candidate/consumer.py.inactive.txt:number",
+      "pass": true
+    },
+    {
+      "name": "span:candidate/consumer.py.inactive.txt:decimal_context",
+      "pass": true
+    },
+    {
+      "name": "span:candidate/consumer.py.inactive.txt:read_csv_bytes",
+      "pass": true
+    },
+    {
+      "name": "span:candidate/consumer.py.inactive.txt:timed_rows",
+      "pass": true
+    },
+    {
+      "name": "span:candidate/consumer.py.inactive.txt:coverage",
+      "pass": true
+    },
+    {
+      "name": "span:candidate/consumer.py.inactive.txt:profile_rows",
+      "pass": true
+    },
+    {
+      "name": "span:candidate/consumer.py.inactive.txt:compare_initialization",
+      "pass": true
+    },
+    {
+      "name": "span:candidate/consumer.py.inactive.txt:invariants",
+      "pass": true
+    },
+    {
+      "name": "span:candidate/consumer.py.inactive.txt:compare_initialization_pair",
+      "pass": true
+    },
+    {
+      "name": "span:candidate/consumer.py.inactive.txt:initial_profile_uniformity",
+      "pass": true
+    },
+    {
+      "name": "span:candidate/consumer.py.inactive.txt:compare_policy",
+      "pass": true
+    },
+    {
+      "name": "span:candidate/consumer.py.inactive.txt:verify_coefficient_evidence",
+      "pass": true
+    },
+    {
+      "name": "span:candidate/consumer.py.inactive.txt:charge_balance",
+      "pass": true
+    },
+    {
+      "name": "span:candidate/consumer.py.inactive.txt:paired_classification",
+      "pass": true
+    },
+    {
+      "name": "span:candidate/consumer.py.inactive.txt:analyze",
+      "pass": true
+    },
+    {
+      "name": "span:candidate/control.py.inactive.txt:ContractError",
+      "pass": true
+    },
+    {
+      "name": "span:candidate/control.py.inactive.txt:reject",
+      "pass": true
+    },
+    {
+      "name": "span:candidate/control.py.inactive.txt:canonical_hash",
+      "pass": true
+    },
+    {
+      "name": "span:candidate/control.py.inactive.txt:finite_number",
+      "pass": true
+    },
+    {
+      "name": "span:candidate/control.py.inactive.txt:is_sha",
+      "pass": true
+    },
+    {
+      "name": "span:candidate/control.py.inactive.txt:require_refs",
+      "pass": true
+    },
+    {
+      "name": "span:candidate/control.py.inactive.txt:authorize_execution",
+      "pass": true
+    },
+    {
+      "name": "span:candidate/control.py.inactive.txt:assess_resources",
+      "pass": true
+    },
+    {
+      "name": "span:candidate/control.py.inactive.txt:advance_stop",
+      "pass": true
+    },
+    {
+      "name": "span:candidate/control.py.inactive.txt:UnavailableNativeAdapter",
+      "pass": true
+    },
+    {
+      "name": "span:candidate/control.py.inactive.txt:execute_once",
+      "pass": true
+    },
+    {
+      "name": "span:candidate/Parent.ps1.inactive.txt:S1Has",
+      "pass": true
+    },
+    {
+      "name": "span:candidate/Parent.ps1.inactive.txt:S1Struct",
+      "pass": true
+    },
+    {
+      "name": "span:candidate/Parent.ps1.inactive.txt:S1Number",
+      "pass": true
+    },
+    {
+      "name": "span:candidate/Parent.ps1.inactive.txt:S1Sha",
+      "pass": true
+    },
+    {
+      "name": "span:candidate/Parent.ps1.inactive.txt:S1Failure",
+      "pass": true
+    },
+    {
+      "name": "span:candidate/Parent.ps1.inactive.txt:S1ExactDecimal",
+      "pass": true
+    },
+    {
+      "name": "span:candidate/Parent.ps1.inactive.txt:S1ExactCompare",
+      "pass": true
+    },
+    {
+      "name": "span:candidate/Parent.ps1.inactive.txt:S1TimeVector",
+      "pass": true
+    },
+    {
+      "name": "span:candidate/Parent.ps1.inactive.txt:S1Coverage",
+      "pass": true
+    },
+    {
+      "name": "span:candidate/Parent.ps1.inactive.txt:S1ChargeFields",
+      "pass": true
+    },
+    {
+      "name": "span:candidate/Parent.ps1.inactive.txt:S1ComparisonNumerics",
+      "pass": true
+    },
+    {
+      "name": "span:candidate/Parent.ps1.inactive.txt:S1NativeAxis",
+      "pass": true
+    },
+    {
+      "name": "span:candidate/Parent.ps1.inactive.txt:S1Fields",
+      "pass": true
+    },
+    {
+      "name": "span:candidate/Parent.ps1.inactive.txt:S1Decision",
+      "pass": true
+    },
+    {
+      "name": "span:candidate/Parent.ps1.inactive.txt:S1FinalReturn",
+      "pass": true
+    },
+    {
+      "name": "protective_prefix90_count249",
+      "pass": true
+    },
+    {
+      "name": "unchanged_deadband_fixture_label:CHARGE_R112",
+      "pass": true
+    },
+    {
+      "name": "unchanged_deadband_fixture_label:CHARGE_R113",
+      "pass": true
+    },
+    {
+      "name": "real_Python_to_PS_routes",
+      "pass": true
+    }
+  ],
+  "count": 57,
+  "cases": 130,
+  "inputs": 130,
+  "groups": 8,
+  "counts": {
+    "Python": 99,
+    "PowerShell5.1": 31
+  },
+  "executed_cases": 0,
+  "static_only_N4_not_counted_as_functional": 1
+}

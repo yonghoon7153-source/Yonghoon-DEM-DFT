@@ -1,0 +1,46 @@
+{
+  "preparation_tool_log_scope": "Selected tool returns transcribed by assistant; not independent OS audit",
+  "records": [
+    {
+      "wall_s": 6.5083153,
+      "rc": 0,
+      "kind": "new static copy/N4 writer",
+      "chunk": "1fe6d5"
+    },
+    {
+      "wall_s": 6.1381713,
+      "rc": 0,
+      "kind": "new offline contract writer",
+      "chunk": "f02be6"
+    },
+    {
+      "kind": "parent parse only",
+      "wall_s": 7.8251491,
+      "functions": 15,
+      "chunk": "e8608e",
+      "rc": 0,
+      "errors": 0
+    },
+    {
+      "wall_s": 6.5158744,
+      "rc": 0,
+      "checks": 240,
+      "kind": "new static AST/hash/text audit",
+      "chunk": "c71170"
+    },
+    {
+      "wall_s": 6.2694022,
+      "rc": 0,
+      "checks": 57,
+      "kind": "new plan/static seal",
+      "chunk": "a3b318"
+    },
+    {
+      "wall_s": 6.2080828,
+      "rc": 0,
+      "kind": "new report writer",
+      "chunk": "dec576"
+    }
+  ],
+  "document_tool_errors": "See notes/CONSUMER_R1_NOTES.json and notes/PLAN_R1_NOTES.json; no candidate test was run."
+}

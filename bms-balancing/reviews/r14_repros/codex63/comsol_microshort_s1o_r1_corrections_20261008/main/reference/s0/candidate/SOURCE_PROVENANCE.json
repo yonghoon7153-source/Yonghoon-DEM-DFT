@@ -1,0 +1,11 @@
+{
+  "repository": "yonghoon7153-source/Yonghoon-DEM-DFT",
+  "commit": "fd7ce941a7c4d3989f80a133271189d67a6a0074",
+  "path": "bms-balancing/comsol_candidates/bmin_particle640_20261004/basis/source480/candidate/src/Normal480Candidate.java",
+  "github_blob_sha": "bed6441afcc841a9bdbe030d3d3a29f5acb97cce",
+  "local_path": "sources/Normal480Candidate.java.txt",
+  "size_bytes": 99959,
+  "sha256": "c70526cf6884eabc57b63dd43dce4b47fb0decf59af68d3f550f1b987d053797",
+  "method": "GitHub connector fetch_file at pinned commit; saved with apply_patch; SHA256 and size match SPEC 45-2 identifiers",
+  "execution": "Read as text only. No Java import, compile, JVM, COMSOL or supplied program execution."
+}

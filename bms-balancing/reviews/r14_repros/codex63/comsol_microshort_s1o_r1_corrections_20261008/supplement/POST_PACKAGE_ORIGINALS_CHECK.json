@@ -1,0 +1,11 @@
+{
+  "scope": "After main ZIP creation and returned-output transcription; before supplement packaging",
+  "selected_count": 116,
+  "originals_after_identity": {
+    "path": "ORIGINALS_AFTER.json",
+    "bytes": 35544,
+    "sha256": "a92289227f29aea7d0449a23fc6da30f091bc53c3a24c0838caba39a3afb787e"
+  },
+  "all_unchanged": true,
+  "snapshot_elapsed_s": 1465.4422019999474
+}
