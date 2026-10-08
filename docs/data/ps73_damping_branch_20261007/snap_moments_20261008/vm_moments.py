@@ -35,6 +35,7 @@ DT_S = 1e-6                                   # 덱 timestep (s) — ps73 압축
 LABELS4 = ('First plate contact', 'Mid-compression', 'Just before the stop', 'Relaxed end')
 WALL_GREY, NOCONTACT_GREY = '#b8b8b8', '#e6e6e6'
 N_BINS = 10
+FONTS = ('Liberation Sans', 'Arial')               # 그림 글꼴 후보 (없으면 matplotlib 기본 DejaVu Sans)
 
 
 def _repo():
@@ -126,7 +127,7 @@ def _fmt_p(p):
 
 
 def _style(plt):
-    plt.rcParams.update({'font.family': ['Liberation Sans', 'Arial', 'DejaVu Sans'], 'font.size': 8, 'axes.linewidth': 0.8,
+    plt.rcParams.update({'font.family': 'sans-serif', 'font.sans-serif': list(FONTS) + ['DejaVu Sans'], 'font.size': 8, 'axes.linewidth': 0.8,
                          'xtick.direction': 'in', 'ytick.direction': 'in', 'svg.fonttype': 'none'})
 
 
@@ -393,6 +394,26 @@ def selftest():
         rc2, S2 = run([(1000000, td / 'c1000000'), (3100000, td / 'bad')], meta, td / 'out_bad')
         chk(f'V8 LW 실패 시점 → 그림 안 그림 · rc 2 ({rc2} · {S2.get("status", "")[:40]})',
             rc2 == 2 and not (td / 'out_bad' / 'vm_moments.png').exists() and S2['moments'][1]['lw_status'] != 'OK')
+        # V10 선호 글꼴 (Arial · Liberation Sans) 이 없는 기계 — 경고 없이 DejaVu Sans 로 (1저자 WSL 10-08: 글자마다 findfont 경고 · 5,140 줄)
+        import logging
+        global FONTS
+        keep = FONTS
+        FONTS = ('NoSuchFontA_vm', 'NoSuchFontB_vm')
+        logs = []
+
+        class _H(logging.Handler):
+            def emit(self, rec):
+                logs.append(rec.getMessage())
+        h = _H()
+        lg = logging.getLogger('matplotlib.font_manager')
+        lg.addHandler(h)
+        try:
+            run(mom, meta, td / 'out_font')
+        finally:
+            lg.removeHandler(h)
+            FONTS = keep
+        nf = [m for m in logs if 'not found' in m]
+        chk(f'V10 선호 글꼴이 없어도 findfont 경고 0 줄 ({len(nf)})', not nf, (nf[:1] or [''])[0])
         try:
             common_range([], 'fixed', 2.0, 1.0)
             chk('V9 fixed 범위 vmin ≥ vmax 거부', False)
