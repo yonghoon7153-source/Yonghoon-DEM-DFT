@@ -6,7 +6,7 @@ date: 2026-10-07
 track: wad
 channel: codex
 kind: prompt
-status: 발송 2026-10-08 (사용자 '다음 CU 줘봐') · 회신 대기
+status: 발송 2026-10-08 · ✅ 회신 수령 2026-10-08 → `codex_CU_reply_wad_agc_graphite_k9_closure_2026_10_08.md` (조건부 GO · 값 유지 · P1 '기판만' 정정 · P2 라벨)
 confidence: medium
 verificationStatus: verified
 verifiedAt: 2026-10-07

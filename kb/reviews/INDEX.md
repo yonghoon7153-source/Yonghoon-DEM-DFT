@@ -120,7 +120,7 @@ evidenceScope: multi-source-primary
 | CR | 2026-10-05 | `li2s1a_CR_prompt_li2s_glass_control_card_2026_10_05.md` | `li2s1a_CR_reply_li2s_glass_control_card_2026_10_05.md` | 초안 (2026-10-05) — 사용자 검토 · 발송 대기 (p90² 값 §0 반영 완료) | 같은 라벨 · 주제 토큰 일치 ['card', 'control', 'glass', 'li2s'] |
 | CS | 2026-10-05 | `li2s1a_CS_prompt_li2s_glass_control_cost_2026_10_05.md` | `li2s1a_CS_reply_li2s_glass_control_cost_2026_10_05.md` | 발송됨 (사용자 · 2026-10-05 · 발송판 `kb/projects/li2s_glass_control_cost_letter_CS_send_2026_10_05.md` = 보내는 글 그대로) — 회신 CS 대기 | 같은 라벨 · 주제 토큰 일치 ['control', 'cost', 'glass', 'li2s'] |
 | CT | 2026-10-07 | `codex_CT_prompt_cascade_v7_main_runner_2026_10_07.md` | `codex_CT_reply_cascade_v7_main_runner_2026_10_08.md` | 발송 완료 2026-10-08 · ✅ 회신 수령 2026-10-08 → `codex_CT_reply_cascade_v7_main_runner_2026_10_08.md` (조건부 GO · P0 없음 · P1 3 · 도는 MD 계속) | 같은 라벨 · 주제 토큰 일치 ['cascade', 'main', 'runner', 'v7'] |
-| CU | 2026-10-07 | `codex_CU_prompt_wad_agc_graphite_k9_closure_2026_10_07.md` | — | 발송 2026-10-08 (사용자 '다음 CU 줘봐') · 회신 대기 | — |
+| CU | 2026-10-07 | `codex_CU_prompt_wad_agc_graphite_k9_closure_2026_10_07.md` | `codex_CU_reply_wad_agc_graphite_k9_closure_2026_10_08.md` | 발송 2026-10-08 · ✅ 회신 수령 2026-10-08 → `codex_CU_reply_wad_agc_graphite_k9_closure_2026_10_08.md` (조건부 GO · 값 유지 · P1 '기판만' 정정 · P2 라벨) | 같은 라벨 · 주제 토큰 일치 ['agc', 'closure', 'graphite', 'k9', 'wad'] |
 | CV | 2026-10-07 | `codex_CV_prompt_cei_easy_story_2026_10_07.md` | — | 발송 대기 (사용자 2026-10-07 '쉬운 스토리 구상 해줘라') | — |
 
 ## 🔴 모순 (status 는 대기인데 증거는 회신 수령)
