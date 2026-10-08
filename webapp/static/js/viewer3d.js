@@ -5245,6 +5245,24 @@ function netCurrentT(s, lo, hi) {
   return Math.max(0, Math.min(1, (Math.log10(s) - lo) / span));
 }
 
+/* 색 · 굵기 축의 범위 — 'log' (기본) = log₁₀ j [최소, 최대] (netCurrentLogRange 그대로) · 'linear' = j [최소, 최대] (A cm⁻² @1V · j = 0 은 버린다)
+ * — 1저자 10-08 "로그스케일 말고 그냥 스케일로 · 범례도 이등분".  하나도 없으면 null. */
+function netCurrentRange(edges, scale) {
+  if (scale !== 'linear') return netCurrentLogRange(edges);
+  let lo = Infinity, hi = -Infinity;
+  (edges || []).forEach(e => { if (e && e.j > 0) { if (e.j < lo) lo = e.j; if (e.j > hi) hi = e.j; } });
+  return isFinite(lo) ? [lo, hi] : null;
+}
+
+/* 색 · 굵기 축 t ∈ [0, 1] — 'log' = netCurrentT 그대로 · 'linear' = (j − lo) / (hi − lo) (자름 · j ≤ 0 → 0 · 범위가 한 점이면 1) */
+function netCurrentTv(j, lo, hi, scale) {
+  if (scale !== 'linear') return netCurrentT(j, lo, hi);
+  if (!(j > 0)) return 0;
+  const span = hi - lo;
+  if (!(span > 0)) return 1;
+  return Math.max(0, Math.min(1, (j - lo) / span));
+}
+
 /* 관 반경 (µm) = 굵기 배율 × (0.10 + 0.40 t) × r_ref (망 입자 반경 중앙값) — 배율 1 = 옛 그림 그대로 (rMin 0.10 · rMax 0.50 r_ref) ·
  * 잘못된 배율 (0 · 음수 · NaN · 없음) = 1.  화살표 (원뿔) 도 이 반경을 따른다. */
 function netCurrentRadius(t, rRef, width) {
@@ -5333,6 +5351,7 @@ function netCurrentColorbarSpec(pay, opt, lo, hi, frame) {
   const ch = { ionic: 'ionic (SE–SE contacts)', electronic: 'electronic (AM–AM contacts)' }[pay.channel] || String(pay.channel);
   const md = pay.mode === 'physics' ? 'Physics FULL (sensitivity)' : 'Hertz FULL';
   const want1C = frame === '1C';
+  const lin = !!(opt && opt.scale === 'linear');                // 선형 눈금 — lo · hi = j (A cm⁻² @1V) · 눈금 = 최소 · 가운데 · 최대 (이등분)
   const fr = netCurrentFrame(pay, want1C ? '1C' : '1V');
   const c1 = want1C && fr.ok;                                  // @1C 를 못 하면 @1V 눈금 그대로 (제목 · 부제가 그렇게 말한다 — 단추는 꺼져 있다)
   const f = c1 ? fr.factor : 1;
@@ -5340,12 +5359,14 @@ function netCurrentColorbarSpec(pay, opt, lo, hi, frame) {
   const d = pay.density || {};
   const q = (d.c1 || {}).Q_areal_mAh_cm2;
   const base = 'j = |I_c| / A_c (A_c = contact area of the same solve · ' + (pay.mode === 'physics' ? 'Physics gen-2 area' : 'c_cpl[22] disc')
-    + ').  Model contact-network solve (Kirchhoff · Holm constriction per contact) — not a measured current.  Log colour scale.';
+    + ').  Model contact-network solve (Kirchhoff · Holm constriction per contact) — not a measured current.  '
+    + (lin ? 'Linear colour scale (middle tick = (min + max) / 2).' : 'Log colour scale.');
   return {
     map: 'jet',
     title: 'Contact current density (A cm⁻²) ' + (c1 ? '@1C (operating)' : '@1V probe') + ' — ' + ch + ' · ' + md
       + ' · top ' + (pay.n_returned || 0) + ' contacts',
-    ticks: netCurrentTicks(lo + sh, hi + sh, netCurrentFmtJ),
+    ticks: lin ? [{ p: 0, label: netCurrentFmtJ(lo * f) }, { p: 0.5, label: netCurrentFmtJ(0.5 * (lo + hi) * f) }, { p: 1, label: netCurrentFmtJ(hi * f) }]
+               : netCurrentTicks(lo + sh, hi + sh, netCurrentFmtJ),
     sub: c1
       ? ('@1C = linear scaling of the 1 V probe solve: j(1C) = j(1V) × I_1C / I_1V (× ' + netCurrentFmtJ(f) + ') · I_1C = Q_areal × 1 h⁻¹'
          + (q > 0 ? ' = ' + (q >= 0.01 && q < 1000 ? String(Number((+q).toPrecision(3))) : netCurrentFmtJ(q)) + ' mA cm⁻²' : '')
@@ -5366,6 +5387,7 @@ function netCurrentControlsHtml(opt) {
     + sel('netcur-top', opt.top, NETCUR_TOPS.map(n => [n, '상위 ' + n]))
     + sel('netcur-mode', opt.mode, [['hertzian', 'Hertz (주)'], ['physics', 'Physics (민감도)']])
     + sel('netcur-width', w, NETCUR_WIDTHS.map(x => [x, '굵기 ×' + x]))
+    + sel('netcur-scale', opt.scale === 'linear' ? 'linear' : 'log', [['log', 'log 눈금'], ['linear', '선형 눈금 (이등분)']])
     + '</div>';
 }
 
@@ -5382,19 +5404,23 @@ function netCurrentLegendHtml(pay, opt, st) {
   const d = pay.density || {};
   const c1 = d.c1 || {};
   const f1 = netCurrentFrame(pay, '1V'), fc = netCurrentFrame(pay, '1C');
+  const lin = st.scale === 'linear';                          // 선형 눈금 — st.lo · st.hi 가 j 값 (log 면 log₁₀ j)
+  const val = v => (lin ? v : Math.pow(10, v));
   const L = [];
   L.push('<b>⚡ 전류 흐름 — 접촉 전류 밀도 (A cm⁻²) · 접촉망 해</b>');
   L.push(netCurrentControlsHtml(opt));
   L.push('채널: ' + (NETCUR_CHANNELS[pay.channel] || esc(pay.channel)) + ' · ' + (NETCUR_MODES[pay.mode] || esc(pay.mode)));
-  L.push('<b>색 · 굵기 = 접촉 전류 밀도 j = |I| / A_c (log₁₀) · 상위 ' + n + ' 접촉 (|I| 큰 순)</b>');
+  L.push('<b>색 · 굵기 = 접촉 전류 밀도 j = |I| / A_c (' + (lin ? '선형' : 'log₁₀') + ') · 상위 ' + n + ' 접촉 (|I| 큰 순)</b>');
   if (f1.ok) {
     const stops = [0, 0.25, 0.5, 0.75, 1].map(v => '#' + jetColor(v).toString(16).padStart(6, '0'));
     L.push('<div style="margin:3px 0 1px 0;height:9px;border-radius:3px;background:linear-gradient(90deg,' + stops.join(',') + ')"></div>');
-    L.push('@1V (탐침 · 원고 S16 · S17 규약): <b>' + fj(Math.pow(10, st.lo)) + ' … ' + fj(Math.pow(10, st.hi)) + ' A cm⁻²</b>'
+    L.push('@1V (탐침 · 원고 S16 · S17 규약): <b>' + fj(val(st.lo)) + ' … ' + fj(val(st.hi)) + ' A cm⁻²</b>'
+      + (lin ? ' <span style="color:#9ca3af">(선형 눈금 · 가운데 ' + fj(0.5 * (val(st.lo) + val(st.hi))) + ')</span>' : '')
       + (d.j_mean_1V > 0 ? ' <span style="color:#9ca3af">(단면 평균 ⟨J⟩ ' + fj(d.j_mean_1V) + ')</span>' : ''));
     if (fc.ok) {
-      L.push('@1C (운전 환산 × ' + fj(fc.factor) + ' = I_1C / I_1V): <b>' + fj(Math.pow(10, st.lo) * fc.factor) + ' … '
-        + fj(Math.pow(10, st.hi) * fc.factor) + ' A cm⁻²</b> <span style="color:#9ca3af">(Q_areal ' + f3(c1.Q_areal_mAh_cm2)
+      L.push('@1C (운전 환산 × ' + fj(fc.factor) + ' = I_1C / I_1V): <b>' + fj(val(st.lo) * fc.factor) + ' … '
+        + fj(val(st.hi) * fc.factor) + ' A cm⁻²</b>' + (lin ? ' <span style="color:#9ca3af">(가운데 ' + fj(0.5 * (val(st.lo) + val(st.hi)) * fc.factor) + ')</span>' : '')
+        + ' <span style="color:#9ca3af">(Q_areal ' + f3(c1.Q_areal_mAh_cm2)
         + ' mAh/cm² → j_1C ' + f3(c1.Q_areal_mAh_cm2) + ' mA cm⁻² · 케이스 표 등급 값)</span>'
         + ((c1.defaults_used || []).length ? ' <span style="color:#fbbf24">⚠ ' + esc((c1.defaults_used || []).join(' · ')) + '</span>' : ''));
     } else {
@@ -5490,22 +5516,23 @@ function netCurrentWireLegend(state, pay) {
   on('netcur-mode', 'change', ev => { opt.mode = ev.target.value; applyNetCurrentMode(state); });
   on('netcur-arrows', 'change', ev => { opt.arrows = ev.target.checked; if (pay) renderNetCurrent(state, pay); });
   on('netcur-width', 'change', ev => { opt.width = +ev.target.value; if (pay) renderNetCurrent(state, pay); });
+  on('netcur-scale', 'change', ev => { opt.scale = ev.target.value; if (pay) renderNetCurrent(state, pay); });
   on('netcur-retry', 'click', () => applyNetCurrentMode(state));          // 오류는 캐시하지 않는다 — 다시 fetch
   //  컬러바 둘 — @1V (탐침) · @1C (운전 환산) · 같은 색 막대 · 다른 숫자 (A cm⁻²)
   on('netcur-cbar-1v', 'click', () => {
     const l = state._netCurLast;
     if (l) exportColorbarPNG(netCurrentColorbarSpec(l.pay, opt, l.st.lo, l.st.hi, '1V'),
-                             'colorbar_net_current_' + l.pay.channel + '_' + l.pay.mode + '_1V.png');
+                             'colorbar_net_current_' + l.pay.channel + '_' + l.pay.mode + '_1V' + (opt.scale === 'linear' ? '_linear' : '') + '.png');
   });
   on('netcur-cbar-1c', 'click', () => {
     const l = state._netCurLast;
     if (l) exportColorbarPNG(netCurrentColorbarSpec(l.pay, opt, l.st.lo, l.st.hi, '1C'),
-                             'colorbar_net_current_' + l.pay.channel + '_' + l.pay.mode + '_1C.png');
+                             'colorbar_net_current_' + l.pay.channel + '_' + l.pay.mode + '_1C' + (opt.scale === 'linear' ? '_linear' : '') + '.png');
   });
 }
 
 function applyNetCurrentMode(state) {
-  const opt = state._netCurOpt || (state._netCurOpt = { channel: 'ionic', mode: 'hertzian', top: 5000, arrows: false, width: 1 });   // top = 경로 기본 (TOP_DEFAULT) · width = 관 굵기 배율
+  const opt = state._netCurOpt || (state._netCurOpt = { channel: 'ionic', mode: 'hertzian', top: 5000, arrows: false, width: 1, scale: 'log' });   // top = 경로 기본 (TOP_DEFAULT) · width = 관 굵기 배율
   netCurrentTeardown(state);
   const tok = state._netCurToken;
   const ionic = opt.channel === 'ionic';
@@ -5544,8 +5571,9 @@ function renderNetCurrent(state, pay) {
   const edges = pay.edges || [];
   const box = pay.box || {};
   const hx = (+box.x > 0 ? +box.x : Infinity) / 2, hy = (+box.y > 0 ? +box.y : Infinity) / 2;
-  const rngJ = netCurrentLogRange(edges);                     // log₁₀ j (A cm⁻² @1V) — 없으면 (σ₀ · 면적 미확인) 회색 · 중간 굵기
-  const rng = rngJ || [-1, 0];
+  const sc = opt.scale === 'linear' ? 'linear' : 'log';         // 눈금 — log (기본) · 선형 (1저자 10-08)
+  const rngJ = netCurrentRange(edges, sc);                    // log₁₀ j 또는 j (A cm⁻² @1V) — 없으면 (σ₀ · 면적 미확인) 회색 · 중간 굵기
+  const rng = rngJ || (sc === 'linear' ? [0, 1] : [-1, 0]);
   const lo = rng[0], hi = rng[1];
   const draw = edges.filter(e => !netCurrentWrap(e.a, e.b, hx, hy));
   const radii = [];
@@ -5567,7 +5595,7 @@ function renderNetCurrent(state, pay) {
       d.subVectors(B, A);
       const len = d.length();
       const hasJ = !!(rngJ && e.j > 0);
-      const t = hasJ ? netCurrentT(e.j, lo, hi) : 0.5, r = netCurrentRadius(t, rRef, opt.width);   // 굵기 배율 (범례 고르기)
+      const t = hasJ ? netCurrentTv(e.j, lo, hi, sc) : 0.5, r = netCurrentRadius(t, rRef, opt.width);   // 굵기 배율 · 눈금 (범례 고르기)
       if (len > 0) d.divideScalar(len); else d.copy(up);
       q.setFromUnitVectors(up, d);
       mid.addVectors(A, B).multiplyScalar(0.5);
@@ -5598,7 +5626,7 @@ function renderNetCurrent(state, pay) {
     state.netCurrentGroup = group;
   }
   if (state.applyClip) state.applyClip();                     // 단면 뷰 — 새 재질에도 자르기 평면
-  const st = { nDrawn: draw.length, nWrapSkipped: edges.length - draw.length, lo: lo, hi: hi };
+  const st = { nDrawn: draw.length, nWrapSkipped: edges.length - draw.length, lo: lo, hi: hi, scale: sc };
   state._netCurLast = { pay: pay, st: st };
   setLegend(state, netCurrentLegendHtml(pay, opt, st));
   netCurrentWireLegend(state, pay);

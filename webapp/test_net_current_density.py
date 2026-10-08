@@ -437,13 +437,15 @@ console.log(JSON.stringify(out));
         wl = ''
     chk('D5r 컬러바 단추 둘 = exportColorbarPNG(netCurrentColorbarSpec(…, \'1V\' · \'1C\')) · 파일 이름 _1V · _1C',
         "netCurrentColorbarSpec(l.pay, opt, l.st.lo, l.st.hi, '1V')" in wl and "netCurrentColorbarSpec(l.pay, opt, l.st.lo, l.st.hi, '1C')" in wl
-        and "'_1V.png'" in wl and "'_1C.png'" in wl, wl[:400])
+        and ("'_1V.png'" in wl or "'_1V' + (opt.scale === 'linear' ? '_linear' : '') + '.png'" in wl)
+        and ("'_1C.png'" in wl or "'_1C' + (opt.scale === 'linear' ? '_linear' : '') + '.png'" in wl), wl[:400])   # 10-08 선형 눈금이면 _linear 꼬리
     try:
         rnc = js_fn(js, 'renderNetCurrent')
     except (ValueError, AssertionError):
         rnc = ''
-    chk('D5s 그리기 — 색 · 굵기 축 = log₁₀ j (netCurrentT(e.j, …)) · 옛 몫 (e.s) 로 칠하지 않는다',
-        'netCurrentT(e.j, lo, hi)' in rnc and 'netCurrentT(e.s' not in rnc, rnc[:300])
+    chk('D5s 그리기 — 색 · 굵기 축 = j (기본 log₁₀ · 10-08 선형 고르기 netCurrentTv(e.j, …, sc)) · 옛 몫 (e.s) 로 칠하지 않는다',
+        ('netCurrentT(e.j, lo, hi)' in rnc or 'netCurrentTv(e.j, lo, hi, sc)' in rnc) and 'netCurrentT(e.s' not in rnc
+        and 'netCurrentTv(e.s' not in rnc, rnc[:300])
 
 
 def section_registration():

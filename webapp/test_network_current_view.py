@@ -724,7 +724,78 @@ console.log(JSON.stringify(out));
         re.search(r"on\('netcur-width', 'change', ev => \{ opt\.width = \+ev\.target\.value; if \(pay\) renderNetCurrent\(state, pay\); \}\)",
                   wl) is not None)
     chk("④z10 기본 옵션에 width: 1 (경로 기본 top 정규식은 그대로)",
-        re.search(r"_netCurOpt = \{ channel: 'ionic', mode: 'hertzian', top: \d+, arrows: false, width: 1 \}", anm) is not None)
+        re.search(r"_netCurOpt = \{ channel: 'ionic', mode: 'hertzian', top: \d+, arrows: false, width: 1, scale: 'log' \}", anm) is not None)
+
+
+def section_viewer_scale():
+    """④s 선형 눈금 — 1저자 10-08 *"우리 전류밀도 값들 두개 로그스케일 말고 그냥 스케일로 그림 표현되게 하고 범례도 이등분 되게"*.
+    고르기 log (기본 · 옛 그림 그대로) · 선형 — 선형이면 색 · 굵기 t = (j − 최소) / (최대 − 최소) · 컬러바 눈금 셋 = 최소 · (최소 + 최대) / 2 · 최대
+    (@1C 는 × I_1C / I_1V) · 범례가 '선형' 과 가운데 값을 적는다."""
+    print('[④s] 뷰어 — 선형 눈금 · 이등분 범례 (node)')
+    js = open(VIEWER_JS, encoding='utf-8').read()
+    names = ('netCurrentRange', 'netCurrentTv', 'netCurrentLogRange', 'netCurrentT', 'netCurrentFmtJ', 'netCurrentTicks', 'netCurrentFrame',
+             'netCurrentColorbarSpec', 'netCurrentControlsHtml', 'netCurrentLegendHtml', 'netCurrentPct', 'jeEscH', 'jetColor')
+    parts, miss = [], []
+    for n in names:
+        try:
+            parts.append(js_fn(js, n))
+        except (ValueError, AssertionError):
+            miss.append(n)
+    for n in ('NETCUR_CHANNELS', 'NETCUR_MODES'):
+        try:
+            parts.append(js_const(js, n))
+        except (ValueError, AssertionError):
+            miss.append(n)
+    consts = [m.group(0) for m in (re.search(r'const NETCUR_TOPS = \[[^\]]*\];', js), re.search(r'const NETCUR_WIDTHS = \[[^\]]*\];', js)) if m]
+    if not chk(f'④s1 viewer3d.js 에 netCurrentRange · netCurrentTv (없음 {miss})', not miss and len(consts) == 2):
+        return
+    script = '\n'.join(parts + consts) + '\n' + r"""
+const E = [{j: 1}, {j: 2}, {j: 5}, {j: 0}];
+const PAY = {channel: 'ionic', mode: 'hertzian', n_returned: 3, n_perc_edges: 3, edges: E, power_share: 0.5, power_identity_rel: 0,
+             density: {c1: {status: 'ok', factor: 10, Q_areal_mAh_cm2: 3}}, zcut: null, sigma_check: {}, generation: {match: true}};
+const out = {};
+out.rLin = netCurrentRange(E, 'linear'); out.rLog = netCurrentRange(E, 'log'); out.rLog0 = netCurrentLogRange(E);
+out.tLin = [netCurrentTv(3, 1, 5, 'linear'), netCurrentTv(0.5, 1, 5, 'linear'), netCurrentTv(9, 1, 5, 'linear'), netCurrentTv(0, 1, 5, 'linear'),
+            netCurrentTv(2, 2, 2, 'linear')];
+out.tLog = [netCurrentTv(10, 0, 2, 'log'), netCurrentT(10, 0, 2)];
+const lin = {channel: 'ionic', mode: 'hertzian', top: 3, scale: 'linear'}, lg = {channel: 'ionic', mode: 'hertzian', top: 3};
+out.sLin = netCurrentColorbarSpec(PAY, lin, 1, 5, '1V'); out.sLin1C = netCurrentColorbarSpec(PAY, lin, 1, 5, '1C');
+out.sLog = netCurrentColorbarSpec(PAY, lg, 0, Math.log10(5), '1V');
+out.legLin = netCurrentLegendHtml(PAY, lin, {nDrawn: 3, nWrapSkipped: 0, lo: 1, hi: 5, scale: 'linear'});
+out.legLog = netCurrentLegendHtml(PAY, lg, {nDrawn: 3, nWrapSkipped: 0, lo: 0, hi: Math.log10(5)});
+out.ctlLin = netCurrentControlsHtml(lin); out.ctlDef = netCurrentControlsHtml(lg);
+out.fj = [netCurrentFmtJ(1), netCurrentFmtJ(3), netCurrentFmtJ(5), netCurrentFmtJ(10), netCurrentFmtJ(30), netCurrentFmtJ(50)];
+console.log(JSON.stringify(out));
+"""
+    res = run_node(script)
+    if not chk('④s2 node 실행', res is not None):
+        return
+    chk(f'④s3 범위 — 선형 = j [최소, 최대] (0 은 버림) {res["rLin"]} · log = netCurrentLogRange 그대로',
+        res['rLin'] == [1, 5] and res['rLog'] == res['rLog0'])
+    chk(f'④s4 선형 t = (j − 최소) / (최대 − 최소) · 자름 · 0 → 0 · 한 점 → 1 {res["tLin"]} · log 는 netCurrentT 그대로',
+        [round(x, 12) for x in res['tLin']] == [0.5, 0.0, 1.0, 0.0, 1.0] and res['tLog'][0] == res['tLog'][1])
+    t1 = [(round(t['p'], 12), t['label']) for t in res['sLin']['ticks']]
+    t2 = [t['label'] for t in res['sLin1C']['ticks']]
+    fj = res['fj']
+    chk(f'④s5 컬러바 선형 = 눈금 셋 (최소 · 가운데 · 최대) {t1} · @1C × 10 {t2}',
+        t1 == [(0.0, fj[0]), (0.5, fj[1]), (1.0, fj[2])] and t2 == [fj[3], fj[4], fj[5]])
+    chk('④s6 컬러바 글 — 선형 = "Linear colour scale" · log 는 "Log colour scale" 그대로',
+        'Linear colour scale' in res['sLin']['sub'] and 'Log colour scale' not in res['sLin']['sub'] and 'Log colour scale' in res['sLog']['sub'])
+    ll, lg_ = res['legLin'], res['legLog']
+    chk('④s7 범례 — 선형 = "선형" · 1 … 5 A cm⁻² · 가운데 3 · log 는 "(log₁₀)" 그대로',
+        '선형' in ll and '1 … 5 A cm⁻²' in ll and '가운데 3' in ll and '(log₁₀)' in lg_ and '선형 눈금' not in lg_.split('netcur-scale')[0], ll[:300])
+    chk('④s8 조작판에 눈금 고르기 (id netcur-scale) · 선형 고르면 selected · 기본 = log',
+        'id="netcur-scale"' in res['ctlLin'] and re.search(r'<option value="linear" selected>', res['ctlLin']) is not None
+        and re.search(r'<option value="log" selected>', res['ctlDef']) is not None)
+    try:
+        rnc = js_fn(js, 'renderNetCurrent')
+        wl = js_fn(js, 'netCurrentWireLegend')
+    except (ValueError, AssertionError):
+        rnc = wl = ''
+    chk('④s9 그리기 = netCurrentRange(edges, sc) · netCurrentTv(e.j, lo, hi, sc) · st.scale 기록',
+        'netCurrentRange(edges, sc)' in rnc and 'netCurrentTv(e.j, lo, hi, sc)' in rnc and 'scale: sc' in rnc)
+    chk('④s10 눈금을 바꾸면 다시 받지 않고 다시 그린다',
+        re.search(r"on\('netcur-scale', 'change', ev => \{ opt\.scale = ev\.target\.value; if \(pay\) renderNetCurrent\(state, pay\); \}\)", wl) is not None)
 
 
 def section_registration():
@@ -759,6 +830,7 @@ def main():
             chk('③ 경로 절 실행', False, f'{type(e).__name__}: {e}')
         section_viewer(payload)
         section_viewer_width()
+        section_viewer_scale()
         section_registration()
     finally:
         shutil.rmtree(tmp, ignore_errors=True)

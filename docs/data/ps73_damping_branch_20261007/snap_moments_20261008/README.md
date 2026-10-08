@@ -121,7 +121,10 @@ compress_2200000 · atom_2200000 = 9-23 = r6).  (d) 입력 sha256 (atoms `fd394a
 - 벽 (바닥 · 판) 에 닿은 입자도 칠한다 (1저자 요청 · 웹앱 기본과 같다) — 그 입자는 벽 힘이 빠진 값 (그림 밖 한정어).
 - 출력 `results_20261008/render3d/`: `vm3d_<step>.png` 넷 (투명 배경 · AM 만) · `vm3d_colorbar.png` (σ_VM MPa · log · 눈금 10 · 30 · 100 · 300 ·
   웹앱 jetColor 와 같은 색 = 조명 전 바탕색) · `vm3d_4panel.png` (흰 바탕 미리보기).
-- 시험 `--selftest` 7 — jetColor 8 비트 · log 색 · 벽도 칠함 · three.js r160 Phong 손 계산 · sRGB 왕복 · z-버퍼 (앞 구가 이김 · 바깥 투명 · 순서 무관).
+- 시험 `--selftest` 9 — jetColor 8 비트 · log · 선형 색 · 범례 가운데 (선형 = (lo + hi) / 2 · log = √(lo · hi)) · 벽도 칠함 · three.js r160 Phong 손 계산 ·
+  sRGB 왕복 · z-버퍼 (앞 구가 이김 · 바깥 투명 · 순서 무관).
+- **선형판** (1저자 10-08 *"이 von Mises 도 그냥 이등분"*): `--scale linear` → 색 = 0 … 413 MPa (아래 0 · 위 = 모은 p95) · 범례 눈금 셋 = 0 · 206 · 413
+  (이등분) · `results_20261008/render3d_linear/` (넷 · 범례 · 숫자 없는 막대 · 미리보기).  log 판 범례 셋 = 5.94 · 49.5 (기하평균) · 413.
 - 보고 한정어 (1저자 10-08 대화): 같은 모델 안 비교 (시점 · 높이) 는 그대로 · MPa 절대값 · AM ↔ SE 크기는 "DEM (연화 SE) 모델 안 값" ·
   (a) 의 값은 축척 중력이 지배.  캡션 권고: *"Love–Weber particle von Mises stress (MPa) from the DEM contact forces (softened SE) — same colour
   scale; model-internal comparison."*

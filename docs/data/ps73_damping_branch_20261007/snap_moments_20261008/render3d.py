@@ -54,9 +54,13 @@ def lin_to_srgb(c):
     return np.where(c <= 0.0031308, c * 12.92, 1.055 * np.power(c, 1.0 / 2.4) - 0.055)
 
 
-def colours(vm, wall, lo, hi, grey_wall=False):
-    """σ_VM → jetColor (log 정규화 · 웹앱 netCurrentT 와 같은 식).  벽 입자도 칠한다 (grey_wall=False · 1저자 10-08)."""
-    t = (np.log10(np.clip(vm, lo, hi)) - math.log10(lo)) / (math.log10(hi) - math.log10(lo))
+def colours(vm, wall, lo, hi, grey_wall=False, scale='log'):
+    """σ_VM → jetColor.  scale 'log' = log 정규화 (웹앱 netCurrentT 와 같은 식) · 'linear' = (σ − lo) / (hi − lo) (1저자 10-08 "그냥 이등분").
+    벽 입자도 칠한다 (grey_wall=False · 1저자 10-08)."""
+    if scale == 'linear':
+        t = (np.clip(vm, lo, hi) - lo) / (hi - lo)
+    else:
+        t = (np.log10(np.clip(vm, lo, hi)) - math.log10(lo)) / (math.log10(hi) - math.log10(lo))
     rgb = jet8(t)
     if grey_wall:
         rgb[wall] = WALL_RGB
@@ -170,30 +174,39 @@ def read_moment(d, step):
     return xyz, rad, vm, wall
 
 
-def colorbar_png(path, lo, hi):
+def colorbar_png(path, lo, hi, scale='log', labels=True):
+    """범례 — 세 눈금 (아래 · 가운데 · 위).  선형 = 가운데 (lo + hi) / 2 (이등분) · log = 기하평균 √(lo · hi) (SDCP 때와 같은 규칙).
+    labels=False = 숫자 없는 막대 (슬라이드에서 직접 적을 때)."""
     import matplotlib
     matplotlib.use('Agg')
     import matplotlib.pyplot as plt
-    from matplotlib.colors import LogNorm
+    from matplotlib.colors import LogNorm, Normalize, ListedColormap
     plt.rcParams.update({'font.family': 'sans-serif', 'font.sans-serif': ['Liberation Sans', 'Arial', 'DejaVu Sans'], 'font.size': 9})
+    cmap = ListedColormap(jet8(np.linspace(0.0, 1.0, 256)))              # 웹앱 jetColor 와 같은 색 (구의 바탕색 · 조명 전)
+    norm = Normalize(lo, hi) if scale == 'linear' else LogNorm(lo, hi)
+    mid = 0.5 * (lo + hi) if scale == 'linear' else math.sqrt(lo * hi)
     fig = plt.figure(figsize=(1.25, 4.2))
     ax = fig.add_axes([0.18, 0.05, 0.22, 0.9])
-    from matplotlib.colors import ListedColormap
-    cmap = ListedColormap(jet8(np.linspace(0.0, 1.0, 256)))              # 웹앱 jetColor 와 같은 색 (구의 바탕색 · 조명 전)
-    cb = fig.colorbar(matplotlib.cm.ScalarMappable(norm=LogNorm(lo, hi), cmap=cmap), cax=ax)
-    ticks = [t for t in (10, 30, 100, 300) if lo <= t <= hi]           # 눈금은 적게 · 평범한 숫자 (보고자료 원칙)
-    cb.set_ticks(ticks)
-    cb.set_ticklabels([str(t) for t in ticks])
+    cb = fig.colorbar(matplotlib.cm.ScalarMappable(norm=norm, cmap=cmap), cax=ax)
     cb.ax.minorticks_off()
-    cb.set_label(r'von Mises stress, $\sigma_{\mathrm{VM}}$ (MPa)')
+    if labels:
+        fmt = lambda v: '0' if v == 0 else f'{v:.3g}'
+        cb.set_ticks([lo, mid, hi])
+        cb.set_ticklabels([fmt(lo), fmt(mid), fmt(hi)])
+        cb.set_label(r'von Mises stress, $\sigma_{\mathrm{VM}}$ (MPa)')
+    else:
+        cb.set_ticks([])
     fig.savefig(path, dpi=300, transparent=True)
     plt.close(fig)
+    return mid
 
 
-def run(src, out, px=1400):
+def run(src, out, px=1400, scale='log'):
     meta = json.load(open(os.path.join(src, 'vm_moments.json'), encoding='utf-8'))
     cr = meta['colour_range_MPa']
     lo, hi = float(cr['vmin']), float(cr['vmax'])
+    if scale == 'linear':
+        lo = 0.0                                               # 선형 = 0 … 모은 p95 (1저자 10-08 "그냥 이등분")
     os.makedirs(out, exist_ok=True)
     moms = meta['moments']
     data = {m['step']: read_moment(src, m['step']) for m in moms}
@@ -203,14 +216,15 @@ def run(src, out, px=1400):
     full = []
     for m in moms:
         xyz, rad, vm, wall = data[m['step']]
-        full.append(render(xyz, rad, colours(vm, wall, lo, hi), px, 2, bounds))
+        full.append(render(xyz, rad, colours(vm, wall, lo, hi, scale=scale), px, 2, bounds))
     boxes = [bbox(a) for a in full]                            # 네 장 같은 자르기 (합집합) — 나란히 놓으면 자리가 맞는다
     ya, yb = min(b[0][0] for b in boxes), max(b[0][1] for b in boxes)
     xa, xb = min(b[1][0] for b in boxes), max(b[1][1] for b in boxes)
     imgs = [a[ya:yb, xa:xb] for a in full]
     for m, rgba in zip(moms, imgs):
         save_png(os.path.join(out, f'vm3d_{m["step"]}.png'), rgba)
-    colorbar_png(os.path.join(out, 'vm3d_colorbar.png'), lo, hi)
+    colorbar_png(os.path.join(out, 'vm3d_colorbar.png'), lo, hi, scale)
+    colorbar_png(os.path.join(out, 'vm3d_colorbar_bare.png'), lo, hi, scale, labels=False)
     from PIL import Image, ImageDraw
     tiles = []
     for k, (m, rgba) in enumerate(zip(moms, imgs)):
@@ -246,6 +260,14 @@ def selftest():
     chk('R2 색 = log 정규화 (1 → 0 · 10 → 0.5 · 100 → 1) · 벽 입자도 칠함 (회색 아님)',
         np.allclose(c[0], jet8(0.0)) and np.allclose(c[1], jet8(0.5)) and np.allclose(c[2], jet8(1.0))
         and np.allclose(c[3], jet8(math.log10(50.0) / 2.0)))
+    cl = colours(np.array([0.0, 50.0, 100.0]), np.zeros(3, bool), 0.0, 100.0, scale='linear')
+    chk('R2b 선형 눈금 — 0 → 0 · 50 → 0.5 · 100 → 1', np.allclose(cl[0], jet8(0.0)) and np.allclose(cl[1], jet8(0.5)) and np.allclose(cl[2], jet8(1.0)))
+    import tempfile as _tf
+    with _tf.TemporaryDirectory() as td:
+        m_lin = colorbar_png(os.path.join(td, 'a.png'), 0.0, 413.0, 'linear')
+        m_log = colorbar_png(os.path.join(td, 'b.png'), 5.94, 413.0, 'log')
+    chk(f'R2c 범례 가운데 — 선형 = (0 + 413) / 2 = {m_lin:.4g} · log = √(5.94 × 413) = {m_log:.4g}',
+        abs(m_lin - 206.5) < 1e-9 and abs(m_log - math.sqrt(5.94 * 413.0)) < 1e-9)
     # three.js r160 Phong — n = L = V 인 점: 선형 albedo × (0.4 + 0.8) / π + 반사광 → sRGB
     n = np.array([[[0.0, 1.0, 0.0]]])
     out = phong_r160(np.array([[[1.0, 1.0, 1.0]]]), n, n, n)[0, 0]
@@ -278,14 +300,15 @@ def main(argv=None):
     ap.add_argument('src', nargs='?', help='vm_moments.py 출력 폴더')
     ap.add_argument('out', nargs='?', help='그림 폴더')
     ap.add_argument('--px', type=int, default=1400)
+    ap.add_argument('--scale', choices=('log', 'linear'), default='log', help='색 눈금 — linear = 0 … p95 · 범례 이등분')
     ap.add_argument('--selftest', action='store_true')
     a = ap.parse_args(argv)
     if a.selftest:
         return selftest()
     if not (a.src and a.out):
         ap.error('src · out 이 필요하다 (또는 --selftest)')
-    lo, hi = run(a.src, a.out, a.px)
-    print(f'색 범위 {lo:.3g} … {hi:.3g} MPa (log · vm_moments.json) → {a.out}')
+    lo, hi = run(a.src, a.out, a.px, a.scale)
+    print(f'색 범위 {lo:.3g} … {hi:.3g} MPa ({a.scale} · 위 = vm_moments.json 공동 p95) → {a.out}')
     return 0
 
 
