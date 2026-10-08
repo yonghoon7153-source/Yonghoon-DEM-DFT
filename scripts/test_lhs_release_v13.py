@@ -35,7 +35,9 @@ v1.3 = 세대 2 망 값 + #1 ML 표 (빈칸 뜻대로) · #2 f 타깃 · 관통 
   V19 ★ 10-07 G2RR4-02 — 감사의 실행 단계 ↔ 영수증 결합 기록 (import_observation.stage_binding) 없음 · 스키마 · 시도 키 집합 ≠ 관측된 완료 시도 = 거부
   V20 ★ 10-08 G2RR5-01 (Codex 세대 2 재검증 5 §1) — 결합 기록의 **시도별 값** (생산자 계약 `run_network_194_parallel.stage_binding_record_problems`) ·
       합계 Σ observed ≤ n_finalized ≤ n_started ≤ n_processes: 값 null · parser 결손 · 0 · 계획 밖 · bool · n_finalized 0 · expected 자기모순 ·
-      실제 audit CLI 실패 binding (최상위 요약 [] · 유지) = 거부 (build · check) / 정상 · 재시도 이력 (started > finalized) = 통과 (과잉차단 금지)
+      실제 audit CLI 실패 binding (최상위 요약 [] · 유지) = 거부 (build · check) / 정상 · 재시도 이력 (started > finalized) = 통과 (과잉차단 금지) ·
+      ★ 10-08 잔여 (1저자 Q6 (가)) — 결합 기록 v2 (시도마다 분류 밖 단계 칸 unclassified): 실제 관측 생산자가 낸 분류 밖 단계 시도 (unknown_stage ·
+      stage_e_out_of_scope) + 최상위 요약 [] = 거부 (V20f1 · f2) · 같은 경로 정상 = 통과 (V20f0) · 옛 스키마 v1 감사 = "감사를 다시" 거부 (V20g1)
 
   python3 scripts/test_lhs_release_v13.py
 """
@@ -254,13 +256,17 @@ def obs_bound(pairs=None):
     #    열쇠 꼴 '케이스|run|시도')
     #  ★ 10-08 G2RR5-01 — 시도 값 = 생산자 계약 그대로 (배포 관문이 시도마다 읽는다): plan_source = 실행기가 쓰는 출처 문자열 **전체** 의 손 사본
     #    (옛 픽스처의 'worker.json attempts[].stage_plan' 은 그 앞부분만 — 실행기가 쓰지 않는 값)
+    #  ★ 10-08 G2RR5-01 잔여 (1저자 Q6 (가)) — 결합 기록 v2 = 시도마다 분류 밖 단계 칸 unclassified (정상 = []) · 실행기 계약 키에 그 칸이 있을 때만 싣는다
+    #    (같은 시험 파일을 고치기 전 실행기 (v1 · 7 키) 에도 돌려 반례가 그 코드에서 통과함을 보이기 위해 — 고친 뒤에는 늘 실린다 · V19b 가 스키마 값을 잡는다)
+    has_uc = 'unclassified' in tuple(getattr(NP194, 'IMPORT_OBS_STAGE_BINDING_KEYS', ()))
     sb = dict(schema=getattr(NP194, 'IMPORT_OBS_STAGE_SCHEMA', 'np194_import_obs/stage_binding/v1'),
               attempts={f'{c}|1|1': dict(plan_source='worker.json attempts[].stage_plan (그 시도가 쓴 케이스 기록의 단계)', mode='bimodal',
                                          executed=['parser', 'contact_bimodal', 'coverage', 'network_cli'], skipped=[], in_process=4,
                                          expected={'worker': 1, 'scripts/parse_liggghts.py': 1, 'scripts/analyze_contacts_bimodal.py': 1,
                                                    'scripts/coverage_physics_vs_hertzian.py': 1, 'scripts/network_conductivity.py': 1},
                                          observed={'worker': 1, 'scripts/parse_liggghts.py': 1, 'scripts/analyze_contacts_bimodal.py': 1,
-                                                   'scripts/coverage_physics_vs_hertzian.py': 1, 'scripts/network_conductivity.py': 1})
+                                                   'scripts/coverage_physics_vs_hertzian.py': 1, 'scripts/network_conductivity.py': 1},
+                                         **({'unclassified': []} if has_uc else {}))
                         for c, _h in sorted(pairs)})
     return dict(n_processes=5 * len(pairs), n_started=5 * len(pairs), n_finalized=5 * len(pairs), processes=[], problems=[], tmp_leftover=[], files=[],
                 observed=[], outside=[], completed_attempts=[[c, '1', '1'] for c, _h in sorted(pairs)], unfinalized_noncompleted=[], stage_binding=sb)
@@ -1489,8 +1495,10 @@ for i, nm, tag, m_, made in r19.get('build', []):
         m_ is not None and not m_.startswith('OTHER') and tag in m_ and not made, (m_ or 'BUILT (거부 없음)')[:400])
 if not r19.get('build'):
     chk('V19a (변이 만들기 시험 못 함)', False, r19)
-chk('V19b 결합 기록이 있는 감사 (스키마 = 실행기 IMPORT_OBS_STAGE_SCHEMA · 시도 = 완료 시도 194) → 감사 판정 문제 0',
-    r19.get('good_au') == [] and getattr(NP194, 'IMPORT_OBS_STAGE_SCHEMA', None) == 'np194_import_obs/stage_binding/v1', r19.get('good_au'))
+chk('V19b 결합 기록이 있는 감사 (스키마 = 실행기 IMPORT_OBS_STAGE_SCHEMA · 시도 = 완료 시도 194) → 감사 판정 문제 0 · ★ 10-08 G2RR5-01 잔여 — 스키마 = v2 '
+    '(시도마다 분류 밖 단계 칸 · 옛 v1 = 감사를 다시 · V20g)',
+    r19.get('good_au') == [] and getattr(NP194, 'IMPORT_OBS_STAGE_SCHEMA', None) == 'np194_import_obs/stage_binding/v2',
+    (r19.get('good_au'), getattr(NP194, 'IMPORT_OBS_STAGE_SCHEMA', None)))
 
 # ═══ V20 ★ 10-08 G2RR5-01 — 배포 관문이 stage_binding 의 시도별 값 · 합계를 읽는다 (build · check) ═══════════════════════════════════════════
 #   Codex 세대 2 재검증 5 §1 (`docs/reviews/codex_review_gen2_network_reverify5_20261007.md` · 탐침 r5_release_contract.py · r5_release_real_binding.py) —
@@ -1569,6 +1577,80 @@ V20_VARIANTS = (
     ('a08', '같은 실패 binding + 최상위 목록 유지 (회귀 — 지금도 거부)', dict(audit=_v20_graft(True)), 'import_observation_problems', 'C'),
 )
 
+#  ★ 10-08 G2RR5-01 잔여 (1저자 Q6 (가)) — 분류 밖 단계 이름만으로 실패한 감사 (Codex r5_observation 의 unknown_stage · stage_e_out_of_scope 꼴) 의 결합 기록은
+#    값이 자기모순 없이 맞아, 최상위 요약 하나만 비우면 배포 관문을 지나갔다 (결합 기록 v1 에 분류 밖 단계 칸이 없다).  결합 기록 = 실행기 관측 생산자
+#    (audit CLI 가 부르는 import_observation + import_observation_problems) 를 이 리포 코드 뿌리 위 합성 ROOT 로 직접 돌려 얻는다 — 끝맺은 영수증 다섯 (워커 +
+#    단계 하위 넷 · 훅 형식) · 시도 단계 계획 = r5_observation 의 단계 (+ 분류 밖 한 단계).  f0 = 같은 경로의 정상 대조 · g1 = 옛 결합 기록 스키마 (v1) 감사.
+V20_STAGES = ('Parse', 'Bimodal Contact Analysis', 'Coverage Physics vs Hertzian', 'Network Solver (both modes)',
+              'Network channel verdict (ionic/electronic/thermal)', 'Network stop contract (stop_after=network)',
+              'Network ionic record check (승격 전 공용 기술 검사 · RGLR2-01)', 'Network Merge')
+V20_UNCLASSIFIED = (('f1', 'unknown_stage', 'Mystery Stage'), ('f2', 'stage_e_out_of_scope', 'Stage E (literature-grounded grain corrections)'))
+V20_RUN_ID = 'ef' * 16
+V20_CASE = sorted(PROD194)[0][0]           # obs_bound 의 첫 결합 시도 케이스 (이식 자리)
+
+
+def _v20_producer(case, extra_step=None):
+    """실행기 관측 생산자 (audit CLI 가 부르는 `import_observation` + `import_observation_problems`) 를 합성 ROOT 로 직접 — 한 케이스 · 완료 시도
+    (run 1 · 시도 1 · done) · 시도 단계 계획 = V20_STAGES (+ extra_step) · 끝맺은 영수증 다섯 (이름 꼴 · 신원 · 머리 · 모듈 줄 = 훅 형식 · 코드 뿌리 = 이 리포).
+    → (생산자 문제 목록, 그 시도의 결합 기록, 결합 스키마)."""
+    ident = dict(run_id=V20_RUN_ID, run_no='1', case=case, attempt='1')
+    stages = [dict(step=s, rc=0, ok=None if s == 'Network Merge' else True) for s in V20_STAGES]
+    if extra_step:
+        stages.append(dict(step=extra_step, rc=0, ok=True))
+    with tempfile.TemporaryDirectory() as td:
+        cdir = os.path.join(td, 'root', 'cases', case)
+        os.makedirs(cdir)
+        plan = dict(schema=getattr(NP194, 'IMPORT_OBS_STAGE_PLAN_SCHEMA', 'np194_stage_plan/v1'), mode='bimodal', stop_after='network', status='done',
+                    stages=stages)
+        with open(os.path.join(cdir, 'worker.json'), 'w', encoding='utf-8') as f:
+            json.dump(dict(attempts=[dict(run=1, attempt=1, outcome='done', stage_plan=plan)]), f)
+        log = os.path.join(td, 'obs', 'log')
+        os.makedirs(log)
+        for i, rel in enumerate(('scripts/lhs_webapp_batch.py', 'scripts/parse_liggghts.py', 'scripts/analyze_contacts_bimodal.py',
+                                 'scripts/coverage_physics_vs_hertzian.py', 'scripts/network_conductivity.py')):
+            pid, main = 4100 + i, os.path.realpath(os.path.join(ROOT, rel))
+            tok = f'{pid}-{i:08x}'
+            with open(os.path.join(log, tok + '.start.json'), 'w', encoding='utf-8') as f:
+                json.dump(dict(schema=NP194.IMPORT_OBS_START_SCHEMA, proc=tok, pid=pid, ppid=4099, identity=ident, main=main, argv=[main],
+                               orig_argv=['python3', main]), f, sort_keys=True)
+            with open(os.path.join(log, tok + '.txt'), 'w', encoding='utf-8') as f:
+                f.write(json.dumps(dict(schema=NP194.IMPORT_OBS_LOG_SCHEMA, proc=tok, pid=pid, identity=ident, complete=True, n=1, main=main),
+                                   sort_keys=True) + '\n' + main + '\n')
+        obs = NP194.import_observation(os.path.join(td, 'obs'), ROOT, worker_script=os.path.join(ROOT, 'scripts', 'lhs_webapp_batch.py'))
+        man = dict(observe_imports=True, import_obs_run_id=V20_RUN_ID, plan=dict(queue=[dict(case=case, cohort='lhs')]), repo_root=ROOT)
+        probs = NP194.import_observation_problems(os.path.join(td, 'root'), man, obs, ())
+        sb_ = obs.get('stage_binding') or {}
+        return probs, (sb_.get('attempts') or {}).get(f'{case}|1|1'), sb_.get('schema')
+
+
+def _v20_graft_rec(rec):
+    """결합 기록 하나 (생산자 출력) 를 첫 결합 시도 자리에 · 최상위 요약 [] (요약이 상세를 덮는 모양)."""
+    def f(a):
+        a = json.loads(json.dumps(a))
+        at_ = a['import_observation']['stage_binding']['attempts']
+        at_[next(iter(at_))] = json.loads(json.dumps(rec))
+        a['import_observation_problems'] = []
+        return a
+    return f
+
+
+def _v20_old_schema(a):
+    """옛 결합 기록 꼴 (v1 — 분류 밖 단계 칸 없음): 스키마 v1 · 시도 기록에서 unclassified 를 뺀다 (= 고치기 전 실행기의 정상 감사)."""
+    a = json.loads(json.dumps(a))
+    sb_ = a['import_observation']['stage_binding']
+    sb_['schema'] = 'np194_import_obs/stage_binding/v1'
+    for rec_ in sb_['attempts'].values():
+        rec_.pop('unclassified', None)
+    return a
+
+
+_v20p = {vid: safe(lambda s=step: _v20_producer(V20_CASE, s)) for vid, _nm, step in (('f0', 'control', None),) + V20_UNCLASSIFIED}
+V20_VARIANTS = V20_VARIANTS + tuple(
+    (vid, f'실제 관측 생산자 결합 기록 — {nm} (분류 밖 단계 {step!r} 만으로 실패한 시도) + 최상위 목록 [] (요약만 비움)',
+     dict(audit=_v20_graft_rec(None if is_err(_v20p[vid]) else _v20p[vid][1])), '분류 밖 단계', '')
+    for vid, nm, step in V20_UNCLASSIFIED) + (
+    ('g1', '옛 결합 기록 스키마 v1 (시도 기록에 분류 밖 단계 칸 없음 — 고치기 전 실행기의 정상 감사 꼴)', dict(audit=_v20_old_schema), '감사를 다시', ''),)
+
 r20 = {}
 with tempfile.TemporaryDirectory() as td:
     hd20 = safe(lambda: make_g2_handover_dir(os.path.join(td, 'handover')))
@@ -1591,6 +1673,12 @@ with tempfile.TemporaryDirectory() as td:
             r20['retry'] = safe(lambda: LRB.build_v13(out_dir=o_rt, handover_dir=hd20, batch_root=b_rt, date=DATE, codex_verdict=ver20))
             if isinstance(r20['retry'], dict):
                 r20['retry_check'] = safe(lambda: LRB.check_v13(o_rt, hd20))
+            #  (f0) 실제 관측 생산자의 정상 결합 기록 (분류 밖 단계 없음) 을 이식 → 만들기 · check_v13 문제 0 (새 스키마의 실제 기록 = 과잉차단 없음)
+            b_f0 = make_batch_root(os.path.join(td, 'b20_f0'), audit=_v20_graft_rec(None if is_err(_v20p['f0']) else _v20p['f0'][1]))
+            o_f0 = os.path.join(td, 'o20_f0')
+            r20['f0'] = safe(lambda: LRB.build_v13(out_dir=o_f0, handover_dir=hd20, batch_root=b_f0, date=DATE, codex_verdict=ver20))
+            if isinstance(r20['f0'], dict):
+                r20['f0_check'] = safe(lambda: LRB.check_v13(o_f0, hd20))
             #  (a) 변이마다 build_v13 거부 · 산출 폴더 없음
             r20['build'] = []
             for vid, nm, kw, tag, cx in V20_VARIANTS:
@@ -1637,6 +1725,17 @@ chk('V20c 재시도 이력 (한 케이스 완료 시도 2 · 결합 2 · 죽은 
     isinstance(r20.get('retry'), dict) and r20.get('retry_check') == [] and isinstance(_rio.get('n_started'), int)
     and _rio['n_started'] > (_rio.get('n_finalized') or 0),
     (_rio, r20.get('retry') if not isinstance(r20.get('retry'), dict) else r20.get('retry_check')))
+for vid, nm, step in (('f0', 'control', None),) + V20_UNCLASSIFIED:
+    pr_ = _v20p.get(vid)
+    #  실행기 audit 의 분류 밖 단계 사유 문구 (손 사본 — 고친 뒤에도 바이트 그대로여야)
+    want_ = [] if step is None else [f'{V20_CASE} (run 1 · 시도 1): 분류 밖 단계 {[step]!r} — 실행 단계 ↔ 영수증 표 (IMPORT_OBS_STAGE_MAIN · '
+                                     'IMPORT_OBS_STAGE_SKIP · IMPORT_OBS_INPROC_STEPS) 를 먼저 고칠 것 (G2RR4-02)']
+    chk(f'V20{vid} [producer] 실행기 관측 생산자 (import_observation + import_observation_problems) · 끝맺은 영수증 다섯 · 시도 계획 '
+        + ('분류 밖 단계 없음 → 문제 0' if step is None else f'+ {step!r} ({nm}) → 문제 = 그 사유 하나 (문자 그대로 — 이것만으로 실패)') + ' · 결합 기록 생성',
+        not is_err(pr_) and pr_[0] == want_ and isinstance(pr_[1], dict), pr_ if is_err(pr_) else (pr_[0], pr_[1], pr_[2]))
+chk('V20f0 [build] 정상 대조 — 실제 관측 생산자의 분류 밖 단계 없는 결합 기록을 이식 → 만들기 · check_v13 문제 0 (새 스키마의 실제 기록 = 과잉차단 없음)',
+    isinstance(r20.get('f0'), dict) and r20.get('f0_check') == [],
+    (r20.get('f0') if not isinstance(r20.get('f0'), dict) else r20.get('f0_check')))
 for vid, nm, tag, cx, m_, made in r20.get('build', []):
     chk(f'V20{vid} [build] {"[Codex] " if cx else ""}{nm} → build_v13 거부 (메시지에 {tag!r}) · 산출 폴더 없음',
         m_ is not None and not m_.startswith('OTHER') and tag in m_ and not made, (m_ or 'BUILT (거부 없음)')[:400])

@@ -1292,7 +1292,8 @@ def v13_audit_observation_problems(a, ident, expect_set=V13_REREAD_SET):
       · 객체가 있으면: dict · problems · outside = 목록 · 둘 다 빈 목록 · 그 내용이 최상위 요약에 다 실렸다 (요약이 상세를 덮지 않는다) · 프로세스 수 셋 = 정수
       · 관측 필수 배치: 배치 manifest observe_imports true · 객체 있음 · 프로세스 > 0 · 관측된 완료 시도 (케이스) ⊇ 등록 케이스 전부 ·
         실행 단계 ↔ 영수증 결합 기록 (스키마 · 시도 열쇠 = 관측된 완료 시도 · G2RR4-02) · ★ G2RR5-01 시도마다 값 = 실행기 계약
-        (`run_network_194_parallel.stage_binding_record_problems`) · 합계 Σ observed ≤ n_finalized ≤ n_started ≤ n_processes"""
+        (`run_network_194_parallel.stage_binding_record_problems`) · 합계 Σ observed ≤ n_finalized ≤ n_started ≤ n_processes ·
+        ★ 10-08 잔여 — 결합 기록 v2 (시도마다 분류 밖 단계 칸) · 옛 스키마 (IMPORT_OBS_STAGE_SCHEMA_RETIRED) = "고친 실행기로 감사를 다시" 거부"""
     p = []
     req = expect_set in V13_IMPORT_OBS_REQUIRED
     oi = (ident or {}).get('observe_imports')
@@ -1341,7 +1342,14 @@ def v13_audit_observation_problems(a, ident, expect_set=V13_REREAD_SET):
             #    정본) · 결합된 시도 = 관측된 완료 시도 (요약 ↔ 상세) — 결합 전 실행기의 감사 (보조 단계 영수증 쌍 결손을 못 보던 판) 를 받지 않는다
             sb = io_.get('stage_binding')
             sch = _np194().IMPORT_OBS_STAGE_SCHEMA
-            if not (isinstance(sb, dict) and sb.get('schema') == sch and isinstance(sb.get('attempts'), dict)):
+            retired = _np194().IMPORT_OBS_STAGE_SCHEMA_RETIRED
+            old = sb.get('schema') if isinstance(sb, dict) and isinstance(sb.get('schema'), str) else None
+            if old in retired:
+                #  ★ 10-08 G2RR5-01 잔여 (1저자 Q6 (가)) — 옛 결합 기록 (v1 — 시도 기록에 분류 밖 단계 칸 없음) 은 이유와 고칠 길을 말하고 거부한다
+                p.append(f'import_observation.stage_binding 스키마 {old!r} = 옛 결합 기록 ({retired[old]}) — 고친 실행기로 감사를 다시 돌릴 것 '
+                         f'(re-run audit with the fixed runner · 읽기 전용 — `run_network_194_parallel.py audit --root <ROOT> --json <ROOT>/seal_audit.json` · '
+                         f'지금 스키마 {sch} · G2RR5-01)')
+            elif not (isinstance(sb, dict) and sb.get('schema') == sch and isinstance(sb.get('attempts'), dict)):
                 p.append(f'import_observation.stage_binding {str(sb)[:80]} — 실행 단계 ↔ 영수증 결합 ({sch}) 을 한 감사가 아니다 (G2RR4-02 · 결합 전 실행기의 감사는 '
                          '보조 단계 영수증 쌍 결손을 못 본다)')
             else:
