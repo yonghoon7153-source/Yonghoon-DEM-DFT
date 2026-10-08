@@ -1,0 +1,501 @@
+{
+ "result_json_pairs": [
+  {
+   "probe": "mv_anchor_porosity",
+   "file": "mv_anchor_porosity_result.json",
+   "bytes_codex": 1607,
+   "bytes_ours": 1567,
+   "bytes_equal": false,
+   "bytes_equal_after_crlf_normalise": true,
+   "parsed_equal": true,
+   "n_numeric": 22,
+   "n_numeric_diff": 0,
+   "max_abs": 0.0,
+   "max_abs_path": null,
+   "max_rel": 0.0,
+   "max_rel_path": null,
+   "numeric_diffs": [],
+   "other": []
+  },
+  {
+   "probe": "mv_pressure_arithmetic",
+   "file": "mv_pressure_arithmetic_result.json",
+   "bytes_codex": 2380,
+   "bytes_ours": 2298,
+   "bytes_equal": false,
+   "bytes_equal_after_crlf_normalise": true,
+   "parsed_equal": true,
+   "n_numeric": 51,
+   "n_numeric_diff": 0,
+   "max_abs": 0.0,
+   "max_abs_path": null,
+   "max_rel": 0.0,
+   "max_rel_path": null,
+   "numeric_diffs": [],
+   "other": []
+  },
+  {
+   "probe": "mv_softening_scaling",
+   "file": "mv_softening_scaling_result.json",
+   "bytes_codex": 4956,
+   "bytes_ours": 4956,
+   "bytes_equal": true,
+   "bytes_equal_after_crlf_normalise": true,
+   "parsed_equal": true,
+   "n_numeric": 94,
+   "n_numeric_diff": 0,
+   "max_abs": 0.0,
+   "max_abs_path": null,
+   "max_rel": 0.0,
+   "max_rel_path": null,
+   "numeric_diffs": [],
+   "other": []
+  },
+  {
+   "probe": "mv_softening_frozen_reweight",
+   "file": "mv_softening_frozen_reweight_result.json",
+   "bytes_codex": 1845,
+   "bytes_ours": 1793,
+   "bytes_equal": false,
+   "bytes_equal_after_crlf_normalise": false,
+   "parsed_equal": false,
+   "n_numeric": 25,
+   "n_numeric_diff": 9,
+   "max_abs": 2.2737367544323206e-13,
+   "max_abs_path": "/rows[3]/conditional_mean_cut_load_MPa",
+   "max_rel": 3.6303911733744223e-16,
+   "max_rel_path": "/rows[0]/conditional_share_pct/AM–SE",
+   "numeric_diffs": [
+    {
+     "path": "/rows[0]/conditional_share_pct/AM–SE",
+     "codex": 39.144141874918446,
+     "ours": 39.14414187491843,
+     "abs": 1.4210854715202004e-14,
+     "rel": 3.6303911733744223e-16
+    },
+    {
+     "path": "/rows[1]/conditional_share_pct/AM–SE",
+     "codex": 49.12202907566136,
+     "ours": 49.122029075661345,
+     "abs": 1.4210854715202004e-14,
+     "rel": 2.892969810614582e-16
+    },
+    {
+     "path": "/rows[2]/conditional_mean_cut_load_MPa",
+     "codex": 337.55612018315827,
+     "ours": 337.5561201831582,
+     "abs": 5.684341886080802e-14,
+     "rel": 1.6839694338815342e-16
+    },
+    {
+     "path": "/rows[2]/conditional_share_pct/AM–AM",
+     "codex": 23.996397440534803,
+     "ours": 23.99639744053481,
+     "abs": 7.105427357601002e-15,
+     "rel": 2.9610392039925483e-16
+    },
+    {
+     "path": "/rows[2]/conditional_share_pct/SE–SE",
+     "codex": 18.6001272264403,
+     "ours": 18.600127226440303,
+     "abs": 3.552713678800501e-15,
+     "rel": 1.9100480526554012e-16
+    },
+    {
+     "path": "/rows[3]/conditional_mean_cut_load_MPa",
+     "codex": 866.9275839750784,
+     "ours": 866.9275839750782,
+     "abs": 2.2737367544323206e-13,
+     "rel": 2.622752807110685e-16
+    },
+    {
+     "path": "/rows[3]/conditional_share_pct/AM–AM",
+     "codex": 9.34349185344742,
+     "ours": 9.343491853447421,
+     "abs": 1.7763568394002505e-15,
+     "rel": 1.9011702126596676e-16
+    },
+    {
+     "path": "/rows[3]/conditional_share_pct/SE–SE",
+     "codex": 23.885430064173796,
+     "ours": 23.885430064173804,
+     "abs": 7.105427357601002e-15,
+     "rel": 2.974795655138135e-16
+    },
+    {
+     "path": "/rows[3]/total_force_ratio",
+     "codex": 5.186914483968276,
+     "ours": 5.186914483968275,
+     "abs": 8.881784197001252e-16,
+     "rel": 1.7123444437831172e-16
+    }
+   ],
+   "other": []
+  },
+  {
+   "probe": "mv_stress_probe",
+   "file": "mv_stress_arithmetic.json",
+   "bytes_codex": 15421,
+   "bytes_ours": 14983,
+   "bytes_equal": false,
+   "bytes_equal_after_crlf_normalise": false,
+   "parsed_equal": false,
+   "n_numeric": 241,
+   "n_numeric_diff": 24,
+   "max_abs": 1.4210854715202004e-14,
+   "max_abs_path": "/cases/ps45:0:10/contribution_integral_difference_pp/AM–AM",
+   "max_rel": 0.3333333333333333,
+   "max_rel_path": "/cases/ps45:10:0/contribution_max_abs_error_pp",
+   "numeric_diffs": [
+    {
+     "path": "/cases/ps45:0:10/contribution_integral_difference_pp/AM–AM",
+     "codex": -0.24780157171399253,
+     "ours": -0.24780157171400674,
+     "abs": 1.4210854715202004e-14,
+     "rel": 5.734771824451164e-14
+    },
+    {
+     "path": "/cases/ps45:0:10/contribution_integral_difference_pp/AM–SE",
+     "codex": 0.19407551783060484,
+     "ours": 0.19407551783060129,
+     "abs": 3.552713678800501e-15,
+     "rel": 1.830583124813002e-14
+    },
+    {
+     "path": "/cases/ps45:0:10/contribution_integral_difference_pp/SE–SE",
+     "codex": 0.053726053883391245,
+     "ours": 0.05372605388338947,
+     "abs": 1.7763568394002505e-15,
+     "rel": 3.306322930873934e-14
+    },
+    {
+     "path": "/cases/ps45:0:10/contribution_recalc_pct/AM–AM",
+     "codex": 59.562242754451724,
+     "ours": 59.56224275445171,
+     "abs": 1.4210854715202004e-14,
+     "rel": 2.3858830792834566e-16
+    },
+    {
+     "path": "/cases/ps45:0:10/contribution_recalc_pct/AM–SE",
+     "codex": 31.00834386750092,
+     "ours": 31.008343867500916,
+     "abs": 3.552713678800501e-15,
+     "rel": 1.1457282897730028e-16
+    },
+    {
+     "path": "/cases/ps45:0:10/contribution_recalc_pct/SE–SE",
+     "codex": 9.42941337804738,
+     "ours": 9.429413378047379,
+     "abs": 1.7763568394002505e-15,
+     "rel": 1.8838466065511426e-16
+    },
+    {
+     "path": "/cases/ps45:10:0/contribution_integral_difference_pp/AM–AM",
+     "codex": 0.4930039560508064,
+     "ours": 0.4930039560507993,
+     "abs": 7.105427357601002e-15,
+     "rel": 1.441251590457573e-14
+    },
+    {
+     "path": "/cases/ps45:10:0/contribution_integral_difference_pp/AM–SE",
+     "codex": -0.6990739143802571,
+     "ours": -0.6990739143802642,
+     "abs": 7.105427357601002e-15,
+     "rel": 1.0164057349929917e-14
+    },
+    {
+     "path": "/cases/ps45:10:0/contribution_max_abs_error_pp",
+     "codex": 1.4210854715202004e-14,
+     "ours": 2.1316282072803006e-14,
+     "abs": 7.105427357601002e-15,
+     "rel": 0.3333333333333333
+    },
+    {
+     "path": "/cases/ps45:10:0/contribution_recalc_pct/AM–AM",
+     "codex": 56.91439845895567,
+     "ours": 56.91439845895566,
+     "abs": 7.105427357601002e-15,
+     "rel": 1.2484410887211862e-16
+    },
+    {
+     "path": "/cases/ps45:10:0/contribution_recalc_pct/AM–SE",
+     "codex": 32.954096869909186,
+     "ours": 32.95409686990918,
+     "abs": 7.105427357601002e-15,
+     "rel": 2.156159031045715e-16
+    },
+    {
+     "path": "/cases/ps45:3:7/contribution_integral_difference_pp/AM–SE",
+     "codex": -0.2960772731143919,
+     "ours": -0.2960772731143848,
+     "abs": 7.105427357601002e-15,
+     "rel": 2.399855714307312e-14
+    },
+    {
+     "path": "/cases/ps45:3:7/contribution_recalc_pct/AM–SE",
+     "codex": 34.66002084881654,
+     "ours": 34.66002084881655,
+     "abs": 7.105427357601002e-15,
+     "rel": 2.050035511690586e-16
+    },
+    {
+     "path": "/cases/ps45:5:5/contribution_integral_difference_pp/AM–AM",
+     "codex": 0.3617244381046234,
+     "ours": 0.3617244381046092,
+     "abs": 1.4210854715202004e-14,
+     "rel": 3.928641036714176e-14
+    },
+    {
+     "path": "/cases/ps45:5:5/contribution_recalc_pct/AM–AM",
+     "codex": 52.37165902073751,
+     "ours": 52.371659020737496,
+     "abs": 1.4210854715202004e-14,
+     "rel": 2.713462773744662e-16
+    },
+    {
+     "path": "/cases/ps45:5:5/phase_share_sum_pct",
+     "codex": 100.00000000000003,
+     "ours": 100.00000000000001,
+     "abs": 1.4210854715202004e-14,
+     "rel": 1.4210854715202e-16
+    },
+    {
+     "path": "/cases/ps45:7:3/contribution_integral_difference_pp/AM–SE",
+     "codex": -0.44736440421003465,
+     "ours": -0.44736440421004176,
+     "abs": 7.105427357601002e-15,
+     "rel": 1.5882862585251504e-14
+    },
+    {
+     "path": "/cases/ps45:7:3/contribution_recalc_pct/AM–SE",
+     "codex": 39.144141874918446,
+     "ours": 39.14414187491844,
+     "abs": 7.105427357601002e-15,
+     "rel": 1.8151955866872112e-16
+    },
+    {
+     "path": "/cases/real14:real14/contribution_integral_difference_pp/AM–SE",
+     "codex": -0.015053154705867655,
+     "ours": -0.015053154705864102,
+     "abs": 3.552713678800501e-15,
+     "rel": 2.3601123805734013e-13
+    },
+    {
+     "path": "/cases/real14:real14/contribution_recalc_pct/AM–SE",
+     "codex": 21.941689763592212,
+     "ours": 21.941689763592215,
+     "abs": 3.552713678800501e-15,
+     "rel": 1.619161385052262e-16
+    },
+    {
+     "path": "/cases/real14:real14/phase_share_sum_pct",
+     "codex": 99.99999999999999,
+     "ours": 99.99999999999997,
+     "abs": 1.4210854715202004e-14,
+     "rel": 1.4210854715202006e-16
+    },
+    {
+     "path": "/cases/snapshot:snap_3100000/contribution_integral_difference_pp/SE–SE",
+     "codex": 0.17200896133687849,
+     "ours": 0.17200896133687493,
+     "abs": 3.552713678800501e-15,
+     "rel": 2.0654235983917916e-14
+    },
+    {
+     "path": "/cases/snapshot:snap_3100000/contribution_recalc_pct/SE–SE",
+     "codex": 11.610577602860074,
+     "ours": 11.61057760286007,
+     "abs": 3.552713678800501e-15,
+     "rel": 3.0598940038309105e-16
+    },
+    {
+     "path": "/cases/snapshot:snap_3100000/phase_share_sum_pct",
+     "codex": 100.00000000000003,
+     "ours": 100.00000000000001,
+     "abs": 1.4210854715202004e-14,
+     "rel": 1.4210854715202e-16
+    }
+   ],
+   "other": []
+  },
+  {
+   "probe": "mv_stress_core_probe",
+   "file": "mv_stress_core_controls.json",
+   "bytes_codex": 7495,
+   "bytes_ours": 7416,
+   "bytes_equal": false,
+   "bytes_equal_after_crlf_normalise": true,
+   "parsed_equal": true,
+   "n_numeric": 25,
+   "n_numeric_diff": 0,
+   "max_abs": 0.0,
+   "max_abs_path": null,
+   "max_rel": 0.0,
+   "max_rel_path": null,
+   "numeric_diffs": [],
+   "other": []
+  },
+  {
+   "probe": "mv_stress_portability",
+   "file": "mv_stress_portability.json",
+   "bytes_codex": 1436,
+   "bytes_ours": 1381,
+   "bytes_equal": false,
+   "bytes_equal_after_crlf_normalise": false,
+   "parsed_equal": false,
+   "n_numeric": 2,
+   "n_numeric_diff": 0,
+   "max_abs": 0.0,
+   "max_abs_path": null,
+   "max_rel": 0.0,
+   "max_rel_path": null,
+   "numeric_diffs": [],
+   "other": [
+    {
+     "path": "/external_review_cache_used_as_environment",
+     "codex": true,
+     "ours": false
+    },
+    {
+     "path": "/runtime/networkx",
+     "codex": "3.7",
+     "ours": "3.6.1"
+    },
+    {
+     "path": "/runtime/numpy",
+     "codex": "2.3.5",
+     "ours": "2.4.6"
+    },
+    {
+     "path": "/runtime/pandas",
+     "codex": "3.0.1",
+     "ours": "3.0.6"
+    },
+    {
+     "path": "/runtime/python",
+     "codex": "3.12.14 (main, Aug 25 2026, 14:01:42) [MSC v.1944 64 bit (AMD64)]",
+     "ours": "3.11.15 (main, Mar  3 2026, 09:26:23) [GCC 13.3.0]"
+    }
+   ]
+  }
+ ],
+ "stdout_pairs": [
+  {
+   "probe": "mv_anchor_porosity",
+   "bytes_codex": 1607,
+   "bytes_ours": 1567,
+   "bytes_equal": false,
+   "text_equal_after_crlf_normalise": true,
+   "n_lines_codex": 40,
+   "n_lines_ours": 40,
+   "differing_lines": []
+  },
+  {
+   "probe": "mv_pressure_arithmetic",
+   "bytes_codex": 2380,
+   "bytes_ours": 2298,
+   "bytes_equal": false,
+   "text_equal_after_crlf_normalise": true,
+   "n_lines_codex": 82,
+   "n_lines_ours": 82,
+   "differing_lines": []
+  },
+  {
+   "probe": "mv_softening_scaling",
+   "bytes_codex": 5085,
+   "bytes_ours": 4956,
+   "bytes_equal": false,
+   "text_equal_after_crlf_normalise": true,
+   "n_lines_codex": 129,
+   "n_lines_ours": 129,
+   "differing_lines": []
+  },
+  {
+   "probe": "mv_softening_frozen_reweight",
+   "bytes_codex": 1845,
+   "bytes_ours": 1793,
+   "bytes_equal": false,
+   "text_equal_after_crlf_normalise": false,
+   "n_lines_codex": 53,
+   "n_lines_ours": 53,
+   "differing_lines": [
+    {
+     "line": 11,
+     "codex": "        \"AM–SE\": 39.144141874918446,",
+     "ours": "        \"AM–SE\": 39.14414187491843,"
+    },
+    {
+     "line": 21,
+     "codex": "        \"AM–SE\": 49.12202907566136,",
+     "ours": "        \"AM–SE\": 49.122029075661345,"
+    },
+    {
+     "line": 30,
+     "codex": "        \"AM–AM\": 23.996397440534803,",
+     "ours": "        \"AM–AM\": 23.99639744053481,"
+    },
+    {
+     "line": 32,
+     "codex": "        \"SE–SE\": 18.6001272264403",
+     "ours": "        \"SE–SE\": 18.600127226440303"
+    },
+    {
+     "line": 34,
+     "codex": "      \"conditional_mean_cut_load_MPa\": 337.55612018315827,",
+     "ours": "      \"conditional_mean_cut_load_MPa\": 337.5561201831582,"
+    },
+    {
+     "line": 40,
+     "codex": "        \"AM–AM\": 9.34349185344742,",
+     "ours": "        \"AM–AM\": 9.343491853447421,"
+    },
+    {
+     "line": 42,
+     "codex": "        \"SE–SE\": 23.885430064173796",
+     "ours": "        \"SE–SE\": 23.885430064173804"
+    },
+    {
+     "line": 44,
+     "codex": "      \"conditional_mean_cut_load_MPa\": 866.9275839750784,",
+     "ours": "      \"conditional_mean_cut_load_MPa\": 866.9275839750782,"
+    },
+    {
+     "line": 45,
+     "codex": "      \"total_force_ratio\": 5.186914483968276",
+     "ours": "      \"total_force_ratio\": 5.186914483968275"
+    }
+   ]
+  },
+  {
+   "probe": "mv_stress_probe",
+   "bytes_codex": 2184,
+   "bytes_ours": 2077,
+   "bytes_equal": false,
+   "text_equal_after_crlf_normalise": false,
+   "n_lines_codex": 90,
+   "n_lines_ours": 90,
+   "differing_lines": [
+    {
+     "line": 89,
+     "codex": "  \"output\": \"C:\\\\Users\\\\Administrator\\\\Documents\\\\Codex\\\\2026-08-24\\\\claude-stoic-knuth-nobvq-x20\\\\model_validation_review_20261008\\\\evidence\\\\mv_stress_arithmetic.json\"",
+     "ours": "  \"output\": \"/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/mv_rerun/root/evidence/mv_stress_arithmetic.json\""
+    }
+   ]
+  },
+  {
+   "probe": "mv_stress_core_probe",
+   "bytes_codex": 2507,
+   "bytes_ours": 2431,
+   "bytes_equal": false,
+   "text_equal_after_crlf_normalise": true,
+   "n_lines_codex": 76,
+   "n_lines_ours": 76,
+   "differing_lines": []
+  },
+  {
+   "probe": "mv_stress_portability",
+   "codex_stdout": "(번들에 없음)",
+   "ours_bytes": 1381
+  }
+ ]
+}

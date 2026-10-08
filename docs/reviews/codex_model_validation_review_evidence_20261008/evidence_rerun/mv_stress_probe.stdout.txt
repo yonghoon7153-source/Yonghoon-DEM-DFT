@@ -1,0 +1,90 @@
+{
+  "snap_to_relaxed": {
+    "contribution_change_pp": {
+      "AM–AM": -3.2856423729379074,
+      "AM–SE": 2.504255076202419,
+      "SE–SE": 0.7813872967354811
+    },
+    "alpha_change": {
+      "AM_P": -0.03142247718500868,
+      "AM_S": 0.014380406098881693,
+      "AM": -0.017667346077531842,
+      "SE": 0.034467257234485016
+    },
+    "alpha_change_relative_pct": {
+      "AM_P": -2.2980344844916067,
+      "AM_S": 1.3414015592069672,
+      "AM": -1.3813779138675764,
+      "SE": 7.320533186629907
+    },
+    "mean_plane_change_pct": -7.00547694301793
+  },
+  "negative_controls": {
+    "mean_vm_not_vm_mean": {
+      "mean_vm": 3.0,
+      "vm_mean_tensor": 0.0
+    },
+    "hydrostatic_stress": {
+      "tensor": [
+        [
+          100.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          100.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          100.0
+        ]
+      ],
+      "vm": 0.0,
+      "zz": 100.0
+    },
+    "wall_mean_normalization": {
+      "interior_vm": [
+        10.0,
+        10.0
+      ],
+      "incomplete_wall_vm": 0.0,
+      "mean_interior": 10.0,
+      "mean_all": 6.666666666666667,
+      "interior_ratio_by_all": 1.5
+    },
+    "tensor_rotation": {
+      "tensor_covariance_max_error": 1.7763568394002505e-15,
+      "vm_invariance_abs_error": 8.881784197001252e-16
+    },
+    "same_global_virial_different_phase_shares": {
+      "global_virial": 1.0,
+      "equal_partition_phase_shares": [
+        0.5,
+        0.5
+      ],
+      "branch_ratio_4_to_1_shares": [
+        0.8,
+        0.2
+      ],
+      "same_equal_phase_volumes_alpha_equal": [
+        1.0,
+        1.0
+      ],
+      "same_equal_phase_volumes_alpha_branch": [
+        1.6,
+        0.4
+      ]
+    }
+  },
+  "case_count": 7,
+  "provenance_record_matches": {
+    "atoms.csv": true,
+    "contacts.csv": true,
+    "mesh_info.json": true,
+    "input_params.json": true
+  },
+  "output": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/mv_rerun/root/evidence/mv_stress_arithmetic.json"
+}

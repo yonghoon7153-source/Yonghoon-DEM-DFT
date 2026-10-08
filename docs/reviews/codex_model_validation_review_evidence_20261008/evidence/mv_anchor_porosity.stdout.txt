@@ -1,0 +1,40 @@
+{
+  "source_sha256": "168bd59b5fd7c7fc419fcd51816d9ba2eefba039d32d75a3a1136ebf3e99fd62",
+  "SE_rows": [
+    {
+      "seed": "SE_only_20vol",
+      "sphere_pct": -2.34,
+      "pair_union_pct": 10.08,
+      "apparent_void_difference_pp": 12.42,
+      "implied_overlap_pct": 12.136017197576713,
+      "reported_overlap_pct": 12.13,
+      "solid_volume_sphere_per_box": 1.0234,
+      "solid_volume_pair_union_per_box": 0.8992,
+      "effective_density_ratio_for_same_mass": 1.1381227758007118
+    },
+    {
+      "seed": "SE_only_25wt",
+      "sphere_pct": 0.23,
+      "pair_union_pct": 11.64,
+      "apparent_void_difference_pp": 11.41,
+      "implied_overlap_pct": 11.436303498045513,
+      "reported_overlap_pct": 11.44,
+      "solid_volume_sphere_per_box": 0.9977,
+      "solid_volume_pair_union_per_box": 0.8835999999999999,
+      "effective_density_ratio_for_same_mass": 1.1291308284291535
+    }
+  ],
+  "three_ball_definition_counterexample": {
+    "function_lines": [
+      48,
+      110
+    ],
+    "pair_union_porosity_pct": 90.69384988682711,
+    "exact_union_porosity_pct": 88.64854216964626,
+    "overstatement_pp": 2.0453077171808474,
+    "omitted_triple_intersection_volume": 1.3089969389957472,
+    "limitation": "Definition counterexample only; not an estimate of error in the two SE beds. Raw SE dumps are unavailable."
+  },
+  "composite_mass_porosity_formula": "epsilon = 1 - (m_total/A/h) * sum(w_i/rho_i); h=z_top-z_bottom",
+  "units_note": "Porosity differences are percentage points, overlap percentages use sphere-sum solid volume as denominator."
+}

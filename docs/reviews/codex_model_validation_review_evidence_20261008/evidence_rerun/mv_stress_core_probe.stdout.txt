@@ -1,0 +1,76 @@
+{
+  "scope": "Synthetic inputs to actual pinned post-processing code; not a raw data reconstruction.",
+  "global_sum_false_assurance_control": {
+    "baseline_status": "OK",
+    "swapped_status": "OK",
+    "swapped_virial_relative_error": 0.0,
+    "baseline_phase_vm": {
+      "AM": {
+        "mean": 21.485917317405868,
+        "ratio": 0.5
+      },
+      "SE": {
+        "mean": 64.45775195221759,
+        "ratio": 1.4999999999999998
+      }
+    },
+    "swapped_phase_vm": {
+      "AM": {
+        "mean": 64.45775195221759,
+        "ratio": 1.5
+      },
+      "SE": {
+        "mean": 21.485917317405868,
+        "ratio": 0.5000000000000001
+      }
+    },
+    "meaning": "Global diagonal virial gate accepts a phase-changing permutation of contact forces."
+  },
+  "contact_point_false_assurance_control": {
+    "baseline_status": "OK",
+    "changed_cp_status": "OK",
+    "changed_cp_checks": {
+      "force_decomp_rel": 0.0,
+      "force_decomp_abs": 0.0,
+      "force_decomp_zero_scale": false,
+      "branch_over_r_max": 0.9999999999999998,
+      "virial_total_rel": 0.0,
+      "virial_total_abs": 0.0,
+      "virial_zero_scale": false,
+      "virial_status": "checked",
+      "virial_scope": "global_diagonal_sum — 전역 부호 · 척도 검사 (Σ_i V_i σ_LW,aa ↔ Σ_i c_strs,aa · 대각 셋) · 프레임 · 입자 · 상 배분의 대응 증명 아님 (같은 기하 두 dimer 의 접촉 힘을 맞바꿔도 통과)"
+    },
+    "baseline_phase_vm": {
+      "AM": {
+        "mean": 19.098593171027442,
+        "ratio": 1.0000000000000004
+      },
+      "SE": {
+        "mean": 19.098593171027428,
+        "ratio": 0.9999999999999997
+      }
+    },
+    "changed_cp_phase_vm": {
+      "AM": {
+        "mean": 14.323944878270579,
+        "ratio": 0.7500000000000001
+      },
+      "SE": {
+        "mean": 23.873241463784293,
+        "ratio": 1.25
+      }
+    },
+    "meaning": "Moving contact point inside both overlapping spheres passes current checks while changing phase allocation."
+  },
+  "actual_tensor_rotation_translation": {
+    "status": "OK",
+    "tensor_relative_max_error": 6.340860639987258e-16,
+    "vm_relative_max_error": 4.409354743161529e-16
+  },
+  "actual_contact_stress_ignores_velocity": {
+    "status": "OK",
+    "tensor_difference": 0.0,
+    "meaning": "Expected for contact-only stress; not certification of total kinetic stress or viscous-damped dynamics."
+  }
+}
+plane_load_share selftest 54/54

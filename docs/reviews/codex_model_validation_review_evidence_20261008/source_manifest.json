@@ -1,0 +1,499 @@
+[
+  {
+    "path": "AGENTS.md",
+    "ref": "61ebd181b1ae5b47a76fe69d4400e4a3950dc8a3",
+    "sha": "2829b46196a08ffae439ddbdc20dc093cde511c4",
+    "sha256": "38b8708ba8a50c8a08819c7c4138763bce02b6dc6c5b8112f4c8aa386fb17ec3",
+    "bytes": 2822
+  },
+  {
+    "path": "docs/data/esse_calibration_2mAh_real_9.csv",
+    "ref": "61ebd181b1ae5b47a76fe69d4400e4a3950dc8a3",
+    "sha": "4692463692129dd0d1caf4a56363966d8fdbfb9c",
+    "sha256": "168bd59b5fd7c7fc419fcd51816d9ba2eefba039d32d75a3a1136ebf3e99fd62",
+    "bytes": 899
+  },
+  {
+    "path": "docs/data/ps45_plane_load_20261007/README.md",
+    "ref": "61ebd181b1ae5b47a76fe69d4400e4a3950dc8a3",
+    "sha": "0750cac9e6acbf6dc866968bddef28cc9255a662",
+    "sha256": "e8f427215e15d065d5c3622f014d75bcb32fc5c2c4bd56631b80fbcec1de575f",
+    "bytes": 23081
+  },
+  {
+    "path": "docs/data/ps45_plane_load_20261007/ibb_damping_drag_20261007.txt",
+    "ref": "61ebd181b1ae5b47a76fe69d4400e4a3950dc8a3",
+    "sha": "d87a01e8081b8dad8e8b6faef728a77dd3e76861",
+    "sha256": "5bf0b7f7c3f770a24101b1c5ac020f575e71a8db61fcf35aef781ae875c08a42",
+    "bytes": 1061
+  },
+  {
+    "path": "docs/data/ps45_plane_load_20261007/ps45/plane_load.json",
+    "ref": "61ebd181b1ae5b47a76fe69d4400e4a3950dc8a3",
+    "sha": "434b6cb77fd5029e877b2f2fb08b5848e6f047f9",
+    "sha256": "0f65a06b3ab6060f19992cc8a09bbf4236e26d72cdbcc496e325b2770040707f",
+    "bytes": 83872
+  },
+  {
+    "path": "docs/data/ps45_plane_load_20261007/ps45/plane_load_cuts_0_10.csv",
+    "ref": "61ebd181b1ae5b47a76fe69d4400e4a3950dc8a3",
+    "sha": "da140859183394b6c438f7297c0d372d737d96e3",
+    "sha256": "9a5b83676de1a1aae612684087bf2727374a191de11f1bfcf5a9ea0ac907761b",
+    "bytes": 2654
+  },
+  {
+    "path": "docs/data/ps45_plane_load_20261007/ps45/plane_load_cuts_10_0.csv",
+    "ref": "61ebd181b1ae5b47a76fe69d4400e4a3950dc8a3",
+    "sha": "f2370ed30a5fd3f4af23ddb47bc9976e685bac17",
+    "sha256": "c58747106523214bc9feb225a6186d8e0e7059ccf9ac2c15efbac12746937997",
+    "bytes": 2671
+  },
+  {
+    "path": "docs/data/ps45_plane_load_20261007/ps45/plane_load_cuts_3_7.csv",
+    "ref": "61ebd181b1ae5b47a76fe69d4400e4a3950dc8a3",
+    "sha": "23e5c94c18bc35f40a1a4ede9c1dc011c2d0fbc3",
+    "sha256": "3079252e8ff07dd9662e40a736477bc90d79c090ded9cd6cb0355247fb13afe6",
+    "bytes": 2702
+  },
+  {
+    "path": "docs/data/ps45_plane_load_20261007/ps45/plane_load_cuts_5_5.csv",
+    "ref": "61ebd181b1ae5b47a76fe69d4400e4a3950dc8a3",
+    "sha": "672b474a6a1ddb41ad0925b36ad20d61bd5f99e6",
+    "sha256": "95677fd5efba4efe1fa7cda616aab677f9e9e8248958869fcd4ee75792efc524",
+    "bytes": 2733
+  },
+  {
+    "path": "docs/data/ps45_plane_load_20261007/ps45/plane_load_cuts_7_3.csv",
+    "ref": "61ebd181b1ae5b47a76fe69d4400e4a3950dc8a3",
+    "sha": "f98d66ee8048528d097a0e4e23ef968ea043994d",
+    "sha256": "4fd22cf590395ba29513b937c986ca3a000b818634edfa2b5e804fc0c4014993",
+    "bytes": 2722
+  },
+  {
+    "path": "docs/data/ps45_plane_load_20261007/ps45/plane_load_rewrite.json",
+    "ref": "61ebd181b1ae5b47a76fe69d4400e4a3950dc8a3",
+    "sha": "3f3c5dd4d37978bb08ad62f733493e467828eda0",
+    "sha256": "441d08dabf26cfc7225d36b752cb9bc2000e617852676f0280b8fb9e9d888699",
+    "bytes": 1266
+  },
+  {
+    "path": "docs/data/ps45_plane_load_20261007/ps45/plane_load_share_slide.csv",
+    "ref": "61ebd181b1ae5b47a76fe69d4400e4a3950dc8a3",
+    "sha": "0f00e71b425a44d6e0b8d246f69f56e928f78d5e",
+    "sha256": "593b7a3941304a2ecc4b7fbe9cce4cd2de15613a7c4de9b702345d5225b6057c",
+    "bytes": 587
+  },
+  {
+    "path": "docs/data/ps45_plane_load_20261007/ps45/plane_load_summary.csv",
+    "ref": "61ebd181b1ae5b47a76fe69d4400e4a3950dc8a3",
+    "sha": "5c2eea19536a53e326237cc950b2dafb054780eb",
+    "sha256": "3e24e97402f05392e4d9d109117e4975391d9cb19d9349ba615048463df0b396",
+    "bytes": 3629
+  },
+  {
+    "path": "docs/data/ps45_plane_load_20261007/ps45_v2/plane_load.json",
+    "ref": "61ebd181b1ae5b47a76fe69d4400e4a3950dc8a3",
+    "sha": "47631a757cc8126c58c4ba36bde73f022814a4f1",
+    "sha256": "daf8d76070023c656972597da27ad55ccd36456601091c4b20c0be682f1166df",
+    "bytes": 102267
+  },
+  {
+    "path": "docs/data/ps45_plane_load_20261007/ps45_v2/plane_load_cuts_0_10.csv",
+    "ref": "61ebd181b1ae5b47a76fe69d4400e4a3950dc8a3",
+    "sha": "da140859183394b6c438f7297c0d372d737d96e3",
+    "sha256": "9a5b83676de1a1aae612684087bf2727374a191de11f1bfcf5a9ea0ac907761b",
+    "bytes": 2654
+  },
+  {
+    "path": "docs/data/ps45_plane_load_20261007/ps45_v2/plane_load_cuts_10_0.csv",
+    "ref": "61ebd181b1ae5b47a76fe69d4400e4a3950dc8a3",
+    "sha": "f2370ed30a5fd3f4af23ddb47bc9976e685bac17",
+    "sha256": "c58747106523214bc9feb225a6186d8e0e7059ccf9ac2c15efbac12746937997",
+    "bytes": 2671
+  },
+  {
+    "path": "docs/data/ps45_plane_load_20261007/ps45_v2/plane_load_cuts_3_7.csv",
+    "ref": "61ebd181b1ae5b47a76fe69d4400e4a3950dc8a3",
+    "sha": "23e5c94c18bc35f40a1a4ede9c1dc011c2d0fbc3",
+    "sha256": "3079252e8ff07dd9662e40a736477bc90d79c090ded9cd6cb0355247fb13afe6",
+    "bytes": 2702
+  },
+  {
+    "path": "docs/data/ps45_plane_load_20261007/ps45_v2/plane_load_cuts_5_5.csv",
+    "ref": "61ebd181b1ae5b47a76fe69d4400e4a3950dc8a3",
+    "sha": "672b474a6a1ddb41ad0925b36ad20d61bd5f99e6",
+    "sha256": "95677fd5efba4efe1fa7cda616aab677f9e9e8248958869fcd4ee75792efc524",
+    "bytes": 2733
+  },
+  {
+    "path": "docs/data/ps45_plane_load_20261007/ps45_v2/plane_load_cuts_7_3.csv",
+    "ref": "61ebd181b1ae5b47a76fe69d4400e4a3950dc8a3",
+    "sha": "f98d66ee8048528d097a0e4e23ef968ea043994d",
+    "sha256": "4fd22cf590395ba29513b937c986ca3a000b818634edfa2b5e804fc0c4014993",
+    "bytes": 2722
+  },
+  {
+    "path": "docs/data/ps45_plane_load_20261007/ps45_v2/plane_load_share_slide.csv",
+    "ref": "61ebd181b1ae5b47a76fe69d4400e4a3950dc8a3",
+    "sha": "0f00e71b425a44d6e0b8d246f69f56e928f78d5e",
+    "sha256": "593b7a3941304a2ecc4b7fbe9cce4cd2de15613a7c4de9b702345d5225b6057c",
+    "bytes": 587
+  },
+  {
+    "path": "docs/data/ps45_plane_load_20261007/ps45_v2/plane_load_summary.csv",
+    "ref": "61ebd181b1ae5b47a76fe69d4400e4a3950dc8a3",
+    "sha": "0b65b92c667759a520df181f102ced52e5be0ce8",
+    "sha256": "a27cb261c5ce0ac68d517567caade508351f6339cbfe1df11966b24c97fc0738",
+    "bytes": 3475
+  },
+  {
+    "path": "docs/data/ps45_plane_load_20261007/ps45_v2/stress_reduction_slide.csv",
+    "ref": "61ebd181b1ae5b47a76fe69d4400e4a3950dc8a3",
+    "sha": "64873318dfb150b12853a6b83fa788d5dfde07d2",
+    "sha256": "d72fb5e6a6b085a2972ae10cce1f151373dec7e51550a698170690576a17f318",
+    "bytes": 799
+  },
+  {
+    "path": "docs/data/ps45_plane_load_20261007/real14_validation/plane_load.json",
+    "ref": "61ebd181b1ae5b47a76fe69d4400e4a3950dc8a3",
+    "sha": "1568caa9024ea451917103f8c60f8c1f545a1d84",
+    "sha256": "6d75501fa58e10dd4192a7efd5ebc832020226a1f3aaf188151c2d748482746b",
+    "bytes": 21202
+  },
+  {
+    "path": "docs/data/ps45_plane_load_20261007/real14_validation/plane_load_cuts_real14.csv",
+    "ref": "61ebd181b1ae5b47a76fe69d4400e4a3950dc8a3",
+    "sha": "ea6e94df8c6df982d11ef2e9b5ad3ed716ac125f",
+    "sha256": "553200f296108a2827206a46334d04b8680310beec7f613f5a005f79c66829ba",
+    "bytes": 2666
+  },
+  {
+    "path": "docs/data/ps45_plane_load_20261007/real14_validation/plane_load_share_slide.csv",
+    "ref": "61ebd181b1ae5b47a76fe69d4400e4a3950dc8a3",
+    "sha": "569f0e9f6499f19723584e23039bb7e7dc63feea",
+    "sha256": "533cf18f5a5e58c3071d0bc203a4523ed668c596f8b2c0ad7e36fabc998b6f00",
+    "bytes": 476
+  },
+  {
+    "path": "docs/data/ps45_plane_load_20261007/real14_validation/plane_load_summary.csv",
+    "ref": "61ebd181b1ae5b47a76fe69d4400e4a3950dc8a3",
+    "sha": "ad360067bcc85ab7ecba036e3f0d888920af73a1",
+    "sha256": "1b9001569b7c71a13f0616b5f1378936b23065e0500f6b23d2bde1fa474eb944",
+    "bytes": 2758
+  },
+  {
+    "path": "docs/data/ps45_plane_load_20261007/real14_validation/stress_reduction_slide.csv",
+    "ref": "61ebd181b1ae5b47a76fe69d4400e4a3950dc8a3",
+    "sha": "7ac5298f5b65728f090388e172ae7d0f3e4e61fe",
+    "sha256": "34cba470ff7746fd6620f6adaa92714242a9af9ea0c15427cc82cb09fc2a7911",
+    "bytes": 684
+  },
+  {
+    "path": "docs/data/ps45_plane_load_20261007/real14_validation/tangential_share.py",
+    "ref": "61ebd181b1ae5b47a76fe69d4400e4a3950dc8a3",
+    "sha": "a840e96aa3bebb91c44b67f65109de09e0a9e7b5",
+    "sha256": "428dceafbd97d6194c6a90445c8e0416349d96ea9a3320597a022726ab460f14",
+    "bytes": 1865
+  },
+  {
+    "path": "docs/data/ps45_plane_load_20261007/real14_validation/tangential_share.txt",
+    "ref": "61ebd181b1ae5b47a76fe69d4400e4a3950dc8a3",
+    "sha": "d2d94e4213920d41814dfe8e6c1576056fef2b85",
+    "sha256": "8ca7234fcccbe64cb61c39cf2b5a87af4c02f71fa1636e5d3c82ab20205dda36",
+    "bytes": 532
+  },
+  {
+    "path": "docs/data/ps45_plane_load_20261007/slide/contacts_vs_sigma_zz_share.csv",
+    "ref": "61ebd181b1ae5b47a76fe69d4400e4a3950dc8a3",
+    "sha": "161191e5b5cbe900be47156103e50fb6374222e3",
+    "sha256": "cb74e7ae26a5d9d5579b0dab7c1278a0c1f4b11ceac7676a375165079b6ec41a",
+    "bytes": 681
+  },
+  {
+    "path": "docs/data/ps45_plane_load_20261007/slide/contacts_vs_sigma_zz_share_73box.csv",
+    "ref": "61ebd181b1ae5b47a76fe69d4400e4a3950dc8a3",
+    "sha": "161191e5b5cbe900be47156103e50fb6374222e3",
+    "sha256": "cb74e7ae26a5d9d5579b0dab7c1278a0c1f4b11ceac7676a375165079b6ec41a",
+    "bytes": 681
+  },
+  {
+    "path": "docs/data/ps45_plane_load_20261007/slide/make_contacts_vs_load.py",
+    "ref": "61ebd181b1ae5b47a76fe69d4400e4a3950dc8a3",
+    "sha": "65d89bc4b20f0547369eb6890be8f2237b7d0a97",
+    "sha256": "fe3773ce8713f5f39ebcb66a953566ef65bb7c25a693ef9f2e51f69e38f6aa86",
+    "bytes": 2872
+  },
+  {
+    "path": "docs/data/ps45_plane_load_20261007/slide/make_contacts_vs_load_73box.py",
+    "ref": "61ebd181b1ae5b47a76fe69d4400e4a3950dc8a3",
+    "sha": "182cc31aa698cf31f1add1176557e4f8a0844124",
+    "sha256": "2fed9a171bca44dfe0494230b42d7abbafed0ce472025520ed7bbfecdec8cbfc",
+    "bytes": 3227
+  },
+  {
+    "path": "docs/data/ps45_plane_load_20261007/slide/make_slide_preview.py",
+    "ref": "61ebd181b1ae5b47a76fe69d4400e4a3950dc8a3",
+    "sha": "b92926c4750a92fef3f6fd7f9446066b4891a9c8",
+    "sha256": "9bb5be465e137eefbc93056347da21789dca00977ba8b94bca95b71f863f7af5",
+    "bytes": 3555
+  },
+  {
+    "path": "docs/data/ps45_plane_load_20261007/wsl_rerun_v2_20261007.txt",
+    "ref": "61ebd181b1ae5b47a76fe69d4400e4a3950dc8a3",
+    "sha": "4917b41f844ac13722c22970ef69af7de8dee04d",
+    "sha256": "63bc62242eeb8f23513f9cf8873cab9108382fbdcc91fdf788ab0a43178345d6",
+    "bytes": 3222
+  },
+  {
+    "path": "docs/data/ps73_damping_branch_20261007/README.md",
+    "ref": "61ebd181b1ae5b47a76fe69d4400e4a3950dc8a3",
+    "sha": "6574b3275bbb97f7829b6d36775275574be139b6",
+    "sha256": "eab8d3bd3e9f270ca039ae02fb857a2606d9e99053a530ff50b6d2dceb26f860",
+    "bytes": 44971
+  },
+  {
+    "path": "docs/data/ps73_damping_branch_20261007/SHA256SUMS",
+    "ref": "61ebd181b1ae5b47a76fe69d4400e4a3950dc8a3",
+    "sha": "cc3ad192fe9564b63d401e228c40f65fa1082f88",
+    "sha256": "c8fa5b5ae246c7dae61f8b5f65e74d9b491666cfb82bc579d6b3c5c13c90082a",
+    "bytes": 874
+  },
+  {
+    "path": "docs/data/ps73_damping_branch_20261007/analyze_branch.py",
+    "ref": "61ebd181b1ae5b47a76fe69d4400e4a3950dc8a3",
+    "sha": "d4749fd1b57874a38dce23f46975bca4b580d7cb",
+    "sha256": "bdfc33137802b63c19fa7bb1c5ec4a8207db95e1a302ff4baff40fff597ad0dd",
+    "bytes": 14947
+  },
+  {
+    "path": "docs/data/ps73_damping_branch_20261007/deck_diffs.txt",
+    "ref": "61ebd181b1ae5b47a76fe69d4400e4a3950dc8a3",
+    "sha": "1f35ff84e515118c7675794d0a57044b3cd828a1",
+    "sha256": "a5d54644cd02914e1c16d34351dda9d08de56a389308fb81446d008f756d6347",
+    "bytes": 12213
+  },
+  {
+    "path": "docs/data/ps73_damping_branch_20261007/in.branch_A.liggghts",
+    "ref": "61ebd181b1ae5b47a76fe69d4400e4a3950dc8a3",
+    "sha": "b074a957284e5e3525baa9ce8ed37301d93a658a",
+    "sha256": "abc00597a49befaf9de1aceefead1913f3e51a31371c40ff70c19666043867f2",
+    "bytes": 15404
+  },
+  {
+    "path": "docs/data/ps73_damping_branch_20261007/in.branch_B.liggghts",
+    "ref": "61ebd181b1ae5b47a76fe69d4400e4a3950dc8a3",
+    "sha": "b772de7a3492e5e261d8aa8df483a7c103133849",
+    "sha256": "a3dd4cb74c9238e9f5f27eada91a7a25b7fa4d1fbe9601021bae32ddfcd9032f",
+    "bytes": 21596
+  },
+  {
+    "path": "docs/data/ps73_damping_branch_20261007/in.branch_C1.liggghts",
+    "ref": "61ebd181b1ae5b47a76fe69d4400e4a3950dc8a3",
+    "sha": "873c53fbac5873e2fa1fa248934cdbd061c4a340",
+    "sha256": "37312b61eb3cc5bbcbe1c29598409eae3fdcc0c4389d6e0b1eed7600feeeba77",
+    "bytes": 15422
+  },
+  {
+    "path": "docs/data/ps73_damping_branch_20261007/in.branch_C2.liggghts",
+    "ref": "61ebd181b1ae5b47a76fe69d4400e4a3950dc8a3",
+    "sha": "33b2e747670845fe0a01b57f4b06cda3d2c58272",
+    "sha256": "78f4b79b1f3dcf5f420149baa2c29e0691ce8e85e466c9ff4044e85e0eacc554",
+    "bytes": 15421
+  },
+  {
+    "path": "docs/data/ps73_damping_branch_20261007/in.branch_t0_syntax.liggghts",
+    "ref": "61ebd181b1ae5b47a76fe69d4400e4a3950dc8a3",
+    "sha": "280cb5a817c1e8d180ca29648cb795dd5f9ed899",
+    "sha256": "866b1293486f7874e58b6606e735b0a43604c8b49353dbc4ebc7c3b182fb5e22",
+    "bytes": 27171
+  },
+  {
+    "path": "docs/data/ps73_damping_branch_20261007/make_branch_decks.py",
+    "ref": "61ebd181b1ae5b47a76fe69d4400e4a3950dc8a3",
+    "sha": "f4007cf2e38a59953695a2a633ba032eaf7873e8",
+    "sha256": "b18db82782585e37a9b3a9237cab7ab92aad7048a7aac66502f7578075f7de31",
+    "bytes": 73552
+  },
+  {
+    "path": "docs/data/ps73_damping_branch_20261007/plate_branch3100000.stl",
+    "ref": "61ebd181b1ae5b47a76fe69d4400e4a3950dc8a3",
+    "sha": "4d35aad55d0f7225efd9cbfeccc09859ec4f8761",
+    "sha256": "a6a2e06c81cc1f0e0b023f36456348575d0d7c0a94e863acd66daa16d3822827",
+    "bytes": 273
+  },
+  {
+    "path": "docs/data/ps73_damping_branch_20261007/run_branch.sh",
+    "ref": "61ebd181b1ae5b47a76fe69d4400e4a3950dc8a3",
+    "sha": "8b9de56d9debfa0000ae66f1a3bf881453b68077",
+    "sha256": "042ad5396b803c5ab3e9638edebf353bb90fc3cdcbffa80e8536ef5cea70c664",
+    "bytes": 20961
+  },
+  {
+    "path": "docs/data/ps73_damping_branch_20261007/run_branch_ibb.sbatch",
+    "ref": "61ebd181b1ae5b47a76fe69d4400e4a3950dc8a3",
+    "sha": "b5d634ddc789aa09c969ae3ddd76689f80755ebb",
+    "sha256": "eed2de70cd60d0bb631a890cda80076745f91b7781825673fc4d57960717fade",
+    "bytes": 2540
+  },
+  {
+    "path": "docs/data/ps73_damping_branch_20261007/snap_3100000_20261008/README.md",
+    "ref": "61ebd181b1ae5b47a76fe69d4400e4a3950dc8a3",
+    "sha": "33a32111016657ef4f3e18336ab0c21f1d933167",
+    "sha256": "d84094d169fc468a6154409ec6cddd958b9b85187e5358055d2494e2212162e3",
+    "bytes": 4632
+  },
+  {
+    "path": "docs/data/ps73_damping_branch_20261007/snap_3100000_20261008/make_stop_zoom.py",
+    "ref": "61ebd181b1ae5b47a76fe69d4400e4a3950dc8a3",
+    "sha": "9de4cb912019b91b40d776583acb0f636ec4d5e8",
+    "sha256": "2fa44625069d381726a0d871dc15b6601218edb1cc33c880a73582d0f870f48d",
+    "bytes": 2092
+  },
+  {
+    "path": "docs/data/ps73_damping_branch_20261007/snap_3100000_20261008/plane/plane_load.json",
+    "ref": "61ebd181b1ae5b47a76fe69d4400e4a3950dc8a3",
+    "sha": "d0b33ed97587d11f5cc69e25a6b6543495944e82",
+    "sha256": "cd42ce7c1d237d5cbd66bc69ce5b97cc920a6ab7dffa72f9915507c622a55d70",
+    "bytes": 21240
+  },
+  {
+    "path": "docs/data/ps73_damping_branch_20261007/snap_3100000_20261008/plane/plane_load_cuts_snap_3100000.csv",
+    "ref": "61ebd181b1ae5b47a76fe69d4400e4a3950dc8a3",
+    "sha": "1b4e1926d3300d9a590ec8e81d1ab546dbf1585a",
+    "sha256": "7f7da31993e0ce8d2b93f6d0432ff6658e88f57789af65def085586ada1bacc0",
+    "bytes": 2719
+  },
+  {
+    "path": "docs/data/ps73_damping_branch_20261007/snap_3100000_20261008/plane/plane_load_share_slide.csv",
+    "ref": "61ebd181b1ae5b47a76fe69d4400e4a3950dc8a3",
+    "sha": "7650c4da050fee341ab7551b74effc3497aa48e7",
+    "sha256": "9148ee9cfd20fc751ea1d8fe66364ae989eeb9371f44648e7965f734fb4ccbbd",
+    "bytes": 483
+  },
+  {
+    "path": "docs/data/ps73_damping_branch_20261007/snap_3100000_20261008/plane/plane_load_summary.csv",
+    "ref": "61ebd181b1ae5b47a76fe69d4400e4a3950dc8a3",
+    "sha": "b548dc5f01c1b87589458a4a32e4d74649b2a4ce",
+    "sha256": "c3b56fe506b5ad6c922ec6e3ad4621e228d0d6422b160f8b03c3add35c471976",
+    "bytes": 2769
+  },
+  {
+    "path": "docs/data/ps73_damping_branch_20261007/snap_3100000_20261008/plane/stress_reduction_slide.csv",
+    "ref": "61ebd181b1ae5b47a76fe69d4400e4a3950dc8a3",
+    "sha": "48df75de53d8e4f39f6c2c6345822598f8645b6f",
+    "sha256": "581040cda8f3864d02587ed217789007eebd6f7bc0c35111733ba5403fec3cda",
+    "bytes": 690
+  },
+  {
+    "path": "docs/data/ps73_damping_branch_20261007/snap_moments_20261008/README.md",
+    "ref": "61ebd181b1ae5b47a76fe69d4400e4a3950dc8a3",
+    "sha": "164565303804927e1b03f858024a4d3815c72dd3",
+    "sha256": "424841d6f870246db921cb9aecb569731dde17e2c57d6ad3dd9afe181c2c02c8",
+    "bytes": 15222
+  },
+  {
+    "path": "docs/data/ps73_damping_branch_20261007/snap_moments_20261008/make_snap_decks.py",
+    "ref": "61ebd181b1ae5b47a76fe69d4400e4a3950dc8a3",
+    "sha": "658042a1aee9e47586068fc5a7579a6f8f2ff992",
+    "sha256": "785c9cc41e679b44b157d819bf692bbf7f8a4b7eb7c708d670088ae46a17ee69",
+    "bytes": 17829
+  },
+  {
+    "path": "docs/data/ps73_damping_branch_20261007/snap_moments_20261008/render3d.py",
+    "ref": "61ebd181b1ae5b47a76fe69d4400e4a3950dc8a3",
+    "sha": "49b9ffd73299c5d0ba01dc78c66915ec565935ec",
+    "sha256": "6800a18a0d3b6f23841223e090b663b77d4c8f953d70f935864d63b8502d9c4a",
+    "bytes": 16963
+  },
+  {
+    "path": "docs/data/ps73_damping_branch_20261007/snap_moments_20261008/results_20261008/vm_moments.json",
+    "ref": "61ebd181b1ae5b47a76fe69d4400e4a3950dc8a3",
+    "sha": "b3323e494285e66f725c5b14bb6a23c362fc2e8c",
+    "sha256": "429ce9dd7b3a1dd69d47b24f529ed0501080523c4ac2adb3df715f94b7b86066",
+    "bytes": 6229
+  },
+  {
+    "path": "docs/data/ps73_damping_branch_20261007/snap_moments_20261008/results_20261008/vm_profile.csv",
+    "ref": "61ebd181b1ae5b47a76fe69d4400e4a3950dc8a3",
+    "sha": "eaefd25f0fe3d4733bd6c7c90e6609b14707d8ce",
+    "sha256": "5a434a1b2737e560e28022cd4750fc0506a8775b21de40edb6d800cce114f818",
+    "bytes": 3443
+  },
+  {
+    "path": "docs/data/ps73_damping_branch_20261007/snap_moments_20261008/vm_moments.py",
+    "ref": "61ebd181b1ae5b47a76fe69d4400e4a3950dc8a3",
+    "sha": "9269cd77a7454d5c0a705a76247a92e51b422e21",
+    "sha256": "75e064a0d34e60881703396a1a325a5b550022f8ce2d16c1a066b1c9cabcbca9",
+    "bytes": 25091
+  },
+  {
+    "path": "docs/data/ps73_damping_branch_20261007/t0_run1_20261007/in.branch_t0_syntax.liggghts",
+    "ref": "61ebd181b1ae5b47a76fe69d4400e4a3950dc8a3",
+    "sha": "a52c8e3f4f4df35ce4ccda6e41264eca7d9824f0",
+    "sha256": "c0130fd0a5019ca916f6135bb18f97b1e37ef292bc3b681985af43c0beafdf42",
+    "bytes": 25130
+  },
+  {
+    "path": "docs/esse_calibration_2mAh_real_9.md",
+    "ref": "61ebd181b1ae5b47a76fe69d4400e4a3950dc8a3",
+    "sha": "b98a29986b33149f2e716d00ecd7eefeaef1f6e5",
+    "sha256": "55ab874ea16346c4206797a7229849ee46fd5a7da74d42102be093d85cfe5592",
+    "bytes": 4687
+  },
+  {
+    "path": "docs/reviews/codex_model_validation_request_20261008.md",
+    "ref": "61ebd181b1ae5b47a76fe69d4400e4a3950dc8a3",
+    "sha": "30c34e6c72ff39633c47ed125c81e108edffe991",
+    "sha256": "475eddca54e4fcbe710518028871909c2845403b4b4d69dffde4e772d50b4ca4",
+    "bytes": 10008
+  },
+  {
+    "path": "docs/reviews/si_table_response_20260925.md",
+    "ref": "61ebd181b1ae5b47a76fe69d4400e4a3950dc8a3",
+    "sha": "b9a72332b44c78d50b00e8be697226d4f76378f2",
+    "sha256": "499055d849a540513a609a6a9a306487bd593e5bb3154c5a12850c82fb376193",
+    "bytes": 72284
+  },
+  {
+    "path": "docs/session_20260923_progress.md",
+    "ref": "61ebd181b1ae5b47a76fe69d4400e4a3950dc8a3",
+    "sha": "5e9e449be215e7301d2fa73daafc443e07048631",
+    "sha256": "e0e484c324851a6fa2f5f46c26c3bf2c9fadefcbdbad3d3e3eef6cd406bf60be",
+    "bytes": 308958
+  },
+  {
+    "path": "scripts/plane_load_share.py",
+    "ref": "61ebd181b1ae5b47a76fe69d4400e4a3950dc8a3",
+    "sha": "338f3e055eeb7a961d135691bd92bb874891ecd3",
+    "sha256": "a1d95cb9c2f800028d67c44d79330362f9ffee568fc9cccebb943cce064a61ee",
+    "bytes": 75189
+  },
+  {
+    "path": "scripts/analyze_contacts.py",
+    "ref": "61ebd181b1ae5b47a76fe69d4400e4a3950dc8a3",
+    "sha": "e214dc377c61f3b625f186b20149bf9eb5314f94",
+    "sha256": "a383ada7aef3d13ba08bd84728a20b6207f9b124a01ce3852c01ae2518ca1aa9",
+    "bytes": 80829
+  },
+  {
+    "path": "scripts/dem_analysis_core.py",
+    "ref": "61ebd181b1ae5b47a76fe69d4400e4a3950dc8a3",
+    "sha": "629fb278118161e1ba1abcb00db0bcaa0f2cf1b6",
+    "sha256": "39fb19cb7eb962f11fe88546fa0ad93c4a9074846be13d15b27c2eae44fb620f",
+    "bytes": 102925
+  },
+  {
+    "path": "scripts/metrics_json.py",
+    "ref": "61ebd181b1ae5b47a76fe69d4400e4a3950dc8a3",
+    "sha": "a674863ae821cb5673b23ae09f2cfddf7eda405c",
+    "sha256": "baa671f895dd6103cf95c25647ee45877d98306f00ab15cd3968fbe4354a7702",
+    "bytes": 9564
+  },
+  {
+    "path": "scripts/type_map_resolve.py",
+    "ref": "61ebd181b1ae5b47a76fe69d4400e4a3950dc8a3",
+    "sha": "31092eb1afda0b1316c3f4f7c716c0dd537b9920",
+    "sha256": "4a289c6412e4b8e1bc0fba573cb287966dfa00a053399097b587f1e14726bfe5",
+    "bytes": 29014
+  }
+]

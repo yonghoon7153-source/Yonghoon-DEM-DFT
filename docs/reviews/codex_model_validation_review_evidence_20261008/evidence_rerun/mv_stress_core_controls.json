@@ -1,0 +1,79 @@
+{
+  "scope": "Synthetic inputs to actual pinned post-processing code; not a raw data reconstruction.",
+  "plane_load_share_selftest": {
+    "passed": true,
+    "output": "  ✓ T1 직렬 기둥: 상태 OK\n  ✓ T1 모든 단면 하중 = F (보존 1.0)\n  ✓ T1 SE–SE 몫 100 %\n  ✓ T1 크기 합 ÷ 단면 하중 = 9 (직렬 접촉 수)\n  ✓ T2 평행 기둥: 단면 몫 AM–AM 75 % · SE–SE 25 %\n  ✓ T2b 단면이 입자 중심 (z = 0.5) 을 지나도 그 기둥 하중이 빠지지 않는다\n  ✓ T2 크기 합 몫 = 12/21 (단면 몫과 다르다)\n  ✓ T2 쌍 몫 PC–PC 75 %\n  ✓ T3 id1 ↔ id2 (힘 부호 반대) 불변\n  ✓ T4 가로 성분 무관 (AM–AM 75 %)\n  ✓ T4 법선 몫 계산됨\n  ✓ T5 접촉 하나 빠짐 → CHECK (보존 · 평형 사유)\n  ✓ T6 원자 없는 접촉 1 → 누락 1 · CHECK\n  ✓ T7 얇은 침대 → FAILED (유효 단면 없음)\n  ✓ T8 무게 몫 1 % 안 → 보존 통과 (평형은 무게만큼 어긋남 → CHECK 사유는 평형만)\n  ✓ T9 압력 = F ÷ 면적 × scale ÷ 1e6\n  ✓ T9 type map 해석 · 쌍 이름\n  ✓ T9 type map 형식 오류 거부\n  ✓ T9 상자 기본값 → CHECK 사유\n  Loaded 13 contacts from contacts.csv\n  ✓ T10 배치: 파일 넷 · 순서 3:7 → 7:3\n  ✓ T10 fx 없는 CSV → fn + ft 경로 · 몫 75 %\n  ✓ T10 입력 결손 케이스 = FAILED (다른 케이스 계속)\n  ✓ T10 슬라이드 CSV 머리 세 줄 + 값 한 줄 (FAILED 제외)\n  ✓ T10 입력 sha256 기록\n  ✓ T10 fx · 접촉점 열 없는 CSV → α NOT_COMPUTED (Love–Weber 사유) · 단면 하중 값은 그대로\n  ✓ T11 혼합 기둥: 단면 분류 11 · 5 · 5 장 · 가운데 단면 = AM–AM 100 %\n  ✓ T11 Contribution to σ_zz = Σ_k F_X ÷ Σ_k F = 44/69 · 15/69 · 10/69 (단면 몫 단순 평균 11/21 · 5/21 · 5/21 과 다르다)\n  ✓ T11 σ_zz (21 단면 하중 평균) = 69/21 × 1e-6 MPa\n  ✓ T11 연속 극한 (창 잘린 적분 Σ f_z^up × 창과 겹친 길이) = 1.24 · 0.45 · 0.28 ÷ 1.97 · σ_zz = 1.97 ÷ 0.6 × 1e-6\n  ✓ T11 슬라이드 머리: Long Name AM–AM · AM–SE · SE–SE contacts · 단위 % · 주석 = Contribution to σ_zz (21 수평 단면 평균)\n  ✓ T11 슬라이드 값 = 21 단면 평균 63.7681 · 21.7391 · 14.4928 (가운데 단면 100 · 0 · 0 이 아니다)\n  ✓ T11 요약 (mean) 열 = 슬라이드 값 · (mid) 열 = 가운데 단면 그대로\n  ✓ T11 --rewrite (plane_load.json → CSV) = 처음 쓴 CSV 넷과 바이트 같다 (슬라이드 · 요약 · 단면 · α)\n  ✓ T11 옛 형식 JSON (기여 키 · α 없음) 재작성 → 같은 슬라이드 (단면 기록에서 다시 계산)\n  ✓ T11 재작성은 원 JSON 을 안 건드린다 · α 없는 옛 JSON 이면 α 슬라이드를 안 쓴다\n  ✓ T11 재작성 출처 기록 plane_load_rewrite.json (원 JSON sha256 · 코드 sha256 · 쓴 파일)\n  ✓ T11 재작성 거부: 저장된 기여 ≠ 단면에서 다시 계산 · 다른 도구의 JSON\n  ✓ T12 평행 기둥: α 상태 OK · 창 안 AM_P 3 · SE 6 (벽에 닿는 끝 입자 빠짐) · 창 안 벽 닿는 입자 0\n  ✓ T12 봉인 Love–Weber 입자 σ_zz = −3F/(2πr²) (상 평균 · 압축 양수 · AM_P · SE)\n  ✓ T12 α AM_P = 0.9375 · α SE = 1.25 · α AM = α AM_P · α AM_S = null (상 없음 — 0 아님)\n  ✓ T12 닫힘 Σ (V_X/V_all) α_X = 1 · 수직 하중뿐 → α_p (평균 응력 tr σ/3) = α_zz\n  ✓ T12 교차 대조: LW 창 합 ÷ 21 단면 평균 = 1 (기둥이 창을 꼭 채운다) · 창 안 두 입자 1.7 · 가장자리 LW 0.7 = 적분 0.7 · 걸침 0\n  ✓ T12 혼합 기둥: α AM_P = (1.5 ÷ 2V_A) ÷ ⟨σ⟩ · α SE = (0.45 ÷ 2V_S) ÷ ⟨σ⟩ · 닫힘 1\n  ✓ T12 가장자리 분해: LW = 창 안 두 입자 1.45 + 가장자리 LW 0.5 · 적분 = 1.45 + 가장자리 0.52 + 걸침 0 · LW ÷ 21 단면 = 3.25 ÷ (69/21)\n  ✓ T12 얇은 창: AM_P 두 입자 모두 창 밖 → α AM_P · α AM = null (상은 있다) · α SE = 1 · 단면 기여 AM–AM 2/3\n  ✓ T12 창 전체를 걸친 접촉 (두 입자 모두 창 밖) = 적분에만 0.2 · LW 0.1 ↔ 적분 0.3 · LW ÷ 21 단면 = 1/3\n  ✓ T12 가로 쌍: α_zz SE = ⟨σ_zz⟩ 비 · α_p SE = ⟨p⟩ 비 (서로 다르다) · 단면 기여는 그대로 75 %\n  ✓ T12 수직 하중 0 → α_zz UNDEFINED (값 null · 0 으로 채우지 않음) · α_p SE = 1 · 단면 기여 null\n  ✓ T12 접촉점 열 없음 → α NOT_COMPUTED (봉인 함수 사유 그대로) · α 값 없음\n  ✓ T12 mono 이름 (1:AM · 3:SE) → α AM = 0.9375 · α AM_P · AM_S = null · 닫힘 1\n  Loaded 9 contacts from contacts.csv\n  Loaded 13 contacts from contacts.csv\n  ✓ T13 배치 (fx · 접촉점 열 · 봉인 로더): 두 케이스 α 상태 OK\n  ✓ T13 stress_reduction_slide.csv 머리 세 줄 (PC:SC · α AM_P · α AM_S · α SE · α AM · 단위 - · 주석)\n  ✓ T13 α 값 행: 0:10 = 없는 상 빈칸 · SE 1 / 7:3 = 0.9375 · 빈칸 · 1.25 · 0.9375\n  ✓ T13 요약 α 열 · 닫힘 · LW ÷ 단면 · α 상태\nplane_load_share selftest 54/54\n"
+  },
+  "global_sum_false_assurance_control": {
+    "baseline_status": "OK",
+    "swapped_status": "OK",
+    "swapped_virial_relative_error": 0.0,
+    "baseline_phase_vm": {
+      "AM": {
+        "mean": 21.485917317405868,
+        "ratio": 0.5
+      },
+      "SE": {
+        "mean": 64.45775195221759,
+        "ratio": 1.4999999999999998
+      }
+    },
+    "swapped_phase_vm": {
+      "AM": {
+        "mean": 64.45775195221759,
+        "ratio": 1.5
+      },
+      "SE": {
+        "mean": 21.485917317405868,
+        "ratio": 0.5000000000000001
+      }
+    },
+    "meaning": "Global diagonal virial gate accepts a phase-changing permutation of contact forces."
+  },
+  "contact_point_false_assurance_control": {
+    "baseline_status": "OK",
+    "changed_cp_status": "OK",
+    "changed_cp_checks": {
+      "force_decomp_rel": 0.0,
+      "force_decomp_abs": 0.0,
+      "force_decomp_zero_scale": false,
+      "branch_over_r_max": 0.9999999999999998,
+      "virial_total_rel": 0.0,
+      "virial_total_abs": 0.0,
+      "virial_zero_scale": false,
+      "virial_status": "checked",
+      "virial_scope": "global_diagonal_sum — 전역 부호 · 척도 검사 (Σ_i V_i σ_LW,aa ↔ Σ_i c_strs,aa · 대각 셋) · 프레임 · 입자 · 상 배분의 대응 증명 아님 (같은 기하 두 dimer 의 접촉 힘을 맞바꿔도 통과)"
+    },
+    "baseline_phase_vm": {
+      "AM": {
+        "mean": 19.098593171027442,
+        "ratio": 1.0000000000000004
+      },
+      "SE": {
+        "mean": 19.098593171027428,
+        "ratio": 0.9999999999999997
+      }
+    },
+    "changed_cp_phase_vm": {
+      "AM": {
+        "mean": 14.323944878270579,
+        "ratio": 0.7500000000000001
+      },
+      "SE": {
+        "mean": 23.873241463784293,
+        "ratio": 1.25
+      }
+    },
+    "meaning": "Moving contact point inside both overlapping spheres passes current checks while changing phase allocation."
+  },
+  "actual_tensor_rotation_translation": {
+    "status": "OK",
+    "tensor_relative_max_error": 6.340860639987258e-16,
+    "vm_relative_max_error": 4.409354743161529e-16
+  },
+  "actual_contact_stress_ignores_velocity": {
+    "status": "OK",
+    "tensor_difference": 0.0,
+    "meaning": "Expected for contact-only stress; not certification of total kinetic stress or viscous-damped dynamics."
+  }
+}

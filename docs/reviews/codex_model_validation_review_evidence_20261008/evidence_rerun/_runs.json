@@ -1,0 +1,41 @@
+{
+  "python": "3.11.15 (main, Mar  3 2026, 09:26:23) [GCC 13.3.0]",
+  "interpreter": "/usr/local/bin/python3 -I -B mv_probe_launcher.py (user site 추가)",
+  "runs": [
+    {
+      "probe": "mv_anchor_porosity.py",
+      "returncode": 0,
+      "seconds": 0.14
+    },
+    {
+      "probe": "mv_pressure_arithmetic.py",
+      "returncode": 0,
+      "seconds": 0.04
+    },
+    {
+      "probe": "mv_softening_scaling.py",
+      "returncode": 0,
+      "seconds": 0.03
+    },
+    {
+      "probe": "mv_softening_frozen_reweight.py",
+      "returncode": 0,
+      "seconds": 0.04
+    },
+    {
+      "probe": "mv_stress_probe.py",
+      "returncode": 0,
+      "seconds": 0.14
+    },
+    {
+      "probe": "mv_stress_core_probe.py",
+      "returncode": 0,
+      "seconds": 13.16
+    },
+    {
+      "probe": "mv_stress_portability.py",
+      "returncode": 0,
+      "seconds": 17.35
+    }
+  ]
+}

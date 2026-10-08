@@ -1,0 +1,41 @@
+{
+  "python": "3.11.15 (main, Mar  3 2026, 09:26:23) [GCC 13.3.0]",
+  "interpreter": "/usr/local/bin/python3 -I -B",
+  "runs": [
+    {
+      "probe": "mv_anchor_porosity.py",
+      "returncode": 0,
+      "seconds": 0.18
+    },
+    {
+      "probe": "mv_pressure_arithmetic.py",
+      "returncode": 0,
+      "seconds": 0.03
+    },
+    {
+      "probe": "mv_softening_scaling.py",
+      "returncode": 0,
+      "seconds": 0.02
+    },
+    {
+      "probe": "mv_softening_frozen_reweight.py",
+      "returncode": 0,
+      "seconds": 0.03
+    },
+    {
+      "probe": "mv_stress_probe.py",
+      "returncode": 0,
+      "seconds": 0.1
+    },
+    {
+      "probe": "mv_stress_core_probe.py",
+      "returncode": 1,
+      "seconds": 0.32
+    },
+    {
+      "probe": "mv_stress_portability.py",
+      "returncode": 1,
+      "seconds": 1.52
+    }
+  ]
+}

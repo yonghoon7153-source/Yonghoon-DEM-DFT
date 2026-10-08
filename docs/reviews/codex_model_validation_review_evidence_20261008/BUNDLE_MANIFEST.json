@@ -1,0 +1,536 @@
+{
+  "pin": "61ebd181b1ae5b47a76fe69d4400e4a3950dc8a3",
+  "files": [
+    {
+      "path": "README.md",
+      "bytes": 2845,
+      "sha256": "498782e42ed655e41efa1a01c897223aba1512a60a1507631571a13edbf4c6d4"
+    },
+    {
+      "path": "codex_review_model_validation_20261008.md",
+      "bytes": 42229,
+      "sha256": "4393346f5fc183fca20501a91e4d88a28672f67ce9a6678af26be698f76974b1"
+    },
+    {
+      "path": "evidence/mv_anchor_porosity.stderr.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "evidence/mv_anchor_porosity.stdout.txt",
+      "bytes": 1607,
+      "sha256": "d9de8489a4d646f0f39ea7401589fe0fa89f24ce5c89baa7633cae2a9981413c"
+    },
+    {
+      "path": "evidence/mv_anchor_porosity_result.json",
+      "bytes": 1607,
+      "sha256": "d9de8489a4d646f0f39ea7401589fe0fa89f24ce5c89baa7633cae2a9981413c"
+    },
+    {
+      "path": "evidence/mv_pressure_arithmetic.stderr.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "evidence/mv_pressure_arithmetic.stdout.txt",
+      "bytes": 2380,
+      "sha256": "a4f6179bcf2dd157e7784b6c6d7c634856bc760b76f0bf60695ac0e98dcf676f"
+    },
+    {
+      "path": "evidence/mv_pressure_arithmetic_result.json",
+      "bytes": 2380,
+      "sha256": "a4f6179bcf2dd157e7784b6c6d7c634856bc760b76f0bf60695ac0e98dcf676f"
+    },
+    {
+      "path": "evidence/mv_softening_frozen_reweight.stderr.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "evidence/mv_softening_frozen_reweight.stdout.txt",
+      "bytes": 1845,
+      "sha256": "7dab0d1ed4fc169023bfb5424cad91550253e64ba5df1ca4844729555ae15f09"
+    },
+    {
+      "path": "evidence/mv_softening_frozen_reweight_result.json",
+      "bytes": 1845,
+      "sha256": "7dab0d1ed4fc169023bfb5424cad91550253e64ba5df1ca4844729555ae15f09"
+    },
+    {
+      "path": "evidence/mv_softening_in.ps_7_3_r45_61ebd18.liggghts",
+      "bytes": 9562,
+      "sha256": "69f4359c0f436ebe4728c9fe0f360326ab5a515d6dc25d75ff7d45ba7cb9dc15"
+    },
+    {
+      "path": "evidence/mv_softening_normal_model_hooke_hysteresis_3d5c00f.h",
+      "bytes": 11389,
+      "sha256": "fd8c4c713dca0bc2bab757a6484d9429f0362ccd86075f173a162b256674d706"
+    },
+    {
+      "path": "evidence/mv_softening_scaling.stderr.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "evidence/mv_softening_scaling.stdout.txt",
+      "bytes": 5085,
+      "sha256": "76964c4ec72d37cd20c4f222c339e42447e5ad944138401c308578e717895e49"
+    },
+    {
+      "path": "evidence/mv_softening_scaling_result.json",
+      "bytes": 4956,
+      "sha256": "a9590621c206dc75b644fc91caa78e2e92d2c8babf54ca5a553309d02459b5e0"
+    },
+    {
+      "path": "evidence/mv_stress_arithmetic.json",
+      "bytes": 15421,
+      "sha256": "af466ead63aff97bd4199cfdf07eaf9f90b362c136a950b1be881276484fc90e"
+    },
+    {
+      "path": "evidence/mv_stress_core_controls.json",
+      "bytes": 7495,
+      "sha256": "8c12e5fcd470a60e036f5b324438d105ce9f3fb9184e39e6d2706ab06669d2c9"
+    },
+    {
+      "path": "evidence/mv_stress_core_probe.stderr.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "evidence/mv_stress_core_probe.stdout.txt",
+      "bytes": 2507,
+      "sha256": "8f40a755f891b1c5399fe93eb90eabf666754bfa0416ce32f567eabac864de19"
+    },
+    {
+      "path": "evidence/mv_stress_portability.json",
+      "bytes": 1436,
+      "sha256": "8a128728b0bbdc948a1cbd5ac52ba813bf84f173d238151cd72565a860247f07"
+    },
+    {
+      "path": "evidence/mv_stress_probe.stderr.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "evidence/mv_stress_probe.stdout.txt",
+      "bytes": 2184,
+      "sha256": "3c03ac7ceb0efc1e1392a68963819f8a3f9c5fc1a20867d0245c30a2df143945"
+    },
+    {
+      "path": "evidence/review_checks.json",
+      "bytes": 1695,
+      "sha256": "4a6fd17ce6dd1e5701a3ee256873152c35bd6b32276cf2b3b4c09f9c07f435cf"
+    },
+    {
+      "path": "probes/mv_anchor_porosity.py",
+      "bytes": 2903,
+      "sha256": "5ace7eeb5c03abd623b6e6b372a3da40bbc5b04c6465b606ca3253f7df1e4a3b"
+    },
+    {
+      "path": "probes/mv_pressure_arithmetic.py",
+      "bytes": 3410,
+      "sha256": "d73d210604ce44771c6d225111edf1a42b6d1fb9ccca8e5dd023d36ac627e306"
+    },
+    {
+      "path": "probes/mv_softening_frozen_reweight.py",
+      "bytes": 2022,
+      "sha256": "41f2d120837a7f31534bf70b18729c27790e23e88ad171d55f2569676677c051"
+    },
+    {
+      "path": "probes/mv_softening_scaling.py",
+      "bytes": 4162,
+      "sha256": "d524ac508aa58d4d214b6b20fa7556f261d1b9c536408ff13b2abb243a386d66"
+    },
+    {
+      "path": "probes/mv_stress_core_probe.py",
+      "bytes": 5199,
+      "sha256": "b1521183969866c84970bc4ac7cd83cea3355ba9a509dc0486ff9de6d7532f40"
+    },
+    {
+      "path": "probes/mv_stress_portability.py",
+      "bytes": 4036,
+      "sha256": "96468662380884cbda672cf9814e06531756c3378cf6c0ffe70540c020de1407"
+    },
+    {
+      "path": "probes/mv_stress_probe.py",
+      "bytes": 5558,
+      "sha256": "83eb72f28ea7c9bc28bf1641bdc05b7f98ce6e4e6e79523df81ef89b29490fa5"
+    },
+    {
+      "path": "run_review_checks.py",
+      "bytes": 3063,
+      "sha256": "d2a3b80967e2a39012d84aae9c0ef7199fb73c4a9cbbb835bafec34f3d57ff34"
+    },
+    {
+      "path": "source/AGENTS.md",
+      "bytes": 2822,
+      "sha256": "38b8708ba8a50c8a08819c7c4138763bce02b6dc6c5b8112f4c8aa386fb17ec3"
+    },
+    {
+      "path": "source/docs/data/esse_calibration_2mAh_real_9.csv",
+      "bytes": 899,
+      "sha256": "168bd59b5fd7c7fc419fcd51816d9ba2eefba039d32d75a3a1136ebf3e99fd62"
+    },
+    {
+      "path": "source/docs/data/ps45_plane_load_20261007/README.md",
+      "bytes": 23081,
+      "sha256": "e8f427215e15d065d5c3622f014d75bcb32fc5c2c4bd56631b80fbcec1de575f"
+    },
+    {
+      "path": "source/docs/data/ps45_plane_load_20261007/ibb_damping_drag_20261007.txt",
+      "bytes": 1061,
+      "sha256": "5bf0b7f7c3f770a24101b1c5ac020f575e71a8db61fcf35aef781ae875c08a42"
+    },
+    {
+      "path": "source/docs/data/ps45_plane_load_20261007/ps45/plane_load.json",
+      "bytes": 83872,
+      "sha256": "0f65a06b3ab6060f19992cc8a09bbf4236e26d72cdbcc496e325b2770040707f"
+    },
+    {
+      "path": "source/docs/data/ps45_plane_load_20261007/ps45/plane_load_cuts_0_10.csv",
+      "bytes": 2654,
+      "sha256": "9a5b83676de1a1aae612684087bf2727374a191de11f1bfcf5a9ea0ac907761b"
+    },
+    {
+      "path": "source/docs/data/ps45_plane_load_20261007/ps45/plane_load_cuts_10_0.csv",
+      "bytes": 2671,
+      "sha256": "c58747106523214bc9feb225a6186d8e0e7059ccf9ac2c15efbac12746937997"
+    },
+    {
+      "path": "source/docs/data/ps45_plane_load_20261007/ps45/plane_load_cuts_3_7.csv",
+      "bytes": 2702,
+      "sha256": "3079252e8ff07dd9662e40a736477bc90d79c090ded9cd6cb0355247fb13afe6"
+    },
+    {
+      "path": "source/docs/data/ps45_plane_load_20261007/ps45/plane_load_cuts_5_5.csv",
+      "bytes": 2733,
+      "sha256": "95677fd5efba4efe1fa7cda616aab677f9e9e8248958869fcd4ee75792efc524"
+    },
+    {
+      "path": "source/docs/data/ps45_plane_load_20261007/ps45/plane_load_cuts_7_3.csv",
+      "bytes": 2722,
+      "sha256": "4fd22cf590395ba29513b937c986ca3a000b818634edfa2b5e804fc0c4014993"
+    },
+    {
+      "path": "source/docs/data/ps45_plane_load_20261007/ps45/plane_load_rewrite.json",
+      "bytes": 1266,
+      "sha256": "441d08dabf26cfc7225d36b752cb9bc2000e617852676f0280b8fb9e9d888699"
+    },
+    {
+      "path": "source/docs/data/ps45_plane_load_20261007/ps45/plane_load_share_slide.csv",
+      "bytes": 587,
+      "sha256": "593b7a3941304a2ecc4b7fbe9cce4cd2de15613a7c4de9b702345d5225b6057c"
+    },
+    {
+      "path": "source/docs/data/ps45_plane_load_20261007/ps45/plane_load_summary.csv",
+      "bytes": 3629,
+      "sha256": "3e24e97402f05392e4d9d109117e4975391d9cb19d9349ba615048463df0b396"
+    },
+    {
+      "path": "source/docs/data/ps45_plane_load_20261007/ps45_v2/plane_load.json",
+      "bytes": 102267,
+      "sha256": "daf8d76070023c656972597da27ad55ccd36456601091c4b20c0be682f1166df"
+    },
+    {
+      "path": "source/docs/data/ps45_plane_load_20261007/ps45_v2/plane_load_cuts_0_10.csv",
+      "bytes": 2654,
+      "sha256": "9a5b83676de1a1aae612684087bf2727374a191de11f1bfcf5a9ea0ac907761b"
+    },
+    {
+      "path": "source/docs/data/ps45_plane_load_20261007/ps45_v2/plane_load_cuts_10_0.csv",
+      "bytes": 2671,
+      "sha256": "c58747106523214bc9feb225a6186d8e0e7059ccf9ac2c15efbac12746937997"
+    },
+    {
+      "path": "source/docs/data/ps45_plane_load_20261007/ps45_v2/plane_load_cuts_3_7.csv",
+      "bytes": 2702,
+      "sha256": "3079252e8ff07dd9662e40a736477bc90d79c090ded9cd6cb0355247fb13afe6"
+    },
+    {
+      "path": "source/docs/data/ps45_plane_load_20261007/ps45_v2/plane_load_cuts_5_5.csv",
+      "bytes": 2733,
+      "sha256": "95677fd5efba4efe1fa7cda616aab677f9e9e8248958869fcd4ee75792efc524"
+    },
+    {
+      "path": "source/docs/data/ps45_plane_load_20261007/ps45_v2/plane_load_cuts_7_3.csv",
+      "bytes": 2722,
+      "sha256": "4fd22cf590395ba29513b937c986ca3a000b818634edfa2b5e804fc0c4014993"
+    },
+    {
+      "path": "source/docs/data/ps45_plane_load_20261007/ps45_v2/plane_load_share_slide.csv",
+      "bytes": 587,
+      "sha256": "593b7a3941304a2ecc4b7fbe9cce4cd2de15613a7c4de9b702345d5225b6057c"
+    },
+    {
+      "path": "source/docs/data/ps45_plane_load_20261007/ps45_v2/plane_load_summary.csv",
+      "bytes": 3475,
+      "sha256": "a27cb261c5ce0ac68d517567caade508351f6339cbfe1df11966b24c97fc0738"
+    },
+    {
+      "path": "source/docs/data/ps45_plane_load_20261007/ps45_v2/stress_reduction_slide.csv",
+      "bytes": 799,
+      "sha256": "d72fb5e6a6b085a2972ae10cce1f151373dec7e51550a698170690576a17f318"
+    },
+    {
+      "path": "source/docs/data/ps45_plane_load_20261007/real14_validation/plane_load.json",
+      "bytes": 21202,
+      "sha256": "6d75501fa58e10dd4192a7efd5ebc832020226a1f3aaf188151c2d748482746b"
+    },
+    {
+      "path": "source/docs/data/ps45_plane_load_20261007/real14_validation/plane_load_cuts_real14.csv",
+      "bytes": 2666,
+      "sha256": "553200f296108a2827206a46334d04b8680310beec7f613f5a005f79c66829ba"
+    },
+    {
+      "path": "source/docs/data/ps45_plane_load_20261007/real14_validation/plane_load_share_slide.csv",
+      "bytes": 476,
+      "sha256": "533cf18f5a5e58c3071d0bc203a4523ed668c596f8b2c0ad7e36fabc998b6f00"
+    },
+    {
+      "path": "source/docs/data/ps45_plane_load_20261007/real14_validation/plane_load_summary.csv",
+      "bytes": 2758,
+      "sha256": "1b9001569b7c71a13f0616b5f1378936b23065e0500f6b23d2bde1fa474eb944"
+    },
+    {
+      "path": "source/docs/data/ps45_plane_load_20261007/real14_validation/stress_reduction_slide.csv",
+      "bytes": 684,
+      "sha256": "34cba470ff7746fd6620f6adaa92714242a9af9ea0c15427cc82cb09fc2a7911"
+    },
+    {
+      "path": "source/docs/data/ps45_plane_load_20261007/real14_validation/tangential_share.py",
+      "bytes": 1865,
+      "sha256": "428dceafbd97d6194c6a90445c8e0416349d96ea9a3320597a022726ab460f14"
+    },
+    {
+      "path": "source/docs/data/ps45_plane_load_20261007/real14_validation/tangential_share.txt",
+      "bytes": 532,
+      "sha256": "8ca7234fcccbe64cb61c39cf2b5a87af4c02f71fa1636e5d3c82ab20205dda36"
+    },
+    {
+      "path": "source/docs/data/ps45_plane_load_20261007/slide/contacts_vs_sigma_zz_share.csv",
+      "bytes": 681,
+      "sha256": "cb74e7ae26a5d9d5579b0dab7c1278a0c1f4b11ceac7676a375165079b6ec41a"
+    },
+    {
+      "path": "source/docs/data/ps45_plane_load_20261007/slide/contacts_vs_sigma_zz_share_73box.csv",
+      "bytes": 681,
+      "sha256": "cb74e7ae26a5d9d5579b0dab7c1278a0c1f4b11ceac7676a375165079b6ec41a"
+    },
+    {
+      "path": "source/docs/data/ps45_plane_load_20261007/slide/make_contacts_vs_load.py",
+      "bytes": 2872,
+      "sha256": "fe3773ce8713f5f39ebcb66a953566ef65bb7c25a693ef9f2e51f69e38f6aa86"
+    },
+    {
+      "path": "source/docs/data/ps45_plane_load_20261007/slide/make_contacts_vs_load_73box.py",
+      "bytes": 3227,
+      "sha256": "2fed9a171bca44dfe0494230b42d7abbafed0ce472025520ed7bbfecdec8cbfc"
+    },
+    {
+      "path": "source/docs/data/ps45_plane_load_20261007/slide/make_slide_preview.py",
+      "bytes": 3555,
+      "sha256": "9bb5be465e137eefbc93056347da21789dca00977ba8b94bca95b71f863f7af5"
+    },
+    {
+      "path": "source/docs/data/ps45_plane_load_20261007/wsl_rerun_v2_20261007.txt",
+      "bytes": 3222,
+      "sha256": "63bc62242eeb8f23513f9cf8873cab9108382fbdcc91fdf788ab0a43178345d6"
+    },
+    {
+      "path": "source/docs/data/ps73_damping_branch_20261007/README.md",
+      "bytes": 44971,
+      "sha256": "eab8d3bd3e9f270ca039ae02fb857a2606d9e99053a530ff50b6d2dceb26f860"
+    },
+    {
+      "path": "source/docs/data/ps73_damping_branch_20261007/SHA256SUMS",
+      "bytes": 874,
+      "sha256": "c8fa5b5ae246c7dae61f8b5f65e74d9b491666cfb82bc579d6b3c5c13c90082a"
+    },
+    {
+      "path": "source/docs/data/ps73_damping_branch_20261007/analyze_branch.py",
+      "bytes": 14947,
+      "sha256": "bdfc33137802b63c19fa7bb1c5ec4a8207db95e1a302ff4baff40fff597ad0dd"
+    },
+    {
+      "path": "source/docs/data/ps73_damping_branch_20261007/deck_diffs.txt",
+      "bytes": 12213,
+      "sha256": "a5d54644cd02914e1c16d34351dda9d08de56a389308fb81446d008f756d6347"
+    },
+    {
+      "path": "source/docs/data/ps73_damping_branch_20261007/in.branch_A.liggghts",
+      "bytes": 15404,
+      "sha256": "abc00597a49befaf9de1aceefead1913f3e51a31371c40ff70c19666043867f2"
+    },
+    {
+      "path": "source/docs/data/ps73_damping_branch_20261007/in.branch_B.liggghts",
+      "bytes": 21596,
+      "sha256": "a3dd4cb74c9238e9f5f27eada91a7a25b7fa4d1fbe9601021bae32ddfcd9032f"
+    },
+    {
+      "path": "source/docs/data/ps73_damping_branch_20261007/in.branch_C1.liggghts",
+      "bytes": 15422,
+      "sha256": "37312b61eb3cc5bbcbe1c29598409eae3fdcc0c4389d6e0b1eed7600feeeba77"
+    },
+    {
+      "path": "source/docs/data/ps73_damping_branch_20261007/in.branch_C2.liggghts",
+      "bytes": 15421,
+      "sha256": "78f4b79b1f3dcf5f420149baa2c29e0691ce8e85e466c9ff4044e85e0eacc554"
+    },
+    {
+      "path": "source/docs/data/ps73_damping_branch_20261007/in.branch_t0_syntax.liggghts",
+      "bytes": 27171,
+      "sha256": "866b1293486f7874e58b6606e735b0a43604c8b49353dbc4ebc7c3b182fb5e22"
+    },
+    {
+      "path": "source/docs/data/ps73_damping_branch_20261007/make_branch_decks.py",
+      "bytes": 73552,
+      "sha256": "b18db82782585e37a9b3a9237cab7ab92aad7048a7aac66502f7578075f7de31"
+    },
+    {
+      "path": "source/docs/data/ps73_damping_branch_20261007/plate_branch3100000.stl",
+      "bytes": 273,
+      "sha256": "a6a2e06c81cc1f0e0b023f36456348575d0d7c0a94e863acd66daa16d3822827"
+    },
+    {
+      "path": "source/docs/data/ps73_damping_branch_20261007/run_branch.sh",
+      "bytes": 20961,
+      "sha256": "042ad5396b803c5ab3e9638edebf353bb90fc3cdcbffa80e8536ef5cea70c664"
+    },
+    {
+      "path": "source/docs/data/ps73_damping_branch_20261007/run_branch_ibb.sbatch",
+      "bytes": 2540,
+      "sha256": "eed2de70cd60d0bb631a890cda80076745f91b7781825673fc4d57960717fade"
+    },
+    {
+      "path": "source/docs/data/ps73_damping_branch_20261007/snap_3100000_20261008/README.md",
+      "bytes": 4632,
+      "sha256": "d84094d169fc468a6154409ec6cddd958b9b85187e5358055d2494e2212162e3"
+    },
+    {
+      "path": "source/docs/data/ps73_damping_branch_20261007/snap_3100000_20261008/make_stop_zoom.py",
+      "bytes": 2092,
+      "sha256": "2fa44625069d381726a0d871dc15b6601218edb1cc33c880a73582d0f870f48d"
+    },
+    {
+      "path": "source/docs/data/ps73_damping_branch_20261007/snap_3100000_20261008/plane/plane_load.json",
+      "bytes": 21240,
+      "sha256": "cd42ce7c1d237d5cbd66bc69ce5b97cc920a6ab7dffa72f9915507c622a55d70"
+    },
+    {
+      "path": "source/docs/data/ps73_damping_branch_20261007/snap_3100000_20261008/plane/plane_load_cuts_snap_3100000.csv",
+      "bytes": 2719,
+      "sha256": "7f7da31993e0ce8d2b93f6d0432ff6658e88f57789af65def085586ada1bacc0"
+    },
+    {
+      "path": "source/docs/data/ps73_damping_branch_20261007/snap_3100000_20261008/plane/plane_load_share_slide.csv",
+      "bytes": 483,
+      "sha256": "9148ee9cfd20fc751ea1d8fe66364ae989eeb9371f44648e7965f734fb4ccbbd"
+    },
+    {
+      "path": "source/docs/data/ps73_damping_branch_20261007/snap_3100000_20261008/plane/plane_load_summary.csv",
+      "bytes": 2769,
+      "sha256": "c3b56fe506b5ad6c922ec6e3ad4621e228d0d6422b160f8b03c3add35c471976"
+    },
+    {
+      "path": "source/docs/data/ps73_damping_branch_20261007/snap_3100000_20261008/plane/stress_reduction_slide.csv",
+      "bytes": 690,
+      "sha256": "581040cda8f3864d02587ed217789007eebd6f7bc0c35111733ba5403fec3cda"
+    },
+    {
+      "path": "source/docs/data/ps73_damping_branch_20261007/snap_moments_20261008/README.md",
+      "bytes": 15222,
+      "sha256": "424841d6f870246db921cb9aecb569731dde17e2c57d6ad3dd9afe181c2c02c8"
+    },
+    {
+      "path": "source/docs/data/ps73_damping_branch_20261007/snap_moments_20261008/make_snap_decks.py",
+      "bytes": 17829,
+      "sha256": "785c9cc41e679b44b157d819bf692bbf7f8a4b7eb7c708d670088ae46a17ee69"
+    },
+    {
+      "path": "source/docs/data/ps73_damping_branch_20261007/snap_moments_20261008/render3d.py",
+      "bytes": 16963,
+      "sha256": "6800a18a0d3b6f23841223e090b663b77d4c8f953d70f935864d63b8502d9c4a"
+    },
+    {
+      "path": "source/docs/data/ps73_damping_branch_20261007/snap_moments_20261008/results_20261008/vm_moments.json",
+      "bytes": 6229,
+      "sha256": "429ce9dd7b3a1dd69d47b24f529ed0501080523c4ac2adb3df715f94b7b86066"
+    },
+    {
+      "path": "source/docs/data/ps73_damping_branch_20261007/snap_moments_20261008/results_20261008/vm_profile.csv",
+      "bytes": 3443,
+      "sha256": "5a434a1b2737e560e28022cd4750fc0506a8775b21de40edb6d800cce114f818"
+    },
+    {
+      "path": "source/docs/data/ps73_damping_branch_20261007/snap_moments_20261008/vm_moments.py",
+      "bytes": 25091,
+      "sha256": "75e064a0d34e60881703396a1a325a5b550022f8ce2d16c1a066b1c9cabcbca9"
+    },
+    {
+      "path": "source/docs/data/ps73_damping_branch_20261007/t0_run1_20261007/in.branch_t0_syntax.liggghts",
+      "bytes": 25130,
+      "sha256": "c0130fd0a5019ca916f6135bb18f97b1e37ef292bc3b681985af43c0beafdf42"
+    },
+    {
+      "path": "source/docs/esse_calibration_2mAh_real_9.md",
+      "bytes": 4687,
+      "sha256": "55ab874ea16346c4206797a7229849ee46fd5a7da74d42102be093d85cfe5592"
+    },
+    {
+      "path": "source/docs/reviews/codex_model_validation_request_20261008.md",
+      "bytes": 10008,
+      "sha256": "475eddca54e4fcbe710518028871909c2845403b4b4d69dffde4e772d50b4ca4"
+    },
+    {
+      "path": "source/docs/reviews/si_table_response_20260925.md",
+      "bytes": 72284,
+      "sha256": "499055d849a540513a609a6a9a306487bd593e5bb3154c5a12850c82fb376193"
+    },
+    {
+      "path": "source/docs/session_20260923_progress.md",
+      "bytes": 308958,
+      "sha256": "e0e484c324851a6fa2f5f46c26c3bf2c9fadefcbdbad3d3e3eef6cd406bf60be"
+    },
+    {
+      "path": "source/scripts/analyze_contacts.py",
+      "bytes": 80829,
+      "sha256": "a383ada7aef3d13ba08bd84728a20b6207f9b124a01ce3852c01ae2518ca1aa9"
+    },
+    {
+      "path": "source/scripts/dem_analysis_core.py",
+      "bytes": 102925,
+      "sha256": "39fb19cb7eb962f11fe88546fa0ad93c4a9074846be13d15b27c2eae44fb620f"
+    },
+    {
+      "path": "source/scripts/metrics_json.py",
+      "bytes": 9564,
+      "sha256": "baa671f895dd6103cf95c25647ee45877d98306f00ab15cd3968fbe4354a7702"
+    },
+    {
+      "path": "source/scripts/plane_load_share.py",
+      "bytes": 75189,
+      "sha256": "a1d95cb9c2f800028d67c44d79330362f9ffee568fc9cccebb943cce064a61ee"
+    },
+    {
+      "path": "source/scripts/type_map_resolve.py",
+      "bytes": 29014,
+      "sha256": "4a289c6412e4b8e1bc0fba573cb287966dfa00a053399097b587f1e14726bfe5"
+    },
+    {
+      "path": "source_manifest.json",
+      "bytes": 21658,
+      "sha256": "b1bc72badb4cd77481beb8e1040cff48cb203a2a9c9b3fa9014ea0a6f7ffd456"
+    },
+    {
+      "path": "source_plan.json",
+      "bytes": 24020,
+      "sha256": "ccf993e11c075e54c3812c9fec83c8c3679687374e214f5e44f3f65bd8dddd4a"
+    },
+    {
+      "path": "submitted/codex_model_validation_request_20261008.md",
+      "bytes": 10008,
+      "sha256": "475eddca54e4fcbe710518028871909c2845403b4b4d69dffde4e772d50b4ca4"
+    }
+  ],
+  "scope": "design review and post-processing/arithmetic only; no simulation"
+}

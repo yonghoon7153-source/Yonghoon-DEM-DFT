@@ -1,0 +1,52 @@
+{
+  "pin": "61ebd181b1ae5b47a76fe69d4400e4a3950dc8a3",
+  "source_files_verified": 71,
+  "external_evidence_blobs_verified": 2,
+  "attachment_equals_pinned_request": true,
+  "python": "3.12.14 (main, Aug 25 2026, 14:01:42) [MSC v.1944 64 bit (AMD64)]",
+  "packages": {
+    "numpy": "2.3.5",
+    "pandas": "3.0.1",
+    "networkx": "not in base environment; see probe dependency path"
+  },
+  "runs": [
+    {
+      "probe": "mv_anchor_porosity.py",
+      "returncode": 0,
+      "stdout": "evidence/mv_anchor_porosity.stdout.txt",
+      "stderr": "evidence/mv_anchor_porosity.stderr.txt"
+    },
+    {
+      "probe": "mv_pressure_arithmetic.py",
+      "returncode": 0,
+      "stdout": "evidence/mv_pressure_arithmetic.stdout.txt",
+      "stderr": "evidence/mv_pressure_arithmetic.stderr.txt"
+    },
+    {
+      "probe": "mv_softening_scaling.py",
+      "returncode": 0,
+      "stdout": "evidence/mv_softening_scaling.stdout.txt",
+      "stderr": "evidence/mv_softening_scaling.stderr.txt"
+    },
+    {
+      "probe": "mv_softening_frozen_reweight.py",
+      "returncode": 0,
+      "stdout": "evidence/mv_softening_frozen_reweight.stdout.txt",
+      "stderr": "evidence/mv_softening_frozen_reweight.stderr.txt"
+    },
+    {
+      "probe": "mv_stress_probe.py",
+      "returncode": 0,
+      "stdout": "evidence/mv_stress_probe.stdout.txt",
+      "stderr": "evidence/mv_stress_probe.stderr.txt"
+    },
+    {
+      "probe": "mv_stress_core_probe.py",
+      "returncode": 0,
+      "stdout": "evidence/mv_stress_core_probe.stdout.txt",
+      "stderr": "evidence/mv_stress_core_probe.stderr.txt"
+    }
+  ],
+  "all_passed": true,
+  "no_simulations": true
+}

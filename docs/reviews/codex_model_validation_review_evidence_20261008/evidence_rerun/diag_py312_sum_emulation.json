@@ -1,0 +1,68 @@
+{
+ "purpose": "Python 3.11 재실행의 끝자리 차이가 Python 3.12 의 내장 sum() 보정 합산 (Neumaier) 때문인지 확인하는 진단 — 판정 증거 아님",
+ "launcher": "tools/mv_probe_launcher_sum312.py (builtins.sum 을 CPython 3.12 sum() 흉내로 바꿈)",
+ "runs": [
+  {
+   "probe": "mv_anchor_porosity.py",
+   "returncode": 0,
+   "seconds": 0.15
+  },
+  {
+   "probe": "mv_pressure_arithmetic.py",
+   "returncode": 0,
+   "seconds": 0.04
+  },
+  {
+   "probe": "mv_softening_scaling.py",
+   "returncode": 0,
+   "seconds": 0.03
+  },
+  {
+   "probe": "mv_softening_frozen_reweight.py",
+   "returncode": 0,
+   "seconds": 0.05
+  },
+  {
+   "probe": "mv_stress_probe.py",
+   "returncode": 0,
+   "seconds": 0.1
+  },
+  {
+   "probe": "mv_stress_core_probe.py",
+   "returncode": 0,
+   "seconds": 0.63
+  },
+  {
+   "probe": "mv_stress_portability.py",
+   "returncode": 1,
+   "seconds": 0.69
+  }
+ ],
+ "result_equality": [
+  {
+   "file": "mv_anchor_porosity_result.json",
+   "parsed_equal_to_codex": true
+  },
+  {
+   "file": "mv_pressure_arithmetic_result.json",
+   "parsed_equal_to_codex": true
+  },
+  {
+   "file": "mv_softening_scaling_result.json",
+   "parsed_equal_to_codex": true
+  },
+  {
+   "file": "mv_softening_frozen_reweight_result.json",
+   "parsed_equal_to_codex": true
+  },
+  {
+   "file": "mv_stress_arithmetic.json",
+   "parsed_equal_to_codex": true
+  },
+  {
+   "file": "mv_stress_core_controls.json",
+   "parsed_equal_to_codex": true
+  }
+ ],
+ "note": "mv_stress_portability 는 이 진단에서 rc 1 이 정상이다 — 그 탐침이 띄우는 자식 프로세스는 바꾼 sum 을 쓰지 않으므로 부모 (바꾼 sum) 결과와 다르다.  본 재실행 (바꾸지 않은 sum) 에서는 rc 0."
+}

@@ -1,0 +1,53 @@
+{
+  "scope": "conditional static force-law illustration, not a simulation or equilibrium result",
+  "input_sha256": "daf8d76070023c656972597da27ad55ccd36456601091c4b20c0be682f1166df",
+  "case": "7:3",
+  "baseline_mean_cut_load_MPa": 167.1374353008093,
+  "rows": [
+    {
+      "E_SE_real_GPa": 1.35,
+      "conditional_share_pct": {
+        "AM–AM": 48.46389322548601,
+        "AM–SE": 39.144141874918446,
+        "SE–SE": 12.391964899595552
+      },
+      "conditional_mean_cut_load_MPa": 167.1374353008093,
+      "total_force_ratio": 1.0
+    },
+    {
+      "E_SE_real_GPa": 2.7,
+      "conditional_share_pct": {
+        "AM–AM": 35.2050276503086,
+        "AM–SE": 49.12202907566136,
+        "SE–SE": 15.672943274030041
+      },
+      "conditional_mean_cut_load_MPa": 230.08448960354656,
+      "total_force_ratio": 1.376618524685669
+    },
+    {
+      "E_SE_real_GPa": 5.4,
+      "conditional_share_pct": {
+        "AM–AM": 23.996397440534803,
+        "AM–SE": 57.403475333024886,
+        "SE–SE": 18.6001272264403
+      },
+      "conditional_mean_cut_load_MPa": 337.55612018315827,
+      "total_force_ratio": 2.0196320445843514
+    },
+    {
+      "E_SE_real_GPa": 23.999999999999996,
+      "conditional_share_pct": {
+        "AM–AM": 9.34349185344742,
+        "AM–SE": 66.77107808237878,
+        "SE–SE": 23.885430064173796
+      },
+      "conditional_mean_cut_load_MPa": 866.9275839750784,
+      "total_force_ratio": 5.186914483968276
+    }
+  ],
+  "limitations": [
+    "uses total contact-force shares; neglect of velocity-force terms is an explicit unverified assumption",
+    "holds geometry/topology/history fixed and imposes no equilibrium or pressure constraint",
+    "does not predict equilibrated V4 shares or alpha; no extrapolation of measured slope"
+  ]
+}

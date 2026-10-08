@@ -1,0 +1,82 @@
+{
+  "boundary_force_units": {
+    "Pdeck_Pa": 300000.0,
+    "Pphysical_MPa": 300.0,
+    "target165MPa_force_N": 412.5,
+    "physical_force_50um_square_N": 0.75
+  },
+  "warmup_counterexample": {
+    "status": "CONVERGED",
+    "chunk": 10,
+    "kinetic_J": 0.5
+  },
+  "late_counterexample": {
+    "status": "CONVERGED",
+    "chunk": 14,
+    "kinetic_J": 0.009
+  },
+  "warmup_KE_ratio_to_reference": 29482.557529314505,
+  "warmup_mass_rms_velocity_m_s": 1.051757904779178,
+  "late_KE_ratio_to_reference": 530.686035527661,
+  "late_mass_rms_velocity_m_s": 0.14110813025753957,
+  "sampling_counterexample": {
+    "description": "F(t)=750[1+0.03sin(2pi t/T)], v=0.009sin(2pi t/T), T=.005 s; servo-compatible sinusoidal input, not DEM solution",
+    "period_steps": 5000.0,
+    "relative_force_peak": 0.03,
+    "velocity_peak_m_s": 0.009,
+    "height_amplitude_deck_m": 7.16197243913529e-06,
+    "height_amplitude_physical_um": 0.00716197243913529,
+    "sample_force_errors": [
+      7.347880794884118e-18,
+      1.4695761589768237e-17,
+      2.2043642384652355e-17,
+      2.9391523179536474e-17
+    ],
+    "sample_height_deltas_m": [
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "linear_servo_estimates": [
+    {
+      "K_N_m": 47000,
+      "tau_s": 0.05319148936170213,
+      "tau_steps": 53191.48936170213,
+      "residual_h_um_at_dz_gate_approx": 0.05319148936170213
+    },
+    {
+      "K_N_m": 4700,
+      "tau_s": 0.5319148936170213,
+      "tau_steps": 531914.8936170213,
+      "residual_h_um_at_dz_gate_approx": 0.5319148936170213
+    },
+    {
+      "K_N_m": 141000,
+      "tau_s": 0.01773049645390071,
+      "tau_steps": 17730.496453900712,
+      "residual_h_um_at_dz_gate_approx": 0.01773049645390071
+    }
+  ],
+  "gravity_budget": {
+    "weight_N": 8.86824,
+    "bottom_minus_top_physical_MPa": 3.547296,
+    "fraction_of300": 0.011824320000000001
+  },
+  "count_guard_can_admit_volume_loss": {
+    "50_AM_r45_porosity_pp_at111052nm": 6.874320271785467,
+    "one_AM_r45_porosity_pp_at111052nm": 0.13748640543570936
+  },
+  "normal_history_reset_example_dimensionless": {
+    "kn": 1,
+    "k2Max": 3,
+    "deltaMaxLim": 1,
+    "current_overlap": 0.4,
+    "old_deltaMax": 0.6,
+    "old_k2": 2.2,
+    "old_fHys": 0.16000000000000003,
+    "reset_deltaMax": 0.4,
+    "reset_fHys": 0.4
+  }
+}

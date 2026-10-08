@@ -1,0 +1,43 @@
+{
+  "scope": "Replay of 11-file minimal ZIP; no dependency environments, empty tmp directory or prior evidence included.",
+  "required_packages": [
+    "numpy",
+    "pandas",
+    "networkx"
+  ],
+  "external_review_cache_used_as_environment": false,
+  "files": [
+    "probes/mv_stress_probe.py",
+    "probes/mv_stress_core_probe.py",
+    "source/scripts/plane_load_share.py",
+    "source/scripts/dem_analysis_core.py",
+    "source/scripts/analyze_contacts.py",
+    "source/scripts/metrics_json.py",
+    "source/scripts/type_map_resolve.py",
+    "source/docs/data/ps45_plane_load_20261007/ps45_v2/plane_load.json",
+    "source/docs/data/ps45_plane_load_20261007/real14_validation/plane_load.json",
+    "source/docs/data/ps73_damping_branch_20261007/snap_3100000_20261008/plane/plane_load.json",
+    "source/docs/data/ps73_damping_branch_20261007/snap_moments_20261008/results_20261008/vm_moments.json"
+  ],
+  "replays": [
+    {
+      "probe": "mv_stress_probe.py",
+      "exit_code": 0,
+      "stderr": "",
+      "json_equal_to_recorded_evidence": true
+    },
+    {
+      "probe": "mv_stress_core_probe.py",
+      "exit_code": 0,
+      "stderr": "",
+      "json_equal_to_recorded_evidence": true
+    }
+  ],
+  "runtime": {
+    "python": "3.11.15 (main, Mar  3 2026, 09:26:23) [GCC 13.3.0]",
+    "numpy": "2.4.6",
+    "pandas": "3.0.6",
+    "networkx": "3.6.1"
+  },
+  "passed": true
+}

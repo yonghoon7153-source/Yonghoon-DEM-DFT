@@ -1,0 +1,129 @@
+{
+  "scope": "arithmetic and model-law probes only, no DEM execution or validation claim",
+  "units_sim_over_real": {
+    "length": 1000.0,
+    "stress_and_E": 0.001,
+    "density": 1.0,
+    "mass": 1000000000.0,
+    "force": 1000.0,
+    "stiffness_F_over_L": 1.0,
+    "time": 31622.776601683792,
+    "velocity": 0.03162277660168379,
+    "acceleration": 1.0000000000000002e-06,
+    "viscous_gamma_F_over_v": 31622.776601683796,
+    "energy": 1000000.0
+  },
+  "gravity": {
+    "required_g_deck_m_per_s2": 9.810000000000001e-06,
+    "current_selfweight_amplification": 1000000.0,
+    "readme_bulk_density_kg_m3_ESTIMATE": 3260,
+    "window_93um_current_selfweight_MPa": 2.9741958,
+    "height_132um_current_selfweight_MPa": 4.2214392,
+    "window_93um_physical_selfweight_Pa": 2.9741958,
+    "window_93um_current_over_165": 0.01802542909090909,
+    "settling_g_98_1_current_amplification_over_earth": 10000000.0,
+    "fall_from_rest_0_295m_at_scaled_g_seconds": 245.2401099307744,
+    "fall_at_scaled_g_in_200000_steps_of_1us_deck_m": 1.9620000000000002e-07
+  },
+  "mapped_velocities_real_m_per_s": {
+    "press_0_01": 0.31622776601683794,
+    "characteristic_2": 63.24555320336759,
+    "insertion_0_5": 15.811388300841898
+  },
+  "target_force_N": {
+    "165_MPa": 412.50000000000006,
+    "300_MPa": 750.0000000000001
+  },
+  "E_and_timestep": [
+    {
+      "factor_SE": 1,
+      "E_SE_real_GPa": 1.35,
+      "E_AM_over_E_SE": 103.70370370370371,
+      "kn_SE_SE_ratio": 1.0,
+      "kn_AM_SE_ratio": 1.0,
+      "gamma_SE_SE_ratio": 1.0,
+      "Rayleigh_AM_P_us": 142.67309778400843,
+      "Rayleigh_AM_S_us": 63.41026568178154,
+      "Rayleigh_SE_us": 105.33292980350939,
+      "dt_1us_over_min_Rayleigh": 0.015770317144205105,
+      "dt_preserve_SE_Rayleigh_margin_us": 1.0,
+      "dt_preserve_SE_SE_Hooke_margin_us": 1.0
+    },
+    {
+      "factor_SE": 2,
+      "E_SE_real_GPa": 2.7,
+      "E_AM_over_E_SE": 51.851851851851855,
+      "kn_SE_SE_ratio": 1.7411011265922482,
+      "kn_AM_SE_ratio": 1.727520184547266,
+      "gamma_SE_SE_ratio": 1.3195079107728942,
+      "Rayleigh_AM_P_us": 142.67309778400843,
+      "Rayleigh_AM_S_us": 63.41026568178154,
+      "Rayleigh_SE_us": 74.48162894630808,
+      "dt_1us_over_min_Rayleigh": 0.015770317144205105,
+      "dt_preserve_SE_Rayleigh_margin_us": 0.7071067811865476,
+      "dt_preserve_SE_SE_Hooke_margin_us": 0.757858283255199
+    },
+    {
+      "factor_SE": 4,
+      "E_SE_real_GPa": 5.4,
+      "E_AM_over_E_SE": 25.925925925925927,
+      "kn_SE_SE_ratio": 3.0314331330207964,
+      "kn_AM_SE_ratio": 2.9617177104952437,
+      "gamma_SE_SE_ratio": 1.7411011265922482,
+      "Rayleigh_AM_P_us": 142.67309778400843,
+      "Rayleigh_AM_S_us": 63.41026568178154,
+      "Rayleigh_SE_us": 52.66646490175469,
+      "dt_1us_over_min_Rayleigh": 0.01898741451254464,
+      "dt_preserve_SE_Rayleigh_margin_us": 0.5,
+      "dt_preserve_SE_SE_Hooke_margin_us": 0.5743491774985174
+    },
+    {
+      "factor_SE": 17.777777777777775,
+      "E_SE_real_GPa": 23.999999999999996,
+      "E_AM_over_E_SE": 5.833333333333334,
+      "kn_SE_SE_ratio": 9.997743227929732,
+      "kn_AM_SE_ratio": 8.847706334254358,
+      "gamma_SE_SE_ratio": 3.161920813039082,
+      "Rayleigh_AM_P_us": 142.67309778400843,
+      "Rayleigh_AM_S_us": 63.41026568178154,
+      "Rayleigh_SE_us": 24.981897809829135,
+      "dt_1us_over_min_Rayleigh": 0.04002898449158453,
+      "dt_preserve_SE_Rayleigh_margin_us": 0.23717082451262847,
+      "dt_preserve_SE_SE_Hooke_margin_us": 0.31626345475706247
+    },
+    {
+      "factor_SE": 18,
+      "E_SE_real_GPa": 24.3,
+      "E_AM_over_E_SE": 5.761316872427984,
+      "kn_SE_SE_ratio": 10.097596309015797,
+      "kn_AM_SE_ratio": 8.922682908449733,
+      "gamma_SE_SE_ratio": 3.177671523146437,
+      "Rayleigh_AM_P_us": 142.67309778400843,
+      "Rayleigh_AM_S_us": 63.41026568178154,
+      "Rayleigh_SE_us": 24.827209648769358,
+      "dt_1us_over_min_Rayleigh": 0.040278388677060545,
+      "dt_preserve_SE_Rayleigh_margin_us": 0.23570226039551584,
+      "dt_preserve_SE_SE_Hooke_margin_us": 0.3146958370983006
+    }
+  ],
+  "baseline_contact": {
+    "SE_SE": {
+      "Yeff_Pa": 741758.2417582418,
+      "kn_N_per_m": 138.68216390589956,
+      "contact_gamma_kg_per_s": 0.006098868742752596,
+      "sqrt_meff_over_kn_s": 6.144534774365063e-05
+    },
+    "AM_S_SE": {
+      "Yeff_Pa": 1468923.8092924973,
+      "kn_N_per_m": 331.665622431863,
+      "contact_gamma_kg_per_s": 0.013295206043717766,
+      "sqrt_meff_over_kn_s": 5.600862909427021e-05
+    }
+  },
+  "limitations": [
+    "Rayleigh estimates use original constant radius/density deck, not parsed restart atom minima.",
+    "Rayleigh/Hertz checks and sqrt(m/k) scaling do not certify hysteretic, adhesive, frictional, wall or servo stability.",
+    "Bulk density 3260 is the source README approximation, not a particle-mass sum.",
+    "E ratios do not predict force-share ratios after equilibrium, slip, contact changes or history evolution."
+  ]
+}

@@ -1,0 +1,436 @@
+{
+  "scope": "Derived JSON arithmetic only; raw dump identities and numerical values not independently reconstructed.",
+  "cases": {
+    "ps45:0:10": {
+      "n_cuts": 21,
+      "mean_mpa_recalc": 158.24579754615976,
+      "contribution_recalc_pct": {
+        "AM–AM": 59.56224275445171,
+        "AM–SE": 31.008343867500916,
+        "SE–SE": 9.429413378047379
+      },
+      "contribution_max_abs_error_pp": 7.105427357601002e-15,
+      "contribution_integral_difference_pp": {
+        "AM–AM": -0.24780157171400674,
+        "AM–SE": 0.19407551783060129,
+        "SE–SE": 0.05372605388338947
+      },
+      "phase_contact_virial_share_pct": {
+        "AM_S": 84.5297498014761,
+        "SE": 15.47025019852393
+      },
+      "phase_share_sum_pct": 100.00000000000003,
+      "ratio_lw_planes": 1.003730984319127,
+      "lw_edge_fraction": 0.02282701976126579,
+      "lw_integral_bias_pct": 0.37298046190250567,
+      "recorded_lw_checks": {
+        "force_decomp_rel": 1.3606793600601968e-06,
+        "force_decomp_abs": 1.0000000000509601e-05,
+        "force_decomp_zero_scale": false,
+        "branch_over_r_max": 1.000984735148354,
+        "virial_total_rel": 3.70068013705333e-06,
+        "virial_total_abs": 0.00036605890891294735,
+        "virial_zero_scale": false,
+        "virial_status": "checked",
+        "virial_scope": "global_diagonal_sum — 전역 부호 · 척도 검사 (Σ_i V_i σ_LW,aa ↔ Σ_i c_strs,aa · 대각 셋) · 프레임 · 입자 · 상 배분의 대응 증명 아님 (같은 기하 두 dimer 의 접촉 힘을 맞바꿔도 통과)"
+      },
+      "n_window": {
+        "AM_S": 4331,
+        "SE": 146309
+      },
+      "wall_in_window": 0
+    },
+    "ps45:3:7": {
+      "n_cuts": 21,
+      "mean_mpa_recalc": 159.92987700833373,
+      "contribution_recalc_pct": {
+        "AM–AM": 54.63492398251825,
+        "AM–SE": 34.66002084881655,
+        "SE–SE": 10.705055168665206
+      },
+      "contribution_max_abs_error_pp": 7.105427357601002e-15,
+      "contribution_integral_difference_pp": {
+        "AM–AM": 0.24291374959449996,
+        "AM–SE": -0.2960772731143848,
+        "SE–SE": 0.05316352351987952
+      },
+      "phase_contact_virial_share_pct": {
+        "AM_P": 26.334131090567073,
+        "AM_S": 56.95401918933014,
+        "SE": 16.711849720102784
+      },
+      "phase_share_sum_pct": 100.0,
+      "ratio_lw_planes": 0.9969029826368789,
+      "lw_edge_fraction": 0.03058539654634299,
+      "lw_integral_bias_pct": -0.31103904841141006,
+      "recorded_lw_checks": {
+        "force_decomp_rel": 5.771865286058877e-06,
+        "force_decomp_abs": 8.300000000005525e-05,
+        "force_decomp_zero_scale": false,
+        "branch_over_r_max": 1.0012684155609786,
+        "virial_total_rel": 4.033997348757433e-06,
+        "virial_total_abs": 0.000384293711320538,
+        "virial_zero_scale": false,
+        "virial_status": "checked",
+        "virial_scope": "global_diagonal_sum — 전역 부호 · 척도 검사 (Σ_i V_i σ_LW,aa ↔ Σ_i c_strs,aa · 대각 셋) · 프레임 · 입자 · 상 배분의 대응 증명 아님 (같은 기하 두 dimer 의 접촉 힘을 맞바꿔도 통과)"
+      },
+      "n_window": {
+        "AM_P": 104,
+        "AM_S": 2735,
+        "SE": 131664
+      },
+      "wall_in_window": 0
+    },
+    "ps45:5:5": {
+      "n_cuts": 21,
+      "mean_mpa_recalc": 164.44245692047488,
+      "contribution_recalc_pct": {
+        "AM–AM": 52.371659020737496,
+        "AM–SE": 36.21916499883614,
+        "SE–SE": 11.409175980426363
+      },
+      "contribution_max_abs_error_pp": 7.105427357601002e-15,
+      "contribution_integral_difference_pp": {
+        "AM–AM": 0.3617244381046092,
+        "AM–SE": -0.585967139563806,
+        "SE–SE": 0.22424270145919678
+      },
+      "phase_contact_virial_share_pct": {
+        "AM_P": 46.94503206167009,
+        "AM_S": 36.42961317959276,
+        "SE": 16.625354758737174
+      },
+      "phase_share_sum_pct": 100.00000000000001,
+      "ratio_lw_planes": 1.0056164007813795,
+      "lw_edge_fraction": 0.03989764727471856,
+      "lw_integral_bias_pct": 0.5614590131900687,
+      "recorded_lw_checks": {
+        "force_decomp_rel": 3.2933242170452823e-06,
+        "force_decomp_abs": 9.200000000042508e-05,
+        "force_decomp_zero_scale": false,
+        "branch_over_r_max": 1.0010319003907882,
+        "virial_total_rel": 3.5796419954728036e-06,
+        "virial_total_abs": 0.00033483214633633906,
+        "virial_zero_scale": false,
+        "virial_status": "checked",
+        "virial_scope": "global_diagonal_sum — 전역 부호 · 척도 검사 (Σ_i V_i σ_LW,aa ↔ Σ_i c_strs,aa · 대각 셋) · 프레임 · 입자 · 상 배분의 대응 증명 아님 (같은 기하 두 dimer 의 접촉 힘을 맞바꿔도 통과)"
+      },
+      "n_window": {
+        "AM_P": 175,
+        "AM_S": 1917,
+        "SE": 131060
+      },
+      "wall_in_window": 0
+    },
+    "ps45:7:3": {
+      "n_cuts": 21,
+      "mean_mpa_recalc": 167.13743530080927,
+      "contribution_recalc_pct": {
+        "AM–AM": 48.46389322548602,
+        "AM–SE": 39.14414187491844,
+        "SE–SE": 12.391964899595553
+      },
+      "contribution_max_abs_error_pp": 7.105427357601002e-15,
+      "contribution_integral_difference_pp": {
+        "AM–AM": 0.337091081408893,
+        "AM–SE": -0.44736440421004176,
+        "SE–SE": 0.11027332280115587
+      },
+      "phase_contact_virial_share_pct": {
+        "AM_P": 61.268226941584,
+        "AM_S": 21.267089383692632,
+        "SE": 17.464683674723375
+      },
+      "phase_share_sum_pct": 100.0,
+      "ratio_lw_planes": 1.0005685134617428,
+      "lw_edge_fraction": 0.04247482852135483,
+      "lw_integral_bias_pct": 0.0572310870028403,
+      "recorded_lw_checks": {
+        "force_decomp_rel": 3.1226465347278135e-06,
+        "force_decomp_abs": 8.499999999855845e-05,
+        "force_decomp_zero_scale": false,
+        "branch_over_r_max": 1.0007199208569768,
+        "virial_total_rel": 1.463827154267651e-05,
+        "virial_total_abs": 0.0013882459476945996,
+        "virial_zero_scale": false,
+        "virial_status": "checked",
+        "virial_scope": "global_diagonal_sum — 전역 부호 · 척도 검사 (Σ_i V_i σ_LW,aa ↔ Σ_i c_strs,aa · 대각 셋) · 프레임 · 입자 · 상 배분의 대응 증명 아님 (같은 기하 두 dimer 의 접촉 힘을 맞바꿔도 통과)"
+      },
+      "n_window": {
+        "AM_P": 239,
+        "AM_S": 1162,
+        "SE": 131308
+      },
+      "wall_in_window": 0
+    },
+    "ps45:10:0": {
+      "n_cuts": 21,
+      "mean_mpa_recalc": 175.47833684927153,
+      "contribution_recalc_pct": {
+        "AM–AM": 56.91439845895566,
+        "AM–SE": 32.95409686990918,
+        "SE–SE": 10.131504671135136
+      },
+      "contribution_max_abs_error_pp": 2.1316282072803006e-14,
+      "contribution_integral_difference_pp": {
+        "AM–AM": 0.4930039560507993,
+        "AM–SE": -0.6990739143802642,
+        "SE–SE": 0.20606995832943475
+      },
+      "phase_contact_virial_share_pct": {
+        "AM_P": 86.9568425049393,
+        "SE": 13.043157495060699
+      },
+      "phase_share_sum_pct": 100.0,
+      "ratio_lw_planes": 1.0149730559155616,
+      "lw_edge_fraction": 0.06024552566062278,
+      "lw_integral_bias_pct": 1.496801678804971,
+      "recorded_lw_checks": {
+        "force_decomp_rel": 2.4934512653901693e-06,
+        "force_decomp_abs": 9.100000000117348e-05,
+        "force_decomp_zero_scale": false,
+        "branch_over_r_max": 1.0011139595470784,
+        "virial_total_rel": 1.3689358955526328e-05,
+        "virial_total_abs": 0.0013013520701221637,
+        "virial_zero_scale": false,
+        "virial_status": "checked",
+        "virial_scope": "global_diagonal_sum — 전역 부호 · 척도 검사 (Σ_i V_i σ_LW,aa ↔ Σ_i c_strs,aa · 대각 셋) · 프레임 · 입자 · 상 배분의 대응 증명 아님 (같은 기하 두 dimer 의 접촉 힘을 맞바꿔도 통과)"
+      },
+      "n_window": {
+        "AM_P": 350,
+        "SE": 130989
+      },
+      "wall_in_window": 0
+    },
+    "snapshot:snap_3100000": {
+      "n_cuts": 21,
+      "mean_mpa_recalc": 179.72825689787823,
+      "contribution_recalc_pct": {
+        "AM–AM": 51.74953559842391,
+        "AM–SE": 36.63988679871601,
+        "SE–SE": 11.61057760286007
+      },
+      "contribution_max_abs_error_pp": 7.105427357601002e-15,
+      "contribution_integral_difference_pp": {
+        "AM–AM": 0.25463534243921515,
+        "AM–SE": -0.42664430377609364,
+        "SE–SE": 0.17200896133687493
+      },
+      "phase_contact_virial_share_pct": {
+        "AM_P": 62.734903976643906,
+        "AM_S": 21.012221133266586,
+        "SE": 16.25287489008953
+      },
+      "phase_share_sum_pct": 100.00000000000001,
+      "ratio_lw_planes": 0.9967038125397657,
+      "lw_edge_fraction": 0.04886756735729652,
+      "lw_integral_bias_pct": 0.20334539939488305,
+      "recorded_lw_checks": {
+        "force_decomp_rel": 2.2175354022398334e-06,
+        "force_decomp_abs": 9.200000000042508e-05,
+        "force_decomp_zero_scale": false,
+        "branch_over_r_max": 1.001272330587441,
+        "virial_total_rel": 8.701568245214895e-07,
+        "virial_total_abs": 8.620773892431544e-05,
+        "virial_zero_scale": false,
+        "virial_status": "checked",
+        "virial_scope": "global_diagonal_sum — 전역 부호 · 척도 검사 (Σ_i V_i σ_LW,aa ↔ Σ_i c_strs,aa · 대각 셋) · 프레임 · 입자 · 상 배분의 대응 증명 아님 (같은 기하 두 dimer 의 접촉 힘을 맞바꿔도 통과)"
+      },
+      "n_window": {
+        "AM_P": 239,
+        "AM_S": 1163,
+        "SE": 131089
+      },
+      "wall_in_window": 0
+    },
+    "real14:real14": {
+      "n_cuts": 21,
+      "mean_mpa_recalc": 263.1410989994437,
+      "contribution_recalc_pct": {
+        "AM–AM": 74.60148373649156,
+        "AM–SE": 21.941689763592215,
+        "SE–SE": 3.4568264999162053
+      },
+      "contribution_max_abs_error_pp": 1.4210854715202004e-14,
+      "contribution_integral_difference_pp": {
+        "AM–AM": 0.02088578973011579,
+        "AM–SE": -0.015053154705864102,
+        "SE–SE": -0.005832635024281885
+      },
+      "phase_contact_virial_share_pct": {
+        "AM_P": 80.39398415139091,
+        "AM_S": 14.61192784936097,
+        "SE": 4.9940879992481
+      },
+      "phase_share_sum_pct": 99.99999999999997,
+      "ratio_lw_planes": 1.158605323012689,
+      "lw_edge_fraction": 0.859433108267156,
+      "lw_integral_bias_pct": 15.860369552702224,
+      "recorded_lw_checks": {
+        "force_decomp_rel": 1.4498405900237476e-06,
+        "force_decomp_abs": 9.999999999976694e-05,
+        "force_decomp_zero_scale": false,
+        "branch_over_r_max": 1.0001395302656626,
+        "virial_total_rel": 5.0172876127695946e-05,
+        "virial_total_abs": 0.0017433036013230208,
+        "virial_zero_scale": false,
+        "virial_status": "checked",
+        "virial_scope": "global_diagonal_sum — 전역 부호 · 척도 검사 (Σ_i V_i σ_LW,aa ↔ Σ_i c_strs,aa · 대각 셋) · 프레임 · 입자 · 상 배분의 대응 증명 아님 (같은 기하 두 dimer 의 접촉 힘을 맞바꿔도 통과)"
+      },
+      "n_window": {
+        "AM_P": 8,
+        "AM_S": 94,
+        "SE": 6578
+      },
+      "wall_in_window": 0
+    }
+  },
+  "snap_to_relaxed": {
+    "contribution_change_pp": {
+      "AM–AM": -3.2856423729379074,
+      "AM–SE": 2.504255076202419,
+      "SE–SE": 0.7813872967354811
+    },
+    "alpha_change": {
+      "AM_P": -0.03142247718500868,
+      "AM_S": 0.014380406098881693,
+      "AM": -0.017667346077531842,
+      "SE": 0.034467257234485016
+    },
+    "alpha_change_relative_pct": {
+      "AM_P": -2.2980344844916067,
+      "AM_S": 1.3414015592069672,
+      "AM": -1.3813779138675764,
+      "SE": 7.320533186629907
+    },
+    "mean_plane_change_pct": -7.00547694301793
+  },
+  "vm_arithmetic": [
+    {
+      "step": 1000000,
+      "phase_ratios": {
+        "AM": {
+          "ratio_recalc": 0.33746188698176544,
+          "wall_excluded_number_pct": 1.0265700483091786
+        },
+        "SE": {
+          "ratio_recalc": 0.3439966353023971,
+          "wall_excluded_number_pct": 1.12368043133204
+        }
+      },
+      "AM_SE_volume_mean_vm_ratio": 0.5629705123215462,
+      "all_particle_number_mean_MPa": 19.865738634568213
+    },
+    {
+      "step": 2200000,
+      "phase_ratios": {
+        "AM": {
+          "ratio_recalc": 4.871552298647914,
+          "wall_excluded_number_pct": 2.475845410628019
+        },
+        "SE": {
+          "ratio_recalc": 2.527551042941257,
+          "wall_excluded_number_pct": 2.2246856970093978
+        }
+      },
+      "AM_SE_volume_mean_vm_ratio": 1.0908099136078528,
+      "all_particle_number_mean_MPa": 54.42357659513515
+    },
+    {
+      "step": 3100000,
+      "phase_ratios": {
+        "AM": {
+          "ratio_recalc": 1.842968208269426,
+          "wall_excluded_number_pct": 3.3816425120772946
+        },
+        "SE": {
+          "ratio_recalc": 1.4255476734629116,
+          "wall_excluded_number_pct": 2.382152125166914
+        }
+      },
+      "AM_SE_volume_mean_vm_ratio": 1.740734679915978,
+      "all_particle_number_mean_MPa": 113.00605293586291
+    },
+    {
+      "step": 3220000,
+      "phase_ratios": {
+        "AM": {
+          "ratio_recalc": 0.9700268654704025,
+          "wall_excluded_number_pct": 3.260869565217391
+        },
+        "SE": {
+          "ratio_recalc": 1.046032055508044,
+          "wall_excluded_number_pct": 2.3481837478977834
+        }
+      },
+      "AM_SE_volume_mean_vm_ratio": 1.5387604171016551,
+      "all_particle_number_mean_MPa": 112.70949540494836
+    }
+  ],
+  "provenance_record_matches": {
+    "atoms.csv": true,
+    "contacts.csv": true,
+    "mesh_info.json": true,
+    "input_params.json": true
+  },
+  "negative_controls": {
+    "mean_vm_not_vm_mean": {
+      "mean_vm": 3.0,
+      "vm_mean_tensor": 0.0
+    },
+    "hydrostatic_stress": {
+      "tensor": [
+        [
+          100.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          100.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          100.0
+        ]
+      ],
+      "vm": 0.0,
+      "zz": 100.0
+    },
+    "wall_mean_normalization": {
+      "interior_vm": [
+        10.0,
+        10.0
+      ],
+      "incomplete_wall_vm": 0.0,
+      "mean_interior": 10.0,
+      "mean_all": 6.666666666666667,
+      "interior_ratio_by_all": 1.5
+    },
+    "tensor_rotation": {
+      "tensor_covariance_max_error": 1.7763568394002505e-15,
+      "vm_invariance_abs_error": 8.881784197001252e-16
+    },
+    "same_global_virial_different_phase_shares": {
+      "global_virial": 1.0,
+      "equal_partition_phase_shares": [
+        0.5,
+        0.5
+      ],
+      "branch_ratio_4_to_1_shares": [
+        0.8,
+        0.2
+      ],
+      "same_equal_phase_volumes_alpha_equal": [
+        1.0,
+        1.0
+      ],
+      "same_equal_phase_volumes_alpha_branch": [
+        1.6,
+        0.4
+      ]
+    }
+  }
+}

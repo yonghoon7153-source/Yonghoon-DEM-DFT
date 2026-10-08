@@ -1,0 +1,545 @@
+{
+  "pin": "61ebd181b1ae5b47a76fe69d4400e4a3950dc8a3",
+  "files": [
+    {
+      "path": "AGENTS.md",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "2829b46196a08ffae439ddbdc20dc093cde511c4",
+      "size": 2822,
+      "url": "https://api.github.com/repos/yonghoon7153-source/Yonghoon-DEM-DFT/git/blobs/2829b46196a08ffae439ddbdc20dc093cde511c4"
+    },
+    {
+      "path": "docs/data/esse_calibration_2mAh_real_9.csv",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "4692463692129dd0d1caf4a56363966d8fdbfb9c",
+      "size": 899,
+      "url": "https://api.github.com/repos/yonghoon7153-source/Yonghoon-DEM-DFT/git/blobs/4692463692129dd0d1caf4a56363966d8fdbfb9c"
+    },
+    {
+      "path": "docs/data/ps45_plane_load_20261007/README.md",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "0750cac9e6acbf6dc866968bddef28cc9255a662",
+      "size": 23081,
+      "url": "https://api.github.com/repos/yonghoon7153-source/Yonghoon-DEM-DFT/git/blobs/0750cac9e6acbf6dc866968bddef28cc9255a662"
+    },
+    {
+      "path": "docs/data/ps45_plane_load_20261007/ibb_damping_drag_20261007.txt",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "d87a01e8081b8dad8e8b6faef728a77dd3e76861",
+      "size": 1061,
+      "url": "https://api.github.com/repos/yonghoon7153-source/Yonghoon-DEM-DFT/git/blobs/d87a01e8081b8dad8e8b6faef728a77dd3e76861"
+    },
+    {
+      "path": "docs/data/ps45_plane_load_20261007/ps45/plane_load.json",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "434b6cb77fd5029e877b2f2fb08b5848e6f047f9",
+      "size": 83872,
+      "url": "https://api.github.com/repos/yonghoon7153-source/Yonghoon-DEM-DFT/git/blobs/434b6cb77fd5029e877b2f2fb08b5848e6f047f9"
+    },
+    {
+      "path": "docs/data/ps45_plane_load_20261007/ps45/plane_load_cuts_0_10.csv",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "da140859183394b6c438f7297c0d372d737d96e3",
+      "size": 2654,
+      "url": "https://api.github.com/repos/yonghoon7153-source/Yonghoon-DEM-DFT/git/blobs/da140859183394b6c438f7297c0d372d737d96e3"
+    },
+    {
+      "path": "docs/data/ps45_plane_load_20261007/ps45/plane_load_cuts_10_0.csv",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "f2370ed30a5fd3f4af23ddb47bc9976e685bac17",
+      "size": 2671,
+      "url": "https://api.github.com/repos/yonghoon7153-source/Yonghoon-DEM-DFT/git/blobs/f2370ed30a5fd3f4af23ddb47bc9976e685bac17"
+    },
+    {
+      "path": "docs/data/ps45_plane_load_20261007/ps45/plane_load_cuts_3_7.csv",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "23e5c94c18bc35f40a1a4ede9c1dc011c2d0fbc3",
+      "size": 2702,
+      "url": "https://api.github.com/repos/yonghoon7153-source/Yonghoon-DEM-DFT/git/blobs/23e5c94c18bc35f40a1a4ede9c1dc011c2d0fbc3"
+    },
+    {
+      "path": "docs/data/ps45_plane_load_20261007/ps45/plane_load_cuts_5_5.csv",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "672b474a6a1ddb41ad0925b36ad20d61bd5f99e6",
+      "size": 2733,
+      "url": "https://api.github.com/repos/yonghoon7153-source/Yonghoon-DEM-DFT/git/blobs/672b474a6a1ddb41ad0925b36ad20d61bd5f99e6"
+    },
+    {
+      "path": "docs/data/ps45_plane_load_20261007/ps45/plane_load_cuts_7_3.csv",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "f98d66ee8048528d097a0e4e23ef968ea043994d",
+      "size": 2722,
+      "url": "https://api.github.com/repos/yonghoon7153-source/Yonghoon-DEM-DFT/git/blobs/f98d66ee8048528d097a0e4e23ef968ea043994d"
+    },
+    {
+      "path": "docs/data/ps45_plane_load_20261007/ps45/plane_load_rewrite.json",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "3f3c5dd4d37978bb08ad62f733493e467828eda0",
+      "size": 1266,
+      "url": "https://api.github.com/repos/yonghoon7153-source/Yonghoon-DEM-DFT/git/blobs/3f3c5dd4d37978bb08ad62f733493e467828eda0"
+    },
+    {
+      "path": "docs/data/ps45_plane_load_20261007/ps45/plane_load_share_slide.csv",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "0f00e71b425a44d6e0b8d246f69f56e928f78d5e",
+      "size": 587,
+      "url": "https://api.github.com/repos/yonghoon7153-source/Yonghoon-DEM-DFT/git/blobs/0f00e71b425a44d6e0b8d246f69f56e928f78d5e"
+    },
+    {
+      "path": "docs/data/ps45_plane_load_20261007/ps45/plane_load_summary.csv",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "5c2eea19536a53e326237cc950b2dafb054780eb",
+      "size": 3629,
+      "url": "https://api.github.com/repos/yonghoon7153-source/Yonghoon-DEM-DFT/git/blobs/5c2eea19536a53e326237cc950b2dafb054780eb"
+    },
+    {
+      "path": "docs/data/ps45_plane_load_20261007/ps45_v2/plane_load.json",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "47631a757cc8126c58c4ba36bde73f022814a4f1",
+      "size": 102267,
+      "url": "https://api.github.com/repos/yonghoon7153-source/Yonghoon-DEM-DFT/git/blobs/47631a757cc8126c58c4ba36bde73f022814a4f1"
+    },
+    {
+      "path": "docs/data/ps45_plane_load_20261007/ps45_v2/plane_load_cuts_0_10.csv",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "da140859183394b6c438f7297c0d372d737d96e3",
+      "size": 2654,
+      "url": "https://api.github.com/repos/yonghoon7153-source/Yonghoon-DEM-DFT/git/blobs/da140859183394b6c438f7297c0d372d737d96e3"
+    },
+    {
+      "path": "docs/data/ps45_plane_load_20261007/ps45_v2/plane_load_cuts_10_0.csv",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "f2370ed30a5fd3f4af23ddb47bc9976e685bac17",
+      "size": 2671,
+      "url": "https://api.github.com/repos/yonghoon7153-source/Yonghoon-DEM-DFT/git/blobs/f2370ed30a5fd3f4af23ddb47bc9976e685bac17"
+    },
+    {
+      "path": "docs/data/ps45_plane_load_20261007/ps45_v2/plane_load_cuts_3_7.csv",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "23e5c94c18bc35f40a1a4ede9c1dc011c2d0fbc3",
+      "size": 2702,
+      "url": "https://api.github.com/repos/yonghoon7153-source/Yonghoon-DEM-DFT/git/blobs/23e5c94c18bc35f40a1a4ede9c1dc011c2d0fbc3"
+    },
+    {
+      "path": "docs/data/ps45_plane_load_20261007/ps45_v2/plane_load_cuts_5_5.csv",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "672b474a6a1ddb41ad0925b36ad20d61bd5f99e6",
+      "size": 2733,
+      "url": "https://api.github.com/repos/yonghoon7153-source/Yonghoon-DEM-DFT/git/blobs/672b474a6a1ddb41ad0925b36ad20d61bd5f99e6"
+    },
+    {
+      "path": "docs/data/ps45_plane_load_20261007/ps45_v2/plane_load_cuts_7_3.csv",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "f98d66ee8048528d097a0e4e23ef968ea043994d",
+      "size": 2722,
+      "url": "https://api.github.com/repos/yonghoon7153-source/Yonghoon-DEM-DFT/git/blobs/f98d66ee8048528d097a0e4e23ef968ea043994d"
+    },
+    {
+      "path": "docs/data/ps45_plane_load_20261007/ps45_v2/plane_load_share_slide.csv",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "0f00e71b425a44d6e0b8d246f69f56e928f78d5e",
+      "size": 587,
+      "url": "https://api.github.com/repos/yonghoon7153-source/Yonghoon-DEM-DFT/git/blobs/0f00e71b425a44d6e0b8d246f69f56e928f78d5e"
+    },
+    {
+      "path": "docs/data/ps45_plane_load_20261007/ps45_v2/plane_load_summary.csv",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "0b65b92c667759a520df181f102ced52e5be0ce8",
+      "size": 3475,
+      "url": "https://api.github.com/repos/yonghoon7153-source/Yonghoon-DEM-DFT/git/blobs/0b65b92c667759a520df181f102ced52e5be0ce8"
+    },
+    {
+      "path": "docs/data/ps45_plane_load_20261007/ps45_v2/stress_reduction_slide.csv",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "64873318dfb150b12853a6b83fa788d5dfde07d2",
+      "size": 799,
+      "url": "https://api.github.com/repos/yonghoon7153-source/Yonghoon-DEM-DFT/git/blobs/64873318dfb150b12853a6b83fa788d5dfde07d2"
+    },
+    {
+      "path": "docs/data/ps45_plane_load_20261007/real14_validation/plane_load.json",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "1568caa9024ea451917103f8c60f8c1f545a1d84",
+      "size": 21202,
+      "url": "https://api.github.com/repos/yonghoon7153-source/Yonghoon-DEM-DFT/git/blobs/1568caa9024ea451917103f8c60f8c1f545a1d84"
+    },
+    {
+      "path": "docs/data/ps45_plane_load_20261007/real14_validation/plane_load_cuts_real14.csv",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "ea6e94df8c6df982d11ef2e9b5ad3ed716ac125f",
+      "size": 2666,
+      "url": "https://api.github.com/repos/yonghoon7153-source/Yonghoon-DEM-DFT/git/blobs/ea6e94df8c6df982d11ef2e9b5ad3ed716ac125f"
+    },
+    {
+      "path": "docs/data/ps45_plane_load_20261007/real14_validation/plane_load_share_slide.csv",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "569f0e9f6499f19723584e23039bb7e7dc63feea",
+      "size": 476,
+      "url": "https://api.github.com/repos/yonghoon7153-source/Yonghoon-DEM-DFT/git/blobs/569f0e9f6499f19723584e23039bb7e7dc63feea"
+    },
+    {
+      "path": "docs/data/ps45_plane_load_20261007/real14_validation/plane_load_summary.csv",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "ad360067bcc85ab7ecba036e3f0d888920af73a1",
+      "size": 2758,
+      "url": "https://api.github.com/repos/yonghoon7153-source/Yonghoon-DEM-DFT/git/blobs/ad360067bcc85ab7ecba036e3f0d888920af73a1"
+    },
+    {
+      "path": "docs/data/ps45_plane_load_20261007/real14_validation/stress_reduction_slide.csv",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "7ac5298f5b65728f090388e172ae7d0f3e4e61fe",
+      "size": 684,
+      "url": "https://api.github.com/repos/yonghoon7153-source/Yonghoon-DEM-DFT/git/blobs/7ac5298f5b65728f090388e172ae7d0f3e4e61fe"
+    },
+    {
+      "path": "docs/data/ps45_plane_load_20261007/real14_validation/tangential_share.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "a840e96aa3bebb91c44b67f65109de09e0a9e7b5",
+      "size": 1865,
+      "url": "https://api.github.com/repos/yonghoon7153-source/Yonghoon-DEM-DFT/git/blobs/a840e96aa3bebb91c44b67f65109de09e0a9e7b5"
+    },
+    {
+      "path": "docs/data/ps45_plane_load_20261007/real14_validation/tangential_share.txt",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "d2d94e4213920d41814dfe8e6c1576056fef2b85",
+      "size": 532,
+      "url": "https://api.github.com/repos/yonghoon7153-source/Yonghoon-DEM-DFT/git/blobs/d2d94e4213920d41814dfe8e6c1576056fef2b85"
+    },
+    {
+      "path": "docs/data/ps45_plane_load_20261007/slide/contacts_vs_sigma_zz_share.csv",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "161191e5b5cbe900be47156103e50fb6374222e3",
+      "size": 681,
+      "url": "https://api.github.com/repos/yonghoon7153-source/Yonghoon-DEM-DFT/git/blobs/161191e5b5cbe900be47156103e50fb6374222e3"
+    },
+    {
+      "path": "docs/data/ps45_plane_load_20261007/slide/contacts_vs_sigma_zz_share_73box.csv",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "161191e5b5cbe900be47156103e50fb6374222e3",
+      "size": 681,
+      "url": "https://api.github.com/repos/yonghoon7153-source/Yonghoon-DEM-DFT/git/blobs/161191e5b5cbe900be47156103e50fb6374222e3"
+    },
+    {
+      "path": "docs/data/ps45_plane_load_20261007/slide/make_contacts_vs_load.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "65d89bc4b20f0547369eb6890be8f2237b7d0a97",
+      "size": 2872,
+      "url": "https://api.github.com/repos/yonghoon7153-source/Yonghoon-DEM-DFT/git/blobs/65d89bc4b20f0547369eb6890be8f2237b7d0a97"
+    },
+    {
+      "path": "docs/data/ps45_plane_load_20261007/slide/make_contacts_vs_load_73box.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "182cc31aa698cf31f1add1176557e4f8a0844124",
+      "size": 3227,
+      "url": "https://api.github.com/repos/yonghoon7153-source/Yonghoon-DEM-DFT/git/blobs/182cc31aa698cf31f1add1176557e4f8a0844124"
+    },
+    {
+      "path": "docs/data/ps45_plane_load_20261007/slide/make_slide_preview.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "b92926c4750a92fef3f6fd7f9446066b4891a9c8",
+      "size": 3555,
+      "url": "https://api.github.com/repos/yonghoon7153-source/Yonghoon-DEM-DFT/git/blobs/b92926c4750a92fef3f6fd7f9446066b4891a9c8"
+    },
+    {
+      "path": "docs/data/ps45_plane_load_20261007/wsl_rerun_v2_20261007.txt",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "4917b41f844ac13722c22970ef69af7de8dee04d",
+      "size": 3222,
+      "url": "https://api.github.com/repos/yonghoon7153-source/Yonghoon-DEM-DFT/git/blobs/4917b41f844ac13722c22970ef69af7de8dee04d"
+    },
+    {
+      "path": "docs/data/ps73_damping_branch_20261007/README.md",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "6574b3275bbb97f7829b6d36775275574be139b6",
+      "size": 44971,
+      "url": "https://api.github.com/repos/yonghoon7153-source/Yonghoon-DEM-DFT/git/blobs/6574b3275bbb97f7829b6d36775275574be139b6"
+    },
+    {
+      "path": "docs/data/ps73_damping_branch_20261007/SHA256SUMS",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "cc3ad192fe9564b63d401e228c40f65fa1082f88",
+      "size": 874,
+      "url": "https://api.github.com/repos/yonghoon7153-source/Yonghoon-DEM-DFT/git/blobs/cc3ad192fe9564b63d401e228c40f65fa1082f88"
+    },
+    {
+      "path": "docs/data/ps73_damping_branch_20261007/analyze_branch.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "d4749fd1b57874a38dce23f46975bca4b580d7cb",
+      "size": 14947,
+      "url": "https://api.github.com/repos/yonghoon7153-source/Yonghoon-DEM-DFT/git/blobs/d4749fd1b57874a38dce23f46975bca4b580d7cb"
+    },
+    {
+      "path": "docs/data/ps73_damping_branch_20261007/deck_diffs.txt",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "1f35ff84e515118c7675794d0a57044b3cd828a1",
+      "size": 12213,
+      "url": "https://api.github.com/repos/yonghoon7153-source/Yonghoon-DEM-DFT/git/blobs/1f35ff84e515118c7675794d0a57044b3cd828a1"
+    },
+    {
+      "path": "docs/data/ps73_damping_branch_20261007/in.branch_A.liggghts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "b074a957284e5e3525baa9ce8ed37301d93a658a",
+      "size": 15404,
+      "url": "https://api.github.com/repos/yonghoon7153-source/Yonghoon-DEM-DFT/git/blobs/b074a957284e5e3525baa9ce8ed37301d93a658a"
+    },
+    {
+      "path": "docs/data/ps73_damping_branch_20261007/in.branch_B.liggghts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "b772de7a3492e5e261d8aa8df483a7c103133849",
+      "size": 21596,
+      "url": "https://api.github.com/repos/yonghoon7153-source/Yonghoon-DEM-DFT/git/blobs/b772de7a3492e5e261d8aa8df483a7c103133849"
+    },
+    {
+      "path": "docs/data/ps73_damping_branch_20261007/in.branch_C1.liggghts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "873c53fbac5873e2fa1fa248934cdbd061c4a340",
+      "size": 15422,
+      "url": "https://api.github.com/repos/yonghoon7153-source/Yonghoon-DEM-DFT/git/blobs/873c53fbac5873e2fa1fa248934cdbd061c4a340"
+    },
+    {
+      "path": "docs/data/ps73_damping_branch_20261007/in.branch_C2.liggghts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "33b2e747670845fe0a01b57f4b06cda3d2c58272",
+      "size": 15421,
+      "url": "https://api.github.com/repos/yonghoon7153-source/Yonghoon-DEM-DFT/git/blobs/33b2e747670845fe0a01b57f4b06cda3d2c58272"
+    },
+    {
+      "path": "docs/data/ps73_damping_branch_20261007/in.branch_t0_syntax.liggghts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "280cb5a817c1e8d180ca29648cb795dd5f9ed899",
+      "size": 27171,
+      "url": "https://api.github.com/repos/yonghoon7153-source/Yonghoon-DEM-DFT/git/blobs/280cb5a817c1e8d180ca29648cb795dd5f9ed899"
+    },
+    {
+      "path": "docs/data/ps73_damping_branch_20261007/make_branch_decks.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "f4007cf2e38a59953695a2a633ba032eaf7873e8",
+      "size": 73552,
+      "url": "https://api.github.com/repos/yonghoon7153-source/Yonghoon-DEM-DFT/git/blobs/f4007cf2e38a59953695a2a633ba032eaf7873e8"
+    },
+    {
+      "path": "docs/data/ps73_damping_branch_20261007/plate_branch3100000.stl",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "4d35aad55d0f7225efd9cbfeccc09859ec4f8761",
+      "size": 273,
+      "url": "https://api.github.com/repos/yonghoon7153-source/Yonghoon-DEM-DFT/git/blobs/4d35aad55d0f7225efd9cbfeccc09859ec4f8761"
+    },
+    {
+      "path": "docs/data/ps73_damping_branch_20261007/run_branch.sh",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "8b9de56d9debfa0000ae66f1a3bf881453b68077",
+      "size": 20961,
+      "url": "https://api.github.com/repos/yonghoon7153-source/Yonghoon-DEM-DFT/git/blobs/8b9de56d9debfa0000ae66f1a3bf881453b68077"
+    },
+    {
+      "path": "docs/data/ps73_damping_branch_20261007/run_branch_ibb.sbatch",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "b5d634ddc789aa09c969ae3ddd76689f80755ebb",
+      "size": 2540,
+      "url": "https://api.github.com/repos/yonghoon7153-source/Yonghoon-DEM-DFT/git/blobs/b5d634ddc789aa09c969ae3ddd76689f80755ebb"
+    },
+    {
+      "path": "docs/data/ps73_damping_branch_20261007/snap_3100000_20261008/README.md",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "33a32111016657ef4f3e18336ab0c21f1d933167",
+      "size": 4632,
+      "url": "https://api.github.com/repos/yonghoon7153-source/Yonghoon-DEM-DFT/git/blobs/33a32111016657ef4f3e18336ab0c21f1d933167"
+    },
+    {
+      "path": "docs/data/ps73_damping_branch_20261007/snap_3100000_20261008/make_stop_zoom.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "9de4cb912019b91b40d776583acb0f636ec4d5e8",
+      "size": 2092,
+      "url": "https://api.github.com/repos/yonghoon7153-source/Yonghoon-DEM-DFT/git/blobs/9de4cb912019b91b40d776583acb0f636ec4d5e8"
+    },
+    {
+      "path": "docs/data/ps73_damping_branch_20261007/snap_3100000_20261008/plane/plane_load.json",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "d0b33ed97587d11f5cc69e25a6b6543495944e82",
+      "size": 21240,
+      "url": "https://api.github.com/repos/yonghoon7153-source/Yonghoon-DEM-DFT/git/blobs/d0b33ed97587d11f5cc69e25a6b6543495944e82"
+    },
+    {
+      "path": "docs/data/ps73_damping_branch_20261007/snap_3100000_20261008/plane/plane_load_cuts_snap_3100000.csv",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "1b4e1926d3300d9a590ec8e81d1ab546dbf1585a",
+      "size": 2719,
+      "url": "https://api.github.com/repos/yonghoon7153-source/Yonghoon-DEM-DFT/git/blobs/1b4e1926d3300d9a590ec8e81d1ab546dbf1585a"
+    },
+    {
+      "path": "docs/data/ps73_damping_branch_20261007/snap_3100000_20261008/plane/plane_load_share_slide.csv",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "7650c4da050fee341ab7551b74effc3497aa48e7",
+      "size": 483,
+      "url": "https://api.github.com/repos/yonghoon7153-source/Yonghoon-DEM-DFT/git/blobs/7650c4da050fee341ab7551b74effc3497aa48e7"
+    },
+    {
+      "path": "docs/data/ps73_damping_branch_20261007/snap_3100000_20261008/plane/plane_load_summary.csv",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "b548dc5f01c1b87589458a4a32e4d74649b2a4ce",
+      "size": 2769,
+      "url": "https://api.github.com/repos/yonghoon7153-source/Yonghoon-DEM-DFT/git/blobs/b548dc5f01c1b87589458a4a32e4d74649b2a4ce"
+    },
+    {
+      "path": "docs/data/ps73_damping_branch_20261007/snap_3100000_20261008/plane/stress_reduction_slide.csv",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "48df75de53d8e4f39f6c2c6345822598f8645b6f",
+      "size": 690,
+      "url": "https://api.github.com/repos/yonghoon7153-source/Yonghoon-DEM-DFT/git/blobs/48df75de53d8e4f39f6c2c6345822598f8645b6f"
+    },
+    {
+      "path": "docs/data/ps73_damping_branch_20261007/snap_moments_20261008/README.md",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "164565303804927e1b03f858024a4d3815c72dd3",
+      "size": 15222,
+      "url": "https://api.github.com/repos/yonghoon7153-source/Yonghoon-DEM-DFT/git/blobs/164565303804927e1b03f858024a4d3815c72dd3"
+    },
+    {
+      "path": "docs/data/ps73_damping_branch_20261007/snap_moments_20261008/make_snap_decks.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "658042a1aee9e47586068fc5a7579a6f8f2ff992",
+      "size": 17829,
+      "url": "https://api.github.com/repos/yonghoon7153-source/Yonghoon-DEM-DFT/git/blobs/658042a1aee9e47586068fc5a7579a6f8f2ff992"
+    },
+    {
+      "path": "docs/data/ps73_damping_branch_20261007/snap_moments_20261008/render3d.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "49b9ffd73299c5d0ba01dc78c66915ec565935ec",
+      "size": 16963,
+      "url": "https://api.github.com/repos/yonghoon7153-source/Yonghoon-DEM-DFT/git/blobs/49b9ffd73299c5d0ba01dc78c66915ec565935ec"
+    },
+    {
+      "path": "docs/data/ps73_damping_branch_20261007/snap_moments_20261008/results_20261008/vm_moments.json",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "b3323e494285e66f725c5b14bb6a23c362fc2e8c",
+      "size": 6229,
+      "url": "https://api.github.com/repos/yonghoon7153-source/Yonghoon-DEM-DFT/git/blobs/b3323e494285e66f725c5b14bb6a23c362fc2e8c"
+    },
+    {
+      "path": "docs/data/ps73_damping_branch_20261007/snap_moments_20261008/results_20261008/vm_profile.csv",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "eaefd25f0fe3d4733bd6c7c90e6609b14707d8ce",
+      "size": 3443,
+      "url": "https://api.github.com/repos/yonghoon7153-source/Yonghoon-DEM-DFT/git/blobs/eaefd25f0fe3d4733bd6c7c90e6609b14707d8ce"
+    },
+    {
+      "path": "docs/data/ps73_damping_branch_20261007/snap_moments_20261008/vm_moments.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "9269cd77a7454d5c0a705a76247a92e51b422e21",
+      "size": 25091,
+      "url": "https://api.github.com/repos/yonghoon7153-source/Yonghoon-DEM-DFT/git/blobs/9269cd77a7454d5c0a705a76247a92e51b422e21"
+    },
+    {
+      "path": "docs/data/ps73_damping_branch_20261007/t0_run1_20261007/in.branch_t0_syntax.liggghts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "a52c8e3f4f4df35ce4ccda6e41264eca7d9824f0",
+      "size": 25130,
+      "url": "https://api.github.com/repos/yonghoon7153-source/Yonghoon-DEM-DFT/git/blobs/a52c8e3f4f4df35ce4ccda6e41264eca7d9824f0"
+    },
+    {
+      "path": "docs/esse_calibration_2mAh_real_9.md",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "b98a29986b33149f2e716d00ecd7eefeaef1f6e5",
+      "size": 4687,
+      "url": "https://api.github.com/repos/yonghoon7153-source/Yonghoon-DEM-DFT/git/blobs/b98a29986b33149f2e716d00ecd7eefeaef1f6e5"
+    },
+    {
+      "path": "docs/reviews/codex_model_validation_request_20261008.md",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "30c34e6c72ff39633c47ed125c81e108edffe991",
+      "size": 10008,
+      "url": "https://api.github.com/repos/yonghoon7153-source/Yonghoon-DEM-DFT/git/blobs/30c34e6c72ff39633c47ed125c81e108edffe991"
+    },
+    {
+      "path": "docs/reviews/si_table_response_20260925.md",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "b9a72332b44c78d50b00e8be697226d4f76378f2",
+      "size": 72284,
+      "url": "https://api.github.com/repos/yonghoon7153-source/Yonghoon-DEM-DFT/git/blobs/b9a72332b44c78d50b00e8be697226d4f76378f2"
+    },
+    {
+      "path": "docs/session_20260923_progress.md",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "5e9e449be215e7301d2fa73daafc443e07048631",
+      "size": 308958,
+      "url": "https://api.github.com/repos/yonghoon7153-source/Yonghoon-DEM-DFT/git/blobs/5e9e449be215e7301d2fa73daafc443e07048631"
+    },
+    {
+      "path": "scripts/plane_load_share.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "338f3e055eeb7a961d135691bd92bb874891ecd3",
+      "size": 75189,
+      "url": "https://api.github.com/repos/yonghoon7153-source/Yonghoon-DEM-DFT/git/blobs/338f3e055eeb7a961d135691bd92bb874891ecd3"
+    },
+    {"path":"scripts/analyze_contacts.py","sha":"e214dc377c61f3b625f186b20149bf9eb5314f94","size":80829},
+    {"path":"scripts/dem_analysis_core.py","sha":"629fb278118161e1ba1abcb00db0bcaa0f2cf1b6","size":102925},
+    {"path":"scripts/metrics_json.py","sha":"a674863ae821cb5673b23ae09f2cfddf7eda405c","size":9564},
+    {"path":"scripts/type_map_resolve.py","sha":"31092eb1afda0b1316c3f4f7c716c0dd537b9920","size":29014}
+  ]
+}
