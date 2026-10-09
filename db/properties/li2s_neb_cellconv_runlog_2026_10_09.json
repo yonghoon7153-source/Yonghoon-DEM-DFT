@@ -14,7 +14,16 @@
     "작업폴더": "~/work/runs/li2s_neb_cellconv_1009/c222 (기준 payload: ~/work/runs/li2s_neb_cellconv_1009/ref333)",
     "worktree": "~/wt_li2scc_1009 (pseudo_dir · relaxed_from 이 이 안을 가리킨다 — 끝날 때까지 지우지 않는다)",
     "체인": "db/inputs/li2s_neb_cellconv_2026_10_09/run_chain_kgy.sh (sha256 bbf3838926eae6f34b905d1a0903204f50c5eb644093955c3cb5fbc47f877d35) → ① endpoints (G1) ② no-CI 빌드 ③ NEB no-CI (G2a) ④ ci → 빌드 --ci_scheme auto --restart ⑤ NEB CI (G2b) · 로그 ~/work/runs/li2s_neb_cellconv_1009/chain.log · tmux li2scc · 가짜 러너 시험 rc 0/11/13/15 + 환경 누락 거부",
-    "사전점검": null,
+    "사전점검": {
+      "at": "2026-10-09 (kgy · 사용자 붙여넣기)",
+      "결과": "통과 — && 사슬이 끝까지 감 (SHA256SUMS 4/4 · run_chain_kgy.sh 해시 줄 포함 · 화면에선 위쪽이 잘려 neb.x 부터 보임)",
+      "neb.x_ldd": "libmpi /home/kgy/apps/openmpi-4.1.6/lib · libnvomp (nvhpc 24.11) + libgomp 동시 링크 → OMP_NUM_THREADS=1 필수 (체인이 건다)",
+      "MPIRUN": "/home/kgy/apps/openmpi-4.1.6/bin/mpirun (→ orterun)",
+      "ase": "3.29.0 (로컬 건식 빌드와 같음 → payload ase_version 칸 일치)",
+      "생성기_selftest": "74/74",
+      "ref333": "[3,3,3] · nat 80 · k [3,3,3] · λ₁ 12.1 · q −1.0 (G4 기준 payload)",
+      "GPU": "3097 MiB · 이용률 95 % (cascade 하나) · 프로세스별 정보는 제한됨 — NEB 가 SM 을 나눠 쓰면 cascade 런이 느려진다 (벽시계 GPU-h)"
+    },
     "발사": null,
     "끝": null
   },
