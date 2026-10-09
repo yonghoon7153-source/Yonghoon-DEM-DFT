@@ -1,0 +1,106 @@
+{
+  "schema": "estimand_card/v1",
+  "kind": "estimand",
+  "record_kind": "estimand_card",
+  "date": "2026-10-09",
+  "status": "proposed",
+  "citable": false,
+  "results_seen": false,
+  "results_seen_note": "3×3×3 값 (v2/li2s 0.305025 eV) 은 이미 봤다 — 이 카드는 그 값을 기준으로 두고 **다른 셀의 결과를 보기 전에** 판정 규칙을 박는다. 2×2×2 · 4×4×4 결과는 0 건.",
+  "system": "li2s",
+  "track": "SEI NEB (Li₂S · Li₃Nd) — 원고 편입 후보 (사용자 2026-10-09 'li3Nd, li2s 관련해서 논문에 넣어야될거 같은데'). 어느 원고·1저자인지는 아직 안 정해졌다 → 이 카드의 결정은 '사용자 (계산 담당)' 로 적는다.",
+  "제목": "Li₂S V_Li⁻ c→c CI-NEB 장벽의 셀 수렴 — 2×2×2 대조 (kgy GPU) · 4×4×4 판정",
+  "0_왜_이_카드인가": "Li₂S 3×3×3 (80 원자 · λ₁ 12.10 Å) 장벽 0.305 eV 는 scientific_status=provisional_single_cell · cell_convergence_status=untested 라 citable=false 다 (db/properties/sei_neb.json v2/li2s · 인용위험 HZ-sei-neb-retracted BLOCKED). 원고에 넣으려면 셀 수렴이 먼저다. 사용자 2026-10-09: '2×2×2 먼저 · kgy GPU 로'.",
+  "1_무엇을_원하는가": "Li₂S 반형석에서 하전 공공 V_Li⁻ (tot_charge −1 · jellium) 이 매개하는 최근접 8c→8c Li 홉 (d = 2.8526 Å) 의 0 K CI-NEB 장벽 Ea_eff(m) 가 초셀 크기 m×m×m 에 얼마나 의존하는가.",
+  "1a_허용_문구": {
+    "2×2×2": "'2×2×2 (23 원자 · λ₁ 8.07 Å) 대조 셀에서 같은 규약의 장벽은 X eV 로, 3×3×3 과 ΔEa = Y eV 다 — 이 셀은 대조용이며 값은 인용하지 않는다.' (내부 기록 · 원고 본문 금지)",
+    "4×4×4_통과시": "'For the Li2S antifluorite model, the charged-vacancy (V_Li-, jellium) nearest-neighbour c->c CI-NEB barrier is 0.305 eV (3x3x3, 80 atoms); a 4x4x4 cell (191 atoms) changes it by Z eV (within the pre-declared 0.05 eV tolerance).' + 홉 수 검산 한 줄 (D-2026-09-27-barrier-hop-count)"
+  },
+  "1b_설계_선언": {
+    "substitution_mode": "해당 없음 — 치환이 아니라 점결함 (공공 1 개)",
+    "host": "Li₂S Fm-3m (mp-1153) · 격자는 gabia vc-relax 결과를 모든 셀에 공통으로 쓴다 (db/inputs/li2s_neb_cellconv_2026_10_09/relaxed/li2s_mp-1153/01_vcrelax.out · sha256 0bcb294b…)",
+    "실제_조성_농도": "2×2×2 Li₁₅S₈ (+e⁻) · 3×3×3 Li₅₃S₂₇ (+e⁻) · 4×4×4 Li₁₂₇S₆₄ (+e⁻) — 공공 농도가 셀마다 다르다 (그게 이 카드가 재는 것이다)",
+    "보상_방식": "모델 조건으로 선언: tot_charge = −1 (V_Li⁻) + 균일 배경전하 (jellium). 유한셀 정전 보정은 하지 않는다.",
+    "부모_치환_자리": "공공 자리 Li 8c (궤도 하나뿐 · n_li_orbits 1) · 뛰는 Li 8c 최근접"
+  },
+  "1c_답하지_않는_것": [
+    "Li₂S 의 실험 전도도·실험 Ea 와의 비교 (다른 양 — 0 K 단일 경로 vs 유한온도 수송)",
+    "공공 형성에너지 (jellium 보정 없이 정의 안 됨 · 이 카드 밖)",
+    "Li₃Nd 장벽 (pristine 재구성이 먼저 · 별건)",
+    "Ea_eff 의 절대값이 '수렴된 물성' 이라는 서술 — 4×4×4 통과 뒤에도 jellium 유한셀 근사는 남는다"
+  ],
+  "2_어떻게_재나": {
+    "도구": "tools/sei/build_neb_inputs.py (입력) · tools/sei/run_sei_neb.sh (끝점 이완 → no-CI NEB → CI auto 재시작) · tools/sei/collect_neb.py (회수)",
+    "공통_규약 (3×3×3 v2 와 같음)": "QE PBE · ecutwfc 60 / ecutrho 480 Ry (생성기 상수 · 갭 계산과 같은 사양) · GBRV uspp Li/S (db/inputs/li2s_neb_cellconv_2026_10_09/pseudo · sha256 02cc4b38… / 84ad7318…) · tot_charge −1 · gaussian 0.005 Ry · 이미지 7 (끝 포함) · path_thr 0.05 eV/Å · nstep 100 · kdens 0.04 Å⁻¹ · 끝점 이완 필수 ('Begin final coordinates') · 홉 c-c 최근접",
+    "셀마다_달라지는_것": {
+      "2×2×2": "--min_l 8 → λ₁ 8.07 Å · nat 23 · k 4×4×4",
+      "3×3×3 (기존)": "--min_l 10 → λ₁ 12.10 Å · nat 80 · k 3×3×3 · Ea 0.305025 / 0.305015 eV (v2/li2s · CI auto 수렴)",
+      "4×4×4": "--min_l 16 → λ₁ 16.14 Å · nat 191 · k 2×2×2"
+    },
+    "k_점": "같은 k 밀도 규칙 (kdens 0.04) 이 셀마다 다른 격자를 준다 — 이것은 규약의 일부로 선언한다 (셀을 키우면서 k 를 줄이는 것은 같은 BZ 표본 밀도를 지키는 것이다).",
+    "보고량_정의": "Ea_eff(m) = max(Ea_forward, Ea_backward) — 끝점이 대칭 등가라 두 값이 같아야 한다 (G3). ΔEa(m) = Ea_eff(m) − Ea_eff(3) (기준 0.305025 eV).",
+    "로컬_재현_2026_10_09": "레포 입력 (pseudo · relaxed) 으로 이 세션에서 생성기를 돌려 3×3×3 이 v2 meta 와 물리 칸 (supercell 3³ · nat 80 · k 3³ · λ₁ 12.1 · hop 2.85259 Å · q −1 · gaussian 0.005) 이 같음을 확인했다. ⚠ protocol_hash 는 비교 불가 — v2 의 c24cf37e7a0e 는 2026-08-20 이전 지문 스키마 (끝점 좌표 sha · ASE 판 · endpoints_relaxed 가 지문에 들어가기 전) 라 같은 입력에서도 새 코드는 다른 해시를 낸다 (미이완 빌드 9cb4e80b5e99)."
+  },
+  "3_이_계에서_잘_정의되는가": {
+    "판정": "예 — 조건부",
+    "근거": [
+      "닫힌 껍질 절연체 (sei_electronic_class: li2s = insulator · measured) · V_Li⁻ 는 전자 하나를 더해 Li⁺ 하나를 뺀 것이라 열린 껍질이 아니다 → 스핀 상태 선택 문제 없음",
+      "공공 자리·도착 자리가 같은 궤도 (8c) → 끝점 대칭 등가 → 경로 하나 · 집계 규칙 불필요",
+      "모든 이미지가 같은 전하 −1 이라 jellium 의 1차 (Madelung q²/εL) 항은 장벽에서 상쇄된다 → 남는 셀 의존은 이미지 사이 쌍극·탄성 변화 (∝ L⁻³ 차수) — 그래서 셀 수렴이 의미 있는 질문이다"
+    ],
+    "위험_신호": [
+      "2×2×2 는 λ₁ 8.07 Å 로 홉 거리 2.85 Å 의 2.8 배뿐이다 — 공공과 그 주기 이미지가 뛰는 Li 의 이웃 껍질을 공유한다. 이 셀의 값이 크게 다르면 그건 '수렴 안 됨' 의 증거이지 3×3×3 이 틀렸다는 증거가 아니다.",
+      "격자를 고정한다 (bulk vc-relax) — 공공 1 개에 의한 부피 변화는 셀이 작을수록 크다. 일정 부피 규약으로 선언한다."
+    ]
+  },
+  "4_판정_결과_보기_전에_정한다": {
+    "문턱": "|ΔEa| ≤ 0.05 eV (결과 전 · 2026-10-09)",
+    "문턱_근거": "이 값의 용도는 상 사이 비교 (sei_neb.json warning) 와 홉 수 검산 (차수) 이다. 300 K 에서 0.05 eV 는 Γ 로 약 7 배 (exp(0.05/0.02585) ≈ 6.9) — 차수 검산 (10 배 단위) 아래다. 이 문턱은 수렴의 정의가 아니라 이 용도에 충분한가의 선언이다.",
+    "2×2×2": "ΔEa(2) 를 부호와 함께 기록만 한다. ⛔ 3×3×3 의 지위를 바꾸지 않는다 (통과해도 '수렴' 이 아니다 · 실패해도 '3×3×3 틀림' 이 아니다). 쓰임: ① kgy GPU 에서 이 파이프라인 (끝점 → no-CI → CI) 이 끝까지 도는지 ② 셀 의존의 방향과 크기 ③ 4×4×4 비용 외삽의 단가.",
+    "2×2×2_게이트_실패시": "'2×2×2 측정 불가' 로 기록하고 **설정을 바꿔 다시 돌리지 않는다** (이미지 수 · path_thr · 셀 조정 루프 금지). 4×4×4 계획은 그대로다.",
+    "4×4×4 (판정 셀)": {
+      "통과 |Ea(4) − Ea(3)| ≤ 0.05 eV": "v2/li2s 의 cell_convergence_status → 'converged_3x3x3_vs_4x4x4' (collect_neb.py 계약 어휘) · 3×3×3 값에 '4×4×4 대조 ±0.05 eV' 꼬리표 · 인용위험 HZ-sei-neb-retracted 를 이 항목에 한해 풀지는 **별도 결정** (사용자) — 자동으로 풀리지 않는다.",
+      "실패 > 0.05 eV": "3×3×3 은 untested 가 아니라 'not_converged_at_3x3x3' 로 내린다 · 4×4×4 값을 최선 추정으로 기록하되 citable=false · 5×5×5 (λ₁ 20 Å · 374 원자) 는 이 카드에 없다 — 더 갈지 말지는 사용자 명시 결정 (재개 규칙 ②).",
+      "게이트_실패": "'4×4×4 측정 불가' — 원인 보고 뒤 사용자 결정. 조용히 3×3×3 을 쓰지 않는다."
+    }
+  },
+  "5_게이트_결과_보기_전": [
+    "G1 끝점: ep_initial · ep_final 둘 다 relax.out 에 'Begin final coordinates' (JOB DONE · 'End of BFGS' 는 증거 아님 — nstep 소진에도 찍힌다)",
+    "G2 NEB 수렴: no-CI 'neb: convergence achieved' → CI 재시작 neb.out 에 CI_scheme = 'auto' 와 'neb: convergence achieved'",
+    "G3 대칭: |Ea_forward − Ea_backward| ≤ 0.01 eV (끝점 대칭 등가라 0 이어야 한다 · 3×3×3 실측 1.0e-5 eV)",
+    "G4 규약 동일성: meta.json 의 protocol_payload 를 **같은 기계·같은 코드로 만든** 3×3×3 기준 payload (kgy 블록이 ref333/ 에 같이 만든다) 와 diff — 달라도 되는 키는 nat · kpts · cell · lambda1_A · face_heights_A · min_l · endpoint_coords_sha · hop_vac_index · hop_moving_index (셀 크기에 딸린 칸) 뿐. 그 밖의 키 (ecutwfc 60 · ecutrho 480 · q · smearing · degauss · pseudos · images · path_thr · hop_shell · hop_distance_A · hop_pair_orbits · electronic_class · endpoints_relaxed · ase_version · hash_schema) 가 다르면 무효. (2026-10-09 로컬 건식 점검: 2×2×2 · 4×4×4 미이완 빌드 vs 3×3×3 — 위 9 키만 달랐다)",
+    "G5 경로: 최고 에너지 이미지가 끝점이 아니다 (내리막만 남은 경로 = 끝점 미이완 시그니처 · li3p 사고)"
+  ],
+  "6_기계_비용": {
+    "기계": "kgy RTX 3090 24 GB · QE-GPU (/home/kgy/apps/qe-7.4.1-gpu/bin/{pw.x,neb.x}) · MPI = ldd 가 말하는 openmpi-4.1.6 · OMP_NUM_THREADS=1 (libnvomp + libgomp 동시 링크)",
+    "⚠_GPU_공유": "kgy GPU 에는 cascade v7 본 라운드 (D-2026-10-07-cascade-v7-main-round-cap · 상한 461.4 GPU-h) 가 돈다. cascade 러너의 GPU-h 는 **벽시계**라 SM 을 나눠 쓰면 그 시간만큼 cascade 런이 느려지고 상한 쪽으로 더 빨리 간다 (탐침 실측 평균 10.44 × 40 = 418 vs 상한 461.4 → 여유 약 43 GPU-h). 2×2×2 는 작아 영향이 작다고 보지만 **겹친 cascade 런을 runlog 에 남긴다** (물리는 안 바뀐다 · 비용 기록만).",
+    "⚠_cascade_시작_문턱": "cascade 러너는 GPU 합계 ≤ 16,000 MiB 일 때만 다음 런을 띄우고 3 h 넘게 못 내려오면 멈춘다 (rc 12). NEB 가 합계를 12,000 MiB 넘게 밀면 우리 NEB 를 멈춘다 (PID 로).",
+    "견적": "2×2×2 · 23 원자 · 이미지 7 — 시간 단위 (실측을 runlog 에 남긴다). 4×4×4 는 191 원자라 VRAM 이 먼저다 — CPU pw.x 프로브로 'Estimated max dynamical RAM' 을 읽은 뒤 기계를 정한다 (24 GB 3090 에 안 들면 gabia 48 GB · 탄성 끝난 뒤)."
+  },
+  "7_닫힘_조건_먼저_박는다": {
+    "2×2×2_단계": "G1–G5 의 통과/실패와 ΔEa(2) 를 runlog 에 적으면 끝난다 (값은 인용하지 않는다).",
+    "카드": "4×4×4 판정이 나거나, 사용자가 4×4×4 를 안 하기로 명시 결정하면 닫힌다 — 그때 3×3×3 은 계속 provisional_single_cell · citable=false 로 남는다.",
+    "재개_조건": "규약 칸 (ecut · PP · 전하 규약 · smearing) 이 바뀌는 경우만. '다른 셀을 하나 더 봤다' 는 재개 사유가 아니다."
+  },
+  "8_⛔_이_카드가_하지_않는_것": [
+    "HZ-sei-neb-retracted (BLOCKED) 를 풀지 않는다 — 통과해도 별도 결정",
+    "sei_neb.json 의 다른 상 (Li₃P · Li₃PO₄ · Li₃Nd …) 의 지위를 바꾸지 않는다",
+    "jellium 유한셀 보정 (Makov–Payne · FNV) 을 하지 않는다 — 장벽에서 1차 항이 상쇄된다는 것은 근사다",
+    "2×2×2 값으로 3×3×3 의 수렴을 주장하지 않는다"
+  ],
+  "출처": [
+    "db/properties/sei_neb.json (v2/li2s · 0.305025 eV · provisional_single_cell)",
+    "db/inputs/li2s_neb_cellconv_2026_10_09/ (gabia 에서 올린 PP · vc-relax · v2 meta · SHA256SUMS · 커밋 0e6c83af2)",
+    "tools/sei/collect_neb.py (cell_convergence_status 계약 · 'converged_3x3x3_vs_4x4x4')",
+    "D-2026-08-16-defect-cell-metric (λ₁) · D-2026-08-20-hash-bound-carry · D-2026-09-27-barrier-hop-count"
+  ],
+  "status_history": [
+    {
+      "at": "2026-10-09",
+      "state": "proposed",
+      "by": "agent",
+      "note": "사용자 '2×2×2 먼저 · gpu 로 · kgy 에서'. 결과 전 판정 규칙 · 게이트를 박는다. 비준은 사용자."
+    }
+  ],
+  "by": "claude-session-2026-10-09 (friendly)"
+}

@@ -1,0 +1,28 @@
+{
+  "kind": "runlog",
+  "date": "2026-10-09",
+  "system": "li2s",
+  "card": "db/properties/li2s_neb_cellconv_estimand_2026_10_09.json",
+  "decision": "D-2026-10-09-li2s-neb-cellconv (proposed)",
+  "track": "SEI NEB — 원고·1저자 미정 · 실행 승인 = 사용자 2026-10-09 ('2×2×2 먼저' · 'gpu로 진행' · 'kgy에서')",
+  "입력": {
+    "repo_dir": "db/inputs/li2s_neb_cellconv_2026_10_09/ (커밋 0e6c83af2 · SHA256SUMS 4 파일)",
+    "로컬_건식_빌드_2026_10_09": "레포 입력으로 2×2×2 (--min_l 8 · nat 23 · k 4×4×4 · λ₁ 8.07) 끝점 이완 입력 2 개 생성 · 생성기 selftest 74/74 · 3×3×3 물리 칸 = v2 meta (지문은 스키마가 달라 비교 불가)"
+  },
+  "단계_2x2x2": {
+    "기계": "kgy RTX 3090 · /home/kgy/apps/qe-7.4.1-gpu/bin/{pw.x,neb.x} · build python = /home/kgy/apps/miniforge3/envs/uma/bin/python",
+    "작업폴더": "~/work/runs/li2s_neb_cellconv_1009/c222 (기준 payload: ~/work/runs/li2s_neb_cellconv_1009/ref333)",
+    "worktree": "~/wt_li2scc_1009 (pseudo_dir · relaxed_from 이 이 안을 가리킨다 — 끝날 때까지 지우지 않는다)",
+    "체인": "~/work/runs/li2s_neb_cellconv_1009/chain.sh → ① endpoints (G1) ② no-CI 빌드 ③ NEB no-CI (G2a) ④ ci → 빌드 --ci_scheme auto --restart ⑤ NEB CI (G2b) · 로그 chain.log · tmux li2scc",
+    "사전점검": null,
+    "발사": null,
+    "끝": null
+  },
+  "⚠_GPU_공유_cascade": {
+    "상대": "cascade v7 본 라운드 (tmux cv7main · 러너 PID 1283841 · 10-07 20:04:49 발사 · D-2026-10-07-cascade-v7-main-round-cap 461.4 GPU-h)",
+    "영향": "cascade 의 GPU-h 는 벽시계 — NEB 가 도는 동안 겹친 cascade 런은 느려진 만큼 비용이 더 찍힌다 (물리는 그대로). 겹친 런 태그와 구간을 여기 적는다.",
+    "멈춤_조건": "GPU 합계 > 12,000 MiB 면 우리 NEB 를 PID 로 멈춘다 (cascade 시작 문턱 16,000 · 그 아래로 3 h 못 내려오면 cascade 러너 rc 12)",
+    "겹친_cascade_런": []
+  },
+  "결과": null
+}
