@@ -4328,3 +4328,45 @@ gate INCOMPLETE · 실효 정책 UNVERIFIED · native 미승인 · 게이트 리
 - R1_004 결과 묶음은 **이 저장소에 아직 없다.** 사용자가 전한 검토 담당 Codex 의 질문 (2026-10-09 · 사용자 채팅 전사): "최종 확인 614.480초의 당시 반환 원문이나 종결 기록이 별도로 있으면 보내주세요.
   현재 ZIP 내부는 포장 전 569.580초, 붙여주신 포장 반환은 569.914초까지라 시간 경계를 구분해 검토하겠습니다. 새 측정·재실행은 필요 없습니다." — 614.480 s 의 근거가 묶음 안에 없다는 뜻.
 - §81 의 확인 요청 (R1_003 위치 승인 · 001 / 002 의 경위) 에는 아직 사용자 답이 없다 — 제출자 기록 분류 유지.
+- **정정 (§83 · 2026-10-09):** "보냈어" (2026-10-09T12:10Z) 는 R1_004 실행 (`ORIGIN.json` 2026-10-08T17:18Z) · 결과 전달 **뒤** 의 메시지다 — 첫 줄의 "보냈어 = R1_004 발송문 발송"
+  해석은 시점 근거가 없다. 승인 범위가 초안 문구와 맞는다는 근거와 승인 경위의 출처 구분은 §83.
+
+## 83. S1O-R1_004 결과 수신 — 새 7 PASS · 원 127 재사용 + 원 미완 3 충족 · 보조 양성 4 별도 · 614.480 s 근거 원파일 · 독립 수용 대기 (2026-10-09 · COMSOL 0)
+
+- 보존: `reviews/r14_repros/codex63/comsol_microshort_s1o_r1_004_result_20261009/` — zip 796,501 B · sha256 `cb85fa123395caf9ea323b0c531144bf30754322ba9b0362f1bbac3e5bc8ff2c` (영수증 값과 같음) ·
+  압축 해제 51 · PACKAGE_MANIFEST (8,399 B · `83a07d17…311c` = 영수증 값) 50 / 50 · 비밀 0 · 받은 코드 · 하네스 · 동봉 스크립트 실행 0. 규칙 `8026155b` → 보존 `82b5bba0`.
+  `user_relayed/` = zip 밖 사용자 전달분 (README): `DELIVERY_RECEIPT.json` 1,175 B `2693f617…8fa9` · `FINAL_SUBMISSION_CHECK.json` 395 B `afd5989d…d261` 은 붙여 넣은 텍스트로 재구성한 바이트가
+  실행 Codex 가 적은 크기 · SHA 와 **일치** (= 원파일과 같은 바이트) · `FINAL_PACKAGE_TOOL_RETURN` 은 붙여 넣은 텍스트 그대로 (대조할 SHA 없음) · 사용자 메시지 전문.
+- 결과 (`main/VALIDATION_CLOSEOUT.json` · `RESULT_KO.md` · `results/` 사본 — 제출자 기록): `LIMITED_SUBSET_VALIDATION_PASS_AWAITING_EXTERNAL_REVIEW`.
+  - Python 보조 양성 4 (READ_CTRL_CSV · TIME · COVERAGE · PROFILE — 대상 함수 각 1 회 진입 · `EXACT_BASELINE_RETURN`) 1 세션 0.433 s / 120 · rc 0.
+  - PS5.1 원 미완 3 (R115 → R113 → R114) 1 세션 9.169 s / 180 · rc 0: R115 `status` = `AWAITING_S1_LIMITED_EXTERNAL_REVIEW` (POLICY02 정상 분기) · R113 `reason` = `DECIMAL_TRANSPORT_PRECISION` ·
+    stage `comparison_numerics` · R114 `reason` = `COMPARISON_SUMMARY_CONTRADICTION` · stage `fields` (양성 대조 PARENT02 = R1_003 기록 재사용 · 재호출 0).
+  - 사전 봉인 381.89 / 600 s · 생산 수정 0 · 자동 재시도 0 · COMSOL / JVM / Java / compile / native / Job / 정책 호출 0 · native_ready false · 전체 / 정상 gate INCOMPLETE · 설치본 t0 · 계수 · native / raw / OS 어댑터 OPEN.
+- R113 (S1O003-N1 의 답 · 제출자 관측): parse 직후 실제 타입 **System.Decimal** · 값 `0.001` 을 assertion 전에 기록 (`current_case_diagnostic.json`) → 그 leaf 하나만 명시 Double 변환
+  (bits `3F50624DD2F1A9FC` · 나머지 leaf 불변). §81 에서 "알려진 동작 (관측 아님)" 으로 적은 Decimal 읽기가 이번 실행 기록에서 관측됐다. `3F50624DD2F1A9FC` 가 IEEE-754 double 0.001 의 비트임은 이 저장소에서 확인.
+- 시간 경계 (합산하지 않는다 — 초안 "포장 내부 snapshot과 도구 wall time을 합산하지 않는다"):
+
+  | 기록 | 위치 | overall s / 1,200 | delivery s / 240 | 경계 (원문) |
+  |---|---|---|---|---|
+  | `VALIDATION_CLOSEOUT.json` | zip 안 | 569.580 | 116.465 | before packaging |
+  | `DELIVERY_RECEIPT.json` | zip 밖 · SHA 일치 | 569.903 | 116.788 | after zip reread/hash before receipt write and tool return |
+  | `FINAL_PACKAGE_TOOL_RETURN` 의 output | zip 밖 · 붙여 넣은 텍스트 | 569.914 | 116.800 | after receipt reread before tool return (도구 wall 6.733 s 는 별도) |
+  | `FINAL_SUBMISSION_CHECK.json` | zip 밖 · SHA 일치 | **614.480** | 161.369 | before this check write and final tool return (frozen 246 · all_unchanged) |
+
+  → §82 검토자 질문의 614.480 s 근거 = `FINAL_SUBMISSION_CHECK.json` 6 행 (CRLF 기준). 이 확인 단계의 **도구 반환 원문** (wall · rc) 은 전달되지 않았다. 마지막 쓰기 · 반환 뒤 구간은 어느 기록에도 없다.
+- **이 저장소의 정적 확인 (실행 0):**
+  - 생산 · 후보 소스 22 (CODE_MANIFEST `4ce5c08d…f5da` · Parent `e9f8d366…56ff` · contracts · candidate · variants · `VALIDATION_PLAN_R1.json` · `SOURCE_CONTRACT_LINKS.json`) 의 봉인 SHA
+    (`SELECTED_SOURCES_AFTER.json` · before = after) = §79 보존 R1 정정본 바이트 22 / 22. 실행 PC 에서의 전후 동일성은 제출자 기록이지만, 적힌 SHA 가 §80 에서 정적 수용한 바이트의 것임은 확인.
+  - `reference/R1_003_ORIGINAL_RESULT.zip` = `11a27f30…5d4b` (876,456 B · §81 기록값) · 154 항목이 §81 보존 `received/` 와 바이트 동일 → §81 의 "R1_003 원 zip 바이트는 이 저장소에 없다" 해소.
+  - `ARCHIVE_REUSE_CHECK.json` 153 항목 = `received/` 153 payload (크기 · SHA) · `REUSE_MAP.json` 의 원 결과 (Python `f16367f2…` · PS `276c6769…`) = `received/results/` · 원 PASS ID 127 (고유).
+  - `reference/NEXT_LIMITED_APPROVAL_DRAFT_KO.md` = `8bd02f0f…2015` (§81 회신 동봉본) · `ORIGIN.json` 단계 상한 (봉인 600 · Python 120 · PS 180 · 미완 정리 60 · 전달 240 · 전체 1,200) = 초안 예산표 ·
+    폴더 `…/future_validation_fixture_R1_004/` = 초안 경로.
+  - `PS_SUBSET.diff` (R1_003 `ps_harness.ps1` → R1_004 `ps_subset.ps1`): R113 의 `-is [double]` 단정 삭제 → 타입 · 값 기록 뒤 `R113_NUMERIC_PARSE_TYPE` · `R113_EXACT_FINITE_VALUE` ·
+    `R113_EXPLICIT_SINGLE_LEAF_DOUBLE` · 사례마다 reach 초기화 · 사례 수 31 → 3 · 세션 상한 300 → 180 s — 초안 "R113 하네스 정정" 과 같은 구조.
+  - 관측 (판정 아님): R114 의 기록된 reach 에 `S1ComparisonNumerics` 까지 들어 있다 (판정 stage 는 `fields`) — 하네스 기준은 "요구 함수 ⊆ reach". 순서의 의미는 검토 몫.
+- 승인 경위 (출처 구분): R1_004 실행 원점 `ORIGIN.json` 2026-10-08T17:18:05Z · 근거 "User go-ahead following explicit R1_004 seven-input1200s proposal; interrupted turn had no target folder"
+  (제출자 기록 · 사용자 원응답 미동봉). 발송문 (§81) 커밋 2026-10-08T14:36Z 보다 뒤라 시점은 모순 없고, 묶음의 초안 원바이트 · 경로 · 예산 · 7 입력이 초안과 같다 (정합). 발송 시점 · 사용자 원문은 이 저장소에 없다.
+- R1_003 위치 승인 (§81 질문): 실행 Codex 진술 "R1_003 위치도 당시 “R1_003에서 같은 조건으로 승인”이라고 별도 승인했습니다. 해당 사용자 답변이 실행 Codex 대화에 남아 있습니다." 를
+  사용자가 전달 (2026-10-09 · `user_relayed/USER_MESSAGE_20261009T121659Z.txt` 57 행). 사용자 본인 확인 원문은 아직 없다 → **제출자 기록 (사용자 전달)**.
+- 다음: 검토 담당 Codex 에 `FINAL_SUBMISSION_CHECK.json` 원파일 (+ 결과 zip · 영수증 · 포장 반환 원파일) 을 보내 독립 수용 판정 — 발송문 `docs/COMSOL_MICROSHORT_S1O_R1_004_REVIEW_REPLY_SEND_20261009.md`.
+  수용돼도 S1-P · COMSOL · microshort 계산은 별도 승인. 이 절은 승인이 아니다.
