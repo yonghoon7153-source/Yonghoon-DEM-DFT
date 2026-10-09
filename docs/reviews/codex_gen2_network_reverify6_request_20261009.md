@@ -95,6 +95,8 @@ cd ~ && tar czf ~/$(basename "$O").tar.gz "$(basename "$O")" && cp ~/$(basename 
 - 컨테이너 예행 (참고 · 판정 아님 · 10-09): 재검증 5 사전 점검 묶음 (`docs/reviews/codex_gen2_network_reverify5_precheck_20261007/g2rr5_839dbac6b_1007_2224.tar.gz`) 의 `839dbac6b` 시범 사본에 4 · 5 단계를 돌렸다 —
   결합 기록 v2 · 시도 3 · 계획 출처 = 시도 사본 · expected=observed · unclassified `[]` · **관측 문제 0** · 사본 파일 변화 없음.  감사 rc 1 · 감사 관문 문제 4 는 환경 탓 (묶음에 게시 산출물 · 원자료 · 워커 체크아웃이 없다 — `not_merged` 3 · 레코드 세대 `missing` 3 · 입력 지문 2 · `code_root_changed_now` 32) — WSL 에서는 그 셋이 있다.
 
+- ✅ **받음 — 10-09 21:13–21:17 KST · 1저자 WSL · 코드 `956173e1c` (detached · dirty 0) · ①–⑤ 전부** — 증거 `docs/reviews/codex_gen2_network_reverify6_precheck_20261009/` (묶음 sha256 `b147dcd5babefcad7897d7bba8dbe0ecbdffa3453edb96d45a86a2dd659a2cab` · 받은 목록 · 받지 않은 것 = README §1): 자체 시험 23/23 · 124/124 · 16/16 · 4/4 / ② smoke rc 0 (27/27 · case15 검사 일곱 전부 PASS — `nc5_attempt` 포함 · real14 σ_ratio = 참고값 8 자리) / ③ reread rc 0 (S0 · S0b) / ④ 두 ROOT audit rc 0 (SEALED 3 · 시작 15 = 끝맺음 15 · 완료 3) / ⑤ gate_readonly rc 0 (두 ROOT 문제 0 · 결합 기록 v2 · 시도 3 · expected=observed · unclassified [] · 파일 변화 없음) — **결과 전 기대와 다섯 단계 모두 같음** (README §2 표).
+
 ## 1. G2RR5-01 — 배포 관문이 `stage_binding` 의 시도별 값을 읽는다 (`8b6453671` · 잔여 `7153a7d6a`)
 
 | 판정문 §1 최소 해결 증거 | 구현 |
