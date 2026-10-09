@@ -1,0 +1,21 @@
+{
+  "engine": "powershell",
+  "utc": "2026-10-08T17:25:00.7050574Z",
+  "tick": 19793023517190,
+  "argv": [
+    "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe",
+    "-NoLogo",
+    "-NoProfile",
+    "-NonInteractive",
+    "-File",
+    "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\outputs\\microshort_s1o_r1_20261008\\future_validation_fixture_R1_004\\harness\\ps_subset.ps1"
+  ],
+  "cwd": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\outputs\\microshort_s1o_r1_20261008\\future_validation_fixture_R1_004",
+  "limit_s": 180,
+  "first_seal": {
+    "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\outputs\\microshort_s1o_r1_20261008\\future_validation_fixture_R1_004\\FIRST_SEAL.json",
+    "bytes": 76598,
+    "sha256": "90805ca5d29fcdc73759057995c130ec78d9e689b2acff1c66ee412a9fcef2b4"
+  },
+  "retry": 0
+}

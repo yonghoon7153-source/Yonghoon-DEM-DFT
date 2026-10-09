@@ -1,0 +1,16 @@
+{
+  "utc": "2026-10-08T17:18:05.2929157Z",
+  "local": "2026-10-09T02:18:05.3027017+09:00",
+  "monotonic_ticks": 19788869502822,
+  "frequency": 10000000,
+  "total_limit_s": 1200,
+  "phase_limits_s": {
+    "python": 120,
+    "preseal": 600,
+    "powershell": 180,
+    "incomplete_closeout": 60,
+    "delivery": 240
+  },
+  "authorization": "User go-ahead following explicit R1_004 seven-input1200s proposal; interrupted turn had no target folder",
+  "start_free_bytes": 106731982848
+}

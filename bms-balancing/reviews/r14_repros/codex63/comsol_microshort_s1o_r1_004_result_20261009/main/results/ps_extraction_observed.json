@@ -1,0 +1,127 @@
+{
+    "source_sha256":  "e9f8d366ca9931b84ded5753a560369b72fea8737a77075bc2b80ec771bc56ff",
+    "source_path":  "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\outputs\\microshort_s1o_r1_20261008\\candidate\\Parent.ps1.inactive.txt",
+    "source_bytes":  25787,
+    "spans":  [
+                  {
+                      "name":  "S1Has",
+                      "end_line":  10,
+                      "sha256":  "f6dc8c12dfa2c7f8ae89415b0e4f75ea5be8391d52f7f1463d705c1ed76cf983",
+                      "start_line":  6,
+                      "bytes":  231,
+                      "normalization":  "CRLF to LF; trailing LF excluded"
+                  },
+                  {
+                      "name":  "S1Struct",
+                      "end_line":  15,
+                      "sha256":  "0b90669aa6fae4e89236495af73b31262001ada7ee1223622bcc0651ef10307f",
+                      "start_line":  11,
+                      "bytes":  248,
+                      "normalization":  "CRLF to LF; trailing LF excluded"
+                  },
+                  {
+                      "name":  "S1Number",
+                      "end_line":  22,
+                      "sha256":  "b7251aa4a08a8cca7f02f3234a1103ee6542075afda098d0ec46f664b43201bc",
+                      "start_line":  16,
+                      "bytes":  386,
+                      "normalization":  "CRLF to LF; trailing LF excluded"
+                  },
+                  {
+                      "name":  "S1Sha",
+                      "end_line":  23,
+                      "sha256":  "13c6456b30805e3b02063ca8cb804b201d948c5518bf01b102610297236d8eed",
+                      "start_line":  23,
+                      "bytes":  90,
+                      "normalization":  "CRLF to LF; trailing LF excluded"
+                  },
+                  {
+                      "name":  "S1Failure",
+                      "end_line":  26,
+                      "sha256":  "3ed6a49f46e52ff5b8edfa2b824e7d24fe12cd2c71430ea07b583a40eaa382a4",
+                      "start_line":  24,
+                      "bytes":  162,
+                      "normalization":  "CRLF to LF; trailing LF excluded"
+                  },
+                  {
+                      "name":  "S1ExactDecimal",
+                      "end_line":  50,
+                      "sha256":  "56d56e31306ef5a1aac5bce5f59feff5fa938f5ce594be3ddeba8303d7dd2cb5",
+                      "start_line":  27,
+                      "bytes":  1500,
+                      "normalization":  "CRLF to LF; trailing LF excluded"
+                  },
+                  {
+                      "name":  "S1ExactCompare",
+                      "end_line":  58,
+                      "sha256":  "377e9f3e20fb3657b07729e121f92d8d17d0acefe5f484517ac2e5e90631d275",
+                      "start_line":  51,
+                      "bytes":  481,
+                      "normalization":  "CRLF to LF; trailing LF excluded"
+                  },
+                  {
+                      "name":  "S1TimeVector",
+                      "end_line":  68,
+                      "sha256":  "3a565c77f2f8f8063bab684a1bc008d9efd18c8aa75c39ed972aa9d7446ad832",
+                      "start_line":  59,
+                      "bytes":  457,
+                      "normalization":  "CRLF to LF; trailing LF excluded"
+                  },
+                  {
+                      "name":  "S1Coverage",
+                      "end_line":  107,
+                      "sha256":  "20365c99d8771bc3203ae7f15a2c6e7f42949cbc213b898656309083794480a1",
+                      "start_line":  69,
+                      "bytes":  3043,
+                      "normalization":  "CRLF to LF; trailing LF excluded"
+                  },
+                  {
+                      "name":  "S1ChargeFields",
+                      "end_line":  155,
+                      "sha256":  "2786f0b5137fe732d95e308c14291a8ac639ebfbc943f54c23f28a52cbd36487",
+                      "start_line":  108,
+                      "bytes":  3849,
+                      "normalization":  "CRLF to LF; trailing LF excluded"
+                  },
+                  {
+                      "name":  "S1ComparisonNumerics",
+                      "end_line":  169,
+                      "sha256":  "c4861945e67275bb469492a536118c3e5307b4fe821e43600907fa53e31f3fcb",
+                      "start_line":  156,
+                      "bytes":  817,
+                      "normalization":  "CRLF to LF; trailing LF excluded"
+                  },
+                  {
+                      "name":  "S1NativeAxis",
+                      "end_line":  217,
+                      "sha256":  "57ebfaa4c6926c84626845b90eacbe266fffb658991e9ab9e4928a97297da6f5",
+                      "start_line":  170,
+                      "bytes":  3535,
+                      "normalization":  "CRLF to LF; trailing LF excluded"
+                  },
+                  {
+                      "name":  "S1Fields",
+                      "end_line":  295,
+                      "sha256":  "80f08b574f7c9581aa4e44de3103c75e495121de9372c256a831cbddbacc5266",
+                      "start_line":  218,
+                      "bytes":  4942,
+                      "normalization":  "CRLF to LF; trailing LF excluded"
+                  },
+                  {
+                      "name":  "S1Decision",
+                      "end_line":  338,
+                      "sha256":  "1df66e6a7551aa05070ad39e7aa5ba14c9559f31418f03ee0cb764c6053368d7",
+                      "start_line":  296,
+                      "bytes":  3027,
+                      "normalization":  "CRLF to LF; trailing LF excluded"
+                  },
+                  {
+                      "name":  "S1FinalReturn",
+                      "end_line":  374,
+                      "sha256":  "0db9f410c53a630ae5bdc98892c02c72a430fb6804e5ef359fcca36e375405a9",
+                      "start_line":  339,
+                      "bytes":  2637,
+                      "normalization":  "CRLF to LF; trailing LF excluded"
+                  }
+              ]
+}

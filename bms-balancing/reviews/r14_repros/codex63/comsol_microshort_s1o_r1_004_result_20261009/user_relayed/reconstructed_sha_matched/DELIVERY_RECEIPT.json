@@ -1,0 +1,24 @@
+{
+  "kind": "DELIVERY_RECEIPT",
+  "recipient": null,
+  "zip": {
+    "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\outputs\\microshort_s1o_r1_20261008\\future_validation_fixture_R1_004\\COMSOL_MICROSHORT_S1O_R1_004_VALIDATION_RESULT_20261009.zip",
+    "bytes": 796501,
+    "sha256": "cb85fa123395caf9ea323b0c531144bf30754322ba9b0362f1bbac3e5bc8ff2c"
+  },
+  "manifest": {
+    "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\outputs\\microshort_s1o_r1_20261008\\future_validation_fixture_R1_004\\PACKAGE_MANIFEST.json",
+    "bytes": 8399,
+    "sha256": "83a07d177e52bb5bd9069e4267d6a731c5a0bfa7e7b490d10d1c5b8945e8311c"
+  },
+  "payload_count": 50,
+  "fixture_bytes": 3695639,
+  "verification": "exact set,size,SHA,CRC,casefold/path/symlink checks",
+  "result": "LIMITED_SUBSET_VALIDATION_PASS_AWAITING_EXTERNAL_REVIEW",
+  "overall_snapshot_s": 569.9025540000293,
+  "overall_limit_s": 1200,
+  "delivery_snapshot_s": 116.78792289993726,
+  "delivery_limit_s": 240,
+  "boundary": "after zip reread/hash before receipt write and tool return",
+  "native_ready": false
+}

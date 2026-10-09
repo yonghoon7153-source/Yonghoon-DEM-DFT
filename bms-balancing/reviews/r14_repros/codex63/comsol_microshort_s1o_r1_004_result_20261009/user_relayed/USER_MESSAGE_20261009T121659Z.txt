@@ -1,0 +1,71 @@
+@"/root/.claude/uploads/b881d255-9513-5adc-9b14-3c0be18d7ad6/a2c367cd-COMSOL_MICROSHORT_S1O_R1_004_VALIDATION_RESULT_20261009.zip" 1_004의 새 7개 입력이 모두 통과했습니다.
+- 기존 127개 재사용 + 미완 3개 신규 충족
+- 보조 양성 4개는 별도 집계
+- 생산 코드·과거 실패 기록 보존, 재시험·COMSOL 실행 없음
+- 최종 확인: 614.480 / 1,200초, 예산 이내
+검토자에게 아래 3개를 보내면 됩니다.
+- [검증 결과 ZIP](C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/microshort_s1o_r1_20261008/future_validation_fixture_R1_004/COMSOL_MICROSHORT_S1O_R1_004_VALIDATION_RESULT_20261009.zip)
+- [전달 영수증](C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/microshort_s1o_r1_20261008/future_validation_fixture_R1_004/DELIVERY_RECEIPT.json)
+- [포장 도구 반환 기록](C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/microshort_s1o_r1_20261008/future_validation_fixture_R1_004/FINAL_PACKAGE_TOOL_RETURN.json)
+독립 수용 대기 상태로 멈췄으며, 실제 계산은 시작하지 않았습니다.
+
+{
+  "kind": "DELIVERY_RECEIPT",
+  "recipient": null,
+  "zip": {
+    "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\outputs\\microshort_s1o_r1_20261008\\future_validation_fixture_R1_004\\COMSOL_MICROSHORT_S1O_R1_004_VALIDATION_RESULT_20261009.zip",
+    "bytes": 796501,
+    "sha256": "cb85fa123395caf9ea323b0c531144bf30754322ba9b0362f1bbac3e5bc8ff2c"
+  },
+  "manifest": {
+    "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\outputs\\microshort_s1o_r1_20261008\\future_validation_fixture_R1_004\\PACKAGE_MANIFEST.json",
+    "bytes": 8399,
+    "sha256": "83a07d177e52bb5bd9069e4267d6a731c5a0bfa7e7b490d10d1c5b8945e8311c"
+  },
+  "payload_count": 50,
+  "fixture_bytes": 3695639,
+  "verification": "exact set,size,SHA,CRC,casefold/path/symlink checks",
+  "result": "LIMITED_SUBSET_VALIDATION_PASS_AWAITING_EXTERNAL_REVIEW",
+  "overall_snapshot_s": 569.9025540000293,
+  "overall_limit_s": 1200,
+  "delivery_snapshot_s": 116.78792289993726,
+  "delivery_limit_s": 240,
+  "boundary": "after zip reread/hash before receipt write and tool return",
+  "native_ready": false
+}
+
+{
+  "source": "Subsequent exact copy of actual exec_command result; not independent OS audit",
+  "tool_return": {
+    "chunk_id": "eb8612",
+    "wall_time_seconds": 6.7332629,
+    "exit_code": 0,
+    "original_token_count": 231,
+    "output": "{\"kind\":\"PACKAGE_FINAL_RETURN\",\"zip\":{\"path\":\"C:\\\\Users\\\\BML\\\\Documents\\\\Codex\\\\2026-09-13\\\\files-mentioned-by-the-user-comsol63\\\\outputs\\\\microshort_s1o_r1_20261008\\\\future_validation_fixture_R1_004\\\\COMSOL_MICROSHORT_S1O_R1_004_VALIDATION_RESULT_20261009.zip\",\"bytes\":796501,\"sha256\":\"cb85fa123395caf9ea323b0c531144bf30754322ba9b0362f1bbac3e5bc8ff2c\"},\"receipt\":{\"path\":\"C:\\\\Users\\\\BML\\\\Documents\\\\Codex\\\\2026-09-13\\\\files-mentioned-by-the-user-comsol63\\\\outputs\\\\microshort_s1o_r1_20261008\\\\future_validation_fixture_R1_004\\\\DELIVERY_RECEIPT.json\",\"bytes\":1175,\"sha256\":\"2693f6175ac26efbf9849697e9a100c5ac86c987f1d3e57de22e9fbde38c9fa9\"},\"result\":\"LIMITED_SUBSET_VALIDATION_PASS_AWAITING_EXTERNAL_REVIEW\",\"new_pass\":7,\"prior_reused\":127,\"overall_snapshot_s\":569.9144170000218,\"delivery_snapshot_s\":116.79978640004992,\"within_time_limits\":true,\"boundary\":\"after receipt reread before tool return\",\"native_ready\":false}\r\n"
+  },
+  "snapshot_semantics": "Package snapshot precedes tool return; tool wall time is separate and not added."
+}
+원파일이 있습니다. 제가 ZIP 밖의 최종 확인 파일 링크를 빠뜨렸습니다. 아래 두 파일을 그대로 첨부하면 됩니다.
+- [FINAL_SUBMISSION_CHECK.json](C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/microshort_s1o_r1_20261008/future_validation_fixture_R1_004/FINAL_SUBMISSION_CHECK.json)
+  395 bytes · SHA-256: afd5989d84b78413d6613207c80dfe7eae8d4a8fb3f7374a02c02a9431d18261
+  6행: "overall_snapshot_s": 614.4801189
+  기록 경계는 이 확인 파일 쓰기·마지막 도구 반환 전 snapshot입니다.
+- [기존 R1_004 결과 ZIP](C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/microshort_s1o_r1_20261008/future_validation_fixture_R1_004/COMSOL_MICROSHORT_S1O_R1_004_VALIDATION_RESULT_20261009.zip)
+  796,501 bytes · SHA-256: cb85fa123395caf9ea323b0c531144bf30754322ba9b0362f1bbac3e5bc8ff2c
+회신은 이렇게 보내세요.
+614.4801189초의 기존 원파일과 R1_004 결과 ZIP을 첨부합니다. 새 시간 측정·재포장·재시험 없이 기존 파일의 크기·SHA만 확인했습니다.
+R1_003 위치도 당시 **“R1_003에서 같은 조건으로 승인”**이라고 별도 승인했습니다. 해당 사용자 답변이 실행 Codex 대화에 남아 있습니다.
+
+{
+  "kind": "FINAL_SUBMISSION_CHECK",
+  "frozen_files": 246,
+  "all_unchanged": true,
+  "package_tool_return_matches_zip_and_receipt": true,
+  "overall_snapshot_s": 614.4801189,
+  "overall_limit_s": 1200,
+  "delivery_snapshot_s": 161.3691145,
+  "delivery_limit_s": 240,
+  "within_limits": true,
+  "boundary": "before this check write and final tool return",
+  "native_ready": false
+}

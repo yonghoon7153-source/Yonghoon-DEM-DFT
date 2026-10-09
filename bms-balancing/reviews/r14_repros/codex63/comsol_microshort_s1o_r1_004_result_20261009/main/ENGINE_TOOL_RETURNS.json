@@ -1,0 +1,25 @@
+{
+  "source": "Actual tool return objects copied after calls; not independent OS audit",
+  "python": {
+    "chunk_id": "ff99b1",
+    "wall_time_seconds": 7.7981884,
+    "exit_code": 0,
+    "original_token_count": 152,
+    "output": "{\"kind\":\"HARNESS_ENGINE_FINAL_RETURN\",\"engine\":\"python\",\"observation_phase\":\"POST_SESSION_RECORD_WRITE\",\"rc\":0,\"within_limits\":true,\"elapsed_s\":0.4488671,\"limit_s\":120,\"overall_snapshot_s\":399.1790558,\"overall_limit_s\":1200.0,\"engine_overall_deadline_s\":1140.0,\"session\":{\"path\":\"C:\\\\Users\\\\BML\\\\Documents\\\\Codex\\\\2026-09-13\\\\files-mentioned-by-the-user-comsol63\\\\outputs\\\\microshort_s1o_r1_20261008\\\\future_validation_fixture_R1_004\\\\results\\\\PYTHON_SESSION.json\",\"bytes\":1762,\"sha256\":\"4288dca39156bedcccf7758b87049f015d0ab4df69614a6a341d2f983a6324c1\"},\"prior_session_within_limits\":true,\"reason\":null}\r\n"
+  },
+  "powershell_start": {
+    "chunk_id": "8f835f",
+    "wall_time_seconds": 10.0014788,
+    "session_id": 43213,
+    "original_token_count": 0,
+    "output": ""
+  },
+  "powershell_completion": {
+    "chunk_id": "3a7d3f",
+    "wall_time_seconds": 0.0000158,
+    "exit_code": 0,
+    "original_token_count": 154,
+    "output": "{\"kind\":\"HARNESS_ENGINE_FINAL_RETURN\",\"engine\":\"powershell\",\"observation_phase\":\"POST_SESSION_RECORD_WRITE\",\"rc\":0,\"within_limits\":true,\"elapsed_s\":9.1838897,\"limit_s\":180,\"overall_snapshot_s\":424.5856452,\"overall_limit_s\":1200.0,\"engine_overall_deadline_s\":1140.0,\"session\":{\"path\":\"C:\\\\Users\\\\BML\\\\Documents\\\\Codex\\\\2026-09-13\\\\files-mentioned-by-the-user-comsol63\\\\outputs\\\\microshort_s1o_r1_20261008\\\\future_validation_fixture_R1_004\\\\results\\\\POWERSHELL_SESSION.json\",\"bytes\":1788,\"sha256\":\"8c7d7e25efddbabd60a0a1e59ed58ce63b9557a6ca186a7fb2899b58a4063dd6\"},\"prior_session_within_limits\":true,\"reason\":null}\r\n"
+  },
+  "note": "Poll wall time is not engine elapsed; session records measure actual owned process. No retry."
+}

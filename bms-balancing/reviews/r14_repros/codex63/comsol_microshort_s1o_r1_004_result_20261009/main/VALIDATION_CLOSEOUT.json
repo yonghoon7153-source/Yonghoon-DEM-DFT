@@ -1,0 +1,114 @@
+{
+  "status": "LIMITED_SUBSET_VALIDATION_PASS_AWAITING_EXTERNAL_REVIEW",
+  "new_cases": 7,
+  "new_python_positive": 4,
+  "new_ps_original_cases": 3,
+  "prior127_reused": true,
+  "prior003_failure_preserved": true,
+  "original130_coverage": "127 reused +3 newly satisfied;4 auxiliary separately",
+  "preseal_s": 381.8903014,
+  "preseal_limit_s": 600,
+  "sessions": {
+    "PYTHON": {
+      "engine": "python",
+      "utc_start": "2026-10-08T17:24:44.0332262Z",
+      "utc_end": "2026-10-08T17:24:44.4734918Z",
+      "pid_owned": 76516,
+      "argv": [
+        "C:\\Users\\BML\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\python.exe",
+        "-I",
+        "-B",
+        "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\outputs\\microshort_s1o_r1_20261008\\future_validation_fixture_R1_004\\harness\\python_subset.py"
+      ],
+      "cwd": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\outputs\\microshort_s1o_r1_20261008\\future_validation_fixture_R1_004",
+      "rc": 0,
+      "timed_out": false,
+      "elapsed_s": 0.4329076,
+      "limit_s": 120,
+      "overall_snapshot_s": 399.1632046,
+      "overall_limit_s": 1200.0,
+      "engine_overall_deadline_s": 1140.0,
+      "closeout_reserve_s": 60.0,
+      "effective_wait_budget_s": 119.9049648,
+      "within_limits": true,
+      "start_or_collection_error": null,
+      "cleanup_error": null,
+      "stdout": {
+        "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\outputs\\microshort_s1o_r1_20261008\\future_validation_fixture_R1_004\\results\\PYTHON_STDOUT.txt",
+        "bytes": 80028,
+        "sha256": "910a7f4700cc065bec49ad51b86a29ec1841ffce0f0ecb3d448e129b5d9ef057"
+      },
+      "stderr": {
+        "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\outputs\\microshort_s1o_r1_20261008\\future_validation_fixture_R1_004\\results\\PYTHON_STDERR.txt",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "status": "ENGINE_RETURNED_RC0",
+      "raw_process_exit_observed": true,
+      "observation_phase": "PRE_SESSION_RECORD_WRITE"
+    },
+    "POWERSHELL": {
+      "engine": "powershell",
+      "utc_start": "2026-10-08T17:25:00.7050574Z",
+      "utc_end": "2026-10-08T17:25:09.8816500Z",
+      "pid_owned": 26612,
+      "argv": [
+        "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe",
+        "-NoLogo",
+        "-NoProfile",
+        "-NonInteractive",
+        "-File",
+        "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\outputs\\microshort_s1o_r1_20261008\\future_validation_fixture_R1_004\\harness\\ps_subset.ps1"
+      ],
+      "cwd": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\outputs\\microshort_s1o_r1_20261008\\future_validation_fixture_R1_004",
+      "rc": 0,
+      "timed_out": false,
+      "elapsed_s": 9.1690324,
+      "limit_s": 180,
+      "overall_snapshot_s": 424.5710034,
+      "overall_limit_s": 1200.0,
+      "engine_overall_deadline_s": 1140.0,
+      "closeout_reserve_s": 60.0,
+      "effective_wait_budget_s": 179.8983086,
+      "within_limits": true,
+      "start_or_collection_error": null,
+      "cleanup_error": null,
+      "stdout": {
+        "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\outputs\\microshort_s1o_r1_20261008\\future_validation_fixture_R1_004\\results\\POWERSHELL_STDOUT.txt",
+        "bytes": 6575,
+        "sha256": "75263c5536c81aa517a01f6ead9b6d9180850f7da3519e4bc4a5017bbb3d2b6b"
+      },
+      "stderr": {
+        "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\outputs\\microshort_s1o_r1_20261008\\future_validation_fixture_R1_004\\results\\POWERSHELL_STDERR.txt",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "status": "ENGINE_RETURNED_RC0",
+      "raw_process_exit_observed": true,
+      "observation_phase": "PRE_SESSION_RECORD_WRITE"
+    }
+  },
+  "transport_observation": {
+    "mutant_bytes": 122638,
+    "mutant_sha256": "b49a89a13fe0313f27f02053441c5db6e9e9741476a325b497478964788dc013",
+    "cast_value_roundtrip": "0.001",
+    "other_leaves_unchanged": true,
+    "cast_clr_type": "System.Double",
+    "source_sha256": "254164ec95da7af50e734baff70f6c804c28eb7854898912261699e8cb8c0880",
+    "double_bits_hex": "3F50624DD2F1A9FC",
+    "parsed_value": "0.001",
+    "parsed_clr_type": "System.Decimal",
+    "token_match_index": 122002
+  },
+  "production_edits": 0,
+  "automatic_retries": 0,
+  "native_ready": false,
+  "overall": "INCOMPLETE",
+  "normal_gate": "INCOMPLETE",
+  "installed_t0_coefficients_native_raw_OS_adapters": "OPEN",
+  "actual_COMSOL_JVM_Java_compile_native_input_Job_policy_calls": 0,
+  "engine_processes": "One functional Python session and one PS5.1 session; separate data-only preparation/packaging Python calls are not functional tests",
+  "overall_snapshot_s": 569.579920399934,
+  "delivery_snapshot_s": 116.46528979996219,
+  "boundary": "before packaging"
+}

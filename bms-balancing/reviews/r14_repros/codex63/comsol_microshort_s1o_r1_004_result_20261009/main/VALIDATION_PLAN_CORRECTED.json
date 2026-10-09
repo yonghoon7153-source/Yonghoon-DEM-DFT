@@ -1,0 +1,470 @@
+{
+  "schema": "S1O_R1_004_SUBSET",
+  "source_manifest_sha256": "4ce5c08dbde5153027819b5a651e3995ec82417b4429b9bb0f789082b440f5da",
+  "native_ready": false,
+  "new_inputs": 7,
+  "python_positive_ids": [
+    "READ_CTRL_CSV",
+    "READ_CTRL_TIME",
+    "READ_CTRL_COVERAGE",
+    "READ_CTRL_PROFILE"
+  ],
+  "python_definition": "INPUT_SEAL.json",
+  "ps_order": [
+    "PARENT_R115",
+    "PARENT_R113",
+    "PARENT_R114"
+  ],
+  "cases": [
+    {
+      "id": "PARENT_R115",
+      "group": "PARENT",
+      "input_id": "PARENT_R115:01",
+      "input_count": 1,
+      "origin_old_id": null,
+      "revision_mapping": "new",
+      "engine": "Windows PowerShell5.1",
+      "source": "candidate/Parent.ps1.inactive.txt",
+      "target_functions": [
+        "S1Decision"
+      ],
+      "fixture_mutation": "Actual Python producer emits voltage maximum exactly0.001 and other metrics below limits, WITHIN_LIMITS_THIS_WINDOW. Exact inclusive boundary accepted.",
+      "expected": "AWAITING_S1_LIMITED_EXTERNAL_REVIEW",
+      "expected_reason_or_status": "AWAITING_S1_LIMITED_EXTERNAL_REVIEW",
+      "required_reach": "S1Decision",
+      "case_kind": "positive_or_expected_classification",
+      "positive_control_case_id": "PARENT01",
+      "reach_rule": "Exact real function and first reason must match. Earlier prerequisite rejection, arbitrary exception or fabricated producer is FAIL. Negative after producer uses a sealed sole-field JSON mutation with before/after hashes.",
+      "session_budget_s": 300,
+      "budget_scope": "shared one engine session, not per-case allowance",
+      "first_unexpected_failure": "Preserve sealed bytes, raw outputs and first error. Stop remaining cases/engine; no retry or correction.",
+      "execution_status": "NOT_RUN",
+      "assertion_count": "NOT_DECLARED_CASE_IS_NOT_ASSERTION_COUNT",
+      "producer_case_id": "POLICY02",
+      "expected_comparison": "WITHIN_LIMITS_THIS_WINDOW",
+      "expected_field_path": "return_value.status",
+      "observation_mode": "powershell_return_classification",
+      "stage_observation": "Successful S1Decision return has no stage field; instrumented actual call reach only, plus returned status/comparison."
+    },
+    {
+      "id": "PARENT_R113",
+      "group": "PARENT",
+      "input_id": "PARENT_R113:01",
+      "input_count": 1,
+      "origin_old_id": null,
+      "revision_mapping": "new",
+      "engine": "Windows PowerShell5.1",
+      "source": "candidate/Parent.ps1.inactive.txt",
+      "target_functions": [
+        "S1Decision",
+        "S1Fields",
+        "S1ComparisonNumerics"
+      ],
+      "fixture_mutation": "Take actual POLICY02 analyze JSON with voltage maximum string \"0.001\"; replace only this token by JSON numeric0.001. Before invoking real parent, assert the post-ConvertFrom-Json field is [double], not integer/string/decimal. The assertion is fixture readiness and a mismatch is fixture FAIL, not target PASS. Expected DECIMAL_TRANSPORT_PRECISION from S1ComparisonNumerics.",
+      "expected": "DECIMAL_TRANSPORT_PRECISION",
+      "expected_reason_or_status": "DECIMAL_TRANSPORT_PRECISION",
+      "required_reach": "S1Decision -> S1Fields -> S1ComparisonNumerics",
+      "case_kind": "negative_rejection",
+      "positive_control_case_id": "PARENT_R115",
+      "reach_rule": "Exact real function and first reason must match. Earlier prerequisite rejection, arbitrary exception or fabricated producer is FAIL. Negative after producer uses a sealed sole-field JSON mutation with before/after hashes.",
+      "session_budget_s": 300,
+      "budget_scope": "shared one engine session, not per-case allowance",
+      "first_unexpected_failure": "Preserve sealed bytes, raw outputs and first error. Stop remaining cases/engine; no retry or correction.",
+      "execution_status": "NOT_RUN",
+      "assertion_count": "NOT_DECLARED_CASE_IS_NOT_ASSERTION_COUNT",
+      "expected_stage": "comparison_numerics",
+      "expected_field_path": "return_value.reason",
+      "observation_mode": "powershell_return_reason",
+      "expected_stage_field_path": "return_value.stage",
+      "producer_case_id": "POLICY02",
+      "post_parse_fixture_precondition": "Result.comparison_details.maxima.voltage_V.value -is [double]; numericvalue0.001; original canonicalstring0.001; all other rawproducerfields unchanged"
+    },
+    {
+      "id": "PARENT_R114",
+      "group": "PARENT",
+      "input_id": "PARENT_R114:01",
+      "input_count": 1,
+      "origin_old_id": null,
+      "revision_mapping": "new",
+      "engine": "Windows PowerShell5.1",
+      "source": "candidate/Parent.ps1.inactive.txt",
+      "target_functions": [
+        "S1Decision",
+        "S1Fields"
+      ],
+      "fixture_mutation": "Take actual POLICY03 producer with exact voltage maximum0.0010000000000000000001 V and EXCEEDS_LIMITS. Forge both comparison summary strings to WITHIN_LIMITS_THIS_WINDOW only; lexical parent rejects contradiction instead of double-roundingvalue.",
+      "expected": "COMPARISON_SUMMARY_CONTRADICTION",
+      "expected_reason_or_status": "COMPARISON_SUMMARY_CONTRADICTION",
+      "required_reach": "S1Decision -> S1Fields",
+      "case_kind": "negative_rejection",
+      "positive_control_case_id": "PARENT02",
+      "reach_rule": "Exact real function and first reason must match. Earlier prerequisite rejection, arbitrary exception or fabricated producer is FAIL. Negative after producer uses a sealed sole-field JSON mutation with before/after hashes.",
+      "session_budget_s": 300,
+      "budget_scope": "shared one engine session, not per-case allowance",
+      "first_unexpected_failure": "Preserve sealed bytes, raw outputs and first error. Stop remaining cases/engine; no retry or correction.",
+      "execution_status": "NOT_RUN",
+      "assertion_count": "NOT_DECLARED_CASE_IS_NOT_ASSERTION_COUNT",
+      "expected_stage": "fields",
+      "producer_case_id": "POLICY03",
+      "expected_field_path": "return_value.reason",
+      "observation_mode": "powershell_return_reason",
+      "expected_stage_field_path": "return_value.stage"
+    }
+  ],
+  "extraction_spans": [
+    {
+      "source": "candidate/consumer.py.inactive.txt",
+      "name": "EvidenceError",
+      "start_line": 10,
+      "end_line": 13,
+      "normalization": "UTF8 text, CRLF->LF, trailing LF excluded; decorators included; no AST execution",
+      "sha256": "258da3700cd84767dce11ce94303571355b8e9ef4c99894a31fa68741dc23464"
+    },
+    {
+      "source": "candidate/consumer.py.inactive.txt",
+      "name": "require",
+      "start_line": 15,
+      "end_line": 17,
+      "normalization": "UTF8 text, CRLF->LF, trailing LF excluded; decorators included; no AST execution",
+      "sha256": "742f264846f801f2f720de701cd67f7bcdc046e968a966552815d84b0605ee63"
+    },
+    {
+      "source": "candidate/consumer.py.inactive.txt",
+      "name": "number",
+      "start_line": 19,
+      "end_line": 26,
+      "normalization": "UTF8 text, CRLF->LF, trailing LF excluded; decorators included; no AST execution",
+      "sha256": "d0ca7b5e4b70176f727e11bfdeaed1824ad2eed2f53e86ee37bfebb44af25cd3"
+    },
+    {
+      "source": "candidate/consumer.py.inactive.txt",
+      "name": "decimal_context",
+      "start_line": 28,
+      "end_line": 33,
+      "normalization": "UTF8 text, CRLF->LF, trailing LF excluded; decorators included; no AST execution",
+      "sha256": "a886939484a7648da27a144921dcfe9536e60de878334031c35f54e5b6e4da7d"
+    },
+    {
+      "source": "candidate/consumer.py.inactive.txt",
+      "name": "read_csv_bytes",
+      "start_line": 35,
+      "end_line": 51,
+      "normalization": "UTF8 text, CRLF->LF, trailing LF excluded; decorators included; no AST execution",
+      "sha256": "b01a5187d4b8c272605ba55b2da90d43116ee43e061493364c34aa6026b246ce"
+    },
+    {
+      "source": "candidate/consumer.py.inactive.txt",
+      "name": "timed_rows",
+      "start_line": 53,
+      "end_line": 64,
+      "normalization": "UTF8 text, CRLF->LF, trailing LF excluded; decorators included; no AST execution",
+      "sha256": "adefab135991a60040d333b0f902520f456f4a4f76ca585843f6f5320755f5b6"
+    },
+    {
+      "source": "candidate/consumer.py.inactive.txt",
+      "name": "coverage",
+      "start_line": 66,
+      "end_line": 83,
+      "normalization": "UTF8 text, CRLF->LF, trailing LF excluded; decorators included; no AST execution",
+      "sha256": "13d252e0a5971b4dbd4fd3aff73b7dace2bf86c190038677f4f548d9958fe043"
+    },
+    {
+      "source": "candidate/consumer.py.inactive.txt",
+      "name": "profile_rows",
+      "start_line": 85,
+      "end_line": 103,
+      "normalization": "UTF8 text, CRLF->LF, trailing LF excluded; decorators included; no AST execution",
+      "sha256": "6b12adcabf98a84fd7267f2bb3a678943d9a537ce3d52aa2403936adb56f8a87"
+    },
+    {
+      "source": "candidate/consumer.py.inactive.txt",
+      "name": "compare_initialization",
+      "start_line": 105,
+      "end_line": 127,
+      "normalization": "UTF8 text, CRLF->LF, trailing LF excluded; decorators included; no AST execution",
+      "sha256": "69bc739d2f5f7c6946a2e3860e064b41e02d3c46a0536d53a2462a5ff126c941"
+    },
+    {
+      "source": "candidate/consumer.py.inactive.txt",
+      "name": "invariants",
+      "start_line": 129,
+      "end_line": 146,
+      "normalization": "UTF8 text, CRLF->LF, trailing LF excluded; decorators included; no AST execution",
+      "sha256": "ef15ecac2231f88ec92d506a3d6d6c19d66ec2b2fab27961777b54f9c199a138"
+    },
+    {
+      "source": "candidate/consumer.py.inactive.txt",
+      "name": "compare_initialization_pair",
+      "start_line": 148,
+      "end_line": 159,
+      "normalization": "UTF8 text, CRLF->LF, trailing LF excluded; decorators included; no AST execution",
+      "sha256": "2fc50c9b9437f1d71de5ad39a419a37928d4ccd398e98860913958623833551a"
+    },
+    {
+      "source": "candidate/consumer.py.inactive.txt",
+      "name": "initial_profile_uniformity",
+      "start_line": 161,
+      "end_line": 174,
+      "normalization": "UTF8 text, CRLF->LF, trailing LF excluded; decorators included; no AST execution",
+      "sha256": "85aee2c89e79322a9168e39ee8be492f53f6022dff28b34ac6158a5629d2b22f"
+    },
+    {
+      "source": "candidate/consumer.py.inactive.txt",
+      "name": "compare_policy",
+      "start_line": 176,
+      "end_line": 204,
+      "normalization": "UTF8 text, CRLF->LF, trailing LF excluded; decorators included; no AST execution",
+      "sha256": "1c2b4bc2026a6f249fee2f6ee4486fe7bcf4f43dabfef2e9ce3897f554d2c794"
+    },
+    {
+      "source": "candidate/consumer.py.inactive.txt",
+      "name": "verify_coefficient_evidence",
+      "start_line": 206,
+      "end_line": 215,
+      "normalization": "UTF8 text, CRLF->LF, trailing LF excluded; decorators included; no AST execution",
+      "sha256": "2e8dcc2ee0699d71d9bccee0ad85cad59dacf949755cc3ab3d93d5ecb860c127"
+    },
+    {
+      "source": "candidate/consumer.py.inactive.txt",
+      "name": "charge_balance",
+      "start_line": 217,
+      "end_line": 325,
+      "normalization": "UTF8 text, CRLF->LF, trailing LF excluded; decorators included; no AST execution",
+      "sha256": "22959528e22e67a40b624cd536c9342e38666f2789dcf74879baec94687244ea"
+    },
+    {
+      "source": "candidate/consumer.py.inactive.txt",
+      "name": "paired_classification",
+      "start_line": 327,
+      "end_line": 353,
+      "normalization": "UTF8 text, CRLF->LF, trailing LF excluded; decorators included; no AST execution",
+      "sha256": "dc9333aa3759134daafe3099bb6f71363ce6b1780213a756256d3f85ad28537e"
+    },
+    {
+      "source": "candidate/consumer.py.inactive.txt",
+      "name": "analyze",
+      "start_line": 355,
+      "end_line": 413,
+      "normalization": "UTF8 text, CRLF->LF, trailing LF excluded; decorators included; no AST execution",
+      "sha256": "570179be2a958523df64fae49ef55871f015cd7636badf4db17d9974f481e886"
+    },
+    {
+      "source": "candidate/control.py.inactive.txt",
+      "name": "ContractError",
+      "start_line": 14,
+      "end_line": 17,
+      "normalization": "UTF8 text, CRLF->LF, trailing LF excluded; decorators included; no AST execution",
+      "sha256": "3323830d00dea5038676b8fb2da921d596b1927567efbebe38b0356486b424fd"
+    },
+    {
+      "source": "candidate/control.py.inactive.txt",
+      "name": "reject",
+      "start_line": 20,
+      "end_line": 21,
+      "normalization": "UTF8 text, CRLF->LF, trailing LF excluded; decorators included; no AST execution",
+      "sha256": "5cfcc3a76eb0e0507a4aadfbdb4742d23d5579bfef7d378ed74d148aec1cb3c0"
+    },
+    {
+      "source": "candidate/control.py.inactive.txt",
+      "name": "canonical_hash",
+      "start_line": 24,
+      "end_line": 26,
+      "normalization": "UTF8 text, CRLF->LF, trailing LF excluded; decorators included; no AST execution",
+      "sha256": "ffeb26c2fa6ba81eeebd6b26a8d0281db8834e877f0bf0dcad0dcbe9c222c288"
+    },
+    {
+      "source": "candidate/control.py.inactive.txt",
+      "name": "finite_number",
+      "start_line": 29,
+      "end_line": 30,
+      "normalization": "UTF8 text, CRLF->LF, trailing LF excluded; decorators included; no AST execution",
+      "sha256": "c8dfe89659e66732a1e663810e642773ea8a8eff0dbd03d3c7ace6e46c24b441"
+    },
+    {
+      "source": "candidate/control.py.inactive.txt",
+      "name": "is_sha",
+      "start_line": 33,
+      "end_line": 34,
+      "normalization": "UTF8 text, CRLF->LF, trailing LF excluded; decorators included; no AST execution",
+      "sha256": "d1ad753216ebdea165374944bba66d6d08c6c9c89a4ffc7b7cea3744b14b64e6"
+    },
+    {
+      "source": "candidate/control.py.inactive.txt",
+      "name": "require_refs",
+      "start_line": 37,
+      "end_line": 48,
+      "normalization": "UTF8 text, CRLF->LF, trailing LF excluded; decorators included; no AST execution",
+      "sha256": "5012ce0f1b52cdffbe296b381c555638dd7fc06200ed844630b31e692b13f54b"
+    },
+    {
+      "source": "candidate/control.py.inactive.txt",
+      "name": "authorize_execution",
+      "start_line": 51,
+      "end_line": 140,
+      "normalization": "UTF8 text, CRLF->LF, trailing LF excluded; decorators included; no AST execution",
+      "sha256": "2cdfd093f974f905e13575642b11a4e99cc332bd0dab4ef219a4ac2223544a79"
+    },
+    {
+      "source": "candidate/control.py.inactive.txt",
+      "name": "assess_resources",
+      "start_line": 143,
+      "end_line": 202,
+      "normalization": "UTF8 text, CRLF->LF, trailing LF excluded; decorators included; no AST execution",
+      "sha256": "700a51fd361ecf46772e5a03f22e60af1d444cbc30d6f2839a909dae8678622f"
+    },
+    {
+      "source": "candidate/control.py.inactive.txt",
+      "name": "advance_stop",
+      "start_line": 205,
+      "end_line": 267,
+      "normalization": "UTF8 text, CRLF->LF, trailing LF excluded; decorators included; no AST execution",
+      "sha256": "2a01a0a2028ec05e6333a2a3150adcf05875ca76f806308d955ed1799811c827"
+    },
+    {
+      "source": "candidate/control.py.inactive.txt",
+      "name": "UnavailableNativeAdapter",
+      "start_line": 270,
+      "end_line": 273,
+      "normalization": "UTF8 text, CRLF->LF, trailing LF excluded; decorators included; no AST execution",
+      "sha256": "e999c3f5f6ad18b35f9286c30824ccc57042e82b57f5b811f63493edb7857bdc"
+    },
+    {
+      "source": "candidate/control.py.inactive.txt",
+      "name": "execute_once",
+      "start_line": 276,
+      "end_line": 326,
+      "normalization": "UTF8 text, CRLF->LF, trailing LF excluded; decorators included; no AST execution",
+      "sha256": "8f50e56ce545892cc61074bb542f519d94f67d020dc2503a460ae61c22910934"
+    },
+    {
+      "source": "candidate/Parent.ps1.inactive.txt",
+      "name": "S1Has",
+      "start_line": 6,
+      "end_line": 10,
+      "normalization": "CRLF->LF; exact function start through final closing brace; trailing LF excluded; no evaluation",
+      "sha256": "f6dc8c12dfa2c7f8ae89415b0e4f75ea5be8391d52f7f1463d705c1ed76cf983"
+    },
+    {
+      "source": "candidate/Parent.ps1.inactive.txt",
+      "name": "S1Struct",
+      "start_line": 11,
+      "end_line": 15,
+      "normalization": "CRLF->LF; exact function start through final closing brace; trailing LF excluded; no evaluation",
+      "sha256": "0b90669aa6fae4e89236495af73b31262001ada7ee1223622bcc0651ef10307f"
+    },
+    {
+      "source": "candidate/Parent.ps1.inactive.txt",
+      "name": "S1Number",
+      "start_line": 16,
+      "end_line": 22,
+      "normalization": "CRLF->LF; exact function start through final closing brace; trailing LF excluded; no evaluation",
+      "sha256": "b7251aa4a08a8cca7f02f3234a1103ee6542075afda098d0ec46f664b43201bc"
+    },
+    {
+      "source": "candidate/Parent.ps1.inactive.txt",
+      "name": "S1Sha",
+      "start_line": 23,
+      "end_line": 23,
+      "normalization": "CRLF->LF; exact function start through final closing brace; trailing LF excluded; no evaluation",
+      "sha256": "13c6456b30805e3b02063ca8cb804b201d948c5518bf01b102610297236d8eed",
+      "bytes": 90
+    },
+    {
+      "source": "candidate/Parent.ps1.inactive.txt",
+      "name": "S1Failure",
+      "start_line": 24,
+      "end_line": 26,
+      "normalization": "CRLF->LF; exact function start through final closing brace; trailing LF excluded; no evaluation",
+      "sha256": "3ed6a49f46e52ff5b8edfa2b824e7d24fe12cd2c71430ea07b583a40eaa382a4"
+    },
+    {
+      "source": "candidate/Parent.ps1.inactive.txt",
+      "name": "S1ExactDecimal",
+      "start_line": 27,
+      "end_line": 50,
+      "normalization": "CRLF->LF; exact function start through final closing brace; trailing LF excluded; no evaluation",
+      "sha256": "56d56e31306ef5a1aac5bce5f59feff5fa938f5ce594be3ddeba8303d7dd2cb5"
+    },
+    {
+      "source": "candidate/Parent.ps1.inactive.txt",
+      "name": "S1ExactCompare",
+      "start_line": 51,
+      "end_line": 58,
+      "normalization": "CRLF->LF; exact function start through final closing brace; trailing LF excluded; no evaluation",
+      "sha256": "377e9f3e20fb3657b07729e121f92d8d17d0acefe5f484517ac2e5e90631d275"
+    },
+    {
+      "source": "candidate/Parent.ps1.inactive.txt",
+      "name": "S1TimeVector",
+      "start_line": 59,
+      "end_line": 68,
+      "normalization": "CRLF->LF; exact function start through final closing brace; trailing LF excluded; no evaluation",
+      "sha256": "3a565c77f2f8f8063bab684a1bc008d9efd18c8aa75c39ed972aa9d7446ad832"
+    },
+    {
+      "source": "candidate/Parent.ps1.inactive.txt",
+      "name": "S1Coverage",
+      "start_line": 69,
+      "end_line": 107,
+      "normalization": "CRLF->LF; exact function start through final closing brace; trailing LF excluded; no evaluation",
+      "sha256": "20365c99d8771bc3203ae7f15a2c6e7f42949cbc213b898656309083794480a1"
+    },
+    {
+      "source": "candidate/Parent.ps1.inactive.txt",
+      "name": "S1ChargeFields",
+      "start_line": 108,
+      "end_line": 155,
+      "normalization": "CRLF->LF; exact function start through final closing brace; trailing LF excluded; no evaluation",
+      "sha256": "2786f0b5137fe732d95e308c14291a8ac639ebfbc943f54c23f28a52cbd36487"
+    },
+    {
+      "source": "candidate/Parent.ps1.inactive.txt",
+      "name": "S1ComparisonNumerics",
+      "start_line": 156,
+      "end_line": 169,
+      "normalization": "CRLF->LF; exact function start through final closing brace; trailing LF excluded; no evaluation",
+      "sha256": "c4861945e67275bb469492a536118c3e5307b4fe821e43600907fa53e31f3fcb"
+    },
+    {
+      "source": "candidate/Parent.ps1.inactive.txt",
+      "name": "S1NativeAxis",
+      "start_line": 170,
+      "end_line": 217,
+      "normalization": "CRLF->LF; exact function start through final closing brace; trailing LF excluded; no evaluation",
+      "sha256": "57ebfaa4c6926c84626845b90eacbe266fffb658991e9ab9e4928a97297da6f5"
+    },
+    {
+      "source": "candidate/Parent.ps1.inactive.txt",
+      "name": "S1Fields",
+      "start_line": 218,
+      "end_line": 295,
+      "normalization": "CRLF->LF; exact function start through final closing brace; trailing LF excluded; no evaluation",
+      "sha256": "80f08b574f7c9581aa4e44de3103c75e495121de9372c256a831cbddbacc5266"
+    },
+    {
+      "source": "candidate/Parent.ps1.inactive.txt",
+      "name": "S1Decision",
+      "start_line": 296,
+      "end_line": 338,
+      "normalization": "CRLF->LF; exact function start through final closing brace; trailing LF excluded; no evaluation",
+      "sha256": "1df66e6a7551aa05070ad39e7aa5ba14c9559f31418f03ee0cb764c6053368d7"
+    },
+    {
+      "source": "candidate/Parent.ps1.inactive.txt",
+      "name": "S1FinalReturn",
+      "start_line": 339,
+      "end_line": 374,
+      "normalization": "CRLF->LF; exact function start through final closing brace; trailing LF excluded; no evaluation",
+      "sha256": "0db9f410c53a630ae5bdc98892c02c72a430fb6804e5ef359fcca36e375405a9"
+    }
+  ],
+  "phase_limits": {
+    "preseal": 600,
+    "delivery": 240,
+    "incomplete_closeout": 60,
+    "python": 120,
+    "powershell": 180
+  },
+  "total_limit_s": 1200,
+  "reuse": "127 prior outcomes conditional on exact lineage and four matching positive controls; original INCOMPLETE preserved"
+}
