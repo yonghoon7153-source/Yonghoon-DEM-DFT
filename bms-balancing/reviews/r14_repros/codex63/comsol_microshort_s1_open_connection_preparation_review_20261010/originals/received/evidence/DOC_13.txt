@@ -1,0 +1,132 @@
+model.physics()
+model.physics()
+Create and define properties for a physics interface.
+Syntax
+model.component( <ctag> ).physics().create( <tag> , physint );
+model.component( <ctag> ).physics().create( <tag> , physint , <geomtag> );
+model.component( <ctag> ).physics().create( <tag> , physint , <geomtag> , <varnames> );
+model.component( <ctag> ).physics( <tag> ).model( <mtag> );
+model.component( <ctag> ).physics( <tag> ).field( fieldname ).fieldname( <namelist> );
+model.component( <ctag> ).physics( <tag> ).field( fieldname ).fieldname( <pos> , <name> );
+model.component( <ctag> ).physics( <tag> ).prop( propname ).set( property , <value> );
+model.component( <ctag> ).physics( <tag> ).create( <ftag> , feature );
+model.component( <ctag> ).physics( <tag> ).create( <ftag> , feature , <dim> );
+model.component( <ctag> ).physics( <tag> ).feature( <ftag> ).create( <ftag2> , feature );
+model.component( <ctag> ).physics( <tag> ).feature( <ftag> ).create( <ftag2> , feature , <dim> );
+model.component( <ctag> ).physics( <tag> ).feature( <ftag> ).set( property , <value> );
+model.component( <ctag> ).physics( <tag> ).feature().move( <ftag>,<position> );
+model.component( <ctag> ).physics( <tag> ).feature( <ftag> ).feature();
+model.component( <ctag> ).physics( <tag> ).feature( <ftag> ).feature( <ftag2> );
+model.component( <ctag> ).physics( <tag> ).feature( <ftag> ).featureInfo();
+model.component( <ctag> ).physics( <tag> ).feature( <ftag> ).featureInfo( "info" );
+feature = model.component( <ctag> ).physics( <tag> ).feature( <ftag> );
+feature.featureInfo( "info" ).set( variable , <value> );
+feature.featureInfo( "info" ).getInfoTable( id );
+model.component( <ctag> ).physics( <tag> ).model();
+model.component( <ctag> ).physics( <tag> ).field( fieldname ).fieldname();
+model.component( <ctag> ).physics( <tag> ).scope();
+model.component( <ctag> ).physics( <tag> ).geom();
+model.component( <ctag> ).physics( <tag> ).image();
+model.component( <ctag> ).physics( <tag> ).prop( propname ).get Type ( <pname> );
+model.component( <ctag> ).physics( <tag> ).prop( propname ).param();
+model.component( <ctag> ).physics( <tag> ).feature( <ftag> ).get Type ( <pname> );
+model.component( <ctag> ).physics( <tag> ).feature( <ftag> ).param();
+model.component( <ctag> ).physics( <tag> ).feature( <tag> ).set(String pname, int value);
+model.component( <ctag> ).physics( <tag> ).feature( <tag> ). set(String pname, int pos, int value);
+model.component( <ctag> ).physics( <tag> ).feature( <tag> ). set(String pname, int pos, int[] value);
+model.component( <ctag> ).physics( <tag> ).feature( <tag> ). set(String pname, int pos1, int pos2, int value);
+model.component( <ctag> ).physics( <tag> ).feature( <tag> ). setIndex(String name, String value, int index);
+model.component( <ctag> ).physics( <tag> ).feature( <tag> ). setIndex(String name, String value, int firstIndex, int secondIndex);
+model.component( <ctag> ).physics( <tag> ).feature( <tag> ). setIndex(String name, String[] value, int index);
+model.component( <ctag> ).physics( <tag> ).feature( <tag> ). setIndex(String name, double value, int index);
+model.component( <ctag> ).physics( <tag> ).feature( <tag> ). setIndex(String name, double value, int firstIndex, int secondIndex);
+model.component( <ctag> ).physics( <tag> ).feature( <tag> ). setIndex(String name, double[] value, int index);
+model.component( <ctag> ).physics( <tag> ).feature( <tag> ).setIndex(String name, int value, int index);
+model.component( <ctag> ).physics( <tag> ).feature( <tag> ). setIndex(String name, String value, int index);
+model.component( <ctag> ).physics( <tag> ).feature( <tag> ). setIndex(String name, String value, int index);
+model.component( <ctag> ).physics( <tag> ).feature( <tag> ). setIndex(String name, int value, int firstIndex, int secondIndex);
+model.component( <ctag> ).physics( <tag> ).feature( <tag> ). setIndex(String name, int[] value, int index);
+model.component( <ctag> ).physics(<tag>).feature(<tag>).importData();
+model.component( <ctag> ).physics(<tag>).feature(<tag>).discardData();
+model.component( <ctag> ).physics(<tag>).feature(<tag>).image();
+model.component( <ctag> ).physics( <tag> ).prop( <tag> ).set(String pname, int value);
+model.component( <ctag> ).physics( <tag> ).prop( <tag> ).set(String pname, int pos, int value);
+model.component( <ctag> ).physics( <tag> ).prop( <tag> ).set(String pname, int pos, int[] value);
+model.component( <ctag> ).physics( <tag> ).prop( <tag> ). set(String pname, int pos1, int pos2, int value);
+model.component( <ctag> ).physics( <tag> ).prop( <tag> ). setIndex(String name, String value, int index);
+model.component( <ctag> ).physics( <tag> ).prop( <tag> ). setIndex(String name, String value, int firstIndex, int secondIndex);
+model.component( <ctag> ).physics( <tag> ).prop( <tag> ). setIndex(String name, String[] value, int index);
+model.component( <ctag> ).physics( <tag> ).prop( <tag> ). setIndex(String name, double value, int index);
+model.component( <ctag> ).physics( <tag> ).prop( <tag> ).
+setIndex(String name, double value, int firstIndex, int secondIndex);
+model.component( <ctag> ).physics( <tag> ).prop( <tag> ). setIndex(String name, double[] value, int index);
+model.component( <ctag> ).physics( <tag> ).prop( <tag> ). setIndex(String name, int value, int index);
+model.physics( <tag> ).prop( <tag> ).setIndex(String name, String value, int index);
+model.physics( <tag> ).prop( <tag> ).setIndex(String name, String value, int index);
+model.component( <ctag> ).physics( <tag> ).prop( <tag> ). setIndex(String name, int value, int firstIndex, int secondIndex);
+model.component( <ctag> ).physics( <tag> ).prop( <tag> ). setIndex(String name, int[] value, int index);
+The set() methods index/position arguments are 1-based. The setIndex() methods index/position arguments are 0-based. See set() , setIndex() , and Methods Associated to Set, SetIndex, and the Various Get Methods for more information.
+Description
+model.component( <ctag> ).physics().create( <tag> , physint ) creates and returns a physics interface.
+model.component( <ctag> ).physics().create( <tag> , physint ) or model.component( <ctag> ).physics().create( <tag> , physint , <geomtag> ) adds a physics interface to the model and initializes it with defaults. The physint argument specifies which physics interface to create. There can be several different values of physint which create the same internal physics interface class, but which set different defaults. The constructor without the <geomtag> argument can only be used (and should be used) by 0D (space-independent) interfaces.
+model.component( <ctag> ).physics().create( <tag> , physint , <geomtag> , <varnames> ) adds an interface with the field variable names <varnames> . Only interfaces supporting a varying number of field variables considers this argument. Providing the variable names in the create method rather than changes them afterward using model.component( <ctag> ).physics( <tag> ).field( fieldname ).fieldname( <namelist> ) ensures that the default features are correct.
+model.component( <ctag> ).physics( <tag> ).field( fieldname ).fieldname( <namelist> ) sets a name of a dependent variable. The entity fieldname (which could be, for example, temperature , x-velocity , electric field ) specifies which dependent variable to set the name for. The available fields are provided by the physics interface. The argument <namelist> can be a list of names for physics interfaces supporting an arbitrary number of dependent variables. The physics interfaces provide default names for the dependent variables.
+model.component( <ctag> ).physics( <tag> ).field( fieldname ).fieldname( <pos> , <name> ) changes the name at position <pos> in the list of field names.
+model.component( <ctag> ).physics( <tag> ).selection().named( <seltag> ) specifies that the physics interface is active on the named selection <seltag> . model.component( <ctag> ).physics( <tag> ).selection().set(...) defines a local selection that makes the physics interface active on the selection’s geometric entities. For a complete list of methods available under selection() , see Selections .The selection must apply to the physics interface’s maximum geometry level. The create() method makes the physics interface active in all domains. 0D interfaces are always active globally and do not support these methods.
+model.component( <ctag> ).physics( <tag> ).prop( propname ).set( pname , <value> ) sets the value of some property parameter. All string types listed in Table 2-4 are supported.
+model.component( <ctag> ).physics( <tag> ).create( <ftag> , feature ) adds a new feature instance to the physics interface and initializes the feature with defaults. The available features are given by the physics interface.
+model.component( <ctag> ).physics( <tag> ).create( <ftag> , feature , <dim> ) adds a new feature instance to the physics interface and initializes the feature with defaults. The feature is assigned to the domain level <dim> . Use this constructor for features which can be applied to more than one domain level. The constructor without the <dim> argument assigns the feature to the highest domain level, which the feature supports.
+model.component( <ctag> ).physics( <tag> ).feature( <ftag> ).set( pname , <value> ) sets a parameter value. All string types listed in the section Table 2-4 are supported.
+model.component( <ctag> ).physics( <tag> ).feature( <ftag> ).selection().named( <seltag> ) assigns the physics feature to the named selection <seltag> . model.component( <ctag> ).physics( <tag> ).selection().set(...) defines a local selection that assigns the physics feature to geometric entities. For a complete list of methods available under selection() , see Selections . 0D features need no domain selection.
+model.component( <ctag> ).physics( <tag> ).feature().move( <ftag>,<position> ) moves the feature <ftag> to the zero indexed position <position> in the list. A feature cannot be moved before a default feature and the default features cannot be moved.
+model.component( <ctag> ).physics( <tag> ).create( <itag>, "init") creates an initial value feature, using the reserved feature ID init .
+model.component( <ctag> ).physics( <tag> ).feature( <itag> ).set( varname , <value> ) specifies an initial value. The variable names are the field variables. For wave problems, the time derivatives of the field variables are also included in the list of variables.
+model.component( <ctag> ).physics( <tag> ).model() returns the model component node tag of the interface.
+model.component( <ctag> ).physics( <tag> ).field( fieldname ).fieldname() returns the field names as a string array.
+model.component( <ctag> ).physics( <tag> ).scope() returns the fully qualified scope name.
+model.component( <ctag> ).physics( <tag> ).geom() returns the geometry tag as a string.
+model.component( <ctag> ).physics( <tag> ).selection().named() returns the selection tag as a string.
+model.component( <ctag> ).physics( <tag> ).selection().get Type () returns domain information. See Selections for available methods.
+model.component( <ctag> ).physics( <tag> ).prop( propname ).get Type ( pname ) returns the parameter value. See get* and Selection Access Methods for available methods.
+model.component( <ctag> ).physics( <tag> ).prop( propname ).param() returns the parameter names as a string array.
+model.component( <ctag> ).physics( <tag> ).feature( <ftag> ).get Type ( <pname> ) returns the parameter value. See get* and Selection Access Methods for available methods.
+model.component( <ctag> ).physics( <tag> ).feature( <ftag> ).param() returns the parameter names as a string array.
+model.component( <ctag> ).physics( <tag> ).feature( <ftag> ).selection().named() returns the selection tag as a string array.
+model.component( <ctag> ).physics( <tag> ).feature( <ftag> ).feature() returns the list of feature attributes. This list supports the same methods as model.component( <ctag> ).physics( <tag> ).feature() .
+model.component( <ctag> ).physics( <tag> ).feature( <ftag> ).feature( <ftag2> ) returns the feature attribute <ftag2> . The feature attributes support the same methods as model.component( <ctag> ).physics( <tag> ).feature( <ftag> ) .
+model.component( <ctag> ).physics(<tag>).feature(<ftag>).featureInfo() returns a list of info objects.
+model.component( <ctag> ).feature(<ftag>).featureInfo( " info " ) returns the info object that contains information about the variables, weak expressions, and constraints that a feature generates. The model.component( <ctag> ).physics( <tag> ) and model.coordSystem( <tag> ) objects also have this list that you access with model.component( <ctag> ).physics( <tag> ).featureInfo( " info " ) . These objects do not support the set method, which only works for the object model.component( <ctag> ).physics( <tag> ).feature( <ftag> ) .
+feature.featureInfo( " info " ).set( variable , <value> ) locks the named variable to the given expression. The expression must be given as a string array.
+feature.featureInfo( " info " ).getInfoTable( id ) returns a table that lists all information about a certain table id. The supported IDs are Expression , Shape , Weak , and Constraint .
+model.component( <ctag> ).physics( <tag> ).feature(<ftag>).importData() imports the file that the physics feature references into the model. This is only allowed for specific physics features that allow external files to be used, such as the Release from Data File feature for the particle tracing interfaces.
+model.component( <ctag> ).physics( <tag> ).feature(<ftag>).discardData() Discards the external file imported by the importData() command. This only has an effect if importData() has been called previously for the physics feature. This is only allowed for specific physics features that allow external files to be used, such as the Release from Data File feature for the particle tracing interfaces.
+Example
+This example creates an Electrostatics interface. It sets boundaries 3 and 8 to the ground potential and assigns the electric potential of 1 V at boundary 4.
+When the physics interface is created a couple of default features are automatically added. One of them is the Charge Conservation feature, which has the tag ccn1 . The relative permittivity is this feature is set to 1.
+Code for Use with Java
+model.component("comp1").physics().create("es","Electrostatics","geom1");
+model.component("comp1").physics("es").create("gnd1", "Ground", 2);
+model.component("comp1").physics("es").feature("gnd1").selection().set(new int[]{3, 8});
+model.component("comp1").physics("es").create("pot1", "ElectricPotential", 2);
+model.component("comp1").physics("es").feature("pot1").selection().set(new int[]{4});
+model.component("comp1").physics("es").feature("pot1").set("V0", "1");
+model.component("comp1").physics("es").feature("ccn1").set("epsilonr_mat", "userdef");
+model.component("comp1").physics("es").feature("ccn1").set("epsilonr", "1");
+Code for Use with MATLAB
+model.component('comp1').physics.create('es','Electrostatics','geom1');
+model.component('comp1').physics('es').create('gnd1', 'Ground', 2);
+model.component('comp1').physics('es').feature('gnd1').selection().set([3, 8]);
+model.component('comp1').physics('es').create('pot1', 'ElectricPotential', 2);
+model.component('comp1').physics('es').feature('pot1').selection.set(4);
+model.component('comp1').physics('es').feature('pot1').set('V0', '1');
+model.component('comp1').physics('es').feature('ccn1').set('epsilonr_mat', 'userdef');
+model.component('comp1').physics('es').feature('ccn1').set('epsilonr', '1');
+Compatibility
+From version 4.3 the methods
+model.physics( <tag> ).feature( <ftag> ).params();
+model.physics( <tag> ).prop( propname ).params();
+are deprecated and replaced by the methods
+model.physics( <tag> ).feature( <ftag> ).param();
+model.physics( <tag> ).prop( propname ).param();
+See Also
+model.material() , model.study()

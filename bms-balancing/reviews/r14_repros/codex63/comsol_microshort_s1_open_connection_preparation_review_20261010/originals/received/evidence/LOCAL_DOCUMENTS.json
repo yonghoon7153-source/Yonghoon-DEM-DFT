@@ -1,0 +1,184 @@
+[
+  {
+    "id": "DOC_01",
+    "original": {
+      "path": "C:/Program Files/COMSOL/COMSOL63/Multiphysics/doc/help/wtpwebapps/ROOT/doc/com.comsol.help.comsol/comsol_api_solver.51.19.html",
+      "bytes": 41393,
+      "sha256": "5eb17f7c40c85cecfea51fda40518cff720db54213ef0f314d25e9b6d68f5746"
+    },
+    "text_extract": {
+      "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/microshort_s1_open_connection_candidate_20261009/evidence/DOC_01.txt",
+      "bytes": 3478,
+      "sha256": "6bb605cb5424213686436d16dac1daa5bbd2b4654b54e5ac4b30a497c5eb7c39"
+    },
+    "transform": "HTML tags removed, entities decoded, whitespace normalized; not native observation"
+  },
+  {
+    "id": "DOC_02",
+    "original": {
+      "path": "C:/Program Files/COMSOL/COMSOL63/Multiphysics/doc/help/wtpwebapps/ROOT/doc/com.comsol.help.comsol/comsol_api_solver.51.50.html",
+      "bytes": 277174,
+      "sha256": "5b55ab13de28a8c558f3a09908ab3bebc61ebe3aeff49668cb7c9b1cebc35704"
+    },
+    "text_extract": {
+      "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/microshort_s1_open_connection_candidate_20261009/evidence/DOC_02.txt",
+      "bytes": 23950,
+      "sha256": "5e7dbf297ac1322c8cb0bce72a3c1992f9c3448b97bec37616094b1511a18a55"
+    },
+    "transform": "HTML tags removed, entities decoded, whitespace normalized; not native observation"
+  },
+  {
+    "id": "DOC_03",
+    "original": {
+      "path": "C:/Program Files/COMSOL/COMSOL63/Multiphysics/doc/help/wtpwebapps/ROOT/doc/com.comsol.help.comsol/comsol_api_solver.51.51.html",
+      "bytes": 63583,
+      "sha256": "607dbd6625e94d6e3b15d38db9323d3cb032258a9b5515dc47b83c58b8caa540"
+    },
+    "text_extract": {
+      "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/microshort_s1_open_connection_candidate_20261009/evidence/DOC_03.txt",
+      "bytes": 5726,
+      "sha256": "24bd5f9706ec172d0a3b3a131e2ee8f37bff3fa1037bfb7974a4d6ba6140fb21"
+    },
+    "transform": "HTML tags removed, entities decoded, whitespace normalized; not native observation"
+  },
+  {
+    "id": "DOC_04",
+    "original": {
+      "path": "C:/Program Files/COMSOL/COMSOL63/Multiphysics/doc/help/wtpwebapps/ROOT/doc/com.comsol.help.comsol/comsol_ref_solver.36.118.html",
+      "bytes": 44001,
+      "sha256": "747a02a8a76b043b190c5c72e2d5ba1e7e9dd10b51cb35a90b9f9ed8cf3104e4"
+    },
+    "text_extract": {
+      "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/microshort_s1_open_connection_candidate_20261009/evidence/DOC_04.txt",
+      "bytes": 13526,
+      "sha256": "5ff3dbe86064a340435426686151717dac4b0fe5776f2a820561a4c592fc8663"
+    },
+    "transform": "HTML tags removed, entities decoded, whitespace normalized; not native observation"
+  },
+  {
+    "id": "DOC_05",
+    "original": {
+      "path": "C:/Program Files/COMSOL/COMSOL63/Multiphysics/doc/help/wtpwebapps/ROOT/doc/com.comsol.help.comsol/comsol_ref_solver.36.120.html",
+      "bytes": 29068,
+      "sha256": "a25ff3b3ccb6de0b9f0e9ff5c379cbdda84cf307e6823410a5886366641403a9"
+    },
+    "text_extract": {
+      "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/microshort_s1_open_connection_candidate_20261009/evidence/DOC_05.txt",
+      "bytes": 10872,
+      "sha256": "b20257070af1a297f291bcca519f8d5f4cbef0e3830b59001863c2fa503a9570"
+    },
+    "transform": "HTML tags removed, entities decoded, whitespace normalized; not native observation"
+  },
+  {
+    "id": "DOC_06",
+    "original": {
+      "path": "C:/Program Files/COMSOL/COMSOL63/Multiphysics/doc/help/wtpwebapps/ROOT/doc/com.comsol.help.comsol/comsol_ref_solver.36.158.html",
+      "bytes": 29192,
+      "sha256": "d65fc558ea34bcdfddf7d89203ea93cef9eacf5400e0595cd6766a1831a40209"
+    },
+    "text_extract": {
+      "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/microshort_s1_open_connection_candidate_20261009/evidence/DOC_06.txt",
+      "bytes": 10217,
+      "sha256": "a4dca1d04d91f9801a8668432daf71f911a94f2839c06a054de7487c375bfb37"
+    },
+    "transform": "HTML tags removed, entities decoded, whitespace normalized; not native observation"
+  },
+  {
+    "id": "DOC_07",
+    "original": {
+      "path": "C:/Program Files/COMSOL/COMSOL63/Multiphysics/doc/help/wtpwebapps/ROOT/doc/com.comsol.help.comsol/comsol_ref_solver.36.163.html",
+      "bytes": 14107,
+      "sha256": "85f3b9a39312329eaefcc106012d27e20b756ba3abb570dc00cafe96cac15eb2"
+    },
+    "text_extract": {
+      "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/microshort_s1_open_connection_candidate_20261009/evidence/DOC_07.txt",
+      "bytes": 4336,
+      "sha256": "383ce197bebfa5535918e13cc02c0e43729a05eecccff28a19b840d238abf5c2"
+    },
+    "transform": "HTML tags removed, entities decoded, whitespace normalized; not native observation"
+  },
+  {
+    "id": "DOC_08",
+    "original": {
+      "path": "C:/Program Files/COMSOL/COMSOL63/Multiphysics/doc/help/wtpwebapps/ROOT/doc/com.comsol.help.comsol/api/com/comsol/model/physics/FeatureInfo.html",
+      "bytes": 26941,
+      "sha256": "8c3332ee92516572e4d480da46f8c31ffb7d2c15fc6768798e8621e23f90d4d7"
+    },
+    "text_extract": {
+      "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/microshort_s1_open_connection_candidate_20261009/evidence/DOC_08.txt",
+      "bytes": 7326,
+      "sha256": "fef896ec50720b2dc523eb4a3bbb641fcb7291adaae66e27c160b5acd1beb1a0"
+    },
+    "transform": "HTML tags removed, entities decoded, whitespace normalized; not native observation"
+  },
+  {
+    "id": "DOC_09",
+    "original": {
+      "path": "C:/Program Files/COMSOL/COMSOL63/Multiphysics/doc/help/wtpwebapps/ROOT/doc/com.comsol.help.comsol/api/com/comsol/model/SolverSequence.html",
+      "bytes": 113421,
+      "sha256": "95af30f620990345089d988747a520b3510b75f7fc4dc830a09d1c0dbf866325"
+    },
+    "text_extract": {
+      "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/microshort_s1_open_connection_candidate_20261009/evidence/DOC_09.txt",
+      "bytes": 34841,
+      "sha256": "da8369beaf536fee2271a17fa8be0536fff6c81d3544b8f9bd2129d2ba59b5b0"
+    },
+    "transform": "HTML tags removed, entities decoded, whitespace normalized; not native observation"
+  },
+  {
+    "id": "DOC_10",
+    "original": {
+      "path": "C:/Program Files/COMSOL/COMSOL63/Multiphysics/doc/help/wtpwebapps/ROOT/doc/com.comsol.help.comsol/api/com/comsol/model/SolutionInfo.html",
+      "bytes": 54839,
+      "sha256": "a8d214f145f9db02b0c64f1e93b20442d72b46229b1e3875f8ae503661e98cb9"
+    },
+    "text_extract": {
+      "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/microshort_s1_open_connection_candidate_20261009/evidence/DOC_10.txt",
+      "bytes": 22582,
+      "sha256": "dd8d80cf89701ce723cfd824cf3e1adf5202452c304bc408262987485bd42c4a"
+    },
+    "transform": "HTML tags removed, entities decoded, whitespace normalized; not native observation"
+  },
+  {
+    "id": "DOC_11",
+    "original": {
+      "path": "C:/Program Files/COMSOL/COMSOL63/Multiphysics/doc/help/wtpwebapps/ROOT/doc/com.comsol.help.comsol/api/com/comsol/model/PropFeature.html",
+      "bytes": 82938,
+      "sha256": "a27c7ad20b2261f59b4ce4208ba11c0efbd229f5740f02432f5c42a0a118bf31"
+    },
+    "text_extract": {
+      "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/microshort_s1_open_connection_candidate_20261009/evidence/DOC_11.txt",
+      "bytes": 21525,
+      "sha256": "0bcaaf423e5b2ccce366e77c250b8d256cc4972e305ecee0bf9b5a1c325e52c5"
+    },
+    "transform": "HTML tags removed, entities decoded, whitespace normalized; not native observation"
+  },
+  {
+    "id": "DOC_12",
+    "original": {
+      "path": "C:/Program Files/COMSOL/COMSOL63/Multiphysics/doc/help/wtpwebapps/ROOT/doc/com.comsol.help.comsol/api/com/comsol/model/NumericalFeature.html",
+      "bytes": 45029,
+      "sha256": "f1af0235afe4a53f7af321f2be5c50151cd18029324866d661bc9ad743a12d20"
+    },
+    "text_extract": {
+      "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/microshort_s1_open_connection_candidate_20261009/evidence/DOC_12.txt",
+      "bytes": 14009,
+      "sha256": "3f56d17c5d6e7faff250625978452101b3d2685587fe4cd7b13270fe5b49ff0b"
+    },
+    "transform": "HTML tags removed, entities decoded, whitespace normalized; not native observation"
+  },
+  {
+    "id": "DOC_13",
+    "original": {
+      "path": "C:/Program Files/COMSOL/COMSOL63/Multiphysics/doc/help/wtpwebapps/ROOT/doc/com.comsol.help.comsol/comsol_api_general.47.51.html",
+      "bytes": 43253,
+      "sha256": "4a5856ec491b341661029af07edd5c0e7aceba31d71587b7f0976eb6389d5684"
+    },
+    "text_extract": {
+      "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/microshort_s1_open_connection_candidate_20261009/evidence/DOC_13.txt",
+      "bytes": 15870,
+      "sha256": "b99ec5555c9dcda8c7e9538b856cbfb1d817b97621dd02d803234145cecb153a"
+    },
+    "transform": "HTML tags removed, entities decoded, whitespace normalized; not native observation"
+  }
+]

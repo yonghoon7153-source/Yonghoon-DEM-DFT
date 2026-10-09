@@ -1,0 +1,194 @@
+[
+  {
+    "file": "candidate/raw_connection.py.inactive.txt",
+    "name": "ConnectionError",
+    "start_line": 13,
+    "end_line": 16,
+    "span_rule": "UTF8 LF between lines, no final LF; separate full raw-file seal",
+    "span_sha256": "8b5d1a90edf28e195d9229fd15a15160a92f6258e478cc112096ed67f21c41ff"
+  },
+  {
+    "file": "candidate/raw_connection.py.inactive.txt",
+    "name": "need",
+    "start_line": 19,
+    "end_line": 21,
+    "span_rule": "UTF8 LF between lines, no final LF; separate full raw-file seal",
+    "span_sha256": "01970d8d177ee86c3f626b472a6c2e9078e8790b02f7815e86564b90fc481812"
+  },
+  {
+    "file": "candidate/raw_connection.py.inactive.txt",
+    "name": "exact",
+    "start_line": 24,
+    "end_line": 31,
+    "span_rule": "UTF8 LF between lines, no final LF; separate full raw-file seal",
+    "span_sha256": "4aa9390310dbbffc3269daff31267842378e5d5894bef43a1fe009be50fe6db5"
+  },
+  {
+    "file": "candidate/raw_connection.py.inactive.txt",
+    "name": "bind_bytes",
+    "start_line": 34,
+    "end_line": 43,
+    "span_rule": "UTF8 LF between lines, no final LF; separate full raw-file seal",
+    "span_sha256": "23155748b534ceb4ff3055cc1cb1fd0cad23edeb177afbea20c68e0c7d738cf7"
+  },
+  {
+    "file": "candidate/raw_connection.py.inactive.txt",
+    "name": "numeric_table",
+    "start_line": 46,
+    "end_line": 64,
+    "span_rule": "UTF8 LF between lines, no final LF; separate full raw-file seal",
+    "span_sha256": "cf3c1904eda624d4e4add9d9de92237c68ba6c5c123ed6b22f1164bad159cd50"
+  },
+  {
+    "file": "candidate/raw_connection.py.inactive.txt",
+    "name": "bind_grid",
+    "start_line": 67,
+    "end_line": 77,
+    "span_rule": "UTF8 LF between lines, no final LF; separate full raw-file seal",
+    "span_sha256": "efa7e15e3d2aecff1138cee581b48a50ffe623eddb1afe35a8bb0e4f24c479c9"
+  },
+  {
+    "file": "candidate/raw_connection.py.inactive.txt",
+    "name": "charge_projection",
+    "start_line": 80,
+    "end_line": 95,
+    "span_rule": "UTF8 LF between lines, no final LF; separate full raw-file seal",
+    "span_sha256": "f7078bd1eb561c47c082e72016415ded0632b45067fc478de2512f4bedfc610f"
+  },
+  {
+    "file": "candidate/raw_connection.py.inactive.txt",
+    "name": "request_prefix",
+    "start_line": 98,
+    "end_line": 125,
+    "span_rule": "UTF8 LF between lines, no final LF; separate full raw-file seal",
+    "span_sha256": "a99c1b93aa0ae872ad1e7168e63c553466db8220f6048c69d1af029fd615f70b"
+  },
+  {
+    "file": "candidate/raw_connection.py.inactive.txt",
+    "name": "quadrature_projection",
+    "start_line": 128,
+    "end_line": 154,
+    "span_rule": "UTF8 LF between lines, no final LF; separate full raw-file seal",
+    "span_sha256": "08b487284f9aa01eb53f385838f60cfa27ebff4fb3d4db9613163dc2cdc4a448"
+  },
+  {
+    "file": "candidate/raw_connection.py.inactive.txt",
+    "name": "require_installed_mapping",
+    "start_line": 157,
+    "end_line": 169,
+    "span_rule": "UTF8 LF between lines, no final LF; separate full raw-file seal",
+    "span_sha256": "2d6665c5271ad2069eb5794a07839fd9ed6794d9b679827411e5fc2415e95ae2"
+  },
+  {
+    "file": "candidate/raw_connection.py.inactive.txt",
+    "name": "UnavailableInstalledProof",
+    "start_line": 172,
+    "end_line": 175,
+    "span_rule": "UTF8 LF between lines, no final LF; separate full raw-file seal",
+    "span_sha256": "de38c9c1f95f48d60e08770360c8541150365329c5810fa7630e3e3f408862cd"
+  },
+  {
+    "file": "candidate/raw_connection.py.inactive.txt",
+    "name": "consumer_connection",
+    "start_line": 178,
+    "end_line": 189,
+    "span_rule": "UTF8 LF between lines, no final LF; separate full raw-file seal",
+    "span_sha256": "b39c770747ec6d0f71682f51c61815e52a9167e1d8c31eba74fa059b6ef450b8"
+  },
+  {
+    "file": "candidate/raw_connection.py.inactive.txt",
+    "name": "__init__",
+    "start_line": 14,
+    "end_line": 16,
+    "span_rule": "UTF8 LF between lines, no final LF; separate full raw-file seal",
+    "span_sha256": "57c52a29f31d7939d72f6257410e87946cfe66e902882f7c334306df0fd96624"
+  },
+  {
+    "file": "candidate/raw_connection.py.inactive.txt",
+    "name": "verify",
+    "start_line": 174,
+    "end_line": 175,
+    "span_rule": "UTF8 LF between lines, no final LF; separate full raw-file seal",
+    "span_sha256": "5201f02020c5478dd1659e525f6f9e8445e5f77ef2916c23f53e1812f07b44f9"
+  },
+  {
+    "file": "candidate/resource_connection.py.inactive.txt",
+    "name": "ResourceConnectionError",
+    "start_line": 7,
+    "end_line": 10,
+    "span_rule": "UTF8 LF between lines, no final LF; separate full raw-file seal",
+    "span_sha256": "0f87bced58b7c852276f1f542429b84ee687031b38fbe3d615af6e7804c620ba"
+  },
+  {
+    "file": "candidate/resource_connection.py.inactive.txt",
+    "name": "must",
+    "start_line": 13,
+    "end_line": 15,
+    "span_rule": "UTF8 LF between lines, no final LF; separate full raw-file seal",
+    "span_sha256": "9959e99dfe0b849d3538ad292805a80aaa0f9866dd0dc48c13eddbdf4a839203"
+  },
+  {
+    "file": "candidate/resource_connection.py.inactive.txt",
+    "name": "nonnegative_int",
+    "start_line": 18,
+    "end_line": 19,
+    "span_rule": "UTF8 LF between lines, no final LF; separate full raw-file seal",
+    "span_sha256": "d2939d6632162a9402741173bf6ac11ecb9ee3667332b32346198cb06234495d"
+  },
+  {
+    "file": "candidate/resource_connection.py.inactive.txt",
+    "name": "finite_time",
+    "start_line": 22,
+    "end_line": 23,
+    "span_rule": "UTF8 LF between lines, no final LF; separate full raw-file seal",
+    "span_sha256": "e0dbe1759f7cd413628ba64884b7db825d5ab156cf6d8c5a0bdc464df8e7fcba"
+  },
+  {
+    "file": "candidate/resource_connection.py.inactive.txt",
+    "name": "project_owned_sample",
+    "start_line": 26,
+    "end_line": 93,
+    "span_rule": "UTF8 LF between lines, no final LF; separate full raw-file seal",
+    "span_sha256": "ee3e55e7f822a81d2bafe9fb78c8964eb0aaf1f4e6d3f782baee5efefa6b89e4"
+  },
+  {
+    "file": "candidate/resource_connection.py.inactive.txt",
+    "name": "resource_decision",
+    "start_line": 96,
+    "end_line": 103,
+    "span_rule": "UTF8 LF between lines, no final LF; separate full raw-file seal",
+    "span_sha256": "88268925cf4457ab318ba566436153f49542f2c6e62d019f0ac35fdf6d8a0dda"
+  },
+  {
+    "file": "candidate/resource_connection.py.inactive.txt",
+    "name": "stop_action_plan",
+    "start_line": 106,
+    "end_line": 115,
+    "span_rule": "UTF8 LF between lines, no final LF; separate full raw-file seal",
+    "span_sha256": "8dbedf78c4e166ee0086347d8e7b55721e673548439a094e8f27e67b8fc01983"
+  },
+  {
+    "file": "candidate/resource_connection.py.inactive.txt",
+    "name": "UnavailableOSProvider",
+    "start_line": 118,
+    "end_line": 121,
+    "span_rule": "UTF8 LF between lines, no final LF; separate full raw-file seal",
+    "span_sha256": "50a249462e36c9d328e43d851c5e3fd627c9866e2dd432ecdf89ad9ee8027ffc"
+  },
+  {
+    "file": "candidate/resource_connection.py.inactive.txt",
+    "name": "__init__",
+    "start_line": 8,
+    "end_line": 10,
+    "span_rule": "UTF8 LF between lines, no final LF; separate full raw-file seal",
+    "span_sha256": "659af7fe25f3918724dff14bfa7da389b0b2c2e419220dcf4b588f42860dd26a"
+  },
+  {
+    "file": "candidate/resource_connection.py.inactive.txt",
+    "name": "__getattr__",
+    "start_line": 120,
+    "end_line": 121,
+    "span_rule": "UTF8 LF between lines, no final LF; separate full raw-file seal",
+    "span_sha256": "fe10a6d70afd14edbf37eec03a02470da684a276d8d25929eece1aeb884452d4"
+  }
+]

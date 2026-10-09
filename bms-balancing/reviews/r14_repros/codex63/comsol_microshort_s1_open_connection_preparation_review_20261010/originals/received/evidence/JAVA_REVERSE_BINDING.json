@@ -1,0 +1,11 @@
+{
+  "source": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\outputs\\microshort_s1o_r1_20261008\\candidate\\variants\\P0.java.inactive.txt",
+  "source_sha256": "6d10c8910e3b7301778112b676be604eccc22aae41fa87cb719a94218e2384fa",
+  "candidate_sha256": "39c2b9929e0d4c4ca8c442f5d0f0485581342b8be7a993d3820870bba8002a8b",
+  "only_change": "single helper insertion before inactive main",
+  "removed_insert_sha256": "240909a7473e3b1421e6a2c5dba2770aff6b65dce4d201800e009ff1b96c83cd",
+  "reverse_full_bytes_equal": true,
+  "call_sites_added": 0,
+  "runAll_calls_added": 0,
+  "native_ready": false
+}

@@ -1,0 +1,18 @@
+{
+  "native_ready": false,
+  "approved": false,
+  "usable": false,
+  "actual_native_argv": null,
+  "actual_native_cwd": null,
+  "installed_provider": "UNAVAILABLE_DEFAULT",
+  "os_provider": "UNAVAILABLE_DEFAULT",
+  "actual_approval_paths_created": false,
+  "previous_core_files_modified": 0,
+  "future_entrypoint_publication": "SEPARATE_IMPLEMENTATION_AND_VALIDATION_REQUIRED",
+  "parent_schema_issue": "R1 manifest vs authorize_execution V1 gate unresolved for future publication; no silent rewrite",
+  "quadrature_bound": null,
+  "cooperative_stop": "UNVERIFIED",
+  "job_commit_hard_cap": "NOT_IMPLEMENTED",
+  "functional_test_calls_this_task": 0,
+  "COMSOL_JVM_compile_solve_calls_this_task": 0
+}

@@ -1,0 +1,413 @@
+NumericalFeature
+JavaScript is disabled on your browser.
+Skip navigation links
+Overview
+Package
+Class
+Tree
+Deprecated
+Index
+Help
+All Classes
+SEARCH:
+JavaScript is disabled on your browser.
+Summary:
+Nested |
+Field |
+Constr |
+Method
+Detail:
+Field |
+Constr |
+Method
+Package com.comsol.model
+Interface NumericalFeature
+All Superinterfaces:
+ModelEntity , NumericalBaseFeature , PrimitiveModelEntity , PropFeature , ResultBaseFeature , SelectionContainer , SelectionEntity
+public interface NumericalFeature
+extends NumericalBaseFeature , ResultBaseFeature
+Numerical features evaluate numerical data, such as integrals over a
+specific set of boundaries.
+Method Summary
+All Methods Instance Methods Abstract Methods
+Modifier and Type
+Method
+Description
+void
+appendResult ()
+Appends the result from the numerical feature in its associated table,
+if any.
+double[][][]
+computeResult ()
+Computes the result from the numerical feature, and returns it.
+PropFeatureList < PropFeature >
+feature ()
+Returns the list of features in this numerical data feature.
+double[][][]
+getComplex ()
+Compute the numerical result (or fetch it from the cache) and return
+the real and imaginary values.
+double[][][]
+getComplex ​(boolean columnwise)
+Compute the numerical result (or fetch it from the cache) and return
+the real and imaginary values.
+double[][][]
+getComplex ​(boolean columnwise,
+int outersolnum)
+Compute the numerical result (or fetch it from the cache) and return
+the real and imaginary values.
+double[][][]
+getComplex ​(int outersolnum)
+Compute the numerical result (or fetch it from the cache) and return
+the real and imaginary values.
+double[][]
+getCoordinates ()
+Get the coordinates from an Eval operation.
+double[][][]
+getData ()
+Get the data from an Eval , Interp or
+Global operation.
+double[][]
+getData ​(int expressionIndex)
+Get the data from an Eval , Interp or
+Global operation, for one specific expression as
+indicated by its 0-index.
+int[][]
+getElements ()
+Get the elements from an Eval operation.
+double[][]
+getImag ()
+Compute the numerical result (or fetch it from the cache) and return
+the imaginary values.Data is ordered such that one row contains data
+for all solution numbers.
+double[][]
+getImag ​(boolean allocate,
+boolean columnwise)
+Compute the numerical result (or fetch it from the cache) and return
+the imaginary values.
+double[][]
+getImag ​(boolean allocate,
+boolean columnwise,
+int outersolnum)
+Compute the numerical result (or fetch it from the cache) and return
+the imaginary values.
+double[][]
+getImag ​(int outersolnum)
+Compute the numerical result (or fetch it from the cache) and return
+the imaginary values.
+double[][][]
+getImagData ()
+Get imaginary data from an Eval , Interp or
+Global operation, The data is ordered
+data[expr][solnum][vertex].
+double[][]
+getImagData ​(int expressionIndex)
+Get imaginary data from an Eval , Interp or
+Global operation, for one specific expression as
+indicated by its 0-index.
+int
+getNData ()
+Get the number of data vectors in the result.
+int
+getNData ​(int outersolnum)
+Get the number of data vectors in the result for a given outersolnum.
+double[][]
+getReal ()
+Compute the numerical result (or fetch it from the cache) and return
+the real values.
+double[][]
+getReal ​(boolean columnwise)
+Compute the numerical result (or fetch it from the cache) and return
+the real values.
+double[][]
+getReal ​(boolean columnwise,
+int outersolnum)
+Compute the numerical result (or fetch it from the cache) and return
+the real values.
+double[][]
+getReal ​(int outersolnum)
+Compute the numerical result (or fetch it from the cache) and return
+the real values.
+int[]
+getVertexElements ()
+Get the element each vertex belongs to from an Eval
+operation.
+boolean
+isComplex ()
+True if the result is complex.
+boolean
+isComplex ​(int outersolnum)
+True if the result is complex.
+void
+run ()
+Compute the numerical result.
+void
+setInterpolationCoordinates ​(double[][] value)
+Set the interpolation coordinates to use for Interp
+features.
+void
+setResult ()
+Sets the result from the numerical feature in its associated table, if
+any.
+Methods inherited from interface com.comsol.model. ModelEntity
+active , author , author , comments , comments , dateCreated , dateModified , docMarker , docMarker , help , help , icon , isactive , isActive , label , label , lastModifiedBy , model , model , name , name , resetAuthor , scope , tag , tag , timeCreated , timeModified , version , version
+Methods inherited from interface com.comsol.model. PrimitiveModelEntity
+getContainer , getDisplayString , resolveModelPath
+Methods inherited from interface com.comsol.model. PropFeature
+getAllowedPropertyValues , getBoolean , getBoolean , getBoolean , getBooleanArray , getBooleanMatrix , getDouble , getDouble , getDouble , getDoubleArray , getDoubleMatrix , getEntryKeyIndex , getEntryKeys , getInt , getInt , getInt , getIntArray , getIntMatrix , getReferenceArray , getString , getString , getString , getString , getStringArray , getStringMatrix , getType , getValueType , hasProperty , hasSelection , move , move , properties , remove , remove , selection , set , set , set , set , set , set , set , set , set , set , set , set , setEntry , setEntry , setEntry , setEntry , setIndex , setIndex , setIndex , setIndex , setIndex , setIndex , setIndex , setIndex , setIndex , setIndex , setIndex , setIndex
+Methods inherited from interface com.comsol.model. ResultBaseFeature
+hasWarning , problem , problem , refresh , runCommand
+Methods inherited from interface com.comsol.model. SelectionEntity
+selection
+Method Detail
+appendResult
+void appendResult()
+Appends the result from the numerical feature in its associated table,
+if any.
+computeResult
+double[][][] computeResult()
+Computes the result from the numerical feature, and returns it.
+Returns:
+The first element contains the real part of the matrix, the second
+contains the imaginary part of the matrix.
+feature
+PropFeatureList < PropFeature > feature()
+Returns the list of features in this numerical data feature.
+Returns:
+List of numerical data features.
+getComplex
+double[][][] getComplex()
+Compute the numerical result (or fetch it from the cache) and return
+the real and imaginary values. Data is ordered such that one row
+contains data for all solution numbers.
+Returns:
+Array of length 2 where the first element is the real part and the
+second element is the imaginary part. The imaginary part can be null
+if the return value is all-real.
+getComplex
+double[][][] getComplex​(boolean columnwise)
+Compute the numerical result (or fetch it from the cache) and return
+the real and imaginary values. Data is ordered such that one row
+contains data for all solution numbers.
+Parameters:
+columnwise - If false, data is ordered such that each row contains the
+values for all solution numbers. If true, one column contains
+the values for all solution numbers.
+Returns:
+Array of length 2 where the first element is the real part and the
+second element is the imaginary part. The imaginary part can be null
+if the return value is all-real.
+getComplex
+double[][][] getComplex​(int outersolnum)
+Compute the numerical result (or fetch it from the cache) and return
+the real and imaginary values. Data is ordered such that one row
+contains data for all solution numbers.
+Parameters:
+outersolnum - The outer solution number (1-indexed) to retrieve data for.
+Returns:
+Array of length 2 where the first element is the real part and the
+second element is the imaginary part. The imaginary part can be null
+if the return value is all-real.
+getComplex
+double[][][] getComplex​(boolean columnwise,
+int outersolnum)
+Compute the numerical result (or fetch it from the cache) and return
+the real and imaginary values. Data is ordered such that one row
+contains data for all solution numbers.
+Parameters:
+columnwise - If false, data is ordered such that each row contains the
+values for all solution numbers. If true, one column contains
+the values for all solution numbers.
+outersolnum - The outer solution number (1-indexed) to retrieve data for.
+Returns:
+Array of length 2 where the first element is the real part and the
+second element is the imaginary part. The imaginary part can be null
+if the return value is all-real.
+getCoordinates
+double[][] getCoordinates()
+Get the coordinates from an Eval operation.
+Returns:
+Coordinates.
+getData
+double[][][] getData()
+Get the data from an Eval , Interp or
+Global operation. The data is ordered
+data[expr][solnum][vertex].
+Returns:
+Retrieved data.
+getData
+double[][] getData​(int expressionIndex)
+Get the data from an Eval , Interp or
+Global operation, for one specific expression as
+indicated by its 0-index.
+Parameters:
+expressionIndex - Expression index.
+Returns:
+Retrieved data.
+getElements
+int[][] getElements()
+Get the elements from an Eval operation.
+Returns:
+Element index.
+getImag
+double[][] getImag()
+Compute the numerical result (or fetch it from the cache) and return
+the imaginary values.Data is ordered such that one row contains data
+for all solution numbers. The computation is performed for the first
+outer solution if there are several outer solutions.
+Returns:
+Matrix of imaginary values of numerical results.
+getImag
+double[][] getImag​(int outersolnum)
+Compute the numerical result (or fetch it from the cache) and return
+the imaginary values. Data is ordered such that one row contains data
+for all solution numbers.
+Parameters:
+outersolnum - The outer solution number (1-indexed) to retrieve data for.
+Returns:
+Matrix of imaginary values of numerical results.
+getImag
+double[][] getImag​(boolean allocate,
+boolean columnwise)
+Compute the numerical result (or fetch it from the cache) and return
+the imaginary values.
+Parameters:
+allocate - True if imaginary numbers should be generated even if data is real.
+columnwise - If false, data is ordered such that each row contains the
+values for all solution numbers. If true, one column contains
+the values for all solution numbers. The computation is performed for
+the first outer solution if there are several outer solutions.
+Returns:
+Matrix of imaginary values of numerical results.
+getImag
+double[][] getImag​(boolean allocate,
+boolean columnwise,
+int outersolnum)
+Compute the numerical result (or fetch it from the cache) and return
+the imaginary values.
+Parameters:
+allocate - True if imaginary numbers should be generated even if data is real.
+columnwise - If false, data is ordered such that each row contains the
+values for all solution numbers. If true, one column contains
+the values for all solution numbers.
+outersolnum - The outer solution number (1-indexed) to retrieve data for.
+Returns:
+Matrix of imaginary values of numerical results.
+getImagData
+double[][][] getImagData()
+Get imaginary data from an Eval , Interp or
+Global operation, The data is ordered
+data[expr][solnum][vertex].
+Returns:
+Retrieved data.
+getImagData
+double[][] getImagData​(int expressionIndex)
+Get imaginary data from an Eval , Interp or
+Global operation, for one specific expression as
+indicated by its 0-index.
+Parameters:
+expressionIndex - Expression index.
+Returns:
+Retrieved data.
+getNData
+int getNData()
+Get the number of data vectors in the result.
+Returns:
+Number of data vectors.
+getNData
+int getNData​(int outersolnum)
+Get the number of data vectors in the result for a given outersolnum.
+Parameters:
+outersolnum - The outer solution number (1-indexed) to retrieve data for.
+Returns:
+Number of data vectors.
+getReal
+double[][] getReal()
+Compute the numerical result (or fetch it from the cache) and return
+the real values. Data is ordered such that one row contains data for
+all solution numbers. The computation is performed for the first
+outer solution if there are several outer solutions.
+Returns:
+Matrix of numerical results.
+getReal
+double[][] getReal​(boolean columnwise)
+Compute the numerical result (or fetch it from the cache) and return
+the real values.
+Parameters:
+columnwise - If false, data is ordered such that each row contains the
+values for all solution numbers. If true, one column contains
+the values for all solution numbers. The computation is performed for
+the first outer solution if there are several outer solutions.
+Returns:
+Matrix of real values of numerical results.
+getReal
+double[][] getReal​(int outersolnum)
+Compute the numerical result (or fetch it from the cache) and return
+the real values. Data is ordered such that one row contains data for
+all solution numbers.
+Parameters:
+outersolnum - The outer solution number (1-indexed) to retrieve data for.
+Returns:
+Matrix of real values of numerical results.
+getReal
+double[][] getReal​(boolean columnwise,
+int outersolnum)
+Compute the numerical result (or fetch it from the cache) and return
+the real values.
+Parameters:
+columnwise - If false, data is ordered such that each row contains the
+values for all solution numbers. If true, one column contains
+the values for all solution numbers.
+outersolnum - The outer solution number (1-indexed) to retrieve data for.
+Returns:
+Matrix of real values of numerical results.
+getVertexElements
+int[] getVertexElements()
+Get the element each vertex belongs to from an Eval
+operation.
+Returns:
+Element index.
+isComplex
+boolean isComplex()
+True if the result is complex.
+Returns:
+true if complex.
+isComplex
+boolean isComplex​(int outersolnum)
+True if the result is complex.
+Parameters:
+outersolnum - The outer solution number (1-indexed) to retrieve data for.
+Returns:
+true if complex.
+run
+void run()
+Compute the numerical result.
+setInterpolationCoordinates
+void setInterpolationCoordinates​(double[][] value)
+Set the interpolation coordinates to use for Interp
+features. Identical to set("coord", double[][] value) .
+Parameters:
+value - Interpolation coordinates.
+setResult
+void setResult()
+Sets the result from the numerical feature in its associated table, if
+any.
+Skip navigation links
+Overview
+Package
+Class
+Tree
+Deprecated
+Index
+Help
+All Classes
+JavaScript is disabled on your browser.
+Summary:
+Nested |
+Field |
+Constr |
+Method
+Detail:
+Field |
+Constr |
+Method

@@ -1,0 +1,196 @@
+--- /dev/null
++++ candidate/raw_connection.py.inactive.txt
+@@ -0,0 +1,193 @@
++"""New inactive byte-to-data connection candidate; no file/process/native I/O.
++
++This module does NOT infer native provenance from metadata or settings. Existing
++consumer/control/Parent are unchanged. No executable publication or imports/tests
++of this candidate occurred during preparation. Installed proof providers remain OPEN.
++"""
++import csv
++import io
++import hashlib
++from decimal import Decimal
++
++
++class ConnectionError(ValueError):
++    def __init__(self, reason, stage):
++        self.reason, self.stage = reason, stage
++        super().__init__(reason + '@' + stage)
++
++
++def need(condition, reason, stage):
++    if not condition:
++        raise ConnectionError(reason, stage)
++
++
++def exact(value, stage):
++    need(type(value) is str and bool(value) and value == value.strip(), 'DECIMAL_TRANSPORT', stage)
++    try:
++        d = Decimal(value)
++    except Exception as exc:
++        raise ConnectionError('DECIMAL_SYNTAX', stage) from exc
++    need(d.is_finite(), 'DECIMAL_NONFINITE', stage)
++    return d
++
++
++def bind_bytes(raw, identity):
++    stage = 'bind_bytes'
++    need(type(raw) is bytes and type(identity) is dict, 'RAW_SCHEMA', stage)
++    need(set(identity) == {'path', 'bytes', 'sha256'} and type(identity['path']) is str
++         and bool(identity['path'].strip()) and type(identity['bytes']) is int
++         and identity['bytes'] > 0 and type(identity['sha256']) is str,
++         'IDENTITY_SCHEMA', stage)
++    need(len(raw) == identity['bytes'] and hashlib.sha256(raw).hexdigest() == identity['sha256'],
++         'RAW_IDENTITY', stage)
++    return dict(identity)
++
++
++def numeric_table(raw, identity, headers, observed_units, required_units):
++    """Numeric ASCII/UTF-8 cells stay Decimal; unit evidence is upstream-bound.
++    This routine compares supplied units; it does not claim native unit readback.
++    """
++    stage = 'numeric_table'
++    bind_bytes(raw, identity)
++    need(headers and len(headers) == len(set(headers)) and observed_units == required_units
++         and len(headers) == len(required_units), 'TABLE_HEADER_OR_UNITS', stage)
++    try:
++        r = csv.DictReader(io.StringIO(raw.decode('utf-8-sig'), newline=''))
++        need(r.fieldnames == headers, 'TABLE_HEADER_OR_UNITS', stage)
++        rows = []
++        for row in r:
++            need(None not in row and None not in row.values(), 'TABLE_WIDTH', stage)
++            rows.append({key: exact(value, stage) for key, value in row.items()})
++        need(bool(rows), 'EMPTY_TABLE', stage)
++        return rows
++    except (UnicodeError, csv.Error) as exc:
++        raise ConnectionError('TABLE_ENCODING', stage) from exc
++
++
++def bind_grid(native_grid, global_rows, leakage_rows, configured_end_s):
++    """Full actual grid, never the shorter requested/comparison prefix."""
++    stage = 'bind_grid'
++    need(type(native_grid) is list and len(native_grid) > 1, 'GRID_EMPTY_OR_ZERO_ONLY', stage)
++    times = [exact(v, stage) for v in native_grid]
++    end = exact(configured_end_s, stage)
++    need(times[0] == 0 and all(b > a for a, b in zip(times, times[1:]))
++         and 0 < times[-1] <= end, 'GRID_ORDER_OR_RANGE', stage)
++    need([r['time_s'] for r in global_rows] == times
++         and [r['time_s'] for r in leakage_rows] == times, 'FULL_GRID_MISMATCH', stage)
++    return times
++
++
++def charge_projection(global_rows, leakage_rows, native_grid, configured_end_s):
++    """Explicit producer-column -> consumer-column projection, no recomputation.
++    Consumer charge_balance still checks I=A*j, RN/RP signs and Li conservation.
++    """
++    bind_grid(native_grid, global_rows, leakage_rows, configured_end_s)
++    out = []
++    for g, l in zip(global_rows, leakage_rows):
++        need(g['reaction_N_A_m2'] == l['reaction_N_A_m2']
++             and g['reaction_P_A_m2'] == l['reaction_P_A_m2']
++             and g['leak_leftward_A_m2'] == l['j_leak_leftward_A_m2'],
++             'DUPLICATE_CURRENT_DISAGREEMENT', 'charge_projection')
++        out.append({'time_s':g['time_s'], 'j':l['j_leak_leftward_A_m2'],
++                    'RN':l['reaction_N_A_m2'], 'RP':l['reaction_P_A_m2'],
++                    'I':l['I_leak_model_A'], 'LiN':g['Li_N_mol_m2'],
++                    'LiP':g['Li_P_mol_m2'], 'LiE':g['Li_electrolyte_mol_m2']})
++    return out
++
++
++def request_prefix(native_grid, configured_requests, reason, guard_pair, end_s):
++    """No nearest/interpolated samples; protective pair need not be in requests."""
++    stage = 'request_prefix'
++    times = [exact(v, stage) for v in native_grid]
++    req = [exact(v, stage) for v in configured_requests]
++    end = exact(end_s, stage)
++    need(len(times) > 1 and times[0] == 0 and all(b > a for a,b in zip(times,times[1:]))
++         and 0 < times[-1] <= end, 'GRID_ORDER_OR_RANGE', stage)
++    need(len(req) > 1 and req[0] == 0 and req[-1] == end
++         and all(b > a for a,b in zip(req,req[1:])), 'REQUEST_VECTOR', stage)
++    if reason == 'NORMAL_END':
++        need(times[-1] == end and guard_pair is None, 'NORMAL_ENDPOINT', stage)
++        safe = end
++    elif reason == 'GUARD_STOP':
++        need(type(guard_pair) is dict and
++             exact(guard_pair['t_minus'], stage) == times[-2] and
++             exact(guard_pair['t_plus'], stage) == times[-1] < end,
++             'PROTECTIVE_PAIR', stage)
++        safe = times[-2]
++    else:
++        raise ConnectionError('END_REASON_UNSUPPORTED', stage)
++    chosen = [x for x in req if x <= safe]
++    need(len(chosen) > 1 and chosen[-1] > 0, 'PREFIX_EMPTY_OR_ZERO_ONLY', stage)
++    missing = [str(x) for x in chosen if x not in set(times)]
++    need(not missing, 'REQUEST_PREFIX_MISSING', stage)
++    return {'safe_end_s':str(safe), 'requested_prefix_s':[str(x) for x in chosen],
++            'actual_times_s':list(native_grid), 'guard_pair':guard_pair,
++            'native_reason_verification':'OPEN_NOT_PROVED_BY_THIS_PROJECTION'}
++
++
++def quadrature_projection(proof, raw_by_path, grid_identity, verified_method_sha256):
++    """Absent bounds remain null; a second trapezoid estimate is NOT an error bound.
++    An independently reviewed method seal is required before any non-null bound.
++    """
++    if proof is None:
++        return {'quadrature_bound_C_m2':None, 'quadrature_provenance':{},
++                'status':'INCONCLUSIVE_NO_CERTIFIED_BOUND'}
++    stage = 'quadrature_projection'
++    need(verified_method_sha256 is not None and
++         proof.get('method_sha256') == verified_method_sha256,
++         'QUADRATURE_METHOD_OPEN', stage)
++    ident = proof['raw_identity']
++    need(ident['path'] in raw_by_path, 'QUADRATURE_RAW_MISSING', stage)
++    bind_bytes(raw_by_path[ident['path']], ident)
++    import json
++    payload = json.loads(raw_by_path[ident['path']].decode('utf-8'))
++    for key in ('method_sha256','grid_sha256','uniform_over_all_prefixes','integrands','bound_C_m2'):
++        need(key in payload and payload[key] == proof.get(key), 'QUADRATURE_PAYLOAD_BINDING', stage)
++    need(proof.get('grid_sha256') == grid_identity['sha256'] and
++         proof.get('uniform_over_all_prefixes') is True and
++         proof.get('integrands') == ['j','RN','-RP'], 'QUADRATURE_GRID_OR_SCOPE', stage)
++    bound = exact(proof['bound_C_m2'], stage)
++    need(bound >= 0, 'QUADRATURE_NEGATIVE', stage)
++    # This only binds a pre-reviewed bound, never derives a method from samples.
++    return {'quadrature_bound_C_m2':str(bound),
++            'quadrature_provenance':{**proof,'bound_method_verified':True},
++            'status':'BOUND_BYTES_LINKED_REQUIRES_METHOD_ACCEPTANCE'}
++
++
++def require_installed_mapping(mapping, reviewed_mapping_sha256, raw_mapping):
++    stage = 'installed_mapping'
++    need(reviewed_mapping_sha256 is not None and type(raw_mapping) is bytes
++         and hashlib.sha256(raw_mapping).hexdigest() == reviewed_mapping_sha256,
++         'INSTALLED_MAPPING_OPEN', stage)
++    # A mapping object must itself be parsed from precisely these bytes by the
++    # future reviewed loader; do not trust a separate caller-side dictionary.
++    import json
++    need(json.loads(raw_mapping.decode('utf-8')) == mapping, 'MAPPING_OBJECT_BINDING', stage)
++    need(mapping.get('installed_observation_status') == 'INDEPENDENTLY_ACCEPTED'
++         and mapping.get('source_manifest_sha256') and mapping.get('engine_sha256'),
++         'INSTALLED_OBSERVATION_OPEN', stage)
++    return mapping
++
++
++class UnavailableInstalledProof:
++    """Native log parser, CDI t0 provenance, effective mapping not implemented here."""
++    def verify(self, *args, **kwargs):
++        raise ConnectionError('INSTALLED_PROOF_PROVIDER_OPEN', 'installed_proof')
++
++
++def consumer_connection(consumer, binding, native, data, readbacks, comparison, proof_provider=None):
++    """A future inert integration seam; supplied semantic verifier cannot default PASS.
++    Do not call this in preparation. Future validation injects explicit inert proofs.
++    No approved installed verifier exists in this submission.
++    """
++    provider = proof_provider if proof_provider is not None else UnavailableInstalledProof()
++    verified = provider.verify(binding, native, data, readbacks, comparison)
++    need(type(verified) is dict and verified.get('status') == 'VERIFIED_INSTALLED_RAW_BINDING'
++         and verified.get('run_id') == binding['run_id']
++         and verified.get('manifest_sha256') == binding['manifest_sha256'],
++         'INSTALLED_PROOF_REJECTED', 'consumer_connection')
++    return consumer.analyze(binding, native, data, readbacks, comparison)
++
++
++if __name__ == '__main__':
++    raise SystemExit('OFFLINE_CONNECTION_ONLY_NO_NATIVE_ENTRY')

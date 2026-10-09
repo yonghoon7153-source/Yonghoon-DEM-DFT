@@ -1,0 +1,391 @@
+{
+  "status": "STATIC_CONSISTENCY_MATCHED_NOT_FUNCTIONAL_PASS",
+  "checks": [
+    {
+      "check": "inactive_manifest_flags",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "check": "new_sealed_file:candidate/InstalledReadback.fragment.java.inactive.txt",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "check": "new_sealed_file:candidate/P0.connection.diff.txt",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "check": "new_sealed_file:candidate/P0.connection.java.inactive.txt",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "check": "new_sealed_file:candidate/raw_connection.py.inactive.txt",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "check": "new_sealed_file:candidate/raw_connection.py.inactive.txt.diff.txt",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "check": "new_sealed_file:candidate/resource_connection.py.inactive.txt",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "check": "new_sealed_file:candidate/resource_connection.py.inactive.txt.diff.txt",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "check": "new_sealed_file:OPEN_CONNECTION_MAP.json",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "check": "new_sealed_file:OS_API_MATRIX.json",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "check": "new_sealed_file:NATIVE_CONNECTION_STATUS.json",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "check": "new_sealed_file:LIMITED_VALIDATION_PLAN.json",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "check": "preservation:C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/microshort_s1o_r1_20261008/CODE_MANIFEST.json",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "check": "preservation:C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/microshort_s1o_r1_20261008/candidate/consumer.py.inactive.txt",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "check": "preservation:C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/microshort_s1o_r1_20261008/candidate/control.py.inactive.txt",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "check": "preservation:C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/microshort_s1o_r1_20261008/candidate/Parent.ps1.inactive.txt",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "check": "preservation:C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/microshort_s1o_r1_20261008/candidate/variants/P0.diff.txt",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "check": "preservation:C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/microshort_s1o_r1_20261008/candidate/variants/P0.java.inactive.txt",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "check": "preservation:C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/microshort_s1o_r1_20261008/candidate/variants/P1.diff.txt",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "check": "preservation:C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/microshort_s1o_r1_20261008/candidate/variants/P1.java.inactive.txt",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "check": "preservation:C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/microshort_s1o_r1_20261008/candidate/variants/P2.diff.txt",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "check": "preservation:C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/microshort_s1o_r1_20261008/candidate/variants/P2.java.inactive.txt",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "check": "preservation:C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/microshort_s1o_r1_20261008/candidate/variants/P3.diff.txt",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "check": "preservation:C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/microshort_s1o_r1_20261008/candidate/variants/P3.java.inactive.txt",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "check": "preservation:C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/microshort_s1o_r1_20261008/contracts/CHARGE_BALANCE.json",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "check": "preservation:C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/microshort_s1o_r1_20261008/contracts/COEFFICIENT_READBACK.json",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "check": "preservation:C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/microshort_s1o_r1_20261008/contracts/COST_MODEL.json",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "check": "preservation:C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/microshort_s1o_r1_20261008/contracts/EXECUTION_BINDING.json",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "check": "preservation:C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/microshort_s1o_r1_20261008/contracts/INITIALIZATION.json",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "check": "preservation:C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/microshort_s1o_r1_20261008/contracts/K_DESIGN.json",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "check": "preservation:C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/microshort_s1o_r1_20261008/contracts/POLICY_VARIANTS.json",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "check": "preservation:C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/microshort_s1o_r1_20261008/contracts/RESOURCE_CONTRACT.json",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "check": "preservation:C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/microshort_s1o_r1_20261008/SOURCE_CONTRACT_LINKS.json",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "check": "preservation:C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/microshort_s1o_r1_20261008/VALIDATION_PLAN_R1.json",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "check": "preservation:C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/b020_profile_unit_stages_20260927/gate/c2_entry.py",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "check": "preservation:C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/b020_profile_unit_stages_20260927/gate/C2_CONTRACT.json",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "check": "preservation:C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/b020_profile_unit_stages_20260927/gate/C2_CODE_MANIFEST.json",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "check": "preservation:C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/b020_profile_unit_stages_20260927/src/execution_records.py",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "check": "preservation:C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/b020_profile_unit_stages_20260927/src/winjob.py",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "check": "preservation:C:/Users/BML/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/python.exe",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "check": "preservation:C:/Program Files/COMSOL/COMSOL63/Multiphysics/bin/win64/comsolcompile.exe",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "check": "preservation:C:/Program Files/COMSOL/COMSOL63/Multiphysics/bin/win64/comsolbatch.exe",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "check": "preservation:C:/Users/BML/Desktop/COMSOL_MICROSHORT_S1O_R1_004_SUPPLEMENT_REVIEW_20261009.zip",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "check": "preservation:C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/microshort_s1o_r1_20261008/future_validation_fixture_R1_003/COMSOL_MICROSHORT_S1O_R1_003_VALIDATION_STOP_20261008.zip",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "check": "preservation:C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/microshort_s1o_r1_20261008/future_validation_fixture_R1_004/COMSOL_MICROSHORT_S1O_R1_004_VALIDATION_RESULT_20261009.zip",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "check": "java_exact_reverse",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "check": "java_insertion_single",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "check": "java_denial_retained",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "check": "java_no_runAll_call_added",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "check": "java_diff_body",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "check": "ast_parse:raw_connection.py.inactive.txt",
+      "matched": true,
+      "detail": "No compile/eval/exec/import of candidate"
+    },
+    {
+      "check": "no_native_io_import:raw_connection.py.inactive.txt",
+      "matched": true,
+      "detail": [
+        "csv",
+        "decimal",
+        "hashlib",
+        "io",
+        "json"
+      ]
+    },
+    {
+      "check": "no_io_dynamic_calls:raw_connection.py.inactive.txt",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "check": "new_file_diff:raw_connection.py.inactive.txt",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "check": "ast_parse:resource_connection.py.inactive.txt",
+      "matched": true,
+      "detail": "No compile/eval/exec/import of candidate"
+    },
+    {
+      "check": "no_native_io_import:resource_connection.py.inactive.txt",
+      "matched": true,
+      "detail": [
+        "math"
+      ]
+    },
+    {
+      "check": "no_io_dynamic_calls:resource_connection.py.inactive.txt",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "check": "new_file_diff:resource_connection.py.inactive.txt",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "check": "plan_case_ids_unique",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "check": "plan_groups",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "check": "plan_engines",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "check": "plan_budget",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "check": "plan_expected_reach",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "check": "plan_positive_controls_exist",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "check": "validation_source_pin:C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/microshort_s1_open_connection_candidate_20261009/candidate/InstalledReadback.fragment.java.inactive.txt",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "check": "validation_source_pin:C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/microshort_s1_open_connection_candidate_20261009/candidate/P0.connection.java.inactive.txt",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "check": "validation_source_pin:C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/microshort_s1_open_connection_candidate_20261009/candidate/raw_connection.py.inactive.txt",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "check": "validation_source_pin:C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/microshort_s1_open_connection_candidate_20261009/candidate/resource_connection.py.inactive.txt",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "check": "validation_engine_pin:C:/Users/BML/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/python.exe",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "check": "validation_engine_pin:C:/Program Files/COMSOL/COMSOL63/Multiphysics/java/win64/jre/bin/javac.exe",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "check": "validation_engine_pin:C:/Program Files/COMSOL/COMSOL63/Multiphysics/java/win64/jre/bin/java.exe",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "check": "fixture_not_created",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "check": "no_runtime_authorization_dirs",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "check": "folder_under_50MiB_prepackage",
+      "matched": true,
+      "detail": {
+        "bytes": 2955379
+      }
+    }
+  ],
+  "check_count": 74,
+  "candidate_function_calls": 0,
+  "candidate_imports": 0,
+  "tests": 0,
+  "COMSOL_JVM_compile": 0,
+  "native_ready": false
+}

@@ -1,0 +1,125 @@
+"""Inactive OS-evidence projection. No ctypes, WinDLL, processes, sleeps or I/O.
+OS collector ABI/counter and stop capabilities remain OPEN. Pure code is untested.
+"""
+from math import isfinite
+
+
+class ResourceConnectionError(ValueError):
+    def __init__(self, reason):
+        self.reason, self.stage = reason, 'resource_connection'
+        super().__init__(reason)
+
+
+def must(ok, reason):
+    if not ok:
+        raise ResourceConnectionError(reason)
+
+
+def nonnegative_int(v):
+    return type(v) is int and v >= 0
+
+
+def finite_time(v):
+    return type(v) in (int, float) and isfinite(v) and v >= 0
+
+
+def project_owned_sample(raw, anchors, previous_sample_end_s):
+    """Consume ONE bounded sampling transaction with two membership bookends.
+    Collector must fail on churn; no zero for exited/inaccessible members.
+    The submitted implementation only validates supplied observations.
+    """
+    must(type(raw) is dict and type(anchors) is dict, 'SAMPLE_SCHEMA')
+    must(raw.get('errors') == [] and raw.get('query_success') is True, 'OS_QUERY_FAILURE')
+    must(raw.get('job_identity') == anchors.get('job_identity') and bool(anchors.get('job_identity'))
+         and anchors.get('assigned_before_resume') is True and
+         anchors.get('held_job_and_root_handles') is True, 'OWNERSHIP_ANCHOR')
+    before, after = raw.get('members_before'), raw.get('members_after')
+    must(type(before) is list and before == after and len(before) > 0, 'MEMBERSHIP_CHURN_OR_EMPTY')
+    must(all(type(x) is dict and set(x) == {'pid','creation_filetime'} and
+             type(x['pid']) is int and x['pid'] > 0 and
+             type(x['creation_filetime']) is int and x['creation_filetime'] > 0 for x in before), 'MEMBER_IDENTITY')
+    pairs = [(x['pid'],x['creation_filetime']) for x in before]
+    must(len(pairs) == len(set(pairs)) and len({x[0] for x in pairs}) == len(pairs), 'MEMBER_DUPLICATE')
+    root = (anchors.get('root_pid'), anchors.get('root_creation_filetime'))
+    must(type(root[0]) is int and root[0] > 0 and type(root[1]) is int and root[1] > 0,
+         'ROOT_ANCHOR_SCHEMA')
+    # Root may exit before its owned children: never add it again or invent a live root.
+    must(root in pairs or raw.get('held_root_signaled') is True, 'ROOT_IDENTITY_MISSING')
+    must(raw.get('membership_source') == 'QUERY_PRIVATE_HELD_JOB'
+         and raw.get('member_times_source') == 'HELD_MEMBER_PROCESS_HANDLES', 'MEMBERSHIP_SOURCE')
+    processes = raw.get('process_counters')
+    must(type(processes) is list and len(processes) == len(pairs), 'RSS_MEMBERS_MISSING')
+    counters = {}
+    for p in processes:
+        key = (p.get('pid'),p.get('creation_filetime'))
+        must(key in pairs and key not in counters and p.get('query_success') is True
+             and nonnegative_int(p.get('working_set_bytes')), 'RSS_IDENTITY_OR_QUERY')
+        counters[key] = p['working_set_bytes']
+    must(raw.get('job_commit_source') == 'REVIEWED_JOB_ACCOUNTING_TOTAL'
+         and raw.get('job_commit_counter_mapping_sha256') == anchors.get('accepted_commit_mapping_sha256')
+         and bool(anchors.get('accepted_commit_mapping_sha256')),
+         'JOB_COMMIT_MAPPING_OPEN')
+    for k in ('job_private_commit_bytes','host_commit_limit_bytes','host_commit_total_bytes',
+              'host_available_ram_bytes','owned_output_growth_bytes','volume_free_bytes'):
+        must(nonnegative_int(raw.get(k)), 'COUNTER_MISSING:'+k)
+    must(raw['host_commit_limit_bytes'] >= raw['host_commit_total_bytes'], 'COMMIT_UNDERFLOW')
+    must(raw.get('output_walk_status') == 'COMPLETE_NO_REPARSE_NO_UNKNOWN_FILE'
+         and raw.get('output_root') == anchors.get('owned_output_root')
+         and bool(anchors.get('owned_output_root')), 'OUTPUT_SCOPE')
+    for k in ('sample_start_s','sample_end_s','native_origin_s','overall_origin_s'):
+        must(finite_time(raw.get(k)), 'CLOCK_INVALID:'+k)
+    start, end = raw['sample_start_s'], raw['sample_end_s']
+    must(finite_time(previous_sample_end_s) and
+         raw['overall_origin_s'] <= raw['native_origin_s'] <= start <= end
+         and previous_sample_end_s <= start, 'CLOCK_ORDER')
+    ownership = {'status':'VERIFIED_PRIVATE_JOB','assigned_before_resume':True,
+                 'identity_fresh':True,'job_identity':anchors['job_identity'],
+                 'root_pid':root[0],'root_creation_filetime':root[1],
+                 'member_pid_creation_pairs':before}
+    sample = {'status':'MEASURED','counter_errors':[],
+              'scope':'EXACT_PRIVATE_JOB_MEMBERS_PLUS_OWNED_OUTPUT_TREE',
+              'job_identity':anchors['job_identity'],
+              'rss_aggregation':'SUM_UNIQUE_MEMBER_WORKING_SETS_NO_JOB_TOTAL_ADD',
+              'commit_aggregation':'JOB_ACCOUNTING_TOTAL_NO_MEMBER_TOTAL_ADD',
+              'monotonic_s':end,'native_elapsed_s':end-raw['native_origin_s'],
+              'overall_elapsed_s':end-raw['overall_origin_s'],
+              'sample_gap_s':end-previous_sample_end_s,'sampling_duration_s':end-start,
+              'job_rss_bytes':sum(counters.values()),
+              'job_private_commit_bytes':raw['job_private_commit_bytes'],
+              'host_commit_available_bytes':raw['host_commit_limit_bytes']-raw['host_commit_total_bytes'],
+              'host_available_ram_bytes':raw['host_available_ram_bytes'],
+              'owned_output_growth_bytes':raw['owned_output_growth_bytes'],
+              'volume_free_bytes':raw['volume_free_bytes']}
+    return sample, ownership
+
+
+def resource_decision(control, raw, anchors, previous_sample_end_s, contract):
+    """Integration calls the unchanged actual assess_resources, never a duplicate."""
+    try:
+        sample, ownership = project_owned_sample(raw, anchors, previous_sample_end_s)
+        return control.assess_resources(sample, ownership, contract)
+    except ResourceConnectionError as exc:
+        return {'status':'STOP_REQUIRED','reasons':[exc.reason],
+                'sampled_max_is_os_peak':False,'counter_projection':'INCOMPLETE'}
+
+
+def stop_action_plan(control, state, event, capabilities):
+    """Pure result of accepted state machine; does NOT call any OS stop API."""
+    result = control.advance_stop(state, event, capabilities)
+    action = result['next_action']
+    return {'transition':result, 'action':action, 'execute_now':False,
+            'stop_classification':'FORCED' if action == 'FORCE_OWNED_JOB_ONCE' else
+                                  'COOPERATIVE_REQUEST_UNOBSERVED' if action == 'REQUEST_COOPERATIVE_ONCE' else
+                                  'NO_TERMINATION_CLAIM',
+            'unknown_pid_termination_allowed':False,
+            'provider_status':'OPEN_NO_OS_DISPATCH_IMPLEMENTED'}
+
+
+class UnavailableOSProvider:
+    """No implicit OS implementation / fallback. Native execute_once stays blocked."""
+    def __getattr__(self, name):
+        raise ResourceConnectionError('OS_PROVIDER_OPEN:'+name)
+
+
+if __name__ == '__main__':
+    raise SystemExit('OFFLINE_RESOURCE_CONNECTION_ONLY')

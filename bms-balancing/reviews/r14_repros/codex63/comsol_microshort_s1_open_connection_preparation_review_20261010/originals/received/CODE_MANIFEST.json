@@ -1,0 +1,65 @@
+{
+  "schema": "S1_OPEN_ADDITIVE_CANDIDATE_V1",
+  "approved": false,
+  "usable": false,
+  "native_ready": false,
+  "basis_manifest_sha256": "4ce5c08dbde5153027819b5a651e3995ec82417b4429b9bb0f789082b440f5da",
+  "self_excluded": true,
+  "files": [
+    {
+      "path": "candidate/InstalledReadback.fragment.java.inactive.txt",
+      "bytes": 2512,
+      "sha256": "844ccbb7259ba55bf3deacaf38bf17932c0b9f6ccc43017d80907c46b5b216c6"
+    },
+    {
+      "path": "candidate/P0.connection.diff.txt",
+      "bytes": 3801,
+      "sha256": "7113aefd75a09fc82fe0d55c61c790f8315efe65abbc2d93acd73fd3d6ba3702"
+    },
+    {
+      "path": "candidate/P0.connection.java.inactive.txt",
+      "bytes": 84529,
+      "sha256": "39c2b9929e0d4c4ca8c442f5d0f0485581342b8be7a993d3820870bba8002a8b"
+    },
+    {
+      "path": "candidate/raw_connection.py.inactive.txt",
+      "bytes": 9426,
+      "sha256": "3de2c292bf03088db1171b0d5cd4cc36a9e53f17385839eb7812bebb094d8d9c"
+    },
+    {
+      "path": "candidate/raw_connection.py.inactive.txt.diff.txt",
+      "bytes": 9696,
+      "sha256": "82ca6d81e9ec98ef93b2d528c1731222eda293cdac7d5f0d7ba0dbbe765cbffa"
+    },
+    {
+      "path": "candidate/resource_connection.py.inactive.txt",
+      "bytes": 6949,
+      "sha256": "4e4d9244d2f0dbd0fde36c7c6273cb7c1a901dc895f0d972392e6f2d0d3662b4"
+    },
+    {
+      "path": "candidate/resource_connection.py.inactive.txt.diff.txt",
+      "bytes": 7156,
+      "sha256": "55939e5f7ef2c96fed5694f6f40c76c8a00c72787ad9652481ad6228b9b9328a"
+    },
+    {
+      "path": "OPEN_CONNECTION_MAP.json",
+      "bytes": 2801,
+      "sha256": "93319429cad4ba89b74c69c64da55a5ffcd0ddc4c6758d33328b31a1b871203f"
+    },
+    {
+      "path": "OS_API_MATRIX.json",
+      "bytes": 4115,
+      "sha256": "ec3ab0c209a5aab458fada593c31c63b73f6eec43b902a718823a2391d57622c"
+    },
+    {
+      "path": "NATIVE_CONNECTION_STATUS.json",
+      "bytes": 700,
+      "sha256": "1947da06fb8b168025d25ae7467cac260b7be58d7d237aae8f97214fceb0b21a"
+    },
+    {
+      "path": "LIMITED_VALIDATION_PLAN.json",
+      "bytes": 30359,
+      "sha256": "fb14cb5e6053e86b0e2de37588ea19a54a7828ee65d732b898203a74e11c938a"
+    }
+  ]
+}

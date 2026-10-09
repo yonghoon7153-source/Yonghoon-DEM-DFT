@@ -1,0 +1,29 @@
+{
+  "status": "OFFLINE_PREPARATION_REVIEWED_REVISIONS_REQUIRED_BEFORE_LIMITED_VALIDATION",
+  "input_sha256": "32cbb6ee5b8885a645da762154dab38d8f67ef4c7f97b5b4bc9c2ecd5fdd6f5c",
+  "candidate_manifest_sha256": "be19764204a4695c9058f565a69c5e09ea528124d4659e9d8f9d1c11fd6f749f",
+  "prior_acceptance_preserved": "LIMITED_VALIDATION_CLOSED_WITH_DOCUMENTED_SCOPE",
+  "findings": [
+    {"id":"OPEN-R1-N1","priority":"P1","subject":"Elapsed origins must be bound independently of each raw sample","evidence_kind":"STATIC_SOURCE_TRACE_NOT_EXECUTED"},
+    {"id":"OPEN-R1-N2","priority":"P2","subject":"Invalid process-counter objects escape structured STOP return","evidence_kind":"STATIC_SOURCE_TRACE_NOT_EXECUTED"},
+    {"id":"OPEN-R1-N3","priority":"P2","subject":"Unreachable test requirement and mismatched branch positive controls","evidence_kind":"STATIC_PLAN_SOURCE_COMPARISON"}
+  ],
+  "four_native_open_items_closed": false,
+  "native_ready": false,
+  "approved": false,
+  "usable": false,
+  "implementation_authorized_by_review": false,
+  "limited_validation_authorized_by_review": false,
+  "native_execution_authorized_by_review": false,
+  "received_code_execution": 0,
+  "delivery": {
+    "user_supplied_supplement_semantically_consistent": true,
+    "reported_snapshots_within_limits": true,
+    "post_check_write_snapshot_s": 1685.0463578,
+    "boundary": "After check write/readback; BEFORE check SHA computation/tool return",
+    "complete_end_to_end_elapsed": "UNOBSERVED_NOT_DECLARED_OVER_BUDGET",
+    "external_sidecar_original_bytes_received": false,
+    "remote_selected_sources_currently_reobserved": false
+  },
+  "overall_normal_gate": "INCOMPLETE"
+}

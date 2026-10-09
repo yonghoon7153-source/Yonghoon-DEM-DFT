@@ -1,0 +1,98 @@
+{
+  "observed_process_experiments": 0,
+  "new_os_calls_executed": 0,
+  "primary_windows_sdk_path_observed_absent": "C:/Program Files (x86)/Windows Kits/10/Include",
+  "rows": [
+    {
+      "metric": "private Job/root",
+      "api_or_candidate": "CreateJobObjectW/CreateProcessW/AssignProcessToJobObject/ResumeThread",
+      "local_source": "winjob.py:30-41,124-132,190-208",
+      "evidence_grade": "SOURCE_DECLARATIONS_AND_PREVIOUS_PATH",
+      "remaining": "member handles for all descendants, PID+creation, two membership bookends"
+    },
+    {
+      "metric": "root identity",
+      "api_or_candidate": "GetProcessTimes",
+      "local_source": "winjob.py:38,203-204",
+      "evidence_grade": "SOURCE_DECLARATION",
+      "remaining": "all-member creation FILETIME collection not implemented"
+    },
+    {
+      "metric": "membership",
+      "api_or_candidate": "QueryInformationJobObject class3",
+      "local_source": "winjob.py:74-80",
+      "evidence_grade": "SOURCE_DECLARATION",
+      "remaining": "capacity/race/error handling; no empty default"
+    },
+    {
+      "metric": "RSS",
+      "api_or_candidate": "WorkingSetSize via reviewed process counter API",
+      "local_source": "not present in existing source",
+      "evidence_grade": "LOCAL_PRIMARY_API_ABI_OPEN",
+      "remaining": "unique member totals, shared pages may count twice"
+    },
+    {
+      "metric": "Job current commit",
+      "api_or_candidate": "exact information class/counter unresolved",
+      "local_source": "existing EXT PeakJobMemoryUsed is peak, not current",
+      "evidence_grade": "OPEN",
+      "remaining": "not member sum and not peak replacement"
+    },
+    {
+      "metric": "Job enforced commit cap",
+      "api_or_candidate": "SetInformationJobObject + query/readback mapping unresolved",
+      "local_source": "winjob.py:193-196 only sets kill-on-close",
+      "evidence_grade": "NOT_IMPLEMENTED",
+      "remaining": "12GiB proposal unchanged; setting/readback failure blocks resume"
+    },
+    {
+      "metric": "host commit",
+      "api_or_candidate": "CommitLimit/CommitTotal/PageSize API candidate; exact primary doc needed",
+      "local_source": "legacy GlobalMemoryStatusEx availPage unused for this meaning",
+      "evidence_grade": "OPEN",
+      "remaining": "host available physical RAM is separate"
+    },
+    {
+      "metric": "host RAM/disk",
+      "api_or_candidate": "GlobalMemoryStatusEx availPhys/shutil.disk_usage",
+      "local_source": "winjob.py:67-73",
+      "evidence_grade": "START_ONLY_SOURCE_PATH",
+      "remaining": "periodic sampling/provider unimplemented"
+    },
+    {
+      "metric": "owned output",
+      "api_or_candidate": "bounded file tree metadata walk",
+      "local_source": "new projection requires COMPLETE_NO_REPARSE_NO_UNKNOWN_FILE",
+      "evidence_grade": "COLLECTOR_OPEN",
+      "remaining": "include staged/prefs/log/CSV/MPH/temp/evidence; original files excluded; no deletion"
+    },
+    {
+      "metric": "cooperative stop",
+      "api_or_candidate": "none verified",
+      "local_source": "no matching stop/cancel callable confirmed in inspected SolverSequence/legacy source",
+      "evidence_grade": "UNVERIFIED",
+      "remaining": "not inferred from getUBlock stop index or runFromTo fstopname"
+    },
+    {
+      "metric": "forced termination",
+      "api_or_candidate": "TerminateJobObject/kill-on-close",
+      "local_source": "winjob.py:36,208-end",
+      "evidence_grade": "SOURCE_PATH_FORCE_ONLY",
+      "remaining": "not graceful; separate decision if no cooperative API"
+    },
+    {
+      "metric": "final boundary",
+      "api_or_candidate": "Parent.S1FinalReturn",
+      "local_source": "Parent.ps1.inactive.txt:339-end",
+      "evidence_grade": "UNCHANGED_ACCEPTED_PURE_LOGIC",
+      "remaining": "actual child rc/clock/writer provider and external return capture remain needed"
+    }
+  ],
+  "resource_contract_unchanged": {
+    "path": "contracts/RESOURCE_CONTRACT.json",
+    "bytes": 7175,
+    "sha256": "e45837427b1b8a69d53b10119ce7ab072bacb869bcdd53c863366c7bd04c67c1"
+  },
+  "force_only_approved": false,
+  "hard_cap_removal_approved": false
+}

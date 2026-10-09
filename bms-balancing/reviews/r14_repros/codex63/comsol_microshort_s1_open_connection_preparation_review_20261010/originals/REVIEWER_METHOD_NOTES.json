@@ -1,0 +1,19 @@
+{
+  "scope": "Reviewer-owned data audit, not submitted functional suite",
+  "first_audit_call": {
+    "chunk_id": "117ec4",
+    "exit_code": 1,
+    "reason": "AssertionError at audit_data.py line 27: initial reviewer assumed inserted block was exactly normalized fragment, ignoring one separator blank line",
+    "already_verified_before_error": "Removing entire insertion restored original P0 bytes exactly",
+    "correction": "Require normalized insertion == normalized fragment + exactly one LF; no broad strip or tolerance",
+    "submitted_files_modified": false,
+    "received_code_executed": false
+  },
+  "second_audit_call": {
+    "chunk_id": "b18224",
+    "exit_code": 1,
+    "reason": "Reviewer typo utf8-sig in final pasted-text decoding; corrected to utf-8-sig",
+    "submitted_files_modified": false,
+    "received_code_executed": false
+  }
+}

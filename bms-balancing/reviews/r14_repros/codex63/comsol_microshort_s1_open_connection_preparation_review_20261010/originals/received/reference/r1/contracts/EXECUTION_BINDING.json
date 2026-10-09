@@ -1,0 +1,190 @@
+{
+  "schema": "S1O_EXECUTION_BINDING_V1",
+  "approved": false,
+  "usable": false,
+  "native_ready": false,
+  "adapter_status": "UNIMPLEMENTED_OPEN",
+  "manifest_binding": "CODE_MANIFEST.json hashes source and contract payload, excludes itself. Separate future validation acceptance and native approval both bind actual manifest bytes SHA and canonical execution-binding SHA; no manifest hash is inserted here.",
+  "fixed_input_commit": "f2d6fa0a985b4f62cd44729ebea3051cccf48d97",
+  "unit": {
+    "run_id": "S1P_P0_candidate_001",
+    "variant_id": "P0",
+    "sigma_short_S_m": "1.7e-6",
+    "initialization_id": "SAME_CONCENTRATION_INVENTORY_FINITE_SIGMA_ALGEBRAIC_RECONSISTENCY_V1",
+    "physical_window_s": [
+      0,
+      120
+    ],
+    "commands": {
+      "status": "INACTIVE_INTERFACE_ONLY_NO_NATIVE_ADAPTER",
+      "cwd": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/microshort_s1o_r1_20261008",
+      "argv": [
+        "C:/Users/BML/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/python.exe",
+        "-I",
+        "-S",
+        "-B",
+        "-X",
+        "utf8",
+        "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/microshort_s1o_r1_20261008/candidate/control.py.inactive.txt"
+      ],
+      "parent_argv": [
+        "C:/WINDOWS/System32/WindowsPowerShell/v1.0/powershell.exe",
+        "-NoLogo",
+        "-NoProfile",
+        "-NoExit",
+        "-File",
+        "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/microshort_s1o_r1_20261008/candidate/Parent.ps1.inactive.txt"
+      ],
+      "native_compile_argv": null,
+      "native_batch_argv": null,
+      "native_cwd": null,
+      "unresolved_reason": "No executable CLI/native adapter is published. Above argv are inactive source-interface identities and terminate without native execution. Exact staged Java, prefs, config/data directories and native argv/cwd must be frozen after adapter/readback implementation and before separate native authorization. Do not execute these commands to fill the gap."
+    },
+    "paths": {
+      "status": "PROPOSED_ONLY_NO_DIRECTORIES_CREATED",
+      "source_root": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/microshort_s1o_r1_20261008",
+      "proposed_native_root": null,
+      "must_be_absent": null,
+      "approval_path": null,
+      "release_path": null,
+      "user_decision_path": null,
+      "input_outputs": "source candidate+contracts/read-only source pins -> future exact staged source/prefs copy/owned Job logs/readbacks/tables/MPH; paths unresolved and activation blocked"
+    },
+    "counts": {
+      "compile": 1,
+      "batch": 1,
+      "solve": 1,
+      "control": 0,
+      "retry": 0,
+      "separate_initialization_solve": 0,
+      "fresh_direct_challenges": 2
+    },
+    "resource_contract_sha256": "e45837427b1b8a69d53b10119ce7ab072bacb869bcdd53c863366c7bd04c67c1",
+    "phase_limits_s": {
+      "preflight_and_direct_input": 300,
+      "native": 7200,
+      "owned_cleanup_total": 120,
+      "analysis": 600,
+      "preservation": 180,
+      "local_delivery": 600
+    },
+    "overall_limit_s": 9000
+  },
+  "engine_pins": [
+    {
+      "path": "C:/Users/BML/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/python.exe",
+      "bytes": 107312,
+      "sha256": "b7a12c3af0b4db44191eec14ea095eba731b7328917f570806183093d19ddca2"
+    },
+    {
+      "path": "C:/Program Files/COMSOL/COMSOL63/Multiphysics/bin/win64/comsolcompile.exe",
+      "bytes": 962024,
+      "sha256": "a44b59db1a60d9b7dcac193ed8d6f1e8f9c0c18d5850eb872d24242ad95f497f"
+    },
+    {
+      "path": "C:/Program Files/COMSOL/COMSOL63/Multiphysics/bin/win64/comsolbatch.exe",
+      "bytes": 962024,
+      "sha256": "f4e74547dcb229db269f552f7535e78b3c7c24d77d25ef8242915051ce4b7bc2"
+    }
+  ],
+  "engine_pin_scope": "Historical NORMAL480 contract pins, not current binary re-observations. PowerShell expected SHA 8bb6fa8c283b4d92120b1ef249a9b311b0f804d4cabbe9981159976c8be76a5e is in original parent line136; exact byte size and present engine identity must be read-only pinned before next validation/native, not invented here. No engine invocation performed. Current validation-only Python/PS byte identities are separately attached below; native current COMSOL and policy observations remain OPEN.",
+  "dependency_pins": [
+    {
+      "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/b020_profile_unit_stages_20260927/gate/c2_entry.py",
+      "bytes": 26769,
+      "sha256": "02c7c0e29d541eee336a081abec4cb8eef7c64ba32466b5cb305499bee8aa3d4"
+    },
+    {
+      "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/b020_profile_unit_stages_20260927/gate/C2_CONTRACT.json",
+      "bytes": 3851,
+      "sha256": "5376cf78dfc98a07fcd852943e482b43ee03b79d79fe99b0d39e9f2fe39bea1b"
+    },
+    {
+      "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/b020_profile_unit_stages_20260927/gate/C2_CODE_MANIFEST.json",
+      "bytes": 603,
+      "sha256": "23cbd50ee2d0fda4d352578c1a54eb723e27733fe03de7bee7787e456bd894cc"
+    },
+    {
+      "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/b020_profile_unit_stages_20260927/src/execution_records.py",
+      "bytes": 11109,
+      "sha256": "b4b9ea1626a8bb9756d6c6e5e935241ca33c7d39a6725878d172a894382dc3c4"
+    },
+    {
+      "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/b020_profile_unit_stages_20260927/src/winjob.py",
+      "bytes": 15851,
+      "sha256": "2f0bb76d1ff11b12402f79e15f03d6d3fa281644fa9db8c218f1f2213819fc65"
+    }
+  ],
+  "dependency_scope": "Historical expected reusable controls; no imports, executions or automatic copying. Legacy launcher.py and policy_binding.py are reference-only, because legacy launcher contains policy apply/restore paths excluded from S1-O and proposed policy-unchanged native route.",
+  "policy_pin": null,
+  "policy_requirement": "Current exact default-prefs path/bytes/SHA/security keys must be read only and adopted under future approval; byte-copy only to private owned prefs. No toggle, registry/ACL edit, elevated shell or fallback. Effective policy remains UNVERIFIED.",
+  "open_blockers": [
+    "Exact S1 executable publication, native argv/cwd and absent output/approval paths not frozen",
+    "Native/readback normalization and same-process fresh-gate adapter not implemented",
+    "Installed coefficient names, equation consumption mapping and finite-sigma CDI initialization timing not observed",
+    "Periodic owned RSS/commit/disk sampler, enforced Job-commit limit and stop adapter not implemented or validated",
+    "Cooperative stop API unavailable in inspected legacy; explicit reviewed force-only option or verified supported method required",
+    "Native current COMSOL engine/dependency/policy identities not re-observed; validation-only PS/Python byte observations do not clear this blocker",
+    "Changed-branch functional validation not executed or accepted",
+    "Separate native one-run user approval absent"
+  ],
+  "reuse": {
+    "unchanged_originals": [
+      "NORMAL480 Java/CONTRACT/COMMAND_MAP/PARENT_COMMAND",
+      "legacy C2/Job files"
+    ],
+    "reused_evidence_only": [
+      "private Job assigned-before-resume architecture",
+      "exclusive evidence writes and typed child rc precedent",
+      "POST_WRITE recheck and outer NoExit rc=null"
+    ],
+    "new_not_yet_validated": [
+      "approval unit checker",
+      "resource assessment and stop transition",
+      "consumer-to-parent field checks",
+      "parent post-write adapter function"
+    ],
+    "not_claimed": "No whole-workflow reuse PASS, no actual initial/physics/resource/native validation in S1-O"
+  },
+  "current_validation_engine_observation": {
+    "source": "reference/ORIGINAL_VALIDATION_PLAN.json (historical observation; not re-observed as functional-engine evidence in R1)",
+    "scope": "Python and PS executable bytes read for future validation only; no engine version/native probe",
+    "engines": [
+      {
+        "path": "C:\\Users\\BML\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\python.exe",
+        "bytes": 107312,
+        "sha256": "b7a12c3af0b4db44191eec14ea095eba731b7328917f570806183093d19ddca2"
+      },
+      {
+        "path": "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe",
+        "bytes": 495616,
+        "sha256": "8bb6fa8c283b4d92120b1ef249a9b311b0f804d4cabbe9981159976c8be76a5e"
+      }
+    ]
+  },
+  "r1_scope": {
+    "id": "S1O-R1-N1-N4",
+    "functional_validation": "NOT_RUN",
+    "current_plan": "VALIDATION_PLAN_R1.json",
+    "original_manifest_sha256": "54c61d10b3bb11e0501e9933b220eca76d9f7cee503953a6f909185e04f965fe",
+    "inactive_path_update": "Source-interface paths point to this R1 copy only. No operational native command, output or authorization path was created."
+  },
+  "r1_parent_projection": {
+    "status": "STATIC_CONTRACT_ONLY_ADAPTER_OPEN",
+    "Expected": {
+      "common_requested_times_s": "Full fixed registered vector from POLICY_VARIANTS.request_vectors[comparison.expected_common_request_vector].tokens_s; immutable binding, canonical decimal strings; never copied from result count",
+      "required_count": "Count of full registered vector, NOT safe-prefix count",
+      "end_s": "Fixed exact configured endpoint"
+    },
+    "Native": {
+      "stored_times_s": "Actual complete raw-native saved vector; strictly increasing finite decimal strings, from0 through actual end",
+      "stored_grid_identity": "Raw saved-grid evidence path/positive integer bytes/SHA; same registered source identity consumed by Python",
+      "final_time_s": "Actual final saved time; exact",
+      "guard_pair": "For PROTECTIVE_STOP_MATCHED: t_minus/t_plus, t_plus=actual endpoint<configured end, pair are last two stored states; retain stop operator/units/domain/no-post-integration proof"
+    },
+    "consumer_native_projection": "Same immutable raw evidence projected as native.stored_times_s/stored_grid_identity/last_stored_s/reason/guard_pair. Schema conversion is not native verification; adapter remains OPEN.",
+    "comparison": "Normal: fixed complete vector. Protective: derive fixed vector prefix <= verified t_minus. Comparison grid must exactly match; full intersection remains separate, strictly ordered, includes every compared time and is subset of actual native grid (may include t_plus).",
+    "charge": "S1O_CHARGE_BUDGET_R1 in CHARGE_BALANCE.json; full actual native grid, not safe comparison prefix; source/global Li binding and signed adjacent intervals consumed.",
+    "precision": "Exact decimal strings and integers for new grid and comparison checks; float/double/CLR decimal transport rejected as precision-ambiguous. No tolerance change. Existing budget double checks unchanged."
+  }
+}

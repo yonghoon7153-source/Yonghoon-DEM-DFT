@@ -1,0 +1,736 @@
+{
+  "schema": "S1_OPEN_CHANGED_BRANCH_PLAN_V1",
+  "approved": false,
+  "usable": false,
+  "native_ready": false,
+  "status": "PROPOSAL_ONLY_NOT_EXECUTED",
+  "groups": 8,
+  "unique_cases": 50,
+  "counts": {
+    "Python": 44,
+    "Java_helper": 6
+  },
+  "engine_pins_current_file_reads_no_version_invocation": {
+    "Python": {
+      "path": "C:/Users/BML/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/python.exe",
+      "bytes": 107312,
+      "sha256": "b7a12c3af0b4db44191eec14ea095eba731b7328917f570806183093d19ddca2"
+    },
+    "Java_compile": {
+      "path": "C:/Program Files/COMSOL/COMSOL63/Multiphysics/java/win64/jre/bin/javac.exe",
+      "bytes": 20712,
+      "sha256": "c60a376855051d615b0c7cf2712573a19ed4e02b905c9d1a274ff990dac85659"
+    },
+    "Java_helper": {
+      "path": "C:/Program Files/COMSOL/COMSOL63/Multiphysics/java/win64/jre/bin/java.exe",
+      "bytes": 46824,
+      "sha256": "e8228b02b882a4aa1a2333ede4a341b15e761cd897433d2661f2b96d7ad4952b"
+    }
+  },
+  "engine_selection_source": {
+    "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/normal30_limited_validation_R1_20260928/COMMANDS.json",
+    "bytes": 2113,
+    "sha256": "725e19de5f0b31228b2c166d835f0f2630bc406164f1dbd329339b183e98fa7c"
+  },
+  "fixture_proposed_only_not_created": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/microshort_s1_open_connection_candidate_20261009/proposed_changed_validation_001",
+  "commands": {
+    "Python": {
+      "argv": [
+        "C:/Users/BML/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/python.exe",
+        "-I",
+        "-S",
+        "-B",
+        "-X",
+        "utf8",
+        "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/microshort_s1_open_connection_candidate_20261009/proposed_changed_validation_001/run_python.py"
+      ],
+      "cwd": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/microshort_s1_open_connection_candidate_20261009/proposed_changed_validation_001",
+      "max_sessions": 1,
+      "timeout_s": 180
+    },
+    "Java_compile": {
+      "argv": [
+        "C:/Program Files/COMSOL/COMSOL63/Multiphysics/java/win64/jre/bin/javac.exe",
+        "-proc:none",
+        "-d",
+        "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/microshort_s1_open_connection_candidate_20261009/proposed_changed_validation_001/classes",
+        "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/microshort_s1_open_connection_candidate_20261009/proposed_changed_validation_001/OpenReadbackHarness.java"
+      ],
+      "cwd": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/microshort_s1_open_connection_candidate_20261009/proposed_changed_validation_001",
+      "max_sessions": 1,
+      "timeout_s": 90
+    },
+    "Java_helper": {
+      "argv": [
+        "C:/Program Files/COMSOL/COMSOL63/Multiphysics/java/win64/jre/bin/java.exe",
+        "-cp",
+        "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/microshort_s1_open_connection_candidate_20261009/proposed_changed_validation_001/classes",
+        "OpenReadbackHarness"
+      ],
+      "cwd": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/microshort_s1_open_connection_candidate_20261009/proposed_changed_validation_001",
+      "max_sessions": 1,
+      "timeout_s": 60
+    }
+  },
+  "budget_proposal_s": {
+    "harness_seal": 600,
+    "Python": 180,
+    "Java_compile": 90,
+    "Java_helper": 60,
+    "preservation_delivery": 300,
+    "incomplete_closeout": 120,
+    "total": 1350
+  },
+  "no_PS_session_reason": "No Parent changes or new Parent projection; existing PS acceptance reused. Future native->Parent adapter still OPEN and requires its own changed-path validation when implemented.",
+  "requirements": [
+    "User separate approval before harness/test",
+    "Freeze exact source/engine/harness/input byte hashes and expected reasons/reach before first test",
+    "Block native/console/Job/file side effects before candidate load",
+    "Only exact new Java helpers plus necessary old pure dependencies; no COMSOL jars/full model",
+    "Actual consumer/control functions for integration; no lookalike replacement",
+    "Expected rejection is not unexpected failure; any unrelated earlier error is failure",
+    "First unexpected failure/time budget stop, preserve stderr/rc and unexecuted IDs; no edits/retry/probe/fallback",
+    "All results keep native_ready=false; installed/OS proof cannot come from fixtures"
+  ],
+  "cases": [
+    {
+      "id": "C01-01",
+      "group": "C01",
+      "engine": "Python",
+      "target_function": "numeric_table",
+      "case": "valid bytes/units",
+      "expected_reason_or_result": "parsed Decimal rows",
+      "fixture_rule": "small exact producer header plus data; identities computed before first test",
+      "positive_control": "C01-01",
+      "reached_function_required": "numeric_table",
+      "unexpected_exception_is_pass": false
+    },
+    {
+      "id": "C01-02",
+      "group": "C01",
+      "engine": "Python",
+      "target_function": "numeric_table",
+      "case": "changed bytes",
+      "expected_reason_or_result": "RAW_IDENTITY",
+      "fixture_rule": "hold expected hash; mutate one byte",
+      "positive_control": "C01-01",
+      "reached_function_required": "numeric_table",
+      "unexpected_exception_is_pass": false
+    },
+    {
+      "id": "C01-03",
+      "group": "C01",
+      "engine": "Python",
+      "target_function": "numeric_table",
+      "case": "header mismatch",
+      "expected_reason_or_result": "TABLE_HEADER_OR_UNITS",
+      "fixture_rule": "rehash fixture; change header only",
+      "positive_control": "C01-01",
+      "reached_function_required": "numeric_table",
+      "unexpected_exception_is_pass": false
+    },
+    {
+      "id": "C01-04",
+      "group": "C01",
+      "engine": "Python",
+      "target_function": "numeric_table",
+      "case": "unit mismatch",
+      "expected_reason_or_result": "TABLE_HEADER_OR_UNITS",
+      "fixture_rule": "raw units array differs; valid data",
+      "positive_control": "C01-01",
+      "reached_function_required": "numeric_table",
+      "unexpected_exception_is_pass": false
+    },
+    {
+      "id": "C01-05",
+      "group": "C01",
+      "engine": "Python",
+      "target_function": "numeric_table",
+      "case": "ragged row",
+      "expected_reason_or_result": "TABLE_WIDTH",
+      "fixture_rule": "rehash raw with extra cell",
+      "positive_control": "C01-01",
+      "reached_function_required": "numeric_table",
+      "unexpected_exception_is_pass": false
+    },
+    {
+      "id": "C01-06",
+      "group": "C01",
+      "engine": "Python",
+      "target_function": "numeric_table",
+      "case": "NaN",
+      "expected_reason_or_result": "DECIMAL_NONFINITE",
+      "fixture_rule": "rehash NaN cell; other fields valid",
+      "positive_control": "C01-01",
+      "reached_function_required": "numeric_table",
+      "unexpected_exception_is_pass": false
+    },
+    {
+      "id": "C01-07",
+      "group": "C01",
+      "engine": "Python",
+      "target_function": "numeric_table",
+      "case": "header only",
+      "expected_reason_or_result": "EMPTY_TABLE",
+      "fixture_rule": "nonzero header bytes; correct identity",
+      "positive_control": "C01-01",
+      "reached_function_required": "numeric_table",
+      "unexpected_exception_is_pass": false
+    },
+    {
+      "id": "C02-01",
+      "group": "C02",
+      "engine": "Python",
+      "target_function": "charge_projection",
+      "case": "normal full grid",
+      "expected_reason_or_result": "exact eight fields",
+      "fixture_rule": "native/global/leak same >=3 times and duplicate RN/RP/j equal",
+      "positive_control": "C02-01",
+      "reached_function_required": "charge_projection (or bind_grid/exact for the specified rejection)",
+      "unexpected_exception_is_pass": false
+    },
+    {
+      "id": "C02-02",
+      "group": "C02",
+      "engine": "Python",
+      "target_function": "charge_projection",
+      "case": "leak omits stored time",
+      "expected_reason_or_result": "FULL_GRID_MISMATCH",
+      "fixture_rule": "native/global full; leak remove middle only",
+      "positive_control": "C02-01",
+      "reached_function_required": "charge_projection (or bind_grid/exact for the specified rejection)",
+      "unexpected_exception_is_pass": false
+    },
+    {
+      "id": "C02-03",
+      "group": "C02",
+      "engine": "Python",
+      "target_function": "charge_projection",
+      "case": "duplicate current differs",
+      "expected_reason_or_result": "DUPLICATE_CURRENT_DISAGREEMENT",
+      "fixture_rule": "valid grids; alter RN on leakage row",
+      "positive_control": "C02-01",
+      "reached_function_required": "charge_projection (or bind_grid/exact for the specified rejection)",
+      "unexpected_exception_is_pass": false
+    },
+    {
+      "id": "C02-04",
+      "group": "C02",
+      "engine": "Python",
+      "target_function": "charge_projection",
+      "case": "repeated time",
+      "expected_reason_or_result": "GRID_ORDER_OR_RANGE",
+      "fixture_rule": "repeat time in all three grids to reach order guard",
+      "positive_control": "C02-01",
+      "reached_function_required": "charge_projection (or bind_grid/exact for the specified rejection)",
+      "unexpected_exception_is_pass": false
+    },
+    {
+      "id": "C02-05",
+      "group": "C02",
+      "engine": "Python",
+      "target_function": "charge_projection",
+      "case": "Double time transport",
+      "expected_reason_or_result": "DECIMAL_TRANSPORT",
+      "fixture_rule": "native_grid one Python float; numeric tables valid",
+      "positive_control": "C02-01",
+      "reached_function_required": "charge_projection (or bind_grid/exact for the specified rejection)",
+      "unexpected_exception_is_pass": false
+    },
+    {
+      "id": "C02-06",
+      "group": "C02",
+      "engine": "Python",
+      "target_function": "charge_projection",
+      "case": "time beyond end",
+      "expected_reason_or_result": "GRID_ORDER_OR_RANGE",
+      "fixture_rule": "same full grids extend beyond unchanged configured end",
+      "positive_control": "C02-01",
+      "reached_function_required": "charge_projection (or bind_grid/exact for the specified rejection)",
+      "unexpected_exception_is_pass": false
+    },
+    {
+      "id": "C03-01",
+      "group": "C03",
+      "engine": "Python",
+      "target_function": "request_prefix",
+      "case": "normal all requests",
+      "expected_reason_or_result": "normal complete prefix",
+      "fixture_rule": "fixed end and >1 request; full stored grid",
+      "positive_control": "C03-01",
+      "reached_function_required": "request_prefix",
+      "unexpected_exception_is_pass": false
+    },
+    {
+      "id": "C03-02",
+      "group": "C03",
+      "engine": "Python",
+      "target_function": "request_prefix",
+      "case": "protective nonrequest stop",
+      "expected_reason_or_result": "prefix ends <= t_minus; pair retained",
+      "fixture_rule": "last two states not both requested; stop strictly before end",
+      "positive_control": "C03-01",
+      "reached_function_required": "request_prefix",
+      "unexpected_exception_is_pass": false
+    },
+    {
+      "id": "C03-03",
+      "group": "C03",
+      "engine": "Python",
+      "target_function": "request_prefix",
+      "case": "missing scheduled prefix",
+      "expected_reason_or_result": "REQUEST_PREFIX_MISSING",
+      "fixture_rule": "remove request time from native but keep other times and endpoint",
+      "positive_control": "C03-01",
+      "reached_function_required": "request_prefix",
+      "unexpected_exception_is_pass": false
+    },
+    {
+      "id": "C03-04",
+      "group": "C03",
+      "engine": "Python",
+      "target_function": "request_prefix",
+      "case": "t0 only safe prefix",
+      "expected_reason_or_result": "PREFIX_EMPTY_OR_ZERO_ONLY",
+      "fixture_rule": "guard pair before first positive request; valid grids",
+      "positive_control": "C03-01",
+      "reached_function_required": "request_prefix",
+      "unexpected_exception_is_pass": false
+    },
+    {
+      "id": "C03-05",
+      "group": "C03",
+      "engine": "Python",
+      "target_function": "request_prefix",
+      "case": "pair not last two",
+      "expected_reason_or_result": "PROTECTIVE_PAIR",
+      "fixture_rule": "valid ordered times but pair t_minus not second last",
+      "positive_control": "C03-01",
+      "reached_function_required": "request_prefix",
+      "unexpected_exception_is_pass": false
+    },
+    {
+      "id": "C04-01",
+      "group": "C04",
+      "engine": "Python",
+      "target_function": "quadrature_projection",
+      "case": "absent bound",
+      "expected_reason_or_result": "INCONCLUSIVE_NO_CERTIFIED_BOUND",
+      "fixture_rule": "proof=None; no bound promoted",
+      "positive_control": "C04-01",
+      "reached_function_required": "quadrature_projection",
+      "unexpected_exception_is_pass": false
+    },
+    {
+      "id": "C04-02",
+      "group": "C04",
+      "engine": "Python",
+      "target_function": "quadrature_projection",
+      "case": "reviewed method and raw",
+      "expected_reason_or_result": "BOUND_BYTES_LINKED_REQUIRES_METHOD_ACCEPTANCE",
+      "fixture_rule": "inert accepted method seal plus matching JSON payload/identity/grid/all prefixes",
+      "positive_control": "C04-01",
+      "reached_function_required": "quadrature_projection",
+      "unexpected_exception_is_pass": false
+    },
+    {
+      "id": "C04-03",
+      "group": "C04",
+      "engine": "Python",
+      "target_function": "quadrature_projection",
+      "case": "unreviewed method",
+      "expected_reason_or_result": "QUADRATURE_METHOD_OPEN",
+      "fixture_rule": "no accepted method hash",
+      "positive_control": "C04-01",
+      "reached_function_required": "quadrature_projection",
+      "unexpected_exception_is_pass": false
+    },
+    {
+      "id": "C04-04",
+      "group": "C04",
+      "engine": "Python",
+      "target_function": "quadrature_projection",
+      "case": "wrong grid",
+      "expected_reason_or_result": "QUADRATURE_GRID_OR_SCOPE",
+      "fixture_rule": "raw and proof both wrong grid, identities recomputed; avoid payload mismatch",
+      "positive_control": "C04-01",
+      "reached_function_required": "quadrature_projection",
+      "unexpected_exception_is_pass": false
+    },
+    {
+      "id": "C04-05",
+      "group": "C04",
+      "engine": "Python",
+      "target_function": "quadrature_projection",
+      "case": "caller forges bound",
+      "expected_reason_or_result": "QUADRATURE_PAYLOAD_BINDING",
+      "fixture_rule": "valid raw identity; caller proof.bound_C_m2 differs from raw",
+      "positive_control": "C04-01",
+      "reached_function_required": "quadrature_projection",
+      "unexpected_exception_is_pass": false
+    },
+    {
+      "id": "C05-01",
+      "group": "C05",
+      "engine": "Python",
+      "target_function": "require_installed_mapping / consumer_connection",
+      "case": "accepted inert seam",
+      "expected_reason_or_result": "actual consumer.analyze reached; preserve its exact result",
+      "fixture_rule": "inert provider verifies supplied same run/manifest; real unchanged consumer with accepted fixture data, no native",
+      "positive_control": "C05-01",
+      "reached_function_required": "consumer_connection",
+      "unexpected_exception_is_pass": false
+    },
+    {
+      "id": "C05-02",
+      "group": "C05",
+      "engine": "Python",
+      "target_function": "require_installed_mapping / consumer_connection",
+      "case": "default provider",
+      "expected_reason_or_result": "INSTALLED_PROOF_PROVIDER_OPEN",
+      "fixture_rule": "provider omitted; consumer not reached",
+      "positive_control": "C05-01",
+      "reached_function_required": "consumer_connection",
+      "unexpected_exception_is_pass": false
+    },
+    {
+      "id": "C05-03",
+      "group": "C05",
+      "engine": "Python",
+      "target_function": "require_installed_mapping / consumer_connection",
+      "case": "wrong provider run",
+      "expected_reason_or_result": "INSTALLED_PROOF_REJECTED",
+      "fixture_rule": "inert proof uses wrong run; consumer not reached",
+      "positive_control": "C05-01",
+      "reached_function_required": "consumer_connection",
+      "unexpected_exception_is_pass": false
+    },
+    {
+      "id": "C05-04",
+      "group": "C05",
+      "engine": "Python",
+      "target_function": "require_installed_mapping / consumer_connection",
+      "case": "mapping absent",
+      "expected_reason_or_result": "INSTALLED_MAPPING_OPEN",
+      "fixture_rule": "no reviewed mapping seal",
+      "positive_control": "C05-07",
+      "reached_function_required": "require_installed_mapping",
+      "unexpected_exception_is_pass": false
+    },
+    {
+      "id": "C05-05",
+      "group": "C05",
+      "engine": "Python",
+      "target_function": "require_installed_mapping / consumer_connection",
+      "case": "mapping dictionary mismatch",
+      "expected_reason_or_result": "MAPPING_OBJECT_BINDING",
+      "fixture_rule": "raw mapping valid SHA; separately supplied dict modified",
+      "positive_control": "C05-07",
+      "reached_function_required": "require_installed_mapping",
+      "unexpected_exception_is_pass": false
+    },
+    {
+      "id": "C05-06",
+      "group": "C05",
+      "engine": "Python",
+      "target_function": "require_installed_mapping / consumer_connection",
+      "case": "mapping not observed",
+      "expected_reason_or_result": "INSTALLED_OBSERVATION_OPEN",
+      "fixture_rule": "correct byte-bound JSON but status OPEN",
+      "positive_control": "C05-07",
+      "reached_function_required": "require_installed_mapping",
+      "unexpected_exception_is_pass": false
+    },
+    {
+      "id": "C05-07",
+      "group": "C05",
+      "engine": "Python",
+      "target_function": "require_installed_mapping",
+      "case": "byte-bound inert mapping positive",
+      "expected_reason_or_result": "same mapping returned",
+      "fixture_rule": "canonical raw JSON and its exact reviewed SHA supplied as inert fixture; INDEPENDENTLY_ACCEPTED marker explicitly fixture only; not production mapping",
+      "positive_control": "C05-07",
+      "reached_function_required": "require_installed_mapping",
+      "unexpected_exception_is_pass": false
+    },
+    {
+      "id": "C06-01",
+      "group": "C06",
+      "engine": "Python",
+      "target_function": "project_owned_sample",
+      "case": "complete sampled transaction",
+      "expected_reason_or_result": "sample and ownership projected",
+      "fixture_rule": "exact member PID+creation, root included once, current Job commit mapping pin nonnull",
+      "positive_control": "C06-01",
+      "reached_function_required": "project_owned_sample",
+      "unexpected_exception_is_pass": false
+    },
+    {
+      "id": "C06-02",
+      "group": "C06",
+      "engine": "Python",
+      "target_function": "project_owned_sample",
+      "case": "root exited children live",
+      "expected_reason_or_result": "sum children only",
+      "fixture_rule": "held root signaled true; member list includes owned children, not root",
+      "positive_control": "C06-01",
+      "reached_function_required": "project_owned_sample",
+      "unexpected_exception_is_pass": false
+    },
+    {
+      "id": "C06-03",
+      "group": "C06",
+      "engine": "Python",
+      "target_function": "project_owned_sample",
+      "case": "duplicate member",
+      "expected_reason_or_result": "MEMBER_DUPLICATE",
+      "fixture_rule": "repeat identical PID+creation on both membership bookends",
+      "positive_control": "C06-01",
+      "reached_function_required": "project_owned_sample",
+      "unexpected_exception_is_pass": false
+    },
+    {
+      "id": "C06-04",
+      "group": "C06",
+      "engine": "Python",
+      "target_function": "project_owned_sample",
+      "case": "membership churn",
+      "expected_reason_or_result": "MEMBERSHIP_CHURN_OR_EMPTY",
+      "fixture_rule": "change after member list",
+      "positive_control": "C06-01",
+      "reached_function_required": "project_owned_sample",
+      "unexpected_exception_is_pass": false
+    },
+    {
+      "id": "C06-05",
+      "group": "C06",
+      "engine": "Python",
+      "target_function": "project_owned_sample",
+      "case": "commit mapping missing",
+      "expected_reason_or_result": "JOB_COMMIT_MAPPING_OPEN",
+      "fixture_rule": "anchors accepted_commit_mapping_sha256=None",
+      "positive_control": "C06-01",
+      "reached_function_required": "project_owned_sample",
+      "unexpected_exception_is_pass": false
+    },
+    {
+      "id": "C06-06",
+      "group": "C06",
+      "engine": "Python",
+      "target_function": "project_owned_sample",
+      "case": "missing counter",
+      "expected_reason_or_result": "COUNTER_MISSING:volume_free_bytes",
+      "fixture_rule": "other fields valid; volume counter None",
+      "positive_control": "C06-01",
+      "reached_function_required": "project_owned_sample",
+      "unexpected_exception_is_pass": false
+    },
+    {
+      "id": "C06-07",
+      "group": "C06",
+      "engine": "Python",
+      "target_function": "project_owned_sample",
+      "case": "reparse output",
+      "expected_reason_or_result": "OUTPUT_SCOPE",
+      "fixture_rule": "output_walk_status not complete",
+      "positive_control": "C06-01",
+      "reached_function_required": "project_owned_sample",
+      "unexpected_exception_is_pass": false
+    },
+    {
+      "id": "C06-08",
+      "group": "C06",
+      "engine": "Python",
+      "target_function": "project_owned_sample",
+      "case": "clock reverses",
+      "expected_reason_or_result": "CLOCK_ORDER",
+      "fixture_rule": "sample end before start; other times finite",
+      "positive_control": "C06-01",
+      "reached_function_required": "project_owned_sample",
+      "unexpected_exception_is_pass": false
+    },
+    {
+      "id": "C07-01",
+      "group": "C07",
+      "engine": "Python",
+      "target_function": "resource_decision / stop_action_plan",
+      "case": "within limits",
+      "expected_reason_or_result": "CONTINUE_WITHIN_SAMPLED_LIMITS",
+      "fixture_rule": "project C06 positive into actual control.assess_resources with unchanged contract",
+      "positive_control": "C07-01",
+      "reached_function_required": "resource_decision -> control.assess_resources",
+      "unexpected_exception_is_pass": false
+    },
+    {
+      "id": "C07-02",
+      "group": "C07",
+      "engine": "Python",
+      "target_function": "resource_decision / stop_action_plan",
+      "case": "RSS threshold exceeded",
+      "expected_reason_or_result": "RESOURCE_THRESHOLD:job_rss_bytes",
+      "fixture_rule": "complete snapshot; RSS one byte above existing early threshold",
+      "positive_control": "C07-01",
+      "reached_function_required": "resource_decision -> control.assess_resources",
+      "unexpected_exception_is_pass": false
+    },
+    {
+      "id": "C07-03",
+      "group": "C07",
+      "engine": "Python",
+      "target_function": "resource_decision / stop_action_plan",
+      "case": "projection query fails",
+      "expected_reason_or_result": "STOP_REQUIRED / OS_QUERY_FAILURE",
+      "fixture_rule": "raw.query_success=false; no zero substitution",
+      "positive_control": "C07-01",
+      "reached_function_required": "resource_decision -> control.assess_resources",
+      "unexpected_exception_is_pass": false
+    },
+    {
+      "id": "C07-04",
+      "group": "C07",
+      "engine": "Python",
+      "target_function": "resource_decision / stop_action_plan",
+      "case": "owned force plan",
+      "expected_reason_or_result": "FORCED + execute_now=false",
+      "fixture_rule": "Actual control.advance_stop STOP_REQUESTED with verified ownership and explicitly force-only inert fixture permission; no OS call. Result action FORCE_OWNED_JOB_ONCE.",
+      "positive_control": "C07-01",
+      "reached_function_required": "stop_action_plan -> control.advance_stop",
+      "unexpected_exception_is_pass": false
+    },
+    {
+      "id": "C07-05",
+      "group": "C07",
+      "engine": "Python",
+      "target_function": "resource_decision / stop_action_plan",
+      "case": "unsupported stop",
+      "expected_reason_or_result": "STOP_METHOD_NOT_APPROVED",
+      "fixture_rule": "actual STOP_REQUESTED no verified cooperative/no force-only permission",
+      "positive_control": "C07-01",
+      "reached_function_required": "stop_action_plan -> control.advance_stop",
+      "unexpected_exception_is_pass": false
+    },
+    {
+      "id": "C07-06",
+      "group": "C07",
+      "engine": "Python",
+      "target_function": "resource_decision / stop_action_plan",
+      "case": "ownership lost",
+      "expected_reason_or_result": "NO_KILL_WITHOUT_OWNERSHIP",
+      "fixture_rule": "event.ownership_verified=false; no OS calls",
+      "positive_control": "C07-01",
+      "reached_function_required": "stop_action_plan -> control.advance_stop",
+      "unexpected_exception_is_pass": false
+    },
+    {
+      "id": "C08-01",
+      "group": "C08",
+      "engine": "Java_helper",
+      "target_function": "s1OpenProperties / s1OpenConfiguredReadback / s1OpenStoredGrid",
+      "case": "typed property output",
+      "expected_reason_or_result": "exact type/key/value table",
+      "fixture_rule": "extract actual new helpers; minimal PropFeature/Model stubs and old readSetting/table dependencies",
+      "positive_control": "C08-01",
+      "reached_function_required": "exact helper named by case; inherited dependency only where specified",
+      "unexpected_exception_is_pass": false
+    },
+    {
+      "id": "C08-02",
+      "group": "C08",
+      "engine": "Java_helper",
+      "target_function": "s1OpenProperties / s1OpenConfiguredReadback / s1OpenStoredGrid",
+      "case": "unknown value type",
+      "expected_reason_or_result": "original IllegalArgumentException propagates",
+      "fixture_rule": "actual old readSetting default; no empty successful output",
+      "positive_control": "C08-01",
+      "reached_function_required": "exact helper named by case; inherited dependency only where specified",
+      "unexpected_exception_is_pass": false
+    },
+    {
+      "id": "C08-03",
+      "group": "C08",
+      "engine": "Java_helper",
+      "target_function": "s1OpenProperties / s1OpenConfiguredReadback / s1OpenStoredGrid",
+      "case": "recursive equation calls",
+      "expected_reason_or_result": "3 features x 4 kinds, recursive/all",
+      "fixture_rule": "record actual helper call arguments on inert FeatureInfo",
+      "positive_control": "C08-01",
+      "reached_function_required": "exact helper named by case; inherited dependency only where specified",
+      "unexpected_exception_is_pass": false
+    },
+    {
+      "id": "C08-04",
+      "group": "C08",
+      "engine": "Java_helper",
+      "target_function": "s1OpenProperties / s1OpenConfiguredReadback / s1OpenStoredGrid",
+      "case": "stored zero semantics",
+      "expected_reason_or_result": "STORED_ZERO_POST_CONSISTENCY_PROOF_OPEN",
+      "fixture_rule": "inert evaluate returns exact [0,positive,end]; no t0 proof tag generated",
+      "positive_control": "C08-01",
+      "reached_function_required": "exact helper named by case; inherited dependency only where specified",
+      "unexpected_exception_is_pass": false
+    },
+    {
+      "id": "C08-05",
+      "group": "C08",
+      "engine": "Java_helper",
+      "target_function": "s1OpenProperties / s1OpenConfiguredReadback / s1OpenStoredGrid",
+      "case": "nonzero first time",
+      "expected_reason_or_result": "original TIME_ORIGIN propagates",
+      "fixture_rule": "use actual existing checkShape via inert evaluate dependency; do not reimplement shape check",
+      "positive_control": "C08-01",
+      "reached_function_required": "exact helper named by case; inherited dependency only where specified",
+      "unexpected_exception_is_pass": false
+    },
+    {
+      "id": "C08-06",
+      "group": "C08",
+      "engine": "Java_helper",
+      "target_function": "s1OpenProperties / s1OpenConfiguredReadback / s1OpenStoredGrid",
+      "case": "readback exception",
+      "expected_reason_or_result": "first raw exception propagates",
+      "fixture_rule": "property getter throws fixed sentinel; later equation calls not reached",
+      "positive_control": "C08-01",
+      "reached_function_required": "exact helper named by case; inherited dependency only where specified",
+      "unexpected_exception_is_pass": false
+    }
+  ],
+  "source_pins": [
+    {
+      "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/microshort_s1_open_connection_candidate_20261009/candidate/InstalledReadback.fragment.java.inactive.txt",
+      "bytes": 2512,
+      "sha256": "844ccbb7259ba55bf3deacaf38bf17932c0b9f6ccc43017d80907c46b5b216c6"
+    },
+    {
+      "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/microshort_s1_open_connection_candidate_20261009/candidate/P0.connection.java.inactive.txt",
+      "bytes": 84529,
+      "sha256": "39c2b9929e0d4c4ca8c442f5d0f0485581342b8be7a993d3820870bba8002a8b"
+    },
+    {
+      "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/microshort_s1_open_connection_candidate_20261009/candidate/raw_connection.py.inactive.txt",
+      "bytes": 9426,
+      "sha256": "3de2c292bf03088db1171b0d5cd4cc36a9e53f17385839eb7812bebb094d8d9c"
+    },
+    {
+      "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/microshort_s1_open_connection_candidate_20261009/candidate/resource_connection.py.inactive.txt",
+      "bytes": 6949,
+      "sha256": "4e4d9244d2f0dbd0fde36c7c6273cb7c1a901dc895f0d972392e6f2d0d3662b4"
+    }
+  ],
+  "existing_core_pins": [
+    {
+      "path": "candidate/consumer.py.inactive.txt",
+      "bytes": 27987,
+      "sha256": "0cb1aa3cc4593dcb041115baf208c4dd09186fcc75055ddcde53c68086cc6b79"
+    },
+    {
+      "path": "candidate/control.py.inactive.txt",
+      "bytes": 18304,
+      "sha256": "8ec75e57336c4ffa33e61d513076fb1facd1cf90430b1e1ce1c15f9bb57ac00d"
+    },
+    {
+      "path": "candidate/Parent.ps1.inactive.txt",
+      "bytes": 25787,
+      "sha256": "e9f8d366ca9931b84ded5753a560369b72fea8737a77075bc2b80ec771bc56ff"
+    }
+  ]
+}

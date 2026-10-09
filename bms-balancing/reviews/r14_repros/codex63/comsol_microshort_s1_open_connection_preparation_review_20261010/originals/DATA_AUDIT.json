@@ -1,0 +1,66 @@
+{
+  "CODE_MANIFEST.json": {
+    "members_matched": 11,
+    "sha256": "be19764204a4695c9058f565a69c5e09ea528124d4659e9d8f9d1c11fd6f749f"
+  },
+  "reference/r1/CODE_MANIFEST.json": {
+    "members_matched": 21,
+    "sha256": "4ce5c08dbde5153027819b5a651e3995ec82417b4429b9bb0f789082b440f5da"
+  },
+  "java": {
+    "reverse_full_bytes_equal": true,
+    "insert_bytes": 2553,
+    "insert_sha256": "240909a7473e3b1421e6a2c5dba2770aff6b65dce4d201800e009ff1b96c83cd",
+    "fragment_relation": "CRLF-normalized fragment plus exactly one separator LF",
+    "runAll_count_unchanged": true,
+    "inactive_main_unchanged": true
+  },
+  "new_python_ast_and_added_diff": "MATCHED_NO_EXECUTION",
+  "function_spans_matched": 24,
+  "selected_preservation": {
+    "recorded_rows": 33,
+    "before_static_prepackage_identical_by_identity": true,
+    "before_prepackage_bytes_identical": true,
+    "remote_current_observation": false,
+    "external_after_package_hash_reported_by_user": "eab7035bce73a5a141bce45e9635ddea267b7b48f48a798e523a59456cf6306c"
+  },
+  "submitted_static_records": {
+    "count": 74,
+    "all_matched_assertions": true,
+    "not_functional_tests": true
+  },
+  "plan_structure": {
+    "groups": 8,
+    "cases": 50,
+    "engines": {
+      "Python": 44,
+      "Java_helper": 6
+    },
+    "budget_sum": 1350,
+    "proposed_only": true,
+    "note": "Matching counts and hashes does not establish branch reach or functional correctness."
+  },
+  "timing": {
+    "phase_records_arithmetic_matched": true,
+    "delivery_origin_offset_s": "1555.0326433",
+    "external_receipt_total_by_ticks_s": "1631.3320085",
+    "external_package_return_total_by_ticks_s": "1631.396287",
+    "final_check_reported_s": "1684.9520819",
+    "post_check_write_reported_s": "1685.0463578",
+    "post_check_write_delivery_reported_s": "130.0137145",
+    "last_boundary": "After check-file write/readback; BEFORE check-file SHA computation and tool return (corrected user transcription).",
+    "complete_after_transcription_elapsed": "UNOBSERVED",
+    "user_external_records_original_bytes_received": false
+  },
+  "pasted_report": {
+    "bytes": 10679,
+    "sha256": "52ed878f83396538b19a97500b91d376f56a67ee1ca5bc5499027368ff225cff",
+    "normalized_text_matches_packaged_report": true
+  },
+  "reviewer_actions": {
+    "received_code_import_compile_execute": 0,
+    "submitted_tests": 0,
+    "COMSOL_JVM": 0,
+    "reviewer_owned_data_inspection_only": true
+  }
+}

@@ -1,0 +1,637 @@
+SolutionInfo
+JavaScript is disabled on your browser.
+Skip navigation links
+Overview
+Package
+Class
+Tree
+Deprecated
+Index
+Help
+All Classes
+SEARCH:
+JavaScript is disabled on your browser.
+Summary:
+Nested |
+Field |
+Constr |
+Method
+Detail:
+Field |
+Constr |
+Method
+Package com.comsol.model
+Interface SolutionInfo
+All Superinterfaces:
+ModelEntity , PrimitiveModelEntity
+public interface SolutionInfo
+extends ModelEntity
+Solution information.
+Method Summary
+All Methods Instance Methods Abstract Methods Deprecated Methods
+Modifier and Type
+Method
+Description
+int[]
+getIndices ​(int level,
+int[] levels)
+Returns the one based indices available for a given level.
+int[]
+getIndicies ​(int arg0,
+int[] arg1)
+Deprecated.
+Use getIndices(int, int[]) instead.
+int
+getISol ​(int outersolnum,
+double t)
+Returns the index-zero based solution object number for the time value
+t .
+int[]
+getISol ​(int outersolnum,
+int innersolnum)
+Returns the index-zero based solution object number and the index-zero
+based solution number within for the outer and inner solution numbers
+(outersolnum,innersolnum).
+java.lang.String
+getLevelDescription ​(int level)
+Get a descriptive 'value' string for one parametric level.
+java.lang.String[]
+getLevelNames ()
+Get the names of the different levels.
+int
+getLevels ()
+Get the number of levels in this solution.
+int
+getMaxInner ​(int[] outersolnum)
+Returns the maximum number of inner solutions for the given outer
+solution numbers.
+int
+getMaxLevels ()
+The maximal number of levels any solution can have.
+java.lang.String
+getName ​(int level)
+Get the parameter name for the loop level.
+int[]
+getOuterSolnum ()
+Returns the one based indices for the outer solutions.
+java.lang.String[][]
+getPNames ​(int[][] solnums)
+Retrieves parameter names for the parameters associated with the
+solutions specified by one-based solnums.
+java.lang.String[]
+getPNamesOuter ()
+Get the subset of parameter names that are looped by an outer
+parametric sweep.
+java.lang.String[]
+getPUnitsOuter ()
+Get the units for the subset of parameters that are looped by an outer
+parametric sweep.
+double[][]
+getPvals ​(int[][] solnums)
+Retrieves the real part of the parameter values for the parameters
+associated with the solutions specified by one-based solnums.
+double[][]
+getPvalsImag ​(int[][] solnums)
+Retrieves the imaginary part of the parameter values for the
+parameters associated with the solutions specified by one-based
+solnums.
+java.lang.String
+getSol ​(int outersolnum)
+Returns the solver sequence tag for the index one based outer solution
+number outersolnum.
+java.lang.String[]
+getSolDescriptions ​(int level,
+int[] levels,
+boolean paramInclusion,
+boolean indexInclusion)
+Get the descriptions for the solutions in this level, one string for
+each solution.
+int[]
+getSolnum ​(int outersolnum,
+boolean strict)
+Returns the one based inner solution numbers for the outer solution
+number outersolnum.
+int[][]
+getSolnums ​(java.lang.String[] pnames)
+Retrieves a list of one-based tuples (outersolnum, innersolnum) for
+all solutions that match all pnames.
+java.lang.String
+getSolverSequence ​(int solnums)
+Returns the SolverSequence associated with the given one-based
+outersolnum.
+java.lang.String[]
+getSplitLevelDescriptions ()
+Get the description of the different levels, split into an array for
+the case when there is more than one.
+java.lang.String[]
+getSplitLevelNames ()
+Get the names of the different levels, split into an array for the
+case when there is more than one.
+java.lang.String[]
+getSplitLevelUnits ()
+Get the units of the different levels, split into an array for the
+case when there is more than one.
+java.lang.String[]
+getSplitName ​(int level)
+Returns all parameter names for the level.
+java.lang.String[]
+getSplitUnit ​(int level)
+Returns all parameter units for the level.
+double[]
+getUniquePvals ​(java.lang.String pname,
+int[][] solnums)
+Retrieves the real part of all parameter values (without duplicates)
+for the parameter pname in the solutions associated with solnums.
+double[]
+getUniquePvalsImag ​(java.lang.String pname,
+int[][] solnums)
+Retrieves the imaginary part of all imaginary parameter values
+(without duplicates) for the parameter pname in the solutions
+associated with solnums.
+java.lang.String
+getUnit ​(java.lang.String name)
+Get the unit of the given parameter.
+java.lang.String[][]
+getUnits ​(int[][] solnums)
+Retrieves units for the parameters associated with the solutions
+specified by one-based solnums.
+double[][]
+getVals ​(int level,
+int[] levels)
+Returns the parameter values for a level.
+double[][]
+getValsImag ​(int level,
+int[] levels)
+Returns the imaginary part of the parameter values for a level.
+boolean
+isStructured ()
+Returns true unless the underlying solution
+object/objects has a parameter variation that depends on the solution
+process itself.
+boolean
+isValid ()
+Returns true if the underlying data is consistent with
+this info object.
+boolean
+isValid ​(boolean checkNative)
+Returns true if the underlying data is consistent with
+this info object.
+int[][]
+mapToLevel ​(int[] outersolnum,
+int[] innersolnum,
+boolean compressedOutput)
+Returns the level representation of index-one based outer and inner
+solution numbers.
+int[][]
+mapToLevel ​(int[] outersolnum,
+int[] innersolnum,
+boolean compressedOutput,
+boolean checkNative)
+Returns the level representation of index-one based outer and inner
+solution numbers.
+int[][]
+mapToSolnum ​(int[][] levelSetting,
+boolean expandInput)
+Returns the solnum representation of a level setting.
+Methods inherited from interface com.comsol.model. ModelEntity
+active , author , author , comments , comments , dateCreated , dateModified , docMarker , docMarker , help , help , icon , isactive , isActive , label , label , lastModifiedBy , model , model , name , name , resetAuthor , scope , tag , tag , timeCreated , timeModified , version , version
+Methods inherited from interface com.comsol.model. PrimitiveModelEntity
+getContainer , getDisplayString , resolveModelPath
+Method Detail
+getISol
+int getISol​(int outersolnum,
+double t)
+Returns the index-zero based solution object number for the time value
+t . The returned solution number is normally the same (0)
+for all t , but can vary for so called multi-solutions
+(time-dependent adaption or for automatic remeshing).
+Parameters:
+outersolnum - Outer solution number.
+t - Time value.
+Returns:
+Solution object number.
+getISol
+int[] getISol​(int outersolnum,
+int innersolnum)
+Returns the index-zero based solution object number and the index-zero
+based solution number within for the outer and inner solution numbers
+(outersolnum,innersolnum). The solution object number is returned in
+the first position and the corresponding solution number in the
+second. The solution object number is normally the same (0) for all
+innersolnum, but can vary for so called multi-solutions
+(time-dependent adaption or for automatic remeshing).
+Parameters:
+outersolnum - Outer solution number.
+innersolnum - Inner solution number.
+Returns:
+Solution numbers.
+getIndices
+int[] getIndices​(int level,
+int[] levels)
+Returns the one based indices available for a given level. These are
+1,...,N where N is the number of values or tuples for the given
+(externally available ) level. When level = getMaxLevel()-1 the
+indices can be the result of an outer product between levels. When
+the format is unstructured, and when levels is set, then the
+unstructured list of indices is returned. When the format is
+unstructured, and when levels==null or levels.length==0, an error
+will be given if level is such that there are no structured data to
+return (currently level==0 and multiple inner pnames).
+Parameters:
+level - Zero indexed loop level.
+levels - One indexed setting for other loop levels. When the format is
+structured the settings do not matter and this parameter can be null.
+When format is unstructured the array should have the same length as
+getLevels().
+Returns:
+The one based indices available for a given level.
+getIndicies
+@Deprecated
+int[] getIndicies​(int arg0,
+int[] arg1)
+Deprecated.
+Use getIndices(int, int[]) instead.
+getLevelDescription
+java.lang.String getLevelDescription​(int level)
+Get a descriptive 'value' string for one parametric level. For
+example: 'Parameter value (p1 (m), p2 (mm/s)'. Always include units
+(if defined) and the parameter names. Shortens the width for many
+parameters.
+Parameters:
+level - Zero indexed loop level.
+Returns:
+Description of the looplevel level.
+getLevelNames
+java.lang.String[] getLevelNames()
+Get the names of the different levels. Some of these may be a
+concatenated string such as ' p1, p2 '.
+Returns:
+Level names.
+getLevels
+int getLevels()
+Get the number of levels in this solution. The following inequality
+holds: 0 ≤ level < getLevels()
+≤ getMaxLevels() .
+Returns:
+Levels.
+getMaxInner
+int getMaxInner​(int[] outersolnum)
+Returns the maximum number of inner solutions for the given outer
+solution numbers. If outersolnum is null , the maximum is
+taken over all outer solutions.
+Parameters:
+outersolnum - Outer solution numbers.
+Returns:
+Maximum number of inner solutions.
+getMaxLevels
+int getMaxLevels()
+The maximal number of levels any solution can have. The following
+inequality holds: 0 ≤ level <
+getLevels() ≤ getMaxLevels() .
+Returns:
+Maximal level.
+getName
+java.lang.String getName​(int level)
+Get the parameter name for the loop level. This may be a concatenated
+string of several parameters such as foo, bar .
+Parameters:
+level - Zero indexed loop level.
+Returns:
+Parameter name.
+getOuterSolnum
+int[] getOuterSolnum()
+Returns the one based indices for the outer solutions. If there are no
+outer parameters or added corresponding parameter values the array is
+empty.
+Returns:
+The one based indices for the outer solutions.
+getPNames
+java.lang.String[][] getPNames​(int[][] solnums)
+Retrieves parameter names for the parameters associated with the
+solutions specified by one-based solnums. If, for example, solnums[5]
+corresponds to the tuple (2,4), then the 5th entry in the return
+array will be an array containing all parameter names associated with
+outersolnum 2 and innersolnum 4. This function works even if isValid
+returns false.
+Parameters:
+solnums - Array of index one based outer and inner solnums.
+Returns:
+The parameter names for the given solnums.
+getPNamesOuter
+java.lang.String[] getPNamesOuter()
+Get the subset of parameter names that are looped by an outer
+parametric sweep.
+Returns:
+Vector with parameter names.
+getPUnitsOuter
+java.lang.String[] getPUnitsOuter()
+Get the units for the subset of parameters that are looped by an outer
+parametric sweep.
+Returns:
+Vector with parameter units.
+getPvals
+double[][] getPvals​(int[][] solnums)
+Retrieves the real part of the parameter values for the parameters
+associated with the solutions specified by one-based solnums. If, for
+example, solnums[5] corresponds to the tuple (2,4), then the 5th
+entry in the return array will be an array containing the real part
+of all parameter values associated with outersolnum 2 and innersolnum
+4. The order of parameter values is matched with the order of the
+parameter names returned by getPNames(solnums). This function works
+even if isValid returns false.
+Parameters:
+solnums - Array of index one based outer and inner solnums.
+Returns:
+The real part of the parameter values for the given solnums.
+getPvalsImag
+double[][] getPvalsImag​(int[][] solnums)
+Retrieves the imaginary part of the parameter values for the
+parameters associated with the solutions specified by one-based
+solnums. If, for example, solnums[5] corresponds to the tuple (2,4),
+then the 5th entry in the return array will be an array containing
+the imaginary part of all parameter values associated with
+outersolnum 2 and innersolnum 4. The order of the parameter values is
+matched with the order of the parameter names returned by
+getPNames(solnums). This function works even if isValid returns
+false.
+Parameters:
+solnums - Array of index one based outer and inner solnums.
+Returns:
+The imaginary part of the parameter values for the given solnums.
+getSol
+java.lang.String getSol​(int outersolnum)
+Returns the solver sequence tag for the index one based outer solution
+number outersolnum. If the outersolnum is invalid null
+is returned.
+Parameters:
+outersolnum - Index one based outer solution number.
+Returns:
+Solver sequence tag or null .
+getSolDescriptions
+java.lang.String[] getSolDescriptions​(int level,
+int[] levels,
+boolean paramInclusion,
+boolean indexInclusion)
+Get the descriptions for the solutions in this level, one string for
+each solution.
+Parameters:
+level - Zero indexed loop level.
+levels - One indexed setting for other loop levels. When the format is
+structured the settings do not matter and this parameter can be null.
+When format is unstructured the array should have the same length as
+getLevels().
+paramInclusion - Include the parameter in the description.
+indexInclusion - Include the index number in the description.
+Returns:
+Solution descriptions.
+getSolnum
+int[] getSolnum​(int outersolnum,
+boolean strict)
+Returns the one based inner solution numbers for the outer solution
+number outersolnum. If strict is true the inner solnums will be
+returned if the outersolnum is a valid outer solution number and else
+a zero array is returned. If strict is false and if the outersolnum
+does not match, then the solnums for the containing solution object
+is returned.
+Parameters:
+outersolnum - Outer solution number.
+strict - Specifies behaviour when outersolnum does not match.
+Returns:
+Index one based solution numbers.
+getSolnums
+int[][] getSolnums​(java.lang.String[] pnames)
+Retrieves a list of one-based tuples (outersolnum, innersolnum) for
+all solutions that match all pnames. This function works even if
+isValid returns false.
+Parameters:
+pnames - Parameter names that must be matched.
+Returns:
+One-based tuples of the form (outersolnum, innersolnum).
+getSolverSequence
+java.lang.String getSolverSequence​(int solnums)
+Returns the SolverSequence associated with the given one-based
+outersolnum. This function works even if isValid returns false.
+Parameters:
+solnums - Index one based outer solution number.
+Returns:
+SolverSequence tag associated with the given outersolnum.
+getSplitLevelDescriptions
+java.lang.String[] getSplitLevelDescriptions()
+Get the description of the different levels, split into an array for
+the case when there is more than one.
+Returns:
+Split level names.
+getSplitLevelNames
+java.lang.String[] getSplitLevelNames()
+Get the names of the different levels, split into an array for the
+case when there is more than one.
+Returns:
+Split level names.
+getSplitLevelUnits
+java.lang.String[] getSplitLevelUnits()
+Get the units of the different levels, split into an array for the
+case when there is more than one.
+Returns:
+Split level units.
+getSplitName
+java.lang.String[] getSplitName​(int level)
+Returns all parameter names for the level.
+Parameters:
+level - Zero indexed loop level.
+Returns:
+Vector of parameter names.
+getSplitUnit
+java.lang.String[] getSplitUnit​(int level)
+Returns all parameter units for the level.
+Parameters:
+level - Zero indexed loop level.
+Returns:
+Vector of parameter units.
+getUniquePvals
+double[] getUniquePvals​(java.lang.String pname,
+int[][] solnums)
+Retrieves the real part of all parameter values (without duplicates)
+for the parameter pname in the solutions associated with solnums. The
+list of solnums is assumed to be consistent when it comes to
+parameters names and units.The parameter values are considered as
+complex numbers so the returned list may contain duplicate real
+values if the corresponding imaginary values differ. This function
+works even if isValid returns false.
+Parameters:
+pname - Parameter name.
+solnums - Array of index one based outer and inner solnums.
+Returns:
+Array of the real part of the parameter values for pname.
+getUniquePvalsImag
+double[] getUniquePvalsImag​(java.lang.String pname,
+int[][] solnums)
+Retrieves the imaginary part of all imaginary parameter values
+(without duplicates) for the parameter pname in the solutions
+associated with solnums. The list of solnums is assumed to be
+consistent when it comes to parameters names and units. The parameter
+values are considered as complex numbers so the returned list may
+contain duplicate imaginary values if the corresponding real values
+differ. This function works even if isValid returns false.
+Parameters:
+pname - Parameter name.
+solnums - Array of index one based outer and inner solnums.
+Returns:
+Array of the imaginary part of the parameter values for pname.
+getUnit
+java.lang.String getUnit​(java.lang.String name)
+Get the unit of the given parameter.
+Parameters:
+name - Name of parameter.
+Returns:
+Unit of parameter.
+getUnits
+java.lang.String[][] getUnits​(int[][] solnums)
+Retrieves units for the parameters associated with the solutions
+specified by one-based solnums. If, for example, solnums[5]
+corresponds to the tuple (2,4), then the 5th entry in the return
+array will be an array containing all units associated with
+outersolnum 2 and innersolnum 4. The order of units is matched with
+the order of the parameter names returned by getPNames(solnums). This
+function works even if isValid returns false.
+Parameters:
+solnums - Array of outer and inner solnums.
+Returns:
+The parameter units for the given solnums .
+getVals
+double[][] getVals​(int level,
+int[] levels)
+Returns the parameter values for a level. For level <
+getMaxLevels()-1 this is just the values/tuples of the parameters for
+this level. The number of rows is the same as the number of
+parameters for this level. The columns are the tuples. For
+level==getMaxLevels()-1 the values are expanded into tuples for the
+case that levels have been merged. When the format is unstructured,
+and when levels is set, then the unstructured lists of values are
+returned. When the format is unstructured, and when levels==null or
+levels.length==0, an error will be given if level is such that there
+are no structured data to return (currently level==0 and multiple
+inner pnames).
+Parameters:
+level - Zero indexed loop level.
+levels - One indexed setting for other loop levels. When the format is
+structured the settings do not matter and this parameter can be null.
+When format is unstructured the array should have the same length as
+getLevels().
+Returns:
+Parameter values for a level.
+getValsImag
+double[][] getValsImag​(int level,
+int[] levels)
+Returns the imaginary part of the parameter values for a level. For
+level < getMaxLevels()-1 this is just the values/tuples of the
+parameters for this level. The number of rows is the same as the
+number of parameters for this level. The columns are the tuples. For
+level==getMaxLevels()-1 the values are expanded into tuples for the
+case that levels have been merged. When the format is unstructured,
+and when levels is set, then the unstructured lists of values are
+returned. When the format is unstructured, and when levels==null or
+levels.length==0, an error will be given if level is such that there
+are no structured data to return (currently level==0 and multiple
+inner pnames).
+Parameters:
+level - Zero indexed loop level.
+levels - One indexed setting for other loop levels. When the format is
+structured the settings do not matter and this parameter can be null.
+When format is unstructured the array should have the same length as
+getLevels().
+Returns:
+Imaginary part of the parameter values for a level.
+isStructured
+boolean isStructured()
+Returns true unless the underlying solution
+object/objects has a parameter variation that depends on the solution
+process itself. Examples are time-dependent simulations where the
+output is determined by the steps taken by the solver or eigenvalue
+simulations.
+Returns:
+Boolean describing the state.
+isValid
+boolean isValid()
+Returns true if the underlying data is consistent with
+this info object.
+Returns:
+Valid state.
+isValid
+boolean isValid​(boolean checkNative)
+Returns true if the underlying data is consistent with
+this info object.
+Parameters:
+checkNative - If false, the native object is not checked for consistency.
+Returns:
+Valid state.
+mapToLevel
+int[][] mapToLevel​(int[] outersolnum,
+int[] innersolnum,
+boolean compressedOutput)
+Returns the level representation of index-one based outer and inner
+solution numbers. The number of rows of the returned data is equal to
+the number of levels.
+Parameters:
+outersolnum - Outer solution numbers.
+innersolnum - Inner solution numbers.
+compressedOutput - When false , the columns represent the tuples, which is
+the most general format. When true , the level settings
+are made unique on each level. NOTE: When true and if
+the compressed representation does not match the input, an array with
+the right number of rows but each with zero length will be returned.
+Returns:
+Level representation.
+mapToLevel
+int[][] mapToLevel​(int[] outersolnum,
+int[] innersolnum,
+boolean compressedOutput,
+boolean checkNative)
+Returns the level representation of index-one based outer and inner
+solution numbers. The number of rows of the returned data is equal to
+the number of levels.
+Parameters:
+outersolnum - Outer solution numbers.
+innersolnum - Inner solution numbers.
+compressedOutput - When false , the columns represent the tuples, which is
+the most general format. When true , the level settings
+are made unique on each level. NOTE: When true and if
+the compressed representation does not match the input, an array with
+the right number of rows but each with zero length will be returned.
+checkNative - If false, the native object is not checked for consistency.
+Returns:
+Level representation.
+mapToSolnum
+int[][] mapToSolnum​(int[][] levelSetting,
+boolean expandInput)
+Returns the solnum representation of a level setting. The first row is
+the inner and the second the outer solnums. The levelSettings must
+have the same number of rows as there are levels. On each row, index
+one based settings for each level should be given. If expandInput is
+false the number of columns must be the same and the columns are
+treated as level-tuples. If expandInput is true, the number of
+columns can be different and the output is expanded to the outer
+product of each levels setting. .
+Parameters:
+levelSetting - Level settings matrix.
+expandInput - Controls format of levelSetting and of output.
+Returns:
+The solnum representation of a level setting.
+Skip navigation links
+Overview
+Package
+Class
+Tree
+Deprecated
+Index
+Help
+All Classes
+JavaScript is disabled on your browser.
+Summary:
+Nested |
+Field |
+Constr |
+Method
+Detail:
+Field |
+Constr |
+Method

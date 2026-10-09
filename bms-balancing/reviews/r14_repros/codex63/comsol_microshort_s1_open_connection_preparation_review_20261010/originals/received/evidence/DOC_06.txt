@@ -1,0 +1,58 @@
+Adaptive Mesh Refinement (Time-Dependent Adaptation)
+Adaptive Mesh Refinement (Time-Dependent Adaptation)
+The Adaptive Mesh Refinement node ( ) is a solver attribute that handles adaptive mesh refinement together with a Time-Dependent Solver or References for the Solution Operation Nodes and Solvers . The adaptive mesh refinement creates multiple meshes for segments of a time-dependent simulation. Also see The Adaptive Solver Algorithms and Error Estimation .
+General
+The software performs adaptive mesh refinement in one geometry only. Use the Adaptation in geometry list to specify that geometry. If you have specified the geometry in the time-dependent study step, which appears in the Defined by study step list above, this list is not available. Choose User defined from the Defined by study step list to enable the Adaptation in geometry list.
+The following properties appear under Time-interval control :
+•
+The Time-interval length can be controlled manually or automatically. Select Manual (default) or Automatic . If Time-interval length is Automatic , the algorithm strives to assume the given value for the fraction of maximum refinement (default value: 0.2) by controlling the size of the time interval. If this setting is defined by the study step, the Time-interval length list is not available. A value of zero means no refinement of the base mesh and a value of one means refinement everywhere using the maximum element refinements. The shortening and lengthening of the interval is determined by the interval reduction and growth factors described below.
+•
+The value in the Interval growth factor (only available when Time-interval length is Automatic ) field (default value: 2.0) determines how the solver increases the time interval length. A value of 2.0 makes the interval length twice as large as the previous interval length when increased.
+•
+The value in the Interval reduction factor field (default value: 0.5) determines how the solver reduces the time interval length. A value of 0.5 makes the interval length half of the previous interval length when reduced.
+•
+By default, the solver determines the Interval length (unit: s) automatically (only available when Time-interval length is Manual ) using an interval length that gives a total of 10 intervals. The length of the time interval is the simulation time before a refinement of the mesh takes place. Select the checkbox to specify a user-defined time interval length in the field (default value: 0.1 s).
+If the number of intervals (that is, the simulation time divided by the interval length) exceeds 100, the interval length specified here may not be respected. You can enforce such a large number of intervals by prescribing a minimal interval length in the Minimal interval length field (see below).
+•
+By default, the solver determines the Initial interval length (unit: s) automatically (only available when Time-interval length is Automatic ). The length of the initial time interval is the simulation time before the first refinement of the mesh takes place. Select the checkbox to specify a user-defined time interval length in the field (default value: 0.1 s).
+•
+By default, the solver also determines the Minimal interval length (unit: s) automatically. The minimal length of the time interval is the shortest possible simulation time without performing a mesh refinement. Click to select the checkbox to specify a user-defined minimal interval length in the field (default value: 0.01 s). The interval length is reduced according to the Interval reduction factor if the solver fails to converge with the current interval length, in which case the minimal interval length setting can be useful.
+The following properties are available under Mesh element control :
+Use the Adaptation method list to control how to adaptively refine mesh elements. Select one of these methods:
+•
+Longest edge refinement , to make the solver refine only the longest edge of an element by recursively bisecting the longest edge of edge elements that need refinement. This method is less suitable for models with nonsimplex elements. This is the default method.
+•
+Regular refinement , to make the solver refine elements in a regular pattern by bisecting all edges of an element that needs refinement.
+•
+General modification , to use the current mesh as a starting point and modify it by refinements, coarsening, topology modification, and point smoothing. Use the Allow coarsening checkbox (selected by default) to control if mesh coarsening is used. If the mesh contains anisotropic elements (for example, a boundary layer mesh), it is best to disable mesh coarsening to preserve the anisotropic structure. If mesh coarsening is allowed, enter a Maximum coarsening factor (default: 5) if needed.
+•
+Rebuild mesh , to set up a size expression describing the error and rebuild the meshing sequence using the size expression as input. Note that structured meshes, such as mapped and swept meshes, in general are not appropriately refined. This method is not supported on imported meshes. The size of the refined mesh is the minimum of the size of the original mesh (previous refined mesh) and the size defined by the refinement. Specify the Maximum coarsening factor (a value of 3 by default) to scale the refined mesh size in the regions where refinement is not needed.
+If the adaptation method has been specified in the study step, the Adaptation method list is not available.
+For the Longest edge refinement and Regular refinement adaptive mesh refinement methods, you can specify the maximum number of refinements of the mesh elements (default: 2) in the Maximum number of refinements field. The Maximum number of refinements field is only available if the Element selection list (see below) is set to Rough global minimum . If the Time-interval length is set to Automatic , you can also specify a value between 0 and 1 in the Fraction of maximum refinement field (default value: 0.2) for these adaptation methods. The value in the Fraction of maximum refinement field acts as a reference value for a measure of the amount of refinement that the automatic time interval control tries to achieve. In general, a smaller value will lead to shorter adaptation time intervals. See The Adaptive Solver Algorithm — Stationary and Eigenvalue Adaptation for more details on the measure of the amount of refinement. Based on initial data, the Fraction of maximum refinement value can be increased. If the value is increased this information will be printed in the log. Also, for these adaptation methods, select or clear the Convert to simplex mesh checkbox (the default is to not use this conversion).
+Use the Element selection list to specify how the solver should select which elements to refine. Select:
+•
+Rough global minimum to minimize the L 2 norm of the error by refining a fraction of the elements with the largest error in such a way that the total number of elements increases roughly by the factor specified in the accompanying Element count growth factor field. The default value is 1.7, which means that the number of elements increases by roughly 70%.
+•
+Fraction of worst error to refine elements whose local error indicator is larger than a given fraction of the largest local error indicator. Use the accompanying Element fraction field to specify the fraction. The default value is 0.5, which means that the fraction contains the elements with more than 50% of the largest local error.
+•
+Fraction of elements to refine a given fraction of the elements. Use the accompanying Element fraction field to specify the fraction. The default value is 0.5, which means that the solver refines about 50% of the elements with the largest local error indicator.
+Select the Store solution when new meshes are created checkbox if you want to save the solution for all new adaptively refined meshes. If cleared, the adaptive mesh refinement solver will only store solutions and meshes for adaptation time intervals that contain requested output times. This option is useful if you have many time adaptation intervals but are only interested in a few output times.
+Error Estimation
+Use the Error estimate list to control how the error estimate is computed.
+For time-dependent adaptive mesh refinement you need to specify a user-defined error estimate. From Error indicator list, choose Error indicator , which is the default and the only option for time-dependent adaptation. You can add error expressions to the Error expression table below using the Add ( ) button. The error expression can be any expression, including field variables and their derivatives, defined in the domain. This method will adapt the mesh where the error expression becomes large; the adaptation is typically not optimal. Select the Active checkbox for the error expressions that should be part of the error indicator. Use the Move Up ( ), Move Down ( ), and Delete ( ) buttons as needed to rearrange and remove error expressions.
+You can also specify a range of sample points as an array of real numbers between 0 and 1 for the error estimation in the Sample points field. This array controls where to check the error in the next subinterval. For background information to help with this section, see The Adaptive Solver Algorithms and Error Estimation .
+Restart
+After each mesh adaptation, the time integration is restarted and you can control the following time-stepping properties:
+By default, the solver chooses an initial step automatically. Select the Initial step checkbox for manual specification of an initial step.
+Use the Consistent initialization list to control how the solver performs consistent initialization of differential-algebraic systems by selecting Off (the default), On , or Backward Euler .
+Output
+This section contains information about the solution and mesh that contain the results from the adaptive mesh refinement.
+Geometric Entity Selection for Adaptation
+See Common Study Step Settings .
+•
+The Adaptive Solver Algorithms and Error Estimation
+•
+Adaptive Mesh Refinement (Utility Node)
+•
+The Log Window
+Implementing a Point Source : Application Library path COMSOL_Multiphysics/Equation_Based/point_source .

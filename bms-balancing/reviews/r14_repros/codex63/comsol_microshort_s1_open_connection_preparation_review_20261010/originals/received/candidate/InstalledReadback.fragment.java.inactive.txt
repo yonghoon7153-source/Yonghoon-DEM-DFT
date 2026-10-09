@@ -1,0 +1,39 @@
+    // BEGIN S1 OPEN ADDITIVE HELPERS. No call site is activated by this addition.
+    // Installation primary references: DOC_08 (FeatureInfo), DOC_11 (PropFeature),
+    // DOC_12 (NumericalFeature); no compile/API execution has been performed.
+    static void s1OpenProperties(com.comsol.model.PropFeature f, String label) throws Exception {
+        table("s1_open_"+label+"_type.csv", new String[][]{{"label","type"},{label,f.getType()}});
+        for (String key:f.properties()) {
+            // Existing readSetting handles the native value type; unknown types
+            // remain an exception, not an empty/default value or a PASS.
+            table("s1_open_"+label+"_property_"+key+".csv",
+                new String[][]{{"key","value_type","value"},
+                {key,f.getValueType(key),Arrays.deepToString(new Object[]{readSetting(f,key)})}});
+        }
+    }
+    static void s1OpenConfiguredReadback(Model m,String sol,String time) throws Exception {
+        s1OpenProperties(m.study("std1").feature("cdi"),"cdi");
+        s1OpenProperties(m.sol(sol).feature(time),"time");
+        for (String feature:new String[]{"pcb1","pce1","pce2"}) {
+            PhysicsFeature f=m.component("comp1").physics("liion").feature(feature);
+            s1OpenProperties(f,feature);
+            // Documented options include recursive and all; row headers/domain
+            // columns must be observed before assigning actual coefficient names.
+            for (String kind:new String[]{"Expression","Weak","Constraint","Shape"})
+                table("s1_open_equations_"+feature+"_"+kind+".csv",
+                      f.featureInfo("info").getInfoTable(kind,"recursive","all"));
+        }
+    }
+    static void s1OpenStoredGrid(Model m) throws Exception {
+        // AFTER the single separately approved runAll and daudit association only.
+        // This gives stored times; it does not prove post-consistency t0 provenance.
+        double[][] values=evaluate(m,"s1openstoredgrid","EvalGlobal",
+            new String[]{"t"},new String[]{"s"},null);
+        String[][] rows=new String[values[0].length+1][3];
+        rows[0]=new String[]{"stored_index_one_based","time_s","t0_semantics"};
+        for(int i=0;i<values[0].length;i++) rows[i+1]=new String[]{
+            Integer.toString(i+1),Double.toString(values[0][i]),
+            values[0][i]==0.0?"STORED_ZERO_POST_CONSISTENCY_PROOF_OPEN":"POSITIVE_STORED_TIME"};
+        table("s1_open_stored_grid.csv",rows);
+    }
+    // END S1 OPEN ADDITIVE HELPERS

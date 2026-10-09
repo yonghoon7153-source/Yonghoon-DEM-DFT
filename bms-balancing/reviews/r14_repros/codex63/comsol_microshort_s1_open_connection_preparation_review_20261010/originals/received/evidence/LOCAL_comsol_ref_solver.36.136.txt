@@ -1,0 +1,248 @@
+Time-Dependent Solver
+Time-Dependent Solver
+Use the Time-Dependent Solver ( ) to find the solution to time-dependent problems (also called dynamic or unsteady problems) using the implicit time-stepping methods BDF or generalized- α or an explicit method from a family of Runge–Kutta methods as well as an Adams–Bashforth method for solving ordinary differential equations (ODEs). This solver is automatically used when a Time Dependent study is added to the model.
+Also see About the Time-Dependent Solver for information about The Implicit Time-Dependent Solver Algorithms and BDF vs. Generalized-a and Explicit Methods .
+When used under an Optimization Solver node, some of the settings below are instead available in the settings for the Optimization Solver node.
+General
+Use the Defined by study step list to specify if the settings are synchronized with the corresponding study step (the default). If you select User defined (to override the settings defined in the corresponding study node), you can specify the Time unit , Output times , and Relative tolerance settings.
+Use the Time unit list to choose a time unit that is suitable for the time span of the simulation. The default time unit is inherited from the corresponding setting in the study step.
+Use the Output times field to enter a vector of times that define the time span for the simulation using the Range button ( ) if needed (default: range(0,0.1,1) ).
+From the Times to store list, choose one of the following options:
+•
+Choose Output times by interpolation (the default) to store the output times using interpolation from the solver’s time steps.
+•
+Choose Steps taken by solver closest to output times to use the time steps from the solver that are closest to a given output time among all the steps that have passed this output time.
+•
+Choose Steps taken by solver to store the actual time steps from the solver. Specify to store every N th step in the Store every Nth step field (default value: 1; that is, all time steps are stored).
+Use the Relative tolerance field to enter a positive scalar number (default: 0.01). The solver uses this number to control the relative error in each time step. The tolerance may need to be set to a smaller (tighter) value if the simulation results seem unexpected or inconsistent.
+Absolute Tolerance
+See Absolute Tolerance Settings for the Time-Dependent Solver for details about this section.
+Specify an absolute tolerance that is used by the solver to control the absolute error. The tolerance specified here is applied to all variables unless modified per variable by selecting a method other than the global method for a variable.
+Select a Global method to select how the specified absolute tolerance is to be interpreted for the variables that use the global method (by default, all variables use the global method). Select:
+•
+Scaled to let the absolute tolerance be applied to scaled variables.
+•
+Unscaled to let the absolute tolerance be applied to unscaled variables.
+Select a Tolerance method to specify how to enter and compute the absolute tolerance. Select:
+•
+Factor to specify a factor (default: 0.1) in the Tolerance factor field that makes the absolute tolerance proportional to the relative tolerance. With this method, the absolute error does not become dominating when you reduce the relative tolerance so that it is much smaller than the absolute tolerance.
+•
+Manual to specify a value for the absolute tolerance. In the Absolute tolerance field, enter a positive number that is applied to either scaled or unscaled variables.
+Select a Derivative tolerance method to specify how to enter and compute the absolute tolerance for the time derivative. It can be useful in some cases where control of the absolute tolerances for the time derivatives must be more elaborate in order to reflect the character of the model solved. Select:
+•
+Automatic to use an automatic derivative tolerance. The automatic method sets the time derivative factor (see below) to one over the time span.
+•
+Factor to specify a factor (default: 1 Hz) in the Time derivative factor field. The time derivative factor acts between the tolerance on the variables and their time derivatives.
+Select the Update scaled absolute tolerance checkbox as needed. See Absolute Tolerance Settings for the Time-Dependent Solver for details.
+To specify the absolute tolerance individually for a variable, select from the Variables list and modify the corresponding tolerance using the Method list. Select:
+•
+Scaled to apply the specified tolerance to scaled variables.
+•
+Unscaled to apply the specified tolerance to unscaled variables.
+•
+Use global (the default) to apply the tolerance specified for the global tolerance.
+If Scaled or Unscaled is selected as the Method , you can specify the absolute tolerance for the selected variable:
+Select a Tolerance method to specify how to enter and compute the absolute tolerance. Select:
+•
+Factor to specify a factor (default: 0.1) in the Tolerance factor field that makes the absolute tolerance proportional to the relative tolerance. With this method, the absolute error does not become dominating when you reduce the relative tolerance so that it is much smaller than the absolute tolerance.
+•
+Manual to specify values for the absolute tolerances. In the Tolerance field, enter a positive number that is applied to either scaled or unscaled variables. If a problem of wave-equation type is being solved, then by default, the solver chooses a tolerance for the variable. To manually enter a tolerance for a variable’s time derivatives, use the Tolerance for time derivatives field.
+Select a Derivative tolerance method to specify how to enter and compute the absolute tolerance for the time derivative. Select:
+•
+Automatic to use an automatic derivative tolerance. The automatic method sets the time derivative factor to one over the time span.
+•
+Factor to specify a factor (default: 1 Hz) in the Time derivative factor field. The time derivative factor acts between the tolerance on the variable and its time derivative.
+Time Stepping (General Settings)
+From the Solver type list, choose Implicit (the default) to use an implicit time-stepping method or choose Explicit to use an explicit time-stepping method. See BDF vs. Generalized-a and Explicit Methods for more information about these methods.
+Settings For Implicit Time Stepping
+Select an implicit time-stepping Method :
+•
+BDF to use a backward differentiation formula.
+•
+Generalized alpha to use the generalized- α method.
+•
+Initialization only to compute consistent initial values only and then stop. If this option is selected, no other settings are required.
+See Time Stepping (BDF and Generalized Alpha) below for information about additional settings for those time-stepping methods.
+Settings For Explicit Time Stepping
+Select an explicit time-stepping Method :
+•
+Runge–Kutta to use one of the following Runge–Kutta methods from the Runge–Kutta method list: RK34 , Cash–Karp 5 , or Dormand–Prince 5 . See Time Stepping (Runge–Kutta Methods) below for more information about these settings for these Runge–Kutta methods.
+•
+Classical Runge–Kutta to use classical explicit Runge–Kutta (ERK) methods. Explicit classical Runge–Kutta methods of order 1–4 are supported. Runge–Kutta 4 is the default choice for the discontinuous Galerkin method. See Time Stepping (Classical Runge–Kutta) below for more information about these settings for this method.
+•
+Adams–Bashforth 3 to use a 3-step explicit Adams–Bashforth method. The third-order Adams–Bashforth multistep method (AB3) for u t = R ( u ) is
+where u n is the solution at time t n , and k is the time step. The time restriction for the discontinuous Galerkin method for wave problems is directly proportional to the smallest mesh element size. See Time Stepping (Adams–Bashforth 3) below for more information about these settings for this method.
+•
+Adams–Bashforth 3 (local) to use an Adams–Bashforth method using a local time-marching scheme with the Wave Form PDE interface. See Time Stepping (Adams–Bashforth 3, Local) below for more information about these settings for this method.
+For all settings for Steps taken by solver except Strict for the implicit solvers and for all explicit solvers, the Interpolate solution at end time checkbox is selected by default. The solver can then step past the last time in the Output times list, leading to the end time being interpolated. If you clear this checkbox, the solver will not step past the last time in the Output times list, so that the time stepping includes the last time and takes no steps past that time.
+For the explicit solve methods, except Runge–Kutta , use the Mass matrix solver list to select the linear solver to be used within the time-stepping scheme to invert the mass matrix. Available linear solvers appear in the model tree. The default is to use the Direct linear solver. For cheap but approximate inversion of the mass matrix, use the Lumped option. From the Algebraic equations list, choose Solve every N th step and then enter a positive integer in the N field (default: 1), or choose Solve periodically and then enter the period (SI unit: s) in the Period Δ t field (default: 0) for solving algebraic equations. For Classical Runge–Kutta, you can also choose Solve at every stage . For more information, see About the Wave Form PDE Interface . By default, the full problem is solved, which correspond to Solve at every stage for Classical Runge–Kutta and Solve every N th step with N = 1 for Adams–Bashforth 3.
+Select the Check validity of coupled system checkbox to examine whether the coupled system can be solved properly with a time-explicit method. However, this procedure will increase the peak memory usage. If you already know that a coupled system can be solved explicitly, it is reasonable to skip the validity check, especially when the number of DOFs is large.
+Time Stepping (BDF and Generalized Alpha)
+The following settings are available when BDF or Generalized alpha is selected above.
+If a Fully Coupled or Segregated attribute node is attached to a Time node, the settings for the nonlinear systems solved by the time-stepping methods come from that node.
+The Generalized alpha time-stepping method requires a Fully Coupled or Segregated attribute node.
+The BDF time-stepping method can be used without a Fully Coupled or Segregated attribute node. In such a situation, the BDF method uses an internal automatic nonlinear solver.
+Steps Taken by Solver
+To modify how the time-stepping methods select the time steps, choose an option from the Steps taken by solver list. Select:
+•
+Free to let the time-stepping method choose time steps freely. The times specified in the Times field in the General section are not considered when a time step is chosen.
+•
+Intermediate to force the time-stepping method to take at least one step in each subinterval of the times specified in the Times field in the General section.
+•
+Strict to force the time-stepping method to take steps that end at the times specified in the Times field in the General section. The solver takes additional steps in between these times if necessary.
+•
+Manual to override the automatic choice of time step with a manual choice. Manual time stepping can be useful in cases where the automatic time-step selection does not work; for example, in contact problems, rotating machinery, or fluid-structure interaction.
+Manual is available for BDF and Generalized alpha and overrides the local error estimation made in each time step.
+Further options that apply to one or several combinations (as indicated at each bullet) of selections made in the Method and Steps taken by solver lists are:
+If Free , Intermediate , or Strict is selected for the Steps taken by solver :
+•
+Initial step . By default, the solver chooses an initial step automatically. Select the Initial step checkbox for manual specification of an initial step. By default, for generalized- α , the first step is 0.1% of the end time, which can affect your solution so that you do not get the same time-step history up to a certain earlier time when the end time is changed. By default, for BDF, the first step is less than 0.1% of the end time but also fulfills DT · yp norm <= 1/2, where DT is the initial time step and yp norm is the weighted norm of the time derivative vector. Thus, also for this method the end time can affect your solution so that you do not get the same time-step history up to a certain earlier time.This should, however, not change the result appreciably if you use tight enough tolerances for that the automatic time step control. Also, the results of the consistent initialization can be strongly dependent on the initial time step taken, if the initial conditions and the boundary conditions do not match, for example. If needed, you can change the values for the Initial step or the Fraction of initial step for Backward Euler (see below).
+•
+Maximum step constraint . By default, the solver chooses a maximum time step automatically. Select Constant as the maximum step constraint for manual specification of a fixed maximum time step. A constant maximum step constraint is a positive scalar value, which can be an expression that evaluates to a numerical value before entering the solver. The expression can include global parameters. Select Expression as the maximum step constraint for more general expressions of the allowed maximum time step. These expressions are evaluated while solving and can, for instance, depend on the time parameter itself.
+The solver uses the absolute value of the expression for the maximum step constraint.
+Additionally, if BDF is selected as the time stepping Method :
+•
+Maximum BDF order (available if Free , Intermediate , or Strict is selected for the Steps taken by solver ). This setting controls the maximum allowed degree of the interpolating polynomial of the BDF method.
+•
+Minimum BDF order (available if Free , Intermediate , or Strict is selected for the Steps taken by solver ). This setting can be used to prevent the solver from decreasing the order of the BDF method below 2.
+•
+BDF order (available if Manual is selected for the Steps taken by solver ). The order of the BDF can be 1–5 (default order: 2).
+•
+Initial step fraction (available if Manual is selected for the Steps taken by solver ). During the startup of the BDF method, a shorter time step will be used to compensate for the lower order that is used for the first handful of steps. The initial step is a fraction of the first step, and the solver then exponentially increases the step length until the requested step length is reached. This settings and the initial step growth rate below control that startup phase. The default values depend on the selected BDF order.
+•
+Initial step growth rate (available if Manual is selected for the Steps taken by solver ).
+•
+Time step (available if Manual is selected for the Steps taken by solver ). Enter a manual time step specification as a scalar, a vector of times, or an expression containing global variables or parameters in the Time step field using the base unit for time. The relative and absolute tolerances are still used to terminate the algebraic equations at each time step. Also, the requested time step will be reduced if the algebraic solver does not converge.
+•
+Event tolerance . This setting can be used to set the event tolerance (default value: 0.01), which is used for root finding of event conditions when using implicit events; see Explicit Event .
+This does not apply to the startup phase of the simulation.
+•
+Nonlinear controller . Select this checkbox to use a nonlinear controller for more efficient time-step control in the BDF method, especially for highly nonlinear problems such as multiphase flow and turbulence in fluid dynamics. When nonlinear failures occur, the nonlinear controller becomes active and uses a more careful time step control. The nonlinear controller acknowledges that the step size for Newton stability might be smaller than the step size for BDF accuracy.
+If Generalized alpha is selected as the time stepping Method :
+•
+Time step increase delay (available if Free , Intermediate , or Strict is selected for the Steps taken by solver ). Select this checkbox and enter a positive integer in the field to make the solver more restrictive when increasing the time step. This integer is the number of time steps taken by the solver before the increase of the time step is actually performed, from the first step where the error estimator signals that the current step is too small. This setting is useful when there is a natural variation in the solution, like periodicity or quasi-periodicity, which make the time steps vary up and down in size. The generalized- α method does not work well when the time step changes often, so in those situations it is better to damp the changes by a more conservative strategy using this setting. Entering 0 results in the same behavior as clearing the checkbox.
+•
+Time step (available if Manual is selected for the Steps taken by solver ). Enter a manual time step specification as a scalar, a vector of times, or an expression containing global variables or parameters in the Time step field.
+•
+Amplification for high frequency . Enter a number between 0 and 1 to control how much damping of high frequencies the solver provides. A value close to 0 results in efficient damping, while a number close to 1 results in little damping.
+•
+Predictor . Select Linear to use linear extrapolation of the present solution to construct the initial guess for the nonlinear system of equations to be solved at the next time step. Select Constant to use the current solution as initial guess.
+Also, the following settings are available for the BDF and generalized- α methods:
+Algebraic Variable Settings
+Use the Singular mass matrix list to control whether the solver automatically determines if a system includes a differential-algebraic equation or not. Select:
+•
+Maybe to make the solver look for zero-filled rows or columns in the mass matrix as a means of detecting a differential-algebraic equation.
+•
+Yes , if the model includes a differential-algebraic equation where the mass matrix has no zero-filled rows or columns.
+Use the Consistent initialization list to control how the solver performs consistent initialization of differential-algebraic systems. The consistent initialization procedure tries to reconcile inconsistent initial values. In doing that, it takes a small time step (by default, 0.1% of the initial step size). If, for example, you have boundary conditions and initial conditions that do not match, the results of the consistent initialization is strongly dependent on the initial time step taken. Select:
+•
+Backward Euler (the default) to perform consistent initialization using a small artificial step with the backward Euler method. When this is selected, enter a value in the Fraction of initial step for Backward Euler field. This value is a dimensionless quantity that determines the size of the time step for the backward Euler method (in terms of the initial step). Adjusting this value can improve the accuracy of the initialization step but can also affect the startup of some models. The default value is 0.001 (that is, the small backward Euler step size is 0.1% of the initial step size). Also, the Safety factor for Backward Euler is used in the algebraic equation termination during consistent initialization using the Backward Euler method. A larger value gives a stricter condition. The default value of 20 corresponds to the normal behavior for any new time step.
+•
+Off to indicate that the initial values already are consistent, which means that the solver does not modify them.
+•
+On to use a consistent initialization routine that is preferable to Backward Euler for index-1 differential-algebraic equations. This method detect the algebraic and differential variables from the sparsity structure of the damping and mass matrices D and E (see Ref. 6 ).
+Use the Error estimation list to control how to treat algebraic degrees of freedom of a differential-algebraic system when estimating the time discretization error. Select:
+•
+Include algebraic (the default) to include the algebraic degrees of freedom in the error norm.
+•
+Exclude algebraic to exclude the algebraic degrees of freedom from the error norm.
+Excluding algebraic degrees of freedom (which stem from stationary equations in the model) means that the algebraic variables are not included in the error test for the time step. The algebraic variables are still solved for as part of the general system of equations. Excluding the algebraic variables from the error test might have the effect that the constraints (including hidden constraints, which are implicitly part of the equations) are not accurately fulfilled. In general, excluding algebraic degrees of freedom is not recommended when solving DAE systems of index 1, whereas it can be generally encouraged for DAE systems of index 2 (see Ref. 7 ).
+If Backward Euler is selected from the Consistent initialization list, select the Rescale after initialization checkbox if you want to perform a rescaling of the variables. In fluid flow simulations, for example, the scaling for velocity can be problematic because the velocity is often zero at the start but then changes dramatically after a consistent initialization. Rescaling of the velocity and pressure can provide a smoother start and avoid using very small time steps.
+Time Stepping (Runge–Kutta Methods)
+The following settings are available when Runge-Kutta is selected as the time-stepping method:
+Steps Taken by Solver
+To modify how the Runge–Kutta time-stepping methods select the time steps, choose an option from the Steps taken by solver list. Select:
+•
+Free to let the time-stepping method choose time steps freely. The times specified in the Times field in the General section are not considered when a time step is chosen.
+•
+Intermediate to force the time-stepping method to take at least one step in each subinterval of the times specified in the Times field in the General section.
+•
+Strict to force the time-stepping method to take steps that end at the times specified in the Times field in the General section. The solver takes additional steps in between these times if necessary.
+•
+Manual to override the automatic choice of time step with a manual choice.
+For all settings for Steps taken by solver except Strict , the Interpolate solution at end time checkbox is selected by default. The solver can then step past the last time in the Output times list, leading to the end time being interpolated. If you clear this checkbox, the solver will not step past the last time in the Output times list, so that the time stepping includes the last time and takes no steps past that time.
+Further options that apply to one or several combinations (as indicated at each bullet) of selections made in the Runge–Kutta method and Steps taken by solver lists are:
+If Free , Intermediate , or Strict is selected for the Steps taken by solver :
+•
+Initial step . By default the solver chooses an initial step automatically. Select the Initial step checkbox for manual specification of an initial step in the associated text field. This settings is not available for the Cash–Karp 5 method; instead you specify a value of the time step in the Time step field.
+The following settings for Free , Intermediate , and Strict are only available for the Dormand–Prince 5 time-stepping method:
+•
+PI step controller . This setting affects the behavior of the PI (proportional-integral) controller that adds damping on step size changes to avoid choosing too large steps, which would then be rejected. The default value is Quick , which corresponds to a PI controller that responds quickly to changes. The Smooth option sets the controller to react more slowly, giving smoother choices of time steps. You can also turn off the PI controller by selecting Disabled . This setting affects the parameters α and β in the relation . Here S is the safety factor described above, and err i is the estimated error in step i .
+•
+Maximum step constraint . By default, the solver chooses a maximum time step automatically. Select Constant as the maximum step constraint for manual specification of a fixed maximum time step. A constant maximum step constraint is a positive scalar value, which can be an expression that evaluates to a numerical value before entering the solver. The expression can include global parameters. Select Expression as the maximum step constraint for more general expressions of the allowed maximum time step. These expressions are evaluated while solving and can, for instance, depend on the time parameter itself.
+•
+Minimum step size growth ratio and Maximum step size growth ratio . These growth ratio limits restrict how fast the step size may change, enforcing that the values of the ratio h new / h old is within the minimum step size growth ratio (default: 0.2) and the maximum step size growth ratio (default: 10).
+•
+Step size safety factor . The solver multiplies this factor (default: 0.9) to the estimated largest allowed step size to avoid taking too large step sizes when the estimate overshoots.
+If Manual is selected for the Steps taken by solver :
+•
+Time step . Enter a manual time step specification as a scalar, a vector of times, or an expression containing global variables or parameters in the Time step field.
+For all options in the Steps taken by solver list, you can also activate or turn off detection of numerical stiffness using the Stiffness detection checkbox (selected by default). If active, the stiffness detection uses a mechanism to detect if the problem that you solve becomes numerically stiff (which means that an explicit time stepping is required to take very small time steps). If the problem is considered to be stiff, an error appears and the solver stops. You can then switch to another solver that is better suited for stiff problems, such as an implicit BDF method.
+Time Stepping (Classical Runge–Kutta)
+For classical Runge–Kutta, select the order of the time-stepping scheme from the Order list (1–4; default 4).
+Time Stepping (Adams–Bashforth 3)
+This option is intended for the Wave Form PDE interface. See About the Wave Form PDE Interface .
+From the Time steps taken by solver list, choose Manual and then enter a time step in the Time step field, or choose time stepping From expressions , where the latter is useful for the Wave Form PDE. When you use From expression , a list of Cell time scale expressions appear, where you can add such expressions to define the time stepping. For explicit methods, the largest stable time step can automatically be computed from an expression. Some physics interfaces (Wave Form PDE, for example) define such an expression in terms of an estimated maximum wave speed (defined by the interface) and the element size ( wahw.wtc ). Here the element order is also taken into account. The expression should in general represent a local cell time scale. For wave problems, the expression should be proportional to the time it takes for the fastest wave to pass one mesh element. Each expression given is evaluated on all mesh elements. The smallest value (time scale), over all elements and all expressions, dictates the time step used. If you select User defined from the Defined by study step list, you can use the Add button ( ) and the Delete button ( ) to add or delete rows in the list.
+Time Stepping (Adams–Bashforth 3, Local)
+For the Adams-Bashforth 3 (local) method, select Off in the Update time levels list to use the initial local time levels for the complete simulation. Select Manual and then enter a positive number for the Number of time steps between updates at which new local time levels will be computed according to the time-stepping expressions in the From expressions list above. Select Factor and give a positive value for Relative time step change in order to recompute the time levels when the relative time-step change for any time level has changed more than the given value.
+Results while Solving
+This section mirrors what is defined for the Time Dependent node’s Results While Solving section. That is, changes made to the Time Dependent node are reflected here.
+Output
+Use the Times to store list to control at what times the solver stores a solution. Select:
+•
+Specified values to store solutions at the values entered in the Times field in the General section.
+•
+Steps taken by solver to store solutions at the time steps taken by the solver.
+The selection made in the list Steps taken by solver in the Time Stepping section influences the output in this situation.
+•
+Select the Store reaction forces checkbox to compute and store reaction forces in the output. This option is not supported when using any of the Runge–Kutta time-stepping methods.
+•
+The computation of boundary flux variables involves solving a system of equations to obtain a continuous field from nodal flux values. If the Use lumping when computing fluxes checkbox is selected, this system of equations is lumped. The benefits of using this option is that it can avoid certain spurious oscillations in the computed flux field and it is also slightly faster. Lumping is not suitable in 3D for shape functions of order higher than 1. Lumping is not supported when using any of the Runge–Kutta time-stepping methods.
+•
+Select the Store time derivatives checkbox to store time derivatives of the variables solved for in the output. Storing the time derivatives gives more accurate results when evaluating quantities that involve these time derivatives.
+•
+Select the Store solution before and after events checkbox to store two additional solutions every time an implicit or explicit event is triggered. See The Events Interface . This stores the solutions before and after the reinitialization.
+Advanced
+Select the Allow complex numbers checkbox to be able to solve problems that are not automatically determined to be complex-valued in a correct way.
+Select the Use output solution for the time operators checkbox to provide access to the output solutions stored at the time of access through the at , timeint , and similar operators. This access has some limitations. It can, for example, not access times after the last saved solution but still before the current solution time. The at operator. r does not give an error when used before the start time. The timeint operator and other integration operators with start and stop arguments give undefined values when evaluated outside their range during postprocessing. Used while solving, these operators will give errors when used out of range. Used while solving, there are often ways to avoid this error, by either saving the solution more often or by restricting the time steps taken by the solver. However, to use a moving average, for example,
+while solving ( Q depends on the variables solved for), it is not possible to use the timeint operator. The reason is that the upper limit of this integral will always be evaluated for the current time t , and it will always be out of bounds for the output solution object (since it cannot be stored until it has been solved for). You can make it possible to use a time operator for this problem by introducing a new equation
+which can be implemented by using the at operator for the second term on the right side. See Built-In Operators for more information about the at , timeint , and other operators.
+To allow variables not solved for to be reused in a periodic manner, select the Periodic values of variables not solved for checkbox. The specify the periodicity using the Start time and Interval length fields (default unit: s). Together, they define the interval for which the input solution is periodic. When reusing variables for time instants that fall outside the specified time window, a periodic map is applied, allowing these variables to be used for times longer than one period.
+Least-Squares Data
+The section only appears if you are solving a time-dependent least-squares optimization problem.
+Least-squares times are read from least-squares objectives (either a file or a table), and the solver sequence is set up accordingly. If there is a least-squares objective with a time column, the time values are displayed under Times from least-squares objectives . If Use times from least-squares objectives is on (which is the default), the least-squares times are read and merged with the user-defined time list at runtime. The merged data governs the setup of the time-dependent solver.
+General parameter values list here refers to the list of times in the General section above. If Exclude times outside General parameter value lists is on (which is the default), start and end simulation times that you have provided are respected, when merging with time values from least-squares objectives. Time values from objectives outside the user-defined time range are ignored. Otherwise (that is, Exclude times outside General parameter value lists is off), all time values from least-squares objectives are used and merged with the user-defined time list.
+If Use times from least-squares objectives is off, no time values from least-squares objectives are used.
+You can change the default values of Use times from least-squares objectives and Exclude times outside General parameter value lists only if Defined by study step is set to User defined .
+Constants
+In this section you can define constants that can be used as temporary constants in the solver. You can use the constants in the model or to define values for internal solver parameters. These constants overrule any previous definition (for example, from Global Definitions). The constant values are expressions and can, for example, include the range() operator, units, and global expressions. The constant name can be a new or an existing global parameter. The constant is temporary in the sense that it is only defined during the solver run. You cannot override parameters used in the following parts of the model:
+•
+Mesh and geometry
+•
+Selections
+•
+Probes
+•
+Functions
+•
+Materials
+•
+Pairs
+•
+Solver sequences
+•
+Parameter-dependent lists
+Also, the Parametric and Time Dependent solvers overrule any definition of solver constants.
+Constants settings for a solver node do not carry over to postprocessing.
+Some examples of when it can be useful to define constants for a solver:
+•
+When doing more advanced solver sequences, where constants need to be changed between calls (for example, in for-loops).
+•
+When you do not want to change the global definition of a parameter or when you cannot or do not want to use a Parametric Solver feature.
+•
+When you want to define auxiliary parameters that are part of the equations like CFLCMP or niterCMP and where the solver does not define these parameters.
+Click the Add button ( ) to add a constant and then define its name in the Constant name column and its value (a numerical value or parameter expression) in the Constant value column. By default, any defined parameters are first added as the constant names, but you can change the names to define other constants. Click Delete ( ) to remove the selected constant from the list.
+Log
+This section, which is initially empty, contains a log from the time stepping. This log is stored in the MPH-file. Select the Keep warnings in stored log to keep warning messages in this log so that the information in those warnings is available also when reopening the model.
+The Log Window ( The Time-Dependent Solver Log )
+The Black–Scholes Equation : Application Library path COMSOL_Multiphysics/Equation_Based/black_scholes_put

@@ -1,0 +1,892 @@
+PropFeature
+JavaScript is disabled on your browser.
+Skip navigation links
+Overview
+Package
+Class
+Tree
+Deprecated
+Index
+Help
+All Classes
+SEARCH:
+JavaScript is disabled on your browser.
+Summary:
+Nested |
+Field |
+Constr |
+Method
+Detail:
+Field |
+Constr |
+Method
+Package com.comsol.model
+Interface PropFeature
+All Superinterfaces:
+ModelEntity , PrimitiveModelEntity , SelectionContainer , SelectionEntity
+All Known Subinterfaces:
+AppFeature , AppView , BatchFeature , BEMFeature , CapeOpenFeature , ColorTableFeature , CommonFeature , ConfigurationFeature , Coordsys , Cpl , DatasetFeature , EvaluationFeature , EvaluationGroupFeature , ExportFeature , ExternalInterfaceFeature , ExtraDimFeature , FormFeature , FunctionFeature , GeomAttribute , GeomDefeature , GeometryAnalysisFeature , GeomFeature , GeomMeshFeature , GeomProblemFeature , GeomSubsequenceCallFeature , Material , MeshData , MeshExport , MeshFeature , MeshProblemFeature , MethodCallFeature , ModelEntityImage , MultigridLevel , NodeGroup , NumericalBaseFeature , NumericalFeature , OptFeature , ProbeFeature , ProblemFeature , ReducedModel , ReportFeature , ResultBaseFeature , ResultFeature , ResultProblemFeature , ResultSolutionParameterFeature , SavePointSelection , SavePointView , SelectionFeature , ShapeFeature , SolverFeature , SolverProblemFeature , StudyFeature , TableBaseFeature , TableFeature , ThermodynamicsFeature , View , ViewBase , ViewFeature , WorkPlaneFeature
+public interface PropFeature
+extends SelectionEntity
+Base interface for object using properties.
+Method Summary
+All Methods Instance Methods Abstract Methods Deprecated Methods
+Modifier and Type
+Method
+Description
+java.lang.String[]
+getAllowedPropertyValues ​(java.lang.String name)
+Returns the set of allowed values for a property if it is a finite set
+of strings, null otherwise.
+boolean
+getBoolean ​(java.lang.String name)
+Gets boolean property.
+boolean
+getBoolean ​(java.lang.String name,
+int index)
+Gets boolean value from string vector property.
+boolean
+getBoolean ​(java.lang.String name,
+java.lang.String key)
+Gets boolean value from string vector property.
+boolean[]
+getBooleanArray ​(java.lang.String name)
+Gets boolean vector property.
+boolean[][]
+getBooleanMatrix ​(java.lang.String name)
+Gets boolean matrix property.
+double
+getDouble ​(java.lang.String name)
+Gets double property.
+double
+getDouble ​(java.lang.String name,
+int index)
+Gets double value from double vector property.
+double
+getDouble ​(java.lang.String name,
+java.lang.String key)
+Gets double value from double vector property.
+double[]
+getDoubleArray ​(java.lang.String name)
+Gets double vector property.
+double[][]
+getDoubleMatrix ​(java.lang.String name)
+Gets double matrix property.
+int
+getEntryKeyIndex ​(java.lang.String name,
+java.lang.String key)
+Returns the index of a given key in a property.
+java.lang.String[]
+getEntryKeys ​(java.lang.String name)
+Returns the possible entry keys for a given property.
+int
+getInt ​(java.lang.String name)
+Gets integer property.
+int
+getInt ​(java.lang.String name,
+int index)
+Gets integer value from string vector property.
+int
+getInt ​(java.lang.String name,
+java.lang.String key)
+Gets integer value from string vector property.
+int[]
+getIntArray ​(java.lang.String name)
+Gets integer vector property.
+int[][]
+getIntMatrix ​(java.lang.String name)
+Gets integer matrix property.
+java.util.List<?>
+getReferenceArray ​(java.lang.String name)
+Deprecated.
+Shouldn't be used.
+java.lang.String
+getString ​(java.lang.String name)
+Gets string property.
+java.lang.String
+getString ​(java.lang.String name,
+int index)
+Gets string value from string vector property.
+java.lang.String
+getString ​(java.lang.String name,
+int firstIndex,
+int secondIndex)
+Gets string value from string matrix property.
+java.lang.String
+getString ​(java.lang.String name,
+java.lang.String key)
+Gets string value from string vector property.
+java.lang.String[]
+getStringArray ​(java.lang.String name)
+Gets string vector property.
+java.lang.String[][]
+getStringMatrix ​(java.lang.String name)
+Gets string matrix property.
+java.lang.String
+getType ()
+Get the type identifier.
+java.lang.String
+getValueType ​(java.lang.String name)
+Returns the main data type that a property can return.
+boolean
+hasProperty ​(java.lang.String name)
+Returns true if this feature supports a given property.
+boolean
+hasSelection ()
+Test if the object has selection.
+PropFeature
+move ​(java.lang.String name,
+int[] indices,
+int relativeChange)
+Move a number of features in a list.
+PropFeature
+move ​(java.lang.String name,
+int firstIndex,
+int lastIndex,
+int newPosition)
+Move a group of features in a list.
+java.lang.String[]
+properties ()
+Returns the names of all properties.
+PropFeature
+remove ​(java.lang.String name,
+int index)
+Removes an indexed element from an array property.
+PropFeature
+remove ​(java.lang.String name,
+int[] indices)
+Removes indexed elements from an array property.
+AbstractSelection
+selection ​(java.lang.String name)
+Returns the selection stored in a selection property with the given
+name.
+PropFeature
+set ​(java.lang.String name,
+boolean value)
+Sets boolean property value.
+PropFeature
+set ​(java.lang.String name,
+boolean[] value)
+Sets boolean vector property value.
+PropFeature
+set ​(java.lang.String name,
+boolean[][] value)
+Sets boolean matrix property value.
+PropFeature
+set ​(java.lang.String name,
+double value)
+Sets double property value.
+PropFeature
+set ​(java.lang.String name,
+double[] value)
+Sets double vector property value.
+PropFeature
+set ​(java.lang.String name,
+double[][] value)
+Sets double matrix property value.
+PropFeature
+set ​(java.lang.String name,
+int value)
+Sets integer property value.
+PropFeature
+set ​(java.lang.String name,
+int[] value)
+Sets integer vector property value.
+PropFeature
+set ​(java.lang.String name,
+int[][] value)
+Sets integer matrix property value.
+PropFeature
+set ​(java.lang.String name,
+java.lang.String value)
+Sets string property value.
+PropFeature
+set ​(java.lang.String name,
+java.lang.String[] value)
+Sets string vector property value.
+PropFeature
+set ​(java.lang.String name,
+java.lang.String[][] value)
+Sets string matrix property value.
+PropFeature
+setEntry ​(java.lang.String name,
+java.lang.String key,
+boolean value)
+Sets boolean vector property value at specified entry.
+PropFeature
+setEntry ​(java.lang.String name,
+java.lang.String key,
+double value)
+Sets double vector property value at specified entry.
+PropFeature
+setEntry ​(java.lang.String name,
+java.lang.String key,
+int value)
+Sets integer vector property value at specified entry.
+PropFeature
+setEntry ​(java.lang.String name,
+java.lang.String key,
+java.lang.String value)
+Sets string vector property value at specified entry.
+PropFeature
+setIndex ​(java.lang.String name,
+boolean[] value,
+int index)
+Sets boolean matrix property value at index.
+PropFeature
+setIndex ​(java.lang.String name,
+boolean value,
+int vector)
+Sets boolean vector property value at index.
+PropFeature
+setIndex ​(java.lang.String name,
+boolean value,
+int firstIndex,
+int secondIndex)
+Sets boolean matrix property value at index.
+PropFeature
+setIndex ​(java.lang.String name,
+double[] value,
+int index)
+Sets double matrix property value at index.
+PropFeature
+setIndex ​(java.lang.String name,
+double value,
+int index)
+Sets string vector property value at index.
+PropFeature
+setIndex ​(java.lang.String name,
+double value,
+int firstIndex,
+int secondIndex)
+Sets string matrix property value at index.
+PropFeature
+setIndex ​(java.lang.String name,
+int[] value,
+int index)
+Sets integer matrix property value at index.
+PropFeature
+setIndex ​(java.lang.String name,
+int value,
+int index)
+Sets string vector property value at index.
+PropFeature
+setIndex ​(java.lang.String name,
+int value,
+int firstIndex,
+int secondIndex)
+Sets string matrix property value at index.
+PropFeature
+setIndex ​(java.lang.String name,
+java.lang.String[] value,
+int index)
+Sets string matrix property value at index.
+PropFeature
+setIndex ​(java.lang.String name,
+java.lang.String value,
+int vector)
+Sets string vector property value at index.
+PropFeature
+setIndex ​(java.lang.String name,
+java.lang.String value,
+int firstIndex,
+int secondIndex)
+Sets string matrix property value at index.
+Methods inherited from interface com.comsol.model. ModelEntity
+active , author , author , comments , comments , dateCreated , dateModified , docMarker , docMarker , help , help , icon , isactive , isActive , label , label , lastModifiedBy , model , model , name , name , resetAuthor , scope , tag , tag , timeCreated , timeModified , version , version
+Methods inherited from interface com.comsol.model. PrimitiveModelEntity
+getContainer , getDisplayString , resolveModelPath
+Methods inherited from interface com.comsol.model. SelectionEntity
+selection
+Method Detail
+getAllowedPropertyValues
+java.lang.String[] getAllowedPropertyValues​(java.lang.String name)
+Returns the set of allowed values for a property if it is a finite set
+of strings, null otherwise.
+Parameters:
+name - Property name.
+Returns:
+Vector of property values.
+getBoolean
+boolean getBoolean​(java.lang.String name)
+Gets boolean property.
+Parameters:
+name - Property name.
+Returns:
+Property value.
+getBoolean
+boolean getBoolean​(java.lang.String name,
+java.lang.String key)
+Gets boolean value from string vector property.
+Parameters:
+name - Property name.
+key - Index key.
+Returns:
+Property value.
+getBoolean
+boolean getBoolean​(java.lang.String name,
+int index)
+Gets boolean value from string vector property.
+Parameters:
+name - Property name.
+index - Index.
+Returns:
+Property value.
+getBooleanArray
+boolean[] getBooleanArray​(java.lang.String name)
+Gets boolean vector property.
+Parameters:
+name - Property name.
+Returns:
+Property value.
+getBooleanMatrix
+boolean[][] getBooleanMatrix​(java.lang.String name)
+Gets boolean matrix property.
+Parameters:
+name - Property name.
+Returns:
+Property value.
+getDouble
+double getDouble​(java.lang.String name)
+Gets double property.
+Parameters:
+name - Property name.
+Returns:
+Property value.
+getDouble
+double getDouble​(java.lang.String name,
+java.lang.String key)
+Gets double value from double vector property.
+Parameters:
+name - Property name.
+key - Index key.
+Returns:
+Property value.
+getDouble
+double getDouble​(java.lang.String name,
+int index)
+Gets double value from double vector property.
+Parameters:
+name - Property name.
+index - Index.
+Returns:
+Property value.
+getDoubleArray
+double[] getDoubleArray​(java.lang.String name)
+Gets double vector property.
+Parameters:
+name - Property name.
+Returns:
+Property value.
+getDoubleMatrix
+double[][] getDoubleMatrix​(java.lang.String name)
+Gets double matrix property.
+Parameters:
+name - Property name.
+Returns:
+Property value.
+getEntryKeyIndex
+int getEntryKeyIndex​(java.lang.String name,
+java.lang.String key)
+Returns the index of a given key in a property.
+Parameters:
+name - Property name.
+key - Entry key.
+Returns:
+Index in property.
+getEntryKeys
+java.lang.String[] getEntryKeys​(java.lang.String name)
+Returns the possible entry keys for a given property.
+Parameters:
+name - Property name.
+Returns:
+Property entry keys.
+getInt
+int getInt​(java.lang.String name)
+Gets integer property.
+Parameters:
+name - Property name.
+Returns:
+Property value.
+getInt
+int getInt​(java.lang.String name,
+java.lang.String key)
+Gets integer value from string vector property.
+Parameters:
+name - Property name.
+key - Index key.
+Returns:
+Property value.
+getInt
+int getInt​(java.lang.String name,
+int index)
+Gets integer value from string vector property.
+Parameters:
+name - Property name.
+index - Index.
+Returns:
+Property value.
+getIntArray
+int[] getIntArray​(java.lang.String name)
+Gets integer vector property.
+Parameters:
+name - Property name.
+Returns:
+Property value.
+getIntMatrix
+int[][] getIntMatrix​(java.lang.String name)
+Gets integer matrix property.
+Parameters:
+name - Property name.
+Returns:
+Property value.
+getString
+java.lang.String getString​(java.lang.String name)
+Gets string property.
+Parameters:
+name - Property name.
+Returns:
+Property value.
+getString
+java.lang.String getString​(java.lang.String name,
+java.lang.String key)
+Gets string value from string vector property.
+Parameters:
+name - Property name.
+key - Index key.
+Returns:
+Property value.
+getString
+java.lang.String getString​(java.lang.String name,
+int index)
+Gets string value from string vector property.
+Parameters:
+name - Property name.
+index - Index.
+Returns:
+Property value.
+getString
+java.lang.String getString​(java.lang.String name,
+int firstIndex,
+int secondIndex)
+Gets string value from string matrix property.
+Parameters:
+name - Property name.
+firstIndex - First index.
+secondIndex - Second index.
+Returns:
+Property value.
+getStringArray
+java.lang.String[] getStringArray​(java.lang.String name)
+Gets string vector property.
+Parameters:
+name - Property name.
+Returns:
+Property value.
+getStringMatrix
+java.lang.String[][] getStringMatrix​(java.lang.String name)
+Gets string matrix property.
+Parameters:
+name - Property name.
+Returns:
+Property value.
+getType
+java.lang.String getType()
+Get the type identifier.
+Returns:
+Type identifier.
+getValueType
+java.lang.String getValueType​(java.lang.String name)
+Returns the main data type that a property can return.
+Parameters:
+name - The name of the property.
+Returns:
+Data type: Boolean , String ,
+StringArray , StringMatrix ,
+Int , IntArray ,
+Double , DoubleArray ,
+DoubleMatrix ,
+DoubleRowMatrix .
+hasProperty
+boolean hasProperty​(java.lang.String name)
+Returns true if this feature supports a given property.
+Parameters:
+name - Property name.
+Returns:
+true if a feature supports the property.
+hasSelection
+boolean hasSelection()
+Test if the object has selection.
+Returns:
+true if object has a selection.
+move
+PropFeature move​(java.lang.String name,
+int[] indices,
+int relativeChange)
+Move a number of features in a list.
+Parameters:
+name - Property name.
+indices - Indices of features.
+relativeChange - How much to move features.
+Returns:
+Property.
+move
+PropFeature move​(java.lang.String name,
+int firstIndex,
+int lastIndex,
+int newPosition)
+Move a group of features in a list.
+Parameters:
+name - Property name.
+firstIndex - First position in group.
+lastIndex - Last position in group.
+newPosition - Where to move group.
+Returns:
+Property.
+properties
+java.lang.String[] properties()
+Returns the names of all properties.
+Returns:
+Vector of property names.
+remove
+PropFeature remove​(java.lang.String name,
+int index)
+Removes an indexed element from an array property.
+Parameters:
+name - Property name.
+index - Index of element.
+Returns:
+Property.
+remove
+PropFeature remove​(java.lang.String name,
+int[] indices)
+Removes indexed elements from an array property.
+Parameters:
+name - Property name.
+indices - Indices of elements.
+Returns:
+Property.
+selection
+AbstractSelection selection​(java.lang.String name)
+Returns the selection stored in a selection property with the given
+name.
+Parameters:
+name - Selection property name.
+Returns:
+Selection.
+set
+PropFeature set​(java.lang.String name,
+java.lang.String value)
+Sets string property value.
+Parameters:
+name - Property name.
+value - Property value.
+Returns:
+Property.
+set
+PropFeature set​(java.lang.String name,
+java.lang.String[] value)
+Sets string vector property value.
+Parameters:
+name - Property name.
+value - Property value.
+Returns:
+Property.
+set
+PropFeature set​(java.lang.String name,
+java.lang.String[][] value)
+Sets string matrix property value.
+Parameters:
+name - Property name.
+value - Property value.
+Returns:
+Property.
+set
+PropFeature set​(java.lang.String name,
+boolean value)
+Sets boolean property value.
+Parameters:
+name - Property name.
+value - Property value.
+Returns:
+Property.
+set
+PropFeature set​(java.lang.String name,
+boolean[] value)
+Sets boolean vector property value.
+Parameters:
+name - Property name.
+value - Property value.
+Returns:
+Property.
+set
+PropFeature set​(java.lang.String name,
+boolean[][] value)
+Sets boolean matrix property value.
+Parameters:
+name - Property name.
+value - Property value.
+Returns:
+Property.
+set
+PropFeature set​(java.lang.String name,
+double value)
+Sets double property value.
+Parameters:
+name - Property name.
+value - Property value.
+Returns:
+Property.
+set
+PropFeature set​(java.lang.String name,
+double[] value)
+Sets double vector property value.
+Parameters:
+name - Property name.
+value - Property value.
+Returns:
+Property.
+set
+PropFeature set​(java.lang.String name,
+double[][] value)
+Sets double matrix property value.
+Parameters:
+name - Property name.
+value - Property value.
+Returns:
+Property.
+set
+PropFeature set​(java.lang.String name,
+int value)
+Sets integer property value.
+Parameters:
+name - Property name.
+value - Property value.
+Returns:
+Property.
+set
+PropFeature set​(java.lang.String name,
+int[] value)
+Sets integer vector property value.
+Parameters:
+name - Property name.
+value - Property value.
+Returns:
+Property.
+set
+PropFeature set​(java.lang.String name,
+int[][] value)
+Sets integer matrix property value.
+Parameters:
+name - Property name.
+value - Property value.
+Returns:
+Property.
+setEntry
+PropFeature setEntry​(java.lang.String name,
+java.lang.String key,
+java.lang.String value)
+Sets string vector property value at specified entry.
+Parameters:
+name - Property name.
+key - Index key.
+value - Property value.
+Returns:
+Property.
+setEntry
+PropFeature setEntry​(java.lang.String name,
+java.lang.String key,
+boolean value)
+Sets boolean vector property value at specified entry.
+Parameters:
+name - Property name.
+key - Index key.
+value - Property value.
+Returns:
+Property.
+setEntry
+PropFeature setEntry​(java.lang.String name,
+java.lang.String key,
+double value)
+Sets double vector property value at specified entry.
+Parameters:
+name - Property name.
+key - Index key.
+value - Property value.
+Returns:
+Property.
+setEntry
+PropFeature setEntry​(java.lang.String name,
+java.lang.String key,
+int value)
+Sets integer vector property value at specified entry.
+Parameters:
+name - Property name.
+key - Index key.
+value - Property value.
+Returns:
+Property.
+setIndex
+PropFeature setIndex​(java.lang.String name,
+java.lang.String value,
+int vector)
+Sets string vector property value at index.
+Parameters:
+name - Property name.
+value - Property value.
+vector - Index in vector.
+Returns:
+Property.
+setIndex
+PropFeature setIndex​(java.lang.String name,
+java.lang.String[] value,
+int index)
+Sets string matrix property value at index.
+Parameters:
+name - Property name.
+value - Property value.
+index - Index in matrix.
+Returns:
+Property.
+setIndex
+PropFeature setIndex​(java.lang.String name,
+boolean value,
+int vector)
+Sets boolean vector property value at index.
+Parameters:
+name - Property name.
+value - Property value.
+vector - Index in vector.
+Returns:
+Property.
+setIndex
+PropFeature setIndex​(java.lang.String name,
+boolean[] value,
+int index)
+Sets boolean matrix property value at index.
+Parameters:
+name - Property name.
+value - Property value.
+index - Index in matrix.
+Returns:
+Property.
+setIndex
+PropFeature setIndex​(java.lang.String name,
+double value,
+int index)
+Sets string vector property value at index.
+Parameters:
+name - Property name.
+value - Property value.
+index - Index in vector.
+Returns:
+Property.
+setIndex
+PropFeature setIndex​(java.lang.String name,
+double[] value,
+int index)
+Sets double matrix property value at index.
+Parameters:
+name - Property name.
+value - Property value.
+index - Index in matrix.
+Returns:
+Property.
+setIndex
+PropFeature setIndex​(java.lang.String name,
+int value,
+int index)
+Sets string vector property value at index.
+Parameters:
+name - Property name.
+value - Property value.
+index - Index in vector.
+Returns:
+Property.
+setIndex
+PropFeature setIndex​(java.lang.String name,
+int[] value,
+int index)
+Sets integer matrix property value at index.
+Parameters:
+name - Property name.
+value - Property value.
+index - Index in matrix.
+Returns:
+Property.
+setIndex
+PropFeature setIndex​(java.lang.String name,
+java.lang.String value,
+int firstIndex,
+int secondIndex)
+Sets string matrix property value at index.
+Parameters:
+name - Property name.
+value - Property value.
+firstIndex - First index in matrix.
+secondIndex - Second index in matrix.
+Returns:
+Property.
+setIndex
+PropFeature setIndex​(java.lang.String name,
+boolean value,
+int firstIndex,
+int secondIndex)
+Sets boolean matrix property value at index.
+Parameters:
+name - Property name.
+value - Property value.
+firstIndex - First index in matrix.
+secondIndex - Second index in matrix.
+Returns:
+Property.
+setIndex
+PropFeature setIndex​(java.lang.String name,
+double value,
+int firstIndex,
+int secondIndex)
+Sets string matrix property value at index.
+Parameters:
+name - Property name.
+value - Property value.
+firstIndex - First index in matrix.
+secondIndex - Second index in matrix.
+Returns:
+Property.
+setIndex
+PropFeature setIndex​(java.lang.String name,
+int value,
+int firstIndex,
+int secondIndex)
+Sets string matrix property value at index.
+Parameters:
+name - Property name.
+value - Property value.
+firstIndex - First index in matrix.
+secondIndex - Second index in matrix.
+Returns:
+Property.
+getReferenceArray
+@Deprecated
+java.util.List<?> getReferenceArray​(java.lang.String name)
+Deprecated.
+Shouldn't be used.
+Skip navigation links
+Overview
+Package
+Class
+Tree
+Deprecated
+Index
+Help
+All Classes
+JavaScript is disabled on your browser.
+Summary:
+Nested |
+Field |
+Constr |
+Method
+Detail:
+Field |
+Constr |
+Method

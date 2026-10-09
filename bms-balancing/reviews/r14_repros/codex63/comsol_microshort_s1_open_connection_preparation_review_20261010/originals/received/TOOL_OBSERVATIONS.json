@@ -1,0 +1,24 @@
+{
+  "observations": [
+    {
+      "kind": "input_arrival",
+      "detail": "Initial exact Desktop lookup absent; after attachment same absolute path matched expected SHA; no network/fallback."
+    },
+    {
+      "kind": "read_only_search_errors",
+      "chunks": [
+        "5a0a62",
+        "04c870",
+        "0b7838"
+      ],
+      "detail": "Nonexistent guessed documentation/plan paths and unexpanded rg glob operands; later located real local paths. No fixed source identity mismatch, candidate test, or native call. Error output remains in conversation tool records."
+    },
+    {
+      "kind": "no_match_search",
+      "detail": "Some rg exit1 means no textual hit, not native failure."
+    }
+  ],
+  "functional_test_first_failure": null,
+  "functional_tests_run": 0,
+  "native_calls": 0
+}

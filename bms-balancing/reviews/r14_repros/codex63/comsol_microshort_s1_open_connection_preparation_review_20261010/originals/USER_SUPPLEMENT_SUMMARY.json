@@ -1,0 +1,27 @@
+{
+  "kind": "REVIEWER_SUMMARY_OF_USER_SUPPLIED_CHAT_TRANSCRIPT_NOT_ORIGINAL_SIDECAR_BYTES",
+  "recipient_in_original_record": null,
+  "archive_bytes": 1929576,
+  "archive_sha256_independently_matched": "32cbb6ee5b8885a645da762154dab38d8f67ef4c7f97b5b4bc9c2ecd5fdd6f5c",
+  "package_manifest_bytes": 13318,
+  "package_manifest_sha256_independently_matched": "63c27d8783fd0c61111cd7c72f93b93a48fe6599ecd56f69680893dea87c7019",
+  "code_manifest_bytes": 2215,
+  "code_manifest_sha256_independently_matched": "be19764204a4695c9058f565a69c5e09ea528124d4659e9d8f9d1c11fd6f749f",
+  "reported_external_files": [
+    {"file":"DELIVERY_RECEIPT.json","bytes":1857,"sha256":"6cc7159ff6ca319e384817067bd87182d0ec3801d909c7d4e670a1f2fdd2459e"},
+    {"file":"FINAL_PACKAGE_TOOL_RETURN.json","bytes":1440,"sha256":"98d72e05a9794bb120ff01470b3285fddf3895e49111e09f30041e6cd6ce8cf8"},
+    {"file":"PACKAGE_STDOUT.json","bytes":1119,"sha256":"2d5e79b1090e8cfcba45666a411c8a9300abe7666ce9159646bac67854e7b8c7"},
+    {"file":"SELECTED_SOURCES_AFTER_PACKAGE.json","bytes":8713,"sha256":"eab7035bce73a5a141bce45e9635ddea267b7b48f48a798e523a59456cf6306c"},
+    {"file":"FINAL_SUBMISSION_CHECK.json","bytes":2776,"sha256":"dcd118a541b601786f3f03b08be00246b25b51e5e352cf5b900781fc8edf4b9e"}
+  ],
+  "reported_package_return": {"chunk_id":"d512d1","rc":0,"wall_time_s":7.2067983,"snapshot_s":1631.396287,"delivery_s":76.3636437},
+  "reported_final_check_return": {"chunk_id":"7bef4b","rc":0,"wall_time_s":6.7977399,"recorded_check_snapshot_s":1684.9520819,"post_check_write_snapshot_s":1685.0463578,"delivery_s":130.0137145},
+  "corrected_boundary": "Post-check write/readback; BEFORE computing displayed check-file SHA and before tool return. HASH in original phase label is too broad. Subsequent transcription write/return excluded.",
+  "wall_times_added_to_snapshots": false,
+  "reported_folder_bytes": 4949132,
+  "folder_limit_bytes": 52428800,
+  "native_ready": false,
+  "reported_functional_sessions": 0,
+  "reported_COMSOL_JVM_compile_solve": 0,
+  "native_or_implementation_authority_inferred_from_transcript": false
+}
