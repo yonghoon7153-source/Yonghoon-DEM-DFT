@@ -1,0 +1,277 @@
+base) [yonghoon@ibb-master ~]$ B=~/dem_test/ps45
+(base) [yonghoon@ibb-master ~]$ for C in ps_0_10_r45 ps_3_7_r45 ps_5_5_r45 ps_7_3_r45 ps_10_0_r45; do
+>   D=$B/$C; echo "████ $C"
+>   echo "ⓐ 폴더: $(ls -d $B/${C}* 2>/dev/null | tr '\n' ' ')"
+>   echo "ⓑ 체크포인트 (step 종류 · 마지막 여섯):"; ls $D/restart_$C/ 2>/dev/null | sed -nE 's/^restart_([a-z_]+)_([0-9]+)\.bin$/   \2 \1/p' | sort -n | tail -6
+>   L=$(ls -t $D/input_${C}*.liggghts 2>/dev/null | head -1); echo "ⓒ 마지막 덱: $L"
+>   [ -n "$L" ] && grep -n -E "^(read_restart|restart |write_restart|fix +(top_mesh|damp|gravi) |unfix +damp|run )" $L
+>   echo "ⓓ 로그 조각 (최근 넷 · 첫 → 끝 thermo step):"
+>   for o in $(ls -t $B/logs/output_${C}_*.out 2>/dev/null | head -4); do awk -v f=$(basename $o) '$1~/^[0-9]+$/&&NF>=4{if(a=="")a=$1; z=$1} /Simulation Finished/{e="Finished"} END{print "   ", f, a, "→", z, e}' $o; done
+>   O=$(ls -t $B/logs/output_${C}_*.out 2>/dev/null | head -1)
+>   if [ -n "$O" ]; then
+>     grep -a -m1 -E "^LIGGGHTS \(" $O
+>     awk '/^====== PHASE 4/{p=1} p&&$1~/^[0-9]+$/&&NF>=5{if(!f){print "    PHASE4 첫 줄:", $0; f=1}; l=$0} END{print "    마지막 줄:", l}' $O
+>     awk '/^====== PHASE 4/{p=1} p&&$1~/^[0-9]+$/&&NF>=5{n++; s[n]=$1; k[n]=$3; q[n]=$5} END{if(n<1)exit; m=(n>25)?n-24:1; a=1e30;b=-1e30;c=1e30;d=-1e30;t=0; for(i=m;i<=n;i++){if(k[i]<a)a=k[i]; if(k[i]>b)b=k[i]; if(q[i]<c)c=q[i]; if(q[i]>d)d=q[i]; t+=q[i]}; printf "    이완 끝 %d 줄 (%s–%s): KE %g–%g J · 판 %.2f–%.2f (평균 %.2f) MPa\n", n-m+1, s[m], s[n], a, b, c*1000, d*1000, t/(n-m+1)*1000}' $O
+>   fi
+>   S=$(ls $D/restart_$C/ 2>/dev/null | sed -nE 's/^restart_[a-z_]+_([0-9]+)\.bin$/\1/p' | sort -n | tail -1)
+>   echo "ⓔ 마지막 체크포인트 step $S 의 파일 (크기 · 시각 · sha256):"
+>   for f in $(ls $D/restart_$C/restart_*_$S.bin 2>/dev/null) $D/post_$C/atom_$S.liggghts $D/post_$C/contact_$S.liggghts $D/post_$C/mesh_$S.stl; do
+>     if [ -e "$f" ]; then ls -la --time-style=+%F_%T "$f" | awk '{print "   ", $5, $6, $7}'; sha256sum "$f" | sed 's/^/    /'; else echo "    없음: $f"; fi
+>   done
+>   echo "ⓕ 용량: $(du -sh $D 2>/dev/null | cut -f1)"
+> done
+████ ps_0_10_r45
+ⓐ 폴더: /home/yonghoon/dem_test/ps45/ps_0_10_r45 /home/yonghoon/dem_test/ps45/ps_0_10_r45_res.tar.gz
+ⓑ 체크포인트 (step 종류 · 마지막 여섯):
+   2950000 compress
+   3000000 compress
+   3050000 compress
+   3100000 compress
+   3150000 compress
+   3200000 compress
+
+ⓒ 마지막 덱: /home/yonghoon/dem_test/ps45/ps_0_10_r45/input_ps_0_10_r45_r6.liggghts
+46:read_restart    restart_ps_0_10_r45/restart_compress_1600000.bin
+113:fix gravi all gravity 9.81 vector 0.0 0.0 -1.0
+114:fix damp all viscous 0.5
+116:fix top_mesh all mesh/surface/stress file plate_ps_0_10_r45_r6.stl type 1 scale 1.0 reference_point 0 0 0
+132:restart 50000 restart_ps_0_10_r45/restart_compress_*.bin
+144:unfix damp
+145:fix damp all viscous 1.0e-5
+152:run 100000
+ⓓ 로그 조각 (최근 넷 · 첫 → 끝 thermo step):
+    output_ps_0_10_r45_r6_198527.out 5 → 3210000 Finished
+    output_ps_0_10_r45_r5_198513.out 5 → 1608000
+    output_ps_0_10_r45_r5_198506.out 5 → 5
+    output_ps_0_10_r45_r4_198466.out 5 → 215000
+LIGGGHTS (Version LIGGGHTS-PUBLIC 3.8.0, compiled 2026-03-26-14:37:06 by yonghoon, git commit 3d5c00f20519e6bb6eb6756f51f1ad36564e649d)
+    PHASE4 첫 줄:  3110000   163349  1.7499723e-05              0     0.35242556
+    마지막 줄:  3210000   163348  2.7080924e-07      9948.0526     0.15639207
+    이완 끝 25 줄 (3186000–3210000): KE 1.10013e-07–2.31241e-06 J · 판 156.29–157.00 (평균 156.56) MPa
+ⓔ 마지막 체크포인트 step 3200000 의 파일 (크기 · 시각 · sha256):
+    81026211 2026-09-24_16:41:53 /home/yonghoon/dem_test/ps45/ps_0_10_r45/restart_ps_0_10_r45/restart_compress_3200000.bin
+    fb3c3f4c3da75b80a19a6eb21e216795b888b44ef86aca949b3d9ed80ad0727a  /home/yonghoon/dem_test/ps45/ps_0_10_r45/restart_ps_0_10_r45/restart_compress_3200000.bin
+    21738360 2026-09-24_16:41:51 /home/yonghoon/dem_test/ps45/ps_0_10_r45/post_ps_0_10_r45/atom_3200000.liggghts
+    b396305190656fa4007061d62a18cd50b91621b027585ee19c621fa0bc4c133d  /home/yonghoon/dem_test/ps45/ps_0_10_r45/post_ps_0_10_r45/atom_3200000.liggghts
+    147202813 2026-09-24_16:41:52 /home/yonghoon/dem_test/ps45/ps_0_10_r45/post_ps_0_10_r45/contact_3200000.liggghts
+    7430dd36a882408d62768e65371dbe99208c0db8651b7474f1101292a7df6dd8  /home/yonghoon/dem_test/ps45/ps_0_10_r45/post_ps_0_10_r45/contact_3200000.liggghts
+    349 2026-09-24_16:41:51 /home/yonghoon/dem_test/ps45/ps_0_10_r45/post_ps_0_10_r45/mesh_3200000.stl
+    9ab7e8a091853fb7454520af75d615116afe20c52e0dceb895c017f7b78ccae7  /home/yonghoon/dem_test/ps45/ps_0_10_r45/post_ps_0_10_r45/mesh_3200000.stl
+ⓕ 용량: 18G
+████ ps_3_7_r45
+ⓐ 폴더: /home/yonghoon/dem_test/ps45/ps_3_7_r45 /home/yonghoon/dem_test/ps45/ps_3_7_r45_res.tar.gz
+ⓑ 체크포인트 (step 종류 · 마지막 여섯):
+   2950000 compress
+   3000000 compress
+   3050000 compress
+   3100000 compress
+   3150000 compress
+   3200000 compress
+ⓒ 마지막 덱: /home/yonghoon/dem_test/ps45/ps_3_7_r45/input_ps_3_7_r45_r6.liggghts
+46:read_restart    restart_ps_3_7_r45/restart_compress_1850000.bin
+113:fix gravi all gravity 9.81 vector 0.0 0.0 -1.0
+114:fix damp all viscous 0.5
+116:fix top_mesh all mesh/surface/stress file plate_ps_3_7_r45_r6.stl type 1 scale 1.0 reference_point 0 0 0
+132:restart 50000 restart_ps_3_7_r45/restart_compress_*.bin
+144:unfix damp
+145:fix damp all viscous 1.0e-5
+152:run 100000
+ⓓ 로그 조각 (최근 넷 · 첫 → 끝 thermo step):
+    output_ps_3_7_r45_r6_198528.out 2 → 3215000 Finished
+    output_ps_3_7_r45_r5_198514.out 2 → 1856000
+    output_ps_3_7_r45_r5_198507.out 2 → 2
+    output_ps_3_7_r45_r4_198467.out 2 → 212000
+LIGGGHTS (Version LIGGGHTS-PUBLIC 3.8.0, compiled 2026-03-26-14:37:06 by yonghoon, git commit 3d5c00f20519e6bb6eb6756f51f1ad36564e649d)
+    PHASE4 첫 줄:  3115000   162095   1.774842e-05              0     0.36556842
+    마지막 줄:  3215000   162093  1.7819373e-07      11479.539     0.15813603
+    이완 끝 25 줄 (3191000–3215000): KE 7.22292e-08–1.84085e-06 J · 판 157.94–158.67 (평균 158.20) MPa
+ⓔ 마지막 체크포인트 step 3200000 의 파일 (크기 · 시각 · sha256):
+    81135207 2026-09-24_17:53:10 /home/yonghoon/dem_test/ps45/ps_3_7_r45/restart_ps_3_7_r45/restart_compress_3200000.bin
+    8d6d2a3c5425413695c03f3195baed3c8c24fc8593bdd890b1aec1f47e3d74d6  /home/yonghoon/dem_test/ps45/ps_3_7_r45/restart_ps_3_7_r45/restart_compress_3200000.bin
+    21745687 2026-09-24_17:53:08 /home/yonghoon/dem_test/ps45/ps_3_7_r45/post_ps_3_7_r45/atom_3200000.liggghts
+    3d4b199372b370122619152da1c93d3f5ee13b0656c38c86bcc8f74f49216877  /home/yonghoon/dem_test/ps45/ps_3_7_r45/post_ps_3_7_r45/atom_3200000.liggghts
+    148584847 2026-09-24_17:53:10 /home/yonghoon/dem_test/ps45/ps_3_7_r45/post_ps_3_7_r45/contact_3200000.liggghts
+    5bc44e7e354692cf91c36448df7397aec25460cda32a5e474d0de9cbcd3358ea  /home/yonghoon/dem_test/ps45/ps_3_7_r45/post_ps_3_7_r45/contact_3200000.liggghts
+    349 2026-09-24_17:53:08 /home/yonghoon/dem_test/ps45/ps_3_7_r45/post_ps_3_7_r45/mesh_3200000.stl
+    3e6fdfc782307323142b5a8132aa9a8c95bb0e86db5ea6c4c332f50b3236fbd1  /home/yonghoon/dem_test/ps45/ps_3_7_r45/post_ps_3_7_r45/mesh_3200000.stl
+ⓕ 용량: 18G
+████ ps_5_5_r45
+ⓐ 폴더: /home/yonghoon/dem_test/ps45/ps_5_5_r45 /home/yonghoon/dem_test/ps45/ps_5_5_r45_res.tar.gz
+ⓑ 체크포인트 (step 종류 · 마지막 여섯):
+   2650000 compress
+   2700000 compress
+   2750000 compress
+   2800000 compress
+   2850000 compress
+   2900000 compress
+ⓒ 마지막 덱: /home/yonghoon/dem_test/ps45/ps_5_5_r45/input_ps_5_5_r45_r6.liggghts
+46:read_restart    restart_ps_5_5_r45/restart_compress_1700000.bin
+113:fix gravi all gravity 9.81 vector 0.0 0.0 -1.0
+114:fix damp all viscous 0.5
+116:fix top_mesh all mesh/surface/stress file plate_ps_5_5_r45_r6.stl type 1 scale 1.0 reference_point 0 0 0
+132:restart 50000 restart_ps_5_5_r45/restart_compress_*.bin
+144:unfix damp
+145:fix damp all viscous 1.0e-5
+152:run 100000
+ⓓ 로그 조각 (최근 넷 · 첫 → 끝 thermo step):
+    output_ps_5_5_r45_r6_198523.out 5 → 2935000 Finished
+    output_ps_5_5_r45_r5_198510.out 5 → 1710001
+    output_ps_5_5_r45_r5_198508.out 5 → 5
+    output_ps_5_5_r45_r4_198468.out 5 → 215000
+LIGGGHTS (Version LIGGGHTS-PUBLIC 3.8.0, compiled 2026-03-26-14:37:06 by yonghoon, git commit 3d5c00f20519e6bb6eb6756f51f1ad36564e649d)
+    PHASE4 첫 줄:  2835000   161258  1.7635568e-05              0     0.35984668
+    마지막 줄:  2935000   161257  1.5742697e-07      11143.247     0.16263685
+    이완 끝 25 줄 (2911000–2935000): KE 6.357e-08–1.01417e-06 J · 판 162.55–163.05 (평균 162.72) MPa
+ⓔ 마지막 체크포인트 step 2900000 의 파일 (크기 · 시각 · sha256):
+    81137307 2026-09-24_03:41:52 /home/yonghoon/dem_test/ps45/ps_5_5_r45/restart_ps_5_5_r45/restart_compress_2900000.bin
+    ba018f5fd9ef023316d029be6ea52315d1812ef90c1c3c872bcbd9653216fb42  /home/yonghoon/dem_test/ps45/ps_5_5_r45/restart_ps_5_5_r45/restart_compress_2900000.bin
+    21450142 2026-09-24_03:41:50 /home/yonghoon/dem_test/ps45/ps_5_5_r45/post_ps_5_5_r45/atom_2900000.liggghts
+    72548a25f0be39714995d44f4e1aa673c858726beb9f921d8db764bb5536784a  /home/yonghoon/dem_test/ps45/ps_5_5_r45/post_ps_5_5_r45/atom_2900000.liggghts
+    148674925 2026-09-24_03:41:52 /home/yonghoon/dem_test/ps45/ps_5_5_r45/post_ps_5_5_r45/contact_2900000.liggghts
+    9fc5a939cc17bfd29a8815cd765af537a763a34ae6531540c748a5177e791b13  /home/yonghoon/dem_test/ps45/ps_5_5_r45/post_ps_5_5_r45/contact_2900000.liggghts
+    349 2026-09-24_03:41:50 /home/yonghoon/dem_test/ps45/ps_5_5_r45/post_ps_5_5_r45/mesh_2900000.stl
+    673146522d602408930ea2fc4f9becbf8e833874f0f5858e7bc138426213fa2b  /home/yonghoon/dem_test/ps45/ps_5_5_r45/post_ps_5_5_r45/mesh_2900000.stl
+ⓕ 용량: 16G
+████ ps_7_3_r45
+ⓐ 폴더: /home/yonghoon/dem_test/ps45/ps_7_3_r45 /home/yonghoon/dem_test/ps45/ps_7_3_r45_res.tar.gz
+ⓑ 체크포인트 (step 종류 · 마지막 여섯):
+   2950000 compress
+   3000000 compress
+   3050000 compress
+   3100000 compress
+   3150000 compress
+   3200000 compress
+ⓒ 마지막 덱: /home/yonghoon/dem_test/ps45/ps_7_3_r45/input_ps_7_3_r45_r8.liggghts
+46:read_restart    restart_ps_7_3_r45/restart_compress_2650000.bin
+113:fix gravi all gravity 9.81 vector 0.0 0.0 -1.0
+114:fix damp all viscous 0.5
+116:fix top_mesh all mesh/surface/stress file plate_ps_7_3_r45_r8.stl type 1 scale 1.0 reference_point 0 0 0
+132:restart 50000 restart_ps_7_3_r45/restart_compress_*.bin
+144:unfix damp
+145:fix damp all viscous 1.0e-5
+152:run 100000
+ⓓ 로그 조각 (최근 넷 · 첫 → 끝 thermo step):
+    output_ps_7_3_r45_r8_220537.out 6 → 3225000 Finished
+    output_ps_7_3_r45_r7_216115.out 3 → 2690000
+    output_ps_7_3_r45_r6_198529.out 2 → 2421000
+    output_ps_7_3_r45_r5_198515.out 2 → 1655001
+LIGGGHTS (Version LIGGGHTS-PUBLIC 3.8.0, compiled 2026-03-26-14:37:06 by yonghoon, git commit 3d5c00f20519e6bb6eb6756f51f1ad36564e649d)
+    PHASE4 첫 줄:  3125000   160420  1.6992482e-05              0     0.30893332
+    마지막 줄:  3225000   160417  1.2554088e-07       3677.268     0.16534203
+    이완 끝 25 줄 (3201000–3225000): KE 5.10378e-08–1.51112e-06 J · 판 165.27–165.75 (평균 165.43) MPa
+ⓔ 마지막 체크포인트 step 3200000 의 파일 (크기 · 시각 · sha256):
+    81154383 2026-09-24_17:09:06 /home/yonghoon/dem_test/ps45/ps_7_3_r45/restart_ps_7_3_r45/restart_compress_3200000.bin
+    0aa6e41a2330ae7825a715b8d98da6b708c37cb4093d3ab0f8fe2c2653ca3730  /home/yonghoon/dem_test/ps45/ps_7_3_r45/restart_ps_7_3_r45/restart_compress_3200000.bin
+    21430748 2026-09-24_17:09:05 /home/yonghoon/dem_test/ps45/ps_7_3_r45/post_ps_7_3_r45/atom_3200000.liggghts
+    2da106f8470a60c7d3b85894025007d6a5decdffb249b22e0a2ce67d08bbdd9e  /home/yonghoon/dem_test/ps45/ps_7_3_r45/post_ps_7_3_r45/atom_3200000.liggghts
+    149687008 2026-09-24_17:09:06 /home/yonghoon/dem_test/ps45/ps_7_3_r45/post_ps_7_3_r45/contact_3200000.liggghts
+    53ae293b4586d091dfca58ab430c174f36b641dcd24678eb10d10fc3f416e65c  /home/yonghoon/dem_test/ps45/ps_7_3_r45/post_ps_7_3_r45/contact_3200000.liggghts
+    349 2026-09-24_17:09:05 /home/yonghoon/dem_test/ps45/ps_7_3_r45/post_ps_7_3_r45/mesh_3200000.stl
+    c25296a6d4d6b185be3c1c0ff98543dbfdb710c281403111c7fae2b9bde2b820  /home/yonghoon/dem_test/ps45/ps_7_3_r45/post_ps_7_3_r45/mesh_3200000.stl
+ⓕ 용량: 18G
+████ ps_10_0_r45
+ⓐ 폴더: /home/yonghoon/dem_test/ps45/ps_10_0_r45
+ⓑ 체크포인트 (step 종류 · 마지막 여섯):
+   3350000 settling
+   3400000 settling
+   3450000 settling
+   3500000 settling
+   3550000 settling
+   3600000 settling
+ⓒ 마지막 덱: /home/yonghoon/dem_test/ps45/ps_10_0_r45/input_ps_10_0_r45_r2.liggghts
+46:read_restart    restart_ps_10_0_r45/restart_settling_1900000.bin
+113:fix gravi all gravity 98.1 vector 0.0 0.0 -1.0
+114:fix damp all viscous 1.0e-5
+117:restart 50000 restart_ps_10_0_r45/restart_settling_*.bin
+122:run 1
+148:fix top_mesh all mesh/surface/stress file plate_ps_10_0_r45.stl type 1 scale 1.0 reference_point 0 0 0
+154:fix gravi all gravity 9.81 vector 0.0 0.0 -1.0
+155:unfix damp
+156:fix damp all viscous 0.5
+161:run 0
+181:unfix damp
+182:fix damp all viscous 1.0e-5
+189:run 100000
+ⓓ 로그 조각 (최근 넷 · 첫 → 끝 thermo step):
+    output_ps_10_0_r45_r2_195590.out 11 → 3640001 Finished
+    output_ps_10_0_r45_r2_195588.out 11 → 201000
+    output_ps_10_0_r45_r2_195586.out  →
+    output_ps_10_0_r45_181337.out 2 → 1933000
+LIGGGHTS (Version LIGGGHTS-PUBLIC 3.8.0, compiled 2026-03-26-14:37:06 by yonghoon, git commit 3d5c00f20519e6bb6eb6756f51f1ad36564e649d)
+    PHASE4 첫 줄:  3540001   159161  1.5902832e-05              0     0.30886047
+    마지막 줄:  3640001   159152  4.6446195e-08      8105.5067     0.17369301
+    이완 끝 25 줄 (3617000–3640001): KE 4.57586e-08–4.50516e-07 J · 판 173.69–174.32 (평균 173.94) MPa
+ⓔ 마지막 체크포인트 step 3600000 의 파일 (크기 · 시각 · sha256):
+    78920211 2026-09-22_07:34:34 /home/yonghoon/dem_test/ps45/ps_10_0_r45/restart_ps_10_0_r45/restart_settling_3600000.bin
+    0e76b6981dbf13ab44717dd180a897ddc8fbd4b2f7eb3e6faae154dffcf6ea2c  /home/yonghoon/dem_test/ps45/ps_10_0_r45/restart_ps_10_0_r45/restart_settling_3600000.bin
+    21086393 2026-09-22_07:34:33 /home/yonghoon/dem_test/ps45/ps_10_0_r45/post_ps_10_0_r45/atom_3600000.liggghts
+    f302968aec5f6e6daa6af0b5301a6b0d9464e6663071291538b4534720268d96  /home/yonghoon/dem_test/ps45/ps_10_0_r45/post_ps_10_0_r45/atom_3600000.liggghts
+    143025239 2026-09-22_07:34:34 /home/yonghoon/dem_test/ps45/ps_10_0_r45/post_ps_10_0_r45/contact_3600000.liggghts
+    39e71cdd5be676f791429f565ad9e2b73e05e3101f66e0de7752cced3fc3b4f6  /home/yonghoon/dem_test/ps45/ps_10_0_r45/post_ps_10_0_r45/contact_3600000.liggghts
+    349 2026-09-22_07:34:33 /home/yonghoon/dem_test/ps45/ps_10_0_r45/post_ps_10_0_r45/mesh_3600000.stl
+    869454432d1670f6335057f6248248309eb90361259a002c8233721d45de1a89  /home/yonghoon/dem_test/ps45/ps_10_0_r45/post_ps_10_0_r45/mesh_3600000.stl
+ⓕ 용량: 20G
+(base) [yonghoon@ibb-master ~]$ # ⓖ 도구 · 바이너리 · 코어 · 디스크
+(base) [yonghoon@ibb-master ~]$ grep -n -E "relax|add_argument|compress|after_settling|settling" ~/dem_test/dem_restart.py | head -40   # 실행하지 않고 읽기만 — 모드 고르기 · --no-relax-detect 의 뜻
+47:            elif re.match(r'restart\s+\d+\s+\S*restart_settling', s): self.idx.setdefault('restart_settle_cmd', i)
+48:            elif re.match(r'write_restart\s+\S*after_settling', s):   self.idx.setdefault('write_after', i)
+57:        # settling / relaxation 의 확정 run 스텝을 실제로 읽는다
+59:        self.relax_steps = self._run_after(self.idx.get('p4'), len(L))
+88:    def settling(self):  # PHASE 1 ~ write_restart(after_settling) 앞
+91:    def after_settling_on(self):  # write_restart 다음 줄부터 끝까지 (zmax run 1 + plate 생성 + 이후 전부)
+115:        lo = self.idx['p2'] if phase == 'compress' else self.idx['p4']
+116:        hi = self.idx['p3'] if phase == 'compress' else len(self.lines)
+123:        if phase == 'compress':
+134:    """compress > after_settling > settling 순으로 가장 진행된 체크포인트."""
+143:    for p in rdir.glob('restart_compress_*.bin'):
+144:        m = re.search(r'restart_compress_(\d+)\.bin$', p.name)
+149:        return {'mode': 'compress', 'file': p, 'step': step}, None
+151:    aft = rdir / 'restart_after_settling.bin'
+153:        return {'mode': 'after_settling', 'file': aft, 'step': None}, None
+156:    for p in rdir.glob('restart_settling_*.bin'):
+157:        m = re.search(r'restart_settling_(\d+)\.bin$', p.name)
+162:        return {'mode': 'settling', 'file': p, 'step': step}, None
+210:        return {'relax_reached': False}
+212:    relax_line = None
+215:            relax_line = i
+216:    if relax_line is None:
+217:        return {'relax_reached': False, 'log': logs[0]}
+218:    relax_start = None
+219:    for l in txt[relax_line:]:
+222:            relax_start = int(m.group(1))
+224:    return {'relax_reached': True, 'relax_start': relax_start, 'log': logs[0]}
+230:def build_deck(deck: Deck, ckpt, case, suffix, plate_stl, relax_info):
+238:       f"#   step         : {ckpt['step'] if ckpt['step'] is not None else 'after_settling'}",
+246:    if mode == 'settling':
+248:        note['settling_remain'] = remain
+252:        for l in deck.settling():
+262:            return None, 'settling 구간에서 run 스텝을 못 찾음'
+264:        A([f'write_restart   restart_{case}/restart_after_settling.bin'])
+265:        A(deck.after_settling_on())
+267:    elif mode == 'after_settling':
+268:        note['settling_remain'] = 0
+275:           f'restart 50000 restart_{case}/restart_settling_*.bin',
+277:        A(deck.after_settling_on())
+279:    else:  # compress
+(base) [yonghoon@ibb-master ~]$ ls -la --time-style=+%F_%T /lustre/home/yonghoon/LIGGGHTS-PUBLIC/src/lmp_mpi && sha256sum /lustre/home/yonghoon/LIGGGHTS-PUBLIC/src/lmp_mpi
+-rwxrwxr-x 1 yonghoon yonghoon 9180024 2026-03-26_14:38:19 /lustre/home/yonghoon/LIGGGHTS-PUBLIC/src/lmp_mpi
+ee2d77261bac9e7fa4e9311c8709e74bf7583a13225a5bc35a791bef9be60a3f  /lustre/home/yonghoon/LIGGGHTS-PUBLIC/src/lmp_mpi
+(base) [yonghoon@ibb-master ~]$ squeue -u $USER -o "%.10i %.24j %.8T %.4C %.10M %R"
+     JOBID                     NAME    STATE CPUS       TIME NODELIST(REASON)
+    268678                 lhss_002  RUNNING    6 2-02:50:24 node01
+    268679                 lhss_004  RUNNING    6 2-02:50:24 node01
+    268680                 lhss_008  RUNNING    2 2-02:50:24 node01
+    268681                 lhss_010  RUNNING    6 2-02:50:24 node01
+    268682                 lhss_014  RUNNING    3 2-02:50:24 node01
+    268683                 lhss_020  RUNNING    4 2-02:50:24 node01
+    268685              lhst_036_6m  RUNNING    4 2-02:50:24 node01
+    267512                 lhss_001  RUNNING    1 3-03:01:05 node01
+(base) [yonghoon@ibb-master ~]$ squeue -u $USER -h -t R -o %C | awk '{s+=$1} END{print "실행 중 코어 합:", s+0, "/ 60 (cpu-60)"}'
+실행 중 코어 합: 32 / 60 (cpu-60)
+(base) [yonghoon@ibb-master ~]$ df -h ~ | tail -1; lfs quota -h -u $USER /lustre 2>/dev/null | head -4
+<Lustre 서버 주소 지움>:/lustre  678T  497T  148T  78% /lustre
+Disk quotas for usr yonghoon (uid 9248):
+     Filesystem    used   quota   limit   grace   files   quota   limit   grace
+        /lustre  1.299T      0k      0k       -  431945       0       0       -
+uid 9248 is using default block quota setting
+(base) [yonghoon@ibb-master ~]$
