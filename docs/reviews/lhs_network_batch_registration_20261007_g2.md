@@ -323,7 +323,7 @@ $PY scripts/run_network_194_parallel.py run --root "$R" 2>&1 | tee ~/net194_run_
      단계 4 reread = S0b 가 등록 표지 · 필수 ID 정확히 · 공용 판정 재계산 (`G2RR5-03`) — **10-07 WSL case15 기록은 이제 거부된다** (시도 증거 · 검사 ID 없음 — 의도 · 고친 스모크로 다시 만든다) ·
      단계 5 audit · 배포 관문 = 시도별 결합 값 검사 (`G2RR5-01`).
   ③ 인계 도구 지문 바뀜: `scripts/g2_network_reread.py` (실행기 HANDOVER_FILES) — 발사 manifest 에 기록 · 봉인 32 · `code_fp e8b2496b…` 그대로.
-  ④ 같은 비준 (수정 계획 밖 덧붙임 · 1저자 10-09): Q6 = 감사 결합 기록에 분류 밖 단계 칸 (요약만 비운 실패 감사를 배포 관문이 거부 · 기존 pilot 감사는 고친 실행기로 audit 다시 — 읽기 전용) · Q7 = 스모크 실제 case15 두 판을 `--selftest-real` (slow) 로 나눈다 (§1 단계 1 도구 자체 시험에 함께 돌린다) — 둘 다 반영 = 별도 커밋 (⬜ 반영 전).
+  ④ 같은 비준 (수정 계획 밖 덧붙임 · 1저자 10-09): Q6 = 감사 결합 기록에 분류 밖 단계 칸 (요약만 비운 실패 감사를 배포 관문이 거부 · 기존 pilot 감사는 고친 실행기로 audit 다시 — 읽기 전용) · Q7 = 스모크 실제 case15 두 판을 `--selftest-real` (slow) 로 나눈다 (§1 단계 1 도구 자체 시험에 함께 돌린다) — 둘 다 반영 = 별도 커밋 (⬜ 반영 전) [→ ✅ 반영 10-09: Q6 `7153a7d6a` (결합 기록 v2) · Q7 `7928ff0de` (`--selftest-real`) · WSL 재확인 명령 = `docs/reviews/codex_gen2_network_reverify6_request_20261009.md` 머리].
 
   | 자리 | 원문 (보존) | 비준 뒤 활성 |
   |---|---|---|
