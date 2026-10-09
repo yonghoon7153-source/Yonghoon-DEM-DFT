@@ -1,20 +1,27 @@
 #!/usr/bin/env bash
 # Li2S 2x2x2 NEB cell-convergence chain (card li2s_neb_cellconv_estimand_2026_10_09 · G1/G2 gates)
-# What it does: endpoints relax (G1) -> no-CI build -> NEB no-CI (G2a) -> ci + rebuild --ci_scheme auto --restart -> NEB CI (G2b).
+# What it does: build endpoint relax inputs -> endpoints relax (G1) -> no-CI build -> NEB no-CI (G2a) -> ci + rebuild --ci_scheme auto --restart -> NEB CI (G2b).
 # Env (all required): W=worktree D=db/inputs/li2s_neb_cellconv_2026_10_09 UPY=python with ase WORK=run dir PW NEB MPIRUN.
-# Exit: 0 done · 11 G1 endpoint not converged · 12 no neb.in · 13 no-CI not converged · 14 CI build failed · 15 CI stage not converged or not CI.
+# Exit: 0 done · 10 no relax.in after build · 11 G1 endpoint not converged · 12 no neb.in · 13 no-CI not converged · 14 CI build failed · 15 CI stage not converged or not CI.
 # Cannot: judge G3-G5 (symmetry, payload diff, MEP shape) -- done after collection in the repo. Does not stop on GPU total; watch does.
 # Tested 2026-10-09 with a stub runner: pass rc 0 · G1 fail 11 · G2a fail 13 · G2b (output not CI) 15 · missing env refuses.
+# 2026-10-09 fix: v1 (sha bbf38389) skipped step 0 and stopped at G1 on kgy in the same second (no relax.in -> runner skipped).
+#   The stub runner wrote relax.out without relax.in, so the test could not see it. Also WORK did not exist, so the log redirect failed before the builder ran (now mkdir -p).
+#   v2 test: REAL run_sei_neb.sh + REAL build_neb_inputs.py with fake pw.x/neb.x/mpirun in a scratch worktree:
+#   v1 reproduces kgy (rc 11 same second) · v2 pass rc 0 (restart_mode restart · CI auto) · pw no final block rc 11 · NEB not converged rc 13.
 set -u
 : "${W:?}" "${D:?}" "${UPY:?}" "${WORK:?}" "${PW:?}" "${NEB:?}" "${MPIRUN:?}"
 export WORK PW NEB MPIRUN OMP_NUM_THREADS=1
-cd "$W" || exit 2
+mkdir -p "$WORK" && cd "$W" || exit 2
 L=$WORK/li2s
 st(){ echo "[$(date '+%F %T')] ■ $*"; }
 B(){ "$UPY" tools/sei/build_neb_inputs.py --work "$WORK" --pseudo_dir "$W/$D/pseudo" --relaxed_from "$W/$D/relaxed" --only li2s --min_l 8 "$@"; }
 st "start · HEAD $(git -C "$W" rev-parse --short HEAD) · GPU $(nvidia-smi --query-gpu=memory.used --format=csv,noheader)"
+st "0 build endpoint inputs"; B > "$WORK/build_ep.log" 2>&1
+for e in ep_initial ep_final; do [ -f "$L/$e/relax.in" ] || { st "STOP: no $e/relax.in after build"; tail -5 "$WORK/build_ep.log"; exit 10; }; done
 st "1 endpoints relax"; bash tools/sei/run_sei_neb.sh endpoints li2s
 for e in ep_initial ep_final; do
+  [ -s "$L/$e/relax.out" ] || { st "STOP G1: $e/relax.out missing or empty (relax did not run)"; exit 11; }
   grep -aq "Begin final coordinates" "$L/$e/relax.out" || { st "STOP G1: $e not converged"; exit 11; }; done
 st "G1 ok"
 st "2 build no-CI"; B > "$WORK/build_noCI.log" 2>&1; [ -f "$L/neb.in" ] || { st "STOP: no neb.in"; tail -5 "$WORK/build_noCI.log"; exit 12; }
