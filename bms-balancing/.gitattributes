@@ -149,3 +149,5 @@ reviews/r14_repros/codex63/comsol_microshort_s1o_r1_source_review_20261008/** -t
 reviews/r14_repros/codex63/comsol_microshort_s1o_r1_003_stop_review_20261008/** -text
 # 2026-10-09: 미세단락 S1O-R1_004 한정 보완 검증 결과 (새 7 PASS · 원 127 재사용 · main/ = 결과 zip 펼친 사본 · user_relayed/ = 사용자 전달 원파일 재구성 · 전사) — bytes 그대로
 reviews/r14_repros/codex63/comsol_microshort_s1o_r1_004_result_20261009/** -text
+# 2026-10-09: 미세단락 S1O-R1_004 보충 검토 회신 (614.480 s 원파일 SHA 일치 · 한정 검증 종결 수용 유지 · reference/ = 앞선 R1_004 검토 회신 · 다음 = S1 OPEN 연결부 준비 초안) — bytes 그대로
+reviews/r14_repros/codex63/comsol_microshort_s1o_r1_004_supplement_review_20261009/** -text
