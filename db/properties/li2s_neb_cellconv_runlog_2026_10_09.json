@@ -24,7 +24,10 @@
       "ref333": "[3,3,3] · nat 80 · k [3,3,3] · λ₁ 12.1 · q −1.0 (G4 기준 payload)",
       "GPU": "3097 MiB · 이용률 95 % (cascade 하나) · 프로세스별 정보는 제한됨 — NEB 가 SM 을 나눠 쓰면 cascade 런이 느려진다 (벽시계 GPU-h)"
     },
-    "발사": null,
+    "발사": {
+      "at": "2026-10-09 22:32:29 (kgy · tmux li2scc · 체인 v2 · HEAD 1b7a9091)",
+      "첫_관측_22:41": "ep_initial · bfgs 1 · scf 반복 16 · Total force 0.058 Ry/bohr (문턱 1e-3) · GPU 합계 7,460 MiB (cascade ≈ 3,096 + pw.x ≈ 4.4 GB) · 이용률 100 %"
+    },
     "끝": null,
     "⛔_발사1_실패_2026_10_09": {
       "at": "2026-10-09 22:03:43 (kgy · tmux li2scc)",
@@ -39,7 +42,9 @@
     "상대": "cascade v7 본 라운드 (tmux cv7main · 러너 PID 1283841 · 10-07 20:04:49 발사 · D-2026-10-07-cascade-v7-main-round-cap 461.4 GPU-h)",
     "영향": "cascade 의 GPU-h 는 벽시계 — NEB 가 도는 동안 겹친 cascade 런은 느려진 만큼 비용이 더 찍힌다 (물리는 그대로). 겹친 런 태그와 구간을 여기 적는다.",
     "멈춤_조건": "GPU 합계 > 12,000 MiB 면 우리 NEB 를 PID 로 멈춘다 (cascade 시작 문턱 16,000 · 그 아래로 3 h 못 내려오면 cascade 러너 rc 12)",
-    "겹친_cascade_런": []
+    "겹친_cascade_런": [
+      "P1_Al2O3_D__T1000__s1 (22:32 발사 시점 진행 중)"
+    ]
   },
   "결과": null
 }
