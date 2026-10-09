@@ -4370,3 +4370,38 @@ gate INCOMPLETE · 실효 정책 UNVERIFIED · native 미승인 · 게이트 리
   사용자가 전달 (2026-10-09 · `user_relayed/USER_MESSAGE_20261009T121659Z.txt` 57 행). 사용자 본인 확인 원문은 아직 없다 → **제출자 기록 (사용자 전달)**.
 - 다음: 검토 담당 Codex 에 `FINAL_SUBMISSION_CHECK.json` 원파일 (+ 결과 zip · 영수증 · 포장 반환 원파일) 을 보내 독립 수용 판정 — 발송문 `docs/COMSOL_MICROSHORT_S1O_R1_004_REVIEW_REPLY_SEND_20261009.md`.
   수용돼도 S1-P · COMSOL · microshort 계산은 별도 승인. 이 절은 승인이 아니다.
+
+## 84. S1O-R1_004 검토 회신 2 건 접수 — 한정 검증 종결 수용 · 614.480 s 원파일 SHA 일치 · 경미 C1 · C2 · 다음 = S1 OPEN 연결부 한정 오프라인 준비 초안 (2026-10-09 · 실행 0)
+
+- 보존: `reviews/r14_repros/codex63/comsol_microshort_s1o_r1_004_supplement_review_20261009/` — zip 1,609,510 B · sha256 `17779cbd61b2d592c15195d6b9810402042d790a6badd43bc9c5df1512bb5e0e` · 압축 해제 12 ·
+  manifest 11 / 11 · 비밀 0 · 받은 코드 · 동봉 스크립트 실행 0. 규칙 `7ff02363` → 보존 `3742ce54`. `originals/inputs/` = 우리 발송문 (`8acc72ad…` = §83 의 docs 원본) · `FINAL_SUBMISSION_CHECK.json` (`afd5989d…`).
+  `prior_review/` = 동봉 `reference/PRIOR_REVIEW.zip` (1,608,343 B · `9524f8ce…1486`) 의 펼친 사본 — **앞선 R1_004 검토 회신** (§82 질문을 낸 회신 · 이 저장소에 처음 들어옴) · manifest 63 / 63 ·
+  그 `received/` 51 = §83 `main/` 과 바이트 동일 · `reference/ORIGINAL_R1_004_RESULT.zip` = `cb85fa12…`.
+- 앞선 회신 (`prior_review/DECISION.json` · `CLAUDE_REPLY_KO.md`): `LIMITED_VALIDATION_CLOSED_WITH_DOCUMENTED_SCOPE` · S1O003-N1 `CLOSED_FOR_APPROVED_TYPED_FIXTURE_AND_TARGET_REJECTION` ·
+  S1O003-N2 `CLOSED_FOUR_MATCHING_POSITIVES_AND_ELEVEN_EXACT_DATA_DELTAS` (READ02–12 의 입력 fingerprint 11 이 새 양성 4 + 선언 변이로 정확히 재구성) · 새 차단 0 ·
+  보존 246 중 전달된 183 은 검토자가 바이트 대조 · 63 (엔진 · 환경) 은 제출 관측 범위 · 614.480 s 원문 미제공 → 재실행 없이 요청 (§82).
+- 보충 회신 (`originals/DECISION.json` · `REVIEW_KO.md` · `SUPPLEMENT_CHECK.json`): 같은 판정 유지 · 원 127 재사용 + 원 미완 3 충족 · 보조 4 별도 · 새 P1 / P2 0 · 재시험 요구 0.
+  - 시간: 614.480 s 원파일 바이트 확인 (`RECEIVED_BYTES_VERIFIED`) → `WITHIN_LIMITS_AT_RECORDED_SNAPSHOT` · 확인 파일 쓰기 뒤 · 마지막 반환 뒤 `UNOBSERVED` ·
+    끝까지의 예산 PASS 는 `NOT_DEMONSTRATED_NOT_A_DECLARED_OVERRUN`. 네 경계는 단조 증가 · 마지막 여유 585.52 / 78.63 s (이후 경과 추정에 쓰지 않음) ·
+    ORIGIN – DELIVERY_ORIGIN tick 차 453.1146 s vs 최종 overall − delivery 453.1110 s (차 0.0036 s — 별도 표본 취득으로 설명 가능 · 보정 · 역전 해석의 근거 없음).
+  - 영수증 · 포장 반환 원파일: `NOT_RECEIVED_PRIOR_PASTED_CONTENT_ONLY` — 이번에 검토자가 받은 파일은 확인 파일과 발송문 두 개.
+  - 246 보존: `PRODUCER_AGGREGATE_ASSERTION` (수신자의 새 현지 관측 아님).
+  - R113: `EXPLICIT_SINGLE_LEAF_DOUBLE_REJECTION_NOT_NATURAL_DECIMAL_REJECTION_TEST` — 동적 증거는 "명시 Double 입력을 실제 S1Decision → S1Fields → S1ComparisonNumerics 가
+    `DECIMAL_TRANSPORT_PRECISION` 으로 거부" 에 한정. 생산 `S1ExactDecimal` 은 Decimal 도 거부하는 코드지만 이번 시험 사례로 세지 않음
+    (근거: 결과 zip `harness/ps_subset.ps1:129–154, 179–219` · `Parent.ps1.inactive.txt:27–35, 156–168`).
+  - R114 (§83 관측의 답): Parent 281 행에서 S1Fields 가 S1ComparisonNumerics 를 부르고 292–293 행에서 그 반환과 summary 를 비교해 거부 → reach 와 `stage=fields` 는 정합.
+  - 경미 C1 (`FINAL_SUBMISSION_CHECK.json:6–11`): 마지막 snapshot 뒤 미관측 → "614.4801189 초의 기록된 경계 내" 로만 표현.
+    경미 C2 (`FINAL_SUBMISSION_CHECK.json:3–5` · 우리 발송문 41 · 51–53 행): 파일 바이트 일치 · 제출자 집계 · 과거 승인 진술은 서로 다른 증거 수준 → 구분 · 복원 텍스트를 원시 OS 감사라 부르지 않음.
+  - 승인 대화: `NOT_INDEPENDENTLY_RETRIEVED_QUOTED_STATEMENTS_ONLY` — 발송문 7 · 16 행 (R1_003 위치 문장) 은 "사용자 진술을 인용하도록 작성된 문구" · 사용자의 "ㄱㄱ" 는 보충 검토 진행 요청이지
+    과거 승인 기록의 대체가 아님.
+- **이 저장소의 C2 반영 (표현 정정 · 재실행 0):** §83 의 "(= 원파일과 같은 바이트)" 와 발송문 41 행 "(붙여 넣은 내용 = 원파일)" 은 "실행 Codex 가 보고한 크기 · SHA 와 같은 바이트" 로 읽는다 —
+  보고값이 원파일의 값이라는 것은 제출자 기록이다 (`user_relayed/README.md` 의 구분과 같다). 검토자가 받은 `FINAL_SUBMISSION_CHECK.json` 은 Administrator `Downloads` 경로라,
+  실행 PC 원파일을 옮긴 것인지 이 저장소가 재구성해 사용자에게 보낸 사본인지는 기록이 없다. 바이트가 같아 내용 판정은 같고, "원파일 수신" 은 "보고된 SHA 와 같은 바이트의 수신" 으로 읽는다.
+- R1_003 위치 승인: 분류 유지 — **제출자 기록 (인용 진술)**. 사용자 본인 확인 원문은 아직 없다.
+- 상태: S1-O 한정 기능 검증 **종결** (S1O003-N1 · N2 닫힘 · 원 130 범위 닫힘). `native_ready=false` · 전체 / 정상 gate INCOMPLETE · 실효 정책 / 실제 코어 UNVERIFIED ·
+  OPEN 4 (`installed_post_consistency_t0` · `installed_effective_coefficient_mapping` · `raw_native_evidence_adapter` · `OS_resource_ownership_stop_adapters`) · S1-P · COMSOL 실행 GO 아님.
+- 다음 (사용자 결정): 회신 `NEXT_APPROVAL_DRAFT_KO.md` (5,756 B · sha256 `f634ba2133f9b0e8eda78b23ba7870f3468e65c13be0499f03e14435e76df79b`) — S1 OPEN 연결부 한정 오프라인 준비 1 건
+  (설치본 t0 / CDI 경로 · 계수와 raw 증거 대응 · native / OS 연결 비활성 후보 · 변경부 한정 검증안 → 제출 뒤 중지). 새 폴더 `…/outputs/microshort_s1_open_connection_candidate_20261009/`
+  (이미 있으면 중지) · 전체 3,600 s (작성 2,400 · 정적 대조 600 · 보존 · 전달 480 · 미완 정리 120) · 폴더 ≤ 50 MiB · 시작 디스크 ≥ 512 MiB · native / JVM / 기능 시험 0 · MPH 열기 ·
+  받은 모듈 import 0 · 설치 · fetch · 환경 재구축 · 권한 상승 미포함 (네트워크 읽기가 필요하면 착수 전에 범위를 따로 명시). 그 뒤에도 변경부 검증 · 실제 관측의 별도 승인 → P0 한 건
+  native 요청 순서다 — 첫 COMSOL 미세단락 계산까지 이번 포함 최소 3 번의 승인. 발송 프롬프트 `docs/COMSOL_MICROSHORT_S1_OPEN_CONNECTION_SEND_20261009.md`. 이 절은 승인이 아니다.
