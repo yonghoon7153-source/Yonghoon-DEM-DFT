@@ -13,7 +13,7 @@
     "기계": "kgy RTX 3090 · /home/kgy/apps/qe-7.4.1-gpu/bin/{pw.x,neb.x} · build python = /home/kgy/apps/miniforge3/envs/uma/bin/python",
     "작업폴더": "~/work/runs/li2s_neb_cellconv_1009/c222 (기준 payload: ~/work/runs/li2s_neb_cellconv_1009/ref333)",
     "worktree": "~/wt_li2scc_1009 (pseudo_dir · relaxed_from 이 이 안을 가리킨다 — 끝날 때까지 지우지 않는다)",
-    "체인": "~/work/runs/li2s_neb_cellconv_1009/chain.sh → ① endpoints (G1) ② no-CI 빌드 ③ NEB no-CI (G2a) ④ ci → 빌드 --ci_scheme auto --restart ⑤ NEB CI (G2b) · 로그 chain.log · tmux li2scc",
+    "체인": "db/inputs/li2s_neb_cellconv_2026_10_09/run_chain_kgy.sh (sha256 bbf3838926eae6f34b905d1a0903204f50c5eb644093955c3cb5fbc47f877d35) → ① endpoints (G1) ② no-CI 빌드 ③ NEB no-CI (G2a) ④ ci → 빌드 --ci_scheme auto --restart ⑤ NEB CI (G2b) · 로그 ~/work/runs/li2s_neb_cellconv_1009/chain.log · tmux li2scc · 가짜 러너 시험 rc 0/11/13/15 + 환경 누락 거부",
     "사전점검": null,
     "발사": null,
     "끝": null
