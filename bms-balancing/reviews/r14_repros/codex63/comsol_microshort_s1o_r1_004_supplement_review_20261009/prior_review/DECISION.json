@@ -1,0 +1,33 @@
+{
+  "review_date": "2026-10-09",
+  "status": "LIMITED_VALIDATION_CLOSED_WITH_DOCUMENTED_SCOPE",
+  "S1O003_N1": "CLOSED_FOR_APPROVED_TYPED_FIXTURE_AND_TARGET_REJECTION",
+  "S1O003_N2": "CLOSED_FOUR_MATCHING_POSITIVES_AND_ELEVEN_EXACT_DATA_DELTAS",
+  "original_cases": 130,
+  "prior_reused": 127,
+  "original_newly_satisfied": 3,
+  "auxiliary_positive_new": 4,
+  "new_functional_inputs": 7,
+  "single_130_case_rerun": false,
+  "source_manifest_sha256": "4ce5c08dbde5153027819b5a651e3995ec82417b4429b9bb0f789082b440f5da",
+  "historical_R1_003_status": "INCOMPLETE_UNCHANGED",
+  "new_blocking_findings_in_limited_validation": [],
+  "native_ready": false,
+  "native_approved": false,
+  "implementation_approved_by_review": false,
+  "normal_gate": "INCOMPLETE",
+  "overall_native_preparation": "INCOMPLETE",
+  "open": ["installed_post_consistency_t0", "installed_effective_coefficient_mapping", "raw_native_evidence_adapter", "OS_resource_ownership_stop_adapters"],
+  "timing": {
+    "functional_sessions": "ACCEPTED_WITH_POST_RECORD_BOUNDARIES",
+    "package_snapshot_seconds": 569.9144170000218,
+    "package_snapshot_provenance": "USER_SUPPLIED_TOOL_RETURN_TRANSCRIPTION",
+    "later_reported_seconds": 614.480,
+    "later_original_record": "NOT_PROVIDED_REQUESTED_WITHOUT_RERUN",
+    "external_receipt_original_bytes": "NOT_PROVIDED_USER_TEXT_ONLY",
+    "wall_time_added_to_snapshot": false
+  },
+  "reviewer_candidate_imports_or_calls": 0,
+  "reviewer_functional_test_reruns": 0,
+  "reviewer_COMSOL_calls": 0
+}

@@ -1,0 +1,7 @@
+{
+  "provenance": "Selected semantic fields from user-pasted receipt and tool-return transcription. Not byte-identical originals, and not reviewer OS observations.",
+  "archive": {"bytes":796501,"sha256":"cb85fa123395caf9ea323b0c531144bf30754322ba9b0362f1bbac3e5bc8ff2c"},
+  "receipt_original_claim": {"bytes":1175,"sha256":"2693f6175ac26efbf9849697e9a100c5ac86c987f1d3e57de22e9fbde38c9fa9","recipient":null,"overall_snapshot_s":569.9025540000293,"delivery_snapshot_s":116.78792289993726},
+  "packaging_return": {"chunk_id":"eb8612","exit_code":0,"wall_time_seconds":6.7332629,"overall_snapshot_s":569.9144170000218,"delivery_snapshot_s":116.79978640004992,"boundary":"after receipt reread before tool return"},
+  "later_user_report": {"seconds":614.480,"limit_seconds":1200,"original_record_received":false}
+}

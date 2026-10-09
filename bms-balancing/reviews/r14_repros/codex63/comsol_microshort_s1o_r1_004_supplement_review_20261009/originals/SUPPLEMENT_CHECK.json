@@ -1,0 +1,64 @@
+{
+  "kind": "SUPPLEMENT_RECORD_REVIEW",
+  "inputs": [
+    {
+      "path": "C:\\Users\\Administrator\\Downloads\\FINAL_SUBMISSION_CHECK.json",
+      "bytes": 395,
+      "sha256": "afd5989d84b78413d6613207c80dfe7eae8d4a8fb3f7374a02c02a9431d18261"
+    },
+    {
+      "path": "C:\\Users\\Administrator\\Downloads\\COMSOL_MICROSHORT_S1O_R1_004_REVIEW_REPLY_SEND_20261009.md",
+      "bytes": 6501,
+      "sha256": "8acc72ad4baf0b21786cd81fb6e1a62430b4cf0bae9de289ea875555a7026ddb"
+    }
+  ],
+  "previous_review_archive": {
+    "path": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\outputs\\microshort_s1o_r1_004_review_20261009\\COMSOL_MICROSHORT_S1O_R1_004_VALIDATION_REVIEW_20261009.zip",
+    "bytes": 1608343,
+    "sha256": "9524f8ce7e5cef2722675806a2d92ac69b27188012bf50c758de7a260dee1486"
+  },
+  "timing_rows": [
+    {
+      "name": "ZIP_CLOSEOUT",
+      "overall": "569.579920399934",
+      "delivery": "116.46528979996219",
+      "origin": "archive original; pre packaging",
+      "separate_snapshot_offset_difference_s": "-0.00000260002819",
+      "within_declared_snapshot_limits": true
+    },
+    {
+      "name": "RECEIPT",
+      "overall": "569.9025540000293",
+      "delivery": "116.78792289993726",
+      "origin": "prior user-pasted receipt; original file not received",
+      "separate_snapshot_offset_difference_s": "-0.00000209990796",
+      "within_declared_snapshot_limits": true
+    },
+    {
+      "name": "PACKAGE_RETURN",
+      "overall": "569.9144170000218",
+      "delivery": "116.79978640004992",
+      "origin": "prior user-pasted eb8612 return transcription",
+      "separate_snapshot_offset_difference_s": "-0.00000260002812",
+      "within_declared_snapshot_limits": true
+    },
+    {
+      "name": "FINAL_SUBMISSION_CHECK",
+      "overall": "614.4801189",
+      "delivery": "161.3691145",
+      "origin": "new original file; before check write and final tool return",
+      "separate_snapshot_offset_difference_s": "-0.0036288",
+      "within_declared_snapshot_limits": true
+    }
+  ],
+  "delivery_origin_after_overall_origin_s": "453.1146332",
+  "final_snapshot_margin_overall_s": "585.5198811",
+  "final_snapshot_margin_delivery_s": "78.6308855",
+  "additional_elapsed_after_package_snapshot_s": "44.5657018999782",
+  "after_check_write_and_final_return_elapsed": "UNOBSERVED_NOT_INFERRED",
+  "snapshot_status": "WITHIN_LIMITS_AT_RECORDED_BOUNDARY",
+  "submission_file_bytes_sha": "MATCHED",
+  "preservation_at_latest_snapshot": "PRODUCER_AGGREGATE_ASSERTION_NOT_NEW_RECIPIENT_PER_FILE_MEASUREMENT",
+  "received_code_executions": 0,
+  "COMSOL_calls": 0
+}

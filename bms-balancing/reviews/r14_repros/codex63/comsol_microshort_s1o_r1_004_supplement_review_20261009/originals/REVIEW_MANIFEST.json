@@ -1,0 +1,62 @@
+{
+  "self_excluded": true,
+  "kind": "SUPPLEMENT_REVIEW_MANIFEST",
+  "payload_count": 11,
+  "files": [
+    {
+      "path": "CLAUDE_REPLY_KO.md",
+      "bytes": 2221,
+      "sha256": "a54bc10b169a93656bf52850dd7885379f4b5600a3ab2422a0b1741986b36246"
+    },
+    {
+      "path": "DECISION.json",
+      "bytes": 1571,
+      "sha256": "1d137057b8a4a80185f123796e306b555ef4959ef2e4ac52b88f4d60956c297a"
+    },
+    {
+      "path": "NEXT_APPROVAL_DRAFT_KO.md",
+      "bytes": 5756,
+      "sha256": "f634ba2133f9b0e8eda78b23ba7870f3468e65c13be0499f03e14435e76df79b"
+    },
+    {
+      "path": "README_KO.md",
+      "bytes": 1112,
+      "sha256": "b551e16e0048f8098bf70cacbed5c790df0c576a97adf055a1a21f7e6d85be57"
+    },
+    {
+      "path": "REVIEW_KO.md",
+      "bytes": 7913,
+      "sha256": "9e72739e9e10a7d20549c7879fd044dc19fd54ae9e3d0192307db24ded30474c"
+    },
+    {
+      "path": "SUPPLEMENT_CHECK.json",
+      "bytes": 2691,
+      "sha256": "03ab885ddcdd05c2f56e6a4da27ce560a62627e18c0e17e426786b0548f0f3fb"
+    },
+    {
+      "path": "check_supplement.py",
+      "bytes": 3782,
+      "sha256": "194f68c41fdcb1219383a5fea2b76e68495b44aca8fe3fdaa2d73a9c0fb9428e"
+    },
+    {
+      "path": "inputs/COMSOL_MICROSHORT_S1O_R1_004_REVIEW_REPLY_SEND_20261009.md",
+      "bytes": 6501,
+      "sha256": "8acc72ad4baf0b21786cd81fb6e1a62430b4cf0bae9de289ea875555a7026ddb"
+    },
+    {
+      "path": "inputs/FINAL_SUBMISSION_CHECK.json",
+      "bytes": 395,
+      "sha256": "afd5989d84b78413d6613207c80dfe7eae8d4a8fb3f7374a02c02a9431d18261"
+    },
+    {
+      "path": "package_reply.py",
+      "bytes": 2744,
+      "sha256": "e81399bc6209de960b3c7e718be7c2dbcfff3ccdb42f6bba12001c32d1dd573a"
+    },
+    {
+      "path": "reference/PRIOR_REVIEW.zip",
+      "bytes": 1608343,
+      "sha256": "9524f8ce7e5cef2722675806a2d92ac69b27188012bf50c758de7a260dee1486"
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+    "target_entered":  true,
+    "reach":  [
+                  "S1Decision",
+                  "S1NativeAxis",
+                  "S1Fields",
+                  "S1ChargeFields",
+                  "S1Coverage",
+                  "S1ComparisonNumerics"
+              ],
+    "id":  "PARENT_R114",
+    "transport":  null
+}

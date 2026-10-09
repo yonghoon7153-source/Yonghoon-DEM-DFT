@@ -1,0 +1,13 @@
+{
+  "kind": "FINAL_SUBMISSION_CHECK",
+  "frozen_files": 246,
+  "all_unchanged": true,
+  "package_tool_return_matches_zip_and_receipt": true,
+  "overall_snapshot_s": 614.4801189,
+  "overall_limit_s": 1200,
+  "delivery_snapshot_s": 161.3691145,
+  "delivery_limit_s": 240,
+  "within_limits": true,
+  "boundary": "before this check write and final tool return",
+  "native_ready": false
+}

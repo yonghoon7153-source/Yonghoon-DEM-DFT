@@ -1,0 +1,94 @@
+--- R1_003/ps_harness.ps1
++++ R1_004/ps_subset.ps1
+@@ -38,7 +38,7 @@
+     $plan=([IO.File]::ReadAllText((Join-Path $fixtureRoot 'VALIDATION_PLAN_CORRECTED.json'))|ConvertFrom-Json)
+     $recipes=([IO.File]::ReadAllText((Join-Path $PSScriptRoot 'PS_INPUT_RECIPES.json'))|ConvertFrom-Json)
+     $producerSeal=([IO.File]::ReadAllText((Join-Path $fixtureRoot 'results/PS_PRODUCER_SEAL.json'))|ConvertFrom-Json)
+-    HRequire ($producerSeal.kind -ceq 'S1O_R1_PS_PRODUCER_SECOND_SEAL' -and $producerSeal.python_status -ceq 'PASS' -and $producerSeal.python_case_count -eq 99) 'SECOND_SEAL_PYTHON_PASS'
++    HRequire ($producerSeal.kind -ceq 'S1O_R1_004_REUSED_PRODUCER_SEAL' -and $producerSeal.python_status -ceq 'PASS' -and $producerSeal.python_case_count -eq 99) 'SECOND_SEAL_PYTHON_PASS'
+     HRequire ((HHash ([IO.File]::ReadAllBytes((Join-Path $candidateRoot 'CODE_MANIFEST.json')))) -ceq $producerSeal.source_manifest_sha256) 'SECOND_SEAL_SOURCE_MANIFEST'
+     HRequire ((HHash ([IO.File]::ReadAllBytes($PSCommandPath))) -ceq $producerSeal.harness_sha256) 'SECOND_SEAL_HARNESS'
+     $requiredProducerFiles=@()
+@@ -78,11 +78,14 @@
+     }
+     HWrite 'ps_extraction_observed.json' @{source_path=$sourcePath;source_bytes=$sourceBytes.Length;source_sha256=(HHash $sourceBytes);spans=@($spans.ToArray())}
+     $cases=@($plan.cases|Where-Object {$_.id -like 'PARENT*'})
+-    HRequire ($cases.Count -eq 31) 'PARENT_CASE_COUNT'
+-    HRequire (@($recipes.cases).Count -eq 31) 'RECIPE_CASE_COUNT'
++    HRequire ($cases.Count -eq 3) 'PARENT_CASE_COUNT'
++    HRequire (@($recipes.cases).Count -eq 3) 'RECIPE_CASE_COUNT'
+     foreach ($case in $cases) {
+-        if ($sessionClock.Elapsed.TotalSeconds -gt 300) { throw 'PS_SESSION_BUDGET' }
++        if ($sessionClock.Elapsed.TotalSeconds -gt 180) { throw 'PS_SESSION_BUDGET' }
+         $id=[string]$case.id
++        $global:S1ValidationReached.Clear()
++        $currentDiagnostic=@{id=$id;target_entered=$false;reach=@();transport=$null}
++        HWrite 'current_case_diagnostic.json' $currentDiagnostic
+         $recipe=@($recipes.cases|Where-Object {$_.id -ceq $id})
+         HRequire ($recipe.Count -eq 1) ('UNIQUE_RECIPE:'+ $id)
+         HRequire ($recipe[0].expected -ceq $case.expected -and $recipe[0].expected_field_path -ceq $case.expected_field_path -and $recipe[0].positive_control_case_id -ceq $case.positive_control_case_id) ('RECIPE_PLAN_BINDING:'+ $id)
+@@ -130,9 +133,28 @@
+                 $mutant=[regex]::Replace($p.RawText,$pattern,'${1}0.001')
+                 HRequire ($mutant.Length -eq ($p.RawText.Length-2)) 'R113_QUOTES_ONLY_REMOVED'
+                 $result=$mutant|ConvertFrom-Json
+-                HRequire ($result.comparison_details.maxima.voltage_V.value -is [double]) 'R113_DOUBLE_AFTER_JSON_PARSE'
++                $parsedValue=$result.comparison_details.maxima.voltage_V.value
++                $typeName=$(if($null -eq $parsedValue){'null'}else{$parsedValue.GetType().FullName})
++                $currentDiagnostic.transport=@{source_sha256=$p.source.sha256;mutant_bytes=$utf8.GetByteCount($mutant);mutant_sha256=(HHash ($utf8.GetBytes($mutant)));token_match_index=$matches[0].Index;parsed_clr_type=$typeName;parsed_value=[string]$parsedValue}
++                HWrite 'current_case_diagnostic.json' $currentDiagnostic
++                HRequire ($null -ne $parsedValue -and $parsedValue -isnot [string] -and $parsedValue -isnot [bool] -and $typeName -in @('System.Decimal','System.Double','System.Single','System.Int32','System.Int64')) 'R113_NUMERIC_PARSE_TYPE'
++                HRequire (-not [double]::IsNaN([double]$parsedValue) -and -not [double]::IsInfinity([double]$parsedValue) -and [decimal]$parsedValue -eq [decimal]0.001) 'R113_EXACT_FINITE_VALUE'
++                $result.comparison_details.maxima.voltage_V.value=$null
++                $restBefore=$result|ConvertTo-Json -Depth 100 -Compress
++                $result.comparison_details.maxima.voltage_V.value=[double]$parsedValue
++                $castValue=$result.comparison_details.maxima.voltage_V.value
++                $currentDiagnostic.transport.cast_clr_type=$castValue.GetType().FullName
++                $currentDiagnostic.transport.cast_value_roundtrip=$castValue.ToString('R',[Globalization.CultureInfo]::InvariantCulture)
++                $currentDiagnostic.transport.double_bits_hex=([BitConverter]::DoubleToInt64Bits($castValue)).ToString('X16')
++                $result.comparison_details.maxima.voltage_V.value=$null
++                $restAfter=$result|ConvertTo-Json -Depth 100 -Compress
++                $result.comparison_details.maxima.voltage_V.value=$castValue
++                $currentDiagnostic.transport.other_leaves_unchanged=($restBefore -ceq $restAfter)
++                HWrite 'current_case_diagnostic.json' $currentDiagnostic
++                HRequire ($castValue -is [double] -and $restBefore -ceq $restAfter) 'R113_EXPLICIT_SINGLE_LEAF_DOUBLE'
++                $recipeTransport=$currentDiagnostic.transport
+                 $mutations=@('Result.comparison_details.maxima.voltage_V.value:JSON string0.001->JSON number0.001')
+-                $recipeTransport=@{source_sha256=$p.source.sha256;mutant_bytes=$utf8.GetByteCount($mutant);mutant_sha256=(HHash ($utf8.GetBytes($mutant)));token_match_index=$matches[0].Index;parsed_clr_type=$result.comparison_details.maxima.voltage_V.value.GetType().FullName}
++
+             }
+             'PARENT_R114' {$result.comparison='WITHIN_LIMITS_THIS_WINDOW';$result.comparison_details.status='WITHIN_LIMITS_THIS_WINDOW';$mutations=@('Result.comparison:WITHIN_LIMITS_THIS_WINDOW','Result.comparison_details.status:WITHIN_LIMITS_THIS_WINDOW')}
+         }
+@@ -155,6 +177,7 @@
+             $field='limited'
+             $adapterLog=@{clock_values=$script:clockValues;clock_calls=$script:clockIndex;writer_calls=$script:writerCalls;readback_calls=$script:readbackCalls;overall_limit=$overallLimit;delivery_start=$deliveryStart;delivery_limit=$deliveryLimit;all_adapters_inert=$true}
+         } else {
++            $currentDiagnostic.target_entered=$true
+             $observed=S1Decision $native $analysis $result $expected $completion
+             $field=$(if ($case.expected_field_path -ceq 'return_value.reason') {'reason'} else {'status'})
+         }
+@@ -180,6 +203,10 @@
+         if ($id -in @('PARENT10','PARENT11')) {$extraChecks=(@($observed.record_errors).Count -eq 1 -and $observed.record_errors[0].reason -match 'POST_WRITE_BUDGET' -and -not $observed.within_limits -and $observed.prior_decision.status -ceq 'AWAITING_S1_LIMITED_EXTERNAL_REVIEW')}
+         if ($id -eq 'PARENT12') {$extraChecks=($observed.within_limits -and @($observed.record_errors).Count -eq 0 -and $observed.snapshot_seconds -eq 100)}
+         if ($id -eq 'PARENT16') {$extraChecks=(@($observed.record_errors).Count -eq 1 -and $observed.record_errors[0].reason -match 'PRE_WRITE_BUDGET' -and $script:writerCalls -eq 0)}
++        if($id -eq 'PARENT_R113'){$extraChecks=$extraChecks -and $observed.stage -ceq 'comparison_numerics'}
++        if($id -eq 'PARENT_R114'){$extraChecks=$extraChecks -and $observed.stage -ceq 'fields'}
++        $currentDiagnostic.reach=$reach
++        HWrite 'current_case_diagnostic.json' $currentDiagnostic
+         $pass=$reasonMatches -and $reachMatches -and $extraChecks
+         $record=@{id=$id;input_id=$case.input_id;producer=$p.source;mutations=$mutations;recipe=$recipe[0];json_transport=$recipeTransport;expected_field=$field;expected=[string]$case.expected;observed=$actual;target_reach=$reach;required_functions=$needed;reason_matches=$reasonMatches;reach_matches=$reachMatches;extra_assertions=$extraChecks;result=$(if($pass){'PASS'}else{'FAIL'});elapsed_s=$caseClock.Elapsed.TotalSeconds;raw_return=$observed;adapter_observation=$adapterLog}
+         $records.Add($record)
+@@ -188,11 +215,11 @@
+         if ($id -eq 'PARENT01') {$normalDecision=$observed}
+     }
+     $sessionClock.Stop()
+-    HRequire ($sessionClock.Elapsed.TotalSeconds -le 300) 'SESSION_LIMIT_AFTER_LAST_CASE'
+-    HWrite 'ps_results.json' @{status='PASS';case_count=$records.Count;cases=@($records.ToArray());elapsed_s=$sessionClock.Elapsed.TotalSeconds;limit_s=300;actual_native_calls=0;actual_gate_calls=0;actual_job_calls=0;engine_sessions=1}
++    HRequire ($sessionClock.Elapsed.TotalSeconds -le 180) 'SESSION_LIMIT_AFTER_LAST_CASE'
++    HWrite 'ps_results.json' @{status='PASS';case_count=$records.Count;cases=@($records.ToArray());elapsed_s=$sessionClock.Elapsed.TotalSeconds;limit_s=180;actual_native_calls=0;actual_gate_calls=0;actual_job_calls=0;engine_sessions=1}
+     exit 0
+ } catch {
+-    $failure=@{status='INCOMPLETE';first_error=$_.ToString();script_stack=$_.ScriptStackTrace;case_count=$records.Count;cases=@($records.ToArray());current_case=$id;elapsed_s=$sessionClock.Elapsed.TotalSeconds;limit_s=300;later_cases_not_run=$true;retry=0}
++    $failure=@{diagnostic=$currentDiagnostic;status='INCOMPLETE';first_error=$_.ToString();script_stack=$_.ScriptStackTrace;case_count=$records.Count;cases=@($records.ToArray());current_case=$id;elapsed_s=$sessionClock.Elapsed.TotalSeconds;limit_s=180;later_cases_not_run=$true;retry=0}
+     try {HWrite 'ps_first_failure.json' $failure} catch {Write-Error ('FOLLOWUP_RECORD_FAILURE:'+ $_.ToString()) -ErrorAction Continue}
+     Write-Output ($failure|ConvertTo-Json -Depth 100 -Compress)
+     exit 1
