@@ -1,0 +1,62 @@
+{
+  "tag": "li2s",
+  "disp": "Li2S",
+  "supercell": [
+    3,
+    3,
+    3
+  ],
+  "nat": 80,
+  "hop_distance_A": 2.8525851847409522,
+  "hop_shell": "c-c",
+  "pair_equivalent": true,
+  "hop_shell_requested": null,
+  "nelec": 322.0,
+  "protocol_hash": "c24cf37e7a0e",
+  "endpoints_relaxed": true,
+  "ci_scheme": "auto",
+  "tot_charge": -1.0,
+  "vacancy_charge": "minus1",
+  "electronic_class": "insulator",
+  "electronic_class_evidence": "measured",
+  "smearing": "gaussian",
+  "degauss": 0.005,
+  "charge_convention": "QE: +1=전자 부족, -1=전자 추가. V_Li- 는 -1 이다. 2026-08-11 이전 입력은 +1(정공 2개)이라 무효.",
+  "num_of_images": 7,
+  "min_cell_A": 12.1,
+  "kpts": [
+    3,
+    3,
+    3
+  ],
+  "li_orbits": {
+    "spacegroup": "Fm-3m",
+    "n_li_orbits": 1,
+    "wyckoffs": [
+      "c"
+    ]
+  },
+  "endpoints_symmetry_equivalent": true,
+  "global_n_li_orbits": 1,
+  "pair_orbits": {
+    "vac": [
+      0,
+      "c"
+    ],
+    "hop": [
+      0,
+      "c"
+    ]
+  },
+  "neighbor_shells": {
+    "c-c": {
+      "d_min": 2.8526,
+      "n": 1431
+    }
+  },
+  "arrival_err_A": 2.220446049250313e-16,
+  "arrival_err_is_pre_relax": true,
+  "endpoint_displacement_max_A": 2.463788183520606,
+  "geometry_source": "/data/work/runs/sei_dft/li2s_mp-1153/01_vcrelax.out",
+  "_note": "endpoints_symmetry_equivalent=false 면 정·역 장벽이 다른 게 정상이다 — 그 차이는 두 Li 자리의 에너지 차다. 장거리 수송에 걸리는 유효 장벽은 max(정, 역) 이다(가장 낮은 자리에서 안장점까지)."
+}
