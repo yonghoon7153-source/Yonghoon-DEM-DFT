@@ -1,0 +1,211 @@
+(base) [yonghoon@ibb-master ~]$ cd ~/Yonghoon-DEM-DFT && git fetch -q origin claude/stoic-knuth-NObVQ && W=$HOME/unload_src_$(git rev-parse --short FETCH_HEAD) && { [ -d "$W" ] || git worktree add -q --detach "$W" FETCH_HEAD; } && cd "$W" && git log --oneline -1
+hts $D/post_$C/contact_$S.liggghts $D/post_$C/mesh_$S.stl -o $O \
+      && echo '{"box_x": 0.05, "box_y": 0.05}' > $O/input_params.json \
+      && python3 scripts/plane_load_share.py --case $O --meta $P/meta.json --label ${C}_$S --out $P/plane_${C}_$S | tail -3
+  done
+done
+cd $HOME && tar czf ps45_unload_pre_20261009_plane.tgz ps45_unload_pre_20261009/plane_* && sha256sum ps45_unload_pre_20261009_plane.tgz
+# ── ⓘ S0 판 압력 조건 · G1 기준 줄 · KE 기준 · 원 NP · 덤프 원자 수 ──
+B=~/dem_test/ps45
+for x in ps_0_10_r45:3200000:3210000:output_ps_0_10_r45_r6_198527.out ps_3_7_r45:3200000:3210000:output_ps_3_7_r45_r6_198528.out ps_5_5_r45:2900000:2930000:output_ps_5_5_r45_r6_198523.out ps_7_3_r45:3200000:3220000:output_ps_7_3_r45_r8_220537.out ps_10_0_r45:3600000:3640000:output_ps_10_0_r45_r2_195590.out; do
+  IFS=: read C S T L <<< "$x"; O=$B/logs/$L; echo "████ $C S0=$S s_d=$T $L"
+  grep -a -m1 "MPI processor grid" $O; grep -a "Loop time" $O | tail -1
+  awk -v s=$S '/^====== PHASE 4/{p=1; next}
+    p && $1~/^[0-9]+$/ && NF==5 { if(!h){h=1; print "    setup 줄 (기준 아님):", $0; next}
+      n++; st[n]=$1; q[n]=$5*1000; ke[n]=$3; at[n]=$2; if($1==s) print "    G1 기준 줄 (정규):", $0 }
+    END{ m=(n>25)?n-24:1; t=0; for(i=m;i<=n;i++) t+=q[i]; mu=t/(n-m+1)
+      w=0; mx=0; for(i=1;i<=n;i++) if(st[i]>=s-5000 && st[i]<=s+5000){w++; d=q[i]-mu; if(d<0)d=-d; if(d>mx)mx=d}
+      printf "    마지막 25 줄 판 평균 %.2f MPa · S0±5000 정규 줄 %d 개 · 최대 |차| %.2f MPa = %.2f %% (등록 조건 ≤ 1 %%)\n", mu, w, mx, 100*mx/mu
+      for(j=0;j<5;j++){u=0; for(i=m+5*j;i<m+5*j+5;i++) u+=ke[i]; v[j]=u/5}
+      for(a=0;a<5;a++) for(b=a+1;b<5;b++) if(v[b]<v[a]){y=v[a]; v[a]=v[b]; v[b]=y}
+      printf "    KE 5 창 (5 줄씩) 평균의 중앙값 %.3g J · 정규 줄 %d · 원자 %d → %d\n", v[2], n, at[1], at[n] }' $O
+  for t in $S $T; do echo "    atom_$t 원자 수: $(sed -n 4p $B/$C/post_$C/atom_$t.liggghts)"; done
+done
+adbd6124 (HEAD) 재검증 6 사전 점검 반입: WSL 재확인 ①–⑤ (10-09 21:13 · 956173e1c) = 결과 전 기대 다섯 단계 모두 같음
+(base) [yonghoon@ibb-master unload_src_adbd6124]$ conda activate myenv && python3 scripts/plane_load_share.py --selftest | tail -1
+plane_load_share selftest 54/54
+(myenv) [yonghoon@ibb-master unload_src_adbd6124]$ P=$HOME/ps45_unload_pre_20261009; mkdir -p $P; echo '{"type_map_resolved": "1:AM_P,2:AM_S,3:SE", "scale": 1000}' > $P/meta.json
+(myenv) [yonghoon@ibb-master unload_src_adbd6124]$ for x in ps_0_10_r45:3200000:3210000 ps_3_7_r45:3200000:3210000 ps_5_5_r45:2900000:2930000 ps_7_3_r45:3200000:3220000 ps_10_0_r45:3600000:3640000; do
+>   C=${x%%:*}; r=${x#*:}; D=~/dem_test/ps45/$C
+>   for S in ${r%%:*} ${r#*:}; do
+>     case $S in *[!0-9]*) echo "⛔ $C S0 미정 — 건너뜀"; continue;; esac
+>     O=$P/${C}_$S
+>     python3 scripts/parse_liggghts.py $D/post_$C/atom_$S.liggghts $D/post_$C/contact_$S.liggghts $D/post_$C/mesh_$S.stl -o $O \
+>       && echo '{"box_x": 0.05, "box_y": 0.05}' > $O/input_params.json \
+>       && python3 scripts/plane_load_share.py --case $O --meta $P/meta.json --label ${C}_$S --out $P/plane_${C}_$S | tail -3
+>   done
+> done
+Parsing atom file: /home/yonghoon/dem_test/ps45/ps_0_10_r45/post_ps_0_10_r45/atom_3200000.liggghts
+  -> 163348 atoms
+Parsing contact file: /home/yonghoon/dem_test/ps45/ps_0_10_r45/post_ps_0_10_r45/contact_3200000.liggghts
+  -> 553444 contacts
+Parsing mesh file: /home/yonghoon/dem_test/ps45/ps_0_10_r45/post_ps_0_10_r45/mesh_3200000.stl
+  -> plate_z = 0.117208, 2 triangles
+No input script found (optional)
+Parse complete!
+         ⚠ 보존 검사 — 단면 하중 최대 ÷ 최소 = 1.0201 > 1 + 0.02
+         α (σ_zz) AM_P  · AM_S 1.292 · SE 0.448 · AM 1.292 · 닫힘 1.000000000 · LW 창 합 ÷ 21 단면 = 1.0037 (창 안 두 입자 155.27 · 가장자리 LW 3.63 ↔ 적분 3.04 · 창 전체 걸침 0.00 MPa)
+→ /home/yonghoon/ps45_unload_pre_20261009/plane_ps_0_10_r45_3200000 · 상태 OK 0 / 1 (OK 아님: ps_0_10_r45_3200000)
+Parsing atom file: /home/yonghoon/dem_test/ps45/ps_0_10_r45/post_ps_0_10_r45/atom_3210000.liggghts
+  -> 163348 atoms
+Parsing contact file: /home/yonghoon/dem_test/ps45/ps_0_10_r45/post_ps_0_10_r45/contact_3210000.liggghts
+  -> 553453 contacts
+Parsing mesh file: /home/yonghoon/dem_test/ps45/ps_0_10_r45/post_ps_0_10_r45/mesh_3210000.stl
+  -> plate_z = 0.117208, 2 triangles
+No input script found (optional)
+Parse complete!
+         ⚠ 보존 검사 — 단면 하중 최대 ÷ 최소 = 1.0222 > 1 + 0.02
+         α (σ_zz) AM_P  · AM_S 1.291 · SE 0.448 · AM 1.291 · 닫힘 1.000000000 · LW 창 합 ÷ 21 단면 = 1.0037 (창 안 두 입자 155.21 · 가장자리 LW 3.63 ↔ 적분 3.04 · 창 전체 걸침 0.00 MPa)
+→ /home/yonghoon/ps45_unload_pre_20261009/plane_ps_0_10_r45_3210000 · 상태 OK 0 / 1 (OK 아님: ps_0_10_r45_3210000)
+Parsing atom file: /home/yonghoon/dem_test/ps45/ps_3_7_r45/post_ps_3_7_r45/atom_3200000.liggghts
+  -> 162093 atoms
+Parsing contact file: /home/yonghoon/dem_test/ps45/ps_3_7_r45/post_ps_3_7_r45/contact_3200000.liggghts
+  -> 558395 contacts
+Parsing mesh file: /home/yonghoon/dem_test/ps45/ps_3_7_r45/post_ps_3_7_r45/mesh_3200000.stl
+  -> plate_z = 0.114361, 2 triangles
+No input script found (optional)
+Parse complete!
+         ⚠ 보존 검사 — 단면 하중 최대 ÷ 최소 = 1.0213 > 1 + 0.02
+         α (σ_zz) AM_P 1.329 · AM_S 1.245 · SE 0.485 · AM 1.270 · 닫힘 1.000000000 · LW 창 합 ÷ 21 단면 = 0.9969 (창 안 두 입자 154.61 · 가장자리 LW 4.88 ↔ 적분 5.38 · 창 전체 걸침 0.00 MPa)
+→ /home/yonghoon/ps45_unload_pre_20261009/plane_ps_3_7_r45_3200000 · 상태 OK 0 / 1 (OK 아님: ps_3_7_r45_3200000)
+Parsing atom file: /home/yonghoon/dem_test/ps45/ps_3_7_r45/post_ps_3_7_r45/atom_3210000.liggghts
+  -> 162093 atoms
+Parsing contact file: /home/yonghoon/dem_test/ps45/ps_3_7_r45/post_ps_3_7_r45/contact_3210000.liggghts
+  -> 558388 contacts
+Parsing mesh file: /home/yonghoon/dem_test/ps45/ps_3_7_r45/post_ps_3_7_r45/mesh_3210000.stl
+  -> plate_z = 0.114361, 2 triangles
+No input script found (optional)
+Parse complete!
+ps_3_7_r45_3210000 OK        159.93   1.0176  1.65e-04   54.63 · 34.66 · 10.71   (55.6 · 34.6 · 9.8) · (25.4 · 38.3 · 36.3)
+         α (σ_zz) AM_P 1.329 · AM_S 1.245 · SE 0.486 · AM 1.270 · 닫힘 1.000000000 · LW 창 합 ÷ 21 단면 = 0.9969 (창 안 두 입자 154.56 · 가장자리 LW 4.88 ↔ 적분 5.37 · 창 전체 걸침 0.00 MPa)
+→ /home/yonghoon/ps45_unload_pre_20261009/plane_ps_3_7_r45_3210000 · 상태 OK 1 / 1
+Parsing atom file: /home/yonghoon/dem_test/ps45/ps_5_5_r45/post_ps_5_5_r45/atom_2900000.liggghts
+  -> 161257 atoms
+Parsing contact file: /home/yonghoon/dem_test/ps45/ps_5_5_r45/post_ps_5_5_r45/contact_2900000.liggghts
+  -> 558432 contacts
+Parsing mesh file: /home/yonghoon/dem_test/ps45/ps_5_5_r45/post_ps_5_5_r45/mesh_2900000.stl
+  -> plate_z = 0.112436, 2 triangles
+No input script found (optional)
+Parse complete!
+         ⚠ 보존 검사 — 단면 하중 최대 ÷ 최소 = 1.0247 > 1 + 0.02
+         α (σ_zz) AM_P 1.404 · AM_S 1.132 · SE 0.483 · AM 1.271 · 닫힘 1.000000000 · LW 창 합 ÷ 21 단면 = 1.0056 (창 안 두 입자 159.06 · 가장자리 LW 6.61 ↔ 적분 5.69 · 창 전체 걸침 0.00 MPa)
+→ /home/yonghoon/ps45_unload_pre_20261009/plane_ps_5_5_r45_2900000 · 상태 OK 0 / 1 (OK 아님: ps_5_5_r45_2900000)
+Parsing atom file: /home/yonghoon/dem_test/ps45/ps_5_5_r45/post_ps_5_5_r45/atom_2930000.liggghts
+  -> 161257 atoms
+Parsing contact file: /home/yonghoon/dem_test/ps45/ps_5_5_r45/post_ps_5_5_r45/contact_2930000.liggghts
+  -> 558496 contacts
+Parsing mesh file: /home/yonghoon/dem_test/ps45/ps_5_5_r45/post_ps_5_5_r45/mesh_2930000.stl
+  -> plate_z = 0.112436, 2 triangles
+No input script found (optional)
+Parse complete!
+ps_5_5_r45_2930000 OK        164.44   1.0196  2.05e-04   52.37 · 36.22 · 11.41   (51.5 · 35.7 · 12.8) · (21.2 · 37.9 · 40.9)
+         α (σ_zz) AM_P 1.403 · AM_S 1.132 · SE 0.484 · AM 1.270 · 닫힘 1.000000000 · LW 창 합 ÷ 21 단면 = 1.0056 (창 안 두 입자 158.77 · 가장자리 LW 6.60 ↔ 적분 5.67 · 창 전체 걸침 0.00 MPa)
+→ /home/yonghoon/ps45_unload_pre_20261009/plane_ps_5_5_r45_2930000 · 상태 OK 1 / 1
+Parsing atom file: /home/yonghoon/dem_test/ps45/ps_7_3_r45/post_ps_7_3_r45/atom_3200000.liggghts
+  -> 160417 atoms
+Parsing contact file: /home/yonghoon/dem_test/ps45/ps_7_3_r45/post_ps_7_3_r45/contact_3200000.liggghts
+  -> 562605 contacts
+Parsing mesh file: /home/yonghoon/dem_test/ps45/ps_7_3_r45/post_ps_7_3_r45/mesh_3200000.stl
+  -> plate_z = 0.111052, 2 triangles
+No input script found (optional)
+Parse complete!
+ps_7_3_r45_3200000 OK        167.36   1.0159  1.71e-04   48.51 · 39.10 · 12.39   (46.4 · 39.4 · 14.2) · (17.0 · 36.4 · 46.6)
+         α (σ_zz) AM_P 1.336 · AM_S 1.086 · SE 0.505 · AM 1.262 · 닫힘 1.000000000 · LW 창 합 ÷ 21 단면 = 1.0006 (창 안 두 입자 160.34 · 가장자리 LW 7.12 ↔ 적분 7.02 · 창 전체 걸침 0.00 MPa)
+→ /home/yonghoon/ps45_unload_pre_20261009/plane_ps_7_3_r45_3200000 · 상태 OK 1 / 1
+Parsing atom file: /home/yonghoon/dem_test/ps45/ps_7_3_r45/post_ps_7_3_r45/atom_3220000.liggghts
+  -> 160417 atoms
+Parsing contact file: /home/yonghoon/dem_test/ps45/ps_7_3_r45/post_ps_7_3_r45/contact_3220000.liggghts
+  -> 562646 contacts
+Parsing mesh file: /home/yonghoon/dem_test/ps45/ps_7_3_r45/post_ps_7_3_r45/mesh_3220000.stl
+  -> plate_z = 0.111052, 2 triangles
+No input script found (optional)
+Parse complete!
+ps_7_3_r45_3220000 OK        167.14   1.0187  1.87e-04   48.46 · 39.14 · 12.39   (46.4 · 39.5 · 14.2) · (17.0 · 36.4 · 46.6)
+         α (σ_zz) AM_P 1.336 · AM_S 1.086 · SE 0.505 · AM 1.261 · 닫힘 1.000000000 · LW 창 합 ÷ 21 단면 = 1.0006 (창 안 두 입자 160.13 · 가장자리 LW 7.10 ↔ 적분 7.01 · 창 전체 걸침 0.00 MPa)
+→ /home/yonghoon/ps45_unload_pre_20261009/plane_ps_7_3_r45_3220000 · 상태 OK 1 / 1
+Parsing atom file: /home/yonghoon/dem_test/ps45/ps_10_0_r45/post_ps_10_0_r45/atom_3600000.liggghts
+  -> 159152 atoms
+Parsing contact file: /home/yonghoon/dem_test/ps45/ps_10_0_r45/post_ps_10_0_r45/contact_3600000.liggghts
+  -> 535278 contacts
+Parsing mesh file: /home/yonghoon/dem_test/ps45/ps_10_0_r45/post_ps_10_0_r45/mesh_3600000.stl
+  -> plate_z = 0.112597, 2 triangles
+No input script found (optional)
+Parse complete!
+         ⚠ 보존 검사 — 단면 하중 최대 ÷ 최소 = 1.0219 > 1 + 0.02
+         α (σ_zz) AM_P 1.317 · AM_S  · SE 0.383 · AM 1.317 · 닫힘 1.000000000 · LW 창 합 ÷ 21 단면 = 1.0150 (창 안 두 입자 168.31 · 가장자리 LW 10.80 ↔ 적분 8.15 · 창 전체 걸침 0.00 MPa)
+→ /home/yonghoon/ps45_unload_pre_20261009/plane_ps_10_0_r45_3600000 · 상태 OK 0 / 1 (OK 아님: ps_10_0_r45_3600000)
+Parsing atom file: /home/yonghoon/dem_test/ps45/ps_10_0_r45/post_ps_10_0_r45/atom_3640000.liggghts
+  -> 159152 atoms
+Parsing contact file: /home/yonghoon/dem_test/ps45/ps_10_0_r45/post_ps_10_0_r45/contact_3640000.liggghts
+  -> 535427 contacts
+Parsing mesh file: /home/yonghoon/dem_test/ps45/ps_10_0_r45/post_ps_10_0_r45/mesh_3640000.stl
+  -> plate_z = 0.112597, 2 triangles
+No input script found (optional)
+Parse complete!
+ps_10_0_r45_3640000 OK        175.48   1.0177  2.26e-04   56.91 · 32.95 · 10.13   (52.0 · 36.7 · 11.3) · (19.8 · 30.5 · 49.6)
+         α (σ_zz) AM_P 1.316 · AM_S  · SE 0.384 · AM 1.316 · 닫힘 1.000000000 · LW 창 합 ÷ 21 단면 = 1.0150 (창 안 두 입자 167.38 · 가장자리 LW 10.73 ↔ 적분 8.10 · 창 전체 걸침 0.00 MPa)
+→ /home/yonghoon/ps45_unload_pre_20261009/plane_ps_10_0_r45_3640000 · 상태 OK 1 / 1
+(myenv) [yonghoon@ibb-master unload_src_adbd6124]$ cd $HOME && tar czf ps45_unload_pre_20261009_plane.tgz ps45_unload_pre_20261009/plane_* && sha256sum ps45_unload_pre_20261009_plane.tgz
+1c8bab3091588afa303bd376cea2a99ebfc14648de5c6c9c5efe7621f3afec93  ps45_unload_pre_20261009_plane.tgz
+(myenv) [yonghoon@ibb-master ~]$ # ── ⓘ S0 판 압력 조건 · G1 기준 줄 · KE 기준 · 원 NP · 덤프 원자 수 ──
+(myenv) [yonghoon@ibb-master ~]$ B=~/dem_test/ps45
+(myenv) [yonghoon@ibb-master ~]$ for x in ps_0_10_r45:3200000:3210000:output_ps_0_10_r45_r6_198527.out ps_3_7_r45:3200000:3210000:output_ps_3_7_r45_r6_198528.out ps_5_5_r45:2900000:2930000:output_ps_5_5_r45_r6_198523.out ps_7_3_r45:3200000:3220000:output_ps_7_3_r45_r8_220537.out ps_10_0_r45:3600000:3640000:output_ps_10_0_r45_r2_195590.out; do
+>   IFS=: read C S T L <<< "$x"; O=$B/logs/$L; echo "████ $C S0=$S s_d=$T $L"
+>   grep -a -m1 "MPI processor grid" $O; grep -a "Loop time" $O | tail -1
+>   awk -v s=$S '/^====== PHASE 4/{p=1; next}
+>     p && $1~/^[0-9]+$/ && NF==5 { if(!h){h=1; print "    setup 줄 (기준 아님):", $0; next}
+>       n++; st[n]=$1; q[n]=$5*1000; ke[n]=$3; at[n]=$2; if($1==s) print "    G1 기준 줄 (정규):", $0 }
+>     END{ m=(n>25)?n-24:1; t=0; for(i=m;i<=n;i++) t+=q[i]; mu=t/(n-m+1)
+>       w=0; mx=0; for(i=1;i<=n;i++) if(st[i]>=s-5000 && st[i]<=s+5000){w++; d=q[i]-mu; if(d<0)d=-d; if(d>mx)mx=d}
+>       printf "    마지막 25 줄 판 평균 %.2f MPa · S0±5000 정규 줄 %d 개 · 최대 |차| %.2f MPa = %.2f %% (등록 조건 ≤ 1 %%)\n", mu, w, mx, 100*mx/mu
+>       for(j=0;j<5;j++){u=0; for(i=m+5*j;i<m+5*j+5;i++) u+=ke[i]; v[j]=u/5}
+>       for(a=0;a<5;a++) for(b=a+1;b<5;b++) if(v[b]<v[a]){y=v[a]; v[a]=v[b]; v[b]=y}
+>       printf "    KE 5 창 (5 줄씩) 평균의 중앙값 %.3g J · 정규 줄 %d · 원자 %d → %d\n", v[2], n, at[1], at[n] }' $O
+>   for t in $S $T; do echo "    atom_$t 원자 수: $(sed -n 4p $B/$C/post_$C/atom_$t.liggghts)"; done
+> done
+████ ps_0_10_r45 S0=3200000 s_d=3210000 output_ps_0_10_r45_r6_198527.out
+  5 by 1 by 1 MPI processor grid
+Loop time of 9948.15 on 5 procs for 100000 steps with 163348 atoms, finish time Thu Sep 24 16:58:08 2026
+    setup 줄 (기준 아님):  3110000   163349  1.7499723e-05              0     0.35242556
+    G1 기준 줄 (정규):  3200000   163348  4.3937936e-07      8973.1083     0.15662662
+    마지막 25 줄 판 평균 156.56 MPa · S0±5000 정규 줄 11 개 · 최대 |차| 0.22 MPa = 0.14 % (등록 조건 ≤ 1 %)
+    KE 5 창 (5 줄씩) 평균의 중앙값 5.49e-07 J · 정규 줄 100 · 원자 163349 → 163348
+    atom_3200000 원자 수: 163348
+    atom_3210000 원자 수: 163348
+████ ps_3_7_r45 S0=3200000 s_d=3210000 output_ps_3_7_r45_r6_198528.out
+  2 by 2 by 1 MPI processor grid
+Loop time of 11479.5 on 4 procs for 100000 steps with 162093 atoms, finish time Thu Sep 24 18:19:21 2026
+    setup 줄 (기준 아님):  3115000   162095   1.774842e-05              0     0.36556842
+    G1 기준 줄 (정규):  3200000   162093  3.5843559e-07      9907.9652     0.15801804
+    마지막 25 줄 판 평균 158.20 MPa · S0±5000 정규 줄 11 개 · 최대 |차| 0.29 MPa = 0.18 % (등록 조건 ≤ 1 %)
+    KE 5 창 (5 줄씩) 평균의 중앙값 3.45e-07 J · 정규 줄 100 · 원자 162095 → 162093
+    atom_3200000 원자 수: 162093
+    atom_3210000 원자 수: 162093
+████ ps_5_5_r45 S0=2900000 s_d=2930000 output_ps_5_5_r45_r6_198523.out
+  5 by 1 by 1 MPI processor grid
+Loop time of 11143.2 on 5 procs for 100000 steps with 161257 atoms, finish time Thu Sep 24 04:43:59 2026
+    setup 줄 (기준 아님):  2835000   161258  1.7635568e-05              0     0.35984668
+    G1 기준 줄 (정규):  2900000   161257  1.4585879e-06      7415.8825     0.16245174
+    마지막 25 줄 판 평균 162.72 MPa · S0±5000 정규 줄 11 개 · 최대 |차| 1.14 MPa = 0.70 % (등록 조건 ≤ 1 %)
+    KE 5 창 (5 줄씩) 평균의 중앙값 2.33e-07 J · 정규 줄 100 · 원자 161258 → 161257
+    atom_2900000 원자 수: 161257
+    atom_2930000 원자 수: 161257
+████ ps_7_3_r45 S0=3200000 s_d=3220000 output_ps_7_3_r45_r8_220537.out
+  6 by 4 by 1 MPI processor grid
+Loop time of 3677.27 on 24 procs for 100000 steps with 160417 atoms, finish time Thu Sep 24 17:25:15 2026
+    setup 줄 (기준 아님):  3125000   160420  1.6992482e-05              0     0.30893332
+    G1 기준 줄 (정규):  3200000   160417  1.3419507e-06      2708.2896     0.16576139
+    마지막 25 줄 판 평균 165.43 MPa · S0±5000 정규 줄 11 개 · 최대 |차| 0.52 MPa = 0.32 % (등록 조건 ≤ 1 %)
+    KE 5 창 (5 줄씩) 평균의 중앙값 2.04e-07 J · 정규 줄 100 · 원자 160420 → 160417
+    atom_3200000 원자 수: 160417
+    atom_3220000 원자 수: 160417
+████ ps_10_0_r45 S0=3600000 s_d=3640000 output_ps_10_0_r45_r2_195590.out
+  11 by 1 by 1 MPI processor grid
+Loop time of 8105.51 on 11 procs for 100000 steps with 159152 atoms, finish time Tue Sep 22 08:27:11 2026
+    setup 줄 (기준 아님):  3540001   159161  1.5902832e-05              0     0.30886047
+    G1 기준 줄 (정규):  3600000   159152  3.5470853e-06      4949.0455     0.17428757
+    마지막 25 줄 판 평균 173.94 MPa · S0±5000 정규 줄 11 개 · 최대 |차| 1.79 MPa = 1.03 % (등록 조건 ≤ 1 %)
+    KE 5 창 (5 줄씩) 평균의 중앙값 9.88e-08 J · 정규 줄 101 · 원자 159161 → 159152
+    atom_3600000 원자 수: 159152
+    atom_3640000 원자 수: 159152
+(myenv) [yonghoon@ibb-master ~]$
