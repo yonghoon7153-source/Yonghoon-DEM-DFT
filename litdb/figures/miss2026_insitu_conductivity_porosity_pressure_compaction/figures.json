@@ -1,0 +1,334 @@
+{
+ "slug": "miss2026_insitu_conductivity_porosity_pressure_compaction",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-10-09",
+ "sources": [
+  "1. Experimental Setup for In Situ Determination of Conductivity-Porosity-Pressure Relationships.pdf",
+  "1. Sup) Experimental Setup for In Situ Determination of Conductivity-Porosity-Pressure Relationships.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 2,
+   "file": "fig_1.png",
+   "caption": "Figure 1. (a) Schematic illustration of the airtight measuring cell; (b) technical drawing of the measuring cell and of the micrometer screw; (c) sketch of the piston with a groove in the middle of the recess ensuring that the micrometer screw is positioned in a reproducible fashion. X-ray diffraction (XRD) measurements on the μc-LPSCl powders were executed using a powder diffractometer STOE STADI MP (STOE, Darmstadt, Germany) and Cu−Kα radiation in a Debye− Scherrer geometry. For this purpose, the powder was filled into a mark tube (Hilgenberg, Malsfeld, Germany) and was closed with a wax under argon. The electronic conductivity of cathode active materials (CAMs), which are mixed with SE particles inside the composite cathode of ASSBs, also plays an important role in the ASSB performance. Common CAMs are transition-metal oxides, such as LiNixMnyCozO2 (x + y + z = 1).27,28 Since such oxi",
+   "rotated_deg": 0,
+   "bbox": [
+    45.5,
+    54.4,
+    561.5,
+    249.0
+   ],
+   "w": 2151,
+   "h": 812,
+   "dpi": 300,
+   "src": "1. Experimental Setup for In Situ Determination of Conductivity-Porosity-Pressure Relationships.pdf",
+   "blank": 0.866,
+   "viewed": true
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 3,
+   "file": "fig_2.png",
+   "caption": "Figure 2. (a) Technical drawing of the test station. (b) Schematic sketch of a sample thickness measurement under an applied pressure p.",
+   "rotated_deg": 0,
+   "bbox": [
+    45.5,
+    247.8,
+    297.5,
+    368.7
+   ],
+   "w": 1051,
+   "h": 505,
+   "dpi": 300,
+   "src": "1. Experimental Setup for In Situ Determination of Conductivity-Porosity-Pressure Relationships.pdf",
+   "blank": 0.808,
+   "viewed": true
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 3,
+   "file": "fig_3.png",
+   "caption": "Figure 3. (a) Pressure-dependent thickness of a microcrystalline solid electrolyte Li5.5PS4.5Cl1.5 (μc-LPSCl) pellet at the applied pressure (black), after release to the minimum pressure (110 kPa) in the measuring cell (red), and after pressing the sample out of the measuring cell (blue). (b) Pressure-dependent ionic conductivity of μc-LPSCl calculated using the in situ thickness under pressure control (black) and using the thickness of the pressed-out sample (blue). https://doi.org/10.1021/acsami.6c03789 ACS Appl. Mater. Interfaces 2026, 18, 32830−32836 32832",
+   "rotated_deg": 0,
+   "bbox": [
+    45.5,
+    514.8,
+    561.5,
+    704.4
+   ],
+   "w": 2151,
+   "h": 790,
+   "dpi": 300,
+   "src": "1. Experimental Setup for In Situ Determination of Conductivity-Porosity-Pressure Relationships.pdf",
+   "blank": 0.943,
+   "viewed": true
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 4,
+   "file": "fig_4.png",
+   "caption": "Figure 4. (a) Pressure-dependent porosity ϵvoid(p) of the μc-LPSCl pellet (black) and of the pc-NMC622 pellet (purple). The closed symbols are in situ porosities under an applied pressure, while the open symbols are porosities after pressure release to the minimum pressure. (b) Conductivity−porosity relationships for both materials under applied pressure (symbols) and fit with the MWHB theory using eq 5 (lines). In both (a) and (b), the colored background illustrates the two porosity regimes: (i) blue: ϵvoid > 0.2; (ii) yellow: ϵvoid < 0.17. The shaded area marks the transition between the two regimes. ( ) 1 ( ) p p pressure of 400 MPa leads to a further increase in the sample thickness. = void 0 In Figure 3b, results for the pressure-dependent ionic conductivity of a μc-LPSCl pellet are shown. The black dots are conductivity values calculated with the sample thickness determined in situ",
+   "rotated_deg": 0,
+   "bbox": [
+    45.5,
+    54.4,
+    561.5,
+    228.6
+   ],
+   "w": 2151,
+   "h": 727,
+   "dpi": 300,
+   "src": "1. Experimental Setup for In Situ Determination of Conductivity-Porosity-Pressure Relationships.pdf",
+   "blank": 0.623,
+   "viewed": true
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 5,
+   "file": "fig_5.png",
+   "caption": "Figure 5. (Left) SEM images of pc-NMC622 powder and cross- sectional SEM images of pc-NMC622 pellets after compression at different pressures. (Right) SEM images of μc-LPSCl powder and cross-sectional SEM images of μc-LPSCl pellets after compression at different pressures. The white lines are guides to the eye for pressure- induced changes of the particle morphology improving the interfacial contacts. the pressure from 200 to 400 MPa (corresponding to ϵvoid = 0.14) leads mainly to a reduction of the void space in the pellets. Therefore, it is plausible that the interrelation between porosity and conductivity in this regime (yellow background color in Figure 4) is well described by the MWBH theory. On the left-hand side of Figure 6, we sketch the pressure-induced changes of the interfacial contacts and the pressure-induced reduction of void space in the two distinct regimes of the σ(ϵvoid",
+   "rotated_deg": 0,
+   "bbox": [
+    313.4,
+    58.4,
+    557.4,
+    401.9
+   ],
+   "w": 1018,
+   "h": 1432,
+   "dpi": 300,
+   "src": "1. Experimental Setup for In Situ Determination of Conductivity-Porosity-Pressure Relationships.pdf",
+   "blank": 0.094,
+   "viewed": true,
+   "auto_bbox": [
+    287.4,
+    54.4,
+    561.5,
+    405.9
+   ],
+   "px": 1457776,
+   "recrop": "2026-10-09 수동 재크롭 — 자동 bbox x0 287.4 pt 가 왼쪽 단 본문 (텍스트 블록 x 51.5–291.5) 을 4 pt 넣어 그림 왼쪽 가장자리에 본문 글자 조각이 섞였다. clip = 그림 래스터 경계 (315.4, 60.4, 555.4, 399.9) + 2 pt (캡션 윗선 y 409.9 앞)"
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 6,
+   "file": "fig_6.png",
+   "caption": "Figure 6. Schematic illustration of pressure-induced changes in the particle morphology and void space of (left) pc-NMC622 and (right) μc-LPSCl.",
+   "rotated_deg": 0,
+   "bbox": [
+    45.5,
+    54.4,
+    297.5,
+    220.2
+   ],
+   "w": 1051,
+   "h": 692,
+   "dpi": 300,
+   "src": "1. Experimental Setup for In Situ Determination of Conductivity-Porosity-Pressure Relationships.pdf",
+   "blank": 0.607,
+   "viewed": true
+  },
+  {
+   "key": "fS1",
+   "kind": "figure",
+   "label": "S1",
+   "page": 2,
+   "file": "fig_S1.png",
+   "caption": "Figure S1. Comparison of the spring characteristic of the soft (a) and stiff (b) springs with the manufacturer specifications fnominal(x)",
+   "rotated_deg": 0,
+   "bbox": [
+    74.2,
+    317.6,
+    521.1,
+    490.8
+   ],
+   "w": 1863,
+   "h": 722,
+   "dpi": 300,
+   "src": "1. Sup) Experimental Setup for In Situ Determination of Conductivity-Porosity-Pressure Relationships.pdf",
+   "blank": 0.91,
+   "viewed": true,
+   "si": true,
+   "auto_bbox": [
+    64.8,
+    313.6,
+    533.1,
+    475.4
+   ],
+   "px": 1345086,
+   "recrop": "2026-10-09 수동 재크롭 — 자동 bbox 하단 475.4 pt 가 캡션 블록 윗선 (부풀려진 글꼴 상자 477.4) 에 맞춰 끊겨 두 패널의 x 축 제목 'Spring deflection / mm' 과 눈금 숫자 아랫부분이 잘렸다 (래스터는 488.8 pt 까지). clip = 두 래스터 합집합 (76.2, 335.0, 519.1, 488.8) + 패널 표지 (a)(b) (y 319.6) + 2 pt · 캡션 글자 실제 윗선 y 492.1 앞"
+  },
+  {
+   "key": "fS2",
+   "kind": "figure",
+   "label": "S2",
+   "page": 3,
+   "file": "fig_S2.png",
+   "caption": "Figure S2. Powder XRD pattern of µc-Li5.5PS4.5Cl1.5 (black) with the references of Li5.5PS4.5Cl1.5 (red),1 LiCl (green)2 and γ-Li3PS4 (blue).3",
+   "rotated_deg": 0,
+   "bbox": [
+    139.9,
+    137.5,
+    455.1,
+    370.5
+   ],
+   "w": 1315,
+   "h": 972,
+   "dpi": 300,
+   "src": "1. Sup) Experimental Setup for In Situ Determination of Conductivity-Porosity-Pressure Relationships.pdf",
+   "blank": 0.917,
+   "viewed": true,
+   "si": true,
+   "auto_bbox": [
+    64.8,
+    65.3,
+    533.4,
+    374.5
+   ],
+   "px": 1278180,
+   "recrop": "2026-10-09 수동 재크롭 — 자동 bbox 상단 65.3 pt 가 SI 절 제목 'Results' (y 71.3–84.6, 본문 활자) 와 빈 여백을 넣었다. clip = 그림 래스터 경계 (141.9, 139.5, 453.1, 368.5) + 2 pt (캡션 윗선 y 378.0 앞)"
+  },
+  {
+   "key": "fS3",
+   "kind": "figure",
+   "label": "S3",
+   "page": 3,
+   "file": "fig_S3.png",
+   "caption": "Figure S3. Pressure protocol for the in-situ thickness and impedance measurements of (a) µc- LPSCl and (b) pc-NMC622 in the new test station. The measurements were carried out during the constant-pressure intervals.",
+   "rotated_deg": 0,
+   "bbox": [
+    64.8,
+    501.4,
+    533.5,
+    646.7
+   ],
+   "w": 1953,
+   "h": 606,
+   "dpi": 300,
+   "src": "1. Sup) Experimental Setup for In Situ Determination of Conductivity-Porosity-Pressure Relationships.pdf",
+   "blank": 0.951,
+   "viewed": true,
+   "si": true
+  },
+  {
+   "key": "fS4",
+   "kind": "figure",
+   "label": "S4",
+   "page": 4,
+   "file": "fig_S4.png",
+   "caption": "Figure S4. (a) Pressure-dependent thickness of the cathode active material pc-NMC622 under an applied pressure (black) and after pressure release to the minimum pressure of 110 kPa inside the measuring cell (red) as well as after pressing-out the sample of the measuring cell (blue). (b) Pressure-dependent electronic conductivity of the cathode active material pc-NMC622 calculated using the in situ thickness under applied pressure (black) and using the thickness of the pressed-out sample (blue). In Miß et al., we have shown that the increase of the electronic conductivity during the compression of a pc-NMC622 pellet is an irreversible process.4 During pressure release, the electronic conductivity is virtually constant (expect at very low pressures, at which sample/electrode interfacial resistances become relevant). In contrast, the pressure dependence of the material-characteristic electr",
+   "rotated_deg": 0,
+   "bbox": [
+    74.2,
+    115.1,
+    519.8,
+    305.3
+   ],
+   "w": 1857,
+   "h": 794,
+   "dpi": 300,
+   "src": "1. Sup) Experimental Setup for In Situ Determination of Conductivity-Porosity-Pressure Relationships.pdf",
+   "blank": 0.954,
+   "viewed": true,
+   "si": true,
+   "auto_bbox": [
+    64.8,
+    111.1,
+    533.5,
+    290.7
+   ],
+   "px": 1474458,
+   "recrop": "2026-10-09 수동 재크롭 — 자동 bbox 하단 290.7 pt 가 캡션 블록 윗선 (부풀려진 글꼴 상자 292.7) 에 맞춰 끊겨 두 패널의 x 축 제목 'p / MPa' 가 잘렸다 (래스터는 303.3 pt 까지). clip = 두 래스터 합집합 (76.2, 132.5, 517.8, 303.3) + 패널 표지 (a)(b) (y 117.1) + 2 pt · 캡션 글자 실제 윗선 y 305.9 앞"
+  },
+  {
+   "key": "fS5",
+   "kind": "figure",
+   "label": "S5",
+   "page": 5,
+   "file": "fig_S5.png",
+   "caption": "Figure S5. (Left) Additional cross-sectional SEM images of pc-NMC622 pellets after compression at 50 MPa and at 200 MPa, respectively. (Right) Additional cross-sectional SEM images of µc-LPSCl pellets after compression at 50 MPa.",
+   "rotated_deg": 0,
+   "bbox": [
+    81.1,
+    92.7,
+    512.9,
+    553.0
+   ],
+   "w": 1801,
+   "h": 1919,
+   "dpi": 300,
+   "src": "1. Sup) Experimental Setup for In Situ Determination of Conductivity-Porosity-Pressure Relationships.pdf",
+   "blank": 0.235,
+   "viewed": true,
+   "si": true,
+   "auto_bbox": [
+    64.8,
+    88.7,
+    527.6,
+    551.3
+   ],
+   "px": 3456119,
+   "recrop": "2026-10-09 수동 재크롭 — 자동 bbox 하단 551.3 pt 가 맨 아래 (200 MPa) 패널 테두리 (그림 선 합집합 y 552.1 까지) 를 잘랐고 왼쪽 18 pt 빈 여백을 넣었다. clip = 래스터 (83.6, 95.2, 510.4, 551.6) ∪ 테두리 선 (83.1, 94.7, 510.9, 552.1) + 2 pt · 하단은 캡션 윗선 y 553.3 앞 0.3 pt"
+  },
+  {
+   "key": "tS1",
+   "kind": "table",
+   "label": "S1",
+   "page": 6,
+   "file": "tab_S1.png",
+   "caption": "Table S1. Characteristic data of µc-Li5.5PS4.5Cl1.5 and pc-LiNi0.6Mn0.2Co0.2O2 pellets. µc-Li5.5PS4.5Cl1.5 pc-LiNi0.6Mn0.2Co0.2O2 Mass of particles in a single pellet 𝒎 / mg 80.2 80.0 Diameter of the pellet 𝒅 / cm 0.5 0.5 Mass density of the particles 𝝆𝟎 / g cm−3 1.871 4.485 Young’s modulus 𝑬 / GPa 676 1807",
+   "rotated_deg": 0,
+   "bbox": [
+    65.8,
+    66.3,
+    529.2,
+    238.2
+   ],
+   "w": 1931,
+   "h": 717,
+   "dpi": 300,
+   "src": "1. Sup) Experimental Setup for In Situ Determination of Conductivity-Porosity-Pressure Relationships.pdf",
+   "blank": 0.602,
+   "viewed": true,
+   "si": true
+  },
+  {
+   "key": "tS2",
+   "kind": "table",
+   "label": "S2",
+   "page": 6,
+   "file": "tab_S2.png",
+   "caption": "Table S2. Calculation of the elastic deformation of the pellets, ∆𝑑𝑠𝑡𝑟𝑎𝑖𝑛, under different applied pressures p. 𝒑 / MPa 𝒅 at x MPa / mm 𝒅 at minimum pressure / mm ∆𝒅𝒔𝒕𝒓𝒂𝒊𝒏 / mm µc-Li5.5PS4.5Cl1.5 10 0.77875 0.778125 −0.000116 20 0.736875 0.744375 −0.000222 30 0.71625 0.718125 −0.000322 40 0.701875 0.7 −0.000418 50 0.680625 0.6875 −0.000513 70 0.66375 0.669375 −0-000700 100 0.6475 0.66 −0.000985 150 0.620625 0.634375 −0.001421 200 0.604375 0.6175 −0.001844 250 0.5925 0.603125 −0.002251 300 0.588 0.5975 −0.002671 350 0.575625 0.588125 −0.003072 400 0.566875 0.5825 −0.003478 pc-LiNi0.6Mn0.2Co0.2O2 50 0.343125 0.345625 −0.000096 100 0.32625 0.33375 −0.000185 150 0.311875 0.321875 −0.000268 200 0.29625 0.31125 −0.000346 250 0.285625 0.304375 −0.000423 300 0.276875 0.29875 −0.000497 350 0.26875 0.291875 −0.000567 400 0.264375 0.283125 −0.000629",
+   "rotated_deg": 0,
+   "bbox": [
+    65.8,
+    275.0,
+    532.4,
+    693.7
+   ],
+   "w": 1945,
+   "h": 1746,
+   "dpi": 300,
+   "src": "1. Sup) Experimental Setup for In Situ Determination of Conductivity-Porosity-Pressure Relationships.pdf",
+   "blank": 0.548,
+   "viewed": true,
+   "si": true
+  }
+ ],
+ "missing_labels": [],
+ "note_manual": "2026-10-09 큐레이터 검수 — 13장 전부 Read 로 열람 (viewed). 자동 크롭 5장 수동 재크롭 (fig_5 · fig_S1 · fig_S2 · fig_S4 · fig_S5 — 사유는 각 항목 recrop · 원 bbox 는 auto_bbox). 나머지 8장 (fig_1–4 · fig_6 · fig_S3 · tab_S1 · tab_S2) 은 자동 크롭 그대로. 캡션 목록 대조: 본문 Figure 1–6 · SI Figure S1–S5 · Table S1–S2 = 13 = 크롭 13 (빠진 번호 없음 · 본문 표 없음)."
+}
