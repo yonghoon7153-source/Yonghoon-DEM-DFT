@@ -4405,3 +4405,43 @@ gate INCOMPLETE · 실효 정책 UNVERIFIED · native 미승인 · 게이트 리
   (이미 있으면 중지) · 전체 3,600 s (작성 2,400 · 정적 대조 600 · 보존 · 전달 480 · 미완 정리 120) · 폴더 ≤ 50 MiB · 시작 디스크 ≥ 512 MiB · native / JVM / 기능 시험 0 · MPH 열기 ·
   받은 모듈 import 0 · 설치 · fetch · 환경 재구축 · 권한 상승 미포함 (네트워크 읽기가 필요하면 착수 전에 범위를 따로 명시). 그 뒤에도 변경부 검증 · 실제 관측의 별도 승인 → P0 한 건
   native 요청 순서다 — 첫 COMSOL 미세단락 계산까지 이번 포함 최소 3 번의 승인. 발송 프롬프트 `docs/COMSOL_MICROSHORT_S1_OPEN_CONNECTION_SEND_20261009.md`. 이 절은 승인이 아니다.
+
+## 85. S1 OPEN 연결부 오프라인 준비본 — 정적 검토 회신 접수: 준비 성과 확인 · 새 한정 검증 전 정정 OPEN-R1-N1 (P1) · N2 · N3 (P2) (2026-10-10 · 실행 0)
+
+- 보존: `reviews/r14_repros/codex63/comsol_microshort_s1_open_connection_preparation_review_20261010/` — zip 1,953,422 B · sha256 `f23d02b01b7a2ae96a2cfcf17009d73a2c47cddae7895c124aea6543b15bdd15` ·
+  압축 해제 92 · manifest 91 / 91 · 그 안의 `received/` = 실행 Codex 준비본 (zip 1,929,576 B · sha256 `32cbb6ee5b8885a645da762154dab38d8f67ef4c7f97b5b4bc9c2ecd5fdd6f5c` 의 펼친 사본 ·
+  PACKAGE_MANIFEST `63c27d87…7019` 79 / 79) · 비밀 0 · 받은 코드 · 후보 · 동봉 스크립트 실행 0. 규칙 `17746954` → 보존 `b3f509fc`.
+  `received/reference/` 의 DECISION · NEXT_APPROVAL_DRAFT · REVIEW · PRIOR_REVIEW.zip = §84 보존본과 바이트 동일 · `reference/r1/` 22 = §79 R1 정정본과 바이트 동일.
+  준비본 zip 원바이트와 ZIP 밖 기록 5 개 (DELIVERY_RECEIPT · FINAL_PACKAGE_TOOL_RETURN · PACKAGE_STDOUT · SELECTED_SOURCES_AFTER_PACKAGE · FINAL_SUBMISSION_CHECK — 크기 · SHA 는
+  회신 `USER_SUPPLEMENT_SUMMARY.json` 에 보고값으로만 있음) 은 이 저장소에 없다.
+- 승인 경위 (출처 구분): §84 발송문 커밋 2026-10-09T13:07:50Z → 사용자 질문 "보충 검토 zip은 내가 너한테 먹여준거?" 13:40:15Z → 준비 원점 `ORIGIN.json` 13:40:27Z ·
+  근거 "User supplied exact S1 OPEN preparation scope and go-ahead; no native or network permission" · `ACCEPTANCE_LINK.json` 의 회신 zip = `17779cbd…` (§84 의 첨부 지시와 같음) — 모두 **제출자 기록**.
+  사용자의 승인 · 발송 원문은 이 저장소에 없다 (시점은 모순 없음).
+- 준비본 (`received/REPORT_KO.md` · `IN_PACKAGE_CLOSEOUT.json` — 제출자 기록): `OFFLINE_PREPARATION_SUBMITTED_WITH_FOUR_OPEN_ITEMS` · 새 CODE_MANIFEST `be197642…f749f` (11 구성원) ·
+  원 R1 21 구성원 · consumer / control / Parent 불변 · P0 새 사본 = 원문 + 읽기용 helper 3 (호출 지점 · runAll 추가 0 · `denyS0Execution()` 유지) · 새 Python 후보 2 (`raw_connection` · `resource_connection`) ·
+  COMSOL 6.3 설치 HTML 문서만 로컬로 읽음 (네트워크 0) · 정적 기록 74 · 검증안 8 군 50 사례 (Python 44 · Java helper 6 · 제안 예산 1,350 s) · 기능 시험 · native · JVM · compile · solve 0 ·
+  준비 1,466.65 / 2,400 s · 정적 88.38 / 600 s · 포장 전 1,630.49 / 3,600 s · 전달 75.45 / 480 s.
+- 판정 (회신 `DECISION.json` · `REVIEW_KO.md`): `OFFLINE_PREPARATION_REVIEWED_REVISIONS_REQUIRED_BEFORE_LIMITED_VALIDATION` · 이전 수용 (`LIMITED_VALIDATION_CLOSED_WITH_DOCUMENTED_SCOPE`) 유지 ·
+  P0 추가 블록 2,553 B 를 빼면 원 P0 전체 바이트와 같음 · 현 50 사례안 실행은 권하지 않음 · OPEN 4 닫힘 0 · `native_ready / approved / usable = false` · 구현 · 한정 검증 · native 승인 아님.
+  - **OPEN-R1-N1 · P1** (`resource_connection.py.inactive.txt:69–86`): 전체 / native 원점을 raw 샘플이 스스로 주장 — 순서만 맞으면 원점을 앞으로 옮겨 경과를 줄일 수 있다.
+    → 시작 때 고정한 독립 context 에 원점 · clock 단위를 결속하고 그 값으로 계산 · 원점 부재 · 변경 · 다른 run / clock 거부 · 원점 이동 음성 / 고정 원점 기준 실제 초과를 대응 양성과 함께 검증안에.
+  - **OPEN-R1-N2 · P2** (같은 파일 49–58 · 96–104): `process_counters` 항목 타입을 `.get` 전에 검사하지 않음 — `[null]` 은 일반 `AttributeError` 로 빠져 `resource_decision` 의 구조화된 `STOP_REQUIRED` 밖으로 나간다.
+    → 항목 타입 · 필수 키 · PID / creation 타입 명시 검사 · 전용 이유 · `assess_resources` 호출 0 고정 · 모든 예외를 PASS / 정상으로 바꾸는 수정은 금지.
+  - **OPEN-R1-N3 · P2** (`LIMITED_VALIDATION_PLAN.json` C04-03~05 · C07-03~06 · C08-01~06): C07-03 은 `OS_QUERY_FAILURE` 가 먼저 나서 요구된 `assess_resources` 도달이 불가 → 호출 0 을 요구 ·
+    C04-03~05 의 양성 C04-01 (`proof=None` 조기 반환) → C04-02 · C07-05 / 06 의 양성 C07-01 (assess 경로) → 같은 `advance_stop` 양성 (C07-04 등) · C08-05 의 양성 C08-01 → stored-grid 양성 C08-04 ·
+    의존 함수 · 예외 / 반환 위치 봉인 · 새 사례 수 · 예산 제시 (50 유지가 목표 아님).
+  - 보충 전달 기록: 수용 — 마지막 1,685.0463578 s / 전달 130.0137145 s 는 확인 파일 쓰기 · 재읽기 뒤 · SHA 계산 · 도구 반환 전 snapshot · 기록 범위는 3,600 / 480 s 안 · wall time 미합산 ·
+    끝까지의 경과는 `UNOBSERVED_NOT_DECLARED_OVER_BUDGET` · ZIP 밖 JSON 은 사용자 후속 전사 (원바이트 미수신) · 재포장 · 재계산 불요.
+- **이 저장소의 정적 확인 (실행 0 · `received/` 사본으로):**
+  - N1: 69–74 행은 `native_origin_s` · `overall_origin_s` 의 유한성과 `overall ≤ native ≤ start ≤ end` · `previous ≤ start` 만 보고, 84–85 행이 `end − raw[...]` 로 경과를 계산한다 — `anchors` 와의 대조 없음.
+    accepted `control.py` 196–199 행은 그 경과를 `limit − stop_reserve` 와만 비교한다. 계약 (`RESOURCE_CONTRACT.json`) 한도: 간격 6 s · 측정 1 s · native 7,200 · 전체 9,000 · reserve 120 s →
+    회신 반례 (원점 9,960 · start 9,999.5 · end 10,000 · 직전 9,995) 는 간격 5 · 측정 0.5 · 경과 40 / 40 s 로 모든 검사를 지나고, 실제 경과 10,000 / 9,700 s 의 `STOP_RESERVE_ENTERED` 를 내지 않는다.
+  - N2: 51 행은 list · 길이만 검사하고 54 행이 곧바로 `p.get(...)` — 멤버 1 · `[None]` 이면 길이 검사를 지나 `AttributeError`, 101 행 `except ResourceConnectionError` 가 받지 못한다.
+  - N3: C07-03 의 `reached_function_required` = `resource_decision -> control.assess_resources` 인데 32 행 `OS_QUERY_FAILURE` 가 100 행보다 먼저 · 양성 지정 (C04-01 · C07-01 · C08-01) 은 계획 JSON 그대로 ·
+    `raw_connection` 132–134 행의 `proof is None` 조기 반환이 non-null 검사 전부를 건너뜀.
+  - 관측 (판정 아님 · 다음 검토 때 물을 것): N2 와 같은 "구조 검사 전 키 접근" 모양이 `raw_connection.quadrature_projection` 139–140 행 (`proof['raw_identity']` · `ident['path']`) 에도 있다.
+    이 함수는 구조화된 반환을 약속하지 않고 `ConnectionError` 를 올리는 계약이라 같은 결함인지는 호출자 계약에 달렸다.
+- 상태: S1-O 한정 기능 검증 종결 유지 · OPEN 4 그대로 · 준비본 + 74 기록 보존 · `native_ready=false` · 전체 / 정상 gate INCOMPLETE · microshort 효과 결과 · 장시간 GO 없음.
+- 다음 (사용자 결정): **추가부 좁은 정정 · 정적 재봉인 1 건 (OPEN-R1)** — 회신 §5 의 권고 그대로 (N1 / N2 의 투영 계약 · 코드 + N3 의 검증안만 · 새 비활성 revision · 준비본 덮어쓰기 0).
+  회신에는 채택 문구 초안이 없어서 이 저장소가 썼다 (범위 = 회신 §2 · §5 · 예산 = 이 저장소 제안 2,400 s: 정정 작성 1,200 · 정적 확인 300 · 검증안 갱신 · 재봉인 480 · 보존 · 전달 300 · 미완 정리 120).
+  발송 프롬프트 `docs/COMSOL_MICROSHORT_S1_OPEN_R1_SEND_20261010.md`. 그 뒤: 새 하네스 봉인 + 변경부 한정 검증 → 설치본 관측 → P0 native — 각각 별도 승인. 이 절은 승인이 아니다.
