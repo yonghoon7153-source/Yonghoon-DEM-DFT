@@ -4445,3 +4445,13 @@ gate INCOMPLETE · 실효 정책 UNVERIFIED · native 미승인 · 게이트 리
 - 다음 (사용자 결정): **추가부 좁은 정정 · 정적 재봉인 1 건 (OPEN-R1)** — 회신 §5 의 권고 그대로 (N1 / N2 의 투영 계약 · 코드 + N3 의 검증안만 · 새 비활성 revision · 준비본 덮어쓰기 0).
   회신에는 채택 문구 초안이 없어서 이 저장소가 썼다 (범위 = 회신 §2 · §5 · 예산 = 이 저장소 제안 2,400 s: 정정 작성 1,200 · 정적 확인 300 · 검증안 갱신 · 재봉인 480 · 보존 · 전달 300 · 미완 정리 120).
   발송 프롬프트 `docs/COMSOL_MICROSHORT_S1_OPEN_R1_SEND_20261010.md`. 그 뒤: 새 하네스 봉인 + 변경부 한정 검증 → 설치본 관측 → P0 native — 각각 별도 승인. 이 절은 승인이 아니다.
+
+## 86. OPEN-R1 발송 · 첨부 정정 (2026-10-11 · 실행 0)
+
+- 사용자 전사 (실행 Codex 응답 · 표시 시각 "오후 2:10" · 날짜 표기 없음): "확인했습니다. 첨부하신 파일은 10월 9일 원준비본입니다. 필요한 파일은 N1–N3 수정 근거가 담긴 10월 10일 검토 회신 ZIP입니다.
+  COMSOL_MICROSHORT_S1_OPEN_CONNECTION_PREPARATION_REVIEW_20261010.zip 이 파일을 첨부해 주세요. 기존 승인은 유지하며, 아직 코드 수정·시험·COMSOL 실행은 하지 않았습니다."
+- 읽기: 사용자가 §85 의 OPEN-R1 발송문 (`docs/COMSOL_MICROSHORT_S1_OPEN_R1_SEND_20261010.md` · sha256 `eb8722fe1b2a268f89392c9eec17fbf48fcc3e11bf8a3130cff63c7ce3908c12`) 을 실행 Codex 에 보냈고,
+  실행 Codex 는 승인을 유지한 채 첨부 정정만 요청했다. 승인 원문 · 발송 시각은 실행 Codex 대화에 있고 이 저장소에는 없다 (발송 · 승인 = 사용자 전사 · 실행 Codex 진술).
+- 첨부 정정: 처음 첨부는 실행 Codex 표현으로 "10월 9일 원준비본" (정확한 파일 식별은 기록 없음). 필요한 회신 zip 은 §85 보존본 그대로 사용자에게 다시 보냈다 —
+  `COMSOL_MICROSHORT_S1_OPEN_CONNECTION_PREPARATION_REVIEW_20261010.zip` · 1,953,422 B · sha256 `f23d02b01b7a2ae96a2cfcf17009d73a2c47cddae7895c124aea6543b15bdd15` (발송문 §1 의 식별과 같음).
+- 실행 Codex 진술: 코드 수정 · 시험 · COMSOL 실행 0 (착수 전). OPEN-R1 결과 묶음은 아직 없다.
