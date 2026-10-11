@@ -117,8 +117,11 @@
   ⇒ QE 추정(`Estimated max dynamical RAM`)이 그 안에 안 들면 **질문·모델 크기를 바꾼다** (li2s 선례: 400 → 120 원자).
   (옛 기록: Slurm · QOS 제출 제한 · scancel 직후 재제출 금지 · pseudo /scratch/x3430a02/kgy/manuscript_support/pseudo)
 - ⭐⭐ **1저자 (2026-09-23): 큰 계산은 GPU 로.** W_ad DFT 같은 큰 잡을 CPU(host RAM)로 돌리는 계획을 세우지 않는다 ⇒
-  큰 잡의 메모리 상한은 **GPU 한 장** (gabia 48 GB). ✅ 메모리 **추정치 읽기** CPU pw.x 프로브(수 초 · PID 로 죽임)와
-  작은 작업은 CPU 로 해도 된다 (1저자 정정 *"ㄴㄴ 이런 큰작업은 gpu로 하라는 얘기였어"* — 처음에 내가 "모든 작업" 으로 넓혀 적었다).
+  큰 잡의 메모리 상한은 **GPU 한 장** (gabia 48 GB).
+  ⛔⛔ **QE 는 CPU 로 안 돌린다 — 메모리 추정 프로브도 GPU pw.x 로 한다** (사용자 2026-10-11 *"qe 관련해서 cpu 안쓴다니까 몇번을 말해"*).
+  종전 이 자리의 *'추정치 읽기 CPU pw.x 프로브는 해도 된다'* 예외를 근거로 10-11 에 또 CPU 프로브를 냈다 — 예외를 지운다.
+  VRAM 은 GPU pw.x 를 짧게 (electron_maxstep 작게) 띄우고 **nvidia-smi 표본 피크 − 시작 전 합계** 로 잰다 · 합계 문턱을 넘으면 그 PID 만 죽인다.
+  (09-23 1저자 정정 *"ㄴㄴ 이런 큰작업은 gpu로 하라는 얘기였어"* 는 QE 밖의 작은 작업 — 파이썬 후처리 등 — 에만 남는다.)
 - **kgy** (RTX3090, QE-GPU + uma env): ssh kgy@59.12.161.91.
   ⛔⛔ **QE-GPU 런타임은 추측하지 말고 `ldd` 로 바이너리에게 묻는다.** 2026-09-08 에
   같은 자리에서 **세 번** 틀렸다: ① conda mpirun 탓 → ② 런처를 뺐더니 `libgomp: TODO`

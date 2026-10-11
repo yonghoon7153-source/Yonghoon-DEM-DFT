@@ -75,7 +75,7 @@
     "기계": "kgy RTX 3090 24 GB · QE-GPU (/home/kgy/apps/qe-7.4.1-gpu/bin/{pw.x,neb.x}) · MPI = ldd 가 말하는 openmpi-4.1.6 · OMP_NUM_THREADS=1 (libnvomp + libgomp 동시 링크)",
     "⚠_GPU_공유": "kgy GPU 에는 cascade v7 본 라운드 (D-2026-10-07-cascade-v7-main-round-cap · 상한 461.4 GPU-h) 가 돈다. cascade 러너의 GPU-h 는 **벽시계**라 SM 을 나눠 쓰면 그 시간만큼 cascade 런이 느려지고 상한 쪽으로 더 빨리 간다 (탐침 실측 평균 10.44 × 40 = 418 vs 상한 461.4 → 여유 약 43 GPU-h). 2×2×2 는 작아 영향이 작다고 보지만 **겹친 cascade 런을 runlog 에 남긴다** (물리는 안 바뀐다 · 비용 기록만).",
     "⚠_cascade_시작_문턱": "cascade 러너는 GPU 합계 ≤ 16,000 MiB 일 때만 다음 런을 띄우고 3 h 넘게 못 내려오면 멈춘다 (rc 12). NEB 가 합계를 12,000 MiB 넘게 밀면 우리 NEB 를 멈춘다 (PID 로).",
-    "견적": "2×2×2 · 23 원자 · 이미지 7 — 시간 단위 (실측을 runlog 에 남긴다). 4×4×4 는 191 원자라 VRAM 이 먼저다 — CPU pw.x 프로브로 'Estimated max dynamical RAM' 을 읽은 뒤 기계를 정한다 (24 GB 3090 에 안 들면 gabia 48 GB · 탄성 끝난 뒤)."
+    "견적": "2×2×2 · 23 원자 · 이미지 7 — 시간 단위 (실측을 runlog 에 남긴다). 4×4×4 는 191 원자라 VRAM 이 먼저다 — GPU pw.x 짧은 SCF 프로브 (electron_maxstep 3) 의 nvidia-smi 피크 − 시작 전 합계로 잰다 (⛔ QE 는 CPU 를 안 쓴다 · 사용자 2026-10-11) · kgy 에 안 들면 gabia 48 GB · 탄성 끝난 뒤"
   },
   "7_닫힘_조건_먼저_박는다": {
     "2×2×2_단계": "G1–G5 의 통과/실패와 ΔEa(2) 를 runlog 에 적으면 끝난다 (값은 인용하지 않는다).",
