@@ -1,0 +1,27 @@
+(myenv) [yonghoon@ibb-master ~]$ cd ~/ps45_unload_pre_20261009 && sha256sum ~/ps45_unload_pre_20261009_plane.tgz && python3 - plane_ps_*/plane_load.json <<'EOF'
+> import json, sys
+> for p in sys.argv[1:]:
+>     R = json.load(open(p))
+>     for l in R['order']:
+>         r = R['cases'][l]
+>         c = list((r.get('contribution_sigma_zz_pct') or {}).items())
+>         s = r.get('sigma_zz_planes_mean_mpa')
+>         a = r.get('alpha') or {}
+>         vf = a.get('volume_frac_window') or {}
+>         lw = 100 * a['alpha_zz']['AM'] * sum(v for k, v in vf.items() if 'AM' in k) if a.get('status') == 'OK' else None
+>         print(l, r['status'], f"σzz {s:.4f}", f"보존 {r['conservation_max_over_min']:.4f}", f"평형 {r['balance_residual']:.3e}",
+>               ' · '.join(f"{k} {v:.4f}" for k, v in c), f"| 절대 AM–AM {c[0][1] * s / 100:.4f} MPa",
+>               f"| LW AM 몫 {lw:.4f}" if lw is not None else '| LW -', '|', '; '.join(r.get('why', [])) or '-', '|', R.get('code_sha256', '')[:16])
+> EOF
+1c8bab3091588afa303bd376cea2a99ebfc14648de5c6c9c5efe7621f3afec93  /home/yonghoon/ps45_unload_pre_20261009_plane.tgz
+ps_0_10_r45_3200000 CHECK σzz 158.3115 보존 1.0201 평형 1.994e-04 AM–AM 59.5519 · AM–SE 31.0226 · SE–SE 9.4255 | 절대 AM–AM 94.2775 MPa | LW AM 몫 84.5337 | 보존 검사 — 단면 하중 최대 ÷ 최소 = 1.0201 > 1 + 0.02 | a1d95cb9c2f80002
+ps_0_10_r45_3210000 CHECK σzz 158.2458 보존 1.0222 평형 2.068e-04 AM–AM 59.5622 · AM–SE 31.0083 · SE–SE 9.4294 | 절대 AM–AM 94.2547 MPa | LW AM 몫 84.5297 | 보존 검사 — 단면 하중 최대 ÷ 최소 = 1.0222 > 1 + 0.02 | a1d95cb9c2f80002
+ps_10_0_r45_3600000 CHECK σzz 176.4578 보존 1.0219 평형 2.543e-04 AM–AM 57.0806 · AM–SE 32.8314 · SE–SE 10.0881 | 절대 AM–AM 100.7231 MPa | LW AM 몫 87.0131 | 보존 검사 — 단면 하중 최대 ÷ 최소 = 1.0219 > 1 + 0.02 | a1d95cb9c2f80002
+ps_10_0_r45_3640000 OK σzz 175.4783 보존 1.0177 평형 2.262e-04 AM–AM 56.9144 · AM–SE 32.9541 · SE–SE 10.1315 | 절대 AM–AM 99.8724 MPa | LW AM 몫 86.9568 | - | a1d95cb9c2f80002
+ps_3_7_r45_3200000 CHECK σzz 159.9838 보존 1.0213 평형 1.840e-04 AM–AM 54.6457 · AM–SE 34.6500 · SE–SE 10.7043 | 절대 AM–AM 87.4244 MPa | LW AM 몫 83.2918 | 보존 검사 — 단면 하중 최대 ÷ 최소 = 1.0213 > 1 + 0.02 | a1d95cb9c2f80002
+ps_3_7_r45_3210000 OK σzz 159.9299 보존 1.0176 평형 1.654e-04 AM–AM 54.6349 · AM–SE 34.6600 · SE–SE 10.7051 | 절대 AM–AM 87.3776 MPa | LW AM 몫 83.2882 | - | a1d95cb9c2f80002
+ps_5_5_r45_2900000 CHECK σzz 164.7465 보존 1.0247 평형 2.346e-04 AM–AM 52.4134 · AM–SE 36.1863 · SE–SE 11.4003 | 절대 AM–AM 86.3492 MPa | LW AM 몫 83.3939 | 보존 검사 — 단면 하중 최대 ÷ 최소 = 1.0247 > 1 + 0.02 | a1d95cb9c2f80002
+ps_5_5_r45_2930000 OK σzz 164.4425 보존 1.0196 평형 2.052e-04 AM–AM 52.3717 · AM–SE 36.2192 · SE–SE 11.4092 | 절대 AM–AM 86.1212 MPa | LW AM 몫 83.3746 | - | a1d95cb9c2f80002
+ps_7_3_r45_3200000 OK σzz 167.3559 보존 1.0159 평형 1.715e-04 AM–AM 48.5117 · AM–SE 39.1002 · SE–SE 12.3881 | 절대 AM–AM 81.1873 MPa | LW AM 몫 82.5520 | - | a1d95cb9c2f80002
+ps_7_3_r45_3220000 OK σzz 167.1374 보존 1.0187 평형 1.874e-04 AM–AM 48.4639 · AM–SE 39.1441 · SE–SE 12.3920 | 절대 AM–AM 81.0013 MPa | LW AM 몫 82.5353 | - | a1d95cb9c2f80002
+(myenv) [yonghoon@ibb-master ps45_unload_pre_20261009]$

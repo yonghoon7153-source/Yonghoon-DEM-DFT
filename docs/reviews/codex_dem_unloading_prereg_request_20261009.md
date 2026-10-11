@@ -17,6 +17,7 @@
 - **사전 점검 2 차 (10-10 · `docs/reviews/dem_unloading_ps45_precheck2_20261009/` · 등록 §11-2)**: s_d 기술자 재현 = 화면 자릿수 전부 같음 · S0 판 압력 조건 0:10 0.14 · 3:7 0.18 · 5:5 0.70 · 7:3 0.32 % ✓ ·
   **10:0 1.03 % (1 % 미달)** → 등록대로 쓸 S0 없음 → F2 (등록 §10 Q11 · 1저자 · 권고 = 이완 연장 → S0′ 3,650,000) · S0 프레임 넷의 도구 상태 = 보존 CHECK (단면 하중 최대 ÷ 최소 1.020–1.025) ·
   원 NP 5 · 4 · 5 · 24 · 11 · 사라진 원자는 전부 S0 전 (atom_S0 = atom_s_d).
+  **D(S0) 사전 고정 (10-11 · 등록 §11-2)** = 59.5519 · 54.6457 · 52.4134 · 48.5117 % (0:10 · 3:7 · 5:5 · 7:3) · 10:0 = S0′ 뒤 · S0 ↔ s_d 순위 = 세 기술자 모두 같음 · |D(S0) − D(s_d)| ≤ 0.05 %p.
 - 근거 자료: 원 덱 `docs/reviews/codex_ps45_porosity_evidence_20261001/reference/dem_scripts/ps_sweep_6mah_20260914/in.ps_*_r45.liggghts` ·
   7:3 재개 덱 · 로그 (r1–r8) `docs/data/ps73_compaction_curve_20261006/raw/ps73_logs.tgz` · hooke/hysteresis 3d5c00f 사본 `docs/reviews/codex_ps45_porosity_evidence_20261001/reference/normal_model_hooke_hysteresis.h`
   (sha256 `fd8c4c71…`) · 같은 7:3 침대 체크포인트 가지 키트 `docs/data/ps73_damping_branch_20261007/README.md` (§8 소스 근거 · run 사이 읽기 · §12 t0 실패) ·
