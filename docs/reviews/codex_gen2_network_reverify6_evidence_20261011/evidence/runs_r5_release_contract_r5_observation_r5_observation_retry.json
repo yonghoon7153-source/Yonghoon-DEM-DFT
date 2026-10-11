@@ -1,0 +1,49 @@
+[
+  {
+    "name": "r5_release_contract",
+    "argv": [
+      "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\gen2_network_reverify6_20261011\\probes\\r5_release_contract.py"
+    ],
+    "rc": 1,
+    "seconds": 15.063000000081956,
+    "tail": [
+      "    with self.open(mode='r', encoding=encoding, errors=errors) as f:",
+      "         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^",
+      "  File \"C:\\Users\\Administrator\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\Lib\\pathlib.py\", line 1013, in open",
+      "    return io.open(self, mode, buffering, encoding, errors, newline)",
+      "           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^",
+      "FileNotFoundError: [Errno 2] No such file or directory: 'C:\\\\Users\\\\Administrator\\\\Documents\\\\Codex\\\\2026-08-24\\\\claude-stoic-knuth-nobvq-x20\\\\gen2_network_reverify6_20261011\\\\submitted\\\\g2rr5_839dbac6b_1007_2224\\\\old_reread.json'"
+    ]
+  },
+  {
+    "name": "r5_observation",
+    "argv": [
+      "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\gen2_network_reverify6_20261011\\probes\\r5_observation.py"
+    ],
+    "rc": 0,
+    "seconds": 20.844000000040978,
+    "tail": [
+      "{\"label\": \"plan_missing_current_fallback\", \"rc\": 0, \"expected_rc\": 0, \"passed\": true, \"observation_problems\": []}",
+      "{\"label\": \"unknown_stage\", \"rc\": 1, \"expected_rc\": 1, \"passed\": true, \"observation_problems\": [\"lhs00_000 (run 1 · 시도 1): 분류 밖 단계 ['Mystery Stage'] — 실행 단계 ↔ 영수증 표 (IMPORT_OBS_STAGE_MAIN · IMPORT_OBS_STAGE_SKIP · IMPORT_OBS_INPROC_STEPS) 를 먼저 고칠 것 (G2RR4-02)\"]}",
+      "{\"label\": \"stage_e_out_of_scope\", \"rc\": 1, \"expected_rc\": 1, \"passed\": true, \"observation_problems\": [\"lhs00_000 (run 1 · 시도 1): 분류 밖 단계 ['Stage E (literature-grounded grain corrections)'] — 실행 단계 ↔ 영수증 표 (IMPORT_OBS_STAGE_MAIN · IMPORT_OBS_STAGE_SKIP · IMPORT_OBS_INPROC_STEPS) 를 먼저 고칠 것 (G2RR4-02)\"]}",
+      "{\"label\": \"csv_fallback_legitimate\", \"rc\": 0, \"expected_rc\": 0, \"passed\": true, \"observation_problems\": []}",
+      "{\"label\": \"noncompleted_unfinalized\", \"rc\": 0, \"expected_rc\": 0, \"passed\": true, \"observation_problems\": []}",
+      "17/17 expected outcomes"
+    ]
+  },
+  {
+    "name": "r5_observation_retry",
+    "argv": [
+      "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\gen2_network_reverify6_20261011\\probes\\r5_observation_retry.py"
+    ],
+    "rc": 0,
+    "seconds": 5.25,
+    "tail": [
+      "{\"label\": \"interrupted_then_done\", \"rc\": 0, \"expected_rc\": 0, \"passed\": true, \"observation_problems\": []}",
+      "{\"label\": \"two_completed_with_copies\", \"rc\": 0, \"expected_rc\": 0, \"passed\": true, \"observation_problems\": []}",
+      "{\"label\": \"two_completed_current_fallback\", \"rc\": 0, \"expected_rc\": 0, \"passed\": true, \"observation_problems\": []}",
+      "{\"label\": \"two_completed_missing_prior_plan\", \"rc\": 1, \"expected_rc\": 1, \"passed\": true, \"observation_problems\": [\"lhs00_000 (run 1 · 시도 1): 완료 시도의 실행 단계 기록이 없다 (worker.json 시도 stage_plan · out/status.json 케이스 기록 stages) — 관측 영수증을 단계와 맞출 수 없다 (G2RR4-02)\"]}",
+      "4/4 expected outcomes"
+    ]
+  }
+]

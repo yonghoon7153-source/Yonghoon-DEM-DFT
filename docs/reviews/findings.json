@@ -8800,7 +8800,7 @@
       "found_by": "codex 10-07 세대 2 재검증 3 (핀 0801d4ceb · 정상 완료 1 케이스 합성 ROOT · 실제 run_network_194_parallel audit CLI · Windows Python 3.12.14 NumPy 2.5.3 — 194 · WSL 미실행)",
       "opened_in": "docs/reviews/codex_review_gen2_network_reverify3_20261007.md",
       "title": "빈 import 관측 로그 하나 = 관측 모듈 0 개로 audit rc 0 — 리포 밖 · 해석 안 되는 줄만 있어도 rc 0 · 둘째 프로세스 로그만 없어도 rc 0 (로그 파일 존재 ≠ 관측 완결)",
-      "note": "판정문 §4.  무너지는 결론: \"관측 기록 파일이 있으므로 워커 · 단계 하위 프로세스의 실제 의존성 조사가 완결됐다\".  자리 (핀 0801d4ceb): scripts/run_network_194_parallel.py:228 (종료 훅이 로그를 쓰며 예외를 삼킨다) · :263 (로그 파일 개수 = n_processes · 빈 파일도 1 · 리포 밖 · 해석 안 되는 줄은 관측 집합에 기여 없음) · :2121 (\"관측 켰는데 파일 0 개\" · \"실제로 보인 봉인 밖 모듈\" 만 거부).  반례 (실 audit CLI): 파일 없음 rc 1 · 빈 1000.txt 하나 rc 0 (관측 0) · 무효/리포 밖 줄 rc 0 · network_conductivity + 별도 로그의 봉인 밖 coating_presets rc 1 · 같은 구성에서 둘째 로그만 없음 rc 0 (관측 1) — 마지막 둘 = 부분 소실 합성 대조 (실제 WSL 로그 소실 주장 아님).  한정: 새 누락 생산 모듈 · 틀린 σ 발견 아님 · 32 파일 수치 교정 유지 · 실행 관측을 안전장치로 내세우는 부분만 부분 판정.  최소 해결 증거 (판정문 §4): ① 완료 케이스/시도/단계와 관측 프로세스 시작 · 종료 영수증 결합 (기대 로그 누락 판단 근거) ② 로그 완결성 검사 — 원자적 최종화 · 실행 신원 · 필수 핵심 모듈 관측 명시 (`len(observed)>0` 만으로는 마지막 반례가 남는다) ③ 완료된 망 경로에서 빈/무효 로그 · 필수 단계 로그 누락을 실제 audit 호출로 거부하는 회귀 ④ WSL pilot3 (비관통 · 관통) 관측 영수증 + audit 제출 · 미관측 lazy 경로 = \"분류됨/미관측\" 구분 ⑤ 194 본 실행도 관측 권고. · 우리 트리 재현 (10-07 · 432 경로 git archive · 탐침 무변경) = 판정값 차이 0 (docs/reviews/codex_gen2_network_reverify3_evidence_20261007/_README_import.md §2) (new_gates import 5 행 같음 — 픽스처는 우리 쪽에서 탐침으로 다시 만든 것).\n★ 10-07 수정 (1저자 *\"ㄱㄱ\"* · 반례 먼저 · `66c09ef68`): 훅 = 시작 영수증 `<pid>-<8hex>.start.json` + 끝 `<pid>-<8hex>.txt` (JSON 머리 + 모듈 · 둘 다 tmp + os.replace · 훅은 예외를 안 낸다) · 신원 NP194_OBS_RUN_ID · RUN_NO · CASE · ATTEMPT (run_queue 가 시도마다 · 하위 프로세스 상속 · manifest import_obs_run_id) · audit 거부 = 빈 · 머리 없음 · 잘림 · 짝 없음 · 남의 신원 · 코드 뿌리 밖 줄 · 완료 시도의 미최종 프로세스 · 완료 시도의 필수 역할 누락 (워커 scripts/lhs_webapp_batch.py · 망 솔버 scripts/network_conductivity.py __main__) · CODE_FILES 밖 모듈 (그대로).  ⚠ 설계 선택 (1저자 · Codex 확인 대상): 완료되지 않은 시도 (SIGKILL · 중단 · 실패) 의 미최종 영수증 = 기록만 (거부 안 함 — OOM 한 번이 성공한 재시도 뒤 감사를 막지 않게 · 시험 = 충돌 → 재시도 rc 0).  덤 발견: CPython 이 sys.exit 없이 끝나는 스크립트의 __main__.__file__ 를 atexit 전에 지워 옛 훅이 그 프로세스의 자기 스크립트 (망 CLI · 피복 단계) 를 빠뜨렸다 → 시작 때 sys.argv[0] 로 넣는다.  안 덮는 것: -I · -E 로 뜬 프로세스는 훅을 건너뛴다 (필수 역할 누락은 잡힌다) · fork 뒤 import 미관측 (생산 경로에 multiprocessing 없음).\n⚠⚠ **재개방 2026-10-07 (Codex 세대 2 재검증 4 `docs/reviews/codex_review_gen2_network_reverify4_20261007.md` §0 표 · §3 = 부분)** — 닫힌 것: 빈 · 잘린 로그 · 시작만 있는 완료 프로세스 · 다른 신원 · 망 솔버 누락 (실제 audit CLI · 제출 WSL pilot3 영수증 15 = 15 · 문제 0).  남은 것: 보조 단계 (파서 · mono/bimodal 접촉 분석 · 피복) 의 시작 · 끝 영수증이 **함께** 사라지면 완료 시도 audit rc 0 (5 개 중 워커 · 솔버 둘만 남겨도 rc 0) = G2RR4-02.  닫는 조건 = G2RR4-02 검증.  claimed_fixed_sha 66c09ef68 은 부분 수정 기록으로 남긴다.  Q2 (완료 아닌 시도의 미최종 영수증 = 정보) 동의 · 좁은 예외 유지.  우리 트리 재현 (10-07 · 448 항목 = 고유 446 git archive 87f0906a2 · 탐침 무변경) = 판정값 차이 0 (docs/reviews/codex_gen2_network_reverify4_evidence_20261007/_README_import.md §2)\n★ 10-07 G2RR4-02 수정 = claimed_fixed (`4c8f84928` — 완료 시도의 실행 단계 계획 ↔ 끝맺은 영수증 결합 · docs/reviews/codex_g2rr4_fix_probe_rerun_20261007/) · 이 항목은 닫는 조건 (G2RR4-02 검증) 까지 open 그대로.\n✅ 10-08 닫는 조건 충족 — Codex 세대 2 재검증 5 (`docs/reviews/codex_review_gen2_network_reverify5_20261007.md` §0 표) 가 G2RR4-02 를 감사 생산 경로에서 닫았다 (단계별 쌍 결손 · 중복 대체 · 미분류 단계 · 계획 결손/불일치 거부 / 정상 · CSV 생략 · 허용 재시도 통과).  ⚠ 판정문 5 에 이 항목 행은 없다 — 닫힘 근거 = 10-07 재검증 4 반입 때 이 항목에 적은 닫는 조건 (\"닫는 조건 = G2RR4-02 검증\" · 재검증 4 §0 표가 이 항목의 남은 부분을 G2RR4-02 로 넘겼다).  수정 사슬 = 66c09ef68 (영수증 형식 · 신원 · 필수 역할) + 4c8f84928 (단계 ↔ 영수증 결합).  배포 경계는 G2RR5-01.",
+      "note": "판정문 §4.  무너지는 결론: \"관측 기록 파일이 있으므로 워커 · 단계 하위 프로세스의 실제 의존성 조사가 완결됐다\".  자리 (핀 0801d4ceb): scripts/run_network_194_parallel.py:228 (종료 훅이 로그를 쓰며 예외를 삼킨다) · :263 (로그 파일 개수 = n_processes · 빈 파일도 1 · 리포 밖 · 해석 안 되는 줄은 관측 집합에 기여 없음) · :2121 (\"관측 켰는데 파일 0 개\" · \"실제로 보인 봉인 밖 모듈\" 만 거부).  반례 (실 audit CLI): 파일 없음 rc 1 · 빈 1000.txt 하나 rc 0 (관측 0) · 무효/리포 밖 줄 rc 0 · network_conductivity + 별도 로그의 봉인 밖 coating_presets rc 1 · 같은 구성에서 둘째 로그만 없음 rc 0 (관측 1) — 마지막 둘 = 부분 소실 합성 대조 (실제 WSL 로그 소실 주장 아님).  한정: 새 누락 생산 모듈 · 틀린 σ 발견 아님 · 32 파일 수치 교정 유지 · 실행 관측을 안전장치로 내세우는 부분만 부분 판정.  최소 해결 증거 (판정문 §4): ① 완료 케이스/시도/단계와 관측 프로세스 시작 · 종료 영수증 결합 (기대 로그 누락 판단 근거) ② 로그 완결성 검사 — 원자적 최종화 · 실행 신원 · 필수 핵심 모듈 관측 명시 (`len(observed)>0` 만으로는 마지막 반례가 남는다) ③ 완료된 망 경로에서 빈/무효 로그 · 필수 단계 로그 누락을 실제 audit 호출로 거부하는 회귀 ④ WSL pilot3 (비관통 · 관통) 관측 영수증 + audit 제출 · 미관측 lazy 경로 = \"분류됨/미관측\" 구분 ⑤ 194 본 실행도 관측 권고. · 우리 트리 재현 (10-07 · 432 경로 git archive · 탐침 무변경) = 판정값 차이 0 (docs/reviews/codex_gen2_network_reverify3_evidence_20261007/_README_import.md §2) (new_gates import 5 행 같음 — 픽스처는 우리 쪽에서 탐침으로 다시 만든 것).\n★ 10-07 수정 (1저자 *\"ㄱㄱ\"* · 반례 먼저 · `66c09ef68`): 훅 = 시작 영수증 `<pid>-<8hex>.start.json` + 끝 `<pid>-<8hex>.txt` (JSON 머리 + 모듈 · 둘 다 tmp + os.replace · 훅은 예외를 안 낸다) · 신원 NP194_OBS_RUN_ID · RUN_NO · CASE · ATTEMPT (run_queue 가 시도마다 · 하위 프로세스 상속 · manifest import_obs_run_id) · audit 거부 = 빈 · 머리 없음 · 잘림 · 짝 없음 · 남의 신원 · 코드 뿌리 밖 줄 · 완료 시도의 미최종 프로세스 · 완료 시도의 필수 역할 누락 (워커 scripts/lhs_webapp_batch.py · 망 솔버 scripts/network_conductivity.py __main__) · CODE_FILES 밖 모듈 (그대로).  ⚠ 설계 선택 (1저자 · Codex 확인 대상): 완료되지 않은 시도 (SIGKILL · 중단 · 실패) 의 미최종 영수증 = 기록만 (거부 안 함 — OOM 한 번이 성공한 재시도 뒤 감사를 막지 않게 · 시험 = 충돌 → 재시도 rc 0).  덤 발견: CPython 이 sys.exit 없이 끝나는 스크립트의 __main__.__file__ 를 atexit 전에 지워 옛 훅이 그 프로세스의 자기 스크립트 (망 CLI · 피복 단계) 를 빠뜨렸다 → 시작 때 sys.argv[0] 로 넣는다.  안 덮는 것: -I · -E 로 뜬 프로세스는 훅을 건너뛴다 (필수 역할 누락은 잡힌다) · fork 뒤 import 미관측 (생산 경로에 multiprocessing 없음).\n⚠⚠ **재개방 2026-10-07 (Codex 세대 2 재검증 4 `docs/reviews/codex_review_gen2_network_reverify4_20261007.md` §0 표 · §3 = 부분)** — 닫힌 것: 빈 · 잘린 로그 · 시작만 있는 완료 프로세스 · 다른 신원 · 망 솔버 누락 (실제 audit CLI · 제출 WSL pilot3 영수증 15 = 15 · 문제 0).  남은 것: 보조 단계 (파서 · mono/bimodal 접촉 분석 · 피복) 의 시작 · 끝 영수증이 **함께** 사라지면 완료 시도 audit rc 0 (5 개 중 워커 · 솔버 둘만 남겨도 rc 0) = G2RR4-02.  닫는 조건 = G2RR4-02 검증.  claimed_fixed_sha 66c09ef68 은 부분 수정 기록으로 남긴다.  Q2 (완료 아닌 시도의 미최종 영수증 = 정보) 동의 · 좁은 예외 유지.  우리 트리 재현 (10-07 · 448 항목 = 고유 446 git archive 87f0906a2 · 탐침 무변경) = 판정값 차이 0 (docs/reviews/codex_gen2_network_reverify4_evidence_20261007/_README_import.md §2)\n★ 10-07 G2RR4-02 수정 = claimed_fixed (`4c8f84928` — 완료 시도의 실행 단계 계획 ↔ 끝맺은 영수증 결합 · docs/reviews/codex_g2rr4_fix_probe_rerun_20261007/) · 이 항목은 닫는 조건 (G2RR4-02 검증) 까지 open 그대로.\n✅ 10-08 닫는 조건 충족 — Codex 세대 2 재검증 5 (`docs/reviews/codex_review_gen2_network_reverify5_20261007.md` §0 표) 가 G2RR4-02 를 감사 생산 경로에서 닫았다 (단계별 쌍 결손 · 중복 대체 · 미분류 단계 · 계획 결손/불일치 거부 / 정상 · CSV 생략 · 허용 재시도 통과).  ⚠ 판정문 5 에 이 항목 행은 없다 — 닫힘 근거 = 10-07 재검증 4 반입 때 이 항목에 적은 닫는 조건 (\"닫는 조건 = G2RR4-02 검증\" · 재검증 4 §0 표가 이 항목의 남은 부분을 G2RR4-02 로 넘겼다).  수정 사슬 = 66c09ef68 (영수증 형식 · 신원 · 필수 역할) + 4c8f84928 (단계 ↔ 영수증 결합).  배포 경계는 G2RR5-01.\n★ 재검증 6 Q5 (10-11 · 판정문 §5) = 한정된 닫힘에 동의 — verified_scope (감사 생산 경로의 영수증 완결성) 범위 · \"리포의 모든 가능한 미래 import 를 인증했다\" 는 뜻 아님 · 배포 경계 = G2RR5-01 (같은 판정에서 따로 닫힘).",
       "claimed_fixed_sha": "66c09ef68",
       "evidence_tests": [
         "scripts/run_network_194_parallel.py --selftest (82/82 → 새 시험이 옛 코드에서 84/100 → 100/100 · Codex 다섯 변이 rc 1 · 새 형식 아홉 변이 rc 1 · 망 솔버 없는 완료 시도 rc 1 · 정상 rc 0 · ㉟d 실제 run_pipeline 통과 · ㉟d2 시작 4 = 최종 4 · 단계 하위 프로세스까지 신원 전파)",
@@ -9193,7 +9193,7 @@
     {
       "id": "G2RR5-01",
       "severity": "P2",
-      "status": "claimed_fixed",
+      "status": "verified",
       "owner": "claude",
       "found_by": "codex 10-07 세대 2 재검증 5 (리뷰 핀 aa7ec7fe9 · WSL 사전 점검 핀 839dbac6b · 독립 사본 469 파일 git blob 대조 · 실제 build_v13 → check_v13 (상위 τ 재독해만 대역) · 실제 audit CLI (합성 1 케이스 ROOT · staged 17 · retry 4) · 제출 WSL 묶음 독립 대조 61/61 · case15 원덤프 CPU 후처리 + 망 하위 프로세스 호출 거부 주입 · Windows Python 3.12.14 NumPy 2.5.3 SciPy 1.16.3 — 194 · DEM · MPM · S3 미실행)",
       "opened_in": "docs/reviews/codex_review_gen2_network_reverify5_20261007.md",
@@ -9210,12 +9210,16 @@
         "scripts/test_lhs_release_v13.py (V20f1 · f2 · g1 — 분류 밖 단계만 실패 + 요약 [] · 옛 v1 스키마 = 거부 · f0 대조 통과)",
         "docs/reviews/codex_g2rr5_fix_probe_rerun_20261008/release/probe_rerun_summary_residual.json (r5_observation 17/17 rc · 문제 문자열 같음 · 잔여 두 결합 = 거부)"
       ],
-      "claimed_fixed_sha": "8b6453671"
+      "claimed_fixed_sha": "8b6453671",
+      "verified_by": "codex",
+      "verified_sha": "a20fc1875",
+      "verified_in": "docs/reviews/codex_review_gen2_network_reverify6_20261011.md",
+      "verified_scope": "배포 관문 (실제 build_v13 · check_v13) 이 감사 stage_binding 의 시도별 값을 읽는다 — null · parser 결손 · 0 · 계획 밖 · bool · 합계 모순 · 실제 실패 audit 의 요약만 비운 binding = 거부 · 산출 폴더 없음 · 생성 뒤 증거 캐시를 갱신한 check 도 거부 · 정상 상세 · 허용 재시도 통과 (판정문 §0 표 · §1-2 · §3) + Q6 unclassified (실제 Mystery Stage · Stage E 감사 binding · 요약 없이 검사해도 거부 · v1 = 재감사 요구 · 재감사 ≠ 계산 재실행).  ⚠ 배포 픽스처 시험은 v13_reread_tau 만 대역 — 관문 수용/거부 증거이지 194 숫자 재검산이 아니다 (§1-2)"
     },
     {
       "id": "G2RR5-02",
       "severity": "P2",
-      "status": "claimed_fixed",
+      "status": "verified",
       "owner": "claude",
       "found_by": "codex 10-07 세대 2 재검증 5 (리뷰 핀 aa7ec7fe9 · WSL 사전 점검 핀 839dbac6b · 독립 사본 469 파일 git blob 대조 · 실제 build_v13 → check_v13 (상위 τ 재독해만 대역) · 실제 audit CLI (합성 1 케이스 ROOT · staged 17 · retry 4) · 제출 WSL 묶음 독립 대조 61/61 · case15 원덤프 CPU 후처리 + 망 하위 프로세스 호출 거부 주입 · Windows Python 3.12.14 NumPy 2.5.3 SciPy 1.16.3 — 194 · DEM · MPM · S3 미실행)",
       "opened_in": "docs/reviews/codex_review_gen2_network_reverify5_20261007.md",
@@ -9230,7 +9234,11 @@
         "docs/reviews/codex_g2rr5_fix_probe_rerun_20261008/case15/README.md (Codex 탐침 무변경 재실행 — r5_case15_pipeline_fault = 7 검사 · nc5_attempt TECH · smoke rc 1 (핀 6/6 PASS) · 결과 rerun_summary.json)",
         "scripts/wsl_network_smoke.py --selftest-real (실제 case15 · 4/4 · slow — docs/reviews/selftest_inventory.tsv)"
       ],
-      "claimed_fixed_sha": "72879744e"
+      "claimed_fixed_sha": "72879744e",
+      "verified_by": "codex",
+      "verified_sha": "a20fc1875",
+      "verified_in": "docs/reviews/codex_review_gen2_network_reverify6_20261011.md",
+      "verified_scope": "case15 음성 대조의 실제 시도 결합 — 원래 child_case 의 실제 망 호출을 PermissionError 로 막으면 nc5_attempt TECH · 스모크 rc 1 · 무주입 실제 case15 7/7 PASS (봉인 밖 기록기 · 이번 최소 범위 · 판정문 §0 · §4).  ⚠ 기록기는 음성 대조 스모크에만 붙는다 — 194 모든 워커가 같은 attempt_evidence 를 가진다고 일반화하지 않는다 · 웹앱 봉인 내부 사유 기록 개선 = WEB-05 로 미룸"
     },
     {
       "id": "G2RR5-03",
@@ -9240,7 +9248,7 @@
       "found_by": "codex 10-07 세대 2 재검증 5 (리뷰 핀 aa7ec7fe9 · WSL 사전 점검 핀 839dbac6b · 독립 사본 469 파일 git blob 대조 · 실제 build_v13 → check_v13 (상위 τ 재독해만 대역) · 실제 audit CLI (합성 1 케이스 ROOT · staged 17 · retry 4) · 제출 WSL 묶음 독립 대조 61/61 · case15 원덤프 CPU 후처리 + 망 하위 프로세스 호출 거부 주입 · Windows Python 3.12.14 NumPy 2.5.3 SciPy 1.16.3 — 194 · DEM · MPM · S3 미실행)",
       "opened_in": "docs/reviews/codex_review_gen2_network_reverify5_20261007.md",
       "title": "다시 읽기 --smoke-root 의 S0b 가 음성 대조 표지 (negative_control) 가 truthy 면 종류를 가리지 않고 S0 에서 빼고 '[음성 대조]' 접두어 PASS 행 4 개 이상만 본다 — 한 PASS 행 네 번 반복 · 미등록 marker · negctl 상세 삭제 · τ 숫자 · 이온 잔차 변조 (PASS 행 유지) · 현재 평가기가 실제로 낸 원자료 SHA FAIL 보고서 (smoke rc 1) 가 rc 0 · S0b PASS",
-      "note": "판정문 §3 (findings_review.json 범위: smoke-root 소비자 · production194 launcher-root 와 구별).  무너지는 결론: \"S0b 성공이면 등록된 case15 의 원자료 · 지정 원인 · 이온 정상 · 비노출 증거가 함께 갖춰졌다\" — G2RR5-02 를 고쳐도 소비자 쪽 구멍은 따로 남는다.  자리 (핀 aa7ec7fe9 · HEAD 같은 줄): scripts/g2_network_reread.py:548–565 (특히 :552 truthy 표지 · :560–565 접두어 PASS 행 ≥ 4) — 서로 다른 필수 검사 · 등록 marker · 보고 상세와의 일치 · 원자료 SHA · 자식 프로세스 판정은 안 본다.  올바른 거부 (과잉차단 아님): PASS 행 하나 FAIL · 셋만 · marker 제거 = rc 1.  정상 관통 · 비관통 · clamp 게시 폴더 = 실제 합성 생산 코드 · K1–K7 통과 · case15 만 변이.  최소 해결 증거 (판정문 §3 · §7-3): 등록 marker/kind/범위만 · 필수 검사 안정 ID + 정확한 개수 · case15 프로세스 · 원자료 신원 필수 검사 포함 · 공유 검증 함수로 상세를 다시 판정해 기록된 검사/요약과 대조 · unknown marker · 중복 검사 · 상세 결손 · 수치 모순 · 실제 SHA FAIL 거부 · 정상 미퍼콜 대조군 계속 통과 · 모든 실패 케이스 면제나 숫자 4 를 늘리는 처방은 답이 아니다.  우리 트리 재현 (10-08 · HEAD 342b18a18 · 469 경로 git archive (핀과 다른 7 파일 = 이 탐침 경로 밖) · 탐침 무변경 · python -I) = 판정값 차이 0 (docs/reviews/codex_gen2_network_reverify5_evidence_20261007/_README_reproduction.md §3) (s0b 13 행 rc · n_fail 같음 · 차이 = 이온 CG 끝자리가 든 detail 문자열 · 합성 입력 지문 (개행) 만).  수정 계획 = docs/reviews/g2rr5_fix_plan_20261008.md §3.  ★ 10-08 밤 claimed_fixed (`b34a52f52` · 등록 표지 · 필수 ID · 공용 판정 재계산 · 범위 밖 작은 추가: S0b 가 timings 필요 · 이온 잔차 · 보존 = bool 아님 · 0 ≤ x < 1e-6 (판정문 §5) · 미등록 표지 FAIL 행) — ⚠ 10-07 WSL case15 기록 = 이제 S0b 거부 (시도 증거 · ID 없음 — 의도 · 고친 스모크로 다시) · 인계 도구 지문 scripts/g2_network_reread.py sha256 adecb782…aba67 → 71945dab…86dd (발사 manifest 기록).",
+      "note": "판정문 §3 (findings_review.json 범위: smoke-root 소비자 · production194 launcher-root 와 구별).  무너지는 결론: \"S0b 성공이면 등록된 case15 의 원자료 · 지정 원인 · 이온 정상 · 비노출 증거가 함께 갖춰졌다\" — G2RR5-02 를 고쳐도 소비자 쪽 구멍은 따로 남는다.  자리 (핀 aa7ec7fe9 · HEAD 같은 줄): scripts/g2_network_reread.py:548–565 (특히 :552 truthy 표지 · :560–565 접두어 PASS 행 ≥ 4) — 서로 다른 필수 검사 · 등록 marker · 보고 상세와의 일치 · 원자료 SHA · 자식 프로세스 판정은 안 본다.  올바른 거부 (과잉차단 아님): PASS 행 하나 FAIL · 셋만 · marker 제거 = rc 1.  정상 관통 · 비관통 · clamp 게시 폴더 = 실제 합성 생산 코드 · K1–K7 통과 · case15 만 변이.  최소 해결 증거 (판정문 §3 · §7-3): 등록 marker/kind/범위만 · 필수 검사 안정 ID + 정확한 개수 · case15 프로세스 · 원자료 신원 필수 검사 포함 · 공유 검증 함수로 상세를 다시 판정해 기록된 검사/요약과 대조 · unknown marker · 중복 검사 · 상세 결손 · 수치 모순 · 실제 SHA FAIL 거부 · 정상 미퍼콜 대조군 계속 통과 · 모든 실패 케이스 면제나 숫자 4 를 늘리는 처방은 답이 아니다.  우리 트리 재현 (10-08 · HEAD 342b18a18 · 469 경로 git archive (핀과 다른 7 파일 = 이 탐침 경로 밖) · 탐침 무변경 · python -I) = 판정값 차이 0 (docs/reviews/codex_gen2_network_reverify5_evidence_20261007/_README_reproduction.md §3) (s0b 13 행 rc · n_fail 같음 · 차이 = 이온 CG 끝자리가 든 detail 문자열 · 합성 입력 지문 (개행) 만).  수정 계획 = docs/reviews/g2rr5_fix_plan_20261008.md §3.  ★ 10-08 밤 claimed_fixed (`b34a52f52` · 등록 표지 · 필수 ID · 공용 판정 재계산 · 범위 밖 작은 추가: S0b 가 timings 필요 · 이온 잔차 · 보존 = bool 아님 · 0 ≤ x < 1e-6 (판정문 §5) · 미등록 표지 FAIL 행) — ⚠ 10-07 WSL case15 기록 = 이제 S0b 거부 (시도 증거 · ID 없음 — 의도 · 고친 스모크로 다시) · 인계 도구 지문 scripts/g2_network_reread.py sha256 adecb782…aba67 → 71945dab…86dd (발사 manifest 기록).\n★ 재검증 6 (10-11 · 핀 a20fc1875 · 판정문 §0 표 · §2) = **부분** — 등록 신원 · 일곱 ID · 실제 시도 · 이온 잔차 · τ 비노출 재판정은 확인 (순수 함수 시험: ID 중복/결손 · 미등록 표지 · τ 숫자 · 이온 잔차 음수 · NaN · Inf · bool · 실제 시도/산출물 결손 · rc≠0 · 다른 실패원인 · digest 불일치 = 거부) · raw SHA 상세 결손/모순 · 음수 면적 상세 모순 = 통과 → 잔여 = G2RR6-01 (Codex 권고: 부분 상태를 그 항목으로 추적 · 수정된 나머지를 open 으로 되돌리지 않는다).  닫는 조건 = G2RR6-01 verified.",
       "evidence_tests": [
         "docs/reviews/codex_gen2_network_reverify5_evidence_20261007/evidence/r5_case15_results.json (s0b — positive rc 0 / marker_unknown · one_check_repeated_four · negctl_missing · tau_numeric · ionic_residual_bad · raw_sha_fail · unexpected_failure_record = rc 0 (오수용) / marker_missing · checks_missing · checks_three · check_fail = rc 1)",
         "docs/reviews/codex_gen2_network_reverify5_evidence_20261007/probes/r5_case15.py",
@@ -9253,7 +9261,7 @@
     {
       "id": "G2RR5-04",
       "severity": "P3",
-      "status": "claimed_fixed",
+      "status": "verified",
       "owner": "claude",
       "found_by": "codex 10-07 세대 2 재검증 5 (리뷰 핀 aa7ec7fe9 · WSL 사전 점검 핀 839dbac6b · 독립 사본 469 파일 git blob 대조 · 실제 build_v13 → check_v13 (상위 τ 재독해만 대역) · 실제 audit CLI (합성 1 케이스 ROOT · staged 17 · retry 4) · 제출 WSL 묶음 독립 대조 61/61 · case15 원덤프 CPU 후처리 + 망 하위 프로세스 호출 거부 주입 · Windows Python 3.12.14 NumPy 2.5.3 SciPy 1.16.3 — 194 · DEM · MPM · S3 미실행)",
       "opened_in": "docs/reviews/codex_review_gen2_network_reverify5_20261007.md",
@@ -9265,7 +9273,21 @@
         "docs/reviews/lhs_network_batch_registration_20261007_g2.md (§4 제안 블록 — 핀 217 행 · HEAD 219 행)",
         "docs/reviews/lhs_network_batch_registration_20261007_g2.md (§4 덧붙임 · §9-6 비준 · 비준 뒤 활성 명령 표)"
       ],
-      "claimed_fixed_sha": "5a00125d2"
+      "claimed_fixed_sha": "5a00125d2",
+      "verified_by": "codex",
+      "verified_sha": "a20fc1875",
+      "verified_in": "docs/reviews/codex_review_gen2_network_reverify6_20261011.md",
+      "verified_scope": "등록 §4 재시도 예외 ↔ §9-6 활성 명령 표 정합 · 합계 동률을 모든 재시도에 요구하지 않음 (판정문 §0 표 · §5 Q4).  ⚠ 등록 비준 ≠ 발사 승인 · 옛 명령의 관측 플래그 누락을 다시 복사하면 실행기가 거부하는 것이 정상"
+    },
+    {
+      "id": "G2RR6-01",
+      "severity": "P2",
+      "status": "open",
+      "owner": "claude",
+      "found_by": "codex 10-11 세대 2 재검증 6 (리뷰 핀 a20fc1875 · WSL 실행 핀 956173e1c · 리뷰 사본 493 파일 git blob SHA-1 · SHA-256 · 실제 g2_network_reread --smoke-root CLI (정상 관통 · 미퍼콜 · clamp = 실제 합성 생산자 게시 · case15 보고만 변이) · 실제 case15 child_case CPU 후처리 + 망 호출 PermissionError 주입 · Windows Python 3.12 NumPy 2.5.3 SciPy 1.16.3 — 194 · DEM · MPM · S3 미실행)",
+      "opened_in": "docs/reviews/codex_review_gen2_network_reverify6_20261011.md",
+      "title": "다시 읽기 --smoke-root 의 S0b 공용 판정이 case15 원자료 SHA 상세와 음수 면적 상세를 읽지 않는다 — case15.raw_sha = raw_sha_ok is True 만 (raw_sha 키 삭제 · atom actual 000000000000 ↔ expected 원래 값 모순 = rc 0) · 음수 면적 행은 앞 ID 둘만 (면적 양수 · 면적값 삭제 = rc 0) — 실제 --smoke-root 네 반례 rc 0 / n_fail 0 · raw_sha={} 도 통과",
+      "note": "판정문 §2.  무너지는 결론: \"S0b 는 상세 결손 · 수치 모순을 공용 함수로 재판정하여 전부 거부한다\".  무너지지 않는 결론: 이번 제출 case15 의 원자료가 맞고 · 망이 실제 실행되며 · 등록된 네 실패 원인이 발화했다는 정상 사례 (위 반례는 모든 사본을 일관되게 위조한 경우가 아니라 한 보고 안에서 남은 PASS 요약과 다른 상세의 모순).  자리 (핀 a20fc1875 = HEAD 5f555bbd4 같은 줄): scripts/g2_network_reread.py:273 (raw_sha 판정 = 요약 플래그만 · 상세는 detail 로만) · :295–298 (음수 면적 행 = 앞 ID 둘만 · 짧은 · 꼴 깨진 행은 조용히 버리고 ID 를 int() 로 강제) · :339–342 · :825–830 (같은 불완전 술어를 두 번 = 누락 발견 못 함) · 생산자 scripts/wsl_network_smoke.py:354–373 (네 파일 해시 계산 자체는 맞다 — 손상된 보고를 읽는 경계의 대조 문제).  우리 트리 재현 (10-11 · HEAD 5f555bbd4 · docs/reviews/codex_gen2_network_reverify6_evidence_20261011/_README_import.md §2): Codex 입력 일곱 rc / n_fail 모두 같음 (오수용 넷 재현) + 자체 같은 부류 변이 22 중 20 통과 (raw_sha 8 · 음수 면적 10 · nc1 실패 단계 하나 더 · nc2 등록 밖 τ 숫자 키).  최소 해결 증거 (판정문 §2-3): ① case15.raw_sha = 등록 네 파일 닫힌 키 집합 · 각 actual/expected 유효 형식 · 일치 · 상세 없음 · 빈 dict = 실패 (지금 보고의 해시 = 12 자리 접두 → 그 검사와 64 자리 바이트 재검증을 같은 보증이라 쓰지 않는다 · 다음 기록 형식에서 전체 SHA 보존 권고 · 원자료 재실행 불요) ② 음수 면적 = 등록 두 ID 쌍 각각 유한 실수 면적 < 0 µm² · bool · NaN · Inf · 결손 · 0 · 양수 거부 (필요하면 고정 원자료 표시 정밀도 대조 · 이온 σ 허용치 불변) ③ 네 반례를 공용 함수뿐 아니라 실제 --smoke-root 소비자 회귀로 · 정상 보고 · 관통 · 미퍼콜 · clamp rc 0 유지 · 검사 ID 일곱 그대로 · 새 시뮬레이션 불요.  봉인 32 · code_fp e8b2496b… 무변경 · 194 · case15 망 재실행 불요 (판정문 §0 · §6-1).  194 발사 = 해소 뒤 저자의 별도 발사 승인 (판정문 §6-2 · §6-3)."
     },
     {
       "id": "RB-01",
@@ -9306,6 +9328,16 @@
       ],
       "owner": "claude",
       "opened_in": "docs/reviews/codex_review_springback_loadshare_20261009.md"
+    },
+    {
+      "id": "SELF-102",
+      "severity": "P3",
+      "status": "open",
+      "owner": "claude",
+      "found_by": "codex 10-11 세대 2 재검증 6 §5 Q7 (분리 커밋 7928ff0de 의 부모 93d1370d1 ↔ 핀 a20fc1875 chk(…) AST · selftest_inventory · check_all · CI 레인 대조)",
+      "opened_in": "docs/reviews/codex_review_gen2_network_reverify6_20261011.md",
+      "title": "재검증 6 요청서 §5 제목 \"시험 약화 없음\" 이 범위를 넘었다 — chk(…) 20 개의 검사 내용이 같다 (16 + 4 · 추가 0 · 삭제 0) 는 fast + real 두 명령을 모두 돌릴 때에 한정되고, 매 push 자동 범위 (게이트 · CI = fast 레인) 는 real 4 만큼 줄었다 (selftest_inventory.tsv:216–217 = slow · check_all.sh:346–347 = fast)",
+      "note": "자리: docs/reviews/codex_gen2_network_reverify6_request_20261009.md §5 제목 (본문 셋째 줄 \"무변경 확인 (AST)\" 은 맞다 — 과장은 제목의 일반화).  Codex: \"약화 없음\" 은 전체 두 명령을 모두 실행할 때의 검사 내용에 한정 · 발사 핀을 고정한 뒤 fast16 + real4 를 사전 점검 필수로 두는 지금 방식은 수용 · 도구가 바뀌면 이전 real 로그를 새 도구의 증거로 옮기지 않는다.  같은 부류 = SELF-88 · SELF-90 (요청서 문장 압축 · 과장).  고침 = 이 요청서는 발송본이라 고치지 않고 이 원장 항목이 정오표 · 다음 요청서 (재검증 7) 에 \"검사 내용 무변경 (두 명령 모두 돌릴 때) · 매 push 자동 범위 = fast 16 (real 4 는 발사 핀 사전 점검)\" 로 쓴다."
     }
   ]
 }

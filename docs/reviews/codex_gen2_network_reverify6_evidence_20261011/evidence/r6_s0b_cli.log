@@ -1,0 +1,9 @@
+[Storage] NOT configured - SUPABASE_URL=False SUPABASE_KEY=False
+[Security] WARNING: auth OFF - local/private only. For public deploy set WEBAPP_REQUIRE_AUTH=1 + WEBAPP_AUTH_TOKEN.
+positive rc 0 n_fail 0
+raw_sha_missing rc 0 n_fail 0
+raw_sha_mismatch rc 0 n_fail 0
+negative_area_positive rc 0 n_fail 0
+negative_area_missing rc 0 n_fail 0
+raw_sha_flag_false rc 1 n_fail 1
+actual_permission_error rc 1 n_fail 1

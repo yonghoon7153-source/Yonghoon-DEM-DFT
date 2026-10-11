@@ -1,0 +1,18 @@
+[
+  {
+    "name": "r6_s0b_cli",
+    "argv": [
+      "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\gen2_network_reverify6_20261011\\probes\\r6_s0b_cli.py"
+    ],
+    "rc": 0,
+    "seconds": 4.702999999979511,
+    "tail": [
+      "raw_sha_missing rc 0 n_fail 0",
+      "raw_sha_mismatch rc 0 n_fail 0",
+      "negative_area_positive rc 0 n_fail 0",
+      "negative_area_missing rc 0 n_fail 0",
+      "raw_sha_flag_false rc 1 n_fail 1",
+      "actual_permission_error rc 1 n_fail 1"
+    ]
+  }
+]

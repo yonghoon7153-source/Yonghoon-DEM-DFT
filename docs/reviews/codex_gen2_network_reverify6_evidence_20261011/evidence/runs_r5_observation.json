@@ -1,0 +1,20 @@
+[
+  {
+    "name": "r5_observation",
+    "argv": [
+      "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\gen2_network_reverify6_20261011\\probes\\r5_observation.py",
+      "--output-name",
+      "packaged_fixture_check"
+    ],
+    "rc": 0,
+    "seconds": 21.094000000040978,
+    "tail": [
+      "{\"label\": \"plan_missing_current_fallback\", \"rc\": 0, \"expected_rc\": 0, \"passed\": true, \"observation_problems\": []}",
+      "{\"label\": \"unknown_stage\", \"rc\": 1, \"expected_rc\": 1, \"passed\": true, \"observation_problems\": [\"lhs00_000 (run 1 · 시도 1): 분류 밖 단계 ['Mystery Stage'] — 실행 단계 ↔ 영수증 표 (IMPORT_OBS_STAGE_MAIN · IMPORT_OBS_STAGE_SKIP · IMPORT_OBS_INPROC_STEPS) 를 먼저 고칠 것 (G2RR4-02)\"]}",
+      "{\"label\": \"stage_e_out_of_scope\", \"rc\": 1, \"expected_rc\": 1, \"passed\": true, \"observation_problems\": [\"lhs00_000 (run 1 · 시도 1): 분류 밖 단계 ['Stage E (literature-grounded grain corrections)'] — 실행 단계 ↔ 영수증 표 (IMPORT_OBS_STAGE_MAIN · IMPORT_OBS_STAGE_SKIP · IMPORT_OBS_INPROC_STEPS) 를 먼저 고칠 것 (G2RR4-02)\"]}",
+      "{\"label\": \"csv_fallback_legitimate\", \"rc\": 0, \"expected_rc\": 0, \"passed\": true, \"observation_problems\": []}",
+      "{\"label\": \"noncompleted_unfinalized\", \"rc\": 0, \"expected_rc\": 0, \"passed\": true, \"observation_problems\": []}",
+      "17/17 expected outcomes"
+    ]
+  }
+]

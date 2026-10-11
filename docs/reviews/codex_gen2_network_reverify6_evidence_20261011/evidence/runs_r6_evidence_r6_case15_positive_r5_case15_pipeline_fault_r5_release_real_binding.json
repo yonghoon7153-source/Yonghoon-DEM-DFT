@@ -1,0 +1,55 @@
+[
+  {
+    "name": "r6_evidence",
+    "argv": [
+      "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\gen2_network_reverify6_20261011\\probes\\r6_evidence.py"
+    ],
+    "rc": 1,
+    "seconds": 0.5779999999795109,
+    "tail": [
+      "Traceback (most recent call last):",
+      "  File \"C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\gen2_network_reverify6_20261011\\probes\\r6_evidence.py\", line 10, in <module>",
+      "    assert [(x['name'],x['verdict']) for x in checks]==[(x['name'],x['verdict']) for x in report['checks']]",
+      "           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^",
+      "AssertionError"
+    ]
+  },
+  {
+    "name": "r6_case15_positive",
+    "argv": [
+      "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\gen2_network_reverify6_20261011\\probes\\r6_case15_positive.py"
+    ],
+    "rc": 0,
+    "seconds": 55.17200000002049,
+    "tail": [
+      "{\"checks\": [[\"case15.proc\", \"PASS\"], [\"case15.raw_sha\", \"PASS\"], [\"case15.nc1_blocked\", \"PASS\"], [\"case15.nc2_tau\", \"PASS\"], [\"case15.nc3_cause\", \"PASS\"], [\"case15.nc4_ionic\", \"PASS\"], [\"case15.nc5_attempt\", \"PASS\"]], \"s0b\": []}"
+    ]
+  },
+  {
+    "name": "r5_case15_pipeline_fault",
+    "argv": [
+      "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\gen2_network_reverify6_20261011\\probes\\r5_case15_pipeline_fault.py"
+    ],
+    "rc": 0,
+    "seconds": 35.35899999993853,
+    "tail": [
+      "{\"root\": \"C:\\\\Users\\\\Administrator\\\\Documents\\\\Codex\\\\2026-08-24\\\\claude-stoic-knuth-nobvq-x20\\\\gen2_network_reverify6_20261011\\\\tmp\\\\r5_case15_pipeline_bhpqmvb9\", \"denied\": 1, \"status\": \"failed\", \"failed_stages\": [\"Network Solver (both modes)\"], \"checks\": 7, \"fail\": 1, \"failures\": [{\"group\": \"A\", \"id\": \"case15.nc5_attempt\", \"name\": \"case15_network: [음성 대조] 실제 망 시도 — 이번 시도의 망 CLI 1 회 · 예외 없음 · rc 0 · per-mode 둘 · 실패 채널 = 등록 넷 (전자 두 모드 · Hertz 열 boundary_overlap · Physics 열 음수 면적 거부) · 이온 computed · 단계 rc 0 · 결손 0 · 내용 검증 거부 · 시도 기록 = 기록기 digest · 원자료 탐침과 같은 원인 (실행 실패 = TECH)\", \"verdict\": \"TECH\", \"detail\": \"망 CLI 실행 예외 PermissionError (r5_case15 injected solver executable denied) — 실행 실패 (지정한 내용 거부 아님)\"}]}"
+    ]
+  },
+  {
+    "name": "r5_release_real_binding",
+    "argv": [
+      "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\gen2_network_reverify6_20261011\\probes\\r5_release_real_binding.py"
+    ],
+    "rc": 0,
+    "seconds": 1.3910000000614673,
+    "tail": [
+      "      \"build_accepted\": false,",
+      "      \"error\": \"ReleaseError: 배치 관문 증거 문제 1 (G2RR3-01 — 등록 §5-2 ⓪ 감사 · §5-3 ⓪b 다시 읽기) — seal_audit.json — import_observation.stage_binding 시도 1/194 의 값이 실행기 결합 계약과 다르다 (첫 [\\\"stage_binding 시도 'lhs00_000|1|1': observed ≠ expected — 모자람 {'scripts/parse_liggghts.py': '0/1'} · 많음 {} · 계획 밖 {} (관측/계획 · 0 개도 결손) — 실행된 단계마다 끝맺은 프로세스가 정확히 그 수여야 (G2RR5-01)\\\"]) — 시도마다 expected = 실행 단계에서 다시 유도 · observed = expected · 정수 (bool 아님) — 최상위 import_observation_problems 가 비어도 (G2RR5-01) — 실제 배포는 두 기록이 이 배치 뿌리 · manifest · 발사 봉인 지문에 대해 통과여야 한다 (옛 · 부분 기록을 들여다볼 때만 --diagnostic-batch-gate · NOT FOR RELEASE)\",",
+      "      \"output_exists\": false",
+      "    }",
+      "  ]",
+      "}"
+    ]
+  }
+]
