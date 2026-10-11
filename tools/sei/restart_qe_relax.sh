@@ -45,7 +45,11 @@ while [ $# -gt 0 ]; do
 done
 
 # ── 판정 (watch_qe_relax.sh 와 같은 문자열) ─────────────────────────────────
-#   → conv | exhaust | oom | error | no_marker | none
+#   → conv | exhaust | stopped | oom | error | no_marker | none
+#   ⛔⛔ 2026-10-11 실물 — `stopped` 가 없었다. `<prefix>.EXIT` 로 **사람이 세운** relax 도 QE 는
+#   `JOB DONE` 을 찍는다 → 맨 끝 `JOB DONE → conv` 갈래로 떨어져 **"수렴 — 건드리지 않는다"** 가 됐다.
+#   09-10 에 EXIT 로 세운 li3nd r2 (step 40 · |F| 0.033) · r3 가 그렇게 찍혔고 `--run` 으로도 영영 안 걸렸다.
+#   탄성 러너 (`tools/elastic/run_elastic_relaxedion_gabia.sh::_out_state`, 09-27) 와 같은 문자열로 가른다.
 #
 # ⛔⛔ 2026-09-07 실물 — 여기 마지막 갈래가 `running` 이었다. **파일에 종료마커가 없다**는
 #   것을 **돌고 있다**로 읽은 것이다. 프로세스를 보지도 않고서.
@@ -62,6 +66,7 @@ classify() {
   [ -f "$f" ] || { echo none; return; }
   if   grep -aq "bfgs converged in" "$f" 2>/dev/null;                      then echo conv
   elif grep -aq "The maximum number of steps has been" "$f" 2>/dev/null;   then echo exhaust
+  elif grep -aqE "Program stopped by user request|Maximum CPU time exceeded" "$f" 2>/dev/null; then echo stopped
   elif grep -aqi "CUDA_ERROR_OUT_OF_MEMORY\|Accelerator Fatal Error" "$f"; then echo oom
   elif grep -aq "Error in routine" "$f" 2>/dev/null;                       then echo error
   elif grep -aq "JOB DONE" "$f" 2>/dev/null;                               then echo conv
@@ -90,7 +95,7 @@ qe_alive_in_dir() {   # $1 = 폴더 → 0 이면 살아있다
 restart_mode_for() {
   local dir="$1" kind="$2"
   local sv; sv=$(find "$dir" -maxdepth 3 -name "*.save" -type d 2>/dev/null | head -1)
-  if [ "$kind" = "exhaust" ] && [ -n "$sv" ] && [ -n "$(ls -A "$sv" 2>/dev/null)" ]; then
+  if { [ "$kind" = "exhaust" ] || [ "$kind" = "stopped" ]; } && [ -n "$sv" ] && [ -n "$(ls -A "$sv" 2>/dev/null)" ]; then
     echo restart
   else
     echo from_scratch
@@ -152,9 +157,13 @@ if [ "$SELFTEST" = 1 ]; then
   mk err     "     Error in routine  read_namelists (1):
      opening input file"
   mk run     "     Total force =     0.0400"
+  mk stop    "     number of bfgs steps    =  40
+
+     Program stopped by user request
+     JOB DONE."
   mkdir -p "$T/none"
-  for c in conv exhaust oom err run none; do
-    case "$c" in conv) w=conv;; exhaust) w=exhaust;; oom) w=oom;; err) w=error;; run) w=no_marker;; none) w=none;; esac
+  for c in conv exhaust stop oom err run none; do
+    case "$c" in conv) w=conv;; exhaust) w=exhaust;; stop) w=stopped;; oom) w=oom;; err) w=error;; run) w=no_marker;; none) w=none;; esac
     g=$(classify "$T/$c/00_control_relax.out")
     chk "$([ "$g" = "$w" ] && echo 1 || echo 0)" "판정 $c → $g (기대 $w)"
   done
@@ -193,6 +202,19 @@ if [ "$SELFTEST" = 1 ]; then
       "양성: save 가 있으면 restart 로 이어붙인다"
   chk "$([ "$(restart_mode_for "$T/oom" oom)" = from_scratch ] && echo 1 || echo 0)" \
       "⛔음성: OOM 은 save 가 있어도 처음부터 (죽은 지점 상태를 못 믿는다)"
+  # ⛔음성 (2026-10-11 실물): EXIT 로 세운 relax 는 JOB DONE 이 있어도 수렴이 아니다
+  chk "$([ "$(classify "$T/stop/00_control_relax.out")" != conv ] && echo 1 || echo 0)" \
+      "⛔음성: EXIT 로 세운 relax 를 **수렴으로 세지 않는다** (li3nd r2·r3 가 '수렴 — 건드리지 않는다' 로 찍혔다)"
+  chk "$([ "$(restart_mode_for "$T/stop" stopped)" = from_scratch ] && echo 1 || echo 0)" \
+      "⛔음성: save 없는 세운 잡에 restart 를 걸지 않는다"
+  mkdir -p "$T/stop/tmp/y.save"; echo z > "$T/stop/tmp/y.save/charge-density.dat"
+  chk "$([ "$(restart_mode_for "$T/stop" stopped)" = restart ] && echo 1 || echo 0)" \
+      "양성: save 가 있으면 세운 잡은 restart 로 잇는다 (BFGS 이력 승계)"
+  # 판정 화면이 세운 잡을 다시 걸 목록에 올리는가 (본 루프 case 배선 · 판정만 · --run 아님)
+  mkdir -p "$T/sroot/j"; printf "&CONTROL\n/\n" > "$T/sroot/j/00_control_relax.in"; cp "$T/stop/00_control_relax.out" "$T/sroot/j/"
+  _o2=$(QE_RESTART_ROOTS="$T/sroot" bash "$0" 2>/dev/null || true)
+  chk "$(echo "$_o2" | grep -q "사람이 세움" && ! echo "$_o2" | grep -q "다시 걸 것이 없다" && echo 1 || echo 0)" \
+      "⛔음성: 본 루프가 세운 잡을 '다시 걸 것이 없다' 로 넘기지 않는다 (판정 화면 배선)"
   # 입력 패치 — 있는 키는 바꾸고 없는 키는 넣는다
   printf "&CONTROL\n  calculation = 'relax'\n  nstep = 50\n/\n&SYSTEM\n/\n" > "$T/a.in"
   patch_in "$T/a.in" "$T/a.out.in" restart 200 >/dev/null
@@ -251,6 +273,8 @@ for d in "${DIRS[@]}"; do
              TODO+=("$d"); MODES+=("$m") ;;
     none)    printf "  · %-42s .out 없음 — 건너뛴다\n" "$(basename "$d")" ;;
     exhaust) printf "  ⛔ %-42s nstep소진 → nstep %s · %s\n" "$(basename "$d")" "$NSTEP" "$m"
+             TODO+=("$d"); MODES+=("$m") ;;
+    stopped) printf "  ⏸ %-42s 사람이 세움(EXIT·max_seconds) → nstep %s · %s (BFGS 이력 승계)\n" "$(basename "$d")" "$NSTEP" "$m"
              TODO+=("$d"); MODES+=("$m") ;;
     oom)     printf "  ☠ %-42s GPU OOM → %s (한 번에 하나만)\n" "$(basename "$d")" "$m"
              TODO+=("$d"); MODES+=("$m") ;;

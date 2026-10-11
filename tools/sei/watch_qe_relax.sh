@@ -116,6 +116,11 @@ _read_out() {
   elif grep -aq "The maximum number of steps has been" "$f" 2>/dev/null; then
     ST="⛔ nstep소진"
     NOTE="JOB DONE 이지만 **미수렴** — nstep 늘려 restart_mode='restart' 로 이어야 한다"
+  elif grep -aqE "Program stopped by user request|Maximum CPU time exceeded" "$f" 2>/dev/null; then
+    # ⛔ 2026-10-11 — EXIT 로 세운 relax 도 JOB DONE 을 찍는다. 아래 JOB DONE → '✅ 종료' 로 떨어지면
+    #   세운 잡이 완주처럼 보인다 (restart_qe_relax.sh 는 같은 자리에서 '수렴' 이라 했다 · li3nd r2·r3).
+    ST="⏸ 세움(EXIT)"
+    NOTE="사람이 세운 relax — 미수렴 · restart_mode='restart' 로 이어야 한다 (restart_qe_relax.sh --run)"
   elif grep -aqi "CUDA_ERROR_OUT_OF_MEMORY\|Accelerator Fatal Error" "$f" 2>/dev/null; then
     ST="☠ GPU OOM"
     NOTE="다른 잡이 GPU 를 물고 있을 때 붙으면 이렇게 죽는다 — 한 번에 하나만"
