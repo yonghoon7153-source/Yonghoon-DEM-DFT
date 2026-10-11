@@ -1,0 +1,80 @@
+(화면 앞부분 = 1저자 붙여 넣기에서 잘림 — ① 성공 게이트 출력 · ② 명령 머리 없음)
+ntact_\([0-9]*\)\.liggghts$/\1/p' | LC_ALL=C sort) | sort -n | tail -1)
+>   echo "$d 공통 step=$s $( [ -e $P/mesh_$s.stl ] && echo mesh_ok || echo MESH_MISSING )"
+>   ls $d/input_$d.liggghts $P/atom_$s.liggghts $P/contact_$s.liggghts $P/mesh_$s.stl $d/logs/*.out >> $L
+> done
+lhss_001 공통 step=3150000 mesh_ok
+lhss_002 공통 step=2790000 mesh_ok
+lhss_003 공통 step=3420000 mesh_ok
+lhss_004 공통 step=3120000 mesh_ok
+lhss_005 공통 step=2110000 mesh_ok
+lhss_006 공통 step=2280000 mesh_ok
+lhss_007 공통 step=2620000 mesh_ok
+lhss_008 공통 step=4470000 mesh_ok
+lhss_009 공통 step=3810000 mesh_ok
+lhss_010 공통 step=2880000 mesh_ok
+lhss_011 공통 step=3160000 mesh_ok
+lhss_012 공통 step=2770000 mesh_ok
+lhss_013 공통 step=2700000 mesh_ok
+lhss_014 공통 step=3010000 mesh_ok
+lhss_015 공통 step=2580000 mesh_ok
+lhss_016 공통 step=2510000 mesh_ok
+lhss_017 공통 step=3380000 mesh_ok
+lhss_018 공통 step=2150000 mesh_ok
+lhss_019 공통 step=2340000 mesh_ok
+lhss_020 공통 step=3490000 mesh_ok
+(base) [yonghoon@ibb-master lhs_supp_20261006]$ wc -l < $L
+107
+(base) [yonghoon@ibb-master lhs_supp_20261006]$ sha256sum $(cat $L) > ~/lhs_supp20_final_20261011.sha256
+(base) [yonghoon@ibb-master lhs_supp_20261006]$ tar czf ~/lhs_supp20_final_20261011.tgz -T $L && sha256sum ~/lhs_supp20_final_20261011.tgz && du -h ~/lhs_supp20_final_20261011.tgz
+16398b6578ad2a588238ea883ee9c125c26d2bc8ac20cc738d810b5f464c572d  /home/yonghoon/lhs_supp20_final_20261011.tgz
+422M    /home/yonghoon/lhs_supp20_final_20261011.tgz
+(base) [yonghoon@ibb-master lhs_supp_20261006]$
+(이어서 — ① 성공 게이트 다시 · 로그가 둘 이상인 케이스 · 1저자 붙여 넣기 그대로 · 명령 줄 일부는 터미널 붙여 넣기 반향으로 겹쳐 보인다)
+(base) [yonghoon@ibb-master lhs_supp_20261006]$ sacct -X -u $USER -S 2026-10-06 -n -P -o JobName,State,ExitCode | grep -E '^lhs[st]_' > ~/lhs_supp_sacct_20261011.psv; wc -l < ~/lhs_supp_sacct_20261011.psv
+42
+(base) [yonghoon@ibb-master lhs_supp_20261006]$ python3 ~/unload_src_adbd6124/scripts/lhs_ext_submit_gate.py --manifest deck_manifest.json --sacct ~/lhs_supp_sacct_20261011.psv --outroot .
+등록 ID 28개 · COMPLETED 28개
+  COMPLETED        28
+
+✓ GO — 64/64 COMPLETED · 봉인 입력 불변 · 기대 산출물 존재
+(base) [yonghoon@ibb-master lhs_supp_20261006]$ for d in lhss_0{01..20}; do n=$(ls $d/logs/*.out | wc -l); [ $n -gt 1 ] && echo "$d 로그 $n: $(ls $d/logs/ | tr '\n' ' ')"; done
+lhss_002 로그 2: output_lhss_002_267513.out output_lhss_002_268678.out
+lhss_004 로그 2: output_lhss_004_267515.out output_lhss_004_268679.out
+lhss_008 로그 2: output_lhss_008_267519.out output_lhss_008_268680.out
+lhss_010 로그 2: output_lhss_010_267521.out output_lhss_010_268681.out
+lhss_014 로그 3: output_lhss_014_267525.out output_lhss_014_268682.out output_lhss_014_276508.out
+lhss_020 로그 2: output_lhss_020_267531.out output_l
+(붙여 넣기 끝이 잘림)
+(이어서 — 로그 여섯 케이스 계보 · 1저자 붙여 넣기 그대로 · 명령 머리는 터미널 반향으로 겹쳐 보인다)
+lhss_020 로그 2: output_lhss_020_267531.out output_lhss_020_268683.out
+   output_lhss_002_267513.out 첫 0 끝 190000
+   output_lhss_002_268678.out 첫 150000 끝 2795001 Finished | Reading restart file ...
+lhss_002/input_lhss_002.liggghts lhss_002/input_lhss_002_r1.liggghts lhss_002/log.liggghts lhss_002/run_lhss_002.sh lhss_002/run_lhss_002_r1.sh
+   output_lhss_004_267515.out 첫 0 끝 178000
+   output_lhss_004_268679.out 첫 150000 끝 3120001 Finished | Reading restart file ...
+lhss_004/input_lhss_004.liggghts lhss_004/input_lhss_004_r1.liggghts lhss_004/log.liggghts lhss_004/run_lhss_004.sh lhss_004/run_lhss_004_r1.sh
+   output_lhss_008_267519.out 첫 0 끝 648000
+   output_lhss_008_268680.out 첫 600000 끝 4475000 Finished | Reading restart file ...
+lhss_008/input_lhss_008.liggghts lhss_008/input_lhss_008_r1.liggghts lhss_008/log.liggghts lhss_008/run_lhss_008.sh lhss_008/run_lhss_008_r1.sh
+   output_lhss_010_267521.out 첫 0 끝 156000
+   output_lhss_010_268681.out 첫 150000 끝 2885001 Finished | Reading restart file ...
+lhss_010/input_lhss_010.liggghts lhss_010/input_lhss_010_r1.liggghts lhss_010/log.liggghts lhss_010/run_lhss_010.sh lhss_010/run_lhss_010_r1.sh
+   output_lhss_014_267525.out 첫 0 끝 268000
+   output_lhss_014_268682.out 첫 200001 끝 2902000  | Reading restart file ...
+   output_lhss_014_276508.out 첫 2900000 끝 3010000 Finished | Reading restart file ...
+lhss_014/input_lhss_014.liggghts lhss_014/input_lhss_014_r1.liggghts lhss_014/input_lhss_014_r2.liggghts lhss_014/log.liggghts lhss_014/run_lhss_014.sh lhss_014/run_lhss_014_r1.sh lhss_014/run_lhss_014_r2.sh
+   output_lhss_020_267531.out 첫 0 끝 243000
+   output_lhss_020_268683.out 첫 200001 끝 3495002 Finished | Reading restart file ...
+lhss_020/input_lhss_020.liggghts lhss_020/input_lhss_020_r1.liggghts lhss_020/log.liggghts lhss_020/run_lhss_020.sh lhss_020/run_lhss_020_r1.sh
+
+=== WSL (DESKTOP-IK8J81H) 10-11 — 전송 검증 · 수확 첫 시도 (1저자 화면 요지) ===
+전송: tgz sha256 16398b6578ad2a588238ea883ee9c125c26d2bc8ac20cc738d810b5f464c572d (ibb 와 같음) · sha256 -c 의 OK 아닌 줄 0 · ~/lhss_local 에 lhss_001…020 (Downloads = C:\Users\Administrator\Downloads)
+수확 첫 시도 (~/dem-audit = a20fc1875):
+  ① seal_area_cohort: 케이스 20 · 상태 {'RAW_OK': 20} · 설계족 {'UNKNOWN': 20}
+  ② lhs_harvest_batch: 성공 0/20 — 전부 BAD_NTYPES n_types='' (빈칸을 0 으로 채우지 않음 = fail-closed 정상)
+  ③ lhs_union_webapp: OK 0/20 (전부 ERROR · 0 s)
+  대조 lhsx_001 (같은 도구): mc_seed 666267859 · mc_void_pct 7.1576249999999995 = 09-27 lhsx64_union.tsv 와 끝자리까지 같음
+  첫 묶음 ~/lhss_harvest_20261011.tgz sha256 a805ebd26ab501fbc52ae0694b5db0fba869f04901aad2ba1096ae0a6e055248 (실패 기록 포함 · 반입 안 함)
+원인 (내 명령 결함): 봉인기 load_design 은 `case_id` · `block` 열을 읽는데 보충 설계 CSV 는 `id` 열 · `block` = 'supp' (설계족은 `kind` · `ntype`) · 덱 첫 줄 보조 경로도 UNKNOWN
+고침 (코드 변경 없음): `case_id = id · block = kind` 표 (kind ↔ ntype 대조) → `seal_area_cohort.py --refill-family` (해시 열 무변경) → 수확 · union 을 _r2 폴더로 다시 (1저자 실행 대기)

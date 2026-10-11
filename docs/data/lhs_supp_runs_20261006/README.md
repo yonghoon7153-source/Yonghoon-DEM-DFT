@@ -6,3 +6,7 @@
 - ⬜ 등록 §4 의 성공 판정 = `scripts/lhs_ext_submit_gate.py` (28 ID 전부 `COMPLETED` + 덱 · 러너 sha256 = `deck_manifest.json`) — 아직 안 돌림.
   sacct 창에는 같은 기간의 다른 ibb 잡 (믹서 등) 이 섞여 게이트가 "매니페스트에 없는 잡" 으로 HOLD 를 낸다 → **이름 앞머리 `lhss_` · `lhst_` 로 좁혀** 넘긴다 (상태로 고르지 않는다).
 - LHS 인계 범위 (1저자 10-11): **보충 20 만 v1.3 에** · 후막 8 은 LHS 밖 (등록 §5 ④ 짝 비교 = 별도 기술 보고).
+- ✅ **10-11 등록 §4 성공 게이트 = GO** (sacct 이름 좁힘 42 줄 · `등록 ID 28개 · COMPLETED 28개` · 봉인 입력 불변 · 끝줄 "64/64" = 도구 고정 문구) — 화면 `ibb_wsl_pack_harvest_20261011.txt`.
+- 계보 (같은 파일): 로그 둘 이상 = `lhss_002 · 004 · 008 · 010 · 020` (2) · `014` (3) — 여섯 다 **체크포인트 재개** (`Reading restart file` · 재개 덱 `_r1` · `_r2` 는 등록 manifest 밖 · 재개 시험 G1–G3 기록 미확인) · 처음부터 다시 돈 런 없음.
+- 보충 20 최종 프레임 묶음 (ibb): 공통 step = 끝 step 이하 가장 큰 10,000 배수 20/20 · mesh 20/20 · 목록 107 (= 80 + 로그 27) · tgz 422 MB sha256 `16398b65…572d` → WSL (DESKTOP-IK8J81H · `~/lhss_local`) 전송 sha256 같음 · `-c` OK 아닌 줄 0.
+- ⚠ WSL 수확 첫 시도 0/20 (BAD_NTYPES — 내 명령: 봉인기는 설계 CSV `case_id` · `block` 을 읽는데 보충 CSV 는 `id` · `block = supp` · 설계족은 `kind`) → `--refill-family` (case_id = id · block = kind · kind ↔ ntype 대조) 로 다시 = 1저자 실행 대기 · 도구 대조 lhsx_001 `mc_void_pct 7.1576249999999995` = 09-27 값과 같음.
