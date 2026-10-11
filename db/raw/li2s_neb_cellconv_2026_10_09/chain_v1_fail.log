@@ -1,0 +1,8 @@
+[2026-10-09 22:03:43] ■ start · HEAD 7ac59644 · GPU 3096 MiB
+[2026-10-09 22:03:43] ■ 1 endpoints relax
+[22:03:43] ⚠ GPU 가 이미 3096 MiB 쓰인다 (UMA?) — 같이 돌립니다. OOM 이면 멈추세요.
+[22:03:43] ⛔ 없음: /home/kgy/work/runs/li2s_neb_cellconv_1009/c222/li2s/ep_initial/relax.in — build_neb_inputs.py 먼저
+[22:03:43] ⛔ 없음: /home/kgy/work/runs/li2s_neb_cellconv_1009/c222/li2s/ep_final/relax.in — build_neb_inputs.py 먼저
+[22:03:43] 끝점 이완 끝 — build_neb_inputs.py 를 **다시 돌려** 이완 좌표를 승계시킬 것
+grep: /home/kgy/work/runs/li2s_neb_cellconv_1009/c222/li2s/ep_initial/relax.out: No such file or directory
+[2026-10-09 22:03:43] ■ STOP G1: ep_initial not converged

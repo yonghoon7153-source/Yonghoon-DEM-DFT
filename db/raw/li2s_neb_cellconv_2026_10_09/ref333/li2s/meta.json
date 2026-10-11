@@ -1,0 +1,129 @@
+{
+  "tag": "li2s",
+  "disp": "Li2S",
+  "supercell": [
+    3,
+    3,
+    3
+  ],
+  "nat": 80,
+  "hop_distance_A": 2.8525851847409522,
+  "hop_shell": "c-c",
+  "pair_equivalent": true,
+  "hop_shell_requested": null,
+  "nelec": 322.0,
+  "protocol_hash": "06c0c448759c",
+  "protocol_payload": {
+    "tag": "li2s",
+    "ecutwfc": 60.0,
+    "ecutrho": 480.0,
+    "q": -1.0,
+    "images": 7,
+    "path_thr": 0.05,
+    "kpts": [
+      3,
+      3,
+      3
+    ],
+    "nat": 80,
+    "min_l": 10.0,
+    "min_l_basis": "lambda1",
+    "lambda1_A": 12.102,
+    "face_heights_A": [
+      9.882,
+      9.882,
+      9.882
+    ],
+    "hop_shell": "c-c",
+    "hop_pair_orbits": {
+      "vac": [
+        0,
+        "c"
+      ],
+      "hop": [
+        0,
+        "c"
+      ]
+    },
+    "hop_vac_index": 0,
+    "hop_moving_index": 7,
+    "hop_distance_A": 2.8526,
+    "endpoint_coords_sha": "86ff57dfcad3a783",
+    "cell": [
+      10.481069,
+      2e-06,
+      6.05125,
+      3.493689,
+      9.881645,
+      6.05125,
+      -0.0,
+      -0.0,
+      12.102497
+    ],
+    "smearing": "gaussian",
+    "degauss": 0.005,
+    "electronic_class": "insulator",
+    "pseudos": {
+      "Li": "li_pbe_v1.4.uspp.F.UPF",
+      "S": "s_pbe_v1.4.uspp.F.UPF"
+    },
+    "endpoints_relaxed": false,
+    "hash_schema": 2,
+    "lambda1_method_id": "M-2026-08-20-lambda1-exact-3d-ase-minkowski",
+    "ase_version": "3.29.0"
+  },
+  "lambda1_A": 12.102,
+  "face_heights_A": [
+    9.882,
+    9.882,
+    9.882
+  ],
+  "min_face_height_A": 9.882,
+  "cell_metric_note": "점결함 이미지 거리는 **λ₁(최단 격자 병진)** 이다. 면 높이는 격자 평면 간 거리라 보수적 하한으로만 쓴다 (둘의 비가 fcc 에서 1.22배 — 2026-08-16 Codex 리뷰).",
+  "endpoints_relaxed": false,
+  "ci_scheme": "no-CI",
+  "tot_charge": -1.0,
+  "vacancy_charge": "minus1",
+  "electronic_class": "insulator",
+  "electronic_class_evidence": "measured",
+  "smearing": "gaussian",
+  "degauss": 0.005,
+  "charge_convention": "QE: +1=전자 부족, -1=전자 추가. V_Li- 는 -1 이다. 2026-08-11 이전 입력은 +1(정공 2개)이라 무효.",
+  "num_of_images": 7,
+  "min_cell_A": 12.1,
+  "kpts": [
+    3,
+    3,
+    3
+  ],
+  "li_orbits": {
+    "spacegroup": "Fm-3m",
+    "n_li_orbits": 1,
+    "wyckoffs": [
+      "c"
+    ]
+  },
+  "endpoints_symmetry_equivalent": true,
+  "global_n_li_orbits": 1,
+  "pair_orbits": {
+    "vac": [
+      0,
+      "c"
+    ],
+    "hop": [
+      0,
+      "c"
+    ]
+  },
+  "neighbor_shells": {
+    "c-c": {
+      "d_min": 2.8526,
+      "n": 1431
+    }
+  },
+  "arrival_err_A": 2.220446049250313e-16,
+  "arrival_err_is_pre_relax": false,
+  "endpoint_displacement_max_A": null,
+  "geometry_source": "/home/kgy/wt_li2scc_1009/db/inputs/li2s_neb_cellconv_2026_10_09/relaxed/li2s_mp-1153/01_vcrelax.out",
+  "_note": "endpoints_symmetry_equivalent=false 면 정·역 장벽이 다른 게 정상이다 — 그 차이는 두 Li 자리의 에너지 차다. 장거리 수송에 걸리는 유효 장벽은 max(정, 역) 이다(가장 낮은 자리에서 안장점까지)."
+}
