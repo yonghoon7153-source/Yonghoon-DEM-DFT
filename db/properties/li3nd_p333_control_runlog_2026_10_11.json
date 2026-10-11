@@ -45,11 +45,22 @@
       "러너": "463447 — 창 셸 아님 (거부 안 걸림) · 19:05:44 얼림 (T)",
       "대기": "BFGS 줄 170 개에서 다음 줄 (상한 14,400 s) — 14:18 watch 의 166 뒤로 4 스텝 · 스텝당 ≈ 70 분",
       "GPU_19:06": "탄성 pw.x 41,374 MiB + li2s 대조 seed5 UMA 2,880 MiB (아직 진행)",
-      "끝": null
+      "끝": {
+        "at": "2026-10-11 19:35:49",
+        "결과": "✅ — BFGS 줄 170 → 171 뒤 EXIT · 상태 stopped · 마지막 Total force 0.006027 · .bfgs fa1dc8cc (19:34:56 저장) · 러너 463447 종료 · 12_p 안 뜸 (19:41 GPU 에 탄성 pw.x 없음)",
+        "재개_조건": "strain_13_m = stopped + tmp_strain_13_m/strain_13_m.bfgs → 러너를 새로 띄우면 restart_mode='restart' (BFGS 171 다음부터)",
+        "tmux": "el_mc2x_1001 창은 남아 있다 (러너만 끝났다 · 창 셸은 살아 있음) — 재개 때 새 세션으로 띄운다"
+      }
     },
     "r2_재개": {
       "대기_시작": "2026-10-11 19:05:43 · tmux li3nd_r2 · ① 정지 로그 대기",
-      "재개": null
+      "재개": {
+        "at": "2026-10-11 19:4x (seed5 19:39:47 끝 → GPU 0 개 × 2 회 뒤)",
+        "판정": "'⏸ li3nd_mp-976264_p333_r2 사람이 세움(EXIT·max_seconds) → nstep 200 · restart (BFGS 이력 승계)'",
+        "실행": "'▶ li3nd_mp-976264_p333_r2 mode=restart nstep=200 (GPU 여유 49139 MiB)' · pw.x 3384461 · -in 00_control_relax.restart.in",
+        "관측_20:02": "새 .out 에 BFGS 줄 0 (첫 SCF 중 · 새 파일이라 0 부터 센다) · VRAM 25,338 MiB (09-10 실측 37.7 GB 까지 오를 수 있다)",
+        "⏭_확인": "첫 SCF 뒤 'number of bfgs steps' 값이 41 근처에서 이어지는지 · 'read from directory' 줄 · 옛 .out 은 .out.NNN 으로 보관"
+      }
     },
     "r2_끝": null,
     "탄성_재개": null
