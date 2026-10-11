@@ -9331,7 +9331,7 @@
       "found_by": "codex 10-11 DEM 언로딩 등록 적대 검토 (검토 핀 a20fc1875 · LIGGGHTS 3d5c00f 원문 판독 · 기존 r8 원 로그 · pressure.csv 재계산 · plane_load_share.compute() 실제 호출 합성 반례 · 소스 식 산술 — 새 DEM/MPM · ibb 실행 · 생산 코드 수정 없음)",
       "opened_in": "docs/reviews/codex_review_dem_unloading_prereg_20261011.md",
       "title": "G4 가 S0 이력 복원을 증명하지 못한다 — wall/gran/local 은 mesh 벽만 고르고 (primitive 바닥 미지원) 활성 compute 를 둔 unfix 는 거부 · compute 재정의는 첫 run 뒤 막힌다 · R 2,000 step 뒤 힘 차 · \"0 ≥ 10×0\" PASS 는 식별 시험이 아니다",
-      "note": "판정문 §2 Q1(c).  REG §3-2 · §3-3 (224–242) · §9 (494).  소스 (3d5c00f): compute_pair_gran_local.cpp:247–269 (mesh 만) · :126–127 (재정의 거부) · fix_wall_gran.cpp:541–542 · modify.cpp:206–210 · 소거는 실제 (fix_wall_gran.cpp:528–556 · fix_mesh_surface.cpp:715–722).  복원 경로 자체는 있다 (modify.cpp:863–911 · 기존 r8 stdout 31–32 · 82–90 의 reset 로그).  최소 해결: 적분 전 실제 이력 관측 / 복원 로그 · 알려진 이력 round-trip + 소거 음성대조 · 미확인이면 U 차단 (표지 넘김 금지).  ⬜ 수정 계획 = docs/reviews/dem_unloading_ul_fix_plan_20261011.md (1저자 비준 대기) · 등록 = docs/reviews/dem_unloading_ps45_prereg_20261009.md (결과 0 건)."
+      "note": "판정문 §2 Q1(c).  REG §3-2 · §3-3 (224–242) · §9 (494).  소스 (3d5c00f): compute_pair_gran_local.cpp:247–269 (mesh 만) · :126–127 (재정의 거부) · fix_wall_gran.cpp:541–542 · modify.cpp:206–210 · 소거는 실제 (fix_wall_gran.cpp:528–556 · fix_mesh_surface.cpp:715–722).  복원 경로 자체는 있다 (modify.cpp:863–911 · 기존 r8 stdout 31–32 · 82–90 의 reset 로그).  최소 해결: 적분 전 실제 이력 관측 / 복원 로그 · 알려진 이력 round-trip + 소거 음성대조 · 미확인이면 U 차단 (표지 넘김 금지).  ⬜ 수정 계획 = docs/reviews/dem_unloading_ul_fix_plan_20261011.md (1저자 비준 대기) · 등록 = docs/reviews/dem_unloading_ps45_prereg_20261009.md (결과 0 건).\n★ 10-11 등록 개정 1 §12-1 (문서 몫 · 1저자 Q1–Q4 권고대로) — 닫는 증거 = 키트 시험 (§12-12 ② ③) + Codex 재검토 (`docs/reviews/codex_dem_unloading_prereg_rereview_request_20261011.md`) 대기 · 원문 보존."
     },
     {
       "id": "UL-02",
@@ -9341,7 +9341,7 @@
       "found_by": "codex 10-11 DEM 언로딩 등록 적대 검토 (검토 핀 a20fc1875 · LIGGGHTS 3d5c00f 원문 판독 · 기존 r8 원 로그 · pressure.csv 재계산 · plane_load_share.compute() 실제 호출 합성 반례 · 소스 식 산술 — 새 DEM/MPM · ibb 실행 · 생산 코드 수정 없음)",
       "opened_in": "docs/reviews/codex_review_dem_unloading_prereg_20261011.md",
       "title": "S3 의 실제 함수 (plane_load_share.balance_residual) 가 총힘 평형을 검사하지 않는다 — 내부 입자 쌍 접촉력만 합산 (중력 · 감쇠 · 외력 없음) → 중력과 정확히 평형인 사슬도 0.0400 > 0.001 로 거부",
-      "note": "판정문 §3.  REG §5-2 (316) · scripts/plane_load_share.py:227–232 · fix_gravity.cpp:331–338.  반례 (실제 compute() · 5 구 사슬 · 총힘 최대 2.2e-20 N) = 우리 트리 재확인 같음 (docs/reviews/codex_dem_unloading_prereg_review_evidence_20261011/_README_import.md §2).  최소 해결: 총힘 정의 · 정규화 · 저압 floor 봉인 · 중력 평형 양성 + 불평형 음성 fixture · pair-only 잔차 = 진단 병기 · 허용치 넓히기 금지.  ⬜ 수정 계획 = docs/reviews/dem_unloading_ul_fix_plan_20261011.md (1저자 비준 대기) · 등록 = docs/reviews/dem_unloading_ps45_prereg_20261009.md (결과 0 건)."
+      "note": "판정문 §3.  REG §5-2 (316) · scripts/plane_load_share.py:227–232 · fix_gravity.cpp:331–338.  반례 (실제 compute() · 5 구 사슬 · 총힘 최대 2.2e-20 N) = 우리 트리 재확인 같음 (docs/reviews/codex_dem_unloading_prereg_review_evidence_20261011/_README_import.md §2).  최소 해결: 총힘 정의 · 정규화 · 저압 floor 봉인 · 중력 평형 양성 + 불평형 음성 fixture · pair-only 잔차 = 진단 병기 · 허용치 넓히기 금지.  ⬜ 수정 계획 = docs/reviews/dem_unloading_ul_fix_plan_20261011.md (1저자 비준 대기) · 등록 = docs/reviews/dem_unloading_ps45_prereg_20261009.md (결과 0 건).\n★ 10-11 등록 개정 1 §12-2 (문서 몫 · 1저자 Q1–Q4 권고대로) — 닫는 증거 = 키트 시험 (§12-12 ② ③) + Codex 재검토 (`docs/reviews/codex_dem_unloading_prereg_rereview_request_20261011.md`) 대기 · 원문 보존."
     },
     {
       "id": "UL-03",
@@ -9351,7 +9351,7 @@
       "found_by": "codex 10-11 DEM 언로딩 등록 적대 검토 (검토 핀 a20fc1875 · LIGGGHTS 3d5c00f 원문 판독 · 기존 r8 원 로그 · pressure.csv 재계산 · plane_load_share.compute() 실제 호출 합성 반례 · 소스 식 산술 — 새 DEM/MPM · ibb 실행 · 생산 코드 수정 없음)",
       "opened_in": "docs/reviews/codex_review_dem_unloading_prereg_20261011.md",
       "title": "교차 분해능을 최대 4 배 과소평가 — 최초 교차가 A 단 (0.20 µm) 이면 B 두 단이 괄호를 좁히지 않는다 · 0.180096 vs 등록 0.045024 %p (7:3 h0 111.052 µm) · 단조성만으로 보간값 ±반 폭 보장 안 됨",
-      "note": "판정문 §3 UL-03.  REG §4-2 (263 · 270) · §5-1 (303) · §7-2 (381).  최소 해결: 실제 괄호 저장 · 모든 후보 끝점 정상성 · 접촉 자료 · coarse 교차 시험 · A 교차 = A 괄호 그대로 (B 값 대체 금지).  ⬜ 수정 계획 = docs/reviews/dem_unloading_ul_fix_plan_20261011.md (1저자 비준 대기) · 등록 = docs/reviews/dem_unloading_ps45_prereg_20261009.md (결과 0 건)."
+      "note": "판정문 §3 UL-03.  REG §4-2 (263 · 270) · §5-1 (303) · §7-2 (381).  최소 해결: 실제 괄호 저장 · 모든 후보 끝점 정상성 · 접촉 자료 · coarse 교차 시험 · A 교차 = A 괄호 그대로 (B 값 대체 금지).  ⬜ 수정 계획 = docs/reviews/dem_unloading_ul_fix_plan_20261011.md (1저자 비준 대기) · 등록 = docs/reviews/dem_unloading_ps45_prereg_20261009.md (결과 0 건).\n★ 10-11 등록 개정 1 §12-3 (문서 몫 · 1저자 Q1–Q4 권고대로) — 닫는 증거 = 키트 시험 (§12-12 ② ③) + Codex 재검토 (`docs/reviews/codex_dem_unloading_prereg_rereview_request_20261011.md`) 대기 · 원문 보존."
     },
     {
       "id": "UL-04",
@@ -9361,7 +9361,7 @@
       "found_by": "codex 10-11 DEM 언로딩 등록 적대 검토 (검토 핀 a20fc1875 · LIGGGHTS 3d5c00f 원문 판독 · 기존 r8 원 로그 · pressure.csv 재계산 · plane_load_share.compute() 실제 호출 합성 반례 · 소스 식 산술 — 새 DEM/MPM · ibb 실행 · 생산 코드 수정 없음)",
       "opened_in": "docs/reviews/codex_review_dem_unloading_prereg_20261011.md",
       "title": "UT (고압 첫 5 단) 로 저압 ρ 의 dt 차를 인증하지 못하고 · UV · UT 동시 실패면 서로 다른 본 설정 두 개가 지정된다",
-      "note": "판정문 §5 UL-04.  REG §4-3 · §4-4 (279–296) · hooke/hysteresis k2 이력 의존 · 가지 전환 (normal_model_hooke_hysteresis.h:139–188).  최소 해결: (v · dt · 창 · 계단) 단일 튜플 결정표 + 그 설정의 종점 비교 · 또는 종점 수치 검증 미확인으로 주장 축소 (계획 Q2).  ⬜ 수정 계획 = docs/reviews/dem_unloading_ul_fix_plan_20261011.md (1저자 비준 대기) · 등록 = docs/reviews/dem_unloading_ps45_prereg_20261009.md (결과 0 건)."
+      "note": "판정문 §5 UL-04.  REG §4-3 · §4-4 (279–296) · hooke/hysteresis k2 이력 의존 · 가지 전환 (normal_model_hooke_hysteresis.h:139–188).  최소 해결: (v · dt · 창 · 계단) 단일 튜플 결정표 + 그 설정의 종점 비교 · 또는 종점 수치 검증 미확인으로 주장 축소 (계획 Q2).  ⬜ 수정 계획 = docs/reviews/dem_unloading_ul_fix_plan_20261011.md (1저자 비준 대기) · 등록 = docs/reviews/dem_unloading_ps45_prereg_20261009.md (결과 0 건).\n★ 10-11 등록 개정 1 §12-4 (문서 몫 · 1저자 Q1–Q4 권고대로) — 닫는 증거 = 키트 시험 (§12-12 ② ③) + Codex 재검토 (`docs/reviews/codex_dem_unloading_prereg_rereview_request_20261011.md`) 대기 · 원문 보존."
     },
     {
       "id": "UL-05",
@@ -9371,7 +9371,7 @@
       "found_by": "codex 10-11 DEM 언로딩 등록 적대 검토 (검토 핀 a20fc1875 · LIGGGHTS 3d5c00f 원문 판독 · 기존 r8 원 로그 · pressure.csv 재계산 · plane_load_share.compute() 실제 호출 합성 반례 · 소스 식 산술 — 새 DEM/MPM · ibb 실행 · 생산 코드 수정 없음)",
       "opened_in": "docs/reviews/codex_review_dem_unloading_prereg_20261011.md",
       "title": "7:3 설정 차를 다른 네 침대의 오차 상한으로 이식할 수 없다 — 현 b 로 다섯 침대 순위를 수치적으로 인증 못 함 · b 의 뜻 (반폭 / 쌍 차) 미고정 · 인접 미구분 ≠ 동률",
-      "note": "판정문 §5 UL-05.  REG §7-2 (381–383) · §9 (473).  최소 해결: 침대별 민감도 + 실제 괄호 I_c (순위 판정 유지안) 또는 \"관측 순위 · 타 침대 민감도 미측정\" 으로 강등 (범위 축소안) — 계획 Q3 · 10 쌍 전부 보고.  ⬜ 수정 계획 = docs/reviews/dem_unloading_ul_fix_plan_20261011.md (1저자 비준 대기) · 등록 = docs/reviews/dem_unloading_ps45_prereg_20261009.md (결과 0 건)."
+      "note": "판정문 §5 UL-05.  REG §7-2 (381–383) · §9 (473).  최소 해결: 침대별 민감도 + 실제 괄호 I_c (순위 판정 유지안) 또는 \"관측 순위 · 타 침대 민감도 미측정\" 으로 강등 (범위 축소안) — 계획 Q3 · 10 쌍 전부 보고.  ⬜ 수정 계획 = docs/reviews/dem_unloading_ul_fix_plan_20261011.md (1저자 비준 대기) · 등록 = docs/reviews/dem_unloading_ps45_prereg_20261009.md (결과 0 건).\n★ 10-11 등록 개정 1 §12-5 (문서 몫 · 1저자 Q1–Q4 권고대로) — 닫는 증거 = 키트 시험 (§12-12 ② ③) + Codex 재검토 (`docs/reviews/codex_dem_unloading_prereg_rereview_request_20261011.md`) 대기 · 원문 보존."
     },
     {
       "id": "UL-06",
@@ -9381,7 +9381,7 @@
       "found_by": "codex 10-11 DEM 언로딩 등록 적대 검토 (검토 핀 a20fc1875 · LIGGGHTS 3d5c00f 원문 판독 · 기존 r8 원 로그 · pressure.csv 재계산 · plane_load_share.compute() 실제 호출 합성 반례 · 소스 식 산술 — 새 DEM/MPM · ibb 실행 · 생산 코드 수정 없음)",
       "opened_in": "docs/reviews/codex_review_dem_unloading_prereg_20261011.md",
       "title": "순힘 0 을 분리로 오인 — 포화 가지에서 +0.25 · −0.25 (kn·δ_lim 단위) 두 접촉이 상쇄하면 접촉 2 개인데 P = 0 → \"접촉 0 OR P ≤ 0\" 은 거짓 분리 · h_surf 시작 시점 오류",
-      "note": "판정문 §6 UL-06.  REG §5-1 (304–308) · normal_model_hooke_hysteresis.h:169–173.  최소 해결: 접촉 수 / 검증된 메시–구 기하로 분리 판정 (두 창 연속) · 상쇄 fixture · 미식별 후보 = 고정 상태 전이.  ⬜ 수정 계획 = docs/reviews/dem_unloading_ul_fix_plan_20261011.md (1저자 비준 대기) · 등록 = docs/reviews/dem_unloading_ps45_prereg_20261009.md (결과 0 건)."
+      "note": "판정문 §6 UL-06.  REG §5-1 (304–308) · normal_model_hooke_hysteresis.h:169–173.  최소 해결: 접촉 수 / 검증된 메시–구 기하로 분리 판정 (두 창 연속) · 상쇄 fixture · 미식별 후보 = 고정 상태 전이.  ⬜ 수정 계획 = docs/reviews/dem_unloading_ul_fix_plan_20261011.md (1저자 비준 대기) · 등록 = docs/reviews/dem_unloading_ps45_prereg_20261009.md (결과 0 건).\n★ 10-11 등록 개정 1 §12-6 (문서 몫 · 1저자 Q1–Q4 권고대로) — 닫는 증거 = 키트 시험 (§12-12 ② ③) + Codex 재검토 (`docs/reviews/codex_dem_unloading_prereg_rereview_request_20261011.md`) 대기 · 원문 보존."
     },
     {
       "id": "UL-07",
@@ -9391,7 +9391,7 @@
       "found_by": "codex 10-11 DEM 언로딩 등록 적대 검토 (검토 핀 a20fc1875 · LIGGGHTS 3d5c00f 원문 판독 · 기존 r8 원 로그 · pressure.csv 재계산 · plane_load_share.compute() 실제 호출 합성 반례 · 소스 식 산술 — 새 DEM/MPM · ibb 실행 · 생산 코드 수정 없음)",
       "opened_in": "docs/reviews/codex_review_dem_unloading_prereg_20261011.md",
       "title": "1 MPa 아래에서 시작하는 중력 팔 (R_M = 첫 교차 뒤 두 단) 에는 새 1 MPa 위쪽 괄호가 없을 수 있다 (예 1.2 → 0.8 교차 · R_M 0.6 · 전환 뒤 0.7 · lift 0.5 → 0.3)",
-      "note": "판정문 §4 UL-07.  REG §4-2 (268) · §6-2 h (344).  최소 해결: NO_BRACKET 처리 (전환 뒤 첫 정상 압력 > P_meas 일 때만 보간 · 재압축 없음 · ρ_g − ρ = 자중 몫 해석 금지) 또는 교차 전 분기 · 재평형 · h0 규약 재등록 — 계획 Q4.  ⬜ 수정 계획 = docs/reviews/dem_unloading_ul_fix_plan_20261011.md (1저자 비준 대기) · 등록 = docs/reviews/dem_unloading_ps45_prereg_20261009.md (결과 0 건)."
+      "note": "판정문 §4 UL-07.  REG §4-2 (268) · §6-2 h (344).  최소 해결: NO_BRACKET 처리 (전환 뒤 첫 정상 압력 > P_meas 일 때만 보간 · 재압축 없음 · ρ_g − ρ = 자중 몫 해석 금지) 또는 교차 전 분기 · 재평형 · h0 규약 재등록 — 계획 Q4.  ⬜ 수정 계획 = docs/reviews/dem_unloading_ul_fix_plan_20261011.md (1저자 비준 대기) · 등록 = docs/reviews/dem_unloading_ps45_prereg_20261009.md (결과 0 건).\n★ 10-11 등록 개정 1 §12-7 (문서 몫 · 1저자 Q1–Q4 권고대로) — 닫는 증거 = 키트 시험 (§12-12 ② ③) + Codex 재검토 (`docs/reviews/codex_dem_unloading_prereg_rereview_request_20261011.md`) 대기 · 원문 보존."
     },
     {
       "id": "UL-08",
@@ -9401,7 +9401,7 @@
       "found_by": "codex 10-11 DEM 언로딩 등록 적대 검토 (검토 핀 a20fc1875 · LIGGGHTS 3d5c00f 원문 판독 · 기존 r8 원 로그 · pressure.csv 재계산 · plane_load_share.compute() 실제 호출 합성 반례 · 소스 식 산술 — 새 DEM/MPM · ibb 실행 · 생산 코드 수정 없음)",
       "opened_in": "docs/reviews/codex_review_dem_unloading_prereg_20261011.md",
       "title": "창 · 덤프 계약 부족 — R 2,000 < W 5,000 · k = 0 두 창은 연속 차 둘을 못 만든다 · 최초 교차 양 끝 S3 · 분리 뒤 S4 자료 · 회전 KE 기준 창 미정",
-      "note": "판정문 §3 유지 창 · UL-08.  REG §3-2 (215) · §4-2 (267 · 270) · §5-2 (315–320).  r8 재계산 (S0 ± 5,000 최대 0.315 % · S1+S2 첫 통과 = 이완 시작 + 80,000) = 판정문 값.  최소 해결: 창 타임라인 · 필수 덤프 · 회전 KE 기준 생성 시험 · 4–12 창 = 실패 허용 사전 예산.  ⬜ 수정 계획 = docs/reviews/dem_unloading_ul_fix_plan_20261011.md (1저자 비준 대기) · 등록 = docs/reviews/dem_unloading_ps45_prereg_20261009.md (결과 0 건)."
+      "note": "판정문 §3 유지 창 · UL-08.  REG §3-2 (215) · §4-2 (267 · 270) · §5-2 (315–320).  r8 재계산 (S0 ± 5,000 최대 0.315 % · S1+S2 첫 통과 = 이완 시작 + 80,000) = 판정문 값.  최소 해결: 창 타임라인 · 필수 덤프 · 회전 KE 기준 생성 시험 · 4–12 창 = 실패 허용 사전 예산.  ⬜ 수정 계획 = docs/reviews/dem_unloading_ul_fix_plan_20261011.md (1저자 비준 대기) · 등록 = docs/reviews/dem_unloading_ps45_prereg_20261009.md (결과 0 건).\n★ 10-11 등록 개정 1 §12-8 (문서 몫 · 1저자 Q1–Q4 권고대로) — 닫는 증거 = 키트 시험 (§12-12 ② ③) + Codex 재검토 (`docs/reviews/codex_dem_unloading_prereg_rereview_request_20261011.md`) 대기 · 원문 보존."
     },
     {
       "id": "UL-09",
@@ -9411,7 +9411,7 @@
       "found_by": "codex 10-11 DEM 언로딩 등록 적대 검토 (검토 핀 a20fc1875 · LIGGGHTS 3d5c00f 원문 판독 · 기존 r8 원 로그 · pressure.csv 재계산 · plane_load_share.compute() 실제 호출 합성 반례 · 소스 식 산술 — 새 DEM/MPM · ibb 실행 · 생산 코드 수정 없음)",
       "opened_in": "docs/reviews/codex_review_dem_unloading_prereg_20261011.md",
       "title": "가변 제외 집합이면 C 보존 불가 (C_sphere 는 고정 ID 집합의 항등식) · 정착 P(h) 사다리꼴 면적 ≠ 실제 판 일 (예 2.5e-8 vs 1.375e-8 J · 45 % 작다) · union 부호 문장 반대",
-      "note": "판정문 §6 UL-09.  REG §6-2 (339–342) · §9 (478).  최소 해결: 고정 ID 관측자 · 판 내부 집합 공극 = 별도 이름 · W_proxy 이름 또는 이동 중 ∫F·v dt · 표면 지표 관측자 고정.  ⬜ 수정 계획 = docs/reviews/dem_unloading_ul_fix_plan_20261011.md (1저자 비준 대기) · 등록 = docs/reviews/dem_unloading_ps45_prereg_20261009.md (결과 0 건)."
+      "note": "판정문 §6 UL-09.  REG §6-2 (339–342) · §9 (478).  최소 해결: 고정 ID 관측자 · 판 내부 집합 공극 = 별도 이름 · W_proxy 이름 또는 이동 중 ∫F·v dt · 표면 지표 관측자 고정.  ⬜ 수정 계획 = docs/reviews/dem_unloading_ul_fix_plan_20261011.md (1저자 비준 대기) · 등록 = docs/reviews/dem_unloading_ps45_prereg_20261009.md (결과 0 건).\n★ 10-11 등록 개정 1 §12-9 (문서 몫 · 1저자 Q1–Q4 권고대로) — 닫는 증거 = 키트 시험 (§12-12 ② ③) + Codex 재검토 (`docs/reviews/codex_dem_unloading_prereg_rereview_request_20261011.md`) 대기 · 원문 보존."
     },
     {
       "id": "UL-10",
@@ -9421,7 +9421,7 @@
       "found_by": "codex 10-11 DEM 언로딩 등록 적대 검토 (검토 핀 a20fc1875 · LIGGGHTS 3d5c00f 원문 판독 · 기존 r8 원 로그 · pressure.csv 재계산 · plane_load_share.compute() 실제 호출 합성 반례 · 소스 식 산술 — 새 DEM/MPM · ibb 실행 · 생산 코드 수정 없음)",
       "opened_in": "docs/reviews/codex_review_dem_unloading_prereg_20261011.md",
       "title": "δ_lim 산술에서 \"대부분 포화 · SE 가 거시 회복 지배 · 비포화 AM S0 회복 ≥ 2/3\" 까지는 나오지 않는다 — 현재 δ 기준 몫 = 하한 · δ_a < δ < δ0 = 이미 인장 · 2/3 = δ_max 출발일 때만 (예 7.69 %)",
-      "note": "판정문 §7 Q6(a).  REG §6-2 (338) · §9 (469–472) · normal_model_hooke_hysteresis.h:117 · 150–198.  δ_lim 표 = 우리 덱 m6 · m8 로 재확인 같음.  최소 해결: 저장 δ_max 기반 분류 또는 하한 표지 · 기전 = 미검증 가설로 제한.  ⬜ 수정 계획 = docs/reviews/dem_unloading_ul_fix_plan_20261011.md (1저자 비준 대기) · 등록 = docs/reviews/dem_unloading_ps45_prereg_20261009.md (결과 0 건)."
+      "note": "판정문 §7 Q6(a).  REG §6-2 (338) · §9 (469–472) · normal_model_hooke_hysteresis.h:117 · 150–198.  δ_lim 표 = 우리 덱 m6 · m8 로 재확인 같음.  최소 해결: 저장 δ_max 기반 분류 또는 하한 표지 · 기전 = 미검증 가설로 제한.  ⬜ 수정 계획 = docs/reviews/dem_unloading_ul_fix_plan_20261011.md (1저자 비준 대기) · 등록 = docs/reviews/dem_unloading_ps45_prereg_20261009.md (결과 0 건).\n★ 10-11 등록 개정 1 §12-10 (문서 몫 · 1저자 Q1–Q4 권고대로) — 닫는 증거 = 키트 시험 (§12-12 ② ③) + Codex 재검토 (`docs/reviews/codex_dem_unloading_prereg_rereview_request_20261011.md`) 대기 · 원문 보존."
     },
     {
       "id": "SELF-101",
