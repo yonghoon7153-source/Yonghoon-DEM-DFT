@@ -274,7 +274,7 @@ for d in "${DIRS[@]}"; do
     none)    printf "  · %-42s .out 없음 — 건너뛴다\n" "$(basename "$d")" ;;
     exhaust) printf "  ⛔ %-42s nstep소진 → nstep %s · %s\n" "$(basename "$d")" "$NSTEP" "$m"
              TODO+=("$d"); MODES+=("$m") ;;
-    stopped) printf "  ⏸ %-42s 사람이 세움(EXIT·max_seconds) → nstep %s · %s (BFGS 이력 승계)\n" "$(basename "$d")" "$NSTEP" "$m"
+    stopped) printf "  ⏸ %-42s 사람이 세움(EXIT·max_seconds) → nstep %s · %s%s\n" "$(basename "$d")" "$NSTEP" "$m" "$([ "$m" = restart ] && echo ' (BFGS 이력 승계)' || echo ' (⚠ save 없음 — 처음부터)')"
              TODO+=("$d"); MODES+=("$m") ;;
     oom)     printf "  ☠ %-42s GPU OOM → %s (한 번에 하나만)\n" "$(basename "$d")" "$m"
              TODO+=("$d"); MODES+=("$m") ;;

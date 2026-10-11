@@ -1,0 +1,43 @@
+{
+  "kind": "runlog",
+  "date": "2026-10-11",
+  "system": "li3nd_mp-976264_p333 (pristine 3×3×3 · 대칭 끔 · rattle 시드 r0–r3)",
+  "decision": "D-2026-10-11-gabia-elastic-pause-li3nd-r2",
+  "track": "SEI NEB (Li₃Nd) · 탄성 (우리 DFT) — 둘 다 1저자 = 사용자",
+  "왜": "Li₃Nd P0-2 control (회신 I · kb/open_items.md ⏭-4): pristine 셀이 공공 없이도 Nd 재배열을 하는지 → 하면 Li₃Nd NEB 끝점부터 다시. 사용자 10-09 'li3Nd, li2s 관련해서 논문에 넣어야' · 10-11 '13m bfgs 뜨면 잠정 stop하고 li3nd 로 넘어가자' · '대신 resume 잘 걸려야돼'.",
+  "기록상_상태": {
+    "r0": "수렴 (무섭동 · bfgs 0 · 08-30)",
+    "r1": "09-06 GPU OOM (겹쳐 걸음) — 그 뒤 기록 없음",
+    "r2": "09-10 23:04 EXIT 통제 정지 · step 40 · |F| 0.032609 · E −14652.33022106 Ry · .bfgs sha 3feb4c36 · 박제 PAUSED_0910_2304/",
+    "r3": "09-06 nstep 소진 (|F| 0.042) → 09-10 EXIT 통제 정지"
+  },
+  "⛔_판정_결함_2026_10_11": {
+    "관측": "gabia 판정만 실행 (사용자 붙여넣기 10-11): restart_qe_relax.sh 가 r0·r1·r2·r3 전부 '✅ 수렴 — 건드리지 않는다' · '다시 걸 것이 없다'",
+    "원인": "그 드라이버에 '사람이 세움' 갈래가 없었다 — EXIT 로 세운 relax 도 QE 가 JOB DONE 을 찍어 마지막 'JOB DONE → conv' 로 떨어진다 (09-10 EXIT 의 r2·r3 가 수렴으로 보였다 · --run 으로도 안 걸렸다)",
+    "고침": "tools/sei/restart_qe_relax.sh @e6941d4 + 표시 정정 — stopped 갈래 (탄성 러너 _out_state 와 같은 문자열) · save 있으면 restart · selftest 28 · 깨기 3/3",
+    "⚠": "r1·r3 의 진짜 상태는 아직 모른다 — 확인 블록 (마커 개수) 결과로 적는다"
+  },
+  "도구": {
+    "정지": "tools/elastic/pause_relax_at_bfgs.sh (sha256 2cc1c477bd22b8610af18f416003e136aa0a939e5b2c88680a01f1275f2248d0) · selftest 19 · 깨기 5/5 (얼림·좀비·EXIT 정리·창 셸 거부·시간 초과 복귀)",
+    "r2_대기": "db/inputs/li3nd_p333_control_2026_10_11/run_r2_after_pause_gabia.sh (sha256 23b58ebc94f52551d1ccfbcc577eb4b2b57bbf1d8030e4953190c8ccbe9b624d) · selftest 13 · 깨기 5/5 (판정 확인·GPU 대기·정지 실패·상한 둘)",
+    "드라이버": "tools/sei/restart_qe_relax.sh (sha256 b9ebbc4196e259467fc21d3a35bc363a9def36e01a947c6b33d518845c0c91d2)"
+  },
+  "계획": [
+    "① 블록이 r2 의 .out 을 직접 본다 — 'bfgs converged in' 0 · 'Program stopped by user request' 1 일 때만 진행 (아니면 아무것도 안 함)",
+    "② tmux stop13m: 탄성 러너 bash 만 얼림 → 13_m 의 다음 BFGS 줄 직후 strain_13_m.EXIT → pw.x 저장·정지 확인 → 남은 EXIT 정리 → 얼린 러너 종료 (12_p 안 뜸)",
+    "③ tmux li3nd_r2: 정지 로그 '✅ 러너' → 새 판정이 r2 '사람이 세움 → restart' → GPU 계산 프로세스 0 개 × 2 (li2s 대조 seed5 UMA 끝 · gabia GPU pw.x↔UMA 동시 금지) → restart_qe_relax.sh --run r2 (restart · nstep 200)",
+    "④ 탄성 재개 (r2 뒤 · 사용자 결정): 러너를 새로 띄운다 → 13_m stopped + .bfgs → restart_mode='restart' · 새 .out 에서 'Atomic positions and unit cell read from directory' · 'initial density is read from file' · 첫 SCF 뒤 'number of bfgs steps' 가 멈춘 번호 다음부터"
+  ],
+  "탄성_13_m_정지_전": {
+    "관측_10_11_14:18": "BFGS 166 · Total force 0.005415 · P −0.32 kbar · GPU pw.x 41,374 MiB · 러너 TAGS 순서상 13_m 뒤에 12_p · 12_m 이 남음",
+    "⚠_게이트": "D-2026-09-11-elastic-conv-threshold 60 BFGS 를 이미 넘었다 (규칙상 modelc_2x = 측정 불가) — 이 정지는 게이트 판정 (① 닫기 / ③ 개정) 을 하지 않는다 · 미결"
+  },
+  "단계": {
+    "확인": null,
+    "정지": null,
+    "r2_재개": null,
+    "r2_끝": null,
+    "탄성_재개": null
+  },
+  "결과": null
+}
