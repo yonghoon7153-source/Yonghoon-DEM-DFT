@@ -7922,7 +7922,7 @@
    "title": "gabia — 탄성 modelc_2x strain_13_m 을 BFGS 스텝 직후 EXIT 로 잠정 정지 · GPU 가 비면 (li2s 대조 seed5 끝) Li₃Nd P0-2 control r2 를 BFGS 이력째 잇는다 · 탄성 재개는 그 뒤 (BFGS 이력 승계)",
    "statement": "① 붙여넣기 블록은 r2 의 .out 이 'bfgs converged in' 0 · 'Program stopped by user request' 1 일 때만 진행한다 (아니면 아무것도 안 한다). ② tools/elastic/pause_relax_at_bfgs.sh 가 탄성 러너 bash 만 얼리고 (창 셸이면 거부 · T 확인) 13_m 의 다음 BFGS 줄 직후 strain_13_m.EXIT 를 놓아 pw.x 가 저장하고 서게 한 뒤, 남은 EXIT 파일을 지우고 얼린 러너를 종료한다 (12_p 안 뜸). ③ db/inputs/li3nd_p333_control_2026_10_11/run_r2_after_pause_gabia.sh 가 정지 성공 → 새 판정 (restart_qe_relax.sh stopped 갈래) 이 r2 를 '사람이 세움 → restart' 로 보는지 → GPU 계산 프로세스 0 개 × 2 회 (seed5 UMA 끝 · GPU pw.x↔UMA 동시 금지) 를 확인하고 restart_qe_relax.sh --run r2 (restart · nstep 200) 를 건다. 하나라도 어긋나면 r2 를 걸지 않는다. ④ r2 만이다 — r3·r1 은 따로 정한다. ⑤ 탄성 재개는 r2 가 끝난 뒤 (또는 사용자 결정) 러너를 새로 띄워서 — 13_m 은 stopped + .bfgs 라 restart_mode='restart'. ⑥ 이 정지는 60 BFGS 게이트 (D-2026-09-11-elastic-conv-threshold · 13_m 은 이미 166) 를 판정하지 않는다 — ① 닫기 / ③ 개정은 미결. 09-11 2차 개정의 '중단' 은 경합으로 인한 비정상 종료이고 EXIT 통제 정지 + 이력 승계는 해당 안 됨 (1저자 09-29 해석 · 10-01 선례).",
    "rationale": "사용자 10-11 '13m bfgs 뜨면 잠정 stop하고 li3nd 로 넘어가자' · '대신 resume 잘 걸려야돼'. 탄성 러너는 13_m 뒤에 12_p·12_m 을 띄우므로 러너를 먼저 얼린다 (10-01 선례 · CLAUDE.md tmux STOP 규칙). r2 는 09-10 EXIT 로 step 40 에 멈춰 있었고, 옛 드라이버가 그것을 '수렴' 으로 읽어 재시작이 막혀 있었다 (e6941d4 로 고침). 트랙 = 탄성 (우리) · SEI NEB Li₃Nd → 1저자 = 사용자.",
-   "decision_state": "proposed",
+   "decision_state": "active",
    "record_kind": "scope_declaration",
    "results_seen": false,
    "card": "kb/open_items.md ⏭-4 (Li₃Nd P0-2 control · 회신 I)",
@@ -7942,15 +7942,31 @@
    "reopen_criteria": "r2 가 EXIT 로 선 상태가 아니면 블록이 정지를 시작하지 않는다 — 이 결정은 쓰이지 않고 끝난다 · 정지 도구가 ⛔ 로 끝나면 r2 를 걸지 않고 사람이 본다 · 대기 스크립트가 r2 를 거부하면 (수렴·from_scratch·GPU 안 빔) 탄성 재개는 사용자 결정",
    "enforcement": "정지 도구 (창 셸 거부 · T 확인 · BFGS 줄 직후 EXIT · 좀비 판정 · 남은 EXIT 정리 · 러너는 pw.x 가 끝난 뒤에만 종료 · 시간 초과면 러너 복귀) · 대기 스크립트 (정지 성공 · r2 restart 판정 · GPU 0 개 × 2 · 상한 8 h / 24 h) · 드라이버 한 번에 하나 (lock)",
    "proposed_by": "claude-session-2026-10-11 (friendly)",
-   "status": "proposed",
+   "status": "active",
    "status_history": [
     {
      "at": "2026-10-11",
      "state": "proposed",
      "by": "agent",
      "note": "사용자 지시를 결정으로 적는다 — 다음 커밋에서 사용자 발화로 비준 · 지문 결속."
+    },
+    {
+     "at": "2026-10-11",
+     "state": "active",
+     "by": "1저자(사용자)",
+     "note": "'아니 그럼 지금 13m bgfs 뜨면 잠정 stop하고 li3nd 로 넘어가자' · '13m bgfs 뜨면 대신 resume 잘 걸려야돼'."
     }
-   ]
+   ],
+   "ratification": {
+    "state": "ratified",
+    "role": "scientific_owner",
+    "actor_id": "yonghoon7153@gmail.com",
+    "timestamp": "2026-10-11T06:28:13Z",
+    "commit": "8003e242b0b018b0ee0b5ce90baaef67d1c01296",
+    "⚠_digest_의_뜻": "`ratification` 을 뺀 결정 내용의 sha256 이다.",
+    "근거_발화": "'아니 그럼 지금 13m bgfs 뜨면 잠정 stop하고 li3nd 로 넘어가자' · '13m bgfs 뜨면 대신 resume 잘 걸려야돼' (2026-10-11 · 이 세션)",
+    "decision_digest": "sha256:e39e731ae3ac844e0b49311986fda3daa354410cd557af0da4569607e37a86e2"
+   }
   }
  ]
 }
