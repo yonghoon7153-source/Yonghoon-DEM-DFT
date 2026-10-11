@@ -80,5 +80,10 @@
   "셀효과_실측": "db/properties/sei_neb_uma_scout.json",
   "미수렴_선례": "db/properties/neb_cc333_force_history_2026_08_27.json",
   "문헌_대조": "litdb/papers/lai2020_li2s_interfacial_layer_amorphous_sulfide_cse.md"
+ },
+ "3c_덧붙임_2026_10_11": {
+  "2×2×2_대조_런": "10-09~10 kgy GPU 에서 2×2×2 대조 NEB (이 카드 밖 · 판정에 안 씀) — db/properties/li2s_neb_cellconv_estimand_2026_10_09.json · 실행 기록 li2s_neb_cellconv_runlog_2026_10_09.json · 원자료 db/raw/li2s_neb_cellconv_2026_10_09/",
+  "결정_등록": "이 카드의 C1–C3 를 D-2026-10-09-li2s-neb-cellconv (proposed) 가 등록한다 — 10-09 판의 0.05 eV 는 이 카드를 못 보고 쓴 것이라 철회했다",
+  "변경_없음": "C1 30 meV · C2 · C3 · §3b 결론 그대로"
  }
 }

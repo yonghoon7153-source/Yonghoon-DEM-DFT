@@ -7847,14 +7847,14 @@
      "manuscript"
     ]
    },
-   "title": "Li₂S V_Li⁻ c→c CI-NEB 장벽 셀 수렴 — 2×2×2 는 대조만 (kgy GPU) · 4×4×4 가 판정 · 문턱 |ΔEa| ≤ 0.05 eV (결과 전)",
-   "statement": "3×3×3 (0.305025 eV · provisional_single_cell) 을 기준으로 같은 규약 (q −1 jellium · gaussian 0.005 · ecut 60/480 · 이미지 7 · path_thr 0.05 · kdens 0.04 · 끝점 이완 필수) 에서 셀만 바꾼다. 2×2×2 (23 원자 · λ₁ 8.07 Å) 는 ΔEa 를 기록만 하고 3×3×3 의 지위를 바꾸지 않는다 · 게이트 실패면 '측정 불가' 로 적고 설정을 바꿔 다시 돌리지 않는다. 판정은 4×4×4 (191 원자 · λ₁ 16.14 Å): |Ea(4) − Ea(3)| ≤ 0.05 eV 면 cell_convergence_status = converged_3x3x3_vs_4x4x4, 넘으면 not_converged_at_3x3x3 (더 갈지는 사용자 명시 결정). 인용위험 HZ-sei-neb-retracted 해제는 통과해도 별도 결정이다.",
-   "rationale": "원고 편입 후보 (사용자 2026-10-09) 인데 3×3×3 하나뿐이라 citable=false 다 (collect_neb 계약: 셀 수렴 미시험 → citable=false). 2×2×2 는 λ₁ 8.07 Å 로 홉 2.85 Å 의 2.8 배뿐이라 수렴 증거가 될 수 없고, 싸게 파이프라인·방향·단가를 본다. 0.05 eV 는 300 K 에서 Γ 약 7 배 — 홉 수 검산 (차수) 과 상 사이 비교라는 용도에 충분한가의 선언이다.",
+   "title": "Li₂S V_Li⁻ c→c CI-NEB 장벽 셀 수렴 — 판정은 4×4×4 · 09-01 카드 C1 |ΔEa| ≤ 30 meV (C2 · C3 그대로) · 2×2×2 는 대조 기록만",
+   "statement": "판정 카드는 db/properties/li2s_cellconv_card_2026_09_01.json 이다: |Ea(4×4×4) − Ea(3×3×3 = 0.305025 eV)| ≤ 30 meV 면 cell_convergence_status = converged (absolute_citable 승격은 사용자 비준) · 30 meV 초과면 미수렴 확정 (5×5×5 자동 확대 없음) · 경로 미수렴은 no-value. 같은 규약 (q −1 jellium · gaussian 0.005 · ecut 60/480 · 이미지 7 · path_thr 0.05 · kdens 0.04 · 끝점 이완 필수). 4×4×4 는 gabia 단독 + 메모리 손잡이 재프로브를 통과해야 던진다 (09-01 카드 §3b · QE 추정 45.15 GB). 2×2×2 (10-09 카드 · kgy) 는 ΔEa 를 기록만 하고 3×3×3 의 지위를 바꾸지 않는다. 인용위험 HZ-sei-neb-retracted 해제는 통과해도 별도 결정이다.",
+   "rationale": "원고 편입 후보 (사용자 2026-10-09) 인데 3×3×3 하나뿐이라 citable=false 다. 문턱은 09-01 카드의 사전등록값 30 meV 를 쓴다 — 10-09 에 같은 보고량 카드를 못 보고 0.05 eV 를 새로 정했다가 철회했다 (2026-10-11 · 2×2×2 는 어느 문턱으로도 판정하지 않으므로 결과를 보고 고른 문턱이 아니다).",
    "decision_state": "proposed",
    "record_kind": "estimand",
-   "results_seen": false,
-   "results_seen_note": "3×3×3 값은 봤다 · 2×2×2 · 4×4×4 는 0 건",
-   "card": "db/properties/li2s_neb_cellconv_estimand_2026_10_09.json",
+   "results_seen": true,
+   "results_seen_note": "3×3×3 값과 2×2×2 대조 값 (10-10) 은 봤다 · 판정 셀 4×4×4 는 0 건 · 문턱 30 meV 는 09-01 사전등록",
+   "card": "db/properties/li2s_cellconv_card_2026_09_01.json",
    "record": "db/properties/li2s_neb_cellconv_runlog_2026_10_09.json",
    "depends_on": [
     "D-2026-08-16-defect-cell-metric",
@@ -7864,16 +7864,18 @@
    "evidence": [
     "db/properties/sei_neb.json v2/li2s (0.305025 / 0.305015 eV · cell_convergence_status untested)",
     "db/inputs/li2s_neb_cellconv_2026_10_09/SHA256SUMS (gabia PP · vc-relax · v2 meta · 커밋 0e6c83af2)",
-    "로컬 건식 빌드 2026-10-09: 3×3×3 물리 칸이 v2 meta 와 일치 · 2×2×2/4×4×4 payload 차이는 셀 크기 칸 9 개뿐"
+    "로컬 건식 빌드 2026-10-09: 3×3×3 물리 칸이 v2 meta 와 일치 · 2×2×2/4×4×4 payload 차이는 셀 크기 칸 9 개뿐",
+    "db/properties/li2s_cellconv_card_2026_09_01.json §3b — 4×4×4 P1 메모리 실측 2026-09-23 (QE 추정 45.15 GB · kgy 불가 · gabia 단독 + 손잡이 재프로브)",
+    "db/raw/li2s_neb_cellconv_2026_10_09/ (2×2×2 회수 87b2a544 · 해시 30/30 · G1–G5 통과)"
    ],
    "reopen_criteria": [
     "규약 칸 (ecut · PP · 전하 규약 · smearing) 이 바뀌는 경우만",
     "'다른 셀을 하나 더 봤다' 는 재개 사유가 아니다"
    ],
-   "enforcement": "① 카드 §5 게이트 G1–G5 (끝점 'Begin final coordinates' · no-CI → CI auto 수렴 · 정역 차 ≤ 0.01 eV · 같은 기계 3×3×3 payload 와 diff · 최고점이 끝점 아님) ② 2×2×2 값은 원고·화면에 싣지 않는다 ③ kgy GPU 는 cascade v7 본 라운드와 공유 — 겹친 cascade 런을 runlog 에 남기고 GPU 합계 12,000 MiB 를 넘기면 우리 NEB 를 PID 로 멈춘다",
+   "enforcement": "① 4×4×4 게이트: 09-01 카드 C3 (경로 0.05 eV/Å 미도달·힘 역주행 = no-value) + 10-09 카드 G1–G5 (같은 기계에서 같은 플래그로 만든 기준 payload 와 diff) ② 2×2×2 값은 원고·화면에 싣지 않는다 ③ 4×4×4 는 메모리 재프로브 통과 전 NEB 금지 (09-01 카드 §3b)",
    "cost_cap": {
-    "machine": "kgy RTX 3090 (2×2×2) · 4×4×4 는 VRAM 프로브 뒤 별도",
-    "견적": "2×2×2 시간 단위 · 실측은 runlog"
+    "machine": "gabia A6000 48 GB 단독 (탄성 뒤 · 1저자 09-23) · 메모리 손잡이 재프로브 통과가 조건",
+    "견적": "재프로브의 SCF 반복 시간으로 낸다 (09-23 P1 은 벽시계를 못 쟀다)"
    },
    "proposed_by": "claude-session-2026-10-09 (friendly)",
    "status": "proposed",
@@ -7883,7 +7885,16 @@
      "state": "proposed",
      "by": "agent",
      "note": "사용자 '2×2×2 먼저 · gpu 로 · kgy 에서' (실행 승인). 트랙 SEI NEB — 원고·1저자 미정이라 비준은 사용자 (계산 담당)."
+    },
+    {
+     "at": "2026-10-11",
+     "state": "proposed",
+     "by": "agent",
+     "note": "09-01 카드 발견 → 문턱 0.05 eV 철회 · 30 meV (09-01 C1) 로 정렬 · 비준 전 수정."
     }
+   ],
+   "cards_extra": [
+    "db/properties/li2s_neb_cellconv_estimand_2026_10_09.json (2×2×2 대조 런 설계·게이트)"
    ]
   }
  ]

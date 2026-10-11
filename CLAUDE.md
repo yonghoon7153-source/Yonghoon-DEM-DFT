@@ -417,7 +417,10 @@
   뺐다** (2026-08-28 정정, `kb/methodology/estimand_before_running_2026_08_28.md` §2.1).
   ⚠ 회신 O: 고치는 법은 "전 계에 같은 NUPDOWN 값" 이 **아니라** 같은 **state-selection
   policy** 다 — 전부 자유 바닥상태이거나, 선언된 해리채널과 양립하는 대응 제약.
-- **규약 대조 30초**: `grep -rl "<양이름>" kb/` — 이미 판정이 있으면 그게 이긴다.
+- **규약 대조 30초**: `rg -l "<계>.*<양이름>|<양이름>" kb/ db/properties/ db/governance/decisions.json` — 이미 판정·카드가 있으면 그게 이긴다.
+  ⚠ 2026-10-11: 이 줄이 `kb/` 만 가리켜서 **`db/properties/li2s_cellconv_card_2026_09_01.json` (같은 보고량 · 문턱 30 meV · 메모리 실측 45 GB) 을 못 보고**
+  10-09 에 새 카드를 써 문턱을 0.05 eV 로 새로 정했다 (비준 전에 철회). **카드는 `db/properties/*card*`·`*estimand*` 에 있다** — 파일 이름으로도 찾는다
+  (`ls db/properties | grep -i "<계>.*\(card\|estimand\|prereg\)"`).
 - ⭐ **속도시험·파일럿 런에도 그 카드의 판정 게이트를 먼저 건다 — 비용만 재지 않는다** (2026-10-01 cascade v6).
   H0 속도시험 런이 40 런보다 먼저 끝났고 궤적도 있었는데 비용만 쟀다. 카드 정의 곡선으로 보면 이미 자격 미달 모양이었다
   (부창비 3.27·0.65·0.11) → 40 런을 다 돌린 뒤(누적 242.10 GPU-h) **자격 0/40 · 방법상 무효** (`cascade_d_rel_closed_2026_10_01.json`).
