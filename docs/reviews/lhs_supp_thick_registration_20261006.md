@@ -68,6 +68,8 @@ squeue -u $USER
 성공 = 28 ID 전부 `COMPLETED` + 산출물 (`lhs_ext_submit_gate.py --manifest ~/lhs_supp_20261006/deck_manifest.json --sacct …`).
 부분 성공은 없다 — 실패 ID 는 체크포인트로 재개하고, 처음부터 다시 돌리기는 보고 뒤.
 
+- ✅ **10-11 — 28 / 28 COMPLETED · Finished** (1저자 ibb 상태표 · `docs/data/lhs_supp_runs_20261006/` · 코어 0 / 60) → ⬜ 위 성공 게이트 (sacct 를 `lhss_` · `lhst_` 이름으로 좁혀 — 같은 기간 다른 잡이 "매니페스트에 없는 잡" HOLD 를 낸다) → 보충 20 최종 프레임 묶음 → WSL 수확 (§5).
+
 ## 5. 분석 계획 (기술 비교 — 판정선 없음)
 
 - 수확 = 64 확장과 같은 길 (수확기 v3 · 웹앱 접촉 단계 · 기하면적 coverage) → 194 와 같은 열.
