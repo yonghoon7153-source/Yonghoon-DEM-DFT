@@ -13,3 +13,5 @@
 - ✅ **10-11 WSL 수확 r2 = 20 / 20** (1저자 화면 · `--refill-family` 설계족 표 20 행 · kind ↔ ntype 대조 통과 · 수확기 `--verify-sha` 성공 20 / 20 · union 20 / 20) — union 중앙: sphere 3.11 % · union 쌍 9.15 % · 쌍 clipped 9.66 % · union 정확 9.65 % · 겹침/상자 7.12 % ·
   검산: delta 열 ↔ 좌표 최대 3.07e-04 · sphere 웹앱 ↔ dual 최대 0.0 %p · 정확 union 음수 0 · 쌍 clipped < 정확 (상한 위반) 0 · 묶음 `~/lhss_harvest_20261011_r2.tgz` sha256 `baa03b6b65d57b7850df151a011d8102b605fc15d81aa9f58969629ac9d00aff` (⬜ 리포 반입 = 1저자 첨부 대기).
   다음 = 웹앱 접촉 · coverage 단계 (194 원천과 같은 코드 — `docs/reviews/g2rr6_fix_plan_20261011.md` §2 미확인 항목) → 보충 세대 2 망 배치 (새 등록 · 관측 ON).
+- ✅ **10-11 수확 r2 묶음 반입** = `lhss_harvest_20261011_r2.tgz` (1저자 첨부 · 166,333 B · sha256 `baa03b6b65d57b7850df151a011d8102b605fc15d81aa9f58969629ac9d00aff` = WSL 화면 값 · 30 항목 전부 `lhss_out_20261011/` 아래 · 절대 경로 · `..` · 링크 없음) — 수확 기술자 20 (`descriptors_r2/`) · 첫 시도 요약 (`descriptors/`) · 코호트 TSV · 설계족 표 · union r2 · lhsx_001 대조 union.
+  r2 JSON 에 `wall_near_tangent` 키 → 수확기 = `cc4210080` 이후 판 (194 수확 `1e09f661d` 와 다름 · 정확한 WSL HEAD 미확인) — 어느 판을 인계 원천으로 쓸지 = `docs/reviews/g2rr6_fix_plan_20261011.md` Q5 (⬜ 1저자).
