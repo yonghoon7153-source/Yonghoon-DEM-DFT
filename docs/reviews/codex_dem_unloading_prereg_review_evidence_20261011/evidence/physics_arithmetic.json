@@ -1,0 +1,193 @@
+{
+  "status": "arithmetic_checks_passed",
+  "evidence_class": "source-equation arithmetic; synthetic counterexamples and nominal-deck calculation",
+  "is_simulation": false,
+  "contains_measured_unloading_results": false,
+  "source_references": {
+    "law": "upstream/normal_model_hooke_hysteresis.h:117,150-198 (fixed 3d5c00f)",
+    "gravity": "upstream/fix_gravity.cpp:331-338,377-397 (fixed 3d5c00f)",
+    "deck": "source/docs/reviews/codex_ps45_porosity_evidence_20261001/reference/dem_scripts/ps_sweep_6mah_20260914/in.ps_7_3_r45.liggghts:3-4,25,39-41,48,55-90,107-109,189,193"
+  },
+  "threshold_formulas": {
+    "delta_lim": "a/(a-1) * phiF * 2*r_eff",
+    "delta_zero": "(1-1/a)*delta_lim = phiF*2*r_eff",
+    "delta_adhesion_switch": "(a-1)/(a+c)*delta_lim",
+    "condition": "Stored deltaMax >= delta_lim. Zero and adhesion thresholds describe the saturated elastic/cohesive law; normal damping is excluded."
+  },
+  "contact_thresholds": [
+    {
+      "pair": "SE-SE",
+      "r_i_um": 0.5,
+      "r_j_um": 0.5,
+      "is_wall": false,
+      "r_eff_um": 0.25,
+      "k2Max_over_kn": 5.0,
+      "kc_over_kn": 1000000.0,
+      "phiF": 0.005,
+      "delta_lim_um": 0.003125,
+      "delta_zero_um": 0.0025,
+      "delta_adhesion_switch_um": 1.24999375003125e-08
+    },
+    {
+      "pair": "AM_S-SE",
+      "r_i_um": 2.0,
+      "r_j_um": 0.5,
+      "is_wall": false,
+      "r_eff_um": 0.4,
+      "k2Max_over_kn": 3.0,
+      "kc_over_kn": 200000.0,
+      "phiF": 0.01,
+      "delta_lim_um": 0.012,
+      "delta_zero_um": 0.008,
+      "delta_adhesion_switch_um": 1.199982000269996e-07
+    },
+    {
+      "pair": "AM_P-SE",
+      "r_i_um": 4.5,
+      "r_j_um": 0.5,
+      "is_wall": false,
+      "r_eff_um": 0.45,
+      "k2Max_over_kn": 3.0,
+      "kc_over_kn": 200000.0,
+      "phiF": 0.01,
+      "delta_lim_um": 0.0135,
+      "delta_zero_um": 0.009000000000000001,
+      "delta_adhesion_switch_um": 1.3499797503037454e-07
+    },
+    {
+      "pair": "wall-SE (wall type 1)",
+      "r_i_um": 0.5,
+      "r_j_um": null,
+      "is_wall": true,
+      "r_eff_um": 0.5,
+      "k2Max_over_kn": 3.0,
+      "kc_over_kn": 200000.0,
+      "phiF": 0.01,
+      "delta_lim_um": 0.015,
+      "delta_zero_um": 0.01,
+      "delta_adhesion_switch_um": 1.4999775003374948e-07
+    },
+    {
+      "pair": "AM_S-AM_S",
+      "r_i_um": 2.0,
+      "r_j_um": 2.0,
+      "is_wall": false,
+      "r_eff_um": 1.0,
+      "k2Max_over_kn": 1.5,
+      "kc_over_kn": 100000.0,
+      "phiF": 0.05,
+      "delta_lim_um": 0.30000000000000004,
+      "delta_zero_um": 0.1,
+      "delta_adhesion_switch_um": 1.4999775003374951e-06
+    },
+    {
+      "pair": "AM_P-AM_S",
+      "r_i_um": 4.5,
+      "r_j_um": 2.0,
+      "is_wall": false,
+      "r_eff_um": 1.3846153846153846,
+      "k2Max_over_kn": 1.5,
+      "kc_over_kn": 100000.0,
+      "phiF": 0.05,
+      "delta_lim_um": 0.41538461538461546,
+      "delta_zero_um": 0.13846153846153847,
+      "delta_adhesion_switch_um": 2.076891923544224e-06
+    },
+    {
+      "pair": "AM_P-AM_P",
+      "r_i_um": 4.5,
+      "r_j_um": 4.5,
+      "is_wall": false,
+      "r_eff_um": 2.25,
+      "k2Max_over_kn": 1.5,
+      "kc_over_kn": 100000.0,
+      "phiF": 0.05,
+      "delta_lim_um": 0.675,
+      "delta_zero_um": 0.225,
+      "delta_adhesion_switch_um": 3.374949375759364e-06
+    }
+  ],
+  "gravity_scales": {
+    "interpretation": "deck/reference ratio under registered length and pressure convention; not full Hooke similarity",
+    "length": 1000.0,
+    "density": 1.0,
+    "pressure": 0.001,
+    "mass": 1000000000.0,
+    "force": 1000.0,
+    "acceleration": 1e-06,
+    "deck_g_for_physical_weight_stress_ratio_m_s2": 9.81e-06,
+    "same_g_deck_weight_pressure_amplification": 1000.0,
+    "same_g_reported_weight_pressure_amplification": 1000000.0
+  },
+  "nominal_7_3_selfweight": {
+    "evidence_class": "nominal deck particle counts; NOT actual S0 particle counts or measured force",
+    "components": [
+      {
+        "type": "AM_P",
+        "nominal_count": 282,
+        "radius_deck_m": 0.0045,
+        "density_kg_m3": 4800.0
+      },
+      {
+        "type": "AM_S",
+        "nominal_count": 1375,
+        "radius_deck_m": 0.002,
+        "density_kg_m3": 4800.0
+      },
+      {
+        "type": "SE",
+        "nominal_count": 158765,
+        "radius_deck_m": 0.0005,
+        "density_kg_m3": 2000.0
+      }
+    ],
+    "area_deck_m2": 0.0025,
+    "mass_deck_kg": 0.9041003096601952,
+    "full_height_weight_pressure_deck_pa": 3547.6896151066057,
+    "full_height_weight_pressure_reported_mpa": 3.5476896151066053,
+    "physical_reference_mass_kg": 9.041003096601952e-10,
+    "physical_reference_area_m2": 2.5e-09,
+    "physical_reference_weight_pressure_pa": 3.547689615106606,
+    "reported_to_physical_weight_pressure_ratio": 999999.9999999998
+  },
+  "synthetic_non_saturated_S0": {
+    "evidence_class": "synthetic source-law counterexample, NOT observed S0 data",
+    "k2Max_over_kn": 1.5,
+    "stored_deltaMax_over_delta_lim": 0.6,
+    "current_delta_S0_over_delta_lim": 0.15,
+    "k2_over_kn": 1.3,
+    "zero_overlap_over_delta_lim": 0.1384615384615385,
+    "remaining_recovery_over_delta_lim": 0.011538461538461497,
+    "remaining_recovery_percent_of_current_overlap": 7.692307692307665,
+    "recovery_if_starting_at_deltaMax_over_delta_lim": 0.4615384615384615
+  },
+  "synthetic_contact_force_cancellation": {
+    "evidence_class": "synthetic two-contact counterexample, NOT measured wall forces",
+    "k2Max_over_kn": 3.0,
+    "kc_over_kn": 200000.0,
+    "normal_velocity": 0.0,
+    "contacts": [
+      {
+        "delta_over_delta_lim": 0.75,
+        "stored_deltaMax_over_delta_lim": 1.0,
+        "linear_force_over_kn_delta_lim": 0.25,
+        "adhesion_bound_over_kn_delta_lim": -150000.0,
+        "force_over_kn_delta_lim": 0.25,
+        "selected_branch": "saturated un/reloading",
+        "geometric_contact_present": true
+      },
+      {
+        "delta_over_delta_lim": 0.5833333333333334,
+        "stored_deltaMax_over_delta_lim": 1.0,
+        "linear_force_over_kn_delta_lim": -0.25,
+        "adhesion_bound_over_kn_delta_lim": -116666.66666666667,
+        "force_over_kn_delta_lim": -0.25,
+        "selected_branch": "saturated un/reloading",
+        "geometric_contact_present": true
+      }
+    ],
+    "total_force_over_kn_delta_lim": 0.0,
+    "contact_count": 2,
+    "conclusion": "Zero total normal force does not imply zero contacts."
+  }
+}

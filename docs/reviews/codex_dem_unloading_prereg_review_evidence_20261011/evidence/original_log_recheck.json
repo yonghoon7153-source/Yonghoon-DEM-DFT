@@ -1,0 +1,42 @@
+{
+  "log": "evidence\\ps73_logs\\home\\yonghoon\\dem_test\\ps45\\logs\\output_ps_7_3_r45_r8_220537.out",
+  "phase4_setup": {
+    "line": 3042,
+    "step": 3125000,
+    "atoms": 160420,
+    "ke": 1.6992482e-05,
+    "cpu": 0.0,
+    "P_MPa": 308.93332000000004
+  },
+  "regular_lines": 100,
+  "S0": {
+    "line": 3117,
+    "step": 3200000,
+    "atoms": 160417,
+    "ke": 1.3419507e-06,
+    "cpu": 2708.2896,
+    "P_MPa": 165.76139
+  },
+  "last25_mean_MPa": 165.42731,
+  "S0_window_count": 11,
+  "max_deviation_MPa": 0.5215299999999843,
+  "max_deviation_pct": 0.31526233485872696,
+  "KE_fivewindow_means_J": [
+    6.288419802e-07,
+    4.15864306e-07,
+    2.038015224e-07,
+    1.510480066e-07,
+    8.28401046e-08
+  ],
+  "KE_baseline_J": 2.038015224e-07,
+  "setup_atom_count": 160420,
+  "final_atom_count": 160417,
+  "last_line": {
+    "line": 3142,
+    "step": 3225000,
+    "atoms": 160417,
+    "ke": 1.2554088e-07,
+    "cpu": 3677.268,
+    "P_MPa": 165.34203
+  }
+}

@@ -1,0 +1,262 @@
+{
+    "purpose":  "Existing CSV/log arithmetic and labelled hypothetical estimator counterexamples; no simulations",
+    "input_sha256":  "538ca9e8dd3d240c0e1a83a058618f79265c979166c39b9253238b32f2ff2309",
+    "phase4_csv_rows":  100,
+    "phase4_regular_log_rows":  100,
+    "max_csv_log_pressure_difference_mpa":  0,
+    "sampling_limit":  "Original records every 1000 steps; proposed fix ave/time every 100 steps cannot be reconstructed. This is a 5-sample window diagnostic, not a replay of future S1/S2.",
+    "tail25_mean_mpa":  165.42731,
+    "early_local_maxima":  [
+                               {
+                                   "step":  3131000,
+                                   "pressure_mpa":  212.05208000000002,
+                                   "excess_over_tail_mpa":  46.624770000000012
+                               },
+                               {
+                                   "step":  3138000,
+                                   "pressure_mpa":  192.93837,
+                                   "excess_over_tail_mpa":  27.511059999999986
+                               },
+                               {
+                                   "step":  3144000,
+                                   "pressure_mpa":  183.28432999999998,
+                                   "excess_over_tail_mpa":  17.857019999999977
+                               },
+                               {
+                                   "step":  3150000,
+                                   "pressure_mpa":  177.18259,
+                                   "excess_over_tail_mpa":  11.755279999999999
+                               },
+                               {
+                                   "step":  3156000,
+                                   "pressure_mpa":  173.23997999999997,
+                                   "excess_over_tail_mpa":  7.8126699999999687
+                               },
+                               {
+                                   "step":  3162000,
+                                   "pressure_mpa":  170.66781,
+                                   "excess_over_tail_mpa":  5.2404999999999973
+                               }
+                           ],
+    "first_to_last_peak_envelope_efold_steps":  14183.001697565067,
+    "tail_ke_five_window_means":  [
+                                      6.288419802E-07,
+                                      4.15864306E-07,
+                                      2.038015224E-07,
+                                      1.510480066E-07,
+                                      8.28401046E-08
+                                  ],
+    "base_translation_ke":  2.038015224E-07,
+    "first_s1_two_pass_end":  3175000,
+    "first_s1_translation_s2_two_pass_end":  3205000,
+    "joint_test_limit":  "Rotation KE absent from original log; this is NOT a full S2 or S3/S4 pass.",
+    "windows":  [
+                    {
+                        "end":  3165000,
+                        "mean_mpa":  166.95204600000002,
+                        "sd_mpa":  3.2827449155744595,
+                        "bias_to_tail_mpa":  1.5247360000000185,
+                        "ke":  0.00012620468846000001,
+                        "s1":  false,
+                        "s2_translation_only":  false,
+                        "pressure_difference_mpa":  0.91187800000002994,
+                        "threshold_mpa":  0.8347602300000001,
+                        "raw_lines":  [
+                                          3078,
+                                          3079,
+                                          3080,
+                                          3081,
+                                          3082
+                                      ]
+                    },
+                    {
+                        "end":  3170000,
+                        "mean_mpa":  166.673756,
+                        "sd_mpa":  1.9571728183351631,
+                        "bias_to_tail_mpa":  1.2464459999999917,
+                        "ke":  7.511324304E-05,
+                        "s1":  true,
+                        "s2_translation_only":  false,
+                        "pressure_difference_mpa":  0.27829000000002679,
+                        "threshold_mpa":  0.83336878,
+                        "raw_lines":  [
+                                          3083,
+                                          3084,
+                                          3085,
+                                          3086,
+                                          3087
+                                      ]
+                    },
+                    {
+                        "end":  3175000,
+                        "mean_mpa":  165.961156,
+                        "sd_mpa":  1.7570128416519837,
+                        "bias_to_tail_mpa":  0.53384599999998272,
+                        "ke":  2.4522884439999997E-05,
+                        "s1":  true,
+                        "s2_translation_only":  false,
+                        "pressure_difference_mpa":  0.712600000000009,
+                        "threshold_mpa":  0.82980577999999994,
+                        "raw_lines":  [
+                                          3088,
+                                          3089,
+                                          3090,
+                                          3091,
+                                          3092
+                                      ]
+                    },
+                    {
+                        "end":  3180000,
+                        "mean_mpa":  165.568562,
+                        "sd_mpa":  1.0168022059968169,
+                        "bias_to_tail_mpa":  0.14125199999998017,
+                        "ke":  1.8055757879999998E-05,
+                        "s1":  true,
+                        "s2_translation_only":  false,
+                        "pressure_difference_mpa":  0.39259400000000255,
+                        "threshold_mpa":  0.82784280999999993,
+                        "raw_lines":  [
+                                          3093,
+                                          3094,
+                                          3095,
+                                          3096,
+                                          3097
+                                      ]
+                    },
+                    {
+                        "end":  3185000,
+                        "mean_mpa":  165.6405,
+                        "sd_mpa":  0.77302453049692665,
+                        "bias_to_tail_mpa":  0.21318999999999733,
+                        "ke":  8.80536098E-06,
+                        "s1":  true,
+                        "s2_translation_only":  false,
+                        "pressure_difference_mpa":  0.071938000000017155,
+                        "threshold_mpa":  0.82820250000000006,
+                        "raw_lines":  [
+                                          3098,
+                                          3099,
+                                          3100,
+                                          3101,
+                                          3102
+                                      ]
+                    },
+                    {
+                        "end":  3190000,
+                        "mean_mpa":  165.813026,
+                        "sd_mpa":  0.65247850212095215,
+                        "bias_to_tail_mpa":  0.38571600000000217,
+                        "ke":  3.5624708180000004E-06,
+                        "s1":  true,
+                        "s2_translation_only":  false,
+                        "pressure_difference_mpa":  0.17252600000000484,
+                        "threshold_mpa":  0.82906513,
+                        "raw_lines":  [
+                                          3103,
+                                          3104,
+                                          3105,
+                                          3106,
+                                          3107
+                                      ]
+                    },
+                    {
+                        "end":  3195000,
+                        "mean_mpa":  165.796694,
+                        "sd_mpa":  0.34535593324857872,
+                        "bias_to_tail_mpa":  0.3693839999999966,
+                        "ke":  2.6627329280000004E-06,
+                        "s1":  true,
+                        "s2_translation_only":  false,
+                        "pressure_difference_mpa":  0.016332000000005564,
+                        "threshold_mpa":  0.82898347,
+                        "raw_lines":  [
+                                          3108,
+                                          3109,
+                                          3110,
+                                          3111,
+                                          3112
+                                      ]
+                    },
+                    {
+                        "end":  3200000,
+                        "mean_mpa":  165.63107,
+                        "sd_mpa":  0.30233071420219171,
+                        "bias_to_tail_mpa":  0.20375999999998839,
+                        "ke":  9.8356393919999988E-07,
+                        "s1":  true,
+                        "s2_translation_only":  true,
+                        "pressure_difference_mpa":  0.16562400000000821,
+                        "threshold_mpa":  0.82815535,
+                        "raw_lines":  [
+                                          3113,
+                                          3114,
+                                          3115,
+                                          3116,
+                                          3117
+                                      ]
+                    },
+                    {
+                        "end":  3205000,
+                        "mean_mpa":  165.49097,
+                        "sd_mpa":  0.19245287864824828,
+                        "bias_to_tail_mpa":  0.063659999999998718,
+                        "ke":  6.288419802E-07,
+                        "s1":  true,
+                        "s2_translation_only":  true,
+                        "pressure_difference_mpa":  0.14009999999998968,
+                        "threshold_mpa":  0.82745485000000008,
+                        "raw_lines":  [
+                                          3118,
+                                          3119,
+                                          3120,
+                                          3121,
+                                          3122
+                                      ]
+                    }
+                ],
+    "coarse_crossing_counterexample":  {
+                                           "h0_um":  111.052,
+                                           "pressures_mpa":  [
+                                                                 4,
+                                                                 0
+                                                             ],
+                                           "bracket_um":  0.2,
+                                           "interpolated_crossing_increment_um":  0.15,
+                                           "fine_resolution_pp":  0.0450239527428592,
+                                           "actual_bracket_resolution_pp":  0.18009581097143679,
+                                           "ratio":  4
+                                       },
+    "band_semantics_counterexample":  {
+                                          "delta_num_pp":  0.1,
+                                          "r_int_pp":  0.0450239527428592,
+                                          "b_pp":  0.24502395274285921,
+                                          "observed_rho_pp":  [
+                                                                  5,
+                                                                  5.3
+                                                              ],
+                                          "claimed_order_by_difference_gt_b":  true,
+                                          "overlaps_if_b_is_per_bed_half_width":  true,
+                                          "note":  "Not a proof the intended b is a half-width. Registration must distinguish per-bed interval from pairwise threshold."
+                                      },
+    "nontransitive_indifference_counterexample":  {
+                                                      "rho_pp":  [
+                                                                     0,
+                                                                     0.08,
+                                                                     0.16
+                                                                 ],
+                                                      "pair_threshold_pp":  0.1,
+                                                      "adjacent_differences":  [
+                                                                                   0.08,
+                                                                                   0.08
+                                                                               ],
+                                                      "outer_difference":  0.16,
+                                                      "note":  "Checking only adjacent pairs misses a resolved outer pair; overlapping/indistinguishable pairs must not be collapsed into equivalence groups."
+                                                  },
+    "interpolation_asymmetry_counterexample":  {
+                                                   "bracket_um":  0.05,
+                                                   "normalized_linear_crossing":  0.99,
+                                                   "point_error_toward_lower_endpoint_um":  0.0495,
+                                                   "unjustified_half_bracket_um":  0.025,
+                                                   "note":  "Monotonicity alone bounds the crossing by the whole actual bracket, not +/- half a bracket about a non-midpoint linear interpolant."
+                                               }
+}
