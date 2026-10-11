@@ -33,9 +33,24 @@
     "⚠_게이트": "D-2026-09-11-elastic-conv-threshold 60 BFGS 를 이미 넘었다 (규칙상 modelc_2x = 측정 불가) — 이 정지는 게이트 판정 (① 닫기 / ③ 개정) 을 하지 않는다 · 미결"
   },
   "단계": {
-    "확인": null,
-    "정지": null,
-    "r2_재개": null,
+    "확인": {
+      "at": "2026-10-11 19:05 (gabia · 붙여넣기 블록의 자체 확인 통과 → tmux 두 개가 떴다)",
+      "r2": "watch 19:06: 'number of bfgs steps' 40 줄 · Total force 0.032609 · .out 갱신 23:04 (= PAUSED_0910_2304) — EXIT 로 선 그대로다. 옛 드라이버의 '수렴' 은 틀린 판정이었다 (확인됨)",
+      "selftest_gabia": "정지 도구 · r2 대기 둘 다 통과 (&& 사슬이라 실패면 tmux 가 안 떴다)",
+      "r1_r3": "아직 마커 확인 안 함 — r2 뒤 따로"
+    },
+    "정지": {
+      "시작": "2026-10-11 19:05:43 · tmux stop13m",
+      "대상": "pw.x 2655011 · cwd /data/work/runs/elastic_modelc_2x · prefix strain_13_m · .bfgs ./tmp_strain_13_m/strain_13_m.bfgs",
+      "러너": "463447 — 창 셸 아님 (거부 안 걸림) · 19:05:44 얼림 (T)",
+      "대기": "BFGS 줄 170 개에서 다음 줄 (상한 14,400 s) — 14:18 watch 의 166 뒤로 4 스텝 · 스텝당 ≈ 70 분",
+      "GPU_19:06": "탄성 pw.x 41,374 MiB + li2s 대조 seed5 UMA 2,880 MiB (아직 진행)",
+      "끝": null
+    },
+    "r2_재개": {
+      "대기_시작": "2026-10-11 19:05:43 · tmux li3nd_r2 · ① 정지 로그 대기",
+      "재개": null
+    },
     "r2_끝": null,
     "탄성_재개": null
   },
