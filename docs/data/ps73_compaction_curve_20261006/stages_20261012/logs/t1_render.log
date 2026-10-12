@@ -1,0 +1,10 @@
+  initial  step   405000  입자 160420  (41.9 s)
+  p50      step  1665000  입자 160420  (39.4 s)
+  p300     step  3125000  입자 160420  (39.8 s)
+  relaxed  step  3225000  입자 160417  (40.3 s)
+→ /tmp/claude-0/-home-user-Yonghoon-DEM-DFT/d26d1e75-209f-540f-83a8-c0e1957edc2f/scratchpad/ps73_figs/t1_geometry ['ps73_geom3d_405000_initial.png', 'ps73_geom3d_1665000_p50.png', 'ps73_geom3d_3125000_p300.png', 'ps73_geom3d_3225000_relaxed.png']
+
+real	2m42.469s
+user	2m29.896s
+sys	0m11.114s
+rc=0

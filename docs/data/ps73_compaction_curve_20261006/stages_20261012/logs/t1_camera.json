@@ -1,0 +1,113 @@
+{
+ "tool": "t1_render",
+ "renderer": "render3d.render (snap_moments_20261008) · ss 2",
+ "px": 1400,
+ "camera_bounds_um": [
+  [
+   0.0,
+   0.0,
+   0.0
+  ],
+  [
+   50.0,
+   50.0,
+   138.252
+  ]
+ ],
+ "camera_rule": "render3d.webapp_camera — 상자 중심 + (1.2, 0.8, 1.2) × 최대 변 · 원근 50° · THREE 좌표 (x, z, y)",
+ "camera_pos_three": [
+  190.9024,
+  179.72760000000002,
+  190.9024
+ ],
+ "camera_target_three": [
+  25.0,
+  69.126,
+  25.0
+ ],
+ "crop_rows_cols": [
+  [
+   316,
+   1165
+  ],
+  [
+   463,
+   939
+  ]
+ ],
+ "image_size_px": [
+  849,
+  476
+ ],
+ "um_per_px_at_target_depth": 0.1727894659408041,
+ "colours": {
+  "AM_P": "#222222",
+  "AM_S": "#888888",
+  "SE": "#f5e6a3"
+ },
+ "colour_source": "webapp/static/js/viewer3d.js const COL",
+ "opacity_note": "웹앱은 SE 를 opacity 0.85 (OPA.SE) 로 그리지만 render3d 는 불투명 z-버퍼 — 여기 SE 는 불투명",
+ "stages": [
+  {
+   "key": "initial",
+   "label": "Initial compression",
+   "step": 405000,
+   "n_particles": 160420,
+   "n_by_phase": {
+    "AM_P": 280,
+    "AM_S": 1376,
+    "SE": 158764
+   },
+   "plate_um": 138.252,
+   "seconds": 41.9,
+   "file": "ps73_geom3d_405000_initial.png",
+   "sha256": "e7dcaed1e1bb27e63debfb76ad472d2b3452bb3ebb861fab77ec5fc639c3b996"
+  },
+  {
+   "key": "p50",
+   "label": "50 MPa",
+   "step": 1665000,
+   "n_particles": 160420,
+   "n_by_phase": {
+    "AM_P": 280,
+    "AM_S": 1376,
+    "SE": 158764
+   },
+   "plate_um": 125.65200000000002,
+   "seconds": 39.4,
+   "file": "ps73_geom3d_1665000_p50.png",
+   "sha256": "10ad1a33cc111e745d30342ea9bf4b54e0db5897d920df91e5648659d4f3e988"
+  },
+  {
+   "key": "p300",
+   "label": "300 MPa (end of compression)",
+   "step": 3125000,
+   "n_particles": 160420,
+   "n_by_phase": {
+    "AM_P": 280,
+    "AM_S": 1376,
+    "SE": 158764
+   },
+   "plate_um": 111.05199999999999,
+   "seconds": 39.8,
+   "file": "ps73_geom3d_3125000_p300.png",
+   "sha256": "9bca1c5f7a381b603a6b953fde42255ceb8efd7d3c310df01228ce3b12a9d4ac"
+  },
+  {
+   "key": "relaxed",
+   "label": "After relaxation",
+   "step": 3225000,
+   "n_particles": 160417,
+   "n_by_phase": {
+    "AM_P": 280,
+    "AM_S": 1376,
+    "SE": 158761
+   },
+   "plate_um": 111.05199999999999,
+   "seconds": 40.3,
+   "file": "ps73_geom3d_3225000_relaxed.png",
+   "sha256": "beec009fd7f55351eefb3b7d7b4f248ca82be91ea23b369a3a8e557715f0b941"
+  }
+ ],
+ "preview": "ps73_geom3d_4panel_preview.png"
+}
