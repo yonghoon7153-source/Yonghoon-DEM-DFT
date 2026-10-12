@@ -54,6 +54,7 @@ evidenceScope: multi-source-mixed
 
 ### 2. Background — 지금까지의 DFT (2.5 분)
 **핵심**: 여러 계를 계산하면서 쌓은 방법들이 이번 스크리닝의 단계가 되었다.
+- 화면 제목 (10-13 확정): *Earlier DFT studies: the basis of this screening* — 다른 ■ 제목처럼 명사구. 칸 그림은 사용자가 옛 발표·논문에서 넣었다 (접착 칸 = Lee et al., ACS Nano 2026, Fig. 6 · 사용자 공저 · 캡션 '< adhesion >').
 - 칸마다 한 줄씩만 말한다 (그림 자리는 채우는 중).
 - 두 줄의 뜻 (슬림판은 화면 bullet 으로 싣는다 · 10-13): **윗줄 = 벌크 재료와 그 도핑·코팅** (기준선 → 도핑 둘 → h-BN 코팅) · **아랫줄 = 셀 안에서 전해질이 만나는 것** (SEI 성분 둘 → 계면 → 바인더 · 원자 → 입자 → 전극으로 규모가 커진다).
   - 기준선 Li₆PS₅Cl: 밴드갭, EOS, 탄성
@@ -61,7 +62,7 @@ evidenceScope: multi-source-mixed
   - B₂O₃·O 도핑: EOS, BVSE, MLIP-MD
   - h-BN@VGCF: Li 흡착·이동 NEB, 층수 효과
   - Li₃N·Li₂S: SEI 성분의 Li 이동 장벽 (NEB, 셀 수렴)
-  - 계면 접착: DEM 접촉 입력
+  - 계면 접착: 공저 ACS Nano 2026 의 계면 결합 곡선 · 접착 일
   - SDCP: 스핀 상태별 흡착
 - 맨 아래 파란 줄로 이어 간다: *"EOS·탄성 → 기준 계산, BVSE → Li 지형, MLIP-MD 프로토콜 → 수송 단계, 대권위 상도 → 안정창, 계면 에너지 → 계면 반응성"*
 - ⚠ 숫자는 말하지 않는다. 특히 **접착에너지 값, li2s(소셀 유리) 수송값은 절대 말하지 않는다** — 칸에도 숫자가 없다.

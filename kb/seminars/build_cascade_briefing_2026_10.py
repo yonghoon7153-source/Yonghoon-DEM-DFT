@@ -570,7 +570,7 @@ def build_lean():
     # ---- 2 previous DFT work: eight figure slots, title above, '< keywords >' below (CW P1: the 'became one step of
     #      the workflow' line is said, not shown)
     name, t = fresh('prev', 'Background')
-    lean_body(t, 'Earlier DFT studies supplied the methods used in this screening',     # user 10-13: a full-sentence title
+    lean_body(t, 'Earlier DFT studies: the basis of this screening',     # user 10-13: noun phrase like every other heading
               ['[[b:Top row]]: bulk materials and their doped or coated forms',          # + small bullets naming the rows
                '[[b:Bottom row]]: SEI components, interfaces, and binders in a battery cell'], h=1.35)
     # grammar (user 10-13, the PI reads English closely): fragments take no period; parallel plurals; serial comma;
@@ -578,7 +578,7 @@ def build_lean():
     tiles = [('Li₆PS₅Cl baseline', 'band gap · EOS · elasticity'), ('Nd/O co-doping (Nd₂O₃)', 'band edges · ICOHP · CEI'),
              ('B₂O₃ and O doping', 'EOS · BVSE · MLIP-MD'), ('h-BN on carbon fiber', 'Li adsorption · NEB'),
              ('Li₃N (SEI component)', 'Li migration (NEB)'), ('Li₂S (SEI component)', 'V[[_:Li]] migration · cell size'),
-             ('Interfacial adhesion', 'adhesion → DEM contacts'), ('Binder (SDCP) adsorption', 'spin-state adsorption')]
+             ('Interfacial adhesion', 'adhesion'), ('Binder (SDCP) adsorption', 'spin-state adsorption')]
     TW, GX = 2.12, 0.14
     for k, (ti, kw) in enumerate(tiles):
         x = 0.55 + (k % 4) * (TW + GX)
