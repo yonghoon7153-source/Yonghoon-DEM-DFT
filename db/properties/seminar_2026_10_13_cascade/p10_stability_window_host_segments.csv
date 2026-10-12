@@ -1,0 +1,5 @@
+# Page 10 — schematic bar segments; 1.4 and 2.5 V are display limits, not data.
+segment,V_start_vs_Li,V_end_vs_Li
+Li uptake (display range),1.4,1.717
+no Li exchange,1.717,2.14
+Li release (display range),2.14,2.5

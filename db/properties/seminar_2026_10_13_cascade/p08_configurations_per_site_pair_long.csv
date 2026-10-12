@@ -1,0 +1,13 @@
+# Page 8 — configurations generated per (cation site, anion site) pair; long format (Origin heat map: X, Y, Z).
+# Source: db/properties/seminar_table_site_grid.csv (from cascade_v23_all.csv, 3,615 configurations).
+# Counts are CONFIGURATIONS, not compounds; all at one dopant concentration. All nine pairs populated.
+cation_site,anion_site,n_configurations,percent_of_all
+Li 24g,free sulfide,1050,29.0
+Li 24g,sulfur in the PS₄ corner,810,22.4
+Li 24g,halide site,600,16.6
+P 4b (framework),free sulfide,375,10.4
+P 4b (framework),sulfur in the PS₄ corner,270,7.5
+P 4b (framework),halide site,180,5.0
+Li 48h,free sulfide,120,3.3
+Li 48h,sulfur in the PS₄ corner,105,2.9
+Li 48h,halide site,105,2.9

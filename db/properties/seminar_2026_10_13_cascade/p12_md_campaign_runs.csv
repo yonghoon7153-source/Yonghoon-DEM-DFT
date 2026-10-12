@@ -1,0 +1,45 @@
+# Page 12 — MLIP-MD run roster (40 runs = 10 start configurations × 2 precursors × 2 seeds), status as of 2026-10-12 10:04 KST (last runner watch).
+# Source: db/properties/cascade_v7_main_runlog_2026_10_07.json (per-run wall-clock GPU-hours of finished runs).
+# NO transport values here (no D, ratio or Ea) — the ratio is analysed once, after all 40 runs.
+# Run order assumption: seed 1 for A–J first (the 13th run was P1_Al2O3_G seed 1); queued order is not asserted.
+precursor,start_configuration,seed,status,wall_GPU_h
+Al2O3-derived,A,1,done,7.834
+Al2S3-derived,A,1,done,7.7673
+Al2O3-derived,B,1,done,7.684
+Al2S3-derived,B,1,done,7.684
+Al2O3-derived,C,1,done,7.684
+Al2S3-derived,C,1,done,7.6673
+Al2O3-derived,D,1,done,8.2341
+Al2S3-derived,D,1,done,8.8674
+Al2O3-derived,E,1,done,7.784
+Al2S3-derived,E,1,done,7.684
+Al2O3-derived,F,1,done,7.68
+Al2S3-derived,F,1,done,7.68
+Al2O3-derived,G,1,running (restarted after reboot),
+Al2S3-derived,G,1,queued,
+Al2O3-derived,H,1,queued,
+Al2S3-derived,H,1,queued,
+Al2O3-derived,I,1,queued,
+Al2S3-derived,I,1,queued,
+Al2O3-derived,J,1,queued,
+Al2S3-derived,J,1,queued,
+Al2O3-derived,A,2,queued,
+Al2S3-derived,A,2,queued,
+Al2O3-derived,B,2,queued,
+Al2S3-derived,B,2,queued,
+Al2O3-derived,C,2,queued,
+Al2S3-derived,C,2,queued,
+Al2O3-derived,D,2,queued,
+Al2S3-derived,D,2,queued,
+Al2O3-derived,E,2,queued,
+Al2S3-derived,E,2,queued,
+Al2O3-derived,F,2,queued,
+Al2S3-derived,F,2,queued,
+Al2O3-derived,G,2,queued,
+Al2S3-derived,G,2,queued,
+Al2O3-derived,H,2,queued,
+Al2S3-derived,H,2,queued,
+Al2O3-derived,I,2,queued,
+Al2S3-derived,I,2,queued,
+Al2O3-derived,J,2,queued,
+Al2S3-derived,J,2,queued,

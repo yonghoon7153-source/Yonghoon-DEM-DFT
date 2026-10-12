@@ -155,5 +155,14 @@
     "곁가지": "첫 고친 블록이 '업로드 worktree 가 이미 있다' 로 멈췄다 — /data/work/wt_li2sB_up_1012 (HEAD ee83432d2 · origin 에 없는 커밋 = 앞선 어느 시도가 커밋까지 하고 push 를 못 한 것) · 새 블록은 그 경로를 읽기만 하고 시각 붙은 새 경로로 올렸다 · 옛 경로는 회수 폴더 트리 해시가 원격과 같고 커밋 안 된 변경이 0 일 때만 지우는 정리 블록을 따로 줬다",
     "kgy": "같은 날 kgy 블록은 가드에서 멈췄다 (계정 kgy 였으나 RUN 폴더 또는 ~/lldvar/.git 폴더 검사 중 하나 실패 — ~/lldvar 가 linked worktree 면 .git 이 파일이다) · 가드를 'git rev-parse 로 묻기' 로 바꾸고 실패 조건을 찍는 판을 다시 줬다",
     "⏭": "kgy seed1·2 회수 → repo 에서 5 시드 해시 대조 → 시드 게이트 (A 원장 문턱) · 밀도 이탈 · T₅₀ 스캔 → 600 K 러너 B 일반화 (결과 전 · 시험 포함) · 트랙 li2s = 외부 1저자"
+  },
+  "✅_kgy_회수_2026_10_12": {
+    "at": "2026-10-13 01:43 KST (= 10-12 16:43 UTC) · kgy · 사용자 붙여넣기",
+    "커밋": "e9b03863 li2s control B quench raw (kgy seeds 1-2) — push 는 자격 증명 입력을 물었다",
+    "경로": "db/raw/lpscl_glass_control_li3ps4_2026_10_05/kgy/ — B/seed1·2 (gabia 와 같은 12 파일) · logs/ (seed*.log · seed*_gate.log) · run_quench_kgy.log · quench_kgy.tsv",
+    "repo_재확인": "SHA256SUMS 30 파일 sha256sum -c 통과 · 39 MB · 80 MB 넘어 뺀 파일 없음",
+    "가드_원인": "첫 고친 블록이 '~/lldvar/.git 이 폴더' 를 요구했는데 kgy 의 ~/lldvar 는 /home/kgy/Yonghoon-DEM-DFT 의 linked worktree 라 .git 이 파일이다 → 가드를 git rev-parse 로 묻게 바꾼 판으로 통과 (진단 줄: '~/lldvar/.git 파일 (worktree) · 공통 저장소 /home/kgy/Yonghoon-DEM-DFT/.git')",
+    "다섯_시드": "gabia seed3·4·5 (faa6dac) + kgy seed1·2 (e9b03863) 전부 repo 에 있다",
+    "⏭": "repo 에서 시드 게이트 (A 원장 문턱) · 밀도 이탈 · T₅₀ 스캔 → 600 K 러너 B 일반화 (결과 전 · 시험 포함) → 기계·공존 결정 · 트랙 li2s = 외부 1저자"
   }
 }

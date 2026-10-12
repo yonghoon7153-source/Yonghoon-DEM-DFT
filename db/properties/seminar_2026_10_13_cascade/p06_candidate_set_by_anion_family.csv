@@ -1,0 +1,11 @@
+# Page 6 — candidate set by anion family (bar chart: n_planned vs n_computed).
+# Source: db/properties/cascade_pool_accounting.csv (91 planned → 89 computed).
+# not_computed: As2S3 = no valid configuration generated; AlI3 = descriptor set incomplete on its top row.
+anion_family,n_planned,n_computed,not_computed_species,reason
+oxides,37,37,,
+chlorides,19,19,,
+sulfides,11,10,As2S3,n_structures = 0 - the calculation never started
+fluorides,10,10,,
+bromides,5,5,,
+nitrides,5,5,,
+iodides,4,3,AlI3,elastic-EOS-BVS missing on the rank_combined==1 row (present on rank 2); using rank 2 would make AlI3 the only species picked from a different placement

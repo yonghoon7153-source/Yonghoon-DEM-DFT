@@ -1,0 +1,5 @@
+# Page 12 — progress bars, as of 2026-10-12 10:04 KST (last runner watch). Update before the talk with the runner watch.
+# Source: cascade_v7_main_runlog_2026_10_07.json ✅_재개 (101.10) · decision D-2026-10-07-cascade-v7-main-round-cap (461.4).
+metric,value,total,unit
+runs,12,40,runs
+GPU-hours used (incl. 6.8444 for the run lost in the 10-12 reboot),101.1,461.4,GPU-h (cap)
