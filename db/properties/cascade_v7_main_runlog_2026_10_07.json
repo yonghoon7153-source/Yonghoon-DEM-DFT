@@ -109,6 +109,13 @@
    "명령": "run_cascade_v7_probe.py --main --resume --out_root ~/work/runs/cascade_v7_main_1007 --prep_root ~/work/runs/cascade_v6_40run_0921 --python <uma python> --settle …",
    "⚠_GPU": "09:46 GPU 415 MiB · 사용률 80 % — 재부팅 뒤 다른 프로세스 (kgy 는 프로세스별 정보 막힘) · 시작 문턱 16,000 안 · 공유면 단가가 오른다"
   },
-  "어림_끝": "남은 28 런 + G 재시작 × ≈ 7.7 h ≈ 9 일 (단독 기준) → ≈ 10-21"
+  "어림_끝": "남은 28 런 + G 재시작 × ≈ 7.7 h ≈ 9 일 (단독 기준) → ≈ 10-21",
+  "✅_재개": {
+   "at": "2026-10-12 09:51:24 (러너 PID 143260 · tmux cv7main · worktree ~/wt_cv7main_1012 CT 수정판)",
+   "로그": "'↻ 이어받기 · 누적 101.10 GPU-h 승계 · 끝난 런 12' → '[13/40] 비용: 누적 101.10 + 단가 8.87 ≤ 상한 461.4' → '▶ P1_Al2O3_G__T1000__s1 (GPU 합계 415 MiB)'",
+   "정산": "P1_Al2O3_G 옛 시도 6.8444 GPU-h (--settle) · 94.2581 + 6.8444 = 101.10",
+   "관측_10:04": "새 시도 7.7 / 405 ps · 0.22 h · GPU 2,733 MiB · 85 % (다른 프로세스 ≈ 415 MiB 가 같이 있다 — 단가가 오를 수 있다)",
+   "감시_결함": "cv7_watch 가 정산된 옛 시도를 도는 런으로 그렸다 (유령 ③ 줄) — watch_cv7probe.py 고침 (selftest PASS · 깨기 1 빨강) · kgy ~/bin/cv7_watch.py 갱신 필요"
+  }
  }
 }
