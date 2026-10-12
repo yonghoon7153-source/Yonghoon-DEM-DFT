@@ -18,6 +18,7 @@ evidenceScope: multi-source-mixed
 # 연구세미나 2026-10-13 — 스토리라인 (대본 준비용)
 
 > 덱: `kb/seminars/Research_Seminar_2026_10_13_cascade_progress.pptx` (19장 = 표지 + 본문 14장 + 감사 + 참고문헌 + 백업 2장 · 장 번호는 덱과 같다)
+> **슬림판** (교수님용 · 글 적게): `…_progress_lean.pptx` — 같은 19장 · 같은 순서 · 장마다 메시지 하나 + bullet ≤ 2 + 그림 하나. 이 스토리라인은 두 덱에 같이 맞는다 (화면에서 빠진 세부는 대본 끝 '슬림판' 표).
 > Origin CSV: `db/properties/seminar_2026_10_13_cascade/` (README 에 장 ↔ 파일)
 > 방향 문서: `kb/seminars/cascade_briefing_2026_10_direction.md` (08-18 덱 판정 · 허용/금지 숫자 · 참고문헌 전체)
 > 원장 정독 노트: `kb/seminars/cascade_db_reading_2026_10_12.md` (단계별 커버리지 · 9월 재건 · 열린 결정)

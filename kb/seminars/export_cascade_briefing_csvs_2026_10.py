@@ -272,7 +272,8 @@ def p18():
 
 README = """# Origin CSVs — Research Seminar 2026-10-13 (cascade progress briefing)
 
-Deck: `kb/seminars/Research_Seminar_2026_10_13_cascade_progress.pptx` (19 slides).
+Decks: `kb/seminars/Research_Seminar_2026_10_13_cascade_progress.pptx` (19 slides) and the lean variant
+`…_progress_lean.pptx` (same 19 slides, same order, same page numbers — every CSV below fits both).
 Made by `kb/seminars/export_cascade_briefing_csvs_2026_10.py` — rerun it after the source files change.
 Every CSV starts with `#` comment lines (source, units, cautions); Origin: Import → skip comment lines.
 2026-10-12 update: the September-audit slide became page 11, so the MD-status CSV is now p13 and the
