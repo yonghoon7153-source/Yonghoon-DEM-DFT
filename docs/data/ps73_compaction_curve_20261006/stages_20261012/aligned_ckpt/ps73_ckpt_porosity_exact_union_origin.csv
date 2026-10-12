@@ -1,0 +1,7 @@
+﻿Simulation time,Porosity (exact union),Union MC std,Plate pressure,Plate height,Step,Stage
+ms,%,%,MPa,µm,,
+step × 1e-3,1 − V_union/(A·H) · MC 4e6 points · seed crc32(ps_7_3_r45) — same quantity as LHS porosity_union_exact_pct,binomial 1σ (yErr of B),curve/pressure.csv,H = plate mesh,,
+400.000,31.8066,0.0233,0.00,138.302,400000,Initial (before plate contact)
+1650.000,25.0883,0.0217,47.11,125.802,1650000,47 MPa (compression)
+3100.000,16.6845,0.0186,296.17,111.302,3100000,296 MPa (just before stop)
+3220.000,16.4941,0.0186,165.30,111.052,3220000,After relaxation

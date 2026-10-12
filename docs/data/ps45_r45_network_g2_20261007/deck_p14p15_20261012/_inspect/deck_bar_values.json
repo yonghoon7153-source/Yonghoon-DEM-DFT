@@ -1,0 +1,138 @@
+{
+ "p14_tortuosity": {
+  "page": 14,
+  "y_axis_x_pt": 75.19,
+  "major_ticks": [
+   2.5,
+   3.1,
+   3.7,
+   4.3
+  ],
+  "tick_fit_max_resid": 0.000602,
+  "bar_fill": [
+   "#FDE724",
+   "#B4DD2B",
+   "#6BCD58",
+   "#35B778",
+   "#1E9C88"
+  ],
+  "bar_values": [
+   4.1002,
+   3.3992,
+   3.0994,
+   2.7997,
+   3.0994
+  ],
+  "bar_base_values": [
+   2.5,
+   2.5,
+   2.5,
+   2.5,
+   2.5
+  ],
+  "bar_width_pt": 10.679,
+  "bar_pitch_pt": 21.357
+ },
+ "p14_coverage": {
+  "page": 14,
+  "y_axis_x_pt": 236.08,
+  "major_ticks": [
+   45.0,
+   52.0,
+   59.0,
+   66.0
+  ],
+  "tick_fit_max_resid": 0.007021,
+  "bar_fill": [
+   "#FDE724",
+   "#B4DD2B",
+   "#6BCD58",
+   "#35B778",
+   "#1E9C88"
+  ],
+  "bar_values": [
+   48.8914,
+   54.996,
+   58.0983,
+   63.393,
+   53.3956
+  ],
+  "bar_base_values": [
+   44.9997,
+   44.9997,
+   44.9997,
+   44.9997,
+   44.9997
+  ],
+  "bar_width_pt": 10.692,
+  "bar_pitch_pt": 21.384
+ },
+ "p15_sigma_li": {
+  "page": 15,
+  "y_axis_x_pt": 605.15,
+  "major_ticks": [
+   0.1,
+   0.2,
+   0.3,
+   0.4
+  ],
+  "tick_fit_max_resid": 0.0001,
+  "bar_fill": [
+   "#FDE724",
+   "#B4DD2B",
+   "#6BCD58",
+   "#35B778",
+   "#1E9C88"
+  ],
+  "bar_values": [
+   0.2101,
+   0.26,
+   0.2899,
+   0.3201,
+   0.2801
+  ],
+  "bar_base_values": [
+   0.1,
+   0.1,
+   0.1,
+   0.1,
+   0.1
+  ],
+  "bar_width_pt": 10.676,
+  "bar_pitch_pt": 21.352
+ },
+ "p15_sigma_e": {
+  "page": 15,
+  "y_axis_x_pt": 605.15,
+  "major_ticks": [
+   1.5,
+   3.0,
+   4.5,
+   6.0
+  ],
+  "tick_fit_max_resid": 0.000139,
+  "bar_fill": [
+   "#FDE724",
+   "#B4DD2B",
+   "#6BCD58",
+   "#35B778",
+   "#1E9C88"
+  ],
+  "bar_values": [
+   6.1976,
+   3.8982,
+   2.6991,
+   1.8997,
+   1.7022
+  ],
+  "bar_base_values": [
+   1.5,
+   1.5,
+   1.5,
+   1.5,
+   1.5
+  ],
+  "bar_width_pt": 10.676,
+  "bar_pitch_pt": 21.352
+ }
+}

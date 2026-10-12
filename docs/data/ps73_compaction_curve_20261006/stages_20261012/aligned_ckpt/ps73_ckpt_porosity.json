@@ -1,0 +1,90 @@
+{
+ "tool": "t2b_union_ckpt",
+ "reported_quantity": "eps_union_pct (exact union)",
+ "mc_n": 4000000,
+ "seed": 267682850,
+ "check_3220000_vs_t2": {
+  "got": 16.494149999999998,
+  "ref": 16.4941
+ },
+ "rows": [
+  {
+   "stage_key": "initial",
+   "stage": "Initial (before plate contact)",
+   "step": 400000,
+   "time_ms": 400.0,
+   "plate_pressure_MPa": 0.0,
+   "plate_um": 138.30200000000002,
+   "eps_union_pct": 31.80655,
+   "union_mc_std_pct": 0.02328625333269341,
+   "eps_sphere_pct_RECORD_ONLY": 31.710077754654254,
+   "union_mc_n": 4000000,
+   "union_mc_seed": 267682850,
+   "input": {
+    "source": "snap",
+    "atoms_csv_sha256": "330d1ea41db350df3c93eae18233378e120cf33dde1f3f030489945bd277e33c",
+    "mesh_info_sha256": "94b5b86a7d2588c9900d382a94b295f5d3a16c776c245393c664ac950837f1b0",
+    "mesh_source": "mesh_400000.stl"
+   },
+   "seconds": 6.6
+  },
+  {
+   "stage_key": "p50",
+   "stage": "47 MPa (compression)",
+   "step": 1650000,
+   "time_ms": 1650.0,
+   "plate_pressure_MPa": 47.110525,
+   "plate_um": 125.80199999999999,
+   "eps_union_pct": 25.08835,
+   "union_mc_std_pct": 0.021676079524890448,
+   "eps_sphere_pct_RECORD_ONLY": 24.924621020525173,
+   "union_mc_n": 4000000,
+   "union_mc_seed": 267682850,
+   "input": {
+    "source": "snap",
+    "atoms_csv_sha256": "e681aa78cac85c7e9a0face84c1dd5e8f3d8a6d87b2357a48bcdc21318c2363c",
+    "mesh_info_sha256": "2e10ae3ac46bcd2deb36781e4dccc9e45341e00b6620a4893c62b83d405fc89b",
+    "mesh_source": "mesh_1650000.stl"
+   },
+   "seconds": 6.0
+  },
+  {
+   "stage_key": "p300",
+   "stage": "296 MPa (just before stop)",
+   "step": 3100000,
+   "time_ms": 3100.0,
+   "plate_pressure_MPa": 296.17081,
+   "plate_um": 111.30199999999999,
+   "eps_union_pct": 16.684475,
+   "union_mc_std_pct": 0.018641860113561462,
+   "eps_sphere_pct_RECORD_ONLY": 15.144087021109732,
+   "union_mc_n": 4000000,
+   "union_mc_seed": 267682850,
+   "input": {
+    "source": "snap",
+    "atoms_csv_sha256": "00ddd74c39c09202b32f0fdd7bdf9cf0b620850351bc52fd9223f73b23bc5ff1",
+    "mesh_info_sha256": "6bc80b09c39dc50048fa78bc3d0235e8bf8a2c7972839d6be29fcad44f4526e1",
+    "mesh_source": "mesh_3100000.stl"
+   },
+   "seconds": 5.7
+  },
+  {
+   "stage_key": "relaxed",
+   "stage": "After relaxation",
+   "step": 3220000,
+   "time_ms": 3220.0,
+   "plate_pressure_MPa": 165.30183000000002,
+   "plate_um": 111.05199999999999,
+   "eps_union_pct": 16.494149999999998,
+   "union_mc_std_pct": 0.018556387146866037,
+   "eps_sphere_pct_RECORD_ONLY": 14.953625377990754,
+   "union_mc_n": 4000000,
+   "union_mc_seed": 267682850,
+   "input": {
+    "source": "dump",
+    "atom_dump_sha256": "cb19ca10045b295afa04f494793f423ba95dbbb38727008dc01fc9656c21bd99"
+   },
+   "seconds": 5.6
+  }
+ ]
+}

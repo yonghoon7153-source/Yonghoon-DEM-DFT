@@ -6,6 +6,10 @@
 - 원자료 = ibb `~/dem_test/ps45/ps_7_3_r45` (find 명령 · 묶음 92,192,171 B · sha256 `25b8e849…` · 24 MB 조각 넷 합침) — 리포에 넣지 않음 · 영수증 = 이 폴더 `ps73_files.txt` (파일 6 sha256 · 시각) · `ps73_restart_list.txt` · `ps73_run_dir.txt`.
 - 계산 = 리포 코드 import 만 (리포 쓰기 0) · 작업 폴더에서 `python3 -I -B` · 코드 = `code/` (작업 폴더 절대 경로 그대로 — 기록용) · 로그 = `logs/`.
 
+> ★ **최종 판 = `aligned_ckpt/` (1저자 10-12)** — 3D · porosity · SE 응력을 **같은 step** (체크포인트 400,000 · 1,650,000 · 3,100,000 · 이완 3,220,000) 으로 맞췄다.
+> **porosity = exact union** (1저자 10-12 *"exact union으로 해야지"* — LHS 배포 열 `porosity_union_exact_pct` 와 같은 양 · sphere-sum 은 기록 (JSON) 만) ·
+> porosity **그래프는 덱에 넣지 않는다** (1저자 — *"thickness 있으니까"*) · 값 CSV 만 둔다.  아래 §1–§4 (405,000 · 1,665,000 · 3,125,000 · 3,225,000) = **첫 판 (이력)**.
+
 ## 1. porosity (`t2_porosity/` · H = 그 step 판 높이 · A = 50 × 50 µm)
 
 | 단계 | step | ms | H (µm) | 판 압력 (MPa) | ε_sphere (%) | ε_union (%) ± MC 1σ | 중심이 판 위 |
@@ -34,7 +38,9 @@
 - 분류 = 같은 접촉 목록에서 SE 마다 n_SE · n_PC · n_SC (PC · SC 칸에도 SE 이웃은 있다).  표 · 상자그림 = 벽 아닌 SE 만 · 3D = 벽 SE 도 칠함 (판 힘이 덤프에 없어 윗면이 파랗다 → 벽 회색판 `_wallgrey` 같이 둠).
 - 색 범위 (3D) = 벽 아닌 SE p5–p95 = 29.6 … 261 MPa (log · jet · `render3d.py`).
 - 한정어: MPa 절대값 = DEM (연화 SE) 모델 안 값 — 분류 · 단계끼리 비교용 · 캡션 권고 *"Love–Weber particle von Mises stress (MPa) from the DEM contact forces (softened SE) — model-internal comparison."*
-- 압축 세 단계 (405,000 · 1,665,000 · 3,125,000) = 접촉 덤프 없음 → 재시작 파일에서 짧게 다시 (settling_400000 · settling_1650000 · compress_3100000 — `ps73_restart_list.txt`) · ⬜ 명령.
+- 압축 세 단계 = 접촉 덤프 없음 → **1저자 10-12: 10-08 AM 그림과 같은 방법** (`../../ps73_damping_branch_20261007/snap_moments_20261008/make_snap_decks.py` · 체크포인트에서 `run 0` · 접촉만 덤프) ·
+  체크포인트 = **400,000** (0 MPa · `restart_settling_400000`) · **1,650,000** (47.1 MPa · `restart_settling_1650000` — `restart_compress_1650000` 은 이 파일의 심링크) · **3,100,000** (296.2 MPa · 10-08 스냅숏 그대로) — 3D · porosity 단계 (405,000 · 1,665,000 · 3,125,000) 와 5,000–25,000 step 다르다 (3,125,000 등은 체크포인트 없음) · ⬜ 단계 표기 = 1저자 · 명령 = 대화 (10-12) · ⬜ WSL 실행 → 그림.
+- Origin 상자그림 입력 `t3_vm_se/ps73_se_vm_by_class_boxdata_origin.csv.gz` (Origin 에 넣을 때 `gunzip -k`) (네 열 = SE only · PC only · SC only · PC + SC · 벽 아닌 SE · MPa) = `code/t3_box_origin.py` (SE 별 CSV.gz 를 읽기만 · 개수 · 중앙값 = 요약표 검산).
 
 ## 3. 3D 기하 (`t1_geometry/`)
 
@@ -47,4 +53,21 @@
 
 ## 5. 파일
 
-`t1_geometry/` (단계별 PNG 4 · 미리보기) · `t2_porosity/` (CSV · Origin CSV · JSON · PNG · SVG) · `t3_vm_se/` (SE 별 CSV.gz 158,761 행 · JSON · 분류 요약 CSV · Origin CSV · 상자그림 PNG · SVG · 3D PNG 넷 · 범례 둘) · `code/` · `logs/` · `SHA256SUMS`.
+`t1_geometry/` (단계별 PNG 4 · 미리보기) · `t2_porosity/` (CSV · Origin CSV · JSON · PNG · SVG) · `t3_vm_se/` (SE 별 CSV.gz 158,761 행 · JSON · 분류 요약 CSV · Origin CSV · 상자그림 입력 Origin CSV · 상자그림 PNG · SVG · 3D PNG 넷 · 범례 둘) · `code/` · `logs/` · `SHA256SUMS`.
+
+## 6. 최종 판 — 같은 step 네 단계 (`aligned_ckpt/` · 10-12)
+
+| 단계 | step | 판 압력 (MPa) | 판 높이 (µm) | **porosity exact union (%)** ± MC 1σ | SE (벽 아님) | SE σ_VM 중앙 (MPa) | 평균 | 중앙: SE 만 · PC 만 · SC 만 · PC + SC |
+|---|---|---|---|---|---|---|---|---|
+| Initial (before plate contact) | 400,000 | 0 | 138.302 | **31.81 ± 0.02** | 156,980 | 11.6 | 22.6 | 11.2 · 8.9 · 13.6 · 28.9 |
+| 47 MPa (compression) | 1,650,000 | 47.1 | 125.802 | **25.09 ± 0.02** | 156,235 | 14.5 | 24.9 | 14.3 · 11.5 · 16.3 · 32.0 |
+| 296 MPa (just before stop) | 3,100,000 | 296.2 | 111.302 | **16.68 ± 0.02** | 154,982 | 91.1 | 113.1 | 79.1 · 95.1 · 97.5 · 151.2 |
+| After relaxation | 3,220,000 | 165.3 | 111.052 | **16.49 ± 0.02** | 155,033 | 91.7 | 113.1 | 80.2 · 95.4 · 98.6 · 150.5 |
+
+- 입력: 400,000 · 1,650,000 · 3,100,000 = 1저자 WSL 스냅숏 (`../../ps73_damping_branch_20261007/snap_moments_20261008/make_snap_decks.py` · 체크포인트에서 `run 0`) 파서 출력 묶음 (`ps73_snap3.tgz` 165,473,075 B · sha256 `476df90c…` · 리포 밖) · 3,220,000 = 첫 판 T3 와 같은 파서 출력.
+- 검사: 1,650,000 = 원 런 atom 덤프와 위치 · 속도 다른 원자 0 / 160,420 (`--verify`) · 400,000 = ibb 에 원 런 덤프가 없어 **원 런 로그 KE 대조** — r1 로그 (`../raw/ps73_logs.tgz` · `output_ps_7_3_r45_181338.out`) `400000 160420 2.8212798e-07` = 스냅숏 setup 줄 (글자 같음) · 1,650,000 KE 3.2731177e-06 도 r3 로그와 같음 · 3,100,000 = 10-08 스냅숏 · 판 높이 = `../curve/plate.csv` (네 단계 같음) · 3,220,000 union 16.4941 = 첫 판 재현.
+- porosity = `code/t2b_union_ckpt.py` → `aligned_ckpt/ps73_ckpt_porosity_exact_union_origin.csv` (exact union 만 · Origin) · JSON (sphere-sum 은 기록만).
+- 3D = `code/aligned_figs.py` → 첫 판 `t1_render.main` 그대로 (원자만 스냅숏 atoms.csv 에서) · 카메라 = 첫 단계 (400,000) 상자 · `aligned_ckpt/t1_geometry/`.
+- SE 응력 = 첫 판 `t3_vm_se.compute` 그대로 (봉인 LW · 단계마다 ANA · step 만 바꿈) · LW 상태 네 단계 OK · **색 범위 = 네 단계 벽 아닌 SE (σ_VM > 0) 를 모은 p5–p95 = 1.17 … 205.5 MPa** (log · jet · 10-08 AM 그림과 같은 규칙) · `aligned_ckpt/t3_vm_se/` (SE 별 CSV.gz · 단계 × 분류 요약 CSV · Origin CSV · 3D 넷 × 두 판 (벽 칠함 · 벽 회색 — 투명 배경) · 공동 범례 · `ps73_se_vm3d_4panel_wallgrey_preview.png`).
+- 한정어: MPa 절대값 = DEM (연화 SE) 모델 안 값 · 벽 SE 는 판 · 바닥 힘이 덤프에 없어 값이 불완전 (표 · 색 범위에서 뺌 · 3D 는 회색판 권장) · 단계 이름의 압력 = 판 압력 (입자 응력 평균 아님).
+- 관찰 (원인 확인 전): 판이 닿기 **전** (400,000) 에도 SE σ_VM 이 아래로 갈수록 커진다 (중앙 11.6 MPa) — 정착 단계 중력 (덱 단위 · PHASE 1 98.1 → 2–3 9.81) 하중으로 보인다 · 47 MPa 단계 중앙 14.5 MPa 는 그보다 조금 크다.
