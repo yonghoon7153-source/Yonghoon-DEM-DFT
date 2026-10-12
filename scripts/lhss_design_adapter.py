@@ -26,9 +26,12 @@
     1저자 10-12 Q5) 은 아직 반입 전.  상자 크기는 수확기 판과 무관 (덱의 상자 · 덤프 머리) 이고 이 어댑터는 union 값을 **싣지 않는다** (확인만)
     → 산출물 바이트는 union 판과 무관하다.
   · 하중 규칙이 반반이다: `2mAh_fixed` 10 (AM-rich · 130 의 2 mAh 규칙 · 하중 2.0 = 설계 입력) · `volfrac_free` 10 (SE-rich · 64 확장처럼 volfrac 가
-    설계 축 · 하중 = volfrac 에서 거꾸로 계산한 값).  주 열 `loading_mAh_cm2` 는 **넣지 않는다** (배포 스키마 결정 = 1저자 대기) —
-    값은 `lhss_loading_rule` · `lhss_loading_mAh_cm2` 에 둔다.
-  · 130 전용 추정 열 10 (`OMITTED`) 은 lhsx 와 같이 만들지 않는다 — 실측 열 (수확 · union) 이 그 자리를 대신한다.
+    설계 축 · 하중 = volfrac 에서 거꾸로 계산한 값).  ★ 본 열 `loading_mAh_cm2` (1저자 10-12 Q6 = (가) — 배포 lhss = lhs 와 같은 132 열):
+    `2mAh_fixed` = 2.0 (설계 입력 · 값 = 생성기 `lhs_supp_design.volfrac_for_loading` 의 기본 하중) · `volfrac_free` = **빈칸** (하중은 설계 입력이
+    아니다 — 역산값은 싣지 않는다 · lhsx 64 는 이 열이 없다).  130 설계 (AM 70–95 wt% · 전부 2.0) 와 같은 자리 (`rve_um` 바로 뒤).
+    규칙 ↔ SE 비율은 생성기 경계 그대로 대조한다 (`2mAh_fixed` ⟺ `pdd_SE ≤ SE_SPLIT` (0.30) ⟺ am_pct ≥ `LOADING_AM_MIN_PCT` (70)) — 어긋나면 거부.
+    역산값 · 규칙은 출처 열 `lhss_loading_rule` · `lhss_loading_mAh_cm2` 에 그대로 남는다 (인계표 · 배포 아님).
+  · 130 전용 추정 열 9 (`OMITTED` — lhsx 의 10 중 하중을 뺀 것) 은 lhsx 와 같이 만들지 않는다 — 실측 열 (수확 · union) 이 그 자리를 대신한다.
   · 보충 전용 출처 열: `lhss_loading_rule` · `lhss_loading_mAh_cm2` · `lhss_ins_scale` (20/20 = 1.0) · `lhss_cap_adjust` (`volfrac` = 입자 수 상한 때문에
     volfrac 를 낮춘 행 · 2 건) · `lhss_gap_dist` (선택 순간의 최근접 거리 — 기존 194 점 + 먼저 고른 보충 점 · 정규화 3 축 · `lhs_supp_design.maximin`).
   ⚠ 이름은 lhsx 와 같아도 뜻이 다른 출처 열: `lhss_stratum` · `lhss_lhs_cell` = 빈칸 (보충 침대는 층화 LHS 가 아니라 maximin 선택) ·
@@ -42,6 +45,7 @@ from __future__ import annotations
 import argparse
 import csv
 import hashlib
+import inspect
 import io
 import os
 import sys
@@ -72,11 +76,17 @@ SUPP_ONLY = tuple('lhss_' + k for k in SUPP_FIELDS)
 
 BASE_COLS = [c for c in LX.COLS if not c.startswith('lhsx_')]                       # 130 인계 스키마 22 열 — lhsx 와 같은 이름 · 순서
 RENAME = {c: 'lhss_' + c[len('lhsx_'):] for c in LX.COLS if c.startswith('lhsx_')}  # 출처 12 열 — 이름만 바꾼다
-COLS = BASE_COLS + list(RENAME.values()) + list(SUPP_ONLY)
+#: ★ 본 하중 열 (1저자 10-12 Q6 = (가)) — 130 설계와 같은 자리 (rve_um 바로 뒤) · 2mAh_fixed = 2.0 · volfrac_free = 빈칸 (NaN → 빈 셀)
+MAIN_LOADING = 'loading_mAh_cm2'
+_I_RVE = BASE_COLS.index('rve_um') + 1
+COLS = BASE_COLS[:_I_RVE] + [MAIN_LOADING] + BASE_COLS[_I_RVE:] + list(RENAME.values()) + list(SUPP_ONLY)
+#: 2mAh_fixed 하중 = 생성기 정본 (`lhs_supp_design.volfrac_for_loading` 의 기본 하중 — 130 설계 상수 2.0 과 같다 · 사본 금지)
+LOADING_FIXED = float(inspect.signature(SD.volfrac_for_loading).parameters['loading'].default)
+#: 하중 규칙 경계 = 생성기 `SE_SPLIT` (pdd_SE > SE_SPLIT = volfrac_free) — am_pct (= 100·(1 − pdd_SE)) 로 70 · 배포 빈칸 규칙이 같은 경계를 쓴다
+LOADING_AM_MIN_PCT = 100.0 * (1.0 - SD.SE_SPLIT)
+LOADING_RULES = ('2mAh_fixed', 'volfrac_free')
 
-OMITTED = dict(LX.OMITTED, loading_mAh_cm2=(
-    '보충 20 은 하중 규칙이 반반 (2mAh_fixed 10 = 설계 입력 2.0 · volfrac_free 10 = volfrac 에서 거꾸로 계산) — 주 열로 둘지는 배포 스키마 결정 '
-    '(1저자 대기) · 값은 lhss_loading_rule · lhss_loading_mAh_cm2 에'))                # 나머지 아홉 = lhsx 와 같은 사유 (130 추정 규약 열 · 만들지 않는다)
+OMITTED = {k: v for k, v in LX.OMITTED.items() if k != MAIN_LOADING}                 # 아홉 = lhsx 와 같은 사유 (130 추정 규약 열 · 만들지 않는다)
 
 
 def _num(r: dict, key: str) -> float:
@@ -128,11 +138,21 @@ def adapt_rows(rows: list[dict]) -> list[dict]:
             raise AdapterRefusal(f'{r["id"]}: adapt_row 가 읽는 열 {e} 가 LHSX_FIELDS 에 없다 — lhsx 어댑터가 바뀌었다') from None
         if list(o) != LX.COLS:
             raise AdapterRefusal(f'{r["id"]}: adapt_row 출력 열 ≠ lhsx COLS — lhsx 어댑터가 바뀌었다')
-        row = {k: o[k] for k in BASE_COLS}
-        row.update({RENAME[k]: o[k] for k in RENAME})
-        row.update(lhss_loading_rule=r['loading_rule'], lhss_loading_mAh_cm2=_num(r, 'loading_mAh_cm2'), lhss_ins_scale=sc,
-                   lhss_cap_adjust=r['cap_adjust'], lhss_gap_dist=_num(r, 'gap_dist'))
-        out.append(row)
+        rule, load, pdd = r['loading_rule'], _num(r, 'loading_mAh_cm2'), _num(r, 'pdd_SE')
+        if rule not in LOADING_RULES:
+            raise AdapterRefusal(f'{r["id"]}: 하중 규칙 {rule!r} 을 모른다 (아는 것: {LOADING_RULES})')
+        fixed = pdd <= SD.SE_SPLIT + 1e-9                                         # 생성기 lhs_supp_design 의 규칙 대조와 같은 식
+        if (rule == '2mAh_fixed') != fixed or (o['am_pct'] >= LOADING_AM_MIN_PCT) != fixed:
+            raise AdapterRefusal(f'{r["id"]}: 하중 규칙 {rule} ↔ pdd_SE {pdd} · am_pct {o["am_pct"]:.4g} 어긋남 — 생성기 경계 SE_SPLIT {SD.SE_SPLIT} '
+                                 f'(2mAh_fixed ⟺ pdd_SE ≤ SE_SPLIT ⟺ am_pct ≥ {LOADING_AM_MIN_PCT:g})')
+        if fixed and load != LOADING_FIXED:
+            raise AdapterRefusal(f'{r["id"]}: 2mAh_fixed 인데 하중 {r["loading_mAh_cm2"]!r} ≠ {LOADING_FIXED} (130 의 2 mAh 규칙 · 생성기 기본 하중)')
+        vals = {k: o[k] for k in BASE_COLS}
+        vals.update({RENAME[k]: o[k] for k in RENAME})
+        vals[MAIN_LOADING] = LOADING_FIXED if fixed else float('nan')            # Q6 (가) — volfrac_free = 빈칸 (역산값은 출처 열에만)
+        vals.update(lhss_loading_rule=rule, lhss_loading_mAh_cm2=load, lhss_ins_scale=sc,
+                    lhss_cap_adjust=r['cap_adjust'], lhss_gap_dist=_num(r, 'gap_dist'))
+        out.append({k: vals[k] for k in COLS})
     return out
 
 
@@ -269,6 +289,19 @@ def selftest() -> int:
     chk('④ 하중 규칙 2mAh_fixed 10 · volfrac_free 10 · 2mAh_fixed 의 lhss_loading_mAh_cm2 = 2.0 (설계 입력)',
         lambda: (sum(o['lhss_loading_rule'] == '2mAh_fixed' for o in out) == 10 and sum(o['lhss_loading_rule'] == 'volfrac_free' for o in out) == 10
                  and all(o['lhss_loading_mAh_cm2'] == 2.0 for o in out if o['lhss_loading_rule'] == '2mAh_fixed')))
+
+    def _main_loading():
+        if len(out) != 20:
+            return False, f'{len(out)} 행'
+        fixed = [o for o in out if o['lhss_loading_rule'] == '2mAh_fixed']
+        free = [o for o in out if o['lhss_loading_rule'] == 'volfrac_free']
+        ok = (len(fixed) == len(free) == 10 and all(o.get('loading_mAh_cm2') == 2.0 for o in fixed)
+              and all(isinstance(o.get('loading_mAh_cm2'), float) and o['loading_mAh_cm2'] != o['loading_mAh_cm2'] for o in free)
+              and all(o['am_pct'] >= LOADING_AM_MIN_PCT for o in fixed) and all(o['am_pct'] < LOADING_AM_MIN_PCT for o in free))
+        return ok, (f'2.0 = {sorted(o["case_id"] for o in fixed)[:3]}… · 빈칸 (NaN) = {len(free)} · 경계 am_pct {LOADING_AM_MIN_PCT} '
+                    f'(= 100·(1 − lhs_supp_design.SE_SPLIT))')
+    chk('④b ★ Q6 (가) 본 열 loading_mAh_cm2 — 2mAh_fixed 10 = 2.0 (설계 입력) · volfrac_free 10 = 빈칸 (NaN · 하중은 설계 입력이 아님) · '
+        '규칙 ↔ am_pct 경계 (생성기 SE_SPLIT) 그대로', _main_loading)
     chk('⑤ lhss_ins_scale 20/20 = 1.0', lambda: (len(out) == 20 and all(o['lhss_ins_scale'] == 1.0 for o in out)))
     chk('⑥ block bimodal 14 · mono_AM_S 4 · mono_AM_P 2 (block = kind)',
         lambda: ({b: sum(o['block'] == b for o in out) for b in ('bimodal', 'mono_AM_S', 'mono_AM_P')} == {'bimodal': 14, 'mono_AM_S': 4, 'mono_AM_P': 2}
@@ -278,10 +311,14 @@ def selftest() -> int:
         and all(o['lhss_cap_adjust'] in ('', 'volfrac') for o in out))
     want12 = ['lhss_stratum', 'lhss_ntype', 'lhss_kind', 'lhss_pdd_SE', 'lhss_w_AM_P', 'lhss_w_AM_S', 'lhss_rSE_lo_um', 'lhss_rSE_truncated',
               'lhss_volfrac', 'lhss_phi_AM_solid', 'lhss_lhs_cell', 'lhss_seed']
-    chk('⑦ 열 = lhsx 130 스키마 22 (case_id … rve_over_d_am_max) + lhss_ 12 (이름만) + 보충 전용 5 = 39 · lhsx_ 0 · 주 loading_mAh_cm2 없음 · 행 열 = COLS',
+    chk('⑦ 열 = lhsx 130 스키마 22 (case_id … rve_over_d_am_max) + 본 열 loading_mAh_cm2 (rve_um 바로 뒤 — 130 설계와 같은 자리 · Q6 (가)) + '
+        'lhss_ 12 (이름만) + 보충 전용 5 = 40 · lhsx_ 0 · 행 열 = COLS · 넣지 않은 130 추정 열 = lhsx 의 열 중 loading 뺀 9',
         lambda: (len(BASE_COLS) == 22 and BASE_COLS[0] == 'case_id' and BASE_COLS[-1] == 'rve_over_d_am_max' and list(RENAME.values()) == want12
                  and list(SUPP_ONLY) == ['lhss_loading_rule', 'lhss_loading_mAh_cm2', 'lhss_ins_scale', 'lhss_cap_adjust', 'lhss_gap_dist']
-                 and len(COLS) == 39 and not any(c.startswith('lhsx_') for c in COLS) and 'loading_mAh_cm2' not in COLS
+                 and len(COLS) == 40 and not any(c.startswith('lhsx_') for c in COLS)
+                 and COLS[COLS.index('rve_um') + 1] == 'loading_mAh_cm2' and COLS.count('loading_mAh_cm2') == 1
+                 and [c for c in COLS if c != 'loading_mAh_cm2'] == BASE_COLS + want12 + list(SUPP_ONLY)
+                 and 'loading_mAh_cm2' not in OMITTED and sorted(OMITTED) == sorted(k for k in LX.OMITTED if k != 'loading_mAh_cm2')
                  and len(out) == 20 and all(list(o) == COLS for o in out), f'{len(COLS)} 열'))
 
     def _same():
@@ -378,6 +415,15 @@ def selftest() -> int:
             LX.adapt_row = saved_adapt
         return a[0] and b[0], a[1][:70] + ' · ' + b[1][:70]
     chk('★㉑ lhsx 어댑터 표류 거부 — adapt_row 가 넘기지 않은 열을 읽음 (KeyError) · 출력 열 ≠ lhsx COLS', _drift)
+    chk('★㉒ 하중 규칙 ↔ SE 비율 어긋남 거부 — volfrac_free 행 (lhss_001 · pdd_SE 0.7) 을 2mAh_fixed 로 바꿈',
+        lambda: refuses_with(lambda: adapt_rows(mut(lambda rr: _row(rr, 'lhss_001').update(loading_rule='2mAh_fixed', loading_mAh_cm2='2.0'))),
+                             'lhss_001', 'SE_SPLIT'))
+    chk('★㉓ 하중 규칙 ↔ SE 비율 어긋남 거부 — 2mAh_fixed 행 (lhss_005 · AM 92.5) 을 volfrac_free 로 바꿈',
+        lambda: refuses_with(lambda: adapt_rows(mut(lambda rr: _row(rr, 'lhss_005').update(loading_rule='volfrac_free'))), 'lhss_005', 'SE_SPLIT'))
+    chk('★㉔ 2mAh_fixed 행의 하중 ≠ 2.0 거부 (lhss_006 → 2.5) · 모르는 하중 규칙 거부 (lhss_007 → fixed)',
+        lambda: tuple(x and y for x, y in zip(
+            refuses_with(lambda: adapt_rows(mut(lambda rr: _row(rr, 'lhss_006').update(loading_mAh_cm2='2.5'))), 'lhss_006', '2.0'),
+            refuses_with(lambda: adapt_rows(mut(lambda rr: _row(rr, 'lhss_007').update(loading_rule='fixed'))), 'lhss_007', '하중 규칙'))))
 
     print(f'lhss_design_adapter selftest: {n[0] - len(fails)}/{n[0]}' + (' 전부 통과' if not fails else f'  ✗ {len(fails)} 건'))
     return 0 if not fails else 1
