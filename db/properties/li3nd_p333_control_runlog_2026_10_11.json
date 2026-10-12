@@ -60,6 +60,14 @@
         "실행": "'▶ li3nd_mp-976264_p333_r2 mode=restart nstep=200 (GPU 여유 49139 MiB)' · pw.x 3384461 · -in 00_control_relax.restart.in",
         "관측_20:02": "새 .out 에 BFGS 줄 0 (첫 SCF 중 · 새 파일이라 0 부터 센다) · VRAM 25,338 MiB (09-10 실측 37.7 GB 까지 오를 수 있다)",
         "⏭_확인": "첫 SCF 뒤 'number of bfgs steps' 값이 41 근처에서 이어지는지 · 'read from directory' 줄 · 옛 .out 은 .out.NNN 으로 보관"
+      },
+      "✅_이력_승계_확인_2026_10_12": {
+        "at": "2026-10-12 08:58 (gabia watch · 사용자 붙여넣기)",
+        "BFGS": "'number of bfgs steps = 49' — 40 에서 이어짐 (처음부터였다면 한 자리 수) · 재개 뒤 ≈ 13 h 에 9 스텝 (≈ 1.4 h/스텝)",
+        "힘": "Total force 0.032609 → 0.026421",
+        "VRAM": "37,222 MiB (09 월 실측 37.7 GB 와 같음)",
+        "SCF_반복_누계": 352,
+        "⚠": "watch 의 'read from file' 두 줄은 의사퍼텐셜 줄이다 (grep 이 잘못 잡음) — 승계 판정 근거는 BFGS 번호"
       }
     },
     "r2_끝": null,
