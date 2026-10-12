@@ -71,3 +71,12 @@
 - SE 응력 = 첫 판 `t3_vm_se.compute` 그대로 (봉인 LW · 단계마다 ANA · step 만 바꿈) · LW 상태 네 단계 OK · **색 범위 = 네 단계 벽 아닌 SE (σ_VM > 0) 를 모은 p5–p95 = 1.17 … 205.5 MPa** (log · jet · 10-08 AM 그림과 같은 규칙) · `aligned_ckpt/t3_vm_se/` (SE 별 CSV.gz · 단계 × 분류 요약 CSV · Origin CSV · 3D 넷 × 두 판 (벽 칠함 · 벽 회색 — 투명 배경) · 공동 범례 · `ps73_se_vm3d_4panel_wallgrey_preview.png`).
 - 한정어: MPa 절대값 = DEM (연화 SE) 모델 안 값 · 벽 SE 는 판 · 바닥 힘이 덤프에 없어 값이 불완전 (표 · 색 범위에서 뺌 · 3D 는 회색판 권장) · 단계 이름의 압력 = 판 압력 (입자 응력 평균 아님).
 - 관찰 (원인 확인 전): 판이 닿기 **전** (400,000) 에도 SE σ_VM 이 아래로 갈수록 커진다 (중앙 11.6 MPa) — 정착 단계 중력 (덱 단위 · PHASE 1 98.1 → 2–3 9.81) 하중으로 보인다 · 47 MPa 단계 중앙 14.5 MPa 는 그보다 조금 크다.
+
+### 6-1. 1저자 10-12 그림 고침 (`code/aligned_previews.py` · 재계산 없음 — SE 별 CSV.gz · 카메라 · porosity JSON 을 읽는다)
+
+- *"저 회색 없애줘"* → 벽 SE (바닥 · 판에 닿은 SE) 는 **그리지 않는다** (칠하면 판 힘이 덤프에 없어 윗면이 거짓으로 낮게 보인다 · 그 아래 층이 보인다).
+- *"log 말고 선형으로 범례"* · *"300 이상 다 같은색으로 한것처럼 잘 차이나는 mpa로"* → **선형 0–200 MPa** (기본 · 200 이상 = 맨 위 색) + 1저자 요청 **0–150 · 0–100** 판 — `ps73_se_vm3d_<step>_<단계>_nowall_linear_0_<상한>.png` (투명 · 글자 없음) · 범례 `ps73_se_vm3d_colorbar_linear_0_<상한>{,_bare}.png` · 미리보기 `…_4panel_nowall_linear_0_<상한>_preview.png`.
+  근거: 벽 아닌 SE 분포 — 296 MPa · 이완 단계 p50 91–92 · p75 132–133 · p90 194–197 · p95 261–265 MPa · 처음 · 47 MPa 단계 p90 47–49 MPa.
+- *"이건 porosity로 해줘야지"* → 3D 단계 이름 = porosity (exact union) — `t1_geometry/ps73_geom3d_4panel_porosity_preview.png` (글자는 그림 밖 아래).
+- *"porosity는 porosity 그림으로 … webapp에서 기공 부분"* · *"3D로 … atom이라도 주던가 webapp에 먹이게"* → 웹앱 3D 보기 "기공 (빈 공간 · 격자 추정)" 으로 1저자가 그린다 — 입력 = WSL 스냅숏 `~/ps73_snap_<S>/post/atom_<S>.liggghts` + `mesh_<S>.stl` (atoms-only 케이스 · 메시를 같이 올려야 영역 윗면 = 판) · 이완 = 웹앱 케이스 `260925_000559_082983`.
+  같은 규칙 (viewer3d.js `computeVoidVoxels` · 격자 보통) 으로 컨테이너에서 계산한 빈 칸 비율 = 31.8 · 25.1 · 16.7 · 16.5 % (exact union 과 0.1 %p 안 · 표시용) — 그 시도 (불투명 3D · 단면) 는 리포에 넣지 않았다.
