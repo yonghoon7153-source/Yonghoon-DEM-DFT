@@ -12,7 +12,7 @@ explored: false
 authoredBy: agent
 effort: high
 claimType: prescriptive
-evidenceScope: multi-source
+evidenceScope: multi-source-mixed
 ---
 
 # cascade 진행 브리핑 (2026-10) — 방향 문서
