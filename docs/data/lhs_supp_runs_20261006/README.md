@@ -15,3 +15,22 @@
   다음 = 웹앱 접촉 · coverage 단계 (194 원천과 같은 코드 — `docs/reviews/g2rr6_fix_plan_20261011.md` §2 미확인 항목) → 보충 세대 2 망 배치 (새 등록 · 관측 ON).
 - ✅ **10-11 수확 r2 묶음 반입** = `lhss_harvest_20261011_r2.tgz` (1저자 첨부 · 166,333 B · sha256 `baa03b6b65d57b7850df151a011d8102b605fc15d81aa9f58969629ac9d00aff` = WSL 화면 값 · 30 항목 전부 `lhss_out_20261011/` 아래 · 절대 경로 · `..` · 링크 없음) — 수확 기술자 20 (`descriptors_r2/`) · 첫 시도 요약 (`descriptors/`) · 코호트 TSV · 설계족 표 · union r2 · lhsx_001 대조 union.
   r2 JSON 에 `wall_near_tangent` 키 → 수확기 = `cc4210080` 이후 판 (194 수확 `1e09f661d` 와 다름 · 정확한 WSL HEAD 미확인) — 어느 판을 인계 원천으로 쓸지 = `docs/reviews/g2rr6_fix_plan_20261011.md` Q5 (⬜ 1저자).
+- ✅ **10-12 1저자 Q5 = (가)** (`docs/reviews/g2rr6_fix_plan_20261011.md` §3 · Q4 = (가) `lhss` 별도 데이터셋) — 보충 20 을 **194 와 같은 판 `1e09f661d`** 로 다시 수확하고 r2 와 키마다 대조한다.
+  r2 수확 체크아웃 = `a20fc1875` 계열 (첫 시도 코호트 표 머리 "도구 커밋 a20fc1875" · `wall_near_tangent` 키).  `1e09f661d` → `a20fc1875` 사이 수확 경로에서 바뀐 것 = 수확기 `scripts/lhs_descriptor_harvest.py` (+143 / −8) · union 이 부르는 `scripts/dem_analysis_core.py` (+700 / −37) · union 도구 docstring 3 줄 ·
+  같은 것 = `scripts/lhs_harvest_batch.py` · `scripts/seal_area_cohort.py` (코호트 표는 r2 것을 그대로 쓴다 — 봉인기 파일이 두 판에서 같다) · `scripts/lhs_perc_extract.py` · `scripts/lens_geometry.py` · `scripts/parse_liggghts.py`.
+  ⬜ 1저자 WSL (DESKTOP-IK8J81H · 몇 분 · 기존 `~/dem-audit` 체크아웃은 그대로 둔다 · 출력 폴더가 이미 있으면 멈춘다):
+
+  ```bash
+  cd ~/dem-audit && git fetch origin claude/sdcp-dem-manuscript-si-pqwtv8
+  git worktree add --detach ~/harv_1e09f661d 1e09f661d
+  git -C ~/harv_1e09f661d rev-parse HEAD                    # 1e09f661d 로 시작해야 한다
+  O=~/lhss_out_r3_1e09f661d && mkdir "$O" && cp ~/lhss_out_20261011/_cohort.tsv ~/lhss_out_20261011/_design_family.csv "$O"/
+  cd ~/harv_1e09f661d
+  python3 scripts/lhs_harvest_batch.py --cohort "$O/_cohort.tsv" --out-dir "$O/descriptors_r3" --verify-sha 2>&1 | tee "$O/harvest_r3.log"
+  python3 scripts/lhs_union_webapp.py --cohort "$O/_cohort.tsv" --out "$O/lhss20_union_r3.tsv" 2>&1 | tee "$O/union_r3.log"
+  git -C ~/harv_1e09f661d rev-parse HEAD > "$O/harvest_head.txt"
+  cd ~ && tar -czf lhss_harvest_r3_1e09f661d.tgz lhss_out_r3_1e09f661d && sha256sum lhss_harvest_r3_1e09f661d.tgz
+  cp lhss_harvest_r3_1e09f661d.tgz /mnt/c/Users/Administrator/Downloads/
+  ```
+
+  → 묶음 첨부 · sha256 화면 → 반입 (이 폴더) · r2 와 키별 대조 (컨테이너) → 차이가 있으면 원인 표와 함께 보고 (r3 = 인계 원천 · r2 = 기록으로 보존).
