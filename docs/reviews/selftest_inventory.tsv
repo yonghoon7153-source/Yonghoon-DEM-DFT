@@ -162,6 +162,7 @@ scripts/step4_dyn.py	--selftest	fast	none	claude	초록 12.8s (실측)
 scripts/step4_viz_from_npz.py	--selftest	fast	none	claude	초록 2.8s (실측)
 scripts/step6_surrogate.py	--selftest	fast	none	claude	초록 5.9s (실측)
 scripts/summarize_jam_sweep.py	--selftest	fast	none	claude	초록 0.1s (실측)
+scripts/supp20_input_receipt.py	--selftest	fast	none	claude	초록 40/40 · 5.5s (실측 10-12 · 반례 먼저: 같은 시험을 accept-all 스텁 (계산만 · 판정 늘 같음) 에 = 6/40 → 구현 40/40) — 보충 20 입력 지문 영수증 (읽기 전용 · Codex 보충 20 지원 검토 Q6 · 수정 계획 sup20_fix_plan_20261012 §3): 등록 §2 raw sha 표 · 코호트 TSV 한 바이트 · ID 하나 · 등록 값 오타 (raw · ids · TSV · code_fp · 값 둘) · 일반 계획 강등 (후막 하나 더 · 등록 집합 불성립) = rc 1 · r3 묶음 · harvest_head · r2 대조 (값 · union) 변조 · 진짜 print_preflight 화면 (grep 판 포함) 변이 8 · 실제 발사 manifest 꼴 (launch_eligibility current) 변이 9 · 읽기 전용
 scripts/trace_deps.py	--selftest	fast	none	claude	초록 16.1s (실측)
 scripts/train_cycle_surrogate.py	--selftest	fast	none	claude	초록 0.3s (실측)
 scripts/unpack_kit_scaffolds.py	--selftest	fast	none	claude	초록 0.1s (실측)
