@@ -292,7 +292,7 @@ MLIP 지표의 기준이 되는 DFT 계산입니다. **[가리킴: 두 곡선]**
 | 3 | 점선 박스 'Project stages' 1–4 + 화살표 + 'Stage 1 audited. Stage 2 pilot in progress.' | 단계마다 무엇을 했는지 (대본 3장) · '선택 규칙은 결과 전에 정한다' (화면 줄은 뺐다) |
 | 4 | 원래 장 그대로 | 그대로 |
 | 5 | bullet 하나 + 원래 표 (14 pt) | 기존 스크린 셋 (대본 5장) · 비슷한 최근 연구 Jung · Park · Muy 는 이름만 (화면 줄은 뺐다 · 17장에 있다) |
-| 6 | 음이온족별 전구체 수 (가로 막대) + **[문헌] 'Literature example: SiO₂ co-doping'** Jung 2026 Fig. 3d | 공치환 실험 선례 CuCl · MgF₂ · ZnO · La₂O₃ · Nd₂O₃ · SiO₂ (화면 줄 · 논문 줄은 뺐다 · 17장) · 문헌 그림은 '선례' 이지 우리 후보의 검증이 아니다 · As₂S₃ 재실행은 7장 |
+| 6 | 08-18 덱의 족별 표 (family · n · examples — 'role in the design' 열은 뺐다 · 사용자 10-13) + **[문헌] 'Literature example: SiO₂ co-doping'** Jung 2026 Fig. 3d | 족별 역할은 말로: 산화물 = 강한 M–O 결합 · 염화물 = 호스트에 이미 Cl · 황화물 = 호스트와 같은 음이온 (대조) · 플루오르화물 = 가장 강한 결합 · 이동성 위험 · 브로민화물 · 요오드화물 = 더 큰 할라이드 (대조) · 질화물 = 더 높은 음이온 전하 (대조) · 공치환 실험 선례 CuCl · MgF₂ · ZnO · La₂O₃ · Nd₂O₃ · SiO₂ (17장) · 문헌 그림은 '선례' 이지 우리 후보의 검증이 아니다 · As₂S₃ 재실행은 7장 |
 | 7 | bullet: 3,675 완화 · **선별된 693 담금질** + 그림 하나: 표마다 담은 전구체 수 (91 · 90 · 89) | 단계별 방법 (UMA · FIRE · 500 K 50 ps) · 90 · 89 인 이유 · '9월 감사 이후 탐색 자료' (화면 줄은 뺐다 · 15장에 있다) |
 | 8 · 9 | 8: 원래 그림 (열지도 크게) · 9: 그대로 | 8: '지표에 따라 같은 전구체 안 흩어짐 ≈ 전구체 사이' 는 말로 (화면 줄은 뺐다 → 11장 감사로 이어진다) · 담금질은 **선별한 구조**만 |
 | 10 | ■ Decomposition stability window · 호스트 창 그림 + **[문헌] 'Literature: decomposition and intrinsic windows'** Schwietert 2021 Fig. 1 (크게) | 우리 정의 = 그 논문의 decomposition window · 옛 정의가 넓었던 이유 · 계면 산물을 바닥상태 상으로 다시 낸다 (둘 다 화면 줄은 뺐다) · '창 없음' |

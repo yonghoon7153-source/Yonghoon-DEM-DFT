@@ -482,7 +482,7 @@ def pack(order):
 # warnings in red), one figure or table, a '< caption >' and one coloured line under it, and the
 # dashed red numbered box + down arrow image of its slide 4 (the user's standard arrow). No cards, badges,
 # icons or chevrons. Literature crops carry a role tag above them and a credit below (CW, 10-13).
-LEAN_FIGS = ['fig_p06_candidates_by_family.png', 'fig_p07_stage1_coverage.png', 'fig_p10_host_window.png',
+LEAN_FIGS = ['fig_p07_stage1_coverage.png', 'fig_p10_host_window.png',
              'fig_p13_run_roster.png', 'lit_jung2026_sio2_fig3d.png', 'lit_schwietert2021_fig1.png', 'lit_he2018_fig3.png',
              'lit_phuthi2026_fig1a.png']
 DASH_RED, NOTE_GREY = 'FF5050', '6B7280'
@@ -643,22 +643,45 @@ def build_lean():
             rp.set('sz', '1400')
     save(t, 'slide7.xml')
 
-    # ---- 6 candidate set (orig slide 8): our count (left) · a literature example of precursor co-doping (right).
-    #      CW P1: the August re-run is told on p07, the six co-doping papers are on p17, the precedent line is said.
+    # ---- 6 candidate set (orig slide 8): the 08-18 family table (user 10-13: back in place of the bar chart, without
+    #      the 'role in the design' column) · a literature example of precursor co-doping (right). The six co-doping
+    #      papers are on p17 and the precedent line is said (CW P1).
     t = load('slide8.xml')
     header(t, 'Approach')
     replace_body(t, P('91 precursors in seven anion families', 'h', ln=130)
                  + P('Cations +1 to +6 paired with anions O²⁻ to I⁻; only existing compounds.', 'b', ln=130)
                  + P('[[b:All 91 precursors]] were relaxed.', 'b', ln=130),
                  y=1.08, h=1.4)
-    drop(t, lambda el: etree.QName(el).localname == 'graphicFrame')          # the family table → a bar chart
-    bh = figure(t, 'slide8.xml', 'fig_p06_candidates_by_family.png', 0.55, 2.55, 3.65, 'Precursors per anion family')
-    jw = 5.1
-    jy = 2.55 + bh / 2 - 0.97                      # tag + crop + credit centred on the bar chart
-    jh = figure(t, 'slide8.xml', 'lit_jung2026_sio2_fig3d.png', 4.4, jy + 0.32, jw, 'Jung 2026 Fig. 3d')
-    add(t, caption(ids(), '< precursors per anion family >', 2.58 + bh, x=0.55, w=3.65, sz=1150),
-        lit_label(ids(), 'Literature example:', 'SiO₂ co-doping', 4.4, jy, jw),
-        credit(ids(), 'Reproduced from Jung et al., Adv. Funct. Mater. (2026), Fig. 3d', 4.4, jy + 0.35 + jh, jw))
+    tbl = t.getroot().find('.//p:graphicFrame', NS)
+    gcs = tbl.findall('.//a:gridCol', NS)
+    assert len(gcs) == 4, len(gcs)
+    gcs[2].getparent().remove(gcs[2])
+    trs = list(tbl.iter(f'{{{NS["a"]}}}tr'))
+    assert shape_text(trs[0].findall('a:tc', NS)[2]).strip() == 'role in the design'
+    for tr in trs:
+        tr.remove(tr.findall('a:tc', NS)[2])
+    cols, rh = [1.2, 0.55, 3.0], 0.4
+    for gc, w in zip(tbl.findall('.//a:gridCol', NS), cols):
+        gc.set('w', str(E(w)))
+    for tr in trs:
+        tr.set('h', str(E(rh)))
+    ty, th = 2.5, rh * len(trs)
+    off, ext = tbl.find('.//p:xfrm/a:off', NS), tbl.find('.//p:xfrm/a:ext', NS)
+    off.set('x', str(E(0.55)))
+    off.set('y', str(E(ty)))
+    ext.set('cx', str(E(sum(cols))))
+    ext.set('cy', str(E(th)))
+    for rp in tbl.iter(f'{{{NS["a"]}}}rPr', f'{{{NS["a"]}}}endParaRPr'):
+        if rp.get('sz'):
+            rp.set('sz', '1400')
+    jx = 0.55 + sum(cols) + 0.3
+    jw = 9.45 - jx
+    pw_, ph_ = png_size(os.path.join(EXTRA, 'lit_jung2026_sio2_fig3d.png'))
+    jh = jw * ph_ / pw_
+    jy = ty + th / 2 - (jh + 0.65) / 2               # tag + crop + credit centred on the table
+    figure(t, 'slide8.xml', 'lit_jung2026_sio2_fig3d.png', jx, jy + 0.32, jw, 'Jung 2026 Fig. 3d')
+    add(t, lit_label(ids(), 'Literature example:', 'SiO₂ co-doping', jx - 0.2, jy, jw + 0.4),
+        credit(ids(), 'Reproduced from Jung et al., Adv. Funct. Mater. (2026), Fig. 3d', jx - 0.2, jy + 0.35 + jh, jw + 0.4))
     save(t, 'slide8.xml')
 
     # ---- 7 Stage 1: what each Stage-1 table holds (CW P1: one figure — p06 already shows the families). The anneal ran
