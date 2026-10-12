@@ -32,7 +32,7 @@
 - 원 dump = WSL `~/lhss_local` (ibb 최종 프레임 묶음 tgz sha256 `16398b6578ad2a588238ea883ee9c125c26d2bc8ac20cc738d810b5f464c572d` · 공통 step = 끝 step 이하 가장 큰 10,000 배수 ·
   `docs/data/lhs_supp_runs_20261006/README.md`) · 수확 JSON `raw.{atom,contact,mesh,deck}.sha256` = 워커 같은 프레임 관문의 대조값 (다르면 그 케이스 REFUSED).
 - 수확 v3 = 재수확 r3 (`1e09f661d`) → `docs/data/lhss_descriptors_cov_1e09f661d/` (⬜) · union → `docs/data/lhss_union_1e09f661d/lhss20_union.tsv` (⬜) ·
-  설계 어댑터 출력 → docs/data/lhss_design_adapted_20261012.csv (⬜ 아직 없음 — 만들면 따옴표 경로로 바꾼다) — 실행기 `COHORT_SPECS['lhss']` 의 경로 그대로.
+  설계 어댑터 출력 = `docs/data/lhss_design_adapted_20261012.csv` (✅ 10-12 · `scripts/lhss_design_adapter.py` = lhsx 어댑터 `adapt_row` 재사용 · 20 행 × 39 열 · sha256 `ea92cee60c37d9d2df37bba4f662e0b63b08d0caf5b4b729f0056625e441cdb7` · 상자 50 µm 검사 = r2 union (재수확 r3 반입 뒤 다시) · 본 열 `loading_mAh_cm2` 없음 = 1저자 결정 대기) — 실행기 `COHORT_SPECS['lhss']` 의 경로 그대로.
   r2 (`a20fc1875` 계열 · `docs/data/lhs_supp_runs_20261006/lhss_harvest_20261011_r2.tgz`) = 기록으로 보존 · 인계 원천 아님.
 
 ## 3. 코드 신원
