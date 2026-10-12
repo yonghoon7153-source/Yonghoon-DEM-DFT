@@ -183,7 +183,9 @@ def report(out_root, log=None, now=None, nvsmi="nvidia-smi", tmux="tmux") -> tup
             f" × 평균 {avg:.2f} h ≈ {left * avg / 24:.1f} 일 → 어림 끝 "
             f"{time.strftime('%m-%d', time.localtime(now + left * avg * 3600))} (직렬 · 도는 런 포함 · 공유가 바뀌면 빗나간다)"
             if avg else ""))
-    running = [s for s in steps if "rc" not in s and "stopped" not in s and s.get("T_K") is not None]
+    # ⛔ 2026-10-12 — `--settle` 로 정산된 시도 (kgy 재부팅으로 끊긴 P1_Al2O3_G) 는 rc·stopped 가 없어서 **도는 런으로** 그려졌다
+    #   ("경과 15.74 h · 남은 813 h" 유령 줄). 정산된 시도는 끝난 것이다 — ④ 에 따로 적는다.
+    running = [s for s in steps if "rc" not in s and "stopped" not in s and "settled" not in s and s.get("T_K") is not None]
     for s in running:
         md = out_root / "md" / str(s.get("tag")) / SUBDIR / f"T{int(s['T_K'])}" / "md.log"
         t0 = utc_epoch(s.get("start_utc"))
@@ -203,6 +205,10 @@ def report(out_root, log=None, now=None, nvsmi="nvidia-smi", tmux="tmux") -> tup
     jr = {(r.get("T_K"), r.get("structure"), r.get("seed")): {k: r.get(k) for k in JUDGE_KEYS if k in r}
           for r in jd.get("runs") or [] if isinstance(r, dict)}
     for s in steps:
+        if "settled" in s:
+            st = s["settled"] if isinstance(s.get("settled"), dict) else {}
+            L.append(f"④ ⏏ 정산 {s.get('tag')} · {s.get('gpu_h', '—')} GPU-h · 정리 없이 끝난 시도 (--settle · {str(st.get('why', '—'))[:90]})")
+            continue
         if "rc" not in s and "stopped" not in s:
             continue
         r = jr.get((s.get("T_K"), s.get("structure"), s.get("seed")), {})
@@ -339,6 +345,16 @@ def _selftest() -> int:
         ck("⛔음성 본 라운드: 판독 산출물이 있어도 안 읽는다 (자격·사건·사유가 화면에 없다)",
            "SHOULD_NOT_SHOW" not in txt and "사건 777" not in txt and "판독 없음 (40 런 뒤" in txt and "⑤" not in txt)
         ck("본 라운드: 도는 런 100.0 / 405 ps", "▶ P1_Al2O3_B__T1000__s1 · md.log 100.0 / 405 ps" in txt)
+        # ⛔ 정산된 옛 시도 (재부팅) + 같은 태그의 새 시도: ③ 은 새 시도 하나 · 옛 시도는 ④ '정산' 줄 (2026-10-12 유령 줄)
+        bb = json.loads((mo / "budget.json").read_text())
+        bb["steps"].insert(2, {"tag": "P1_Al2O3_B__T1000__s1", "T_K": 1000, "structure": "P1_Al2O3_B", "seed": 1,
+                               "start_utc": "2026-10-11T09:20:20Z", "pid": 1, "gpu_h": 6.8444,
+                               "settled": {"gpu_h": 6.8444, "why": "kgy 재부팅"}})
+        (mo / "budget.json").write_text(json.dumps(bb))
+        rc, L = report(mo, now=now, nvsmi="/bin/false", tmux=str(ft))
+        txt = "\n".join(L)
+        ck("⛔음성 정산된 시도를 도는 런으로 그리지 않는다 (③ 한 줄)", txt.count("③ ▶ P1_Al2O3_B__T1000__s1") == 1)
+        ck("정산된 시도는 ④ '정산' 줄로 남는다 (조용히 버리지 않는다)", "④ ⏏ 정산 P1_Al2O3_B__T1000__s1 · 6.8444 GPU-h" in txt and "kgy 재부팅" in txt)
         (mo / "logs").mkdir(); (mo / "logs" / "x.log").write_text("D_Li=7.77e-06 cm2/s\n")
         _, L = report(mo, log=mo / "logs" / "x.log", now=now, nvsmi="/bin/false", tmux=str(ft))
         txt = "\n".join(L)
