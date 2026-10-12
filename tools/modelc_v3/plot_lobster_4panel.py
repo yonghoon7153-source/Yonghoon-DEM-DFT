@@ -265,8 +265,14 @@ def plot_panel(ax, E, cohp, color, label, icohp_value, fermi_ref=0.0,
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("--lobster_dir", required=True,
-                    help="dir containing COHPCAR.lobster + ICOHPLIST.lobster")
+    ap.add_argument("--lobster_dir", default=None,
+                    help="dir containing COHPCAR.lobster + ICOHPLIST.lobster (or use --from_csv)")
+    ap.add_argument("--from_csv", default=None,
+                    help="redraw from a table this tool wrote with --csv (curves already smoothed: no second "
+                         "smoothing; ICOHP read from its header). For vector copies of a figure whose LOBSTER "
+                         "files are not in the repo (2026-10-13: Nd tile on the seminar deck)")
+    ap.add_argument("--formats", default=None,
+                    help="comma list of extra file types next to --out_png, e.g. 'svg,pdf' (vector: text as paths)")
     ap.add_argument("--out_png", required=True)
     ap.add_argument("--ylim", type=float, nargs=2, default=[-12, 6])
     ap.add_argument("--preset", default="modelc", choices=list(PRESETS),
@@ -279,6 +285,10 @@ def main():
                     help="also write energy-resolved smoothed -pCOHP table to this CSV")
     args = ap.parse_args()
     cfg_list = build_panels(args.panels) if args.panels else PRESETS[args.preset]
+    if args.from_csv:
+        return redraw_from_csv(args, cfg_list)
+    if not args.lobster_dir:
+        raise SystemExit("⛔ give --lobster_dir (LOBSTER files) or --from_csv (a table written by --csv)")
 
     work = Path(args.lobster_dir)
     cohp_path = work / "COHPCAR.lobster"
@@ -327,8 +337,50 @@ def main():
                 fontsize=16, fontweight='bold', ha='right', va='bottom')
 
     plt.tight_layout()
+    save_all(args)
+
+
+def save_all(args):
+    """--out_png plus any --formats copies (svg/pdf are vector; svg keeps text as paths)."""
+    plt.rcParams['svg.fonttype'] = 'path'
     plt.savefig(args.out_png, dpi=300, bbox_inches='tight', facecolor='white')
     print(f"\n→ {args.out_png}")
+    for ext in [e.strip().lstrip('.') for e in (args.formats or '').split(',') if e.strip()]:
+        out = str(Path(args.out_png).with_suffix('.' + ext))
+        plt.savefig(out, dpi=300, bbox_inches='tight', facecolor='white')
+        print(f"→ {out}")
+
+
+def redraw_from_csv(args, cfg_list):
+    """Redraw the panels from a --csv table: same plot_panel, same layout, no extra smoothing.
+    What it cannot do: re-match bonds or change the smoothing (the curves are fixed in the table)."""
+    import csv as _csv
+    rows = list(_csv.reader(open(args.from_csv, encoding='utf-8')))
+    head = rows[0][0]
+    if 'ICOHP(eV/bond):' not in head:
+        raise SystemExit(f"⛔ {args.from_csv}: no 'ICOHP(eV/bond):' header — not a table written by --csv")
+    icohp = {}
+    for part in head.split('ICOHP(eV/bond):', 1)[1].split(','):
+        lab, val = part.strip().rsplit(' ', 1)
+        icohp[lab.replace('-', '–')] = float(val)
+    cols = rows[1]
+    data = np.array([[float(x) for x in r] for r in rows[2:] if r and not r[0].startswith('#')])
+    E = data[:, 0]
+    n = len(cfg_list)
+    fig, axes = plt.subplots(1, n, figsize=(4 * n, 6), sharey=True)
+    axes = np.atleast_1d(axes)
+    for ax, cfg in zip(axes, cfg_list):
+        key = '-pCOHP_' + cfg['label'].replace('–', '-')
+        if key not in cols or cfg['label'] not in icohp:
+            raise SystemExit(f"⛔ {args.from_csv}: panel {cfg['label']} missing (columns {cols[1:]})")
+        plot_panel(ax, E, data[:, cols.index(key)], cfg['color'], cfg['label'], icohp[cfg['label']],
+                   ylim=tuple(args.ylim))
+    axes[0].set_ylabel(r"$E - E_F$  (eV)", fontsize=12)
+    for letter, ax in zip("abcdef", axes):
+        ax.text(-0.10, 1.02, letter, transform=ax.transAxes,
+                fontsize=16, fontweight='bold', ha='right', va='bottom')
+    plt.tight_layout()
+    save_all(args)
 
 
 if __name__ == "__main__":

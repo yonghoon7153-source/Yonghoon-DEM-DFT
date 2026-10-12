@@ -331,6 +331,41 @@ def plot_pdos(E, DOS, EF, vbm, cbm, gap, E_p, per_elem,
     plt.close()
 
 
+def redraw_from_csv(args):
+    """PDOS figure from a raw per-element table + this tool's summary json (2026-10-13: vector copies for
+    the seminar deck). Same smoothing (gaussian_smooth, --smooth σ on total and PDOS alike) and the same
+    plot_pdos. The gap band and label come from the summary, and only a fixed-occ nscf gap is drawn unless
+    --allow_dos_gap. What it cannot do: recompute VBM/CBM or the band-edge characters (it reads them)."""
+    import csv as _csv
+    if not args.summary:
+        raise SystemExit("⛔ --from_csv needs --summary (EF, VBM/CBM and the gap source come from it)")
+    sm = json.loads(Path(args.summary).read_text(encoding='utf-8'))
+    src = sm.get("band_gap_source", "?")
+    if src != "fixed-occ nscf" and not args.allow_dos_gap:
+        raise SystemExit(f"⛔ summary gap source is '{src}', not fixed-occ nscf — CLAUDE.md band-gap rule "
+                         "(use --allow_dos_gap to draw it with that label)")
+    rows = [r for r in _csv.reader(open(args.from_csv, encoding='utf-8')) if r and not r[0].startswith('#')]
+    head, body = rows[0], np.array([[float(x) for x in r] for r in rows[1:]])
+    if 'E_eV' not in head or 'total_dos' not in head:
+        raise SystemExit(f"⛔ {args.from_csv}: needs E_eV and total_dos columns (got {head})")
+    E = body[:, head.index('E_eV')]
+    DOS = body[:, head.index('total_dos')]
+    per_elem = {el: body[:, head.index(el)] for el in ELEM_ORDER if el in head}
+    if args.smooth and args.smooth > 0:
+        DOS = gaussian_smooth(DOS, E, args.smooth)
+        per_elem = {el: gaussian_smooth(v, E, args.smooth) for el, v in per_elem.items()}
+    globals()["_GAP_SRC"] = src
+    keep = (E >= args.xlim[0] - 1.0) & (E <= args.xlim[1] + 1.0)   # after smoothing: no edge effect inside xlim;
+    E, DOS = E[keep], DOS[keep]                                       # keeps vector files small (the semicore delta
+    per_elem = {el: v[keep] for el, v in per_elem.items()}            # at −42 eV is outside every window)
+    stem = Path(args.out_prefix or Path(args.from_csv).stem)
+    for ext in [e.strip().lstrip('.') for e in args.formats.split(',') if e.strip()]:
+        plt.rcParams['svg.fonttype'] = 'path'
+        plot_pdos(E, DOS, sm["EF_eV_qe"], sm["VBM_eV"], sm["CBM_eV"], sm["band_gap_eV"], E, per_elem,
+                  sm.get("VBM_character"), sm.get("CBM_character"), f"{stem}_dos_pdos.{ext}",
+                  xlim=tuple(args.xlim), title=args.title)
+
+
 def main():
     ap = argparse.ArgumentParser()
     # ⛔⛔ CLAUDE.md 데이터 규율: **Band gap 은 fixed-occupations nscf 의 VBM/CBM
@@ -353,7 +388,16 @@ def main():
     #   ⛔ 스무딩은 k 격자 미수렴을 고치지 않는다 — 보기 좋게 만들 뿐이다.
     ap.add_argument("--smooth", type=float, default=0.15,
                     help="Gaussian sigma (eV). family 규약 0.15. 0 이면 raw")
-    ap.add_argument("--dir", required=True)
+    ap.add_argument("--dir", default=None)
+    ap.add_argument("--from_csv", default=None,
+                    help="redraw the PDOS figure from a raw table (E_eV,…,total_dos,<element>…; e.g. "
+                         "db/properties/<sys>_pdos.csv) — QE files not needed. Needs --summary")
+    ap.add_argument("--summary", default=None,
+                    help="<sys>_dos_summary.json written by this tool (EF, VBM/CBM, gap source, characters)")
+    ap.add_argument("--formats", default="png",
+                    help="--from_csv only: comma list of file types, e.g. 'png,svg,pdf'")
+    ap.add_argument("--allow_dos_gap", action="store_true",
+                    help="--from_csv only: draw even if the summary gap is not fixed-occ nscf (label says so)")
     ap.add_argument("--prefix", default="V0")
     ap.add_argument("--out_prefix", default=None)
     ap.add_argument("--e_min", type=float, default=-3.0)
@@ -365,6 +409,10 @@ def main():
     ap.add_argument("--title", default=None,
                     help="optional plot title (e.g., composition)")
     args = ap.parse_args()
+    if args.from_csv:
+        return redraw_from_csv(args)
+    if not args.dir:
+        raise SystemExit("⛔ give --dir (QE dos.x/projwfc.x output) or --from_csv + --summary")
 
     d = Path(args.dir)
     out_pref = args.out_prefix or args.prefix
