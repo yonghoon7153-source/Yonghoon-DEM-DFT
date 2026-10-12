@@ -146,5 +146,14 @@
     "러너_로그": "'✅ 끝 — 시드 3 4 5 · 다음: 회수(새 worktree) → repo 에서 시드 게이트 · T₅₀ 스캔 → 600 K 러너'",
     "공존_예외": "D-2026-10-05-gabia-uma-coexist-elastic-li2s-control 은 3 시드가 끝나 소멸했다 (결정 항목은 비준 지문 때문에 안 건드린다 · 소멸 기록 = 이 칸) · 600 K MD 로 넘어가지 않는다",
     "⏭": "회수 (새 worktree) → repo 시드 게이트 · T₅₀ 스캔 → 600 K 러너 — 기계는 따로 정한다 (gabia GPU 는 지금 Li₃Nd r2 GPU pw.x 가 쓴다 · GPU pw.x↔UMA 동시 금지) · 트랙 li2s = 외부 1저자"
+  },
+  "✅_gabia_회수_2026_10_12": {
+    "at": "2026-10-13 01:23 KST (= 10-12 16:23 UTC) · gabia · 사용자 붙여넣기",
+    "커밋": "faa6dac li2s control B quench raw (gabia seeds 3-5) — push 는 자격 증명 입력을 물었다 (gabia 도 push 에 인증이 걸린다)",
+    "경로": "db/raw/lpscl_glass_control_li3ps4_2026_10_05/gabia/ — B/seed3·4·5 (final.vasp · final.xyz · final_relax.log · gr_partials.csv · initial.xyz · md_init_raw.xyz · plan.json · prerelax.log · result.json · seed_gate.json · thermo.csv · traj.xyz) · logs/ (seed*.log · seed*_gate.log · seed*_pmon.tsv) · run_quench_gabia.log · quench_gabia.tsv",
+    "repo_재확인": "SHA256SUMS 47 파일 sha256sum -c 통과 · 59 MB · 80 MB 넘어 뺀 파일 없음",
+    "곁가지": "첫 고친 블록이 '업로드 worktree 가 이미 있다' 로 멈췄다 — /data/work/wt_li2sB_up_1012 (HEAD ee83432d2 · origin 에 없는 커밋 = 앞선 어느 시도가 커밋까지 하고 push 를 못 한 것) · 새 블록은 그 경로를 읽기만 하고 시각 붙은 새 경로로 올렸다 · 옛 경로는 회수 폴더 트리 해시가 원격과 같고 커밋 안 된 변경이 0 일 때만 지우는 정리 블록을 따로 줬다",
+    "kgy": "같은 날 kgy 블록은 가드에서 멈췄다 (계정 kgy 였으나 RUN 폴더 또는 ~/lldvar/.git 폴더 검사 중 하나 실패 — ~/lldvar 가 linked worktree 면 .git 이 파일이다) · 가드를 'git rev-parse 로 묻기' 로 바꾸고 실패 조건을 찍는 판을 다시 줬다",
+    "⏭": "kgy seed1·2 회수 → repo 에서 5 시드 해시 대조 → 시드 게이트 (A 원장 문턱) · 밀도 이탈 · T₅₀ 스캔 → 600 K 러너 B 일반화 (결과 전 · 시험 포함) · 트랙 li2s = 외부 1저자"
   }
 }
