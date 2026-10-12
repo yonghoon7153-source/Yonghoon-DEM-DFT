@@ -47,12 +47,15 @@
 ## 4. 발사 (짧은 Codex 검토 GO + 1저자 발사 승인 뒤)
 
 ```bash
-cd ~/dem-audit && git fetch origin claude/sdcp-dem-manuscript-si-pqwtv8 && git checkout --detach <발사 커밋>
+cd ~/dem-audit && git fetch origin claude/stoic-knuth-NObVQ && git checkout --detach <발사 커밋>
 PY=$(ls ~/Yonghoon-DEM-DFT/venv/bin/python ~/Yonghoon-DEM-DFT/.venv/bin/python3 2>/dev/null | head -1); R=~/netsupp20_$(git rev-parse --short HEAD)
 $PY scripts/run_network_194_parallel.py run --root "$R" --cohorts lhss --dry-run --observe-imports 2>&1 | grep -E "코드 |기대 망 세대|전이 의존|지연 import|fork|입력 지문|원자료 · 메시 문제|⛔"   # §2 · §3 값과 같아야
 $PY scripts/run_network_194_parallel.py run --root "$R" --cohorts lhss --observe-imports 2>&1 | tee ~/netsupp20_run_$(date +%m%d_%H%M).log | tail -40
 ```
 
+- ⚠ **10-12 문서 개정 (결과 0 건 · Codex 보충 20 지원 검토 §5 끝 · 수정 계획 `docs/reviews/sup20_fix_plan_20261012.md` §4 ③)** — 위 fetch 예시의 가지를
+  옛 연장 세션 가지 `claude/sdcp-dem-manuscript-si-pqwtv8` 에서 본 가지 `claude/stoic-knuth-NObVQ` 로 고쳤다 (연장 세션 병합 뒤 발사 · 194 등록 §4 와 같은 가지) ·
+  `<발사 커밋>` = SUP20-01 · 02 수정을 담은 최종 핀 · 대상 · 지문 (§2) · 코드 신원 (§3) · 판정 · 관문 (§5) · 순서는 그대로.
 - 194 배치 = 194 등록 §4 제안 블록 그대로 (`--observe-imports` · `--cohorts` 기본 lhs,lhsx · 같은 발사 커밋 · 다른 ROOT) — **194 먼저**, 끝난 뒤 보충 20.
 - 원 dump 위치가 수확 때와 다르면 `--root-from` · `--root-to` (194 등록과 같은 규칙).  `--cohorts lhs,lhsx,lhss` 한 배치 (214) 는 등록 집합이 아니다 — 배포 관문이 받지 않는다.
 
