@@ -9,7 +9,7 @@
 
 ## 0. 순서
 
-① WSL 재수확 (`1e09f661d` · 명령 = `docs/data/lhs_supp_runs_20261006/README.md` 끝) → 반입 · r2 와 키별 대조 →
+① ✅ WSL 재수확 (`1e09f661d` · 10-12 · 20 / 20) → ✅ 반입 · r2 와 키별 대조 (값 동일 · §2) →
 ② 설계 어댑터 (lhss 20 → 130 인계 스키마) · lhss 열 구성 (✅ 1저자 10-12 Q6 = (가) lhs 132 열 · volfrac_free 하중 빈칸) → ③ 인계 생성기 · 배포 생성기 214 결합 (시험 먼저) → ④ 이 등록 비준 (⬜ 1저자) →
 ⑤ 짧은 Codex 검토 → GO → ⑥ 발사 핀 사전 점검 (fast16 + real4 · 깨끗한 트리 · 새 ROOT 둘 · 194 등록 §1 과 같은 단계) →
 ⑦ 같은 날 **194 먼저 → 보충 20** (같은 발사 커밋 · 다른 ROOT) → ⑧ 배치마다 §5 관문 → ⑨ v1.3 한 번에 (두 배치 결합 관문).
@@ -28,13 +28,13 @@
 |---|---|
 | 케이스 수 | 20 (lhss 20) |
 | `ids_sha256` ('case\tcohort' 줄 · (코호트, 케이스) 순 · 실행기 `ids_digest`) | `991cf1150b183f64bc69926a8b3e7c05453ec47e13b89ba3a6ad2fd2c981c694` |
-| `raw_sha256_table_sha256` | ⬜ 재수확 반입 뒤 (실행기 dry-run 이 같은 값을 찍어야) |
-| 코호트 TSV sha256 | ⬜ 재수확 반입 뒤 |
+| `raw_sha256_table_sha256` | `a7aaa3c8c7683f1835a096acb83ecdb055eaf5f129221f7067c5f34462807d0e` (10-12 · r3 반입 뒤 실행기 `plan_input_digest` 를 그대로 불러 계산 · 원자료 sha 결손 0 · 발사 핀 dry-run 이 같은 값을 찍어야) |
+| 코호트 TSV sha256 | `69d3f913072288b1d6b8ca8a14e43b0bc8f80e8836a8f79a9b26b2d8ed6dcaf7` (`docs/data/lhss_descriptors_cov_1e09f661d/_cohort.tsv` = r2 코호트 표와 같은 바이트) |
 
 - 원 dump = WSL `~/lhss_local` (ibb 최종 프레임 묶음 tgz sha256 `16398b6578ad2a588238ea883ee9c125c26d2bc8ac20cc738d810b5f464c572d` · 공통 step = 끝 step 이하 가장 큰 10,000 배수 ·
   `docs/data/lhs_supp_runs_20261006/README.md`) · 수확 JSON `raw.{atom,contact,mesh,deck}.sha256` = 워커 같은 프레임 관문의 대조값 (다르면 그 케이스 REFUSED).
-- 수확 v3 = 재수확 r3 (`1e09f661d`) → `docs/data/lhss_descriptors_cov_1e09f661d/` (⬜) · union → `docs/data/lhss_union_1e09f661d/lhss20_union.tsv` (⬜) ·
-  설계 어댑터 출력 = `docs/data/lhss_design_adapted_20261012.csv` (✅ 10-12 · `scripts/lhss_design_adapter.py` = lhsx 어댑터 `adapt_row` 재사용 · 20 행 × 40 열 · sha256 `df505b79a756ee3fe2759c740bfb43282dd69035c5a9fb9354a657300117dc0c` · 상자 50 µm 검사 = r2 union (재수확 r3 반입 뒤 다시) · 본 열 `loading_mAh_cm2` = 1저자 10-12 **Q6 (가)** — 2mAh_fixed 10 = 2.0 (설계 입력) · volfrac_free 10 = 빈칸 (하중은 설계 입력이 아님 · 역산값은 출처 열 `lhss_loading_mAh_cm2` 에만) · 배포 lhss = lhs 와 같은 132 열 · 규칙 ↔ SE 비율 = 생성기 경계 `SE_SPLIT` 0.30 (am_pct 70) 대조 · 옛 39 열판 `ea92cee6…` = 역사) — 실행기 `COHORT_SPECS['lhss']` 의 경로 그대로.
+- 수확 v3 = 재수확 r3 (`1e09f661d`) → `docs/data/lhss_descriptors_cov_1e09f661d/` (✅ 10-12 반입 · `registered_id_set('supp20')` = 20 쌍 · `991cf115…` 같음) · union → `docs/data/lhss_union_1e09f661d/lhss20_union.tsv` (✅ 10-12 · r2 union 과 칸 차이 0) · r2 ↔ r3 키별 대조 = `docs/data/lhs_supp_runs_20261006/README.md` 끝 ·
+  설계 어댑터 출력 = `docs/data/lhss_design_adapted_20261012.csv` (✅ 10-12 · `scripts/lhss_design_adapter.py` = lhsx 어댑터 `adapt_row` 재사용 · 20 행 × 40 열 · sha256 `df505b79a756ee3fe2759c740bfb43282dd69035c5a9fb9354a657300117dc0c` · 상자 50 µm 검사 = r2 union → ✅ 10-12 r3 union 으로 다시 = 20/20 · 출력 바이트 같음 (sha256 `df505b79…` — 어댑터는 union 값을 싣지 않는다 · 어댑터 머리말의 "r3 반입 전" 문구는 리뷰 핀 그대로 둔다) · 본 열 `loading_mAh_cm2` = 1저자 10-12 **Q6 (가)** — 2mAh_fixed 10 = 2.0 (설계 입력) · volfrac_free 10 = 빈칸 (하중은 설계 입력이 아님 · 역산값은 출처 열 `lhss_loading_mAh_cm2` 에만) · 배포 lhss = lhs 와 같은 132 열 · 규칙 ↔ SE 비율 = 생성기 경계 `SE_SPLIT` 0.30 (am_pct 70) 대조 · 옛 39 열판 `ea92cee6…` = 역사) — 실행기 `COHORT_SPECS['lhss']` 의 경로 그대로.
   r2 (`a20fc1875` 계열 · `docs/data/lhs_supp_runs_20261006/lhss_harvest_20261011_r2.tgz`) = 기록으로 보존 · 인계 원천 아님.
 
 ## 3. 코드 신원

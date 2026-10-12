@@ -416,6 +416,12 @@ $$
   양 = 판 (plate · wall · punch) 속도 — 전극 DEM 카드 값 0.002 m/s [33] · 0.01 m/s [37] · 0.003 m/s [35] · 0.00707 m/s [18] · 0.75 mm/s [29] · 상단 벽 최대 0.2 m/s [8].
   이 값들의 밀도 · 축척 규약은 카드에서 확인하지 않았다 → 우리 0.01 mm/s 와 같은 표에 나란히 놓지 않는다.
   준정적 판정 = 관성수 [6] · 무차원 전단변형률 속도 [15] · 운동 / 위치 에너지 비 < 1 % (MPFEM · 카드 `demirtas2021_mpfem_hollow_sphere_die_compaction` · 이 보고서 참고문헌 밖) · 속도 사다리 [33].
+- **원문 낱말 확인** (10-12 · 리포 PDF `docs/literature_coverage/pdfs/` pdftotext — 1저자 질문 *"실제로 plate velocity 라는 게 있어?"*): 다섯 편 모두 **"plate velocity" 를 낱말 그대로 쓰지 않는다**
+  ("plate velocity · plate speed · platen velocity · wall velocity · punch velocity" 0 건).  원문 = Lyu 2025 [37] *"moving the pressure plate downward along the z-axis with a constant speed of 0.01 m/s"* ·
+  *"constant-velocity compression"* · Ngandjong 2021 [33] *"moving the upper plane at a speed of 0.002 m s⁻¹"* · *"The plane speed was selected …"* (SI S6 *"Effect of plane speed"*) ·
+  Sangrós Giménez 2020 [29] *"The absolute velocity of each plate was set as equal to the velocity of the sample holder …"* · Varkey 2026 [18] *"moving the upper plate with a constant velocity"* ·
+  *"a constant displacement rate of 0.00707 m s⁻¹ on the pressing plate"* · He 2026 [35] = 식의 기호 *v*_Plate (카드 · PDF 리포 밖 → 주변 문장 [미확인]).
+  ⇒ 뜻은 다섯 편 모두 같은 양 (판이 움직이는 속도) · 슬라이드 항목 이름 = **Plate velocity** (1저자 결정 · He 2026 기호와 같은 뜻) · 문장 꼴 = *"the upper plate was moved downward at a constant velocity of 0.01 mm/s"* (Lyu · Varkey 꼴).
 
 ## 10. 배터리 전극 DEM 문헌 속 위치
 
