@@ -1,4 +1,8 @@
-"""ps45 다섯 조성 — 이온 · 전자전도도 (Tabor = Physics 모드 · 세대 2 망 FULL) 발표 양식 그림 + Origin CSV.  값 = network_cases.tsv 그대로."""
+"""ps45 다섯 조성 — 이온 · 전자전도도 (Physics 모드 · 세대 2 망 FULL) 발표 양식 그림 + Origin CSV.  값 = network_cases.tsv 그대로.
+
+⛔ 10-13 표기 정정 (Codex ps45 σ_e 보고 기준 판정 §4 · 원장 PS45E-02 · SELF-109): 옛 docstring "(Tabor = Physics 모드)" 는 이온 열에만 맞다 —
+이온 = SE–SE Physics g2 면적 (Tabor 소성 면적 포함) · 전자 = AM–AM 간선 전부 native 접촉 원판 (native_unsupported_pair) + ψ 곱셈 협착 (Tabor 아님).
+파일 이름 (sigma_*_tabor) 은 1저자 Origin · 덱 연결 때문에 그대로 둔다 · 값 · 그림 바이트 무변경 (CSV 전자 열 머리 두 칸만 바뀐다)."""
 import csv, os, sys
 import matplotlib
 matplotlib.use('Agg')
@@ -35,9 +39,9 @@ def main(tsv, out):
     draw(xs, se, 'Electronic conductivity (mS/cm)', os.path.join(out, 'sigma_e_tabor.png'), '{:.2f}')
     with open(os.path.join(out, 'sigma_tabor_g2.csv'), 'w', encoding='utf-8', newline='') as f:
         w = csv.writer(f, lineterminator='\n')
-        w.writerow(['PC:SC', 'Ionic conductivity (Tabor)', 'Electronic conductivity (Tabor)'])
+        w.writerow(['PC:SC', 'Ionic conductivity (Tabor)', 'Electronic conductivity (Physics g2: native AM-AM area + psi)'])
         w.writerow(['wt%', 'mS/cm', 'mS/cm'])
-        w.writerow(['조성', 'sigma_full_mScm_physics · 망 FULL · SE σ₀ 3.0 mS/cm (펠릿값)', 'electronic_sigma_full_mScm_physics · 망 FULL (Stage E 파괴 보정 전) · AM 입자 σ 입력 50 mS/cm (CL-92: 측정 NCM811 의 약 10 배) · 탄소 첨가제 없음'])
+        w.writerow(['조성', 'sigma_full_mScm_physics · 망 FULL · SE σ₀ 3.0 mS/cm (펠릿값)', 'electronic_sigma_full_mScm_physics · 망 FULL (Stage E 파괴 보정 전) · AM 입자 σ 입력 50 mS/cm (CL-92: 측정 NCM811 의 약 10 배) · 탄소 첨가제 없음 · AM–AM 간선 전부 native 원판 면적 + ψ 곱셈 협착 (Tabor 아님 · PS45E-02)'])
         for x, a, b in zip(xs, si, se):
             w.writerow([x, repr(a), repr(b)])
     print('σ_ion', [round(v, 4) for v in si]); print('σ_e', [round(v, 3) for v in se])

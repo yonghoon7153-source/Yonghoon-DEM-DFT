@@ -1,6 +1,6 @@
-PC:SC,Ionic conductivity (Tabor),Electronic conductivity (Tabor)
+PC:SC,Ionic conductivity (Tabor),Electronic conductivity (Physics g2: native AM-AM area + psi)
 wt%,mS/cm,mS/cm
-조성,sigma_full_mScm_physics · 망 FULL · SE σ₀ 3.0 mS/cm (펠릿값),electronic_sigma_full_mScm_physics · 망 FULL (Stage E 파괴 보정 전) · AM 입자 σ 입력 50 mS/cm (CL-92: 측정 NCM811 의 약 10 배) · 탄소 첨가제 없음
+조성,sigma_full_mScm_physics · 망 FULL · SE σ₀ 3.0 mS/cm (펠릿값),electronic_sigma_full_mScm_physics · 망 FULL (Stage E 파괴 보정 전) · AM 입자 σ 입력 50 mS/cm (CL-92: 측정 NCM811 의 약 10 배) · 탄소 첨가제 없음 · AM–AM 간선 전부 native 원판 면적 + ψ 곱셈 협착 (Tabor 아님 · PS45E-02)
 0:10,0.206431,6.191108
 3:7,0.260718,3.899533
 5:5,0.290814,2.689311

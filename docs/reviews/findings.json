@@ -9625,6 +9625,79 @@
         "docs/data/lhs_network194_11fcf91e8/handover_v12_20261006/lhsx_handover_v12_20261006_columns.tsv (v1.2 인계 — 같음)",
         "docs/reviews/sup20_fix_plan_20261012.md (§2 정정 표지 · 구현 기록)"
       ]
+    },
+    {
+      "id": "PS45E-01",
+      "severity": "P2",
+      "status": "open",
+      "owner": "claude",
+      "found_by": "codex 10-13 ps45 σ_e 보고 기준 검토 (요청서 codex_ps45_sigma_e_basis_request_20261012 의 답 · 코드 핀 46cd0bdb8 · 실행 핀 0801d4ceb = network_conductivity.py 바이트 같음 · 실제 build_network · solve_network · run_decomposition · _run_all_networks 합성 15 입자 망 18 가지 · 저장 증서 재구성 10 · 덱 · AM scaffold 조성 재계산 · Ketter SI · Source Data · Minnmann 학위논문 재수록 · Wang 원 그림 · Trevisanello 원문 — 실침대 인자 OFF 다섯 망 · DEM · WSL 미실행 · Windows Python 3.12.14 NumPy 2.5.3 SciPy 1.16.3)",
+      "opened_in": "docs/reviews/codex_review_ps45_sigmae_reporting_20261013.md",
+      "title": "실제 ps45 침대를 \"NCM 고체 기준 60 vol%\" 로 부르고 Minnmann 61 vol% 와 같은 조성이라 본 비교 — 실행 덱 (in.ps_*_r45.liggghts 템플릿 줄) 밀도 4.8 / 2.0 g/cm³ · 질량 0.816 : 0.184 → 명목 64.8855 % · 구 체적 (scaffold · 덤프 개수) 64.7077–64.9201 % (60 % = 4.85 / 1.64 로 낸 다른 규약) · Minnmann 61 vol% = 기공 포함 전체 부피 (고체 ≈ 70.93 % · 53 vol% → 고체 ≈ 61.63 %) · Ketter 60 vol% = 고체 기준",
+      "note": "판정문 §0 ①② · §5-1 · §5-2 · §7.  자리: docs/reviews/codex_ps45_sigma_e_basis_request_20261012.md §1 침대 줄 · f 줄 (발송본 — 원문 유지 · 머리 표지 + 원장이 정오표) · docs/data/ps45_r45_network_g2_20261007/README.md §σ_e 문헌 줄 (고침 — 이 항목을 올린 묶음) · 2차년도 보고 덱 p11 표 · p15 각주 (1저자 PPT · 리포 밖 · ⬜ 1저자).  무너지는 결론: \"같은 NCM 비율 문헌 (≈ 1 mS/cm) 대비 3–10 배 낮다\" 의 '같은 비율' · \"Minnmann 61 vol% = 우리 60 %\".  무너지지 않는 것: 망 계산값 (기하 · 개수 · σ) · 문헌 값 자체 (Ketter 60 vol% 고체 DC 1.03488 · EIS 1.12144 · 순수 5.22147 · Minnmann 53 vol% 1.11 · 61 vol% 1.43 / 0.697 mS/cm).  같은 기하에 4.85 / 1.64 를 붙이면 질량 84.43–84.55 wt% 가 돼 81.6 wt% 침대가 아니다 — 밀도만 바꿔 \"60 % 침대\" 로 부를 수 없다.  상자 기준 AM 분율 (52.5–55.1 %) · Minnmann 식 14 % 기공 환산 (55.8 % 전체) 과 섞지 않는다.  최소 해결 증거 (판정문 §7): 실제 덱 밀도 · 구 체적 고체 분율, 문헌 기공 분모를 분리한 표 · 각주.  우리 재현 (10-13 · HEAD 58f40a002): Codex composition_basis 탐침 무변경 = 판정값 차이 0 · 독립 재계산 (SE scaffold 행 · 덱 템플릿 줄) 64.9065 · 64.9025 · 64.7077 · 64.7937 · 64.9201 % (Codex 와 ≤ 1.5e-13) · 개수 = 덤프 5/5.  우리 쪽 경위 = SELF-108.  ⬜ claimed_fixed = 덱 p11 · p15 (1저자) 와 README 가 함께 고쳐진 뒤.",
+      "evidence_tests": [
+        "docs/reviews/codex_review_ps45_sigmae_reporting_20261013.md (§5-1 표 · §5-2 비교표 · §7)",
+        "docs/reviews/codex_ps45_sigmae_reporting_evidence_20261013/evidence/composition_basis.json (Codex — 덱 · AM scaffold · 덤프 개수 · 구 체적 고체 분율)",
+        "docs/reviews/codex_ps45_sigmae_reporting_evidence_20261013/_repro_ours_20261013/solid_fraction_check.json (우리 독립 재계산 — SE scaffold 행 · 64.7077–64.9201 %)"
+      ]
+    },
+    {
+      "id": "PS45E-02",
+      "severity": "P2",
+      "status": "open",
+      "owner": "claude",
+      "found_by": "codex 10-13 ps45 σ_e 보고 기준 검토 (요청서 codex_ps45_sigma_e_basis_request_20261012 의 답 · 코드 핀 46cd0bdb8 · 실행 핀 0801d4ceb = network_conductivity.py 바이트 같음 · 실제 build_network · solve_network · run_decomposition · _run_all_networks 합성 15 입자 망 18 가지 · 저장 증서 재구성 10 · 덱 · AM scaffold 조성 재계산 · Ketter SI · Source Data · Minnmann 학위논문 재수록 · Wang 원 그림 · Trevisanello 원문 — 실침대 인자 OFF 다섯 망 · DEM · WSL 미실행 · Windows Python 3.12.14 NumPy 2.5.3 SciPy 1.16.3)",
+      "opened_in": "docs/reviews/codex_review_ps45_sigmae_reporting_20261013.md",
+      "title": "전자 Physics g2 를 \"Tabor 면적\" 으로 부르는 표지 — 전자 망 간선은 전부 AM–AM 이고 plastic_coverage.py:622–623 이 native 접촉 원판을 그대로 돌려준다 (다섯 침대 8,970 · 5,794 · 3,878 · 2,208 · 733 간선 전부 native_unsupported_pair) → Hertz 대비 차이 = ψ 곱셈 협착 법칙 (Maxwell ↔ ψ) · SE 용 Tabor 소성 면적을 AM 에 쓴 결과가 아님 · make_sigma_tabor_figs.py 의 \"Electronic conductivity (Tabor)\"",
+      "note": "판정문 §0 ③ · §4 · §7.  자리: docs/data/ps45_r45_network_g2_20261007/make_sigma_tabor_figs.py (docstring · CSV 머리) · sigma_tabor_g2.csv 머리 (Origin 열 이름) · README 값 표 \"σ_e · Tabor\" 줄 · 2차년도 보고 덱 p15 σe− 막대 (1저자 PPT · 리포 밖 · ⬜ 1저자).  출력 수치 자체는 이 이유로 무효가 아니다 (판정문 §7).  권고 명칭: 주 = \"Hertz H0 / Maxwell 협착 모형\" · 감도 = \"Physics g2 / native AM 접촉 면적 + ψ 곱셈 협착 모형\".  Physics 가 크다고 실험 검증된 소성 전도 증가로 읽지 않는다 · 두 모드 차이는 통계 오차 막대가 아니다.  이온 쪽 \"Tabor\" (SE–SE Physics g2 면적) 는 이 결함에 들지 않는다.  리포 표지 고침 (수치 · 파일 이름 무변경) = 이 항목을 올린 묶음 — 스크립트 docstring · CSV 머리 (스크립트 재생성 = 같은 바이트 확인) · README 줄 표지.  우리 재현: Codex report_arithmetic 무변경 = native_unsupported_pair 다섯 침대 전수 같음.  우리 쪽 경위 = SELF-109.  ⬜ claimed_fixed = 덱 p15 (1저자) 뒤.  웹앱 같은 오표기 (10-13 검색): 케이스 페이지 행 이름 \"σ_e^physics — Tabor plastic film (mS/cm)\" = webapp/app.py:2522 (행 이름) · 1871 · 2867 (같은 문자열을 열쇠로 쓰는 유령 행 억제 · 행 대응표) · webapp/templates/single.html:2784 (짧은 이름 대응 — app.py 문자열과 짝) · 머리 webapp/app.py:2440 \"Physics 계열 v1 (Network solver — Tabor plastic film + volume conservation)\" — webapp/app.py 는 봉인 32 파일 (code_fp e8b2496b…) 이라 이번에 고치지 않았다 (값 무관 · 표지만 · ⬜ 194 · 보충 20 배치 뒤 웹앱 묶음 = 1저자).  관찰 (확인 전 · 이 판정 범위 밖): 열 행 \"κ^physics — Tabor plastic film\" 은 AM–AM (native) 과 AM–SE · SE–SE (Tabor 사다리) 가 섞인 망이다.",
+      "evidence_tests": [
+        "docs/reviews/codex_review_ps45_sigmae_reporting_20261013.md (§4 — 전자 Physics g2 = native 원판 + ψ · 권고 명칭)",
+        "docs/reviews/codex_ps45_sigmae_reporting_evidence_20261013/evidence/report_arithmetic.json (Codex — electronic_area_binding_counts_physics = native_unsupported_pair 전수 · 10 레코드)",
+        "docs/reviews/codex_ps45_sigmae_reporting_evidence_20261013/_repro_ours_20261013/report_arithmetic.json (우리 재현 — 키 261/261 같음)"
+      ]
+    },
+    {
+      "id": "PS45E-03",
+      "severity": "P2",
+      "status": "open",
+      "owner": "claude",
+      "found_by": "codex 10-13 ps45 σ_e 보고 기준 검토 (요청서 codex_ps45_sigma_e_basis_request_20261012 의 답 · 코드 핀 46cd0bdb8 · 실행 핀 0801d4ceb = network_conductivity.py 바이트 같음 · 실제 build_network · solve_network · run_decomposition · _run_all_networks 합성 15 입자 망 18 가지 · 저장 증서 재구성 10 · 덱 · AM scaffold 조성 재계산 · Ketter SI · Source Data · Minnmann 학위논문 재수록 · Wang 원 그림 · Trevisanello 원문 — 실침대 인자 OFF 다섯 망 · DEM · WSL 미실행 · Windows Python 3.12.14 NumPy 2.5.3 SciPy 1.16.3)",
+      "opened_in": "docs/reviews/codex_review_ps45_sigmae_reporting_20261013.md",
+      "title": "파일을 바꾸지 않는 monkeypatch (SIGMA_AM_ELECTRONIC 0.0041 · sigma_AM_relative → 1) 결과를 \"봉인 파일 해시가 같다\" 는 이유로 원 생산물과 같은 모형으로 다루는 위험 — 실행 중 교체한 상수 · 함수는 파일 code_fp 에 남지 않는다 · 소비자가 0.05 를 되돌리면 tau_flux.sigma0_binding_problems (:708–745) 가 전자 증서 셋을 거부한다 · 현행 수치 증서에 PC 상대 인자 ON/OFF 필드가 없다",
+      "note": "판정문 §3-3 · §7 — \"이 항목은 제안된 진단 실행의 예방 조건이지, 아직 실행하지 않은 결과가 잘못 발행되었다는 발견이 아니다\".  최소 해결 증거: 별도 보고용 runtime variant 원장 (manifest) 에 원 코드 핀 · 해시 · wrapper 해시 · 입력 기하 · 접촉 해시 · sigma_ref 0.0041 · 상대 인자 ON/OFF · 반경 · 상 사상 · 접촉 · 전극 · bulk 규약 · 수치 증서 · 원 case ID 를 기록하고 출력 · 증서 해시와 연결 · 원 생산 JSON · TSV · 상태 · code_fp 무변경 · 단위 환산 표 = readout-only · 인자 OFF 재풀이 = report-only model variant 로 표지.  우리 재현: Codex code_scaling 무변경 = 0.0041 패치 중 binding 문제 0 · 0.05 복원 뒤 3 (두 모드) 같음.  준비 (결과 0 건): 결과 전 등록 docs/reviews/ps45_sigmae_factor_off_registration_20261013.md + 보고 전용 실행기 scripts/ps45_sigmae_factor_off_variant.py (봉인 파일 무변경 · 별도 출력 · 필수 manifest · 생산 폴더 거부 · 합성 PC-only ×35/8 패치 검증 · 대조 팔 = 저장 증서 q) → 1저자 WSL 실행 → Codex 확인 뒤 claimed_fixed.",
+      "evidence_tests": [
+        "docs/reviews/codex_review_ps45_sigmae_reporting_20261013.md (§3-3 · §7 PS45E-03)",
+        "docs/reviews/codex_ps45_sigmae_reporting_evidence_20261013/evidence/code_scaling.json (Codex — top_level_checks: 패치 중 sigma_binding_problems 0 · 복원 뒤 3)",
+        "docs/reviews/codex_ps45_sigmae_reporting_evidence_20261013/_repro_ours_20261013/code_scaling.json (우리 재현 — 같음)"
+      ]
+    },
+    {
+      "id": "SELF-108",
+      "severity": "P3",
+      "status": "open",
+      "owner": "claude",
+      "found_by": "codex 10-13 ps45 σ_e 보고 기준 검토 §0 ① · §5-1 (우리 요청서 §1 사실 줄 대조)",
+      "opened_in": "docs/reviews/codex_review_ps45_sigmae_reporting_20261013.md",
+      "title": "요청서 §1 · ps45 g2 README §σ_e 가 이 침대를 \"NCM 고체 기준 60 vol% (밀도 4.85 · 1.64 g cm⁻³ — 덱 p11 표 · [산술])\" 로 적고 문헌 60–61 vol% 와 \"같은 NCM 비율\" 이라 대조했다 — 실행 덱 밀도는 4.8 / 2.0 (템플릿 줄 density constant 4800 · 2000) → 명목 64.8855 % · 구 체적 64.7077–64.9201 % · Minnmann 61 vol% 는 기공 포함 (고체 ≈ 70.9 %)",
+      "note": "결과 0 건 · 망 계산값 무변경 · 결함 자체 = PS45E-01 (P2).  자리: docs/reviews/codex_ps45_sigma_e_basis_request_20261012.md §1 침대 줄 · f 줄 (발송본 — 원문 유지 · 머리 표지 + 이 원장이 정오표) · docs/data/ps45_r45_network_g2_20261007/README.md §σ_e 문헌 줄 (고침 — 이 항목을 올린 묶음 · 옛 문장은 정정 표지와 함께 남긴다) · docs/session_20260923_progress.md 10-12 줄 (원문 유지 · 10-13 줄이 정정) · 1저자 대화 (채팅 표 · 보고).  교훈: 부피분율을 낼 때 덱 실행 줄의 밀도 (particletemplate/sphere … density constant) 를 먼저 본다 — 보고 덱 표의 물성 (4.85 · 1.64) 은 다른 규약일 수 있다 (규율 ⑥ 의 수치판 — 실물에서 가져온다) · 문헌 vol% 는 분모 (고체만 ↔ 기공 포함) 를 원문에서 확인한 뒤에 같은 양이라 쓴다.",
+      "evidence_tests": [
+        "docs/reviews/codex_review_ps45_sigmae_reporting_20261013.md (§5-1 — 4.85/1.64 이면 59.9935 % · 덱 4.8/2.0 이면 64.8855 %)",
+        "docs/reviews/codex_ps45_sigmae_reporting_evidence_20261013/_repro_ours_20261013/solid_fraction_check.json (우리 독립 재계산)"
+      ]
+    },
+    {
+      "id": "SELF-109",
+      "severity": "P3",
+      "status": "open",
+      "owner": "claude",
+      "found_by": "codex 10-13 ps45 σ_e 보고 기준 검토 §4 (make_sigma_tabor_figs.py 표지 대조 · native_unsupported_pair 전수)",
+      "opened_in": "docs/reviews/codex_review_ps45_sigmae_reporting_20261013.md",
+      "title": "전자 망 Physics 결과를 \"Tabor\" 로 적었다 — ps45 g2 README 값 표 \"σ_e · Tabor (mS/cm)\" 줄 · make_sigma_tabor_figs.py docstring \"(Tabor = Physics 모드)\" · sigma_tabor_g2.csv 머리 \"Electronic conductivity (Tabor)\" (Origin 열 이름) · 진행 기록 10-07 줄 \"σ_e Tabor 6.19 → 1.67\" — 전자 망 간선은 전부 AM–AM 이라 Physics 면적 = native 원판 (Tabor 소성 면적 아님 · 차이 = ψ 협착 법칙) · 요청서 (Physics 로 적음) 에는 없음",
+      "note": "결과 · 수치 무변경 · 결함 자체 = PS45E-02 (P2).  고침 = 이 항목을 올린 묶음 (README 줄 · 스크립트 docstring · CSV 머리 — 파일 이름 sigma_e_tabor.png · sigma_tabor_g2.csv · make_sigma_tabor_figs.py 는 1저자 Origin · 덱 연결 때문에 그대로 두고 README 에 표지) · 진행 기록 10-07 줄 = 원문 유지 (10-13 줄이 정정) · 덱 p15 = ⬜ 1저자.  이온 쪽 \"Tabor\" (SE–SE Physics g2 = Tabor 소성 면적 포함) 는 이 결함이 아니다.  교훈: 모드 이름 (physics) 을 물리 이름 (Tabor) 으로 바꿔 부를 때는 그 채널의 간선 종류마다 실제로 쓰인 면적 규칙 (area_binding_counts_physics) 을 먼저 본다.  웹앱 같은 오표기 (10-13 검색): 케이스 페이지 행 이름 \"σ_e^physics — Tabor plastic film (mS/cm)\" = webapp/app.py:2522 (행 이름) · 1871 · 2867 (같은 문자열을 열쇠로 쓰는 유령 행 억제 · 행 대응표) · webapp/templates/single.html:2784 (짧은 이름 대응 — app.py 문자열과 짝) · 머리 webapp/app.py:2440 \"Physics 계열 v1 (Network solver — Tabor plastic film + volume conservation)\" — webapp/app.py 는 봉인 32 파일 (code_fp e8b2496b…) 이라 이번에 고치지 않았다 (값 무관 · 표지만 · ⬜ 194 · 보충 20 배치 뒤 웹앱 묶음 = 1저자).  관찰 (확인 전 · 이 판정 범위 밖): 열 행 \"κ^physics — Tabor plastic film\" 은 AM–AM (native) 과 AM–SE · SE–SE (Tabor 사다리) 가 섞인 망이다.",
+      "evidence_tests": [
+        "docs/reviews/codex_review_ps45_sigmae_reporting_20261013.md (§4 — native_unsupported_pair 전수 · \"Electronic conductivity (Tabor)\" 는 이 전자 가지를 잘못 설명)",
+        "docs/data/ps45_r45_network_g2_20261007/make_sigma_tabor_figs.py (고친 표지 — 값 · 파일 이름 무변경)"
+      ]
     }
   ]
 }
