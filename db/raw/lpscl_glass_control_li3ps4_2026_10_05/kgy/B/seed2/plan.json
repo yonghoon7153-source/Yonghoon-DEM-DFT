@@ -1,0 +1,43 @@
+{
+ "system": "B",
+ "seed": 2,
+ "n_atoms": 120,
+ "composition": {
+  "Li": 45,
+  "P": 15,
+  "S": 60
+ },
+ "start_density_g_cm3": 1.2,
+ "T_melt_K": 1200.0,
+ "T_final_K": 300.0,
+ "melt_ps": 100.0,
+ "quench_rate_K_s": 1000000000000.0,
+ "quench_ps": 900.0,
+ "hold_ps": 50.0,
+ "dt_fs": 2.0,
+ "save_ps": 1.0,
+ "G2_declared_before_results": true,
+ "card": "db/properties/lpscl_li2s_interphase_prereg_2026_09_11.json",
+ "게이트_입력": {
+  "G2_quench_rate_K_s": 1000000000000.0,
+  "ensemble": "NPT",
+  "thermostat": "Berendsen",
+  "barostat": "Berendsen",
+  "target_pressure_GPa": 0.0,
+  "barostat_params": {
+   "taut_fs": 100.0,
+   "taup_fs": 1000.0,
+   "compressibility_au": 8.0
+  },
+  "⛔_엄밀성": "Berendsen 은 부피 변동을 정확한 NPT 분포로 표본화하지 않는다 (Bernetti–Bussi 2020) — 구조 생성용이지 앙상블 통계용이 아니다.",
+  "final_relax": {
+   "kind": "FIRE",
+   "fmax_eV_A": 0.05,
+   "cell": "fixed",
+   "⛔": "밀도는 **마지막 NPT 셀**의 값이고 구조 지표는 그 셀을 고정한 완화 구조의 값이다 (개정 ③ — '300 K 평형 유리의 평균값' 이 아니다)."
+  },
+  "G4_band_card": "db/properties/lpscl_li2s_layer1_amendment_2026_09_12.json",
+  "읽는_곳": "melt_quench_uma.py --gate_check <run_dir>"
+ },
+ "uma_inference_mode": "turbo"
+}
