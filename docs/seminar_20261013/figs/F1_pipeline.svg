@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+  "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg xmlns:xlink="http://www.w3.org/1999/xlink" width="623.622047pt" height="232.440945pt" viewBox="0 0 623.622047 232.440945" xmlns="http://www.w3.org/2000/svg" version="1.1">
+ <metadata>
+  <rdf:RDF xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:cc="http://creativecommons.org/ns#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+   <cc:Work>
+    <dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage"/>
+    <dc:date>2026-10-12T22:01:13.272942</dc:date>
+    <dc:format>image/svg+xml</dc:format>
+    <dc:creator>
+     <cc:Agent>
+      <dc:title>Matplotlib v3.11.2, https://matplotlib.org/</dc:title>
+     </cc:Agent>
+    </dc:creator>
+   </cc:Work>
+  </rdf:RDF>
+ </metadata>
+ <defs>
+  <style type="text/css">*{stroke-linejoin: round; stroke-linecap: butt}</style>
+ </defs>
+ <g id="figure_1">
+  <g id="patch_1">
+   <path d="M 0 232.440945 
+L 623.622047 232.440945 
+L 623.622047 0 
+L 0 0 
+L 0 232.440945 
+z
+" style="fill: none"/>
+  </g>
+  <g id="axes_1">
+   <g id="patch_2">
+    <path d="M 26.78514 160.410448 
+L 135.932362 160.410448 
+Q 142.523378 160.410448 142.523378 150.546614 
+L 142.523378 26.656861 
+Q 142.523378 16.793027 135.932362 16.793027 
+L 26.78514 16.793027 
+Q 20.194125 16.793027 20.194125 26.656861 
+L 20.194125 150.546614 
+Q 20.194125 160.410448 26.78514 160.410448 
+z
+" clip-path="url(#p6f47cace44)" style="fill: #ffffff; stroke: #1f3a68; stroke-width: 1.4; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_3">
+    <path d="M 146.104861 88.601738 
+Q 156.496354 88.601738 165.434403 88.601738 
+" clip-path="url(#p6f47cace44)" style="fill: none; stroke: #6b7280; stroke-width: 1.3; stroke-linecap: round"/>
+    <path d="M 159.834403 85.801738 
+L 165.434403 88.601738 
+L 159.834403 91.401738 
+z
+" clip-path="url(#p6f47cace44)" style="fill: #6b7280; stroke: #6b7280; stroke-width: 1.3; stroke-linecap: round"/>
+   </g>
+   <g id="patch_4">
+    <path d="M 177.060301 160.410448 
+L 286.207522 160.410448 
+Q 292.798538 160.410448 292.798538 150.546614 
+L 292.798538 26.656861 
+Q 292.798538 16.793027 286.207522 16.793027 
+L 177.060301 16.793027 
+Q 170.469285 16.793027 170.469285 26.656861 
+L 170.469285 150.546614 
+Q 170.469285 160.410448 177.060301 160.410448 
+z
+" clip-path="url(#p6f47cace44)" style="fill: #ffffff; stroke: #1f3a68; stroke-width: 1.4; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_5">
+    <path d="M 296.380022 88.601738 
+Q 306.771514 88.601738 315.709563 88.601738 
+" clip-path="url(#p6f47cace44)" style="fill: none; stroke: #6b7280; stroke-width: 1.3; stroke-linecap: round"/>
+    <path d="M 310.109563 85.801738 
+L 315.709563 88.601738 
+L 310.109563 91.401738 
+z
+" clip-path="url(#p6f47cace44)" style="fill: #6b7280; stroke: #6b7280; stroke-width: 1.3; stroke-linecap: round"/>
+   </g>
+   <g id="patch_6">
+    <path d="M 327.335461 160.410448 
+L 436.482683 160.410448 
+Q 443.073699 160.410448 443.073699 150.546614 
+L 443.073699 26.656861 
+Q 443.073699 16.793027 436.482683 16.793027 
+L 327.335461 16.793027 
+Q 320.744445 16.793027 320.744445 26.656861 
+L 320.744445 150.546614 
+Q 320.744445 160.410448 327.335461 160.410448 
+z
+" clip-path="url(#p6f47cace44)" style="fill: #ffffff; stroke: #1f3a68; stroke-width: 1.4; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_7">
+    <path d="M 446.655182 88.601738 
+Q 457.046675 88.601738 465.984724 88.601738 
+" clip-path="url(#p6f47cace44)" style="fill: none; stroke: #6b7280; stroke-width: 1.3; stroke-linecap: round"/>
+    <path d="M 460.384724 85.801738 
+L 465.984724 88.601738 
+L 460.384724 91.401738 
+z
+" clip-path="url(#p6f47cace44)" style="fill: #6b7280; stroke: #6b7280; stroke-width: 1.3; stroke-linecap: round"/>
+   </g>
+   <g id="patch_8">
+    <path d="M 477.610621 160.410448 
+L 586.757843 160.410448 
+Q 593.348859 160.410448 593.348859 150.546614 
+L 593.348859 26.656861 
+Q 593.348859 16.793027 586.757843 16.793027 
+L 477.610621 16.793027 
+Q 471.019606 16.793027 471.019606 26.656861 
+L 471.019606 150.546614 
+Q 471.019606 160.410448 477.610621 160.410448 
+z
+" clip-path="url(#p6f47cace44)" style="fill: #ffffff; stroke: #6b7280; stroke-width: 1.4; stroke-linejoin: miter"/>
+   </g>
+   <g id="text_1">
+    <text style="font-weight: 700; font-size: 11.5px; font-family: 'DejaVu Sans'; fill: #1f3a68" transform="translate(29.619532 59.120862)">Powder packing</text>
+    <text style="font-weight: 700; font-size: 11.5px; font-family: 'DejaVu Sans'; fill: #1f3a68" transform="translate(17.760157 72.924007)">and die compaction</text>
+   </g>
+   <g id="text_2">
+    <text style="font-size: 9.2px; font-family: 'DejaVu Sans'; fill: #333333" transform="translate(22.702282 118.139701)">Discrete element method</text>
+    <text style="font-size: 9.2px; font-family: 'DejaVu Sans'; fill: #333333" transform="translate(20.216845 129.182216)">(soft spheres, contact law)</text>
+   </g>
+   <g id="text_3">
+    <text style="font-weight: 700; font-size: 11.5px; font-family: 'DejaVu Sans'; fill: #1f3a68" transform="translate(170.497037 59.120862)">Plastic compaction</text>
+    <text style="font-weight: 700; font-size: 11.5px; font-family: 'DejaVu Sans'; fill: #1f3a68" transform="translate(175.354888 72.924007)">of the electrolyte</text>
+   </g>
+   <g id="text_4">
+    <text style="font-size: 9.2px; font-family: 'DejaVu Sans'; fill: #333333" transform="translate(180.526474 118.139701)">Material point method</text>
+    <text style="font-size: 9.2px; font-family: 'DejaVu Sans'; fill: #333333" transform="translate(168.74113 129.182216)">(J2 plasticity, DEM scaffold)</text>
+   </g>
+   <g id="text_5">
+    <text style="font-weight: 700; font-size: 11.5px; font-family: 'DejaVu Sans'; fill: #1f3a68" transform="translate(350.909384 59.120862)">Voxelized</text>
+    <text style="font-weight: 700; font-size: 11.5px; font-family: 'DejaVu Sans'; fill: #1f3a68" transform="translate(333.666572 72.924007)">microstructure</text>
+   </g>
+   <g id="text_6">
+    <text style="font-size: 9.2px; font-family: 'DejaVu Sans'; fill: #333333" transform="translate(328.199759 118.139701)">Finite-volume transport</text>
+    <text style="font-size: 9.2px; font-family: 'DejaVu Sans'; fill: #333333" transform="translate(321.121509 129.182216)">(ionic, electronic, thermal)</text>
+   </g>
+   <g id="text_7">
+    <text style="font-weight: 700; font-size: 11.5px; font-family: 'DejaVu Sans'; fill: #6b7280" transform="translate(501.426224 59.121311)">Electrode</text>
+    <text style="font-weight: 700; font-size: 11.5px; font-family: 'DejaVu Sans'; fill: #6b7280" transform="translate(502.544779 72.923557)">response</text>
+   </g>
+   <g id="text_8">
+    <text style="font-size: 9.2px; font-family: 'DejaVu Sans'; fill: #333333" transform="translate(483.067014 118.139701)">Reaction distribution,</text>
+    <text style="font-size: 9.2px; font-family: 'DejaVu Sans'; fill: #333333" transform="translate(499.011045 129.182216)">rate capability</text>
+   </g>
+   <g id="patch_9">
+    <path d="M 81.358751 191.15912 
+Q 81.358751 179.348578 81.358751 167.538036 
+" style="fill: none; stroke-dasharray: 2.4,1.6; stroke-dashoffset: 0; stroke: #6b7280; stroke-width: 0.8; stroke-linecap: round"/>
+   </g>
+   <g id="text_9">
+    <text style="font-size: 8.4px; font-family: 'DejaVu Sans'; fill: #6b7280" transform="translate(54.726814 202.136188)">calibrated to</text>
+    <text style="font-size: 8.4px; font-family: 'DejaVu Sans'; fill: #6b7280" transform="translate(29.146845 212.218485)">compaction experiments</text>
+   </g>
+   <g id="patch_10">
+    <path d="M 231.633912 191.15912 
+Q 231.633912 179.348578 231.633912 167.538036 
+" style="fill: none; stroke-dasharray: 2.4,1.6; stroke-dashoffset: 0; stroke: #6b7280; stroke-width: 0.8; stroke-linecap: round"/>
+   </g>
+   <g id="text_10">
+    <text style="font-size: 8.4px; font-family: 'DejaVu Sans'; fill: #6b7280" transform="translate(205.001974 202.136188)">calibrated to</text>
+    <text style="font-size: 8.4px; font-family: 'DejaVu Sans'; fill: #6b7280" transform="translate(172.293818 212.218485)">pure-electrolyte compaction</text>
+   </g>
+   <g id="patch_11">
+    <path d="M 381.909072 191.15912 
+Q 381.909072 179.348578 381.909072 167.538036 
+" style="fill: none; stroke-dasharray: 2.4,1.6; stroke-dashoffset: 0; stroke: #6b7280; stroke-width: 0.8; stroke-linecap: round"/>
+   </g>
+   <g id="text_11">
+    <text style="font-size: 8.4px; font-family: 'DejaVu Sans'; fill: #6b7280" transform="translate(356.696603 202.136188)">anchored to</text>
+    <text style="font-size: 8.4px; font-family: 'DejaVu Sans'; fill: #6b7280" transform="translate(323.308572 212.218485)">conductivity measurements</text>
+   </g>
+  </g>
+ </g>
+ <defs>
+  <clipPath id="p6f47cace44">
+   <rect x="4.902968" y="1.8" width="616.919079" height="228.840945"/>
+  </clipPath>
+ </defs>
+</svg>

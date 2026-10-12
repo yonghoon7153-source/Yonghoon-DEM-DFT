@@ -1,0 +1,21 @@
+{
+ "1": "title",
+ "2": "CLAUDE.md frame [1]–[5]; docs/report_20261021 2-2",
+ "3": "ps73 stages README §6 (porosity exact union 31.81 · 25.09 · 16.68 · 16.49); report_20261021 G1 (20.59 · 18.67 · 17.67 · 16.49 · 16.90)",
+ "4": "ps45_r45_network_g2 README (tau2 7.2433 · 5.9733 · 5.4495 · 5.0297 · 5.2864; σ_ion 0.0587–0.0893; constriction share 73–75 %; CF tau2 1.25–1.79)",
+ "5": "dem_governing_equations_background_20261011.md §5.1 · §10.3 · §11; DEMP-01 (57.9 %)",
+ "6": "CLAUDE.md DEM↔MPM frame; 2D champion E 1.53 / σy 0.15; 3D locked E 1.53 · ν 0.49 · σy 0.30",
+ "7": "CLAUDE.md 3D MPM (ν 0.49 · K 25.5 ≈ B0 26.23); CL-94 (10 % = calibration target, source unverified); DPC cross-check",
+ "8": "CLAUDE.md scaffold cross-validation + 09-09 correction (CDX-16); fam_platen_prereg §11 (ε_sphere 1.13 %, 14.5 %p over-compaction)",
+ "9": "CLAUDE.md §5 two-solver table; CL-81 (contact-free branch; median 4.04× vs full network, n = 157)",
+ "10": "CL-60 (centerline); phase_a_rep100 README (ORDER-ROBUST 72/72, replay 0.00000 %); report_20261021 G6",
+ "11": "CL-24 (live: 1.4215 → 1.1621 → 1.0849; 1.0742 → 0.9926 → 0.9908); CL-41 hold (finer-grid values not quotable); CL-72 (lower-bound claim retracted)",
+ "12": "sdcp_sigma_e_dcp_anchor_registration_20261012 (54.0 · 70.6 ↔ 4.47 · 12.4); ps45_sigmae_factor_off_20261013 (0.391 · 0.406 · 0.402 · 0.375 · 0.467); Codex §6-1 footnote",
+ "13": "ps45_plane_load_20261007 README (AM–AM 59.56 · 54.63 · 52.37 · 48.46 · 56.91 %); RB-01/02 (interpretation on hold); ps73 stages §6 (SE σ_VM)",
+ "14": "sdcp_gain_prereg_v2 (h1 verdict, values hold CL-33/41); phase_a_rep100 README; lee_abs_sigma_e_prereg §5 (R 2.074, Q 0.840); release v1.2 README",
+ "15": "release v1.2 README; report_20261021 G3 · G5a · G5b; lhs_ml_crosscheck_20261005 (OOF R² 0.990 vs 0.980)",
+ "16": "Rint v3.1; fam_platen_prereg §12; dem_unloading_ps45_prereg §13; hetero_thesis §4",
+ "17": "summary of slides 3–15",
+ "18": "references from canonical literature cards only",
+ "19": "closing"
+}
