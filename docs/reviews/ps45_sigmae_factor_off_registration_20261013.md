@@ -108,8 +108,8 @@ cp "$OUT.tgz" "$DL/"
 
 | 항목 | 값 |
 |---|---|
-| 1저자 비준 | ⬜ |
-| 실행 커밋 (`git log -1`) · dirty | ⬜ |
-| 입력 뿌리 | ⬜ |
-| `--selftest` · `--check-only` · 실행 rc | ⬜ |
-| 받은 tgz sha256 | ⬜ |
+| 1저자 비준 | ✅ 10-13 *"이것도 하고서 넘어갈까"* (Physics g2 감도 팔 포함 · 등록 그대로) |
+| 실행 커밋 (`git log -1`) · dirty | `66d537f24` · dirty 0 |
+| 입력 뿌리 | `~/ps45_network_g2_0801d4ceb/work/results` (10-07 세대 2 배치 · 대체 폴더 안 씀) |
+| `--selftest` · `--check-only` · 실행 rc | 앞 둘 = 화면만 (묶음에 없음) · 실행 = manifest run_status ok · 다섯 케이스 ok |
+| 받은 tgz sha256 | `21730156…` (26,050 B) — 결과 = `docs/data/ps45_sigmae_factor_off_20261013/README.md` |
