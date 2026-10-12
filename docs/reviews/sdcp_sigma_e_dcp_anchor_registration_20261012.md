@@ -21,10 +21,10 @@
 | SBE | **4.47** | DC 분극 (kgy) |
 | DBE | **12.4** | DC 분극 (kgy) |
 
-- ⬜ Q2 (미확인 — 아는 것만 받으면 이 표에 적는다): 조성 (모델 = SBE 70 : 27 : 3 : 1 · DBE 70 : 27 : 3 : 0.5 : 0.5 (NCM : LPSCl : VGCF : PTFE (: SDCP)) 와 같은가) · 두께 · 성형 / 측정 압력 · 온도 · 전극 · PTFE 0.5 wt% 단독 (SDCP 없음) 대조 유무.
+- 조성 = 실조성 = 모델과 같다 (1저자 10-12): SBE 70 : 27 : 3 : 1 · DBE 70 : 27 : 3 : 0.5 : 0.5 (NCM : LPSCl : VGCF : PTFE (: SDCP)) — 모델 SBE 침대 = PTFE 1 · DBE = PTFE 0.5 + SDCP 0.5 (`docs/sdcp_318_base_sbe_dbe_comparison.md` §1).
+- ⬜ 미확인 (아는 것만 받으면 적는다): 두께 · 성형 / 측정 압력 · 온도 · 전극 · PTFE 0.5 wt% 단독 (SDCP 없음) 대조 유무.
   조성이 다르면 보정을 다시 한다 (이 문서의 규칙 그대로 · 결과 전 개정).
 - 처음 전달값 5.59 · 12.3 은 1저자가 정정했다 — 쓰지 않는다.
-
 ## 2. 고정 (원고 Table S3 생산 설정 그대로 — `docs/data/w4_ptfe_centerline_20260827/` 매니페스트)
 
 vox 0.15 µm · 브리지 0.48 µm (러너 기본 · 명시) · VGCF 선분 스탬프 · PTFE `centerline` · SDCP 구 스탬프 Ø0.30 µm (`SDCP_SPHERE_D=0.30`) · plate rule p2-occupied-surface-first ·
