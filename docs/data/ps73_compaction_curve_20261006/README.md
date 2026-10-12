@@ -120,3 +120,16 @@
 ### 7-2. 다음 (선택)
 
 - 1 → 50 ms 는 기록 간격 (점 둘) 사이 직선이다.  낙하를 촘촘히 보이려면 투입 재현을 50,000 step 까지 늘린다 (2 코어 약 2.4 시간 · 원 로그 KE 1,000 step 마다 대조) — 미실행 · 1저자 선택.
+
+## 8. 시간–판 속도 (10-12 · `make_fig_velocity_ms.py`)
+
+- **1저자 결정 (10-12)**: 압력 그래프에 맞춘 시간–속도 그래프 — 권고 Q4 (압력 ms 판과 같은 x 축 · 같은 단계 점선 · Origin CSV) 비준 · *"그냥 40만 이후에 1e-5 일정하게 그리고 relaxation에서 그치면 되니까 괜찮을듯"*.
+- **값** = 덱 설정 `variable press_speed equal 0.01` (덱 9 개 모두 · `log.liggghts` 의 풀린 줄 -0.01) = 0.01 덱 m/s → 실제 길이 환산 **0.01 mm/s (= 1 × 10⁻⁵ m/s)** (덱 1 m = 실제 1 mm).
+  발표 · 보고 용어 = *plate velocity 0.01 mm/s* (1저자 10-12 · `docs/dem_governing_equations_background_20261011.md` §9-1 — 같은 절의 계산값 (실제 밀도 기준 0.32 m/s 등) 은 내부 기록).
+- **계단 선** (점 7): 0 ms 판 없음 (정의상 0) · 200.002 ms 판 놓음 (고정) · 400.002 ms 압축 시작 0 → 0.01 · 3125 ms 이완 시작 0.01 → 0 · 3225 ms 런 끝.
+- **판 메시로 확인** (`curve/plate.csv` 605 장): 안정화 40 장 · 이완 20 장 = 판 높이 변화 0 · 압축 545 장 = 한 직선 (기울기 0.01 덱 m/s · 최대 잔차 8.3e-17 덱 m) ·
+  직선이 압축 시작 · 이완 시작에서 고정 판 높이와 이어짐 (끊김 없음) · `key_numbers.json` 판 하강 0.01 µm / 1,000 step 과 같음 · 결과 `key_numbers_velocity_ms.json`.
+  검사 = `make_fig_velocity_ms.py --selftest` 13/13 (반례 — 압축 한 점 어긋남 · 다른 속도 · 안정화 · 이완 중 판 움직임 · 빠진 메시 · 경계 어긋남 · 덱 속도 둘 · 옆으로 움직이는 판 = 전부 거부).
+- **한정어**: x = Simulation time (축척 덱 시간 — §5) · 속도 = 실제 길이 / 시뮬레이션 시간 · 0 구간 (Settling · Relaxation) 은 x 축선과 겹친다 (압력 그래프와 같음).
+- **파일**: `origin/ps73_ms_plate_velocity.csv` (A ms · B mm/s · C Source) · `origin/ps73_ms_plate_velocity.ogs` · `previews/ps73_ms_plate_velocity.png` · `previews/ps73_ms_plate_velocity.svg` · `key_numbers_velocity_ms.json`.
+  `make_fig_ms.py` 는 미리보기 함수에 y 눈금 글자 선택 인자 (`yfmt` · 기본 없음) 만 더했다 — 기존 그림 · CSV 바이트 그대로 (다시 돌려 확인 · 자체시험 35/35).

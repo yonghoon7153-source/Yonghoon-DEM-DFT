@@ -319,11 +319,13 @@ def ogs_text(name, what, color, y_from, y_to, y_inc, ylabel, bounds_ms, target=N
             f'layer.y.from = {y_from:g}; layer.y.to = {y_to:g}; layer.y.inc = {y_inc:g}; layer.y.minor = 1;\nlabel -yl {ylabel};\n' + vb + tgt)
 
 
-def draw_preview(series, color, ylabel, ylim, ystep, name, bounds_ms, target=None, settle_label_at='top', marker_sources=()):
+def draw_preview(series, color, ylabel, ylim, ystep, name, bounds_ms, target=None, settle_label_at='top', marker_sources=(),
+                 yfmt=None):
+    """yfmt (선택 · 10-12 판 속도 그래프) = y 눈금 글자 함수 — 없으면 기본 (기존 그림 바이트 그대로)."""
     import matplotlib
     matplotlib.use('Agg')
     import matplotlib.pyplot as plt
-    from matplotlib.ticker import MultipleLocator
+    from matplotlib.ticker import FuncFormatter, MultipleLocator
     gray, light = '#404040', '#9AA0A8'
     plt.rcParams.update({'font.family': 'Liberation Sans', 'font.size': 11, 'axes.edgecolor': gray, 'axes.labelcolor': gray,
                          'xtick.color': gray, 'ytick.color': gray, 'axes.linewidth': 1.0, 'xtick.direction': 'out',
@@ -355,6 +357,8 @@ def draw_preview(series, color, ylabel, ylim, ystep, name, bounds_ms, target=Non
     ax.xaxis.set_minor_locator(MultipleLocator(500))
     ax.yaxis.set_major_locator(MultipleLocator(ystep))
     ax.yaxis.set_minor_locator(MultipleLocator(ystep / 2))
+    if yfmt is not None:
+        ax.yaxis.set_major_formatter(FuncFormatter(yfmt))
     ax.set_xlabel(XLABEL)
     ax.set_ylabel(ylabel)
     fig.tight_layout(pad=0.4)

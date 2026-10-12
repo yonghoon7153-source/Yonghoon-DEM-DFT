@@ -1,0 +1,9 @@
+﻿Simulation time,Plate velocity,Source
+ms,mm/s,
+0.000,0,no plate (0 by definition)
+200.002,0,plate placed (fixed)
+400.002,0,plate fixed (mesh)
+400.002,0.01,compression start (deck press_speed)
+3125.000,0.01,compression end (deck press_speed)
+3125.000,0,relaxation (plate fixed · mesh)
+3225.000,0,end of run (plate fixed · mesh)

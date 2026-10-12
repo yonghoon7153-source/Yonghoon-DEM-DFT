@@ -1,0 +1,87 @@
+{
+ "x_axis": {
+  "label": "Simulation time (ms)",
+  "time_ms": "step × 1e-3",
+  "dt_s": 1e-06
+ },
+ "phase_bounds_step": {
+  "1": 1,
+  "2": 200002,
+  "3": 400002,
+  "4": 3125000,
+  "5": 3225000
+ },
+ "phase_bounds_ms": {
+  "1": 0.001,
+  "2": 200.002,
+  "3": 400.002,
+  "4": 3125.0,
+  "5": 3225.0
+ },
+ "velocity": {
+  "deck_m_per_s": 0.01,
+  "real_mm_per_s": 0.01,
+  "real_m_per_s": 1e-05,
+  "term": "plate velocity 0.01 mm/s (1st author 10-12 · dem_governing_equations_background_20261011.md §9-1)",
+  "decks_checked": {
+   "input_ps_7_3_r45.liggghts": 0.01,
+   "input_ps_7_3_r45.liggghts.orig15000": 0.01,
+   "input_ps_7_3_r45_r2.liggghts": 0.01,
+   "input_ps_7_3_r45_r3.liggghts": 0.01,
+   "input_ps_7_3_r45_r4.liggghts": 0.01,
+   "input_ps_7_3_r45_r5.liggghts": 0.01,
+   "input_ps_7_3_r45_r6.liggghts": 0.01,
+   "input_ps_7_3_r45_r7.liggghts": 0.01,
+   "input_ps_7_3_r45_r8.liggghts": 0.01
+  }
+ },
+ "mesh_check": {
+  "n_mesh": 605,
+  "n_stabilization": 40,
+  "n_compression": 545,
+  "n_relaxation": 20,
+  "slope_deck_m_per_s": 0.010000000000000012,
+  "max_residual_deck_m": 8.326672684688674e-17,
+  "plate_z_stabilization_deck_m": 0.138302,
+  "plate_z_relaxation_deck_m": 0.111052,
+  "line_at_compression_start_minus_fixed_deck_m": -1.9999999961717307e-08,
+  "line_at_relaxation_start_minus_fixed_deck_m": 0.0
+ },
+ "series": [
+  {
+   "ms": 0.0,
+   "mm_per_s": 0.0,
+   "source": "no plate (0 by definition)"
+  },
+  {
+   "ms": 200.002,
+   "mm_per_s": 0.0,
+   "source": "plate placed (fixed)"
+  },
+  {
+   "ms": 400.002,
+   "mm_per_s": 0.0,
+   "source": "plate fixed (mesh)"
+  },
+  {
+   "ms": 400.002,
+   "mm_per_s": 0.01,
+   "source": "compression start (deck press_speed)"
+  },
+  {
+   "ms": 3125.0,
+   "mm_per_s": 0.01,
+   "source": "compression end (deck press_speed)"
+  },
+  {
+   "ms": 3125.0,
+   "mm_per_s": 0.0,
+   "source": "relaxation (plate fixed · mesh)"
+  },
+  {
+   "ms": 3225.0,
+   "mm_per_s": 0.0,
+   "source": "end of run (plate fixed · mesh)"
+  }
+ ]
+}
