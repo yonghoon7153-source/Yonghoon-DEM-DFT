@@ -1,0 +1,11 @@
+--- 821f0e151/scripts/wsl_network_smoke.py
++++ 3cedd40a5911d0606bf33ed2085d5cb93c4db2e0/scripts/wsl_network_smoke.py
+@@ -916,6 +916,8 @@
+     ch.update(over.pop('channels', {}))
+     r = dict(id='case15_network', kind='case15', stop_after='network', negative_control=_rr().CASE15_NEGCTL.get('tag', 'case15_publication_blocked'),
+              status='failed', failed_stages=['Network Solver (both modes)'], stage_e_ran=False, returned_network_run_id=None, raw_sha_ok=True,
++             #  ★ 10-11 G2RR6-01 — S0b 공용 판정이 상세 (등록 네 파일 · [actual, expected] · 앞 12 자리) 까지 보므로 픽스처도 등록 표 값을 싣는다 (stage_refbed 꼴)
++             raw_sha={k: (h[:_rr().CASE15_NEGCTL['raw_sha_prefix']],) * 2 for k, h in _rr().CASE15_NEGCTL['raw_sha256'].items()},
+              stages=_c15_solver(),
+              attempt=dict(schema='network_attempt/v2', latest_attempt_status='failed', solver_status='failed', failure_kind='solver',
+                           stage='Network Solver (both modes)', input_digests=dict(_C15_DIG),

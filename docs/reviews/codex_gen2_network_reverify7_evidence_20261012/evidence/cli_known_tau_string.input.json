@@ -1,0 +1,435 @@
+{
+  "reports": {
+    "through": {
+      "stop_after": "network",
+      "status": "done"
+    },
+    "nonthrough": {
+      "stop_after": "network",
+      "status": "done"
+    },
+    "clamp": {
+      "stop_after": "network",
+      "status": "done"
+    },
+    "case15_network": {
+      "id": "case15_network",
+      "kind": "case15",
+      "stop_after": "network",
+      "raw_sha_ok": true,
+      "raw_sha": {
+        "atom_v4_1710000.liggghts": [
+          "f40f69eccd79",
+          "f40f69eccd79"
+        ],
+        "contact_v4_1710000.liggghts": [
+          "180140701ef4",
+          "180140701ef4"
+        ],
+        "mesh_v4_1710000.stl": [
+          "2868f0898a90",
+          "2868f0898a90"
+        ],
+        "input_case15.liggghts": [
+          "172953c78a07",
+          "172953c78a07"
+        ]
+      },
+      "type_map": "1:AM_P,2:SE",
+      "type_map_errors": [],
+      "mode": "standard",
+      "cid": "case15_network",
+      "status": "failed",
+      "success": false,
+      "failed_stages": [
+        "Network Solver (both modes)"
+      ],
+      "returned_network_run_id": null,
+      "pipeline_s": 38.59,
+      "stages": [
+        {
+          "step": "Parse",
+          "rc": 0,
+          "ok": true,
+          "required": true,
+          "missing_outputs": [],
+          "stale_outputs": [],
+          "verify_failed": false,
+          "err": ""
+        },
+        {
+          "step": "Contact Analysis",
+          "rc": 0,
+          "ok": true,
+          "required": true,
+          "missing_outputs": [],
+          "stale_outputs": [],
+          "verify_failed": false,
+          "err": ""
+        },
+        {
+          "step": "Coverage Physics vs Hertzian",
+          "rc": 0,
+          "ok": true,
+          "required": false,
+          "missing_outputs": [],
+          "stale_outputs": [],
+          "verify_failed": false,
+          "err": ""
+        },
+        {
+          "step": "Network Solver (both modes)",
+          "rc": 0,
+          "ok": false,
+          "required": true,
+          "missing_outputs": [],
+          "stale_outputs": [],
+          "verify_failed": true,
+          "err": " 을 풀지 못했다 (boundary_overlap) — 미퍼콜이 아니다 · 수치 실패 = 게시 차단 (WEB-03 Q1 — 일반 · 정지 경로 모두)); physics.electronic=fail (관통 성분은 있는데 σ_e 을 풀지 못했다 (boundary_overlap) — 미퍼콜이 아니다 · 수치 실패 = 게시 차단 (WEB-03 Q1 — 일반 · 정지 경로 모두)); physics.thermal=fail (ValueError: physics_g2: 간선 (31, 29241) — ligg_area < 0 (-0.186036))"
+        },
+        {
+          "step": "Network Merge / Stage E",
+          "rc": 1,
+          "ok": null,
+          "required": null,
+          "missing_outputs": null,
+          "stale_outputs": null,
+          "verify_failed": null,
+          "err": "network 실패 → merge·Stage E 미실행 (게시본은 이전 세대 유지 · full_metrics 는 건드리지 않는다 — 최근 시도 = network_attempt.json)"
+        }
+      ],
+      "fm": {
+        "sigma_full_mScm": null,
+        "sigma_full_mScm_physics": null,
+        "electronic_sigma_full_mScm": null,
+        "electronic_sigma_full_mScm_physics": null,
+        "thermal_sigma_full_mScm": null,
+        "thermal_sigma_full_mScm_physics": null,
+        "network_run_id": null,
+        "active_network_run_id": null,
+        "network_solver_status": null,
+        "stage_e_parent_network_run_id": null,
+        "porosity": 32.83834837743689,
+        "percolation_pct": 98.15382746788936,
+        "stress_cv": 372.9146213666944,
+        "constriction_power_share_ion_hertz": null,
+        "constriction_power_share_ion_physics": null,
+        "sigma_full_mScm_stage_e": null,
+        "sigma_full_status": null,
+        "sigma_full_status_physics": null
+      },
+      "stage_e_ran": false,
+      "stage_e_missing": [
+        "sigma_full_mScm_stage_e",
+        "sigma_full_mScm_stage_e_physics",
+        "electronic_sigma_full_mScm_stage_e",
+        "electronic_sigma_full_mScm_stage_e_physics",
+        "thermal_sigma_full_mScm_stage_e"
+      ],
+      "provenance": {
+        "network_run_id": null,
+        "code_sha": null,
+        "solver_status": "unknown",
+        "provenance_state": "missing",
+        "note": "pre-provenance artifact (도장 이전 세대)"
+      },
+      "attempt": {
+        "schema": "network_attempt/v2",
+        "network_attempt_run_id": "20261009T211633-f913f864",
+        "solver_status": "failed",
+        "latest_attempt_status": "failed",
+        "failure_kind": "solver",
+        "reason": " 을 풀지 못했다 (boundary_overlap) — 미퍼콜이 아니다 · 수치 실패 = 게시 차단 (WEB-03 Q1 — 일반 · 정지 경로 모두)); physics.electronic=fail (관통 성분은 있는데 σ_e 을 풀지 못했다 (boundary_overlap) — 미퍼콜이 아니다 · 수치 실패 = 게시 차단 (WEB-03 Q1 — 일반 · 정지 경로 모두)); physics.thermal=fail (ValueError: physics_g2: 간선 (31, 29241) — ligg_area < 0 (-0.186036))",
+        "stage": "Network Solver (both modes)",
+        "active_network_run_id": null,
+        "active_status": "none",
+        "previous_generation_kept": false,
+        "input_digests": {
+          "atoms.csv": "e140e28d3daf3ad7",
+          "contacts.csv": "bcb53e13d2cc69be"
+        },
+        "code_sha": "956173e1ca28a4893845210e725dbed137222c84",
+        "attempted_at": "2026-10-09T21:16:52",
+        "argv": {
+          "type_map": "1:AM_P,2:SE",
+          "scale": 1000,
+          "contact_mode": "both"
+        }
+      },
+      "status_view": {
+        "active_network_run_id": null,
+        "active_status": "none",
+        "active_problem": "",
+        "latest_attempt_run_id": "20261009T211633-f913f864",
+        "latest_attempt_status": "failed",
+        "failure_kind": "solver",
+        "latest_attempt_stage": "Network Solver (both modes)",
+        "latest_attempt_reason": " 을 풀지 못했다 (boundary_overlap) — 미퍼콜이 아니다 · 수치 실패 = 게시 차단 (WEB-03 Q1 — 일반 · 정지 경로 모두)); physics.electronic=fail (관통 성분은 있는데 σ_e 을 풀지 못했다 (boundary_overlap) — 미퍼콜이 아니다 · 수치 실패 = 게시 차단 (WEB-03 Q1 — 일반 · 정지 경로 모두)); physics.thermal=fail (ValueError: physics_g2: 간선 (31, 29241) — ligg_area < 0 (-0.186036))",
+        "stale": false
+      },
+      "dual": {
+        "hertzian": {
+          "sigma_full": null,
+          "sigma_full_mScm": null,
+          "sigma_full_status": null,
+          "sigma_full_reason": null,
+          "boundary_rule": null,
+          "percolating_fraction": null,
+          "phi_se": null
+        },
+        "physics": {
+          "sigma_full": null,
+          "sigma_full_mScm": null,
+          "sigma_full_status": null,
+          "sigma_full_reason": null,
+          "boundary_rule": null,
+          "percolating_fraction": null,
+          "phi_se": null
+        }
+      },
+      "tau": {
+        "case": "case15_network",
+        "f_ion_hertz": null,
+        "f_ion_hertz_gap": null,
+        "tau2_ion_hertz": null,
+        "tau_ion_hertz": "3.21",
+        "ion_net_status_hertz": "NOT_COMPUTED",
+        "ion_net_status_reason_hertz": "missing_input",
+        "f_ion_physics": null,
+        "f_ion_physics_gap": null,
+        "tau2_ion_physics": null,
+        "tau_ion_physics": null,
+        "ion_net_status_physics": "NOT_COMPUTED",
+        "ion_net_status_reason_physics": "missing_input",
+        "f_ion_hertz_h12": null,
+        "f_ion_hertz_h12_gap": null,
+        "tau2_ion_hertz_h12": null,
+        "tau_ion_hertz_h12": null,
+        "ion_net_status_hertz_h12": "NOT_COMPUTED",
+        "ion_net_status_reason_hertz_h12": "missing_input"
+      },
+      "collector": "해당 없음 — 웹앱 망 경로에는 STEP3 집전체 (collector) 가 없다 (계획/미계획 = mpm_webapp_payload 생산자 · 이 시험 밖)",
+      "negative_control": "case15_publication_blocked",
+      "attempt_evidence": {
+        "schema": "wsl_network_smoke/attempt_evidence/v1",
+        "hook": "pipeline_service._RUNNER",
+        "calls": [
+          {
+            "n": 1,
+            "script": "network_conductivity.py",
+            "input_digests": {
+              "atoms.csv": "e140e28d3daf3ad7",
+              "contacts.csv": "bcb53e13d2cc69be"
+            },
+            "exception": null,
+            "exception_text": null,
+            "returncode": 0,
+            "per_mode": {
+              "hertzian": {
+                "sha256": "25620c7007d22afc46d5480fbb810e5d6e3242fe99eee9635101dca947568ba3",
+                "bytes": 19540,
+                "channels": {
+                  "ionic": {
+                    "status": "computed",
+                    "reason": null
+                  },
+                  "electronic": {
+                    "status": "failed",
+                    "reason": "관통 성분은 있는데 σ_e 을 풀지 못했다 (boundary_overlap) — 미퍼콜이 아니다 · 수치 실패 = 게시 차단 (WEB-03 Q1 — 일반 · 정지 경로 모두)"
+                  },
+                  "thermal": {
+                    "status": "failed",
+                    "reason": "관통 성분은 있는데 κ 을 풀지 못했다 (boundary_overlap) — 미퍼콜이 아니다 · 수치 실패 = 게시 차단 (WEB-03 Q1 — 일반 · 정지 경로 모두)"
+                  }
+                },
+                "read_error": null
+              },
+              "physics": {
+                "sha256": "7c78a5120924973e50c305603b1d520ad1adda4330279ddd6b3463c484e20cd7",
+                "bytes": 9439,
+                "channels": {
+                  "ionic": {
+                    "status": "computed",
+                    "reason": null
+                  },
+                  "electronic": {
+                    "status": "failed",
+                    "reason": "관통 성분은 있는데 σ_e 을 풀지 못했다 (boundary_overlap) — 미퍼콜이 아니다 · 수치 실패 = 게시 차단 (WEB-03 Q1 — 일반 · 정지 경로 모두)"
+                  },
+                  "thermal": {
+                    "status": "failed",
+                    "reason": "ValueError: physics_g2: 간선 (31, 29241) — ligg_area < 0 (-0.186036)"
+                  }
+                },
+                "read_error": null
+              }
+            }
+          }
+        ]
+      },
+      "negctl": {
+        "atoms": 65970,
+        "contacts": 182995,
+        "plate_um": 19.1455,
+        "box_um": [
+          100.0,
+          100.0
+        ],
+        "negative_area": [
+          [
+            31,
+            29241,
+            -0.186036,
+            1.05114
+          ],
+          [
+            38,
+            29241,
+            -0.186264,
+            1.0512
+          ]
+        ],
+        "channels": {
+          "ionic_hertzian": {
+            "value": [
+              0.17045824120072228,
+              0.0003263508256908428
+            ],
+            "status": "computed",
+            "reason": null,
+            "conservation_rel": 2.4032031929133505e-09,
+            "residual_rel": 9.760010783051247e-11,
+            "intersection": []
+          },
+          "ionic_physics": {
+            "value": [
+              0.18920751298295146,
+              0.00036224724398150964
+            ],
+            "status": "computed",
+            "reason": null,
+            "conservation_rel": 4.984454649176648e-09,
+            "residual_rel": 9.943326652498563e-11,
+            "intersection": []
+          },
+          "electronic_hertzian": {
+            "value": [
+              null,
+              null
+            ],
+            "status": "not_computed",
+            "reason": "boundary_overlap",
+            "conservation_rel": null,
+            "residual_rel": null,
+            "intersection": [
+              24,
+              40,
+              57,
+              103
+            ]
+          },
+          "electronic_physics": {
+            "value": [
+              null,
+              null
+            ],
+            "status": "not_computed",
+            "reason": "boundary_overlap",
+            "conservation_rel": null,
+            "residual_rel": null,
+            "intersection": [
+              24,
+              40,
+              57,
+              103
+            ]
+          },
+          "thermal_hertzian": {
+            "value": [
+              null,
+              null
+            ],
+            "status": "not_computed",
+            "reason": "boundary_overlap",
+            "conservation_rel": null,
+            "residual_rel": null,
+            "intersection": [
+              24,
+              40,
+              57,
+              103
+            ]
+          },
+          "thermal_physics": {
+            "error": "ValueError: physics_g2: 간선 (31, 29241) — ligg_area < 0 (-0.186036)"
+          }
+        }
+      }
+    }
+  },
+  "checks": [
+    {
+      "group": "A",
+      "id": "case15.proc",
+      "name": "case15_network: 자식 프로세스 정상 종료 · 보고서 있음",
+      "verdict": "PASS",
+      "detail": "rc 0  · 보고서 id 'case15_network'"
+    },
+    {
+      "group": "A",
+      "id": "case15.raw_sha",
+      "name": "case15_network: 원자료 sha256 = README 표 (압축 푼 바이트)",
+      "verdict": "PASS",
+      "detail": "{'atom_v4_1710000.liggghts': ['f40f69eccd79', 'f40f69eccd79'], 'contact_v4_1710000.liggghts': ['180140701ef4', '180140701ef4'], 'mesh_v4_1710000.stl': ['2868f0898a90', '2868f0898a90'], 'input_case15.liggghts': ['172953c78a07', '172953c78a07']}"
+    },
+    {
+      "group": "A",
+      "id": "case15.nc1_blocked",
+      "name": "case15_network: [음성 대조] 게시 차단 — failed · 실패 단계 Network Solver (both modes) · Stage E 안 돌았다 · 반환 run id 없음 (옛 성공 산출물 재사용 없음)",
+      "verdict": "PASS",
+      "detail": "status failed · 실패 단계 ['Network Solver (both modes)'] · Stage E False · run id None"
+    },
+    {
+      "group": "A",
+      "id": "case15.nc2_tau",
+      "name": "case15_network: [음성 대조] 인계 숫자 비노출 — τ 세 모드 NOT_COMPUTED · 숫자 칸 없음",
+      "verdict": "PASS",
+      "detail": "{'hertz': 'NOT_COMPUTED', 'physics': 'NOT_COMPUTED', 'hertz_h12': 'NOT_COMPUTED'} · 숫자 {}"
+    },
+    {
+      "group": "A",
+      "id": "case15.nc3_cause",
+      "name": "case15_network: [음성 대조] 원인 발화 (원덤프 직접 6 조합) — 전자 두 모드 · Hertz 열 boundary_overlap · B∩T = 입자 ID [24, 40, 57, 103] · Physics 열 음수 원자료 면적 거부 · 음수 행 2",
+      "verdict": "PASS",
+      "detail": "겹침 {'electronic_hertzian': ('boundary_overlap', [24, 40, 57, 103]), 'electronic_physics': ('boundary_overlap', [24, 40, 57, 103]), 'thermal_hertzian': ('boundary_overlap', [24, 40, 57, 103])} · Physics 열 'ValueError: physics_g2: 간선 (31, 29241) — ligg_area < 0 (-0.186036)' · 음수 행 [(31, 29241), (38, 29241)] · 증거 오류 None"
+    },
+    {
+      "group": "A",
+      "id": "case15.nc4_ionic",
+      "name": "case15_network: [음성 대조] 이온 정상 — 두 모드 computed · σ_ratio 참고 8 자리 {'hertzian': 0.00032635, 'physics': 0.00036225} · 증서 보존 · 잔차 0 이상 1e-06 미만",
+      "verdict": "PASS",
+      "detail": "{'hertzian': ('computed', 0.00032635, 2.4032031929133505e-09, 9.760010783051247e-11), 'physics': ('computed', 0.00036225, 4.984454649176648e-09, 9.943326652498563e-11)}"
+    },
+    {
+      "group": "A",
+      "id": "case15.nc5_attempt",
+      "name": "case15_network: [음성 대조] 실제 망 시도 — 이번 시도의 망 CLI 1 회 · 예외 없음 · rc 0 · per-mode 둘 · 실패 채널 = 등록 넷 (전자 두 모드 · Hertz 열 boundary_overlap · Physics 열 음수 면적 거부) · 이온 computed · 단계 rc 0 · 결손 0 · 내용 검증 거부 · 시도 기록 = 기록기 digest · 원자료 탐침과 같은 원인 (실행 실패 = TECH)",
+      "verdict": "PASS",
+      "detail": "망 CLI 1 회 · rc 0 · per-mode 둘 (sha256 25620c7007d2 · 7c78a5120924) · 실패 = 등록 넷 · 이온 computed 둘 · 단계 rc 0 · 결손 0 · 내용 검증 거부 · 시도 기록 = 망 솔버 단계 · digest {'atoms.csv': 'e140e28d3daf3ad7', 'contacts.csv': 'bcb53e13d2cc69be'} · 원자료 탐침과 같은 원인"
+    }
+  ],
+  "timings": {
+    "case15_network": {
+      "rc": 0,
+      "signal": null,
+      "start": "2026-10-09T21:16:11",
+      "end": "2026-10-09T21:16:59",
+      "wall_s": 45.94,
+      "peak_rss_mb": 773.4,
+      "user_s": 48.15,
+      "sys_s": 1.47,
+      "log": "/home/yonghoon71/g2pre_smoke_956173e1c_1009_2113/cases/case15_network/log.txt"
+    }
+  },
+  "rc": 0
+}

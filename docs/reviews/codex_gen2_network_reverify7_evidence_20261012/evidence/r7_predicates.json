@@ -1,0 +1,3700 @@
+{
+  "schema": "r7_predicate_probes/v1",
+  "review_pin": "3cedd40a5911d0606bf33ed2085d5cb93c4db2e0",
+  "scope": "Pure predicates and producer evaluate only; raw gzip display conversion read only; no DEM, WSL or network simulation.",
+  "source_sha256": {
+    "source\\scripts\\g2_network_reread.py": "248ee5c08bc57751405912454a543a5a5197e29c8869f344e9bd7af4300a63ad",
+    "source\\scripts\\wsl_network_smoke.py": "feb3e84b9c01d2dee28a158fbbd179e57a4c947325181c276d66d2cec1831b11",
+    "source\\docs\\reviews\\codex_gen2_network_reverify6_evidence_20261011\\evidence\\r6_s0b_positive.input.json": "74c6f94b78db3ce011bdb213b9a75ad4bd7b10194baaca6617a35878270dee74"
+  },
+  "raw_negative_rows": [
+    {
+      "id1": 31,
+      "id2": 29241,
+      "raw_area": "-1.86036e-07",
+      "raw_delta": "0.00105114",
+      "area_um2": -0.186036,
+      "delta_um": 1.0511400000000002,
+      "displayed": [
+        31,
+        29241,
+        -0.186036,
+        1.05114
+      ]
+    },
+    {
+      "id1": 38,
+      "id2": 29241,
+      "raw_area": "-1.86264e-07",
+      "raw_delta": "0.0010512",
+      "area_um2": -0.186264,
+      "delta_um": 1.0512,
+      "displayed": [
+        38,
+        29241,
+        -0.186264,
+        1.0512
+      ]
+    }
+  ],
+  "registered_rows_equal_producer_display": true,
+  "registered_sha_table_matches_readme": true,
+  "result_counts": {
+    "positive": 12,
+    "negative_sha": 88,
+    "negative_rows": 82,
+    "nonproducer_schema": 3,
+    "negative_stage": 11,
+    "negative_tau": 31,
+    "nonproducer_boundary": 5
+  },
+  "total": 232,
+  "mismatches": [],
+  "producer_shared_mismatches": [],
+  "results": [
+    {
+      "name": "positive_actual_20261009",
+      "category": "positive",
+      "expected": "pass",
+      "observed": "pass",
+      "contract": "Imported real report.",
+      "failed_checks": {},
+      "s0b_problem_count": 0,
+      "producer_matches_shared": true,
+      "matches_expected": true,
+      "failing_details": {}
+    },
+    {
+      "name": "positive_raw_key_order",
+      "category": "positive",
+      "expected": "pass",
+      "observed": "pass",
+      "contract": "Mapping order is immaterial.",
+      "failed_checks": {},
+      "s0b_problem_count": 0,
+      "producer_matches_shared": true,
+      "matches_expected": true,
+      "failing_details": {}
+    },
+    {
+      "name": "positive_tau_key_order",
+      "category": "positive",
+      "expected": "pass",
+      "observed": "pass",
+      "contract": "Mapping order is immaterial.",
+      "failed_checks": {},
+      "s0b_problem_count": 0,
+      "producer_matches_shared": true,
+      "matches_expected": true,
+      "failing_details": {}
+    },
+    {
+      "name": "positive_negative_row_order",
+      "category": "positive",
+      "expected": "pass",
+      "observed": "pass",
+      "contract": "Rows are compared after sorting.",
+      "failed_checks": {},
+      "s0b_problem_count": 0,
+      "producer_matches_shared": true,
+      "matches_expected": true,
+      "failing_details": {}
+    },
+    {
+      "name": "positive_check_order",
+      "category": "positive",
+      "expected": "pass",
+      "observed": "pass",
+      "contract": "Stable ID collection is unordered.",
+      "failed_checks": {},
+      "s0b_problem_count": 0,
+      "producer_matches_shared": true,
+      "matches_expected": true,
+      "failing_details": {}
+    },
+    {
+      "name": "positive_tuple_sha_pair",
+      "category": "positive",
+      "expected": "pass",
+      "observed": "pass",
+      "contract": "stage_refbed emits tuples before JSON serialization.",
+      "failed_checks": {},
+      "s0b_problem_count": 0,
+      "producer_matches_shared": true,
+      "matches_expected": true,
+      "failing_details": {}
+    },
+    {
+      "name": "positive_tuple_inner_rows",
+      "category": "positive",
+      "expected": "pass",
+      "observed": "pass",
+      "contract": "Helper explicitly supports tuple rows; JSON converts to lists.",
+      "failed_checks": {},
+      "s0b_problem_count": 0,
+      "producer_matches_shared": true,
+      "matches_expected": true,
+      "failing_details": {}
+    },
+    {
+      "name": "positive_lexical_precision",
+      "category": "positive",
+      "expected": "pass",
+      "observed": "pass",
+      "contract": "Equivalent JSON number spellings parse to identical floats.",
+      "failed_checks": {},
+      "s0b_problem_count": 0,
+      "producer_matches_shared": true,
+      "matches_expected": true,
+      "failing_details": {}
+    },
+    {
+      "name": "positive_all_blank_tau_fields_removed",
+      "category": "positive",
+      "expected": "pass",
+      "observed": "pass",
+      "contract": "No numeric exposure; missing optional numeric fields remain blank.",
+      "failed_checks": {},
+      "s0b_problem_count": 0,
+      "producer_matches_shared": true,
+      "matches_expected": true,
+      "failing_details": {}
+    },
+    {
+      "name": "positive_blank_tau_empty_strings",
+      "category": "positive",
+      "expected": "pass",
+      "observed": "pass",
+      "contract": "Empty strings retain blank-cell semantics.",
+      "failed_checks": {},
+      "s0b_problem_count": 0,
+      "producer_matches_shared": true,
+      "matches_expected": true,
+      "failing_details": {}
+    },
+    {
+      "name": "positive_check_id_name_swap",
+      "category": "positive",
+      "expected": "pass",
+      "observed": "pass",
+      "contract": "Verdicts are recomputed from report by stable ID; names/details are nonauthoritative display text.",
+      "failed_checks": {},
+      "s0b_problem_count": 0,
+      "producer_matches_shared": true,
+      "matches_expected": true,
+      "failing_details": {}
+    },
+    {
+      "name": "sha_atom_v4_1710000.liggghts_0_wrong",
+      "category": "negative_sha",
+      "expected": "reject",
+      "observed": "reject",
+      "contract": "Both sides must be lowercase hexadecimal strings of exactly 12 characters matching the registered prefix.",
+      "failed_checks": {
+        "case15.raw_sha": "FAIL"
+      },
+      "s0b_problem_count": 1,
+      "producer_matches_shared": true,
+      "matches_expected": true,
+      "failing_details": {
+        "case15.raw_sha": "raw_sha 상세 {'atom_v4_1710000.liggghts': 'actual 000000000000 ≠ expected f40f69eccd79'} — 요약 raw_sha_ok=True 와 모순"
+      }
+    },
+    {
+      "name": "sha_atom_v4_1710000.liggghts_0_uppercase",
+      "category": "negative_sha",
+      "expected": "reject",
+      "observed": "reject",
+      "contract": "Both sides must be lowercase hexadecimal strings of exactly 12 characters matching the registered prefix.",
+      "failed_checks": {
+        "case15.raw_sha": "FAIL"
+      },
+      "s0b_problem_count": 1,
+      "producer_matches_shared": true,
+      "matches_expected": true,
+      "failing_details": {
+        "case15.raw_sha": "raw_sha 상세 {'atom_v4_1710000.liggghts': \"꼴 ['F40F69ECCD79', 'f40f69eccd79'] ([actual, expected] · 각 16 진 12 자리여야)\"} — 요약 raw_sha_ok=True 와 모순"
+      }
+    },
+    {
+      "name": "sha_atom_v4_1710000.liggghts_0_full64",
+      "category": "negative_sha",
+      "expected": "reject",
+      "observed": "reject",
+      "contract": "Both sides must be lowercase hexadecimal strings of exactly 12 characters matching the registered prefix.",
+      "failed_checks": {
+        "case15.raw_sha": "FAIL"
+      },
+      "s0b_problem_count": 1,
+      "producer_matches_shared": true,
+      "matches_expected": true,
+      "failing_details": {
+        "case15.raw_sha": "raw_sha 상세 {'atom_v4_1710000.liggghts': \"꼴 ['f40f69eccd793ca96c7ba823914180e879b2c14c1c9a57f4c15af3393fce608f', 'f40f69eccd79'] ([actual, expected] · 각 16 진 12 자리여야)\"} — 요약 raw_sha_ok=True 와 모순"
+      }
+    },
+    {
+      "name": "sha_atom_v4_1710000.liggghts_0_short",
+      "category": "negative_sha",
+      "expected": "reject",
+      "observed": "reject",
+      "contract": "Both sides must be lowercase hexadecimal strings of exactly 12 characters matching the registered prefix.",
+      "failed_checks": {
+        "case15.raw_sha": "FAIL"
+      },
+      "s0b_problem_count": 1,
+      "producer_matches_shared": true,
+      "matches_expected": true,
+      "failing_details": {
+        "case15.raw_sha": "raw_sha 상세 {'atom_v4_1710000.liggghts': \"꼴 ['f40f69eccd7', 'f40f69eccd79'] ([actual, expected] · 각 16 진 12 자리여야)\"} — 요약 raw_sha_ok=True 와 모순"
+      }
+    },
+    {
+      "name": "sha_atom_v4_1710000.liggghts_0_nonhex",
+      "category": "negative_sha",
+      "expected": "reject",
+      "observed": "reject",
+      "contract": "Both sides must be lowercase hexadecimal strings of exactly 12 characters matching the registered prefix.",
+      "failed_checks": {
+        "case15.raw_sha": "FAIL"
+      },
+      "s0b_problem_count": 1,
+      "producer_matches_shared": true,
+      "matches_expected": true,
+      "failing_details": {
+        "case15.raw_sha": "raw_sha 상세 {'atom_v4_1710000.liggghts': \"꼴 ['gggggggggggg', 'f40f69eccd79'] ([actual, expected] · 각 16 진 12 자리여야)\"} — 요약 raw_sha_ok=True 와 모순"
+      }
+    },
+    {
+      "name": "sha_atom_v4_1710000.liggghts_0_integer",
+      "category": "negative_sha",
+      "expected": "reject",
+      "observed": "reject",
+      "contract": "Both sides must be lowercase hexadecimal strings of exactly 12 characters matching the registered prefix.",
+      "failed_checks": {
+        "case15.raw_sha": "FAIL"
+      },
+      "s0b_problem_count": 1,
+      "producer_matches_shared": true,
+      "matches_expected": true,
+      "failing_details": {
+        "case15.raw_sha": "raw_sha 상세 {'atom_v4_1710000.liggghts': \"꼴 [123456789012, 'f40f69eccd79'] ([actual, expected] · 각 16 진 12 자리여야)\"} — 요약 raw_sha_ok=True 와 모순"
+      }
+    },
+    {
+      "name": "sha_atom_v4_1710000.liggghts_0_bool",
+      "category": "negative_sha",
+      "expected": "reject",
+      "observed": "reject",
+      "contract": "Both sides must be lowercase hexadecimal strings of exactly 12 characters matching the registered prefix.",
+      "failed_checks": {
+        "case15.raw_sha": "FAIL"
+      },
+      "s0b_problem_count": 1,
+      "producer_matches_shared": true,
+      "matches_expected": true,
+      "failing_details": {
+        "case15.raw_sha": "raw_sha 상세 {'atom_v4_1710000.liggghts': \"꼴 [True, 'f40f69eccd79'] ([actual, expected] · 각 16 진 12 자리여야)\"} — 요약 raw_sha_ok=True 와 모순"
+      }
+    },
+    {
+      "name": "sha_atom_v4_1710000.liggghts_0_null",
+      "category": "negative_sha",
+      "expected": "reject",
+      "observed": "reject",
+      "contract": "Both sides must be lowercase hexadecimal strings of exactly 12 characters matching the registered prefix.",
+      "failed_checks": {
+        "case15.raw_sha": "FAIL"
+      },
+      "s0b_problem_count": 1,
+      "producer_matches_shared": true,
+      "matches_expected": true,
+      "failing_details": {
+        "case15.raw_sha": "raw_sha 상세 {'atom_v4_1710000.liggghts': \"꼴 [None, 'f40f69eccd79'] ([actual, expected] · 각 16 진 12 자리여야)\"} — 요약 raw_sha_ok=True 와 모순"
+      }
+    },
+    {
+      "name": "sha_atom_v4_1710000.liggghts_1_wrong",
+      "category": "negative_sha",
+      "expected": "reject",
+      "observed": "reject",
+      "contract": "Both sides must be lowercase hexadecimal strings of exactly 12 characters matching the registered prefix.",
+      "failed_checks": {
+        "case15.raw_sha": "FAIL"
+      },
+      "s0b_problem_count": 1,
+      "producer_matches_shared": true,
+      "matches_expected": true,
+      "failing_details": {
+        "case15.raw_sha": "raw_sha 상세 {'atom_v4_1710000.liggghts': 'actual f40f69eccd79 ≠ expected 000000000000'} — 요약 raw_sha_ok=True 와 모순"
+      }
+    },
+    {
+      "name": "sha_atom_v4_1710000.liggghts_1_uppercase",
+      "category": "negative_sha",
+      "expected": "reject",
+      "observed": "reject",
+      "contract": "Both sides must be lowercase hexadecimal strings of exactly 12 characters matching the registered prefix.",
+      "failed_checks": {
+        "case15.raw_sha": "FAIL"
+      },
+      "s0b_problem_count": 1,
+      "producer_matches_shared": true,
+      "matches_expected": true,
+      "failing_details": {
+        "case15.raw_sha": "raw_sha 상세 {'atom_v4_1710000.liggghts': \"꼴 ['f40f69eccd79', 'F40F69ECCD79'] ([actual, expected] · 각 16 진 12 자리여야)\"} — 요약 raw_sha_ok=True 와 모순"
+      }
+    },
+    {
+      "name": "sha_atom_v4_1710000.liggghts_1_full64",
+      "category": "negative_sha",
+      "expected": "reject",
+      "observed": "reject",
+      "contract": "Both sides must be lowercase hexadecimal strings of exactly 12 characters matching the registered prefix.",
+      "failed_checks": {
+        "case15.raw_sha": "FAIL"
+      },
+      "s0b_problem_count": 1,
+      "producer_matches_shared": true,
+      "matches_expected": true,
+      "failing_details": {
+        "case15.raw_sha": "raw_sha 상세 {'atom_v4_1710000.liggghts': \"꼴 ['f40f69eccd79', 'f40f69eccd793ca96c7ba823914180e879b2c14c1c9a57f4c15af3393fce608f'] ([actual, expected] · 각 16 진 12 자리여야)\"} — 요약 raw_sha_ok=True 와 모순"
+      }
+    },
+    {
+      "name": "sha_atom_v4_1710000.liggghts_1_short",
+      "category": "negative_sha",
+      "expected": "reject",
+      "observed": "reject",
+      "contract": "Both sides must be lowercase hexadecimal strings of exactly 12 characters matching the registered prefix.",
+      "failed_checks": {
+        "case15.raw_sha": "FAIL"
+      },
+      "s0b_problem_count": 1,
+      "producer_matches_shared": true,
+      "matches_expected": true,
+      "failing_details": {
+        "case15.raw_sha": "raw_sha 상세 {'atom_v4_1710000.liggghts': \"꼴 ['f40f69eccd79', 'f40f69eccd7'] ([actual, expected] · 각 16 진 12 자리여야)\"} — 요약 raw_sha_ok=True 와 모순"
+      }
+    },
+    {
+      "name": "sha_atom_v4_1710000.liggghts_1_nonhex",
+      "category": "negative_sha",
+      "expected": "reject",
+      "observed": "reject",
+      "contract": "Both sides must be lowercase hexadecimal strings of exactly 12 characters matching the registered prefix.",
+      "failed_checks": {
+        "case15.raw_sha": "FAIL"
+      },
+      "s0b_problem_count": 1,
+      "producer_matches_shared": true,
+      "matches_expected": true,
+      "failing_details": {
+        "case15.raw_sha": "raw_sha 상세 {'atom_v4_1710000.liggghts': \"꼴 ['f40f69eccd79', 'gggggggggggg'] ([actual, expected] · 각 16 진 12 자리여야)\"} — 요약 raw_sha_ok=True 와 모순"
+      }
+    },
+    {
+      "name": "sha_atom_v4_1710000.liggghts_1_integer",
+      "category": "negative_sha",
+      "expected": "reject",
+      "observed": "reject",
+      "contract": "Both sides must be lowercase hexadecimal strings of exactly 12 characters matching the registered prefix.",
+      "failed_checks": {
+        "case15.raw_sha": "FAIL"
+      },
+      "s0b_problem_count": 1,
+      "producer_matches_shared": true,
+      "matches_expected": true,
+      "failing_details": {
+        "case15.raw_sha": "raw_sha 상세 {'atom_v4_1710000.liggghts': \"꼴 ['f40f69eccd79', 123456789012] ([actual, expected] · 각 16 진 12 자리여야)\"} — 요약 raw_sha_ok=True 와 모순"
+      }
+    },
+    {
+      "name": "sha_atom_v4_1710000.liggghts_1_bool",
+      "category": "negative_sha",
+      "expected": "reject",
+      "observed": "reject",
+      "contract": "Both sides must be lowercase hexadecimal strings of exactly 12 characters matching the registered prefix.",
+      "failed_checks": {
+        "case15.raw_sha": "FAIL"
+      },
+      "s0b_problem_count": 1,
+      "producer_matches_shared": true,
+      "matches_expected": true,
+      "failing_details": {
+        "case15.raw_sha": "raw_sha 상세 {'atom_v4_1710000.liggghts': \"꼴 ['f40f69eccd79', True] ([actual, expected] · 각 16 진 12 자리여야)\"} — 요약 raw_sha_ok=True 와 모순"
+      }
+    },
+    {
+      "name": "sha_atom_v4_1710000.liggghts_1_null",
+      "category": "negative_sha",
+      "expected": "reject",
+      "observed": "reject",
+      "contract": "Both sides must be lowercase hexadecimal strings of exactly 12 characters matching the registered prefix.",
+      "failed_checks": {
+        "case15.raw_sha": "FAIL"
+      },
+      "s0b_problem_count": 1,
+      "producer_matches_shared": true,
+      "matches_expected": true,
+      "failing_details": {
+        "case15.raw_sha": "raw_sha 상세 {'atom_v4_1710000.liggghts': \"꼴 ['f40f69eccd79', None] ([actual, expected] · 각 16 진 12 자리여야)\"} — 요약 raw_sha_ok=True 와 모순"
+      }
+    },
+    {
+      "name": "sha_atom_v4_1710000.liggghts_both_wrong",
+      "category": "negative_sha",
+      "expected": "reject",
+      "observed": "reject",
+      "contract": "Mutually equal hashes must still match the registration.",
+      "failed_checks": {
+        "case15.raw_sha": "FAIL"
+      },
+      "s0b_problem_count": 1,
+      "producer_matches_shared": true,
+      "matches_expected": true,
+      "failing_details": {
+        "case15.raw_sha": "raw_sha 상세 {'atom_v4_1710000.liggghts': 'expected 000000000000 ≠ 등록 f40f69eccd79'} — 요약 raw_sha_ok=True 와 모순"
+      }
+    },
+    {
+      "name": "sha_atom_v4_1710000.liggghts_absent",
+      "category": "negative_sha",
+      "expected": "reject",
+      "observed": "reject",
+      "contract": "Closed four-file map.",
+      "failed_checks": {
+        "case15.raw_sha": "FAIL"
+      },
+      "s0b_problem_count": 1,
+      "producer_matches_shared": true,
+      "matches_expected": true,
+      "failing_details": {
+        "case15.raw_sha": "raw_sha 상세 키 ['contact_v4_1710000.liggghts', 'input_case15.liggghts', 'mesh_v4_1710000.stl'] ≠ 등록 네 파일 ['atom_v4_1710000.liggghts', 'contact_v4_1710000.liggghts', 'input_case15.liggghts', 'mesh_v4_1710000.stl'] — 상세 결손 · 모순 (요약 raw_sha_ok=True 만으로 통과시키지 않는다)"
+      }
+    },
+    {
+      "name": "sha_atom_v4_1710000.liggghts_three_values",
+      "category": "negative_sha",
+      "expected": "reject",
+      "observed": "reject",
+      "contract": "Pair has exactly two elements.",
+      "failed_checks": {
+        "case15.raw_sha": "FAIL"
+      },
+      "s0b_problem_count": 1,
+      "producer_matches_shared": true,
+      "matches_expected": true,
+      "failing_details": {
+        "case15.raw_sha": "raw_sha 상세 {'atom_v4_1710000.liggghts': \"꼴 ['f40f69eccd79', 'f40f69eccd79', 'f40f69eccd79'] ([actual, expected] · 각 16 진 12 자리여야)\"} — 요약 raw_sha_ok=True 와 모순"
+      }
+    },
+    {
+      "name": "sha_contact_v4_1710000.liggghts_0_wrong",
+      "category": "negative_sha",
+      "expected": "reject",
+      "observed": "reject",
+      "contract": "Both sides must be lowercase hexadecimal strings of exactly 12 characters matching the registered prefix.",
+      "failed_checks": {
+        "case15.raw_sha": "FAIL"
+      },
+      "s0b_problem_count": 1,
+      "producer_matches_shared": true,
+      "matches_expected": true,
+      "failing_details": {
+        "case15.raw_sha": "raw_sha 상세 {'contact_v4_1710000.liggghts': 'actual 000000000000 ≠ expected 180140701ef4'} — 요약 raw_sha_ok=True 와 모순"
+      }
+    },
+    {
+      "name": "sha_contact_v4_1710000.liggghts_0_uppercase",
+      "category": "negative_sha",
+      "expected": "reject",
+      "observed": "reject",
+      "contract": "Both sides must be lowercase hexadecimal strings of exactly 12 characters matching the registered prefix.",
+      "failed_checks": {
+        "case15.raw_sha": "FAIL"
+      },
+      "s0b_problem_count": 1,
+      "producer_matches_shared": true,
+      "matches_expected": true,
+      "failing_details": {
+        "case15.raw_sha": "raw_sha 상세 {'contact_v4_1710000.liggghts': \"꼴 ['180140701EF4', '180140701ef4'] ([actual, expected] · 각 16 진 12 자리여야)\"} — 요약 raw_sha_ok=True 와 모순"
+      }
+    },
+    {
+      "name": "sha_contact_v4_1710000.liggghts_0_full64",
+      "category": "negative_sha",
+      "expected": "reject",
+      "observed": "reject",
+      "contract": "Both sides must be lowercase hexadecimal strings of exactly 12 characters matching the registered prefix.",
+      "failed_checks": {
+        "case15.raw_sha": "FAIL"
+      },
+      "s0b_problem_count": 1,
+      "producer_matches_shared": true,
+      "matches_expected": true,
+      "failing_details": {
+        "case15.raw_sha": "raw_sha 상세 {'contact_v4_1710000.liggghts': \"꼴 ['180140701ef4dfd34bbda6c236837d267502d35a0372824c8720d7d8731b1b4d', '180140701ef4'] ([actual, expected] · 각 16 진 12 자리여야)\"} — 요약 raw_sha_ok=True 와 모순"
+      }
+    },
+    {
+      "name": "sha_contact_v4_1710000.liggghts_0_short",
+      "category": "negative_sha",
+      "expected": "reject",
+      "observed": "reject",
+      "contract": "Both sides must be lowercase hexadecimal strings of exactly 12 characters matching the registered prefix.",
+      "failed_checks": {
+        "case15.raw_sha": "FAIL"
+      },
+      "s0b_problem_count": 1,
+      "producer_matches_shared": true,
+      "matches_expected": true,
+      "failing_details": {
+        "case15.raw_sha": "raw_sha 상세 {'contact_v4_1710000.liggghts': \"꼴 ['180140701ef', '180140701ef4'] ([actual, expected] · 각 16 진 12 자리여야)\"} — 요약 raw_sha_ok=True 와 모순"
+      }
+    },
+    {
+      "name": "sha_contact_v4_1710000.liggghts_0_nonhex",
+      "category": "negative_sha",
+      "expected": "reject",
+      "observed": "reject",
+      "contract": "Both sides must be lowercase hexadecimal strings of exactly 12 characters matching the registered prefix.",
+      "failed_checks": {
+        "case15.raw_sha": "FAIL"
+      },
+      "s0b_problem_count": 1,
+      "producer_matches_shared": true,
+      "matches_expected": true,
+      "failing_details": {
+        "case15.raw_sha": "raw_sha 상세 {'contact_v4_1710000.liggghts': \"꼴 ['gggggggggggg', '180140701ef4'] ([actual, expected] · 각 16 진 12 자리여야)\"} — 요약 raw_sha_ok=True 와 모순"
+      }
+    },
+    {
+      "name": "sha_contact_v4_1710000.liggghts_0_integer",
+      "category": "negative_sha",
+      "expected": "reject",
+      "observed": "reject",
+      "contract": "Both sides must be lowercase hexadecimal strings of exactly 12 characters matching the registered prefix.",
+      "failed_checks": {
+        "case15.raw_sha": "FAIL"
+      },
+      "s0b_problem_count": 1,
+      "producer_matches_shared": true,
+      "matches_expected": true,
+      "failing_details": {
+        "case15.raw_sha": "raw_sha 상세 {'contact_v4_1710000.liggghts': \"꼴 [123456789012, '180140701ef4'] ([actual, expected] · 각 16 진 12 자리여야)\"} — 요약 raw_sha_ok=True 와 모순"
+      }
+    },
+    {
+      "name": "sha_contact_v4_1710000.liggghts_0_bool",
+      "category": "negative_sha",
+      "expected": "reject",
+      "observed": "reject",
+      "contract": "Both sides must be lowercase hexadecimal strings of exactly 12 characters matching the registered prefix.",
+      "failed_checks": {
+        "case15.raw_sha": "FAIL"
+      },
+      "s0b_problem_count": 1,
+      "producer_matches_shared": true,
+      "matches_expected": true,
+      "failing_details": {
+        "case15.raw_sha": "raw_sha 상세 {'contact_v4_1710000.liggghts': \"꼴 [True, '180140701ef4'] ([actual, expected] · 각 16 진 12 자리여야)\"} — 요약 raw_sha_ok=True 와 모순"
+      }
+    },
+    {
+      "name": "sha_contact_v4_1710000.liggghts_0_null",
+      "category": "negative_sha",
+      "expected": "reject",
+      "observed": "reject",
+      "contract": "Both sides must be lowercase hexadecimal strings of exactly 12 characters matching the registered prefix.",
+      "failed_checks": {
+        "case15.raw_sha": "FAIL"
+      },
+      "s0b_problem_count": 1,
+      "producer_matches_shared": true,
+      "matches_expected": true,
+      "failing_details": {
+        "case15.raw_sha": "raw_sha 상세 {'contact_v4_1710000.liggghts': \"꼴 [None, '180140701ef4'] ([actual, expected] · 각 16 진 12 자리여야)\"} — 요약 raw_sha_ok=True 와 모순"
+      }
+    },
+    {
+      "name": "sha_contact_v4_1710000.liggghts_1_wrong",
+      "category": "negative_sha",
+      "expected": "reject",
+      "observed": "reject",
+      "contract": "Both sides must be lowercase hexadecimal strings of exactly 12 characters matching the registered prefix.",
+      "failed_checks": {
+        "case15.raw_sha": "FAIL"
+      },
+      "s0b_problem_count": 1,
+      "producer_matches_shared": true,
+      "matches_expected": true,
+      "failing_details": {
+        "case15.raw_sha": "raw_sha 상세 {'contact_v4_1710000.liggghts': 'actual 180140701ef4 ≠ expected 000000000000'} — 요약 raw_sha_ok=True 와 모순"
+      }
+    },
+    {
+      "name": "sha_contact_v4_1710000.liggghts_1_uppercase",
+      "category": "negative_sha",
+      "expected": "reject",
+      "observed": "reject",
+      "contract": "Both sides must be lowercase hexadecimal strings of exactly 12 characters matching the registered prefix.",
+      "failed_checks": {
+        "case15.raw_sha": "FAIL"
+      },
+      "s0b_problem_count": 1,
+      "producer_matches_shared": true,
+      "matches_expected": true,
+      "failing_details": {
+        "case15.raw_sha": "raw_sha 상세 {'contact_v4_1710000.liggghts': \"꼴 ['180140701ef4', '180140701EF4'] ([actual, expected] · 각 16 진 12 자리여야)\"} — 요약 raw_sha_ok=True 와 모순"
+      }
+    },
+    {
+      "name": "sha_contact_v4_1710000.liggghts_1_full64",
+      "category": "negative_sha",
+      "expected": "reject",
+      "observed": "reject",
+      "contract": "Both sides must be lowercase hexadecimal strings of exactly 12 characters matching the registered prefix.",
+      "failed_checks": {
+        "case15.raw_sha": "FAIL"
+      },
+      "s0b_problem_count": 1,
+      "producer_matches_shared": true,
+      "matches_expected": true,
+      "failing_details": {
+        "case15.raw_sha": "raw_sha 상세 {'contact_v4_1710000.liggghts': \"꼴 ['180140701ef4', '180140701ef4dfd34bbda6c236837d267502d35a0372824c8720d7d8731b1b4d'] ([actual, expected] · 각 16 진 12 자리여야)\"} — 요약 raw_sha_ok=True 와 모순"
+      }
+    },
+    {
+      "name": "sha_contact_v4_1710000.liggghts_1_short",
+      "category": "negative_sha",
+      "expected": "reject",
+      "observed": "reject",
+      "contract": "Both sides must be lowercase hexadecimal strings of exactly 12 characters matching the registered prefix.",
+      "failed_checks": {
+        "case15.raw_sha": "FAIL"
+      },
+      "s0b_problem_count": 1,
+      "producer_matches_shared": true,
+      "matches_expected": true,
+      "failing_details": {
+        "case15.raw_sha": "raw_sha 상세 {'contact_v4_1710000.liggghts': \"꼴 ['180140701ef4', '180140701ef'] ([actual, expected] · 각 16 진 12 자리여야)\"} — 요약 raw_sha_ok=True 와 모순"
+      }
+    },
+    {
+      "name": "sha_contact_v4_1710000.liggghts_1_nonhex",
+      "category": "negative_sha",
+      "expected": "reject",
+      "observed": "reject",
+      "contract": "Both sides must be lowercase hexadecimal strings of exactly 12 characters matching the registered prefix.",
+      "failed_checks": {
+        "case15.raw_sha": "FAIL"
+      },
+      "s0b_problem_count": 1,
+      "producer_matches_shared": true,
+      "matches_expected": true,
+      "failing_details": {
+        "case15.raw_sha": "raw_sha 상세 {'contact_v4_1710000.liggghts': \"꼴 ['180140701ef4', 'gggggggggggg'] ([actual, expected] · 각 16 진 12 자리여야)\"} — 요약 raw_sha_ok=True 와 모순"
+      }
+    },
+    {
+      "name": "sha_contact_v4_1710000.liggghts_1_integer",
+      "category": "negative_sha",
+      "expected": "reject",
+      "observed": "reject",
+      "contract": "Both sides must be lowercase hexadecimal strings of exactly 12 characters matching the registered prefix.",
+      "failed_checks": {
+        "case15.raw_sha": "FAIL"
+      },
+      "s0b_problem_count": 1,
+      "producer_matches_shared": true,
+      "matches_expected": true,
+      "failing_details": {
+        "case15.raw_sha": "raw_sha 상세 {'contact_v4_1710000.liggghts': \"꼴 ['180140701ef4', 123456789012] ([actual, expected] · 각 16 진 12 자리여야)\"} — 요약 raw_sha_ok=True 와 모순"
+      }
+    },
+    {
+      "name": "sha_contact_v4_1710000.liggghts_1_bool",
+      "category": "negative_sha",
+      "expected": "reject",
+      "observed": "reject",
+      "contract": "Both sides must be lowercase hexadecimal strings of exactly 12 characters matching the registered prefix.",
+      "failed_checks": {
+        "case15.raw_sha": "FAIL"
+      },
+      "s0b_problem_count": 1,
+      "producer_matches_shared": true,
+      "matches_expected": true,
+      "failing_details": {
+        "case15.raw_sha": "raw_sha 상세 {'contact_v4_1710000.liggghts': \"꼴 ['180140701ef4', True] ([actual, expected] · 각 16 진 12 자리여야)\"} — 요약 raw_sha_ok=True 와 모순"
+      }
+    },
+    {
+      "name": "sha_contact_v4_1710000.liggghts_1_null",
+      "category": "negative_sha",
+      "expected": "reject",
+      "observed": "reject",
+      "contract": "Both sides must be lowercase hexadecimal strings of exactly 12 characters matching the registered prefix.",
+      "failed_checks": {
+        "case15.raw_sha": "FAIL"
+      },
+      "s0b_problem_count": 1,
+      "producer_matches_shared": true,
+      "matches_expected": true,
+      "failing_details": {
+        "case15.raw_sha": "raw_sha 상세 {'contact_v4_1710000.liggghts': \"꼴 ['180140701ef4', None] ([actual, expected] · 각 16 진 12 자리여야)\"} — 요약 raw_sha_ok=True 와 모순"
+      }
+    },
+    {
+      "name": "sha_contact_v4_1710000.liggghts_both_wrong",
+      "category": "negative_sha",
+      "expected": "reject",
+      "observed": "reject",
+      "contract": "Mutually equal hashes must still match the registration.",
+      "failed_checks": {
+        "case15.raw_sha": "FAIL"
+      },
+      "s0b_problem_count": 1,
+      "producer_matches_shared": true,
+      "matches_expected": true,
+      "failing_details": {
+        "case15.raw_sha": "raw_sha 상세 {'contact_v4_1710000.liggghts': 'expected 000000000000 ≠ 등록 180140701ef4'} — 요약 raw_sha_ok=True 와 모순"
+      }
+    },
+    {
+      "name": "sha_contact_v4_1710000.liggghts_absent",
+      "category": "negative_sha",
+      "expected": "reject",
+      "observed": "reject",
+      "contract": "Closed four-file map.",
+      "failed_checks": {
+        "case15.raw_sha": "FAIL"
+      },
+      "s0b_problem_count": 1,
+      "producer_matches_shared": true,
+      "matches_expected": true,
+      "failing_details": {
+        "case15.raw_sha": "raw_sha 상세 키 ['atom_v4_1710000.liggghts', 'input_case15.liggghts', 'mesh_v4_1710000.stl'] ≠ 등록 네 파일 ['atom_v4_1710000.liggghts', 'contact_v4_1710000.liggghts', 'input_case15.liggghts', 'mesh_v4_1710000.stl'] — 상세 결손 · 모순 (요약 raw_sha_ok=True 만으로 통과시키지 않는다)"
+      }
+    },
+    {
+      "name": "sha_contact_v4_1710000.liggghts_three_values",
+      "category": "negative_sha",
+      "expected": "reject",
+      "observed": "reject",
+      "contract": "Pair has exactly two elements.",
+      "failed_checks": {
+        "case15.raw_sha": "FAIL"
+      },
+      "s0b_problem_count": 1,
+      "producer_matches_shared": true,
+      "matches_expected": true,
+      "failing_details": {
+        "case15.raw_sha": "raw_sha 상세 {'contact_v4_1710000.liggghts': \"꼴 ['180140701ef4', '180140701ef4', '180140701ef4'] ([actual, expected] · 각 16 진 12 자리여야)\"} — 요약 raw_sha_ok=True 와 모순"
+      }
+    },
+    {
+      "name": "sha_mesh_v4_1710000.stl_0_wrong",
+      "category": "negative_sha",
+      "expected": "reject",
+      "observed": "reject",
+      "contract": "Both sides must be lowercase hexadecimal strings of exactly 12 characters matching the registered prefix.",
+      "failed_checks": {
+        "case15.raw_sha": "FAIL"
+      },
+      "s0b_problem_count": 1,
+      "producer_matches_shared": true,
+      "matches_expected": true,
+      "failing_details": {
+        "case15.raw_sha": "raw_sha 상세 {'mesh_v4_1710000.stl': 'actual 000000000000 ≠ expected 2868f0898a90'} — 요약 raw_sha_ok=True 와 모순"
+      }
+    },
+    {
+      "name": "sha_mesh_v4_1710000.stl_0_uppercase",
+      "category": "negative_sha",
+      "expected": "reject",
+      "observed": "reject",
+      "contract": "Both sides must be lowercase hexadecimal strings of exactly 12 characters matching the registered prefix.",
+      "failed_checks": {
+        "case15.raw_sha": "FAIL"
+      },
+      "s0b_problem_count": 1,
+      "producer_matches_shared": true,
+      "matches_expected": true,
+      "failing_details": {
+        "case15.raw_sha": "raw_sha 상세 {'mesh_v4_1710000.stl': \"꼴 ['2868F0898A90', '2868f0898a90'] ([actual, expected] · 각 16 진 12 자리여야)\"} — 요약 raw_sha_ok=True 와 모순"
+      }
+    },
+    {
+      "name": "sha_mesh_v4_1710000.stl_0_full64",
+      "category": "negative_sha",
+      "expected": "reject",
+      "observed": "reject",
+      "contract": "Both sides must be lowercase hexadecimal strings of exactly 12 characters matching the registered prefix.",
+      "failed_checks": {
+        "case15.raw_sha": "FAIL"
+      },
+      "s0b_problem_count": 1,
+      "producer_matches_shared": true,
+      "matches_expected": true,
+      "failing_details": {
+        "case15.raw_sha": "raw_sha 상세 {'mesh_v4_1710000.stl': \"꼴 ['2868f0898a9056375c74ea24f2be1d46cb5f06f2411b01c21fa77c96836c053b', '2868f0898a90'] ([actual, expected] · 각 16 진 12 자리여야)\"} — 요약 raw_sha_ok=True 와 모순"
+      }
+    },
+    {
+      "name": "sha_mesh_v4_1710000.stl_0_short",
+      "category": "negative_sha",
+      "expected": "reject",
+      "observed": "reject",
+      "contract": "Both sides must be lowercase hexadecimal strings of exactly 12 characters matching the registered prefix.",
+      "failed_checks": {
+        "case15.raw_sha": "FAIL"
+      },
+      "s0b_problem_count": 1,
+      "producer_matches_shared": true,
+      "matches_expected": true,
+      "failing_details": {
+        "case15.raw_sha": "raw_sha 상세 {'mesh_v4_1710000.stl': \"꼴 ['2868f0898a9', '2868f0898a90'] ([actual, expected] · 각 16 진 12 자리여야)\"} — 요약 raw_sha_ok=True 와 모순"
+      }
+    },
+    {
+      "name": "sha_mesh_v4_1710000.stl_0_nonhex",
+      "category": "negative_sha",
+      "expected": "reject",
+      "observed": "reject",
+      "contract": "Both sides must be lowercase hexadecimal strings of exactly 12 characters matching the registered prefix.",
+      "failed_checks": {
+        "case15.raw_sha": "FAIL"
+      },
+      "s0b_problem_count": 1,
+      "producer_matches_shared": true,
+      "matches_expected": true,
+      "failing_details": {
+        "case15.raw_sha": "raw_sha 상세 {'mesh_v4_1710000.stl': \"꼴 ['gggggggggggg', '2868f0898a90'] ([actual, expected] · 각 16 진 12 자리여야)\"} — 요약 raw_sha_ok=True 와 모순"
+      }
+    },
+    {
+      "name": "sha_mesh_v4_1710000.stl_0_integer",
+      "category": "negative_sha",
+      "expected": "reject",
+      "observed": "reject",
+      "contract": "Both sides must be lowercase hexadecimal strings of exactly 12 characters matching the registered prefix.",
+      "failed_checks": {
+        "case15.raw_sha": "FAIL"
+      },
+      "s0b_problem_count": 1,
+      "producer_matches_shared": true,
+      "matches_expected": true,
+      "failing_details": {
+        "case15.raw_sha": "raw_sha 상세 {'mesh_v4_1710000.stl': \"꼴 [123456789012, '2868f0898a90'] ([actual, expected] · 각 16 진 12 자리여야)\"} — 요약 raw_sha_ok=True 와 모순"
+      }
+    },
+    {
+      "name": "sha_mesh_v4_1710000.stl_0_bool",
+      "category": "negative_sha",
+      "expected": "reject",
+      "observed": "reject",
+      "contract": "Both sides must be lowercase hexadecimal strings of exactly 12 characters matching the registered prefix.",
+      "failed_checks": {
+        "case15.raw_sha": "FAIL"
+      },
+      "s0b_problem_count": 1,
+      "producer_matches_shared": true,
+      "matches_expected": true,
+      "failing_details": {
+        "case15.raw_sha": "raw_sha 상세 {'mesh_v4_1710000.stl': \"꼴 [True, '2868f0898a90'] ([actual, expected] · 각 16 진 12 자리여야)\"} — 요약 raw_sha_ok=True 와 모순"
+      }
+    },
+    {
+      "name": "sha_mesh_v4_1710000.stl_0_null",
+      "category": "negative_sha",
+      "expected": "reject",
+      "observed": "reject",
+      "contract": "Both sides must be lowercase hexadecimal strings of exactly 12 characters matching the registered prefix.",
+      "failed_checks": {
+        "case15.raw_sha": "FAIL"
+      },
+      "s0b_problem_count": 1,
+      "producer_matches_shared": true,
+      "matches_expected": true,
+      "failing_details": {
+        "case15.raw_sha": "raw_sha 상세 {'mesh_v4_1710000.stl': \"꼴 [None, '2868f0898a90'] ([actual, expected] · 각 16 진 12 자리여야)\"} — 요약 raw_sha_ok=True 와 모순"
+      }
+    },
+    {
+      "name": "sha_mesh_v4_1710000.stl_1_wrong",
+      "category": "negative_sha",
+      "expected": "reject",
+      "observed": "reject",
+      "contract": "Both sides must be lowercase hexadecimal strings of exactly 12 characters matching the registered prefix.",
+      "failed_checks": {
+        "case15.raw_sha": "FAIL"
+      },
+      "s0b_problem_count": 1,
+      "producer_matches_shared": true,
+      "matches_expected": true,
+      "failing_details": {
+        "case15.raw_sha": "raw_sha 상세 {'mesh_v4_1710000.stl': 'actual 2868f0898a90 ≠ expected 000000000000'} — 요약 raw_sha_ok=True 와 모순"
+      }
+    },
+    {
+      "name": "sha_mesh_v4_1710000.stl_1_uppercase",
+      "category": "negative_sha",
+      "expected": "reject",
+      "observed": "reject",
+      "contract": "Both sides must be lowercase hexadecimal strings of exactly 12 characters matching the registered prefix.",
+      "failed_checks": {
+        "case15.raw_sha": "FAIL"
+      },
+      "s0b_problem_count": 1,
+      "producer_matches_shared": true,
+      "matches_expected": true,
+      "failing_details": {
+        "case15.raw_sha": "raw_sha 상세 {'mesh_v4_1710000.stl': \"꼴 ['2868f0898a90', '2868F0898A90'] ([actual, expected] · 각 16 진 12 자리여야)\"} — 요약 raw_sha_ok=True 와 모순"
+      }
+    },
+    {
+      "name": "sha_mesh_v4_1710000.stl_1_full64",
+      "category": "negative_sha",
+      "expected": "reject",
+      "observed": "reject",
+      "contract": "Both sides must be lowercase hexadecimal strings of exactly 12 characters matching the registered prefix.",
+      "failed_checks": {
+        "case15.raw_sha": "FAIL"
+      },
+      "s0b_problem_count": 1,
+      "producer_matches_shared": true,
+      "matches_expected": true,
+      "failing_details": {
+        "case15.raw_sha": "raw_sha 상세 {'mesh_v4_1710000.stl': \"꼴 ['2868f0898a90', '2868f0898a9056375c74ea24f2be1d46cb5f06f2411b01c21fa77c96836c053b'] ([actual, expected] · 각 16 진 12 자리여야)\"} — 요약 raw_sha_ok=True 와 모순"
+      }
+    },
+    {
+      "name": "sha_mesh_v4_1710000.stl_1_short",
+      "category": "negative_sha",
+      "expected": "reject",
+      "observed": "reject",
+      "contract": "Both sides must be lowercase hexadecimal strings of exactly 12 characters matching the registered prefix.",
+      "failed_checks": {
+        "case15.raw_sha": "FAIL"
+      },
+      "s0b_problem_count": 1,
+      "producer_matches_shared": true,
+      "matches_expected": true,
+      "failing_details": {
+        "case15.raw_sha": "raw_sha 상세 {'mesh_v4_1710000.stl': \"꼴 ['2868f0898a90', '2868f0898a9'] ([actual, expected] · 각 16 진 12 자리여야)\"} — 요약 raw_sha_ok=True 와 모순"
+      }
+    },
+    {
+      "name": "sha_mesh_v4_1710000.stl_1_nonhex",
+      "category": "negative_sha",
+      "expected": "reject",
+      "observed": "reject",
+      "contract": "Both sides must be lowercase hexadecimal strings of exactly 12 characters matching the registered prefix.",
+      "failed_checks": {
+        "case15.raw_sha": "FAIL"
+      },
+      "s0b_problem_count": 1,
+      "producer_matches_shared": true,
+      "matches_expected": true,
+      "failing_details": {
+        "case15.raw_sha": "raw_sha 상세 {'mesh_v4_1710000.stl': \"꼴 ['2868f0898a90', 'gggggggggggg'] ([actual, expected] · 각 16 진 12 자리여야)\"} — 요약 raw_sha_ok=True 와 모순"
+      }
+    },
+    {
+      "name": "sha_mesh_v4_1710000.stl_1_integer",
+      "category": "negative_sha",
+      "expected": "reject",
+      "observed": "reject",
+      "contract": "Both sides must be lowercase hexadecimal strings of exactly 12 characters matching the registered prefix.",
+      "failed_checks": {
+        "case15.raw_sha": "FAIL"
+      },
+      "s0b_problem_count": 1,
+      "producer_matches_shared": true,
+      "matches_expected": true,
+      "failing_details": {
+        "case15.raw_sha": "raw_sha 상세 {'mesh_v4_1710000.stl': \"꼴 ['2868f0898a90', 123456789012] ([actual, expected] · 각 16 진 12 자리여야)\"} — 요약 raw_sha_ok=True 와 모순"
+      }
+    },
+    {
+      "name": "sha_mesh_v4_1710000.stl_1_bool",
+      "category": "negative_sha",
+      "expected": "reject",
+      "observed": "reject",
+      "contract": "Both sides must be lowercase hexadecimal strings of exactly 12 characters matching the registered prefix.",
+      "failed_checks": {
+        "case15.raw_sha": "FAIL"
+      },
+      "s0b_problem_count": 1,
+      "producer_matches_shared": true,
+      "matches_expected": true,
+      "failing_details": {
+        "case15.raw_sha": "raw_sha 상세 {'mesh_v4_1710000.stl': \"꼴 ['2868f0898a90', True] ([actual, expected] · 각 16 진 12 자리여야)\"} — 요약 raw_sha_ok=True 와 모순"
+      }
+    },
+    {
+      "name": "sha_mesh_v4_1710000.stl_1_null",
+      "category": "negative_sha",
+      "expected": "reject",
+      "observed": "reject",
+      "contract": "Both sides must be lowercase hexadecimal strings of exactly 12 characters matching the registered prefix.",
+      "failed_checks": {
+        "case15.raw_sha": "FAIL"
+      },
+      "s0b_problem_count": 1,
+      "producer_matches_shared": true,
+      "matches_expected": true,
+      "failing_details": {
+        "case15.raw_sha": "raw_sha 상세 {'mesh_v4_1710000.stl': \"꼴 ['2868f0898a90', None] ([actual, expected] · 각 16 진 12 자리여야)\"} — 요약 raw_sha_ok=True 와 모순"
+      }
+    },
+    {
+      "name": "sha_mesh_v4_1710000.stl_both_wrong",
+      "category": "negative_sha",
+      "expected": "reject",
+      "observed": "reject",
+      "contract": "Mutually equal hashes must still match the registration.",
+      "failed_checks": {
+        "case15.raw_sha": "FAIL"
+      },
+      "s0b_problem_count": 1,
+      "producer_matches_shared": true,
+      "matches_expected": true,
+      "failing_details": {
+        "case15.raw_sha": "raw_sha 상세 {'mesh_v4_1710000.stl': 'expected 000000000000 ≠ 등록 2868f0898a90'} — 요약 raw_sha_ok=True 와 모순"
+      }
+    },
+    {
+      "name": "sha_mesh_v4_1710000.stl_absent",
+      "category": "negative_sha",
+      "expected": "reject",
+      "observed": "reject",
+      "contract": "Closed four-file map.",
+      "failed_checks": {
+        "case15.raw_sha": "FAIL"
+      },
+      "s0b_problem_count": 1,
+      "producer_matches_shared": true,
+      "matches_expected": true,
+      "failing_details": {
+        "case15.raw_sha": "raw_sha 상세 키 ['atom_v4_1710000.liggghts', 'contact_v4_1710000.liggghts', 'input_case15.liggghts'] ≠ 등록 네 파일 ['atom_v4_1710000.liggghts', 'contact_v4_1710000.liggghts', 'input_case15.liggghts', 'mesh_v4_1710000.stl'] — 상세 결손 · 모순 (요약 raw_sha_ok=True 만으로 통과시키지 않는다)"
+      }
+    },
+    {
+      "name": "sha_mesh_v4_1710000.stl_three_values",
+      "category": "negative_sha",
+      "expected": "reject",
+      "observed": "reject",
+      "contract": "Pair has exactly two elements.",
+      "failed_checks": {
+        "case15.raw_sha": "FAIL"
+      },
+      "s0b_problem_count": 1,
+      "producer_matches_shared": true,
+      "matches_expected": true,
+      "failing_details": {
+        "case15.raw_sha": "raw_sha 상세 {'mesh_v4_1710000.stl': \"꼴 ['2868f0898a90', '2868f0898a90', '2868f0898a90'] ([actual, expected] · 각 16 진 12 자리여야)\"} — 요약 raw_sha_ok=True 와 모순"
+      }
+    },
+    {
+      "name": "sha_input_case15.liggghts_0_wrong",
+      "category": "negative_sha",
+      "expected": "reject",
+      "observed": "reject",
+      "contract": "Both sides must be lowercase hexadecimal strings of exactly 12 characters matching the registered prefix.",
+      "failed_checks": {
+        "case15.raw_sha": "FAIL"
+      },
+      "s0b_problem_count": 1,
+      "producer_matches_shared": true,
+      "matches_expected": true,
+      "failing_details": {
+        "case15.raw_sha": "raw_sha 상세 {'input_case15.liggghts': 'actual 000000000000 ≠ expected 172953c78a07'} — 요약 raw_sha_ok=True 와 모순"
+      }
+    },
+    {
+      "name": "sha_input_case15.liggghts_0_uppercase",
+      "category": "negative_sha",
+      "expected": "reject",
+      "observed": "reject",
+      "contract": "Both sides must be lowercase hexadecimal strings of exactly 12 characters matching the registered prefix.",
+      "failed_checks": {
+        "case15.raw_sha": "FAIL"
+      },
+      "s0b_problem_count": 1,
+      "producer_matches_shared": true,
+      "matches_expected": true,
+      "failing_details": {
+        "case15.raw_sha": "raw_sha 상세 {'input_case15.liggghts': \"꼴 ['172953C78A07', '172953c78a07'] ([actual, expected] · 각 16 진 12 자리여야)\"} — 요약 raw_sha_ok=True 와 모순"
+      }
+    },
+    {
+      "name": "sha_input_case15.liggghts_0_full64",
+      "category": "negative_sha",
+      "expected": "reject",
+      "observed": "reject",
+      "contract": "Both sides must be lowercase hexadecimal strings of exactly 12 characters matching the registered prefix.",
+      "failed_checks": {
+        "case15.raw_sha": "FAIL"
+      },
+      "s0b_problem_count": 1,
+      "producer_matches_shared": true,
+      "matches_expected": true,
+      "failing_details": {
+        "case15.raw_sha": "raw_sha 상세 {'input_case15.liggghts': \"꼴 ['172953c78a07c4da16bd6b2bc6b02111c144f5ba257f800349193cc92de4dc60', '172953c78a07'] ([actual, expected] · 각 16 진 12 자리여야)\"} — 요약 raw_sha_ok=True 와 모순"
+      }
+    },
+    {
+      "name": "sha_input_case15.liggghts_0_short",
+      "category": "negative_sha",
+      "expected": "reject",
+      "observed": "reject",
+      "contract": "Both sides must be lowercase hexadecimal strings of exactly 12 characters matching the registered prefix.",
+      "failed_checks": {
+        "case15.raw_sha": "FAIL"
+      },
+      "s0b_problem_count": 1,
+      "producer_matches_shared": true,
+      "matches_expected": true,
+      "failing_details": {
+        "case15.raw_sha": "raw_sha 상세 {'input_case15.liggghts': \"꼴 ['172953c78a0', '172953c78a07'] ([actual, expected] · 각 16 진 12 자리여야)\"} — 요약 raw_sha_ok=True 와 모순"
+      }
+    },
+    {
+      "name": "sha_input_case15.liggghts_0_nonhex",
+      "category": "negative_sha",
+      "expected": "reject",
+      "observed": "reject",
+      "contract": "Both sides must be lowercase hexadecimal strings of exactly 12 characters matching the registered prefix.",
+      "failed_checks": {
+        "case15.raw_sha": "FAIL"
+      },
+      "s0b_problem_count": 1,
+      "producer_matches_shared": true,
+      "matches_expected": true,
+      "failing_details": {
+        "case15.raw_sha": "raw_sha 상세 {'input_case15.liggghts': \"꼴 ['gggggggggggg', '172953c78a07'] ([actual, expected] · 각 16 진 12 자리여야)\"} — 요약 raw_sha_ok=True 와 모순"
+      }
+    },
+    {
+      "name": "sha_input_case15.liggghts_0_integer",
+      "category": "negative_sha",
+      "expected": "reject",
+      "observed": "reject",
+      "contract": "Both sides must be lowercase hexadecimal strings of exactly 12 characters matching the registered prefix.",
+      "failed_checks": {
+        "case15.raw_sha": "FAIL"
+      },
+      "s0b_problem_count": 1,
+      "producer_matches_shared": true,
+      "matches_expected": true,
+      "failing_details": {
+        "case15.raw_sha": "raw_sha 상세 {'input_case15.liggghts': \"꼴 [123456789012, '172953c78a07'] ([actual, expected] · 각 16 진 12 자리여야)\"} — 요약 raw_sha_ok=True 와 모순"
+      }
+    },
+    {
+      "name": "sha_input_case15.liggghts_0_bool",
+      "category": "negative_sha",
+      "expected": "reject",
+      "observed": "reject",
+      "contract": "Both sides must be lowercase hexadecimal strings of exactly 12 characters matching the registered prefix.",
+      "failed_checks": {
+        "case15.raw_sha": "FAIL"
+      },
+      "s0b_problem_count": 1,
+      "producer_matches_shared": true,
+      "matches_expected": true,
+      "failing_details": {
+        "case15.raw_sha": "raw_sha 상세 {'input_case15.liggghts': \"꼴 [True, '172953c78a07'] ([actual, expected] · 각 16 진 12 자리여야)\"} — 요약 raw_sha_ok=True 와 모순"
+      }
+    },
+    {
+      "name": "sha_input_case15.liggghts_0_null",
+      "category": "negative_sha",
+      "expected": "reject",
+      "observed": "reject",
+      "contract": "Both sides must be lowercase hexadecimal strings of exactly 12 characters matching the registered prefix.",
+      "failed_checks": {
+        "case15.raw_sha": "FAIL"
+      },
+      "s0b_problem_count": 1,
+      "producer_matches_shared": true,
+      "matches_expected": true,
+      "failing_details": {
+        "case15.raw_sha": "raw_sha 상세 {'input_case15.liggghts': \"꼴 [None, '172953c78a07'] ([actual, expected] · 각 16 진 12 자리여야)\"} — 요약 raw_sha_ok=True 와 모순"
+      }
+    },
+    {
+      "name": "sha_input_case15.liggghts_1_wrong",
+      "category": "negative_sha",
+      "expected": "reject",
+      "observed": "reject",
+      "contract": "Both sides must be lowercase hexadecimal strings of exactly 12 characters matching the registered prefix.",
+      "failed_checks": {
+        "case15.raw_sha": "FAIL"
+      },
+      "s0b_problem_count": 1,
+      "producer_matches_shared": true,
+      "matches_expected": true,
+      "failing_details": {
+        "case15.raw_sha": "raw_sha 상세 {'input_case15.liggghts': 'actual 172953c78a07 ≠ expected 000000000000'} — 요약 raw_sha_ok=True 와 모순"
+      }
+    },
+    {
+      "name": "sha_input_case15.liggghts_1_uppercase",
+      "category": "negative_sha",
+      "expected": "reject",
+      "observed": "reject",
+      "contract": "Both sides must be lowercase hexadecimal strings of exactly 12 characters matching the registered prefix.",
+      "failed_checks": {
+        "case15.raw_sha": "FAIL"
+      },
+      "s0b_problem_count": 1,
+      "producer_matches_shared": true,
+      "matches_expected": true,
+      "failing_details": {
+        "case15.raw_sha": "raw_sha 상세 {'input_case15.liggghts': \"꼴 ['172953c78a07', '172953C78A07'] ([actual, expected] · 각 16 진 12 자리여야)\"} — 요약 raw_sha_ok=True 와 모순"
+      }
+    },
+    {
+      "name": "sha_input_case15.liggghts_1_full64",
+      "category": "negative_sha",
+      "expected": "reject",
+      "observed": "reject",
+      "contract": "Both sides must be lowercase hexadecimal strings of exactly 12 characters matching the registered prefix.",
+      "failed_checks": {
+        "case15.raw_sha": "FAIL"
+      },
+      "s0b_problem_count": 1,
+      "producer_matches_shared": true,
+      "matches_expected": true,
+      "failing_details": {
+        "case15.raw_sha": "raw_sha 상세 {'input_case15.liggghts': \"꼴 ['172953c78a07', '172953c78a07c4da16bd6b2bc6b02111c144f5ba257f800349193cc92de4dc60'] ([actual, expected] · 각 16 진 12 자리여야)\"} — 요약 raw_sha_ok=True 와 모순"
+      }
+    },
+    {
+      "name": "sha_input_case15.liggghts_1_short",
+      "category": "negative_sha",
+      "expected": "reject",
+      "observed": "reject",
+      "contract": "Both sides must be lowercase hexadecimal strings of exactly 12 characters matching the registered prefix.",
+      "failed_checks": {
+        "case15.raw_sha": "FAIL"
+      },
+      "s0b_problem_count": 1,
+      "producer_matches_shared": true,
+      "matches_expected": true,
+      "failing_details": {
+        "case15.raw_sha": "raw_sha 상세 {'input_case15.liggghts': \"꼴 ['172953c78a07', '172953c78a0'] ([actual, expected] · 각 16 진 12 자리여야)\"} — 요약 raw_sha_ok=True 와 모순"
+      }
+    },
+    {
+      "name": "sha_input_case15.liggghts_1_nonhex",
+      "category": "negative_sha",
+      "expected": "reject",
+      "observed": "reject",
+      "contract": "Both sides must be lowercase hexadecimal strings of exactly 12 characters matching the registered prefix.",
+      "failed_checks": {
+        "case15.raw_sha": "FAIL"
+      },
+      "s0b_problem_count": 1,
+      "producer_matches_shared": true,
+      "matches_expected": true,
+      "failing_details": {
+        "case15.raw_sha": "raw_sha 상세 {'input_case15.liggghts': \"꼴 ['172953c78a07', 'gggggggggggg'] ([actual, expected] · 각 16 진 12 자리여야)\"} — 요약 raw_sha_ok=True 와 모순"
+      }
+    },
+    {
+      "name": "sha_input_case15.liggghts_1_integer",
+      "category": "negative_sha",
+      "expected": "reject",
+      "observed": "reject",
+      "contract": "Both sides must be lowercase hexadecimal strings of exactly 12 characters matching the registered prefix.",
+      "failed_checks": {
+        "case15.raw_sha": "FAIL"
+      },
+      "s0b_problem_count": 1,
+      "producer_matches_shared": true,
+      "matches_expected": true,
+      "failing_details": {
+        "case15.raw_sha": "raw_sha 상세 {'input_case15.liggghts': \"꼴 ['172953c78a07', 123456789012] ([actual, expected] · 각 16 진 12 자리여야)\"} — 요약 raw_sha_ok=True 와 모순"
+      }
+    },
+    {
+      "name": "sha_input_case15.liggghts_1_bool",
+      "category": "negative_sha",
+      "expected": "reject",
+      "observed": "reject",
+      "contract": "Both sides must be lowercase hexadecimal strings of exactly 12 characters matching the registered prefix.",
+      "failed_checks": {
+        "case15.raw_sha": "FAIL"
+      },
+      "s0b_problem_count": 1,
+      "producer_matches_shared": true,
+      "matches_expected": true,
+      "failing_details": {
+        "case15.raw_sha": "raw_sha 상세 {'input_case15.liggghts': \"꼴 ['172953c78a07', True] ([actual, expected] · 각 16 진 12 자리여야)\"} — 요약 raw_sha_ok=True 와 모순"
+      }
+    },
+    {
+      "name": "sha_input_case15.liggghts_1_null",
+      "category": "negative_sha",
+      "expected": "reject",
+      "observed": "reject",
+      "contract": "Both sides must be lowercase hexadecimal strings of exactly 12 characters matching the registered prefix.",
+      "failed_checks": {
+        "case15.raw_sha": "FAIL"
+      },
+      "s0b_problem_count": 1,
+      "producer_matches_shared": true,
+      "matches_expected": true,
+      "failing_details": {
+        "case15.raw_sha": "raw_sha 상세 {'input_case15.liggghts': \"꼴 ['172953c78a07', None] ([actual, expected] · 각 16 진 12 자리여야)\"} — 요약 raw_sha_ok=True 와 모순"
+      }
+    },
+    {
+      "name": "sha_input_case15.liggghts_both_wrong",
+      "category": "negative_sha",
+      "expected": "reject",
+      "observed": "reject",
+      "contract": "Mutually equal hashes must still match the registration.",
+      "failed_checks": {
+        "case15.raw_sha": "FAIL"
+      },
+      "s0b_problem_count": 1,
+      "producer_matches_shared": true,
+      "matches_expected": true,
+      "failing_details": {
+        "case15.raw_sha": "raw_sha 상세 {'input_case15.liggghts': 'expected 000000000000 ≠ 등록 172953c78a07'} — 요약 raw_sha_ok=True 와 모순"
+      }
+    },
+    {
+      "name": "sha_input_case15.liggghts_absent",
+      "category": "negative_sha",
+      "expected": "reject",
+      "observed": "reject",
+      "contract": "Closed four-file map.",
+      "failed_checks": {
+        "case15.raw_sha": "FAIL"
+      },
+      "s0b_problem_count": 1,
+      "producer_matches_shared": true,
+      "matches_expected": true,
+      "failing_details": {
+        "case15.raw_sha": "raw_sha 상세 키 ['atom_v4_1710000.liggghts', 'contact_v4_1710000.liggghts', 'mesh_v4_1710000.stl'] ≠ 등록 네 파일 ['atom_v4_1710000.liggghts', 'contact_v4_1710000.liggghts', 'input_case15.liggghts', 'mesh_v4_1710000.stl'] — 상세 결손 · 모순 (요약 raw_sha_ok=True 만으로 통과시키지 않는다)"
+      }
+    },
+    {
+      "name": "sha_input_case15.liggghts_three_values",
+      "category": "negative_sha",
+      "expected": "reject",
+      "observed": "reject",
+      "contract": "Pair has exactly two elements.",
+      "failed_checks": {
+        "case15.raw_sha": "FAIL"
+      },
+      "s0b_problem_count": 1,
+      "producer_matches_shared": true,
+      "matches_expected": true,
+      "failing_details": {
+        "case15.raw_sha": "raw_sha 상세 {'input_case15.liggghts': \"꼴 ['172953c78a07', '172953c78a07', '172953c78a07'] ([actual, expected] · 각 16 진 12 자리여야)\"} — 요약 raw_sha_ok=True 와 모순"
+      }
+    },
+    {
+      "name": "sha_shape_absent",
+      "category": "negative_sha",
+      "expected": "reject",
+      "observed": "reject",
+      "contract": "Raw detail must be a mapping with all four registered keys.",
+      "failed_checks": {
+        "case15.raw_sha": "FAIL"
+      },
+      "s0b_problem_count": 1,
+      "producer_matches_shared": true,
+      "matches_expected": true,
+      "failing_details": {
+        "case15.raw_sha": "raw_sha 상세 키 NoneType ≠ 등록 네 파일 ['atom_v4_1710000.liggghts', 'contact_v4_1710000.liggghts', 'input_case15.liggghts', 'mesh_v4_1710000.stl'] — 상세 결손 · 모순 (요약 raw_sha_ok=True 만으로 통과시키지 않는다)"
+      }
+    },
+    {
+      "name": "sha_shape_empty",
+      "category": "negative_sha",
+      "expected": "reject",
+      "observed": "reject",
+      "contract": "Raw detail must be a mapping with all four registered keys.",
+      "failed_checks": {
+        "case15.raw_sha": "FAIL"
+      },
+      "s0b_problem_count": 1,
+      "producer_matches_shared": true,
+      "matches_expected": true,
+      "failing_details": {
+        "case15.raw_sha": "raw_sha 상세 키 [] ≠ 등록 네 파일 ['atom_v4_1710000.liggghts', 'contact_v4_1710000.liggghts', 'input_case15.liggghts', 'mesh_v4_1710000.stl'] — 상세 결손 · 모순 (요약 raw_sha_ok=True 만으로 통과시키지 않는다)"
+      }
+    },
+    {
+      "name": "sha_shape_list",
+      "category": "negative_sha",
+      "expected": "reject",
+      "observed": "reject",
+      "contract": "Raw detail must be a mapping with all four registered keys.",
+      "failed_checks": {
+        "case15.raw_sha": "FAIL"
+      },
+      "s0b_problem_count": 1,
+      "producer_matches_shared": true,
+      "matches_expected": true,
+      "failing_details": {
+        "case15.raw_sha": "raw_sha 상세 키 list ≠ 등록 네 파일 ['atom_v4_1710000.liggghts', 'contact_v4_1710000.liggghts', 'input_case15.liggghts', 'mesh_v4_1710000.stl'] — 상세 결손 · 모순 (요약 raw_sha_ok=True 만으로 통과시키지 않는다)"
+      }
+    },
+    {
+      "name": "sha_shape_string",
+      "category": "negative_sha",
+      "expected": "reject",
+      "observed": "reject",
+      "contract": "Raw detail must be a mapping with all four registered keys.",
+      "failed_checks": {
+        "case15.raw_sha": "FAIL"
+      },
+      "s0b_problem_count": 1,
+      "producer_matches_shared": true,
+      "matches_expected": true,
+      "failing_details": {
+        "case15.raw_sha": "raw_sha 상세 키 str ≠ 등록 네 파일 ['atom_v4_1710000.liggghts', 'contact_v4_1710000.liggghts', 'input_case15.liggghts', 'mesh_v4_1710000.stl'] — 상세 결손 · 모순 (요약 raw_sha_ok=True 만으로 통과시키지 않는다)"
+      }
+    },
+    {
+      "name": "sha_shape_bool",
+      "category": "negative_sha",
+      "expected": "reject",
+      "observed": "reject",
+      "contract": "Raw detail must be a mapping with all four registered keys.",
+      "failed_checks": {
+        "case15.raw_sha": "FAIL"
+      },
+      "s0b_problem_count": 1,
+      "producer_matches_shared": true,
+      "matches_expected": true,
+      "failing_details": {
+        "case15.raw_sha": "raw_sha 상세 키 bool ≠ 등록 네 파일 ['atom_v4_1710000.liggghts', 'contact_v4_1710000.liggghts', 'input_case15.liggghts', 'mesh_v4_1710000.stl'] — 상세 결손 · 모순 (요약 raw_sha_ok=True 만으로 통과시키지 않는다)"
+      }
+    },
+    {
+      "name": "sha_extra_key",
+      "category": "negative_sha",
+      "expected": "reject",
+      "observed": "reject",
+      "contract": "Closed four-file map.",
+      "failed_checks": {
+        "case15.raw_sha": "FAIL"
+      },
+      "s0b_problem_count": 1,
+      "producer_matches_shared": true,
+      "matches_expected": true,
+      "failing_details": {
+        "case15.raw_sha": "raw_sha 상세 키 ['atom_v4_1710000.liggghts', 'contact_v4_1710000.liggghts', 'extra', 'input_case15.liggghts', 'mesh_v4_1710000.stl'] ≠ 등록 네 파일 ['atom_v4_1710000.liggghts', 'contact_v4_1710000.liggghts', 'input_case15.liggghts', 'mesh_v4_1710000.stl'] — 상세 결손 · 모순 (요약 raw_sha_ok=True 만으로 통과시키지 않는다)"
+      }
+    },
+    {
+      "name": "sha_mixed_key_types",
+      "category": "negative_sha",
+      "expected": "reject",
+      "observed": "reject",
+      "contract": "Malformed non-JSON-map input must fail closed without propagating an exception.",
+      "failed_checks": {
+        "case15.raw_sha": "FAIL"
+      },
+      "s0b_problem_count": 1,
+      "producer_matches_shared": true,
+      "matches_expected": true,
+      "failing_details": {
+        "case15.raw_sha": "판정 예외 TypeError: '<' not supported between instances of 'int' and 'str'"
+      }
+    },
+    {
+      "name": "sha_flag_False",
+      "category": "negative_sha",
+      "expected": "reject",
+      "observed": "reject",
+      "contract": "The summary flag must be the Boolean True.",
+      "failed_checks": {
+        "case15.raw_sha": "FAIL"
+      },
+      "s0b_problem_count": 1,
+      "producer_matches_shared": true,
+      "matches_expected": true,
+      "failing_details": {
+        "case15.raw_sha": "raw_sha_ok False — 원자료 sha256 ≠ README 표 · 상세 {'atom_v4_1710000.liggghts': ['f40f69eccd79', 'f40f69eccd79'], 'contact_v4_1710000.liggghts': ['180140701ef4', '180140701ef4'], 'mesh_v4_1710000.stl': ['2868f0898a90', '2868f0898a90'], 'input_case15.liggghts': ['172953c78a07', '172953c78a07']}"
+      }
+    },
+    {
+      "name": "sha_flag_0",
+      "category": "negative_sha",
+      "expected": "reject",
+      "observed": "reject",
+      "contract": "The summary flag must be the Boolean True.",
+      "failed_checks": {
+        "case15.raw_sha": "FAIL"
+      },
+      "s0b_problem_count": 1,
+      "producer_matches_shared": true,
+      "matches_expected": true,
+      "failing_details": {
+        "case15.raw_sha": "raw_sha_ok 0 — 원자료 sha256 ≠ README 표 · 상세 {'atom_v4_1710000.liggghts': ['f40f69eccd79', 'f40f69eccd79'], 'contact_v4_1710000.liggghts': ['180140701ef4', '180140701ef4'], 'mesh_v4_1710000.stl': ['2868f0898a90', '2868f0898a90'], 'input_case15.liggghts': ['172953c78a07', '172953c78a07']}"
+      }
+    },
+    {
+      "name": "sha_flag_1",
+      "category": "negative_sha",
+      "expected": "reject",
+      "observed": "reject",
+      "contract": "The summary flag must be the Boolean True.",
+      "failed_checks": {
+        "case15.raw_sha": "FAIL"
+      },
+      "s0b_problem_count": 1,
+      "producer_matches_shared": true,
+      "matches_expected": true,
+      "failing_details": {
+        "case15.raw_sha": "raw_sha_ok 1 — 원자료 sha256 ≠ README 표 · 상세 {'atom_v4_1710000.liggghts': ['f40f69eccd79', 'f40f69eccd79'], 'contact_v4_1710000.liggghts': ['180140701ef4', '180140701ef4'], 'mesh_v4_1710000.stl': ['2868f0898a90', '2868f0898a90'], 'input_case15.liggghts': ['172953c78a07', '172953c78a07']}"
+      }
+    },
+    {
+      "name": "sha_flag_'True'",
+      "category": "negative_sha",
+      "expected": "reject",
+      "observed": "reject",
+      "contract": "The summary flag must be the Boolean True.",
+      "failed_checks": {
+        "case15.raw_sha": "FAIL"
+      },
+      "s0b_problem_count": 1,
+      "producer_matches_shared": true,
+      "matches_expected": true,
+      "failing_details": {
+        "case15.raw_sha": "raw_sha_ok 'True' — 원자료 sha256 ≠ README 표 · 상세 {'atom_v4_1710000.liggghts': ['f40f69eccd79', 'f40f69eccd79'], 'contact_v4_1710000.liggghts': ['180140701ef4', '180140701ef4'], 'mesh_v4_1710000.stl': ['2868f0898a90', '2868f0898a90'], 'input_case15.liggghts': ['172953c78a07', '172953c78a07']}"
+      }
+    },
+    {
+      "name": "sha_flag_None",
+      "category": "negative_sha",
+      "expected": "reject",
+      "observed": "reject",
+      "contract": "The summary flag must be the Boolean True.",
+      "failed_checks": {
+        "case15.raw_sha": "FAIL"
+      },
+      "s0b_problem_count": 1,
+      "producer_matches_shared": true,
+      "matches_expected": true,
+      "failing_details": {
+        "case15.raw_sha": "raw_sha_ok None — 원자료 sha256 ≠ README 표 · 상세 {'atom_v4_1710000.liggghts': ['f40f69eccd79', 'f40f69eccd79'], 'contact_v4_1710000.liggghts': ['180140701ef4', '180140701ef4'], 'mesh_v4_1710000.stl': ['2868f0898a90', '2868f0898a90'], 'input_case15.liggghts': ['172953c78a07', '172953c78a07']}"
+      }
+    },
+    {
+      "name": "row0_id0_bool",
+      "category": "negative_rows",
+      "expected": "reject",
+      "observed": "reject",
+      "contract": "IDs must be actual integers at the registered positions.",
+      "failed_checks": {
+        "case15.nc3_cause": "FAIL"
+      },
+      "s0b_problem_count": 1,
+      "producer_matches_shared": true,
+      "matches_expected": true,
+      "failing_details": {
+        "case15.nc3_cause": "겹침 {'electronic_hertzian': ('boundary_overlap', [24, 40, 57, 103]), 'electronic_physics': ('boundary_overlap', [24, 40, 57, 103]), 'thermal_hertzian': ('boundary_overlap', [24, 40, 57, 103])} · Physics 열 'ValueError: physics_g2: 간선 (31, 29241) — ligg_area < 0 (-0.186036)' · 음수 행 음수 면적 행 ID [True, 29241, -0.186036, 1.05114] — 정수여야 · 증거 오류 None"
+      }
+    },
+    {
+      "name": "row0_id0_float_integer",
+      "category": "negative_rows",
+      "expected": "reject",
+      "observed": "reject",
+      "contract": "IDs must be actual integers at the registered positions.",
+      "failed_checks": {
+        "case15.nc3_cause": "FAIL"
+      },
+      "s0b_problem_count": 1,
+      "producer_matches_shared": true,
+      "matches_expected": true,
+      "failing_details": {
+        "case15.nc3_cause": "겹침 {'electronic_hertzian': ('boundary_overlap', [24, 40, 57, 103]), 'electronic_physics': ('boundary_overlap', [24, 40, 57, 103]), 'thermal_hertzian': ('boundary_overlap', [24, 40, 57, 103])} · Physics 열 'ValueError: physics_g2: 간선 (31, 29241) — ligg_area < 0 (-0.186036)' · 음수 행 음수 면적 행 ID [31.0, 29241, -0.186036, 1.05114] — 정수여야 · 증거 오류 None"
+      }
+    },
+    {
+      "name": "row0_id0_string",
+      "category": "negative_rows",
+      "expected": "reject",
+      "observed": "reject",
+      "contract": "IDs must be actual integers at the registered positions.",
+      "failed_checks": {
+        "case15.nc3_cause": "FAIL"
+      },
+      "s0b_problem_count": 1,
+      "producer_matches_shared": true,
+      "matches_expected": true,
+      "failing_details": {
+        "case15.nc3_cause": "겹침 {'electronic_hertzian': ('boundary_overlap', [24, 40, 57, 103]), 'electronic_physics': ('boundary_overlap', [24, 40, 57, 103]), 'thermal_hertzian': ('boundary_overlap', [24, 40, 57, 103])} · Physics 열 'ValueError: physics_g2: 간선 (31, 29241) — ligg_area < 0 (-0.186036)' · 음수 행 음수 면적 행 ID ['31', 29241, -0.186036, 1.05114] — 정수여야 · 증거 오류 None"
+      }
+    },
+    {
+      "name": "row0_id0_null",
+      "category": "negative_rows",
+      "expected": "reject",
+      "observed": "reject",
+      "contract": "IDs must be actual integers at the registered positions.",
+      "failed_checks": {
+        "case15.nc3_cause": "FAIL"
+      },
+      "s0b_problem_count": 1,
+      "producer_matches_shared": true,
+      "matches_expected": true,
+      "failing_details": {
+        "case15.nc3_cause": "겹침 {'electronic_hertzian': ('boundary_overlap', [24, 40, 57, 103]), 'electronic_physics': ('boundary_overlap', [24, 40, 57, 103]), 'thermal_hertzian': ('boundary_overlap', [24, 40, 57, 103])} · Physics 열 'ValueError: physics_g2: 간선 (31, 29241) — ligg_area < 0 (-0.186036)' · 음수 행 음수 면적 행 ID [None, 29241, -0.186036, 1.05114] — 정수여야 · 증거 오류 None"
+      }
+    },
+    {
+      "name": "row0_id0_wrong",
+      "category": "negative_rows",
+      "expected": "reject",
+      "observed": "reject",
+      "contract": "IDs must be actual integers at the registered positions.",
+      "failed_checks": {
+        "case15.nc3_cause": "FAIL"
+      },
+      "s0b_problem_count": 1,
+      "producer_matches_shared": true,
+      "matches_expected": true,
+      "failing_details": {
+        "case15.nc3_cause": "겹침 {'electronic_hertzian': ('boundary_overlap', [24, 40, 57, 103]), 'electronic_physics': ('boundary_overlap', [24, 40, 57, 103]), 'thermal_hertzian': ('boundary_overlap', [24, 40, 57, 103])} · Physics 열 'ValueError: physics_g2: 간선 (31, 29241) — ligg_area < 0 (-0.186036)' · 음수 행 음수 면적 행 [(32, 29241, -0.186036, 1.05114), (38, 29241, -0.186264, 1.0512)] ≠ 등록 [(31, 29241, -0.186036, 1.05114), (38, 29241, -0.186264, 1.0512)] · 증거 오류 None"
+      }
+    },
+    {
+      "name": "row0_id1_bool",
+      "category": "negative_rows",
+      "expected": "reject",
+      "observed": "reject",
+      "contract": "IDs must be actual integers at the registered positions.",
+      "failed_checks": {
+        "case15.nc3_cause": "FAIL"
+      },
+      "s0b_problem_count": 1,
+      "producer_matches_shared": true,
+      "matches_expected": true,
+      "failing_details": {
+        "case15.nc3_cause": "겹침 {'electronic_hertzian': ('boundary_overlap', [24, 40, 57, 103]), 'electronic_physics': ('boundary_overlap', [24, 40, 57, 103]), 'thermal_hertzian': ('boundary_overlap', [24, 40, 57, 103])} · Physics 열 'ValueError: physics_g2: 간선 (31, 29241) — ligg_area < 0 (-0.186036)' · 음수 행 음수 면적 행 ID [31, True, -0.186036, 1.05114] — 정수여야 · 증거 오류 None"
+      }
+    },
+    {
+      "name": "row0_id1_float_integer",
+      "category": "negative_rows",
+      "expected": "reject",
+      "observed": "reject",
+      "contract": "IDs must be actual integers at the registered positions.",
+      "failed_checks": {
+        "case15.nc3_cause": "FAIL"
+      },
+      "s0b_problem_count": 1,
+      "producer_matches_shared": true,
+      "matches_expected": true,
+      "failing_details": {
+        "case15.nc3_cause": "겹침 {'electronic_hertzian': ('boundary_overlap', [24, 40, 57, 103]), 'electronic_physics': ('boundary_overlap', [24, 40, 57, 103]), 'thermal_hertzian': ('boundary_overlap', [24, 40, 57, 103])} · Physics 열 'ValueError: physics_g2: 간선 (31, 29241) — ligg_area < 0 (-0.186036)' · 음수 행 음수 면적 행 ID [31, 29241.0, -0.186036, 1.05114] — 정수여야 · 증거 오류 None"
+      }
+    },
+    {
+      "name": "row0_id1_string",
+      "category": "negative_rows",
+      "expected": "reject",
+      "observed": "reject",
+      "contract": "IDs must be actual integers at the registered positions.",
+      "failed_checks": {
+        "case15.nc3_cause": "FAIL"
+      },
+      "s0b_problem_count": 1,
+      "producer_matches_shared": true,
+      "matches_expected": true,
+      "failing_details": {
+        "case15.nc3_cause": "겹침 {'electronic_hertzian': ('boundary_overlap', [24, 40, 57, 103]), 'electronic_physics': ('boundary_overlap', [24, 40, 57, 103]), 'thermal_hertzian': ('boundary_overlap', [24, 40, 57, 103])} · Physics 열 'ValueError: physics_g2: 간선 (31, 29241) — ligg_area < 0 (-0.186036)' · 음수 행 음수 면적 행 ID [31, '29241', -0.186036, 1.05114] — 정수여야 · 증거 오류 None"
+      }
+    },
+    {
+      "name": "row0_id1_null",
+      "category": "negative_rows",
+      "expected": "reject",
+      "observed": "reject",
+      "contract": "IDs must be actual integers at the registered positions.",
+      "failed_checks": {
+        "case15.nc3_cause": "FAIL"
+      },
+      "s0b_problem_count": 1,
+      "producer_matches_shared": true,
+      "matches_expected": true,
+      "failing_details": {
+        "case15.nc3_cause": "겹침 {'electronic_hertzian': ('boundary_overlap', [24, 40, 57, 103]), 'electronic_physics': ('boundary_overlap', [24, 40, 57, 103]), 'thermal_hertzian': ('boundary_overlap', [24, 40, 57, 103])} · Physics 열 'ValueError: physics_g2: 간선 (31, 29241) — ligg_area < 0 (-0.186036)' · 음수 행 음수 면적 행 ID [31, None, -0.186036, 1.05114] — 정수여야 · 증거 오류 None"
+      }
+    },
+    {
+      "name": "row0_id1_wrong",
+      "category": "negative_rows",
+      "expected": "reject",
+      "observed": "reject",
+      "contract": "IDs must be actual integers at the registered positions.",
+      "failed_checks": {
+        "case15.nc3_cause": "FAIL"
+      },
+      "s0b_problem_count": 1,
+      "producer_matches_shared": true,
+      "matches_expected": true,
+      "failing_details": {
+        "case15.nc3_cause": "겹침 {'electronic_hertzian': ('boundary_overlap', [24, 40, 57, 103]), 'electronic_physics': ('boundary_overlap', [24, 40, 57, 103]), 'thermal_hertzian': ('boundary_overlap', [24, 40, 57, 103])} · Physics 열 'ValueError: physics_g2: 간선 (31, 29241) — ligg_area < 0 (-0.186036)' · 음수 행 음수 면적 행 [(31, 29242, -0.186036, 1.05114), (38, 29241, -0.186264, 1.0512)] ≠ 등록 [(31, 29241, -0.186036, 1.05114), (38, 29241, -0.186264, 1.0512)] · 증거 오류 None"
+      }
+    },
+    {
+      "name": "row0_value2_bool",
+      "category": "negative_rows",
+      "expected": "reject",
+      "observed": "reject",
+      "contract": "Fixed producer emits round(raw_unit_conversion, 6); values must be finite, signed correctly, and equal to that display value.",
+      "failed_checks": {
+        "case15.nc3_cause": "FAIL"
+      },
+      "s0b_problem_count": 1,
+      "producer_matches_shared": true,
+      "matches_expected": true,
+      "failing_details": {
+        "case15.nc3_cause": "겹침 {'electronic_hertzian': ('boundary_overlap', [24, 40, 57, 103]), 'electronic_physics': ('boundary_overlap', [24, 40, 57, 103]), 'thermal_hertzian': ('boundary_overlap', [24, 40, 57, 103])} · Physics 열 'ValueError: physics_g2: 간선 (31, 29241) — ligg_area < 0 (-0.186036)' · 음수 행 음수 면적 행 값 [31, 29241, True, 1.05114] — 면적 · δ = 유한 실수여야 · 증거 오류 None"
+      }
+    },
+    {
+      "name": "row0_value2_string",
+      "category": "negative_rows",
+      "expected": "reject",
+      "observed": "reject",
+      "contract": "Fixed producer emits round(raw_unit_conversion, 6); values must be finite, signed correctly, and equal to that display value.",
+      "failed_checks": {
+        "case15.nc3_cause": "FAIL"
+      },
+      "s0b_problem_count": 1,
+      "producer_matches_shared": true,
+      "matches_expected": true,
+      "failing_details": {
+        "case15.nc3_cause": "겹침 {'electronic_hertzian': ('boundary_overlap', [24, 40, 57, 103]), 'electronic_physics': ('boundary_overlap', [24, 40, 57, 103]), 'thermal_hertzian': ('boundary_overlap', [24, 40, 57, 103])} · Physics 열 'ValueError: physics_g2: 간선 (31, 29241) — ligg_area < 0 (-0.186036)' · 음수 행 음수 면적 행 값 [31, 29241, '-0.186036', 1.05114] — 면적 · δ = 유한 실수여야 · 증거 오류 None"
+      }
+    },
+    {
+      "name": "row0_value2_null",
+      "category": "negative_rows",
+      "expected": "reject",
+      "observed": "reject",
+      "contract": "Fixed producer emits round(raw_unit_conversion, 6); values must be finite, signed correctly, and equal to that display value.",
+      "failed_checks": {
+        "case15.nc3_cause": "FAIL"
+      },
+      "s0b_problem_count": 1,
+      "producer_matches_shared": true,
+      "matches_expected": true,
+      "failing_details": {
+        "case15.nc3_cause": "겹침 {'electronic_hertzian': ('boundary_overlap', [24, 40, 57, 103]), 'electronic_physics': ('boundary_overlap', [24, 40, 57, 103]), 'thermal_hertzian': ('boundary_overlap', [24, 40, 57, 103])} · Physics 열 'ValueError: physics_g2: 간선 (31, 29241) — ligg_area < 0 (-0.186036)' · 음수 행 음수 면적 행 값 [31, 29241, None, 1.05114] — 면적 · δ = 유한 실수여야 · 증거 오류 None"
+      }
+    },
+    {
+      "name": "row0_value2_zero",
+      "category": "negative_rows",
+      "expected": "reject",
+      "observed": "reject",
+      "contract": "Fixed producer emits round(raw_unit_conversion, 6); values must be finite, signed correctly, and equal to that display value.",
+      "failed_checks": {
+        "case15.nc3_cause": "FAIL"
+      },
+      "s0b_problem_count": 1,
+      "producer_matches_shared": true,
+      "matches_expected": true,
+      "failing_details": {
+        "case15.nc3_cause": "겹침 {'electronic_hertzian': ('boundary_overlap', [24, 40, 57, 103]), 'electronic_physics': ('boundary_overlap', [24, 40, 57, 103]), 'thermal_hertzian': ('boundary_overlap', [24, 40, 57, 103])} · Physics 열 'ValueError: physics_g2: 간선 (31, 29241) — ligg_area < 0 (-0.186036)' · 음수 행 음수 면적 행 [31, 29241, 0, 1.05114] — 면적 < 0 µm² · δ > 0 이어야 · 증거 오류 None"
+      }
+    },
+    {
+      "name": "row0_value2_nan",
+      "category": "negative_rows",
+      "expected": "reject",
+      "observed": "reject",
+      "contract": "Fixed producer emits round(raw_unit_conversion, 6); values must be finite, signed correctly, and equal to that display value.",
+      "failed_checks": {
+        "case15.nc3_cause": "FAIL"
+      },
+      "s0b_problem_count": 1,
+      "producer_matches_shared": true,
+      "matches_expected": true,
+      "failing_details": {
+        "case15.nc3_cause": "겹침 {'electronic_hertzian': ('boundary_overlap', [24, 40, 57, 103]), 'electronic_physics': ('boundary_overlap', [24, 40, 57, 103]), 'thermal_hertzian': ('boundary_overlap', [24, 40, 57, 103])} · Physics 열 'ValueError: physics_g2: 간선 (31, 29241) — ligg_area < 0 (-0.186036)' · 음수 행 음수 면적 행 값 [31, 29241, nan, 1.05114] — 면적 · δ = 유한 실수여야 · 증거 오류 None"
+      }
+    },
+    {
+      "name": "row0_value2_inf",
+      "category": "negative_rows",
+      "expected": "reject",
+      "observed": "reject",
+      "contract": "Fixed producer emits round(raw_unit_conversion, 6); values must be finite, signed correctly, and equal to that display value.",
+      "failed_checks": {
+        "case15.nc3_cause": "FAIL"
+      },
+      "s0b_problem_count": 1,
+      "producer_matches_shared": true,
+      "matches_expected": true,
+      "failing_details": {
+        "case15.nc3_cause": "겹침 {'electronic_hertzian': ('boundary_overlap', [24, 40, 57, 103]), 'electronic_physics': ('boundary_overlap', [24, 40, 57, 103]), 'thermal_hertzian': ('boundary_overlap', [24, 40, 57, 103])} · Physics 열 'ValueError: physics_g2: 간선 (31, 29241) — ligg_area < 0 (-0.186036)' · 음수 행 음수 면적 행 값 [31, 29241, inf, 1.05114] — 면적 · δ = 유한 실수여야 · 증거 오류 None"
+      }
+    },
+    {
+      "name": "row0_value2_negative_inf",
+      "category": "negative_rows",
+      "expected": "reject",
+      "observed": "reject",
+      "contract": "Fixed producer emits round(raw_unit_conversion, 6); values must be finite, signed correctly, and equal to that display value.",
+      "failed_checks": {
+        "case15.nc3_cause": "FAIL"
+      },
+      "s0b_problem_count": 1,
+      "producer_matches_shared": true,
+      "matches_expected": true,
+      "failing_details": {
+        "case15.nc3_cause": "겹침 {'electronic_hertzian': ('boundary_overlap', [24, 40, 57, 103]), 'electronic_physics': ('boundary_overlap', [24, 40, 57, 103]), 'thermal_hertzian': ('boundary_overlap', [24, 40, 57, 103])} · Physics 열 'ValueError: physics_g2: 간선 (31, 29241) — ligg_area < 0 (-0.186036)' · 음수 행 음수 면적 행 값 [31, 29241, -inf, 1.05114] — 면적 · δ = 유한 실수여야 · 증거 오류 None"
+      }
+    },
+    {
+      "name": "row0_value2_wrong_sign",
+      "category": "negative_rows",
+      "expected": "reject",
+      "observed": "reject",
+      "contract": "Fixed producer emits round(raw_unit_conversion, 6); values must be finite, signed correctly, and equal to that display value.",
+      "failed_checks": {
+        "case15.nc3_cause": "FAIL"
+      },
+      "s0b_problem_count": 1,
+      "producer_matches_shared": true,
+      "matches_expected": true,
+      "failing_details": {
+        "case15.nc3_cause": "겹침 {'electronic_hertzian': ('boundary_overlap', [24, 40, 57, 103]), 'electronic_physics': ('boundary_overlap', [24, 40, 57, 103]), 'thermal_hertzian': ('boundary_overlap', [24, 40, 57, 103])} · Physics 열 'ValueError: physics_g2: 간선 (31, 29241) — ligg_area < 0 (-0.186036)' · 음수 행 음수 면적 행 [31, 29241, 0.186036, 1.05114] — 면적 < 0 µm² · δ > 0 이어야 · 증거 오류 None"
+      }
+    },
+    {
+      "name": "row0_value2_one_ulp",
+      "category": "negative_rows",
+      "expected": "reject",
+      "observed": "reject",
+      "contract": "Fixed producer emits round(raw_unit_conversion, 6); values must be finite, signed correctly, and equal to that display value.",
+      "failed_checks": {
+        "case15.nc3_cause": "FAIL"
+      },
+      "s0b_problem_count": 1,
+      "producer_matches_shared": true,
+      "matches_expected": true,
+      "failing_details": {
+        "case15.nc3_cause": "겹침 {'electronic_hertzian': ('boundary_overlap', [24, 40, 57, 103]), 'electronic_physics': ('boundary_overlap', [24, 40, 57, 103]), 'thermal_hertzian': ('boundary_overlap', [24, 40, 57, 103])} · Physics 열 'ValueError: physics_g2: 간선 (31, 29241) — ligg_area < 0 (-0.186036)' · 음수 행 음수 면적 행 [(31, 29241, -0.18603599999999998, 1.05114), (38, 29241, -0.186264, 1.0512)] ≠ 등록 [(31, 29241, -0.186036, 1.05114), (38, 29241, -0.186264, 1.0512)] · 증거 오류 None"
+      }
+    },
+    {
+      "name": "row0_value2_subprecision",
+      "category": "negative_rows",
+      "expected": "reject",
+      "observed": "reject",
+      "contract": "Fixed producer emits round(raw_unit_conversion, 6); values must be finite, signed correctly, and equal to that display value.",
+      "failed_checks": {
+        "case15.nc3_cause": "FAIL"
+      },
+      "s0b_problem_count": 1,
+      "producer_matches_shared": true,
+      "matches_expected": true,
+      "failing_details": {
+        "case15.nc3_cause": "겹침 {'electronic_hertzian': ('boundary_overlap', [24, 40, 57, 103]), 'electronic_physics': ('boundary_overlap', [24, 40, 57, 103]), 'thermal_hertzian': ('boundary_overlap', [24, 40, 57, 103])} · Physics 열 'ValueError: physics_g2: 간선 (31, 29241) — ligg_area < 0 (-0.186036)' · 음수 행 음수 면적 행 [(31, 29241, -0.18603599, 1.05114), (38, 29241, -0.186264, 1.0512)] ≠ 등록 [(31, 29241, -0.186036, 1.05114), (38, 29241, -0.186264, 1.0512)] · 증거 오류 None"
+      }
+    },
+    {
+      "name": "row0_value2_one_micro",
+      "category": "negative_rows",
+      "expected": "reject",
+      "observed": "reject",
+      "contract": "Fixed producer emits round(raw_unit_conversion, 6); values must be finite, signed correctly, and equal to that display value.",
+      "failed_checks": {
+        "case15.nc3_cause": "FAIL"
+      },
+      "s0b_problem_count": 1,
+      "producer_matches_shared": true,
+      "matches_expected": true,
+      "failing_details": {
+        "case15.nc3_cause": "겹침 {'electronic_hertzian': ('boundary_overlap', [24, 40, 57, 103]), 'electronic_physics': ('boundary_overlap', [24, 40, 57, 103]), 'thermal_hertzian': ('boundary_overlap', [24, 40, 57, 103])} · Physics 열 'ValueError: physics_g2: 간선 (31, 29241) — ligg_area < 0 (-0.186036)' · 음수 행 음수 면적 행 [(31, 29241, -0.186035, 1.05114), (38, 29241, -0.186264, 1.0512)] ≠ 등록 [(31, 29241, -0.186036, 1.05114), (38, 29241, -0.186264, 1.0512)] · 증거 오류 None"
+      }
+    },
+    {
+      "name": "row0_value2_huge_integer",
+      "category": "negative_rows",
+      "expected": "reject",
+      "observed": "reject",
+      "contract": "Fixed producer emits round(raw_unit_conversion, 6); values must be finite, signed correctly, and equal to that display value.",
+      "failed_checks": {
+        "case15.nc3_cause": "FAIL"
+      },
+      "s0b_problem_count": 1,
+      "producer_matches_shared": true,
+      "matches_expected": true,
+      "failing_details": {
+        "case15.nc3_cause": "판정 예외 OverflowError: int too large to convert to float"
+      }
+    },
+    {
+      "name": "row0_value3_bool",
+      "category": "negative_rows",
+      "expected": "reject",
+      "observed": "reject",
+      "contract": "Fixed producer emits round(raw_unit_conversion, 6); values must be finite, signed correctly, and equal to that display value.",
+      "failed_checks": {
+        "case15.nc3_cause": "FAIL"
+      },
+      "s0b_problem_count": 1,
+      "producer_matches_shared": true,
+      "matches_expected": true,
+      "failing_details": {
+        "case15.nc3_cause": "겹침 {'electronic_hertzian': ('boundary_overlap', [24, 40, 57, 103]), 'electronic_physics': ('boundary_overlap', [24, 40, 57, 103]), 'thermal_hertzian': ('boundary_overlap', [24, 40, 57, 103])} · Physics 열 'ValueError: physics_g2: 간선 (31, 29241) — ligg_area < 0 (-0.186036)' · 음수 행 음수 면적 행 값 [31, 29241, -0.186036, True] — 면적 · δ = 유한 실수여야 · 증거 오류 None"
+      }
+    },
+    {
+      "name": "row0_value3_string",
+      "category": "negative_rows",
+      "expected": "reject",
+      "observed": "reject",
+      "contract": "Fixed producer emits round(raw_unit_conversion, 6); values must be finite, signed correctly, and equal to that display value.",
+      "failed_checks": {
+        "case15.nc3_cause": "FAIL"
+      },
+      "s0b_problem_count": 1,
+      "producer_matches_shared": true,
+      "matches_expected": true,
+      "failing_details": {
+        "case15.nc3_cause": "겹침 {'electronic_hertzian': ('boundary_overlap', [24, 40, 57, 103]), 'electronic_physics': ('boundary_overlap', [24, 40, 57, 103]), 'thermal_hertzian': ('boundary_overlap', [24, 40, 57, 103])} · Physics 열 'ValueError: physics_g2: 간선 (31, 29241) — ligg_area < 0 (-0.186036)' · 음수 행 음수 면적 행 값 [31, 29241, -0.186036, '1.05114'] — 면적 · δ = 유한 실수여야 · 증거 오류 None"
+      }
+    },
+    {
+      "name": "row0_value3_null",
+      "category": "negative_rows",
+      "expected": "reject",
+      "observed": "reject",
+      "contract": "Fixed producer emits round(raw_unit_conversion, 6); values must be finite, signed correctly, and equal to that display value.",
+      "failed_checks": {
+        "case15.nc3_cause": "FAIL"
+      },
+      "s0b_problem_count": 1,
+      "producer_matches_shared": true,
+      "matches_expected": true,
+      "failing_details": {
+        "case15.nc3_cause": "겹침 {'electronic_hertzian': ('boundary_overlap', [24, 40, 57, 103]), 'electronic_physics': ('boundary_overlap', [24, 40, 57, 103]), 'thermal_hertzian': ('boundary_overlap', [24, 40, 57, 103])} · Physics 열 'ValueError: physics_g2: 간선 (31, 29241) — ligg_area < 0 (-0.186036)' · 음수 행 음수 면적 행 값 [31, 29241, -0.186036, None] — 면적 · δ = 유한 실수여야 · 증거 오류 None"
+      }
+    },
+    {
+      "name": "row0_value3_zero",
+      "category": "negative_rows",
+      "expected": "reject",
+      "observed": "reject",
+      "contract": "Fixed producer emits round(raw_unit_conversion, 6); values must be finite, signed correctly, and equal to that display value.",
+      "failed_checks": {
+        "case15.nc3_cause": "FAIL"
+      },
+      "s0b_problem_count": 1,
+      "producer_matches_shared": true,
+      "matches_expected": true,
+      "failing_details": {
+        "case15.nc3_cause": "겹침 {'electronic_hertzian': ('boundary_overlap', [24, 40, 57, 103]), 'electronic_physics': ('boundary_overlap', [24, 40, 57, 103]), 'thermal_hertzian': ('boundary_overlap', [24, 40, 57, 103])} · Physics 열 'ValueError: physics_g2: 간선 (31, 29241) — ligg_area < 0 (-0.186036)' · 음수 행 음수 면적 행 [31, 29241, -0.186036, 0] — 면적 < 0 µm² · δ > 0 이어야 · 증거 오류 None"
+      }
+    },
+    {
+      "name": "row0_value3_nan",
+      "category": "negative_rows",
+      "expected": "reject",
+      "observed": "reject",
+      "contract": "Fixed producer emits round(raw_unit_conversion, 6); values must be finite, signed correctly, and equal to that display value.",
+      "failed_checks": {
+        "case15.nc3_cause": "FAIL"
+      },
+      "s0b_problem_count": 1,
+      "producer_matches_shared": true,
+      "matches_expected": true,
+      "failing_details": {
+        "case15.nc3_cause": "겹침 {'electronic_hertzian': ('boundary_overlap', [24, 40, 57, 103]), 'electronic_physics': ('boundary_overlap', [24, 40, 57, 103]), 'thermal_hertzian': ('boundary_overlap', [24, 40, 57, 103])} · Physics 열 'ValueError: physics_g2: 간선 (31, 29241) — ligg_area < 0 (-0.186036)' · 음수 행 음수 면적 행 값 [31, 29241, -0.186036, nan] — 면적 · δ = 유한 실수여야 · 증거 오류 None"
+      }
+    },
+    {
+      "name": "row0_value3_inf",
+      "category": "negative_rows",
+      "expected": "reject",
+      "observed": "reject",
+      "contract": "Fixed producer emits round(raw_unit_conversion, 6); values must be finite, signed correctly, and equal to that display value.",
+      "failed_checks": {
+        "case15.nc3_cause": "FAIL"
+      },
+      "s0b_problem_count": 1,
+      "producer_matches_shared": true,
+      "matches_expected": true,
+      "failing_details": {
+        "case15.nc3_cause": "겹침 {'electronic_hertzian': ('boundary_overlap', [24, 40, 57, 103]), 'electronic_physics': ('boundary_overlap', [24, 40, 57, 103]), 'thermal_hertzian': ('boundary_overlap', [24, 40, 57, 103])} · Physics 열 'ValueError: physics_g2: 간선 (31, 29241) — ligg_area < 0 (-0.186036)' · 음수 행 음수 면적 행 값 [31, 29241, -0.186036, inf] — 면적 · δ = 유한 실수여야 · 증거 오류 None"
+      }
+    },
+    {
+      "name": "row0_value3_negative_inf",
+      "category": "negative_rows",
+      "expected": "reject",
+      "observed": "reject",
+      "contract": "Fixed producer emits round(raw_unit_conversion, 6); values must be finite, signed correctly, and equal to that display value.",
+      "failed_checks": {
+        "case15.nc3_cause": "FAIL"
+      },
+      "s0b_problem_count": 1,
+      "producer_matches_shared": true,
+      "matches_expected": true,
+      "failing_details": {
+        "case15.nc3_cause": "겹침 {'electronic_hertzian': ('boundary_overlap', [24, 40, 57, 103]), 'electronic_physics': ('boundary_overlap', [24, 40, 57, 103]), 'thermal_hertzian': ('boundary_overlap', [24, 40, 57, 103])} · Physics 열 'ValueError: physics_g2: 간선 (31, 29241) — ligg_area < 0 (-0.186036)' · 음수 행 음수 면적 행 값 [31, 29241, -0.186036, -inf] — 면적 · δ = 유한 실수여야 · 증거 오류 None"
+      }
+    },
+    {
+      "name": "row0_value3_wrong_sign",
+      "category": "negative_rows",
+      "expected": "reject",
+      "observed": "reject",
+      "contract": "Fixed producer emits round(raw_unit_conversion, 6); values must be finite, signed correctly, and equal to that display value.",
+      "failed_checks": {
+        "case15.nc3_cause": "FAIL"
+      },
+      "s0b_problem_count": 1,
+      "producer_matches_shared": true,
+      "matches_expected": true,
+      "failing_details": {
+        "case15.nc3_cause": "겹침 {'electronic_hertzian': ('boundary_overlap', [24, 40, 57, 103]), 'electronic_physics': ('boundary_overlap', [24, 40, 57, 103]), 'thermal_hertzian': ('boundary_overlap', [24, 40, 57, 103])} · Physics 열 'ValueError: physics_g2: 간선 (31, 29241) — ligg_area < 0 (-0.186036)' · 음수 행 음수 면적 행 [31, 29241, -0.186036, -1.05114] — 면적 < 0 µm² · δ > 0 이어야 · 증거 오류 None"
+      }
+    },
+    {
+      "name": "row0_value3_one_ulp",
+      "category": "negative_rows",
+      "expected": "reject",
+      "observed": "reject",
+      "contract": "Fixed producer emits round(raw_unit_conversion, 6); values must be finite, signed correctly, and equal to that display value.",
+      "failed_checks": {
+        "case15.nc3_cause": "FAIL"
+      },
+      "s0b_problem_count": 1,
+      "producer_matches_shared": true,
+      "matches_expected": true,
+      "failing_details": {
+        "case15.nc3_cause": "겹침 {'electronic_hertzian': ('boundary_overlap', [24, 40, 57, 103]), 'electronic_physics': ('boundary_overlap', [24, 40, 57, 103]), 'thermal_hertzian': ('boundary_overlap', [24, 40, 57, 103])} · Physics 열 'ValueError: physics_g2: 간선 (31, 29241) — ligg_area < 0 (-0.186036)' · 음수 행 음수 면적 행 [(31, 29241, -0.186036, 1.0511400000000002), (38, 29241, -0.186264, 1.0512)] ≠ 등록 [(31, 29241, -0.186036, 1.05114), (38, 29241, -0.186264, 1.0512)] · 증거 오류 None"
+      }
+    },
+    {
+      "name": "row0_value3_subprecision",
+      "category": "negative_rows",
+      "expected": "reject",
+      "observed": "reject",
+      "contract": "Fixed producer emits round(raw_unit_conversion, 6); values must be finite, signed correctly, and equal to that display value.",
+      "failed_checks": {
+        "case15.nc3_cause": "FAIL"
+      },
+      "s0b_problem_count": 1,
+      "producer_matches_shared": true,
+      "matches_expected": true,
+      "failing_details": {
+        "case15.nc3_cause": "겹침 {'electronic_hertzian': ('boundary_overlap', [24, 40, 57, 103]), 'electronic_physics': ('boundary_overlap', [24, 40, 57, 103]), 'thermal_hertzian': ('boundary_overlap', [24, 40, 57, 103])} · Physics 열 'ValueError: physics_g2: 간선 (31, 29241) — ligg_area < 0 (-0.186036)' · 음수 행 음수 면적 행 [(31, 29241, -0.186036, 1.05114001), (38, 29241, -0.186264, 1.0512)] ≠ 등록 [(31, 29241, -0.186036, 1.05114), (38, 29241, -0.186264, 1.0512)] · 증거 오류 None"
+      }
+    },
+    {
+      "name": "row0_value3_one_micro",
+      "category": "negative_rows",
+      "expected": "reject",
+      "observed": "reject",
+      "contract": "Fixed producer emits round(raw_unit_conversion, 6); values must be finite, signed correctly, and equal to that display value.",
+      "failed_checks": {
+        "case15.nc3_cause": "FAIL"
+      },
+      "s0b_problem_count": 1,
+      "producer_matches_shared": true,
+      "matches_expected": true,
+      "failing_details": {
+        "case15.nc3_cause": "겹침 {'electronic_hertzian': ('boundary_overlap', [24, 40, 57, 103]), 'electronic_physics': ('boundary_overlap', [24, 40, 57, 103]), 'thermal_hertzian': ('boundary_overlap', [24, 40, 57, 103])} · Physics 열 'ValueError: physics_g2: 간선 (31, 29241) — ligg_area < 0 (-0.186036)' · 음수 행 음수 면적 행 [(31, 29241, -0.186036, 1.0511409999999999), (38, 29241, -0.186264, 1.0512)] ≠ 등록 [(31, 29241, -0.186036, 1.05114), (38, 29241, -0.186264, 1.0512)] · 증거 오류 None"
+      }
+    },
+    {
+      "name": "row0_value3_huge_integer",
+      "category": "negative_rows",
+      "expected": "reject",
+      "observed": "reject",
+      "contract": "Fixed producer emits round(raw_unit_conversion, 6); values must be finite, signed correctly, and equal to that display value.",
+      "failed_checks": {
+        "case15.nc3_cause": "FAIL"
+      },
+      "s0b_problem_count": 1,
+      "producer_matches_shared": true,
+      "matches_expected": true,
+      "failing_details": {
+        "case15.nc3_cause": "판정 예외 OverflowError: int too large to convert to float"
+      }
+    },
+    {
+      "name": "row1_id0_bool",
+      "category": "negative_rows",
+      "expected": "reject",
+      "observed": "reject",
+      "contract": "IDs must be actual integers at the registered positions.",
+      "failed_checks": {
+        "case15.nc3_cause": "FAIL"
+      },
+      "s0b_problem_count": 1,
+      "producer_matches_shared": true,
+      "matches_expected": true,
+      "failing_details": {
+        "case15.nc3_cause": "겹침 {'electronic_hertzian': ('boundary_overlap', [24, 40, 57, 103]), 'electronic_physics': ('boundary_overlap', [24, 40, 57, 103]), 'thermal_hertzian': ('boundary_overlap', [24, 40, 57, 103])} · Physics 열 'ValueError: physics_g2: 간선 (31, 29241) — ligg_area < 0 (-0.186036)' · 음수 행 음수 면적 행 ID [True, 29241, -0.186264, 1.0512] — 정수여야 · 증거 오류 None"
+      }
+    },
+    {
+      "name": "row1_id0_float_integer",
+      "category": "negative_rows",
+      "expected": "reject",
+      "observed": "reject",
+      "contract": "IDs must be actual integers at the registered positions.",
+      "failed_checks": {
+        "case15.nc3_cause": "FAIL"
+      },
+      "s0b_problem_count": 1,
+      "producer_matches_shared": true,
+      "matches_expected": true,
+      "failing_details": {
+        "case15.nc3_cause": "겹침 {'electronic_hertzian': ('boundary_overlap', [24, 40, 57, 103]), 'electronic_physics': ('boundary_overlap', [24, 40, 57, 103]), 'thermal_hertzian': ('boundary_overlap', [24, 40, 57, 103])} · Physics 열 'ValueError: physics_g2: 간선 (31, 29241) — ligg_area < 0 (-0.186036)' · 음수 행 음수 면적 행 ID [38.0, 29241, -0.186264, 1.0512] — 정수여야 · 증거 오류 None"
+      }
+    },
+    {
+      "name": "row1_id0_string",
+      "category": "negative_rows",
+      "expected": "reject",
+      "observed": "reject",
+      "contract": "IDs must be actual integers at the registered positions.",
+      "failed_checks": {
+        "case15.nc3_cause": "FAIL"
+      },
+      "s0b_problem_count": 1,
+      "producer_matches_shared": true,
+      "matches_expected": true,
+      "failing_details": {
+        "case15.nc3_cause": "겹침 {'electronic_hertzian': ('boundary_overlap', [24, 40, 57, 103]), 'electronic_physics': ('boundary_overlap', [24, 40, 57, 103]), 'thermal_hertzian': ('boundary_overlap', [24, 40, 57, 103])} · Physics 열 'ValueError: physics_g2: 간선 (31, 29241) — ligg_area < 0 (-0.186036)' · 음수 행 음수 면적 행 ID ['38', 29241, -0.186264, 1.0512] — 정수여야 · 증거 오류 None"
+      }
+    },
+    {
+      "name": "row1_id0_null",
+      "category": "negative_rows",
+      "expected": "reject",
+      "observed": "reject",
+      "contract": "IDs must be actual integers at the registered positions.",
+      "failed_checks": {
+        "case15.nc3_cause": "FAIL"
+      },
+      "s0b_problem_count": 1,
+      "producer_matches_shared": true,
+      "matches_expected": true,
+      "failing_details": {
+        "case15.nc3_cause": "겹침 {'electronic_hertzian': ('boundary_overlap', [24, 40, 57, 103]), 'electronic_physics': ('boundary_overlap', [24, 40, 57, 103]), 'thermal_hertzian': ('boundary_overlap', [24, 40, 57, 103])} · Physics 열 'ValueError: physics_g2: 간선 (31, 29241) — ligg_area < 0 (-0.186036)' · 음수 행 음수 면적 행 ID [None, 29241, -0.186264, 1.0512] — 정수여야 · 증거 오류 None"
+      }
+    },
+    {
+      "name": "row1_id0_wrong",
+      "category": "negative_rows",
+      "expected": "reject",
+      "observed": "reject",
+      "contract": "IDs must be actual integers at the registered positions.",
+      "failed_checks": {
+        "case15.nc3_cause": "FAIL"
+      },
+      "s0b_problem_count": 1,
+      "producer_matches_shared": true,
+      "matches_expected": true,
+      "failing_details": {
+        "case15.nc3_cause": "겹침 {'electronic_hertzian': ('boundary_overlap', [24, 40, 57, 103]), 'electronic_physics': ('boundary_overlap', [24, 40, 57, 103]), 'thermal_hertzian': ('boundary_overlap', [24, 40, 57, 103])} · Physics 열 'ValueError: physics_g2: 간선 (31, 29241) — ligg_area < 0 (-0.186036)' · 음수 행 음수 면적 행 [(31, 29241, -0.186036, 1.05114), (39, 29241, -0.186264, 1.0512)] ≠ 등록 [(31, 29241, -0.186036, 1.05114), (38, 29241, -0.186264, 1.0512)] · 증거 오류 None"
+      }
+    },
+    {
+      "name": "row1_id1_bool",
+      "category": "negative_rows",
+      "expected": "reject",
+      "observed": "reject",
+      "contract": "IDs must be actual integers at the registered positions.",
+      "failed_checks": {
+        "case15.nc3_cause": "FAIL"
+      },
+      "s0b_problem_count": 1,
+      "producer_matches_shared": true,
+      "matches_expected": true,
+      "failing_details": {
+        "case15.nc3_cause": "겹침 {'electronic_hertzian': ('boundary_overlap', [24, 40, 57, 103]), 'electronic_physics': ('boundary_overlap', [24, 40, 57, 103]), 'thermal_hertzian': ('boundary_overlap', [24, 40, 57, 103])} · Physics 열 'ValueError: physics_g2: 간선 (31, 29241) — ligg_area < 0 (-0.186036)' · 음수 행 음수 면적 행 ID [38, True, -0.186264, 1.0512] — 정수여야 · 증거 오류 None"
+      }
+    },
+    {
+      "name": "row1_id1_float_integer",
+      "category": "negative_rows",
+      "expected": "reject",
+      "observed": "reject",
+      "contract": "IDs must be actual integers at the registered positions.",
+      "failed_checks": {
+        "case15.nc3_cause": "FAIL"
+      },
+      "s0b_problem_count": 1,
+      "producer_matches_shared": true,
+      "matches_expected": true,
+      "failing_details": {
+        "case15.nc3_cause": "겹침 {'electronic_hertzian': ('boundary_overlap', [24, 40, 57, 103]), 'electronic_physics': ('boundary_overlap', [24, 40, 57, 103]), 'thermal_hertzian': ('boundary_overlap', [24, 40, 57, 103])} · Physics 열 'ValueError: physics_g2: 간선 (31, 29241) — ligg_area < 0 (-0.186036)' · 음수 행 음수 면적 행 ID [38, 29241.0, -0.186264, 1.0512] — 정수여야 · 증거 오류 None"
+      }
+    },
+    {
+      "name": "row1_id1_string",
+      "category": "negative_rows",
+      "expected": "reject",
+      "observed": "reject",
+      "contract": "IDs must be actual integers at the registered positions.",
+      "failed_checks": {
+        "case15.nc3_cause": "FAIL"
+      },
+      "s0b_problem_count": 1,
+      "producer_matches_shared": true,
+      "matches_expected": true,
+      "failing_details": {
+        "case15.nc3_cause": "겹침 {'electronic_hertzian': ('boundary_overlap', [24, 40, 57, 103]), 'electronic_physics': ('boundary_overlap', [24, 40, 57, 103]), 'thermal_hertzian': ('boundary_overlap', [24, 40, 57, 103])} · Physics 열 'ValueError: physics_g2: 간선 (31, 29241) — ligg_area < 0 (-0.186036)' · 음수 행 음수 면적 행 ID [38, '29241', -0.186264, 1.0512] — 정수여야 · 증거 오류 None"
+      }
+    },
+    {
+      "name": "row1_id1_null",
+      "category": "negative_rows",
+      "expected": "reject",
+      "observed": "reject",
+      "contract": "IDs must be actual integers at the registered positions.",
+      "failed_checks": {
+        "case15.nc3_cause": "FAIL"
+      },
+      "s0b_problem_count": 1,
+      "producer_matches_shared": true,
+      "matches_expected": true,
+      "failing_details": {
+        "case15.nc3_cause": "겹침 {'electronic_hertzian': ('boundary_overlap', [24, 40, 57, 103]), 'electronic_physics': ('boundary_overlap', [24, 40, 57, 103]), 'thermal_hertzian': ('boundary_overlap', [24, 40, 57, 103])} · Physics 열 'ValueError: physics_g2: 간선 (31, 29241) — ligg_area < 0 (-0.186036)' · 음수 행 음수 면적 행 ID [38, None, -0.186264, 1.0512] — 정수여야 · 증거 오류 None"
+      }
+    },
+    {
+      "name": "row1_id1_wrong",
+      "category": "negative_rows",
+      "expected": "reject",
+      "observed": "reject",
+      "contract": "IDs must be actual integers at the registered positions.",
+      "failed_checks": {
+        "case15.nc3_cause": "FAIL"
+      },
+      "s0b_problem_count": 1,
+      "producer_matches_shared": true,
+      "matches_expected": true,
+      "failing_details": {
+        "case15.nc3_cause": "겹침 {'electronic_hertzian': ('boundary_overlap', [24, 40, 57, 103]), 'electronic_physics': ('boundary_overlap', [24, 40, 57, 103]), 'thermal_hertzian': ('boundary_overlap', [24, 40, 57, 103])} · Physics 열 'ValueError: physics_g2: 간선 (31, 29241) — ligg_area < 0 (-0.186036)' · 음수 행 음수 면적 행 [(31, 29241, -0.186036, 1.05114), (38, 29242, -0.186264, 1.0512)] ≠ 등록 [(31, 29241, -0.186036, 1.05114), (38, 29241, -0.186264, 1.0512)] · 증거 오류 None"
+      }
+    },
+    {
+      "name": "row1_value2_bool",
+      "category": "negative_rows",
+      "expected": "reject",
+      "observed": "reject",
+      "contract": "Fixed producer emits round(raw_unit_conversion, 6); values must be finite, signed correctly, and equal to that display value.",
+      "failed_checks": {
+        "case15.nc3_cause": "FAIL"
+      },
+      "s0b_problem_count": 1,
+      "producer_matches_shared": true,
+      "matches_expected": true,
+      "failing_details": {
+        "case15.nc3_cause": "겹침 {'electronic_hertzian': ('boundary_overlap', [24, 40, 57, 103]), 'electronic_physics': ('boundary_overlap', [24, 40, 57, 103]), 'thermal_hertzian': ('boundary_overlap', [24, 40, 57, 103])} · Physics 열 'ValueError: physics_g2: 간선 (31, 29241) — ligg_area < 0 (-0.186036)' · 음수 행 음수 면적 행 값 [38, 29241, True, 1.0512] — 면적 · δ = 유한 실수여야 · 증거 오류 None"
+      }
+    },
+    {
+      "name": "row1_value2_string",
+      "category": "negative_rows",
+      "expected": "reject",
+      "observed": "reject",
+      "contract": "Fixed producer emits round(raw_unit_conversion, 6); values must be finite, signed correctly, and equal to that display value.",
+      "failed_checks": {
+        "case15.nc3_cause": "FAIL"
+      },
+      "s0b_problem_count": 1,
+      "producer_matches_shared": true,
+      "matches_expected": true,
+      "failing_details": {
+        "case15.nc3_cause": "겹침 {'electronic_hertzian': ('boundary_overlap', [24, 40, 57, 103]), 'electronic_physics': ('boundary_overlap', [24, 40, 57, 103]), 'thermal_hertzian': ('boundary_overlap', [24, 40, 57, 103])} · Physics 열 'ValueError: physics_g2: 간선 (31, 29241) — ligg_area < 0 (-0.186036)' · 음수 행 음수 면적 행 값 [38, 29241, '-0.186264', 1.0512] — 면적 · δ = 유한 실수여야 · 증거 오류 None"
+      }
+    },
+    {
+      "name": "row1_value2_null",
+      "category": "negative_rows",
+      "expected": "reject",
+      "observed": "reject",
+      "contract": "Fixed producer emits round(raw_unit_conversion, 6); values must be finite, signed correctly, and equal to that display value.",
+      "failed_checks": {
+        "case15.nc3_cause": "FAIL"
+      },
+      "s0b_problem_count": 1,
+      "producer_matches_shared": true,
+      "matches_expected": true,
+      "failing_details": {
+        "case15.nc3_cause": "겹침 {'electronic_hertzian': ('boundary_overlap', [24, 40, 57, 103]), 'electronic_physics': ('boundary_overlap', [24, 40, 57, 103]), 'thermal_hertzian': ('boundary_overlap', [24, 40, 57, 103])} · Physics 열 'ValueError: physics_g2: 간선 (31, 29241) — ligg_area < 0 (-0.186036)' · 음수 행 음수 면적 행 값 [38, 29241, None, 1.0512] — 면적 · δ = 유한 실수여야 · 증거 오류 None"
+      }
+    },
+    {
+      "name": "row1_value2_zero",
+      "category": "negative_rows",
+      "expected": "reject",
+      "observed": "reject",
+      "contract": "Fixed producer emits round(raw_unit_conversion, 6); values must be finite, signed correctly, and equal to that display value.",
+      "failed_checks": {
+        "case15.nc3_cause": "FAIL"
+      },
+      "s0b_problem_count": 1,
+      "producer_matches_shared": true,
+      "matches_expected": true,
+      "failing_details": {
+        "case15.nc3_cause": "겹침 {'electronic_hertzian': ('boundary_overlap', [24, 40, 57, 103]), 'electronic_physics': ('boundary_overlap', [24, 40, 57, 103]), 'thermal_hertzian': ('boundary_overlap', [24, 40, 57, 103])} · Physics 열 'ValueError: physics_g2: 간선 (31, 29241) — ligg_area < 0 (-0.186036)' · 음수 행 음수 면적 행 [38, 29241, 0, 1.0512] — 면적 < 0 µm² · δ > 0 이어야 · 증거 오류 None"
+      }
+    },
+    {
+      "name": "row1_value2_nan",
+      "category": "negative_rows",
+      "expected": "reject",
+      "observed": "reject",
+      "contract": "Fixed producer emits round(raw_unit_conversion, 6); values must be finite, signed correctly, and equal to that display value.",
+      "failed_checks": {
+        "case15.nc3_cause": "FAIL"
+      },
+      "s0b_problem_count": 1,
+      "producer_matches_shared": true,
+      "matches_expected": true,
+      "failing_details": {
+        "case15.nc3_cause": "겹침 {'electronic_hertzian': ('boundary_overlap', [24, 40, 57, 103]), 'electronic_physics': ('boundary_overlap', [24, 40, 57, 103]), 'thermal_hertzian': ('boundary_overlap', [24, 40, 57, 103])} · Physics 열 'ValueError: physics_g2: 간선 (31, 29241) — ligg_area < 0 (-0.186036)' · 음수 행 음수 면적 행 값 [38, 29241, nan, 1.0512] — 면적 · δ = 유한 실수여야 · 증거 오류 None"
+      }
+    },
+    {
+      "name": "row1_value2_inf",
+      "category": "negative_rows",
+      "expected": "reject",
+      "observed": "reject",
+      "contract": "Fixed producer emits round(raw_unit_conversion, 6); values must be finite, signed correctly, and equal to that display value.",
+      "failed_checks": {
+        "case15.nc3_cause": "FAIL"
+      },
+      "s0b_problem_count": 1,
+      "producer_matches_shared": true,
+      "matches_expected": true,
+      "failing_details": {
+        "case15.nc3_cause": "겹침 {'electronic_hertzian': ('boundary_overlap', [24, 40, 57, 103]), 'electronic_physics': ('boundary_overlap', [24, 40, 57, 103]), 'thermal_hertzian': ('boundary_overlap', [24, 40, 57, 103])} · Physics 열 'ValueError: physics_g2: 간선 (31, 29241) — ligg_area < 0 (-0.186036)' · 음수 행 음수 면적 행 값 [38, 29241, inf, 1.0512] — 면적 · δ = 유한 실수여야 · 증거 오류 None"
+      }
+    },
+    {
+      "name": "row1_value2_negative_inf",
+      "category": "negative_rows",
+      "expected": "reject",
+      "observed": "reject",
+      "contract": "Fixed producer emits round(raw_unit_conversion, 6); values must be finite, signed correctly, and equal to that display value.",
+      "failed_checks": {
+        "case15.nc3_cause": "FAIL"
+      },
+      "s0b_problem_count": 1,
+      "producer_matches_shared": true,
+      "matches_expected": true,
+      "failing_details": {
+        "case15.nc3_cause": "겹침 {'electronic_hertzian': ('boundary_overlap', [24, 40, 57, 103]), 'electronic_physics': ('boundary_overlap', [24, 40, 57, 103]), 'thermal_hertzian': ('boundary_overlap', [24, 40, 57, 103])} · Physics 열 'ValueError: physics_g2: 간선 (31, 29241) — ligg_area < 0 (-0.186036)' · 음수 행 음수 면적 행 값 [38, 29241, -inf, 1.0512] — 면적 · δ = 유한 실수여야 · 증거 오류 None"
+      }
+    },
+    {
+      "name": "row1_value2_wrong_sign",
+      "category": "negative_rows",
+      "expected": "reject",
+      "observed": "reject",
+      "contract": "Fixed producer emits round(raw_unit_conversion, 6); values must be finite, signed correctly, and equal to that display value.",
+      "failed_checks": {
+        "case15.nc3_cause": "FAIL"
+      },
+      "s0b_problem_count": 1,
+      "producer_matches_shared": true,
+      "matches_expected": true,
+      "failing_details": {
+        "case15.nc3_cause": "겹침 {'electronic_hertzian': ('boundary_overlap', [24, 40, 57, 103]), 'electronic_physics': ('boundary_overlap', [24, 40, 57, 103]), 'thermal_hertzian': ('boundary_overlap', [24, 40, 57, 103])} · Physics 열 'ValueError: physics_g2: 간선 (31, 29241) — ligg_area < 0 (-0.186036)' · 음수 행 음수 면적 행 [38, 29241, 0.186264, 1.0512] — 면적 < 0 µm² · δ > 0 이어야 · 증거 오류 None"
+      }
+    },
+    {
+      "name": "row1_value2_one_ulp",
+      "category": "negative_rows",
+      "expected": "reject",
+      "observed": "reject",
+      "contract": "Fixed producer emits round(raw_unit_conversion, 6); values must be finite, signed correctly, and equal to that display value.",
+      "failed_checks": {
+        "case15.nc3_cause": "FAIL"
+      },
+      "s0b_problem_count": 1,
+      "producer_matches_shared": true,
+      "matches_expected": true,
+      "failing_details": {
+        "case15.nc3_cause": "겹침 {'electronic_hertzian': ('boundary_overlap', [24, 40, 57, 103]), 'electronic_physics': ('boundary_overlap', [24, 40, 57, 103]), 'thermal_hertzian': ('boundary_overlap', [24, 40, 57, 103])} · Physics 열 'ValueError: physics_g2: 간선 (31, 29241) — ligg_area < 0 (-0.186036)' · 음수 행 음수 면적 행 [(31, 29241, -0.186036, 1.05114), (38, 29241, -0.18626399999999999, 1.0512)] ≠ 등록 [(31, 29241, -0.186036, 1.05114), (38, 29241, -0.186264, 1.0512)] · 증거 오류 None"
+      }
+    },
+    {
+      "name": "row1_value2_subprecision",
+      "category": "negative_rows",
+      "expected": "reject",
+      "observed": "reject",
+      "contract": "Fixed producer emits round(raw_unit_conversion, 6); values must be finite, signed correctly, and equal to that display value.",
+      "failed_checks": {
+        "case15.nc3_cause": "FAIL"
+      },
+      "s0b_problem_count": 1,
+      "producer_matches_shared": true,
+      "matches_expected": true,
+      "failing_details": {
+        "case15.nc3_cause": "겹침 {'electronic_hertzian': ('boundary_overlap', [24, 40, 57, 103]), 'electronic_physics': ('boundary_overlap', [24, 40, 57, 103]), 'thermal_hertzian': ('boundary_overlap', [24, 40, 57, 103])} · Physics 열 'ValueError: physics_g2: 간선 (31, 29241) — ligg_area < 0 (-0.186036)' · 음수 행 음수 면적 행 [(31, 29241, -0.186036, 1.05114), (38, 29241, -0.18626399000000002, 1.0512)] ≠ 등록 [(31, 29241, -0.186036, 1.05114), (38, 29241, -0.186264, 1.0512)] · 증거 오류 None"
+      }
+    },
+    {
+      "name": "row1_value2_one_micro",
+      "category": "negative_rows",
+      "expected": "reject",
+      "observed": "reject",
+      "contract": "Fixed producer emits round(raw_unit_conversion, 6); values must be finite, signed correctly, and equal to that display value.",
+      "failed_checks": {
+        "case15.nc3_cause": "FAIL"
+      },
+      "s0b_problem_count": 1,
+      "producer_matches_shared": true,
+      "matches_expected": true,
+      "failing_details": {
+        "case15.nc3_cause": "겹침 {'electronic_hertzian': ('boundary_overlap', [24, 40, 57, 103]), 'electronic_physics': ('boundary_overlap', [24, 40, 57, 103]), 'thermal_hertzian': ('boundary_overlap', [24, 40, 57, 103])} · Physics 열 'ValueError: physics_g2: 간선 (31, 29241) — ligg_area < 0 (-0.186036)' · 음수 행 음수 면적 행 [(31, 29241, -0.186036, 1.05114), (38, 29241, -0.186263, 1.0512)] ≠ 등록 [(31, 29241, -0.186036, 1.05114), (38, 29241, -0.186264, 1.0512)] · 증거 오류 None"
+      }
+    },
+    {
+      "name": "row1_value2_huge_integer",
+      "category": "negative_rows",
+      "expected": "reject",
+      "observed": "reject",
+      "contract": "Fixed producer emits round(raw_unit_conversion, 6); values must be finite, signed correctly, and equal to that display value.",
+      "failed_checks": {
+        "case15.nc3_cause": "FAIL"
+      },
+      "s0b_problem_count": 1,
+      "producer_matches_shared": true,
+      "matches_expected": true,
+      "failing_details": {
+        "case15.nc3_cause": "판정 예외 OverflowError: int too large to convert to float"
+      }
+    },
+    {
+      "name": "row1_value3_bool",
+      "category": "negative_rows",
+      "expected": "reject",
+      "observed": "reject",
+      "contract": "Fixed producer emits round(raw_unit_conversion, 6); values must be finite, signed correctly, and equal to that display value.",
+      "failed_checks": {
+        "case15.nc3_cause": "FAIL"
+      },
+      "s0b_problem_count": 1,
+      "producer_matches_shared": true,
+      "matches_expected": true,
+      "failing_details": {
+        "case15.nc3_cause": "겹침 {'electronic_hertzian': ('boundary_overlap', [24, 40, 57, 103]), 'electronic_physics': ('boundary_overlap', [24, 40, 57, 103]), 'thermal_hertzian': ('boundary_overlap', [24, 40, 57, 103])} · Physics 열 'ValueError: physics_g2: 간선 (31, 29241) — ligg_area < 0 (-0.186036)' · 음수 행 음수 면적 행 값 [38, 29241, -0.186264, True] — 면적 · δ = 유한 실수여야 · 증거 오류 None"
+      }
+    },
+    {
+      "name": "row1_value3_string",
+      "category": "negative_rows",
+      "expected": "reject",
+      "observed": "reject",
+      "contract": "Fixed producer emits round(raw_unit_conversion, 6); values must be finite, signed correctly, and equal to that display value.",
+      "failed_checks": {
+        "case15.nc3_cause": "FAIL"
+      },
+      "s0b_problem_count": 1,
+      "producer_matches_shared": true,
+      "matches_expected": true,
+      "failing_details": {
+        "case15.nc3_cause": "겹침 {'electronic_hertzian': ('boundary_overlap', [24, 40, 57, 103]), 'electronic_physics': ('boundary_overlap', [24, 40, 57, 103]), 'thermal_hertzian': ('boundary_overlap', [24, 40, 57, 103])} · Physics 열 'ValueError: physics_g2: 간선 (31, 29241) — ligg_area < 0 (-0.186036)' · 음수 행 음수 면적 행 값 [38, 29241, -0.186264, '1.0512'] — 면적 · δ = 유한 실수여야 · 증거 오류 None"
+      }
+    },
+    {
+      "name": "row1_value3_null",
+      "category": "negative_rows",
+      "expected": "reject",
+      "observed": "reject",
+      "contract": "Fixed producer emits round(raw_unit_conversion, 6); values must be finite, signed correctly, and equal to that display value.",
+      "failed_checks": {
+        "case15.nc3_cause": "FAIL"
+      },
+      "s0b_problem_count": 1,
+      "producer_matches_shared": true,
+      "matches_expected": true,
+      "failing_details": {
+        "case15.nc3_cause": "겹침 {'electronic_hertzian': ('boundary_overlap', [24, 40, 57, 103]), 'electronic_physics': ('boundary_overlap', [24, 40, 57, 103]), 'thermal_hertzian': ('boundary_overlap', [24, 40, 57, 103])} · Physics 열 'ValueError: physics_g2: 간선 (31, 29241) — ligg_area < 0 (-0.186036)' · 음수 행 음수 면적 행 값 [38, 29241, -0.186264, None] — 면적 · δ = 유한 실수여야 · 증거 오류 None"
+      }
+    },
+    {
+      "name": "row1_value3_zero",
+      "category": "negative_rows",
+      "expected": "reject",
+      "observed": "reject",
+      "contract": "Fixed producer emits round(raw_unit_conversion, 6); values must be finite, signed correctly, and equal to that display value.",
+      "failed_checks": {
+        "case15.nc3_cause": "FAIL"
+      },
+      "s0b_problem_count": 1,
+      "producer_matches_shared": true,
+      "matches_expected": true,
+      "failing_details": {
+        "case15.nc3_cause": "겹침 {'electronic_hertzian': ('boundary_overlap', [24, 40, 57, 103]), 'electronic_physics': ('boundary_overlap', [24, 40, 57, 103]), 'thermal_hertzian': ('boundary_overlap', [24, 40, 57, 103])} · Physics 열 'ValueError: physics_g2: 간선 (31, 29241) — ligg_area < 0 (-0.186036)' · 음수 행 음수 면적 행 [38, 29241, -0.186264, 0] — 면적 < 0 µm² · δ > 0 이어야 · 증거 오류 None"
+      }
+    },
+    {
+      "name": "row1_value3_nan",
+      "category": "negative_rows",
+      "expected": "reject",
+      "observed": "reject",
+      "contract": "Fixed producer emits round(raw_unit_conversion, 6); values must be finite, signed correctly, and equal to that display value.",
+      "failed_checks": {
+        "case15.nc3_cause": "FAIL"
+      },
+      "s0b_problem_count": 1,
+      "producer_matches_shared": true,
+      "matches_expected": true,
+      "failing_details": {
+        "case15.nc3_cause": "겹침 {'electronic_hertzian': ('boundary_overlap', [24, 40, 57, 103]), 'electronic_physics': ('boundary_overlap', [24, 40, 57, 103]), 'thermal_hertzian': ('boundary_overlap', [24, 40, 57, 103])} · Physics 열 'ValueError: physics_g2: 간선 (31, 29241) — ligg_area < 0 (-0.186036)' · 음수 행 음수 면적 행 값 [38, 29241, -0.186264, nan] — 면적 · δ = 유한 실수여야 · 증거 오류 None"
+      }
+    },
+    {
+      "name": "row1_value3_inf",
+      "category": "negative_rows",
+      "expected": "reject",
+      "observed": "reject",
+      "contract": "Fixed producer emits round(raw_unit_conversion, 6); values must be finite, signed correctly, and equal to that display value.",
+      "failed_checks": {
+        "case15.nc3_cause": "FAIL"
+      },
+      "s0b_problem_count": 1,
+      "producer_matches_shared": true,
+      "matches_expected": true,
+      "failing_details": {
+        "case15.nc3_cause": "겹침 {'electronic_hertzian': ('boundary_overlap', [24, 40, 57, 103]), 'electronic_physics': ('boundary_overlap', [24, 40, 57, 103]), 'thermal_hertzian': ('boundary_overlap', [24, 40, 57, 103])} · Physics 열 'ValueError: physics_g2: 간선 (31, 29241) — ligg_area < 0 (-0.186036)' · 음수 행 음수 면적 행 값 [38, 29241, -0.186264, inf] — 면적 · δ = 유한 실수여야 · 증거 오류 None"
+      }
+    },
+    {
+      "name": "row1_value3_negative_inf",
+      "category": "negative_rows",
+      "expected": "reject",
+      "observed": "reject",
+      "contract": "Fixed producer emits round(raw_unit_conversion, 6); values must be finite, signed correctly, and equal to that display value.",
+      "failed_checks": {
+        "case15.nc3_cause": "FAIL"
+      },
+      "s0b_problem_count": 1,
+      "producer_matches_shared": true,
+      "matches_expected": true,
+      "failing_details": {
+        "case15.nc3_cause": "겹침 {'electronic_hertzian': ('boundary_overlap', [24, 40, 57, 103]), 'electronic_physics': ('boundary_overlap', [24, 40, 57, 103]), 'thermal_hertzian': ('boundary_overlap', [24, 40, 57, 103])} · Physics 열 'ValueError: physics_g2: 간선 (31, 29241) — ligg_area < 0 (-0.186036)' · 음수 행 음수 면적 행 값 [38, 29241, -0.186264, -inf] — 면적 · δ = 유한 실수여야 · 증거 오류 None"
+      }
+    },
+    {
+      "name": "row1_value3_wrong_sign",
+      "category": "negative_rows",
+      "expected": "reject",
+      "observed": "reject",
+      "contract": "Fixed producer emits round(raw_unit_conversion, 6); values must be finite, signed correctly, and equal to that display value.",
+      "failed_checks": {
+        "case15.nc3_cause": "FAIL"
+      },
+      "s0b_problem_count": 1,
+      "producer_matches_shared": true,
+      "matches_expected": true,
+      "failing_details": {
+        "case15.nc3_cause": "겹침 {'electronic_hertzian': ('boundary_overlap', [24, 40, 57, 103]), 'electronic_physics': ('boundary_overlap', [24, 40, 57, 103]), 'thermal_hertzian': ('boundary_overlap', [24, 40, 57, 103])} · Physics 열 'ValueError: physics_g2: 간선 (31, 29241) — ligg_area < 0 (-0.186036)' · 음수 행 음수 면적 행 [38, 29241, -0.186264, -1.0512] — 면적 < 0 µm² · δ > 0 이어야 · 증거 오류 None"
+      }
+    },
+    {
+      "name": "row1_value3_one_ulp",
+      "category": "negative_rows",
+      "expected": "reject",
+      "observed": "reject",
+      "contract": "Fixed producer emits round(raw_unit_conversion, 6); values must be finite, signed correctly, and equal to that display value.",
+      "failed_checks": {
+        "case15.nc3_cause": "FAIL"
+      },
+      "s0b_problem_count": 1,
+      "producer_matches_shared": true,
+      "matches_expected": true,
+      "failing_details": {
+        "case15.nc3_cause": "겹침 {'electronic_hertzian': ('boundary_overlap', [24, 40, 57, 103]), 'electronic_physics': ('boundary_overlap', [24, 40, 57, 103]), 'thermal_hertzian': ('boundary_overlap', [24, 40, 57, 103])} · Physics 열 'ValueError: physics_g2: 간선 (31, 29241) — ligg_area < 0 (-0.186036)' · 음수 행 음수 면적 행 [(31, 29241, -0.186036, 1.05114), (38, 29241, -0.186264, 1.0512000000000001)] ≠ 등록 [(31, 29241, -0.186036, 1.05114), (38, 29241, -0.186264, 1.0512)] · 증거 오류 None"
+      }
+    },
+    {
+      "name": "row1_value3_subprecision",
+      "category": "negative_rows",
+      "expected": "reject",
+      "observed": "reject",
+      "contract": "Fixed producer emits round(raw_unit_conversion, 6); values must be finite, signed correctly, and equal to that display value.",
+      "failed_checks": {
+        "case15.nc3_cause": "FAIL"
+      },
+      "s0b_problem_count": 1,
+      "producer_matches_shared": true,
+      "matches_expected": true,
+      "failing_details": {
+        "case15.nc3_cause": "겹침 {'electronic_hertzian': ('boundary_overlap', [24, 40, 57, 103]), 'electronic_physics': ('boundary_overlap', [24, 40, 57, 103]), 'thermal_hertzian': ('boundary_overlap', [24, 40, 57, 103])} · Physics 열 'ValueError: physics_g2: 간선 (31, 29241) — ligg_area < 0 (-0.186036)' · 음수 행 음수 면적 행 [(31, 29241, -0.186036, 1.05114), (38, 29241, -0.186264, 1.0512000099999999)] ≠ 등록 [(31, 29241, -0.186036, 1.05114), (38, 29241, -0.186264, 1.0512)] · 증거 오류 None"
+      }
+    },
+    {
+      "name": "row1_value3_one_micro",
+      "category": "negative_rows",
+      "expected": "reject",
+      "observed": "reject",
+      "contract": "Fixed producer emits round(raw_unit_conversion, 6); values must be finite, signed correctly, and equal to that display value.",
+      "failed_checks": {
+        "case15.nc3_cause": "FAIL"
+      },
+      "s0b_problem_count": 1,
+      "producer_matches_shared": true,
+      "matches_expected": true,
+      "failing_details": {
+        "case15.nc3_cause": "겹침 {'electronic_hertzian': ('boundary_overlap', [24, 40, 57, 103]), 'electronic_physics': ('boundary_overlap', [24, 40, 57, 103]), 'thermal_hertzian': ('boundary_overlap', [24, 40, 57, 103])} · Physics 열 'ValueError: physics_g2: 간선 (31, 29241) — ligg_area < 0 (-0.186036)' · 음수 행 음수 면적 행 [(31, 29241, -0.186036, 1.05114), (38, 29241, -0.186264, 1.0512009999999998)] ≠ 등록 [(31, 29241, -0.186036, 1.05114), (38, 29241, -0.186264, 1.0512)] · 증거 오류 None"
+      }
+    },
+    {
+      "name": "row1_value3_huge_integer",
+      "category": "negative_rows",
+      "expected": "reject",
+      "observed": "reject",
+      "contract": "Fixed producer emits round(raw_unit_conversion, 6); values must be finite, signed correctly, and equal to that display value.",
+      "failed_checks": {
+        "case15.nc3_cause": "FAIL"
+      },
+      "s0b_problem_count": 1,
+      "producer_matches_shared": true,
+      "matches_expected": true,
+      "failing_details": {
+        "case15.nc3_cause": "판정 예외 OverflowError: int too large to convert to float"
+      }
+    },
+    {
+      "name": "rows_duplicate",
+      "category": "negative_rows",
+      "expected": "reject",
+      "observed": "reject",
+      "contract": "Registered pairs are distinct.",
+      "failed_checks": {
+        "case15.nc3_cause": "FAIL"
+      },
+      "s0b_problem_count": 1,
+      "producer_matches_shared": true,
+      "matches_expected": true,
+      "failing_details": {
+        "case15.nc3_cause": "겹침 {'electronic_hertzian': ('boundary_overlap', [24, 40, 57, 103]), 'electronic_physics': ('boundary_overlap', [24, 40, 57, 103]), 'thermal_hertzian': ('boundary_overlap', [24, 40, 57, 103])} · Physics 열 'ValueError: physics_g2: 간선 (31, 29241) — ligg_area < 0 (-0.186036)' · 음수 행 음수 면적 행 중복 [(31, 29241, -0.186036, 1.05114), (31, 29241, -0.186036, 1.05114)] · 증거 오류 None"
+      }
+    },
+    {
+      "name": "rows_extra",
+      "category": "negative_rows",
+      "expected": "reject",
+      "observed": "reject",
+      "contract": "Exactly two rows.",
+      "failed_checks": {
+        "case15.nc3_cause": "FAIL"
+      },
+      "s0b_problem_count": 1,
+      "producer_matches_shared": true,
+      "matches_expected": true,
+      "failing_details": {
+        "case15.nc3_cause": "겹침 {'electronic_hertzian': ('boundary_overlap', [24, 40, 57, 103]), 'electronic_physics': ('boundary_overlap', [24, 40, 57, 103]), 'thermal_hertzian': ('boundary_overlap', [24, 40, 57, 103])} · Physics 열 'ValueError: physics_g2: 간선 (31, 29241) — ligg_area < 0 (-0.186036)' · 음수 행 음수 면적 칸 [[31, 29241, -0.186036, 1.05114], [38, 29241, -0.186264, 1.0512], [1, 2, -1.0, 1.0]] — 목록 · 2 행이어야 · 증거 오류 None"
+      }
+    },
+    {
+      "name": "rows_missing",
+      "category": "negative_rows",
+      "expected": "reject",
+      "observed": "reject",
+      "contract": "Exactly two rows.",
+      "failed_checks": {
+        "case15.nc3_cause": "FAIL"
+      },
+      "s0b_problem_count": 1,
+      "producer_matches_shared": true,
+      "matches_expected": true,
+      "failing_details": {
+        "case15.nc3_cause": "겹침 {'electronic_hertzian': ('boundary_overlap', [24, 40, 57, 103]), 'electronic_physics': ('boundary_overlap', [24, 40, 57, 103]), 'thermal_hertzian': ('boundary_overlap', [24, 40, 57, 103])} · Physics 열 'ValueError: physics_g2: 간선 (31, 29241) — ligg_area < 0 (-0.186036)' · 음수 행 음수 면적 칸 [[31, 29241, -0.186036, 1.05114]] — 목록 · 2 행이어야 · 증거 오류 None"
+      }
+    },
+    {
+      "name": "rows_tuple_container",
+      "category": "nonproducer_schema",
+      "expected": "reject",
+      "observed": "reject",
+      "contract": "Producer list comprehension and JSON array both produce a list, not tuple container.",
+      "failed_checks": {
+        "case15.nc3_cause": "FAIL"
+      },
+      "s0b_problem_count": 1,
+      "producer_matches_shared": true,
+      "matches_expected": true,
+      "failing_details": {
+        "case15.nc3_cause": "겹침 {'electronic_hertzian': ('boundary_overlap', [24, 40, 57, 103]), 'electronic_physics': ('boundary_overlap', [24, 40, 57, 103]), 'thermal_hertzian': ('boundary_overlap', [24, 40, 57, 103])} · Physics 열 'ValueError: physics_g2: 간선 (31, 29241) — ligg_area < 0 (-0.186036)' · 음수 행 음수 면적 칸 ([31, 29241, -0.186036, 1.05114], [38, 29241, -0.186264, 1.0512]) — 목록 · 2 행이어야 · 증거 오류 None"
+      }
+    },
+    {
+      "name": "row0_length0",
+      "category": "negative_rows",
+      "expected": "reject",
+      "observed": "reject",
+      "contract": "Exactly four columns per row.",
+      "failed_checks": {
+        "case15.nc3_cause": "FAIL"
+      },
+      "s0b_problem_count": 1,
+      "producer_matches_shared": true,
+      "matches_expected": true,
+      "failing_details": {
+        "case15.nc3_cause": "겹침 {'electronic_hertzian': ('boundary_overlap', [24, 40, 57, 103]), 'electronic_physics': ('boundary_overlap', [24, 40, 57, 103]), 'thermal_hertzian': ('boundary_overlap', [24, 40, 57, 103])} · Physics 열 'ValueError: physics_g2: 간선 (31, 29241) — ligg_area < 0 (-0.186036)' · 음수 행 음수 면적 행 꼴 [] — [id1, id2, 면적 µm², δ µm] 넷이어야 · 증거 오류 None"
+      }
+    },
+    {
+      "name": "row0_length1",
+      "category": "negative_rows",
+      "expected": "reject",
+      "observed": "reject",
+      "contract": "Exactly four columns per row.",
+      "failed_checks": {
+        "case15.nc3_cause": "FAIL"
+      },
+      "s0b_problem_count": 1,
+      "producer_matches_shared": true,
+      "matches_expected": true,
+      "failing_details": {
+        "case15.nc3_cause": "겹침 {'electronic_hertzian': ('boundary_overlap', [24, 40, 57, 103]), 'electronic_physics': ('boundary_overlap', [24, 40, 57, 103]), 'thermal_hertzian': ('boundary_overlap', [24, 40, 57, 103])} · Physics 열 'ValueError: physics_g2: 간선 (31, 29241) — ligg_area < 0 (-0.186036)' · 음수 행 음수 면적 행 꼴 [31] — [id1, id2, 면적 µm², δ µm] 넷이어야 · 증거 오류 None"
+      }
+    },
+    {
+      "name": "row0_length2",
+      "category": "negative_rows",
+      "expected": "reject",
+      "observed": "reject",
+      "contract": "Exactly four columns per row.",
+      "failed_checks": {
+        "case15.nc3_cause": "FAIL"
+      },
+      "s0b_problem_count": 1,
+      "producer_matches_shared": true,
+      "matches_expected": true,
+      "failing_details": {
+        "case15.nc3_cause": "겹침 {'electronic_hertzian': ('boundary_overlap', [24, 40, 57, 103]), 'electronic_physics': ('boundary_overlap', [24, 40, 57, 103]), 'thermal_hertzian': ('boundary_overlap', [24, 40, 57, 103])} · Physics 열 'ValueError: physics_g2: 간선 (31, 29241) — ligg_area < 0 (-0.186036)' · 음수 행 음수 면적 행 꼴 [31, 29241] — [id1, id2, 면적 µm², δ µm] 넷이어야 · 증거 오류 None"
+      }
+    },
+    {
+      "name": "row0_length3",
+      "category": "negative_rows",
+      "expected": "reject",
+      "observed": "reject",
+      "contract": "Exactly four columns per row.",
+      "failed_checks": {
+        "case15.nc3_cause": "FAIL"
+      },
+      "s0b_problem_count": 1,
+      "producer_matches_shared": true,
+      "matches_expected": true,
+      "failing_details": {
+        "case15.nc3_cause": "겹침 {'electronic_hertzian': ('boundary_overlap', [24, 40, 57, 103]), 'electronic_physics': ('boundary_overlap', [24, 40, 57, 103]), 'thermal_hertzian': ('boundary_overlap', [24, 40, 57, 103])} · Physics 열 'ValueError: physics_g2: 간선 (31, 29241) — ligg_area < 0 (-0.186036)' · 음수 행 음수 면적 행 꼴 [31, 29241, -0.186036] — [id1, id2, 면적 µm², δ µm] 넷이어야 · 증거 오류 None"
+      }
+    },
+    {
+      "name": "row0_length5",
+      "category": "negative_rows",
+      "expected": "reject",
+      "observed": "reject",
+      "contract": "Exactly four columns per row.",
+      "failed_checks": {
+        "case15.nc3_cause": "FAIL"
+      },
+      "s0b_problem_count": 1,
+      "producer_matches_shared": true,
+      "matches_expected": true,
+      "failing_details": {
+        "case15.nc3_cause": "겹침 {'electronic_hertzian': ('boundary_overlap', [24, 40, 57, 103]), 'electronic_physics': ('boundary_overlap', [24, 40, 57, 103]), 'thermal_hertzian': ('boundary_overlap', [24, 40, 57, 103])} · Physics 열 'ValueError: physics_g2: 간선 (31, 29241) — ligg_area < 0 (-0.186036)' · 음수 행 음수 면적 행 꼴 [31, 29241, -0.186036, 1.05114, 99] — [id1, id2, 면적 µm², δ µm] 넷이어야 · 증거 오류 None"
+      }
+    },
+    {
+      "name": "row1_length0",
+      "category": "negative_rows",
+      "expected": "reject",
+      "observed": "reject",
+      "contract": "Exactly four columns per row.",
+      "failed_checks": {
+        "case15.nc3_cause": "FAIL"
+      },
+      "s0b_problem_count": 1,
+      "producer_matches_shared": true,
+      "matches_expected": true,
+      "failing_details": {
+        "case15.nc3_cause": "겹침 {'electronic_hertzian': ('boundary_overlap', [24, 40, 57, 103]), 'electronic_physics': ('boundary_overlap', [24, 40, 57, 103]), 'thermal_hertzian': ('boundary_overlap', [24, 40, 57, 103])} · Physics 열 'ValueError: physics_g2: 간선 (31, 29241) — ligg_area < 0 (-0.186036)' · 음수 행 음수 면적 행 꼴 [] — [id1, id2, 면적 µm², δ µm] 넷이어야 · 증거 오류 None"
+      }
+    },
+    {
+      "name": "row1_length1",
+      "category": "negative_rows",
+      "expected": "reject",
+      "observed": "reject",
+      "contract": "Exactly four columns per row.",
+      "failed_checks": {
+        "case15.nc3_cause": "FAIL"
+      },
+      "s0b_problem_count": 1,
+      "producer_matches_shared": true,
+      "matches_expected": true,
+      "failing_details": {
+        "case15.nc3_cause": "겹침 {'electronic_hertzian': ('boundary_overlap', [24, 40, 57, 103]), 'electronic_physics': ('boundary_overlap', [24, 40, 57, 103]), 'thermal_hertzian': ('boundary_overlap', [24, 40, 57, 103])} · Physics 열 'ValueError: physics_g2: 간선 (31, 29241) — ligg_area < 0 (-0.186036)' · 음수 행 음수 면적 행 꼴 [38] — [id1, id2, 면적 µm², δ µm] 넷이어야 · 증거 오류 None"
+      }
+    },
+    {
+      "name": "row1_length2",
+      "category": "negative_rows",
+      "expected": "reject",
+      "observed": "reject",
+      "contract": "Exactly four columns per row.",
+      "failed_checks": {
+        "case15.nc3_cause": "FAIL"
+      },
+      "s0b_problem_count": 1,
+      "producer_matches_shared": true,
+      "matches_expected": true,
+      "failing_details": {
+        "case15.nc3_cause": "겹침 {'electronic_hertzian': ('boundary_overlap', [24, 40, 57, 103]), 'electronic_physics': ('boundary_overlap', [24, 40, 57, 103]), 'thermal_hertzian': ('boundary_overlap', [24, 40, 57, 103])} · Physics 열 'ValueError: physics_g2: 간선 (31, 29241) — ligg_area < 0 (-0.186036)' · 음수 행 음수 면적 행 꼴 [38, 29241] — [id1, id2, 면적 µm², δ µm] 넷이어야 · 증거 오류 None"
+      }
+    },
+    {
+      "name": "row1_length3",
+      "category": "negative_rows",
+      "expected": "reject",
+      "observed": "reject",
+      "contract": "Exactly four columns per row.",
+      "failed_checks": {
+        "case15.nc3_cause": "FAIL"
+      },
+      "s0b_problem_count": 1,
+      "producer_matches_shared": true,
+      "matches_expected": true,
+      "failing_details": {
+        "case15.nc3_cause": "겹침 {'electronic_hertzian': ('boundary_overlap', [24, 40, 57, 103]), 'electronic_physics': ('boundary_overlap', [24, 40, 57, 103]), 'thermal_hertzian': ('boundary_overlap', [24, 40, 57, 103])} · Physics 열 'ValueError: physics_g2: 간선 (31, 29241) — ligg_area < 0 (-0.186036)' · 음수 행 음수 면적 행 꼴 [38, 29241, -0.186264] — [id1, id2, 면적 µm², δ µm] 넷이어야 · 증거 오류 None"
+      }
+    },
+    {
+      "name": "row1_length5",
+      "category": "negative_rows",
+      "expected": "reject",
+      "observed": "reject",
+      "contract": "Exactly four columns per row.",
+      "failed_checks": {
+        "case15.nc3_cause": "FAIL"
+      },
+      "s0b_problem_count": 1,
+      "producer_matches_shared": true,
+      "matches_expected": true,
+      "failing_details": {
+        "case15.nc3_cause": "겹침 {'electronic_hertzian': ('boundary_overlap', [24, 40, 57, 103]), 'electronic_physics': ('boundary_overlap', [24, 40, 57, 103]), 'thermal_hertzian': ('boundary_overlap', [24, 40, 57, 103])} · Physics 열 'ValueError: physics_g2: 간선 (31, 29241) — ligg_area < 0 (-0.186036)' · 음수 행 음수 면적 행 꼴 [38, 29241, -0.186264, 1.0512, 99] — [id1, id2, 면적 µm², δ µm] 넷이어야 · 증거 오류 None"
+      }
+    },
+    {
+      "name": "rows_endpoints_swapped",
+      "category": "nonproducer_schema",
+      "expected": "reject",
+      "observed": "reject",
+      "contract": "IDs preserve ordered c_cpl[7]/c_cpl[8] fields from registered bytes; no undirected-pair normalization exists in producer.",
+      "failed_checks": {
+        "case15.nc3_cause": "FAIL"
+      },
+      "s0b_problem_count": 1,
+      "producer_matches_shared": true,
+      "matches_expected": true,
+      "failing_details": {
+        "case15.nc3_cause": "겹침 {'electronic_hertzian': ('boundary_overlap', [24, 40, 57, 103]), 'electronic_physics': ('boundary_overlap', [24, 40, 57, 103]), 'thermal_hertzian': ('boundary_overlap', [24, 40, 57, 103])} · Physics 열 'ValueError: physics_g2: 간선 (31, 29241) — ligg_area < 0 (-0.186036)' · 음수 행 음수 면적 행 [(29241, 31, -0.186036, 1.05114), (29241, 38, -0.186264, 1.0512)] ≠ 등록 [(31, 29241, -0.186036, 1.05114), (38, 29241, -0.186264, 1.0512)] · 증거 오류 None"
+      }
+    },
+    {
+      "name": "rows_values_swapped_across_pairs",
+      "category": "negative_rows",
+      "expected": "reject",
+      "observed": "reject",
+      "contract": "Each pair binds its own area and delta.",
+      "failed_checks": {
+        "case15.nc3_cause": "FAIL"
+      },
+      "s0b_problem_count": 1,
+      "producer_matches_shared": true,
+      "matches_expected": true,
+      "failing_details": {
+        "case15.nc3_cause": "겹침 {'electronic_hertzian': ('boundary_overlap', [24, 40, 57, 103]), 'electronic_physics': ('boundary_overlap', [24, 40, 57, 103]), 'thermal_hertzian': ('boundary_overlap', [24, 40, 57, 103])} · Physics 열 'ValueError: physics_g2: 간선 (31, 29241) — ligg_area < 0 (-0.186036)' · 음수 행 음수 면적 행 [(31, 29241, -0.186264, 1.0512), (38, 29241, -0.186036, 1.05114)] ≠ 등록 [(31, 29241, -0.186036, 1.05114), (38, 29241, -0.186264, 1.0512)] · 증거 오류 None"
+      }
+    },
+    {
+      "name": "failed_stages_empty",
+      "category": "negative_stage",
+      "expected": "reject",
+      "observed": "reject",
+      "contract": "The producer emits exactly the required solver failure as a list.",
+      "failed_checks": {
+        "case15.nc1_blocked": "FAIL"
+      },
+      "s0b_problem_count": 1,
+      "producer_matches_shared": true,
+      "matches_expected": true,
+      "failing_details": {
+        "case15.nc1_blocked": "status failed · 실패 단계 [] · Stage E False · run id None"
+      }
+    },
+    {
+      "name": "failed_stages_other",
+      "category": "negative_stage",
+      "expected": "reject",
+      "observed": "reject",
+      "contract": "The producer emits exactly the required solver failure as a list.",
+      "failed_checks": {
+        "case15.nc1_blocked": "FAIL"
+      },
+      "s0b_problem_count": 1,
+      "producer_matches_shared": true,
+      "matches_expected": true,
+      "failing_details": {
+        "case15.nc1_blocked": "status failed · 실패 단계 ['Parse'] · Stage E False · run id None"
+      }
+    },
+    {
+      "name": "failed_stages_extra",
+      "category": "negative_stage",
+      "expected": "reject",
+      "observed": "reject",
+      "contract": "The producer emits exactly the required solver failure as a list.",
+      "failed_checks": {
+        "case15.nc1_blocked": "FAIL"
+      },
+      "s0b_problem_count": 1,
+      "producer_matches_shared": true,
+      "matches_expected": true,
+      "failing_details": {
+        "case15.nc1_blocked": "status failed · 실패 단계 ['Network Solver (both modes)', 'Parse'] · Stage E False · run id None"
+      }
+    },
+    {
+      "name": "failed_stages_duplicate",
+      "category": "negative_stage",
+      "expected": "reject",
+      "observed": "reject",
+      "contract": "The producer emits exactly the required solver failure as a list.",
+      "failed_checks": {
+        "case15.nc1_blocked": "FAIL"
+      },
+      "s0b_problem_count": 1,
+      "producer_matches_shared": true,
+      "matches_expected": true,
+      "failing_details": {
+        "case15.nc1_blocked": "status failed · 실패 단계 ['Network Solver (both modes)', 'Network Solver (both modes)'] · Stage E False · run id None"
+      }
+    },
+    {
+      "name": "failed_stages_string",
+      "category": "negative_stage",
+      "expected": "reject",
+      "observed": "reject",
+      "contract": "The producer emits exactly the required solver failure as a list.",
+      "failed_checks": {
+        "case15.nc1_blocked": "FAIL"
+      },
+      "s0b_problem_count": 1,
+      "producer_matches_shared": true,
+      "matches_expected": true,
+      "failing_details": {
+        "case15.nc1_blocked": "status failed · 실패 단계 Network Solver (both modes) · Stage E False · run id None"
+      }
+    },
+    {
+      "name": "failed_stages_null",
+      "category": "negative_stage",
+      "expected": "reject",
+      "observed": "reject",
+      "contract": "The producer emits exactly the required solver failure as a list.",
+      "failed_checks": {
+        "case15.nc1_blocked": "FAIL"
+      },
+      "s0b_problem_count": 1,
+      "producer_matches_shared": true,
+      "matches_expected": true,
+      "failing_details": {
+        "case15.nc1_blocked": "status failed · 실패 단계 None · Stage E False · run id None"
+      }
+    },
+    {
+      "name": "failed_stages_tuple",
+      "category": "negative_stage",
+      "expected": "reject",
+      "observed": "reject",
+      "contract": "The producer emits exactly the required solver failure as a list.",
+      "failed_checks": {
+        "case15.nc1_blocked": "FAIL"
+      },
+      "s0b_problem_count": 1,
+      "producer_matches_shared": true,
+      "matches_expected": true,
+      "failing_details": {
+        "case15.nc1_blocked": "status failed · 실패 단계 ('Network Solver (both modes)',) · Stage E False · run id None"
+      }
+    },
+    {
+      "name": "blocked_status_done",
+      "category": "negative_stage",
+      "expected": "reject",
+      "observed": "reject",
+      "contract": "Existing publication-blocking contract is preserved.",
+      "failed_checks": {
+        "case15.nc1_blocked": "FAIL"
+      },
+      "s0b_problem_count": 2,
+      "producer_matches_shared": true,
+      "matches_expected": true,
+      "failing_details": {
+        "case15.nc1_blocked": "status done · 실패 단계 ['Network Solver (both modes)'] · Stage E False · run id None"
+      }
+    },
+    {
+      "name": "blocked_stage_e_ran_True",
+      "category": "negative_stage",
+      "expected": "reject",
+      "observed": "reject",
+      "contract": "Existing publication-blocking contract is preserved.",
+      "failed_checks": {
+        "case15.nc1_blocked": "FAIL"
+      },
+      "s0b_problem_count": 1,
+      "producer_matches_shared": true,
+      "matches_expected": true,
+      "failing_details": {
+        "case15.nc1_blocked": "status failed · 실패 단계 ['Network Solver (both modes)'] · Stage E True · run id None"
+      }
+    },
+    {
+      "name": "blocked_stage_e_ran_0",
+      "category": "negative_stage",
+      "expected": "reject",
+      "observed": "reject",
+      "contract": "Existing publication-blocking contract is preserved.",
+      "failed_checks": {
+        "case15.nc1_blocked": "FAIL"
+      },
+      "s0b_problem_count": 1,
+      "producer_matches_shared": true,
+      "matches_expected": true,
+      "failing_details": {
+        "case15.nc1_blocked": "status failed · 실패 단계 ['Network Solver (both modes)'] · Stage E 0 · run id None"
+      }
+    },
+    {
+      "name": "blocked_returned_network_run_id_RUN-x",
+      "category": "negative_stage",
+      "expected": "reject",
+      "observed": "reject",
+      "contract": "Existing publication-blocking contract is preserved.",
+      "failed_checks": {
+        "case15.nc1_blocked": "FAIL"
+      },
+      "s0b_problem_count": 2,
+      "producer_matches_shared": true,
+      "matches_expected": true,
+      "failing_details": {
+        "case15.nc1_blocked": "status failed · 실패 단계 ['Network Solver (both modes)'] · Stage E False · run id RUN-x"
+      }
+    },
+    {
+      "name": "tau_tau_ion_hertz_integer",
+      "category": "negative_tau",
+      "expected": "reject",
+      "observed": "reject",
+      "contract": "Every top-level int/float other than bool is rejected, regardless of key.",
+      "failed_checks": {
+        "case15.nc2_tau": "FAIL"
+      },
+      "s0b_problem_count": 1,
+      "producer_matches_shared": true,
+      "matches_expected": true,
+      "failing_details": {
+        "case15.nc2_tau": "{'hertz': 'NOT_COMPUTED', 'physics': 'NOT_COMPUTED', 'hertz_h12': 'NOT_COMPUTED'} · 숫자 {'tau_ion_hertz': 1}"
+      }
+    },
+    {
+      "name": "tau_tau_ion_hertz_float",
+      "category": "negative_tau",
+      "expected": "reject",
+      "observed": "reject",
+      "contract": "Every top-level int/float other than bool is rejected, regardless of key.",
+      "failed_checks": {
+        "case15.nc2_tau": "FAIL"
+      },
+      "s0b_problem_count": 1,
+      "producer_matches_shared": true,
+      "matches_expected": true,
+      "failing_details": {
+        "case15.nc2_tau": "{'hertz': 'NOT_COMPUTED', 'physics': 'NOT_COMPUTED', 'hertz_h12': 'NOT_COMPUTED'} · 숫자 {'tau_ion_hertz': 0.5}"
+      }
+    },
+    {
+      "name": "tau_tau_ion_hertz_zero",
+      "category": "negative_tau",
+      "expected": "reject",
+      "observed": "reject",
+      "contract": "Every top-level int/float other than bool is rejected, regardless of key.",
+      "failed_checks": {
+        "case15.nc2_tau": "FAIL"
+      },
+      "s0b_problem_count": 1,
+      "producer_matches_shared": true,
+      "matches_expected": true,
+      "failing_details": {
+        "case15.nc2_tau": "{'hertz': 'NOT_COMPUTED', 'physics': 'NOT_COMPUTED', 'hertz_h12': 'NOT_COMPUTED'} · 숫자 {'tau_ion_hertz': 0}"
+      }
+    },
+    {
+      "name": "tau_tau_ion_hertz_nan",
+      "category": "negative_tau",
+      "expected": "reject",
+      "observed": "reject",
+      "contract": "Every top-level int/float other than bool is rejected, regardless of key.",
+      "failed_checks": {
+        "case15.nc2_tau": "FAIL"
+      },
+      "s0b_problem_count": 1,
+      "producer_matches_shared": true,
+      "matches_expected": true,
+      "failing_details": {
+        "case15.nc2_tau": "{'hertz': 'NOT_COMPUTED', 'physics': 'NOT_COMPUTED', 'hertz_h12': 'NOT_COMPUTED'} · 숫자 {'tau_ion_hertz': nan}"
+      }
+    },
+    {
+      "name": "tau_tau_ion_hertz_inf",
+      "category": "negative_tau",
+      "expected": "reject",
+      "observed": "reject",
+      "contract": "Every top-level int/float other than bool is rejected, regardless of key.",
+      "failed_checks": {
+        "case15.nc2_tau": "FAIL"
+      },
+      "s0b_problem_count": 1,
+      "producer_matches_shared": true,
+      "matches_expected": true,
+      "failing_details": {
+        "case15.nc2_tau": "{'hertz': 'NOT_COMPUTED', 'physics': 'NOT_COMPUTED', 'hertz_h12': 'NOT_COMPUTED'} · 숫자 {'tau_ion_hertz': inf}"
+      }
+    },
+    {
+      "name": "tau_tau2_flux_ion_net_full_integer",
+      "category": "negative_tau",
+      "expected": "reject",
+      "observed": "reject",
+      "contract": "Every top-level int/float other than bool is rejected, regardless of key.",
+      "failed_checks": {
+        "case15.nc2_tau": "FAIL"
+      },
+      "s0b_problem_count": 1,
+      "producer_matches_shared": true,
+      "matches_expected": true,
+      "failing_details": {
+        "case15.nc2_tau": "{'hertz': 'NOT_COMPUTED', 'physics': 'NOT_COMPUTED', 'hertz_h12': 'NOT_COMPUTED'} · 숫자 {'tau2_flux_ion_net_full': 1}"
+      }
+    },
+    {
+      "name": "tau_tau2_flux_ion_net_full_float",
+      "category": "negative_tau",
+      "expected": "reject",
+      "observed": "reject",
+      "contract": "Every top-level int/float other than bool is rejected, regardless of key.",
+      "failed_checks": {
+        "case15.nc2_tau": "FAIL"
+      },
+      "s0b_problem_count": 1,
+      "producer_matches_shared": true,
+      "matches_expected": true,
+      "failing_details": {
+        "case15.nc2_tau": "{'hertz': 'NOT_COMPUTED', 'physics': 'NOT_COMPUTED', 'hertz_h12': 'NOT_COMPUTED'} · 숫자 {'tau2_flux_ion_net_full': 0.5}"
+      }
+    },
+    {
+      "name": "tau_tau2_flux_ion_net_full_zero",
+      "category": "negative_tau",
+      "expected": "reject",
+      "observed": "reject",
+      "contract": "Every top-level int/float other than bool is rejected, regardless of key.",
+      "failed_checks": {
+        "case15.nc2_tau": "FAIL"
+      },
+      "s0b_problem_count": 1,
+      "producer_matches_shared": true,
+      "matches_expected": true,
+      "failing_details": {
+        "case15.nc2_tau": "{'hertz': 'NOT_COMPUTED', 'physics': 'NOT_COMPUTED', 'hertz_h12': 'NOT_COMPUTED'} · 숫자 {'tau2_flux_ion_net_full': 0}"
+      }
+    },
+    {
+      "name": "tau_tau2_flux_ion_net_full_nan",
+      "category": "negative_tau",
+      "expected": "reject",
+      "observed": "reject",
+      "contract": "Every top-level int/float other than bool is rejected, regardless of key.",
+      "failed_checks": {
+        "case15.nc2_tau": "FAIL"
+      },
+      "s0b_problem_count": 1,
+      "producer_matches_shared": true,
+      "matches_expected": true,
+      "failing_details": {
+        "case15.nc2_tau": "{'hertz': 'NOT_COMPUTED', 'physics': 'NOT_COMPUTED', 'hertz_h12': 'NOT_COMPUTED'} · 숫자 {'tau2_flux_ion_net_full': nan}"
+      }
+    },
+    {
+      "name": "tau_tau2_flux_ion_net_full_inf",
+      "category": "negative_tau",
+      "expected": "reject",
+      "observed": "reject",
+      "contract": "Every top-level int/float other than bool is rejected, regardless of key.",
+      "failed_checks": {
+        "case15.nc2_tau": "FAIL"
+      },
+      "s0b_problem_count": 1,
+      "producer_matches_shared": true,
+      "matches_expected": true,
+      "failing_details": {
+        "case15.nc2_tau": "{'hertz': 'NOT_COMPUTED', 'physics': 'NOT_COMPUTED', 'hertz_h12': 'NOT_COMPUTED'} · 숫자 {'tau2_flux_ion_net_full': inf}"
+      }
+    },
+    {
+      "name": "tau_unregistered_numeric_integer",
+      "category": "negative_tau",
+      "expected": "reject",
+      "observed": "reject",
+      "contract": "Every top-level int/float other than bool is rejected, regardless of key.",
+      "failed_checks": {
+        "case15.nc2_tau": "FAIL"
+      },
+      "s0b_problem_count": 1,
+      "producer_matches_shared": true,
+      "matches_expected": true,
+      "failing_details": {
+        "case15.nc2_tau": "{'hertz': 'NOT_COMPUTED', 'physics': 'NOT_COMPUTED', 'hertz_h12': 'NOT_COMPUTED'} · 숫자 {'unregistered_numeric': 1}"
+      }
+    },
+    {
+      "name": "tau_unregistered_numeric_float",
+      "category": "negative_tau",
+      "expected": "reject",
+      "observed": "reject",
+      "contract": "Every top-level int/float other than bool is rejected, regardless of key.",
+      "failed_checks": {
+        "case15.nc2_tau": "FAIL"
+      },
+      "s0b_problem_count": 1,
+      "producer_matches_shared": true,
+      "matches_expected": true,
+      "failing_details": {
+        "case15.nc2_tau": "{'hertz': 'NOT_COMPUTED', 'physics': 'NOT_COMPUTED', 'hertz_h12': 'NOT_COMPUTED'} · 숫자 {'unregistered_numeric': 0.5}"
+      }
+    },
+    {
+      "name": "tau_unregistered_numeric_zero",
+      "category": "negative_tau",
+      "expected": "reject",
+      "observed": "reject",
+      "contract": "Every top-level int/float other than bool is rejected, regardless of key.",
+      "failed_checks": {
+        "case15.nc2_tau": "FAIL"
+      },
+      "s0b_problem_count": 1,
+      "producer_matches_shared": true,
+      "matches_expected": true,
+      "failing_details": {
+        "case15.nc2_tau": "{'hertz': 'NOT_COMPUTED', 'physics': 'NOT_COMPUTED', 'hertz_h12': 'NOT_COMPUTED'} · 숫자 {'unregistered_numeric': 0}"
+      }
+    },
+    {
+      "name": "tau_unregistered_numeric_nan",
+      "category": "negative_tau",
+      "expected": "reject",
+      "observed": "reject",
+      "contract": "Every top-level int/float other than bool is rejected, regardless of key.",
+      "failed_checks": {
+        "case15.nc2_tau": "FAIL"
+      },
+      "s0b_problem_count": 1,
+      "producer_matches_shared": true,
+      "matches_expected": true,
+      "failing_details": {
+        "case15.nc2_tau": "{'hertz': 'NOT_COMPUTED', 'physics': 'NOT_COMPUTED', 'hertz_h12': 'NOT_COMPUTED'} · 숫자 {'unregistered_numeric': nan}"
+      }
+    },
+    {
+      "name": "tau_unregistered_numeric_inf",
+      "category": "negative_tau",
+      "expected": "reject",
+      "observed": "reject",
+      "contract": "Every top-level int/float other than bool is rejected, regardless of key.",
+      "failed_checks": {
+        "case15.nc2_tau": "FAIL"
+      },
+      "s0b_problem_count": 1,
+      "producer_matches_shared": true,
+      "matches_expected": true,
+      "failing_details": {
+        "case15.nc2_tau": "{'hertz': 'NOT_COMPUTED', 'physics': 'NOT_COMPUTED', 'hertz_h12': 'NOT_COMPUTED'} · 숫자 {'unregistered_numeric': inf}"
+      }
+    },
+    {
+      "name": "tau_ion_net_status_reason_hertz_integer",
+      "category": "negative_tau",
+      "expected": "reject",
+      "observed": "reject",
+      "contract": "Every top-level int/float other than bool is rejected, regardless of key.",
+      "failed_checks": {
+        "case15.nc2_tau": "FAIL"
+      },
+      "s0b_problem_count": 1,
+      "producer_matches_shared": true,
+      "matches_expected": true,
+      "failing_details": {
+        "case15.nc2_tau": "{'hertz': 'NOT_COMPUTED', 'physics': 'NOT_COMPUTED', 'hertz_h12': 'NOT_COMPUTED'} · 숫자 {'ion_net_status_reason_hertz': 1}"
+      }
+    },
+    {
+      "name": "tau_ion_net_status_reason_hertz_float",
+      "category": "negative_tau",
+      "expected": "reject",
+      "observed": "reject",
+      "contract": "Every top-level int/float other than bool is rejected, regardless of key.",
+      "failed_checks": {
+        "case15.nc2_tau": "FAIL"
+      },
+      "s0b_problem_count": 1,
+      "producer_matches_shared": true,
+      "matches_expected": true,
+      "failing_details": {
+        "case15.nc2_tau": "{'hertz': 'NOT_COMPUTED', 'physics': 'NOT_COMPUTED', 'hertz_h12': 'NOT_COMPUTED'} · 숫자 {'ion_net_status_reason_hertz': 0.5}"
+      }
+    },
+    {
+      "name": "tau_ion_net_status_reason_hertz_zero",
+      "category": "negative_tau",
+      "expected": "reject",
+      "observed": "reject",
+      "contract": "Every top-level int/float other than bool is rejected, regardless of key.",
+      "failed_checks": {
+        "case15.nc2_tau": "FAIL"
+      },
+      "s0b_problem_count": 1,
+      "producer_matches_shared": true,
+      "matches_expected": true,
+      "failing_details": {
+        "case15.nc2_tau": "{'hertz': 'NOT_COMPUTED', 'physics': 'NOT_COMPUTED', 'hertz_h12': 'NOT_COMPUTED'} · 숫자 {'ion_net_status_reason_hertz': 0}"
+      }
+    },
+    {
+      "name": "tau_ion_net_status_reason_hertz_nan",
+      "category": "negative_tau",
+      "expected": "reject",
+      "observed": "reject",
+      "contract": "Every top-level int/float other than bool is rejected, regardless of key.",
+      "failed_checks": {
+        "case15.nc2_tau": "FAIL"
+      },
+      "s0b_problem_count": 1,
+      "producer_matches_shared": true,
+      "matches_expected": true,
+      "failing_details": {
+        "case15.nc2_tau": "{'hertz': 'NOT_COMPUTED', 'physics': 'NOT_COMPUTED', 'hertz_h12': 'NOT_COMPUTED'} · 숫자 {'ion_net_status_reason_hertz': nan}"
+      }
+    },
+    {
+      "name": "tau_ion_net_status_reason_hertz_inf",
+      "category": "negative_tau",
+      "expected": "reject",
+      "observed": "reject",
+      "contract": "Every top-level int/float other than bool is rejected, regardless of key.",
+      "failed_checks": {
+        "case15.nc2_tau": "FAIL"
+      },
+      "s0b_problem_count": 1,
+      "producer_matches_shared": true,
+      "matches_expected": true,
+      "failing_details": {
+        "case15.nc2_tau": "{'hertz': 'NOT_COMPUTED', 'physics': 'NOT_COMPUTED', 'hertz_h12': 'NOT_COMPUTED'} · 숫자 {'ion_net_status_reason_hertz': inf}"
+      }
+    },
+    {
+      "name": "tau_case_integer",
+      "category": "negative_tau",
+      "expected": "reject",
+      "observed": "reject",
+      "contract": "Every top-level int/float other than bool is rejected, regardless of key.",
+      "failed_checks": {
+        "case15.nc2_tau": "FAIL"
+      },
+      "s0b_problem_count": 1,
+      "producer_matches_shared": true,
+      "matches_expected": true,
+      "failing_details": {
+        "case15.nc2_tau": "{'hertz': 'NOT_COMPUTED', 'physics': 'NOT_COMPUTED', 'hertz_h12': 'NOT_COMPUTED'} · 숫자 {'case': 1}"
+      }
+    },
+    {
+      "name": "tau_case_float",
+      "category": "negative_tau",
+      "expected": "reject",
+      "observed": "reject",
+      "contract": "Every top-level int/float other than bool is rejected, regardless of key.",
+      "failed_checks": {
+        "case15.nc2_tau": "FAIL"
+      },
+      "s0b_problem_count": 1,
+      "producer_matches_shared": true,
+      "matches_expected": true,
+      "failing_details": {
+        "case15.nc2_tau": "{'hertz': 'NOT_COMPUTED', 'physics': 'NOT_COMPUTED', 'hertz_h12': 'NOT_COMPUTED'} · 숫자 {'case': 0.5}"
+      }
+    },
+    {
+      "name": "tau_case_zero",
+      "category": "negative_tau",
+      "expected": "reject",
+      "observed": "reject",
+      "contract": "Every top-level int/float other than bool is rejected, regardless of key.",
+      "failed_checks": {
+        "case15.nc2_tau": "FAIL"
+      },
+      "s0b_problem_count": 1,
+      "producer_matches_shared": true,
+      "matches_expected": true,
+      "failing_details": {
+        "case15.nc2_tau": "{'hertz': 'NOT_COMPUTED', 'physics': 'NOT_COMPUTED', 'hertz_h12': 'NOT_COMPUTED'} · 숫자 {'case': 0}"
+      }
+    },
+    {
+      "name": "tau_case_nan",
+      "category": "negative_tau",
+      "expected": "reject",
+      "observed": "reject",
+      "contract": "Every top-level int/float other than bool is rejected, regardless of key.",
+      "failed_checks": {
+        "case15.nc2_tau": "FAIL"
+      },
+      "s0b_problem_count": 1,
+      "producer_matches_shared": true,
+      "matches_expected": true,
+      "failing_details": {
+        "case15.nc2_tau": "{'hertz': 'NOT_COMPUTED', 'physics': 'NOT_COMPUTED', 'hertz_h12': 'NOT_COMPUTED'} · 숫자 {'case': nan}"
+      }
+    },
+    {
+      "name": "tau_case_inf",
+      "category": "negative_tau",
+      "expected": "reject",
+      "observed": "reject",
+      "contract": "Every top-level int/float other than bool is rejected, regardless of key.",
+      "failed_checks": {
+        "case15.nc2_tau": "FAIL"
+      },
+      "s0b_problem_count": 1,
+      "producer_matches_shared": true,
+      "matches_expected": true,
+      "failing_details": {
+        "case15.nc2_tau": "{'hertz': 'NOT_COMPUTED', 'physics': 'NOT_COMPUTED', 'hertz_h12': 'NOT_COMPUTED'} · 숫자 {'case': inf}"
+      }
+    },
+    {
+      "name": "tau_registered_bool",
+      "category": "negative_tau",
+      "expected": "reject",
+      "observed": "reject",
+      "contract": "Registered numeric-column prefixes reject every nonblank value, including nested containers and bool.",
+      "failed_checks": {
+        "case15.nc2_tau": "FAIL"
+      },
+      "s0b_problem_count": 1,
+      "producer_matches_shared": true,
+      "matches_expected": true,
+      "failing_details": {
+        "case15.nc2_tau": "{'hertz': 'NOT_COMPUTED', 'physics': 'NOT_COMPUTED', 'hertz_h12': 'NOT_COMPUTED'} · 숫자 {'tau_ion_hertz': True}"
+      }
+    },
+    {
+      "name": "tau_registered_string_numeric",
+      "category": "negative_tau",
+      "expected": "reject",
+      "observed": "reject",
+      "contract": "Registered numeric-column prefixes reject every nonblank value, including nested containers and bool.",
+      "failed_checks": {
+        "case15.nc2_tau": "FAIL"
+      },
+      "s0b_problem_count": 1,
+      "producer_matches_shared": true,
+      "matches_expected": true,
+      "failing_details": {
+        "case15.nc2_tau": "{'hertz': 'NOT_COMPUTED', 'physics': 'NOT_COMPUTED', 'hertz_h12': 'NOT_COMPUTED'} · 숫자 {'tau_ion_hertz': '1.5'}"
+      }
+    },
+    {
+      "name": "tau_registered_nested_dict",
+      "category": "negative_tau",
+      "expected": "reject",
+      "observed": "reject",
+      "contract": "Registered numeric-column prefixes reject every nonblank value, including nested containers and bool.",
+      "failed_checks": {
+        "case15.nc2_tau": "FAIL"
+      },
+      "s0b_problem_count": 1,
+      "producer_matches_shared": true,
+      "matches_expected": true,
+      "failing_details": {
+        "case15.nc2_tau": "{'hertz': 'NOT_COMPUTED', 'physics': 'NOT_COMPUTED', 'hertz_h12': 'NOT_COMPUTED'} · 숫자 {'tau_ion_hertz': {'value': 1.5}}"
+      }
+    },
+    {
+      "name": "tau_registered_nested_list",
+      "category": "negative_tau",
+      "expected": "reject",
+      "observed": "reject",
+      "contract": "Registered numeric-column prefixes reject every nonblank value, including nested containers and bool.",
+      "failed_checks": {
+        "case15.nc2_tau": "FAIL"
+      },
+      "s0b_problem_count": 1,
+      "producer_matches_shared": true,
+      "matches_expected": true,
+      "failing_details": {
+        "case15.nc2_tau": "{'hertz': 'NOT_COMPUTED', 'physics': 'NOT_COMPUTED', 'hertz_h12': 'NOT_COMPUTED'} · 숫자 {'tau_ion_hertz': [1.5]}"
+      }
+    },
+    {
+      "name": "tau_unknown_bool",
+      "category": "nonproducer_boundary",
+      "expected": "pass",
+      "observed": "pass",
+      "contract": "Current producer selects flat scalar case_row fields and cannot emit this new nested tau extension; shallow scanning is not recursive JSON validation.",
+      "failed_checks": {},
+      "s0b_problem_count": 0,
+      "producer_matches_shared": true,
+      "matches_expected": true,
+      "failing_details": {}
+    },
+    {
+      "name": "tau_unknown_string_numeric",
+      "category": "nonproducer_boundary",
+      "expected": "pass",
+      "observed": "pass",
+      "contract": "Current producer selects flat scalar case_row fields and cannot emit this new nested tau extension; shallow scanning is not recursive JSON validation.",
+      "failed_checks": {},
+      "s0b_problem_count": 0,
+      "producer_matches_shared": true,
+      "matches_expected": true,
+      "failing_details": {}
+    },
+    {
+      "name": "tau_unknown_nested_dict",
+      "category": "nonproducer_boundary",
+      "expected": "pass",
+      "observed": "pass",
+      "contract": "Current producer selects flat scalar case_row fields and cannot emit this new nested tau extension; shallow scanning is not recursive JSON validation.",
+      "failed_checks": {},
+      "s0b_problem_count": 0,
+      "producer_matches_shared": true,
+      "matches_expected": true,
+      "failing_details": {}
+    },
+    {
+      "name": "tau_unknown_nested_list",
+      "category": "nonproducer_boundary",
+      "expected": "pass",
+      "observed": "pass",
+      "contract": "Current producer selects flat scalar case_row fields and cannot emit this new nested tau extension; shallow scanning is not recursive JSON validation.",
+      "failed_checks": {},
+      "s0b_problem_count": 0,
+      "producer_matches_shared": true,
+      "matches_expected": true,
+      "failing_details": {}
+    },
+    {
+      "name": "tau_unknown_deep_nested",
+      "category": "nonproducer_boundary",
+      "expected": "pass",
+      "observed": "pass",
+      "contract": "Current producer selects flat scalar case_row fields and cannot emit this new nested tau extension; shallow scanning is not recursive JSON validation.",
+      "failed_checks": {},
+      "s0b_problem_count": 0,
+      "producer_matches_shared": true,
+      "matches_expected": true,
+      "failing_details": {}
+    },
+    {
+      "name": "tau_missing_mode",
+      "category": "negative_tau",
+      "expected": "reject",
+      "observed": "reject",
+      "contract": "All three statuses remain required.",
+      "failed_checks": {
+        "case15.nc2_tau": "FAIL"
+      },
+      "s0b_problem_count": 1,
+      "producer_matches_shared": true,
+      "matches_expected": true,
+      "failing_details": {
+        "case15.nc2_tau": "{'hertz': 'NOT_COMPUTED', 'physics': 'NOT_COMPUTED', 'hertz_h12': None} · 숫자 {}"
+      }
+    },
+    {
+      "name": "tau_bad_mode",
+      "category": "negative_tau",
+      "expected": "reject",
+      "observed": "reject",
+      "contract": "All three statuses must be NOT_COMPUTED.",
+      "failed_checks": {
+        "case15.nc2_tau": "FAIL"
+      },
+      "s0b_problem_count": 1,
+      "producer_matches_shared": true,
+      "matches_expected": true,
+      "failing_details": {
+        "case15.nc2_tau": "{'hertz': 'NOT_COMPUTED', 'physics': 'OK', 'hertz_h12': 'NOT_COMPUTED'} · 숫자 {}"
+      }
+    },
+    {
+      "name": "positive_raw_bytes_display_conversion",
+      "category": "positive",
+      "expected": "pass",
+      "observed": "pass",
+      "contract": "Direct gzip read + producer's documented six-decimal conversion; no solver execution.",
+      "failed_checks": {},
+      "s0b_problem_count": 0,
+      "producer_matches_shared": true,
+      "matches_expected": true,
+      "failing_details": {}
+    },
+    {
+      "name": "unrounded_raw_values",
+      "category": "nonproducer_schema",
+      "expected": "reject",
+      "observed": "reject",
+      "contract": "Unrounded input is not the current report format; producer explicitly rounds to six decimals.",
+      "failed_checks": {
+        "case15.nc3_cause": "FAIL"
+      },
+      "s0b_problem_count": 1,
+      "producer_matches_shared": true,
+      "matches_expected": true,
+      "failing_details": {
+        "case15.nc3_cause": "겹침 {'electronic_hertzian': ('boundary_overlap', [24, 40, 57, 103]), 'electronic_physics': ('boundary_overlap', [24, 40, 57, 103]), 'thermal_hertzian': ('boundary_overlap', [24, 40, 57, 103])} · Physics 열 'ValueError: physics_g2: 간선 (31, 29241) — ligg_area < 0 (-0.186036)' · 음수 행 음수 면적 행 [(31, 29241, -0.186036, 1.0511400000000002), (38, 29241, -0.186264, 1.0512)] ≠ 등록 [(31, 29241, -0.186036, 1.05114), (38, 29241, -0.186264, 1.0512)] · 증거 오류 None"
+      }
+    }
+  ]
+}

@@ -9243,7 +9243,7 @@
     {
       "id": "G2RR5-03",
       "severity": "P2",
-      "status": "claimed_fixed",
+      "status": "verified",
       "owner": "claude",
       "found_by": "codex 10-07 세대 2 재검증 5 (리뷰 핀 aa7ec7fe9 · WSL 사전 점검 핀 839dbac6b · 독립 사본 469 파일 git blob 대조 · 실제 build_v13 → check_v13 (상위 τ 재독해만 대역) · 실제 audit CLI (합성 1 케이스 ROOT · staged 17 · retry 4) · 제출 WSL 묶음 독립 대조 61/61 · case15 원덤프 CPU 후처리 + 망 하위 프로세스 호출 거부 주입 · Windows Python 3.12.14 NumPy 2.5.3 SciPy 1.16.3 — 194 · DEM · MPM · S3 미실행)",
       "opened_in": "docs/reviews/codex_review_gen2_network_reverify5_20261007.md",
@@ -9254,9 +9254,15 @@
         "docs/reviews/codex_gen2_network_reverify5_evidence_20261007/probes/r5_case15.py",
         "scripts/g2_network_reread.py --selftest (G2RR5-03 — 20 → 고치기 전 코드 20/23 → 23/23 · 공용 판정 case15_negctl_verdicts · 필수 ID 일곱 (proc · raw_sha · nc1–nc5) 정확히 1 회 · 등록 표지 · 상세 재판정)",
         "scripts/wsl_network_smoke.py --selftest (G2RR5-03 — 19 → 16/20 → 20/20 · 스모크 evaluate 가 공용 판정을 import)",
-        "docs/reviews/codex_g2rr5_fix_probe_rerun_20261008/case15/README.md (r5_case15 = 옛 WSL 기록 positive 가 이제 S0b 거부라 탐침 자기 assert 에서 멈춤 · assert 끄고 = 변이 12 행 전부 rc 1 (핀 4) · r5_case15_fault_reread 대체 입력 = S0b 실패 (핀 rc 0))"
+        "docs/reviews/codex_g2rr5_fix_probe_rerun_20261008/case15/README.md (r5_case15 = 옛 WSL 기록 positive 가 이제 S0b 거부라 탐침 자기 assert 에서 멈춤 · assert 끄고 = 변이 12 행 전부 rc 1 (핀 4) · r5_case15_fault_reread 대체 입력 = S0b 실패 (핀 rc 0))",
+        "docs/reviews/codex_gen2_network_reverify7_evidence_20261012/evidence/r7_parent_cli.json (등록 변이 25 · 부모 ↔ 현행 실제 --smoke-root 52 회 — 옛 오수용 24 → 현행 0 · na_dup_row 전후 rc 1 · 정상 0 / 0)",
+        "docs/reviews/codex_gen2_network_reverify7_evidence_20261012/evidence/r7_cli.json (고정 정상 + 호환 변형 · 반례 소비자 23/23 기대대로 · S0 / S0b 까지)"
       ],
-      "claimed_fixed_sha": "b34a52f52"
+      "claimed_fixed_sha": "b34a52f52",
+      "verified_by": "codex",
+      "verified_sha": "3cedd40a5",
+      "verified_in": "docs/reviews/codex_review_gen2_network_reverify7_20261012.md",
+      "verified_scope": "S0b = 공용 판정 · 필수 ID 일곱 정확히 1 회 · 등록 표지 · 상세 재판정 — 재검증 6 이 남긴 잔여 (원자료 sha256 = 요약 플래그만 · 음수 면적 행 = 앞 ID 둘만 = G2RR6-01) 가 ec9c51149 로 닫혀 S0b 상세 재판정 전체가 닫힘 (판정문 §0 '이에 따라 G2RR5-03 의 S0b 상세 재판정 잔여도 닫을 수 있다').  한정 = G2RR6-01 verified_scope 와 같음."
     },
     {
       "id": "G2RR5-04",
@@ -9282,7 +9288,7 @@
     {
       "id": "G2RR6-01",
       "severity": "P2",
-      "status": "claimed_fixed",
+      "status": "verified",
       "owner": "claude",
       "found_by": "codex 10-11 세대 2 재검증 6 (리뷰 핀 a20fc1875 · WSL 실행 핀 956173e1c · 리뷰 사본 493 파일 git blob SHA-1 · SHA-256 · 실제 g2_network_reread --smoke-root CLI (정상 관통 · 미퍼콜 · clamp = 실제 합성 생산자 게시 · case15 보고만 변이) · 실제 case15 child_case CPU 후처리 + 망 호출 PermissionError 주입 · Windows Python 3.12 NumPy 2.5.3 SciPy 1.16.3 — 194 · DEM · MPM · S3 미실행)",
       "opened_in": "docs/reviews/codex_review_gen2_network_reverify6_20261011.md",
@@ -9293,8 +9299,18 @@
         "scripts/g2_network_reread.py --selftest (G2RR6-01 — 고치기 전 23/26 → 26/26 · 새 셋: Codex 넷 + 같은 부류 21 = 실제 --smoke-root rc 1 · S0b 실패 / 10-09 실제 WSL 기록 = Codex 입력 그대로 rc 0 · 변이 넷 + 대조 둘 rc 1 / 등록 sha256 = case15 README 표)",
         "scripts/wsl_network_smoke.py --selftest (16/16 · 생산자 evaluate 가 같은 공용 판정 · 픽스처 raw_sha = 등록 앞 12 자리) · --selftest-real (4/4 · 실제 case15 파이프라인 → --smoke-root rc 0)",
         "docs/reviews/codex_gen2_network_reverify6_evidence_20261011/_repro_ours_20261011/repro_s0b_cli_fixed.json (Codex 입력 일곱 · 고친 트리 ec9c51149 = 넷 rc 1 · 정상 rc 0 · 대조 둘 rc 1)",
-        "docs/reviews/codex_gen2_network_reverify6_evidence_20261011/_repro_ours_20261011/probe_same_class_fixed.json (같은 부류 23 · 고치기 전 21 통과 → 23 거부)"
-      ]
+        "docs/reviews/codex_gen2_network_reverify6_evidence_20261011/_repro_ours_20261011/probe_same_class_fixed.json (같은 부류 23 · 고치기 전 21 통과 → 23 거부)",
+        "docs/reviews/codex_gen2_network_reverify7_evidence_20261012/evidence/r7_parent_cli.json (등록 변이 25 · 부모 ↔ 현행 실제 --smoke-root 52 회 — 옛 오수용 24 → 현행 0 · na_dup_row 전후 rc 1 · 정상 0 / 0)",
+        "docs/reviews/codex_gen2_network_reverify7_evidence_20261012/evidence/r7_cli.json (고정 정상 + 호환 변형 · 반례 소비자 23/23 기대대로 · S0 / S0b 까지)",
+        "docs/reviews/codex_gen2_network_reverify7_evidence_20261012/evidence/r7_predicates.json · docs/reviews/codex_gen2_network_reverify7_evidence_20261012/evidence/test_quality_predicates.json (독립 함수 탐침 232/232 기대 일치 · 정확히 등록된 25 변이 = 의도한 검사 ID 하나만 실패)",
+        "docs/reviews/codex_gen2_network_reverify7_evidence_20261012/evidence/r7_contract.json (원자료 네 파일 전체 sha256 · Decimal 접촉 재계산 음수 둘 · 봉인 32 무변경 · 수정 범위)",
+        "docs/reviews/codex_gen2_network_reverify7_evidence_20261012/_repro_ours_20261012/compare_probe_outputs.json (우리 트리 · Codex 실행기 무변경 · 113 JSON 판정값 차이 0 · 환경 차이만)",
+        "docs/reviews/codex_gen2_network_reverify7_evidence_20261012/_repro_ours_20261012/r7_contract_ours.json (r7_contract 의 git 판 — 여섯 묶음 전부 Codex 와 같음)"
+      ],
+      "verified_by": "codex",
+      "verified_sha": "3cedd40a5",
+      "verified_in": "docs/reviews/codex_review_gen2_network_reverify7_20261012.md",
+      "verified_scope": "S0b 공용 판정이 원자료 sha256 상세 (네 파일 닫힌 키 · [actual, expected] 소문자 16진 12 자리 · 일치 · 등록 접두 — 두 값을 같은 오답으로 바꿔도 거부) 와 음수 면적 행 상세 (네 칸 · 정수 ID · 유한 비-bool · area < 0 · δ > 0 · 중복 없음 · 등록 표시값) 를 재판정 — 원 반례 넷 실제 소비자 rc 1 · n_fail 1 · 정상 0 · 0 · 등록 변이 25 전후 CLI 52 회 기대대로 · 자체시험 26/26 (판정문 §0 · §2).  ⚠ 한정 (판정문 §2-1 · §3): 12 자리 접두 상세 검증이지 S0b 가 원파일 64 자리를 다시 계산하는 것 아님 · 'τ 칸 어디든' = 현행 평면 τ 최상위 숫자 칸 (중첩 dict · 리스트 안 숫자는 못 봄 — 중첩 스키마 도입 시 별도 계약) · 엄격 표시값 일치 = 이 고정 case15 fixture 한정 · 스모크 fast 는 Codex 윈도에서 os.wait4 부재로 완주 못 함 (요청자 fast16 · real4 를 독립 통과로 세지 않음 — 발사 핀 사전 점검에서 다시)."
     },
     {
       "id": "RB-01",
@@ -9525,6 +9541,16 @@
       "opened_in": "docs/reviews/codex_review_dem_unloading_prereg_rereview_20261012.md",
       "title": "언로딩 개정 1 문안 (§12) · 재검토 요청서에 범위 없는 완결성 단정 둘 — ① §12-4 ③ \"동시 실패 포함 · 팔 셋으로 끝난다\" · 요청서 §1 표 4 행 \"결정표 넷 · 팔 셋으로 끝\" = 유효한 δ 두 개일 때만 참 (결손 · 무효 끝점이면 결정표에 행이 없다 — ULR1-01) · 요청서 §2 의 결손 끝점 시험도 그 뒤 선택 차단을 뺐다 ② §12-8 \"창 W = 5,000 step\" = dt₀ 에서만 맞는 step 수를 dt/2 팔에도 적용되는 글로 썼다 (REG:625 물리 시간 고정 · 옛 UT 창 10,000 과 충돌 — ULR1-04)",
       "note": "결과 0 건 · 사용 0 (키트 미작성 · 실행 없음).  고침 = ULR1-01 · 04 수정 문안 (등록 개정 2) 과 같은 커밋.  교훈: 결정표 · 창 같은 \"규칙이 완결된다\" 문장은 입력 공간 (무효 · 결손 · NaN · 다른 dt) 을 다 적었을 때만 쓴다 — 유한한 경우 넷이 배타 · 완전하다는 것과 모든 허용 결과가 덮인다는 것은 다르다.  ⬜ 수정 계획 = docs/reviews/dem_unloading_ulr1_fix_plan_20261012.md (1저자 비준 대기 · Q1–Q4)."
+    },
+    {
+      "id": "G2RR7-01",
+      "severity": "P3",
+      "status": "open",
+      "owner": "claude",
+      "found_by": "codex 10-12 세대 2 재검증 7 (리뷰 핀 3cedd40a5 · 수정 ec9c51149 · 부모 821f0e151 · 리뷰 사본 573 파일 git blob SHA-1 · SHA-256 · 실제 --smoke-root CLI 부모 · 현행 52 회 · 독립 함수 탐침 232 · case15 원자료 전체 sha256 · Decimal 접촉 재계산 · Windows Python 3.12.14 NumPy 2.5.3 SciPy 1.16.3 — 194 · DEM · MPM · WSL · 스모크 real 미실행)",
+      "opened_in": "docs/reviews/codex_review_gen2_network_reverify7_20261012.md",
+      "title": "재검증 7 요청서 §2 시험표가 같은 부류 변이 25 (Codex 넷 + 같은 부류 21) 를 '고치기 전 전부 rc 0 · S0b ✓ (오수용)' 이라 적었다 — 중복 행 na_dup_row 는 부모 판정식도 ID 쌍 목록 불일치로 이미 거부 (전후 모두 rc 1 · n_fail 1 · S0 True · S0b False) → 정확히 = 기존 오수용 24 새로 차단 + 이미 거부하던 중복 행 1 계속 거부 · 현행 25 거부",
+      "note": "판정문 §4.  자리 = docs/reviews/codex_gen2_network_reverify7_request_20261011.md:29 (구성 = scripts/g2_network_reread.py:1357).  반례 증거 = docs/reviews/codex_gen2_network_reverify7_evidence_20261012/evidence/r7_parent_cli.json (우리 재현 같음 — _repro_ours_20261012/compare_probe_outputs.json).  G2RR6-01 을 다시 열 이유 아님 (판정문 — 현행 25 거부 · 26/26 · 원 반례 차단 · 정상 수용은 그대로).  probe_same_class 23 (옛 21 통과 · 2 거부 — SELF-104) 과 섞지 않는다.  같은 부류 = SELF-88 · SELF-90 · SELF-102 (요청서 문장 과장).  정정 적용 = 이 항목을 올린 커밋 (요청서 §2 그 칸에 정정 표지 · 원문 보존) → claimed_fixed = 다음 커밋에서 그 sha."
     }
   ]
 }

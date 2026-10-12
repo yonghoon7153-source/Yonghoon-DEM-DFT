@@ -26,7 +26,7 @@
 | 시험 | 고치기 전 (`821f0e151` 판정식) | 고친 뒤 (`ec9c51149`) |
 |---|---|---|
 | `scripts/g2_network_reread.py --selftest` | 23 / 26 (새 셋 실패) | **26 / 26** |
-| └ Codex 넷 + 같은 부류 21 (raw_sha {} · None · 키 하나 삭제 · 키 추가 · 두 값 함께 바꿈 · 16 진 아님 · 빈 문자열 · 원소 셋 / 면적 0 · NaN · bool · 문자열 · 군더더기 행 · 짧은 행 · ID 문자열 · ID 실수 · 다른 음수값 · δ 결손 · 중복 행 / 실패 단계 하나 더 / 등록 밖 τ 숫자 키) — 실제 `--smoke-root` | 전부 rc 0 · S0b ✓ (오수용) | 전부 rc 1 · S0b ✗ (S0 그대로) |
+| └ Codex 넷 + 같은 부류 21 (raw_sha {} · None · 키 하나 삭제 · 키 추가 · 두 값 함께 바꿈 · 16 진 아님 · 빈 문자열 · 원소 셋 / 면적 0 · NaN · bool · 문자열 · 군더더기 행 · 짧은 행 · ID 문자열 · ID 실수 · 다른 음수값 · δ 결손 · 중복 행 / 실패 단계 하나 더 / 등록 밖 τ 숫자 키) — 실제 `--smoke-root` | 전부 rc 0 · S0b ✓ (오수용) ⛔ **정정 10-12 (Codex 재검증 7 `G2RR7-01`)**: 24 개 rc 0 (오수용) + 중복 행 `na_dup_row` 1 개는 옛 판정식도 이미 rc 1 (ID 쌍 목록 불일치) — 기존 오수용 24 새로 차단 + 중복 행 1 계속 거부 = 현행 25 거부 | 전부 rc 1 · S0b ✗ (S0 그대로) |
 | └ 10-09 실제 WSL 기록 = Codex 입력 그대로 (`evidence/r6_s0b_*.input.json` 일곱) | 넷 rc 0 (오수용) | positive rc 0 · n_fail 0 · 넷 + 대조 둘 rc 1 · n_fail 1 |
 | └ 등록 sha256 = case15 README 표 | (등록 없음) | 같음 |
 | `scripts/wsl_network_smoke.py --selftest` (생산자 evaluate = 같은 공용 판정) | — | 16 / 16 |

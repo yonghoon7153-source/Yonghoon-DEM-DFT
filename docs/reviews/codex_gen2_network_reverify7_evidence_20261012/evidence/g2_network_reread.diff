@@ -1,0 +1,230 @@
+--- 821f0e151/scripts/g2_network_reread.py
++++ 3cedd40a5911d0606bf33ed2085d5cb93c4db2e0/scripts/g2_network_reread.py
+@@ -63,6 +63,7 @@
+ import hashlib
+ import io
+ import json
++import math
+ import os
+ import shutil
+ import sys
+@@ -112,7 +113,16 @@
+     refuse_prefix='ValueError: ',
+     attempt_table={'hertzian.ionic': 'computed', 'physics.ionic': 'computed',
+                    'hertzian.electronic': 'boundary_overlap', 'physics.electronic': 'boundary_overlap',
+-                   'hertzian.thermal': 'boundary_overlap', 'physics.thermal': 'ligg_area_negative'})
++                   'hertzian.thermal': 'boundary_overlap', 'physics.thermal': 'ligg_area_negative'},
++    #  ★ 10-11 G2RR6-01 (Codex 세대 2 재검증 6 §2-3) — 상세 재판정의 등록값.  ① 원자료 네 파일의 sha256 = `docs/data/case15_corner_20261001/README.md` 표
++    #    (압축 푼 바이트 · selftest 가 README 와 대조) · 스모크 보고는 앞 `raw_sha_prefix` 자리 [actual, expected] 를 싣는다 — 그 검사는 64 자리 바이트 재검증과
++    #    **같은 보증이 아니다** (판정문 §2-3 ①).  ② 음수 면적 행 = 생산자 `case15_channel_probe` 꼴 [id1, id2, 면적 µm², δ µm] (`round(·, 6)`) — 고정 원자료의 표시값.
++    raw_sha256={'atom_v4_1710000.liggghts': 'f40f69eccd793ca96c7ba823914180e879b2c14c1c9a57f4c15af3393fce608f',
++                'contact_v4_1710000.liggghts': '180140701ef4dfd34bbda6c236837d267502d35a0372824c8720d7d8731b1b4d',
++                'mesh_v4_1710000.stl': '2868f0898a9056375c74ea24f2be1d46cb5f06f2411b01c21fa77c96836c053b',
++                'input_case15.liggghts': '172953c78a07c4da16bd6b2bc6b02111c144f5ba257f800349193cc92de4dc60'},
++    raw_sha_prefix=12,
++    negative_rows_ref=((31, 29241, -0.186036, 1.05114), (38, 29241, -0.186264, 1.0512)))
+ #: 필수 검사 = (안정 ID, 이름 꼬리) — 차례 그대로.  생산자 검사 dict 의 id · 소비자 S0b 는 그 케이스의 기록이 이 집합과 **정확히** 같기를 (각 1 회 · 모르는 ID ·
+ #:   id 없는 행 거부) 요구한다 — 접두어 '[음성 대조]' PASS 행 수 (옛 '넷 이상') 를 세지 않는다.
+ CASE15_NEGCTL_CHECKS = (
+@@ -149,6 +159,69 @@
+ 
+ def _c15_hex64(s):
+     return isinstance(s, str) and len(s) == 64 and all(c in '0123456789abcdef' for c in s)
++
++
++def _c15_hexn(s, n):
++    """소문자 16 진 정확히 n 자리 (bool · 숫자 · 빈 문자열 아님)."""
++    return isinstance(s, str) and len(s) == n and all(c in '0123456789abcdef' for c in s)
++
++
++def _c15_real(x):
++    """유한 실수 (bool 아님 · 문자열 아님)."""
++    return isinstance(x, (int, float)) and not isinstance(x, bool) and math.isfinite(x)
++
++
++def _c15_raw_sha_verdict(r, ng):
++    """★ 10-11 G2RR6-01 — case15.raw_sha 를 요약 플래그만이 아니라 **상세**로 다시 판정 → (판정, 세부).
++    raw_sha_ok is True · raw_sha = dict · 키 = 등록 네 파일 정확히 · 값 = [actual, expected] 둘 · 각 소문자 16 진 `raw_sha_prefix` 자리 · actual = expected ·
++    expected = 등록 sha256 의 앞 자리 — 하나라도 어긋나면 FAIL (상세 결손 · 빈 dict · 모순 · 등록 표와 다름).  ⚠ 접두 대조 = 64 자리 바이트 재검증 아님."""
++    reg, n = ng['raw_sha256'], ng['raw_sha_prefix']
++    rs = r.get('raw_sha')
++    if r.get('raw_sha_ok') is not True:
++        return 'FAIL', f'raw_sha_ok {r.get("raw_sha_ok")!r} — 원자료 sha256 ≠ README 표 · 상세 {rs!r}'
++    if not isinstance(rs, dict) or set(rs) != set(reg):
++        got = sorted(rs) if isinstance(rs, dict) else type(rs).__name__
++        return 'FAIL', f'raw_sha 상세 키 {got} ≠ 등록 네 파일 {sorted(reg)} — 상세 결손 · 모순 (요약 raw_sha_ok=True 만으로 통과시키지 않는다)'
++    bad = {}
++    for k, full in reg.items():
++        v = rs[k]
++        if not (isinstance(v, (list, tuple)) and len(v) == 2 and all(_c15_hexn(x, n) for x in v)):
++            bad[k] = f'꼴 {v!r} ([actual, expected] · 각 16 진 {n} 자리여야)'
++        elif v[0] != v[1]:
++            bad[k] = f'actual {v[0]} ≠ expected {v[1]}'
++        elif v[1] != full[:n]:
++            bad[k] = f'expected {v[1]} ≠ 등록 {full[:n]}'
++    if bad:
++        return 'FAIL', f'raw_sha 상세 {bad} — 요약 raw_sha_ok=True 와 모순'
++    return 'PASS', rs
++
++
++def _c15_negative_rows(neg, ng):
++    """★ 10-11 G2RR6-01 — 음수 면적 행 상세 → (정렬된 행 · 문제 문자열 '').  칸 = 목록 · 등록 행 수 정확히 · 행 = [id1, id2, 면적 µm², δ µm] 넷 ·
++    ID = 정수 (bool · 문자열 · 실수 아님) · 면적 · δ = 유한 실수 · 면적 < 0 · δ > 0 · 같은 쌍 중복 없음 · 행 = 등록 표시값 (`negative_rows_ref`) —
++    옛 판은 짧은 · 꼴 깨진 행을 조용히 버리고 ID 를 int() 로 강제했다 (면적 양수 · 면적값 삭제가 통과)."""
++    ref = sorted(tuple(x) for x in ng['negative_rows_ref'])
++    rows = neg.get('negative_area')
++    if not isinstance(rows, list) or len(rows) != len(ref):
++        return None, f'음수 면적 칸 {rows!r} — 목록 · {len(ref)} 행이어야'
++    got = []
++    for x in rows:
++        if not (isinstance(x, (list, tuple)) and len(x) == 4):
++            return None, f'음수 면적 행 꼴 {x!r} — [id1, id2, 면적 µm², δ µm] 넷이어야'
++        i1, i2, a, dl = x
++        if not all(isinstance(v, int) and not isinstance(v, bool) for v in (i1, i2)):
++            return None, f'음수 면적 행 ID {x!r} — 정수여야'
++        if not (_c15_real(a) and _c15_real(dl)):
++            return None, f'음수 면적 행 값 {x!r} — 면적 · δ = 유한 실수여야'
++        if not (a < 0 and dl > 0):
++            return None, f'음수 면적 행 {x!r} — 면적 < 0 µm² · δ > 0 이어야'
++        got.append((i1, i2, a, dl))
++    got.sort()
++    if len({g[:2] for g in got}) != len(got):
++        return None, f'음수 면적 행 중복 {got}'
++    if got != ref:
++        return None, f'음수 면적 행 {got} ≠ 등록 {ref}'
++    return got, ''
+ 
+ 
+ def _c15_attempt_class(st, ng):
+@@ -270,18 +343,22 @@
+ 
+     put('case15.proc', lambda: (ok(_c15_int0(t.get('rc')) and r.get('id') == cid),
+                                 f'rc {t.get("rc")!r} {t.get("signal") or ""} · 보고서 id {r.get("id")!r}'))
+-    put('case15.raw_sha', lambda: (ok(r.get('raw_sha_ok') is True), r.get('raw_sha')))
++    #  ★ 10-11 G2RR6-01 — 요약 플래그만 보던 옛 판 (`raw_sha_ok is True`) 대신 상세 (등록 네 파일 · [actual, expected] · 일치 · 등록 표) 까지
++    put('case15.raw_sha', lambda: _c15_raw_sha_verdict(r, ng))
+ 
+     def nc1():
+         fs = r.get('failed_stages')
+-        return (ok(r.get('status') == 'failed' and isinstance(fs, list) and ng['solver_step'] in fs and r.get('stage_e_ran') is False
++        #  ★ 10-11 G2RR6-01 (같은 부류) — 실패 단계 = 등록 단계 **정확히 하나** (옛 판 = 들어 있기만 하면 — 다른 단계가 같이 실패해도 통과)
++        return (ok(r.get('status') == 'failed' and fs == [ng['solver_step']] and r.get('stage_e_ran') is False
+                    and not r.get('returned_network_run_id')),
+                 f'status {r.get("status")} · 실패 단계 {fs} · Stage E {r.get("stage_e_ran")} · run id {r.get("returned_network_run_id")}')
+ 
+     def nc2():
+         tau = _c15_d(r.get('tau'))
+         sts = {m: tau.get(f'ion_net_status_{m}') for m in ('hertz', 'physics', 'hertz_h12')}
+-        nums = {k: v for k, v in tau.items() if str(k).startswith(('f_ion_', 'tau2_ion_', 'tau_ion_')) and v not in (None, '')}
++        #  ★ 10-11 G2RR6-01 (같은 부류) — 등록 키 접두의 값 + τ 칸 **어디든** 숫자 (int · float · bool 아님) 가 있으면 노출 (옛 판 = 접두 키만)
++        nums = {k: v for k, v in tau.items() if (str(k).startswith(('f_ion_', 'tau2_ion_', 'tau_ion_')) and v not in (None, ''))
++                or (isinstance(v, (int, float)) and not isinstance(v, bool))}
+         return ok(set(sts.values()) == {'NOT_COMPUTED'} and not nums), f'{sts} · 숫자 {nums}'
+ 
+     def nc3():
+@@ -290,10 +367,11 @@
+         ids = list(ng['b_and_t_ids'])
+         ov = {k: (_c15_d(ch.get(k)).get('reason'), _c15_d(ch.get(k)).get('intersection')) for k in ng['overlap_channels']}
+         refuse = str(_c15_d(ch.get(ng['refuse_channel'])).get('error') or '')
+-        rows = sorted(tuple(int(v) for v in x[:2]) for x in (neg.get('negative_area') or []) if isinstance(x, (list, tuple)) and len(x) >= 2)
++        #  ★ 10-11 G2RR6-01 — 음수 면적 행 = 꼴 · ID · 면적 < 0 · δ > 0 · 등록 표시값까지 (`_c15_negative_rows`) — 옛 판은 앞 ID 둘만 읽었다
++        rows, why = _c15_negative_rows(neg, ng)
+         return (ok(bool(ch) and all(v == (ng['overlap_reason'], ids) for v in ov.values()) and ng['refuse_text'] in refuse
+-                   and rows == sorted(ng['negative_rows'])),
+-                f'겹침 {ov} · Physics 열 {refuse[:120]!r} · 음수 행 {rows} · 증거 오류 {neg.get("error")}')
++                   and rows is not None),
++                f'겹침 {ov} · Physics 열 {refuse[:120]!r} · 음수 행 {rows if rows is not None else why} · 증거 오류 {neg.get("error")}')
+ 
+     def nc4():
+         ch = _c15_d(_c15_d(r.get('negctl')).get('channels'))
+@@ -1117,7 +1195,9 @@
+         c15 = dict(
+             id='case15_network', kind='case15', stop_after='network', negative_control='case15_publication_blocked', status='failed', success=False,
+             failed_stages=[solver], stage_e_ran=False, returned_network_run_id=None, raw_sha_ok=True,
+-            raw_sha={k: ('ab' * 6, 'ab' * 6) for k in ('atom_v4_1710000.liggghts', 'contact_v4_1710000.liggghts', 'mesh_v4_1710000.stl', 'input_case15.liggghts')},
++            #  ★ 10-11 G2RR6-01 — 원자료 sha256 상세 = 등록 표 (case15 README) 의 앞 12 자리 (옛 픽스처 'ab'*6 은 이제 등록 표와 달라 거부된다)
++            raw_sha={k: (h, h) for k, h in (('atom_v4_1710000.liggghts', 'f40f69eccd79'), ('contact_v4_1710000.liggghts', '180140701ef4'),
++                                             ('mesh_v4_1710000.stl', '2868f0898a90'), ('input_case15.liggghts', '172953c78a07'))},
+             stages=[dict(step=s, rc=0, ok=True, required=s != 'Coverage Physics vs Hertzian', missing_outputs=[], stale_outputs=[], verify_failed=False, err='')
+                     for s in ('Parse', 'Contact Analysis', 'Coverage Physics vs Hertzian')]
+             + [dict(step=solver, rc=0, ok=False, required=True, missing_outputs=[], stale_outputs=[], verify_failed=True, err=f'… physics.thermal=fail ({ref})'),
+@@ -1239,6 +1319,79 @@
+         chk(f'★ G2RR5-03 신원 · ID 계약 — 등록 표지 + kind 다름 (= 미등록) · 모르는 ID 하나 더 · 자식 프로세스 기록 (timings) 없음 · 옛 형식 기록 (실제 시도 증거 · 검사 '
+             f'id 없음 = G2RR5-02 이전 생산자 · 제출 WSL 10-07 기록과 같은 꼴 — 그 기록은 고친 스모크로 다시 만들어야) → rc 1 {_bad(ext4) or ""}',
+             not _bad(ext4), repr({nm: res[nm] for nm in ext4}))
++        #  ★ 10-11 G2RR6-01 (Codex 세대 2 재검증 6 §2 · 반례 먼저 · 실제 --smoke-root 소비자) — S0b 공용 판정이 원자료 sha256 상세와 음수 면적 상세를 **다시**
++        #    판정한다.  옛 판: case15.raw_sha = raw_sha_ok is True 만 · 음수 면적 = 행의 앞 ID 둘만 (짧은 · 꼴 깨진 행은 조용히 버리고 ID 를 int() 로 강제) →
++        #    Codex 넷 (raw_sha 키 삭제 · atom actual 000000000000 · 면적 양수 · 면적값 삭제) 과 같은 부류 (자체 탐침 —
++        #    docs/reviews/codex_gen2_network_reverify6_evidence_20261011/_repro_ours_20261011/probe_same_class_ours.json) 이 rc 0.  고친 판 = 전부 rc 1 ·
++        #    양성 (위 합성 c15 = 등록 접두 · 10-09 실제 WSL 기록 = 반입한 Codex 입력 그대로) rc 0 · 등록 표 = case15 README sha256 표 (사본 표류 검사).
++        _A15 = 'atom_v4_1710000.liggghts'
++
++        def _rs(d_):
++            return _r(d_)['raw_sha']
++
++        def _na(rows):
++            return lambda d_: _r(d_)['negctl'].update(negative_area=rows)
++        _R1, _R2 = [31, 29241, -0.186036, 1.05114], [38, 29241, -0.186264, 1.0512]
++        V6 = {'r6_raw_sha_missing': _mut(lambda d_: _r(d_).pop('raw_sha')),
++              'r6_raw_sha_mismatch': _mut(lambda d_: _rs(d_).update({_A15: ['000000000000', _rs(d_)[_A15][1]]})),
++              'r6_negative_area_positive': _mut(_na([[31, 29241, 0.186036], [38, 29241, 0.186264]])),
++              'r6_negative_area_missing': _mut(_na([[31, 29241], [38, 29241]]))}
++        V6s = {'sha_empty': _mut(lambda d_: _r(d_).update(raw_sha={})),
++               'sha_none': _mut(lambda d_: _r(d_).update(raw_sha=None)),
++               'sha_key_dropped': _mut(lambda d_: _rs(d_).pop('mesh_v4_1710000.stl')),
++               'sha_key_extra': _mut(lambda d_: _rs(d_).update({'extra.bin': ['abcdefabcdef', 'abcdefabcdef']})),
++               'sha_both_changed': _mut(lambda d_: _rs(d_).update({_A15: ['000000000000', '000000000000']})),
++               'sha_not_hex': _mut(lambda d_: _rs(d_).update({_A15: ['zzzzzzzzzzzz', 'zzzzzzzzzzzz']})),
++               'sha_empty_str': _mut(lambda d_: _rs(d_).update({_A15: ['', '']})),
++               'sha_triple': _mut(lambda d_: _rs(d_).update({_A15: list(_rs(d_)[_A15]) + ['x']})),
++               'na_zero': _mut(_na([[31, 29241, 0.0, 1.05114], [38, 29241, 0.0, 1.0512]])),
++               'na_nan': _mut(_na([[31, 29241, float('nan'), 1.05114], [38, 29241, float('nan'), 1.0512]])),
++               'na_bool': _mut(_na([[31, 29241, True, 1.05114], [38, 29241, True, 1.0512]])),
++               'na_string': _mut(_na([[31, 29241, '-0.186036', 1.05114], [38, 29241, '-0.186264', 1.0512]])),
++               'na_junk_row': _mut(_na([_R1, _R2, 'junk'])),
++               'na_short_row': _mut(_na([_R1, _R2, [7]])),
++               'na_id_str': _mut(_na([['31', '29241', -0.186036, 1.05114], ['38', '29241', -0.186264, 1.0512]])),
++               'na_id_float': _mut(_na([[31.9, 29241.2, -0.186036, 1.05114], [38.7, 29241.9, -0.186264, 1.0512]])),
++               'na_other_value': _mut(_na([[31, 29241, -5.0, 1.05114], [38, 29241, -5.0, 1.0512]])),
++               'na_delta_missing': _mut(_na([[31, 29241, -0.186036], [38, 29241, -0.186264]])),
++               'na_dup_row': _mut(_na([_R1, list(_R1)])),
++               'fs_extra': _mut(lambda d_: _r(d_).update(failed_stages=list(_r(d_)['failed_stages']) + ['Parse'])),
++               'tau_other_numeric': _mut(lambda d_: _r(d_)['tau'].update(tau2_flux_ion_net_full=3.21))}
++        res6 = {nm: _sm(doc, nm)[:2] for nm, doc in dict(V6, **V6s).items()}
++        bad6 = {nm: v for nm, v in res6.items() if v != (1, {'S0': True, 'S0b': False})}
++        chk(f'★ G2RR6-01 반례 — Codex 재검증 6 §2 넷 (옛 판 rc 0 · n_fail 0) + 같은 부류 {len(V6s)} (raw_sha {{}} · None · 키 하나 삭제 · 키 추가 · 두 값 '
++            f'함께 바꿈 · 16 진 아님 · 빈 문자열 · 원소 셋 / 면적 0 · NaN · bool · 문자열 · 군더더기 행 · 짧은 행 · ID 문자열 · ID 실수 · 다른 음수값 · δ 결손 · '
++            f'중복 행 / 실패 단계 하나 더 / 등록 밖 τ 숫자 키) → 전부 rc 1 · S0b 실패 (S0 그대로) {bad6 or ""}', not bad6, repr(bad6)[:700])
++        #  10-09 실제 WSL case15 기록 = Codex 재검증 6 입력 그대로 (반입 증거) — 정상 관통 · 미퍼콜 · clamp 게시 폴더 = 위 실 생산자 게시 (보고 키 이름으로)
++        _ev6 = ROOT / 'docs' / 'reviews' / 'codex_gen2_network_reverify6_evidence_20261011' / 'evidence'
++        sm6 = tmp / 'smoke_r6'
++        (sm6 / 'work' / 'results').mkdir(parents=True)
++        for bed in ('through', 'nonthrough', 'clamp'):
++            shutil.copytree(tmp / f'case_{bed}', sm6 / 'work' / 'results' / bed)
++        want6 = {'positive': 0, 'raw_sha_missing': 1, 'raw_sha_mismatch': 1, 'negative_area_positive': 1, 'negative_area_missing': 1,
++                 'raw_sha_flag_false': 1, 'actual_permission_error': 1}
++        got6 = {}
++        for lab in want6:
++            doc6 = _read_json(_ev6 / f'r6_s0b_{lab}.input.json')
++            if not isinstance(doc6, dict):
++                got6[lab] = '반입 증거 없음'
++                continue
++            (sm6 / 'smoke_report.json').write_text(json.dumps(doc6, ensure_ascii=False), encoding='utf-8')
++            jp6 = tmp / f'sm6_{lab}.json'
++            rc6 = _main_rc(['--smoke-root', str(sm6), '--json', str(jp6)])
++            got6[lab] = (rc6, (_read_json(jp6) or {}).get('n_fail'))
++        bad6r = {lab: got6[lab] for lab, w in want6.items() if got6[lab] != (w, w)}
++        chk(f'★ G2RR6-01 실제 기록 — 10-09 WSL case15 정상 보고 rc 0 · n_fail 0 · Codex 입력 그대로의 변이 넷 + 대조 둘 (raw_sha_ok False · 실제 시도 '
++            f'PermissionError) = rc 1 · n_fail 1 (재실행 없이 다시 읽기만) {bad6r or ""}', not bad6r, repr(got6)[:600])
++        import re as _re6
++        _tab6 = {}
++        for ln in (ROOT / 'docs' / 'data' / 'case15_corner_20261001' / 'README.md').read_text(encoding='utf-8').splitlines():
++            m6 = _re6.match(r'^([0-9a-f]{64})\s+[\d,]+ B\s+(\S+)', ln)
++            if m6:
++                _tab6[m6.group(2)] = m6.group(1)
++        _reg6 = _ng.get('raw_sha256') or {}
++        chk('★ G2RR6-01 등록 원자료 sha256 (CASE15_NEGCTL raw_sha256 · 네 파일) = case15 README sha256 표 (같은 64 자리 · 사본 표류 없음)',
++            len(_reg6) == 4 and all(_tab6.get(k) == v for k, v in _reg6.items()), repr((_reg6, {k: _tab6.get(k) for k in _reg6})))
+     finally:
+         shutil.rmtree(tmp, ignore_errors=True)
+         for d in made:

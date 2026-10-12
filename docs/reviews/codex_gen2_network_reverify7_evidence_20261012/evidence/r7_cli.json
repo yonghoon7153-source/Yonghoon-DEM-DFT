@@ -1,0 +1,619 @@
+{
+  "scope": "Actual S0/S0b consumer with three real synthetic publications, fixed 10-09 case15 report.",
+  "root": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\gen2_network_reverify7_20261012\\tmp\\r7_cli_x4n7_044\\consumer",
+  "no_dem_simulation": true,
+  "rows": [
+    {
+      "name": "positive",
+      "rc": 0,
+      "n_fail": 0,
+      "expected_rc": 0,
+      "meta": [
+        {
+          "name": "S0 스모크 망 정지 케이스 전부 done (3 · 등록 음성 대조 1 제외 · 미등록 음성 대조 표지 0)",
+          "ok": true,
+          "detail": [
+            "through",
+            "nonthrough",
+            "clamp"
+          ]
+        },
+        {
+          "name": "S0b 스모크 음성 대조 (등록 1 · 미등록 0) = 게시 없음 · 기록된 검사 = 등록 안정 ID 7 개 (각 1 회 · 전부 PASS) · 공용 판정 재계산 = 기록 (자식 프로세스 · 원자료 sha256 · 원인 · 이온 · 실제 망 시도 — G2RR5-02 · 03)",
+          "ok": true,
+          "detail": [
+            "case15_network"
+          ]
+        }
+      ],
+      "matched": true
+    },
+    {
+      "name": "raw_sha_missing",
+      "rc": 1,
+      "n_fail": 1,
+      "expected_rc": 1,
+      "meta": [
+        {
+          "name": "S0 스모크 망 정지 케이스 전부 done (3 · 등록 음성 대조 1 제외 · 미등록 음성 대조 표지 0)",
+          "ok": true,
+          "detail": [
+            "through",
+            "nonthrough",
+            "clamp"
+          ]
+        },
+        {
+          "name": "S0b 스모크 음성 대조 (등록 1 · 미등록 0) = 게시 없음 · 기록된 검사 = 등록 안정 ID 7 개 (각 1 회 · 전부 PASS) · 공용 판정 재계산 = 기록 (자식 프로세스 · 원자료 sha256 · 원인 · 이온 · 실제 망 시도 — G2RR5-02 · 03)",
+          "ok": false,
+          "detail": {
+            "case15_network": [
+              "공용 판정 재계산 ≠ 기록 {'case15.raw_sha': ('PASS', 'FAIL', \"raw_sha 상세 키 NoneType ≠ 등록 네 파일 ['atom_v4_1710000.liggghts', 'contact_v4_1710000.liggghts', 'input_case15.liggghts', 'mesh_v4_1710000.stl'] — 상세 결손 · 모순 (요약 raw\")} — 보고 상세가 기록된 판정을 뒷받침하지 않는다 (상세 결손 · 수치 모순 · 실행 실패)"
+            ]
+          }
+        }
+      ],
+      "matched": true
+    },
+    {
+      "name": "raw_sha_mismatch",
+      "rc": 1,
+      "n_fail": 1,
+      "expected_rc": 1,
+      "meta": [
+        {
+          "name": "S0 스모크 망 정지 케이스 전부 done (3 · 등록 음성 대조 1 제외 · 미등록 음성 대조 표지 0)",
+          "ok": true,
+          "detail": [
+            "through",
+            "nonthrough",
+            "clamp"
+          ]
+        },
+        {
+          "name": "S0b 스모크 음성 대조 (등록 1 · 미등록 0) = 게시 없음 · 기록된 검사 = 등록 안정 ID 7 개 (각 1 회 · 전부 PASS) · 공용 판정 재계산 = 기록 (자식 프로세스 · 원자료 sha256 · 원인 · 이온 · 실제 망 시도 — G2RR5-02 · 03)",
+          "ok": false,
+          "detail": {
+            "case15_network": [
+              "공용 판정 재계산 ≠ 기록 {'case15.raw_sha': ('PASS', 'FAIL', \"raw_sha 상세 {'atom_v4_1710000.liggghts': 'actual 000000000000 ≠ expected f40f69eccd79'} — 요약 raw_sha_ok=True 와 모순\")} — 보고 상세가 기록된 판정을 뒷받침하지 않는다 (상세 결손 · 수치 모순 · 실행 실패)"
+            ]
+          }
+        }
+      ],
+      "matched": true
+    },
+    {
+      "name": "negative_area_positive",
+      "rc": 1,
+      "n_fail": 1,
+      "expected_rc": 1,
+      "meta": [
+        {
+          "name": "S0 스모크 망 정지 케이스 전부 done (3 · 등록 음성 대조 1 제외 · 미등록 음성 대조 표지 0)",
+          "ok": true,
+          "detail": [
+            "through",
+            "nonthrough",
+            "clamp"
+          ]
+        },
+        {
+          "name": "S0b 스모크 음성 대조 (등록 1 · 미등록 0) = 게시 없음 · 기록된 검사 = 등록 안정 ID 7 개 (각 1 회 · 전부 PASS) · 공용 판정 재계산 = 기록 (자식 프로세스 · 원자료 sha256 · 원인 · 이온 · 실제 망 시도 — G2RR5-02 · 03)",
+          "ok": false,
+          "detail": {
+            "case15_network": [
+              "공용 판정 재계산 ≠ 기록 {'case15.nc3_cause': ('PASS', 'FAIL', \"겹침 {'electronic_hertzian': ('boundary_overlap', [24, 40, 57, 103]), 'electronic_physics': ('boundary_overlap', [24, 40, 57, 103]), 'thermal_hertzian': ('boundar\")} — 보고 상세가 기록된 판정을 뒷받침하지 않는다 (상세 결손 · 수치 모순 · 실행 실패)"
+            ]
+          }
+        }
+      ],
+      "matched": true
+    },
+    {
+      "name": "negative_area_missing",
+      "rc": 1,
+      "n_fail": 1,
+      "expected_rc": 1,
+      "meta": [
+        {
+          "name": "S0 스모크 망 정지 케이스 전부 done (3 · 등록 음성 대조 1 제외 · 미등록 음성 대조 표지 0)",
+          "ok": true,
+          "detail": [
+            "through",
+            "nonthrough",
+            "clamp"
+          ]
+        },
+        {
+          "name": "S0b 스모크 음성 대조 (등록 1 · 미등록 0) = 게시 없음 · 기록된 검사 = 등록 안정 ID 7 개 (각 1 회 · 전부 PASS) · 공용 판정 재계산 = 기록 (자식 프로세스 · 원자료 sha256 · 원인 · 이온 · 실제 망 시도 — G2RR5-02 · 03)",
+          "ok": false,
+          "detail": {
+            "case15_network": [
+              "공용 판정 재계산 ≠ 기록 {'case15.nc3_cause': ('PASS', 'FAIL', \"겹침 {'electronic_hertzian': ('boundary_overlap', [24, 40, 57, 103]), 'electronic_physics': ('boundary_overlap', [24, 40, 57, 103]), 'thermal_hertzian': ('boundar\")} — 보고 상세가 기록된 판정을 뒷받침하지 않는다 (상세 결손 · 수치 모순 · 실행 실패)"
+            ]
+          }
+        }
+      ],
+      "matched": true
+    },
+    {
+      "name": "raw_sha_flag_false",
+      "rc": 1,
+      "n_fail": 1,
+      "expected_rc": 1,
+      "meta": [
+        {
+          "name": "S0 스모크 망 정지 케이스 전부 done (3 · 등록 음성 대조 1 제외 · 미등록 음성 대조 표지 0)",
+          "ok": true,
+          "detail": [
+            "through",
+            "nonthrough",
+            "clamp"
+          ]
+        },
+        {
+          "name": "S0b 스모크 음성 대조 (등록 1 · 미등록 0) = 게시 없음 · 기록된 검사 = 등록 안정 ID 7 개 (각 1 회 · 전부 PASS) · 공용 판정 재계산 = 기록 (자식 프로세스 · 원자료 sha256 · 원인 · 이온 · 실제 망 시도 — G2RR5-02 · 03)",
+          "ok": false,
+          "detail": {
+            "case15_network": [
+              "공용 판정 재계산 ≠ 기록 {'case15.raw_sha': ('PASS', 'FAIL', \"raw_sha_ok False — 원자료 sha256 ≠ README 표 · 상세 {'atom_v4_1710000.liggghts': ['f40f69eccd79', 'f40f69eccd79'], 'contact_v4_1710000.liggghts': ['180140701ef4', '18\")} — 보고 상세가 기록된 판정을 뒷받침하지 않는다 (상세 결손 · 수치 모순 · 실행 실패)"
+            ]
+          }
+        }
+      ],
+      "matched": true
+    },
+    {
+      "name": "actual_permission_error",
+      "rc": 1,
+      "n_fail": 1,
+      "expected_rc": 1,
+      "meta": [
+        {
+          "name": "S0 스모크 망 정지 케이스 전부 done (3 · 등록 음성 대조 1 제외 · 미등록 음성 대조 표지 0)",
+          "ok": true,
+          "detail": [
+            "through",
+            "nonthrough",
+            "clamp"
+          ]
+        },
+        {
+          "name": "S0b 스모크 음성 대조 (등록 1 · 미등록 0) = 게시 없음 · 기록된 검사 = 등록 안정 ID 7 개 (각 1 회 · 전부 PASS) · 공용 판정 재계산 = 기록 (자식 프로세스 · 원자료 sha256 · 원인 · 이온 · 실제 망 시도 — G2RR5-02 · 03)",
+          "ok": false,
+          "detail": {
+            "case15_network": [
+              "공용 판정 재계산 ≠ 기록 {'case15.nc5_attempt': ('PASS', 'TECH', '망 CLI 실행 예외 PermissionError (None) — 실행 실패 (지정한 내용 거부 아님)')} — 보고 상세가 기록된 판정을 뒷받침하지 않는다 (상세 결손 · 수치 모순 · 실행 실패)"
+            ]
+          }
+        }
+      ],
+      "matched": true
+    },
+    {
+      "name": "positive_row_reversed",
+      "rc": 0,
+      "n_fail": 0,
+      "expected_rc": 0,
+      "meta": [
+        {
+          "name": "S0 스모크 망 정지 케이스 전부 done (3 · 등록 음성 대조 1 제외 · 미등록 음성 대조 표지 0)",
+          "ok": true,
+          "detail": [
+            "through",
+            "nonthrough",
+            "clamp"
+          ]
+        },
+        {
+          "name": "S0b 스모크 음성 대조 (등록 1 · 미등록 0) = 게시 없음 · 기록된 검사 = 등록 안정 ID 7 개 (각 1 회 · 전부 PASS) · 공용 판정 재계산 = 기록 (자식 프로세스 · 원자료 sha256 · 원인 · 이온 · 실제 망 시도 — G2RR5-02 · 03)",
+          "ok": true,
+          "detail": [
+            "case15_network"
+          ]
+        }
+      ],
+      "matched": true
+    },
+    {
+      "name": "positive_sha_reordered",
+      "rc": 0,
+      "n_fail": 0,
+      "expected_rc": 0,
+      "meta": [
+        {
+          "name": "S0 스모크 망 정지 케이스 전부 done (3 · 등록 음성 대조 1 제외 · 미등록 음성 대조 표지 0)",
+          "ok": true,
+          "detail": [
+            "through",
+            "nonthrough",
+            "clamp"
+          ]
+        },
+        {
+          "name": "S0b 스모크 음성 대조 (등록 1 · 미등록 0) = 게시 없음 · 기록된 검사 = 등록 안정 ID 7 개 (각 1 회 · 전부 PASS) · 공용 판정 재계산 = 기록 (자식 프로세스 · 원자료 sha256 · 원인 · 이온 · 실제 망 시도 — G2RR5-02 · 03)",
+          "ok": true,
+          "detail": [
+            "case15_network"
+          ]
+        }
+      ],
+      "matched": true
+    },
+    {
+      "name": "positive_unknown_empty_tau",
+      "rc": 0,
+      "n_fail": 0,
+      "expected_rc": 0,
+      "meta": [
+        {
+          "name": "S0 스모크 망 정지 케이스 전부 done (3 · 등록 음성 대조 1 제외 · 미등록 음성 대조 표지 0)",
+          "ok": true,
+          "detail": [
+            "through",
+            "nonthrough",
+            "clamp"
+          ]
+        },
+        {
+          "name": "S0b 스모크 음성 대조 (등록 1 · 미등록 0) = 게시 없음 · 기록된 검사 = 등록 안정 ID 7 개 (각 1 회 · 전부 PASS) · 공용 판정 재계산 = 기록 (자식 프로세스 · 원자료 sha256 · 원인 · 이온 · 실제 망 시도 — G2RR5-02 · 03)",
+          "ok": true,
+          "detail": [
+            "case15_network"
+          ]
+        }
+      ],
+      "matched": true
+    },
+    {
+      "name": "area_positive_four_columns",
+      "rc": 1,
+      "n_fail": 1,
+      "expected_rc": 1,
+      "meta": [
+        {
+          "name": "S0 스모크 망 정지 케이스 전부 done (3 · 등록 음성 대조 1 제외 · 미등록 음성 대조 표지 0)",
+          "ok": true,
+          "detail": [
+            "through",
+            "nonthrough",
+            "clamp"
+          ]
+        },
+        {
+          "name": "S0b 스모크 음성 대조 (등록 1 · 미등록 0) = 게시 없음 · 기록된 검사 = 등록 안정 ID 7 개 (각 1 회 · 전부 PASS) · 공용 판정 재계산 = 기록 (자식 프로세스 · 원자료 sha256 · 원인 · 이온 · 실제 망 시도 — G2RR5-02 · 03)",
+          "ok": false,
+          "detail": {
+            "case15_network": [
+              "공용 판정 재계산 ≠ 기록 {'case15.nc3_cause': ('PASS', 'FAIL', \"겹침 {'electronic_hertzian': ('boundary_overlap', [24, 40, 57, 103]), 'electronic_physics': ('boundary_overlap', [24, 40, 57, 103]), 'thermal_hertzian': ('boundar\")} — 보고 상세가 기록된 판정을 뒷받침하지 않는다 (상세 결손 · 수치 모순 · 실행 실패)"
+            ]
+          }
+        }
+      ],
+      "matched": true
+    },
+    {
+      "name": "area_inf_four_columns",
+      "rc": 1,
+      "n_fail": 1,
+      "expected_rc": 1,
+      "meta": [
+        {
+          "name": "S0 스모크 망 정지 케이스 전부 done (3 · 등록 음성 대조 1 제외 · 미등록 음성 대조 표지 0)",
+          "ok": true,
+          "detail": [
+            "through",
+            "nonthrough",
+            "clamp"
+          ]
+        },
+        {
+          "name": "S0b 스모크 음성 대조 (등록 1 · 미등록 0) = 게시 없음 · 기록된 검사 = 등록 안정 ID 7 개 (각 1 회 · 전부 PASS) · 공용 판정 재계산 = 기록 (자식 프로세스 · 원자료 sha256 · 원인 · 이온 · 실제 망 시도 — G2RR5-02 · 03)",
+          "ok": false,
+          "detail": {
+            "case15_network": [
+              "공용 판정 재계산 ≠ 기록 {'case15.nc3_cause': ('PASS', 'FAIL', \"겹침 {'electronic_hertzian': ('boundary_overlap', [24, 40, 57, 103]), 'electronic_physics': ('boundary_overlap', [24, 40, 57, 103]), 'thermal_hertzian': ('boundar\")} — 보고 상세가 기록된 판정을 뒷받침하지 않는다 (상세 결손 · 수치 모순 · 실행 실패)"
+            ]
+          }
+        }
+      ],
+      "matched": true
+    },
+    {
+      "name": "area_display_ulp",
+      "rc": 1,
+      "n_fail": 1,
+      "expected_rc": 1,
+      "meta": [
+        {
+          "name": "S0 스모크 망 정지 케이스 전부 done (3 · 등록 음성 대조 1 제외 · 미등록 음성 대조 표지 0)",
+          "ok": true,
+          "detail": [
+            "through",
+            "nonthrough",
+            "clamp"
+          ]
+        },
+        {
+          "name": "S0b 스모크 음성 대조 (등록 1 · 미등록 0) = 게시 없음 · 기록된 검사 = 등록 안정 ID 7 개 (각 1 회 · 전부 PASS) · 공용 판정 재계산 = 기록 (자식 프로세스 · 원자료 sha256 · 원인 · 이온 · 실제 망 시도 — G2RR5-02 · 03)",
+          "ok": false,
+          "detail": {
+            "case15_network": [
+              "공용 판정 재계산 ≠ 기록 {'case15.nc3_cause': ('PASS', 'FAIL', \"겹침 {'electronic_hertzian': ('boundary_overlap', [24, 40, 57, 103]), 'electronic_physics': ('boundary_overlap', [24, 40, 57, 103]), 'thermal_hertzian': ('boundar\")} — 보고 상세가 기록된 판정을 뒷받침하지 않는다 (상세 결손 · 수치 모순 · 실행 실패)"
+            ]
+          }
+        }
+      ],
+      "matched": true
+    },
+    {
+      "name": "delta_zero",
+      "rc": 1,
+      "n_fail": 1,
+      "expected_rc": 1,
+      "meta": [
+        {
+          "name": "S0 스모크 망 정지 케이스 전부 done (3 · 등록 음성 대조 1 제외 · 미등록 음성 대조 표지 0)",
+          "ok": true,
+          "detail": [
+            "through",
+            "nonthrough",
+            "clamp"
+          ]
+        },
+        {
+          "name": "S0b 스모크 음성 대조 (등록 1 · 미등록 0) = 게시 없음 · 기록된 검사 = 등록 안정 ID 7 개 (각 1 회 · 전부 PASS) · 공용 판정 재계산 = 기록 (자식 프로세스 · 원자료 sha256 · 원인 · 이온 · 실제 망 시도 — G2RR5-02 · 03)",
+          "ok": false,
+          "detail": {
+            "case15_network": [
+              "공용 판정 재계산 ≠ 기록 {'case15.nc3_cause': ('PASS', 'FAIL', \"겹침 {'electronic_hertzian': ('boundary_overlap', [24, 40, 57, 103]), 'electronic_physics': ('boundary_overlap', [24, 40, 57, 103]), 'thermal_hertzian': ('boundar\")} — 보고 상세가 기록된 판정을 뒷받침하지 않는다 (상세 결손 · 수치 모순 · 실행 실패)"
+            ]
+          }
+        }
+      ],
+      "matched": true
+    },
+    {
+      "name": "delta_inf",
+      "rc": 1,
+      "n_fail": 1,
+      "expected_rc": 1,
+      "meta": [
+        {
+          "name": "S0 스모크 망 정지 케이스 전부 done (3 · 등록 음성 대조 1 제외 · 미등록 음성 대조 표지 0)",
+          "ok": true,
+          "detail": [
+            "through",
+            "nonthrough",
+            "clamp"
+          ]
+        },
+        {
+          "name": "S0b 스모크 음성 대조 (등록 1 · 미등록 0) = 게시 없음 · 기록된 검사 = 등록 안정 ID 7 개 (각 1 회 · 전부 PASS) · 공용 판정 재계산 = 기록 (자식 프로세스 · 원자료 sha256 · 원인 · 이온 · 실제 망 시도 — G2RR5-02 · 03)",
+          "ok": false,
+          "detail": {
+            "case15_network": [
+              "공용 판정 재계산 ≠ 기록 {'case15.nc3_cause': ('PASS', 'FAIL', \"겹침 {'electronic_hertzian': ('boundary_overlap', [24, 40, 57, 103]), 'electronic_physics': ('boundary_overlap', [24, 40, 57, 103]), 'thermal_hertzian': ('boundar\")} — 보고 상세가 기록된 판정을 뒷받침하지 않는다 (상세 결손 · 수치 모순 · 실행 실패)"
+            ]
+          }
+        }
+      ],
+      "matched": true
+    },
+    {
+      "name": "id_bool",
+      "rc": 1,
+      "n_fail": 1,
+      "expected_rc": 1,
+      "meta": [
+        {
+          "name": "S0 스모크 망 정지 케이스 전부 done (3 · 등록 음성 대조 1 제외 · 미등록 음성 대조 표지 0)",
+          "ok": true,
+          "detail": [
+            "through",
+            "nonthrough",
+            "clamp"
+          ]
+        },
+        {
+          "name": "S0b 스모크 음성 대조 (등록 1 · 미등록 0) = 게시 없음 · 기록된 검사 = 등록 안정 ID 7 개 (각 1 회 · 전부 PASS) · 공용 판정 재계산 = 기록 (자식 프로세스 · 원자료 sha256 · 원인 · 이온 · 실제 망 시도 — G2RR5-02 · 03)",
+          "ok": false,
+          "detail": {
+            "case15_network": [
+              "공용 판정 재계산 ≠ 기록 {'case15.nc3_cause': ('PASS', 'FAIL', \"겹침 {'electronic_hertzian': ('boundary_overlap', [24, 40, 57, 103]), 'electronic_physics': ('boundary_overlap', [24, 40, 57, 103]), 'thermal_hertzian': ('boundar\")} — 보고 상세가 기록된 판정을 뒷받침하지 않는다 (상세 결손 · 수치 모순 · 실행 실패)"
+            ]
+          }
+        }
+      ],
+      "matched": true
+    },
+    {
+      "name": "raw_expected_forged_together",
+      "rc": 1,
+      "n_fail": 1,
+      "expected_rc": 1,
+      "meta": [
+        {
+          "name": "S0 스모크 망 정지 케이스 전부 done (3 · 등록 음성 대조 1 제외 · 미등록 음성 대조 표지 0)",
+          "ok": true,
+          "detail": [
+            "through",
+            "nonthrough",
+            "clamp"
+          ]
+        },
+        {
+          "name": "S0b 스모크 음성 대조 (등록 1 · 미등록 0) = 게시 없음 · 기록된 검사 = 등록 안정 ID 7 개 (각 1 회 · 전부 PASS) · 공용 판정 재계산 = 기록 (자식 프로세스 · 원자료 sha256 · 원인 · 이온 · 실제 망 시도 — G2RR5-02 · 03)",
+          "ok": false,
+          "detail": {
+            "case15_network": [
+              "공용 판정 재계산 ≠ 기록 {'case15.raw_sha': ('PASS', 'FAIL', \"raw_sha 상세 {'atom_v4_1710000.liggghts': 'expected 0123456789ab ≠ 등록 f40f69eccd79'} — 요약 raw_sha_ok=True 와 모순\")} — 보고 상세가 기록된 판정을 뒷받침하지 않는다 (상세 결손 · 수치 모순 · 실행 실패)"
+            ]
+          }
+        }
+      ],
+      "matched": true
+    },
+    {
+      "name": "raw_uppercase",
+      "rc": 1,
+      "n_fail": 1,
+      "expected_rc": 1,
+      "meta": [
+        {
+          "name": "S0 스모크 망 정지 케이스 전부 done (3 · 등록 음성 대조 1 제외 · 미등록 음성 대조 표지 0)",
+          "ok": true,
+          "detail": [
+            "through",
+            "nonthrough",
+            "clamp"
+          ]
+        },
+        {
+          "name": "S0b 스모크 음성 대조 (등록 1 · 미등록 0) = 게시 없음 · 기록된 검사 = 등록 안정 ID 7 개 (각 1 회 · 전부 PASS) · 공용 판정 재계산 = 기록 (자식 프로세스 · 원자료 sha256 · 원인 · 이온 · 실제 망 시도 — G2RR5-02 · 03)",
+          "ok": false,
+          "detail": {
+            "case15_network": [
+              "공용 판정 재계산 ≠ 기록 {'case15.raw_sha': ('PASS', 'FAIL', 'raw_sha 상세 {\\'atom_v4_1710000.liggghts\\': \"꼴 [\\'F40F69ECCD79\\', \\'F40F69ECCD79\\'] ([actual, expected] · 각 16 진 12 자리여야)\"} — 요약 raw_sha_ok=True 와 모순')} — 보고 상세가 기록된 판정을 뒷받침하지 않는다 (상세 결손 · 수치 모순 · 실행 실패)"
+            ]
+          }
+        }
+      ],
+      "matched": true
+    },
+    {
+      "name": "failed_stage_extra",
+      "rc": 1,
+      "n_fail": 1,
+      "expected_rc": 1,
+      "meta": [
+        {
+          "name": "S0 스모크 망 정지 케이스 전부 done (3 · 등록 음성 대조 1 제외 · 미등록 음성 대조 표지 0)",
+          "ok": true,
+          "detail": [
+            "through",
+            "nonthrough",
+            "clamp"
+          ]
+        },
+        {
+          "name": "S0b 스모크 음성 대조 (등록 1 · 미등록 0) = 게시 없음 · 기록된 검사 = 등록 안정 ID 7 개 (각 1 회 · 전부 PASS) · 공용 판정 재계산 = 기록 (자식 프로세스 · 원자료 sha256 · 원인 · 이온 · 실제 망 시도 — G2RR5-02 · 03)",
+          "ok": false,
+          "detail": {
+            "case15_network": [
+              "공용 판정 재계산 ≠ 기록 {'case15.nc1_blocked': ('PASS', 'FAIL', \"status failed · 실패 단계 ['Network Solver (both modes)', 'Parse'] · Stage E False · run id None\")} — 보고 상세가 기록된 판정을 뒷받침하지 않는다 (상세 결손 · 수치 모순 · 실행 실패)"
+            ]
+          }
+        }
+      ],
+      "matched": true
+    },
+    {
+      "name": "unknown_tau_zero",
+      "rc": 1,
+      "n_fail": 1,
+      "expected_rc": 1,
+      "meta": [
+        {
+          "name": "S0 스모크 망 정지 케이스 전부 done (3 · 등록 음성 대조 1 제외 · 미등록 음성 대조 표지 0)",
+          "ok": true,
+          "detail": [
+            "through",
+            "nonthrough",
+            "clamp"
+          ]
+        },
+        {
+          "name": "S0b 스모크 음성 대조 (등록 1 · 미등록 0) = 게시 없음 · 기록된 검사 = 등록 안정 ID 7 개 (각 1 회 · 전부 PASS) · 공용 판정 재계산 = 기록 (자식 프로세스 · 원자료 sha256 · 원인 · 이온 · 실제 망 시도 — G2RR5-02 · 03)",
+          "ok": false,
+          "detail": {
+            "case15_network": [
+              "공용 판정 재계산 ≠ 기록 {'case15.nc2_tau': ('PASS', 'FAIL', \"{'hertz': 'NOT_COMPUTED', 'physics': 'NOT_COMPUTED', 'hertz_h12': 'NOT_COMPUTED'} · 숫자 {'extra_numeric': 0}\")} — 보고 상세가 기록된 판정을 뒷받침하지 않는다 (상세 결손 · 수치 모순 · 실행 실패)"
+            ]
+          }
+        }
+      ],
+      "matched": true
+    },
+    {
+      "name": "unknown_tau_nan",
+      "rc": 1,
+      "n_fail": 1,
+      "expected_rc": 1,
+      "meta": [
+        {
+          "name": "S0 스모크 망 정지 케이스 전부 done (3 · 등록 음성 대조 1 제외 · 미등록 음성 대조 표지 0)",
+          "ok": true,
+          "detail": [
+            "through",
+            "nonthrough",
+            "clamp"
+          ]
+        },
+        {
+          "name": "S0b 스모크 음성 대조 (등록 1 · 미등록 0) = 게시 없음 · 기록된 검사 = 등록 안정 ID 7 개 (각 1 회 · 전부 PASS) · 공용 판정 재계산 = 기록 (자식 프로세스 · 원자료 sha256 · 원인 · 이온 · 실제 망 시도 — G2RR5-02 · 03)",
+          "ok": false,
+          "detail": {
+            "case15_network": [
+              "공용 판정 재계산 ≠ 기록 {'case15.nc2_tau': ('PASS', 'FAIL', \"{'hertz': 'NOT_COMPUTED', 'physics': 'NOT_COMPUTED', 'hertz_h12': 'NOT_COMPUTED'} · 숫자 {'extra_numeric': nan}\")} — 보고 상세가 기록된 판정을 뒷받침하지 않는다 (상세 결손 · 수치 모순 · 실행 실패)"
+            ]
+          }
+        }
+      ],
+      "matched": true
+    },
+    {
+      "name": "known_tau_string",
+      "rc": 1,
+      "n_fail": 1,
+      "expected_rc": 1,
+      "meta": [
+        {
+          "name": "S0 스모크 망 정지 케이스 전부 done (3 · 등록 음성 대조 1 제외 · 미등록 음성 대조 표지 0)",
+          "ok": true,
+          "detail": [
+            "through",
+            "nonthrough",
+            "clamp"
+          ]
+        },
+        {
+          "name": "S0b 스모크 음성 대조 (등록 1 · 미등록 0) = 게시 없음 · 기록된 검사 = 등록 안정 ID 7 개 (각 1 회 · 전부 PASS) · 공용 판정 재계산 = 기록 (자식 프로세스 · 원자료 sha256 · 원인 · 이온 · 실제 망 시도 — G2RR5-02 · 03)",
+          "ok": false,
+          "detail": {
+            "case15_network": [
+              "공용 판정 재계산 ≠ 기록 {'case15.nc2_tau': ('PASS', 'FAIL', \"{'hertz': 'NOT_COMPUTED', 'physics': 'NOT_COMPUTED', 'hertz_h12': 'NOT_COMPUTED'} · 숫자 {'tau_ion_hertz': '3.21'}\")} — 보고 상세가 기록된 판정을 뒷받침하지 않는다 (상세 결손 · 수치 모순 · 실행 실패)"
+            ]
+          }
+        }
+      ],
+      "matched": true
+    },
+    {
+      "name": "boundary_nested_tau_number",
+      "rc": 0,
+      "n_fail": 0,
+      "expected_rc": 0,
+      "meta": [
+        {
+          "name": "S0 스모크 망 정지 케이스 전부 done (3 · 등록 음성 대조 1 제외 · 미등록 음성 대조 표지 0)",
+          "ok": true,
+          "detail": [
+            "through",
+            "nonthrough",
+            "clamp"
+          ]
+        },
+        {
+          "name": "S0b 스모크 음성 대조 (등록 1 · 미등록 0) = 게시 없음 · 기록된 검사 = 등록 안정 ID 7 개 (각 1 회 · 전부 PASS) · 공용 판정 재계산 = 기록 (자식 프로세스 · 원자료 sha256 · 원인 · 이온 · 실제 망 시도 — G2RR5-02 · 03)",
+          "ok": true,
+          "detail": [
+            "case15_network"
+          ]
+        }
+      ],
+      "matched": true
+    }
+  ],
+  "all_expected": true
+}
