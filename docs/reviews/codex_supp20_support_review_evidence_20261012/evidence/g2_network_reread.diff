@@ -1,0 +1,96 @@
+--- 3cedd40a5911d0606bf33ed2085d5cb93c4db2e0/scripts/g2_network_reread.py
++++ b429c3c1df0956d2721861d89cc29a2d56f2b581/scripts/g2_network_reread.py
+@@ -14,7 +14,8 @@
+                      스모크 생산자가 import 해 검사를 만든다 (이 파일은 하네스를 import 하지 않는다))
+   --launcher-root R  `scripts/run_network_194_parallel.py` ROOT — manifest 의 기대 세대 (expected_network_generation · 없으면 FAIL) · merged/<코호트>
+                      (진짜 배치 기록 status.json · metrics_flat.csv) · merged/<코호트>/results/<case>
+-                     ★ 10-07 G2RR2-02 — **등록 모드 필수**: --expect-set production194 (등록 ID 지문 194) | pilot3 (시범 세 케이스) · 또는 --expect-case 코호트:케이스
++                     ★ 10-07 G2RR2-02 — **등록 모드 필수**: --expect-set production194 (등록 ID 지문 194) | supp20 (★ 10-12 보충 20 · lhss · 등록 지문 20) |
++                     pilot3 (시범 세 케이스) · 또는 --expect-case 코호트:케이스
+                      (여러 번).  계획 큐 (고칠 수 있는 manifest) 를 자기 자신의 유일한 기대 집합으로 쓰지 않는다.
+   --case-dir D       케이스 폴더 하나 (여러 번)
+ 
+@@ -38,7 +39,8 @@
+ 
+ 판정: rc 0 = 전부 PASS · 1 = FAIL 있음 · 2 = 사용 오류.  --json 이면 케이스마다 판정 · 상태표를 남긴다 (붙여 넣을 것 = 화면 요약).
+   JSON 스키마 v2 (10-07) = 등록 집합 필드 (expected_set · expected_n · read_n · set_equal · missing · extra) — v1.3 생성기 (`lhs_release_build`) 는
+-  expected_set production194 · 기대 = 읽음 = 194 · 같음 True 인 기록만 받는다 (옛 v1 기록 · 일부 · pilot3 = 거부).
++  expected_set production194 · 기대 = 읽음 = 194 · 같음 True 인 기록만 받는다 (옛 v1 기록 · 일부 · pilot3 = 거부) · ★ 10-12 보충 배치 = expected_set supp20 ·
++  기대 = 읽음 = 20 (두 배치 · 배치마다 자기 ROOT · 자기 등록 집합 — 한 배치의 PASS 가 다른 배치를 면제하지 않는다).
+   ★ JSON 스키마 v3 (10-07 G2RR3-01 · Codex 세대 2 재검증 3 §3 "reread 는 … 이번 ROOT/봉인에 대한 증거인지 결합") = 실행 신원 (--launcher-root 일 때 ·
+   그 밖 = null): launcher_root (읽은 ROOT · resolve) · manifest_sha256 (판정에 쓴 manifest **바이트** 의 sha256 — 같은 바이트를 해석했다) · seal_fp
+   (그 manifest 의 seal.code_fp) · launch_sha (git.sha).  v1.3 배포 관문 (`lhs_release_build.v13_reread_problems`) 이 배치 뿌리 · 지금 manifest · 발사 봉인과
+@@ -53,6 +55,7 @@
+   $P scripts/g2_network_reread.py --smoke-root ~/g2pre_smoke_<sha> --json ~/g2pre_smoke_<sha>/reread.json
+   $P scripts/g2_network_reread.py --launcher-root ~/g2pre_pilot_<sha> --expect-set pilot3 --json ~/g2pre_pilot_<sha>/reread.json
+   $P scripts/g2_network_reread.py --launcher-root ~/net194_<sha> --expect-set production194 --json ~/net194_<sha>/reread.json
++  $P scripts/g2_network_reread.py --launcher-root ~/netsupp20_<sha> --expect-set supp20 --json ~/netsupp20_<sha>/reread.json
+   $P scripts/g2_network_reread.py --selftest
+ """
+ from __future__ import annotations
+@@ -845,7 +848,7 @@
+     g.add_argument('--case-dir', action='append', default=[], help='케이스 폴더 (여러 번)')
+     g.add_argument('--selftest', action='store_true', help='합성 침대 (실 생산자 CLI 게시) 로 양성 · 음성 대조')
+     ap.add_argument('--expect-generation', default='g2', help='smoke-root · case-dir 의 기대 세대 (기본 g2 · launcher-root 는 manifest 선언)')
+-    ap.add_argument('--expect-set', default='', help='launcher-root 의 등록 집합 이름 (production194 · pilot3 — G2RR2-02 · 등록 모드 필수)')
++    ap.add_argument('--expect-set', default='', help='launcher-root 의 등록 집합 이름 (production194 · supp20 · pilot3 — G2RR2-02 · 등록 모드 필수)')
+     ap.add_argument('--expect-case', action='append', default=[],
+                     help='launcher-root 의 명시 등록 집합 — 코호트:케이스 (여러 번 · --expect-set 대신)')
+     ap.add_argument('--json', default='', help='판정 JSON 을 쓸 곳')
+@@ -862,7 +865,7 @@
+     if a.launcher_root:
+         #  ★ 10-07 G2RR2-02 — 등록 모드 필수 (생산 194 · 시범의 정확한 ID) — 계획 큐를 자기 자신의 기대 집합으로 쓰지 않는다
+         if bool(a.expect_set) == bool(a.expect_case):
+-            print('⛔ --launcher-root 는 등록 집합이 필요하다 — --expect-set (production194 · pilot3) 또는 --expect-case 코호트:케이스 (여러 번) 중 하나만',
++            print('⛔ --launcher-root 는 등록 집합이 필요하다 — --expect-set (production194 · supp20 · pilot3) 또는 --expect-case 코호트:케이스 (여러 번) 중 하나만',
+                   file=sys.stderr)
+             return 2
+         try:
+@@ -1164,6 +1167,47 @@
+             chk('★ G2RR4-01 — 생산 194 (합성) 판정 JSON 의 상세 = 상세 계약 통과 (194 케이스 × K1–K7 · meta 열 · 재계수 0 = n_fail 0)', d194 == [], d194[:3])
+         else:
+             chk('★ 등록 집합 양성 production194 (등록 집합 함수 없음 — 옛 코드)', False)
++        #  ★ 10-12 보충 20 (합성) — 등록 supp20 = 커밋된 lhss 수확 폴더에서 열거 (production194 와 같은 규칙) · 여기서는 실행기 COHORT_SPECS['lhss'] 를
++        #    합성 수확 폴더 (20 ID) 로 바꿔 끼운다 · 20 케이스 K1–K7 · H1 · M3 기대 20 = 읽음 20 · 상세 계약 · 반례 = 한 케이스 결손 · 후막 혼입 → M3 실패
++        _NPm = _np()
++        _cs_keep = getattr(_NPm, 'COHORT_SPECS', None)
++        ids20 = [f'lhss_{i:03d}' for i in range(1, 21)]
++        hs20 = tmp / 'lhss_harvest_s20'
++        hs20.mkdir()
++        for c in ids20:
++            (hs20 / f'{c}.json').write_text('{}', encoding='utf-8')
++        try:
++            if isinstance(_cs_keep, dict):
++                _NPm.COHORT_SPECS = dict(_cs_keep, lhss=dict(_cs_keep.get('lhss') or {}, harvest=str(hs20)))
++            exp_s20 = _rid('supp20') if _rid else None
++        except Exception as e:                                   # noqa: BLE001 — 옛 실행기 (등록 집합 없음) 도 ✗ 로 남긴다
++            exp_s20 = None
++            print(f'  (등록 집합 supp20 못 읽음: {type(e).__name__}: {e})')
++        finally:
++            if isinstance(_cs_keep, dict):
++                _NPm.COHORT_SPECS = _cs_keep
++        if exp_s20 is not None:
++            lr_s20, _ms20 = _lroot('supp20', {'lhss': [(c, 'through') for c in ids20]}, link=True)
++            reps, meta, exp = _run_l(lr_s20, exp_s20)
++            m3 = next((m_ for m_ in meta if m_['name'].startswith('M3')), {})
++            chk('★ 등록 집합 양성 supp20 (합성 — 등록 지문 20 · lhss) — 20 케이스 K1–K7 · H1 통과 · M3 기대 20 = 읽음 20',
++                _ok_all(reps, meta) and len(reps) == 20 and m3.get('ok') is True and exp_s20['name'] == 'supp20', [m_ for m_ in meta if not m_['ok']][:3])
++            _ldp3 = globals().get('launcher_detail_problems')
++            rec20 = json.loads(json.dumps(dict(schema=SCHEMA, expected_generation=exp, meta=meta, cases=reps,
++                                               n_fail=summarize(reps, meta, out=lambda *a, **k: None), expected_set=exp_s20['name'],
++                                               expected_n=m3.get('expected_n'), read_n=m3.get('read_n'), set_equal=m3.get('set_equal'),
++                                               missing=m3.get('missing'), extra=m3.get('extra')), default=str))
++            d20 = _ldp3(rec20, exp_s20['pairs']) if _ldp3 else ['(상세 계약 함수 없음 — 옛 코드)']
++            chk('★ 보충 20 (합성) 판정 JSON 의 상세 = 상세 계약 통과 (20 케이스 × K1–K7 · meta 열 · 재계수 0 = n_fail 0)', d20 == [], d20[:3])
++            m3s = {}
++            for lab_, cl_ in (('결손 19', [(c, 'through') for c in ids20[:-1]]),
++                              ('후막 혼입', [(c, 'through') for c in ids20] + [('lhst_036_6m', 'through')])):
++                lr_b, _mb = _lroot('supp20_' + ('miss' if lab_.startswith('결손') else 'thick'), {'lhss': cl_}, link=True)
++                _rb, meta_b, _eb = _run_l(lr_b, exp_s20)
++                m3s[lab_] = next((m_ for m_ in meta_b if m_['name'].startswith('M3')), {}).get('ok')
++            chk('★ 보충 20 반례 — 한 케이스 결손 (19) · 후막 혼입 (lhst_036_6m) = M3 실패 (기대 20 ≠ 읽음)', all(v_ is False for v_ in m3s.values()), m3s)
++        else:
++            chk('★ 등록 집합 양성 supp20 (등록 집합 없음 — 옛 실행기)', False)
+         #  ★ 10-07 G2RR4-03 → ★ 10-08 G2RR5-03 (Codex 세대 2 재검증 5 §3) — 스모크 음성 대조 (case15) S0b 반례 먼저 (Codex r5_case15 변이 그대로) ·
+         #    정상 관통 · 비관통 · clamp 게시 폴더 = 위 실 생산자 게시 (K1–K7 · H1 통과가 계속 보여야).  S0b = 등록 표지 ∧ 케이스 신원 (case15_network · kind case15 ·
+         #    망 정지) 일 때만 S0 에서 뺀다 (그 밖 truthy 표지 = S0 실패 + "미등록 음성 대조 표지") · 그 케이스의 기록된 검사 = 등록 안정 ID 집합 정확히 (각 1 회 ·

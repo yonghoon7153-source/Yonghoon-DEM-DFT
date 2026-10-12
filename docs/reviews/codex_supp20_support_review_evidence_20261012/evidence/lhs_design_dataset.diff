@@ -1,0 +1,109 @@
+--- 3cedd40a5911d0606bf33ed2085d5cb93c4db2e0/scripts/lhs_design_dataset.py
++++ b429c3c1df0956d2721861d89cc29a2d56f2b581/scripts/lhs_design_dataset.py
+@@ -2222,7 +2222,10 @@
+     'am_pct': ('**고체 중 AM 질량 %** = 100 · (w_AM_P + w_AM_S) / (w_AM_P + w_AM_S + w_SE) — SE 질량 % = 100 − am_pct · **부피 % 아님** '
+                '(부피 몫 = phi_se_mass_conserving · phi_am_mass_conserving · se_of_solid_vol)'),
+     'rve_um': '측면 상자 한 변 (µm · x = y · x·y 주기 경계) — 코호트 상수 50',
+-    'loading_mAh_cm2': '면용량 (mAh/cm² · 130 설계 상수 2.0 — 두께 추정의 입력) · 확장 (lhsx) 설계에는 없다 (volfrac 기반)',
++    'loading_mAh_cm2': ('면용량 (mAh/cm²) — 2 mAh 규칙 행의 **설계 입력 2.0** (130 전부 · 두께 추정의 입력 · 보충 lhss 의 2mAh_fixed 10 행) · '
++                        '부피분율 규칙 행은 **빈칸** (보충 lhss 의 volfrac_free 10 행 — 하중이 설계 입력이 아니다 · 역산값은 출처 열 lhss_loading_mAh_cm2 (정본 인계표 열) · '
++                        '1저자 10-12 Q6 (가)) · 경계 = 보충 설계 생성기 SE_SPLIT 0.30 (am_pct 70 — 130 은 AM 70–95 wt%) · 확장 (lhsx) 설계에는 이 열이 없다 '
++                        '(volfrac 기반)'),
+     'pressure_MPa': ('압밀 목표압 (MPa · 설계 상수 300 = 덱 target_press) · ⚠ **도달 여부는 이 열이 말하지 않는다** (DESC-06 — 압밀 루프 기록 열 '
+                      'press_* 가 있는 표에서만 생성기가 확인한다)'),
+     'e_se_gpa': 'DEM SE 유효 탄성계수 (GPa · 설계 상수 1.35 — 18 배 연화 규약 · 물성 아님)',
+@@ -2263,15 +2266,44 @@
+     'lhsx_phi_AM_solid': 'AM 의 고체 중 부피 몫 (설계 — 질량분율과 밀도에서 · lhs_ext_design.phi_am_of_pdd_se · 측정 아님)',
+     'lhsx_lhs_cell': 'LHS 칸 좌표 (층 안 4 축 [pdd_SE · volfrac · rP 분위 · rSE 분위] 의 칸 번호)',
+     'lhsx_seed': '덱 난수 seed',
++    #  ── 보충 (lhss) 설계 원본 열 — scripts/lhss_design_adapter.py 가 lhsx 어댑터 adapt_row 그대로 옮기고 이름만 lhss_ 로 바꾼 12 + 보충 전용 5
++    #     (1저자 10-12 Q4 = (가) lhss 별도 데이터셋 · 원천 = lhs_supp_design · 이름이 lhsx 와 같아도 뜻이 다른 열은 그 뜻으로 적는다)
++    'lhss_stratum': '보충 설계에는 층이 없다 — 빈칸 (보충 20 은 층화 LHS 가 아니라 maximin 선택 · lhs_supp_design.maximin)',
++    'lhss_ntype': '덱 입자 type 수 (3 = bimodal · 2 = mono)',
++    'lhss_kind': '보충 설계 종류 (bimodal · mono_AM_P · mono_AM_S — block 과 같은 뜻)',
++    'lhss_pdd_SE': 'SE 질량분율 (덱 particledistribution/discrete) — am_pct = 100 · (1 − 이 값) · 하중 규칙 경계 SE_SPLIT 0.30 (이하 = 2mAh_fixed)',
++    'lhss_w_AM_P': 'AM_P 질량분율 (덱 · 셋의 합 = 1) — ps_frac = w_AM_P / (w_AM_P + w_AM_S)',
++    'lhss_w_AM_S': 'AM_S 질량분율 (덱 · 셋의 합 = 1)',
++    'lhss_rSE_lo_um': ('SE 반지름 하한 (µm · 0.5 = SE 지름 1.0 µm 시뮬 가능 하한 — lhs_supp_design D_SE_MIN) · lhsx 의 "입자 수 상한 때문에 올린 하한" 과 '
++                       '뜻이 다르다'),
++    'lhss_rSE_truncated': '1 = SE 반지름을 하한으로 눌렀다 · 0 = 그대로 (보충 20 = 전부 0)',
++    'lhss_volfrac': ('삽입 부피분율 (덱 volfrac) — 2mAh_fixed 행 = 하중 2.0 에서 계산한 값 (lhs_supp_design.volfrac_for_loading) · volfrac_free 행 = 설계 축 · '
++                     'lhss_cap_adjust = volfrac 행은 입자 수 상한 때문에 낮춘 값'),
++    'lhss_phi_AM_solid': 'AM 의 고체 중 부피 몫 (설계 — 질량분율과 밀도에서 · lhs_ext_design.phi_am_of_pdd_se · 측정 아님)',
++    'lhss_lhs_cell': '보충 설계에는 LHS 칸이 없다 — 빈칸 (maximin 선택)',
++    'lhss_seed': '덱 난수 seed',
++    'lhss_loading_rule': ('하중 규칙 — 2mAh_fixed (130 의 2 mAh 규칙 · 하중 2.0 이 설계 입력 · AM ≥ 70 wt%) · volfrac_free (64 확장 규칙 · volfrac 가 설계 축 · '
++                          'AM < 70 wt%) · 경계 = lhs_supp_design SE_SPLIT 0.30 (pdd_SE 이하 = 2mAh_fixed)'),
++    'lhss_loading_mAh_cm2': ('면용량 (mAh/cm²) 출처 — 2mAh_fixed = 설계 입력 2.0 · volfrac_free = volfrac 에서 거꾸로 계산한 값 (설계 입력 아님 · 본 열 '
++                             'loading_mAh_cm2 는 그 행에서 빈칸 · 1저자 10-12 Q6 (가))'),
++    'lhss_ins_scale': '삽입 높이 배율 (보충 20 = 전부 1.0 — 후막 짝 lhst_* 의 3 · 4 와 구분 · 그 8 은 LHS 밖)',
++    'lhss_cap_adjust': ('volfrac = 입자 수 상한 (기존 194 설계의 최대 추정 입자 수) 때문에 volfrac 를 낮춘 행 (보충 20 중 2) · 빈칸 = 조정 없음'),
++    'lhss_gap_dist': ('선택 순간의 최근접 거리 (정규화 3 축 — ps · (SE wt% − 5)/65 · (SE 지름 − 1)/1 · 기존 194 점 + 먼저 고른 보충 점 · '
++                      'lhs_supp_design.maximin) — 설계 기록 · 특징 아님'),
+ }
+ 
+ 
+ def design_define(col, design_source=None):
+-    """설계 열의 뜻 — DESIGN_DEFINE (없으면 일반 문구) + 이 표의 설계 원천.  확장 원본 열 (lhsx_*) 은 어댑터 경유를 적는다."""
++    """설계 열의 뜻 — DESIGN_DEFINE (없으면 일반 문구) + 이 표의 설계 원천.  확장 원본 열 (lhsx_*) · 보충 원본 열 (lhss_*) 은 어댑터 경유를 적는다."""
+     src = design_source or '설계 CSV'
+-    base = DESIGN_DEFINE.get(col) or f'설계 열 (`{col}` — 생성 코드: 130 = build() · 64 = scripts/lhsx_design_adapter.py)'
+-    tail = (f'원천 = {src} (확장 설계 docs/data/lhs_ext_design_v2_20260829.csv 를 scripts/lhsx_design_adapter.py 가 옮긴 열)' if col.startswith('lhsx_')
+-            else f'원천 = {src}')
++    base = DESIGN_DEFINE.get(col) or (f'설계 열 (`{col}` — 생성 코드: 130 = build() · 64 = scripts/lhsx_design_adapter.py · '
++                                      f'보충 20 = scripts/lhss_design_adapter.py)')
++    if col.startswith('lhsx_'):
++        tail = f'원천 = {src} (확장 설계 docs/data/lhs_ext_design_v2_20260829.csv 를 scripts/lhsx_design_adapter.py 가 옮긴 열)'
++    elif col.startswith('lhss_'):
++        tail = f'원천 = {src} (보충 설계 docs/data/lhs_supp_design_20261006.csv 를 scripts/lhss_design_adapter.py 가 옮긴 열)'
++    else:
++        tail = f'원천 = {src}'
+     return f'{base} · {tail}'
+ 
+ 
+@@ -6076,6 +6108,45 @@
+             all(v == [] for v in _dg31.values()), repr({k: sorted({r for _, r in v})[:10] for k, v in _dg31.items()}))
+     except Exception as e:                                                # noqa: BLE001
+         _chk31(f'㉛h 실데이터 사전 참조 표지 ({type(e).__name__}: {e})', False)
++    #  ㉛i — 보충 lhss 20 설계 열 (1저자 10-12 Q4 = (가) lhss 별도 데이터셋 · Q6 = (가) 하중 열) — 출처 열 17 의 뜻이 일반 문구 · lhsx 문구로 새지 않는다
++    _ls31 = pathlib.Path(__file__).resolve().parent.parent / 'docs' / 'data' / 'lhss_design_adapted_20261012.csv'
++    try:
++        with _ls31.open(encoding='utf-8', newline='') as _fh:
++            _lsc31 = next(csv.reader(_fh))
++        _dls31 = _cd31(_lsc31, design_source='docs/data/lhss_design_adapted_20261012.csv')
++    except Exception as e:                                                # noqa: BLE001
++        _lsc31, _dls31 = [], {'_err': {'meaning': f'{type(e).__name__}: {e}', 'caveat': '', 'source': ''}}
++    _lsx31 = [c for c in _lsc31 if c.startswith('lhss_')]
++    _gm31 = lambda c: (_dls31.get(c) or {}).get('meaning', '')            # noqa: E731
++    _bad_ls31 = [c for c in _lsx31 if c not in DESIGN_DEFINE or '생성 코드' in _gm31(c) or 'lhsx_design_adapter' in _gm31(c)
++                 or 'lhss_design_adapter' not in _gm31(c) or 'lhs_supp_design_20261006.csv' not in _gm31(c)]
++    _chk31('㉛i ★ 보충 lhss 설계 출처 열 17 = 전부 고유 뜻 (DESIGN_DEFINE) · 원천 = 보충 설계 CSV 를 scripts/lhss_design_adapter.py 가 옮긴 열 · '
++           'lhsx 어댑터 · 일반 문구로 새지 않는다',
++           len(_lsx31) == 17 and not _bad_ls31, repr((len(_lsx31), _bad_ls31[:6])))
++    _chk31('㉛i2 ★ lhss 뜻 차이 — stratum · lhs_cell = 빈칸 (maximin 선택 · 층화 LHS 아님) · rSE_lo_um = SE 지름 1.0 µm 시뮬 하한 (lhsx 와 뜻이 다름) · '
++           'loading_rule = 경계 SE_SPLIT (2mAh_fixed · volfrac_free) · lhss_loading_mAh_cm2 = 역산값은 설계 입력 아님 · cap_adjust = 기존 194 최대 입자 수 · '
++           'gap_dist = maximin 최근접 거리 (특징 아님)',
++           all(w in _gm31('lhss_stratum') for w in ('빈칸', 'maximin')) and all(w in _gm31('lhss_lhs_cell') for w in ('빈칸', 'maximin'))
++           and '1.0 µm' in _gm31('lhss_rSE_lo_um') and '뜻이 다르다' in _gm31('lhss_rSE_lo_um')
++           and all(w in _gm31('lhss_loading_rule') for w in ('SE_SPLIT', '2mAh_fixed', 'volfrac_free'))
++           and all(w in _gm31('lhss_loading_mAh_cm2') for w in ('거꾸로', '설계 입력 아님', 'loading_mAh_cm2'))
++           and '기존 194' in _gm31('lhss_cap_adjust') and all(w in _gm31('lhss_gap_dist') for w in ('maximin', '특징 아님')),
++           repr({c: _gm31(c)[:50] for c in ('lhss_stratum', 'lhss_rSE_lo_um', 'lhss_loading_rule', 'lhss_cap_adjust')}))
++    _lm31 = _gm31('loading_mAh_cm2')
++    _chk31('㉛i3 ★ Q6 (가) — 본 하중 열 뜻 = 2 mAh 규칙 행 설계 입력 2.0 (130 전부 · 보충 2mAh_fixed) · 부피분율 규칙 행 빈칸 (보충 volfrac_free · 역산값 = '
++           'lhss_loading_mAh_cm2 + 표지 "(정본 인계표 열)" — 배포에 없는 인계표 열 참조 · 배포 프로필 ③) · lhsx 64 = 열 없음 · 경계 am_pct 70 · '
++           '일반 문구 = 세 생성 코드 (130 · 64 · 보충 20)',
++           all(w in _lm31 for w in ('2.0', '2mAh_fixed', 'volfrac_free', '빈칸', 'lhsx', 'am_pct 70', 'lhss_loading_mAh_cm2 (정본 인계표 열)'))
++           and 'lhss_design_adapter' in design_define('some_new_design_col'), _lm31[:200])
++    try:                                                                  # 실데이터 사전 + 배포 빌더 dangling_refs — lhss 주 표 (lhs 132 열) 기준 문제 0
++        import lhs_release_build as _LRB31i
++        _rel31i = list(_LRB31i._v13_tsv_cols('docs/data/lhs_release_20261006_v12/lhs_release_20261006_v12_columns.tsv'))
++        _dg31i = _LRB31i.dangling_refs(_rel31i, _lsc31 + ['lhss_loading_mAh_cm2'],
++                                       [[c, d['source'], d['verdict'], d['meaning'], d['caveat']] for c, d in _dls31.items() if c in _rel31i])
++        _chk31('㉛i4 ★ lhss 설계 열 사전 (커밋된 어댑터 CSV 머리) 을 lhs 132 열 배포에 실을 때 표지 없는 인계표 열 참조 0 (배포 프로필 ③ · LREL-06)',
++               _dg31i == [], repr(_dg31i[:6]))
++    except Exception as e:                                                # noqa: BLE001
++        _chk31(f'㉛i4 lhss 사전 참조 표지 ({type(e).__name__}: {e})', False)
+     #  ═══ ㉜ DESC-06 최종 join (원자료 sha) · DESC-07 ② 전체 피복 가중평균 (Codex 배포 v1.1 최종 리뷰 raw_sha_mismatch · coverage_total_plus_1 — 반례 먼저) ═══
+     def _wa32(**st):
+         w_ = _wa()

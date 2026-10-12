@@ -1,0 +1,79 @@
+{
+  "pin": "b429c3c1df0956d2721861d89cc29a2d56f2b581",
+  "base": "3cedd40a5911d0606bf33ed2085d5cb93c4db2e0",
+  "source_files_verified": 1016,
+  "source_bytes_verified": 68985889,
+  "source_integrity_problems": [],
+  "source_extra_noncache_files": [],
+  "environment": {
+    "python": "3.12.14 (main, Aug 25 2026, 14:01:42) [MSC v.1944 64 bit (AMD64)]",
+    "platform": "Windows-11-10.0.26200-SP0",
+    "packages": {
+      "numpy": "2.5.3",
+      "scipy": "1.16.3",
+      "pandas": "3.0.1",
+      "matplotlib": "3.11.2"
+    }
+  },
+  "final_results": {
+    "adapter": {
+      "rc": 0,
+      "seconds": 0.1720000000204891
+    },
+    "builder": {
+      "rc": 0,
+      "seconds": 1.1879999998491257
+    },
+    "dataset": {
+      "rc": 0,
+      "seconds": 12.125
+    },
+    "design_probe": {
+      "rc": 0,
+      "seconds": 1.578999999910593
+    },
+    "lhsx": {
+      "rc": 0,
+      "seconds": 0.125
+    },
+    "release": {
+      "rc": 1,
+      "seconds": 75.34399999980815
+    },
+    "release_probe": {
+      "rc": 0,
+      "seconds": 11.030999999959022
+    },
+    "reread": {
+      "rc": 0,
+      "seconds": 36.515000000130385
+    },
+    "runner": {
+      "rc": 1,
+      "seconds": 0.6720000000204891
+    },
+    "runner_probe": {
+      "rc": 0,
+      "seconds": 13.843000000109896
+    },
+    "snapshot_contract": {
+      "rc": 0,
+      "seconds": 1.0940000000409782
+    }
+  },
+  "evidence_checks": {
+    "normal_build_27": true,
+    "normal_check_empty": true,
+    "different_fp_build_refuses": true,
+    "inconsistent_root_check_accepts": true,
+    "bound_root_check_refuses": true,
+    "missing_root_check_accepts": true,
+    "supp_identity_missing_accepts": true,
+    "primary_identity_missing_refuses": true,
+    "original194_bytes_unchanged": true,
+    "three_probes_rc0": true
+  },
+  "reread_checkmark_count": 30,
+  "production_code_modified": false,
+  "production_campaign_executed": false
+}

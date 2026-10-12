@@ -1,0 +1,46 @@
+{
+  "pin": "b429c3c1df0956d2721861d89cc29a2d56f2b581",
+  "sealed_count": 32,
+  "sealed_changed": [],
+  "new_handover": {
+    "scripts/lhs_design_dataset.py": "ac4a855e2435cf47f163679335d46aa499fe523a513dc24faea7f6eefcd94a8f",
+    "scripts/g2_network_reread.py": "1487ea0116aee5f679eb9de2fc1d089450758810260217c66b6c7a8828518fa6"
+  },
+  "old_handover": {
+    "scripts/lhs_design_dataset.py": "27c9c1a8a680945c5ba60e6717e1d77438a489549a62eb24bddb65223c0a8b29",
+    "scripts/g2_network_reread.py": "248ee5c08bc57751405912454a543a5a5197e29c8869f344e9bd7af4300a63ad"
+  },
+  "request_matches_pin": false,
+  "artifact_missing_as_declared": {
+    "docs/data/lhss_descriptors_cov_1e09f661d": true,
+    "docs/data/lhss_union_1e09f661d/lhss20_union.tsv": true
+  },
+  "production194": {
+    "n": 194,
+    "digest": "a04282d7275bd8f92b0afb4ac8b045f72f3867ccebbb7813b530b3901fd7b3bf"
+  },
+  "supp20": {
+    "error": "등록 집합 supp20 — 수확 폴더에서 열거한 집합 (n 0 · {} · 01ba4719c80b) ≠ 등록 (n 20 · {'lhss': 20} · 991cf1150b18)"
+  },
+  "scripts/g2_network_reread.py": {
+    "functions_added": [],
+    "functions_changed": [
+      "_parse",
+      "_selftest",
+      "main"
+    ],
+    "functions_removed": []
+  },
+  "scripts/run_network_194_parallel.py": {
+    "functions_added": [
+      "registered_production_set"
+    ],
+    "functions_changed": [
+      "_parse",
+      "_selftest",
+      "production_observation_problem",
+      "production_plan"
+    ],
+    "functions_removed": []
+  }
+}

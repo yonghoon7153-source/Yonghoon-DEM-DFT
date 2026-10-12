@@ -1,0 +1,12 @@
+{
+  "name": "lhsx",
+  "argv": [
+    "scripts/lhsx_design_adapter.py",
+    "--selftest"
+  ],
+  "rc": 0,
+  "seconds": 0.125,
+  "tail": [
+    "lhsx_design_adapter selftest: 14/14"
+  ]
+}

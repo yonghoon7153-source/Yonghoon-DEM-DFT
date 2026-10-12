@@ -1,0 +1,20 @@
+{
+  "name": "reread",
+  "argv": [
+    "scripts/g2_network_reread.py",
+    "--selftest"
+  ],
+  "rc": 0,
+  "seconds": 36.515000000130385,
+  "tail": [
+    "  ✓ ★ G2RR5-03 양성 — 실제 case15 값의 기록 + 고친 스모크 생산자 evaluate (하위 프로세스) 의 검사 일곱 = 등록 안정 ID (차례 · id 키) 전부 PASS · 공용 판정 (case15_negctl_verdicts) 재계산 일곱 PASS · S0 · S0b 통과 rc 0 · 정상 관통 · 비관통 · clamp 게시 폴더 K1–K7 · H1 통과 · 실패 상태 토큰 = pipeline_service._CHANNEL_FAIL_STATES {'S0': True, 'S0b': True} rc 0",
+    "  ✓ ★ G2RR5-03 반례 (Codex r5_case15 변이 일곱 — 옛 판 rc 0) → 전부 rc 1 (미등록 표지 = S0 · S0b 실패 · 그 밖 = S0b 실패) ",
+    "  ✓ 회귀 — 표지 없음 (이름 면제 없음 = S0 실패) · 검사 없음 · 셋만 · 하나 FAIL · 게시됨 → rc 1 (옛 판도 rc 1 · 과잉차단 아님 = 위 양성) ",
+    "  ✓ ★ G2RR5-03 신원 · ID 계약 — 등록 표지 + kind 다름 (= 미등록) · 모르는 ID 하나 더 · 자식 프로세스 기록 (timings) 없음 · 옛 형식 기록 (실제 시도 증거 · 검사 id 없음 = G2RR5-02 이전 생산자 · 제출 WSL 10-07 기록과 같은 꼴 — 그 기록은 고친 스모크로 다시 만들어야) → rc 1 ",
+    "  ✓ ★ G2RR6-01 반례 — Codex 재검증 6 §2 넷 (옛 판 rc 0 · n_fail 0) + 같은 부류 21 (raw_sha {} · None · 키 하나 삭제 · 키 추가 · 두 값 함께 바꿈 · 16 진 아님 · 빈 문자열 · 원소 셋 / 면적 0 · NaN · bool · 문자열 · 군더더기 행 · 짧은 행 · ID 문자열 · ID 실수 · 다른 음수값 · δ 결손 · 중복 행 / 실패 단계 하나 더 / 등록 밖 τ 숫자 키) → 전부 rc 1 · S0b 실패 (S0 그대로) ",
+    "  ✓ ★ G2RR6-01 실제 기록 — 10-09 WSL case15 정상 보고 rc 0 · n_fail 0 · Codex 입력 그대로의 변이 넷 + 대조 둘 (raw_sha_ok False · 실제 시도 PermissionError) = rc 1 · n_fail 1 (재실행 없이 다시 읽기만) ",
+    "  ✓ ★ G2RR6-01 등록 원자료 sha256 (CASE15_NEGCTL raw_sha256 · 네 파일) = case15 README sha256 표 (같은 64 자리 · 사본 표류 없음)",
+    "",
+    "✓ 전부 통과"
+  ]
+}

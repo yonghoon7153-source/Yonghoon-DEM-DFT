@@ -9576,6 +9576,33 @@
         "docs/reviews/lhs_release_v13_plan_20261007.md (§2-4 정정 표지 — 컨테이너 --v13-check rc 0 은 G2RR3-01 뒤 거짓 · 실제 묶음 대조 = 빌드 manifest 의 배치 뿌리에서 v13_batch_gate_recheck 재판정 → 대조는 WSL · §2b 두 배치 명령도 WSL 대조)",
         "scripts/test_lhs_release_v13.py (V21 — check_v13 이 두 뿌리 관문을 다시 판정 · 뿌리 없는 대조 = 문제 · 234/234 at b429c3c1d)"
       ]
+    },
+    {
+      "id": "SUP20-01",
+      "severity": "P2",
+      "status": "open",
+      "owner": "claude",
+      "found_by": "codex 10-12 보충 20 지원 검토 (리뷰 핀 b429c3c1d · 기준 = 재검증 7 핀 3cedd40a5 · 실제 build_v13 · check_v13 합성 214 (τ 실제 원천 재독해 = 대역 · 제출 V21 과 같은 한정) · check · 배치 관문 · 교차 = 대역 없음 · 실제 설계 800 칸 독립 재계산 · 등록 / 관측 술어 탐침 · Windows 스냅샷 — 생산 194 · 보충 20 · check_all · Linux fast16 + real4 미실행)",
+      "opened_in": "docs/reviews/codex_review_supp20_support_20261012.md",
+      "title": "배포 대조 check_v13 의 배치별 재판정 뿌리 (batch_gate.batch_root · supp_batch.batch_gate.batch_root) 와 배치 교차 뿌리 (batches[이름].root — 따로 저장한 사본) 가 서로 결합되지 않는다 — manifest supp_batch 만 다른 유효 뿌리 (다른 code_fp) 의 증거로 바꿔도 문제 0 · 교차 뿌리를 없는 경로로 바꾸면 교차 검사를 조용히 건너뛴다 (문제 0) · 보충 code_identity 삭제 · 승인 없는 봉인 변경 (sealed_changed [webapp/app.py] · allowed []) 도 문제 0",
+      "note": "판정문 §1.  무너지는 결론: \"check_v13 도 실제로 받아들인 두 배치에 대해 같은 code_fp 를 다시 강제한다\".  무너지지 않는 결론: 정상 build 의 교차 검사 (다른 code_fp 보충 뿌리 = build 거부 · ReleaseError) · 이미 계산된 σ 의 정확성 · 194 의 R7 기술 판정 · 수치 봉인 32 (code_fp e8b2496b… 바이트 동일).  자리 (핀 b429c3c1d): scripts/lhs_release_build.py v13_batch_gate_recheck (2493–2510 — 배치별 = _v13_gate_recheck_one 이 batch_gate.batch_root 를 읽고 · 교차 = batches[이름].root 를 읽는다 · 둘이 같은지 안 본다 · all(isdir(...)) 거짓이면 교차 생략) · check_v13 2452 (최상위 194 code_identity 검사 — 보충 쪽 없음).  실제 함수 반례 (판정문 §1 표 · 합성 지문 250a59b2… ↔ 3b0ef9f1… = 시험용 축소 봉인 · 생산 지문 아님): 정상 build → check 문제 0 · 다른 code_fp 보충 → build 거부 · supp_batch 만 교체 (batches.supp20.root 원래) = check 문제 0 · 위 + batches.supp20.root 도 교체 뿌리 = 교차 문제 2 · 교체 대신 batches.supp20.root = 없는 경로 = 문제 0 · 정상 묶음 교차 뿌리 하나만 없는 경로 = 문제 0 · build_v13 산출 = 해시 기록 27 + manifest 1 = 28 파일 (반환 n_files 27 = manifest 작성 전 집계).  최소 해결 증거 (판정문 §1): ① 배치마다 검증한 관문 뿌리를 교차 검사의 유일한 입력 · 중복 저장한 batches 뿌리 / expect_set / datasets / n 은 권위 입력과 대조 ② 필수 뿌리 결손 · 비문자열 · 없는 경로 = 거부 (생략 아님) ③ 보충에도 194 와 같은 code_identity 존재 · 명시 승인 계약 ④ 정상 / 반례를 build 와 check 에 상주 · 다른 뿌리의 개별 관문은 정상이라는 대조를 남긴다.  배포 도구 층 결함 — 계산이 끝난 뒤라도 이 결함만으로 214 재계산 이유 없음 (판정문 §4).  우리 트리 재현: 10-12 · HEAD b556dd5db (리뷰 핀 이후 바뀐 것 = 문서 · 자료뿐 · scripts/ · webapp/ 변경 0) · Codex run_checks.py 로 release_probe · design_probe 를 무변경 탐침 그대로 다시 = 둘 다 rc 0 · 키별 대조 판정값 차이 0 (release 97 키 중 다른 6 = 작업 경로 문자열 · design 914 키 중 다른 14 = 재적합 실수 끝자리 상대 ≤ 1e-12) · supp_batch 교체 · 교차 뿌리 없는 경로 · 보충 code_identity 삭제 · 승인 없는 봉인 변경 = 전부 check 문제 0 (오수용 재현) · 다른 code_fp 보충 = build 거부 (회귀 대조) · docs/reviews/codex_supp20_support_review_evidence_20261012/_repro_ours_20261012/",
+      "evidence_tests": [
+        "docs/reviews/codex_supp20_support_review_evidence_20261012/evidence/release_probe.json (Codex — 실제 build_v13 · check_v13 반례 표)",
+        "docs/reviews/codex_supp20_support_review_evidence_20261012/probes/release_probe.py (입력 생성 = 제출 시험 합성 생성기 재사용)"
+      ]
+    },
+    {
+      "id": "SUP20-02",
+      "severity": "P3",
+      "status": "open",
+      "owner": "claude",
+      "found_by": "codex 10-12 보충 20 지원 검토 (리뷰 핀 b429c3c1d · 기준 = 재검증 7 핀 3cedd40a5 · 실제 build_v13 · check_v13 합성 214 (τ 실제 원천 재독해 = 대역 · 제출 V21 과 같은 한정) · check · 배치 관문 · 교차 = 대역 없음 · 실제 설계 800 칸 독립 재계산 · 등록 / 관측 술어 탐침 · Windows 스냅샷 — 생산 194 · 보충 20 · check_all · Linux fast16 + real4 미실행)",
+      "opened_in": "docs/reviews/codex_review_supp20_support_20261012.md",
+      "title": "lhss_w_AM_P 열 사전 (lhsx_w_AM_P 에서 물려받음 · scripts/lhs_design_dataset.py DESIGN_DEFINE) 이 \"AM_P 질량분율 · ps_frac = w_AM_P / (w_AM_P + w_AM_S)\" 라 적는다 — type 2 개 덱 (mono) 의 P 슬롯 = 단일 AM 자리 · mono_AM_S 4 행 (lhss_001 · 002 · 003 · 020) 은 P 슬롯 0.3 · 0.3 · 0.3 · 0.375 · S 슬롯 0 → 식 = 1 · 올바른 ps_frac = 0 (어댑터 변환값은 0 — 계산 · CSV 정상 · 문구만)",
+      "note": "판정문 §2.  자리 (핀 b429c3c1d): scripts/lhs_design_dataset.py:2275–2276 (lhss) · 같은 문구 lhsx_w_AM_P (2261).  규약 근거 = scripts/lhs_ext_materialize.py 머리 (\"P 열 = 일반 AM 자리\") · 어댑터가 kind 로 상을 옮긴다.  해결 = P / S 원천 슬롯의 mono 규약을 적고 비율 식은 bimodal 에 한정 · mono_AM_P = 1 · mono_AM_S = 0 (CSV · 계산 변경 불요).  옛 인계 열 사전 (docs/data/lhsx_handover_2026092*_columns.tsv · …20261001_columns.tsv · v1.2 인계 lhsx_handover_v12_20261006_columns.tsv) 에도 같은 문구 — 생성 기록 · 배포 v1.1 · v1.2 묶음에는 이 열 없음 (검색 확인 10-12).  해결 증거 대조 = docs/reviews/codex_supp20_support_review_evidence_20261012/evidence/design_probe.json (네 행).",
+      "evidence_tests": [
+        "docs/reviews/codex_supp20_support_review_evidence_20261012/evidence/design_probe.json (Codex — mono_AM_S 네 행 원천 슬롯 ↔ 변환 ps_frac)"
+      ]
     }
   ]
 }
