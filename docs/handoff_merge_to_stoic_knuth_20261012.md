@@ -16,10 +16,10 @@ stoic-knuth 의 원격 헤드 `46cd0bdb8` (10-11 밤 · DEM 지배방정식 배�
 
 | 브랜치 | 원격 SHA | merge-base | 이쪽이 앞선 | 저쪽이 앞선 | 병합 형태 |
 |---|---|---|---:|---:|---|
-| `claude/stoic-knuth-NObVQ` | `46cd0bdb8` | `46cd0bdb8` | **31** — 묶음별 목록 = §4 · 그 안에 병합 커밋 1 (`abbc63a4b` = SUP20 수정 작업트리를 이 가지 안에서 합친 것 — fast-forward 에 영향 없음) · 마지막 = 이 문서 2판 | **0** | ✅ fast-forward |
+| `claude/stoic-knuth-NObVQ` | `46cd0bdb8` | `46cd0bdb8` | **32** — 묶음별 목록 = §4 · 그 안에 병합 커밋 1 (`abbc63a4b` = SUP20 수정 작업트리를 이 가지 안에서 합친 것 — fast-forward 에 영향 없음) · 마지막 = ps73 접촉 상대별 3D + 이 문서 2판 고침 (같은 커밋) | **0** | ✅ fast-forward |
 | `claude/friendly-meitner-lldvar` (litdb 정본) | (적지 않는다) | — | — | — | 무관 — 이 세션은 `litdb/` 를 건드리지 않았다 |
 
-이쪽 HEAD = **이 문서 2판을 담은 커밋** (자기 SHA 는 적을 수 없다 — §2 의 `DOC_OK` 가 확인한다).
+이쪽 HEAD = **이 문서 2판 (고친 판) 을 담은 커밋** (자기 SHA 는 적을 수 없다 — §2 의 `DOC_OK` 가 확인한다).
 ⚠ 이쪽에 커밋이 더 생기면 같은 프롬프트를 다시 붙이면 된다 — 단 그 사이 stoic-knuth 에 아무것도 커밋하지 않았을 때만.
 
 ## 2. 병합 절차 (저쪽 세션이 그대로 실행)
@@ -69,7 +69,7 @@ git push -u origin claude/stoic-knuth-NObVQ                 # 네트워크 오�
 | **Codex 언로딩 개정 1 재검토 반입** | 판정문 (바이트 그대로) · 증거 (묶음 154 / 154 · source 97 = 핀 `3409814a3` blob · upstream 27 = 10-11 반입과 같음) · 우리 트리 재확인 (Codex 탐침 무변경 재실행 JSON 같음 · 우리 식 인용 등록 줄 34 / 34 · 산술 전부 같음) · 원장 `UL-01` ~ `UL-10` 노트 (open 유지) · 새 `ULR1-01` · `ULR1-02` (P1) · `ULR1-03` · `ULR1-04` · `ULR1-05` (P2) · `SELF-105` · 반영 계획 | `docs/reviews/codex_review_dem_unloading_prereg_rereview_20261012.md` · `docs/reviews/codex_dem_unloading_prereg_rereview_evidence_20261012/_README_import.md` · `docs/reviews/dem_unloading_ulr1_fix_plan_20261012.md` |
 | **보충 20 지원 (U1–U5)** (1저자 (나) · Q4 (가) lhss · Q5 (가) · Q6 (가) 하중 열) | 실행기 등록 집합 supp20 · 관측 필수 (130/130) · 다시 읽기 `--expect-set supp20` (30) · lhss 설계 어댑터 + 본 하중 열 (27/27 · `docs/data/lhss_design_adapted_20261012.csv` 20 × 40) · 인계 생성기 열 사전 lhss_* (389/389) · 배포 생성기 두 배치 · 214 결합 (`--supp-batch-root` · 234/234) · 봉인 32 무변경 · 짧은 Codex 검토 요청서 `docs/reviews/codex_supp20_support_review_request_20261012.md` · 자기 결함 `SELF-106` (v1.3 계획 §2-4 컨테이너 대조 문장) | `docs/reviews/g2rr6_fix_plan_20261011.md` §2 · `docs/reviews/lhs_release_v13_plan_20261007.md` §2b |
 
-### 4-2. 2판에서 더해진 것 (10-12 아침 ~ 10-13 새벽 · 커밋 22 + 이 판)
+### 4-2. 2판에서 더해진 것 (10-12 아침 ~ 10-13 새벽 · 커밋 22 + 이 판 둘)
 
 | 줄기 | 산출 | 정본 |
 |---|---|---|
@@ -77,7 +77,7 @@ git push -u origin claude/stoic-knuth-NObVQ                 # 네트워크 오�
 | **DEM 언로딩 개정 2 · 판 속도** | REG §13 (`af3af8123` · 1저자 ULR1 계획 Q1–Q4 권고대로 · 결과 0 건 · `SELF-105` 같은 커밋) · 판 속도 = **plate velocity 0.01 mm/s** (1저자 — 발표 · 보고 용어 · 값 · 계산값 = DEM 지배방정식 보고서 §9-1 내부 기록) | `docs/reviews/dem_unloading_ps45_prereg_20261009.md` §13 · `docs/reviews/dem_unloading_ulr1_fix_plan_20261012.md` |
 | **σ₀ 보고 기준 · σ_e 실험 앵커** | σ₀ = **1.5 mS/cm** (`38cc6691f` · 1저자 *"1.5로 고정하자"* · 자료 · 보고의 절대 σ_ion = f × 1.5 · 망 σ ∝ σ₀ 라 다시 계산 없음 · f · 수송 tortuosity 불변 · 솔버 상수 3.0 = 봉인 32 그대로) · P:S 다섯 조성 σ_ion 경향 분해 (`06d2cf328` · ps45 g2 README 끝) · σ_e 실험 앵커 SBE 4.47 · DBE 12.4 mS/cm (정정값 · `bef5bd5d7`) → STEP3 표 값 재실행 **등록** (`bd1db419d` · 결과 0 건) + 실험 조성 = 실조성 (`58f40a002`) | `docs/data/ps45_r45_network_g2_20261007/README.md` §σ₀ · `docs/reviews/sdcp_sigma_e_dcp_anchor_registration_20261012.md` |
 | **ps45 σ_e 기준 (덱 p15 σe−) — Codex 판정** | 요청서 (`bd1db419d`) → 판정 반입 (`a919cd4c1` · **권고 (가′) 조건부** = Hertz H0 + PC 크기 인자 끔 + 공통 기준값 4.1 mS/cm 를 *"조건부 환산"* 으로 · 다섯 망 진단 뒤 · *"이중 할인 제거 = 정답"* 논리 불성립 · 실제 AM 고체 64.71–64.92 % · 전자 Physics g2 = native AM–AM 원판 + ψ = **Tabor 아님** · 우리 트리 재현 판정값 차이 0) · 원장 `PS45E-01` · `02` · `03` (P2 open) · `SELF-108` · `109` · README §σ_e · 전자 열 표지 고침 (수치 무변경 · `e7b803c41` · `dbade898a`) · 인자 끔 다섯 전자 망 진단 **결과 전 등록** + 보고 전용 실행기 (`a9fa84244` · 봉인 파일 무변경 · 별도 출력 · manifest 필수 · 자체시험 58/58 · 결과 0 건) | `docs/reviews/codex_review_ps45_sigmae_reporting_20261013.md` · `docs/reviews/ps45_sigmae_factor_off_registration_20261013.md` |
-| **ps73 발표 그림** | 시간–판 속도 그래프 · ibb 묶음 영수증 (`bef5bd5d7`) · 이완 단계 3D · SE σ_VM (`33326218a`) · **같은 step 네 단계 최종 판** (`ef31da994` · 체크포인트 400,000 · 1,650,000 · 3,100,000 · 3,220,000 = 0 · 47.1 · 296.2 · 165.3 MPa · porosity = **exact union** 31.81 · 25.09 · 16.68 · 16.49 % (LHS 배포 열과 같은 양 · ε_sphere 는 기록만) · SE σ_VM 중앙 11.6 · 14.5 · 91.1 · 91.7 MPa · 스냅숏 입력 = 원 덤프 대조 · r1 로그 KE) · 1저자 고침 (`560c5efd1` · 벽 SE 안 그림 (회색 없앰) · 선형 범례 0–200 / 150 / 100 MPa · 3D 단계 이름 = porosity) · 상자그림 원값 `.csv.gz` | `docs/data/ps73_compaction_curve_20261006/stages_20261012/README.md` §6 · §6-1 |
+| **ps73 발표 그림** | 시간–판 속도 그래프 · ibb 묶음 영수증 (`bef5bd5d7`) · 이완 단계 3D · SE σ_VM (`33326218a`) · **같은 step 네 단계 최종 판** (`ef31da994` · 체크포인트 400,000 · 1,650,000 · 3,100,000 · 3,220,000 = 0 · 47.1 · 296.2 · 165.3 MPa · porosity = **exact union** 31.81 · 25.09 · 16.68 · 16.49 % (LHS 배포 열과 같은 양 · ε_sphere 는 기록만) · SE σ_VM 중앙 11.6 · 14.5 · 91.1 · 91.7 MPa · 스냅숏 입력 = 원 덤프 대조 · r1 로그 KE) · 1저자 고침 (`560c5efd1` · 벽 SE 안 그림 (회색 없앰) · 선형 범례 0–200 / 150 / 100 MPa · 3D 단계 이름 = porosity) · 상자그림 원값 `.csv.gz` · **AM 접촉 상대별 3D** (1저자 10-13 — 상자그림 · 중앙값 대신 · 이완 단계 · None · PC · SC · PC + SC · 선형 0–150 MPa · README §6-2) | `docs/data/ps73_compaction_curve_20261006/stages_20261012/README.md` §6 · §6-1 |
 | **2차년도 덱 p14 · p15 새 막대** | p15 σLi+ Hertz · σ₀ 1.5 (0.0587–0.0893 mS/cm) · p14 수송 tortuosity Hertz (7.24–5.03 · Tabor ○ 짝판) · 생성기 다시 돌려 CSV · SVG · PNG 바이트 같음 · 덱 판독 근거 `_inspect/` (`ef31da994`) | `docs/data/ps45_r45_network_g2_20261007/deck_p14p15_20261012/NOTES.md` |
 
 ## 5. 넘어간 뒤 — 지금 상태 (날짜를 보고 읽을 것 · 10-13 새벽)
@@ -87,7 +87,7 @@ git push -u origin claude/stoic-knuth-NObVQ                 # 네트워크 오�
 | **세대 2 망 · 보충 20** | Codex 재검증 7 (10-12 · 핀 `3cedd40a5`) = 기존 194 발사 승인 · 사전 점검 단계 GO · 보충 검토 (핀 `b429c3c1d`) = HOLD → SUP20 수정 ✅ (claimed_fixed) · 짧은 재확인 요청서 ✅ 작성 | ⬜ 재확인 요청서 발송 (1저자 · 리뷰 핀 `a9422d2e7`) → Codex GO → ⬜ 1저자 발사 승인 → 같은 날 194 → 보충 20 → v1.3 한 번에 (`docs/reviews/lhs_release_v13_plan_20261007.md` §2b) · 그 GO 전에는 194 도 발사하지 않는다 (두 배치 같은 날) |
 | **ps45 σ_e (덱 p15 σe−)** | Codex 10-13 = 권고 (가′) 조건부 · 인자 끔 다섯 망 진단 = 결과 전 등록 (결과 0 건) | ⬜ 등록 비준 (Physics g2 감도 팔 유지 포함) → WSL 등록 §5 명령 (입력 = g2 작업 폴더 — 없으면 등록 §5 의 대체 폴더 · 둘 다 없으면 멈추고 보고) → tgz 반입 → (필요하면) Codex 짧은 확인 · ⬜ 덱 p11 AM 고체 분율 60 % → 64.7–64.9 % · p15 각주 · 표지 (PPT 는 1저자) · ⬜ 웹앱 표지 *"σ_e^physics — Tabor plastic film"* 고침 = 봉인 `webapp/app.py` → 권고 194 · 보충 20 배치 뒤 · 4.1 mS/cm = Wang 2018 원문 확인 전 *"조건부"* 그대로 · 10-06 덱 = 역사 산출물 (고치지 않음) |
 | **σ₀ · σ_e 실험 앵커** | σ₀ 1.5 = 자료 · 보고 기준 · 솔버 상수 3.0 그대로 · SBE/DBE STEP3 표 값 재실행 등록 (결과 0 건) | ⬜ 봉인 32 상수까지 바꿀 시점 (권고 = 194 · 보충 20 배치 뒤) · ⬜ kgy 정찰 (등록 문서 명령) |
-| **ps73 발표 그림** | 최종 판 ✅ (`aligned_ckpt/` · 위 §4-2) | ⬜ 기공 3D = 1저자가 웹앱에서 (원자 덤프 + 판 mesh STL 업로드 → DEM 기공 보기 · README §6-1) · ⚠ 관찰 (확인 전): 판 닿기 전 (400,000) 에도 아래쪽 SE 응력이 크다 (정착 중력 하중으로 보임) · 3 · 4 단계 SE 응력 중앙이 거의 같은데 (91.1 ↔ 91.7 MPa) 판 압력은 296 → 165 MPa — 같은 침대 `DEMP-01` (압축 중 판 반력의 57.9 % = 전역 감쇠 저항) 과 같은 방향 · 정량 연결은 확인 전 |
+| **ps73 발표 그림** | 최종 판 ✅ (`aligned_ckpt/` · 위 §4-2 · 접촉 상대별 3D 포함) | ⬜ 기공 3D = 1저자가 웹앱에서 (원자 덤프 + 판 mesh STL 업로드 → DEM 기공 보기 · README §6-1) · ⚠ 관찰 (확인 전): 판 닿기 전 (400,000) 에도 아래쪽 SE 응력이 크다 (정착 중력 하중으로 보임) · 3 · 4 단계 SE 응력 중앙이 거의 같은데 (91.1 ↔ 91.7 MPa) 판 압력은 296 → 165 MPa — 같은 침대 `DEMP-01` (압축 중 판 반력의 57.9 % = 전역 감쇠 저항) 과 같은 방향 · 정량 연결은 확인 전 |
 | **덱 p13–p15** | p14 · p15 새 막대 ✅ | ⬜ p13 칸 그림 (권고 = Hertz Li⁺ 접촉 전류) · p14 coverage 규약 (권고 = Tabor 유지 + 각주) · "5:7" → "5:5" 오타 · 축 이름 "Transport tortuosity" |
 | **DEM 언로딩** | 개정 2 = REG §13 ✅ (10-12 · 결과 0 건) | ⬜ 키트 (시험 먼저 · 판정문 해결 증거 그대로) + S3 함수 · σ_P · 회전 KE 기준 · 표면 관측자 fixture → §12 덧붙임 → ibb 작은 시험 → Codex (키트 증거 + 개정 2) → GO · 1저자 순서 = 이종기술 · 연구세미나 뒤 (Rint 도 같음) |
 | **DEM 지배방정식 보고서** (`46cd0bdb8`) | `docs/dem_governing_equations_background_20261011.md` · 자료 `docs/data/dem_governing_equations_report_20261011/` | ⬜ Luding 2008 카드 f_min 의 k_c 인자 누락 → PDF 확인 뒤 정본 브랜치에서 고침 · 고전 출처 7 은 정본 카드 없음 → 이름 언급만 |

@@ -1,0 +1,61 @@
+{
+ "tool": "aligned_class3d",
+ "step": 3220000,
+ "stage_key": "relaxed",
+ "rule": "per AM-contact class (t3_vm_se class column): only that class of non-wall SE drawn · wall SE (z−r<0 or z+r>plate) not drawn · AM not drawn",
+ "scale": "linear",
+ "vmin_MPa": 0.0,
+ "vmax_MPa": 150.0,
+ "above_vmax": "top colour (jet8 t = 1)",
+ "camera": "aligned_ckpt/logs/t1_camera.json (same as the 4-stage figures)",
+ "per_class": {
+  "SE_only": {
+   "label": "None",
+   "n_drawn": 49694,
+   "file": "ps73_se_vm3d_3220000_relaxed_class_none_nowall_linear_0_150.png",
+   "p25_p50_p75_p90_MPa": [
+    58.06,
+    80.19,
+    104.15,
+    127.24
+   ],
+   "pct_at_or_above_vmax": 3.04
+  },
+  "PC_only": {
+   "label": "PC",
+   "n_drawn": 44975,
+   "file": "ps73_se_vm3d_3220000_relaxed_class_pc_nowall_linear_0_150.png",
+   "p25_p50_p75_p90_MPa": [
+    60.52,
+    95.41,
+    146.19,
+    211.7
+   ],
+   "pct_at_or_above_vmax": 23.65
+  },
+  "SC_only": {
+   "label": "SC",
+   "n_drawn": 46738,
+   "file": "ps73_se_vm3d_3220000_relaxed_class_sc_nowall_linear_0_150.png",
+   "p25_p50_p75_p90_MPa": [
+    67.96,
+    98.63,
+    139.57,
+    190.65
+   ],
+   "pct_at_or_above_vmax": 20.75
+  },
+  "PC_and_SC": {
+   "label": "PC + SC",
+   "n_drawn": 13626,
+   "file": "ps73_se_vm3d_3220000_relaxed_class_pcsc_nowall_linear_0_150.png",
+   "p25_p50_p75_p90_MPa": [
+    83.63,
+    150.48,
+    272.15,
+    439.47
+   ],
+   "pct_at_or_above_vmax": 50.12
+  }
+ }
+}

@@ -80,3 +80,22 @@
 - *"이건 porosity로 해줘야지"* → 3D 단계 이름 = porosity (exact union) — `t1_geometry/ps73_geom3d_4panel_porosity_preview.png` (글자는 그림 밖 아래).
 - *"porosity는 porosity 그림으로 … webapp에서 기공 부분"* · *"3D로 … atom이라도 주던가 webapp에 먹이게"* → 웹앱 3D 보기 "기공 (빈 공간 · 격자 추정)" 으로 1저자가 그린다 — 입력 = WSL 스냅숏 `~/ps73_snap_<S>/post/atom_<S>.liggghts` + `mesh_<S>.stl` (atoms-only 케이스 · 메시를 같이 올려야 영역 윗면 = 판) · 이완 = 웹앱 케이스 `260925_000559_082983`.
   같은 규칙 (viewer3d.js `computeVoidVoxels` · 격자 보통) 으로 컨테이너에서 계산한 빈 칸 비율 = 31.8 · 25.1 · 16.7 · 16.5 % (exact union 과 0.1 %p 안 · 표시용) — 그 시도 (불투명 3D · 단면) 는 리포에 넣지 않았다.
+
+### 6-2. AM 접촉 상대별 3D — 이완 단계 (1저자 10-13 · `code/aligned_class3d.py` · 재계산 없음)
+
+- 1저자 *"저 중앙값 그림이 필요한게 아니고 ~사이에 응력값이던 3d geometry로 해서 각각의 차이를 보고싶은거야"* → 상자그림 (`t3_vm_se/ps73_se_vm_by_class.png` · 기록으로 남긴다) 대신
+  이완 단계 (3,220,000) 의 SE 를 **접촉 상대 분류마다 따로** 3D 로 그린다 — None (AM 접촉 없음) · PC (PC 만) · SC (SC 만) · PC + SC (둘 다) · 분류 = SE 별 CSV.gz 의 `class` 열 (상자그림과 같다) ·
+  카메라 = 네 단계 그림과 같다 · 벽 SE · AM 은 그리지 않는다 (§6-1 규칙).
+- 색 = **선형 0–150 MPa** (1저자 *"150이 제일 좋은듯"* · 150 이상 = 맨 위 색) — `aligned_ckpt/t3_vm_se/ps73_se_vm3d_3220000_relaxed_class_{none,pc,sc,pcsc}_nowall_linear_0_150.png` (투명 · 글자 없음 ·
+  1저자에게 네 장 전달 · 범례 없이 — 범례가 필요하면 네 단계 그림과 같은 `ps73_se_vm3d_colorbar_linear_0_150.png`) · 미리보기 `…_3220000_relaxed_class_4panel_nowall_linear_0_150_preview.png` ·
+  기록 `…_3220000_relaxed_class_nowall_linear_0_150.json`.  처음 보인 0–200 MPa 판 = 같은 스크립트 `--vmax 200` (리포에는 0–150 만).
+
+| 접촉 상대 (벽 아닌 SE) | 개수 | σ_VM p25 · p50 · p75 · p90 (MPa) | 150 MPa 이상 |
+|---|---:|---|---:|
+| None | 49694 | 58.1 · 80.2 · 104.1 · 127.2 | 3.0 % |
+| PC | 44975 | 60.5 · 95.4 · 146.2 · 211.7 | 23.7 % |
+| SC | 46738 | 68.0 · 98.6 · 139.6 · 190.7 | 20.8 % |
+| PC + SC | 13626 | 83.6 · 150.5 · 272.1 · 439.5 | 50.1 % |
+
+- 검산: 개수 합 155033 = §6 표의 이완 단계 SE (벽 아님) · 중앙값 넷 = §6 표 (80.2 · 95.4 · 98.6 · 150.5).
+- 그림에서 보이는 것 (관찰): None 은 대부분 중간 색 · PC · SC 는 AM 둘레 껍질 모양에 150 이상 (맨 위 색) 이 섞인다 · PC + SC 는 절반이 150 이상.  MPa 절대값 = DEM (연화 SE) 모델 안 값 (§6 한정어).
