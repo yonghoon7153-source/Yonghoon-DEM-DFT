@@ -17,7 +17,7 @@ site-preference backup p18 (old p12 / p17 files are removed by the script). p06 
 | 13 | MD status | `p13_md_campaign_progress.csv` · `p13_md_campaign_runs.csv` | progress bars; run roster (status, wall-clock GPU-h) |
 | 18 | Backup: site preference | `p18_site_preference_vs_ionic_radius.csv` | ΔE vs Shannon radius, three loadings per element (June batch, not Stage 1) |
 
-Slim-deck preview figures (`--figures`, house style, English labels) in `kb/seminars/assets_2026_10_13/`: `fig_p07_stage1_scale_coverage.png` · `fig_p10_host_window.png` · `fig_p13_run_roster.png` (all drawn from the CSVs here) · `fig_p12_msd_check_schematic.png` (a schematic, no data). Replace them with the Origin versions when ready.
+Slim-deck figures (`--figures`) in `kb/seminars/assets_2026_10_13/`: plain previews drawn from the CSVs here (`fig_p06_candidates_by_family.png` · `fig_p07_stage1_scale_coverage.png` · `fig_p10_host_window.png` · `fig_p13_run_roster.png`) — replace them with the Origin versions — and literature figures cropped from the litdb crops as the reason for a method choice (`lit_jung2026_sio2_fig3d.png` p06 · `lit_schwietert2021_fig1.png` p10 · `lit_he2018_fig3.png` p12 · `lit_phuthi2026_fig1a.png` p14; never redrawn, never on the same plot as our numbers).
 
 Pages without a CSV:
 - 2 (previous DFT work): figure boxes left empty on purpose — fill per tile on request.

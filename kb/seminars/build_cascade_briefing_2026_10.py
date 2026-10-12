@@ -395,12 +395,13 @@ def slide_refs():
          ('[[B:Precursor-derived co-doping]]', None),
          ('Taklu et al., Nano Energy 90, 106542 (2021)', 1), ('Liu et al., Angew. Chem. Int. Ed. 62, e202302655 (2023)', 1),
          ('Jang et al., J. Alloys Compd. 957, 170273 (2023)', 1), ('Yang et al., Electrochim. Acta 535, 146619 (2025)', 1),
-         ('Xu et al., Nano Energy 157, 112246 (2026)', 1)]
+         ('Xu et al., Nano Energy 157, 112246 (2026)', 1), ('Jung et al., Adv. Funct. Mater. (2026), doi:10.1002/adfm.78249', 1)]
     R = [('[[B:Methods]]', None),
          ('Wood et al. (UMA), arXiv:2506.23971 (2026)', 1), ('Rao et al., Phys. Status Solidi A 208, 1804 (2011)', 1),
          ('Deng et al., J. Electrochem. Soc. 163, A67 (2016)', 1), ('Torii et al., J. Phys. Chem. C 129, 17882 (2025)', 1),
          ('Zhu et al., ACS Appl. Mater. Interfaces 7, 23685 (2015)', 1), ('Richards et al., Chem. Mater. 28, 266 (2016)', 1),
          ('Xiao et al., Nat. Rev. Mater. 5, 105 (2020)', 1), ('Schwietert et al., Nat. Mater. 19, 428 (2020)', 1),
+         ('Schwietert et al., JACS Au 1, 1488 (2021)', 1),
          ('Sundar et al., Adv. Sci. 12, e13191 (2025)', 1),
          ('[[B:Transport statistics and limits]]', None),
          ('He et al., npj Comput. Mater. 4, 18 (2018)', 1), ('Phuthi et al., Chem. Mater. (2026), Perspective', 1),
@@ -477,8 +478,9 @@ def pack(order):
 # the visual language of the user's 08-18 deck: ■ heading + two short bullets (key words in blue,
 # warnings in red), one figure or table, a '< caption >' and one coloured line under it, and the
 # dashed red numbered box + down-arrow image of its slide 4. No cards, badges, icons or chevrons.
-LEAN_FIGS = ['fig_p07_stage1_scale_coverage.png', 'fig_p10_host_window.png',
-             'fig_p12_msd_check_schematic.png', 'fig_p13_run_roster.png']
+LEAN_FIGS = ['fig_p06_candidates_by_family.png', 'fig_p07_stage1_scale_coverage.png', 'fig_p10_host_window.png',
+             'fig_p13_run_roster.png', 'lit_jung2026_sio2_fig3d.png', 'lit_schwietert2021_fig1.png', 'lit_he2018_fig3.png',
+             'lit_phuthi2026_fig1a.png']
 DASH_RED, NOTE_GREY = 'FF5050', '6B7280'
 
 
@@ -524,12 +526,13 @@ def dashed_list(t, slide, title, items, x, y, w, h, note_x=0.52, sz=1500, arrow_
     step = (h - 0.3) / len(items)
     for k, (main, note) in enumerate(items):
         yy = y + 0.2 + k * step
-        add(t, tb(ids(), f'Item {k + 1}', x + 0.4, yy, w * note_x - 0.35, step, P(f'{k + 1}.  {main}', 'p', sz, 100, color=INK),
-                  anchor='ctr'),
-            tb(ids(), f'Note {k + 1}', x + w * note_x + 0.1, yy, w * (1 - note_x) - 0.25, step,
-               P(note, 'p', sz, 100, color=NOTE_GREY), anchor='ctr'))
+        mw = (w * note_x - 0.35) if note else (w - 0.7)
+        add(t, tb(ids(), f'Item {k + 1}', x + 0.4, yy, mw, step, P(f'{k + 1}.  {main}', 'p', sz, 100, color=INK), anchor='ctr'))
+        if note:
+            add(t, tb(ids(), f'Note {k + 1}', x + w * note_x + 0.1, yy, w * (1 - note_x) - 0.25, step,
+                      P(note, 'p', sz, 100, color=NOTE_GREY), anchor='ctr'))
     if arrow_y is not None:
-        down_arrow(t, slide, arrow_y)
+        down_arrow(t, slide, arrow_y, x=x + w / 2 - 1.405)
 
 
 def down_arrow(t, slide, y, x=3.59, w=2.81, h=0.72):
@@ -622,17 +625,18 @@ def build_lean():
                  + P('Cations +1 to +6 paired with anions O²⁻ to I⁻; only existing compounds.', 'b', ln=130)
                  + P('All 91 were relaxed; As₂S₃ and AlI₃ were completed in an [[b:August re-run]].', 'b', ln=130),
                  y=1.08, h=1.4)
-    gf = t.getroot().find('.//p:graphicFrame', NS)
-    gf.find('.//p:xfrm/a:off', NS).set('y', str(E(2.5)))
-    for rp in gf.iter(f'{{{NS["a"]}}}rPr', f'{{{NS["a"]}}}endParaRPr'):
-        if rp.get('sz'):
-            rp.set('sz', '1300')
-    for tr in gf.iter(f'{{{NS["a"]}}}tr'):
-        tr.set('h', str(E(0.36)))
-    add(t, refs_line(ids(), 'Precursor-derived co-doping: CuCl, Taklu, Nano Energy 90, 106542 (2021) · '
-                            'MgF₂, Liu, Angew. Chem. Int. Ed. 62, e202302655 (2023) · ZnO, Jang, J. Alloys Compd. 957, 170273 (2023) · '
-                            'La₂O₃, Yang, Electrochim. Acta 535, 146619 (2025) · Nd₂O₃, Xu, Nano Energy 157, 112246 (2026)',
-                     y=5.72, h=0.8, sz=950))
+    drop(t, lambda el: etree.QName(el).localname == 'graphicFrame')          # the family table → a bar chart
+    bh = figure(t, 'slide8.xml', 'fig_p06_candidates_by_family.png', 0.55, 2.45, 4.0, 'Precursors per anion family')
+    jh = figure(t, 'slide8.xml', 'lit_jung2026_sio2_fig3d.png', 4.85, 2.75, 4.6, 'Jung 2026 Fig. 3d')
+    add(t, caption(ids(), '< precursors per anion family >', 2.48 + bh, x=0.55, w=4.0, sz=1150),
+        caption(ids(), '< one precursor (SiO₂) in Li₆PS₅Cl: capacity over 500 cycles >', 2.8 + jh, x=4.75, w=4.8, sz=1150),
+        tb(ids(), 'Credit right', 4.75, 3.12 + jh, 4.8, 0.26,
+           P('Reproduced from Jung et al., Adv. Funct. Mater. (2026), Fig. 3d', 'p', 900, 100, 'ctr', MUTED, italic=True)),
+        line_under(ids(), 'Precursor co-doping has experimental precedent; [[b:here 91 precursors are screened by calculation]].',
+                   5.42, sz=1350),
+        refs_line(ids(), 'CuCl, Taklu, Nano Energy 90, 106542 (2021) · MgF₂, Liu, Angew. Chem. Int. Ed. 62, e202302655 (2023) · '
+                         'ZnO, Jang, J. Alloys Compd. 957, 170273 (2023) · La₂O₃, Yang, Electrochim. Acta 535, 146619 (2025) · '
+                         'Nd₂O₃, Xu, Nano Energy 157, 112246 (2026) · SiO₂, Jung, Adv. Funct. Mater. (2026)', y=5.95, h=0.6, sz=950))
     save(t, 'slide8.xml')
 
     # ---- 7 Stage 1: data figure (structures per family · precursors per table)
@@ -660,19 +664,20 @@ def build_lean():
     lean_body(t, 'Stability window: voltage range without Li exchange',
               ['The Li chemical potential is scanned as a voltage on a [[b:grand-potential phase diagram]] (MP phases, 0 K).',
                'Recomputed for 90 precursors with this definition; the earlier one gave [[r:wider windows]].'], h=1.7)
-    wh = figure(t, name, 'fig_p10_host_window.png', 0.55, 2.95, 4.5, 'Host stability window')
-    rid31 = rel_add(name, '../media/image31.png')
-    sw = 4.25
-    sh_ = sw * 805 / 2118
-    add(t, pic(ids(), 'Sundar 2025 Fig 2', rid31, 5.25, 2.95, sw, sh_, 'Coating reaction energy at four interfaces'),
-        tb(ids(), 'Credit right', 5.2, 3.0 + sh_, 4.35, 0.26,
-           P('Reproduced from Sundar et al., Adv. Sci. 12, e13191 (2025)', 'p', 900, 100, 'ctr', MUTED, italic=True)))
-    yb = 3.0 + max(wh, sh_ + 0.3)
-    add(t, caption(ids(), '< stability window of the Li₆PS₅Cl host  ·  coating reaction energy at four interfaces >', yb),
-        line_under(ids(), 'Host window [[b:1.717–2.140 V]]; interface products are being re-derived with [[b:ground-state phases]].',
-                   yb + 0.36, sz=1350),
-        refs_line(ids(), 'Zhu, ACS Appl. Mater. Interfaces 7, 23685 (2015) · Richards, Chem. Mater. 28, 266 (2016) · '
-                         'Xiao, Nat. Rev. Mater. 5, 105 (2020) · Schwietert, Nat. Mater. 19, 428 (2020)', y=6.4))
+    sw = 2.95
+    pw_, ph_ = png_size(os.path.join(EXTRA, 'lit_schwietert2021_fig1.png'))
+    sh_ = sw * ph_ / pw_
+    ww_, wh_ = png_size(os.path.join(EXTRA, 'fig_p10_host_window.png'))
+    wh = figure(t, name, 'fig_p10_host_window.png', 0.55, 2.75 + (sh_ - 4.5 * wh_ / ww_) / 2, 4.5, 'Host stability window')
+    figure(t, name, 'lit_schwietert2021_fig1.png', 5.95, 2.75, sw, 'Schwietert 2021 Fig. 1')
+    add(t, caption(ids(), '< Li₆PS₅Cl host (MP phases, 0 K) >', 2.78 + (sh_ - wh) / 2 + wh, x=0.55, w=4.5, sz=1150),
+        caption(ids(), '< decomposition vs intrinsic windows >', 2.78 + sh_, x=5.2, w=4.45, sz=1150),
+        tb(ids(), 'Credit right', 5.2, 3.08 + sh_, 4.45, 0.26,
+           P('Reproduced from Schwietert et al., JACS Au 1, 1488 (2021), Fig. 1', 'p', 900, 100, 'ctr', MUTED, italic=True)),
+        line_under(ids(), 'Our window follows the [[b:decomposition-window]] definition; interface products are being '
+                          're-derived with [[b:ground-state phases]].', 5.88, h=0.52, sz=1300),
+        refs_line(ids(), 'Zhu, ACS Appl. Mater. Interfaces 7, 23685 (2015) · Schwietert, JACS Au 1, 1488 (2021) · '
+                         'Richards, Chem. Mater. 28, 266 (2016) · Xiao, Nat. Rev. Mater. 5, 105 (2020)', y=6.42, h=0.36, sz=900))
     save(t, name)
 
     # ---- 11 September audit: a two-column table in the template style
@@ -696,20 +701,16 @@ def build_lean():
     name, t = fresh('md_setup', 'Progress')
     lean_body(t, 'Stage 2 pilot: does the precursor anion change Li transport?',
               ['Al₂O₃- vs Al₂S₃-derived Al doping in the [[b:same host configuration and cell volume]].',
-               'Analysis rule fixed before the runs: diffusive-regime checks, then an [[b:equivalence test]] (±ln 1.5).'], h=1.7)
-    rows = [['Setting', 'Value'],
-            ['Potential', 'UMA (universal MLIP)'],
-            ['Ensemble', 'NVT, Langevin, 1000 K'],
-            ['Run length', '400 ps; MSD fit 2–50 ps'],
-            ['Cell', '204 atoms, common volume'],
-            ['Recipes', '2 Al + 3 O + 4 V[[_:Li]]  vs  2 Al + 4 V[[_:Li]]'],
-            ['Sampling', '10 starts × 2 recipes × 2 seeds = 40']]
-    add(t, table(ids(), 'Settings table', 0.55, 2.95, [1.2, 3.25], rows, [0.36] + [0.4] * 6, sz=1150, hsz=1200, aligns=['l', 'l']))
-    mh = figure(t, name, 'fig_p12_msd_check_schematic.png', 5.2, 2.85, 4.3, 'Diffusive-regime check (schematic)')
-    add(t, caption(ids(), '< what the diffusive-regime check looks for (schematic) >', 2.88 + mh, x=5.1, w=4.5, sz=1150),
-        line_under(ids(), 'Reported quantity: [[b:D(Al₂O₃) / D(Al₂S₃)]], a ratio of Li tracer diffusivities.', 5.85, sz=1400),
-        refs_line(ids(), 'Kahle, Energy Environ. Sci. 13, 928 (2020) · He, npj Comput. Mater. 4, 18 (2018) · '
-                         'Wood et al. (UMA), arXiv:2506.23971 (2026)'))
+               'Reported: [[b:D(Al₂O₃) / D(Al₂S₃)]]; checks and an equivalence test (±ln 1.5) fixed before the runs.'], h=1.7)
+    hh = figure(t, name, 'lit_he2018_fig3.png', 1.7, 2.72, 6.6, 'He 2018 Fig. 3')
+    add(t, caption(ids(), '< one structure, ten independent AIMD runs: MSD spread and fit quality vs fit range >', 2.76 + hh, sz=1150),
+        tb(ids(), 'Credit', 0.55, 3.06 + hh, 8.9, 0.26,
+           P('Reproduced from He et al., npj Comput. Mater. 4, 18 (2018), Fig. 3', 'p', 900, 100, 'ctr', MUTED, italic=True)),
+        line_under(ids(), 'Hence [[b:10 start configurations × 2 seeds]], a fixed fit window (2–50 ps) and checks before any fit.',
+                   3.36 + hh, sz=1350),
+        tb(ids(), 'Settings', 0.55, 3.72 + hh, 8.9, 0.3,
+           P('UMA · NVT, 1000 K · 400 ps · 204 atoms, common volume · 2 Al + 3 O + 4 V[[_:Li]] vs 2 Al + 4 V[[_:Li]] · 40 runs',
+             'p', 1050, 100, 'ctr', MUTED)))
     save(t, name)
 
     # ---- 13 Stage 2 pilot status: run roster (left) + Jung 2026 Fig. 5b (right)
@@ -733,12 +734,16 @@ def build_lean():
     name, t = fresh('next', 'Plan')
     lean_body(t, 'Next steps', h=0.5)
     dashed_list(t, name, 'Plan',
-                [('Pilot verdict (late Oct)', '(40 runs, analysed once)'),
-                 ('Run scope and ranking margin δ', '(set before the results)'),
-                 ('Descriptor check vs transport', '(rank correlation, CI)'),
-                 ('Windows, interfaces (+As₂S₃), elastic', '(1–2 months)'),
-                 ('Shortlist → DFT → experiments', '(with the experimental team)')],
-                0.57, 1.95, 8.86, 2.8, note_x=0.55, sz=1500, arrow_y=4.88)
+                [('Pilot verdict (late Oct), analysed once', ''),
+                 ('Run scope and ranking margin δ, before results', ''),
+                 ('Do Stage-1 descriptors predict transport?', ''),
+                 ('Windows, interfaces (+As₂S₃), elastic constants', ''),
+                 ('Shortlist → DFT validation → experiments', '')],
+                0.45, 1.95, 5.3, 2.8, sz=1400, arrow_y=4.88)
+    ph = figure(t, name, 'lit_phuthi2026_fig1a.png', 6.05, 1.75, 3.4, 'Phuthi 2026 Fig. 1a')
+    add(t, caption(ids(), '< length and time scales per property >', 1.78 + ph, x=5.85, w=3.8, sz=1100),
+        tb(ids(), 'Credit right', 5.85, 2.06 + ph, 3.8, 0.26,
+           P('Reproduced from Phuthi et al., Chem. Mater. (2026), Fig. 1a', 'p', 900, 100, 'ctr', MUTED, italic=True)))
     add(t, line_under(ids(), 'Goal: a screen that [[b:selects the precursor]], with the selection rule stated in advance.', 5.65),
         tb(ids(), 'Upgrades', 0.55, 6.05, 8.9, 0.3,
            P('Method upgrades: ≥ 2 nm cells · ≥ 0.3 ns · fine-tuned MLIP · ensemble uncertainty · defect thermodynamics',

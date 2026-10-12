@@ -315,137 +315,154 @@ def roster_matrix(rows):
     return grid
 
 
+# Literature figures used on the slim deck as the reason for a method choice — cropped from the litdb
+# figure crops (litdb/figures/<slug>/), never redrawn and never mixed with our numbers.
+LIT_CROPS = [  # (slug, file, crop box in px or None, output name, why)
+    ('jung2026_sio2_cosubstitution_mechanical_argyrodite', 'fig_3.png', (40, 585, 2170, 1140), 'lit_jung2026_sio2_fig3d.png',
+     'p06: one precursor (SiO2) co-substitution, cycling over 500 cycles'),
+    ('schwietert2021_intrinsic_vs_decomposition_window_sse', 'fig_1.png', None, 'lit_schwietert2021_fig1.png',
+     'p10: decomposition vs intrinsic stability window'),
+    ('he2018_statistical_variances_diffusional_aimd', 'fig_3.png', (200, 0, 1990, 704), 'lit_he2018_fig3.png',
+     'p12: MSD spread over ten independent AIMD runs of one structure'),
+    ('phuthi2026_mlip_ssb_perspective', 'fig_1.png', (150, 0, 1065, 765), 'lit_phuthi2026_fig1a.png',
+     'p14: length and time scales needed for bulk ion transport'),
+]
+
+
+def lit_crops():
+    from PIL import Image
+    made = []
+    for slug, fname, box_, out, _ in LIT_CROPS:
+        im = Image.open(os.path.join(ROOT, 'litdb', 'figures', slug, fname))
+        if box_:
+            x0, y0, x1, y1 = box_
+            if not (0 <= x0 < x1 <= im.width and 0 <= y0 < y1 <= im.height):
+                raise ValueError(f'{slug}/{fname}: crop {box_} outside {im.size}')
+            im = im.crop(box_)
+        dst = os.path.join(ASSETS, out)
+        im.save(dst)
+        made.append(dst)
+    return made
+
+
+def origin_axes(ax, frame=True):
+    """Plain Origin-like axes: black frame, inward ticks on all sides (the user's Origin graphs replace these)."""
+    for sp_ in ax.spines.values():
+        sp_.set_visible(frame)
+        sp_.set_color('black')
+        sp_.set_linewidth(1.0)
+    ax.tick_params(direction='in', top=frame, right=frame, colors='black', length=4, width=1, labelsize=9.5)
+    return ax
+
+
 def figures():
     import matplotlib
     matplotlib.use('Agg')
     import matplotlib.pyplot as plt
-    from matplotlib.patches import Patch
-    sys.path.insert(0, ROOT)
-    from tools.figures.house_style import INK, MUT, apply_axes
-    plt.rcParams.update({'font.family': 'DejaVu Sans', 'font.size': 10, 'axes.edgecolor': MUT})
+    from matplotlib.patches import Patch, Rectangle
+    plt.rcParams.update({'font.family': 'Liberation Sans', 'font.size': 10, 'axes.labelsize': 10.5})
     os.makedirs(ASSETS, exist_ok=True)
     made = []
-    BLUE_, LIGHT, AMBER, GREY = '#2563eb', '#93c5fd', '#f59e0b', '#e5e7eb'
+    GREY, DARK = '#bdbdbd', '#404040'
 
-    # p07: scale (structures per family) + coverage (precursors per table)
-    fam = rows_of(os.path.join(OUT, 'p07_structures_by_anion_family.csv'))
+    def save(fig, name):
+        out = os.path.join(ASSETS, name)
+        fig.tight_layout()
+        fig.savefig(out, dpi=300)
+        plt.close(fig)
+        made.append(out)
+
+    # p06: precursors per anion family
+    fam6 = rows_of(os.path.join(OUT, 'p06_candidate_set_by_anion_family.csv'))[1:]
+    fig, ax = plt.subplots(figsize=(4.3, 2.9))
+    xs = range(len(fam6))
+    ax.bar(xs, [int(r[1]) for r in fam6], 0.6, color=GREY, edgecolor='black', linewidth=0.8)
+    for x, r in zip(xs, fam6):
+        ax.text(x, int(r[1]) + 0.8, r[1], ha='center', va='bottom', fontsize=9.5)
+    ax.set_xticks(list(xs), [r[0] for r in fam6], rotation=30, ha='right')
+    ax.set_ylim(0, 42)
+    ax.set_ylabel('precursors')
+    origin_axes(ax)
+    save(fig, 'fig_p06_candidates_by_family.png')
+
+    # p07: structures per family (left) · precursors held by each Stage-1 table (right)
+    fam = rows_of(os.path.join(OUT, 'p07_structures_by_anion_family.csv'))[1:]
     cov = rows_of(os.path.join(OUT, 'p07_stage1_coverage_by_ledger.csv'))
-    fig, (a1, a2) = plt.subplots(1, 2, figsize=(8.6, 2.75), gridspec_kw={'width_ratios': [1.15, 1]})
-    names = [r[0] for r in fam[1:]]
-    rel = [int(r[1]) for r in fam[1:]]
-    ann = [int(r[2]) for r in fam[1:]]
-    xs = range(len(names))
-    a1.bar([x - 0.2 for x in xs], rel, 0.4, color=BLUE_, label='relaxed (3,675)')
-    a1.bar([x + 0.2 for x in xs], ann, 0.4, color=LIGHT, label='annealed (693)')
-    a1.set_xticks(list(xs), names, rotation=30, ha='right', fontsize=9)
+    fig, (a1, a2) = plt.subplots(1, 2, figsize=(8.6, 2.75), gridspec_kw={'width_ratios': [1.1, 1]})
+    xs = range(len(fam))
+    a1.bar([x - 0.2 for x in xs], [int(r[1]) for r in fam], 0.4, color=GREY, edgecolor='black', linewidth=0.6, label='relaxed (3,675)')
+    a1.bar([x + 0.2 for x in xs], [int(r[2]) for r in fam], 0.4, color=DARK, edgecolor='black', linewidth=0.6, label='annealed (693)')
+    a1.set_xticks(list(xs), [r[0] for r in fam], rotation=30, ha='right', fontsize=9)
+    a1.set_ylabel('structures')
     a1.legend(frameon=False, fontsize=9)
-    apply_axes(a1, ylabel='structures', fontsize=10)
+    origin_axes(a1)
     head = cov[0]
     i = {k: head.index(k) for k in head}
     keep = [r for r in cov[1:] if not r[i['step_or_ledger']].startswith('Concentration set')]
-    short = {'Site enumeration': 'relaxed', 'Short anneal': 'annealed', 'Stability window': 'stability window',
-             'Interface: doped composition vs LiCoO2': 'interface vs cathodes', 'Interface: doped composition vs Li metal': 'interface vs Li',
-             'Interface: doped composition vs carbon': 'interface vs C', 'Precursor as a separate phase': 'separate phase',
-             'Literature-style gate funnel': 'gate funnel'}
-    lab = []
-    for r in keep:
-        nm = next(v for k, v in short.items() if r[i['step_or_ledger']].startswith(k))
-        lab.append(nm)
+    short = [('Site enumeration', 'relaxed'), ('Short anneal', 'annealed'), ('Stability window', 'stability window'),
+             ('Interface: doped composition vs LiCoO2', 'interface vs cathodes'), ('Interface: doped composition vs Li metal', 'interface vs Li'),
+             ('Interface: doped composition vs carbon', 'interface vs C'), ('Precursor as a separate phase', 'separate phase'),
+             ('Literature-style gate funnel', 'gate funnel')]
+    lab = [next(v for k, v in short if r[i['step_or_ledger']].startswith(k)) for r in keep]
     n = [int(r[i['n_precursors']]) for r in keep]
-    miss = [', '.join(sp for sp, col in (('As₂S₃', 'As2S3_included'), ('AlI₃', 'AlI3_included')) if r[i[col]] == 'no') for r in keep]
+    miss = [', '.join(sp for sp, col in (('As$_2$S$_3$', 'As2S3_included'), ('AlI$_3$', 'AlI3_included')) if r[i[col]] == 'no') for r in keep]
     ys = list(range(len(lab)))[::-1]
-    a2.barh(ys, n, color=[BLUE_ if not m else LIGHT for m in miss], height=0.6)
+    a2.barh(ys, n, 0.6, color=GREY, edgecolor='black', linewidth=0.6)
     for y, v, m in zip(ys, n, miss):
-        a2.text(v + 1.5, y, f'{v}' + (f'  (no {m})' if m else ''), va='center', fontsize=8.5, color=INK if not m else '#b42318')
+        a2.text(v + 1.5, y, f'{v}' + (f'  (no {m})' if m else ''), va='center', fontsize=8.5)
     a2.set_yticks(ys, lab, fontsize=9)
-    a2.set_xlim(0, 135)
+    a2.set_xlim(0, 152)
     a2.set_xticks([0, 30, 60, 91])
-    apply_axes(a2, xlabel='precursors (of 91)', fontsize=10)
-    fig.tight_layout()
-    out = os.path.join(ASSETS, 'fig_p07_stage1_scale_coverage.png')
-    fig.savefig(out, dpi=300)
-    plt.close(fig)
-    made.append(out)
+    a2.set_xlabel('precursors (of 91)')
+    origin_axes(a2)
+    save(fig, 'fig_p07_stage1_scale_coverage.png')
 
-    # p10: host window on a voltage axis
+    # p10: host stability window on a voltage axis
     seg = rows_of(os.path.join(OUT, 'p10_stability_window_host_segments.csv'))[1:]
-    fig, ax = plt.subplots(figsize=(4.4, 1.85))
-    colors = {'Li uptake': '#fbe3e3', 'no Li exchange': '#dff2e3', 'Li release': '#fbe3e3'}
-    for name_, v0, v1 in seg:
-        key = next(k for k in colors if name_.startswith(k))
-        ax.axvspan(float(v0), float(v1), color=colors[key])
-        ax.text((float(v0) + float(v1)) / 2, 0.5, key, ha='center', va='center', fontsize=9,
-                color='#1b5e20' if key == 'no Li exchange' else '#7f1d1d')
     lo, hi = float(seg[1][1]), float(seg[1][2])
+    fig, ax = plt.subplots(figsize=(4.4, 1.9))
+    ax.axvspan(lo, hi, color='#d9d9d9')
     for v in (lo, hi):
-        ax.axvline(v, color=INK, ls='--', lw=1)
-        ax.text(v, 1.04, f'{v:.3f} V', ha='center', va='bottom', fontsize=9, color=INK)
+        ax.axvline(v, color='black', ls='--', lw=1)
+        ax.text(v, 1.03, f'{v:.3f} V', ha='center', va='bottom', fontsize=9)
+    ax.text((1.4 + lo) / 2, 0.5, 'Li uptake', ha='center', va='center', fontsize=9)
+    ax.text((lo + hi) / 2, 0.5, 'no Li\nexchange', ha='center', va='center', fontsize=9)
+    ax.text((hi + 2.5) / 2, 0.5, 'Li release', ha='center', va='center', fontsize=9)
     ax.set_xlim(1.4, 2.5)
     ax.set_ylim(0, 1)
     ax.set_yticks([])
-    for sname in ('left', 'top', 'right'):
-        ax.spines[sname].set_visible(False)
-    ax.tick_params(colors=MUT)
-    ax.set_xlabel('voltage vs Li/Li$^+$ (V)', fontsize=10, color=INK)
-    fig.tight_layout()
-    out = os.path.join(ASSETS, 'fig_p10_host_window.png')
-    fig.savefig(out, dpi=300)
-    plt.close(fig)
-    made.append(out)
-
-    # p12: what the diffusive-regime check looks for (schematic — illustrative curves, no data)
-    import math
-    fig, ax = plt.subplots(figsize=(4.3, 2.55))
-    ts = [k * 0.25 for k in range(1, 241)]
-    lin = [2.0 * t for t in ts]
-    bent = [2.0 * t if t < 6 else 12 + 26 * math.log(1 + (t - 6) / 13) for t in ts]   # same start, later slopes smaller
-    ax.axvspan(2, 50, color='#eef3fa')
-    for v in (2, 18, 34, 50):
-        ax.axvline(v, color=MUT, lw=0.6, ls=':')
-    ax.plot(ts, lin, color=BLUE_, lw=2.2, label='linear: sub-window slopes agree')
-    ax.plot(ts, bent, color='#b42318', lw=2.2, ls='--', label='bends down: later slopes smaller')
-    ax.text(26, 112, 'fit window 2–50 ps', ha='center', fontsize=9, color=INK)
-    ax.text(59.5, 3, 'schematic', ha='right', fontsize=8, color=MUT, style='italic')
-    ax.set_xlim(0, 60)
-    ax.set_ylim(0, 125)
-    ax.set_xticks([2, 18, 34, 50])
-    ax.set_yticks([])
-    ax.legend(frameon=False, fontsize=8.5, loc='upper left', bbox_to_anchor=(0.0, 0.9))
-    apply_axes(ax, xlabel='time lag (ps)', ylabel='Li MSD', fontsize=10)
-    fig.tight_layout()
-    out = os.path.join(ASSETS, 'fig_p12_msd_check_schematic.png')
-    fig.savefig(out, dpi=300)
-    plt.close(fig)
-    made.append(out)
+    ax.set_xlabel('voltage vs Li/Li$^+$ (V)')
+    origin_axes(ax)
+    ax.tick_params(left=False, right=False)
+    save(fig, 'fig_p10_host_window.png')
 
     # p13: 40-run roster status
     runs = rows_of(os.path.join(OUT, 'p13_md_campaign_runs.csv'))[1:]
     grid = roster_matrix(runs)
     rows_ = ['Al₂O₃ · seed 1', 'Al₂S₃ · seed 1', 'Al₂O₃ · seed 2', 'Al₂S₃ · seed 2']
     cols = list('ABCDEFGHIJ')
-    cmap = {'done': BLUE_, 'running': AMBER, 'queued': GREY}
+    style = {'done': ('black', 'black'), 'running': ('#9e9e9e', 'black'), 'queued': ('white', '#9e9e9e')}
     fig, ax = plt.subplots(figsize=(4.4, 2.25))
     for yi, rname in enumerate(rows_):
         for xi, c in enumerate(cols):
-            ax.add_patch(matplotlib.patches.Rectangle((xi + 0.06, 3 - yi + 0.08), 0.88, 0.84, color=cmap[grid[(rname, c)]]))
+            fc, ec = style[grid[(rname, c)]]
+            ax.add_patch(Rectangle((xi + 0.12, 3 - yi + 0.14), 0.76, 0.72, facecolor=fc, edgecolor=ec, linewidth=0.8))
     ax.set_xlim(0, 10)
     ax.set_ylim(0, 4)
     ax.set_xticks([k + 0.5 for k in range(10)], cols)
     ax.set_yticks([3.5 - k for k in range(4)], rows_, fontsize=9)
-    for sname in ('left', 'top', 'right', 'bottom'):
-        ax.spines[sname].set_visible(False)
-    ax.tick_params(length=0, colors=INK)
-    ax.set_xlabel('start configuration', fontsize=10, color=INK)
+    ax.set_xlabel('start configuration')
+    origin_axes(ax)
+    ax.tick_params(length=0)
     counts = {k: sum(v == k for v in grid.values()) for k in ROSTER_STATUS}
-    ax.legend(handles=[Patch(color=cmap[k], label=f'{k} ({counts[k]})') for k in ROSTER_STATUS],
+    ax.legend(handles=[Patch(facecolor=style[k][0], edgecolor=style[k][1], label=f'{k} ({counts[k]})') for k in ROSTER_STATUS],
               frameon=False, fontsize=8.5, ncol=3, loc='lower center', bbox_to_anchor=(0.45, 1.0))
-    fig.tight_layout()
-    out = os.path.join(ASSETS, 'fig_p13_run_roster.png')
-    fig.savefig(out, dpi=300)
-    plt.close(fig)
-    made.append(out)
-    return made
+    save(fig, 'fig_p13_run_roster.png')
 
+    stale = os.path.join(ASSETS, 'fig_p12_msd_check_schematic.png')   # replaced by He et al. 2018 Fig. 3 (lit_he2018_fig3.png)
+    if os.path.exists(stale):
+        os.remove(stale)
+    return made + lit_crops()
 
 README = """# Origin CSVs — Research Seminar 2026-10-13 (cascade progress briefing)
 
@@ -466,7 +483,7 @@ site-preference backup p18 (old p12 / p17 files are removed by the script). p06 
 | 13 | MD status | `p13_md_campaign_progress.csv` · `p13_md_campaign_runs.csv` | progress bars; run roster (status, wall-clock GPU-h) |
 | 18 | Backup: site preference | `p18_site_preference_vs_ionic_radius.csv` | ΔE vs Shannon radius, three loadings per element (June batch, not Stage 1) |
 
-Slim-deck preview figures (`--figures`, house style, English labels) in `kb/seminars/assets_2026_10_13/`: `fig_p07_stage1_scale_coverage.png` · `fig_p10_host_window.png` · `fig_p13_run_roster.png` (all drawn from the CSVs here) · `fig_p12_msd_check_schematic.png` (a schematic, no data). Replace them with the Origin versions when ready.
+Slim-deck figures (`--figures`) in `kb/seminars/assets_2026_10_13/`: plain previews drawn from the CSVs here (`fig_p06_candidates_by_family.png` · `fig_p07_stage1_scale_coverage.png` · `fig_p10_host_window.png` · `fig_p13_run_roster.png`) — replace them with the Origin versions — and literature figures cropped from the litdb crops as the reason for a method choice (`lit_jung2026_sio2_fig3d.png` p06 · `lit_schwietert2021_fig1.png` p10 · `lit_he2018_fig3.png` p12 · `lit_phuthi2026_fig1a.png` p14; never redrawn, never on the same plot as our numbers).
 
 Pages without a CSV:
 - 2 (previous DFT work): figure boxes left empty on purpose — fill per tile on request.
@@ -537,6 +554,18 @@ def selftest():
             ok += 1
         else:
             raise AssertionError(f'roster_matrix accepted {bad}')
+    # negative: a literature crop box outside the image must be refused
+    saved = LIT_CROPS[:]
+    try:
+        LIT_CROPS[:] = [('he2018_statistical_variances_diffusional_aimd', 'fig_3.png', (0, 0, 99999, 10), 'x.png', '')]
+        try:
+            lit_crops()
+        except ValueError:
+            ok += 1
+        else:
+            raise AssertionError('lit_crops accepted a box outside the image')
+    finally:
+        LIT_CROPS[:] = saved
     print(f'selftest PASS ({ok})')
 
 
