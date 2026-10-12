@@ -304,7 +304,7 @@ MLIP 지표의 기준이 되는 DFT 계산입니다. **[가리킴: 두 곡선]**
 
 - 우리 그래프 넷은 CSV 에서 그린 **수수한 미리보기**다 (`kb/seminars/assets_2026_10_13/fig_p06 · p07 · p10 · p13` · 생성 `export_cascade_briefing_csvs_2026_10.py --figures`). Origin 으로 다시 그리면 같은 자리에 바꿔 넣는다. 10-13 부터 p06 (가로 막대) · p07 (커버리지 한 장 · `fig_p07_stage1_coverage.png`) 은 **슬라이드에 들어가는 크기로** 그려서 그림 속 글씨가 화면 글씨와 같다 (13–14 pt) — Origin 판도 그 크기에서 글씨를 맞춘다. 족별 구조 수 CSV (`p07_structures_by_anion_family.csv`) 는 Origin 용으로 남겼다.
 - **[문헌] 그림 다섯은 litdb 크롭을 그대로 잘라 썼다** (다시 그리지 않음 · 우리 숫자와 한 그림에 안 섞음) — `lit_jung2026_sio2_fig3d` · `lit_schwietert2021_fig1` · `lit_he2018_fig3` · `jung2026_fig5b` · `lit_phuthi2026_fig1a`. 10-12 에 직접 봤다.
-- 3장 화살표는 08-18 덱 4장의 그림 조각 (88×36 px 를 늘려서 31×50 ppi · 흐렸다) 을 **같은 모양의 벡터 도형**으로 다시 그렸다.
+- 3장 화살표는 08-18 덱 4장의 **원래 그림 그대로**다 — 사용자 표준 (10-13 *'화살표는 원복했어 저게 표준이야'*). Codex CW 가 흐리다며 벡터를 권했지만 쓰지 않는다.
 - 10장 질문 대비: 우리 환원 끝 1.717 V 는 Schwietert 2021 decomposition window 의 1.72 V 와 같고, 산화 끝은 MP 보정 규약 때문에 다르다 — **화면에는 숫자 비교를 안 싣는다** (디펜스 S10).
 - 진행 숫자(3 · 13 · 15장의 12/40 과 명단 그림)는 **두 덱 모두** 발표 전에 바꾼다 — run log 를 갱신하고 `--figures` 를 다시 돌리면 명단 그림도 따라온다.
 - 빌드: `python3 kb/seminars/build_cascade_briefing_2026_10.py <08-18 덱> <출력.pptx> <pptx 스킬 폴더> kb/seminars/assets_2026_10_13 --lean` (플래그 없으면 상세판).

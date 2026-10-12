@@ -480,7 +480,7 @@ def pack(order):
 # Same slides, same order and page numbers as the full deck (so the pNN CSVs map 1:1), written in
 # the visual language of the user's 08-18 deck: ■ heading + two short bullets (key words in blue,
 # warnings in red), one figure or table, a '< caption >' and one coloured line under it, and the
-# dashed red numbered box + down arrow of its slide 4 (the arrow redrawn as vector shapes). No cards, badges,
+# dashed red numbered box + down arrow image of its slide 4 (the user's standard arrow). No cards, badges,
 # icons or chevrons. Literature crops carry a role tag above them and a credit below (CW, 10-13).
 LEAN_FIGS = ['fig_p06_candidates_by_family.png', 'fig_p07_stage1_coverage.png', 'fig_p10_host_window.png',
              'fig_p13_run_roster.png', 'lit_jung2026_sio2_fig3d.png', 'lit_schwietert2021_fig1.png', 'lit_he2018_fig3.png',
@@ -551,37 +551,15 @@ def dashed_list(t, slide, title, items, x, y, w, h, note_x=0.52, sz=1500, arrow_
         down_arrow(t, slide, arrow_y, x=x + w / 2 - 1.405)
 
 
-ARROW_TOP, ARROW_BOT = 'C9D4EA', 'A3B6DB'
-
-
 def down_arrow(t, slide, y, x=3.59, w=2.81, h=0.72):
-    """The light-blue arrow of the 08-18 slide 4 (a band fading at both ends that bends into a down arrow), redrawn
-    as two vector shapes in the same 2.81 × 0.72 in box. The 08-18 deck used a crop of media/image8.png: 88 × 36 px
-    stretched to that box = 31 × 50 ppi, visibly blurred on a projector (CW). `slide` is kept for the old signature."""
-    sp = lambda name, geom, fill, yy, hh: (
-        f'<p:sp><p:nvSpPr><p:cNvPr id="{ids()}" name="{name}"/><p:cNvSpPr/><p:nvPr/></p:nvSpPr>'
-        f'<p:spPr><a:xfrm><a:off x="{E(x)}" y="{E(yy)}"/><a:ext cx="{E(w)}" cy="{E(hh)}"/></a:xfrm>{geom}{fill}'
-        '<a:ln><a:noFill/></a:ln></p:spPr>'
-        '<p:txBody><a:bodyPr rtlCol="0" anchor="ctr"/><a:lstStyle/><a:p><a:endParaRPr lang="en-US" dirty="0"/></a:p></p:txBody></p:sp>')
-    grad = lambda stops, ang: ('<a:gradFill rotWithShape="1"><a:gsLst>'
-                               + ''.join(f'<a:gs pos="{p}"><a:srgbClr val="{c}"/></a:gs>' for p, c in stops)
-                               + f'</a:gsLst><a:lin ang="{ang}" scaled="0"/></a:gradFill>')
-    # band: rows 30–60 of the 350-unit design, white → colour → white so the ends fade into the slide
-    band = sp('Arrow band', '<a:prstGeom prst="rect"><a:avLst/></a:prstGeom>',
-              grad([(0, 'FFFFFF'), (34000, ARROW_TOP), (66000, ARROW_TOP), (100000, 'FFFFFF')], 0),
-              y + h * 30 / 350, h * 60 / 350)
-    # stem + head (design units 880 × 350, same stretch as the old crop); the top edge tucks 4 units into the band
-    path = ('<a:moveTo><a:pt x="300" y="86"/></a:moveTo><a:lnTo><a:pt x="300" y="90"/></a:lnTo>'
-            '<a:quadBezTo><a:pt x="350" y="90"/><a:pt x="350" y="140"/></a:quadBezTo>'
-            '<a:lnTo><a:pt x="350" y="180"/></a:lnTo><a:lnTo><a:pt x="295" y="180"/></a:lnTo>'
-            '<a:lnTo><a:pt x="445" y="346"/></a:lnTo><a:lnTo><a:pt x="595" y="180"/></a:lnTo>'
-            '<a:lnTo><a:pt x="540" y="180"/></a:lnTo><a:lnTo><a:pt x="540" y="140"/></a:lnTo>'
-            '<a:quadBezTo><a:pt x="540" y="90"/><a:pt x="590" y="90"/></a:quadBezTo>'
-            '<a:lnTo><a:pt x="590" y="86"/></a:lnTo><a:close/>')
-    head = sp('Down arrow', '<a:custGeom><a:avLst/><a:gdLst/><a:ahLst/><a:cxnLst/><a:rect l="0" t="0" r="r" b="b"/>'
-                            f'<a:pathLst><a:path w="880" h="350">{path}</a:path></a:pathLst></a:custGeom>',
-              grad([(0, ARROW_TOP), (30000, ARROW_TOP), (100000, ARROW_BOT)], 5400000), y, h)
-    add(t, band, head)
+    """The light-blue down arrow of the 08-18 slide 4 — a crop of media/image8.png, same crop and size.
+    This image is the user's standard arrow (2026-10-13 'that is the standard'): do not redraw it. Codex CW found the
+    crop soft (88 × 36 px at 2.81 × 0.72 in = 31 × 50 ppi) and suggested a vector redraw; the user put the image back."""
+    xml = pic(ids(), 'Down arrow', rel_add(slide, '../media/image8.png'), x, y, w, h, '')
+    xml = xml.replace('<a:stretch><a:fillRect/></a:stretch>',
+                      '<a:srcRect l="46859" t="52346" r="43846" b="38064"/><a:stretch/>')
+    assert 'srcRect' in xml
+    add(t, xml)
 
 
 def build_lean():

@@ -108,6 +108,7 @@
 - spines top/right 제거, dpi 300, 같은 계열 그림은 기존 family와 양식 통일.
 - 데이터 그림은 **Origin-ready CSV를 동시 출력**해 db/properties/에 등록 (열 이름 명시적).
 - .opju 자동화는 클라우드에선 불가 — 로컬 Windows Claude Code + originpro로 (CSV가 우리 쪽 절반).
+- **발표 덱 (08-18 랩 템플릿)**: 아래 화살표는 08-18 덱 4장의 그림 (`image8.png` 크롭 · `kb/seminars/build_cascade_briefing_2026_10.py::down_arrow`) 이 **표준**이다 — 벡터로 다시 그리지 않는다 (사용자 2026-10-13 *'화살표는 원복했어 저게 표준이야'* · Codex CW 가 흐리다고 했지만 사용자 결정).
 
 ## 계산 자원 (최종 갱신 2026-09-23 — KISTI 종료 반영)
 - ⛔⛔ **KISTI neuron(x3430a02) — 접근 종료 (1저자 2026-09-15)**. 새 계산을 KISTI 로 계획하지 않는다.
