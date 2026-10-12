@@ -9,6 +9,7 @@
 > ⇒ v1.3 생성 시점 = 194 세대 2 배치 (Codex 재검증 6 GO 뒤) **와** 보충 DEM 28 완료 → 수확 v3 · 웹앱 접촉 단계 → 보충 세대 2 배치 (새 실행 등록 · 같은 봉인 32 · `code_fp e8b2496b…`) 뒤.
 > 생성기 · 다시 읽기 · 배포 관문에 보충 집합 (기대 ID 20 · 행 214) 을 넣는 변경 = 재검증 6 핀 뒤 별도 커밋 (시험 먼저) — 재검증 6 요청서 §10 · Q9 (짧은 보충 검토로 닫을 수 있는지 Codex 에 묻는다).
 > 아래 §1–§7 은 194 기준으로 쓴 그대로다 (보충 단계는 위 변경 뒤 이 문서에 더한다).
+> ✅ **보충 단계 = §2b (10-12 · U5 — 배포 생성기 두 배치 · 시험 먼저 55/207 → 234/234)** — 2-1 · 2-2 의 194 명령은 §2b 로 바꿔 쓴다 (보충 배치 뿌리 · 자기 등록 집합 관문).
 > ⚠ **이 커밋은 `webapp/app.py` 를 바꾼다 — 세대 2 발사 봉인 29 파일 중 하나다** (등록 §3).  들이는 순서는 §7 (발사 전에 통째로 push 하지 말 것).
 
 ## 0. 이 커밋의 상태
@@ -105,8 +106,44 @@ python3 scripts/lhs_release_build.py --v13-check --release-dir docs/data/lhs_rel
     --handover-dir docs/data/lhs_network194_<sha>/handover_v13_<D>        # rc 0 = 통과 (τ 다시 읽기 · 봉인 대조는 빌드 manifest 의 WSL 기록)
 ```
 
+- ⛔ **정정 (10-12 · 보충 지원 중 발견)** — 위 컨테이너 `--v13-check` 의 "rc 0" 은 10-07 G2RR3-01 뒤로 거짓이다: 실제 묶음 대조는 빌드가 기록한 **배치 뿌리 (WSL 경로) 에서
+  배치 관문을 다시 판정**하므로 (`v13_batch_gate_recheck`) 뿌리가 없는 컨테이너에서는 "빌드가 판정한 배치 뿌리 … 가 없다" 문제를 낸다.  대조는 배치 뿌리가 있는 **WSL** 에서
+  (2-2 의 빌드가 이미 `check_v13` 을 돈다 · 반입 뒤 다시 보려면 WSL 에서 같은 명령) · 컨테이너 = 빌드 manifest `files` 의 sha256 대조만.
+
 - 커밋 하나 → 게이트 → 바로 push (컨테이너 재시작 대비) · ZIP (수영 님) = 배포 폴더 그대로 (`DRYRUN_` 파일 없음 확인).
 - 원장 · CLAUDE.md LHS 줄 · 진행 기록 · 등록 §9 (v1.3 커밋) 는 그 커밋에서 (이 커밋은 손대지 않았다).
+
+## 2b. ★ 10-12 보충 20 — 두 배치 명령 (1저자 (나) · U5 · 2-1 · 2-2 를 이것으로)
+
+v1.3 = 194 배치 (`$R` — lhs · lhsx · 등록 집합 production194) + 보충 20 배치 (`$RS` — lhss · supp20) · 같은 발사 커밋 · 다른 ROOT
+(보충 등록 `docs/reviews/lhs_network_batch_registration_20261012_supp20.md` §4 · §5).  배포 생성기는 배치 뿌리 둘을 다 받아야 만든다 (보충 없이 만드는 길 없음).
+
+```
+R=~/net194_<발사 sha>; RS=~/netsupp20_<발사 sha>; cd ~/dem-audit
+# ⓪ · ⓪b — 배치마다 자기 등록 집합 (한 배치의 통과가 다른 배치를 면제하지 않는다)
+$PY scripts/run_network_194_parallel.py audit --root "$R"  --tsv "$R/seal_audit.tsv"  --json "$R/seal_audit.json"     # rc 0
+$PY scripts/g2_network_reread.py --launcher-root "$R"  --expect-set production194 --json "$R/reread.json"            # rc 0
+$PY scripts/run_network_194_parallel.py audit --root "$RS" --tsv "$RS/seal_audit.tsv" --json "$RS/seal_audit.json"    # rc 0
+$PY scripts/g2_network_reread.py --launcher-root "$RS" --expect-set supp20 --json "$RS/reread.json"                  # rc 0
+# ②a 압력 기록 — lhs · lhsx = 2-1 그대로 ($R/pressure/) · lhss = 보충 배치 뿌리에 (--root-from · --root-to 는 실행기 출력 그대로)
+$PY scripts/lhs_pressure_record.py --cohort docs/data/lhss_descriptors_cov_1e09f661d/_cohort.tsv --harvest-dir docs/data/lhss_descriptors_cov_1e09f661d \
+    --out "$RS/pressure/lhss_pressure_record.tsv"
+# v1.3 한 명령 (단계 A 세 데이터셋 — 각자 자기 배치 뿌리 · 단계 B · 대조)
+D=$(date +%Y%m%d)
+$PY scripts/lhs_release_build.py --v13 --batch-root "$R" --supp-batch-root "$RS" \
+    --codex-verdict docs/reviews/<GO 판정문>.md [--transfer-text <판정문 전달 문안>.txt] \
+    --handover-out "$R/handover_v13_$D" --out-dir "$R/release_v13_$D" --date $D
+tar czf ~/lhs_v13_$D.tar.gz -C "$R" handover_v13_$D release_v13_$D seal_audit.json reread.json manifest.json
+tar czf ~/lhss_gate_$D.tar.gz -C "$RS" seal_audit.json reread.json manifest.json
+```
+
+- 배치마다 (`v13_prepare_batches`): manifest 기대 세대 g2 · 원천 (그 배치의 데이터셋 = manifest 코호트 정확히) · 발사 봉인 대조 · ⓪ 감사 · ⓪b 다시 읽기 (그 배치의 등록
+  집합 · supp20 도 import 관측 필수) → 배치 교차 (`v13_cross_batch_problems` — 다른 위치 · 같은 발사 봉인 지문 code_fp · 기대 세대 · 발사 sha 다름 = 경고).
+- 데이터셋 결합 (`v13_combined_problems`): ID 데이터셋 사이 교집합 공집합 · 고유 수 = 행 합 (214) · σ₀ · T · 기준 한 값 · 세대 섞임 없음 · 공유 열 정의 같음 (설계 열은 원천 꼬리 뺌).
+- 배포: `lhss_release_<D>_v13.csv` (lhs 와 같은 132 + v1.3 열 · 하중 = 2 mAh 규칙 행 2.0 · 부피분율 규칙 행 빈칸 + `NA_NOT_DESIGN_INPUT`) · Physics 부록 · ML 표
+  (`dataset` · `network_batch`) · 재적합 = 214 관통 행 + 194 만 참고 줄 (`reference_without_supp`) · 빌드 manifest (194 = 최상위 batch_* · 보충 = `supp_batch` · `batches` ·
+  `cross_batch` · `datasets`).  194 행의 주 표 · 부록 · 열 사전 = 보충 없이 같은 명세로 만든 것과 바이트 같음 (시험 V21g).
+- 대조 `--v13-check` 는 WSL 에서 (배치 뿌리 둘을 다시 판정 — 2-4 정정 참조).
 
 ## 3. 생성기가 거부하는 것 (막히면 볼 곳)
 

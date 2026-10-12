@@ -61,12 +61,14 @@ $PY scripts/run_network_194_parallel.py run --root "$R" --cohorts lhss --observe
 3. `g2_network_reread.py --launcher-root <ROOT> --expect-set supp20` rc 0 (M-reg · M1 · M2 · M3 기대 20 = 읽음 20 · 케이스마다 K1–K7 · 코호트 H1).
 4. τ · 인계 생성기 관문 = 194 등록 §5-4 · 5 · 6 그대로 (계약 상수 = 봉인 파일 · 실행기 재선언 없음).
 5. 배포 관문 (v1.3) = **두 배치 각각** ⓪ 감사 · ⓪b 다시 읽기 (자기 등록 집합) + 교차 (같은 code_fp · 기대 세대 · 물성 · 열 정의) + 결합 (ID 교집합 공집합 · 고유 214 ·
-   행마다 dataset · 배치 출처 · 기존 194 행 값 · 상태 = 보충 없이 만든 것과 같음) — ⬜ 배포 생성기 구현 뒤 함수 이름을 이 칸에.
+   행마다 dataset · 배치 출처 · 기존 194 행 값 · 상태 = 보충 없이 만든 것과 같음) — ✅ 10-12 U5 함수: `v13_batch_roots` (둘 다 · 다른 위치) · `v13_prepare_batches`
+   (배치마다 manifest g2 · 원천 · 발사 봉인 · `v13_batch_gate_check(…, expect_set=<그 배치>)`) · `v13_cross_batch_problems` (code_fp · 기대 세대) · `v13_combined_problems`
+   (ID · 물성 · 세대 · 열 정의) · `v13_batch_gate_recheck` (check_v13 이 두 뿌리 다시) · 명령 = v1.3 계획 §2b.
    한 배치의 PASS 가 다른 배치를 면제하지 않는다.
 
 ## 6. 인계 v1.3
 
-- 194 등록 §6 + lhss — ⬜ 배포 생성기 구현 뒤 명령 (`docs/reviews/lhs_release_v13_plan_20261007.md` 에 보충 단계 덧붙임).
+- 194 등록 §6 + lhss — 명령 = `docs/reviews/lhs_release_v13_plan_20261007.md` §2b (✅ 10-12 · `--batch-root` + `--supp-batch-root` · 대조는 WSL).
 
 ## 8. 이탈 기록
 

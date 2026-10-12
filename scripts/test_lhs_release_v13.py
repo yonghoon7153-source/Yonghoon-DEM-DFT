@@ -38,6 +38,11 @@ v1.3 = 세대 2 망 값 + #1 ML 표 (빈칸 뜻대로) · #2 f 타깃 · 관통 
       실제 audit CLI 실패 binding (최상위 요약 [] · 유지) = 거부 (build · check) / 정상 · 재시도 이력 (started > finalized) = 통과 (과잉차단 금지) ·
       ★ 10-08 잔여 (1저자 Q6 (가)) — 결합 기록 v2 (시도마다 분류 밖 단계 칸 unclassified): 실제 관측 생산자가 낸 분류 밖 단계 시도 (unknown_stage ·
       stage_e_out_of_scope) + 최상위 요약 [] = 거부 (V20f1 · f2) · 같은 경로 정상 = 통과 (V20f0) · 옛 스키마 v1 감사 = "감사를 다시" 거부 (V20g1)
+  V21 ★ 10-12 보충 20 (1저자 (나) · Q4 (가) lhss · Q6 (가) 하중 열 · Codex 재검증 6 Q9 — 고정 집합 · 같은 세대 교차 · 관측 강제 · 배치별 완결 ·
+      결합 214 고유 · 회귀) — v1.3 = 194 배치 (production194 = lhs · lhsx) + 보충 배치 (supp20 = lhss): 정상 214 · 배치마다 자기 등록 집합 관문 ·
+      교차 (같은 봉인 지문 · 기대 세대 · 물성 · 열 정의) · 결합 (ID 교집합 공집합 · 고유 214) · 기존 194 행 = 보충 없이 만든 것과 같음 · 하중 빈칸 코드 ·
+      재적합 214 + 194 참고 · 반례 (보충 없음 · 같은 뿌리 · 다른 코호트 · 다른 봉인 지문 · 세대 · 다른 등록 집합 · 관측 없음 · 결손 · 후막 · σ₀ · 열 정의) ·
+      check_v13 재판정 · 단계 A 세 번 · CLI.  ⚠ 기존 V12–V20 의 실제 경로는 정상 보충 배치 (SUPP_ROOT) 를 붙여 214 로 돈다 (build13 · stage13)
 
   python3 scripts/test_lhs_release_v13.py
 """
@@ -63,6 +68,29 @@ import lhs_design_dataset as LDD         # noqa: E402
 import tau_flux as TF                    # noqa: E402
 import run_network_194_parallel as NP194  # noqa: E402  (발사 봉인 지문 code_fp · 등록 집합 · 감사 기록 스키마 — 실행기 정본 · 손 사본 금지)
 import g2_network_reread as G2RR         # noqa: E402  (다시 읽기 기록 스키마 — 정본)
+import atexit                            # noqa: E402
+
+#: ★ 10-12 보충 20 — 등록 집합 supp20 = **커밋된** lhss 수확 폴더 (실행기 COHORT_SPECS['lhss']['harvest']) 를 열거해 세운다 (registered_id_set) ·
+#:   정식 r3 수확 반입 전이라 시험은 합성 20 파일 폴더 (이름만 · 내용 {}) 를 이 프로세스 안에서만 끼운다 (끝에 되돌린다 · 리포 파일 무변경)
+SUPP20 = sorted((f'lhss_{i:03d}', 'lhss') for i in range(1, 21))
+_SUPP_TD = tempfile.mkdtemp(prefix='v13_supp_')
+_SUPP_HARV = os.path.join(_SUPP_TD, 'lhss_descriptors_cov_1e09f661d')
+os.makedirs(_SUPP_HARV)
+for _c, _h in SUPP20:
+    with open(os.path.join(_SUPP_HARV, _c + '.json'), 'w', encoding='utf-8') as _f:
+        _f.write('{}')
+_ORIG_LHSS_SPEC = dict(NP194.COHORT_SPECS.get('lhss') or {})
+if _ORIG_LHSS_SPEC:
+    NP194.COHORT_SPECS['lhss'] = dict(_ORIG_LHSS_SPEC, harvest=_SUPP_HARV)
+
+
+def _supp_cleanup():
+    if _ORIG_LHSS_SPEC:
+        NP194.COHORT_SPECS['lhss'] = _ORIG_LHSS_SPEC
+    shutil.rmtree(_SUPP_TD, ignore_errors=True)
+
+
+atexit.register(_supp_cleanup)
 
 _ok, _fail = 0, []
 
@@ -130,13 +158,16 @@ def _write_csv(p, head, rows):
             w.writerow([r.get(c, '') for c in head])
 
 
-def make_g2_handover_dir(td, mutate=None):
+def make_g2_handover_dir(td, mutate=None, with_lhss=True):
     """합성 세대 2 인계표 묶음 (테스트 전용) — 커밋된 v1.2 인계표 행 (실값) 을 지금 생성기 스키마로 옮긴다:
     τ 열 = tau_flux.column_names() (세 모드) · 표기 = 세대 2 오라클 · H12 = Hertz 값 복사 · se_isolated_pct = 100 − top_reachable_pct ·
     press_* = 합성 기록 · 열 사전 = 지금 생성기 column_dictionary (웹앱 판정 = 커밋된 194 배치) · τ 출처 부록 = 지금 검사 목록.
+    ★ 10-12 보충 20 — with_lhss (기본) = 합성 lhss 20 (`_lhss_from` — lhsx 앞 10 행 = 부피분율 규칙 (AM < 70 · 하중 빈칸) · lhs 앞 10 행 = 2 mAh 규칙
+    (AM ≥ 70 · 하중 2.0) · ID = lhss_001…020 · lhsx_* → lhss_* + 보충 전용 5 · 하중 열 = rve_um 바로 뒤) 도 쓴다 · mutate 는 데이터셋마다 (lhss 는 변이 전 원본에서 유도).
     ⚠ 숫자는 세대 1 값 그대로다 — 경로 · 관문 시험이지 세대 2 값이 아니다."""
     os.makedirs(td, exist_ok=True)
     tcols = TF.column_names()
+    prep, provs, wvs = {}, {}, {}
     for ds in ('lhs', 'lhsx'):
         head, rows = _read_csv(os.path.join(V12, f'{ds}_handover_v12_20261006.csv'))
         base = [c for c in head if LDD.tau_net_define(c) is None]
@@ -157,24 +188,65 @@ def make_g2_handover_dir(td, mutate=None):
             o['ion_net_generation'] = 'g2'
             o.update(PRESS)
             out.append(o)
+        prep[ds] = (new_head, out)
+        wvs[ds] = LDD.load_webapp(os.path.join(BATCH12, 'merged', ds))
+        with open(os.path.join(V12, f'{ds}_handover_v12_20261006_tau_provenance.tsv'), encoding='utf-8', newline='') as f:
+            provs[ds] = list(csv.DictReader(f, delimiter='\t'))
+    if with_lhss:
+        prep['lhss'], provs['lhss'] = _lhss_from(prep, provs)
+        wvs['lhss'] = wvs['lhsx']
+    for ds, (new_head, out) in prep.items():
+        ids0 = [o['case_id'] for o in out]
         if mutate:
             mutate(ds, new_head, out)
+        #  변이가 행 ID 를 바꾸거나 행을 더하면 τ 출처 부록도 그 행을 따라간다 (자리 = 변이 전 행 · 더한 행 = 마지막 행의 부록) — 시험이 겨눈 관문이 판정하게
+        pv_by = {pv['case']: pv for pv in provs[ds]}
+        if [o['case_id'] for o in out] != ids0 and all(i in pv_by for i in ids0):
+            provs[ds] = [dict(pv_by[ids0[min(k, len(ids0) - 1)]], case=o['case_id']) for k, o in enumerate(out)]
         stem = os.path.join(td, f'{ds}_handover_v13_{DATE}')
         _write_csv(stem + '.csv', new_head, out)
-        wv = LDD.load_webapp(os.path.join(BATCH12, 'merged', ds))
         with open(stem + '_columns.tsv', 'w', encoding='utf-8', newline='') as f:
             w = csv.DictWriter(f, ['column', 'source', 'verdict', 'meaning', 'caveat'], delimiter='\t', lineterminator='\n')
             w.writeheader()
-            for d in LDD.column_dictionary(new_head, webapp=wv, design_source='(합성)'):
+            for d in LDD.column_dictionary(new_head, webapp=wvs[ds], design_source='(합성)'):
                 w.writerow(d)
-        with open(os.path.join(V12, f'{ds}_handover_v12_20261006_tau_provenance.tsv'), encoding='utf-8', newline='') as f:
-            prov = list(csv.DictReader(f, delimiter='\t'))
         with open(stem + '_tau_provenance.tsv', 'w', encoding='utf-8', newline='') as f:
             w = csv.DictWriter(f, LDD.TAU_PROVENANCE_COLS, delimiter='\t', lineterminator='\n')
             w.writeheader()
-            for p in prov:
-                w.writerow(dict(p, same_generation_checks=';'.join(LDD.TAU_SAME_GEN_CHECKS)))
+            for pv in provs[ds]:
+                w.writerow(dict(pv, same_generation_checks=';'.join(LDD.TAU_SAME_GEN_CHECKS)))
     return td
+
+
+#: 합성 lhss 20 의 원천 행 — lhss_001…010 ← lhsx 0…9 (부피분율 규칙) · lhss_011…020 ← lhs 0…9 (2 mAh 규칙)
+LHSS_FROM = [('lhsx', i) for i in range(10)] + [('lhs', i) for i in range(10)]
+LHSS_SUPP_ONLY = ('lhss_loading_rule', 'lhss_loading_mAh_cm2', 'lhss_ins_scale', 'lhss_cap_adjust', 'lhss_gap_dist')
+
+
+def _lhss_from(prep, provs):
+    """합성 lhss 인계표 (열 · 행 · τ 출처 부록) — lhsx 열 (lhsx_* → lhss_*) + 하중 열 (rve_um 뒤) + 보충 전용 5 · 행 = LHSS_FROM (값 그대로 · ID 만 바꿈)."""
+    hx = prep['lhsx'][0]
+    head = []
+    for c in hx:
+        head.append('lhss_' + c[len('lhsx_'):] if c.startswith('lhsx_') else c)
+        if c == 'rve_um':
+            head.append('loading_mAh_cm2')
+    head += list(LHSS_SUPP_ONLY)
+    pv_by = {ds: {pv['case']: pv for pv in provs[ds]} for ds in ('lhs', 'lhsx')}
+    out, pv_out = [], []
+    for k, (src, i) in enumerate(LHSS_FROM, 1):
+        r = prep[src][1][i]
+        cid = f'lhss_{k:03d}'
+        o = {}
+        for c in head:
+            o[c] = (r.get('lhsx_' + c[len('lhss_'):], '') if src == 'lhsx' else '') if c.startswith('lhss_') else r.get(c, '')
+        o['case_id'] = cid
+        o['loading_mAh_cm2'] = r.get('loading_mAh_cm2', '') if src == 'lhs' else ''
+        o.update(lhss_loading_rule='2mAh_fixed' if src == 'lhs' else 'volfrac_free', lhss_loading_mAh_cm2='2.0' if src == 'lhs' else '0.5',
+                 lhss_ins_scale='1.0', lhss_cap_adjust='', lhss_gap_dist='0.1')
+        out.append(o)
+        pv_out.append(dict(pv_by[src][r['case_id']], case=cid))
+    return (head, out), pv_out
 
 
 #: 합성 발사 봉인 (실행기 manifest code_hashes 의 부분집합 · 지금 파일 지문) · 인계 단계 지문 (handover_code_hashes) — 손 목록 (실행기 상수를 베끼지 않는다)
@@ -221,7 +293,7 @@ RR_CASE_CHECK_NAMES = (
 def rr_detail(pairs=None, expected_set='production194'):
     """다시 읽기 상세 (meta · cases) — 생산자 꼴 (모두 ok True · 등록 집합 pairs (기본 PROD194) · 코호트 순서 lhs → lhsx)."""
     pairs = sorted(pairs if pairs is not None else PROD194, key=lambda x: (x[1], x[0]))
-    cohorts = [h for h in ('lhs', 'lhsx') if any(h == hh for _c, hh in pairs)]
+    cohorts = [h for h in ('lhs', 'lhsx', 'lhss') if any(h == hh for _c, hh in pairs)]
     meta = [dict(name='M0 manifest 기대 세대 선언 (expected_network_generation)', ok=True, detail='g2'),
             dict(name='M-plan manifest plan · cohorts · queue 꼴 (비지 않음 · 중복 · 코호트 소속 — 루프 전)', ok=True, detail=''),
             dict(name=f'M-reg 계획 큐 = 등록 집합 {expected_set} ({len(pairs)})', ok=True, detail='등록에만 [] · 계획에만 [] · 등록 밖 코호트 []')]
@@ -239,12 +311,20 @@ def rr_detail(pairs=None, expected_set='production194'):
     return meta, cases
 
 
+def _kind_of(man):
+    """★ 10-12 보충 20 — 배치 manifest 의 코호트 → (등록 집합 이름, (케이스, 코호트) 쌍): [lhss] = supp20 · 그 밖 = production194."""
+    names = [c.get('name') for c in ((man.get('plan') or {}).get('cohorts') or []) if isinstance(c, dict)]
+    return ('supp20', SUPP20) if names == ['lhss'] else ('production194', PROD194)
+
+
 def rr_bound(td):
     """⓪b 다시 읽기 통과 기록 — 이 배치 뿌리 (realpath) · manifest sha256 · 발사 봉인 지문 · 발사 sha 에 결합 (도구 v3 의 실행 신원 필드) ·
-    ★ G2RR4-01 상세 (meta · cases — 생산자 꼴)."""
+    ★ G2RR4-01 상세 (meta · cases — 생산자 꼴) · ★ 10-12 그 배치의 등록 집합 (production194 · supp20)."""
     man = _man_of(td)
-    meta, cases = rr_detail()
-    return dict(RR_OK, meta=meta, cases=cases, launcher_root=os.path.realpath(td), manifest_sha256=_sha_path(os.path.join(td, 'manifest.json')),
+    ks, pairs = _kind_of(man)
+    meta, cases = rr_detail(pairs, ks)
+    return dict(RR_OK, expected_set=ks, expected_n=len(pairs), read_n=len(pairs), meta=meta, cases=cases, launcher_root=os.path.realpath(td),
+                manifest_sha256=_sha_path(os.path.join(td, 'manifest.json')),
                 seal_fp=(man.get('seal') or {}).get('code_fp'), launch_sha=(man.get('git') or {}).get('sha'))
 
 
@@ -276,13 +356,14 @@ def audit_bound(td):
     """⓪ 봉인 감사 통과 기록 (`run_network_194_parallel.py audit --json` 의 키 그대로) — 이 배치 뿌리 · 봉인 지문 · 발사 sha · 등록 194 ID 가 전부
     SEALED · merged same · 레코드 세대 g2 · 실행 형식 자격 current · 문제 목록 전부 빈 목록 · ★ G2RR4-01 import 관측 객체 (생산 194 = 관측 필수 · G2RR4-03)."""
     man = _man_of(td)
+    _ks, pairs = _kind_of(man)
     rows = [dict(case=c, cohort=h, record_status='done', n_attempts=1, attempt=1, run=1, form='attempt_seal', verdict='SEALED',
-                 why='시작 · 끝 지문 = 발사 봉인 · git sha = 발사 · dirty 아님', record_sha='0' * 64, generation='g2', merged='same') for c, h in PROD194]
+                 why='시작 · 끝 지문 = 발사 봉인 · git sha = 발사 · dirty 아님', record_sha='0' * 64, generation='g2', merged='same') for c, h in pairs]
     return dict(schema=NP194.LAUNCH_SEAL_SCHEMA + '#audit', root=os.path.realpath(td), audited_at='2099-12-31T00:00:00',
                 launch_sha=(man.get('git') or {}).get('sha'), seal_fp=(man.get('seal') or {}).get('code_fp'), code_root=ROOT, code_root_changed_now=[],
                 verdicts={'SEALED': len(rows)}, merged={'same': len(rows)}, cases=rows, expected_network_generation='g2', generation_declared=True,
                 generation_problems=[], input_problems=[], eligibility=dict(kind='current', historical=None, problems=[], note=''),
-                import_observation=obs_bound(), import_observation_problems=[])
+                import_observation=obs_bound(pairs), import_observation_problems=[])
 
 
 def _write_gate(td, name, spec, good):
@@ -305,18 +386,19 @@ def _write_gate(td, name, spec, good):
         json.dump(rec, f)
 
 
-def make_batch_root(td, gen='g2', code=True, handover=True, alter=None, reread=GOOD, audit=GOOD, man_edit=None):
+def make_batch_root(td, gen='g2', code=True, handover=True, alter=None, reread=GOOD, audit=GOOD, man_edit=None, kind='production194'):
     """합성 배치 뿌리 — manifest (기대 세대 선언 · 코호트 원천 · 발사 봉인 code_hashes + seal.code_fp · git sha · handover_code_hashes) +
     ⓪ 감사 (seal_audit.json) · ⓪b 다시 읽기 (reread.json) 기록 (τ 다시 읽기는 시험에서 대역).
     code / handover = 지금 체크아웃의 파일 지문 (같다) · alter = {파일: 가짜 지문} (발사 뒤 바뀐 파일 흉내 · 봉인 지문은 바뀐 지도로) ·
     man_edit = 기록을 쓰기 전 manifest 수정 · reread / audit = `_write_gate` 의 spec (기본 GOOD — 이 배치 뿌리에 결합된 통과 기록)."""
     os.makedirs(td, exist_ok=True)
-    man = {'schema': 'network_parallel_launcher/v1', 'stop_after': 'network',
-           'plan': {'cohorts': [
-               {'name': 'lhs', 'harvest_dir': '/x/docs/data/lhs_descriptors_cov_1e09f661d', 'union': 'docs/data/lhs_union_20260927/lhs130_union.tsv',
-                'design': ''},
-               {'name': 'lhsx', 'harvest_dir': '/x/docs/data/lhsx_descriptors_cov_1e09f661d',
-                'union': 'docs/data/lhs_union_20260927/lhsx64_union.tsv', 'design': 'docs/data/lhsx_design_adapted_20260929.csv'}]}}
+    cohorts = ([{'name': 'lhss', 'harvest_dir': '/x/docs/data/lhss_descriptors_cov_1e09f661d', 'union': 'docs/data/lhss_union_1e09f661d/lhss20_union.tsv',
+                 'design': 'docs/data/lhss_design_adapted_20261012.csv'}] if kind == 'supp20' else
+               [{'name': 'lhs', 'harvest_dir': '/x/docs/data/lhs_descriptors_cov_1e09f661d', 'union': 'docs/data/lhs_union_20260927/lhs130_union.tsv',
+                 'design': ''},
+                {'name': 'lhsx', 'harvest_dir': '/x/docs/data/lhsx_descriptors_cov_1e09f661d',
+                 'union': 'docs/data/lhs_union_20260927/lhsx64_union.tsv', 'design': 'docs/data/lhsx_design_adapted_20260929.csv'}])
+    man = {'schema': 'network_parallel_launcher/v1', 'stop_after': 'network', 'plan': {'cohorts': cohorts}}
     if gen is not None:
         man['expected_network_generation'] = gen
     if code:
@@ -338,6 +420,27 @@ def make_batch_root(td, gen='g2', code=True, handover=True, alter=None, reread=G
     _write_gate(td, 'reread.json', reread, rr_bound)
     _write_gate(td, 'seal_audit.json', audit, audit_bound)
     return td
+
+
+def make_supp_batch_root(td, **kw):
+    """★ 10-12 보충 20 — 합성 보충 배치 뿌리 (코호트 lhss · 등록 집합 supp20 · 관측 ON · 같은 발사 봉인 지문 · 같은 발사 sha)."""
+    return make_batch_root(td, kind='supp20', **kw)
+
+
+#: 정상 보충 배치 (시험 모듈 동안 산다) — 기존 V12–V20 의 실제 경로 (194 배치 변이) 가 214 로 돈다 · check_v13 재판정도 이 뿌리를 다시 읽는다
+SUPP_ROOT = make_supp_batch_root(os.path.join(_SUPP_TD, 'supp_ok'))
+
+
+def build13(**kw):
+    """build_v13 + 기본 보충 배치 뿌리 (명시하면 그 값) — 보충 배치는 정상 · 194 배치만 바꾸는 옛 시험이 그대로 판정된다."""
+    kw.setdefault('supp_batch_root', SUPP_ROOT)
+    return LRB.build_v13(**kw)
+
+
+def stage13(*a, **kw):
+    """stage_handovers_v13 + 기본 보충 배치 뿌리."""
+    kw.setdefault('supp_batch_root', SUPP_ROOT)
+    return LRB.stage_handovers_v13(*a, **kw)
 
 
 # ═══ V0 ══════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════
@@ -404,9 +507,10 @@ cases2 = [
 bad2 = [(n, got, want) for n, got, want in cases2 if got != want]
 chk(f'V2 빈칸 뜻 {len(cases2)} 경우 (닫힌 어휘 · 값이어야 할 칸 = None)', not bad2, bad2[:4])
 codes = safe(lambda: set(LRB.V13_BLANK_CODES), set())
-chk('V2b 어휘 = NA_PHASE_ABSENT · NA_ZERO_CONTACTS · NA_NOT_PERCOLATING · INF_NOT_PERCOLATING · NOT_COMPUTED · HOLD_BAND_FALLBACK · EMPTY_NO_REASON',
+chk('V2b 어휘 = NA_PHASE_ABSENT · NA_ZERO_CONTACTS · NA_NOT_PERCOLATING · INF_NOT_PERCOLATING · NOT_COMPUTED · HOLD_BAND_FALLBACK · EMPTY_NO_REASON · '
+    '★ 10-12 NA_NOT_DESIGN_INPUT (부피분율 규칙 행의 하중 — Q6 (가))',
     codes == {'NA_PHASE_ABSENT', 'NA_ZERO_CONTACTS', 'NA_NOT_PERCOLATING', 'INF_NOT_PERCOLATING', 'NOT_COMPUTED', 'HOLD_BAND_FALLBACK',
-              'EMPTY_NO_REASON'}, codes)
+              'EMPTY_NO_REASON', 'NA_NOT_DESIGN_INPUT'}, codes)
 
 # ═══ V3 빈칸 일관성 (양방향) ══════════════════════════════════════════════════════════════════════════════════════════════════════
 print('V3  빈칸 일관성')
@@ -620,16 +724,18 @@ with tempfile.TemporaryDirectory() as td10:
                                                  else _orig_run(argv, **kw))
     try:
         b_g2 = make_batch_root(os.path.join(td10, 'b_g2'), 'g2')
-        r10c = safe(lambda: LRB.stage_handovers_v13(b_g2, os.path.join(td10, 'h_ok'), DATE, pressure_unverified=True))
-        chk('V10c 단계 A — 생성기 두 번 (lhs · lhsx) · 리포 루트에서 · 둘 다 --tau-batch-manifest <배치>/manifest.json · --pressure-unverified',
+        r10c = safe(lambda: stage13(b_g2, os.path.join(td10, 'h_ok'), DATE, pressure_unverified=True))
+        chk('V10c 단계 A — 생성기 세 번 (lhs · lhsx = 194 배치 · ★ 10-12 lhss = 보충 배치) · 리포 루트에서 · 각자 자기 배치의 --tau-batch-manifest '
+            '<배치>/manifest.json · --pressure-unverified',
             not is_err(r10c) and [os.path.basename(c[0][c[0].index('--export-handover') + 1]) for c in _sp_calls]
-            == [f'lhs_handover_v13_{DATE}.csv', f'lhsx_handover_v13_{DATE}.csv'] and all(c[1] == ROOT for c in _sp_calls)
-            and all(_opt(c[0], '--tau-batch-manifest') == os.path.join(b_g2, 'manifest.json') for c in _sp_calls), (r10c, _sp_calls))
+            == [f'lhs_handover_v13_{DATE}.csv', f'lhsx_handover_v13_{DATE}.csv', f'lhss_handover_v13_{DATE}.csv'] and all(c[1] == ROOT for c in _sp_calls)
+            and [_opt(c[0], '--tau-batch-manifest') for c in _sp_calls] == [os.path.join(b_g2, 'manifest.json')] * 2 + [os.path.join(SUPP_ROOT, 'manifest.json')],
+            (r10c, _sp_calls))
         n0 = len(_sp_calls)
         b_lg = make_batch_root(os.path.join(td10, 'b_lg'), 'inferred_legacy')
-        chk('V10d manifest inferred_legacy → 생성기를 부르기 전에 거부', refused(lambda: LRB.stage_handovers_v13(b_lg, os.path.join(td10, 'h_lg'), DATE,
+        chk('V10d manifest inferred_legacy → 생성기를 부르기 전에 거부', refused(lambda: stage13(b_lg, os.path.join(td10, 'h_lg'), DATE,
                                                                                                    pressure_unverified=True), 'g2') and len(_sp_calls) == n0)
-        chk('V10e 압력 기록이 없고 명시 승인도 없으면 → 거부 (DESC-06)', refused(lambda: LRB.stage_handovers_v13(b_g2, os.path.join(td10, 'h_np'), DATE),
+        chk('V10e 압력 기록이 없고 명시 승인도 없으면 → 거부 (DESC-06)', refused(lambda: stage13(b_g2, os.path.join(td10, 'h_np'), DATE),
                                                                          'DESC-06') and len(_sp_calls) == n0)
     finally:
         if _orig_run is not None:
@@ -681,13 +787,14 @@ with tempfile.TemporaryDirectory() as td:
     if _orig_rr is not None:
         LRB.v13_reread_tau = lambda ds, root, rows, gen: rr_calls.append((ds, root, len(rows), gen)) or []
         try:
-            rep = safe(lambda: LRB.build_v13(out_dir=out, handover_dir=hdir, batch_root=broot, date=DATE, codex_verdict=verdict,
+            rep = safe(lambda: build13(out_dir=out, handover_dir=hdir, batch_root=broot, date=DATE, codex_verdict=verdict,
                                              transfer_text=tfile))
         finally:
             LRB.v13_reread_tau = _orig_rr
     okb = isinstance(rep, dict)
-    chk('V12a 만들기 성공 · τ 다시 읽기를 두 데이터셋에 기대 세대 g2 로 불렀다', okb and sorted((c[0], c[3]) for c in rr_calls) == [('lhs', 'g2'), ('lhsx', 'g2')]
-        and sorted(c[2] for c in rr_calls) == [64, 130], (rep if not okb else rr_calls))
+    chk('V12a 만들기 성공 · τ 다시 읽기를 세 데이터셋에 기대 세대 g2 로 불렀다 (★ 10-12 lhss = 보충 배치 뿌리)',
+        okb and sorted((c[0], c[3]) for c in rr_calls) == [('lhs', 'g2'), ('lhss', 'g2'), ('lhsx', 'g2')]
+        and sorted(c[2] for c in rr_calls) == [20, 64, 130], (rep if not okb else rr_calls))
     names = sorted(os.listdir(out)) if os.path.isdir(out) else []
     want = [f'lhs_release_{DATE}_v13.csv', f'lhs_release_{DATE}_v13_columns.tsv', f'lhsx_release_{DATE}_v13.csv', f'lhs_release_{DATE}_v13_physics.csv',
             f'lhs_mltable_{DATE}_v13.csv', f'lhs_mltable_{DATE}_v13_columns.tsv', 'lhs_v13_refit_porosity_sigma_cn_rows.csv',
@@ -703,7 +810,7 @@ with tempfile.TemporaryDirectory() as td:
         chk('V12d check_v13 — 배포 ⊆ 인계표 · ML 표 되읽기 · 빈칸 일관성 · se_isolated · 재적합 재현 · 세대 · sha256 = 문제 0', prob == [], prob)
         man = json.load(open(os.path.join(out, 'v13_build_manifest.json'), encoding='utf-8'))
         chk('V12e 빌드 manifest — dry_run false · 세대 g2 (두 데이터셋) · τ 다시 읽기 수행 · Codex 판정문 · 파일 sha256',
-            man.get('dry_run') is False and man.get('generation') == {'lhs': 'g2', 'lhsx': 'g2'} and man.get('tau_reread') == 'performed'
+            man.get('dry_run') is False and man.get('generation') == {'lhs': 'g2', 'lhsx': 'g2', 'lhss': 'g2'} and man.get('tau_reread') == 'performed'
             and man.get('codex_verdict') and isinstance(man.get('files'), dict) and len(man['files']) >= 10, {k: man.get(k) for k in ('dry_run', 'generation')})
         rd = open(os.path.join(out, 'README.md'), encoding='utf-8').read()
         chk('V12f README — v1.3 최종판 · 빈칸 코드 표 (#1) · f_ion_hertz 타깃 · 관통 분류 먼저 (#2) · 재적합 (#5) · 수송 tortuosity · se_isolated_pct · DRY RUN 아님',
@@ -745,7 +852,7 @@ with tempfile.TemporaryDirectory() as td:
     if _orig_rr is not None:
         LRB.v13_reread_tau = lambda *a: []
         try:
-            ok12j = refused(lambda: LRB.build_v13(out_dir=out2, handover_dir=hdir2, batch_root=broot, date=DATE, codex_verdict=verdict), 'se_isolated')
+            ok12j = refused(lambda: build13(out_dir=out2, handover_dir=hdir2, batch_root=broot, date=DATE, codex_verdict=verdict), 'se_isolated')
         finally:
             LRB.v13_reread_tau = _orig_rr
     else:
@@ -763,14 +870,14 @@ with tempfile.TemporaryDirectory() as td:
     if _orig_rr is not None:
         LRB.v13_reread_tau = lambda *a: []
         try:
-            res['verdict'] = refused(lambda: LRB.build_v13(out_dir=os.path.join(td, 'o1'), handover_dir=hdir, batch_root=b_ok, date=DATE, codex_verdict=None),
+            res['verdict'] = refused(lambda: build13(out_dir=os.path.join(td, 'o1'), handover_dir=hdir, batch_root=b_ok, date=DATE, codex_verdict=None),
                                      'Codex')
-            res['legacy'] = refused(lambda: LRB.build_v13(out_dir=os.path.join(td, 'o2'), handover_dir=hdir, batch_root=b_leg, date=DATE,
+            res['legacy'] = refused(lambda: build13(out_dir=os.path.join(td, 'o2'), handover_dir=hdir, batch_root=b_leg, date=DATE,
                                                           codex_verdict=verdict), 'g2')
-            res['nobatch'] = refused(lambda: LRB.build_v13(out_dir=os.path.join(td, 'o3'), handover_dir=hdir, batch_root=None, date=DATE,
+            res['nobatch'] = refused(lambda: build13(out_dir=os.path.join(td, 'o3'), handover_dir=hdir, batch_root=None, date=DATE,
                                                            codex_verdict=verdict), 'batch')
             LRB.v13_reread_tau = lambda *a: ['a: f_ion_hertz 인계표 0.1 ≠ 다시 읽음 0.2']
-            res['reread'] = refused(lambda: LRB.build_v13(out_dir=os.path.join(td, 'o4'), handover_dir=hdir, batch_root=b_ok, date=DATE,
+            res['reread'] = refused(lambda: build13(out_dir=os.path.join(td, 'o4'), handover_dir=hdir, batch_root=b_ok, date=DATE,
                                                           codex_verdict=verdict), 'τ')
         finally:
             LRB.v13_reread_tau = _orig_rr
@@ -783,10 +890,10 @@ print('V14 DRY RUN (커밋된 v1.2 원천 · 세대 1)')
 with tempfile.TemporaryDirectory() as td:
     o_real = os.path.join(td, 'real')
     chk('V14a 세대 1 인계표로 dry-run 없이 → 거부 (세대 · v1.3 = g2) · 폴더 안 만듦',
-        refused(lambda: LRB.build_v13(out_dir=o_real, handover_dir=V12, date=DATE, dry_run=False, batch_root=BATCH12,
+        refused(lambda: build13(out_dir=o_real, handover_dir=V12, date=DATE, dry_run=False, batch_root=BATCH12,
                                       codex_verdict=os.path.join(ROOT, 'CLAUDE.md')), '') and not os.path.exists(o_real))
     o_dry = os.path.join(td, 'dry')
-    rep = safe(lambda: LRB.build_v13(out_dir=o_dry, handover_dir=V12, date=DATE, dry_run=True))
+    rep = safe(lambda: build13(out_dir=o_dry, handover_dir=V12, date=DATE, dry_run=True))
     names = sorted(os.listdir(o_dry)) if os.path.isdir(o_dry) else []
     files = [n for n in names if os.path.isfile(os.path.join(o_dry, n))]
     chk('V14b dry-run — 만들기 성공 · 모든 파일 이름이 DRYRUN_ 로 시작 · origin · previews 도', isinstance(rep, dict) and files and all(n.startswith('DRYRUN_')
@@ -817,7 +924,7 @@ with tempfile.TemporaryDirectory() as td:
         for n in ('V14c', 'V14d', 'V14e', 'V14f'):
             chk(f'{n} (dry-run 만들기 실패로 건너뜀)', False, rep)
     chk('V14g dry-run 산출을 docs/data 아래로 → 거부 (폴더 안 만듦)',
-        refused(lambda: LRB.build_v13(out_dir=os.path.join(ROOT, 'docs', 'data', 'lhs_release_DRYRUN_test_v13'), handover_dir=V12, date=DATE,
+        refused(lambda: build13(out_dir=os.path.join(ROOT, 'docs', 'data', 'lhs_release_DRYRUN_test_v13'), handover_dir=V12, date=DATE,
                                       dry_run=True), 'docs/data')
         and not os.path.exists(os.path.join(ROOT, 'docs', 'data', 'lhs_release_DRYRUN_test_v13')))
 
@@ -879,12 +986,14 @@ with tempfile.TemporaryDirectory() as td:
         LRB.v13_reread_tau = lambda *a: []
         try:
             b_app = make_batch_root(os.path.join(td, 'b_app'), alter={'webapp/app.py': '0' * 64})
-            r16['app_msg'] = refusal_msg(lambda: LRB.build_v13(out_dir=os.path.join(td, 'o_app'), handover_dir=hd, batch_root=b_app, date=DATE,
-                                                               codex_verdict=ver))
+            #  ★ 10-12 — 보충 배치도 같은 발사 봉인 지도 (같은 발사 커밋이면 두 manifest code_hashes 가 같다 · 배치 교차 = 같은 code_fp)
+            bs_app = make_supp_batch_root(os.path.join(td, 'bs_app'), alter={'webapp/app.py': '0' * 64})
+            r16['app_msg'] = refusal_msg(lambda: build13(out_dir=os.path.join(td, 'o_app'), handover_dir=hd, batch_root=b_app, date=DATE,
+                                                               codex_verdict=ver, supp_batch_root=bs_app))
             r16['app_nodir'] = not os.path.exists(os.path.join(td, 'o_app'))
             o_ok = os.path.join(td, 'o_app_allowed')
-            r16['app_ok'] = safe(lambda: LRB.build_v13(out_dir=o_ok, handover_dir=hd, batch_root=b_app, date=DATE, codex_verdict=ver,
-                                                       allow_seal_diff=['webapp/app.py']))
+            r16['app_ok'] = safe(lambda: build13(out_dir=o_ok, handover_dir=hd, batch_root=b_app, date=DATE, codex_verdict=ver,
+                                                       allow_seal_diff=['webapp/app.py'], supp_batch_root=bs_app))
             if isinstance(r16['app_ok'], dict):
                 r16['app_man'] = json.load(open(os.path.join(o_ok, 'v13_build_manifest.json'), encoding='utf-8'))
                 r16['app_readme'] = open(os.path.join(o_ok, 'README.md'), encoding='utf-8').read()
@@ -899,19 +1008,19 @@ with tempfile.TemporaryDirectory() as td:
                 open(mp_, 'w', encoding='utf-8', newline='').write(bak)
             b_hd = make_batch_root(os.path.join(td, 'b_hd'), alter={'scripts/lhs_design_dataset.py': '1' * 64})
             o_hd = os.path.join(td, 'o_hd')
-            r16['hd'] = safe(lambda: LRB.build_v13(out_dir=o_hd, handover_dir=hd, batch_root=b_hd, date=DATE, codex_verdict=ver))
+            r16['hd'] = safe(lambda: build13(out_dir=o_hd, handover_dir=hd, batch_root=b_hd, date=DATE, codex_verdict=ver))
             if isinstance(r16['hd'], dict):
                 r16['hd_man'] = json.load(open(os.path.join(o_hd, 'v13_build_manifest.json'), encoding='utf-8'))
                 r16['hd_readme'] = open(os.path.join(o_hd, 'README.md'), encoding='utf-8').read()
             b_rf = make_batch_root(os.path.join(td, 'b_rf'), reread=lambda r: dict(r, n_fail=1))
-            r16['rf_msg'] = refusal_msg(lambda: LRB.build_v13(out_dir=os.path.join(td, 'o_rf'), handover_dir=hd, batch_root=b_rf, date=DATE,
+            r16['rf_msg'] = refusal_msg(lambda: build13(out_dir=os.path.join(td, 'o_rf'), handover_dir=hd, batch_root=b_rf, date=DATE,
                                                               codex_verdict=ver))
             b_rl = make_batch_root(os.path.join(td, 'b_rl'), reread=lambda r: dict(r, expected_generation='inferred_legacy'))
-            r16['rl_msg'] = refusal_msg(lambda: LRB.build_v13(out_dir=os.path.join(td, 'o_rl'), handover_dir=hd, batch_root=b_rl, date=DATE,
+            r16['rl_msg'] = refusal_msg(lambda: build13(out_dir=os.path.join(td, 'o_rl'), handover_dir=hd, batch_root=b_rl, date=DATE,
                                                               codex_verdict=ver))
             b_r0 = make_batch_root(os.path.join(td, 'b_r0'))
             o_r0 = os.path.join(td, 'o_r0')
-            r16['r0'] = safe(lambda: LRB.build_v13(out_dir=o_r0, handover_dir=hd, batch_root=b_r0, date=DATE, codex_verdict=ver))
+            r16['r0'] = safe(lambda: build13(out_dir=o_r0, handover_dir=hd, batch_root=b_r0, date=DATE, codex_verdict=ver))
             if isinstance(r16['r0'], dict):
                 r16['r0_man'] = json.load(open(os.path.join(o_r0, 'v13_build_manifest.json'), encoding='utf-8'))
                 #  check_v13 — 빌드 manifest 의 다시 읽기 기록을 일부 집합으로 바꾸면 문제 (G2RR2-02 · ★ G2RR3-01: 기록 ≠ 지금 배치 뿌리)
@@ -928,25 +1037,25 @@ with tempfile.TemporaryDirectory() as td:
                              ('0 케이스 (기대 0)', lambda r: dict(r, expected_n=0, read_n=0))):
                 b_rs = make_batch_root(os.path.join(td, f'b_rs{len(r16["rs_msg"])}'), reread=rec)
                 o_rs = os.path.join(td, f'o_rs{len(r16["rs_msg"])}')
-                r16['rs_msg'][tag] = (refusal_msg(lambda: LRB.build_v13(out_dir=o_rs, handover_dir=hd, batch_root=b_rs, date=DATE, codex_verdict=ver)),
+                r16['rs_msg'][tag] = (refusal_msg(lambda: build13(out_dir=o_rs, handover_dir=hd, batch_root=b_rs, date=DATE, codex_verdict=ver)),
                                       os.path.exists(o_rs))
             o_un = os.path.join(td, 'o_unused')
-            r16['unused'] = safe(lambda: LRB.build_v13(out_dir=o_un, handover_dir=hd, batch_root=b0, date=DATE, codex_verdict=ver,
+            r16['unused'] = safe(lambda: build13(out_dir=o_un, handover_dir=hd, batch_root=b0, date=DATE, codex_verdict=ver,
                                                        allow_seal_diff=['webapp/app.py']))
             #  승인 경로 철자 — './webapp/app.py' 도 같은 파일 (정규화) · 승인 기록은 manifest 키 철자로
             o_nm = os.path.join(td, 'o_norm')
-            r16['norm'] = safe(lambda: LRB.build_v13(out_dir=o_nm, handover_dir=hd, batch_root=b_app, date=DATE, codex_verdict=ver,
-                                                     allow_seal_diff=['./webapp/app.py']))
+            r16['norm'] = safe(lambda: build13(out_dir=o_nm, handover_dir=hd, batch_root=b_app, date=DATE, codex_verdict=ver,
+                                                     allow_seal_diff=['./webapp/app.py'], supp_batch_root=bs_app))
             if isinstance(r16['norm'], dict):
                 r16['norm_ci'] = json.load(open(os.path.join(o_nm, 'v13_build_manifest.json'), encoding='utf-8')).get('code_identity')
             #  CLI — --allow-seal-diff 가 build_v13 까지 간다 (인계표 폴더를 주면 단계 A 없이)
             o_cli = os.path.join(td, 'o_cli')
             bufc = io.StringIO()
             with contextlib.redirect_stdout(bufc), contextlib.redirect_stderr(bufc):
-                r16['cli_refuse'] = safe(lambda: LRB.main(['--v13', '--handover-dir', hd, '--batch-root', b_app, '--codex-verdict', ver,
-                                                           '--out-dir', o_cli, '--date', DATE]), 99)
-                r16['cli_ok'] = safe(lambda: LRB.main(['--v13', '--handover-dir', hd, '--batch-root', b_app, '--codex-verdict', ver,
-                                                       '--out-dir', o_cli, '--date', DATE, '--allow-seal-diff', 'webapp/app.py']), 99)
+                r16['cli_refuse'] = safe(lambda: LRB.main(['--v13', '--handover-dir', hd, '--batch-root', b_app, '--supp-batch-root', bs_app,
+                                                           '--codex-verdict', ver, '--out-dir', o_cli, '--date', DATE]), 99)
+                r16['cli_ok'] = safe(lambda: LRB.main(['--v13', '--handover-dir', hd, '--batch-root', b_app, '--supp-batch-root', bs_app,
+                                                       '--codex-verdict', ver, '--out-dir', o_cli, '--date', DATE, '--allow-seal-diff', 'webapp/app.py']), 99)
             r16['cli_out'] = os.path.isfile(os.path.join(o_cli, 'README.md'))
         finally:
             LRB.v13_reread_tau = _orig_rr
@@ -1014,15 +1123,17 @@ with tempfile.TemporaryDirectory() as td:
         LRB.subprocess.run = lambda argv, **kw: (_sp16.append(argv) or _FakeRun()) if '--export-handover' in argv else _orun(argv, **kw)
         try:
             b_a = make_batch_root(os.path.join(td, 'b_a'), alter={'webapp/app.py': '0' * 64})
-            m16l = refusal_msg(lambda: LRB.stage_handovers_v13(b_a, os.path.join(td, 'h1'), DATE, pressure_unverified=True))
+            bs_a = make_supp_batch_root(os.path.join(td, 'bs_a'), alter={'webapp/app.py': '0' * 64})
+            m16l = refusal_msg(lambda: stage13(b_a, os.path.join(td, 'h1'), DATE, pressure_unverified=True, supp_batch_root=bs_a))
             n_before = len(_sp16)
-            r16l = safe(lambda: LRB.stage_handovers_v13(b_a, os.path.join(td, 'h2'), DATE, pressure_unverified=True, allow_seal_diff=['webapp/app.py']))
+            r16l = safe(lambda: stage13(b_a, os.path.join(td, 'h2'), DATE, pressure_unverified=True, allow_seal_diff=['webapp/app.py'],
+                                        supp_batch_root=bs_a))
         finally:
             LRB.subprocess.run = _orun
     else:
         m16l, n_before, r16l = None, 0, ('ERR', 'no subprocess')
-chk('V16l 단계 A — 봉인 다름이면 생성기를 부르기 전에 거부 · 명시 승인이면 생성기 두 번',
-    m16l is not None and 'webapp/app.py' in m16l and n_before == 0 and not is_err(r16l) and len(_sp16) == 2, (m16l, n_before, r16l, len(_sp16)))
+chk('V16l 단계 A — 봉인 다름이면 생성기를 부르기 전에 거부 · 명시 승인이면 생성기 세 번 (★ 10-12 lhs · lhsx · lhss)',
+    m16l is not None and 'webapp/app.py' in m16l and n_before == 0 and not is_err(r16l) and len(_sp16) == 3, (m16l, n_before, r16l, len(_sp16)))
 
 # ═══ V17 ★ 10-07 G2RR3-01 — 배치 관문 증거 필수 · 판정 · 결합 · build = check 같은 관문 · 진단 모드 ═════════════════════════════════════
 #   Codex 세대 2 재검증 3 §3 (`docs/reviews/codex_review_gen2_network_reverify3_20261007.md` · 탐침 release_gate.py · new_gates.py) — 옛 판은 감사 기록의
@@ -1129,7 +1240,7 @@ with tempfile.TemporaryDirectory() as td:
             b_good = make_batch_root(os.path.join(td, 'b_good'))
             r17['b_good_real'] = os.path.realpath(b_good)
             o_good = os.path.join(td, 'o_good')
-            r17['good'] = safe(lambda: LRB.build_v13(out_dir=o_good, handover_dir=hd17, batch_root=b_good, date=DATE, codex_verdict=ver17))
+            r17['good'] = safe(lambda: build13(out_dir=o_good, handover_dir=hd17, batch_root=b_good, date=DATE, codex_verdict=ver17))
             if isinstance(r17['good'], dict):
                 r17['good_check'] = safe(lambda: LRB.check_v13(o_good, hd17))
                 r17['good_man'] = json.load(open(os.path.join(o_good, 'v13_build_manifest.json'), encoding='utf-8'))
@@ -1139,7 +1250,7 @@ with tempfile.TemporaryDirectory() as td:
             for i, (nm, kw, tag, cx) in enumerate(V17_VARIANTS):
                 b_ = make_batch_root(os.path.join(td, f'b17_{i:02d}'), **kw)
                 o_ = os.path.join(td, f'o17_{i:02d}')
-                m_ = refusal_msg(lambda: LRB.build_v13(out_dir=o_, handover_dir=hd17, batch_root=b_, date=DATE, codex_verdict=ver17))
+                m_ = refusal_msg(lambda: build13(out_dir=o_, handover_dir=hd17, batch_root=b_, date=DATE, codex_verdict=ver17))
                 r17['build'].append((i, nm, tag, cx, m_, os.path.exists(o_)))
             #  (c) check_v13 — 좋은 묶음의 배치 증거를 변이로 바꾸면 문제 · 빌드 manifest 기록을 지금 파일에 맞춰 위조해도 문제 (같은 관문을 다시 돈다)
             r17['check'] = []
@@ -1168,26 +1279,26 @@ with tempfile.TemporaryDirectory() as td:
                 #  build · 단계 A · check 가 같은 관문 함수 — 그 함수가 문제를 내면 셋 다 막힌다
                 fn0 = getattr(LRB, 'v13_batch_gate_problems', None)
                 if fn0 is not None:
-                    LRB.v13_batch_gate_problems = lambda br: (fn0(br)[0], ['합성 관문 문제 (같은 함수 시험)'])
+                    LRB.v13_batch_gate_problems = lambda br, *a_, **k_: (fn0(br, *a_, **k_)[0], ['합성 관문 문제 (같은 함수 시험)'])
                     try:
-                        r17['same_build'] = refusal_msg(lambda: LRB.build_v13(out_dir=os.path.join(td, 'o17_same'), handover_dir=hd17, batch_root=b_good,
+                        r17['same_build'] = refusal_msg(lambda: build13(out_dir=os.path.join(td, 'o17_same'), handover_dir=hd17, batch_root=b_good,
                                                                               date=DATE, codex_verdict=ver17))
-                        r17['same_stage'] = refusal_msg(lambda: LRB.stage_handovers_v13(b_good, os.path.join(td, 'h17_same'), DATE, pressure_unverified=True))
+                        r17['same_stage'] = refusal_msg(lambda: stage13(b_good, os.path.join(td, 'h17_same'), DATE, pressure_unverified=True))
                         r17['same_check'] = safe(lambda: LRB.check_v13(o_good, hd17))
                     finally:
                         LRB.v13_batch_gate_problems = fn0
             #  (d) 배치 뿌리가 사라진 묶음 → check_v13 은 관문을 다시 판정할 수 없다 = 문제
             b_gone = make_batch_root(os.path.join(td, 'b_gone'))
             o_gone = os.path.join(td, 'o_gone')
-            if isinstance(safe(lambda: LRB.build_v13(out_dir=o_gone, handover_dir=hd17, batch_root=b_gone, date=DATE, codex_verdict=ver17)), dict):
+            if isinstance(safe(lambda: build13(out_dir=o_gone, handover_dir=hd17, batch_root=b_gone, date=DATE, codex_verdict=ver17)), dict):
                 shutil.rmtree(b_gone)
                 r17['gone'] = safe(lambda: LRB.check_v13(o_gone, hd17))
             #  (e) 진단 모드 — 옛 도구 다시 읽기 기록 (실행 신원 없음) + 감사 없음: 배포 = 거부 · 진단 = 만들고 NOT FOR RELEASE · 배포 대조 거부
             b_dg = make_batch_root(os.path.join(td, 'b_diag'), reread=V17_DIAG_RR, audit=None)
-            r17['diag_release'] = refusal_msg(lambda: LRB.build_v13(out_dir=os.path.join(td, 'o_diag_rel'), handover_dir=hd17, batch_root=b_dg, date=DATE,
+            r17['diag_release'] = refusal_msg(lambda: build13(out_dir=os.path.join(td, 'o_diag_rel'), handover_dir=hd17, batch_root=b_dg, date=DATE,
                                                                     codex_verdict=ver17))
             o_dg = os.path.join(td, 'o_diag')
-            r17['diag'] = safe(lambda: LRB.build_v13(out_dir=o_dg, handover_dir=hd17, batch_root=b_dg, date=DATE, codex_verdict=ver17, diagnostic=True))
+            r17['diag'] = safe(lambda: build13(out_dir=o_dg, handover_dir=hd17, batch_root=b_dg, date=DATE, codex_verdict=ver17, diagnostic=True))
             if isinstance(r17['diag'], dict):
                 r17['diag_readme'] = open(os.path.join(o_dg, 'README.md'), encoding='utf-8').read()
                 r17['diag_man'] = json.load(open(os.path.join(o_dg, 'v13_build_manifest.json'), encoding='utf-8'))
@@ -1195,20 +1306,20 @@ with tempfile.TemporaryDirectory() as td:
                 r17['diag_check_diag'] = safe(lambda: LRB.check_v13(o_dg, hd17, diagnostic=True))
                 if isinstance(r17.get('good'), dict):
                     r17['good_check_diag'] = safe(lambda: LRB.check_v13(o_good, hd17, diagnostic=True))
-            r17['diag_dry'] = refusal_msg(lambda: LRB.build_v13(out_dir=os.path.join(td, 'o_diag_dry'), handover_dir=V12, date=DATE, dry_run=True,
+            r17['diag_dry'] = refusal_msg(lambda: build13(out_dir=os.path.join(td, 'o_diag_dry'), handover_dir=V12, date=DATE, dry_run=True,
                                                                 diagnostic=True))
             _drepo = os.path.join(ROOT, 'docs', 'data', 'lhs_release_DIAG_test_v13')
-            r17['diag_repo'] = refusal_msg(lambda: LRB.build_v13(out_dir=_drepo, handover_dir=hd17, batch_root=b_dg, date=DATE, codex_verdict=ver17,
+            r17['diag_repo'] = refusal_msg(lambda: build13(out_dir=_drepo, handover_dir=hd17, batch_root=b_dg, date=DATE, codex_verdict=ver17,
                                                                  diagnostic=True))
             r17['diag_repo_made'] = os.path.exists(_drepo)
             #  (f) CLI — --diagnostic-batch-gate 가 build · check 까지 간다 · 없으면 배포 경로 (거부)
             o_c1, o_c2 = os.path.join(td, 'o17_cli_diag'), os.path.join(td, 'o17_cli_rel')
             buf17 = io.StringIO()
             with contextlib.redirect_stdout(buf17), contextlib.redirect_stderr(buf17):
-                r17['cli_build_rel'] = safe(lambda: LRB.main(['--v13', '--handover-dir', hd17, '--batch-root', b_dg, '--codex-verdict', ver17, '--out-dir', o_c2,
-                                                              '--date', DATE]), 99)
-                r17['cli_build_diag'] = safe(lambda: LRB.main(['--v13', '--handover-dir', hd17, '--batch-root', b_dg, '--codex-verdict', ver17, '--out-dir', o_c1,
-                                                               '--date', DATE, '--diagnostic-batch-gate']), 99)
+                r17['cli_build_rel'] = safe(lambda: LRB.main(['--v13', '--handover-dir', hd17, '--batch-root', b_dg, '--supp-batch-root', SUPP_ROOT,
+                                                              '--codex-verdict', ver17, '--out-dir', o_c2, '--date', DATE]), 99)
+                r17['cli_build_diag'] = safe(lambda: LRB.main(['--v13', '--handover-dir', hd17, '--batch-root', b_dg, '--supp-batch-root', SUPP_ROOT,
+                                                               '--codex-verdict', ver17, '--out-dir', o_c1, '--date', DATE, '--diagnostic-batch-gate']), 99)
                 r17['cli_check_rel'] = safe(lambda: LRB.main(['--v13-check', '--handover-dir', hd17, '--release-dir', o_c1]), 99)
                 r17['cli_check_diag'] = safe(lambda: LRB.main(['--v13-check', '--handover-dir', hd17, '--release-dir', o_c1, '--diagnostic-batch-gate']), 99)
             r17['cli_made'] = (os.path.isfile(os.path.join(o_c1, 'README.md')), os.path.exists(o_c2))
@@ -1225,11 +1336,11 @@ with tempfile.TemporaryDirectory() as td:
                                           ('감사 refused', dict(audit=V17_REFUSED_AUDIT)))):
                 b_ = make_batch_root(os.path.join(td, f'b17_sa{j}'), **kw)
                 n0 = len(_sp17)
-                m_ = refusal_msg(lambda: LRB.stage_handovers_v13(b_, os.path.join(td, f'h17_sa{j}'), DATE, pressure_unverified=True))
+                m_ = refusal_msg(lambda: stage13(b_, os.path.join(td, f'h17_sa{j}'), DATE, pressure_unverified=True))
                 r17['stage'][nm] = (m_, len(_sp17) - n0)
             b_ = make_batch_root(os.path.join(td, 'b17_sa_ok'))
             n0 = len(_sp17)
-            r17['stage_ok'] = (safe(lambda: LRB.stage_handovers_v13(b_, os.path.join(td, 'h17_sa_ok'), DATE, pressure_unverified=True)), len(_sp17) - n0)
+            r17['stage_ok'] = (safe(lambda: stage13(b_, os.path.join(td, 'h17_sa_ok'), DATE, pressure_unverified=True)), len(_sp17) - n0)
         finally:
             LRB.subprocess.run = _orun17
 
@@ -1282,9 +1393,9 @@ chk('V17i CLI — 옛 · 부분 기록으로 --v13 (표지 없음) = rc ≠ 0 ·
     ({k: r17.get(k) for k in ('cli_build_rel', 'cli_build_diag', 'cli_check_rel', 'cli_check_diag', 'cli_made')},
      buf17.getvalue()[-400:] if 'buf17' in dir() else ''))
 st17 = r17.get('stage') or {}
-chk('V17j 단계 A — reread 없음 · {} · 감사 없음 · 감사 refused → 생성기를 부르기 전에 거부 · 결합된 통과 기록이면 생성기 두 번',
+chk('V17j 단계 A — reread 없음 · {} · 감사 없음 · 감사 refused → 생성기를 부르기 전에 거부 · 결합된 통과 기록이면 생성기 세 번 (★ 10-12 lhs · lhsx · lhss)',
     len(st17) == 4 and all(m_ is not None and not m_.startswith('OTHER') and n_ == 0 for m_, n_ in st17.values())
-    and not is_err((r17.get('stage_ok') or (('ERR', ''), 0))[0]) and (r17.get('stage_ok') or (None, 0))[1] == 2,
+    and not is_err((r17.get('stage_ok') or (('ERR', ''), 0))[0]) and (r17.get('stage_ok') or (None, 0))[1] == 3,
     ({k: ((m_ or '')[:120], n_) for k, (m_, n_) in st17.items()}, r17.get('stage_ok')))
 chk('V17k 생산 배포 정책 — 받는 봉인 판정 = SEALED 만 (SEALED_DIRTY_ALLOWED · SEALED_LEGACY 는 실행기 audit rc 0 이어도 배포 아님) · 실행기 SEAL_OK 의 부분집합',
     tuple(getattr(LRB, 'V13_AUDIT_SEALED', ())) == ('SEALED',) and set(getattr(LRB, 'V13_AUDIT_SEALED', ('x',))) <= set(NP194.SEAL_OK),
@@ -1380,7 +1491,7 @@ with tempfile.TemporaryDirectory() as td:
             #  (a) 양성 대조 — 상세 꼴 그대로의 통과 기록 둘 → 만들기 · check_v13 문제 0
             b_ok = make_batch_root(os.path.join(td, 'b18_ok'))
             o_ok = os.path.join(td, 'o18_ok')
-            r18['good'] = safe(lambda: LRB.build_v13(out_dir=o_ok, handover_dir=hd18, batch_root=b_ok, date=DATE, codex_verdict=ver18))
+            r18['good'] = safe(lambda: build13(out_dir=o_ok, handover_dir=hd18, batch_root=b_ok, date=DATE, codex_verdict=ver18))
             if isinstance(r18['good'], dict):
                 r18['good_check'] = safe(lambda: LRB.check_v13(o_ok, hd18))
             r18['good_rr_probs'] = safe(lambda: LRB.v13_reread_problems(json.load(open(os.path.join(b_ok, 'reread.json'), encoding='utf-8')), b_ok))
@@ -1390,7 +1501,7 @@ with tempfile.TemporaryDirectory() as td:
             for i, (nm, kw, tag, cx) in enumerate(V18_VARIANTS):
                 b_ = make_batch_root(os.path.join(td, f'b18_{i:02d}'), **kw)
                 o_ = os.path.join(td, f'o18_{i:02d}')
-                m_ = refusal_msg(lambda: LRB.build_v13(out_dir=o_, handover_dir=hd18, batch_root=b_, date=DATE, codex_verdict=ver18))
+                m_ = refusal_msg(lambda: build13(out_dir=o_, handover_dir=hd18, batch_root=b_, date=DATE, codex_verdict=ver18))
                 r18['build'].append((i, nm, tag, cx, m_, os.path.exists(o_)))
             #  (c) check_v13 — 좋은 묶음의 배치 증거를 변이로 바꾸면 문제 · 빌드 manifest 기록을 지금 파일에 맞춰 위조해도 문제
             r18['check'] = []
@@ -1484,7 +1595,7 @@ with tempfile.TemporaryDirectory() as td:
             for i, (nm, kw, tag) in enumerate(V19_VARIANTS):
                 b_ = make_batch_root(os.path.join(td, f'b19_{i:02d}'), **kw)
                 o_ = os.path.join(td, f'o19_{i:02d}')
-                m_ = refusal_msg(lambda: LRB.build_v13(out_dir=o_, handover_dir=hd19, batch_root=b_, date=DATE, codex_verdict=ver19))
+                m_ = refusal_msg(lambda: build13(out_dir=o_, handover_dir=hd19, batch_root=b_, date=DATE, codex_verdict=ver19))
                 r19['build'].append((i, nm, tag, m_, os.path.exists(o_)))
             b_g = make_batch_root(os.path.join(td, 'b19_good'))
             r19['good_au'] = safe(lambda: LRB.v13_audit_problems(json.load(open(os.path.join(b_g, 'seal_audit.json'), encoding='utf-8')), b_g))
@@ -1662,7 +1773,7 @@ with tempfile.TemporaryDirectory() as td:
             #  (b) 정상 대조 — 상세 194 · 시도마다 expected = observed → 만들기 · check_v13 문제 0
             b_ok = make_batch_root(os.path.join(td, 'b20_ok'))
             o_ok = os.path.join(td, 'o20_ok')
-            r20['good'] = safe(lambda: LRB.build_v13(out_dir=o_ok, handover_dir=hd20, batch_root=b_ok, date=DATE, codex_verdict=ver20))
+            r20['good'] = safe(lambda: build13(out_dir=o_ok, handover_dir=hd20, batch_root=b_ok, date=DATE, codex_verdict=ver20))
             if isinstance(r20['good'], dict):
                 r20['good_check'] = safe(lambda: LRB.check_v13(o_ok, hd20))
             #  (c) 재시도 이력 → 만들기 · check_v13 문제 0 (과잉차단 금지)
@@ -1670,13 +1781,13 @@ with tempfile.TemporaryDirectory() as td:
             o_rt = os.path.join(td, 'o20_retry')
             r20['retry_io'] = {k_: (json.load(open(os.path.join(b_rt, 'seal_audit.json'), encoding='utf-8'))['import_observation'] or {}).get(k_)
                                for k_ in ('n_processes', 'n_started', 'n_finalized')}
-            r20['retry'] = safe(lambda: LRB.build_v13(out_dir=o_rt, handover_dir=hd20, batch_root=b_rt, date=DATE, codex_verdict=ver20))
+            r20['retry'] = safe(lambda: build13(out_dir=o_rt, handover_dir=hd20, batch_root=b_rt, date=DATE, codex_verdict=ver20))
             if isinstance(r20['retry'], dict):
                 r20['retry_check'] = safe(lambda: LRB.check_v13(o_rt, hd20))
             #  (f0) 실제 관측 생산자의 정상 결합 기록 (분류 밖 단계 없음) 을 이식 → 만들기 · check_v13 문제 0 (새 스키마의 실제 기록 = 과잉차단 없음)
             b_f0 = make_batch_root(os.path.join(td, 'b20_f0'), audit=_v20_graft_rec(None if is_err(_v20p['f0']) else _v20p['f0'][1]))
             o_f0 = os.path.join(td, 'o20_f0')
-            r20['f0'] = safe(lambda: LRB.build_v13(out_dir=o_f0, handover_dir=hd20, batch_root=b_f0, date=DATE, codex_verdict=ver20))
+            r20['f0'] = safe(lambda: build13(out_dir=o_f0, handover_dir=hd20, batch_root=b_f0, date=DATE, codex_verdict=ver20))
             if isinstance(r20['f0'], dict):
                 r20['f0_check'] = safe(lambda: LRB.check_v13(o_f0, hd20))
             #  (a) 변이마다 build_v13 거부 · 산출 폴더 없음
@@ -1684,7 +1795,7 @@ with tempfile.TemporaryDirectory() as td:
             for vid, nm, kw, tag, cx in V20_VARIANTS:
                 b_ = make_batch_root(os.path.join(td, f'b20_{vid}'), **kw)
                 o_ = os.path.join(td, f'o20_{vid}')
-                m_ = refusal_msg(lambda: LRB.build_v13(out_dir=o_, handover_dir=hd20, batch_root=b_, date=DATE, codex_verdict=ver20))
+                m_ = refusal_msg(lambda: build13(out_dir=o_, handover_dir=hd20, batch_root=b_, date=DATE, codex_verdict=ver20))
                 r20['build'].append((vid, nm, tag, cx, m_, os.path.exists(o_)))
             #  (a') check_v13 — 좋은 묶음의 감사를 변이로 바꾸면 문제 · 빌드 manifest 의 기록 (캐시 sha256) 을 지금 파일에 맞춰 위조해도 문제 (같은 관문을 다시 돈다)
             r20['check'] = []
@@ -1756,6 +1867,257 @@ chk('V20e 시도 값 계약 = 실행기 한 함수 (run_network_194_parallel.sta
     callable(_sbp) and all(_sbp(k_, v_) == [] for k_, v_ in _v20ok.items()) and _v20bad is not None and bool(_sbp(_v20k, _v20bad))
     and isinstance(r20.get('same_fn'), list) and any('합성 시도 계약 문제' in str(p_) for p_ in r20['same_fn']),
     (callable(_sbp), _sbp(_v20k, _v20bad) if callable(_sbp) and _v20bad is not None else None, r20.get('same_fn')))
+
+# ═══ V21 보충 20 — 214 · 두 배치 ═══════════════════════════════════════════════════════════════════════════════════════════════════
+print('V21 ★ 10-12 보충 20 — v1.3 = 194 배치 (production194) + 보충 배치 (supp20)')
+_inp21 = getattr(LRB, 'V13_INPUTS', {}) or {}
+_specs21 = {'lhs': NP194.COHORT_SPECS['lhs'], 'lhsx': NP194.COHORT_SPECS['lhsx'], 'lhss': _ORIG_LHSS_SPEC}
+
+
+def _same_src(ds):
+    a, b = _inp21.get(ds) or {}, _specs21.get(ds) or {}
+    return (bool(a) and bool(b) and os.path.basename(str(a.get('harvest', '')).rstrip('/')) == os.path.basename(str(b.get('harvest', '')).rstrip('/'))
+            and (a.get('union') or '') == str(b.get('union') or '') and (a.get('design') or '') == str(b.get('design') or ''))
+
+
+chk('V21a 데이터셋 셋 · 배치 둘 (production194 = lhs · lhsx · supp20 = lhss) · 입력 원천 = 실행기 COHORT_SPECS (수확 폴더 이름 · union · 설계 — 사본 표류 없음) · '
+    '관측 필수 집합 = 실행기 PRODUCTION_SETS · lhss 기대 ID = 커밋된 어댑터 CSV (20)',
+    tuple(getattr(LRB, 'V13_DATASETS', ())) == ('lhs', 'lhsx', 'lhss')
+    and dict(getattr(LRB, 'V13_BATCHES', ())) == {'production194': ('lhs', 'lhsx'), 'supp20': ('lhss',)}
+    and all(_same_src(ds) for ds in ('lhs', 'lhsx', 'lhss'))
+    and tuple(getattr(LRB, 'V13_IMPORT_OBS_REQUIRED', ())) == tuple(getattr(NP194, 'PRODUCTION_SETS', ('?',)))
+    and (_inp21.get('lhss') or {}).get('expect_ids') == 'docs/data/lhss_design_adapted_20261012.csv' and (_inp21.get('lhss') or {}).get('n') == 20,
+    (getattr(LRB, 'V13_DATASETS', None), getattr(LRB, 'V13_BATCHES', None), _inp21.get('lhss'), [ds for ds in _specs21 if not _same_src(ds)]))
+chk('V21b ★ Q6 (가) — lhss 주 표 열 = lhs 주 표 열 (v1.2 132 + v1.3 추가 · 하중 열 포함 · lhsx 에는 없음) · Physics 부록 = lhs 부록',
+    safe(lambda: LRB.v13_columns('lhss', 'main')) == m_l and safe(lambda: LRB.v13_columns('lhss', 'physics')) == ph_l
+    and 'loading_mAh_cm2' in (m_l if isinstance(m_l, list) else []) and 'loading_mAh_cm2' not in (m_x if isinstance(m_x, list) else ['loading_mAh_cm2']))
+_br21 = lambda am: safe(lambda: LRB.v13_blank_reason(dict(BASE, am_pct=am), 'loading_mAh_cm2'))  # noqa: E731
+chk('V21c ★ Q6 (가) 하중 빈칸 규칙 — AM < 70 wt% (부피분율 규칙 · 생성기 SE_SPLIT 경계) = NA_NOT_DESIGN_INPUT · AM ≥ 70 (2 mAh 규칙 · 130 의 70.0 포함) = 값 · '
+    'am_pct 없음 = 거부 · 닫힌 어휘에 있다',
+    _br21('30.0') == 'NA_NOT_DESIGN_INPUT' and _br21('69.9') == 'NA_NOT_DESIGN_INPUT' and _br21('70.0') is None and _br21('92.5') is None
+    and refused(lambda: LRB.v13_blank_reason(dict(BASE, am_pct=''), 'loading_mAh_cm2'), 'am_pct')
+    and 'NA_NOT_DESIGN_INPUT' in (getattr(LRB, 'V13_BLANK_CODES', {}) or {}), [_br21(x) for x in ('30.0', '69.9', '70.0', '92.5')])
+_lr21 = [dict(BASE, case_id='s1', am_pct='30.0', loading_mAh_cm2=''), dict(BASE, case_id='s2', am_pct='92.5', loading_mAh_cm2='2.0')]
+_lc21 = ['case_id', 'loading_mAh_cm2']
+_p21a = safe(lambda: LRB.v13_blank_problems(_lr21, _lc21))
+_p21b = safe(lambda: LRB.v13_blank_problems([dict(_lr21[0], loading_mAh_cm2='0.42'), _lr21[1]], _lc21))
+_p21c = safe(lambda: LRB.v13_blank_problems([_lr21[0], dict(_lr21[1], loading_mAh_cm2='')], _lc21))
+chk('V21c2 하중 빈칸 일관성 (양방향) — 부피분율 행 빈칸 · 2 mAh 행 2.0 = 문제 0 / 부피분율 행에 역산값 = 문제 (s1) / 2 mAh 행 빈칸 = 문제 (s2)',
+    _p21a == [] and isinstance(_p21b, list) and any('s1' in x for x in _p21b) and isinstance(_p21c, list) and any('s2' in x for x in _p21c),
+    (_p21a, _p21b, _p21c))
+
+#  결합 함수 (데이터셋을 하나로 묶을 수 있는가) — ID · 물성 · 세대 · 열 정의
+_cp = getattr(LRB, 'v13_combined_problems', None)
+_g2r = lambda c, **kv: dict(trow(c, 'g2'), ion_sigma0_mScm='3.0', ion_sigma0_T_C='25.0', phi_basis='phi_se_mc', L_basis='L_mc', **kv)  # noqa: E731
+_dd = lambda **kv: {'porosity_union_exact_pct': dict({'column': 'porosity_union_exact_pct', 'source': 'union', 'verdict': '✅', 'meaning': '정확 union',  # noqa: E731
+                                                      'caveat': ''}, **kv),
+                    'am_pct': {'column': 'am_pct', 'source': 'design', 'verdict': '설계', 'meaning': '고체 중 AM 질량 % · 원천 = a.csv', 'caveat': ''}}
+_cp_ok = safe(lambda: _cp({'lhs': [_g2r('a'), _g2r('b')], 'lhss': [_g2r('lhss_001')]},
+                          {'lhs': _dd(), 'lhss': dict(_dd(), am_pct=dict(_dd()['am_pct'], meaning='고체 중 AM 질량 % · 원천 = z.csv'))}))
+_cp_dup = safe(lambda: _cp({'lhs': [_g2r('a'), _g2r('b')], 'lhss': [_g2r('a')]}, None))
+_cp_dup2 = safe(lambda: _cp({'lhs': [_g2r('a'), _g2r('a')]}, None))
+_cp_s0 = safe(lambda: _cp({'lhs': [_g2r('a')], 'lhss': [dict(_g2r('lhss_001'), ion_sigma0_mScm='3.1')]}, None))
+_cp_mix = safe(lambda: _cp({'lhs': [_g2r('a')], 'lhss': [dict(trow('lhss_001', 'inferred_legacy', G1H, G1P, NO12), ion_sigma0_mScm='3.0',
+                                                               ion_sigma0_T_C='25.0', phi_basis='phi_se_mc', L_basis='L_mc')]}, None))
+_cp_def = safe(lambda: _cp({'lhs': [_g2r('a')], 'lhss': [_g2r('lhss_001')]}, {'lhs': _dd(), 'lhss': _dd(meaning='다른 뜻')}))
+chk('V21d 결합 함수 v13_combined_problems — 정상 (설계 열 뜻은 "원천 = …" 꼬리만 다르면 같다) = 문제 0',
+    callable(_cp) and _cp_ok == [], _cp_ok)
+chk('V21d2 결합 반례 — 데이터셋 사이 ID 겹침 (a) · 데이터셋 안 중복 · σ₀ 두 값 · 세대 섞임 (g2 ↔ inferred_legacy) · 공유 열 정의 다름 → 각각 문제',
+    all(isinstance(x, list) and x for x in (_cp_dup, _cp_dup2, _cp_s0, _cp_mix, _cp_def))
+    and any("'a'" in x or ' a ' in x or 'a' in x.split() for x in _cp_dup) and any('ion_sigma0_mScm' in x for x in _cp_s0)
+    and any('porosity_union_exact_pct' in x for x in _cp_def), (_cp_dup, _cp_dup2, _cp_s0, _cp_mix, _cp_def))
+
+#  실제 경로 — 정상 214 (합성 세대 2 인계표 셋 · 194 배치 + 보충 배치 · τ 다시 읽기 대역)
+r21 = {}
+_rr21 = []
+_orig_rr21 = LRB.v13_reread_tau
+with tempfile.TemporaryDirectory() as td:
+    hd21 = safe(lambda: make_g2_handover_dir(os.path.join(td, 'handover')))
+    b194 = make_batch_root(os.path.join(td, 'b194'))
+    bsup = make_supp_batch_root(os.path.join(td, 'bsup'))
+    ver21 = os.path.join(td, 'go.md')
+    open(ver21, 'w', encoding='utf-8').write('# GO (합성)\n')
+    LRB.v13_reread_tau = lambda ds, root, rows, gen: _rr21.append((ds, os.path.realpath(root), len(rows), gen)) or []
+    try:
+        o21 = os.path.join(td, 'rel')
+        r21['good'] = safe(lambda: LRB.build_v13(out_dir=o21, handover_dir=hd21, batch_root=b194, supp_batch_root=bsup, date=DATE, codex_verdict=ver21))
+        r21['rr_good'] = list(_rr21)                       # 정상 빌드의 τ 다시 읽기 호출만 (뒤의 거부 시험 호출과 섞지 않는다)
+        if isinstance(r21['good'], dict):
+            r21['names'] = sorted(os.listdir(o21))
+            r21['check'] = safe(lambda: LRB.check_v13(o21, hd21))
+            r21['man'] = json.load(open(os.path.join(o21, 'v13_build_manifest.json'), encoding='utf-8'))
+            r21['readme'] = open(os.path.join(o21, 'README.md'), encoding='utf-8').read()
+            r21['main'] = {ds: _read_csv(os.path.join(o21, f'{ds}_release_{DATE}_v13.csv')) for ds in ('lhs', 'lhsx', 'lhss')}
+            r21['ml'] = {ds: _read_csv(os.path.join(o21, f'{ds}_mltable_{DATE}_v13.csv')) for ds in ('lhs', 'lhsx', 'lhss')}
+            r21['summary'] = json.load(open(os.path.join(o21, 'lhs_v13_refit_porosity_sigma_cn_summary.json'), encoding='utf-8'))
+            #  194 행 불변 — lhs · lhsx 주 표 · 부록 = 보충 없이 같은 열 명세로 인계표에서 바로 만든 것 (바이트 같음)
+            inv = {}
+            for ds in ('lhs', 'lhsx'):
+                hp = os.path.join(hd21, f'{ds}_handover_v13_{DATE}.csv')
+                for kind, suf, appx in (('main', '', False), ('physics', '_physics', True)):
+                    pref = os.path.join(td, f'solo_{ds}{suf}')
+                    LRB.build(hp, LRB.v13_columns(ds, kind), pref, appendix=appx, profile='ml_v1',
+                              expect_ids=os.path.join(ROOT, LRB.V13_INPUTS[ds]['expect_ids']))
+                    inv[(ds, kind)] = (open(pref + '.csv', 'rb').read() == open(os.path.join(o21, f'{ds}_release_{DATE}_v13{suf}.csv'), 'rb').read()
+                                       and open(pref + '_columns.tsv', 'rb').read()
+                                       == open(os.path.join(o21, f'{ds}_release_{DATE}_v13{suf}_columns.tsv'), 'rb').read())
+            r21['inv'] = inv
+            #  194 만으로 다시 적합 (참고 줄 대조)
+            rows194 = []
+            for ds in ('lhs', 'lhsx'):
+                h_, rr_ = r21['main'][ds]
+                rows194 += [dict(x, dataset=ds) for x in rr_]
+            r21['fit194'] = safe(lambda: LRB.refit_porosity_sigma_cn(rows194))
+            #  check_v13 재판정 — 보충 배치 증거를 바꾸면 문제 · 되돌리면 0
+            rrp = os.path.join(bsup, 'reread.json')
+            orig = open(rrp, 'rb').read()
+            j = json.loads(orig)
+            j['n_fail'] = 1
+            open(rrp, 'w', encoding='utf-8').write(json.dumps(j))
+            r21['tamper_rr'] = safe(lambda: LRB.check_v13(o21, hd21))
+            open(rrp, 'wb').write(orig)
+            mp = os.path.join(bsup, 'manifest.json')
+            morig = open(mp, 'rb').read()
+            open(mp, 'w', encoding='utf-8').write(json.dumps(dict(json.loads(morig), _edited=1)))
+            r21['tamper_man'] = safe(lambda: LRB.check_v13(o21, hd21))
+            open(mp, 'wb').write(morig)
+            r21['restored'] = safe(lambda: LRB.check_v13(o21, hd21))
+
+        def _refuse(name, tag, **kw):
+            o_ = os.path.join(td, f'o_{name}')
+            args = dict(out_dir=o_, handover_dir=hd21, batch_root=b194, supp_batch_root=bsup, date=DATE, codex_verdict=ver21)
+            args.update(kw)
+            m_ = refusal_msg(lambda: LRB.build_v13(**args))
+            r21.setdefault('refuse', []).append((name, tag, m_, os.path.exists(o_)))
+
+        _refuse('보충 배치 뿌리 없음', '보충', supp_batch_root=None)
+        _refuse('보충 = 194 와 같은 뿌리', '같은 배치 뿌리', supp_batch_root=b194)
+        _refuse('보충 자리에 194 꼴 배치 (코호트 lhs · lhsx)', 'lhss', supp_batch_root=make_batch_root(os.path.join(td, 'b194b')))
+        _refuse('보충 배치 발사 봉인 지문 다름 (봉인 파일 하나 더 — 이 체크아웃과는 같은 지문)', 'code_fp',
+                supp_batch_root=make_supp_batch_root(os.path.join(td, 'bs_fp'), alter={'scripts/lhs_release_build.py': _sha_file('scripts/lhs_release_build.py')}))
+        _refuse('보충 배치 기대 세대 inferred_legacy', 'g2', supp_batch_root=make_supp_batch_root(os.path.join(td, 'bs_lg'), gen='inferred_legacy'))
+        _refuse('보충 배치 다시 읽기 = 다른 등록 집합 (production194)', 'supp20',
+                supp_batch_root=make_supp_batch_root(os.path.join(td, 'bs_set'), reread=lambda r: dict(r, expected_set='production194')))
+        _refuse('보충 배치 감사에 import 관측 객체 없음', 'import_observation',
+                supp_batch_root=make_supp_batch_root(os.path.join(td, 'bs_obs'), audit=lambda a: (a.pop('import_observation'), a)[1]))
+        _refuse('보충 배치 관측 끈 실행 (observe_imports false)', 'observe_imports',
+                supp_batch_root=make_supp_batch_root(os.path.join(td, 'bs_off'), man_edit=lambda m: m.update(observe_imports=False)))
+        _refuse('보충 배치 감사 행 19 (한 케이스 빠짐)', 'supp20',
+                supp_batch_root=make_supp_batch_root(os.path.join(td, 'bs_19'), audit=lambda a: a.update(
+                    cases=a['cases'][1:], verdicts={'SEALED': 19}, merged={'same': 19})))
+        _refuse('인계표 폴더에 lhss 없음 (194 만)', 'lhss', handover_dir=safe(lambda: make_g2_handover_dir(os.path.join(td, 'h194'), with_lhss=False)))
+
+        def _mut_dup(ds, head, out):
+            if ds == 'lhss':
+                out[0]['case_id'] = 'lhs00_000'
+        _refuse('lhss 행 ID 가 lhs 행과 겹침', 'lhs00_000', handover_dir=safe(lambda: make_g2_handover_dir(os.path.join(td, 'h_dup'), mutate=_mut_dup)))
+
+        def _mut_thick(ds, head, out):
+            if ds == 'lhss':
+                out.append(dict(out[-1], case_id='lhst_045_6m'))
+        _refuse('lhss 에 후막 행 (lhst_045_6m · 21 행)', 'lhst_045_6m',
+                handover_dir=safe(lambda: make_g2_handover_dir(os.path.join(td, 'h_thick'), mutate=_mut_thick)))
+
+        def _mut_s0(ds, head, out):
+            if ds == 'lhss':
+                for o in out:
+                    o['ion_sigma0_mScm'] = '3.1'
+        _refuse('lhss σ₀ 3.1 ≠ 194 의 σ₀ (물성 교차)', 'ion_sigma0_mScm', handover_dir=safe(lambda: make_g2_handover_dir(os.path.join(td, 'h_s0'), mutate=_mut_s0)))
+
+        def _mut_load(ds, head, out):
+            if ds == 'lhss':
+                out[0]['loading_mAh_cm2'] = '0.4193'
+        _refuse('lhss 부피분율 행에 역산 하중 (빈칸이어야)', 'loading_mAh_cm2', handover_dir=safe(lambda: make_g2_handover_dir(os.path.join(td, 'h_ld'), mutate=_mut_load)))
+        hdef = safe(lambda: make_g2_handover_dir(os.path.join(td, 'h_def')))
+        if not is_err(hdef):
+            cp_ = os.path.join(hdef, f'lhss_handover_v13_{DATE}_columns.tsv')
+            txt = open(cp_, encoding='utf-8').read().splitlines()
+            txt = [ln.replace('\t', '\t', 1) if not ln.startswith('porosity_union_exact_pct\t') else
+                   '\t'.join(ln.split('\t')[:3] + ['(보충만 다른 뜻)'] + ln.split('\t')[4:]) for ln in txt]
+            open(cp_, 'w', encoding='utf-8').write('\n'.join(txt) + '\n')
+        _refuse('lhss 열 사전 — 공유 열 (porosity_union_exact_pct) 뜻이 194 와 다름 (열 정의 교차)', 'porosity_union_exact_pct', handover_dir=hdef)
+        #  단계 A — 세 번 (각자 자기 배치)
+        _calls21 = []
+        if hasattr(LRB, 'subprocess'):
+            _orun = LRB.subprocess.run
+            LRB.subprocess.run = lambda argv, **kw: ((_calls21.append(argv) or _FakeRun()) if '--export-handover' in argv else _orun(argv, **kw))
+            try:
+                r21['stageA'] = safe(lambda: LRB.stage_handovers_v13(b194, os.path.join(td, 'hA'), DATE, pressure_unverified=True, supp_batch_root=bsup))
+                r21['stageA_nosupp'] = refusal_msg(lambda: LRB.stage_handovers_v13(b194, os.path.join(td, 'hB'), DATE, pressure_unverified=True))
+            finally:
+                LRB.subprocess.run = _orun
+        r21['stage_calls'] = _calls21
+        r21['b194'], r21['bsup'] = os.path.realpath(b194), os.path.realpath(bsup)
+    finally:
+        LRB.v13_reread_tau = _orig_rr21
+
+_g21 = r21.get('good')
+_m21 = r21.get('man') or {}
+chk('V21e 정상 214 — 만들기 · τ 다시 읽기 = lhs · lhsx (194 배치 뿌리) · lhss (보충 배치 뿌리) · 행 130 · 64 · 20 · 산출에 lhss 주 표 · 부록 · ML 표 · check_v13 문제 0',
+    isinstance(_g21, dict) and sorted(r21.get('rr_good') or []) == sorted([('lhs', r21.get('b194'), 130, 'g2'), ('lhsx', r21.get('b194'), 64, 'g2'),
+                                                                       ('lhss', r21.get('bsup'), 20, 'g2')])
+    and all(n in (r21.get('names') or []) for n in (f'lhss_release_{DATE}_v13.csv', f'lhss_release_{DATE}_v13_physics.csv',
+                                                     f'lhss_mltable_{DATE}_v13.csv', f'lhss_mltable_{DATE}_v13_columns.tsv'))
+    and r21.get('check') == [], (_g21 if not isinstance(_g21, dict) else (sorted(r21.get('rr_good') or []), r21.get('check'))))
+_ml21 = r21.get('ml') or {}
+_mn21 = r21.get('main') or {}
+_lhss_rows = (_ml21.get('lhss') or ([], []))[1]
+_lhs_ml = _ml21.get('lhs') or ([], [])
+chk('V21f 행마다 출처 — ML 표 dataset · network_batch (lhs · lhsx = production194 · lhss = supp20) · lhss 주 표 20 × lhs 열 · 하중 = 2 mAh 행 값 · 부피분율 행 빈칸 '
+    '+ 코드 NA_NOT_DESIGN_INPUT (10) · lhs ML 표에도 그 코드 열 (전부 빈칸 — 합집합 규칙)',
+    bool(_lhss_rows) and all(r_.get('dataset') == 'lhss' and r_.get('network_batch') == 'supp20' for r_ in _lhss_rows)
+    and all(r_.get('network_batch') == 'production194' for r_ in _lhs_ml[1]) and 'network_batch' in _lhs_ml[0]
+    and (_mn21.get('lhss') or ([], []))[0] == (_mn21.get('lhs') or (['?'], []))[0] and len((_mn21.get('lhss') or ([], []))[1]) == 20
+    and sum(r_.get('loading_mAh_cm2__blank') == 'NA_NOT_DESIGN_INPUT' and r_.get('loading_mAh_cm2') == '' for r_ in _lhss_rows) == 10
+    and sum(r_.get('loading_mAh_cm2') not in ('', None) and r_.get('loading_mAh_cm2__blank') == '' for r_ in _lhss_rows) == 10
+    and 'loading_mAh_cm2__blank' in _lhs_ml[0] and all(r_.get('loading_mAh_cm2__blank') == '' for r_ in _lhs_ml[1]),
+    ([(r_.get('case_id'), r_.get('network_batch'), r_.get('loading_mAh_cm2'), r_.get('loading_mAh_cm2__blank')) for r_ in _lhss_rows[:3]], _lhs_ml[0][:4]))
+chk('V21g ★ 회귀 — 기존 194 행 = 보충 없이 같은 열 명세로 인계표에서 바로 만든 배포 (lhs · lhsx 주 표 · Physics 부록 · 열 사전 바이트 같음)',
+    (r21.get('inv') or {}) and all((r21.get('inv') or {}).values()) and len(r21.get('inv') or {}) == 4, r21.get('inv'))
+_bm21 = (_m21.get('batches') or {})
+_sb21 = (_m21.get('supp_batch') or {})
+chk('V21h 빌드 manifest — 데이터셋 셋 · 세대 g2 셋 · 배치 둘 (뿌리 · 등록 집합 · 데이터셋) · 보충 배치 관문 (supp20 · 20/20 · 문제 0) · 교차 (같은 code_fp · 문제 0)',
+    _m21.get('datasets') == ['lhs', 'lhsx', 'lhss'] and _m21.get('generation') == {'lhs': 'g2', 'lhsx': 'g2', 'lhss': 'g2'}
+    and (_bm21.get('production194') or {}).get('root') == r21.get('b194') and (_bm21.get('supp20') or {}).get('root') == r21.get('bsup')
+    and (_bm21.get('production194') or {}).get('datasets') == ['lhs', 'lhsx'] and (_bm21.get('supp20') or {}).get('datasets') == ['lhss']
+    and (_sb21.get('batch_gate') or {}).get('problems') == [] and (_sb21.get('batch_gate') or {}).get('expect_set') == 'supp20'
+    and ((_sb21.get('batch_gate_files') or {}).get('reread.json') or {}).get('read_n') == 20
+    and ((_sb21.get('batch_gate_files') or {}).get('reread.json') or {}).get('expected_set') == 'supp20'
+    and (_m21.get('cross_batch') or {}).get('problems') == [] and (_m21.get('cross_batch') or {}).get('code_fp')
+    == NP194.code_fp({rel: _sha_file(rel) for rel in SEAL_FILES}),
+    {k: _m21.get(k) for k in ('datasets', 'batches', 'cross_batch')})
+_s21 = r21.get('summary') or {}
+_ref21 = (_s21.get('reference_without_supp') or {})
+_f194 = r21.get('fit194') if isinstance(r21.get('fit194'), dict) else {}
+chk('V21i 재적합 — 214 (관통 행 · lhss 포함) + 194 만 참고 줄 (reference_without_supp = lhs · lhsx 만 다시 적합한 값) · README 에 보충 · supp20 · 참고 줄',
+    'lhss' in (_s21.get('n_fit_by_dataset') or {}) and _ref21.get('n_fit') == ((_f194.get('summary') or {}).get('n_fit'))
+    and not LRB._v13_close(_ref21.get('fits'), json.loads(json.dumps((_f194.get('summary') or {}).get('fits'))))
+    and all(k in (r21.get('readme') or '') for k in ('supp20', 'lhss', '보충', '194 만')),
+    (_s21.get('n_fit_by_dataset'), _ref21.get('n_fit'), (_f194.get('summary') or {}).get('n_fit')))
+for nm, tag, m_, made in r21.get('refuse', []):
+    chk(f'V21j 거부 — {nm} (메시지에 {tag!r}) · 산출 폴더 없음', m_ is not None and not m_.startswith('OTHER') and tag in m_ and not made,
+        (m_ or 'BUILT (거부 없음)')[:400])
+if not r21.get('refuse'):
+    chk('V21j (거부 시험 못 함)', False, r21)
+chk('V21k check_v13 재판정 — 좋은 214 묶음의 보충 배치 다시 읽기 n_fail 1 · 보충 manifest 바뀜 = 문제 (보충 배치 표지) · 되돌리면 문제 0',
+    isinstance(r21.get('tamper_rr'), list) and any('supp20' in p_ or '보충' in p_ for p_ in r21['tamper_rr'])
+    and isinstance(r21.get('tamper_man'), list) and bool(r21['tamper_man']) and r21.get('restored') == [],
+    (r21.get('tamper_rr'), r21.get('tamper_man'), r21.get('restored')))
+_sc21 = r21.get('stage_calls') or []
+chk('V21l 단계 A — 생성기 세 번 (lhs · lhsx = 194 배치 · lhss = 보충 배치 · --design = lhss 어댑터 CSV · --union · --harvest = lhss 원천) · 보충 뿌리 없으면 거부',
+    not is_err(r21.get('stageA')) and len(_sc21) == 3
+    and [_opt(c, '--tau-batch-manifest') for c in _sc21] == [os.path.join(r21.get('b194', ''), 'manifest.json')] * 2
+    + [os.path.join(r21.get('bsup', ''), 'manifest.json')]
+    and _opt(_sc21[2], '--tau-results') == os.path.join(r21.get('bsup', ''), 'merged', 'lhss', 'results')
+    and _opt(_sc21[2], '--design') == 'docs/data/lhss_design_adapted_20261012.csv'
+    and _opt(_sc21[2], '--union') == 'docs/data/lhss_union_1e09f661d/lhss20_union.tsv'
+    and _opt(_sc21[2], '--harvest') == 'docs/data/lhss_descriptors_cov_1e09f661d'
+    and isinstance(r21.get('stageA_nosupp'), str) and '보충' in r21['stageA_nosupp'], (r21.get('stageA'), _sc21, r21.get('stageA_nosupp')))
+with contextlib.redirect_stdout(io.StringIO()) as _hb21:
+    with contextlib.suppress(SystemExit):
+        LRB.main(['--help'])
+chk('V21m CLI — --supp-batch-root (보충 배치 뿌리) 가 있다 · --pressure-record lhss=… 를 받는다 (데이터셋 셋)',
+    '--supp-batch-root' in _hb21.getvalue() and 'lhss' in tuple(getattr(LRB, 'V13_DATASETS', ())), _hb21.getvalue()[-300:])
 
 print(f'\n{_ok} PASS · {len(_fail)} FAIL')
 if _fail:
