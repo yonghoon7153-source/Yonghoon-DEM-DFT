@@ -1,0 +1,95 @@
+{
+ "design_probe.json": {
+  "equal": 898,
+  "float_1e-12": [
+   "refit.fits.free.by_dataset.lhs.bias",
+   "refit.fits.free.by_dataset.lhs.r2",
+   "refit.fits.free.by_dataset.lhs.resid_sd",
+   "refit.fits.free.by_dataset.lhsx.bias",
+   "refit.fits.free.by_dataset.lhsx.r2",
+   "refit.fits.free.by_dataset.lhsx.resid_sd",
+   "refit.fits.free.loocv_r2",
+   "refit.fits.free.params.a",
+   "refit.fits.free.params.alpha",
+   "refit.fits.free.params.beta",
+   "refit.fits.free.r2",
+   "refit.fits.free.se.a",
+   "refit.fits.free.se.alpha",
+   "refit.fits.free.se.beta"
+  ],
+  "judgment_diff": [
+   {
+    "codex": "AM_P 질량분율 (덱 · 셋의 합 = 1) — ps_frac = w_AM_P / (w_AM_P + w_AM_S) · 원천 = docs/data/lhss_design_adapted_20261012.csv (보충 설계 docs/data/lhs_supp_design_20261006.csv 를 scripts/lhss_design_adapter.py 가 옮긴 열)",
+    "key": "new_dictionary_claims.lhss_w_AM_P.meaning",
+    "ours": "P 슬롯 질량분율 (덱 · 셋의 합 = 1) — bimodal = AM_P · mono (type 2 개) = 단일 AM 자리 (크기 라벨 = lhss_kind) · ps_frac = w_AM_P / (w_AM_P + w_AM_S) 는 bimodal 에만 · mono_AM_P → ps_frac 1 · mono_AM_S → ps_frac 0 (어댑터가 kin"
+   },
+   {
+    "codex": "AM_S 질량분율 (덱 · 셋의 합 = 1) · 원천 = docs/data/lhss_design_adapted_20261012.csv (보충 설계 docs/data/lhs_supp_design_20261006.csv 를 scripts/lhss_design_adapter.py 가 옮긴 열)",
+    "key": "new_dictionary_claims.lhss_w_AM_S.meaning",
+    "ours": "S 슬롯 질량분율 (덱 · 셋의 합 = 1) — bimodal = AM_S · mono = 0 · 원천 = docs/data/lhss_design_adapted_20261012.csv (보충 설계 docs/data/lhs_supp_design_20261006.csv 를 scripts/lhss_design_adapter.py 가 옮긴 열)"
+   }
+  ],
+  "keys_codex": 914,
+  "keys_ours": 914,
+  "only_codex": [],
+  "only_ours": [],
+  "path_only_diff": []
+ },
+ "release_probe.json": {
+  "equal": 82,
+  "float_1e-12": [],
+  "judgment_diff": [
+   {
+    "codex": "발사 봉인 지문 (code_fp) 이 배치마다 다르다 {'production194': '250a59b21293b394', 'supp20': '3b0ef9f1f2245699'} — 같은 봉인 32 로 돈 배치만 한 배포에 싣는다 (보충 등록 §3)",
+    "key": "actual_cross_problem[0]",
+    "ours": "발사 봉인 지문 (code_fp) 이 배치마다 다르다 {'production194': '250a59b21293b394', 'supp20': '60252564cf188d73'} — 같은 봉인 32 로 돈 배치만 한 배포에 싣는다 (보충 등록 §3)"
+   },
+   {
+    "codex": "배치 교차 — 발사 봉인 지문 (code_fp) 이 배치마다 다르다 {'production194': '250a59b21293b394', 'supp20': '3b0ef9f1f2245699'} — 같은 봉인 32 로 돈 배치만 한 배포에 싣는다 (보충 등록 §3)",
+    "key": "different_fp_gate_matching_cross_root.returned[0]",
+    "ours": "배치 교차 — 발사 봉인 지문 (code_fp) 이 배치마다 다르다 {'production194': '250a59b21293b394', 'supp20': '60252564cf188d73'} — 같은 봉인 32 로 돈 배치만 한 배포에 싣는다 (보충 등록 §3)"
+   },
+   {
+    "codex": "3b0ef9f1f22456997979308efa7597f52884e04869cabc4f8fee31fe3f9e10cc",
+    "key": "fps.supp_replacement",
+    "ours": "60252564cf188d7321f5e916d07aa97c723911056ebab6da151ac8b32e7222a2"
+   },
+   {
+    "codex": "배치 교차 문제 1 (보충 등록 §3 — 같은 봉인 · 같은 세대) — 발사 봉인 지문 (code_fp) 이 배치마다 다르다 {'production194': '250a59b21293b394', 'supp20': '3b0ef9f1f2245699'} — 같은 봉인 32 로 돈 배치만 한 배포에 싣는다 (보충 등록 §3)",
+    "key": "normal_build_different_fp.message",
+    "ours": "배치 교차 문제 1 (보충 등록 §3 — 같은 봉인 · 같은 세대) — 발사 봉인 지문 (code_fp) 이 배치마다 다르다 {'production194': '250a59b21293b394', 'supp20': '60252564cf188d73'} — 같은 봉인 32 로 돈 배치만 한 배포에 싣는다 (보충 등록 §3)"
+   }
+  ],
+  "keys_codex": 97,
+  "keys_ours": 104,
+  "only_codex": [
+   "different_fp_gate_missing_cross_root.returned",
+   "different_fp_gate_original_cross_roots.returned",
+   "missing_cross_root.returned",
+   "missing_supp_code_identity.returned",
+   "unauthorized_supp_code_change.returned"
+  ],
+  "only_ours": [
+   "different_fp_gate_matching_cross_root.returned[2]",
+   "different_fp_gate_missing_cross_root.returned[0]",
+   "different_fp_gate_missing_cross_root.returned[1]",
+   "different_fp_gate_missing_cross_root.returned[2]",
+   "different_fp_gate_missing_cross_root.returned[3]",
+   "different_fp_gate_original_cross_roots.returned[0]",
+   "different_fp_gate_original_cross_roots.returned[1]",
+   "different_fp_gate_original_cross_roots.returned[2]",
+   "different_fp_gate_original_cross_roots.returned[3]",
+   "missing_cross_root.returned[0]",
+   "missing_supp_code_identity.returned[0]",
+   "unauthorized_supp_code_change.returned[0]"
+  ],
+  "path_only_diff": [
+   "baseline_build.returned.out_dir",
+   "lhs_loading99_build.returned.out_dir",
+   "lhss_loading99_build.returned.out_dir",
+   "tau_stub_calls[0][1]",
+   "tau_stub_calls[1][1]",
+   "tau_stub_calls[2][1]"
+  ]
+ }
+}

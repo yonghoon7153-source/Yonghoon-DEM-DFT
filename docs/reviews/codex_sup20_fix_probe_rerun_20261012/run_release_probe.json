@@ -1,0 +1,19 @@
+{
+  "name": "release_probe",
+  "argv": [
+    "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/d26d1e75-209f-540f-83a8-c0e1957edc2f/scratchpad/sup20w/probe_fixed/probes/release_probe.py"
+  ],
+  "rc": 0,
+  "seconds": 16.01764972899946,
+  "tail": [
+    "  \"lhs_loading99_input\": {",
+    "    \"case\": \"lhs00_000\",",
+    "    \"before\": \"2.0000\",",
+    "    \"after\": \"99\"",
+    "  },",
+    "  \"lhs_loading99_check\": {",
+    "    \"returned\": []",
+    "  }",
+    "}"
+  ]
+}
