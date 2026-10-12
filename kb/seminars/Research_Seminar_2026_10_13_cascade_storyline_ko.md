@@ -61,7 +61,7 @@ evidenceScope: multi-source-mixed
   - Nd/O: 밴드 엣지, −ICOHP, CEI — 실험팀과 협업
   - B₂O₃·O 도핑: EOS, BVSE, MLIP-MD
   - h-BN@VGCF: Li 흡착·이동 NEB, 층수 효과
-  - Li₃N·Li₂S: SEI 성분의 Li 이동 장벽 (NEB, 셀 수렴)
+  - Li₃N·Li₂S: SEI 성분의 Li 이동 장벽 (NEB) · Li₂S 는 셀 크기 대조를 준비 중 (3×3×3 값만 있음)
   - 계면 접착: 공저 ACS Nano 2026 의 계면 결합 곡선 · 접착 일
   - SDCP: 스핀 상태별 흡착
 - 맨 아래 파란 줄로 이어 간다: *"EOS·탄성 → 기준 계산, BVSE → Li 지형, MLIP-MD 프로토콜 → 수송 단계, 대권위 상도 → 안정창, 계면 에너지 → 계면 반응성"*
