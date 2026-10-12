@@ -339,7 +339,7 @@ def slide_title():
     save(t, 'slide1.xml')
 
 
-def slide_sampling(note):
+def slide_sampling(note, color=BLUE):
     """Orig slide 11: site-pair heat map + anneal schematic; `note` is the blue line at the bottom."""
     t = load('slide11.xml')
     header(t, 'Approach')
@@ -366,7 +366,7 @@ def slide_sampling(note):
         tb(ids(), 'Caption right', 5.45, 2.62 + 3.6 * 1197 / 1623, 3.9, 0.32,
            P('< what the short anneal does >', 'p', 1150, 100, 'ctr')),
         tb(ids(), 'Bottom note', 0.55, 6.2, 8.9, 0.6,
-           P(note, 'p', 1250, 105, color=BLUE)))
+           P(note, 'p', 1250, 105, color=color)))
     save(t, 'slide11.xml')
 
 
@@ -435,7 +435,7 @@ def slide_backups():
     t = load('slide15.xml')
     header(t, 'Backup')
     replace_body(t, P('Bond-valence Li landscape (method illustration)', 'h', ln=120)
-                 + P('Low bond-valence site energy marks Li-accessible regions — a structural proxy, not a diffusion coefficient.', 'b', ln=120),
+                 + P('Low bond-valence site energy marks Li-accessible regions; it is a structural proxy for Li pathways.', 'b', ln=120),
                  y=1.08, h=1.2)
     save(t, 'slide15.xml')
 
@@ -473,86 +473,109 @@ def pack(order):
 
 
 # ================================================================ lean variant (--lean)
-# Same slides, same order and page numbers as the full deck (so the pNN CSVs map 1:1), but each
-# slide carries one message, at most two short bullets and one visual, plus a caption and one
-# takeaway line — the density of the 08-18 deck. The detail moves to the script and defense notes.
-DONE_C, RECO_C, RUN_C, PLAN_C = ('E8F3EA', '1B5E20'), ('FFF4E0', '8A5A00'), ('DCEBF8', '0B5394'), ('EFEFEF', '4B5563')
-OK_GREEN, NO_RED, OPEN_AMBER = '1B7F3B', 'B42318', 'B7791F'
+# Same slides, same order and page numbers as the full deck (so the pNN CSVs map 1:1), written in
+# the visual language of the user's 08-18 deck: ■ heading + two short bullets (key words in blue,
+# warnings in red), one figure or table, a '< caption >' and one coloured line under it, and the
+# dashed red numbered box + down-arrow image of its slide 4. No cards, badges, icons or chevrons.
+LEAN_FIGS = ['fig_p07_stage1_scale_coverage.png', 'fig_p10_host_window.png',
+             'fig_p12_msd_check_schematic.png', 'fig_p13_run_roster.png']
+DASH_RED, NOTE_GREY = 'FF5050', '6B7280'
 
 
-def chip(i, name, x, y, w, h, text, fc, sz=1000, bold=True):
-    return box(i, name, x, y, w, h, fill=fc[0], anchor='ctr', adj=50000, ins=(0.04, 0.0, 0.04, 0.0),
-               paras=P(text, 'p', sz, 100, 'ctr', fc[1], bold=bold))
-
-
-def icon(i, name, x, y, d, glyph, fill, sz=1300):
-    return box(i, name, x, y, d, d, fill=fill, geom='ellipse', anchor='ctr', ins=(0.0, 0.0, 0.0, 0.0),
-               paras=P(glyph, 'p', sz, 100, 'ctr', 'FFFFFF', bold=True))
-
-
-def lean_body(t, head, bullets=(), h=0.5):
+def lean_body(t, head, bullets=(), h=0.5, bsz=1500, bln=130):
     """Heading + level-2 bullets in the template's own body box (the look of the 08-18 slides)."""
     drop(t, lambda el: name_of(el) == 'Rectangle 4')
     add(t, tb(150, 'Rectangle 4', 0.61, 1.08, 8.84, h,
-              P(head, 'h', ln=130) + ''.join(P(b, 'b', ln=130) for b in bullets)))
+              P(head, 'h', ln=130) + ''.join(P(b, 'b', bsz, ln=bln, spcbef=600 if bsz > 1500 else 0) for b in bullets)))
 
 
-def caption(i, text, x, y, w, h=0.3, sz=1200):
+def caption(i, text, y, x=0.55, w=8.9, h=0.32, sz=1300):
     return tb(i, 'Caption', x, y, w, h, P(text, 'p', sz, 100, 'ctr'))
 
 
-def takeaway(i, text, y, h=0.42, sz=1400, x=0.55, w=8.9):
-    return tb(i, 'Takeaway', x, y, w, h, P(text, 'p', sz, 105, 'ctr', BLUE))
+def line_under(i, text, y, h=0.4, sz=1400, x=0.4, w=9.2):
+    """The one-line conclusion under a caption: black text, key words in [[b:blue]] / [[r:red]]."""
+    return tb(i, 'Conclusion', x, y, w, h, P(text, 'p', sz, 110, 'ctr', INK))
+
+
+def png_size(path):
+    with open(path, 'rb') as f:
+        head = f.read(24)
+    return int.from_bytes(head[16:20], 'big'), int.from_bytes(head[20:24], 'big')
+
+
+def figure(t, slide, fname, x, y, w, descr):
+    """Place a deck figure (copied into ppt/media) at width w; returns its height."""
+    pw, ph = png_size(os.path.join(EXTRA, fname))
+    h = w * ph / pw
+    add(t, pic(ids(), descr, rel_add(slide, f'../media/{fname}'), x, y, w, h, descr))
+    return h
+
+
+def dashed_list(t, slide, title, items, x, y, w, h, note_x=0.52, sz=1500, arrow_y=None):
+    """The 08-18 slide-4 box: dashed red rounded frame, red title on the frame, numbered items with grey notes."""
+    add(t,
+        box(ids(), 'Dashed frame', x, y, w, h, line=DASH_RED, dash=True, adj=5000, lw=22225),
+        tb(ids(), 'Frame title', x + 0.45, y - 0.19, 0.35 + 0.12 * len(title), 0.36,
+           P(title, 'p', 1500, 100, 'ctr', DASH_RED, bold=True), ins=(0.04, 0.02, 0.04, 0.02)))
+    nofill = t.getroot().find('.//p:cSld/p:spTree', NS)[-1].find('./p:spPr/a:noFill', NS)   # title box cuts the dashed line
+    nofill.addprevious(etree.fromstring(f'<a:solidFill xmlns:a="{NS["a"]}"><a:srgbClr val="FFFFFF"/></a:solidFill>'))
+    nofill.getparent().remove(nofill)
+    step = (h - 0.3) / len(items)
+    for k, (main, note) in enumerate(items):
+        yy = y + 0.2 + k * step
+        add(t, tb(ids(), f'Item {k + 1}', x + 0.4, yy, w * note_x - 0.35, step, P(f'{k + 1}.  {main}', 'p', sz, 100, color=INK),
+                  anchor='ctr'),
+            tb(ids(), f'Note {k + 1}', x + w * note_x + 0.1, yy, w * (1 - note_x) - 0.25, step,
+               P(note, 'p', sz, 100, color=NOTE_GREY), anchor='ctr'))
+    if arrow_y is not None:
+        down_arrow(t, slide, arrow_y)
+
+
+def down_arrow(t, slide, y, x=3.59, w=2.81, h=0.72):
+    """The light-blue down arrow of the 08-18 slide 4 — a crop of media/image8.png, same crop and size."""
+    xml = pic(ids(), 'Down arrow', rel_add(slide, '../media/image8.png'), x, y, w, h, '')
+    xml = xml.replace('<a:stretch><a:fillRect/></a:stretch>',
+                      '<a:srcRect l="46859" t="52346" r="43846" b="38064"/><a:stretch/>')
+    assert 'srcRect' in xml
+    add(t, xml)
 
 
 def build_lean():
+    for f in LEAN_FIGS:
+        shutil.copy(os.path.join(EXTRA, f), os.path.join(WORK, 'ppt', 'media', f))
     slide_title()
 
-    # ---- 2 previous DFT work: title + keywords + an empty figure box per tile
+    # ---- 2 previous DFT work: eight figure slots, title above, '< keywords >' below
     name, t = fresh('prev', 'Background')
-    lean_body(t, 'DFT simulations so far — the basis of this screening')
-    tiles = [('Li₆PS₅Cl baseline', 'Band gap · EOS · elastic'),
-             ('Nd/O co-doping (Nd₂O₃)', 'Band edges · ICOHP · CEI'),
-             ('B₂O₃ and O doping', 'EOS · BVSE · MLIP-MD'),
-             ('h-BN on carbon fiber', 'Li adsorption · NEB'),
-             ('Li₃N (SEI component)', 'Li migration (NEB)'),
-             ('Li₂S (SEI component)', 'Li-vacancy NEB · cell size'),
-             ('Interfacial adhesion', 'Work of adhesion → DEM'),
-             ('Binder adsorption (SDCP)', 'Spin-resolved adsorption')]
-    TW, TH, GX, GY = 2.16, 2.3, 0.12, 0.12
+    lean_body(t, 'DFT simulations so far',
+              ['Each of these calculations became [[b:one step of the screening workflow]].'], h=0.95)
+    tiles = [('Li₆PS₅Cl baseline', 'band gap · EOS · elastic'), ('Nd/O co-doping (Nd₂O₃)', 'band edges · ICOHP · CEI'),
+             ('B₂O₃ and O doping', 'EOS · BVSE · MLIP-MD'), ('h-BN on carbon fiber', 'Li adsorption · NEB'),
+             ('Li₃N (SEI component)', 'Li migration (NEB)'), ('Li₂S (SEI component)', 'V[[_:Li]] migration · cell size'),
+             ('Interfacial adhesion', 'adhesion → DEM contacts'), ('Binder (SDCP) adsorption', 'spin-state adsorption')]
+    TW, GX = 2.12, 0.14
     for k, (ti, kw) in enumerate(tiles):
-        x = 0.5 + (k % 4) * (TW + GX)
-        y = 1.6 + (k // 4) * (TH + GY)
-        add(t,
-            box(ids(), f'Tile {k + 1}', x, y, TW, TH, fill='F5F7FA', adj=5000),
-            tb(ids(), f'Tile {k + 1} title', x + 0.06, y + 0.04, TW - 0.12, 0.44,
-               P(ti, 'p', 1200, 100, 'ctr', NAVY, bold=True), anchor='ctr'),
-            box(ids(), f'Tile {k + 1} figure', x + 0.1, y + 0.5, TW - 0.2, 1.36, fill='FFFFFF', line='9CA3AF',
-                dash=True, geom='rect', paras=P('Figure', 'p', 1000, 100, 'ctr', MUTED), anchor='ctr'),
-            tb(ids(), f'Tile {k + 1} keywords', x + 0.06, y + 1.9, TW - 0.12, 0.36,
-               P(kw, 'p', 1100, 100, 'ctr', INK), anchor='ctr'))
-    add(t, takeaway(ids(), '→ These methods became the steps of this screen', 6.38, 0.36, 1300))
+        x = 0.55 + (k % 4) * (TW + GX)
+        y = 2.1 + (k // 4) * 2.15
+        add(t, tb(ids(), f'Tile {k + 1} title', x, y, TW, 0.3, P(ti, 'p', 1150, 100, 'ctr', INK, bold=True), anchor='b'),
+            box(ids(), f'Tile {k + 1} figure', x + 0.06, y + 0.34, TW - 0.12, 1.3, fill='FFFFFF', line='9CA3AF', dash=True,
+                geom='rect', paras=P('Figure', 'p', 1000, 100, 'ctr', MUTED), anchor='ctr'),
+            tb(ids(), f'Tile {k + 1} caption', x, y + 1.66, TW, 0.3, P(f'< {kw} >', 'p', 1000, 100, 'ctr', INK)))
     save(t, name)
 
-    # ---- 3 overview: four steps on one line
+    # ---- 3 overview: purpose + the dashed numbered box of the 08-18 deck
     name, t = fresh('overview', 'Overview')
-    lean_body(t, 'Goal: let the computation pick the precursor — rule fixed first')
-    steps = [('Stage 1', 'Jun–Aug', '91', ['precursors relaxed', '3,675 structures'], 'Done · exploratory', DONE_C),
-             ('Audit', 'Sep', '237', ['roster designs', 'one primary readout'], 'Rules fixed', DONE_C),
-             ('Stage 2 pilot', 'Oct', '12/40', ['MLIP-MD runs done', 'Al₂O₃ vs Al₂S₃'], 'Running', RUN_C),
-             ('Next', 'Nov →', 'DFT', ['shortlist → DFT', '→ experiments'], 'Planned', PLAN_C)]
-    BW, BG, BY, BH = 1.95, 0.35, 1.85, 3.35
-    x0 = (10 - (4 * BW + 3 * BG)) / 2
-    for k, (ti, when, big, lines, st, fc) in enumerate(steps):
-        x = x0 + k * (BW + BG)
-        paras = (P(ti, 'p', 1500, 100, 'ctr', NAVY, bold=True) + P(when, 'p', 1100, 100, 'ctr', MUTED, spcaft=900)
-                 + P(big, 'p', 3200, 100, 'ctr', INK, bold=True, spcaft=500)
-                 + ''.join(P(s_, 'p', 1200, 110, 'ctr', INK) for s_ in lines))
-        add(t, box(ids(), f'Step {k + 1}', x, BY, BW, BH, fill='F5F7FA', paras=paras, ins=(0.08, 0.16, 0.08, 0.1)),
-            chip(ids(), f'Step {k + 1} status', x + 0.1, BY + BH - 0.48, BW - 0.2, 0.32, st, fc))
-        if k < 3:
-            add(t, arrow(ids(), x + BW + 0.06, BY + BH / 2 - 0.16, BG - 0.12, 0.32))
-    add(t, takeaway(ids(), 'No dopant ranking yet — [[B:the screen proposes, predefined tests decide.]]', 5.62, 0.45, 1500))
+    lean_body(t, 'This work: dopant precursors for Li₆PS₅Cl, selected by calculation',
+              ['The unit of screening is a [[b:precursor compound]] (91 candidates).',
+               'The selection rule is fixed [[b:before]] the results are seen.'], h=1.35)
+    dashed_list(t, name, 'Progress so far',
+                [('Stage 1 exploration screen (Jun–Aug)', '(91 precursors, 3,675 structures)'),
+                 ('Audit of Stage 1 (Sep)', '(rules fixed before new results)'),
+                 ('Stage 2 pilot: MLIP-MD (Oct)', '(12 of 40 runs done)'),
+                 ('Shortlist → DFT → experiments', '(after the pilot verdict)')],
+                0.57, 2.85, 8.86, 2.3, note_x=0.55, arrow_y=5.22)
+    add(t, line_under(ids(), 'No dopant ranking yet: the ranking rule is set [[b:before the results]].', 5.95))
     save(t, name)
 
     # ---- 4 failure modes: orig slide 3, unchanged
@@ -560,8 +583,8 @@ def build_lean():
     # ---- 5 prior screens (orig slide 7): two short bullets + the table, larger
     t = load('slide7.xml')
     replace_body(t, P('Prior work: what dopant screens vary', 'h', ln=130)
-                 + P('Earlier: one element on one site, or hostless compounds.', 'b', ln=130)
-                 + P('Here: one [[b:precursor compound]] fills a cation and an anion site.', 'b', ln=130),
+                 + P('Earlier screens put one element on one site, or screened compounds without a host.', 'b', ln=130)
+                 + P('Here one [[b:precursor compound]] fills a cation and an anion site.', 'b', ln=130),
                  y=1.08, h=1.45)
     drop(t, lambda el: etree.QName(el).localname == 'grpSp' or name_of(el) == 'TextBox 3')
     add(t, tb(ids(), 'References top', 4.6, 0.93, 4.9, 0.42,
@@ -596,8 +619,8 @@ def build_lean():
     t = load('slide8.xml')
     header(t, 'Approach')
     replace_body(t, P('Candidate set: 91 precursors in seven anion families', 'h', ln=130)
-                 + P('Cations +1 to +6, anions O²⁻ to I⁻; existing compounds only.', 'b', ln=130)
-                 + P('All 91 relaxed (As₂S₃, AlI₃: August re-run).', 'b', ln=130),
+                 + P('Cations +1 to +6 paired with anions O²⁻ to I⁻; only existing compounds.', 'b', ln=130)
+                 + P('All 91 were relaxed; As₂S₃ and AlI₃ were completed in an [[b:August re-run]].', 'b', ln=130),
                  y=1.08, h=1.4)
     gf = t.getroot().find('.//p:graphicFrame', NS)
     gf.find('.//p:xfrm/a:off', NS).set('y', str(E(2.5)))
@@ -606,207 +629,133 @@ def build_lean():
             rp.set('sz', '1300')
     for tr in gf.iter(f'{{{NS["a"]}}}tr'):
         tr.set('h', str(E(0.36)))
-    add(t, refs_line(ids(), 'Precursor-derived co-doping: CuCl — Taklu, Nano Energy 90, 106542 (2021) · '
-                            'MgF₂ — Liu, Angew. Chem. Int. Ed. 62, e202302655 (2023) · ZnO — Jang, J. Alloys Compd. 957, 170273 (2023) · '
-                            'La₂O₃ — Yang, Electrochim. Acta 535, 146619 (2025) · Nd₂O₃ — Xu, Nano Energy 157, 112246 (2026)',
+    add(t, refs_line(ids(), 'Precursor-derived co-doping: CuCl, Taklu, Nano Energy 90, 106542 (2021) · '
+                            'MgF₂, Liu, Angew. Chem. Int. Ed. 62, e202302655 (2023) · ZnO, Jang, J. Alloys Compd. 957, 170273 (2023) · '
+                            'La₂O₃, Yang, Electrochim. Acta 535, 146619 (2025) · Nd₂O₃, Xu, Nano Energy 157, 112246 (2026)',
                      y=5.72, h=0.8, sz=950))
     save(t, 'slide8.xml')
 
-    # ---- 7 Stage 1 as a flow: four boxes with counts, four descriptor rows with status
+    # ---- 7 Stage 1: data figure (structures per family · precursors per table)
     name, t = fresh('workflow', 'Approach')
-    lean_body(t, 'Stage 1 (Jun–Aug): an exploration screen')
-    flow = [('1', 'Enumeration', '91', 'precursors', 'charge-balanced sites'),
-            ('2', 'MLIP relaxation', '3,675', 'structures', 'universal MLIP (UMA)'),
-            ('3', 'Short anneal', '693', 'structures', '500 K · 50 ps MD'),
-            ('4', 'Descriptors', '4', 'axes', 'listed below')]
-    BW, BG, BY, BH = 1.95, 0.35, 1.68, 1.75
-    x0 = (10 - (4 * BW + 3 * BG)) / 2
-    for k, (n, ti, big, unit, how) in enumerate(flow):
-        x = x0 + k * (BW + BG)
-        paras = (P(f'{n} · {ti}', 'p', 1200, 100, 'ctr', NAVY, bold=True, spcaft=500)
-                 + P(big, 'p', 2800, 100, 'ctr', INK, bold=True) + P(unit, 'p', 1150, 100, 'ctr', INK, spcaft=400)
-                 + P(how, 'p', 1050, 100, 'ctr', MUTED))
-        add(t, box(ids(), f'Flow {n}', x, BY, BW, BH, fill='EEF3FA', paras=paras, ins=(0.06, 0.12, 0.06, 0.08)))
-        if k < 3:
-            add(t, arrow(ids(), x + BW + 0.06, BY + BH / 2 - 0.16, BG - 0.12, 0.32))
-    axes = [('Li-site landscape (BVSE)', 'Done', DONE_C),
-            ('EOS (done) · elastic constants', 'C[[_:ij]] running', RUN_C),
-            ('Stability window (90)', 'Recomputed', RECO_C),
-            ('Interface energy (90)', 'Products: redo', PLAN_C)]
-    for k, (lab, st, fc) in enumerate(axes):
-        x = x0 + (k % 2) * 4.5
-        y = 3.68 + (k // 2) * 0.6
-        add(t, box(ids(), f'Axis {k + 1}', x, y, 4.35, 0.5, fill='F5F7FA'),
-            tb(ids(), f'Axis {k + 1} label', x + 0.1, y, 2.75, 0.5, P(lab, 'p', 1200, 100, color=INK), anchor='ctr'),
-            chip(ids(), f'Axis {k + 1} status', x + 4.35 - 1.5, y + 0.1, 1.4, 0.3, st, fc, 1000))
-    add(t, takeaway(ids(), 'Since Sep: [[B:exploratory data]] — it guides the next calculations, not a ranking', 5.0, 0.45),
-        tb(ids(), 'Note', 0.55, 5.55, 8.9, 0.6,
-           P('As₂S₃ and AlI₃ completed in an August re-run (As₂S₃ not yet in the window and interface tables) · '
-             'one dopant level for all structures', 'p', 1100, 105, 'ctr', MUTED)))
+    lean_body(t, 'Stage 1 (Jun–Aug): exploration screen',
+              ['Each charge-balanced placement: [[b:UMA relaxation]], then a 500 K / 50 ps anneal.',
+               'Descriptors: Li-site landscape, EOS/elastic (DFT), [[b:stability window]], interface.'], h=1.4)
+    fh = figure(t, name, 'fig_p07_stage1_scale_coverage.png', 0.7, 2.75, 8.6, 'Stage-1 structures and coverage')
+    add(t, caption(ids(), '< structures per anion family  ·  precursors held by each Stage-1 table >', 2.78 + fh),
+        line_under(ids(), 'As₂S₃ and AlI₃ came from an August re-run; [[r:As₂S₃ is not yet in the window and interface tables]].',
+                   3.12 + fh, sz=1350),
+        line_under(ids(), 'Since September these results are [[b:exploratory data]] for choosing the next calculations.',
+                   3.45 + fh, sz=1350))
     save(t, name)
 
     # ---- 8 configuration sampling (orig slide 11)
-    slide_sampling('Within-precursor scatter can match between-precursor spread → [[B:exploration, not ranking]]')
+    slide_sampling('For some descriptors the spread [[r:within one precursor]] matches the spread between precursors, '
+                   'so they are used for [[b:exploration]].', color=INK)
 
     # ---- 9 DFT reference (orig slide 16)
     slide_dft_reference()
 
-    # ---- 10 stability window: one schematic, one literature figure, one takeaway
+    # ---- 10 stability window: our host window (left) + the coating view from the literature (right)
     name, t = fresh('stability', 'Approach')
     lean_body(t, 'Stability window: voltage range without Li exchange',
-              ['Grand-potential phase diagram (Materials Project phases, 0 K).',
-               'Recomputed for 90 precursors with this definition (Oct).'], h=1.35)
-    xa, xb, va, vb = 0.75, 4.85, 1.4, 2.5
-    X = lambda v: xa + (v - va) * (xb - xa) / (vb - va)
-    by = 3.15
-    add(t,
-        tb(ids(), 'Schematic title', 0.6, 2.5, 4.4, 0.3, P('Li₆PS₅Cl host', 'p', 1300, 100, 'ctr', INK, bold=True)),
-        tb(ids(), 'Window label', (X(1.717) + X(2.140)) / 2 - 1.0, by - 0.32, 2.0, 0.28,
-           P('0.423 V', 'p', 1200, 100, 'ctr', '1B5E20', bold=True)),
-        box(ids(), 'Reduction zone', X(1.4), by, X(1.717) - X(1.4), 0.5, fill='FBE3E3', geom='rect', anchor='ctr',
-            paras=P('Li uptake', 'p', 1050, 100, 'ctr', '7F1D1D')),
-        box(ids(), 'Window zone', X(1.717), by, X(2.140) - X(1.717), 0.5, fill='DFF2E3', geom='rect', anchor='ctr',
-            paras=P('no Li exchange', 'p', 1050, 100, 'ctr', '1B5E20')),
-        box(ids(), 'Oxidation zone', X(2.140), by, X(2.5) - X(2.140), 0.5, fill='FBE3E3', geom='rect', anchor='ctr',
-            paras=P('Li release', 'p', 1050, 100, 'ctr', '7F1D1D')),
-        tb(ids(), 'Tick low', X(1.717) - 0.45, by + 0.54, 0.9, 0.26, P('1.717 V', 'p', 1050, 100, 'ctr')),
-        tb(ids(), 'Tick high', X(2.140) - 0.45, by + 0.54, 0.9, 0.26, P('2.140 V', 'p', 1050, 100, 'ctr')),
-        tb(ids(), 'Axis label', 0.75, by + 0.82, 4.1, 0.26, P('voltage vs Li/Li⁺ →', 'p', 1050, 100, 'ctr', MUTED)),
-        caption(ids(), '< stable window of the host (MP phases, 0 K) >', 0.6, by + 1.18, 4.4))
+              ['The Li chemical potential is scanned as a voltage on a [[b:grand-potential phase diagram]] (MP phases, 0 K).',
+               'Recomputed for 90 precursors with this definition; the earlier one gave [[r:wider windows]].'], h=1.7)
+    wh = figure(t, name, 'fig_p10_host_window.png', 0.55, 2.95, 4.5, 'Host stability window')
     rid31 = rel_add(name, '../media/image31.png')
-    fw = 4.15
-    fh = fw * 805 / 2118
-    add(t, pic(ids(), 'Sundar 2025 Fig 2', rid31, 5.3, 2.55, fw, fh, 'Coating reaction energy at four interfaces'),
-        caption(ids(), '< coating view: reaction energy at four interfaces >', 5.2, 2.6 + fh, 4.35, sz=1150),
-        tb(ids(), 'Credit right', 5.2, 2.9 + fh, 4.35, 0.28,
-           P('Reproduced from Sundar et al., Adv. Sci. 12, e13191 (2025)', 'p', 950, 100, 'ctr', MUTED, italic=True)),
-        takeaway(ids(), 'Interface: doped composition vs LiCoO₂, LiNiO₂, LiMn₂O₄, Li, C — products being '
-                        '[[B:re-derived with ground-state phases]]', 4.95, 0.62, 1350),
+    sw = 4.25
+    sh_ = sw * 805 / 2118
+    add(t, pic(ids(), 'Sundar 2025 Fig 2', rid31, 5.25, 2.95, sw, sh_, 'Coating reaction energy at four interfaces'),
+        tb(ids(), 'Credit right', 5.2, 3.0 + sh_, 4.35, 0.26,
+           P('Reproduced from Sundar et al., Adv. Sci. 12, e13191 (2025)', 'p', 900, 100, 'ctr', MUTED, italic=True)))
+    yb = 3.0 + max(wh, sh_ + 0.3)
+    add(t, caption(ids(), '< stability window of the Li₆PS₅Cl host  ·  coating reaction energy at four interfaces >', yb),
+        line_under(ids(), 'Host window [[b:1.717–2.140 V]]; interface products are being re-derived with [[b:ground-state phases]].',
+                   yb + 0.36, sz=1350),
         refs_line(ids(), 'Zhu, ACS Appl. Mater. Interfaces 7, 23685 (2015) · Richards, Chem. Mater. 28, 266 (2016) · '
                          'Xiao, Nat. Rev. Mater. 5, 105 (2020) · Schwietert, Nat. Mater. 19, 428 (2020)', y=6.4))
     save(t, name)
 
-    # ---- 11 September audit: found (left) → fixed before results (right)
+    # ---- 11 September audit: a two-column table in the template style
     name, t = fresh('audit', 'Progress')
-    lean_body(t, 'September audit → Stage 2: rules fixed before new results')
-    found = ['Concentration labels ≠ concentration',
-             'Volume filter: host reference ~40 % above DFT',
-             'Scatter within a precursor ≈ spread between precursors (some axes)',
-             'No stated primary objective']
-    fixed = [('✓', OK_GREEN, 'One readout: D[[_:rel]] vs the host'),
-             ('✓', OK_GREEN, '237 designs (design = composition)'),
-             ('✓', OK_GREEN, 'Build rules: parent sites, charge balance'),
-             ('✓', OK_GREEN, 'Median-energy representative'),
-             ('…', OPEN_AMBER, 'Ranking margin δ — still open')]
-    CY, CH = 1.65, 3.6
-    add(t, box(ids(), 'Found card', 0.55, CY, 4.1, CH, fill='FDF1F1', adj=4000),
-        tb(ids(), 'Found title', 0.7, CY + 0.1, 3.8, 0.36, P('Found in Stage 1', 'p', 1400, 100, color=NO_RED, bold=True)),
-        box(ids(), 'Fixed card', 5.35, CY, 4.1, CH, fill='EEF6F0', adj=4000),
-        tb(ids(), 'Fixed title', 5.5, CY + 0.1, 3.8, 0.36,
-           P('Fixed before new results', 'p', 1400, 100, color=OK_GREEN, bold=True)),
-        arrow(ids(), 4.78, CY + CH / 2 - 0.2, 0.44, 0.4, fill='9CA3AF'))
-    for k, s_ in enumerate(found):
-        y = CY + 0.62 + k * 0.72
-        add(t, icon(ids(), f'Found icon {k + 1}', 0.72, y + 0.05, 0.34, '✕', NO_RED, 1100),
-            tb(ids(), f'Found {k + 1}', 1.15, y - 0.04, 3.4, 0.56, P(s_, 'p', 1250, 100, color=INK), anchor='ctr'))
-    for k, (g, c, s_) in enumerate(fixed):
-        y = CY + 0.62 + k * 0.6
-        add(t, icon(ids(), f'Fixed icon {k + 1}', 5.52, y + 0.05, 0.34, g, c, 1100),
-            tb(ids(), f'Fixed {k + 1}', 5.95, y - 0.04, 3.45, 0.5, P(s_, 'p', 1250, 100, color=INK), anchor='ctr'))
-    add(t, takeaway(ids(), 'Approved ranking: none · [[B:237 designs ≠ 237 runs]] — scope set after the pilot', 5.5, 0.45))
+    lean_body(t, 'September audit of Stage 1: rules fixed before new results',
+              ['Stage 1 was re-checked against the ledger; the rules below were [[b:ratified on Sep 12]].'], h=0.95)
+    rows = [['', 'Found in Stage 1', 'Fixed before new results'],
+            ['1', 'Concentration labels did not change the dopant level', 'One primary readout: D[[_:rel]] = D*(design) / D*(host)'],
+            ['2', 'Volume filter: host reference ~40 % above the DFT volume', 'Design roster: 237 (one design = one composition)'],
+            ['3', 'Elastic descriptor: spread within a precursor ≈ between precursors', 'Build rules: parent sites fixed, full charge balance'],
+            ['4', 'Several descriptors merged without a primary objective', 'Representative: the median-energy configuration'],
+            ['5', '', 'Ranking margin δ: proposed, not yet set']]
+    add(t, table(ids(), 'Audit table', 0.55, 2.2, [0.4, 4.2, 4.3], rows, [0.42] + [0.56] * 5, sz=1250, hsz=1300,
+                 colors={(5, 2): 'C00000'}, aligns=['ctr', 'l', 'l']),
+        caption(ids(), '< what the audit found and what was fixed before any new result >', 5.5),
+        line_under(ids(), 'No dopant ranking has been approved; [[b:237 is the design roster]], and the run scope is set after the pilot.',
+                   5.86, sz=1350))
     save(t, name)
 
-    # ---- 12 Stage 2 pilot design: two recipes → one ratio; settings as chips
+    # ---- 12 Stage 2 pilot design: settings table + what the check looks for
     name, t = fresh('md_setup', 'Progress')
     lean_body(t, 'Stage 2 pilot: does the precursor anion change Li transport?',
-              ['Same host configuration and volume — only the precursor anion differs.',
-               'Analysis rule fixed before the runs (equivalence margin ±ln 1.5).'], h=1.35)
-    add(t,
-        box(ids(), 'Recipe A', 1.0, 2.6, 3.0, 1.05, fill='EEF3FA', anchor='ctr',
-            paras=P('Al₂O₃-derived', 'p', 1500, 100, 'ctr', NAVY, bold=True) + P('2 Al + 3 O + 4 V[[_:Li]]', 'p', 1300, 110, 'ctr')),
-        icon(ids(), 'Versus', 4.7, 2.83, 0.6, 'vs', '9CA3AF', 1300),
-        box(ids(), 'Recipe B', 6.0, 2.6, 3.0, 1.05, fill='F3F4F6', anchor='ctr',
-            paras=P('Al₂S₃-derived', 'p', 1500, 100, 'ctr', '374151', bold=True) + P('2 Al + 4 V[[_:Li]]  (S kept)', 'p', 1300, 110, 'ctr')),
-        tb(ids(), 'Ratio', 0.55, 3.85, 8.9, 0.55, P('D(Al₂O₃) / D(Al₂S₃)', 'p', 2400, 100, 'ctr', BLUE, bold=True)),
-        caption(ids(), '< reported: a ratio of Li tracer diffusivities — not an absolute conductivity >', 0.55, 4.42, 8.9))
-    chips = ['UMA (MLIP)', 'NVT · 1000 K', '400 ps per run', '204 atoms', '40 runs (10×2×2)']
-    CWD, CG = 1.7, 0.1
-    cx0 = (10 - (5 * CWD + 4 * CG)) / 2
-    for k, c in enumerate(chips):
-        add(t, chip(ids(), f'Setting {k + 1}', cx0 + k * (CWD + CG), 5.08, CWD, 0.55, c, ('F5F7FA', INK), 1100, bold=False))
-    add(t, refs_line(ids(), 'Kahle, Energy Environ. Sci. 13, 928 (2020) · He, npj Comput. Mater. 4, 18 (2018) · '
-                            'Wood et al. (UMA), arXiv:2506.23971 (2026)'))
+              ['Al₂O₃- vs Al₂S₃-derived Al doping in the [[b:same host configuration and cell volume]].',
+               'Analysis rule fixed before the runs: diffusive-regime checks, then an [[b:equivalence test]] (±ln 1.5).'], h=1.7)
+    rows = [['Setting', 'Value'],
+            ['Potential', 'UMA (universal MLIP)'],
+            ['Ensemble', 'NVT, Langevin, 1000 K'],
+            ['Run length', '400 ps; MSD fit 2–50 ps'],
+            ['Cell', '204 atoms, common volume'],
+            ['Recipes', '2 Al + 3 O + 4 V[[_:Li]]  vs  2 Al + 4 V[[_:Li]]'],
+            ['Sampling', '10 starts × 2 recipes × 2 seeds = 40']]
+    add(t, table(ids(), 'Settings table', 0.55, 2.95, [1.2, 3.25], rows, [0.36] + [0.4] * 6, sz=1150, hsz=1200, aligns=['l', 'l']))
+    mh = figure(t, name, 'fig_p12_msd_check_schematic.png', 5.2, 2.85, 4.3, 'Diffusive-regime check (schematic)')
+    add(t, caption(ids(), '< what the diffusive-regime check looks for (schematic) >', 2.88 + mh, x=5.1, w=4.5, sz=1150),
+        line_under(ids(), 'Reported quantity: [[b:D(Al₂O₃) / D(Al₂S₃)]], a ratio of Li tracer diffusivities.', 5.85, sz=1400),
+        refs_line(ids(), 'Kahle, Energy Environ. Sci. 13, 928 (2020) · He, npj Comput. Mater. 4, 18 (2018) · '
+                         'Wood et al. (UMA), arXiv:2506.23971 (2026)'))
     save(t, name)
 
-    # ---- 13 Stage 2 pilot status: big progress number + one literature figure
+    # ---- 13 Stage 2 pilot status: run roster (left) + Jung 2026 Fig. 5b (right)
     name, t = fresh('md_status', 'Progress')
     lean_body(t, 'Stage 2 pilot: temperature choice, status and limits',
-              ['600 K (UMA, this cell): MSD never linear → no diffusivity reported.',
-               '1000 K chosen by a predefined probe (800 K failed the checks).'], h=1.35)
-    sx, sy, sw, shh = 0.55, 2.55, 4.6, 2.65
-    bx, bw = sx + 1.15, 2.3
-    add(t,
-        box(ids(), 'Status panel', sx, sy, sw, shh, fill='F5F7FA', adj=4000),
-        tb(ids(), 'Status title', sx + 0.15, sy + 0.08, sw - 0.3, 0.3, P('Status (Oct 12)', 'p', 1200, 100, color=NAVY, bold=True)),
-        tb(ids(), 'Big number', sx + 0.15, sy + 0.42, sw - 0.3, 0.7,
-           P('12 / 40 [[m:runs]]', 'p', 3600, 100, 'ctr', INK, bold=True)),
-        tb(ids(), 'Bar1 label', sx + 0.15, sy + 1.3, 1.0, 0.26, P('Runs', 'p', 1050, 100)),
-        box(ids(), 'Bar1 bg', bx, sy + 1.33, bw, 0.2, fill='E5E7EB', geom='rect'),
-        box(ids(), 'Bar1 fg', bx, sy + 1.33, bw * 12 / 40, 0.2, fill=BLUE, geom='rect'),
-        tb(ids(), 'Bar1 value', bx + bw + 0.05, sy + 1.28, 1.05, 0.28, P('12 / 40', 'p', 1050, 100, color=INK, bold=True)),
-        tb(ids(), 'Bar2 label', sx + 0.15, sy + 1.65, 1.0, 0.26, P('GPU-hours', 'p', 1050, 100)),
-        box(ids(), 'Bar2 bg', bx, sy + 1.68, bw, 0.2, fill='E5E7EB', geom='rect'),
-        box(ids(), 'Bar2 fg', bx, sy + 1.68, bw * 101.1 / 461.4, 0.2, fill=BLUE, geom='rect'),
-        tb(ids(), 'Bar2 value', bx + bw + 0.05, sy + 1.63, 1.05, 0.28, P('101 / 461', 'p', 1050, 100, color=INK, bold=True)),
-        tb(ids(), 'Status text', sx + 0.15, sy + 2.05, sw - 0.3, 0.5,
-           P('≈ Oct 21 · the ratio is analysed once, after all 40 runs', 'p', 1100, 105, 'ctr', INK)),
-        takeaway(ids(), 'Cell ≈ 1.6 nm (< 2 nm), 1000 K → [[B:relative, condition-specific]]', 5.35, 0.6, 1300, x=sx, w=sw))
+              ['600 K (UMA, this cell): the MSD stayed [[r:non-linear]] within 2–100 ps, so no diffusivity was reported.',
+               '1000 K was chosen by a [[b:predefined probe]]; 800 K failed the checks.'], h=1.7)
+    rh = figure(t, name, 'fig_p13_run_roster.png', 0.55, 3.0, 4.45, '40-run roster on Oct 12')
     ridj = rel_add(name, '../media/jung2026_fig5b.png')
-    jw = 3.6
+    jw = 3.05
     jh = jw * 635 / 715
-    add(t, pic(ids(), 'Jung 2026 Fig 5b', ridj, 5.6, 2.45, jw, jh, 'Li diffusivity vs 1000/T, Jung 2026 Fig. 5b'),
-        caption(ids(), '< the order at 1300 K flips by 700 K >', 5.4, 2.5 + jh, 4.0, sz=1150),
-        tb(ids(), 'Credit right', 5.4, 2.8 + jh, 4.0, 0.28,
-           P('Reproduced from Jung et al., eTransportation 28, 100570 (2026), Fig. 5b', 'p', 900, 100, 'ctr', MUTED, italic=True)),
+    add(t, caption(ids(), '< 40-run roster on Oct 12 >', 3.03 + rh, x=0.55, w=4.45, sz=1150),
+        pic(ids(), 'Jung 2026 Fig 5b', ridj, 5.85, 2.72, jw, jh, 'Li diffusivity vs 1000/T, Jung 2026 Fig. 5b'),
+        caption(ids(), '< ordering at 1300 K vs 700 K, Jung et al. 2026 >', 2.76 + jh, x=5.3, w=4.15, sz=1150),
+        line_under(ids(), 'Cell ≈ 1.6 nm at 1000 K: the result will be [[b:relative and condition-specific]] (≈ Oct 21).',
+                   5.92, sz=1350),
         refs_line(ids(), 'Phuthi et al., Chem. Mater. (2026), Perspective · Jung et al., eTransportation 28, 100570 (2026)', y=6.42))
     save(t, name)
 
-    # ---- 14 plan: three stages as chevrons
+    # ---- 14 plan: the dashed numbered box again
     name, t = fresh('next', 'Plan')
-    lean_body(t, 'Next: from the pilot verdict to a shortlist')
-    stages = [('Late Oct', BLUE, ['Pilot verdict: 40 runs, analysed once',
-                                  'Next step for each outcome written in advance']),
-              ('Nov–Dec', NAVY, ['Scope over the 237 roster + ranking margin δ, before results',
-                                 'Do Stage-1 descriptors predict transport?',
-                                 'Windows & interface redo (+As₂S₃) · C[[_:ij]]']),
-              ('Then', BUL, ['Rank on D[[_:rel]] → shortlist',
-                             'DFT validation → experiments'])]
-    CW = 2.96
-    for k, (lab, c, items) in enumerate(stages):
-        x = 0.56 + k * CW
-        add(t, box(ids(), f'Stage {k + 1}', x, 1.72, CW, 0.62, fill=c, geom='homePlate' if k == 0 else 'chevron',
-                   anchor='ctr', paras=P(lab, 'p', 1500, 100, 'ctr', 'FFFFFF', bold=True)),
-            tb(ids(), f'Stage {k + 1} text', x + 0.12, 2.5, CW - 0.3, 2.55,
-               ''.join(P(s_, 'cb', 1250, 110, spcaft=600) for s_ in items)))
-    add(t, tb(ids(), 'Upgrades', 0.55, 5.1, 8.9, 0.4,
-              P('Method upgrades: ≥ 2 nm cells · ≥ 0.3 ns · fine-tuned MLIP · ensemble uncertainty · defect thermodynamics',
-                'p', 1100, 100, 'ctr', MUTED)),
-        takeaway(ids(), 'Goal: a screen that [[B:selects]] the precursor — with the rule stated in advance', 5.6, 0.45, 1450),
+    lean_body(t, 'Next steps', h=0.5)
+    dashed_list(t, name, 'Plan',
+                [('Pilot verdict (late Oct)', '(40 runs, analysed once)'),
+                 ('Run scope and ranking margin δ', '(set before the results)'),
+                 ('Descriptor check vs transport', '(rank correlation, CI)'),
+                 ('Windows, interfaces (+As₂S₃), elastic', '(1–2 months)'),
+                 ('Shortlist → DFT → experiments', '(with the experimental team)')],
+                0.57, 1.95, 8.86, 2.8, note_x=0.55, sz=1500, arrow_y=4.88)
+    add(t, line_under(ids(), 'Goal: a screen that [[b:selects the precursor]], with the selection rule stated in advance.', 5.65),
+        tb(ids(), 'Upgrades', 0.55, 6.05, 8.9, 0.3,
+           P('Method upgrades: ≥ 2 nm cells · ≥ 0.3 ns · fine-tuned MLIP · ensemble uncertainty · defect thermodynamics',
+             'p', 1050, 100, 'ctr', MUTED)),
         refs_line(ids(), 'Phuthi, Chem. Mater. (2026) · Muy, Chem. Mater. 37, 2395 (2025) · Alghamdi, J. Phys. Energy 8, 025013 (2026) · '
-                         'Grasselli, Digital Discovery 4, 2654 (2025)', y=6.42, h=0.36, sz=900))
+                         'Grasselli, Digital Discovery 4, 2654 (2025)', y=6.48, h=0.32, sz=900))
     save(t, name)
 
-    # ---- 15 summary: three lines
+    # ---- 15 summary: bullets, arrow, one line
     name, t = fresh('summary', 'Summary')
-    rows = [('✓', OK_GREEN, 'Stage 1: 91 precursors screened — kept as exploratory data'),
-            ('✓', OK_GREEN, 'Audit: one readout and build rules, fixed before results'),
-            ('▶', BLUE, 'Stage 2 pilot running: 12 of 40 MD runs, verdict ≈ late Oct')]
-    for k, (g, c, s_) in enumerate(rows):
-        y = 1.55 + k * 1.1
-        add(t, icon(ids(), f'Summary icon {k + 1}', 0.75, y + 0.13, 0.56, g, c, 1500),
-            box(ids(), f'Summary row {k + 1}', 1.55, y, 7.9, 0.82, fill='F5F7FA', anchor='ctr', ins=(0.22, 0.05, 0.2, 0.05),
-                paras=P(s_, 'p', 1700, 100, color=INK)))
-    add(t, takeaway(ids(), 'No dopant ranking yet — [[B:the screen proposes, predefined tests decide.]]', 5.15, 0.5, 1600))
+    lean_body(t, 'Summary',
+              ['Stage 1 screened [[b:91 precursors]] (3,675 structures); the results are used as exploratory data.',
+               'The September audit fixed [[b:one readout and the build rules]] before any new result.',
+               'The Stage 2 pilot is running ([[b:12 of 40]] MD runs); the verdict comes around late October.'], h=3.0,
+              bsz=1800, bln=140)
+    down_arrow(t, name, 4.25)
+    add(t, line_under(ids(), 'No dopant ranking yet: [[b:the ranking rule is set before the results]].', 5.1, h=0.45, sz=1700))
     save(t, name)
 
     slide_refs()

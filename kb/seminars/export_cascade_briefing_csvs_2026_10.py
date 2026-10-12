@@ -270,6 +270,183 @@ def p18():
                  + comments_of(src), rs[0], rs[1:])
 
 
+# ---------------------------------------------------------------- deck figures (--figures)
+# Preview figures for the slim deck, drawn from the CSVs above (house style, English labels).
+# They are stand-ins until the Origin versions exist; p12 is a schematic and carries no data.
+ASSETS = os.path.join(ROOT, 'kb', 'seminars', 'assets_2026_10_13')
+ROSTER_STATUS = ('done', 'running', 'queued')
+
+
+def structures_by_family():
+    """Stage-1 main set (x = 0.25, incl. the August re-run): relaxed and annealed structures per anion family."""
+    fam_rows = {}
+    for r in stage1_rows():
+        if r['family'] not in MAIN_FAMILIES:
+            continue
+        f = anion_family(base(r['dopant']))
+        rel, ann = fam_rows.get(f, (0, 0))
+        fam_rows[f] = (rel + 1, ann + (r['anneal_converged'] == 'True'))
+    return fam_rows
+
+
+def p07b():
+    fam = structures_by_family()
+    order = ['oxides', 'chlorides', 'sulfides', 'fluorides', 'bromides', 'nitrides', 'iodides']
+    assert set(fam) == set(order), sorted(fam)
+    rows = [[f, fam[f][0], fam[f][1]] for f in order]
+    assert sum(r[1] for r in rows) == 3675 and sum(r[2] for r in rows) == 693, rows
+    return write('p07_structures_by_anion_family.csv',
+                 ['Page 7 (slim deck figure, left panel) — Stage-1 structures per anion family: relaxed vs annealed (500 K, 50 ps).',
+                  'Source: cascade_all_302_2026_08_25.csv, main x = 0.25 set incl. the August re-run (families v23 + as2s3_recover).',
+                  'Structures (configurations), not designs; all at one dopant level.'],
+                 ['anion_family', 'n_relaxed_structures', 'n_annealed_structures'], rows)
+
+
+def roster_matrix(rows):
+    """40-run roster -> {(row_label, start_configuration): status}. Raises on an unknown status or a duplicate cell."""
+    grid = {}
+    for prec, parent, seed, status, _ in rows:
+        if status.split(' ')[0] not in ROSTER_STATUS:
+            raise ValueError(f'unknown run status: {status!r}')
+        key = (f"{'Al₂O₃' if prec.startswith('Al2O3') else 'Al₂S₃'} · seed {seed}", parent)
+        if key in grid:
+            raise ValueError(f'duplicate roster cell: {key}')
+        grid[key] = status.split(' ')[0]
+    return grid
+
+
+def figures():
+    import matplotlib
+    matplotlib.use('Agg')
+    import matplotlib.pyplot as plt
+    from matplotlib.patches import Patch
+    sys.path.insert(0, ROOT)
+    from tools.figures.house_style import INK, MUT, apply_axes
+    plt.rcParams.update({'font.family': 'DejaVu Sans', 'font.size': 10, 'axes.edgecolor': MUT})
+    os.makedirs(ASSETS, exist_ok=True)
+    made = []
+    BLUE_, LIGHT, AMBER, GREY = '#2563eb', '#93c5fd', '#f59e0b', '#e5e7eb'
+
+    # p07: scale (structures per family) + coverage (precursors per table)
+    fam = rows_of(os.path.join(OUT, 'p07_structures_by_anion_family.csv'))
+    cov = rows_of(os.path.join(OUT, 'p07_stage1_coverage_by_ledger.csv'))
+    fig, (a1, a2) = plt.subplots(1, 2, figsize=(8.6, 2.75), gridspec_kw={'width_ratios': [1.15, 1]})
+    names = [r[0] for r in fam[1:]]
+    rel = [int(r[1]) for r in fam[1:]]
+    ann = [int(r[2]) for r in fam[1:]]
+    xs = range(len(names))
+    a1.bar([x - 0.2 for x in xs], rel, 0.4, color=BLUE_, label='relaxed (3,675)')
+    a1.bar([x + 0.2 for x in xs], ann, 0.4, color=LIGHT, label='annealed (693)')
+    a1.set_xticks(list(xs), names, rotation=30, ha='right', fontsize=9)
+    a1.legend(frameon=False, fontsize=9)
+    apply_axes(a1, ylabel='structures', fontsize=10)
+    head = cov[0]
+    i = {k: head.index(k) for k in head}
+    keep = [r for r in cov[1:] if not r[i['step_or_ledger']].startswith('Concentration set')]
+    short = {'Site enumeration': 'relaxed', 'Short anneal': 'annealed', 'Stability window': 'stability window',
+             'Interface: doped composition vs LiCoO2': 'interface vs cathodes', 'Interface: doped composition vs Li metal': 'interface vs Li',
+             'Interface: doped composition vs carbon': 'interface vs C', 'Precursor as a separate phase': 'separate phase',
+             'Literature-style gate funnel': 'gate funnel'}
+    lab = []
+    for r in keep:
+        nm = next(v for k, v in short.items() if r[i['step_or_ledger']].startswith(k))
+        lab.append(nm)
+    n = [int(r[i['n_precursors']]) for r in keep]
+    miss = [', '.join(sp for sp, col in (('As₂S₃', 'As2S3_included'), ('AlI₃', 'AlI3_included')) if r[i[col]] == 'no') for r in keep]
+    ys = list(range(len(lab)))[::-1]
+    a2.barh(ys, n, color=[BLUE_ if not m else LIGHT for m in miss], height=0.6)
+    for y, v, m in zip(ys, n, miss):
+        a2.text(v + 1.5, y, f'{v}' + (f'  (no {m})' if m else ''), va='center', fontsize=8.5, color=INK if not m else '#b42318')
+    a2.set_yticks(ys, lab, fontsize=9)
+    a2.set_xlim(0, 135)
+    a2.set_xticks([0, 30, 60, 91])
+    apply_axes(a2, xlabel='precursors (of 91)', fontsize=10)
+    fig.tight_layout()
+    out = os.path.join(ASSETS, 'fig_p07_stage1_scale_coverage.png')
+    fig.savefig(out, dpi=300)
+    plt.close(fig)
+    made.append(out)
+
+    # p10: host window on a voltage axis
+    seg = rows_of(os.path.join(OUT, 'p10_stability_window_host_segments.csv'))[1:]
+    fig, ax = plt.subplots(figsize=(4.4, 1.85))
+    colors = {'Li uptake': '#fbe3e3', 'no Li exchange': '#dff2e3', 'Li release': '#fbe3e3'}
+    for name_, v0, v1 in seg:
+        key = next(k for k in colors if name_.startswith(k))
+        ax.axvspan(float(v0), float(v1), color=colors[key])
+        ax.text((float(v0) + float(v1)) / 2, 0.5, key, ha='center', va='center', fontsize=9,
+                color='#1b5e20' if key == 'no Li exchange' else '#7f1d1d')
+    lo, hi = float(seg[1][1]), float(seg[1][2])
+    for v in (lo, hi):
+        ax.axvline(v, color=INK, ls='--', lw=1)
+        ax.text(v, 1.04, f'{v:.3f} V', ha='center', va='bottom', fontsize=9, color=INK)
+    ax.set_xlim(1.4, 2.5)
+    ax.set_ylim(0, 1)
+    ax.set_yticks([])
+    for sname in ('left', 'top', 'right'):
+        ax.spines[sname].set_visible(False)
+    ax.tick_params(colors=MUT)
+    ax.set_xlabel('voltage vs Li/Li$^+$ (V)', fontsize=10, color=INK)
+    fig.tight_layout()
+    out = os.path.join(ASSETS, 'fig_p10_host_window.png')
+    fig.savefig(out, dpi=300)
+    plt.close(fig)
+    made.append(out)
+
+    # p12: what the diffusive-regime check looks for (schematic — illustrative curves, no data)
+    import math
+    fig, ax = plt.subplots(figsize=(4.3, 2.55))
+    ts = [k * 0.25 for k in range(1, 241)]
+    lin = [2.0 * t for t in ts]
+    bent = [2.0 * t if t < 6 else 12 + 26 * math.log(1 + (t - 6) / 13) for t in ts]   # same start, later slopes smaller
+    ax.axvspan(2, 50, color='#eef3fa')
+    for v in (2, 18, 34, 50):
+        ax.axvline(v, color=MUT, lw=0.6, ls=':')
+    ax.plot(ts, lin, color=BLUE_, lw=2.2, label='linear: sub-window slopes agree')
+    ax.plot(ts, bent, color='#b42318', lw=2.2, ls='--', label='bends down: later slopes smaller')
+    ax.text(26, 112, 'fit window 2–50 ps', ha='center', fontsize=9, color=INK)
+    ax.text(59.5, 3, 'schematic', ha='right', fontsize=8, color=MUT, style='italic')
+    ax.set_xlim(0, 60)
+    ax.set_ylim(0, 125)
+    ax.set_xticks([2, 18, 34, 50])
+    ax.set_yticks([])
+    ax.legend(frameon=False, fontsize=8.5, loc='upper left', bbox_to_anchor=(0.0, 0.9))
+    apply_axes(ax, xlabel='time lag (ps)', ylabel='Li MSD', fontsize=10)
+    fig.tight_layout()
+    out = os.path.join(ASSETS, 'fig_p12_msd_check_schematic.png')
+    fig.savefig(out, dpi=300)
+    plt.close(fig)
+    made.append(out)
+
+    # p13: 40-run roster status
+    runs = rows_of(os.path.join(OUT, 'p13_md_campaign_runs.csv'))[1:]
+    grid = roster_matrix(runs)
+    rows_ = ['Al₂O₃ · seed 1', 'Al₂S₃ · seed 1', 'Al₂O₃ · seed 2', 'Al₂S₃ · seed 2']
+    cols = list('ABCDEFGHIJ')
+    cmap = {'done': BLUE_, 'running': AMBER, 'queued': GREY}
+    fig, ax = plt.subplots(figsize=(4.4, 2.25))
+    for yi, rname in enumerate(rows_):
+        for xi, c in enumerate(cols):
+            ax.add_patch(matplotlib.patches.Rectangle((xi + 0.06, 3 - yi + 0.08), 0.88, 0.84, color=cmap[grid[(rname, c)]]))
+    ax.set_xlim(0, 10)
+    ax.set_ylim(0, 4)
+    ax.set_xticks([k + 0.5 for k in range(10)], cols)
+    ax.set_yticks([3.5 - k for k in range(4)], rows_, fontsize=9)
+    for sname in ('left', 'top', 'right', 'bottom'):
+        ax.spines[sname].set_visible(False)
+    ax.tick_params(length=0, colors=INK)
+    ax.set_xlabel('start configuration', fontsize=10, color=INK)
+    counts = {k: sum(v == k for v in grid.values()) for k in ROSTER_STATUS}
+    ax.legend(handles=[Patch(color=cmap[k], label=f'{k} ({counts[k]})') for k in ROSTER_STATUS],
+              frameon=False, fontsize=8.5, ncol=3, loc='lower center', bbox_to_anchor=(0.45, 1.0))
+    fig.tight_layout()
+    out = os.path.join(ASSETS, 'fig_p13_run_roster.png')
+    fig.savefig(out, dpi=300)
+    plt.close(fig)
+    made.append(out)
+    return made
+
+
 README = """# Origin CSVs — Research Seminar 2026-10-13 (cascade progress briefing)
 
 Decks: `kb/seminars/Research_Seminar_2026_10_13_cascade_progress.pptx` (19 slides) and the lean variant
@@ -282,12 +459,14 @@ site-preference backup p18 (old p12 / p17 files are removed by the script). p06 
 | page | slide | CSV | what to plot |
 |---|---|---|---|
 | 6 | Candidate set | `p06_candidate_set_by_anion_family.csv` | bars: n_planned vs n_relaxed vs n_gate_evaluation per anion family |
-| 7 | Stage-1 workflow | `p07_stage1_coverage_by_ledger.csv` | table or bars: precursors held by each Stage-1 ledger (As2S3 / AlI3 flags) |
+| 7 | Stage-1 workflow | `p07_stage1_coverage_by_ledger.csv` · `p07_structures_by_anion_family.csv` | bars: precursors held by each Stage-1 table (As2S3 / AlI3 flags) · structures per anion family (relaxed vs annealed) |
 | 8 | Configuration sampling | `p08_configurations_per_site_pair_long.csv` · `_matrix.csv` | heat map: cation site × anion site → configurations (main batch 3,615) |
 | 9 | DFT EOS | `p09_eos_bm3_fit_curves.csv` | lines: E − E0 vs V per f.u. (fit curves; raw points not in repo) |
 | 10 | Stability window | `p10_stability_window_host.csv` · `p10_stability_window_host_segments.csv` | bar segments on a voltage axis (host Li6PS5Cl) |
 | 13 | MD status | `p13_md_campaign_progress.csv` · `p13_md_campaign_runs.csv` | progress bars; run roster (status, wall-clock GPU-h) |
 | 18 | Backup: site preference | `p18_site_preference_vs_ionic_radius.csv` | ΔE vs Shannon radius, three loadings per element (June batch, not Stage 1) |
+
+Slim-deck preview figures (`--figures`, house style, English labels) in `kb/seminars/assets_2026_10_13/`: `fig_p07_stage1_scale_coverage.png` · `fig_p10_host_window.png` · `fig_p13_run_roster.png` (all drawn from the CSVs here) · `fig_p12_msd_check_schematic.png` (a schematic, no data). Replace them with the Origin versions when ready.
 
 Pages without a CSV:
 - 2 (previous DFT work): figure boxes left empty on purpose — fill per tile on request.
@@ -304,10 +483,13 @@ def main():
     for old in ('p12_md_campaign_runs.csv', 'p12_md_campaign_progress.csv', 'p17_site_preference_vs_ionic_radius.csv'):
         if os.path.exists(os.path.join(OUT, old)):      # renamed when the audit slide became page 11
             os.remove(os.path.join(OUT, old))
-    made = [p06(), p07(), p08(), p09(), p10(), p13(), p18()]
+    made = [p06(), p07(), p07b(), p08(), p09(), p10(), p13(), p18()]
     with open(os.path.join(OUT, 'README.md'), 'w', encoding='utf-8') as f:
         f.write(README)
     print('wrote', len(os.listdir(OUT)), 'files to', os.path.relpath(OUT, ROOT))
+    if '--figures' in sys.argv:
+        for f in figures():
+            print('figure', os.path.relpath(f, ROOT))
 
 
 def selftest():
@@ -345,6 +527,16 @@ def selftest():
     else:
         raise AssertionError('assert_subset accepted an unknown species')
     assert_subset('test', {'Al2O3'}, {'Al2O3', 'As2S3'}); ok += 1
+    # roster grid: positive, then an unknown status and a duplicate cell must be refused
+    good = [['Al2O3-derived', 'A', '1', 'done', '5.9'], ['Al2S3-derived', 'A', '1', 'running (restarted)', '']]
+    assert roster_matrix(good) == {('Al₂O₃ · seed 1', 'A'): 'done', ('Al₂S₃ · seed 1', 'A'): 'running'}; ok += 1
+    for bad in ([['Al2O3-derived', 'A', '1', 'finished', '']], good + [['Al2O3-derived', 'A', '1', 'queued', '']]):
+        try:
+            roster_matrix(bad)
+        except ValueError:
+            ok += 1
+        else:
+            raise AssertionError(f'roster_matrix accepted {bad}')
     print(f'selftest PASS ({ok})')
 
 

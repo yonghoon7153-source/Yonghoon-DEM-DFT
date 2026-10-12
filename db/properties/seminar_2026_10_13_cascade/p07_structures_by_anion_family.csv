@@ -1,0 +1,11 @@
+# Page 7 (slim deck figure, left panel) — Stage-1 structures per anion family: relaxed vs annealed (500 K, 50 ps).
+# Source: cascade_all_302_2026_08_25.csv, main x = 0.25 set incl. the August re-run (families v23 + as2s3_recover).
+# Structures (configurations), not designs; all at one dopant level.
+anion_family,n_relaxed_structures,n_annealed_structures
+oxides,1830,324
+chlorides,660,132
+sulfides,585,117
+fluorides,195,39
+bromides,210,42
+nitrides,90,18
+iodides,105,21
