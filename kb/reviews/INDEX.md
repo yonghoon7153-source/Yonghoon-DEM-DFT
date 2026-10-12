@@ -122,7 +122,7 @@ evidenceScope: multi-source-primary
 | CT | 2026-10-07 | `codex_CT_prompt_cascade_v7_main_runner_2026_10_07.md` | `codex_CT_reply_cascade_v7_main_runner_2026_10_08.md` | 발송 완료 2026-10-08 · ✅ 회신 수령 2026-10-08 → `codex_CT_reply_cascade_v7_main_runner_2026_10_08.md` (조건부 GO · P0 없음 · P1 3 · 도는 MD 계속) | 같은 라벨 · 주제 토큰 일치 ['cascade', 'main', 'runner', 'v7'] |
 | CU | 2026-10-07 | `codex_CU_prompt_wad_agc_graphite_k9_closure_2026_10_07.md` | `codex_CU_reply_wad_agc_graphite_k9_closure_2026_10_08.md` | 발송 2026-10-08 · ✅ 회신 수령 2026-10-08 → `codex_CU_reply_wad_agc_graphite_k9_closure_2026_10_08.md` (조건부 GO · 값 유지 · P1 '기판만' 정정 · P2 라벨) | 같은 라벨 · 주제 토큰 일치 ['agc', 'closure', 'graphite', 'k9', 'wad'] |
 | CV | 2026-10-07 | `codex_CV_prompt_cei_easy_story_2026_10_07.md` | `codex_CV_reply_cei_easy_story_2026_10_08.md` | 발송 2026-10-08 · ✅ 회신 수령 2026-10-08 → `codex_CV_reply_cei_easy_story_2026_10_08.md` (조건부 GO · 스토리 그림 NO-GO · P0 2 · P1 5) | 같은 라벨 · 주제 토큰 일치 ['cei', 'easy', 'story'] |
-| CW | 2026-10-12 | `codex_CW_prompt_seminar_lean_deck_aesthetics_2026_10_12.md` | — | 발송 대기 | — |
+| CW | 2026-10-12 | `codex_CW_prompt_seminar_lean_deck_aesthetics_2026_10_12.md` | `codex_CW_reply_seminar_lean_deck_aesthetics_2026_10_13.md` | 발송 2026-10-13 · ✅ 회신 수령 2026-10-13 → `codex_CW_reply_seminar_lean_deck_aesthetics_2026_10_13.md` (조건부 GO · P0 3 · P1 5) | 같은 라벨 · 주제 토큰 일치 ['aesthetics', 'deck', 'lean', 'seminar'] |
 
 ## 🔴 모순 (status 는 대기인데 증거는 회신 수령)
 

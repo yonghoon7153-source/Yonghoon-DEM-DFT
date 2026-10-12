@@ -500,6 +500,17 @@ def line_under(i, text, y, h=0.4, sz=1400, x=0.4, w=9.2):
     return tb(i, 'Conclusion', x, y, w, h, P(text, 'p', sz, 110, 'ctr', INK))
 
 
+def lit_label(i, head, role, x, y, w, h=0.28, sz=1300):
+    """Role tag ABOVE a literature crop ('Literature: …'), read before the figure (CW P0-2/3): a small credit
+    under the figure comes too late to stop the audience reading a paper's plot as our result."""
+    return tb(i, 'Literature tag', x, y, w, h, P(f'[[B:{head}]] {role}', 'p', sz, 100, 'ctr', INK))
+
+
+def credit(i, text, x, y, w, h=0.26):
+    """'Reproduced from …' under a literature crop (9 pt, grey italic)."""
+    return tb(i, 'Credit', x, y, w, h, P(text, 'p', 900, 100, 'ctr', MUTED, italic=True))
+
+
 def png_size(path):
     with open(path, 'rb') as f:
         head = f.read(24)
@@ -680,54 +691,54 @@ def build_lean():
                          'Richards, Chem. Mater. 28, 266 (2016) · Xiao, Nat. Rev. Mater. 5, 105 (2020)', y=6.42, h=0.36, sz=900))
     save(t, name)
 
-    # ---- 11 September audit: a two-column table in the template style
+    # ---- 11 September audit: two independent lists (CW P0-1 — one table with shared row numbers read as
+    #      finding → fix pairs, and they are not pairs: e.g. finding 4 is answered by decision 1)
     name, t = fresh('audit', 'Progress')
-    lean_body(t, 'September audit of Stage 1: rules fixed before new results',
-              ['Stage 1 was re-checked against the ledger; the rules below were [[b:ratified on Sep 12]].'], h=0.95)
-    rows = [['', 'Found in Stage 1', 'Fixed before new results'],
-            ['1', 'Concentration labels did not change the dopant level', 'One primary readout: D[[_:rel]] = D*(design) / D*(host)'],
-            ['2', 'Volume filter: host reference ~40 % above the DFT volume', 'Design roster: 237 (one design = one composition)'],
-            ['3', 'Elastic descriptor: spread within a precursor ≈ between precursors', 'Build rules: parent sites fixed, full charge balance'],
-            ['4', 'Several descriptors merged without a primary objective', 'Representative: the median-energy configuration'],
-            ['5', '', 'Ranking margin δ: proposed, not yet set']]
-    add(t, table(ids(), 'Audit table', 0.55, 2.2, [0.4, 4.2, 4.3], rows, [0.42] + [0.56] * 5, sz=1250, hsz=1300,
-                 colors={(5, 2): 'C00000'}, aligns=['ctr', 'l', 'l']),
-        caption(ids(), '< what the audit found and what was fixed before any new result >', 5.5),
-        line_under(ids(), 'No dopant ranking has been approved; [[b:237 is the design roster]], and the run scope is set after the pilot.',
-                   5.86, sz=1350))
+    lean_body(t, 'September audit of Stage 1', ['Stage 1 was re-checked against the ledger.'], h=0.95)
+    found = ['Concentration labels did not change the dopant level',
+             'Volume filter: host reference ~40 % above the DFT volume',
+             'Elastic descriptor: spread within a precursor ≈ between precursors',
+             'Several descriptors merged without a primary objective']
+    fixed = ['One primary readout: D[[_:rel]] = D*(design) / D*(host)',
+             'Design roster: 237 (one design = one composition)',
+             'Build rules: parent sites fixed, full charge balance',
+             'Representative: the median-energy configuration']
+    for x, w, title, items in ((0.55, 4.25, 'Audit findings', found), (5.05, 4.4, 'Decisions recorded on Sep 12', fixed)):
+        add(t, tb(ids(), title, x, 2.2, w, 0.36, P(title, 'p', 1400, 100, color=INK, bold=True)),
+            box(ids(), f'{title} rule', x + 0.05, 2.58, w - 0.1, 0.014, fill='9CA3AF', geom='rect'),
+            tb(ids(), f'{title} items', x, 2.66, w, 2.75, ''.join(P(s, 'cb', 1400, 110, spcbef=700) for s in items)))
+    add(t, line_under(ids(), '[[r:Ranking margin δ: proposed, not yet set]]', 5.55, h=0.38, sz=1400),
+        line_under(ids(), 'The run scope is set after the pilot.', 6.03, h=0.4, sz=1350))
     save(t, name)
 
-    # ---- 12 Stage 2 pilot design: settings table + what the check looks for
+    # ---- 12 Stage 2 pilot design: the paper's figure says why repeats and a fixed window matter; our numbers are
+    #      on a separate line (CW P0-2 — 'Hence …' read as if 10 × 2 and 2–50 ps came from that figure)
     name, t = fresh('md_setup', 'Progress')
     lean_body(t, 'Stage 2 pilot: does the precursor anion change Li transport?',
               ['Al₂O₃- vs Al₂S₃-derived Al doping in the [[b:same host configuration and cell volume]].',
-               'Reported: [[b:D(Al₂O₃) / D(Al₂S₃)]]; checks and an equivalence test (±ln 1.5) fixed before the runs.'], h=1.7)
-    hh = figure(t, name, 'lit_he2018_fig3.png', 1.7, 2.72, 6.6, 'He 2018 Fig. 3')
-    add(t, caption(ids(), '< one structure, ten independent AIMD runs: MSD spread and fit quality vs fit range >', 2.76 + hh, sz=1150),
-        tb(ids(), 'Credit', 0.55, 3.06 + hh, 8.9, 0.26,
-           P('Reproduced from He et al., npj Comput. Mater. 4, 18 (2018), Fig. 3', 'p', 900, 100, 'ctr', MUTED, italic=True)),
-        line_under(ids(), 'Hence [[b:10 start configurations × 2 seeds]], a fixed fit window (2–50 ps) and checks before any fit.',
-                   3.36 + hh, sz=1350),
-        tb(ids(), 'Settings', 0.55, 3.72 + hh, 8.9, 0.3,
-           P('UMA · NVT, 1000 K · 400 ps · 204 atoms, common volume · 2 Al + 3 O + 4 V[[_:Li]] vs 2 Al + 4 V[[_:Li]] · 40 runs',
-             'p', 1050, 100, 'ctr', MUTED)))
+               'Reported: [[b:D(Al₂O₃) / D(Al₂S₃)]]; checks and an equivalence test (±ln 1.5) fixed before the runs.'], h=1.3)
+    hh = figure(t, name, 'lit_he2018_fig3.png', 1.7, 2.75, 6.6, 'He 2018 Fig. 3')
+    add(t, lit_label(ids(), 'Literature:', 'run-to-run spread and fit-window sensitivity', 1.7, 2.43, 6.6),
+        credit(ids(), 'Reproduced from He et al., npj Comput. Mater. 4, 18 (2018), Fig. 3', 0.55, 2.78 + hh, 8.9),
+        line_under(ids(), 'Our pilot: [[b:10 start configurations × 2 seeds]] per precursor; 2–50 ps fit window.', 5.85, sz=1400))
     save(t, name)
 
-    # ---- 13 Stage 2 pilot status: run roster (left) + Jung 2026 Fig. 5b (right)
+    # ---- 13 Stage 2 pilot status: run roster (ours, left) + Jung 2026 Fig. 5b (literature, right; CW P0-3 — the
+    #      role tag sits above the crop so it is not read as a third result next to our roster)
     name, t = fresh('md_status', 'Progress')
-    lean_body(t, 'Stage 2 pilot: temperature choice, status and limits',
-              ['600 K (UMA, this cell): the MSD stayed [[r:non-linear]] within 2–100 ps, so no diffusivity was reported.',
-               '1000 K was chosen by a [[b:predefined probe]]; 800 K failed the checks.'], h=1.7)
-    rh = figure(t, name, 'fig_p13_run_roster.png', 0.55, 3.0, 4.45, '40-run roster on Oct 12')
-    ridj = rel_add(name, '../media/jung2026_fig5b.png')
-    jw = 3.05
+    lean_body(t, 'Stage 2 pilot at 1000 K',
+              ['600 K, this UMA cell: no diffusivity reported ([[r:non-linear MSD]], 2–100 ps).',
+               '[[b:Predefined probe]]: 800 K failed; 1000 K was selected.'], h=1.3)
+    rh = figure(t, name, 'fig_p13_run_roster.png', 0.55, 3.08, 4.65, '40-run roster on Oct 12')
+    jw = 3.5
     jh = jw * 635 / 715
-    add(t, caption(ids(), '< 40-run roster on Oct 12 >', 3.03 + rh, x=0.55, w=4.45, sz=1150),
-        pic(ids(), 'Jung 2026 Fig 5b', ridj, 5.85, 2.72, jw, jh, 'Li diffusivity vs 1000/T, Jung 2026 Fig. 5b'),
-        caption(ids(), '< ordering at 1300 K vs 700 K, Jung et al. 2026 >', 2.76 + jh, x=5.3, w=4.15, sz=1150),
-        line_under(ids(), 'Cell ≈ 1.6 nm at 1000 K: the result will be [[b:relative and condition-specific]] (≈ Oct 21).',
-                   5.92, sz=1350),
-        refs_line(ids(), 'Phuthi et al., Chem. Mater. (2026), Perspective · Jung et al., eTransportation 28, 100570 (2026)', y=6.42))
+    add(t, caption(ids(), '< 40-run roster on Oct 12 >', 3.11 + rh, x=0.55, w=4.65, sz=1150),
+        lit_label(ids(), 'Literature:', 'temperature-dependent ordering', 5.25, 2.43, 4.2),
+        pic(ids(), 'Jung 2026 Fig 5b', rel_add(name, '../media/jung2026_fig5b.png'), 5.6, 2.75, jw, jh,
+            'Li diffusivity vs 1000/T, Jung 2026 Fig. 5b'),
+        credit(ids(), 'Reproduced from Jung et al., eTransportation 28, 100570 (2026), Fig. 5b', 5.25, 2.78 + jh, 4.2),
+        line_under(ids(), 'Cell ≈ 1.6 nm at 1000 K: the result will be [[b:relative and condition-specific]].', 6.17, sz=1350),
+        refs_line(ids(), 'Phuthi et al., Chem. Mater. (2026), Perspective', y=6.6, h=0.28))
     save(t, name)
 
     # ---- 14 plan: the dashed numbered box again
