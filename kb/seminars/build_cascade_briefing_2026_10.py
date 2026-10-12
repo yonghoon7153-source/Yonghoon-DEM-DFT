@@ -577,7 +577,7 @@ def build_lean():
     # 'battery cell', since a bare 'cell' reads as the simulation cell in a DFT talk
     tiles = [('Li₆PS₅Cl baseline', 'band gap · EOS · elasticity'), ('Nd/O co-doping (Nd₂O₃)', 'band edges · ICOHP · CEI'),
              ('B₂O₃ and O doping', 'EOS · BVSE · MLIP-MD'), ('h-BN on carbon fiber', 'Li adsorption · NEB'),
-             ('Li₃N (SEI component)', 'Li migration (NEB)'), ('Li₂S (SEI component)', 'V[[_:Li]] migration · cell size'),
+             ('Li₃N (SEI component)', 'Li migration (NEB)'), ('Li₂S–Li₆PS₅Cl interphase', 'glass model · MLIP-MD'),   # user 10-13: the li2s/LPSCl track, not the SEI NEB
              ('Interfacial adhesion', 'adhesion'), ('Binder (SDCP) adsorption', 'spin-state adsorption')]
     TW, GX = 2.12, 0.14
     for k, (ti, kw) in enumerate(tiles):
@@ -830,7 +830,7 @@ tiles = [
     ('B₂O₃ and O doping', 'Equation of state, bond-valence Li pathways, MLIP-MD Li transport (multi-seed, relative)'),
     ('h-BN on carbon fiber', 'Li adsorption and migration (NEB) on h-BN-coated VGCF; layer-number (confinement) effect'),
     ('Li₃N (SEI component)', 'Li migration barriers (NEB); universal MLIP found biased for Li₃N → DFT only'),
-    ('Li₂S (SEI component)', 'Li-vacancy migration barrier (NEB, charged cell) and supercell-size convergence'),
+    ('Li₂S–Li₆PS₅Cl interphase', 'Amorphous interphase in Li₂S composite cathodes: glass model, DFT-checked MLIP, MLIP-MD — with a collaborator'),   # user 10-13: the li2s/LPSCl track
     ('Interfacial adhesion', 'Work of adhesion of SE|SE and SE|graphite interfaces (slab DFT, MLIP cross-check) → contact input for DEM'),
     ('Binder adsorption (SDCP)', 'Spin-state-resolved adsorption of a binder molecule on LiNiO₂ surfaces'),
 ]
