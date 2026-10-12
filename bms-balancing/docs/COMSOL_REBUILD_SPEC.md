@@ -4455,3 +4455,37 @@ gate INCOMPLETE · 실효 정책 UNVERIFIED · native 미승인 · 게이트 리
 - 첨부 정정: 처음 첨부는 실행 Codex 표현으로 "10월 9일 원준비본" (정확한 파일 식별은 기록 없음). 필요한 회신 zip 은 §85 보존본 그대로 사용자에게 다시 보냈다 —
   `COMSOL_MICROSHORT_S1_OPEN_CONNECTION_PREPARATION_REVIEW_20261010.zip` · 1,953,422 B · sha256 `f23d02b01b7a2ae96a2cfcf17009d73a2c47cddae7895c124aea6543b15bdd15` (발송문 §1 의 식별과 같음).
 - 실행 Codex 진술: 코드 수정 · 시험 · COMSOL 실행 0 (착수 전). OPEN-R1 결과 묶음은 아직 없다.
+
+## 87. OPEN-R1 정정본 — 정적 재검토 회신 접수: N1 · N2 코드 정정 수용 · 검증안 메타데이터 2 건 조건부 수용 → 다음 = 9 군 93 사례 변경부 한정 검증 (2026-10-12 · 실행 0)
+
+- 보존: `reviews/r14_repros/codex63/comsol_microshort_s1_open_r1_review_20261011/` — zip 4,038,610 B · sha256 `4fcb4c3216fa4bc8c38277d68682fb2b24e732a4c9e512896dca0ca7571e432a` · 압축 해제 130 ·
+  manifest 129 / 129 · 그 안의 `received/` = 실행 Codex OPEN-R1 정정본 (zip 4,011,062 B · sha256 `c9cf85b30f48fce0a8e747a8428b74b22a2d4c101498e2c0306720ed571fee0b` 의 펼친 사본 ·
+  PACKAGE_MANIFEST `045bcfc4…7392` 117 / 117) · 비밀 0 · 받은 코드 · 후보 · 동봉 스크립트 실행 0. 규칙 `06ddfc0b` → 보존 `d0fd880e`.
+  `received/basis/REVIEW.zip` = 10-10 검토 회신 (`f23d02b0…`) · `basis/prior_preparation/` 80 = §85 보존 준비본과 바이트 동일. 정정본 zip 원바이트와 ZIP 밖 기록 (영수증 · 포장 반환 · 최종 확인) 원파일은 이 저장소에 없다.
+- 승인 경위 (출처 구분): `received/AUTHORIZATION_SCOPE_RECORD.json` 의 사용자 원문 (실행 Codex 대화 · 제출자 기록) "OPEN-R1 N1–N3의 오프라인 정정·정적 재봉인 1건을 최대 2,400초로 승인합니다.
+  시험·COMSOL 실행은 제외합니다." · 원점 `ORIGIN.json` 2026-10-11T05:17:19Z · 단계 상한 = §85 발송문 제안 (1,200 · 300 · 480 · 300 · 120) · 원점 전에는 빠진 회신 zip 찾기 (§86) 와 실행 전 PS parse 오류 1 건뿐 (예산 재사용 0).
+- 정정본 (제출자 기록): 준비본 대비 바뀐 파일 3 — `resource_connection.py.inactive.txt` (10,846 B · `f45e6531…5816`) · 그 diff · `LIMITED_VALIDATION_PLAN.json` (178,519 B · `6702a6be…20c9`) ·
+  raw_connection · P0 · Java fragment 동일 (이 저장소에서도 바이트 대조) · 새 CODE_MANIFEST `feb12ef6…8ecc` (14) · FUNCTION_SPANS 86 · 정적 검사 151 · 검증안 9 군 93 사례 (C01 7 · C02 6 · C03 5 · C04 5 ·
+  C05 7 · C06 8 · C07 6 · C08 6 · C09 43 — Python 87 · Java helper 6 · 제안 1,350 s · 전부 NOT_EXECUTED) · 시간: 작성 349.13 / 1,200 · 정적 91.35 / 300 · 검증안 · 재봉인 423.47 / 480 s ·
+  마지막 snapshot 875.5703937 / 2,400 s · 전달 102.9739274 / 300 s (최종 확인 쓰기 · 재읽기 · 해시 뒤 · 반환 전) · 제출자 준비 도구 오류 2 (8b5773 · b41600) 공개.
+- 판정 (회신 `DECISION.json` · `REVIEW_KO.md`): `STATIC_CORRECTIONS_ACCEPTED_WITH_PLAN_METADATA_CONDITIONS` · N1 · N2 `STATIC_CORRECTION_ACCEPTED` · N3 앞선 정정 확인 · 추가 생산 수정 · 추가 사례 · 130 재실행 요구 0 ·
+  `plan_ready_for_execution=false` 유지 · 기능 검증 NOT_RUN · 구현 / 시험 / native 승인 아님. 조건 (검증안 메타데이터만):
+  - ① 순서 규칙 하나로: `case_order` "C01 through C09 in listed order" 가 "matching positive before dependent negatives" 와 충돌 (C05-04 / 05 / 06 → 뒤의 C05-07) · 나열은 Python → C08 Java → C09 Python 인데
+    명령은 Python 1 세션 · javac 1 · Java helper 1. → Python 1 세션 C01 → C02 → C03 → C04 → C05-01 / 02 / 03 / **07 / 04 / 05 / 06** → C06 → C07 → C09, 그 뒤 javac 1 회 → Java helper 1 세션 C08-01~06.
+  - ② C03-04 · 05 (protective fixture) 의 양성 C03-01 (normal) → C03-02 (protective) · C03-02 는 그 분기의 양성 · C03-03 은 C03-01 유지 · 입력 · 기대값 불변.
+  - 정정본 또는 원문보다 우선하는 봉인 부속서로 남기고 원 계획 SHA · 새 문서 SHA · 고정 후보 SHA 를 연결 · 옛 봉인본 수정 0.
+  - 한계 명시 (회신): frozen context 는 정상 API 의 원점 교체를 막는 코드 계약이지 보안 경계 · OS clock 진실성 · 실제 sampler 의 session 유지 증명이 아님 · `previous_sample_end_s` 는 여전히 호출자 공급.
+- **이 저장소의 정적 확인 (실행 0 · `received/` 사본):**
+  - N1: `ExecutionClockContext` (31–52 · frozen · run / clock id · 단위 `seconds` · 원점 유한성 · 순서) · `ResourceSession` (55–82 · 시작 기록에서 한 번 생성 · `decide` 에 원점 인수 없음 · anchor 를 scalar tuple 로 복사) ·
+    `bind_sample_clock` (85–97 · raw 의 run / clock / 단위 / 원점이 context 와 정확히 같아야 함 · 다르면 `CLOCK_ORIGIN_MISMATCH`) · 경과 (165–166) = `end − context.*_origin_s`.
+    → §85 의 반례 (raw 원점 9,960) 는 이제 `bind_sample_clock` 에서 거부된다.
+  - N2: 129 `PROCESS_COUNTER_SCHEMA` (dict) → 130 `PROCESS_COUNTER_KEYS` → 132–134 `PROCESS_COUNTER_IDENTITY_TYPE` (정확 int · 양수) → 136 membership / query / working set — `[None]` 은 129 에서
+    `ResourceConnectionError` → 182 행에서 `STOP_REQUIRED`. C07-03 의 `OS_QUERY_FAILURE` (106) 는 `bind_sample_clock` (107) · `assess_resources` (181) 보다 먼저.
+  - 조건 ①: `case_order` 원문 · C05-04 / 05 / 06 → C05-07 (나열상 뒤) 을 계획 JSON 에서 확인 (나열 뒤 양성 참조는 이 3 건뿐) · 명령 3 개 (Python · javac · java) 각 `max_sessions 1`.
+    조건 ②: C03-04 · 05 의 fixture 가 "C03 protective fixture" 인데 `positive_control` = C03-01 · C03-02 도 C03-01 을 가리킴.
+  - 관측 (§85 · 판정 아님) 유지: `raw_connection.quadrature_projection` 139–140 은 이번에 바뀌지 않았다 (바이트 동일).
+- 상태: OPEN 4 · `native_ready / approved / usable = false` · 전체 / 정상 gate INCOMPLETE · 실효 정책 / 실제 코어 UNVERIFIED · microshort 효과 결과 없음.
+- 다음 (사용자 결정): **9 군 93 사례 변경부 한정 검증 1 건** — 회신 "다음 단계와 금지" 대로 메타데이터 정정 (조건 ① ②) 을 포함하고, 새 하네스 · fixture · 실제 엔진 바이트 · 정확한 명령을 시험 전에 봉인 ·
+  검증안 제안 1,350 s (하네스 봉인 600 · Python 180 · javac 90 · Java helper 60 · 보존 · 전달 300 · 미완 정리 120) · 세션 자동 확대 없음 · 첫 예상 밖 실패 / 시간 초과에서 중지 ·
+  javac / java 는 이 작은 helper 에만 (COMSOL 모델 컴파일 · native 아님). 회신에 채택 문구 초안이 없어 이 저장소가 썼다 — 발송 프롬프트 `docs/COMSOL_MICROSHORT_S1_OPEN_R1_VALIDATION_SEND_20261012.md`.
+  통과해도 OPEN 4 종결 · 설치본 관측 · P0 실행 승인이 아니다. 이 절은 승인이 아니다.
