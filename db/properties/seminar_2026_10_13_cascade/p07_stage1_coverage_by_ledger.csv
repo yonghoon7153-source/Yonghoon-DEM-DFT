@@ -1,0 +1,13 @@
+# Page 7 — Stage-1 coverage: how many of the 91 precursors each ledger holds (table or bars: n_precursors per step).
+# Counted from the ledger files by this script. Stage 1 is exploratory data since 2026-09-19 (cascade_v23_demoted_2026_09_19.json).
+# Configurations are structures, not designs; all main-set configurations share one dopant level (labels x002/x005/x010 are not concentrations).
+workflow_row,step_or_ledger,n_precursors,n_rows,row_unit,As2S3_included,AlI3_included,source
+1-2,Site enumeration + MLIP relaxation (main batch + August re-run),91,3675,configurations,yes,yes,cascade_all_302_2026_08_25.csv (families v23 + as2s3_recover)
+3,Short anneal 500 K / 50 ps (converged),91,693,configurations,yes,yes,cascade_all_302_2026_08_25.csv anneal_converged
+6,"Stability window (grand potential, corrected definition)",90,354,compositions,no,yes,oxidation_stability_cascade_v3_pinned.json results
+7,Interface: doped composition vs LiCoO2 / LiNiO2 / LiMn2O4 (+ NCM811 and Li-metal subsets of 8),90,286,reaction rows,no,yes,cascade_interface_90.jsonl
+7,Interface: doped composition vs Li metal,90,90,reaction rows,no,yes,cascade_interface_li.jsonl
+7,Interface: doped composition vs carbon,90,90,reaction rows,no,yes,cascade_interface_carbon.jsonl
+— (slide 10 text),"Precursor as a separate phase (coating view) vs H2O (H2S release), LiCoO2, Li6PS5Cl, Li metal, LiNiO2",89,89,precursors,no,no,cascade_stability_axes.csv
+— (not on slides),"Literature-style gate funnel (diagnostic, unvalidated)",89,89,precursors,no,no,cascade_screening_funnel_v2.json pool_names
+— (not on slides),"Concentration set x = 0.0625 / 0.25 in a 16 f.u. cell (exploratory, incomplete)",13,450,configurations,no,no,cascade_all_302_2026_08_25.csv family dualx_v23

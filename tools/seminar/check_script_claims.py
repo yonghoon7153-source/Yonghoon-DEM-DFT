@@ -262,7 +262,7 @@ def main():
     a = ap.parse_args()
     if a.selftest:
         return selftest()
-    targets = [Path(p) for p in a.paths]
+    targets = [Path(p).resolve() for p in a.paths]   # 상대경로를 주면 relative_to(ROOT) 가 ValueError (2026-10-12)
     if a.all:
         targets += sorted((ROOT / "kb" / "seminars").glob("*.md"))
     if not targets:

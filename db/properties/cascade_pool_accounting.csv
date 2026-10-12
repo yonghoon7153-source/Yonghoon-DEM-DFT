@@ -1,4 +1,5 @@
 "# 91 planned -> 89 scored. Two species drop, for DIFFERENT reasons.",,,,,
+"# ⚠ 2026-10-12: As2S3 and AlI3 were completed in the 08-20~25 re-run (tools/doping/run_as2s3_recover.sh · 60 configurations) — all 91 are RELAXED (cascade_all_302_2026_08_25.csv). n_scored 89 = the scored/gate set built BEFORE the re-run; the As2S3 drop_reason below is the pre-re-run state. Per-ledger coverage: db/properties/seminar_2026_10_13_cascade/p07_stage1_coverage_by_ledger.csv",,,,,
 # Source: db/properties/cascade_v23_ranked_v2.csv (89 rows) counted by anion family;,,,,,
 #   plan from tools/doping/master_batch_273.sh (PHASE_1A 37 + PHASE_1B 54).,,,,,
 #   AlI3 rationale: kb/methodology/cascade_pipeline_anatomy_2026_08_13.md 'AlI3 - 90번째를 넣는 유일한 경로',,,,,

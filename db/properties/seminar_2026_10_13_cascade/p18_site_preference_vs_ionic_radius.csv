@@ -1,4 +1,5 @@
-# Page 17 (backup) — site preference vs Shannon ionic radius (MLIP relative energies).
+# Page 18 (backup) — site preference vs Shannon ionic radius (MLIP relative energies).
+# This is the June site-preference batch (antisite swap), NOT the Stage-1 cascade set whose x labels were all x = 0.25.
 # Source: db/properties/seminar_table_site_preference.csv — its notes, verbatim:
 # Step 1 site preference. Source: db/properties/site_preference_raw_78.csv (78 systems).
 # ** The three points per element are three DOPING LEVELS (labels x002 / x005 / x010), NOT repeat runs. **

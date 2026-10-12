@@ -1,4 +1,4 @@
-# Page 12 — MLIP-MD run roster (40 runs = 10 start configurations × 2 precursors × 2 seeds), status as of 2026-10-12 10:04 KST (last runner watch).
+# Page 13 — MLIP-MD run roster (40 runs = 10 start configurations × 2 precursors × 2 seeds), status as of 2026-10-12 10:04 KST (last runner watch).
 # Source: db/properties/cascade_v7_main_runlog_2026_10_07.json (per-run wall-clock GPU-hours of finished runs).
 # NO transport values here (no D, ratio or Ea) — the ratio is analysed once, after all 40 runs.
 # Run order assumption: seed 1 for A–J first (the 13th run was P1_Al2O3_G seed 1); queued order is not asserted.

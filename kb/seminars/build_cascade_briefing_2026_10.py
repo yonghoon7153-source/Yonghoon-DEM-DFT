@@ -6,7 +6,8 @@ duplicating slide 3 for new slides (pptx skill add_slide.py) and editing slide X
 
 Usage: python3 build_deck.py <src.pptx> <out.pptx> <skill_dir> <extra_media_dir>
 What this does NOT do: speaker notes; native charts (graphs are drawn in Origin from the
-per-page CSVs); it does not check that numbers match the ledger (they were checked by hand).
+per-page CSVs); it does not check that numbers match the ledger (they were checked by hand —
+since 2026-10-12 the Stage-1 counts on slides 3/6/7/8/15 are the ones p06/p07 count from the ledger files).
 """
 import os, re, shutil, subprocess, sys, zipfile
 from xml.sax.saxutils import escape
@@ -304,7 +305,7 @@ def heading(i, text, y=0.98, h=0.48):
 shutil.rmtree(WORK, ignore_errors=True)
 zipfile.ZipFile(SRC).extractall(WORK)
 
-NEW_KEYS = ['prev', 'overview', 'workflow', 'stability', 'md_setup', 'md_status', 'next', 'summary', 'refs']
+NEW_KEYS = ['prev', 'overview', 'workflow', 'stability', 'audit', 'md_setup', 'md_status', 'next', 'summary', 'refs']
 new = {}
 for k in NEW_KEYS:
     out = sh('python3', os.path.join(SKILL, 'scripts', 'add_slide.py'), WORK, 'slide3.xml')
@@ -367,23 +368,23 @@ add(t, heading(ids(), 'This work: purpose, what has run, what comes next'))
 cards = [
     ('Purpose', 'FDF1F1', BUL, [('p', 'Select dopant precursors for Li₆PS₅Cl that raise electrochemical and mechanical stability without slowing Li-ion transport.'),
                                 ('p', 'Let the computation make the selection, with the selection rule stated in advance.')]),
-    ('Completed', 'EEF3FA', NAVY, [('cb', 'Site enumeration + MLIP relaxation: 89 of 91 precursors (3,615 configurations)'),
-                                   ('cb', 'DFT equation of state of the reference compositions'),
-                                   ('cb', 'Stability windows recomputed with one consistent definition')]),
-    ('Running', 'E8F4FB', BLUE, [('cb', 'MLIP-MD Li diffusivity: Al₂O₃- vs Al₂S₃-derived doping (12 of 40 runs)'),
+    ('Completed', 'EEF3FA', NAVY, [('cb', 'Stage 1: all 91 precursors enumerated and relaxed (3,675 configurations)'),
+                                   ('cb', 'DFT equation of state; stability windows recomputed'),
+                                   ('cb', 'September audit → Stage 2 with one primary readout')]),
+    ('Running', 'E8F4FB', BLUE, [('cb', 'Stage 2 pilot: MLIP-MD Li diffusivity, Al₂O₃- vs Al₂S₃-derived doping (12 of 40 runs)'),
                                  ('cb', 'DFT elastic constants of the reference compositions')]),
-    ('Next', 'F3F4F6', '374151', [('cb', 'Interfacial reaction products with ground-state reference phases'),
-                                  ('cb', 'Selection rule fixed before combining descriptors'),
+    ('Next', 'F3F4F6', '374151', [('cb', 'Scope over the 237-design roster and the ranking margin, fixed in advance'),
+                                  ('cb', 'Check whether Stage-1 descriptors predict the measured transport'),
                                   ('cb', 'Shortlist → DFT validation → experiments')]),
 ]
 for k, (ti, fill, tc, items) in enumerate(cards):
     x = 0.55 + (k % 2) * 4.52
     y = 1.55 + (k // 2) * 2.4
     paras = P(ti, 'p', 1600, 100, color=tc, bold=True, spcaft=600) + ''.join(
-        P(s, kind, 1300, 110, color=INK, spcaft=400) for kind, s in items)
+        P(s, kind, 1300, 110, color=INK, spcaft=300) for kind, s in items)
     add(t, box(ids(), f'Card {ti}', x, y, 4.38, 2.25, fill=fill, paras=paras, ins=(0.16, 0.12, 0.16, 0.1)))
 add(t, tb(ids(), 'Status note', 0.55, 6.38, 8.9, 0.4,
-          P('At this stage the screening descriptors are used for exploration; [[B:no dopant ranking is claimed.]]',
+          P('Stage-1 descriptors are used for exploration; [[B:no dopant ranking is claimed.]]',
             'p', 1300, 100, color=BLUE)))
 save(t, name)
 
@@ -397,7 +398,7 @@ drop(t, lambda el: etree.QName(el).localname == 'grpSp' or name_of(el) == 'TextB
 add(t, tb(ids(), 'References top', 4.6, 0.93, 4.9, 0.42,
           P('Chem. Mater. 27, 4040 (2015) · Adv. Energy Mater. 14, 2304025 (2024)', 'p', 950, 100, 'r', MUTED, italic=True)
           + P('J. Mater. Chem. A 12, 7272 (2024) · Joule 3, 1252 (2019)', 'p', 950, 100, 'r', MUTED, italic=True)))
-assert set_texts(t, {'47': '89'}) == 1          # cell runs: '47' ' (' '91' ' planned)'
+assert set_texts(t, {'47': '91', ' (': '', '91': '', ' planned)': ''}) == 4   # cell runs: '47' ' (' '91' ' planned)' -> '91'
 tbl = t.getroot().find('.//p:graphicFrame', NS)
 cell_hits = 0
 for tc in tbl.iter(f'{{{NS["a"]}}}tc'):
@@ -428,7 +429,7 @@ t = load('slide8.xml')
 header(t, 'Approach')
 replace_body(t, P('Candidate set: 91 precursor compounds in seven anion families', 'h', ln=130)
              + P('Cations +1 to +6, anions O²⁻ to I⁻; only existing compounds are used.', 'b', ln=130)
-             + P('89 of 91 computed (As₂S₃: no valid configuration; AlI₃: incomplete).', 'b', ln=130),
+             + P('All 91 relaxed — As₂S₃ and AlI₃ were completed in an August re-run.', 'b', ln=130),
              y=1.08, h=1.4)
 gf = t.getroot().find('.//p:graphicFrame', NS)
 gf.find('.//p:xfrm/a:off', NS).set('y', str(E(2.5)))
@@ -445,26 +446,28 @@ save(t, 'slide8.xml')
 
 # ---- 7 workflow table
 name, t = fresh('workflow', 'Approach')
-add(t, heading(ids(), 'Simulation workflow and status'))
+add(t, heading(ids(), 'Stage 1 — exploration screen (Jun–Aug): workflow and status'))
 DONE, RECO, RUN, PLAN = ('E8F3EA', '1B5E20'), ('FFF4E0', '8A5A00'), ('DCEBF8', '0B5394'), ('EFEFEF', '4B5563')
 rows = [['#', 'Step', 'Method', 'Scale', 'Status'],
-        ['1', 'Site enumeration', 'Charge-balanced placement of the precursor cation and anion on the Li, P, S and Cl sublattices', '91 precursors', 'Done'],
-        ['2', 'Relaxation', 'Universal MLIP (UMA), FIRE optimizer', '3,615 configurations', 'Done'],
-        ['3', 'Short anneal', 'MLIP-MD at 500 K for 50 ps, then re-relaxation', '681 configurations', 'Done'],
+        ['1', 'Site enumeration', 'Charge-balanced placement of precursor cation and anion on Li, P, S, Cl sites', '91 precursors', 'Done'],
+        ['2', 'Relaxation', 'Universal MLIP (UMA), FIRE optimizer', '3,675 configurations', 'Done'],
+        ['3', 'Short anneal', 'MLIP-MD at 500 K for 50 ps, then re-relaxation', '693 configurations', 'Done'],
         ['4', 'Li-site landscape', 'Bond-valence site energy (softBV)', 'per precursor', 'Done (structural proxy)'],
         ['5', 'EOS / elastic constants', 'DFT (Quantum ESPRESSO): Birch–Murnaghan fit; finite strains with ionic relaxation', 'reference compositions', 'EOS done · C[[_:ij]] running'],
-        ['6', 'Stability window', 'Grand-potential phase diagram from Materials Project phases (0 K)', '89 compositions', 'Recomputed'],
-        ['7', 'Interfacial reactivity', 'Pseudo-binary reaction energy vs Li metal, LiCoO₂, LiMn₂O₄', '90 compounds', 'Re-evaluation planned'],
-        ['8', 'Li transport', 'MLIP-MD (NVT); MSD → Li diffusivity ratio between two precursors', '40 runs', 'Running (12/40)']]
-st = {1: DONE, 2: DONE, 3: DONE, 4: DONE, 5: RUN, 6: RECO, 7: PLAN, 8: RUN}
+        ['6', 'Stability window', 'Grand-potential phase diagram from Materials Project phases (0 K)', '90 precursors', 'Recomputed (Oct)'],
+        ['7', 'Interface reactivity', 'Reaction energy of each doped composition vs cathodes, Li metal, carbon', '90 precursors', 'Done · products redo']]
+st = {1: DONE, 2: DONE, 3: DONE, 4: DONE, 5: RUN, 6: RECO, 7: PLAN}
 fills = {(r, 4): st[r][0] for r in st}
 colors = {(r, 4): st[r][1] for r in st}
 add(t, table(ids(), 'Workflow table', 0.45, 1.52, [0.35, 1.7, 3.75, 1.75, 1.55], rows,
-             [0.38] + [0.52] * 8, sz=1150, hsz=1250, fills=fills, colors=colors,
+             [0.38] + [0.52] * 7, sz=1150, hsz=1250, fills=fills, colors=colors,
              aligns=['ctr', 'l', 'l', 'l', 'ctr']),
-    tb(ids(), 'Abbreviations', 0.45, 6.18, 9.1, 0.6,
-       P('MLIP: machine-learning interatomic potential (UMA, a universal model) · MSD: mean squared displacement · '
-         'EOS: equation of state · all configurations at one dopant concentration', 'p', 1050, 105, color=MUTED)))
+    tb(ids(), 'Stage note', 0.45, 5.62, 9.1, 0.6,
+       P('As₂S₃ and AlI₃ were completed in an August re-run; As₂S₃ is not yet in the stability and interface tables (rows 6–7). '
+         'Since the September audit these outputs are [[B:exploratory data]] — Li transport is measured in Stage 2.', 'p', 1150, 110, color=BLUE)),
+    tb(ids(), 'Abbreviations', 0.45, 6.25, 9.1, 0.55,
+       P('MLIP: machine-learning interatomic potential (UMA, a universal model) · EOS: equation of state · '
+         'all Stage-1 configurations use one dopant level (one precursor unit per four formula units)', 'p', 1050, 105, color=MUTED)))
 save(t, name)
 
 # ---- 8 configuration sampling (orig slide 11)
@@ -488,7 +491,7 @@ hw = 4.6
 hh = hw * emf_ext[1] / emf_ext[0]
 add(t, pic(ids(), 'Site-pair heatmap', emf_rid, 0.5, 2.6, hw, hh, 'Configurations per cation-anion site pair'),
     tb(ids(), 'Caption left', 0.5, 2.62 + hh, hw, 0.32,
-       P('< configurations per cation–anion site pair (3,615 in total) >', 'p', 1150, 100, 'ctr')),
+       P('< configurations per cation–anion site pair: main batch 3,615 (+60 in the August re-run) >', 'p', 1100, 100, 'ctr')),
     pic(ids(), 'Anneal schematic', rid23, 5.55, 2.6, 3.6, 3.6 * 1197 / 1623, 'What a short anneal does'),
     tb(ids(), 'Caption right', 5.45, 2.62 + 3.6 * 1197 / 1623, 3.9, 0.32,
        P('< what the short anneal does >', 'p', 1150, 100, 'ctr')),
@@ -516,7 +519,7 @@ add(t, heading(ids(), 'Electrochemical stability window and interfacial reactivi
 add(t, tb(ids(), 'Window bullets', 0.55, 1.5, 4.55, 2.55,
           P('Grand-potential phase diagram: the Li chemical potential is scanned as a voltage (0 K, bulk thermodynamics).', 'cb', 1250, 110, spcaft=500)
           + P('Stable window = voltage range where the composition decomposes [[b:without Li exchange]]; if no such range exists, no stable window.', 'cb', 1250, 110, spcaft=500)
-          + P('Recomputed for all 89 compositions with this definition (Sep–Oct); the earlier definition overestimated window widths.', 'cb', 1250, 110)))
+          + P('Recomputed for the 90 precursors in the stability table with this definition (Oct); the earlier definition overestimated window widths.', 'cb', 1250, 110)))
 x0, x1, v0, v1 = 0.75, 4.85, 1.4, 2.5
 X = lambda v: x0 + (v - v0) * (x1 - x0) / (v1 - v0)
 add(t,
@@ -539,17 +542,48 @@ add(t, pic(ids(), 'Sundar 2025 Fig 2', rid31, 5.3, 1.55, 4.15, 4.15 * 805 / 2118
     tb(ids(), 'Caption right', 5.3, 3.17, 4.15, 0.3, P('< coating reaction energy at four interfaces >', 'p', 1100, 100, 'ctr')),
     tb(ids(), 'Credit right', 5.3, 3.43, 4.15, 0.28, P('Reproduced from Sundar et al., Adv. Sci. 12, e13191 (2025)', 'p', 950, 100, 'ctr', MUTED, italic=True)),
     tb(ids(), 'Interface bullets', 5.3, 3.85, 4.15, 2.2,
-       P('Interfacial reactivity uses the same phase data: reaction energy of each dopant phase against Li₆PS₅Cl, Li metal and cathode materials.', 'cb', 1250, 110, spcaft=500)
-       + P('Our reaction-product analysis is being [[b:redone with ground-state reference phases]] (E[[_:hull]] = 0).', 'cb', 1250, 110)),
+       P('Same phase data: reaction energy of each doped composition against LiCoO₂, LiNiO₂, LiMn₂O₄, Li metal and carbon.', 'cb', 1250, 110, spcaft=500)
+       + P('A separate table treats the precursor itself as a second phase (coating view, as in the figure); its product band gaps are being [[b:re-derived with ground-state phases]] (E[[_:hull]] = 0).', 'cb', 1250, 110)),
     refs_line(ids(), 'Zhu, ACS Appl. Mater. Interfaces 7, 23685 (2015) · Richards, Chem. Mater. 28, 266 (2016) · '
                      'Xiao, Nat. Rev. Mater. 5, 105 (2020) · Schwietert, Nat. Mater. 19, 428 (2020)', y=6.4))
 save(t, name)
 
+# ---- 10b September audit -> Stage 2 rules (fixed before any new result)
+name, t = fresh('audit', 'Progress')
+add(t, heading(ids(), 'September audit → Stage 2: rules fixed before new results'))
+found = (P('What the audit of Stage 1 found', 'p', 1300, 100, color=NAVY, bold=True, spcaft=600)
+         + P('Concentration labels did not change the dopant level: every configuration has one precursor unit per four formula units.', 'cb', 1150, 108, spcaft=450)
+         + P('The volume filter used a host reference ~40 % above the DFT equilibrium volume of the same composition → Stage 2 builds from the DFT-equilibrium host.', 'cb', 1150, 108, spcaft=450)
+         + P('Young\'s modulus: scatter among configurations of one precursor ≈ spread between precursors (ratio 1.1; substitution energy 0.2).', 'cb', 1150, 108, spcaft=450)
+         + P('Several descriptors were merged into one score without a stated primary objective.', 'cb', 1150, 108))
+add(t, box(ids(), 'Audit findings', 0.55, 1.55, 4.3, 3.6, fill='F5F7FA', paras=found, ins=(0.16, 0.12, 0.16, 0.1)),
+    box(ids(), 'Audit verdict', 0.55, 5.27, 4.3, 0.62, fill='FDF1F1', anchor='ctr',
+        paras=P('→ Stage-1 outputs are kept as [[B:exploratory data]]; approved dopant ranking: none.', 'p', 1150, 105, color=BUL)))
+add(t, tb(ids(), 'Rules title', 5.05, 1.5, 4.4, 0.34,
+          P('Fixed before any new result (Sep 12–19)', 'p', 1300, 100, color=NAVY, bold=True)))
+OK_, OPEN_ = ('E8F3EA', '1B5E20'), ('FFF4E0', '8A5A00')
+rules = [('Primary readout', 'D[[_:rel]] = D*(design) / D*(host): Li tracer diffusivity relative to the host, compared across designs', 'Ratified', OK_),
+         ('Design roster', '237 designs; one design = one composition (file names are not identifiers)', 'Ratified', OK_),
+         ('Build rules', 'Parent sites fixed before substitution · full charge balance incl. vacancies · refusals counted separately', 'Ratified', OK_),
+         ('Representative', 'The configuration with the median substitution energy stands for its design', 'Ratified', OK_),
+         ('Ranking margin', 'How large a difference must be before one design is called better (δ)', 'Proposed · δ open', OPEN_)]
+RY, RH, RG = 1.9, 0.74, 0.08
+for k, (lab, txt, chip, (cf, cc)) in enumerate(rules):
+    y = RY + k * (RH + RG)
+    add(t, box(ids(), f'Rule {k + 1}', 5.05, y, 4.4, RH, fill='FFFFFF', line='C9D3E3', ins=(0.12, 0.05, 0.12, 0.05),
+               paras=P(lab, 'p', 1150, 100, color=NAVY, bold=True, spcaft=300) + P(txt, 'p', 1000, 100, color=INK)),
+        box(ids(), f'Rule {k + 1} status', 7.75, y + 0.05, 1.62, 0.24, fill=cf, anchor='ctr', adj=30000, ins=(0.02, 0.0, 0.02, 0.0),
+            paras=P(chip, 'p', 900, 100, 'ctr', cc, bold=True)))
+add(t, tb(ids(), 'Scope note', 0.55, 6.15, 8.9, 0.5,
+          P('237 designs ≠ 237 runs: the execution scope is decided [[B:after the pilot]] — the pilot tests the protocol on two Al precursors (next slides).',
+            'p', 1200, 105, color=BLUE)))
+save(t, name)
+
 # ---- 11 MD setup
 name, t = fresh('md_setup', 'Progress')
-add(t, heading(ids(), 'Li transport by MLIP molecular dynamics: setup'))
+add(t, heading(ids(), 'Stage 2 pilot — Li transport by MLIP molecular dynamics: setup'))
 add(t, tb(ids(), 'Setup bullets', 0.55, 1.5, 4.6, 2.9,
-          P('[[B:Question]]: does the precursor anion (Al₂O₃ vs Al₂S₃) change Li diffusivity in Al-doped Li₆PS₅Cl?', 'cb', 1250, 110, spcaft=600)
+          P('[[B:Pilot question]]: does the precursor anion (Al₂O₃ vs Al₂S₃) change Li diffusivity in Al-doped Li₆PS₅Cl — and can the protocol resolve it?', 'cb', 1250, 110, spcaft=600)
           + P('[[B:Reported quantity]]: ratio of Li tracer diffusivities from MSD slopes — relative, not an absolute conductivity.', 'cb', 1250, 110, spcaft=600)
           + P('[[B:Analysis plan fixed before the runs]]: diffusive-regime checks, then an equivalence test (margin ±ln 1.5) on the log-ratio.', 'cb', 1250, 110)),
     box(ids(), 'Recipe A', 0.6, 4.5, 2.1, 0.95, fill='EEF3FA', anchor='ctr',
@@ -575,7 +609,7 @@ save(t, name)
 
 # ---- 12 MD status + limits
 name, t = fresh('md_status', 'Progress')
-add(t, heading(ids(), 'Li transport: temperature choice, status and limits'))
+add(t, heading(ids(), 'Stage 2 pilot — temperature choice, status and limits'))
 add(t, tb(ids(), 'Status bullets', 0.55, 1.5, 4.75, 3.1,
           P('[[B:600 K pilot]] (40 runs, 200 ps): Li hopped (~4,000 hops per run) but the MSD never became linear over 2–100 ps → no diffusivity reported (UMA, this cell and volume).', 'cb', 1200, 108, spcaft=500)
           + P('[[B:Temperature]] then chosen by a predefined pilot: 800 K failed and 1000 K passed the diffusive-regime checks.', 'cb', 1200, 108, spcaft=500)
@@ -610,13 +644,13 @@ add(t, heading(ids(), 'Next steps and purpose'))
 plan = [('Now → late Oct', BLUE, 1.55, 0.95,
          P('Finish the 40 MD runs and analyse once with the predefined criteria. The follow-up for each outcome '
            '(difference · equivalent · inconclusive · criteria not met) is written down before the analysis.', 'p', 1250, 110)),
-        ('Next 1–2 months', NAVY, 2.62, 1.2,
-         P('Interfacial reaction products with ground-state reference phases', 'cb', 1250, 110)
-         + P('Stability-window table with the corrected definition', 'cb', 1250, 110)
-         + P('DFT elastic constants of the reference compositions', 'cb', 1250, 110)),
-        ('Then', BUL, 3.94, 0.95,
-         P('Selection rule fixed before combining descriptors → shortlist → DFT validation → synthesis and testing with the experimental team.', 'p', 1250, 110)),
-        ('Method upgrades', MUTED, 5.01, 0.95,
+        ('Next 1–2 months', NAVY, 2.62, 1.42,
+         P('Execution scope over the 237-design roster and the ranking margin δ — fixed before any result', 'cb', 1200, 105)
+         + P('Do Stage-1 descriptors predict the measured transport? (rank correlation with a confidence interval)', 'cb', 1200, 105)
+         + P('Stability windows and interface products with ground-state phases (As₂S₃ added) · DFT elastic constants', 'cb', 1200, 105)),
+        ('Then', BUL, 4.14, 0.8,
+         P('Rank designs on the primary readout with its uncertainty → shortlist → DFT validation → synthesis and testing with the experimental team.', 'p', 1250, 110)),
+        ('Method upgrades', MUTED, 5.06, 0.95,
          P('Larger cells (≥ 2 nm) and longer runs (≥ 0.3 ns) · fine-tuned MLIP · ensemble uncertainty · '
            'dopant concentration from charge-neutral defect thermodynamics', 'p', 1250, 110))]
 for lab, c, y, h, paras in plan:
@@ -631,13 +665,14 @@ save(t, name)
 
 # ---- 14 summary
 name, t = fresh('summary', 'Summary')
-cols3 = [('Done', 'E8F3EA', '1B5E20', ['91 precursors enumerated; 89 relaxed with an MLIP (3,615 configurations)',
-                                      'DFT equation of state of the reference compositions',
-                                      'Stability windows recomputed with one consistent definition']),
-         ('Running', 'E3EEF9', '0B5394', ['MLIP-MD Li diffusivity ratio, Al₂O₃ vs Al₂S₃ (40 runs; ~Oct 21)',
+cols3 = [('Done', 'E8F3EA', '1B5E20', ['Stage 1: all 91 precursors enumerated and relaxed (3,675 configurations)',
+                                      'DFT equation of state; stability windows recomputed',
+                                      'September audit → Stage-2 rules fixed before new results']),
+         ('Running', 'E3EEF9', '0B5394', ['Stage-2 pilot: Li diffusivity ratio, Al₂O₃ vs Al₂S₃ (40 runs; ~Oct 21)',
                                          'DFT elastic constants']),
-         ('Next', 'F3F4F6', '374151', ['Interfacial reaction products with ground-state phases',
-                                      'Selection rule fixed in advance → shortlist → DFT → experiment'])]
+         ('Next', 'F3F4F6', '374151', ['Execution scope and ranking margin, fixed in advance',
+                                      'Check Stage-1 descriptors against the measured transport',
+                                      'Shortlist → DFT → experiment'])]
 for k, (ti, fill, tc, items) in enumerate(cols3):
     paras = P(ti, 'p', 1800, 100, color=tc, bold=True, spcaft=900) + ''.join(P(s, 'cb', 1400, 115, spcaft=700) for s in items)
     add(t, box(ids(), f'Summary {ti}', 0.55 + k * 3.07, 1.15, 2.9, 4.35, fill=fill, paras=paras, ins=(0.16, 0.14, 0.16, 0.1)))
@@ -701,7 +736,7 @@ save(t, 'slide15.xml')
 
 # ---- order, prune, pack
 order = ['slide1.xml', new['prev'], new['overview'], 'slide3.xml', 'slide7.xml', 'slide8.xml', new['workflow'],
-         'slide11.xml', 'slide16.xml', new['stability'], new['md_setup'], new['md_status'], new['next'],
+         'slide11.xml', 'slide16.xml', new['stability'], new['audit'], new['md_setup'], new['md_status'], new['next'],
          new['summary'], 'slide19.xml', new['refs'], 'slide10.xml', 'slide15.xml']
 pres_p = os.path.join(WORK, 'ppt', 'presentation.xml')
 rels_p = os.path.join(WORK, 'ppt', '_rels', 'presentation.xml.rels')

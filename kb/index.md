@@ -1,16 +1,17 @@
 # kb 카탈로그 (생성물 — 손으로 고치지 말 것)
 
-> `python3 tools/kb_wiki.py index` 가 만든다 · 2026-10-12 · managed-files: 520
+> `python3 tools/kb_wiki.py index` 가 만든다 · 2026-10-12 · managed-files: 521
 
 규칙: kb/SCHEMA.md · 코드 체계: kb/CODES.md · 열린 질문: kb/questions/ · 논지 카드: kb/syntheses/ · 원장: kb/open_items.md · 문헌: litdb/INDEX.md
 
 값 = `db/properties/canonical_registry.json` · 금지 = `db/properties/citation_hazards.json` · 판정 = `db/governance/decisions.json` · 리뷰 = `kb/reviews/INDEX.md`
 
-## 최근 갱신 상위 20 (frontmatter `updated` 기준 · 전체 315건)
+## 최근 갱신 상위 20 (frontmatter `updated` 기준 · 전체 316건)
 - 2026-10-12 · `kb/seminars/Research_Seminar_2026_10_13_cascade_defense_ko.md` — 연구세미나 2026-10-13 — cascade 진행 브리핑 디펜스 (예상 질문 · 개념 설명 · 숫자 카드) · 진행
 - 2026-10-12 · `kb/seminars/Research_Seminar_2026_10_13_cascade_script_ko.md` — 연구세미나 2026-10-13 — cascade 진행 브리핑 발표 대본 (장별) · 진행
 - 2026-10-12 · `kb/seminars/Research_Seminar_2026_10_13_cascade_storyline_ko.md` — 연구세미나 2026-10-13 — cascade 진행 브리핑 스토리라인 (대본 준비용) · 진행
 - 2026-10-12 · `kb/seminars/cascade_briefing_2026_10_direction.md` — cascade 진행 브리핑 (2026-10) — 08-18 덱 판정 · 13장 구성 · 현재 상황 · 방향 · 참고문헌 · 진행
+- 2026-10-12 · `kb/seminars/cascade_db_reading_2026_10_12.md` — cascade 원장 정독 — 단계별 커버리지 · 9월 재건 · 세미나 덱 정정 (2026-10-12) · 진행
 - 2026-10-08 · `kb/reviews/INDEX.md` — 리뷰 사슬 색인 — 프롬프트↔회신 (자동 생성) · 자동생성
 - 2026-10-08 · `kb/reviews/codex_CT_reply_cascade_v7_main_runner_2026_10_08.md` — CT 회신 — cascade v7 본 라운드 러너: 조건부 GO · P0 없음 · P1 셋 (판독 입력 결박 · 미정산 시간 · 자식 생성 직후 정리) · P2 (이어받기 대조 · partial · watcher --log) · 수령 2026-10-08 (사용자 붙여넣기 · 원문 보존 · 마크다운…
 - 2026-10-08 · `kb/reviews/codex_CU_reply_wad_agc_graphite_k9_closure_2026_10_08.md` — CU 회신 — P1b Ag(111)|흑연 3층 k9 마감 사후 감사: 조건부 GO · 값 유지 · P1 '기판만' 정정 (셀 c·영상 간격도 다름) · P2 라벨 좁히기 · 집계기 신원 검사 공백 · 수령 2026-10-08 (사용자 붙여넣기 · 원문 보존 · 마크다운…
@@ -26,7 +27,6 @@
 - 2026-10-05 · `kb/reviews/li2s1a_CS_prompt_li2s_glass_control_cost_2026_10_05.md` — CS 프롬프트 — li2s 소셀 유리 대조 계: 담금질 시작 · ⚠ 비용 견적 오류 정정 (시드당 3 h → 실측 ≈ 33–39 h 벽시계) · 총상한 80 GPU-h 를 MD 전에 넘는다 · 셈법·새 상한 140·그 사이 처리 확인 요청 셋 (외부 1저자에게) · 발송됨 (사용자 · 2026-10-05 · 발송판 `kb/projec…
 - 2026-10-05 · `kb/reviews/li2s1a_CS_reply_li2s_glass_control_cost_2026_10_05.md` — 회신 CS — 외부 1저자 (li2s 소셀 유리 대조 계 비용): Q-CS-1 kgy 는 등분 가정으로 상한 비교 (과대평가 방향 = 보수적 · 벽시계 병기 · gabia 는 nvidia-smi 실측 · 기계별 방식 명시) · Q-CS-2 140 수용 + 셋 (80 이 틀린 이유 기록 · 다음 카드 비용 항목에 실측 장부 대조 필수 · 여유 14 % 얇음 → 160 또는 멈춤 경로 명시 · MD 40 을 v2 장부에서 다시) · Q-CS-3 그 처리로 됨 + 넷에서 멈출 때 규칙을 지금 박을 것 · 덧붙임 R 은 B 실제 산포 쪽 검출한계로 읽기 · 수령 (2026-10-05 · 사용자 붙여넣기) — 회신 원문 · 고…
 - 2026-10-05 · `kb/projects/handoff_2026_10_05_return_to_origin.md` — origin 복귀·통합 카드 — claude/evac-2026-10-02 → claude/friendly-meitner-lldvar (2026-10-05 · no-ff) · 발송 대기 — 사용자가 §0 프롬프트를 origin 세션에 붙여 넣는다
-- 2026-10-05 · `kb/projects/merge_request_2026_10_05.md` — 머지 요청 (최종) — 대피 브랜치 claude/evac-2026-10-02 → claude/friendly-meitner-lldvar (2026-10-05) · 최종 — 10-05 밤 실측 (no-ff · 가상 병합 텍스트 충돌 …
 
 ⚠ frontmatter 없는 레거시 문서는 이 목록에 안 뜬다 (날짜를 기계로 읽을 수 없다 — SCHEMA 상 소급하지 않는다).
 
@@ -536,7 +536,7 @@
 - `kb/literature_db/pustorino_2025_lpscl_li_ordering_mechanical.md` — Pustorino et al. 2025 — LPSCl Li ordering → 기계적/전자 물성
 - `kb/literature_db/sundar_2025_lpscl_coating.md` — 📄 Sundar et al. 2025 — Computationally-Guided LPSCl Oxide Coating
 
-## seminars/ (29)
+## seminars/ (30)
 - `kb/seminars/Research_Seminar_2026_08_cascade_final_README.md` — Research Seminar — Cascade final package
 - `kb/seminars/Research_Seminar_2026_08_cascade_final_defense_QA_ko.md` — Research Seminar — Cascade Defense Q&A
 - `kb/seminars/Research_Seminar_2026_08_cascade_final_script_ko.md` — Research Seminar — Cascade final speaker script
@@ -547,6 +547,7 @@
 - `kb/seminars/Research_Seminar_2026_10_13_cascade_storyline_ko.md` — 연구세미나 2026-10-13 — cascade 진행 브리핑 스토리라인 (대본 준비용)  (2026-10-12 · 진행)
 - `kb/seminars/cascade_briefing_2026_10_direction.md` — cascade 진행 브리핑 (2026-10) — 08-18 덱 판정 · 13장 구성 · 현재 상황 · 방향 · 참고문헌  (2026-10-12 · 진행)
 - `kb/seminars/cascade_content_edit_directive_2026_08_11.md` — Cascade 세미나 내용 편집 지시서 — 기준본 24장 (Codex 편집용)
+- `kb/seminars/cascade_db_reading_2026_10_12.md` — cascade 원장 정독 — 단계별 커버리지 · 9월 재건 · 세미나 덱 정정 (2026-10-12)  (2026-10-12 · 진행)
 - `kb/seminars/cascade_deck_3to7_script_2026_08_20.md` — cascade 세미나 — 덱 3~7장 대본 (재정비판)  (2026-08-20 · 초안 — 본 대본 병합 대기)
 - `kb/seminars/cascade_deck_8to12_script_2026_08_20.md` — 세미나 대본 — 덱 8~12장 (후보군 · 자리 · 구조생성 · MLIP 스크리닝)  (2026-08-20 · 초안)
 - `kb/seminars/cascade_dopant_screening_story_2026_08.md` — LPSCl 도펀트 스크리닝 — 연구세미나 대본 (v6 · 덱과 1:1)  (2026-08-16 · 진행)
