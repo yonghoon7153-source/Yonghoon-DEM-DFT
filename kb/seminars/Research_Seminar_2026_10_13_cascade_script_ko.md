@@ -288,7 +288,7 @@ MLIP 지표의 기준이 되는 DFT 계산입니다. **[가리킴: 두 곡선]**
 
 | 장 | 슬림판 화면 | 말로 채울 것 |
 |---|---|---|
-| 2 | ■ 'Earlier DFT studies supplied the methods used in this screening' · bullet 둘 (Top row: bulk materials and their doping or coating · Bottom row: SEI components, interfaces and binder in a cell) + 그림 자리 8칸 (제목 + `< 키워드 >`) | 칸마다 한 줄 (대본 2장) · 마무리 '이 경험들이 스크리닝의 단계가 됐다' + 짝 다섯 (EOS → 기준 계산 · BVSE → Li 지형 · MD → 수송 · 대권위 상도표 → 안정창 · 계면 에너지 → 계면 반응성) — 숫자는 0 개 |
+| 2 | ■ 'Earlier DFT studies supplied the methods used in this screening' · bullet 둘 (Top row: bulk materials and their doped or coated forms · Bottom row: SEI components, interfaces, and binders in a battery cell) + 그림 자리 8칸 (제목 + `< 키워드 >`) | 칸마다 한 줄 (대본 2장) · 마무리 '이 경험들이 스크리닝의 단계가 됐다' + 짝 다섯 (EOS → 기준 계산 · BVSE → Li 지형 · MD → 수송 · 대권위 상도표 → 안정창 · 계면 에너지 → 계면 반응성) — 숫자는 0 개 |
 | 3 | 점선 박스 'Project stages' 1–4 + 화살표 + 'Stage 1 audited. Stage 2 pilot in progress.' | 단계마다 무엇을 했는지 (대본 3장) · '선택 규칙은 결과 전에 정한다' (화면 줄은 뺐다) |
 | 4 | 원래 장 그대로 | 그대로 |
 | 5 | bullet 하나 + 원래 표 (14 pt) | 기존 스크린 셋 (대본 5장) · 비슷한 최근 연구 Jung · Park · Muy 는 이름만 (화면 줄은 뺐다 · 17장에 있다) |
