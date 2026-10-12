@@ -1,0 +1,3211 @@
+{
+  "pinned_commit": "46cd0bdb872e7d6c85ca50ec4172e98377253130",
+  "source_sha256": "da9ecfefd8dc4b84e222140e347e4a718381169f27c88bf56c71ec4a7c2749be",
+  "source_sha256_after": "da9ecfefd8dc4b84e222140e347e4a718381169f27c88bf56c71ec4a7c2749be",
+  "python": "3.12.14 (main, Aug 25 2026, 14:01:42) [MSC v.1944 64 bit (AMD64)]",
+  "numpy": "2.5.3",
+  "scipy": "1.16.3",
+  "networkx": "3.7",
+  "scope": "synthetic only; actual imported build_network/solve_network/run_decomposition/_run_all_networks; source read-only",
+  "fixture": "15 nodes, 22 edges, equal r=4.5 um, 3 columns x 5 layers, intersection-disc contacts, 3 bottom + 3 top nodes under L0",
+  "baseline_S_cm": 0.05,
+  "alternate_S_cm": 0.0041,
+  "expected_scaling": 0.082,
+  "factor_r45": 0.22857142857142856,
+  "exact_factor_r45": "8/35",
+  "exact_disable_multiplier": 4.375,
+  "rounded_0229_disable_multiplier": 4.366812227074235,
+  "rounded_0229_relative_error": 0.0018714909544604958,
+  "global_checks": [
+    {
+      "case": "hertzian/pure_pc",
+      "edges_equal": true,
+      "fields_equal": true,
+      "branches": {
+        "full": {
+          "raw_q_bitwise_equal": true,
+          "raw_info_equal": true,
+          "certificate_equal_except_sigma_bulk": true,
+          "unrounded_ratio": 0.082,
+          "linear_relative_error": 0,
+          "rounded_new_minus_rounded_old_times_ratio": 9.200000000014752e-8
+        },
+        "bulk_net": {
+          "raw_q_bitwise_equal": true,
+          "raw_info_equal": true,
+          "certificate_equal_except_sigma_bulk": true,
+          "unrounded_ratio": 0.08200000000000002,
+          "linear_relative_error": 1.1148230327501955e-16,
+          "rounded_new_minus_rounded_old_times_ratio": -4.820000000238522e-7
+        },
+        "constr_net": {
+          "raw_q_bitwise_equal": true,
+          "raw_info_equal": true,
+          "certificate_equal_except_sigma_bulk": true,
+          "unrounded_ratio": 0.082,
+          "linear_relative_error": 1.4890329894716983e-16,
+          "rounded_new_minus_rounded_old_times_ratio": -2.6000000000192536e-8
+        }
+      }
+    },
+    {
+      "case": "hertzian/pure_sc",
+      "edges_equal": true,
+      "fields_equal": true,
+      "branches": {
+        "full": {
+          "raw_q_bitwise_equal": true,
+          "raw_info_equal": true,
+          "certificate_equal_except_sigma_bulk": true,
+          "unrounded_ratio": 0.08200000000000002,
+          "linear_relative_error": 1.6162182835741653e-16,
+          "rounded_new_minus_rounded_old_times_ratio": 3.839999999644128e-7
+        },
+        "bulk_net": {
+          "raw_q_bitwise_equal": true,
+          "raw_info_equal": true,
+          "certificate_equal_except_sigma_bulk": true,
+          "unrounded_ratio": 0.08199999999999999,
+          "linear_relative_error": 2.0385335456003547e-16,
+          "rounded_new_minus_rounded_old_times_ratio": 8.600000001024455e-8
+        },
+        "constr_net": {
+          "raw_q_bitwise_equal": true,
+          "raw_info_equal": true,
+          "certificate_equal_except_sigma_bulk": true,
+          "unrounded_ratio": 0.082,
+          "linear_relative_error": 1.3614015903741205e-16,
+          "rounded_new_minus_rounded_old_times_ratio": -4.200000000564863e-8
+        }
+      }
+    },
+    {
+      "case": "hertzian/mixed",
+      "edges_equal": true,
+      "fields_equal": true,
+      "branches": {
+        "full": {
+          "raw_q_bitwise_equal": true,
+          "raw_info_equal": true,
+          "certificate_equal_except_sigma_bulk": true,
+          "unrounded_ratio": 0.082,
+          "linear_relative_error": 0,
+          "rounded_new_minus_rounded_old_times_ratio": -5.040000000053335e-7
+        },
+        "bulk_net": {
+          "raw_q_bitwise_equal": true,
+          "raw_info_equal": true,
+          "certificate_equal_except_sigma_bulk": true,
+          "unrounded_ratio": 0.082,
+          "linear_relative_error": 0,
+          "rounded_new_minus_rounded_old_times_ratio": 2.6399999997206436e-7
+        },
+        "constr_net": {
+          "raw_q_bitwise_equal": true,
+          "raw_info_equal": true,
+          "certificate_equal_except_sigma_bulk": true,
+          "unrounded_ratio": 0.082,
+          "linear_relative_error": 0,
+          "rounded_new_minus_rounded_old_times_ratio": -4.139999999971944e-7
+        }
+      }
+    },
+    {
+      "case": "physics/pure_pc",
+      "edges_equal": true,
+      "fields_equal": true,
+      "branches": {
+        "full": {
+          "raw_q_bitwise_equal": true,
+          "raw_info_equal": true,
+          "certificate_equal_except_sigma_bulk": true,
+          "unrounded_ratio": 0.08200000000000002,
+          "linear_relative_error": 1.4483708522311554e-16,
+          "rounded_new_minus_rounded_old_times_ratio": -2.539999999981446e-7
+        },
+        "bulk_net": {
+          "raw_q_bitwise_equal": true,
+          "raw_info_equal": true,
+          "certificate_equal_except_sigma_bulk": true,
+          "unrounded_ratio": 0.08200000000000002,
+          "linear_relative_error": 1.1148230327501955e-16,
+          "rounded_new_minus_rounded_old_times_ratio": -4.820000000238522e-7
+        },
+        "constr_net": {
+          "raw_q_bitwise_equal": true,
+          "raw_info_equal": true,
+          "certificate_equal_except_sigma_bulk": true,
+          "unrounded_ratio": 0.082,
+          "linear_relative_error": 0,
+          "rounded_new_minus_rounded_old_times_ratio": 1.9799999999986495e-7
+        }
+      }
+    },
+    {
+      "case": "physics/pure_sc",
+      "edges_equal": true,
+      "fields_equal": true,
+      "branches": {
+        "full": {
+          "raw_q_bitwise_equal": true,
+          "raw_info_equal": true,
+          "certificate_equal_except_sigma_bulk": true,
+          "unrounded_ratio": 0.082,
+          "linear_relative_error": 1.3242247791827743e-16,
+          "rounded_new_minus_rounded_old_times_ratio": 3.5800000000585364e-7
+        },
+        "bulk_net": {
+          "raw_q_bitwise_equal": true,
+          "raw_info_equal": true,
+          "certificate_equal_except_sigma_bulk": true,
+          "unrounded_ratio": 0.08199999999999999,
+          "linear_relative_error": 2.0385335456003547e-16,
+          "rounded_new_minus_rounded_old_times_ratio": 8.600000001024455e-8
+        },
+        "constr_net": {
+          "raw_q_bitwise_equal": true,
+          "raw_info_equal": true,
+          "certificate_equal_except_sigma_bulk": true,
+          "unrounded_ratio": 0.082,
+          "linear_relative_error": 0,
+          "rounded_new_minus_rounded_old_times_ratio": -4.799999999693938e-7
+        }
+      }
+    },
+    {
+      "case": "physics/mixed",
+      "edges_equal": true,
+      "fields_equal": true,
+      "branches": {
+        "full": {
+          "raw_q_bitwise_equal": true,
+          "raw_info_equal": true,
+          "certificate_equal_except_sigma_bulk": true,
+          "unrounded_ratio": 0.08200000000000002,
+          "linear_relative_error": 0,
+          "rounded_new_minus_rounded_old_times_ratio": 1.4799999999148827e-7
+        },
+        "bulk_net": {
+          "raw_q_bitwise_equal": true,
+          "raw_info_equal": true,
+          "certificate_equal_except_sigma_bulk": true,
+          "unrounded_ratio": 0.082,
+          "linear_relative_error": 0,
+          "rounded_new_minus_rounded_old_times_ratio": 2.6399999997206436e-7
+        },
+        "constr_net": {
+          "raw_q_bitwise_equal": true,
+          "raw_info_equal": true,
+          "certificate_equal_except_sigma_bulk": true,
+          "unrounded_ratio": 0.08200000000000002,
+          "linear_relative_error": 1.7582024868226002e-16,
+          "rounded_new_minus_rounded_old_times_ratio": 3.5799999999197585e-7
+        }
+      }
+    }
+  ],
+  "disabling_checks": [
+    {
+      "case": "hertzian/pure_pc",
+      "q_disabled_over_original": {
+        "full": 4.375000000000013,
+        "bulk_net": 4.375000000000005,
+        "constr_net": 4.3750000000000115
+      },
+      "edge_R_disabled_over_original_unique": {
+        "R_bulk": [
+          0.228571428571
+        ],
+        "R_constriction": [
+          0.228571428571
+        ],
+        "R_total": [
+          0.228571428571
+        ]
+      },
+      "maximum_voltage_change": 5.551115123125783e-16
+    },
+    {
+      "case": "hertzian/pure_sc",
+      "q_disabled_over_original": {
+        "full": 1,
+        "bulk_net": 1,
+        "constr_net": 1
+      },
+      "edge_R_disabled_over_original_unique": {
+        "R_bulk": [
+          1
+        ],
+        "R_constriction": [
+          1
+        ],
+        "R_total": [
+          1
+        ]
+      },
+      "maximum_voltage_change": 0
+    },
+    {
+      "case": "hertzian/mixed",
+      "q_disabled_over_original": {
+        "full": 3.1546569020543345,
+        "bulk_net": 2.384829643672459,
+        "constr_net": 3.288178778276034
+      },
+      "edge_R_disabled_over_original_unique": {
+        "R_bulk": [
+          0.228571428571,
+          0.372093023256,
+          1
+        ],
+        "R_constriction": [
+          0.228571428571,
+          1
+        ],
+        "R_total": [
+          0.228571428571,
+          0.243371481554,
+          1
+        ]
+      },
+      "maximum_voltage_change": 0.1980688822084702
+    },
+    {
+      "case": "physics/pure_pc",
+      "q_disabled_over_original": {
+        "full": 4.3749999999999885,
+        "bulk_net": 4.375000000000005,
+        "constr_net": 4.375000000000001
+      },
+      "edge_R_disabled_over_original_unique": {
+        "R_bulk": [
+          0.228571428571
+        ],
+        "R_constriction": [
+          0.228571428571
+        ],
+        "R_total": [
+          0.228571428571
+        ]
+      },
+      "maximum_voltage_change": 4.996003610813204e-16
+    },
+    {
+      "case": "physics/pure_sc",
+      "q_disabled_over_original": {
+        "full": 1,
+        "bulk_net": 1,
+        "constr_net": 1
+      },
+      "edge_R_disabled_over_original_unique": {
+        "R_bulk": [
+          1
+        ],
+        "R_constriction": [
+          1
+        ],
+        "R_total": [
+          1
+        ]
+      },
+      "maximum_voltage_change": 0
+    },
+    {
+      "case": "physics/mixed",
+      "q_disabled_over_original": {
+        "full": 3.1248490173565875,
+        "bulk_net": 2.384829643672459,
+        "constr_net": 3.288178778276038
+      },
+      "edge_R_disabled_over_original_unique": {
+        "R_bulk": [
+          0.228571428571,
+          0.372093023256,
+          1
+        ],
+        "R_constriction": [
+          0.228571428571,
+          1
+        ],
+        "R_total": [
+          0.228571428571,
+          0.246896552264,
+          1
+        ]
+      },
+      "maximum_voltage_change": 0.1961943218275991
+    }
+  ],
+  "top_level_checks": [
+    {
+      "contact_mode": "hertzian",
+      "original_mScm": 0.663872,
+      "alternate_mScm": 0.054437,
+      "q_equal": true,
+      "status_original": "computed",
+      "status_alternate": "computed",
+      "sigma_binding_problems_while_patched": [],
+      "sigma_binding_problems_after_restore": [
+        "electronic_solve_certificate_full: 증서 σ_bulk 0.0041 ≠ electronic 채널 기준 전도도 0.05 (network_conductivity.SIGMA_AM_ELECTRONIC · G2RR2-04)",
+        "electronic_solve_certificate_bulk_net: 증서 σ_bulk 0.0041 ≠ electronic 채널 기준 전도도 0.05 (network_conductivity.SIGMA_AM_ELECTRONIC · G2RR2-04)",
+        "electronic_solve_certificate_constr_net: 증서 σ_bulk 0.0041 ≠ electronic 채널 기준 전도도 0.05 (network_conductivity.SIGMA_AM_ELECTRONIC · G2RR2-04)"
+      ]
+    },
+    {
+      "contact_mode": "physics",
+      "original_mScm": 0.817986,
+      "alternate_mScm": 0.067075,
+      "q_equal": true,
+      "status_original": "computed",
+      "status_alternate": "computed",
+      "sigma_binding_problems_while_patched": [],
+      "sigma_binding_problems_after_restore": [
+        "electronic_solve_certificate_full: 증서 σ_bulk 0.0041 ≠ electronic 채널 기준 전도도 0.05 (network_conductivity.SIGMA_AM_ELECTRONIC · G2RR2-04)",
+        "electronic_solve_certificate_bulk_net: 증서 σ_bulk 0.0041 ≠ electronic 채널 기준 전도도 0.05 (network_conductivity.SIGMA_AM_ELECTRONIC · G2RR2-04)",
+        "electronic_solve_certificate_constr_net: 증서 σ_bulk 0.0041 ≠ electronic 채널 기준 전도도 0.05 (network_conductivity.SIGMA_AM_ELECTRONIC · G2RR2-04)"
+      ]
+    }
+  ],
+  "barriers": [
+    {
+      "contact_mode": "physics",
+      "kind": "mixed",
+      "delta": 0.1,
+      "box": 30,
+      "disc_fraction": 0.999,
+      "physical_geometry": false,
+      "purpose": "synthetic defensive-branch stress; deliberately inconsistent area or box; not physical evidence",
+      "baseline": {
+        "boundaries": {
+          "bottom": [
+            1,
+            2,
+            3
+          ],
+          "top": [
+            13,
+            14,
+            15
+          ],
+          "rule": "L0"
+        },
+        "flags": {
+          "n_floor_only": 22,
+          "n_clamp_zero": 0,
+          "area_binding_counts_physics": {
+            "native_unsupported_pair": 22
+          }
+        },
+        "branches": {
+          "full": {
+            "q_raw": 0.11139896218495834,
+            "q_published": 0.11139896,
+            "mScm_raw": 5.5699481092479175,
+            "mScm_published": 5.569948,
+            "status": "computed",
+            "reason": null,
+            "certificate_problem": null,
+            "certificate": {
+              "channel": "electronic",
+              "branch": "full",
+              "role": "physics",
+              "sigma_bulk_S_cm": 0.05,
+              "status": "computed",
+              "reason": null,
+              "method": "spsolve",
+              "I_bottom": 2.2479611203242715,
+              "I_top": -2.2479611203242698,
+              "conservation_rel": 7.902079904051048e-16,
+              "residual_rel": 4.487636742974735e-16,
+              "g_to_q": 0.049555555555555554
+            }
+          },
+          "bulk_net": {
+            "q_raw": 0.11139896218495834,
+            "q_published": 0.11139896,
+            "mScm_raw": 5.5699481092479175,
+            "mScm_published": 5.569948,
+            "status": "computed",
+            "reason": null,
+            "certificate_problem": null,
+            "certificate": {
+              "channel": "electronic",
+              "branch": "bulk_only",
+              "role": "physics",
+              "sigma_bulk_S_cm": 0.05,
+              "status": "computed",
+              "reason": null,
+              "method": "spsolve",
+              "I_bottom": 2.2479611203242715,
+              "I_top": -2.2479611203242698,
+              "conservation_rel": 7.902079904051048e-16,
+              "residual_rel": 4.487636742974735e-16,
+              "g_to_q": 0.049555555555555554
+            }
+          },
+          "constr_net": {
+            "q_raw": null,
+            "q_published": null,
+            "mScm_raw": null,
+            "mScm_published": null,
+            "status": "not_computed",
+            "reason": "zero_resistance_requires_contraction",
+            "certificate_problem": "풀이 상태 'not_computed' (사유 'zero_resistance_requires_contraction') — 게시할 해가 없다",
+            "certificate": {
+              "channel": "electronic",
+              "branch": "constriction_only",
+              "role": "physics",
+              "sigma_bulk_S_cm": 0.05,
+              "status": "not_computed",
+              "reason": "zero_resistance_requires_contraction",
+              "method": null,
+              "I_bottom": null,
+              "I_top": null,
+              "conservation_rel": null,
+              "residual_rel": null,
+              "g_to_q": 0.049555555555555554
+            }
+          }
+        }
+      },
+      "alternate": {
+        "boundaries": {
+          "bottom": [
+            1,
+            2,
+            3
+          ],
+          "top": [
+            13,
+            14,
+            15
+          ],
+          "rule": "L0"
+        },
+        "flags": {
+          "n_floor_only": 22,
+          "n_clamp_zero": 0,
+          "area_binding_counts_physics": {
+            "native_unsupported_pair": 22
+          }
+        },
+        "branches": {
+          "full": {
+            "q_raw": 0.11139896218495834,
+            "q_published": 0.11139896,
+            "mScm_raw": 0.45673574495832925,
+            "mScm_published": 0.456736,
+            "status": "computed",
+            "reason": null,
+            "certificate_problem": null,
+            "certificate": {
+              "channel": "electronic",
+              "branch": "full",
+              "role": "physics",
+              "sigma_bulk_S_cm": 0.0041,
+              "status": "computed",
+              "reason": null,
+              "method": "spsolve",
+              "I_bottom": 2.2479611203242715,
+              "I_top": -2.2479611203242698,
+              "conservation_rel": 7.902079904051048e-16,
+              "residual_rel": 4.487636742974735e-16,
+              "g_to_q": 0.049555555555555554
+            }
+          },
+          "bulk_net": {
+            "q_raw": 0.11139896218495834,
+            "q_published": 0.11139896,
+            "mScm_raw": 0.45673574495832925,
+            "mScm_published": 0.456736,
+            "status": "computed",
+            "reason": null,
+            "certificate_problem": null,
+            "certificate": {
+              "channel": "electronic",
+              "branch": "bulk_only",
+              "role": "physics",
+              "sigma_bulk_S_cm": 0.0041,
+              "status": "computed",
+              "reason": null,
+              "method": "spsolve",
+              "I_bottom": 2.2479611203242715,
+              "I_top": -2.2479611203242698,
+              "conservation_rel": 7.902079904051048e-16,
+              "residual_rel": 4.487636742974735e-16,
+              "g_to_q": 0.049555555555555554
+            }
+          },
+          "constr_net": {
+            "q_raw": null,
+            "q_published": null,
+            "mScm_raw": null,
+            "mScm_published": null,
+            "status": "not_computed",
+            "reason": "zero_resistance_requires_contraction",
+            "certificate_problem": "풀이 상태 'not_computed' (사유 'zero_resistance_requires_contraction') — 게시할 해가 없다",
+            "certificate": {
+              "channel": "electronic",
+              "branch": "constriction_only",
+              "role": "physics",
+              "sigma_bulk_S_cm": 0.0041,
+              "status": "not_computed",
+              "reason": "zero_resistance_requires_contraction",
+              "method": null,
+              "I_bottom": null,
+              "I_top": null,
+              "conservation_rel": null,
+              "residual_rel": null,
+              "g_to_q": 0.049555555555555554
+            }
+          }
+        }
+      },
+      "relative_disabled": {
+        "boundaries": {
+          "bottom": [
+            1,
+            2,
+            3
+          ],
+          "top": [
+            13,
+            14,
+            15
+          ],
+          "rule": "L0"
+        },
+        "flags": {
+          "n_floor_only": 22,
+          "n_clamp_zero": 0,
+          "area_binding_counts_physics": {
+            "native_unsupported_pair": 22
+          }
+        },
+        "branches": {
+          "full": {
+            "q_raw": 0.265667547293036,
+            "q_published": 0.26566755,
+            "mScm_raw": 13.2833773646518,
+            "mScm_published": 13.283377,
+            "status": "computed",
+            "reason": null,
+            "certificate_problem": null,
+            "certificate": {
+              "channel": "electronic",
+              "branch": "full",
+              "role": "physics",
+              "sigma_bulk_S_cm": 0.05,
+              "status": "computed",
+              "reason": null,
+              "method": "spsolve",
+              "I_bottom": 5.361004317572474,
+              "I_top": -5.361004317572469,
+              "conservation_rel": 9.940433177292827e-16,
+              "residual_rel": 5.120041827287296e-16,
+              "g_to_q": 0.049555555555555554
+            }
+          },
+          "bulk_net": {
+            "q_raw": 0.265667547293036,
+            "q_published": 0.26566755,
+            "mScm_raw": 13.2833773646518,
+            "mScm_published": 13.283377,
+            "status": "computed",
+            "reason": null,
+            "certificate_problem": null,
+            "certificate": {
+              "channel": "electronic",
+              "branch": "bulk_only",
+              "role": "physics",
+              "sigma_bulk_S_cm": 0.05,
+              "status": "computed",
+              "reason": null,
+              "method": "spsolve",
+              "I_bottom": 5.361004317572474,
+              "I_top": -5.361004317572469,
+              "conservation_rel": 9.940433177292827e-16,
+              "residual_rel": 5.120041827287296e-16,
+              "g_to_q": 0.049555555555555554
+            }
+          },
+          "constr_net": {
+            "q_raw": null,
+            "q_published": null,
+            "mScm_raw": null,
+            "mScm_published": null,
+            "status": "not_computed",
+            "reason": "zero_resistance_requires_contraction",
+            "certificate_problem": "풀이 상태 'not_computed' (사유 'zero_resistance_requires_contraction') — 게시할 해가 없다",
+            "certificate": {
+              "channel": "electronic",
+              "branch": "constriction_only",
+              "role": "physics",
+              "sigma_bulk_S_cm": 0.05,
+              "status": "not_computed",
+              "reason": "zero_resistance_requires_contraction",
+              "method": null,
+              "I_bottom": null,
+              "I_top": null,
+              "conservation_rel": null,
+              "residual_rel": null,
+              "g_to_q": 0.049555555555555554
+            }
+          }
+        }
+      }
+    },
+    {
+      "contact_mode": "physics",
+      "kind": "mixed",
+      "delta": 0.1,
+      "box": 4,
+      "disc_fraction": null,
+      "physical_geometry": false,
+      "purpose": "synthetic defensive-branch stress; deliberately inconsistent area or box; not physical evidence",
+      "baseline": {
+        "boundaries": {
+          "bottom": [
+            1,
+            2,
+            3
+          ],
+          "top": [
+            13,
+            14,
+            15
+          ],
+          "rule": "L0"
+        },
+        "flags": {
+          "n_floor_only": 0,
+          "n_clamp_zero": 0,
+          "area_binding_counts_physics": {
+            "native_unsupported_pair": 22
+          }
+        },
+        "branches": {
+          "full": {
+            "q_raw": 0.9211683050867127,
+            "q_published": 0.92116831,
+            "mScm_raw": 46.058415254335635,
+            "mScm_published": 46.058415,
+            "status": "computed",
+            "reason": null,
+            "certificate_problem": null,
+            "certificate": {
+              "channel": "electronic",
+              "branch": "full",
+              "role": "physics",
+              "sigma_bulk_S_cm": 0.05,
+              "status": "computed",
+              "reason": null,
+              "method": "spsolve",
+              "I_bottom": 0.3304639659503902,
+              "I_top": -0.3304639659503902,
+              "conservation_rel": 0,
+              "residual_rel": 3.4637692738448846e-16,
+              "g_to_q": 2.7875
+            }
+          },
+          "bulk_net": {
+            "q_raw": 6.310165076838594,
+            "q_published": 6.31016508,
+            "mScm_raw": 315.50825384192973,
+            "mScm_published": 315.508254,
+            "status": "model_over_conduction",
+            "reason": "q_gt_1p5",
+            "certificate_problem": null,
+            "certificate": {
+              "channel": "electronic",
+              "branch": "bulk_only",
+              "role": "physics",
+              "sigma_bulk_S_cm": 0.05,
+              "status": "model_over_conduction",
+              "reason": "q_gt_1p5",
+              "method": "spsolve",
+              "I_bottom": 2.26373635043537,
+              "I_top": -2.263736350435374,
+              "conservation_rel": 1.7655779074634187e-15,
+              "residual_rel": 6.463516078238163e-16,
+              "g_to_q": 2.7875
+            }
+          },
+          "constr_net": {
+            "q_raw": 1.0829041620496573,
+            "q_published": 1.08290416,
+            "mScm_raw": 54.14520810248287,
+            "mScm_published": 54.145208,
+            "status": "computed",
+            "reason": null,
+            "certificate_problem": null,
+            "certificate": {
+              "channel": "electronic",
+              "branch": "constriction_only",
+              "role": "physics",
+              "sigma_bulk_S_cm": 0.05,
+              "status": "computed",
+              "reason": null,
+              "method": "spsolve",
+              "I_bottom": 0.3884857980447201,
+              "I_top": -0.38848579804472005,
+              "conservation_rel": 1.4289106966239142e-16,
+              "residual_rel": 7.690731200321515e-16,
+              "g_to_q": 2.7875
+            }
+          }
+        }
+      },
+      "alternate": {
+        "boundaries": {
+          "bottom": [
+            1,
+            2,
+            3
+          ],
+          "top": [
+            13,
+            14,
+            15
+          ],
+          "rule": "L0"
+        },
+        "flags": {
+          "n_floor_only": 0,
+          "n_clamp_zero": 0,
+          "area_binding_counts_physics": {
+            "native_unsupported_pair": 22
+          }
+        },
+        "branches": {
+          "full": {
+            "q_raw": 0.9211683050867127,
+            "q_published": 0.92116831,
+            "mScm_raw": 3.7767900508555226,
+            "mScm_published": 3.77679,
+            "status": "computed",
+            "reason": null,
+            "certificate_problem": null,
+            "certificate": {
+              "channel": "electronic",
+              "branch": "full",
+              "role": "physics",
+              "sigma_bulk_S_cm": 0.0041,
+              "status": "computed",
+              "reason": null,
+              "method": "spsolve",
+              "I_bottom": 0.3304639659503902,
+              "I_top": -0.3304639659503902,
+              "conservation_rel": 0,
+              "residual_rel": 3.4637692738448846e-16,
+              "g_to_q": 2.7875
+            }
+          },
+          "bulk_net": {
+            "q_raw": 6.310165076838594,
+            "q_published": 6.31016508,
+            "mScm_raw": 25.87167681503824,
+            "mScm_published": 25.871677,
+            "status": "model_over_conduction",
+            "reason": "q_gt_1p5",
+            "certificate_problem": null,
+            "certificate": {
+              "channel": "electronic",
+              "branch": "bulk_only",
+              "role": "physics",
+              "sigma_bulk_S_cm": 0.0041,
+              "status": "model_over_conduction",
+              "reason": "q_gt_1p5",
+              "method": "spsolve",
+              "I_bottom": 2.26373635043537,
+              "I_top": -2.263736350435374,
+              "conservation_rel": 1.7655779074634187e-15,
+              "residual_rel": 6.463516078238163e-16,
+              "g_to_q": 2.7875
+            }
+          },
+          "constr_net": {
+            "q_raw": 1.0829041620496573,
+            "q_published": 1.08290416,
+            "mScm_raw": 4.439907064403595,
+            "mScm_published": 4.439907,
+            "status": "computed",
+            "reason": null,
+            "certificate_problem": null,
+            "certificate": {
+              "channel": "electronic",
+              "branch": "constriction_only",
+              "role": "physics",
+              "sigma_bulk_S_cm": 0.0041,
+              "status": "computed",
+              "reason": null,
+              "method": "spsolve",
+              "I_bottom": 0.3884857980447201,
+              "I_top": -0.38848579804472005,
+              "conservation_rel": 1.4289106966239142e-16,
+              "residual_rel": 7.690731200321515e-16,
+              "g_to_q": 2.7875
+            }
+          }
+        }
+      },
+      "relative_disabled": {
+        "boundaries": {
+          "bottom": [
+            1,
+            2,
+            3
+          ],
+          "top": [
+            13,
+            14,
+            15
+          ],
+          "rule": "L0"
+        },
+        "flags": {
+          "n_floor_only": 0,
+          "n_clamp_zero": 0,
+          "area_binding_counts_physics": {
+            "native_unsupported_pair": 22
+          }
+        },
+        "branches": {
+          "full": {
+            "q_raw": null,
+            "q_published": null,
+            "mScm_raw": null,
+            "mScm_published": null,
+            "status": "not_computed",
+            "reason": "solve_failed",
+            "certificate_problem": "풀이 상태 'over_conduction_guard' (사유 'sigma_ratio > 1.5') — 게시할 해가 없다",
+            "certificate": {
+              "channel": "electronic",
+              "branch": "full",
+              "role": "physics",
+              "sigma_bulk_S_cm": 0.05,
+              "status": "over_conduction_guard",
+              "reason": "sigma_ratio > 1.5",
+              "method": "spsolve",
+              "I_bottom": 1.0316023487175887,
+              "I_top": -1.0316023487175885,
+              "conservation_rel": 2.1524243833009943e-16,
+              "residual_rel": 1.1881060897604732e-16,
+              "g_to_q": 2.7875
+            }
+          },
+          "bulk_net": {
+            "q_raw": 14.943799535233254,
+            "q_published": 14.94379954,
+            "mScm_raw": 747.1899767616628,
+            "mScm_published": 747.189977,
+            "status": "model_over_conduction",
+            "reason": "q_gt_1p5",
+            "certificate_problem": null,
+            "certificate": {
+              "channel": "electronic",
+              "branch": "bulk_only",
+              "role": "physics",
+              "sigma_bulk_S_cm": 0.05,
+              "status": "model_over_conduction",
+              "reason": "q_gt_1p5",
+              "method": "spsolve",
+              "I_bottom": 5.361004317572467,
+              "I_top": -5.36100431757247,
+              "conservation_rel": 4.970216588646417e-16,
+              "residual_rel": 8.619869570663274e-16,
+              "g_to_q": 2.7875
+            }
+          },
+          "constr_net": {
+            "q_raw": 3.5607824845584792,
+            "q_published": 3.56078248,
+            "mScm_raw": 178.039124227924,
+            "mScm_published": 178.039124,
+            "status": "model_over_conduction",
+            "reason": "q_gt_1p5",
+            "certificate_problem": null,
+            "certificate": {
+              "channel": "electronic",
+              "branch": "constriction_only",
+              "role": "physics",
+              "sigma_bulk_S_cm": 0.05,
+              "status": "model_over_conduction",
+              "reason": "q_gt_1p5",
+              "method": "spsolve",
+              "I_bottom": 1.2774107567922794,
+              "I_top": -1.277410756792278,
+              "conservation_rel": 1.2167677673063205e-15,
+              "residual_rel": 5.524639372097656e-16,
+              "g_to_q": 2.7875
+            }
+          }
+        }
+      }
+    },
+    {
+      "contact_mode": "hertzian",
+      "kind": "mixed",
+      "delta": 0.1,
+      "box": 4,
+      "disc_fraction": null,
+      "physical_geometry": false,
+      "purpose": "synthetic defensive-branch stress; deliberately inconsistent area or box; not physical evidence",
+      "baseline": {
+        "boundaries": {
+          "bottom": [
+            1,
+            2,
+            3
+          ],
+          "top": [
+            13,
+            14,
+            15
+          ],
+          "rule": "L0"
+        },
+        "flags": {
+          "n_floor_only": 0,
+          "n_clamp_zero": 0,
+          "area_binding_counts_physics": {
+            "native_unsupported_pair": 22
+          }
+        },
+        "branches": {
+          "full": {
+            "q_raw": 0.7474741003740918,
+            "q_published": 0.7474741,
+            "mScm_raw": 37.37370501870459,
+            "mScm_published": 37.373705,
+            "status": "computed",
+            "reason": null,
+            "certificate_problem": null,
+            "certificate": {
+              "channel": "electronic",
+              "branch": "full",
+              "role": "H0",
+              "sigma_bulk_S_cm": 0.05,
+              "status": "computed",
+              "reason": null,
+              "method": "spsolve",
+              "I_bottom": 0.26815214363196116,
+              "I_top": -0.2681521436319617,
+              "conservation_rel": 2.0701363964274986e-15,
+              "residual_rel": 3.3812690709619255e-16,
+              "g_to_q": 2.7875
+            }
+          },
+          "bulk_net": {
+            "q_raw": 6.310165076838594,
+            "q_published": 6.31016508,
+            "mScm_raw": 315.50825384192973,
+            "mScm_published": 315.508254,
+            "status": "model_over_conduction",
+            "reason": "q_gt_1p5",
+            "certificate_problem": null,
+            "certificate": {
+              "channel": "electronic",
+              "branch": "bulk_only",
+              "role": "H0",
+              "sigma_bulk_S_cm": 0.05,
+              "status": "model_over_conduction",
+              "reason": "q_gt_1p5",
+              "method": "spsolve",
+              "I_bottom": 2.26373635043537,
+              "I_top": -2.263736350435374,
+              "conservation_rel": 1.7655779074634187e-15,
+              "residual_rel": 6.463516078238163e-16,
+              "g_to_q": 2.7875
+            }
+          },
+          "constr_net": {
+            "q_raw": 0.8506428047597707,
+            "q_published": 0.8506428,
+            "mScm_raw": 42.53214023798854,
+            "mScm_published": 42.53214,
+            "status": "computed",
+            "reason": null,
+            "certificate_problem": null,
+            "certificate": {
+              "channel": "electronic",
+              "branch": "constriction_only",
+              "role": "H0",
+              "sigma_bulk_S_cm": 0.05,
+              "status": "computed",
+              "reason": null,
+              "method": "spsolve",
+              "I_bottom": 0.305163338030411,
+              "I_top": -0.3051633380304104,
+              "conservation_rel": 2.0009699313322645e-15,
+              "residual_rel": 8.297178227188878e-16,
+              "g_to_q": 2.7875
+            }
+          }
+        }
+      },
+      "alternate": {
+        "boundaries": {
+          "bottom": [
+            1,
+            2,
+            3
+          ],
+          "top": [
+            13,
+            14,
+            15
+          ],
+          "rule": "L0"
+        },
+        "flags": {
+          "n_floor_only": 0,
+          "n_clamp_zero": 0,
+          "area_binding_counts_physics": {
+            "native_unsupported_pair": 22
+          }
+        },
+        "branches": {
+          "full": {
+            "q_raw": 0.7474741003740918,
+            "q_published": 0.7474741,
+            "mScm_raw": 3.0646438115337764,
+            "mScm_published": 3.064644,
+            "status": "computed",
+            "reason": null,
+            "certificate_problem": null,
+            "certificate": {
+              "channel": "electronic",
+              "branch": "full",
+              "role": "H0",
+              "sigma_bulk_S_cm": 0.0041,
+              "status": "computed",
+              "reason": null,
+              "method": "spsolve",
+              "I_bottom": 0.26815214363196116,
+              "I_top": -0.2681521436319617,
+              "conservation_rel": 2.0701363964274986e-15,
+              "residual_rel": 3.3812690709619255e-16,
+              "g_to_q": 2.7875
+            }
+          },
+          "bulk_net": {
+            "q_raw": 6.310165076838594,
+            "q_published": 6.31016508,
+            "mScm_raw": 25.87167681503824,
+            "mScm_published": 25.871677,
+            "status": "model_over_conduction",
+            "reason": "q_gt_1p5",
+            "certificate_problem": null,
+            "certificate": {
+              "channel": "electronic",
+              "branch": "bulk_only",
+              "role": "H0",
+              "sigma_bulk_S_cm": 0.0041,
+              "status": "model_over_conduction",
+              "reason": "q_gt_1p5",
+              "method": "spsolve",
+              "I_bottom": 2.26373635043537,
+              "I_top": -2.263736350435374,
+              "conservation_rel": 1.7655779074634187e-15,
+              "residual_rel": 6.463516078238163e-16,
+              "g_to_q": 2.7875
+            }
+          },
+          "constr_net": {
+            "q_raw": 0.8506428047597707,
+            "q_published": 0.8506428,
+            "mScm_raw": 3.48763549951506,
+            "mScm_published": 3.487635,
+            "status": "computed",
+            "reason": null,
+            "certificate_problem": null,
+            "certificate": {
+              "channel": "electronic",
+              "branch": "constriction_only",
+              "role": "H0",
+              "sigma_bulk_S_cm": 0.0041,
+              "status": "computed",
+              "reason": null,
+              "method": "spsolve",
+              "I_bottom": 0.305163338030411,
+              "I_top": -0.3051633380304104,
+              "conservation_rel": 2.0009699313322645e-15,
+              "residual_rel": 8.297178227188878e-16,
+              "g_to_q": 2.7875
+            }
+          }
+        }
+      },
+      "relative_disabled": {
+        "boundaries": {
+          "bottom": [
+            1,
+            2,
+            3
+          ],
+          "top": [
+            13,
+            14,
+            15
+          ],
+          "rule": "L0"
+        },
+        "flags": {
+          "n_floor_only": 0,
+          "n_clamp_zero": 0,
+          "area_binding_counts_physics": {
+            "native_unsupported_pair": 22
+          }
+        },
+        "branches": {
+          "full": {
+            "q_raw": null,
+            "q_published": null,
+            "mScm_raw": null,
+            "mScm_published": null,
+            "status": "not_computed",
+            "reason": "solve_failed",
+            "certificate_problem": "풀이 상태 'over_conduction_guard' (사유 'sigma_ratio > 1.5') — 게시할 해가 없다",
+            "certificate": {
+              "channel": "electronic",
+              "branch": "full",
+              "role": "H0",
+              "sigma_bulk_S_cm": 0.05,
+              "status": "over_conduction_guard",
+              "reason": "sigma_ratio > 1.5",
+              "method": "spsolve",
+              "I_bottom": 0.845228275362651,
+              "I_top": -0.8452282753626521,
+              "conservation_rel": 1.313518557041654e-15,
+              "residual_rel": 5.630537906750564e-16,
+              "g_to_q": 2.7875
+            }
+          },
+          "bulk_net": {
+            "q_raw": 14.943799535233254,
+            "q_published": 14.94379954,
+            "mScm_raw": 747.1899767616628,
+            "mScm_published": 747.189977,
+            "status": "model_over_conduction",
+            "reason": "q_gt_1p5",
+            "certificate_problem": null,
+            "certificate": {
+              "channel": "electronic",
+              "branch": "bulk_only",
+              "role": "H0",
+              "sigma_bulk_S_cm": 0.05,
+              "status": "model_over_conduction",
+              "reason": "q_gt_1p5",
+              "method": "spsolve",
+              "I_bottom": 5.361004317572467,
+              "I_top": -5.36100431757247,
+              "conservation_rel": 4.970216588646417e-16,
+              "residual_rel": 8.619869570663274e-16,
+              "g_to_q": 2.7875
+            }
+          },
+          "constr_net": {
+            "q_raw": 2.797065618504282,
+            "q_published": 2.79706562,
+            "mScm_raw": 139.8532809252141,
+            "mScm_published": 139.853281,
+            "status": "model_over_conduction",
+            "reason": "q_gt_1p5",
+            "certificate_problem": null,
+            "certificate": {
+              "channel": "electronic",
+              "branch": "constriction_only",
+              "role": "H0",
+              "sigma_bulk_S_cm": 0.05,
+              "status": "model_over_conduction",
+              "reason": "q_gt_1p5",
+              "method": "spsolve",
+              "I_bottom": 1.0034316120194733,
+              "I_top": -1.003431612019471,
+              "conservation_rel": 2.2128523983627713e-15,
+              "residual_rel": 4.3052101198607433e-16,
+              "g_to_q": 2.7875
+            }
+          }
+        }
+      }
+    },
+    {
+      "contact_mode": "hertzian",
+      "kind": "pure_pc",
+      "delta": 0.1,
+      "box": 30,
+      "disc_fraction": 0,
+      "physical_geometry": false,
+      "purpose": "synthetic defensive-branch stress; deliberately inconsistent area or box; not physical evidence",
+      "baseline": {
+        "boundaries": {
+          "bottom": [
+            1,
+            2,
+            3
+          ],
+          "top": [
+            13,
+            14,
+            15
+          ],
+          "rule": "L0"
+        },
+        "flags": {
+          "n_floor_only": 0,
+          "n_clamp_zero": 0,
+          "area_binding_counts_physics": {
+            "native_unsupported_pair": 22
+          }
+        },
+        "branches": {
+          "full": {
+            "q_raw": 3.716666666664391e-14,
+            "q_published": 0,
+            "mScm_raw": 1.8583333333321957e-12,
+            "mScm_published": 0,
+            "status": "computed",
+            "reason": null,
+            "certificate_problem": null,
+            "certificate": {
+              "channel": "electronic",
+              "branch": "full",
+              "role": "H0",
+              "sigma_bulk_S_cm": 0.05,
+              "status": "computed",
+              "reason": null,
+              "method": "spsolve",
+              "I_bottom": 7.499999999995408e-13,
+              "I_top": -7.499999999995411e-13,
+              "conservation_rel": 4.0389678347340516e-16,
+              "residual_rel": 3.9860301880919623e-16,
+              "g_to_q": 0.049555555555555554
+            }
+          },
+          "bulk_net": {
+            "q_raw": 0.06072401080983672,
+            "q_published": 0.06072401,
+            "mScm_raw": 3.036200540491836,
+            "mScm_published": 3.036201,
+            "status": "computed",
+            "reason": null,
+            "certificate_problem": null,
+            "certificate": {
+              "channel": "electronic",
+              "branch": "bulk_only",
+              "role": "H0",
+              "sigma_bulk_S_cm": 0.05,
+              "status": "computed",
+              "reason": null,
+              "method": "spsolve",
+              "I_bottom": 1.2253724154451355,
+              "I_top": -1.2253724154451362,
+              "conservation_rel": 5.436174393832018e-16,
+              "residual_rel": 2.876285556927769e-16,
+              "g_to_q": 0.049555555555555554
+            }
+          },
+          "constr_net": {
+            "q_raw": 3.716666666666673e-14,
+            "q_published": 0,
+            "mScm_raw": 1.8583333333333367e-12,
+            "mScm_published": 0,
+            "status": "computed",
+            "reason": null,
+            "certificate_problem": null,
+            "certificate": {
+              "channel": "electronic",
+              "branch": "constriction_only",
+              "role": "H0",
+              "sigma_bulk_S_cm": 0.05,
+              "status": "computed",
+              "reason": null,
+              "method": "spsolve",
+              "I_bottom": 7.500000000000012e-13,
+              "I_top": -7.499999999999994e-13,
+              "conservation_rel": 2.4233807008389443e-15,
+              "residual_rel": 4.608820400250593e-16,
+              "g_to_q": 0.049555555555555554
+            }
+          }
+        }
+      },
+      "alternate": {
+        "boundaries": {
+          "bottom": [
+            1,
+            2,
+            3
+          ],
+          "top": [
+            13,
+            14,
+            15
+          ],
+          "rule": "L0"
+        },
+        "flags": {
+          "n_floor_only": 0,
+          "n_clamp_zero": 0,
+          "area_binding_counts_physics": {
+            "native_unsupported_pair": 22
+          }
+        },
+        "branches": {
+          "full": {
+            "q_raw": 3.716666666664391e-14,
+            "q_published": 0,
+            "mScm_raw": 1.5238333333324004e-13,
+            "mScm_published": 0,
+            "status": "computed",
+            "reason": null,
+            "certificate_problem": null,
+            "certificate": {
+              "channel": "electronic",
+              "branch": "full",
+              "role": "H0",
+              "sigma_bulk_S_cm": 0.0041,
+              "status": "computed",
+              "reason": null,
+              "method": "spsolve",
+              "I_bottom": 7.499999999995408e-13,
+              "I_top": -7.499999999995411e-13,
+              "conservation_rel": 4.0389678347340516e-16,
+              "residual_rel": 3.9860301880919623e-16,
+              "g_to_q": 0.049555555555555554
+            }
+          },
+          "bulk_net": {
+            "q_raw": 0.06072401080983672,
+            "q_published": 0.06072401,
+            "mScm_raw": 0.2489684443203306,
+            "mScm_published": 0.248968,
+            "status": "computed",
+            "reason": null,
+            "certificate_problem": null,
+            "certificate": {
+              "channel": "electronic",
+              "branch": "bulk_only",
+              "role": "H0",
+              "sigma_bulk_S_cm": 0.0041,
+              "status": "computed",
+              "reason": null,
+              "method": "spsolve",
+              "I_bottom": 1.2253724154451355,
+              "I_top": -1.2253724154451362,
+              "conservation_rel": 5.436174393832018e-16,
+              "residual_rel": 2.876285556927769e-16,
+              "g_to_q": 0.049555555555555554
+            }
+          },
+          "constr_net": {
+            "q_raw": 3.716666666666673e-14,
+            "q_published": 0,
+            "mScm_raw": 1.5238333333333362e-13,
+            "mScm_published": 0,
+            "status": "computed",
+            "reason": null,
+            "certificate_problem": null,
+            "certificate": {
+              "channel": "electronic",
+              "branch": "constriction_only",
+              "role": "H0",
+              "sigma_bulk_S_cm": 0.0041,
+              "status": "computed",
+              "reason": null,
+              "method": "spsolve",
+              "I_bottom": 7.500000000000012e-13,
+              "I_top": -7.499999999999994e-13,
+              "conservation_rel": 2.4233807008389443e-15,
+              "residual_rel": 4.608820400250593e-16,
+              "g_to_q": 0.049555555555555554
+            }
+          }
+        }
+      },
+      "relative_disabled": {
+        "boundaries": {
+          "bottom": [
+            1,
+            2,
+            3
+          ],
+          "top": [
+            13,
+            14,
+            15
+          ],
+          "rule": "L0"
+        },
+        "flags": {
+          "n_floor_only": 0,
+          "n_clamp_zero": 0,
+          "area_binding_counts_physics": {
+            "native_unsupported_pair": 22
+          }
+        },
+        "branches": {
+          "full": {
+            "q_raw": 3.716666666666145e-14,
+            "q_published": 0,
+            "mScm_raw": 1.8583333333330725e-12,
+            "mScm_published": 0,
+            "status": "computed",
+            "reason": null,
+            "certificate_problem": null,
+            "certificate": {
+              "channel": "electronic",
+              "branch": "full",
+              "role": "H0",
+              "sigma_bulk_S_cm": 0.05,
+              "status": "computed",
+              "reason": null,
+              "method": "spsolve",
+              "I_bottom": 7.499999999998947e-13,
+              "I_top": -7.499999999998951e-13,
+              "conservation_rel": 5.385290446309527e-16,
+              "residual_rel": 2.524354896707592e-16,
+              "g_to_q": 0.049555555555555554
+            }
+          },
+          "bulk_net": {
+            "q_raw": 0.265667547293036,
+            "q_published": 0.26566755,
+            "mScm_raw": 13.2833773646518,
+            "mScm_published": 13.283377,
+            "status": "computed",
+            "reason": null,
+            "certificate_problem": null,
+            "certificate": {
+              "channel": "electronic",
+              "branch": "bulk_only",
+              "role": "H0",
+              "sigma_bulk_S_cm": 0.05,
+              "status": "computed",
+              "reason": null,
+              "method": "spsolve",
+              "I_bottom": 5.361004317572474,
+              "I_top": -5.361004317572469,
+              "conservation_rel": 9.940433177292827e-16,
+              "residual_rel": 5.120041827287296e-16,
+              "g_to_q": 0.049555555555555554
+            }
+          },
+          "constr_net": {
+            "q_raw": 3.716666666666673e-14,
+            "q_published": 0,
+            "mScm_raw": 1.8583333333333367e-12,
+            "mScm_published": 0,
+            "status": "computed",
+            "reason": null,
+            "certificate_problem": null,
+            "certificate": {
+              "channel": "electronic",
+              "branch": "constriction_only",
+              "role": "H0",
+              "sigma_bulk_S_cm": 0.05,
+              "status": "computed",
+              "reason": null,
+              "method": "spsolve",
+              "I_bottom": 7.500000000000012e-13,
+              "I_top": -7.499999999999994e-13,
+              "conservation_rel": 2.4233807008389443e-15,
+              "residual_rel": 4.608820400250593e-16,
+              "g_to_q": 0.049555555555555554
+            }
+          }
+        }
+      }
+    }
+  ],
+  "runs": {
+    "hertzian/pure_pc": {
+      "baseline": {
+        "boundaries": {
+          "bottom": [
+            1,
+            2,
+            3
+          ],
+          "top": [
+            13,
+            14,
+            15
+          ],
+          "rule": "L0"
+        },
+        "flags": {
+          "n_floor_only": 0,
+          "n_clamp_zero": 0,
+          "area_binding_counts_physics": {
+            "native_unsupported_pair": 22
+          }
+        },
+        "branches": {
+          "full": {
+            "q_raw": 0.00957388725871091,
+            "q_published": 0.00957389,
+            "mScm_raw": 0.47869436293554557,
+            "mScm_published": 0.478694,
+            "status": "computed",
+            "reason": null,
+            "certificate_problem": null,
+            "certificate": {
+              "channel": "electronic",
+              "branch": "full",
+              "role": "H0",
+              "sigma_bulk_S_cm": 0.05,
+              "status": "computed",
+              "reason": null,
+              "method": "spsolve",
+              "I_bottom": 0.19319503436860577,
+              "I_top": -0.19319503436860622,
+              "conservation_rel": 2.2986574748228942e-15,
+              "residual_rel": 3.519086191719103e-16,
+              "g_to_q": 0.049555555555555554
+            }
+          },
+          "bulk_net": {
+            "q_raw": 0.06072401080983672,
+            "q_published": 0.06072401,
+            "mScm_raw": 3.036200540491836,
+            "mScm_published": 3.036201,
+            "status": "computed",
+            "reason": null,
+            "certificate_problem": null,
+            "certificate": {
+              "channel": "electronic",
+              "branch": "bulk_only",
+              "role": "H0",
+              "sigma_bulk_S_cm": 0.05,
+              "status": "computed",
+              "reason": null,
+              "method": "spsolve",
+              "I_bottom": 1.2253724154451355,
+              "I_top": -1.2253724154451362,
+              "conservation_rel": 5.436174393832018e-16,
+              "residual_rel": 2.876285556927769e-16,
+              "g_to_q": 0.049555555555555554
+            }
+          },
+          "constr_net": {
+            "q_raw": 0.01136585394185864,
+            "q_published": 0.01136585,
+            "mScm_raw": 0.5682926970929321,
+            "mScm_published": 0.568293,
+            "status": "computed",
+            "reason": null,
+            "certificate_problem": null,
+            "certificate": {
+              "channel": "electronic",
+              "branch": "constriction_only",
+              "role": "H0",
+              "sigma_bulk_S_cm": 0.05,
+              "status": "computed",
+              "reason": null,
+              "method": "spsolve",
+              "I_bottom": 0.22935579703302186,
+              "I_top": -0.22935579703302217,
+              "conservation_rel": 1.3311690208901061e-15,
+              "residual_rel": 6.233319283454151e-16,
+              "g_to_q": 0.049555555555555554
+            }
+          }
+        }
+      },
+      "alternate": {
+        "boundaries": {
+          "bottom": [
+            1,
+            2,
+            3
+          ],
+          "top": [
+            13,
+            14,
+            15
+          ],
+          "rule": "L0"
+        },
+        "flags": {
+          "n_floor_only": 0,
+          "n_clamp_zero": 0,
+          "area_binding_counts_physics": {
+            "native_unsupported_pair": 22
+          }
+        },
+        "branches": {
+          "full": {
+            "q_raw": 0.00957388725871091,
+            "q_published": 0.00957389,
+            "mScm_raw": 0.039252937760714736,
+            "mScm_published": 0.039253,
+            "status": "computed",
+            "reason": null,
+            "certificate_problem": null,
+            "certificate": {
+              "channel": "electronic",
+              "branch": "full",
+              "role": "H0",
+              "sigma_bulk_S_cm": 0.0041,
+              "status": "computed",
+              "reason": null,
+              "method": "spsolve",
+              "I_bottom": 0.19319503436860577,
+              "I_top": -0.19319503436860622,
+              "conservation_rel": 2.2986574748228942e-15,
+              "residual_rel": 3.519086191719103e-16,
+              "g_to_q": 0.049555555555555554
+            }
+          },
+          "bulk_net": {
+            "q_raw": 0.06072401080983672,
+            "q_published": 0.06072401,
+            "mScm_raw": 0.2489684443203306,
+            "mScm_published": 0.248968,
+            "status": "computed",
+            "reason": null,
+            "certificate_problem": null,
+            "certificate": {
+              "channel": "electronic",
+              "branch": "bulk_only",
+              "role": "H0",
+              "sigma_bulk_S_cm": 0.0041,
+              "status": "computed",
+              "reason": null,
+              "method": "spsolve",
+              "I_bottom": 1.2253724154451355,
+              "I_top": -1.2253724154451362,
+              "conservation_rel": 5.436174393832018e-16,
+              "residual_rel": 2.876285556927769e-16,
+              "g_to_q": 0.049555555555555554
+            }
+          },
+          "constr_net": {
+            "q_raw": 0.01136585394185864,
+            "q_published": 0.01136585,
+            "mScm_raw": 0.04660000116162043,
+            "mScm_published": 0.0466,
+            "status": "computed",
+            "reason": null,
+            "certificate_problem": null,
+            "certificate": {
+              "channel": "electronic",
+              "branch": "constriction_only",
+              "role": "H0",
+              "sigma_bulk_S_cm": 0.0041,
+              "status": "computed",
+              "reason": null,
+              "method": "spsolve",
+              "I_bottom": 0.22935579703302186,
+              "I_top": -0.22935579703302217,
+              "conservation_rel": 1.3311690208901061e-15,
+              "residual_rel": 6.233319283454151e-16,
+              "g_to_q": 0.049555555555555554
+            }
+          }
+        }
+      },
+      "relative_disabled": {
+        "boundaries": {
+          "bottom": [
+            1,
+            2,
+            3
+          ],
+          "top": [
+            13,
+            14,
+            15
+          ],
+          "rule": "L0"
+        },
+        "flags": {
+          "n_floor_only": 0,
+          "n_clamp_zero": 0,
+          "area_binding_counts_physics": {
+            "native_unsupported_pair": 22
+          }
+        },
+        "branches": {
+          "full": {
+            "q_raw": 0.041885756756860355,
+            "q_published": 0.04188576,
+            "mScm_raw": 2.0942878378430176,
+            "mScm_published": 2.094288,
+            "status": "computed",
+            "reason": null,
+            "certificate_problem": null,
+            "certificate": {
+              "channel": "electronic",
+              "branch": "full",
+              "role": "H0",
+              "sigma_bulk_S_cm": 0.05,
+              "status": "computed",
+              "reason": null,
+              "method": "spsolve",
+              "I_bottom": 0.8452282753626529,
+              "I_top": -0.8452282753626512,
+              "conservation_rel": 1.9702778355624793e-15,
+              "residual_rel": 4.218112840398168e-16,
+              "g_to_q": 0.049555555555555554
+            }
+          },
+          "bulk_net": {
+            "q_raw": 0.265667547293036,
+            "q_published": 0.26566755,
+            "mScm_raw": 13.2833773646518,
+            "mScm_published": 13.283377,
+            "status": "computed",
+            "reason": null,
+            "certificate_problem": null,
+            "certificate": {
+              "channel": "electronic",
+              "branch": "bulk_only",
+              "role": "H0",
+              "sigma_bulk_S_cm": 0.05,
+              "status": "computed",
+              "reason": null,
+              "method": "spsolve",
+              "I_bottom": 5.361004317572474,
+              "I_top": -5.361004317572469,
+              "conservation_rel": 9.940433177292827e-16,
+              "residual_rel": 5.120041827287296e-16,
+              "g_to_q": 0.049555555555555554
+            }
+          },
+          "constr_net": {
+            "q_raw": 0.04972561099563168,
+            "q_published": 0.04972561,
+            "mScm_raw": 2.486280549781584,
+            "mScm_published": 2.486281,
+            "status": "computed",
+            "reason": null,
+            "certificate_problem": null,
+            "certificate": {
+              "channel": "electronic",
+              "branch": "constriction_only",
+              "role": "H0",
+              "sigma_bulk_S_cm": 0.05,
+              "status": "computed",
+              "reason": null,
+              "method": "spsolve",
+              "I_bottom": 1.0034316120194733,
+              "I_top": -1.003431612019471,
+              "conservation_rel": 2.2128523983627713e-15,
+              "residual_rel": 4.3052101198607433e-16,
+              "g_to_q": 0.049555555555555554
+            }
+          }
+        }
+      }
+    },
+    "hertzian/pure_sc": {
+      "baseline": {
+        "boundaries": {
+          "bottom": [
+            1,
+            2,
+            3
+          ],
+          "top": [
+            13,
+            14,
+            15
+          ],
+          "rule": "L0"
+        },
+        "flags": {
+          "n_floor_only": 0,
+          "n_clamp_zero": 0,
+          "area_binding_counts_physics": {
+            "native_unsupported_pair": 22
+          }
+        },
+        "branches": {
+          "full": {
+            "q_raw": 0.041885756756860355,
+            "q_published": 0.04188576,
+            "mScm_raw": 2.0942878378430176,
+            "mScm_published": 2.094288,
+            "status": "computed",
+            "reason": null,
+            "certificate_problem": null,
+            "certificate": {
+              "channel": "electronic",
+              "branch": "full",
+              "role": "H0",
+              "sigma_bulk_S_cm": 0.05,
+              "status": "computed",
+              "reason": null,
+              "method": "spsolve",
+              "I_bottom": 0.8452282753626529,
+              "I_top": -0.8452282753626512,
+              "conservation_rel": 1.9702778355624793e-15,
+              "residual_rel": 4.218112840398168e-16,
+              "g_to_q": 0.049555555555555554
+            }
+          },
+          "bulk_net": {
+            "q_raw": 0.265667547293036,
+            "q_published": 0.26566755,
+            "mScm_raw": 13.2833773646518,
+            "mScm_published": 13.283377,
+            "status": "computed",
+            "reason": null,
+            "certificate_problem": null,
+            "certificate": {
+              "channel": "electronic",
+              "branch": "bulk_only",
+              "role": "H0",
+              "sigma_bulk_S_cm": 0.05,
+              "status": "computed",
+              "reason": null,
+              "method": "spsolve",
+              "I_bottom": 5.361004317572474,
+              "I_top": -5.361004317572469,
+              "conservation_rel": 9.940433177292827e-16,
+              "residual_rel": 5.120041827287296e-16,
+              "g_to_q": 0.049555555555555554
+            }
+          },
+          "constr_net": {
+            "q_raw": 0.04972561099563168,
+            "q_published": 0.04972561,
+            "mScm_raw": 2.486280549781584,
+            "mScm_published": 2.486281,
+            "status": "computed",
+            "reason": null,
+            "certificate_problem": null,
+            "certificate": {
+              "channel": "electronic",
+              "branch": "constriction_only",
+              "role": "H0",
+              "sigma_bulk_S_cm": 0.05,
+              "status": "computed",
+              "reason": null,
+              "method": "spsolve",
+              "I_bottom": 1.0034316120194733,
+              "I_top": -1.003431612019471,
+              "conservation_rel": 2.2128523983627713e-15,
+              "residual_rel": 4.3052101198607433e-16,
+              "g_to_q": 0.049555555555555554
+            }
+          }
+        }
+      },
+      "alternate": {
+        "boundaries": {
+          "bottom": [
+            1,
+            2,
+            3
+          ],
+          "top": [
+            13,
+            14,
+            15
+          ],
+          "rule": "L0"
+        },
+        "flags": {
+          "n_floor_only": 0,
+          "n_clamp_zero": 0,
+          "area_binding_counts_physics": {
+            "native_unsupported_pair": 22
+          }
+        },
+        "branches": {
+          "full": {
+            "q_raw": 0.041885756756860355,
+            "q_published": 0.04188576,
+            "mScm_raw": 0.17173160270312748,
+            "mScm_published": 0.171732,
+            "status": "computed",
+            "reason": null,
+            "certificate_problem": null,
+            "certificate": {
+              "channel": "electronic",
+              "branch": "full",
+              "role": "H0",
+              "sigma_bulk_S_cm": 0.0041,
+              "status": "computed",
+              "reason": null,
+              "method": "spsolve",
+              "I_bottom": 0.8452282753626529,
+              "I_top": -0.8452282753626512,
+              "conservation_rel": 1.9702778355624793e-15,
+              "residual_rel": 4.218112840398168e-16,
+              "g_to_q": 0.049555555555555554
+            }
+          },
+          "bulk_net": {
+            "q_raw": 0.265667547293036,
+            "q_published": 0.26566755,
+            "mScm_raw": 1.0892369439014475,
+            "mScm_published": 1.089237,
+            "status": "computed",
+            "reason": null,
+            "certificate_problem": null,
+            "certificate": {
+              "channel": "electronic",
+              "branch": "bulk_only",
+              "role": "H0",
+              "sigma_bulk_S_cm": 0.0041,
+              "status": "computed",
+              "reason": null,
+              "method": "spsolve",
+              "I_bottom": 5.361004317572474,
+              "I_top": -5.361004317572469,
+              "conservation_rel": 9.940433177292827e-16,
+              "residual_rel": 5.120041827287296e-16,
+              "g_to_q": 0.049555555555555554
+            }
+          },
+          "constr_net": {
+            "q_raw": 0.04972561099563168,
+            "q_published": 0.04972561,
+            "mScm_raw": 0.2038750050820899,
+            "mScm_published": 0.203875,
+            "status": "computed",
+            "reason": null,
+            "certificate_problem": null,
+            "certificate": {
+              "channel": "electronic",
+              "branch": "constriction_only",
+              "role": "H0",
+              "sigma_bulk_S_cm": 0.0041,
+              "status": "computed",
+              "reason": null,
+              "method": "spsolve",
+              "I_bottom": 1.0034316120194733,
+              "I_top": -1.003431612019471,
+              "conservation_rel": 2.2128523983627713e-15,
+              "residual_rel": 4.3052101198607433e-16,
+              "g_to_q": 0.049555555555555554
+            }
+          }
+        }
+      },
+      "relative_disabled": {
+        "boundaries": {
+          "bottom": [
+            1,
+            2,
+            3
+          ],
+          "top": [
+            13,
+            14,
+            15
+          ],
+          "rule": "L0"
+        },
+        "flags": {
+          "n_floor_only": 0,
+          "n_clamp_zero": 0,
+          "area_binding_counts_physics": {
+            "native_unsupported_pair": 22
+          }
+        },
+        "branches": {
+          "full": {
+            "q_raw": 0.041885756756860355,
+            "q_published": 0.04188576,
+            "mScm_raw": 2.0942878378430176,
+            "mScm_published": 2.094288,
+            "status": "computed",
+            "reason": null,
+            "certificate_problem": null,
+            "certificate": {
+              "channel": "electronic",
+              "branch": "full",
+              "role": "H0",
+              "sigma_bulk_S_cm": 0.05,
+              "status": "computed",
+              "reason": null,
+              "method": "spsolve",
+              "I_bottom": 0.8452282753626529,
+              "I_top": -0.8452282753626512,
+              "conservation_rel": 1.9702778355624793e-15,
+              "residual_rel": 4.218112840398168e-16,
+              "g_to_q": 0.049555555555555554
+            }
+          },
+          "bulk_net": {
+            "q_raw": 0.265667547293036,
+            "q_published": 0.26566755,
+            "mScm_raw": 13.2833773646518,
+            "mScm_published": 13.283377,
+            "status": "computed",
+            "reason": null,
+            "certificate_problem": null,
+            "certificate": {
+              "channel": "electronic",
+              "branch": "bulk_only",
+              "role": "H0",
+              "sigma_bulk_S_cm": 0.05,
+              "status": "computed",
+              "reason": null,
+              "method": "spsolve",
+              "I_bottom": 5.361004317572474,
+              "I_top": -5.361004317572469,
+              "conservation_rel": 9.940433177292827e-16,
+              "residual_rel": 5.120041827287296e-16,
+              "g_to_q": 0.049555555555555554
+            }
+          },
+          "constr_net": {
+            "q_raw": 0.04972561099563168,
+            "q_published": 0.04972561,
+            "mScm_raw": 2.486280549781584,
+            "mScm_published": 2.486281,
+            "status": "computed",
+            "reason": null,
+            "certificate_problem": null,
+            "certificate": {
+              "channel": "electronic",
+              "branch": "constriction_only",
+              "role": "H0",
+              "sigma_bulk_S_cm": 0.05,
+              "status": "computed",
+              "reason": null,
+              "method": "spsolve",
+              "I_bottom": 1.0034316120194733,
+              "I_top": -1.003431612019471,
+              "conservation_rel": 2.2128523983627713e-15,
+              "residual_rel": 4.3052101198607433e-16,
+              "g_to_q": 0.049555555555555554
+            }
+          }
+        }
+      }
+    },
+    "hertzian/mixed": {
+      "baseline": {
+        "boundaries": {
+          "bottom": [
+            1,
+            2,
+            3
+          ],
+          "top": [
+            13,
+            14,
+            15
+          ],
+          "rule": "L0"
+        },
+        "flags": {
+          "n_floor_only": 0,
+          "n_clamp_zero": 0,
+          "area_binding_counts_physics": {
+            "native_unsupported_pair": 22
+          }
+        },
+        "branches": {
+          "full": {
+            "q_raw": 0.013277436519192961,
+            "q_published": 0.01327744,
+            "mScm_raw": 0.6638718259596481,
+            "mScm_published": 0.663872,
+            "status": "computed",
+            "reason": null,
+            "certificate_problem": null,
+            "certificate": {
+              "channel": "electronic",
+              "branch": "full",
+              "role": "H0",
+              "sigma_bulk_S_cm": 0.05,
+              "status": "computed",
+              "reason": null,
+              "method": "spsolve",
+              "I_bottom": 0.26793033334694316,
+              "I_top": -0.26793033334694366,
+              "conservation_rel": 1.8646651718765515e-15,
+              "residual_rel": 3.3549395310648325e-16,
+              "g_to_q": 0.049555555555555554
+            }
+          },
+          "bulk_net": {
+            "q_raw": 0.11139896218495834,
+            "q_published": 0.11139896,
+            "mScm_raw": 5.5699481092479175,
+            "mScm_published": 5.569948,
+            "status": "computed",
+            "reason": null,
+            "certificate_problem": null,
+            "certificate": {
+              "channel": "electronic",
+              "branch": "bulk_only",
+              "role": "H0",
+              "sigma_bulk_S_cm": 0.05,
+              "status": "computed",
+              "reason": null,
+              "method": "spsolve",
+              "I_bottom": 2.2479611203242715,
+              "I_top": -2.2479611203242698,
+              "conservation_rel": 7.902079904051048e-16,
+              "residual_rel": 4.487636742974735e-16,
+              "g_to_q": 0.049555555555555554
+            }
+          },
+          "constr_net": {
+            "q_raw": 0.015122538751284813,
+            "q_published": 0.01512254,
+            "mScm_raw": 0.7561269375642408,
+            "mScm_published": 0.756127,
+            "status": "computed",
+            "reason": null,
+            "certificate_problem": null,
+            "certificate": {
+              "channel": "electronic",
+              "branch": "constriction_only",
+              "role": "H0",
+              "sigma_bulk_S_cm": 0.05,
+              "status": "computed",
+              "reason": null,
+              "method": "spsolve",
+              "I_bottom": 0.305163338030411,
+              "I_top": -0.3051633380304104,
+              "conservation_rel": 2.0009699313322645e-15,
+              "residual_rel": 8.297178227188878e-16,
+              "g_to_q": 0.049555555555555554
+            }
+          }
+        }
+      },
+      "alternate": {
+        "boundaries": {
+          "bottom": [
+            1,
+            2,
+            3
+          ],
+          "top": [
+            13,
+            14,
+            15
+          ],
+          "rule": "L0"
+        },
+        "flags": {
+          "n_floor_only": 0,
+          "n_clamp_zero": 0,
+          "area_binding_counts_physics": {
+            "native_unsupported_pair": 22
+          }
+        },
+        "branches": {
+          "full": {
+            "q_raw": 0.013277436519192961,
+            "q_published": 0.01327744,
+            "mScm_raw": 0.05443748972869115,
+            "mScm_published": 0.054437,
+            "status": "computed",
+            "reason": null,
+            "certificate_problem": null,
+            "certificate": {
+              "channel": "electronic",
+              "branch": "full",
+              "role": "H0",
+              "sigma_bulk_S_cm": 0.0041,
+              "status": "computed",
+              "reason": null,
+              "method": "spsolve",
+              "I_bottom": 0.26793033334694316,
+              "I_top": -0.26793033334694366,
+              "conservation_rel": 1.8646651718765515e-15,
+              "residual_rel": 3.3549395310648325e-16,
+              "g_to_q": 0.049555555555555554
+            }
+          },
+          "bulk_net": {
+            "q_raw": 0.11139896218495834,
+            "q_published": 0.11139896,
+            "mScm_raw": 0.45673574495832925,
+            "mScm_published": 0.456736,
+            "status": "computed",
+            "reason": null,
+            "certificate_problem": null,
+            "certificate": {
+              "channel": "electronic",
+              "branch": "bulk_only",
+              "role": "H0",
+              "sigma_bulk_S_cm": 0.0041,
+              "status": "computed",
+              "reason": null,
+              "method": "spsolve",
+              "I_bottom": 2.2479611203242715,
+              "I_top": -2.2479611203242698,
+              "conservation_rel": 7.902079904051048e-16,
+              "residual_rel": 4.487636742974735e-16,
+              "g_to_q": 0.049555555555555554
+            }
+          },
+          "constr_net": {
+            "q_raw": 0.015122538751284813,
+            "q_published": 0.01512254,
+            "mScm_raw": 0.06200240888026774,
+            "mScm_published": 0.062002,
+            "status": "computed",
+            "reason": null,
+            "certificate_problem": null,
+            "certificate": {
+              "channel": "electronic",
+              "branch": "constriction_only",
+              "role": "H0",
+              "sigma_bulk_S_cm": 0.0041,
+              "status": "computed",
+              "reason": null,
+              "method": "spsolve",
+              "I_bottom": 0.305163338030411,
+              "I_top": -0.3051633380304104,
+              "conservation_rel": 2.0009699313322645e-15,
+              "residual_rel": 8.297178227188878e-16,
+              "g_to_q": 0.049555555555555554
+            }
+          }
+        }
+      },
+      "relative_disabled": {
+        "boundaries": {
+          "bottom": [
+            1,
+            2,
+            3
+          ],
+          "top": [
+            13,
+            14,
+            15
+          ],
+          "rule": "L0"
+        },
+        "flags": {
+          "n_floor_only": 0,
+          "n_clamp_zero": 0,
+          "area_binding_counts_physics": {
+            "native_unsupported_pair": 22
+          }
+        },
+        "branches": {
+          "full": {
+            "q_raw": 0.041885756756860355,
+            "q_published": 0.04188576,
+            "mScm_raw": 2.0942878378430176,
+            "mScm_published": 2.094288,
+            "status": "computed",
+            "reason": null,
+            "certificate_problem": null,
+            "certificate": {
+              "channel": "electronic",
+              "branch": "full",
+              "role": "H0",
+              "sigma_bulk_S_cm": 0.05,
+              "status": "computed",
+              "reason": null,
+              "method": "spsolve",
+              "I_bottom": 0.8452282753626529,
+              "I_top": -0.8452282753626512,
+              "conservation_rel": 1.9702778355624793e-15,
+              "residual_rel": 4.218112840398168e-16,
+              "g_to_q": 0.049555555555555554
+            }
+          },
+          "bulk_net": {
+            "q_raw": 0.265667547293036,
+            "q_published": 0.26566755,
+            "mScm_raw": 13.2833773646518,
+            "mScm_published": 13.283377,
+            "status": "computed",
+            "reason": null,
+            "certificate_problem": null,
+            "certificate": {
+              "channel": "electronic",
+              "branch": "bulk_only",
+              "role": "H0",
+              "sigma_bulk_S_cm": 0.05,
+              "status": "computed",
+              "reason": null,
+              "method": "spsolve",
+              "I_bottom": 5.361004317572474,
+              "I_top": -5.361004317572469,
+              "conservation_rel": 9.940433177292827e-16,
+              "residual_rel": 5.120041827287296e-16,
+              "g_to_q": 0.049555555555555554
+            }
+          },
+          "constr_net": {
+            "q_raw": 0.04972561099563168,
+            "q_published": 0.04972561,
+            "mScm_raw": 2.486280549781584,
+            "mScm_published": 2.486281,
+            "status": "computed",
+            "reason": null,
+            "certificate_problem": null,
+            "certificate": {
+              "channel": "electronic",
+              "branch": "constriction_only",
+              "role": "H0",
+              "sigma_bulk_S_cm": 0.05,
+              "status": "computed",
+              "reason": null,
+              "method": "spsolve",
+              "I_bottom": 1.0034316120194733,
+              "I_top": -1.003431612019471,
+              "conservation_rel": 2.2128523983627713e-15,
+              "residual_rel": 4.3052101198607433e-16,
+              "g_to_q": 0.049555555555555554
+            }
+          }
+        }
+      }
+    },
+    "physics/pure_pc": {
+      "baseline": {
+        "boundaries": {
+          "bottom": [
+            1,
+            2,
+            3
+          ],
+          "top": [
+            13,
+            14,
+            15
+          ],
+          "rule": "L0"
+        },
+        "flags": {
+          "n_floor_only": 0,
+          "n_clamp_zero": 0,
+          "area_binding_counts_physics": {
+            "native_unsupported_pair": 22
+          }
+        },
+        "branches": {
+          "full": {
+            "q_raw": 0.01168494342928369,
+            "q_published": 0.01168494,
+            "mScm_raw": 0.5842471714641845,
+            "mScm_published": 0.584247,
+            "status": "computed",
+            "reason": null,
+            "certificate_problem": null,
+            "certificate": {
+              "channel": "electronic",
+              "branch": "full",
+              "role": "physics",
+              "sigma_bulk_S_cm": 0.05,
+              "status": "computed",
+              "reason": null,
+              "method": "spsolve",
+              "I_bottom": 0.23579482256402062,
+              "I_top": -0.23579482256402018,
+              "conservation_rel": 1.883371335388367e-15,
+              "residual_rel": 3.4096761315431085e-16,
+              "g_to_q": 0.049555555555555554
+            }
+          },
+          "bulk_net": {
+            "q_raw": 0.06072401080983672,
+            "q_published": 0.06072401,
+            "mScm_raw": 3.036200540491836,
+            "mScm_published": 3.036201,
+            "status": "computed",
+            "reason": null,
+            "certificate_problem": null,
+            "certificate": {
+              "channel": "electronic",
+              "branch": "bulk_only",
+              "role": "physics",
+              "sigma_bulk_S_cm": 0.05,
+              "status": "computed",
+              "reason": null,
+              "method": "spsolve",
+              "I_bottom": 1.2253724154451355,
+              "I_top": -1.2253724154451362,
+              "conservation_rel": 5.436174393832018e-16,
+              "residual_rel": 2.876285556927769e-16,
+              "g_to_q": 0.049555555555555554
+            }
+          },
+          "constr_net": {
+            "q_raw": 0.014469211365824927,
+            "q_published": 0.01446921,
+            "mScm_raw": 0.7234605682912464,
+            "mScm_published": 0.723461,
+            "status": "computed",
+            "reason": null,
+            "certificate_problem": null,
+            "certificate": {
+              "channel": "electronic",
+              "branch": "constriction_only",
+              "role": "physics",
+              "sigma_bulk_S_cm": 0.05,
+              "status": "computed",
+              "reason": null,
+              "method": "spsolve",
+              "I_bottom": 0.29197960155252095,
+              "I_top": -0.29197960155252056,
+              "conservation_rel": 1.3308397454912884e-15,
+              "residual_rel": 3.3629777809167414e-16,
+              "g_to_q": 0.049555555555555554
+            }
+          }
+        }
+      },
+      "alternate": {
+        "boundaries": {
+          "bottom": [
+            1,
+            2,
+            3
+          ],
+          "top": [
+            13,
+            14,
+            15
+          ],
+          "rule": "L0"
+        },
+        "flags": {
+          "n_floor_only": 0,
+          "n_clamp_zero": 0,
+          "area_binding_counts_physics": {
+            "native_unsupported_pair": 22
+          }
+        },
+        "branches": {
+          "full": {
+            "q_raw": 0.01168494342928369,
+            "q_published": 0.01168494,
+            "mScm_raw": 0.04790826806006314,
+            "mScm_published": 0.047908,
+            "status": "computed",
+            "reason": null,
+            "certificate_problem": null,
+            "certificate": {
+              "channel": "electronic",
+              "branch": "full",
+              "role": "physics",
+              "sigma_bulk_S_cm": 0.0041,
+              "status": "computed",
+              "reason": null,
+              "method": "spsolve",
+              "I_bottom": 0.23579482256402062,
+              "I_top": -0.23579482256402018,
+              "conservation_rel": 1.883371335388367e-15,
+              "residual_rel": 3.4096761315431085e-16,
+              "g_to_q": 0.049555555555555554
+            }
+          },
+          "bulk_net": {
+            "q_raw": 0.06072401080983672,
+            "q_published": 0.06072401,
+            "mScm_raw": 0.2489684443203306,
+            "mScm_published": 0.248968,
+            "status": "computed",
+            "reason": null,
+            "certificate_problem": null,
+            "certificate": {
+              "channel": "electronic",
+              "branch": "bulk_only",
+              "role": "physics",
+              "sigma_bulk_S_cm": 0.0041,
+              "status": "computed",
+              "reason": null,
+              "method": "spsolve",
+              "I_bottom": 1.2253724154451355,
+              "I_top": -1.2253724154451362,
+              "conservation_rel": 5.436174393832018e-16,
+              "residual_rel": 2.876285556927769e-16,
+              "g_to_q": 0.049555555555555554
+            }
+          },
+          "constr_net": {
+            "q_raw": 0.014469211365824927,
+            "q_published": 0.01446921,
+            "mScm_raw": 0.059323766599882206,
+            "mScm_published": 0.059324,
+            "status": "computed",
+            "reason": null,
+            "certificate_problem": null,
+            "certificate": {
+              "channel": "electronic",
+              "branch": "constriction_only",
+              "role": "physics",
+              "sigma_bulk_S_cm": 0.0041,
+              "status": "computed",
+              "reason": null,
+              "method": "spsolve",
+              "I_bottom": 0.29197960155252095,
+              "I_top": -0.29197960155252056,
+              "conservation_rel": 1.3308397454912884e-15,
+              "residual_rel": 3.3629777809167414e-16,
+              "g_to_q": 0.049555555555555554
+            }
+          }
+        }
+      },
+      "relative_disabled": {
+        "boundaries": {
+          "bottom": [
+            1,
+            2,
+            3
+          ],
+          "top": [
+            13,
+            14,
+            15
+          ],
+          "rule": "L0"
+        },
+        "flags": {
+          "n_floor_only": 0,
+          "n_clamp_zero": 0,
+          "area_binding_counts_physics": {
+            "native_unsupported_pair": 22
+          }
+        },
+        "branches": {
+          "full": {
+            "q_raw": 0.05112162750311601,
+            "q_published": 0.05112163,
+            "mScm_raw": 2.5560813751558005,
+            "mScm_published": 2.556081,
+            "status": "computed",
+            "reason": null,
+            "certificate_problem": null,
+            "certificate": {
+              "channel": "electronic",
+              "branch": "full",
+              "role": "physics",
+              "sigma_bulk_S_cm": 0.05,
+              "status": "computed",
+              "reason": null,
+              "method": "spsolve",
+              "I_bottom": 1.0316023487175876,
+              "I_top": -1.031602348717589,
+              "conservation_rel": 1.2914546299805963e-15,
+              "residual_rel": 3.7930754790770692e-16,
+              "g_to_q": 0.049555555555555554
+            }
+          },
+          "bulk_net": {
+            "q_raw": 0.265667547293036,
+            "q_published": 0.26566755,
+            "mScm_raw": 13.2833773646518,
+            "mScm_published": 13.283377,
+            "status": "computed",
+            "reason": null,
+            "certificate_problem": null,
+            "certificate": {
+              "channel": "electronic",
+              "branch": "bulk_only",
+              "role": "physics",
+              "sigma_bulk_S_cm": 0.05,
+              "status": "computed",
+              "reason": null,
+              "method": "spsolve",
+              "I_bottom": 5.361004317572474,
+              "I_top": -5.361004317572469,
+              "conservation_rel": 9.940433177292827e-16,
+              "residual_rel": 5.120041827287296e-16,
+              "g_to_q": 0.049555555555555554
+            }
+          },
+          "constr_net": {
+            "q_raw": 0.06330279972548407,
+            "q_published": 0.0633028,
+            "mScm_raw": 3.1651399862742036,
+            "mScm_published": 3.16514,
+            "status": "computed",
+            "reason": null,
+            "certificate_problem": null,
+            "certificate": {
+              "channel": "electronic",
+              "branch": "constriction_only",
+              "role": "physics",
+              "sigma_bulk_S_cm": 0.05,
+              "status": "computed",
+              "reason": null,
+              "method": "spsolve",
+              "I_bottom": 1.2774107567922794,
+              "I_top": -1.277410756792278,
+              "conservation_rel": 1.2167677673063205e-15,
+              "residual_rel": 5.524639372097656e-16,
+              "g_to_q": 0.049555555555555554
+            }
+          }
+        }
+      }
+    },
+    "physics/pure_sc": {
+      "baseline": {
+        "boundaries": {
+          "bottom": [
+            1,
+            2,
+            3
+          ],
+          "top": [
+            13,
+            14,
+            15
+          ],
+          "rule": "L0"
+        },
+        "flags": {
+          "n_floor_only": 0,
+          "n_clamp_zero": 0,
+          "area_binding_counts_physics": {
+            "native_unsupported_pair": 22
+          }
+        },
+        "branches": {
+          "full": {
+            "q_raw": 0.05112162750311601,
+            "q_published": 0.05112163,
+            "mScm_raw": 2.5560813751558005,
+            "mScm_published": 2.556081,
+            "status": "computed",
+            "reason": null,
+            "certificate_problem": null,
+            "certificate": {
+              "channel": "electronic",
+              "branch": "full",
+              "role": "physics",
+              "sigma_bulk_S_cm": 0.05,
+              "status": "computed",
+              "reason": null,
+              "method": "spsolve",
+              "I_bottom": 1.0316023487175876,
+              "I_top": -1.031602348717589,
+              "conservation_rel": 1.2914546299805963e-15,
+              "residual_rel": 3.7930754790770692e-16,
+              "g_to_q": 0.049555555555555554
+            }
+          },
+          "bulk_net": {
+            "q_raw": 0.265667547293036,
+            "q_published": 0.26566755,
+            "mScm_raw": 13.2833773646518,
+            "mScm_published": 13.283377,
+            "status": "computed",
+            "reason": null,
+            "certificate_problem": null,
+            "certificate": {
+              "channel": "electronic",
+              "branch": "bulk_only",
+              "role": "physics",
+              "sigma_bulk_S_cm": 0.05,
+              "status": "computed",
+              "reason": null,
+              "method": "spsolve",
+              "I_bottom": 5.361004317572474,
+              "I_top": -5.361004317572469,
+              "conservation_rel": 9.940433177292827e-16,
+              "residual_rel": 5.120041827287296e-16,
+              "g_to_q": 0.049555555555555554
+            }
+          },
+          "constr_net": {
+            "q_raw": 0.06330279972548407,
+            "q_published": 0.0633028,
+            "mScm_raw": 3.1651399862742036,
+            "mScm_published": 3.16514,
+            "status": "computed",
+            "reason": null,
+            "certificate_problem": null,
+            "certificate": {
+              "channel": "electronic",
+              "branch": "constriction_only",
+              "role": "physics",
+              "sigma_bulk_S_cm": 0.05,
+              "status": "computed",
+              "reason": null,
+              "method": "spsolve",
+              "I_bottom": 1.2774107567922794,
+              "I_top": -1.277410756792278,
+              "conservation_rel": 1.2167677673063205e-15,
+              "residual_rel": 5.524639372097656e-16,
+              "g_to_q": 0.049555555555555554
+            }
+          }
+        }
+      },
+      "alternate": {
+        "boundaries": {
+          "bottom": [
+            1,
+            2,
+            3
+          ],
+          "top": [
+            13,
+            14,
+            15
+          ],
+          "rule": "L0"
+        },
+        "flags": {
+          "n_floor_only": 0,
+          "n_clamp_zero": 0,
+          "area_binding_counts_physics": {
+            "native_unsupported_pair": 22
+          }
+        },
+        "branches": {
+          "full": {
+            "q_raw": 0.05112162750311601,
+            "q_published": 0.05112163,
+            "mScm_raw": 0.20959867276277566,
+            "mScm_published": 0.209599,
+            "status": "computed",
+            "reason": null,
+            "certificate_problem": null,
+            "certificate": {
+              "channel": "electronic",
+              "branch": "full",
+              "role": "physics",
+              "sigma_bulk_S_cm": 0.0041,
+              "status": "computed",
+              "reason": null,
+              "method": "spsolve",
+              "I_bottom": 1.0316023487175876,
+              "I_top": -1.031602348717589,
+              "conservation_rel": 1.2914546299805963e-15,
+              "residual_rel": 3.7930754790770692e-16,
+              "g_to_q": 0.049555555555555554
+            }
+          },
+          "bulk_net": {
+            "q_raw": 0.265667547293036,
+            "q_published": 0.26566755,
+            "mScm_raw": 1.0892369439014475,
+            "mScm_published": 1.089237,
+            "status": "computed",
+            "reason": null,
+            "certificate_problem": null,
+            "certificate": {
+              "channel": "electronic",
+              "branch": "bulk_only",
+              "role": "physics",
+              "sigma_bulk_S_cm": 0.0041,
+              "status": "computed",
+              "reason": null,
+              "method": "spsolve",
+              "I_bottom": 5.361004317572474,
+              "I_top": -5.361004317572469,
+              "conservation_rel": 9.940433177292827e-16,
+              "residual_rel": 5.120041827287296e-16,
+              "g_to_q": 0.049555555555555554
+            }
+          },
+          "constr_net": {
+            "q_raw": 0.06330279972548407,
+            "q_published": 0.0633028,
+            "mScm_raw": 0.2595414788744847,
+            "mScm_published": 0.259541,
+            "status": "computed",
+            "reason": null,
+            "certificate_problem": null,
+            "certificate": {
+              "channel": "electronic",
+              "branch": "constriction_only",
+              "role": "physics",
+              "sigma_bulk_S_cm": 0.0041,
+              "status": "computed",
+              "reason": null,
+              "method": "spsolve",
+              "I_bottom": 1.2774107567922794,
+              "I_top": -1.277410756792278,
+              "conservation_rel": 1.2167677673063205e-15,
+              "residual_rel": 5.524639372097656e-16,
+              "g_to_q": 0.049555555555555554
+            }
+          }
+        }
+      },
+      "relative_disabled": {
+        "boundaries": {
+          "bottom": [
+            1,
+            2,
+            3
+          ],
+          "top": [
+            13,
+            14,
+            15
+          ],
+          "rule": "L0"
+        },
+        "flags": {
+          "n_floor_only": 0,
+          "n_clamp_zero": 0,
+          "area_binding_counts_physics": {
+            "native_unsupported_pair": 22
+          }
+        },
+        "branches": {
+          "full": {
+            "q_raw": 0.05112162750311601,
+            "q_published": 0.05112163,
+            "mScm_raw": 2.5560813751558005,
+            "mScm_published": 2.556081,
+            "status": "computed",
+            "reason": null,
+            "certificate_problem": null,
+            "certificate": {
+              "channel": "electronic",
+              "branch": "full",
+              "role": "physics",
+              "sigma_bulk_S_cm": 0.05,
+              "status": "computed",
+              "reason": null,
+              "method": "spsolve",
+              "I_bottom": 1.0316023487175876,
+              "I_top": -1.031602348717589,
+              "conservation_rel": 1.2914546299805963e-15,
+              "residual_rel": 3.7930754790770692e-16,
+              "g_to_q": 0.049555555555555554
+            }
+          },
+          "bulk_net": {
+            "q_raw": 0.265667547293036,
+            "q_published": 0.26566755,
+            "mScm_raw": 13.2833773646518,
+            "mScm_published": 13.283377,
+            "status": "computed",
+            "reason": null,
+            "certificate_problem": null,
+            "certificate": {
+              "channel": "electronic",
+              "branch": "bulk_only",
+              "role": "physics",
+              "sigma_bulk_S_cm": 0.05,
+              "status": "computed",
+              "reason": null,
+              "method": "spsolve",
+              "I_bottom": 5.361004317572474,
+              "I_top": -5.361004317572469,
+              "conservation_rel": 9.940433177292827e-16,
+              "residual_rel": 5.120041827287296e-16,
+              "g_to_q": 0.049555555555555554
+            }
+          },
+          "constr_net": {
+            "q_raw": 0.06330279972548407,
+            "q_published": 0.0633028,
+            "mScm_raw": 3.1651399862742036,
+            "mScm_published": 3.16514,
+            "status": "computed",
+            "reason": null,
+            "certificate_problem": null,
+            "certificate": {
+              "channel": "electronic",
+              "branch": "constriction_only",
+              "role": "physics",
+              "sigma_bulk_S_cm": 0.05,
+              "status": "computed",
+              "reason": null,
+              "method": "spsolve",
+              "I_bottom": 1.2774107567922794,
+              "I_top": -1.277410756792278,
+              "conservation_rel": 1.2167677673063205e-15,
+              "residual_rel": 5.524639372097656e-16,
+              "g_to_q": 0.049555555555555554
+            }
+          }
+        }
+      }
+    },
+    "physics/mixed": {
+      "baseline": {
+        "boundaries": {
+          "bottom": [
+            1,
+            2,
+            3
+          ],
+          "top": [
+            13,
+            14,
+            15
+          ],
+          "rule": "L0"
+        },
+        "flags": {
+          "n_floor_only": 0,
+          "n_clamp_zero": 0,
+          "area_binding_counts_physics": {
+            "native_unsupported_pair": 22
+          }
+        },
+        "branches": {
+          "full": {
+            "q_raw": 0.016359711211379253,
+            "q_published": 0.01635971,
+            "mScm_raw": 0.8179855605689627,
+            "mScm_published": 0.817986,
+            "status": "computed",
+            "reason": null,
+            "certificate_problem": null,
+            "certificate": {
+              "channel": "electronic",
+              "branch": "full",
+              "role": "physics",
+              "sigma_bulk_S_cm": 0.05,
+              "status": "computed",
+              "reason": null,
+              "method": "spsolve",
+              "I_bottom": 0.33012870157491764,
+              "I_top": -0.330128701574917,
+              "conservation_rel": 1.8496503352504317e-15,
+              "residual_rel": 5.109578716781863e-16,
+              "g_to_q": 0.049555555555555554
+            }
+          },
+          "bulk_net": {
+            "q_raw": 0.11139896218495834,
+            "q_published": 0.11139896,
+            "mScm_raw": 5.5699481092479175,
+            "mScm_published": 5.569948,
+            "status": "computed",
+            "reason": null,
+            "certificate_problem": null,
+            "certificate": {
+              "channel": "electronic",
+              "branch": "bulk_only",
+              "role": "physics",
+              "sigma_bulk_S_cm": 0.05,
+              "status": "computed",
+              "reason": null,
+              "method": "spsolve",
+              "I_bottom": 2.2479611203242715,
+              "I_top": -2.2479611203242698,
+              "conservation_rel": 7.902079904051048e-16,
+              "residual_rel": 4.487636742974735e-16,
+              "g_to_q": 0.049555555555555554
+            }
+          },
+          "constr_net": {
+            "q_raw": 0.019251629547549463,
+            "q_published": 0.01925163,
+            "mScm_raw": 0.9625814773774731,
+            "mScm_published": 0.962581,
+            "status": "computed",
+            "reason": null,
+            "certificate_problem": null,
+            "certificate": {
+              "channel": "electronic",
+              "branch": "constriction_only",
+              "role": "physics",
+              "sigma_bulk_S_cm": 0.05,
+              "status": "computed",
+              "reason": null,
+              "method": "spsolve",
+              "I_bottom": 0.3884857980447201,
+              "I_top": -0.38848579804472005,
+              "conservation_rel": 1.4289106966239142e-16,
+              "residual_rel": 7.690731200321515e-16,
+              "g_to_q": 0.049555555555555554
+            }
+          }
+        }
+      },
+      "alternate": {
+        "boundaries": {
+          "bottom": [
+            1,
+            2,
+            3
+          ],
+          "top": [
+            13,
+            14,
+            15
+          ],
+          "rule": "L0"
+        },
+        "flags": {
+          "n_floor_only": 0,
+          "n_clamp_zero": 0,
+          "area_binding_counts_physics": {
+            "native_unsupported_pair": 22
+          }
+        },
+        "branches": {
+          "full": {
+            "q_raw": 0.016359711211379253,
+            "q_published": 0.01635971,
+            "mScm_raw": 0.06707481596665495,
+            "mScm_published": 0.067075,
+            "status": "computed",
+            "reason": null,
+            "certificate_problem": null,
+            "certificate": {
+              "channel": "electronic",
+              "branch": "full",
+              "role": "physics",
+              "sigma_bulk_S_cm": 0.0041,
+              "status": "computed",
+              "reason": null,
+              "method": "spsolve",
+              "I_bottom": 0.33012870157491764,
+              "I_top": -0.330128701574917,
+              "conservation_rel": 1.8496503352504317e-15,
+              "residual_rel": 5.109578716781863e-16,
+              "g_to_q": 0.049555555555555554
+            }
+          },
+          "bulk_net": {
+            "q_raw": 0.11139896218495834,
+            "q_published": 0.11139896,
+            "mScm_raw": 0.45673574495832925,
+            "mScm_published": 0.456736,
+            "status": "computed",
+            "reason": null,
+            "certificate_problem": null,
+            "certificate": {
+              "channel": "electronic",
+              "branch": "bulk_only",
+              "role": "physics",
+              "sigma_bulk_S_cm": 0.0041,
+              "status": "computed",
+              "reason": null,
+              "method": "spsolve",
+              "I_bottom": 2.2479611203242715,
+              "I_top": -2.2479611203242698,
+              "conservation_rel": 7.902079904051048e-16,
+              "residual_rel": 4.487636742974735e-16,
+              "g_to_q": 0.049555555555555554
+            }
+          },
+          "constr_net": {
+            "q_raw": 0.019251629547549463,
+            "q_published": 0.01925163,
+            "mScm_raw": 0.07893168114495282,
+            "mScm_published": 0.078932,
+            "status": "computed",
+            "reason": null,
+            "certificate_problem": null,
+            "certificate": {
+              "channel": "electronic",
+              "branch": "constriction_only",
+              "role": "physics",
+              "sigma_bulk_S_cm": 0.0041,
+              "status": "computed",
+              "reason": null,
+              "method": "spsolve",
+              "I_bottom": 0.3884857980447201,
+              "I_top": -0.38848579804472005,
+              "conservation_rel": 1.4289106966239142e-16,
+              "residual_rel": 7.690731200321515e-16,
+              "g_to_q": 0.049555555555555554
+            }
+          }
+        }
+      },
+      "relative_disabled": {
+        "boundaries": {
+          "bottom": [
+            1,
+            2,
+            3
+          ],
+          "top": [
+            13,
+            14,
+            15
+          ],
+          "rule": "L0"
+        },
+        "flags": {
+          "n_floor_only": 0,
+          "n_clamp_zero": 0,
+          "area_binding_counts_physics": {
+            "native_unsupported_pair": 22
+          }
+        },
+        "branches": {
+          "full": {
+            "q_raw": 0.05112162750311601,
+            "q_published": 0.05112163,
+            "mScm_raw": 2.5560813751558005,
+            "mScm_published": 2.556081,
+            "status": "computed",
+            "reason": null,
+            "certificate_problem": null,
+            "certificate": {
+              "channel": "electronic",
+              "branch": "full",
+              "role": "physics",
+              "sigma_bulk_S_cm": 0.05,
+              "status": "computed",
+              "reason": null,
+              "method": "spsolve",
+              "I_bottom": 1.0316023487175876,
+              "I_top": -1.031602348717589,
+              "conservation_rel": 1.2914546299805963e-15,
+              "residual_rel": 3.7930754790770692e-16,
+              "g_to_q": 0.049555555555555554
+            }
+          },
+          "bulk_net": {
+            "q_raw": 0.265667547293036,
+            "q_published": 0.26566755,
+            "mScm_raw": 13.2833773646518,
+            "mScm_published": 13.283377,
+            "status": "computed",
+            "reason": null,
+            "certificate_problem": null,
+            "certificate": {
+              "channel": "electronic",
+              "branch": "bulk_only",
+              "role": "physics",
+              "sigma_bulk_S_cm": 0.05,
+              "status": "computed",
+              "reason": null,
+              "method": "spsolve",
+              "I_bottom": 5.361004317572474,
+              "I_top": -5.361004317572469,
+              "conservation_rel": 9.940433177292827e-16,
+              "residual_rel": 5.120041827287296e-16,
+              "g_to_q": 0.049555555555555554
+            }
+          },
+          "constr_net": {
+            "q_raw": 0.06330279972548407,
+            "q_published": 0.0633028,
+            "mScm_raw": 3.1651399862742036,
+            "mScm_published": 3.16514,
+            "status": "computed",
+            "reason": null,
+            "certificate_problem": null,
+            "certificate": {
+              "channel": "electronic",
+              "branch": "constriction_only",
+              "role": "physics",
+              "sigma_bulk_S_cm": 0.05,
+              "status": "computed",
+              "reason": null,
+              "method": "spsolve",
+              "I_bottom": 1.2774107567922794,
+              "I_top": -1.277410756792278,
+              "conservation_rel": 1.2167677673063205e-15,
+              "residual_rel": 5.524639372097656e-16,
+              "g_to_q": 0.049555555555555554
+            }
+          }
+        }
+      }
+    }
+  }
+}

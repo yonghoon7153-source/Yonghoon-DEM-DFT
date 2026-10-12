@@ -1,0 +1,355 @@
+{
+  "scope": "stored solve-certificate reconstruction, not raw-bed re-solve",
+  "cases": [
+    {
+      "ratio": "0:10",
+      "case_id": "260925_000001_0bee25",
+      "modes": {
+        "hertz": {
+          "q_reconstructed": 0.09531757155270575,
+          "old50_mScm": 4.765878577635287,
+          "new4_1_mScm": 0.39080204336609353,
+          "new4_1_display6": 0.390802,
+          "old_TSV": 4.765879,
+          "new_vs_scaled_rounded_delta_mScm": -3.463390646496478e-08,
+          "electronic_edges": 8970,
+          "native_unsupported_pair": 8970,
+          "conservation_rel_recomputed": 4.805484486121797e-15,
+          "residual_rel_recorded": 2.212185706231373e-15,
+          "temperature_provenance": {
+            "T_C": null,
+            "T_ref_C": 25.0,
+            "Ea_ion_eV": null,
+            "T_dependence": "NOT_MODELLED",
+            "sigma_ion_T_factor": 1.0,
+            "sigma_e_T_dependence": "NOT_MODELLED",
+            "convention": "sigma*T = sigma0*exp(-Ea/(kB*T))  [Kraft 2017 eq 5]",
+            "Ea_band_eV": {
+              "ma2024": 0.29,
+              "reisacher2023": 0.41,
+              "kraft2017": 0.46
+            },
+            "trust": "T_ref=25 °C is OUR CONVENTION, not an anchor — σ_grain=3.0 mS/cm is a project value (lower end of the Cronau 2021 SI Fig. S2c µC-LPSCl pellet plateau; not single-crystal — SELF-51; docs/temp_pressure_capability.md T1-b). Ea is a BAND 0.29-0.46 eV (1.8x wide = x2.47..x4.44 at 30->60 °C); single-value reporting is forbidden — sweep EA_ION_EV_BAND. T_dependence=NOT_MODELLED: sigma is the 25 °C value; a run at any other cell temperature UNDER-states sigma_ion (and over-states the ionic ohmic drop)."
+          },
+          "record_path": "solver_output/260925_000001_0bee25/network_conductivity_hertzian.json",
+          "record_sha256": "3ea21d502fd5b23458705d22023522c2659c8e6bc84b0b5df21774f0d25ebbe5"
+        },
+        "physics": {
+          "q_reconstructed": 0.12382215274856079,
+          "old50_mScm": 6.19110763742804,
+          "new4_1_mScm": 0.5076708262690992,
+          "new4_1_display6": 0.507671,
+          "old_TSV": 6.191108,
+          "new_vs_scaled_rounded_delta_mScm": -2.9730900852342756e-08,
+          "electronic_edges": 8970,
+          "native_unsupported_pair": 8970,
+          "conservation_rel_recomputed": 2.3540579689104322e-15,
+          "residual_rel_recorded": 2.0033886292743157e-15,
+          "temperature_provenance": {
+            "T_C": null,
+            "T_ref_C": 25.0,
+            "Ea_ion_eV": null,
+            "T_dependence": "NOT_MODELLED",
+            "sigma_ion_T_factor": 1.0,
+            "sigma_e_T_dependence": "NOT_MODELLED",
+            "convention": "sigma*T = sigma0*exp(-Ea/(kB*T))  [Kraft 2017 eq 5]",
+            "Ea_band_eV": {
+              "ma2024": 0.29,
+              "reisacher2023": 0.41,
+              "kraft2017": 0.46
+            },
+            "trust": "T_ref=25 °C is OUR CONVENTION, not an anchor — σ_grain=3.0 mS/cm is a project value (lower end of the Cronau 2021 SI Fig. S2c µC-LPSCl pellet plateau; not single-crystal — SELF-51; docs/temp_pressure_capability.md T1-b). Ea is a BAND 0.29-0.46 eV (1.8x wide = x2.47..x4.44 at 30->60 °C); single-value reporting is forbidden — sweep EA_ION_EV_BAND. T_dependence=NOT_MODELLED: sigma is the 25 °C value; a run at any other cell temperature UNDER-states sigma_ion (and over-states the ionic ohmic drop)."
+          },
+          "record_path": "solver_output/260925_000001_0bee25/network_conductivity_physics.json",
+          "record_sha256": "ee1554f7d65e4d85a7e4f12430ab29fc1d0fb5ac00194e9a2f9a75265696bf3b"
+        }
+      }
+    },
+    {
+      "ratio": "3:7",
+      "case_id": "260925_000448_bd85f9",
+      "modes": {
+        "hertz": {
+          "q_reconstructed": 0.05751186183002016,
+          "old50_mScm": 2.875593091501008,
+          "new4_1_mScm": 0.23579863350308264,
+          "new4_1_display6": 0.235799,
+          "old_TSV": 2.875593,
+          "new_vs_scaled_rounded_delta_mScm": 7.503082655180293e-09,
+          "electronic_edges": 5794,
+          "native_unsupported_pair": 5794,
+          "conservation_rel_recomputed": 6.004815262089825e-15,
+          "residual_rel_recorded": 1.5589495553413465e-15,
+          "temperature_provenance": {
+            "T_C": null,
+            "T_ref_C": 25.0,
+            "Ea_ion_eV": null,
+            "T_dependence": "NOT_MODELLED",
+            "sigma_ion_T_factor": 1.0,
+            "sigma_e_T_dependence": "NOT_MODELLED",
+            "convention": "sigma*T = sigma0*exp(-Ea/(kB*T))  [Kraft 2017 eq 5]",
+            "Ea_band_eV": {
+              "ma2024": 0.29,
+              "reisacher2023": 0.41,
+              "kraft2017": 0.46
+            },
+            "trust": "T_ref=25 °C is OUR CONVENTION, not an anchor — σ_grain=3.0 mS/cm is a project value (lower end of the Cronau 2021 SI Fig. S2c µC-LPSCl pellet plateau; not single-crystal — SELF-51; docs/temp_pressure_capability.md T1-b). Ea is a BAND 0.29-0.46 eV (1.8x wide = x2.47..x4.44 at 30->60 °C); single-value reporting is forbidden — sweep EA_ION_EV_BAND. T_dependence=NOT_MODELLED: sigma is the 25 °C value; a run at any other cell temperature UNDER-states sigma_ion (and over-states the ionic ohmic drop)."
+          },
+          "record_path": "solver_output/260925_000448_bd85f9/network_conductivity_hertzian.json",
+          "record_sha256": "e9fe225285296b9ef39542ac4d3e05112159c4bccac362295487e6302dcb1e86"
+        },
+        "physics": {
+          "q_reconstructed": 0.07799065239740544,
+          "old50_mScm": 3.8995326198702718,
+          "new4_1_mScm": 0.31976167482936224,
+          "new4_1_display6": 0.319762,
+          "old_TSV": 3.899533,
+          "new_vs_scaled_rounded_delta_mScm": -3.117063773760975e-08,
+          "electronic_edges": 5794,
+          "native_unsupported_pair": 5794,
+          "conservation_rel_recomputed": 7.163055189712377e-15,
+          "residual_rel_recorded": 1.5273686253941333e-15,
+          "temperature_provenance": {
+            "T_C": null,
+            "T_ref_C": 25.0,
+            "Ea_ion_eV": null,
+            "T_dependence": "NOT_MODELLED",
+            "sigma_ion_T_factor": 1.0,
+            "sigma_e_T_dependence": "NOT_MODELLED",
+            "convention": "sigma*T = sigma0*exp(-Ea/(kB*T))  [Kraft 2017 eq 5]",
+            "Ea_band_eV": {
+              "ma2024": 0.29,
+              "reisacher2023": 0.41,
+              "kraft2017": 0.46
+            },
+            "trust": "T_ref=25 °C is OUR CONVENTION, not an anchor — σ_grain=3.0 mS/cm is a project value (lower end of the Cronau 2021 SI Fig. S2c µC-LPSCl pellet plateau; not single-crystal — SELF-51; docs/temp_pressure_capability.md T1-b). Ea is a BAND 0.29-0.46 eV (1.8x wide = x2.47..x4.44 at 30->60 °C); single-value reporting is forbidden — sweep EA_ION_EV_BAND. T_dependence=NOT_MODELLED: sigma is the 25 °C value; a run at any other cell temperature UNDER-states sigma_ion (and over-states the ionic ohmic drop)."
+          },
+          "record_path": "solver_output/260925_000448_bd85f9/network_conductivity_physics.json",
+          "record_sha256": "ed8b7cd84c7670df6bf324ab777c493933e36f1b6abc559b0e04b47691b2bad3"
+        }
+      }
+    },
+    {
+      "ratio": "5:5",
+      "case_id": "260925_000513_123978",
+      "modes": {
+        "hertz": {
+          "q_reconstructed": 0.038753015893334936,
+          "old50_mScm": 1.9376507946667467,
+          "new4_1_mScm": 0.1588873651626732,
+          "new4_1_display6": 0.158887,
+          "old_TSV": 1.937651,
+          "new_vs_scaled_rounded_delta_mScm": -1.6837326810570374e-08,
+          "electronic_edges": 3878,
+          "native_unsupported_pair": 3878,
+          "conservation_rel_recomputed": 8.117282318817409e-15,
+          "residual_rel_recorded": 9.528516506375668e-16,
+          "temperature_provenance": {
+            "T_C": null,
+            "T_ref_C": 25.0,
+            "Ea_ion_eV": null,
+            "T_dependence": "NOT_MODELLED",
+            "sigma_ion_T_factor": 1.0,
+            "sigma_e_T_dependence": "NOT_MODELLED",
+            "convention": "sigma*T = sigma0*exp(-Ea/(kB*T))  [Kraft 2017 eq 5]",
+            "Ea_band_eV": {
+              "ma2024": 0.29,
+              "reisacher2023": 0.41,
+              "kraft2017": 0.46
+            },
+            "trust": "T_ref=25 °C is OUR CONVENTION, not an anchor — σ_grain=3.0 mS/cm is a project value (lower end of the Cronau 2021 SI Fig. S2c µC-LPSCl pellet plateau; not single-crystal — SELF-51; docs/temp_pressure_capability.md T1-b). Ea is a BAND 0.29-0.46 eV (1.8x wide = x2.47..x4.44 at 30->60 °C); single-value reporting is forbidden — sweep EA_ION_EV_BAND. T_dependence=NOT_MODELLED: sigma is the 25 °C value; a run at any other cell temperature UNDER-states sigma_ion (and over-states the ionic ohmic drop)."
+          },
+          "record_path": "solver_output/260925_000513_123978/network_conductivity_hertzian.json",
+          "record_sha256": "15c414fe7550c6984f72782d3445f3ec4fe2dc1be20fd3fd9d0b5a505b8439c3"
+        },
+        "physics": {
+          "q_reconstructed": 0.05378621651503911,
+          "old50_mScm": 2.6893108257519556,
+          "new4_1_mScm": 0.22052348771166033,
+          "new4_1_display6": 0.220523,
+          "old_TSV": 2.689311,
+          "new_vs_scaled_rounded_delta_mScm": -1.4288339678092399e-08,
+          "electronic_edges": 3878,
+          "native_unsupported_pair": 3878,
+          "conservation_rel_recomputed": 5.755675511873717e-15,
+          "residual_rel_recorded": 9.802226899480384e-16,
+          "temperature_provenance": {
+            "T_C": null,
+            "T_ref_C": 25.0,
+            "Ea_ion_eV": null,
+            "T_dependence": "NOT_MODELLED",
+            "sigma_ion_T_factor": 1.0,
+            "sigma_e_T_dependence": "NOT_MODELLED",
+            "convention": "sigma*T = sigma0*exp(-Ea/(kB*T))  [Kraft 2017 eq 5]",
+            "Ea_band_eV": {
+              "ma2024": 0.29,
+              "reisacher2023": 0.41,
+              "kraft2017": 0.46
+            },
+            "trust": "T_ref=25 °C is OUR CONVENTION, not an anchor — σ_grain=3.0 mS/cm is a project value (lower end of the Cronau 2021 SI Fig. S2c µC-LPSCl pellet plateau; not single-crystal — SELF-51; docs/temp_pressure_capability.md T1-b). Ea is a BAND 0.29-0.46 eV (1.8x wide = x2.47..x4.44 at 30->60 °C); single-value reporting is forbidden — sweep EA_ION_EV_BAND. T_dependence=NOT_MODELLED: sigma is the 25 °C value; a run at any other cell temperature UNDER-states sigma_ion (and over-states the ionic ohmic drop)."
+          },
+          "record_path": "solver_output/260925_000513_123978/network_conductivity_physics.json",
+          "record_sha256": "2afe04a911214dfd592d28729de89fda9b029d5ce3dd01d7d3a7d405c623e1ad"
+        }
+      }
+    },
+    {
+      "ratio": "7:3",
+      "case_id": "260925_000559_082983",
+      "modes": {
+        "hertz": {
+          "q_reconstructed": 0.02654792123788106,
+          "old50_mScm": 1.327396061894053,
+          "new4_1_mScm": 0.10884647707531234,
+          "new4_1_display6": 0.108846,
+          "old_TSV": 1.327396,
+          "new_vs_scaled_rounded_delta_mScm": 5.075312337066151e-09,
+          "electronic_edges": 2208,
+          "native_unsupported_pair": 2208,
+          "conservation_rel_recomputed": 4.458382514279768e-15,
+          "residual_rel_recorded": 9.4873930424036e-16,
+          "temperature_provenance": {
+            "T_C": null,
+            "T_ref_C": 25.0,
+            "Ea_ion_eV": null,
+            "T_dependence": "NOT_MODELLED",
+            "sigma_ion_T_factor": 1.0,
+            "sigma_e_T_dependence": "NOT_MODELLED",
+            "convention": "sigma*T = sigma0*exp(-Ea/(kB*T))  [Kraft 2017 eq 5]",
+            "Ea_band_eV": {
+              "ma2024": 0.29,
+              "reisacher2023": 0.41,
+              "kraft2017": 0.46
+            },
+            "trust": "T_ref=25 °C is OUR CONVENTION, not an anchor — σ_grain=3.0 mS/cm is a project value (lower end of the Cronau 2021 SI Fig. S2c µC-LPSCl pellet plateau; not single-crystal — SELF-51; docs/temp_pressure_capability.md T1-b). Ea is a BAND 0.29-0.46 eV (1.8x wide = x2.47..x4.44 at 30->60 °C); single-value reporting is forbidden — sweep EA_ION_EV_BAND. T_dependence=NOT_MODELLED: sigma is the 25 °C value; a run at any other cell temperature UNDER-states sigma_ion (and over-states the ionic ohmic drop)."
+          },
+          "record_path": "solver_output/260925_000559_082983/network_conductivity_hertzian.json",
+          "record_sha256": "2d25b26d8c70aa1052f75abaff35ddf75e787dffcc837e83e926e7cddda3ed40"
+        },
+        "physics": {
+          "q_reconstructed": 0.03756201255677017,
+          "old50_mScm": 1.8781006278385086,
+          "new4_1_mScm": 0.15400425148275768,
+          "new4_1_display6": 0.154004,
+          "old_TSV": 1.878101,
+          "new_vs_scaled_rounded_delta_mScm": -3.051724234426345e-08,
+          "electronic_edges": 2208,
+          "native_unsupported_pair": 2208,
+          "conservation_rel_recomputed": 9.19064078380065e-16,
+          "residual_rel_recorded": 8.143140892972595e-16,
+          "temperature_provenance": {
+            "T_C": null,
+            "T_ref_C": 25.0,
+            "Ea_ion_eV": null,
+            "T_dependence": "NOT_MODELLED",
+            "sigma_ion_T_factor": 1.0,
+            "sigma_e_T_dependence": "NOT_MODELLED",
+            "convention": "sigma*T = sigma0*exp(-Ea/(kB*T))  [Kraft 2017 eq 5]",
+            "Ea_band_eV": {
+              "ma2024": 0.29,
+              "reisacher2023": 0.41,
+              "kraft2017": 0.46
+            },
+            "trust": "T_ref=25 °C is OUR CONVENTION, not an anchor — σ_grain=3.0 mS/cm is a project value (lower end of the Cronau 2021 SI Fig. S2c µC-LPSCl pellet plateau; not single-crystal — SELF-51; docs/temp_pressure_capability.md T1-b). Ea is a BAND 0.29-0.46 eV (1.8x wide = x2.47..x4.44 at 30->60 °C); single-value reporting is forbidden — sweep EA_ION_EV_BAND. T_dependence=NOT_MODELLED: sigma is the 25 °C value; a run at any other cell temperature UNDER-states sigma_ion (and over-states the ionic ohmic drop)."
+          },
+          "record_path": "solver_output/260925_000559_082983/network_conductivity_physics.json",
+          "record_sha256": "179d4c6035600634c36c6837972ed77acecc97ad0e9dd11bbec79f711d7a0f82"
+        }
+      }
+    },
+    {
+      "ratio": "10:0",
+      "case_id": "260922_222828_6e4ff6",
+      "modes": {
+        "hertz": {
+          "q_reconstructed": 0.026044573916290736,
+          "old50_mScm": 1.3022286958145368,
+          "new4_1_mScm": 0.10678275305679201,
+          "new4_1_display6": 0.106783,
+          "old_TSV": 1.302229,
+          "new_vs_scaled_rounded_delta_mScm": -2.494320799906191e-08,
+          "electronic_edges": 733,
+          "native_unsupported_pair": 733,
+          "conservation_rel_recomputed": 5.759715584774134e-15,
+          "residual_rel_recorded": 8.170596557080811e-16,
+          "temperature_provenance": {
+            "T_C": null,
+            "T_ref_C": 25.0,
+            "Ea_ion_eV": null,
+            "T_dependence": "NOT_MODELLED",
+            "sigma_ion_T_factor": 1.0,
+            "sigma_e_T_dependence": "NOT_MODELLED",
+            "convention": "sigma*T = sigma0*exp(-Ea/(kB*T))  [Kraft 2017 eq 5]",
+            "Ea_band_eV": {
+              "ma2024": 0.29,
+              "reisacher2023": 0.41,
+              "kraft2017": 0.46
+            },
+            "trust": "T_ref=25 °C is OUR CONVENTION, not an anchor — σ_grain=3.0 mS/cm is a project value (lower end of the Cronau 2021 SI Fig. S2c µC-LPSCl pellet plateau; not single-crystal — SELF-51; docs/temp_pressure_capability.md T1-b). Ea is a BAND 0.29-0.46 eV (1.8x wide = x2.47..x4.44 at 30->60 °C); single-value reporting is forbidden — sweep EA_ION_EV_BAND. T_dependence=NOT_MODELLED: sigma is the 25 °C value; a run at any other cell temperature UNDER-states sigma_ion (and over-states the ionic ohmic drop)."
+          },
+          "record_path": "solver_output/260922_222828_6e4ff6/network_conductivity_hertzian.json",
+          "record_sha256": "df02ed1d02ab4d812d215f626dc5aaf3e71da6a921fccbb8fe980f3c28934166"
+        },
+        "physics": {
+          "q_reconstructed": 0.0334880348036738,
+          "old50_mScm": 1.6744017401836901,
+          "new4_1_mScm": 0.13730094269506257,
+          "new4_1_display6": 0.137301,
+          "old_TSV": 1.674402,
+          "new_vs_scaled_rounded_delta_mScm": -2.1304937425359327e-08,
+          "electronic_edges": 733,
+          "native_unsupported_pair": 733,
+          "conservation_rel_recomputed": 4.778123343899695e-15,
+          "residual_rel_recorded": 8.764638408481085e-16,
+          "temperature_provenance": {
+            "T_C": null,
+            "T_ref_C": 25.0,
+            "Ea_ion_eV": null,
+            "T_dependence": "NOT_MODELLED",
+            "sigma_ion_T_factor": 1.0,
+            "sigma_e_T_dependence": "NOT_MODELLED",
+            "convention": "sigma*T = sigma0*exp(-Ea/(kB*T))  [Kraft 2017 eq 5]",
+            "Ea_band_eV": {
+              "ma2024": 0.29,
+              "reisacher2023": 0.41,
+              "kraft2017": 0.46
+            },
+            "trust": "T_ref=25 °C is OUR CONVENTION, not an anchor — σ_grain=3.0 mS/cm is a project value (lower end of the Cronau 2021 SI Fig. S2c µC-LPSCl pellet plateau; not single-crystal — SELF-51; docs/temp_pressure_capability.md T1-b). Ea is a BAND 0.29-0.46 eV (1.8x wide = x2.47..x4.44 at 30->60 °C); single-value reporting is forbidden — sweep EA_ION_EV_BAND. T_dependence=NOT_MODELLED: sigma is the 25 °C value; a run at any other cell temperature UNDER-states sigma_ion (and over-states the ionic ohmic drop)."
+          },
+          "record_path": "solver_output/260922_222828_6e4ff6/network_conductivity_physics.json",
+          "record_sha256": "9980488f54166a175b21aa8016b1de64cd3a82f21ab0d2a185908ea367bbf9b3"
+        }
+      }
+    }
+  ],
+  "pc_factor": {
+    "exact": 0.22857142857142856,
+    "inverse": 4.375,
+    "inverse_from_rounded_0_229": 4.366812227074235
+  },
+  "endpoints_conditional_monodisperse_ordinary_positive_edges": {
+    "hertz": {
+      "SC": 0.39080204336609353,
+      "PC_factor_on": 0.10678275305679201,
+      "PC_factor_off": 0.4671745446234651,
+      "PC_over_SC_on": 0.27324000697908485,
+      "PC_over_SC_off": 1.1954250305334961
+    },
+    "physics": {
+      "SC": 0.5076708262690992,
+      "PC_factor_on": 0.13730094269506257,
+      "PC_factor_off": 0.6006916242908987,
+      "PC_over_SC_on": 0.2704526941287817,
+      "PC_over_SC_off": 1.18323053681342
+    }
+  },
+  "nominal_solid_fraction_from_user_densities": 0.5999354445360973,
+  "nominal_solid_fraction_from_DEM_densities": 0.6488549618320609,
+  "literature_composition_conversions": {
+    "minnmann_53_to_solid": 0.616279069767442,
+    "minnmann_61_to_solid": 0.7093023255813954,
+    "user_solid_60_to_total_at_porosity_14": 0.516,
+    "DEM_solid_to_total_at_porosity_14": 0.5580152671755724
+  },
+  "source_module_run_pin_equals_review_pin": true
+}

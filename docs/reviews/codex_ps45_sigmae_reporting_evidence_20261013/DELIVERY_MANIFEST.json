@@ -1,0 +1,485 @@
+{
+  "scope": "ps45 report-only review; no production edits or real-bed reruns",
+  "files": [
+    {
+      "path": "acquire.py",
+      "bytes": 3738,
+      "sha256": "8c4608d9a668660c5aada08dd09199741ca21b1cd10ec96a8b99afba5d7c811c"
+    },
+    {
+      "path": "code_commit.json",
+      "bytes": 364818,
+      "sha256": "5ebd991e4fe3d36fdf9b74ad92efcfb3c170e344061eaff2a04a0585144e0e92"
+    },
+    {
+      "path": "code_tree.json",
+      "bytes": 3410175,
+      "sha256": "0aab461e4e4cb829dc000bd0430919c090f06cb249fa9d5e0d36691ad886a002"
+    },
+    {
+      "path": "codex_review_ps45_sigmae_reporting_20261013.md",
+      "bytes": 27150,
+      "sha256": "9881998bcc1bb1c6ccfef3d591f09703f09eb7b503dd3060271703357f7db1dd"
+    },
+    {
+      "path": "evidence/code_scaling.json",
+      "bytes": 103611,
+      "sha256": "51812d24a071a2c34c764933e9b0852eb263d44e05be777ea80e2efe665b0e64"
+    },
+    {
+      "path": "evidence/composition_basis.json",
+      "bytes": 12950,
+      "sha256": "a9c89136bbc25218352afd263b1b40cb1241614c02d4bf83e2f80cc7cb8a62b3"
+    },
+    {
+      "path": "evidence/extra_source_manifest.json",
+      "bytes": 3004,
+      "sha256": "b6044ac6a16d8b9aac7ee3a2a0bf98c48145d106efe95d72d6b502379bd235f6"
+    },
+    {
+      "path": "evidence/final_verification.json",
+      "bytes": 430,
+      "sha256": "8df37ff2e5615390eded47685dcab0c0eddf992f3f4f6ccf1da1ec93ac3a3130"
+    },
+    {
+      "path": "evidence/literature_access_final.json",
+      "bytes": 2129,
+      "sha256": "39a77cf4120837750f1bc22caa204319b20dc83e5d68297f2bacdadf5b89c5dd"
+    },
+    {
+      "path": "evidence/literature_downloads.json",
+      "bytes": 3060,
+      "sha256": "a7bc49f38879e7788eaf1cf55bc7751e4bf61db9d3d461a1462f983185680083"
+    },
+    {
+      "path": "evidence/literature_figures_manifest.json",
+      "bytes": 7574,
+      "sha256": "dc83f209327a6d66d65870aac3cea562fbf9f442f256245debb268e0a0964577"
+    },
+    {
+      "path": "evidence/network_conductivity_run0801.py",
+      "bytes": 153018,
+      "sha256": "da9ecfefd8dc4b84e222140e347e4a718381169f27c88bf56c71ec4a7c2749be"
+    },
+    {
+      "path": "evidence/report_arithmetic.json",
+      "bytes": 19353,
+      "sha256": "1b7789d9074fec9e92afea9eb41a57e820b725f6add72e588b2c3592809a1a62"
+    },
+    {
+      "path": "evidence/rescaled_readout_pc_factor_on.csv",
+      "bytes": 861,
+      "sha256": "5fd69093caa675cae8d995f479f46c467a4355fd02480c79581fa6f44272630a"
+    },
+    {
+      "path": "fetch_extra.py",
+      "bytes": 1305,
+      "sha256": "87a632682258039eba3678fedc0640dcd3e311339c7701b707dea20a9d428da2"
+    },
+    {
+      "path": "fetch_figures.py",
+      "bytes": 1495,
+      "sha256": "c2e702b313773ec94229a92451adc765c780c0c67094a730a7ba48c20cb8f198"
+    },
+    {
+      "path": "fetch_references.py",
+      "bytes": 1576,
+      "sha256": "a4009cf29339676980f5a29e1175bcfe7acbaaaf754cf76d231945c21368230f"
+    },
+    {
+      "path": "lit_commit.json",
+      "bytes": 6346,
+      "sha256": "e810d904285010bb608142057657d7d21a3b8a90816823b0d36786a789e42699"
+    },
+    {
+      "path": "lit_tree.json",
+      "bytes": 4878130,
+      "sha256": "65a1a8eeba0c2561f6db5a0a4b17b654eb72a4fdaa05db09573e5a3089177c6f"
+    },
+    {
+      "path": "literature_cards/litdb/papers/asano2017_ncm111_li3ps4_composite_electronic_ionic_conductivity.md",
+      "bytes": 60986,
+      "sha256": "98537a4c1ced815c46c963234a689a8962a37e172fd06cc46806a846e99a0a0e"
+    },
+    {
+      "path": "literature_cards/litdb/papers/ketter2025_resistor_network_models_predict_transport_properties.md",
+      "bytes": 61036,
+      "sha256": "8d58d69da8ab3bc1b9928782c1071d4b77c43d5a43baead63e9f3bbe2c08de72"
+    },
+    {
+      "path": "literature_cards/litdb/papers/minnmann2021_jes_charge_transport_bottlenecks.md",
+      "bytes": 96903,
+      "sha256": "d56b7d487712fdd9e8c6ce798e7e86565aa5084fe86b28ad9babe6f8cd3aaa76"
+    },
+    {
+      "path": "literature_cards/litdb/papers/trevisanello2021_sc_pc_ncm_cracking_diffusion.md",
+      "bytes": 33119,
+      "sha256": "ecf516a95ac7278eb0e8f1f7150491dc4fee52569fc6d298f0dde377e7e24ec8"
+    },
+    {
+      "path": "literature_cards/litdb/papers/wang2018_lco_nmc_electronic_ionic_conductivity_vs_ni.md",
+      "bytes": 54324,
+      "sha256": "01f6ef55099eecabeae2381021d2ac80d551d14ab6fb5df896ea3c4460deceb8"
+    },
+    {
+      "path": "literature_figures/litdb/figures/asano2017_ncm111_li3ps4_composite_electronic_ionic_conductivity/fig_1.png",
+      "bytes": 104471,
+      "sha256": "0ee7cd8e3f09c924556e1fd5be0ce5e9b1bde2a84c97c7b74aa2a3bc1bd35d27"
+    },
+    {
+      "path": "literature_figures/litdb/figures/asano2017_ncm111_li3ps4_composite_electronic_ionic_conductivity/fig_3.png",
+      "bytes": 71843,
+      "sha256": "faccfbba29ced0f1b4d633f9dca7c9579b3ab0eb8e662531ac45de9569ddc5bd"
+    },
+    {
+      "path": "literature_figures/litdb/figures/asano2017_ncm111_li3ps4_composite_electronic_ionic_conductivity/fig_4.png",
+      "bytes": 431344,
+      "sha256": "a6a89074a50af8723a4c8f0b70a88f963800b0a22b1f19448f6982d320c1a745"
+    },
+    {
+      "path": "literature_figures/litdb/figures/asano2017_ncm111_li3ps4_composite_electronic_ionic_conductivity/figures.json",
+      "bytes": 5322,
+      "sha256": "dce9b8fd6ad4ff7c3dc1df679074ed0f815102308e9db9f4381be319bc433ffe"
+    },
+    {
+      "path": "literature_figures/litdb/figures/asano2017_ncm111_li3ps4_composite_electronic_ionic_conductivity/tab_1.png",
+      "bytes": 54503,
+      "sha256": "667f9f38b39964ebe5cce6f9034b53746ce7c3810c30246715447cb1a381e614"
+    },
+    {
+      "path": "literature_figures/litdb/figures/asano2017_ncm111_li3ps4_composite_electronic_ionic_conductivity/tab_2.png",
+      "bytes": 60537,
+      "sha256": "b049ae706a26ff3f52bcc9f7b617477d0cb60cc784ee9ca59508d5057c4b0778"
+    },
+    {
+      "path": "literature_figures/litdb/figures/minnmann2021_jes_charge_transport_bottlenecks/fig_2.png",
+      "bytes": 385061,
+      "sha256": "ffd6fa144f821003a57f5b7d695e91b44aa59339c9eee2b3a4ab0cfddf4180be"
+    },
+    {
+      "path": "literature_figures/litdb/figures/minnmann2021_jes_charge_transport_bottlenecks/figures.json",
+      "bytes": 17464,
+      "sha256": "537edcb505e5705e6c96aac389f8bbe13d599d1f7ef392749a2b604b6989313b"
+    },
+    {
+      "path": "literature_figures/litdb/figures/minnmann2021_jes_charge_transport_bottlenecks/tab_S1.png",
+      "bytes": 249305,
+      "sha256": "a370c436447b1786585930f982acff8afcf066580bd24d34ce5ea26b31576f7b"
+    },
+    {
+      "path": "literature_figures/litdb/figures/minnmann2021_jes_charge_transport_bottlenecks/tab_S2.png",
+      "bytes": 75181,
+      "sha256": "2bdf0a46bf84321eb3af5b941d9e168f3b2828d57bea772af338b7820a381428"
+    },
+    {
+      "path": "literature_figures/litdb/figures/minnmann2021_jes_charge_transport_bottlenecks/tab_S5.png",
+      "bytes": 43567,
+      "sha256": "ee2c13af7f9322a998c883f0777cabe91d8c4cc1d7d156a8dd51e96b03417ad2"
+    },
+    {
+      "path": "literature_figures/litdb/figures/wang2018_lco_nmc_electronic_ionic_conductivity_vs_ni/fig_1.png",
+      "bytes": 441235,
+      "sha256": "5d06717df86f197eca159159e5a40f0dfaaa6993df6216a420f72b5a571cd55b"
+    },
+    {
+      "path": "literature_figures/litdb/figures/wang2018_lco_nmc_electronic_ionic_conductivity_vs_ni/fig_4.png",
+      "bytes": 1102704,
+      "sha256": "d895d6a43bd4d1b94234ce3a98d76b621bc091ba0925c560993d6093dada7343"
+    },
+    {
+      "path": "literature_figures/litdb/figures/wang2018_lco_nmc_electronic_ionic_conductivity_vs_ni/fig_S2.png",
+      "bytes": 3553433,
+      "sha256": "30e8f8d1963094e3f310b26c7918f1a692e87c57a9c9f008ec84d598966e77da"
+    },
+    {
+      "path": "literature_figures/litdb/figures/wang2018_lco_nmc_electronic_ionic_conductivity_vs_ni/fig_S8.png",
+      "bytes": 292518,
+      "sha256": "67e4cd177faa488a4bacffdcca0ec595ab6ed1b7d7e30c2d5ed0a3380a8b6b3f"
+    },
+    {
+      "path": "literature_figures/litdb/figures/wang2018_lco_nmc_electronic_ionic_conductivity_vs_ni/figures.json",
+      "bytes": 15440,
+      "sha256": "563881b52b6c22299199d43a8a7ffc4e71b9ca36c7f45ac586120e071875a529"
+    },
+    {
+      "path": "notes/anchor_pc.md",
+      "bytes": 11040,
+      "sha256": "6371280a00e86aafabc5f57adefdae58e9cafc5d716207bee52bd468ebda44a4"
+    },
+    {
+      "path": "notes/code_scaling.md",
+      "bytes": 9839,
+      "sha256": "cd793378846f5658b327b5df4147975173b4beb0922326e127639be2c6db58b7"
+    },
+    {
+      "path": "notes/composition_basis.md",
+      "bytes": 6502,
+      "sha256": "1087ef6ddcd3fbb55c0ea6c338c42601de627abd5473fc6836cd8bfece2b1c85"
+    },
+    {
+      "path": "notes/transport_literature.md",
+      "bytes": 11257,
+      "sha256": "41462de98ee5362cc4f48e4a19657c22b6931fccd09e49b36eea2e9e813d977b"
+    },
+    {
+      "path": "package_review.py",
+      "bytes": 2666,
+      "sha256": "a20b01638a7538a962dad7dea47cbee82fc0c5790d1db2f54b24498b05d20c79"
+    },
+    {
+      "path": "probes/code_scaling.py",
+      "bytes": 10839,
+      "sha256": "d71ef8a40277c62995eeed6d4e26c39af627b4610fc64971a7e8430f53299ab1"
+    },
+    {
+      "path": "probes/composition_basis.py",
+      "bytes": 6393,
+      "sha256": "084093878b83e7c801ce6a749a84b576f74605a94951bda2a60724a703a7ec23"
+    },
+    {
+      "path": "probes/report_arithmetic.py",
+      "bytes": 4203,
+      "sha256": "1a5580b00c273cbf7cb8f5063fc184b03d6d9830b0418a26b0516e57f3574f4c"
+    },
+    {
+      "path": "README.md",
+      "bytes": 2679,
+      "sha256": "21148ba7c051177484162c64daee9095a7344ceadaf72e6843a2f21f540b29e6"
+    },
+    {
+      "path": "source/AGENTS.md",
+      "bytes": 2822,
+      "sha256": "38b8708ba8a50c8a08819c7c4138763bce02b6dc6c5b8112f4c8aa386fb17ec3"
+    },
+    {
+      "path": "source/CLAUDE.md",
+      "bytes": 312805,
+      "sha256": "e7488a26dce9fe5e3cf78f4046baab5f86d26c5e35893829f8744bdf41adb722"
+    },
+    {
+      "path": "source/dem_scripts/ps_sweep_6mah_20260914/in.ps_0_10_r45.liggghts",
+      "bytes": 9637,
+      "sha256": "27a41924d6e3dad58f3e7becb68643c5361fd22fc431b269aaf51447526ed0a6"
+    },
+    {
+      "path": "source/dem_scripts/ps_sweep_6mah_20260914/in.ps_10_0_r45.liggghts",
+      "bytes": 9635,
+      "sha256": "4777e5f2c842cba07d6ef69478f04e4ef6e630f1ec8ad73e4c990804466721a8"
+    },
+    {
+      "path": "source/dem_scripts/ps_sweep_6mah_20260914/in.ps_3_7_r45.liggghts",
+      "bytes": 9562,
+      "sha256": "104fd6e48f59bbea5add3ee1855f5d066c90c6a96862662db68e83211050d0c6"
+    },
+    {
+      "path": "source/dem_scripts/ps_sweep_6mah_20260914/in.ps_5_5_r45.liggghts",
+      "bytes": 9558,
+      "sha256": "c558541ee01219ba4a0d41b912e7297eda50e7ca04b5049f23f844d883d72b36"
+    },
+    {
+      "path": "source/dem_scripts/ps_sweep_6mah_20260914/in.ps_7_3_r45.liggghts",
+      "bytes": 9562,
+      "sha256": "69f4359c0f436ebe4728c9fe0f360326ab5a515d6dc25d75ff7d45ba7cb9dc15"
+    },
+    {
+      "path": "source/docs/data/ps45_dh_transfer_20260926/kits/kit_ps_0_10_r45__am_scaffold.csv.gz",
+      "bytes": 45151,
+      "sha256": "ee2f5a7cca8b0a7548a5b1697ae813202ca2e27057125c727599d5f7299b5dd0"
+    },
+    {
+      "path": "source/docs/data/ps45_dh_transfer_20260926/kits/kit_ps_10_0_r45__am_scaffold.csv.gz",
+      "bytes": 4379,
+      "sha256": "31536a6c67e9e0428791a297db09ed10d744f6f5a3358c4166b8f773fb09c08b"
+    },
+    {
+      "path": "source/docs/data/ps45_dh_transfer_20260926/kits/kit_ps_3_7_r45__am_scaffold.csv.gz",
+      "bytes": 33499,
+      "sha256": "cfe0bf65508c4cbb839a456f214bba4da80f46e653615c1cf81d96ebc18a032b"
+    },
+    {
+      "path": "source/docs/data/ps45_dh_transfer_20260926/kits/kit_ps_5_5_r45__am_scaffold.csv.gz",
+      "bytes": 25262,
+      "sha256": "b7eee936ddc1ff6278751c6892fb5d22b88e617fdcc955a2b303d74331727723"
+    },
+    {
+      "path": "source/docs/data/ps45_dh_transfer_20260926/kits/kit_ps_7_3_r45__am_scaffold.csv.gz",
+      "bytes": 17238,
+      "sha256": "c4519ad3701d4b9a3b0a133356f3fb043d4a2ae8ae722964a58c1e36200e3ac1"
+    },
+    {
+      "path": "source/docs/data/ps45_r45_network_g2_20261007/figs/sigma_e_tabor.png",
+      "bytes": 74000,
+      "sha256": "5ee543dbf789c6d43c757b5efecd87a89a83e19eb44d0a49da72afcdd2c4e140"
+    },
+    {
+      "path": "source/docs/data/ps45_r45_network_g2_20261007/figs/sigma_ion_tabor.png",
+      "bytes": 88075,
+      "sha256": "d702ca7d62aff9b364fd9eb27358d458308265f22df6fe40f6a40ad475a387ff"
+    },
+    {
+      "path": "source/docs/data/ps45_r45_network_g2_20261007/figs/transport_tortuosity_hertz_tabor.png",
+      "bytes": 86013,
+      "sha256": "a28e4f8e35127c769fd96db50011edc3e47c9af7ea6a63adae1ff02696c707de"
+    },
+    {
+      "path": "source/docs/data/ps45_r45_network_g2_20261007/figs/transport_tortuosity_tabor.png",
+      "bytes": 82745,
+      "sha256": "b4baf23231c218cfcc6826301eab36e82cf0f13bef5f39385ca122651572a4b0"
+    },
+    {
+      "path": "source/docs/data/ps45_r45_network_g2_20261007/make_sigma_tabor_figs.py",
+      "bytes": 2718,
+      "sha256": "681b578cee9a1bb1feacda9e5671ba2e9d6cbb6a2ed5675ff62c81d9b8793a06"
+    },
+    {
+      "path": "source/docs/data/ps45_r45_network_g2_20261007/make_tau2_figs.py",
+      "bytes": 3140,
+      "sha256": "41670b8bf1553bf4d6c0b98f08b36a5b23dd86ee526cb17db51f9c48d5014723"
+    },
+    {
+      "path": "source/docs/data/ps45_r45_network_g2_20261007/network_cases.tsv",
+      "bytes": 15522,
+      "sha256": "fb7aab63716b01aba8e96f9f307b67d3ae3a5d022ee4b71e16c4e8c28102ebc7"
+    },
+    {
+      "path": "source/docs/data/ps45_r45_network_g2_20261007/raw/ps45_network_g2.tgz",
+      "bytes": 59390,
+      "sha256": "076727a8f0f1e263349a9f50c4aca5afdb112b16c3b4193bc9f8c9573fcf608f"
+    },
+    {
+      "path": "source/docs/data/ps45_r45_network_g2_20261007/README.md",
+      "bytes": 3272,
+      "sha256": "6833a94792a6459b8d82a4a493d74b2914793979f154c63705d18083886b4ad3"
+    },
+    {
+      "path": "source/docs/data/ps45_r45_network_g2_20261007/sigma_tabor_g2.csv",
+      "bytes": 442,
+      "sha256": "a9a46ba321f17fe6d655ac6fe6ec10783d07b496435cca27050fa6ded246da4d"
+    },
+    {
+      "path": "source/docs/data/ps45_r45_network_g2_20261007/transport_tortuosity_g2.csv",
+      "bytes": 438,
+      "sha256": "be122394167f51ec302e378119d50c2c917ca18d3de8a66066f366ac0ff3e5dc"
+    },
+    {
+      "path": "source/docs/reviews/claims.json",
+      "bytes": 481907,
+      "sha256": "ea18150b325b99e52ba8380b66afd392f8ff55f2ae7efe773a95d14ab4525f60"
+    },
+    {
+      "path": "source/docs/reviews/findings.json",
+      "bytes": 1626401,
+      "sha256": "f38a343e9ae50aace89e4937333fe670e1a0477c89192b2a43ca4e4b7a6f9d6b"
+    },
+    {
+      "path": "source/scripts/analyze_contacts.py",
+      "bytes": 80829,
+      "sha256": "a383ada7aef3d13ba08bd84728a20b6207f9b124a01ce3852c01ae2518ca1aa9"
+    },
+    {
+      "path": "source/scripts/build_ps45_kits.py",
+      "bytes": 12535,
+      "sha256": "fa831f8e55f652e3764df9cd67773ff60ef12a140fd9742aa07e69906b8f2a44"
+    },
+    {
+      "path": "source/scripts/dem_analysis_core.py",
+      "bytes": 102925,
+      "sha256": "39fb19cb7eb962f11fe88546fa0ad93c4a9074846be13d15b27c2eae44fb620f"
+    },
+    {
+      "path": "source/scripts/fracture_model.py",
+      "bytes": 11127,
+      "sha256": "3cd8dabb3ebaea3950f53951f776fceabc82f9431633587fc7bd85a8dd9d8170"
+    },
+    {
+      "path": "source/scripts/lens_geometry.py",
+      "bytes": 5907,
+      "sha256": "891ac67f8b6c1b4c7978b5e806800ae74f5c8791928d6ece19a29e5f3b212b77"
+    },
+    {
+      "path": "source/scripts/lhs_descriptor_harvest.py",
+      "bytes": 223454,
+      "sha256": "96fa643e309aab46b2a5cbd59e2276ee16b99107a9a7514e5d9fdcaf5c2d8d9e"
+    },
+    {
+      "path": "source/scripts/lhs_harvest_batch.py",
+      "bytes": 22565,
+      "sha256": "4d798c631ac893ca32018fde58145bc5c8a2e3e2a6423da61cb87bd13599148e"
+    },
+    {
+      "path": "source/scripts/lhs_perc_extract.py",
+      "bytes": 26440,
+      "sha256": "0750d0964d006e64934e42e83b98fe0786115440f024fc5215d5d2aaf6396a16"
+    },
+    {
+      "path": "source/scripts/lhs_union_webapp.py",
+      "bytes": 27536,
+      "sha256": "3f06e9d36060a366d79e1abb76b5fe07e23b51d63666f51ba3afeabf64211408"
+    },
+    {
+      "path": "source/scripts/metrics_json.py",
+      "bytes": 9564,
+      "sha256": "baa671f895dd6103cf95c25647ee45877d98306f00ab15cd3968fbe4354a7702"
+    },
+    {
+      "path": "source/scripts/network_conductivity.py",
+      "bytes": 153018,
+      "sha256": "da9ecfefd8dc4b84e222140e347e4a718381169f27c88bf56c71ec4a7c2749be"
+    },
+    {
+      "path": "source/scripts/parse_liggghts.py",
+      "bytes": 14646,
+      "sha256": "4fe3f1f32ebc4168978c7278b7a1d37b072d64fbf00e97d0933351337d223425"
+    },
+    {
+      "path": "source/scripts/plastic_coverage.py",
+      "bytes": 89422,
+      "sha256": "cce27a34c0bf2e4f5c122e43d983aa3414a825ab461a00abd408dba02e151348"
+    },
+    {
+      "path": "source/scripts/se_material.py",
+      "bytes": 23261,
+      "sha256": "767a6a383d4581274b07ee79146a53fbe118f1f6eb0acb9ec0a5af21c9c9930c"
+    },
+    {
+      "path": "source/scripts/tau_flux.py",
+      "bytes": 92027,
+      "sha256": "eb9388ec8bd2d40b1c63365ae72b6850e9fc51fd9ce0780df4e557424a1440fb"
+    },
+    {
+      "path": "source/scripts/test_network_dirichlet.py",
+      "bytes": 14856,
+      "sha256": "6f2a1f92b3dac300e6673f60705b6d04854ba71351597f6bd6eb24bf23402ba8"
+    },
+    {
+      "path": "source/scripts/test_network_generation2.py",
+      "bytes": 25242,
+      "sha256": "30dc3ed1725d3a939520b553710221e09116c3bdabf470c0bee88ea524ec5821"
+    },
+    {
+      "path": "source/scripts/test_network_solve_certificate.py",
+      "bytes": 48039,
+      "sha256": "ddc31669fc197ed0f5f564d4e9c5108eb18cba1e4084793fcbfe911af37d3786"
+    },
+    {
+      "path": "source/scripts/test_physics_area_g2.py",
+      "bytes": 30145,
+      "sha256": "525ac8db407fa542e12fa7495aeb752ee80f552cc270c78199cca02093fcaaa5"
+    },
+    {
+      "path": "source/scripts/type_map_resolve.py",
+      "bytes": 29014,
+      "sha256": "4a289c6412e4b8e1bc0fba573cb287966dfa00a053399097b587f1e14726bfe5"
+    },
+    {
+      "path": "source_manifest.json",
+      "bytes": 10419,
+      "sha256": "b3b457c6b9e491f8f6d35b3f841d0369b2bac992f0d7e14e24104fabf0c23ec7"
+    },
+    {
+      "path": "verify_review.py",
+      "bytes": 2448,
+      "sha256": "1d6afb6037aebfbb2da61830d5222f327a1254587aad54027c95dd7eff15408d"
+    }
+  ]
+}
