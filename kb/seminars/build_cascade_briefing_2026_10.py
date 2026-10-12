@@ -570,7 +570,9 @@ def build_lean():
     # ---- 2 previous DFT work: eight figure slots, title above, '< keywords >' below (CW P1: the 'became one step of
     #      the workflow' line is said, not shown)
     name, t = fresh('prev', 'Background')
-    lean_body(t, 'DFT simulations so far', h=0.5)
+    lean_body(t, 'Earlier DFT studies supplied the methods used in this screening',     # user 10-13: a full-sentence title
+              ['[[b:Top row]]: bulk materials and their doping or coating.',             # + small bullets naming the rows
+               '[[b:Bottom row]]: SEI components, interfaces and binder in a cell.'], h=1.35)
     tiles = [('Li₆PS₅Cl baseline', 'band gap · EOS · elastic'), ('Nd/O co-doping (Nd₂O₃)', 'band edges · ICOHP · CEI'),
              ('B₂O₃ and O doping', 'EOS · BVSE · MLIP-MD'), ('h-BN on carbon fiber', 'Li adsorption · NEB'),
              ('Li₃N (SEI component)', 'Li migration (NEB)'), ('Li₂S (SEI component)', 'V[[_:Li]] migration · cell size'),
@@ -578,7 +580,7 @@ def build_lean():
     TW, GX = 2.12, 0.14
     for k, (ti, kw) in enumerate(tiles):
         x = 0.55 + (k % 4) * (TW + GX)
-        y = 1.85 + (k // 4) * 2.25
+        y = 2.45 + (k // 4) * 2.15
         add(t, tb(ids(), f'Tile {k + 1} title', x, y, TW, 0.3, P(ti, 'p', 1150, 100, 'ctr', INK, bold=True), anchor='b'),
             box(ids(), f'Tile {k + 1} figure', x + 0.06, y + 0.34, TW - 0.12, 1.3, fill='FFFFFF', line='9CA3AF', dash=True,
                 geom='rect', paras=P('Figure', 'p', 1000, 100, 'ctr', MUTED), anchor='ctr'),
