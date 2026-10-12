@@ -1,5 +1,6 @@
 # DEM 지배방정식 보고서 — 발표용 문헌 기본형 ↔ 우리 코드 구현식 (LIGGGHTS-PUBLIC 3.8.0 · 3d5c00f) — 2026-10-09
 
+- ★ **10-11 배경 조사판**: 문헌 계보 · 배터리 전극 DEM 비교 · 덱 산술 · 그림 두 장을 붙인 정리본 = `docs/dem_governing_equations_background_20261011.md` (이 문서는 식 ↔ 소스 줄 압축판으로 그대로 둔다).
 - **왜 둘로 나누나 (1저자 10-09)**: 발표 슬라이드에는 문헌의 대표 지배방정식을 **감쇠 · 점착 등을 뺀 기본형**으로 싣는다.  우리 코드가 실제로 푸는 식 (구현식) 은 이 보고서에 따로 둔다.
 - **코드**: LIGGGHTS-PUBLIC 3.8.0 · git `3d5c00f` (2024-06-07 "Remove logos") — ibb 빌드 배너 · `lmp_mpi` sha256 `ee2d7726…` 와 같은 커밋 (`docs/reviews/dem_unloading_ps45_precheck1_20261009/README.md` §2).
   덱 = `pair_style gran model hooke/hysteresis tangential history rolling_friction cdt` (ps45 원 덱 · 다섯 조성 덱의 재료 · 접촉 · 적분 줄은 서로 같다 — 10-09 diff 0 줄).
