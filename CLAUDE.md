@@ -281,6 +281,9 @@
   · ⚠ **MP 가 id 를 옮기는 중이다** — `mp-1211324` 로 물으면 `mp-aaacqxxk` 가 돌아온다. 기록엔 둘 다 남긴다.
 - **desktop WSL**: ORCA r2SCAN-3c (SDCP 분자 계열).
 - 공통: 실행 스크립트에 pgrep 중복실행 가드, 출력 grep은 `grep -a`(NUL 오염 대비), watch 스크립트 관례 유지.
+- ⛔ **붙여넣기 블록에서 저장소 위치를 `git rev-parse --git-common-dir` 로 유도하지 마라** (2026-10-12 gabia) — 메인 저장소에서는 **상대경로(`.git`)** 를 줘서
+  사용자 셸의 현재 폴더가 다르면 `cd .git/..` 가 깨진다 (linked worktree 에서만 절대경로). 10-11 블록은 사용자가 마침 `/data/work/repo` 에 있어서 우연히 맞았다.
+  ⇒ 메인 저장소 경로를 **직접** 쓴다: gabia `/data/work/repo` · kgy `~/lldvar` (`git -C <그 경로> fetch … && git -C <그 경로> worktree add …`).
 - ⛔ **tmux 창의 셸(pane pid)을 `kill -STOP` 하면 tmux 가 곧바로 그 프로세스 그룹을 CONT 한다** (2026-09-26 gabia 에서 두 번 헛발질 ·
   tmux 3.4 로 재현). 러너를 얼려 다음 점을 못 띄우게 하려면 **러너 스크립트 bash(창 셸의 자식)만** STOP 하고 `ps -o stat=` 가 `T` 인지 본다 —
   창 셸까지 같이 STOP 하면 둘 다 `S` 로 돌아온다. 러너를 **죽이면** 창이 닫히며 SIGHUP 이 같은 그룹의 mpirun·pw.x 로 갈 수 있다 (돌던 점을 잃는다).
