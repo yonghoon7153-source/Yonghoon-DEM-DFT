@@ -2258,8 +2258,11 @@ DESIGN_DEFINE = {
     'lhsx_ntype': '덱 입자 type 수 (3 = bimodal · 2 = mono)',
     'lhsx_kind': '확장 설계 종류 (bimodal · mono_AM_P · mono_AM_S — block 과 같은 뜻)',
     'lhsx_pdd_SE': 'SE 질량분율 (덱 particledistribution/discrete) — am_pct = 100 · (1 − 이 값)',
-    'lhsx_w_AM_P': 'AM_P 질량분율 (덱 · 셋의 합 = 1) — ps_frac = w_AM_P / (w_AM_P + w_AM_S)',
-    'lhsx_w_AM_S': 'AM_S 질량분율 (덱 · 셋의 합 = 1)',
+    #  ★ 10-12 SUP20-02 (Codex 보충 20 지원 검토 §2) — 원천 P · S 슬롯의 mono 규약 (옛 문구 "AM_P 질량분율 — ps_frac = w_AM_P / (w_AM_P + w_AM_S)" 는
+    #    mono_AM_S 행에서 1 을 준다 · 실제 ps_frac = 0) · 문구만 (CSV · 계산 변경 없음 · selftest ㉛j · ㉛j2)
+    'lhsx_w_AM_P': ('P 슬롯 질량분율 (덱 · 셋의 합 = 1) — bimodal = AM_P · mono (type 2 개) = 단일 AM 자리 (크기 라벨 = lhsx_kind) · '
+                    'ps_frac = w_AM_P / (w_AM_P + w_AM_S) 는 bimodal 에만 · mono_AM_P → ps_frac 1 · mono_AM_S → ps_frac 0 (어댑터가 kind 로 정한다)'),
+    'lhsx_w_AM_S': 'S 슬롯 질량분율 (덱 · 셋의 합 = 1) — bimodal = AM_S · mono = 0',
     'lhsx_rSE_lo_um': 'SE 반지름 하한 (µm · 입자 수 상한을 지키려고 올린 값 · lhs_ext_design)',
     'lhsx_rSE_truncated': '1 = SE 반지름을 하한으로 눌렀다 (입자 수 상한 · lhs_ext_design) · 0 = 그대로',
     'lhsx_volfrac': '삽입 부피분율 (덱 volfrac — 확장 설계는 면용량 대신 이 값으로 두께가 정해진다)',
@@ -2272,8 +2275,10 @@ DESIGN_DEFINE = {
     'lhss_ntype': '덱 입자 type 수 (3 = bimodal · 2 = mono)',
     'lhss_kind': '보충 설계 종류 (bimodal · mono_AM_P · mono_AM_S — block 과 같은 뜻)',
     'lhss_pdd_SE': 'SE 질량분율 (덱 particledistribution/discrete) — am_pct = 100 · (1 − 이 값) · 하중 규칙 경계 SE_SPLIT 0.30 (이하 = 2mAh_fixed)',
-    'lhss_w_AM_P': 'AM_P 질량분율 (덱 · 셋의 합 = 1) — ps_frac = w_AM_P / (w_AM_P + w_AM_S)',
-    'lhss_w_AM_S': 'AM_S 질량분율 (덱 · 셋의 합 = 1)',
+    'lhss_w_AM_P': ('P 슬롯 질량분율 (덱 · 셋의 합 = 1) — bimodal = AM_P · mono (type 2 개) = 단일 AM 자리 (크기 라벨 = lhss_kind) · '
+                    'ps_frac = w_AM_P / (w_AM_P + w_AM_S) 는 bimodal 에만 · mono_AM_P → ps_frac 1 · mono_AM_S → ps_frac 0 (어댑터가 kind 로 정한다 · '
+                    '보충 mono_AM_S 넷 = lhss_001 · 002 · 003 · 020)'),
+    'lhss_w_AM_S': 'S 슬롯 질량분율 (덱 · 셋의 합 = 1) — bimodal = AM_S · mono = 0',
     'lhss_rSE_lo_um': ('SE 반지름 하한 (µm · 0.5 = SE 지름 1.0 µm 시뮬 가능 하한 — lhs_supp_design D_SE_MIN) · lhsx 의 "입자 수 상한 때문에 올린 하한" 과 '
                        '뜻이 다르다'),
     'lhss_rSE_truncated': '1 = SE 반지름을 하한으로 눌렀다 · 0 = 그대로 (보충 20 = 전부 0)',
@@ -6147,6 +6152,45 @@ def _selftest():
                _dg31i == [], repr(_dg31i[:6]))
     except Exception as e:                                                # noqa: BLE001
         _chk31(f'㉛i4 lhss 사전 참조 표지 ({type(e).__name__}: {e})', False)
+    #  ㉛j ★ 10-12 SUP20-02 (Codex 보충 20 지원 검토 §2 · P3 · 수정 계획 docs/reviews/sup20_fix_plan_20261012.md §2 · 1저자 Q2 (가)) — 원천 슬롯 열 *_w_AM_P ·
+    #     *_w_AM_S (lhsx · lhss) 의 mono 규약.  type 2 개 덱 (mono_AM_P · mono_AM_S) 의 P 슬롯 = 단일 AM 자리 (scripts/lhs_ext_materialize.py 머리 "P 열 = 일반 AM 자리" ·
+    #     어댑터가 kind 로 상을 옮긴다) → 비율 식 w_AM_P / (w_AM_P + w_AM_S) 은 bimodal 에만.  옛 문구 "AM_P 질량분율 — ps_frac = w_AM_P / (w_AM_P + w_AM_S)" 는
+    #     mono_AM_S 행 (P 슬롯 > 0 · S 슬롯 0) 에서 1 을 준다 (실제 ps_frac = 0).  문구만 — CSV · 계산 변경 없음.
+    _wd31 = dict(_cd31(['lhsx_w_AM_P', 'lhsx_w_AM_S'], design_source='docs/data/lhsx_design_adapted_20260929.csv'),
+                 **_cd31(['lhss_w_AM_P', 'lhss_w_AM_S'], design_source='docs/data/lhss_design_adapted_20261012.csv'))
+    _gw31 = lambda c: (_wd31.get(c) or {}).get('meaning', '')            # noqa: E731
+    _bad_w31 = [c for c in ('lhsx_w_AM_P', 'lhss_w_AM_P')
+                if not all(w in _gw31(c) for w in ('P 슬롯', 'bimodal = AM_P', '단일 AM 자리', 'bimodal 에만', 'mono_AM_P → ps_frac 1', 'mono_AM_S → ps_frac 0'))
+                or _gw31(c).startswith('AM_P 질량분율')]
+    _bad_w31 += [c for c in ('lhsx_w_AM_S', 'lhss_w_AM_S') if not all(w in _gw31(c) for w in ('S 슬롯', 'bimodal = AM_S', 'mono = 0'))]
+    _chk31('㉛j ★ SUP20-02 — 원천 슬롯 열 w_AM_P · w_AM_S (lhsx · lhss) = P · S 슬롯 질량분율 · mono (type 2 개) 의 P 슬롯 = 단일 AM 자리 · 비율 식은 bimodal 에만 · '
+           'mono_AM_P → ps_frac 1 · mono_AM_S → ps_frac 0 (옛 문구 "AM_P 질량분율 — ps_frac = w_AM_P / (w_AM_P + w_AM_S)" = mono_AM_S 에서 1)',
+           not _bad_w31, repr({c: _gw31(c)[:80] for c in _bad_w31}))
+    #  ㉛j2 — 문구가 적는 규약 = 커밋된 어댑터 CSV (lhsx 64 · lhss 20) 의 실제 값 (계산 정상 확인 · 문구를 고치기 전 · 뒤 같음) + Codex design_probe 의 표
+    #     (lhss mono_AM_S 네 행 = P 슬롯 0.3 · 0.3 · 0.3 · 0.375 · S 슬롯 0 · 옛 식 = 1 · ps_frac = 0)
+    _rule31, _old31 = [], {}
+    for _ds31j, _rel31j in (('lhsx', 'docs/data/lhsx_design_adapted_20260929.csv'), ('lhss', 'docs/data/lhss_design_adapted_20261012.csv')):
+        try:
+            with (pathlib.Path(__file__).resolve().parent.parent / _rel31j).open(encoding='utf-8', newline='') as _fh31j:
+                _rr31j = list(csv.DictReader(_fh31j))
+        except Exception as e:                                            # noqa: BLE001
+            _rule31.append((_ds31j, f'{type(e).__name__}: {e}'))
+            continue
+        for _r31j in _rr31j:
+            _k31j, _p31j = _r31j[f'{_ds31j}_kind'], float(_r31j[f'{_ds31j}_w_AM_P'])
+            _s31j, _f31j = float(_r31j[f'{_ds31j}_w_AM_S'] or 0), float(_r31j['ps_frac'])
+            _ok31j = (abs(_p31j / (_p31j + _s31j) - _f31j) <= 1e-9 and _s31j > 0 if _k31j == 'bimodal' else
+                      _f31j == 1.0 and _s31j == 0 and _p31j > 0 if _k31j == 'mono_AM_P' else
+                      _f31j == 0.0 and _s31j == 0 and _p31j > 0 if _k31j == 'mono_AM_S' else False)
+            if not _ok31j:
+                _rule31.append((_r31j['case_id'], _k31j, _p31j, _s31j, _f31j))
+            if _k31j == 'mono_AM_S':
+                _old31.setdefault(_ds31j, {})[_r31j['case_id']] = (_p31j, _p31j / (_p31j + _s31j), _f31j)
+    _chk31('㉛j2 SUP20-02 — 커밋된 어댑터 CSV: bimodal = w_P / (w_P + w_S) · mono_AM_P = 1 · mono_AM_S = 0 (S 슬롯 0 · P 슬롯 = 단일 AM) 위반 0 · '
+           'lhss mono_AM_S = Codex 표 네 행 (P 0.3 · 0.3 · 0.3 · 0.375 → 옛 식 1 · ps_frac 0) · lhsx mono_AM_S 8 행도 옛 식 1 · ps_frac 0',
+           not _rule31 and {c: v[0] for c, v in (_old31.get('lhss') or {}).items()} == {'lhss_001': 0.3, 'lhss_002': 0.3, 'lhss_003': 0.3, 'lhss_020': 0.375}
+           and all(v[1] == 1.0 and v[2] == 0.0 for d_ in _old31.values() for v in d_.values()) and len(_old31.get('lhsx') or {}) == 8,
+           repr((_rule31[:4], _old31.get('lhss'))))
     #  ═══ ㉜ DESC-06 최종 join (원자료 sha) · DESC-07 ② 전체 피복 가중평균 (Codex 배포 v1.1 최종 리뷰 raw_sha_mismatch · coverage_total_plus_1 — 반례 먼저) ═══
     def _wa32(**st):
         w_ = _wa()
