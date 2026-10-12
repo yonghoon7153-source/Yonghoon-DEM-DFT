@@ -355,6 +355,18 @@ def origin_axes(ax, frame=True):
     return ax
 
 
+def plain_axes(ax, size=11):
+    """Left and bottom axes only (house style: no top/right frame — CW P1 read the four-sided frame as a matplotlib
+    default), inward ticks; for the bar previews drawn at slide size."""
+    for k in ('top', 'right'):
+        ax.spines[k].set_visible(False)
+    for k in ('left', 'bottom'):
+        ax.spines[k].set_color('black')
+        ax.spines[k].set_linewidth(1.0)
+    ax.tick_params(direction='in', colors='black', length=4, width=1, labelsize=size)
+    return ax
+
+
 def figures():
     import matplotlib
     matplotlib.use('Agg')
@@ -372,30 +384,25 @@ def figures():
         plt.close(fig)
         made.append(out)
 
-    # p06: precursors per anion family
+    # p06: precursors per anion family — horizontal bars drawn at the slide size (3.65 × 2.9 in), so a 13 pt label
+    # here is 13 pt on the slide (CW P1: names were tilted and small); family order kept top → bottom
     fam6 = rows_of(os.path.join(OUT, 'p06_candidate_set_by_anion_family.csv'))[1:]
-    fig, ax = plt.subplots(figsize=(4.3, 2.9))
-    xs = range(len(fam6))
-    ax.bar(xs, [int(r[1]) for r in fam6], 0.6, color=GREY, edgecolor='black', linewidth=0.8)
-    for x, r in zip(xs, fam6):
-        ax.text(x, int(r[1]) + 0.8, r[1], ha='center', va='bottom', fontsize=9.5)
-    ax.set_xticks(list(xs), [r[0] for r in fam6], rotation=30, ha='right')
-    ax.set_ylim(0, 42)
-    ax.set_ylabel('precursors')
-    origin_axes(ax)
+    fig, ax = plt.subplots(figsize=(3.65, 2.9))
+    ys = list(range(len(fam6)))[::-1]
+    vals = [int(r[1]) for r in fam6]
+    ax.barh(ys, vals, 0.62, color=GREY, edgecolor='black', linewidth=0.8)
+    for y, v in zip(ys, vals):
+        ax.text(v + 0.8, y, str(v), va='center', fontsize=14)
+    ax.set_yticks(ys, [r[0] for r in fam6], fontsize=13)
+    ax.set_xlim(0, max(vals) * 1.2)
+    ax.set_xlabel('precursors', fontsize=12)
+    plain_axes(ax)
+    ax.tick_params(axis='y', length=0)
     save(fig, 'fig_p06_candidates_by_family.png')
 
-    # p07: structures per family (left) · precursors held by each Stage-1 table (right)
-    fam = rows_of(os.path.join(OUT, 'p07_structures_by_anion_family.csv'))[1:]
+    # p07: precursors held by each Stage-1 table — one panel at the slide size (8.0 × 3.05 in; CW P1: the per-family
+    # structure counts repeated p06 and are now a line of text; their CSV stays for Origin)
     cov = rows_of(os.path.join(OUT, 'p07_stage1_coverage_by_ledger.csv'))
-    fig, (a1, a2) = plt.subplots(1, 2, figsize=(8.6, 2.75), gridspec_kw={'width_ratios': [1.1, 1]})
-    xs = range(len(fam))
-    a1.bar([x - 0.2 for x in xs], [int(r[1]) for r in fam], 0.4, color=GREY, edgecolor='black', linewidth=0.6, label='relaxed (3,675)')
-    a1.bar([x + 0.2 for x in xs], [int(r[2]) for r in fam], 0.4, color=DARK, edgecolor='black', linewidth=0.6, label='annealed (693)')
-    a1.set_xticks(list(xs), [r[0] for r in fam], rotation=30, ha='right', fontsize=9)
-    a1.set_ylabel('structures')
-    a1.legend(frameon=False, fontsize=9)
-    origin_axes(a1)
     head = cov[0]
     i = {k: head.index(k) for k in head}
     keep = [r for r in cov[1:] if not r[i['step_or_ledger']].startswith('Concentration set')]
@@ -406,16 +413,21 @@ def figures():
     lab = [next(v for k, v in short if r[i['step_or_ledger']].startswith(k)) for r in keep]
     n = [int(r[i['n_precursors']]) for r in keep]
     miss = [', '.join(sp for sp, col in (('As$_2$S$_3$', 'As2S3_included'), ('AlI$_3$', 'AlI3_included')) if r[i[col]] == 'no') for r in keep]
+    fig, ax = plt.subplots(figsize=(8.0, 3.05))
     ys = list(range(len(lab)))[::-1]
-    a2.barh(ys, n, 0.6, color=GREY, edgecolor='black', linewidth=0.6)
+    ax.barh(ys, n, 0.62, color=GREY, edgecolor='black', linewidth=0.8)
     for y, v, m in zip(ys, n, miss):
-        a2.text(v + 1.5, y, f'{v}' + (f'  (no {m})' if m else ''), va='center', fontsize=8.5)
-    a2.set_yticks(ys, lab, fontsize=9)
-    a2.set_xlim(0, 152)
-    a2.set_xticks([0, 30, 60, 91])
-    a2.set_xlabel('precursors (of 91)')
-    origin_axes(a2)
-    save(fig, 'fig_p07_stage1_scale_coverage.png')
+        ax.text(v + 1.5, y, f'{v}', va='center', fontsize=14)
+        if m:
+            ax.text(v + 9, y, f'(no {m})', va='center', fontsize=12.5, color='#4b5563')
+    ax.set_yticks(ys, lab, fontsize=14)
+    ax.set_xlim(0, 150)
+    ax.set_xticks([0, 30, 60, 91])
+    ax.set_xlabel('precursors (of 91)', fontsize=13)
+    plain_axes(ax, 12)
+    ax.spines['bottom'].set_bounds(0, 91)        # the axis stops at 91; the room to its right is for the notes
+    ax.tick_params(axis='y', length=0)
+    save(fig, 'fig_p07_stage1_coverage.png')
 
     # p10: host stability window on a voltage axis
     seg = rows_of(os.path.join(OUT, 'p10_stability_window_host_segments.csv'))[1:]
@@ -459,9 +471,10 @@ def figures():
               frameon=False, fontsize=8.5, ncol=3, loc='lower center', bbox_to_anchor=(0.45, 1.0))
     save(fig, 'fig_p13_run_roster.png')
 
-    stale = os.path.join(ASSETS, 'fig_p12_msd_check_schematic.png')   # replaced by He et al. 2018 Fig. 3 (lit_he2018_fig3.png)
-    if os.path.exists(stale):
-        os.remove(stale)
+    for stale in ('fig_p12_msd_check_schematic.png',        # replaced by He et al. 2018 Fig. 3 (lit_he2018_fig3.png)
+                  'fig_p07_stage1_scale_coverage.png'):     # two panels → fig_p07_stage1_coverage.png (CW, 10-13)
+        if os.path.exists(os.path.join(ASSETS, stale)):
+            os.remove(os.path.join(ASSETS, stale))
     return made + lit_crops()
 
 README = """# Origin CSVs — Research Seminar 2026-10-13 (cascade progress briefing)
@@ -476,14 +489,14 @@ site-preference backup p18 (old p12 / p17 files are removed by the script). p06 
 | page | slide | CSV | what to plot |
 |---|---|---|---|
 | 6 | Candidate set | `p06_candidate_set_by_anion_family.csv` | bars: n_planned vs n_relaxed vs n_gate_evaluation per anion family |
-| 7 | Stage-1 workflow | `p07_stage1_coverage_by_ledger.csv` · `p07_structures_by_anion_family.csv` | bars: precursors held by each Stage-1 table (As2S3 / AlI3 flags) · structures per anion family (relaxed vs annealed) |
+| 7 | Stage-1 coverage | `p07_stage1_coverage_by_ledger.csv` · `p07_structures_by_anion_family.csv` | bars: precursors held by each Stage-1 table (As2S3 / AlI3 flags); the per-family structure counts (relaxed 3,675 vs annealed 693) are a text line on the slim deck since 10-13 |
 | 8 | Configuration sampling | `p08_configurations_per_site_pair_long.csv` · `_matrix.csv` | heat map: cation site × anion site → configurations (main batch 3,615) |
 | 9 | DFT EOS | `p09_eos_bm3_fit_curves.csv` | lines: E − E0 vs V per f.u. (fit curves; raw points not in repo) |
 | 10 | Stability window | `p10_stability_window_host.csv` · `p10_stability_window_host_segments.csv` | bar segments on a voltage axis (host Li6PS5Cl) |
 | 13 | MD status | `p13_md_campaign_progress.csv` · `p13_md_campaign_runs.csv` | progress bars; run roster (status, wall-clock GPU-h) |
 | 18 | Backup: site preference | `p18_site_preference_vs_ionic_radius.csv` | ΔE vs Shannon radius, three loadings per element (June batch, not Stage 1) |
 
-Slim-deck figures (`--figures`) in `kb/seminars/assets_2026_10_13/`: plain previews drawn from the CSVs here (`fig_p06_candidates_by_family.png` · `fig_p07_stage1_scale_coverage.png` · `fig_p10_host_window.png` · `fig_p13_run_roster.png`) — replace them with the Origin versions — and literature figures cropped from the litdb crops as the reason for a method choice (`lit_jung2026_sio2_fig3d.png` p06 · `lit_schwietert2021_fig1.png` p10 · `lit_he2018_fig3.png` p12 · `lit_phuthi2026_fig1a.png` p14; never redrawn, never on the same plot as our numbers).
+Slim-deck figures (`--figures`) in `kb/seminars/assets_2026_10_13/`: plain previews drawn from the CSVs here (`fig_p06_candidates_by_family.png` · `fig_p07_stage1_coverage.png` · `fig_p10_host_window.png` · `fig_p13_run_roster.png`; p06 and p07 are drawn at the size they take on the slide, so their font sizes are the slide's) — replace them with the Origin versions — and literature figures cropped from the litdb crops as the reason for a method choice (`lit_jung2026_sio2_fig3d.png` p06 · `lit_schwietert2021_fig1.png` p10 · `lit_he2018_fig3.png` p12 · `lit_phuthi2026_fig1a.png` p14; never redrawn, never on the same plot as our numbers).
 
 Pages without a CSV:
 - 2 (previous DFT work): figure boxes left empty on purpose — fill per tile on request.

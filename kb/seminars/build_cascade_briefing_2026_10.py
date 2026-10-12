@@ -76,7 +76,7 @@ def runs(markup, sz=None, color='bg1', bold=False, italic=False):
 
 
 def P(markup, kind='b', sz=1500, ln=150, algn=None, color=None, bold=False, italic=False,
-      spcbef=0, spcaft=0):
+      spcbef=0, spcaft=0, hang=0):
     sp = ''
     if spcbef: sp += f'<a:spcBef><a:spcPts val="{spcbef}"/></a:spcBef>'
     if spcaft: sp += f'<a:spcAft><a:spcPts val="{spcaft}"/></a:spcAft>'
@@ -99,7 +99,8 @@ def P(markup, kind='b', sz=1500, ln=150, algn=None, color=None, bold=False, ital
                '<a:buFont typeface="Arial" panose="020B0604020202020204" pitchFamily="34" charset="0"/>'
                '<a:buChar char="•"/><a:defRPr/></a:pPr>')
         return f'<a:p>{ppr}{runs(markup, sz, color or INK, bold, italic)}</a:p>'
-    ppr = f'<a:pPr marL="0" indent="0" latinLnBrk="0"{al}>{lnx}{sp}<a:buNone/><a:defRPr/></a:pPr>'
+    mi = f'marL="{E(hang)}" indent="{-E(hang)}"' if hang else 'marL="0" indent="0"'   # hang: numbered item, wrapped lines align
+    ppr = f'<a:pPr {mi} latinLnBrk="0"{al}>{lnx}{sp}<a:buNone/><a:defRPr/></a:pPr>'
     return f'<a:p>{ppr}{runs(markup, sz, color or INK, bold, italic)}</a:p>'
 
 
@@ -339,8 +340,10 @@ def slide_title():
     save(t, 'slide1.xml')
 
 
-def slide_sampling(note, color=BLUE):
-    """Orig slide 11: site-pair heat map + anneal schematic; `note` is the blue line at the bottom."""
+def slide_sampling(note, color=BLUE, hx=0.5, hy=2.6, hw=4.6, ax=5.55, ay=2.6, aw=3.6, cap_h=0.32):
+    """Orig slide 11: site-pair heat map + anneal schematic; `note` is the blue line at the bottom (None: no line).
+    The geometry arguments let the lean deck enlarge the heat map (CW P1); the defaults are the full deck's layout.
+    The anneal ran on selected structures only (693 of 3,675 — `anneal_converged` in cascade_all_302), not on each."""
     t = load('slide11.xml')
     header(t, 'Approach')
     grp = t.getroot().find('.//p:grpSp', NS)
@@ -354,19 +357,19 @@ def slide_sampling(note, color=BLUE):
     drop(t, lambda el: etree.QName(el).localname == 'grpSp' or name_of(el) in ('TextBox 8', 'TextBox 9'))
     replace_body(t, P('Configuration sampling and MLIP relaxation', 'h', ln=130)
                  + P('No site was assumed: every charge-balanced placement was [[b:built and relaxed]].', 'b', ln=130)
-                 + P('A short anneal (500 K, 50 ps) moves each structure out of its local minimum.', 'b', ln=130),
+                 + P('A short anneal (500 K, 50 ps) moves selected structures out of their local minimum.', 'b', ln=130),
                  y=1.08, h=1.4)
     rid23 = rel_add('slide11.xml', '../media/image23.png')
-    hw = 4.6
     hh = hw * emf_ext[1] / emf_ext[0]
-    add(t, pic(ids(), 'Site-pair heatmap', emf_rid, 0.5, 2.6, hw, hh, 'Configurations per cation-anion site pair'),
-        tb(ids(), 'Caption left', 0.5, 2.62 + hh, hw, 0.32,
+    ah = aw * 1197 / 1623
+    add(t, pic(ids(), 'Site-pair heatmap', emf_rid, hx, hy, hw, hh, 'Configurations per cation-anion site pair'),
+        tb(ids(), 'Caption left', hx, hy + 0.02 + hh, hw, cap_h,
            P('< configurations per cation–anion site pair: main batch 3,615 (+60 in the August re-run) >', 'p', 1100, 100, 'ctr')),
-        pic(ids(), 'Anneal schematic', rid23, 5.55, 2.6, 3.6, 3.6 * 1197 / 1623, 'What a short anneal does'),
-        tb(ids(), 'Caption right', 5.45, 2.62 + 3.6 * 1197 / 1623, 3.9, 0.32,
-           P('< what the short anneal does >', 'p', 1150, 100, 'ctr')),
-        tb(ids(), 'Bottom note', 0.55, 6.2, 8.9, 0.6,
-           P(note, 'p', 1250, 105, color=color)))
+        pic(ids(), 'Anneal schematic', rid23, ax, ay, aw, ah, 'What a short anneal does'),
+        tb(ids(), 'Caption right', ax - 0.1, ay + 0.02 + ah, aw + 0.3, 0.32,
+           P('< what the short anneal does >', 'p', 1150, 100, 'ctr')))
+    if note:
+        add(t, tb(ids(), 'Bottom note', 0.55, 6.2, 8.9, 0.6, P(note, 'p', 1250, 105, color=color)))
     save(t, 'slide11.xml')
 
 
@@ -477,8 +480,9 @@ def pack(order):
 # Same slides, same order and page numbers as the full deck (so the pNN CSVs map 1:1), written in
 # the visual language of the user's 08-18 deck: ■ heading + two short bullets (key words in blue,
 # warnings in red), one figure or table, a '< caption >' and one coloured line under it, and the
-# dashed red numbered box + down-arrow image of its slide 4. No cards, badges, icons or chevrons.
-LEAN_FIGS = ['fig_p06_candidates_by_family.png', 'fig_p07_stage1_scale_coverage.png', 'fig_p10_host_window.png',
+# dashed red numbered box + down arrow of its slide 4 (the arrow redrawn as vector shapes). No cards, badges,
+# icons or chevrons. Literature crops carry a role tag above them and a credit below (CW, 10-13).
+LEAN_FIGS = ['fig_p06_candidates_by_family.png', 'fig_p07_stage1_coverage.png', 'fig_p10_host_window.png',
              'fig_p13_run_roster.png', 'lit_jung2026_sio2_fig3d.png', 'lit_schwietert2021_fig1.png', 'lit_he2018_fig3.png',
              'lit_phuthi2026_fig1a.png']
 DASH_RED, NOTE_GREY = 'FF5050', '6B7280'
@@ -538,7 +542,8 @@ def dashed_list(t, slide, title, items, x, y, w, h, note_x=0.52, sz=1500, arrow_
     for k, (main, note) in enumerate(items):
         yy = y + 0.2 + k * step
         mw = (w * note_x - 0.35) if note else (w - 0.7)
-        add(t, tb(ids(), f'Item {k + 1}', x + 0.4, yy, mw, step, P(f'{k + 1}.  {main}', 'p', sz, 100, color=INK), anchor='ctr'))
+        add(t, tb(ids(), f'Item {k + 1}', x + 0.4, yy, mw, step, P(f'{k + 1}.\t{main}', 'p', sz, 100, color=INK, hang=0.3),
+                  anchor='ctr'))
         if note:
             add(t, tb(ids(), f'Note {k + 1}', x + w * note_x + 0.1, yy, w * (1 - note_x) - 0.25, step,
                       P(note, 'p', sz, 100, color=NOTE_GREY), anchor='ctr'))
@@ -546,13 +551,37 @@ def dashed_list(t, slide, title, items, x, y, w, h, note_x=0.52, sz=1500, arrow_
         down_arrow(t, slide, arrow_y, x=x + w / 2 - 1.405)
 
 
+ARROW_TOP, ARROW_BOT = 'C9D4EA', 'A3B6DB'
+
+
 def down_arrow(t, slide, y, x=3.59, w=2.81, h=0.72):
-    """The light-blue down arrow of the 08-18 slide 4 — a crop of media/image8.png, same crop and size."""
-    xml = pic(ids(), 'Down arrow', rel_add(slide, '../media/image8.png'), x, y, w, h, '')
-    xml = xml.replace('<a:stretch><a:fillRect/></a:stretch>',
-                      '<a:srcRect l="46859" t="52346" r="43846" b="38064"/><a:stretch/>')
-    assert 'srcRect' in xml
-    add(t, xml)
+    """The light-blue arrow of the 08-18 slide 4 (a band fading at both ends that bends into a down arrow), redrawn
+    as two vector shapes in the same 2.81 × 0.72 in box. The 08-18 deck used a crop of media/image8.png: 88 × 36 px
+    stretched to that box = 31 × 50 ppi, visibly blurred on a projector (CW). `slide` is kept for the old signature."""
+    sp = lambda name, geom, fill, yy, hh: (
+        f'<p:sp><p:nvSpPr><p:cNvPr id="{ids()}" name="{name}"/><p:cNvSpPr/><p:nvPr/></p:nvSpPr>'
+        f'<p:spPr><a:xfrm><a:off x="{E(x)}" y="{E(yy)}"/><a:ext cx="{E(w)}" cy="{E(hh)}"/></a:xfrm>{geom}{fill}'
+        '<a:ln><a:noFill/></a:ln></p:spPr>'
+        '<p:txBody><a:bodyPr rtlCol="0" anchor="ctr"/><a:lstStyle/><a:p><a:endParaRPr lang="en-US" dirty="0"/></a:p></p:txBody></p:sp>')
+    grad = lambda stops, ang: ('<a:gradFill rotWithShape="1"><a:gsLst>'
+                               + ''.join(f'<a:gs pos="{p}"><a:srgbClr val="{c}"/></a:gs>' for p, c in stops)
+                               + f'</a:gsLst><a:lin ang="{ang}" scaled="0"/></a:gradFill>')
+    # band: rows 30–60 of the 350-unit design, white → colour → white so the ends fade into the slide
+    band = sp('Arrow band', '<a:prstGeom prst="rect"><a:avLst/></a:prstGeom>',
+              grad([(0, 'FFFFFF'), (34000, ARROW_TOP), (66000, ARROW_TOP), (100000, 'FFFFFF')], 0),
+              y + h * 30 / 350, h * 60 / 350)
+    # stem + head (design units 880 × 350, same stretch as the old crop); the top edge tucks 4 units into the band
+    path = ('<a:moveTo><a:pt x="300" y="86"/></a:moveTo><a:lnTo><a:pt x="300" y="90"/></a:lnTo>'
+            '<a:quadBezTo><a:pt x="350" y="90"/><a:pt x="350" y="140"/></a:quadBezTo>'
+            '<a:lnTo><a:pt x="350" y="180"/></a:lnTo><a:lnTo><a:pt x="295" y="180"/></a:lnTo>'
+            '<a:lnTo><a:pt x="445" y="346"/></a:lnTo><a:lnTo><a:pt x="595" y="180"/></a:lnTo>'
+            '<a:lnTo><a:pt x="540" y="180"/></a:lnTo><a:lnTo><a:pt x="540" y="140"/></a:lnTo>'
+            '<a:quadBezTo><a:pt x="540" y="90"/><a:pt x="590" y="90"/></a:quadBezTo>'
+            '<a:lnTo><a:pt x="590" y="86"/></a:lnTo><a:close/>')
+    head = sp('Down arrow', '<a:custGeom><a:avLst/><a:gdLst/><a:ahLst/><a:cxnLst/><a:rect l="0" t="0" r="r" b="b"/>'
+                            f'<a:pathLst><a:path w="880" h="350">{path}</a:path></a:pathLst></a:custGeom>',
+              grad([(0, ARROW_TOP), (30000, ARROW_TOP), (100000, ARROW_BOT)], 5400000), y, h)
+    add(t, band, head)
 
 
 def build_lean():
@@ -560,10 +589,10 @@ def build_lean():
         shutil.copy(os.path.join(EXTRA, f), os.path.join(WORK, 'ppt', 'media', f))
     slide_title()
 
-    # ---- 2 previous DFT work: eight figure slots, title above, '< keywords >' below
+    # ---- 2 previous DFT work: eight figure slots, title above, '< keywords >' below (CW P1: the 'became one step of
+    #      the workflow' line is said, not shown)
     name, t = fresh('prev', 'Background')
-    lean_body(t, 'DFT simulations so far',
-              ['Each of these calculations became [[b:one step of the screening workflow]].'], h=0.95)
+    lean_body(t, 'DFT simulations so far', h=0.5)
     tiles = [('Li₆PS₅Cl baseline', 'band gap · EOS · elastic'), ('Nd/O co-doping (Nd₂O₃)', 'band edges · ICOHP · CEI'),
              ('B₂O₃ and O doping', 'EOS · BVSE · MLIP-MD'), ('h-BN on carbon fiber', 'Li adsorption · NEB'),
              ('Li₃N (SEI component)', 'Li migration (NEB)'), ('Li₂S (SEI component)', 'V[[_:Li]] migration · cell size'),
@@ -571,35 +600,35 @@ def build_lean():
     TW, GX = 2.12, 0.14
     for k, (ti, kw) in enumerate(tiles):
         x = 0.55 + (k % 4) * (TW + GX)
-        y = 2.1 + (k // 4) * 2.15
+        y = 1.85 + (k // 4) * 2.25
         add(t, tb(ids(), f'Tile {k + 1} title', x, y, TW, 0.3, P(ti, 'p', 1150, 100, 'ctr', INK, bold=True), anchor='b'),
             box(ids(), f'Tile {k + 1} figure', x + 0.06, y + 0.34, TW - 0.12, 1.3, fill='FFFFFF', line='9CA3AF', dash=True,
                 geom='rect', paras=P('Figure', 'p', 1000, 100, 'ctr', MUTED), anchor='ctr'),
             tb(ids(), f'Tile {k + 1} caption', x, y + 1.66, TW, 0.3, P(f'< {kw} >', 'p', 1000, 100, 'ctr', INK)))
     save(t, name)
 
-    # ---- 3 overview: purpose + the dashed numbered box of the 08-18 deck
+    # ---- 3 overview: unit of screening + the dashed numbered box of the 08-18 deck (CW: 'Project stages' — the box
+    #      also holds a future step; the rule-before-results line is said here and shown once, on p11)
     name, t = fresh('overview', 'Overview')
-    lean_body(t, 'This work: dopant precursors for Li₆PS₅Cl, selected by calculation',
-              ['The unit of screening is a [[b:precursor compound]] (91 candidates).',
-               'The selection rule is fixed [[b:before]] the results are seen.'], h=1.35)
-    dashed_list(t, name, 'Progress so far',
+    lean_body(t, 'Computational screening of dopant precursors for Li₆PS₅Cl',
+              ['The unit of screening is a [[b:precursor compound]] (91 candidates).'], h=0.95)
+    dashed_list(t, name, 'Project stages',
                 [('Stage 1 exploration screen (Jun–Aug)', '(91 precursors, 3,675 structures)'),
                  ('Audit of Stage 1 (Sep)', '(rules fixed before new results)'),
                  ('Stage 2 pilot: MLIP-MD (Oct)', '(12 of 40 runs done)'),
                  ('Shortlist → DFT → experiments', '(after the pilot verdict)')],
-                0.57, 2.85, 8.86, 2.3, note_x=0.55, arrow_y=5.22)
-    add(t, line_under(ids(), 'No dopant ranking yet: the ranking rule is set [[b:before the results]].', 5.95))
+                0.57, 2.45, 8.86, 2.3, note_x=0.55, arrow_y=4.86)
+    add(t, line_under(ids(), 'Stage 1 audited. [[b:Stage 2 pilot in progress.]]', 5.68))
     save(t, name)
 
     # ---- 4 failure modes: orig slide 3, unchanged
 
-    # ---- 5 prior screens (orig slide 7): two short bullets + the table, larger
+    # ---- 5 prior screens (orig slide 7): one bullet + the table, larger (CW P1: n column narrower, 14 pt; the
+    #      'earlier screens …' sentence repeated the table, and the related-screens line is on p17)
     t = load('slide7.xml')
-    replace_body(t, P('Prior work: what dopant screens vary', 'h', ln=130)
-                 + P('Earlier screens put one element on one site, or screened compounds without a host.', 'b', ln=130)
+    replace_body(t, P('Prior dopant screens and this study', 'h', ln=130)
                  + P('Here one [[b:precursor compound]] fills a cation and an anion site.', 'b', ln=130),
-                 y=1.08, h=1.45)
+                 y=1.08, h=1.0)
     drop(t, lambda el: etree.QName(el).localname == 'grpSp' or name_of(el) == 'TextBox 3')
     add(t, tb(ids(), 'References top', 4.6, 0.93, 4.9, 0.42,
               P('Chem. Mater. 27, 4040 (2015) · Adv. Energy Mater. 14, 2304025 (2024)', 'p', 950, 100, 'r', MUTED, italic=True)
@@ -618,77 +647,82 @@ def build_lean():
                 ps[0].remove(r)
             hits += 1
     assert hits == 1, hits
-    tbl.find('.//p:xfrm/a:off', NS).set('y', str(E(2.7)))
+    cols, rh = [1.75, 1.6, 2.3, 0.8, 2.55], 0.62
+    gcs = tbl.findall('.//a:gridCol', NS)
+    assert len(gcs) == len(cols), len(gcs)
+    for gc, w in zip(gcs, cols):
+        gc.set('w', str(E(w)))
+    trs = list(tbl.iter(f'{{{NS["a"]}}}tr'))
+    for tr in trs:
+        tr.set('h', str(E(rh)))
+    off, ext = tbl.find('.//p:xfrm/a:off', NS), tbl.find('.//p:xfrm/a:ext', NS)
+    off.set('x', str(E(0.5)))
+    off.set('y', str(E(2.25)))
+    ext.set('cx', str(E(sum(cols))))
+    ext.set('cy', str(E(rh * len(trs))))
     for rp in tbl.iter(f'{{{NS["a"]}}}rPr', f'{{{NS["a"]}}}endParaRPr'):
         if rp.get('sz'):
-            rp.set('sz', '1300')
-    for tr in tbl.iter(f'{{{NS["a"]}}}tr'):
-        tr.set('h', str(E(0.5)))
-    add(t, refs_line(ids(), 'Related screens: Sendek, Energy Environ. Sci. 10, 306 (2017) · Kahle, Energy Environ. Sci. 13, 928 (2020) · '
-                            'Jung, eTransportation 28, 100570 (2026) · Park, Adv. Sci. 2026, e76305 · Muy, Chem. Mater. 37, 2395 (2025)',
-                     y=6.2, h=0.48, sz=950))
+            rp.set('sz', '1400')
     save(t, 'slide7.xml')
 
-    # ---- 6 candidate set (orig slide 8)
+    # ---- 6 candidate set (orig slide 8): our count (left) · a literature example of precursor co-doping (right).
+    #      CW P1: the August re-run is told on p07, the six co-doping papers are on p17, the precedent line is said.
     t = load('slide8.xml')
     header(t, 'Approach')
-    replace_body(t, P('Candidate set: 91 precursors in seven anion families', 'h', ln=130)
+    replace_body(t, P('91 precursors in seven anion families', 'h', ln=130)
                  + P('Cations +1 to +6 paired with anions O²⁻ to I⁻; only existing compounds.', 'b', ln=130)
-                 + P('All 91 were relaxed; As₂S₃ and AlI₃ were completed in an [[b:August re-run]].', 'b', ln=130),
+                 + P('[[b:All 91 precursors]] were relaxed.', 'b', ln=130),
                  y=1.08, h=1.4)
     drop(t, lambda el: etree.QName(el).localname == 'graphicFrame')          # the family table → a bar chart
-    bh = figure(t, 'slide8.xml', 'fig_p06_candidates_by_family.png', 0.55, 2.45, 4.0, 'Precursors per anion family')
-    jh = figure(t, 'slide8.xml', 'lit_jung2026_sio2_fig3d.png', 4.85, 2.75, 4.6, 'Jung 2026 Fig. 3d')
-    add(t, caption(ids(), '< precursors per anion family >', 2.48 + bh, x=0.55, w=4.0, sz=1150),
-        caption(ids(), '< one precursor (SiO₂) in Li₆PS₅Cl: capacity over 500 cycles >', 2.8 + jh, x=4.75, w=4.8, sz=1150),
-        tb(ids(), 'Credit right', 4.75, 3.12 + jh, 4.8, 0.26,
-           P('Reproduced from Jung et al., Adv. Funct. Mater. (2026), Fig. 3d', 'p', 900, 100, 'ctr', MUTED, italic=True)),
-        line_under(ids(), 'Precursor co-doping has experimental precedent; [[b:here 91 precursors are screened by calculation]].',
-                   5.42, sz=1350),
-        refs_line(ids(), 'CuCl, Taklu, Nano Energy 90, 106542 (2021) · MgF₂, Liu, Angew. Chem. Int. Ed. 62, e202302655 (2023) · '
-                         'ZnO, Jang, J. Alloys Compd. 957, 170273 (2023) · La₂O₃, Yang, Electrochim. Acta 535, 146619 (2025) · '
-                         'Nd₂O₃, Xu, Nano Energy 157, 112246 (2026) · SiO₂, Jung, Adv. Funct. Mater. (2026)', y=5.95, h=0.6, sz=950))
+    bh = figure(t, 'slide8.xml', 'fig_p06_candidates_by_family.png', 0.55, 2.55, 3.65, 'Precursors per anion family')
+    jw = 5.1
+    jy = 2.55 + bh / 2 - 0.97                      # tag + crop + credit centred on the bar chart
+    jh = figure(t, 'slide8.xml', 'lit_jung2026_sio2_fig3d.png', 4.4, jy + 0.32, jw, 'Jung 2026 Fig. 3d')
+    add(t, caption(ids(), '< precursors per anion family >', 2.58 + bh, x=0.55, w=3.65, sz=1150),
+        lit_label(ids(), 'Literature example:', 'SiO₂ co-doping', 4.4, jy, jw),
+        credit(ids(), 'Reproduced from Jung et al., Adv. Funct. Mater. (2026), Fig. 3d', 4.4, jy + 0.35 + jh, jw))
     save(t, 'slide8.xml')
 
-    # ---- 7 Stage 1: data figure (structures per family · precursors per table)
+    # ---- 7 Stage 1: what each Stage-1 table holds (CW P1: one figure — p06 already shows the families). The anneal ran
+    #      on 693 selected structures, not on every placement (cascade_all_302 `anneal_converged`).
     name, t = fresh('workflow', 'Approach')
-    lean_body(t, 'Stage 1 (Jun–Aug): exploration screen',
-              ['Each charge-balanced placement: [[b:UMA relaxation]], then a 500 K / 50 ps anneal.',
-               'Descriptors: Li-site landscape, EOS/elastic (DFT), [[b:stability window]], interface.'], h=1.4)
-    fh = figure(t, name, 'fig_p07_stage1_scale_coverage.png', 0.7, 2.75, 8.6, 'Stage-1 structures and coverage')
-    add(t, caption(ids(), '< structures per anion family  ·  precursors held by each Stage-1 table >', 2.78 + fh),
+    lean_body(t, 'Stage 1: calculation coverage',
+              ['Every charge-balanced placement was relaxed with [[b:UMA]] (3,675 structures); '
+               '693 selected structures were then annealed (500 K, 50 ps).',
+               'Descriptors: Li-site landscape, EOS/elastic (DFT), [[b:stability window]], interface.'], h=1.45)
+    fh = figure(t, name, 'fig_p07_stage1_coverage.png', 1.0, 2.62, 8.0, 'Precursors held by each Stage-1 table')
+    add(t, caption(ids(), '< precursors held by each Stage-1 table >', 2.65 + fh, sz=1150),
         line_under(ids(), 'As₂S₃ and AlI₃ came from an August re-run; [[r:As₂S₃ is not yet in the window and interface tables]].',
-                   3.12 + fh, sz=1350),
-        line_under(ids(), 'Since September these results are [[b:exploratory data]] for choosing the next calculations.',
-                   3.45 + fh, sz=1350))
+                   3.0 + fh, sz=1350))
     save(t, name)
 
-    # ---- 8 configuration sampling (orig slide 11)
-    slide_sampling('For some descriptors the spread [[r:within one precursor]] matches the spread between precursors, '
-                   'so they are used for [[b:exploration]].', color=INK)
+    # ---- 8 configuration sampling (orig slide 11): heat map larger (CW P1); the descriptor-spread line is said — p11
+    #      comes back to it
+    slide_sampling(None, hx=0.55, hy=2.7, hw=5.0, ax=6.0, ay=2.95, aw=3.1, cap_h=0.5)
 
     # ---- 9 DFT reference (orig slide 16)
     slide_dft_reference()
 
-    # ---- 10 stability window: our host window (left) + the coating view from the literature (right)
+    # ---- 10 stability window: our host window (left) + the window definitions from the literature (right). CW P1: the
+    #      crop is larger; 'the earlier definition gave wider windows' and the interface re-derivation are said.
     name, t = fresh('stability', 'Approach')
-    lean_body(t, 'Stability window: voltage range without Li exchange',
+    lean_body(t, 'Decomposition stability window',
               ['The Li chemical potential is scanned as a voltage on a [[b:grand-potential phase diagram]] (MP phases, 0 K).',
-               'Recomputed for 90 precursors with this definition; the earlier one gave [[r:wider windows]].'], h=1.7)
-    sw = 2.95
+               'Recomputed for 90 precursors with this definition.'], h=1.5)
+    sw, sy = 3.7, 2.97
     pw_, ph_ = png_size(os.path.join(EXTRA, 'lit_schwietert2021_fig1.png'))
     sh_ = sw * ph_ / pw_
+    lw = 4.4
     ww_, wh_ = png_size(os.path.join(EXTRA, 'fig_p10_host_window.png'))
-    wh = figure(t, name, 'fig_p10_host_window.png', 0.55, 2.75 + (sh_ - 4.5 * wh_ / ww_) / 2, 4.5, 'Host stability window')
-    figure(t, name, 'lit_schwietert2021_fig1.png', 5.95, 2.75, sw, 'Schwietert 2021 Fig. 1')
-    add(t, caption(ids(), '< Li₆PS₅Cl host (MP phases, 0 K) >', 2.78 + (sh_ - wh) / 2 + wh, x=0.55, w=4.5, sz=1150),
-        caption(ids(), '< decomposition vs intrinsic windows >', 2.78 + sh_, x=5.2, w=4.45, sz=1150),
-        tb(ids(), 'Credit right', 5.2, 3.08 + sh_, 4.45, 0.26,
-           P('Reproduced from Schwietert et al., JACS Au 1, 1488 (2021), Fig. 1', 'p', 900, 100, 'ctr', MUTED, italic=True)),
-        line_under(ids(), 'Our window follows the [[b:decomposition-window]] definition; interface products are being '
-                          're-derived with [[b:ground-state phases]].', 5.88, h=0.52, sz=1300),
+    lh = lw * wh_ / ww_
+    ly = sy + sh_ / 2 - (lh + 0.35) / 2           # our window + its caption centred on the crop
+    figure(t, name, 'fig_p10_host_window.png', 0.55, ly, lw, 'Host stability window')
+    figure(t, name, 'lit_schwietert2021_fig1.png', 5.3, sy, sw, 'Schwietert 2021 Fig. 1')
+    add(t, caption(ids(), '< Li₆PS₅Cl host (MP phases, 0 K) >', ly + lh + 0.03, x=0.55, w=lw, sz=1150),
+        lit_label(ids(), 'Literature:', 'decomposition and intrinsic windows', 5.0, sy - 0.32, 4.5),
+        credit(ids(), 'Reproduced from Schwietert et al., JACS Au 1, 1488 (2021), Fig. 1', 5.0, sy + sh_ + 0.03, 4.5),
         refs_line(ids(), 'Zhu, ACS Appl. Mater. Interfaces 7, 23685 (2015) · Schwietert, JACS Au 1, 1488 (2021) · '
-                         'Richards, Chem. Mater. 28, 266 (2016) · Xiao, Nat. Rev. Mater. 5, 105 (2020)', y=6.42, h=0.36, sz=900))
+                         'Richards, Chem. Mater. 28, 266 (2016) · Xiao, Nat. Rev. Mater. 5, 105 (2020)', y=6.5, h=0.32, sz=900))
     save(t, name)
 
     # ---- 11 September audit: two independent lists (CW P0-1 — one table with shared row numbers read as
@@ -741,37 +775,31 @@ def build_lean():
         refs_line(ids(), 'Phuthi et al., Chem. Mater. (2026), Perspective', y=6.6, h=0.28))
     save(t, name)
 
-    # ---- 14 plan: the dashed numbered box again
+    # ---- 14 next calculations: the dashed numbered box + the length/time-scale figure it answers to. CW P1: goal line,
+    #      arrow and the method-upgrade list are said; one line keeps the figure tied to our plan (cells ≥ 2 nm).
     name, t = fresh('next', 'Plan')
-    lean_body(t, 'Next steps', h=0.5)
-    dashed_list(t, name, 'Plan',
-                [('Pilot verdict (late Oct), analysed once', ''),
-                 ('Run scope and ranking margin δ, before results', ''),
+    lean_body(t, 'Next calculations', h=0.5)
+    dashed_list(t, name, 'Milestones',
+                [('Pilot verdict (late Oct)', ''),
+                 ('Run scope and ranking margin δ', ''),
                  ('Do Stage-1 descriptors predict transport?', ''),
                  ('Windows, interfaces (+As₂S₃), elastic constants', ''),
                  ('Shortlist → DFT validation → experiments', '')],
-                0.45, 1.95, 5.3, 2.8, sz=1400, arrow_y=4.88)
-    ph = figure(t, name, 'lit_phuthi2026_fig1a.png', 6.05, 1.75, 3.4, 'Phuthi 2026 Fig. 1a')
-    add(t, caption(ids(), '< length and time scales per property >', 1.78 + ph, x=5.85, w=3.8, sz=1100),
-        tb(ids(), 'Credit right', 5.85, 2.06 + ph, 3.8, 0.26,
-           P('Reproduced from Phuthi et al., Chem. Mater. (2026), Fig. 1a', 'p', 900, 100, 'ctr', MUTED, italic=True)))
-    add(t, line_under(ids(), 'Goal: a screen that [[b:selects the precursor]], with the selection rule stated in advance.', 5.65),
-        tb(ids(), 'Upgrades', 0.55, 6.05, 8.9, 0.3,
-           P('Method upgrades: ≥ 2 nm cells · ≥ 0.3 ns · fine-tuned MLIP · ensemble uncertainty · defect thermodynamics',
-             'p', 1050, 100, 'ctr', MUTED)),
-        refs_line(ids(), 'Phuthi, Chem. Mater. (2026) · Muy, Chem. Mater. 37, 2395 (2025) · Alghamdi, J. Phys. Energy 8, 025013 (2026) · '
-                         'Grasselli, Digital Discovery 4, 2654 (2025)', y=6.48, h=0.32, sz=900))
+                0.45, 1.95, 4.45, 3.55, sz=1400)
+    ph = figure(t, name, 'lit_phuthi2026_fig1a.png', 5.25, 2.18, 4.2, 'Phuthi 2026 Fig. 1a')
+    add(t, lit_label(ids(), 'Literature:', 'length and time scales', 5.1, 1.86, 4.5),
+        credit(ids(), 'Reproduced from Phuthi et al., Chem. Mater. (2026), Fig. 1a', 5.1, 2.21 + ph, 4.5),
+        line_under(ids(), 'Planned for our runs: [[b:cells ≥ 2 nm]] (now ≈ 1.6 nm).', 6.05, x=5.1, w=4.5, sz=1300))
     save(t, name)
 
-    # ---- 15 summary: bullets, arrow, one line
+    # ---- 15 current status: three bullets and one closing line (CW: no arrow; 'no ranking yet' is said once, here)
     name, t = fresh('summary', 'Summary')
-    lean_body(t, 'Summary',
+    lean_body(t, 'Current status',
               ['Stage 1 screened [[b:91 precursors]] (3,675 structures); the results are used as exploratory data.',
                'The September audit fixed [[b:one readout and the build rules]] before any new result.',
                'The Stage 2 pilot is running ([[b:12 of 40]] MD runs); the verdict comes around late October.'], h=3.0,
               bsz=1800, bln=140)
-    down_arrow(t, name, 4.25)
-    add(t, line_under(ids(), 'No dopant ranking yet: [[b:the ranking rule is set before the results]].', 5.1, h=0.45, sz=1700))
+    add(t, line_under(ids(), '[[b:No dopant ranking yet.]] The ranking margin remains to be set.', 4.5, h=0.5, sz=1700))
     save(t, name)
 
     slide_refs()
