@@ -24,13 +24,15 @@
   cd ~/dem-audit && git fetch origin claude/sdcp-dem-manuscript-si-pqwtv8
   git worktree add --detach ~/harv_1e09f661d 1e09f661d
   git -C ~/harv_1e09f661d rev-parse HEAD                    # 1e09f661d 로 시작해야 한다
+  PY=$(ls ~/Yonghoon-DEM-DFT/venv/bin/python ~/Yonghoon-DEM-DFT/.venv/bin/python3 2>/dev/null | head -1); echo "PY=$PY"   # 비어 있으면 멈춘다
   O=~/lhss_out_r3_1e09f661d && mkdir "$O" && cp ~/lhss_out_20261011/_cohort.tsv ~/lhss_out_20261011/_design_family.csv "$O"/
   cd ~/harv_1e09f661d
-  python3 scripts/lhs_harvest_batch.py --cohort "$O/_cohort.tsv" --out-dir "$O/descriptors_r3" --verify-sha 2>&1 | tee "$O/harvest_r3.log"
-  python3 scripts/lhs_union_webapp.py --cohort "$O/_cohort.tsv" --out "$O/lhss20_union_r3.tsv" 2>&1 | tee "$O/union_r3.log"
+  $PY scripts/lhs_harvest_batch.py --cohort "$O/_cohort.tsv" --out-dir "$O/descriptors_r3" --verify-sha 2>&1 | tee "$O/harvest_r3.log"
+  $PY scripts/lhs_union_webapp.py --cohort "$O/_cohort.tsv" --out "$O/lhss20_union_r3.tsv" 2>&1 | tee "$O/union_r3.log"
   git -C ~/harv_1e09f661d rev-parse HEAD > "$O/harvest_head.txt"
   cd ~ && tar -czf lhss_harvest_r3_1e09f661d.tgz lhss_out_r3_1e09f661d && sha256sum lhss_harvest_r3_1e09f661d.tgz
   cp lhss_harvest_r3_1e09f661d.tgz /mnt/c/Users/Administrator/Downloads/
   ```
 
+  ⚠ 10-12 정정 — 첫 판은 두 도구를 시스템 `python3` 로 불렀다.  10-07 같은 WSL 에서 시스템 python3 에 numpy 가 없어 실패한 기록이 있고 (`docs/data/ps45_plane_load_20261007/README.md` §2) · union 도구가 numpy 를 쓰며 · 수확 배치는 수확기를 `sys.executable` 로 부르므로 배치 venv (`$PY` · 194 등록 · v1.3 계획과 같은 줄) 로 바꿨다 (명령 · 인자는 그대로).
   → 묶음 첨부 · sha256 화면 → 반입 (이 폴더) · r2 와 키별 대조 (컨테이너) → 차이가 있으면 원인 표와 함께 보고 (r3 = 인계 원천 · r2 = 기록으로 보존).

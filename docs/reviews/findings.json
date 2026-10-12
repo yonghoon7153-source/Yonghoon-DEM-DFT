@@ -9561,12 +9561,17 @@
     {
       "id": "SELF-106",
       "severity": "P3",
-      "status": "open",
+      "status": "claimed_fixed",
       "owner": "claude",
       "found_by": "claude 10-12 보충 20 U5 (배포 생성기 두 배치 구현 중 v1.3 계획 명령을 다시 읽다가)",
       "opened_in": "docs/reviews/lhs_release_v13_plan_20261007.md",
       "title": "v1.3 계획 §2-4 의 \"컨테이너 `--v13-check` rc 0 = 통과\" 문장은 10-07 G2RR3-01 뒤로 거짓 — 실제 묶음 대조 (`check_v13`) 는 빌드 manifest 가 기록한 배치 뿌리 (WSL 경로) 에서 배치 관문을 다시 판정하므로 (`v13_batch_gate_recheck`) 뿌리가 없는 컨테이너에서는 \"빌드가 판정한 배치 뿌리 … 가 없다\" 문제를 낸다 (G2RR3-01 수정이 대조를 강하게 만든 뒤 계획 명령을 고치지 않았다)",
-      "note": "결과 0 건 · 사용 0 (v1.3 실제 묶음 없음 — 계획 명령만).  고침 = 같은 커밋에서 §2-4 정정 표지 + §2b (보충 두 배치 명령 — 대조는 WSL) · 다음 커밋에서 claimed_fixed (이 커밋 sha).  교훈: 관문을 강하게 만드는 수정은 그 관문을 부르는 운영 명령 (계획 · 등록 · README) 도 같은 묶음에서 다시 돌려 본다."
+      "note": "결과 0 건 · 사용 0 (v1.3 실제 묶음 없음 — 계획 명령만).  고침 = 같은 커밋에서 §2-4 정정 표지 + §2b (보충 두 배치 명령 — 대조는 WSL) · 다음 커밋에서 claimed_fixed (이 커밋 sha).  교훈: 관문을 강하게 만드는 수정은 그 관문을 부르는 운영 명령 (계획 · 등록 · README) 도 같은 묶음에서 다시 돌려 본다.  → claimed_fixed (10-12 · 다음 커밋 · 검증 = Codex 보충 20 짧은 검토 (리뷰 핀 b429c3c1d) 때 계획 §2-4 · §2b 문구 확인).",
+      "claimed_fixed_sha": "b429c3c1d",
+      "evidence_tests": [
+        "docs/reviews/lhs_release_v13_plan_20261007.md (§2-4 정정 표지 — 컨테이너 --v13-check rc 0 은 G2RR3-01 뒤 거짓 · 실제 묶음 대조 = 빌드 manifest 의 배치 뿌리에서 v13_batch_gate_recheck 재판정 → 대조는 WSL · §2b 두 배치 명령도 WSL 대조)",
+        "scripts/test_lhs_release_v13.py (V21 — check_v13 이 두 뿌리 관문을 다시 판정 · 뿌리 없는 대조 = 문제 · 234/234 at b429c3c1d)"
+      ]
     }
   ]
 }

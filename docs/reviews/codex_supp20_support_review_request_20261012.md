@@ -1,11 +1,11 @@
-# Codex 짧은 검토 요청 — 보충 20 지원 (세대 2 접촉망 · v1.3 = 194 + 보충 20) (2026-10-12 · ⬜ 초안 · 발송 = 1저자)
+# Codex 짧은 검토 요청 — 보충 20 지원 (세대 2 접촉망 · v1.3 = 194 + 보충 20) (2026-10-12 · 발송 = 1저자 10-12 · 리뷰 핀 `b429c3c1d`)
 
 > 근거: Codex 재검증 6 판정 Q9 (`docs/reviews/codex_review_gen2_network_reverify6_20261011.md` — *"194 + 보충 20 두 배치 권고 · 짧은 추가 검토 가능"* · 최소 목록 =
 > 고정 집합 · 같은 세대 교차 · 관측 강제 · 배치별 완결 · 결합 214 고유 · 회귀) · 재검증 7 GO 의 범위 (`docs/reviews/codex_review_gen2_network_reverify7_20261012.md` —
 > 핀 `3cedd40a5` 의 **기존 194** 발사 승인 · 사전 점검 단계 · 보충 20 / 214 배포 GO 아님).
 > 1저자 10-12 **(나)** — 보충 지원 구현 + 이 짧은 검토 먼저 → 194 · 보충 20 **두 배치 같은 날 연달아** 발사 → v1.3 한 번에.  Q4 = (가) `lhss` 별도 데이터셋 ·
 > Q5 = (가) 194 와 같은 수확기 판 `1e09f661d` 로 재수확 + r2 키별 대조 · Q6 = (가) lhss 배포 = lhs 와 같은 132 열 · 부피분율 규칙 행 하중 빈칸.
-> **리뷰 핀** = 이 요청서를 담은 커밋 (발송 때 `git rev-parse HEAD` 로 적는다) · **기준** = `3cedd40a5` (재검증 7 핀).
+> **리뷰 핀** = 이 요청서를 담은 커밋 (발송 때 `git rev-parse HEAD` 로 적는다) = **`b429c3c1d`** (10-12 발송 · 1저자) · **기준** = `3cedd40a5` (재검증 7 핀).
 
 ## 1. 바뀐 것 (기준 → 리뷰 핀 · 봉인 32 무변경 · `code_fp e8b2496b9c2ecf6edad8c6b52d32a2514c96dd54c9a20823c300639249ecae71`)
 
@@ -15,7 +15,7 @@
 | U2 다시 읽기 | `28492841f` | `scripts/g2_network_reread.py` (HANDOVER) | `--expect-set supp20` 합성 양성 · 상세 계약 · 결손 / 후막 반례 · 문구 (sha256 `248ee5c0…` → 바뀜) | 고치기 전 실행기 1 실패 → 30 통과 |
 | U3 설계 어댑터 | `74a44aa12` · `b9ee7ac97` | `scripts/lhss_design_adapter.py` · `docs/data/lhss_design_adapted_20261012.csv` | lhsx `adapt_row` 재사용 (사본 없음) · 설계 sha256 고정 · 후막 · 결손 · 중복 · ins_scale ≠ 1 거부 · 본 하중 열 (Q6 (가) · 2mAh_fixed 2.0 = 생성기 기본 하중 · volfrac_free 빈칸 · 규칙 ↔ pdd_SE (SE_SPLIT 0.30) ↔ am_pct 70 대조) · 20 × 40 | 0/22 → 23/23 → 22/27 → 27/27 |
 | U4 인계 생성기 | `8c19276ca` | `scripts/lhs_design_dataset.py` (HANDOVER) | 열 사전 — lhss_* 17 뜻 (lhsx 와 이름만 같은 열은 그 뜻) · 하중 열 뜻 · 원천 문구 · 배포에 없는 인계표 열 참조 표지 | 385/388 → 389/389 |
-| U5 배포 생성기 | 리뷰 핀 | `scripts/lhs_release_build.py` · `scripts/test_lhs_release_v13.py` | 데이터셋 셋 · 배치 둘 (`V13_BATCHES`) · 배치 뿌리 둘 필수 · 배치마다 자기 등록 집합 관문 · 교차 · 결합 · ML 표 `network_batch` · 하중 빈칸 코드 `NA_NOT_DESIGN_INPUT` · 재적합 214 + 194 참고 줄 · README · 그림 · check_v13 두 뿌리 다시 · CLI `--supp-batch-root` | 55/207 → 234/234 (자체 selftest 31/31) |
+| U5 배포 생성기 | `b429c3c1d` (리뷰 핀) | `scripts/lhs_release_build.py` · `scripts/test_lhs_release_v13.py` | 데이터셋 셋 · 배치 둘 (`V13_BATCHES`) · 배치 뿌리 둘 필수 · 배치마다 자기 등록 집합 관문 · 교차 · 결합 · ML 표 `network_batch` · 하중 빈칸 코드 `NA_NOT_DESIGN_INPUT` · 재적합 214 + 194 참고 줄 · README · 그림 · check_v13 두 뿌리 다시 · CLI `--supp-batch-root` | 55/207 → 234/234 (자체 selftest 31/31) |
 
 ## 2. 최소 목록 (재검증 6 Q9) ↔ 구현
 
