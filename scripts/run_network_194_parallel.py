@@ -153,6 +153,11 @@ COHORT_SPECS = {
     'lhsx': dict(harvest='docs/data/lhsx_descriptors_cov_1e09f661d', cohort='docs/data/lhsx_descriptors_20260925/_cohort.tsv',
                  expect_n=64, union='docs/data/lhs_union_20260927/lhsx64_union.tsv',
                  design='docs/data/lhsx_design_adapted_20260929.csv'),
+    #  ★ 10-12 보충 20 (1저자 (나) · Q4 (가) 세 번째 데이터셋 · Q5 (가) 194 와 같은 수확기 판 `1e09f661d` 재수확) — `--cohorts lhss` 로 **명시할 때만** 돈다
+    #    (기본 `--cohorts` = lhs,lhsx 그대로 · 194 등록 명령 무변경) · 경로 = 재수확 반입 · 설계 어댑터 출력 (등록 docs/reviews/lhs_network_batch_registration_20261012_supp20.md)
+    'lhss': dict(harvest='docs/data/lhss_descriptors_cov_1e09f661d', cohort='docs/data/lhss_descriptors_cov_1e09f661d/_cohort.tsv',
+                 expect_n=20, union='docs/data/lhss_union_1e09f661d/lhss20_union.tsv',
+                 design='docs/data/lhss_design_adapted_20261012.csv'),
 }
 #: 인계 v1.2 의 웹앱 묶음 — network 배치는 다섯 묶음 + 망 τ 묶음 tau 를 낸다 (`lhs_design_dataset.WA_STAGE_GROUPS['network']` · RGL-03).
 #:   tau 는 `--tau-results <ROOT>/merged/<코호트>/results` (출처 관문 P0–P3 · 출처 부록 <표>_tau_provenance.tsv) 와 짝이다 — τ TSV 를 case 열로
@@ -973,7 +978,13 @@ REGISTERED_ID_SETS = {
                           source='docs/reviews/lhs_network_batch_registration_20261007_g2.md §2 (lhs 130 · lhsx 64 · ids_sha256)'),
     'pilot3': dict(pairs=(('lhs00_055', 'lhs'), ('lhs00_128', 'lhs'), ('lhsx_007', 'lhsx')),
                    source='docs/reviews/lhs_network_batch_registration_20261007_g2.md §1 단계 5 (시범 세 케이스)'),
+    #  ★ 10-12 보충 20 — production194 와 같은 규칙 (커밋된 lhss 수확 폴더에서 열거 → 수 · 코호트 · 지문이 같아야 쓴다) · 후막 lhst_* 8 = 집합 밖
+    'supp20': dict(n=20, ids_sha256='991cf1150b183f64bc69926a8b3e7c05453ec47e13b89ba3a6ad2fd2c981c694', cohort_n={'lhss': 20},
+                   source='docs/reviews/lhs_network_batch_registration_20261012_supp20.md §2 (lhss 20 · ids_sha256)'),
 }
+#: ★ 10-12 — **등록 생산 집합** (import 관측 필수 · 다시 읽기 등록 집합 · v1.3 배포 관문의 배치 단위).  pilot3 = 시범 (관측 선택) — 여기 넣지 않는다.
+#:   v1.3 = 두 배치 (production194 · supp20 — 각각 자기 ROOT 에서 완결) · 한 배치 214 계획은 어느 등록 집합도 아니다 (Codex 재검증 6 §7 Q9).
+PRODUCTION_SETS = ('production194', 'supp20')
 
 
 def registered_id_set(name) -> dict:
@@ -995,22 +1006,36 @@ def registered_id_set(name) -> dict:
     return dict(name=name, pairs=frozenset(pairs), source=reg['source'])
 
 
-def production_plan(plan) -> bool:
-    """★ 10-07 G2RR4-03 — 이 계획이 등록 생산 194 인가 (계획 큐의 (케이스, 코호트) 집합 = 등록 집합 production194 · 커밋된 수확 폴더에서 열거 · 지문 대조).
-    등록 집합을 못 세우면 (수확 폴더가 등록과 다르다) 거짓 — 그런 계획은 등록 생산 194 가 아니다 (입력 지문 · 다시 읽기 M-reg · 배포 관문이 따로 막는다)."""
+def registered_production_set(plan) -> str | None:
+    """★ 10-12 보충 20 — 이 계획의 (케이스, 코호트) 집합이 등록 생산 집합 (PRODUCTION_SETS — production194 · supp20) 중 어느 것과 정확히 같은가 → 이름 | None.
+    집합마다 커밋된 수확 폴더에서 열거 · 지문 대조 (registered_id_set) — 못 세우는 집합 (수확 폴더가 등록과 다르다 · 아직 반입 전) 은 건너뛴다 (그 집합이 아니다).
+    한 배치 214 · 결손 · 추가 · 대체 · 후막 혼입 계획 = None (입력 지문 · 다시 읽기 M-reg · 배포 관문이 따로 막는다)."""
     pairs = frozenset((e.get('case'), e.get('cohort')) for e in ((plan or {}).get('queue') or []) if isinstance(e, dict))
-    try:
-        return bool(pairs) and pairs == registered_id_set('production194')['pairs']
-    except LaunchError:
-        return False
+    if not pairs:
+        return None
+    for nm in PRODUCTION_SETS:
+        try:
+            if pairs == registered_id_set(nm)['pairs']:
+                return nm
+        except LaunchError:
+            continue
+    return None
+
+
+def production_plan(plan) -> bool:
+    """★ 10-07 G2RR4-03 · 10-12 보충 20 — 이 계획이 **등록 생산 집합** (production194 · supp20) 인가 (registered_production_set 이 이름을 돌려주는가).
+    등록 집합을 못 세우면 (수확 폴더가 등록과 다르다) 거짓 — 그런 계획은 등록 생산이 아니다 (입력 지문 · 다시 읽기 M-reg · 배포 관문이 따로 막는다)."""
+    return registered_production_set(plan) is not None
 
 
 def production_observation_problem(man) -> str | None:
-    """★ 10-07 G2RR4-03 (Codex 세대 2 재검증 4 §4 Q3) — 생산 194 = import 관측 필수 (등록 §4 `run --observe-imports`).  manifest → 사유 (관측을 끈 생산 계획) | None.
-    발사 사전 점검 (preflight) · 감사 (audit) 가 같은 판정을 쓴다 — v1.3 배포 관문도 observe_imports true · 관측 객체 · 결합 기록 없는 생산 배치를 받지 않는다."""
-    if production_plan((man or {}).get('plan')) and (man or {}).get('observe_imports') is not True:
-        return ('생산 194 계획 (등록 production194) 인데 import 관측을 끈 실행 — 생산 194 는 관측 필수 (`run --observe-imports` · G2RR4-03 · 등록 §4) · '
-                '관측 없이 돈 생산 배치는 v1.3 배포 관문이 받지 않는다')
+    """★ 10-07 G2RR4-03 (Codex 세대 2 재검증 4 §4 Q3) · 10-12 보충 20 — 등록 생산 집합 (production194 · supp20) = import 관측 필수 (등록 §4 `run --observe-imports` ·
+    보충 등록 같은 줄).  manifest → 사유 (관측을 끈 등록 생산 계획) | None.  발사 사전 점검 (preflight) · 감사 (audit) 가 같은 판정을 쓴다 — v1.3 배포 관문도
+    observe_imports true · 관측 객체 · 결합 기록 없는 생산 배치를 받지 않는다."""
+    nm = registered_production_set((man or {}).get('plan'))
+    if nm and (man or {}).get('observe_imports') is not True:
+        return (f'등록 생산 계획 ({nm}) 인데 import 관측을 끈 실행 — 등록 생산 집합 ({" · ".join(PRODUCTION_SETS)}) 은 관측 필수 '
+                '(`run --observe-imports` · G2RR4-03 · 등록 §4) · 관측 없이 돈 생산 배치는 v1.3 배포 관문이 받지 않는다')
     return None
 
 
@@ -2702,7 +2727,8 @@ def _parse(argv=None):
     r = sub.add_parser('run', help='새 ROOT 에서 실행 (비어 있지 않으면 거부)')
     r.add_argument('--root', required=True)
     common_run(r)
-    r.add_argument('--cohorts', default='lhs,lhsx', help='코호트 (쉼표) — lhs = 130 · lhsx = 64')
+    r.add_argument('--cohorts', default='lhs,lhsx', help='코호트 (쉼표) — lhs = 130 · lhsx = 64 (기본 = 등록 production194) · lhss = 보충 20 '
+                                                        '(등록 supp20 · 명시할 때만 · 194 와 섞지 않는다 — 두 배치)')
     r.add_argument('--case', action='append', default=[], help='이 케이스만 (여러 번 · 시범)')
     r.add_argument('--order', choices=['cost', 'name'], default='cost', help='큐 순서 — cost = 접촉 수 큰 순 (기본)')
     r.add_argument('--network-lock', choices=['per-case', 'shared'], default='per-case',
@@ -4425,6 +4451,85 @@ def _selftest() -> int:
                 repr((_G.get('IMPORT_OBS_STAGE_SCHEMA'), sorted(ret_), psb_.get('schema'), pat_.get('unclassified'))))
 
         _scenario('㉟j G2RR5-01 잔여 분류 밖 단계 결합 기록 시나리오', _s35j)
+
+        # ═══ ㊱ ★ 10-12 보충 20 지원 (1저자 (나) · Codex 재검증 6 §7 Q9 — 두 배치 · 고정 집합 · 관측 강제 · 반례 먼저) ═════════════════════════════════
+        #   옛 판: 등록 생산 집합 = production194 하나 — 보충 20 배치는 관측 강제 · 후속 다시 읽기의 등록 집합에서 빠지고 (--expect-case 스무 개) ·
+        #   20 중 1 결손 · 다른 ID 대체 · 후막 혼입을 막을 등록 지문이 없다.
+        def _s36():
+            ids_ = [f'lhss_{i:03d}' for i in range(1, 21)]
+            pairs_ = frozenset((c_, 'lhss') for c_ in ids_)
+            reg_ = REGISTERED_ID_SETS.get('supp20') or {}
+            sp_ = COHORT_SPECS.get('lhss') or {}
+            chk('㊱ 보충 등록 집합 supp20 — n 20 · 코호트 lhss 20 · 등록 지문 = ids_digest(20 쌍) = 991cf115… · 코호트 표 lhss (expect_n 20) · '
+                '--cohorts 기본 = lhs,lhsx 그대로 (194 등록 명령 무변경)',
+                reg_.get('n') == 20 and reg_.get('cohort_n') == {'lhss': 20} and reg_.get('ids_sha256') == ids_digest(pairs_)
+                == '991cf1150b183f64bc69926a8b3e7c05453ec47e13b89ba3a6ad2fd2c981c694' and sp_.get('expect_n') == 20
+                and _parse(['run', '--root', str(tmp / 's36_args')]).cohorts == 'lhs,lhsx', repr((reg_, sp_)))
+
+            def _hdir(name_, cases_):
+                d_ = tmp / name_
+                d_.mkdir()
+                for c_ in cases_:
+                    #  원자료 sha256 (raw.atom · contact · mesh · deck) = 입력 지문의 대조값 — 사전 점검이 요구한다 (합성 값)
+                    raw_ = {k_: dict(sha256=hashlib.sha256(f'{c_}:{k_}'.encode()).hexdigest()) for k_ in ('atom', 'contact', 'mesh', 'deck')}
+                    (d_ / f'{c_}.json').write_text(json.dumps(dict(contact_scan=dict(n_rows_last=1000), raw=raw_)), encoding='utf-8')
+                (d_ / '_cohort.tsv').write_text('case_id\tblock\n', encoding='utf-8')
+                return d_
+
+            def _specs(d_):
+                return dict(COHORT_SPECS, lhss=dict(sp_, harvest=str(d_), cohort=str(d_ / '_cohort.tsv')))
+
+            h20 = _hdir('s36_h20', ids_)
+            bad_ = {'19 (한 케이스 결손)': ids_[:-1], '21 (lhss_021 추가)': ids_ + ['lhss_021'], '대체 (lhss_020 → lhss_099)': ids_[:-1] + ['lhss_099'],
+                    '후막 혼입 (lhst_036_6m 추가)': ids_ + ['lhst_036_6m']}
+            with _patch(COHORT_SPECS=_specs(h20)):
+                got_ = registered_id_set('supp20')['pairs']
+            bad_ok = {}
+            for k_, cs_ in bad_.items():
+                d_ = _hdir('s36_' + str(len(bad_ok)), cs_)
+                with _patch(COHORT_SPECS=_specs(d_)):
+                    bad_ok[k_] = _raises(lambda: registered_id_set('supp20'), LaunchError)
+            chk('㊱ supp20 = 커밋된 lhss 수확 폴더에서 열거 → 등록 지문 같아야 (production194 와 같은 규칙) — 정확히 20 = 통과 · 결손 · 추가 · 대체 · 후막 혼입 = LaunchError',
+                got_ == pairs_ and all(bad_ok.values()), repr(bad_ok))
+
+            rps = _G.get('registered_production_set')
+            pp_ = _G.get('production_plan')
+            pop_ = _G.get('production_observation_problem')
+            with _patch(COHORT_SPECS=_specs(h20)):
+                psup = build_plan(['lhss'], _specs(h20))
+                p194_ = build_plan(['lhs', 'lhsx'], cohort_specs(_parse(['run', '--root', str(tmp / 's36_p194')])))
+                pboth = dict(psup, queue=list(p194_['queue']) + list(psup['queue']))
+                p19 = dict(psup, queue=list(psup['queue'])[:-1])
+                v_ = dict(sup=rps(psup) if rps else None, p194=rps(p194_) if rps else None, both=rps(pboth) if rps else None,
+                          p19=rps(p19) if rps else None)
+                pp_v = (pp_(psup), pp_(p194_), pp_(pboth), pp_(p19)) if pp_ else None
+                ob_ = (pop_(dict(plan=psup, observe_imports=False)), pop_(dict(plan=psup, observe_imports=True))) if pop_ else None
+            chk('㊱ 등록 생산 집합 판별 — 보충 계획 = supp20 · 194 계획 = production194 (그대로) · 한 배치 214 = 등록 아님 · 19 = 등록 아님 · '
+                'production_plan 은 둘 다 참',
+                callable(rps) and v_ == dict(sup='supp20', p194='production194', both=None, p19=None) and pp_v == (True, True, False, False),
+                repr((v_, pp_v)))
+            chk('㊱ ★ 관측 강제 — 보충 20 계획인데 관측을 끈 manifest = 문제 (supp20 · 관측 필수) · 켠 manifest = 없음',
+                ob_ is not None and bool(ob_[0]) and 'supp20' in ob_[0] and '관측 필수' in ob_[0] and ob_[1] is None, repr(ob_))
+
+            base_ = ['run', '--root', str(tmp / 's36_dry'), '--cohorts', 'lhss', '--dry-run', '--allow-missing-raw', '--allow-dirty']
+            with _patch(COHORT_SPECS=_specs(h20)):
+                rc_n, o_n = _main_rc(base_)
+                rc_y, o_y = _main_rc(base_ + ['--observe-imports'])
+            chk('㊱ ★ 보충 20 dry-run — --observe-imports 없이 = 사전 점검 ⛔ (관측 필수) rc 2 · 있으면 rc 0 (아무것도 안 쓴다)',
+                rc_n == 2 and '관측 필수' in o_n and rc_y == 0 and '관측 필수' not in o_y and not (tmp / 's36_dry').exists(),
+                repr((rc_n, rc_y, [ln for ln in o_n.splitlines() if '⛔' in ln][:3], [ln for ln in o_y.splitlines() if '⛔' in ln][:3])))
+
+            pl_ = dict(cohorts=[dict(name='lhss', harvest_dir=str(h20), cohort=str(h20 / '_cohort.tsv'), union=sp_.get('union', ''),
+                                     design=sp_.get('design', ''))], queue=[dict(case=c_, cohort='lhss') for c_ in ids_])
+            mf_ = dict(schema=SCHEMA, git=dict(sha='a' * 40, short='a' * 9), code_hashes=dict(_h_real), plan=pl_, **{GK: 'g2'}, seal={GK: 'g2'})
+            ln_ = []
+            with _patch(COHORT_SPECS=_specs(h20)):
+                print_followups(tmp / 's36_fu', mf_, out=lambda *a, **k: ln_.append(' '.join(map(str, a))))
+            rr_ = [x_ for x_ in ln_ if x_.startswith('python3 scripts/g2_network_reread.py')]
+            chk('㊱ 후속 다시 읽기 명령 — 보충 20 계획 → --expect-set supp20 (케이스 스무 개를 하나씩 적지 않는다)',
+                len(rr_) == 1 and '--expect-set supp20' in rr_[0] and '--expect-case' not in rr_[0], repr(rr_))
+
+        _scenario('㊱ 보충 20 지원 시나리오', _s36)
     finally:
         for k, v in env_keep.items():
             if v is None:
