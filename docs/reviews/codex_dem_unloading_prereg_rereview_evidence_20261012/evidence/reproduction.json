@@ -1,0 +1,62 @@
+{
+  "purpose": "document-review finite arithmetic and evidence-integrity checks only",
+  "DEM_or_MPM_executed": false,
+  "project_modules_imported": false,
+  "runtime": {
+    "python": "3.12.14 (main, Aug 25 2026, 14:01:42) [MSC v.1944 64 bit (AMD64)]",
+    "platform": "Windows-11-10.0.26200-SP0"
+  },
+  "probe_results": {
+    "state": {
+      "returncode": 0,
+      "saved_json_equal": true,
+      "stderr": ""
+    },
+    "observers": {
+      "returncode": 0,
+      "saved_json_equal": true,
+      "stderr": ""
+    }
+  },
+  "attachments": {
+    "prereg.md": {
+      "sha256": "73bc55a5045b6c60377095b51558418757b3d41d694a608be5c25e505a69babd",
+      "equals_pinned_source": true
+    },
+    "request.md": {
+      "sha256": "92f9c5ee919fbec1bee304684b29e0be3f2d6d662795f58deb04f12f0a46363a",
+      "equals_pinned_source": true
+    }
+  },
+  "source": {
+    "pin": "3409814a3b6e024d6b5c7d2918aa29494b642ae1",
+    "verified_files": 97
+  },
+  "upstream": {
+    "pin": "3d5c00f20519e6bb6eb6756f51f1ad36564e649d",
+    "verified_files": 37
+  },
+  "schedule": {
+    "independent_R_end": 3602000,
+    "main_extension_end": 3660000,
+    "S0_prime": 3650000,
+    "S0_prime_window": [
+      3645000,
+      3655000
+    ],
+    "optional_extension_end": 3710000,
+    "S0_double_prime": 3700000,
+    "S0_double_prime_window": [
+      3695000,
+      3705000
+    ],
+    "S0_prime_mod_contact_cadence_10000": 0,
+    "main_end_mod_restart_cadence_50000": 10000
+  },
+  "result": "PASS",
+  "limitations": [
+    "PASS is not a DEM result, kit execution, or production-release verdict.",
+    "Synthetic decision examples are not a tested implementation of the not-yet-built kit.",
+    "Hash checks establish the reviewed files, not scientific correctness."
+  ]
+}

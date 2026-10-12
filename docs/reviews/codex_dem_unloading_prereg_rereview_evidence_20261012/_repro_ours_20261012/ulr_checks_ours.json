@@ -1,0 +1,343 @@
+{
+  "kind": "our-tree recheck of codex 10-12 unloading re-review (no DEM · no kit · no codex import)",
+  "reg": {
+    "sha256": "73bc55a5045b6c60377095b51558418757b3d41d694a608be5c25e505a69babd",
+    "sha_matches_verdict": true,
+    "lines": 685
+  },
+  "request": {
+    "sha256": "92f9c5ee919fbec1bee304684b29e0be3f2d6d662795f58deb04f12f0a46363a",
+    "sha_matches_verdict": true
+  },
+  "line_checks": {
+    "n": 34,
+    "ok": 34,
+    "rows": [
+      {
+        "line": 275,
+        "ok": true,
+        "missing": [],
+        "why": "ULR1-02 멈춤 = 첫 교차 뒤 두 단 · 분리 · 유지까지"
+      },
+      {
+        "line": 288,
+        "ok": true,
+        "missing": [],
+        "why": "ULR1-04 옛 UT = 같은 시간 창 10,000"
+      },
+      {
+        "line": 307,
+        "ok": true,
+        "missing": [],
+        "why": "ULR1-05 ③ 옛 UT 연장 (§12-4 가 대체)"
+      },
+      {
+        "line": 319,
+        "ok": true,
+        "missing": [],
+        "why": "ULR1-03 상쇄 문턱"
+      },
+      {
+        "line": 320,
+        "ok": true,
+        "missing": [],
+        "why": "ULR1-05 ① 비단조 판정이 b 를 부른다"
+      },
+      {
+        "line": 332,
+        "ok": true,
+        "missing": [],
+        "why": "ULR1-04 S4 문턱"
+      },
+      {
+        "line": 334,
+        "ok": true,
+        "missing": [],
+        "why": "ULR1-01 UNSTEADY 정의"
+      },
+      {
+        "line": 335,
+        "ok": true,
+        "missing": [],
+        "why": "ULR1-01 끝점 비정상 = 미식별"
+      },
+      {
+        "line": 336,
+        "ok": true,
+        "missing": [],
+        "why": "ULR1-02 TIMEOUT"
+      },
+      {
+        "line": 337,
+        "ok": true,
+        "missing": [],
+        "why": "ULR1-02 TIMEOUT = 하한 (조건 없음)"
+      },
+      {
+        "line": 389,
+        "ok": true,
+        "missing": [],
+        "why": "ULR1-01 상태표"
+      },
+      {
+        "line": 390,
+        "ok": true,
+        "missing": [],
+        "why": "ULR1-01 · Q2 σ_P"
+      },
+      {
+        "line": 391,
+        "ok": true,
+        "missing": [],
+        "why": "ULR1-02 상태표 (대체 표지 없음)"
+      },
+      {
+        "line": 392,
+        "ok": true,
+        "missing": [],
+        "why": "ULR1-01 TECH = 별도 범주"
+      },
+      {
+        "line": 394,
+        "ok": true,
+        "missing": [],
+        "why": "ULR1-03 표지 (값과 함께)"
+      },
+      {
+        "line": 413,
+        "ok": true,
+        "missing": [],
+        "why": "ULR1-05 ① 보고 예문의 b"
+      },
+      {
+        "line": 435,
+        "ok": true,
+        "missing": [],
+        "why": "ULR1-05 ① 보고 예문의 b"
+      },
+      {
+        "line": 473,
+        "ok": true,
+        "missing": [],
+        "why": "ULR1-05 ② UV 동시 제출 예문"
+      },
+      {
+        "line": 619,
+        "ok": true,
+        "missing": [],
+        "why": "ULR1-01 결손 끝점 = 보간 안 함"
+      },
+      {
+        "line": 625,
+        "ok": true,
+        "missing": [],
+        "why": "ULR1-04 물리 시간 = 튜플"
+      },
+      {
+        "line": 627,
+        "ok": true,
+        "missing": [],
+        "why": "ULR1-01 · 05 ③ dt 먼저"
+      },
+      {
+        "line": 629,
+        "ok": true,
+        "missing": [],
+        "why": "ULR1-01 \"팔 셋으로 끝난다\" (유한 넷에서만 참)"
+      },
+      {
+        "line": 633,
+        "ok": true,
+        "missing": [],
+        "why": "ULR1-01 결정표 1행"
+      },
+      {
+        "line": 634,
+        "ok": true,
+        "missing": [],
+        "why": "ULR1-01 결정표 2행"
+      },
+      {
+        "line": 635,
+        "ok": true,
+        "missing": [],
+        "why": "ULR1-01 결정표 3행 · ULR1-05 ③"
+      },
+      {
+        "line": 636,
+        "ok": true,
+        "missing": [],
+        "why": "ULR1-01 결정표 4행"
+      },
+      {
+        "line": 650,
+        "ok": true,
+        "missing": [],
+        "why": "ULR1-03 상태 전이"
+      },
+      {
+        "line": 651,
+        "ok": true,
+        "missing": [],
+        "why": "ULR1-03 기록 · 첫 창"
+      },
+      {
+        "line": 655,
+        "ok": true,
+        "missing": [],
+        "why": "ULR1-02 분기 위치"
+      },
+      {
+        "line": 660,
+        "ok": true,
+        "missing": [],
+        "why": "ULR1-04 W 적용 범위 한정 없음"
+      },
+      {
+        "line": 661,
+        "ok": true,
+        "missing": [],
+        "why": "ULR1-03 단 끝 벽 자료 하나"
+      },
+      {
+        "line": 662,
+        "ok": true,
+        "missing": [],
+        "why": "ULR1-04 유지 예산"
+      },
+      {
+        "line": 667,
+        "ok": true,
+        "missing": [],
+        "why": "Q2 표면 관측자 = 열거만"
+      },
+      {
+        "line": 678,
+        "ok": true,
+        "missing": [],
+        "why": "Q6 10:0 일정"
+      }
+    ],
+    "decision_block_mentions_missing_or_invalid": false
+  },
+  "arithmetic": {
+    "ULR1_01_selector": [
+      {
+        "d_dt": "0.04",
+        "d_v": "0.04",
+        "row": "UB"
+      },
+      {
+        "d_dt": "0.04",
+        "d_v": "0.2",
+        "row": "UV_dt0"
+      },
+      {
+        "d_dt": "0.2",
+        "d_v": "0.04",
+        "row": "UT"
+      },
+      {
+        "d_dt": "0.2",
+        "d_v": "0.2",
+        "row": "UV_dt0_half"
+      },
+      {
+        "d_dt": "0.1",
+        "d_v": "0.1",
+        "row": "UB"
+      },
+      {
+        "d_dt": null,
+        "d_v": "0.04",
+        "row": null
+      },
+      {
+        "d_dt": "0.04",
+        "d_v": null,
+        "row": null
+      },
+      {
+        "d_dt": "nan",
+        "d_v": "0.04",
+        "row": null
+      }
+    ],
+    "ULR1_01_codex_same": true,
+    "ULR1_02": {
+      "interp_lift_um": 0.225,
+      "rho_M_pct": 0.2026077873428664,
+      "rho_last_pct": 0.31516766920001443,
+      "false_lower_bound": true,
+      "codex_same": true
+    },
+    "ULR1_03": {
+      "net_MPa": 1.0,
+      "contact_by_650": true,
+      "tension_by_319_651": true
+    },
+    "ULR1_04": {
+      "T_W_s": 0.005,
+      "W_half_dt_steps": 10000,
+      "hold_4_12_s_ub": [
+        0.02,
+        0.06
+      ],
+      "literal_5000_at_half_dt_window_s": 0.0025,
+      "surface_um_per_window_ub": 0.003,
+      "S4_fail_ub": true,
+      "surface_um_per_window_literal": 0.0015,
+      "S4_fail_literal": false,
+      "codex_same": true
+    },
+    "ULR1_05_nonmonotone": {
+      "first_lift_um": 1.025,
+      "last_lift_um": 1.125,
+      "span_pp": 0.09004790548571841,
+      "codex_same": true
+    },
+    "Q2_S3": {
+      "sum_norms": 0.002,
+      "norm_sum": 0.0,
+      "codex_same": true
+    },
+    "Q2_sigma_P": {
+      "ddof0": 0.33,
+      "ddof1": 0.33857285618810085,
+      "3ddof0": 0.99,
+      "3ddof1": 1.0157185685643024,
+      "noise_floor_ddof0": false,
+      "noise_floor_ddof1": true,
+      "codex_same": true
+    },
+    "Q2_surface": {
+      "omit_empty_mean": 100.0,
+      "zero_empty_mean": 99.0,
+      "p999_linear": 190.09999999999962,
+      "p999_nearest_rank": 200.0,
+      "codex_same": true
+    },
+    "Q3": {
+      "A_width_pp": 0.18009581097143681,
+      "max_bracket_abs_diff_pp": 0.2200958109714368,
+      "select_1.00_1.04_1.20": "UV_dt0",
+      "unmeasured_corner_diff_pp": 0.6,
+      "codex_same": true
+    },
+    "Q6": {
+      "main_end": 3660000,
+      "S0p_mod_10000": 0,
+      "main_end_mod_50000": 10000,
+      "opt_end": 3710000,
+      "S0pp_window_inside": true,
+      "R_continue_would_be": 3662000
+    }
+  },
+  "source_blobs": {
+    "pin": "3409814a3b6e024d6b5c7d2918aa29494b642ae1",
+    "files": 97,
+    "same": 97,
+    "diff": []
+  },
+  "all_ok": true
+}

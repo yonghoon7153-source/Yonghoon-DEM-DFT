@@ -1,0 +1,14 @@
+{
+  "pin": "3409814a3b6e024d6b5c7d2918aa29494b642ae1",
+  "upstream_pin": "3d5c00f20519e6bb6eb6756f51f1ad36564e649d",
+  "request_date": "2026-10-11T13:40:23Z",
+  "request_attachment_equals_pin": true,
+  "prereg_attachment_equals_pin": true,
+  "attachment_sha256": {
+    "prereg.md": "73bc55a5045b6c60377095b51558418757b3d41d694a608be5c25e505a69babd",
+    "request.md": "92f9c5ee919fbec1bee304684b29e0be3f2d6d662795f58deb04f12f0a46363a"
+  },
+  "source_files": 97,
+  "upstream_files": 37,
+  "upstream_errors": []
+}

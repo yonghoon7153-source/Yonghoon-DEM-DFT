@@ -1,0 +1,206 @@
+{
+  "kind": "finite_synthetic_arithmetic_not_DEM_not_production_implementation_test",
+  "source": "submitted/prereg.md",
+  "four_finite_rows": [
+    {
+      "delta_dt_pp": 0.04,
+      "delta_v_pp": 0.04,
+      "selected": "UB"
+    },
+    {
+      "delta_dt_pp": 0.04,
+      "delta_v_pp": 0.2,
+      "selected": "UV_dt0"
+    },
+    {
+      "delta_dt_pp": 0.2,
+      "delta_v_pp": 0.04,
+      "selected": "UT"
+    },
+    {
+      "delta_dt_pp": 0.2,
+      "delta_v_pp": 0.2,
+      "selected": "UV_dt0_half"
+    }
+  ],
+  "equality_boundary": {
+    "delta_dt_pp": 0.1,
+    "delta_v_pp": 0.1,
+    "selected": "UB"
+  },
+  "undefined_inputs": [
+    {
+      "cause": "UT endpoint invalid, delta_dt unavailable",
+      "selected": "NO_REGISTERED_ROW"
+    },
+    {
+      "cause": "UV endpoint invalid, delta_v unavailable",
+      "selected": "NO_REGISTERED_ROW"
+    },
+    {
+      "cause": "NaN is neither registered <= nor >",
+      "selected": "NO_REGISTERED_ROW"
+    }
+  ],
+  "pressure_positive_cancellation": {
+    "force_equivalent_pressure_MPa": {
+      "compression": 1.6,
+      "tension_magnitude": 0.6
+    },
+    "net_pressure_MPa": 1.0,
+    "CONTACT_predicate_line_650": true,
+    "TENSION_assignment_line_651": true,
+    "primary_eligibility": "not_fixed_by_label_alone"
+  },
+  "temporal_state_fixtures_needed": [
+    {
+      "contact_counts_per_window": [
+        2,
+        0,
+        0
+      ],
+      "pressures_MPa": [
+        0.4,
+        0,
+        0
+      ],
+      "question": "zero-contact first window and CONTACT to SEPARATED without a TENSION visit"
+    },
+    {
+      "contact_counts_per_window": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "pressures_MPa": [
+        0,
+        0,
+        0.2,
+        0.2
+      ],
+      "question": "recontact during four post-separation hold windows; reset or invalidate surface endpoint"
+    }
+  ],
+  "time_window_interpretations": [
+    {
+      "arm": "UB",
+      "dt_s": 1e-06,
+      "window_steps": 5000,
+      "window_s": 0.005,
+      "hold_s": [
+        0.02,
+        0.06
+      ]
+    },
+    {
+      "arm": "UT_keep_physical_time_line_288",
+      "dt_s": 5e-07,
+      "window_steps": 10000,
+      "window_s": 0.005,
+      "hold_s": [
+        0.02,
+        0.06
+      ]
+    },
+    {
+      "arm": "UT_literal_line_660",
+      "dt_s": 5e-07,
+      "window_steps": 5000,
+      "window_s": 0.0025,
+      "hold_s": [
+        0.01,
+        0.03
+      ]
+    },
+    {
+      "arm": "UV_half_dt_keep_physical_time",
+      "dt_s": 5e-07,
+      "window_steps": 10000,
+      "window_s": 0.005,
+      "hold_s": [
+        0.04,
+        0.12
+      ]
+    },
+    {
+      "arm": "UV_half_dt_literal_line_660",
+      "dt_s": 5e-07,
+      "window_steps": 5000,
+      "window_s": 0.0025,
+      "hold_s": [
+        0.02,
+        0.06
+      ]
+    }
+  ],
+  "final_slow_arm_dt_context": {
+    "observed_rho_pp": {
+      "UB_fast_dt0": 1.0,
+      "UT_fast_dt0_half": 1.04,
+      "UV_slow_dt0": 1.2
+    },
+    "delta_dt_fast_pp": 0.04,
+    "delta_v_at_dt0_pp": 0.2,
+    "selected": "UV_dt0",
+    "unmeasured_corner_consistent_with_all_observations": {
+      "slow_dt0_half_rho_pp": 1.8,
+      "slow_dt_difference_pp": 0.6
+    }
+  },
+  "point_threshold_vs_bracket": {
+    "h0_um": 111.052,
+    "A_width_pp": 0.18009581097143681,
+    "UB_interval_pp": [
+      1.0,
+      1.1800958109714368
+    ],
+    "UT_interval_pp": [
+      1.04,
+      1.2200958109714368
+    ],
+    "interpolant_abs_difference_pp": 0.04,
+    "possible_abs_difference_range_from_brackets_pp": [
+      0,
+      0.2200958109714368
+    ],
+    "interpretation": "point-estimate selector remains deterministic; bracket-robust pass is not established"
+  },
+  "post_measurement_timeout": {
+    "lift_um": [
+      0.2,
+      0.25,
+      0.3,
+      0.35
+    ],
+    "pressure_MPa": [
+      1.2,
+      0.8,
+      0.6,
+      0.4
+    ],
+    "assumptions": "all four endpoints normal and contacting; +2 check complete; separation not reached before timeout",
+    "interpolated_lift_um": 0.225,
+    "valid_rho_percent": 0.2026077873428664,
+    "old_unconditional_timeout_claim_rho_greater_than_percent": 0.31516766920001443,
+    "contradiction": true
+  },
+  "live_nonmonotone_b_reference": {
+    "lift_um": [
+      1.0,
+      1.05,
+      1.1,
+      1.15
+    ],
+    "pressure_MPa": [
+      1.2,
+      0.8,
+      1.3,
+      0.7
+    ],
+    "first_crossing_rho_percent": 0.9229910312286136,
+    "last_crossing_rho_percent": 1.013038936714332,
+    "span_pp": 0.09004790548571841,
+    "b": "removed_in_revision_but_still_invoked_by_line_320"
+  }
+}
