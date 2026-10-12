@@ -1,0 +1,54 @@
+{
+  "static_helper_errors": [
+    {
+      "chunk_id": "8b5773",
+      "exit_code": 1,
+      "wall_time_s": 6.683419,
+      "scope": "Own read-only bootstrap helper before new directory creation",
+      "error": "FileNotFoundError: C:/Users/BML/Desktop/COMSOL_MICROSHORT_S1_OPEN_CONNECTION_PREPARATION_20261009.zip",
+      "cause": "Helper incorrectly chose Desktop copy, not the instruction-designated original preparation folder.",
+      "resolution": "Used existing designated preparation folder ZIP at exactly the same sealed size/SHA. No received/candidate execution or function test; no target/root fallback.",
+      "source": "Tool result transcription; not an independently recorded OS audit"
+    },
+    {
+      "chunk_id": "b41600",
+      "exit_code": 0,
+      "wall_time_s": 6.6666479,
+      "scope": "Premature read of new explanatory MD while parallel author was still writing",
+      "error": "Get-Content: VALIDATION_PROPOSAL_KO.md does not exist yet",
+      "resolution": "No candidate/test action. Writer subsequently completed file; no source-path substitution.",
+      "source": "Tool-output transcription"
+    }
+  ],
+  "static_tool_returns": [
+    {
+      "chunk_id": "8ce6c3",
+      "exit_code": 0,
+      "wall_time_s": 6.5712449,
+      "output": {
+        "static_checks": 151,
+        "all_matched": true,
+        "static_elapsed_s": 91.3476796,
+        "function_spans": 86,
+        "functional_tests": 0
+      }
+    },
+    {
+      "chunk_id": "babd7f",
+      "exit_code": 0,
+      "wall_time_s": 6.2788533,
+      "output": {
+        "code_manifest_sha256": "feb12ef6991141aab59fd2fbc0d5f0d138bdd735255aa7123274503ce80b8ecc",
+        "sealed_members": 14,
+        "groups": 9,
+        "cases": 93,
+        "counts": {
+          "Python": 87,
+          "Java_helper": 6
+        },
+        "plan_reseal_elapsed_s": 423.4650326,
+        "functional_tests": 0
+      }
+    }
+  ]
+}

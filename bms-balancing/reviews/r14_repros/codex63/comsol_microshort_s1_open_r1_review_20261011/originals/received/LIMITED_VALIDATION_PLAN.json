@@ -1,0 +1,4904 @@
+{
+  "schema": "S1_OPEN_R1_CHANGED_BRANCH_PLAN_V2",
+  "approved": false,
+  "usable": false,
+  "native_ready": false,
+  "status": "PROPOSAL_ONLY_NOT_EXECUTED",
+  "groups": 9,
+  "unique_cases": 93,
+  "counts": {
+    "Python": 87,
+    "Java_helper": 6
+  },
+  "engine_selection_source": {
+    "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/normal30_limited_validation_R1_20260928/COMMANDS.json",
+    "bytes": 2113,
+    "sha256": "725e19de5f0b31228b2c166d835f0f2630bc406164f1dbd329339b183e98fa7c",
+    "observation_scope": "HISTORICAL_SELECTION_RECORD_ONLY_NOT_CURRENT_EXECUTION"
+  },
+  "fixture_proposed_only_not_created": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/microshort_s1_open_connection_r1_20261010/proposed_changed_validation_001",
+  "commands": {
+    "Python": {
+      "argv": [
+        "C:/Users/BML/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/python.exe",
+        "-I",
+        "-S",
+        "-B",
+        "-X",
+        "utf8",
+        "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/microshort_s1_open_connection_r1_20261010/proposed_changed_validation_001/run_python.py"
+      ],
+      "cwd": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/microshort_s1_open_connection_r1_20261010/proposed_changed_validation_001",
+      "max_sessions": 1,
+      "timeout_s": 180,
+      "authorization": "SEPARATE_FUTURE_APPROVAL_REQUIRED_NOT_RUN"
+    },
+    "Java_compile": {
+      "argv": [
+        "C:/Program Files/COMSOL/COMSOL63/Multiphysics/java/win64/jre/bin/javac.exe",
+        "-proc:none",
+        "-d",
+        "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/microshort_s1_open_connection_r1_20261010/proposed_changed_validation_001/classes",
+        "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/microshort_s1_open_connection_r1_20261010/proposed_changed_validation_001/OpenReadbackHarness.java"
+      ],
+      "cwd": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/microshort_s1_open_connection_r1_20261010/proposed_changed_validation_001",
+      "max_sessions": 1,
+      "timeout_s": 90,
+      "authorization": "SEPARATE_FUTURE_APPROVAL_REQUIRED_NOT_RUN"
+    },
+    "Java_helper": {
+      "argv": [
+        "C:/Program Files/COMSOL/COMSOL63/Multiphysics/java/win64/jre/bin/java.exe",
+        "-cp",
+        "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/microshort_s1_open_connection_r1_20261010/proposed_changed_validation_001/classes",
+        "OpenReadbackHarness"
+      ],
+      "cwd": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/microshort_s1_open_connection_r1_20261010/proposed_changed_validation_001",
+      "max_sessions": 1,
+      "timeout_s": 60,
+      "authorization": "SEPARATE_FUTURE_APPROVAL_REQUIRED_NOT_RUN"
+    }
+  },
+  "budget_proposal_s": {
+    "harness_seal": 600,
+    "Python": 180,
+    "Java_compile": 90,
+    "Java_helper": 60,
+    "preservation_delivery": 300,
+    "incomplete_closeout": 120,
+    "total": 1350
+  },
+  "no_PS_session_reason": "No Parent changes or new Parent projection; existing PS acceptance reused. Future native->Parent adapter still OPEN and requires its own changed-path validation when implemented.",
+  "requirements": [
+    "User separate approval before harness/test",
+    "Freeze exact source/engine/harness/input byte hashes and expected reasons/reach before first test",
+    "Block native/console/Job/file side effects before candidate load",
+    "Only exact new Java helpers plus necessary old pure dependencies; no COMSOL jars/full model",
+    "Actual consumer/control functions for integration; no lookalike replacement",
+    "Expected rejection is not unexpected failure; any unrelated earlier error is failure",
+    "First unexpected failure/time budget stop, preserve stderr/rc and unexecuted IDs; no edits/retry/probe/fallback",
+    "All results keep native_ready=false; installed/OS proof cannot come from fixtures",
+    "N1/N2 new cases must traverse actual ResourceSession.decide where designated; no replacement elapsed-time or threshold evaluator.",
+    "Future harness must preserve all exact source span bytes and record actual call/return/exception reach. Static inspection is not PASS.",
+    "Independent start_record is constructed once per session before raw samples; no refreshed origin between samples.",
+    "All fixture values below are declarative proposals only; no fixture, harness, approval, executable, runtime folder or report is created by this plan.",
+    "Freeze exact inputs, expected fields, dependency spans, harness and engine identities before separate test approval; incomplete materialization means NOT_READY."
+  ],
+  "cases": [
+    {
+      "id": "C01-01",
+      "group": "C01",
+      "engine": "Python",
+      "target_function": "numeric_table",
+      "case": "valid bytes/units",
+      "expected_reason_or_result": "parsed Decimal rows",
+      "fixture_rule": "small exact producer header plus data; identities computed before first test",
+      "positive_control": "C01-01",
+      "reached_function_required": "numeric_table",
+      "unexpected_exception_is_pass": false,
+      "invocations": 1,
+      "input_mutation": "small exact producer header plus data; identities computed before first test",
+      "expected_assertion": {
+        "kind": "return",
+        "equals": [
+          {
+            "time_s": "Decimal('0')",
+            "value": "Decimal('1')"
+          },
+          {
+            "time_s": "Decimal('1')",
+            "value": "Decimal('2')"
+          }
+        ]
+      },
+      "required_reach": [
+        "numeric_table"
+      ],
+      "forbidden_reach": [
+        "COMSOL",
+        "JVM_model",
+        "OS_process_start",
+        "Job_API",
+        "console_input",
+        "native_provider",
+        "control.execute_once"
+      ],
+      "call_counts": {
+        "target": 1
+      },
+      "source_span_reference": "FUNCTION_SPANS.json",
+      "actual_execution": "NOT_EXECUTED"
+    },
+    {
+      "id": "C01-02",
+      "group": "C01",
+      "engine": "Python",
+      "target_function": "numeric_table",
+      "case": "changed bytes",
+      "expected_reason_or_result": "RAW_IDENTITY",
+      "fixture_rule": "hold expected hash; mutate one byte",
+      "positive_control": "C01-01",
+      "reached_function_required": "numeric_table",
+      "unexpected_exception_is_pass": false,
+      "invocations": 1,
+      "input_mutation": "hold expected hash; mutate one byte",
+      "expected_assertion": {
+        "kind": "exception",
+        "class": "ConnectionError",
+        "reason": "RAW_IDENTITY",
+        "stage": "bind_bytes",
+        "message": "RAW_IDENTITY@bind_bytes"
+      },
+      "required_reach": [
+        "numeric_table"
+      ],
+      "forbidden_reach": [
+        "COMSOL",
+        "JVM_model",
+        "OS_process_start",
+        "Job_API",
+        "console_input",
+        "native_provider",
+        "control.execute_once"
+      ],
+      "call_counts": {
+        "target": 1
+      },
+      "source_span_reference": "FUNCTION_SPANS.json",
+      "actual_execution": "NOT_EXECUTED"
+    },
+    {
+      "id": "C01-03",
+      "group": "C01",
+      "engine": "Python",
+      "target_function": "numeric_table",
+      "case": "header mismatch",
+      "expected_reason_or_result": "TABLE_HEADER_OR_UNITS",
+      "fixture_rule": "rehash fixture; change header only",
+      "positive_control": "C01-01",
+      "reached_function_required": "numeric_table",
+      "unexpected_exception_is_pass": false,
+      "invocations": 1,
+      "input_mutation": "rehash fixture; change header only",
+      "expected_assertion": {
+        "kind": "exception",
+        "class": "ConnectionError",
+        "reason": "TABLE_HEADER_OR_UNITS",
+        "stage": "numeric_table",
+        "message": "TABLE_HEADER_OR_UNITS@numeric_table"
+      },
+      "required_reach": [
+        "numeric_table"
+      ],
+      "forbidden_reach": [
+        "COMSOL",
+        "JVM_model",
+        "OS_process_start",
+        "Job_API",
+        "console_input",
+        "native_provider",
+        "control.execute_once"
+      ],
+      "call_counts": {
+        "target": 1
+      },
+      "source_span_reference": "FUNCTION_SPANS.json",
+      "actual_execution": "NOT_EXECUTED"
+    },
+    {
+      "id": "C01-04",
+      "group": "C01",
+      "engine": "Python",
+      "target_function": "numeric_table",
+      "case": "unit mismatch",
+      "expected_reason_or_result": "TABLE_HEADER_OR_UNITS",
+      "fixture_rule": "raw units array differs; valid data",
+      "positive_control": "C01-01",
+      "reached_function_required": "numeric_table",
+      "unexpected_exception_is_pass": false,
+      "invocations": 1,
+      "input_mutation": "raw units array differs; valid data",
+      "expected_assertion": {
+        "kind": "exception",
+        "class": "ConnectionError",
+        "reason": "TABLE_HEADER_OR_UNITS",
+        "stage": "numeric_table",
+        "message": "TABLE_HEADER_OR_UNITS@numeric_table"
+      },
+      "required_reach": [
+        "numeric_table"
+      ],
+      "forbidden_reach": [
+        "COMSOL",
+        "JVM_model",
+        "OS_process_start",
+        "Job_API",
+        "console_input",
+        "native_provider",
+        "control.execute_once"
+      ],
+      "call_counts": {
+        "target": 1
+      },
+      "source_span_reference": "FUNCTION_SPANS.json",
+      "actual_execution": "NOT_EXECUTED"
+    },
+    {
+      "id": "C01-05",
+      "group": "C01",
+      "engine": "Python",
+      "target_function": "numeric_table",
+      "case": "ragged row",
+      "expected_reason_or_result": "TABLE_WIDTH",
+      "fixture_rule": "rehash raw with extra cell",
+      "positive_control": "C01-01",
+      "reached_function_required": "numeric_table",
+      "unexpected_exception_is_pass": false,
+      "invocations": 1,
+      "input_mutation": "rehash raw with extra cell",
+      "expected_assertion": {
+        "kind": "exception",
+        "class": "ConnectionError",
+        "reason": "TABLE_WIDTH",
+        "stage": "numeric_table",
+        "message": "TABLE_WIDTH@numeric_table"
+      },
+      "required_reach": [
+        "numeric_table"
+      ],
+      "forbidden_reach": [
+        "COMSOL",
+        "JVM_model",
+        "OS_process_start",
+        "Job_API",
+        "console_input",
+        "native_provider",
+        "control.execute_once"
+      ],
+      "call_counts": {
+        "target": 1
+      },
+      "source_span_reference": "FUNCTION_SPANS.json",
+      "actual_execution": "NOT_EXECUTED"
+    },
+    {
+      "id": "C01-06",
+      "group": "C01",
+      "engine": "Python",
+      "target_function": "numeric_table",
+      "case": "NaN",
+      "expected_reason_or_result": "DECIMAL_NONFINITE",
+      "fixture_rule": "rehash NaN cell; other fields valid",
+      "positive_control": "C01-01",
+      "reached_function_required": "numeric_table",
+      "unexpected_exception_is_pass": false,
+      "invocations": 1,
+      "input_mutation": "rehash NaN cell; other fields valid",
+      "expected_assertion": {
+        "kind": "exception",
+        "class": "ConnectionError",
+        "reason": "DECIMAL_NONFINITE",
+        "stage": "numeric_table",
+        "message": "DECIMAL_NONFINITE@numeric_table"
+      },
+      "required_reach": [
+        "numeric_table"
+      ],
+      "forbidden_reach": [
+        "COMSOL",
+        "JVM_model",
+        "OS_process_start",
+        "Job_API",
+        "console_input",
+        "native_provider",
+        "control.execute_once"
+      ],
+      "call_counts": {
+        "target": 1
+      },
+      "source_span_reference": "FUNCTION_SPANS.json",
+      "actual_execution": "NOT_EXECUTED"
+    },
+    {
+      "id": "C01-07",
+      "group": "C01",
+      "engine": "Python",
+      "target_function": "numeric_table",
+      "case": "header only",
+      "expected_reason_or_result": "EMPTY_TABLE",
+      "fixture_rule": "nonzero header bytes; correct identity",
+      "positive_control": "C01-01",
+      "reached_function_required": "numeric_table",
+      "unexpected_exception_is_pass": false,
+      "invocations": 1,
+      "input_mutation": "nonzero header bytes; correct identity",
+      "expected_assertion": {
+        "kind": "exception",
+        "class": "ConnectionError",
+        "reason": "EMPTY_TABLE",
+        "stage": "numeric_table",
+        "message": "EMPTY_TABLE@numeric_table"
+      },
+      "required_reach": [
+        "numeric_table"
+      ],
+      "forbidden_reach": [
+        "COMSOL",
+        "JVM_model",
+        "OS_process_start",
+        "Job_API",
+        "console_input",
+        "native_provider",
+        "control.execute_once"
+      ],
+      "call_counts": {
+        "target": 1
+      },
+      "source_span_reference": "FUNCTION_SPANS.json",
+      "actual_execution": "NOT_EXECUTED"
+    },
+    {
+      "id": "C02-01",
+      "group": "C02",
+      "engine": "Python",
+      "target_function": "charge_projection",
+      "case": "normal full grid",
+      "expected_reason_or_result": "exact eight fields",
+      "fixture_rule": "native/global/leak same >=3 times and duplicate RN/RP/j equal",
+      "positive_control": "C02-01",
+      "reached_function_required": "charge_projection (or bind_grid/exact for the specified rejection)",
+      "unexpected_exception_is_pass": false,
+      "invocations": 1,
+      "input_mutation": "native/global/leak same >=3 times and duplicate RN/RP/j equal",
+      "expected_assertion": {
+        "kind": "return",
+        "rows": 3,
+        "exact_keys": [
+          "time_s",
+          "j",
+          "RN",
+          "RP",
+          "I",
+          "LiN",
+          "LiP",
+          "LiE"
+        ],
+        "exact_values": "time_s=Decimal(t), j=1, RN=1, RP=-1, I=2, LiN=10, LiP=20, LiE=30; all values Decimal"
+      },
+      "required_reach": [
+        "charge_projection (or bind_grid/exact for the specified rejection)"
+      ],
+      "forbidden_reach": [
+        "COMSOL",
+        "JVM_model",
+        "OS_process_start",
+        "Job_API",
+        "console_input",
+        "native_provider",
+        "control.execute_once"
+      ],
+      "call_counts": {
+        "target": 1
+      },
+      "source_span_reference": "FUNCTION_SPANS.json",
+      "actual_execution": "NOT_EXECUTED"
+    },
+    {
+      "id": "C02-02",
+      "group": "C02",
+      "engine": "Python",
+      "target_function": "charge_projection",
+      "case": "leak omits stored time",
+      "expected_reason_or_result": "FULL_GRID_MISMATCH",
+      "fixture_rule": "native/global full; leak remove middle only",
+      "positive_control": "C02-01",
+      "reached_function_required": "charge_projection (or bind_grid/exact for the specified rejection)",
+      "unexpected_exception_is_pass": false,
+      "invocations": 1,
+      "input_mutation": "native/global full; leak remove middle only",
+      "expected_assertion": {
+        "kind": "exception",
+        "class": "ConnectionError",
+        "reason": "FULL_GRID_MISMATCH",
+        "stage": "bind_grid",
+        "message": "FULL_GRID_MISMATCH@bind_grid"
+      },
+      "required_reach": [
+        "charge_projection (or bind_grid/exact for the specified rejection)"
+      ],
+      "forbidden_reach": [
+        "COMSOL",
+        "JVM_model",
+        "OS_process_start",
+        "Job_API",
+        "console_input",
+        "native_provider",
+        "control.execute_once"
+      ],
+      "call_counts": {
+        "target": 1
+      },
+      "source_span_reference": "FUNCTION_SPANS.json",
+      "actual_execution": "NOT_EXECUTED"
+    },
+    {
+      "id": "C02-03",
+      "group": "C02",
+      "engine": "Python",
+      "target_function": "charge_projection",
+      "case": "duplicate current differs",
+      "expected_reason_or_result": "DUPLICATE_CURRENT_DISAGREEMENT",
+      "fixture_rule": "valid grids; alter RN on leakage row",
+      "positive_control": "C02-01",
+      "reached_function_required": "charge_projection (or bind_grid/exact for the specified rejection)",
+      "unexpected_exception_is_pass": false,
+      "invocations": 1,
+      "input_mutation": "valid grids; alter RN on leakage row",
+      "expected_assertion": {
+        "kind": "exception",
+        "class": "ConnectionError",
+        "reason": "DUPLICATE_CURRENT_DISAGREEMENT",
+        "stage": "charge_projection",
+        "message": "DUPLICATE_CURRENT_DISAGREEMENT@charge_projection"
+      },
+      "required_reach": [
+        "charge_projection (or bind_grid/exact for the specified rejection)"
+      ],
+      "forbidden_reach": [
+        "COMSOL",
+        "JVM_model",
+        "OS_process_start",
+        "Job_API",
+        "console_input",
+        "native_provider",
+        "control.execute_once"
+      ],
+      "call_counts": {
+        "target": 1
+      },
+      "source_span_reference": "FUNCTION_SPANS.json",
+      "actual_execution": "NOT_EXECUTED"
+    },
+    {
+      "id": "C02-04",
+      "group": "C02",
+      "engine": "Python",
+      "target_function": "charge_projection",
+      "case": "repeated time",
+      "expected_reason_or_result": "GRID_ORDER_OR_RANGE",
+      "fixture_rule": "repeat time in all three grids to reach order guard",
+      "positive_control": "C02-01",
+      "reached_function_required": "charge_projection (or bind_grid/exact for the specified rejection)",
+      "unexpected_exception_is_pass": false,
+      "invocations": 1,
+      "input_mutation": "repeat time in all three grids to reach order guard",
+      "expected_assertion": {
+        "kind": "exception",
+        "class": "ConnectionError",
+        "reason": "GRID_ORDER_OR_RANGE",
+        "stage": "bind_grid",
+        "message": "GRID_ORDER_OR_RANGE@bind_grid"
+      },
+      "required_reach": [
+        "charge_projection (or bind_grid/exact for the specified rejection)"
+      ],
+      "forbidden_reach": [
+        "COMSOL",
+        "JVM_model",
+        "OS_process_start",
+        "Job_API",
+        "console_input",
+        "native_provider",
+        "control.execute_once"
+      ],
+      "call_counts": {
+        "target": 1
+      },
+      "source_span_reference": "FUNCTION_SPANS.json",
+      "actual_execution": "NOT_EXECUTED"
+    },
+    {
+      "id": "C02-05",
+      "group": "C02",
+      "engine": "Python",
+      "target_function": "charge_projection",
+      "case": "Double time transport",
+      "expected_reason_or_result": "DECIMAL_TRANSPORT",
+      "fixture_rule": "native_grid one Python float; numeric tables valid",
+      "positive_control": "C02-01",
+      "reached_function_required": "charge_projection (or bind_grid/exact for the specified rejection)",
+      "unexpected_exception_is_pass": false,
+      "invocations": 1,
+      "input_mutation": "native_grid one Python float; numeric tables valid",
+      "expected_assertion": {
+        "kind": "exception",
+        "class": "ConnectionError",
+        "reason": "DECIMAL_TRANSPORT",
+        "stage": "bind_grid",
+        "message": "DECIMAL_TRANSPORT@bind_grid"
+      },
+      "required_reach": [
+        "charge_projection (or bind_grid/exact for the specified rejection)"
+      ],
+      "forbidden_reach": [
+        "COMSOL",
+        "JVM_model",
+        "OS_process_start",
+        "Job_API",
+        "console_input",
+        "native_provider",
+        "control.execute_once"
+      ],
+      "call_counts": {
+        "target": 1
+      },
+      "source_span_reference": "FUNCTION_SPANS.json",
+      "actual_execution": "NOT_EXECUTED"
+    },
+    {
+      "id": "C02-06",
+      "group": "C02",
+      "engine": "Python",
+      "target_function": "charge_projection",
+      "case": "time beyond end",
+      "expected_reason_or_result": "GRID_ORDER_OR_RANGE",
+      "fixture_rule": "same full grids extend beyond unchanged configured end",
+      "positive_control": "C02-01",
+      "reached_function_required": "charge_projection (or bind_grid/exact for the specified rejection)",
+      "unexpected_exception_is_pass": false,
+      "invocations": 1,
+      "input_mutation": "same full grids extend beyond unchanged configured end",
+      "expected_assertion": {
+        "kind": "exception",
+        "class": "ConnectionError",
+        "reason": "GRID_ORDER_OR_RANGE",
+        "stage": "bind_grid",
+        "message": "GRID_ORDER_OR_RANGE@bind_grid"
+      },
+      "required_reach": [
+        "charge_projection (or bind_grid/exact for the specified rejection)"
+      ],
+      "forbidden_reach": [
+        "COMSOL",
+        "JVM_model",
+        "OS_process_start",
+        "Job_API",
+        "console_input",
+        "native_provider",
+        "control.execute_once"
+      ],
+      "call_counts": {
+        "target": 1
+      },
+      "source_span_reference": "FUNCTION_SPANS.json",
+      "actual_execution": "NOT_EXECUTED"
+    },
+    {
+      "id": "C03-01",
+      "group": "C03",
+      "engine": "Python",
+      "target_function": "request_prefix",
+      "case": "normal all requests",
+      "expected_reason_or_result": "normal complete prefix",
+      "fixture_rule": "fixed end and >1 request; full stored grid",
+      "positive_control": "C03-01",
+      "reached_function_required": "request_prefix",
+      "unexpected_exception_is_pass": false,
+      "invocations": 1,
+      "input_mutation": "fixed end and >1 request; full stored grid",
+      "expected_assertion": {
+        "kind": "return",
+        "equals": {
+          "safe_end_s": "2",
+          "requested_prefix_s": [
+            "0",
+            "1",
+            "2"
+          ],
+          "actual_times_s": [
+            "0",
+            "1",
+            "2"
+          ],
+          "guard_pair": null,
+          "native_reason_verification": "OPEN_NOT_PROVED_BY_THIS_PROJECTION"
+        }
+      },
+      "required_reach": [
+        "request_prefix"
+      ],
+      "forbidden_reach": [
+        "COMSOL",
+        "JVM_model",
+        "OS_process_start",
+        "Job_API",
+        "console_input",
+        "native_provider",
+        "control.execute_once"
+      ],
+      "call_counts": {
+        "target": 1
+      },
+      "source_span_reference": "FUNCTION_SPANS.json",
+      "actual_execution": "NOT_EXECUTED"
+    },
+    {
+      "id": "C03-02",
+      "group": "C03",
+      "engine": "Python",
+      "target_function": "request_prefix",
+      "case": "protective nonrequest stop",
+      "expected_reason_or_result": "prefix ends <= t_minus; pair retained",
+      "fixture_rule": "last two states not both requested; stop strictly before end",
+      "positive_control": "C03-01",
+      "reached_function_required": "request_prefix",
+      "unexpected_exception_is_pass": false,
+      "invocations": 1,
+      "input_mutation": "last two states not both requested; stop strictly before end",
+      "expected_assertion": {
+        "kind": "return",
+        "equals": {
+          "safe_end_s": "1.5",
+          "requested_prefix_s": [
+            "0",
+            "1"
+          ],
+          "actual_times_s": [
+            "0",
+            "1",
+            "1.5",
+            "1.6"
+          ],
+          "guard_pair": {
+            "t_minus": "1.5",
+            "t_plus": "1.6"
+          },
+          "native_reason_verification": "OPEN_NOT_PROVED_BY_THIS_PROJECTION"
+        }
+      },
+      "required_reach": [
+        "request_prefix"
+      ],
+      "forbidden_reach": [
+        "COMSOL",
+        "JVM_model",
+        "OS_process_start",
+        "Job_API",
+        "console_input",
+        "native_provider",
+        "control.execute_once"
+      ],
+      "call_counts": {
+        "target": 1
+      },
+      "source_span_reference": "FUNCTION_SPANS.json",
+      "actual_execution": "NOT_EXECUTED"
+    },
+    {
+      "id": "C03-03",
+      "group": "C03",
+      "engine": "Python",
+      "target_function": "request_prefix",
+      "case": "missing scheduled prefix",
+      "expected_reason_or_result": "REQUEST_PREFIX_MISSING",
+      "fixture_rule": "C03 normal fixture: remove native time '1' only; retain 0 and endpoint2",
+      "positive_control": "C03-01",
+      "reached_function_required": "request_prefix",
+      "unexpected_exception_is_pass": false,
+      "invocations": 1,
+      "input_mutation": "C03 normal fixture: remove native time '1' only; retain 0 and endpoint2",
+      "expected_assertion": {
+        "kind": "exception",
+        "class": "ConnectionError",
+        "reason": "REQUEST_PREFIX_MISSING",
+        "stage": "request_prefix",
+        "message": "REQUEST_PREFIX_MISSING@request_prefix"
+      },
+      "required_reach": [
+        "request_prefix"
+      ],
+      "forbidden_reach": [
+        "COMSOL",
+        "JVM_model",
+        "OS_process_start",
+        "Job_API",
+        "console_input",
+        "native_provider",
+        "control.execute_once"
+      ],
+      "call_counts": {
+        "target": 1
+      },
+      "source_span_reference": "FUNCTION_SPANS.json",
+      "actual_execution": "NOT_EXECUTED"
+    },
+    {
+      "id": "C03-04",
+      "group": "C03",
+      "engine": "Python",
+      "target_function": "request_prefix",
+      "case": "t0 only safe prefix",
+      "expected_reason_or_result": "PREFIX_EMPTY_OR_ZERO_ONLY",
+      "fixture_rule": "C03 protective fixture: native_grid=['0','0.25','0.5'],guard_pair={t_minus:'0.25',t_plus:'0.5'}, requests unchanged",
+      "positive_control": "C03-01",
+      "reached_function_required": "request_prefix",
+      "unexpected_exception_is_pass": false,
+      "invocations": 1,
+      "input_mutation": "C03 protective fixture: native_grid=['0','0.25','0.5'],guard_pair={t_minus:'0.25',t_plus:'0.5'}, requests unchanged",
+      "expected_assertion": {
+        "kind": "exception",
+        "class": "ConnectionError",
+        "reason": "PREFIX_EMPTY_OR_ZERO_ONLY",
+        "stage": "request_prefix",
+        "message": "PREFIX_EMPTY_OR_ZERO_ONLY@request_prefix"
+      },
+      "required_reach": [
+        "request_prefix"
+      ],
+      "forbidden_reach": [
+        "COMSOL",
+        "JVM_model",
+        "OS_process_start",
+        "Job_API",
+        "console_input",
+        "native_provider",
+        "control.execute_once"
+      ],
+      "call_counts": {
+        "target": 1
+      },
+      "source_span_reference": "FUNCTION_SPANS.json",
+      "actual_execution": "NOT_EXECUTED"
+    },
+    {
+      "id": "C03-05",
+      "group": "C03",
+      "engine": "Python",
+      "target_function": "request_prefix",
+      "case": "pair not last two",
+      "expected_reason_or_result": "PROTECTIVE_PAIR",
+      "fixture_rule": "C03 protective fixture: only guard_pair.t_minus='1', while actual second-last time remains1.5",
+      "positive_control": "C03-01",
+      "reached_function_required": "request_prefix",
+      "unexpected_exception_is_pass": false,
+      "invocations": 1,
+      "input_mutation": "C03 protective fixture: only guard_pair.t_minus='1', while actual second-last time remains1.5",
+      "expected_assertion": {
+        "kind": "exception",
+        "class": "ConnectionError",
+        "reason": "PROTECTIVE_PAIR",
+        "stage": "request_prefix",
+        "message": "PROTECTIVE_PAIR@request_prefix"
+      },
+      "required_reach": [
+        "request_prefix"
+      ],
+      "forbidden_reach": [
+        "COMSOL",
+        "JVM_model",
+        "OS_process_start",
+        "Job_API",
+        "console_input",
+        "native_provider",
+        "control.execute_once"
+      ],
+      "call_counts": {
+        "target": 1
+      },
+      "source_span_reference": "FUNCTION_SPANS.json",
+      "actual_execution": "NOT_EXECUTED"
+    },
+    {
+      "id": "C04-01",
+      "group": "C04",
+      "engine": "Python",
+      "target_function": "quadrature_projection",
+      "case": "absent bound",
+      "expected_reason_or_result": "INCONCLUSIVE_NO_CERTIFIED_BOUND",
+      "fixture_rule": "proof=None; no bound promoted",
+      "positive_control": "C04-01",
+      "reached_function_required": "quadrature_projection",
+      "unexpected_exception_is_pass": false,
+      "invocations": 1,
+      "input_mutation": "proof=None; no bound promoted",
+      "expected_assertion": {
+        "kind": "return",
+        "equals": {
+          "quadrature_bound_C_m2": null,
+          "quadrature_provenance": {},
+          "status": "INCONCLUSIVE_NO_CERTIFIED_BOUND"
+        }
+      },
+      "required_reach": [
+        "quadrature_projection"
+      ],
+      "forbidden_reach": [
+        "COMSOL",
+        "JVM_model",
+        "OS_process_start",
+        "Job_API",
+        "console_input",
+        "native_provider",
+        "control.execute_once"
+      ],
+      "call_counts": {
+        "target": 1
+      },
+      "source_span_reference": "FUNCTION_SPANS.json",
+      "actual_execution": "NOT_EXECUTED"
+    },
+    {
+      "id": "C04-02",
+      "group": "C04",
+      "engine": "Python",
+      "target_function": "quadrature_projection",
+      "case": "reviewed method and raw",
+      "expected_reason_or_result": "BOUND_BYTES_LINKED_REQUIRES_METHOD_ACCEPTANCE",
+      "fixture_rule": "inert accepted method seal plus matching JSON payload/identity/grid/all prefixes",
+      "positive_control": "C04-02",
+      "reached_function_required": "quadrature_projection",
+      "unexpected_exception_is_pass": false,
+      "invocations": 1,
+      "input_mutation": "inert accepted method seal plus matching JSON payload/identity/grid/all prefixes",
+      "expected_assertion": {
+        "kind": "return",
+        "fields": {
+          "status": "BOUND_BYTES_LINKED_REQUIRES_METHOD_ACCEPTANCE",
+          "quadrature_bound_C_m2": "str(Decimal(proof.bound_C_m2))",
+          "quadrature_provenance": "proof plus bound_method_verified=true"
+        }
+      },
+      "required_reach": [
+        "quadrature_projection",
+        "bind_bytes",
+        "exact"
+      ],
+      "forbidden_reach": [
+        "COMSOL",
+        "JVM_model",
+        "OS_process_start",
+        "Job_API",
+        "console_input",
+        "native_provider",
+        "control.execute_once"
+      ],
+      "call_counts": {
+        "target": 1
+      },
+      "source_span_reference": "FUNCTION_SPANS.json",
+      "actual_execution": "NOT_EXECUTED"
+    },
+    {
+      "id": "C04-03",
+      "group": "C04",
+      "engine": "Python",
+      "target_function": "quadrature_projection",
+      "case": "unreviewed method",
+      "expected_reason_or_result": "QUADRATURE_METHOD_OPEN",
+      "fixture_rule": "C04-02 non-null proof unchanged; verified_method_sha256=None only",
+      "positive_control": "C04-02",
+      "reached_function_required": "quadrature_projection",
+      "unexpected_exception_is_pass": false,
+      "invocations": 1,
+      "input_mutation": "C04-02 non-null proof unchanged; verified_method_sha256=None only",
+      "expected_assertion": {
+        "kind": "exception",
+        "class": "ConnectionError",
+        "reason": "QUADRATURE_METHOD_OPEN",
+        "stage": "quadrature_projection",
+        "message": "QUADRATURE_METHOD_OPEN@quadrature_projection"
+      },
+      "required_reach": [
+        "quadrature_projection",
+        "need at QUADRATURE_METHOD_OPEN"
+      ],
+      "forbidden_reach": [
+        "COMSOL",
+        "JVM_model",
+        "OS_process_start",
+        "Job_API",
+        "console_input",
+        "native_provider",
+        "control.execute_once",
+        "quadrature successful return",
+        "bind_bytes"
+      ],
+      "call_counts": {
+        "quadrature_projection": 1,
+        "bind_bytes": 0
+      },
+      "source_span_reference": "FUNCTION_SPANS.json",
+      "actual_execution": "NOT_EXECUTED"
+    },
+    {
+      "id": "C04-04",
+      "group": "C04",
+      "engine": "Python",
+      "target_function": "quadrature_projection",
+      "case": "wrong grid",
+      "expected_reason_or_result": "QUADRATURE_GRID_OR_SCOPE",
+      "fixture_rule": "C04-02: change grid_sha256 identically in raw JSON and proof, recompute raw bytes/SHA, retain external grid_identity; all payload keys still match",
+      "positive_control": "C04-02",
+      "reached_function_required": "quadrature_projection",
+      "unexpected_exception_is_pass": false,
+      "invocations": 1,
+      "input_mutation": "C04-02: change grid_sha256 identically in raw JSON and proof, recompute raw bytes/SHA, retain external grid_identity; all payload keys still match",
+      "expected_assertion": {
+        "kind": "exception",
+        "class": "ConnectionError",
+        "reason": "QUADRATURE_GRID_OR_SCOPE",
+        "stage": "quadrature_projection",
+        "message": "QUADRATURE_GRID_OR_SCOPE@quadrature_projection"
+      },
+      "required_reach": [
+        "quadrature_projection",
+        "need at QUADRATURE_GRID_OR_SCOPE"
+      ],
+      "forbidden_reach": [
+        "COMSOL",
+        "JVM_model",
+        "OS_process_start",
+        "Job_API",
+        "console_input",
+        "native_provider",
+        "control.execute_once",
+        "quadrature successful return"
+      ],
+      "call_counts": {
+        "quadrature_projection": 1,
+        "bind_bytes": 1
+      },
+      "source_span_reference": "FUNCTION_SPANS.json",
+      "actual_execution": "NOT_EXECUTED"
+    },
+    {
+      "id": "C04-05",
+      "group": "C04",
+      "engine": "Python",
+      "target_function": "quadrature_projection",
+      "case": "caller forges bound",
+      "expected_reason_or_result": "QUADRATURE_PAYLOAD_BINDING",
+      "fixture_rule": "C04-02: change only caller proof.bound_C_m2; raw bytes and identity unchanged",
+      "positive_control": "C04-02",
+      "reached_function_required": "quadrature_projection",
+      "unexpected_exception_is_pass": false,
+      "invocations": 1,
+      "input_mutation": "C04-02: change only caller proof.bound_C_m2; raw bytes and identity unchanged",
+      "expected_assertion": {
+        "kind": "exception",
+        "class": "ConnectionError",
+        "reason": "QUADRATURE_PAYLOAD_BINDING",
+        "stage": "quadrature_projection",
+        "message": "QUADRATURE_PAYLOAD_BINDING@quadrature_projection"
+      },
+      "required_reach": [
+        "quadrature_projection",
+        "need at QUADRATURE_PAYLOAD_BINDING"
+      ],
+      "forbidden_reach": [
+        "COMSOL",
+        "JVM_model",
+        "OS_process_start",
+        "Job_API",
+        "console_input",
+        "native_provider",
+        "control.execute_once",
+        "quadrature successful return"
+      ],
+      "call_counts": {
+        "quadrature_projection": 1,
+        "bind_bytes": 1
+      },
+      "source_span_reference": "FUNCTION_SPANS.json",
+      "actual_execution": "NOT_EXECUTED"
+    },
+    {
+      "id": "C05-01",
+      "group": "C05",
+      "engine": "Python",
+      "target_function": "require_installed_mapping / consumer_connection",
+      "case": "accepted inert seam",
+      "expected_reason_or_result": "actual consumer.analyze reached; preserve its exact result",
+      "fixture_rule": "inert provider verifies supplied same run/manifest; real unchanged consumer with accepted fixture data, no native",
+      "positive_control": "C05-01",
+      "reached_function_required": "consumer_connection",
+      "unexpected_exception_is_pass": false,
+      "invocations": 1,
+      "input_mutation": "inert provider verifies supplied same run/manifest; real unchanged consumer with accepted fixture data, no native",
+      "expected_assertion": {
+        "kind": "return",
+        "equals": "byte-for-byte/typed structured result from actual unchanged consumer.analyze on the same presealed accepted fixture",
+        "do_not_synthesize_consumer_result": true
+      },
+      "required_reach": [
+        "consumer_connection"
+      ],
+      "forbidden_reach": [
+        "COMSOL",
+        "JVM_model",
+        "OS_process_start",
+        "Job_API",
+        "console_input",
+        "native_provider",
+        "control.execute_once"
+      ],
+      "call_counts": {
+        "consumer_connection": 1,
+        "consumer.analyze": 1
+      },
+      "source_span_reference": "FUNCTION_SPANS.json",
+      "actual_execution": "NOT_EXECUTED"
+    },
+    {
+      "id": "C05-02",
+      "group": "C05",
+      "engine": "Python",
+      "target_function": "require_installed_mapping / consumer_connection",
+      "case": "default provider",
+      "expected_reason_or_result": "INSTALLED_PROOF_PROVIDER_OPEN",
+      "fixture_rule": "provider omitted; consumer not reached",
+      "positive_control": "C05-01",
+      "reached_function_required": "consumer_connection",
+      "unexpected_exception_is_pass": false,
+      "invocations": 1,
+      "input_mutation": "provider omitted; consumer not reached",
+      "expected_assertion": {
+        "kind": "exception",
+        "class": "ConnectionError",
+        "reason": "INSTALLED_PROOF_PROVIDER_OPEN",
+        "stage": "installed_proof",
+        "message": "INSTALLED_PROOF_PROVIDER_OPEN@installed_proof"
+      },
+      "required_reach": [
+        "consumer_connection"
+      ],
+      "forbidden_reach": [
+        "COMSOL",
+        "JVM_model",
+        "OS_process_start",
+        "Job_API",
+        "console_input",
+        "native_provider",
+        "control.execute_once",
+        "consumer.analyze"
+      ],
+      "call_counts": {
+        "target": 1,
+        "consumer.analyze": 0
+      },
+      "source_span_reference": "FUNCTION_SPANS.json",
+      "actual_execution": "NOT_EXECUTED"
+    },
+    {
+      "id": "C05-03",
+      "group": "C05",
+      "engine": "Python",
+      "target_function": "require_installed_mapping / consumer_connection",
+      "case": "wrong provider run",
+      "expected_reason_or_result": "INSTALLED_PROOF_REJECTED",
+      "fixture_rule": "inert proof uses wrong run; consumer not reached",
+      "positive_control": "C05-01",
+      "reached_function_required": "consumer_connection",
+      "unexpected_exception_is_pass": false,
+      "invocations": 1,
+      "input_mutation": "inert proof uses wrong run; consumer not reached",
+      "expected_assertion": {
+        "kind": "exception",
+        "class": "ConnectionError",
+        "reason": "INSTALLED_PROOF_REJECTED",
+        "stage": "consumer_connection",
+        "message": "INSTALLED_PROOF_REJECTED@consumer_connection"
+      },
+      "required_reach": [
+        "consumer_connection"
+      ],
+      "forbidden_reach": [
+        "COMSOL",
+        "JVM_model",
+        "OS_process_start",
+        "Job_API",
+        "console_input",
+        "native_provider",
+        "control.execute_once",
+        "consumer.analyze"
+      ],
+      "call_counts": {
+        "target": 1,
+        "consumer.analyze": 0
+      },
+      "source_span_reference": "FUNCTION_SPANS.json",
+      "actual_execution": "NOT_EXECUTED"
+    },
+    {
+      "id": "C05-04",
+      "group": "C05",
+      "engine": "Python",
+      "target_function": "require_installed_mapping / consumer_connection",
+      "case": "mapping absent",
+      "expected_reason_or_result": "INSTALLED_MAPPING_OPEN",
+      "fixture_rule": "no reviewed mapping seal",
+      "positive_control": "C05-07",
+      "reached_function_required": "require_installed_mapping",
+      "unexpected_exception_is_pass": false,
+      "invocations": 1,
+      "input_mutation": "no reviewed mapping seal",
+      "expected_assertion": {
+        "kind": "exception",
+        "class": "ConnectionError",
+        "reason": "INSTALLED_MAPPING_OPEN",
+        "stage": "installed_mapping",
+        "message": "INSTALLED_MAPPING_OPEN@installed_mapping"
+      },
+      "required_reach": [
+        "require_installed_mapping"
+      ],
+      "forbidden_reach": [
+        "COMSOL",
+        "JVM_model",
+        "OS_process_start",
+        "Job_API",
+        "console_input",
+        "native_provider",
+        "control.execute_once",
+        "consumer.analyze"
+      ],
+      "call_counts": {
+        "target": 1,
+        "consumer.analyze": 0
+      },
+      "source_span_reference": "FUNCTION_SPANS.json",
+      "actual_execution": "NOT_EXECUTED"
+    },
+    {
+      "id": "C05-05",
+      "group": "C05",
+      "engine": "Python",
+      "target_function": "require_installed_mapping / consumer_connection",
+      "case": "mapping dictionary mismatch",
+      "expected_reason_or_result": "MAPPING_OBJECT_BINDING",
+      "fixture_rule": "raw mapping valid SHA; separately supplied dict modified",
+      "positive_control": "C05-07",
+      "reached_function_required": "require_installed_mapping",
+      "unexpected_exception_is_pass": false,
+      "invocations": 1,
+      "input_mutation": "raw mapping valid SHA; separately supplied dict modified",
+      "expected_assertion": {
+        "kind": "exception",
+        "class": "ConnectionError",
+        "reason": "MAPPING_OBJECT_BINDING",
+        "stage": "installed_mapping",
+        "message": "MAPPING_OBJECT_BINDING@installed_mapping"
+      },
+      "required_reach": [
+        "require_installed_mapping"
+      ],
+      "forbidden_reach": [
+        "COMSOL",
+        "JVM_model",
+        "OS_process_start",
+        "Job_API",
+        "console_input",
+        "native_provider",
+        "control.execute_once",
+        "consumer.analyze"
+      ],
+      "call_counts": {
+        "target": 1,
+        "consumer.analyze": 0
+      },
+      "source_span_reference": "FUNCTION_SPANS.json",
+      "actual_execution": "NOT_EXECUTED"
+    },
+    {
+      "id": "C05-06",
+      "group": "C05",
+      "engine": "Python",
+      "target_function": "require_installed_mapping / consumer_connection",
+      "case": "mapping not observed",
+      "expected_reason_or_result": "INSTALLED_OBSERVATION_OPEN",
+      "fixture_rule": "correct byte-bound JSON but status OPEN",
+      "positive_control": "C05-07",
+      "reached_function_required": "require_installed_mapping",
+      "unexpected_exception_is_pass": false,
+      "invocations": 1,
+      "input_mutation": "correct byte-bound JSON but status OPEN",
+      "expected_assertion": {
+        "kind": "exception",
+        "class": "ConnectionError",
+        "reason": "INSTALLED_OBSERVATION_OPEN",
+        "stage": "installed_mapping",
+        "message": "INSTALLED_OBSERVATION_OPEN@installed_mapping"
+      },
+      "required_reach": [
+        "require_installed_mapping"
+      ],
+      "forbidden_reach": [
+        "COMSOL",
+        "JVM_model",
+        "OS_process_start",
+        "Job_API",
+        "console_input",
+        "native_provider",
+        "control.execute_once",
+        "consumer.analyze"
+      ],
+      "call_counts": {
+        "target": 1,
+        "consumer.analyze": 0
+      },
+      "source_span_reference": "FUNCTION_SPANS.json",
+      "actual_execution": "NOT_EXECUTED"
+    },
+    {
+      "id": "C05-07",
+      "group": "C05",
+      "engine": "Python",
+      "target_function": "require_installed_mapping",
+      "case": "byte-bound inert mapping positive",
+      "expected_reason_or_result": "same mapping returned",
+      "fixture_rule": "canonical raw JSON and its exact reviewed SHA supplied as inert fixture; INDEPENDENTLY_ACCEPTED marker explicitly fixture only; not production mapping",
+      "positive_control": "C05-07",
+      "reached_function_required": "require_installed_mapping",
+      "unexpected_exception_is_pass": false,
+      "invocations": 1,
+      "input_mutation": "canonical raw JSON and its exact reviewed SHA supplied as inert fixture; INDEPENDENTLY_ACCEPTED marker explicitly fixture only; not production mapping",
+      "expected_assertion": {
+        "kind": "return",
+        "identity": "same supplied mapping object",
+        "equality": "byte-parsed canonical fixture mapping"
+      },
+      "required_reach": [
+        "require_installed_mapping"
+      ],
+      "forbidden_reach": [
+        "COMSOL",
+        "JVM_model",
+        "OS_process_start",
+        "Job_API",
+        "console_input",
+        "native_provider",
+        "control.execute_once"
+      ],
+      "call_counts": {
+        "require_installed_mapping": 1
+      },
+      "source_span_reference": "FUNCTION_SPANS.json",
+      "actual_execution": "NOT_EXECUTED"
+    },
+    {
+      "id": "C06-01",
+      "group": "C06",
+      "engine": "Python",
+      "target_function": "project_owned_sample",
+      "case": "complete sampled transaction",
+      "expected_reason_or_result": "sample and ownership projected",
+      "fixture_rule": "exact member PID+creation, root included once, current Job commit mapping pin nonnull; use ResourceSession(start_record, anchors).clock created from RESOURCE_BASELINE below; raw run/clock/unit/origins exactly match that context",
+      "positive_control": "C06-01",
+      "reached_function_required": "project_owned_sample",
+      "unexpected_exception_is_pass": false,
+      "invocations": 1,
+      "input_mutation": "exact member PID+creation, root included once, current Job commit mapping pin nonnull; use ResourceSession(start_record, anchors).clock created from RESOURCE_BASELINE below; raw run/clock/unit/origins exactly match that context",
+      "expected_assertion": {
+        "kind": "return",
+        "fields": {
+          "sample": "exact declared projection, no zero substitution",
+          "ownership": "VERIFIED_PRIVATE_JOB and baseline PID/creation anchors"
+        }
+      },
+      "required_reach": [
+        "project_owned_sample",
+        "bind_sample_clock"
+      ],
+      "forbidden_reach": [
+        "COMSOL",
+        "JVM_model",
+        "OS_process_start",
+        "Job_API",
+        "console_input",
+        "native_provider",
+        "control.execute_once"
+      ],
+      "call_counts": {
+        "project_owned_sample": 1,
+        "bind_sample_clock": 1
+      },
+      "source_span_reference": "FUNCTION_SPANS.json",
+      "actual_execution": "NOT_EXECUTED"
+    },
+    {
+      "id": "C06-02",
+      "group": "C06",
+      "engine": "Python",
+      "target_function": "project_owned_sample",
+      "case": "root exited children live",
+      "expected_reason_or_result": "sum children only",
+      "fixture_rule": "RESOURCE_BASELINE: root anchors remain11/101; both membership lists and sole process counter identify child22/202, working set1000; held_root_signaled=true; sum only child counter",
+      "positive_control": "C06-01",
+      "reached_function_required": "project_owned_sample",
+      "unexpected_exception_is_pass": false,
+      "invocations": 1,
+      "input_mutation": "RESOURCE_BASELINE: root anchors remain11/101; both membership lists and sole process counter identify child22/202, working set1000; held_root_signaled=true; sum only child counter",
+      "expected_assertion": {
+        "kind": "return",
+        "fields": {
+          "sample": "exact declared projection, no zero substitution",
+          "ownership": "VERIFIED_PRIVATE_JOB and baseline PID/creation anchors"
+        }
+      },
+      "required_reach": [
+        "project_owned_sample",
+        "bind_sample_clock"
+      ],
+      "forbidden_reach": [
+        "COMSOL",
+        "JVM_model",
+        "OS_process_start",
+        "Job_API",
+        "console_input",
+        "native_provider",
+        "control.execute_once"
+      ],
+      "call_counts": {
+        "project_owned_sample": 1,
+        "bind_sample_clock": 1
+      },
+      "source_span_reference": "FUNCTION_SPANS.json",
+      "actual_execution": "NOT_EXECUTED"
+    },
+    {
+      "id": "C06-03",
+      "group": "C06",
+      "engine": "Python",
+      "target_function": "project_owned_sample",
+      "case": "duplicate member",
+      "expected_reason_or_result": "MEMBER_DUPLICATE",
+      "fixture_rule": "RESOURCE_BASELINE: repeat the identical PID11/creation101 membership entry in both bookends; other values remain valid; member duplicate guard occurs before process counter count",
+      "positive_control": "C06-01",
+      "reached_function_required": "project_owned_sample",
+      "unexpected_exception_is_pass": false,
+      "invocations": 1,
+      "input_mutation": "RESOURCE_BASELINE: repeat the identical PID11/creation101 membership entry in both bookends; other values remain valid; member duplicate guard occurs before process counter count",
+      "expected_assertion": {
+        "kind": "exception",
+        "class": "ResourceConnectionError",
+        "reason": "MEMBER_DUPLICATE",
+        "stage": "resource_connection",
+        "message": "MEMBER_DUPLICATE"
+      },
+      "required_reach": [
+        "project_owned_sample",
+        "bind_sample_clock"
+      ],
+      "forbidden_reach": [
+        "COMSOL",
+        "JVM_model",
+        "OS_process_start",
+        "Job_API",
+        "console_input",
+        "native_provider",
+        "control.execute_once"
+      ],
+      "call_counts": {
+        "project_owned_sample": 1,
+        "bind_sample_clock": 1
+      },
+      "source_span_reference": "FUNCTION_SPANS.json",
+      "actual_execution": "NOT_EXECUTED"
+    },
+    {
+      "id": "C06-04",
+      "group": "C06",
+      "engine": "Python",
+      "target_function": "project_owned_sample",
+      "case": "membership churn",
+      "expected_reason_or_result": "MEMBERSHIP_CHURN_OR_EMPTY",
+      "fixture_rule": "RESOURCE_BASELINE: members_after=[] only",
+      "positive_control": "C06-01",
+      "reached_function_required": "project_owned_sample",
+      "unexpected_exception_is_pass": false,
+      "invocations": 1,
+      "input_mutation": "RESOURCE_BASELINE: members_after=[] only",
+      "expected_assertion": {
+        "kind": "exception",
+        "class": "ResourceConnectionError",
+        "reason": "MEMBERSHIP_CHURN_OR_EMPTY",
+        "stage": "resource_connection",
+        "message": "MEMBERSHIP_CHURN_OR_EMPTY"
+      },
+      "required_reach": [
+        "project_owned_sample",
+        "bind_sample_clock"
+      ],
+      "forbidden_reach": [
+        "COMSOL",
+        "JVM_model",
+        "OS_process_start",
+        "Job_API",
+        "console_input",
+        "native_provider",
+        "control.execute_once"
+      ],
+      "call_counts": {
+        "project_owned_sample": 1,
+        "bind_sample_clock": 1
+      },
+      "source_span_reference": "FUNCTION_SPANS.json",
+      "actual_execution": "NOT_EXECUTED"
+    },
+    {
+      "id": "C06-05",
+      "group": "C06",
+      "engine": "Python",
+      "target_function": "project_owned_sample",
+      "case": "commit mapping missing",
+      "expected_reason_or_result": "JOB_COMMIT_MAPPING_OPEN",
+      "fixture_rule": "RESOURCE_BASELINE: anchors.accepted_commit_mapping_sha256=null; raw mapping remains baseline; construction accepts scalar null",
+      "positive_control": "C06-01",
+      "reached_function_required": "project_owned_sample",
+      "unexpected_exception_is_pass": false,
+      "invocations": 1,
+      "input_mutation": "RESOURCE_BASELINE: anchors.accepted_commit_mapping_sha256=null; raw mapping remains baseline; construction accepts scalar null",
+      "expected_assertion": {
+        "kind": "exception",
+        "class": "ResourceConnectionError",
+        "reason": "JOB_COMMIT_MAPPING_OPEN",
+        "stage": "resource_connection",
+        "message": "JOB_COMMIT_MAPPING_OPEN"
+      },
+      "required_reach": [
+        "project_owned_sample",
+        "bind_sample_clock"
+      ],
+      "forbidden_reach": [
+        "COMSOL",
+        "JVM_model",
+        "OS_process_start",
+        "Job_API",
+        "console_input",
+        "native_provider",
+        "control.execute_once"
+      ],
+      "call_counts": {
+        "project_owned_sample": 1,
+        "bind_sample_clock": 1
+      },
+      "source_span_reference": "FUNCTION_SPANS.json",
+      "actual_execution": "NOT_EXECUTED"
+    },
+    {
+      "id": "C06-06",
+      "group": "C06",
+      "engine": "Python",
+      "target_function": "project_owned_sample",
+      "case": "missing counter",
+      "expected_reason_or_result": "COUNTER_MISSING:volume_free_bytes",
+      "fixture_rule": "RESOURCE_BASELINE: raw.volume_free_bytes=null only",
+      "positive_control": "C06-01",
+      "reached_function_required": "project_owned_sample",
+      "unexpected_exception_is_pass": false,
+      "invocations": 1,
+      "input_mutation": "RESOURCE_BASELINE: raw.volume_free_bytes=null only",
+      "expected_assertion": {
+        "kind": "exception",
+        "class": "ResourceConnectionError",
+        "reason": "COUNTER_MISSING:volume_free_bytes",
+        "stage": "resource_connection",
+        "message": "COUNTER_MISSING:volume_free_bytes"
+      },
+      "required_reach": [
+        "project_owned_sample",
+        "bind_sample_clock"
+      ],
+      "forbidden_reach": [
+        "COMSOL",
+        "JVM_model",
+        "OS_process_start",
+        "Job_API",
+        "console_input",
+        "native_provider",
+        "control.execute_once"
+      ],
+      "call_counts": {
+        "project_owned_sample": 1,
+        "bind_sample_clock": 1
+      },
+      "source_span_reference": "FUNCTION_SPANS.json",
+      "actual_execution": "NOT_EXECUTED"
+    },
+    {
+      "id": "C06-07",
+      "group": "C06",
+      "engine": "Python",
+      "target_function": "project_owned_sample",
+      "case": "reparse output",
+      "expected_reason_or_result": "OUTPUT_SCOPE",
+      "fixture_rule": "RESOURCE_BASELINE: raw.output_walk_status='REPARSE_FOUND' only",
+      "positive_control": "C06-01",
+      "reached_function_required": "project_owned_sample",
+      "unexpected_exception_is_pass": false,
+      "invocations": 1,
+      "input_mutation": "RESOURCE_BASELINE: raw.output_walk_status='REPARSE_FOUND' only",
+      "expected_assertion": {
+        "kind": "exception",
+        "class": "ResourceConnectionError",
+        "reason": "OUTPUT_SCOPE",
+        "stage": "resource_connection",
+        "message": "OUTPUT_SCOPE"
+      },
+      "required_reach": [
+        "project_owned_sample",
+        "bind_sample_clock"
+      ],
+      "forbidden_reach": [
+        "COMSOL",
+        "JVM_model",
+        "OS_process_start",
+        "Job_API",
+        "console_input",
+        "native_provider",
+        "control.execute_once"
+      ],
+      "call_counts": {
+        "project_owned_sample": 1,
+        "bind_sample_clock": 1
+      },
+      "source_span_reference": "FUNCTION_SPANS.json",
+      "actual_execution": "NOT_EXECUTED"
+    },
+    {
+      "id": "C06-08",
+      "group": "C06",
+      "engine": "Python",
+      "target_function": "project_owned_sample",
+      "case": "clock reverses",
+      "expected_reason_or_result": "CLOCK_ORDER",
+      "fixture_rule": "sample end before start; other times finite; use ResourceSession(start_record, anchors).clock created from RESOURCE_BASELINE below; raw run/clock/unit/origins exactly match that context; retain raw overall/native origins 100/200; change sample_start_s=211 and sample_end_s=210, previous_sample_end_s=206; every prior field valid",
+      "positive_control": "C06-01",
+      "reached_function_required": "project_owned_sample",
+      "unexpected_exception_is_pass": false,
+      "invocations": 1,
+      "input_mutation": "sample end before start; other times finite; use ResourceSession(start_record, anchors).clock created from RESOURCE_BASELINE below; raw run/clock/unit/origins exactly match that context; retain raw overall/native origins 100/200; change sample_start_s=211 and sample_end_s=210, previous_sample_end_s=206; every prior field valid",
+      "expected_assertion": {
+        "kind": "exception",
+        "class": "ResourceConnectionError",
+        "reason": "CLOCK_ORDER",
+        "stage": "resource_connection",
+        "message": "CLOCK_ORDER"
+      },
+      "required_reach": [
+        "project_owned_sample",
+        "bind_sample_clock"
+      ],
+      "forbidden_reach": [
+        "COMSOL",
+        "JVM_model",
+        "OS_process_start",
+        "Job_API",
+        "console_input",
+        "native_provider",
+        "control.execute_once"
+      ],
+      "call_counts": {
+        "project_owned_sample": 1,
+        "bind_sample_clock": 1
+      },
+      "source_span_reference": "FUNCTION_SPANS.json",
+      "actual_execution": "NOT_EXECUTED"
+    },
+    {
+      "id": "C07-01",
+      "group": "C07",
+      "engine": "Python",
+      "target_function": "ResourceSession.decide / resource_decision / project_owned_sample",
+      "case": "within limits",
+      "expected_reason_or_result": "CONTINUE_WITHIN_SAMPLED_LIMITS",
+      "fixture_rule": "RESOURCE_BASELINE through one retained ResourceSession and unchanged original RESOURCE_CONTRACT",
+      "positive_control": "C07-01",
+      "reached_function_required": "ResourceSession.decide -> resource_decision -> project_owned_sample -> bind_sample_clock -> actual control.assess_resources",
+      "unexpected_exception_is_pass": false,
+      "invocations": 1,
+      "input_mutation": "RESOURCE_BASELINE through one retained ResourceSession and unchanged original RESOURCE_CONTRACT",
+      "expected_assertion": {
+        "kind": "return",
+        "equals": {
+          "status": "CONTINUE_WITHIN_SAMPLED_LIMITS",
+          "reasons": [],
+          "observed_monotonic_s": 211,
+          "sampled_max_is_os_peak": false,
+          "sampled_threshold_is_hard_cap": false
+        }
+      },
+      "required_reach": [
+        "ResourceSession.decide",
+        "resource_decision",
+        "project_owned_sample",
+        "bind_sample_clock",
+        "control.assess_resources"
+      ],
+      "forbidden_reach": [
+        "COMSOL",
+        "JVM_model",
+        "OS_process_start",
+        "Job_API",
+        "console_input",
+        "native_provider",
+        "control.execute_once"
+      ],
+      "call_counts": {
+        "ResourceSession.__init__": 1,
+        "ResourceSession.decide": 1,
+        "resource_decision": 1,
+        "project_owned_sample": 1,
+        "bind_sample_clock": 1,
+        "control.assess_resources": 1
+      },
+      "source_span_reference": "FUNCTION_SPANS.json",
+      "actual_execution": "NOT_EXECUTED"
+    },
+    {
+      "id": "C07-02",
+      "group": "C07",
+      "engine": "Python",
+      "target_function": "ResourceSession.decide / resource_decision / project_owned_sample",
+      "case": "RSS threshold exceeded",
+      "expected_reason_or_result": "RESOURCE_THRESHOLD:job_rss_bytes",
+      "fixture_rule": "C07-01: sole process working_set_bytes=8589934593 (unchanged threshold 8589934592 plus one); all other counters/times valid",
+      "positive_control": "C07-01",
+      "reached_function_required": "ResourceSession.decide -> resource_decision -> project_owned_sample -> bind_sample_clock -> actual control.assess_resources",
+      "unexpected_exception_is_pass": false,
+      "invocations": 1,
+      "input_mutation": "C07-01: sole process working_set_bytes=8589934593 (unchanged threshold 8589934592 plus one); all other counters/times valid",
+      "expected_assertion": {
+        "kind": "return",
+        "equals": {
+          "status": "STOP_REQUIRED",
+          "reasons": [
+            "RESOURCE_THRESHOLD:job_rss_bytes"
+          ],
+          "observed_monotonic_s": 211,
+          "sampled_max_is_os_peak": false,
+          "sampled_threshold_is_hard_cap": false
+        }
+      },
+      "required_reach": [
+        "ResourceSession.decide",
+        "resource_decision",
+        "project_owned_sample",
+        "bind_sample_clock",
+        "control.assess_resources"
+      ],
+      "forbidden_reach": [
+        "COMSOL",
+        "JVM_model",
+        "OS_process_start",
+        "Job_API",
+        "console_input",
+        "native_provider",
+        "control.execute_once"
+      ],
+      "call_counts": {
+        "ResourceSession.__init__": 1,
+        "ResourceSession.decide": 1,
+        "resource_decision": 1,
+        "project_owned_sample": 1,
+        "bind_sample_clock": 1,
+        "control.assess_resources": 1
+      },
+      "source_span_reference": "FUNCTION_SPANS.json",
+      "actual_execution": "NOT_EXECUTED"
+    },
+    {
+      "id": "C07-03",
+      "group": "C07",
+      "engine": "Python",
+      "target_function": "ResourceSession.decide / resource_decision / project_owned_sample",
+      "case": "projection query fails",
+      "expected_reason_or_result": "STOP_REQUIRED / OS_QUERY_FAILURE",
+      "fixture_rule": "C07-01: raw.query_success=false only",
+      "positive_control": "C07-01",
+      "reached_function_required": "ResourceSession.decide -> resource_decision -> project_owned_sample raises OS_QUERY_FAILURE -> resource_decision catch",
+      "unexpected_exception_is_pass": false,
+      "invocations": 1,
+      "input_mutation": "C07-01: raw.query_success=false only",
+      "expected_assertion": {
+        "kind": "return",
+        "equals": {
+          "status": "STOP_REQUIRED",
+          "reasons": [
+            "OS_QUERY_FAILURE"
+          ],
+          "sampled_max_is_os_peak": false,
+          "counter_projection": "INCOMPLETE"
+        }
+      },
+      "required_reach": [
+        "ResourceSession.decide",
+        "resource_decision",
+        "project_owned_sample",
+        "must(OS_QUERY_FAILURE)",
+        "resource_decision except ResourceConnectionError"
+      ],
+      "forbidden_reach": [
+        "COMSOL",
+        "JVM_model",
+        "OS_process_start",
+        "Job_API",
+        "console_input",
+        "native_provider",
+        "control.execute_once",
+        "bind_sample_clock",
+        "control.assess_resources"
+      ],
+      "call_counts": {
+        "ResourceSession.__init__": 1,
+        "ResourceSession.decide": 1,
+        "resource_decision": 1,
+        "project_owned_sample": 1,
+        "bind_sample_clock": 0,
+        "control.assess_resources": 0
+      },
+      "source_span_reference": "FUNCTION_SPANS.json",
+      "actual_execution": "NOT_EXECUTED",
+      "caught_exception": {
+        "kind": "exception",
+        "class": "ResourceConnectionError",
+        "reason": "OS_QUERY_FAILURE",
+        "stage": "resource_connection",
+        "message": "OS_QUERY_FAILURE"
+      }
+    },
+    {
+      "id": "C07-04",
+      "group": "C07",
+      "engine": "Python",
+      "target_function": "resource_decision / stop_action_plan",
+      "case": "owned force plan",
+      "expected_reason_or_result": "transition.status=FORCE_PENDING; action=FORCE_OWNED_JOB_ONCE; stop_classification=FORCED; execute_now=false",
+      "fixture_rule": "STOP_BASELINE unchanged",
+      "positive_control": "C07-04",
+      "reached_function_required": "stop_action_plan -> control.advance_stop",
+      "unexpected_exception_is_pass": false,
+      "invocations": 1,
+      "input_mutation": "STOP_BASELINE unchanged",
+      "expected_assertion": {
+        "kind": "return",
+        "equals": {
+          "transition": {
+            "status": "FORCE_PENDING",
+            "last_monotonic_s": 11,
+            "cleanup_deadline_s": 100,
+            "overall_deadline_s": 200,
+            "next_action": "FORCE_OWNED_JOB_ONCE",
+            "cooperative_status": "UNAVAILABLE_DECLARED"
+          },
+          "action": "FORCE_OWNED_JOB_ONCE",
+          "execute_now": false,
+          "stop_classification": "FORCED",
+          "unknown_pid_termination_allowed": false,
+          "provider_status": "OPEN_NO_OS_DISPATCH_IMPLEMENTED"
+        }
+      },
+      "required_reach": [
+        "stop_action_plan",
+        "control.advance_stop"
+      ],
+      "forbidden_reach": [
+        "COMSOL",
+        "JVM_model",
+        "OS_process_start",
+        "Job_API",
+        "console_input",
+        "native_provider",
+        "control.execute_once"
+      ],
+      "call_counts": {
+        "stop_action_plan": 1,
+        "control.advance_stop": 1
+      },
+      "source_span_reference": "FUNCTION_SPANS.json",
+      "actual_execution": "NOT_EXECUTED"
+    },
+    {
+      "id": "C07-05",
+      "group": "C07",
+      "engine": "Python",
+      "target_function": "resource_decision / stop_action_plan",
+      "case": "unsupported stop",
+      "expected_reason_or_result": "transition.error=STOP_METHOD_NOT_APPROVED; action=NONE",
+      "fixture_rule": "C07-04: force_only_explicitly_approved=false only",
+      "positive_control": "C07-04",
+      "reached_function_required": "stop_action_plan -> control.advance_stop",
+      "unexpected_exception_is_pass": false,
+      "invocations": 1,
+      "input_mutation": "C07-04: force_only_explicitly_approved=false only",
+      "expected_assertion": {
+        "kind": "return",
+        "equals": {
+          "transition": {
+            "status": "UNRESOLVED",
+            "last_monotonic_s": 11,
+            "cleanup_deadline_s": 100,
+            "overall_deadline_s": 200,
+            "next_action": "NONE",
+            "error": "STOP_METHOD_NOT_APPROVED"
+          },
+          "action": "NONE",
+          "execute_now": false,
+          "stop_classification": "NO_TERMINATION_CLAIM",
+          "unknown_pid_termination_allowed": false,
+          "provider_status": "OPEN_NO_OS_DISPATCH_IMPLEMENTED"
+        }
+      },
+      "required_reach": [
+        "stop_action_plan",
+        "control.advance_stop"
+      ],
+      "forbidden_reach": [
+        "COMSOL",
+        "JVM_model",
+        "OS_process_start",
+        "Job_API",
+        "console_input",
+        "native_provider",
+        "control.execute_once"
+      ],
+      "call_counts": {
+        "stop_action_plan": 1,
+        "control.advance_stop": 1
+      },
+      "source_span_reference": "FUNCTION_SPANS.json",
+      "actual_execution": "NOT_EXECUTED"
+    },
+    {
+      "id": "C07-06",
+      "group": "C07",
+      "engine": "Python",
+      "target_function": "resource_decision / stop_action_plan",
+      "case": "ownership lost",
+      "expected_reason_or_result": "transition.error=STOP_OWNERSHIP_LOST; action=NO_KILL_WITHOUT_OWNERSHIP",
+      "fixture_rule": "C07-04: event.ownership_verified=false only; force-only permission remains true",
+      "positive_control": "C07-04",
+      "reached_function_required": "stop_action_plan -> control.advance_stop",
+      "unexpected_exception_is_pass": false,
+      "invocations": 1,
+      "input_mutation": "C07-04: event.ownership_verified=false only; force-only permission remains true",
+      "expected_assertion": {
+        "kind": "return",
+        "equals": {
+          "transition": {
+            "status": "UNRESOLVED",
+            "last_monotonic_s": 11,
+            "cleanup_deadline_s": 100,
+            "overall_deadline_s": 200,
+            "next_action": "NO_KILL_WITHOUT_OWNERSHIP",
+            "error": "STOP_OWNERSHIP_LOST"
+          },
+          "action": "NO_KILL_WITHOUT_OWNERSHIP",
+          "execute_now": false,
+          "stop_classification": "NO_TERMINATION_CLAIM",
+          "unknown_pid_termination_allowed": false,
+          "provider_status": "OPEN_NO_OS_DISPATCH_IMPLEMENTED"
+        }
+      },
+      "required_reach": [
+        "stop_action_plan",
+        "control.advance_stop"
+      ],
+      "forbidden_reach": [
+        "COMSOL",
+        "JVM_model",
+        "OS_process_start",
+        "Job_API",
+        "console_input",
+        "native_provider",
+        "control.execute_once"
+      ],
+      "call_counts": {
+        "stop_action_plan": 1,
+        "control.advance_stop": 1
+      },
+      "source_span_reference": "FUNCTION_SPANS.json",
+      "actual_execution": "NOT_EXECUTED"
+    },
+    {
+      "id": "C08-01",
+      "group": "C08",
+      "engine": "Java_helper",
+      "target_function": "s1OpenProperties",
+      "case": "typed property output",
+      "expected_reason_or_result": "exact type/key/value table",
+      "fixture_rule": "PROP_BASELINE: stable label=fixture, getType=FixtureType, properties=[p], getValueType(p)=String, getString(p)=value",
+      "positive_control": "C08-01",
+      "reached_function_required": "s1OpenProperties -> original readSetting -> original table",
+      "unexpected_exception_is_pass": false,
+      "invocations": 1,
+      "input_mutation": "PROP_BASELINE: stable label=fixture, getType=FixtureType, properties=[p], getValueType(p)=String, getString(p)=value",
+      "expected_assertion": {
+        "kind": "return_and_output",
+        "return": "void",
+        "tables": {
+          "s1_open_fixture_type.csv": [
+            [
+              "label",
+              "type"
+            ],
+            [
+              "fixture",
+              "FixtureType"
+            ]
+          ],
+          "s1_open_fixture_property_p.csv": [
+            [
+              "key",
+              "value_type",
+              "value"
+            ],
+            [
+              "p",
+              "String",
+              "[value]"
+            ]
+          ]
+        }
+      },
+      "required_reach": [
+        "s1OpenProperties",
+        "original readSetting",
+        "original table"
+      ],
+      "forbidden_reach": [
+        "COMSOL",
+        "JVM_model",
+        "OS_process_start",
+        "Job_API",
+        "console_input",
+        "native_provider",
+        "control.execute_once"
+      ],
+      "call_counts": {
+        "s1OpenProperties": 1
+      },
+      "source_span_reference": "FUNCTION_SPANS.json",
+      "actual_execution": "NOT_EXECUTED"
+    },
+    {
+      "id": "C08-02",
+      "group": "C08",
+      "engine": "Java_helper",
+      "target_function": "s1OpenProperties -> readSetting",
+      "case": "unknown value type",
+      "expected_reason_or_result": "original IllegalArgumentException propagates",
+      "fixture_rule": "C08-01: stable getValueType(p)=S1_UNKNOWN_TYPE only",
+      "positive_control": "C08-01",
+      "reached_function_required": "s1OpenProperties -> original readSetting default",
+      "unexpected_exception_is_pass": false,
+      "invocations": 1,
+      "input_mutation": "C08-01: stable getValueType(p)=S1_UNKNOWN_TYPE only",
+      "expected_assertion": {
+        "kind": "exception",
+        "class": "java.lang.IllegalArgumentException",
+        "message": "S1_UNKNOWN_TYPE"
+      },
+      "required_reach": [
+        "s1OpenProperties",
+        "original readSetting default"
+      ],
+      "forbidden_reach": [
+        "COMSOL",
+        "JVM_model",
+        "OS_process_start",
+        "Job_API",
+        "console_input",
+        "native_provider",
+        "control.execute_once"
+      ],
+      "call_counts": {
+        "s1OpenProperties": 1,
+        "readSetting": 1,
+        "property table for p": 0
+      },
+      "source_span_reference": "FUNCTION_SPANS.json",
+      "actual_execution": "NOT_EXECUTED"
+    },
+    {
+      "id": "C08-03",
+      "group": "C08",
+      "engine": "Java_helper",
+      "target_function": "s1OpenConfiguredReadback",
+      "case": "recursive equation calls",
+      "expected_reason_or_result": "3 features x 4 kinds, recursive/all",
+      "fixture_rule": "CONFIGURED_BASELINE: each of cdi,time,pcb1,pce1,pce2 has stable valid PROP_BASELINE property; each info table returns frozen sentinel rows",
+      "positive_control": "C08-03",
+      "reached_function_required": "s1OpenConfiguredReadback -> s1OpenProperties -> FeatureInfo.getInfoTable",
+      "unexpected_exception_is_pass": false,
+      "invocations": 1,
+      "input_mutation": "CONFIGURED_BASELINE: each of cdi,time,pcb1,pce1,pce2 has stable valid PROP_BASELINE property; each info table returns frozen sentinel rows",
+      "expected_assertion": {
+        "kind": "return_and_trace",
+        "return": "void",
+        "property_order": [
+          "cdi",
+          "time",
+          "pcb1",
+          "pce1",
+          "pce2"
+        ],
+        "equation_calls": [
+          {
+            "feature": "pcb1",
+            "kind": "Expression",
+            "args": [
+              "recursive",
+              "all"
+            ],
+            "table": "s1_open_equations_pcb1_Expression.csv"
+          },
+          {
+            "feature": "pcb1",
+            "kind": "Weak",
+            "args": [
+              "recursive",
+              "all"
+            ],
+            "table": "s1_open_equations_pcb1_Weak.csv"
+          },
+          {
+            "feature": "pcb1",
+            "kind": "Constraint",
+            "args": [
+              "recursive",
+              "all"
+            ],
+            "table": "s1_open_equations_pcb1_Constraint.csv"
+          },
+          {
+            "feature": "pcb1",
+            "kind": "Shape",
+            "args": [
+              "recursive",
+              "all"
+            ],
+            "table": "s1_open_equations_pcb1_Shape.csv"
+          },
+          {
+            "feature": "pce1",
+            "kind": "Expression",
+            "args": [
+              "recursive",
+              "all"
+            ],
+            "table": "s1_open_equations_pce1_Expression.csv"
+          },
+          {
+            "feature": "pce1",
+            "kind": "Weak",
+            "args": [
+              "recursive",
+              "all"
+            ],
+            "table": "s1_open_equations_pce1_Weak.csv"
+          },
+          {
+            "feature": "pce1",
+            "kind": "Constraint",
+            "args": [
+              "recursive",
+              "all"
+            ],
+            "table": "s1_open_equations_pce1_Constraint.csv"
+          },
+          {
+            "feature": "pce1",
+            "kind": "Shape",
+            "args": [
+              "recursive",
+              "all"
+            ],
+            "table": "s1_open_equations_pce1_Shape.csv"
+          },
+          {
+            "feature": "pce2",
+            "kind": "Expression",
+            "args": [
+              "recursive",
+              "all"
+            ],
+            "table": "s1_open_equations_pce2_Expression.csv"
+          },
+          {
+            "feature": "pce2",
+            "kind": "Weak",
+            "args": [
+              "recursive",
+              "all"
+            ],
+            "table": "s1_open_equations_pce2_Weak.csv"
+          },
+          {
+            "feature": "pce2",
+            "kind": "Constraint",
+            "args": [
+              "recursive",
+              "all"
+            ],
+            "table": "s1_open_equations_pce2_Constraint.csv"
+          },
+          {
+            "feature": "pce2",
+            "kind": "Shape",
+            "args": [
+              "recursive",
+              "all"
+            ],
+            "table": "s1_open_equations_pce2_Shape.csv"
+          }
+        ]
+      },
+      "required_reach": [
+        "s1OpenConfiguredReadback",
+        "s1OpenProperties",
+        "FeatureInfo.getInfoTable"
+      ],
+      "forbidden_reach": [
+        "COMSOL",
+        "JVM_model",
+        "OS_process_start",
+        "Job_API",
+        "console_input",
+        "native_provider",
+        "control.execute_once"
+      ],
+      "call_counts": {
+        "s1OpenConfiguredReadback": 1,
+        "s1OpenProperties": 5,
+        "FeatureInfo.getInfoTable": 12
+      },
+      "source_span_reference": "FUNCTION_SPANS.json",
+      "actual_execution": "NOT_EXECUTED"
+    },
+    {
+      "id": "C08-04",
+      "group": "C08",
+      "engine": "Java_helper",
+      "target_function": "s1OpenStoredGrid -> evaluate -> checkShape",
+      "case": "stored zero semantics",
+      "expected_reason_or_result": "STORED_ZERO_POST_CONSISTENCY_PROOF_OPEN",
+      "fixture_rule": "STORED_BASELINE: actual evaluate; inert getReal={{0.0,1.0,120.0}}; expr=['t'],data=daudit,innerinput=all,unit=['s'] getters match; TIMES=null; T_END_SECONDS=120.0",
+      "positive_control": "C08-04",
+      "reached_function_required": "s1OpenStoredGrid -> original evaluate -> original checkShape -> original units configured/evaluated",
+      "unexpected_exception_is_pass": false,
+      "invocations": 1,
+      "input_mutation": "STORED_BASELINE: actual evaluate; inert getReal={{0.0,1.0,120.0}}; expr=['t'],data=daudit,innerinput=all,unit=['s'] getters match; TIMES=null; T_END_SECONDS=120.0",
+      "expected_assertion": {
+        "kind": "return_and_output",
+        "return": "void",
+        "table": "s1_open_stored_grid.csv",
+        "rows": [
+          [
+            "stored_index_one_based",
+            "time_s",
+            "t0_semantics"
+          ],
+          [
+            "1",
+            "0.0",
+            "STORED_ZERO_POST_CONSISTENCY_PROOF_OPEN"
+          ],
+          [
+            "2",
+            "1.0",
+            "POSITIVE_STORED_TIME"
+          ],
+          [
+            "3",
+            "120.0",
+            "POSITIVE_STORED_TIME"
+          ]
+        ]
+      },
+      "required_reach": [
+        "s1OpenStoredGrid",
+        "original evaluate",
+        "original checkShape",
+        "original units configured/evaluated"
+      ],
+      "forbidden_reach": [
+        "COMSOL",
+        "JVM_model",
+        "OS_process_start",
+        "Job_API",
+        "console_input",
+        "native_provider",
+        "control.execute_once"
+      ],
+      "call_counts": {
+        "s1OpenStoredGrid": 1,
+        "evaluate": 1,
+        "checkShape": 1,
+        "getReal": 1,
+        "stored-grid table": 1
+      },
+      "source_span_reference": "FUNCTION_SPANS.json",
+      "actual_execution": "NOT_EXECUTED"
+    },
+    {
+      "id": "C08-05",
+      "group": "C08",
+      "engine": "Java_helper",
+      "target_function": "s1OpenStoredGrid -> evaluate -> checkShape",
+      "case": "nonzero first time",
+      "expected_reason_or_result": "original TIME_ORIGIN propagates",
+      "fixture_rule": "C08-04: only inert getReal first time becomes 0.5; exact matrix {{0.5,1.0,120.0}}; all earlier binding/unit/shape prerequisites pass",
+      "positive_control": "C08-04",
+      "reached_function_required": "s1OpenStoredGrid -> original evaluate -> original checkShape TIME_ORIGIN throw",
+      "unexpected_exception_is_pass": false,
+      "invocations": 1,
+      "input_mutation": "C08-04: only inert getReal first time becomes 0.5; exact matrix {{0.5,1.0,120.0}}; all earlier binding/unit/shape prerequisites pass",
+      "expected_assertion": {
+        "kind": "exception",
+        "class": "java.lang.IllegalStateException",
+        "message": "TIME_ORIGIN:s1openstoredgrid",
+        "origin": "original P0 checkShape TIME_ORIGIN line in FUNCTION_SPANS.json"
+      },
+      "required_reach": [
+        "s1OpenStoredGrid",
+        "original evaluate",
+        "original checkShape TIME_ORIGIN throw"
+      ],
+      "forbidden_reach": [
+        "COMSOL",
+        "JVM_model",
+        "OS_process_start",
+        "Job_API",
+        "console_input",
+        "native_provider",
+        "control.execute_once",
+        "units evaluated",
+        "stored-grid output",
+        "replacement evaluate/checkShape"
+      ],
+      "call_counts": {
+        "s1OpenStoredGrid": 1,
+        "evaluate": 1,
+        "checkShape": 1,
+        "getReal": 1,
+        "units configured": 1,
+        "units evaluated": 0,
+        "stored-grid table": 0
+      },
+      "source_span_reference": "FUNCTION_SPANS.json",
+      "actual_execution": "NOT_EXECUTED"
+    },
+    {
+      "id": "C08-06",
+      "group": "C08",
+      "engine": "Java_helper",
+      "target_function": "s1OpenConfiguredReadback -> s1OpenProperties -> readSetting",
+      "case": "readback exception",
+      "expected_reason_or_result": "first raw exception propagates",
+      "fixture_rule": "C08-03: first cdi getString(p) throws fixed IllegalStateException('C08_READBACK_SENTINEL'); retain exact same exception object",
+      "positive_control": "C08-03",
+      "reached_function_required": "s1OpenConfiguredReadback -> s1OpenProperties(cdi) -> original readSetting -> cdi.getString(p)",
+      "unexpected_exception_is_pass": false,
+      "invocations": 1,
+      "input_mutation": "C08-03: first cdi getString(p) throws fixed IllegalStateException('C08_READBACK_SENTINEL'); retain exact same exception object",
+      "expected_assertion": {
+        "kind": "exception",
+        "class": "java.lang.IllegalStateException",
+        "message": "C08_READBACK_SENTINEL",
+        "same_exception_identity": true
+      },
+      "required_reach": [
+        "s1OpenConfiguredReadback",
+        "s1OpenProperties(cdi)",
+        "original readSetting",
+        "cdi.getString(p)"
+      ],
+      "forbidden_reach": [
+        "COMSOL",
+        "JVM_model",
+        "OS_process_start",
+        "Job_API",
+        "console_input",
+        "native_provider",
+        "control.execute_once",
+        "time readback",
+        "physics readback",
+        "equation calls"
+      ],
+      "call_counts": {
+        "s1OpenConfiguredReadback": 1,
+        "s1OpenProperties": 1,
+        "readSetting": 1,
+        "FeatureInfo.getInfoTable": 0,
+        "time property reads": 0
+      },
+      "source_span_reference": "FUNCTION_SPANS.json",
+      "actual_execution": "NOT_EXECUTED"
+    },
+    {
+      "id": "C09-01",
+      "group": "C09",
+      "engine": "Python",
+      "target_function": "ResourceSession.decide / resource_decision / project_owned_sample / bind_sample_clock",
+      "case": "same execution and same private Job retained across two samples",
+      "positive_control": "C09-01",
+      "fixture_rule": "RESOURCE_BASELINE; Construct one session from independent start_record and anchors; decide baseline at 211 then second raw start=215,end=216,previous=211; identical origins/run/clock/Job; no reconstruction",
+      "input_mutation": "Construct one session from independent start_record and anchors; decide baseline at 211 then second raw start=215,end=216,previous=211; identical origins/run/clock/Job; no reconstruction",
+      "expected_reason_or_result": "CONTINUE_WITHIN_SAMPLED_LIMITS",
+      "expected_assertion": {
+        "kind": "two_returns",
+        "statuses": [
+          "CONTINUE_WITHIN_SAMPLED_LIMITS",
+          "CONTINUE_WITHIN_SAMPLED_LIMITS"
+        ],
+        "reasons": [
+          [],
+          []
+        ],
+        "observed_monotonic_s": [
+          211,
+          216
+        ],
+        "projected_elapsed": {
+          "native": [
+            11,
+            16
+          ],
+          "overall": [
+            111,
+            116
+          ]
+        },
+        "same_session_and_clock_identity": true
+      },
+      "required_reach": [
+        "ResourceSession.decide",
+        "resource_decision",
+        "project_owned_sample",
+        "bind_sample_clock",
+        "actual control.assess_resources"
+      ],
+      "forbidden_reach": [
+        "COMSOL",
+        "JVM_model",
+        "OS_process_start",
+        "Job_API",
+        "console_input",
+        "native_provider",
+        "control.execute_once"
+      ],
+      "call_counts": {
+        "ResourceSession.__init__": 1,
+        "ResourceSession.decide": 2,
+        "resource_decision": 2,
+        "project_owned_sample": 2,
+        "bind_sample_clock": 2,
+        "control.assess_resources": 2
+      },
+      "invocations": 2,
+      "source_span_reference": "FUNCTION_SPANS.json",
+      "unexpected_exception_is_pass": false,
+      "actual_execution": "NOT_EXECUTED",
+      "reached_function_required": "ResourceSession.decide -> resource_decision -> project_owned_sample -> bind_sample_clock -> actual control.assess_resources"
+    },
+    {
+      "id": "C09-02",
+      "group": "C09",
+      "engine": "Python",
+      "target_function": "ResourceSession.decide / resource_decision / project_owned_sample / bind_sample_clock",
+      "case": "raw native origin shift",
+      "positive_control": "C09-01",
+      "fixture_rule": "RESOURCE_BASELINE; Only raw.native_origin_s=201; retained context.native_origin_s=200",
+      "input_mutation": "Only raw.native_origin_s=201; retained context.native_origin_s=200",
+      "expected_reason_or_result": "CLOCK_ORIGIN_MISMATCH:native_origin_s",
+      "expected_assertion": {
+        "kind": "return",
+        "equals": {
+          "status": "STOP_REQUIRED",
+          "reasons": [
+            "CLOCK_ORIGIN_MISMATCH:native_origin_s"
+          ],
+          "sampled_max_is_os_peak": false,
+          "counter_projection": "INCOMPLETE"
+        }
+      },
+      "required_reach": [
+        "ResourceSession.decide",
+        "resource_decision",
+        "project_owned_sample",
+        "bind_sample_clock",
+        "specified rejection guard",
+        "resource_decision ResourceConnectionError catch"
+      ],
+      "forbidden_reach": [
+        "COMSOL",
+        "JVM_model",
+        "OS_process_start",
+        "Job_API",
+        "console_input",
+        "native_provider",
+        "control.execute_once",
+        "control.assess_resources"
+      ],
+      "call_counts": {
+        "ResourceSession.__init__": 1,
+        "ResourceSession.decide": 1,
+        "resource_decision": 1,
+        "project_owned_sample": 1,
+        "bind_sample_clock": 1,
+        "control.assess_resources": 0
+      },
+      "invocations": 1,
+      "source_span_reference": "FUNCTION_SPANS.json",
+      "unexpected_exception_is_pass": false,
+      "actual_execution": "NOT_EXECUTED",
+      "reached_function_required": "ResourceSession.decide -> resource_decision -> project_owned_sample -> bind_sample_clock -> specified rejection guard -> resource_decision ResourceConnectionError catch"
+    },
+    {
+      "id": "C09-03",
+      "group": "C09",
+      "engine": "Python",
+      "target_function": "ResourceSession.decide / resource_decision / project_owned_sample / bind_sample_clock",
+      "case": "raw overall origin shift",
+      "positive_control": "C09-01",
+      "fixture_rule": "RESOURCE_BASELINE; Only raw.overall_origin_s=101; retained context.overall_origin_s=100",
+      "input_mutation": "Only raw.overall_origin_s=101; retained context.overall_origin_s=100",
+      "expected_reason_or_result": "CLOCK_ORIGIN_MISMATCH:overall_origin_s",
+      "expected_assertion": {
+        "kind": "return",
+        "equals": {
+          "status": "STOP_REQUIRED",
+          "reasons": [
+            "CLOCK_ORIGIN_MISMATCH:overall_origin_s"
+          ],
+          "sampled_max_is_os_peak": false,
+          "counter_projection": "INCOMPLETE"
+        }
+      },
+      "required_reach": [
+        "ResourceSession.decide",
+        "resource_decision",
+        "project_owned_sample",
+        "bind_sample_clock",
+        "specified rejection guard",
+        "resource_decision ResourceConnectionError catch"
+      ],
+      "forbidden_reach": [
+        "COMSOL",
+        "JVM_model",
+        "OS_process_start",
+        "Job_API",
+        "console_input",
+        "native_provider",
+        "control.execute_once",
+        "control.assess_resources"
+      ],
+      "call_counts": {
+        "ResourceSession.__init__": 1,
+        "ResourceSession.decide": 1,
+        "resource_decision": 1,
+        "project_owned_sample": 1,
+        "bind_sample_clock": 1,
+        "control.assess_resources": 0
+      },
+      "invocations": 1,
+      "source_span_reference": "FUNCTION_SPANS.json",
+      "unexpected_exception_is_pass": false,
+      "actual_execution": "NOT_EXECUTED",
+      "reached_function_required": "ResourceSession.decide -> resource_decision -> project_owned_sample -> bind_sample_clock -> specified rejection guard -> resource_decision ResourceConnectionError catch"
+    },
+    {
+      "id": "C09-04",
+      "group": "C09",
+      "engine": "Python",
+      "target_function": "ResourceSession.decide / resource_decision / project_owned_sample / bind_sample_clock",
+      "case": "actual fixed native budget exceeded",
+      "positive_control": "C09-01",
+      "fixture_rule": "RESOURCE_BASELINE; Retain start origins; sample_start=7280,end=7281,previous=7276; gap5 duration1; native_elapsed=7081 > 7200-120; all counters within limits",
+      "input_mutation": "Retain start origins; sample_start=7280,end=7281,previous=7276; gap5 duration1; native_elapsed=7081 > 7200-120; all counters within limits",
+      "expected_reason_or_result": "STOP_REQUIRED; reasons[0]=STOP_RESERVE_ENTERED:native_elapsed_s",
+      "expected_assertion": {
+        "kind": "return",
+        "equals": {
+          "status": "STOP_REQUIRED",
+          "reasons": [
+            "STOP_RESERVE_ENTERED:native_elapsed_s"
+          ],
+          "observed_monotonic_s": 7281,
+          "sampled_max_is_os_peak": false,
+          "sampled_threshold_is_hard_cap": false
+        }
+      },
+      "required_reach": [
+        "ResourceSession.decide",
+        "resource_decision",
+        "project_owned_sample",
+        "bind_sample_clock",
+        "actual control.assess_resources"
+      ],
+      "forbidden_reach": [
+        "COMSOL",
+        "JVM_model",
+        "OS_process_start",
+        "Job_API",
+        "console_input",
+        "native_provider",
+        "control.execute_once"
+      ],
+      "call_counts": {
+        "ResourceSession.__init__": 1,
+        "ResourceSession.decide": 1,
+        "resource_decision": 1,
+        "project_owned_sample": 1,
+        "bind_sample_clock": 1,
+        "control.assess_resources": 1
+      },
+      "invocations": 1,
+      "source_span_reference": "FUNCTION_SPANS.json",
+      "unexpected_exception_is_pass": false,
+      "actual_execution": "NOT_EXECUTED",
+      "reached_function_required": "ResourceSession.decide -> resource_decision -> project_owned_sample -> bind_sample_clock -> actual control.assess_resources"
+    },
+    {
+      "id": "C09-05",
+      "group": "C09",
+      "engine": "Python",
+      "target_function": "ResourceSession.decide / resource_decision / project_owned_sample / bind_sample_clock",
+      "case": "actual fixed overall and native budgets exceeded",
+      "positive_control": "C09-01",
+      "fixture_rule": "RESOURCE_BASELINE; Retain start origins; sample_start=8980,end=8981,previous=8976; native_elapsed=8781 and overall_elapsed=8881; gap5 duration1",
+      "input_mutation": "Retain start origins; sample_start=8980,end=8981,previous=8976; native_elapsed=8781 and overall_elapsed=8881; gap5 duration1",
+      "expected_reason_or_result": "STOP_REQUIRED; native then overall STOP_RESERVE_ENTERED",
+      "expected_assertion": {
+        "kind": "return",
+        "equals": {
+          "status": "STOP_REQUIRED",
+          "reasons": [
+            "STOP_RESERVE_ENTERED:native_elapsed_s",
+            "STOP_RESERVE_ENTERED:overall_elapsed_s"
+          ],
+          "observed_monotonic_s": 8981,
+          "sampled_max_is_os_peak": false,
+          "sampled_threshold_is_hard_cap": false
+        }
+      },
+      "required_reach": [
+        "ResourceSession.decide",
+        "resource_decision",
+        "project_owned_sample",
+        "bind_sample_clock",
+        "actual control.assess_resources"
+      ],
+      "forbidden_reach": [
+        "COMSOL",
+        "JVM_model",
+        "OS_process_start",
+        "Job_API",
+        "console_input",
+        "native_provider",
+        "control.execute_once"
+      ],
+      "call_counts": {
+        "ResourceSession.__init__": 1,
+        "ResourceSession.decide": 1,
+        "resource_decision": 1,
+        "project_owned_sample": 1,
+        "bind_sample_clock": 1,
+        "control.assess_resources": 1
+      },
+      "invocations": 1,
+      "source_span_reference": "FUNCTION_SPANS.json",
+      "unexpected_exception_is_pass": false,
+      "actual_execution": "NOT_EXECUTED",
+      "reached_function_required": "ResourceSession.decide -> resource_decision -> project_owned_sample -> bind_sample_clock -> actual control.assess_resources"
+    },
+    {
+      "id": "C09-06",
+      "group": "C09",
+      "engine": "Python",
+      "target_function": "ResourceSession.decide / resource_decision / project_owned_sample / bind_sample_clock",
+      "case": "missing raw overall_origin_s",
+      "positive_control": "C09-01",
+      "fixture_rule": "RESOURCE_BASELINE; Delete only raw.overall_origin_s",
+      "input_mutation": "Delete only raw.overall_origin_s",
+      "expected_reason_or_result": "CLOCK_ORIGIN_MISSING:overall_origin_s",
+      "expected_assertion": {
+        "kind": "return",
+        "equals": {
+          "status": "STOP_REQUIRED",
+          "reasons": [
+            "CLOCK_ORIGIN_MISSING:overall_origin_s"
+          ],
+          "sampled_max_is_os_peak": false,
+          "counter_projection": "INCOMPLETE"
+        }
+      },
+      "required_reach": [
+        "ResourceSession.decide",
+        "resource_decision",
+        "project_owned_sample",
+        "bind_sample_clock",
+        "specified rejection guard",
+        "resource_decision ResourceConnectionError catch"
+      ],
+      "forbidden_reach": [
+        "COMSOL",
+        "JVM_model",
+        "OS_process_start",
+        "Job_API",
+        "console_input",
+        "native_provider",
+        "control.execute_once",
+        "control.assess_resources"
+      ],
+      "call_counts": {
+        "ResourceSession.__init__": 1,
+        "ResourceSession.decide": 1,
+        "resource_decision": 1,
+        "project_owned_sample": 1,
+        "bind_sample_clock": 1,
+        "control.assess_resources": 0
+      },
+      "invocations": 1,
+      "source_span_reference": "FUNCTION_SPANS.json",
+      "unexpected_exception_is_pass": false,
+      "actual_execution": "NOT_EXECUTED",
+      "reached_function_required": "ResourceSession.decide -> resource_decision -> project_owned_sample -> bind_sample_clock -> specified rejection guard -> resource_decision ResourceConnectionError catch"
+    },
+    {
+      "id": "C09-07",
+      "group": "C09",
+      "engine": "Python",
+      "target_function": "ResourceSession.__init__ / ExecutionClockContext.__post_init__",
+      "case": "missing independent start overall_origin_s",
+      "positive_control": "C09-01",
+      "fixture_rule": "RESOURCE_BASELINE; Delete only start_record.overall_origin_s before constructing session",
+      "input_mutation": "Delete only start_record.overall_origin_s before constructing session",
+      "expected_reason_or_result": "CONTEXT_MISSING:overall_origin_s",
+      "expected_assertion": {
+        "kind": "exception",
+        "class": "ResourceConnectionError",
+        "reason": "CONTEXT_MISSING:overall_origin_s",
+        "stage": "resource_connection",
+        "message": "CONTEXT_MISSING:overall_origin_s"
+      },
+      "required_reach": [
+        "ResourceSession.__init__",
+        "specified constructor guard"
+      ],
+      "forbidden_reach": [
+        "COMSOL",
+        "JVM_model",
+        "OS_process_start",
+        "Job_API",
+        "console_input",
+        "native_provider",
+        "control.execute_once",
+        "control.assess_resources"
+      ],
+      "call_counts": {
+        "ResourceSession.__init__": 1,
+        "ResourceSession.decide": 0,
+        "resource_decision": 0,
+        "project_owned_sample": 0,
+        "bind_sample_clock": 0,
+        "control.assess_resources": 0
+      },
+      "invocations": 1,
+      "source_span_reference": "FUNCTION_SPANS.json",
+      "unexpected_exception_is_pass": false,
+      "actual_execution": "NOT_EXECUTED",
+      "constructor_failure": true,
+      "reached_function_required": "ResourceSession.__init__ -> specified constructor guard"
+    },
+    {
+      "id": "C09-08",
+      "group": "C09",
+      "engine": "Python",
+      "target_function": "ResourceSession.decide / resource_decision / project_owned_sample / bind_sample_clock",
+      "case": "missing raw native_origin_s",
+      "positive_control": "C09-01",
+      "fixture_rule": "RESOURCE_BASELINE; Delete only raw.native_origin_s",
+      "input_mutation": "Delete only raw.native_origin_s",
+      "expected_reason_or_result": "CLOCK_ORIGIN_MISSING:native_origin_s",
+      "expected_assertion": {
+        "kind": "return",
+        "equals": {
+          "status": "STOP_REQUIRED",
+          "reasons": [
+            "CLOCK_ORIGIN_MISSING:native_origin_s"
+          ],
+          "sampled_max_is_os_peak": false,
+          "counter_projection": "INCOMPLETE"
+        }
+      },
+      "required_reach": [
+        "ResourceSession.decide",
+        "resource_decision",
+        "project_owned_sample",
+        "bind_sample_clock",
+        "specified rejection guard",
+        "resource_decision ResourceConnectionError catch"
+      ],
+      "forbidden_reach": [
+        "COMSOL",
+        "JVM_model",
+        "OS_process_start",
+        "Job_API",
+        "console_input",
+        "native_provider",
+        "control.execute_once",
+        "control.assess_resources"
+      ],
+      "call_counts": {
+        "ResourceSession.__init__": 1,
+        "ResourceSession.decide": 1,
+        "resource_decision": 1,
+        "project_owned_sample": 1,
+        "bind_sample_clock": 1,
+        "control.assess_resources": 0
+      },
+      "invocations": 1,
+      "source_span_reference": "FUNCTION_SPANS.json",
+      "unexpected_exception_is_pass": false,
+      "actual_execution": "NOT_EXECUTED",
+      "reached_function_required": "ResourceSession.decide -> resource_decision -> project_owned_sample -> bind_sample_clock -> specified rejection guard -> resource_decision ResourceConnectionError catch"
+    },
+    {
+      "id": "C09-09",
+      "group": "C09",
+      "engine": "Python",
+      "target_function": "ResourceSession.__init__ / ExecutionClockContext.__post_init__",
+      "case": "missing independent start native_origin_s",
+      "positive_control": "C09-01",
+      "fixture_rule": "RESOURCE_BASELINE; Delete only start_record.native_origin_s before constructing session",
+      "input_mutation": "Delete only start_record.native_origin_s before constructing session",
+      "expected_reason_or_result": "CONTEXT_MISSING:native_origin_s",
+      "expected_assertion": {
+        "kind": "exception",
+        "class": "ResourceConnectionError",
+        "reason": "CONTEXT_MISSING:native_origin_s",
+        "stage": "resource_connection",
+        "message": "CONTEXT_MISSING:native_origin_s"
+      },
+      "required_reach": [
+        "ResourceSession.__init__",
+        "specified constructor guard"
+      ],
+      "forbidden_reach": [
+        "COMSOL",
+        "JVM_model",
+        "OS_process_start",
+        "Job_API",
+        "console_input",
+        "native_provider",
+        "control.execute_once",
+        "control.assess_resources"
+      ],
+      "call_counts": {
+        "ResourceSession.__init__": 1,
+        "ResourceSession.decide": 0,
+        "resource_decision": 0,
+        "project_owned_sample": 0,
+        "bind_sample_clock": 0,
+        "control.assess_resources": 0
+      },
+      "invocations": 1,
+      "source_span_reference": "FUNCTION_SPANS.json",
+      "unexpected_exception_is_pass": false,
+      "actual_execution": "NOT_EXECUTED",
+      "constructor_failure": true,
+      "reached_function_required": "ResourceSession.__init__ -> specified constructor guard"
+    },
+    {
+      "id": "C09-10",
+      "group": "C09",
+      "engine": "Python",
+      "target_function": "ResourceSession.decide / resource_decision / project_owned_sample / bind_sample_clock",
+      "case": "wrong raw run_id",
+      "positive_control": "C09-01",
+      "fixture_rule": "RESOURCE_BASELINE; Set only raw.run_id='WRONG'",
+      "input_mutation": "Set only raw.run_id='WRONG'",
+      "expected_reason_or_result": "CLOCK_BINDING_MISMATCH:run_id",
+      "expected_assertion": {
+        "kind": "return",
+        "equals": {
+          "status": "STOP_REQUIRED",
+          "reasons": [
+            "CLOCK_BINDING_MISMATCH:run_id"
+          ],
+          "sampled_max_is_os_peak": false,
+          "counter_projection": "INCOMPLETE"
+        }
+      },
+      "required_reach": [
+        "ResourceSession.decide",
+        "resource_decision",
+        "project_owned_sample",
+        "bind_sample_clock",
+        "specified rejection guard",
+        "resource_decision ResourceConnectionError catch"
+      ],
+      "forbidden_reach": [
+        "COMSOL",
+        "JVM_model",
+        "OS_process_start",
+        "Job_API",
+        "console_input",
+        "native_provider",
+        "control.execute_once",
+        "control.assess_resources"
+      ],
+      "call_counts": {
+        "ResourceSession.__init__": 1,
+        "ResourceSession.decide": 1,
+        "resource_decision": 1,
+        "project_owned_sample": 1,
+        "bind_sample_clock": 1,
+        "control.assess_resources": 0
+      },
+      "invocations": 1,
+      "source_span_reference": "FUNCTION_SPANS.json",
+      "unexpected_exception_is_pass": false,
+      "actual_execution": "NOT_EXECUTED",
+      "reached_function_required": "ResourceSession.decide -> resource_decision -> project_owned_sample -> bind_sample_clock -> specified rejection guard -> resource_decision ResourceConnectionError catch"
+    },
+    {
+      "id": "C09-11",
+      "group": "C09",
+      "engine": "Python",
+      "target_function": "ResourceSession.decide / resource_decision / project_owned_sample / bind_sample_clock",
+      "case": "missing raw run_id",
+      "positive_control": "C09-01",
+      "fixture_rule": "RESOURCE_BASELINE; Delete only raw.run_id",
+      "input_mutation": "Delete only raw.run_id",
+      "expected_reason_or_result": "CLOCK_BINDING_MISSING:run_id",
+      "expected_assertion": {
+        "kind": "return",
+        "equals": {
+          "status": "STOP_REQUIRED",
+          "reasons": [
+            "CLOCK_BINDING_MISSING:run_id"
+          ],
+          "sampled_max_is_os_peak": false,
+          "counter_projection": "INCOMPLETE"
+        }
+      },
+      "required_reach": [
+        "ResourceSession.decide",
+        "resource_decision",
+        "project_owned_sample",
+        "bind_sample_clock",
+        "specified rejection guard",
+        "resource_decision ResourceConnectionError catch"
+      ],
+      "forbidden_reach": [
+        "COMSOL",
+        "JVM_model",
+        "OS_process_start",
+        "Job_API",
+        "console_input",
+        "native_provider",
+        "control.execute_once",
+        "control.assess_resources"
+      ],
+      "call_counts": {
+        "ResourceSession.__init__": 1,
+        "ResourceSession.decide": 1,
+        "resource_decision": 1,
+        "project_owned_sample": 1,
+        "bind_sample_clock": 1,
+        "control.assess_resources": 0
+      },
+      "invocations": 1,
+      "source_span_reference": "FUNCTION_SPANS.json",
+      "unexpected_exception_is_pass": false,
+      "actual_execution": "NOT_EXECUTED",
+      "reached_function_required": "ResourceSession.decide -> resource_decision -> project_owned_sample -> bind_sample_clock -> specified rejection guard -> resource_decision ResourceConnectionError catch"
+    },
+    {
+      "id": "C09-12",
+      "group": "C09",
+      "engine": "Python",
+      "target_function": "ResourceSession.decide / resource_decision / project_owned_sample / bind_sample_clock",
+      "case": "wrong raw clock_id",
+      "positive_control": "C09-01",
+      "fixture_rule": "RESOURCE_BASELINE; Set only raw.clock_id='WRONG'",
+      "input_mutation": "Set only raw.clock_id='WRONG'",
+      "expected_reason_or_result": "CLOCK_BINDING_MISMATCH:clock_id",
+      "expected_assertion": {
+        "kind": "return",
+        "equals": {
+          "status": "STOP_REQUIRED",
+          "reasons": [
+            "CLOCK_BINDING_MISMATCH:clock_id"
+          ],
+          "sampled_max_is_os_peak": false,
+          "counter_projection": "INCOMPLETE"
+        }
+      },
+      "required_reach": [
+        "ResourceSession.decide",
+        "resource_decision",
+        "project_owned_sample",
+        "bind_sample_clock",
+        "specified rejection guard",
+        "resource_decision ResourceConnectionError catch"
+      ],
+      "forbidden_reach": [
+        "COMSOL",
+        "JVM_model",
+        "OS_process_start",
+        "Job_API",
+        "console_input",
+        "native_provider",
+        "control.execute_once",
+        "control.assess_resources"
+      ],
+      "call_counts": {
+        "ResourceSession.__init__": 1,
+        "ResourceSession.decide": 1,
+        "resource_decision": 1,
+        "project_owned_sample": 1,
+        "bind_sample_clock": 1,
+        "control.assess_resources": 0
+      },
+      "invocations": 1,
+      "source_span_reference": "FUNCTION_SPANS.json",
+      "unexpected_exception_is_pass": false,
+      "actual_execution": "NOT_EXECUTED",
+      "reached_function_required": "ResourceSession.decide -> resource_decision -> project_owned_sample -> bind_sample_clock -> specified rejection guard -> resource_decision ResourceConnectionError catch"
+    },
+    {
+      "id": "C09-13",
+      "group": "C09",
+      "engine": "Python",
+      "target_function": "ResourceSession.decide / resource_decision / project_owned_sample / bind_sample_clock",
+      "case": "missing raw clock_id",
+      "positive_control": "C09-01",
+      "fixture_rule": "RESOURCE_BASELINE; Delete only raw.clock_id",
+      "input_mutation": "Delete only raw.clock_id",
+      "expected_reason_or_result": "CLOCK_BINDING_MISSING:clock_id",
+      "expected_assertion": {
+        "kind": "return",
+        "equals": {
+          "status": "STOP_REQUIRED",
+          "reasons": [
+            "CLOCK_BINDING_MISSING:clock_id"
+          ],
+          "sampled_max_is_os_peak": false,
+          "counter_projection": "INCOMPLETE"
+        }
+      },
+      "required_reach": [
+        "ResourceSession.decide",
+        "resource_decision",
+        "project_owned_sample",
+        "bind_sample_clock",
+        "specified rejection guard",
+        "resource_decision ResourceConnectionError catch"
+      ],
+      "forbidden_reach": [
+        "COMSOL",
+        "JVM_model",
+        "OS_process_start",
+        "Job_API",
+        "console_input",
+        "native_provider",
+        "control.execute_once",
+        "control.assess_resources"
+      ],
+      "call_counts": {
+        "ResourceSession.__init__": 1,
+        "ResourceSession.decide": 1,
+        "resource_decision": 1,
+        "project_owned_sample": 1,
+        "bind_sample_clock": 1,
+        "control.assess_resources": 0
+      },
+      "invocations": 1,
+      "source_span_reference": "FUNCTION_SPANS.json",
+      "unexpected_exception_is_pass": false,
+      "actual_execution": "NOT_EXECUTED",
+      "reached_function_required": "ResourceSession.decide -> resource_decision -> project_owned_sample -> bind_sample_clock -> specified rejection guard -> resource_decision ResourceConnectionError catch"
+    },
+    {
+      "id": "C09-14",
+      "group": "C09",
+      "engine": "Python",
+      "target_function": "ResourceSession.decide / resource_decision / project_owned_sample / bind_sample_clock",
+      "case": "wrong raw clock_origin",
+      "positive_control": "C09-01",
+      "fixture_rule": "RESOURCE_BASELINE; Set only raw.clock_origin='WRONG'",
+      "input_mutation": "Set only raw.clock_origin='WRONG'",
+      "expected_reason_or_result": "CLOCK_BINDING_MISMATCH:clock_origin",
+      "expected_assertion": {
+        "kind": "return",
+        "equals": {
+          "status": "STOP_REQUIRED",
+          "reasons": [
+            "CLOCK_BINDING_MISMATCH:clock_origin"
+          ],
+          "sampled_max_is_os_peak": false,
+          "counter_projection": "INCOMPLETE"
+        }
+      },
+      "required_reach": [
+        "ResourceSession.decide",
+        "resource_decision",
+        "project_owned_sample",
+        "bind_sample_clock",
+        "specified rejection guard",
+        "resource_decision ResourceConnectionError catch"
+      ],
+      "forbidden_reach": [
+        "COMSOL",
+        "JVM_model",
+        "OS_process_start",
+        "Job_API",
+        "console_input",
+        "native_provider",
+        "control.execute_once",
+        "control.assess_resources"
+      ],
+      "call_counts": {
+        "ResourceSession.__init__": 1,
+        "ResourceSession.decide": 1,
+        "resource_decision": 1,
+        "project_owned_sample": 1,
+        "bind_sample_clock": 1,
+        "control.assess_resources": 0
+      },
+      "invocations": 1,
+      "source_span_reference": "FUNCTION_SPANS.json",
+      "unexpected_exception_is_pass": false,
+      "actual_execution": "NOT_EXECUTED",
+      "reached_function_required": "ResourceSession.decide -> resource_decision -> project_owned_sample -> bind_sample_clock -> specified rejection guard -> resource_decision ResourceConnectionError catch"
+    },
+    {
+      "id": "C09-15",
+      "group": "C09",
+      "engine": "Python",
+      "target_function": "ResourceSession.decide / resource_decision / project_owned_sample / bind_sample_clock",
+      "case": "missing raw clock_origin",
+      "positive_control": "C09-01",
+      "fixture_rule": "RESOURCE_BASELINE; Delete only raw.clock_origin",
+      "input_mutation": "Delete only raw.clock_origin",
+      "expected_reason_or_result": "CLOCK_BINDING_MISSING:clock_origin",
+      "expected_assertion": {
+        "kind": "return",
+        "equals": {
+          "status": "STOP_REQUIRED",
+          "reasons": [
+            "CLOCK_BINDING_MISSING:clock_origin"
+          ],
+          "sampled_max_is_os_peak": false,
+          "counter_projection": "INCOMPLETE"
+        }
+      },
+      "required_reach": [
+        "ResourceSession.decide",
+        "resource_decision",
+        "project_owned_sample",
+        "bind_sample_clock",
+        "specified rejection guard",
+        "resource_decision ResourceConnectionError catch"
+      ],
+      "forbidden_reach": [
+        "COMSOL",
+        "JVM_model",
+        "OS_process_start",
+        "Job_API",
+        "console_input",
+        "native_provider",
+        "control.execute_once",
+        "control.assess_resources"
+      ],
+      "call_counts": {
+        "ResourceSession.__init__": 1,
+        "ResourceSession.decide": 1,
+        "resource_decision": 1,
+        "project_owned_sample": 1,
+        "bind_sample_clock": 1,
+        "control.assess_resources": 0
+      },
+      "invocations": 1,
+      "source_span_reference": "FUNCTION_SPANS.json",
+      "unexpected_exception_is_pass": false,
+      "actual_execution": "NOT_EXECUTED",
+      "reached_function_required": "ResourceSession.decide -> resource_decision -> project_owned_sample -> bind_sample_clock -> specified rejection guard -> resource_decision ResourceConnectionError catch"
+    },
+    {
+      "id": "C09-16",
+      "group": "C09",
+      "engine": "Python",
+      "target_function": "ResourceSession.decide / resource_decision / project_owned_sample / bind_sample_clock",
+      "case": "wrong raw clock_unit",
+      "positive_control": "C09-01",
+      "fixture_rule": "RESOURCE_BASELINE; Set only raw.clock_unit='WRONG'",
+      "input_mutation": "Set only raw.clock_unit='WRONG'",
+      "expected_reason_or_result": "CLOCK_BINDING_MISMATCH:clock_unit",
+      "expected_assertion": {
+        "kind": "return",
+        "equals": {
+          "status": "STOP_REQUIRED",
+          "reasons": [
+            "CLOCK_BINDING_MISMATCH:clock_unit"
+          ],
+          "sampled_max_is_os_peak": false,
+          "counter_projection": "INCOMPLETE"
+        }
+      },
+      "required_reach": [
+        "ResourceSession.decide",
+        "resource_decision",
+        "project_owned_sample",
+        "bind_sample_clock",
+        "specified rejection guard",
+        "resource_decision ResourceConnectionError catch"
+      ],
+      "forbidden_reach": [
+        "COMSOL",
+        "JVM_model",
+        "OS_process_start",
+        "Job_API",
+        "console_input",
+        "native_provider",
+        "control.execute_once",
+        "control.assess_resources"
+      ],
+      "call_counts": {
+        "ResourceSession.__init__": 1,
+        "ResourceSession.decide": 1,
+        "resource_decision": 1,
+        "project_owned_sample": 1,
+        "bind_sample_clock": 1,
+        "control.assess_resources": 0
+      },
+      "invocations": 1,
+      "source_span_reference": "FUNCTION_SPANS.json",
+      "unexpected_exception_is_pass": false,
+      "actual_execution": "NOT_EXECUTED",
+      "reached_function_required": "ResourceSession.decide -> resource_decision -> project_owned_sample -> bind_sample_clock -> specified rejection guard -> resource_decision ResourceConnectionError catch"
+    },
+    {
+      "id": "C09-17",
+      "group": "C09",
+      "engine": "Python",
+      "target_function": "ResourceSession.decide / resource_decision / project_owned_sample / bind_sample_clock",
+      "case": "missing raw clock_unit",
+      "positive_control": "C09-01",
+      "fixture_rule": "RESOURCE_BASELINE; Delete only raw.clock_unit",
+      "input_mutation": "Delete only raw.clock_unit",
+      "expected_reason_or_result": "CLOCK_BINDING_MISSING:clock_unit",
+      "expected_assertion": {
+        "kind": "return",
+        "equals": {
+          "status": "STOP_REQUIRED",
+          "reasons": [
+            "CLOCK_BINDING_MISSING:clock_unit"
+          ],
+          "sampled_max_is_os_peak": false,
+          "counter_projection": "INCOMPLETE"
+        }
+      },
+      "required_reach": [
+        "ResourceSession.decide",
+        "resource_decision",
+        "project_owned_sample",
+        "bind_sample_clock",
+        "specified rejection guard",
+        "resource_decision ResourceConnectionError catch"
+      ],
+      "forbidden_reach": [
+        "COMSOL",
+        "JVM_model",
+        "OS_process_start",
+        "Job_API",
+        "console_input",
+        "native_provider",
+        "control.execute_once",
+        "control.assess_resources"
+      ],
+      "call_counts": {
+        "ResourceSession.__init__": 1,
+        "ResourceSession.decide": 1,
+        "resource_decision": 1,
+        "project_owned_sample": 1,
+        "bind_sample_clock": 1,
+        "control.assess_resources": 0
+      },
+      "invocations": 1,
+      "source_span_reference": "FUNCTION_SPANS.json",
+      "unexpected_exception_is_pass": false,
+      "actual_execution": "NOT_EXECUTED",
+      "reached_function_required": "ResourceSession.decide -> resource_decision -> project_owned_sample -> bind_sample_clock -> specified rejection guard -> resource_decision ResourceConnectionError catch"
+    },
+    {
+      "id": "C09-18",
+      "group": "C09",
+      "engine": "Python",
+      "target_function": "ResourceSession.decide / resource_decision / project_owned_sample / bind_sample_clock",
+      "case": "caller source dictionaries cannot rebind retained session",
+      "positive_control": "C09-01",
+      "fixture_rule": "RESOURCE_BASELINE; Construct session; then mutate caller start_record overall/native origins to 900/901 and caller anchors run_id/job_identity/root_pid to DIFFERENT/OTHER_JOB/99; decide using original matching raw; recorded session clock/anchors remain original",
+      "input_mutation": "Construct session; then mutate caller start_record overall/native origins to 900/901 and caller anchors run_id/job_identity/root_pid to DIFFERENT/OTHER_JOB/99; decide using original matching raw; recorded session clock/anchors remain original",
+      "expected_reason_or_result": "CONTINUE_WITHIN_SAMPLED_LIMITS",
+      "expected_assertion": {
+        "kind": "return_and_snapshot",
+        "return_fields": {
+          "status": "CONTINUE_WITHIN_SAMPLED_LIMITS",
+          "reasons": [],
+          "observed_monotonic_s": 211
+        },
+        "session_clock": {
+          "overall_origin_s": 100,
+          "native_origin_s": 200,
+          "run_id": "FIXTURE_RUN"
+        },
+        "session_anchor_fields": {
+          "run_id": "FIXTURE_RUN",
+          "job_identity": "FIXTURE_JOB",
+          "root_pid": 11
+        }
+      },
+      "required_reach": [
+        "ResourceSession.decide",
+        "resource_decision",
+        "project_owned_sample",
+        "bind_sample_clock",
+        "actual control.assess_resources"
+      ],
+      "forbidden_reach": [
+        "COMSOL",
+        "JVM_model",
+        "OS_process_start",
+        "Job_API",
+        "console_input",
+        "native_provider",
+        "control.execute_once"
+      ],
+      "call_counts": {
+        "ResourceSession.__init__": 1,
+        "ResourceSession.decide": 1,
+        "resource_decision": 1,
+        "project_owned_sample": 1,
+        "bind_sample_clock": 1,
+        "control.assess_resources": 1
+      },
+      "invocations": 1,
+      "source_span_reference": "FUNCTION_SPANS.json",
+      "unexpected_exception_is_pass": false,
+      "actual_execution": "NOT_EXECUTED",
+      "reached_function_required": "ResourceSession.decide -> resource_decision -> project_owned_sample -> bind_sample_clock -> actual control.assess_resources"
+    },
+    {
+      "id": "C09-19",
+      "group": "C09",
+      "engine": "Python",
+      "target_function": "ResourceSession frozen field / ExecutionClockContext frozen field",
+      "case": "immutable clock assignment",
+      "positive_control": "C09-01",
+      "fixture_rule": "RESOURCE_BASELINE; Construct valid session, then attempt session.clock = another valid context",
+      "input_mutation": "Construct valid session, then attempt session.clock = another valid context",
+      "expected_reason_or_result": "dataclasses.FrozenInstanceError",
+      "expected_assertion": {
+        "kind": "exception",
+        "class": "dataclasses.FrozenInstanceError",
+        "message": "cannot assign to field 'clock'",
+        "session_unchanged": true
+      },
+      "required_reach": [
+        "ResourceSession.__init__",
+        "generated frozen dataclass assignment guard"
+      ],
+      "forbidden_reach": [
+        "COMSOL",
+        "JVM_model",
+        "OS_process_start",
+        "Job_API",
+        "console_input",
+        "native_provider",
+        "control.execute_once",
+        "ResourceSession.decide",
+        "control.assess_resources"
+      ],
+      "call_counts": {
+        "ResourceSession.__init__": 1,
+        "ResourceSession.decide": 0,
+        "control.assess_resources": 0
+      },
+      "invocations": 1,
+      "source_span_reference": "FUNCTION_SPANS.json",
+      "unexpected_exception_is_pass": false,
+      "actual_execution": "NOT_EXECUTED",
+      "reached_function_required": "ResourceSession.__init__ -> generated frozen dataclass assignment guard"
+    },
+    {
+      "id": "C09-20",
+      "group": "C09",
+      "engine": "Python",
+      "target_function": "ResourceSession frozen field / ExecutionClockContext frozen field",
+      "case": "immutable origin assignment",
+      "positive_control": "C09-01",
+      "fixture_rule": "RESOURCE_BASELINE; Construct valid session, then attempt session.clock.native_origin_s = 201",
+      "input_mutation": "Construct valid session, then attempt session.clock.native_origin_s = 201",
+      "expected_reason_or_result": "dataclasses.FrozenInstanceError",
+      "expected_assertion": {
+        "kind": "exception",
+        "class": "dataclasses.FrozenInstanceError",
+        "message": "cannot assign to field 'native_origin_s'",
+        "session_unchanged": true
+      },
+      "required_reach": [
+        "ResourceSession.__init__",
+        "generated frozen dataclass assignment guard"
+      ],
+      "forbidden_reach": [
+        "COMSOL",
+        "JVM_model",
+        "OS_process_start",
+        "Job_API",
+        "console_input",
+        "native_provider",
+        "control.execute_once",
+        "ResourceSession.decide",
+        "control.assess_resources"
+      ],
+      "call_counts": {
+        "ResourceSession.__init__": 1,
+        "ResourceSession.decide": 0,
+        "control.assess_resources": 0
+      },
+      "invocations": 1,
+      "source_span_reference": "FUNCTION_SPANS.json",
+      "unexpected_exception_is_pass": false,
+      "actual_execution": "NOT_EXECUTED",
+      "reached_function_required": "ResourceSession.__init__ -> generated frozen dataclass assignment guard"
+    },
+    {
+      "id": "C09-21",
+      "group": "C09",
+      "engine": "Python",
+      "target_function": "ResourceSession.__init__ / ExecutionClockContext.__post_init__",
+      "case": "invalid start unit",
+      "positive_control": "C09-01",
+      "fixture_rule": "RESOURCE_BASELINE; Only start_record.clock_unit='milliseconds'",
+      "input_mutation": "Only start_record.clock_unit='milliseconds'",
+      "expected_reason_or_result": "CONTEXT_CLOCK_UNIT",
+      "expected_assertion": {
+        "kind": "exception",
+        "class": "ResourceConnectionError",
+        "reason": "CONTEXT_CLOCK_UNIT",
+        "stage": "resource_connection",
+        "message": "CONTEXT_CLOCK_UNIT"
+      },
+      "required_reach": [
+        "ResourceSession.__init__",
+        "specified constructor guard"
+      ],
+      "forbidden_reach": [
+        "COMSOL",
+        "JVM_model",
+        "OS_process_start",
+        "Job_API",
+        "console_input",
+        "native_provider",
+        "control.execute_once",
+        "control.assess_resources"
+      ],
+      "call_counts": {
+        "ResourceSession.__init__": 1,
+        "ResourceSession.decide": 0,
+        "resource_decision": 0,
+        "project_owned_sample": 0,
+        "bind_sample_clock": 0,
+        "control.assess_resources": 0
+      },
+      "invocations": 1,
+      "source_span_reference": "FUNCTION_SPANS.json",
+      "unexpected_exception_is_pass": false,
+      "actual_execution": "NOT_EXECUTED",
+      "constructor_failure": true,
+      "reached_function_required": "ResourceSession.__init__ -> specified constructor guard"
+    },
+    {
+      "id": "C09-22",
+      "group": "C09",
+      "engine": "Python",
+      "target_function": "ResourceSession.__init__ / ExecutionClockContext.__post_init__",
+      "case": "start origin order invalid",
+      "positive_control": "C09-01",
+      "fixture_rule": "RESOURCE_BASELINE; Only start_record.overall_origin_s=201; native remains200",
+      "input_mutation": "Only start_record.overall_origin_s=201; native remains200",
+      "expected_reason_or_result": "CONTEXT_ORIGIN_ORDER",
+      "expected_assertion": {
+        "kind": "exception",
+        "class": "ResourceConnectionError",
+        "reason": "CONTEXT_ORIGIN_ORDER",
+        "stage": "resource_connection",
+        "message": "CONTEXT_ORIGIN_ORDER"
+      },
+      "required_reach": [
+        "ResourceSession.__init__",
+        "specified constructor guard"
+      ],
+      "forbidden_reach": [
+        "COMSOL",
+        "JVM_model",
+        "OS_process_start",
+        "Job_API",
+        "console_input",
+        "native_provider",
+        "control.execute_once",
+        "control.assess_resources"
+      ],
+      "call_counts": {
+        "ResourceSession.__init__": 1,
+        "ResourceSession.decide": 0,
+        "resource_decision": 0,
+        "project_owned_sample": 0,
+        "bind_sample_clock": 0,
+        "control.assess_resources": 0
+      },
+      "invocations": 1,
+      "source_span_reference": "FUNCTION_SPANS.json",
+      "unexpected_exception_is_pass": false,
+      "actual_execution": "NOT_EXECUTED",
+      "constructor_failure": true,
+      "reached_function_required": "ResourceSession.__init__ -> specified constructor guard"
+    },
+    {
+      "id": "C09-23",
+      "group": "C09",
+      "engine": "Python",
+      "target_function": "ResourceSession.__init__ / ExecutionClockContext.__post_init__",
+      "case": "anchor run mismatch at construction",
+      "positive_control": "C09-01",
+      "fixture_rule": "RESOURCE_BASELINE; Only anchors.run_id='OTHER_RUN'",
+      "input_mutation": "Only anchors.run_id='OTHER_RUN'",
+      "expected_reason_or_result": "CONTEXT_RUN_BINDING",
+      "expected_assertion": {
+        "kind": "exception",
+        "class": "ResourceConnectionError",
+        "reason": "CONTEXT_RUN_BINDING",
+        "stage": "resource_connection",
+        "message": "CONTEXT_RUN_BINDING"
+      },
+      "required_reach": [
+        "ResourceSession.__init__",
+        "specified constructor guard"
+      ],
+      "forbidden_reach": [
+        "COMSOL",
+        "JVM_model",
+        "OS_process_start",
+        "Job_API",
+        "console_input",
+        "native_provider",
+        "control.execute_once",
+        "control.assess_resources"
+      ],
+      "call_counts": {
+        "ResourceSession.__init__": 1,
+        "ResourceSession.decide": 0,
+        "resource_decision": 0,
+        "project_owned_sample": 0,
+        "bind_sample_clock": 0,
+        "control.assess_resources": 0
+      },
+      "invocations": 1,
+      "source_span_reference": "FUNCTION_SPANS.json",
+      "unexpected_exception_is_pass": false,
+      "actual_execution": "NOT_EXECUTED",
+      "constructor_failure": true,
+      "reached_function_required": "ResourceSession.__init__ -> specified constructor guard"
+    },
+    {
+      "id": "C09-24",
+      "group": "C09",
+      "engine": "Python",
+      "target_function": "ResourceSession.__init__ / ExecutionClockContext.__post_init__",
+      "case": "mutable anchor value rejected",
+      "positive_control": "C09-01",
+      "fixture_rule": "RESOURCE_BASELINE; Add anchors.extra=[]",
+      "input_mutation": "Add anchors.extra=[]",
+      "expected_reason_or_result": "CONTEXT_ANCHOR_SCHEMA",
+      "expected_assertion": {
+        "kind": "exception",
+        "class": "ResourceConnectionError",
+        "reason": "CONTEXT_ANCHOR_SCHEMA",
+        "stage": "resource_connection",
+        "message": "CONTEXT_ANCHOR_SCHEMA"
+      },
+      "required_reach": [
+        "ResourceSession.__init__",
+        "specified constructor guard"
+      ],
+      "forbidden_reach": [
+        "COMSOL",
+        "JVM_model",
+        "OS_process_start",
+        "Job_API",
+        "console_input",
+        "native_provider",
+        "control.execute_once",
+        "control.assess_resources"
+      ],
+      "call_counts": {
+        "ResourceSession.__init__": 1,
+        "ResourceSession.decide": 0,
+        "resource_decision": 0,
+        "project_owned_sample": 0,
+        "bind_sample_clock": 0,
+        "control.assess_resources": 0
+      },
+      "invocations": 1,
+      "source_span_reference": "FUNCTION_SPANS.json",
+      "unexpected_exception_is_pass": false,
+      "actual_execution": "NOT_EXECUTED",
+      "constructor_failure": true,
+      "reached_function_required": "ResourceSession.__init__ -> specified constructor guard"
+    },
+    {
+      "id": "C09-25",
+      "group": "C09",
+      "engine": "Python",
+      "target_function": "ResourceSession.decide / resource_decision / project_owned_sample / bind_sample_clock",
+      "case": "process counter item null",
+      "positive_control": "C09-01",
+      "fixture_rule": "RESOURCE_BASELINE; Only raw.process_counters[0]=null",
+      "input_mutation": "Only raw.process_counters[0]=null",
+      "expected_reason_or_result": "PROCESS_COUNTER_SCHEMA",
+      "expected_assertion": {
+        "kind": "return",
+        "equals": {
+          "status": "STOP_REQUIRED",
+          "reasons": [
+            "PROCESS_COUNTER_SCHEMA"
+          ],
+          "sampled_max_is_os_peak": false,
+          "counter_projection": "INCOMPLETE"
+        }
+      },
+      "required_reach": [
+        "ResourceSession.decide",
+        "resource_decision",
+        "project_owned_sample",
+        "bind_sample_clock",
+        "specified rejection guard",
+        "resource_decision ResourceConnectionError catch"
+      ],
+      "forbidden_reach": [
+        "COMSOL",
+        "JVM_model",
+        "OS_process_start",
+        "Job_API",
+        "console_input",
+        "native_provider",
+        "control.execute_once",
+        "control.assess_resources"
+      ],
+      "call_counts": {
+        "ResourceSession.__init__": 1,
+        "ResourceSession.decide": 1,
+        "resource_decision": 1,
+        "project_owned_sample": 1,
+        "bind_sample_clock": 1,
+        "control.assess_resources": 0
+      },
+      "invocations": 1,
+      "source_span_reference": "FUNCTION_SPANS.json",
+      "unexpected_exception_is_pass": false,
+      "actual_execution": "NOT_EXECUTED",
+      "reached_function_required": "ResourceSession.decide -> resource_decision -> project_owned_sample -> bind_sample_clock -> specified rejection guard -> resource_decision ResourceConnectionError catch"
+    },
+    {
+      "id": "C09-26",
+      "group": "C09",
+      "engine": "Python",
+      "target_function": "ResourceSession.decide / resource_decision / project_owned_sample / bind_sample_clock",
+      "case": "process counter item scalar",
+      "positive_control": "C09-01",
+      "fixture_rule": "RESOURCE_BASELINE; Only raw.process_counters[0]=17",
+      "input_mutation": "Only raw.process_counters[0]=17",
+      "expected_reason_or_result": "PROCESS_COUNTER_SCHEMA",
+      "expected_assertion": {
+        "kind": "return",
+        "equals": {
+          "status": "STOP_REQUIRED",
+          "reasons": [
+            "PROCESS_COUNTER_SCHEMA"
+          ],
+          "sampled_max_is_os_peak": false,
+          "counter_projection": "INCOMPLETE"
+        }
+      },
+      "required_reach": [
+        "ResourceSession.decide",
+        "resource_decision",
+        "project_owned_sample",
+        "bind_sample_clock",
+        "specified rejection guard",
+        "resource_decision ResourceConnectionError catch"
+      ],
+      "forbidden_reach": [
+        "COMSOL",
+        "JVM_model",
+        "OS_process_start",
+        "Job_API",
+        "console_input",
+        "native_provider",
+        "control.execute_once",
+        "control.assess_resources"
+      ],
+      "call_counts": {
+        "ResourceSession.__init__": 1,
+        "ResourceSession.decide": 1,
+        "resource_decision": 1,
+        "project_owned_sample": 1,
+        "bind_sample_clock": 1,
+        "control.assess_resources": 0
+      },
+      "invocations": 1,
+      "source_span_reference": "FUNCTION_SPANS.json",
+      "unexpected_exception_is_pass": false,
+      "actual_execution": "NOT_EXECUTED",
+      "reached_function_required": "ResourceSession.decide -> resource_decision -> project_owned_sample -> bind_sample_clock -> specified rejection guard -> resource_decision ResourceConnectionError catch"
+    },
+    {
+      "id": "C09-27",
+      "group": "C09",
+      "engine": "Python",
+      "target_function": "ResourceSession.decide / resource_decision / project_owned_sample / bind_sample_clock",
+      "case": "process counter item list",
+      "positive_control": "C09-01",
+      "fixture_rule": "RESOURCE_BASELINE; Only raw.process_counters[0]=[]",
+      "input_mutation": "Only raw.process_counters[0]=[]",
+      "expected_reason_or_result": "PROCESS_COUNTER_SCHEMA",
+      "expected_assertion": {
+        "kind": "return",
+        "equals": {
+          "status": "STOP_REQUIRED",
+          "reasons": [
+            "PROCESS_COUNTER_SCHEMA"
+          ],
+          "sampled_max_is_os_peak": false,
+          "counter_projection": "INCOMPLETE"
+        }
+      },
+      "required_reach": [
+        "ResourceSession.decide",
+        "resource_decision",
+        "project_owned_sample",
+        "bind_sample_clock",
+        "specified rejection guard",
+        "resource_decision ResourceConnectionError catch"
+      ],
+      "forbidden_reach": [
+        "COMSOL",
+        "JVM_model",
+        "OS_process_start",
+        "Job_API",
+        "console_input",
+        "native_provider",
+        "control.execute_once",
+        "control.assess_resources"
+      ],
+      "call_counts": {
+        "ResourceSession.__init__": 1,
+        "ResourceSession.decide": 1,
+        "resource_decision": 1,
+        "project_owned_sample": 1,
+        "bind_sample_clock": 1,
+        "control.assess_resources": 0
+      },
+      "invocations": 1,
+      "source_span_reference": "FUNCTION_SPANS.json",
+      "unexpected_exception_is_pass": false,
+      "actual_execution": "NOT_EXECUTED",
+      "reached_function_required": "ResourceSession.decide -> resource_decision -> project_owned_sample -> bind_sample_clock -> specified rejection guard -> resource_decision ResourceConnectionError catch"
+    },
+    {
+      "id": "C09-28",
+      "group": "C09",
+      "engine": "Python",
+      "target_function": "ResourceSession.decide / resource_decision / project_owned_sample / bind_sample_clock",
+      "case": "process counter missing pid",
+      "positive_control": "C09-01",
+      "fixture_rule": "RESOURCE_BASELINE; Delete only raw.process_counters[0].pid",
+      "input_mutation": "Delete only raw.process_counters[0].pid",
+      "expected_reason_or_result": "PROCESS_COUNTER_KEYS",
+      "expected_assertion": {
+        "kind": "return",
+        "equals": {
+          "status": "STOP_REQUIRED",
+          "reasons": [
+            "PROCESS_COUNTER_KEYS"
+          ],
+          "sampled_max_is_os_peak": false,
+          "counter_projection": "INCOMPLETE"
+        }
+      },
+      "required_reach": [
+        "ResourceSession.decide",
+        "resource_decision",
+        "project_owned_sample",
+        "bind_sample_clock",
+        "specified rejection guard",
+        "resource_decision ResourceConnectionError catch"
+      ],
+      "forbidden_reach": [
+        "COMSOL",
+        "JVM_model",
+        "OS_process_start",
+        "Job_API",
+        "console_input",
+        "native_provider",
+        "control.execute_once",
+        "control.assess_resources"
+      ],
+      "call_counts": {
+        "ResourceSession.__init__": 1,
+        "ResourceSession.decide": 1,
+        "resource_decision": 1,
+        "project_owned_sample": 1,
+        "bind_sample_clock": 1,
+        "control.assess_resources": 0
+      },
+      "invocations": 1,
+      "source_span_reference": "FUNCTION_SPANS.json",
+      "unexpected_exception_is_pass": false,
+      "actual_execution": "NOT_EXECUTED",
+      "reached_function_required": "ResourceSession.decide -> resource_decision -> project_owned_sample -> bind_sample_clock -> specified rejection guard -> resource_decision ResourceConnectionError catch"
+    },
+    {
+      "id": "C09-29",
+      "group": "C09",
+      "engine": "Python",
+      "target_function": "ResourceSession.decide / resource_decision / project_owned_sample / bind_sample_clock",
+      "case": "process counter missing creation_filetime",
+      "positive_control": "C09-01",
+      "fixture_rule": "RESOURCE_BASELINE; Delete only raw.process_counters[0].creation_filetime",
+      "input_mutation": "Delete only raw.process_counters[0].creation_filetime",
+      "expected_reason_or_result": "PROCESS_COUNTER_KEYS",
+      "expected_assertion": {
+        "kind": "return",
+        "equals": {
+          "status": "STOP_REQUIRED",
+          "reasons": [
+            "PROCESS_COUNTER_KEYS"
+          ],
+          "sampled_max_is_os_peak": false,
+          "counter_projection": "INCOMPLETE"
+        }
+      },
+      "required_reach": [
+        "ResourceSession.decide",
+        "resource_decision",
+        "project_owned_sample",
+        "bind_sample_clock",
+        "specified rejection guard",
+        "resource_decision ResourceConnectionError catch"
+      ],
+      "forbidden_reach": [
+        "COMSOL",
+        "JVM_model",
+        "OS_process_start",
+        "Job_API",
+        "console_input",
+        "native_provider",
+        "control.execute_once",
+        "control.assess_resources"
+      ],
+      "call_counts": {
+        "ResourceSession.__init__": 1,
+        "ResourceSession.decide": 1,
+        "resource_decision": 1,
+        "project_owned_sample": 1,
+        "bind_sample_clock": 1,
+        "control.assess_resources": 0
+      },
+      "invocations": 1,
+      "source_span_reference": "FUNCTION_SPANS.json",
+      "unexpected_exception_is_pass": false,
+      "actual_execution": "NOT_EXECUTED",
+      "reached_function_required": "ResourceSession.decide -> resource_decision -> project_owned_sample -> bind_sample_clock -> specified rejection guard -> resource_decision ResourceConnectionError catch"
+    },
+    {
+      "id": "C09-30",
+      "group": "C09",
+      "engine": "Python",
+      "target_function": "ResourceSession.decide / resource_decision / project_owned_sample / bind_sample_clock",
+      "case": "process counter missing query_success",
+      "positive_control": "C09-01",
+      "fixture_rule": "RESOURCE_BASELINE; Delete only raw.process_counters[0].query_success",
+      "input_mutation": "Delete only raw.process_counters[0].query_success",
+      "expected_reason_or_result": "PROCESS_COUNTER_KEYS",
+      "expected_assertion": {
+        "kind": "return",
+        "equals": {
+          "status": "STOP_REQUIRED",
+          "reasons": [
+            "PROCESS_COUNTER_KEYS"
+          ],
+          "sampled_max_is_os_peak": false,
+          "counter_projection": "INCOMPLETE"
+        }
+      },
+      "required_reach": [
+        "ResourceSession.decide",
+        "resource_decision",
+        "project_owned_sample",
+        "bind_sample_clock",
+        "specified rejection guard",
+        "resource_decision ResourceConnectionError catch"
+      ],
+      "forbidden_reach": [
+        "COMSOL",
+        "JVM_model",
+        "OS_process_start",
+        "Job_API",
+        "console_input",
+        "native_provider",
+        "control.execute_once",
+        "control.assess_resources"
+      ],
+      "call_counts": {
+        "ResourceSession.__init__": 1,
+        "ResourceSession.decide": 1,
+        "resource_decision": 1,
+        "project_owned_sample": 1,
+        "bind_sample_clock": 1,
+        "control.assess_resources": 0
+      },
+      "invocations": 1,
+      "source_span_reference": "FUNCTION_SPANS.json",
+      "unexpected_exception_is_pass": false,
+      "actual_execution": "NOT_EXECUTED",
+      "reached_function_required": "ResourceSession.decide -> resource_decision -> project_owned_sample -> bind_sample_clock -> specified rejection guard -> resource_decision ResourceConnectionError catch"
+    },
+    {
+      "id": "C09-31",
+      "group": "C09",
+      "engine": "Python",
+      "target_function": "ResourceSession.decide / resource_decision / project_owned_sample / bind_sample_clock",
+      "case": "process counter missing working_set_bytes",
+      "positive_control": "C09-01",
+      "fixture_rule": "RESOURCE_BASELINE; Delete only raw.process_counters[0].working_set_bytes",
+      "input_mutation": "Delete only raw.process_counters[0].working_set_bytes",
+      "expected_reason_or_result": "PROCESS_COUNTER_KEYS",
+      "expected_assertion": {
+        "kind": "return",
+        "equals": {
+          "status": "STOP_REQUIRED",
+          "reasons": [
+            "PROCESS_COUNTER_KEYS"
+          ],
+          "sampled_max_is_os_peak": false,
+          "counter_projection": "INCOMPLETE"
+        }
+      },
+      "required_reach": [
+        "ResourceSession.decide",
+        "resource_decision",
+        "project_owned_sample",
+        "bind_sample_clock",
+        "specified rejection guard",
+        "resource_decision ResourceConnectionError catch"
+      ],
+      "forbidden_reach": [
+        "COMSOL",
+        "JVM_model",
+        "OS_process_start",
+        "Job_API",
+        "console_input",
+        "native_provider",
+        "control.execute_once",
+        "control.assess_resources"
+      ],
+      "call_counts": {
+        "ResourceSession.__init__": 1,
+        "ResourceSession.decide": 1,
+        "resource_decision": 1,
+        "project_owned_sample": 1,
+        "bind_sample_clock": 1,
+        "control.assess_resources": 0
+      },
+      "invocations": 1,
+      "source_span_reference": "FUNCTION_SPANS.json",
+      "unexpected_exception_is_pass": false,
+      "actual_execution": "NOT_EXECUTED",
+      "reached_function_required": "ResourceSession.decide -> resource_decision -> project_owned_sample -> bind_sample_clock -> specified rejection guard -> resource_decision ResourceConnectionError catch"
+    },
+    {
+      "id": "C09-32",
+      "group": "C09",
+      "engine": "Python",
+      "target_function": "ResourceSession.decide / resource_decision / project_owned_sample / bind_sample_clock",
+      "case": "counter identity invalid pid=true",
+      "positive_control": "C09-01",
+      "fixture_rule": "RESOURCE_BASELINE; Set only raw.process_counters[0].pid=true",
+      "input_mutation": "Set only raw.process_counters[0].pid=true",
+      "expected_reason_or_result": "PROCESS_COUNTER_IDENTITY_TYPE",
+      "expected_assertion": {
+        "kind": "return",
+        "equals": {
+          "status": "STOP_REQUIRED",
+          "reasons": [
+            "PROCESS_COUNTER_IDENTITY_TYPE"
+          ],
+          "sampled_max_is_os_peak": false,
+          "counter_projection": "INCOMPLETE"
+        }
+      },
+      "required_reach": [
+        "ResourceSession.decide",
+        "resource_decision",
+        "project_owned_sample",
+        "bind_sample_clock",
+        "specified rejection guard",
+        "resource_decision ResourceConnectionError catch"
+      ],
+      "forbidden_reach": [
+        "COMSOL",
+        "JVM_model",
+        "OS_process_start",
+        "Job_API",
+        "console_input",
+        "native_provider",
+        "control.execute_once",
+        "control.assess_resources"
+      ],
+      "call_counts": {
+        "ResourceSession.__init__": 1,
+        "ResourceSession.decide": 1,
+        "resource_decision": 1,
+        "project_owned_sample": 1,
+        "bind_sample_clock": 1,
+        "control.assess_resources": 0
+      },
+      "invocations": 1,
+      "source_span_reference": "FUNCTION_SPANS.json",
+      "unexpected_exception_is_pass": false,
+      "actual_execution": "NOT_EXECUTED",
+      "reached_function_required": "ResourceSession.decide -> resource_decision -> project_owned_sample -> bind_sample_clock -> specified rejection guard -> resource_decision ResourceConnectionError catch"
+    },
+    {
+      "id": "C09-33",
+      "group": "C09",
+      "engine": "Python",
+      "target_function": "ResourceSession.decide / resource_decision / project_owned_sample / bind_sample_clock",
+      "case": "counter identity invalid pid=11.0",
+      "positive_control": "C09-01",
+      "fixture_rule": "RESOURCE_BASELINE; Set only raw.process_counters[0].pid=11.0",
+      "input_mutation": "Set only raw.process_counters[0].pid=11.0",
+      "expected_reason_or_result": "PROCESS_COUNTER_IDENTITY_TYPE",
+      "expected_assertion": {
+        "kind": "return",
+        "equals": {
+          "status": "STOP_REQUIRED",
+          "reasons": [
+            "PROCESS_COUNTER_IDENTITY_TYPE"
+          ],
+          "sampled_max_is_os_peak": false,
+          "counter_projection": "INCOMPLETE"
+        }
+      },
+      "required_reach": [
+        "ResourceSession.decide",
+        "resource_decision",
+        "project_owned_sample",
+        "bind_sample_clock",
+        "specified rejection guard",
+        "resource_decision ResourceConnectionError catch"
+      ],
+      "forbidden_reach": [
+        "COMSOL",
+        "JVM_model",
+        "OS_process_start",
+        "Job_API",
+        "console_input",
+        "native_provider",
+        "control.execute_once",
+        "control.assess_resources"
+      ],
+      "call_counts": {
+        "ResourceSession.__init__": 1,
+        "ResourceSession.decide": 1,
+        "resource_decision": 1,
+        "project_owned_sample": 1,
+        "bind_sample_clock": 1,
+        "control.assess_resources": 0
+      },
+      "invocations": 1,
+      "source_span_reference": "FUNCTION_SPANS.json",
+      "unexpected_exception_is_pass": false,
+      "actual_execution": "NOT_EXECUTED",
+      "reached_function_required": "ResourceSession.decide -> resource_decision -> project_owned_sample -> bind_sample_clock -> specified rejection guard -> resource_decision ResourceConnectionError catch"
+    },
+    {
+      "id": "C09-34",
+      "group": "C09",
+      "engine": "Python",
+      "target_function": "ResourceSession.decide / resource_decision / project_owned_sample / bind_sample_clock",
+      "case": "counter identity invalid pid=[]",
+      "positive_control": "C09-01",
+      "fixture_rule": "RESOURCE_BASELINE; Set only raw.process_counters[0].pid=[]",
+      "input_mutation": "Set only raw.process_counters[0].pid=[]",
+      "expected_reason_or_result": "PROCESS_COUNTER_IDENTITY_TYPE",
+      "expected_assertion": {
+        "kind": "return",
+        "equals": {
+          "status": "STOP_REQUIRED",
+          "reasons": [
+            "PROCESS_COUNTER_IDENTITY_TYPE"
+          ],
+          "sampled_max_is_os_peak": false,
+          "counter_projection": "INCOMPLETE"
+        }
+      },
+      "required_reach": [
+        "ResourceSession.decide",
+        "resource_decision",
+        "project_owned_sample",
+        "bind_sample_clock",
+        "specified rejection guard",
+        "resource_decision ResourceConnectionError catch"
+      ],
+      "forbidden_reach": [
+        "COMSOL",
+        "JVM_model",
+        "OS_process_start",
+        "Job_API",
+        "console_input",
+        "native_provider",
+        "control.execute_once",
+        "control.assess_resources"
+      ],
+      "call_counts": {
+        "ResourceSession.__init__": 1,
+        "ResourceSession.decide": 1,
+        "resource_decision": 1,
+        "project_owned_sample": 1,
+        "bind_sample_clock": 1,
+        "control.assess_resources": 0
+      },
+      "invocations": 1,
+      "source_span_reference": "FUNCTION_SPANS.json",
+      "unexpected_exception_is_pass": false,
+      "actual_execution": "NOT_EXECUTED",
+      "reached_function_required": "ResourceSession.decide -> resource_decision -> project_owned_sample -> bind_sample_clock -> specified rejection guard -> resource_decision ResourceConnectionError catch"
+    },
+    {
+      "id": "C09-35",
+      "group": "C09",
+      "engine": "Python",
+      "target_function": "ResourceSession.decide / resource_decision / project_owned_sample / bind_sample_clock",
+      "case": "counter identity invalid creation_filetime={}",
+      "positive_control": "C09-01",
+      "fixture_rule": "RESOURCE_BASELINE; Set only raw.process_counters[0].creation_filetime={}",
+      "input_mutation": "Set only raw.process_counters[0].creation_filetime={}",
+      "expected_reason_or_result": "PROCESS_COUNTER_IDENTITY_TYPE",
+      "expected_assertion": {
+        "kind": "return",
+        "equals": {
+          "status": "STOP_REQUIRED",
+          "reasons": [
+            "PROCESS_COUNTER_IDENTITY_TYPE"
+          ],
+          "sampled_max_is_os_peak": false,
+          "counter_projection": "INCOMPLETE"
+        }
+      },
+      "required_reach": [
+        "ResourceSession.decide",
+        "resource_decision",
+        "project_owned_sample",
+        "bind_sample_clock",
+        "specified rejection guard",
+        "resource_decision ResourceConnectionError catch"
+      ],
+      "forbidden_reach": [
+        "COMSOL",
+        "JVM_model",
+        "OS_process_start",
+        "Job_API",
+        "console_input",
+        "native_provider",
+        "control.execute_once",
+        "control.assess_resources"
+      ],
+      "call_counts": {
+        "ResourceSession.__init__": 1,
+        "ResourceSession.decide": 1,
+        "resource_decision": 1,
+        "project_owned_sample": 1,
+        "bind_sample_clock": 1,
+        "control.assess_resources": 0
+      },
+      "invocations": 1,
+      "source_span_reference": "FUNCTION_SPANS.json",
+      "unexpected_exception_is_pass": false,
+      "actual_execution": "NOT_EXECUTED",
+      "reached_function_required": "ResourceSession.decide -> resource_decision -> project_owned_sample -> bind_sample_clock -> specified rejection guard -> resource_decision ResourceConnectionError catch"
+    },
+    {
+      "id": "C09-36",
+      "group": "C09",
+      "engine": "Python",
+      "target_function": "ResourceSession.decide / resource_decision / project_owned_sample / bind_sample_clock",
+      "case": "counter identity invalid creation_filetime='101'",
+      "positive_control": "C09-01",
+      "fixture_rule": "RESOURCE_BASELINE; Set only raw.process_counters[0].creation_filetime='101'",
+      "input_mutation": "Set only raw.process_counters[0].creation_filetime='101'",
+      "expected_reason_or_result": "PROCESS_COUNTER_IDENTITY_TYPE",
+      "expected_assertion": {
+        "kind": "return",
+        "equals": {
+          "status": "STOP_REQUIRED",
+          "reasons": [
+            "PROCESS_COUNTER_IDENTITY_TYPE"
+          ],
+          "sampled_max_is_os_peak": false,
+          "counter_projection": "INCOMPLETE"
+        }
+      },
+      "required_reach": [
+        "ResourceSession.decide",
+        "resource_decision",
+        "project_owned_sample",
+        "bind_sample_clock",
+        "specified rejection guard",
+        "resource_decision ResourceConnectionError catch"
+      ],
+      "forbidden_reach": [
+        "COMSOL",
+        "JVM_model",
+        "OS_process_start",
+        "Job_API",
+        "console_input",
+        "native_provider",
+        "control.execute_once",
+        "control.assess_resources"
+      ],
+      "call_counts": {
+        "ResourceSession.__init__": 1,
+        "ResourceSession.decide": 1,
+        "resource_decision": 1,
+        "project_owned_sample": 1,
+        "bind_sample_clock": 1,
+        "control.assess_resources": 0
+      },
+      "invocations": 1,
+      "source_span_reference": "FUNCTION_SPANS.json",
+      "unexpected_exception_is_pass": false,
+      "actual_execution": "NOT_EXECUTED",
+      "reached_function_required": "ResourceSession.decide -> resource_decision -> project_owned_sample -> bind_sample_clock -> specified rejection guard -> resource_decision ResourceConnectionError catch"
+    },
+    {
+      "id": "C09-37",
+      "group": "C09",
+      "engine": "Python",
+      "target_function": "ResourceSession.decide / resource_decision / project_owned_sample / bind_sample_clock",
+      "case": "counter identity invalid creation_filetime=0",
+      "positive_control": "C09-01",
+      "fixture_rule": "RESOURCE_BASELINE; Set only raw.process_counters[0].creation_filetime=0",
+      "input_mutation": "Set only raw.process_counters[0].creation_filetime=0",
+      "expected_reason_or_result": "PROCESS_COUNTER_IDENTITY_TYPE",
+      "expected_assertion": {
+        "kind": "return",
+        "equals": {
+          "status": "STOP_REQUIRED",
+          "reasons": [
+            "PROCESS_COUNTER_IDENTITY_TYPE"
+          ],
+          "sampled_max_is_os_peak": false,
+          "counter_projection": "INCOMPLETE"
+        }
+      },
+      "required_reach": [
+        "ResourceSession.decide",
+        "resource_decision",
+        "project_owned_sample",
+        "bind_sample_clock",
+        "specified rejection guard",
+        "resource_decision ResourceConnectionError catch"
+      ],
+      "forbidden_reach": [
+        "COMSOL",
+        "JVM_model",
+        "OS_process_start",
+        "Job_API",
+        "console_input",
+        "native_provider",
+        "control.execute_once",
+        "control.assess_resources"
+      ],
+      "call_counts": {
+        "ResourceSession.__init__": 1,
+        "ResourceSession.decide": 1,
+        "resource_decision": 1,
+        "project_owned_sample": 1,
+        "bind_sample_clock": 1,
+        "control.assess_resources": 0
+      },
+      "invocations": 1,
+      "source_span_reference": "FUNCTION_SPANS.json",
+      "unexpected_exception_is_pass": false,
+      "actual_execution": "NOT_EXECUTED",
+      "reached_function_required": "ResourceSession.decide -> resource_decision -> project_owned_sample -> bind_sample_clock -> specified rejection guard -> resource_decision ResourceConnectionError catch"
+    },
+    {
+      "id": "C09-38",
+      "group": "C09",
+      "engine": "Python",
+      "target_function": "ResourceSession.decide / resource_decision / project_owned_sample / bind_sample_clock",
+      "case": "counter value invalid query_success=false",
+      "positive_control": "C09-01",
+      "fixture_rule": "RESOURCE_BASELINE; Set only raw.process_counters[0].query_success=false",
+      "input_mutation": "Set only raw.process_counters[0].query_success=false",
+      "expected_reason_or_result": "RSS_IDENTITY_OR_QUERY",
+      "expected_assertion": {
+        "kind": "return",
+        "equals": {
+          "status": "STOP_REQUIRED",
+          "reasons": [
+            "RSS_IDENTITY_OR_QUERY"
+          ],
+          "sampled_max_is_os_peak": false,
+          "counter_projection": "INCOMPLETE"
+        }
+      },
+      "required_reach": [
+        "ResourceSession.decide",
+        "resource_decision",
+        "project_owned_sample",
+        "bind_sample_clock",
+        "specified rejection guard",
+        "resource_decision ResourceConnectionError catch"
+      ],
+      "forbidden_reach": [
+        "COMSOL",
+        "JVM_model",
+        "OS_process_start",
+        "Job_API",
+        "console_input",
+        "native_provider",
+        "control.execute_once",
+        "control.assess_resources"
+      ],
+      "call_counts": {
+        "ResourceSession.__init__": 1,
+        "ResourceSession.decide": 1,
+        "resource_decision": 1,
+        "project_owned_sample": 1,
+        "bind_sample_clock": 1,
+        "control.assess_resources": 0
+      },
+      "invocations": 1,
+      "source_span_reference": "FUNCTION_SPANS.json",
+      "unexpected_exception_is_pass": false,
+      "actual_execution": "NOT_EXECUTED",
+      "reached_function_required": "ResourceSession.decide -> resource_decision -> project_owned_sample -> bind_sample_clock -> specified rejection guard -> resource_decision ResourceConnectionError catch"
+    },
+    {
+      "id": "C09-39",
+      "group": "C09",
+      "engine": "Python",
+      "target_function": "ResourceSession.decide / resource_decision / project_owned_sample / bind_sample_clock",
+      "case": "counter value invalid working_set_bytes=null",
+      "positive_control": "C09-01",
+      "fixture_rule": "RESOURCE_BASELINE; Set only raw.process_counters[0].working_set_bytes=null",
+      "input_mutation": "Set only raw.process_counters[0].working_set_bytes=null",
+      "expected_reason_or_result": "RSS_IDENTITY_OR_QUERY",
+      "expected_assertion": {
+        "kind": "return",
+        "equals": {
+          "status": "STOP_REQUIRED",
+          "reasons": [
+            "RSS_IDENTITY_OR_QUERY"
+          ],
+          "sampled_max_is_os_peak": false,
+          "counter_projection": "INCOMPLETE"
+        }
+      },
+      "required_reach": [
+        "ResourceSession.decide",
+        "resource_decision",
+        "project_owned_sample",
+        "bind_sample_clock",
+        "specified rejection guard",
+        "resource_decision ResourceConnectionError catch"
+      ],
+      "forbidden_reach": [
+        "COMSOL",
+        "JVM_model",
+        "OS_process_start",
+        "Job_API",
+        "console_input",
+        "native_provider",
+        "control.execute_once",
+        "control.assess_resources"
+      ],
+      "call_counts": {
+        "ResourceSession.__init__": 1,
+        "ResourceSession.decide": 1,
+        "resource_decision": 1,
+        "project_owned_sample": 1,
+        "bind_sample_clock": 1,
+        "control.assess_resources": 0
+      },
+      "invocations": 1,
+      "source_span_reference": "FUNCTION_SPANS.json",
+      "unexpected_exception_is_pass": false,
+      "actual_execution": "NOT_EXECUTED",
+      "reached_function_required": "ResourceSession.decide -> resource_decision -> project_owned_sample -> bind_sample_clock -> specified rejection guard -> resource_decision ResourceConnectionError catch"
+    },
+    {
+      "id": "C09-40",
+      "group": "C09",
+      "engine": "Python",
+      "target_function": "ResourceSession.decide / resource_decision / project_owned_sample / bind_sample_clock",
+      "case": "counter value invalid working_set_bytes=true",
+      "positive_control": "C09-01",
+      "fixture_rule": "RESOURCE_BASELINE; Set only raw.process_counters[0].working_set_bytes=true",
+      "input_mutation": "Set only raw.process_counters[0].working_set_bytes=true",
+      "expected_reason_or_result": "RSS_IDENTITY_OR_QUERY",
+      "expected_assertion": {
+        "kind": "return",
+        "equals": {
+          "status": "STOP_REQUIRED",
+          "reasons": [
+            "RSS_IDENTITY_OR_QUERY"
+          ],
+          "sampled_max_is_os_peak": false,
+          "counter_projection": "INCOMPLETE"
+        }
+      },
+      "required_reach": [
+        "ResourceSession.decide",
+        "resource_decision",
+        "project_owned_sample",
+        "bind_sample_clock",
+        "specified rejection guard",
+        "resource_decision ResourceConnectionError catch"
+      ],
+      "forbidden_reach": [
+        "COMSOL",
+        "JVM_model",
+        "OS_process_start",
+        "Job_API",
+        "console_input",
+        "native_provider",
+        "control.execute_once",
+        "control.assess_resources"
+      ],
+      "call_counts": {
+        "ResourceSession.__init__": 1,
+        "ResourceSession.decide": 1,
+        "resource_decision": 1,
+        "project_owned_sample": 1,
+        "bind_sample_clock": 1,
+        "control.assess_resources": 0
+      },
+      "invocations": 1,
+      "source_span_reference": "FUNCTION_SPANS.json",
+      "unexpected_exception_is_pass": false,
+      "actual_execution": "NOT_EXECUTED",
+      "reached_function_required": "ResourceSession.decide -> resource_decision -> project_owned_sample -> bind_sample_clock -> specified rejection guard -> resource_decision ResourceConnectionError catch"
+    },
+    {
+      "id": "C09-41",
+      "group": "C09",
+      "engine": "Python",
+      "target_function": "ResourceSession.decide / resource_decision / project_owned_sample / bind_sample_clock",
+      "case": "counter value invalid working_set_bytes=-1",
+      "positive_control": "C09-01",
+      "fixture_rule": "RESOURCE_BASELINE; Set only raw.process_counters[0].working_set_bytes=-1",
+      "input_mutation": "Set only raw.process_counters[0].working_set_bytes=-1",
+      "expected_reason_or_result": "RSS_IDENTITY_OR_QUERY",
+      "expected_assertion": {
+        "kind": "return",
+        "equals": {
+          "status": "STOP_REQUIRED",
+          "reasons": [
+            "RSS_IDENTITY_OR_QUERY"
+          ],
+          "sampled_max_is_os_peak": false,
+          "counter_projection": "INCOMPLETE"
+        }
+      },
+      "required_reach": [
+        "ResourceSession.decide",
+        "resource_decision",
+        "project_owned_sample",
+        "bind_sample_clock",
+        "specified rejection guard",
+        "resource_decision ResourceConnectionError catch"
+      ],
+      "forbidden_reach": [
+        "COMSOL",
+        "JVM_model",
+        "OS_process_start",
+        "Job_API",
+        "console_input",
+        "native_provider",
+        "control.execute_once",
+        "control.assess_resources"
+      ],
+      "call_counts": {
+        "ResourceSession.__init__": 1,
+        "ResourceSession.decide": 1,
+        "resource_decision": 1,
+        "project_owned_sample": 1,
+        "bind_sample_clock": 1,
+        "control.assess_resources": 0
+      },
+      "invocations": 1,
+      "source_span_reference": "FUNCTION_SPANS.json",
+      "unexpected_exception_is_pass": false,
+      "actual_execution": "NOT_EXECUTED",
+      "reached_function_required": "ResourceSession.decide -> resource_decision -> project_owned_sample -> bind_sample_clock -> specified rejection guard -> resource_decision ResourceConnectionError catch"
+    },
+    {
+      "id": "C09-42",
+      "group": "C09",
+      "engine": "Python",
+      "target_function": "ResourceSession.decide / resource_decision / project_owned_sample / bind_sample_clock",
+      "case": "counter value invalid working_set_bytes=1000.5",
+      "positive_control": "C09-01",
+      "fixture_rule": "RESOURCE_BASELINE; Set only raw.process_counters[0].working_set_bytes=1000.5",
+      "input_mutation": "Set only raw.process_counters[0].working_set_bytes=1000.5",
+      "expected_reason_or_result": "RSS_IDENTITY_OR_QUERY",
+      "expected_assertion": {
+        "kind": "return",
+        "equals": {
+          "status": "STOP_REQUIRED",
+          "reasons": [
+            "RSS_IDENTITY_OR_QUERY"
+          ],
+          "sampled_max_is_os_peak": false,
+          "counter_projection": "INCOMPLETE"
+        }
+      },
+      "required_reach": [
+        "ResourceSession.decide",
+        "resource_decision",
+        "project_owned_sample",
+        "bind_sample_clock",
+        "specified rejection guard",
+        "resource_decision ResourceConnectionError catch"
+      ],
+      "forbidden_reach": [
+        "COMSOL",
+        "JVM_model",
+        "OS_process_start",
+        "Job_API",
+        "console_input",
+        "native_provider",
+        "control.execute_once",
+        "control.assess_resources"
+      ],
+      "call_counts": {
+        "ResourceSession.__init__": 1,
+        "ResourceSession.decide": 1,
+        "resource_decision": 1,
+        "project_owned_sample": 1,
+        "bind_sample_clock": 1,
+        "control.assess_resources": 0
+      },
+      "invocations": 1,
+      "source_span_reference": "FUNCTION_SPANS.json",
+      "unexpected_exception_is_pass": false,
+      "actual_execution": "NOT_EXECUTED",
+      "reached_function_required": "ResourceSession.decide -> resource_decision -> project_owned_sample -> bind_sample_clock -> specified rejection guard -> resource_decision ResourceConnectionError catch"
+    },
+    {
+      "id": "C09-43",
+      "group": "C09",
+      "engine": "Python",
+      "target_function": "ResourceSession.decide / resource_decision / project_owned_sample / bind_sample_clock",
+      "case": "counter value invalid pid=99",
+      "positive_control": "C09-01",
+      "fixture_rule": "RESOURCE_BASELINE; Set only raw.process_counters[0].pid=99",
+      "input_mutation": "Set only raw.process_counters[0].pid=99",
+      "expected_reason_or_result": "RSS_IDENTITY_OR_QUERY",
+      "expected_assertion": {
+        "kind": "return",
+        "equals": {
+          "status": "STOP_REQUIRED",
+          "reasons": [
+            "RSS_IDENTITY_OR_QUERY"
+          ],
+          "sampled_max_is_os_peak": false,
+          "counter_projection": "INCOMPLETE"
+        }
+      },
+      "required_reach": [
+        "ResourceSession.decide",
+        "resource_decision",
+        "project_owned_sample",
+        "bind_sample_clock",
+        "specified rejection guard",
+        "resource_decision ResourceConnectionError catch"
+      ],
+      "forbidden_reach": [
+        "COMSOL",
+        "JVM_model",
+        "OS_process_start",
+        "Job_API",
+        "console_input",
+        "native_provider",
+        "control.execute_once",
+        "control.assess_resources"
+      ],
+      "call_counts": {
+        "ResourceSession.__init__": 1,
+        "ResourceSession.decide": 1,
+        "resource_decision": 1,
+        "project_owned_sample": 1,
+        "bind_sample_clock": 1,
+        "control.assess_resources": 0
+      },
+      "invocations": 1,
+      "source_span_reference": "FUNCTION_SPANS.json",
+      "unexpected_exception_is_pass": false,
+      "actual_execution": "NOT_EXECUTED",
+      "reached_function_required": "ResourceSession.decide -> resource_decision -> project_owned_sample -> bind_sample_clock -> specified rejection guard -> resource_decision ResourceConnectionError catch"
+    }
+  ],
+  "source_pins": [
+    {
+      "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/microshort_s1_open_connection_r1_20261010/candidate/InstalledReadback.fragment.java.inactive.txt",
+      "bytes": 2512,
+      "sha256": "844ccbb7259ba55bf3deacaf38bf17932c0b9f6ccc43017d80907c46b5b216c6"
+    },
+    {
+      "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/microshort_s1_open_connection_r1_20261010/candidate/P0.connection.java.inactive.txt",
+      "bytes": 84529,
+      "sha256": "39c2b9929e0d4c4ca8c442f5d0f0485581342b8be7a993d3820870bba8002a8b"
+    },
+    {
+      "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/microshort_s1_open_connection_r1_20261010/candidate/raw_connection.py.inactive.txt",
+      "bytes": 9426,
+      "sha256": "3de2c292bf03088db1171b0d5cd4cc36a9e53f17385839eb7812bebb094d8d9c"
+    },
+    {
+      "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/microshort_s1_open_connection_r1_20261010/candidate/resource_connection.py.inactive.txt",
+      "bytes": 10846,
+      "sha256": "f45e6531383d03daa2e968437c6188be0229c144c6956647b0b0f81fae795816"
+    }
+  ],
+  "existing_core_pins": [
+    {
+      "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/microshort_s1_open_connection_r1_20261010/basis/prior_preparation/reference/r1/candidate/consumer.py.inactive.txt",
+      "bytes": 27987,
+      "sha256": "0cb1aa3cc4593dcb041115baf208c4dd09186fcc75055ddcde53c68086cc6b79"
+    },
+    {
+      "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/microshort_s1_open_connection_r1_20261010/basis/prior_preparation/reference/r1/candidate/control.py.inactive.txt",
+      "bytes": 18304,
+      "sha256": "8ec75e57336c4ffa33e61d513076fb1facd1cf90430b1e1ce1c15f9bb57ac00d"
+    },
+    {
+      "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/microshort_s1_open_connection_r1_20261010/basis/prior_preparation/reference/r1/candidate/Parent.ps1.inactive.txt",
+      "bytes": 25787,
+      "sha256": "e9f8d366ca9931b84ded5753a560369b72fea8737a77075bc2b80ec771bc56ff"
+    }
+  ],
+  "current_authorization": "OFFLINE_CORRECTION_AND_STATIC_RESEAL_ONLY; NO_TEST_OR_ENGINE_EXECUTION",
+  "original_cases_retained": 50,
+  "engine_pins_historical_observations_no_current_version_or_engine_invocation": {
+    "Python": {
+      "path": "C:/Users/BML/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/python.exe",
+      "bytes": 107312,
+      "sha256": "b7a12c3af0b4db44191eec14ea095eba731b7328917f570806183093d19ddca2"
+    },
+    "Java_compile": {
+      "path": "C:/Program Files/COMSOL/COMSOL63/Multiphysics/java/win64/jre/bin/javac.exe",
+      "bytes": 20712,
+      "sha256": "c60a376855051d615b0c7cf2712573a19ed4e02b905c9d1a274ff990dac85659"
+    },
+    "Java_helper": {
+      "path": "C:/Program Files/COMSOL/COMSOL63/Multiphysics/java/win64/jre/bin/java.exe",
+      "bytes": 46824,
+      "sha256": "e8228b02b882a4aa1a2333ede4a341b15e761cd897433d2661f2b96d7ad4952b"
+    }
+  },
+  "budget_scope": "1350 seconds is an unchanged FUTURE validation proposal, not this correction authorization. Added pure cases share one Python session; no additional session or enlarged timeout. Exhaustion stops with unexecuted IDs; no retry.",
+  "dependency_spans": {
+    "path": "FUNCTION_SPANS.json",
+    "scope": "Static exact source spans, dependencies and exception origins; must resolve and byte-bind before separately approved harness construction.",
+    "hash_convention": "inclusive one-based source lines; preserve indentation; CRLF/CR normalized to LF; UTF-8 without BOM; no trailing LF",
+    "not_a_test_result": true
+  },
+  "stop_baseline": {
+    "state": {
+      "status": "STOP_REQUESTED",
+      "last_monotonic_s": 10,
+      "cleanup_deadline_s": 100,
+      "overall_deadline_s": 200
+    },
+    "event": {
+      "monotonic_s": 11,
+      "ownership_verified": true
+    },
+    "capabilities": {
+      "cooperative_stop": "UNSUPPORTED",
+      "force_only_explicitly_approved": true
+    }
+  },
+  "java_dependency_contract": {
+    "source": "basis/prior_preparation/reference/r1/candidate/variants/P0.java.inactive.txt",
+    "new_helpers": "candidate/InstalledReadback.fragment.java.inactive.txt",
+    "exact_spans": "FUNCTION_SPANS.json",
+    "no_replacement": [
+      "evaluate",
+      "checkShape",
+      "readSetting"
+    ],
+    "allowed_inert_surface": "Only COMSOL object/property/FeatureInfo/NumericalFeature surface; actual helpers/dependencies stay exact. Capture original table stdout.",
+    "per_case_reset": "TIMES=null before C08-04 and C08-05; T_END_SECONDS=120.0 unchanged",
+    "dependencies": {
+      "property": [
+        "s1OpenProperties",
+        "readSetting",
+        "table",
+        "quote"
+      ],
+      "configured": [
+        "s1OpenConfiguredReadback",
+        "s1OpenProperties",
+        "readSetting",
+        "table",
+        "quote"
+      ],
+      "stored": [
+        "s1OpenStoredGrid",
+        "evaluate",
+        "checkShape",
+        "units",
+        "evaluatedUnits",
+        "table",
+        "quote",
+        "T_END_SECONDS",
+        "TIMES"
+      ]
+    }
+  },
+  "resource_baseline": {
+    "name": "RESOURCE_BASELINE",
+    "declarative_only": true,
+    "contract": "basis/prior_preparation/reference/r1/contracts/RESOURCE_CONTRACT.json (unchanged)",
+    "start_record": {
+      "run_id": "FIXTURE_RUN",
+      "clock_id": "FIXTURE_CLOCK",
+      "clock_origin": "FIXTURE_MONOTONIC_EPOCH",
+      "clock_unit": "seconds",
+      "overall_origin_s": 100,
+      "native_origin_s": 200
+    },
+    "anchors": {
+      "run_id": "FIXTURE_RUN",
+      "job_identity": "FIXTURE_JOB",
+      "assigned_before_resume": true,
+      "held_job_and_root_handles": true,
+      "root_pid": 11,
+      "root_creation_filetime": 101,
+      "accepted_commit_mapping_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "owned_output_root": "FIXTURE_OWNED_OUTPUT"
+    },
+    "raw": {
+      "run_id": "FIXTURE_RUN",
+      "clock_id": "FIXTURE_CLOCK",
+      "clock_origin": "FIXTURE_MONOTONIC_EPOCH",
+      "clock_unit": "seconds",
+      "overall_origin_s": 100,
+      "native_origin_s": 200,
+      "errors": [],
+      "query_success": true,
+      "job_identity": "FIXTURE_JOB",
+      "members_before": [
+        {
+          "pid": 11,
+          "creation_filetime": 101
+        }
+      ],
+      "members_after": [
+        {
+          "pid": 11,
+          "creation_filetime": 101
+        }
+      ],
+      "held_root_signaled": false,
+      "membership_source": "QUERY_PRIVATE_HELD_JOB",
+      "member_times_source": "HELD_MEMBER_PROCESS_HANDLES",
+      "process_counters": [
+        {
+          "pid": 11,
+          "creation_filetime": 101,
+          "query_success": true,
+          "working_set_bytes": 1000
+        }
+      ],
+      "job_commit_source": "REVIEWED_JOB_ACCOUNTING_TOTAL",
+      "job_commit_counter_mapping_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "job_private_commit_bytes": 1000,
+      "host_commit_limit_bytes": 8589934592,
+      "host_commit_total_bytes": 1073741824,
+      "host_available_ram_bytes": 4294967296,
+      "owned_output_growth_bytes": 0,
+      "volume_free_bytes": 17179869184,
+      "output_walk_status": "COMPLETE_NO_REPARSE_NO_UNKNOWN_FILE",
+      "output_root": "FIXTURE_OWNED_OUTPUT",
+      "sample_start_s": 210,
+      "sample_end_s": 211
+    },
+    "previous_sample_end_s": 206,
+    "expected_projection_fields": {
+      "native_elapsed_s": 11,
+      "overall_elapsed_s": 111,
+      "sample_gap_s": 5,
+      "sampling_duration_s": 1,
+      "job_rss_bytes": 1000,
+      "host_commit_available_bytes": 7516192768
+    }
+  },
+  "case_order": "C01 through C09 in listed order; matching positive before dependent negatives; first unexpected failure stops all remaining IDs",
+  "new_case_scope": {
+    "C09_cases": 43,
+    "N1": "independent fixed clock and actual session path",
+    "N2": "explicit typed process counter rejection through actual resource decision"
+  },
+  "contract_and_dependency_pins": [
+    {
+      "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/microshort_s1_open_connection_r1_20261010/basis/prior_preparation/reference/r1/contracts/RESOURCE_CONTRACT.json",
+      "bytes": 7175,
+      "sha256": "e45837427b1b8a69d53b10119ce7ab072bacb869bcdd53c863366c7bd04c67c1"
+    },
+    {
+      "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/microshort_s1_open_connection_r1_20261010/FUNCTION_SPANS.json",
+      "bytes": 52077,
+      "sha256": "8002e9ea5ecf7b56b04f00f35426e23a3bba0c958b4f24f3997a1e45f862e7ab"
+    },
+    {
+      "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/microshort_s1_open_connection_r1_20261010/RESOURCE_CLOCK_CONTRACT.json",
+      "bytes": 2589,
+      "sha256": "781a54aabeb60a516274e230da25b3b11b8b79c1eb61846ed5061e22e9402fb3"
+    }
+  ],
+  "numeric_fixture_proposals": {
+    "C01": {
+      "headers": [
+        "time_s",
+        "value"
+      ],
+      "units": [
+        "s",
+        "1"
+      ],
+      "raw_utf8": "time_s,value\n0,1\n1,2\n",
+      "identity": "Exact UTF-8 bytes/length/SHA computed before test approval; fixture path string only",
+      "expected_rows": [
+        {
+          "time_s": "Decimal('0')",
+          "value": "Decimal('1')"
+        },
+        {
+          "time_s": "Decimal('1')",
+          "value": "Decimal('2')"
+        }
+      ]
+    },
+    "C02": {
+      "native_grid": [
+        "0",
+        "1",
+        "2"
+      ],
+      "configured_end_s": "2",
+      "each_global_row": "time_s=Decimal(t); reaction_N_A_m2=Decimal('1'); reaction_P_A_m2=Decimal('-1'); leak_leftward_A_m2=Decimal('1'); Li_N_mol_m2=Decimal('10'); Li_P_mol_m2=Decimal('20'); Li_electrolyte_mol_m2=Decimal('30')",
+      "each_leakage_row": "time_s=Decimal(t); reaction_N_A_m2=Decimal('1'); reaction_P_A_m2=Decimal('-1'); j_leak_leftward_A_m2=Decimal('1'); I_leak_model_A=Decimal('2')",
+      "expected_each_output": "time_s=Decimal(t), j=1, RN=1, RP=-1, I=2, LiN=10, LiP=20, LiE=30; all values Decimal"
+    },
+    "C03": {
+      "normal": {
+        "native_grid": [
+          "0",
+          "1",
+          "2"
+        ],
+        "configured_requests": [
+          "0",
+          "1",
+          "2"
+        ],
+        "reason": "NORMAL_END",
+        "guard_pair": null,
+        "end_s": "2"
+      },
+      "protective": {
+        "native_grid": [
+          "0",
+          "1",
+          "1.5",
+          "1.6"
+        ],
+        "configured_requests": [
+          "0",
+          "1",
+          "2"
+        ],
+        "reason": "GUARD_STOP",
+        "guard_pair": {
+          "t_minus": "1.5",
+          "t_plus": "1.6"
+        },
+        "end_s": "2"
+      }
+    }
+  },
+  "plan_ready_for_execution": false,
+  "fixture_and_harness_state": "NOT_CREATED_NOT_RUN",
+  "source_pin_scope": "Current source/contract/dependency files read and hashed only; candidate code never imported or called. Engine pins are historical observations.",
+  "source_byte_bindings": [
+    {
+      "path": "candidate/resource_connection.py.inactive.txt",
+      "bytes": 10846,
+      "sha256": "f45e6531383d03daa2e968437c6188be0229c144c6956647b0b0f81fae795816"
+    },
+    {
+      "path": "candidate/raw_connection.py.inactive.txt",
+      "bytes": 9426,
+      "sha256": "3de2c292bf03088db1171b0d5cd4cc36a9e53f17385839eb7812bebb094d8d9c"
+    },
+    {
+      "path": "candidate/InstalledReadback.fragment.java.inactive.txt",
+      "bytes": 2512,
+      "sha256": "844ccbb7259ba55bf3deacaf38bf17932c0b9f6ccc43017d80907c46b5b216c6"
+    },
+    {
+      "path": "basis/prior_preparation/reference/r1/candidate/control.py.inactive.txt",
+      "bytes": 18304,
+      "sha256": "8ec75e57336c4ffa33e61d513076fb1facd1cf90430b1e1ce1c15f9bb57ac00d"
+    },
+    {
+      "path": "basis/prior_preparation/reference/r1/candidate/consumer.py.inactive.txt",
+      "bytes": 27987,
+      "sha256": "0cb1aa3cc4593dcb041115baf208c4dd09186fcc75055ddcde53c68086cc6b79"
+    },
+    {
+      "path": "basis/prior_preparation/reference/r1/candidate/variants/P0.java.inactive.txt",
+      "bytes": 81976,
+      "sha256": "6d10c8910e3b7301778112b676be604eccc22aae41fa87cb719a94218e2384fa"
+    }
+  ],
+  "dependency_span_file": {
+    "path": "FUNCTION_SPANS.json",
+    "bytes": 52077,
+    "sha256": "8002e9ea5ecf7b56b04f00f35426e23a3bba0c958b4f24f3997a1e45f862e7ab"
+  },
+  "execution_status": "NOT_RUN; requires separate user approval and first-test harness/fixture/engine seal"
+}

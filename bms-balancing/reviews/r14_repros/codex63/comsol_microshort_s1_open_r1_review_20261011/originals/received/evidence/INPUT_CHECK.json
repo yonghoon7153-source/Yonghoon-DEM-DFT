@@ -1,0 +1,17 @@
+{
+  "review": {
+    "path": "C:\\Users\\BML\\Desktop\\COMSOL_MICROSHORT_S1_OPEN_CONNECTION_PREPARATION_REVIEW_20261010.zip",
+    "bytes": 1953422,
+    "sha256": "f23d02b01b7a2ae96a2cfcf17009d73a2c47cddae7895c124aea6543b15bdd15"
+  },
+  "preparation": {
+    "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\outputs\\microshort_s1_open_connection_candidate_20261009\\COMSOL_MICROSHORT_S1_OPEN_CONNECTION_PREPARATION_20261009.zip",
+    "bytes": 1929576,
+    "sha256": "32cbb6ee5b8885a645da762154dab38d8f67ef4c7f97b5b4bc9c2ecd5fdd6f5c"
+  },
+  "target_initially_absent": true,
+  "exact_manifest_set_hash_crc_paths": true,
+  "local_package_payload_equal": true,
+  "code_manifest_members_match": true,
+  "observed_elapsed_s": 191.94216459989548
+}

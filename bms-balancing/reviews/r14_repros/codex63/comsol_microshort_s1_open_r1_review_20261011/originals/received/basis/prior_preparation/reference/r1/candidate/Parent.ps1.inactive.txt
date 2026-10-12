@@ -1,0 +1,376 @@
+# S1-O INACTIVE SOURCE. No received source is executed in this stage.
+# Pure parent-consumption functions only. There is no Start-Process, invocation,
+# transcript, runtime-directory write, console challenge or native entrypoint.
+# New native adapter/entrypoint publication requires a new seal and approval.
+
+function S1Has($Object,[string]$Name) {
+    if ($null -eq $Object) { return $false }
+    if ($Object -is [System.Collections.IDictionary]) { return $Object.Contains($Name) }
+    return $null -ne $Object.PSObject.Properties[$Name]
+}
+function S1Struct($Object) {
+    if ($null -eq $Object) { return $false }
+    if ($Object -is [System.Collections.IDictionary]) { return $Object.Count -gt 0 }
+    return $Object -is [pscustomobject] -and @($Object.PSObject.Properties).Count -gt 0
+}
+function S1Number($Value,[double]$Min,[double]$Max) {
+    if ($Value -is [bool] -or $null -eq $Value) { return $false }
+    $v=0.0
+    return ([double]::TryParse([string]$Value,[Globalization.NumberStyles]::Float,
+        [Globalization.CultureInfo]::InvariantCulture,[ref]$v) -and
+        -not [double]::IsNaN($v) -and -not [double]::IsInfinity($v) -and $v -ge $Min -and $v -le $Max)
+}
+function S1Sha($Value) { return $Value -is [string] -and $Value -cmatch '^[0-9a-f]{64}$' }
+function S1Failure([string]$Reason,[string]$Stage) {
+    return @{status='INCOMPLETE';reason=$Reason;stage=$Stage;overall='INCOMPLETE';normal_gate='INCOMPLETE'}
+}
+function S1ExactDecimal($Value) {
+    # Decimal strings cross Python->JSON->PS without a binary-double conversion.
+    # A floating/decimal CLR value has already lost the original lexical evidence.
+    if ($Value -is [string]) { $text=$Value }
+    elseif ($Value -is [byte] -or $Value -is [sbyte] -or $Value -is [int16] -or
+        $Value -is [uint16] -or $Value -is [int32] -or $Value -is [uint32] -or
+        $Value -is [int64] -or $Value -is [uint64]) {
+        $text=$Value.ToString([Globalization.CultureInfo]::InvariantCulture)
+    } else { throw 'DECIMAL_TRANSPORT_PRECISION' }
+    $m=[regex]::Match($text,'^([+-]?)(?:([0-9]+)(?:\.([0-9]*))?|\.([0-9]+))(?:[eE]([+-]?[0-9]+))?$')
+    if (-not $m.Success) { throw 'DECIMAL_TRANSPORT_FORMAT' }
+    $whole=$m.Groups[2].Value
+    $fraction=$(if ($m.Groups[4].Success) {$m.Groups[4].Value} else {$m.Groups[3].Value})
+    $exponent=0
+    if ($m.Groups[5].Success -and -not [int]::TryParse($m.Groups[5].Value,
+            [Globalization.NumberStyles]::AllowLeadingSign,[Globalization.CultureInfo]::InvariantCulture,[ref]$exponent)) {
+        throw 'DECIMAL_TRANSPORT_EXPONENT'
+    }
+    $digits=$whole+$fraction; $trimmed=$digits.TrimStart([char]'0')
+    if ($trimmed.Length -eq 0) { return @{sign=0;digits='0';position=[long]0} }
+    $leading=$digits.Length-$trimmed.Length
+    return @{sign=$(if ($m.Groups[1].Value -ceq '-') {-1} else {1});
+        digits=$trimmed.TrimEnd([char]'0');position=([long]$whole.Length+[long]$exponent-[long]$leading)}
+}
+function S1ExactCompare($Left,$Right) {
+    $a=S1ExactDecimal $Left; $b=S1ExactDecimal $Right
+    if ($a.sign -ne $b.sign) { return [Math]::Sign($a.sign-$b.sign) }
+    if ($a.sign -eq 0) { return 0 }
+    if ($a.position -ne $b.position) { return ($a.sign*[Math]::Sign($a.position-$b.position)) }
+    $length=[Math]::Max($a.digits.Length,$b.digits.Length)
+    return ($a.sign*[Math]::Sign([string]::CompareOrdinal($a.digits.PadRight($length,'0'),$b.digits.PadRight($length,'0'))))
+}
+function S1TimeVector($Values,$Upper,[string]$Reason) {
+    if ($Values -isnot [array] -or @($Values).Count -lt 2) { throw $Reason }
+    $prior=$null
+    foreach ($value in $Values) {
+        if ((S1ExactCompare $value 0) -lt 0 -or (S1ExactCompare $value $Upper) -gt 0 -or
+            ($null -ne $prior -and (S1ExactCompare $value $prior) -le 0)) { throw $Reason }
+        $prior=$value
+    }
+    if ((S1ExactCompare $Values[0] 0) -ne 0) { throw $Reason }
+}
+function S1Coverage($Coverage,$Expected,$NativeAxis) {
+    try {
+        # Fixed registered vector, never the producer's reported count, defines the prefix.
+        S1TimeVector $Expected.common_requested_times_s $Expected.end_s 'EXPECTED_REQUEST_VECTOR'
+        if ($Expected.required_count -ne @($Expected.common_requested_times_s).Count) { throw 'EXPECTED_REQUEST_COUNT' }
+        $required=@($Expected.common_requested_times_s | Where-Object {
+            (S1ExactCompare $_ $NativeAxis.safe_end_s) -le 0
+        })
+        if ($required.Count -lt 2) { throw 'EMPTY_OR_ZERO_ONLY_COMPARISON' }
+        if (-not (S1Struct $Coverage) -or $Coverage.status -cne 'PASS' -or
+            $Coverage.missing_a -isnot [array] -or @($Coverage.missing_a).Count -ne 0 -or
+            $Coverage.missing_b -isnot [array] -or @($Coverage.missing_b).Count -ne 0 -or
+            $Coverage.common_requested_count -isnot [int] -or $Coverage.common_requested_count -ne $required.Count -or
+            $Coverage.comparison_count -isnot [int] -or $Coverage.comparison_count -ne $required.Count -or
+            $Coverage.full_intersection_count -isnot [int] -or
+            $Coverage.full_intersection_count -ne @($Coverage.full_intersection).Count) { throw 'COMPARISON_COVERAGE' }
+        S1TimeVector $Coverage.comparison_times $NativeAxis.safe_end_s 'COMPARISON_TIME_ORDER_OR_RANGE'
+        S1TimeVector $Coverage.full_intersection $NativeAxis.actual_end_s 'INTERSECTION_TIME_ORDER_OR_RANGE'
+        if (@($Coverage.comparison_times).Count -ne $required.Count) { throw 'COMPARISON_TIME_COUNT' }
+        for ($i=0;$i -lt $required.Count;$i++) {
+            if ((S1ExactCompare $Coverage.comparison_times[$i] $required[$i]) -ne 0) { throw 'COMPARISON_TIME_CONTENT' }
+        }
+        if ((S1ExactCompare $Coverage.first $required[0]) -ne 0 -or
+            (S1ExactCompare $Coverage.last $required[-1]) -ne 0) { throw 'COMPARISON_ENDPOINT_CONTENT' }
+        # All common states remain visible, including protective t_plus beyond the safe prefix.
+        # Comparison times must belong to full intersection; full intersection must belong to native grid.
+        $j=0
+        foreach ($t in $Coverage.full_intersection) {
+            while ($j -lt @($NativeAxis.stored_times_s).Count -and (S1ExactCompare $NativeAxis.stored_times_s[$j] $t) -lt 0) { $j++ }
+            if ($j -ge @($NativeAxis.stored_times_s).Count -or (S1ExactCompare $NativeAxis.stored_times_s[$j] $t) -ne 0) { throw 'INTERSECTION_NOT_NATIVE_SUBSET' }
+        }
+        $j=0
+        foreach ($t in $required) {
+            while ($j -lt @($Coverage.full_intersection).Count -and (S1ExactCompare $Coverage.full_intersection[$j] $t) -lt 0) { $j++ }
+            if ($j -ge @($Coverage.full_intersection).Count -or (S1ExactCompare $Coverage.full_intersection[$j] $t) -ne 0) { throw 'COMPARISON_NOT_INTERSECTION_SUBSET' }
+        }
+        return @{status='PASS';expected_prefix_count=$required.Count;safe_end_s=$NativeAxis.safe_end_s}
+    } catch { return S1Failure $_.Exception.Message 'coverage' }
+}
+function S1ChargeFields($Charge,$Expected,$NativeAxis,$Sources) {
+    try {
+        if ($Charge.schema -cne 'S1O_CHARGE_BUDGET_R1' -or $Charge.status -cnotin @('CONSISTENT','INCONCLUSIVE') -or
+            $Charge.records -isnot [array] -or @($Charge.records).Count -lt 2) { throw 'CHARGE_RECORD_SCHEMA' }
+        $g=$Charge.grid_binding; $direction=$Charge.interval_direction
+        if (-not (S1Struct $g) -or $g.status -cne 'PASS' -or $g.units_status -cne 'MATCHED' -or
+            $g.global_li_status -cne 'EXACT_MATCH_ALL_TIMES' -or $g.count -isnot [int] -or
+            $g.count -ne @($Charge.records).Count -or $g.count -ne @($NativeAxis.stored_times_s).Count -or
+            @($g.times_s).Count -ne $g.count -or $g.native_reason -cne $NativeAxis.native_reason) { throw 'CHARGE_GRID_SCHEMA' }
+        S1TimeVector $g.times_s $NativeAxis.actual_end_s 'CHARGE_GRID_TIME_ORDER_OR_RANGE'
+        if ((S1ExactCompare $g.start_s 0) -ne 0 -or (S1ExactCompare $g.actual_end_s $NativeAxis.actual_end_s) -ne 0 -or
+            (S1ExactCompare $g.configured_end_s $Expected.end_s) -ne 0 -or
+            (S1ExactCompare $g.comparison_safe_end_s $NativeAxis.safe_end_s) -ne 0) { throw 'CHARGE_ENDPOINT_BINDING' }
+        foreach ($name in @('native_grid_identity','global_identity','charge_identity')) {
+            $id=$g.$name
+            if (-not (S1Struct $id) -or -not (S1Sha $id.sha256) -or $id.path -isnot [string] -or
+                [string]::IsNullOrWhiteSpace($id.path) -or -not (S1Number $id.bytes 1 ([double]::MaxValue))) { throw 'CHARGE_SOURCE_IDENTITY' }
+            $matched=@($Sources | Where-Object {$_.path -ceq $id.path -and $_.sha256 -ceq $id.sha256 -and $_.bytes -eq $id.bytes})
+            if ($matched.Count -ne 1) { throw 'CHARGE_SOURCE_NOT_REGISTERED' }
+        }
+        foreach ($key in @('path','bytes','sha256')) {
+            if ($g.native_grid_identity.$key -cne $NativeAxis.stored_grid_identity.$key) { throw 'CHARGE_NATIVE_GRID_IDENTITY' }
+        }
+        if (-not (S1Struct $direction) -or $direction.status -cne 'WITHIN_DEADBAND_OR_EXPECTED' -or
+            (S1ExactCompare $direction.deadband_C_m2 '0.0002') -ne 0 -or
+            $direction.checked_intervals -isnot [int] -or $direction.checked_intervals -ne ($g.count-1) -or
+            -not (S1Has $direction 'first_violation') -or $null -ne $direction.first_violation) { throw 'CHARGE_INTERVAL_SCHEMA' }
+        for ($i=0;$i -lt $g.count;$i++) {
+            $r=$Charge.records[$i]
+            if (-not (S1Struct $r) -or (S1ExactCompare $g.times_s[$i] $NativeAxis.stored_times_s[$i]) -ne 0 -or
+                (S1ExactCompare $r.t_s $g.times_s[$i]) -ne 0) { throw 'CHARGE_RECORD_TIME_BINDING' }
+            foreach ($key in @('qI_C_m2','qRN_C_m2','qRP_C_m2','qN_C_m2','qP_C_m2')) { $null=S1ExactDecimal $r.$key }
+            if ($i -eq 0) {
+                if ($r.interval_sign -cne 'NOT_APPLICABLE_AT_T0' -or $null -ne $r.interval_start_s -or
+                    $null -ne $r.dqN_C_m2 -or $null -ne $r.dqP_C_m2) { throw 'CHARGE_T0_INTERVAL' }
+            } else {
+                if ((S1ExactCompare $r.interval_start_s $g.times_s[$i-1]) -ne 0 -or
+                    (S1ExactCompare $r.dqN_C_m2 '-0.0002') -lt 0 -or
+                    (S1ExactCompare $r.dqP_C_m2 '-0.0002') -lt 0 -or
+                    $r.interval_sign -cnotin @('RESOLUTION_LIMITED','RESOLVED_EXPECTED_DIRECTION')) { throw 'CHARGE_INTERVAL_DIRECTION' }
+                $intervalSign=$(if ((S1ExactCompare $r.dqN_C_m2 '0.0002') -le 0 -or
+                    (S1ExactCompare $r.dqP_C_m2 '0.0002') -le 0) {'RESOLUTION_LIMITED'} else {'RESOLVED_EXPECTED_DIRECTION'})
+                if ($r.interval_sign -cne $intervalSign) { throw 'CHARGE_INTERVAL_SIGN_CONTRADICTION' }
+            }
+        }
+        return @{status='PASS'}
+    } catch { return S1Failure $_.Exception.Message 'charge_fields' }
+}
+function S1ComparisonNumerics($Details,$NativeAxis) {
+    try {
+        $within=$true; $limits=@{voltage_V='0.001';surface_x='0.0001';Li_relative='0.000001'}
+        foreach ($key in @('voltage_V','surface_x','Li_relative')) {
+            $row=$Details.maxima.$key
+            if (-not (S1Struct $row) -or (S1ExactCompare $row.value 0) -lt 0 -or
+                (S1ExactCompare $row.time_s 0) -lt 0 -or (S1ExactCompare $row.time_s $NativeAxis.safe_end_s) -gt 0) {
+                throw ('NUMERIC_FIELD_INVALID:'+ $key)
+            }
+            if ((S1ExactCompare $row.value $limits[$key]) -gt 0) { $within=$false }
+        }
+        return @{status='PASS';comparison=$(if ($within) {'WITHIN_LIMITS_THIS_WINDOW'} else {'EXCEEDS_LIMITS'})}
+    } catch { return S1Failure $_.Exception.Message 'comparison_numerics' }
+}
+function S1NativeAxis($Native,$Expected) {
+    if (-not (S1Struct $Native)) { return S1Failure 'NATIVE_RECORD_MISSING' 'native' }
+    foreach ($key in @('returned','invocation_succeeded','new_error','within_limits')) {
+        if (-not (S1Has $Native $key) -or $Native.$key -isnot [bool]) { return S1Failure 'NATIVE_BOOL_SCHEMA' 'native' }
+    }
+    if (-not $Native.returned -or -not $Native.invocation_succeeded -or $Native.new_error -or
+        -not $Native.within_limits -or $Native.rc -isnot [int] -or $Native.rc -ne 0 -or
+        -not (S1Has $Native 'exception') -or $Native.exception -or $Native.fatal -isnot [bool] -or $Native.fatal -or $Native.record_errors -isnot [array] -or
+        @($Native.record_errors).Count -ne 0) { return S1Failure 'NATIVE_INVOCATION_OR_FATAL' 'native' }
+    if ($Native.run_id -cne $Expected.run_id -or $Native.variant_id -cne $Expected.variant_id -or
+        $Native.manifest_sha256 -cne $Expected.manifest_sha256 -or
+        -not (S1Number $Native.elapsed_s 0 $Expected.phase_limits_s.native)) {
+        return S1Failure 'NATIVE_BINDING_OR_TIME' 'native'
+    }
+    try {
+        S1TimeVector $Native.stored_times_s $Expected.end_s 'NATIVE_STORED_GRID'
+        if ((S1ExactCompare $Native.stored_times_s[-1] $Native.final_time_s) -ne 0 -or
+            -not (S1Struct $Native.stored_grid_identity) -or -not (S1Sha $Native.stored_grid_identity.sha256) -or
+            $Native.stored_grid_identity.path -isnot [string] -or [string]::IsNullOrWhiteSpace($Native.stored_grid_identity.path) -or
+            -not (S1Number $Native.stored_grid_identity.bytes 1 ([double]::MaxValue))) { throw 'NATIVE_STORED_GRID_BINDING' }
+        $normalEnd=(S1ExactCompare $Native.final_time_s $Expected.end_s) -eq 0
+        $protectivePair=$false
+        if ($Native.termination -ceq 'PROTECTIVE_STOP_MATCHED') {
+            $pair=$Native.guard_pair
+            if (-not (S1Struct $pair) -or (S1ExactCompare $pair.t_minus 0) -lt 0 -or
+                (S1ExactCompare $pair.t_minus $pair.t_plus) -ge 0 -or
+                (S1ExactCompare $pair.t_plus $Native.final_time_s) -ne 0 -or
+                (S1ExactCompare $pair.t_plus $Expected.end_s) -ge 0 -or
+                (S1ExactCompare $Native.stored_times_s[-2] $pair.t_minus) -ne 0) { throw 'NATIVE_STOP_PAIR_TIMES' }
+            $protectivePair=$true
+        }
+    } catch { return S1Failure $_.Exception.Message 'native' }
+    if ($Native.termination -ceq 'NORMAL_END_MATCHED' -and
+        $normalEnd -and
+        $Native.active_guards -is [array] -and @($Native.active_guards).Count -eq 0) {
+        return @{status='NORMAL_WINDOW_COMPLETED';reason=$null;stage='native';native_reason='NORMAL_END';
+            actual_end_s=$Native.final_time_s;safe_end_s=$Expected.end_s;stored_times_s=$Native.stored_times_s;stored_grid_identity=$Native.stored_grid_identity}
+    }
+    if ($Native.termination -ceq 'PROTECTIVE_STOP_MATCHED' -and
+        $protectivePair -and
+        $Native.active_guards -is [array] -and @($Native.active_guards).Count -gt 0 -and
+        $Native.stop_pair_status -ceq 'MATCHED_SAME_OPERATOR_UNITS_DOMAIN' -and
+        $Native.no_post_stop_integration -is [bool] -and $Native.no_post_stop_integration) {
+        return @{status='PROTECTIVE_STOP';reason=$Native.stop_reason;stage='native';native_reason='GUARD_STOP';
+            actual_end_s=$Native.final_time_s;safe_end_s=$Native.guard_pair.t_minus;stored_times_s=$Native.stored_times_s;stored_grid_identity=$Native.stored_grid_identity}
+    }
+    return S1Failure 'NATIVE_END_EVIDENCE' 'native'
+}
+function S1Fields($Result,$Expected,$NativeAxis) {
+    if (-not (S1Struct $Result) -or $Result.schema -cne 'S1O_CONSUMER_V1' -or
+        $Result.run_id -cne $Expected.run_id -or $Result.variant_id -cne $Expected.variant_id -or
+        $Result.manifest_sha256 -cne $Expected.manifest_sha256 -or
+        $Result.errors -isnot [array] -or @($Result.errors).Count -gt 0) {
+        return S1Failure 'RESULT_SCHEMA_BINDING_ERRORS' 'fields'
+    }
+    if ($Result.overall -cne 'INCOMPLETE' -or $Result.normal_gate -cne 'INCOMPLETE' -or
+        $Result.native_approved_by_this_result -isnot [bool] -or $Result.native_approved_by_this_result) {
+        return S1Failure 'RESULT_SCOPE_EXPANSION' 'fields'
+    }
+    foreach ($axis in @('initialization','initial_profile','invariants','effective_coefficients','charge_budget','comparison_details')) {
+        if (-not (S1Struct $Result.$axis)) { return S1Failure ('EVIDENCE_AXIS_MISSING:'+ $axis) 'fields' }
+    }
+    if ($Result.source_evidence -isnot [array] -or @($Result.source_evidence).Count -eq 0) {
+        return S1Failure 'SOURCE_EVIDENCE_MISSING' 'fields'
+    }
+    $seen=@{}
+    foreach ($ref in $Result.source_evidence) {
+        if (-not (S1Struct $ref) -or $ref.path -isnot [string] -or [string]::IsNullOrWhiteSpace($ref.path) -or
+            -not (S1Sha $ref.sha256) -or -not (S1Number $ref.bytes 1 ([double]::MaxValue))) {
+            return S1Failure 'SOURCE_EVIDENCE_IDENTITY' 'fields'
+        }
+        $key=$ref.path.Replace('\','/').ToLowerInvariant()
+        if ($seen.ContainsKey($key)) { return S1Failure 'SOURCE_EVIDENCE_DUPLICATE' 'fields' }
+        $seen[$key]=$true
+    }
+    if ($Result.evidence_validity -cne 'VALID' -or $Result.initialization.status -cne 'PASS' -or
+        $Result.effective_coefficients.status -cne 'PASS' -or
+        $Result.effective_coefficients.grade -cne 'INSTALLED_EQUATION_AND_NUMERICAL_READBACK' -or
+        -not (S1Struct $Result.effective_coefficients.raw_identity)) {
+        return S1Failure 'INITIALIZATION_OR_ACTUAL_COEFFICIENT_UNVERIFIED' 'fields'
+    }
+    if ($Result.initialization.fields -isnot [array] -or @($Result.initialization.fields).Count -eq 0 -or
+        $Result.initial_profile.status -cne 'PASS' -or
+        -not (S1Number $Result.initial_profile.N_count 241 241) -or
+        -not (S1Number $Result.initial_profile.P_count 241 241) -or
+        $Result.initial_profile.both_surface_and_particle_average -isnot [bool] -or
+        -not $Result.initial_profile.both_surface_and_particle_average -or
+        $Result.invariants.status -cne 'PASS' -or
+        -not (S1Number $Result.invariants.Li_relative_max 0 0.000001) -or
+        -not (S1Number $Result.invariants.voltage_identity_max_V 0 0.00000001)) {
+        return S1Failure 'INITIAL_PROFILE_OR_INVARIANT_EVIDENCE' 'fields'
+    }
+    $initialNames=@{}
+    foreach ($row in $Result.initialization.fields) {
+        if (-not (S1Struct $row) -or $row.name -isnot [string] -or [string]::IsNullOrWhiteSpace($row.name) -or
+            $row.unit -isnot [string] -or [string]::IsNullOrWhiteSpace($row.unit) -or
+            -not (S1Number $row.absolute_delta 0 ([double]::MaxValue)) -or
+            -not (S1Number $row.relative_delta 0 ([double]::MaxValue)) -or $initialNames.ContainsKey($row.name)) {
+            return S1Failure 'INITIAL_FIELDS_SCHEMA' 'fields'
+        }
+        $initialNames[$row.name]=$true
+    }
+    $charge=S1ChargeFields $Result.charge_budget $Expected $NativeAxis $Result.source_evidence
+    if ($charge.status -ceq 'INCOMPLETE') { return $charge }
+    $d=$Result.comparison_details
+    $coverage=$d.coverage
+    $covered=S1Coverage $coverage $Expected $NativeAxis
+    if ($covered.status -ceq 'INCOMPLETE') { return $covered }
+    if (-not (S1Number $d.coordinates_per_electrode 241 241) -or $d.interpolated -isnot [bool] -or $d.interpolated) {
+        return S1Failure 'COMPARISON_COVERAGE' 'fields'
+    }
+    $numeric=S1ComparisonNumerics $d $NativeAxis
+    if ($numeric.status -ceq 'INCOMPLETE') { return $numeric }
+    # Same fixed geometry as S0 Java L_el=52um, L_sep=25um, L_pos=44um.
+    $surface=$d.maxima.surface_x
+    if ($surface.electrode -cnotin @('N','P')) { return S1Failure 'SURFACE_MAXIMUM_LOCATION' 'fields' }
+    $lo=$(if ($surface.electrode -ceq 'N') {0.0} else {0.000077})
+    $hi=$(if ($surface.electrode -ceq 'N') {0.000052} else {0.000121})
+    if (-not (S1Number $surface.coordinate_m ($lo-1e-15) ($hi+1e-15))) {
+        return S1Failure 'SURFACE_MAXIMUM_LOCATION' 'fields'
+    }
+    if (-not (S1Number $d.max_decomposition_residual_V 0 0.00000001)) { return S1Failure 'DECOMPOSITION_INVALID' 'fields' }
+    $expectedComparison=$numeric.comparison
+    if ($Result.comparison -cne $expectedComparison -or $d.status -cne $expectedComparison) { return S1Failure 'COMPARISON_SUMMARY_CONTRADICTION' 'fields' }
+    return @{status='VALID_FIELDS';comparison=$expectedComparison;charge_budget=$Result.charge_budget.status;stage='fields'}
+}
+function S1Decision($Native,$Analysis,$Result,$Expected,$Completion) {
+    if (-not (S1Struct $Expected) -or -not (S1Sha $Expected.manifest_sha256)) {
+        return S1Failure 'EXPECTED_BINDING_MISSING' 'parent'
+    }
+    if ($Expected.run_id -isnot [string] -or [string]::IsNullOrWhiteSpace($Expected.run_id) -or
+        $Expected.variant_id -isnot [string] -or [string]::IsNullOrWhiteSpace($Expected.variant_id) -or
+        $Expected.required_count -isnot [int] -or $Expected.required_count -lt 2 -or
+        -not (S1Number $Expected.end_s 0.000000001 ([double]::MaxValue)) -or
+        -not (S1Struct $Expected.phase_limits_s) -or
+        -not (S1Number $Expected.phase_limits_s.native 1 ([double]::MaxValue)) -or
+        -not (S1Number $Expected.phase_limits_s.analysis 1 ([double]::MaxValue)) -or
+        -not (S1Number $Expected.overall_limit_s 1 ([double]::MaxValue))) {
+        return S1Failure 'EXPECTED_REQUIRED_FIELDS' 'parent'
+    }
+    $nativeAxis=S1NativeAxis $Native $Expected
+    if ($nativeAxis.status -ceq 'INCOMPLETE') { return $nativeAxis }
+    if (-not (S1Struct $Analysis) -or $Analysis.rc -isnot [int] -or $Analysis.rc -ne 0 -or
+        $Analysis.returned -isnot [bool] -or -not $Analysis.returned -or
+        $Analysis.record_errors -isnot [array] -or @($Analysis.record_errors).Count -ne 0 -or
+        -not (S1Number $Analysis.elapsed_s 0 $Expected.phase_limits_s.analysis)) {
+        return S1Failure 'ANALYSIS_RC_OR_TIME' 'parent'
+    }
+    $fields=S1Fields $Result $Expected $nativeAxis
+    if ($fields.status -ceq 'INCOMPLETE') { return $fields }
+    if ($Result.native_completion -cne $nativeAxis.status) { return S1Failure 'NATIVE_CONSUMER_CONTRADICTION' 'parent' }
+    $expectedLimited=$(if ($nativeAxis.status -ceq 'NORMAL_WINDOW_COMPLETED' -and $fields.charge_budget -ceq 'CONSISTENT') {
+        'AWAITING_S1_LIMITED_EXTERNAL_REVIEW'
+    } else {'INCOMPLETE'})
+    if ($Result.limited_result -cne $expectedLimited) { return S1Failure 'LIMITED_RESULT_CONTRADICTION' 'parent' }
+    foreach ($axis in @('preservation','process_cleanup','policy_preservation','resource_recording')) {
+        if ($Completion.$axis -cne 'PASS') { return S1Failure ('COMPLETION_AXIS:'+ $axis) 'parent' }
+    }
+    if (-not (S1Number $Completion.overall_elapsed_s 0 $Expected.overall_limit_s) -or
+        $Completion.record_errors -isnot [array] -or @($Completion.record_errors).Count -ne 0) {
+        return S1Failure 'COMPLETION_BUDGET_OR_RECORD' 'parent'
+    }
+    $status='AWAITING_S1_LIMITED_EXTERNAL_REVIEW'
+    if ($nativeAxis.status -ceq 'PROTECTIVE_STOP') { $status='PROTECTIVE_STOP_INCOMPLETE' }
+    elseif ($fields.charge_budget -ceq 'INCONCLUSIVE') { $status='INCOMPLETE' }
+    return @{status=$status;native_completion=$nativeAxis.status;evidence_validity='VALID';
+        comparison=$fields.comparison;charge_budget=$fields.charge_budget;overall='INCOMPLETE';normal_gate='INCOMPLETE';
+        native_approved_by_this_result=$false;raw_host_rc=$null;host_boundary='SCRIPT_FINAL_RECORD_NOT_PROCESS_EXIT'}
+}
+function S1FinalReturn($Decision,[scriptblock]$Clock,[scriptblock]$Writer,[scriptblock]$Readback,
+        [double]$OverallLimit,[double]$DeliveryStart,[double]$DeliveryLimit) {
+    # These adapters are inert in the future separate validation. Production
+    # caller is not supplied here and must gate before the FIRST writer call.
+    $errors=@(); $boundary=$null; $pre=$null; $post=$null; $within=$false; $priorFailure=$false
+    try {
+        if (-not (S1Struct $Decision) -or
+            $Decision.status -cnotin @('AWAITING_S1_LIMITED_EXTERNAL_REVIEW','PROTECTIVE_STOP_INCOMPLETE','INCOMPLETE') -or
+            $Decision.overall -cne 'INCOMPLETE' -or $Decision.normal_gate -cne 'INCOMPLETE') { throw 'FINAL_DECISION_SCHEMA' }
+        foreach ($name in @('record_errors','errors')) {
+            if (S1Has $Decision $name) {
+                if ($Decision.$name -isnot [array]) { throw 'PRIOR_ERROR_SCHEMA' }
+                if (@($Decision.$name).Count -gt 0) { $priorFailure=$true }
+            }
+        }
+        if ((S1Has $Decision 'reason') -and $Decision.reason) { $priorFailure=$true }
+        if (-not (S1Number $OverallLimit 0 ([double]::MaxValue)) -or
+            -not (S1Number $DeliveryLimit 0 ([double]::MaxValue)) -or
+            -not (S1Number $DeliveryStart 0 $OverallLimit)) { throw 'FINAL_BUDGET_SCHEMA' }
+        $pre=& $Clock
+        if (-not (S1Number $pre $DeliveryStart $OverallLimit) -or ($pre-$DeliveryStart) -gt $DeliveryLimit) { throw 'PRE_WRITE_BUDGET' }
+        $boundary=& $Writer @{observation_phase='PRE_WRITE';elapsed_s=$pre;decision=$Decision;overall='INCOMPLETE'}
+        $observed=& $Readback $boundary
+        if (-not (S1Struct $observed) -or -not (S1Sha $observed.sha256) -or
+            $observed.byte_equal -isnot [bool] -or -not $observed.byte_equal) { throw 'FINAL_READBACK_IDENTITY' }
+        $post=& $Clock
+        $within=(S1Number $post $pre $OverallLimit) -and ($post-$DeliveryStart) -le $DeliveryLimit
+        if (-not $within) { throw 'POST_WRITE_BUDGET' }
+    } catch {
+        $errors+=@{reason=$_.ToString();stage='FINAL_POST_WRITE';order='FIRST_OR_FOLLOWUP_PRESERVE_PREVIOUS'}
+    }
+    $limited=$(if ($within -and @($errors).Count -eq 0 -and -not $priorFailure) {$Decision.status} else {'INCOMPLETE'})
+    return @{kind='S1_PARENT_FINAL_RETURN';observation_phase='POST_WRITE';limited=$limited;overall='INCOMPLETE';
+        prior_decision=$Decision;prior_failure_preserved=$priorFailure;record_errors=$errors;within_limits=$within;pre_write_seconds=$pre;snapshot_seconds=$post;
+        boundary=$boundary;raw_host_rc=$null;host_boundary='SCRIPT_FINAL_RECORD_NOT_PROCESS_EXIT'}
+}
+
+throw 'S1O_OFFLINE_ONLY_NO_EXECUTABLE_PARENT_ENTRYPOINT'

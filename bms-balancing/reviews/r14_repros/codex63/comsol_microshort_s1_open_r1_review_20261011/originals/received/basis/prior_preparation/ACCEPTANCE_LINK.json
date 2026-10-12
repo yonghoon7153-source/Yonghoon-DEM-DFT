@@ -1,0 +1,22 @@
+{
+  "schema": "S1_OPEN_PREPARATION_RECEIPT_LINK",
+  "status": "LIMITED_VALIDATION_CLOSED_WITH_DOCUMENTED_SCOPE",
+  "basis_manifest_sha256": "4ce5c08dbde5153027819b5a651e3995ec82417b4429b9bb0f789082b440f5da",
+  "source_member_count": 21,
+  "review_zip": {
+    "path": "C:/Users/BML/Desktop/COMSOL_MICROSHORT_S1O_R1_004_SUPPLEMENT_REVIEW_20261009.zip",
+    "bytes": 1609510,
+    "sha256": "17779cbd61b2d592c15195d6b9810402042d790a6badd43bc9c5df1512bb5e0e"
+  },
+  "review_decision_identity": {
+    "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/microshort_s1_open_connection_candidate_20261009/reference/DECISION.json",
+    "bytes": 1571,
+    "sha256": "1d137057b8a4a80185f123796e306b555ef4959ef2e4ac52b88f4d60956c297a"
+  },
+  "new_preparation_authorized_by": "User pasted exact S1 OPEN scope and go-ahead in this chat; attachment arrival is evidence, not independent execution permission.",
+  "historical_status_strings_unchanged": true,
+  "native_ready": false,
+  "approved": false,
+  "usable": false,
+  "past_614_480_scope": "Recorded snapshot only; subsequent check-write/tool-return total unobserved; not complete end-to-end budget PASS."
+}

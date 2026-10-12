@@ -1,0 +1,15 @@
+{
+  "utc": "2026-10-11T05:17:19.1200876Z",
+  "local": "2026-10-11T14:17:19.1318606+09:00",
+  "monotonic_ticks": 21948374686113,
+  "frequency": 10000000,
+  "limits_s": {
+    "correction": 1200,
+    "static": 300,
+    "plan_reseal": 480,
+    "preservation_delivery": 300,
+    "incomplete_closeout": 120,
+    "total": 2400
+  },
+  "attempt": 1
+}

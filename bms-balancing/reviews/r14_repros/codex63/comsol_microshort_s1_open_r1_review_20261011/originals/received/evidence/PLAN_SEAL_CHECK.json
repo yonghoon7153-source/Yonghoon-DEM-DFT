@@ -1,0 +1,8 @@
+{
+  "unique_ids": 93,
+  "positive_controls_resolve": true,
+  "N3_positive_links_correct": true,
+  "old_case_ids_preserved": true,
+  "only_three_previous_members_changed": true,
+  "scope": "JSON/hash/text assertions only; no functional cases executed"
+}

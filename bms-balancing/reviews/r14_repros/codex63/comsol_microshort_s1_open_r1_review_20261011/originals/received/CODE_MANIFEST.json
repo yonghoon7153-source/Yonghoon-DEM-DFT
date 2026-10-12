@@ -1,0 +1,81 @@
+{
+  "schema": "S1_OPEN_CONNECTION_R1_INACTIVE_V1",
+  "approved": false,
+  "usable": false,
+  "native_ready": false,
+  "basis_manifest_sha256": "4ce5c08dbde5153027819b5a651e3995ec82417b4429b9bb0f789082b440f5da",
+  "previous_connection_manifest_sha256": "be19764204a4695c9058f565a69c5e09ea528124d4659e9d8f9d1c11fd6f749f",
+  "self_excluded": true,
+  "files": [
+    {
+      "path": "candidate/InstalledReadback.fragment.java.inactive.txt",
+      "bytes": 2512,
+      "sha256": "844ccbb7259ba55bf3deacaf38bf17932c0b9f6ccc43017d80907c46b5b216c6"
+    },
+    {
+      "path": "candidate/P0.connection.diff.txt",
+      "bytes": 3801,
+      "sha256": "7113aefd75a09fc82fe0d55c61c790f8315efe65abbc2d93acd73fd3d6ba3702"
+    },
+    {
+      "path": "candidate/P0.connection.java.inactive.txt",
+      "bytes": 84529,
+      "sha256": "39c2b9929e0d4c4ca8c442f5d0f0485581342b8be7a993d3820870bba8002a8b"
+    },
+    {
+      "path": "candidate/raw_connection.py.inactive.txt",
+      "bytes": 9426,
+      "sha256": "3de2c292bf03088db1171b0d5cd4cc36a9e53f17385839eb7812bebb094d8d9c"
+    },
+    {
+      "path": "candidate/raw_connection.py.inactive.txt.diff.txt",
+      "bytes": 9696,
+      "sha256": "82ca6d81e9ec98ef93b2d528c1731222eda293cdac7d5f0d7ba0dbbe765cbffa"
+    },
+    {
+      "path": "candidate/resource_connection.py.inactive.txt",
+      "bytes": 10846,
+      "sha256": "f45e6531383d03daa2e968437c6188be0229c144c6956647b0b0f81fae795816"
+    },
+    {
+      "path": "candidate/resource_connection.py.inactive.txt.diff.txt",
+      "bytes": 8100,
+      "sha256": "538aa7cb31429d1709ef0b114c1f44850335b937d11826aee6073ae622e13844"
+    },
+    {
+      "path": "OPEN_CONNECTION_MAP.json",
+      "bytes": 2801,
+      "sha256": "93319429cad4ba89b74c69c64da55a5ffcd0ddc4c6758d33328b31a1b871203f"
+    },
+    {
+      "path": "OS_API_MATRIX.json",
+      "bytes": 4115,
+      "sha256": "ec3ab0c209a5aab458fada593c31c63b73f6eec43b902a718823a2391d57622c"
+    },
+    {
+      "path": "NATIVE_CONNECTION_STATUS.json",
+      "bytes": 700,
+      "sha256": "1947da06fb8b168025d25ae7467cac260b7be58d7d237aae8f97214fceb0b21a"
+    },
+    {
+      "path": "LIMITED_VALIDATION_PLAN.json",
+      "bytes": 178519,
+      "sha256": "6702a6be556f0f5b4512dd221c08f77d39111606f1d9f97511dd796f2d3d20c9"
+    },
+    {
+      "path": "RESOURCE_CLOCK_CONTRACT.json",
+      "bytes": 2589,
+      "sha256": "781a54aabeb60a516274e230da25b3b11b8b79c1eb61846ed5061e22e9402fb3"
+    },
+    {
+      "path": "FUNCTION_SPANS.json",
+      "bytes": 52077,
+      "sha256": "8002e9ea5ecf7b56b04f00f35426e23a3bba0c958b4f24f3997a1e45f862e7ab"
+    },
+    {
+      "path": "REVISION_BINDING.json",
+      "bytes": 4432,
+      "sha256": "bbb1ef6d82c58a8d8b70fcc2727a44a28316da6cc0c38781699f39b16580df55"
+    }
+  ]
+}

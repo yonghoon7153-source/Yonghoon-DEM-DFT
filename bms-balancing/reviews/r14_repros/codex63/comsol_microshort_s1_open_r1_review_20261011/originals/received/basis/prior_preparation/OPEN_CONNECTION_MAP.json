@@ -1,0 +1,69 @@
+{
+  "native_ready": false,
+  "basis": {
+    "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/microshort_s1o_r1_20261008/CODE_MANIFEST.json",
+    "bytes": 4080,
+    "sha256": "4ce5c08dbde5153027819b5a651e3995ec82417b4429b9bb0f789082b440f5da"
+  },
+  "items": [
+    {
+      "id": "stored_grid",
+      "producer": "s1OpenStoredGrid / EvalGlobal t innerinput=all",
+      "unit": "s",
+      "domain": "solution",
+      "consumer": "native.stored_times_s / Parent.Native.stored_times_s",
+      "status": "HELPER_UNCALLED; semantic native parser OPEN"
+    },
+    {
+      "id": "initial",
+      "producer": "CDI type/properties + Time consistent + actual exact t0 values/profile",
+      "consumer": "readbacks.initial + initial_targets",
+      "status": "POST_CONSISTENCY_PROVENANCE_OPEN"
+    },
+    {
+      "id": "coefficients",
+      "producer": "pcb1/pce1/pce2 properties + recursive/all FeatureInfo + actual evaluation",
+      "consumer": "readbacks.configured/consumed/coefficient_expected",
+      "status": "INSTALLED_VARIABLES_AND_VALUES_OPEN",
+      "installed_symbol": null,
+      "mapping_sha256": null
+    },
+    {
+      "id": "charge",
+      "producer": "preflight_global.csv + s1_leakage.csv + native complete grid",
+      "consumer": "data.charge + readbacks.charge_provenance",
+      "status": "BYTE_AND_NUMERIC_PROJECTION_CANDIDATE_ONLY"
+    },
+    {
+      "id": "quadrature",
+      "producer": "independently reviewed uniform-all-prefix j/RN/-RP bound raw",
+      "consumer": "quadrature_bound_C_m2 + quadrature_provenance",
+      "status": "METHOD_OPEN",
+      "current_bound_C_m2": null
+    },
+    {
+      "id": "request_guard",
+      "producer": "full configured vector + native reason/operator/guard last two actual states",
+      "consumer": "comparison_spec.safe_end_s and common_requests; native.guard_pair",
+      "status": "PREFIX_CANDIDATE; native reason/guard proof OPEN"
+    },
+    {
+      "id": "os",
+      "producer": "held private Job/member handles -> counter snapshot -> projection",
+      "consumer": "control.assess_resources then advance_stop; Parent final boundary",
+      "status": "PURE_PROJECTION_ONLY; OS provider/cap/stop OPEN"
+    }
+  ],
+  "unresolved": [
+    "installed_post_consistency_t0",
+    "installed_effective_coefficient_mapping",
+    "raw_native_evidence_adapter",
+    "OS_resource_ownership_stop_adapters"
+  ],
+  "equation_reference": "evidence/DOC_08.txt:101-143",
+  "time_reference": "evidence/DOC_02.txt:consistent and evidence/LOCAL_comsol_ref_solver.36.136.txt:137-143",
+  "exact_native_argv": null,
+  "exact_native_cwd": null,
+  "new_native_paths": null,
+  "parent_schema_publication": "OPEN: R1 manifest schema differs from unchanged V1 authorize_execution expected schema; do not normalize silently"
+}

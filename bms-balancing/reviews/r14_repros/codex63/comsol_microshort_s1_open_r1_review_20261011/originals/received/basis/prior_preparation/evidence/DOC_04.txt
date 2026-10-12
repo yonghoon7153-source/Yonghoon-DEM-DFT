@@ -1,0 +1,72 @@
+About the Stationary Solver
+About the Stationary Solver
+The following background information about the Stationary Solver discusses these topics: Damped Newton Methods , Termination Criterion for the Fully Coupled and Segregated Attribute Nodes , Linear Solvers vs. Nonlinear Solvers , and Pseudo Time Stepping . Also see Selecting a Stationary, Time-Dependent, or Eigenvalue Solver .
+Stationary in the COMSOL Multiphysics Programming Reference Manual
+Damped Newton Methods
+The nonlinear solver uses an affine invariant form of the damped Newton method as described in Ref. 3 . You can write the discrete form of the equations as f ( U ) = 0 , where f ( U ) is the residual vector and U is the solution vector. Starting with the initial guess U 0 , the software forms the linearized model using U 0 as the linearization point. It solves the discretized form of the linearized model f '( U 0 ) δ U = − f ( U 0 ) for the Newton step δ U using the selected linear system solver ( f '( U 0 ) is the Jacobian matrix). It then computes the new iteration U 1 = U 0 + λ δ U , where λ ( 0 ≤ λ ≤ 1 ) is the damping factor. Next the modified Newton correction estimates the error E for the new iteration U 1 by solving f '( U 0 ) E = − f ( U 1 ) . If the relative error corresponding to E is larger than the relative error in the previous iteration, the algorithm reduces the damping factor λ and recomputes U 1 . This algorithm repeats the damping-factor reduction until the relative error is less than in the previous iteration or until the damping factor underflows the minimum damping factor. When it has taken a successful step U 1 , the algorithm proceeds with the next Newton iteration.
+A value of λ = 1 results in Newton’s method, which converges quadratically if the initial guess U 0 is sufficiently close to a solution. In order to enlarge the domain of attraction, the solver chooses the damping factors judiciously. The success of a nonlinear solver still depends heavily on a carefully selected initial guess, so you should provide the best value for U 0 , giving at least an order of magnitude guess for different solution components.
+Termination Criterion for the Fully Coupled and Segregated Attribute Nodes
+You specify the termination criteria in the Settings window for a Fully Coupled or Segregated subnode to the Stationary Solver node. Also see The Segregated Solver ( Termination Criterion for a Segregated Solver ).
+Termination Criterion: Solution
+For Termination criterion: Solution , the nonlinear iterations terminate when the following convergence criterion is satisfied: Let U be the current approximation to the true solution vector, and let E be the estimated error in this vector. The software stops the iterations when the relative tolerance exceeds the relative error computed as the following weighted Euclidean norm:
+Here M is the number of fields; N j is the number of degrees of freedom in field j . The double subscript denotes degree of freedom index ( i ) and field ( j ) component. Let W i,j = max ( | U i,j | , S j ), where S j is a scale factor that the solver determines from the scaling method. You select the scaling method from the Method list in the Scaling section of the Dependent Variables node’s Settings window. The solver then computes the scale factor S j using the following rules:
+•
+For Automatic , S j is the average of | U i,j | for all DOFs i for fixed j , times a factor equal to 10 − 5 for highly nonlinear problems or 0.1 otherwise.
+•
+For Manual , S j is the value given in the Scale field. S j is multiplied by a factor equal to 10 − 5 for highly nonlinear problems or 0.1 otherwise
+•
+For Initial value based , S j is the average of | V i,j | for all DOFs i with fixed j times a factor equal to 10 − 5 for highly nonlinear problems or 0.1 otherwise. V = U 0 is the solution vector corresponding to the initial value. In case all DOFs are zero for that particular field j , the total mean of | V i,j | for all i and j is used instead.
+•
+For None , W i,j = 1 . In this case, err is an estimate for the absolute error.
+The (automatically damped Newton) nonlinear solver only checks the convergence criterion if the damping factor for the current iteration is equal to 1 . The solver continues as long as the damping factor is not equal to 1 even if the estimated error is smaller than the requested relative tolerance.
+Termination Criterion: Residual
+For Termination criterion: Residual , the nonlinear iterations terminate when the following convergence criterion is satisfied: The software stops the iterations when the relative tolerance exceeds the relative error computed as the weighted Euclidean norm
+where F is the current residual. In the equation above, the double subscript denotes the degree of freedom index ( i ) and the field ( j ) component. The iterations can also terminate if the relative step size is in the range of a hundred machine epsilon, and in addition, a full Newton step is taken. The weights are determined considering both the initial residual f 0 and the residual after the first iteration f 1 as f = 0.5 | f 0 | + 0.5 | f 1 |. In the equation above, the double subscript denotes the degree of freedom index ( i ) and the field ( j ) component. The iterations can also terminate if the relative step size is in the range of a hundred machine epsilon and in addition a full Newton step is taken.
+You select the scaling method from the Method list in the Residual Scaling section of the Dependent Variables node’s Settings window. The solver then computes the weights using the following rules:
+•
+For Automatic , the weights are determined considering both the initial residual f 0 and the residual after the first iteration f 1 as . is the average of f i , j for all DOFs i for a fixed j . In case all f i , j are zero for that particular field j , the total mean of f i , j for all i and j is used instead.
+For time-dependent problems, the first time step calculates the weights based on f as above. Here f is considered as the base residual. In later time steps, the initial residual of the current step f 0 t and the residual after the first iteration of the current time step f 1 t will be considered together with the base residual f to determine whether the weights need to be updated for the current time step. The weights are calculated based on ( i = 0 or 1). The weights are updated as if the ratio / or / for a field j exceeds the threshold defined in the Threshold for updating residual scale field in the settings for a Dependent Variables node or its Field subnodes.
+•
+For Manual , the weights is the value given in the Scaling field.
+Additional information about the weights for time-dependent problems:
+•
+With consistent initialization active, the base residual f and the weights will be calculated during the consistent initialization and recalculated after the consistent initialization finishes.
+•
+When the weights for field j need to be updated, then the weights are updated for all fields solved for in the fully coupled solver or in the same segregated step.
+•
+For wave problems, the weights consist of two parts: the nonvelocity part and the velocity part . The weights are calculated using only the nonvelocity part of the residual f . The weights for the field j are defined to be proportional to the weights as . The proportional ratio r is a fieldwise quantity and is defined as , where F is the current residual. The weights are set to be 1 for the first iteration at the first time step. It is updated when the velocity part of the residual is nonzero for the first time. The velocity weights will be updated again when the nonvelocity weights are updated.
+Termination Criterion: Solution or Residual
+For Termination criterion: Solution or residual , the nonlinear iterations terminate when the relative tolerance exceeds the relative error computed as the minimum of the solution-based error and the error given by the Residual factor times the residual-based error above.
+Termination Criterion: Solution and Residual
+For Termination criterion: Solution and residual , the nonlinear iterations terminate the Newton iterations on a solution-based estimated relative error and a residual-based estimated relative error given by the Residual factor times the residual-based error above.
+Linear Solvers vs. Nonlinear Solvers
+Automatic Nonlinearity Detection
+COMSOL Multiphysics automatically detects nonlinearity, so you normally do not need to decide whether to use a linear or a nonlinear solver.
+The automatic detection works through analysis of the variables contributing to the residual Jacobian matrix and the constraint Jacobian matrix. If the algorithm finds that both these matrices are complete and do not depend on the solution, the stationary solver (including parametric sweeps) uses a linear solver algorithm. Otherwise, the solver uses a nonlinear solver algorithm. “Complete” here means that the algorithm only found contributing variables for which the correct Jacobian is computed.
+Overriding the Automatic Nonlinearity Detection
+In some cases you might want to specify explicitly that the stationary solver uses the linear or nonlinear solver algorithm. Such cases include:
+•
+Linear models where the automatic detection of linearity makes COMSOL Multiphysics use the nonlinear solver. This can happen, for example, for models that involve some less common types of coupling variables (directly or indirectly as part of some boundary conditions). The nonlinear solver usually converges directly for linear problems, but if that is not the case, you can switch to the linear solver.
+When using the Fully Coupled solver, you can furthermore
+•
+Use the linear solver to single-step Newton’s method for a nonlinear problem.
+•
+Use the linear solver to solve a linearized (nonlinear) problem. See the section about linearity in Stationary Solver for details on how the residual is assembled in this case.
+Which Models Are Nonlinear?
+How do you determine if a problem is linear or nonlinear? Finding out is not always easy, but for most physics you can apply the following criterion: If any coefficient or material property contains a dependent variable, the model is nonlinear. The same holds true for models based on a PDE in the coefficient form, again with the same criterion.
+There are some special cases that arise with some physics interfaces. First, in the Heat Transfer physics interfaces, if you include radiation terms for blackbody radiation, which depend on temperature according to the Stefan–Boltzmann law, the problem is nonlinear. Second, Single-Phase Flow is always nonlinear, unless the convective terms in the momentum equations have been omitted, resulting in the linear Stokes equations.
+Whether your problem is linear or nonlinear, the solvers break it down into one or several linear systems of equations. Therefore, the linear solver selection affects the solution time and memory requirements also for nonlinear models.
+Pseudo Time Stepping
+A pseudo time-stepping method is used in transport problems to stabilize the convergence toward steady state. Here an adaptive feedback controller controls a CFL (Courant–Friedrichs–Lewy) number, which is then used for pseudo time stepping. The CFL number starts from a moderate value (order one) and increases up to several orders of magnitude at convergence.
+A simple multiplicative PID controller for CFL control is used
+(20-7)
+where the controller parameters k P , k I , and k D for the proportional, integral, and derivative parts, respectively, are positive constants. Here e n is the nonlinear error estimate for step n and tol is a given target error estimate. CFL n is the built-in solver variable CFLCMP.
+•
+The first factor is nothing but a power of the current convergence rate (based on the last two steps), and is the most important part of this controller. If the error is decreasing, the controller increases the CFL number and if the error is increasing, the controller decreases the CFL number. The strength of this coupling (and the rapidness of this effect) is controlled by the parameter k P .
+•
+The next factor is used to control the CFL number toward the requested target error estimate. A standard local error estimate control uses only a factor of this sort, but for this type of control, the absolute level of the error is not that important. However, without this factor ( k I = 0 ), the CFL number might drift even though the error level is fluctuating on the same level. This factor can also be used to select an absolute regime for the error where increasing the CFL number should be more difficult.
+•
+The last factor is a derivative factor; it is affected by the change of the convergence rate.
+A hard lower limit is used, and to lower the risk of premature termination there is an extra requirement of not accepting convergence until .
+After each segregated solver iteration, the log reports the Pseudo time-stepping CFL-ratio defined as min ( log ( CFL )/ log ( CFL ∞ ), 1.0 ), where CFL ∞ = 10 4 is the steady-state CFL number. The CFL ratio concerns the overall progress of the segregated solver and not individual groups. Convergence is allowed when this number is one and the usual convergence criteria are met.
+Pseudo time stepping is available for stationary problems. In the coupled approach, it functions together with the constant damped Newton solver. See the settings for Fully Coupled and Segregated for related parameters.

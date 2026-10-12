@@ -1,0 +1,27 @@
+{
+  "correction": {
+    "start_ticks": 21948374686113,
+    "end_ticks": 21951866000450,
+    "limit_s": 1200,
+    "elapsed_s": 349.1314337
+  },
+  "static": {
+    "start_ticks": 21951866000450,
+    "limit_s": 300,
+    "end_ticks": 21952779477246,
+    "elapsed_s": 91.3476796
+  },
+  "plan_reseal": {
+    "start_ticks": 21951866000450,
+    "limit_s": 480,
+    "end_ticks": 21956100650776,
+    "elapsed_s": 423.4650326
+  },
+  "note": "Static data checks and validation-plan writing proceed in parallel in independent files. Each phase uses its own full wall-clock interval; total is measured from one origin, not the sum of overlapping intervals. No budget transfer.",
+  "preservation_delivery": {
+    "start_ticks": 21956100650776,
+    "limit_s": 300,
+    "state": "IN_PROGRESS; final snapshots outside ZIP",
+    "origin_scope": "Immediately after plan/reseal; includes pre-package metadata/return transcription"
+  }
+}

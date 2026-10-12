@@ -1,0 +1,25 @@
+{
+  "status": "OFFLINE_PREPARATION_SUBMITTED_WITH_FOUR_OPEN_ITEMS",
+  "native_ready": false,
+  "approved": false,
+  "usable": false,
+  "static_checks": 74,
+  "functional_tests": 0,
+  "native_JVM_compile_solve": 0,
+  "preparation_s": 1466.6525769,
+  "preparation_limit_s": 2400,
+  "static_s": 88.3800664,
+  "static_limit_s": 600,
+  "boundary": "BEFORE_PACKAGE_CREATION",
+  "snapshot": {
+    "utc": "2026-10-09T14:07:37.672202+00:00",
+    "monotonic_ticks": 20538579456070,
+    "total_elapsed_s": 1630.4865287,
+    "total_limit_s": 3600,
+    "delivery_elapsed_s": 75.4538854,
+    "delivery_limit_s": 480,
+    "folder_bytes": 2992415,
+    "folder_limit_bytes": 52428800
+  },
+  "recipient": null
+}

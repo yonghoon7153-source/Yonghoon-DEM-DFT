@@ -1,0 +1,24 @@
+{
+  "method": "Read submitted files as evidence; reviewer-owned ZIP/hash/CRC/AST/text data scripts only. No received candidate/module/tool/test execution.",
+  "external_sidecars": "Provided as chat JSON and tool-return transcriptions. Original sidecar file bytes were not included in the incoming archive and their byte hashes were not independently verified.",
+  "submitted_return_observations": [
+    {"chunk_id": "026d2f", "exit_code": 0, "overall_snapshot_s": 854.6730238, "delivery_snapshot_s": 82.0765575, "wall_time_s": 7.6169604},
+    {"chunk_id": "b608bf", "exit_code": 0, "overall_snapshot_s": 875.5703937, "delivery_snapshot_s": 102.9739274, "wall_time_s": 6.2478148}
+  ],
+  "timing_limit": "Snapshots precede external tool return and later transcription. Tool wall times are not added. No post-last-transcription total was observed.",
+  "remote_preservation_limit": "Supplied selected-source records agree for 112 items / 111 unique paths. Basis bytes are verified locally; no fresh remote OS or whole-machine preservation observation.",
+  "submitted_static_errors": ["8b5773 FileNotFoundError in own bootstrap path selection", "b41600 premature Get-Content of not-yet-written explanatory file"],
+  "reviewer_data_audit_error": {
+    "first_result": "122/123: review_text_original false",
+    "cause": "Reviewer selector included both root REVIEW_KO.md and nested received/reference/REVIEW_KO.md in the prior review archive.",
+    "correction": "Read the exact root REVIEW_KO.md entry; source and submitted bytes unchanged.",
+    "first_result_preserved": "DATA_AUDIT_ATTEMPT_01.json",
+    "corrected_result": "123/123",
+    "tool_returns": ["424425", "0d6e98"],
+    "is_candidate_functional_failure": false
+  },
+  "reviewer_data_audit_is_not_functional_validation": true,
+  "received_code_execution": 0,
+  "COMSOL_execution": 0,
+  "source_modification": 0
+}

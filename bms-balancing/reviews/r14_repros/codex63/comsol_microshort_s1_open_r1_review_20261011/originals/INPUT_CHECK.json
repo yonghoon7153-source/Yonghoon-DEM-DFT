@@ -1,0 +1,14 @@
+{
+  "input": {
+    "path": "C:\\Users\\Administrator\\Downloads\\COMSOL_MICROSHORT_S1_OPEN_CONNECTION_R1_20261010.zip",
+    "bytes": 4011062,
+    "sha256": "c9cf85b30f48fce0a8e747a8428b74b22a2d4c101498e2c0306720ed571fee0b"
+  },
+  "payload": 117,
+  "entries": 118,
+  "uncompressed_bytes": 5739527,
+  "exact_set_size_SHA_CRC_casefold_path_symlink": "PASS",
+  "package_manifest_sha256": "045bcfc47bdd5571ba045df5b60f700b07292775239af8f2de03f1d2205a7392",
+  "code_manifest_sha256": "feb12ef6991141aab59fd2fbc0d5f0d138bdd735255aa7123274503ce80b8ecc",
+  "received_code_executed": 0
+}

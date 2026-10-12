@@ -1,0 +1,1344 @@
+SolverSequence
+JavaScript is disabled on your browser.
+Skip navigation links
+Overview
+Package
+Class
+Tree
+Deprecated
+Index
+Help
+All Classes
+SEARCH:
+JavaScript is disabled on your browser.
+Summary:
+Nested |
+Field |
+Constr |
+Method
+Detail:
+Field |
+Constr |
+Method
+Package com.comsol.model
+Interface SolverSequence
+All Superinterfaces:
+ModelEntity , PrimitiveModelEntity
+public interface SolverSequence
+extends ModelEntity
+Solver sequence.
+Method Summary
+All Methods Instance Methods Abstract Methods Deprecated Methods
+Modifier and Type
+Method
+Description
+java.lang.String
+adaptationStudyFeature ()
+Returns path to adaptation study feature.
+void
+adaptationStudyFeature ​(java.lang.String tag)
+Sets adaptation study feature.
+void
+attach ​(java.lang.String study)
+Attaches solver sequence to a study.
+void
+clearSolution ()
+Deprecated.
+Clears the solution data associated with the solver sequence.
+void
+clearSolutionData ()
+Clears the solution data associated with the solver sequence.
+void
+continueRun ()
+Continues to run a solver sequence.
+void
+continueWithoutModelUpdate ()
+Continues to run a solver sequence without model update.
+void
+copySolution ​(java.lang.String fname)
+Copy the solution to a new solver sequence.
+SolverFeature
+create ​(java.lang.String tag,
+java.lang.String oper)
+Create a solver feature.
+void
+createAutoSequence ​(java.lang.String aSequence)
+Creates a solver sequence automatically from the study.
+void
+createAutoSequence ​(java.lang.String aSequence,
+boolean forceSequence)
+Creates a solver sequence automatically from the study.
+void
+createAutoSequence ​(java.lang.String aSequence,
+java.lang.String aStudyStep)
+Creates a solver sequence automatically from the study.
+void
+createSolution ()
+Create a solution.
+void
+detach ()
+Detaches solver sequence from its study.
+SolverFeatureList
+feature ()
+Returns all solver features.
+SolverFeature
+feature ​(java.lang.String tag)
+Returns solver feature.
+java.lang.String
+getClusterStorage ()
+Gets the solution storage format on cluster.
+int
+getDefaultSolnum ()
+Gets the default solution number.
+java.lang.String
+getErrorMessage ()
+Returns error message.
+java.lang.String
+getInformationMessage ()
+Returns information message.
+java.lang.String
+getMesh ​(java.lang.String geom)
+Returns mesh tag.
+java.lang.String
+getMesh ​(java.lang.String geom,
+int iMulti)
+Returns mesh tag.
+int
+getNStepsBack ​(java.lang.String field)
+Returns the number of steps back to a given analysis name or operation
+type.
+int
+getNStepsBack ​(java.lang.String[] field)
+Returns the number of steps back to where fields are last computed.
+int
+getNU ​(java.lang.String uType)
+Returns the number of solutions stored of a type.
+java.lang.String[]
+getParamNames ()
+Returns the parameter names.
+double[]
+getParamVals ()
+Returns the parameter values.
+java.lang.String
+getPartitioningMethod ()
+Gets the partitioning method on cluster.
+java.lang.String[]
+getPNames ()
+Gets parameter names.
+double[]
+getPVals ()
+Returns for a solution of Parametric type the real part of all the
+parameter values stored.
+double[]
+getPVals ​(int solnum)
+Returns for a solution of Parametric type the real part of all the
+parameter values stored for a solution number.
+double[]
+getPValsImag ()
+Gets the imaginary part of the parameter values for the default
+solution number.
+double[]
+getPValsImag ​(int solnum)
+Gets the imaginary part of the parameter values for a solution number.
+java.lang.String
+getSavePointTag ()
+Returns the tag of the associated save point, or an empty string if
+there is no save point.
+java.lang.String
+getSequenceType ()
+Get sequence type.
+int[]
+getSize ()
+Returns an array of sizes for the solution data.
+int[]
+getSize ​(int iMulti)
+Returns an array of sizes for the solution data.
+int[]
+getSizeMulti ()
+Returns an array of sizes for the solution data.
+SolutionInfo
+getSolutioninfo ()
+Returns solution info object.
+java.lang.String
+getType ()
+Get solution type.
+double[]
+getU ()
+Retrieves the real part of the solution vector using a default
+solution number.
+double[]
+getU ​(int solnum)
+Returns the real part of the solution vector for a solution number.
+double[]
+getU ​(int solnum,
+java.lang.String uType)
+Returns the real part of the solution vector for a solution number.
+double[]
+getU ​(int solnum,
+java.lang.String uType,
+int uNum)
+Returns the real part of the solution vector for a solution number.
+double[]
+getU ​(int solnum,
+java.lang.String uType,
+int uNum,
+int nStepsBack)
+Returns the real part of the solution vector for a solution number.
+double[]
+getUBlock ​(int start,
+int stop)
+Gets blocks of real part of the solution vector solution for a default
+solution number.
+double[]
+getUBlock ​(int solnum,
+int start,
+int stop)
+Gets blocks of real part of the solution vector solution for a default
+solution number.
+double[]
+getUBlock ​(int solnum,
+java.lang.String uType,
+int start,
+int stop)
+Gets blocks of real part of the solution vector solution for a default
+solution number.
+double[]
+getUBlock ​(int solnum,
+java.lang.String uType,
+int uNum,
+int start,
+int stop)
+Gets blocks of real part of the solution vector solution for a default
+solution number.
+double[]
+getUDot ()
+Gets real part of the first time-derivative of the solution vector.
+double[]
+getUDot ​(int solnum)
+Gets real part of the first time-derivative of the solution vector for
+a solution number.
+double[]
+getUDotBlock ​(int start,
+int stop)
+Gets blocks of real part of the time-derivative of the solution vector
+solution for a default solution number.
+double[]
+getUDotBlock ​(int solnum,
+int start,
+int stop)
+Gets blocks of real part of the time-derivative of the solution vector
+solution for a default solution number.
+double[]
+getUDotImag ()
+Gets imaginary part of first time-derivative solution vector for the
+default solution number.
+double[]
+getUDotImag ​(int solnum)
+Gets imaginary part of first time-derivative solution vector for the
+default solution number.
+double[]
+getUDotImagBlock ​(int start,
+int stop)
+Gets blocks of imaginary part of the time-derivative of the solution
+vector solution for a default solution number.
+double[]
+getUDotImagBlock ​(int solnum,
+int start,
+int stop)
+Gets blocks of imaginary part of the time-derivative of the solution
+vector solution for a default solution number.
+double[]
+getUImag ()
+Gets imaginary part of the solution vector for default solution
+number.
+double[]
+getUImag ​(int solnum)
+Gets imaginary part of the solution vector for a solution number.
+double[]
+getUImag ​(int solnum,
+java.lang.String uType)
+Gets imaginary part of the solution vector for a solution number.
+double[]
+getUImag ​(int solnum,
+java.lang.String uType,
+int uNum)
+Gets imaginary part of the solution vector for a solution number.
+double[]
+getUImagBlock ​(int start,
+int stop)
+Gets blocks of imaginary part of the solution vector solution for a
+default solution number.
+double[]
+getUImagBlock ​(int solnum,
+int start,
+int stop)
+Gets blocks of imaginary part of the solution vector solution for a
+default solution number.
+double[]
+getUImagBlock ​(int solnum,
+java.lang.String uType,
+int start,
+int stop)
+Gets blocks of imaginary part of the solution vector solution for a
+default solution number.
+double[]
+getUImagBlock ​(int solnum,
+java.lang.String uType,
+int uNum,
+int start,
+int stop)
+Gets blocks of imaginary part of the solution vector solution for a
+default solution number.
+java.lang.String
+getWarningMessage ()
+Returns warning message.
+boolean
+hasProblems ()
+Returns true if solver sequence has problems.
+boolean
+hasProblemsOrInformation ()
+Returns true if solver sequence has problems or
+information nodes.
+boolean
+isAttached ()
+Test if solver sequence is attached to a study.
+boolean
+isEmpty ()
+Checks if the solutions associated with the solver sequence are empty.
+boolean
+isInitialized ()
+Returns true if the solution is initialized.
+boolean
+isRealPVals ()
+Returns true if the parameters are real.
+boolean
+isRealU ()
+Returns true if the solution is real.
+boolean
+isRealU ​(int solnum)
+Returns true if the solution is real.
+boolean
+isRealU ​(int solnum,
+java.lang.String uType)
+Returns true if the solution is real.
+boolean
+isRealU ​(int solnum,
+java.lang.String uType,
+int uNum)
+Returns true if the solution is real.
+boolean
+isRealUDot ()
+Returns true if the time-derivative of the solution is real.
+boolean
+isRealUDot ​(int solnum)
+Returns true if the time-derivative of the solution is real.
+void
+run ()
+Runs solver sequence.
+void
+run ​(boolean createPlots)
+Runs solver sequence.
+void
+run ​(java.lang.String fname)
+Runs the features in a solver sequence to a feature.
+void
+run ​(java.lang.String fname,
+boolean createPlots)
+Runs the features in a solver sequence to a feature.
+void
+runAll ()
+Runs all solver sequence.
+void
+runAll ​(boolean createPlots)
+Runs all solver sequence.
+void
+runAllWithoutModelUpdate ()
+Runs solver sequence without model update.
+void
+runFrom ​(java.lang.String fname)
+Runs the features for a solver sequence from a feature.
+void
+runFrom ​(java.lang.String fname,
+boolean createPlots)
+Runs the features for a solver sequence from a feature.
+void
+runFromTo ​(java.lang.String fstartname,
+java.lang.String fstopname)
+Runs the features in a solver sequence from a feature to a feature.
+void
+runFromTo ​(java.lang.String fstartname,
+java.lang.String fstopname,
+boolean createPlots)
+Runs the features in a solver sequence from a feature to a feature.
+void
+setClusterStorage ​(java.lang.String format)
+Sets the solution storage format on cluster.
+void
+setPartitioningMethod ​(java.lang.String format)
+Sets the partitioning method on cluster.
+void
+setPNames ​(java.lang.String[] names)
+Sets parameter names of solution.
+void
+setPVals ​(double[] val)
+Sets real part of parameter values of solution.
+void
+setPVals ​(int solnum,
+double[] val)
+Sets real part of parameter values of solution for solution number.
+void
+setPValsImag ​(double[] val)
+Sets imaginary part of parameter values of solution.
+void
+setPValsImag ​(int solnum,
+double[] val)
+Sets imaginary part of parameter values of solution.
+void
+setU ​(double[] val)
+Sets real part of solution vector.
+void
+setU ​(int solnum,
+double[] val)
+Sets real part of solution vector for a solution number.
+void
+setUBlock ​(double[] val,
+int start)
+Sets blocks of the real part of the solution vector.
+void
+setUBlock ​(int solnum,
+double[] val,
+int start)
+Sets blocks of the real part of the solution vector.
+void
+setUDot ​(double[] val)
+Sets real part of time-derivative of the solution vector.
+void
+setUDot ​(int solnum,
+double[] val)
+Sets real part of time-derivative of the solution vector for a
+solution number.
+void
+setUDotBlock ​(double[] val,
+int start)
+Sets blocks of the time derivative of the real part of the solution
+vector.
+void
+setUDotBlock ​(int solnum,
+double[] val,
+int start)
+Sets blocks of the time derivative of the real part of the solution
+vector.
+void
+setUDotImag ​(double[] val)
+Sets imaginary part of time-derivative of the solution vector.
+void
+setUDotImag ​(int solnum,
+double[] val)
+Sets imaginary part of time-derivative of the solution vector for a
+solution number.
+void
+setUDotImagBlock ​(double[] val,
+int start)
+Sets blocks of the time derivative of the imaginary part of the
+solution vector.
+void
+setUDotImagBlock ​(int solnum,
+double[] val,
+int start)
+Sets blocks of the time derivative of the imaginary part of the
+solution vector.
+void
+setUImag ​(double[] val)
+Sets imaginary part of solution vector.
+void
+setUImag ​(int solnum,
+double[] val)
+Sets imaginary part of solution vector.
+void
+setUImagBlock ​(double[] val,
+int start)
+Sets blocks of the imaginary part of the solution vector.
+void
+setUImagBlock ​(int solnum,
+double[] val,
+int start)
+Sets blocks of the imaginary part of the solution vector.
+void
+setupDomainDecompositionSolver ​(java.lang.String solverOperationID)
+Setup a domain decomposition solver based on the current solver.
+java.lang.String
+study ()
+Returns the study tag of a solver sequence.
+void
+study ​(java.lang.String tag)
+Assigns a solver sequence to a study.
+void
+updateSolution ()
+Updates a solver sequence to make it up to date with respect to the
+current model.
+XmeshInfo
+xmeshInfo ()
+Returns extended mesh information for solution.
+XmeshInfo
+xmeshInfo ​(int iMulti)
+Returns extended mesh information for solution iMulti of multi
+solution object.
+XmeshInfo
+xmeshInfo ​(java.lang.String meshCase)
+Returns extended mesh information for solution for mesh case.
+Methods inherited from interface com.comsol.model. ModelEntity
+active , author , author , comments , comments , dateCreated , dateModified , docMarker , docMarker , help , help , icon , isactive , isActive , label , label , lastModifiedBy , model , model , name , name , resetAuthor , scope , tag , tag , timeCreated , timeModified , version , version
+Methods inherited from interface com.comsol.model. PrimitiveModelEntity
+getContainer , getDisplayString , resolveModelPath
+Method Detail
+adaptationStudyFeature
+java.lang.String adaptationStudyFeature()
+Returns path to adaptation study feature.
+Returns:
+Path to adaptation study feature.
+adaptationStudyFeature
+void adaptationStudyFeature​(java.lang.String tag)
+Sets adaptation study feature.
+Parameters:
+tag - A path of tags to the adaptation study feature.
+attach
+void attach​(java.lang.String study)
+Attaches solver sequence to a study.
+Parameters:
+study - Study tag.
+clearSolution
+@Deprecated
+void clearSolution()
+Deprecated.
+Clears the solution data associated with the solver sequence. Prefer using clearSolutionData() instead that generally works as expected.
+clearSolutionData
+void clearSolutionData()
+Clears the solution data associated with the solver sequence. The
+features are not changed. Result features are unaffected.
+continueRun
+void continueRun()
+Continues to run a solver sequence.
+continueWithoutModelUpdate
+void continueWithoutModelUpdate()
+Continues to run a solver sequence without model update.
+copySolution
+void copySolution​(java.lang.String fname)
+Copy the solution to a new solver sequence.
+Parameters:
+fname - Tag of the new solution.
+create
+SolverFeature create​(java.lang.String tag,
+java.lang.String oper)
+Create a solver feature.
+Parameters:
+tag - Feature tag.
+oper - Type of feature.
+Returns:
+Created solver feature.
+createAutoSequence
+void createAutoSequence​(java.lang.String aSequence)
+Creates a solver sequence automatically from the study.
+Parameters:
+aSequence - Study tag of the study to generate the solver sequence from.
+createAutoSequence
+void createAutoSequence​(java.lang.String aSequence,
+java.lang.String aStudyStep)
+Creates a solver sequence automatically from the study.
+Parameters:
+aSequence - Study tag of the study to generate the solver sequence from.
+aStudyStep - Tag of the study step to create the relevant solver sequence branch.
+createAutoSequence
+void createAutoSequence​(java.lang.String aSequence,
+boolean forceSequence)
+Creates a solver sequence automatically from the study.
+Parameters:
+aSequence - Study tag of the study to generate the solver sequence from.
+forceSequence - Always create a sequence if true.
+createSolution
+void createSolution()
+Create a solution.
+detach
+void detach()
+Detaches solver sequence from its study.
+feature
+SolverFeatureList feature()
+Returns all solver features.
+Returns:
+List of solver features.
+feature
+SolverFeature feature​(java.lang.String tag)
+Returns solver feature.
+Parameters:
+tag - Solver feature tag.
+Returns:
+Solver feature.
+getClusterStorage
+java.lang.String getClusterStorage()
+Gets the solution storage format on cluster.
+Returns:
+Storage format.
+getDefaultSolnum
+int getDefaultSolnum()
+Gets the default solution number.
+Returns:
+Default solution number.
+getErrorMessage
+java.lang.String getErrorMessage()
+Returns error message.
+Returns:
+Error message.
+getInformationMessage
+java.lang.String getInformationMessage()
+Returns information message.
+Returns:
+Information message.
+getMesh
+java.lang.String getMesh​(java.lang.String geom)
+Returns mesh tag.
+Parameters:
+geom - Geometry tag.
+Returns:
+Mesh tag.
+getMesh
+java.lang.String getMesh​(java.lang.String geom,
+int iMulti)
+Returns mesh tag.
+Parameters:
+geom - Geometry tag.
+iMulti - Local solution number in multi solution.
+Returns:
+Mesh tag.
+getNStepsBack
+int getNStepsBack​(java.lang.String field)
+Returns the number of steps back to a given analysis name or operation
+type.
+Parameters:
+field - Field name.
+Returns:
+Number of steps back.
+getNStepsBack
+int getNStepsBack​(java.lang.String[] field)
+Returns the number of steps back to where fields are last computed.
+Parameters:
+field - Field name.
+Returns:
+Number of steps back.
+getNU
+int getNU​(java.lang.String uType)
+Returns the number of solutions stored of a type.
+Parameters:
+uType - Type of solution: Sol (main solution),
+Reacf (reaction force), Adj
+(adjoint solution), Fsens (functional
+sensitivity), and Sens (forward sensitivity).
+Returns:
+Number of solutions.
+getPNames
+java.lang.String[] getPNames()
+Gets parameter names.
+Returns:
+Parameter names.
+getPVals
+double[] getPVals()
+Returns for a solution of Parametric type the real part of all the
+parameter values stored.
+Returns:
+Real part of parameter values.
+getPVals
+double[] getPVals​(int solnum)
+Returns for a solution of Parametric type the real part of all the
+parameter values stored for a solution number.
+Parameters:
+solnum - Solution number.
+Returns:
+Real part of parameter values.
+getPValsImag
+double[] getPValsImag()
+Gets the imaginary part of the parameter values for the default
+solution number.
+Returns:
+Imaginary part of the parameter values.
+getPValsImag
+double[] getPValsImag​(int solnum)
+Gets the imaginary part of the parameter values for a solution number.
+Parameters:
+solnum - Solution number.
+Returns:
+Imaginary part of the parameter values.
+getParamNames
+java.lang.String[] getParamNames()
+Returns the parameter names.
+Returns:
+Parameter names.
+getParamVals
+double[] getParamVals()
+Returns the parameter values.
+Returns:
+Parameter values.
+getPartitioningMethod
+java.lang.String getPartitioningMethod()
+Gets the partitioning method on cluster.
+Returns:
+Partitioning method.
+getSavePointTag
+java.lang.String getSavePointTag()
+Returns the tag of the associated save point, or an empty string if
+there is no save point.
+Returns:
+Save point tag.
+getSequenceType
+java.lang.String getSequenceType()
+Get sequence type.
+Returns:
+Types: SolverSequence ,
+CopySolution ,
+ParametricStore , Stored ,
+Parametric , or None .
+getSize
+int[] getSize()
+Returns an array of sizes for the solution data.
+Returns:
+The number of degrees of freedoms is stored in the first position and
+the number of solutions (solnums) in the second.
+getSize
+int[] getSize​(int iMulti)
+Returns an array of sizes for the solution data.
+Parameters:
+iMulti - Local solution number in multi solution.
+Returns:
+The number of local degrees of freedoms is stored in the first
+position and the number of local solutions (local solnums) in the
+second.
+getSizeMulti
+int[] getSizeMulti()
+Returns an array of sizes for the solution data.
+Returns:
+The number of local solutions in multi solution in the first position
+and the number of solutions (solnums) in the second.
+getSolutioninfo
+SolutionInfo getSolutioninfo()
+Returns solution info object.
+Returns:
+Solution info object.
+getType
+java.lang.String getType()
+Get solution type.
+Returns:
+Solution type:
+Stationary , Parametric ,
+Time , or Eigenvalue .
+getU
+double[] getU()
+Retrieves the real part of the solution vector using a default
+solution number.
+Returns:
+Real part of solution vector.
+getU
+double[] getU​(int solnum)
+Returns the real part of the solution vector for a solution number.
+Parameters:
+solnum - Solution number.
+Returns:
+Real part of solution vector.
+getU
+double[] getU​(int solnum,
+java.lang.String uType)
+Returns the real part of the solution vector for a solution number.
+Parameters:
+solnum - Solution number.
+uType - Real part of solution vector.
+Returns:
+Real part of solution vector.
+getU
+double[] getU​(int solnum,
+java.lang.String uType,
+int uNum)
+Returns the real part of the solution vector for a solution number.
+Parameters:
+solnum - Solution number.
+uType - Solution type.
+uNum - Solution index.
+Returns:
+Real part of solution vector.
+getU
+double[] getU​(int solnum,
+java.lang.String uType,
+int uNum,
+int nStepsBack)
+Returns the real part of the solution vector for a solution number.
+Parameters:
+solnum - Solution number.
+uType - Solution type.
+uNum - Solution index.
+nStepsBack - Linked solution number.
+Returns:
+Real part of solution vector.
+getUBlock
+double[] getUBlock​(int start,
+int stop)
+Gets blocks of real part of the solution vector solution for a default
+solution number.
+Parameters:
+start - Start index.
+stop - Stop index.
+Returns:
+Real part of solution vector.
+getUBlock
+double[] getUBlock​(int solnum,
+int start,
+int stop)
+Gets blocks of real part of the solution vector solution for a default
+solution number.
+Parameters:
+solnum - Solution number.
+start - Start index.
+stop - Stop index.
+Returns:
+Real part of solution vector.
+getUBlock
+double[] getUBlock​(int solnum,
+java.lang.String uType,
+int start,
+int stop)
+Gets blocks of real part of the solution vector solution for a default
+solution number.
+Parameters:
+solnum - Solution number.
+uType - Solution type.
+start - Start index.
+stop - stop.
+Returns:
+Real part of solution vector.
+getUBlock
+double[] getUBlock​(int solnum,
+java.lang.String uType,
+int uNum,
+int start,
+int stop)
+Gets blocks of real part of the solution vector solution for a default
+solution number.
+Parameters:
+solnum - Solution number.
+uType - Solution type.
+uNum - Solution INDEX.
+start - Start index.
+stop - Stop index.
+Returns:
+Real part of solution vector.
+getUDot
+double[] getUDot()
+Gets real part of the first time-derivative of the solution vector.
+Returns:
+Real part of first time-derivative of the solution vector.
+getUDot
+double[] getUDot​(int solnum)
+Gets real part of the first time-derivative of the solution vector for
+a solution number.
+Parameters:
+solnum - Solution number.
+Returns:
+Real part of first time-derivative of the solution vector.
+getUDotBlock
+double[] getUDotBlock​(int start,
+int stop)
+Gets blocks of real part of the time-derivative of the solution vector
+solution for a default solution number.
+Parameters:
+start - Start index.
+stop - Stop index.
+Returns:
+Real part of time-derivative of solution vector.
+getUDotBlock
+double[] getUDotBlock​(int solnum,
+int start,
+int stop)
+Gets blocks of real part of the time-derivative of the solution vector
+solution for a default solution number.
+Parameters:
+solnum - Solution number.
+start - Start index.
+stop - stop index.
+Returns:
+Real part of time-derivative of solution vector.
+getUDotImag
+double[] getUDotImag()
+Gets imaginary part of first time-derivative solution vector for the
+default solution number.
+Returns:
+Imaginary part of first time-derivative solution vector.
+getUDotImag
+double[] getUDotImag​(int solnum)
+Gets imaginary part of first time-derivative solution vector for the
+default solution number.
+Parameters:
+solnum - Solution number.
+Returns:
+Imaginary part of first time-derivative solution vector.
+getUDotImagBlock
+double[] getUDotImagBlock​(int start,
+int stop)
+Gets blocks of imaginary part of the time-derivative of the solution
+vector solution for a default solution number.
+Parameters:
+start - Start index.
+stop - Stop index.
+Returns:
+Imaginary part of time-derivative of the solution vector.
+getUDotImagBlock
+double[] getUDotImagBlock​(int solnum,
+int start,
+int stop)
+Gets blocks of imaginary part of the time-derivative of the solution
+vector solution for a default solution number.
+Parameters:
+solnum - Solution number.
+start - Start index.
+stop - Stop index.
+Returns:
+Imaginary part of time-derivative of the solution vector.
+getUImag
+double[] getUImag()
+Gets imaginary part of the solution vector for default solution
+number.
+Returns:
+Imaginary part of the solution vector.
+getUImag
+double[] getUImag​(int solnum)
+Gets imaginary part of the solution vector for a solution number.
+Parameters:
+solnum - Solution number.
+Returns:
+Imaginary part of the solution vector.
+getUImag
+double[] getUImag​(int solnum,
+java.lang.String uType)
+Gets imaginary part of the solution vector for a solution number.
+Parameters:
+solnum - Solution number.
+uType - Solution type.
+Returns:
+Imaginary part of the solution vector.
+getUImag
+double[] getUImag​(int solnum,
+java.lang.String uType,
+int uNum)
+Gets imaginary part of the solution vector for a solution number.
+Parameters:
+solnum - Solution number.
+uType - Solution type.
+uNum - Solution index.
+Returns:
+Imaginary part of the solution vector.
+getUImagBlock
+double[] getUImagBlock​(int start,
+int stop)
+Gets blocks of imaginary part of the solution vector solution for a
+default solution number.
+Parameters:
+start - Start index.
+stop - Stop index.
+Returns:
+Imaginary part of solution vector.
+getUImagBlock
+double[] getUImagBlock​(int solnum,
+int start,
+int stop)
+Gets blocks of imaginary part of the solution vector solution for a
+default solution number.
+Parameters:
+solnum - Solution number.
+start - Start index.
+stop - Stop index.
+Returns:
+Imaginary part of solution vector.
+getUImagBlock
+double[] getUImagBlock​(int solnum,
+java.lang.String uType,
+int start,
+int stop)
+Gets blocks of imaginary part of the solution vector solution for a
+default solution number.
+Parameters:
+solnum - Solution number.
+uType - Solution type.
+start - Start index.
+stop - Stop index.
+Returns:
+Imaginary part of solution vector.
+getUImagBlock
+double[] getUImagBlock​(int solnum,
+java.lang.String uType,
+int uNum,
+int start,
+int stop)
+Gets blocks of imaginary part of the solution vector solution for a
+default solution number.
+Parameters:
+solnum - Solution number.
+uType - Solution type.
+uNum - Solution index.
+start - Start index.
+stop - Stop index.
+Returns:
+Imaginary part of solution vector.
+getWarningMessage
+java.lang.String getWarningMessage()
+Returns warning message.
+Returns:
+Warning message.
+hasProblems
+boolean hasProblems()
+Returns true if solver sequence has problems.
+Returns:
+true if solver sequence has problems.
+hasProblemsOrInformation
+boolean hasProblemsOrInformation()
+Returns true if solver sequence has problems or
+information nodes.
+Returns:
+true if solver sequence has problems or information
+nodes.
+isAttached
+boolean isAttached()
+Test if solver sequence is attached to a study.
+Returns:
+true if attached.
+isEmpty
+boolean isEmpty()
+Checks if the solutions associated with the solver sequence are empty.
+Returns:
+true if empty.
+isInitialized
+boolean isInitialized()
+Returns true if the solution is initialized.
+Returns:
+true if solution is initialized.
+isRealPVals
+boolean isRealPVals()
+Returns true if the parameters are real.
+Returns:
+true if parameters are real.
+isRealU
+boolean isRealU()
+Returns true if the solution is real.
+Returns:
+true if solution is real.
+isRealU
+boolean isRealU​(int solnum)
+Returns true if the solution is real.
+Parameters:
+solnum - Solution number.
+Returns:
+true if solution is real.
+isRealU
+boolean isRealU​(int solnum,
+java.lang.String uType)
+Returns true if the solution is real.
+Parameters:
+solnum - Solution number.
+uType - Solution type.
+Returns:
+true if solution is real.
+isRealU
+boolean isRealU​(int solnum,
+java.lang.String uType,
+int uNum)
+Returns true if the solution is real.
+Parameters:
+solnum - Solution number.
+uType - Solution type.
+uNum - Solution index.
+Returns:
+true if solution is real.
+isRealUDot
+boolean isRealUDot()
+Returns true if the time-derivative of the solution is real.
+Returns:
+true if parameters are real.
+isRealUDot
+boolean isRealUDot​(int solnum)
+Returns true if the time-derivative of the solution is real.
+Parameters:
+solnum - Solution number.
+Returns:
+true if parameters are real.
+run
+void run()
+Runs solver sequence.
+run
+void run​(java.lang.String fname)
+Runs the features in a solver sequence to a feature.
+Parameters:
+fname - Run to this feature.
+run
+void run​(boolean createPlots)
+Runs solver sequence.
+Parameters:
+createPlots - Create plots.
+run
+void run​(java.lang.String fname,
+boolean createPlots)
+Runs the features in a solver sequence to a feature.
+Parameters:
+fname - Run to this feature.
+createPlots - Create plots.
+runAll
+void runAll()
+Runs all solver sequence.
+runAll
+void runAll​(boolean createPlots)
+Runs all solver sequence.
+Parameters:
+createPlots - Create plots.
+runAllWithoutModelUpdate
+void runAllWithoutModelUpdate()
+Runs solver sequence without model update.
+runFrom
+void runFrom​(java.lang.String fname)
+Runs the features for a solver sequence from a feature.
+Parameters:
+fname - Run from this feature.
+runFrom
+void runFrom​(java.lang.String fname,
+boolean createPlots)
+Runs the features for a solver sequence from a feature.
+Parameters:
+fname - Run from this feature.
+createPlots - Create plots.
+runFromTo
+void runFromTo​(java.lang.String fstartname,
+java.lang.String fstopname)
+Runs the features in a solver sequence from a feature to a feature.
+Parameters:
+fstartname - Run from feature.
+fstopname - Run to feature.
+runFromTo
+void runFromTo​(java.lang.String fstartname,
+java.lang.String fstopname,
+boolean createPlots)
+Runs the features in a solver sequence from a feature to a feature.
+Parameters:
+fstartname - Run from feature.
+fstopname - Run to feature.
+createPlots - Create plots.
+setClusterStorage
+void setClusterStorage​(java.lang.String format)
+Sets the solution storage format on cluster.
+Parameters:
+format - Type of cluster storage format: all (Solution is
+stored on all nodes), single (Only a single node
+stores the entire solution), shared (All nodes
+access the solution from the same file).
+setPNames
+void setPNames​(java.lang.String[] names)
+Sets parameter names of solution.
+Parameters:
+names - Parameter names.
+setPVals
+void setPVals​(double[] val)
+Sets real part of parameter values of solution.
+Parameters:
+val - Parameter values.
+setPVals
+void setPVals​(int solnum,
+double[] val)
+Sets real part of parameter values of solution for solution number.
+Parameters:
+solnum - Solution number.
+val - Imaginary part of parameter values.
+setPValsImag
+void setPValsImag​(double[] val)
+Sets imaginary part of parameter values of solution.
+Parameters:
+val - Imaginary part of parameter values.
+setPValsImag
+void setPValsImag​(int solnum,
+double[] val)
+Sets imaginary part of parameter values of solution.
+Parameters:
+solnum - Solution number.
+val - Imaginary part of parameter values.
+setPartitioningMethod
+void setPartitioningMethod​(java.lang.String format)
+Sets the partitioning method on cluster.
+Parameters:
+format - Type of partitioning method: mo (Mesh ordering),
+nd (Nested dissection), wnd
+(Weighted nested dissection), off (Off).
+setU
+void setU​(double[] val)
+Sets real part of solution vector.
+Parameters:
+val - Solution vector.
+setU
+void setU​(int solnum,
+double[] val)
+Sets real part of solution vector for a solution number.
+Parameters:
+solnum - Solution number.
+val - Solution vector.
+setUBlock
+void setUBlock​(double[] val,
+int start)
+Sets blocks of the real part of the solution vector.
+Parameters:
+val - Solution vector.
+start - start.
+setUBlock
+void setUBlock​(int solnum,
+double[] val,
+int start)
+Sets blocks of the real part of the solution vector.
+Parameters:
+solnum - Solution number.
+val - Solution vector.
+start - Start index.
+setUDot
+void setUDot​(double[] val)
+Sets real part of time-derivative of the solution vector.
+Parameters:
+val - Solution vector.
+setUDot
+void setUDot​(int solnum,
+double[] val)
+Sets real part of time-derivative of the solution vector for a
+solution number.
+Parameters:
+solnum - Solution number.
+val - Solution vector.
+setUDotBlock
+void setUDotBlock​(double[] val,
+int start)
+Sets blocks of the time derivative of the real part of the solution
+vector.
+Parameters:
+val - Solution vector.
+start - Start index.
+setUDotBlock
+void setUDotBlock​(int solnum,
+double[] val,
+int start)
+Sets blocks of the time derivative of the real part of the solution
+vector.
+Parameters:
+solnum - Solution number.
+val - Solution vector.
+start - Start index.
+setUDotImag
+void setUDotImag​(double[] val)
+Sets imaginary part of time-derivative of the solution vector.
+Parameters:
+val - Solution vector.
+setUDotImag
+void setUDotImag​(int solnum,
+double[] val)
+Sets imaginary part of time-derivative of the solution vector for a
+solution number.
+Parameters:
+solnum - Solution number.
+val - Solution vector.
+setUDotImagBlock
+void setUDotImagBlock​(double[] val,
+int start)
+Sets blocks of the time derivative of the imaginary part of the
+solution vector.
+Parameters:
+val - Solution vector.
+start - Start index.
+setUDotImagBlock
+void setUDotImagBlock​(int solnum,
+double[] val,
+int start)
+Sets blocks of the time derivative of the imaginary part of the
+solution vector.
+Parameters:
+solnum - Solution number.
+val - Solution vector.
+start - Start index.
+setUImag
+void setUImag​(double[] val)
+Sets imaginary part of solution vector.
+Parameters:
+val - Solution vector.
+setUImag
+void setUImag​(int solnum,
+double[] val)
+Sets imaginary part of solution vector.
+Parameters:
+solnum - Solution number.
+val - Solution vector.
+setUImagBlock
+void setUImagBlock​(double[] val,
+int start)
+Sets blocks of the imaginary part of the solution vector.
+Parameters:
+val - Solution vector.
+start - Start index.
+setUImagBlock
+void setUImagBlock​(int solnum,
+double[] val,
+int start)
+Sets blocks of the imaginary part of the solution vector.
+Parameters:
+solnum - Solution number.
+val - Solution vector.
+start - Start index.
+setupDomainDecompositionSolver
+void setupDomainDecompositionSolver​(java.lang.String solverOperationID)
+Setup a domain decomposition solver based on the current solver.
+Parameters:
+solverOperationID - Type of domain decomposition solver.
+study
+java.lang.String study()
+Returns the study tag of a solver sequence.
+Returns:
+Study tag.
+study
+void study​(java.lang.String tag)
+Assigns a solver sequence to a study.
+Parameters:
+tag - Study tag.
+updateSolution
+void updateSolution()
+Updates a solver sequence to make it up to date with respect to the
+current model.
+xmeshInfo
+XmeshInfo xmeshInfo()
+Returns extended mesh information for solution.
+Returns:
+Extended mesh information.
+xmeshInfo
+XmeshInfo xmeshInfo​(java.lang.String meshCase)
+Returns extended mesh information for solution for mesh case.
+Parameters:
+meshCase - Mesh case.
+Returns:
+Extended mesh information.
+xmeshInfo
+XmeshInfo xmeshInfo​(int iMulti)
+Returns extended mesh information for solution iMulti of multi
+solution object.
+Parameters:
+iMulti - Local solution number in multi solution.
+Returns:
+Extended mesh information for solution iMulti of multi solution
+object.
+Skip navigation links
+Overview
+Package
+Class
+Tree
+Deprecated
+Index
+Help
+All Classes
+JavaScript is disabled on your browser.
+Summary:
+Nested |
+Field |
+Constr |
+Method
+Detail:
+Field |
+Constr |
+Method

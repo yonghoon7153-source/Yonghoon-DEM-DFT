@@ -1,0 +1,33 @@
+Automatic Remeshing
+Automatic Remeshing
+The Automatic Remeshing node ( ) is an attribute that adds automatic remeshing. The remeshing occurs when the mesh quality falls below a specified value. It is added if you have selected the Automatic remeshing checkbox for an auxiliary sweep in the Study Extension section in the settings for a Stationary study step, for example. It can also be used together with The Moving Mesh Interface to assure a satisfactory mesh quality throughout the simulation. Right-click a Time-Dependent Solver operation node to add it.
+AutoRemesh in the COMSOL Multiphysics Programming Reference Manual .
+General
+The software only performs automatic remeshing in one geometry. Use the Remesh in geometry list to specify that geometry if the model contains more than one geometry.
+Conditions for Remeshing
+From the Condition type list, choose between different types of conditions for when remeshing should occur. Select:
+•
+Mesh quality (the default). The solver remeshes when the mesh quality becomes less than a given limit. Edit the Mesh quality expression as needed, or click the Replace Expression button ( ) to choose another expression. Edit the limit in the Stop when mesh quality is below field (default value: 0.2).
+•
+Distortion . The solver remeshes when the distortion that the mesh has undergone becomes larger than a given limit. Edit the Distortion expression or click the Replace Expression button ( ) and choose another expression for the distortion if desired. Edit the limit in the Stop when distortion exceeds field (default: 2) if desired. The condition for stopping is (for a model component called comp1 )
+sqrt(comp1.material.I1isoMax) > 2
+The variable comp1.material.I1isoMax is the (nonnegative) first invariant of the isochoric Green–Lagrange strain, E iso , defined as
+where F is the deformation gradient, J its determinant, and n is the space dimension. When the distortion is small, the following approximation is applicable:
+•
+General . The solver remeshes when a logical condition becomes true. Edit the condition in the Stop when condition is true field or click the Replace Expression button ( ) and choose another expression.
+•
+Specified times . The solver remeshes at the specified times that you enter in the Remeshing times field. Use the Range button ( ) if desired to specify a range of times.
+•
+Specified time step . The solver remeshes after a specific time step, which you enter in the Remeshing time step field. If desired, click the Replace Expression button ( ) to choose an expression to use. The time step can be a constant, a parameter, a variable, or a function in the model.
+The Remesh at setting determines which previous solution is used for the remeshing:
+•
+When Last output from solver before stop is selected, the remeshing is done on the last solution that would have been stored by the solver if remeshing would not have occurred. This setting discards any solver progress done since the last output.
+•
+When Last step taken by solver before stop is selected (the default), the remeshing is done using the solution from the last solver step before the condition for remeshing became fulfilled. Only the very last solver step, at which the condition was triggered, is discarded. Typically, this setting is preferred because then the progress of the automatic remeshing does not depend on the solver’s list of output times.
+Remesh
+After each remeshing, the time integration is restarted and you can control the following time-stepping properties.
+By default, the solver chooses an initial step automatically. Select the Initial step checkbox to enter a different value (SI unit: s).
+To control how the solver performs Consistent initialization of differential-algebraic systems, select Off (the default), On , or Backward Euler from the list.
+Select the Store solution when new meshes are created checkbox if you want to save the solution for all new meshes. If cleared, the automatic remeshing solver will only store solutions and deformed configurations for time intervals that contain requested output times. This option is useful if you have many remeshing times but are only interested in a few output times.
+Output
+This section contains information about which solution and meshes contain the results from the automatic remeshing node.

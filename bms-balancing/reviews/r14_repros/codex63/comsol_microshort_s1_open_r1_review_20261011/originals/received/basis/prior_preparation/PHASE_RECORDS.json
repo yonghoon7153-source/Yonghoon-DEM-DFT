@@ -1,0 +1,21 @@
+{
+  "preparation": {
+    "start_ticks": 20522274590783,
+    "end_ticks": 20536941116552,
+    "elapsed_s": 1466.6525769,
+    "limit_s": 2400
+  },
+  "static": {
+    "start_ticks": 20536941116552,
+    "limit_s": 600,
+    "end_ticks": 20537824917216,
+    "elapsed_s": 88.3800664
+  },
+  "total_origin_ticks": 20522274590783,
+  "frequency": 10000000,
+  "total_limit_s": 3600,
+  "delivery": {
+    "start_ticks": 20537824917216,
+    "limit_s": 480
+  }
+}

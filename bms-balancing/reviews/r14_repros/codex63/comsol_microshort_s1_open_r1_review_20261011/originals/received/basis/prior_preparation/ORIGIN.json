@@ -1,0 +1,17 @@
+{
+  "utc": "2026-10-09T13:40:27.1072249Z",
+  "local": "2026-10-09T22:40:27.1168299+09:00",
+  "monotonic_ticks": 20522274590783,
+  "frequency": 10000000,
+  "total_limit_s": 3600,
+  "phase_limits_s": {
+    "preparation": 2400,
+    "static": 600,
+    "delivery": 480,
+    "incomplete_closeout": 120
+  },
+  "folder_limit_bytes": 52428800,
+  "start_disk_free_bytes": 110639706112,
+  "authorization": "User supplied exact S1 OPEN preparation scope and go-ahead; no native or network permission",
+  "input_resolution": "Initial exact desktop lookup MISSING; later same absolute path present and matching SHA before candidate preparation; preserved as two observations; no network fetch"
+}

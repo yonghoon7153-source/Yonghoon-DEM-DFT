@@ -1,0 +1,23 @@
+[
+  {
+    "path": "C:/Program Files/COMSOL/COMSOL63/Multiphysics/doc/help/wtpwebapps/ROOT/doc/com.comsol.help.battery/battery_ug_electrochem.07.005.html",
+    "bytes": 2568,
+    "sha256": "8c0bed2e9fe812ed18375a2cc3b828484979b33118456eed470645844ab09a73",
+    "title": "Initial Values",
+    "snippet": " equilibrium potential of the grounded electrode. Note: For Primary current distributions, or for models solved using a Current Distribution Initialization study step set to Primary , the settings of this section usually have limited impact on the solver convergence."
+  },
+  {
+    "path": "C:/Program Files/COMSOL/COMSOL63/Multiphysics/doc/help/wtpwebapps/ROOT/doc/com.comsol.help.battery/battery_ug_electrochem.07.037.html",
+    "bytes": 24976,
+    "sha256": "6a13635cb77a3455b6e326d5e77ab9e38c75fdbe7efb0a44f93e5f1cca95cd38",
+    "title": "Electrode Surface",
+    "snippet": "ry Condition) This setting only has an effect if there are multiple Electrode Reaction subnodes present and if either a Current Distribution Initialization study step (using a Primary Current distribution type) or the Primary Current Distribution interface is used. The setting determines which equilibrium potential value will be used for defining the primary current distribution constraint. When the First reaction has been selected, the first electrode reaction subnode must be active in the model. To display this section, click the Show More Options button ( ) and select Advanced Physics Options in the Show More Options dialog. Constraint Settings For primary current distributions, the use of weak constraints will in some cases give a more accurate value of the local current density during the solver process. This may in turn render more accurate results when coupling to the local current density variable to describe other phenomena in the model, for instance when modeling geometry deformation due to electrode dissolution/deposition. The section is available in the Primary Current Distribution and Secondary Current Distribution interfaces when the Current Distribution Model property has been set to Pr"
+  },
+  {
+    "path": "C:/Program Files/COMSOL/COMSOL63/Multiphysics/doc/help/wtpwebapps/ROOT/doc/com.comsol.help.battery/battery_ug_modeling.05.17.html",
+    "bytes": 44294,
+    "sha256": "56e9123a01efcdebbeb4629d0ad85c510c08790e5627818f33f96f5e0fbe01ec",
+    "title": "Solving Electrochemical Models",
+    "snippet": "der using a Stationary with Initialization or a Time Dependent with Initialization study. Both these studies will use a Current Distribution Initialization study step as a first step to solve for the potentials only. If you run into problems solving for the second step in this study you may have to change the “Current distribution type” setting to Secondary on the Current Distribution Initialization study step node, and also review the Initial Values as described in the next bullet. • Review the Initial Values , especially the potentials. Suitable initial potential values can usually be derived making a “potential walk” through the geometry, starting at the grounded boundary. Compute electric and electrolyte potentials in other domains by assuming equilibrium potential differences between electrode and electrolyte for the main electrode reactions. • Switch to Linearized Butler-Volmer kinetics (or a Primary current distribution) while troubleshooting. This can be useful to help achieve a solution for a model that does not solve with nonlinear kinetics, thereby indicating suitable initial values for the nonlinear problem. • If your model contains porous electrodes, try refining the mesh resolution in th"
+  }
+]

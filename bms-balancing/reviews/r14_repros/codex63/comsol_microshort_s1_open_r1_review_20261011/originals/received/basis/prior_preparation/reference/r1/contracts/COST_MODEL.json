@@ -1,0 +1,140 @@
+{
+  "kind": "S1O_PILOT_COST_OBSERVATION_AND_REBUDGET_DESIGN",
+  "approved": false,
+  "native_ready": false,
+  "historical_record_scope": "source-ledger quoted observations, not new measurements; charging nearzero olddense differs from finite-sigma rest",
+  "historical": [
+    {
+      "run": "NORMAL120",
+      "compile_batch_s": "2650.203",
+      "overall_s": "2794.536",
+      "stored_states": 2140,
+      "mph_bytes": 2734001003
+    },
+    {
+      "run": "NORMAL240",
+      "compile_batch_s": "4059.516",
+      "overall_s": "4269.865",
+      "stored_states": 3340,
+      "mph_bytes": 4261090658
+    },
+    {
+      "run": "NORMAL480",
+      "compile_batch_s": "6500.453",
+      "overall_s": "6829.015",
+      "solver_s": "2457",
+      "stored_states": 5740,
+      "mph_bytes": 7315279360
+    },
+    {
+      "run": "BMIN150_particle640",
+      "overall_s": "4471.8936425",
+      "stored_states": 2447,
+      "mph_bytes": 6162301981
+    }
+  ],
+  "historical_evidence": "reference/s0/notes/COST_AND_DESIGN.md:16-29 and source SPEC lines cited there",
+  "separate_clocks": [
+    "compile wall",
+    "batch wall",
+    "initialization wall if observable",
+    "Time solver wall from labeled native log",
+    "post-solve save/export wall when instrumented otherwise residual unclassified",
+    "analysis wall",
+    "packaging wall",
+    "parent total"
+  ],
+  "never_add_nested_clocks": true,
+  "pilot_records": [
+    "variant/settings/source identity",
+    "actual core request and separately observed process CPU",
+    "fresh/consistent initialization outcome",
+    "accepted step count and dt distribution by capsegment",
+    "Tfail/NLfail rejected records separately",
+    "native wall and CPU where available",
+    "stored/requested/full-field counts",
+    "MPH size and all output footprint",
+    "CSV/stdout/base64 bytes",
+    "sampled working-set and private commit maxima",
+    "OS process/job peak counter availability and aggregation scope",
+    "available physical/commit/disk minima",
+    "postprocessor and package wall/size",
+    "monitor/drop/sample gaps and resource stop outcome"
+  ],
+  "sampled_peak_caveat": "sampled_max != OS peak != enforced hard cap; counters absent/unreadable give UNKNOWN and no resource-sufficiency PASS",
+  "proposed_per_run_limits": {
+    "status": "UNAPPROVED_PLANNING_CEILING_REQUIRES_PILOT_COST_AND_RESOURCE_REVIEW",
+    "preflight_s": 300,
+    "compile_batch_s": 7200,
+    "owned_cleanup_s": 120,
+    "analysis_s": 600,
+    "preservation_s": 180,
+    "local_delivery_s": 600,
+    "overall_s": 9000,
+    "output_growth_GiB_proposed": 6,
+    "start_disk_free_GiB_proposed": 16,
+    "resource_binding": "RESOURCE_CONTRACT.json; S0 numbers do not override future stricter contract or measured cumulative reservation"
+  },
+  "rebudget_formula": {
+    "calibration": "from P record per-phase C_compile,C_init,c_step (native step/solver record), c_store (save/export residual only if separated), c_analysis,c_pack; if phases cannot separate leave them unresolved instead of fake fit",
+    "n_step_scenario": "use accepted counts by capsegment, strict requests, initial transients; S0 cap integral lower bound1063 is lower bound only, not forecast; use1x/3x/10x work factors as sensitivity scenarios, not probability intervals",
+    "native_scenario_s": "C_compile + C_init + f_step*c_step*N_est + c_store*S_est + C_batch_other ; no double counting nested solver/batch times",
+    "candidate_native_limit_s": "ceil(1.5*max(validated_applicable_scenarios_native) + 300) rounded up to60s; compare with explicit7200 proposal and seek revised approval if greater; neverautoextend",
+    "candidate_overall_limit_s": "approved_native + separately budgeted preflight/cleanup/analysis/preservation/delivery with final-record margin; each phase budget remains independently binding",
+    "analysis_pack": "scale measured bytes/rows throughput with2x margin andfixedstartup, separately from native; absentmeasurement OPEN",
+    "disk": "planned persistent previous outputs + worst candidate MPH/CSV/stdout/raw/fullbase64 + temporary and package coexistence + cleanup/log reserve; require free>=sum_reserved+margin before newrun; no deletion of oldMPH to fit",
+    "RAM_commit": "use sameconfigurationpilot measuredcounter scope and conservative margin; extrapolating mesh640/600 or sigma/late regime remains UNKNOWN; if safeheadroom cannot be defended no nativeGO",
+    "recalibration": "after first complete full3600 high/Z pair, update only future cost approvals, not Kselection/physics thresholds; if cap active or NLfail changes treat mappinguncertain"
+  },
+  "storage_scenario": {
+    "normal240_480_incremental_bytes_per_state": "1272578.625833333333333333333",
+    "intercept_bytes": "10678047.716666666666666668",
+    "401_state_MPH_bytes_scenario": "520982076.6758333333333333345",
+    "particle640_401_state_scenario_bytes": "1009841885.729873314262362076",
+    "same_fields_encoding_assumption": true,
+    "not_RAM_or_disk_cap_or_completion_guarantee": true,
+    "all401profiles_rows": 193282
+  },
+  "ocv_predictions": [
+    {
+      "sigma_S_m": "1.7e-8",
+      "one_hour_equilibrium_mean_composition_OCV_drop_mV": "0.096248"
+    },
+    {
+      "sigma_S_m": "1.7e-7",
+      "one_hour_equilibrium_mean_composition_OCV_drop_mV": "0.962366"
+    },
+    {
+      "sigma_S_m": "1.7e-6",
+      "one_hour_equilibrium_mean_composition_OCV_drop_mV": "9.503694"
+    }
+  ],
+  "prediction_comparison": {
+    "mean_OCV": "same fixed OCP functions at electrode particle-volume/length-weighted averagex: U_P(xavgP,T)-U_N(xavgN,T); not arithmetic meanofsurfaceextrema orterminalV",
+    "columns": [
+      "S0 analytic OCVdrop",
+      "computed mean-composition OCVdrop",
+      "terminal selfdrop",
+      "paired terminalD",
+      "initial terminal offset",
+      "late S and K ED/ES",
+      "reaction/diffusion/nonuniformity interpretation unresolved"
+    ],
+    "forbidden": "no sigma/OCP/initialstate retuning to hitprediction; disagreement is evidence, notautomaticretry; no empirical R-to-sigma inversion"
+  },
+  "three_unjudgeable_paths": [
+    {
+      "path": "same tlist name but interpolated/missing accepted times or discarded guard state",
+      "blocker": "exact requested/stored/native-step evidence and perrun ownrequests coverage, noempty/t0 PASS"
+    },
+    {
+      "path": "finiteσ CDI changes inventory or initial potential jump counted as self-discharge",
+      "blocker": "threephase initialization and sameinitialinventory limits; retain algebraic potentialoffset and use paired increments"
+    },
+    {
+      "path": "P120 accepted then claim late2700-3600 or weakσ resolution without matchedZ control",
+      "blocker": "fixed20run K with same-axisZ and full3600cap; missingcoverage=>INCONCLUSIVE, noEDzero default"
+    }
+  ],
+  "limits_of_budget": "P/M/N caps are unapproved proposals; fullK nominal60h wall+outputs substantial. User may stop afterP, or approve reducedregisteredquestion with INCONCLUSIVE residual, notautomaticexecution."
+}

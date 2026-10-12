@@ -1,0 +1,11 @@
+{
+  "phase": "AFTER_PREPACKAGE_ORIGINAL_HASHES_BEFORE_PACKAGE_WRITE",
+  "snapshot_ticks": 21956908575774,
+  "overall_s": 853.3889661,
+  "delivery_s": 80.7924998,
+  "originals_unchanged": true,
+  "functional_tests": 0,
+  "native_ready": false,
+  "actual_runtime_created": false,
+  "post_package_evidence": "External DELIVERY_RECEIPT, FINAL_PACKAGE_TOOL_RETURN, FINAL_SUBMISSION_CHECK, FINAL_CHECK_TOOL_RETURN"
+}

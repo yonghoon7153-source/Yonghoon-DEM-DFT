@@ -1,0 +1,792 @@
+{
+  "method": "Data/byte/AST/text only; no received module import, function call, test, JVM, COMSOL or OS resource experiment",
+  "checks": [
+    {
+      "name": "code_manifest_14",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "name": "revision:candidate/InstalledReadback.fragment.java.inactive.txt",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "name": "revision:candidate/P0.connection.diff.txt",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "name": "revision:candidate/P0.connection.java.inactive.txt",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "name": "revision:candidate/raw_connection.py.inactive.txt",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "name": "revision:candidate/raw_connection.py.inactive.txt.diff.txt",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "name": "revision:candidate/resource_connection.py.inactive.txt",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "name": "revision:candidate/resource_connection.py.inactive.txt.diff.txt",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "name": "revision:OPEN_CONNECTION_MAP.json",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "name": "revision:OS_API_MATRIX.json",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "name": "revision:NATIVE_CONNECTION_STATUS.json",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "name": "revision:LIMITED_VALIDATION_PLAN.json",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "name": "only_expected_three_old_members_changed",
+      "matched": true,
+      "detail": [
+        "candidate/resource_connection.py.inactive.txt",
+        "candidate/resource_connection.py.inactive.txt.diff.txt",
+        "LIMITED_VALIDATION_PLAN.json"
+      ]
+    },
+    {
+      "name": "previous_zip_identity",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "name": "basis_exact_original_80_members",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "name": "previous_review_zip_identity",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "name": "review_text_original",
+      "matched": false,
+      "detail": null
+    },
+    {
+      "name": "span:resource_connection.ResourceConnectionError",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "name": "span:resource_connection.ResourceConnectionError.__init__",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "name": "span:resource_connection.must",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "name": "span:resource_connection.nonnegative_int",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "name": "span:resource_connection.finite_time",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "name": "span:resource_connection.ExecutionClockContext",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "name": "span:resource_connection.ExecutionClockContext.__post_init__",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "name": "span:resource_connection.ResourceSession",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "name": "span:resource_connection.ResourceSession.__init__",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "name": "span:resource_connection.ResourceSession.decide",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "name": "span:resource_connection.bind_sample_clock",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "name": "span:resource_connection.project_owned_sample",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "name": "span:resource_connection.resource_decision",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "name": "span:resource_connection.stop_action_plan",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "name": "span:resource_connection.UnavailableOSProvider",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "name": "span:resource_connection.UnavailableOSProvider.__getattr__",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "name": "span:resource_connection.guard_line_96",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "name": "span:resource_connection.guard_line_106",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "name": "span:resource_connection.guard_line_129",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "name": "span:resource_connection.guard_line_131",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "name": "span:resource_connection.guard_line_134",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "name": "span:raw_connection.ConnectionError",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "name": "span:raw_connection.ConnectionError.__init__",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "name": "span:raw_connection.need",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "name": "span:raw_connection.exact",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "name": "span:raw_connection.bind_bytes",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "name": "span:raw_connection.numeric_table",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "name": "span:raw_connection.bind_grid",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "name": "span:raw_connection.charge_projection",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "name": "span:raw_connection.request_prefix",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "name": "span:raw_connection.quadrature_projection",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "name": "span:raw_connection.require_installed_mapping",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "name": "span:raw_connection.UnavailableInstalledProof",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "name": "span:raw_connection.UnavailableInstalledProof.verify",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "name": "span:raw_connection.consumer_connection",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "name": "span:raw_connection.guard_line_138",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "name": "span:raw_connection.guard_line_145",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "name": "span:raw_connection.guard_line_148",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "name": "span:control.ContractError",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "name": "span:control.ContractError.__init__",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "name": "span:control.reject",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "name": "span:control.canonical_hash",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "name": "span:control.finite_number",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "name": "span:control.is_sha",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "name": "span:control.require_refs",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "name": "span:control.authorize_execution",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "name": "span:control.assess_resources",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "name": "span:control.advance_stop",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "name": "span:control.UnavailableNativeAdapter",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "name": "span:control.UnavailableNativeAdapter.__getattr__",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "name": "span:control.execute_once",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "name": "span:control.guard_line_199",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "name": "span:control.guard_line_221",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "name": "span:control.guard_line_241",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "name": "span:consumer.EvidenceError",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "name": "span:consumer.EvidenceError.__init__",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "name": "span:consumer.require",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "name": "span:consumer.number",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "name": "span:consumer.decimal_context",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "name": "span:consumer.read_csv_bytes",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "name": "span:consumer.timed_rows",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "name": "span:consumer.coverage",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "name": "span:consumer.profile_rows",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "name": "span:consumer.compare_initialization",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "name": "span:consumer.invariants",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "name": "span:consumer.compare_initialization_pair",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "name": "span:consumer.initial_profile_uniformity",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "name": "span:consumer.compare_policy",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "name": "span:consumer.verify_coefficient_evidence",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "name": "span:consumer.charge_balance",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "name": "span:consumer.paired_classification",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "name": "span:consumer.analyze",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "name": "span:s1OpenProperties",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "name": "span:s1OpenConfiguredReadback",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "name": "span:s1OpenStoredGrid",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "name": "span:P0.T_END_SECONDS",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "name": "span:P0.TIMES",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "name": "span:P0.checkShape",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "name": "span:P0.TIME_ORIGIN_throw",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "name": "span:P0.units",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "name": "span:P0.evaluatedUnits",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "name": "span:P0.quote",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "name": "span:P0.table",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "name": "span:P0.evaluate",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "name": "span:P0.readSetting",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "name": "span:P0.unknown_type_throw",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "name": "span_count",
+      "matched": true,
+      "detail": 86
+    },
+    {
+      "name": "preservation_count_and_duplicate_identity",
+      "matched": true,
+      "detail": {
+        "items": 112,
+        "unique_paths": 111
+      }
+    },
+    {
+      "name": "preservation_records:SELECTED_SOURCES_AFTER_STATIC.json",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "name": "preservation_records:SELECTED_SOURCES_AFTER_PREPACKAGE.json",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "name": "reported_static_records_consistent",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "name": "plan_counts",
+      "matched": true,
+      "detail": {
+        "Python": 87,
+        "Java_helper": 6
+      }
+    },
+    {
+      "name": "old_50_case_ids_retained",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "name": "cases_are_not_executed",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "name": "plan_pin:source_pins",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "name": "plan_pin:existing_core_pins",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "name": "plan_pin:contract_and_dependency_pins",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "name": "plan_pin:source_byte_bindings",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "name": "span_file_pin",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "name": "resource_ast_parse_only",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "name": "resource_minimal_diff_body",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "name": "phase_arithmetic:correction",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "name": "phase_arithmetic:static",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "name": "phase_arithmetic:plan_reseal",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "name": "chat_tick_arithmetic:receipt",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "name": "chat_tick_arithmetic:final_check",
+      "matched": true,
+      "detail": null
+    }
+  ],
+  "matched": 122,
+  "total": 123,
+  "failed": [
+    {
+      "name": "review_text_original",
+      "matched": false,
+      "detail": null
+    }
+  ],
+  "case_counts": {
+    "groups": {
+      "C01": 7,
+      "C02": 6,
+      "C03": 5,
+      "C04": 5,
+      "C05": 7,
+      "C06": 8,
+      "C07": 6,
+      "C08": 6,
+      "C09": 43
+    },
+    "engines": {
+      "Python": 87,
+      "Java_helper": 6
+    },
+    "unique": 93
+  },
+  "plan_pin_counts": {
+    "source_pins": 4,
+    "existing_core_pins": 3,
+    "contract_and_dependency_pins": 3,
+    "source_byte_bindings": 6
+  },
+  "plan_order_observation": {
+    "declared": "C01 through C09 in listed order; matching positive before dependent negatives; first unexpected failure stops all remaining IDs",
+    "positive_after_dependent": [
+      {
+        "case": "C05-04",
+        "positive_control": "C05-07"
+      },
+      {
+        "case": "C05-05",
+        "positive_control": "C05-07"
+      },
+      {
+        "case": "C05-06",
+        "positive_control": "C05-07"
+      }
+    ],
+    "listed_engine_blocks": [
+      {
+        "engine": "Python",
+        "ids": [
+          "C01-01",
+          "C01-02",
+          "C01-03",
+          "C01-04",
+          "C01-05",
+          "C01-06",
+          "C01-07",
+          "C02-01",
+          "C02-02",
+          "C02-03",
+          "C02-04",
+          "C02-05",
+          "C02-06",
+          "C03-01",
+          "C03-02",
+          "C03-03",
+          "C03-04",
+          "C03-05",
+          "C04-01",
+          "C04-02",
+          "C04-03",
+          "C04-04",
+          "C04-05",
+          "C05-01",
+          "C05-02",
+          "C05-03",
+          "C05-04",
+          "C05-05",
+          "C05-06",
+          "C05-07",
+          "C06-01",
+          "C06-02",
+          "C06-03",
+          "C06-04",
+          "C06-05",
+          "C06-06",
+          "C06-07",
+          "C06-08",
+          "C07-01",
+          "C07-02",
+          "C07-03",
+          "C07-04",
+          "C07-05",
+          "C07-06"
+        ]
+      },
+      {
+        "engine": "Java_helper",
+        "ids": [
+          "C08-01",
+          "C08-02",
+          "C08-03",
+          "C08-04",
+          "C08-05",
+          "C08-06"
+        ]
+      },
+      {
+        "engine": "Python",
+        "ids": [
+          "C09-01",
+          "C09-02",
+          "C09-03",
+          "C09-04",
+          "C09-05",
+          "C09-06",
+          "C09-07",
+          "C09-08",
+          "C09-09",
+          "C09-10",
+          "C09-11",
+          "C09-12",
+          "C09-13",
+          "C09-14",
+          "C09-15",
+          "C09-16",
+          "C09-17",
+          "C09-18",
+          "C09-19",
+          "C09-20",
+          "C09-21",
+          "C09-22",
+          "C09-23",
+          "C09-24",
+          "C09-25",
+          "C09-26",
+          "C09-27",
+          "C09-28",
+          "C09-29",
+          "C09-30",
+          "C09-31",
+          "C09-32",
+          "C09-33",
+          "C09-34",
+          "C09-35",
+          "C09-36",
+          "C09-37",
+          "C09-38",
+          "C09-39",
+          "C09-40",
+          "C09-41",
+          "C09-42",
+          "C09-43"
+        ]
+      }
+    ],
+    "scope": "Review observation, not a functional test"
+  },
+  "provenance_limit": "Preservation files and chat external returns are supplied records, not fresh remote filesystem or OS observations. Static reported 151 are not re-executed checks."
+}

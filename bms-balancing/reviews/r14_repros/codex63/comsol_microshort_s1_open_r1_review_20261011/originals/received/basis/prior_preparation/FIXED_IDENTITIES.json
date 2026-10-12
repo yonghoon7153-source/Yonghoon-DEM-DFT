@@ -1,0 +1,40 @@
+{
+  "accepted_manifest": {
+    "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/microshort_s1o_r1_20261008/CODE_MANIFEST.json",
+    "bytes": 4080,
+    "sha256": "4ce5c08dbde5153027819b5a651e3995ec82417b4429b9bb0f789082b440f5da"
+  },
+  "accepted_parent": {
+    "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/microshort_s1o_r1_20261008/candidate/Parent.ps1.inactive.txt",
+    "bytes": 25787,
+    "sha256": "e9f8d366ca9931b84ded5753a560369b72fea8737a77075bc2b80ec771bc56ff"
+  },
+  "incoming_review": {
+    "path": "C:/Users/BML/Desktop/COMSOL_MICROSHORT_S1O_R1_004_SUPPLEMENT_REVIEW_20261009.zip",
+    "bytes": 1609510,
+    "sha256": "17779cbd61b2d592c15195d6b9810402042d790a6badd43bc9c5df1512bb5e0e"
+  },
+  "approval_scope_document": {
+    "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/microshort_s1_open_connection_candidate_20261009/reference/NEXT_APPROVAL_DRAFT_KO.md",
+    "bytes": 5756,
+    "sha256": "f634ba2133f9b0e8eda78b23ba7870f3468e65c13be0499f03e14435e76df79b"
+  },
+  "proposal_engines": {
+    "Python": {
+      "path": "C:/Users/BML/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/python.exe",
+      "bytes": 107312,
+      "sha256": "b7a12c3af0b4db44191eec14ea095eba731b7328917f570806183093d19ddca2"
+    },
+    "Java_compile": {
+      "path": "C:/Program Files/COMSOL/COMSOL63/Multiphysics/java/win64/jre/bin/javac.exe",
+      "bytes": 20712,
+      "sha256": "c60a376855051d615b0c7cf2712573a19ed4e02b905c9d1a274ff990dac85659"
+    },
+    "Java_helper": {
+      "path": "C:/Program Files/COMSOL/COMSOL63/Multiphysics/java/win64/jre/bin/java.exe",
+      "bytes": 46824,
+      "sha256": "e8228b02b882a4aa1a2333ede4a341b15e761cd897433d2661f2b96d7ad4952b"
+    }
+  },
+  "before_selection_count": 33
+}

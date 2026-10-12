@@ -1,0 +1,247 @@
+FeatureInfo
+JavaScript is disabled on your browser.
+Skip navigation links
+Overview
+Package
+Class
+Tree
+Deprecated
+Index
+Help
+All Classes
+SEARCH:
+JavaScript is disabled on your browser.
+Summary:
+Nested |
+Field |
+Constr |
+Method
+Detail:
+Field |
+Constr |
+Method
+Package com.comsol.model.physics
+Interface FeatureInfo
+All Superinterfaces:
+ModelEntity , PrimitiveModelEntity
+public interface FeatureInfo
+extends ModelEntity
+Variable and system of equation changes.
+Method Summary
+All Methods Instance Methods Abstract Methods Deprecated Methods
+Modifier and Type
+Method
+Description
+FeatureInfo
+clearLocks ()
+Clear all user-defined expressions (locked expressions) for the parent
+PhysicsFeature .
+java.lang.String[][]
+getInfoTable ​(java.lang.String id)
+Returns a table with information about all variables, weak equations,
+constraints, and shapes that the parent contributes with.
+java.lang.String[][]
+getInfoTable ​(java.lang.String id,
+java.lang.String... options)
+Returns a table with information about all variables, weak equations,
+constraints, and shapes that the parent contributes with.
+java.lang.String[]
+getStringArray ​(java.lang.String name)
+Returns the user-defined expressions for the first definition.
+java.lang.String[]
+getStringArray ​(java.lang.String name,
+int sdim)
+Returns the user-defined expressions for the given definition.
+boolean
+isLocked ​(java.lang.String name)
+Check if the given identifier name (e.g.
+java.lang.String[]
+lock ​(java.lang.String arg0)
+Deprecated.
+Use getStringArray(String) instead.
+java.lang.String[]
+lock ​(java.lang.String arg0,
+int arg1)
+Deprecated.
+Use getStringArray(String, int) instead.
+FeatureInfo
+lock ​(java.lang.String arg0,
+int arg1,
+java.lang.String[] arg2)
+Deprecated.
+Use set(String, int, String[]) instead.
+FeatureInfo
+lock ​(java.lang.String arg0,
+java.lang.String[] arg1)
+Deprecated.
+Use set(String, String[]) instead.
+java.lang.String
+removeLock ​(java.lang.String name)
+Removes the lock of the given identifier name (e.g.
+FeatureInfo
+set ​(java.lang.String name,
+int sdim,
+java.lang.String[] expr)
+Sets the user-defined expressions for the given definition.
+FeatureInfo
+set ​(java.lang.String name,
+java.lang.String[] expr)
+Sets the user-defined expressions for first definition.
+Methods inherited from interface com.comsol.model. ModelEntity
+active , author , author , comments , comments , dateCreated , dateModified , docMarker , docMarker , help , help , icon , isactive , isActive , label , label , lastModifiedBy , model , model , name , name , resetAuthor , scope , tag , tag , timeCreated , timeModified , version , version
+Methods inherited from interface com.comsol.model. PrimitiveModelEntity
+getContainer , getDisplayString , resolveModelPath
+Method Detail
+clearLocks
+FeatureInfo clearLocks()
+Clear all user-defined expressions (locked expressions) for the parent
+PhysicsFeature .
+Returns:
+Feature information.
+getInfoTable
+java.lang.String[][] getInfoTable​(java.lang.String id)
+Returns a table with information about all variables, weak equations,
+constraints, and shapes that the parent contributes with.
+Parameters:
+id - The type of table to return. Can be any of the following strings
+Expression Returns information about
+variables.
+Shape Returns information about
+shape declarations.
+Weak Returns information
+about weak equations.
+Constraint Returns
+information about constraints.
+.
+Returns:
+A double string array with the information about an item in each row
+(first index).
+getInfoTable
+java.lang.String[][] getInfoTable​(java.lang.String id,
+java.lang.String... options)
+Returns a table with information about all variables, weak equations,
+constraints, and shapes that the parent contributes with.
+Parameters:
+id - The type of table to return. Can be any of the following strings
+Expression Returns information about
+variables.
+Shape Returns information about
+shape declarations.
+Weak Returns information
+about weak equations.
+Constraint Returns
+information about constraints.
+.
+options - Extra options that specifies what to include in the table. The options
+can be any of the following strings
+recursive Collects information from the parent and
+its descendants. The default is to only include info from the
+parent.
+all Returns all available columns of
+information. Without this option the columns returned are the same
+as the ones displayed in the Equation view.
+.
+Returns:
+A double string array with the information about an item in each row
+(first index).
+getStringArray
+java.lang.String[] getStringArray​(java.lang.String name)
+Returns the user-defined expressions for the first definition.
+Parameters:
+name - The identifier name (e.g. variable name).
+Returns:
+A string array with the user-defined expressions.
+getStringArray
+java.lang.String[] getStringArray​(java.lang.String name,
+int sdim)
+Returns the user-defined expressions for the given definition.
+Parameters:
+name - The identifier name (e.g. variable name).
+sdim - The occurrence of the definition, which can be larger than zero for
+variables that have more than one definition on different geometric
+entities for instance.
+Returns:
+A string array with the user-defined expressions.
+isLocked
+boolean isLocked​(java.lang.String name)
+Check if the given identifier name (e.g. variable name) has a
+user-defined expression (locked).
+Parameters:
+name - The identifier name (e.g. variable name).
+Returns:
+true if locked.
+lock
+@Deprecated
+java.lang.String[] lock​(java.lang.String arg0)
+Deprecated.
+Use getStringArray(String) instead.
+lock
+@Deprecated
+FeatureInfo lock​(java.lang.String arg0,
+java.lang.String[] arg1)
+Deprecated.
+Use set(String, String[]) instead.
+lock
+@Deprecated
+java.lang.String[] lock​(java.lang.String arg0,
+int arg1)
+Deprecated.
+Use getStringArray(String, int) instead.
+lock
+@Deprecated
+FeatureInfo lock​(java.lang.String arg0,
+int arg1,
+java.lang.String[] arg2)
+Deprecated.
+Use set(String, int, String[]) instead.
+removeLock
+java.lang.String removeLock​(java.lang.String name)
+Removes the lock of the given identifier name (e.g. variable name), so
+it uses the expression defined by the parent PhysicsFeature .
+Parameters:
+name - The identifier name (e.g. variable name).
+Returns:
+The identifier name if found else null .
+set
+FeatureInfo set​(java.lang.String name,
+java.lang.String[] expr)
+Sets the user-defined expressions for first definition.
+Parameters:
+name - The identifier name (e.g. variable name).
+expr - The user-defined values as a string array. Use two elements for
+constraints, one for the constraint and one for the constraint force.
+Returns:
+Feature information.
+set
+FeatureInfo set​(java.lang.String name,
+int sdim,
+java.lang.String[] expr)
+Sets the user-defined expressions for the given definition.
+Parameters:
+name - The identifier name (e.g. variable name).
+sdim - The occurrence of the definition, which can be larger than zero for
+variables that have more than one definition on different geometric
+entities for instance.
+expr - The user-defined values as a string array. Use two elements for
+constraints, one for the constraint and one for the constraint force.
+Returns:
+Feature information.
+Skip navigation links
+Overview
+Package
+Class
+Tree
+Deprecated
+Index
+Help
+All Classes
+JavaScript is disabled on your browser.
+Summary:
+Nested |
+Field |
+Constr |
+Method
+Detail:
+Field |
+Constr |
+Method

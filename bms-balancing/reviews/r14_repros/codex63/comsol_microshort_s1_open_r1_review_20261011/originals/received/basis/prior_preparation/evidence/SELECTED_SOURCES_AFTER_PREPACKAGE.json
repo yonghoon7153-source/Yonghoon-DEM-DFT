@@ -1,0 +1,167 @@
+[
+  {
+    "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/microshort_s1o_r1_20261008/CODE_MANIFEST.json",
+    "bytes": 4080,
+    "sha256": "4ce5c08dbde5153027819b5a651e3995ec82417b4429b9bb0f789082b440f5da"
+  },
+  {
+    "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/microshort_s1o_r1_20261008/candidate/consumer.py.inactive.txt",
+    "bytes": 27987,
+    "sha256": "0cb1aa3cc4593dcb041115baf208c4dd09186fcc75055ddcde53c68086cc6b79"
+  },
+  {
+    "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/microshort_s1o_r1_20261008/candidate/control.py.inactive.txt",
+    "bytes": 18304,
+    "sha256": "8ec75e57336c4ffa33e61d513076fb1facd1cf90430b1e1ce1c15f9bb57ac00d"
+  },
+  {
+    "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/microshort_s1o_r1_20261008/candidate/Parent.ps1.inactive.txt",
+    "bytes": 25787,
+    "sha256": "e9f8d366ca9931b84ded5753a560369b72fea8737a77075bc2b80ec771bc56ff"
+  },
+  {
+    "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/microshort_s1o_r1_20261008/candidate/variants/P0.diff.txt",
+    "bytes": 11687,
+    "sha256": "6525d92016083c6c99fc65ae48b8b0b4bca3c9f7e5323ff9685d1ccfff9ab97b"
+  },
+  {
+    "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/microshort_s1o_r1_20261008/candidate/variants/P0.java.inactive.txt",
+    "bytes": 81976,
+    "sha256": "6d10c8910e3b7301778112b676be604eccc22aae41fa87cb719a94218e2384fa"
+  },
+  {
+    "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/microshort_s1o_r1_20261008/candidate/variants/P1.diff.txt",
+    "bytes": 10748,
+    "sha256": "29b9a7a176911bd153e95c3a39c5a8084e7d8ca995e42c3f329a1b67ac8b7b49"
+  },
+  {
+    "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/microshort_s1o_r1_20261008/candidate/variants/P1.java.inactive.txt",
+    "bytes": 81975,
+    "sha256": "c8a049c73308b426fde5be2e9743781b408457453be456b4f571328a65485b9c"
+  },
+  {
+    "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/microshort_s1o_r1_20261008/candidate/variants/P2.diff.txt",
+    "bytes": 5326,
+    "sha256": "b48a27ce849a73461c465250636ffde5d32e9fc5f8ab329fa681c6a269b2fa77"
+  },
+  {
+    "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/microshort_s1o_r1_20261008/candidate/variants/P2.java.inactive.txt",
+    "bytes": 76553,
+    "sha256": "f824c39dbf9700b7b8b922dcb72e3b5c70e68e39b3d06c1dd9929492700ed006"
+  },
+  {
+    "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/microshort_s1o_r1_20261008/candidate/variants/P3.diff.txt",
+    "bytes": 5092,
+    "sha256": "58cf1fc80f57159be6e547083b872c24f3248a2078f5f35aeee86103e284ff63"
+  },
+  {
+    "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/microshort_s1o_r1_20261008/candidate/variants/P3.java.inactive.txt",
+    "bytes": 76607,
+    "sha256": "5ab6565f6a152f3ef96b7f42a3c7756bcd01a07d444a4e544fc50573d84c199b"
+  },
+  {
+    "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/microshort_s1o_r1_20261008/contracts/CHARGE_BALANCE.json",
+    "bytes": 12042,
+    "sha256": "6ce428333b98bc219e99d8fd4de173d28680489d0e86ec630213cc2a709fe66c"
+  },
+  {
+    "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/microshort_s1o_r1_20261008/contracts/COEFFICIENT_READBACK.json",
+    "bytes": 7784,
+    "sha256": "6e6b3049b67bba662acaea022909ba31f1acd260c37b2c92ebd0a0bb34ba959c"
+  },
+  {
+    "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/microshort_s1o_r1_20261008/contracts/COST_MODEL.json",
+    "bytes": 6985,
+    "sha256": "101776d1212f41808865a5c4a9bb5465b11d025afb8f35e9aa1beafbbbffb7d9"
+  },
+  {
+    "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/microshort_s1o_r1_20261008/contracts/EXECUTION_BINDING.json",
+    "bytes": 11180,
+    "sha256": "21c88db625f798a85c5a6c79d41da1a15a618797278d6c26e1f149eb22af178b"
+  },
+  {
+    "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/microshort_s1o_r1_20261008/contracts/INITIALIZATION.json",
+    "bytes": 11933,
+    "sha256": "56c32c57c6a7a354cb860b6f57dcd35a7280112e26c273f7ae8d2977ca997f78"
+  },
+  {
+    "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/microshort_s1o_r1_20261008/contracts/K_DESIGN.json",
+    "bytes": 25471,
+    "sha256": "db7a81c61d0770b1750389a2ee00838120d3c90b796954b010b673ed49d8552b"
+  },
+  {
+    "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/microshort_s1o_r1_20261008/contracts/POLICY_VARIANTS.json",
+    "bytes": 42337,
+    "sha256": "8ec8f376060c9008502560674d6fc2e02fce643c676ddd852c808a3711838bdd"
+  },
+  {
+    "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/microshort_s1o_r1_20261008/contracts/RESOURCE_CONTRACT.json",
+    "bytes": 7175,
+    "sha256": "e45837427b1b8a69d53b10119ce7ab072bacb869bcdd53c863366c7bd04c67c1"
+  },
+  {
+    "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/microshort_s1o_r1_20261008/SOURCE_CONTRACT_LINKS.json",
+    "bytes": 2414,
+    "sha256": "5425fa91e4579b9785bb80b92bab755358fd1c24df933aeeae00172182acf7ff"
+  },
+  {
+    "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/microshort_s1o_r1_20261008/VALIDATION_PLAN_R1.json",
+    "bytes": 275106,
+    "sha256": "137b4241d03d0d512dd4f746db1727f579b96fa0125c761497ac764caf0446b8"
+  },
+  {
+    "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/b020_profile_unit_stages_20260927/gate/c2_entry.py",
+    "bytes": 26769,
+    "sha256": "02c7c0e29d541eee336a081abec4cb8eef7c64ba32466b5cb305499bee8aa3d4"
+  },
+  {
+    "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/b020_profile_unit_stages_20260927/gate/C2_CONTRACT.json",
+    "bytes": 3851,
+    "sha256": "5376cf78dfc98a07fcd852943e482b43ee03b79d79fe99b0d39e9f2fe39bea1b"
+  },
+  {
+    "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/b020_profile_unit_stages_20260927/gate/C2_CODE_MANIFEST.json",
+    "bytes": 603,
+    "sha256": "23cbd50ee2d0fda4d352578c1a54eb723e27733fe03de7bee7787e456bd894cc"
+  },
+  {
+    "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/b020_profile_unit_stages_20260927/src/execution_records.py",
+    "bytes": 11109,
+    "sha256": "b4b9ea1626a8bb9756d6c6e5e935241ca33c7d39a6725878d172a894382dc3c4"
+  },
+  {
+    "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/b020_profile_unit_stages_20260927/src/winjob.py",
+    "bytes": 15851,
+    "sha256": "2f0bb76d1ff11b12402f79e15f03d6d3fa281644fa9db8c218f1f2213819fc65"
+  },
+  {
+    "path": "C:/Users/BML/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/python.exe",
+    "bytes": 107312,
+    "sha256": "b7a12c3af0b4db44191eec14ea095eba731b7328917f570806183093d19ddca2"
+  },
+  {
+    "path": "C:/Program Files/COMSOL/COMSOL63/Multiphysics/bin/win64/comsolcompile.exe",
+    "bytes": 962024,
+    "sha256": "a44b59db1a60d9b7dcac193ed8d6f1e8f9c0c18d5850eb872d24242ad95f497f"
+  },
+  {
+    "path": "C:/Program Files/COMSOL/COMSOL63/Multiphysics/bin/win64/comsolbatch.exe",
+    "bytes": 962024,
+    "sha256": "f4e74547dcb229db269f552f7535e78b3c7c24d77d25ef8242915051ce4b7bc2"
+  },
+  {
+    "path": "C:/Users/BML/Desktop/COMSOL_MICROSHORT_S1O_R1_004_SUPPLEMENT_REVIEW_20261009.zip",
+    "bytes": 1609510,
+    "sha256": "17779cbd61b2d592c15195d6b9810402042d790a6badd43bc9c5df1512bb5e0e"
+  },
+  {
+    "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/microshort_s1o_r1_20261008/future_validation_fixture_R1_003/COMSOL_MICROSHORT_S1O_R1_003_VALIDATION_STOP_20261008.zip",
+    "bytes": 876456,
+    "sha256": "11a27f3034fed763442ccce9730f7e008058b819bfbffd9d58a5d2994b875d4b"
+  },
+  {
+    "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/microshort_s1o_r1_20261008/future_validation_fixture_R1_004/COMSOL_MICROSHORT_S1O_R1_004_VALIDATION_RESULT_20261009.zip",
+    "bytes": 796501,
+    "sha256": "cb85fa123395caf9ea323b0c531144bf30754322ba9b0362f1bbac3e5bc8ff2c"
+  }
+]

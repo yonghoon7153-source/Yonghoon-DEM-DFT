@@ -1,0 +1,108 @@
+{
+  "scope": "OPEN-R1 N1 N2 N3 only; inactive",
+  "previous_code_manifest": {
+    "path": "basis/prior_preparation/CODE_MANIFEST.json",
+    "bytes": 2215,
+    "sha256": "be19764204a4695c9058f565a69c5e09ea528124d4659e9d8f9d1c11fd6f749f"
+  },
+  "members": [
+    {
+      "path": "candidate/InstalledReadback.fragment.java.inactive.txt",
+      "previous_bytes": 2512,
+      "previous_sha256": "844ccbb7259ba55bf3deacaf38bf17932c0b9f6ccc43017d80907c46b5b216c6",
+      "current_bytes": 2512,
+      "current_sha256": "844ccbb7259ba55bf3deacaf38bf17932c0b9f6ccc43017d80907c46b5b216c6",
+      "changed": false
+    },
+    {
+      "path": "candidate/P0.connection.diff.txt",
+      "previous_bytes": 3801,
+      "previous_sha256": "7113aefd75a09fc82fe0d55c61c790f8315efe65abbc2d93acd73fd3d6ba3702",
+      "current_bytes": 3801,
+      "current_sha256": "7113aefd75a09fc82fe0d55c61c790f8315efe65abbc2d93acd73fd3d6ba3702",
+      "changed": false
+    },
+    {
+      "path": "candidate/P0.connection.java.inactive.txt",
+      "previous_bytes": 84529,
+      "previous_sha256": "39c2b9929e0d4c4ca8c442f5d0f0485581342b8be7a993d3820870bba8002a8b",
+      "current_bytes": 84529,
+      "current_sha256": "39c2b9929e0d4c4ca8c442f5d0f0485581342b8be7a993d3820870bba8002a8b",
+      "changed": false
+    },
+    {
+      "path": "candidate/raw_connection.py.inactive.txt",
+      "previous_bytes": 9426,
+      "previous_sha256": "3de2c292bf03088db1171b0d5cd4cc36a9e53f17385839eb7812bebb094d8d9c",
+      "current_bytes": 9426,
+      "current_sha256": "3de2c292bf03088db1171b0d5cd4cc36a9e53f17385839eb7812bebb094d8d9c",
+      "changed": false
+    },
+    {
+      "path": "candidate/raw_connection.py.inactive.txt.diff.txt",
+      "previous_bytes": 9696,
+      "previous_sha256": "82ca6d81e9ec98ef93b2d528c1731222eda293cdac7d5f0d7ba0dbbe765cbffa",
+      "current_bytes": 9696,
+      "current_sha256": "82ca6d81e9ec98ef93b2d528c1731222eda293cdac7d5f0d7ba0dbbe765cbffa",
+      "changed": false
+    },
+    {
+      "path": "candidate/resource_connection.py.inactive.txt",
+      "previous_bytes": 6949,
+      "previous_sha256": "4e4d9244d2f0dbd0fde36c7c6273cb7c1a901dc895f0d972392e6f2d0d3662b4",
+      "current_bytes": 10846,
+      "current_sha256": "f45e6531383d03daa2e968437c6188be0229c144c6956647b0b0f81fae795816",
+      "changed": true
+    },
+    {
+      "path": "candidate/resource_connection.py.inactive.txt.diff.txt",
+      "previous_bytes": 7156,
+      "previous_sha256": "55939e5f7ef2c96fed5694f6f40c76c8a00c72787ad9652481ad6228b9b9328a",
+      "current_bytes": 8100,
+      "current_sha256": "538aa7cb31429d1709ef0b114c1f44850335b937d11826aee6073ae622e13844",
+      "changed": true
+    },
+    {
+      "path": "OPEN_CONNECTION_MAP.json",
+      "previous_bytes": 2801,
+      "previous_sha256": "93319429cad4ba89b74c69c64da55a5ffcd0ddc4c6758d33328b31a1b871203f",
+      "current_bytes": 2801,
+      "current_sha256": "93319429cad4ba89b74c69c64da55a5ffcd0ddc4c6758d33328b31a1b871203f",
+      "changed": false
+    },
+    {
+      "path": "OS_API_MATRIX.json",
+      "previous_bytes": 4115,
+      "previous_sha256": "ec3ab0c209a5aab458fada593c31c63b73f6eec43b902a718823a2391d57622c",
+      "current_bytes": 4115,
+      "current_sha256": "ec3ab0c209a5aab458fada593c31c63b73f6eec43b902a718823a2391d57622c",
+      "changed": false
+    },
+    {
+      "path": "NATIVE_CONNECTION_STATUS.json",
+      "previous_bytes": 700,
+      "previous_sha256": "1947da06fb8b168025d25ae7467cac260b7be58d7d237aae8f97214fceb0b21a",
+      "current_bytes": 700,
+      "current_sha256": "1947da06fb8b168025d25ae7467cac260b7be58d7d237aae8f97214fceb0b21a",
+      "changed": false
+    },
+    {
+      "path": "LIMITED_VALIDATION_PLAN.json",
+      "previous_bytes": 30359,
+      "previous_sha256": "fb14cb5e6053e86b0e2de37588ea19a54a7828ee65d732b898203a74e11c938a",
+      "current_bytes": 178519,
+      "current_sha256": "6702a6be556f0f5b4512dd221c08f77d39111606f1d9f97511dd796f2d3d20c9",
+      "changed": true
+    }
+  ],
+  "source_locations": {
+    "new_candidate": "candidate/",
+    "unchanged_accepted_r1": "basis/prior_preparation/reference/r1/",
+    "unchanged_historical_74_static_checks": "basis/prior_preparation/STATIC_CHECKS.json",
+    "review": "basis/REVIEW.zip"
+  },
+  "runtime_paths_created": false,
+  "native_argv": null,
+  "native_cwd": null,
+  "native_approval_paths": null
+}

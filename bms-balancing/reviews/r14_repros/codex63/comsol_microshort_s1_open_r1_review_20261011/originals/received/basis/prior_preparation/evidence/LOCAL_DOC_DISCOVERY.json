@@ -1,0 +1,16 @@
+[
+  {
+    "path": "C:\\Program Files\\COMSOL\\COMSOL63\\Multiphysics\\doc\\help\\wtpwebapps\\ROOT\\doc\\com.comsol.help.comsol\\comsol_ref_solver.36.120.html",
+    "bytes": 29068,
+    "sha256": "a25ff3b3ccb6de0b9f0e9ff5c379cbdda84cf307e6823410a5886366641403a9",
+    "title": "About the Time-Dependent Solver",
+    "extract": "outputs\\microshort_s1_open_connection_candidate_20261009\\evidence\\LOCAL_comsol_ref_solver.36.120.txt"
+  },
+  {
+    "path": "C:\\Program Files\\COMSOL\\COMSOL63\\Multiphysics\\doc\\help\\wtpwebapps\\ROOT\\doc\\com.comsol.help.comsol\\comsol_ref_solver.36.136.html",
+    "bytes": 107745,
+    "sha256": "6ed7a81a98cb3a42060d9be107122650a4b8c69d2f771c725e4d77d7c5cbeade",
+    "title": "Time-Dependent Solver",
+    "extract": "outputs\\microshort_s1_open_connection_candidate_20261009\\evidence\\LOCAL_comsol_ref_solver.36.136.txt"
+  }
+]

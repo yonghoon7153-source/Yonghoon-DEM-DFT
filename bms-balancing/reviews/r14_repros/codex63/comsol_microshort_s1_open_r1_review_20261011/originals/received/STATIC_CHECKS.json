@@ -1,0 +1,763 @@
+{
+  "method": "Own AST/hash/text/data checks only; no candidate imports/calls, no functional cases",
+  "count": 151,
+  "matched": 151,
+  "all_matched": true,
+  "checks": [
+    {
+      "id": "resource_python_parse",
+      "matched": true,
+      "detail": "AST only; no compile/import/function evaluation"
+    },
+    {
+      "id": "unchanged_definition:ResourceConnectionError",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "id": "unchanged_definition:must",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "id": "unchanged_definition:nonnegative_int",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "id": "unchanged_definition:stop_action_plan",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "id": "unchanged_definition:UnavailableOSProvider",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "id": "added_definitions_exact",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "id": "frozen_slots:ExecutionClockContext",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "id": "frozen_slots:ResourceSession",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "id": "sample_api_no_rebinding",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "id": "session_call_binds_clock",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "id": "anchors_snapshot",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "id": "anchors_scalar_only",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "id": "start_record_missing_explicit",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "id": "sample_identity_exact",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "id": "sample_origins_required",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "id": "sample_origins_exact",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "id": "elapsed_only_context",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "id": "os_failure_before_clock",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "id": "counter_type_keys_identity_before_dereference",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "id": "counter_reasons",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "id": "only_typed_projection_exception_caught",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "id": "assessor_after_projection",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "id": "no_new_time_budget",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "id": "huge_clock_rejection",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "id": "unchanged_candidate_member:candidate/InstalledReadback.fragment.java.inactive.txt",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "id": "unchanged_candidate_member:candidate/P0.connection.diff.txt",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "id": "unchanged_candidate_member:candidate/P0.connection.java.inactive.txt",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "id": "unchanged_candidate_member:candidate/raw_connection.py.inactive.txt",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "id": "unchanged_candidate_member:candidate/raw_connection.py.inactive.txt.diff.txt",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "id": "unchanged_candidate_member:OPEN_CONNECTION_MAP.json",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "id": "unchanged_candidate_member:OS_API_MATRIX.json",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "id": "unchanged_candidate_member:NATIVE_CONNECTION_STATUS.json",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "id": "python_ast:candidate\\raw_connection.py.inactive.txt",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "id": "python_ast:basis\\prior_preparation\\reference\\r1\\candidate\\control.py.inactive.txt",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "id": "python_ast:basis\\prior_preparation\\reference\\r1\\candidate\\consumer.py.inactive.txt",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "id": "native_inactive",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "id": "native_commands_null",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "id": "four_open_retained",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "id": "original_preserved:C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\outputs\\microshort_s1_open_connection_candidate_20261009\\ACCEPTANCE_LINK.json",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "id": "original_preserved:C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\outputs\\microshort_s1_open_connection_candidate_20261009\\candidate\\InstalledReadback.fragment.java.inactive.txt",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "id": "original_preserved:C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\outputs\\microshort_s1_open_connection_candidate_20261009\\candidate\\P0.connection.diff.txt",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "id": "original_preserved:C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\outputs\\microshort_s1_open_connection_candidate_20261009\\candidate\\P0.connection.java.inactive.txt",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "id": "original_preserved:C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\outputs\\microshort_s1_open_connection_candidate_20261009\\candidate\\raw_connection.py.inactive.txt",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "id": "original_preserved:C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\outputs\\microshort_s1_open_connection_candidate_20261009\\candidate\\raw_connection.py.inactive.txt.diff.txt",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "id": "original_preserved:C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\outputs\\microshort_s1_open_connection_candidate_20261009\\candidate\\resource_connection.py.inactive.txt",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "id": "original_preserved:C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\outputs\\microshort_s1_open_connection_candidate_20261009\\candidate\\resource_connection.py.inactive.txt.diff.txt",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "id": "original_preserved:C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\outputs\\microshort_s1_open_connection_candidate_20261009\\CODE_MANIFEST.json",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "id": "original_preserved:C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\outputs\\microshort_s1_open_connection_candidate_20261009\\COMSOL_MICROSHORT_S1_OPEN_CONNECTION_PREPARATION_20261009.zip",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "id": "original_preserved:C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\outputs\\microshort_s1_open_connection_candidate_20261009\\CONNECTION_DETAILS_KO.md",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "id": "original_preserved:C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\outputs\\microshort_s1_open_connection_candidate_20261009\\DELIVERY_RECEIPT.json",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "id": "original_preserved:C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\outputs\\microshort_s1_open_connection_candidate_20261009\\evidence\\CDI_SEARCH.json",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "id": "original_preserved:C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\outputs\\microshort_s1_open_connection_candidate_20261009\\evidence\\DOC_01.txt",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "id": "original_preserved:C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\outputs\\microshort_s1_open_connection_candidate_20261009\\evidence\\DOC_02.txt",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "id": "original_preserved:C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\outputs\\microshort_s1_open_connection_candidate_20261009\\evidence\\DOC_03.txt",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "id": "original_preserved:C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\outputs\\microshort_s1_open_connection_candidate_20261009\\evidence\\DOC_04.txt",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "id": "original_preserved:C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\outputs\\microshort_s1_open_connection_candidate_20261009\\evidence\\DOC_05.txt",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "id": "original_preserved:C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\outputs\\microshort_s1_open_connection_candidate_20261009\\evidence\\DOC_06.txt",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "id": "original_preserved:C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\outputs\\microshort_s1_open_connection_candidate_20261009\\evidence\\DOC_07.txt",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "id": "original_preserved:C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\outputs\\microshort_s1_open_connection_candidate_20261009\\evidence\\DOC_08.txt",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "id": "original_preserved:C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\outputs\\microshort_s1_open_connection_candidate_20261009\\evidence\\DOC_09.txt",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "id": "original_preserved:C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\outputs\\microshort_s1_open_connection_candidate_20261009\\evidence\\DOC_10.txt",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "id": "original_preserved:C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\outputs\\microshort_s1_open_connection_candidate_20261009\\evidence\\DOC_11.txt",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "id": "original_preserved:C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\outputs\\microshort_s1_open_connection_candidate_20261009\\evidence\\DOC_12.txt",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "id": "original_preserved:C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\outputs\\microshort_s1_open_connection_candidate_20261009\\evidence\\DOC_13.txt",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "id": "original_preserved:C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\outputs\\microshort_s1_open_connection_candidate_20261009\\evidence\\INPUT_ARCHIVE_CHECK.json",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "id": "original_preserved:C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\outputs\\microshort_s1_open_connection_candidate_20261009\\evidence\\JAVA_REVERSE_BINDING.json",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "id": "original_preserved:C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\outputs\\microshort_s1_open_connection_candidate_20261009\\evidence\\LOCAL_comsol_ref_solver.36.120.txt",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "id": "original_preserved:C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\outputs\\microshort_s1_open_connection_candidate_20261009\\evidence\\LOCAL_comsol_ref_solver.36.136.txt",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "id": "original_preserved:C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\outputs\\microshort_s1_open_connection_candidate_20261009\\evidence\\LOCAL_DOC_DISCOVERY.json",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "id": "original_preserved:C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\outputs\\microshort_s1_open_connection_candidate_20261009\\evidence\\LOCAL_DOCUMENTS.json",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "id": "original_preserved:C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\outputs\\microshort_s1_open_connection_candidate_20261009\\evidence\\SELECTED_SOURCES_AFTER_PREPACKAGE.json",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "id": "original_preserved:C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\outputs\\microshort_s1_open_connection_candidate_20261009\\evidence\\SELECTED_SOURCES_AFTER_STATIC.json",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "id": "original_preserved:C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\outputs\\microshort_s1_open_connection_candidate_20261009\\evidence\\SELECTED_SOURCES_BEFORE.json",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "id": "original_preserved:C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\outputs\\microshort_s1_open_connection_candidate_20261009\\evidence\\SOURCE_IDENTITY_CHECK.json",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "id": "original_preserved:C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\outputs\\microshort_s1_open_connection_candidate_20261009\\FINAL_CHECK_TOOL_RETURN.json",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "id": "original_preserved:C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\outputs\\microshort_s1_open_connection_candidate_20261009\\FINAL_PACKAGE_TOOL_RETURN.json",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "id": "original_preserved:C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\outputs\\microshort_s1_open_connection_candidate_20261009\\FINAL_SUBMISSION_CHECK.json",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "id": "original_preserved:C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\outputs\\microshort_s1_open_connection_candidate_20261009\\FIXED_IDENTITIES.json",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "id": "original_preserved:C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\outputs\\microshort_s1_open_connection_candidate_20261009\\FUNCTION_SPANS.json",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "id": "original_preserved:C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\outputs\\microshort_s1_open_connection_candidate_20261009\\IN_PACKAGE_CLOSEOUT.json",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "id": "original_preserved:C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\outputs\\microshort_s1_open_connection_candidate_20261009\\LIMITED_VALIDATION_PLAN.json",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "id": "original_preserved:C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\outputs\\microshort_s1_open_connection_candidate_20261009\\NATIVE_CONNECTION_STATUS.json",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "id": "original_preserved:C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\outputs\\microshort_s1_open_connection_candidate_20261009\\OPEN_CONNECTION_MAP.json",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "id": "original_preserved:C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\outputs\\microshort_s1_open_connection_candidate_20261009\\ORIGIN.json",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "id": "original_preserved:C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\outputs\\microshort_s1_open_connection_candidate_20261009\\OS_API_MATRIX.json",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "id": "original_preserved:C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\outputs\\microshort_s1_open_connection_candidate_20261009\\PACKAGE_MANIFEST.json",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "id": "original_preserved:C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\outputs\\microshort_s1_open_connection_candidate_20261009\\PACKAGE_STDOUT.json",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "id": "original_preserved:C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\outputs\\microshort_s1_open_connection_candidate_20261009\\PHASE_RECORDS.json",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "id": "original_preserved:C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\outputs\\microshort_s1_open_connection_candidate_20261009\\README_KO.md",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "id": "original_preserved:C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\outputs\\microshort_s1_open_connection_candidate_20261009\\reference\\DECISION.json",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "id": "original_preserved:C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\outputs\\microshort_s1_open_connection_candidate_20261009\\reference\\NEXT_APPROVAL_DRAFT_KO.md",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "id": "original_preserved:C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\outputs\\microshort_s1_open_connection_candidate_20261009\\reference\\PRIOR_REVIEW.zip",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "id": "original_preserved:C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\outputs\\microshort_s1_open_connection_candidate_20261009\\reference\\r1\\candidate\\consumer.py.inactive.txt",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "id": "original_preserved:C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\outputs\\microshort_s1_open_connection_candidate_20261009\\reference\\r1\\candidate\\control.py.inactive.txt",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "id": "original_preserved:C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\outputs\\microshort_s1_open_connection_candidate_20261009\\reference\\r1\\candidate\\Parent.ps1.inactive.txt",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "id": "original_preserved:C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\outputs\\microshort_s1_open_connection_candidate_20261009\\reference\\r1\\candidate\\variants\\P0.diff.txt",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "id": "original_preserved:C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\outputs\\microshort_s1_open_connection_candidate_20261009\\reference\\r1\\candidate\\variants\\P0.java.inactive.txt",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "id": "original_preserved:C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\outputs\\microshort_s1_open_connection_candidate_20261009\\reference\\r1\\candidate\\variants\\P1.diff.txt",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "id": "original_preserved:C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\outputs\\microshort_s1_open_connection_candidate_20261009\\reference\\r1\\candidate\\variants\\P1.java.inactive.txt",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "id": "original_preserved:C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\outputs\\microshort_s1_open_connection_candidate_20261009\\reference\\r1\\candidate\\variants\\P2.diff.txt",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "id": "original_preserved:C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\outputs\\microshort_s1_open_connection_candidate_20261009\\reference\\r1\\candidate\\variants\\P2.java.inactive.txt",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "id": "original_preserved:C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\outputs\\microshort_s1_open_connection_candidate_20261009\\reference\\r1\\candidate\\variants\\P3.diff.txt",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "id": "original_preserved:C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\outputs\\microshort_s1_open_connection_candidate_20261009\\reference\\r1\\candidate\\variants\\P3.java.inactive.txt",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "id": "original_preserved:C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\outputs\\microshort_s1_open_connection_candidate_20261009\\reference\\r1\\CODE_MANIFEST.json",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "id": "original_preserved:C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\outputs\\microshort_s1_open_connection_candidate_20261009\\reference\\r1\\contracts\\CHARGE_BALANCE.json",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "id": "original_preserved:C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\outputs\\microshort_s1_open_connection_candidate_20261009\\reference\\r1\\contracts\\COEFFICIENT_READBACK.json",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "id": "original_preserved:C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\outputs\\microshort_s1_open_connection_candidate_20261009\\reference\\r1\\contracts\\COST_MODEL.json",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "id": "original_preserved:C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\outputs\\microshort_s1_open_connection_candidate_20261009\\reference\\r1\\contracts\\EXECUTION_BINDING.json",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "id": "original_preserved:C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\outputs\\microshort_s1_open_connection_candidate_20261009\\reference\\r1\\contracts\\INITIALIZATION.json",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "id": "original_preserved:C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\outputs\\microshort_s1_open_connection_candidate_20261009\\reference\\r1\\contracts\\K_DESIGN.json",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "id": "original_preserved:C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\outputs\\microshort_s1_open_connection_candidate_20261009\\reference\\r1\\contracts\\POLICY_VARIANTS.json",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "id": "original_preserved:C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\outputs\\microshort_s1_open_connection_candidate_20261009\\reference\\r1\\contracts\\RESOURCE_CONTRACT.json",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "id": "original_preserved:C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\outputs\\microshort_s1_open_connection_candidate_20261009\\reference\\r1\\SOURCE_CONTRACT_LINKS.json",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "id": "original_preserved:C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\outputs\\microshort_s1_open_connection_candidate_20261009\\reference\\r1\\VALIDATION_PLAN_R1.json",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "id": "original_preserved:C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\outputs\\microshort_s1_open_connection_candidate_20261009\\reference\\REVIEW_KO.md",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "id": "original_preserved:C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\outputs\\microshort_s1_open_connection_candidate_20261009\\REPORT_KO.md",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "id": "original_preserved:C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\outputs\\microshort_s1_open_connection_candidate_20261009\\SELECTED_SOURCES_AFTER_PACKAGE.json",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "id": "original_preserved:C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\outputs\\microshort_s1_open_connection_candidate_20261009\\SEPARATE_ALLOWLIST_DRAFT_KO.md",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "id": "original_preserved:C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\outputs\\microshort_s1_open_connection_candidate_20261009\\STATIC_CHECKS.json",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "id": "original_preserved:C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\outputs\\microshort_s1_open_connection_candidate_20261009\\TOOL_OBSERVATIONS.json",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "id": "original_preserved:C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\outputs\\microshort_s1_open_connection_candidate_20261009\\tools\\build_submission_metadata.py",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "id": "original_preserved:C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\outputs\\microshort_s1_open_connection_candidate_20261009\\tools\\collect_static.py",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "id": "original_preserved:C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\outputs\\microshort_s1_open_connection_candidate_20261009\\tools\\package_submission.py",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "id": "original_preserved:C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\outputs\\microshort_s1_open_connection_candidate_20261009\\tools\\static_check.py",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "id": "original_preserved:C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\outputs\\microshort_s1_open_connection_candidate_20261009\\VALIDATION_PROPOSAL_KO.md",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "id": "original_preserved:C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\outputs\\microshort_s1o_r1_20261008\\CODE_MANIFEST.json",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "id": "original_preserved:C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\outputs\\microshort_s1o_r1_20261008\\candidate\\consumer.py.inactive.txt",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "id": "original_preserved:C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\outputs\\microshort_s1o_r1_20261008\\candidate\\control.py.inactive.txt",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "id": "original_preserved:C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\outputs\\microshort_s1o_r1_20261008\\candidate\\Parent.ps1.inactive.txt",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "id": "original_preserved:C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\outputs\\microshort_s1o_r1_20261008\\candidate\\variants\\P0.diff.txt",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "id": "original_preserved:C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\outputs\\microshort_s1o_r1_20261008\\candidate\\variants\\P0.java.inactive.txt",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "id": "original_preserved:C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\outputs\\microshort_s1o_r1_20261008\\candidate\\variants\\P1.diff.txt",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "id": "original_preserved:C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\outputs\\microshort_s1o_r1_20261008\\candidate\\variants\\P1.java.inactive.txt",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "id": "original_preserved:C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\outputs\\microshort_s1o_r1_20261008\\candidate\\variants\\P2.diff.txt",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "id": "original_preserved:C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\outputs\\microshort_s1o_r1_20261008\\candidate\\variants\\P2.java.inactive.txt",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "id": "original_preserved:C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\outputs\\microshort_s1o_r1_20261008\\candidate\\variants\\P3.diff.txt",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "id": "original_preserved:C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\outputs\\microshort_s1o_r1_20261008\\candidate\\variants\\P3.java.inactive.txt",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "id": "original_preserved:C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\outputs\\microshort_s1o_r1_20261008\\contracts\\CHARGE_BALANCE.json",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "id": "original_preserved:C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\outputs\\microshort_s1o_r1_20261008\\contracts\\COEFFICIENT_READBACK.json",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "id": "original_preserved:C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\outputs\\microshort_s1o_r1_20261008\\contracts\\COST_MODEL.json",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "id": "original_preserved:C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\outputs\\microshort_s1o_r1_20261008\\contracts\\EXECUTION_BINDING.json",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "id": "original_preserved:C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\outputs\\microshort_s1o_r1_20261008\\contracts\\INITIALIZATION.json",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "id": "original_preserved:C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\outputs\\microshort_s1o_r1_20261008\\contracts\\K_DESIGN.json",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "id": "original_preserved:C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\outputs\\microshort_s1o_r1_20261008\\contracts\\POLICY_VARIANTS.json",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "id": "original_preserved:C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\outputs\\microshort_s1o_r1_20261008\\contracts\\RESOURCE_CONTRACT.json",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "id": "original_preserved:C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\outputs\\microshort_s1o_r1_20261008\\SOURCE_CONTRACT_LINKS.json",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "id": "original_preserved:C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\outputs\\microshort_s1o_r1_20261008\\VALIDATION_PLAN_R1.json",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "id": "original_preserved:C:\\Users\\BML\\Desktop\\COMSOL_MICROSHORT_S1_OPEN_CONNECTION_PREPARATION_REVIEW_20261010.zip",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "id": "original_preserved:C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\outputs\\microshort_s1_open_connection_candidate_20261009\\COMSOL_MICROSHORT_S1_OPEN_CONNECTION_PREPARATION_20261009.zip",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "id": "original_preserved:C:\\Users\\BML\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\python.exe",
+      "matched": true,
+      "detail": null
+    }
+  ]
+}

@@ -1,0 +1,8 @@
+{
+  "source": "Direct user message in this chat; record only, no native authority",
+  "user_text": "OPEN-R1 N1–N3의 오프라인 정정·정적 재봉인 1건을 최대 2,400초로 승인합니다. 시험·COMSOL 실행은 제외합니다.",
+  "native_approved": false,
+  "functional_validation_approved": false,
+  "new_origin": "2026-10-11T05:17:19.1200876Z",
+  "pre_origin_context": "Earlier turns only located missing review ZIP; one read-only PS parse error chunk29b1e1 occurred before statements ran. No prior budget reused."
+}
