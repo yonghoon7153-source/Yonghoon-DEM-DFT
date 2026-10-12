@@ -152,7 +152,7 @@ evidenceScope: multi-source
 - 점수 지도 · block structure · Top-N · "top ten unchanged" · Pareto.
 - 옛 창: "five < 0.05 V" · 호스트 0.898 V · 족별 중앙값 0.898…0.310 · `legacy_window_V_2026_09_22` 의 모든 값.
 - 산물 갭 통계 ("693 반응 / 69 % 금속 산물" 등) — HOLD.
-- v5/v6 의 D · 비 · 기울기 · Ea (0.688 · 1.381 · 0.975 포함) · "Li 가 확산하지 않는다" · "레시피 효과 없음" · v7 중간값 · "T* = 확산 시작 온도".
+- v5/v6 의 D · 비 · 기울기 · Ea (v5 값 포함 — 숫자는 마감 기록에만) · "Li 가 확산하지 않는다" · "레시피 효과 없음" · v7 중간값 · "T* = 확산 시작 온도".
 - MLIP σ/D 절대값 · modelc_2x 탄성 숫자 · 조성 간 전단/영률 변화 (`HZ-elastic-cross-composition` 확인 전).
 - 문헌 숫자를 우리 숫자와 같은 표·그림에 (`litdb/comparison_vs_ours.md` 규칙).
 
