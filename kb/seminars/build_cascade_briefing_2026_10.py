@@ -691,6 +691,11 @@ def build_lean():
             if text is not None:
                 cell_set(tc, text, INK if text.startswith('ML-predicted') else None)
         new_rows[key] = tr
+    for tc in rows['Xiao 2019'].findall('a:tc', NS)[1:2]:          # user 10-13: 'no host' / '(free coating)'
+        for t_ in tc.iter(A + 't'):
+            if t_.text and 'free co' in t_.text:
+                t_.text = '(free coating)'
+                t_.getparent().addprevious(etree.SubElement(etree.Element(A + 'x'), A + 'br'))   # own line, as the user set it
     for tr in grid.findall('a:tr', NS):
         grid.remove(tr)
     order = [rows['study'], rows['Miara 2015 (via Anderson)'], rows['Xiao 2019'], rows['Lee 2024'],
@@ -700,14 +705,11 @@ def build_lean():
     for rp in tbl.iter(A + 'rPr', A + 'endParaRPr'):
         if rp.get('sz'):
             rp.set('sz', '1300')
-    cites = {'Miara 2015 (via Anderson)': ['Chem. Mater., 27, 4040 (2015).', 'Adv. Energy Mater., 14, 2304025 (2024).'],
-             'Xiao 2019': ['Joule, 3, 1252 (2019).'], 'Lee 2024': ['J. Mater. Chem. A, 12, 7272 (2024).'],
-             'Muy 2025': ['Chem. Mater., 37, 2395 (2025).'], 'Jung 2026': ['eTransportation, 28, 100570 (2026).']}
-    for tr in grid.findall('a:tr', NS):
-        first = tr.find('a:tc', NS)
-        for c in cites.get(shape_text(first).strip(), []):
-            first.find('.//a:txBody', NS).append(
-                etree.fromstring(f'<x xmlns:a="{NS["a"]}">{P(c, "p", 850, 100, "ctr", MUTED, italic=True)}</x>')[0])
+    # citations: the user's final layout (10-13) stacks them top right in the lab's form, oldest first by row order
+    add(t, tb(ids(), 'References top', 5.6, 0.02, 3.9, 0.86, ''.join(
+        P(c, 'p', 750, 95, 'r', INK) for c in (
+            '[[i:Chem. Mater.]], 27, 4040 (2015).', '[[i:Adv. Energy Mater.]], 14, 2304025 (2024).', '[[i:Joule]], 3, 1252 (2019).',
+            '[[i:J. Mater. Chem. A]], 12, 7272 (2024).', '[[i:Chem. Mater.]], 37, 2395 (2025).', '[[i:eTransportation]], 28, 100570 (2026).'))))
     for para in tbl.iter(A + 'p'):
         ppr = para.find('a:pPr', NS)
         if ppr is None:
@@ -720,7 +722,7 @@ def build_lean():
     for gc, w in zip(gcs, cols):
         gc.set('w', str(E(w)))
     trs = grid.findall('a:tr', NS)
-    hs = [0.4] + [0.52] * (len(trs) - 1)
+    hs = [0.42] + [0.5] * (len(trs) - 1)
     for tr, h in zip(trs, hs):
         tr.set('h', str(E(h)))
     off, ext = tbl.find('.//p:xfrm/a:off', NS), tbl.find('.//p:xfrm/a:ext', NS)

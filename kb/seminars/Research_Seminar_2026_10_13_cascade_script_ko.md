@@ -34,7 +34,7 @@ evidenceScope: multi-source-mixed
 > | 2 | Background — Earlier DFT studies | ✅ 확정 10-13 | 6e568c4 · e70e1d6 (Li₂S 칸 = li2s/LPSCl 계면상) |
 > | 3 | Overview — 하나씩에서 여럿으로 · 예 하나 (Al₂O₃ / Al₂S₃) | ✅ 확정 10-13 | b464c62 · fa4a120 · 9b4f498 (화살표 줄 → 다음 장 다리 · 'we must check') · 한 장 PPT + 노트 |
 > | 4 | Introduction — 두 열화는 서로를 키운다 (Kang 2026 Fig. 16) | ✅ 확정 10-13 (*'됐어 저정도면'*) | 9c4bbde (문구 넷 · 출처는 랩 표준 그대로) |
-> | 5 | Introduction — 선행 스크린과 이번 작업 (novelty · Muy 2025 · Jung 2026 추가) | ✍ 수정안 10-13 | 표 6 행 · 디펜스 S5 브리핑 |
+> | 5 | Introduction — 선행 스크린과 이번 작업 (novelty · Muy 2025 · Jung 2026 추가) | ✅ 확정 10-13 (사용자 최종판 · 출처 오른쪽 위) | 34adf6e · 디펜스 S5 브리핑 (논문별 확인 중) |
 > | 1 · 6–19 | 나머지 | ⏳ 그 장을 볼 때 확정 | — |
 
 ---
@@ -135,7 +135,7 @@ evidenceScope: multi-source-mixed
 ## 5. 선행 스크린과 이번 작업의 차이 ⏱ 7:00
 > 화면 (사용자 10-13 · novelty 장 · 사용자 덱 6쪽): ■ *Prior dopant screens and what this study adds* · bullet 둘
 > (*Earlier screens varied one or two elements, or a coating compound without a host.* · *Here one precursor compound adds a cation and an anion in the ratio of its formula.*) ·
-> 표 = 선행 다섯 편 + 이번 작업 (오래된 순 · **Muy 2025 · Jung 2026 를 litdb 에서 더함**) · 출처는 study 칸에 랩 표준 표기.
+> 표 = 선행 다섯 편 + 이번 작업 (오래된 순 · **Muy 2025 · Jung 2026 를 litdb 에서 더함**) · 출처는 **오른쪽 위 여섯 줄** (랩 표준 표기 · 사용자 최종판 10-13).
 > 앞 장 끝: *'그러면 지금까지의 도핑 스크린은 무엇을 바꿔 가며 걸렀는지, 선행 연구부터 보겠습니다.'*
 
 지금까지의 도핑 스크린 다섯 편을 이번 작업과 나란히 놓았습니다. **[가리킴: what is varied 열]** 이 열이 핵심입니다. 무엇을 바꿔 가며 걸렀는지입니다.
