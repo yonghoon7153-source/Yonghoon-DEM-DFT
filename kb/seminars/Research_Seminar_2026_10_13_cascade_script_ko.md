@@ -60,28 +60,30 @@ evidenceScope: multi-source-mixed
 **[클릭]**
 
 ## 3. Overview ⏱ 4:30
-> 화면 (사용자 10-13): ■ *Computational screening of dopant precursors for Li₆PS₅Cl* · bullet 둘 (*Goal* · *Unit of screening*) ·
-> 점선 상자 *Project stages* 1–4 · 화살표 · 아래 줄 *Stage 1 has been audited; the Stage 2 pilot is in progress.*
-> ⚠ 상자 번호 (1–4) 와 Stage 번호 (1 · 2) 가 따로 간다 — 말로는 **'첫째 · 둘째'** 로 읽는다 ('2단계 = 감사' 로 들리지 않게).
+> 화면 (사용자 10-13 · 질문으로 다시 짬): ■ *Choosing a dopant precursor for Li₆PS₅Cl* · bullet 둘 (*In the lab* · *This work*) ·
+> 점선 상자 *The question* — Al₂O₃ → Al + O / Al₂S₃ → Al + S } *Same Al, different partner anion* · *Does the anion change stability or Li transport?* ·
+> 화살표 · 아래 줄 *Today: the screen, its audit, and the first test of this question*
+> 왜 바꿨나: 사용자 10-13 *"너무 단조롭다 · 다 밝히고 하는 건 별로 · 기대를 가질 만하고 집중할 수 있는 페이지"* — 단계 상자 · 진행 숫자는 뒤 장 (11 감사 · 13 파일럿 · 15 요약) 으로.
 > (사용자 덱에서는 4쪽 — 앞에 한 장이 더 있다.)
 
-이번 작업은 Li₆PS₅Cl 에 넣을 도펀트를 계산으로 고르는 스크리닝입니다.
+**[화면이 뜨면 1–2 초 멈춘다]**
+질문 하나로 시작하겠습니다. Li₆PS₅Cl 에 Al 을 도핑하고 싶으면, 실제로 무엇을 넣으시겠습니까?
 
-**[가리킴: Goal]** 목표는 전기화학 안정성과 기계적 안정성은 높이고, Li 이온 수송은 늦추지 않는 도펀트를 찾는 것입니다.
+**[가리킴: In the lab]** Al 원소를 그대로 넣지는 않습니다. 화합물을 넣습니다.
 
-**[가리킴: Unit of screening]** 원소가 아니라 전구체 화합물 하나를 단위로 거릅니다. 후보는 91개입니다.
+**[가리킴: 상자 왼쪽]** Al₂O₃ 에는 Al 과 함께 산소가, Al₂S₃ 에는 Al 과 함께 황이 따라옵니다.
 
-**[가리킴: 상자]** 전체 흐름은 네 단계입니다.
-- 첫째, 6월부터 8월까지 91개 전구체를 모두 훑은 1단계 탐색입니다. 구조 3,675개를 MLIP 로 완화했습니다.
-- 둘째, 9월에 그 1단계를 감사했습니다. 새 결과를 보기 전에 규칙부터 정했습니다.
-- 셋째, 10월에 시작한 2단계 파일럿입니다. MLIP 분자동역학 40 런 중 12 런이 끝났습니다.
-  (⚠ 12/40 은 발표 직전 값으로 — 13장과 같이 · kgy `python3 ~/bin/cv7_watch.py --out_root ~/work/runs/cascade_v7_main_1007`)
-- 넷째, 후보를 추려 DFT 로 확인하고 실험으로 넘기는 일은 파일럿 판정이 나온 뒤입니다.
+**[가리킴: 상자 오른쪽]** 같은 Al 인데, 따라오는 음이온이 다릅니다. 그러면 전해질의 안정성이나 Li 이동도 달라질까요?
 
-**[가리킴: 아래 줄]** 지금은 1단계 감사가 끝났고, 2단계 파일럿이 도는 중입니다. 그래서 오늘은 도펀트 순위가 아니라, 여기까지 온 과정을 말씀드리겠습니다.
+**[가리킴: This work]** 그래서 이번 작업은 원소가 아니라, 실제로 넣는 화합물인 전구체를 단위로 잡았습니다. 후보 91개를 합성하기 전에 계산으로 먼저 걸렀습니다. 찾는 것은 안정성은 높이면서 Li 이동은 늦추지 않는 전구체입니다.
+
+**[가리킴: 아래 줄]** 오늘은 세 가지를 보여 드리겠습니다. 91개를 어떻게 걸렀는지, 9월에 그 결과를 어떻게 다시 점검했는지, 그리고 이 질문을 Al₂O₃ 와 Al₂S₃ 로 Li 이동에서 처음 시험하고 있는 계산입니다.
 먼저 왜 안정성과 수송을 같이 봐야 하는지부터 보겠습니다.
 
 **[클릭]**
+
+  (⚠ 질문은 질문으로만 — 음이온이 Li 이동을 바꾼다 / 안 바꾼다는 말하지 않는다 · 파일럿 판정 전. 진행 숫자 (12/40) 는 이 장에서 말하지 않는다 — 13장에서.
+  'Al + O' 는 화합물이 **가져오는 것**이다 — '격자에 들어간다' 고 말하지 않는다 (모델의 가정 · 디펜스 S3).)
 
 ## 4. 왜 여러 축인가 ⏱ 6:00
 왜 여러 축을 한꺼번에 봐야 하는지부터 말씀드리겠습니다. **[가리킴: 그림]**
@@ -293,7 +295,7 @@ MLIP 지표의 기준이 되는 DFT 계산입니다. **[가리킴: 두 곡선]**
 | 장 | 슬림판 화면 | 말로 채울 것 |
 |---|---|---|
 | 2 | ■ 'Earlier DFT studies: the basis of this screening' · bullet 둘 (Top row: bulk materials and their doped or coated forms · Bottom row: SEI components, interfaces, and binders in a battery cell) + 그림 자리 8칸 (제목 + `< 키워드 >`) | 칸마다 한 줄 (대본 2장) · 마무리 '이 경험들이 스크리닝의 단계가 됐다' + 짝 다섯 (EOS → 기준 계산 · BVSE → Li 지형 · MD → 수송 · 대권위 상도표 → 안정창 · 계면 에너지 → 계면 반응성) — 숫자는 0 개 |
-| 3 | ■ 'Computational screening of dopant precursors for Li₆PS₅Cl' · bullet 둘 (Goal: higher electrochemical and mechanical stability without slowing Li-ion transport · Unit of screening: a precursor compound (91 candidates)) + 점선 박스 'Project stages' 1–4 + 화살표 + 'Stage 1 has been audited; the Stage 2 pilot is in progress.' | 목표 · 단위 · 네 단계 ('첫째–넷째' 로 읽는다 · 대본 3장) · 지금 위치 · '규칙은 결과 전에' 는 둘째 항목에서 말로 |
+| 3 | ■ 'Choosing a dopant precursor for Li₆PS₅Cl' · bullet 둘 (In the lab: dopants added as compounds, not as bare elements · This work: 91 candidate precursors, screened by simulation before synthesis) + 점선 박스 'The question' (Al₂O₃ → Al + O · Al₂S₃ → Al + S · Same Al, different partner anion · Does the anion change stability or Li transport?) + 화살표 + 'Today: the screen, its audit, and the first test of this question' | 청중에게 질문으로 연다 (대본 3장) · 답은 말하지 않는다 · 진행 숫자는 13장에서 |
 | 4 | 원래 장 그대로 | 그대로 |
 | 5 | bullet 하나 + 원래 표 (14 pt) | 기존 스크린 셋 (대본 5장) · 비슷한 최근 연구 Jung · Park · Muy 는 이름만 (화면 줄은 뺐다 · 17장에 있다) |
 | 6 | 08-18 덱의 족별 표 (family · n · examples — 'role in the design' 열은 뺐다 · 사용자 10-13) + **[문헌] 'Literature example: SiO₂ co-doping'** Jung 2026 Fig. 3d | 족별 역할은 말로: 산화물 = 강한 M–O 결합 · 염화물 = 호스트에 이미 Cl · 황화물 = 호스트와 같은 음이온 (대조) · 플루오르화물 = 가장 강한 결합 · 이동성 위험 · 브로민화물 · 요오드화물 = 더 큰 할라이드 (대조) · 질화물 = 더 높은 음이온 전하 (대조) · 공치환 실험 선례 CuCl · MgF₂ · ZnO · La₂O₃ · Nd₂O₃ · SiO₂ (17장) · 문헌 그림은 '선례' 이지 우리 후보의 검증이 아니다 · As₂S₃ 재실행은 7장 |

@@ -529,8 +529,8 @@ def figure(t, slide, fname, x, y, w, descr):
     return h
 
 
-def dashed_list(t, slide, title, items, x, y, w, h, note_x=0.52, sz=1500, arrow_y=None):
-    """The 08-18 slide-4 box: dashed red rounded frame, red title on the frame, numbered items with grey notes."""
+def dashed_frame(t, title, x, y, w, h):
+    """The 08-18 slide-4 frame alone: dashed red rounded box, its red title cut into the top line."""
     add(t,
         box(ids(), 'Dashed frame', x, y, w, h, line=DASH_RED, dash=True, adj=5000, lw=22225),
         tb(ids(), 'Frame title', x + 0.45, y - 0.19, 0.35 + 0.12 * len(title), 0.36,
@@ -538,6 +538,11 @@ def dashed_list(t, slide, title, items, x, y, w, h, note_x=0.52, sz=1500, arrow_
     nofill = t.getroot().find('.//p:cSld/p:spTree', NS)[-1].find('./p:spPr/a:noFill', NS)   # title box cuts the dashed line
     nofill.addprevious(etree.fromstring(f'<a:solidFill xmlns:a="{NS["a"]}"><a:srgbClr val="FFFFFF"/></a:solidFill>'))
     nofill.getparent().remove(nofill)
+
+
+def dashed_list(t, slide, title, items, x, y, w, h, note_x=0.52, sz=1500, arrow_y=None):
+    """The 08-18 slide-4 box: dashed red rounded frame, red title on the frame, numbered items with grey notes."""
+    dashed_frame(t, title, x, y, w, h)
     step = (h - 0.3) / len(items)
     for k, (main, note) in enumerate(items):
         yy = y + 0.2 + k * step
@@ -589,20 +594,29 @@ def build_lean():
             tb(ids(), f'Tile {k + 1} caption', x, y + 1.66, TW, 0.3, P(f'< {kw} >', 'p', 1000, 100, 'ctr', INK)))
     save(t, name)
 
-    # ---- 3 overview: unit of screening + the dashed numbered box of the 08-18 deck (CW: 'Project stages' — the box
-    #      also holds a future step; the rule-before-results line is said here and shown once, on p11)
+    # ---- 3 overview — opens with the question the screen asks (user 10-13: 'too flat; laying everything out is not
+    #      good; make a page people look forward to'). The stages box and the 12/40 status left this page: the audit,
+    #      the pilot and the status have their own slides (p11, p12-p13, p15). The question is a question only — the
+    #      pilot has no verdict, so no answer is implied. In the box, 'Al + O' is what the compound brings with it.
     name, t = fresh('overview', 'Overview')
-    lean_body(t, 'Computational screening of dopant precursors for Li₆PS₅Cl',     # user 10-13: small bullets as on p02
-              ['[[b:Goal]]: higher electrochemical and mechanical stability without slowing Li-ion transport',
-               '[[b:Unit of screening]]: a precursor compound (91 candidates)'], h=1.35)
-    dashed_list(t, name, 'Project stages',
-                [('Stage 1 exploration screen (Jun–Aug)', '(91 precursors, 3,675 structures)'),
-                 ('Audit of Stage 1 (Sep)', '(rules fixed before new results)'),
-                 ('Stage 2 pilot: MLIP-MD (Oct)', '(12 of 40 runs done)'),
-                 ('Shortlist → DFT → experiments', '(after the pilot verdict)')],
-                0.57, 2.6, 8.86, 2.3, note_x=0.55, arrow_y=5.01)     # 0.15 in lower: room under the second bullet
-    # a full sentence, so it keeps its period (user 10-13 grammar rule); 'the Stage 2 pilot' takes the article
-    add(t, line_under(ids(), 'Stage 1 has been audited; [[b:the Stage 2 pilot is in progress.]]', 5.83))
+    lean_body(t, 'Choosing a dopant precursor for Li₆PS₅Cl',
+              ['[[b:In the lab]]: dopants added as compounds, not as bare elements',
+               '[[b:This work]]: 91 candidate precursors, screened by simulation before synthesis'], h=1.35)
+    fx, fy, fw, fh = 0.57, 2.6, 8.86, 2.3
+    dashed_frame(t, 'The question', fx, fy, fw, fh)
+    for k, (cmp, an) in enumerate([('Al₂O₃', 'O'), ('Al₂S₃', 'S')]):
+        yy = fy + 0.36 + k * 0.98
+        add(t, box(ids(), f'Precursor {cmp}', 1.0, yy, 1.5, 0.62, fill='F3F4F6', line='9CA3AF', anchor='ctr',
+                   paras=P(cmp, 'p', 2000, 100, 'ctr', INK, bold=True)),
+            arrow(ids(), 2.66, yy + 0.17, 0.5, 0.28),
+            tb(ids(), f'Brings {an}', 3.25, yy, 1.35, 0.62, P(f'Al + [[r:{an}]]', 'p', 2000, 100, 'l', INK), anchor='ctr'))
+    add(t, box(ids(), 'Brace', 4.62, fy + 0.36, 0.24, 1.6, line='9CA3AF', geom='rightBrace', lw=19050),
+        tb(ids(), 'Question', 5.05, fy + 0.3, 4.2, 1.72,
+           P('Same Al, different partner anion', 'p', 1800, 110, 'l', INK, bold=True)
+           + P('Does the anion change', 'p', 1800, 110, 'l', BLUE, spcbef=900)     # broken by hand: 'Li transport' stays
+           + P('stability or Li transport?', 'p', 1800, 110, 'l', BLUE), anchor='ctr'))   # on one line
+    down_arrow(t, name, fy + fh + 0.11, x=fx + fw / 2 - 1.405)
+    add(t, line_under(ids(), 'Today: the screen, its audit, and [[b:the first test of this question]]', 5.83))
     save(t, name)
 
     # ---- 4 failure modes: orig slide 3, unchanged

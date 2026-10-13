@@ -69,19 +69,20 @@ evidenceScope: multi-source-mixed
 - ⚠ 숫자는 말하지 않는다. 특히 **접착에너지 값, li2s(소셀 유리) 수송값은 절대 말하지 않는다** — 칸에도 숫자가 없다.
 - ➜ "이 경험을 바탕으로 지금 하고 있는 일이 다음 장입니다."
 
-### 3. Overview — 이 프로젝트의 지도 (1.5 분)
-**핵심**: 무엇을 왜 거르는지 (목표 · 단위) 와 네 단계, 그리고 지금 위치 — 1단계 감사 끝 · 2단계 파일럿 진행 중.
-- 화면 (사용자 10-13 · 슬림판): ■ *Computational screening of dopant precursors for Li₆PS₅Cl* · bullet 둘 —
-  *Goal: higher electrochemical and mechanical stability without slowing Li-ion transport* · *Unit of screening: a precursor compound (91 candidates)* ·
-  점선 상자 *Project stages* 1–4 (괄호 = 규모 · 상태) · 화살표 · 아래 줄 *Stage 1 has been audited; the Stage 2 pilot is in progress.*
-- 이 장이 있는 이유:
-  - **지도** — 뒤 장이 모두 이 네 단계 중 하나에 걸린다: 실패 모드 · 선행 스크린 (왜 이렇게 거르나) → 1단계 설계 장들 → 9월 감사 → 2단계 파일럿 → 계획. 청중이 지금 어디를 듣는지 안다.
-  - **기대치** — 오늘은 순위가 아니라 진행 보고다. 넷째 단계 (짧은 목록 → DFT → 실험) 는 파일럿 판정 뒤라는 걸 먼저 보여 준다 ('그래서 뭐가 제일 좋아?' 를 미리 받는다).
-  - **새로운 점 하나** — 단위가 원소가 아니라 전구체 화합물이다 (5장 선행 스크린 표와 이어진다).
-  - **다리** — Goal bullet (안정성 둘 + 수송) 이 다음 장 (결합된 실패 모드) 으로 넘어가는 이유다.
-  - 점선 번호 상자는 08-18 발표에서 쓰던 양식이라 눈에 익다.
-- 상자 번호 (1–4) 와 Stage 번호 (1 · 2) 가 다르다 — 말로는 '첫째 · 둘째' 로.
-- ⚠ 12/40 은 발표 직전 값으로 (13장과 같이).
+### 3. Overview — 질문으로 연다 (1.5 분)
+**핵심**: 도핑 실험에서 넣는 건 원소가 아니라 화합물이다 → 같은 Al 이라도 Al₂O₃ 와 Al₂S₃ 는 다른 음이온을 데려온다 → 그게 안정성 · Li 이동을 바꾸나? →
+그래서 단위를 전구체 화합물로 잡고 91 개를 합성 전에 계산으로 걸렀다 → 오늘: 스크린 · 감사 · 이 질문의 첫 시험.
+- 화면 (사용자 10-13 · 질문으로 다시 짬): ■ *Choosing a dopant precursor for Li₆PS₅Cl* · bullet 둘 — *In the lab: dopants added as compounds, not as bare elements* ·
+  *This work: 91 candidate precursors, screened by simulation before synthesis* · 점선 상자 *The question* (Al₂O₃ → Al + O · Al₂S₃ → Al + S } *Same Al, different
+  partner anion* · *Does the anion change stability or Li transport?*) · 화살표 · 아래 줄 *Today: the screen, its audit, and the first test of this question*
+- 왜 바꿨나: 사용자 10-13 *"너무 단조롭다 · 우리 랩에 처음 나오는 주제인데 다 밝히고 하는 건 별로 · 기대를 가질 만하고 집중할 수 있는 페이지"*.
+  단계 상자 · 진행 숫자 (12/40) 는 뒤 장 (11 감사 · 13 파일럿 · 15 요약) 으로 미루고, 첫 화면은 질문으로 연다.
+- 이 장이 하는 일:
+  - **고리** — 실험 위주 랩에서 '무엇을 넣을지' 는 매일 고르는 문제다. 이 주제를 처음 듣는 사람도 바로 붙는다.
+  - **새로운 점** — 단위가 원소가 아니라 전구체 화합물이다 (5장 선행 스크린 표가 받는다).
+  - **기대** — 이 질문의 첫 시험이 12–13장 파일럿이라, 끝까지 들을 이유가 생긴다.
+  - **다리** — '안정성 · Li 이동' 이 다음 장 (결합된 실패 모드) 으로 넘어가는 이유다.
+- ⚠ 질문은 질문으로만 — 답 (음이온이 바꾼다 / 안 바꾼다) 은 말하지 않는다 (파일럿 판정 전). 'Al + O' 는 화합물이 가져오는 것이지 '격자에 들어간다' 가 아니다.
 - ➜ "먼저 왜 안정성과 수송을 같이 봐야 하는지부터 보겠습니다."
 
 ### 4. Introduction — 결합된 실패 모드 (1.5 분)
