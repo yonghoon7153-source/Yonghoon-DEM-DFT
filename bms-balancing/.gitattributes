@@ -172,3 +172,5 @@ evidence/reil_c4_0a_20261013/** -text
 # 2026-10-13: REIL C4 고정 배열 봉인 (A1/A2 Phase A · profile Sobol 2 · 동시 Sobol 16 · label-seed — C4-0a 에서 생성 · 봉인) — bytes 그대로
 reil_c4_arrays_20261013/** -text
 # 2026-10-13 정정 (C4-0a 결과): 위 폴더의 실제 봉인은 Phase A 넷 (A0 · A1/A2 상자 × seed 0 · 1) 뿐 — profile Sobol 2 · 동시 Sobol 16 · label-seed 는 C4-0b 에서 (상태 문서 §40). 규칙 (-text) 은 그대로
+# 2026-10-13: 미세단락 S1 OPEN-R1 _003 한정 검증 결과 검토 회신 (9 군 93 사례 한정 기능 검증 수용 · P1 0 · _001 보존 구간 부속 정정 · 재시험 0 · OPEN 4 유지) — bytes 그대로
+reviews/r14_repros/codex63/comsol_microshort_s1_open_r1_003_review_20261013/** -text
