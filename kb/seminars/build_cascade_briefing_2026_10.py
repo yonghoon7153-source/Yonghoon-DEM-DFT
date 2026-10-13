@@ -529,11 +529,12 @@ def figure(t, slide, fname, x, y, w, descr):
     return h
 
 
-def dashed_frame(t, title, x, y, w, h):
-    """The 08-18 slide-4 frame alone: dashed red rounded box, its red title cut into the top line."""
+def dashed_frame(t, title, x, y, w, h, tw=None):
+    """The 08-18 slide-4 frame alone: dashed red rounded box, its red title cut into the top line.
+    tw: width of the white title cut; the default (0.12 in per character) is too wide for long titles."""
     add(t,
         box(ids(), 'Dashed frame', x, y, w, h, line=DASH_RED, dash=True, adj=5000, lw=22225),
-        tb(ids(), 'Frame title', x + 0.45, y - 0.19, 0.35 + 0.12 * len(title), 0.36,
+        tb(ids(), 'Frame title', x + 0.45, y - 0.19, tw or 0.35 + 0.12 * len(title), 0.36,
            P(title, 'p', 1500, 100, 'ctr', DASH_RED, bold=True), ins=(0.04, 0.02, 0.04, 0.02)))
     nofill = t.getroot().find('.//p:cSld/p:spTree', NS)[-1].find('./p:spPr/a:noFill', NS)   # title box cuts the dashed line
     nofill.addprevious(etree.fromstring(f'<a:solidFill xmlns:a="{NS["a"]}"><a:srgbClr val="FFFFFF"/></a:solidFill>'))
@@ -603,7 +604,8 @@ def build_lean():
               ['[[b:In the lab]]: dopants added as compounds, not as bare elements',
                '[[b:This work]]: 91 candidate precursors, screened by simulation before synthesis'], h=1.35)
     fx, fy, fw, fh = 0.57, 2.6, 8.86, 2.3
-    dashed_frame(t, 'The question', fx, fy, fw, fh)
+    dashed_frame(t, 'Example: one cation, two precursors', fx, fy, fw, fh, tw=3.45)   # user 10-13: the pair is one example,
+    #      not the scope — Stage 1 covered all 91 precursors and the Stage 2 roster holds 237 designs
     for k, (cmp, an) in enumerate([('Al₂O₃', 'O'), ('Al₂S₃', 'S')]):
         yy = fy + 0.36 + k * 0.98
         add(t, box(ids(), f'Precursor {cmp}', 1.0, yy, 1.5, 0.62, fill='F3F4F6', line='9CA3AF', anchor='ctr',
@@ -616,7 +618,7 @@ def build_lean():
            + P('Does the anion change', 'p', 1800, 110, 'l', BLUE, spcbef=900)     # broken by hand: 'Li transport' stays
            + P('stability or Li transport?', 'p', 1800, 110, 'l', BLUE), anchor='ctr'))   # on one line
     down_arrow(t, name, fy + fh + 0.11, x=fx + fw / 2 - 1.405)
-    add(t, line_under(ids(), 'Today: the screen, its audit, and [[b:the first test of this question]]', 5.83))
+    add(t, line_under(ids(), 'Today: the 91-precursor screen, its audit, and [[b:the first test of this question]]', 5.83))
     save(t, name)
 
     # ---- 4 failure modes: orig slide 3, unchanged
