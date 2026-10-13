@@ -1,0 +1,321 @@
+{
+ "slug": "johnson1971_jkr_surface_energy_contact_elastic_solids",
+ "dpi": 600,
+ "maxpx": 3200,
+ "generated": "2026-10-13",
+ "sources": [
+  "303e5223-35._Surface_energy_and_the_contact_of_elastic_solids.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 4,
+   "file": "fig_1.png",
+   "caption": "FIGURE 1. The contact between two elastic solids both in the presence (contact radius a1) and absence (contact radius a0) of surface forces. (a) shows the contact between two convex bodies of radii R1 and R2 under a normal load of P0; δ is the elastic displacement. (b) indicates the distribution of stress in the contacting spherical surfaces. When surfaces are maintained in contact over an enlarged area by surface forces the stresses between the surfaces are tensile (T) at the edge of the contact and only remain compressive (P) in the centre. Distribution A is the Hertz stress with a = a1 and P = P1; distribution B the actual stress (Johnson 1958) with a = a1 and P = P0 and distribution C the Hertz stress with a = a0 and P = P0. (c) represents the load-displacement relation for the contacting surfaces.",
+   "rotated_deg": 0,
+   "bbox": [
+    36,
+    62,
+    418,
+    623
+   ],
+   "w": 3184,
+   "h": 4676,
+   "dpi": 600,
+   "src": "303e5223-35._Surface_energy_and_the_contact_of_elastic_solids.pdf",
+   "blank": 0.959,
+   "manual_crop": "hand crop at the native 600 ppi of the 1-bit JSTOR scan: the extractor's caption anchor fails on OCR captions ('FIGu:RE 1.'), it found only Figs 4-5; clip = ink extent incl. caption, page number/header and JSTOR footer excluded (2026-10-13)",
+   "viewed": true
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 9,
+   "file": "fig_2.png",
+   "caption": "FIGURE 2. Results for two rubber spheres (R1 = R2 = 2.2 cm) in dry and lubricated contact. +, Dry contact; ○, water contact; ×, SDS solution contact; ---, Hertz theory; —, modified theory.",
+   "rotated_deg": 0,
+   "bbox": [
+    34,
+    219,
+    416,
+    489
+   ],
+   "w": 3184,
+   "h": 2250,
+   "dpi": 600,
+   "src": "303e5223-35._Surface_energy_and_the_contact_of_elastic_solids.pdf",
+   "blank": 0.977,
+   "manual_crop": "hand crop at the native 600 ppi of the 1-bit JSTOR scan: the extractor's caption anchor fails on OCR captions ('FIGu:RE 1.'), it found only Figs 4-5; clip = ink extent incl. caption, page number/header and JSTOR footer excluded (2026-10-13)",
+   "viewed": true
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 11,
+   "file": "fig_3.png",
+   "caption": "FIGURE 3. Results for rubber sphere (R = 2.2 cm) in dry contact with rubber flat under small positive and negative loads. ○, Contact results; ---, Hertz theory; —, modified theory.",
+   "rotated_deg": 0,
+   "bbox": [
+    34,
+    136,
+    416,
+    409
+   ],
+   "w": 3184,
+   "h": 2276,
+   "dpi": 600,
+   "src": "303e5223-35._Surface_energy_and_the_contact_of_elastic_solids.pdf",
+   "blank": 0.976,
+   "manual_crop": "hand crop at the native 600 ppi of the 1-bit JSTOR scan: the extractor's caption anchor fails on OCR captions ('FIGu:RE 1.'), it found only Figs 4-5; clip = ink extent incl. caption, page number/header and JSTOR footer excluded (2026-10-13)",
+   "viewed": true
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 11,
+   "file": "fig_4.png",
+   "caption": "FIGURE 4. Dry contact results for gelatine spheres of different radius of curvature pressed against a Perspex flat. ○, 2.45 cm radius; ×, 7.9 cm radius; □, 25.5 cm radius; ---, Hertz theory; —, modified theory.",
+   "rotated_deg": 0,
+   "bbox": [
+    34,
+    410,
+    416,
+    622
+   ],
+   "w": 3184,
+   "h": 1768,
+   "dpi": 600,
+   "src": "303e5223-35._Surface_energy_and_the_contact_of_elastic_solids.pdf",
+   "blank": 0.96,
+   "manual_crop": "hand crop at the native 600 ppi of the 1-bit JSTOR scan: the extractor's caption anchor fails on OCR captions ('FIGu:RE 1.'), it found only Figs 4-5; clip = ink extent incl. caption, page number/header and JSTOR footer excluded (2026-10-13)",
+   "viewed": true
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 12,
+   "file": "fig_5.png",
+   "caption": "FIGURE 5. Results for gelatine spheres in dry contact with flat Perspex under small positive and negative loads plotted non-dimensionally. ○, 2.45 cm radius; ×, 7.9 cm radius; □, 25.5 cm radius; —, modified theory. [card note: the printed y-axis label a(K/3γπR²) lacks the exponent 1/3]",
+   "rotated_deg": 0,
+   "bbox": [
+    38,
+    166,
+    418,
+    429
+   ],
+   "w": 3168,
+   "h": 2192,
+   "dpi": 600,
+   "src": "303e5223-35._Surface_energy_and_the_contact_of_elastic_solids.pdf",
+   "blank": 0.971,
+   "manual_crop": "hand crop at the native 600 ppi of the 1-bit JSTOR scan: the extractor's caption anchor fails on OCR captions ('FIGu:RE 1.'), it found only Figs 4-5; clip = ink extent incl. caption, page number/header and JSTOR footer excluded (2026-10-13)",
+   "viewed": true
+  },
+  {
+   "key": "e1",
+   "kind": "equation",
+   "label": "eq1-2",
+   "page": 3,
+   "file": "eq_01_02_hertz.png",
+   "caption": "Equations (1)-(2), p.302: Hertz contact radius a0^3 = (3/4)π(k1+k2)R1R2/(R1+R2)·P0 with k_i = (1-ν_i^2)/(πE_i); approach δ^3 = (9/16)π^2(k1+k2)^2 (R1+R2)/(R1R2)·P0^2.",
+   "rotated_deg": 0,
+   "bbox": [
+    36,
+    283,
+    416,
+    447
+   ],
+   "w": 3167,
+   "h": 1367,
+   "dpi": 600,
+   "src": "303e5223-35._Surface_energy_and_the_contact_of_elastic_solids.pdf",
+   "blank": 0.949,
+   "manual_crop": "equation-region hand crop at the native 600 ppi (key equations of a scanned classic, transcribed in the card §3-1); clip = full text width, JSTOR footer excluded (2026-10-13)",
+   "viewed": true
+  },
+  {
+   "key": "e3",
+   "kind": "equation",
+   "label": "eq3-7",
+   "page": 5,
+   "file": "eq_03_07_approximate.png",
+   "caption": "Equations (3)-(7), p.304 (approximate theory): U_S = -πa^2γ with γ the energy per unit contact area (i.e. the two surfaces); F_S = -dU_S/dx; x ≈ a^2(R1+R2)/R1R2; F_S ≈ πR1R2γ/(R1+R2); P0 ≈ πR1R2γ/(R1+R2) (mica example ≈ 2 g); adhesion force independent of elastic moduli.",
+   "rotated_deg": 0,
+   "bbox": [
+    36,
+    140,
+    418,
+    522
+   ],
+   "w": 3184,
+   "h": 3184,
+   "dpi": 600,
+   "src": "303e5223-35._Surface_energy_and_the_contact_of_elastic_solids.pdf",
+   "blank": 0.914,
+   "manual_crop": "equation-region hand crop at the native 600 ppi (key equations of a scanned classic, transcribed in the card §3-1); clip = full text width, JSTOR footer excluded (2026-10-13)",
+   "viewed": true
+  },
+  {
+   "key": "e8",
+   "kind": "equation",
+   "label": "eq8",
+   "page": 5,
+   "file": "eq_08_exact_setup.png",
+   "caption": "Exact analysis opening, p.304: equilibrium when dU_T/da = 0 (8).",
+   "rotated_deg": 0,
+   "bbox": [
+    36,
+    532,
+    418,
+    621
+   ],
+   "w": 3184,
+   "h": 742,
+   "dpi": 600,
+   "src": "303e5223-35._Surface_energy_and_the_contact_of_elastic_solids.pdf",
+   "blank": 0.912,
+   "manual_crop": "equation-region hand crop at the native 600 ppi (key equations of a scanned classic, transcribed in the card §3-1); clip = full text width, JSTOR footer excluded (2026-10-13)",
+   "viewed": true
+  },
+  {
+   "key": "e9",
+   "kind": "equation",
+   "label": "eq9-11",
+   "page": 6,
+   "file": "eq_09_11_hertz_apparent_load.png",
+   "caption": "Equations (9)-(11), p.305: a0^3 = RP0/K with R = R1R2/(R1+R2), K = 4/3π(k1+k2); δ = a^2/R; apparent Hertz load P1 with a1^3 = RP1/K; the three energy terms U_E, U_M, U_S.",
+   "rotated_deg": 0,
+   "bbox": [
+    36,
+    60,
+    416,
+    356
+   ],
+   "w": 3167,
+   "h": 2467,
+   "dpi": 600,
+   "src": "303e5223-35._Surface_energy_and_the_contact_of_elastic_solids.pdf",
+   "blank": 0.909,
+   "manual_crop": "equation-region hand crop at the native 600 ppi (key equations of a scanned classic, transcribed in the card §3-1); clip = full text width, JSTOR footer excluded (2026-10-13)",
+   "viewed": true
+  },
+  {
+   "key": "eUE",
+   "kind": "equation",
+   "label": "eqUE",
+   "page": 6,
+   "file": "eq_UE_tensile_edge.png",
+   "caption": "Elastic energy path, p.305: U_E = U1 - U2, U1 = (2/5)P1^(5/3)/(K^(2/3)R^(1/3)); tensile stresses at the contact edge (Johnson 1958, Fig. 1b curve B); profile meets interface perpendicularly (observed by optical interferometry); δ = (2/3)P/(K a1).",
+   "rotated_deg": 0,
+   "bbox": [
+    36,
+    355,
+    418,
+    623
+   ],
+   "w": 3184,
+   "h": 2234,
+   "dpi": 600,
+   "src": "303e5223-35._Surface_energy_and_the_contact_of_elastic_solids.pdf",
+   "blank": 0.916,
+   "manual_crop": "equation-region hand crop at the native 600 ppi (key equations of a scanned classic, transcribed in the card §3-1); clip = full text width, JSTOR footer excluded (2026-10-13)",
+   "viewed": true
+  },
+  {
+   "key": "e12",
+   "kind": "equation",
+   "label": "eq12-13",
+   "page": 7,
+   "file": "eq_12_13_energies.png",
+   "caption": "Equations (12)-(13), p.306: U2 and stored elastic energy U_E = [1/(K^(2/3)R^(1/3))][(1/15)P1^(5/3) + (1/3)P0^2 P1^(-1/3)]; mechanical energy U_M = -P0 δ2.",
+   "rotated_deg": 0,
+   "bbox": [
+    34,
+    60,
+    416,
+    340
+   ],
+   "w": 3184,
+   "h": 2334,
+   "dpi": 600,
+   "src": "303e5223-35._Surface_energy_and_the_contact_of_elastic_solids.pdf",
+   "blank": 0.972,
+   "manual_crop": "equation-region hand crop at the native 600 ppi (key equations of a scanned classic, transcribed in the card §3-1); clip = full text width, JSTOR footer excluded (2026-10-13)",
+   "viewed": true
+  },
+  {
+   "key": "e14",
+   "kind": "equation",
+   "label": "eq14-17",
+   "page": 7,
+   "file": "eq_14_17_equilibrium.png",
+   "caption": "Equations (14)-(17), p.306: U_S = -γπa1^2 = -γπ(RP1/K)^(2/3), where γ is the energy of adhesion of both surfaces; total energy U_T (15); dU_T/dP1 (16); P1^2 - 2P1(P0 + 3γπR) + P0^2 = 0 (17).",
+   "rotated_deg": 0,
+   "bbox": [
+    34,
+    338,
+    416,
+    620
+   ],
+   "w": 3184,
+   "h": 2351,
+   "dpi": 600,
+   "src": "303e5223-35._Surface_energy_and_the_contact_of_elastic_solids.pdf",
+   "blank": 0.967,
+   "manual_crop": "equation-region hand crop at the native 600 ppi (key equations of a scanned classic, transcribed in the card §3-1); clip = full text width, JSTOR footer excluded (2026-10-13)",
+   "viewed": true
+  },
+  {
+   "key": "e18",
+   "kind": "equation",
+   "label": "eq18-21",
+   "page": 8,
+   "file": "eq_18_21_jkr_result.png",
+   "caption": "Equations (18)-(21), p.307: stable root P1 = P0 + 3γπR + sqrt{6γπRP0 + (3γπR)^2}; modified Hertz a^3 = (R/K)(P + 3γπR + sqrt{6γπRP + (3γπR)^2}); zero load a^3 = R(6γπR)/K; separation at P = -(3/2)γπR, independent of the elastic modulus.",
+   "rotated_deg": 0,
+   "bbox": [
+    36,
+    60,
+    416,
+    345
+   ],
+   "w": 3167,
+   "h": 2375,
+   "dpi": 600,
+   "src": "303e5223-35._Surface_energy_and_the_contact_of_elastic_solids.pdf",
+   "blank": 0.936,
+   "manual_crop": "equation-region hand crop at the native 600 ppi (key equations of a scanned classic, transcribed in the card §3-1); clip = full text width, JSTOR footer excluded (2026-10-13)",
+   "viewed": true
+  },
+  {
+   "key": "e22",
+   "kind": "equation",
+   "label": "eq22",
+   "page": 10,
+   "file": "eq_22_young.png",
+   "caption": "Equation (22), p.309: Young equation γ_S/V = γ_S/L + γ_L/V cos θ.",
+   "rotated_deg": 0,
+   "bbox": [
+    36,
+    60,
+    418,
+    176
+   ],
+   "w": 3184,
+   "h": 967,
+   "dpi": 600,
+   "src": "303e5223-35._Surface_energy_and_the_contact_of_elastic_solids.pdf",
+   "blank": 0.935,
+   "manual_crop": "equation-region hand crop at the native 600 ppi (key equations of a scanned classic, transcribed in the card §3-1); clip = full text width, JSTOR footer excluded (2026-10-13)",
+   "viewed": true
+  }
+ ],
+ "missing_labels": [],
+ "note": "JSTOR 1-bit scan at 600 ppi; all crops hand-made at native resolution; page = PDF page (PDF n = printed p.(299+n)); equation crops kind='equation'."
+}
