@@ -618,7 +618,10 @@ def build_lean():
            + P('Does the anion change', 'p', 1800, 110, 'l', BLUE, spcbef=900)     # broken by hand: 'Li transport' stays
            + P('stability or Li transport?', 'p', 1800, 110, 'l', BLUE), anchor='ctr'))   # on one line
     down_arrow(t, name, fy + fh + 0.11, x=fx + fw / 2 - 1.405)
-    add(t, line_under(ids(), 'This talk covers the 91-precursor screen, its audit, and [[b:the first test of this question.]]', 5.83))
+    # under the arrow: what answering the question takes — it hands over to the next slide ('evaluated separately');
+    # the agenda line it replaces did not follow from the box (user 10-13)
+    add(t, line_under(ids(), 'To answer this question, we check electrochemical stability, mechanical stability, and Li transport '
+                             '[[b:separately.]]', 5.83))
     save(t, name)
 
     # ---- 4 failure modes: orig slide 3, unchanged

@@ -72,11 +72,11 @@ evidenceScope: multi-source-mixed
 ### 3. Overview — 하나씩에서 여럿으로, 그리고 질문 하나 (1.5 분)
 **핵심** (사용자 10-13 흐름): 앞 장처럼 도펀트를 하나씩 계산하다 보니 범위를 넓혀 여러 도펀트를 Li₆PS₅Cl 에 넣어 보고 싶어졌다 →
 넓히려니 실험에서 넣는 건 원소가 아니라 화합물이다 → 그래서 전구체를 단위로 91 개를 합성 전에 계산으로 걸렀다 →
-예: 같은 Al 이라도 Al₂O₃ 와 Al₂S₃ 는 다른 음이온을 데려온다 — 그게 안정성 · Li 이동을 바꾸나? → 오늘: 스크린 · 감사 · 이 질문의 첫 시험.
+예: 같은 Al 이라도 Al₂O₃ 와 Al₂S₃ 는 다른 음이온을 데려온다 — 그게 안정성 · Li 이동을 바꾸나? → 답하려면 전기화학 · 기계 안정성과 Li 이동을 따로 봐야 한다 → 다음 장 (실패 모드).
 - 화면 (사용자 10-13 · 질문으로 다시 짬 · 콜론 줄 없앰): ■ *Choosing a dopant precursor for Li₆PS₅Cl* · bullet 둘 —
   *In the lab, dopants are added as compounds, not as bare elements.* · *This work screens 91 candidate precursors by simulation before synthesis.* ·
   점선 상자 *An example* (Al₂O₃ → Al + O · Al₂S₃ → Al + S } *Same Al, different partner anion* · *Does the anion change stability or Li transport?*) ·
-  화살표 · 아래 줄 *This talk covers the 91-precursor screen, its audit, and the first test of this question.*
+  화살표 · 아래 줄 *To answer this question, we check electrochemical stability, mechanical stability, and Li transport separately.*
 - 상자는 **예 하나**다 (사용자 10-13 *'이건 하나의 예인거지?'*): 1단계는 91 개 전부 (3,675 구조) · 2단계 설계 목록은 조성 단위 237 (09-12 비준) ·
   Al₂O₃ 대 Al₂S₃ 는 MD 방법이 설계 사이 차이를 가려낼 수 있는지 먼저 보는 **파일럿 쌍** — 같은 Al · 같은 공공 수 · 같은 배치 · 같은 부피에서 음이온만 다른
   가장 깨끗한 대조. 파일럿 40 런에 GPU 약 2 주라, 237 중 무엇을 얼마나 돌릴지는 파일럿 뒤에 결과를 보기 전에 정한다.
@@ -88,9 +88,9 @@ evidenceScope: multi-source-mixed
   - **고리** — 실험 위주 랩에서 '무엇을 넣을지' 는 매일 고르는 문제다. 이 주제를 처음 듣는 사람도 바로 붙는다.
   - **새로운 점** — 단위가 원소가 아니라 전구체 화합물이다 (5장 선행 스크린 표가 받는다).
   - **기대** — 이 질문의 첫 시험이 12–13장 파일럿이라, 끝까지 들을 이유가 생긴다.
-  - **다리** — '안정성 · Li 이동' 이 다음 장 (결합된 실패 모드) 으로 넘어가는 이유다.
+  - **다리** — 화살표 아래 줄 ('세 가지를 따로') 이 다음 장 (결합된 실패 모드 · *'evaluated separately'*) 으로 그대로 넘어간다 (사용자 10-13).
 - ⚠ 질문은 질문으로만 — 답 (음이온이 바꾼다 / 안 바꾼다) 은 말하지 않는다 (파일럿 판정 전). 'Al + O' 는 화합물이 가져오는 것이지 '격자에 들어간다' 가 아니다.
-- ➜ "먼저 왜 안정성과 수송을 같이 봐야 하는지부터 보겠습니다."
+- ➜ "왜 따로 봐야 하는지부터 보겠습니다."
 
 ### 4. Introduction — 결합된 실패 모드 (1.5 분)
 **핵심**: 전기화학 열화와 기계 열화가 엮여 있어서, 한 축만 고치면 다른 축이 나빠질 수 있다.
