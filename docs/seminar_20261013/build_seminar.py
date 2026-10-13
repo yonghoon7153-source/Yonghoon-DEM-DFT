@@ -337,7 +337,7 @@ def build(template, repo, figs, out):
 
     # ── 4 ① DEM → transport ─────────────────────────────────────────────
     s = body_slide('DEM', 'From the contact network to Li⁺ transport',
-                   ['Kirchhoff network: each SE–SE contact = bulk resistance + Holm/Maxwell constriction using Hertz contact radii; σ₀ = 1.5 mS cm⁻¹ [8].',
+                   ['Contact-network approach [8]: bulk resistance + Holm/Maxwell constriction using Hertz contact radii; chosen σ₀ = 1.5 mS cm⁻¹ (pellet-literature range).',
                     'Transport tortuosity T = φ_SE σ₀ / σ_eff: 7.2 → 5.0 (0:10 → 7:3). Contact constriction accounts for 73–75 % of Joule dissipation in this network model.'],
                    body_box=(0.61, 1.08, 8.84, 2.05))
     place_pic(s, repo / 'docs/data/ps45_r45_network_g2_20261007/deck_p14p15_20261012/p14_tortuosity_hertz.png', (0.45, 3.20, 2.95, 2.80))
@@ -368,7 +368,7 @@ def build(template, repo, figs, out):
     D[5] = 'dem_governing_equations_background_20261011.md §5.1 · §10.3 · §11; DEMP-01 (57.9 %)'
     notes(s, 'Sources: docs/dem_governing_equations_background_20261011.md (§5.3 figure 2; §10.3 literature counts; §11 limits). '
              'Damping share 57.9 % = measured on one 7:3 bed during compression (ledger DEMP-01, open). Literature count = selected canonical cards, our classification; not a systematic review. '
-             'Bulk modulus reference ≈ 22 GPa = our DFT E_VRH 22.06 GPa (literature DEM input 22.1 GPa, Bazzoun 2026 [8]); the glass-electrolyte value 24 GPa (Sakuda 2013 [15]) is a different material system. '
+             'Young\'s modulus reference: our DFT E_VRH = 22.06 GPa (literature DEM input 22.1 GPa, Bazzoun 2026 [8]); the bulk modulus K / B0 = 26.23 GPa is a separate quantity; the glass-electrolyte value 24 GPa (Sakuda 2013 [15]) is a different material system. '
              'The statement is about this implementation (fixed spherical shapes, hooke/hysteresis), not about DEM in general.')
 
     # ── 6 ③ MPM — why ───────────────────────────────────────────────────
@@ -388,29 +388,29 @@ def build(template, repo, figs, out):
     s = two_column('MPM', 'Effective material inputs and their status',
                    'Bulk modulus from DFT; shear softening and yield stress from a pure-electrolyte calibration sweep.',
                    'Effective material inputs',
-                   ['Bulk LPSCl: E ≈ 22 GPa (DFT; DEM input 22.1 GPa [8]); σy 0.05–0.30 GPa',
+                   ['LPSCl reference: E ≈ 22 GPa (our DFT E_VRH; literature DEM input 22.1 GPa [8])',
                     'DEM effective: E = 1.35 GPa — reproduces compaction, not a property',
                     'MPM: E = 1.53 GPa, ν = 0.49, σy = 0.30 GPa; K = 25.5 ≈ DFT 26.2 GPa'],
                    'Calibration target and limits',
                    ['Calibration target: pure-SE porosity 10 % at 300 MPa (lab reference sample, unpublished)',
-                    'Not a literature anchor; the earlier attribution was withdrawn',
-                    'Shear-only softening keeps the real bulk modulus (ν = 0.49)'],
+                    'Validation against independent experiments: pending'],
                    bottom=[('Tested alternatives (volumetric cap, real E) did not remove the need for effective parameters.', BLUE)])
     D[7] = 'CLAUDE.md 3D MPM (ν 0.49 · K 25.5 ≈ B0 26.23); DFT E_VRH 22.06; Bazzoun 2026 E_SE 22.1; CL-94 (10 % = calibration target, source unverified); DPC cross-check'
     notes(s, 'Sources: CLAUDE.md "3D MPM compaction — 3-fix calibration" (K = E/(3(1−2ν)) = 25.5 GPa vs DFT B0 26.23); our DFT E_VRH 22.06 GPa; Bazzoun 2026 [8] uses E_SE = 22.1 GPa for Li6PS5Cl; '
              'the sulfide-glass value 24 GPa (75Li2S·25P2S5, Sakuda 2013 [15]) is a different material system and is not used on the slide. '
              'σy = 0.30 GPa was selected in the pure-SE calibration sweep (0.15 → 5.6 %, 0.20 → 6.7 %, 0.25 → 9.0 %, 0.30 → 10.0 %), inside the literature range. '
-             'Claims ledger CL-94: the pure-SE 10 % value is a calibration target (lab standard sample, unpublished); our earlier literature attribution was withdrawn. '
+             'Claims ledger CL-94: the pure-SE 10 % value is a calibration target (lab standard sample, unpublished); it is not a literature anchor — our earlier literature attribution was withdrawn. '
+             'Shear-only softening (ν = 0.49) keeps K = 25.5 GPa close to the DFT reference B0 = 26.23 GPa; softening the bulk modulus over-crushed the bed. '
              '"Tested alternatives" = DPC volumetric cap and real-E runs (docs/mpm_dpc_cap_crosscheck.md); the statement is limited to the tested models.')
 
     # ── 8 ③ DEM ↔ MPM ───────────────────────────────────────────────────
     s = body_slide('MPM', 'Compaction agreement depends on initialization and loading protocol',
-                   ['Historical and current scaffold calculations differ in electrolyte initialization and loading protocol; they are not one validation series.',
+                   ['Historical and current scaffold calculations use different electrolyte initializations and run configurations; they are not one validation series.',
                     'AM load sharing remains a candidate explanation for over-compaction; the final hypothesis verdict is pending.'], body_box=(0.61, 1.08, 8.84, 2.20))
     textbox(s, (0.61, 3.50, 8.84, 2.40),
             [[('Scaffold calculations (AM skeleton from the DEM bed)', NAVY, True)],
              [('· Earlier: cell-filled SE, bidirectional servo — historical, not a DEM-seeded validation', DARK)],
-             [('· Current registered runs: DEM-seeded SE, fixed-platen hold — f = 0 completed; f(a) execution failed', DARK)],
+             [('· Current registered runs: DEM-seeded SE, stress-controlled servo — f = 0 completed; f(a) execution failed', DARK)],
              [('· AM-load-sharing hypothesis: verdict pending', DARK)]], 'Status box', size=14, line=1.2)
     for p_ in shape(s, 'Status box').text_frame.paragraphs:
         p_.alignment = 1   # left
@@ -418,6 +418,7 @@ def build(template, repo, figs, out):
     notes(s, 'Sources: CLAUDE.md "DEM→MPM SCAFFOLD" and the 2026-09-09 correction (porosity agreement = same geometry, not independent); docs/mpm3d_calibration.md (earlier cell-filled SE, servo); '
              'docs/reviews/fam_platen_prereg_20260812.md §11 (R1 over-compaction) and §12-6-2 (f = 0 completed with I0 false; f(a) EXECUTION_FAILED; four-cell verdict unassigned). '
              'The earlier thickness agreement (30.7 vs 30.28 µm) is not shown: it comes from a different initialization and loading protocol and cannot serve as the validation value of the DEM-seeded runs (SEM-02). '
+             'The current statuses refer to the registered servo runs (--protocol servo; primary endpoint = final thickness after servo convergence). '
              'No figure: a side-by-side comparison requires the same initialization, loading history and state.')
 
     # ── 9 ④ Voxelization ────────────────────────────────────────────────
@@ -445,7 +446,7 @@ def build(template, repo, figs, out):
     place_pic(s, repo / 'docs/report_20261021/previews/G6.png', (6.15, 3.05, 3.50, 3.05))
     caption(s, (0.45, 6.10, 2.75, 0.55), ['Additive seeding illustration', 'not a production stamp'])
     caption(s, (3.30, 6.10, 2.75, 0.55), ['Synthetic morphology example', 'not a production stamp'])
-    caption(s, (6.15, 6.10, 3.50, 0.55), ['σ(e⁻) vs VGCF wt% at three voxel sizes', 'campaign values; contact resistance not included'])
+    caption(s, (6.15, 6.10, 3.50, 0.55), ['σ(e⁻) vs VGCF wt%, three voxel sizes', 'campaign values; no contact resistance'])
     D[10] = 'CL-60 (centerline); phase_a_rep100 README (ORDER-ROBUST 72/72, replay 0.00000 %); report_20261021 G6'
     notes(s, 'Sources: docs/data/phase_a_rep100_20260930/README.md (104 arms, 72/72 adjacent-composition comparisons with no threshold violation; order only is the registered estimand; '
              'increments are technical report only; replay difference 0.00000 %); docs/report_20261021 G6 (voxel σe means; contact resistance not included). '
@@ -471,7 +472,7 @@ def build(template, repo, figs, out):
     place_pic(s, figs / 'F3_sigma_e_model_vs_exp.png', (0.60, 2.95, 4.35, 3.00))
     place_pic(s, figs / 'F4_ps45_sigma_e.png', (5.10, 2.95, 4.35, 3.00))
     caption(s, (0.60, 6.10, 4.35, 0.65), ['Model and DC-polarization estimates — log scale', 'conditions not yet matched'])
-    caption(s, (5.10, 6.10, 4.35, 0.65), ['Carbon- and binder-free NCM–SE beds; Hertz H0 contacts', 'common NCM reference 4.1 mS cm⁻¹ [16]; empirical size factor off; one bed per composition'])
+    caption(s, (5.10, 6.10, 4.35, 0.70), ['NCM–SE beds, no carbon/binder; Hertz H0', 'common NCM reference 4.1 mS cm⁻¹ [16]; size factor off', 'one bed per composition'])
     D[12] = 'sdcp_sigma_e_dcp_anchor_registration_20261012 (54.0 · 70.6 ↔ 4.47 · 12.4); ps45_sigmae_factor_off_20261013 (0.391 · 0.406 · 0.402 · 0.375 · 0.467); Codex §6-1 footnote; Wang 2018 (NMC811 4.1e-3 S/cm)'
     notes(s, 'Sources: docs/reviews/sdcp_sigma_e_dcp_anchor_registration_20261012.md (DC-polarization values 4.47 and 12.4 mS/cm, measurement conditions unverified; model 54.0 and 70.6; re-run registered, no results yet); '
              'docs/data/ps45_sigmae_factor_off_20261013/README.md (0.391 · 0.406 · 0.402 · 0.375 · 0.467 mS/cm; raw minimum 0.3747). Footnote for the right panel (Codex §6-1): computed effective electronic conductivity of the '
@@ -496,7 +497,7 @@ def build(template, repo, figs, out):
     s = dup_slide(prs, P['dashed'])
     set_runs_text(shape(s, 'TextBox 20').text_frame, 'Progress')
     set_body(shape(s, 'Rectangle 4'), 'Registered studies and current status',
-             ['Registered before launch, reviewed externally; the table shows the ledger state, not result claims.'])
+             ['The table summarizes the current status of each registered study.'])
     place(shape(s, 'Rectangle 4'), (0.61, 1.08, 8.84, 1.05))
     set_text(shape(s, 'Frame title'), 'Study status', size=15, bold=True)
     for r in shape(s, 'Frame title').text_frame.paragraphs[0].runs:
@@ -530,11 +531,11 @@ def build(template, repo, figs, out):
     # ── 15 ⑦ dataset ───────────────────────────────────────────────────
     s = body_slide('Progress', 'A 194-bed design-of-experiments dataset for machine learning',
                    ['130 + 64 Latin-hypercube beds (composition, particle sizes) → structure and transport descriptors, released as v1.2 (conditional use as model descriptors).',
-                    'SE percolation 106/130; geometric shortest-path tortuosity 1.3–4.2 (percolating beds; not transport tortuosity).'], body_box=(0.61, 1.08, 8.84, 2.05))
+                    'In the 130-bed set: SE percolation 106/130; geometric shortest-path tortuosity 1.3–4.2 (percolating beds; not transport tortuosity).'], body_box=(0.61, 1.08, 8.84, 2.05))
     place_pic(s, repo / 'docs/report_20261021/previews/G5a.png', (0.55, 3.35, 4.30, 2.65))
     place_pic(s, repo / 'docs/report_20261021/previews/G3.png', (5.05, 3.35, 4.30, 2.65))
-    caption(s, (0.55, 6.10, 4.30, 0.55), ['Geometric tortuosity vs SE fraction (130 beds)', '× = no percolating SE path (24 beds)'])
-    caption(s, (5.05, 6.10, 4.30, 0.55), ['Porosity vs SE fraction', '130 + 64 beds'])
+    caption(s, (0.55, 6.10, 4.30, 0.55), ['Geometric tortuosity vs SE fraction — 130 + 64 beds', '×: 24 non-percolating beds in the 130-bed set'])
+    caption(s, (5.05, 6.10, 4.30, 0.55), ['Porosity vs SE fraction — 130-bed set'])
     D[15] = 'release v1.2 README; report_20261021 G3 · G5a (G5b moved to notes); lhs_ml_crosscheck_20261005 (notes only, no comparison claim)'
     notes(s, 'Sources: docs/data/lhs_release_20261006_v12/README.md (130 × 132 and 64 × 131; physical-target HOLD 59/130 and 62/64 — released as model descriptors, not validated physical targets); '
              'docs/report_20261021/summary.json (G5: span 106/130; finite geometric tortuosity 1.29–4.15 over the 130-bed set; G5b = ionically isolated AM, not shown). '
@@ -620,7 +621,8 @@ FOOT = {'HANYANG UNIVERSITY', 'Battery Materials Lab.'}
 #: Codex 10-13 가 지적한 문구 — 어느 장 본문 · notes 에도 남으면 안 된다 (SEM-01~06 · 11 · 14)
 FORBIDDEN = ['Large–large', 'large–large', 'follow no power law', 'changes sign', 'never to one another', 'cross-validation',
              'was retracted', 'Every production number', 'nothing below has a result', '30.7', 'Pressed honestly', 'contact-free branch',
-             'Hertz constriction', 'single-crystal LPSCl', 'irreducible', 'closing the three problems', 'gain follows the represented']
+             'Hertz constriction', 'single-crystal LPSCl', 'irreducible', 'closing the three problems', 'gain follows the represented',
+             'fixed-platen hold', 'σy 0.05–0.30', 'Geometric tortuosity vs SE fraction (130 beds)']
 INTERNAL = r'\b(?:CL-\d+|SELF-\d+|SEM-\d+|G2RR\d*-\d+|RGL[R0-9]*-\d+|UL-\d+|DEMP-\d+|RB-\d+|MV-\d+|PS45E-\d+|stoic-knuth|pqwtv8|kgy|ibb|uma|WSL)\b'
 
 
@@ -677,6 +679,9 @@ def selftest(out, repo, figs=None, word_cap=100, wide_cap=120, wide=(7, 14, 16))
     assert not bad, f'phrases flagged by the Codex review still present: {bad}'
     n = len(prs.slides)
     assert n == 19, n
+    # p15 캡션 ↔ 그림 집단 (SEMV2-02): 왼쪽 G5a = 130 + 64 · 오른쪽 G3 = 130
+    caps15 = [sh.text_frame.text for sh in prs.slides[14].shapes if sh.name == 'Caption']
+    assert any('130 + 64' in c and 'tortuosity' in c for c in caps15) and any('130-bed set' in c and 'Porosity' in c for c in caps15), caps15
     stats = slide_stats(prs)
     heavy = [(i, w) for i, (w, _, _) in enumerate(stats, 1) if 2 <= i <= 17 and w > (wide_cap if i in wide else word_cap)]
     assert not heavy, f'slides over {word_cap}/{wide_cap} words (placeholders excluded): {heavy}'

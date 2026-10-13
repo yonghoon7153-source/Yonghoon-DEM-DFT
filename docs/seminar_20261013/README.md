@@ -46,3 +46,4 @@
 - 새 그림 v2: F2–F4 글씨 = 최종 배치 기준 ≈ 12 pt · F4 라벨 5/5 (`_fmt` 의 x locator 를 범주 축에 안 씀 — 옛 판 결함 SEM-09) · F1 상자 문구 축약 + 띠 = 보정 **표적**.  값 불변 (selftest 정본 대조).
 - 글 전문 v2 = `slide_text_v2.md` (덱에서 추출 · notes 포함) · `slide_text_draft3.md` = 초안 4 (역사).  참고문헌 16 (+ [15] Sakuda 2013 · [16] Wang 2018 — 정본 카드).
 - 덱 pptx · PDF · 렌더 = 리포 밖 (ZIP v4) — Codex 재확인은 **수정 PPT + 그 PDF** 로.
+- **v2.1 (10-13 · Codex 재확인 = 조건부 GO · `docs/reviews/codex_review_seminar_deck_v2_recheck_20261013.md`)**: P0 = p8 현재 등록 런 = **stress-controlled servo** (fixed-platen hold 오기 · SEMV2-01) · p15 캡션 집단 정정 (왼쪽 G5a = 130 + 64 · 오른쪽 G3 = 130 · SEMV2-02) · P1 = p12 축 제목 두 줄 + 조건 캡션 3 줄 · p2 F1 상자 안 줄바꿈 · p5 notes E_VRH = Young's modulus (K/B0 별도) · p7 미확인 σy 범위 삭제 · 철회 이력 · 중복 → notes · p4 `[8]` = 방법 · σ₀ 1.5 = chosen reference · p14 소개 문장 축약.  selftest 에 `fixed-platen hold` · `σy 0.05–0.30` 금지 + p15 캡션 ↔ 집단 검사 추가 (v2 덱에서 실패 확인).  글 전문 = `slide_text_v2.md` (v2.1 로 갱신).

@@ -1,4 +1,4 @@
-# 연구세미나 덱 v2 — 장별 글 전문 (Codex 10-13 판정 반영 · 생성기 build_seminar.py 출력에서 추출)
+# 연구세미나 덱 v2.1 — 장별 글 전문 (Codex 10-13 판정 + 재확인 조건부 GO 의 P0/P1 반영 · 생성기 출력에서 추출)
 
 ## p01
 - [직사각형 10] Yonghoon An
@@ -28,7 +28,7 @@
 
 ## p04
 - [Rectangle 4] From the contact network to Li⁺ transport
-- [Rectangle 4] Kirchhoff network: each SE–SE contact = bulk resistance + Holm/Maxwell constriction using Hertz contact radii; σ₀ = 1.5 mS cm⁻¹ [8].
+- [Rectangle 4] Contact-network approach [8]: bulk resistance + Holm/Maxwell constriction using Hertz contact radii; chosen σ₀ = 1.5 mS cm⁻¹ (pellet-literature range).
 - [Rectangle 4] Transport tortuosity T = φ_SE σ₀ / σ_eff: 7.2 → 5.0 (0:10 → 7:3). Contact constriction accounts for 73–75 % of Joule dissipation in this network model.
 - [TextBox 20] DEM
 - [Placeholder] Figure pending: current pathways in the 7:3 bed (ionic, Hertz; top 50 % of current)
@@ -51,7 +51,7 @@
 - [Lit box] · linear hysteretic law: 1/22
 - [Lit box] · global damping, dry compaction: none
 - [Caption] < Contact-law illustration from the implementation [1, 7] >
-- notes: Sources: docs/dem_governing_equations_background_20261011.md (§5.3 figure 2; §10.3 literature counts; §11 limits). Damping share 57.9 % = measured on one 7:3 bed during compression (ledger DEMP-01, open). Literature count = selected canonical cards, our classification; not a systematic review. Bulk modulus reference ≈ 22 GPa = our DFT E_VRH 22.06 GPa (literature DEM input 22.1 GPa, Bazzoun 2026 [8]); the glass-electrolyte value 24 GPa (Sakuda 2013 [15]) is a different material system. The statement is about this implementation (fixed spherical shapes, hooke/hysteresis), not about DEM in general.
+- notes: Sources: docs/dem_governing_equations_background_20261011.md (§5.3 figure 2; §10.3 literature counts; §11 limits). Damping share 57.9 % = measured on one 7:3 bed during compression (ledger DEMP-01, open). Literature count = selected canonical cards, our classification; not a systematic review. Young's modulus reference: our DFT E_VRH = 22.06 GPa (literature DEM input 22.1 GPa, Bazzoun 2026 [8]); the bulk modulus K / B0 = 26.23 GPa is a separate quantity; the glass-electrolyte value 24 GPa (Sakuda 2013 [15]) is a different material system. The statement is about this implementation (fixed spherical shapes, hooke/hysteresis), not about DEM in general.
 
 ## p06
 - [Rectangle 4] The material point method supplies the plastic half
@@ -69,26 +69,25 @@
 - [Rectangle 4] Effective material inputs and their status
 - [Rectangle 4] Bulk modulus from DFT; shear softening and yield stress from a pure-electrolyte calibration sweep.
 - [Audit findings] Effective material inputs
-- [Audit findings items] Bulk LPSCl: E ≈ 22 GPa (DFT; DEM input 22.1 GPa [8]); σy 0.05–0.30 GPa
+- [Audit findings items] LPSCl reference: E ≈ 22 GPa (our DFT E_VRH; literature DEM input 22.1 GPa [8])
 - [Audit findings items] DEM effective: E = 1.35 GPa — reproduces compaction, not a property
 - [Audit findings items] MPM: E = 1.53 GPa, ν = 0.49, σy = 0.30 GPa; K = 25.5 ≈ DFT 26.2 GPa
 - [Decisions recorded on Sep 12] Calibration target and limits
 - [Decisions recorded on Sep 12 items] Calibration target: pure-SE porosity 10 % at 300 MPa (lab reference sample, unpublished)
-- [Decisions recorded on Sep 12 items] Not a literature anchor; the earlier attribution was withdrawn
-- [Decisions recorded on Sep 12 items] Shear-only softening keeps the real bulk modulus (ν = 0.49)
+- [Decisions recorded on Sep 12 items] Validation against independent experiments: pending
 - [Conclusion] Tested alternatives (volumetric cap, real E) did not remove the need for effective parameters.
-- notes: Sources: CLAUDE.md "3D MPM compaction — 3-fix calibration" (K = E/(3(1−2ν)) = 25.5 GPa vs DFT B0 26.23); our DFT E_VRH 22.06 GPa; Bazzoun 2026 [8] uses E_SE = 22.1 GPa for Li6PS5Cl; the sulfide-glass value 24 GPa (75Li2S·25P2S5, Sakuda 2013 [15]) is a different material system and is not used on the slide. σy = 0.30 GPa was selected in the pure-SE calibration sweep (0.15 → 5.6 %, 0.20 → 6.7 %, 0.25 → 9.0 %, 0.30 → 10.0 %), inside the literature range. Claims ledger CL-94: the pure-SE 10 % value is a calibration target (lab standard sample, unpublished); our earlier literature attribution was withdrawn. "Tested alternatives" = DPC volumetric cap and real-E runs (docs/mpm_dpc_cap_crosscheck.md); the statement is limited to the tested models.
+- notes: Sources: CLAUDE.md "3D MPM compaction — 3-fix calibration" (K = E/(3(1−2ν)) = 25.5 GPa vs DFT B0 26.23); our DFT E_VRH 22.06 GPa; Bazzoun 2026 [8] uses E_SE = 22.1 GPa for Li6PS5Cl; the sulfide-glass value 24 GPa (75Li2S·25P2S5, Sakuda 2013 [15]) is a different material system and is not used on the slide. σy = 0.30 GPa was selected in the pure-SE calibration sweep (0.15 → 5.6 %, 0.20 → 6.7 %, 0.25 → 9.0 %, 0.30 → 10.0 %), inside the literature range. Claims ledger CL-94: the pure-SE 10 % value is a calibration target (lab standard sample, unpublished); it is not a literature anchor — our earlier literature attribution was withdrawn. Shear-only softening (ν = 0.49) keeps K = 25.5 GPa close to the DFT reference B0 = 26.23 GPa; softening the bulk modulus over-crushed the bed. "Tested alternatives" = DPC volumetric cap and real-E runs (docs/mpm_dpc_cap_crosscheck.md); the statement is limited to the tested models.
 
 ## p08
 - [Rectangle 4] Compaction agreement depends on initialization and loading protocol
-- [Rectangle 4] Historical and current scaffold calculations differ in electrolyte initialization and loading protocol; they are not one validation series.
+- [Rectangle 4] Historical and current scaffold calculations use different electrolyte initializations and run configurations; they are not one validation series.
 - [Rectangle 4] AM load sharing remains a candidate explanation for over-compaction; the final hypothesis verdict is pending.
 - [TextBox 20] MPM
 - [Status box] Scaffold calculations (AM skeleton from the DEM bed)
 - [Status box] · Earlier: cell-filled SE, bidirectional servo — historical, not a DEM-seeded validation
-- [Status box] · Current registered runs: DEM-seeded SE, fixed-platen hold — f = 0 completed; f(a) execution failed
+- [Status box] · Current registered runs: DEM-seeded SE, stress-controlled servo — f = 0 completed; f(a) execution failed
 - [Status box] · AM-load-sharing hypothesis: verdict pending
-- notes: Sources: CLAUDE.md "DEM→MPM SCAFFOLD" and the 2026-09-09 correction (porosity agreement = same geometry, not independent); docs/mpm3d_calibration.md (earlier cell-filled SE, servo); docs/reviews/fam_platen_prereg_20260812.md §11 (R1 over-compaction) and §12-6-2 (f = 0 completed with I0 false; f(a) EXECUTION_FAILED; four-cell verdict unassigned). The earlier thickness agreement (30.7 vs 30.28 µm) is not shown: it comes from a different initialization and loading protocol and cannot serve as the validation value of the DEM-seeded runs (SEM-02). No figure: a side-by-side comparison requires the same initialization, loading history and state.
+- notes: Sources: CLAUDE.md "DEM→MPM SCAFFOLD" and the 2026-09-09 correction (porosity agreement = same geometry, not independent); docs/mpm3d_calibration.md (earlier cell-filled SE, servo); docs/reviews/fam_platen_prereg_20260812.md §11 (R1 over-compaction) and §12-6-2 (f = 0 completed with I0 false; f(a) EXECUTION_FAILED; four-cell verdict unassigned). The earlier thickness agreement (30.7 vs 30.28 µm) is not shown: it comes from a different initialization and loading protocol and cannot serve as the validation value of the DEM-seeded runs (SEM-02). The current statuses refer to the registered servo runs (--protocol servo; primary endpoint = final thickness after servo convergence). No figure: a side-by-side comparison requires the same initialization, loading history and state.
 
 ## p09
 - [Rectangle 4] Voxelizing the compacted microstructure into a transport mesh
@@ -110,8 +109,8 @@
 - [Caption] < not a production stamp >
 - [Caption] < Synthetic morphology example >
 - [Caption] < not a production stamp >
-- [Caption] < σ(e⁻) vs VGCF wt% at three voxel sizes >
-- [Caption] < campaign values; contact resistance not included >
+- [Caption] < σ(e⁻) vs VGCF wt%, three voxel sizes >
+- [Caption] < campaign values; no contact resistance >
 - notes: Sources: docs/data/phase_a_rep100_20260930/README.md (104 arms, 72/72 adjacent-composition comparisons with no threshold violation; order only is the registered estimand; increments are technical report only; replay difference 0.00000 %); docs/report_20261021 G6 (voxel σe means; contact resistance not included). Left and centre panels are illustrations (seeding schematic; synthetic preview that includes additive types not used in Phase A) — they do not demonstrate the fidelity of the production VGCF/PTFE stamps. Stamp conventions: CLAUDE.md SR-01 (sphere stamp, centerline PTFE = CL-60).
 
 ## p11
@@ -131,8 +130,9 @@
 - [TextBox 20] Limits
 - [Caption] < Model and DC-polarization estimates — log scale >
 - [Caption] < conditions not yet matched >
-- [Caption] < Carbon- and binder-free NCM–SE beds; Hertz H0 contacts >
-- [Caption] < common NCM reference 4.1 mS cm⁻¹ [16]; empirical size factor off; one bed per composition >
+- [Caption] < NCM–SE beds, no carbon/binder; Hertz H0 >
+- [Caption] < common NCM reference 4.1 mS cm⁻¹ [16]; size factor off >
+- [Caption] < one bed per composition >
 - notes: Sources: docs/reviews/sdcp_sigma_e_dcp_anchor_registration_20261012.md (DC-polarization values 4.47 and 12.4 mS/cm, measurement conditions unverified; model 54.0 and 70.6; re-run registered, no results yet); docs/data/ps45_sigmae_factor_off_20261013/README.md (0.391 · 0.406 · 0.402 · 0.375 · 0.467 mS/cm; raw minimum 0.3747). Footnote for the right panel (Codex §6-1): computed effective electronic conductivity of the DEM particle arrangement; Hertz H0 / Holm–Maxwell constriction; common reference conductivity 4.1 mS/cm for polycrystalline and single-crystal NCM (Wang 2018 [16], SPS pellet NMC811 at 20 °C, designated reference); no empirical size factor; absolute values conditional on this reference and contact model; single bed per composition, scatter not evaluated; carbon- and binder-free AM–SE composite.
 
 ## p13
@@ -149,7 +149,7 @@
 ## p14
 - [TextBox 20] Progress
 - [Rectangle 4] Registered studies and current status
-- [Rectangle 4] Registered before launch, reviewed externally; the table shows the ledger state, not result claims.
+- [Rectangle 4] The table summarizes the current status of each registered study.
 - [Frame title] Study status
 - [Item 1] 1.	Historical eight-origin study
 - [Note 1] Conductivity estimates and inference remain on hold
@@ -167,12 +167,11 @@
 ## p15
 - [Rectangle 4] A 194-bed design-of-experiments dataset for machine learning
 - [Rectangle 4] 130 + 64 Latin-hypercube beds (composition, particle sizes) → structure and transport descriptors, released as v1.2 (conditional use as model descriptors).
-- [Rectangle 4] SE percolation 106/130; geometric shortest-path tortuosity 1.3–4.2 (percolating beds; not transport tortuosity).
+- [Rectangle 4] In the 130-bed set: SE percolation 106/130; geometric shortest-path tortuosity 1.3–4.2 (percolating beds; not transport tortuosity).
 - [TextBox 20] Progress
-- [Caption] < Geometric tortuosity vs SE fraction (130 beds) >
-- [Caption] < × = no percolating SE path (24 beds) >
-- [Caption] < Porosity vs SE fraction >
-- [Caption] < 130 + 64 beds >
+- [Caption] < Geometric tortuosity vs SE fraction — 130 + 64 beds >
+- [Caption] < ×: 24 non-percolating beds in the 130-bed set >
+- [Caption] < Porosity vs SE fraction — 130-bed set >
 - notes: Sources: docs/data/lhs_release_20261006_v12/README.md (130 × 132 and 64 × 131; physical-target HOLD 59/130 and 62/64 — released as model descriptors, not validated physical targets); docs/report_20261021/summary.json (G5: span 106/130; finite geometric tortuosity 1.29–4.15 over the 130-bed set; G5b = ionically isolated AM, not shown). Loading is not a free design axis (derived from thickness and composition). The collaborator porosity model (OOF R² 0.99) and our five-knob fit (0.98) use unverified and different CV protocols; no comparison is claimed.
 
 ## p16

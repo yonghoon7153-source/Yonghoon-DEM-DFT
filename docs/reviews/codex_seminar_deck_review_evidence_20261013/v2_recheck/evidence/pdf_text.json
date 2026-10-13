@@ -1,0 +1,78 @@
+[
+  {
+    "page": 1,
+    "text": "Yonghoon An\nDivision of Materials Science & Engineering, Hanyang University\n(E-mail : yonghoon71@hanyang.ac.kr)\n[date — to be set]\nResearch Seminar\nParticle-resolved multiscale simulation of sulfide all-solid-state composite \ncathodes:\nfrom powder packing to transport\n"
+  },
+  {
+    "page": 2,
+    "text": "2Battery Materials Lab.\n A coupled DEM–MPM–transport workflow\n• Each stage has specific calibration targets and unresolved validation tasks.\n• Agreement between models sharing inputs is a consistency check, not \nindependent validation.\nIntroduction\n< DEM packing → plastic compaction → voxel transport → electrode response >"
+  },
+  {
+    "page": 3,
+    "text": "3Battery Materials Lab.\n Composition-dependent porosity in five simulated beds\n• Soft-sphere DEM with a linear hysteretic contact law, pressed to 300 MPa; \none bed per composition, no seed replicates.\n• One 7:3 bed: porosity 31.8 → 25.1 → 16.7 → 16.5 % (final state relaxed at \nfixed platen); 7:3 (large : small NCM) is the lowest of the five beds.\nDEM\n< Four stages of one 7:3 bed: 0 · 47 · 296 · 165 MPa (last = \nrelaxed) >\n< Porosity vs large : small NCM (one \nbed each) >"
+  },
+  {
+    "page": 4,
+    "text": "4Battery Materials Lab.\n From the contact network to Li⁺ transport\n• Kirchhoff network: each SE–SE contact = bulk resistance + Holm/Maxwell \nconstriction using Hertz contact radii; σ₀ = 1.5 mS cm⁻¹ [8].\n• T ransport tortuosity T = φ_SE σ₀ / σ_eff: 7.2 → 5.0 (0:10 → 7:3). Contact \nconstriction accounts for 73–75 % of Joule dissipation in this network model.\nDEM\nFigure pending: current \npathways in the 7:3 bed (ionic, \nHertz; top 50 % of current)\n< Transport tortuosity (Hertz) >\n< truncated y-axis — compare \nvalues >\n< σ(Li⁺), σ₀ = 1.5 mS cm⁻¹ >\n< truncated y-axis — compare \nvalues >\n< Current pathways (figure \npending) >"
+  },
+  {
+    "page": 5,
+    "text": "5Battery Materials Lab.\n What a fixed-shape soft-sphere DEM cannot do\n• No shape change and no yield cap: overlap is the only plasticity proxy; the \nsoftened SE modulus (1.35 vs ≈ 22 GPa) is an effective parameter, not a \nproperty [1, 7].\n• In one 7:3 bed, global viscous damping carries 58 % of the plate reaction \nduring compression — an open issue.\nDEM\nSelected literature survey\n(22 studies; author classification)\n· softened SE modulus: 0/22\n· yield or hardness cap: 7/22\n· linear hysteretic law: 1/22\n· global damping, dry compaction: \nnone\n< Contact-law illustration from the implementation [1, 7] >"
+  },
+  {
+    "page": 6,
+    "text": "6Battery Materials Lab.\n The material point method supplies the plastic half\n• J2 plasticity on a background grid: shape change and void filling that a \nfixed-shape sphere cannot represent.\n• Active material is kept rigid (DEM skeleton); only the electrolyte flows. 2D: E \n= 1.53 GPa, σy = 0.15 GPa; 3D: E = 1.53 GPa, ν = 0.49, σy = 0.30 GPa.\nMPM\nFigure pending: plastic SE morphology after \ncompaction (2D)\nFigure pending: 3D DEM-scaffold MPM, x–z slice \n(AM fixed, SE material points)\n< 2D: SE flows into voids (figure pending) > < 3D: fixed AM skeleton, plastic SE (figure \npending) >"
+  },
+  {
+    "page": 7,
+    "text": "7Battery Materials Lab.\nMPM\n Effective material inputs and their status\n• Bulk modulus from DFT; shear softening and yield stress from a pure-\nelectrolyte calibration sweep.\nEffective material inputs\n• Bulk LPSCl: E ≈ 22 GPa (DFT; DEM \ninput 22.1 GPa [8]); σy 0.05–0.30 GPa\n• DEM effective: E = 1.35 GPa — \nreproduces compaction, not a \nproperty\n• MPM: E = 1.53 GPa, ν = 0.49, σy = \n0.30 GPa; K = 25.5 ≈ DFT 26.2 GPa\nCalibration target and limits\n• Calibration target: pure-SE porosity 10 \n% at 300 MPa (lab reference sample, \nunpublished)\n• Not a literature anchor; the earlier \nattribution was withdrawn\n• Shear-only softening keeps the real \nbulk modulus (ν = 0.49)\nT ested alternatives (volumetric cap, real E) did not remove the need for effective \nparameters."
+  },
+  {
+    "page": 8,
+    "text": "8Battery Materials Lab.\n Compaction agreement depends on initialization and loading \nprotocol\n• Historical and current scaffold calculations differ in electrolyte initialization \nand loading protocol; they are not one validation series.\n• AM load sharing remains a candidate explanation for over-compaction; the \nfinal hypothesis verdict is pending.\nMPM\nScaffold calculations (AM skeleton from the DEM bed)\n· Earlier: cell-filled SE, bidirectional servo — historical, not a DEM-seeded validation\n· Current registered runs: DEM-seeded SE, fixed-platen hold — f = 0 completed; f(a) \nexecution failed\n· AM-load-sharing hypothesis: verdict pending"
+  },
+  {
+    "page": 9,
+    "text": "9Battery Materials Lab.\n Voxelizing the compacted microstructure into a transport mesh\n• Finite-volume conservation on the phase grid gives electrical (σ, φ) and \nthermal (κ, T) transport on the same structure.\n• Faces are joined by a harmonic mean with no interface-resistance term: an \nideal-interface voxel model — an upper bound only within the same \ngeometry, properties and boundaries.\nTransport\nFigure pending: voxelized phase grid of a \ncompacted bed (mid-plane slice; AM · SE · pore · \nadditives)\nFigure pending: electronic current-density field \nat 1 V\n< Phase grid (figure pending) > < Current density at 1 V (figure pending) >"
+  },
+  {
+    "page": 10,
+    "text": "10Battery Materials Lab.\n Additive geometry used in transport rasterization\n• Carbon fibres (VGCF) as diameter-preserving segments, PTFE as a centre-\nline insulator, a conductive polymer as true-diameter spheres.\n• Pre-registered 104-arm study: the electronic-conductivity order across 1–4 \nwt% VGCF holds across the tested voxel sizes and grid-origin offsets \n(72/72).\nTransport\n< Additive seeding illustration \n>\n< not a production stamp >\n< Synthetic morphology \nexample >\n< not a production stamp >\n< σ(e⁻) vs VGCF wt% at three voxel \nsizes >\n< campaign values; contact resistance \nnot included >"
+  },
+  {
+    "page": 11,
+    "text": "11Battery Materials Lab.\n Problem 1: Grid dependence\n• The electronic ratio decreases across the three tested voxel spacings (0.4, \n0.3, 0.25 µm); the ionic ratio crosses 1.\n• Grid convergence has not been established.\nLimits\nNo converged conductivity \nratio is reported.\n< Conductivity ratio, with / without conductive polymer, vs \nvoxel size >\n< same bed pair and convention >"
+  },
+  {
+    "page": 12,
+    "text": "12Battery Materials Lab.\n Problem 2: Absolute electronic conductivity\n• Voxel predictions exceed the available DC-polarization estimates; \nmeasurement conditions remain unverified.\n• The NCM–SE comparison uses a common reference conductivity and a \nspecified contact model.\nLimits\n< Model and DC-polarization estimates — log \nscale >\n< conditions not yet matched >\n< Carbon- and binder-free NCM–SE beds; Hertz H0 \ncontacts >\n< common NCM reference 4.1 mS cm⁻¹ [16]; \nempirical size factor off; one bed per composition \n>"
+  },
+  {
+    "page": 13,
+    "text": "13Battery Materials Lab.\n Problem 3: Load sharing during compaction\n• NCM–NCM contacts contribute 48–60 % of vertical stress after relaxation at \nfixed platen position; 7:3 is the minimum.\n• The porosity ranking agrees for the selected five compositions (exploratory \ncomparison, n = 5).\nLimits\n< Contribution to σ_zz by contact type >\n< 21 planes, load-weighted; relaxed at fixed \nplaten >\n< SE von Mises stress, four stages >\n< 0–150 MPa; wall SE excluded >"
+  },
+  {
+    "page": 14,
+    "text": "14Battery Materials Lab.\nProgress\n Registered studies and current status\n• Registered before launch, reviewed externally; the table shows the ledger \nstate, not result claims.\nStudy status\n1. Historical eight-origin study Conductivity estimates and inference remain \non hold\n2. VGCF ordering study (104 arms) Ordering holds across tested grids and \noffsets (72/72)\n3. Absolute-conductivity comparison \n[12] R = 2.07 (Tier 1); Q = 0.84\n4. 194-bed dataset v1.2 Released for conditional use as model \ndescriptors\nR: model / literature conductivity. Q: conductivity retained after PTFE treatment (registered model-\nsensitivity prediction).\n5. Updated transport software Seven reviews completed; production \nremains pending"
+  },
+  {
+    "page": 15,
+    "text": "15Battery Materials Lab.\n A 194-bed design-of-experiments dataset for machine learning\n• 130 + 64 Latin-hypercube beds (composition, particle sizes) → structure and \ntransport descriptors, released as v1.2 (conditional use as model \ndescriptors).\n• SE percolation 106/130; geometric shortest-path tortuosity 1.3–4.2 \n(percolating beds; not transport tortuosity).\nProgress\n< Geometric tortuosity vs SE fraction (130 beds) \n>\n< × = no percolating SE path (24 beds) >\n< Porosity vs SE fraction >\n< 130 + 64 beds >"
+  },
+  {
+    "page": 16,
+    "text": "16Battery Materials Lab.\nPlan\n T ests for unresolved model limits\n• Grid sensitivity remains unresolved. Diagnostic results exist, while final \nhypothesis verdicts remain pending.\nElectronic transport\n• Interface resistance: film model \nimplemented, production on hold\n• Carbon conductivity: comparison with \nDC polarization\n• NCM conductivity: literature-based \ninput review\nCompaction and mixing\n• AM load sharing: final hypothesis \nverdict pending\n• Unloading: springback and measured \nthickness\n• Mixing: an adhesion parameter for SE–\nSE contacts\nPending: separate launch approvals for the updated 194-bed run and the 20-bed \nextension."
+  },
+  {
+    "page": 17,
+    "text": "17Battery Materials Lab.\nSummary\n Current findings and limitations\n• DEM and contact networks: composition trends from one bed per \ncomposition\n• MPM: plastic deformation, with compaction agreement dependent on \ninitialization and loading protocol\n• Voxel transport: ideal-interface calculations with grid dependence and \nunresolved absolute conductivity\n• Final model-validation verdicts remain pending"
+  },
+  {
+    "page": 18,
+    "text": "18Battery Materials Lab.\nReferences\nContact mechanics and DEM\n[1] S. Luding, Granul. Matter 10, 235–246 \n(2008)\n[2] C. Thornton, Z. Ning, Powder Technol. 99, \n154–162 (1998)\n[3] M. Paulick, M. Morgeneyer, A. Kwade, \nPowder Technol. 283, 66–76 (2015)\n[4] C.J. Coetzee, Powder Technol. 310, 104–\n142 (2017)\n[5] K. Giannis et al., Granul. Matter 23, 17 \n(2021)\n[6] W. Zunker, K. Kamrin, J. Mech. Phys. \nSolids 183, 105492 (2024)\n[7] LIGGGHTS-PUBLIC 3.8.0 (commit 3d5c00f, \n2024), github.com/CFDEMproject/LIGGGHTS-\nPUBLIC\n[15] A. Sakuda, A. Hayashi, M. Tatsumisago, \nSci. Rep. 3, 2261 (2013)\nSolid-state battery electrodes\n[8] A.M. Bazzoun et al., J. Power Sources 661, \n238682 (2026)\n[9] M. So et al., J. Power Sources 508, 230344 \n(2021)\n[10] C.A. Varkey et al., Adv. Powder Technol. \n37, 105338 (2026)\n[11] T. Shi et al., Adv. Energy Mater. 10, \n1902881 (2020)\n[12] D.J. Lee et al., Nat. Commun. 16, 4200 \n(2025)\n[13] P . Minnmann et al., J. Electrochem. Soc. \n168, 040537 (2021)\n[14] V. Miß, F. Lange, S. Staubitz, B. Roling, \nACS Appl. Mater. Interfaces 18, 32830–32836 \n(2026)\n[16] S. Wang, M. Yan, Y . Li, C. Vinado, J. Yang, \nJ. Power Sources 393, 75–82 (2018)"
+  },
+  {
+    "page": 19,
+    "text": "19Battery Materials Lab.\nThank you\nFor more information or any \nquestions, please e-mail at \nyonghoon71@hanyang.ac.kr"
+  }
+]

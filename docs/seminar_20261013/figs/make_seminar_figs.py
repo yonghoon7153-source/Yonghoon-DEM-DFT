@@ -47,21 +47,21 @@ def _fmt(ax, nx=None, ny=4):
 def fig_pipeline(out):
     # 8.46 × 3.15 in 배치 (21.5 × 8.0 cm) → 거의 1:1
     fig, ax = plt.subplots(figsize=(21.5 / 2.54, 8.0 / 2.54))
-    boxes = [("DEM packing", "soft-sphere DEM\n(contact law)", NAVY),
-             ("Plastic compaction", "material point method\n(J2 plasticity, DEM scaffold)", NAVY),
-             ("Voxel transport", "finite-volume solver\n(ionic, electronic, thermal)", NAVY),
-             ("Electrode response", "reaction distribution\n(in development)", GRAY)]
+    boxes = [("DEM\npacking", "soft-sphere DEM\n(contact law)", NAVY),
+             ("Plastic\ncompaction", "MPM: J2 plasticity\nDEM scaffold", NAVY),
+             ("Voxel\ntransport", "finite-volume solver\nionic · electronic · thermal", NAVY),
+             ("Electrode\nresponse", "reaction distribution\n(in development)", GRAY)]
     n = len(boxes); w, h, gap = 4.6, 3.4, 1.1; x0 = 0.6
     for i, (head, sub, col) in enumerate(boxes):
         x = x0 + i * (w + gap)
         ax.add_patch(FancyBboxPatch((x, 1.9), w, h, boxstyle="round,pad=0.02,rounding_size=0.25", fc="white", ec=col, lw=1.4))
-        ax.text(x + w / 2, 1.9 + h * 0.70, head, ha="center", va="center", fontsize=12.5, color=col, fontweight="bold")
-        ax.text(x + w / 2, 1.9 + h * 0.30, sub, ha="center", va="center", fontsize=10.5, color="#333333")
+        ax.text(x + w / 2, 1.9 + h * 0.70, head, ha="center", va="center", fontsize=12, color=col, fontweight="bold", linespacing=1.05)
+        ax.text(x + w / 2, 1.9 + h * 0.27, sub, ha="center", va="center", fontsize=9.5, color="#333333")
         if i < n - 1:
             ax.add_patch(FancyArrowPatch((x + w + 0.08, 1.9 + h / 2), (x + w + gap - 0.08, 1.9 + h / 2),
                                          arrowstyle="-|>", mutation_scale=14, lw=1.3, color=GRAY))
     # 보정 표적 (완료 표지가 아니다 — SEM-01)
-    for i, txt in enumerate(["calibration target:\ncompaction experiments", "calibration target:\npure-electrolyte compaction", "comparison target:\nconductivity measurements"]):
+    for i, txt in enumerate(["calibration target:\ncompaction data", "calibration target:\npure-SE compaction", "comparison target:\nconductivity data"]):
         x = x0 + i * (w + gap)
         ax.annotate("", xy=(x + w / 2, 1.75), xytext=(x + w / 2, 1.05), arrowprops=dict(arrowstyle="-", lw=0.8, color=GRAY, ls=(0, (3, 2))))
         ax.text(x + w / 2, 0.55, txt, ha="center", va="center", fontsize=10, color=GRAY)
@@ -101,7 +101,7 @@ def fig_sigma_e_exp(out):
     ax.bar([i - wdt / 2 for i in x], SIGMA_E_EXP["model"], wdt, color=NAVY, label="voxel model")
     ax.bar([i + wdt / 2 for i in x], SIGMA_E_EXP["exp"], wdt, color=ORANGE, label="DC polarization")
     ax.set_xticks(x); ax.set_xticklabels(SIGMA_E_EXP["labels"])
-    ax.set_ylabel("Electronic conductivity (mS cm$^{-1}$)")
+    ax.set_ylabel("Electronic conductivity\n(mS cm$^{-1}$)")
     ax.set_yscale("log"); ax.set_ylim(1, 200)
     ax.spines["top"].set_visible(False); ax.spines["right"].set_visible(False)
     ax.legend(frameon=False, loc="upper left")
@@ -122,7 +122,7 @@ def fig_ps45_sigma_e(out):
     _fmt(ax, ny=4)                                   # x locator 는 건드리지 않는다 → 범주 라벨 5 개 유지
     ax.set_xticks(x); ax.set_xticklabels(PS45["ps"])
     ax.set_xlabel("Large : small NCM (mass)")
-    ax.set_ylabel("Electronic conductivity (mS cm$^{-1}$)")
+    ax.set_ylabel("Electronic conductivity\n(mS cm$^{-1}$)")
     ax.set_ylim(0, 0.6)
     fig.tight_layout(pad=0.4)
     for ext in ("png", "svg"):
