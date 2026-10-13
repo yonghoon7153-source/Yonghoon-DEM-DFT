@@ -273,6 +273,35 @@ def two_lines(tc, first, second):
     br.addnext(r2)
 
 
+# The 08-18 family table's third column ('role in the design'), rewritten for the p03 question (user 10-13): each
+# family's anion compared with the host's S2- and Cl-. Sulfides and chlorides change only the cation.
+ANION_VS_HOST = {'role in the design': 'anion vs. host',
+                 'oxides': 'O²⁻, smaller than S²⁻', 'chlorides': 'Cl⁻, already in the host',
+                 'sulfides': 'S²⁻, already in the host', 'fluorides': 'F⁻, smaller than Cl⁻',
+                 'bromides': 'Br⁻, larger than Cl⁻', 'nitrides': 'N³⁻, higher charge than S²⁻',
+                 'iodides': 'I⁻, much larger than Cl⁻'}
+
+
+def set_anion_column(t):
+    """Rewrite column 3 of the 08-18 family table with ANION_VS_HOST (first-run style kept; all 8 rows must match)."""
+    A = f'{{{NS["a"]}}}'
+    tbl = t.getroot().find('.//p:graphicFrame', NS)
+    hits = 0
+    for tr in tbl.iter(A + 'tr'):
+        tcs = tr.findall('a:tc', NS)
+        fam = shape_text(tcs[0]).strip()
+        key = shape_text(tcs[2]).strip() if fam == 'family' else fam
+        ps = tcs[2].findall('.//a:p', NS)
+        for extra in ps[1:]:
+            extra.getparent().remove(extra)
+        rs = ps[0].findall('a:r', NS)
+        rs[0].find('a:t', NS).text = ANION_VS_HOST[key]
+        for r in rs[1:]:
+            ps[0].remove(r)
+        hits += 1
+    assert hits == 8, hits
+
+
 def replace_body(t, paras, x=0.61, y=1.0, w=8.84, h=0.5):
     """Remove the original body 'Rectangle 4' and put a fresh one with the same bullet styles."""
     drop(t, lambda el: name_of(el) == 'Rectangle 4')
@@ -507,7 +536,7 @@ def pack(order):
 # dashed red numbered box + down arrow image of its slide 4 (the user's standard arrow). No cards, badges,
 # icons or chevrons. Literature crops carry a role tag above them and a credit below (CW, 10-13).
 LEAN_FIGS = ['fig_p07_stage1_coverage.png', 'fig_p10_host_window.png',
-             'fig_p13_run_roster.png', 'lit_jung2026_sio2_fig3d.png', 'lit_schwietert2021_fig1.png', 'lit_he2018_fig3.png',
+             'fig_p13_run_roster.png', 'lit_schwietert2021_fig1.png', 'lit_he2018_fig3.png',
              'lit_phuthi2026_fig1a.png']
 DASH_RED, NOTE_GREY = 'FF5050', '6B7280'
 
@@ -768,45 +797,18 @@ def build_lean():
     ext.set('cy', str(E(sum(hs))))
     save(t, 'slide7.xml')
 
-    # ---- 6 candidate set (orig slide 8): the 08-18 family table (user 10-13: back in place of the bar chart, without
-    #      the 'role in the design' column) · a literature example of precursor co-doping (right). The six co-doping
-    #      papers are on p17 and the precedent line is said (CW P1).
+    # ---- 6 candidate set (orig slide 8): the 08-18 family table with all four columns (user 10-13: 'replace this
+    #      slide with the 08-18 one; only the role column and the bullets change to fit the story'). The role column
+    #      now compares each family's anion with the host's (ANION_VS_HOST); the bullets lead back to the p03 question
+    #      (same cation, other partner anion). Al, Li and Mg appear in all seven families (cascade_all_302 ledger,
+    #      91 precursors). The SiO2 literature example is gone; the co-doping papers stay on p17.
     t = load('slide8.xml')
     header(t, 'Approach')
     replace_body(t, P('91 precursors in seven anion families', 'h', ln=130)
-                 + P('Cations +1 to +6 paired with anions O²⁻ to I⁻; only existing compounds.', 'b', ln=130)
-                 + P('[[b:All 91 precursors]] were relaxed.', 'b', ln=130),
-                 y=1.08, h=1.4)
-    tbl = t.getroot().find('.//p:graphicFrame', NS)
-    gcs = tbl.findall('.//a:gridCol', NS)
-    assert len(gcs) == 4, len(gcs)
-    gcs[2].getparent().remove(gcs[2])
-    trs = list(tbl.iter(f'{{{NS["a"]}}}tr'))
-    assert shape_text(trs[0].findall('a:tc', NS)[2]).strip() == 'role in the design'
-    for tr in trs:
-        tr.remove(tr.findall('a:tc', NS)[2])
-    cols, rh = [1.2, 0.55, 3.0], 0.4
-    for gc, w in zip(tbl.findall('.//a:gridCol', NS), cols):
-        gc.set('w', str(E(w)))
-    for tr in trs:
-        tr.set('h', str(E(rh)))
-    ty, th = 2.5, rh * len(trs)
-    off, ext = tbl.find('.//p:xfrm/a:off', NS), tbl.find('.//p:xfrm/a:ext', NS)
-    off.set('x', str(E(0.55)))
-    off.set('y', str(E(ty)))
-    ext.set('cx', str(E(sum(cols))))
-    ext.set('cy', str(E(th)))
-    for rp in tbl.iter(f'{{{NS["a"]}}}rPr', f'{{{NS["a"]}}}endParaRPr'):
-        if rp.get('sz'):
-            rp.set('sz', '1400')
-    jx = 0.55 + sum(cols) + 0.3
-    jw = 9.45 - jx
-    pw_, ph_ = png_size(os.path.join(EXTRA, 'lit_jung2026_sio2_fig3d.png'))
-    jh = jw * ph_ / pw_
-    jy = ty + th / 2 - (jh + 0.65) / 2               # tag + crop + credit centred on the table
-    figure(t, 'slide8.xml', 'lit_jung2026_sio2_fig3d.png', jx, jy + 0.32, jw, 'Jung 2026 Fig. 3d')
-    add(t, lit_label(ids(), 'Literature example:', 'SiO₂ co-doping', jx - 0.2, jy, jw + 0.4),
-        credit(ids(), 'Reproduced from Jung et al., Adv. Funct. Mater. (2026), Fig. 3d', jx - 0.2, jy + 0.35 + jh, jw + 0.4))
+                 + P('Every precursor is an [[b:existing compound]], with a cation from +1 to +6.', 'b', ln=130)
+                 + P('[[b:Al, Li, and Mg]] appear in all seven families, so their partner anions can be compared.',
+                     'b', ln=130), y=1.08, h=1.4)
+    set_anion_column(t)
     save(t, 'slide8.xml')
 
     # ---- 7 Stage 1: what each Stage-1 table holds (CW P1: one figure — p06 already shows the families). The anneal ran
@@ -1033,10 +1035,11 @@ save(t, 'slide7.xml')
 # ---- 6 candidate set (orig slide 8)
 t = load('slide8.xml')
 header(t, 'Approach')
-replace_body(t, P('Candidate set: 91 precursor compounds in seven anion families', 'h', ln=130)
-             + P('Cations +1 to +6, anions O²⁻ to I⁻; only existing compounds are used.', 'b', ln=130)
-             + P('All 91 relaxed — As₂S₃ and AlI₃ were completed in an August re-run.', 'b', ln=130),
+replace_body(t, P('91 precursors in seven anion families', 'h', ln=130)   # = the lean slide (user 10-13)
+             + P('Every precursor is an [[b:existing compound]], with a cation from +1 to +6.', 'b', ln=130)
+             + P('[[b:Al, Li, and Mg]] appear in all seven families, so their partner anions can be compared.', 'b', ln=130),
              y=1.08, h=1.4)
+set_anion_column(t)
 gf = t.getroot().find('.//p:graphicFrame', NS)
 gf.find('.//p:xfrm/a:off', NS).set('y', str(E(2.5)))
 for rp in gf.iter(f'{{{NS["a"]}}}rPr', f'{{{NS["a"]}}}endParaRPr'):
