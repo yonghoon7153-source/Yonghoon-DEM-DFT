@@ -7967,6 +7967,59 @@
     "근거_발화": "'아니 그럼 지금 13m bgfs 뜨면 잠정 stop하고 li3nd 로 넘어가자' · '13m bgfs 뜨면 대신 resume 잘 걸려야돼' (2026-10-11 · 이 세션)",
     "decision_digest": "sha256:e39e731ae3ac844e0b49311986fda3daa354410cd557af0da4569607e37a86e2"
    }
+  },
+  {
+   "id": "D-2026-10-13-gabia-uma-coexist-pwx-li2s-control-600k",
+   "kind": "policy",
+   "scope": "ops.gabia.gpu.concurrency",
+   "slot": "gabia_gpu_pwx_uma_coexist_exception",
+   "applies_to": {
+    "systems": [
+     "li3ps4_glass",
+     "li3nd_pristine_333_control",
+     "modelc_2x_elastic"
+    ],
+    "tasks": [
+     "li2s_glass_control_600k_gabia_3runs"
+    ],
+    "methods": [
+     "uma_md_nvt",
+     "qe_gpu_relax"
+    ],
+    "use_cases": [
+     "internal"
+    ]
+   },
+   "title": "gabia GPU — 'pw.x ↔ UMA 동시 실행 금지' 의 범위 한정 예외 (6): li2s 대조 계 B 600 K · 400 ps 의 gabia 몫 3 런 (seed2·4·5) 을 지금 도는 GPU pw.x (Li₃Nd P0-2 control r2 → 그 뒤 재개되는 탄성 modelc_2x) 옆에서 한 번에 하나씩 — 예외 (5) 와 같은 가드 + pw.x 작업방 둘 감시 + nvidia-smi 점유 표본",
+   "statement": "li2s 대조 계 카드 (D-2026-10-05-lpscl-smallcell-glass-control-li3ps4 · §1b 기계 = A 600 K 와 같은 시드–기계 대응 gabia {2, 4, 5} · kgy {1, 3}) 의 gabia 몫 **3 런** (T600 seed2·4·5 · prod 400 ps · 드라이버 --seed 1002 · 1004 · 1005 · 구조 = repo 담금질 회수본 relax 판 (seed2 kgy · seed4·5 gabia) · 설정 = A v2 600 K gabia 판과 run_meta·dt 대조) 에 한해, gabia A6000 에서 지금 도는 GPU pw.x — Li₃Nd P0-2 control r2 restart relax (VRAM 37,222 MiB · 10-12 실측) — 그리고 그사이 사용자가 재개하면 탄성 modelc_2x (기록 피크 41.2 GB) — 옆에 UMA MD 를 **한 번에 하나씩** 올려도 된다. 러너 tools/ionic/glass_main_queue_gabia.sh SYSTEM=B (sha16 23b8fd45aafbeb31 · EXCEPTION_ID 기본값 = 이 결정 · CARD_DECISION 기본값 = 카드 결정) 가 기계로 건다: ① GPU 합계 > 46,000 MiB 면 우리 MD kill ② 우리 MD (PID 트리) > 3,500 MiB (시작 300 s 뒤부터) 면 kill ③ host MemAvailable < 8,192 MiB 면 kill ④ 감시 작업방 (PWX_WATCH = /data/work/runs/sei_control/li3nd_mp-976264_p333_r2 · /data/work/runs/elastic_modelc_2x) 의 *.out 어느 것이든 우리 런 시작 뒤 GPU 메모리 오류가 새로 쓰이면 kill (파일별 오프셋 · 시작 뒤 새로 생긴 *.out 은 처음부터) ⑤ 시작은 GPU 합계 ≤ 42,500 · host ≥ 12,288 MiB 일 때만 ⑥ ①–④ 가 한 번이라도 발동하면 **예외를 닫는다** (큐 멈춤 · 다음 런 안 띄움 · 자동 재시작 없음 · 종료 코드 2/3/5) ⑦ pw.x 와 그 러너는 건드리지 않는다 ⑧ 감시 작업방 하나라도 *.out 이 없으면 시작하지 않는다 (14) ⑨ 카드 결정이 active 가 아니면 시작하지 않는다 (6). 더해서 회신 CS Q-CS-1 (gabia 는 실측) 대로 60 s 마다 `nvidia-smi pmon` 표본 (우리 PID 트리 sm % · 모든 잡 sm % 합 · 못 읽으면 NA) 을 queue_logs/s<S>_T600_pmon.tsv 에 남긴다 — 장부의 점유 = Σ Δt × 우리/합 (합이 0 인 표본은 우리 몫 1 · 보수). 메모리 산수: r2 37.2 GB + 우리 ≤ 2.0 GB (A v2 600 K 우리 피크 1,992–2,038 MiB) ≈ 39.3 GB · 탄성이면 41.2 + 2.0 = 43.2 GB (예외 (3)–(5) 와 같다).",
+   "rationale": "gabia 운용 = 우리 트랙 → 결정 = 사용자 (li2s 과학 판정과 무관한 기계 배정 · Li₃Nd (SEI NEB) · 탄성 1저자 = 사용자). 사용자 10-13 '저번처럼 gabia, kgy에서 나눠 돌리자' — 카드 §1b 의 시드–기계 대응 그대로. 예외 (5) 는 '600 K MD 로 넘어가지 않는다 (600 K gabia 런은 새 결정)' 였고, 지금 gabia GPU 의 상대도 탄성이 아니라 Li₃Nd r2 라 새 결정이다. 예외 (3)·(4)·(5) 는 UMA 12 잡 (런 9 · 담금질 3) 을 가드 발동 없이 끝냈다 (피크 GPU 합계 43,437 MiB). r2 쪽 손실 상한: 경합으로 r2 pw.x 가 OOM 으로 죽으면 tools/sei/restart_qe_relax.sh 의 stopped·restart 경로로 BFGS 이력째 잇는다 — 잃는 것은 진행 중이던 BFGS 한 스텝 (10-12 실측 ≈ 1.4 h/스텝). 탄성 쪽 과학 조건은 D-2026-09-11-elastic-conv-threshold 2차 개정 그대로 (경합으로 탄성 잡이 비정상 종료하면 modelc_2x 를 처음부터). 예외 (5) 동안 우리 점유는 pmon 실측 약 15 % (중앙 0.122) 였다 — 곁의 pw.x 스텝이 그만큼 느려질 수 있다.",
+   "record_kind": "scope_declaration",
+   "card": "db/properties/lpscl_smallcell_glass_control_li3ps4_estimand_2026_10_05.json",
+   "record": "tools/ionic/glass_main_queue_gabia.sh",
+   "evidence": [
+    "D-2026-10-05-gabia-uma-coexist-elastic-li2s-control (예외 (5) · B 담금질 3 시드 rc 0 완주 · 가드 발동 0 · pmon 표본 2,817–2,831 개 · 10-11 소멸) · D-2026-09-30-…-li2s-v2 (예외 (4) · 5 런 · 피크 43,437 MiB) · D-2026-09-29-…-li2s-main (예외 (3) · 4 런 · 피크 43,391 MiB)",
+    "db/properties/li3nd_p333_control_runlog_2026_10_11.json — r2 restart VRAM 37,222 MiB (10-12 08:58 watch) · BFGS 이력 승계 확인",
+    "tools/ionic/glass_main_queue_gabia.sh --selftest 56 ✔ (음성 30 · B 실물 구조 DRY_RUN 포함) · 일부러 깨기 7/7 빨강 (B 기록값 · 작업방 첫째만 · pmon 끔 · *.out 없음 통과 · 새 *.out 오프셋 · 카드 결정 · 기본 큐)",
+    "db/properties/lpscl_glass_control_li3ps4_runlog_2026_10_05.json `✅_repo_점검_2026_10_13` — B 시드 게이트 5/5 (relax 판 · P 4배위 15/15 · 비결합 최단 2.337–2.373 Å > 2.0)"
+   ],
+   "method_ref": "glass_main_queue_gabia.sh SYSTEM=B — TOTALCAP 46000 · OURCAP 3500 · WARM 300 s · HOSTFLOOR 8192 · START_MAX 42500 · SAMPLE 2 s · POLL 60 s · PMON_S 60 s · PWX_WATCH '/data/work/runs/sei_control/li3nd_mp-976264_p333_r2 /data/work/runs/elastic_modelc_2x' (DRY_RUN 이 작업방마다 최신 *.out 을 찍는다) · QUEUE '600:2:400 600:4:400 600:5:400' · VSEED_OFFSET 1000 · LABEL_PREFIX lpscl_glass_ctrlB · ROOT /data/work/runs/lpscl_glass_control_li3ps4_600K_2026_10_13 · REF = /data/work/runs/lpscl_glass_md_v2_2026_09_30/seed2/T600",
+   "reopen_criteria": "가드 ①–④ 가 한 번이라도 발동하거나 공존 중 곁의 pw.x 가 비정상 종료하면 **예외를 닫고** 원 규칙 (동시 금지) 으로 돌아간다. 3 런이 끝나면 예외는 소멸한다. 다른 UMA 런 · 다른 GPU pw.x 잡 (r1 · r3 · 새 계산) · 둘 이상 동시 · B 의 다른 온도 · A 런 · kgy 몫 시드로 **넘어가지 않는다** — 필요하면 새 결정.",
+   "enforcement": "러너가 ①–③ 을 2 s 표본으로 · ④ 를 60 s 마다 · ⑤ 시작 문턱 · ⑧ ⑨ 를 시작 전에 건다. ⚠ 확률적 보호다 — 표본 간격보다 빠른 VRAM 급등은 못 막는다. ⚠ SM 을 나눠 써서 곁의 pw.x 스텝이 느려질 수 있다.",
+   "amends": [],
+   "amends_note": "비준되면 CLAUDE.md §계산 자원 gabia 에 이 예외 줄을 더한다 (같은 커밋 · 규칙 본문은 그대로).",
+   "schema_version": 2,
+   "decision_state": "proposed",
+   "results_seen": false,
+   "proposed_by": "claude-session-2026-10-13 (friendly)",
+   "status": "proposed",
+   "status_history": [
+    {
+     "at": "2026-10-13",
+     "state": "proposed",
+     "by": "agent",
+     "note": "사용자 '저번처럼 gabia, kgy에서 나눠 돌리자' (기계 배정 · 실행 승인) → 초안. gabia 의 공존 상대가 Li₃Nd r2 (GPU pw.x) 이고 예외 (5) 가 600 K MD 를 범위 밖으로 적어 새 결정이다. 비준 = 사용자 (gabia 운용 · Li₃Nd · 탄성 1저자)."
+    }
+   ]
   }
  ]
 }
