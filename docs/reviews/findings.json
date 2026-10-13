@@ -10476,6 +10476,16 @@
       "opened_in": "docs/data/ps45_unload_20261009/README.md",
       "title": "관측자 σ_P 의 기본 열 이름이 실제 thermo 머리와 달랐다 — sigma_P(col='v_Ps') ↔ 덱 thermo_style v_ul_Ps 의 머리 'ul_Ps' → 실제 로그에서 표본 0 = OBS_MISSING (NOISE_FLOOR 판정 불가)",
       "note": "12a2d989d 의 `docs/data/ps45_unload_20261009/ul_observers.py` (커밋 · 미배포 · 런 0 건).  자리 = 그 README §9 (시험 먼저 기록).  시험 먼저 O4b (기본 열 = 표 records.thermo_cols 의 Ps 열) — 고치기 전 1 실패 → bdd500f0c 에서 17 / 17 · 판독기는 열 이름을 표에서 넘긴다 (ul_reader arm_verdict) · 생성기 GD13 = 덱 thermo_style 머리 ↔ 표 대조.  닫힘 = Codex 키트 재검토."
+    },
+    {
+      "id": "ULK-02",
+      "severity": "P2",
+      "status": "open",
+      "owner": "claude",
+      "found_by": "1저자 ibb 이력 시험 첫 실행 10-13 (job 281180 · H0–H5 TECH · LIGGGHTS ERROR `Pair gran allows only one compute of type pair/local` · 3d5c00f pair_gran.cpp 581)",
+      "opened_in": "docs/data/ps45_unload_20261009/README.md",
+      "title": "이력 시험 덱 일곱이 pair/gran/local compute 둘 (r8 머리 cpl + 관측 hb_ph) 을 함께 살렸다 — LIGGGHTS 는 compute 를 만들 때 등록하고 하나만 받아 H0 에서 멈춤 (전 단계 TECH) · 생성기 selftest 가 이 등록 규칙을 몰랐다",
+      "note": "고침 = 생성기 `docs/data/ps45_unload_20261009/history_test/make_history_decks.py` (hb_ph 앞 `uncompute cpl` · 머리 글자 그대로 · 덱 일곱 · SHA256SUMS 새 봉인 sha256 241277b2…) — 1저자 Q1 *\"권고대로 해\"* · 이 원장 줄과 같은 커밋.  시험 먼저 ⑮ (함께 사는 pair/gran/local ≤ 1 · wall/gran/local ≤ 1 · 내리는 compute 를 쓰는 덤프 없음 + 규칙 자체 반례 넷) = 고치기 전 131 중 7 실패 → 139 / 139.  본 키트 덱 64 = 같은 규칙 문제 0.  판정 규칙 변경 없음.  claimed_fixed = ibb 재실행 H0 통과 뒤 · 닫힘 = Codex 키트 재검토.  자리 = 키트 README §1-5 · 등록 §13-7-4."
     }
   ]
 }

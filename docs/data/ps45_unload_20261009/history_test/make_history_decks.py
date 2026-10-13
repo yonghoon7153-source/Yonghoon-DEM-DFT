@@ -542,6 +542,13 @@ def _dyn_lines(H, integr=True):
     return out
 
 
+#  r8 머리의 cpl (pair/gran/local) 은 머리 글자 그대로 두고 hb_ph 앞에서 내린다 — LIGGGHTS pair gran 은 pair/gran/local 을
+#  하나만 받고 compute 를 만드는 순간 등록한다 (3d5c00f pair_gran.cpp:581 · compute_pair_gran_local.cpp post_create).
+#  uncompute 는 pre_delete 로 등록을 푼다.  첫 ibb 실행 (job 281180) = 이 겹침으로 H0–H5 전부 TECH (README §1-5 · 원장 ULK-02).
+DROP_CPL = ['# r8 머리 cpl 을 내린다 — pair gran 은 pair/gran/local 을 하나만 받는다 (만들 때 등록 · pair_gran.cpp:581) · 머리 글자는 그대로',
+            'uncompute cpl']
+
+
 def _obs_consumer(P, badid=False):
     O = P['observers']
     pre = list(O['atoms_pre'])
@@ -558,6 +565,7 @@ def _obs_consumer(P, badid=False):
         f'write_dump all custom ${{out}}/pre_atoms.dump {" ".join(pre)} modify format "{_fmt(pre)}"',
         '# POST_SETUP — run 0 의 setup · local 재평가 뒤 (deltaMax 상한 갱신 · 분리 소거 가능 · 시간 적분 없음)',
         'compute hb_wh all wall/gran/local id history',
+        *DROP_CPL,
         'compute hb_ph all pair/gran/local id history',
         f'dump hb_dw all local 1000000 ${{out}}/post_mesh_*.dump {" ".join(O["mesh_local"])}',
         f'dump_modify hb_dw first yes format "{_fmt(O["mesh_local"])}"',
@@ -614,7 +622,7 @@ def _producer(P, H, zero):
     for g, s in (('hb_bot', 'B'), ('hb_top', 'T'), ('hb_pair', 'P'), ('hb_zero', 'Z')):
         L.append(f'group {g} id ' + ' '.join(str(q['id']) for q in D['parts'] if q['set'] == s))
     L += [''] + _dyn_lines(H, integr=False) + ['thermo 100', '',
-          'compute hb_wh all wall/gran/local id history', 'compute hb_ph all pair/gran/local id history',
+          'compute hb_wh all wall/gran/local id history', *DROP_CPL, 'compute hb_ph all pair/gran/local id history',
           f'restart {S["auto_restart_every"]} ${{out}}/restart/auto_*.bin', '',
           '# ① 적재 — 첫 setup 에서 history[0] = max(0, δ) = 설계 deltaMax',
           'print "HIST_STAGE load"', f'run {S["load"]}', '',
@@ -832,6 +840,18 @@ def selftest() -> int:
         chk(f'④ {k}: run 사이 위험한 읽기 없음 (⑭a — write_restart 뒤 ke · run 0 뒤 메시 힘 · 없는 fix)', lambda text=text: text and scan_between_runs(text) == [])
         chk(f'④ {k}: 살아 있는 equal 정의 다음 줄 = 얼림 (⑭b)', lambda text=text: text and unfrozen_lazy(text) == [])
         chk(f'④ {k}: if 조건 = 숫자 · 비교 · 논리만', lambda text=text: text and _bad_if(text) == [])
+        chk(f'④ {k}: 함께 사는 pair/gran/local ≤ 1 · wall/gran/local ≤ 1 · 내리는 compute 를 쓰는 덤프 없음 (⑮ — 첫 ibb 실행 TECH)',
+            lambda text=text: text and _local_compute_problems(text) == [], '; '.join(_local_compute_problems(text)))
+        chk(f'④ {k}: r8 머리 cpl 글자 그대로 (내리기만 하고 고치지 않는다)', lambda text=text: head['cmd']['cpl'] in _cmds(text))
+    # ⑮ 규칙 자체 — 반례는 잡고 바른 꼴은 통과해야 (규칙이 비어 초록을 내지 않게)
+    syn = {'둘 함께': 'compute a all pair/gran/local id\ncompute b all pair/gran/local id history\nrun 0\n',
+           '덤프 살아 있는 uncompute': 'compute b all pair/gran/local id history\ndump d all local 1 x c_b[1]\nuncompute b\n',
+           'wall 둘': 'compute w1 all wall/gran/local id\ncompute w2 all wall/gran/local id history\n',
+           '내린 compute 를 쓰는 덤프': 'compute b all pair/gran/local id\nuncompute b\ndump d all local 1 x c_b[1]\n'}
+    good = ('compute a all pair/gran/local id\nuncompute a\ncompute b all pair/gran/local id history\n'
+            'compute w all wall/gran/local id history\ndump d all local 1 x c_b[1] c_w[1]\nrun 0\nundump d\nuncompute w\nuncompute b\n')
+    chk('⑮ 규칙 자체: 반례 넷 (둘 함께 · 덤프 살아 있는 uncompute · wall 둘 · 내린 compute 덤프) 을 잡고 · 사이에 uncompute 한 꼴은 통과',
+        lambda: all(_local_compute_problems(t) for t in syn.values()) and _local_compute_problems(good) == [])
     # ⑤ 소비자 (H1 · H2 · H3 · H4 둘째 단계 · H5b)
     c = decks.get('consumer', '')
     cl = _cmds(c)
@@ -978,6 +998,42 @@ def _bad_if(text):
             cond = re.sub(r'\d+\.?\d*(?:[eE][-+]?\d+)?', '1', cond)
             if re.search(r'[A-Za-z_]|[+*/]', cond) or re.search(r'\d\s*-\s*\d', cond):
                 bad.append(ln)
+    return bad
+
+
+LOCAL_STYLES = ('pair/gran/local', 'wall/gran/local')
+
+
+def _local_compute_problems(text):
+    """⑮ LIGGGHTS 는 compute pair/gran/local · wall/gran/local 을 **만드는 순간** pair gran · 벽 fix 에 등록하고 (post_create →
+    init_cpgl → register_*) 하나만 받는다 (공개 3d5c00f pair_gran.cpp:581 · fix_wall_gran.cpp:1236 — compute_pair_gran_local.cpp
+    sha256 71c4d3b5… = docs/data/liggghts_add_pair_pin.json 의 ibb · WSL 소스).  uncompute 가 등록을 푼다 (pre_delete).
+    덱 순서대로 살아 있는 개수와 덤프 참조를 센다 — 첫 ibb 실행 (job 281180) 의 TECH (r8 머리 cpl + hb_ph) 를 런 전에 잡는다."""
+    live = {s: [] for s in LOCAL_STYLES}
+    defined, dumps, bad = set(), {}, []
+    for ln in _cmds(text):
+        w = ln.split()
+        if w[0] == 'compute' and len(w) > 3:
+            if w[3] in live:
+                if live[w[3]]:
+                    bad.append(f'{w[3]} 둘이 함께 산다 ({live[w[3]][0]} · {w[1]})')
+                live[w[3]].append(w[1])
+            defined.add(w[1])
+        elif w[0] == 'uncompute' and len(w) > 1:
+            users = sorted(d for d, refs in dumps.items() if w[1] in refs)
+            if users:
+                bad.append(f'uncompute {w[1]} 때 그것을 쓰는 덤프가 살아 있다 ({", ".join(users)})')
+            for ids in live.values():
+                if w[1] in ids:
+                    ids.remove(w[1])
+            defined.discard(w[1])
+        elif w[0] == 'dump' and len(w) > 1:
+            refs = set(re.findall(r'\bc_([A-Za-z0-9_]+)', ln))
+            if refs - defined:
+                bad.append(f'dump {w[1]} 가 살아 있지 않은 compute 를 쓴다 ({", ".join(sorted(refs - defined))})')
+            dumps[w[1]] = refs
+        elif w[0] == 'undump' and len(w) > 1:
+            dumps.pop(w[1], None)
     return bad
 
 

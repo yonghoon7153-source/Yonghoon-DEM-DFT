@@ -816,3 +816,11 @@ squeue -u $USER
 #### 13-7-3. 그대로 둔 것 (등록 값 · 키트가 바꾸지 않음)
 
 S1 · S2 · S4 문턱 · P_meas 1 MPa · 사다리 · Δz_A · Δz_B · v₀ · dt₀ · 결정표 0.10 %p · 확인 두 단 · 분리 2 창 · 분리 뒤 4 창 · 상한 16 µm · 가드 값 · g_aux 9.81e-6 · 모델 (재료 · 접촉 · 감쇠 · 경계 · 중력 9.81) · 다섯 침대 · S0 (10:0 = S0′ 규칙).
+
+#### 13-7-4. 이력 시험 첫 실행 (10-13 · 실행 기록 · 규칙 · 값 변경 없음)
+
+- ibb job 281180 = H0–H5 전부 TECH (H0 rc 1 · LIGGGHTS `Pair gran allows only one compute of type pair/local` · 3d5c00f `pair_gran.cpp` 581) — **이력 시험 덱 결함**:
+  r8 머리 `compute cpl` (pair/gran/local) 과 관측 `compute hb_ph` 가 함께 살았다 (LIGGGHTS 는 compute 를 만들 때 등록하고 하나만 받는다).
+- 고침 (1저자 Q1 *"권고대로 해"*) = 이력 시험 생성기만 — `hb_ph` 앞 `uncompute cpl` · 머리 글자 그대로 · 시험 먼저 ⑮ (131 중 7 실패 → 139 / 139) · 새 봉인 ·
+  키트 `docs/data/ps45_unload_20261009/README.md` §1-5 · 원장 `ULK-02`.  판정 규칙 · 문턱 · 등록 값 · 본 키트 덱 64 (같은 규칙으로 문제 0) 변경 없음.
+- ⬜ 재실행 (같은 명령 · 새 커밋 작업 트리) → 결과를 이 절에 덧붙인다.

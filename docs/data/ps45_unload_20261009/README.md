@@ -101,6 +101,21 @@ WSL 로 가져오는 꼴 (접속 정보는 자리표시): `scp -P <port> <user>@
 - rc 0 = H0–H5 전부 기대대로 · rc 2 = 하나라도 아님 (화면 `HISTORY_VERDICT …` 줄 · 행마다 사유).  H0 가 TECH 면 대개 문법 (바이너리) 문제다 — 화면 그대로 보낸다.
 - `bash $H/run_history_ibb.sbatch $H` 가 LMP sha256 불일치로 멈추면 다른 바이너리다 — 등록 빌드를 찾는다 (이탈로 진행하려면 `ALLOW_OTHER_LMP=1` · run_manifest 에 남는다 · 1저자 결정).
 
+### 1-5. 실행 기록
+
+- **첫 실행 10-13 (job 281180) = H0–H5 전부 TECH** — sacct FAILED 00:00:11 (ExitCode 2:0) · 읽는 쪽 rc 2 · H0 사유 = rc 1 ·
+  `ERROR: Pair gran allows only one compute of type pair/local (../pair_gran.cpp:581)` · SYN = NOT_RUN.  보고 묶음 `hist_20261013_170458.report.tgz`
+  sha256 `ae4a77c40e94c564b95d98200d40c044d905330a7a5085f6721ad4d99fc3ec3b` (ibb 에 둠 · 반입 안 함 — 받은 것은 화면 출력뿐).
+- **원인 = 이력 시험 덱 결함 (판정 규칙 아님)**: 생성기가 r8 머리 글자 그대로 `compute cpl … pair/gran/local …` 을 넣고 관측용 `compute hb_ph all pair/gran/local id history` 를 더했다.
+  LIGGGHTS 는 compute 를 **만드는 순간** pair gran 에 등록하고 하나만 받는다 (3d5c00f `pair_gran.cpp` 581 · `compute_pair_gran_local.cpp` `post_create → init_cpgl` ·
+  읽은 원본 sha256 `71c4d3b5…` = `docs/data/liggghts_add_pair_pin.json` 의 ibb · WSL 소스).  SYN 을 뺀 덱 일곱이 같은 꼴이었고 생성기 selftest 는 이 등록 규칙을 몰랐다 (원장 `ULK-02`).
+- **고침 (1저자 10-13 Q1 *"권고대로 해"*)**: 덱 일곱에서 `hb_ph` 정의 바로 앞에 `uncompute cpl` (cpl 을 쓰는 덤프는 없다 · `uncompute` 의 `pre_delete` 가 등록을 푼다) · 머리 글자는 그대로.
+  시험 먼저 ⑮ (함께 사는 pair/gran/local ≤ 1 · wall/gran/local ≤ 1 · 내리는 compute 를 쓰는 덤프 없음 · 규칙 자체 반례 넷) = 고치기 전 131 중 7 실패 (덱 일곱 · SYN 만 통과) →
+  고친 뒤 139 / 139 (+ 머리 cpl 글자 그대로 8) · 읽는 쪽 38 / 38 그대로.  바뀐 파일 = 덱 일곱 · 생성기 · `SHA256SUMS` (SYN · 판 STL · 표 · 읽는 쪽 · 러너 · 래퍼 = 바이트 그대로) ·
+  판정 규칙 (§1-3 · 읽는 쪽) 변경 없음.
+- 본 키트 덱 64 = 같은 ⑮ 규칙으로 문제 0 (pair/gran/local = 머리 cpl 하나).
+- 새 봉인 `history_test/SHA256SUMS` sha256 `241277b20aaccb8d1ab73c79fb9e0758138a3bed64751add98f7849b44697bf6` · ⬜ 재실행 = §1-4 그대로 (새 커밋 = 새 작업 트리 · 결과는 `hist_<시각>/` 로 갈린다).
+
 ## 2. 덱 (K2 · `make_unload_decks.py`) — 결과 0 건 · 실행은 Codex GO 뒤
 
 | 종류 | 무엇 | 런 |
@@ -223,3 +238,4 @@ scp -P <port> <user>@<ibb-host>:~/ps45_unload_20261009/<침대>/<잡>.report.tgz
 | 같은 파일 R16 (중력 팔 R_M 복원 G1 · G2 · G2c 2 — choice C12) | 2 실패 | 40 / 40 |
 | `ul_runner_test.py --selftest` (K3 러너 모의 · 가짜 mpirun · lmp · 임시 키트 다시 봉인) | 12 중 12 실패 (러너 · 봉인 없음) | 12 / 12 |
 | `seal_kit.py --selftest` (K8 봉인 · 활성 규칙 · 폐기 규칙 판별력) | 10 중 10 실패 | 10 / 10 |
+| `history_test/make_history_decks.py --selftest` ⑮ (함께 사는 pair/gran/local ≤ 1 · wall/gran/local ≤ 1 · 첫 ibb 실행 TECH — §1-5 · `ULK-02`) | 131 중 7 실패 (덱 일곱 · SYN 만 통과) | 139 / 139 |

@@ -105,6 +105,8 @@ thermo_style custom step atoms ke cpu v_pressMPa
 thermo 100
 
 compute hb_wh all wall/gran/local id history
+# r8 머리 cpl 을 내린다 — pair gran 은 pair/gran/local 을 하나만 받는다 (만들 때 등록 · pair_gran.cpp:581) · 머리 글자는 그대로
+uncompute cpl
 compute hb_ph all pair/gran/local id history
 restart 1500 ${out}/restart/auto_*.bin
 

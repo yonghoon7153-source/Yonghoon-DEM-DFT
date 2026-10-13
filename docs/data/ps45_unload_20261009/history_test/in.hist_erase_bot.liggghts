@@ -66,6 +66,8 @@ print "HIST_CONSUMER_START step=${hb_step0} atoms=${hb_n0}"
 write_dump all custom ${out}/pre_atoms.dump id type x y z radius mass vx vy vz omegax omegay omegaz f_history_zwall_bot[1] f_history_zwall_bot[2] f_history_zwall_bot[3] f_history_zwall_bot[4] modify format "%d %d %.17g %.17g %.17g %.17g %.17g %.17g %.17g %.17g %.17g %.17g %.17g %.17g %.17g %.17g %.17g"
 # POST_SETUP — run 0 의 setup · local 재평가 뒤 (deltaMax 상한 갱신 · 분리 소거 가능 · 시간 적분 없음)
 compute hb_wh all wall/gran/local id history
+# r8 머리 cpl 을 내린다 — pair gran 은 pair/gran/local 을 하나만 받는다 (만들 때 등록 · pair_gran.cpp:581) · 머리 글자는 그대로
+uncompute cpl
 compute hb_ph all pair/gran/local id history
 dump hb_dw all local 1000000 ${out}/post_mesh_*.dump c_hb_wh[1] c_hb_wh[2] c_hb_wh[3] c_hb_wh[4] c_hb_wh[5] c_hb_wh[6] c_hb_wh[7]
 dump_modify hb_dw first yes format "%.17g %.17g %.17g %.17g %.17g %.17g %.17g"

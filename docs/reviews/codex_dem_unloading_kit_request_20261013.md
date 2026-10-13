@@ -12,7 +12,7 @@
 - 등록 `docs/reviews/dem_unloading_ps45_prereg_20261009.md` (§12 개정 1 · §13 개정 2) · 반영 계획 `docs/reviews/dem_unloading_ulr1_fix_plan_20261012.md` · 판정문 CX1 `docs/reviews/codex_review_dem_unloading_prereg_20261011.md` ·
   CX2 `docs/reviews/codex_review_dem_unloading_prereg_rereview_20261012.md` · 증거 `docs/reviews/codex_dem_unloading_prereg_rereview_evidence_20261012/`.
 - 권고 기본값 (C1–C20 · ✅ 1저자 비준 10-13 → 등록 §13-7) = 부록 초안 `docs/reviews/dem_unloading_kit_section13_appendix_draft_20261013.md`.
-- 이 컨테이너에는 LIGGGHTS 가 없다 — DEM 실행 0 건 · 덱 문법 = 3d5c00f 원문 판독 + 생성기 selftest + 이력 시험 SYN (ibb 결과 ⬜).
+- 이 컨테이너에는 LIGGGHTS 가 없다 — DEM 실행 0 건 · 덱 문법 = 3d5c00f 원문 판독 + 생성기 selftest + 이력 시험 SYN (ibb 결과 ⬜ — 첫 실행 10-13 job 281180 = H0–H5 TECH · 이력 시험 덱 결함 (pair/gran/local 둘) · 고침 · 재실행 ⬜ · 키트 README §1-5 · 원장 `ULK-02`).
 
 ## 1. 만든 것
 
@@ -38,7 +38,7 @@
 
 ## 3. 시험 수 (고치기 전 실패 → 고친 뒤 · README §9)
 
-K2 284 중 282 → 285 / 285 · K4 33 → 40 / 40 (R14 · R15 · R16 덧붙임 포함) · K3 모의 12 → 12 / 12 · K8 10 → 10 / 10 · K5 13 → 14 / 14 · K6 16 → 17 / 17 (+ O4b) · K7 34 → 34 / 34 · 이력 시험 생성기 115 → 122 / 122 · 읽는 쪽 38 → 38 / 38.
+K2 284 중 282 → 285 / 285 · K4 33 → 40 / 40 (R14 · R15 · R16 덧붙임 포함) · K3 모의 12 → 12 / 12 · K8 10 → 10 / 10 · K5 13 → 14 / 14 · K6 16 → 17 / 17 (+ O4b) · K7 34 → 34 / 34 · 이력 시험 생성기 115 → 122 / 122 → ⑮ 131 중 7 → 139 / 139 (첫 ibb 실행 TECH 뒤 · README §1-5) · 읽는 쪽 38 → 38 / 38.
 고치는 중 스스로 잡은 것: ① 처음 쓴 GD7 이 `if` 안 `include` 를 요구했다 — 3d5c00f input.cpp 845–846 이 금지 (ERROR) → 상태 파일 맨 바깥 include · GD3b 추가 (고친 시험이 고치기 전 덱에서 실패 확인) ② σ_P 기본 열 'v_Ps' ≠ thermo 머리 'ul_Ps' (`ULK-01` · P3 · 원장 open) ③ PRE_SETUP 관측에서 힘 열 뺌 (setup 전) ④ 러너 모의의 가짜 S0 파일이 덤프 꼴이 아니라 판독기가 끝점을 무효로 막았다 (실패 닫힘 = 의도) — 모의 자료를 고침.
 
 ## 4. 질문
@@ -64,6 +64,6 @@ python3 -I $K/history_test/make_history_decks.py --check && python3 -I $K/histor
 
 ## 6. 한정
 
-- 결과 0 건 · DEM 실행 0 건 · 실제 바이너리 문법 = 이력 시험 SYN (ibb ⬜) 이 처음.  덱 상태 기계는 합성 기록으로만 시험했다 (가짜 lmp 는 덱을 해석하지 않는다).
+- 결과 0 건 · DEM 실행 0 건 · 실제 바이너리 문법 = 이력 시험 (첫 실행 = 덱 결함 TECH · 재실행 ⬜) 이 처음.  덱 상태 기계는 합성 기록으로만 시험했다 (가짜 lmp 는 덱을 해석하지 않는다).
 - 숫자 기본값 (C1–C20) = 1저자 비준 전 — 비준되면 등록 §13 덧붙임.
 - 디스크 · 시간 어림 (README §3) = 산술 · 실측 아님.
