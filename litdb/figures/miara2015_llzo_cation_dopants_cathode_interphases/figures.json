@@ -108,6 +108,26 @@
    "blank": 0.902
   },
   {
+   "key": "t2",
+   "kind": "table",
+   "label": "2",
+   "page": 4,
+   "file": "tab_2.png",
+   "caption": "Table 2. Number of Dopant(Site) Combinations for LLZO with a Calculated Defect Energy of <2 eVa",
+   "bbox": [
+    58.5,
+    375.0,
+    302.5,
+    479.5
+   ],
+   "w": 1018,
+   "h": 436,
+   "dpi": 300,
+   "src": "Miara2015 ChemMater First-Principles Studies on Cation Dopants and Electrolyte Cathode Interphases for Lithium Garnets.pdf",
+   "blank": 0.794,
+   "manual_crop": "auto crop skipped t2 as '영역 없음' (text-only table, no graphics for the geometry check); clip = caption top (377.0 pt) to bottom rule (477.5 pt) of the left column on PDF p.4 = printed p.4043, footnote included (2026-10-13)"
+  },
+  {
    "key": "t3",
    "kind": "table",
    "label": "3",
@@ -135,7 +155,8 @@
    "skipped": [
     "p4 영역 없음"
    ],
-   "near_miss": []
+   "near_miss": [],
+   "resolved": "manual_crop 2026-10-13 -> tab_2.png (see figures[t2].manual_crop)"
   }
  ]
 }

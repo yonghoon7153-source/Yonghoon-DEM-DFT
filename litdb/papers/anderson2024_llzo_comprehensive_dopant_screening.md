@@ -95,6 +95,10 @@ CCD와 **강하게 상관**(σ_e와는 무상관) — 이라는 6축 지도를 �
 - **기보고 30종** — "To date, 30 different dopants have been reported in LLZO."
 - **계산 예측 45종** — ref [12] = **Miara/Richards/Wang/Ceder, Chem. Mater. 2015, 27, 4040**이
   "LLZO가 이론적으로 추가 45종을 수용할 수 있다"고 예측. 그 예측 명단이 신규 후보의 원천.
+  > ⚠ **2026-10-13 Miara 원문 대조** (`papers/miara2015_llzo_cation_dopants_cathode_interphases.md` §0S-2):
+  > **Miara 본문에는 45 라는 수가 없다.** Miara 의 계산 입력은 **128 이온종 × 3 자리** (`Table 1`) 이고, 집계는 전부
+  > dopant(site) 조합 단위다 (`Table 2`: < 2 eV 108 · 비등원자가·V–Ni 제외 59). 45 는 **이 논문(Anderson)의 수**로 인용한다.
+  > 또 신규 30 중 9 종 (Na · K · P · V · Ag · Cs · Au · Re · Yb) 은 Miara 의 2 eV 문턱 밖이거나 값이 없다 — "예측 명단 = 신규 원천" 은 그대로는 성립하지 않는다.
 - 실제 실행 = 신규 29 + 기보고 30 = **59**. **Sb는 Fig 1에 표시돼 있으나 실측 제외**(본문 명시).
 
 > 🔑 **우리와의 결정적 차이**: 그들의 풀 = "선행 실험(30) ∪ 선행 DFT 예측(45)"이라는 **문헌 정의 집합**.
@@ -112,7 +116,12 @@ CCD와 **강하게 상관**(σ_e와는 무상관) — 이라는 6축 지도를 �
 
 1. **DFT 결함에너지** — Fig 3d, ref [12](Miara 2015, Ceder 그룹) **인용값**. 도펀트별 Li/La/Zr 자리
    결함에너지 3점, 최소값을 주는 자리 = 최적 자리. 일부 원소는 산화수 첨자 표기(예 Fe3, V5, Ce4, Ta5;
-   figure-read). **Lu는 `n/a`**(ref [12]에 값 없음).
+   figure-read). ~~**Lu는 `n/a`**(ref [12]에 값 없음).~~
+   > ✍ **정정 2026-10-13 (Miara 원문 대조 · `papers/miara2015_llzo_cation_dopants_cathode_interphases.md` §11)**:
+   > 패널 d 의 La 블록 x 라벨은 `… Er, Tm, n/a, Lu, Bi` — **`n/a` 는 Yb 자리**다. **Lu 는 값이 있다**
+   > (La figure-read ≈ 0.92 = Miara `Fig. 2` Lu³⁺(La) 0.930). 패널 c·d 에는 **Re 가 없다**. ⇒ 결함에너지가 있는
+   > 도펀트 = 59 − Yb − Re = **57** (§19.6 서술이 원래 맞았다). 첨자 예시의 `Ta5` 도 패널 d 에는 `Ta`(첨자 없음)다.
+   > 같은 대조에서 **Al(La) 만 어긋난다**: 이 그림 ≈ 4.04 eV ↔ Miara 본문 3.16 eV (p. 4042) — 원인 미확정, 인용은 Miara 본문값.
 2. **Bond valence mismatch** — Fig 3c, 방법은 ref [35](Jia/…/McCalla, Chem. Mater. 2022, 34, 11047)
    = **자기 선행연구**. 값은 0~5 범위. **⚠ 이것은 우리 BVSE(Li 이동 에너지 지형)가 아니라
    "이 자리에 이 이온을 넣으면 결합가가 얼마나 안 맞는가"의 *자리 적합도* 지표다.** 이름만 비슷하고
@@ -591,7 +600,7 @@ calculations or the far cheaper bond valence calculations promotes the cubic pha
 | **3a** | 59×3 전 시료의 **total garnet wt%** 산점 (주황=최적자리, 빨강/파랑=대체) | **전수 매트릭스를 한 장에** — 우리 cascade 47×3농도 산점의 원형 |
 | **3b** | 같은 축의 **cubic wt%** | 여기서 최적자리(주황)가 압도적으로 위 = 논문의 1번 주장 그림 |
 | **3c** | 도펀트별 **bond valence mismatch** (자리 3색) | 값싼 서술자를 전수로 깔고 실험과 겹쳐보는 포맷 |
-| **3d** | 도펀트별 **결함에너지 (ref [12] 인용)** (자리 3색). Lu는 `n/a` | **문헌 계산값을 자기 실험축에 나란히 놓는 방법** — 우리도 BVSE/UMA proxy를 문헌값과 병치 가능 |
+| **3d** | 도펀트별 **결함에너지 (ref [12] 인용)** (자리 3색). ~~Lu는 `n/a`~~ → **`n/a` 는 Yb 자리 · Re 없음 · Lu 는 값 있음** (2026-10-13 Miara 원문 대조 — §3b 주석) | **문헌 계산값을 자기 실험축에 나란히 놓는 방법** — 우리도 BVSE/UMA proxy를 문헌값과 병치 가능 |
 | **4a** | **주기율표 히트맵 — RT σ_i** (10⁻⁶~10⁻³ 컬러바), undoped 별도 박스 | 🔑 **주기율표 히트맵**이 이 논문 최고의 전달 장치. 우리 cascade 47 도펀트 점수를 이 포맷으로 그리면 즉시 대조 가능 |
 | **4b** | **주기율표 히트맵 — σ_e** (10⁻⁸~10⁻⁶) | 같은 포맷 두 물성 = 시선 이동만으로 trade-off 읽힘 |
 | **5** | **59개 고전압 CV 소형 격자**(3.5–4.7 V), blank 차감. 빨강 화살표로 Nd↑ / Y·Dy·Er·Sc↓ | **small-multiples**로 59개를 한 장에. 우리 47 도펀트 ESW 프로파일도 이 포맷 가능 |
