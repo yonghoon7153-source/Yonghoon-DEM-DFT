@@ -1,0 +1,48 @@
+FFFFF.FF.FFF..                                                           [100%]
+=================================== FAILURES ===================================
+E   Failed: DID NOT RAISE E3aStop
+/home/user/Yonghoon-DEM-DFT/bms-balancing/tests/test_reil_c4_0a_fix.py:63: Failed: DID NOT RAISE E3aStop
+E   TypeError: check_arrays() got an unexpected keyword argument 'seal'
+/home/user/Yonghoon-DEM-DFT/bms-balancing/tests/test_reil_c4_0a_fix.py:79: TypeError: check_arrays() got an unexpected keyword argument 'seal'
+E   TypeError: check_arrays() got an unexpected keyword argument 'seal'
+/home/user/Yonghoon-DEM-DFT/bms-balancing/tests/test_reil_c4_0a_fix.py:86: TypeError: check_arrays() got an unexpected keyword argument 'seal'
+E   AssertionError: assert 'COMPLETE' == 'RECORD_INCOMPLETE'
+      
+      - RECORD_INCOMPLETE
+      + COMPLETE
+/home/user/Yonghoon-DEM-DFT/bms-balancing/tests/test_reil_c4_0a_fix.py:110: AssertionError: assert 'COMPLETE' == 'RECORD_INCOMPLETE'
+E   AssertionError: assert ('COMPLETE' == 'RECORD_INCOMPLETE'
+      
+      - RECORD_INCOMPLETE
+      + COMPLETE)
+/home/user/Yonghoon-DEM-DFT/bms-balancing/tests/test_reil_c4_0a_fix.py:127: AssertionError: assert ('COMPLETE' == 'RECORD_INCOMPLETE'
+E   AssertionError: assert None == ['time', 'size']
+     +  where None = <built-in method get of dict object at 0x7fbec4dc96c0>('limit_violations')
+     +    where <built-in method get of dict object at 0x7fbec4dc96c0> = {'record_state': 'OUTPUT_LIMIT_EXCEEDED', 'files': {'R.json': 'e45debf0022c4562831d6f5ed7464741d7647f4831a48ba3e53b1602d0da38da'}, 'problems': ['최종 쓰기 뒤 산출 1213 B > 상한 1000 B — 성공으로 종결하지 않는다'], 'output_bytes_after': 1213, ...}.get
+/home/user/Yonghoon-DEM-DFT/bms-balancing/tests/test_reil_c4_0a_fix.py:148: AssertionError: assert None == ['time', 'size']
+E   assert (None is not None)
+/home/user/Yonghoon-DEM-DFT/bms-balancing/tests/test_reil_c4_0a_fix.py:243: assert (None is not None)
+E   AttributeError: 'Watch' object has no attribute 'stale'
+/home/user/Yonghoon-DEM-DFT/bms-balancing/tests/test_reil_c4_0a_fix.py:259: AttributeError: 'Watch' object has no attribute 'stale'
+E   AssertionError: assert (1 == 1 and None == {'n_eval': 7, 'n_nonfinite': 2, 'n_out_eval_PE': 3, 'n_eval_G_violated': 1})
+     +  where 1 = len([{'kind': 'structural', 'origin': 'util', 'stage': 'optimize', 'type': 'MemoryError', ...}])
+     +  and   None = <built-in method get of dict object at 0x7fbec4dcb340>('partial')
+     +    where <built-in method get of dict object at 0x7fbec4dcb340> = {'kind': 'structural', 'origin': 'util', 'stage': 'optimize', 'type': 'MemoryError', ...}.get
+/home/user/Yonghoon-DEM-DFT/bms-balancing/tests/test_reil_c4_0a_fix.py:292: AssertionError: assert (1 == 1 and None == {'n_eval': 7, 'n_nonfinite': 2, 'n_out_eval_PE': 3, 'n_eval_G_violated': 1})
+E   assert (None, None, None, None) == (3, 1, 2, 1)
+      
+      At index 0 diff: None != 3
+      Use -v to get more diff
+/home/user/Yonghoon-DEM-DFT/bms-balancing/tests/test_reil_c4_0a_fix.py:368: assert (None, None, None, None) == (3, 1, 2, 1)
+=========================== short test summary info ============================
+FAILED tests/test_reil_c4_0a_fix.py::test_n1_a_an_array_changed_together_with_both_local_records_is_refused
+FAILED tests/test_reil_c4_0a_fix.py::test_n1_b_check_arrays_authenticates_the_c6_manifest_before_using_its_entries
+FAILED tests/test_reil_c4_0a_fix.py::test_n1_c_untouched_arrays_match_every_c6_entry_directly
+FAILED tests/test_reil_c4_0a_fix.py::test_n2_a_a_slow_last_write_past_the_limit_is_not_complete
+FAILED tests/test_reil_c4_0a_fix.py::test_n2_b_a_slow_final_size_scan_past_the_limit_is_not_complete
+FAILED tests/test_reil_c4_0a_fix.py::test_n2_d_time_and_size_both_over_are_both_recorded
+FAILED tests/test_reil_c4_0a_fix.py::test_n3_a_a_slow_terminal_disk_sample_cannot_hide_an_rss_gap
+FAILED tests/test_reil_c4_0a_fix.py::test_n3_c_a_freshness_check_does_not_refresh_the_watch
+FAILED tests/test_reil_c4_0a_fix.py::test_n4_a_worker_loop_forwards_the_structural_partial
+FAILED tests/test_reil_c4_0a_fix.py::test_n4_b_the_partial_crosses_the_worker_boundary_and_the_task_stays_interrupted
+10 failed, 4 passed in 11.24s

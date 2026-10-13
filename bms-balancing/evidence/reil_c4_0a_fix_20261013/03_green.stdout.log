@@ -1,0 +1,12 @@
+........................................                                 [100%]
+==================================== PASSES ====================================
+___ test_07_the_preserved_util_copy_runs_one_nsga2_case_on_synthetic_curves ____
+----------------------------- Captured stdout call -----------------------------
+NSGA2_SYNTHETIC_OUTCOME returned 5000
+_____________________ test_08_the_cli_has_no_default_seal ______________________
+----------------------------- Captured stderr call -----------------------------
+usage: reil_c4_e3a identity [-h] --venv VENV --seal SEAL
+                            --seal-manifest-sha256 SEAL_MANIFEST_SHA256 --out
+                            OUT
+reil_c4_e3a identity: error: the following arguments are required: --seal, --seal-manifest-sha256
+40 passed in 17.68s

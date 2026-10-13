@@ -384,9 +384,25 @@ def seal_arrays(out, *, c6_seal, make=None, c6_manifest_sha256=None) -> dict:
             "generation_warnings": arrays_json["generation_warnings"]}
 
 
-def check_arrays(arrays_dir, manifest_sha256) -> dict:
-    """C4 배열 봉인 폴더 대조 — MANIFEST 의 이름 집합 · 바이트 · ARRAYS.json 이 명시한 수용 봉인 (C6) MANIFEST 에 묶였는가."""
+def check_arrays(arrays_dir, *, seal, manifest_sha256) -> dict:
+    """C4 배열 봉인 폴더 대조 (C4-0A-N1).
+
+    먼저 수용된 봉인 (C6) 의 MANIFEST 바이트를 명시 sha256 으로 인증하고, 넷의 npy 바이트를 그 항목에 **직접** 대조한다. 로컬 MANIFEST ·
+    ARRAYS.json 은 그 뒤 자기 일치만 따로 본다 — 배열과 로컬 두 기록을 함께 바꾸면 자기 일치는 통과하므로 그것만으로는 결속이 아니다."""
+    c6_b = _read(Path(seal) / "MANIFEST.json")
+    if _sha(c6_b) != manifest_sha256:
+        raise E3aStop(f"수용 봉인 MANIFEST sha256 {_sha(c6_b)} ≠ 명시 {manifest_sha256}")
+    try:
+        c6_man = json.loads(c6_b)
+    except ValueError as e:
+        raise E3aStop(f"수용 봉인 MANIFEST 가 JSON 이 아니다: {e}") from None
     d = Path(arrays_dir)
+    direct = {}
+    for n in ARRAY_NAMES:
+        got = _sha(_read(d / n))
+        if c6_man.get(n) is None or got != c6_man[n]:
+            raise E3aStop(f"배열 {n} 의 바이트 ({got}) 가 수용 봉인 MANIFEST 항목 ({c6_man.get(n)}) 과 다르다")
+        direct[n] = True
     mb = _read(d / "MANIFEST.json")
     try:
         man = json.loads(mb)
@@ -403,7 +419,8 @@ def check_arrays(arrays_dir, manifest_sha256) -> dict:
         raise E3aStop(f"배열 봉인의 수용 봉인 MANIFEST {meta.get('c6_manifest_sha256')} ≠ 명시 {manifest_sha256}")
     if any(meta.get("arrays", {}).get(n, {}).get("npy_sha256") != man[n] for n in ARRAY_NAMES):
         raise E3aStop("ARRAYS.json 의 npy sha256 이 MANIFEST 와 다르다")
-    return {"arrays_dir": str(d), "manifest_sha256": _sha(mb), "manifest": man, "c6_manifest_sha256": manifest_sha256}
+    return {"arrays_dir": str(d), "manifest_sha256": _sha(mb), "manifest": man, "c6_manifest_sha256": manifest_sha256,
+            "c6_direct_match": direct}
 
 
 # ---------------------------------------------------------------- identity · 건조
@@ -459,7 +476,7 @@ def dryrun(out, *, venv, seal, manifest_sha256, arrays_dir, util_copy, p0_result
     if not ust["ok"] or missing:
         raise E3aStop(f"util 사본 정적 검사 실패: {ust['bad']} · 없는 함수 {missing}")
     nb = notebook_case_table()
-    arr = check_arrays(arrays_dir, manifest_sha256)
+    arr = check_arrays(arrays_dir, seal=seal, manifest_sha256=manifest_sha256)
     p0b = _read(p0_result)
     try:
         res = json.loads(p0b)

@@ -9,6 +9,14 @@ C5 의 `reil_c5_pilot.orchestrate` · `disk_sample` · `split_dirty` 는 **고�
    루트 집합으로 다시 잰다. 경로는 정확 일치 또는 구분자 뒤 하위 경로만 소유로 본다. Git 원문은 분류와 따로 남기고, 따옴표 · 이름 바꿈처럼
    모호한 줄은 소유로 보지 않는다.
 
+C4-0a 결과 검토 (2026-10-13) 의 한정 보완 셋:
+
+- **N2** — 최종 기록은 마지막 쓰기 · 재읽기 · 해시 · 용량 조회 **뒤** snapshot 하나로 시간 한도를 판정하고 그 값을 그대로 반환한다. 넘으면
+  파일 · 해시는 보존하고 미완 (`RECORD_INCOMPLETE`) 이다.
+- **N3** — 느릴 수 있는 조회 (RSS · 디스크) 뒤와 정상 종료 직전에 두 감시기의 freshness 를 확인한다 (`Watch.stale`). 확인은 표본이 아니라서
+  마지막 유효 시각을 바꾸지 않는다.
+- **N4** — 구조 오류의 `partial` (이미 모은 계수) 을 작업자 경계 너머 부모까지 보낸다. 그 작업은 여전히 중단 (`STARTED_INTERRUPTED`) 이다.
+
 OS 조회가 영구히 막히는 경우의 강제 종료나 OS 하드 한도를 증명하지 않는다 (C4 v2 §4-4).
 """
 from __future__ import annotations
@@ -56,6 +64,14 @@ class Watch:
             return f"{self.name} {kind} — 마지막 유효 표본 뒤 {gap:.2f} s > {self.gap_limit} s"
         if value is not None:
             self.last_valid, self.has_valid = t_after, True
+        return None
+
+    def stale(self, now: float):
+        """확인만 (C4-0A-N3) — 지금 시각에서 마지막 유효 표본 (없으면 감시 시작) 까지의 공백이 한도를 넘었으면 이유, 아니면 None.
+        표본이 아니므로 `last_valid` · `samples` 를 바꾸지 않는다."""
+        gap = now - self.last_valid
+        if gap > self.gap_limit:
+            return f"{self.name} 공백 (확인 · 표본 아님) — 마지막 유효 표본 뒤 {gap:.2f} s > {self.gap_limit} s"
         return None
 
 
@@ -157,8 +173,9 @@ def worker_loop(wid, tasks, ctx, task_fn, q, stop, prog, deadline_abs: float, cl
                 q.put((kind, tid, _jsonable({**payload, "t": clock()})))
             try:
                 row = task_fn(task, ctx, notify=notify, progress=progress)
-            except Structural as s:
-                q.put(("structural", tid, {**(s.info if isinstance(s.info, dict) else {"message": str(s.info)}), "t": clock()}))
+            except Structural as s:                       # partial (이미 모은 계수) 도 부모까지 보낸다 (C4-0A-N4) — 완료 행으로 바꾸지 않는다
+                q.put(("structural", tid, {**(s.info if isinstance(s.info, dict) else {"message": str(s.info)}),
+                                           "partial": _jsonable(s.partial), "t": clock()}))
                 return
             q.put(("done", tid, _jsonable(row)))
         q.put(("worker_end", wid, {"t": clock()}))
@@ -168,6 +185,7 @@ def worker_loop(wid, tasks, ctx, task_fn, q, stop, prog, deadline_abs: float, cl
 
 
 def _states(tasks, ev, prog, reason, t_stop, t0) -> list:
+    partial = {s.get("task_id"): s["partial"] for s in ev.get("structural", []) if s.get("partial") is not None}
     out = []
     for task in tasks:
         tid = task["task_id"]
@@ -176,9 +194,12 @@ def _states(tasks, ev, prog, reason, t_stop, t0) -> list:
         if tid in ev["done"]:
             out.append({**ev["done"][tid], "task_id": tid, "state": "COMPLETED", "t_start_rel": rel})
         elif st:
-            out.append({"task_id": tid, "worker": task.get("worker"), "state": "STARTED_INTERRUPTED", "t_start_rel": rel,
-                        "n_eval_observed": f"≥ {int(prog.get(tid, 0) if isinstance(prog, dict) else prog[tid])} · 미확인",
-                        "elapsed_s": t_stop - st["t"], "interrupt_reason": reason})
+            row = {"task_id": tid, "worker": task.get("worker"), "state": "STARTED_INTERRUPTED", "t_start_rel": rel,
+                   "n_eval_observed": f"≥ {int(prog.get(tid, 0) if isinstance(prog, dict) else prog[tid])} · 미확인",
+                   "elapsed_s": t_stop - st["t"], "interrupt_reason": reason}
+            if tid in partial:
+                row["structural_partial"] = partial[tid]        # 구조 오류 직전까지의 계수 — 상태는 중단 그대로
+            out.append(row)
         else:
             out.append({"task_id": tid, "worker": task.get("worker"), "state": "NOT_STARTED", "t_start_rel": None,
                         "interrupt_reason": reason or "작업자가 끝난 뒤 남은 작업"})
@@ -199,6 +220,10 @@ def supervise(tasks, ctx, task_fn, *, n_workers, limits, t0, clock=time.monotoni
     rss_w = Watch("메모리", limits["rss_gap"], clock() - t0)      # 표본 시각은 원점 기준 상대값
     disk_w = Watch("디스크", limits["disk_gap"], clock() - t0)
     reason = None
+
+    def fresh(now):
+        """두 감시기 freshness 확인 (C4-0A-N3) — 확인만 · 유효 시각을 바꾸지 않는다."""
+        return rss_w.stale(now) or disk_w.stale(now)
 
     def handle(msg):
         kind, key, payload = msg
@@ -256,6 +281,8 @@ def supervise(tasks, ctx, task_fn, *, n_workers, limits, t0, clock=time.monotoni
             reason = f"메모리 표본 {v} B > 상한 {limits['rss']} B"
         if reason is None and clock() >= deadline_abs:               # 표본 수집 뒤 마감 재검사
             reason = f"단계 경계 — 측정 마감 {limits['measure']} s (표본 수집 뒤 재검사) · 신규 시작 중지"
+        if reason is None:
+            reason = fresh(clock() - t0)                              # 느린 RSS 조회 뒤 — 디스크 감시기 freshness (C4-0A-N3)
         if reason is not None:
             break
         if ta - last_disk_try >= disk_every:
@@ -271,12 +298,16 @@ def supervise(tasks, ctx, task_fn, *, n_workers, limits, t0, clock=time.monotoni
                 reason = f"디스크 표본: 새 산출 {d[0]} B (상한 {limits['disk_new']}) · 여유 {d[1]} B (하한 {limits['disk_free']})"
             if reason is None and clock() >= deadline_abs:
                 reason = f"단계 경계 — 측정 마감 {limits['measure']} s (디스크 표본 뒤 재검사) · 신규 시작 중지"
+            if reason is None:
+                reason = fresh(clock() - t0)                          # 느린 디스크 조회 뒤 — RSS 감시기 freshness (C4-0A-N3)
             if reason is not None:
                 break
         if len(set(ev["worker_end"]) | set(ev["worker_deadline"])) == n_workers:   # 마감을 본 작업자는 둘 다 보낸다 — 합집합으로 센다
             drain()
             if ev["worker_deadline"] and any(t["task_id"] not in ev["started"] for t in tasks):
                 reason = f"단계 경계 — 작업자가 마감 ({limits['measure']} s) 을 보고 신규 시작을 멈췄다"
+            if reason is None:
+                reason = fresh(clock() - t0)                          # 정상 종료 직전 — 두 감시기 freshness (C4-0A-N3)
             break
     t_stop = clock()
     if reason is not None:
@@ -332,8 +363,17 @@ def final_record(out_dir, parts: dict, *, roots, limit_bytes, clock=time.monoton
             break
         files[name] = hashlib.sha256(back).hexdigest()
     after = output_bytes(roots)
-    if state == "COMPLETE" and after > limit_bytes:
-        state = "OUTPUT_LIMIT_EXCEEDED"
+    snap = clock() - t0       # 마지막 쓰기 · 재읽기 · 해시 · 용량 조회 뒤 snapshot 하나 — 시간 판정과 반환에 같은 값 (C4-0A-N2)
+    violations = []
+    if snap > limit_s:
+        violations.append("time")
+        problems.append(f"최종 snapshot {snap:.3f} s > 기록 한도 {limit_s} s — 파일 · 해시는 보존하고 미완으로 둔다")
+        if state == "COMPLETE":
+            state = "RECORD_INCOMPLETE"
+    if after > limit_bytes:
+        violations.append("size")
         problems.append(f"최종 쓰기 뒤 산출 {after} B > 상한 {limit_bytes} B — 성공으로 종결하지 않는다")
+        if state == "COMPLETE":
+            state = "OUTPUT_LIMIT_EXCEEDED"
     return {"record_state": state, "files": files, "problems": problems, "output_bytes_after": after,
-            "output_roots": [str(r) for r in roots], "final_snapshot_s": clock() - t0}
+            "output_roots": [str(r) for r in roots], "final_snapshot_s": snap, "limit_violations": violations}
