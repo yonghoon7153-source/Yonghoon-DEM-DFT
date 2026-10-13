@@ -155,6 +155,10 @@ def _git(*args):
 
 def run_all(out_dir):
     import rint_t41_census as T41
+    #  출처는 **실행 시작** 시점에 잰다 (10-13 첫 실행은 끝에 재서 그 사이 커밋의 HEAD 가 찍혔다 — blob 은 같았다 · README 표지)
+    head0 = _git('rev-parse', 'HEAD')
+    blobs0 = {f: _git('hash-object', f) for f in ('scripts/step3_sigma.py', 'scripts/rint_t43_order_diag.py',
+                                                  'scripts/rint_t41_census.py', 'scripts/rint_iface_join.py')}
     os.makedirs(out_dir, exist_ok=True)
     jobs, sig = [], None
     for bed in T41.BEDS:
@@ -191,9 +195,8 @@ def run_all(out_dir):
            'registration': 'docs/reviews/rint_t43_order_dependence_registration_20261013.md',
            'status': ('보고 전용 (RINTG-11) — 판정 없음 · legacy OFF 계약 (선택 (1)) 무변경 · 크기가 의미 있으면 D21 = 1저자 · '
                       '①′ 정량 채택 · 생산 HOLD · 웹앱 화면 없음'),
-           'K': K, 'seeds': list(SEEDS), 'git_head': _git('rev-parse', 'HEAD'),
-           'code_blobs': {f: _git('hash-object', f) for f in ('scripts/step3_sigma.py', 'scripts/rint_t43_order_diag.py',
-                                                              'scripts/rint_t41_census.py', 'scripts/rint_iface_join.py')},
+           'K': K, 'seeds': list(SEEDS), 'git_head_at_start': head0, 'git_head': _git('rev-parse', 'HEAD'),
+           'code_blobs': blobs0,
            'environment': {'python': platform.python_version(), 'numpy': np.__version__, 'scipy': _sp.__version__},
            'jobs': jobs, 'sigma_off': {'bed': SIGMA_BED, 'config': SIGMA_CFG, **(sig or {'status': 'not_run'})},
            'sigma_not_done': 'case15 · kit_ps_5_5 · vox 0.15 의 σ_OFF = 이 컨테이너에서 하지 않음 (등록 §2 · 생산 기계 몫)'}

@@ -224,6 +224,9 @@ def _child(bed, cfg, out_json):
 
 
 def run_all(out_dir, beds, cfgs):
+    #  출처는 **실행 시작** 시점에 잰다 (10-13 첫 실행은 끝에 재서 그 사이 커밋의 HEAD 가 찍혔다 — blob 은 같았다 · README 표지)
+    head0 = _git('rev-parse', 'HEAD')
+    blobs = {f: _git('hash-object', f) for f in ('scripts/step3_sigma.py', 'scripts/rint_iface_join.py', 'scripts/rint_t41_census.py')}
     os.makedirs(out_dir, exist_ok=True)
     parts = []
     for bed in beds:
@@ -245,11 +248,10 @@ def run_all(out_dir, beds, cfgs):
             print(f"  {bed} × {cfg}: OK {el:.0f} s · grid {res['grid']} · pairs {res.get('n_registered_pairs')} · "
                   f"classes {res.get('classes')} · peak {res.get('peak_rss_mb')} MB", flush=True)
     import numpy as _np, scipy as _sp
-    blobs = {f: _git('hash-object', f) for f in ('scripts/step3_sigma.py', 'scripts/rint_iface_join.py', 'scripts/rint_t41_census.py')}
     doc = {'kind': 'rint_t41_census', 'version': 'v1', 'date_utc': datetime.datetime.now(datetime.timezone.utc).isoformat(timespec='seconds'),
            'status': ('보고 전용 — σ 솔브 없음 · 예외 법칙 (D4′) 결정 아님 · 결과를 보고 법칙을 바꾸지 않는다 (v3 §7-1 T4-1) · '
                       '①′ 정량 채택 · 생산 HOLD · 웹앱 화면 없음'),
-           'git_head': _git('rev-parse', 'HEAD'), 'code_blobs': blobs,
+           'git_head_at_start': head0, 'git_head': _git('rev-parse', 'HEAD'), 'code_blobs': blobs,
            'environment': {'python': platform.python_version(), 'numpy': _np.__version__, 'scipy': _sp.__version__,
                            'machine': platform.machine(), 'cpu_count': os.cpu_count()},
            'configs': CONFIGS, 'beds': {k: {kk: vv for kk, vv in v.items() if kk != 'type_map'} | {'type_map': v['type_map']}
