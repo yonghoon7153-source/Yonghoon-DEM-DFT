@@ -60,29 +60,26 @@ evidenceScope: multi-source-mixed
 **[클릭]**
 
 ## 3. Overview ⏱ 4:30
-이번 작업의 목적은 하나입니다. **[가리킴: Purpose]**
-- Li₆PS₅Cl 의 전기화학 안정성과 기계적 안정성을 높이면서도 Li 이온 수송을 해치지 않는 **도펀트 전구체를 고르는 것**입니다.
-- 그리고 그 선택을 **계산이 하게** 만드는 것입니다. 선택 규칙은 결과를 보기 **전에** 정해 둡니다.
+> 화면 (사용자 10-13): ■ *Computational screening of dopant precursors for Li₆PS₅Cl* · bullet 둘 (*Goal* · *Unit of screening*) ·
+> 점선 상자 *Project stages* 1–4 · 화살표 · 아래 줄 *Stage 1 has been audited; the Stage 2 pilot is in progress.*
+> ⚠ 상자 번호 (1–4) 와 Stage 번호 (1 · 2) 가 따로 간다 — 말로는 **'첫째 · 둘째'** 로 읽는다 ('2단계 = 감사' 로 들리지 않게).
+> (사용자 덱에서는 4쪽 — 앞에 한 장이 더 있다.)
 
-새로운 점은 두 가지입니다.
-- 원소가 아니라 **전구체 화합물**을 단위로 거릅니다.
-- 전기화학 · 기계 · 수송을 **한 흐름**에서 봅니다.
+이번 작업은 Li₆PS₅Cl 에 넣을 도펀트를 계산으로 고르는 스크리닝입니다.
 
-**[가리킴: Completed]** 끝난 것:
-- 1단계 탐색으로 91개 전구체 전부의 배치를 열거해 MLIP 로 완화했습니다. 3,675개 구조입니다.
-- 기준 조성의 DFT 상태방정식을 끝냈고, 안정창을 하나의 정의로 통일해 다시 계산했습니다.
-- 그리고 9월에 1단계를 감사해서, 주 보고량 하나로 2단계를 다시 짰습니다.
+**[가리킴: Goal]** 목표는 전기화학 안정성과 기계적 안정성은 높이고, Li 이온 수송은 늦추지 않는 도펀트를 찾는 것입니다.
 
-**[가리킴: Running]** 지금 도는 것:
-- 2단계의 첫 파일럿입니다. Al₂O₃ 와 Al₂S₃ 에서 온 도핑의 Li 확산을 비교하는 MLIP 분자동역학 40 런입니다.
-- DFT 탄성상수 계산입니다.
+**[가리킴: Unit of screening]** 원소가 아니라 전구체 화합물 하나를 단위로 거릅니다. 후보는 91개입니다.
 
-**[가리킴: Next]** 다음은:
-- 237개 설계 목록에서 무엇을 얼마나 돌릴지, 그리고 얼마나 차이 나야 "더 낫다" 고 할지를 결과 전에 정하고,
-- 1단계 지표가 실제 수송을 예측하는지 확인한 뒤,
-- 짧은 목록을 DFT 로 확인해 실험으로 넘기는 것입니다.
+**[가리킴: 상자]** 전체 흐름은 네 단계입니다.
+- 첫째, 6월부터 8월까지 91개 전구체를 모두 훑은 1단계 탐색입니다. 구조 3,675개를 MLIP 로 완화했습니다.
+- 둘째, 9월에 그 1단계를 감사했습니다. 새 결과를 보기 전에 규칙부터 정했습니다.
+- 셋째, 10월에 시작한 2단계 파일럿입니다. MLIP 분자동역학 40 런 중 12 런이 끝났습니다.
+  (⚠ 12/40 은 발표 직전 값으로 — 13장과 같이 · kgy `python3 ~/bin/cv7_watch.py --out_root ~/work/runs/cascade_v7_main_1007`)
+- 넷째, 후보를 추려 DFT 로 확인하고 실험으로 넘기는 일은 파일럿 판정이 나온 뒤입니다.
 
-아래 줄이 오늘의 전제입니다. **1단계 지표는 탐색용이고, 도펀트 순위는 주장하지 않습니다.**
+**[가리킴: 아래 줄]** 지금은 1단계 감사가 끝났고, 2단계 파일럿이 도는 중입니다. 그래서 오늘은 도펀트 순위가 아니라, 여기까지 온 과정을 말씀드리겠습니다.
+먼저 왜 안정성과 수송을 같이 봐야 하는지부터 보겠습니다.
 
 **[클릭]**
 
@@ -296,7 +293,7 @@ MLIP 지표의 기준이 되는 DFT 계산입니다. **[가리킴: 두 곡선]**
 | 장 | 슬림판 화면 | 말로 채울 것 |
 |---|---|---|
 | 2 | ■ 'Earlier DFT studies: the basis of this screening' · bullet 둘 (Top row: bulk materials and their doped or coated forms · Bottom row: SEI components, interfaces, and binders in a battery cell) + 그림 자리 8칸 (제목 + `< 키워드 >`) | 칸마다 한 줄 (대본 2장) · 마무리 '이 경험들이 스크리닝의 단계가 됐다' + 짝 다섯 (EOS → 기준 계산 · BVSE → Li 지형 · MD → 수송 · 대권위 상도표 → 안정창 · 계면 에너지 → 계면 반응성) — 숫자는 0 개 |
-| 3 | 점선 박스 'Project stages' 1–4 + 화살표 + 'Stage 1 audited. Stage 2 pilot in progress.' | 단계마다 무엇을 했는지 (대본 3장) · '선택 규칙은 결과 전에 정한다' (화면 줄은 뺐다) |
+| 3 | ■ 'Computational screening of dopant precursors for Li₆PS₅Cl' · bullet 둘 (Goal: higher electrochemical and mechanical stability without slowing Li-ion transport · Unit of screening: a precursor compound (91 candidates)) + 점선 박스 'Project stages' 1–4 + 화살표 + 'Stage 1 has been audited; the Stage 2 pilot is in progress.' | 목표 · 단위 · 네 단계 ('첫째–넷째' 로 읽는다 · 대본 3장) · 지금 위치 · '규칙은 결과 전에' 는 둘째 항목에서 말로 |
 | 4 | 원래 장 그대로 | 그대로 |
 | 5 | bullet 하나 + 원래 표 (14 pt) | 기존 스크린 셋 (대본 5장) · 비슷한 최근 연구 Jung · Park · Muy 는 이름만 (화면 줄은 뺐다 · 17장에 있다) |
 | 6 | 08-18 덱의 족별 표 (family · n · examples — 'role in the design' 열은 뺐다 · 사용자 10-13) + **[문헌] 'Literature example: SiO₂ co-doping'** Jung 2026 Fig. 3d | 족별 역할은 말로: 산화물 = 강한 M–O 결합 · 염화물 = 호스트에 이미 Cl · 황화물 = 호스트와 같은 음이온 (대조) · 플루오르화물 = 가장 강한 결합 · 이동성 위험 · 브로민화물 · 요오드화물 = 더 큰 할라이드 (대조) · 질화물 = 더 높은 음이온 전하 (대조) · 공치환 실험 선례 CuCl · MgF₂ · ZnO · La₂O₃ · Nd₂O₃ · SiO₂ (17장) · 문헌 그림은 '선례' 이지 우리 후보의 검증이 아니다 · As₂S₃ 재실행은 7장 |

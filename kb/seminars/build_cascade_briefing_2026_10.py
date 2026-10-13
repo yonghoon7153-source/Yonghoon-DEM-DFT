@@ -592,15 +592,17 @@ def build_lean():
     # ---- 3 overview: unit of screening + the dashed numbered box of the 08-18 deck (CW: 'Project stages' — the box
     #      also holds a future step; the rule-before-results line is said here and shown once, on p11)
     name, t = fresh('overview', 'Overview')
-    lean_body(t, 'Computational screening of dopant precursors for Li₆PS₅Cl',
-              ['The unit of screening is a [[b:precursor compound]] (91 candidates).'], h=0.95)
+    lean_body(t, 'Computational screening of dopant precursors for Li₆PS₅Cl',     # user 10-13: small bullets as on p02
+              ['[[b:Goal]]: higher electrochemical and mechanical stability without slowing Li-ion transport',
+               '[[b:Unit of screening]]: a precursor compound (91 candidates)'], h=1.35)
     dashed_list(t, name, 'Project stages',
                 [('Stage 1 exploration screen (Jun–Aug)', '(91 precursors, 3,675 structures)'),
                  ('Audit of Stage 1 (Sep)', '(rules fixed before new results)'),
                  ('Stage 2 pilot: MLIP-MD (Oct)', '(12 of 40 runs done)'),
                  ('Shortlist → DFT → experiments', '(after the pilot verdict)')],
-                0.57, 2.45, 8.86, 2.3, note_x=0.55, arrow_y=4.86)
-    add(t, line_under(ids(), 'Stage 1 audited. [[b:Stage 2 pilot in progress.]]', 5.68))
+                0.57, 2.6, 8.86, 2.3, note_x=0.55, arrow_y=5.01)     # 0.15 in lower: room under the second bullet
+    # a full sentence, so it keeps its period (user 10-13 grammar rule); 'the Stage 2 pilot' takes the article
+    add(t, line_under(ids(), 'Stage 1 has been audited; [[b:the Stage 2 pilot is in progress.]]', 5.83))
     save(t, name)
 
     # ---- 4 failure modes: orig slide 3, unchanged
