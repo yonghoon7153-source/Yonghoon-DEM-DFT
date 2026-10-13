@@ -1,0 +1,452 @@
+{
+ "slug": "nisar2021_cathode_coating_review_critical_thickness",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-10-13",
+ "sources": [
+  "Nisar2021 EnergyStorageMater Valuation of Surface Coatings in High-Energy Density Lithium-ion Battery Cathode Materials.pdf",
+  "Sup) Nisar2021 EnergyStorageMater Valuation of Surface Coatings in High-Energy Density Lithium-ion Battery Cathode Materials.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 3,
+   "file": "fig_1.png",
+   "caption": "Fig. 1. (a) Requirements and challenges of sur- face coatings for cathode materials, (b) Role and functionality of surface coatings employed for cathode materials.",
+   "rotated_deg": 0,
+   "bbox": [
+    32.0,
+    52.0,
+    404.0,
+    476.0
+   ],
+   "w": 1551,
+   "h": 1768,
+   "dpi": 300,
+   "src": "Nisar2021 EnergyStorageMater Valuation of Surface Coatings in High-Energy Density Lithium-ion Battery Cathode Materials.pdf",
+   "blank": 0.702,
+   "manual_crop": "Elsevier side-caption layout: caption sits in the right column (x 410-562) and the tool searched only above/below it in that column, so the raster in the left column was reported as 'graphics none (img0/draw0)'; clip = embedded raster rect (38, 58, 398, 470) on PDF p.3 + 6 pt margin (2026-10-13, litdb-curator)"
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 4,
+   "file": "fig_2.png",
+   "caption": "Fig. 2. (a) Schematic showing the possible sur- face coating morphologies such as thin coat- ing, inhomogeneous coating and island coating [38–40] .",
+   "rotated_deg": 0,
+   "bbox": [
+    32.0,
+    51.0,
+    404.0,
+    298.0
+   ],
+   "w": 1551,
+   "h": 1030,
+   "dpi": 300,
+   "src": "Nisar2021 EnergyStorageMater Valuation of Surface Coatings in High-Energy Density Lithium-ion Battery Cathode Materials.pdf",
+   "blank": 0.399,
+   "manual_crop": "Elsevier side-caption layout: caption sits in the right column (x 410-562) and the tool searched only above/below it in that column, so the raster in the left column was reported as 'graphics none (img0/draw0)'; clip = embedded raster rect (38, 57, 398, 292) on PDF p.4 + 6 pt margin (2026-10-13, litdb-curator)"
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 6,
+   "file": "fig_3.png",
+   "caption": "Fig. 3. Displays diﬀerent processes and strate- gies employed for surface coatings of cath- ode materials. (a) sol-gel, (b) hydrothermal, (c) dry ball milling, (d) Chemical vapor de- position (CVD), (e) Atomic layer deposition (ALD) where (i) shows conventional ALD pro- cess while (ii) shows ﬂuidized bed particle ALD process speciﬁcally designed for powder coat- ing [65–70] .",
+   "rotated_deg": 0,
+   "bbox": [
+    32.0,
+    51.0,
+    404.0,
+    359.0
+   ],
+   "w": 1551,
+   "h": 1284,
+   "dpi": 300,
+   "src": "Nisar2021 EnergyStorageMater Valuation of Surface Coatings in High-Energy Density Lithium-ion Battery Cathode Materials.pdf",
+   "blank": 0.734,
+   "manual_crop": "Elsevier side-caption layout: caption sits in the right column (x 410-562) and the tool searched only above/below it in that column, so the raster in the left column was reported as 'graphics none (img0/draw0)'; clip = embedded raster rect (38, 57, 398, 353) on PDF p.6 + 6 pt margin (2026-10-13, litdb-curator)"
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 7,
+   "file": "fig_4.png",
+   "caption": "Fig. 4. A. (a) Rate capability of bare and SiO 2 coated LNMO, (b) Cycling performance of 1 wt.% SiO 2 coated LNMO at 10, 40 and 80C for 400 cycles, Elevated temperature (55°C) (c) cycling at 40C, charge/discharge curves af- ter diﬀerent cycles (d) bare and (e) 1 wt.% SiO 2 coated LNMO, EIS spectra of (f) bare and (g) 1 wt.% SiO 2 LNMO at diﬀerent SOC, (h) Ex-situ TEM images of 1 wt. % SiO 2 coated LNMO after charging to 5V [ 27 , 29] . Figure 4 B. (a) Rate capability of bare and ZrO 2 coated Li 1.2 Ni 0.16 Mn 0.56 Co 0.08 O 2 (NCM) materials, (b- c) TEM and elemental mapping images of 1.5 wt.% ZrO 2 coated NMC, (d) High resolution XPS spectra of Zr for 1.5 wt.% ZrO 2 coated NMC, (e) Thermal stability (DSC), (f) Cycling behavior of pristine and ZrO 2 coated NMC (ZrO 2 = 1.0, 1.5 & 2.0 wt.%) at 0.1C for 50 cy- cles, Charge/discharge curves of (g) bare and (h) 1.5 wt.% ZrO 2 after cycles [6",
+   "rotated_deg": 0,
+   "bbox": [
+    32.0,
+    51.0,
+    404.0,
+    527.0
+   ],
+   "w": 1551,
+   "h": 1984,
+   "dpi": 300,
+   "src": "Nisar2021 EnergyStorageMater Valuation of Surface Coatings in High-Energy Density Lithium-ion Battery Cathode Materials.pdf",
+   "blank": 0.662,
+   "manual_crop": "Elsevier side-caption layout: caption sits in the right column (x 410-562) and the tool searched only above/below it in that column, so the raster in the left column was reported as 'graphics none (img0/draw0)'; clip = embedded raster rect (38, 57, 398, 521) on PDF p.7 + 6 pt margin (2026-10-13, litdb-curator)"
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 8,
+   "file": "fig_5.png",
+   "caption": "Fig. 5. (a) Schematic illustration of Li 3 PO 4 (LPO) modiﬁed LiNi 0.8 Co 0.1 Mn 0.1 O 2 (NCM), (b-c) HR-TEM images, (d) SEM elemental map- ping images, (e) rate capability performance, (f) cycling performance at 1C between 2.8-4.5 V, and EIS spectra after (g) 1 st and (h) 50 th cycle for bare and LPO coated NCM materials [148] .",
+   "rotated_deg": 0,
+   "bbox": [
+    32.0,
+    209.0,
+    404.0,
+    444.0
+   ],
+   "w": 1551,
+   "h": 980,
+   "dpi": 300,
+   "src": "Nisar2021 EnergyStorageMater Valuation of Surface Coatings in High-Energy Density Lithium-ion Battery Cathode Materials.pdf",
+   "blank": 0.512,
+   "manual_crop": "Elsevier side-caption layout: caption sits in the right column (x 410-562) and the tool searched only above/below it in that column, so the raster in the left column was reported as 'graphics none (img0/draw0)'; clip = embedded raster rect (38, 215, 398, 438) on PDF p.8 + 6 pt margin (2026-10-13, litdb-curator)"
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 9,
+   "file": "fig_6.png",
+   "caption": "Fig. 6. (a) Schematic illustration of USMLLR material, (b) HT-TEM image of USMLLR with a thin coating layer, (c) XRD patterns, (d) Raman spectra, (e) DSC thermal stability with elec- trode in charged state 4.8 V, (f) rate capability, (g) cycling at C/10, charge/discharge curves of (h) PLLR, (i) USMLLR [149] . Note: The term PLLR refers to pristine layered lithium- rich materials (PLLR), USMLLR refers to Ul- trathin spinel membrane encapsulated-layered lithium-rich cathode.",
+   "rotated_deg": 0,
+   "bbox": [
+    31.9,
+    50.9,
+    403.9,
+    265.2
+   ],
+   "w": 1551,
+   "h": 895,
+   "dpi": 300,
+   "src": "Nisar2021 EnergyStorageMater Valuation of Surface Coatings in High-Energy Density Lithium-ion Battery Cathode Materials.pdf",
+   "blank": 0.715
+  },
+  {
+   "key": "f7",
+   "kind": "figure",
+   "label": "7",
+   "page": 10,
+   "file": "fig_7.png",
+   "caption": "Fig. 7. (a) Schematic illustration of LLTO mod- iﬁed LiNi 0.6 Co 0.2 Mn 0.2 O 2 , TEM images of (b) bare and (c) LLTO coated NCM622, (d) rate ca- pability, cycling behavior of pristine and LLTO coated NCM622 at cutoﬀvoltages of (e) 3.0- 4.3V and (f) 3.0-4.5 V, EIS spectra of (g) bare and (h) LLTO coated NCM622 after various cy- cles at 0.5C [100] .",
+   "rotated_deg": 0,
+   "bbox": [
+    32.0,
+    51.0,
+    404.0,
+    351.0
+   ],
+   "w": 1551,
+   "h": 1251,
+   "dpi": 300,
+   "src": "Nisar2021 EnergyStorageMater Valuation of Surface Coatings in High-Energy Density Lithium-ion Battery Cathode Materials.pdf",
+   "blank": 0.69,
+   "manual_crop": "Elsevier side-caption layout: caption sits in the right column (x 410-562) and the tool searched only above/below it in that column, so the raster in the left column was reported as 'graphics none (img0/draw0)'; clip = embedded raster rect (38, 57, 398, 345) on PDF p.10 + 6 pt margin (2026-10-13, litdb-curator)"
+  },
+  {
+   "key": "f8",
+   "kind": "figure",
+   "label": "8",
+   "page": 11,
+   "file": "fig_8.png",
+   "caption": "Fig. 8. (a) Graphical illustration of NCM@PANI-PEG composite coating, TEM images of (b) PANI polymer coating and (c) PANI-PEG polymer composite coating, (d) Charge/discharge curves, (e) Rate capability data at diﬀerent C-rates, cycling performance at (e) 25 and (f) 55° respectively, EIS spectra (g) before cycling and (h) after 100 cycles respectively for pristine, PANI polymer and PANI-PEG polymer composite coating [112] .",
+   "rotated_deg": 0,
+   "bbox": [
+    31.9,
+    51.7,
+    403.9,
+    306.2
+   ],
+   "w": 1551,
+   "h": 1061,
+   "dpi": 300,
+   "src": "Nisar2021 EnergyStorageMater Valuation of Surface Coatings in High-Energy Density Lithium-ion Battery Cathode Materials.pdf",
+   "blank": 0.726
+  },
+  {
+   "key": "f9",
+   "kind": "figure",
+   "label": "9",
+   "page": 12,
+   "file": "fig_9.png",
+   "caption": "Fig. 9. (a) Schematic illustration of Mn sur- face doped Ni-rich cathode, (b) galvanostatic charge and discharge curves at 0.1C in the volt- age window of 3.0-4.3 V, (c) cycling perfor- mance at 1C at elevated temperature (60°C), (d) DSC thermal stability proﬁles for bare and Mn-NCM cathode at the fully charged state, (e- f) EIS Nyquist plots at fully charged states (e) 1 st cycle and (f) after 30 th cycles [162] .",
+   "rotated_deg": 0,
+   "bbox": [
+    32.0,
+    52.0,
+    404.0,
+    276.0
+   ],
+   "w": 1551,
+   "h": 934,
+   "dpi": 300,
+   "src": "Nisar2021 EnergyStorageMater Valuation of Surface Coatings in High-Energy Density Lithium-ion Battery Cathode Materials.pdf",
+   "blank": 0.834,
+   "manual_crop": "Elsevier side-caption layout: caption sits in the right column (x 410-562) and the tool searched only above/below it in that column, so the raster in the left column was reported as 'graphics none (img0/draw0)'; clip = embedded raster rect (38, 58, 398, 270) on PDF p.12 + 6 pt margin (2026-10-13, litdb-curator)"
+  },
+  {
+   "key": "f10",
+   "kind": "figure",
+   "label": "10",
+   "page": 13,
+   "file": "fig_10.png",
+   "caption": "Fig. 10. (a-c) Compares the diﬀusion time of diﬀerent coating materials with respect to coating thickness at 300 K (a) diﬀerent materials, (b) aluminum-based /materials compositions and (c) silicon-based materials/compositions.",
+   "rotated_deg": 0,
+   "bbox": [
+    31.9,
+    501.5,
+    568.0,
+    634.6
+   ],
+   "w": 2235,
+   "h": 556,
+   "dpi": 300,
+   "src": "Nisar2021 EnergyStorageMater Valuation of Surface Coatings in High-Energy Density Lithium-ion Battery Cathode Materials.pdf",
+   "blank": 0.881
+  },
+  {
+   "key": "f11",
+   "kind": "figure",
+   "label": "11",
+   "page": 15,
+   "file": "fig_11.png",
+   "caption": "Fig. 11. Various interfaces in cathode compos- ites in solid-state batteries with cathode coating [199] .",
+   "rotated_deg": 0,
+   "bbox": [
+    32.0,
+    51.0,
+    404.0,
+    332.0
+   ],
+   "w": 1551,
+   "h": 1172,
+   "dpi": 300,
+   "src": "Nisar2021 EnergyStorageMater Valuation of Surface Coatings in High-Energy Density Lithium-ion Battery Cathode Materials.pdf",
+   "blank": 0.496,
+   "manual_crop": "Elsevier side-caption layout: caption sits in the right column (x 410-562) and the tool searched only above/below it in that column, so the raster in the left column was reported as 'graphics none (img0/draw0)'; clip = embedded raster rect (38, 57, 398, 326) on PDF p.15 + 6 pt margin (2026-10-13, litdb-curator)"
+  },
+  {
+   "key": "f12",
+   "kind": "figure",
+   "label": "12",
+   "page": 15,
+   "file": "fig_12.png",
+   "caption": "Fig. 12. Schematic illustrating the key issues arising at the interface between the cathode and the solid electrolyte during battery opera- tion, along with the beneﬁts resulting from the presence of a suitable cathode coating [200] .",
+   "rotated_deg": 0,
+   "bbox": [
+    32.0,
+    340.0,
+    404.0,
+    542.0
+   ],
+   "w": 1551,
+   "h": 843,
+   "dpi": 300,
+   "src": "Nisar2021 EnergyStorageMater Valuation of Surface Coatings in High-Energy Density Lithium-ion Battery Cathode Materials.pdf",
+   "blank": 0.486,
+   "manual_crop": "Elsevier side-caption layout: caption sits in the right column (x 410-562) and the tool searched only above/below it in that column, so the raster in the left column was reported as 'graphics none (img0/draw0)'; clip = embedded raster rect (38, 346, 398, 536) on PDF p.15 + 6 pt margin (2026-10-13, litdb-curator)"
+  },
+  {
+   "key": "t1",
+   "kind": "table",
+   "label": "1",
+   "page": 7,
+   "file": "tab_1.png",
+   "caption": "Table 1 The requirements and challenges of surface coatings for cathode materials. Requirements Challenges Thin coating layer Inhomogeneous coating, Island coating, Bare (uncoated) regions Ionic & electronic conducting layer Increase in charge transfer resistance ( R ct ), poor ionic and electronic conductivity Stable upon cycling Formation of cracks due to fatigue, delamination Easy processing Change of cathode surface chemistry in complicated wet processing (wet coating) Cheaper coating materials Expensive coating precursor, increase cathode material cost",
+   "rotated_deg": 0,
+   "bbox": [
+    115.0,
+    534.0,
+    481.0,
+    630.0
+   ],
+   "w": 1526,
+   "h": 400,
+   "dpi": 300,
+   "src": "Nisar2021 EnergyStorageMater Valuation of Surface Coatings in High-Energy Density Lithium-ion Battery Cathode Materials.pdf",
+   "blank": 0.894,
+   "recrop": "auto crop rendered the whole page (w~2210 x h~2990 px) instead of the table; clip = caption top to the printed bottom rule (121, 540, 475, 624) on PDF p.7 + 6 pt margin (2026-10-13, litdb-curator); old bbox [32.9, 32.1, 563.4, 751.2]"
+  },
+  {
+   "key": "t2",
+   "kind": "table",
+   "label": "2",
+   "page": 8,
+   "file": "tab_2.png",
+   "caption": "Table 2 Comparison of advantages and disadvantages of various coating processes. Process Advantages Disadvantages Wet chemical coating Simple, economical, commercially viable Thickness, morphology, and homogeneity are quite diﬃcult to control. The extra cost is involved in wastewater treatment and powder drying. Compatibility of grinding media, solvent, cathode, and coating materials Atomic layer deposition (ALD) Nano coating, uniform coating, precise control over coating composition Expensive, commercially not viable Dry coating (Ball milling) Simple, cheap and commercially viable (scalable) Thickness, morphology, and homogeneity are quite diﬃcult to control, leads to non-uniform coating Hydrothermal Uniform coating Expensive, sophisticated, commercially not viable Chemical vapor deposition (CVD) Uniform coating, thickness easy to control Expensive, commercially not viable",
+   "rotated_deg": 0,
+   "bbox": [
+    33.0,
+    51.0,
+    563.0,
+    196.0
+   ],
+   "w": 2209,
+   "h": 605,
+   "dpi": 300,
+   "src": "Nisar2021 EnergyStorageMater Valuation of Surface Coatings in High-Energy Density Lithium-ion Battery Cathode Materials.pdf",
+   "blank": 0.926,
+   "recrop": "auto crop rendered the whole page (w~2210 x h~2990 px) instead of the table; clip = caption top to the printed bottom rule (39, 57, 557, 190) on PDF p.8 + 6 pt margin (2026-10-13, litdb-curator); old bbox [32.9, 32.1, 563.4, 751.2]"
+  },
+  {
+   "key": "t3",
+   "kind": "table",
+   "label": "3",
+   "page": 8,
+   "file": "tab_3.png",
+   "caption": "Table 3 Onset temperature and heat generation for bare and ZrO 2 coated Li 1.2 Ni 0.16 Mn 0.56 Co 0.08 O 2 (NMC) materials.",
+   "rotated_deg": 0,
+   "bbox": [
+    56.0,
+    459.0,
+    271.0,
+    556.0
+   ],
+   "w": 897,
+   "h": 405,
+   "dpi": 300,
+   "src": "Nisar2021 EnergyStorageMater Valuation of Surface Coatings in High-Energy Density Lithium-ion Battery Cathode Materials.pdf",
+   "blank": 0.903,
+   "recrop": "auto crop rendered the whole page (w~2210 x h~2990 px) instead of the table; clip = caption top to the printed bottom rule (62, 465, 265, 550) on PDF p.8 + 6 pt margin (2026-10-13, litdb-curator); old bbox [32.9, 32.1, 563.4, 751.2]"
+  },
+  {
+   "key": "t4",
+   "kind": "table",
+   "label": "4",
+   "page": 13,
+   "file": "tab_4.png",
+   "caption": "Table 4 Comparison of electrochemical performance of coated and uncoated cathode materials.",
+   "rotated_deg": 0,
+   "bbox": [
+    33.0,
+    51.0,
+    563.0,
+    500.0
+   ],
+   "w": 2209,
+   "h": 1872,
+   "dpi": 300,
+   "src": "Nisar2021 EnergyStorageMater Valuation of Surface Coatings in High-Energy Density Lithium-ion Battery Cathode Materials.pdf",
+   "blank": 0.932,
+   "recrop": "auto crop rendered the whole page (w~2210 x h~2990 px) instead of the table; clip = caption top to the printed bottom rule (39, 57, 557, 494) on PDF p.13 + 6 pt margin (2026-10-13, litdb-curator); old bbox [32.9, 32.1, 563.2, 742.0]"
+  },
+  {
+   "key": "t5",
+   "kind": "table",
+   "label": "5",
+   "page": 14,
+   "file": "tab_5.png",
+   "caption": "Table 5 Lithium-ion diﬀusivity of diﬀerent coating materials at 300K. The term “am ” means amorphous while “cry ” means crystalline.",
+   "rotated_deg": 0,
+   "bbox": [
+    57.0,
+    51.0,
+    273.0,
+    294.0
+   ],
+   "w": 901,
+   "h": 1013,
+   "dpi": 300,
+   "src": "Nisar2021 EnergyStorageMater Valuation of Surface Coatings in High-Energy Density Lithium-ion Battery Cathode Materials.pdf",
+   "blank": 0.917,
+   "recrop": "auto crop rendered the whole page (w~2210 x h~2990 px) instead of the table; clip = caption top to the printed bottom rule (63, 57, 267, 288) on PDF p.14 + 6 pt margin (2026-10-13, litdb-curator); old bbox [32.9, 32.1, 563.2, 744.3]"
+  },
+  {
+   "key": "t6",
+   "kind": "table",
+   "label": "6",
+   "page": 14,
+   "file": "tab_6.png",
+   "caption": "Table 6 Comparison of the role of surface coatings in conventional and solid-state batteries (SSB). Conventional lithium-ion batteries Solid-state batteries (SSB) Physical barrier between cathode and electrolyte Improve electro-chemical stability between cathode and solid electrolyte Electronically conductive Electronically insulating Ionically conductive Ionically conductive HF scavenger Suppress cathode volume changes Prevent metal dissolution Reduce interfacial resistance",
+   "rotated_deg": 0,
+   "bbox": [
+    108.0,
+    653.0,
+    488.0,
+    749.0
+   ],
+   "w": 1584,
+   "h": 401,
+   "dpi": 300,
+   "src": "Nisar2021 EnergyStorageMater Valuation of Surface Coatings in High-Energy Density Lithium-ion Battery Cathode Materials.pdf",
+   "blank": 0.906,
+   "recrop": "auto crop rendered the whole page (w~2210 x h~2990 px) instead of the table; clip = caption top to the printed bottom rule (114, 659, 482, 743) on PDF p.14 + 6 pt margin (2026-10-13, litdb-curator); old bbox [32.9, 32.1, 563.2, 744.3]"
+  }
+ ],
+ "missing_labels": [
+  {
+   "key": "f1",
+   "why": "번호 공백 — 이 번호가 추출되지 않았다",
+   "skipped": [
+    "p3 그래픽 없음(img0/draw0)"
+   ],
+   "near_miss": [],
+   "resolved": "manual_crop fig_1.png (2026-10-13, litdb-curator) - see figures[f1].manual_crop"
+  },
+  {
+   "key": "f2",
+   "why": "번호 공백 — 이 번호가 추출되지 않았다",
+   "skipped": [
+    "p4 그래픽 없음(img0/draw0)"
+   ],
+   "near_miss": [],
+   "resolved": "manual_crop fig_2.png (2026-10-13, litdb-curator) - see figures[f2].manual_crop"
+  },
+  {
+   "key": "f3",
+   "why": "번호 공백 — 이 번호가 추출되지 않았다",
+   "skipped": [
+    "p6 그래픽 없음(img0/draw0)"
+   ],
+   "near_miss": [],
+   "resolved": "manual_crop fig_3.png (2026-10-13, litdb-curator) - see figures[f3].manual_crop"
+  },
+  {
+   "key": "f4",
+   "why": "번호 공백 — 이 번호가 추출되지 않았다",
+   "skipped": [
+    "p7 그래픽 없음(img0/draw0)"
+   ],
+   "near_miss": [],
+   "resolved": "manual_crop fig_4.png (2026-10-13, litdb-curator) - see figures[f4].manual_crop"
+  },
+  {
+   "key": "f5",
+   "why": "번호 공백 — 이 번호가 추출되지 않았다",
+   "skipped": [
+    "p8 그래픽 없음(img0/draw0)"
+   ],
+   "near_miss": [],
+   "resolved": "manual_crop fig_5.png (2026-10-13, litdb-curator) - see figures[f5].manual_crop"
+  },
+  {
+   "key": "f7",
+   "why": "번호 공백 — 이 번호가 추출되지 않았다",
+   "skipped": [
+    "p10 그래픽 없음(img0/draw0)"
+   ],
+   "near_miss": [],
+   "resolved": "manual_crop fig_7.png (2026-10-13, litdb-curator) - see figures[f7].manual_crop"
+  },
+  {
+   "key": "f9",
+   "why": "번호 공백 — 이 번호가 추출되지 않았다",
+   "skipped": [
+    "p12 그래픽 없음(img0/draw0)"
+   ],
+   "near_miss": [],
+   "resolved": "manual_crop fig_9.png (2026-10-13, litdb-curator) - see figures[f9].manual_crop"
+  }
+ ]
+}

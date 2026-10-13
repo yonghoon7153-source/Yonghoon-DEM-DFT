@@ -1,0 +1,233 @@
+{
+ "slug": "wang2020_br_rich_argyrodite_fast_ion_conduction_origin",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-10-13",
+ "sources": [
+  "Wang2020 ChemMater Fast Ion Conduction and Its Origin in Li6-xPS5-xBr1+x.pdf",
+  "Sup) Wang2020 ChemMater Fast Ion Conduction and Its Origin in Li6-xPS5-xBr1+x.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 2,
+   "file": "fig_1.png",
+   "caption": "Figure 1. XRD characterizations of Li6−xPS5−xBr1+x (0 ≤x ≤0.5). (a) Crystal structure of Li6PS5Br. Two types of S2−sites are shown: free S2− (Wyckoﬀ4d) and S2−within the PS4 3−tetrahedra (Wyckoﬀ16e). Li ions at diﬀerent sites are not diﬀerentiated for simplicity. (b) High-resolution XRD of Li6PS5Br and the corresponding Rietveld reﬁnement. (c) XRD patterns of Li6−xPS5−xBr1+x and expanded region around the peak (311) as a function of x (0 ≤x ≤0.5). (d) Lattice parameter a obtained from the reﬁnement of XRD patterns in (c) as a function of x in Li6−xPS5−xBr1+x. using an Abrin battery testing system with a current density of 10 μA cm−1, and the direction of current was changed every 30 min. ratio. The mixture was then sealed in an airtight quartz tube in argon. The sealed tube was placed in a box furnace and heated from room temperature to 300 °C at a rate of 1 °C min−1. The temperature was",
+   "rotated_deg": 0,
+   "bbox": [
+    54.5,
+    63.2,
+    570.5,
+    374.6
+   ],
+   "w": 2151,
+   "h": 1298,
+   "dpi": 300,
+   "src": "Wang2020 ChemMater Fast Ion Conduction and Its Origin in Li6-xPS5-xBr1+x.pdf",
+   "blank": 0.919
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 3,
+   "file": "fig_2.png",
+   "caption": "Figure 2. Electrochemical impedance and ionic conductivity of Li6−xPS5−xBr1+x (0 ≤x ≤0.7). (a) Electrochemical impedance measured at 21 °C. (b) Ionic conductivity of Li6−xPS5−xBr1+x as a function of x (0 ≤x ≤0.7). (c) Arrhenius plot of the ionic conductivity of Li6−xPS5−xBr1+x (x = 0, 0.3, 0.5, and 0.7) as a function of temperature.",
+   "rotated_deg": 0,
+   "bbox": [
+    54.5,
+    63.2,
+    570.5,
+    199.4
+   ],
+   "w": 2151,
+   "h": 568,
+   "dpi": 300,
+   "src": "Wang2020 ChemMater Fast Ion Conduction and Its Origin in Li6-xPS5-xBr1+x.pdf",
+   "blank": 0.927
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 3,
+   "file": "fig_3.png",
+   "caption": "Figure 3. 6Li NMR characterization of Li6−xPS5−xBr1+x. (a) Li at 24g and 48h Wyckoﬀsites observed with 6Li NMR. (b) 6Li isotropic NMR shifts obtained from experiments compared with 6Li shifts obtained with DFT NMR calculations. (c) Normalized 6Li NMR resonance integrals of Li (24g) and Li (48h) in Li6−xPS5−xBr1+x and the corresponding ionic conductivities. diﬀerent 48h pairs within the cage (intracage) and/or between diﬀerent cages (intercage).15 Crystalline Li6−xPS5−xBr1+x (0 ≤ x ≤0.5) was obtained at the annealing temperature of 450− 550 °C.. Figure 1b is the Rietveld reﬁnement of high-resolution XRD pattern of Li6PS5Br. It shows that 24.4% of 4d sites are taken by Br (Table S1), indicating considerable site disorder. With the increasing amount of Br, the cubic structure is maintained with enlargement of the lattice parameter. Taking the (311) plane as an example (Figure 1c), the shift",
+   "rotated_deg": 0,
+   "bbox": [
+    54.5,
+    238.2,
+    570.5,
+    375.9
+   ],
+   "w": 2151,
+   "h": 575,
+   "dpi": 300,
+   "src": "Wang2020 ChemMater Fast Ion Conduction and Its Origin in Li6-xPS5-xBr1+x.pdf",
+   "blank": 0.933
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 4,
+   "file": "fig_4.png",
+   "caption": "Figure 4. 7Li NMR spin−lattice relaxation time (T1) as an indicator of Li-ion dynamics. The measured ionic conductivity is also plotted for comparing the trend.",
+   "rotated_deg": 0,
+   "bbox": [
+    54.5,
+    575.8,
+    306.5,
+    723.2
+   ],
+   "w": 1050,
+   "h": 615,
+   "dpi": 300,
+   "src": "Wang2020 ChemMater Fast Ion Conduction and Its Origin in Li6-xPS5-xBr1+x.pdf",
+   "blank": 0.946
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 5,
+   "file": "fig_5.png",
+   "caption": "Figure 5. (a) Five diﬀerent conﬁgurations of Wyckoﬀ4d sites in the second coordination shell of P. (b) Five characteristic P local structural environments observed with 31P NMR denoted as P1−P5, representing P with the closest four 4d sites occupied by 4S, 3SBr, 2S2Br, 1S3Br, and 4Br, respectively. (c) Normalized fractions of P1−P5 structural environments based on 31P NMR analysis (red open circles) compared with predicted values by statistical distribution calculation (blue ﬁlled squares). Corresponding fractions of 4d sites occupied by sulfur are shown in the top box.",
+   "rotated_deg": 0,
+   "bbox": [
+    54.5,
+    63.2,
+    570.5,
+    425.3
+   ],
+   "w": 2151,
+   "h": 1510,
+   "dpi": 300,
+   "src": "Wang2020 ChemMater Fast Ion Conduction and Its Origin in Li6-xPS5-xBr1+x.pdf",
+   "blank": 0.916
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 5,
+   "file": "fig_6.png",
+   "caption": "Figure 6. (a) Overall jump rate and conductivity as a function of x in Li6−xPS5−xBr1+x. (b) Fraction of 1S3Br as a function of x in Li6−xPS5−xBr1+x in comparison with the overall jump rate. tively.6 To make reliable spectral assignments, Li5.7PS4.7IBr0.3 is synthesized in this work. Because I−shows no positional mixing with S2−in Li6PS5I because of signiﬁcantly larger ionic radius than S2−and prefers to sit at 4a sites, Br−will be forced to sit at 4d sites. The 79Br NMR spectrum of Li5.7PS4.7IBr0.3 shows enhanced intensity of the Br (4d) resonance. The crystallographic site 4a is a high-symmetry site; the quadrupolar interaction is weak. As a result, the line shape of the Br (4a) resonance should be sharp. This is then used for analyzing the spectra acquired by 79Br QCPMG NMR experiments. The signal from the sharp component of Br (4a) is allocated into the spikelets near 100 ppm in the Q",
+   "rotated_deg": 0,
+   "bbox": [
+    54.5,
+    484.2,
+    570.5,
+    642.8
+   ],
+   "w": 2151,
+   "h": 662,
+   "dpi": 300,
+   "src": "Wang2020 ChemMater Fast Ion Conduction and Its Origin in Li6-xPS5-xBr1+x.pdf",
+   "blank": 0.951
+  },
+  {
+   "key": "f7",
+   "kind": "figure",
+   "label": "7",
+   "page": 6,
+   "file": "fig_7.png",
+   "caption": "Figure 7. Li density distribution in Li6PS5Br with (a) 0 and (b) 50% of the 4d sites occupied by Br−in a 1 × 1 × 1 cell based on AIMD simulations at 500 K.",
+   "rotated_deg": 0,
+   "bbox": [
+    54.5,
+    63.2,
+    570.4,
+    188.1
+   ],
+   "w": 2150,
+   "h": 521,
+   "dpi": 300,
+   "src": "Wang2020 ChemMater Fast Ion Conduction and Its Origin in Li6-xPS5-xBr1+x.pdf",
+   "blank": 0.754
+  },
+  {
+   "key": "f8",
+   "kind": "figure",
+   "label": "8",
+   "page": 6,
+   "file": "fig_8.png",
+   "caption": "Figure 8. Tracer-exchange Li NMR. (a) 6Li NMR of the pristine and 6Li→7Li tracer-exchanged Li6PS5Br. (b) Simulation of the diﬀerence spectrum. (c) Normalized spectral integrals of 6Li NMR resonances from Li at 24g and 48h sites. conductivity than the measured value; a small amount of impurities in Li5.3PS4.3Br1.7 slightly decreases the ionic conductivity. The fraction of 1S3Br is side by side with the calculated overall Li-ion jump rate (Figure 6b), which follows a similar trend as increasing x in Li6−xPS5−xBr1+x. It suggests that the conﬁguration of 1S3Br is the major factor to determine the overall Li jump. This is consistent with the experimental results, showing that 70% Br-occupancy at 4d sites delivers the highest measured ionic conductivity. gradual increase in Br occupancy at 4d sites (Figure S2a) with increasing x. Figure S2b summarizes the fraction of 4d sites occupied by Br fr",
+   "rotated_deg": 0,
+   "bbox": [
+    54.5,
+    217.2,
+    570.5,
+    366.0
+   ],
+   "w": 2151,
+   "h": 620,
+   "dpi": 300,
+   "src": "Wang2020 ChemMater Fast Ion Conduction and Its Origin in Li6-xPS5-xBr1+x.pdf",
+   "blank": 0.893
+  },
+  {
+   "key": "fS1",
+   "kind": "figure",
+   "label": "S1",
+   "page": 2,
+   "file": "fig_S1.png",
+   "caption": "Figure S1. X-ray diffraction patterns of Li5.3 PS 4.3 Br 1.7 and Li 5.2 PS 4.2 Br 1.8 . Peaks from LiBr are annotatedwith asterisks. The estimated amount of LiBr from Li5.3 PS 4.3 Br 1.7 is 18% based on Rietveld refinement.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    66.0,
+    491.1,
+    355.0
+   ],
+   "w": 1772,
+   "h": 1205,
+   "dpi": 300,
+   "src": "Sup) Wang2020 ChemMater Fast Ion Conduction and Its Origin in Li6-xPS5-xBr1+x.pdf",
+   "blank": 0.944
+  },
+  {
+   "key": "fS2",
+   "kind": "figure",
+   "label": "S2",
+   "page": 2,
+   "file": "fig_S2.png",
+   "caption": "Figure S2. (a) 79Br static QCPMG NMR spectra of Li 6 −x PS 5 −x Br 1+x( 0 ≤𝑥≤0.7) and Li5.7 PS 4.7 IBr 0.3 . (b) Summary of 4d site occupanciesby Br obtained by 31 P NMR and 79 Br NMR, respectively.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    397.9,
+    486.2,
+    668.7
+   ],
+   "w": 1751,
+   "h": 1130,
+   "dpi": 300,
+   "src": "Sup) Wang2020 ChemMater Fast Ion Conduction and Its Origin in Li6-xPS5-xBr1+x.pdf",
+   "blank": 0.825
+  },
+  {
+   "key": "fS3",
+   "kind": "figure",
+   "label": "S3",
+   "page": 4,
+   "file": "fig_S3.png",
+   "caption": "Figure S3. Calculated 6Li NMR shifts for two different Li 6 PS 5Br structures: 1) only 24g and 2) only 48h sites are occupied by Li.Table S4. Limiting jump rates of Li+ of different configurations at 4d sites in Li 6 PS 5 Cl .2Cl occupancy at 4c sites (%) 02550751004d configuration4S3S1Cl2S2Cl1S3Cl4ClLimiting step -intercageintercageintercagedoubletLimiting Jump rate (109 s −1 ) -17.931.2622.1Table S5. Overall jump rates in Li6 −x PS 5 −x Br 1+x , calculated based on Equation 5 given in main text. xoverall jump rate (109 s −1 ) 024.50.124.90.225.40.326.10.532.60.634.40.735.8Reference: (1) Sturniolo, S.; Green, T. F. G.; Hanson, R. M.; Zilka, M.; Refson, K.; Hodgkinson, P.; Brown, S. P.; Yates, J. R. Visualization and Processing of Computed Solid-State NMR Parameters: MagresView and MagresPython. Solid State Nucl. Magn. Reson. 2016, 78, 64– 70. https://doi.org/10.1016/j.ssnmr.2016.05.004.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    66.0,
+    498.7,
+    267.8
+   ],
+   "w": 1803,
+   "h": 841,
+   "dpi": 300,
+   "src": "Sup) Wang2020 ChemMater Fast Ion Conduction and Its Origin in Li6-xPS5-xBr1+x.pdf",
+   "blank": 0.867
+  }
+ ],
+ "missing_labels": []
+}

@@ -1,0 +1,301 @@
+{
+ "slug": "yuan2026_percolating_li2s_interphase_efield_md",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-10-13",
+ "sources": [
+  "Yuan2026 ChemRxiv Reversible Ion Transport Through an Irreversibly Percolating Li2S Interphase at the Li-Li6PS5Cl Interface.pdf",
+  "Sup) Yuan2026 ChemRxiv Reversible Ion Transport Through an Irreversibly Percolating Li2S Interphase at the Li-Li6PS5Cl Interface.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 4,
+   "file": "fig_1.png",
+   "caption": "FIG. 1. Spontaneous evolution of the Li/Li6PS5Cl interface at 425 K. (a) Initial simulation configuration consisting of Li metal in contact with Li6PS5Cl, with a vacuum region introduced along the surface-normal direction. (b) Configuration after approximately 1 ns of NV T simulation. (c) Li and S number-density profiles along the z direction, averaged over the final 50 ps of the trajectory. (d) In-plane Li–Li radial distribution functions, in-plane g(r), evaluated within the interphase region using 50 ps trajectory windows beginning at the indicated simulation times.",
+   "rotated_deg": 0,
+   "bbox": [
+    79.0,
+    67.8,
+    544.6,
+    396.9
+   ],
+   "w": 1941,
+   "h": 1372,
+   "dpi": 300,
+   "src": "Yuan2026 ChemRxiv Reversible Ion Transport Through an Irreversibly Percolating Li2S Interphase at the Li-Li6PS5Cl Interface.pdf",
+   "blank": 0.848
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 5,
+   "file": "fig_2.png",
+   "caption": "FIG. 2. Field-free Li dynamics within the interphase. (a) In-plane Li mean-squared displacement (MSD) cal- culated from trajectory windows beginning at 0.00, 0.07, 0.50, and 1.00 ns. (b) Corresponding in-plane Li self- diffusion coefficient, Dxy (Å2 ps−1), determined from the linear regime of the MSD. The horizontal line indicates the bulk Li6PS5Cl reference value obtained from AIMD. (c) Apparent in-plane Nernst–Einstein conductivity, σNE xy , calculated from Dxy, the horizontal line denotes the corresponding bulk reference value.",
+   "rotated_deg": 0,
+   "bbox": [
+    79.0,
+    67.8,
+    544.6,
+    225.8
+   ],
+   "w": 1941,
+   "h": 659,
+   "dpi": 300,
+   "src": "Yuan2026 ChemRxiv Reversible Ion Transport Through an Irreversibly Percolating Li2S Interphase at the Li-Li6PS5Cl Interface.pdf",
+   "blank": 0.955
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 6,
+   "file": "fig_3.png",
+   "caption": "FIG. 3. Field-free interphase chemistry and growth law. (a)–(c) In-plane g(r) for Li–S, Li–Cl, and Li–P evaluated within the interphase region using 50 ps trajectory windows beginning at the indicated simulation times. The black line shows the g(r) for corresponding bulk crystalline structures at 425 K. (d) Representative configuration coloured according to the assigned local structural environment. (e) Time-dependent fractions of Li-centred environments. (f) Evolution of the thickness of the SEI (τSEI) and fitted √ t relation.",
+   "rotated_deg": 0,
+   "bbox": [
+    79.0,
+    67.8,
+    544.6,
+    454.2
+   ],
+   "w": 1941,
+   "h": 1611,
+   "dpi": 300,
+   "src": "Yuan2026 ChemRxiv Reversible Ion Transport Through an Irreversibly Percolating Li2S Interphase at the Li-Li6PS5Cl Interface.pdf",
+   "blank": 0.887
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 8,
+   "file": "fig_4.png",
+   "caption": "FIG. 4. Field-driven evolution of the Li/Li6PS5Cl interface at 425 K. Panel (a)–(d) represent the structural configuration, composition identification, Li charge distribution, and P charge distribution, respectively. Each panel shows snapshots at 0, 100, 350, 450, and 700 ps. An electric field of +0.1 V Å−1 is applied from 0 to 350 ps and is subsequently reversed to −0.1 V Å−1 from 350 to 700 ps.",
+   "rotated_deg": 0,
+   "bbox": [
+    83.0,
+    124.0,
+    541.0,
+    671.0
+   ],
+   "w": 1910,
+   "h": 2280,
+   "dpi": 300,
+   "src": "Yuan2026 ChemRxiv Reversible Ion Transport Through an Irreversibly Percolating Li2S Interphase at the Li-Li6PS5Cl Interface.pdf",
+   "blank": 0.739,
+   "recrop": "auto crop kept only the lower half (panels c Li charge / d P charge, old bbox [79.0, 438.3, 544.6, 675.0]) and dropped the timeline (E = +0.1 / -0.1 V/A), panel a Structure and panel b Composition; clip = union of the vector drawings on main p.8 (85.0,126.8,538.5,669.0) + 2 pt (2026-10-13, litdb-curator)"
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 10,
+   "file": "fig_5.png",
+   "caption": "FIG. 5. Quantification of the field-driven evolution. (a) Time-dependent fractions of Li local environments during the forward (+0.1 V Å−1) and reversed (−0.1 V Å−1) field stages. (b) Evolution of the SEI thickness, τSEI. (c) Cumulative number of Li atoms transported across the interface-normal plane during the reversed field-driven simulation. The linear least-squares fit gives R2 = 0.9842 and a transport rate of 0.419 ps−1.",
+   "rotated_deg": 0,
+   "bbox": [
+    79.0,
+    67.8,
+    544.6,
+    226.9
+   ],
+   "w": 1941,
+   "h": 664,
+   "dpi": 300,
+   "src": "Yuan2026 ChemRxiv Reversible Ion Transport Through an Irreversibly Percolating Li2S Interphase at the Li-Li6PS5Cl Interface.pdf",
+   "blank": 0.938
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 11,
+   "file": "fig_6.png",
+   "caption": "FIG. 6. Clustering and percolation of the reaction products in the interphase under an applied electric field. (a) Representative graphs of S in Li2S-like, P in Li3P-like and Cl in LiCl-like environments, constructed with cut-offs of 4.4, 5.0 and 4.2 Å, respectively. (b) Fraction of atoms in the largest cluster, Φ, for S, P and Cl. The dashed line marks field reversal at 350 ps. (c) Size of the largest cluster, Smax, for S, P and Cl on logarithmic axes. The lines are fits of Eq. (8) for t < t∗(α = 0.77) and for approximately 10–100 ps (α = 0.49). (d) JMAK analysis of ΦS according to Eq. (10), and the dashed line is a linear fit with n = 0.74.",
+   "rotated_deg": 0,
+   "bbox": [
+    79.0,
+    67.8,
+    544.6,
+    375.7
+   ],
+   "w": 1941,
+   "h": 1284,
+   "dpi": 300,
+   "src": "Yuan2026 ChemRxiv Reversible Ion Transport Through an Irreversibly Percolating Li2S Interphase at the Li-Li6PS5Cl Interface.pdf",
+   "blank": 0.908
+  },
+  {
+   "key": "f7",
+   "kind": "figure",
+   "label": "7",
+   "page": 13,
+   "file": "fig_7.png",
+   "caption": "FIG. 7. Electronic density of states (DOS) for spin-up channels across the interphase. (a) Interfacial configuration from the last frame of the field-free trajectory, showing the two 5 Å slabs, i and ii, extracted for the DOS calculations. (b) DOS of bulk Li metal (Li250). (c,d) DOS of slab i (Li94P6S31Cl8) and slab ii (Li85P7S31Cl7), respectively. (e) DOS of bulk Li6PS5Cl (Li24P4S20Cl4). Energies are referenced to the Fermi energy of each structure, E−EF, and only the spin-up channel is shown. The DOS is not normalised per atom, because the cells contain different numbers of atoms. Absolute intensities should not be compared between panels.",
+   "rotated_deg": 0,
+   "bbox": [
+    50.2,
+    67.8,
+    544.6,
+    526.5
+   ],
+   "w": 2061,
+   "h": 1912,
+   "dpi": 300,
+   "src": "Yuan2026 ChemRxiv Reversible Ion Transport Through an Irreversibly Percolating Li2S Interphase at the Li-Li6PS5Cl Interface.pdf",
+   "blank": 0.878
+  },
+  {
+   "key": "fS1",
+   "kind": "figure",
+   "label": "S1",
+   "page": 4,
+   "file": "fig_S1.png",
+   "caption": "FIG. S.1. Validation of the fine-tuned CHGNet model against AIMD reference calculations for Li/Li6PS5Cl configurations. Panels (a) – (d) compare force components predicted by CHGNet with the corresponding AIMD reference forces for the four validation datasets, (a) – (b)Li6PS5Cl(010)/Li(100) at 350 and 500 K, (c) – (d)Li6PS5Cl(010)/Li(111) at 350 and 500 K. The parity line denotes perfect agreement between the reference and predicted values. The colour scale represents the logarithm of the number of data points within each region of the distribution. Energy and force root mean square errors (RMSEs) are reported in each panel.",
+   "rotated_deg": 0,
+   "bbox": [
+    83.0,
+    88.0,
+    541.0,
+    487.0
+   ],
+   "w": 1910,
+   "h": 1664,
+   "dpi": 300,
+   "src": "Sup) Yuan2026 ChemRxiv Reversible Ion Transport Through an Irreversibly Percolating Li2S Interphase at the Li-Li6PS5Cl Interface.pdf",
+   "blank": 0.907,
+   "manual_crop": "auto extractor returned 0 SI captions: this SI writes captions as 'FIG. S.1.' / 'TABLE S.1.' (dot between S and the number), which CAP_RE label (?:ST|S)?\\d+ does not match; clip = union of 5 rasters + vector frame + axis labels, above the caption (2026-10-13, litdb-curator)"
+  },
+  {
+   "key": "fS2",
+   "kind": "figure",
+   "label": "S2",
+   "page": 5,
+   "file": "fig_S2.png",
+   "caption": "FIG. S.2. Evolution of the Li and S number-density profiles along the surface-normal direction during the forward electric field simulation. Profiles are shown for the 50–100, 150–200, and 250–300 ps intervals.",
+   "rotated_deg": 0,
+   "bbox": [
+    83.0,
+    91.0,
+    541.0,
+    436.0
+   ],
+   "w": 1910,
+   "h": 1438,
+   "dpi": 300,
+   "src": "Sup) Yuan2026 ChemRxiv Reversible Ion Transport Through an Irreversibly Percolating Li2S Interphase at the Li-Li6PS5Cl Interface.pdf",
+   "blank": 0.957,
+   "manual_crop": "auto extractor returned 0 SI captions: this SI writes captions as 'FIG. S.1.' / 'TABLE S.1.' (dot between S and the number), which CAP_RE label (?:ST|S)?\\d+ does not match; clip = vector drawings (85.0,93.6,538.6,433.7) + 2 pt, above the caption (2026-10-13, litdb-curator)"
+  },
+  {
+   "key": "fS3",
+   "kind": "figure",
+   "label": "S3",
+   "page": 8,
+   "file": "fig_S3.png",
+   "caption": "FIG. S.3. Temperature dependence of the apparent in-plane Nernst–Einstein ionic conductivity, σxy, for the four Li6PS5Cl/Li surface-orientation combinations. Conductivities are estimated from the corresponding Li self-diffusion coefficients using the Nernst–Einstein relation.",
+   "rotated_deg": 0,
+   "bbox": [
+    151.0,
+    91.0,
+    473.0,
+    325.0
+   ],
+   "w": 1342,
+   "h": 976,
+   "dpi": 300,
+   "src": "Sup) Yuan2026 ChemRxiv Reversible Ion Transport Through an Irreversibly Percolating Li2S Interphase at the Li-Li6PS5Cl Interface.pdf",
+   "blank": 0.966,
+   "manual_crop": "auto extractor returned 0 SI captions: this SI writes captions as 'FIG. S.1.' / 'TABLE S.1.' (dot between S and the number), which CAP_RE label (?:ST|S)?\\d+ does not match; clip = vector drawings (153.1,93.6,470.5,322.5) + 2 pt, above the caption (2026-10-13, litdb-curator)"
+  },
+  {
+   "key": "fS4",
+   "kind": "figure",
+   "label": "S4",
+   "page": 10,
+   "file": "fig_S4.png",
+   "caption": "FIG. S.4. Anion–anion radial distribution functions, g(r), of crystalline Li2S (S–S), Li3P (P–P) and LiCl (Cl–Cl) at 425 K. The grey dashed lines mark the cut-off distances used to define the first coordination shell in the graph analysis: 4.4, 5.0 and 4.2 Å, respectively.",
+   "rotated_deg": 0,
+   "bbox": [
+    83.0,
+    236.0,
+    541.0,
+    369.0
+   ],
+   "w": 1910,
+   "h": 555,
+   "dpi": 300,
+   "src": "Sup) Yuan2026 ChemRxiv Reversible Ion Transport Through an Irreversibly Percolating Li2S Interphase at the Li-Li6PS5Cl Interface.pdf",
+   "blank": 0.956,
+   "manual_crop": "auto extractor returned 0 SI captions: this SI writes captions as 'FIG. S.1.' / 'TABLE S.1.' (dot between S and the number), which CAP_RE label (?:ST|S)?\\d+ does not match; clip = vector drawings (85.0,238.6,538.5,367.1) + axis label 'Distance' + 2 pt (2026-10-13, litdb-curator)"
+  },
+  {
+   "key": "fS5",
+   "kind": "figure",
+   "label": "S5",
+   "page": 12,
+   "file": "fig_S5.png",
+   "caption": "FIG. S.5. Clustering and percolation of the reaction products in the interphase during the field-free trajectory at 425 K. (a) Representative graphs of S in Li2S-like, P in Li3P-like and Cl in LiCl-like environments, constructed with cut-offs of 4.4, 5.0 and 4.2 Å, respectively. (b) Fraction of atoms in the largest cluster, Φ, for S, P and Cl. (c) Size of the largest cluster, Smax, for S, P and Cl on logarithmic axes. The line is a fit to the S data with α = 0.47. (d) JMAK analysis of ΦS according to Eq. (S.1), with the dashed line a fit giving n = 0.45. (e) Number of clusters, Nclusters, for S, P and Cl.",
+   "rotated_deg": 0,
+   "bbox": [
+    83.0,
+    91.0,
+    541.0,
+    417.0
+   ],
+   "w": 1910,
+   "h": 1359,
+   "dpi": 300,
+   "src": "Sup) Yuan2026 ChemRxiv Reversible Ion Transport Through an Irreversibly Percolating Li2S Interphase at the Li-Li6PS5Cl Interface.pdf",
+   "blank": 0.918,
+   "manual_crop": "auto extractor returned 0 SI captions: this SI writes captions as 'FIG. S.1.' / 'TABLE S.1.' (dot between S and the number), which CAP_RE label (?:ST|S)?\\d+ does not match; clip = 3 rasters + vector drawings (85.0,93.6,538.5,414.2) + 2 pt, above the caption (2026-10-13, litdb-curator)"
+  },
+  {
+   "key": "tS1",
+   "kind": "table",
+   "label": "S1",
+   "page": 2,
+   "file": "tab_S1.png",
+   "caption": "TABLE S.1. AIMD reference configurations used for fine-tuning the CHGNet.",
+   "rotated_deg": 0,
+   "bbox": [
+    122.0,
+    244.0,
+    502.0,
+    600.0
+   ],
+   "w": 1584,
+   "h": 1484,
+   "dpi": 300,
+   "src": "Sup) Yuan2026 ChemRxiv Reversible Ion Transport Through an Irreversibly Percolating Li2S Interphase at the Li-Li6PS5Cl Interface.pdf",
+   "blank": 0.957,
+   "manual_crop": "auto extractor returned 0 SI captions: this SI writes captions as 'FIG. S.1.' / 'TABLE S.1.' (dot between S and the number), which CAP_RE label (?:ST|S)?\\d+ does not match; clip = caption top to the last table row (2026-10-13, litdb-curator)"
+  },
+  {
+   "key": "tS2",
+   "kind": "table",
+   "label": "S2",
+   "page": 7,
+   "file": "tab_S2.png",
+   "caption": "TABLE S.2. In-plane Li self-diffusion coefficients, Dxy, obtained for different Li6PS5Cl/Li surface-orientation combinations. Diffusion coefficients are reported in Å2 ps−1.",
+   "rotated_deg": 0,
+   "bbox": [
+    83.0,
+    476.0,
+    541.0,
+    637.0
+   ],
+   "w": 1910,
+   "h": 672,
+   "dpi": 300,
+   "src": "Sup) Yuan2026 ChemRxiv Reversible Ion Transport Through an Irreversibly Percolating Li2S Interphase at the Li-Li6PS5Cl Interface.pdf",
+   "blank": 0.936,
+   "manual_crop": "auto extractor returned 0 SI captions: this SI writes captions as 'FIG. S.1.' / 'TABLE S.1.' (dot between S and the number), which CAP_RE label (?:ST|S)?\\d+ does not match; clip = caption top to the last table row (2026-10-13, litdb-curator)"
+  }
+ ],
+ "missing_labels": []
+}

@@ -464,6 +464,14 @@
    "6fe46724-41467_2022_29769_MOESM1_ESM.pdf"
   ]
  },
+ "feng2020_li_deficient_argyrodite_cl_disorder": {
+  "figures": 17,
+  "generated": "2026-10-13",
+  "pdfs": [
+   "Feng2020 EnergyStorageMater Enhanced ion conduction by enforcing structural disorder in Li-deficient argyrodites Li6-xPS5-xCl1+x.pdf",
+   "Sup) Feng2020 EnergyStorageMater Enhanced ion conduction by enforcing structural disorder in Li-deficient argyrodites Li6-xPS5-xCl1+x.pdf"
+  ]
+ },
  "firstprinciples_prediction_esw_reaction_mechanisms_sse": {
   "figures": 29,
   "generated": "2026-09-22",
@@ -1511,7 +1519,7 @@
   ]
  },
  "miara2015_llzo_cation_dopants_cathode_interphases": {
-  "figures": 6,
+  "figures": 7,
   "generated": "2026-10-13",
   "pdfs": [
    "Miara2015 ChemMater First-Principles Studies on Cation Dopants and Electrolyte Cathode Interphases for Lithium Garnets.pdf"
@@ -1627,6 +1635,14 @@
   "generated": "2026-10-02",
   "pdfs": [
    "6. The electrode tortuosity factor why the conventional tortuosity factor is not well suited for quantifying transport in porous Li-ion battery electrodes and what to use instead.pdf"
+  ]
+ },
+ "nisar2021_cathode_coating_review_critical_thickness": {
+  "figures": 18,
+  "generated": "2026-10-13",
+  "pdfs": [
+   "Nisar2021 EnergyStorageMater Valuation of Surface Coatings in High-Energy Density Lithium-ion Battery Cathode Materials.pdf",
+   "Sup) Nisar2021 EnergyStorageMater Valuation of Surface Coatings in High-Energy Density Lithium-ion Battery Cathode Materials.pdf"
   ]
  },
  "nisar2024_dem_effective_electrical_conductivity_sps": {
@@ -2272,6 +2288,14 @@
    "f0e95785-1-s2.0-S037877531830466X-mmc1.pdf"
   ]
  },
+ "wang2020_br_rich_argyrodite_fast_ion_conduction_origin": {
+  "figures": 11,
+  "generated": "2026-10-13",
+  "pdfs": [
+   "Wang2020 ChemMater Fast Ion Conduction and Its Origin in Li6-xPS5-xBr1+x.pdf",
+   "Sup) Wang2020 ChemMater Fast Ion Conduction and Its Origin in Li6-xPS5-xBr1+x.pdf"
+  ]
+ },
  "wang2022_resistive_decomposing_interfaces_se_alkali_metal": {
   "figures": 26,
   "generated": "2026-09-22",
@@ -2520,6 +2544,14 @@
    "Yuan 2026 - Sup) Stress homogenization layered composite electrolyte ASSLMB (Nat Commun s41467-026-78129-0) SI.pdf"
   ]
  },
+ "yuan2026_percolating_li2s_interphase_efield_md": {
+  "figures": 7,
+  "generated": "2026-10-13",
+  "pdfs": [
+   "Yuan2026 ChemRxiv Reversible Ion Transport Through an Irreversibly Percolating Li2S Interphase at the Li-Li6PS5Cl Interface.pdf",
+   "Sup) Yuan2026 ChemRxiv Reversible Ion Transport Through an Irreversibly Percolating Li2S Interphase at the Li-Li6PS5Cl Interface.pdf"
+  ]
+ },
  "yun2023_deciphering_degradation_halide_vs_sulfide": {
   "figures": 5,
   "generated": "2026-08-05",
@@ -2572,6 +2604,14 @@
   "pdfs": [
    "61. Zhang2026_Minimum_AbInitio_Data_MLIP.pdf",
    "61. Sup) Zhang2026_Minimum_AbInitio_Data_MLIP.pdf"
+  ]
+ },
+ "zhang2026_odoping_argyrodite_o2_co2_dry_air": {
+  "figures": 36,
+  "generated": "2026-10-13",
+  "pdfs": [
+   "Zhang2026 AdvMater Argyrodite Sulfide Electrolytes with Dry Atmospheric Stability for All-Solid-State Lithium Batteries.pdf",
+   "Sup) Zhang2026 AdvMater Argyrodite Sulfide Electrolytes with Dry Atmospheric Stability for All-Solid-State Lithium Batteries.pdf"
   ]
  },
  "zhang2026_xct_dem_cathode_calendering_peel_calibration": {
