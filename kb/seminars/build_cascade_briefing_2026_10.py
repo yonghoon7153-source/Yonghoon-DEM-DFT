@@ -629,7 +629,8 @@ def build_lean():
     # ---- 4 failure modes: orig slide 3, wording fixed with the user 10-13. A failure mode is not 'improved' (the old
     #      bullet said so) and the second bullet repeated 'coupled'; the figure is Kang et al. 2026 Fig. 16 (our group's
     #      review) and shows cell-level modes (CAM cracking, anode volume change), so the title names the batteries. The
-    #      figure's 'decompostion' typo is in the published figure and stays. The first author joins the citation.
+    #      figure's 'decompostion' typo is in the published figure and stays. The citation keeps the lab's standard form
+    #      ('Chem. Commun., 62, 10277 (2026).' — user 10-13).
     t = load('slide3.xml')
     assert set_texts(t, {
         'Failure modes in sulfide solid electrolytes': 'Failure modes in sulfide-based all-solid-state batteries',
@@ -637,56 +638,93 @@ def build_lean():
         'Because these failure modes are coupled, improving one of them can ': 'A dopant that suppresses one mode can ',
         'degrade another': 'worsen the other',
         ', and the loss is ': ', and the trade-off ',
-        'not detected ': 'goes undetected ',
-        ',\xa062, 10277 (2026).': '\xa062, 10277 (2026)'}) == 7
-    chem = next(r for r in t.getroot().iter(f'{{{NS["a"]}}}r') if r.findtext('a:t', namespaces=NS) == 'Chem')
-    auth = etree.fromstring(etree.tostring(chem))          # same size and colour, upright
-    auth.find('a:t', NS).text = 'Kang et al., '
-    for k in ('i', 'err'):
-        auth.find('a:rPr', NS).attrib.pop(k, None)
-    chem.addprevious(auth)
+        'not detected ': 'goes undetected '}) == 6
     save(t, 'slide3.xml')
 
-    # ---- 5 prior screens (orig slide 7): one bullet + the table, larger (CW P1: n column narrower, 14 pt; the
-    #      'earlier screens …' sentence repeated the table, and the related-screens line is on p17)
+    # ---- 5 prior screens (orig slide 7) — the novelty slide (user 10-13: 'talk about what is new here'). Rows come
+    #      from litdb digests, oldest first. Muy 2025 (argyrodite, one dopant at a time) and Jung 2026 (LGPS, two
+    #      dopants, Li-compensated) join; Jung 2026 is the closest prior art and already gates on ML-predicted G and
+    #      G/K, so the novelty claimed is the unit of screening, not the mechanical axis (litdb jung2026 §1-A lists what
+    #      is taken). Citations sit in the study cells in the lab's form ('Journal, vol, page (year).'); Latin words no
+    #      longer break mid-word in PowerPoint (latinLnBrk="0").
     t = load('slide7.xml')
-    replace_body(t, P('Prior dopant screens and this study', 'h', ln=130)
-                 + P('Here one [[b:precursor compound]] fills a cation and an anion site.', 'b', ln=130),
-                 y=1.08, h=1.0)
+    replace_body(t, P('Prior dopant screens and what this study adds', 'h', ln=130)
+                 + P('Earlier screens varied one or two elements, or a coating compound without a host.', 'b', ln=130)
+                 + P('Here one [[b:precursor compound]] adds a cation and an anion, charge-balanced within the salt.',
+                     'b', ln=130), y=1.08, h=1.35)   # one line (7.7 in of ~8.1 in at 15 pt)
     drop(t, lambda el: etree.QName(el).localname == 'grpSp' or name_of(el) == 'TextBox 3')
-    add(t, tb(ids(), 'References top', 4.6, 0.93, 4.9, 0.42,
-              P('Chem. Mater. 27, 4040 (2015) · Adv. Energy Mater. 14, 2304025 (2024)', 'p', 950, 100, 'r', MUTED, italic=True)
-              + P('J. Mater. Chem. A 12, 7272 (2024) · Joule 3, 1252 (2019)', 'p', 950, 100, 'r', MUTED, italic=True)))
     assert set_texts(t, {'47': '91', ' (': '', '91': '', ' planned)': ''}) == 4
+    A = f'{{{NS["a"]}}}'
     tbl = t.getroot().find('.//p:graphicFrame', NS)
+
+    def cell_set(tc, text, color=None):
+        ps = tc.findall('.//a:p', NS)
+        for extra in ps[1:]:
+            extra.getparent().remove(extra)
+        rs = ps[0].findall('a:r', NS)
+        rs[0].find('a:t', NS).text = text
+        for r in rs[1:]:
+            ps[0].remove(r)
+        if color:
+            rpr = rs[0].find('a:rPr', NS)
+            for f in rpr.findall('a:solidFill', NS):
+                rpr.remove(f)
+            rpr.insert(0, etree.fromstring(f'<a:solidFill xmlns:a="{NS["a"]}"><a:srgbClr val="{color}"/></a:solidFill>'))
+
     hits = 0
-    for tc in tbl.iter(f'{{{NS["a"]}}}tc'):
+    for tc in tbl.iter(A + 'tc'):
         if shape_text(tc).startswith('Included'):
-            ps = tc.findall('.//a:p', NS)
-            for extra in ps[1:]:
-                extra.getparent().remove(extra)
-            rs = ps[0].findall('a:r', NS)
-            rs[0].find('a:t', NS).text = 'DFT reference + MLIP descriptor (not a gate)'
-            for r in rs[1:]:
-                ps[0].remove(r)
+            cell_set(tc, 'DFT reference + MLIP descriptor (not a gate)')
             hits += 1
     assert hits == 1, hits
-    cols, rh = [1.75, 1.6, 2.3, 0.8, 2.55], 0.62
+    grid = tbl.find('.//a:tbl', NS)
+    rows = {shape_text(tr.find('a:tc', NS)).strip(): tr for tr in grid.findall('a:tr', NS)}
+    assert set(rows) == {'study', 'Miara 2015 (via Anderson)', 'Lee 2024', 'Xiao 2019', 'this work'}, set(rows)
+    new_rows = {}
+    for key, cells in (('Muy 2025', ['Muy 2025', 'argyrodite (Li₇PS₆)', 'one element, site-resolved', '24', None]),
+                       ('Jung 2026', ['Jung 2026', 'LGPS', 'two elements, Li-compensated', '2,550', 'ML-predicted G and G/K (gate)'])):
+        tr = etree.fromstring(etree.tostring(rows['Lee 2024']))
+        for tc, text in zip(tr.findall('a:tc', NS), cells):
+            if text is not None:
+                cell_set(tc, text, INK if text.startswith('ML-predicted') else None)
+        new_rows[key] = tr
+    for tr in grid.findall('a:tr', NS):
+        grid.remove(tr)
+    order = [rows['study'], rows['Miara 2015 (via Anderson)'], rows['Xiao 2019'], rows['Lee 2024'],
+             new_rows['Muy 2025'], new_rows['Jung 2026'], rows['this work']]
+    for tr in order:
+        grid.append(tr)
+    for rp in tbl.iter(A + 'rPr', A + 'endParaRPr'):
+        if rp.get('sz'):
+            rp.set('sz', '1300')
+    cites = {'Miara 2015 (via Anderson)': ['Chem. Mater., 27, 4040 (2015).', 'Adv. Energy Mater., 14, 2304025 (2024).'],
+             'Xiao 2019': ['Joule, 3, 1252 (2019).'], 'Lee 2024': ['J. Mater. Chem. A, 12, 7272 (2024).'],
+             'Muy 2025': ['Chem. Mater., 37, 2395 (2025).'], 'Jung 2026': ['eTransportation, 28, 100570 (2026).']}
+    for tr in grid.findall('a:tr', NS):
+        first = tr.find('a:tc', NS)
+        for c in cites.get(shape_text(first).strip(), []):
+            first.find('.//a:txBody', NS).append(
+                etree.fromstring(f'<x xmlns:a="{NS["a"]}">{P(c, "p", 850, 100, "ctr", MUTED, italic=True)}</x>')[0])
+    for para in tbl.iter(A + 'p'):
+        ppr = para.find('a:pPr', NS)
+        if ppr is None:
+            ppr = etree.SubElement(para, A + 'pPr')
+            para.insert(0, ppr)
+        ppr.set('latinLnBrk', '0')
+    cols = [2.1, 1.5, 2.5, 0.75, 2.35]   # measured: the longest cell texts fit without mid-word breaks
     gcs = tbl.findall('.//a:gridCol', NS)
     assert len(gcs) == len(cols), len(gcs)
     for gc, w in zip(gcs, cols):
         gc.set('w', str(E(w)))
-    trs = list(tbl.iter(f'{{{NS["a"]}}}tr'))
-    for tr in trs:
-        tr.set('h', str(E(rh)))
+    trs = grid.findall('a:tr', NS)
+    hs = [0.4] + [0.52] * (len(trs) - 1)
+    for tr, h in zip(trs, hs):
+        tr.set('h', str(E(h)))
     off, ext = tbl.find('.//p:xfrm/a:off', NS), tbl.find('.//p:xfrm/a:ext', NS)
-    off.set('x', str(E(0.5)))
-    off.set('y', str(E(2.25)))
+    off.set('x', str(E(0.4)))
+    off.set('y', str(E(2.45)))
     ext.set('cx', str(E(sum(cols))))
-    ext.set('cy', str(E(rh * len(trs))))
-    for rp in tbl.iter(f'{{{NS["a"]}}}rPr', f'{{{NS["a"]}}}endParaRPr'):
-        if rp.get('sz'):
-            rp.set('sz', '1400')
+    ext.set('cy', str(E(sum(hs))))
     save(t, 'slide7.xml')
 
     # ---- 6 candidate set (orig slide 8): the 08-18 family table (user 10-13: back in place of the bar chart, without

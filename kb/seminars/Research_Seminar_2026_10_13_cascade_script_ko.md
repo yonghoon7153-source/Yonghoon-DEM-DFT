@@ -33,8 +33,9 @@ evidenceScope: multi-source-mixed
 > |---|---|---|---|
 > | 2 | Background — Earlier DFT studies | ✅ 확정 10-13 | 6e568c4 · e70e1d6 (Li₂S 칸 = li2s/LPSCl 계면상) |
 > | 3 | Overview — 하나씩에서 여럿으로 · 예 하나 (Al₂O₃ / Al₂S₃) | ✅ 확정 10-13 | b464c62 · fa4a120 · 9b4f498 (화살표 줄 → 다음 장 다리 · 'we must check') · 한 장 PPT + 노트 |
-> | 4 | Introduction — 두 열화는 서로를 키운다 (Kang 2026 Fig. 16) | ✍ 수정안 10-13 (사용자 확인 중) | 문구 넷 · 출처 줄 |
-> | 1 · 5–19 | 나머지 | ⏳ 그 장을 볼 때 확정 | — |
+> | 4 | Introduction — 두 열화는 서로를 키운다 (Kang 2026 Fig. 16) | ✅ 확정 10-13 (*'됐어 저정도면'*) | 9c4bbde (문구 넷 · 출처는 랩 표준 그대로) |
+> | 5 | Introduction — 선행 스크린과 이번 작업 (novelty · Muy 2025 · Jung 2026 추가) | ✍ 수정안 10-13 | 표 6 행 · 디펜스 S5 브리핑 |
+> | 1 · 6–19 | 나머지 | ⏳ 그 장을 볼 때 확정 | — |
 
 ---
 
@@ -124,27 +125,35 @@ evidenceScope: multi-source-mixed
 **[가리킴: 둘째 bullet]** 그래서 한쪽을 막으려고 고른 도펀트가 다른 쪽을 나쁘게 만들 수 있고, 이 손해는 둘을 따로 재지 않으면 보이지 않습니다.
 앞 장에서 세 가지를 반드시 따로 봐야 한다고 한 이유가 이것입니다.
 
-그러면 지금까지의 도핑 스크린은 이 축들을 어떻게 다뤘는지, 선행 연구부터 보겠습니다.
+그러면 지금까지의 도핑 스크린은 무엇을 바꿔 가며 걸렀는지, 선행 연구부터 보겠습니다.
 
 **[클릭]**
 
   (⚠ 고리 설명은 리뷰 §4 문장 그대로다 — *'reaction-induced fragility leads to fracture, and the exposed surfaces accelerate ongoing interfacial degradation'*.
   '도펀트가 한쪽을 막고 다른 쪽을 나쁘게 한 예' 를 우리 값으로 들지 않는다 — 계 간 Ea · σ 비교는 인용위험 (HZ-cross-system-Ea · HZ-b2o3-md-ea).)
 
-## 5. 선행 스크린과의 차이 ⏱ 7:00
-그러면 기존 스크리닝은 무엇을 바꿔 가며 걸렀는지 보겠습니다. **[가리킴: 표]**
-- 가넷 연구는 양이온 하나를 세 자리에 넣어 보고, 에너지가 낮은 자리를 골랐습니다.
-- argyrodite 연구는 원래 화학식에 있던 원소들을 바꿨습니다.
-- Xiao 등의 코팅 스크린은 호스트 없이 화합물 자체를 걸렀습니다.
-- 이번 작업은 **전구체 화합물 하나가 양이온 자리와 음이온 자리 두 곳을 동시에 채우는** 경우를 거릅니다.
-- 역학 축은 DFT 기준과 MLIP 지표로 같이 보지만, 탈락 관문으로는 쓰지 않습니다.
+## 5. 선행 스크린과 이번 작업의 차이 ⏱ 7:00
+> 화면 (사용자 10-13 · novelty 장 · 사용자 덱 6쪽): ■ *Prior dopant screens and what this study adds* · bullet 둘
+> (*Earlier screens varied one or two elements, or a coating compound without a host.* · *Here one precursor compound adds a cation and an anion, charge-balanced within the salt.*) ·
+> 표 = 선행 다섯 편 + 이번 작업 (오래된 순 · **Muy 2025 · Jung 2026 를 litdb 에서 더함**) · 출처는 study 칸에 랩 표준 표기.
+> 앞 장 끝: *'그러면 지금까지의 도핑 스크린은 무엇을 바꿔 가며 걸렀는지, 선행 연구부터 보겠습니다.'*
 
-**[가리킴: Related screens]** 비슷한 방향의 최근 연구도 있습니다.
-- Jung 등은 LGPS 계열에서 이중 도핑을 걸렀습니다.
-- Park 등은 기계학습으로 계면 안정성을 걸렀습니다.
-- Muy 등은 argyrodite 에서 자리별 결함 열역학을 풀었습니다.
+지금까지의 도핑 스크린 다섯 편을 이번 작업과 나란히 놓았습니다. **[가리킴: what is varied 열]** 이 열이 핵심입니다. 무엇을 바꿔 가며 걸렀는지입니다.
+- **[가리킴: Miara]** 가넷 산화물에서는 양이온 하나를 세 자리에 넣어 보고, 어느 자리에 들어가는지를 계산했습니다.
+- **[가리킴: Xiao]** Xiao 등은 호스트 없이, 코팅으로 쓸 화합물 자체를 10만 개 넘게 걸렀습니다.
+- **[가리킴: Lee · Muy]** 아지로다이트에서는 원래 화학식에 있는 원소 조합을 바꾸거나, 원소 하나를 자리별로 넣어 봤습니다.
+- **[가리킴: Jung]** 가장 가까운 건 올해 나온 Jung 등의 연구입니다. LGPS 에 원소 두 개를 넣고, 전하는 Li 양으로 맞췄습니다.
+
+**[가리킴: this work 행]** 이번 작업은 원소가 아니라 전구체 화합물 하나를 넣습니다. 양이온과 음이온이 같은 화합물에서 함께 들어가고, 전하는 그 화합물 안에서 맞춰집니다. 실험에서 실제로 넣는 단위 그대로입니다.
+
+**[가리킴: mechanical axis 열]** 기계 축은 대부분 없었고, Jung 등은 ML 로 예측한 탄성 값을 거름 기준으로 썼습니다. 저희는 DFT 기준 계산과 MLIP 지표로 기록하되, 아직 거름 기준으로는 쓰지 않습니다.
+
+그러면 이 91개 전구체가 어떤 화합물들인지 보겠습니다.
 
 **[클릭]**
+
+  (⚠ '처음' · '유일' 이라고 말하지 않는다 — 표의 다섯 편과 비교한 차이만 말한다. Jung 2026 이 이미 가진 것 (ML 대리모형 → DFT 안정창 → AIMD 의 틀 · 'S 자리 최적 도펀트는 Cl 과 O' · O 치환 왜곡 기전) 은 우리 것으로 말하지 않는다 —
+  litdb `jung2026_scalable_ai_dual_doped_lgps` §1-A. 기계 축은 새로움이 아니다. 논문별 브리핑 = 디펜스 S5.)
 
 ## 6. 후보군 ⏱ 8:00
 후보는 7개 음이온족, 91개 화합물입니다. **[가리킴: 표]**
@@ -332,7 +341,7 @@ MLIP 지표의 기준이 되는 DFT 계산입니다. **[가리킴: 두 곡선]**
 | 2 | ■ 'Earlier DFT studies: the basis of this screening' · bullet 둘 (Top row: bulk materials and their doped or coated forms · Bottom row: SEI components, interfaces, and binders in a battery cell) + 그림 자리 8칸 (제목 + `< 키워드 >`) | 칸마다 한 줄 (대본 2장) · 마무리 '이 경험들이 스크리닝의 단계가 됐다' + 짝 다섯 (EOS → 기준 계산 · BVSE → Li 지형 · MD → 수송 · 대권위 상도표 → 안정창 · 계면 에너지 → 계면 반응성) — 숫자는 0 개 |
 | 3 | ■ 'Choosing a dopant precursor for Li₆PS₅Cl' · bullet 둘 (In the lab, dopants are added as compounds, not as bare elements. · This work screens 91 candidate precursors by simulation before synthesis.) + 점선 박스 'An example' (Al₂O₃ → Al + O · Al₂S₃ → Al + S · Same Al, different partner anion · Does the anion change stability or Li transport?) + 화살표 + 'To answer this question, we must check electrochemical stability, mechanical stability, and Li transport separately.' | 앞 장의 도핑 계산 → 범위를 넓힘 → 넣는 건 화합물 → 예 · 질문 → 세 가지를 따로 (대본 3장) · 아래 줄 = 다음 장으로 가는 다리 · 상자는 예 하나 · 답은 말하지 않는다 · 진행 숫자는 13장에서 |
 | 4 | ■ 'Failure modes in sulfide-based all-solid-state batteries' · bullet 둘 (reinforce each other · A dopant that suppresses one mode can worsen the other, and the trade-off goes undetected unless each mode is evaluated separately.) + Kang 2026 Fig. 16 + 출처 'Kang et al., …' | 앞 장 '왜 따로' 에 답 · 두 열화 → 서로 키우는 고리 → 가운데 SE doping → 따로 재는 이유 (대본 4장) · 그림 오타는 원 논문 그대로 |
-| 5 | bullet 하나 + 원래 표 (14 pt) | 기존 스크린 셋 (대본 5장) · 비슷한 최근 연구 Jung · Park · Muy 는 이름만 (화면 줄은 뺐다 · 17장에 있다) |
+| 5 | ■ 'Prior dopant screens and what this study adds' · bullet 둘 + 표 6 행 (Miara 2015 via Anderson · Xiao 2019 · Lee 2024 · Muy 2025 · Jung 2026 · this work · 출처는 study 칸) | what is varied 열이 핵심 → this work 행 → 기계 축은 새로움이 아님 (대본 5장 · 논문별 브리핑 = 디펜스 S5) |
 | 6 | 08-18 덱의 족별 표 (family · n · examples — 'role in the design' 열은 뺐다 · 사용자 10-13) + **[문헌] 'Literature example: SiO₂ co-doping'** Jung 2026 Fig. 3d | 족별 역할은 말로: 산화물 = 강한 M–O 결합 · 염화물 = 호스트에 이미 Cl · 황화물 = 호스트와 같은 음이온 (대조) · 플루오르화물 = 가장 강한 결합 · 이동성 위험 · 브로민화물 · 요오드화물 = 더 큰 할라이드 (대조) · 질화물 = 더 높은 음이온 전하 (대조) · 공치환 실험 선례 CuCl · MgF₂ · ZnO · La₂O₃ · Nd₂O₃ · SiO₂ (17장) · 문헌 그림은 '선례' 이지 우리 후보의 검증이 아니다 · As₂S₃ 재실행은 7장 |
 | 7 | bullet: 3,675 완화 · **선별된 693 담금질** + 그림 하나: 표마다 담은 전구체 수 (91 · 90 · 89) | 단계별 방법 (UMA · FIRE · 500 K 50 ps) · 90 · 89 인 이유 · '9월 감사 이후 탐색 자료' (화면 줄은 뺐다 · 15장에 있다) |
 | 8 · 9 | 8: 원래 그림 (열지도 크게) · 9: 그대로 | 8: '지표에 따라 같은 전구체 안 흩어짐 ≈ 전구체 사이' 는 말로 (화면 줄은 뺐다 → 11장 감사로 이어진다) · 담금질은 **선별한 구조**만 |
