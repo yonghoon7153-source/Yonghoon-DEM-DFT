@@ -164,5 +164,10 @@
     "가드_원인": "첫 고친 블록이 '~/lldvar/.git 이 폴더' 를 요구했는데 kgy 의 ~/lldvar 는 /home/kgy/Yonghoon-DEM-DFT 의 linked worktree 라 .git 이 파일이다 → 가드를 git rev-parse 로 묻게 바꾼 판으로 통과 (진단 줄: '~/lldvar/.git 파일 (worktree) · 공통 저장소 /home/kgy/Yonghoon-DEM-DFT/.git')",
     "다섯_시드": "gabia seed3·4·5 (faa6dac) + kgy seed1·2 (e9b03863) 전부 repo 에 있다",
     "⏭": "repo 에서 시드 게이트 (A 원장 문턱) · 밀도 이탈 · T₅₀ 스캔 → 600 K 러너 B 일반화 (결과 전 · 시험 포함) → 기계·공존 결정 · 트랙 li2s = 외부 1저자"
+  },
+  "✅_gabia_옛_worktree_정리_2026_10_13": {
+    "관측": "사용자 붙여넣기 10-13 (조건부 정리 블록)",
+    "판정": "옛 업로드 worktree /data/work/wt_li2sB_up_1012 — 회수 폴더 트리 bb5b1fa26d8c6441453ce9f40640166fe3860a7e = 원격 트리 · 커밋 안 된 변경 0 ⇒ git worktree remove 로 지움",
+    "남은_worktree": "aprime_s2 · repo_wad · wt_evidence_2026_09 · wt_li2s_v2_0930 · wt_li3ps4_1005 · wt_sei_1011 · wt_wad_se_1001 · wt_wad_w_1001 (다른 잡의 작업 폴더 — 손대지 않음)"
   }
 }
