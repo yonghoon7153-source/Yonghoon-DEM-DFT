@@ -262,7 +262,7 @@ F_입자 = (π/6)·ρ·D50³·(a₅₀ + g) (g = 9.81) — Fig 8 · 12 · 13 의
 ### 7-3. ★ D3 (SE–SE 점착 앵커) 후보로서 — 가상 낙하 시험 [추정]
 - **장점**: mg 시료 · 평판 · 단층 · 감속 펄스라는 **경계조건이 단순**해서 DEM 으로 1:1 흉내 낼 수 있다 — 판 위 단층 입자 (실측 PSD) + 판 감속 펄스 → 탈착 질량 분율 곡선.  비교 대상은 Bo 한 숫자가 아니라 **Fig 7 꼴의 곡선 전체** (감속도 단계 · 분율).
 - **단점**: 장치 창 (a ≲ 105 m/s²) 에서 µm 1 차 입자는 매끈한 구 JKR 기준으로 떨어지지 않는다 (§3-2 의 Bo_JKR 10⁴–10⁶ 급, 비슷한 D50 의 Eskal · 이부프로펜 제트밀) → 실제로 떨어지는 것은 응집체 · 겹쳐 쌓인 입자 · 느슨한 증착 · 돌기 접촉일 것 [추정] → DEM 재현은 **증착 상태 · 응집체 · 거칠기**까지 넣어야 뜻이 있다.
-- ⇒ D3 앵커로는 `geldart2006_powder_flowability_angle_of_repose_tester` (안식각 · Hausner) · `jarray2019_cohesion_driven_mixing_segregation_drum` (미세저울 떼는 힘 · 드럼 각도) · `alizadeh2018_dem_adhesion_calibration_segregation_heap` (단일 성분 더미 보정) 보다 **해석 사슬이 길다**.  쓰려면 (가) 불활성 · 건조 (나) 반복 ≥ 3 · 감속도 파형 기록 (다) 탈착 입자 크기 분포 (라) 같은 펄스의 DEM 곡선과 대조 — 4 개가 같이 있어야 한다.
+- ⇒ D3 앵커로는 `geldart2006_powder_flowability_angle_of_repose_tester` (안식각 · Hausner) · `jarray2019_cohesion_driven_mixing_segregation_drum` (미세저울 떼는 힘 · 드럼 각도) · `alizadeh2018_dem_adhesion_calibration_segregation_heap` (단일 성분 더미 보정) · `nase2001_granular_bond_collision_number_wet_cohesion` (정지 계 Bo_g ≈ 1 전이 · 드럼은 Co) 보다 **해석 사슬이 길다**.  특히 정지 계의 응집 문턱이 Bo_g ≈ 1 근처인데 (nase2001) 이 장치는 원리상 Bo < 1 을 못 재고 실제 창이 ≈ 5.4–11.7 이라 **그 문턱 자체를 짚을 수 없다** [우리 산술].  쓰려면 (가) 불활성 · 건조 (나) 반복 ≥ 3 · 감속도 파형 기록 (다) 탈착 입자 크기 분포 (라) 같은 펄스의 DEM 곡선과 대조 — 4 개가 같이 있어야 한다.
 
 ### 7-4. 황화물 (LPSCl) · NCM 에 적용하려면 [추정 — 원문 밖]
 - 글로브박스 (Ar) 안에 낙하대 · 저울 · 분산기 (건조 Ar) · 시료 밀봉 이송 (SEM) — 원문은 대기 · RH 40–60 % · Au/Pd 코팅 SEM.
@@ -319,7 +319,7 @@ F_입자 = (π/6)·ρ·D50³·(a₅₀ + g) (g = 9.81) — Fig 8 · 12 · 13 의
 |---|---|---|
 | 3 | D.T. Tran, R. Bittner, P. Zámostný, Adhesion force measurement by centrifuge technique as tool for predicting interactive mixture stability, Chem. Eng. Res. Des. 165 (2021) 467–476. | 원심 탈착 → 정렬 (상호작용) 혼합물 안정성 — SE 를 NCM 에 붙인 혼합물의 안정성 시험 형식 |
 | 5 | A. Castellanos, The relationship between attractive interparticle forces and bulk behaviour in dry and uncharged fine powders, Adv. Phys. 54 (4) (2005) 263–376. | ★ 건조 미분의 입자간 힘 ↔ 벌크 거동 (Bond 수) — D3 의 이론 바탕 |
-| 9 | S.T. Nase, W.L. Vargas, A.A. Abatan, J.J. McCarthy, Discrete characterization tools for cohesive granular material, Powder Technol. 116 (2–3) (2001) 214–223. | DEM 에서 입상 Bond 수 정의 · 응집 특성화 |
+| 9 | S.T. Nase, W.L. Vargas, A.A. Abatan, J.J. McCarthy, Discrete characterization tools for cohesive granular material, Powder Technol. 116 (2–3) (2001) 214–223. | 정본 `nase2001_granular_bond_collision_number_wet_cohesion` — Bo_g = F_c/W 정의 · 정지 더미 · 호퍼는 Bo_g ≈ 1 에서 급변 · 드럼은 충돌 수 Co |
 | 10 | M. Capece, R. Ho, J. Strong, P. Gao, Prediction of powder flow performance using a multi-component granular Bond number, Powder Technol. 286 (2015) 561–571. | ★ 혼합물 (다성분) Bond 수 — 이종 혼합 (AM + SE) 의 Bo 정의 |
 | 11 | E. Ermis, Establishment of a Repeatable Test Procedure for Measuring Adhesion Strength of Particulates in Contact with Surfaces, Doctoral dissertation University of Greenwich, UK, 2011. | 장치 원전 · 감속도 측정 상세 |
 | 15 | G.R. Salazar-Banda, M.A. Felicetti, J.A.S. Gonçalves, J.R. Coury, M.L. Aguiar, Determination of the adhesion force between particles and a flat surface, using the centrifuge technique, Powder Technol. 173 (2) (2007) 107–117. | 체적력 탈착의 다른 방식 (원심) |
