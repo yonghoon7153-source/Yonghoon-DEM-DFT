@@ -102,9 +102,10 @@ def codes(obj):
 #  (b > a — 원판 밖 support 를 일부러 만든다 · RINTG-02 의 support ≠ 참 원판 상황).  중심 x · y 를 셀 경계에서 비켜 둔다.
 A_C = np.array([[1.03, 0.97, 1.0], [1.03, 0.97, 2.833]]); A_R = np.array([1.0, 1.0]); A_T = np.array([2, 2])
 A_LO, A_HI, A_VOX, A_BR = (0.0, 0.0, 0.0), (2.0, 2.0, 3.833), 0.1, 0.7
-#  RRM_B — 혼합 종류 · 반경 다름: AM_S R 1 · AM_P R 0.6 · δ 0.2 µm
-B_C = np.array([[1.03, 0.97, 1.0], [1.03, 0.97, 2.4]]); B_R = np.array([1.0, 0.6]); B_T = np.array([2, 1])
-B_LO, B_HI = (0.0, 0.0, 0.0), (2.0, 2.0, 3.0)
+#  RRM_B — 혼합 종류 · 반경 다름: AM_S R 1 · AM_P R 0.6 · δ 0.3 µm → a ≈ 0.4437 µm (≥ k·h 0.4)
+#  (시험 먼저 커밋의 δ 0.2 는 a 0.371 < k·h 라 RRM 이 **옳게** 미해상 거부했다 — 픽스처 잘못 · 구현 아님 · 10-13 정정)
+B_C = np.array([[1.03, 0.97, 1.0], [1.03, 0.97, 2.3]]); B_R = np.array([1.0, 0.6]); B_T = np.array([2, 1])
+B_LO, B_HI = (0.0, 0.0, 0.0), (2.0, 2.0, 2.9)
 #  기울기 접점 (중심선이 축과 어긋남 · D11 미정)
 T_C = np.array([[1.0, 1.0, 1.0], [1.35, 1.0, 2.75]]); T_R = np.ones(2); T_T = np.array([2, 2])
 T_LO, T_HI = (0.0, 0.0, 0.0), (2.4, 2.0, 3.8)
@@ -383,14 +384,15 @@ def t_isolation():
 # ═════════════════════════ RRM-6 ═════════════════════════
 @case('RRM-6 혼합 종류 · 반경 다름 (AM_S|AM_P)')
 def t_mixed():
-    print('RRM-6 — RRM_B (AM_S R 1 · AM_P R 0.6 · δ 0.2 · 고정 브리지 0.7)')
+    print('RRM-6 — RRM_B (AM_S R 1 · AM_P R 0.6 · δ 0.3 · 고정 브리지 0.7)')
     sid, _, L = bed(B_C, B_R, B_T, B_LO, B_HI, A_VOX, A_BR)
     P = RRM.rrm_plan(L, RT, resolve_k=K_FIX)
     W = RRM.rrm_face_weights(L, 0)
     wmap = {(int(a_), int(l_)): float(w_) for a_, l_, w_ in zip(W['axis'], W['lin'], W['w'])}
     R_ = rows_of(P)
-    ok = all((R_[k][0] and R_[k][1] == 0.0) if w == 0.0 else (not R_[k][0] and abs(R_[k][1] - 2.0e-3 * A_VOX ** 2 / w) <= 1e-12 * R_[k][1])
-             for k, w in wmap.items())
+    ok = set(R_) == set(wmap) and all(
+        (R_[k][0] and R_[k][1] == 0.0) if w == 0.0 else (not R_[k][0] and abs(R_[k][1] - 2.0e-3 * A_VOX ** 2 / w) <= 1e-12 * R_[k][1])
+        for k, w in wmap.items())
     chk('RRM-6 거부 없음 · 종류 키 AM_S|AM_P 의 r · 행 = 면 가중 규칙 · 원장 검사 통과',
         P['rejections'] == [] and ok and set(R_) == set(wmap) and RRM.rrm_check(P, L) == []
         and str(L['contacts']['type_key'][0]) == 'AM_S|AM_P', repr(codes(P)))

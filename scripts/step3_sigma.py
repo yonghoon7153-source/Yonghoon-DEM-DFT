@@ -1078,6 +1078,18 @@ def _iface_input_check(am_c, am_r, am_t):
     return c, r, t, rej, rank
 
 
+def _iface_particles_fp(c, r, t):
+    """입자 **집합** 지문 (행 순서 무관) — 중심 (x, y, z) · 반경 · 종류 사전순으로 정렬한 float64 · int64 바이트 (E5 와 같은 지문 규약).
+    조인 관문 (`rint_iface_join` · T4-2) · 시험 전용 RRM 이 "원장을 만든 입자 = 조인이 인증한 입자" 인지 대조한다 (2026-10-13)."""
+    c = np.asarray(c, np.float64).reshape(-1, 3); r = np.asarray(r, np.float64).ravel(); t = np.asarray(t).astype(np.int64).ravel()
+    o = np.lexsort((t, r, c[:, 2], c[:, 1], c[:, 0])) if len(c) else np.zeros(0, np.int64)
+    h = hashlib.blake2b(digest_size=16)
+    for x in (c[o], r[o], t[o]):
+        x = np.ascontiguousarray(x)
+        h.update(x.dtype.str.encode()); h.update(repr(x.shape).encode()); h.update(x.data)
+    return h.hexdigest()
+
+
 def _cells_power_grid(ijk, cg, rr2):
     """셀 (정수 ijk [M, 3]) 에서 입자 power [격자 단위²] — `_ball_cells` 와 같은 식 · 같은 연산 순서 (원소마다 같은 값).
     cg = (c − lo)/h (항목마다) · rr2 = (r/h)·(r/h).  p ≤ 0 ⇔ 셀 중심이 구 안 (부호는 뺄셈에서 정확)."""
@@ -1205,6 +1217,7 @@ def am_iface_ledger(am_c, am_r, am_t, sid, sid_pre, box_lo, vox, *, delta_bound_
            'bridge_um_requested': None if bridge_um is None else float(bridge_um), 'tol_am_um': tol,
            'delta_bound_um': db, 'n_particles': int(N), 'raster_sdcp_bridge_um': _sb,
            'fp_sid': _grid_fp(sid), 'fp_sid_pre': _grid_fp(sid_pre),
+           'fp_particles': _iface_particles_fp(c, r, t),
            'n_M': int(M.sum()), 'n_M0': int(M0.sum()), 'rejections': rej}
     if any(x['code'] in ('exact_duplicate', 'concentric_nonidentical') for x in rej):
         led.update(owner=None, contacts=None, faces=None, claims=None)   # canonical 키가 없다 → owner 를 정하지 않는다
@@ -1323,6 +1336,9 @@ def am_iface_ledger(am_c, am_r, am_t, sid, sid_pre, box_lo, vox, *, delta_bound_
     C['nsurv'] = np.bincount(f_cid[reg_face & f_sv], minlength=nC).astype(np.int64)
     C['n_triple'] = np.bincount(f_cid[reg_face & f_tri], minlength=nC).astype(np.int64)
     C['a_lt_h'] = C['a_um'] < vox
+    #  canonical 입자 (canonical id 순 — 접점 a · b 가 가리키는 행) — 시험 전용 RRM (근축면 원판) · 조인 대조가 읽는다 (2026-10-13)
+    _rp = rep[:N]                                              # N 0 이면 빈 배열 (rep 는 길이 Nr ≥ 1)
+    led['particles'] = {'c': c[_rp].copy(), 'r': r[_rp].copy(), 't': np.asarray(t)[_rp].astype(np.int64)}
     led.update(owner=owner, contacts=C, faces=faces,
                claims={'cell': cell, 'rank': rank[part] if len(part) else part.copy()},
                fp_owner=_grid_fp(owner), n_cells_claimed=int(len(cells_u)),

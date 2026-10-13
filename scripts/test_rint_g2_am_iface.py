@@ -19,7 +19,7 @@
   E4′       T0-3′ class_sensitivity (에너지 · 중심 로그 FD · h 둘 · 혼합 σ · 판) · T0-3m e4_printed_mutant · T0-3i multiclass_integral
   거부      N2 · N3 · N4 · N6 · N7 · 채널 · 거부 계획 → 솔브 거부
   원장      T0-6b ledger_integrity (변조 · 끼워 넣기 거부) · E2 진단이 원장을 읽는다 (AST) · 기록 필드 · PROTOCOL_FIELDS 밖
-  보류      N9 (RRM) · T2 · T3 · D12-V · T4-1 · T4-3 · N1 · N5′ · 직접 R_j 간선 (②) — 이 묶음 밖 (PENDING 줄로 표시)
+  보류      T2 · T3 · D12-V · T4-1 · T4-3 · N1 · N5′ · 직접 R_j 간선 (②) — 이 묶음 밖 (PENDING 줄로 표시) · N9 · RRM = test_rint_g2_rrm.py
 """
 import argparse
 import ast
@@ -845,7 +845,8 @@ def t_record_fields():
 @case('PENDING (이 묶음 밖)')
 def t_pending():
     print('PENDING — 계약에 있으나 이 묶음 밖 (실패가 아니라 보류 · 원장 · 보고에 남는다):')
-    for p in ('N9 reject_film_off_outside — RRM (해상 기준 모형) 미구현 (T2-4 · T3-B 와 함께)',
+    for p in ('N9 reject_film_off_outside · RRM (시험 전용 해상 기준) → scripts/test_rint_g2_rrm.py (10-13 · 축 정렬 접점만 · D17 원판 밖 = '
+              '절단 = 권고 기본값 · 1저자 확인 전) — T2-4 · T3-B 수렴 · RRM 자체 오차 검증은 D12-V 봉인 뒤',
               'T2-1′ · T2-2a/b/m · T2-4a/b · T3-D/B/P — D12-V 수치 봉인 전 (검증 PASS 발행 불가 · 개발 판만 가능)',
               'T4-1 ledger_census · T4-3 raster_order_size (RINTG-11) — 실침대 (real_14 · ps45 · Phase A) CPU census',
               'N1 reject_dilate · N5′ reject_frame · T4-2 join_gate — payload 배선 · 덤프 (c_cpl[22]) 경로 때',
