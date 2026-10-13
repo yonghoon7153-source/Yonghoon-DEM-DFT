@@ -1,0 +1,1261 @@
+{
+ "kind": "rint_t41_census",
+ "version": "v1",
+ "date_utc": "2026-10-13T06:24:54+00:00",
+ "status": "보고 전용 — σ 솔브 없음 · 예외 법칙 (D4′) 결정 아님 · 결과를 보고 법칙을 바꾸지 않는다 (v3 §7-1 T4-1) · ①′ 정량 채택 · 생산 HOLD · 웹앱 화면 없음",
+ "git_head": "a7d1ea10837ced9cb91c826bacf750c59817f46c",
+ "code_blobs": {
+  "scripts/step3_sigma.py": "ad202738e7003d2bc903556ec225764ffcbb5d51",
+  "scripts/rint_iface_join.py": "08de177c772fbfad78ca08caf4aa52db123a3c73",
+  "scripts/rint_t41_census.py": "ecffaa4e4ae12af627177013535984897c0fa16e"
+ },
+ "environment": {
+  "python": "3.11.15",
+  "numpy": "2.4.6",
+  "scipy": "1.17.1",
+  "machine": "x86_64",
+  "cpu_count": 4
+ },
+ "configs": {
+  "vox0.4_bridge1.2h": {
+   "vox": 0.4,
+   "bridge_um": null,
+   "basis": "킷 run_mpm.sh --step3-vox 0.4 · --step3-bridge-um 없음 (기본 1.2·vox)"
+  },
+  "vox0.15_bridge0.24": {
+   "vox": 0.15,
+   "bridge_um": 0.24,
+   "basis": "Phase A · Lee STEP3 러너 VOX=0.15 BRIDGE_UM=0.24 (CL-87 · CL-88 물리 고정)"
+  }
+ },
+ "beds": {
+  "real_14": {
+   "scaffold": "docs/data/real14_am_scaffold.csv",
+   "atom": "docs/data/real14_reference_20260928/atom_2060000.liggghts.gz",
+   "contact": "docs/data/real14_reference_20260928/contact_2060000.liggghts.gz",
+   "box_lateral_sim": null,
+   "type_map": {
+    "1": "AM_P",
+    "2": "AM_S",
+    "3": "SE"
+   }
+  },
+  "case15": {
+   "scaffold": "docs/data/case15_corner_20261001/case15_am_scaffold.csv",
+   "atom": "docs/data/case15_corner_20261001/atom_v4_1710000.liggghts.gz",
+   "contact": "docs/data/case15_corner_20261001/contact_v4_1710000.liggghts.gz",
+   "box_lateral_sim": null,
+   "type_map": {
+    "1": "AM_P",
+    "2": "SE"
+   }
+  },
+  "kit_ps_5_5": {
+   "scaffold": "docs/data/kit_ps_scaffolds/kit_ps_5_5__am_scaffold.csv.gz",
+   "atom": null,
+   "contact": null,
+   "box_lateral_sim": "docs/data/kit_ps_scaffolds/kit_ps_5_5__mpm_input.json",
+   "type_map": null
+  }
+ },
+ "frame": "LIGGGHTS 상자 × 1000 µm · lo (0, 0, 0) · hi (L, L, max(z + r)) · 비주기 raster · dilate_z 1 · AM-only (첨가제 · SE 없음)",
+ "carbon_note": "0 — 리포에 첨가제 (VGCF · SDCP · SuperP) 점 집합이 없다 · AM-only raster 라 덮인 목이 정의상 없다 (N_c^surv = N_c^0) · 실침대의 탄소 가림 몫은 첨가제 점 집합이 있는 기계에서 (원장 RINT-08 · v3 §2-2)",
+ "jobs": [
+  {
+   "bed": "real_14",
+   "config": "vox0.4_bridge1.2h",
+   "vox_um": 0.4,
+   "bridge_um_effective": 0.48,
+   "bridge_um_requested": null,
+   "tol_am_um": 0.1,
+   "box_um": [
+    [
+     0.0,
+     0.0,
+     0.0
+    ],
+    [
+     50.0,
+     50.0,
+     31.312
+    ]
+   ],
+   "grid": [
+    125,
+    125,
+    79
+   ],
+   "n_cells": 1234375,
+   "n_M": 698139,
+   "delta_bound_um": 0.002915255888325765,
+   "delta_bound_source": "rint_iface_join g_geo.delta_bound_um (scaffold 자릿수 + 덤프 실측 반폭)",
+   "n_particles": {
+    "AM_P": 36,
+    "AM_S": 421
+   },
+   "rejections": [],
+   "n8_exact_duplicate": 0,
+   "n8b_concentric_nonidentical": 0,
+   "time_s": {
+    "rasterize": 0.06,
+    "ledger": 0.75
+   },
+   "n_registered_pairs": 659,
+   "classes": {
+    "contact": 563,
+    "ambiguous": 27,
+    "gap_bridged": 69
+   },
+   "classes_by_type": {
+    "AM_S|AM_S": {
+     "contact": 301,
+     "ambiguous": 17,
+     "gap_bridged": 40
+    },
+    "AM_P|AM_P": {
+     "contact": 35,
+     "ambiguous": 0,
+     "gap_bridged": 3
+    },
+    "AM_S|AM_P": {
+     "contact": 227,
+     "ambiguous": 10,
+     "gap_bridged": 26
+    }
+   },
+   "support_over_true_contact": {
+    "n": 563,
+    "p0": 1.358910349053303,
+    "p10": 2.045872789820649,
+    "p50": 3.9533312717128677,
+    "p90": 18.082809431369096,
+    "p100": 77.50954120824052
+   },
+   "support_over_true_ambiguous_a_hi": {
+    "n": 27,
+    "p0": 29.198392120714658,
+    "p10": 33.959446427652,
+    "p50": 48.987721112371595,
+    "p90": 71.16721978369584,
+    "p100": 87.88787272469033
+   },
+   "support_faces_contact": {
+    "n": 563,
+    "p0": 4.0,
+    "p10": 8.0,
+    "p50": 14.0,
+    "p90": 32.0,
+    "p100": 144.0
+   },
+   "a_um_contact": {
+    "n": 563,
+    "p0": 0.07724474092136759,
+    "p10": 0.1704831554643919,
+    "p50": 0.4086738626382022,
+    "p90": 0.8232327949600381,
+    "p100": 2.035128374329246
+   },
+   "a_lt_h": {
+    "contact": 268,
+    "contact_of": 563,
+    "ambiguous_a_hi": 27,
+    "ambiguous_of": 27,
+    "meaning": "a < h — CNC 편향 미인증 범위 (RRM 없음 · v3 §2-1) · RRM 기준이면 unresolved_subgrid"
+   },
+   "triple": {
+    "n_contacts_with_triple_face": 0,
+    "n_triple_faces_registered": 0,
+    "n_faces_registered": 11625,
+    "n_cells_multi_claim_ge3": 0,
+    "meaning": "면 양쪽 셀 중 하나가 둘 이상의 다른 주인과 닿음 (짝 + 셋째) · 다중 청구 = 청구자 3 이상 셀"
+   },
+   "eps_band_gt1_cells": 0,
+   "unrealized": {
+    "n": 0,
+    "carbon": 0,
+    "box_clip": 0,
+    "no_support": 0,
+    "meaning": "contact 부류인데 owner 쌍 면 0 — box_clip = 접촉점이 raster 상자 밖 (옆면 · 바닥 잘림) · no_support = 상자 안인데 면 없음 · carbon = 첨가제가 목을 덮음 (여기서는 정의상 0)"
+   },
+   "unregistered": {
+    "n_faces": 195,
+    "n_faces_surv": 195,
+    "n_pairs": 89,
+    "meaning": "등록 쌍 (gap ≤ tol) 이 아닌데 두 주인이 면을 공유 — 양자화 융합 · 브리지가 셋째를 찌름 (v2 §3-6)"
+   },
+   "carbon_covered_neck_share": 0.0,
+   "carbon_covered_neck_share_note": "0 — 리포에 첨가제 (VGCF · SDCP · SuperP) 점 집합이 없다 · AM-only raster 라 덮인 목이 정의상 없다 (N_c^surv = N_c^0) · 실침대의 탄소 가림 몫은 첨가제 점 집합이 있는 기계에서 (원장 RINT-08 · v3 §2-2)",
+   "seam_scaffold": {
+    "n_touch": 70,
+    "n_bridge_rule": 75,
+    "meaning": "옆면 주기 영상으로만 닿는 AM 쌍 (scaffold 기하) — 비주기 raster 가 표현 못 함 (seam_unrepresented · v2 §3-6)"
+   },
+   "dem_crosscheck": {
+    "n_dem_am_am": 660,
+    "n_dem_seam": 70,
+    "n_dem_non_seam": 590,
+    "n_dem_not_registered": 0,
+    "by_class": {
+     "contact": {
+      "n": 563,
+      "in_dem": 563,
+      "not_in_dem": 0
+     },
+     "ambiguous": {
+      "n": 27,
+      "in_dem": 27,
+      "not_in_dem": 0
+     },
+     "gap_bridged": {
+      "n": 69,
+      "in_dem": 0,
+      "not_in_dem": 69
+     }
+    },
+    "meaning": "보고만 — 원장 부류는 scaffold δ (δ_bound) 로 정한다 · 덤프 경로 부류 채택 = 미구현 · 이음매 (seam) = 비주기 raster 가 표현 못 하는 DEM 접점 (seam_unrepresented)"
+   },
+   "fp_sid": "3a3f0977d5b0f4a70de6f11997a20fd4",
+   "peak_rss_mb": 457.9,
+   "join": {
+    "status": "PASS",
+    "fp_join": "d999e78b59212de244bb931f2333c505",
+    "files": {
+     "scaffold": {
+      "name": "real14_am_scaffold.csv",
+      "sha256_file": "281ad86e0465a13b6ed96dbcf30c76acf4f372ff9d7c4a7e36fe55ecd44413fd",
+      "sha256_content": "281ad86e0465a13b6ed96dbcf30c76acf4f372ff9d7c4a7e36fe55ecd44413fd"
+     },
+     "atom": {
+      "name": "atom_2060000.liggghts.gz",
+      "sha256_file": "5f6dcc80e12615fa7705567788a3633bdd386076e42112a04b602eb84f9437f6",
+      "sha256_content": "079c85f15bb3ee8713101de58bb25c0ccb394583d42fa47ac0262fdee75907c5"
+     },
+     "contact": {
+      "name": "contact_2060000.liggghts.gz",
+      "sha256_file": "47d1985ff8cea9580d4f7b5f9c8014d96b99e03171cdc23bbd45e05b161a0bb7",
+      "sha256_content": "a609ba940781d4540953fee3eb8d43c0232d02d3a845f0c8e5469baf3d064235"
+     }
+    },
+    "steps": {
+     "atom": 2060000,
+     "contact": 2060000
+    },
+    "scaffold_frame_claim": "G-geo 만 — scaffold 머리줄에 원 덤프 step 이 없다 (v3 §6-3 · 기하 대응까지만 주장)",
+    "g_geo": {
+     "n_scaffold": 457,
+     "n_dump_am": 457,
+     "n_matched": 457,
+     "n_unmatched": 0,
+     "n_ambiguous": 0,
+     "max_pos_ratio": 0.9900990081545088,
+     "max_radius_ratio": 0.0,
+     "scaffold_half_box": 5e-07,
+     "scaffold_dec_exp": [
+      -6
+     ],
+     "dump_sigfig": 6,
+     "delta_bound_um": 0.002915255888325765,
+     "n_dem_am_am": 660,
+     "n_dem_am_am_seam": 70,
+     "n_delta_scaffold_mismatch": 0,
+     "max_delta_scaffold_ratio": 0.3937349384448685,
+     "n_area_tested": 660,
+     "n_area_beyond": 0,
+     "n_area_uncertified": 0,
+     "n_scaffold_certain_pairs": 563,
+     "n_dem_contact_missing": 0
+    },
+    "g_frame": {
+     "atom_step": 2060000,
+     "contact_step": 2060000,
+     "atom_frames": 1,
+     "contact_frames": 1,
+     "box_equal": true,
+     "box_flags": [
+      "pp",
+      "pp",
+      "ff"
+     ],
+     "n_atoms": 33289,
+     "n_contact_rows": 106563,
+     "n_orphan_rows": 0,
+     "n_pos_mismatch": 0,
+     "max_pos_ratio": 0.9535046477780045,
+     "n_rows_image_shift": 28,
+     "n_rows_image_shift_flag0": 15,
+     "n_delta_pos_mismatch": 0,
+     "max_delta_pos_ratio": 0.9534758519706489,
+     "n_delta_nonpositive": 0,
+     "atom_sigfig": 6,
+     "contact_sigfig": 6
+    }
+   },
+   "status": "OK",
+   "wall_s": 5.6
+  },
+  {
+   "bed": "real_14",
+   "config": "vox0.15_bridge0.24",
+   "vox_um": 0.15,
+   "bridge_um_effective": 0.24,
+   "bridge_um_requested": 0.24,
+   "tol_am_um": 0.1,
+   "box_um": [
+    [
+     0.0,
+     0.0,
+     0.0
+    ],
+    [
+     50.0,
+     50.0,
+     31.312
+    ]
+   ],
+   "grid": [
+    334,
+    334,
+    209
+   ],
+   "n_cells": 23315204,
+   "n_M": 13255840,
+   "delta_bound_um": 0.002915255888325765,
+   "delta_bound_source": "rint_iface_join g_geo.delta_bound_um (scaffold 자릿수 + 덤프 실측 반폭)",
+   "n_particles": {
+    "AM_P": 36,
+    "AM_S": 421
+   },
+   "rejections": [],
+   "n8_exact_duplicate": 0,
+   "n8b_concentric_nonidentical": 0,
+   "time_s": {
+    "rasterize": 0.21,
+    "ledger": 34.98
+   },
+   "n_registered_pairs": 659,
+   "classes": {
+    "contact": 563,
+    "ambiguous": 27,
+    "gap_bridged": 69
+   },
+   "classes_by_type": {
+    "AM_S|AM_S": {
+     "contact": 301,
+     "ambiguous": 17,
+     "gap_bridged": 40
+    },
+    "AM_P|AM_P": {
+     "contact": 35,
+     "ambiguous": 0,
+     "gap_bridged": 3
+    },
+    "AM_S|AM_P": {
+     "contact": 227,
+     "ambiguous": 10,
+     "gap_bridged": 26
+    }
+   },
+   "support_over_true_contact": {
+    "n": 563,
+    "p0": 1.185237038816458,
+    "p10": 1.749428108153932,
+    "p50": 2.471131032029763,
+    "p90": 7.183605125302974,
+    "p100": 29.054658379014896
+   },
+   "support_over_true_ambiguous_a_hi": {
+    "n": 27,
+    "p0": 10.12303608565696,
+    "p10": 13.316539880634116,
+    "p50": 18.07926616410002,
+    "p90": 31.46064754094542,
+    "p100": 42.330518036145406
+   },
+   "support_faces_contact": {
+    "n": 563,
+    "p0": 10.0,
+    "p10": 27.0,
+    "p50": 61.0,
+    "p90": 173.0,
+    "p100": 927.0
+   },
+   "a_um_contact": {
+    "n": 563,
+    "p0": 0.07724474092136759,
+    "p10": 0.1704831554643919,
+    "p50": 0.4086738626382022,
+    "p90": 0.8232327949600381,
+    "p100": 2.035128374329246
+   },
+   "a_lt_h": {
+    "contact": 42,
+    "contact_of": 563,
+    "ambiguous_a_hi": 27,
+    "ambiguous_of": 27,
+    "meaning": "a < h — CNC 편향 미인증 범위 (RRM 없음 · v3 §2-1) · RRM 기준이면 unresolved_subgrid"
+   },
+   "triple": {
+    "n_contacts_with_triple_face": 0,
+    "n_triple_faces_registered": 0,
+    "n_faces_registered": 55420,
+    "n_cells_multi_claim_ge3": 0,
+    "meaning": "면 양쪽 셀 중 하나가 둘 이상의 다른 주인과 닿음 (짝 + 셋째) · 다중 청구 = 청구자 3 이상 셀"
+   },
+   "eps_band_gt1_cells": 0,
+   "unrealized": {
+    "n": 0,
+    "carbon": 0,
+    "box_clip": 0,
+    "no_support": 0,
+    "meaning": "contact 부류인데 owner 쌍 면 0 — box_clip = 접촉점이 raster 상자 밖 (옆면 · 바닥 잘림) · no_support = 상자 안인데 면 없음 · carbon = 첨가제가 목을 덮음 (여기서는 정의상 0)"
+   },
+   "unregistered": {
+    "n_faces": 1,
+    "n_faces_surv": 1,
+    "n_pairs": 1,
+    "meaning": "등록 쌍 (gap ≤ tol) 이 아닌데 두 주인이 면을 공유 — 양자화 융합 · 브리지가 셋째를 찌름 (v2 §3-6)"
+   },
+   "carbon_covered_neck_share": 0.0,
+   "carbon_covered_neck_share_note": "0 — 리포에 첨가제 (VGCF · SDCP · SuperP) 점 집합이 없다 · AM-only raster 라 덮인 목이 정의상 없다 (N_c^surv = N_c^0) · 실침대의 탄소 가림 몫은 첨가제 점 집합이 있는 기계에서 (원장 RINT-08 · v3 §2-2)",
+   "seam_scaffold": {
+    "n_touch": 70,
+    "n_bridge_rule": 75,
+    "meaning": "옆면 주기 영상으로만 닿는 AM 쌍 (scaffold 기하) — 비주기 raster 가 표현 못 함 (seam_unrepresented · v2 §3-6)"
+   },
+   "dem_crosscheck": {
+    "n_dem_am_am": 660,
+    "n_dem_seam": 70,
+    "n_dem_non_seam": 590,
+    "n_dem_not_registered": 0,
+    "by_class": {
+     "contact": {
+      "n": 563,
+      "in_dem": 563,
+      "not_in_dem": 0
+     },
+     "ambiguous": {
+      "n": 27,
+      "in_dem": 27,
+      "not_in_dem": 0
+     },
+     "gap_bridged": {
+      "n": 69,
+      "in_dem": 0,
+      "not_in_dem": 69
+     }
+    },
+    "meaning": "보고만 — 원장 부류는 scaffold δ (δ_bound) 로 정한다 · 덤프 경로 부류 채택 = 미구현 · 이음매 (seam) = 비주기 raster 가 표현 못 하는 DEM 접점 (seam_unrepresented)"
+   },
+   "fp_sid": "11db41e90def33fe55a762d4406b5c4d",
+   "peak_rss_mb": 2281.5,
+   "join": {
+    "status": "PASS",
+    "fp_join": "d999e78b59212de244bb931f2333c505",
+    "files": {
+     "scaffold": {
+      "name": "real14_am_scaffold.csv",
+      "sha256_file": "281ad86e0465a13b6ed96dbcf30c76acf4f372ff9d7c4a7e36fe55ecd44413fd",
+      "sha256_content": "281ad86e0465a13b6ed96dbcf30c76acf4f372ff9d7c4a7e36fe55ecd44413fd"
+     },
+     "atom": {
+      "name": "atom_2060000.liggghts.gz",
+      "sha256_file": "5f6dcc80e12615fa7705567788a3633bdd386076e42112a04b602eb84f9437f6",
+      "sha256_content": "079c85f15bb3ee8713101de58bb25c0ccb394583d42fa47ac0262fdee75907c5"
+     },
+     "contact": {
+      "name": "contact_2060000.liggghts.gz",
+      "sha256_file": "47d1985ff8cea9580d4f7b5f9c8014d96b99e03171cdc23bbd45e05b161a0bb7",
+      "sha256_content": "a609ba940781d4540953fee3eb8d43c0232d02d3a845f0c8e5469baf3d064235"
+     }
+    },
+    "steps": {
+     "atom": 2060000,
+     "contact": 2060000
+    },
+    "scaffold_frame_claim": "G-geo 만 — scaffold 머리줄에 원 덤프 step 이 없다 (v3 §6-3 · 기하 대응까지만 주장)",
+    "g_geo": {
+     "n_scaffold": 457,
+     "n_dump_am": 457,
+     "n_matched": 457,
+     "n_unmatched": 0,
+     "n_ambiguous": 0,
+     "max_pos_ratio": 0.9900990081545088,
+     "max_radius_ratio": 0.0,
+     "scaffold_half_box": 5e-07,
+     "scaffold_dec_exp": [
+      -6
+     ],
+     "dump_sigfig": 6,
+     "delta_bound_um": 0.002915255888325765,
+     "n_dem_am_am": 660,
+     "n_dem_am_am_seam": 70,
+     "n_delta_scaffold_mismatch": 0,
+     "max_delta_scaffold_ratio": 0.3937349384448685,
+     "n_area_tested": 660,
+     "n_area_beyond": 0,
+     "n_area_uncertified": 0,
+     "n_scaffold_certain_pairs": 563,
+     "n_dem_contact_missing": 0
+    },
+    "g_frame": {
+     "atom_step": 2060000,
+     "contact_step": 2060000,
+     "atom_frames": 1,
+     "contact_frames": 1,
+     "box_equal": true,
+     "box_flags": [
+      "pp",
+      "pp",
+      "ff"
+     ],
+     "n_atoms": 33289,
+     "n_contact_rows": 106563,
+     "n_orphan_rows": 0,
+     "n_pos_mismatch": 0,
+     "max_pos_ratio": 0.9535046477780045,
+     "n_rows_image_shift": 28,
+     "n_rows_image_shift_flag0": 15,
+     "n_delta_pos_mismatch": 0,
+     "max_delta_pos_ratio": 0.9534758519706489,
+     "n_delta_nonpositive": 0,
+     "atom_sigfig": 6,
+     "contact_sigfig": 6
+    }
+   },
+   "status": "OK",
+   "wall_s": 39.4
+  },
+  {
+   "bed": "case15",
+   "config": "vox0.4_bridge1.2h",
+   "vox_um": 0.4,
+   "bridge_um_effective": 0.48,
+   "bridge_um_requested": null,
+   "tol_am_um": 0.1,
+   "box_um": [
+    [
+     0.0,
+     0.0,
+     0.0
+    ],
+    [
+     100.0,
+     100.0,
+     20.323
+    ]
+   ],
+   "grid": [
+    250,
+    250,
+    51
+   ],
+   "n_cells": 3187500,
+   "n_M": 1412410,
+   "delta_bound_um": 0.002915255888325765,
+   "delta_bound_source": "rint_iface_join g_geo.delta_bound_um (scaffold 자릿수 + 덤프 실측 반폭)",
+   "n_particles": {
+    "AM_P": 104,
+    "AM_S": 0
+   },
+   "rejections": [],
+   "n8_exact_duplicate": 0,
+   "n8b_concentric_nonidentical": 0,
+   "time_s": {
+    "rasterize": 0.02,
+    "ledger": 1.72
+   },
+   "n_registered_pairs": 124,
+   "classes": {
+    "contact": 106,
+    "ambiguous": 3,
+    "gap_bridged": 15
+   },
+   "classes_by_type": {
+    "AM_S|AM_S": {
+     "contact": 0,
+     "ambiguous": 0,
+     "gap_bridged": 0
+    },
+    "AM_P|AM_P": {
+     "contact": 106,
+     "ambiguous": 3,
+     "gap_bridged": 15
+    },
+    "AM_S|AM_P": {
+     "contact": 0,
+     "ambiguous": 0,
+     "gap_bridged": 0
+    }
+   },
+   "support_over_true_contact": {
+    "n": 106,
+    "p0": 1.5805465018502185,
+    "p10": 1.7200596267485038,
+    "p50": 2.416044642662883,
+    "p90": 12.027980363700463,
+    "p100": 58.40805992338911
+   },
+   "support_over_true_ambiguous_a_hi": {
+    "n": 3,
+    "p0": 30.8359493691916,
+    "p10": 32.284537727184336,
+    "p50": 38.07889115915529,
+    "p90": 54.21869863481505,
+    "p100": 58.253650503729986
+   },
+   "support_faces_contact": {
+    "n": 106,
+    "p0": 15.0,
+    "p10": 25.5,
+    "p50": 59.5,
+    "p90": 157.5,
+    "p100": 230.0
+   },
+   "a_um_contact": {
+    "n": 106,
+    "p0": 0.1505689210960357,
+    "p10": 0.3283119610801579,
+    "p50": 1.1216365523780907,
+    "p90": 2.131031415099308,
+    "p100": 2.642917422092484
+   },
+   "a_lt_h": {
+    "contact": 20,
+    "contact_of": 106,
+    "ambiguous_a_hi": 3,
+    "ambiguous_of": 3,
+    "meaning": "a < h — CNC 편향 미인증 범위 (RRM 없음 · v3 §2-1) · RRM 기준이면 unresolved_subgrid"
+   },
+   "triple": {
+    "n_contacts_with_triple_face": 0,
+    "n_triple_faces_registered": 0,
+    "n_faces_registered": 8466,
+    "n_cells_multi_claim_ge3": 0,
+    "meaning": "면 양쪽 셀 중 하나가 둘 이상의 다른 주인과 닿음 (짝 + 셋째) · 다중 청구 = 청구자 3 이상 셀"
+   },
+   "eps_band_gt1_cells": 0,
+   "unrealized": {
+    "n": 0,
+    "carbon": 0,
+    "box_clip": 0,
+    "no_support": 0,
+    "meaning": "contact 부류인데 owner 쌍 면 0 — box_clip = 접촉점이 raster 상자 밖 (옆면 · 바닥 잘림) · no_support = 상자 안인데 면 없음 · carbon = 첨가제가 목을 덮음 (여기서는 정의상 0)"
+   },
+   "unregistered": {
+    "n_faces": 72,
+    "n_faces_surv": 72,
+    "n_pairs": 13,
+    "meaning": "등록 쌍 (gap ≤ tol) 이 아닌데 두 주인이 면을 공유 — 양자화 융합 · 브리지가 셋째를 찌름 (v2 §3-6)"
+   },
+   "carbon_covered_neck_share": 0.0,
+   "carbon_covered_neck_share_note": "0 — 리포에 첨가제 (VGCF · SDCP · SuperP) 점 집합이 없다 · AM-only raster 라 덮인 목이 정의상 없다 (N_c^surv = N_c^0) · 실침대의 탄소 가림 몫은 첨가제 점 집합이 있는 기계에서 (원장 RINT-08 · v3 §2-2)",
+   "seam_scaffold": {
+    "n_touch": 10,
+    "n_bridge_rule": 12,
+    "meaning": "옆면 주기 영상으로만 닿는 AM 쌍 (scaffold 기하) — 비주기 raster 가 표현 못 함 (seam_unrepresented · v2 §3-6)"
+   },
+   "dem_crosscheck": {
+    "n_dem_am_am": 119,
+    "n_dem_seam": 10,
+    "n_dem_non_seam": 109,
+    "n_dem_not_registered": 0,
+    "by_class": {
+     "contact": {
+      "n": 106,
+      "in_dem": 106,
+      "not_in_dem": 0
+     },
+     "ambiguous": {
+      "n": 3,
+      "in_dem": 3,
+      "not_in_dem": 0
+     },
+     "gap_bridged": {
+      "n": 15,
+      "in_dem": 0,
+      "not_in_dem": 15
+     }
+    },
+    "meaning": "보고만 — 원장 부류는 scaffold δ (δ_bound) 로 정한다 · 덤프 경로 부류 채택 = 미구현 · 이음매 (seam) = 비주기 raster 가 표현 못 하는 DEM 접점 (seam_unrepresented)"
+   },
+   "fp_sid": "045bba8dedeb9e27b4383c46acd78428",
+   "peak_rss_mb": 732.7,
+   "join": {
+    "status": "PASS",
+    "fp_join": "0e854d7623836a28fca8d548c0eb28f3",
+    "files": {
+     "scaffold": {
+      "name": "case15_am_scaffold.csv",
+      "sha256_file": "275c56e12fe11294fe6bf2cb304ce4187ee3fb3cb2f7ccdd8a5fc92d770383ba",
+      "sha256_content": "275c56e12fe11294fe6bf2cb304ce4187ee3fb3cb2f7ccdd8a5fc92d770383ba"
+     },
+     "atom": {
+      "name": "atom_v4_1710000.liggghts.gz",
+      "sha256_file": "30da8899c5dfd14fcb70a590938695a6c153bc11e6b12d0e7ae3e68d72c9228d",
+      "sha256_content": "f40f69eccd793ca96c7ba823914180e879b2c14c1c9a57f4c15af3393fce608f"
+     },
+     "contact": {
+      "name": "contact_v4_1710000.liggghts.gz",
+      "sha256_file": "d2546c9498e8b6c99c2d88b72d21304535ae990623f926ff7e83e573c085b112",
+      "sha256_content": "180140701ef4dfd34bbda6c236837d267502d35a0372824c8720d7d8731b1b4d"
+     }
+    },
+    "steps": {
+     "atom": 1710000,
+     "contact": 1710000
+    },
+    "scaffold_frame_claim": "G-geo 만 — scaffold 머리줄에 원 덤프 step 이 없다 (v3 §6-3 · 기하 대응까지만 주장)",
+    "g_geo": {
+     "n_scaffold": 104,
+     "n_dump_am": 104,
+     "n_matched": 104,
+     "n_unmatched": 0,
+     "n_ambiguous": 0,
+     "max_pos_ratio": 0.9504950478150144,
+     "max_radius_ratio": 0.0,
+     "scaffold_half_box": 5e-07,
+     "scaffold_dec_exp": [
+      -6
+     ],
+     "dump_sigfig": 6,
+     "delta_bound_um": 0.002915255888325765,
+     "n_dem_am_am": 119,
+     "n_dem_am_am_seam": 10,
+     "n_delta_scaffold_mismatch": 0,
+     "max_delta_scaffold_ratio": 0.33948760522688354,
+     "n_area_tested": 119,
+     "n_area_beyond": 0,
+     "n_area_uncertified": 0,
+     "n_scaffold_certain_pairs": 106,
+     "n_dem_contact_missing": 0
+    },
+    "g_frame": {
+     "atom_step": 1710000,
+     "contact_step": 1710000,
+     "atom_frames": 1,
+     "contact_frames": 1,
+     "box_equal": true,
+     "box_flags": [
+      "pp",
+      "pp",
+      "ff"
+     ],
+     "n_atoms": 65970,
+     "n_contact_rows": 182995,
+     "n_orphan_rows": 0,
+     "n_pos_mismatch": 0,
+     "max_pos_ratio": 0.9101250895604038,
+     "n_rows_image_shift": 21,
+     "n_rows_image_shift_flag0": 10,
+     "n_delta_pos_mismatch": 0,
+     "max_delta_pos_ratio": 0.9249554935163455,
+     "n_delta_nonpositive": 0,
+     "atom_sigfig": 6,
+     "contact_sigfig": 6
+    }
+   },
+   "status": "OK",
+   "wall_s": 9.6
+  },
+  {
+   "bed": "case15",
+   "config": "vox0.15_bridge0.24",
+   "vox_um": 0.15,
+   "bridge_um_effective": 0.24,
+   "bridge_um_requested": 0.24,
+   "tol_am_um": 0.1,
+   "box_um": [
+    [
+     0.0,
+     0.0,
+     0.0
+    ],
+    [
+     100.0,
+     100.0,
+     20.323
+    ]
+   ],
+   "grid": [
+    667,
+    667,
+    136
+   ],
+   "n_cells": 60504904,
+   "n_M": 26788868,
+   "delta_bound_um": 0.002915255888325765,
+   "delta_bound_source": "rint_iface_join g_geo.delta_bound_um (scaffold 자릿수 + 덤프 실측 반폭)",
+   "n_particles": {
+    "AM_P": 104,
+    "AM_S": 0
+   },
+   "rejections": [],
+   "n8_exact_duplicate": 0,
+   "n8b_concentric_nonidentical": 0,
+   "time_s": {
+    "rasterize": 0.58,
+    "ledger": 81.75
+   },
+   "n_registered_pairs": 124,
+   "classes": {
+    "contact": 106,
+    "ambiguous": 3,
+    "gap_bridged": 15
+   },
+   "classes_by_type": {
+    "AM_S|AM_S": {
+     "contact": 0,
+     "ambiguous": 0,
+     "gap_bridged": 0
+    },
+    "AM_P|AM_P": {
+     "contact": 106,
+     "ambiguous": 3,
+     "gap_bridged": 15
+    },
+    "AM_S|AM_P": {
+     "contact": 0,
+     "ambiguous": 0,
+     "gap_bridged": 0
+    }
+   },
+   "support_over_true_contact": {
+    "n": 106,
+    "p0": 1.5069586284493723,
+    "p10": 1.614840791974867,
+    "p50": 1.9200809810725954,
+    "p90": 5.687626822285023,
+    "p100": 19.99584251462851
+   },
+   "support_over_true_ambiguous_a_hi": {
+    "n": 3,
+    "p0": 16.106277125872392,
+    "p10": 16.144492003723432,
+    "p50": 16.2973515151276,
+    "p90": 23.774886349991295,
+    "p100": 25.644270058707217
+   },
+   "support_faces_contact": {
+    "n": 106,
+    "p0": 59.0,
+    "p10": 81.0,
+    "p50": 341.0,
+    "p90": 1028.0,
+    "p100": 1605.0
+   },
+   "a_um_contact": {
+    "n": 106,
+    "p0": 0.1505689210960357,
+    "p10": 0.3283119610801579,
+    "p50": 1.1216365523780907,
+    "p90": 2.131031415099308,
+    "p100": 2.642917422092484
+   },
+   "a_lt_h": {
+    "contact": 0,
+    "contact_of": 106,
+    "ambiguous_a_hi": 1,
+    "ambiguous_of": 3,
+    "meaning": "a < h — CNC 편향 미인증 범위 (RRM 없음 · v3 §2-1) · RRM 기준이면 unresolved_subgrid"
+   },
+   "triple": {
+    "n_contacts_with_triple_face": 0,
+    "n_triple_faces_registered": 0,
+    "n_faces_registered": 49073,
+    "n_cells_multi_claim_ge3": 0,
+    "meaning": "면 양쪽 셀 중 하나가 둘 이상의 다른 주인과 닿음 (짝 + 셋째) · 다중 청구 = 청구자 3 이상 셀"
+   },
+   "eps_band_gt1_cells": 0,
+   "unrealized": {
+    "n": 0,
+    "carbon": 0,
+    "box_clip": 0,
+    "no_support": 0,
+    "meaning": "contact 부류인데 owner 쌍 면 0 — box_clip = 접촉점이 raster 상자 밖 (옆면 · 바닥 잘림) · no_support = 상자 안인데 면 없음 · carbon = 첨가제가 목을 덮음 (여기서는 정의상 0)"
+   },
+   "unregistered": {
+    "n_faces": 1,
+    "n_faces_surv": 1,
+    "n_pairs": 1,
+    "meaning": "등록 쌍 (gap ≤ tol) 이 아닌데 두 주인이 면을 공유 — 양자화 융합 · 브리지가 셋째를 찌름 (v2 §3-6)"
+   },
+   "carbon_covered_neck_share": 0.0,
+   "carbon_covered_neck_share_note": "0 — 리포에 첨가제 (VGCF · SDCP · SuperP) 점 집합이 없다 · AM-only raster 라 덮인 목이 정의상 없다 (N_c^surv = N_c^0) · 실침대의 탄소 가림 몫은 첨가제 점 집합이 있는 기계에서 (원장 RINT-08 · v3 §2-2)",
+   "seam_scaffold": {
+    "n_touch": 10,
+    "n_bridge_rule": 12,
+    "meaning": "옆면 주기 영상으로만 닿는 AM 쌍 (scaffold 기하) — 비주기 raster 가 표현 못 함 (seam_unrepresented · v2 §3-6)"
+   },
+   "dem_crosscheck": {
+    "n_dem_am_am": 119,
+    "n_dem_seam": 10,
+    "n_dem_non_seam": 109,
+    "n_dem_not_registered": 0,
+    "by_class": {
+     "contact": {
+      "n": 106,
+      "in_dem": 106,
+      "not_in_dem": 0
+     },
+     "ambiguous": {
+      "n": 3,
+      "in_dem": 3,
+      "not_in_dem": 0
+     },
+     "gap_bridged": {
+      "n": 15,
+      "in_dem": 0,
+      "not_in_dem": 15
+     }
+    },
+    "meaning": "보고만 — 원장 부류는 scaffold δ (δ_bound) 로 정한다 · 덤프 경로 부류 채택 = 미구현 · 이음매 (seam) = 비주기 raster 가 표현 못 하는 DEM 접점 (seam_unrepresented)"
+   },
+   "fp_sid": "bdfb4db70591cc2e0e161f4568b407b6",
+   "peak_rss_mb": 4631.6,
+   "join": {
+    "status": "PASS",
+    "fp_join": "0e854d7623836a28fca8d548c0eb28f3",
+    "files": {
+     "scaffold": {
+      "name": "case15_am_scaffold.csv",
+      "sha256_file": "275c56e12fe11294fe6bf2cb304ce4187ee3fb3cb2f7ccdd8a5fc92d770383ba",
+      "sha256_content": "275c56e12fe11294fe6bf2cb304ce4187ee3fb3cb2f7ccdd8a5fc92d770383ba"
+     },
+     "atom": {
+      "name": "atom_v4_1710000.liggghts.gz",
+      "sha256_file": "30da8899c5dfd14fcb70a590938695a6c153bc11e6b12d0e7ae3e68d72c9228d",
+      "sha256_content": "f40f69eccd793ca96c7ba823914180e879b2c14c1c9a57f4c15af3393fce608f"
+     },
+     "contact": {
+      "name": "contact_v4_1710000.liggghts.gz",
+      "sha256_file": "d2546c9498e8b6c99c2d88b72d21304535ae990623f926ff7e83e573c085b112",
+      "sha256_content": "180140701ef4dfd34bbda6c236837d267502d35a0372824c8720d7d8731b1b4d"
+     }
+    },
+    "steps": {
+     "atom": 1710000,
+     "contact": 1710000
+    },
+    "scaffold_frame_claim": "G-geo 만 — scaffold 머리줄에 원 덤프 step 이 없다 (v3 §6-3 · 기하 대응까지만 주장)",
+    "g_geo": {
+     "n_scaffold": 104,
+     "n_dump_am": 104,
+     "n_matched": 104,
+     "n_unmatched": 0,
+     "n_ambiguous": 0,
+     "max_pos_ratio": 0.9504950478150144,
+     "max_radius_ratio": 0.0,
+     "scaffold_half_box": 5e-07,
+     "scaffold_dec_exp": [
+      -6
+     ],
+     "dump_sigfig": 6,
+     "delta_bound_um": 0.002915255888325765,
+     "n_dem_am_am": 119,
+     "n_dem_am_am_seam": 10,
+     "n_delta_scaffold_mismatch": 0,
+     "max_delta_scaffold_ratio": 0.33948760522688354,
+     "n_area_tested": 119,
+     "n_area_beyond": 0,
+     "n_area_uncertified": 0,
+     "n_scaffold_certain_pairs": 106,
+     "n_dem_contact_missing": 0
+    },
+    "g_frame": {
+     "atom_step": 1710000,
+     "contact_step": 1710000,
+     "atom_frames": 1,
+     "contact_frames": 1,
+     "box_equal": true,
+     "box_flags": [
+      "pp",
+      "pp",
+      "ff"
+     ],
+     "n_atoms": 65970,
+     "n_contact_rows": 182995,
+     "n_orphan_rows": 0,
+     "n_pos_mismatch": 0,
+     "max_pos_ratio": 0.9101250895604038,
+     "n_rows_image_shift": 21,
+     "n_rows_image_shift_flag0": 10,
+     "n_delta_pos_mismatch": 0,
+     "max_delta_pos_ratio": 0.9249554935163455,
+     "n_delta_nonpositive": 0,
+     "atom_sigfig": 6,
+     "contact_sigfig": 6
+    }
+   },
+   "status": "OK",
+   "wall_s": 89.2
+  },
+  {
+   "bed": "kit_ps_5_5",
+   "config": "vox0.4_bridge1.2h",
+   "vox_um": 0.4,
+   "bridge_um_effective": 0.48,
+   "bridge_um_requested": null,
+   "tol_am_um": 0.1,
+   "box_um": [
+    [
+     0.0,
+     0.0,
+     0.0
+    ],
+    [
+     50.0,
+     50.0,
+     113.295
+    ]
+   ],
+   "grid": [
+    125,
+    125,
+    284
+   ],
+   "n_cells": 4437500,
+   "n_M": 2381137,
+   "delta_bound_um": 0.0035437718918639853,
+   "delta_bound_source": "scaffold 자릿수 + 덤프 %g 6 유효숫자 **가정** (덤프 리포에 없음 · 확인 안 됨)",
+   "n_particles": {
+    "AM_P": 88,
+    "AM_S": 2292
+   },
+   "rejections": [],
+   "n8_exact_duplicate": 0,
+   "n8b_concentric_nonidentical": 0,
+   "time_s": {
+    "rasterize": 0.72,
+    "ledger": 4.55
+   },
+   "n_registered_pairs": 3503,
+   "classes": {
+    "contact": 3010,
+    "ambiguous": 91,
+    "gap_bridged": 402
+   },
+   "classes_by_type": {
+    "AM_S|AM_S": {
+     "contact": 2252,
+     "ambiguous": 63,
+     "gap_bridged": 296
+    },
+    "AM_P|AM_P": {
+     "contact": 52,
+     "ambiguous": 1,
+     "gap_bridged": 6
+    },
+    "AM_S|AM_P": {
+     "contact": 706,
+     "ambiguous": 27,
+     "gap_bridged": 100
+    }
+   },
+   "support_over_true_contact": {
+    "n": 3010,
+    "p0": 1.3563024752299082,
+    "p10": 2.624157500573798,
+    "p50": 5.513162286005173,
+    "p90": 17.048340692938876,
+    "p100": 77.9603008865284
+   },
+   "support_over_true_ambiguous_a_hi": {
+    "n": 91,
+    "p0": 18.256717785517324,
+    "p10": 26.323984938937947,
+    "p50": 42.34530536450799,
+    "p90": 89.8837424520885,
+    "p100": 1670.9742499453366
+   },
+   "support_faces_contact": {
+    "n": 3010,
+    "p0": 3.0,
+    "p10": 8.0,
+    "p50": 11.0,
+    "p90": 19.0,
+    "p100": 158.0
+   },
+   "a_um_contact": {
+    "n": 3010,
+    "p0": 0.08422440263957832,
+    "p10": 0.16789669441893298,
+    "p50": 0.3152926213751785,
+    "p90": 0.5584038401295083,
+    "p100": 2.0730801962297503
+   },
+   "a_lt_h": {
+    "contact": 2153,
+    "contact_of": 3010,
+    "ambiguous_a_hi": 91,
+    "ambiguous_of": 91,
+    "meaning": "a < h — CNC 편향 미인증 범위 (RRM 없음 · v3 §2-1) · RRM 기준이면 unresolved_subgrid"
+   },
+   "triple": {
+    "n_contacts_with_triple_face": 0,
+    "n_triple_faces_registered": 0,
+    "n_faces_registered": 43337,
+    "n_cells_multi_claim_ge3": 0,
+    "meaning": "면 양쪽 셀 중 하나가 둘 이상의 다른 주인과 닿음 (짝 + 셋째) · 다중 청구 = 청구자 3 이상 셀"
+   },
+   "eps_band_gt1_cells": 0,
+   "unrealized": {
+    "n": 0,
+    "carbon": 0,
+    "box_clip": 0,
+    "no_support": 0,
+    "meaning": "contact 부류인데 owner 쌍 면 0 — box_clip = 접촉점이 raster 상자 밖 (옆면 · 바닥 잘림) · no_support = 상자 안인데 면 없음 · carbon = 첨가제가 목을 덮음 (여기서는 정의상 0)"
+   },
+   "unregistered": {
+    "n_faces": 1035,
+    "n_faces_surv": 1035,
+    "n_pairs": 483,
+    "meaning": "등록 쌍 (gap ≤ tol) 이 아닌데 두 주인이 면을 공유 — 양자화 융합 · 브리지가 셋째를 찌름 (v2 §3-6)"
+   },
+   "carbon_covered_neck_share": 0.0,
+   "carbon_covered_neck_share_note": "0 — 리포에 첨가제 (VGCF · SDCP · SuperP) 점 집합이 없다 · AM-only raster 라 덮인 목이 정의상 없다 (N_c^surv = N_c^0) · 실침대의 탄소 가림 몫은 첨가제 점 집합이 있는 기계에서 (원장 RINT-08 · v3 §2-2)",
+   "seam_scaffold": {
+    "n_touch": 164,
+    "n_bridge_rule": 187,
+    "meaning": "옆면 주기 영상으로만 닿는 AM 쌍 (scaffold 기하) — 비주기 raster 가 표현 못 함 (seam_unrepresented · v2 §3-6)"
+   },
+   "fp_sid": "c8dcaf17426f8d1a47d7332003f13934",
+   "peak_rss_mb": 484.4,
+   "status": "OK",
+   "wall_s": 6.7
+  },
+  {
+   "bed": "kit_ps_5_5",
+   "config": "vox0.15_bridge0.24",
+   "vox_um": 0.15,
+   "bridge_um_effective": 0.24,
+   "bridge_um_requested": 0.24,
+   "tol_am_um": 0.1,
+   "box_um": [
+    [
+     0.0,
+     0.0,
+     0.0
+    ],
+    [
+     50.0,
+     50.0,
+     113.295
+    ]
+   ],
+   "grid": [
+    334,
+    334,
+    756
+   ],
+   "n_cells": 84336336,
+   "n_M": 45191076,
+   "delta_bound_um": 0.0035437718918639853,
+   "delta_bound_source": "scaffold 자릿수 + 덤프 %g 6 유효숫자 **가정** (덤프 리포에 없음 · 확인 안 됨)",
+   "n_particles": {
+    "AM_P": 88,
+    "AM_S": 2292
+   },
+   "rejections": [],
+   "n8_exact_duplicate": 0,
+   "n8b_concentric_nonidentical": 0,
+   "time_s": {
+    "rasterize": 1.22,
+    "ledger": 136.14
+   },
+   "n_registered_pairs": 3503,
+   "classes": {
+    "contact": 3010,
+    "ambiguous": 91,
+    "gap_bridged": 402
+   },
+   "classes_by_type": {
+    "AM_S|AM_S": {
+     "contact": 2252,
+     "ambiguous": 63,
+     "gap_bridged": 296
+    },
+    "AM_P|AM_P": {
+     "contact": 52,
+     "ambiguous": 1,
+     "gap_bridged": 6
+    },
+    "AM_S|AM_P": {
+     "contact": 706,
+     "ambiguous": 27,
+     "gap_bridged": 100
+    }
+   },
+   "support_over_true_contact": {
+    "n": 3010,
+    "p0": 1.216242951668272,
+    "p10": 1.989939127211967,
+    "p50": 3.018902455919126,
+    "p90": 7.125188833829486,
+    "p100": 28.479601203970983
+   },
+   "support_over_true_ambiguous_a_hi": {
+    "n": 91,
+    "p0": 5.626199812524142,
+    "p10": 11.877090423460976,
+    "p50": 14.744557793213374,
+    "p90": 39.56587105588195,
+    "p100": 491.32339451517703
+   },
+   "support_faces_contact": {
+    "n": 3010,
+    "p0": 12.0,
+    "p10": 26.0,
+    "p50": 42.0,
+    "p90": 93.0,
+    "p100": 1058.0
+   },
+   "a_um_contact": {
+    "n": 3010,
+    "p0": 0.08422440263957832,
+    "p10": 0.16789669441893298,
+    "p50": 0.3152926213751785,
+    "p90": 0.5584038401295083,
+    "p100": 2.0730801962297503
+   },
+   "a_lt_h": {
+    "contact": 203,
+    "contact_of": 3010,
+    "ambiguous_a_hi": 90,
+    "ambiguous_of": 91,
+    "meaning": "a < h — CNC 편향 미인증 범위 (RRM 없음 · v3 §2-1) · RRM 기준이면 unresolved_subgrid"
+   },
+   "triple": {
+    "n_contacts_with_triple_face": 0,
+    "n_triple_faces_registered": 0,
+    "n_faces_registered": 175215,
+    "n_cells_multi_claim_ge3": 0,
+    "meaning": "면 양쪽 셀 중 하나가 둘 이상의 다른 주인과 닿음 (짝 + 셋째) · 다중 청구 = 청구자 3 이상 셀"
+   },
+   "eps_band_gt1_cells": 0,
+   "unrealized": {
+    "n": 0,
+    "carbon": 0,
+    "box_clip": 0,
+    "no_support": 0,
+    "meaning": "contact 부류인데 owner 쌍 면 0 — box_clip = 접촉점이 raster 상자 밖 (옆면 · 바닥 잘림) · no_support = 상자 안인데 면 없음 · carbon = 첨가제가 목을 덮음 (여기서는 정의상 0)"
+   },
+   "unregistered": {
+    "n_faces": 29,
+    "n_faces_surv": 29,
+    "n_pairs": 20,
+    "meaning": "등록 쌍 (gap ≤ tol) 이 아닌데 두 주인이 면을 공유 — 양자화 융합 · 브리지가 셋째를 찌름 (v2 §3-6)"
+   },
+   "carbon_covered_neck_share": 0.0,
+   "carbon_covered_neck_share_note": "0 — 리포에 첨가제 (VGCF · SDCP · SuperP) 점 집합이 없다 · AM-only raster 라 덮인 목이 정의상 없다 (N_c^surv = N_c^0) · 실침대의 탄소 가림 몫은 첨가제 점 집합이 있는 기계에서 (원장 RINT-08 · v3 §2-2)",
+   "seam_scaffold": {
+    "n_touch": 164,
+    "n_bridge_rule": 187,
+    "meaning": "옆면 주기 영상으로만 닿는 AM 쌍 (scaffold 기하) — 비주기 raster 가 표현 못 함 (seam_unrepresented · v2 §3-6)"
+   },
+   "fp_sid": "9bbd67bccd3b4225e59298f7cb80c7d8",
+   "peak_rss_mb": 7372.5,
+   "status": "OK",
+   "wall_s": 139.0
+  }
+ ]
+}
