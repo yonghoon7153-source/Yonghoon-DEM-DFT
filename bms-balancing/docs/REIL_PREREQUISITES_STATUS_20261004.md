@@ -743,3 +743,58 @@ rc 0 → **옛 봉인 대조 (§2-4) 에서 허용 밖 차이** → 정지. 원�
 - **환경 조건:** 시작할 때 identity 가 맞지 않거나 컨테이너가 바뀌었으면 시작하지 않는다 (§38 · 별도 C4-ENV 승인).
 - **검토자에게 밝힐 것:** RED / GREEN 이 C4-0 전체로는 각 2 회가 된다 (분할의 결과 · 사용자 결정).
 - 이 분할은 C4-E / A / B · 자료 개봉 · 맞춤 · 설치 승인이 아니다.
+
+## §40 C4-0a 결과 — 구현 · 합성 시험 · Phase A 배열 봉인 · 무자료 건조 (2026-10-13 · 검토 대기 · 덧붙임 — 위 §0–§39 은 그대로)
+
+- **대상 커밋:** `979e0633` (코드 · 증거 · 배열). 착수 HEAD 는 `3fabeb70` 이다 (보존 규칙 커밋 · 착수 때는 로컬에만 있었고 이번 push 로 같이 올라갔다).
+- **시간:** t0 2026-10-13T06:51:10Z · 끝 기록 07:25:43Z = 2,074 s / 14,400 s. 이 숫자는 커밋 · push · 문서 작성 **전**에 쓴 기록이다
+  (`06_end.json` — C4-ENV 회신 ENV-P2-01 의 교훈대로 "최종" 이라고 쓰지 않는다). 계산 합 38.342 s / 1,800 s.
+- **단계 (`evidence/reil_c4_0a_20261013/`):**
+
+  | 단계 | 배정 (timeout) | 실측 | rc | 결과 |
+  |---|---|---|---|---|
+  | 01 identity (새 봉인 · 전체 MANIFEST sha 명시) | 60 s | 17.496 s | 0 | ok · problems [] · full C6 check 는 부르지 않음 (§38 의 인정) |
+  | 02 RED | 600 s | 4.386 s | 1 | 26 failed — 전부 `NotImplementedError('C4-0a RED — 구현 전')` · 그 밖 오류 0 · stderr 0 B |
+  | 03 GREEN | 600 s | 12.769 s | 0 | 26 passed · stderr 0 B · 자동 수정 · 재시험 0 |
+  | 04 Phase A 배열 봉인 | 240 s | 2.523 s | 0 | 넷 모두 수용된 봉인과 npy 바이트 · raw sha 같음 · 생성 경고 0 · identity ok |
+  | 05 무자료 건조 | 300 s | 1.168 s | 0 | 66 호출 · 최적화 / 목적 호출 0 · util import 0 · `05_dryrun/PLAN.json` |
+
+  - 시험 파일 sha256 은 RED · GREEN 이 같다 (`6b2635d4…7e17`). GREEN 직전 원천 sha 7 개 (`03_green.source_sha256.txt`) 와 끝의 sha
+    (`06_source_sha256_end.txt`) 도 같다. C5 · P0 · C6 스크립트와 `tests/conftest.py` 는 바뀌지 않았다.
+  - 자식 env 에서 비밀 형태 변수 15 개를 뺐다 (이름만 `*.meta.json` 에). 커밋 전 45 파일 (증거 · 배열 · 코드 · 시험) 의 비밀값 검사 결과는
+    0 이다. 46 번째 파일은 `.gitattributes` 의 주석 한 줄이다.
+  - `*.log` 는 `.gitignore` 대상이라 porcelain 기록에 보이지 않는다 — `git add -f` 로 넣었고, blob 대조는 46 / 46 일치다.
+- **봉인한 배열:** `reil_c4_arrays_20261013/` — MANIFEST `861c33ac…b06c` · ARRAYS.json `c06929b4…08fe`. npy sha 넷은 수용된 C6 봉인
+  (`reil_c6_rebuild_20261013/`) 과 같다: `916ac373…` · `0e8dacca…` · `2e7ba141…` · `72a33726…`.
+- **E3a 계획 (건조):** 6 case × 11 행 = 66 호출 · 호출 번호 = case × 11 + 행 · 작업자 = 번호 mod 4. 기대 평가 1,501,500 (산술 · 한도 아님) ·
+  optimizer 실행 275 · 작업자별 404,500 / 404,500 / 388,000 / 304,500. 노트북 발췌의 case 표 · 호출 문구 대조 일치. P0 추출 #0–#10 전부 OK 결속.
+- **검토자에게 밝힐 것:**
+  1. **범위 변경 — 배열 셋을 C4-0b 로 옮겼다.** §39 3 은 "A1 / A2 Phase A · profile Sobol 2 · 동시 양립 Sobol 16 · label-seed 배열" 이었다.
+     C4-0a 는 Phase A 넷만 봉인했다. 옮긴 셋은 펼칠 상자가 P0 사전표 · max_q 와 H 격자에서 나온다 (부속 A §3-3 · §3-4 · §3-6). 그래서 H 실행기와
+     같은 코드 경로에서 만든다. v2 §4-3 의 시점 "C4 첫 국소 실행 전" 은 C4-0b 에서도 지켜진다. 이 결정은 실행 중 사용자 확인 없이 내가 했다 —
+     수용 여부를 묻는다. `ARRAYS.json` 의 `not_in_this_seal` 과 `.gitattributes` 정정 줄에도 적었다.
+  2. RED / GREEN 은 C4-0 전체로 각 2 회가 된다 (§39 · 분할의 결과).
+  3. **오류 위치 규칙을 E3a 용으로 다시 정했다.** C5 `classify_exception` 은 자기 파일만 "우리" 로 안다. 그래서 E3a 의 계수용 감싸기 안 오류가 그 바깥
+     util frame 때문에 "지역 (util)" 으로 갈 수 있었다. E3a 는 안쪽부터 처음 만나는 util frame → util, e3a · monitor · c5 frame → 우리 (구조)
+     로 본다. 라이브러리 (pymoo · scipy · numpy) frame 은 건너뛴다. C5 코드는 고치지 않았다.
+  4. **노트북과 다른 점 둘 (값 무관 — 근거 있음):**
+     - (a) 노트북은 case 여섯이 Model 객체 하나를 공유한다 (발췌 cell 8 `LFP_Models[case].append(data_extract)`). 실행기는 호출마다 깊은 사본을
+       넘긴다. 그들 objective 가 읽는 키 (`Q_exp_interp` · `dVdQ_exp_interp` · `V_exp_interp`) 와 쓰는 키가 다르다 (util 157–236).
+     - (b) 실행 순서는 case 순이다 (노트북은 셀 순). 호출마다 그들 seed (GA 0–19 · NSGA 1) 로 다시 시작하므로 값과 무관하다. 작업자 부하 때문이다.
+  5. 구현 중 자체 정적 검토로 GREEN **전에** 고친 것 셋이다 (실행 0 · 시험 파일 불변):
+     - 감시 끝 조건 — 마감을 본 작업자가 `worker_end` · `worker_deadline` 를 둘 다 보내 두 번 세던 것을 합집합으로 고쳤다.
+     - 건조의 P0 행 대조 — `sorted(key=str)` 가 10 을 2 앞에 두어 늘 실패할 것을 집합 대조로 고쳤다.
+     - 반환 F 가 None 일 때 — `np.asarray(None, float)` 가 nan 이 되어 비유한 1 로 셀 것을 None 으로 따로 두었다.
+  6. 합성 곡선 NSGA2 1 회 (시험 07) 가 끝까지 돌았는지 (returned) 그들 util 오류로 끝났는지 (지역 error) 는 기록에 없다. 시험은 둘 다
+     허용하고, pytest 가 통과 시험의 출력을 잡았다. 추가 실행은 하지 않았다.
+  7. 배열 봉인 단계 안의 identity 는 2.5 s 안에 끝났다 (01 단계는 17.5 s). 같은 대조이고 디스크 캐시 차이로 보이지만, **확인하지 않은 추정**이다.
+- **E3a 호출 기록 필드:**
+  - 평가 수 `n_eval` (예외로 끝난 평가 포함) 과 비유한 `n_nonfinite` (optimizer 가 받은 목적) · `n_nonfinite_any_of_4`.
+  - 영역 밖 평가 수 `n_out_eval_PE` / `_NE` / `_any` · `n_out_unknown_eval` (빈 슬라이스) · `n_dvdq_observed`. 정의는 그들 슬라이스
+    `[argmin|q| : argmax q]` 밖 실험 Q 점 ≥ 1 인 평가다 (C5 `n_out_labels` 와 같은 식 · 추가 계산 없음).
+  - 상자 밖 x 평가 · G 위반 x 평가 수.
+  - X · F · G 원형, `G_status` (없음 · 보고됨 · 미반환), G 재계산 (그들 float 식 · 정확 유리수 · 상자 잔차).
+  - `success_reported` 와 `success_is_evidence=false`.
+  - P0 추출 기록, Model / halfcell digest (전후 다르면 구조 오류), 경고 (형 · 문구별 개수), wall · cpu.
+- **넣지 않은 것:** ENV-P2-01–04 의 범용 도구 보완 (§38 — 몰래 추가하지 않음) · C4-E / A / B · 자료 개봉 · 맞춤 · 설치 · 환경 재구축.
+- **다음:** 검토 요청 (`docs/REIL_C4_0A_RESULT_REVIEW_SEND_20261013.md`). C4-0b (H 실행기 + 옮긴 배열 셋) 는 사용자 확인 뒤에 시작한다 (§39).
