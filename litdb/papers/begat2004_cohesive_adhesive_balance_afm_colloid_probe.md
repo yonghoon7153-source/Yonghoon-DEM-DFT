@@ -140,10 +140,10 @@ salbutamol sulfate–lactose 는 접착 우세 (탐침들이 대각선 아래), 
 | 7 | CAB 그래프 개념 — 탐침 A 들은 대각선 위 (F_adh ≪ F_coh) · 탐침 B 들은 아래 | ★ 논지 판가름 실험의 그림 문법 |
 | 8 | lactose/budesonide CAB — 인쇄 회귀식 4.5371 · 2.0186 (⚠ 점 · 선과 불일치) | ★ 응집 우세 예 · 내부 불일치 사례 (§10-1) |
 | 9 | lactose/salbutamol CAB — 0.8371 · 0.0593 | ★ 접착 우세 예 (W_AB > W_AA · W_BB) |
-| Table I | 거칠기 Ra · Rq | 기판 요건 (< 5 nm) |
-| Table II | 3 원계 CAB 행렬 | ★ 결합 규칙 시험 재료 (§7-2) |
-| eq (1)–(2) | 반데르발스 (JKR · DMT) · 모세관 | 정의 |
-| eq (3) | CAB 비 | 기하 약분 가정 |
+| Table I (1) | 거칠기 Ra · Rq | 기판 요건 (< 5 nm) |
+| Table II (2) | 3 원계 CAB 행렬 | ★ 결합 규칙 시험 재료 (§7-2) |
+| 식 크롭 | eq (1)–(2) — 반데르발스 (JKR · DMT) · 모세관 | 정의 |
+| 식 크롭 | eq (3) — CAB 비 | 기하 약분 가정 |
 
 ## 6. Post-processing ★
 - **원문**: 4,096 곡선 → 가우스 맞춤 평균 ± SD · ANOVA + Fisher (99 %) · CAB 원점 회귀 + R² · 교차 정규화 (산출 경로 미기술).

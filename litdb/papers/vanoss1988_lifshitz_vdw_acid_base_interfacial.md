@@ -140,24 +140,24 @@ LW 는 기하평균 결합 규칙 (Good–Girifalco–Fowkes) 을 따르지만 A
 ---
 
 ## 5. Figure set ★ (그림 없음 — 표 · 식 크롭)
-| 크롭 | 내용 | 우리 활용 |
+| Fig · 표 | 내용 | 우리 활용 |
 |---|---|---|
 | Table 1 | 마이크로파 영역 유전 분산 (ethanol · methanol · glycerol · water: ε_∞ · ε₀ · Cole–Cole α · ω_MW) | Lifshitz Hamaker 계산 입력 |
 | Table 2 | 분광 상수 (n₀² · ω_IR · ω_UV) — He … PTFE · 물 · 알칸 · 벤젠 · CS₂ · glycerol · PMMA | 식 (12)–(14) 입력 |
 | Table 3 | ★ Hamaker 상수 · γ^LW · l_eq · l₀ (24 물질) | A ↔ γ^LW 환산 · ⚠ polystyrene 오기 |
-| `eq_16_20_lw_combining_rule.png` | ★ 식 (16)–(20) · 결합 규칙 범위 문장 | 논지 §2-1 의 기하평균 근거 · 범위 |
-| `eq_21_23_lw_repulsion_in_liquid.png` | 식 (21)–(23) 반발 반데르발스 | 습식 (용매) 에서 점착이 뒤집힐 수 있음 |
-| `eq_24_young_apolar.png` | 식 (24) · (24a) | 무극성 액체로 γ^LW |
-| `eq_25_32_decay_hamaker.png` | 식 (25)–(32) · d₀ 1.58 Å | 구 기하 힘 · DMT 연결 |
-| `eq_33_37_acid_base.png` | ★ 식 (33)–(37a) | AB 교차항 · 음의 γ₁₂^AB |
-| `eq_38_42_young_dupre.png` | 식 (38)–(42) · (16c) · (20a) | 세 액체 접촉각 측정식 |
-| `eq_43_18b_interfacial_tension.png` | ★ 식 (43) · (18b) Φ | 총 계면 장력 · 기하평균 실패의 실측 |
-| `eq_18c_43b_oxide_sulfide.png` | ★ 식 (18c) · (43a) · (43b) · "oxide, sulfide" 문장 · Fowkes "18c is wrong" | 산화물 · 황화물 = 비대칭 |
-| `txt_monopolar_water_reference.png` | 단극성 · 물 기준값 25.5 · γ⁻ ≥ 28 반발 · 식 (44)–(45) | 기준 · 단극성 반발 |
-| `eq_52_three_liquids.png` | §IIIA1 측정 절차 · 식 (52) | 측정 설계 |
-| `eq_53_hamaker_vs_gammaLW.png` | 식 (53a) · (53b) | Hamaker ↔ γ |
-| `eq_54_proportionality.png` | 식 (54) · 1.88 × 10⁻¹⁴ cm² · ±8 % | ★ 환산 상수 |
-| `txt_hexadecyl_direct_force.png` | 헥사데실 −60 vs −67 vs −102.7 mJ/m² | 이론 ↔ 직접 힘 측정 |
+| 식 크롭 | `eq_16_20_lw_combining_rule.png` — ★ 식 (16)–(20) · 결합 규칙 범위 문장 | 논지 §2-1 의 기하평균 근거 · 범위 |
+| 식 크롭 | `eq_21_23_lw_repulsion_in_liquid.png` — 식 (21)–(23) 반발 반데르발스 | 습식 (용매) 에서 점착이 뒤집힐 수 있음 |
+| 식 크롭 | `eq_24_young_apolar.png` — 식 (24) · (24a) | 무극성 액체로 γ^LW |
+| 식 크롭 | `eq_25_32_decay_hamaker.png` — 식 (25)–(32) · d₀ 1.58 Å | 구 기하 힘 · DMT 연결 |
+| 식 크롭 | `eq_33_37_acid_base.png` — ★ 식 (33)–(37a) | AB 교차항 · 음의 γ₁₂^AB |
+| 식 크롭 | `eq_38_42_young_dupre.png` — 식 (38)–(42) · (16c) · (20a) | 세 액체 접촉각 측정식 |
+| 식 크롭 | `eq_43_18b_interfacial_tension.png` — ★ 식 (43) · (18b) Φ | 총 계면 장력 · 기하평균 실패의 실측 |
+| 식 크롭 | `eq_18c_43b_oxide_sulfide.png` — ★ 식 (18c) · (43a) · (43b) · "oxide, sulfide" 문장 · Fowkes "18c is wrong" | 산화물 · 황화물 = 비대칭 |
+| 본문 크롭 | `txt_monopolar_water_reference.png` — 단극성 · 물 기준값 25.5 · γ⁻ ≥ 28 반발 · 식 (44)–(45) | 기준 · 단극성 반발 |
+| 식 크롭 | `eq_52_three_liquids.png` — §IIIA1 측정 절차 · 식 (52) | 측정 설계 |
+| 식 크롭 | `eq_53_hamaker_vs_gammaLW.png` — 식 (53a) · (53b) | Hamaker ↔ γ |
+| 식 크롭 | `eq_54_proportionality.png` — 식 (54) · 1.88 × 10⁻¹⁴ cm² · ±8 % | ★ 환산 상수 |
+| 본문 크롭 | `txt_hexadecyl_direct_force.png` — 헥사데실 −60 vs −67 vs −102.7 mJ/m² | 이론 ↔ 직접 힘 측정 |
 
 ## 6. Post-processing ★
 - **원문**: 접촉각 → (24a) · (41) 연립 · Lifshitz 식 (10) · (12) · (14) 수치 적분 → Hamaker 상수 · l_eq · l₀ (Table III) · 직접 힘 측정과 대조.
