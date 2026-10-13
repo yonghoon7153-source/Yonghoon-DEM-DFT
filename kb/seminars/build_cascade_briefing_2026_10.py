@@ -390,7 +390,7 @@ ids = Ids()
 # ---------------------------------------------------------------- slides shared by both variants
 def slide_title():
     t = load('slide1.xml')
-    assert set_texts(t, {'August 18, 2026': 'October 13, 2026',
+    assert set_texts(t, {'August 18, 2026': 'October 16, 2026',   # seminar moved from Tue 10-13 to Fri 10-16 (user 10-13)
                          'Technical Report on DFT Screening:': 'Progress Report on DFT/MLIP Screening:'}) == 2
     save(t, 'slide1.xml')
 
