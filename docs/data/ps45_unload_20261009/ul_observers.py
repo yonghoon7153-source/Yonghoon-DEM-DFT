@@ -5,7 +5,7 @@
     python3 ul_observers.py --selftest
 
 권고 기본값 (choice — docs/reviews/dem_unloading_kit_section13_appendix_draft_20261013.md · 1저자 비준 대기 · CX2 §3-2 · §3-3 반례 그대로 fixture)
-  σ_P (C3)   : 표본 = k* 의 마지막 두 창의 thermo **정규 줄** (setup 줄 · 겹친 경계 줄 제외 — ul_lib.parse_thermo) 의 보고 MPa (1000 · v_Ps) ·
+  σ_P (C3)   : 표본 = k* 의 마지막 두 창의 thermo **정규 줄** (setup 줄 · 겹친 경계 줄 제외 — ul_lib.parse_thermo) 의 보고 MPa (1000 · Ps — thermo 열 'ul_Ps' = v_ul_Ps 의 LIGGGHTS 머리 이름) ·
                창 범위 (시작, 끝] · ddof = 1 · 최소 표본 10 (모자라면 OBS_MISSING — NOISE_FLOOR 아님) · NOISE_FLOOR = P_meas < 3 σ_P.
                시간상관 표본 → ρ 신뢰구간 · 독립 반복으로 쓰지 않는다.
   표면 (C5)  : 고정 ID 집합 = S0 원자 − S0 에서 중심이 판 위 · 바닥 아래인 원자 (그 뒤 프레임마다 다시 자르지 않는다 — 들어 올린 판 아래로 돌아온 옛 이탈 입자를 다시 넣지 않는다) ·
@@ -30,7 +30,7 @@ def _fin(*xs):
     return all(isinstance(x, (int, float)) and math.isfinite(x) for x in xs)
 
 
-def sigma_P(regular, windows, ddof=1, min_n=10, col='v_Ps', scale=1000.0):
+def sigma_P(regular, windows, ddof=1, min_n=10, col='ul_Ps', scale=1000.0):
     """regular = {step: thermo 정규 줄 dict} (ul_lib.parse_thermo) · windows = [(시작, 끝)] (창 범위 (시작, 끝]) → σ_P (보고 MPa)."""
     samples = [regular[s][col] * scale for s in sorted(regular) if col in regular[s] and any(lo < s <= hi for lo, hi in windows)]
     out = {'status': 'OBS_MISSING', 'sigma': None, 'n': len(samples), 'ddof': ddof, 'samples': samples}
@@ -143,7 +143,7 @@ def selftest():
             fails.append(name)
 
     # σ_P — CX2 §3-2: 0.67 · 1.33 번갈아 20 표본 (보고 MPa) → ddof 1 = NOISE_FLOOR · ddof 0 = 아님
-    reg = {100000 + 500 * (i + 1): {'v_Ps': (0.67 if i % 2 == 0 else 1.33) / 1000.0} for i in range(20)}
+    reg = {100000 + 500 * (i + 1): {'ul_Ps': (0.67 if i % 2 == 0 else 1.33) / 1000.0} for i in range(20)}
     win = [(100000, 105000), (105000, 110000)]
     chk('O1 σ_P ddof 1 (기본) = 0.3385728562 → 3σ 1.0157 > 1 MPa → NOISE_FLOOR',
         lambda: (lambda s: abs(s['sigma'] - 0.3385728562) < 1e-9 and s['n'] == 20 and noise_floor(s['sigma'], 1.0) == 'NOISE_FLOOR')(sigma_P(reg, win)))
@@ -154,7 +154,12 @@ def selftest():
             sigma_P({k: v for k, v in list(reg.items())[:9]}, win)))
     chk('O3 표본 0 = OBS_MISSING', lambda: sigma_P({}, win)['status'] == 'OBS_MISSING')
     chk('O4 창 범위 (시작, 끝] — 시작 step 줄 (앞 창 · setup 자리) 은 넣지 않는다',
-        lambda: sigma_P({**reg, 100000: {'v_Ps': 99.0}}, win)['n'] == 20)
+        lambda: sigma_P({**reg, 100000: {'ul_Ps': 99.0}}, win)['n'] == 20)
+    import inspect
+    import json as _json
+    cols = _json.load(open(os.path.join(HERE, 'unload_params.json'), encoding='utf-8'))['records']['thermo_cols']
+    chk('O4b σ_P 기본 열 이름 = 덱 thermo 머리의 Ps 열 (표 thermo_cols · LIGGGHTS 는 v_ul_Ps 를 "ul_Ps" 로 찍는다 — "v_Ps" 면 실제 로그에서 표본 0)',
+        lambda: inspect.signature(sigma_P).parameters['col'].default == 'ul_Ps' and 'ul_Ps' in cols)
     # 표면 — CX2 §3-3: 빈 칸 · 분위수 · 고정 ID
     full = [{'id': i + 1, 'x': (i % 10 + 0.5) * 0.005, 'y': (i // 10 + 0.5) * 0.005, 'z': 0.0995, 'radius': 0.0005} for i in range(100)]
     box = ((0.0, 0.05), (0.0, 0.05))
