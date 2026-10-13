@@ -1,0 +1,166 @@
+# ============================================================
+# DEM 언로딩 키트 — 작은 침대 이력 시험 (H0–H5) · 생산자
+#   생성: history_test/make_history_decks.py (손으로 고치지 말 것 — 생성기를 고치고 다시 만든다 · SHA256SUMS)
+#   정본: docs/data/ps45_unload_20261009/README.md §1 · 등록 §12-1 · §13-6 ③ · Codex 판정문 10-12 §5
+#   변수: run_history.sh 가 -var 로 준다 — out (이 단계 폴더) · plate_stl (판 STL · 자료는 restart 에서) · ckpt (읽을 restart)
+#   모델 머리 = r8 원 덱 글자 (재료 · pair · 벽 · 중력 9.81 · 감쇠 1.0e-5 · 메시) — 숫자를 다시 적지 않는다
+#   생산자: 입자 20 (적분 없음) → 적재 (deltaMax) → 부분 제하 (set) → 접선 (속도 · run 1000) → 정지 (run 990) → 덤프 · restart
+# ============================================================
+
+atom_style granular
+atom_modify map array sort 0 0
+boundary p p f
+newton off
+soft_particles yes
+communicate single vel yes
+units si
+
+variable r_AM_P equal 4.5e-3
+variable r_AM_S equal 2.0e-3
+variable r_SE equal 0.5e-3
+variable dt equal 1.0e-6
+timestep ${dt}
+processors * * 1
+
+region hb_box block 0.0 0.05 0.0 0.05 -0.01 0.1 units box
+create_box 3 hb_box
+
+neighbor 0.002 bin
+neigh_modify delay 0 check yes
+
+fix m1 all property/global youngsModulus peratomtype 1.4e8 1.4e8 0.135e7
+fix m2 all property/global poissonsRatio peratomtype 0.25 0.25 0.30
+fix m3 all property/global coefficientRestitution peratomtypepair 3 0.3 0.3 0.3 0.3 0.3 0.3 0.3 0.3 0.3
+fix m4 all property/global coefficientFriction peratomtypepair 3 0.5 0.5 0.5 0.5 0.5 0.5 0.5 0.5 0.5
+fix m5 all property/global coefficientRollingFriction peratomtypepair 3 0.2 0.2 0.1 0.2 0.2 0.1 0.1 0.1 0.1
+fix m6 all property/global coefficientMaxElasticStiffness peratomtypepair 3 1.5 1.5 3.0 1.5 1.5 3.0 3.0 3.0 5.0
+fix m7 all property/global coefficientAdhesionStiffness peratomtypepair 3 1.0e5 1.0e5 2.0e5 1.0e5 1.0e5 2.0e5 2.0e5 2.0e5 1.0e6
+fix m8 all property/global coefficientPlasticityDepth peratomtypepair 3 0.05 0.05 0.01 0.05 0.05 0.01 0.01 0.01 0.005
+fix m9 all property/global characteristicVelocity scalar 2.0
+
+pair_style gran model hooke/hysteresis tangential history rolling_friction cdt
+pair_coeff * *
+
+compute strs all stress/atom
+compute ke all ke/atom
+compute cpl all pair/gran/local pos id force force_normal force_tangential torque contactArea delta contactPoint
+
+fix zwall_bot all wall/gran model hooke/hysteresis tangential history rolling_friction cdt primitive type 1 zplane 0.0
+
+# ── fixture 입자 (자리 = 생성기 계산 · 적재 자리 = 설계 deltaMax 겹침 · history_params.json)
+create_atoms 1 single 0.008 0.042 0.0042 units box
+create_atoms 2 single 0.02 0.044 0.00185 units box
+create_atoms 3 single 0.03 0.046 0.00046 units box
+create_atoms 3 single 0.04 0.044 0.00049 units box
+create_atoms 1 single 0.01 0.035 0.0258 units box
+create_atoms 2 single 0.035 0.012 0.028149999999999998 units box
+create_atoms 3 single 0.02 0.03 0.029539999999999997 units box
+create_atoms 3 single 0.04 0.02 0.029509999999999998 units box
+create_atoms 1 single 0.0205 0.03 0.015 units box
+create_atoms 1 single 0.0293 0.03 0.015 units box
+create_atoms 1 single 0.01 0.0215 0.015 units box
+create_atoms 3 single 0.01 0.026459999999999997 0.015 units box
+create_atoms 3 single 0.0162 0.04 0.015 units box
+create_atoms 3 single 0.017192 0.04 0.015 units box
+create_atoms 2 single 0.042 0.031 0.015 units box
+create_atoms 3 single 0.042 0.033465 0.015 units box
+create_atoms 1 single 0.03 0.008 0.015 units box
+create_atoms 2 single 0.036379999999999996 0.008 0.015 units box
+create_atoms 3 single 0.045 0.005 0.015 units box
+create_atoms 2 single 0.003 0.012 0.015 units box
+set atom 1 diameter 0.009 density 4800.0
+set atom 2 diameter 0.004 density 4800.0
+set atom 3 diameter 0.001 density 2000.0
+set atom 4 diameter 0.001 density 2000.0
+set atom 5 diameter 0.009 density 4800.0
+set atom 6 diameter 0.004 density 4800.0
+set atom 7 diameter 0.001 density 2000.0
+set atom 8 diameter 0.001 density 2000.0
+set atom 9 diameter 0.009 density 4800.0
+set atom 10 diameter 0.009 density 4800.0
+set atom 11 diameter 0.009 density 4800.0
+set atom 12 diameter 0.001 density 2000.0
+set atom 13 diameter 0.001 density 2000.0
+set atom 14 diameter 0.001 density 2000.0
+set atom 15 diameter 0.004 density 4800.0
+set atom 16 diameter 0.001 density 2000.0
+set atom 17 diameter 0.009 density 4800.0
+set atom 18 diameter 0.004 density 4800.0
+set atom 19 diameter 0.001 density 2000.0
+set atom 20 diameter 0.004 density 4800.0
+group hb_bot id 1 2 3 4
+group hb_top id 5 6 7 8
+group hb_pair id 9 10 11 12 13 14 15 16 17 18
+group hb_zero id 19 20
+
+# (생산자 · SYN: 적분 fix 없음 — 운동학 fixture · 위치는 명령으로만 바뀐다)
+fix gravi all gravity 9.81 vector 0.0 0.0 -1.0
+fix top_mesh all mesh/surface/stress file ${plate_stl} type 1 scale 1.0 reference_point 0 0 0
+fix zwall_top all wall/gran model hooke/hysteresis tangential history rolling_friction cdt mesh n_meshes 1 meshes top_mesh
+fix damp all viscous 1.0e-5
+fix_modify zwall_top energy yes
+
+variable pressMPa equal abs(f_top_mesh[3])/0.0025/1000000
+thermo_style custom step atoms ke cpu v_pressMPa
+thermo 100
+
+compute hb_wh all wall/gran/local id history
+compute hb_ph all pair/gran/local id history
+restart 1500 ${out}/restart/auto_*.bin
+
+# ① 적재 — 첫 setup 에서 history[0] = max(0, δ) = 설계 deltaMax
+print "HIST_STAGE load"
+run 10
+
+# ② 부분 제하 — 순간 이동 (이력 유지 · 현재 겹침 δ < deltaMax)
+set atom 1 z 0.0043
+set atom 2 z 0.0019
+set atom 3 z 0.000475
+set atom 4 z 0.000492
+set atom 5 z 0.025699999999999997
+set atom 6 z 0.028099999999999997
+set atom 7 z 0.029525
+set atom 8 z 0.029508
+set atom 10 x 0.02935
+set atom 12 y 0.026475
+set atom 14 x 0.017195
+set atom 16 y 0.033478
+set atom 18 x 0.03642
+
+# ③ 접선 이력 — 적분이 없어 위치는 그대로 · shear += v_t·dt (법선에 수직)
+set atom 1 vx 0.02 vy 0.0 vz 0.0
+set atom 2 vx 0.0 vy 0.01 vz 0.0
+set atom 3 vx 0.003 vy 0.004 vz 0.0
+set atom 4 vx 0.0005 vy 0.0 vz 0.0
+set atom 5 vx 0.0 vy -0.02 vz 0.0
+set atom 6 vx 0.01 vy 0.0 vz 0.0
+set atom 7 vx 0.0 vy 0.005 vz 0.0
+set atom 8 vx -0.0005 vy 0.0 vz 0.0
+set atom 10 vx 0.0 vy 0.01 vz 0.0
+set atom 12 vx 0.002 vy 0.0 vz 0.0
+set atom 14 vx 0.0 vy 0.001 vz 0.0
+set atom 16 vx 0.002 vy 0.0 vz 0.0
+set atom 18 vx 0.0 vy 0.005 vz 0.0
+print "HIST_STAGE shear"
+run 1000
+velocity all set 0.0 0.0 0.0 units box
+
+# ④ 정지 — 마지막 step (2000) 의 in-run 덤프 = 봉인할 기대값 (생산자 끝)
+dump hb_pa all custom 2000 ${out}/producer/atoms_*.dump id type x y z radius mass vx vy vz omegax omegay omegaz fx fy fz f_history_zwall_bot[1] f_history_zwall_bot[2] f_history_zwall_bot[3] f_history_zwall_bot[4]
+dump_modify hb_pa format "%d %d %.17g %.17g %.17g %.17g %.17g %.17g %.17g %.17g %.17g %.17g %.17g %.17g %.17g %.17g %.17g %.17g %.17g %.17g"
+dump hb_pw all local 2000 ${out}/producer/mesh_*.dump c_hb_wh[1] c_hb_wh[2] c_hb_wh[3] c_hb_wh[4] c_hb_wh[5] c_hb_wh[6] c_hb_wh[7]
+dump_modify hb_pw format "%.17g %.17g %.17g %.17g %.17g %.17g %.17g"
+dump hb_pp all local 2000 ${out}/producer/pair_*.dump c_hb_ph[1] c_hb_ph[2] c_hb_ph[3] c_hb_ph[4] c_hb_ph[5] c_hb_ph[6] c_hb_ph[7]
+dump_modify hb_pp format "%.17g %.17g %.17g %.17g %.17g %.17g %.17g"
+print "HIST_STAGE hold"
+run 990
+undump hb_pa
+undump hb_pw
+undump hb_pp
+variable hb_step_now equal step
+variable hb_step_end equal ${hb_step_now}
+variable hb_n_now equal atoms
+variable hb_n_end equal ${hb_n_now}
+write_dump all custom ${out}/producer/end_pack.dump id type x y z radius mass vx vy vz omegax omegay omegaz f_history_zwall_bot[1] f_history_zwall_bot[2] f_history_zwall_bot[3] f_history_zwall_bot[4] modify format "%d %d %.17g %.17g %.17g %.17g %.17g %.17g %.17g %.17g %.17g %.17g %.17g %.17g %.17g %.17g %.17g"
+write_restart ${out}/fixture.bin
+print "HIST_PRODUCER_DONE step=${hb_step_end} atoms=${hb_n_end}"
