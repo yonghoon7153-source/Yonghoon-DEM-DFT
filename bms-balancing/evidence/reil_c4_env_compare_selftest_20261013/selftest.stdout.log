@@ -1,0 +1,24 @@
+ok   P0 log -> 28 wheel names
+ok   artifacts: exact set ok
+ok   artifacts: extra wheel caught
+ok   artifacts by dist: case-insensitive name ok
+ok   artifacts by dist: wrong version caught
+ok   artifacts by dist: sdist caught
+ok   lock: record_sha_differs ['cffi', 'fonttools', 'numpy', 'pip']
+ok   lock: collision-line change is disallowed under the C4-ENV rule
+ok   PROFILE identical between the two committed seals
+ok   lock: python line 3.11.15->3.11.17 allowed
+ok   lock: python line with unexpected version disallowed
+ok   lock: version change disallowed
+ok   lock: files aggregate change disallowed
+ok   PROFILE: version+build change allowed
+ok   PROFILE: libc change disallowed
+ok   PROFILE: BLAS change disallowed
+ok   PROFILE: formatting-only change disallowed
+ok   record_rows[clean] problems=[]
+ok   record text sha = env_profile-style (CRLF normalized) and differs from raw
+ok   record_rows[hash] problems=[{'wheel_row_mismatch': 'foo/__init__.py', 'wheel': ['sha256=nia_NpkRxFwkPGhBR7I_yeHc_PJX0pmhxjIBam_NM_Q', '6'], 'installed': ('sha256=2SmKENGwc1g33EvYXaxkGw887yekfl1TpU8vP1svz_o', '6')}]
+ok   record_rows[extra] problems=[{'installed_row_unexplained': 'foo_bar-1.0.dist-info/direct_url.json'}]
+ok   record_rows[hashed_pyc] problems=[{'installed_row_unexplained': 'foo/__pycache__/__init__.cpython-311.pyc'}]
+ok   record_rows[shebang] problems=[{'shebang_not_this_venv': '../../../bin/foo', 'line': '#!/elsewhere/venv/bin/python'}]
+FAILS 0
