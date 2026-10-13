@@ -163,3 +163,5 @@ evidence/reil_c4_env_compare_selftest_20261013/** -text
 reil_c6_rebuild_20261013/** -text
 # 2026-10-13: REIL C4-ENV 실행 기록 (S0–S10 meta · stdout · stderr · 내려받기 식별 · old→new 대조 · RECORD 원문 · 실행기 사본) — bytes 그대로
 evidence/reil_c4_env_20261013/** -text
+# 2026-10-13: REIL C4-ENV 결과 검토 회신 (새 봉인 reil_c6_rebuild_20261013 한정 수용 · P1 0 · 비차단 P2 ENV-P2-01–04 · C4-0 해제) — bytes 그대로
+reviews/review_reil_c4_env_result_20261013/** -text
