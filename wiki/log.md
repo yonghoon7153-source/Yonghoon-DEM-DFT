@@ -3601,3 +3601,13 @@ to the C-rate" 인데 Fig. 15(a) `[도표]` SOH 79.4 % 에서 C/3 ≈18 % vs C/2
   [[pocv-nonequilibrium-mode-bias]] (P5 재료 — 우리 4 매개 목적함수에 오프셋 없음 `src/fitting.py:48` · 가설로만) · index ocvfit 줄
 - 격리: ocvfit · 대조 스크립트는 스크래치패드의 버리는 venv (pybamm 26.8.0.0 · pybammsolvers 0.9.1 · casadi 3.7.2 는 기준 곡선 재생성용) · 운영 환경 · 저장소 산출물 · 등록부 쓰기 0
 - 하지 않은 것: 우리 파이프라인에 상수 오프셋을 넣어 재는 일 (RUN_SCOPE · 게이트) · E2 · upstream 알림 (발견한 결함 없음 — 대조군 합성 실패 3 은 우리 설계의 `v_full` 고정 탓)
+
+## [2026-10-13] update | 22p 후속 세미나 (2026-10-07 BML) — 정성 인사이트만 (원자료 비공개)
+- 사용자 결정 (2026-10-13): 저장소가 공개라 덱 그림 · 협업 셀 수치 · 녹취는 올리지 않고, 우리 해석과 게이트 대응만 짧게 남긴다. raw 파일 0 · 그림 크롭 0.
+- 갱신: [[22p-physics-or-degeneracy]] — Evidence For 끝 항목 (Asheruddin 항목의 미확인 (c) 일부 해소: 22p 셀 = blend 음극 · 22p 맞춤 = `γ_Si` 닫힘
+  · 후속판 = 처방 ③ · 가지 · 율 · 창은 여전히 미인쇄) + Status Log (status `active` 유지 · 다음 후보 E-γ · E-zone · E-IR · E-src 미승인).
+- 갱신: [[halfcell-ocp-shape-invariance]] — "같은 연구실이 처방 ③ 을 최종 방법으로 채택" 절 (채택 근거 = 기대 추세 · 평균 RMSE · 두 track 의 `γ_Si` 불일치
+  · 음수 LAM_NE · 체크리스트 (c) 여전히 0 · 탭 쪽 Si 신호 선행 소실).
+- 요지 `[해석]`: 형상 표현만 바꿔도 LAM 은 크게 움직이고 LLI 는 거의 그대로다. half-cell 은 큰 PE / NE 격차를 시사하는데, 우리 결론 2 에서는 큰 격차의
+  붕괴가 드물었다 (1/245 · 전체 64/604) → 원인은 모델 안 축퇴보다 오설정 쪽 (같은 증상 · 다른 원인).
+- 하지 않은 것: raw digest · 그림 크롭 · 녹취 저장 · 덱 수치 인용 · 게이트 실험 (RUN_SCOPE). 사용자에게는 저장소 밖 비공개 메모로 따로 전달했다.
