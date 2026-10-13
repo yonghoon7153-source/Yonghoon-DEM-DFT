@@ -1,0 +1,122 @@
+{
+ "schema": "ps45_unload_active_rules_v1",
+ "rules": [
+  {
+   "id": "selection",
+   "rule": "유효한 δ 두 개면 결정표 한 행 (§12-4) · 필요한 끝점이 무효 · 결손 · 무교차 · NaN 이면 SELECTION_UNRESOLVED — 다음 팔 · 본 런 없음 (§13-1)",
+   "where": "ul_reader.py:selection",
+   "where_exists": true,
+   "witness": [
+    "ul_reader R2",
+    "ul_reader R3"
+   ]
+  },
+  {
+   "id": "submission_order",
+   "rule": "UB · UT · UC 먼저 (서로 독립) → UB · UT 끝점 판독 → dt* → 그 dt* 의 UV 하나만 → 최종 튜플의 팔만 본 런 (§13-5 ② · 동시 UV 제출 없음)",
+   "where": "ul_reader.py:gate",
+   "where_exists": true,
+   "witness": [
+    "ul_reader R5",
+    "ul_runner_test M5"
+   ]
+  },
+  {
+   "id": "ut_rm_stop",
+   "rule": "UT = 첫 교차 + 확인 두 단 → R_M restart + 상태 파일 → 멈춤 (RM_STOP) · UB · UV = 전체 멈춤 규칙 (§13-5 ③)",
+   "where": "make_unload_decks.py:_machine",
+   "where_exists": true,
+   "witness": [
+    "make_unload_decks GD7"
+   ]
+  },
+  {
+   "id": "utc",
+   "rule": "결정표 3 행 → UTc = U_UT3 덱을 UT 의 R_M (restart + 상태) 에서 이어 돌림 · 7:3 은 S0 에서 새 UT3 없음 (§13-5 ③)",
+   "where": "ul_reader.py:gate",
+   "where_exists": true,
+   "witness": [
+    "ul_reader R5",
+    "ul_runner_test M9"
+   ]
+  },
+  {
+   "id": "nonmonotone_union",
+   "rule": "첫 교차 = 점 추정 + 비단조 표지 · 보고 괄호 = 모든 교차 괄호의 합집합 · 7:3 b 재이식 없음 (§13-5 ①)",
+   "where": "ul_reader.py:arm_verdict",
+   "where_exists": true,
+   "witness": [
+    "ul_reader R8"
+   ]
+  },
+  {
+   "id": "separation",
+   "rule": "창 접촉 상태 CONTACT · TENSION · ZERO · OBS_MISSING (≠ 0) · 분리 = 연속 두 0 창의 둘째 창 끝 · 재접촉 = 계수 · 분리 뒤 창 초기화 (§13-3)",
+   "where": "ul_reader.py:separation",
+   "where_exists": true,
+   "witness": [
+    "ul_reader R6"
+   ]
+  },
+  {
+   "id": "timeout",
+   "rule": "측정 뒤 TIMEOUT = 유효 ρ + 실제 괄호 · 교차 전 = 정상 · 접촉 · 단조일 때만 하한 · 아니면 미식별 (§13-2)",
+   "where": "ul_reader.py:arm_verdict",
+   "where_exists": true,
+   "witness": [
+    "ul_reader R1"
+   ]
+  },
+  {
+   "id": "cancellation",
+   "rule": "교차 끝점 인장 합 ≥ 0.5 · P_meas · A → 상쇄 표지 · 처분 = 진단값 (순위 · 10 쌍 표 밖) · 접촉 상태 · 자격과 세 칸 (§13-3 Q2 (가))",
+   "where": "ul_reader.py:arm_verdict",
+   "where_exists": true,
+   "witness": [
+    "ul_reader R7"
+   ]
+  },
+  {
+   "id": "physical_windows",
+   "rule": "창 W(dt) = T_W / dt (T_W = dt₀ · 5,000) · 유지 · 이동 · 표본 · thermo = 물리 시간 — 생성된 덱에서 다시 계산 (§13-4)",
+   "where": "make_unload_decks.py:arm_numbers",
+   "where_exists": true,
+   "witness": [
+    "make_unload_decks GD6",
+    "ul_reader R9"
+   ]
+  },
+  {
+   "id": "s3_total_force",
+   "rule": "S3 = 입자별 총힘 ‖F_i‖ 합 ÷ (접촉 크기 합 + 무게) ≤ 1e-3 · 이중 가산 없음 · 결손 = NOT_COMPUTED (§12-2 · choice C1 · C2)",
+   "where": "ul_s3.py:s3_residual",
+   "where_exists": true,
+   "witness": [
+    "ul_s3 selftest"
+   ]
+  },
+  {
+   "id": "sigma_p",
+   "rule": "σ_P = k* 마지막 두 창 thermo 정규 줄 (ul_Ps) · ddof 1 · 최소 10 · NOISE_FLOOR = P_meas < 3 σ_P (choice C3)",
+   "where": "ul_observers.py:sigma_P",
+   "where_exists": true,
+   "witness": [
+    "ul_observers O1–O4b"
+   ]
+  },
+  {
+   "id": "resume_once",
+   "rule": "기계 실패 이어 돌림 = 마지막 restart_unload_* + 짝 상태 파일에서 한 번 · 두 번째 = 거부 (§4-4 · §13-1)",
+   "where": "run_unload.sh:screen_a2.txt",
+   "where_exists": true,
+   "witness": [
+    "ul_runner_test M7"
+   ]
+  }
+ ],
+ "forbidden": [],
+ "forbidden_rules": {
+  "old_b": "REG §13-5 ① — 옛 띠 b (2 δ_num + r_int) 판정 폐기 · 비단조 = 교차 괄호 합집합",
+  "simultaneous_UV": "REG §13-5 ② — 동시 UV 제출 폐기 · UB · UT · UC 먼저 → dt* 의 UV"
+ }
+}
