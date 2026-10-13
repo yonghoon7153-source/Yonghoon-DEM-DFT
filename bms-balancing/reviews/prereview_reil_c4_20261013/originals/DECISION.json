@@ -1,0 +1,112 @@
+{
+  "schema": "review-decision/v1",
+  "review_id": "REIL_C4_PREREVIEW_20261013",
+  "reviewer": "Codex",
+  "repository": "yonghoon7153-source/Yonghoon-DEM-DFT",
+  "branch": "claude/14-gate-code-review-9qkx05",
+  "frozen_commit": "6014b206935b7f1969ba617a1d41fd943925663e",
+  "scope": "Static prereview of C4 request and C6 environment path; C5 cost/resource/identity evidence only",
+  "decision": "MODIFICATION_CONDITIONAL_SUITABILITY_NO_EXECUTION_GO",
+  "c5_cost_evidence": "ACCEPTED_WITH_DOCUMENTED_LIMITS",
+  "c4_phase_structure": "ACCEPTED",
+  "c4_execution_counts_arithmetic": "ACCEPTED",
+  "old_c5_rerun_required": false,
+  "existing_c4_0_user_approval": "ACKNOWLEDGED_NOT_REVOKED; changed implementation/count scope requires user reconfirmation; environment blocked",
+  "environment_recommendation": "SEPARATE_BOUNDED_NEW_ENVIRONMENT_PREPARATION_THEN_DIFF_REVIEW_AND_SEAL_ADOPTION",
+  "environment_approval_draft": {
+    "approved": false,
+    "usable": false,
+    "requires_filled_paths_commands_test_tool_identity_and_diff_policy": true,
+    "proposed_attempts": 1,
+    "proposed_wall_limit_seconds": 1800,
+    "proposed_total_new_disk_bytes": 2000000000,
+    "emit_calls": 1,
+    "check_calls": 1,
+    "synthetic_cobyqa_calls_in_emit_and_check": 2,
+    "sobol_generation_path_executions": 2,
+    "adopt_seal_automatically": false
+  },
+  "findings": [
+    {
+      "id": "C4-N1",
+      "priority": "P1",
+      "status": "OPEN",
+      "topic": "New environment authority, actual emit/check operations, old-new evidence and adoption, test-tool identity"
+    },
+    {
+      "id": "C4-N2",
+      "priority": "P2",
+      "status": "OPEN_BEFORE_C4_REUSE",
+      "topic": "Late successful sampling hides monitoring gaps; query timing"
+    },
+    {
+      "id": "C4-N3",
+      "priority": "P2",
+      "status": "OPEN_BEFORE_C4_REUSE",
+      "topic": "Output scope/final size check and path-boundary dirty classification"
+    },
+    {
+      "id": "C4-N4",
+      "priority": "P2",
+      "status": "OPEN_DOCUMENT_CORRECTION",
+      "topic": "H3 rho threshold, registered fallback, Sobol16 seal/use12"
+    },
+    {
+      "id": "C4-N5",
+      "priority": "P2",
+      "status": "USER_RECONFIRMATION_REQUIRED",
+      "topic": "RED/GREEN counts and C4-ENV check reuse"
+    },
+    {
+      "id": "C4-N6",
+      "priority": "P2",
+      "status": "OPEN_ANNOTATION",
+      "topic": "Cost range, upper median, wall vs CPU, sampled RSS, output size and hash labels"
+    },
+    {
+      "id": "C4-N7",
+      "priority": "P2",
+      "status": "CLOSE_BEFORE_RESEARCH_EXECUTION_APPROVAL",
+      "topic": "Conditional cost extrapolation, excluded work, reserve and cost stopping rule"
+    }
+  ],
+  "preserved_boundaries": {
+    "C4_E_approved": false,
+    "C4_A_approved": false,
+    "C4_B_approved": false,
+    "data_opening_approved": false,
+    "fitting_approved": false,
+    "environment_install_approved_by_this_review": false,
+    "implementation_performed": false,
+    "scientific_result_interpretation": false,
+    "external_transmission": false
+  },
+  "performed": {
+    "readonly_document_source_and_evidence_review": true,
+    "cost_metadata_arithmetic": true,
+    "reviewer_artifact_writing_and_packaging": true,
+    "supplied_program_imports": 0,
+    "supplied_program_executions": 0,
+    "tests": 0,
+    "sobol_regenerations": 0,
+    "installations": 0,
+    "environment_rebuilds": 0,
+    "xlsx_pickle_notebook_opens": 0,
+    "COMSOL_JVM_native_calls": 0
+  },
+  "provenance_limits": [
+    "Remote current venv absence/Python3.11.17/disk26GB are submitter reports, not this reviewer's live OS measurements.",
+    "C5 bytes and recorded identities verified; no claim of retrospective independent OS audit.",
+    "C5 fit J/witness ranks/nominal distances/fit statuses are not summarized or interpreted.",
+    "A document review is not user execution authority."
+  ],
+  "artifacts": [
+    "REVIEW_KO.md",
+    "REQUEST_CORRECTIONS_KO.md",
+    "ENV_APPROVAL_DRAFT_KO.md",
+    "CLAUDE_REPLY_KO.md",
+    "C5_COST_AUDIT.json",
+    "SOURCE_INDEX.json",
+    "SOURCE_MANIFEST.json"
+  ]
+}

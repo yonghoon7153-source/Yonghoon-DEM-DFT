@@ -1,0 +1,52 @@
+{
+  "kind": "REVIEW_PACKAGE_MANIFEST",
+  "frozen_ref": "6014b206935b7f1969ba617a1d41fd943925663e",
+  "scope": "Review documents, cost-only derived audit, provenance and reviewer packaging utility. No raw fit results, notebooks, xlsx or pickle.",
+  "files": [
+    {
+      "path": "C5_COST_AUDIT.json",
+      "bytes": 149187,
+      "sha256": "07a77136ee1017c2ad5e2f64350b7e5e1f036a09432e0d2f29b03c603ca2e9f8"
+    },
+    {
+      "path": "CLAUDE_REPLY_KO.md",
+      "bytes": 3801,
+      "sha256": "d537e0cdb436aee1c2c1a335d9015b821b7733868fc1f4f19df7b51131d14d23"
+    },
+    {
+      "path": "DECISION.json",
+      "bytes": 4067,
+      "sha256": "0726b861f3110becdd713e169c5063f5f358e096b7eb3bf88c75babbb1f19d80"
+    },
+    {
+      "path": "ENV_APPROVAL_DRAFT_KO.md",
+      "bytes": 5788,
+      "sha256": "012c958427654447d519c7af82d390b7f0e6f36db90b04f71a9c9f758f8586a4"
+    },
+    {
+      "path": "REQUEST_CORRECTIONS_KO.md",
+      "bytes": 5372,
+      "sha256": "4ffd5515fffc479b4b9fe45363d07f961011a90b497f47adb4a3a5096ef345ed"
+    },
+    {
+      "path": "REVIEW_KO.md",
+      "bytes": 23376,
+      "sha256": "4a6f7596fa9a4ee3b34d2e7715f6af2c85571785ec00c1018408cef9e8e7348d"
+    },
+    {
+      "path": "SOURCE_INDEX.json",
+      "bytes": 5587,
+      "sha256": "497a285570b23137384f4011c5e48b8e883f333bf93285ce2e8013a6550ada4c"
+    },
+    {
+      "path": "SOURCE_MANIFEST.json",
+      "bytes": 10835,
+      "sha256": "ce1bdfa06c803dde43eb87427b94e7a97f78da5d44e364eb4fc45542ffe363f4"
+    },
+    {
+      "path": "package_review.py",
+      "bytes": 4665,
+      "sha256": "c58cd5bd714dd060836cc5fd4203fe01e699975f254279f166af12004fbfe358"
+    }
+  ]
+}
