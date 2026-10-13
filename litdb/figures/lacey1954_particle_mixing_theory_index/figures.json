@@ -1,0 +1,276 @@
+{
+ "slug": "lacey1954_particle_mixing_theory_index",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-10-13",
+ "sources": [
+  "8975f2be-30._Developments_in_the_theory_of_particle_mixing.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 2,
+   "file": "fig_1.png",
+   "caption": "FIG. 1. Flow of materials in a simple barrel-mixer",
+   "rotated_deg": 0,
+   "bbox": [
+    86,
+    84,
+    164,
+    167
+   ],
+   "w": 326,
+   "h": 346,
+   "dpi": 300,
+   "src": "8975f2be-30._Developments_in_the_theory_of_particle_mixing.pdf",
+   "blank": 0.903,
+   "recrop": "2026-10-13 손 크롭 — 쪽 전체 스캔 (300 dpi) 에서 그림 영역만 (캡션 제외) · 300 dpi = 원 스캔 해상도",
+   "viewed": true
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 4,
+   "file": "fig_2.png",
+   "caption": "FIG. 2. Effect of sample size on analysis of convective mixing",
+   "rotated_deg": 0,
+   "bbox": [
+    203,
+    332,
+    356,
+    430.5
+   ],
+   "w": 639,
+   "h": 411,
+   "dpi": 300,
+   "src": "8975f2be-30._Developments_in_the_theory_of_particle_mixing.pdf",
+   "blank": 0.916,
+   "recrop": "2026-10-13 손 크롭 — 쪽 전체 스캔 (300 dpi) 에서 그림 영역만 (캡션 제외) · 300 dpi = 원 스캔 해상도",
+   "viewed": true
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 5,
+   "file": "fig_3.png",
+   "caption": "FIG. 3. Rate of attainment of complete mixing",
+   "rotated_deg": 0,
+   "bbox": [
+    199,
+    222,
+    350,
+    320.5
+   ],
+   "w": 630,
+   "h": 411,
+   "dpi": 300,
+   "src": "8975f2be-30._Developments_in_the_theory_of_particle_mixing.pdf",
+   "blank": 0.957,
+   "recrop": "2026-10-13 손 크롭 — 쪽 전체 스캔 (300 dpi) 에서 그림 영역만 (캡션 제외) · 300 dpi = 원 스캔 해상도",
+   "viewed": true
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 6,
+   "file": "fig_4.png",
+   "caption": "FIG. 4. Logarithmic plot of Brothman's equation",
+   "rotated_deg": 0,
+   "bbox": [
+    185,
+    158,
+    373,
+    275.5
+   ],
+   "w": 785,
+   "h": 490,
+   "dpi": 300,
+   "src": "8975f2be-30._Developments_in_the_theory_of_particle_mixing.pdf",
+   "blank": 0.927,
+   "recrop": "2026-10-13 손 크롭 — 쪽 전체 스캔 (300 dpi) 에서 그림 영역만 (캡션 제외) · 300 dpi = 원 스캔 해상도",
+   "viewed": true
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 7,
+   "file": "fig_5.png",
+   "caption": "FIG. 5. Typical plot of Coulson & Maitra's results",
+   "rotated_deg": 0,
+   "bbox": [
+    76,
+    276,
+    227,
+    394
+   ],
+   "w": 630,
+   "h": 492,
+   "dpi": 300,
+   "src": "8975f2be-30._Developments_in_the_theory_of_particle_mixing.pdf",
+   "blank": 0.962,
+   "recrop": "2026-10-13 손 크롭 — 쪽 전체 스캔 (300 dpi) 에서 그림 영역만 (캡션 제외) · 300 dpi = 원 스캔 해상도",
+   "viewed": true
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 7,
+   "file": "fig_6.png",
+   "caption": "FIG. 6. Logarithmic plot of Blumberg & Maritz' results",
+   "rotated_deg": 0,
+   "bbox": [
+    289,
+    255,
+    479,
+    411.5
+   ],
+   "w": 792,
+   "h": 653,
+   "dpi": 300,
+   "src": "8975f2be-30._Developments_in_the_theory_of_particle_mixing.pdf",
+   "blank": 0.946,
+   "recrop": "2026-10-13 손 크롭 — 쪽 전체 스캔 (300 dpi) 에서 그림 영역만 (캡션 제외) · 300 dpi = 원 스캔 해상도",
+   "viewed": true
+  },
+  {
+   "key": "f7",
+   "kind": "figure",
+   "label": "7",
+   "page": 8,
+   "file": "fig_7.png",
+   "caption": "FIG. 7. Barrel mixer with pure diffusive mixing",
+   "rotated_deg": 0,
+   "bbox": [
+    184,
+    419,
+    371,
+    486
+   ],
+   "w": 780,
+   "h": 280,
+   "dpi": 300,
+   "src": "8975f2be-30._Developments_in_the_theory_of_particle_mixing.pdf",
+   "blank": 0.901,
+   "recrop": "2026-10-13 손 크롭 — 쪽 전체 스캔 (300 dpi) 에서 그림 영역만 (캡션 제외) · 300 dpi = 원 스캔 해상도",
+   "viewed": true
+  },
+  {
+   "key": "f8",
+   "kind": "figure",
+   "label": "8",
+   "page": 9,
+   "file": "fig_8.png",
+   "caption": "FIG. 8. Initial state (FIGS. 8, 9 and 10. Distribution of concentration, p, of 'black' particles along a mixer during pure diffusive mixing)",
+   "rotated_deg": 0,
+   "bbox": [
+    78,
+    277,
+    266,
+    385
+   ],
+   "w": 784,
+   "h": 451,
+   "dpi": 300,
+   "src": "8975f2be-30._Developments_in_the_theory_of_particle_mixing.pdf",
+   "blank": 0.966,
+   "recrop": "2026-10-13 손 크롭 — 쪽 전체 스캔 (300 dpi) 에서 그림 영역만 (캡션 제외) · 300 dpi = 원 스캔 해상도",
+   "viewed": true
+  },
+  {
+   "key": "f9",
+   "kind": "figure",
+   "label": "9",
+   "page": 9,
+   "file": "fig_9.png",
+   "caption": "FIG. 9. Final state (FIGS. 8, 9 and 10. Distribution of concentration, p, of 'black' particles along a mixer during pure diffusive mixing)",
+   "rotated_deg": 0,
+   "bbox": [
+    292,
+    285,
+    482,
+    386.5
+   ],
+   "w": 793,
+   "h": 424,
+   "dpi": 300,
+   "src": "8975f2be-30._Developments_in_the_theory_of_particle_mixing.pdf",
+   "blank": 0.972,
+   "recrop": "2026-10-13 손 크롭 — 쪽 전체 스캔 (300 dpi) 에서 그림 영역만 (캡션 제외) · 300 dpi = 원 스캔 해상도",
+   "viewed": true
+  },
+  {
+   "key": "f10",
+   "kind": "figure",
+   "label": "10",
+   "page": 9,
+   "file": "fig_10.png",
+   "caption": "FIG. 10. Complete plot (FIGS. 8, 9 and 10. Distribution of concentration, p, of 'black' particles along a mixer during pure diffusive mixing)",
+   "rotated_deg": 0,
+   "bbox": [
+    183,
+    409,
+    372,
+    511.5
+   ],
+   "w": 788,
+   "h": 428,
+   "dpi": 300,
+   "src": "8975f2be-30._Developments_in_the_theory_of_particle_mixing.pdf",
+   "blank": 0.925,
+   "recrop": "2026-10-13 손 크롭 — 쪽 전체 스캔 (300 dpi) 에서 그림 영역만 (캡션 제외) · 300 dpi = 원 스캔 해상도",
+   "viewed": true
+  },
+  {
+   "key": "f11",
+   "kind": "figure",
+   "label": "11",
+   "page": 10,
+   "file": "fig_11.png",
+   "caption": "FIG. 11. Logarithmic plot of sample variance against time, with various proportions (P) of black particles",
+   "rotated_deg": 0,
+   "bbox": [
+    75,
+    238.5,
+    259,
+    531
+   ],
+   "w": 768,
+   "h": 1220,
+   "dpi": 300,
+   "src": "8975f2be-30._Developments_in_the_theory_of_particle_mixing.pdf",
+   "blank": 0.917,
+   "recrop": "2026-10-13 손 크롭 — 쪽 전체 스캔 (300 dpi) 에서 그림 영역만 (캡션 제외) · 300 dpi = 원 스캔 해상도",
+   "viewed": true
+  },
+  {
+   "key": "f12",
+   "kind": "figure",
+   "label": "12",
+   "page": 10,
+   "file": "fig_12.png",
+   "caption": "FIG. 12. As for Fig. 11, with 'corrected' variance plotted, showing the elimination of the effect of P except in the transients",
+   "rotated_deg": 0,
+   "bbox": [
+    286,
+    269.5,
+    478,
+    507.5
+   ],
+   "w": 801,
+   "h": 993,
+   "dpi": 300,
+   "src": "8975f2be-30._Developments_in_the_theory_of_particle_mixing.pdf",
+   "blank": 0.954,
+   "recrop": "2026-10-13 손 크롭 — 쪽 전체 스캔 (300 dpi) 에서 그림 영역만 (캡션 제외) · 300 dpi = 원 스캔 해상도",
+   "viewed": true
+  }
+ ],
+ "missing_labels": []
+}

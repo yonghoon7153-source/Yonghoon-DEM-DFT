@@ -45,7 +45,7 @@
 |---|---|---|---|---|
 | J.A. Hersey (Victorian College of Pharmacy, Australia) | *Powder Technol.* 11 (1975) 41–44 | [미확인] (PII 0032-5910(75)80021-0, PDF 메타데이터) | 가상의 예: 미분 d = 5 × 10⁻⁴ cm (5 µm) 1 wt% · 운반체 D = 5 × 10⁻² cm (500 µm) · 밀도 1.2 g cm⁻³ | **이론 · 개념** (실험 · 모사 없음) |
 
-> ★ **계보**: 제약 분체 (미량 약물 · 윤활제 혼합) 맥락.  저자 선행 = Hersey 1967 (*J. Pharm. Pharmacol. Suppl.* 19, 168S–176S — 혼합물 균질 평가, ref 11) · Hersey 1972 (*Australian J. Pharm. Sci.* NS1(3), 76–78 — 혼합 문제 피하기, ref 4).  균질 지수 = Buslik 1973 (*Powder Technol.* 7, 111–116, ref 12).  무작위 혼합 기준의 예 = **Lacey 1954** (ref 8 — 같은 날 카드 후보 #30) · Ashton & Valentin 1966 (ref 9) · Stange 1954 (ref 10).
+> ★ **계보**: 제약 분체 (미량 약물 · 윤활제 혼합) 맥락.  저자 선행 = Hersey 1967 (*J. Pharm. Pharmacol. Suppl.* 19, 168S–176S — 혼합물 균질 평가, ref 11) · Hersey 1972 (*Australian J. Pharm. Sci.* NS1(3), 76–78 — 혼합 문제 피하기, ref 4).  균질 지수 = Buslik 1973 (*Powder Technol.* 7, 111–116, ref 12).  무작위 혼합 기준의 예 = **Lacey 1954** (ref 8 — [`lacey1954_particle_mixing_theory_index`](lacey1954_particle_mixing_theory_index.md)) · Ashton & Valentin 1966 (ref 9) · Stange 1954 (ref 10).
 > ★ 용어 주의: 이 논문이 쓰는 말은 *"cohesive, interacting particulate systems"* 와 *"ordered mixing"* 이다 — **'interactive mixing' 이라는 이름은 이 논문에 없다**.  논지 §2-5 · §6 의 *"상호작용 (ordered/interactive) 혼합"* 표기 중 'interactive' 쪽 근거는 이 카드로 닫히지 않는다 — 같은 날 카드 [`pfeffer2001_dry_particle_coating_engineered_particulates`](pfeffer2001_dry_particle_coating_engineered_particulates.md) 가 'regimented · interactive mix' 를 **Orr [20–22]** 에 귀속한다 (2 차 귀속 · Orr 원문 [미확인]).
 
 ## 3. 핵심 수치 · 식 (★ 전부 쪽 · 표지 병기)
@@ -179,7 +179,7 @@
 7. **1975 년 제약 맥락** — 배터리 복합양극 (압축 · 이온 경로) 으로의 확장은 우리 추론.
 8. **"더 균질" 의 범위** — SUMMARY 는 *"frequently more homogenous"* · 본문 비교는 **완전 정렬 · 평형** 단위체를 가정한 H_i 경계와 무작위 계의 비교다.  불완전 정렬 (부족 · 과잉 · 비평형) 의 H_i 는 다루지 않는다 (과잉은 "복잡하다" 고만 적는다).
 9. **포화 f 는 정의값** — 예시의 f = 0.25 는 1 wt% 를 포화 (평형) 로 **두고** 거꾸로 푼 값이다.  실제 포화 분율의 측정 · 예측 방법은 없다.
-10. **참고문헌 8 (Lacey) 의 학술지 표기** — 원문 목록은 *"J. Appl. Chem. Biotechnol., Lond., 4 (1954)"* 로 적는다 (그대로 옮김).  같은 날 받은 Lacey 원저 PDF 의 메타데이터는 *"Journal of Applied Chemistry 1954"* — 학술지 이름 대조는 그 카드 (#30) 에서.
+10. **참고문헌 8 (Lacey) 의 학술지 표기** — 원문 목록은 *"J. Appl. Chem. Biotechnol., Lond., 4 (1954)"* 로 적는다 (그대로 옮김).  Lacey 원저 PDF 의 쪽 표기는 *"J. appl. Chem., 4, May, 1954"* — 'Biotechnol.' 은 원저에 없다 ([`lacey1954_particle_mixing_theory_index`](lacey1954_particle_mixing_theory_index.md) §10 항목 6).
 
 ## 11. 참고문헌 — 우리가 더 볼 것 (원문 목록 서지 그대로 + 이유 한 줄)
 
@@ -189,7 +189,7 @@
 | 4 | J.A. Hersey, Avoiding powder mixing problems, Australian J. Pharm. Sci., NS1(3) (1972) 76–78 | 정렬 혼합의 관찰 근거 (저자 선행) — 카드 없음 |
 | 5 · 6 | D.J. Craik, The flow properties of starch powders and mixtures, J. Pharm. Pharmacol., 10 (1958) 73–79 · D.J. Craik and B.F. Miller, The flow properties of powders under humid conditions, J. Pharm. Pharmacol., Suppl., 10 (1958) 136T–142T | 안식각 근거 (미분 접착이 계 성질을 바꾼다) — 카드 없음 |
 | 7 | T.M. Jones and N. Pilpel, Some physical properties of lactose and magnesia, J. Pharm. Pharmacol., 17 (1965) 440–448 | 식 (2) 의 출처 — 카드 없음 |
-| 8 | P.M.C. Lacey, Development in the theory of particle mixing, J. Appl. Chem. Biotechnol., Lond., 4 (1954) 257–268 | **Lacey 원저** — 같은 날 카드 후보 (#30) |
+| 8 | P.M.C. Lacey, Development in the theory of particle mixing, J. Appl. Chem. Biotechnol., Lond., 4 (1954) 257–268 | ✅ [`lacey1954_particle_mixing_theory_index`](lacey1954_particle_mixing_theory_index.md) (⚠ 원저 쪽 표기 = *J. appl. Chem.*) |
 | 11 | J.A. Hersey, The assessment of homogeneity in powder mixtures, J. Pharm. Pharmacol., Suppl., 19 (1967) 168S–176S | 요구 균질도 기준 — 카드 없음 |
 | 12 | D. Buslik, A proposed universal homogeneity and mixing index, Powder Technol., 7 (1973) 111–116 | 균질 지수 H_i — 카드 없음 |
 | 13 | J.M. Coulson and N.K. Maitra, The mixing of solid particles, Ind. Chem. Mfr., 26 (1950) 55–60 | 1 차 혼합 속도 — 카드 없음 |

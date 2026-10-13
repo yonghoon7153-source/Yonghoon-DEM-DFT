@@ -1,0 +1,15 @@
+# lacey1954_particle_mixing_theory_index — 손 판독 (2026-10-13). 크롭 = 같은 폴더 fig_*.png (쪽 스캔 300 dpi 그대로).
+# 목적 = 그림 11 · 12 (확산 이론 계산 곡선) 가 식 (19) 와 맞는지 대조. 판독 정밀도 ±0.03 (세로축 1 칸 = 229 px · 가로 0.05 = 196 px, 판독용 확대 기준).
+# theory 열 = 우리 산술: -log10 s^2 = -log10[(2/pi^2) e^(-2 pi^2 T) sin^2(P pi)] (식 19) · 그림 12 = -log10 s_c^2 = 0.693 + 8.573 T.
+figure,panel,series,x,x_unit,y,y_unit,printed,note
+11,-,P = 0.01 (right end),0.15,T,4.99,-log10 s^2,no,theory 4.985
+11,-,P = 0.01 dashed extrapolation,0,T,3.72,-log10 s^2,no,theory 3.699 (q = 1 항만)
+11,-,P = 0.025 (right end),0.15,T,4.19,-log10 s^2,no,theory 4.190
+11,-,P = 0.05 (right end),0.15,T,3.57,-log10 s^2,no,theory 3.590
+11,-,P = 0.1 (right end),0.15,T,3.0,-log10 s^2,no,theory 2.999
+11,-,P = 0.25 (right end),0.15,T,2.23,-log10 s^2,no,theory 2.280
+11,-,P = 0.5 (right end),0.15,T,1.98,-log10 s^2,no,theory 1.979
+11,-,P = 0.5,0.10,T,1.55,-log10 s^2,no,theory 1.551
+12,-,lines merge (corrected variance),0.05,T,1.12,-log10 s_c^2,no,theory 1.122
+12,-,straight line,0.10,T,1.57,-log10 s_c^2,no,theory 1.551
+6,-,-log10 phi asymptote (Blumberg & Maritz),300,s,-1.0,-log10 phi,no,그림 라벨 s_r^2 = 10 (phi 단위 = 2 sin^-1 sqrt(P) 변환의 분산)

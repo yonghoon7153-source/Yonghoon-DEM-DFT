@@ -201,7 +201,7 @@ DEM (입자 동역학) + 실험 — 우리 쪽 반쪽은 **믹서 DEM 의 점착
 | 24 | O.R. Walton, R.L. Braun, Viscosity, granular-temperature, and stress calculations for shearing assemblies of inelastic, frictional disks, J. Rheol. 30 (1986) 949–980. | 접선 모델 — 카드 없음 |
 | 27 | G. Lian, C. Thornton, M.J. Adams, A theoretical study of liquid bridge forces between two rigid spherical bodies, J. Colloid Interface Sci. 161 (1993) 138–147. | 다리 힘 · 파단 거리 — 카드 없음 |
 | 35 | R.A. Bagnold, Experiments on a gravity-free dispersion of large solid spheres in a Newtonian fluid under shear, Proc. R. Soc. 225 (1954) 4–63. | 충돌력 원전 — 카드 없음 |
-| 41 | P.M. Lacey, Developments in the theory of particle mixing, J. Appl. Chem. 4 (1954) 257–268. | Lacey 원저 — 같은 날 카드 후보 (#30) |
+| 41 | P.M. Lacey, Developments in the theory of particle mixing, J. Appl. Chem. 4 (1954) 257–268. | ✅ [`lacey1954_particle_mixing_theory_index`](lacey1954_particle_mixing_theory_index.md) |
 | 42 | J.F. Gilchrist, D.V. Khakhar, J.J. McCarthy, J.M. Ottino, Chaotic mixing of granular materials in two-dimensional tumbling mixers, Chaos 9 (1999) 195–205. | δ/R_t ≈ 0.03 의 출처 — 카드 없음 |
 | 44 | J.A. Hersey, Ordered mixing: a new concept in powder mixing practice, Powder Technol. 11 (1975) 149–153. | ✅ [`hersey1975_ordered_mixing_concept`](hersey1975_ordered_mixing_concept.md) (⚠ 쪽 41–44 — §10 항목 5) |
 
