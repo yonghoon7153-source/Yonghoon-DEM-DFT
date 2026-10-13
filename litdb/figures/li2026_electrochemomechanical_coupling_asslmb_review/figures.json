@@ -1,0 +1,370 @@
+{
+ "slug": "li2026_electrochemomechanical_coupling_asslmb_review",
+ "dpi": 300,
+ "generated": "2026-10-13",
+ "sources": [
+  "31._Electro-Chemo-Mechanical_Coupling_in_All-Solid-State_Lithium_Metal_Batteries_From_Stress_Generation_to_Failure_Mitigation.pdf"
+ ],
+ "method": "수동 크롭 (PyMuPDF clip 렌더 300 dpi) — 그림 = 임베드 래스터 (여러 띠로 쪼개진 그림은 띠 합집합) bbox 그대로 · 표 = 텍스트 표 (제목 ~ 아래 괘선/Note). 캡션 = PDF 텍스트 층 (다음 쪽으로 이어진 캡션 3 개 = Fig. 3 · 4 · 12 는 이어 붙임).",
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 3,
+   "file": "fig_1.png",
+   "caption": "Figure 1. Electro-chemo-mechanical coupling and interfacial failure in ASSLMBs.",
+   "rotated_deg": 0,
+   "bbox": [
+    170.5,
+    237.5,
+    489.3,
+    557.5
+   ],
+   "w": 1329,
+   "h": 1334,
+   "dpi": 300,
+   "src": "31._Electro-Chemo-Mechanical_Coupling_in_All-Solid-State_Lithium_Metal_Batteries_From_Stress_Generation_to_Failure_Mitigation.pdf",
+   "viewed": true,
+   "crop_note": "임베드 래스터 (여러 띠면 합집합) bbox 그대로"
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 6,
+   "file": "fig_2.png",
+   "caption": "Figure 2. Chemo-mechanical origins of stress evolution in ASSLMBs. (a–c) Structural evolution and stress generation in cathode materials during lithiation/delithiation, including compositiondependent lattice changes, particle cracking induced by anisotropic deformation, and different stress-evolution pathways associated with cathode volume changes. (a) Reproduced with permission from Ref. [30]. Copyright 2017 American Chemical Society. (b) Reproduced from Ref. [44] under the terms of the CC BY-NC-ND 4.0 license. Copyright 2021, Wiley-VCH GmbH. (c) Adapted from Ref. [49]. Copyright 2023 ASME. (d,e) Chemo-mechanical interactions within composite cathodes, showing stress development at the cathode/SE interface and the effect of cathode loading on local stress distribution and stress concentration. (d) Reproduced with permission from Ref. [50]. Copyright 2023 American Chemical Society. (e) Reproduced with permission from Ref. [51]. Copyright 2025 American Chemical Society. (f,g) Stress evolution associated with Li plating and stripping, including heterogeneous Li deposition, stripping-induced interfacial void formation, and the accumulation of residual strain during repeated cycling. (g) Reproduced from Ref. [52] under the CC BY-NC 3.0 license. Copyright 2025, the authors. Published by the Royal Society of Chemistry. (h–k) Effects of external stack pressure and solid–solid contact mechanics, illustrating pressure-dependent interfacial behavior, the evolution of microscopic contact regions, and Li creep-mediated redistribution of interfacial contact stress. (h) Reproduced with permission from Ref. [53]. Copyright 2024 Wiley-VCH GmbH. (i) Reproduced with permission from Ref. [54]. Copyright 2025 Elsevier B.V. (j) Reproduced from Ref. [55] under the CC BY-NC 4.0 license. Copyright 2025 ASME. (k) Reproduced from Ref. [56] under the CC BY-NC-ND license. Copyright 2020, the authors. Published by Elsevier Inc.",
+   "rotated_deg": 0,
+   "bbox": [
+    168.5,
+    169.2,
+    541.9,
+    429.2
+   ],
+   "w": 1556,
+   "h": 1084,
+   "dpi": 300,
+   "src": "31._Electro-Chemo-Mechanical_Coupling_in_All-Solid-State_Lithium_Metal_Batteries_From_Stress_Generation_to_Failure_Mitigation.pdf",
+   "viewed": true,
+   "crop_note": "임베드 래스터 (여러 띠면 합집합) bbox 그대로"
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 14,
+   "file": "fig_3.png",
+   "caption": "Figure 3. Effects of stress on electrochemical behavior in ASSLMBs. (a–c) Cathode-side electrochemo-mechanical effects, including particle-size-dependent Li-ion diffusion and impedance response, differences in cycling stability and Li-ion diffusion pathways between single-crystalline and polycrystalline NCM, and the coupling among particle cracking, reaction heterogeneity, and loss of ionic contact in composite cathodes. (a,b) Reproduced from Ref. [108] under the CC BY 4.0 license. Copyright 2021, the authors. Published by IOP Publishing on behalf of The Electrochemical Society. (c) Reproduced from Ref. [109] under the CC BY 4.0 license. Copyright 2025, the authors. (d–g) Stress-mediated Li plating and stripping at the Li/SE interface, showing stress concentration near Li-filled defects, the dependence of crack propagation on defect size and deposition overpotential, vacancy accumulation and void formation during stripping, and the resulting current focusing at the remaining contact regions. (d) Reproduced from Ref. [110] under the CC BY 4.0 license. Copyright 2024, the authors. Published by Elsevier B.V. (e) Reproduced with permission from Ref. [111]. Copyright 2017 Wiley-VCH GmbH. (f,g) Reproduced from Ref. [112] under the CC BY-NC-ND 4.0 license. Copyright 2020, the authors. Published by Elsevier Inc. (h,i) Effects of external mechanical loading on Li/SE interfacial behavior, illustrating the pressure-dependent transition between unstable and stable cycling and the reduction in interfacial resistance with increasing mechanical load through improved solid–solid contact. (h) Reproduced with permission from Ref. [113]. Copyright 2019 Elsevier Inc. (i) Reproduced with permission from Ref. [114]. Copyright 2019 American Chemical Society. (j,k) Interfacial evolution under electro-chemo-mechanical coupling, highlighting the roles of mechanical properties, fracture resistance, and interfacial adhesion in governing contact stability, together with the multistage evolution from relatively uniform Li deposition to stress accumulation, void formation, localized Li growth, and eventual cell failure. (j) Adapted from Ref. [7]. Copyright 2019 Springer Nature Limited. (k) Reproduced with permission from Ref. [115]. Copyright 2024 Elsevier B.V.",
+   "rotated_deg": 0,
+   "bbox": [
+    54.9,
+    73.9,
+    540.3,
+    662.7
+   ],
+   "w": 2024,
+   "h": 2455,
+   "dpi": 300,
+   "src": "31._Electro-Chemo-Mechanical_Coupling_in_All-Solid-State_Lithium_Metal_Batteries_From_Stress_Generation_to_Failure_Mitigation.pdf",
+   "viewed": true,
+   "crop_note": "임베드 래스터 (여러 띠면 합집합) bbox 그대로"
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 22,
+   "file": "fig_4.png",
+   "caption": "Figure 4. Electro-chemo-mechanical degradation and failure mechanisms in composite cathodes of ASSLMBs. (a–e) Experimentally observed mechanical degradation of solid-state batteries and composite cathodes during electrochemical cycling, including cycling-induced electrode deformation, cell bending and edge cracking caused by electrode-volume mismatch, and progressive loss of solid– solid contact around cathode particles. (a,b) Reproduced with permission from Ref. [119]. Copyright 2017 American Chemical Society. (c,d) Reproduced with permission from Ref. [127]. Copyright 2017 The Royal Society of Chemistry. (e) Reproduced from Ref. [118] under the CC BY-NC 3.0 license. Copyright 2020, the authors. Published by the Royal Society of Chemistry. (f,g) Mechanics of cathode particle/SE interfacial debonding, illustrating the idealized composite-electrode microstructure and the dependence of critical particle-volume contraction for debonding on interfacial fracture energy and SE stiffness. (f,g) Reproduced with permission from Ref. [128]. Copyright 2018 American Physical Society. (h,i) Influence of mechanical constraint imposed by the SE on cathode-particle fracture, showing the transition from predominantly radial opening-mode cracking under weak constraint to mixed-mode fracture involving radial and circumferential cracking and grain-boundary shear under solid-state confinement. (h) Reproduced with permission from Ref. [129]. Copyright 2021 Elsevier Ltd. (i) Reproduced from Ref. [120] under the CC BY 4.0 license. Copyright 2024, the authors. (j–l) Coupled electrochemical–mechanical modeling of cathode particle/SE interfacial failure, illustrating the 3D ASSLMB configuration, nonuniform interfacial debonding induced by cathode contraction during delithiation, and the influence of SE mechanical properties on stress accumulation, crack initiation, and interfacial separation. (j–l) Reproduced with permission from Ref. [130]. Copyright 2025 Elsevier B.V.",
+   "rotated_deg": 0,
+   "bbox": [
+    47.1,
+    114.2,
+    547.4,
+    553.5
+   ],
+   "w": 2085,
+   "h": 1832,
+   "dpi": 300,
+   "src": "31._Electro-Chemo-Mechanical_Coupling_in_All-Solid-State_Lithium_Metal_Batteries_From_Stress_Generation_to_Failure_Mitigation.pdf",
+   "viewed": true,
+   "crop_note": "임베드 래스터 (여러 띠면 합집합) bbox 그대로"
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 26,
+   "file": "fig_5.png",
+   "caption": "Figure 5. Li-dendrite growth and SE penetration mechanisms in ASSLMBs. (a–c) Representative Li-filament nucleation and propagation pathways in SEs, including defect-assisted Li deposition and crack initiation from subsurface pores or interfacial defects, preferential Li propagation along grain boundaries and pore networks, and Li nucleation within the bulk electrolyte associated with local electronic leakage and electrochemical heterogeneity. (a) Reproduced with permission from Ref. [131]. Copyright 2023, the authors, under exclusive licence to Springer Nature Limited. (b) Reproduced with permission from Ref. [132]. Copyright 2017 Elsevier Ltd. (c) Reproduced with permission from Ref. [111]. Copyright 2017 Wiley-VCH GmbH. (d–f) Atomic-scale mechanisms of mechanically driven Li penetration through crystalline SEs, showing stress accumulation and crack propagation ahead of Li-filled defects in single-crystalline LLZO, preferential filament deflection and propagation along grain boundaries in polycrystalline LLZO, and Li-concentration-dependent fracture behavior associated with local structural reconstruction and crack-tip toughening. (d–f) Reproduced from Ref. [133] under the CC BY-NC-ND 4.0 license. Copyright 2025, the authors. (g) Progressive electrochemo-mechanical degradation of a Li/LAGP interface, illustrating the evolution from an initially intact electrolyte to radial and circumferential crack networks during cycling and the associated increase in interfacial resistance. (g) Reproduced with permission from Ref. [134]. Copyright 2019 American Chemical Society. (h–j) Operando visualization of Li penetration through ceramic SEs, showing Li nucleation at surface defects, subsequent branched filament propagation through the electrolyte, and eventual formation of a continuous penetration pathway leading to internal short circuit. (h–j) Reproduced from Ref. [112] under the CC BY-NC-ND 4.0 license. Copyright 2020, the authors. Published by Elsevier Inc. (k) Defect-mediated Li-penetration mechanism involving dendrite-induced local stress, dislocation generation and accumulation near the filament tip, and their potential role in facilitating subsequent crack propagation. (k) Reproduced from Ref. [135] under the CC BY 4.0 license. Copyright 2024, the authors.",
+   "rotated_deg": 0,
+   "bbox": [
+    54.3,
+    113.6,
+    539.6,
+    441.7
+   ],
+   "w": 2023,
+   "h": 1368,
+   "dpi": 300,
+   "src": "31._Electro-Chemo-Mechanical_Coupling_in_All-Solid-State_Lithium_Metal_Batteries_From_Stress_Generation_to_Failure_Mitigation.pdf",
+   "viewed": true,
+   "crop_note": "임베드 래스터 (여러 띠면 합집합) bbox 그대로"
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 30,
+   "file": "fig_6.png",
+   "caption": "Figure 6. Electro-chemo-mechanical interfacial degradation in ASSLMBs. (a) Evolution of interfacial contact in Si-based composite electrodes, illustrating the role of a continuous 3D SE network in accommodating cycling-induced volume changes, suppressing debonding and void formation, and preserving ionic transport pathways. (a) Reproduced from Ref. [140] under the CC BY 4.0 license. Copyright 2024, the authors. (b–d) Contact-loss-induced degradation at the Li/SE interface, showing the evolution of microscopic contact regions and current constriction during Li stripping, the characteristic impedance response associated with decreasing real contact area, and the asymmetric contact evolution between Li plating and stripping under different current densities and stack pressures. (b) Reproduced from Ref. [55]. under the CC BY-NC 4.0 license. Copyright 2025 ASME. (c) Reproduced from Ref. [141] under the CC BY-NC-ND 4.0 license. Copyright 2022, the authors. Published by the American Chemical Society. (d) Reproduced from Ref. [142] under the terms of the CC BY 4.0 license. Copyright 2022, the authors. Published by Wiley-VCH GmbH. (e) Coupled morphological and mechanical evolution of the SEI during Li deposition, illustrating how nonuniform Li-ion flux induces localized Li growth and heterogeneous stress, ultimately leading to mechanical failure of the interfacial layer. (e) Reproduced with permission from Ref. [143]. Copyright 2020 Wiley-VCH Verlag GmbH & Co. KGaA, Weinheim.",
+   "rotated_deg": 0,
+   "bbox": [
+    49.0,
+    196.4,
+    545.5,
+    535.2
+   ],
+   "w": 2069,
+   "h": 1412,
+   "dpi": 300,
+   "src": "31._Electro-Chemo-Mechanical_Coupling_in_All-Solid-State_Lithium_Metal_Batteries_From_Stress_Generation_to_Failure_Mitigation.pdf",
+   "viewed": true,
+   "crop_note": "임베드 래스터 (여러 띠면 합집합) bbox 그대로"
+  },
+  {
+   "key": "f7",
+   "kind": "figure",
+   "label": "7",
+   "page": 34,
+   "file": "fig_7.png",
+   "caption": "Figure 7. Schematic overview of advanced characterization techniques for probing composite-cathode evolution, Li plating/stripping dynamics, and stress and mechanical behavior in ASSLMBs.",
+   "rotated_deg": 0,
+   "bbox": [
+    54.9,
+    72.8,
+    540.3,
+    367.5
+   ],
+   "w": 2024,
+   "h": 1229,
+   "dpi": 300,
+   "src": "31._Electro-Chemo-Mechanical_Coupling_in_All-Solid-State_Lithium_Metal_Batteries_From_Stress_Generation_to_Failure_Mitigation.pdf",
+   "viewed": true,
+   "crop_note": "임베드 래스터 (여러 띠면 합집합) bbox 그대로"
+  },
+  {
+   "key": "f8",
+   "kind": "figure",
+   "label": "8",
+   "page": 35,
+   "file": "fig_8.png",
+   "caption": "Figure 8. Advanced 3D characterization of structural and interfacial evolution in composite cathodes. (a,b) 3D reconstruction and quantitative microstructural analysis of composite cathodes with different SE particle sizes using plasma FIB–SEM tomography and synchrotron XCT, respectively, revealing the spatial distributions of cathode materials, SEs, and pores and the effects of SE particle size on porosity, interfacial contact, ionic-transport pathways, and electrode densification. (a) Reproduced from Ref. [172] under the CC BY 4.0 license. Copyright 2024, the authors. Published by IOP Publishing on behalf of The Electrochemical Society. (b) Reproduced from Ref. [173] under the CC BY-NC-ND 4.0 license. Copyright 2024, the authors. Published by Wiley-VCH GmbH. (c) Spatially resolved 3D XANES imaging of NCM/LPSC composite cathodes with different cathode loadings, correlating local Ni oxidation-state distributions with lithiation heterogeneity and revealing the relationship among cathode loading, microstructural degradation, local reaction nonuniformity, and electrochemical performance. (c) Reproduced with permission from Ref. [51]. Copyright 2025 American Chemical Society. (d) Full-field TXM reconstruction of cycled NCM811 particles, visualizing 3D internal cracking and particle fragmentation and quantifying crack-induced disruption of particle integrity and Li-ion transport pathways. (d) Reproduced from Ref. [109] under the CC BY-NC 4.0 license. Copyright 2025, the authors. Published by the American Association for the Advancement of Science.",
+   "rotated_deg": 0,
+   "bbox": [
+    55.2,
+    74.5,
+    540.5,
+    396.3
+   ],
+   "w": 2023,
+   "h": 1342,
+   "dpi": 300,
+   "src": "31._Electro-Chemo-Mechanical_Coupling_in_All-Solid-State_Lithium_Metal_Batteries_From_Stress_Generation_to_Failure_Mitigation.pdf",
+   "viewed": true,
+   "crop_note": "임베드 래스터 (여러 띠면 합집합) bbox 그대로"
+  },
+  {
+   "key": "f9",
+   "kind": "figure",
+   "label": "9",
+   "page": 38,
+   "file": "fig_9.png",
+   "caption": "Figure 9. Multiscale in situ and operando characterization of Li plating and penetration in ASSLMBs. (a) In situ SEM observation of Li-deposition-induced crack initiation and propagation in a Li/LPSC/Li cell, revealing the progressive development of a crack network, subsequent Li filling of the cracks, and the coupled evolution toward electrolyte penetration and short circuit. (a) Reproduced with permission from Ref. [176]. Copyright 2023 Elsevier Ltd.; and reproduced from Ref. [112] under the CC BY-NC-ND 4.0 license. Copyright 2020, the authors. Published by Elsevier Inc. (b1–b4) Direct visualization of Li penetration across complementary length scales: (b1,b2) operando OM combined with cross-sectional FIB–SEM analysis of an in-plane Li/LLZO configuration, resolving branched Li propagation and crack-assisted penetration through the ceramic electrolyte; and (b3,b4) crosssectional in situ TEM of a Li/LLZO/CC nanobattery, revealing mechanically confined Li accumulation, interfacial stress buildup, Li eruption, and associated crack formation in LLZO. (b1,b2) Reproduced from Ref. [112] under the CC BY-NC-ND 4.0 license. Copyright 2020, the authors. Published by Elsevier Inc. (b3,b4) Reproduced from Ref. [177] under the CC BY 4.0 license. Copyright 2022, the authors. (c) Operando 3D focal-variation microscopy of an anode-free Cu/LLZO/Li cell, correlating",
+   "rotated_deg": 0,
+   "bbox": [
+    51.1,
+    225.5,
+    543.9,
+    588.1
+   ],
+   "w": 2055,
+   "h": 1512,
+   "dpi": 300,
+   "src": "31._Electro-Chemo-Mechanical_Coupling_in_All-Solid-State_Lithium_Metal_Batteries_From_Stress_Generation_to_Failure_Mitigation.pdf",
+   "viewed": true,
+   "crop_note": "임베드 래스터 (여러 띠면 합집합) bbox 그대로"
+  },
+  {
+   "key": "f10",
+   "kind": "figure",
+   "label": "10",
+   "page": 41,
+   "file": "fig_10.png",
+   "caption": "Figure 10. Operando characterization of stress and mechanical evolution in ASSLMBs. (a,b) Operando stack-pressure monitoring of the cell-level mechanical response during electrochemical cycling, including the experimental configuration for simultaneous pressure and electrochemical measurements and representative pressure evolution associated with reaction-induced volume changes in different electrode materials and architectures. (a) Reproduced with permission from Ref. [180]. Copyright 2021 Elsevier Inc. (b1,b2) Reproduced with permission from Ref. [13]. Copyright 2018 The Royal Society of Chemistry. (c1,c2) Local interfacial stress measurement using an embedded FBG sensor, showing stress-induced splitting of the Bragg reflection into two polarized peaks and the corresponding reversible evolution of interfacial stress during electrochemical cycling. (c1,c2) Reproduced from Ref. [166] under the CC BY 4.0 license. Copyright 2022, the authors. (d1,d2) In situ optical-curvature measurement of stress generated during Li deposition, illustrating the conversion of substrate bending into the internal pressure of the growing Li layer and the abrupt mechanical response associated with SE cracking and Li penetration. (d1,d2) Reproduced with permission from Ref. [181]. Copyright 2022 Wiley-VCH GmbH. (e1,e2) Operando photoelastic visualization of dendrite-induced stress fields in a transparent SE, showing the experimental configuration for optical retardation measurements and the spatially resolved stress concentration around a propagating Li-dendrite tip. (e1,e2) Reproduced with permission from Ref. [147]. Copyright 2023 Elsevier Inc.",
+   "rotated_deg": 0,
+   "bbox": [
+    101.5,
+    127.6,
+    493.5,
+    546.3
+   ],
+   "w": 1635,
+   "h": 1746,
+   "dpi": 300,
+   "src": "31._Electro-Chemo-Mechanical_Coupling_in_All-Solid-State_Lithium_Metal_Batteries_From_Stress_Generation_to_Failure_Mitigation.pdf",
+   "viewed": true,
+   "crop_note": "임베드 래스터 (여러 띠면 합집합) bbox 그대로"
+  },
+  {
+   "key": "f11",
+   "kind": "figure",
+   "label": "11",
+   "page": 45,
+   "file": "fig_11.png",
+   "caption": "Figure 11. Cathode engineering strategies for mitigating electro-chemo-mechanical degradation in ASSLMBs. (a1,a2) Surface-coating strategy for stabilizing Ni-rich layered oxide cathodes, showing the improved cycling performance of LNO-coated NMC811 and the suppression of cycling-induced particle cracking, structural fragmentation, and reaction heterogeneity through simultaneous interfacial protection and mechanical reinforcement. (a1) Reproduced from Ref. [109] under the CC BY 4.0 license. Copyright 2025, the authors. Published by the American Association for the Advancement of Science. (a2) Reproduced with permission from Ref. [182]. Copyright 2023 Elsevier Ltd. (b1,b2) Mechanically compliant polymer-assisted composite-cathode design using a PVDF–PAN framework, illustrating homogenized Li-ion transport, accommodation of cycling-induced strain, improved structural integrity, and reduced interfacial resistance and polarization during prolonged cycling. (b1,b2) Reproduced with permission from Ref. [183]. Copyright 2023 Elsevier B.V. (c) Bimodal particle-size engineering of composite cathodes by combining large polycrystalline NCWA with small single-crystalline NCM particles, enabling denser particle packing, reduced porosity and ionic tortuosity, improved cathode/SE contact, and enhanced electrochemical kinetics and mechanical integrity. (c) Reproduced with permission from Ref. [184]. Copyright 2026 American Chemical Society. (d1–d6) Crystallographic texture engineering for active regulation of cathode stress, illustrating anisotropic lattice deformation of LCO during delithiation, orientation-dependent compressive and tensile pressure responses, tailoring of the magnitude and direction of electrode stress through controlled grain orientation, and improved cycling stability of stress-regulated ASSLMBs under low external stack pressure. (d1–d6) Reproduced from Ref. [185] under the CC BY-NC-ND 4.0 license. Copyright 2025, the authors.",
+   "rotated_deg": 0,
+   "bbox": [
+    92.4,
+    74.1,
+    503.1,
+    450.8
+   ],
+   "w": 1712,
+   "h": 1571,
+   "dpi": 300,
+   "src": "31._Electro-Chemo-Mechanical_Coupling_in_All-Solid-State_Lithium_Metal_Batteries_From_Stress_Generation_to_Failure_Mitigation.pdf",
+   "viewed": true,
+   "crop_note": "임베드 래스터 (여러 띠면 합집합) bbox 그대로"
+  },
+  {
+   "key": "f12",
+   "kind": "figure",
+   "label": "12",
+   "page": 48,
+   "file": "fig_12.png",
+   "caption": "Figure 12. Interfacial engineering strategies for mitigating electro-chemo-mechanical degradation in ASSLMBs. (a) Surface cleaning and reconstruction of garnet-type LLZO, illustrating the removal of LCO/LiOH surface contamination through wet polishing, high-temperature annealing, and Li preheating to improve Li wettability, restore intimate Li/LLZO contact, and reduce interfacial resistance. (a) Reproduced with permission from Ref. [187]. Copyright 2017 American Chemical Society. (b) Functional interface engineering within thick composite cathodes through transient-liquid-assisted densification, showing stress-driven redistribution and redeposition of soluble components into interparticle voids to form continuous secondary boundaries that enhance particle bonding, mechanical toughness, and 3D ion/electron transport. (b) Reproduced from Ref. [188] under the CC BY 4.0 license. Copyright 2025, the authors. (c1,c2) External stress engineering using a through-thickness temperature gradient across LLZTO, generating a residual compressive-stress field that reduces the Mode-I crack-driving force for Li-filled defects and thereby increases the critical current density and cycling stability against Li-dendrite penetration. (c1,c2) Reproduced with permission from Ref. [189]. Copyright 2025 Elsevier Inc. (d1–d4) Artificial interlayer strategies for stabilizing the Li/garnet interface, including the formation of a conductive LiySn/Li3N composite interface from a SnNx precursor and an ultrathin Li–Al alloy interlayer, both of which improve Li wettability, homogenize interfacial contact, and substantially reduce interfacial resistance. (d1,d2) Reproduced with permission from Ref. [190]. Copyright 2020 Wiley-VCH GmbH. (d3,d4) Reproduced from Ref. [191] under the CC BY-NC 4.0 license. Copyright 2017, the authors. Published by the American Association for the Advancement of Science. (e1–e4) Regulation of Li deposition microstructure using Au, Ag, and Bi interlayers, illustrating how interlayer chemistry modifies Li grain size, crystallographic texture, lattice strain, and grain-growth behavior, thereby providing an additional route to controlling electro-chemomechanical stability at the Li/SE interface. (e1–e4) Reproduced from Ref. [192] under the CC BY 3.0 license. Copyright 2026, the authors. Published by the Royal Society of Chemistry.",
+   "rotated_deg": 0,
+   "bbox": [
+    167.9,
+    279.5,
+    544.9,
+    670.2
+   ],
+   "w": 1572,
+   "h": 1629,
+   "dpi": 300,
+   "src": "31._Electro-Chemo-Mechanical_Coupling_in_All-Solid-State_Lithium_Metal_Batteries_From_Stress_Generation_to_Failure_Mitigation.pdf",
+   "viewed": true,
+   "crop_note": "임베드 래스터 (여러 띠면 합집합) bbox 그대로"
+  },
+  {
+   "key": "f13",
+   "kind": "figure",
+   "label": "13",
+   "page": 52,
+   "file": "fig_13.png",
+   "caption": "Figure 13. Multiscale electro-chemo-mechanical regulation strategies for mechanically robust ASSLMBs. (a1–a5) Self-healing polymer–electrolyte design based on a PNPU–PVDF–HFP network with reversible hydrogen bonding, illustrating enhanced mechanical strength and deformability, recovery of structural integrity after damage, improved Li-ion transport, and stable long-term Li plating/stripping enabled by simultaneous preservation of the mechanical framework and ionicconduction network. (a1–a5) Reproduced with permission from Ref. [194]. Copyright 2023 Wiley- VCH GmbH. (b1–b4) Chemically bonded self-healing polymer–ceramic composite electrolyte formed by covalently grafting dynamic polyurethane–urea chains onto Li7P3S11 particles, showing strengthened polymer/ceramic interfacial adhesion, homogeneous particle dispersion, RT self-healing and recovery of tensile deformability, and improved resistance to phase separation, interfacial debonding, and mechanical cracking. (b1–b4) Reproduced with permission from Ref. [195]. Copyright 2022 Elsevier B.V. (c1–c3) Stress regulation of Li deposition through compliant CCs and 3D deposition substrates, comparing stress-constrained Li growth on rigid Cu with stress-relieved deposition on Cu/PDMS and porous Cu@PDMS architectures, where substrate deformation and increased effective surface area redistribute deposition-induced compressive stress and local current density to promote more uniform Li nucleation and growth. (c1–c3) Adapted from Ref. [196]. Copyright 2018 Springer Nature Limited. (d1–d4) Cell-level mechanical regulation through geometrically flexible battery architectures, including helical, overlapping rigid–flexible, wrinkled/arched, and kirigami configurations that convert bending, twisting, stretching, and other macroscopic deformations into reversible geometric motion, thereby reducing strain accumulation in brittle active materials and critical interfaces while maintaining electrochemical functionality. (d1) Reproduced with permission from Ref. [197]. Copyright 2012 Wiley-VCH Verlag GmbH & Co. KGaA, Weinheim. (d2) Reproduced with permission from Ref. [198]. Copyright 2023 Wiley-VCH GmbH. (d3) Reproduced with permission from Ref. [199]. Copyright 2015 WILEY-VCH Verlag GmbH & Co. KGaA, Weinheim. (d4) Reproduced with permission from Ref. [200]. Copyright 2023 Elsevier B.V.",
+   "rotated_deg": 0,
+   "bbox": [
+    49.3,
+    73.7,
+    546.1,
+    370.8
+   ],
+   "w": 2071,
+   "h": 1238,
+   "dpi": 300,
+   "src": "31._Electro-Chemo-Mechanical_Coupling_in_All-Solid-State_Lithium_Metal_Batteries_From_Stress_Generation_to_Failure_Mitigation.pdf",
+   "viewed": true,
+   "crop_note": "임베드 래스터 (여러 띠면 합집합) bbox 그대로"
+  },
+  {
+   "key": "t1",
+   "kind": "table",
+   "label": "1",
+   "page": 4,
+   "file": "tab_1.png",
+   "caption": "Table 1. Origins of stress generation in ASSLMBs.",
+   "rotated_deg": 0,
+   "bbox": [
+    35.0,
+    139.5,
+    560.5,
+    305.5
+   ],
+   "w": 2191,
+   "h": 692,
+   "dpi": 300,
+   "src": "31._Electro-Chemo-Mechanical_Coupling_in_All-Solid-State_Lithium_Metal_Batteries_From_Stress_Generation_to_Failure_Mitigation.pdf",
+   "viewed": true,
+   "crop_note": "텍스트 표 — 제목 줄부터 아래 괘선 (Table 3 · 4 는 표 아래 Note 포함) + 2 pt"
+  },
+  {
+   "key": "t2",
+   "kind": "table",
+   "label": "2",
+   "page": 4,
+   "file": "tab_2.png",
+   "caption": "Table 2. Representative cathode materials and their electro-chemo-mechanical characteristics.",
+   "rotated_deg": 0,
+   "bbox": [
+    35.0,
+    571.0,
+    560.5,
+    765.5
+   ],
+   "w": 2191,
+   "h": 811,
+   "dpi": 300,
+   "src": "31._Electro-Chemo-Mechanical_Coupling_in_All-Solid-State_Lithium_Metal_Batteries_From_Stress_Generation_to_Failure_Mitigation.pdf",
+   "viewed": true,
+   "crop_note": "텍스트 표 — 제목 줄부터 아래 괘선 (Table 3 · 4 는 표 아래 Note 포함) + 2 pt"
+  },
+  {
+   "key": "t3",
+   "kind": "table",
+   "label": "3",
+   "page": 8,
+   "file": "tab_3.png",
+   "caption": "Table 3. RT ionic conductivity and mechanical properties of typical inorganic SEs.",
+   "rotated_deg": 0,
+   "bbox": [
+    35.0,
+    111.5,
+    560.5,
+    315.5
+   ],
+   "w": 2191,
+   "h": 851,
+   "dpi": 300,
+   "src": "31._Electro-Chemo-Mechanical_Coupling_in_All-Solid-State_Lithium_Metal_Batteries_From_Stress_Generation_to_Failure_Mitigation.pdf",
+   "viewed": true,
+   "crop_note": "텍스트 표 — 제목 줄부터 아래 괘선 (Table 3 · 4 는 표 아래 Note 포함) + 2 pt"
+  },
+  {
+   "key": "t4",
+   "kind": "table",
+   "label": "4",
+   "page": 33,
+   "file": "tab_4.png",
+   "caption": "Table 4. Comparison of representative characterization techniques for electro-chemo-mechanical behaviors in ASSLMBs.",
+   "rotated_deg": 0,
+   "bbox": [
+    34.0,
+    72.0,
+    808.0,
+    493.0
+   ],
+   "w": 3226,
+   "h": 1755,
+   "dpi": 300,
+   "src": "31._Electro-Chemo-Mechanical_Coupling_in_All-Solid-State_Lithium_Metal_Batteries_From_Stress_Generation_to_Failure_Mitigation.pdf",
+   "viewed": true,
+   "crop_note": "텍스트 표 — 제목 줄부터 아래 괘선 (Table 3 · 4 는 표 아래 Note 포함) + 2 pt · 가로 (landscape) 쪽"
+  }
+ ],
+ "missing_labels": [],
+ "note_manual": "2026-10-13 큐레이터 크롭 — 17 장 (Figure 1–13 · Table 1–4) · 접촉 시트로 전수 열람 · 캡션 목록 대조: 본문 Figure 1–13 · Table 1–4 = 17 = 크롭 17 (SI 없음). ⚠ 리뷰의 그림은 대부분 다른 논문 그림의 재수록 (캡션의 Reproduced/Adapted 출처 표기 참조)."
+}
