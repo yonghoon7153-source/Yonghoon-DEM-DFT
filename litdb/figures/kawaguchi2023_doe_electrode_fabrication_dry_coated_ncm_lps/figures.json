@@ -1,0 +1,482 @@
+{
+ "slug": "kawaguchi2023_doe_electrode_fabrication_dry_coated_ncm_lps",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-10-13",
+ "sources": [
+  "d9f5750a-26._Statistical_analysis_of_electrode_fabrication_process_for_all-solid-state_batteries_and_effects_of_electrode_fabrication_conditions_on_battery_performance.pdf",
+  "264c2375-26._Sup_Statistical_analysis_of_electrode_fabrication_process_for_all-solid-state_batteries_and_effects_of_electrode_fabrication_conditions_on_battery_performance.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 2,
+   "file": "fig_1.png",
+   "caption": "Fig. 1. SEM images of LiNi1/3Co1/3Mn1/3O2 (NCM) and Li3PS4 (LPS). Median diameters of NCM and LPS were 4.70 and 0.37 µm, respectively.",
+   "rotated_deg": 0,
+   "bbox": [
+    96.1,
+    66.9,
+    495.1,
+    191.9
+   ],
+   "w": 1663,
+   "h": 522,
+   "dpi": 300,
+   "src": "d9f5750a-26._Statistical_analysis_of_electrode_fabrication_process_for_all-solid-state_batteries_and_effects_of_electrode_fabrication_conditions_on_battery_performance.pdf",
+   "blank": 0.123,
+   "auto_bbox": [
+    31.6,
+    61.9,
+    563.6,
+    198.0
+   ],
+   "native_dpi": 300.0,
+   "caption_note": "텍스트 층의 'lm' = µm 글꼴 치환 (그림 축척 막대 = 1 µm)",
+   "recrop": "2026-10-13 래스터 원본 경계 (+1 pt) 로 다시 자름 · 원 해상도 그대로 (300.0 dpi · 축소 없음) — 자동 bbox 는 좌우 흰 여백 포함",
+   "viewed": true
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 2,
+   "file": "fig_2.png",
+   "caption": "Fig. 2. Schematic diagram of dry impact-blending device. (a) Front view and (b) side view.",
+   "rotated_deg": 0,
+   "bbox": [
+    67.8,
+    228.4,
+    523.4,
+    499.8
+   ],
+   "w": 1899,
+   "h": 1132,
+   "dpi": 300,
+   "src": "d9f5750a-26._Statistical_analysis_of_electrode_fabrication_process_for_all-solid-state_batteries_and_effects_of_electrode_fabrication_conditions_on_battery_performance.pdf",
+   "blank": 0.837,
+   "auto_bbox": [
+    31.6,
+    223.4,
+    563.6,
+    506.8
+   ],
+   "native_dpi": 300.0,
+   "recrop": "2026-10-13 래스터 원본 경계 (+1 pt) 로 다시 자름 · 원 해상도 그대로 (300.0 dpi · 축소 없음) — 자동 bbox 는 좌우 흰 여백 포함",
+   "viewed": true
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 4,
+   "file": "fig_3.png",
+   "caption": "Fig. 3. SEM and EDX images of the (a) simple mixture prepared through mortar-and-pestle mixing and (b) the dry-coated particles. (c) Number-based particle size distribution of each particle.",
+   "rotated_deg": 0,
+   "bbox": [
+    96.1,
+    236.3,
+    495.1,
+    731.1
+   ],
+   "w": 1663,
+   "h": 2063,
+   "dpi": 300,
+   "src": "d9f5750a-26._Statistical_analysis_of_electrode_fabrication_process_for_all-solid-state_batteries_and_effects_of_electrode_fabrication_conditions_on_battery_performance.pdf",
+   "blank": 0.62,
+   "auto_bbox": [
+    31.6,
+    231.3,
+    563.6,
+    738.1
+   ],
+   "native_dpi": 300.0,
+   "recrop": "2026-10-13 래스터 원본 경계 (+1 pt) 로 다시 자름 · 원 해상도 그대로 (300.0 dpi · 축소 없음) — 자동 bbox 는 좌우 흰 여백 포함",
+   "viewed": true
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 7,
+   "file": "fig_4.png",
+   "caption": "Fig. 4. Standardized partial regression coefficients for each dominant factor for (a) initial discharge capacity (Q1st), (b) resistance of solid electrolyte (Rs1st) and (c) charge transfer resistance of cathode layer after 1st cycle (Rct1st) in the simple mixture prepared by mortar-and-pestle mixing and (d) initial discharge capacity (Q1st), © resistance of solid electrolyte (Rs1st) and (f) charge transfer resistance of cathode layer after 1st cycle (Rct1st) in the dry-coated particles.",
+   "rotated_deg": 0,
+   "bbox": [
+    31.6,
+    248.6,
+    563.7,
+    729.5
+   ],
+   "w": 2218,
+   "h": 2005,
+   "dpi": 300,
+   "src": "d9f5750a-26._Statistical_analysis_of_electrode_fabrication_process_for_all-solid-state_batteries_and_effects_of_electrode_fabrication_conditions_on_battery_performance.pdf",
+   "blank": 0.948,
+   "caption_note": "캡션의 '©' 는 원문 인쇄 그대로 — 그림 속 패널 표지는 (e) · 벡터 그림 (막대 · 눈금 = 벡터 경로, 글자 = 윤곽 도형) · (c) · (f) 가로축 표지 밑의 잔 표시는 원문 그대로 (크롭 잘림 아님) · 막대 높이 벡터 판독 = digitized.csv",
+   "viewed": true
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 8,
+   "file": "fig_5.png",
+   "caption": "Fig. 5. SEM images of cross section of composite cathode fabricated from a simple mixture prepared by mortar-and-pestle mixing at (a) Xs = 0.1, P = 180 Mpa, (b) Xs = 0.1, P = 360 Mpa, (c) Xs = 0.3, P = 180 Mpa, and (d) Xs = 0.3, P = 360 Mpa.",
+   "rotated_deg": 0,
+   "bbox": [
+    81.9,
+    385.5,
+    509.2,
+    731.0
+   ],
+   "w": 1781,
+   "h": 1440,
+   "dpi": 300,
+   "src": "d9f5750a-26._Statistical_analysis_of_electrode_fabrication_process_for_all-solid-state_batteries_and_effects_of_electrode_fabrication_conditions_on_battery_performance.pdf",
+   "blank": 0.314,
+   "auto_bbox": [
+    31.6,
+    380.5,
+    563.7,
+    738.1
+   ],
+   "native_dpi": 300.0,
+   "recrop": "2026-10-13 래스터 원본 경계 (+1 pt) 로 다시 자름 · 원 해상도 그대로 (300.0 dpi · 축소 없음) — 자동 bbox 는 좌우 흰 여백 포함",
+   "viewed": true
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 9,
+   "file": "fig_6.png",
+   "caption": "Fig. 6. SEM images of cross section of composite cathode fabricated from composite particles by dry-coated particles at (a) Xs = 0.1, P = 180 Mpa, (b) Xs = 0.1, P = 360 Mpa, (c) Xs = 0.3, P = 180 Mpa and (d) Xs = 0.3, P = 360 Mpa.",
+   "rotated_deg": 0,
+   "bbox": [
+    81.9,
+    385.5,
+    509.2,
+    731.0
+   ],
+   "w": 1781,
+   "h": 1440,
+   "dpi": 300,
+   "src": "d9f5750a-26._Statistical_analysis_of_electrode_fabrication_process_for_all-solid-state_batteries_and_effects_of_electrode_fabrication_conditions_on_battery_performance.pdf",
+   "blank": 0.31,
+   "auto_bbox": [
+    31.6,
+    380.5,
+    563.6,
+    738.1
+   ],
+   "native_dpi": 300.0,
+   "recrop": "2026-10-13 래스터 원본 경계 (+1 pt) 로 다시 자름 · 원 해상도 그대로 (300.0 dpi · 축소 없음) — 자동 bbox 는 좌우 흰 여백 포함",
+   "viewed": true
+  },
+  {
+   "key": "f7",
+   "kind": "figure",
+   "label": "7",
+   "page": 10,
+   "file": "fig_7.png",
+   "caption": "Fig. 7. Response surface plot (P versus Ts) for initial discharge capacity in simple mixture prepared by mortar-and-pestle mixing and dry-coated particles.",
+   "rotated_deg": 0,
+   "bbox": [
+    67.8,
+    307.8,
+    523.4,
+    739.7
+   ],
+   "w": 1899,
+   "h": 1800,
+   "dpi": 300,
+   "src": "d9f5750a-26._Statistical_analysis_of_electrode_fabrication_process_for_all-solid-state_batteries_and_effects_of_electrode_fabrication_conditions_on_battery_performance.pdf",
+   "blank": 0.814,
+   "auto_bbox": [
+    31.6,
+    302.8,
+    563.6,
+    746.6
+   ],
+   "native_dpi": 300.0,
+   "recrop": "2026-10-13 래스터 원본 경계 (+1 pt) 로 다시 자름 · 원 해상도 그대로 (300.0 dpi · 축소 없음) — 자동 bbox 는 좌우 흰 여백 포함",
+   "viewed": true
+  },
+  {
+   "key": "f8",
+   "kind": "figure",
+   "label": "8",
+   "page": 12,
+   "file": "fig_8.png",
+   "caption": "Fig. 8. Standardized partial regression coefficients for each dominant factor for: (a) discharge capacity retention rate (Qr 1st-50th), (b) difference in resistance of solid electrolyte between 1st and 50th cycles (ΔRs 1st-50th), and (c) difference in charge transfer resistance of cathode layer between 1st and 50th cycles (ΔRct 1st-50th) in simple mixture prepared through mortar-and-pestle mixing.",
+   "rotated_deg": 0,
+   "bbox": [
+    300.6,
+    61.9,
+    563.7,
+    532.8
+   ],
+   "w": 1097,
+   "h": 1964,
+   "dpi": 300,
+   "src": "d9f5750a-26._Statistical_analysis_of_electrode_fabrication_process_for_all-solid-state_batteries_and_effects_of_electrode_fabrication_conditions_on_battery_performance.pdf",
+   "blank": 0.941,
+   "caption_note": "벡터 그림 · 막대 높이 벡터 판독 = digitized.csv · 텍스트 층의 'D' = Δ 글꼴 치환",
+   "viewed": true
+  },
+  {
+   "key": "f9",
+   "kind": "figure",
+   "label": "9",
+   "page": 13,
+   "file": "fig_9.png",
+   "caption": "Fig. 9. Response surface plot (P versus Ts) for discharge capacity retention rate (Qr 1st-50th) in simple mixture prepared by mortar-and-pestle mixing.",
+   "rotated_deg": 0,
+   "bbox": [
+    118.8,
+    66.9,
+    475.3,
+    547.3
+   ],
+   "w": 1487,
+   "h": 2003,
+   "dpi": 300,
+   "src": "d9f5750a-26._Statistical_analysis_of_electrode_fabrication_process_for_all-solid-state_batteries_and_effects_of_electrode_fabrication_conditions_on_battery_performance.pdf",
+   "blank": 0.831,
+   "auto_bbox": [
+    31.6,
+    61.9,
+    563.6,
+    554.3
+   ],
+   "native_dpi": 300.0,
+   "recrop": "2026-10-13 래스터 원본 경계 (+1 pt) 로 다시 자름 · 원 해상도 그대로 (300.0 dpi · 축소 없음) — 자동 bbox 는 좌우 흰 여백 포함",
+   "viewed": true
+  },
+  {
+   "key": "fS1",
+   "kind": "figure",
+   "label": "S1",
+   "page": 1,
+   "file": "fig_S1.png",
+   "caption": "Fig. S1. Schematic of the all-solid-state cell.",
+   "rotated_deg": 0,
+   "bbox": [
+    108.0,
+    400.0,
+    522.0,
+    668.0
+   ],
+   "w": 1725,
+   "h": 1118,
+   "dpi": 300,
+   "src": "264c2375-26._Sup_Statistical_analysis_of_electrode_fabrication_process_for_all-solid-state_batteries_and_effects_of_electrode_fabrication_conditions_on_battery_performance.pdf",
+   "blank": 0.844,
+   "auto_bbox": [
+    188.6,
+    429.8,
+    491.2,
+    644.3
+   ],
+   "recrop": "2026-10-13 자동 bbox (188.6–491.2 pt) 는 왼쪽 표지 (Nut (M6)×4 · Bolt×4 · Insulating sheet · Metal plate) 와 오른쪽 'Mixture of NCM and LPS' 를 잘라 벡터 300 dpi 로 다시 자름",
+   "viewed": true
+  },
+  {
+   "key": "fS2",
+   "kind": "figure",
+   "label": "S2",
+   "page": 2,
+   "file": "fig_S2.png",
+   "caption": "Fig. S2. Typical Nyquist plots of all-solid-state half-cell in this study. Rs and Rct mean resistance of solid electrolyte and charge transfer resistance of cathode layer.",
+   "rotated_deg": 0,
+   "bbox": [
+    98.0,
+    440.0,
+    522.0,
+    702.0
+   ],
+   "w": 1767,
+   "h": 1092,
+   "dpi": 300,
+   "src": "264c2375-26._Sup_Statistical_analysis_of_electrode_fabrication_process_for_all-solid-state_batteries_and_effects_of_electrode_fabrication_conditions_on_battery_performance.pdf",
+   "blank": 0.958,
+   "auto_bbox": [
+    36.5,
+    606.2,
+    561.4,
+    702.4
+   ],
+   "native_dpi": 190.9,
+   "recrop": "2026-10-13 자동 bbox (y 606–702) 는 그림 아래 1/3 만 — 래스터 (128.5–513.9 × 447.2–698.7 pt · 원 해상도 190.9 dpi) 와 벡터 표지 (Rs · Rct · 음극 확산) 전체를 300 dpi 로 다시 자름 (래스터 부분은 원 해상도 이상으로 보간됨)",
+   "viewed": true
+  },
+  {
+   "key": "fS3",
+   "kind": "figure",
+   "label": "S3",
+   "page": 3,
+   "file": "fig_S3.png",
+   "caption": "Fig. S3. Charge-discharge curves after 1st cycle of the all-solid-state in the simple mixture (Table 1 (a) No.8) and dry-coated particles (Table 2 (a) No.4).",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    233.0,
+    512.0,
+    515.0
+   ],
+   "w": 1784,
+   "h": 1176,
+   "dpi": 300,
+   "src": "264c2375-26._Sup_Statistical_analysis_of_electrode_fabrication_process_for_all-solid-state_batteries_and_effects_of_electrode_fabrication_conditions_on_battery_performance.pdf",
+   "blank": 0.96,
+   "auto_bbox": [
+    36.5,
+    231.4,
+    558.7,
+    518.7
+   ],
+   "recrop": "2026-10-13 자동 bbox 의 좌우 흰 여백을 좁혀 벡터 300 dpi 로 다시 자름",
+   "viewed": true
+  },
+  {
+   "key": "t1",
+   "kind": "table",
+   "label": "1",
+   "page": 3,
+   "file": "tab_1.png",
+   "caption": "Table 1 Experimental, ANOVA, and MLRA results of initial electrochemical performances of the all-solid-state cells fabricated from the simple mixture prepared by mortar-and-pestle mixing. (a) Series of experimental results from the DoE. ANOVA result and MLR model for (b) initial discharge capacity (Q1st), (c) resistance of solid electrolyte after 1st cycle (Rs1st), and (d) charge transfer resistance of cathode layer after 1st cycle (Rct1st).",
+   "rotated_deg": 0,
+   "bbox": [
+    34.0,
+    357.0,
+    561.0,
+    761.0
+   ],
+   "w": 2197,
+   "h": 1684,
+   "dpi": 300,
+   "src": "d9f5750a-26._Statistical_analysis_of_electrode_fabrication_process_for_all-solid-state_batteries_and_effects_of_electrode_fabrication_conditions_on_battery_performance.pdf",
+   "blank": 0.942,
+   "auto_bbox": [
+    32.6,
+    42.7,
+    562.7,
+    775.3
+   ],
+   "caption_note": "표 안 (c) 부표 표지는 '©' 로 인쇄됨 · ⚠ (d) 부표 (Rct1st) 는 Table 2 (d) 와 글자 단위로 같다 — Table 1 (a) 의 Rct 값으로 다시 계산하면 맞지 않음 (카드 §10)",
+   "recrop": "2026-10-13 자동 bbox 는 쪽 전체 (본문 · 쪽 머리 포함, 294 dpi) — 표 제목부터 마지막 괘선까지 벡터 300 dpi 로 다시 자름",
+   "viewed": true
+  },
+  {
+   "key": "t2",
+   "kind": "table",
+   "label": "2",
+   "page": 5,
+   "file": "tab_2.png",
+   "caption": "Table 2 Experimental, ANOVA, and MLRA results of initial electrochemical performances of the all-solid-state cells fabricated from the dry-coated particles. (a) Series of experimental results from the DoE. ANOVA result and MLR model for (b) initial discharge capacity (Q1st), (c) resistance of solid electrolyte after 1st cycle (Rs1st), and (d) charge transfer resistance of cathode layer after 1st cycle (Rct1st).",
+   "rotated_deg": 0,
+   "bbox": [
+    34.0,
+    347.0,
+    561.0,
+    761.0
+   ],
+   "w": 2197,
+   "h": 1726,
+   "dpi": 300,
+   "src": "d9f5750a-26._Statistical_analysis_of_electrode_fabrication_process_for_all-solid-state_batteries_and_effects_of_electrode_fabrication_conditions_on_battery_performance.pdf",
+   "blank": 0.943,
+   "auto_bbox": [
+    32.6,
+    42.7,
+    562.7,
+    775.3
+   ],
+   "recrop": "2026-10-13 자동 bbox 는 쪽 전체 (본문 · 쪽 머리 포함, 294 dpi) — 표 제목부터 마지막 괘선까지 벡터 300 dpi 로 다시 자름",
+   "viewed": true
+  },
+  {
+   "key": "t3",
+   "kind": "table",
+   "label": "3",
+   "page": 6,
+   "file": "tab_3.png",
+   "caption": "Table 3 Experimental and ANOVA, and MLRA results of cycle performances of the all-solid-state cells fabricated from the simple mixture prepared by mortar-and-pestle mixing. (a) Series of experimental results by DoE. ANOVA result and MLR model for (b) discharge capacity retention rate for 50th cycle (Qr 1st-50th), (c) difference in resistance of solid electrolyte between 1st and 50th cycles (ΔRs 1st-50th), and (d) difference in charge transfer resistance of cathode layer between 1st and 50th cycles (ΔRct 1st-50th).",
+   "rotated_deg": 0,
+   "bbox": [
+    34.0,
+    318.0,
+    561.0,
+    757.0
+   ],
+   "w": 2197,
+   "h": 1830,
+   "dpi": 300,
+   "src": "d9f5750a-26._Statistical_analysis_of_electrode_fabrication_process_for_all-solid-state_batteries_and_effects_of_electrode_fabrication_conditions_on_battery_performance.pdf",
+   "blank": 0.942,
+   "auto_bbox": [
+    32.6,
+    42.8,
+    562.7,
+    775.3
+   ],
+   "caption_note": "⚠ (c) · (d) 의 Total 행이 각 부표의 나머지 행 합과 맞지 않음 (카드 §10)",
+   "recrop": "2026-10-13 자동 bbox 는 쪽 전체 (본문 · 쪽 머리 포함, 294 dpi) — 표 제목부터 마지막 괘선까지 벡터 300 dpi 로 다시 자름",
+   "viewed": true
+  },
+  {
+   "key": "t4",
+   "kind": "table",
+   "label": "4",
+   "page": 11,
+   "file": "tab_4.png",
+   "caption": "Table 4 Experimental and ANOVA results of cycle performances of the all-solid-state cells fabricated from the dry-coated particles. (a) Series of experimental results by DoE. ANOVA result for (b) discharge capacity retention rate for 50th cycle (Qr 1st-50th), (c) difference in resistance of solid electrolyte between 1st and 50th cycles (ΔRs 1st-50th), and (d) difference in charge transfer resistance of cathode layer between 1st and 50th cycles (ΔRct 1st-50th).",
+   "rotated_deg": 0,
+   "bbox": [
+    32.6,
+    62.6,
+    562.6,
+    368.7
+   ],
+   "w": 2210,
+   "h": 1277,
+   "dpi": 300,
+   "src": "d9f5750a-26._Statistical_analysis_of_electrode_fabrication_process_for_all-solid-state_batteries_and_effects_of_electrode_fabrication_conditions_on_battery_performance.pdf",
+   "blank": 0.94,
+   "viewed": true
+  },
+  {
+   "key": "tS1",
+   "kind": "table",
+   "label": "S1",
+   "page": 2,
+   "file": "tab_S1.png",
+   "caption": "Table S1 Operating conditions of charge-discharge test",
+   "rotated_deg": 0,
+   "bbox": [
+    95.0,
+    141.0,
+    503.0,
+    326.0
+   ],
+   "w": 1701,
+   "h": 772,
+   "dpi": 300,
+   "src": "264c2375-26._Sup_Statistical_analysis_of_electrode_fabrication_process_for_all-solid-state_batteries_and_effects_of_electrode_fabrication_conditions_on_battery_performance.pdf",
+   "blank": 0.925,
+   "auto_bbox": [
+    94.7,
+    140.4,
+    502.7,
+    325.8
+   ],
+   "manual_crop": "2026-10-13 손 크롭 — 자동 bbox 와 거의 같은 영역을 벡터 300 dpi 로 (렌더 확인)",
+   "viewed": true
+  }
+ ],
+ "missing_labels": [],
+ "note_manual": "2026-10-13 본문 그림 9 · 표 4 + SI 그림 3 · 표 1 = 17 장 전부 렌더 열람 · 래스터 7 장은 원 해상도 (300 dpi) 경계 크롭 · 표 1–3 · SI 그림 S1 · S2 · S3 · 표 S1 은 손으로 다시 자름 · 그림 4 · 8 · 표 4 는 자동 크롭 유지 (렌더 확인) · 그림 4 · 8 막대 높이는 벡터 경로에서 읽어 digitized.csv 에 기록"
+}
