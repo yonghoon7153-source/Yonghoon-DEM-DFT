@@ -1,0 +1,301 @@
+{
+ "slug": "kim2026_operando_neutron_thick_nmc811_interior_hotspot",
+ "dpi": 300,
+ "generated": "2026-10-13",
+ "sources": [
+  "1._Interior_transport_degradation_hotspots_in_high-loading_NMC811_sulfide_all-solid-state_batteries_revealed_by_operando_neutron_imaging.pdf",
+  "1._Sup_Interior_transport_degradation_hotspots_in_high-loading_NMC811_sulfide_all-solid-state_batteries_revealed_by_operando_neutron_imaging.pdf"
+ ],
+ "method": "수동 크롭 (PyMuPDF clip 렌더 300 dpi) — 그림 = 임베드 래스터 1 장씩 → clip = 래스터 bbox 그대로 (본문 · 캡션 · 여백 없음). Table 1 = 텍스트 표 → 'Table 1' 머리 ~ 아래 괘선 + 1 pt.",
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 2,
+   "file": "fig_1.png",
+   "caption": "Fig. 1. Operando neutron imaging platform and custom all-solid-state cell. (a) Experimental configuration with a goniometer-mounted stage, collimated neutron beam, and high-resolution detector. (b) PTFE-based operando cell with stainless-steel plungers and ceramic insulators. (c) Representative neutron radiograph of the assembled cell. (d) Neutron transmission image. The grayscale represents the normalized neutron transmission. (e) Pseudo-color image used to visualize relative lithium redistribution with respect to the initial pristine stage. The color scale represents relative change for better visualization.",
+   "rotated_deg": 0,
+   "bbox": [
+    111.4,
+    499.6,
+    483.9,
+    697.5
+   ],
+   "w": 1553,
+   "h": 826,
+   "dpi": 300,
+   "src": "1._Interior_transport_degradation_hotspots_in_high-loading_NMC811_sulfide_all-solid-state_batteries_revealed_by_operando_neutron_imaging.pdf",
+   "viewed": true,
+   "crop_note": "래스터 bbox 그대로",
+   "panels": "a–e"
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 3,
+   "file": "fig_2.png",
+   "caption": "Fig. 2. Operando neutron radiography of the first charge–discharge cycle at 0.5 mA cm−2 for the Si|LPSCl|NMC811 cell. (a) Voltage profile with selected states. (b,c) Pseudo-color image maps during charge and discharge showing relative transmission ratio changes with respect to the initial/pristine stage. (d,e) Through-thickness line profiles obtained by averaging the neutron transmission along the thickness direction of the electrodes at different charge/discharge stages. (f) Through-thickness line profile comparison of pristine, fully charged, and fully discharged states highlighting first-cycle irreversibility.",
+   "rotated_deg": 0,
+   "bbox": [
+    69.9,
+    55.4,
+    525.4,
+    525.9
+   ],
+   "w": 1899,
+   "h": 1962,
+   "dpi": 300,
+   "src": "1._Interior_transport_degradation_hotspots_in_high-loading_NMC811_sulfide_all-solid-state_batteries_revealed_by_operando_neutron_imaging.pdf",
+   "viewed": true,
+   "crop_note": "래스터 bbox 그대로",
+   "panels": "a–f"
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 4,
+   "file": "fig_3.png",
+   "caption": "Fig. 3. Rate-dependent operando neutron radiography of the Si|LPSCl|NMC811 cell. (a-d) Cycling at 0.5 mA cm−2. (e-h) Cycling at 1.0 mA cm−2. Pseudo-color image and line profiles compare how current density changes the reaction topology across the cathode thickness.",
+   "rotated_deg": 0,
+   "bbox": [
+    42.5,
+    55.4,
+    552.7,
+    366.3
+   ],
+   "w": 2126,
+   "h": 1297,
+   "dpi": 300,
+   "src": "1._Interior_transport_degradation_hotspots_in_high-loading_NMC811_sulfide_all-solid-state_batteries_revealed_by_operando_neutron_imaging.pdf",
+   "viewed": true,
+   "crop_note": "래스터 bbox 그대로",
+   "panels": "a–h"
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 5,
+   "file": "fig_4.png",
+   "caption": "Fig. 4. Spatiotemporal maps of relative lithium change across the NMC811 cathode derived from operando neutron radiography. The in-plane transmission is averaged over the radial direction for the (a) Charge and (b) Discharge at 0.5 mA cm−2. The maps highlight a non-monotonic reaction sequence and a persistent interior reaction zone, highlighted by the lithium depletion contour lines. (c) Three-dimensional surface plots showing lithium concentration change (ΔCLi) as a function of electrode depth and time during charge (left) and discharge (right).",
+   "rotated_deg": 0,
+   "bbox": [
+    70.4,
+    55.4,
+    524.9,
+    445.7
+   ],
+   "w": 1895,
+   "h": 1628,
+   "dpi": 300,
+   "src": "1._Interior_transport_degradation_hotspots_in_high-loading_NMC811_sulfide_all-solid-state_batteries_revealed_by_operando_neutron_imaging.pdf",
+   "viewed": true,
+   "crop_note": "래스터 bbox 그대로",
+   "panels": "a–c"
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 6,
+   "file": "fig_5.png",
+   "caption": "Fig. 5. Three-dimensional neutron tomography reconstructions after full discharge. (a-c) Representative orthogonal cross-sections of the silicon anode extracted from the reconstructed volume. (d-f) Representative orthogonal cross-sections of the NMC811 cathode extracted from the reconstructed volume.",
+   "rotated_deg": 0,
+   "bbox": [
+    70.5,
+    537.8,
+    524.7,
+    716.7
+   ],
+   "w": 1894,
+   "h": 747,
+   "dpi": 300,
+   "src": "1._Interior_transport_degradation_hotspots_in_high-loading_NMC811_sulfide_all-solid-state_batteries_revealed_by_operando_neutron_imaging.pdf",
+   "viewed": true,
+   "crop_note": "래스터 bbox 그대로",
+   "panels": "a–f"
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 7,
+   "file": "fig_6.png",
+   "caption": "Fig. 6. Cross-sectional Raman mapping of chemical evolution in the composite cathode. (a) Optical micrograph with the green box showing the mapped region. (b) Raman contour maps at selected states of charge. (c-g) Representative normalized spectra collected near the current collector, in the cathode center, and near the solid-electrolyte side. (h) Evolution of the average normalized 460/425 cm−1 Raman intensity ratio across the current collector side, center region, and solid electrolyte side of the thick cathode during charging.",
+   "rotated_deg": 0,
+   "bbox": [
+    42.5,
+    55.4,
+    552.7,
+    403.3
+   ],
+   "w": 2126,
+   "h": 1451,
+   "dpi": 300,
+   "src": "1._Interior_transport_degradation_hotspots_in_high-loading_NMC811_sulfide_all-solid-state_batteries_revealed_by_operando_neutron_imaging.pdf",
+   "viewed": true,
+   "crop_note": "래스터 bbox 그대로",
+   "panels": "a–h"
+  },
+  {
+   "key": "t1",
+   "kind": "table",
+   "label": "1",
+   "page": 7,
+   "file": "tab_1.png",
+   "caption": "Table 1 Raman shifts associated with LPSCl and the corresponding detectable species at each Raman shift.",
+   "rotated_deg": 0,
+   "bbox": [
+    36.5,
+    465.5,
+    293.0,
+    682.5
+   ],
+   "w": 1069,
+   "h": 905,
+   "dpi": 300,
+   "src": "1._Interior_transport_degradation_hotspots_in_high-loading_NMC811_sulfide_all-solid-state_batteries_revealed_by_operando_neutron_imaging.pdf",
+   "viewed": true,
+   "crop_note": "텍스트 표 — 'Table 1' 머리부터 아래 괘선 + 1 pt (오른쪽 단 본문 미포함)"
+  },
+  {
+   "key": "f7",
+   "kind": "figure",
+   "label": "7",
+   "page": 8,
+   "file": "fig_7.png",
+   "caption": "Fig. 7. Schematic illustration of the heterogeneous redox mechanism in thick cathode sulfide ASSBs, where lithium extraction becomes preferentially localized within the cathode interior during charging.",
+   "rotated_deg": 0,
+   "bbox": [
+    127.2,
+    55.4,
+    468.2,
+    396.7
+   ],
+   "w": 1421,
+   "h": 1423,
+   "dpi": 300,
+   "src": "1._Interior_transport_degradation_hotspots_in_high-loading_NMC811_sulfide_all-solid-state_batteries_revealed_by_operando_neutron_imaging.pdf",
+   "viewed": true,
+   "crop_note": "래스터 bbox 그대로"
+  },
+  {
+   "key": "fS1",
+   "kind": "figure",
+   "label": "S1",
+   "page": 4,
+   "file": "si_fig_S1.png",
+   "caption": "Fig. S1. Distribution of relaxation times analysis of impedance spectra during charging at two current densities. (a) Results at 0.2 mA cm-2 across different states of charge. (b) Results at 0.4 mA cm-2 across different states of charge.",
+   "rotated_deg": 0,
+   "bbox": [
+    72.0,
+    72.0,
+    540.0,
+    253.3
+   ],
+   "w": 1950,
+   "h": 756,
+   "dpi": 300,
+   "src": "1._Sup_Interior_transport_degradation_hotspots_in_high-loading_NMC811_sulfide_all-solid-state_batteries_revealed_by_operando_neutron_imaging.pdf",
+   "viewed": true,
+   "si": true,
+   "crop_note": "래스터 bbox 그대로 (원본 264 ppi → 300 dpi 렌더)",
+   "panels": "a–b"
+  },
+  {
+   "key": "fS2",
+   "kind": "figure",
+   "label": "S2",
+   "page": 5,
+   "file": "si_fig_S2.png",
+   "caption": "Fig. S2. Three-dimensional neutron tomography reconstructions of the cell after charging. (a) Silicon anode, solid electrolyte (SE) side. (b) Silicon anode, current collector (CC) side. (c) NMC811 cathode, SE side. (d) NMC811 cathode, CC side.",
+   "rotated_deg": 0,
+   "bbox": [
+    72.0,
+    72.0,
+    540.0,
+    366.1
+   ],
+   "w": 1950,
+   "h": 1226,
+   "dpi": 300,
+   "src": "1._Sup_Interior_transport_degradation_hotspots_in_high-loading_NMC811_sulfide_all-solid-state_batteries_revealed_by_operando_neutron_imaging.pdf",
+   "viewed": true,
+   "si": true,
+   "crop_note": "래스터 bbox 그대로 (원본 184 ppi)",
+   "panels": "a–d",
+   "caption_note": "⚠ 캡션 (c) = NMC811 cathode, SE side · (d) = CC side 인데 그림 속 패널 글자는 (c) Cathode (CC side) · (d) Cathode (SE side) — 캡션과 그림이 (c)/(d) 를 서로 바꿔 적었다 (원문 그대로 둠)."
+  },
+  {
+   "key": "fS3",
+   "kind": "figure",
+   "label": "S3",
+   "page": 6,
+   "file": "si_fig_S3.png",
+   "caption": "Fig. S3. Voltage profile of the cell charged at C/50 for the in-operando Raman measurements.",
+   "rotated_deg": 0,
+   "bbox": [
+    114.0,
+    72.0,
+    498.0,
+    381.6
+   ],
+   "w": 1600,
+   "h": 1290,
+   "dpi": 300,
+   "src": "1._Sup_Interior_transport_degradation_hotspots_in_high-loading_NMC811_sulfide_all-solid-state_batteries_revealed_by_operando_neutron_imaging.pdf",
+   "viewed": true,
+   "si": true,
+   "crop_note": "래스터 bbox 그대로 (원본 200 ppi)"
+  },
+  {
+   "key": "fS4",
+   "kind": "figure",
+   "label": "S4",
+   "page": 7,
+   "file": "si_fig_S4.png",
+   "caption": "Fig. S4. Voltage profile and internal stack pressure of the all-solid-state battery during cycling. The internal stack pressure was continuously monitored using a pressure sensor throughout electrochemical cycling.",
+   "rotated_deg": 0,
+   "bbox": [
+    72.0,
+    72.0,
+    540.0,
+    316.5
+   ],
+   "w": 1950,
+   "h": 1019,
+   "dpi": 300,
+   "src": "1._Sup_Interior_transport_degradation_hotspots_in_high-loading_NMC811_sulfide_all-solid-state_batteries_revealed_by_operando_neutron_imaging.pdf",
+   "viewed": true,
+   "si": true,
+   "crop_note": "래스터 bbox 그대로 (원본 226 ppi)"
+  },
+  {
+   "key": "fS5",
+   "kind": "figure",
+   "label": "S5",
+   "page": 8,
+   "file": "si_fig_S5.png",
+   "caption": "Fig. S5. FIB-SEM benchmark of the cathode thickness.",
+   "rotated_deg": 0,
+   "bbox": [
+    199.2,
+    72.0,
+    412.8,
+    283.1
+   ],
+   "w": 890,
+   "h": 880,
+   "dpi": 300,
+   "src": "1._Sup_Interior_transport_degradation_hotspots_in_high-loading_NMC811_sulfide_all-solid-state_batteries_revealed_by_operando_neutron_imaging.pdf",
+   "viewed": true,
+   "si": true,
+   "crop_note": "래스터 bbox 그대로 (원본 200 ppi)"
+  }
+ ],
+ "missing_labels": [],
+ "note_manual": "2026-10-13 큐레이터 크롭 — 13 장 전부 Read 로 열람 (viewed). 캡션 목록 대조: 본문 Figure 1–7 · Table 1 · SI Figure S1–S5 = 13 = 크롭 13 (빠진 번호 없음 · SI 에 표 없음 · SI Appendix A/B 는 식 · 문장뿐이라 크롭 대신 카드 §3-9 에 옮겨 적음). 파일 이름 = 본문 fig_N · tab_1 / SI si_fig_SN (키는 webapp figref 규약 fN · t1 · fSN)."
+}
