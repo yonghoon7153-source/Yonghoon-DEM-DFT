@@ -4626,3 +4626,22 @@ gate INCOMPLETE · 실효 정책 UNVERIFIED · native 미승인 · 게이트 리
   §91 끝의 "승인 뒤 묶음 작성" 순서는 이렇게 바로잡는다. 문서 수집은 이 저장소 (클라우드 세션) 에서 하고, 실행 PC 의 네트워크는 0 이다.
 - **유지:** OPEN 4 · `native_ready / approved / usable = false` · INCOMPLETE · UNVERIFIED · `_001` 의 `_003` 구간 보존 미확인. 기존 93 사례
   재시험 요구 없음.
+
+## 93. 공식 문서 묶음 — 이 세션에서는 못 만든다 · 새 세션 인수인계 (2026-10-13 · 실행 0)
+
+- **막힌 이유:** 이 세션의 클라우드 환경 네트워크 정책이 `learn.microsoft.com` 을 거부한다 (agent proxy CONNECT 403 · 10:31Z · 재확인 같음).
+  - 환경 편집 창 원문: "환경 변경 사항은 새 세션에 적용됩니다" — 사용자가 허용 도메인을 더해도 **이 세션에는 반영되지 않는다**.
+  - `raw.githubusercontent.com` 은 열려 있다 (MicrosoftDocs 원본 · 대안 ② — 검토자 형식과 달라 쓰려면 검토자 확인 필요).
+- **준비해 둔 것:**
+  - 수집 범위 `docs/COMSOL_S1_OS_B_DOCS_SCOPE_20261013.json` (Learn 36 쪽 · v2 §3 범주 1–7 · `3afe79ef…d5f5`).
+  - 묶음 생성기 `scripts/comsol_os_b_docs_bundle.py` (`c396b0a1…63c5`). 항목당 curl 1 회 · 재시도 없음. HTTP 200 이 아니거나 제목이 다르면
+    묶음을 만들지 않는다. zip 은 이름 순 · 고정 시각 (재현용).
+- **새 세션이 할 일 (사용자가 네트워크 액세스에 `learn.microsoft.com` 을 더한 뒤):**
+  1. `curl -sS -o /dev/null -w '%{http_code}' https://learn.microsoft.com/en-us/windows/win32/api/jobapi2/nf-jobapi2-terminatejobobject` 가 200 인지 본다.
+  2. `python3 -I bms-balancing/scripts/comsol_os_b_docs_bundle.py bms-balancing/docs/COMSOL_S1_OS_B_DOCS_SCOPE_20261013.json <scratchpad>/os_b_docs/bundle`
+     — 출력 `ok` · 묶음 이름 · 크기 · sha256 · MANIFEST sha256 을 받는다. `ok: false` 면 그 원문을 남기고 멈춘다.
+  3. 원문 HTML 은 저장소에 넣지 않는다. 식별만 이 원장 다음 절에 적는다.
+  4. 검토자의 비활성 v2 (`reviews/r14_repros/codex63/comsol_microshort_s1_os_b_scope_review_20261013/originals/OS_B_SEND_V2_INACTIVE_KO.md`)
+     의 §0 식별 칸 넷만 채운 최종 v2 를 `docs/` 에 새로 만든다. 그 밖의 문장은 바꾸지 않고, 바꾼 줄을 원장에 적는다.
+  5. 묶음 zip 과 최종 v2 를 사용자에게 보내고, B 준비 승인 (v2 §0 채택 문구) 을 묻는다. 그 전에는 실행 Codex 에 보내지 않는다.
+- 이 절은 B 착수 · 실행 PC 관측 · COMSOL 승인이 아니다.
