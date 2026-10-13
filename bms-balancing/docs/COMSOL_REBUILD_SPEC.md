@@ -4685,3 +4685,14 @@ gate INCOMPLETE · 실효 정책 UNVERIFIED · native 미승인 · 게이트 리
 - 발송: 사용자 몫 — 최종 v2 전문 + 묶음 zip → 실행 담당 Codex (COMSOL PC · 네트워크 0). 이 저장소는 발송 사실을 직접 보지 못한다 —
   결과 묶음이 오면 그 ORIGIN · 승인 기록과 이 절 (v2 sha · 묶음 sha) 을 대조한다.
 - 유지: OPEN 4 · `native_ready / approved / usable = false` · INCOMPLETE · UNVERIFIED. 이 절은 B 착수 승인이며 실행 PC 관측 · OS 시험 · COMSOL / native 승인이 아니다.
+
+## 96. OS B 실행 측 착수 전 중지 — 기존 수용 회신 ZIP 미첨부 · 보충 전달 (2026-10-13 · 실행 0)
+
+- **실행 Codex 보고 (사용자 전달 · 2026-10-13):** 공식 문서 ZIP 과 본문 36 개 식별은 일치한다. v2 §1 필수 기준 "기존 수용 회신 ZIP"
+  (38,949 B · `879cff57…0d17`) 을 지정 원본 위치 · 작업공간 · 바탕화면에서 찾지 못해 준비 착수 전에 멈췄다. 후보 작성 · 시험 · COMSOL 0 ·
+  3,600 s 원점 시작 전.
+- **원인:** §95 발송 안내에 이 zip 을 넣지 않았다 (v2 · 묶음 zip 둘만 안내). 이 저장소 쪽 누락이다.
+- **보충:** `reviews/r14_repros/codex63/comsol_microshort_s1_open_r1_003_review_20261013/COMSOL_MICROSHORT_S1_OPEN_R1_003_REVIEW_REPLY_20261013.zip`
+  — 38,949 B · sha256 `879cff578dfa52a7dcf0c008cded5f42698bb3b2916570b9e4b5da0b31e10d17` (지금 재계산 · v2 §1 · §89 와 일치). 사용자가 실행 Codex 에 첨부한다.
+- 승인 범위 (§95) 는 그대로다 — 첨부 보충은 범위 변경이 아니다. 3,600 s 원점은 실행 측이 이 zip 확인 뒤 새로 시작한다 (중지 전 소비 없음 · 실행 측 보고 기준).
+- 유지: OPEN 4 · `native_ready / approved / usable = false`.
