@@ -1,0 +1,58 @@
+{
+  "repository": "yonghoon7153-source/Yonghoon-DEM-DFT",
+  "ref": "c2ab1e0cbdc8fc2da2321bd18a064381c6513919",
+  "scope": "Selected read-only source snapshots. Other audited sources are identified in notes; not a full repository copy.",
+  "sources": [
+    {
+      "path": "bms-balancing/docs/REIL_C4_ENV_APPROVAL_REQUEST_20261013.md",
+      "blob": "d54ba8cdb10293cddfa53a5583b4e3223e74b686",
+      "url": "https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT/blob/c2ab1e0cbdc8fc2da2321bd18a064381c6513919/bms-balancing/docs/REIL_C4_ENV_APPROVAL_REQUEST_20261013.md"
+    },
+    {
+      "path": "bms-balancing/docs/REIL_C4_APPROVAL_REQUEST_v2_20261013.md",
+      "blob": "5abd201780c9db4685a289053d6eb79d8b0ef8e5",
+      "url": "https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT/blob/c2ab1e0cbdc8fc2da2321bd18a064381c6513919/bms-balancing/docs/REIL_C4_APPROVAL_REQUEST_v2_20261013.md"
+    },
+    {
+      "path": "bms-balancing/docs/REIL_C4_ENV_RESULT_REVIEW_SEND_20261013.md",
+      "blob": "e9efd86389abf2f8a7694a595295bc26cf743e65",
+      "url": "https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT/blob/c2ab1e0cbdc8fc2da2321bd18a064381c6513919/bms-balancing/docs/REIL_C4_ENV_RESULT_REVIEW_SEND_20261013.md"
+    },
+    {
+      "path": "bms-balancing/evidence/reil_c4_env_20261013/09_old_new_diff.json",
+      "blob": "b04dd56398ce01b078e165e2a767c6ebbbd7f3bc",
+      "url": "https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT/blob/c2ab1e0cbdc8fc2da2321bd18a064381c6513919/bms-balancing/evidence/reil_c4_env_20261013/09_old_new_diff.json"
+    },
+    {
+      "path": "bms-balancing/evidence/reil_c4_env_20261013/10_end.json",
+      "blob": "b391acfc64b2f030673a7c1c708471f47cdbb97e",
+      "url": "https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT/blob/c2ab1e0cbdc8fc2da2321bd18a064381c6513919/bms-balancing/evidence/reil_c4_env_20261013/10_end.json"
+    },
+    {
+      "path": "bms-balancing/scripts/reil_c4_env_compare.py",
+      "blob": "99471920caea03446a3dace5820814ab8fc567a4",
+      "url": "https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT/blob/c2ab1e0cbdc8fc2da2321bd18a064381c6513919/bms-balancing/scripts/reil_c4_env_compare.py"
+    },
+    {
+      "path": "bms-balancing/evidence/reil_c4_env_20261013/00_runner.py",
+      "blob": "e84548605eb3f97b9f28998dc641b74503cdbb27",
+      "url": "https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT/blob/c2ab1e0cbdc8fc2da2321bd18a064381c6513919/bms-balancing/evidence/reil_c4_env_20261013/00_runner.py"
+    },
+    {
+      "path": "bms-balancing/evidence/reil_c4_env_20261013/00_s0_precheck.json",
+      "blob": "01d5eba1c63d454ec71c76e80ea7f4dd1a59f05a",
+      "url": "https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT/blob/c2ab1e0cbdc8fc2da2321bd18a064381c6513919/bms-balancing/evidence/reil_c4_env_20261013/00_s0_precheck.json"
+    },
+    {
+      "path": "bms-balancing/docs/REIL_PREREQUISITES_STATUS_20261004.md",
+      "blob": "20bfdca73e7201d0b2132bfbc34e895c16809768",
+      "url": "https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT/blob/c2ab1e0cbdc8fc2da2321bd18a064381c6513919/bms-balancing/docs/REIL_PREREQUISITES_STATUS_20261004.md"
+    }
+  ],
+  "official_documentation": [
+    {
+      "url": "https://pip.pypa.io/en/stable/topics/configuration/",
+      "used_for": "PIP_CONFIG_FILE disables configuration files, not option environment variables; effective source cannot be inferred solely from this setting."
+    }
+  ]
+}

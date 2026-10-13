@@ -1,0 +1,225 @@
+{
+  "kind": "REVIEWER_STATIC_RUNNER_AUDIT",
+  "review_ref": "c2ab1e0cbdc8fc2da2321bd18a064381c6513919",
+  "runner_blob": "e84548605eb3f97b9f28998dc641b74503cdbb27",
+  "scope": "GitHub stored evidence and static source only; no code execution, installation, tests, fit, or raw REIL data opened",
+  "findings": [
+    {
+      "id": "RUNNER-F1",
+      "priority": "P2",
+      "scope": "description boundary; nonblocking to historical env-seal acceptance",
+      "location": "bms-balancing/docs/REIL_PREREQUISITES_STATUS_20261004.md:617,634,636; evidence/reil_c4_env_20261013/00_runner.py:277-319",
+      "finding": "36.446s and 556020307B are S10 pre-10_end-write/pre-commit snapshots. S10 has no separate meta.rc/time-out record. The 36.6s after-commit log is only reported in status; this evidence directory does not preserve outer runner stdout/rc. Git commit proves artifact commit exists (2026-10-13T06:06:53Z) and its message stores +36.5s sampled pre-commit. Do not call 36.446s complete execution wall time or sampled disk maximum a continuous/final peak.",
+      "remedy": "Preserve originals; add exact timing/boundary description. If original outer stdout exists, attach without rerunning; if not, keep +36.6 as submitter report. No reseal/rerun requested."
+    },
+    {
+      "id": "RUNNER-F2",
+      "priority": "P2",
+      "scope": "future generic runner reuse, not demonstrated historical breach",
+      "location": "bms-balancing/evidence/reil_c4_env_20261013/00_runner.py:252-320",
+      "finding": "S10 finalization records its start but never enforces the 90s allotment. Total deadline and disk check occur before final JSON write, secret scan, staging, hashing and commit. Successful commit after crossing the total deadline would still return 0. Individual git calls default to 60s rather than remaining S10/overall budget.",
+      "remedy": "Before future reuse as an enforcing runner, propagate remaining stage/overall budget into finalization operations and perform a final boundary observation with retained external return; keep original historical runner unchanged."
+    }
+  ],
+  "accepted": {
+    "argv_cwd": "10 child commands correspond to fixed S1-S9 (S4 a/b); exactly one of each in preserved meta; cwd matches",
+    "secret_env_removal": "Accepted scoped security hygiene from preexecution §36. Regex also matches GIT_CONFIG_* and MAX_THINKING_TOKENS; names preserved, not values. No environment-key removal in parent git function; this is not complete sandbox/network/secret non-disclosure proof.",
+    "precheck_deviation": "Accept disclosed read-only extra precheck as documented exception, not counted in S0 0.123s or overall 36.446s. Function reads/hash/list only. Extra invocation original output/timing not present in evidence directory; cannot independently certify problem0/time for it. Do not label every procedure strictly once.",
+    "source_preservation": "Pre/end seven protected tree IDs and five file SHA identities match; protected_worktree_dirty_end=[]; start porcelain empty; end porcelain contains only new evidence/seal paths. This is protected-scope identity, not whole-machine audit.",
+    "scientific_execution": "Stored commands show only approved emit+check path; pytest/C5 fit absent. Old-new seal semantics reviewed by sibling agent."
+  },
+  "observed": {
+    "start_head": "8e2985d6d7524c58d4560cd324b84905fd4c0029",
+    "end_head_before_commit": "8e2985d6d7524c58d4560cd324b84905fd4c0029",
+    "record_commit": "1135624c435b161f0928c2663f77700392606d85",
+    "commit_date": "2026-10-13T06:06:53Z",
+    "s0_problems": [],
+    "steps": [
+      {
+        "elapsed_s": 0.123,
+        "end_rel": 0.123,
+        "rc": 0,
+        "start_rel": 0,
+        "step": "S0",
+        "timed_out": false,
+        "timeout_s": 60
+      },
+      {
+        "elapsed_s": 3.83,
+        "end_rel": 3.954,
+        "rc": 0,
+        "start_rel": 0.124,
+        "step": "01_venv",
+        "timed_out": false,
+        "timeout_s": 120
+      },
+      {
+        "elapsed_s": 8.004,
+        "end_rel": 11.959,
+        "rc": 0,
+        "start_rel": 3.955,
+        "step": "02_download_science",
+        "timed_out": false,
+        "timeout_s": 480
+      },
+      {
+        "elapsed_s": 1.162,
+        "end_rel": 13.136,
+        "rc": 0,
+        "start_rel": 11.974,
+        "step": "03_download_test",
+        "timed_out": false,
+        "timeout_s": 120
+      },
+      {
+        "elapsed_s": 0.215,
+        "end_rel": 13.362,
+        "rc": 0,
+        "start_rel": 13.147,
+        "step": "04a_artifacts_science",
+        "timed_out": false,
+        "timeout_s": 30
+      },
+      {
+        "elapsed_s": 0.065,
+        "end_rel": 13.428,
+        "rc": 0,
+        "start_rel": 13.363,
+        "step": "04b_artifacts_test",
+        "timed_out": false,
+        "timeout_s": 29.784
+      },
+      {
+        "elapsed_s": 17.997,
+        "end_rel": 31.425,
+        "rc": 0,
+        "start_rel": 13.429,
+        "step": "05_install_science",
+        "timed_out": false,
+        "timeout_s": 300
+      },
+      {
+        "elapsed_s": 1.418,
+        "end_rel": 32.873,
+        "rc": 0,
+        "start_rel": 31.455,
+        "step": "06_install_test",
+        "timed_out": false,
+        "timeout_s": 120
+      },
+      {
+        "elapsed_s": 1.672,
+        "end_rel": 34.593,
+        "rc": 0,
+        "start_rel": 32.92,
+        "step": "07_emit",
+        "timed_out": false,
+        "timeout_s": 180
+      },
+      {
+        "elapsed_s": 1.622,
+        "end_rel": 36.216,
+        "rc": 0,
+        "start_rel": 34.593,
+        "step": "08_check",
+        "timed_out": false,
+        "timeout_s": 180
+      },
+      {
+        "elapsed_s": 0.114,
+        "end_rel": 36.361,
+        "rc": 0,
+        "start_rel": 36.246,
+        "step": "09_compare",
+        "timed_out": false,
+        "timeout_s": 120
+      }
+    ],
+    "snapshot_end_s": 36.446,
+    "s10_recording_elapsed_s": 0.085,
+    "sampled_disk_max_bytes": 556020307,
+    "disk_limit_bytes": 2000000000,
+    "disk": [
+      {
+        "du_sb_parts": {
+          "/home/user/Yonghoon-DEM-DFT/bms-balancing/evidence/reil_c4_env_20261013": 44960,
+          "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/b881d255-9513-5adc-9b14-3c0be18d7ad6/scratchpad/reil_c4env": 119956587
+        },
+        "du_sb_total": 120001547,
+        "free_bytes": 26977259520,
+        "label": "S2",
+        "t_rel": 11.973,
+        "utc": "2026-10-13T06:06:28.855Z"
+      },
+      {
+        "du_sb_parts": {
+          "/home/user/Yonghoon-DEM-DFT/bms-balancing/evidence/reil_c4_env_20261013": 47857,
+          "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/b881d255-9513-5adc-9b14-3c0be18d7ad6/scratchpad/reil_c4env": 121621292
+        },
+        "du_sb_total": 121669149,
+        "free_bytes": 26975571968,
+        "label": "S3",
+        "t_rel": 13.147,
+        "utc": "2026-10-13T06:06:30.029Z"
+      },
+      {
+        "du_sb_parts": {
+          "/home/user/Yonghoon-DEM-DFT/bms-balancing/evidence/reil_c4_env_20261013": 65894,
+          "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/b881d255-9513-5adc-9b14-3c0be18d7ad6/scratchpad/reil_c4env": 542819366
+        },
+        "du_sb_total": 542885260,
+        "free_bytes": 26525732864,
+        "label": "S5",
+        "t_rel": 31.454,
+        "utc": "2026-10-13T06:06:48.336Z"
+      },
+      {
+        "du_sb_parts": {
+          "/home/user/Yonghoon-DEM-DFT/bms-balancing/evidence/reil_c4_env_20261013": 68268,
+          "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/b881d255-9513-5adc-9b14-3c0be18d7ad6/scratchpad/reil_c4env": 554829978
+        },
+        "du_sb_total": 554898246,
+        "free_bytes": 26511716352,
+        "label": "S6",
+        "t_rel": 32.92,
+        "utc": "2026-10-13T06:06:49.800Z"
+      },
+      {
+        "du_sb_parts": {
+          "/home/user/Yonghoon-DEM-DFT/bms-balancing/evidence/reil_c4_env_20261013": 70517,
+          "/home/user/Yonghoon-DEM-DFT/bms-balancing/reil_c6_rebuild_20261013": 26319,
+          "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/b881d255-9513-5adc-9b14-3c0be18d7ad6/scratchpad/reil_c4env": 554829978
+        },
+        "du_sb_total": 554926814,
+        "free_bytes": 26511646720,
+        "label": "S8",
+        "t_rel": 36.246,
+        "utc": "2026-10-13T06:06:53.128Z"
+      },
+      {
+        "du_sb_parts": {
+          "/home/user/Yonghoon-DEM-DFT/bms-balancing/evidence/reil_c4_env_20261013": 1164010,
+          "/home/user/Yonghoon-DEM-DFT/bms-balancing/reil_c6_rebuild_20261013": 26319,
+          "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/b881d255-9513-5adc-9b14-3c0be18d7ad6/scratchpad/reil_c4env": 554829978
+        },
+        "du_sb_total": 556020307,
+        "free_bytes": 26510462976,
+        "label": "S10",
+        "t_rel": 36.446,
+        "utc": "2026-10-13T06:06:53.328Z"
+      }
+    ],
+    "all_10_child_rc_zero": true,
+    "all_metadatum_elapsed_within_timeout": true,
+    "files_equal": true,
+    "trees_equal": true
+  },
+  "unknowns": [
+    "No independent reviewer remote-OS measurement",
+    "36.6s post-commit monotonic/outer rc0 not raw verified",
+    "Extra pre-origin precheck timing/raw invocation not provided",
+    "Periodic du snapshots do not observe transient pip/check temporary peak",
+    "Secret-filter scan is not independent comprehensive credential audit"
+  ],
+  "recommendation": "Accept recorded environment preparation with documented limitations, contingent on independent new-seal/old-new-compare review. Do not require installation/emit/check rerun. Correct timing/peak statements and harden finalizer only before future reusable execution, under proper authorization."
+}

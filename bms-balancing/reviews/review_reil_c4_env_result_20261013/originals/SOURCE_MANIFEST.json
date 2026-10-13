@@ -1,0 +1,105 @@
+{
+  "kind": "REVIEW_SOURCE_MANIFEST",
+  "ref": "c2ab1e0cbdc8fc2da2321bd18a064381c6513919",
+  "attachment": {
+    "path": "C:\\Users\\Administrator\\Downloads\\REIL_C4_ENV_RESULT_REVIEW_SEND_20261013.md",
+    "bytes": 6410,
+    "sha256": "d29d0268df0cf274326988e9be967981eb76a710732607448f1e4dabf0a3c076",
+    "exact_remote_bytes": true,
+    "text_equal_ignoring_line_endings_and_terminal_newlines": true
+  },
+  "sources": [
+    {
+      "path": "bms-balancing/docs/REIL_C4_ENV_APPROVAL_REQUEST_20261013.md",
+      "blob": "d54ba8cdb10293cddfa53a5583b4e3223e74b686",
+      "url": "https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT/blob/c2ab1e0cbdc8fc2da2321bd18a064381c6513919/bms-balancing/docs/REIL_C4_ENV_APPROVAL_REQUEST_20261013.md",
+      "capture_bytes": 31083,
+      "capture_sha256": "47af94d1eba4a8be885566aada162afbeb5fa8a792105dce19650b84cd76554d",
+      "remote_bytes": 31083,
+      "remote_sha256": "47af94d1eba4a8be885566aada162afbeb5fa8a792105dce19650b84cd76554d",
+      "binding": "EXACT"
+    },
+    {
+      "path": "bms-balancing/docs/REIL_C4_APPROVAL_REQUEST_v2_20261013.md",
+      "blob": "5abd201780c9db4685a289053d6eb79d8b0ef8e5",
+      "url": "https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT/blob/c2ab1e0cbdc8fc2da2321bd18a064381c6513919/bms-balancing/docs/REIL_C4_APPROVAL_REQUEST_v2_20261013.md",
+      "capture_bytes": 22921,
+      "capture_sha256": "22dcc8e5ef6430253f55834743e10808b0c3547c8fb560d0ad415dce77da8f87",
+      "remote_bytes": 22921,
+      "remote_sha256": "22dcc8e5ef6430253f55834743e10808b0c3547c8fb560d0ad415dce77da8f87",
+      "binding": "EXACT"
+    },
+    {
+      "path": "bms-balancing/docs/REIL_C4_ENV_RESULT_REVIEW_SEND_20261013.md",
+      "blob": "e9efd86389abf2f8a7694a595295bc26cf743e65",
+      "url": "https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT/blob/c2ab1e0cbdc8fc2da2321bd18a064381c6513919/bms-balancing/docs/REIL_C4_ENV_RESULT_REVIEW_SEND_20261013.md",
+      "capture_bytes": 6410,
+      "capture_sha256": "d29d0268df0cf274326988e9be967981eb76a710732607448f1e4dabf0a3c076",
+      "remote_bytes": 6410,
+      "remote_sha256": "d29d0268df0cf274326988e9be967981eb76a710732607448f1e4dabf0a3c076",
+      "binding": "EXACT"
+    },
+    {
+      "path": "bms-balancing/evidence/reil_c4_env_20261013/09_old_new_diff.json",
+      "blob": "b04dd56398ce01b078e165e2a767c6ebbbd7f3bc",
+      "url": "https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT/blob/c2ab1e0cbdc8fc2da2321bd18a064381c6513919/bms-balancing/evidence/reil_c4_env_20261013/09_old_new_diff.json",
+      "capture_bytes": 18540,
+      "capture_sha256": "aeb7655ce728d035be0053cf012e1e2ddaf54ebda2f27b2ece6ea0cd604024fd",
+      "remote_bytes": 18540,
+      "remote_sha256": "aeb7655ce728d035be0053cf012e1e2ddaf54ebda2f27b2ece6ea0cd604024fd",
+      "binding": "EXACT"
+    },
+    {
+      "path": "bms-balancing/evidence/reil_c4_env_20261013/10_end.json",
+      "blob": "b391acfc64b2f030673a7c1c708471f47cdbb97e",
+      "url": "https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT/blob/c2ab1e0cbdc8fc2da2321bd18a064381c6513919/bms-balancing/evidence/reil_c4_env_20261013/10_end.json",
+      "capture_bytes": 6786,
+      "capture_sha256": "b7fadb4ae55c0c70e65706de7464d504a23eb2619db939ac097718cc6cceb5d7",
+      "remote_bytes": 6786,
+      "remote_sha256": "b7fadb4ae55c0c70e65706de7464d504a23eb2619db939ac097718cc6cceb5d7",
+      "binding": "EXACT"
+    },
+    {
+      "path": "bms-balancing/scripts/reil_c4_env_compare.py",
+      "blob": "99471920caea03446a3dace5820814ab8fc567a4",
+      "url": "https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT/blob/c2ab1e0cbdc8fc2da2321bd18a064381c6513919/bms-balancing/scripts/reil_c4_env_compare.py",
+      "capture_bytes": 17605,
+      "capture_sha256": "eff94d3dfd4b3d31c7a19e440dfb968734dab1afb16b584c2fdee354100695e0",
+      "remote_bytes": 17605,
+      "remote_sha256": "eff94d3dfd4b3d31c7a19e440dfb968734dab1afb16b584c2fdee354100695e0",
+      "binding": "EXACT"
+    },
+    {
+      "path": "bms-balancing/evidence/reil_c4_env_20261013/00_runner.py",
+      "blob": "e84548605eb3f97b9f28998dc641b74503cdbb27",
+      "url": "https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT/blob/c2ab1e0cbdc8fc2da2321bd18a064381c6513919/bms-balancing/evidence/reil_c4_env_20261013/00_runner.py",
+      "capture_bytes": 21298,
+      "capture_sha256": "5c781a2d78af5c02dfcecfc5df7dfe2a254353bfdf1f3fa262d760eed352d2cc",
+      "remote_bytes": 21298,
+      "remote_sha256": "5c781a2d78af5c02dfcecfc5df7dfe2a254353bfdf1f3fa262d760eed352d2cc",
+      "binding": "EXACT"
+    },
+    {
+      "path": "bms-balancing/evidence/reil_c4_env_20261013/00_s0_precheck.json",
+      "blob": "01d5eba1c63d454ec71c76e80ea7f4dd1a59f05a",
+      "url": "https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT/blob/c2ab1e0cbdc8fc2da2321bd18a064381c6513919/bms-balancing/evidence/reil_c4_env_20261013/00_s0_precheck.json",
+      "capture_bytes": 3627,
+      "capture_sha256": "690544d082519296867a904617f30abcf65bf4b75d417b04d2bfe1578fe24568",
+      "remote_bytes": 3627,
+      "remote_sha256": "690544d082519296867a904617f30abcf65bf4b75d417b04d2bfe1578fe24568",
+      "binding": "EXACT"
+    },
+    {
+      "path": "bms-balancing/docs/REIL_PREREQUISITES_STATUS_20261004.md",
+      "blob": "20bfdca73e7201d0b2132bfbc34e895c16809768",
+      "url": "https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT/blob/c2ab1e0cbdc8fc2da2321bd18a064381c6513919/bms-balancing/docs/REIL_PREREQUISITES_STATUS_20261004.md",
+      "capture_bytes": 85388,
+      "capture_sha256": "ceb0e3077614812361f459aa85409877432bb14b4bc9ce4a006ad6b65e689aa8",
+      "remote_bytes": 85388,
+      "remote_sha256": "ceb0e3077614812361f459aa85409877432bb14b4bc9ce4a006ad6b65e689aa8",
+      "binding": "EXACT"
+    }
+  ],
+  "scope": "Selected original text captures; additional read-only source identities are recorded in notes. No source was executed.",
+  "capture_note": "Capture newline discrepancies, if any, are explicit; remote bytes bind to immutable Git blob."
+}

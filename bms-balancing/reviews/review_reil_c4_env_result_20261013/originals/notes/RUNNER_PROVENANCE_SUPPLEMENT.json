@@ -1,0 +1,65 @@
+{
+  "kind": "STATIC_RUNNER_PROVENANCE_SUPPLEMENT",
+  "review_ref": "c2ab1e0cbdc8fc2da2321bd18a064381c6513919",
+  "protected_git_tree_checks": {
+    "8e2985d6d7524c58d4560cd324b84905fd4c0029": {
+      "bms-balancing/reil_c6_20261005": "3ec46373da366265242e92df9c6e112e5ff100e0",
+      "bms-balancing/reil_c6_rebuild_20261006": "b55f3a439e23bd41626d64bbb40b8221571f8690",
+      "bms-balancing/evidence/reil_c6_n1_20261006": "fdd12a5f30dc52242e0553b6b616c463a264fe54",
+      "bms-balancing/evidence/reil_p0_20261006": "82a74d69c3f3cad363d6f120fe0e88658af0a496",
+      "bms-balancing/evidence/reil_c5_impl_20261006": "cfea813242c2d47f559a3807c5bab1bb63f3e183",
+      "bms-balancing/evidence/reil_c5_pilot_20261006": "514e4dcd284f831a92e158ad4542136cc455f018",
+      "bms-balancing/evidence/reil_c5_pilot_20261006_wrapper": "6238fff9ff7bc6a54747f28653eca4e3f1b20a2d"
+    },
+    "1135624c435b161f0928c2663f77700392606d85": {
+      "bms-balancing/reil_c6_20261005": "3ec46373da366265242e92df9c6e112e5ff100e0",
+      "bms-balancing/reil_c6_rebuild_20261006": "b55f3a439e23bd41626d64bbb40b8221571f8690",
+      "bms-balancing/evidence/reil_c6_n1_20261006": "fdd12a5f30dc52242e0553b6b616c463a264fe54",
+      "bms-balancing/evidence/reil_p0_20261006": "82a74d69c3f3cad363d6f120fe0e88658af0a496",
+      "bms-balancing/evidence/reil_c5_impl_20261006": "cfea813242c2d47f559a3807c5bab1bb63f3e183",
+      "bms-balancing/evidence/reil_c5_pilot_20261006": "514e4dcd284f831a92e158ad4542136cc455f018",
+      "bms-balancing/evidence/reil_c5_pilot_20261006_wrapper": "6238fff9ff7bc6a54747f28653eca4e3f1b20a2d"
+    },
+    "c2ab1e0cbdc8fc2da2321bd18a064381c6513919": {
+      "bms-balancing/reil_c6_20261005": "3ec46373da366265242e92df9c6e112e5ff100e0",
+      "bms-balancing/reil_c6_rebuild_20261006": "b55f3a439e23bd41626d64bbb40b8221571f8690",
+      "bms-balancing/evidence/reil_c6_n1_20261006": "fdd12a5f30dc52242e0553b6b616c463a264fe54",
+      "bms-balancing/evidence/reil_p0_20261006": "82a74d69c3f3cad363d6f120fe0e88658af0a496",
+      "bms-balancing/evidence/reil_c5_impl_20261006": "cfea813242c2d47f559a3807c5bab1bb63f3e183",
+      "bms-balancing/evidence/reil_c5_pilot_20261006": "514e4dcd284f831a92e158ad4542136cc455f018",
+      "bms-balancing/evidence/reil_c5_pilot_20261006_wrapper": "6238fff9ff7bc6a54747f28653eca4e3f1b20a2d"
+    }
+  },
+  "all_seven_trees_equal_across_three_commits": true,
+  "git_record_commit": {
+    "sha": "1135624c435b161f0928c2663f77700392606d85",
+    "parent": "8e2985d6d7524c58d4560cd324b84905fd4c0029",
+    "author_date": "2026-10-13T06:06:53Z",
+    "committer_date": "2026-10-13T06:06:53Z",
+    "message_sample_s": 36.5,
+    "message_sample_boundary": "Before git commit invocation; not outer completion"
+  },
+  "outer_return": {
+    "evidence_directory_raw_log_present": false,
+    "post_commit_36_6_seconds": "Only status section37 report located, not independently raw verified",
+    "monotonic_36_446": "Before 10_end write and commit",
+    "utc_crosscheck": "Commit timestamp has one-second resolution. Compatible with ~36.118–37.118 seconds from t0 if same wall clock; this is not monotonic execution end or external rc."
+  },
+  "network": {
+    "approved_argv_observed": true,
+    "configured_source": "Submitter declares PyPI default + files.pythonhosted.org only",
+    "download_stdout_contains_index_line": false,
+    "download_stdout_contains_urls": false,
+    "actual_endpoint_observed": false,
+    "inherited_environment_gap": "Runner excludes secret-pattern names only; PIP_CONFIG_FILE=/dev/null does not discard PIP_INDEX_URL/PIP_EXTRA_INDEX_URL/PIP_FIND_LINKS. Both approved/current argv omit explicit --index-url and pip --isolated. Do not promote declared PyPI scope into independent network audit.",
+    "remedy_future": "Pin exact index and sanitize only reviewed pip configuration variables or record explicit nonsecret allowlisted effective config, avoiding proxy/cert credential disclosure. An OS/network allowlist is a separate capability; argv alone does not prove redirects/destinations."
+  },
+  "secret_filter_scope": {
+    "child_env_removed_names_count": 15,
+    "includes_git_config_and_max_thinking_tokens": true,
+    "parent_git_environment_sanitized": false,
+    "names_only_recorded": true,
+    "accepted_as_scoped_security_hygiene": true,
+    "full_environment_or_secret_audit_claim": false
+  }
+}

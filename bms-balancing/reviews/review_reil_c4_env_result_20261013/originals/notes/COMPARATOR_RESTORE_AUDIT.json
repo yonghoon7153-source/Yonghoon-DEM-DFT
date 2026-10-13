@@ -1,0 +1,53 @@
+{
+  "reviewer_scope": "Static text and metadata only; no supplied code import or execution, no tests, install, REIL data or notebooks.",
+  "repository": "yonghoon7153-source/Yonghoon-DEM-DFT",
+  "ref": "c2ab1e0cbdc8fc2da2321bd18a064381c6513919",
+  "current_submission": {
+    "verdict": "No independently confirmed blocker from comparator/selftest scope. Accept fixed submitted seal if remaining runner and seal audit agree; do not infer general comparator completeness.",
+    "comparator_blob": "99471920caea03446a3dace5820814ab8fc567a4",
+    "selftest_blob": "a03cb978ca6b6daa698a7c851f6dc89f92059f7a",
+    "selftest_assertions": 23,
+    "selftest_submitted_rc": 0,
+    "coverage": "artifacts name/version checks; lock/profile differences; record_rows clean/hash/extra/hashed-pyc/shebang; CRLF text-hash distinction",
+    "not_covered": "No compare() end-to-end, no manifest_diff() direct call; no .data relocation branches, duplicate RECORD row rejection, arbitrary same-shebang bin content/path provenance",
+    "lock_observed": "Old/new GitHub UTF-8 contents both use LF and final newline, with precisely five reported changed lines 4/16/22/27/32; no current line-ending discrepancy.",
+    "record_scope": "record_rows compares installed RECORD metadata to wheel RECORD, exempts pip-created row categories and verifies bin first line; it is not itself an installed payload hasher. Scientific payload verification is separately supplied by reil_c6_profile.lock_text / env_profile in emit/check.",
+    "number_of_sealed_files": 11,
+    "file_count_definition": "Four named .txt/.json records plus six .npy arrays plus MANIFEST.json = 11",
+    "emit_check_count": "Explicit emit one plus check one => two synthetic COBYQA calls and two complete Sobol generation paths, as approved."
+  },
+  "findings": [
+    {
+      "id": "CMP-FUTURE-1",
+      "priority": "P2",
+      "current_blocking": false,
+      "file": "bms-balancing/scripts/reil_c4_env_compare.py",
+      "lines": "89-106",
+      "issue": "splitlines() drops line endings/final-newline information while the approval says only enumerated byte differences. With legitimate four RECORD changes, unrelated CRLF or terminal newline differences may not be classified.",
+      "remedy": "Before reusing comparator as an automatic generic acceptance gate, preserve line endings and compare a reconstructed expected lock to exact new bytes. Add end-to-end compare/manifest and line-ending controls; no demand to rerun environment just for the fixed current historical seal."
+    },
+    {
+      "id": "RESTORE-DRAFT-1",
+      "priority": "P2",
+      "current_blocking": false,
+      "file": "bms-balancing/docs/REIL_C4_ENV_RESULT_REVIEW_SEND_20261013.md",
+      "lines": "58-65",
+      "issue": "Future exact-restoration bullets list downloaded wheel 32 but not ensurepip bundled pip/setuptools wheel two explicitly. Current approval does bind both at 43/45 and S9 at 200; do not call them absent from current run.",
+      "remedy": "Explicitly carry forward approval §1-2 identities and source/tool hashes; precheck 32 downloaded plus two bundled artifact hashes before venv/install. Same-argv alone is too implicit for a standing authority rule."
+    },
+    {
+      "id": "RESTORE-DRAFT-2",
+      "priority": "P2",
+      "current_blocking": false,
+      "file": "bms-balancing/docs/REIL_C4_ENV_RESULT_REVIEW_SEND_20261013.md",
+      "lines": "62-63",
+      "issue": "Exact RECORD bytes alone do not prove actual test-tool payload bytes. Scientific emit/check hashes scientific installed files but excludes the external pytest_t tree.",
+      "remedy": "Future restore must compare the installed four test distributions' recorded hashes/sizes to actual files and bind their exact path/manifest; keep RECORD bytes as an additional check. This is a future restoration-completeness point, not evidence that current test files were corrupt."
+    }
+  ],
+  "qualifications": [
+    "Same-shebang scripts are accepted by broad pip-created category at comparator 233-246; this matches approved category rule but does not prove only shebang changed or exact pip-generated bodies. Do not upgrade report beyond that scope.",
+    "Restoration is not approved by this review. Fixed paths, same source hashes, single attempt and budget, no overwrite/fallback; a changed environment needs separate review.",
+    "Future emit one plus check one still executes two synthetic optimization/Sobol paths and needs that explicit authorization; old check is not proof of a new process environment."
+  ]
+}

@@ -1,0 +1,57 @@
+{
+  "kind": "REVIEW_PACKAGE_MANIFEST",
+  "ref": "c2ab1e0cbdc8fc2da2321bd18a064381c6513919",
+  "scope": "Review documents, derived read-only audit notes, source bindings and reviewer utility; source captures remain local/GitHub. No runtime or approval token.",
+  "files": [
+    {
+      "path": "CLAUDE_REPLY_KO.md",
+      "bytes": 3141,
+      "sha256": "0ddf7947b8fe7f8f312f78415c3d6368a784d0e82661a5370837d57fd0cb4b10"
+    },
+    {
+      "path": "DECISION.json",
+      "bytes": 6429,
+      "sha256": "b39586e0072c90571847737cb1d7ebc6b0c8ed66e05d93fbe028fa1a1271caed"
+    },
+    {
+      "path": "REVIEW_KO.md",
+      "bytes": 14728,
+      "sha256": "c5ace8043da95816f5430536dc2800856798bde07c730c954b79154033974989"
+    },
+    {
+      "path": "SOURCE_INDEX.json",
+      "bytes": 3429,
+      "sha256": "8e4204bca87587f446acfb2cf0f1ced79967bf52580d204cafad3151e960797e"
+    },
+    {
+      "path": "SOURCE_MANIFEST.json",
+      "bytes": 5978,
+      "sha256": "b4c6d2ea503cabb6c8d2a8b3bf82a7db1d68767d04d3aa4100677e0ef0aadc85"
+    },
+    {
+      "path": "notes/COMPARATOR_RESTORE_AUDIT.json",
+      "bytes": 4534,
+      "sha256": "358c1110bde22600f097d7cf9f48148696eceeffdb096078619a07898b88a1a2"
+    },
+    {
+      "path": "notes/RUNNER_AUDIT.json",
+      "bytes": 9557,
+      "sha256": "481c9662eb18bdc127be05acff2b4d8ff85cf50abd048528258b7b2d405f3e48"
+    },
+    {
+      "path": "notes/RUNNER_PROVENANCE_SUPPLEMENT.json",
+      "bytes": 4347,
+      "sha256": "d6caf8444c7884b5d92ee21e53fc26774234a9705b99ad5441053f3845c6f92e"
+    },
+    {
+      "path": "notes/SEAL_AUDIT.json",
+      "bytes": 35108,
+      "sha256": "b868403948df70542b94d89fa0468c33364cb004a37db268af0e67642abb4ccc"
+    },
+    {
+      "path": "package_review.py",
+      "bytes": 5120,
+      "sha256": "2817206d9b745f857866164f800a62e42e37bce1e733aca66356e9f87f1b5525"
+    }
+  ]
+}

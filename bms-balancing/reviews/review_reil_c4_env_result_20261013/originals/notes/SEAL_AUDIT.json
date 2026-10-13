@@ -1,0 +1,897 @@
+{
+  "ref": "c2ab1e0cbdc8fc2da2321bd18a064381c6513919",
+  "repository": "yonghoon7153-source/Yonghoon-DEM-DFT",
+  "scope": "Reviewer-owned text/metadata/hash arithmetic only. No supplied program execution, package install, data opening, array generation, or tests.",
+  "source_provenance": "GitHub connector GET at exact frozen commit. Git blob equality independently checked for 8 unchanged scientific seal members. Original wheel bytes and actual installed runtime were not directly inspected.",
+  "verdict": "SEAL_METADATA_AND_RECORDED_RECONCILIATION_ACCEPTABLE_WITH_SCOPE; no observed current-submission mismatch",
+  "seal_hash_audit": [
+    {
+      "file": "MANIFEST.json",
+      "old_sha256": "a14617ecad1954a86122922072b8d1656e9b13fdbf003d131ad32e0ff52a91f5",
+      "new_sha256": "4f12094897b53463097e78dafc0bfe5f37c1d76bb1a6266c0a907d755fb2ebdc"
+    },
+    {
+      "file": "REIL_C6.lock.txt",
+      "old_sha256": "b392f7b01f9492337a4c52ef323d9348af076866e6997d96179bc438375fe9ef",
+      "new_sha256": "ea91156cac99fac17830818f17fd4a260a93722269f720171e0ab9b2a75c1faa"
+    },
+    {
+      "file": "PROFILE.json",
+      "old_sha256": "c9449c284d755363c75848ad4c6d0582bdb7b6c1799674646b13ed2dfc49191d",
+      "new_sha256": "50f2c7fb176910da2df252cfd7f17a8f05a56b8696e1be3040d6ff5cf034a641"
+    }
+  ],
+  "blobComparison": [
+    {
+      "name": "COBYQA_OPTIONS.json",
+      "old_blob": "f99f007e405e18f100671bf5d0458f790ea6a3ae",
+      "new_blob": "f99f007e405e18f100671bf5d0458f790ea6a3ae",
+      "old_bytes": 2823,
+      "new_bytes": 2823,
+      "identical_git_blob": true
+    },
+    {
+      "name": "MANIFEST.json",
+      "old_blob": "a2bc9bca16f86caec5f8c2008a1b98c953b9ad44",
+      "new_blob": "cd54ebec8949abbcf05c7cf7147178289a32196d",
+      "old_bytes": 954,
+      "new_bytes": 954,
+      "identical_git_blob": false
+    },
+    {
+      "name": "PROFILE.json",
+      "old_blob": "2c12ef50e6740b70bc77c90a210dfff6ecf3d4c2",
+      "new_blob": "a9573929df348f016cf7c4dcd033f1682c8df3ab",
+      "old_bytes": 2728,
+      "new_bytes": 2728,
+      "identical_git_blob": false
+    },
+    {
+      "name": "REIL_C6.lock.txt",
+      "old_blob": "3c65d92db87041cbb62137187fd223f23ac46f03",
+      "new_blob": "21c2e71a7586d975e22123319dbdc486d9518e70",
+      "old_bytes": 4117,
+      "new_bytes": 4117,
+      "identical_git_blob": false
+    },
+    {
+      "name": "SOBOL_PHASE_A.json",
+      "old_blob": "c923f7ea51b48f44a3bfb074ff339c0015d16dbb",
+      "new_blob": "c923f7ea51b48f44a3bfb074ff339c0015d16dbb",
+      "old_bytes": 2641,
+      "new_bytes": 2641,
+      "identical_git_blob": true
+    },
+    {
+      "name": "sobol_A0_their_box_seed0.npy",
+      "old_blob": "3af0eb0d59dca49ad310ea1043d255076bb56a4c",
+      "new_blob": "3af0eb0d59dca49ad310ea1043d255076bb56a4c",
+      "old_bytes": 2176,
+      "new_bytes": 2176,
+      "identical_git_blob": true
+    },
+    {
+      "name": "sobol_A0_their_box_seed1.npy",
+      "old_blob": "5d26643d385a3eb9cbee7539000143e089a7e874",
+      "new_blob": "5d26643d385a3eb9cbee7539000143e089a7e874",
+      "old_bytes": 2176,
+      "new_bytes": 2176,
+      "identical_git_blob": true
+    },
+    {
+      "name": "sobol_A1_A2_wide_box_seed0.npy",
+      "old_blob": "c2fe477561e5a2dd0de383863bfcbc3d290c699f",
+      "new_blob": "c2fe477561e5a2dd0de383863bfcbc3d290c699f",
+      "old_bytes": 2176,
+      "new_bytes": 2176,
+      "identical_git_blob": true
+    },
+    {
+      "name": "sobol_A1_A2_wide_box_seed1.npy",
+      "old_blob": "5895f7dfe0a8adc14cd08e8b1ad20492d65665b9",
+      "new_blob": "5895f7dfe0a8adc14cd08e8b1ad20492d65665b9",
+      "old_bytes": 2176,
+      "new_bytes": 2176,
+      "identical_git_blob": true
+    },
+    {
+      "name": "sobol_unit_seed0.npy",
+      "old_blob": "a4216c1bf224699ecf2d8de44fbe8c9333cb8795",
+      "new_blob": "a4216c1bf224699ecf2d8de44fbe8c9333cb8795",
+      "old_bytes": 2176,
+      "new_bytes": 2176,
+      "identical_git_blob": true
+    },
+    {
+      "name": "sobol_unit_seed1.npy",
+      "old_blob": "25f7cea989e608140c043bc5f805b7f870d024d9",
+      "new_blob": "25f7cea989e608140c043bc5f805b7f870d024d9",
+      "old_bytes": 2176,
+      "new_bytes": 2176,
+      "identical_git_blob": true
+    }
+  ],
+  "lock_line_changes": [
+    {
+      "line": 4,
+      "old": "#@ python \"3.11.15\"",
+      "new": "#@ python \"3.11.17\""
+    },
+    {
+      "line": 16,
+      "old": "cffi==2.1.1  # record-sha256 eaf1d223880183e41d9c85dae880ab9d5db2563e3f6eba4186f7b1427b3577c4",
+      "new": "cffi==2.1.1  # record-sha256 aeccd2bde993f93078c41487373649f80fbf9aa8e5207c222e41f71628507fdf"
+    },
+    {
+      "line": 22,
+      "old": "fonttools==4.66.1  # record-sha256 201b77583a8943c54baff85744ca925c4438412a72b4eed21efd72fa927050e7",
+      "new": "fonttools==4.66.1  # record-sha256 f2fa180c9035d11eafc39e158ba95ce2b08ffe454e7a516b53d1600101f6c86d"
+    },
+    {
+      "line": 27,
+      "old": "numpy==2.4.6  # record-sha256 5f2cadac7692a8477da76ad3213fc4a807fc4538878bfa55d51ec7b7b36de51b",
+      "new": "numpy==2.4.6  # record-sha256 f9cec8b8ba1006d9fd3d4ab83feae32be8f7a99b01ececa7f19c20221b397185"
+    },
+    {
+      "line": 32,
+      "old": "pip==24.0  # record-sha256 13dc90e08854d142d483d4be0af36a66cbe713028bfce01b48bcf12c320956ae",
+      "new": "pip==24.0  # record-sha256 a50889fadbc82d0dbfcdf0a80712ca2e9f8500bf5b78298d84a77c5b839efb97"
+    }
+  ],
+  "records": {
+    "count": 30,
+    "raw_hashes_match": 30,
+    "normalized_hashes_match": 30,
+    "normalized_hashes_match_new_lock": 30,
+    "duplicate_paths": [],
+    "hash_audit": [
+      {
+        "name": "about-time-4.2.1.RECORD",
+        "path": "bms-balancing/evidence/reil_c4_env_20261013/09_records/about-time-4.2.1.RECORD",
+        "git_blob": "50c0c793ed3768189a2303fe3003b8a8a7b62fc2",
+        "bytes": 1382,
+        "raw_sha256": "7e007728245e156a5b97d1eba416d1126044c4281215e9f4328dce4023c50342",
+        "text_sha256": "e5a630322aead38c00d7d20ca0050eb7cd2024eb035505a6ef7bab8e5329f0bd",
+        "raw_match": true,
+        "text_match": true,
+        "lock_match": true
+      },
+      {
+        "name": "alive-progress-3.3.0.RECORD",
+        "path": "bms-balancing/evidence/reil_c4_env_20261013/09_records/alive-progress-3.3.0.RECORD",
+        "git_blob": "c03613c3888604c72c8b0968d7f5a643fb231ff3",
+        "bytes": 5146,
+        "raw_sha256": "0ed8e90c80ab1ca8c272859a6e65ec10cff4fc0f915fac57b7a21debdc89f699",
+        "text_sha256": "00c80da0799ae100798d538d9946e030259eae3b2b39cb70f99e7ff6ac7e9be8",
+        "raw_match": true,
+        "text_match": true,
+        "lock_match": true
+      },
+      {
+        "name": "autograd-1.9.1.RECORD",
+        "path": "bms-balancing/evidence/reil_c4_env_20261013/09_records/autograd-1.9.1.RECORD",
+        "git_blob": "c7fdf07cfe576461850f43844612f55147642f65",
+        "bytes": 5530,
+        "raw_sha256": "942b3d62a1f5b6c3a1fa0e32d40e1968ac103270be32f34d0999adf910dce56e",
+        "text_sha256": "4e20971527b9bf4571582f8ad0e59c1c7a9b908d698f0f5cbbbcccf9b468b07b",
+        "raw_match": true,
+        "text_match": true,
+        "lock_match": true
+      },
+      {
+        "name": "cffi-2.1.1.RECORD",
+        "path": "bms-balancing/evidence/reil_c4_env_20261013/09_records/cffi-2.1.1.RECORD",
+        "git_blob": "5352490efe2b0f06c1173966799f0d23258a79e3",
+        "bytes": 3515,
+        "raw_sha256": "c69055c3bae2b9f5cb08f10b77efe8d17a4fa8a2467e5d2236485ae5751654a3",
+        "text_sha256": "aeccd2bde993f93078c41487373649f80fbf9aa8e5207c222e41f71628507fdf",
+        "raw_match": true,
+        "text_match": true,
+        "lock_match": true
+      },
+      {
+        "name": "cma-4.5.0.RECORD",
+        "path": "bms-balancing/evidence/reil_c4_env_20261013/09_records/cma-4.5.0.RECORD",
+        "git_blob": "d2e3a9b1876c67e42931438d7f375ddee08f3368",
+        "bytes": 4464,
+        "raw_sha256": "87f1bccb68147a9164eca07366f013b2ad6d4622658ff645e7209dab6f22e72a",
+        "text_sha256": "b3d98d0842be1b0915b0854bf66308d6fdd3f1bbbd694a1e0f94afa5e72680bd",
+        "raw_match": true,
+        "text_match": true,
+        "lock_match": true
+      },
+      {
+        "name": "contourpy-1.3.3.RECORD",
+        "path": "bms-balancing/evidence/reil_c4_env_20261013/09_records/contourpy-1.3.3.RECORD",
+        "git_blob": "8179d2c57c4404ce9b807d41fea1901511326de7",
+        "bytes": 2946,
+        "raw_sha256": "031a29cf132ef40af92f7cedc416dcbb0697cf901a27e3b7fe1bb62aa4c35ee6",
+        "text_sha256": "f64770812b948e954eeb76f82c937bc5133fdd72026b30501e6a15d91c322189",
+        "raw_match": true,
+        "text_match": true,
+        "lock_match": true
+      },
+      {
+        "name": "cycler-0.12.1.RECORD",
+        "path": "bms-balancing/evidence/reil_c4_env_20261013/09_records/cycler-0.12.1.RECORD",
+        "git_blob": "88cba26588f2bea3a3623220b020587e2f2ad402",
+        "bytes": 672,
+        "raw_sha256": "ebf24fc90f3cc6915a6629cd50fc70b0706e9c530dba9fa65d585c3821c714e4",
+        "text_sha256": "564b9fd56f9f1730196522406a8ac8766040b69bc979b97b325e05f3490f6108",
+        "raw_match": true,
+        "text_match": true,
+        "lock_match": true
+      },
+      {
+        "name": "deprecated-1.3.1.RECORD",
+        "path": "bms-balancing/evidence/reil_c4_env_20261013/09_records/deprecated-1.3.1.RECORD",
+        "git_blob": "cb692a61f207284f52dfeaf69e0c37a18119f508",
+        "bytes": 1026,
+        "raw_sha256": "d2568f91afd67844ce401f392b6d6b2f3de2f96a7c1cee7f140022732355d2bf",
+        "text_sha256": "2d83577d876285800c273d6212ea91aff315fa70915329cfc72487861ec0ee8e",
+        "raw_match": true,
+        "text_match": true,
+        "lock_match": true
+      },
+      {
+        "name": "et-xmlfile-2.0.0.RECORD",
+        "path": "bms-balancing/evidence/reil_c4_env_20261013/09_records/et-xmlfile-2.0.0.RECORD",
+        "git_blob": "c3e06fb41d5d1a8be1d81a38221fd72eaa20600d",
+        "bytes": 1102,
+        "raw_sha256": "b594ad08f9d9b9edb4cc01e8bd90f15a4864be081df90bfe43d6a2225d354fd5",
+        "text_sha256": "d317f82e92dcc9a3bc806879cc75aee30b5ca8246f1c877bf0cc4e56660a9278",
+        "raw_match": true,
+        "text_match": true,
+        "lock_match": true
+      },
+      {
+        "name": "fonttools-4.66.1.RECORD",
+        "path": "bms-balancing/evidence/reil_c4_env_20261013/09_records/fonttools-4.66.1.RECORD",
+        "git_blob": "480481cf43b52f342d9d220bbbd2d176a06ac470",
+        "bytes": 52848,
+        "raw_sha256": "b99cbd55bcd420709f7d0c0915a221309d57c0ea1fb1b64250a70f4b69ebd806",
+        "text_sha256": "f2fa180c9035d11eafc39e158ba95ce2b08ffe454e7a516b53d1600101f6c86d",
+        "raw_match": true,
+        "text_match": true,
+        "lock_match": true
+      },
+      {
+        "name": "graphemeu-0.7.2.RECORD",
+        "path": "bms-balancing/evidence/reil_c4_env_20261013/09_records/graphemeu-0.7.2.RECORD",
+        "git_blob": "5ef3e675e915ea8179418a9216e2c870409fd433",
+        "bytes": 1277,
+        "raw_sha256": "bf2b7f9a906da2241700fca7d9aee52ec8692a78496d69e8500159fd405a3050",
+        "text_sha256": "7f4f7cdd31ef1116e87b5889a6fae96cd12a3bdfd8dc232aec4d7b8324657b30",
+        "raw_match": true,
+        "text_match": true,
+        "lock_match": true
+      },
+      {
+        "name": "kiwisolver-1.5.1.RECORD",
+        "path": "bms-balancing/evidence/reil_c4_env_20261013/09_records/kiwisolver-1.5.1.RECORD",
+        "git_blob": "5dcadeb888a06a695ad63307f46fc25d1a96db17",
+        "bytes": 1034,
+        "raw_sha256": "249e78ebd2c25ddb5ee2044978e36f353a71cab2c7dc3206f89add955c0cd2d5",
+        "text_sha256": "026de1a2707ce8f1e3fe8d90ad0e3c2e837ff2c0b4a00b4e866fc80dfca35c0a",
+        "raw_match": true,
+        "text_match": true,
+        "lock_match": true
+      },
+      {
+        "name": "matplotlib-3.11.2.RECORD",
+        "path": "bms-balancing/evidence/reil_c4_env_20261013/09_records/matplotlib-3.11.2.RECORD",
+        "git_blob": "84220f62b86f8ec3d3fbf995444020524952711a",
+        "bytes": 74412,
+        "raw_sha256": "125790d9fe7910068375eb4ff02cb22d5a1493ee4a6ef11a786c53acbe70a9af",
+        "text_sha256": "0026be91603fd8f235c3e77b10a6645b41edc6a30cb2488b8889450b1f7dbee6",
+        "raw_match": true,
+        "text_match": true,
+        "lock_match": true
+      },
+      {
+        "name": "moocore-0.3.2.RECORD",
+        "path": "bms-balancing/evidence/reil_c4_env_20261013/09_records/moocore-0.3.2.RECORD",
+        "git_blob": "147fb327a29ceda4e0e1e115f1174fac85bd01f5",
+        "bytes": 7336,
+        "raw_sha256": "fb382da4af9ef3b0910db1d9182b957a28403c571881d6e12a153d1b88bc4036",
+        "text_sha256": "3ace139e19bb5b90916f9c73c7f3ac9d96bf0d7607e7b2c6d3b84653c8c85e94",
+        "raw_match": true,
+        "text_match": true,
+        "lock_match": true
+      },
+      {
+        "name": "numpy-2.4.6.RECORD",
+        "path": "bms-balancing/evidence/reil_c4_env_20261013/09_records/numpy-2.4.6.RECORD",
+        "git_blob": "51a9622883adcbb9eccf36553b7ef8792f8d76ed",
+        "bytes": 127589,
+        "raw_sha256": "a8dddc0436e2d02346df595e391bc07ee592977d473b678cf88cd2b0e6c1d633",
+        "text_sha256": "f9cec8b8ba1006d9fd3d4ab83feae32be8f7a99b01ececa7f19c20221b397185",
+        "raw_match": true,
+        "text_match": true,
+        "lock_match": true
+      },
+      {
+        "name": "openpyxl-3.1.5.RECORD",
+        "path": "bms-balancing/evidence/reil_c4_env_20261013/09_records/openpyxl-3.1.5.RECORD",
+        "git_blob": "467d3be548d9c55a6ab8035ee79e290e623659ac",
+        "bytes": 27747,
+        "raw_sha256": "6140d75a8b5fe3e31553b5cfe275092919a5b8f98796462f9dcf6aaacdefb2bf",
+        "text_sha256": "2b7f886697d3afd17f12a98eb9386fad66d98f5fece698ce30abb925b74b24bd",
+        "raw_match": true,
+        "text_match": true,
+        "lock_match": true
+      },
+      {
+        "name": "packaging-26.3.RECORD",
+        "path": "bms-balancing/evidence/reil_c4_env_20261013/09_records/packaging-26.3.RECORD",
+        "git_blob": "7d7930ef122569eef8b602428aae0647d7c842dc",
+        "bytes": 3581,
+        "raw_sha256": "d809e069eb5ed0248f046e18502bd4ccd13a417d8e1112079952ddf4433a213d",
+        "text_sha256": "194236f63fa503ef6bc832807d7f1a28f6b8c645a208880d557244ef4941adbc",
+        "raw_match": true,
+        "text_match": true,
+        "lock_match": true
+      },
+      {
+        "name": "pandas-3.0.5.RECORD",
+        "path": "bms-balancing/evidence/reil_c4_env_20261013/09_records/pandas-3.0.5.RECORD",
+        "git_blob": "30a1fae05476db4fa5dc5cdf73374b23ab9ade02",
+        "bytes": 245191,
+        "raw_sha256": "96954a7ad93d07b06af1e5ddae5d01fbd5e4f76745cd3ae0d7740904fc186914",
+        "text_sha256": "0cf9ba06ee2488a8c75425c84415686ef5489a9e72feebb75f40d124bf574e98",
+        "raw_match": true,
+        "text_match": true,
+        "lock_match": true
+      },
+      {
+        "name": "pillow-12.3.0.RECORD",
+        "path": "bms-balancing/evidence/reil_c4_env_20261013/09_records/pillow-12.3.0.RECORD",
+        "git_blob": "b750d58ce29b7626f07a3cf1ef7d4972362cd646",
+        "bytes": 16236,
+        "raw_sha256": "e461dc0d98542d21e42633fd14ad4d19463ba9ef2e8ffa41b28c1c2f0d3dd9e7",
+        "text_sha256": "d67571156a1abfdcb25fbb895cdd005a3d59c4d1a9c11f253febdd84419d1e93",
+        "raw_match": true,
+        "text_match": true,
+        "lock_match": true
+      },
+      {
+        "name": "pip-24.0.RECORD",
+        "path": "bms-balancing/evidence/reil_c4_env_20261013/09_records/pip-24.0.RECORD",
+        "git_blob": "d4297c9cf90fa43d3c980822fdac1d84778321ba",
+        "bytes": 78936,
+        "raw_sha256": "fd4446fff5069cf2faa7a2396da8a584ead23b5d64b210dd50e597f3213fb874",
+        "text_sha256": "a50889fadbc82d0dbfcdf0a80712ca2e9f8500bf5b78298d84a77c5b839efb97",
+        "raw_match": true,
+        "text_match": true,
+        "lock_match": true
+      },
+      {
+        "name": "platformdirs-4.12.3.RECORD",
+        "path": "bms-balancing/evidence/reil_c4_env_20261013/09_records/platformdirs-4.12.3.RECORD",
+        "git_blob": "091c55d5c4b4e27f6a503022f81076b7ffaa54d2",
+        "bytes": 2186,
+        "raw_sha256": "f37653b599a7f9eaf77c28a3486384c1d647148095fa3b0b0c521dcbfb3c0c65",
+        "text_sha256": "3eba3c2695f62422e40c76466cecd43fb2add054bf3f8ad294cdb245fba3b7da",
+        "raw_match": true,
+        "text_match": true,
+        "lock_match": true
+      },
+      {
+        "name": "pycparser-3.0.RECORD",
+        "path": "bms-balancing/evidence/reil_c4_env_20261013/09_records/pycparser-3.0.RECORD",
+        "git_blob": "17d304b6a3fe6e19372806df35cc73ce97fa9683",
+        "bytes": 1484,
+        "raw_sha256": "422460c1a116078dd249b6fde592def7d049f04d33149ac8dbaf5425a185268f",
+        "text_sha256": "5192a85147780baa9341bf63a3b42e3b818d5c7ca219779bae4888f1bf78b6ab",
+        "raw_match": true,
+        "text_match": true,
+        "lock_match": true
+      },
+      {
+        "name": "pymoo-0.6.2.RECORD",
+        "path": "bms-balancing/evidence/reil_c4_env_20261013/09_records/pymoo-0.6.2.RECORD",
+        "git_blob": "4d658425c47a659b9a0b6a5d1ef1ad9a57ae6c3a",
+        "bytes": 49659,
+        "raw_sha256": "39e28ef36092960211c40e24138a42a242a4e67b184e4ce2245e345eeb11c3de",
+        "text_sha256": "633df478f7ce4559affac716e8f4b13b3bcd8a552e7da27bba539780e1fe1a50",
+        "raw_match": true,
+        "text_match": true,
+        "lock_match": true
+      },
+      {
+        "name": "pyparsing-3.3.3.RECORD",
+        "path": "bms-balancing/evidence/reil_c4_env_20261013/09_records/pyparsing-3.3.3.RECORD",
+        "git_blob": "bb484b34ee7b4d34062d36e9902378c7edfc0d25",
+        "bytes": 2902,
+        "raw_sha256": "c4c2f096bacdd7bab9d2eb3ab6642536b27f50652d799f56bbf7ac14e12d0af3",
+        "text_sha256": "c4acc104075f051ef5cdbf737bb7c31190df3e9e75c3689f191f14760a29486f",
+        "raw_match": true,
+        "text_match": true,
+        "lock_match": true
+      },
+      {
+        "name": "python-dateutil-2.9.0.post0.RECORD",
+        "path": "bms-balancing/evidence/reil_c4_env_20261013/09_records/python-dateutil-2.9.0.post0.RECORD",
+        "git_blob": "2b874cbef466122222e9d5eccaaf11b042a30ede",
+        "bytes": 3125,
+        "raw_sha256": "2d07914d24c0e9ff27be7ab8be3924c0b036ccf24d7df1a50db22e10a8263e22",
+        "text_sha256": "ea009219f435165e7013386035f57b84d75e0676dec16cefcf99db3310324aa2",
+        "raw_match": true,
+        "text_match": true,
+        "lock_match": true
+      },
+      {
+        "name": "scipy-1.17.1.RECORD",
+        "path": "bms-balancing/evidence/reil_c4_env_20261013/09_records/scipy-1.17.1.RECORD",
+        "git_blob": "d75f67bdd729f291725f761fa8790ee80196029b",
+        "bytes": 198248,
+        "raw_sha256": "4cd9d4db7fbf310e5d9f26a88bc5fd0aca93a95cf23a23f178287a3c7e3580a0",
+        "text_sha256": "b8ea386fea9f83a6696fb52817f71582fb1174192a306225bc87ea13177b1b64",
+        "raw_match": true,
+        "text_match": true,
+        "lock_match": true
+      },
+      {
+        "name": "seaborn-0.13.2.RECORD",
+        "path": "bms-balancing/evidence/reil_c4_env_20261013/09_records/seaborn-0.13.2.RECORD",
+        "git_blob": "99023fba10e3b301f3f7d0d592b7a516ae377011",
+        "bytes": 7609,
+        "raw_sha256": "df2fa7ae8360c56d2db59814663b816eaff8156f899ffc43a38b2626c01cdee6",
+        "text_sha256": "b5cce8a692a943b3e43ef2ff5eb9bc8ba5f385270817460962fb03b8b6c7eab8",
+        "raw_match": true,
+        "text_match": true,
+        "lock_match": true
+      },
+      {
+        "name": "setuptools-79.0.1.RECORD",
+        "path": "bms-balancing/evidence/reil_c4_env_20261013/09_records/setuptools-79.0.1.RECORD",
+        "git_blob": "bbb18e9e6805a414f50c73ad8bd5842509e961c6",
+        "bytes": 75738,
+        "raw_sha256": "1502c7cf29900fe22505e616345266a0deb0330ad03b9bb8b4d07a82fdb997dc",
+        "text_sha256": "96f9fb80ff93050d980e9f489b3483c7e290aeae8d8e87ec4691380d69e8d642",
+        "raw_match": true,
+        "text_match": true,
+        "lock_match": true
+      },
+      {
+        "name": "six-1.17.0.RECORD",
+        "path": "bms-balancing/evidence/reil_c4_env_20261013/09_records/six-1.17.0.RECORD",
+        "git_blob": "bcd83a187f36ed78dee3d4a7238b5767978aa473",
+        "bytes": 561,
+        "raw_sha256": "6eca8f3767a4e15a8317acec57d36e1248342e307b4a20bebbbfa713befaa539",
+        "text_sha256": "b4da9e24e598662bf65a3e2314bf54cb7d88a8cb29e42b5dfcb50d6bb746b777",
+        "raw_match": true,
+        "text_match": true,
+        "lock_match": true
+      },
+      {
+        "name": "wrapt-2.5.0.RECORD",
+        "path": "bms-balancing/evidence/reil_c4_env_20261013/09_records/wrapt-2.5.0.RECORD",
+        "git_blob": "8eb0cb605c4600c213359b422e63b6b56c3b733c",
+        "bytes": 2456,
+        "raw_sha256": "1f984967b4e3e90ad6bfaf5901225a879abed84762fed828fa3e972bd9f688f2",
+        "text_sha256": "45ac0eb79f6c494ec65a01112053725fcb27c323ffaa340701f00affebf74de0",
+        "raw_match": true,
+        "text_match": true,
+        "lock_match": true
+      }
+    ],
+    "row_inventory": [
+      {
+        "name": "about-time-4.2.1.RECORD",
+        "lines": 19,
+        "duplicate_paths": [],
+        "special": [
+          "../../../LICENSE",
+          "about_time-4.2.1.dist-info/INSTALLER",
+          "about_time-4.2.1.dist-info/RECORD"
+        ],
+        "nul": false
+      },
+      {
+        "name": "alive-progress-3.3.0.RECORD",
+        "lines": 66,
+        "duplicate_paths": [],
+        "special": [
+          "../../../LICENSE",
+          "alive_progress-3.3.0.dist-info/INSTALLER",
+          "alive_progress-3.3.0.dist-info/RECORD"
+        ],
+        "nul": false
+      },
+      {
+        "name": "autograd-1.9.1.RECORD",
+        "lines": 79,
+        "duplicate_paths": [],
+        "special": [
+          "autograd-1.9.1.dist-info/INSTALLER",
+          "autograd-1.9.1.dist-info/RECORD"
+        ],
+        "nul": false
+      },
+      {
+        "name": "cffi-2.1.1.RECORD",
+        "lines": 53,
+        "duplicate_paths": [],
+        "special": [
+          "../../../bin/cffi-gen-src",
+          "cffi-2.1.1.dist-info/INSTALLER",
+          "cffi-2.1.1.dist-info/RECORD"
+        ],
+        "nul": false
+      },
+      {
+        "name": "cma-4.5.0.RECORD",
+        "lines": 66,
+        "duplicate_paths": [],
+        "special": [
+          "cma-4.5.0.dist-info/INSTALLER",
+          "cma-4.5.0.dist-info/RECORD"
+        ],
+        "nul": false
+      },
+      {
+        "name": "contourpy-1.3.3.RECORD",
+        "lines": 42,
+        "duplicate_paths": [],
+        "special": [
+          "contourpy-1.3.3.dist-info/INSTALLER",
+          "contourpy-1.3.3.dist-info/RECORD"
+        ],
+        "nul": false
+      },
+      {
+        "name": "cycler-0.12.1.RECORD",
+        "lines": 9,
+        "duplicate_paths": [],
+        "special": [
+          "cycler-0.12.1.dist-info/INSTALLER",
+          "cycler-0.12.1.dist-info/RECORD"
+        ],
+        "nul": false
+      },
+      {
+        "name": "deprecated-1.3.1.RECORD",
+        "lines": 14,
+        "duplicate_paths": [],
+        "special": [
+          "deprecated-1.3.1.dist-info/INSTALLER",
+          "deprecated-1.3.1.dist-info/RECORD"
+        ],
+        "nul": false
+      },
+      {
+        "name": "et-xmlfile-2.0.0.RECORD",
+        "lines": 14,
+        "duplicate_paths": [],
+        "special": [
+          "et_xmlfile-2.0.0.dist-info/INSTALLER",
+          "et_xmlfile-2.0.0.dist-info/RECORD"
+        ],
+        "nul": false
+      },
+      {
+        "name": "fonttools-4.66.1.RECORD",
+        "lines": 709,
+        "duplicate_paths": [],
+        "special": [
+          "../../../bin/fonttools",
+          "../../../bin/pyftmerge",
+          "../../../bin/pyftsubset",
+          "../../../bin/ttx",
+          "../../../share/man/man1/ttx.1",
+          "fonttools-4.66.1.dist-info/INSTALLER",
+          "fonttools-4.66.1.dist-info/RECORD"
+        ],
+        "nul": false
+      },
+      {
+        "name": "graphemeu-0.7.2.RECORD",
+        "lines": 17,
+        "duplicate_paths": [],
+        "special": [
+          "graphemeu-0.7.2.dist-info/INSTALLER",
+          "graphemeu-0.7.2.dist-info/RECORD"
+        ],
+        "nul": false
+      },
+      {
+        "name": "kiwisolver-1.5.1.RECORD",
+        "lines": 13,
+        "duplicate_paths": [],
+        "special": [
+          "kiwisolver-1.5.1.dist-info/INSTALLER",
+          "kiwisolver-1.5.1.dist-info/RECORD"
+        ],
+        "nul": false
+      },
+      {
+        "name": "matplotlib-3.11.2.RECORD",
+        "lines": 892,
+        "duplicate_paths": [],
+        "special": [
+          "matplotlib-3.11.2.dist-info/INSTALLER",
+          "matplotlib-3.11.2.dist-info/RECORD",
+          "matplotlib-3.11.2.dist-info/REQUESTED"
+        ],
+        "nul": false
+      },
+      {
+        "name": "moocore-0.3.2.RECORD",
+        "lines": 88,
+        "duplicate_paths": [],
+        "special": [
+          "moocore-0.3.2.dist-info/INSTALLER",
+          "moocore-0.3.2.dist-info/RECORD"
+        ],
+        "nul": false
+      },
+      {
+        "name": "numpy-2.4.6.RECORD",
+        "lines": 1533,
+        "duplicate_paths": [],
+        "special": [
+          "../../../bin/f2py",
+          "../../../bin/numpy-config",
+          "numpy-2.4.6.dist-info/INSTALLER",
+          "numpy-2.4.6.dist-info/RECORD",
+          "numpy-2.4.6.dist-info/REQUESTED"
+        ],
+        "nul": false
+      },
+      {
+        "name": "openpyxl-3.1.5.RECORD",
+        "lines": 387,
+        "duplicate_paths": [],
+        "special": [
+          "openpyxl-3.1.5.dist-info/INSTALLER",
+          "openpyxl-3.1.5.dist-info/RECORD",
+          "openpyxl-3.1.5.dist-info/REQUESTED"
+        ],
+        "nul": false
+      },
+      {
+        "name": "packaging-26.3.RECORD",
+        "lines": 52,
+        "duplicate_paths": [],
+        "special": [
+          "packaging-26.3.dist-info/INSTALLER",
+          "packaging-26.3.dist-info/RECORD"
+        ],
+        "nul": false
+      },
+      {
+        "name": "pandas-3.0.5.RECORD",
+        "lines": 2944,
+        "duplicate_paths": [],
+        "special": [
+          "pandas-3.0.5.dist-info/INSTALLER",
+          "pandas-3.0.5.dist-info/RECORD",
+          "pandas-3.0.5.dist-info/REQUESTED"
+        ],
+        "nul": false
+      },
+      {
+        "name": "pillow-12.3.0.RECORD",
+        "lines": 238,
+        "duplicate_paths": [],
+        "special": [
+          "pillow-12.3.0.dist-info/INSTALLER",
+          "pillow-12.3.0.dist-info/RECORD"
+        ],
+        "nul": false
+      },
+      {
+        "name": "pip-24.0.RECORD",
+        "lines": 1024,
+        "duplicate_paths": [],
+        "special": [
+          "../../../bin/pip",
+          "../../../bin/pip3",
+          "../../../bin/pip3.11",
+          "pip-24.0.dist-info/INSTALLER",
+          "pip-24.0.dist-info/RECORD",
+          "pip-24.0.dist-info/REQUESTED"
+        ],
+        "nul": false
+      },
+      {
+        "name": "platformdirs-4.12.3.RECORD",
+        "lines": 31,
+        "duplicate_paths": [],
+        "special": [
+          "platformdirs-4.12.3.dist-info/INSTALLER",
+          "platformdirs-4.12.3.dist-info/RECORD"
+        ],
+        "nul": false
+      },
+      {
+        "name": "pycparser-3.0.RECORD",
+        "lines": 21,
+        "duplicate_paths": [],
+        "special": [
+          "pycparser-3.0.dist-info/INSTALLER",
+          "pycparser-3.0.dist-info/RECORD"
+        ],
+        "nul": false
+      },
+      {
+        "name": "pymoo-0.6.2.RECORD",
+        "lines": 661,
+        "duplicate_paths": [],
+        "special": [
+          "pymoo-0.6.2.dist-info/INSTALLER",
+          "pymoo-0.6.2.dist-info/RECORD",
+          "pymoo-0.6.2.dist-info/REQUESTED"
+        ],
+        "nul": false
+      },
+      {
+        "name": "pyparsing-3.3.3.RECORD",
+        "lines": 41,
+        "duplicate_paths": [],
+        "special": [
+          "pyparsing-3.3.3.dist-info/INSTALLER",
+          "pyparsing-3.3.3.dist-info/RECORD"
+        ],
+        "nul": false
+      },
+      {
+        "name": "python-dateutil-2.9.0.post0.RECORD",
+        "lines": 44,
+        "duplicate_paths": [],
+        "special": [
+          "python_dateutil-2.9.0.post0.dist-info/INSTALLER",
+          "python_dateutil-2.9.0.post0.dist-info/RECORD"
+        ],
+        "nul": false
+      },
+      {
+        "name": "scipy-1.17.1.RECORD",
+        "lines": 2400,
+        "duplicate_paths": [],
+        "special": [
+          "scipy-1.17.1.dist-info/INSTALLER",
+          "scipy-1.17.1.dist-info/RECORD",
+          "scipy-1.17.1.dist-info/REQUESTED"
+        ],
+        "nul": false
+      },
+      {
+        "name": "seaborn-0.13.2.RECORD",
+        "lines": 114,
+        "duplicate_paths": [],
+        "special": [
+          "seaborn-0.13.2.dist-info/INSTALLER",
+          "seaborn-0.13.2.dist-info/RECORD",
+          "seaborn-0.13.2.dist-info/REQUESTED"
+        ],
+        "nul": false
+      },
+      {
+        "name": "setuptools-79.0.1.RECORD",
+        "lines": 873,
+        "duplicate_paths": [],
+        "special": [
+          "setuptools-79.0.1.dist-info/INSTALLER",
+          "setuptools-79.0.1.dist-info/RECORD",
+          "setuptools-79.0.1.dist-info/REQUESTED",
+          "setuptools/_vendor/autocommand-2.2.2.dist-info/INSTALLER",
+          "setuptools/_vendor/autocommand-2.2.2.dist-info/RECORD",
+          "setuptools/_vendor/backports.tarfile-1.2.0.dist-info/INSTALLER",
+          "setuptools/_vendor/backports.tarfile-1.2.0.dist-info/RECORD",
+          "setuptools/_vendor/backports.tarfile-1.2.0.dist-info/REQUESTED",
+          "setuptools/_vendor/importlib_metadata-8.0.0.dist-info/INSTALLER",
+          "setuptools/_vendor/importlib_metadata-8.0.0.dist-info/RECORD",
+          "setuptools/_vendor/importlib_metadata-8.0.0.dist-info/REQUESTED",
+          "setuptools/_vendor/inflect-7.3.1.dist-info/INSTALLER",
+          "setuptools/_vendor/inflect-7.3.1.dist-info/RECORD",
+          "setuptools/_vendor/jaraco.collections-5.1.0.dist-info/INSTALLER",
+          "setuptools/_vendor/jaraco.collections-5.1.0.dist-info/RECORD",
+          "setuptools/_vendor/jaraco.collections-5.1.0.dist-info/REQUESTED",
+          "setuptools/_vendor/jaraco.context-5.3.0.dist-info/INSTALLER",
+          "setuptools/_vendor/jaraco.context-5.3.0.dist-info/RECORD",
+          "setuptools/_vendor/jaraco.functools-4.0.1.dist-info/INSTALLER",
+          "setuptools/_vendor/jaraco.functools-4.0.1.dist-info/RECORD",
+          "setuptools/_vendor/jaraco.text-3.12.1.dist-info/INSTALLER",
+          "setuptools/_vendor/jaraco.text-3.12.1.dist-info/RECORD",
+          "setuptools/_vendor/jaraco.text-3.12.1.dist-info/REQUESTED",
+          "setuptools/_vendor/more_itertools-10.3.0.dist-info/INSTALLER",
+          "setuptools/_vendor/more_itertools-10.3.0.dist-info/RECORD",
+          "setuptools/_vendor/more_itertools-10.3.0.dist-info/REQUESTED",
+          "setuptools/_vendor/packaging-24.2.dist-info/INSTALLER",
+          "setuptools/_vendor/packaging-24.2.dist-info/RECORD",
+          "setuptools/_vendor/packaging-24.2.dist-info/REQUESTED",
+          "setuptools/_vendor/platformdirs-4.2.2.dist-info/INSTALLER",
+          "setuptools/_vendor/platformdirs-4.2.2.dist-info/RECORD",
+          "setuptools/_vendor/platformdirs-4.2.2.dist-info/REQUESTED",
+          "setuptools/_vendor/tomli-2.0.1.dist-info/INSTALLER",
+          "setuptools/_vendor/tomli-2.0.1.dist-info/RECORD",
+          "setuptools/_vendor/tomli-2.0.1.dist-info/REQUESTED",
+          "setuptools/_vendor/typeguard-4.3.0.dist-info/INSTALLER",
+          "setuptools/_vendor/typeguard-4.3.0.dist-info/RECORD",
+          "setuptools/_vendor/typing_extensions-4.12.2.dist-info/INSTALLER",
+          "setuptools/_vendor/typing_extensions-4.12.2.dist-info/RECORD",
+          "setuptools/_vendor/wheel-0.45.1.dist-info/INSTALLER",
+          "setuptools/_vendor/wheel-0.45.1.dist-info/RECORD",
+          "setuptools/_vendor/wheel-0.45.1.dist-info/REQUESTED",
+          "setuptools/_vendor/zipp-3.19.2.dist-info/INSTALLER",
+          "setuptools/_vendor/zipp-3.19.2.dist-info/RECORD",
+          "setuptools/_vendor/zipp-3.19.2.dist-info/REQUESTED"
+        ],
+        "nul": false
+      },
+      {
+        "name": "six-1.17.0.RECORD",
+        "lines": 8,
+        "duplicate_paths": [],
+        "special": [
+          "six-1.17.0.dist-info/INSTALLER",
+          "six-1.17.0.dist-info/RECORD"
+        ],
+        "nul": false
+      },
+      {
+        "name": "wrapt-2.5.0.RECORD",
+        "lines": 37,
+        "duplicate_paths": [],
+        "special": [
+          "wrapt-2.5.0.dist-info/INSTALLER",
+          "wrapt-2.5.0.dist-info/RECORD"
+        ],
+        "nul": false
+      }
+    ]
+  },
+  "test_records": [
+    {
+      "name": "iniconfig-2.3.0.dist-info.RECORD",
+      "git_blob": "5db0935259c848730b20f4450372421c27a69e7a",
+      "bytes": 1177,
+      "raw_match": true,
+      "text_match": true,
+      "raw_sha256": "f4f03ab270b3343a56dd8085d5e4395344066766e01aafaa46c9d79e985f5d87"
+    },
+    {
+      "name": "pluggy-1.6.0.dist-info.RECORD",
+      "git_blob": "442a3851b0b5d5f49202b011462b0aedcb2841ae",
+      "bytes": 1617,
+      "raw_match": true,
+      "text_match": true,
+      "raw_sha256": "4e521d5efdf38f58bc3f76f918a04c0f15a6a4d2ee1700953ad72f5ea6e13d1f"
+    },
+    {
+      "name": "pygments-2.21.0.dist-info.RECORD",
+      "git_blob": "5e0d3794dfae1aedb50a9eda211f3d1e5689391b",
+      "bytes": 48209,
+      "raw_match": true,
+      "text_match": true,
+      "raw_sha256": "2003430842cec5c34589bb7bfd78ac923c1b72bd8044f997eb72091b885ee9e5"
+    },
+    {
+      "name": "pytest-9.1.1.dist-info.RECORD",
+      "git_blob": "d56d21af29e65ed057b9dd9b4ca20b98e63b7875",
+      "bytes": 11632,
+      "raw_match": true,
+      "text_match": true,
+      "raw_sha256": "fd1ff04ead3a920a8488083b77459a53867190e6138c887ef9805942cf4f5440"
+    }
+  ],
+  "artifact_metadata": {
+    "science_files": 28,
+    "science_filename_set_matches_report_expected": true,
+    "science_dist_rows_count": 30,
+    "science_wheel_matches_artifact_name_or_ensurepip": true,
+    "test_files": 4,
+    "science_artifact_manifest_blob": "1b6c795b7d3f9fee0db4a563b3ec43481d08d60a",
+    "test_artifact_manifest_blob": "8284150a698a3005b2ff95735a31ea387fe0ddd1"
+  },
+  "limitations": [
+    "Old installed RECORD originals were not retained. Old-to-new generated wrapper byte equivalence cannot be independently reconstructed from hashes alone.",
+    "Downloaded wheel hashes are submitted metadata; original wheel bytes were not fetched. New RECORD wheel-row agreement is recorded comparison evidence, not reviewer remeasurement.",
+    "Unhashed 5301 RECORD entries (mostly bytecode) are explicitly outside full byte identity. One declared LICENSE collision persists unchanged.",
+    "reil_c4_env_compare.py:233-246 checks arbitrary ../../../bin/ entries only by interpreter shebang; no entry-point-name or wrapper-body derivation. :237 accepts INSTALLER/REQUESTED/RECORD under any top-level *.dist-info; :200 collapses duplicate paths. Actual submitted 30 records contain no duplicate paths or unexpected top-level administrative-record ownership. These generic hardening gaps are not evidence of corruption in this fixed submission.",
+    "Test tool 4 wheel/RECORD identities preserved; no runtime test or installed-file verification implied."
+  ],
+  "recommendation": "Accept only this fixed new generation after parent review of execution authority/resource boundaries. Keep future restoration adoption separate; do not present the generic comparison utility as arbitrary corruption-resistant proof. No rebuild/re-emit requested by this audit."
+}
