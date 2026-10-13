@@ -1,0 +1,304 @@
+figure,series,x_name,x,y_name,y,note
+fig10,LPS powder compression (filled),stack_P_GPa,0.01,density_g_cm3,0.813,in-die CompreDrive; raster 300 dpi marker centroid; +-0.02 g/cm3 (overlapping markers +-0.03); 0.05/0.1 GPa overlap with binder markers
+fig10,LPS powder compression (filled),stack_P_GPa,0.025,density_g_cm3,0.923,in-die CompreDrive; raster 300 dpi marker centroid; +-0.02 g/cm3 (overlapping markers +-0.03); 0.05/0.1 GPa overlap with binder markers
+fig10,LPS powder compression (filled),stack_P_GPa,0.05,density_g_cm3,1.04,in-die CompreDrive; raster 300 dpi marker centroid; +-0.02 g/cm3 (overlapping markers +-0.03); 0.05/0.1 GPa overlap with binder markers
+fig10,LPS powder compression (filled),stack_P_GPa,0.1,density_g_cm3,1.2,in-die CompreDrive; raster 300 dpi marker centroid; +-0.02 g/cm3 (overlapping markers +-0.03); 0.05/0.1 GPa overlap with binder markers
+fig10,LPS powder compression (filled),stack_P_GPa,0.2,density_g_cm3,1.412,in-die CompreDrive; raster 300 dpi marker centroid; +-0.02 g/cm3 (overlapping markers +-0.03); 0.05/0.1 GPa overlap with binder markers
+fig10,LPS powder compression (filled),stack_P_GPa,0.3,density_g_cm3,1.548,in-die CompreDrive; raster 300 dpi marker centroid; +-0.02 g/cm3 (overlapping markers +-0.03); 0.05/0.1 GPa overlap with binder markers
+fig10,LPS powder compression (filled),stack_P_GPa,0.4,density_g_cm3,1.656,in-die CompreDrive; raster 300 dpi marker centroid; +-0.02 g/cm3 (overlapping markers +-0.03); 0.05/0.1 GPa overlap with binder markers
+fig10,LPS powder compression (filled),stack_P_GPa,0.5,density_g_cm3,1.735,in-die CompreDrive; raster 300 dpi marker centroid; +-0.02 g/cm3 (overlapping markers +-0.03); 0.05/0.1 GPa overlap with binder markers
+fig10,LPS powder compression (filled),stack_P_GPa,0.6,density_g_cm3,1.796,in-die CompreDrive; raster 300 dpi marker centroid; +-0.02 g/cm3 (overlapping markers +-0.03); 0.05/0.1 GPa overlap with binder markers
+fig10,LPS powder compression (filled),stack_P_GPa,0.7,density_g_cm3,1.841,in-die CompreDrive; raster 300 dpi marker centroid; +-0.02 g/cm3 (overlapping markers +-0.03); 0.05/0.1 GPa overlap with binder markers
+fig10,LPS powder compression (filled),stack_P_GPa,0.8,density_g_cm3,1.882,in-die CompreDrive; raster 300 dpi marker centroid; +-0.02 g/cm3 (overlapping markers +-0.03); 0.05/0.1 GPa overlap with binder markers
+fig10,LPS powder compression (filled),stack_P_GPa,0.9,density_g_cm3,1.91,in-die CompreDrive; raster 300 dpi marker centroid; +-0.02 g/cm3 (overlapping markers +-0.03); 0.05/0.1 GPa overlap with binder markers
+fig10,LPS powder compression (filled),stack_P_GPa,1.0,density_g_cm3,1.936,in-die CompreDrive; raster 300 dpi marker centroid; +-0.02 g/cm3 (overlapping markers +-0.03); 0.05/0.1 GPa overlap with binder markers
+fig10,LPS powder compression (filled),stack_P_GPa,1.1,density_g_cm3,1.955,in-die CompreDrive; raster 300 dpi marker centroid; +-0.02 g/cm3 (overlapping markers +-0.03); 0.05/0.1 GPa overlap with binder markers
+fig10,LPS powder compression (filled),stack_P_GPa,1.2,density_g_cm3,1.97,in-die CompreDrive; raster 300 dpi marker centroid; +-0.02 g/cm3 (overlapping markers +-0.03); 0.05/0.1 GPa overlap with binder markers
+fig10,LPS powder compression (filled),stack_P_GPa,1.3,density_g_cm3,1.979,in-die CompreDrive; raster 300 dpi marker centroid; +-0.02 g/cm3 (overlapping markers +-0.03); 0.05/0.1 GPa overlap with binder markers
+fig10,LPS powder compression (filled),stack_P_GPa,1.4,density_g_cm3,1.985,in-die CompreDrive; raster 300 dpi marker centroid; +-0.02 g/cm3 (overlapping markers +-0.03); 0.05/0.1 GPa overlap with binder markers
+fig10,LPS powder compression (filled),stack_P_GPa,1.5,density_g_cm3,1.98,in-die CompreDrive; raster 300 dpi marker centroid; +-0.02 g/cm3 (overlapping markers +-0.03); 0.05/0.1 GPa overlap with binder markers
+fig10,LPS powder release (open),stack_P_GPa,0.01,density_g_cm3,1.88,in-die CompreDrive; raster 300 dpi marker centroid; +-0.02 g/cm3 (overlapping markers +-0.03); ring centre = mean of top/bottom arcs; >=1.1 GPa overlaps filled
+fig10,LPS powder release (open),stack_P_GPa,0.025,density_g_cm3,1.88,in-die CompreDrive; raster 300 dpi marker centroid; +-0.02 g/cm3 (overlapping markers +-0.03); ring centre = mean of top/bottom arcs; >=1.1 GPa overlaps filled
+fig10,LPS powder release (open),stack_P_GPa,0.05,density_g_cm3,1.902,in-die CompreDrive; raster 300 dpi marker centroid; +-0.02 g/cm3 (overlapping markers +-0.03); ring centre = mean of top/bottom arcs; >=1.1 GPa overlaps filled
+fig10,LPS powder release (open),stack_P_GPa,0.1,density_g_cm3,1.908,in-die CompreDrive; raster 300 dpi marker centroid; +-0.02 g/cm3 (overlapping markers +-0.03); ring centre = mean of top/bottom arcs; >=1.1 GPa overlaps filled
+fig10,LPS powder release (open),stack_P_GPa,0.2,density_g_cm3,1.919,in-die CompreDrive; raster 300 dpi marker centroid; +-0.02 g/cm3 (overlapping markers +-0.03); ring centre = mean of top/bottom arcs; >=1.1 GPa overlaps filled
+fig10,LPS powder release (open),stack_P_GPa,0.3,density_g_cm3,1.932,in-die CompreDrive; raster 300 dpi marker centroid; +-0.02 g/cm3 (overlapping markers +-0.03); ring centre = mean of top/bottom arcs; >=1.1 GPa overlaps filled
+fig10,LPS powder release (open),stack_P_GPa,0.4,density_g_cm3,1.941,in-die CompreDrive; raster 300 dpi marker centroid; +-0.02 g/cm3 (overlapping markers +-0.03); ring centre = mean of top/bottom arcs; >=1.1 GPa overlaps filled
+fig10,LPS powder release (open),stack_P_GPa,0.5,density_g_cm3,1.951,in-die CompreDrive; raster 300 dpi marker centroid; +-0.02 g/cm3 (overlapping markers +-0.03); ring centre = mean of top/bottom arcs; >=1.1 GPa overlaps filled
+fig10,LPS powder release (open),stack_P_GPa,0.6,density_g_cm3,1.96,in-die CompreDrive; raster 300 dpi marker centroid; +-0.02 g/cm3 (overlapping markers +-0.03); ring centre = mean of top/bottom arcs; >=1.1 GPa overlaps filled
+fig10,LPS powder release (open),stack_P_GPa,0.7,density_g_cm3,1.969,in-die CompreDrive; raster 300 dpi marker centroid; +-0.02 g/cm3 (overlapping markers +-0.03); ring centre = mean of top/bottom arcs; >=1.1 GPa overlaps filled
+fig10,LPS powder release (open),stack_P_GPa,0.8,density_g_cm3,1.975,in-die CompreDrive; raster 300 dpi marker centroid; +-0.02 g/cm3 (overlapping markers +-0.03); ring centre = mean of top/bottom arcs; >=1.1 GPa overlaps filled
+fig10,LPS powder release (open),stack_P_GPa,0.9,density_g_cm3,1.982,in-die CompreDrive; raster 300 dpi marker centroid; +-0.02 g/cm3 (overlapping markers +-0.03); ring centre = mean of top/bottom arcs; >=1.1 GPa overlaps filled
+fig10,LPS powder release (open),stack_P_GPa,1.0,density_g_cm3,1.988,in-die CompreDrive; raster 300 dpi marker centroid; +-0.02 g/cm3 (overlapping markers +-0.03); ring centre = mean of top/bottom arcs; >=1.1 GPa overlaps filled
+fig10,LPS powder release (open),stack_P_GPa,1.1,density_g_cm3,1.99,in-die CompreDrive; raster 300 dpi marker centroid; +-0.02 g/cm3 (overlapping markers +-0.03); ring centre = mean of top/bottom arcs; >=1.1 GPa overlaps filled
+fig10,LPS powder release (open),stack_P_GPa,1.2,density_g_cm3,2.0,in-die CompreDrive; raster 300 dpi marker centroid; +-0.02 g/cm3 (overlapping markers +-0.03); ring centre = mean of top/bottom arcs; >=1.1 GPa overlaps filled
+fig10,LPS powder release (open),stack_P_GPa,1.3,density_g_cm3,2.0,in-die CompreDrive; raster 300 dpi marker centroid; +-0.02 g/cm3 (overlapping markers +-0.03); ring centre = mean of top/bottom arcs; >=1.1 GPa overlaps filled
+fig10,LPS powder release (open),stack_P_GPa,1.4,density_g_cm3,2.0,in-die CompreDrive; raster 300 dpi marker centroid; +-0.02 g/cm3 (overlapping markers +-0.03); ring centre = mean of top/bottom arcs; >=1.1 GPa overlaps filled
+fig10,LPS powder release (open),stack_P_GPa,1.5,density_g_cm3,2.01,in-die CompreDrive; raster 300 dpi marker centroid; +-0.02 g/cm3 (overlapping markers +-0.03); ring centre = mean of top/bottom arcs; >=1.1 GPa overlaps filled
+fig10,3 wt% HNBR compression (filled),stack_P_GPa,0.01,density_g_cm3,0.988,in-die CompreDrive; raster 300 dpi marker centroid; +-0.02 g/cm3 (overlapping markers +-0.03); >=1.1 GPa overlap
+fig10,3 wt% HNBR compression (filled),stack_P_GPa,0.025,density_g_cm3,1.036,in-die CompreDrive; raster 300 dpi marker centroid; +-0.02 g/cm3 (overlapping markers +-0.03); >=1.1 GPa overlap
+fig10,3 wt% HNBR compression (filled),stack_P_GPa,0.05,density_g_cm3,1.08,in-die CompreDrive; raster 300 dpi marker centroid; +-0.02 g/cm3 (overlapping markers +-0.03); >=1.1 GPa overlap
+fig10,3 wt% HNBR compression (filled),stack_P_GPa,0.1,density_g_cm3,1.121,in-die CompreDrive; raster 300 dpi marker centroid; +-0.02 g/cm3 (overlapping markers +-0.03); >=1.1 GPa overlap
+fig10,3 wt% HNBR compression (filled),stack_P_GPa,0.2,density_g_cm3,1.264,in-die CompreDrive; raster 300 dpi marker centroid; +-0.02 g/cm3 (overlapping markers +-0.03); >=1.1 GPa overlap
+fig10,3 wt% HNBR compression (filled),stack_P_GPa,0.3,density_g_cm3,1.357,in-die CompreDrive; raster 300 dpi marker centroid; +-0.02 g/cm3 (overlapping markers +-0.03); >=1.1 GPa overlap
+fig10,3 wt% HNBR compression (filled),stack_P_GPa,0.4,density_g_cm3,1.41,in-die CompreDrive; raster 300 dpi marker centroid; +-0.02 g/cm3 (overlapping markers +-0.03); >=1.1 GPa overlap
+fig10,3 wt% HNBR compression (filled),stack_P_GPa,0.5,density_g_cm3,1.47,in-die CompreDrive; raster 300 dpi marker centroid; +-0.02 g/cm3 (overlapping markers +-0.03); >=1.1 GPa overlap
+fig10,3 wt% HNBR compression (filled),stack_P_GPa,0.6,density_g_cm3,1.51,in-die CompreDrive; raster 300 dpi marker centroid; +-0.02 g/cm3 (overlapping markers +-0.03); >=1.1 GPa overlap
+fig10,3 wt% HNBR compression (filled),stack_P_GPa,0.7,density_g_cm3,1.541,in-die CompreDrive; raster 300 dpi marker centroid; +-0.02 g/cm3 (overlapping markers +-0.03); >=1.1 GPa overlap
+fig10,3 wt% HNBR compression (filled),stack_P_GPa,0.8,density_g_cm3,1.571,in-die CompreDrive; raster 300 dpi marker centroid; +-0.02 g/cm3 (overlapping markers +-0.03); >=1.1 GPa overlap
+fig10,3 wt% HNBR compression (filled),stack_P_GPa,0.9,density_g_cm3,1.594,in-die CompreDrive; raster 300 dpi marker centroid; +-0.02 g/cm3 (overlapping markers +-0.03); >=1.1 GPa overlap
+fig10,3 wt% HNBR compression (filled),stack_P_GPa,1.0,density_g_cm3,1.604,in-die CompreDrive; raster 300 dpi marker centroid; +-0.02 g/cm3 (overlapping markers +-0.03); >=1.1 GPa overlap
+fig10,3 wt% HNBR compression (filled),stack_P_GPa,1.1,density_g_cm3,1.62,in-die CompreDrive; raster 300 dpi marker centroid; +-0.02 g/cm3 (overlapping markers +-0.03); >=1.1 GPa overlap
+fig10,3 wt% HNBR compression (filled),stack_P_GPa,1.2,density_g_cm3,1.64,in-die CompreDrive; raster 300 dpi marker centroid; +-0.02 g/cm3 (overlapping markers +-0.03); >=1.1 GPa overlap
+fig10,3 wt% HNBR compression (filled),stack_P_GPa,1.3,density_g_cm3,1.65,in-die CompreDrive; raster 300 dpi marker centroid; +-0.02 g/cm3 (overlapping markers +-0.03); >=1.1 GPa overlap
+fig10,3 wt% HNBR compression (filled),stack_P_GPa,1.4,density_g_cm3,1.655,in-die CompreDrive; raster 300 dpi marker centroid; +-0.02 g/cm3 (overlapping markers +-0.03); >=1.1 GPa overlap
+fig10,3 wt% HNBR compression (filled),stack_P_GPa,1.5,density_g_cm3,1.66,in-die CompreDrive; raster 300 dpi marker centroid; +-0.02 g/cm3 (overlapping markers +-0.03); >=1.1 GPa overlap
+fig10,3 wt% HNBR release (open),stack_P_GPa,0.01,density_g_cm3,1.47,in-die CompreDrive; raster 300 dpi marker centroid; +-0.02 g/cm3 (overlapping markers +-0.03); column-median of colour pixels; error bars ~+-0.06 at <=0.1 GPa
+fig10,3 wt% HNBR release (open),stack_P_GPa,0.025,density_g_cm3,1.48,in-die CompreDrive; raster 300 dpi marker centroid; +-0.02 g/cm3 (overlapping markers +-0.03); column-median of colour pixels; error bars ~+-0.06 at <=0.1 GPa
+fig10,3 wt% HNBR release (open),stack_P_GPa,0.05,density_g_cm3,1.49,in-die CompreDrive; raster 300 dpi marker centroid; +-0.02 g/cm3 (overlapping markers +-0.03); column-median of colour pixels; error bars ~+-0.06 at <=0.1 GPa
+fig10,3 wt% HNBR release (open),stack_P_GPa,0.1,density_g_cm3,1.5,in-die CompreDrive; raster 300 dpi marker centroid; +-0.02 g/cm3 (overlapping markers +-0.03); column-median of colour pixels; error bars ~+-0.06 at <=0.1 GPa
+fig10,3 wt% HNBR release (open),stack_P_GPa,0.2,density_g_cm3,1.54,in-die CompreDrive; raster 300 dpi marker centroid; +-0.02 g/cm3 (overlapping markers +-0.03); column-median of colour pixels; error bars ~+-0.06 at <=0.1 GPa
+fig10,3 wt% HNBR release (open),stack_P_GPa,0.3,density_g_cm3,1.58,in-die CompreDrive; raster 300 dpi marker centroid; +-0.02 g/cm3 (overlapping markers +-0.03); column-median of colour pixels; error bars ~+-0.06 at <=0.1 GPa
+fig10,3 wt% HNBR release (open),stack_P_GPa,0.4,density_g_cm3,1.57,in-die CompreDrive; raster 300 dpi marker centroid; +-0.02 g/cm3 (overlapping markers +-0.03); column-median of colour pixels; error bars ~+-0.06 at <=0.1 GPa
+fig10,3 wt% HNBR release (open),stack_P_GPa,0.5,density_g_cm3,1.6,in-die CompreDrive; raster 300 dpi marker centroid; +-0.02 g/cm3 (overlapping markers +-0.03); column-median of colour pixels; error bars ~+-0.06 at <=0.1 GPa
+fig10,3 wt% HNBR release (open),stack_P_GPa,0.6,density_g_cm3,1.6,in-die CompreDrive; raster 300 dpi marker centroid; +-0.02 g/cm3 (overlapping markers +-0.03); column-median of colour pixels; error bars ~+-0.06 at <=0.1 GPa
+fig10,3 wt% HNBR release (open),stack_P_GPa,0.7,density_g_cm3,1.6,in-die CompreDrive; raster 300 dpi marker centroid; +-0.02 g/cm3 (overlapping markers +-0.03); column-median of colour pixels; error bars ~+-0.06 at <=0.1 GPa
+fig10,3 wt% HNBR release (open),stack_P_GPa,0.8,density_g_cm3,1.63,in-die CompreDrive; raster 300 dpi marker centroid; +-0.02 g/cm3 (overlapping markers +-0.03); column-median of colour pixels; error bars ~+-0.06 at <=0.1 GPa
+fig10,4.3 wt% HNBR compression (filled),stack_P_GPa,0.01,density_g_cm3,1.131,in-die CompreDrive; raster 300 dpi marker centroid; +-0.02 g/cm3 (overlapping markers +-0.03)
+fig10,4.3 wt% HNBR compression (filled),stack_P_GPa,0.025,density_g_cm3,1.14,in-die CompreDrive; raster 300 dpi marker centroid; +-0.02 g/cm3 (overlapping markers +-0.03)
+fig10,4.3 wt% HNBR compression (filled),stack_P_GPa,0.05,density_g_cm3,1.16,in-die CompreDrive; raster 300 dpi marker centroid; +-0.02 g/cm3 (overlapping markers +-0.03)
+fig10,4.3 wt% HNBR compression (filled),stack_P_GPa,0.1,density_g_cm3,1.19,in-die CompreDrive; raster 300 dpi marker centroid; +-0.02 g/cm3 (overlapping markers +-0.03)
+fig10,4.3 wt% HNBR compression (filled),stack_P_GPa,0.2,density_g_cm3,1.309,in-die CompreDrive; raster 300 dpi marker centroid; +-0.02 g/cm3 (overlapping markers +-0.03)
+fig10,4.3 wt% HNBR compression (filled),stack_P_GPa,0.3,density_g_cm3,1.393,in-die CompreDrive; raster 300 dpi marker centroid; +-0.02 g/cm3 (overlapping markers +-0.03)
+fig10,4.3 wt% HNBR compression (filled),stack_P_GPa,0.4,density_g_cm3,1.455,in-die CompreDrive; raster 300 dpi marker centroid; +-0.02 g/cm3 (overlapping markers +-0.03)
+fig10,4.3 wt% HNBR compression (filled),stack_P_GPa,0.5,density_g_cm3,1.497,in-die CompreDrive; raster 300 dpi marker centroid; +-0.02 g/cm3 (overlapping markers +-0.03)
+fig10,4.3 wt% HNBR compression (filled),stack_P_GPa,0.6,density_g_cm3,1.537,in-die CompreDrive; raster 300 dpi marker centroid; +-0.02 g/cm3 (overlapping markers +-0.03)
+fig10,4.3 wt% HNBR compression (filled),stack_P_GPa,0.7,density_g_cm3,1.564,in-die CompreDrive; raster 300 dpi marker centroid; +-0.02 g/cm3 (overlapping markers +-0.03)
+fig10,4.3 wt% HNBR compression (filled),stack_P_GPa,0.8,density_g_cm3,1.593,in-die CompreDrive; raster 300 dpi marker centroid; +-0.02 g/cm3 (overlapping markers +-0.03)
+fig10,4.3 wt% HNBR compression (filled),stack_P_GPa,0.9,density_g_cm3,1.611,in-die CompreDrive; raster 300 dpi marker centroid; +-0.02 g/cm3 (overlapping markers +-0.03)
+fig10,4.3 wt% HNBR compression (filled),stack_P_GPa,1.0,density_g_cm3,1.625,in-die CompreDrive; raster 300 dpi marker centroid; +-0.02 g/cm3 (overlapping markers +-0.03)
+fig10,4.3 wt% HNBR compression (filled),stack_P_GPa,1.1,density_g_cm3,1.64,in-die CompreDrive; raster 300 dpi marker centroid; +-0.02 g/cm3 (overlapping markers +-0.03)
+fig10,4.3 wt% HNBR compression (filled),stack_P_GPa,1.2,density_g_cm3,1.649,in-die CompreDrive; raster 300 dpi marker centroid; +-0.02 g/cm3 (overlapping markers +-0.03)
+fig10,4.3 wt% HNBR compression (filled),stack_P_GPa,1.3,density_g_cm3,1.654,in-die CompreDrive; raster 300 dpi marker centroid; +-0.02 g/cm3 (overlapping markers +-0.03)
+fig10,4.3 wt% HNBR compression (filled),stack_P_GPa,1.4,density_g_cm3,1.662,in-die CompreDrive; raster 300 dpi marker centroid; +-0.02 g/cm3 (overlapping markers +-0.03)
+fig10,4.3 wt% HNBR compression (filled),stack_P_GPa,1.5,density_g_cm3,1.669,in-die CompreDrive; raster 300 dpi marker centroid; +-0.02 g/cm3 (overlapping markers +-0.03)
+fig10,4.3 wt% HNBR release (open),stack_P_GPa,0.01,density_g_cm3,1.53,in-die CompreDrive; raster 300 dpi marker centroid; +-0.02 g/cm3 (overlapping markers +-0.03); column-median; >=0.7 GPa overlaps compression
+fig10,4.3 wt% HNBR release (open),stack_P_GPa,0.025,density_g_cm3,1.52,in-die CompreDrive; raster 300 dpi marker centroid; +-0.02 g/cm3 (overlapping markers +-0.03); column-median; >=0.7 GPa overlaps compression
+fig10,4.3 wt% HNBR release (open),stack_P_GPa,0.05,density_g_cm3,1.52,in-die CompreDrive; raster 300 dpi marker centroid; +-0.02 g/cm3 (overlapping markers +-0.03); column-median; >=0.7 GPa overlaps compression
+fig10,4.3 wt% HNBR release (open),stack_P_GPa,0.1,density_g_cm3,1.52,in-die CompreDrive; raster 300 dpi marker centroid; +-0.02 g/cm3 (overlapping markers +-0.03); column-median; >=0.7 GPa overlaps compression
+fig10,4.3 wt% HNBR release (open),stack_P_GPa,0.2,density_g_cm3,1.55,in-die CompreDrive; raster 300 dpi marker centroid; +-0.02 g/cm3 (overlapping markers +-0.03); column-median; >=0.7 GPa overlaps compression
+fig10,4.3 wt% HNBR release (open),stack_P_GPa,0.3,density_g_cm3,1.57,in-die CompreDrive; raster 300 dpi marker centroid; +-0.02 g/cm3 (overlapping markers +-0.03); column-median; >=0.7 GPa overlaps compression
+fig10,4.3 wt% HNBR release (open),stack_P_GPa,0.4,density_g_cm3,1.6,in-die CompreDrive; raster 300 dpi marker centroid; +-0.02 g/cm3 (overlapping markers +-0.03); column-median; >=0.7 GPa overlaps compression
+fig10,4.3 wt% HNBR release (open),stack_P_GPa,0.5,density_g_cm3,1.6,in-die CompreDrive; raster 300 dpi marker centroid; +-0.02 g/cm3 (overlapping markers +-0.03); column-median; >=0.7 GPa overlaps compression
+fig10,4.3 wt% HNBR release (open),stack_P_GPa,0.6,density_g_cm3,1.63,in-die CompreDrive; raster 300 dpi marker centroid; +-0.02 g/cm3 (overlapping markers +-0.03); column-median; >=0.7 GPa overlaps compression
+fig8a,LPS powder compression,stack_P_MPa,10,sigma_mS_cm,0.009,CompreDrive EIS 25 C; raster 300 dpi; +-0.003 mS/cm; 10/25 MPa overlap; 700/1100 visual
+fig8a,LPS powder compression,stack_P_MPa,25,sigma_mS_cm,0.01,CompreDrive EIS 25 C; raster 300 dpi; +-0.003 mS/cm; 10/25 MPa overlap; 700/1100 visual
+fig8a,LPS powder compression,stack_P_MPa,50,sigma_mS_cm,0.0141,CompreDrive EIS 25 C; raster 300 dpi; +-0.003 mS/cm; 10/25 MPa overlap; 700/1100 visual
+fig8a,LPS powder compression,stack_P_MPa,100,sigma_mS_cm,0.0241,CompreDrive EIS 25 C; raster 300 dpi; +-0.003 mS/cm; 10/25 MPa overlap; 700/1100 visual
+fig8a,LPS powder compression,stack_P_MPa,200,sigma_mS_cm,0.0475,CompreDrive EIS 25 C; raster 300 dpi; +-0.003 mS/cm; 10/25 MPa overlap; 700/1100 visual
+fig8a,LPS powder compression,stack_P_MPa,300,sigma_mS_cm,0.0736,CompreDrive EIS 25 C; raster 300 dpi; +-0.003 mS/cm; 10/25 MPa overlap; 700/1100 visual
+fig8a,LPS powder compression,stack_P_MPa,400,sigma_mS_cm,0.099,CompreDrive EIS 25 C; raster 300 dpi; +-0.003 mS/cm; 10/25 MPa overlap; 700/1100 visual
+fig8a,LPS powder compression,stack_P_MPa,500,sigma_mS_cm,0.126,CompreDrive EIS 25 C; raster 300 dpi; +-0.003 mS/cm; 10/25 MPa overlap; 700/1100 visual
+fig8a,LPS powder compression,stack_P_MPa,600,sigma_mS_cm,0.152,CompreDrive EIS 25 C; raster 300 dpi; +-0.003 mS/cm; 10/25 MPa overlap; 700/1100 visual
+fig8a,LPS powder compression,stack_P_MPa,700,sigma_mS_cm,0.178,CompreDrive EIS 25 C; raster 300 dpi; +-0.003 mS/cm; 10/25 MPa overlap; 700/1100 visual
+fig8a,LPS powder compression,stack_P_MPa,800,sigma_mS_cm,0.202,CompreDrive EIS 25 C; raster 300 dpi; +-0.003 mS/cm; 10/25 MPa overlap; 700/1100 visual
+fig8a,LPS powder compression,stack_P_MPa,900,sigma_mS_cm,0.222,CompreDrive EIS 25 C; raster 300 dpi; +-0.003 mS/cm; 10/25 MPa overlap; 700/1100 visual
+fig8a,LPS powder compression,stack_P_MPa,1000,sigma_mS_cm,0.239,CompreDrive EIS 25 C; raster 300 dpi; +-0.003 mS/cm; 10/25 MPa overlap; 700/1100 visual
+fig8a,LPS powder compression,stack_P_MPa,1100,sigma_mS_cm,0.248,CompreDrive EIS 25 C; raster 300 dpi; +-0.003 mS/cm; 10/25 MPa overlap; 700/1100 visual
+fig8a,LPS powder compression,stack_P_MPa,1200,sigma_mS_cm,0.255,CompreDrive EIS 25 C; raster 300 dpi; +-0.003 mS/cm; 10/25 MPa overlap; 700/1100 visual
+fig8a,LPS powder compression,stack_P_MPa,1300,sigma_mS_cm,0.256,CompreDrive EIS 25 C; raster 300 dpi; +-0.003 mS/cm; 10/25 MPa overlap; 700/1100 visual
+fig8a,LPS powder compression,stack_P_MPa,1400,sigma_mS_cm,0.255,CompreDrive EIS 25 C; raster 300 dpi; +-0.003 mS/cm; 10/25 MPa overlap; 700/1100 visual
+fig8a,LPS powder compression,stack_P_MPa,1500,sigma_mS_cm,0.2505,CompreDrive EIS 25 C; raster 300 dpi; +-0.003 mS/cm; 10/25 MPa overlap; 700/1100 visual
+fig8a,LPS powder release,stack_P_MPa,10,sigma_mS_cm,0.1348,CompreDrive EIS 25 C; raster 300 dpi; +-0.003 mS/cm
+fig8a,LPS powder release,stack_P_MPa,25,sigma_mS_cm,0.1482,CompreDrive EIS 25 C; raster 300 dpi; +-0.003 mS/cm
+fig8a,LPS powder release,stack_P_MPa,50,sigma_mS_cm,0.1586,CompreDrive EIS 25 C; raster 300 dpi; +-0.003 mS/cm
+fig8a,LPS powder release,stack_P_MPa,100,sigma_mS_cm,0.173,CompreDrive EIS 25 C; raster 300 dpi; +-0.003 mS/cm
+fig8a,LPS powder release,stack_P_MPa,200,sigma_mS_cm,0.1905,CompreDrive EIS 25 C; raster 300 dpi; +-0.003 mS/cm
+fig8a,LPS powder release,stack_P_MPa,300,sigma_mS_cm,0.2052,CompreDrive EIS 25 C; raster 300 dpi; +-0.003 mS/cm
+fig8a,LPS powder release,stack_P_MPa,400,sigma_mS_cm,0.2174,CompreDrive EIS 25 C; raster 300 dpi; +-0.003 mS/cm
+fig8a,LPS powder release,stack_P_MPa,500,sigma_mS_cm,0.2275,CompreDrive EIS 25 C; raster 300 dpi; +-0.003 mS/cm
+fig8a,LPS powder release,stack_P_MPa,600,sigma_mS_cm,0.2357,CompreDrive EIS 25 C; raster 300 dpi; +-0.003 mS/cm
+fig8a,LPS powder release,stack_P_MPa,700,sigma_mS_cm,0.2414,CompreDrive EIS 25 C; raster 300 dpi; +-0.003 mS/cm
+fig8a,LPS powder release,stack_P_MPa,800,sigma_mS_cm,0.2437,CompreDrive EIS 25 C; raster 300 dpi; +-0.003 mS/cm
+fig8a,LPS powder release,stack_P_MPa,900,sigma_mS_cm,0.2458,CompreDrive EIS 25 C; raster 300 dpi; +-0.003 mS/cm
+fig8a,LPS powder release,stack_P_MPa,1000,sigma_mS_cm,0.2459,CompreDrive EIS 25 C; raster 300 dpi; +-0.003 mS/cm
+fig8a,LPS powder release,stack_P_MPa,1100,sigma_mS_cm,0.247,CompreDrive EIS 25 C; raster 300 dpi; +-0.003 mS/cm
+fig8a,LPS powder release,stack_P_MPa,1200,sigma_mS_cm,0.2449,CompreDrive EIS 25 C; raster 300 dpi; +-0.003 mS/cm
+fig8a,LPS powder release,stack_P_MPa,1300,sigma_mS_cm,0.2453,CompreDrive EIS 25 C; raster 300 dpi; +-0.003 mS/cm
+fig8a,LPS powder release,stack_P_MPa,1400,sigma_mS_cm,0.2454,CompreDrive EIS 25 C; raster 300 dpi; +-0.003 mS/cm
+fig8a,LPS powder release,stack_P_MPa,1500,sigma_mS_cm,0.2505,CompreDrive EIS 25 C; raster 300 dpi; +-0.003 mS/cm
+fig8a,3 wt% HNBR compression,stack_P_MPa,10,sigma_mS_cm,0.007,CompreDrive EIS 25 C; raster 300 dpi; +-0.003 mS/cm; >=800 MPa compression/release overlap
+fig8a,3 wt% HNBR compression,stack_P_MPa,50,sigma_mS_cm,0.01,CompreDrive EIS 25 C; raster 300 dpi; +-0.003 mS/cm; >=800 MPa compression/release overlap
+fig8a,3 wt% HNBR compression,stack_P_MPa,100,sigma_mS_cm,0.0158,CompreDrive EIS 25 C; raster 300 dpi; +-0.003 mS/cm; >=800 MPa compression/release overlap
+fig8a,3 wt% HNBR compression,stack_P_MPa,200,sigma_mS_cm,0.0286,CompreDrive EIS 25 C; raster 300 dpi; +-0.003 mS/cm; >=800 MPa compression/release overlap
+fig8a,3 wt% HNBR compression,stack_P_MPa,300,sigma_mS_cm,0.0404,CompreDrive EIS 25 C; raster 300 dpi; +-0.003 mS/cm; >=800 MPa compression/release overlap
+fig8a,3 wt% HNBR compression,stack_P_MPa,400,sigma_mS_cm,0.0538,CompreDrive EIS 25 C; raster 300 dpi; +-0.003 mS/cm; >=800 MPa compression/release overlap
+fig8a,3 wt% HNBR compression,stack_P_MPa,500,sigma_mS_cm,0.0637,CompreDrive EIS 25 C; raster 300 dpi; +-0.003 mS/cm; >=800 MPa compression/release overlap
+fig8a,3 wt% HNBR compression,stack_P_MPa,600,sigma_mS_cm,0.0709,CompreDrive EIS 25 C; raster 300 dpi; +-0.003 mS/cm; >=800 MPa compression/release overlap
+fig8a,3 wt% HNBR compression,stack_P_MPa,700,sigma_mS_cm,0.0756,CompreDrive EIS 25 C; raster 300 dpi; +-0.003 mS/cm; >=800 MPa compression/release overlap
+fig8a,3 wt% HNBR compression,stack_P_MPa,900,sigma_mS_cm,0.0837,CompreDrive EIS 25 C; raster 300 dpi; +-0.003 mS/cm; >=800 MPa compression/release overlap
+fig8a,3 wt% HNBR compression,stack_P_MPa,1200,sigma_mS_cm,0.084,CompreDrive EIS 25 C; raster 300 dpi; +-0.003 mS/cm; >=800 MPa compression/release overlap
+fig8a,3 wt% HNBR compression,stack_P_MPa,1500,sigma_mS_cm,0.0815,CompreDrive EIS 25 C; raster 300 dpi; +-0.003 mS/cm; >=800 MPa compression/release overlap
+fig8a,3 wt% HNBR release,stack_P_MPa,10,sigma_mS_cm,0.022,"CompreDrive EIS 25 C; raster 300 dpi; +-0.003 mS/cm; <=200 MPa cluster with 4.3 wt% release, +-0.006"
+fig8a,3 wt% HNBR release,stack_P_MPa,25,sigma_mS_cm,0.023,"CompreDrive EIS 25 C; raster 300 dpi; +-0.003 mS/cm; <=200 MPa cluster with 4.3 wt% release, +-0.006"
+fig8a,3 wt% HNBR release,stack_P_MPa,50,sigma_mS_cm,0.033,"CompreDrive EIS 25 C; raster 300 dpi; +-0.003 mS/cm; <=200 MPa cluster with 4.3 wt% release, +-0.006"
+fig8a,3 wt% HNBR release,stack_P_MPa,100,sigma_mS_cm,0.045,"CompreDrive EIS 25 C; raster 300 dpi; +-0.003 mS/cm; <=200 MPa cluster with 4.3 wt% release, +-0.006"
+fig8a,3 wt% HNBR release,stack_P_MPa,200,sigma_mS_cm,0.06,"CompreDrive EIS 25 C; raster 300 dpi; +-0.003 mS/cm; <=200 MPa cluster with 4.3 wt% release, +-0.006"
+fig8a,3 wt% HNBR release,stack_P_MPa,300,sigma_mS_cm,0.0702,"CompreDrive EIS 25 C; raster 300 dpi; +-0.003 mS/cm; <=200 MPa cluster with 4.3 wt% release, +-0.006"
+fig8a,3 wt% HNBR release,stack_P_MPa,400,sigma_mS_cm,0.0758,"CompreDrive EIS 25 C; raster 300 dpi; +-0.003 mS/cm; <=200 MPa cluster with 4.3 wt% release, +-0.006"
+fig8a,3 wt% HNBR release,stack_P_MPa,500,sigma_mS_cm,0.0792,"CompreDrive EIS 25 C; raster 300 dpi; +-0.003 mS/cm; <=200 MPa cluster with 4.3 wt% release, +-0.006"
+fig8a,3 wt% HNBR release,stack_P_MPa,600,sigma_mS_cm,0.0819,"CompreDrive EIS 25 C; raster 300 dpi; +-0.003 mS/cm; <=200 MPa cluster with 4.3 wt% release, +-0.006"
+fig8a,3 wt% HNBR release,stack_P_MPa,700,sigma_mS_cm,0.0827,"CompreDrive EIS 25 C; raster 300 dpi; +-0.003 mS/cm; <=200 MPa cluster with 4.3 wt% release, +-0.006"
+fig8a,4.3 wt% HNBR compression,stack_P_MPa,10,sigma_mS_cm,0.0034,CompreDrive EIS 25 C; raster 300 dpi; +-0.003 mS/cm
+fig8a,4.3 wt% HNBR compression,stack_P_MPa,50,sigma_mS_cm,0.0055,CompreDrive EIS 25 C; raster 300 dpi; +-0.003 mS/cm
+fig8a,4.3 wt% HNBR compression,stack_P_MPa,100,sigma_mS_cm,0.0117,CompreDrive EIS 25 C; raster 300 dpi; +-0.003 mS/cm
+fig8a,4.3 wt% HNBR compression,stack_P_MPa,200,sigma_mS_cm,0.022,CompreDrive EIS 25 C; raster 300 dpi; +-0.003 mS/cm
+fig8a,4.3 wt% HNBR compression,stack_P_MPa,300,sigma_mS_cm,0.032,CompreDrive EIS 25 C; raster 300 dpi; +-0.003 mS/cm
+fig8a,4.3 wt% HNBR compression,stack_P_MPa,400,sigma_mS_cm,0.0422,CompreDrive EIS 25 C; raster 300 dpi; +-0.003 mS/cm
+fig8a,4.3 wt% HNBR compression,stack_P_MPa,500,sigma_mS_cm,0.0508,CompreDrive EIS 25 C; raster 300 dpi; +-0.003 mS/cm
+fig8a,4.3 wt% HNBR compression,stack_P_MPa,600,sigma_mS_cm,0.0587,CompreDrive EIS 25 C; raster 300 dpi; +-0.003 mS/cm
+fig8a,4.3 wt% HNBR compression,stack_P_MPa,700,sigma_mS_cm,0.0643,CompreDrive EIS 25 C; raster 300 dpi; +-0.003 mS/cm
+fig8a,4.3 wt% HNBR compression,stack_P_MPa,800,sigma_mS_cm,0.0693,CompreDrive EIS 25 C; raster 300 dpi; +-0.003 mS/cm
+fig8a,4.3 wt% HNBR compression,stack_P_MPa,900,sigma_mS_cm,0.0733,CompreDrive EIS 25 C; raster 300 dpi; +-0.003 mS/cm
+fig8a,4.3 wt% HNBR compression,stack_P_MPa,1000,sigma_mS_cm,0.0749,CompreDrive EIS 25 C; raster 300 dpi; +-0.003 mS/cm
+fig8a,4.3 wt% HNBR compression,stack_P_MPa,1100,sigma_mS_cm,0.0761,CompreDrive EIS 25 C; raster 300 dpi; +-0.003 mS/cm
+fig8a,4.3 wt% HNBR compression,stack_P_MPa,1200,sigma_mS_cm,0.076,CompreDrive EIS 25 C; raster 300 dpi; +-0.003 mS/cm
+fig8a,4.3 wt% HNBR compression,stack_P_MPa,1300,sigma_mS_cm,0.076,CompreDrive EIS 25 C; raster 300 dpi; +-0.003 mS/cm
+fig8a,4.3 wt% HNBR compression,stack_P_MPa,1400,sigma_mS_cm,0.0754,CompreDrive EIS 25 C; raster 300 dpi; +-0.003 mS/cm
+fig8a,4.3 wt% HNBR compression,stack_P_MPa,1500,sigma_mS_cm,0.075,CompreDrive EIS 25 C; raster 300 dpi; +-0.003 mS/cm
+fig8a,4.3 wt% HNBR release,stack_P_MPa,10,sigma_mS_cm,0.028,CompreDrive EIS 25 C; raster 300 dpi; +-0.003 mS/cm; <=200 MPa +-0.006
+fig8a,4.3 wt% HNBR release,stack_P_MPa,25,sigma_mS_cm,0.031,CompreDrive EIS 25 C; raster 300 dpi; +-0.003 mS/cm; <=200 MPa +-0.006
+fig8a,4.3 wt% HNBR release,stack_P_MPa,50,sigma_mS_cm,0.035,CompreDrive EIS 25 C; raster 300 dpi; +-0.003 mS/cm; <=200 MPa +-0.006
+fig8a,4.3 wt% HNBR release,stack_P_MPa,100,sigma_mS_cm,0.043,CompreDrive EIS 25 C; raster 300 dpi; +-0.003 mS/cm; <=200 MPa +-0.006
+fig8a,4.3 wt% HNBR release,stack_P_MPa,200,sigma_mS_cm,0.056,CompreDrive EIS 25 C; raster 300 dpi; +-0.003 mS/cm; <=200 MPa +-0.006
+fig8a,4.3 wt% HNBR release,stack_P_MPa,300,sigma_mS_cm,0.0645,CompreDrive EIS 25 C; raster 300 dpi; +-0.003 mS/cm; <=200 MPa +-0.006
+fig8a,4.3 wt% HNBR release,stack_P_MPa,400,sigma_mS_cm,0.0709,CompreDrive EIS 25 C; raster 300 dpi; +-0.003 mS/cm; <=200 MPa +-0.006
+fig8a,4.3 wt% HNBR release,stack_P_MPa,500,sigma_mS_cm,0.0743,CompreDrive EIS 25 C; raster 300 dpi; +-0.003 mS/cm; <=200 MPa +-0.006
+fig8a,4.3 wt% HNBR release,stack_P_MPa,600,sigma_mS_cm,0.0762,CompreDrive EIS 25 C; raster 300 dpi; +-0.003 mS/cm; <=200 MPa +-0.006
+fig8a,4.3 wt% HNBR release,stack_P_MPa,700,sigma_mS_cm,0.0772,CompreDrive EIS 25 C; raster 300 dpi; +-0.003 mS/cm; <=200 MPa +-0.006
+fig8b,LPS powder 2nd cycle compression,stack_P_MPa,10,sigma_mS_cm,0.14,CompreDrive EIS 25 C; raster 300 dpi; +-0.003 mS/cm; one measurement (caption)
+fig8b,LPS powder 2nd cycle compression,stack_P_MPa,100,sigma_mS_cm,0.147,CompreDrive EIS 25 C; raster 300 dpi; +-0.003 mS/cm; one measurement (caption)
+fig8b,LPS powder 2nd cycle compression,stack_P_MPa,200,sigma_mS_cm,0.152,CompreDrive EIS 25 C; raster 300 dpi; +-0.003 mS/cm; one measurement (caption)
+fig8b,LPS powder 2nd cycle compression,stack_P_MPa,300,sigma_mS_cm,0.156,CompreDrive EIS 25 C; raster 300 dpi; +-0.003 mS/cm; one measurement (caption)
+fig8b,LPS powder 2nd cycle compression,stack_P_MPa,400,sigma_mS_cm,0.16,CompreDrive EIS 25 C; raster 300 dpi; +-0.003 mS/cm; one measurement (caption)
+fig8b,LPS powder 2nd cycle compression,stack_P_MPa,500,sigma_mS_cm,0.165,CompreDrive EIS 25 C; raster 300 dpi; +-0.003 mS/cm; one measurement (caption)
+fig8b,LPS powder 2nd cycle compression,stack_P_MPa,600,sigma_mS_cm,0.171,CompreDrive EIS 25 C; raster 300 dpi; +-0.003 mS/cm; one measurement (caption)
+fig8b,LPS powder 2nd cycle compression,stack_P_MPa,800,sigma_mS_cm,0.187,CompreDrive EIS 25 C; raster 300 dpi; +-0.003 mS/cm; one measurement (caption)
+fig8b,LPS powder 2nd cycle compression,stack_P_MPa,900,sigma_mS_cm,0.196,CompreDrive EIS 25 C; raster 300 dpi; +-0.003 mS/cm; one measurement (caption)
+fig8b,LPS powder 2nd cycle compression,stack_P_MPa,1000,sigma_mS_cm,0.204,CompreDrive EIS 25 C; raster 300 dpi; +-0.003 mS/cm; one measurement (caption)
+fig8b,LPS powder 2nd cycle compression,stack_P_MPa,1500,sigma_mS_cm,0.23,CompreDrive EIS 25 C; raster 300 dpi; +-0.003 mS/cm; one measurement (caption)
+fig8b,LPS powder 2nd cycle release,stack_P_MPa,100,sigma_mS_cm,0.155,CompreDrive EIS 25 C; raster 300 dpi; +-0.003 mS/cm
+fig8b,LPS powder 2nd cycle release,stack_P_MPa,200,sigma_mS_cm,0.165,CompreDrive EIS 25 C; raster 300 dpi; +-0.003 mS/cm
+fig8b,LPS powder 2nd cycle release,stack_P_MPa,300,sigma_mS_cm,0.173,CompreDrive EIS 25 C; raster 300 dpi; +-0.003 mS/cm
+fig8b,LPS powder 2nd cycle release,stack_P_MPa,400,sigma_mS_cm,0.18,CompreDrive EIS 25 C; raster 300 dpi; +-0.003 mS/cm
+fig8b,LPS powder 2nd cycle release,stack_P_MPa,500,sigma_mS_cm,0.186,CompreDrive EIS 25 C; raster 300 dpi; +-0.003 mS/cm
+fig8b,LPS powder 2nd cycle release,stack_P_MPa,600,sigma_mS_cm,0.194,CompreDrive EIS 25 C; raster 300 dpi; +-0.003 mS/cm
+fig8b,LPS powder 2nd cycle release,stack_P_MPa,700,sigma_mS_cm,0.199,CompreDrive EIS 25 C; raster 300 dpi; +-0.003 mS/cm
+fig8b,LPS powder 2nd cycle release,stack_P_MPa,900,sigma_mS_cm,0.208,CompreDrive EIS 25 C; raster 300 dpi; +-0.003 mS/cm
+fig8b,LPS powder 2nd cycle release,stack_P_MPa,1000,sigma_mS_cm,0.212,CompreDrive EIS 25 C; raster 300 dpi; +-0.003 mS/cm
+fig9b,S500 308 um 100 C,fab_P_MPa,0,coating_density_g_cm3,0.48,"out-of-die (thickness after release, dial gauge); raster; +-0.04 g/cm3; 131 um series overlap"
+fig9b,S500 308 um 100 C,fab_P_MPa,25,coating_density_g_cm3,0.92,"out-of-die (thickness after release, dial gauge); raster; +-0.04 g/cm3; 131 um series overlap"
+fig9b,S500 308 um 100 C,fab_P_MPa,50,coating_density_g_cm3,1.06,"out-of-die (thickness after release, dial gauge); raster; +-0.04 g/cm3; 131 um series overlap"
+fig9b,S500 308 um 100 C,fab_P_MPa,100,coating_density_g_cm3,1.09,"out-of-die (thickness after release, dial gauge); raster; +-0.04 g/cm3; 131 um series overlap"
+fig9b,S500 308 um 100 C,fab_P_MPa,200,coating_density_g_cm3,1.29,"out-of-die (thickness after release, dial gauge); raster; +-0.04 g/cm3; 131 um series overlap"
+fig9b,S500 308 um 100 C,fab_P_MPa,300,coating_density_g_cm3,1.4,"out-of-die (thickness after release, dial gauge); raster; +-0.04 g/cm3; 131 um series overlap"
+fig9b,S500 308 um 40 C,fab_P_MPa,0,coating_density_g_cm3,0.47,"out-of-die (thickness after release, dial gauge); raster; +-0.04 g/cm3; 131 um series overlap"
+fig9b,S500 308 um 40 C,fab_P_MPa,25,coating_density_g_cm3,0.88,"out-of-die (thickness after release, dial gauge); raster; +-0.04 g/cm3; 131 um series overlap"
+fig9b,S500 308 um 40 C,fab_P_MPa,50,coating_density_g_cm3,0.99,"out-of-die (thickness after release, dial gauge); raster; +-0.04 g/cm3; 131 um series overlap"
+fig9b,S500 308 um 40 C,fab_P_MPa,100,coating_density_g_cm3,1.08,"out-of-die (thickness after release, dial gauge); raster; +-0.04 g/cm3; 131 um series overlap"
+fig9b,S500 308 um 40 C,fab_P_MPa,200,coating_density_g_cm3,1.28,"out-of-die (thickness after release, dial gauge); raster; +-0.04 g/cm3; 131 um series overlap"
+fig9b,S500 308 um 40 C,fab_P_MPa,300,coating_density_g_cm3,1.38,"out-of-die (thickness after release, dial gauge); raster; +-0.04 g/cm3; 131 um series overlap"
+fig9b,S300 131 um (40/100 C),fab_P_MPa,0,coating_density_g_cm3,0.47,"out-of-die (thickness after release, dial gauge); raster; +-0.04 g/cm3; 131 um series overlap; 40 vs 100 C not separable at 300 MPa (~1.15/~1.17)"
+fig9b,S300 131 um (40/100 C),fab_P_MPa,300,coating_density_g_cm3,1.16,"out-of-die (thickness after release, dial gauge); raster; +-0.04 g/cm3; 131 um series overlap; 40 vs 100 C not separable at 300 MPa (~1.15/~1.17)"
+fig12,springback mean (printed),case,3wt%_1mm/min,springback_pct,6.7,printed in figure & text p.14; 13-15 measurements each
+fig12,springback mean (printed),case,3wt%_5mm/min,springback_pct,9.2,printed in figure & text p.14; 13-15 measurements each
+fig12,springback mean (printed),case,4.3wt%_1mm/min,springback_pct,7.9,printed in figure & text p.14; 13-15 measurements each
+fig12,springback mean (printed),case,4.3wt%_5mm/min,springback_pct,10.4,printed in figure & text p.14; 13-15 measurements each
+fig12,springback whisker range (1.5 IQR),case,3wt%_1mm/min,springback_pct_range,5.4-7.7,visual read +-0.1
+fig12,springback whisker range (1.5 IQR),case,3wt%_5mm/min,springback_pct_range,8.6-10.0,visual read +-0.1
+fig12,springback whisker range (1.5 IQR),case,4.3wt%_1mm/min,springback_pct_range,7.3-8.5,visual read +-0.1
+fig12,springback whisker range (1.5 IQR),case,4.3wt%_5mm/min,springback_pct_range,8.7-11.8 (+12.9 outlier),visual read +-0.1
+figS1,setup unloading fit slope (5 references),reference,1,slope_N_per_mm,-10934,"recomputed from vector fit lines (PDF drawings), 1 mm/min; mean -1.094e4 N/mm -> setup deflection ~0.046 mm at 500 N"
+figS1,setup unloading fit slope (5 references),reference,2,slope_N_per_mm,-10947,"recomputed from vector fit lines (PDF drawings), 1 mm/min; mean -1.094e4 N/mm -> setup deflection ~0.046 mm at 500 N"
+figS1,setup unloading fit slope (5 references),reference,3,slope_N_per_mm,-10954,"recomputed from vector fit lines (PDF drawings), 1 mm/min; mean -1.094e4 N/mm -> setup deflection ~0.046 mm at 500 N"
+figS1,setup unloading fit slope (5 references),reference,4,slope_N_per_mm,-10932,"recomputed from vector fit lines (PDF drawings), 1 mm/min; mean -1.094e4 N/mm -> setup deflection ~0.046 mm at 500 N"
+figS1,setup unloading fit slope (5 references),reference,5,slope_N_per_mm,-10927,"recomputed from vector fit lines (PDF drawings), 1 mm/min; mean -1.094e4 N/mm -> setup deflection ~0.046 mm at 500 N"
+fig2d,reduced modulus E_R mean (printed),state,0MPa,E_R_GPa,0.491,"printed in figure; flat punch 50 um, 63 indents; LPS + 3 wt% HNBR"
+fig2d,reduced modulus E_R mean (printed),state,100MPa_40C,E_R_GPa,1.929,"printed in figure; flat punch 50 um, 63 indents; LPS + 3 wt% HNBR"
+fig2d,reduced modulus E_R mean (printed),state,100MPa_100C,E_R_GPa,2.332,"printed in figure; flat punch 50 um, 63 indents; LPS + 3 wt% HNBR"
+fig2d,reduced modulus E_R mean (printed),state,300MPa_40C,E_R_GPa,5.344,"printed in figure; flat punch 50 um, 63 indents; LPS + 3 wt% HNBR"
+fig2e,hardness H mean (printed),state,0MPa,H_GPa,0.009,printed in figure
+fig2e,hardness H mean (printed),state,100MPa_40C,H_GPa,0.172,printed in figure
+fig2e,hardness H mean (printed),state,100MPa_100C,H_GPa,0.086,printed in figure
+fig2e,hardness H mean (printed),state,300MPa_40C,H_GPa,0.809,printed in figure
+fig2b,adhesion/cohesion strength,fab_P_MPa,0,sigma_A_MPa,0.13,0 MPa = 0.13 printed (cohesive); others visual +-0.03; 200 MPa not measurable
+fig2b,adhesion/cohesion strength,fab_P_MPa,50,sigma_A_MPa,0.81,0 MPa = 0.13 printed (cohesive); others visual +-0.03; 200 MPa not measurable
+fig2b,adhesion/cohesion strength,fab_P_MPa,100,sigma_A_MPa,0.84,0 MPa = 0.13 printed (cohesive); others visual +-0.03; 200 MPa not measurable
+fig2b,adhesion/cohesion strength,fab_P_MPa,300,sigma_A_MPa,0.57,0 MPa = 0.13 printed (cohesive); others visual +-0.03; 200 MPa not measurable
+fig2b,adhesion/cohesion strength,fab_P_MPa,400,sigma_A_MPa,0.34,0 MPa = 0.13 printed (cohesive); others visual +-0.03; 200 MPa not measurable
+fig2c,adhesion strength vs densification T (100 MPa),T_C,20,sigma_A_MPa,0.52,100 C = 1.27 printed (text); others visual +-0.03
+fig2c,adhesion strength vs densification T (100 MPa),T_C,40,sigma_A_MPa,0.84,100 C = 1.27 printed (text); others visual +-0.03
+fig2c,adhesion strength vs densification T (100 MPa),T_C,60,sigma_A_MPa,0.89,100 C = 1.27 printed (text); others visual +-0.03
+fig2c,adhesion strength vs densification T (100 MPa),T_C,80,sigma_A_MPa,1.15,100 C = 1.27 printed (text); others visual +-0.03
+fig2c,adhesion strength vs densification T (100 MPa),T_C,100,sigma_A_MPa,1.27,100 C = 1.27 printed (text); others visual +-0.03
+fig7,LPS powder,stack_P_MPa,25,sigma_mS_cm,0.0114,"EIS 25 C, PTFE cell + hydraulic press; each point = one sample measured once; raster marker centroid +-0.002 mS/cm; fabrication history of these samples not stated"
+fig7,LPS powder,stack_P_MPa,50,sigma_mS_cm,0.0189,"EIS 25 C, PTFE cell + hydraulic press; each point = one sample measured once; raster marker centroid +-0.002 mS/cm; fabrication history of these samples not stated"
+fig7,LPS powder,stack_P_MPa,100,sigma_mS_cm,0.0354,"EIS 25 C, PTFE cell + hydraulic press; each point = one sample measured once; raster marker centroid +-0.002 mS/cm; fabrication history of these samples not stated"
+fig7,LPS powder,stack_P_MPa,200,sigma_mS_cm,0.0733,"EIS 25 C, PTFE cell + hydraulic press; each point = one sample measured once; raster marker centroid +-0.002 mS/cm; fabrication history of these samples not stated"
+fig7,LPS powder,stack_P_MPa,200,sigma_mS_cm,0.0803,"EIS 25 C, PTFE cell + hydraulic press; each point = one sample measured once; raster marker centroid +-0.002 mS/cm; fabrication history of these samples not stated"
+fig7,LPS powder,stack_P_MPa,200,sigma_mS_cm,0.1005,"EIS 25 C, PTFE cell + hydraulic press; each point = one sample measured once; raster marker centroid +-0.002 mS/cm; fabrication history of these samples not stated"
+fig7,3 wt% HNBR,stack_P_MPa,50,sigma_mS_cm,0.0073,"EIS 25 C, PTFE cell + hydraulic press; each point = one sample measured once; raster marker centroid +-0.002 mS/cm; fabrication history of these samples not stated; 25 MPa hidden under 4.3 wt% markers"
+fig7,3 wt% HNBR,stack_P_MPa,100,sigma_mS_cm,0.0165,"EIS 25 C, PTFE cell + hydraulic press; each point = one sample measured once; raster marker centroid +-0.002 mS/cm; fabrication history of these samples not stated; 25 MPa hidden under 4.3 wt% markers"
+fig7,3 wt% HNBR,stack_P_MPa,100,sigma_mS_cm,0.0247,"EIS 25 C, PTFE cell + hydraulic press; each point = one sample measured once; raster marker centroid +-0.002 mS/cm; fabrication history of these samples not stated; 25 MPa hidden under 4.3 wt% markers"
+fig7,3 wt% HNBR,stack_P_MPa,200,sigma_mS_cm,0.0382,"EIS 25 C, PTFE cell + hydraulic press; each point = one sample measured once; raster marker centroid +-0.002 mS/cm; fabrication history of these samples not stated; 25 MPa hidden under 4.3 wt% markers"
+fig7,3 wt% HNBR,stack_P_MPa,200,sigma_mS_cm,0.0413,"EIS 25 C, PTFE cell + hydraulic press; each point = one sample measured once; raster marker centroid +-0.002 mS/cm; fabrication history of these samples not stated; 25 MPa hidden under 4.3 wt% markers"
+fig7,4.3 wt% HNBR,stack_P_MPa,25,sigma_mS_cm,0.0057,"EIS 25 C, PTFE cell + hydraulic press; each point = one sample measured once; raster marker centroid +-0.002 mS/cm; fabrication history of these samples not stated"
+fig7,4.3 wt% HNBR,stack_P_MPa,25,sigma_mS_cm,0.0076,"EIS 25 C, PTFE cell + hydraulic press; each point = one sample measured once; raster marker centroid +-0.002 mS/cm; fabrication history of these samples not stated"
+fig7,4.3 wt% HNBR,stack_P_MPa,50,sigma_mS_cm,0.0112,"EIS 25 C, PTFE cell + hydraulic press; each point = one sample measured once; raster marker centroid +-0.002 mS/cm; fabrication history of these samples not stated"
+fig7,4.3 wt% HNBR,stack_P_MPa,100,sigma_mS_cm,0.0187,"EIS 25 C, PTFE cell + hydraulic press; each point = one sample measured once; raster marker centroid +-0.002 mS/cm; fabrication history of these samples not stated"
+fig7,4.3 wt% HNBR,stack_P_MPa,100,sigma_mS_cm,0.0212,"EIS 25 C, PTFE cell + hydraulic press; each point = one sample measured once; raster marker centroid +-0.002 mS/cm; fabrication history of these samples not stated"
+fig7,4.3 wt% HNBR,stack_P_MPa,200,sigma_mS_cm,0.0289,"EIS 25 C, PTFE cell + hydraulic press; each point = one sample measured once; raster marker centroid +-0.002 mS/cm; fabrication history of these samples not stated"
+fig7,4.3 wt% HNBR,stack_P_MPa,200,sigma_mS_cm,0.032,"EIS 25 C, PTFE cell + hydraulic press; each point = one sample measured once; raster marker centroid +-0.002 mS/cm; fabrication history of these samples not stated"
+fig7,4.3 wt% HNBR,stack_P_MPa,200,sigma_mS_cm,0.0504,"EIS 25 C, PTFE cell + hydraulic press; each point = one sample measured once; raster marker centroid +-0.002 mS/cm; fabrication history of these samples not stated"
+fig4b,LPS powder non-compacted,fab_P_MPa,0,sigma_mS_cm,0.0106,"stack 25 MPa, 25 C; filled = press body = cell body, open = press body != cell body; raster blobs +-0.001 mS/cm; groups of 2-3 samples"
+fig4b,LPS powder non-compacted,fab_P_MPa,0,sigma_mS_cm,0.0127,"stack 25 MPa, 25 C; filled = press body = cell body, open = press body != cell body; raster blobs +-0.001 mS/cm; groups of 2-3 samples"
+fig4b,LPS powder press=cell,fab_P_MPa,25,sigma_mS_cm,0.0141,"stack 25 MPa, 25 C; filled = press body = cell body, open = press body != cell body; raster blobs +-0.001 mS/cm; groups of 2-3 samples; 25/50 lower members overlap"
+fig4b,LPS powder press=cell,fab_P_MPa,50,sigma_mS_cm,0.0181,"stack 25 MPa, 25 C; filled = press body = cell body, open = press body != cell body; raster blobs +-0.001 mS/cm; groups of 2-3 samples; 25/50 lower members overlap"
+fig4b,LPS powder press=cell,fab_P_MPa,100,sigma_mS_cm,0.0217,"stack 25 MPa, 25 C; filled = press body = cell body, open = press body != cell body; raster blobs +-0.001 mS/cm; groups of 2-3 samples; 25/50 lower members overlap"
+fig4b,LPS powder press=cell,fab_P_MPa,200,sigma_mS_cm,0.0221,"stack 25 MPa, 25 C; filled = press body = cell body, open = press body != cell body; raster blobs +-0.001 mS/cm; groups of 2-3 samples; 25/50 lower members overlap"
+fig4b,LPS powder press=cell,fab_P_MPa,200,sigma_mS_cm,0.0265,"stack 25 MPa, 25 C; filled = press body = cell body, open = press body != cell body; raster blobs +-0.001 mS/cm; groups of 2-3 samples; 25/50 lower members overlap"
+fig4b,LPS powder press!=cell,fab_P_MPa,25,sigma_mS_cm,0.0107,"stack 25 MPa, 25 C; filled = press body = cell body, open = press body != cell body; raster blobs +-0.001 mS/cm; groups of 2-3 samples"
+fig4b,LPS powder press!=cell,fab_P_MPa,50,sigma_mS_cm,0.0113,"stack 25 MPa, 25 C; filled = press body = cell body, open = press body != cell body; raster blobs +-0.001 mS/cm; groups of 2-3 samples"
+fig4b,LPS powder press!=cell,fab_P_MPa,100,sigma_mS_cm,0.0151,"stack 25 MPa, 25 C; filled = press body = cell body, open = press body != cell body; raster blobs +-0.001 mS/cm; groups of 2-3 samples"
+fig4b,LPS powder press!=cell,fab_P_MPa,200,sigma_mS_cm,0.0187,"stack 25 MPa, 25 C; filled = press body = cell body, open = press body != cell body; raster blobs +-0.001 mS/cm; groups of 2-3 samples"
+fig4c,3 wt% HNBR non-compacted,fab_P_MPa,0,sigma_mS_cm,0.0075,"stack 25 MPa, 25 C; filled = press body = cell body, open = press body != cell body; raster blobs +-0.001 mS/cm; groups of 2-3 samples"
+fig4c,3 wt% HNBR press=cell,fab_P_MPa,25,sigma_mS_cm,0.009,"stack 25 MPa, 25 C; filled = press body = cell body, open = press body != cell body; raster blobs +-0.001 mS/cm; groups of 2-3 samples; ranges 25: 0.006-0.009, 100: 0.0105-0.013, 200: 0.0136-0.0172"
+fig4c,3 wt% HNBR press=cell,fab_P_MPa,50,sigma_mS_cm,0.009,"stack 25 MPa, 25 C; filled = press body = cell body, open = press body != cell body; raster blobs +-0.001 mS/cm; groups of 2-3 samples; ranges 25: 0.006-0.009, 100: 0.0105-0.013, 200: 0.0136-0.0172"
+fig4c,3 wt% HNBR press=cell,fab_P_MPa,100,sigma_mS_cm,0.0118,"stack 25 MPa, 25 C; filled = press body = cell body, open = press body != cell body; raster blobs +-0.001 mS/cm; groups of 2-3 samples; ranges 25: 0.006-0.009, 100: 0.0105-0.013, 200: 0.0136-0.0172"
+fig4c,3 wt% HNBR press=cell,fab_P_MPa,200,sigma_mS_cm,0.0155,"stack 25 MPa, 25 C; filled = press body = cell body, open = press body != cell body; raster blobs +-0.001 mS/cm; groups of 2-3 samples; ranges 25: 0.006-0.009, 100: 0.0105-0.013, 200: 0.0136-0.0172"
+fig4c,3 wt% HNBR press!=cell,fab_P_MPa,25,sigma_mS_cm,0.0077,"stack 25 MPa, 25 C; filled = press body = cell body, open = press body != cell body; raster blobs +-0.001 mS/cm; groups of 2-3 samples; ranges 50: 0.0058-0.0075, 100: 0.0067-0.0089, 200: 0.0062-0.0113"
+fig4c,3 wt% HNBR press!=cell,fab_P_MPa,50,sigma_mS_cm,0.0066,"stack 25 MPa, 25 C; filled = press body = cell body, open = press body != cell body; raster blobs +-0.001 mS/cm; groups of 2-3 samples; ranges 50: 0.0058-0.0075, 100: 0.0067-0.0089, 200: 0.0062-0.0113"
+fig4c,3 wt% HNBR press!=cell,fab_P_MPa,100,sigma_mS_cm,0.0078,"stack 25 MPa, 25 C; filled = press body = cell body, open = press body != cell body; raster blobs +-0.001 mS/cm; groups of 2-3 samples; ranges 50: 0.0058-0.0075, 100: 0.0067-0.0089, 200: 0.0062-0.0113"
+fig4c,3 wt% HNBR press!=cell,fab_P_MPa,200,sigma_mS_cm,0.0088,"stack 25 MPa, 25 C; filled = press body = cell body, open = press body != cell body; raster blobs +-0.001 mS/cm; groups of 2-3 samples; ranges 50: 0.0058-0.0075, 100: 0.0067-0.0089, 200: 0.0062-0.0113"
+fig4d,4.3 wt% HNBR non-compacted,fab_P_MPa,0,sigma_mS_cm,0.006,"stack 25 MPa, 25 C; filled = press body = cell body, open = press body != cell body; raster blobs +-0.001 mS/cm; groups of 2-3 samples"
+fig4d,4.3 wt% HNBR press=cell,fab_P_MPa,25,sigma_mS_cm,0.008,"stack 25 MPa, 25 C; filled = press body = cell body, open = press body != cell body; raster blobs +-0.001 mS/cm; groups of 2-3 samples"
+fig4d,4.3 wt% HNBR press=cell,fab_P_MPa,50,sigma_mS_cm,0.009,"stack 25 MPa, 25 C; filled = press body = cell body, open = press body != cell body; raster blobs +-0.001 mS/cm; groups of 2-3 samples"
+fig4d,4.3 wt% HNBR press=cell,fab_P_MPa,100,sigma_mS_cm,0.0104,"stack 25 MPa, 25 C; filled = press body = cell body, open = press body != cell body; raster blobs +-0.001 mS/cm; groups of 2-3 samples"
+fig4d,4.3 wt% HNBR press=cell,fab_P_MPa,200,sigma_mS_cm,0.0126,"stack 25 MPa, 25 C; filled = press body = cell body, open = press body != cell body; raster blobs +-0.001 mS/cm; groups of 2-3 samples"
+fig4d,4.3 wt% HNBR press!=cell,fab_P_MPa,25,sigma_mS_cm,0.0057,"stack 25 MPa, 25 C; filled = press body = cell body, open = press body != cell body; raster blobs +-0.001 mS/cm; groups of 2-3 samples; ranges 50: 0.0050-0.0069, 100: 0.0053-0.0069, 200: 0.0049-0.0089"
+fig4d,4.3 wt% HNBR press!=cell,fab_P_MPa,50,sigma_mS_cm,0.006,"stack 25 MPa, 25 C; filled = press body = cell body, open = press body != cell body; raster blobs +-0.001 mS/cm; groups of 2-3 samples; ranges 50: 0.0050-0.0069, 100: 0.0053-0.0069, 200: 0.0049-0.0089"
+fig4d,4.3 wt% HNBR press!=cell,fab_P_MPa,100,sigma_mS_cm,0.006,"stack 25 MPa, 25 C; filled = press body = cell body, open = press body != cell body; raster blobs +-0.001 mS/cm; groups of 2-3 samples; ranges 50: 0.0050-0.0069, 100: 0.0053-0.0069, 200: 0.0049-0.0089"
+fig4d,4.3 wt% HNBR press!=cell,fab_P_MPa,200,sigma_mS_cm,0.007,"stack 25 MPa, 25 C; filled = press body = cell body, open = press body != cell body; raster blobs +-0.001 mS/cm; groups of 2-3 samples; ranges 50: 0.0050-0.0069, 100: 0.0053-0.0069, 200: 0.0049-0.0089"
+fig6a,LPSCl 4.3 wt% HNBR non-compacted,fab_P_MPa,0,sigma_mS_cm,0.324,"stack 25 MPa, 25 C; raster blobs +-0.01 (a) / +-0.03 (b) mS/cm"
+fig6a,LPSCl 4.3 wt% HNBR non-compacted,fab_P_MPa,0,sigma_mS_cm,0.344,"stack 25 MPa, 25 C; raster blobs +-0.01 (a) / +-0.03 (b) mS/cm"
+fig6a,LPSCl 4.3 wt% HNBR non-compacted,fab_P_MPa,0,sigma_mS_cm,0.368,"stack 25 MPa, 25 C; raster blobs +-0.01 (a) / +-0.03 (b) mS/cm"
+fig6a,LPSCl 4.3 wt% HNBR press=cell,fab_P_MPa,100,sigma_mS_cm,0.22-0.27,"stack 25 MPa, 25 C; raster blobs +-0.01 (a) / +-0.03 (b) mS/cm; ranges of 3 samples"
+fig6a,LPSCl 4.3 wt% HNBR press=cell,fab_P_MPa,300,sigma_mS_cm,0.21-0.25,"stack 25 MPa, 25 C; raster blobs +-0.01 (a) / +-0.03 (b) mS/cm; ranges of 3 samples"
+fig6a,LPSCl 4.3 wt% HNBR press=cell,fab_P_MPa,500,sigma_mS_cm,0.15-0.21,"stack 25 MPa, 25 C; raster blobs +-0.01 (a) / +-0.03 (b) mS/cm; ranges of 3 samples"
+fig6a,LPSCl 4.3 wt% HNBR press!=cell,fab_P_MPa,100,sigma_mS_cm,0.13-0.19,"stack 25 MPa, 25 C; raster blobs +-0.01 (a) / +-0.03 (b) mS/cm; ranges"
+fig6a,LPSCl 4.3 wt% HNBR press!=cell,fab_P_MPa,300,sigma_mS_cm,0.11-0.14,"stack 25 MPa, 25 C; raster blobs +-0.01 (a) / +-0.03 (b) mS/cm; ranges"
+fig6a,LPSCl 4.3 wt% HNBR press!=cell,fab_P_MPa,500,sigma_mS_cm,0.08-0.13,"stack 25 MPa, 25 C; raster blobs +-0.01 (a) / +-0.03 (b) mS/cm; ranges"
+fig6b,LPSCl powder press=cell,fab_P_MPa,0,sigma_mS_cm,0.99-1.10,"stack 25 MPa, 25 C; raster blobs +-0.01 (a) / +-0.03 (b) mS/cm"
+fig6b,LPSCl powder press=cell,fab_P_MPa,100,sigma_mS_cm,1.19,"stack 25 MPa, 25 C; raster blobs +-0.01 (a) / +-0.03 (b) mS/cm"
+fig6b,LPSCl powder press=cell,fab_P_MPa,300,sigma_mS_cm,1.11-1.46,"stack 25 MPa, 25 C; raster blobs +-0.01 (a) / +-0.03 (b) mS/cm"
+fig6b,LPSCl powder press=cell,fab_P_MPa,500,sigma_mS_cm,1.21,"stack 25 MPa, 25 C; raster blobs +-0.01 (a) / +-0.03 (b) mS/cm"

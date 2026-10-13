@@ -1,0 +1,752 @@
+{
+ "slug": "heck2026_densification_sulfide_se_binder_scalable",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-10-13",
+ "sources": [
+  "6. Evaluating densification effects on sulfide-based electrolytes to examine an application in scalable solid-state battery manufacturing.pdf",
+  "6. Sup) Evaluating densification effects on sulfide-based electrolytes to examine an application in scalable solid-state battery manufacturing.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 2,
+   "file": "fig_1.png",
+   "caption": "Fig. 1. Schematic illustration of the densification of a separator in a glovebox followed by EIS in a climate chamber. 2",
+   "rotated_deg": 0,
+   "bbox": [
+    65.7,
+    476.2,
+    529.6,
+    730.8
+   ],
+   "w": 1934,
+   "h": 1061,
+   "dpi": 300,
+   "src": "6. Evaluating densification effects on sulfide-based electrolytes to examine an application in scalable solid-state battery manufacturing.pdf",
+   "blank": 0.63,
+   "viewed": true
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 6,
+   "file": "fig_2.png",
+   "caption": "Fig. 2. a) Schematic illustration of the uniaxial compaction adapted from Heck et al., Ref. [15] under the terms of the CC-BY 4.0 license. Copyright: The Authors (2024), published by Wiley-VCH GmbH and LPS separators compacted with different fabrication pressures. b) Adhesion/cohesion strength as a function of the fabrication pressure of separators S300 compacted at 40 ◦C. Error bars present the standard deviation of ten samples. c) Adhesion strength as a function of the densification temperature of separators S300 compacted at 100 MPa. Error bars present the standard deviation of nine to ten samples. d) Reduced elastic modulus for different densification states determined by 63 indents. e) Hardness for different densification states determined by 63 indents. Individual data points are shown as red dots, the average value is shown in numbers. All graphs present data for LPS separators wi",
+   "rotated_deg": 0,
+   "bbox": [
+    31.6,
+    50.2,
+    566.0,
+    585.0
+   ],
+   "w": 2228,
+   "h": 2229,
+   "dpi": 300,
+   "src": "6. Evaluating densification effects on sulfide-based electrolytes to examine an application in scalable solid-state battery manufacturing.pdf",
+   "blank": 0.872,
+   "viewed": true
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 7,
+   "file": "fig_3.png",
+   "caption": "Fig. 3. SEM images of separator S300 and S500 layers with 3 wt% HNBR for a) different fabrication pressures (compacted at 40 ◦C) and b) different densification temperatures (compacted at 100 MPa). structure of the separator favors short circuits due to the current focusing on sharper protrusions [47]. In Fig. 3b) SEM images of the separator surface compacted at different densification temperatures but with a constant pressure of 100 MPa are shown. An increased sintering of the particles can be observed for separator S300 when going from 20 ◦C to 40 ◦C to 80 ◦C. In contrast, according to the areas depicted for SEM analysis no significant difference for the different densification temperatures can be seen for separator S500. Close particle contact on the separator surface is already achieved at 20 ◦C. It is presumed that the reduction of surface roughness also affects the contact with the ",
+   "rotated_deg": 0,
+   "bbox": [
+    31.6,
+    49.8,
+    566.0,
+    460.0
+   ],
+   "w": 2228,
+   "h": 1710,
+   "dpi": 300,
+   "src": "6. Evaluating densification effects on sulfide-based electrolytes to examine an application in scalable solid-state battery manufacturing.pdf",
+   "blank": 0.408,
+   "viewed": true
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 8,
+   "file": "fig_4.png",
+   "caption": "Fig. 4. a) Schematic illustration of press body = cell body and press body ∕= cell body. Specific ionic conductivity as a function of the fabrication pressure for separators with b) pure LPS powder, c) 3 wt% HNBR and d) 4.3 wt% HNBR of separator S500. The orange data points present the non-compacted samples. All measurements were performed at 25 ◦C and a stack pressure of 25 MPa. Each data point represents one individual sample measured. For each variation, three samples were measured, in exceptional cases two. The standard deviation is based on the variation of the layer thickness and the fit error given by RelaxIS. smoothing the surface. In addition, the binder-based separators were coated onto aluminum. The surface characteristics of the measurement plungers are also expected to influence the measurement results. grain boundary contribution (faster process at lower time constant) with",
+   "rotated_deg": 0,
+   "bbox": [
+    31.6,
+    49.9,
+    566.0,
+    563.0
+   ],
+   "w": 2228,
+   "h": 2139,
+   "dpi": 300,
+   "src": "6. Evaluating densification effects on sulfide-based electrolytes to examine an application in scalable solid-state battery manufacturing.pdf",
+   "blank": 0.895,
+   "viewed": true
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 9,
+   "file": "fig_5.png",
+   "caption": "Fig. 5. a) Results of DRT analysis for separators with pure powder, 3 wt% and 4.3 wt% HNBR. Results of DRT analysis for b) the pure LPS powder, c) separator with 3 wt% HNBR and d) 4.3 wt% HNBR for non-compacted state and compacted at 100 MPa for press body = cell body and press body ∕= cell body. EIS was performed at 25 ◦C and a stack pressure of 25 MPa.",
+   "rotated_deg": 0,
+   "bbox": [
+    31.6,
+    50.0,
+    565.8,
+    464.0
+   ],
+   "w": 2227,
+   "h": 1726,
+   "dpi": 300,
+   "src": "6. Evaluating densification effects on sulfide-based electrolytes to examine an application in scalable solid-state battery manufacturing.pdf",
+   "blank": 0.925,
+   "viewed": true
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 9,
+   "file": "fig_6.png",
+   "caption": "Fig. 6. Specific ionic conductivity as a function of the fabrication pressure for separators with a) LPSCl and 4.3 wt% HNBR analyzed for press body = cell body and press body ∕= cell body and b) for LPSCl and 4.3 wt% HNBR compared to pure LPSCl powder compacted in press body = cell body. The orange data points present the non-compacted samples. All measurements were performed at 25 ◦C and a stack pressure of 25 MPa. Each data point represents one individual sample measured. For each variation, data points of three samples measured are shown, in exceptional case two or four. The standard deviation is based on the variation of the layer thickness and the fit error given by RelaxIS. 9",
+   "rotated_deg": 0,
+   "bbox": [
+    31.6,
+    510.8,
+    565.8,
+    692.4
+   ],
+   "w": 2227,
+   "h": 757,
+   "dpi": 300,
+   "src": "6. Evaluating densification effects on sulfide-based electrolytes to examine an application in scalable solid-state battery manufacturing.pdf",
+   "blank": 0.921,
+   "viewed": true
+  },
+  {
+   "key": "f7",
+   "kind": "figure",
+   "label": "7",
+   "page": 10,
+   "file": "fig_7.png",
+   "caption": "Fig. 7. Specific ionic conductivity of separator S500 with a binder content of 3 wt% and 4.3 wt% and pure LPS powder as a function of the stack pressure. Each data point presents one individual sample measured. For each variation, data points of three samples are shown, in exceptional case two. The standard deviation is based on the variation of the layer thickness and the fit error given by RelaxIS. All measurements were performed at 25 ◦C. pressures voids are more relevant (see Fig. 8a)). Moreover, besides the denser structure of the sample the contact resistance to the current collector (plungers of the cell body) decreases with increasing stack pressure, resulting in the measurement of a higher ionic conductivity [21].",
+   "rotated_deg": 0,
+   "bbox": [
+    300.6,
+    49.4,
+    566.0,
+    242.3
+   ],
+   "w": 1107,
+   "h": 805,
+   "dpi": 300,
+   "src": "6. Evaluating densification effects on sulfide-based electrolytes to examine an application in scalable solid-state battery manufacturing.pdf",
+   "blank": 0.941,
+   "viewed": true
+  },
+  {
+   "key": "f8",
+   "kind": "figure",
+   "label": "8",
+   "page": 11,
+   "file": "fig_8.png",
+   "caption": "Fig. 8. Specific ionic conductivity of a) separators with 3 wt% and 4.3 wt% binder, as well as pure LPS powder and b) for two compaction cycles of the pure LPS powder. Each data point represents an average of three measurements; the second cycle for the LPS powder is based on one measurement. The unfilled points represent the progression of pressure release. The measurements were performed at 25 ◦C and a stepwise increase of the stack pressure applied to the sample. The error bars include the fitting errors of the impedance measurements as well as the measurement error of the CompreDrive. c) and d) X-ray diffraction patterns of the LPS powder before and after compaction at 1.5 GPa. e) Generalized microstrain for the LPS powder non-compacted and after compaction at 1.5 GPa, as well as separators with 3 wt% and 4.3 wt% binder after compaction at 1.5 GPa and f) corresponding strain contour ",
+   "rotated_deg": 0,
+   "bbox": [
+    31.6,
+    50.3,
+    566.0,
+    532.0
+   ],
+   "w": 2228,
+   "h": 2008,
+   "dpi": 300,
+   "src": "6. Evaluating densification effects on sulfide-based electrolytes to examine an application in scalable solid-state battery manufacturing.pdf",
+   "blank": 0.873,
+   "viewed": true
+  },
+  {
+   "key": "f9",
+   "kind": "figure",
+   "label": "9",
+   "page": 12,
+   "file": "fig_9.png",
+   "caption": "Fig. 9. a) Layer thickness as a function of the rate of compression. Error bars represent the standard deviation of 15 to 25 layer thickness values for each variation. b) Density as a function of the fabrication pressure. Error bars represent the standard deviation of the calculated density of three to five samples. Exponential fit ac­ cording to C. Meyer et al. was applied [54]. c) Pore size distribution of separator S300. The separators were compacted at 40 ◦C or 100 ◦C. d) Pore size distribution of separators S300 and S500. All graphs present data for LPS separators with 3 wt% HNBR. In Fig. 9b) the coating density as a function of the fabrication pres­ sure and densification temperature is shown for two different layer thicknesses. Meyer et al. [54] developed an exponential approximation based on the Heckel's equation [55] to quantify the compaction resis­ tance (see Eq. (5)): describ",
+   "rotated_deg": 0,
+   "bbox": [
+    31.6,
+    50.0,
+    566.0,
+    417.0
+   ],
+   "w": 2228,
+   "h": 1530,
+   "dpi": 300,
+   "src": "6. Evaluating densification effects on sulfide-based electrolytes to examine an application in scalable solid-state battery manufacturing.pdf",
+   "blank": 0.854,
+   "viewed": true
+  },
+  {
+   "key": "f10",
+   "kind": "figure",
+   "label": "10",
+   "page": 13,
+   "file": "fig_10.png",
+   "caption": "Fig. 10. Density as a function of the stack pressure for pure LPS powder and separator sheets with 3 wt% and 4.3 wt% binder under “in die” measurement conditions. Exponential fit according to C. Meyer et al. was applied [54]. Before each measurement series, the samples with HNBR were pre-compacted at 100 MPa for 10 min to detach the aluminum substrate. The open points represent the progression of pressure release. The measurements were per­ formed at 25 ◦C with increasing stack pressure applied to the sample. Error bars represent the standard deviation of the calculated density of three samples for each variation. surface have a greater influence on the result obtained for the thinner layers. Also, pores at the lateral surface of the samples have a higher impact onto the measurement result for the thicker layer.",
+   "rotated_deg": 0,
+   "bbox": [
+    31.6,
+    49.8,
+    297.0,
+    246.0
+   ],
+   "w": 1107,
+   "h": 819,
+   "dpi": 300,
+   "src": "6. Evaluating densification effects on sulfide-based electrolytes to examine an application in scalable solid-state battery manufacturing.pdf",
+   "blank": 0.843,
+   "viewed": true
+  },
+  {
+   "key": "f11",
+   "kind": "figure",
+   "label": "11",
+   "page": 14,
+   "file": "fig_11.png",
+   "caption": "Fig. 11. a) Representative FTIR spectra of binder material (black line) and separator samples produced with different fabrication pressures and 4.3 wt% HNBR. b) Simulations of the absorbance of peaks belonging to the asymmetric and symmetric stretching vibrations of -CH2-. Purple curve: theoretical IR signal for LPS separator samples with 4.3 wt% binder (4.7 vol%) and 40 vol% pores. All other curves have a thin binder layer with different thicknesses at the surface. (For interpretation of the references to colour in this figure legend, the reader is referred to the web version of this article.) to 1 at 2920 cm−1 and all other graphs were multiplied with the same scaling factor. According to the calculations, 5.5 % of the absorbance of pure HNBR should be found experimentally for the composite. An additional uniform 5 nm HNBR layer on top should raise the absorbance to 10.5 % of the pure ",
+   "rotated_deg": 0,
+   "bbox": [
+    31.6,
+    50.2,
+    565.8,
+    242.0
+   ],
+   "w": 2227,
+   "h": 800,
+   "dpi": 300,
+   "src": "6. Evaluating densification effects on sulfide-based electrolytes to examine an application in scalable solid-state battery manufacturing.pdf",
+   "blank": 0.86,
+   "viewed": true
+  },
+  {
+   "key": "f12",
+   "kind": "figure",
+   "label": "12",
+   "page": 14,
+   "file": "fig_12.png",
+   "caption": "Fig. 12. Estimated springback for separators with a binder content of 3 wt% and 4.3 wt% and an un-/loading speed of 1 mm min−1 compared to 5 mm min−1. For each variation 13 to 15 measurements were performed. In­ dividual data point are shown, the average value is shown in numbers. the springback increases from 7.9 % to 10.4 % on average for an increase in the loading speed. The higher springback for a higher binder content confirms that the binder contributes more to the elasticity and flexibility of the separator layer compared to the sulfide-based particles. In addi­ tion, the binder acts as a buffer. With an increase in the HNBR amount, stress absorption by the binder is enhanced and thus, plastic deforma­ tion of the particles is minimized. Consequently, the partly elastic re­ covery of the binder embedding the sulfide-based particles might result in a reinforcement of inhomogeneous ",
+   "rotated_deg": 0,
+   "bbox": [
+    300.6,
+    298.8,
+    566.0,
+    509.1
+   ],
+   "w": 1107,
+   "h": 877,
+   "dpi": 300,
+   "src": "6. Evaluating densification effects on sulfide-based electrolytes to examine an application in scalable solid-state battery manufacturing.pdf",
+   "blank": 0.869,
+   "viewed": true
+  },
+  {
+   "key": "f13",
+   "kind": "figure",
+   "label": "13",
+   "page": 15,
+   "file": "fig_13.png",
+   "caption": "Fig. 13. Specific discharge capacity of rate performance test of half-cells with separators containing 3 wt% HNBR and separators composed of pure LPS powder (0 wt% HNBR) at 25 ◦C and a stack pressure of 25 MPa. The cathode- separator compound was compacted at 200 MPa. Error bars represent the standard deviation based on the performance data of four half-cells tested.",
+   "rotated_deg": 0,
+   "bbox": [
+    31.6,
+    494.5,
+    296.8,
+    692.6
+   ],
+   "w": 1106,
+   "h": 826,
+   "dpi": 300,
+   "src": "6. Evaluating densification effects on sulfide-based electrolytes to examine an application in scalable solid-state battery manufacturing.pdf",
+   "blank": 0.828,
+   "viewed": true
+  },
+  {
+   "key": "t1",
+   "kind": "table",
+   "label": "1",
+   "page": 3,
+   "file": "tab_1.png",
+   "caption": "Table 1 Definition of the separator types described in this study. Separator type Description Schematic illustration Solid electrolyte Binder content",
+   "rotated_deg": 0,
+   "bbox": [
+    35.6,
+    576.2,
+    535.5,
+    727.0
+   ],
+   "w": 2084,
+   "h": 630,
+   "dpi": 300,
+   "src": "6. Evaluating densification effects on sulfide-based electrolytes to examine an application in scalable solid-state battery manufacturing.pdf",
+   "blank": 0.883,
+   "auto_bbox": [
+    32.6,
+    31.6,
+    563.3,
+    728.8
+   ],
+   "recrop": "2026-10-13 수동 재크롭 — 자동 bbox 가 쪽 전체 (2213x2906) 를 잡았다. clip = 캡션 (y 578.2) ~ 마지막 행 'LPSCl 0 wt%' (y 724.8) + 2 pt · 표 안 모식 래스터 포함",
+   "viewed": true
+  },
+  {
+   "key": "fS1",
+   "kind": "figure",
+   "label": "S1",
+   "page": 1,
+   "file": "fig_S1.png",
+   "caption": "Figure S1: Unloading data curves and linear regressions for the determination of the correction factor to determine the springback after compaction at 500 N and a un-/loading speed of 1 mm min-1 as example.",
+   "rotated_deg": 0,
+   "bbox": [
+    180.0,
+    443.0,
+    418.0,
+    637.0
+   ],
+   "w": 992,
+   "h": 810,
+   "dpi": 300,
+   "src": "6. Sup) Evaluating densification effects on sulfide-based electrolytes to examine an application in scalable solid-state battery manufacturing.pdf",
+   "viewed": true,
+   "manual_crop": "2026-10-13 수동 크롭 — 자동 추출이 '그래픽 없음' 으로 제외 (벡터 그래프, drawings 65). 첫 손 크롭 [205.6, 446.3, 411.8, 615.4] 이 y 축 숫자 · 축 이름을 잘라 다시 잡음: clip = 'Force F / N' (x 183) ~ 오른쪽 틀 (≈414) · '500' (y 447.5) ~ 'Distance d / mm' (y 634.9).",
+   "si": true
+  },
+  {
+   "key": "fS2",
+   "kind": "figure",
+   "label": "S2",
+   "page": 2,
+   "file": "fig_S2.png",
+   "caption": "Figure S2: Representative Nyquist plots and used equivalent circuit for LPS and LPSCl separators compacted at a fabrication pressure of 100 MPa. Impedance was measured at a stack pressure of 25 MPa and 25 °C. a) 5000 b) 120000 Pure LPS Fabrication pressure: Fabrication pressure: 0 MPa 25 MPa 50 MPa 100 MPa 200 MPa 0 MPa 25 MPa 50 MPa 100 MPa 200 MPa 90000 - Im(Z)*A/dL / W cm -Im(Z) / W Pure LPS 2500 60000 30000",
+   "rotated_deg": 0,
+   "bbox": [
+    64.8,
+    65.1,
+    533.5,
+    376.3
+   ],
+   "w": 1953,
+   "h": 1297,
+   "dpi": 300,
+   "src": "6. Sup) Evaluating densification effects on sulfide-based electrolytes to examine an application in scalable solid-state battery manufacturing.pdf",
+   "blank": 0.943,
+   "viewed": true
+  },
+  {
+   "key": "fS3ad",
+   "kind": "figure",
+   "label": "S3ad",
+   "page": 2,
+   "file": "fig_S3ad.png",
+   "caption": "Figure S3 (a)–(d) (SI p.2 — 캡션 'S3:' 은 p.3): Representative Nyquist plots of the LPS and LPSCl separators for different fabrication pressures and press body ≠ cell body (a) pure LPS (b) pure LPS normalized (c) 3 wt% HNBR (d) 3 wt% HNBR normalized",
+   "rotated_deg": 0,
+   "bbox": [
+    155.7,
+    419.0,
+    452.7,
+    712.5
+   ],
+   "w": 1239,
+   "h": 1224,
+   "dpi": 300,
+   "src": "6. Sup) Evaluating densification effects on sulfide-based electrolytes to examine an application in scalable solid-state battery manufacturing.pdf",
+   "viewed": true,
+   "manual_crop": "2026-10-13 수동 크롭 — Figure S3 은 두 쪽에 걸치고 캡션이 'Figure' 없이 'S3:' 로 시작해 자동 추출이 번호 공백으로 놓쳤다. p.2 아래 벡터 그래프 합집합 (159.7, 421, 448.7, 708) + 여유",
+   "si": true
+  },
+  {
+   "key": "fS3eh",
+   "kind": "figure",
+   "label": "S3eh",
+   "page": 3,
+   "file": "fig_S3eh.png",
+   "caption": "S3: Representative Nyquist plots of the LPS and LPSCl separators for different fabrication pressures and press body ≠ cell body. Impedance was measured at a stack pressure of 25 MPa and 25 °C. For each variation, the impedance data is also shown in relation to the sample area and sample thickness. (e)–(h) = LPS 4.3 wt% HNBR · LPSCl 4.3 wt% HNBR",
+   "rotated_deg": 0,
+   "bbox": [
+    132.0,
+    66.0,
+    460.0,
+    378.0
+   ],
+   "w": 1367,
+   "h": 1300,
+   "dpi": 300,
+   "src": "6. Sup) Evaluating densification effects on sulfide-based electrolytes to examine an application in scalable solid-state battery manufacturing.pdf",
+   "viewed": true,
+   "manual_crop": "2026-10-13 수동 크롭 — Figure S3 의 p.3 위 패널 (e)–(h) — 축 글자 (x 135.5–461) · 그래프 (y 70–374) 합집합 + 여유 · 캡션 y 384.0 앞",
+   "si": true
+  },
+  {
+   "key": "fS4",
+   "kind": "figure",
+   "label": "S4",
+   "page": 3,
+   "file": "fig_S4.png",
+   "caption": "Figure S4: SEM image of an LPS particle.",
+   "rotated_deg": 0,
+   "bbox": [
+    64.8,
+    462.3,
+    455.8,
+    677.0
+   ],
+   "w": 1630,
+   "h": 895,
+   "dpi": 300,
+   "src": "6. Sup) Evaluating densification effects on sulfide-based electrolytes to examine an application in scalable solid-state battery manufacturing.pdf",
+   "blank": 0.265,
+   "viewed": true
+  },
+  {
+   "key": "fS5",
+   "kind": "figure",
+   "label": "S5",
+   "page": 6,
+   "file": "fig_S5.png",
+   "caption": "Figure S5: In-situ high-pressure X-ray synchrotron diffraction data and the corresponding Rietveld refinement of LPS powder before and after compaction at 1.5 GPa.",
+   "rotated_deg": 0,
+   "bbox": [
+    100.0,
+    400.0,
+    476.0,
+    620.0
+   ],
+   "w": 1568,
+   "h": 918,
+   "dpi": 300,
+   "src": "6. Sup) Evaluating densification effects on sulfide-based electrolytes to examine an application in scalable solid-state battery manufacturing.pdf",
+   "blank": 0.829,
+   "auto_bbox": [
+    64.8,
+    178.0,
+    533.5,
+    623.1
+   ],
+   "recrop": "2026-10-13 수동 재크롭 — 자동 bbox (y 178–623) 가 위의 Table S5 원자 좌표 행을 함께 잡았다. clip = 패널 제목 'LPS powder …' (y 405) ~ 축 글자 'Q / Å−1' (y 617) · x = 'Intensity' (113) ~ 오른쪽 패널 틀 (≈470).",
+   "viewed": true
+  },
+  {
+   "key": "fS6",
+   "kind": "figure",
+   "label": "S6",
+   "page": 7,
+   "file": "fig_S6.png",
+   "caption": "Figure S6: In-situ high-pressure X-ray synchrotron diffraction data and the corresponding Rietveld refinement of separators with 3 wt% and 4.3 wt% HNBR after compaction at 1.5 GPa and corresponding strain contour plots.",
+   "rotated_deg": 0,
+   "bbox": [
+    64.8,
+    71.0,
+    533.6,
+    459.6
+   ],
+   "w": 1954,
+   "h": 1620,
+   "dpi": 300,
+   "src": "6. Sup) Evaluating densification effects on sulfide-based electrolytes to examine an application in scalable solid-state battery manufacturing.pdf",
+   "blank": 0.873,
+   "viewed": true
+  },
+  {
+   "key": "fS7",
+   "kind": "figure",
+   "label": "S7",
+   "page": 8,
+   "file": "fig_S7.png",
+   "caption": "Figure S7: SEM cross sections of separator S500 compacted at 100 MPa and 100 °C (10 kV) or 20 °C (5 kV). Particle breakage is highlighted by boxes.",
+   "rotated_deg": 0,
+   "bbox": [
+    163.0,
+    270.0,
+    432.0,
+    494.0
+   ],
+   "w": 1121,
+   "h": 934,
+   "dpi": 300,
+   "src": "6. Sup) Evaluating densification effects on sulfide-based electrolytes to examine an application in scalable solid-state battery manufacturing.pdf",
+   "blank": 0.674,
+   "auto_bbox": [
+    64.8,
+    100.8,
+    530.2,
+    496.9
+   ],
+   "recrop": "2026-10-13 수동 재크롭 — 자동 bbox (y 100.8–496.9) 가 위의 Table S7 (Meyer 적합값) 을 함께 잡았다. clip = SEM 이미지 래스터 [166.4, 273.3, 428.9, 490.9] + 여백 3 pt.",
+   "viewed": true
+  },
+  {
+   "key": "fS8",
+   "kind": "figure",
+   "label": "S8",
+   "page": 9,
+   "file": "fig_S8.png",
+   "caption": "Figure S8: From top to down: SEM image of non-compacted LPS-separator with 4.3 wt% HNBR binder, EDX mapping of the N-Signal, cross section for the EDX line-mapping and elemental line profile for the N-signal.",
+   "rotated_deg": 0,
+   "bbox": [
+    64.8,
+    78.6,
+    515.2,
+    374.1
+   ],
+   "w": 1877,
+   "h": 1232,
+   "dpi": 300,
+   "src": "6. Sup) Evaluating densification effects on sulfide-based electrolytes to examine an application in scalable solid-state battery manufacturing.pdf",
+   "blank": 0.661,
+   "viewed": true
+  },
+  {
+   "key": "fS9",
+   "kind": "figure",
+   "label": "S9",
+   "page": 9,
+   "file": "fig_S9.png",
+   "caption": "Figure S9: From top to down: SEM image of LPS-separator with 4.3 wt% HNBR binder compacted at 100 MPa, EDX mapping of the N-Signal, cross section for the EDX line- mapping and elemental line profile for the N-signal.",
+   "rotated_deg": 0,
+   "bbox": [
+    64.8,
+    420.1,
+    504.3,
+    715.5
+   ],
+   "w": 1832,
+   "h": 1232,
+   "dpi": 300,
+   "src": "6. Sup) Evaluating densification effects on sulfide-based electrolytes to examine an application in scalable solid-state battery manufacturing.pdf",
+   "blank": 0.694,
+   "viewed": true
+  },
+  {
+   "key": "fS10",
+   "kind": "figure",
+   "label": "S10",
+   "page": 10,
+   "file": "fig_S10.png",
+   "caption": "Figure S10: From top to down: SEM image of non-compacted LPSCl-separator with 4.3 wt% HNBR binder, EDX mapping of the N-Signal, cross section for the EDX line-mapping and elemental line profile for the N-signal.",
+   "rotated_deg": 0,
+   "bbox": [
+    64.8,
+    64.8,
+    533.5,
+    360.3
+   ],
+   "w": 1953,
+   "h": 1232,
+   "dpi": 300,
+   "src": "6. Sup) Evaluating densification effects on sulfide-based electrolytes to examine an application in scalable solid-state battery manufacturing.pdf",
+   "blank": 0.678,
+   "viewed": true
+  },
+  {
+   "key": "fS11",
+   "kind": "figure",
+   "label": "S11",
+   "page": 10,
+   "file": "fig_S11.png",
+   "caption": "Figure S11: From top to down: SEM image of LPSCl-separator with 4.3 wt% HNBR binder compacted at 100 MPa, EDX mapping of the N-Signal, cross section for the EDX line-mapping and elemental line profile for the N-signal.",
+   "rotated_deg": 0,
+   "bbox": [
+    64.8,
+    420.1,
+    533.6,
+    715.5
+   ],
+   "w": 1954,
+   "h": 1232,
+   "dpi": 300,
+   "src": "6. Sup) Evaluating densification effects on sulfide-based electrolytes to examine an application in scalable solid-state battery manufacturing.pdf",
+   "blank": 0.674,
+   "viewed": true
+  },
+  {
+   "key": "tS1",
+   "kind": "table",
+   "label": "S1",
+   "page": 4,
+   "file": "tab_S1.png",
+   "caption": "Table S1: Strain data obtained for pure LPS powder and separators with 3 wt% and 4.3 wt% HNBR. Sample Pristine Li3PS4 Li3PS4 after 1.5 GPa Li3PS4 after 1.5 GPa + 3 wt% Binder Li3PS4 after 1.5 GPa + 4.3 wt% Binder s400 40 530 420 390 s040 460 5400 4300 4100 s004 560 6200 4900 4400 s220 0 0 0 0 s202 1800 17300 14300 14000 s022 940 11200 9600 8400 eta 1.00 0.96 1.00 1.00 GSAS II 1.00 3.92 3.55 3.43 - Mustrain",
+   "rotated_deg": 0,
+   "bbox": [
+    65.8,
+    66.0,
+    529.2,
+    324.6
+   ],
+   "w": 1932,
+   "h": 1078,
+   "dpi": 300,
+   "src": "6. Sup) Evaluating densification effects on sulfide-based electrolytes to examine an application in scalable solid-state battery manufacturing.pdf",
+   "blank": 0.793,
+   "viewed": true
+  },
+  {
+   "key": "tS2",
+   "kind": "table",
+   "label": "S2",
+   "page": 4,
+   "file": "tab_S2.png",
+   "caption": "Table S2: Crystallographic data of pristine Li3PS4 obtained from Mo-X-Ray diffraction data. Statistical standard deviation for each refined parameter is shown in parentheses. Rwp = 6.26 %; GoF = 1.31 λMolybdenum = 0.7093 Å Space-group: Pnma; 2.1(2) w.% Li2S-side phase a = 12.989(1) Å; b = 8.0371(8) c = 6.1350(5) Å Atom Wyckoff site x y z Occupancy Beq Li1 8d 0.3562 0.013 0.439 1 3 Li2 4b 0 0 0.5 0.7 3 Li3 4c 0.999 0 0.889 0.3 3 P 4c 0.08670(6) 0.25 0.172(1) 1 2.1(3) S1 8d 0.1557(3) 0.03944(5) 0.2746(9) 1 1.7(1) S2 4c 0.9401(4) 0.25 0.265(2) 1 1.7(1) S3 4c 0.1032(5) 0.25 0.809(1) 1 1.7(1)",
+   "rotated_deg": 0,
+   "bbox": [
+    65.8,
+    336.8,
+    532.4,
+    644.7
+   ],
+   "w": 1945,
+   "h": 1284,
+   "dpi": 300,
+   "src": "6. Sup) Evaluating densification effects on sulfide-based electrolytes to examine an application in scalable solid-state battery manufacturing.pdf",
+   "blank": 0.598,
+   "viewed": true
+  },
+  {
+   "key": "tS3",
+   "kind": "table",
+   "label": "S3",
+   "page": 5,
+   "file": "tab_S3.png",
+   "caption": "Table S3: Crystallographic data of pure Li3PS4, compacted at 1.5 GPa in CompreDrive, as obtained from Mo-X-Ray diffraction data. Statistical standard deviation for each refined parameter is shown in parentheses. Rwp = 3.68 %; GoF = 2.16 λMolybdenum = 0.7093 Å Space-group: Pnma; 1.8(1) wt.% Li2S-side phase a = 13.000(2) Å; b = 8.0138(9); c = 6.1237(9) Å Atom Wyckoff site x y z Occupancy Beq Li1 8d 0.3562 0.013 0.439 1 3 Li2 4b 0 0 0.5 0.7 3 Li3 4c 0.999 0 0.889 0.3 3 P 4c 0.0887(4) 0.25 0.1699(8) 1 1.1(2) S1 8d 0.1546(2) 0.0418(3) 0.2736(6) 1 1.25(6) S2 4c 0.9409(3) 0.25 0.269(1) 1 1.25(6) S3 4c 0.1047(4) 0.25 0.8137(8) 1 1.25(6)",
+   "rotated_deg": 0,
+   "bbox": [
+    65.8,
+    66.0,
+    532.6,
+    381.4
+   ],
+   "w": 1946,
+   "h": 1315,
+   "dpi": 300,
+   "src": "6. Sup) Evaluating densification effects on sulfide-based electrolytes to examine an application in scalable solid-state battery manufacturing.pdf",
+   "blank": 0.622,
+   "viewed": true
+  },
+  {
+   "key": "tS4",
+   "kind": "table",
+   "label": "S4",
+   "page": 5,
+   "file": "tab_S4.png",
+   "caption": "Table S4: Crystallographic data of Li3PS4 with 3 wt% binder, compacted at 1.5 GPa in CompreDrive, as obtained from Mo-X-Ray diffraction data. Statistical standard deviation for each refined parameter is shown in parentheses. Rwp = 3.97 %; GoF = 2.25 λMolybdenum = 0.7093 Å Space-group: Pnma; 1.7(1) w.% Li2S-side phase a = 13.000(2) Å; b = 8.0153(9) c = 6.1239(8) Å Atom Wyckoff site x y z Occupancy Beq Li1 8d 0.3562 0.013 0.439 1 3 Li2 4b 0 0 0.5 0.7 3 Li3 4c 0.999 0 0.889 0.3 3 P 4c 0.0886(4) 0.25 0.1697(7) 1 0.9(2) S1 8d 0.1547(2) 0.0420(3) 0.2738(6) 1 1.31(6) S2 4c 0.9412(3) 0.25 0.268(1) 1 1.31(6) S3 4c 0.1048(3) 0.25 0.8142(7) 1 1.31(6)",
+   "rotated_deg": 0,
+   "bbox": [
+    65.8,
+    394.7,
+    532.5,
+    710.1
+   ],
+   "w": 1945,
+   "h": 1315,
+   "dpi": 300,
+   "src": "6. Sup) Evaluating densification effects on sulfide-based electrolytes to examine an application in scalable solid-state battery manufacturing.pdf",
+   "blank": 0.621,
+   "viewed": true
+  },
+  {
+   "key": "tS5",
+   "kind": "table",
+   "label": "S5",
+   "page": 6,
+   "file": "tab_S5.png",
+   "caption": "Table S5: Crystallographic data of Li3PS4 with 4.3 wt% binder, compacted at 1.5 GPa in CompreDrive, as obtained from Mo-X-Ray diffraction data. Statistical standard deviation for each refined parameter is shown in parentheses. Rwp = 3.86 %; GoF = 2.15 λMolybdenum = 0.7093 Å Space-group: Pnma; 1.9(1) w.% Li2S-side phase a = 13.000(2) Å; b = 8.0153(9) c = 6.1239(8) Å Atom Wyckoff site x y z Occupancy Beq Li1 8d 0.3562 0.013 0.439 1 3 Li2 4b 0 0 0.5 0.7 3 Li3 4c 0.999 0 0.889 0.3 3 P 4c 0.0886(4) 0.25 0.1702(8) 1 1.1(2) S1 8d 0.1546(2) 0.0420(3) 0.2738(6) 1 1.31(7) S2 4c 0.9409(3) 0.25 0.268(1) 1 1.31(7) S3 4c 0.1053(5) 0.25 0.8146(8) 1 1.31(7)",
+   "rotated_deg": 0,
+   "bbox": [
+    65.8,
+    66.0,
+    532.5,
+    381.4
+   ],
+   "w": 1945,
+   "h": 1315,
+   "dpi": 300,
+   "src": "6. Sup) Evaluating densification effects on sulfide-based electrolytes to examine an application in scalable solid-state battery manufacturing.pdf",
+   "blank": 0.621,
+   "viewed": true
+  },
+  {
+   "key": "tS6",
+   "kind": "table",
+   "label": "S6",
+   "page": 7,
+   "file": "tab_S6.png",
+   "caption": "Table S6: Fitting parameter in accordance with Meyer et al.[1] for two different layer thicknesses. Layer thickness [µm] 308 ± 12 131 ± 6 308 ± 12 131 ± 6 Densification 40 40 100 100 temperature / °C 0.50 ± 0.06 0.46 ± 0.03 0.51 ± 0.10 0.46 ± 0.07 Initial coating density ρ0 / g cm-3 1.33 ± 0.05 1.12 ± 0.02 1.32 ± 0.08 1.17 ± 0.04 Maximum coating density ρc, max / g cm-3 60.91 ± 14.03 26.10 ± 3.21 48.05 ± 17.38 27.43 ± 7.07 Compaction resistance γc / MPa",
+   "rotated_deg": 0,
+   "bbox": [
+    65.8,
+    506.9,
+    532.4,
+    726.3
+   ],
+   "w": 1945,
+   "h": 915,
+   "dpi": 300,
+   "src": "6. Sup) Evaluating densification effects on sulfide-based electrolytes to examine an application in scalable solid-state battery manufacturing.pdf",
+   "blank": 0.915,
+   "viewed": true
+  },
+  {
+   "key": "tS7",
+   "kind": "table",
+   "label": "S7",
+   "page": 8,
+   "file": "tab_S7.png",
+   "caption": "Table S7: Fitting parameter in accordance with Meyer et al.[1] for pure LPS powder and separator with 3 wt% and 4.3 wt% binder compacted to 1.5 GPa. LPS powder 3 wt% HNBR 4.3 wt% HNBR Initial coating density ρ0 0.84 ± 0.02 0.99 ± 0.01 1.09 ± 0.01 / g cm-3 1.99 ± 0.01 1.68 ± 0.01 1.69 ± 0.01 Maximum coating density ρc, max / g cm-3 Compaction resistance γc 0.32 ± 0.02 0.42 ± 0.02 0.45 ± 0.02 / GPa",
+   "rotated_deg": 0,
+   "bbox": [
+    65.8,
+    65.7,
+    532.5,
+    255.6
+   ],
+   "w": 1945,
+   "h": 793,
+   "dpi": 300,
+   "src": "6. Sup) Evaluating densification effects on sulfide-based electrolytes to examine an application in scalable solid-state battery manufacturing.pdf",
+   "blank": 0.914,
+   "viewed": true
+  },
+  {
+   "key": "tS8",
+   "kind": "table",
+   "label": "S8",
+   "page": 8,
+   "file": "tab_S8.png",
+   "caption": "Table S8: FTIR peak positions, assignments, literature data and origin of peaks. Wavenumber / cm-1 Assignment Literature[2] 2926 𝜈𝑎(CH2) aliph. 2940 – 2915 2855 𝜈𝑠(CH2) aliph. 2870 – 2840 2236 𝜈(C≡N) 2260 – 2230 1730 𝜈(C=O) in esters 1750 – 1725 1464 𝛿(CH2) 1480 – 1440 𝜈(C-O) in esters, 1300 – 1100 𝜈𝑎(C-O-C) in esters, 1171 1275 – 1185 𝜈𝑠(C-O-C) in esters 1160 – 1050 723 𝜌(CH2)n, n > 3 725 - 720",
+   "rotated_deg": 0,
+   "bbox": [
+    65.8,
+    530.4,
+    469.1,
+    780.4
+   ],
+   "w": 1681,
+   "h": 1043,
+   "dpi": 300,
+   "src": "6. Sup) Evaluating densification effects on sulfide-based electrolytes to examine an application in scalable solid-state battery manufacturing.pdf",
+   "blank": 0.698,
+   "viewed": true
+  }
+ ],
+ "missing_labels": [],
+ "note_manual": "2026-10-13 — 손 크롭 6 장 (tab_1 = 자동 bbox 가 쪽 전체 · fig_S1 = 자동 제외 (벡터) → 축 글자 포함 재크롭 · fig_S3ad · fig_S3eh = 캡션이 \"S3:\" 로 시작해 누락 · 두 쪽에 걸침 · fig_S5 = 위 Table S5 혼입 · fig_S7 = 위 Table S7 혼입) · 판독 원자료 digitized.csv 303 행 · Fig S1 기울기는 벡터 경로에서 재계산 · 크롭 전부 Read (낱장 또는 contact sheet) 로 확인"
+}
