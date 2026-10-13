@@ -322,5 +322,21 @@
     "kgy": "사용자 '지금 cascade 옆에서 (Recommended)' — seed1·3 을 cascade v7 본 라운드와 GPU 를 나눠 지금 돌린다 (db/inputs/lpscl_glass_control_li3ps4_2026_10_05/run_600k_kgy.sh). 비용은 우리 장부에 등분 (동시 GPU 잡 수 = cascade + 우리 = 2 · Unity 그리기 부하는 세지 않음 = 우리 몫 과대 = 보수)",
     "시드_기계_대응": "카드 §1b 그대로 (gabia {2, 4, 5} · kgy {1, 3}) — 판독 전에 적을 어긋남 없음",
     "⏭": "붙여넣기 블록 (gabia · kgy 각각 새 worktree → selftest → DRY_RUN → tmux) → 사용자 실행 → 감시 → 5 런 끝 → 판독 도구 대조 모드 · 점검 목록 (판독 전) → 판독 → 편지"
+  },
+  "발사_600K_2026_10_13": {
+    "출처": "사용자 붙여넣기 10-13 15:51 (두 기계 감시 스크립트 · 결과값 없음)",
+    "kgy": {
+      "상태": "✅ 떴다 — tmux li3ps4_600k · 포장 스크립트 run_600k_kgy.sh → v2 러너 3aef029a",
+      "문지기": "15:45:34 ✓ (카드 결정 active · 러너 sha · seed3 바이트 같음)",
+      "판": "torch 2.8.0+cu128 · fairchem 2.21.0 · ase 3.29.0 (15:45:39)",
+      "seed1": "시작 15:45:41 · PID 635293 · run_meta OK 15:45:46 (T·seed·v0·prod 만 다름 · seed 1001) · dt 0.0020 ps/행 OK 15:47:11 · 15:51 md.log 2.648 / 405 ps",
+      "GPU": "4,687 / 24,576 MiB · 98 % (cascade + 우리 · 프로세스별 정보 막힘) · cascade tmux cv7main 살아 있음"
+    },
+    "gabia": {
+      "상태": "⏸ 아직 안 떴다 (15:51 · tmux li3ps4_600k 없음 · 큐 로그 없음) — 발사 블록이 안 돌았거나 앞 단계에서 멈췄다 · 다시 준다",
+      "곁의_pw.x": "Li₃Nd r2 · /data/work/runs/sei_control/li3nd_mp-976264_p333_r2/00_control_relax.out (PWX_WATCH 경로 확인) · BFGS 71 · Total force 0.032291 · GPU 37,250 MiB (pw.x 37,234)",
+      "host": "MemAvailable 45,397 MiB"
+    },
+    "감시": "kgy ~/w_li3ps4_600k_k.sh · gabia /root/w_li3ps4_600k_g.sh (repo db/inputs/… · git show 로 받음) · `--loop 300` 으로 자동 갱신 (사용자 '갱신되게')"
   }
 }
