@@ -159,3 +159,7 @@ reviews/r14_repros/codex63/comsol_microshort_s1_open_r1_review_20261011/** -text
 reviews/prereview_reil_c4_20261013/** -text
 # 2026-10-13: REIL C4-ENV 대조 스크립트 (scripts/reil_c4_env_compare.py) 의 자체 확인 기록 (합성 자료 · 커밋된 봉인 두 개만 · 설치 0) — bytes 그대로
 evidence/reil_c4_env_compare_selftest_20261013/** -text
+# 2026-10-13: REIL C4-ENV 새 봉인 (현재 interpreter 3.11.17 의 새 환경 세대 · emit 산출 · 검토 수용 전에는 C4 환경 아님) — bytes 그대로
+reil_c6_rebuild_20261013/** -text
+# 2026-10-13: REIL C4-ENV 실행 기록 (S0–S10 meta · stdout · stderr · 내려받기 식별 · old→new 대조 · RECORD 원문 · 실행기 사본) — bytes 그대로
+evidence/reil_c4_env_20261013/** -text
