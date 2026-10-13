@@ -4696,3 +4696,15 @@ gate INCOMPLETE · 실효 정책 UNVERIFIED · native 미승인 · 게이트 리
   — 38,949 B · sha256 `879cff578dfa52a7dcf0c008cded5f42698bb3b2916570b9e4b5da0b31e10d17` (지금 재계산 · v2 §1 · §89 와 일치). 사용자가 실행 Codex 에 첨부한다.
 - 승인 범위 (§95) 는 그대로다 — 첨부 보충은 범위 변경이 아니다. 3,600 s 원점은 실행 측이 이 zip 확인 뒤 새로 시작한다 (중지 전 소비 없음 · 실행 측 보고 기준).
 - 유지: OPEN 4 · `native_ready / approved / usable = false`.
+
+## 97. OS B R2 — 입력 확인 단계 중지 (공식 문서 ZIP 지정 위치 부재) · 원본 재전달 (2026-10-14 · 실행 0)
+
+- **실행 Codex 보고 (사용자 전달):** `C:/Users/BML/Desktop/COMSOL_S1_OS_B_OFFICIAL_DOCS_20261013.zip` 이 지정 위치에 없어 입력 확인에서 멈췄다.
+  첫 오류 중지 규칙대로 대체 사본 · 재시도 0. 후보 수정 · 시험 · CIM · COMSOL 0. R2 폴더
+  `…/outputs/microshort_s1_os_b_prep_R2_20261014/` 는 중지 기록으로 보존 (`COMSOL_MICROSHORT_S1_OS_B_R2_INPUT_STOP_20261014.zip` ·
+  `DELIVERY_RECEIPT.json` · `FINAL_DELIVERY_TOOL_RETURN.json` — 이 저장소는 아직 받지 않았다 · 식별 미기록).
+- **재전달:** §94 에서 만든 원본 그대로 (재생성 아님 — 재생성하면 가져온 시각이 MANIFEST 에 들어가 sha 가 바뀐다).
+  지금 재계산: 525,600 B · sha256 `6579d317bfe43129e7364c973882912f95d29c8b0031115f6263fb82d1207dd6` · 묶음 내 MANIFEST `8ce680e4…81253` — §94 · v2 §0 과 일치.
+  사용자가 실행 PC 의 지정 경로 (바탕화면) 에 두고 다시 보낸다.
+- 승인 범위 (§95) 변경 없음. 다음 실행은 새 R 폴더 · 새 3,600 s 원점 (실행 측 규칙).
+- 유지: OPEN 4 · `native_ready / approved / usable = false`.
