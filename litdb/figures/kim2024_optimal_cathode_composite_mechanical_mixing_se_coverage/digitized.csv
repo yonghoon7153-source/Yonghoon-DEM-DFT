@@ -1,0 +1,19 @@
+# kim2024_optimal_cathode_composite_mechanical_mixing_se_coverage — figure readings (판독) · 2026-10-13
+# method: VISUAL reading of the 300 dpi native raster crops against the printed axis ticks (no marker fitting) — TREND only.
+# precision: capacities +-3 mAh/g (Fig 3f, 5g) ; von Mises stress end points +-40 MPa (Fig 4f, read at the last plotted point, normalized capacity 0.88-0.97).
+# cross-check: Fig 3f MM10 1000th/1st = 51/63 = 0.81 vs printed retention 80.6 %.
+figure,cell_or_model,x,x_unit,y,y_unit,note
+Fig 3f,MM10 (graphite-protected Li anode; 1 C; 23 C),1,cycle,63,mAh/g,
+Fig 3f,MM10 (graphite-protected Li anode; 1 C; 23 C),150,cycle,67,mAh/g,local maximum
+Fig 3f,MM10 (graphite-protected Li anode; 1 C; 23 C),1000,cycle,51,mAh/g,
+Fig 3f,HM23 (graphite-protected Li anode; 1 C; 23 C),1,cycle,52,mAh/g,
+Fig 3f,HM23 (graphite-protected Li anode; 1 C; 23 C),1000,cycle,7,mAh/g,
+Fig 5g,HM7 (92 wt% NCM; 7 wt% SE; 10 mg/cm2; 0.3 C; 55 C),1,cycle,72,mAh/g,
+Fig 5g,HM7 (92 wt% NCM; 7 wt% SE; 10 mg/cm2; 0.3 C; 55 C),110,cycle,45,mAh/g,
+Fig 5g,MM5 (92 wt% NCM; 7 wt% SE; 10 mg/cm2; 0.3 C; 55 C),1-110,cycle,150,mAh/g,flat band 145-155
+Fig 4f,HM23 model sigma_v in NCM,0.95,normalized capacity,1180,MPa,end of line
+Fig 4f,MM10 model sigma_v in NCM,0.97,normalized capacity,450,MPa,end of line
+Fig 4f,MM23 model sigma_v in NCM,0.88,normalized capacity,150,MPa,end of line
+Fig 4f,HM23 model sigma_v in SE,0.94,normalized capacity,640,MPa,end of line
+Fig 4f,MM10 model sigma_v in SE,0.97,normalized capacity,455,MPa,end of line
+Fig 4f,MM23 model sigma_v in SE,0.89,normalized capacity,650,MPa,end of line
