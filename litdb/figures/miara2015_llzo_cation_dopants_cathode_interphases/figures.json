@@ -1,0 +1,141 @@
+{
+ "slug": "miara2015_llzo_cation_dopants_cathode_interphases",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-10-13",
+ "sources": [
+  "Miara2015 ChemMater First-Principles Studies on Cation Dopants and Electrolyte Cathode Interphases for Lithium Garnets.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 3,
+   "file": "fig_1.png",
+   "caption": "Figure 1. A quaternary section of the quintenary phase diagram for Li−La−Al−Zr−O. The position of the new compound, Li53AlLa24Zr16O96, is highlighted in green in the decomposition triangle. This particular substitution has a defect energy of 1.36 eV.",
+   "rotated_deg": 0,
+   "bbox": [
+    318.5,
+    63.2,
+    570.4,
+    207.9
+   ],
+   "w": 1051,
+   "h": 604,
+   "dpi": 300,
+   "src": "Miara2015 ChemMater First-Principles Studies on Cation Dopants and Electrolyte Cathode Interphases for Lithium Garnets.pdf",
+   "blank": 0.923
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 4,
+   "file": "fig_2.png",
+   "caption": "Figure 2. Site and oxidation state preference for the dopant elements studied. The color shows the most stable cation site (green for Li-site, red for La-site, and blue for Zr-site). The darker colors signify lower defect energy, such that Al3+(Li) is darker than B3+(Li). The box also shows the preferred oxidation state and the defect energy (in eV). strategies are to combine two dopants to achieve a concentration of ∼6.5 Li pfu, or a renewed push to examine garnets with a lithium content of >7 Li pfu may yield novel compounds.",
+   "rotated_deg": 0,
+   "bbox": [
+    54.5,
+    63.2,
+    570.5,
+    331.7
+   ],
+   "w": 2151,
+   "h": 1120,
+   "dpi": 300,
+   "src": "Miara2015 ChemMater First-Principles Studies on Cation Dopants and Electrolyte Cathode Interphases for Lithium Garnets.pdf",
+   "blank": 0.555
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 5,
+   "file": "fig_3.png",
+   "caption": "Figure 3. LLZO|LCO pseudo-binary phase diagram when Li is available at 3 V vs lithium metal. The decomposition products along the tie line are marked, and the maximum driving force reaction is marked with a red star. electrolytes. For the reactions of LLZO/LLTO with LCO and LMO, the cathode gains lithium and is oxidized, forming Li2MO3 (M = Mn, Co). In LFP, the phosphorus has a strong tendency to gain lithium and form Li3PO4. The above routine (generate a tie line on the Grand Canonical phase diagram and ﬁnd the largest reaction energy) is repeated for voltages from 0 to 5.0 V vs lithium metal and the results are plotted in Figure 4. The calculated intrinsic stability windows of the electrolytes and cathodes are marked at the bottom of Figure 4. It is seen that the LLZO is more stable at low voltages, but both garnets are decomposed by 3.8 V. Within the electrolyte stability window, the ",
+   "rotated_deg": 0,
+   "bbox": [
+    318.5,
+    63.2,
+    570.5,
+    245.8
+   ],
+   "w": 1052,
+   "h": 761,
+   "dpi": 300,
+   "src": "Miara2015 ChemMater First-Principles Studies on Cation Dopants and Electrolyte Cathode Interphases for Lithium Garnets.pdf",
+   "blank": 0.935
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 6,
+   "file": "fig_4.png",
+   "caption": "Figure 4. Driving force for interphase formation between electrolyte, and cathode, with varying voltage from 0 to 5 V vs lithium metal. [Legend: blue, LCO; red, LMO; green, LFP; thick line, LLZP; thin line, LLTO.] The calculated intrinsic stability windows are marked along the bottom for reference. dopants with similar or lower defect energies, compared to Al3+(Li), such as Zn2+(Li), and Mg2+(Li). Moreover, recent molecular dynamics simulations and experimental work suggests that LLZO compounds with Li concentrations above 7 pfu can also exhibit high conductivities.13,54−56 This suggests a new path for stabilizing the cubic structure, since many of the low-defect-energy dopants from our calculations are subvalent dopants that increase the lithium concentration. In this group, the dopant(site) combinations with relatively low defect energies are Sc3+(Zr), Ca2+(Zr), Bi3+(Zr), Mg2+(Zr), Ca2",
+   "rotated_deg": 0,
+   "bbox": [
+    54.5,
+    189.2,
+    306.5,
+    346.6
+   ],
+   "w": 1050,
+   "h": 657,
+   "dpi": 300,
+   "src": "Miara2015 ChemMater First-Principles Studies on Cation Dopants and Electrolyte Cathode Interphases for Lithium Garnets.pdf",
+   "blank": 0.919
+  },
+  {
+   "key": "t1",
+   "kind": "table",
+   "label": "1",
+   "page": 2,
+   "file": "tab_1.png",
+   "caption": "Table 1. Elements and Oxidation States (Shown in Parentheses) of the Dopant Used in the Calculationsa (128 total)",
+   "rotated_deg": 0,
+   "bbox": [
+    54.5,
+    81.0,
+    570.5,
+    256.4
+   ],
+   "w": 2151,
+   "h": 732,
+   "dpi": 300,
+   "src": "Miara2015 ChemMater First-Principles Studies on Cation Dopants and Electrolyte Cathode Interphases for Lithium Garnets.pdf",
+   "blank": 0.902
+  },
+  {
+   "key": "t3",
+   "kind": "table",
+   "label": "3",
+   "page": 6,
+   "file": "tab_3.png",
+   "caption": "Table 3. Maximum Reaction Energies and Decomposition Products Are Shown for the Electrolyte|Cathode Combinations Studied, with Li Available at 3 V (1 −x) cathode Δφ (meV/ (x) electrolyte atom) decomposition products 2.00 LLZO 7.02 LCO −33.37 La2O3 + 2.000 La2Zr2O7 + 7.000 Li2CoO3 2.01 LLZO 7.05 LMO −108.9 La2O3 + 2.008 La2Zr2O7 + 7.033 Li2MnO3 1.48 LLZO 3.47 LFP −181.17 3.457 Li3PO4 + Fe2O3 + 1.481 La2Zr2O7 + 1.469 LaFeO3 1.00 LLTO 1.0 LCO −10.54 Li3TaO4 + Li2CoO3+ La3TaO7 2.01 LLTO 5.07 LMO −56.45 La3TaO7 + 5.039 Li2MnO3 + 3.026 LaTaO4 1.00 LLTO 2.67 LFP −124.41 LaPO4 + 1.666 Li3PO4 + 1.334 Fe2O3 + 1.998 balance of the reaction products containing iron oxides does not create percolating electronic pathways. Experimentally, there have been conﬂicting reports about the stability of the LLZO|LCO interface. Some reports show a large interfacial resistance with a heterogeneous layer at the i",
+   "rotated_deg": 0,
+   "bbox": [
+    60.5,
+    504.3,
+    564.5,
+    553.5
+   ],
+   "w": 2101,
+   "h": 206,
+   "dpi": 300,
+   "src": "Miara2015 ChemMater First-Principles Studies on Cation Dopants and Electrolyte Cathode Interphases for Lithium Garnets.pdf",
+   "blank": 0.83
+  }
+ ],
+ "missing_labels": [
+  {
+   "key": "t2",
+   "why": "번호 공백 — 이 번호가 추출되지 않았다",
+   "skipped": [
+    "p4 영역 없음"
+   ],
+   "near_miss": []
+  }
+ ]
+}
