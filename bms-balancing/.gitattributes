@@ -167,3 +167,7 @@ evidence/reil_c4_env_20261013/** -text
 reviews/review_reil_c4_env_result_20261013/** -text
 # 2026-10-13: REIL C4-ENV 실행 당시 바깥 반환 원문의 사후 첨부 (run.out · 하네스 캡처 · 검토 회신 ENV-P2-01 허용 · 재실행 0) — bytes 그대로
 evidence/reil_c4_env_20261013_outer_return/** -text
+# 2026-10-13: REIL C4-0a 실행 기록 (identity · RED · GREEN · 고정 배열 봉인 · 무자료 건조 · 시작/끝 HEAD · porcelain) — bytes 그대로
+evidence/reil_c4_0a_20261013/** -text
+# 2026-10-13: REIL C4 고정 배열 봉인 (A1/A2 Phase A · profile Sobol 2 · 동시 Sobol 16 · label-seed — C4-0a 에서 생성 · 봉인) — bytes 그대로
+reil_c4_arrays_20261013/** -text
