@@ -241,7 +241,7 @@
 ### 7-2. ★ 언로딩 시험 (ρ_c) — 무엇을 주나 · 무엇을 못 주나
 - **준다**: ① **정의의 선례** — Eq 3 이 우리 ρ_c 와 같은 꼴 (최대 하중 두께 기준 상대 증가) ② **순수 SE 는 in-die 감압에서 공극을 다시 열지 않는다** (β-LPS 감압 끝 D ≈1.00 · 회복 ≈7 % ≈ 고체 탄성 팽창, K ≈23 GPa 가정 필요) [판독 · 우리 산술] ③ **바인더가 있으면 공극이 다시 열린다** (3 wt% D 0.91 → 0.80) ④ **속도 의존은 바인더 점탄성** — 바인더 없는 우리 DEM 의 속도 의존은 다른 기구 (관성 · 감쇠, `DEMP-01`) ⑤ 감압 가지 0.3 → 0.01 GPa 의 두께 변화 (분말 ≈2.8 %) 는 1.5 GPa 를 겪은 **완전 치밀** 상태의 값.
 - **못 준다**: LPSCl · NCM 복합체의 회복 · 300 MPa 출발 회복 · 측방 회복 · 무구속 다이 밖 회복 (springback 은 펀치 시험) · 시간 분해.
-- [우리 산술 — 크기 감각, 판정 아님] 순수 고체 탄성만 보면, 구속 축변형 = σ/M, M = E(1−ν)/((1+ν)(1−2ν)): 실물 LPSCl (E ≈22 GPa · ν 0.36 — CLAUDE.md DFT 쌍) 은 160 MPa 에서 **≈0.4 %**, DEM 연화 E_eff 1.35 GPa (ν 0.3) 이면 **≈9 %** — 등록 §7-4 한정어 *"연화 SE (E 1.35 GPa) 모델 안 값 — 실제 회복보다 클 수 있다"* 의 크기 감각.  (DEM 회복은 접촉망 · AM 골격 (D AM–AM 52–60 %) 이 정해 이 연속체 수치와 같지 않다.)
+- [우리 산술 — 크기 감각, 판정 아님] 순수 고체 탄성만 보면, 구속 축변형 = σ/M, M = E(1−ν)/((1+ν)(1−2ν)): 실물 LPSCl (E ≈22 GPa · ν 0.36 — CLAUDE.md DFT 쌍) 은 160 MPa 에서 **≈0.4 %**, DEM 연화 E_eff 1.35 GPa (ν 0.3) 이면 **≈9 %** — 등록 §7-4 한정어 *"연화 SE (E 1.35 GPa) 모델 안 값 — 실제 회복보다 클 수 있다"* 의 크기 감각.  (DEM 회복은 접촉망 · AM 골격 (AM–AM 기여율 D(S0) 48.5–59.6 %, 등록 §11-2) 이 정해 이 연속체 수치와 같지 않다.)
 - ⚠ Codex 판정 (springback · load-share, 11 행): 우리 *"필요 회복 4.4–9.9 %"* 는 되튐의 독립 증거로 쓸 수 없다 — **이 논문 springback 6.7–10.4 % 가 같은 범위라도 앵커가 아니다** (바인더 시트 · 펀치 · 640 MPa · β-LPS).  `RB-01` · `RB-02` HOLD 그대로.
 
 ### 7-3. ★ CL-94 · V2
@@ -300,7 +300,7 @@
 | 44 | F.P. McGrogan, … K.J. van Vliet, *Adv. Energy Mater.* 7 (2017) 1602011 | 유리질 Li₂S–P₂S₅ "compliant yet brittle" — 취성 근거 |
 | 53 | V. Faka, M.T. Agne, … W.G. Zeier, *J. Am. Chem. Soc.* 146 (2024) 1710–1721 | 압력 유도 전위 ↔ 수송 (미세변형 해석 원전) |
 | 54 | C. Meyer, H. Bockholt, W. Haselrieder, A. Kwade, *J. Mater. Process. Technol.* 249 (2017) 172–178 | Meyer 지수식 (γ_c) 원전 |
-| 56 | A. Diener, S. Ivanov, W. Haselrieder, A. Kwade, *Energy Technol.* 10 (2022) 2101033 | 캘린더링 롤 간극 순간 탄성 회복 — 이 묶음의 다음 카드 |
+| 56 | A. Diener, S. Ivanov, W. Haselrieder, A. Kwade, *Energy Technol.* 10 (2022) 2101033 | 캘린더링 롤 간극 순간 탄성 회복 — 정본 카드 `diener2022_roll_gap_springback_calendering` (고하중 SB 절댓값은 간극 안 밀도가 진밀도를 넘어 과대 — 그 카드 §3-7) |
 | 58 | C. Sun, D.J. Grant, *Pharm. Dev. Technol.* 6 (2001) 193–200 | in-die vs out-of-die Heckel — 탄성 변형의 영향 원전 |
 | 61 | A. Ohashi, M. Kodama, S. Xueying, S. Hori, K. Suzuki, R. Kanno, S. Hirai, *J. Power Sources* 470 (2020) 228437 (Stress distribution in the composite electrodes of sulfide all-solid-state lithium-ion batteries) | 복합 전극 응력 분포 (강성 높은 상으로 응력 집중) · ⚠ `CL-90` 의 확인 불가 인용과 **같은 권 (470) · 다른 저자 · 다른 쪽번호** — 그 인용이 이 논문을 잘못 기억한 것인지는 **[미확인]** (원문 확인 전 연결하지 않는다) |
 | 72 | M. Rosner, … S. Kaskel, *Adv. Funct. Mater.* e18517 (2025) | PTFE 건식 SE 필름 안정성 — 저자가 다음 바인더로 제안 |
@@ -314,7 +314,7 @@
 ## 🔗 관련 카드
 - 같은 축 (치밀화 · in-die / out-of-die · 감압): `faka2026_particle_size_consolidation_strain_lpscl` · `thompson2026_high_pressure_densification_lps_lpscl_xrd_tomography` · `lee2025_heckel_argyrodite_powder_densification_nanoindentation` · `miss2026_insitu_conductivity_porosity_pressure_compaction`.
 - σ 측정 · 적층압: `cronau2021_stack_pressure_ionic_conductivity` · `doux2020_stack_pressure_assb` · `schneider2023_particle_size_pressure_transport`.
-- 바인더 · 되튐: `hong2026_cbd_viscoelasticity_springback` · `bielefeld2020_effective_ionic_conductivity_binder` · `cao2026_dual_binder_18um_sulfide_electrolyte_film` · `lee2026_unveiling_ptfe_dry_electrode_digital_twin`.
+- 바인더 · 되튐: `diener2022_roll_gap_springback_calendering` (ref 56) · `hong2026_cbd_viscoelasticity_springback` · `bielefeld2020_effective_ionic_conductivity_binder` · `cao2026_dual_binder_18um_sulfide_electrolyte_film` · `lee2026_unveiling_ptfe_dry_electrode_digital_twin`.
 
 ## 🗨️ Q&A 로그
 <!-- "Q&A 작성해줘" 트리거 시 직전 질문/답 누적 -->
