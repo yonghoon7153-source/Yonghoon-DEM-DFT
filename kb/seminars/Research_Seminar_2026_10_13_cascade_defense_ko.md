@@ -119,13 +119,14 @@ evidenceScope: multi-source-mixed
 - **"그럼 기계 축은 새로운 건가?"** → 아닙니다. Jung 등은 ML 로 예측한 G 와 G/K 를 거름 기준으로 썼습니다. 저희는 DFT 기준과 MLIP 지표로 기록하고, 9월 감사에서 배치 잡음이 커서 거름 기준으로는 안 씁니다.
 - **"황화물 발표에 왜 가넷 (산화물) 이 있나?"** (사용자 10-13 질문) → 계가 아니라 **도핑 스크린을 짜는 방식**을 비교하는 표라서입니다.
   1. 한 이야기입니다 — Miara 가 DFT 로 도펀트 128 종의 자리를 예측했고, Anderson 이 원소 59 개 × 세 자리 = 177 시료로 실험 검증했습니다.
+     (Anderson 은 화면 참고문헌에 없다 — 말할 때 출처를 같이 댄다: *Adv. Energy Mater.*, 14, 2304025 (2024).)
      (10-13 정정 — 옛 괄호 'Anderson 의 후보 풀 = 기존 실험 30 + Miara 예측 45' 는 Anderson 의 서술이고, 45 는 Miara 원문에 없다.)
   2. '원소 하나씩 · 자리별로' 라는 고전적 방식의 대표이고, 실험 검증까지 된 경우입니다 — DFT 가 예측한 자리에 넣으면 입방상이 잘 생겼습니다.
   3. Anderson 의 결론이 저희 쪽으로 이어집니다 — 자기 기준 다섯을 순서대로 걸면 59 종 중 하나도 안 남아서, '원소 하나로는 못 한다 → 공도핑' 으로 결론을 냈습니다
      (한 원소는 입방상 · 전도도, 다른 원소는 전위창, La/Zr 자리는 대기 안정성). 여러 축을 따로 봐야 하고 (4장), 이온 둘을 함께 넣는 방향 (전구체) 과 맞닿습니다.
   - 약점: 산화물이라 계가 다르다 · 아지로다이트 예는 Lee (산화수 자리별 다원소 조성 설계) · Muy (원소 하나씩) 로 이미 있다. 빼도 표의 논리는 선다.
     (10-13 정정 — 옛 문장은 'Lee · Muy 가 단일 원소 예' 였는데 Lee 는 단일 원소가 아니다.)
-- **"Miara 는 왜 'via Anderson' 인가?"** (⚠ 10-13 Miara 원문 대조 — 슬라이드 수정은 사용자 결정 대기)
+- **"Miara 는 왜 'via Anderson' 인가?"** (⚠ 10-13 Miara 원문 대조 → **사용자 반영**: 표는 'Miara 2015 · 128' · 'via Anderson' 과 Anderson 참고문헌을 같이 뺐다)
   → 45 는 **Miara 원문에 없는 수**입니다. Anderson 이 Miara 를 '추가 45 종 예측' 으로 인용하면서 쓴 수라서, 45 를 쓰는 한 'via Anderson' 이 붙어 있어야 합니다.
   Miara 가 실제로 계산한 것은 도펀트 128 종 (원소 × 산화수) × 세 자리입니다 (Table 1 · p. 4041). 표를 **n = 128** 로 고치면 네 칸이 전부 Miara 원문에서 나오므로 'via Anderson' 을 뗍니다.
   (옛 답 '45 는 Miara 가 DFT 결함에너지로 예측한 도펀트 수' 는 틀렸다 · Miara digest `litdb/papers/miara2015_llzo_cation_dopants_cathode_interphases.md` §0S)
@@ -133,7 +134,7 @@ evidenceScope: multi-source-mixed
 #### 논문별 브리핑 (질문이 오면 이 순서로 — 무엇을 · 어떻게 · 결론 · 우리와 다른 점)
 - **Miara 2015** (*Chem. Mater.*, 27, 4040) · **Anderson 2024** (*Adv. Energy Mater.*, 14, 2304025) — 가넷 LLZO (Li₇La₃Zr₂O₁₂). ✅ 사용자 확인 순서 1 (10-13)
   - **표 칸별 (10-13 Miara 원문 대조)**: host = 산화물 가넷 LLZO ✓ · what is varied = 도펀트 양이온 하나를 Li · La · Zr 세 자리에 넣어 봄 ✓ · mechanical = 없음 ✓ (전문 검색 0 건) ·
-    ⚠ n = 45 → **128 이 맞다** (아래 ⚠ · 슬라이드 수정은 사용자 결정 대기).
+    n = **128** ✓ (10-13 사용자 반영 · 옛 45 는 아래 ⚠). what is varied 칸은 'one cation, 3 sites (Li, La, Zr)'.
   - **Miara (Ceder 그룹 + Samsung Research America · 계산 · 원문 확인 ✓)**: 도펀트 **128 종** (원소 × 산화수 · 94 원소) 을 Li · La · Zr 세 자리에 하나씩 넣어
     결함에너지 (그 자리에 넣는 에너지 · 기준 화학퍼텐셜은 상도표에서) 를 DFT 로 계산 → 가장 낮은 자리 = 그 도펀트의 자리. 음이온 (O) 자리는 한 번도 안 바꿨다.
     VASP · PBE · 500 eV · 192 원자 셀에 도펀트 1 개. 전하는 Li 빈자리 · 침입으로 맞춘다 (저희와 같다 — 차이로 말하지 않는다).
@@ -179,7 +180,7 @@ evidenceScope: multi-source-mixed
   - **표 칸별 (원문 Fig. 1b 대조)**: host = 아지로다이트 ✓ (군 1–3 은 Li₆PS₅I · 군 4 는 Cl/Br) · n = 84 ✓ (12 + 18 + 18 + 18 + 13 + 5) · mechanical = 없음 ✓.
     ⚠ what is varied = 'elements already in the formula' 는 **오해를 산다** — 원래 화학식에 있던 원소가 아니라, P 자리를 Si · Ge · Sn · Sb · W · Mo 로 바꾸고 할로겐을 Cl · Br 로 바꾼다.
     정확한 말은 'P-site cations and halides'. 그리고 bullet 1 의 'one or two elements' 는 Lee 와 안 맞는다 — 군 3 은 P 자리 양이온 셋을 한꺼번에 바꾸고 (예 Si₀.₅Sb₀.₂₅W₀.₂₅), 군 4 는 할로겐까지 섞는다.
-    (10-13 사용자에게 고칠지 물음 — 권고 'Earlier screens varied elements, …' · 'P-site cations and halides')
+    (10-13 사용자 반영 — 'Earlier screens varied elements, …' · 'P-site cations and halides')
   - **누가**: 성균관대 화학공학 이상욱 그룹 + 현대자동차 (과제도 현대차). 순수 계산 — 합성 보고 없음.
   - **무엇을 (Fig. 1b)**: Li₅₊₂ₓ₊ᵧ[A]ₓ⁴⁺[B]ᵧ⁵⁺[C]₁₋ₓ₋ᵧ⁶⁺S₅I — P 자리를 산화수가 다른 양이온 조합으로 0.25 단위로 바꾸고 (4 가 Si/Ge/Sn · 5 가 P/Sb · 6 가 W/Mo), Li 양은 전하에 맞춰 따라간다.
     군 1 (5 가 + 6 가) 12 · 군 2 (4 가 + 6 가) 18 · 군 3 (4 가 + 5 가 + 6 가) 18 → 잘 나온 8 개에 군 4 할로겐 치환 · 혼합 · 과잉 36.

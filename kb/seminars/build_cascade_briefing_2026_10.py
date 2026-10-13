@@ -649,11 +649,13 @@ def build_lean():
     #      longer break mid-word in PowerPoint (latinLnBrk="0").
     t = load('slide7.xml')
     replace_body(t, P('Prior dopant screens and what this study adds', 'h', ln=130)
-                 + P('Earlier screens varied one or two elements, or a coating compound without a host.', 'b', ln=130)
-                 + P('Here one [[b:precursor compound]] adds a cation and an anion in the ratio of its formula.',
+                 + P('Earlier screens varied elements, or a coating compound without a host.', 'b', ln=130)
+                 + P('Here one [[b:precursor compound]] adds its cation and anion together, in its formula ratio.',
                      'b', ln=130), y=1.08, h=1.35)   # one line (7.1 in at 15 pt)
     # user 10-13 asked what 'charge-balanced within the salt' meant: it over-claimed. Our builds also balance charge in
     # the host with Li vacancies or interstitials (contract rule ②); what the salt fixes is the cation:anion ratio.
+    # User's final wording (10-13, after checking each paper): 'one or two elements' did not fit Lee 2024 (up to three
+    # P-site cations plus the halide), and 'a cation and an anion' read as one of each (Al2O3 adds them 2:3).
     drop(t, lambda el: etree.QName(el).localname == 'grpSp' or name_of(el) == 'TextBox 3')
     assert set_texts(t, {'47': '91', ' (': '', '91': '', ' planned)': ''}) == 4
     A = f'{{{NS["a"]}}}'
@@ -691,10 +693,17 @@ def build_lean():
             if text is not None:
                 cell_set(tc, text, INK if text.startswith('ML-predicted') else None)
         new_rows[key] = tr
-    for tc in rows['Xiao 2019'].findall('a:tc', NS)[1:2]:          # user 10-13: 'no host' / '(free coating)'
+    # user 10-13 after reading each original: Miara computes 128 dopant species on Li, La and Zr (Table 1, p. 4041);
+    # 45 was Anderson's citation of it, so the row drops 'via Anderson'. Lee varies P-site cations and the halide.
+    _m = rows['Miara 2015 (via Anderson)'].findall('a:tc', NS)
+    cell_set(_m[0], 'Miara 2015')
+    cell_set(_m[2], 'one cation, 3 sites (Li, La, Zr)')
+    cell_set(_m[3], '128')
+    cell_set(rows['Lee 2024'].findall('a:tc', NS)[2], 'P-site cations and halides')
+    for tc in rows['Xiao 2019'].findall('a:tc', NS)[1:2]:          # user 10-13: 'no host' / '(coating layer)'
         for t_ in tc.iter(A + 't'):
             if t_.text and 'free co' in t_.text:
-                t_.text = '(free coating)'
+                t_.text = '(coating layer)'
                 t_.getparent().addprevious(etree.SubElement(etree.Element(A + 'x'), A + 'br'))   # own line, as the user set it
     for tr in grid.findall('a:tr', NS):
         grid.remove(tr)
@@ -708,7 +717,7 @@ def build_lean():
     # citations: the user's final layout (10-13) stacks them top right in the lab's form, oldest first by row order
     add(t, tb(ids(), 'References top', 5.6, 0.02, 3.9, 0.86, ''.join(
         P(c, 'p', 750, 95, 'r', INK) for c in (
-            '[[i:Chem. Mater.]], 27, 4040 (2015).', '[[i:Adv. Energy Mater.]], 14, 2304025 (2024).', '[[i:Joule]], 3, 1252 (2019).',
+            '[[i:Chem. Mater.]], 27, 4040 (2015).', '[[i:Joule]], 3, 1252 (2019).',   # Anderson dropped with 'via Anderson'
             '[[i:J. Mater. Chem. A]], 12, 7272 (2024).', '[[i:Chem. Mater.]], 37, 2395 (2025).', '[[i:eTransportation]], 28, 100570 (2026).'))))
     for para in tbl.iter(A + 'p'):
         ppr = para.find('a:pPr', NS)
@@ -963,15 +972,19 @@ save(t, name)
 
 # ---- 5 prior screens (orig slide 7)
 t = load('slide7.xml')
-replace_body(t, P('Prior work: what dopant screens vary', 'h', ln=130)
-             + P('Earlier screens place one element on a site, or screen hostless compounds.', 'b', ln=130)
-             + P('Here a [[b:precursor compound]] fills one cation and one anion site at once.', 'b', ln=130),
+replace_body(t, P('Prior work: what dopant screens vary', 'h', ln=130)   # bullets = the lean slide's (user 10-13)
+             + P('Earlier screens varied elements, or a coating compound without a host.', 'b', ln=130)
+             + P('Here one [[b:precursor compound]] adds its cation and anion together, in its formula ratio.', 'b', ln=130),
              y=1.08, h=1.45)
 drop(t, lambda el: etree.QName(el).localname == 'grpSp' or name_of(el) == 'TextBox 3')   # images + captions; 4-line refs box
 add(t, tb(ids(), 'References top', 4.6, 0.93, 4.9, 0.42,
-          P('Chem. Mater. 27, 4040 (2015) · Adv. Energy Mater. 14, 2304025 (2024)', 'p', 950, 100, 'r', MUTED, italic=True)
-          + P('J. Mater. Chem. A 12, 7272 (2024) · Joule 3, 1252 (2019)', 'p', 950, 100, 'r', MUTED, italic=True)))
+          P('Chem. Mater. 27, 4040 (2015) · Joule 3, 1252 (2019)', 'p', 950, 100, 'r', MUTED, italic=True)
+          + P('J. Mater. Chem. A 12, 7272 (2024)', 'p', 950, 100, 'r', MUTED, italic=True)))
 assert set_texts(t, {'47': '91', ' (': '', '91': '', ' planned)': ''}) == 4   # cell runs: '47' ' (' '91' ' planned)' -> '91'
+# same corrections as the lean table (user 10-13, Miara original: 128 species x 3 sites; 45 was Anderson's citation)
+assert set_texts(t, {'Miara 2015 (via Anderson)': 'Miara 2015', 'one cation, 3 sites': 'one cation, 3 sites (Li, La, Zr)',
+                     '45': '128', 'elements already in the formula': 'P-site cations and halides',
+                     ' — free coating': ' — coating layer'}) == 5
 tbl = t.getroot().find('.//p:graphicFrame', NS)
 cell_hits = 0
 for tc in tbl.iter(f'{{{NS["a"]}}}tc'):

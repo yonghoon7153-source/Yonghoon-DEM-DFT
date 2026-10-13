@@ -34,7 +34,7 @@ evidenceScope: multi-source-mixed
 > | 2 | Background — Earlier DFT studies | ✅ 확정 10-13 | 6e568c4 · e70e1d6 (Li₂S 칸 = li2s/LPSCl 계면상) |
 > | 3 | Overview — 하나씩에서 여럿으로 · 예 하나 (Al₂O₃ / Al₂S₃) | ✅ 확정 10-13 | b464c62 · fa4a120 · 9b4f498 (화살표 줄 → 다음 장 다리 · 'we must check') · 한 장 PPT + 노트 |
 > | 4 | Introduction — 두 열화는 서로를 키운다 (Kang 2026 Fig. 16) | ✅ 확정 10-13 (*'됐어 저정도면'*) | 9c4bbde (문구 넷 · 출처는 랩 표준 그대로) |
-> | 5 | Introduction — 선행 스크린과 이번 작업 (novelty · Muy 2025 · Jung 2026 추가) | ✅ 확정 10-13 (사용자 최종판 · 출처 오른쪽 위) | 34adf6e · 디펜스 S5 브리핑 (논문별 확인 중) |
+> | 5 | Introduction — 선행 스크린과 이번 작업 (novelty · Muy 2025 · Jung 2026 추가) | ✅ 확정 10-13 (사용자 최종판 · 출처 오른쪽 위) · 논문별 원문 대조 뒤 재확정 (Miara n 128 · Lee 칸 · bullet 둘 · Anderson 참고문헌 뺌) | 34adf6e · 이번 반영 커밋 · 디펜스 S5 브리핑 (Miara · Xiao · Lee 확인 ✅ · Muy · Jung 남음) |
 > | 1 · 6–19 | 나머지 | ⏳ 그 장을 볼 때 확정 | — |
 
 ---
@@ -134,14 +134,16 @@ evidenceScope: multi-source-mixed
 
 ## 5. 선행 스크린과 이번 작업의 차이 ⏱ 7:00
 > 화면 (사용자 10-13 · novelty 장 · 사용자 덱 6쪽): ■ *Prior dopant screens and what this study adds* · bullet 둘
-> (*Earlier screens varied one or two elements, or a coating compound without a host.* · *Here one precursor compound adds a cation and an anion in the ratio of its formula.*) ·
-> 표 = 선행 다섯 편 + 이번 작업 (오래된 순 · **Muy 2025 · Jung 2026 를 litdb 에서 더함**) · 출처는 **오른쪽 위 여섯 줄** (랩 표준 표기 · 사용자 최종판 10-13).
+> (*Earlier screens varied elements, or a coating compound without a host.* · *Here one precursor compound adds its cation and anion together, in its formula ratio.*) ·
+> 표 = 선행 다섯 편 + 이번 작업 (오래된 순 · **Muy 2025 · Jung 2026 를 litdb 에서 더함**) · 출처는 **오른쪽 위 다섯 줄** (랩 표준 표기 · 사용자 최종판 10-13).
+> ⚠ 10-13 논문별 원문 대조 뒤 사용자 반영: Miara 행 = *Miara 2015 · one cation, 3 sites (Li, La, Zr) · 128* (45 는 Miara 원문에 없는 Anderson 의 인용 수 → 'via Anderson' 과 Anderson 참고문헌을 같이 뺌) ·
+> Lee 칸 = *P-site cations and halides* · Xiao = *no host (coating layer)* · 첫 bullet 에서 'one or two' 를 뺌 (Lee 는 P 자리 양이온 셋까지 + 할로겐).
 > 앞 장 끝: *'그러면 지금까지의 도핑 스크린은 무엇을 바꿔 가며 걸렀는지, 선행 연구부터 보겠습니다.'*
 
 지금까지의 도핑 스크린 다섯 편을 이번 작업과 나란히 놓았습니다. **[가리킴: what is varied 열]** 이 열이 핵심입니다. 무엇을 바꿔 가며 걸렀는지입니다.
-- **[가리킴: Miara]** 가넷 산화물에서는 DFT 로 도펀트가 들어갈 자리를 예측했고, 그 예측을 시료 177 개로 실험 검증한 연구는
-  '원소 하나로는 모든 축을 못 맞춘다, 공도핑이 필요하다' 고 결론 냈습니다.
-  (Anderson 2024 결론 — litdb `anderson2024_…` §결론 2: 자기 기준 다섯을 순서대로 걸면 59 종 중 0 종)
+- **[가리킴: Miara]** 가넷 산화물에서는 Miara 등이 도펀트 128 종을 Li · La · Zr 세 자리에 하나씩 넣어 보고, 어느 자리에 들어가는지 DFT 로 예측했습니다.
+  (10-13 — 화면에서 Anderson 참고문헌이 빠져서, 177 시료 실험 검증 · '공도핑이 필요하다' 는 Anderson 결론은 대본에서 뺐다. 말하려면 참고문헌
+  *Adv. Energy Mater.*, 14, 2304025 (2024). 를 화면에 되살린다. 질문이 오면 디펜스 S5.)
 - **[가리킴: Xiao]** Xiao 등은 호스트 없이, 코팅으로 쓸 화합물 자체를 10만 개 넘게 걸렀습니다.
 - **[가리킴: Lee · Muy]** 아지로다이트에서는 P 자리 양이온과 할로겐을 바꿔 새 조성을 설계하거나, 원소 하나를 자리별로 넣어 봤습니다.
 - **[가리킴: Jung]** 가장 가까운 건 올해 나온 Jung 등의 연구입니다. LGPS 에 원소 두 개를 따로 골라 넣었습니다.
@@ -345,7 +347,7 @@ MLIP 지표의 기준이 되는 DFT 계산입니다. **[가리킴: 두 곡선]**
 | 2 | ■ 'Earlier DFT studies: the basis of this screening' · bullet 둘 (Top row: bulk materials and their doped or coated forms · Bottom row: SEI components, interfaces, and binders in a battery cell) + 그림 자리 8칸 (제목 + `< 키워드 >`) | 칸마다 한 줄 (대본 2장) · 마무리 '이 경험들이 스크리닝의 단계가 됐다' + 짝 다섯 (EOS → 기준 계산 · BVSE → Li 지형 · MD → 수송 · 대권위 상도표 → 안정창 · 계면 에너지 → 계면 반응성) — 숫자는 0 개 |
 | 3 | ■ 'Choosing a dopant precursor for Li₆PS₅Cl' · bullet 둘 (In the lab, dopants are added as compounds, not as bare elements. · This work screens 91 candidate precursors by simulation before synthesis.) + 점선 박스 'An example' (Al₂O₃ → Al + O · Al₂S₃ → Al + S · Same Al, different partner anion · Does the anion change stability or Li transport?) + 화살표 + 'To answer this question, we must check electrochemical stability, mechanical stability, and Li transport separately.' | 앞 장의 도핑 계산 → 범위를 넓힘 → 넣는 건 화합물 → 예 · 질문 → 세 가지를 따로 (대본 3장) · 아래 줄 = 다음 장으로 가는 다리 · 상자는 예 하나 · 답은 말하지 않는다 · 진행 숫자는 13장에서 |
 | 4 | ■ 'Failure modes in sulfide-based all-solid-state batteries' · bullet 둘 (reinforce each other · A dopant that suppresses one mode can worsen the other, and the trade-off goes undetected unless each mode is evaluated separately.) + Kang 2026 Fig. 16 + 출처 'Kang et al., …' | 앞 장 '왜 따로' 에 답 · 두 열화 → 서로 키우는 고리 → 가운데 SE doping → 따로 재는 이유 (대본 4장) · 그림 오타는 원 논문 그대로 |
-| 5 | ■ 'Prior dopant screens and what this study adds' · bullet 둘 + 표 6 행 (Miara 2015 via Anderson · Xiao 2019 · Lee 2024 · Muy 2025 · Jung 2026 · this work · 출처는 study 칸) | what is varied 열이 핵심 → this work 행 → 기계 축은 새로움이 아님 (대본 5장 · 논문별 브리핑 = 디펜스 S5) |
+| 5 | ■ 'Prior dopant screens and what this study adds' · bullet 둘 + 표 6 행 (Miara 2015 · Xiao 2019 · Lee 2024 · Muy 2025 · Jung 2026 · this work · 출처는 오른쪽 위 다섯 줄) | what is varied 열이 핵심 → this work 행 → 기계 축은 새로움이 아님 (대본 5장 · 논문별 브리핑 = 디펜스 S5) |
 | 6 | 08-18 덱의 족별 표 (family · n · examples — 'role in the design' 열은 뺐다 · 사용자 10-13) + **[문헌] 'Literature example: SiO₂ co-doping'** Jung 2026 Fig. 3d | 족별 역할은 말로: 산화물 = 강한 M–O 결합 · 염화물 = 호스트에 이미 Cl · 황화물 = 호스트와 같은 음이온 (대조) · 플루오르화물 = 가장 강한 결합 · 이동성 위험 · 브로민화물 · 요오드화물 = 더 큰 할라이드 (대조) · 질화물 = 더 높은 음이온 전하 (대조) · 공치환 실험 선례 CuCl · MgF₂ · ZnO · La₂O₃ · Nd₂O₃ · SiO₂ (17장) · 문헌 그림은 '선례' 이지 우리 후보의 검증이 아니다 · As₂S₃ 재실행은 7장 |
 | 7 | bullet: 3,675 완화 · **선별된 693 담금질** + 그림 하나: 표마다 담은 전구체 수 (91 · 90 · 89) | 단계별 방법 (UMA · FIRE · 500 K 50 ps) · 90 · 89 인 이유 · '9월 감사 이후 탐색 자료' (화면 줄은 뺐다 · 15장에 있다) |
 | 8 · 9 | 8: 원래 그림 (열지도 크게) · 9: 그대로 | 8: '지표에 따라 같은 전구체 안 흩어짐 ≈ 전구체 사이' 는 말로 (화면 줄은 뺐다 → 11장 감사로 이어진다) · 담금질은 **선별한 구조**만 |
