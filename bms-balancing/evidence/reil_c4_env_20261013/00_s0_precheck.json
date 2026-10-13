@@ -1,0 +1,81 @@
+{
+ "deb": {
+  "libpython3.11-stdlib": "3.11.17-1+noble1",
+  "python3.11-minimal": "3.11.17-1+noble1",
+  "python3.11-venv": "3.11.17-1+noble1"
+ },
+ "df_B1": "Filesystem        1B-blocks        Used   Available Use% Mounted on\n/dev/vda       270553174016 14721118208 27102740480  36% /\n/dev/vda       270553174016 14721118208 27102740480  36% /\n",
+ "documents": {
+  "bms-balancing/docs/REIL_C4_APPROVAL_REQUEST_v2_20261013.md": "22dcc8e5ef6430253f55834743e10808b0c3547c8fb560d0ad415dce77da8f87",
+  "bms-balancing/docs/REIL_C4_ENV_APPROVAL_REQUEST_20261013.md": "47af94d1eba4a8be885566aada162afbeb5fa8a792105dce19650b84cd76554d"
+ },
+ "elapsed_s": 0.122,
+ "ensurepip_bundled": {
+  "pip-24.0-py3-none-any.whl": "ba0d021a166865d2265246961bec0152ff124de910c5cc39f1156ce3fa7c69dc",
+  "setuptools-79.0.1-py3-none-any.whl": "e147c0549f27767ba362f9da434eab9c5dc0045d5304feb602a0af001089fc51"
+ },
+ "env_removed_names_for_children": [
+  "AWS_ACCESS_KEY_ID",
+  "AWS_SECRET_ACCESS_KEY",
+  "CLAUDE_CODE_MESSAGING_TOKEN",
+  "CLAUDE_SESSION_INGRESS_TOKEN_FILE",
+  "CLOUDSDK_AUTH_ACCESS_TOKEN",
+  "GH_TOKEN",
+  "GITHUB_TOKEN",
+  "GIT_CONFIG_COUNT",
+  "GIT_CONFIG_KEY_0",
+  "GIT_CONFIG_KEY_1",
+  "GIT_CONFIG_KEY_2",
+  "GIT_CONFIG_VALUE_0",
+  "GIT_CONFIG_VALUE_1",
+  "GIT_CONFIG_VALUE_2",
+  "MAX_THINKING_TOKENS"
+ ],
+ "files": {
+  "bms-balancing/evidence/reil_p0_20261006/01_venv_constraints.txt": "db63333bdaf1835444a86187215ed7faf06897eb8a247c667ed167a5ee1dc772",
+  "bms-balancing/scripts/reil_c4_env_compare.py": "eff94d3dfd4b3d31c7a19e440dfb968734dab1afb16b584c2fdee354100695e0",
+  "bms-balancing/scripts/reil_c5_pilot.py": "73bee8dc412b39863afb64b70bc128cbecee2075a3a17914fc7288f353ef11a6",
+  "bms-balancing/scripts/reil_c6_profile.py": "408afc4bb5eb1069583b955e0eb6215bf48dd9259ad474c230549d1b3642df5d",
+  "degradation-degeneracy/tools/env_profile.py": "83b0d8365d039d75050d087fe980ad7b64818686b699e5d06da1c0ad63148563"
+ },
+ "free_bytes": 27102740480,
+ "head": "8e2985d6d7524c58d4560cd324b84905fd4c0029",
+ "interpreter": {
+  "build": [
+   "main",
+   "Oct  1 2026 15:41:07"
+  ],
+  "implementation": "CPython",
+  "is_symlink": false,
+  "libc": "glibc 2.39",
+  "machine": "x86_64",
+  "path": "/usr/bin/python3.11",
+  "sha256": "73bf4b06fad87996a59b3c0810eb127b91e84846d21e563862fb4acf74fbcb99",
+  "size": 6644312,
+  "sys_version": "3.11.17 (main, Oct  1 2026, 15:41:07) [GCC 13.3.0]",
+  "system": "Linux",
+  "version": "3.11.17"
+ },
+ "paths_exist": {
+  "/home/user/Yonghoon-DEM-DFT/bms-balancing/evidence/reil_c4_env_20261013": false,
+  "/home/user/Yonghoon-DEM-DFT/bms-balancing/reil_c6_rebuild_20261013": false,
+  "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/b881d255-9513-5adc-9b14-3c0be18d7ad6/scratchpad/reil_c4env": false
+ },
+ "porcelain_start_lines": 0,
+ "problems": [],
+ "runner": {
+  "isolated": true,
+  "sys_executable": "/usr/bin/python3.11"
+ },
+ "runner_copy_sha256": "5c781a2d78af5c02dfcecfc5df7dfe2a254353bfdf1f3fa262d760eed352d2cc",
+ "t0_utc": "2026-10-13T06:06:16.882Z",
+ "trees": {
+  "bms-balancing/evidence/reil_c5_impl_20261006": "cfea813242c2d47f559a3807c5bab1bb63f3e183",
+  "bms-balancing/evidence/reil_c5_pilot_20261006": "514e4dcd284f831a92e158ad4542136cc455f018",
+  "bms-balancing/evidence/reil_c5_pilot_20261006_wrapper": "6238fff9ff7bc6a54747f28653eca4e3f1b20a2d",
+  "bms-balancing/evidence/reil_c6_n1_20261006": "fdd12a5f30dc52242e0553b6b616c463a264fe54",
+  "bms-balancing/evidence/reil_p0_20261006": "82a74d69c3f3cad363d6f120fe0e88658af0a496",
+  "bms-balancing/reil_c6_20261005": "3ec46373da366265242e92df9c6e112e5ff100e0",
+  "bms-balancing/reil_c6_rebuild_20261006": "b55f3a439e23bd41626d64bbb40b8221571f8690"
+ }
+}

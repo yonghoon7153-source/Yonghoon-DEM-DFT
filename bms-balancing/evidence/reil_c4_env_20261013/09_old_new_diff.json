@@ -1,0 +1,471 @@
+{
+ "allowed_only": true,
+ "bin_set": [
+  "cffi",
+  "fonttools",
+  "numpy",
+  "pip"
+ ],
+ "disallowed": [],
+ "files": {
+  "COBYQA_OPTIONS.json": {
+   "identical": true,
+   "new_sha256": "0317d11b240a948f86b75f049a75cef59a6673a7585fb32f8257901d99b9ee14",
+   "old_sha256": "0317d11b240a948f86b75f049a75cef59a6673a7585fb32f8257901d99b9ee14"
+  },
+  "MANIFEST.json": {
+   "allowed": true,
+   "changed": [
+    "PROFILE.json",
+    "REIL_C6.lock.txt"
+   ],
+   "identical": false,
+   "manifest_vs_files_mismatch": [],
+   "new_sha256": "4f12094897b53463097e78dafc0bfe5f37c1d76bb1a6266c0a907d755fb2ebdc",
+   "old_sha256": "a14617ecad1954a86122922072b8d1656e9b13fdbf003d131ad32e0ff52a91f5"
+  },
+  "PROFILE.json": {
+   "allowed": true,
+   "changed": [
+    {
+     "new": [
+      "main",
+      "Oct  1 2026 15:41:07"
+     ],
+     "old": [
+      "main",
+      "Mar  3 2026 09:26:23"
+     ],
+     "path": "/python/build"
+    },
+    {
+     "new": "3.11.17",
+     "old": "3.11.15",
+     "path": "/python/version"
+    }
+   ],
+   "identical": false,
+   "new_sha256": "50f2c7fb176910da2df252cfd7f17a8f05a56b8696e1be3040d6ff5cf034a641",
+   "old_sha256": "c9449c284d755363c75848ad4c6d0582bdb7b6c1799674646b13ed2dfc49191d",
+   "regenerated_equal": true
+  },
+  "REIL_C6.lock.txt": {
+   "allowed": true,
+   "identical": false,
+   "lines": [
+    {
+     "kind": "python",
+     "line": 4,
+     "new": "#@ python \"3.11.17\"",
+     "old": "#@ python \"3.11.15\""
+    },
+    {
+     "kind": "record_sha",
+     "line": 16,
+     "new": "cffi==2.1.1  # record-sha256 aeccd2bde993f93078c41487373649f80fbf9aa8e5207c222e41f71628507fdf",
+     "old": "cffi==2.1.1  # record-sha256 eaf1d223880183e41d9c85dae880ab9d5db2563e3f6eba4186f7b1427b3577c4"
+    },
+    {
+     "kind": "record_sha",
+     "line": 22,
+     "new": "fonttools==4.66.1  # record-sha256 f2fa180c9035d11eafc39e158ba95ce2b08ffe454e7a516b53d1600101f6c86d",
+     "old": "fonttools==4.66.1  # record-sha256 201b77583a8943c54baff85744ca925c4438412a72b4eed21efd72fa927050e7"
+    },
+    {
+     "kind": "record_sha",
+     "line": 27,
+     "new": "numpy==2.4.6  # record-sha256 f9cec8b8ba1006d9fd3d4ab83feae32be8f7a99b01ececa7f19c20221b397185",
+     "old": "numpy==2.4.6  # record-sha256 5f2cadac7692a8477da76ad3213fc4a807fc4538878bfa55d51ec7b7b36de51b"
+    },
+    {
+     "kind": "record_sha",
+     "line": 32,
+     "new": "pip==24.0  # record-sha256 a50889fadbc82d0dbfcdf0a80712ca2e9f8500bf5b78298d84a77c5b839efb97",
+     "old": "pip==24.0  # record-sha256 13dc90e08854d142d483d4be0af36a66cbe713028bfce01b48bcf12c320956ae"
+    }
+   ],
+   "new_sha256": "ea91156cac99fac17830818f17fd4a260a93722269f720171e0ab9b2a75c1faa",
+   "old_sha256": "b392f7b01f9492337a4c52ef323d9348af076866e6997d96179bc438375fe9ef",
+   "record_sha_differs": [
+    "cffi",
+    "fonttools",
+    "numpy",
+    "pip"
+   ]
+  },
+  "SOBOL_PHASE_A.json": {
+   "identical": true,
+   "new_sha256": "887654728fc3d58c4a7c596e3254560a2d48a07dca0e1a50d7d4da007e18cc52",
+   "old_sha256": "887654728fc3d58c4a7c596e3254560a2d48a07dca0e1a50d7d4da007e18cc52"
+  },
+  "sobol_A0_their_box_seed0.npy": {
+   "identical": true,
+   "new_sha256": "916ac3733713bc49618ccfdee0aa1090372d05b4cc01fabcfe89b7f40a6cd4f9",
+   "old_sha256": "916ac3733713bc49618ccfdee0aa1090372d05b4cc01fabcfe89b7f40a6cd4f9"
+  },
+  "sobol_A0_their_box_seed1.npy": {
+   "identical": true,
+   "new_sha256": "0e8daccaf05476af5324fb3f4d227b3a1781fc980f19576af8f6132f0ebef445",
+   "old_sha256": "0e8daccaf05476af5324fb3f4d227b3a1781fc980f19576af8f6132f0ebef445"
+  },
+  "sobol_A1_A2_wide_box_seed0.npy": {
+   "identical": true,
+   "new_sha256": "2e7ba141ddf09bac178bed803bfd82049116ede2691a5758b1055c1e730708d4",
+   "old_sha256": "2e7ba141ddf09bac178bed803bfd82049116ede2691a5758b1055c1e730708d4"
+  },
+  "sobol_A1_A2_wide_box_seed1.npy": {
+   "identical": true,
+   "new_sha256": "72a3372631a51496e452a26cae3a96ad65582d8c4385bae99a749900fb88b872",
+   "old_sha256": "72a3372631a51496e452a26cae3a96ad65582d8c4385bae99a749900fb88b872"
+  },
+  "sobol_unit_seed0.npy": {
+   "identical": true,
+   "new_sha256": "e8ca4cc02dfc2f8c5ad6bc906f4452991c93427df3c10b1997419b5207f34bf7",
+   "old_sha256": "e8ca4cc02dfc2f8c5ad6bc906f4452991c93427df3c10b1997419b5207f34bf7"
+  },
+  "sobol_unit_seed1.npy": {
+   "identical": true,
+   "new_sha256": "870eec2c46821e153692f503066e5506fb8d0fb236657f7572c65304181b01c3",
+   "old_sha256": "870eec2c46821e153692f503066e5506fb8d0fb236657f7572c65304181b01c3"
+  }
+ },
+ "new": "bms-balancing/reil_c6_rebuild_20261013",
+ "note": "allowed_only 는 '허용 차이 밖 없음' 일 뿐 — 채택은 검토 수용 뒤 (요청문 §4)",
+ "old": "bms-balancing/reil_c6_rebuild_20261006",
+ "python_build": [
+  "main",
+  "Oct  1 2026 15:41:07"
+ ],
+ "python_version": "3.11.17",
+ "record_rows": {
+  "about-time": {
+   "bin_rows": [],
+   "dist_info": "about_time-4.2.1.dist-info",
+   "problems": [],
+   "record_raw_sha256": "7e007728245e156a5b97d1eba416d1126044c4281215e9f4328dce4023c50342",
+   "record_text_sha256": "e5a630322aead38c00d7d20ca0050eb7cd2024eb035505a6ef7bab8e5329f0bd",
+   "shebangs": {},
+   "version": "4.2.1",
+   "wheel": "about_time-4.2.1-py3-none-any.whl"
+  },
+  "alive-progress": {
+   "bin_rows": [],
+   "dist_info": "alive_progress-3.3.0.dist-info",
+   "problems": [],
+   "record_raw_sha256": "0ed8e90c80ab1ca8c272859a6e65ec10cff4fc0f915fac57b7a21debdc89f699",
+   "record_text_sha256": "00c80da0799ae100798d538d9946e030259eae3b2b39cb70f99e7ff6ac7e9be8",
+   "shebangs": {},
+   "version": "3.3.0",
+   "wheel": "alive_progress-3.3.0-py3-none-any.whl"
+  },
+  "autograd": {
+   "bin_rows": [],
+   "dist_info": "autograd-1.9.1.dist-info",
+   "problems": [],
+   "record_raw_sha256": "942b3d62a1f5b6c3a1fa0e32d40e1968ac103270be32f34d0999adf910dce56e",
+   "record_text_sha256": "4e20971527b9bf4571582f8ad0e59c1c7a9b908d698f0f5cbbbcccf9b468b07b",
+   "shebangs": {},
+   "version": "1.9.1",
+   "wheel": "autograd-1.9.1-py3-none-any.whl"
+  },
+  "cffi": {
+   "bin_rows": [
+    "../../../bin/cffi-gen-src"
+   ],
+   "dist_info": "cffi-2.1.1.dist-info",
+   "problems": [],
+   "record_raw_sha256": "c69055c3bae2b9f5cb08f10b77efe8d17a4fa8a2467e5d2236485ae5751654a3",
+   "record_text_sha256": "aeccd2bde993f93078c41487373649f80fbf9aa8e5207c222e41f71628507fdf",
+   "shebangs": {
+    "../../../bin/cffi-gen-src": "#!/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/b881d255-9513-5adc-9b14-3c0be18d7ad6/scratchpad/reil_c4env/venv/bin/python"
+   },
+   "version": "2.1.1",
+   "wheel": "cffi-2.1.1-cp311-cp311-manylinux2014_x86_64.manylinux_2_17_x86_64.whl"
+  },
+  "cma": {
+   "bin_rows": [],
+   "dist_info": "cma-4.5.0.dist-info",
+   "problems": [],
+   "record_raw_sha256": "87f1bccb68147a9164eca07366f013b2ad6d4622658ff645e7209dab6f22e72a",
+   "record_text_sha256": "b3d98d0842be1b0915b0854bf66308d6fdd3f1bbbd694a1e0f94afa5e72680bd",
+   "shebangs": {},
+   "version": "4.5.0",
+   "wheel": "cma-4.5.0-py3-none-any.whl"
+  },
+  "contourpy": {
+   "bin_rows": [],
+   "dist_info": "contourpy-1.3.3.dist-info",
+   "problems": [],
+   "record_raw_sha256": "031a29cf132ef40af92f7cedc416dcbb0697cf901a27e3b7fe1bb62aa4c35ee6",
+   "record_text_sha256": "f64770812b948e954eeb76f82c937bc5133fdd72026b30501e6a15d91c322189",
+   "shebangs": {},
+   "version": "1.3.3",
+   "wheel": "contourpy-1.3.3-cp311-cp311-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl"
+  },
+  "cycler": {
+   "bin_rows": [],
+   "dist_info": "cycler-0.12.1.dist-info",
+   "problems": [],
+   "record_raw_sha256": "ebf24fc90f3cc6915a6629cd50fc70b0706e9c530dba9fa65d585c3821c714e4",
+   "record_text_sha256": "564b9fd56f9f1730196522406a8ac8766040b69bc979b97b325e05f3490f6108",
+   "shebangs": {},
+   "version": "0.12.1",
+   "wheel": "cycler-0.12.1-py3-none-any.whl"
+  },
+  "deprecated": {
+   "bin_rows": [],
+   "dist_info": "deprecated-1.3.1.dist-info",
+   "problems": [],
+   "record_raw_sha256": "d2568f91afd67844ce401f392b6d6b2f3de2f96a7c1cee7f140022732355d2bf",
+   "record_text_sha256": "2d83577d876285800c273d6212ea91aff315fa70915329cfc72487861ec0ee8e",
+   "shebangs": {},
+   "version": "1.3.1",
+   "wheel": "deprecated-1.3.1-py2.py3-none-any.whl"
+  },
+  "et-xmlfile": {
+   "bin_rows": [],
+   "dist_info": "et_xmlfile-2.0.0.dist-info",
+   "problems": [],
+   "record_raw_sha256": "b594ad08f9d9b9edb4cc01e8bd90f15a4864be081df90bfe43d6a2225d354fd5",
+   "record_text_sha256": "d317f82e92dcc9a3bc806879cc75aee30b5ca8246f1c877bf0cc4e56660a9278",
+   "shebangs": {},
+   "version": "2.0.0",
+   "wheel": "et_xmlfile-2.0.0-py3-none-any.whl"
+  },
+  "fonttools": {
+   "bin_rows": [
+    "../../../bin/fonttools",
+    "../../../bin/pyftmerge",
+    "../../../bin/pyftsubset",
+    "../../../bin/ttx"
+   ],
+   "dist_info": "fonttools-4.66.1.dist-info",
+   "problems": [],
+   "record_raw_sha256": "b99cbd55bcd420709f7d0c0915a221309d57c0ea1fb1b64250a70f4b69ebd806",
+   "record_text_sha256": "f2fa180c9035d11eafc39e158ba95ce2b08ffe454e7a516b53d1600101f6c86d",
+   "shebangs": {
+    "../../../bin/fonttools": "#!/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/b881d255-9513-5adc-9b14-3c0be18d7ad6/scratchpad/reil_c4env/venv/bin/python",
+    "../../../bin/pyftmerge": "#!/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/b881d255-9513-5adc-9b14-3c0be18d7ad6/scratchpad/reil_c4env/venv/bin/python",
+    "../../../bin/pyftsubset": "#!/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/b881d255-9513-5adc-9b14-3c0be18d7ad6/scratchpad/reil_c4env/venv/bin/python",
+    "../../../bin/ttx": "#!/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/b881d255-9513-5adc-9b14-3c0be18d7ad6/scratchpad/reil_c4env/venv/bin/python"
+   },
+   "version": "4.66.1",
+   "wheel": "fonttools-4.66.1-cp311-cp311-manylinux2014_x86_64.manylinux_2_17_x86_64.whl"
+  },
+  "graphemeu": {
+   "bin_rows": [],
+   "dist_info": "graphemeu-0.7.2.dist-info",
+   "problems": [],
+   "record_raw_sha256": "bf2b7f9a906da2241700fca7d9aee52ec8692a78496d69e8500159fd405a3050",
+   "record_text_sha256": "7f4f7cdd31ef1116e87b5889a6fae96cd12a3bdfd8dc232aec4d7b8324657b30",
+   "shebangs": {},
+   "version": "0.7.2",
+   "wheel": "graphemeu-0.7.2-py3-none-any.whl"
+  },
+  "kiwisolver": {
+   "bin_rows": [],
+   "dist_info": "kiwisolver-1.5.1.dist-info",
+   "problems": [],
+   "record_raw_sha256": "249e78ebd2c25ddb5ee2044978e36f353a71cab2c7dc3206f89add955c0cd2d5",
+   "record_text_sha256": "026de1a2707ce8f1e3fe8d90ad0e3c2e837ff2c0b4a00b4e866fc80dfca35c0a",
+   "shebangs": {},
+   "version": "1.5.1",
+   "wheel": "kiwisolver-1.5.1-cp311-cp311-manylinux2014_x86_64.manylinux_2_17_x86_64.whl"
+  },
+  "matplotlib": {
+   "bin_rows": [],
+   "dist_info": "matplotlib-3.11.2.dist-info",
+   "problems": [],
+   "record_raw_sha256": "125790d9fe7910068375eb4ff02cb22d5a1493ee4a6ef11a786c53acbe70a9af",
+   "record_text_sha256": "0026be91603fd8f235c3e77b10a6645b41edc6a30cb2488b8889450b1f7dbee6",
+   "shebangs": {},
+   "version": "3.11.2",
+   "wheel": "matplotlib-3.11.2-cp311-cp311-manylinux2014_x86_64.manylinux_2_17_x86_64.whl"
+  },
+  "moocore": {
+   "bin_rows": [],
+   "dist_info": "moocore-0.3.2.dist-info",
+   "problems": [],
+   "record_raw_sha256": "fb382da4af9ef3b0910db1d9182b957a28403c571881d6e12a153d1b88bc4036",
+   "record_text_sha256": "3ace139e19bb5b90916f9c73c7f3ac9d96bf0d7607e7b2c6d3b84653c8c85e94",
+   "shebangs": {},
+   "version": "0.3.2",
+   "wheel": "moocore-0.3.2-cp310-abi3-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl"
+  },
+  "numpy": {
+   "bin_rows": [
+    "../../../bin/f2py",
+    "../../../bin/numpy-config"
+   ],
+   "dist_info": "numpy-2.4.6.dist-info",
+   "problems": [],
+   "record_raw_sha256": "a8dddc0436e2d02346df595e391bc07ee592977d473b678cf88cd2b0e6c1d633",
+   "record_text_sha256": "f9cec8b8ba1006d9fd3d4ab83feae32be8f7a99b01ececa7f19c20221b397185",
+   "shebangs": {
+    "../../../bin/f2py": "#!/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/b881d255-9513-5adc-9b14-3c0be18d7ad6/scratchpad/reil_c4env/venv/bin/python",
+    "../../../bin/numpy-config": "#!/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/b881d255-9513-5adc-9b14-3c0be18d7ad6/scratchpad/reil_c4env/venv/bin/python"
+   },
+   "version": "2.4.6",
+   "wheel": "numpy-2.4.6-cp311-cp311-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl"
+  },
+  "openpyxl": {
+   "bin_rows": [],
+   "dist_info": "openpyxl-3.1.5.dist-info",
+   "problems": [],
+   "record_raw_sha256": "6140d75a8b5fe3e31553b5cfe275092919a5b8f98796462f9dcf6aaacdefb2bf",
+   "record_text_sha256": "2b7f886697d3afd17f12a98eb9386fad66d98f5fece698ce30abb925b74b24bd",
+   "shebangs": {},
+   "version": "3.1.5",
+   "wheel": "openpyxl-3.1.5-py2.py3-none-any.whl"
+  },
+  "packaging": {
+   "bin_rows": [],
+   "dist_info": "packaging-26.3.dist-info",
+   "problems": [],
+   "record_raw_sha256": "d809e069eb5ed0248f046e18502bd4ccd13a417d8e1112079952ddf4433a213d",
+   "record_text_sha256": "194236f63fa503ef6bc832807d7f1a28f6b8c645a208880d557244ef4941adbc",
+   "shebangs": {},
+   "version": "26.3",
+   "wheel": "packaging-26.3-py3-none-any.whl"
+  },
+  "pandas": {
+   "bin_rows": [],
+   "dist_info": "pandas-3.0.5.dist-info",
+   "problems": [],
+   "record_raw_sha256": "96954a7ad93d07b06af1e5ddae5d01fbd5e4f76745cd3ae0d7740904fc186914",
+   "record_text_sha256": "0cf9ba06ee2488a8c75425c84415686ef5489a9e72feebb75f40d124bf574e98",
+   "shebangs": {},
+   "version": "3.0.5",
+   "wheel": "pandas-3.0.5-cp311-cp311-manylinux_2_24_x86_64.manylinux_2_28_x86_64.whl"
+  },
+  "pillow": {
+   "bin_rows": [],
+   "dist_info": "pillow-12.3.0.dist-info",
+   "problems": [],
+   "record_raw_sha256": "e461dc0d98542d21e42633fd14ad4d19463ba9ef2e8ffa41b28c1c2f0d3dd9e7",
+   "record_text_sha256": "d67571156a1abfdcb25fbb895cdd005a3d59c4d1a9c11f253febdd84419d1e93",
+   "shebangs": {},
+   "version": "12.3.0",
+   "wheel": "pillow-12.3.0-cp311-cp311-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl"
+  },
+  "pip": {
+   "bin_rows": [
+    "../../../bin/pip",
+    "../../../bin/pip3",
+    "../../../bin/pip3.11"
+   ],
+   "dist_info": "pip-24.0.dist-info",
+   "problems": [],
+   "record_raw_sha256": "fd4446fff5069cf2faa7a2396da8a584ead23b5d64b210dd50e597f3213fb874",
+   "record_text_sha256": "a50889fadbc82d0dbfcdf0a80712ca2e9f8500bf5b78298d84a77c5b839efb97",
+   "shebangs": {
+    "../../../bin/pip": "#!/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/b881d255-9513-5adc-9b14-3c0be18d7ad6/scratchpad/reil_c4env/venv/bin/python3.11",
+    "../../../bin/pip3": "#!/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/b881d255-9513-5adc-9b14-3c0be18d7ad6/scratchpad/reil_c4env/venv/bin/python3.11",
+    "../../../bin/pip3.11": "#!/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/b881d255-9513-5adc-9b14-3c0be18d7ad6/scratchpad/reil_c4env/venv/bin/python3.11"
+   },
+   "version": "24.0",
+   "wheel": "pip-24.0-py3-none-any.whl"
+  },
+  "platformdirs": {
+   "bin_rows": [],
+   "dist_info": "platformdirs-4.12.3.dist-info",
+   "problems": [],
+   "record_raw_sha256": "f37653b599a7f9eaf77c28a3486384c1d647148095fa3b0b0c521dcbfb3c0c65",
+   "record_text_sha256": "3eba3c2695f62422e40c76466cecd43fb2add054bf3f8ad294cdb245fba3b7da",
+   "shebangs": {},
+   "version": "4.12.3",
+   "wheel": "platformdirs-4.12.3-py3-none-any.whl"
+  },
+  "pycparser": {
+   "bin_rows": [],
+   "dist_info": "pycparser-3.0.dist-info",
+   "problems": [],
+   "record_raw_sha256": "422460c1a116078dd249b6fde592def7d049f04d33149ac8dbaf5425a185268f",
+   "record_text_sha256": "5192a85147780baa9341bf63a3b42e3b818d5c7ca219779bae4888f1bf78b6ab",
+   "shebangs": {},
+   "version": "3.0",
+   "wheel": "pycparser-3.0-py3-none-any.whl"
+  },
+  "pymoo": {
+   "bin_rows": [],
+   "dist_info": "pymoo-0.6.2.dist-info",
+   "problems": [],
+   "record_raw_sha256": "39e28ef36092960211c40e24138a42a242a4e67b184e4ce2245e345eeb11c3de",
+   "record_text_sha256": "633df478f7ce4559affac716e8f4b13b3bcd8a552e7da27bba539780e1fe1a50",
+   "shebangs": {},
+   "version": "0.6.2",
+   "wheel": "pymoo-0.6.2-cp311-cp311-manylinux_2_24_x86_64.manylinux_2_28_x86_64.whl"
+  },
+  "pyparsing": {
+   "bin_rows": [],
+   "dist_info": "pyparsing-3.3.3.dist-info",
+   "problems": [],
+   "record_raw_sha256": "c4c2f096bacdd7bab9d2eb3ab6642536b27f50652d799f56bbf7ac14e12d0af3",
+   "record_text_sha256": "c4acc104075f051ef5cdbf737bb7c31190df3e9e75c3689f191f14760a29486f",
+   "shebangs": {},
+   "version": "3.3.3",
+   "wheel": "pyparsing-3.3.3-py3-none-any.whl"
+  },
+  "python-dateutil": {
+   "bin_rows": [],
+   "dist_info": "python_dateutil-2.9.0.post0.dist-info",
+   "problems": [],
+   "record_raw_sha256": "2d07914d24c0e9ff27be7ab8be3924c0b036ccf24d7df1a50db22e10a8263e22",
+   "record_text_sha256": "ea009219f435165e7013386035f57b84d75e0676dec16cefcf99db3310324aa2",
+   "shebangs": {},
+   "version": "2.9.0.post0",
+   "wheel": "python_dateutil-2.9.0.post0-py2.py3-none-any.whl"
+  },
+  "scipy": {
+   "bin_rows": [],
+   "dist_info": "scipy-1.17.1.dist-info",
+   "problems": [],
+   "record_raw_sha256": "4cd9d4db7fbf310e5d9f26a88bc5fd0aca93a95cf23a23f178287a3c7e3580a0",
+   "record_text_sha256": "b8ea386fea9f83a6696fb52817f71582fb1174192a306225bc87ea13177b1b64",
+   "shebangs": {},
+   "version": "1.17.1",
+   "wheel": "scipy-1.17.1-cp311-cp311-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl"
+  },
+  "seaborn": {
+   "bin_rows": [],
+   "dist_info": "seaborn-0.13.2.dist-info",
+   "problems": [],
+   "record_raw_sha256": "df2fa7ae8360c56d2db59814663b816eaff8156f899ffc43a38b2626c01cdee6",
+   "record_text_sha256": "b5cce8a692a943b3e43ef2ff5eb9bc8ba5f385270817460962fb03b8b6c7eab8",
+   "shebangs": {},
+   "version": "0.13.2",
+   "wheel": "seaborn-0.13.2-py3-none-any.whl"
+  },
+  "setuptools": {
+   "bin_rows": [],
+   "dist_info": "setuptools-79.0.1.dist-info",
+   "problems": [],
+   "record_raw_sha256": "1502c7cf29900fe22505e616345266a0deb0330ad03b9bb8b4d07a82fdb997dc",
+   "record_text_sha256": "96f9fb80ff93050d980e9f489b3483c7e290aeae8d8e87ec4691380d69e8d642",
+   "shebangs": {},
+   "version": "79.0.1",
+   "wheel": "setuptools-79.0.1-py3-none-any.whl"
+  },
+  "six": {
+   "bin_rows": [],
+   "dist_info": "six-1.17.0.dist-info",
+   "problems": [],
+   "record_raw_sha256": "6eca8f3767a4e15a8317acec57d36e1248342e307b4a20bebbbfa713befaa539",
+   "record_text_sha256": "b4da9e24e598662bf65a3e2314bf54cb7d88a8cb29e42b5dfcb50d6bb746b777",
+   "shebangs": {},
+   "version": "1.17.0",
+   "wheel": "six-1.17.0-py2.py3-none-any.whl"
+  },
+  "wrapt": {
+   "bin_rows": [],
+   "dist_info": "wrapt-2.5.0.dist-info",
+   "problems": [],
+   "record_raw_sha256": "1f984967b4e3e90ad6bfaf5901225a879abed84762fed828fa3e972bd9f688f2",
+   "record_text_sha256": "45ac0eb79f6c494ec65a01112053725fcb27c323ffaa340701f00affebf74de0",
+   "shebangs": {},
+   "version": "2.5.0",
+   "wheel": "wrapt-2.5.0-cp311-cp311-manylinux1_x86_64.manylinux_2_28_x86_64.manylinux_2_5_x86_64.whl"
+  }
+ },
+ "venv": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/b881d255-9513-5adc-9b14-3c0be18d7ad6/scratchpad/reil_c4env/venv"
+}

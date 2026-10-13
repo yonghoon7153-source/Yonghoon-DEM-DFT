@@ -1,0 +1,217 @@
+{
+ "disk": [
+  {
+   "du_sb_parts": {
+    "/home/user/Yonghoon-DEM-DFT/bms-balancing/evidence/reil_c4_env_20261013": 44960,
+    "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/b881d255-9513-5adc-9b14-3c0be18d7ad6/scratchpad/reil_c4env": 119956587
+   },
+   "du_sb_total": 120001547,
+   "free_bytes": 26977259520,
+   "label": "S2",
+   "t_rel": 11.973,
+   "utc": "2026-10-13T06:06:28.855Z"
+  },
+  {
+   "du_sb_parts": {
+    "/home/user/Yonghoon-DEM-DFT/bms-balancing/evidence/reil_c4_env_20261013": 47857,
+    "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/b881d255-9513-5adc-9b14-3c0be18d7ad6/scratchpad/reil_c4env": 121621292
+   },
+   "du_sb_total": 121669149,
+   "free_bytes": 26975571968,
+   "label": "S3",
+   "t_rel": 13.147,
+   "utc": "2026-10-13T06:06:30.029Z"
+  },
+  {
+   "du_sb_parts": {
+    "/home/user/Yonghoon-DEM-DFT/bms-balancing/evidence/reil_c4_env_20261013": 65894,
+    "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/b881d255-9513-5adc-9b14-3c0be18d7ad6/scratchpad/reil_c4env": 542819366
+   },
+   "du_sb_total": 542885260,
+   "free_bytes": 26525732864,
+   "label": "S5",
+   "t_rel": 31.454,
+   "utc": "2026-10-13T06:06:48.336Z"
+  },
+  {
+   "du_sb_parts": {
+    "/home/user/Yonghoon-DEM-DFT/bms-balancing/evidence/reil_c4_env_20261013": 68268,
+    "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/b881d255-9513-5adc-9b14-3c0be18d7ad6/scratchpad/reil_c4env": 554829978
+   },
+   "du_sb_total": 554898246,
+   "free_bytes": 26511716352,
+   "label": "S6",
+   "t_rel": 32.92,
+   "utc": "2026-10-13T06:06:49.800Z"
+  },
+  {
+   "du_sb_parts": {
+    "/home/user/Yonghoon-DEM-DFT/bms-balancing/evidence/reil_c4_env_20261013": 70517,
+    "/home/user/Yonghoon-DEM-DFT/bms-balancing/reil_c6_rebuild_20261013": 26319,
+    "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/b881d255-9513-5adc-9b14-3c0be18d7ad6/scratchpad/reil_c4env": 554829978
+   },
+   "du_sb_total": 554926814,
+   "free_bytes": 26511646720,
+   "label": "S8",
+   "t_rel": 36.246,
+   "utc": "2026-10-13T06:06:53.128Z"
+  },
+  {
+   "du_sb_parts": {
+    "/home/user/Yonghoon-DEM-DFT/bms-balancing/evidence/reil_c4_env_20261013": 1164010,
+    "/home/user/Yonghoon-DEM-DFT/bms-balancing/reil_c6_rebuild_20261013": 26319,
+    "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/b881d255-9513-5adc-9b14-3c0be18d7ad6/scratchpad/reil_c4env": 554829978
+   },
+   "du_sb_total": 556020307,
+   "free_bytes": 26510462976,
+   "label": "S10",
+   "t_rel": 36.446,
+   "utc": "2026-10-13T06:06:53.328Z"
+  }
+ ],
+ "elapsed_s_records": 0.085,
+ "end_rel": 36.446,
+ "end_utc": "2026-10-13T06:06:53.328Z",
+ "head_end": "8e2985d6d7524c58d4560cd324b84905fd4c0029",
+ "note": "end_rel 은 커밋 직전 · 커밋 시각은 git 기록 · push 는 1,800 s 밖",
+ "protected_changed": [],
+ "protected_files_end": {
+  "bms-balancing/evidence/reil_p0_20261006/01_venv_constraints.txt": "db63333bdaf1835444a86187215ed7faf06897eb8a247c667ed167a5ee1dc772",
+  "bms-balancing/scripts/reil_c4_env_compare.py": "eff94d3dfd4b3d31c7a19e440dfb968734dab1afb16b584c2fdee354100695e0",
+  "bms-balancing/scripts/reil_c5_pilot.py": "73bee8dc412b39863afb64b70bc128cbecee2075a3a17914fc7288f353ef11a6",
+  "bms-balancing/scripts/reil_c6_profile.py": "408afc4bb5eb1069583b955e0eb6215bf48dd9259ad474c230549d1b3642df5d",
+  "degradation-degeneracy/tools/env_profile.py": "83b0d8365d039d75050d087fe980ad7b64818686b699e5d06da1c0ad63148563"
+ },
+ "protected_trees_end": {
+  "bms-balancing/evidence/reil_c5_impl_20261006": "cfea813242c2d47f559a3807c5bab1bb63f3e183",
+  "bms-balancing/evidence/reil_c5_pilot_20261006": "514e4dcd284f831a92e158ad4542136cc455f018",
+  "bms-balancing/evidence/reil_c5_pilot_20261006_wrapper": "6238fff9ff7bc6a54747f28653eca4e3f1b20a2d",
+  "bms-balancing/evidence/reil_c6_n1_20261006": "fdd12a5f30dc52242e0553b6b616c463a264fe54",
+  "bms-balancing/evidence/reil_p0_20261006": "82a74d69c3f3cad363d6f120fe0e88658af0a496",
+  "bms-balancing/reil_c6_20261005": "3ec46373da366265242e92df9c6e112e5ff100e0",
+  "bms-balancing/reil_c6_rebuild_20261006": "b55f3a439e23bd41626d64bbb40b8221571f8690"
+ },
+ "protected_worktree_dirty_end": [],
+ "start_rel": 36.361,
+ "start_utc": "2026-10-13T06:06:53.243Z",
+ "steps": [
+  {
+   "elapsed_s": 0.123,
+   "end_rel": 0.123,
+   "rc": 0,
+   "start_rel": 0.0,
+   "step": "S0",
+   "timed_out": false,
+   "timeout_s": 60
+  },
+  {
+   "elapsed_s": 3.83,
+   "end_rel": 3.954,
+   "rc": 0,
+   "start_rel": 0.124,
+   "step": "01_venv",
+   "timed_out": false,
+   "timeout_s": 120
+  },
+  {
+   "elapsed_s": 8.004,
+   "end_rel": 11.959,
+   "rc": 0,
+   "start_rel": 3.955,
+   "step": "02_download_science",
+   "timed_out": false,
+   "timeout_s": 480
+  },
+  {
+   "elapsed_s": 1.162,
+   "end_rel": 13.136,
+   "rc": 0,
+   "start_rel": 11.974,
+   "step": "03_download_test",
+   "timed_out": false,
+   "timeout_s": 120
+  },
+  {
+   "elapsed_s": 0.215,
+   "end_rel": 13.362,
+   "rc": 0,
+   "start_rel": 13.147,
+   "step": "04a_artifacts_science",
+   "timed_out": false,
+   "timeout_s": 30
+  },
+  {
+   "elapsed_s": 0.065,
+   "end_rel": 13.428,
+   "rc": 0,
+   "start_rel": 13.363,
+   "step": "04b_artifacts_test",
+   "timed_out": false,
+   "timeout_s": 29.784
+  },
+  {
+   "elapsed_s": 17.997,
+   "end_rel": 31.425,
+   "rc": 0,
+   "start_rel": 13.429,
+   "step": "05_install_science",
+   "timed_out": false,
+   "timeout_s": 300
+  },
+  {
+   "elapsed_s": 1.418,
+   "end_rel": 32.873,
+   "rc": 0,
+   "start_rel": 31.455,
+   "step": "06_install_test",
+   "timed_out": false,
+   "timeout_s": 120
+  },
+  {
+   "elapsed_s": 1.672,
+   "end_rel": 34.593,
+   "rc": 0,
+   "start_rel": 32.92,
+   "step": "07_emit",
+   "timed_out": false,
+   "timeout_s": 180
+  },
+  {
+   "elapsed_s": 1.622,
+   "end_rel": 36.216,
+   "rc": 0,
+   "start_rel": 34.593,
+   "step": "08_check",
+   "timed_out": false,
+   "timeout_s": 180
+  },
+  {
+   "elapsed_s": 0.114,
+   "end_rel": 36.361,
+   "rc": 0,
+   "start_rel": 36.246,
+   "step": "09_compare",
+   "timed_out": false,
+   "timeout_s": 120
+  }
+ ],
+ "stopped": null,
+ "test_tool_records": {
+  "iniconfig-2.3.0.dist-info": {
+   "record_raw_sha256": "f4f03ab270b3343a56dd8085d5e4395344066766e01aafaa46c9d79e985f5d87",
+   "record_text_sha256": "3d7deebfd20d2dd52356632074cb700264095e8f0ed223bcc8fb9f8e2bb1d547"
+  },
+  "pluggy-1.6.0.dist-info": {
+   "record_raw_sha256": "4e521d5efdf38f58bc3f76f918a04c0f15a6a4d2ee1700953ad72f5ea6e13d1f",
+   "record_text_sha256": "1ffffc0adc26190e55196190e6e375996645f392994f8eda29cef85bbe23d1ed"
+  },
+  "pygments-2.21.0.dist-info": {
+   "record_raw_sha256": "2003430842cec5c34589bb7bfd78ac923c1b72bd8044f997eb72091b885ee9e5",
+   "record_text_sha256": "e7f18a8196b4815a975a11d8f042dceaab9dc0d206e4f334d34ca5de15cf47e5"
+  },
+  "pytest-9.1.1.dist-info": {
+   "record_raw_sha256": "fd1ff04ead3a920a8488083b77459a53867190e6138c887ef9805942cf4f5440",
+   "record_text_sha256": "b31faf6dcfe04c71ba4dae23c7910f2ea08606efbf56652b47c678c6377388f4"
+  }
+ }
+}

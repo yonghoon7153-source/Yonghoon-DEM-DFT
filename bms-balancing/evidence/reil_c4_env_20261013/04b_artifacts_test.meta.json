@@ -1,0 +1,46 @@
+{
+ "allot_s": 29.784208621999994,
+ "argv": [
+  "/usr/bin/python3.11",
+  "-I",
+  "bms-balancing/scripts/reil_c4_env_compare.py",
+  "artifacts",
+  "--wheels",
+  "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/b881d255-9513-5adc-9b14-3c0be18d7ad6/scratchpad/reil_c4env/wheels_test",
+  "--expect-dists",
+  "pytest==9.1.1,pluggy==1.6.0,iniconfig==2.3.0,pygments==2.21.0",
+  "--out",
+  "bms-balancing/evidence/reil_c4_env_20261013/04_artifacts_test.json"
+ ],
+ "cwd": "/home/user/Yonghoon-DEM-DFT",
+ "elapsed_s": 0.065,
+ "end_rel": 13.428,
+ "end_utc": "2026-10-13T06:06:30.310Z",
+ "env_removed_names": [
+  "AWS_ACCESS_KEY_ID",
+  "AWS_SECRET_ACCESS_KEY",
+  "CLAUDE_CODE_MESSAGING_TOKEN",
+  "CLAUDE_SESSION_INGRESS_TOKEN_FILE",
+  "CLOUDSDK_AUTH_ACCESS_TOKEN",
+  "GH_TOKEN",
+  "GITHUB_TOKEN",
+  "GIT_CONFIG_COUNT",
+  "GIT_CONFIG_KEY_0",
+  "GIT_CONFIG_KEY_1",
+  "GIT_CONFIG_KEY_2",
+  "GIT_CONFIG_VALUE_0",
+  "GIT_CONFIG_VALUE_1",
+  "GIT_CONFIG_VALUE_2",
+  "MAX_THINKING_TOKENS"
+ ],
+ "env_set": {
+  "TMPDIR": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/b881d255-9513-5adc-9b14-3c0be18d7ad6/scratchpad/reil_c4env/tmp"
+ },
+ "network": "0",
+ "rc": 0,
+ "start_rel": 13.363,
+ "start_utc": "2026-10-13T06:06:30.245Z",
+ "step": "04b_artifacts_test",
+ "timed_out": false,
+ "timeout_s": 29.784
+}
