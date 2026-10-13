@@ -2,6 +2,20 @@
 
 > **한 줄**: v2.1 (조건부 GO 의 P0 둘 · P1 다섯 반영 · `codex_seminar_deck_v2_1_closure_request_20261013.md`) 뒤에 1저자가 **발표물의 모양**을 바꾸라고 지시했다 — 10-13 연구세미나 덱 4 장의 문법 (한 줄 제목 + 소불릿 ≤ 2 · 핵심어 빨강 · 그림 한 띠 · 우상단 출처 줄 · 꺾쇠 캡션 없음), 3D 그림 위주, 앞 15 장 → 10 장 압축, 믹서 3 장을 Plan 앞에 따로, 믹서 팔 코드 금지 · 분야 용어.  **값 · Codex 가 닫은 문장은 그대로** (자리만 옮기고 notes 에 전문).  확인할 것 = 옮기면서 뜻이 바뀐 곳이 있는가 · 새 그림 10 이 정본값인가 · 믹서 3 장의 등록 범주 · 한정어 문구 · 판정.  새 시뮬레이션 · 새 계산 없음.  검토 핀 = 이 요청서가 든 커밋.
 
+## 0. v2.1 종결 확인 항목의 v3 위치 (ZIP v5 를 대신할 수 있다)
+
+ZIP v5 (v2.1 종결 확인 · `codex_seminar_deck_v2_1_closure_request_20261013.md`) 를 따로 보지 않았다면 이 묶음 하나로 함께 본다 — 일곱 항목의 문장은 v2.1 그대로이고 자리만 옮겼다.
+
+| ID | v3 위치 | 확인할 것 |
+|---|---|---|
+| SEMV2-01 (P0) | 6 장 불릿 2 (`… different electrolyte initializations and run configurations; they are not one validation series.`) · 상태 세 줄 (`Current registered runs: DEM-seeded SE, stress-controlled servo — f = 0 completed; f(a) execution failed` 등) = 6 장 notes | 상태 줄을 notes 로 내린 것이 괜찮은가 |
+| SEMV2-02 (P0) | 10 장 오른쪽 해석 줄 `(a) geometric tortuosity, 130 + 64 beds; ×: 24 non-percolating beds in the 130-bed set; not transport tortuosity · (b) porosity, 130-bed set` | 그림 (배포 v1.2 CSV 직접) 의 집단과 일치 |
+| SEMV2-03 | 8 장 세 패널 그림 (b) · (c) 세로축 두 줄 · 해석 줄 (c) | 잘림 · 겹침 없음 |
+| SEMV2-04 | 2 장 흐름도 = PPT 도형 (상자 제목 한 줄) | 넘침 없음 |
+| SEMV2-05 | 5 장 notes `Young's modulus reference: our DFT E_VRH = 22.06 GPa …; the bulk modulus K / B0 = 26.23 GPa is a separate quantity` | 그대로 |
+| SEMV2-06 | 6 장 표 첫 행 `LPSCl reference` · `E ≈ 22 GPa (our DFT E_VRH; literature DEM input 22.1 GPa [8])` · σy 범위 없음 | 그대로 |
+| SEMV2-07 | 4 장 불릿 1 `Contact-network approach [8]: …` | 그대로 |
+
 ## 1. v2.1 → v3 장 대응
 
 | v3 | v2.1 | 무엇이 바뀌었나 (값 · 닫힌 문장은 불변) |
@@ -25,7 +39,7 @@
 | 17 | 19 | Thank you |
 
 - 믹서 용어 = 분야 표준 · 팔 코드 (내부 식별자) 없음 — selftest 가 본문 · notes 를 함께 검사한다.  팔 이름 = `no cohesion (control)` · `NCM–NCM cohesion removed` · `reference cohesion` · `lower cohesion (three levels)` · `NCM–NCM ×10 / ×30` · `all pairs ×10 / ×14`.
-- 그림 10 = `docs/seminar_20261013/figs_v3/make_seminar_figs.py` (`--selftest` = 정본값 대조 · 철회값 0 · 팔 코드 0 · 조성 라벨 5).  문헌 크롭 3 = litdb 정본 브랜치 `litdb/figures/` 에서 빌드 때 받는다 (리포 사본 없음).  Lee 2025 크롭 = 자리가 없어 미배치 (1저자 결정 대기).
+- 그림 10 = `docs/seminar_20261013/figs_v3/make_seminar_figs.py` (`--selftest` = 정본값 대조 · 철회값 0 · 팔 코드 0 · 조성 라벨 5).  문헌 크롭 3 = litdb 정본 브랜치 `litdb/figures/` 에서 빌드 때 받는다 (리포 사본 없음).  Lee 2025 크롭 = 미배치 (1저자 10-13 결정 — [12] 는 10 장 상태표 · 참고문헌으로만).
 - 단어 수 (장 위 · 출처 줄 · 꼬리표 · 표 제외): p02 87 · p03 98 · p04 86 · p05 87 · p06 52 · p07 79 · p08 98 · p09 76 · p10 77 · p11 100 · p12 87 · p13 110 · p14 74 · p15 56.
 - 생성기 selftest (고치기 전 = v2.1 덱에서 실패 확인): 17 장 · 꺾쇠 캡션 0 · 빈 자리 4 장의 출처 줄 `figure: presenter` · 출처 줄 ≤ 110 자 · 제목 한 줄 · **겹침 검사** (본문 바닥 추정 (Calibri 폭 = Carlito 로 줄바꿈 측정) ≤ 그림 띠 윗선) · 단어 ≤ 100/120 · bullet ≥ 15 pt · 해석 줄 ≥ 12 pt · 10 장 해석 줄 ↔ 집단 · 11 장 등록 범주 문구 · 금지 문구 (v2.1 목록 + `real coating effect` · `Figure pending`).
 - 렌더 (LibreOffice · Carlito) 17 장 겹침 0 — 동봉 PNG.
