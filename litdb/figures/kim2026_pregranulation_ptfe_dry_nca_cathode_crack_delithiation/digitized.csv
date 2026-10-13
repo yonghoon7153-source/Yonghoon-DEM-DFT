@@ -1,0 +1,80 @@
+# kim2026_pregranulation_ptfe_dry_nca_cathode_crack_delithiation — figure readings (판독) · 2026-10-13
+# Method: pixel analysis of the crops in this folder (main figures = 300 ppi native raster; SI = Word-export raster 96-220 ppi rendered at >=200 dpi).
+#   Axes calibrated from frame lines + tick marks / tick labels of each panel. Markers / bar tops found by colour (blue = GIDE, red/pink = CDE).
+# Self-checks (calibration against PRINTED values in the same figure or text):
+#   Fig 4j end points read 86.2 / 80.8 % vs printed 86.1 / 80.9 % (text p.9) -> |err| <= 0.1 %p.
+#   Fig 4c discharge end points read 186.3 / 195.4 mAh/g vs printed 185 / 195 (text p.8).
+#   Fig 6b DFT bars read 127.0/134.3/155.4 (B) · 52.9/83.3/78.7 (G) · 140.9/207.7/202.4 (E) vs printed SI Fig S22 128/135/156 · 54/84/79 · 141/208/203 GPa -> <= 2 %.
+#   Fig 6c CDE / GIDE read 0.880 / 0.628 vs printed 0.88 / 0.63 GPa (text p.13).
+# Precision: capacities +-0.05 mAh/cm2 (Fig 4d,4g), +-2 mAh/g (SI S24-S26), retention +-0.3 %p (Fig 4i,j), MD moduli +-1.5 GPa, von Mises +-0.02 GPa,
+#   SAICAS +-0.003 N (30 um) / +-0.006 N (100 um), Nyquist marker positions +-0.1 ohm. S36a C_ij = visual reading +-2 GPa. TREND use only — never quote as printed values.
+figure,panel,series,x,x_unit,y,y_unit,method,note
+Fig 2h,30 um,CDE,30,um depth,0.343,N,bar top (left axis 0.30-0.40),axis truncated at 0.30
+Fig 2h,30 um,GIDE,30,um depth,0.366,N,bar top (left axis 0.30-0.40),+6.8 % vs CDE [우리 산술]
+Fig 2h,100 um,CDE,100,um depth,0.904,N,bar top (right axis 0.80-1.00),axis truncated at 0.80
+Fig 2h,100 um,GIDE,100,um depth,0.985,N,bar top (right axis 0.80-1.00),+9.0 % vs CDE [우리 산술]
+Fig 2j,1/3 R_ion marker left,CDE,10.64,ohm,,,dashed line x on Z_re axis,
+Fig 2j,1/3 R_ion marker right,CDE,17.47,ohm,,,dashed line x on Z_re axis,span 6.83 -> R_ion ~20.5 ohm vs Table S2 18.03
+Fig 2k,1/3 R_ion marker left,GIDE,10.98,ohm,,,dashed line x on Z_re axis,
+Fig 2k,1/3 R_ion marker right,GIDE,15.67,ohm,,,dashed line x on Z_re axis,span 4.69 -> R_ion ~14.1 ohm vs Table S2 13.44
+Fig 4c,discharge end,CDE,186.3,mAh/g,3.0,V,curve end point,printed 185
+Fig 4c,discharge end,GIDE,195.4,mAh/g,3.0,V,curve end point,printed 195
+Fig 4d,0.5C half cell,GIDE,1,cycle,8.81,mAh/cm2,marker,
+Fig 4d,0.5C half cell,GIDE,10,cycle,8.53,mAh/cm2,marker,
+Fig 4d,0.5C half cell,GIDE,20,cycle,8.36,mAh/cm2,marker,
+Fig 4d,0.5C half cell,GIDE,40,cycle,8.19,mAh/cm2,marker,
+Fig 4d,0.5C half cell,GIDE,50,cycle,8.11,mAh/cm2,marker,
+Fig 4d,0.5C half cell,GIDE,60,cycle,8.00,mAh/cm2,marker,
+Fig 4d,0.5C half cell,GIDE,70,cycle,7.88,mAh/cm2,marker,
+Fig 4d,0.5C half cell,GIDE,80,cycle,7.79,mAh/cm2,marker,
+Fig 4d,0.5C half cell,GIDE,90,cycle,7.66,mAh/cm2,marker,
+Fig 4d,0.5C half cell,GIDE,99,cycle,7.54,mAh/cm2,marker,85.6 % of cycle 1 (printed 86 %)
+Fig 4d,0.5C half cell,CDE,1,cycle,8.19,mAh/cm2,marker,
+Fig 4d,0.5C half cell,CDE,10,cycle,7.91,mAh/cm2,marker,
+Fig 4d,0.5C half cell,CDE,20,cycle,7.79,mAh/cm2,marker,
+Fig 4d,0.5C half cell,CDE,40,cycle,7.32,mAh/cm2,marker,
+Fig 4d,0.5C half cell,CDE,50,cycle,6.98,mAh/cm2,marker,
+Fig 4d,0.5C half cell,CDE,60,cycle,6.36,mAh/cm2,marker,77.7 % of cycle 1
+Fig 4d,0.5C half cell,CDE,70,cycle,5.06,mAh/cm2,marker,
+Fig 4d,0.5C half cell,CDE,80,cycle,3.11,mAh/cm2,marker,
+Fig 4d,0.5C half cell,CDE,90,cycle,2.59,mAh/cm2,marker,
+Fig 4d,0.5C half cell,CDE,99,cycle,2.28,mAh/cm2,marker,27.8 % of cycle 1 (text: fails after ~60 cycles)
+Fig 4g,0.2C,GIDE,1-3,cycle,9.76,mAh/cm2,marker mean,printed 9.7 (97 %)
+Fig 4g,0.5C,GIDE,4-6,cycle,9.41,mAh/cm2,marker mean,
+Fig 4g,1C,GIDE,7-9,cycle,8.57,mAh/cm2,marker mean (8.61/8.59/8.50),printed 86 % of designed
+Fig 4g,0.5C back,GIDE,10-12,cycle,9.38,mAh/cm2,marker mean,
+Fig 4g,0.2C back,GIDE,13-15,cycle,9.74,mAh/cm2,marker mean,
+Fig 4g,0.2C,CDE,1-3,cycle,9.18,mAh/cm2,marker mean,printed 92 %
+Fig 4g,0.5C,CDE,4-6,cycle,8.74,mAh/cm2,marker mean,
+Fig 4g,1C,CDE,7-9,cycle,6.31,mAh/cm2,marker mean (6.53/6.27/6.12),printed 63 %
+Fig 4g,0.5C back,CDE,10-12,cycle,8.65,mAh/cm2,marker mean,
+Fig 4g,0.2C back,CDE,13-15,cycle,9.01,mAh/cm2,marker mean,
+Fig 4i,0.2C full cell,GIDE,200,cycle,89.5,% retention,end markers,text p.9 says 86.3 %
+Fig 4i,0.2C full cell,CDE,200,cycle,86.5,% retention,end markers,text p.9 says 84.8 %
+Fig 4j,0.5C full cell,GIDE,300,cycle,86.2,% retention,end markers,printed 86.1 % (calibration check)
+Fig 4j,0.5C full cell,CDE,300,cycle,80.8,% retention,end markers,printed 80.9 % (calibration check)
+Fig 6b,MD 300 K,pristine,B,,42.3,GPa,hatched bar top,DFT 128 (printed S22)
+Fig 6b,MD 300 K,CDE-model,B,,52.9,GPa,hatched bar top,DFT 135
+Fig 6b,MD 300 K,GIDE-model,B,,59.5,GPa,hatched bar top,DFT 156
+Fig 6b,MD 300 K,pristine,G,,11.2,GPa,hatched bar top,DFT 54
+Fig 6b,MD 300 K,CDE-model,G,,20.5,GPa,hatched bar top,DFT 84
+Fig 6b,MD 300 K,GIDE-model,G,,19.2,GPa,hatched bar top,DFT 79
+Fig 6b,MD 300 K,pristine,E,,31.7,GPa,hatched bar top,DFT 141
+Fig 6b,MD 300 K,CDE-model,E,,54.9,GPa,hatched bar top,DFT 208
+Fig 6b,MD 300 K,GIDE-model,E,,52.2,GPa,hatched bar top,DFT 203
+Fig 6c,time-averaged von Mises,pristine,,,1.94,GPa,bar top,NOT stated in text
+Fig 6c,time-averaged von Mises,CDE-model,,,0.880,GPa,bar top,printed 0.88
+Fig 6c,time-averaged von Mises,GIDE-model,,,0.628,GPa,bar top,printed 0.63
+SI Fig S24,0.1C formation discharge end,CDE,207.0,mAh/g,3.0,V,curve end point,
+SI Fig S24,0.1C formation discharge end,GIDE,209.4,mAh/g,3.0,V,curve end point,
+SI Fig S25,discharge end,CDE 1st,170.1,mAh/g,3.0,V,curve end point,vs Fig 4c first cycle 186
+SI Fig S25,discharge end,CDE 10th,166.1,mAh/g,3.0,V,curve end point,
+SI Fig S25,discharge end,CDE 50th,144.7,mAh/g,3.0,V,curve end point,
+SI Fig S25,discharge end,CDE 100th,46.7,mAh/g,3.0,V,curve end point,27.5 % of 1st
+SI Fig S26,discharge end,GIDE 1st,182.8,mAh/g,3.0,V,curve end point,vs Fig 4c first cycle 195
+SI Fig S26,discharge end,GIDE 10th,179.2,mAh/g,3.0,V,curve end point,
+SI Fig S26,discharge end,GIDE 50th,169.7,mAh/g,3.0,V,curve end point,
+SI Fig S26,discharge end,GIDE 100th,157.4,mAh/g,3.0,V,curve end point,86.1 % of 1st
+SI Fig S36a,C_ij MD 300 K,pristine,C11 C22 C33 C12 C13 C23 C44 C55 C66,,53 73 80 35 40 18 4.5 19 21.5,GPa,visual +-2 GPa,
+SI Fig S36a,C_ij MD 300 K,CDE-model,C11 C22 C33 C12 C13 C23 C44 C55 C66,,69 111 112 43 46 9.5 10.5 22.5 37,GPa,visual +-2 GPa,
+SI Fig S36a,C_ij MD 300 K,GIDE-model,C11 C22 C33 C12 C13 C23 C44 C55 C66,,69 114 156 47 64.5 28 9 25 28,GPa,visual +-2 GPa,
