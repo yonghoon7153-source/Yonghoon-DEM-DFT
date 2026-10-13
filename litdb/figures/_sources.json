@@ -105,6 +105,13 @@
    "이용민 교수님/20. Advanced multilayer model electrode for binder distribution within composite electrodes of lithium batteries.pdf"
   ]
  },
+ "balasubramanian2026_rfb_electrolyte_kmc_lbm_preprint": {
+  "figures": 8,
+  "generated": "2026-10-13",
+  "pdfs": [
+   "11._Insights_into_Electrolyte_Effects_on_Interfacial_Kinetics_and_Transport_in_Porous_Redox_Flow_Battery_Electrodes_A_Multiparadigm_Modelling_Study.pdf"
+  ]
+ },
  "banik2022_substitutions_oxidative_stability_argyrodite": {
   "figures": 4,
   "generated": "2026-08-05",
@@ -440,6 +447,14 @@
   "generated": "2026-09-25",
   "pdfs": [
    "37d2ae22-1-s2.0-S0008622300002955-main.pdf"
+  ]
+ },
+ "faka2026_particle_size_consolidation_strain_lpscl": {
+  "figures": 31,
+  "generated": "2026-10-13",
+  "pdfs": [
+   "4. How Particle Size Affects Consolidation Behavior, Strain and Properties of Li6PS5Cl Fast Ionic Conductors.pdf",
+   "4. Sup) How Particle Size Affects Consolidation Behavior, Strain and Properties of Li6PS5Cl Fast Ionic Conductors.pdf"
   ]
  },
  "famprikis2019_fundamentals_inorganic_sse": {
@@ -1048,6 +1063,14 @@
    "120. Sup) NatCommun_2026_Kim_Moisture_LPSC_SI.pdf"
   ]
  },
+ "kim2026_operando_neutron_thick_nmc811_interior_hotspot": {
+  "figures": 13,
+  "generated": "2026-10-13",
+  "pdfs": [
+   "1._Interior_transport_degradation_hotspots_in_high-loading_NMC811_sulfide_all-solid-state_batteries_revealed_by_operando_neutron_imaging.pdf",
+   "1._Sup_Interior_transport_degradation_hotspots_in_high-loading_NMC811_sulfide_all-solid-state_batteries_revealed_by_operando_neutron_imaging.pdf"
+  ]
+ },
  "klar2016_dp_sand_animation": {
   "figures": 17,
   "generated": "2026-08-05",
@@ -1161,6 +1184,14 @@
    "Sup) Lee2025 Science Halide segregation all-solid-state lithium-chalcogen batteries part2 adt1882_sm.pdf"
   ]
  },
+ "lee2025_heckel_argyrodite_powder_densification_nanoindentation": {
+  "figures": 11,
+  "generated": "2026-10-13",
+  "pdfs": [
+   "3. Characterization of densification behavior and mechanical properties of solid electrolyte powders for all solid-state batteries.pdf",
+   "3. Sup) Characterization of densification behavior and mechanical properties of solid electrolyte powders for all solid-state batteries.pdf"
+  ]
+ },
  "lee2026_lpscl_coating_thickness_ncm811": {
   "figures": 24,
   "generated": "2026-09-22",
@@ -1192,6 +1223,14 @@
    "lee2026_deck.pdf"
   ]
  },
+ "lee2026_unveiling_ptfe_dry_electrode_digital_twin": {
+  "figures": 36,
+  "generated": "2026-10-13",
+  "pdfs": [
+   "aadb168b-4._Unveiling_the_Structural_Advantages_in_PTFE_Based_Dry_Processed_Electrodes_for_Sulfide_Based_All_Solid_State_Batteries_via_3D_Microstructure_Resolved_Analysis.pdf",
+   "29772169-4._Sup_Unveiling_the_Structural_Advantages_in_PTFE_Based_Dry_Processed_Electrodes_for_Sulfide_Based_All_Solid_State_Batteries_via_3D_Microstructure_Resolved_Analysis.pdf"
+  ]
+ },
  "li2024_inf3_argyrodite_ultrathin_film": {
   "figures": 40,
   "generated": "2026-08-05",
@@ -1205,6 +1244,13 @@
   "generated": "2026-08-05",
   "pdfs": [
    "DFT 먹인 논문/09. Engineering high-performance argyrodite sulfide electrolytes via metal halide doping for all-solid-state lithium metal batteries.pdf"
+  ]
+ },
+ "li2026_electrochemomechanical_coupling_asslmb_review": {
+  "figures": 17,
+  "generated": "2026-10-13",
+  "pdfs": [
+   "31._Electro-Chemo-Mechanical_Coupling_in_All-Solid-State_Lithium_Metal_Batteries_From_Stress_Generation_to_Failure_Mitigation.pdf"
   ]
  },
  "li2026_functionally_differentiated_interphase": {
@@ -1316,6 +1362,14 @@
   "pdfs": [
    "84. Liu2024_pBand_Center_Sulfur_Argyrodite_Dual_Interface.pdf",
    "84. Sup) Liu2024_pBand_Center_Sulfur_Argyrodite_Dual_Interface.docx (word/media 수동 매핑: imageN ↔ Figure S(N-1))"
+  ]
+ },
+ "liu2024_sc_ni90_sulfur_coating_sulfide_assb": {
+  "figures": 13,
+  "generated": "2026-10-13",
+  "pdfs": [
+   "2._High_Capacity_Long_Life_Sulfide_All_Solid_State_Batteries_With_Single_Crystal_Ni_Rich_Layered_Oxide_Cathodes.pdf",
+   "2._Sup_High_Capacity_Long_Life_Sulfide_All_Solid_State_Batteries_With_Single_Crystal_Ni_Rich_Layered_Oxide_Cathodes.pdf"
   ]
  },
  "liu2025_dry_processing_high_energy_li_batteries_review": {
@@ -1553,6 +1607,14 @@
   "pdfs": [
    "1. Experimental Setup for In Situ Determination of Conductivity-Porosity-Pressure Relationships.pdf",
    "1. Sup) Experimental Setup for In Situ Determination of Conductivity-Porosity-Pressure Relationships.pdf"
+  ]
+ },
+ "miss2026_pressure_tortuosity_composite_cathode_coating": {
+  "figures": 16,
+  "generated": "2026-10-13",
+  "pdfs": [
+   "2. Pressure-Dependent Electronic and Ionic Tortuosities During Fabrication of Composite Cathodes for All-Solid-State Batteries Influence of Active Material Particle Morphology, Volume Fraction, and Coating.pdf",
+   "2. Sup) Pressure-Dependent Electronic and Ionic Tortuosities During Fabrication of Composite Cathodes for All-Solid-State Batteries Influence of Active Material Particle Morphology, Volume Fraction, and Coating.pdf"
   ]
  },
  "molerus1975_theory_of_yield_cohesive_powders": {
@@ -2192,6 +2254,14 @@
    "DEM 논문/07. Micromechanical analysis of cohesive granular materials using the discrete element method with an adhesive elasto-plastic contact model.pdf"
   ]
  },
+ "thompson2026_high_pressure_densification_lps_lpscl_xrd_tomography": {
+  "figures": 23,
+  "generated": "2026-10-13",
+  "pdfs": [
+   "5. High Pressure Densification Investigation of Li3PS4 and Li6PS5Cl Solid Electrolytes using Combine X-Ray Diffraction, X-Ray Absorption Tomography and Ionic Measurement.pdf",
+   "5. Sup) High Pressure Densification Investigation of Li3PS4 and Li6PS5Cl Solid Electrolytes using Combine X-Ray Diffraction, X-Ray Absorption Tomography and Ionic Measurement.pdf"
+  ]
+ },
  "thorat2009_quantifying_tortuosity_porous_liion": {
   "figures": 12,
   "generated": "2026-10-03",
@@ -2289,7 +2359,7 @@
   ]
  },
  "wang2020_br_rich_argyrodite_fast_ion_conduction_origin": {
-  "figures": 11,
+  "figures": 16,
   "generated": "2026-10-13",
   "pdfs": [
    "Wang2020 ChemMater Fast Ion Conduction and Its Origin in Li6-xPS5-xBr1+x.pdf",
@@ -2545,7 +2615,7 @@
   ]
  },
  "yuan2026_percolating_li2s_interphase_efield_md": {
-  "figures": 7,
+  "figures": 14,
   "generated": "2026-10-13",
   "pdfs": [
    "Yuan2026 ChemRxiv Reversible Ion Transport Through an Irreversibly Percolating Li2S Interphase at the Li-Li6PS5Cl Interface.pdf",
@@ -2614,6 +2684,13 @@
    "Sup) Zhang2026 AdvMater Argyrodite Sulfide Electrolytes with Dry Atmospheric Stability for All-Solid-State Lithium Batteries.pdf"
   ]
  },
+ "zhang2026_polymer_electrolyte_modeling_perspective": {
+  "figures": 7,
+  "generated": "2026-10-13",
+  "pdfs": [
+   "10._Modeling_Approaches_for_Polymer-Based_Electrolytes_in_Advanced_Batteries_Bridging_Processing_Structure_and_Performance.pdf"
+  ]
+ },
  "zhang2026_xct_dem_cathode_calendering_peel_calibration": {
   "figures": 13,
   "generated": "2026-09-26",
@@ -2630,11 +2707,12 @@
   ]
  },
  "zhou2026_high_entropy_lgps_multicationic": {
-  "figures": 25,
+  "figures": 38,
   "generated": "2026-08-05",
   "pdfs": [
    "DFT 먹인 논문/49. A high-entropy multicationic substituted Li10GeP2S12 solid electrolyte enabling stable all-solid-state batteries.pdf",
-   "DFT 먹인 논문/49. Sup) A high-entropy multicationic substituted Li10GeP2S12 solid electrolyte enabling stable all-solid-state batteries.pdf"
+   "DFT 먹인 논문/49. Sup) A high-entropy multicationic substituted Li10GeP2S12 solid electrolyte enabling stable all-solid-state batteries.pdf",
+   "Sup) Zhou2026 ChemEngJ A high-entropy multicationic substituted Li10GeP2S12 solid electrolyte enabling stable all-solid-state batteries.pdf"
   ]
  },
  "zhu2015_esw_grand_potential_origin": {
