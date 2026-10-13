@@ -537,7 +537,7 @@ def pack(order):
 # warnings in red), one figure or table, a '< caption >' and one coloured line under it, and the
 # dashed red numbered box + down arrow image of its slide 4 (the user's standard arrow). No cards, badges,
 # icons or chevrons. Literature crops carry a role tag above them and a credit below (CW, 10-13).
-LEAN_FIGS = ['fig_p07_stage1_coverage.png', 'fig_p10_host_window.png',
+LEAN_FIGS = ['fig_p10_host_window.png',   # fig_p07_stage1_coverage.png left the slides 10-14 (pipeline box instead)
              'fig_p13_run_roster.png', 'lit_schwietert2021_fig1.png', 'lit_he2018_fig3.png',
              'lit_phuthi2026_fig1a.png']
 DASH_RED, NOTE_GREY = 'FF5050', '6B7280'
@@ -813,17 +813,25 @@ def build_lean():
     set_anion_column(t)
     save(t, 'slide8.xml')
 
-    # ---- 7 Stage 1: what each Stage-1 table holds (CW P1: one figure — p06 already shows the families). The anneal ran
-    #      on 693 selected structures, not on every placement (cascade_all_302 `anneal_converged`).
+    # ---- 7 Stage 1 pipeline (user 10-14: 'just show the pipeline we ran before'). The per-table coverage bars are gone —
+    #      every bar was 89–91 of 91 and showed no difference; the old bullet 'EOS/elastic (DFT)' also read as if the
+    #      91 precursors had DFT elastic constants (DFT EOS/elastic is the host reference on slide 9; the per-precursor
+    #      elastic moduli are UMA values). Numbers from the ledger: cascade_all_302 (91 precursors · 3,675 structures ·
+    #      693 annealed · descriptors on the rank-1 rows of all 91) · the score table holds 89 (built before the August
+    #      re-run). As₂S₃ joined the window and interface tables on 2026-10-14
+    #      (oxidation_stability_cascade_as2s3_addendum_2026_10_13.json), so the red As₂S₃ line is gone. The step names
+    #      match the audit slide (volume filter · elastic · combined score) so that slide can point back here.
     name, t = fresh('workflow', 'Results & Discussion')
-    lean_body(t, 'Stage 1: calculation coverage',
-              ['Every charge-balanced placement was relaxed with [[b:UMA]] (3,675 structures); '
-               '693 selected structures were then annealed (500 K, 50 ps).',
-               'Descriptors: Li-site landscape, EOS/elastic (DFT), [[b:stability window]], interface.'], h=1.45)
-    fh = figure(t, name, 'fig_p07_stage1_coverage.png', 1.0, 2.62, 8.0, 'Precursors held by each Stage-1 table')
-    add(t, caption(ids(), '< precursors held by each Stage-1 table >', 2.65 + fh, sz=1150),
-        line_under(ids(), 'As₂S₃ and AlI₃ came from an August re-run; [[r:As₂S₃ is not yet in the window and interface tables]].',
-                   3.0 + fh, sz=1350))
+    lean_body(t, 'Stage 1: screening pipeline (June–August)', h=0.5)
+    dashed_list(t, name, 'Pipeline',
+                [('Site enumeration', '91 precursors'),
+                 ('UMA relaxation and volume filter', '3,675 structures'),
+                 ('Short anneal (500 K, 50 ps) and re-relaxation', '693 selected structures'),
+                 ('Descriptors (Li-site landscape, elastic moduli, stability window, and interface reactivity)',
+                  '91 precursors'),
+                 ('Combined score and ranking', '89 precursors')],
+                0.45, 1.95, 9.1, 3.75, note_x=0.68, sz=1500)
+    add(t, caption(ids(), '< Stage-1 pipeline, run from June to August >', 5.9))
     save(t, name)
 
     # ---- 8 configuration sampling (orig slide 11): heat map larger (CW P1); the descriptor-spread line is said — p11
@@ -1065,8 +1073,8 @@ rows = [['#', 'Step', 'Method', 'Scale', 'Status'],
         ['3', 'Short anneal', 'MLIP-MD at 500 K for 50 ps, then re-relaxation', '693 configurations', 'Done'],
         ['4', 'Li-site landscape', 'Bond-valence site energy (softBV)', 'per precursor', 'Done (structural proxy)'],
         ['5', 'EOS / elastic constants', 'DFT (Quantum ESPRESSO): Birch–Murnaghan fit; finite strains with ionic relaxation', 'reference compositions', 'EOS done · C[[_:ij]] running'],
-        ['6', 'Stability window', 'Grand-potential phase diagram from Materials Project phases (0 K)', '90 precursors', 'Recomputed (Oct)'],
-        ['7', 'Interface reactivity', 'Reaction energy of each doped composition vs cathodes, Li metal, carbon', '90 precursors', 'Done · products redo']]
+        ['6', 'Stability window', 'Grand-potential phase diagram from Materials Project phases (0 K)', '91 precursors', 'Recomputed (Oct)'],
+        ['7', 'Interface reactivity', 'Reaction energy of each doped composition vs cathodes, Li metal, carbon', '91 precursors', 'Done · product statistics on hold']]
 st = {1: DONE, 2: DONE, 3: DONE, 4: DONE, 5: RUN, 6: RECO, 7: PLAN}
 fills = {(r, 4): st[r][0] for r in st}
 colors = {(r, 4): st[r][1] for r in st}
@@ -1074,7 +1082,7 @@ add(t, table(ids(), 'Workflow table', 0.45, 1.52, [0.35, 1.7, 3.75, 1.75, 1.55],
              [0.38] + [0.52] * 7, sz=1150, hsz=1250, fills=fills, colors=colors,
              aligns=['ctr', 'l', 'l', 'l', 'ctr']),
     tb(ids(), 'Stage note', 0.45, 5.62, 9.1, 0.6,
-       P('As₂S₃ and AlI₃ were completed in an August re-run; As₂S₃ is not yet in the stability and interface tables (rows 6–7). '
+       P('As₂S₃ and AlI₃ were completed in an August re-run, and As₂S₃ was added to the stability and interface tables on October 14. '
          'Since the September audit these outputs are [[B:exploratory data]] — Li transport is measured in Stage 2.', 'p', 1150, 110, color=BLUE)),
     tb(ids(), 'Abbreviations', 0.45, 6.25, 9.1, 0.55,
        P('MLIP: machine-learning interatomic potential (UMA, a universal model) · EOS: equation of state · '

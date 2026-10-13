@@ -4,7 +4,7 @@
 anion_family,n_planned,n_relaxed,n_gate_evaluation,not_in_gate_evaluation,note
 oxides,37,37,37,,
 chlorides,19,19,19,,
-sulfides,11,11,10,As2S3,"relaxed in the August re-run (08-20~25, valence table fixed); not yet in the stability, interface or gate tables"
+sulfides,11,11,10,As2S3,"relaxed in the August re-run (08-20~25, valence table fixed); added to the stability-window and interface tables on 2026-10-14; not in the gate table"
 fluorides,10,10,10,,
 bromides,5,5,5,,
 nitrides,5,5,5,,

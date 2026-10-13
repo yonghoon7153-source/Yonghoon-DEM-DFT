@@ -629,7 +629,16 @@
    "id": "HZ-cascade-product-gaps-nonground-polymorph",
    "binding_scope": "partial",
    "binding_scope_why": "이 값들은 레지스트리 claim 이 아니다 (원장 파일 자체 + kb 결과 문서 kb/results/interface_axes_90_2026_08_19.md · kb/reviews/litdb_dopant_sota_2026_09_09.md 의 문장). 덮을 claim 이 없어 id 로 이름만 댄다.",
-   "found": "2026-09-23 · Li₂S 문헌 대조용 Explore 조사 중 발견 (Li₂S 가 mp-1125 로 남아 있었다) → 메인이 전체 352종을 실측"
+   "found": "2026-09-23 · Li₂S 문헌 대조용 Explore 조사 중 발견 (Li₂S 가 mp-1125 로 남아 있었다) → 메인이 전체 352종을 실측",
+   "✅_재생성_2026_10_14_gabia": {
+    "무엇": "고친 sei_product_gaps.py 로 다시 만들었다 — 2026-10-14 02:07–02:11 · gabia · MP db 2026.04.13 · 커밋 9225dd9 · 러너 db/inputs/cascade_as2s3_mp_2026_10_13/run_gabia.sh · 반응 출처는 run_cascade_extras.sh (B) 와 같다 (stability_axes + interface_90 + interface_li)",
+    "결과": "화학식 352 → 540 (08-19 뒤 계면 표가 채워지고 As₂S₃ 가 더해졌다) · E_hull = 0 은 524 · 나머지 16 은 MP summary 가 그 화학식에 E_hull 0 항목을 주지 않아 가장 낮은 것을 골랐다 (9 개는 옛 판과 같은 값 — LiCl P6₃mc 0.0039 (다형 2) · Cr₃P · CuS₂ … / 7 개는 새 화학식 — Co₂N 0.178 · CoN 0.103 …)",
+    "옛_판과_비교": "공통 화학식 351 중 mp-id 가 바뀐 것 234 · 금속/절연 (갭 ≤ 0.01 eV) 이 뒤집힌 것 20 · 갭이 0.5 eV 넘게 바뀐 것 53 · 같은 반응 693 개 중 '금속 산물 포함' 판정이 뒤집힌 것 97 (현행 규칙으로 다시 센 옛 판 507 → 새 판 432) · 반응 전체 1,832 개 중 1,172 개 (64 %)",
+    "⚠_MP_갭_품질": "바닥상으로 바뀐 R-3c Cr₂O₃ (mp-19399) · R-3c Fe₂O₃ (mp-19770) 의 MP summary 갭이 0.0 eV 다 — 알려진 절연체다. Al₂CoO₄ (P3m1) · Cr₂(SO₄)₃ 도 0.0. ⇒ 금속/절연 판정이 '어느 항목을 고르나' 를 넘어 MP 갭 값 (자성 배열) 의 품질에 걸려 있다",
+    "남은_것": "cascade_product_bvse.json 은 다시 만들지 않았다 (옛 mp-id 그대로)"
+   },
+   "⚠_HOLD_유지_2026_10_14": "재생성으로 '바닥상이 아닌 다형' 문제는 풀렸지만 HOLD 는 유지한다 — 금속/절연 판정이 MP 갭 품질에 민감하다는 것이 이번에 드러났다 (위 ⚠_MP_갭_품질). 그래서 '금속 산물 포함 반응 n %' 통계 · 개별 전이금속 화합물 갭 · 주범 목록은 계속 인용하지 않는다. 풀 조건: 자성 배열에 강한 갭 출처 (예: MP 의 GGA+U 반강자성 바닥상 갭 · 우리 계산) 로 금속/절연 판정 대조 + cascade_product_bvse.json 재생성. 등급 변경은 사용자 (트랙 cascade · 1저자 = 사용자) 결정이다 — 이 칸은 등급을 바꾸지 않는다.",
+   "updated": "2026-10-14"
   },
   {
    "file": "db/properties/sdcp_c12_v42_stage1_2026_09_30.json",
@@ -688,6 +697,11 @@
    "date": "2026-09-22",
    "what": "ESW 창 1 건 등록 — `window_V` 전량 BLOCKED (`HZ-esw-reduction-limit-label`). 값이 아니라 **두 값을 빼는 방식**이 틀렸다: `red = max(V | evolution > 0)` 이 Li-보존 행(`evolution == 0`)을 버려서 환원 가장자리를 한 계단 아래로 잡는다.",
    "why": "Schwietert 2021 digest 가 `[Zhu15]` 3.4× 감사를 파다가 찾았고, 본 세션에서 **코드 두 곳과 데이터 양쪽으로 직접 확인**했다. cascade 356 행을 재유도해 보니 **0 행을 빼고 전부 넓다**(중앙 +0.475 V, 최대 +0.676 V). 우리 1.717 V 가 문헌 1.72 V 와 0.003 V 차라 **라벨만 고치면 환원 쪽은 일치한다** — 값이 틀린 게 아니라 이름과 뺄셈이 틀렸다는 뜻이라, 금지 범위를 `oxidation_limit_V`·`ocv_self_decomposition_V` **밖으로** 명시했다(고칠 재료까지 막으면 안 된다)."
+  },
+  {
+   "date": "2026-10-14",
+   "what": "HZ-cascade-product-gaps-nonground-polymorph — 파일을 고친 도구로 재생성 (gabia · MP db 2026.04.13 · 9225dd9) · 등급 HOLD 유지",
+   "why": "선택 버그는 풀렸으나 금속/절연 판정이 바뀌었고 (공통 351 중 20 뒤집힘 · 같은 반응 693 중 97 뒤집힘) R-3c Cr₂O₃ · Fe₂O₃ 의 MP 갭이 0 eV 라 판정이 MP 갭 품질에 민감하다. 통계는 계속 인용하지 않는다."
   }
  ],
  "updated": "2026-09-22",

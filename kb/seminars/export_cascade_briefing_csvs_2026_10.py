@@ -82,12 +82,19 @@ def stage1_rows():
         return [r for r in csv.DictReader(f)]
 
 
+ESW_ADDENDUM = 'oxidation_stability_cascade_as2s3_addendum_2026_10_13.json'
+
+
 def ledger_species():
     """Species set of every Stage-1 ledger, read from the ledger files (no typed-in counts)."""
     allr = stage1_rows()
     main = [r for r in allr if r['family'] in MAIN_FAMILIES]
     dualx = [r for r in allr if r['family'] == 'dualx_v23']
     esw = json.load(open(os.path.join(P, 'oxidation_stability_cascade_v3_pinned.json')))['results']
+    # 2026-10-14: As2S3 went into a separate addendum (same tool, same MP db 2026.04.13, host re-measured in its phase set);
+    # v3_pinned stays untouched. The addendum is part of the ledger now — a missing file is an error, not a zero.
+    esw_add = {k: v for k, v in json.load(open(os.path.join(P, ESW_ADDENDUM)))['results'].items()
+               if not k.startswith('__HOST__')}
     jl = lambda f: [json.loads(x) for x in open(os.path.join(P, f), encoding='utf-8') if x.strip()]
     i90, ili, icb = jl('cascade_interface_90.jsonl'), jl('cascade_interface_li.jsonl'), jl('cascade_interface_carbon.jsonl')
     sep = rows_of(os.path.join(P, 'cascade_stability_axes.csv'))
@@ -97,7 +104,8 @@ def ledger_species():
         'annealed': ({base(r['dopant']) for r in main if r['anneal_converged'] == 'True'},
                      sum(r['anneal_converged'] == 'True' for r in main)),
         'dualx': ({base(r['dopant']) for r in dualx}, len(dualx)),
-        'esw': ({v['dopant_base'] for v in esw.values() if v.get('dopant_base')}, len(esw)),
+        'esw': ({v['dopant_base'] for v in esw.values() if v.get('dopant_base')} | {base(v['dopant']) for v in esw_add.values()},
+                len(esw) + len(esw_add)),
         'iface_cathode': ({r['species'] for r in i90}, len(i90)),
         'iface_li': ({r['species'] for r in ili}, len(ili)),
         'iface_carbon': ({r['species'] for r in icb}, len(icb)),
@@ -114,7 +122,7 @@ def p06():
     relaxed, gate = led['main'][0], led['gate_eval'][0]
     planned = {r[i['anion_family']]: int(r[i['n_planned']]) for r in body}
     assert sum(planned.values()) == len(relaxed) == 91, (sum(planned.values()), len(relaxed))
-    note = {'As2S3': 'relaxed in the August re-run (08-20~25, valence table fixed); not yet in the stability, interface or gate tables',
+    note = {'As2S3': 'relaxed in the August re-run (08-20~25, valence table fixed); added to the stability-window and interface tables on 2026-10-14; not in the gate table',
             'AlI3': 'relaxed; rank-1 configuration lacks elastic/EOS/bond-valence descriptors — using rank 2 is an open decision'}
     rows = []
     for fam, n_pl in planned.items():
@@ -135,7 +143,7 @@ def p07():
     allsp = led['main'][0]
     steps = [('main', '1-2', 'Site enumeration + MLIP relaxation (main batch + August re-run)', 'cascade_all_302_2026_08_25.csv (families v23 + as2s3_recover)', 'configurations'),
              ('annealed', '3', 'Short anneal 500 K / 50 ps (converged)', 'cascade_all_302_2026_08_25.csv anneal_converged', 'configurations'),
-             ('esw', '6', 'Stability window (grand potential, corrected definition)', 'oxidation_stability_cascade_v3_pinned.json results', 'compositions'),
+             ('esw', '6', 'Stability window (grand potential, corrected definition)', 'oxidation_stability_cascade_v3_pinned.json results + ' + ESW_ADDENDUM + ' (As2S3, 2026-10-14)', 'compositions'),
              ('iface_cathode', '7', 'Interface: doped composition vs LiCoO2 / LiNiO2 / LiMn2O4 (+ NCM811 and Li-metal subsets of 8)', 'cascade_interface_90.jsonl', 'reaction rows'),
              ('iface_li', '7', 'Interface: doped composition vs Li metal', 'cascade_interface_li.jsonl', 'reaction rows'),
              ('iface_carbon', '7', 'Interface: doped composition vs carbon', 'cascade_interface_carbon.jsonl', 'reaction rows'),
@@ -489,7 +497,7 @@ site-preference backup p18 (old p12 / p17 files are removed by the script). p06 
 | page | slide | CSV | what to plot |
 |---|---|---|---|
 | 6 | Candidate set | `p06_candidate_set_by_anion_family.csv` | bars: n_planned vs n_relaxed vs n_gate_evaluation per anion family |
-| 7 | Stage-1 coverage | `p07_stage1_coverage_by_ledger.csv` · `p07_structures_by_anion_family.csv` | bars: precursors held by each Stage-1 table (As2S3 / AlI3 flags); the per-family structure counts (relaxed 3,675 vs annealed 693) are a text line on the slim deck since 10-13 |
+| 7 | Stage-1 coverage | `p07_stage1_coverage_by_ledger.csv` · `p07_structures_by_anion_family.csv` | not drawn on the slim deck since 2026-10-14 (the slide shows the five-step pipeline box; the full deck keeps the step table) — kept for questions and Origin (As2S3 / AlI3 flags) |
 | 8 | Configuration sampling | `p08_configurations_per_site_pair_long.csv` · `_matrix.csv` | heat map: cation site × anion site → configurations (main batch 3,615) |
 | 9 | DFT EOS | `p09_eos_bm3_fit_curves.csv` | lines: E − E0 vs V per f.u. (fit curves; raw points not in repo) |
 | 10 | Stability window | `p10_stability_window_host.csv` · `p10_stability_window_host_segments.csv` | bar segments on a voltage axis (host Li6PS5Cl) |

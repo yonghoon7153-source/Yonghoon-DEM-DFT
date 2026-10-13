@@ -74,10 +74,12 @@ evidenceScope: multi-source-primary
 |---|---|---|---|
 | 배치 열거 + MLIP 완화 (본 배치 + 재실행) | 91 | ✅ | ✅ |
 | 짧은 담금질 | 91 | ✅ | ✅ |
-| 안정창 (`v3_pinned`) | 90 | ❌ | ✅ |
-| 계면 · 도핑 조성 vs 양극 / Li / 탄소 | 90 | ❌ | ✅ |
+| 안정창 (`v3_pinned` + 10-14 As₂S₃ 보충) | 91 | ✅ | ✅ |
+| 계면 · 도핑 조성 vs 양극 / Li / 탄소 | 91 | ✅ | ✅ |
 | 별도 상 (`stability_axes`) | 89 | ❌ | ❌ |
 | 게이트 깔때기 (`funnel_v2`) | 89 | ❌ | ❌ |
+
+- ✅ **10-14 보충** (gabia · MP db 2026.04.13 = 90 종과 같은 판 · `db/inputs/cascade_as2s3_mp_2026_10_13/run_gabia.sh` · 결과 커밋 9225dd9): As₂S₃ 안정창 (rank 1 세 행 · `oxidation_stability_cascade_as2s3_addendum_2026_10_13.json`) · 계면 (양극 셋 · Li · 탄소 — `--only As2S3:As2Cl4Li28P2S20`) · 계면 산물 밴드갭 재생성 (HOLD 유지 — `HZ-cascade-product-gaps-nonground-polymorph` ✅_재생성_2026_10_14_gabia). AlI₃ 1순위 배치의 UMA 지표는 GPU 일이라 남았다.
 
 - As₂S₃ 가 처음 빠진 이유: 원자가 표(`ALTERNATIVE_VALENCES`)에 As 가 없어 +5 로만 가정 → As₂S₃ 단위 전하 +4 → stage-01 구조 0 개. **물리 판정이 아니라 사전 누락**이었다 (`tools/doping/substitute_compound.py` 주석). 재실행: 45 구성 (P 4b × Cl 4d / S 16e / S 4a) · 전부 수렴 · 9 담금질.
 - AlI₃: 본 배치 15 + 재실행 15. 순위 1 배치에 탄성 · EOS · BVS 가 없다 (순위 2 에는 있다) — `cascade_pool_accounting.csv` `drop_reason`.

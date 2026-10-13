@@ -198,11 +198,11 @@ evidenceScope: multi-source-mixed
 3. 선별된 693 개 구조는 500 K 에서 50 ps 짧게 데운 뒤 다시 완화했습니다.
 4. 결합원자가 지형으로 Li 이 갈 수 있는 영역을 표시했습니다. 이것은 구조 지표이지 확산계수가 아닙니다.
 5. 기준 조성은 DFT 로 상태방정식을 끝냈고, 탄성상수는 GPU 에서 계산하고 있습니다.
-6. 안정창은 Materials Project 상 자료로 대권위 상도표를 만들어, 90 개 전구체를 다시 계산했습니다.
-7. 계면 반응에너지는 도핑 조성과 양극, Li 금속, 탄소 사이로 계산을 끝냈고, 산물 쪽은 다시 냅니다.
+6. 안정창은 Materials Project 상 자료로 대권위 상도표를 만들어, 91 개 전구체를 다시 계산했습니다.
+7. 계면 반응에너지는 도핑 조성과 양극, Li 금속, 탄소 사이로 계산을 끝냈습니다. 산물 쪽 통계는 고친 도구로 다시 만들었지만, 금속·절연 판정이 MP 밴드갭 값에 민감해서 아직 말하지 않습니다.
 
 **[가리킴: 파란 줄]** 두 가지를 짚겠습니다.
-- 8월 재실행으로 채운 As₂S₃ 는 6–7 행 표에 아직 들어가지 않았습니다.
+- 8월 재실행으로 채운 As₂S₃ 는 10월 14일 6–7 행 표에도 넣었습니다 (나머지 90 개와 같은 MP 판).
 - 그리고 9월 감사 이후, 이 1단계 결과는 **탐색 자료**로 씁니다. 수송은 2단계에서 잽니다.
 
 **[클릭]**
@@ -348,7 +348,7 @@ MLIP 지표의 기준이 되는 DFT 계산입니다. **[가리킴: 두 곡선]**
 ### 꼭 지킬 것 (말이 새기 쉬운 곳)
 - 13장: "Li 이 확산하지 않는다" 라고 말하지 않는다 → "MSD 가 직선이 되지 않아 **확산계수를 정의하지 않았다**".
 - 13장: "1000 K 는 확산이 시작되는 온도" 라고 말하지 않는다 → "미리 정한 점검을 통과한 온도".
-- 6장 · 7장: "89 개만 계산했다" 고 말하지 않는다 → "91 개 전부 완화했고, 뒤 단계 표가 아직 다 따라오지 않았다".
+- 6장 · 7장: "89 개만 계산했다" 고 말하지 않는다 → "91 개 전부 완화·담금질·지표까지 했고, 전구체 사이 점수만 8월 재실행 전에 만들어서 89 개다".
 - 11장: "가짜 basin 이 확정됐다" 고 말하지 않는다 → "기준 부피가 같은 조성의 DFT 평형보다 40 % 정도 컸다". 237 을 "계산한 수" 로 말하지 않는다 → "설계 목록".
 - 8장 · 15장: "어느 도펀트가 좋다" 는 답을 하지 않는다 → "지금 지표는 탐색용, 순위는 주 보고량과 미리 정한 여유로".
 - 2장: 숫자는 하나도 읽지 않는다 (접착에너지 값 · li2s 수송값은 어디서도 말하지 않는다).
@@ -368,7 +368,7 @@ MLIP 지표의 기준이 되는 DFT 계산입니다. **[가리킴: 두 곡선]**
 | 4 | ■ 'Failure modes in sulfide-based all-solid-state batteries' · bullet 둘 (reinforce each other · A dopant that suppresses one mode can worsen the other, and the trade-off goes undetected unless each mode is evaluated separately.) + Kang 2026 Fig. 16 + 출처 'Kang et al., …' | 앞 장 '왜 따로' 에 답 · 두 열화 → 서로 키우는 고리 → 가운데 SE doping → 따로 재는 이유 (대본 4장) · 그림 오타는 원 논문 그대로 |
 | 5 | ■ 'Prior dopant screens and what this study adds' · bullet 둘 + 표 6 행 (Miara 2015 · Xiao 2019 · Lee 2024 · Muy 2025 · Jung 2026 · this work · 출처는 오른쪽 위 다섯 줄) | what is varied 열이 핵심 → this work 행 → 기계 축은 새로움이 아님 (대본 5장 · 논문별 브리핑 = 디펜스 S5) |
 | 6 | 08-18 덱의 족별 표 (family · n · examples — 'role in the design' 열은 뺐다 · 사용자 10-13) + **[문헌] 'Literature example: SiO₂ co-doping'** Jung 2026 Fig. 3d | 족별 역할은 말로: 산화물 = 강한 M–O 결합 · 염화물 = 호스트에 이미 Cl · 황화물 = 호스트와 같은 음이온 (대조) · 플루오르화물 = 가장 강한 결합 · 이동성 위험 · 브로민화물 · 요오드화물 = 더 큰 할라이드 (대조) · 질화물 = 더 높은 음이온 전하 (대조) · 공치환 실험 선례 CuCl · MgF₂ · ZnO · La₂O₃ · Nd₂O₃ · SiO₂ (17장) · 문헌 그림은 '선례' 이지 우리 후보의 검증이 아니다 · As₂S₃ 재실행은 7장 |
-| 7 | bullet: 3,675 완화 · **선별된 693 담금질** + 그림 하나: 표마다 담은 전구체 수 (91 · 90 · 89) | 단계별 방법 (UMA · FIRE · 500 K 50 ps) · 90 · 89 인 이유 · '9월 감사 이후 탐색 자료' (화면 줄은 뺐다 · 15장에 있다) |
+| 7 | ■ 'Stage 1: screening pipeline (June–August)' + 점선 박스 'Pipeline' 다섯 단계 (오른쪽 회색 = 규모 91 · 3,675 · 693 선별 · 91 · 89) + `< 캡션 >` — 10-14 사용자 *'예전에 어떤 파이프라인으로 했었는지를 보여주자'* 로 커버리지 막대를 뺐다 | 단계마다 한 줄 (UMA · FIRE · 500 K 50 ps · 서술자 넷 · 점수는 재실행 전이라 89) · 단계 이름 (부피 필터 · 탄성 · 점수) 은 11장 감사와 같은 말이라 거기서 번호로 가리킨다 · 남은 것 (AlI₃ 1순위 배치의 UMA 지표 · 계면 산물 통계 보류 · 호스트 탄성 진행 중) 은 물으면 · '9월 감사 이후 탐색 자료' (화면 줄은 뺐다 · 15장에 있다) |
 | 8 · 9 | 8: 원래 그림 (열지도 크게) · 9: 그대로 | 8: '지표에 따라 같은 전구체 안 흩어짐 ≈ 전구체 사이' 는 말로 (화면 줄은 뺐다 → 11장 감사로 이어진다) · 담금질은 **선별한 구조**만 |
 | 10 | ■ Decomposition stability window · 호스트 창 그림 + **[문헌] 'Literature: decomposition and intrinsic windows'** Schwietert 2021 Fig. 1 (크게) | 우리 정의 = 그 논문의 decomposition window · 옛 정의가 넓었던 이유 · 계면 산물을 바닥상태 상으로 다시 낸다 (둘 다 화면 줄은 뺐다) · '창 없음' |
 | 11 | **두 목록** (Audit findings 4 · Decisions recorded on Sep 12 4) + 빨강 'Ranking margin δ: proposed, not yet set' + 'The run scope is set after the pilot.' | ⚠ 두 목록은 **행끼리 짝이 아니다** (넷째 발견 '주목적 없음' 의 답이 첫째 결정 D_rel 이다) — 짝지어 읽지 않는다 · 감사 넷의 근거 (1.1 · 0.2 · ~40 %) · 규칙마다 뜻 한 줄 |
@@ -377,7 +377,7 @@ MLIP 지표의 기준이 되는 DFT 계산입니다. **[가리킴: 두 곡선]**
 | 14 | 점선 박스 'Milestones' 1–5 + **[문헌] 'Literature: length and time scales'** Phuthi 2026 Fig. 1a + 'Planned for our runs: cells ≥ 2 nm (now ≈ 1.6 nm).' | 결과 네 경우별 다음 일 · '한 번만 분석' · 목표 (계산이 전구체를 고르는 스크린 · 규칙은 미리) · 방법 개선 (미세조정 MLIP · 불확도 · 결함 열역학) — 셋 다 화면 줄은 뺐다 |
 | 15 | ■ Current status · bullet 셋 (큰 글씨) + 'No dopant ranking yet. The ranking margin remains to be set.' (화살표 뺌) | 그대로 읽는다 · '순위는 아직 없다' 는 여기서 한 번만 |
 
-- 우리 그래프 넷은 CSV 에서 그린 **수수한 미리보기**다 (`kb/seminars/assets_2026_10_13/fig_p06 · p07 · p10 · p13` · 생성 `export_cascade_briefing_csvs_2026_10.py --figures`). Origin 으로 다시 그리면 같은 자리에 바꿔 넣는다. 10-13 부터 p06 (가로 막대) · p07 (커버리지 한 장 · `fig_p07_stage1_coverage.png`) 은 **슬라이드에 들어가는 크기로** 그려서 그림 속 글씨가 화면 글씨와 같다 (13–14 pt) — Origin 판도 그 크기에서 글씨를 맞춘다. 족별 구조 수 CSV (`p07_structures_by_anion_family.csv`) 는 Origin 용으로 남겼다.
+- 우리 그래프 넷은 CSV 에서 그린 **수수한 미리보기**다 (`kb/seminars/assets_2026_10_13/fig_p06 · p07 · p10 · p13` · 생성 `export_cascade_briefing_csvs_2026_10.py --figures`). Origin 으로 다시 그리면 같은 자리에 바꿔 넣는다. 10-13 부터 p06 (가로 막대) 은 **슬라이드에 들어가는 크기로** 그려서 (p07 커버리지 그림 `fig_p07_stage1_coverage.png` 은 10-14 에 슬림판에서 빠졌다 — 파이프라인 박스로 바꿈 · CSV 는 질문용으로 남김) 그림 속 글씨가 화면 글씨와 같다 (13–14 pt) — Origin 판도 그 크기에서 글씨를 맞춘다. 족별 구조 수 CSV (`p07_structures_by_anion_family.csv`) 는 Origin 용으로 남겼다.
 - **[문헌] 그림 다섯은 litdb 크롭을 그대로 잘라 썼다** (다시 그리지 않음 · 우리 숫자와 한 그림에 안 섞음) — `lit_jung2026_sio2_fig3d` · `lit_schwietert2021_fig1` · `lit_he2018_fig3` · `jung2026_fig5b` · `lit_phuthi2026_fig1a`. 10-12 에 직접 봤다.
 - 3장 화살표는 08-18 덱 4장의 **원래 그림 그대로**다 — 사용자 표준 (10-13 *'화살표는 원복했어 저게 표준이야'*). Codex CW 가 흐리다며 벡터를 권했지만 쓰지 않는다.
 - 10장 질문 대비: 우리 환원 끝 1.717 V 는 Schwietert 2021 decomposition window 의 1.72 V 와 같고, 산화 끝은 MP 보정 규약 때문에 다르다 — **화면에는 숫자 비교를 안 싣는다** (디펜스 S10).
