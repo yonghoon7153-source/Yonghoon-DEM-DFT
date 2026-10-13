@@ -1,0 +1,388 @@
+diff --git a/bms-balancing/scripts/reil_c4_h.py b/bms-balancing/scripts/reil_c4_h.py
+index 0888808..f9c645e 100644
+--- a/bms-balancing/scripts/reil_c4_h.py
++++ b/bms-balancing/scripts/reil_c4_h.py
+@@ -8,7 +8,8 @@
+         --arrays <Phase A 배열> --h-arrays <0b1 배열> --h-manifest-sha256 <sha> --util-copy <util 사본> --p0-result <P0> --out <새 폴더>
+ 
+ 이 파일이 아닌 것: Phase B (profile 순회 · 대체 사슬 · 적응적 시작점 봉인 연결 · 동시 · 명목) · H4 대조 · ray · 표지 (C4-0b2) ·
+-자료 개봉 · 맞춤 · 실제 H 실행 (C4-A · C4-B). 건조는 합성 입력과 보존 util 사본만 쓴다.
++자료 개봉 · 맞춤 · 실제 H 실행 (C4-A · C4-B). 건조는 계획 · seed · 봉인만 읽는다 (C4 v2 §4-5 · 승인 경계 C4-0B1-A1) —
++합성 입력 · 보존 util 사본은 시험에서만 쓴다.
+ """
+ from __future__ import annotations
+ 
+@@ -314,6 +315,30 @@ def _build_arrays(plan) -> dict:
+     return {rel: np.ascontiguousarray(np.vstack(bl), dtype="<f8") for rel, bl in by_file.items()}
+ 
+ 
++def _attach_from_files(plan, d) -> dict:
++    """생성기 없이 봉인 npy 에서 블록을 잘라 file · rows · raw_sha256 을 붙인다 — `_build_arrays` 와 같은 배치 (단위 · 단계마다 계획 순서로 쌓음).
++    npy 는 float64 little-endian 2 차원이어야 하고, 행 수가 계획의 합과 같아야 한다."""
++    import numpy as np
++    loaded, used = {}, {}
++    for e in plan["entries"]:
++        rel = f"{e['stage']}/{e['unit'].replace('|', '_')}.npy"
++        if rel not in loaded:
++            a = np.load(io.BytesIO(e3a._read(Path(d) / rel)), allow_pickle=False)
++            if a.dtype != np.dtype("<f8") or a.ndim != 2:
++                raise HStop(f"{rel}: dtype · 차원 {a.dtype} · {a.shape}")
++            loaded[rel] = a
++        r0 = used.get(rel, 0)
++        block = loaded[rel][r0:r0 + e["n"]]
++        if block.shape != (e["n"], len(e["box_lo"])):
++            raise HStop(f"{e['label']}: 블록 모양 {block.shape}")
++        e.update(file=rel, rows=[r0, r0 + e["n"]], raw_sha256=_sha(np.ascontiguousarray(block, dtype="<f8").tobytes()))
++        used[rel] = r0 + e["n"]
++    short = sorted(rel for rel, a in loaded.items() if a.shape[0] != used[rel])
++    if short:
++        raise HStop(f"npy 행 수가 계획의 합과 다르다: {short[:3]}")
++    return loaded
++
++
+ def rules_record() -> dict:
+     """규칙 · label 형식 기록 (B §2-1 맞춤 전 봉인) — 순회 · 동률 · 대체 · 중복 · 부족은 등록 원문 그대로 (줄 범위 · 문서 sha256)."""
+     sources = {}
+@@ -394,8 +419,10 @@ def seal_h_arrays(out, *, p0_result, units=None) -> dict:
+             "n_skipped_simultaneous": man["n_skipped_simultaneous"], "complete": man["complete"], "n_files": len(files) + 1}
+ 
+ 
+-def check_h_arrays(arrays_dir, *, manifest_sha256, p0_result) -> dict:
+-    """봉인 대조 — MANIFEST 를 명시 sha256 으로 인증 · 파일 목록 · 바이트 · P0 · 배열 재생성 · 기록 문서 재생성을 모두 맞춘다."""
++def check_h_arrays(arrays_dir, *, manifest_sha256, p0_result, regenerate=True) -> dict:
++    """봉인 대조 — MANIFEST 를 명시 sha256 으로 인증 · 파일 목록 · 바이트 · P0 · 계획 (label · seed · 격자 · 상자) · 기록 문서를 맞춘다.
++    regenerate=True: Sobol 배열을 다시 만들어 바이트 대조 (봉인 단계 · 시험). regenerate=False: 생성기를 부르지 않고 봉인 npy 바이트에서
++    블록 raw sha 를 다시 계산해 INDEX 와 맞춘다 — 읽기 전용 건조용 (C4 v2 §4-5 '계획 · seed · 봉인만 읽음' · 승인 경계 C4-0B1-A1)."""
+     import numpy as np
+     d = Path(arrays_dir)
+     e3a._guard([d, p0_result])
+@@ -413,13 +440,17 @@ def check_h_arrays(arrays_dir, *, manifest_sha256, p0_result) -> dict:
+     if _sha(p0b) != man["p0_result_sha256"]:
+         raise HStop("P0 결과 sha256 이 봉인 기록과 다르다")
+     plan = array_plan(json.loads(p0b), man["units"])
+-    arrays = _build_arrays(plan)
+-    if sorted(arrays) != sorted(r for r in man["files"] if r.endswith(".npy")):
+-        raise HStop("재생성한 배열 파일 집합이 봉인과 다르다")
+-    for rel, a in arrays.items():
+-        got = np.load(io.BytesIO(e3a._read(d / rel)), allow_pickle=False)
+-        if got.dtype != a.dtype or got.shape != a.shape or got.tobytes() != a.tobytes():
+-            raise HStop(f"{rel}: 재생성 배열이 봉인과 다르다")
++    npy = sorted(r for r in man["files"] if r.endswith(".npy"))
++    if regenerate:
++        arrays = _build_arrays(plan)
++        if sorted(arrays) != npy:
++            raise HStop("재생성한 배열 파일 집합이 봉인과 다르다")
++        for rel, a in arrays.items():
++            got = np.load(io.BytesIO(e3a._read(d / rel)), allow_pickle=False)
++            if got.dtype != a.dtype or got.shape != a.shape or got.tobytes() != a.tobytes():
++                raise HStop(f"{rel}: 재생성 배열이 봉인과 다르다")
++    elif sorted(_attach_from_files(plan, d)) != npy:
++        raise HStop("계획이 가리키는 배열 파일 집합이 봉인과 다르다")
+     want = {"INDEX.json": c5.dump(_index_obj(plan)), "LABEL_SEED_TABLE.json": c5.dump([[e["label"], e["seed"]] for e in plan["entries"]]),
+             "RULES.json": c5.dump(rules_record())}
+     for name, b in want.items():
+@@ -427,7 +458,8 @@ def check_h_arrays(arrays_dir, *, manifest_sha256, p0_result) -> dict:
+             raise HStop(f"{name}: 재생성 기록이 봉인과 다르다")
+     return {"ok": True, "arrays_dir": str(d), "manifest_sha256": manifest_sha256, "n_labels": len(plan["entries"]),
+             "units": len(man["units"]), "complete": bool(man["complete"]) and len(man["units"]) == len(UNIT_KINDS) * len(ROWS),
+-            "regenerated_match": True, "generator": man["generator"]}
++            "mode": "regenerate" if regenerate else "bytes", "regenerated_match": True if regenerate else None,
++            "generator": man["generator"]}
+ 
+ 
+ # ---------------------------------------------------------------- 목적 (v2 §2 · §5 · 부속 A §4-2–§4-3 · B §3)
+@@ -588,23 +620,22 @@ def feasibility_class(res) -> str:
+     return "numerically_accepted" if all(v <= TOL for v in vals) else "infeasible"
+ 
+ 
+-def witness(*, solver_error, value, residuals) -> str:
+-    """A §2-1: SOLVER_ERROR (예외 — 반환점 없음) · NONFINITE (재평가 비유한 · 재평가 실패 · 교차 실패 · x 비유한) · INFEASIBLE_RETURN."""
++def witness(*, solver_error, value, residuals, reeval_error=False) -> str:
++    """A §2-1 · C4 v2 §5-3: SOLVER_ERROR (최적화 중 지역 예외 — 반환점 없음) · REEVAL_ERROR (반환점의 독립 재평가 중 지역 예외 — C4 · H 에도
++    따로 기록 · C4-0B1-N3) · NONFINITE (재평가가 정상 반환한 비유한 · 교차 실패 · x 비유한) · INFEASIBLE_RETURN (§2-2 밖). termination 은 따로."""
+     if solver_error:
+         return "invalid:SOLVER_ERROR"
++    if reeval_error:
++        return "invalid:REEVAL_ERROR"
+     if value is None or not math.isfinite(value) or residuals is None:
+         return "invalid:NONFINITE"
+     return "valid" if feasibility_class(residuals) in ("exact_feasible", "numerically_accepted") else "invalid:INFEASIBLE_RETURN"
+ 
+ 
+ def termination(res) -> str:
+-    """A §2-3: converged (solver 성공) · budget (MAX_EVAL · MAX_ITER) · solver_error (그 밖 status) — 원 status · message 는 행에 따로."""
+-    from scipy._lib.cobyqa.settings import ExitStatus
+-    if bool(getattr(res, "success", False)):
+-        return "converged"
+-    if getattr(res, "status", None) in (ExitStatus.MAX_EVAL_WARNING.value, ExitStatus.MAX_ITER_WARNING.value):
+-        return "budget"
+-    return "solver_error"
++    """A §2-3 · C4 v2 §5-4: converged (solver 성공) · budget (MAX_EVAL · MAX_ITER) · 그 밖 status 는 unclassified (C5 `termination_of` 그대로) —
++    알려진 셋에 매핑하지 않고 전체 중지한다 (C4 v2 §6 · C4-0B1-N2). solver_error 는 최적화 중 지역 예외 (반환점 없음) 에만 쓴다."""
++    return c5.termination_of(res)
+ 
+ 
+ def active_set(x, region) -> dict:
+@@ -702,7 +733,21 @@ def _check_task(task, ctx) -> None:
+         raise HStop(f"#{task['row']} H4 끝점 수용 아님 — 실행하지 않는다")
+ 
+ 
+-def _run_phase_a(task, ctx, notify, progress) -> dict:
++def _partial(acc, info) -> dict:
++    """구조 중지의 부분 기록 (C4-0B1-N1 · 부속 B §2-5 · C4 v2 §6) — 그때까지의 행 · 평가 수 · 비유한 수 · 경고 원문 · 중지 오류.
++    아직 생기지 않은 값은 넣지 않는다 (0 · 성공값으로 채우지 않음)."""
++    part = dict(acc.get("row") or {})
++    count = acc.get("count")
++    if count is not None:
++        part.update(n_eval=count["n"], n_nonfinite=count["nonfinite"])
++    caught = acc.get("caught")
++    if caught is not None:
++        part["warnings"] = sorted({f"{w.category.__name__}: {w.message}" for w in caught})[:20]
++    part["stop_error"] = info
++    return part
++
++
++def _run_phase_a(task, ctx, notify, progress, acc) -> dict:
+     import numpy as np
+     from scipy.optimize import Bounds, LinearConstraint, minimize
+     _check_task(task, ctx)
+@@ -710,8 +755,9 @@ def _run_phase_a(task, ctx, notify, progress) -> dict:
+     t0, c0 = time.monotonic(), time.process_time()
+     row = {k: task[k] for k in ("task_id", "run_id", "unit", "objective", "region", "row", "seed")}
+     row.update(x0=[float(v) for v in task["x0"]], worker=task.get("worker"), t_start=t0)
++    acc["row"] = row
+     model_run = copy.deepcopy(ctx["models"][task["row"]])
+-    count = {"n": 0, "nonfinite": 0}
++    count = acc["count"] = {"n": 0, "nonfinite": 0}
+ 
+     def fun(x):
+         count["n"] += 1
+@@ -727,6 +773,7 @@ def _run_phase_a(task, ctx, notify, progress) -> dict:
+     cons = [LinearConstraint([[0.0, 0.0, 1.0, -1.0]], float(G_LB), np.inf)] if region in G_REGIONS else []
+     res, err = None, None
+     with warnings.catch_warnings(record=True) as caught:
++        acc["caught"] = caught
+         warnings.simplefilter("always")
+         try:
+             res = minimize(fun, np.asarray(row["x0"], dtype=float), method="COBYQA", bounds=Bounds(list(lo), list(hi)),
+@@ -734,13 +781,14 @@ def _run_phase_a(task, ctx, notify, progress) -> dict:
+         except BaseException as e:  # noqa: BLE001 — 분류해서 지역 / 구조로 나눈다
+             info = classify(e, "optimize", uf)
+             if info["kind"] == "structural":
+-                raise mon.Structural(info, partial={**row, "n_eval": count["n"]}) from None
++                raise mon.Structural(info, partial=_partial(acc, info)) from None
+             err = info
+     msgs = sorted({f"{w.category.__name__}: {w.message}" for w in caught})
+-    if any("Unknown solver options" in m for m in msgs):
+-        raise mon.Structural({"kind": "structural", "origin": "optimizer", "stage": "optimize", "type": "OptimizeWarning",
+-                              "message": "알 수 없는 옵션 경고 — fail-closed (부속 A §3-1)", "traceback": msgs[:3]})
+     row.update(n_eval=count["n"], n_nonfinite=count["nonfinite"], warnings=msgs[:20])
++    if any("Unknown solver options" in m for m in msgs):
++        info = {"kind": "structural", "origin": "optimizer", "stage": "optimize", "type": "OptimizeWarning",
++                "message": "알 수 없는 옵션 경고 — fail-closed (부속 A §3-1)", "traceback": msgs[:3]}
++        raise mon.Structural(info, partial=_partial(acc, info))
+     if err is not None:
+         row.update(termination="solver_error", witness="invalid:SOLVER_ERROR", error=err, x=None, fun=None, status=None,
+                    message=None, nfev=None, nit=None, value=None, components=None, reeval_error=None, residuals=None,
+@@ -749,6 +797,11 @@ def _run_phase_a(task, ctx, notify, progress) -> dict:
+         x = [float(v) for v in res.x]
+         row.update(x=x, fun=float(res.fun), status=int(res.status), message=str(res.message),
+                    nfev=int(getattr(res, "nfev", -1)), nit=int(getattr(res, "nit", -1)), termination=termination(res), error=None)
++        if row["termination"] == "unclassified":                # C4 v2 §5-4 · §6 — 재평가 · 증인으로 넘어가지 않고 전체 중지 (C4-0B1-N2)
++            info = {"kind": "structural", "origin": "optimizer", "stage": "optimize", "type": "UnclassifiedTermination",
++                    "message": f"미분류 termination — status {row['status']} · {row['message']} (C4 v2 §5-4 · §6: 전체 중지)"[:500],
++                    "traceback": []}
++            raise mon.Structural(info, partial=_partial(acc, info))
+         notify("returned", {"run_id": row["run_id"], "x": x, "status": row["status"], "termination": row["termination"],
+                             "n_eval": count["n"]})
+         value, comp, rerr = None, None, None
+@@ -757,10 +810,11 @@ def _run_phase_a(task, ctx, notify, progress) -> dict:
+         except BaseException as e:  # noqa: BLE001
+             info = classify(e, "reeval", uf)
+             if info["kind"] == "structural":
+-                raise mon.Structural(info, partial=row) from None
++                raise mon.Structural(info, partial=_partial(acc, info)) from None
+             rerr = info
+         resid = exact_residuals(x, region)
+-        row.update(value=value, components=comp, reeval_error=rerr, witness=witness(solver_error=False, value=value, residuals=resid),
++        row.update(value=value, components=comp, reeval_error=rerr,
++                   witness=witness(solver_error=False, value=value, residuals=resid, reeval_error=rerr is not None),
+                    feasibility_class=feasibility_class(resid),
+                    residuals=None if resid is None else {"box": frac_str(resid["box"]),
+                                                          "box_by_coord": [frac_str(v) for v in resid["box_by_coord"]],
+@@ -773,7 +827,7 @@ def _run_phase_a(task, ctx, notify, progress) -> dict:
+             except BaseException as e:  # noqa: BLE001 — 라벨 실패는 '미확인' (증인 불변) · 구조 오류는 전역 중단
+                 info = classify(e, "label", uf)
+                 if info["kind"] == "structural":
+-                    raise mon.Structural(info, partial=row) from None
++                    raise mon.Structural(info, partial=_partial(acc, info)) from None
+                 lab = {"n_out_PE": "미확인", "n_out_NE": "미확인", "label_error": info}
+         row.update(lab)
+     t1 = time.monotonic()
+@@ -783,14 +837,16 @@ def _run_phase_a(task, ctx, notify, progress) -> dict:
+ 
+ def run_phase_a(task, ctx, notify=None, progress=None) -> dict:
+     """Phase A 지역 실행 하나 — 감시 모듈 `supervise` 의 task_fn 계약. 최적화 → 독립 재평가 1 회 → 정확 잔차 · 분류 · 라벨.
+-    지역 오류는 행 (SOLVER_ERROR · NONFINITE) · 우리 코드의 예외는 `mon.Structural` (행을 만들지 않는다)."""
++    지역 오류는 행 (SOLVER_ERROR · REEVAL_ERROR · NONFINITE). 구조 목록 오류 · 미분류 termination · 옵션 경고 · 우리 코드의 예외는
++    `mon.Structural` (행을 만들지 않는다 · partial = 그때까지의 행 · 계수 · 경고 · 중지 오류 — C4-0B1-N1)."""
++    acc = {"row": {k: task.get(k) for k in ("task_id", "run_id", "unit", "objective", "region", "row", "seed")}}
+     try:
+-        return _run_phase_a(task, ctx, notify or (lambda kind, payload: None), progress)
++        return _run_phase_a(task, ctx, notify or (lambda kind, payload: None), progress, acc)
+     except mon.Structural:
+         raise
+     except BaseException as e:  # noqa: BLE001 — 우리 코드 · 설정의 예외 = 구조 오류
+-        raise mon.Structural(classify(e, "ours", ctx.get("util_file")),
+-                             partial={k: task.get(k) for k in ("task_id", "unit", "run_id")}) from None
++        info = classify(e, "ours", ctx.get("util_file"))
++        raise mon.Structural(info, partial=_partial(acc, info)) from None
+ 
+ 
+ def phase_a_summary(rows, expected=2 * PHASE_A_N) -> dict:
+@@ -902,55 +958,12 @@ def common_update(records, pre=None) -> dict:
+     return {"final": final, "pre": dict(pre or {}), "combined_lower": combined_lower, "rho_hat": rho_hat}
+ 
+ 
+-# ---------------------------------------------------------------- 건조 (상태 §46 — 계획 · 게이트 · 합성 표본)
+-def _key(k) -> str:
+-    return "|".join(str(v) for v in k)
+-
+-
+-def _synthetic_sample(util_copy, phase_a) -> dict:
+-    """합성 표본 — 해석식 곡선 · 건조 옵션 · 목적 넷 × 시작 4 (seed 0 · 1 의 앞 2 점) + 결합 ρ · 요약 · 문턱 · 공통 갱신."""
+-    util, uf = c5.load_util(util_copy, c5.UTIL_COPY_SHA)
+-    model, hc = synthetic_wide_inputs(util)
+-    gate = endpoint_gate(float(model["V_exp_interp"][0]), float(model["V_exp_interp"][-1]))
+-    row = 0
+-    ctx = {"util": util, "util_file": uf, "models": {row: model}, "halfcell": hc, "options": dict(DRY_OPTIONS),
+-           "gates": {row: gate}, "denominators": {}}
+-    first = [u for u in units() if u["row"] == row and u["objective"] != "rho" and u["unit"] != "J_Vs|A1|0" and u["unit"] != "J_V|A1|0"]
+-    tasks = [t for t in phase_a_tasks(first, phase_a, 1) if t["start_index"] in (0, 1)]
+-    rows = [run_phase_a(t, ctx) for t in tasks]
+-    summaries = {u["unit"]: phase_a_summary([r for r in rows if r["unit"] == u["unit"]], expected=4) for u in first}
+-    den = rho_denominators(summaries, row)
+-    if den is not None:
+-        ctx["denominators"][row] = den
+-        ru = [u for u in units() if u["unit"] == f"rho|A0|{row}"]
+-        rt = [t for t in phase_a_tasks(ru, phase_a, 1, start_id=len(tasks)) if t["start_index"] in (0, 1)]
+-        rrows = [run_phase_a(t, ctx) for t in rt]
+-        rows += rrows
+-        summaries[ru[0]["unit"]] = phase_a_summary(rrows, expected=4)
+-    records = [{"row": r["row"], "region": r["region"], "objective": r["objective"], "stage": "phase_a",
+-                "valid": r["witness"] == "valid", "value": r["value"], "components": r["components"]} for r in rows]
+-    pre = {(s.split("|")[0], s.split("|")[1], row): v["J0"] for s, v in summaries.items() if not v["unfit"] and not s.startswith("rho")}
+-    cu = common_update(records, pre=pre)
+-    sigma = 0.001
+-    thr = {}
+-    for u in first:
+-        thr[u["unit"]] = thresholds(u["objective"], u["region"], J_hat=cu["final"].get((u["objective"], u["region"], row)),
+-                                    sigma_v=sigma)
+-    fin = {_key(k): v for k, v in cu["final"].items()}
+-    thr[f"rho|A0|{row}"] = thresholds("rho", "A0", J_hat=None, sigma_v=sigma, J_hat_V=fin.get(f"J_V|A0|{row}"),
+-                                      J_hat_D=fin.get(f"J_D|A0|{row}"))
+-    return {"banner": "합성 입력 (해석식 곡선 · REIL 자료 아님) · 건조 옵션 maxfev 50 · 합성 σ̂_v 0.001 — 경로 확인용이며 증거 · 비용 근거가 아니다",
+-            "gate_synthetic": gate, "options": {k: repr(v) for k, v in sorted(DRY_OPTIONS.items())}, "rows": rows,
+-            "summaries": summaries, "rho_denominators": den,
+-            "common_update": {"final": fin, "pre": {_key(k): v for k, v in cu["pre"].items()},
+-                              "combined_lower": cu["combined_lower"], "rho_hat": {str(k): v for k, v in cu["rho_hat"].items()}},
+-            "thresholds": thr, "util_copy_sha256": c5.UTIL_COPY_SHA}
+-
+-
++# ---------------------------------------------------------------- 건조 (계획 · seed · 봉인만 읽음 — C4 v2 §4-5 · 승인 경계 C4-0B1-A1)
+ def dryrun(out, *, venv, seal, manifest_sha256, arrays_dir, h_arrays_dir, h_manifest_sha256, util_copy, p0_result,
+            env_identity=None, n_workers=4) -> dict:
+-    """무자료 건조 — identity · util 사본 · Phase A 배열 (C6 결속) · 0b1 배열 (재생성 대조 · 77 단위) · P0 게이트 → PLAN.json ·
+-    합성 표본 → SYNTHETIC_SAMPLE.json. 자료 개봉 0 · 실제 셀 맞춤 0."""
++    """무자료 건조 = 계획 · seed · 봉인만 읽음 (C4 v2 §4-5 · 승인 경계 C4-0B1-A1) — identity · util 사본 (sha · AST · import 0) · Phase A 배열
++    (C6 결속) · 0b1 배열 (바이트 대조 · 생성기 0 · 77 단위) · P0 게이트 → PLAN.json 하나. 최적화 · 목적 호출 · util import · Sobol 생성 0 ·
++    자료 개봉 0. 합성 실행은 여기 넣지 않는다 (넣으려면 횟수 · 예산을 밝힌 별도 사전 승인)."""
+     import numpy as np
+     out = Path(out)
+     e3a._guard([out, seal, arrays_dir, h_arrays_dir, util_copy, p0_result])
+@@ -968,7 +981,7 @@ def dryrun(out, *, venv, seal, manifest_sha256, arrays_dir, h_arrays_dir, h_mani
+         raise HStop(f"util 사본 정적 검사 실패: {ust.get('bad')}")
+     arr = e3a.check_arrays(arrays_dir, seal=seal, manifest_sha256=manifest_sha256)
+     phase_a = load_phase_a_arrays(arrays_dir)
+-    hchk = check_h_arrays(h_arrays_dir, manifest_sha256=h_manifest_sha256, p0_result=p0_result)
++    hchk = check_h_arrays(h_arrays_dir, manifest_sha256=h_manifest_sha256, p0_result=p0_result, regenerate=False)
+     if not hchk["complete"]:
+         raise HStop(f"0b1 배열 봉인이 77 단위 전부가 아니다 ({hchk['units']})")
+     p0b = e3a._read(p0_result)
+@@ -995,8 +1008,10 @@ def dryrun(out, *, venv, seal, manifest_sha256, arrays_dir, h_arrays_dir, h_mani
+                          "p0_gate": ("H4 끝점 수용 아님 → 그 셀 H4 UNFIT · 실행하지 않음 (부속 A §4-3)" if u["unit"] in h4_gated else
+                                      "ρ: A0 의 J_V · J_D Phase A 뒤 분모 Ĵ⁽⁰⁾ (UNFIT · 비양수면 결합 UNFIT)" if u["objective"] == "rho" else None)})
+     plan = {
+-        "schema": "reil-c4-0b1-plan-v1",
+-        "scope": "C4-0b1 무자료 건조 (상태 §46) — Phase A 계획 · P0 게이트 · 봉인 대조. 자료 개봉 0 · 실제 셀 맞춤 0. 합성 표본은 SYNTHETIC_SAMPLE.json",
++        "schema": "reil-c4-0b1-plan-v2",
++        "scope": "무자료 건조 = 계획 · seed · 봉인만 읽음 (C4 v2 §4-5 · 승인 경계 C4-0B1-A1) — Phase A 계획 · P0 게이트 · 봉인 바이트 대조. "
++                 "자료 개봉 0 · 실제 셀 맞춤 0",
++        "execution": {"optimizer_calls": 0, "objective_calls": 0, "util_imported": False, "sobol_generated": 0},
+         "phase_a": {"registered_runs": len(t1) + len(t2), "wave1_runs": len(t1), "wave2_rho_runs": len(t2), "per_unit": 2 * PHASE_A_N,
+                     "n_units": len(us), "n_workers": n_workers, "options": {k: repr(v) for k, v in sorted(OPTIONS.items())},
+                     "task_rule": "단위 순서 = units() (셀마다 J_V A0 · A1 · A2 · J_D A0 · ρ A0 · J_Vs A0 · A1) · 1 파 = ρ 밖 66 단위 · 2 파 = ρ 11 단위 · "
+@@ -1011,16 +1026,14 @@ def dryrun(out, *, venv, seal, manifest_sha256, arrays_dir, h_arrays_dir, h_mani
+         "p0_result": str(p0_result), "p0_result_sha256": _sha(p0b),
+         "not_this_step": "C4-0b2 (Phase B · H4 대조 · ray · 표지) · C4-E / C4-A / C4-B (자료 실행) — 별도 확인 · 승인",
+     }
+-    sample = _synthetic_sample(util_copy, phase_a)
+     plan["elapsed_s"] = time.monotonic() - t0
+-    pb, sb = c5.dump(plan), c5.dump(sample)
++    pb = c5.dump(plan)
+     out.mkdir(exist_ok=False)
+     (out / "PLAN.json").write_bytes(pb)
+-    (out / "SYNTHETIC_SAMPLE.json").write_bytes(sb)
+-    if (out / "PLAN.json").read_bytes() != pb or (out / "SYNTHETIC_SAMPLE.json").read_bytes() != sb:
++    if (out / "PLAN.json").read_bytes() != pb:
+         raise HStop("다시 읽은 바이트가 쓴 것과 다르다")
+-    return {"ok": True, "out": str(out), "plan_sha256": _sha(pb), "sample_sha256": _sha(sb), "registered_runs": len(t1) + len(t2),
+-            "h4_endpoint_gated_units": len(h4_gated), "sample_rows": len(sample["rows"]), "identity_ok": True,
++    return {"ok": True, "out": str(out), "plan_sha256": _sha(pb), "registered_runs": len(t1) + len(t2),
++            "h4_endpoint_gated_units": len(h4_gated), "execution": plan["execution"], "identity_ok": True,
+             "elapsed_s": plan["elapsed_s"]}
+ 
+ 
+diff --git a/bms-balancing/tests/test_reil_c4_0b1.py b/bms-balancing/tests/test_reil_c4_0b1.py
+index c3b32f2..519f85f 100644
+--- a/bms-balancing/tests/test_reil_c4_0b1.py
++++ b/bms-balancing/tests/test_reil_c4_0b1.py
+@@ -338,12 +338,12 @@ def test_07_witness_reasons_are_the_registered_three():
+     assert h.witness(solver_error=False, value=0.1, residuals=good) == "valid"
+ 
+ 
+-def test_07_termination_is_converged_budget_or_solver_error():
++def test_07_termination_is_converged_budget_or_unclassified():
+     from scipy._lib.cobyqa.settings import ExitStatus
+     assert h.termination(SimpleNamespace(success=True, status=0)) == "converged"
+     assert h.termination(SimpleNamespace(success=False, status=ExitStatus.MAX_EVAL_WARNING.value)) == "budget"
+     assert h.termination(SimpleNamespace(success=False, status=ExitStatus.MAX_ITER_WARNING.value)) == "budget"
+-    assert h.termination(SimpleNamespace(success=False, status=ExitStatus.LINALG_ERROR.value)) == "solver_error"
++    assert h.termination(SimpleNamespace(success=False, status=ExitStatus.LINALG_ERROR.value)) == "unclassified"   # C4 v2 §5-4 (C4-0B1-N2)
+ 
+ 
+ def test_07_active_bounds_and_g_are_recorded():
+@@ -518,8 +518,8 @@ def test_09_common_update_refuses_a_final_above_the_pre_update_value():
+         h.common_update(rec, pre={("J_V", "A1", 0): 0.02})
+ 
+ 
+-# ======================================================================== (10) 건조 — 계획 9,856 · 게이트 · 합성 표본 (상태 §46)
+-def test_10_dryrun_writes_the_plan_and_a_synthetic_sample(tmp_path):
++# ======================================================================== (10) 건조 — 계획 9,856 · 게이트 · 읽기만 (상태 §46 · §48 승인 경계 A1)
++def test_10_dryrun_writes_only_the_plan(tmp_path):
+     harr = tmp_path / "h_arrays"
+     seal = h.seal_h_arrays(harr, p0_result=P0_RESULT)
+     fake_ident = lambda **kw: {"ok": True, "problems": [], "record": {}, "full_c6_check": "NOT_RUN"}
+@@ -531,10 +531,8 @@ def test_10_dryrun_writes_the_plan_and_a_synthetic_sample(tmp_path):
+     assert rec["ok"] and plan["phase_a"]["registered_runs"] == 9856
+     assert plan["phase_a"]["wave1_runs"] == 66 * 128 and plan["phase_a"]["wave2_rho_runs"] == 11 * 128
+     assert set(plan["gates"]["h4_endpoint"]) == {str(r) for r in range(11)}
+-    sample = json.loads((out / "SYNTHETIC_SAMPLE.json").read_text(encoding="utf-8"))
+-    assert sample["banner"].startswith("합성") and {r["objective"] for r in sample["rows"]} == {"J_V", "J_D", "rho", "J_Vs"}
+-    assert all(r["state"] == "COMPLETED" for r in sample["rows"])
+-    assert set(sample["summaries"]) and "common_update" in sample and "thresholds" in sample
++    assert not (out / "SYNTHETIC_SAMPLE.json").exists()                 # 승인 경계 C4-0B1-A1 — 건조는 계획 · seed · 봉인만 읽는다
++    assert plan["execution"] == {"optimizer_calls": 0, "objective_calls": 0, "util_imported": False, "sobol_generated": 0}
+     with pytest.raises(h.HStop):
+         h.dryrun(out, venv="/v", seal=NEW_SEAL, manifest_sha256=NEW_SEAL_MANIFEST, arrays_dir=PHASE_A_ARRAYS,
+                  h_arrays_dir=harr, h_manifest_sha256=seal["manifest_sha256"], util_copy=UTIL_COPY,

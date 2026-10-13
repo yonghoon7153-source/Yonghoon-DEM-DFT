@@ -1,0 +1,57 @@
+{
+ "approval": "상태 문서 §49 (사용자 '승인이야 / 권고대로 해') — C4-0b1 한정 보완 N1–N3 · A1 (바이트 대조 전환 포함 · GREEN 기존 51 포함 · 건조 재실행 없음)",
+ "auto_fix_or_retest": 0,
+ "compute_sum_s": 54.249,
+ "container_uptime_at_t0_s": 68.8,
+ "controls": {
+  "file": "tests/test_reil_c4_0b1_fix.py",
+  "fixed_copy": "docs/REIL_C4_0B1_FIX_CONTROLS_DRAFT_20261013.py.txt (바이트 동일)",
+  "sha256": "7133c550628c819c2eadca1d2e4e468ce9373d0907ccd9dc098a4c471f4e1297"
+ },
+ "end_record_utc": "2026-10-13T14:42:38Z",
+ "green": "66 passed (기존 51 + 새 15 · 20.02 s · -rP) · stderr 0 B",
+ "limits_s": {
+  "compute": 1260,
+  "green": 600,
+  "identity": 60,
+  "red": 600,
+  "work": 7200
+ },
+ "note": "이 기록은 커밋 · push · 문서 작성 전에 썼다 — 그 뒤 작업은 work_elapsed 에 들어 있지 않다",
+ "patch": "docs/REIL_C4_0B1_FIX_PATCH_DRAFT_20261013.diff (5d2b887c…) git apply · 결과 sha 둘 다 = 기대 (03_patch_applied.txt)",
+ "red": "10 failed · 5 passed (n1_d · n2_c ×2 · n3_b · n3_c) — 승인 요청 §4 선언과 같음. 실패 종류: n1_a (3, None) ≠ (3, 2) · n1_b partial 없음 (0 > 0) · n1_c (None ×4) · n2_a 'solver_error' ≠ 'unclassified' · n2_b DID NOT RAISE · n2_d global_stop None · n3_a NONFINITE ≠ REEVAL_ERROR · a1_a 건조가 qmc.Sobol 을 부름 · a1_b · a1_c TypeError (regenerate) — stderr 0 B",
+ "steps": {
+  "01_identity": {
+   "elapsed_s": 22.884,
+   "end_utc": "2026-10-13T14:41:14.129Z",
+   "head_end": "3f719cde013e955a198cacda67191d3b0a42bec1",
+   "head_start": "3f719cde013e955a198cacda67191d3b0a42bec1",
+   "rc": 0,
+   "start_utc": "2026-10-13T14:40:51.245Z",
+   "timed_out": false,
+   "timeout_s": 60.0
+  },
+  "02_red": {
+   "elapsed_s": 10.666,
+   "end_utc": "2026-10-13T14:41:33.544Z",
+   "head_end": "3f719cde013e955a198cacda67191d3b0a42bec1",
+   "head_start": "3f719cde013e955a198cacda67191d3b0a42bec1",
+   "rc": 1,
+   "start_utc": "2026-10-13T14:41:22.878Z",
+   "timed_out": false,
+   "timeout_s": 600.0
+  },
+  "03_green": {
+   "elapsed_s": 20.699,
+   "end_utc": "2026-10-13T14:42:19.572Z",
+   "head_end": "3f719cde013e955a198cacda67191d3b0a42bec1",
+   "head_start": "3f719cde013e955a198cacda67191d3b0a42bec1",
+   "rc": 0,
+   "start_utc": "2026-10-13T14:41:58.873Z",
+   "timed_out": false,
+   "timeout_s": 600.0
+  }
+ },
+ "t0_utc": "2026-10-13T14:40:29Z",
+ "work_elapsed_s_at_record": 129.1
+}

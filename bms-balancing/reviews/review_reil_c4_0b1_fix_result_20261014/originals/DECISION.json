@@ -1,0 +1,55 @@
+{
+  "kind": "REIL_C4_0B1_FIX_INDEPENDENT_REVIEW",
+  "date": "2026-10-14",
+  "reviewed_ref": "c6787db21c6608d3b5ad57fe7e39dfa865b5d6da",
+  "production_commit": "d02e15076955a89e5d7e11f65859f15136062f59",
+  "decision": "C4_0B1_IMPLEMENTATION_CLOSURE_HELD_N1_REMAINDER",
+  "items": {
+    "N1": "PARTIALLY_ACCEPTED_RETURN_FIELDS_LOST_ON_OPTION_WARNING",
+    "N2": "CLOSED",
+    "N3": "CLOSED",
+    "A1": "ACCEPTED_WITH_HISTORICAL_SCOPE_DEVIATION_PRESERVED",
+    "arrays": "PRIOR_ACCEPTANCE_MAINTAINED"
+  },
+  "findings": [
+    {
+      "id": "C4-0B1-N1-REMAINDER",
+      "priority": 2,
+      "file": "bms-balancing/scripts/reil_c4_h.py",
+      "lines": [
+        788,
+        791
+      ],
+      "title": "Already available optimizer return fields omitted before option-warning structural stop",
+      "test_gap": "test_n1_b only asserts counts/warnings/stop_error/task identity"
+    }
+  ],
+  "evidence": {
+    "captured_git_blobs": 39,
+    "production_commit_members_matched": 29,
+    "red_failed": 10,
+    "red_passed": 5,
+    "green_passed": 66,
+    "stage_seconds": 54.249,
+    "stage_limit_seconds": 1260,
+    "work_snapshot_seconds": 129.1,
+    "work_snapshot_boundary": "Before commit/push/documentation, not final whole-work observation",
+    "old_evidence_entries_unchanged": 36,
+    "array_trees_unchanged": 2
+  },
+  "received_code_execution": 0,
+  "raw_data_opened": 0,
+  "reviewer_retests": 0,
+  "approvals": {
+    "implementation": false,
+    "tests": false,
+    "dryrun": false,
+    "reseal_arrays": false,
+    "c4_0b2": false,
+    "c4_e": false,
+    "c4_a": false,
+    "c4_b": false,
+    "comsol": false
+  },
+  "external_delivery_performed": false
+}

@@ -1,0 +1,894 @@
+[
+  {
+    "ref": "7505bd0089ae6730fdf8e4eba326869f7c273715",
+    "path": "bms-balancing",
+    "entries": [
+      {
+        "name": ".gitattributes",
+        "path": "bms-balancing/.gitattributes",
+        "sha": "b524946778d990cfab2751d95d0c40638f406897",
+        "size": 21881,
+        "type": "file"
+      },
+      {
+        "name": ".gitignore",
+        "path": "bms-balancing/.gitignore",
+        "sha": "26a28903334ffcf0cec41156f5fcdfbff6bf6241",
+        "size": 1286,
+        "type": "file"
+      },
+      {
+        "name": "CODEX_REVIEW_REQUEST.md",
+        "path": "bms-balancing/CODEX_REVIEW_REQUEST.md",
+        "sha": "6bc5fecb5764596c9474ae01611cf6509fc5c599",
+        "size": 11357,
+        "type": "file"
+      },
+      {
+        "name": "FINDINGS.md",
+        "path": "bms-balancing/FINDINGS.md",
+        "sha": "c3392380248ba098091ce05252bb8af20d34abf3",
+        "size": 117558,
+        "type": "file"
+      },
+      {
+        "name": "FOR_BMS_TEAM.md",
+        "path": "bms-balancing/FOR_BMS_TEAM.md",
+        "sha": "f9222c7a260b79a396a0069ec05152556d4b2bf8",
+        "size": 25342,
+        "type": "file"
+      },
+      {
+        "name": "HANDOFF_TO_GATE.md",
+        "path": "bms-balancing/HANDOFF_TO_GATE.md",
+        "sha": "76f4e23e47e19f4c46066e550e9ebbc83cc30e3d",
+        "size": 22234,
+        "type": "file"
+      },
+      {
+        "name": "INTRO.md",
+        "path": "bms-balancing/INTRO.md",
+        "sha": "b8bba606b9ffbde3091dd21d5ed971c8fe83aace",
+        "size": 25651,
+        "type": "file"
+      },
+      {
+        "name": "MERGE_BRIEF_FOR_GATE.md",
+        "path": "bms-balancing/MERGE_BRIEF_FOR_GATE.md",
+        "sha": "959d4dc4ae85fafa6e68f750664365d3de462efc",
+        "size": 18074,
+        "type": "file"
+      },
+      {
+        "name": "README.md",
+        "path": "bms-balancing/README.md",
+        "sha": "839ac3b21152cb3e467bbeb920f45659b8a987d9",
+        "size": 12302,
+        "type": "file"
+      },
+      {
+        "name": "WORKING_STATE.md",
+        "path": "bms-balancing/WORKING_STATE.md",
+        "sha": "78f52675019f212b6f224f0c0c81a2e8f20cbbba",
+        "size": 119184,
+        "type": "file"
+      },
+      {
+        "name": "bms_balancing",
+        "path": "bms-balancing/bms_balancing",
+        "sha": "b339ea1862d783c43a6b3281f78033f6f4684a13",
+        "size": 0,
+        "type": "dir"
+      },
+      {
+        "name": "comsol_candidates",
+        "path": "bms-balancing/comsol_candidates",
+        "sha": "6461deed313d23a4db5ca06342998ad04e6636fb",
+        "size": 0,
+        "type": "dir"
+      },
+      {
+        "name": "datasets",
+        "path": "bms-balancing/datasets",
+        "sha": "dade10425ca64aa78bc37cbef0fbd5daef1f4835",
+        "size": 0,
+        "type": "dir"
+      },
+      {
+        "name": "docs",
+        "path": "bms-balancing/docs",
+        "sha": "e4c26f27e9e1cea7195a877c4074ac770fc56db9",
+        "size": 0,
+        "type": "dir"
+      },
+      {
+        "name": "evidence",
+        "path": "bms-balancing/evidence",
+        "sha": "5983ac37a19eeb777c38c352a18270614bece904",
+        "size": 0,
+        "type": "dir"
+      },
+      {
+        "name": "matlab",
+        "path": "bms-balancing/matlab",
+        "sha": "773243ec80145109d1f7609f11f3bb9dd80e9bef",
+        "size": 0,
+        "type": "dir"
+      },
+      {
+        "name": "out",
+        "path": "bms-balancing/out",
+        "sha": "fda718d65f5236d6a77031c42decd570aa3d029e",
+        "size": 0,
+        "type": "dir"
+      },
+      {
+        "name": "reil_c4_arrays_0b1_20261013",
+        "path": "bms-balancing/reil_c4_arrays_0b1_20261013",
+        "sha": "e0add8d9cba8e6c7edeb8cec2dd1e5875af1d1e0",
+        "size": 0,
+        "type": "dir"
+      },
+      {
+        "name": "reil_c4_arrays_20261013",
+        "path": "bms-balancing/reil_c4_arrays_20261013",
+        "sha": "e294f648eb6ce51207da3b2021292734556d4e1b",
+        "size": 0,
+        "type": "dir"
+      },
+      {
+        "name": "reil_c6_20261005",
+        "path": "bms-balancing/reil_c6_20261005",
+        "sha": "3ec46373da366265242e92df9c6e112e5ff100e0",
+        "size": 0,
+        "type": "dir"
+      },
+      {
+        "name": "reil_c6_rebuild_20261006",
+        "path": "bms-balancing/reil_c6_rebuild_20261006",
+        "sha": "b55f3a439e23bd41626d64bbb40b8221571f8690",
+        "size": 0,
+        "type": "dir"
+      },
+      {
+        "name": "reil_c6_rebuild_20261013",
+        "path": "bms-balancing/reil_c6_rebuild_20261013",
+        "sha": "f4384bb265ccd73ffc39cd4a43d7507014234bde",
+        "size": 0,
+        "type": "dir"
+      },
+      {
+        "name": "requirements.txt",
+        "path": "bms-balancing/requirements.txt",
+        "sha": "694c353ad281e7e5fb901178513bcf78cbf9494b",
+        "size": 974,
+        "type": "file"
+      },
+      {
+        "name": "reviews",
+        "path": "bms-balancing/reviews",
+        "sha": "69e36c84d8159413b5a2a5016ed2ce83ca8db592",
+        "size": 0,
+        "type": "dir"
+      },
+      {
+        "name": "scripts",
+        "path": "bms-balancing/scripts",
+        "sha": "95af8d35fa2f9f7cbf84932884e3bcb6fd3ff5ea",
+        "size": 0,
+        "type": "dir"
+      },
+      {
+        "name": "tests",
+        "path": "bms-balancing/tests",
+        "sha": "787fd690f1e5dec449a343dfcb3639881d8d8315",
+        "size": 0,
+        "type": "dir"
+      }
+    ]
+  },
+  {
+    "ref": "7505bd0089ae6730fdf8e4eba326869f7c273715",
+    "path": "bms-balancing/evidence/reil_c4_0b1_20261013",
+    "entries": [
+      {
+        "name": "00_identity_c4.py",
+        "path": "bms-balancing/evidence/reil_c4_0b1_20261013/00_identity_c4.py",
+        "sha": "d29186ee0914992c67a23e9915a68c2d81077f8b",
+        "size": 1506,
+        "type": "file"
+      },
+      {
+        "name": "00_porcelain_start.txt",
+        "path": "bms-balancing/evidence/reil_c4_0b1_20261013/00_porcelain_start.txt",
+        "sha": "4fc154ada8f1b2bd887f905da2b42070e812b554",
+        "size": 130,
+        "type": "file"
+      },
+      {
+        "name": "00_start.txt",
+        "path": "bms-balancing/evidence/reil_c4_0b1_20261013/00_start.txt",
+        "sha": "6dd11124cd0441fcae7b5acb455ac655788c832e",
+        "size": 266,
+        "type": "file"
+      },
+      {
+        "name": "00_step_runner.py",
+        "path": "bms-balancing/evidence/reil_c4_0b1_20261013/00_step_runner.py",
+        "sha": "1df21181c4b545a639ad469066ef9558c491f6d0",
+        "size": 3580,
+        "type": "file"
+      },
+      {
+        "name": "01_identity.json",
+        "path": "bms-balancing/evidence/reil_c4_0b1_20261013/01_identity.json",
+        "sha": "3df21137b342dfac889cd5ed04e3e03ec6c9067d",
+        "size": 1116,
+        "type": "file"
+      },
+      {
+        "name": "01_identity.meta.json",
+        "path": "bms-balancing/evidence/reil_c4_0b1_20261013/01_identity.meta.json",
+        "sha": "160949c293c9e5ba65a433ae5b07fe3700e22258",
+        "size": 1866,
+        "type": "file"
+      },
+      {
+        "name": "01_identity.porcelain_end.txt",
+        "path": "bms-balancing/evidence/reil_c4_0b1_20261013/01_identity.porcelain_end.txt",
+        "sha": "b352a9564a6f4eb18ccfb7a231aad424e4c79285",
+        "size": 484,
+        "type": "file"
+      },
+      {
+        "name": "01_identity.porcelain_start.txt",
+        "path": "bms-balancing/evidence/reil_c4_0b1_20261013/01_identity.porcelain_start.txt",
+        "sha": "5ab22ad30153de8a33306bd1eb72394012fe5ab8",
+        "size": 341,
+        "type": "file"
+      },
+      {
+        "name": "01_identity.stderr.log",
+        "path": "bms-balancing/evidence/reil_c4_0b1_20261013/01_identity.stderr.log",
+        "sha": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+        "size": 0,
+        "type": "file"
+      },
+      {
+        "name": "01_identity.stdout.log",
+        "path": "bms-balancing/evidence/reil_c4_0b1_20261013/01_identity.stdout.log",
+        "sha": "f937346f0986d1fbf954437c0afc2aa1908415f6",
+        "size": 29,
+        "type": "file"
+      },
+      {
+        "name": "02_red.meta.json",
+        "path": "bms-balancing/evidence/reil_c4_0b1_20261013/02_red.meta.json",
+        "sha": "5cc3b8157c994d7497851f4ac8b6bc3675166516",
+        "size": 1656,
+        "type": "file"
+      },
+      {
+        "name": "02_red.porcelain_end.txt",
+        "path": "bms-balancing/evidence/reil_c4_0b1_20261013/02_red.porcelain_end.txt",
+        "sha": "64564d13d73d1ba35db592dc2fb24eb58209515e",
+        "size": 776,
+        "type": "file"
+      },
+      {
+        "name": "02_red.porcelain_start.txt",
+        "path": "bms-balancing/evidence/reil_c4_0b1_20261013/02_red.porcelain_start.txt",
+        "sha": "1a690aeb769118c5f122e53cfea5a2ca97d70120",
+        "size": 702,
+        "type": "file"
+      },
+      {
+        "name": "02_red.source_sha256.txt",
+        "path": "bms-balancing/evidence/reil_c4_0b1_20261013/02_red.source_sha256.txt",
+        "sha": "1b20f21e2ef5a253b496a0d2628eeb69d766bb95",
+        "size": 630,
+        "type": "file"
+      },
+      {
+        "name": "02_red.stderr.log",
+        "path": "bms-balancing/evidence/reil_c4_0b1_20261013/02_red.stderr.log",
+        "sha": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+        "size": 0,
+        "type": "file"
+      },
+      {
+        "name": "02_red.stdout.log",
+        "path": "bms-balancing/evidence/reil_c4_0b1_20261013/02_red.stdout.log",
+        "sha": "70ae48681b44a1a9b4d79c44967fadaf79274cb9",
+        "size": 12577,
+        "type": "file"
+      },
+      {
+        "name": "03_green.meta.json",
+        "path": "bms-balancing/evidence/reil_c4_0b1_20261013/03_green.meta.json",
+        "sha": "b74e10ed42649d944a56445c66656bab2c041390",
+        "size": 1690,
+        "type": "file"
+      },
+      {
+        "name": "03_green.porcelain_end.txt",
+        "path": "bms-balancing/evidence/reil_c4_0b1_20261013/03_green.porcelain_end.txt",
+        "sha": "6791176b022137b7976da252c41b97f18d08e0e0",
+        "size": 1062,
+        "type": "file"
+      },
+      {
+        "name": "03_green.porcelain_start.txt",
+        "path": "bms-balancing/evidence/reil_c4_0b1_20261013/03_green.porcelain_start.txt",
+        "sha": "ebfc2611ca194e73a39e923ad6f9fa4953e923b9",
+        "size": 986,
+        "type": "file"
+      },
+      {
+        "name": "03_green.source_sha256.txt",
+        "path": "bms-balancing/evidence/reil_c4_0b1_20261013/03_green.source_sha256.txt",
+        "sha": "9a91602498de1aecc7ffd99b476be46a2848c27c",
+        "size": 630,
+        "type": "file"
+      },
+      {
+        "name": "03_green.stderr.log",
+        "path": "bms-balancing/evidence/reil_c4_0b1_20261013/03_green.stderr.log",
+        "sha": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+        "size": 0,
+        "type": "file"
+      },
+      {
+        "name": "03_green.stdout.log",
+        "path": "bms-balancing/evidence/reil_c4_0b1_20261013/03_green.stdout.log",
+        "sha": "a2da58b3061f88709ac6e55f398d962ae6365d2e",
+        "size": 1933,
+        "type": "file"
+      },
+      {
+        "name": "04_seal_arrays.meta.json",
+        "path": "bms-balancing/evidence/reil_c4_0b1_20261013/04_seal_arrays.meta.json",
+        "sha": "2f86055dd83a4611102bfe8d9265d79ae239b565",
+        "size": 1582,
+        "type": "file"
+      },
+      {
+        "name": "04_seal_arrays.porcelain_end.txt",
+        "path": "bms-balancing/evidence/reil_c4_0b1_20261013/04_seal_arrays.porcelain_end.txt",
+        "sha": "3d0f703a997fa1c36e3b99e940d36f34fa3511ed",
+        "size": 11701,
+        "type": "file"
+      },
+      {
+        "name": "04_seal_arrays.porcelain_start.txt",
+        "path": "bms-balancing/evidence/reil_c4_0b1_20261013/04_seal_arrays.porcelain_start.txt",
+        "sha": "a22df9a93d3d3d47424c46e4e9371e5c6d9b1628",
+        "size": 1202,
+        "type": "file"
+      },
+      {
+        "name": "04_seal_arrays.stderr.log",
+        "path": "bms-balancing/evidence/reil_c4_0b1_20261013/04_seal_arrays.stderr.log",
+        "sha": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+        "size": 0,
+        "type": "file"
+      },
+      {
+        "name": "04_seal_arrays.stdout.log",
+        "path": "bms-balancing/evidence/reil_c4_0b1_20261013/04_seal_arrays.stdout.log",
+        "sha": "2844e9947d4713f3adb8330c512ee2ca0614b3bd",
+        "size": 278,
+        "type": "file"
+      },
+      {
+        "name": "05_dryrun.meta.json",
+        "path": "bms-balancing/evidence/reil_c4_0b1_20261013/05_dryrun.meta.json",
+        "sha": "d68d83ca6db56c5905059d678d7df7be8f2d84f6",
+        "size": 2116,
+        "type": "file"
+      },
+      {
+        "name": "05_dryrun.porcelain_end.txt",
+        "path": "bms-balancing/evidence/reil_c4_0b1_20261013/05_dryrun.porcelain_end.txt",
+        "sha": "0e57d027bf0547f1a42c78601fe50c0d445fb9c4",
+        "size": 12076,
+        "type": "file"
+      },
+      {
+        "name": "05_dryrun.porcelain_start.txt",
+        "path": "bms-balancing/evidence/reil_c4_0b1_20261013/05_dryrun.porcelain_start.txt",
+        "sha": "d78259e02375021780359b13ca06180418bc536a",
+        "size": 11853,
+        "type": "file"
+      },
+      {
+        "name": "05_dryrun.stderr.log",
+        "path": "bms-balancing/evidence/reil_c4_0b1_20261013/05_dryrun.stderr.log",
+        "sha": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+        "size": 0,
+        "type": "file"
+      },
+      {
+        "name": "05_dryrun.stdout.log",
+        "path": "bms-balancing/evidence/reil_c4_0b1_20261013/05_dryrun.stdout.log",
+        "sha": "98712478425382cb8c14ea6918f08d94a23e0e7a",
+        "size": 360,
+        "type": "file"
+      },
+      {
+        "name": "05_dryrun",
+        "path": "bms-balancing/evidence/reil_c4_0b1_20261013/05_dryrun",
+        "sha": "77c05cea58bf4f3149e341025be1f510337b2705",
+        "size": 0,
+        "type": "dir"
+      },
+      {
+        "name": "06_end.json",
+        "path": "bms-balancing/evidence/reil_c4_0b1_20261013/06_end.json",
+        "sha": "9d71ebd1675d6de3a9bd58a4bd2d6aeb870cd1ff",
+        "size": 3502,
+        "type": "file"
+      },
+      {
+        "name": "06_porcelain_end.txt",
+        "path": "bms-balancing/evidence/reil_c4_0b1_20261013/06_porcelain_end.txt",
+        "sha": "93d8f68ddbe8bf064e34955134fd4283b19771fa",
+        "size": 12286,
+        "type": "file"
+      },
+      {
+        "name": "06_source_sha256_end.txt",
+        "path": "bms-balancing/evidence/reil_c4_0b1_20261013/06_source_sha256_end.txt",
+        "sha": "9a91602498de1aecc7ffd99b476be46a2848c27c",
+        "size": 630,
+        "type": "file"
+      }
+    ]
+  },
+  {
+    "ref": "c6787db21c6608d3b5ad57fe7e39dfa865b5d6da",
+    "path": "bms-balancing",
+    "entries": [
+      {
+        "name": ".gitattributes",
+        "path": "bms-balancing/.gitattributes",
+        "sha": "dcf84be001b95f12580dff24ea8416b2f7a400eb",
+        "size": 22267,
+        "type": "file"
+      },
+      {
+        "name": ".gitignore",
+        "path": "bms-balancing/.gitignore",
+        "sha": "26a28903334ffcf0cec41156f5fcdfbff6bf6241",
+        "size": 1286,
+        "type": "file"
+      },
+      {
+        "name": "CODEX_REVIEW_REQUEST.md",
+        "path": "bms-balancing/CODEX_REVIEW_REQUEST.md",
+        "sha": "6bc5fecb5764596c9474ae01611cf6509fc5c599",
+        "size": 11357,
+        "type": "file"
+      },
+      {
+        "name": "FINDINGS.md",
+        "path": "bms-balancing/FINDINGS.md",
+        "sha": "c3392380248ba098091ce05252bb8af20d34abf3",
+        "size": 117558,
+        "type": "file"
+      },
+      {
+        "name": "FOR_BMS_TEAM.md",
+        "path": "bms-balancing/FOR_BMS_TEAM.md",
+        "sha": "f9222c7a260b79a396a0069ec05152556d4b2bf8",
+        "size": 25342,
+        "type": "file"
+      },
+      {
+        "name": "HANDOFF_TO_GATE.md",
+        "path": "bms-balancing/HANDOFF_TO_GATE.md",
+        "sha": "76f4e23e47e19f4c46066e550e9ebbc83cc30e3d",
+        "size": 22234,
+        "type": "file"
+      },
+      {
+        "name": "INTRO.md",
+        "path": "bms-balancing/INTRO.md",
+        "sha": "b8bba606b9ffbde3091dd21d5ed971c8fe83aace",
+        "size": 25651,
+        "type": "file"
+      },
+      {
+        "name": "MERGE_BRIEF_FOR_GATE.md",
+        "path": "bms-balancing/MERGE_BRIEF_FOR_GATE.md",
+        "sha": "959d4dc4ae85fafa6e68f750664365d3de462efc",
+        "size": 18074,
+        "type": "file"
+      },
+      {
+        "name": "README.md",
+        "path": "bms-balancing/README.md",
+        "sha": "839ac3b21152cb3e467bbeb920f45659b8a987d9",
+        "size": 12302,
+        "type": "file"
+      },
+      {
+        "name": "WORKING_STATE.md",
+        "path": "bms-balancing/WORKING_STATE.md",
+        "sha": "78f52675019f212b6f224f0c0c81a2e8f20cbbba",
+        "size": 119184,
+        "type": "file"
+      },
+      {
+        "name": "bms_balancing",
+        "path": "bms-balancing/bms_balancing",
+        "sha": "b339ea1862d783c43a6b3281f78033f6f4684a13",
+        "size": 0,
+        "type": "dir"
+      },
+      {
+        "name": "comsol_candidates",
+        "path": "bms-balancing/comsol_candidates",
+        "sha": "6461deed313d23a4db5ca06342998ad04e6636fb",
+        "size": 0,
+        "type": "dir"
+      },
+      {
+        "name": "datasets",
+        "path": "bms-balancing/datasets",
+        "sha": "dade10425ca64aa78bc37cbef0fbd5daef1f4835",
+        "size": 0,
+        "type": "dir"
+      },
+      {
+        "name": "docs",
+        "path": "bms-balancing/docs",
+        "sha": "ba5d2f5ec123dbc1d6a0355a7b646ab3278442dd",
+        "size": 0,
+        "type": "dir"
+      },
+      {
+        "name": "evidence",
+        "path": "bms-balancing/evidence",
+        "sha": "54ec122adff33ce2bbd1f757b008de8a4f6c4ce0",
+        "size": 0,
+        "type": "dir"
+      },
+      {
+        "name": "matlab",
+        "path": "bms-balancing/matlab",
+        "sha": "773243ec80145109d1f7609f11f3bb9dd80e9bef",
+        "size": 0,
+        "type": "dir"
+      },
+      {
+        "name": "out",
+        "path": "bms-balancing/out",
+        "sha": "fda718d65f5236d6a77031c42decd570aa3d029e",
+        "size": 0,
+        "type": "dir"
+      },
+      {
+        "name": "reil_c4_arrays_0b1_20261013",
+        "path": "bms-balancing/reil_c4_arrays_0b1_20261013",
+        "sha": "e0add8d9cba8e6c7edeb8cec2dd1e5875af1d1e0",
+        "size": 0,
+        "type": "dir"
+      },
+      {
+        "name": "reil_c4_arrays_20261013",
+        "path": "bms-balancing/reil_c4_arrays_20261013",
+        "sha": "e294f648eb6ce51207da3b2021292734556d4e1b",
+        "size": 0,
+        "type": "dir"
+      },
+      {
+        "name": "reil_c6_20261005",
+        "path": "bms-balancing/reil_c6_20261005",
+        "sha": "3ec46373da366265242e92df9c6e112e5ff100e0",
+        "size": 0,
+        "type": "dir"
+      },
+      {
+        "name": "reil_c6_rebuild_20261006",
+        "path": "bms-balancing/reil_c6_rebuild_20261006",
+        "sha": "b55f3a439e23bd41626d64bbb40b8221571f8690",
+        "size": 0,
+        "type": "dir"
+      },
+      {
+        "name": "reil_c6_rebuild_20261013",
+        "path": "bms-balancing/reil_c6_rebuild_20261013",
+        "sha": "f4384bb265ccd73ffc39cd4a43d7507014234bde",
+        "size": 0,
+        "type": "dir"
+      },
+      {
+        "name": "requirements.txt",
+        "path": "bms-balancing/requirements.txt",
+        "sha": "694c353ad281e7e5fb901178513bcf78cbf9494b",
+        "size": 974,
+        "type": "file"
+      },
+      {
+        "name": "reviews",
+        "path": "bms-balancing/reviews",
+        "sha": "e659d104fe971c3a9523e718c53762e78503336a",
+        "size": 0,
+        "type": "dir"
+      },
+      {
+        "name": "scripts",
+        "path": "bms-balancing/scripts",
+        "sha": "5d38140ed55a9960e357198f08dd87b4a9a3aae1",
+        "size": 0,
+        "type": "dir"
+      },
+      {
+        "name": "tests",
+        "path": "bms-balancing/tests",
+        "sha": "beee46e855b89c4d22a3b057588d5b62bbbb9ddd",
+        "size": 0,
+        "type": "dir"
+      }
+    ]
+  },
+  {
+    "ref": "c6787db21c6608d3b5ad57fe7e39dfa865b5d6da",
+    "path": "bms-balancing/evidence/reil_c4_0b1_20261013",
+    "entries": [
+      {
+        "name": "00_identity_c4.py",
+        "path": "bms-balancing/evidence/reil_c4_0b1_20261013/00_identity_c4.py",
+        "sha": "d29186ee0914992c67a23e9915a68c2d81077f8b",
+        "size": 1506,
+        "type": "file"
+      },
+      {
+        "name": "00_porcelain_start.txt",
+        "path": "bms-balancing/evidence/reil_c4_0b1_20261013/00_porcelain_start.txt",
+        "sha": "4fc154ada8f1b2bd887f905da2b42070e812b554",
+        "size": 130,
+        "type": "file"
+      },
+      {
+        "name": "00_start.txt",
+        "path": "bms-balancing/evidence/reil_c4_0b1_20261013/00_start.txt",
+        "sha": "6dd11124cd0441fcae7b5acb455ac655788c832e",
+        "size": 266,
+        "type": "file"
+      },
+      {
+        "name": "00_step_runner.py",
+        "path": "bms-balancing/evidence/reil_c4_0b1_20261013/00_step_runner.py",
+        "sha": "1df21181c4b545a639ad469066ef9558c491f6d0",
+        "size": 3580,
+        "type": "file"
+      },
+      {
+        "name": "01_identity.json",
+        "path": "bms-balancing/evidence/reil_c4_0b1_20261013/01_identity.json",
+        "sha": "3df21137b342dfac889cd5ed04e3e03ec6c9067d",
+        "size": 1116,
+        "type": "file"
+      },
+      {
+        "name": "01_identity.meta.json",
+        "path": "bms-balancing/evidence/reil_c4_0b1_20261013/01_identity.meta.json",
+        "sha": "160949c293c9e5ba65a433ae5b07fe3700e22258",
+        "size": 1866,
+        "type": "file"
+      },
+      {
+        "name": "01_identity.porcelain_end.txt",
+        "path": "bms-balancing/evidence/reil_c4_0b1_20261013/01_identity.porcelain_end.txt",
+        "sha": "b352a9564a6f4eb18ccfb7a231aad424e4c79285",
+        "size": 484,
+        "type": "file"
+      },
+      {
+        "name": "01_identity.porcelain_start.txt",
+        "path": "bms-balancing/evidence/reil_c4_0b1_20261013/01_identity.porcelain_start.txt",
+        "sha": "5ab22ad30153de8a33306bd1eb72394012fe5ab8",
+        "size": 341,
+        "type": "file"
+      },
+      {
+        "name": "01_identity.stderr.log",
+        "path": "bms-balancing/evidence/reil_c4_0b1_20261013/01_identity.stderr.log",
+        "sha": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+        "size": 0,
+        "type": "file"
+      },
+      {
+        "name": "01_identity.stdout.log",
+        "path": "bms-balancing/evidence/reil_c4_0b1_20261013/01_identity.stdout.log",
+        "sha": "f937346f0986d1fbf954437c0afc2aa1908415f6",
+        "size": 29,
+        "type": "file"
+      },
+      {
+        "name": "02_red.meta.json",
+        "path": "bms-balancing/evidence/reil_c4_0b1_20261013/02_red.meta.json",
+        "sha": "5cc3b8157c994d7497851f4ac8b6bc3675166516",
+        "size": 1656,
+        "type": "file"
+      },
+      {
+        "name": "02_red.porcelain_end.txt",
+        "path": "bms-balancing/evidence/reil_c4_0b1_20261013/02_red.porcelain_end.txt",
+        "sha": "64564d13d73d1ba35db592dc2fb24eb58209515e",
+        "size": 776,
+        "type": "file"
+      },
+      {
+        "name": "02_red.porcelain_start.txt",
+        "path": "bms-balancing/evidence/reil_c4_0b1_20261013/02_red.porcelain_start.txt",
+        "sha": "1a690aeb769118c5f122e53cfea5a2ca97d70120",
+        "size": 702,
+        "type": "file"
+      },
+      {
+        "name": "02_red.source_sha256.txt",
+        "path": "bms-balancing/evidence/reil_c4_0b1_20261013/02_red.source_sha256.txt",
+        "sha": "1b20f21e2ef5a253b496a0d2628eeb69d766bb95",
+        "size": 630,
+        "type": "file"
+      },
+      {
+        "name": "02_red.stderr.log",
+        "path": "bms-balancing/evidence/reil_c4_0b1_20261013/02_red.stderr.log",
+        "sha": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+        "size": 0,
+        "type": "file"
+      },
+      {
+        "name": "02_red.stdout.log",
+        "path": "bms-balancing/evidence/reil_c4_0b1_20261013/02_red.stdout.log",
+        "sha": "70ae48681b44a1a9b4d79c44967fadaf79274cb9",
+        "size": 12577,
+        "type": "file"
+      },
+      {
+        "name": "03_green.meta.json",
+        "path": "bms-balancing/evidence/reil_c4_0b1_20261013/03_green.meta.json",
+        "sha": "b74e10ed42649d944a56445c66656bab2c041390",
+        "size": 1690,
+        "type": "file"
+      },
+      {
+        "name": "03_green.porcelain_end.txt",
+        "path": "bms-balancing/evidence/reil_c4_0b1_20261013/03_green.porcelain_end.txt",
+        "sha": "6791176b022137b7976da252c41b97f18d08e0e0",
+        "size": 1062,
+        "type": "file"
+      },
+      {
+        "name": "03_green.porcelain_start.txt",
+        "path": "bms-balancing/evidence/reil_c4_0b1_20261013/03_green.porcelain_start.txt",
+        "sha": "ebfc2611ca194e73a39e923ad6f9fa4953e923b9",
+        "size": 986,
+        "type": "file"
+      },
+      {
+        "name": "03_green.source_sha256.txt",
+        "path": "bms-balancing/evidence/reil_c4_0b1_20261013/03_green.source_sha256.txt",
+        "sha": "9a91602498de1aecc7ffd99b476be46a2848c27c",
+        "size": 630,
+        "type": "file"
+      },
+      {
+        "name": "03_green.stderr.log",
+        "path": "bms-balancing/evidence/reil_c4_0b1_20261013/03_green.stderr.log",
+        "sha": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+        "size": 0,
+        "type": "file"
+      },
+      {
+        "name": "03_green.stdout.log",
+        "path": "bms-balancing/evidence/reil_c4_0b1_20261013/03_green.stdout.log",
+        "sha": "a2da58b3061f88709ac6e55f398d962ae6365d2e",
+        "size": 1933,
+        "type": "file"
+      },
+      {
+        "name": "04_seal_arrays.meta.json",
+        "path": "bms-balancing/evidence/reil_c4_0b1_20261013/04_seal_arrays.meta.json",
+        "sha": "2f86055dd83a4611102bfe8d9265d79ae239b565",
+        "size": 1582,
+        "type": "file"
+      },
+      {
+        "name": "04_seal_arrays.porcelain_end.txt",
+        "path": "bms-balancing/evidence/reil_c4_0b1_20261013/04_seal_arrays.porcelain_end.txt",
+        "sha": "3d0f703a997fa1c36e3b99e940d36f34fa3511ed",
+        "size": 11701,
+        "type": "file"
+      },
+      {
+        "name": "04_seal_arrays.porcelain_start.txt",
+        "path": "bms-balancing/evidence/reil_c4_0b1_20261013/04_seal_arrays.porcelain_start.txt",
+        "sha": "a22df9a93d3d3d47424c46e4e9371e5c6d9b1628",
+        "size": 1202,
+        "type": "file"
+      },
+      {
+        "name": "04_seal_arrays.stderr.log",
+        "path": "bms-balancing/evidence/reil_c4_0b1_20261013/04_seal_arrays.stderr.log",
+        "sha": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+        "size": 0,
+        "type": "file"
+      },
+      {
+        "name": "04_seal_arrays.stdout.log",
+        "path": "bms-balancing/evidence/reil_c4_0b1_20261013/04_seal_arrays.stdout.log",
+        "sha": "2844e9947d4713f3adb8330c512ee2ca0614b3bd",
+        "size": 278,
+        "type": "file"
+      },
+      {
+        "name": "05_dryrun.meta.json",
+        "path": "bms-balancing/evidence/reil_c4_0b1_20261013/05_dryrun.meta.json",
+        "sha": "d68d83ca6db56c5905059d678d7df7be8f2d84f6",
+        "size": 2116,
+        "type": "file"
+      },
+      {
+        "name": "05_dryrun.porcelain_end.txt",
+        "path": "bms-balancing/evidence/reil_c4_0b1_20261013/05_dryrun.porcelain_end.txt",
+        "sha": "0e57d027bf0547f1a42c78601fe50c0d445fb9c4",
+        "size": 12076,
+        "type": "file"
+      },
+      {
+        "name": "05_dryrun.porcelain_start.txt",
+        "path": "bms-balancing/evidence/reil_c4_0b1_20261013/05_dryrun.porcelain_start.txt",
+        "sha": "d78259e02375021780359b13ca06180418bc536a",
+        "size": 11853,
+        "type": "file"
+      },
+      {
+        "name": "05_dryrun.stderr.log",
+        "path": "bms-balancing/evidence/reil_c4_0b1_20261013/05_dryrun.stderr.log",
+        "sha": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+        "size": 0,
+        "type": "file"
+      },
+      {
+        "name": "05_dryrun.stdout.log",
+        "path": "bms-balancing/evidence/reil_c4_0b1_20261013/05_dryrun.stdout.log",
+        "sha": "98712478425382cb8c14ea6918f08d94a23e0e7a",
+        "size": 360,
+        "type": "file"
+      },
+      {
+        "name": "05_dryrun",
+        "path": "bms-balancing/evidence/reil_c4_0b1_20261013/05_dryrun",
+        "sha": "77c05cea58bf4f3149e341025be1f510337b2705",
+        "size": 0,
+        "type": "dir"
+      },
+      {
+        "name": "06_end.json",
+        "path": "bms-balancing/evidence/reil_c4_0b1_20261013/06_end.json",
+        "sha": "9d71ebd1675d6de3a9bd58a4bd2d6aeb870cd1ff",
+        "size": 3502,
+        "type": "file"
+      },
+      {
+        "name": "06_porcelain_end.txt",
+        "path": "bms-balancing/evidence/reil_c4_0b1_20261013/06_porcelain_end.txt",
+        "sha": "93d8f68ddbe8bf064e34955134fd4283b19771fa",
+        "size": 12286,
+        "type": "file"
+      },
+      {
+        "name": "06_source_sha256_end.txt",
+        "path": "bms-balancing/evidence/reil_c4_0b1_20261013/06_source_sha256_end.txt",
+        "sha": "9a91602498de1aecc7ffd99b476be46a2848c27c",
+        "size": 630,
+        "type": "file"
+      }
+    ]
+  }
+]

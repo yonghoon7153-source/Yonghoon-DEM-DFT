@@ -1,0 +1,48 @@
+FFF.FF..FF..FFF                                                          [100%]
+=================================== FAILURES ===================================
+E   assert (3, None) == (3, 2)
+      
+      At index 1 diff: None != 2
+      Use -v to get more diff
+/home/user/Yonghoon-DEM-DFT/bms-balancing/tests/test_reil_c4_0b1_fix.py:108: assert (3, None) == (3, 2)
+E   AssertionError: assert (0 > 0)
+     +  where 0 = <built-in method get of dict object at 0x7f4ae2571e40>('n_eval', 0)
+     +    where <built-in method get of dict object at 0x7f4ae2571e40> = {}.get
+/home/user/Yonghoon-DEM-DFT/bms-balancing/tests/test_reil_c4_0b1_fix.py:121: AssertionError: assert (0 > 0)
+E   AssertionError: assert (None, None, None, None) == (2, 0, [0.9, ..., 'converged')
+      
+      At index 0 diff: None != 2
+      Use -v to get more diff
+/home/user/Yonghoon-DEM-DFT/bms-balancing/tests/test_reil_c4_0b1_fix.py:138: AssertionError: assert (None, None, None, None) == (2, 0, [0.9, ..., 'converged')
+E   AssertionError: assert 'solver_error' == 'unclassified'
+      
+      - unclassified
+      + solver_error
+/home/user/Yonghoon-DEM-DFT/bms-balancing/tests/test_reil_c4_0b1_fix.py:159: AssertionError: assert 'solver_error' == 'unclassified'
+E   Failed: DID NOT RAISE Structural
+/home/user/Yonghoon-DEM-DFT/bms-balancing/tests/test_reil_c4_0b1_fix.py:166: Failed: DID NOT RAISE Structural
+E   assert (None is not None)
+/home/user/Yonghoon-DEM-DFT/bms-balancing/tests/test_reil_c4_0b1_fix.py:189: assert (None is not None)
+E   AssertionError: assert ('invalid:NONFINITE' == 'invalid:REEVAL_ERROR'
+      
+      - invalid:REEVAL_ERROR
+      + invalid:NONFINITE)
+/home/user/Yonghoon-DEM-DFT/bms-balancing/tests/test_reil_c4_0b1_fix.py:201: AssertionError: assert ('invalid:NONFINITE' == 'invalid:REEVAL_ERROR'
+E   AssertionError: 건조 · 대조가 qmc.Sobol 을 불렀다
+/home/user/Yonghoon-DEM-DFT/bms-balancing/tests/test_reil_c4_0b1_fix.py:236: AssertionError: 건조 · 대조가 qmc.Sobol 을 불렀다
+E   TypeError: check_h_arrays() got an unexpected keyword argument 'regenerate'
+/home/user/Yonghoon-DEM-DFT/bms-balancing/tests/test_reil_c4_0b1_fix.py:280: TypeError: check_h_arrays() got an unexpected keyword argument 'regenerate'
+E   TypeError: check_h_arrays() got an unexpected keyword argument 'regenerate'
+/home/user/Yonghoon-DEM-DFT/bms-balancing/tests/test_reil_c4_0b1_fix.py:289: TypeError: check_h_arrays() got an unexpected keyword argument 'regenerate'
+=========================== short test summary info ============================
+FAILED tests/test_reil_c4_0b1_fix.py::test_n1_a_counts_and_the_stop_error_cross_the_worker_boundary
+FAILED tests/test_reil_c4_0b1_fix.py::test_n1_b_an_unknown_option_stop_keeps_counts_and_warnings
+FAILED tests/test_reil_c4_0b1_fix.py::test_n1_c_an_error_in_our_code_after_the_run_keeps_the_row_so_far
+FAILED tests/test_reil_c4_0b1_fix.py::test_n2_a_termination_is_converged_budget_or_unclassified
+FAILED tests/test_reil_c4_0b1_fix.py::test_n2_b_an_unclassified_return_stops_before_the_reeval
+FAILED tests/test_reil_c4_0b1_fix.py::test_n2_d_an_unclassified_return_is_a_global_stop_across_the_worker_boundary
+FAILED tests/test_reil_c4_0b1_fix.py::test_n3_a_a_local_reeval_exception_is_reeval_error_and_counted_apart
+FAILED tests/test_reil_c4_0b1_fix.py::test_a1_a_the_dryrun_only_reads - Asser...
+FAILED tests/test_reil_c4_0b1_fix.py::test_a1_b_byte_mode_refuses_an_array_changed_together_with_its_manifest_entry
+FAILED tests/test_reil_c4_0b1_fix.py::test_a1_c_byte_mode_accepts_an_untouched_seal_without_the_generator
+10 failed, 5 passed in 9.72s
