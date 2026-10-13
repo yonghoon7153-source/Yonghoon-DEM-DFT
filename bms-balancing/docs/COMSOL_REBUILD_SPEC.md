@@ -4567,3 +4567,25 @@ gate INCOMPLETE · 실효 정책 UNVERIFIED · native 미승인 · 게이트 리
 - **사용자 (2026-10-13):** "3번도 권고대로" → 초안 작성 승인 (문서 · 계산 0).
 - 초안은 검토 Codex 의 범위 검토를 거친다. 실행 승인 여부는 그 뒤 사용자가 정한다.
 - 이 절은 구현 · 설치본 관측 · P0 · COMSOL / native 실행 승인이 아니다. OPEN 4 · `native_ready=false` 는 그대로다.
+
+## 91. 다음 OPEN 해소 범위 — 제안 초안 (검토 발송 대기 · 2026-10-13 · 문서만 · 실행 0 · 네트워크 0)
+
+- **두 문서:**
+  - 검토 요청문 `docs/COMSOL_MICROSHORT_S1_OPEN_NEXT_SCOPE_PROPOSAL_20261013.md` (sha256 `a7e376074cd97195e63098ccd25a921e678538ba0c6e880eaba1934dadd3b5ef`).
+  - 실행 발송문 초안 v1 `docs/COMSOL_MICROSHORT_S1_OS_B_SEND_20261013.md` (sha256 `2181ddf1faca7b416eac709ebc7bc6f217f5c1522b7fa46089240b603a04c095` · §0 채택 문구 초안 · 승인 전에는 초안).
+- **네 OPEN 의 의존 (문서 근거):**
+  - 준비본 별도 허용 초안 A–E — A 는 `_003` 으로 수용 · 다음이 B.
+  - S0 범위안 §5 "이 항목 미정이면 native 승인 불가" (RAM/commit 감시 · 소유 Job 종료).
+  - C → mapping 봉인 → D (한 P0 runAll 안에서 ① ② ③ 관측).
+  - E 는 collector · mapping 고정과 inert 검증 수용 뒤.
+  - ③ provider 는 ① ② 없이 지나지 못한다 (`UnavailableInstalledProof`).
+- **제안:** 첫 항목은 ④ OS 자원 · 소유 · 중지를 B 단계부터 한다.
+  - B 의 범위: 공식 근거 대응 · 비활성 provider 후보 · 변경부 검증안 작성만 · 새 원점 3,600 초 · 새 폴더 1.
+  - 프로세스 · Job 생성과 OS API 호출 시험은 0 이다.
+  - 이유: COMSOL 없이 끝까지 닫히는 유일한 OPEN · native 승인 문턱 · 다른 OPEN 에 기대지 않음 · A–E 순서.
+  - REIL C4-N2 · N3 와 같은 표본기 결함 유형을 검증안 규칙에 넣었다.
+- **사용자 · 검토자가 고를 것:**
+  - 근거 문서: (a) 실행 PC 의 공식 URL 열람 또는 (b) 이 저장소가 사본 묶음을 받아 첨부 — 권장 (b). (b) 의 fetch 는 아직 하지 않았다.
+  - 검토 질문 Q1–Q7 (Q5: C 에도 §5 조건이 걸리는가 · Q6: D 가 곧 P0 인가 포함).
+- **다음:** 사용자가 검토 요청문 + 실행 발송문 초안을 검토 담당 Codex 에 보낸다 → 회신 반영 v2 → §0 채택 (사용자) → (b) 면 문서 묶음 작성 → 실행 담당 Codex 발송.
+  이 절은 B 착수 · 설치본 관측 · OS 시험 · COMSOL / native 실행의 승인이 아니다.
