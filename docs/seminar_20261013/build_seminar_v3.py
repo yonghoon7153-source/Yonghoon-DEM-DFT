@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
-"""연구세미나 덱 생성기 v3 "보는 판" (2026-10-13 · 1저자 지시 — 양식 = 10-13 연구세미나 덱 사본 · 그 덱 4 장의 문법).
+"""연구세미나 덱 생성기 v3.1 "보는 판" (2026-10-13 · 1저자 지시 — 양식 = 10-13 연구세미나 덱 사본 · 그 덱 4 장의 문법).
+v3.1 = Codex v3 재확인 (조건부 GO · SEMV3-01~10) 교체문: [9] = JES 168, 030538 · 낮은 점착 비교군 (0 아님) · 진단 범주 · Bo ↔ CED 구분 · 조건부 접착일 · 반올림 = 판독 JSON.
 
     python3 build_seminar.py --template <10-13 덱.pptx> --repo <리포> --figs <그림 폴더> --lit <문헌 크롭 폴더> --out <out.pptx>
     python3 build_seminar.py --selftest-only <deck.pptx> --repo <리포> --figs <그림 폴더>     # 검사만 (고치기 전 덱 = 실패해야 한다)
@@ -393,7 +394,24 @@ LIT_BRANCH = 'origin/claude/friendly-meitner-lldvar'
 LIT_FILES = ('bazzoun2026_dem_fem_rnm_ionic/fig_2.png',
              'luding2008_cohesive_frictional_contact_models/fig_1.png',
              'so2021_dem_fabrication_degradation_ductile_particles/fig_4.png')
-SO_CROP = (0.0, 0.0, 0.475, 1.0)     # So 2021 Fig. 4 → (a) 패널 (상대 밀도 vs 압력 · Sakuda 실험점) — 폭 · 높이 분율 (l, t, r, b)
+SO_CROP = (0.0, 0.0, 0.515, 1.0)     # So 2021 Fig. 4 → (a) 패널 전체 (500 MPa 눈금 포함 · 0.49 에서 그림 끝 · 0.53 부터 SEM) — 폭 · 높이 분율 (l, t, r, b)
+
+
+def _figmod():
+    """그림 스크립트 (make_seminar_figs.py) 를 불러 판독 JSON 값을 같은 함수로 쓴다 (notes 수치 = 그림 값)."""
+    import importlib.util
+    here = Path(__file__).resolve().parent
+    for cand in (here / 'figs_v3' / 'make_seminar_figs.py', here / 'figs' / 'make_seminar_figs.py'):
+        if cand.exists():
+            spec = importlib.util.spec_from_file_location('make_seminar_figs', cand)
+            mod = importlib.util.module_from_spec(spec)
+            spec.loader.exec_module(mod)
+            return mod
+    raise FileNotFoundError('make_seminar_figs.py next to the generator (figs_v3/ or figs/)')
+
+
+def _f3(v):
+    return f"{v:+.3f}".replace('-', '−')
 
 
 def fetch_lit(lit, repo):
@@ -421,6 +439,8 @@ def fetch_lit(lit, repo):
 def build(template, repo, figs, lit, out):
     repo = Path(repo); figs = Path(figs)
     lit = fetch_lit(lit or Path(out).resolve().parent / 'lit', repo)
+    fm = _figmod()
+    pm, dm, cl = fm.dev_planned_m(repo), fm.dev_delta_m(repo), fm.dev_cluster(repo)
     prs = Presentation(template)
     P = {k: prs.slides[i - 1] for k, i in dict(title=1, pic=4, two=11, summary=15, thanks=16, refs=17).items()}
     CONC_PROTO = copy.deepcopy(shape(P['summary'], 'Conclusion')._element)      # 글 상자 원형 (Calibri)
@@ -556,7 +576,7 @@ def build(template, repo, figs, lit, out):
 
     # ── 5 DEM limits + MPM (Luding 2008 crop + blank for the MPM 3D view) ─
     s, ft = body_slide('DEM → MPM', 'Fixed-shape DEM limits and the material point method (MPM)',
-                       [[('No shape change and no yield cap: ', None), ('overlap is the only plasticity proxy', R), ('; the softened SE modulus (1.35 vs ≈ 22 GPa) is an ', None), ('effective parameter, not a property', R), (' [1, 7].', None)],
+                       [[('Our fixed-shape implementation has no shape change and no yield cap: ', None), ('overlap is the only plasticity proxy', R), ('; the softened SE modulus (1.35 vs ≈ 22 GPa) is an ', None), ('effective parameter, not a property', R), (' [1, 7].', None)],
                         [('J2 plasticity on a background grid: ', None), ('shape change and void filling', R), (' that a fixed-shape sphere cannot represent; active material is kept rigid (DEM skeleton), only the electrolyte flows.', None)]],
                        src='Luding 2008, Fig. 1 [1] (left) · figure: presenter — MPM 3D view of the DEM-scaffold bed (right)')
     fh = FZ_BOTTOM - ft - 0.55
@@ -578,7 +598,7 @@ def build(template, repo, figs, lit, out):
     s, ft = body_slide('MPM', 'Effective material inputs and their status',
                        [[('Bulk modulus from DFT; ', None), ('shear softening and yield stress', R), (' from a pure-electrolyte calibration sweep.', None)],
                         [('Historical and current scaffold calculations use different electrolyte initializations and run configurations; ', None), ('they are not one validation series', R), ('.', None)]],
-                       src='This work (left) · So et al., J. Power Sources 508, 230344 (2021), Fig. 4a (right) [9]')
+                       src='This work (left) · So et al., J. Electrochem. Soc. 168, 030538 (2021), Fig. 4a (right) [9]')
     fh = FZ_BOTTOM - ft - 0.55
     rows = [('Input', 'Value and status'),
             ('LPSCl reference', 'E ≈ 22 GPa (our DFT E_VRH; literature DEM input 22.1 GPa [8])'),
@@ -590,12 +610,12 @@ def build(template, repo, figs, lit, out):
     note_line(s, (0.45, ft + fh + 0.04, 4.9, 0.5), 'Tested alternatives (volumetric cap, real E) did not remove the need for effective parameters.', color=BLUE)
     lit_tag(s, (5.55, ft, 3.9, 0.3), 'DEM vs SE density–pressure data [9]')
     pic = place_pic(s, lit / 'so2021_fig4a_crop.png', (5.55, ft + 0.36, 3.9, fh - 0.36 - 0.3), name='Lit So')
-    credit(s, (5.55, pic.top / 914400 + pic.height / 914400 + 0.03, 3.9, 0.26), 'Reproduced from So et al., J. Power Sources 508, 230344 (2021), Fig. 4a')
+    credit(s, (5.55, pic.top / 914400 + pic.height / 914400 + 0.03, 3.9, 0.26), 'Reproduced from So et al., J. Electrochem. Soc. 168, 030538 (2021), Fig. 4a')
     D[6] = 'CLAUDE.md 3D MPM (ν 0.49 · K 25.5 ≈ B0 26.23); DFT E_VRH 22.06; Bazzoun 2026 E_SE 22.1; CL-94 (10 % = calibration target, source unverified); DPC cross-check; ' \
            'scaffold status (notes) = fam_platen_prereg §11 · §12-6-2; literature crop = litdb figures so2021_dem_fabrication_degradation_ductile_particles/fig_4 (panel a)'
     notes(s, 'Sources: CLAUDE.md "3D MPM compaction — 3-fix calibration" (K = E/(3(1−2ν)) = 25.5 GPa vs DFT B0 26.23); our DFT E_VRH 22.06 GPa; Bazzoun 2026 [8] uses E_SE = 22.1 GPa for Li6PS5Cl; '
              'the sulfide-glass value 24 GPa (75Li2S·25P2S5, Sakuda 2013 [15]) is a different material system and is not used on the slide. '
-             'σy = 0.30 GPa was selected in the pure-SE calibration sweep (0.15 → 5.6 %, 0.20 → 6.7 %, 0.25 → 9.0 %, 0.30 → 10.0 %), inside the literature range. '
+             'σy = 0.30 GPa was selected in the pure-SE calibration sweep (0.15 → 5.6 %, 0.20 → 6.7 %, 0.25 → 9.0 %, 0.30 → 10.0 %). '
              'Claims ledger CL-94: the pure-SE 10 % value is a calibration target (lab standard sample, unpublished); it is not a literature anchor — our earlier literature attribution was withdrawn. '
              'Shear-only softening (ν = 0.49) keeps K = 25.5 GPa close to the DFT reference B0 = 26.23 GPa; softening the bulk modulus over-crushed the bed. '
              '"Tested alternatives" = DPC volumetric cap and real-E runs (docs/mpm_dpc_cap_crosscheck.md); the statement is limited to the tested models. '
@@ -604,7 +624,7 @@ def build(template, repo, figs, lit, out):
              'The current statuses refer to the registered servo runs (--protocol servo; primary endpoint = final thickness after servo convergence). '
              'AM load sharing remains a candidate explanation for over-compaction; the final hypothesis verdict is pending. '
              'The earlier thickness agreement is not shown: it comes from a different initialization and loading protocol and cannot serve as the validation value of the DEM-seeded runs (SEM-02). '
-             'Literature crop: So et al. 2021 calibrate a contact-plasticity parameter on the relative density vs pressure of a sulfide SE (their Fig. 4a, experimental points from Sakuda et al.) — a literature example of calibrating an effective contact parameter on pure-SE compaction data.')
+             'Literature crop: So et al., J. Electrochem. Soc. 168, 030538 (2021) [9], Fig. 4a — relative density vs pressure of a sulfide SE with their contact-plasticity parameter (experimental points from Sakuda et al.): a literature example of calibrating an effective contact parameter on pure-SE compaction data.')
 
     # ── 7 Transport: voxel mesh + additives (blank 3D current flow + VGCF chart) ─
     s, ft = body_slide('Transport', 'Voxelizing the compacted microstructure into a transport mesh',
@@ -613,14 +633,15 @@ def build(template, repo, figs, lit, out):
                        src='figure: presenter — 3D current-flow views, contact network and voxel (left) · this work, 104-arm study (right)')
     fh = FZ_BOTTOM - ft - 0.55
     place_pic(s, figs / 'F_vgcf.png', (5.3, ft, 4.15, fh), name='Fig VGCF')
-    note_line(s, (5.3, ft + fh + 0.04, 4.15, 0.5), ['σ(e⁻) vs VGCF wt%: campaign means (96 primary arms), three voxel sizes;', 'no contact resistance'])
+    note_line(s, (5.3, ft + fh + 0.04, 4.15, 0.5), ['Original Phase A campaign (VGCF E = 10 GPa): means of 96 primary arms,', 'three voxel sizes; no contact resistance'])
     D[7] = 'CLAUDE.md §5 two-solver table; CL-81 (ideal-interface / contact-free branch); CL-60 (centerline); phase_a_rep100 README (ORDER-ROBUST 72/72, replay 0.00000 %); report_20261021 G6 (figure F_vgcf redrawn); left half = presenter figure'
     notes(s, 'Sources: CLAUDE.md "σ 를 내는 솔버는 둘이다" table and CL-81. Finite-volume conservation on the phase grid gives electrical (σ, φ) and thermal (κ, T) transport on the same structure. '
              'The voxel solver has no interface-resistance term by default (the film mechanism exists but is off): this makes it an ideal-interface model and an upper bound only for the same geometry, phase properties and boundary conditions — not a physical upper bound; '
              'geometric necks still cost resistance inside the voxel grid. The 4.04× (contact-free / full network, n = 157) is a ratio inside the contact-network model. '
              'Additives: carbon fibres (VGCF) as diameter-preserving segments, PTFE as a centre-line insulator, a conductive polymer as true-diameter spheres. Pre-registered 104-arm study: the electronic-conductivity order across 1–4 wt% VGCF holds across the tested voxel sizes and grid-origin offsets (72/72) — '
              'docs/data/phase_a_rep100_20260930/README.md (104 arms, 72/72 adjacent-composition comparisons with no threshold violation; order only is the registered estimand; increments are technical report only; replay difference 0.00000 %); '
-             'docs/report_20261021 G6 (voxel σe means; contact resistance not included; figure F_vgcf redrawn from G6). Stamp conventions: CLAUDE.md SR-01 (sphere stamp, centerline PTFE = CL-60). '
+             'docs/report_20261021 G6 (voxel σe means; contact resistance not included; figure F_vgcf redrawn from G6). '
+             'The plotted means are the original campaign (VGCF E = 10 GPa, docs/data/phase_a_104arms_20260921); the 100 GPa replication (docs/data/phase_a_rep100_20260930) also keeps the order 72/72 with slightly different means, so the plotted values are not the 100 GPa means. Stamp conventions: CLAUDE.md SR-01 (sphere stamp, centerline PTFE = CL-60). '
              'Presenter figures (left, blank): (i) contact-network current pathways of the 7:3 bed — scripts/network_current.py dump <7:3 result folder> → webapp DEM 3D viewer "current flow" (same bed, same H0/FULL ionic solution, 1 V, colour = j = |I|/A; '
              '"top 50 % of current" = edges carrying the top half of the current share, not the top half by count); (ii) STEP3 phase grid and the 1 V current-density field of the same voxel solution (A cm⁻²; state origin, voxel size, phase mapping, electrode rule, run hash).')
 
@@ -631,8 +652,9 @@ def build(template, repo, figs, lit, out):
                        src='This work — voxel transport solver (a, b) · contact network, five NCM–SE beds (c)')
     fh = FZ_BOTTOM - ft - 0.55
     place_pic(s, figs / 'F_limits.png', (0.4, ft, 9.1, fh), name='Fig limits')
-    note_line(s, (0.45, ft + fh + 0.04, 9.0, 0.5), ['(a) same bed pair and convention; no converged conductivity ratio is reported · (b) log scale; conditions not yet matched ·',
-                                                    '(c) no carbon/binder; Hertz H0; common NCM reference 4.1 mS cm⁻¹ [16]; size factor off; one bed per composition'])
+    note_line(s, (0.45, ft + fh + 0.04, 9.0, 0.66), ['(a) Grid dependence: same bed pair and convention; no converged conductivity ratio is reported.',
+                                                     '(b) Voxel model vs DC polarization, log scale; conditions not yet matched.',
+                                                     '(c) NCM–SE beds: no carbon/binder; Hertz H0; common NCM reference 4.1 mS cm⁻¹ [16]; size factor off; one bed per composition.'])
     D[8] = 'CL-24 (live: 1.4215 → 1.1621 → 1.0849; 1.0742 → 0.9926 → 0.9908); CL-41 hold; CL-72 retracted; sdcp_sigma_e_dcp_anchor_registration_20261012 (54.0 · 70.6 ↔ 4.47 · 12.4); ps45_sigmae_factor_off_20261013 (0.391 · 0.406 · 0.402 · 0.375 · 0.467); Wang 2018 [16]'
     notes(s, 'Sources: claims ledger CL-24 (public values at vox 0.4/0.3/0.25); CL-41 (vox ≤ 0.15 values on hold — not shown); CL-72 ("lower bound" retracted). '
              'The three public points admit an exact power-law fit (three points, three parameters), so no statement about power laws or extrapolation is made from them (SEM-03); '
@@ -645,7 +667,7 @@ def build(template, repo, figs, lit, out):
     # ── 9 Limits 3 — load sharing (stacked bar + SE von Mises 3D) ──────
     s, ft = body_slide('Limits', 'Problem 3: Load sharing during compaction',
                        [[('NCM–NCM contacts contribute ', None), ('48–60 % of vertical stress', R), (' after relaxation at fixed platen position; ', None), ('7:3 is the minimum', R), ('.', None)],
-                        [('The porosity ranking agrees for the selected five compositions (exploratory comparison, n = 5).', None)]],
+                        [('The NCM–NCM stress-share ranking matches the ', None), ('experimental porosity summaries', R), (' for the selected five compositions (exploratory, n = 5).', None)]],
                        src='This work — DEM, five beds (left) · one 7:3 bed, four stages (right)')
     fh = FZ_BOTTOM - ft - 0.55
     place_pic(s, figs / 'F_load.png', (0.45, ft, 3.5, fh), name='Fig load share')
@@ -667,13 +689,13 @@ def build(template, repo, figs, lit, out):
     rows = [('Registered study', 'Status'),
             ('Historical eight-origin study', 'Conductivity estimates and inference remain on hold'),
             ('VGCF ordering study (104 arms)', 'Ordering holds across tested grids and offsets (72/72)'),
-            ('Absolute-conductivity comparison [12]', 'R = 2.07 (Tier 1); Q = 0.84'),
+            ('Absolute-conductivity comparison [12]', 'R = 2.07 (order-of-magnitude agreement); Q = 0.84'),
             ('194-bed dataset v1.2', 'Released for conditional use as model descriptors'),
             ('Updated transport software', 'Seven reviews completed; production remains pending')]
     add_table(s, (0.45, ft, 4.6, 2.85), rows, (2.05, 2.55), size=11, name='Table studies', row_h=(0.34, 0.5, 0.5, 0.5, 0.5, 0.5))
     note_line(s, (0.45, ft + fh + 0.04, 4.6, 0.6), ['R: model / literature conductivity. Q: conductivity retained after PTFE treatment', '(registered model-sensitivity prediction).'])
     place_pic(s, figs / 'F_dataset.png', (5.15, ft, 4.35, fh), name='Fig dataset')
-    note_line(s, (5.15, ft + fh + 0.04, 4.35, 0.6), ['(a) geometric tortuosity, 130 + 64 beds; ×: 24 non-percolating beds in the 130-bed set;', 'not transport tortuosity · (b) porosity, 130-bed set'])
+    note_line(s, (5.15, ft + fh + 0.04, 4.35, 0.6), ['(a) geometric tortuosity, 130 + 64 beds; ×: 24 non-percolating beds in the', '130-bed set (display position only); not transport tortuosity · (b) porosity, 130-bed set'])
     D[10] = 'sdcp_gain_prereg_v2 (inference on hold: CL-33/34/41); phase_a_rep100 README; lee_abs_sigma_e_prereg §5 (R 2.074, Q 0.840); release v1.2 README + CSV (figure F_dataset redrawn: tortuosity_SE_wall, porosity_union_exact_pct vs se_of_solid_vol); codex gen-2 reverify 7'
     notes(s, 'Sources: docs/reviews/sdcp_gain_prereg_v2_20260816.md — the eight-origin (voxel 0.15 µm) study: numerical ratios and the h1 inference are on hold in the claims ledger (CL-33/34/41), so no result is reported; '
              'docs/data/phase_a_rep100_20260930/README.md (104 arms; 72/72; replay 0.00000 %); docs/reviews/lee_abs_sigma_e_prereg_20260923.md §5 (R = 2.074 ± 0.004, Tier 1 "order-of-magnitude", not "within band"; '
@@ -683,18 +705,19 @@ def build(template, repo, figs, lit, out):
              'Loading is not a free design axis (derived from thickness and composition). The collaborator porosity model (OOF R² 0.99) and our five-knob fit (0.98) use unverified and different CV protocols; no comparison is claimed.')
 
     # ── 11 Mixing 1 — layered campaign ─────────────────────────────────
-    s, ft = body_slide('Mixing', 'Drum mixing of a layered NCM–SE bed: no segregation detected',
-                       [[('Rotating-drum DEM with a cohesive soft-contact model: ', None), ('ten runs from a layered initial state, eight revolutions', R), ('; Lacey index M on a 16×16×4 bin grid vs a random reference.', None)],
-                        [('No NCM–NCM cohesion vs reference cohesion: ΔM within seed-to-seed scatter = the ', None), ('registered "no segregation" category', R), (' (not "no effect"), direction and size unresolved.', None)]],
+    s, ft = body_slide('Mixing', 'Layered-bed mixing: unresolved mixing-index contrast',
+                       [[('Rotating-drum DEM, cohesive soft contacts: ', None), ('ten runs from a layered start, eight revolutions', R), ('; Lacey index M on 16×16×4 bins vs a random reference.', None)],
+                        [('Low NCM–NCM cohesion versus the reference setting gives an ', None), ('unresolved paired contrast', R), (' at 16×16×4 bins (ΔM = 0.0012, seed SE = 0.0073). Subsequent diagnostic classification; ', None), ('the original 1% overlap condition was not met', R), ('.', None)]],
                        src='This work (left) · figure: presenter — bed view, layered start and after eight revolutions (right)')
     fh = FZ_BOTTOM - ft - 0.6
     place_pic(s, figs / 'F_mix1.png', (0.45, ft, 4.75, fh), name='Fig mixing index')
-    note_line(s, (0.45, ft + fh + 0.04, 4.75, 0.6), ['M = 1: fully mixed; error bars = within-run SD; all ten runs reach M ≈ 0.96–1.00, so this bin grid cannot separate the arms;',
-                                                     'the registered 1 % overlap condition of the contact model was not met (diagnostic)'])
+    note_line(s, (0.45, ft + fh + 0.04, 4.75, 0.6), ['M = 1: random-reference variance; error bars = within-run SD; all ten runs reach M ≈ 0.96–1.00,',
+                                                     'so this bin grid cannot separate the settings'])
     D[11] = 'mixer_layered_prereg_20260921 §2 · §5 · §6 (registered no-segregation category: Δ +0.0012, SE 0.0073 at 16×16×4; negative control, floor and flatness checks passed); report_20261021 G7 = mixer_final10_20260930 (figure F_mix1 redrawn)'
     notes(s, 'Sources: docs/reviews/mixer_layered_prereg_20260921.md §2 (verdict line), §5 (report wording), §6 (readout 2026-09-30); docs/data/mixer_final10_20260930/ (ten runs; figure F_mix1 redrawn from the registered final values, report_20261021 G7). '
-             'Registered estimand: paired contrast of the final Lacey index between the arm without NCM–NCM cohesion and the reference-cohesion arm, three seeds, 16×16×4 bins: Δ = +0.0012, seed-to-seed SE 0.0073 ⇒ |Δ| ≤ SE ⇒ registered "no segregation" category '
-             '("direction and size not resolved" — in this model, this drum, the tested inputs and this bin convention; not "no effect", not "equivalent"). Coarser grids (report only): 12×12×3 Δ −0.0156, SE 0.0058 (ambiguous); 8×8×2 Δ +0.0081, SE 0.0144. '
+             'Registered estimand: paired contrast of the final Lacey index between the low NCM–NCM cohesion setting (small but nonzero: CED 108,795 and 142,562 J m⁻³ for the large and small NCM self-pairs; model Bond number 0.00109 and 0.00553) '
+             'and the reference setting (model Bond number 3.0), three seeds, 16×16×4 bins: Δ = +0.0012, seed-to-seed SE 0.0073 ⇒ |Δ| ≤ SE. The numerical rule maps this contrast to the registered "no segregation" category. '
+             'This does not establish compliance with the original registration, equivalence, or a physical absence of segregation (this model, this drum, the tested inputs and this bin convention). Coarser grids (report only): 12×12×3 Δ −0.0156, SE 0.0058 (ambiguous); 8×8×2 Δ +0.0081, SE 0.0144. '
              'Negative control (no cohesion): M ≥ 0.8 in all three grids; floor check 10/10; flatness 30/30; QC 30/30. '
              'The two cohesion matrices differ in NCM–NCM and NCM–wall adhesion together; the comparison is not a reproduction of real coating or of powder flowability. '
              'Contract qualifier (Codex wording, 2026-09-28): the result is a comparison of mixing indices after eight revolutions in the specified soft-contact model; in the reference state the maximum stored-frame overlap was 4.7–5.8 % particle–particle and 4.5–5.7 % at the wall, '
@@ -702,38 +725,54 @@ def build(template, repo, figs, lit, out):
              'Presenter figure (right, blank): bed view of one run, layered start and after eight revolutions (webapp bed view; display only).')
 
     # ── 12 Mixing 2 — cohesion exploration ─────────────────────────────
-    s, ft = body_slide('Mixing', 'Cohesion exploration: stronger cohesion lowers mixing',
-                       [[('Exploratory single-seed runs, two revolutions: NCM–NCM cohesion raised ', None), ('10× and 30×', R), (', or all contact pairs raised ', None), ('10× and 14×', R), (', vs the run without NCM–NCM cohesion.', None)],
-                        [('ΔM grows with the Bond number in every bin grid, but each arm is ', None), ('one seed chosen after earlier runs', R), (', and wall adhesion changes with the pair — ', None), ('no verdict', R), (' is drawn.', None)]],
-                       src='This work (left) · figure: presenter — bed snapshots, non-cohesive vs cohesive NCM, two revolutions (right)')
+    s, ft = body_slide('Mixing', 'Exploratory cohesion settings produce different mixing indices',
+                       [[('One seed, two revolutions: large-NCM self-pair ', None), ('model Bond number 38.4, 384, 1152', R), (', or all nonzero cohesion-energy densities ', None), ('×10 and ×14.42', R), (' (vs the low-cohesion comparator).', None)],
+                        [('Within each series ΔM rises with the imposed level; levels were chosen ', None), ('post hoc', R), (', and wall adhesion and start states also differ — ', None), ('no verdict', R), ('.', None)]],
+                       src='This work (left) · figure: presenter — low versus higher NCM cohesion, two revolutions (right)')
     fh = FZ_BOTTOM - ft - 0.6
     place_pic(s, figs / 'F_mix2.png', (0.45, ft, 4.75, fh), name='Fig cohesion exploration')
-    note_line(s, (0.45, ft + fh + 0.04, 4.75, 0.6), ['hatched: bin grid failed the volume-coverage check; ΔM mixes the start-state difference', 'with the post-rotation difference; M < 0 is outside the Lacey range'])
-    D[12] = 'mixer_highbo_devrot_prelim_20261002 (reference contrast +0.010 / −0.006 / +0.008); mixer_highbo_devbo_prelim_20261003 (×10: +0.83 / +0.93 / +0.99; ×30: +1.88 / +2.43 / +3.16); mixer_highbo_devu_prelim_20261006 (uniform ×10: +0.24 / +0.17 / +0.10; ×14: +0.87 (QC) / +0.48 / +0.27) — figure F_mix2'
-    notes(s, 'Sources: docs/data/mixer_highbo_devrot_prelim_20261002/README.md, mixer_highbo_devbo_prelim_20261003/README.md, mixer_highbo_devu_prelim_20261006/README.md (development data; one seed; two revolutions; no pass/fail line; not used for any verdict; not mixed with the confirmatory seeds). '
-             'ΔM = M(arm without NCM–NCM cohesion) − M(arm), bins 16×16×4 · 12×12×3 · 8×8×2: reference cohesion +0.010 / −0.006 / +0.008; NCM–NCM cohesion ×10 +0.83 / +0.93 / +0.99; ×30 +1.88 / +2.43 / +3.16; '
-             'all pairs ×10 +0.24 / +0.17 / +0.10; all pairs ×14 +0.87 (16×16×4 failed the volume-coverage check) / +0.48 / +0.27. The 16×16×4 cells of the ×10 and ×30 NCM runs also failed that check. '
-             'Negative M values of the strongly cohesive arms lie outside the Lacey range [0, 1] (their start-state variance is smaller); ΔM therefore mixes a start-state difference with the post-rotation difference. '
-             'The ×10 / ×30 levels were chosen after seeing the first exploratory contrast (post-hoc); NCM–NCM and NCM–wall adhesion change together (joint intervention); the uniform runs scale all nine cohesion matrix elements and include SE stiffening. '
-             'No sentence about "real coating effect" or "real powder" is made. Presenter figure (right, blank): bed snapshots of the arm without NCM–NCM cohesion vs a cohesive arm after two revolutions (webapp bed view).')
+    note_line(s, (0.45, ft + fh + 0.04, 4.75, 0.6), ['ΔM = M(low-cohesion comparator) − M(setting); hatched: bin grid failed the volume-coverage check;', 'ΔM includes start-state differences; M < 0 lies outside the Lacey range'])
+    rows12 = ' · '.join(f"{lab} {' / '.join(_f3(v) for v in dm[k])}" for k, lab in
+                        (('Bo38.4', 'NCM-pair Bo 38.4'), ('Bo384', 'Bo 384'), ('Bo1152', 'Bo 1152'), ('CED10', 'all-pair CED ×10'), ('CED14', 'CED ×14.42')))
+    m1152 = ' / '.join(_f3(v) for v in pm['Bo1152'])
+    D[12] = ('mixer_highbo_{devrot,devbo,devu}_prelim readout JSONs (planned.M_final) — ΔM = M(low-cohesion comparator) − M(setting): ' + rows12 +
+             '; series = large-NCM self-pair model Bond number 38.4 / 384 / 1152 and all-pair CED ×10 / ×14.42 (figure F_mix2)')
+    notes(s, 'Sources: docs/data/mixer_highbo_devrot_prelim_20261002/, mixer_highbo_devbo_prelim_20261003/, mixer_highbo_devu_prelim_20261006/ (README and readout JSONs; development data; one seed per arm; two revolutions; '
+             'no pass/fail line; not used for any verdict; not mixed with the confirmatory seeds). Two series, defined separately: (i) the model Bond number of the large-NCM self-pair (code convention: '
+             'equilibrium cohesive force / particle weight) 38.4 → 384 → 1152 — the large-NCM cohesion energy density rises only 3.56348e6 → 7.67728e6 → 1.10725e7 J m⁻³ (×2.154, ×3.107); '
+             '(ii) all nine nonzero cohesion-energy-density entries of the low-cohesion comparator multiplied by 10 and 14.42. '
+             'ΔM = M(low-cohesion comparator) − M(setting), bins 16×16×4 / 12×12×3 / 8×8×2: ' + rows12 + '. '
+             'The 16×16×4 cells of NCM-pair Bo 384 and 1152 and of all-pair CED ×14.42 failed the volume-coverage check. '
+             'M of the NCM-pair Bo 1152 setting is ' + m1152 + ' (outside the Lacey range [0, 1]); start-state variances differ between settings, so ΔM mixes a start-state difference with the post-rotation difference. '
+             'Cohesion levels were selected after earlier runs (post hoc); every setting uses the same development seed. NCM–NCM and NCM–wall adhesion change together. '
+             'All exploratory decks share the stiffened SE modulus (2e8 Pa); compare with the original soft campaign only with that generation noted. '
+             'The low-cohesion comparator is small but nonzero (CED 108,795 and 142,562 J m⁻³ for the large and small NCM self-pairs). '
+             'No sentence about real coating effects or real powders is made. Presenter figure (right, blank): bed snapshots of the low-cohesion comparator vs a higher-cohesion setting after two revolutions (webapp bed view).')
 
     # ── 13 Mixing 3 — surface energy and SE–SE adhesion ────────────────
     s, ft = body_slide('Mixing', 'Surface energy and coating: SE–SE adhesion is the open term',
-                       [[('Two NCM–SE contacts → NCM–NCM + SE–SE frees ', None), ('ΔW = 2(√γ_A − √γ_S)² ≥ 0', R), ('; the small SE phase keeps like–like contacts best, so uncoated beds can retain SE–SE clusters.', None)],
-                        [('Uniformly cohesive runs keep most SE in SE–SE clusters after two revolutions, unlike the run without NCM–NCM cohesion; the ', None), ('confirmatory 18-run block stays on hold', R), ('.', None)]],
-                       src='This work — exploratory runs (left) · ratified thesis argument (right)')
+                       [[('With equal contact areas and an ', None), ('assumed geometric-mean adhesion rule', R), (', ΔW = 2(√γ_A − √γ_S)² ≥ 0 is an adhesive-work difference per unit area; SE–SE cluster survival also depends on relative surface energies and contact dynamics.', None)],
+                        [('Exploratory all-pair CED scaling retains a larger SE–SE cluster fraction than the low-cohesion comparator; the ', None), ('confirmatory 18-run block remains on hold', R), ('.', None)]],
+                       src='This work: exploratory contact statistics (left), conditional adhesion model (right)')
     fh = FZ_BOTTOM - ft - 0.55
-    place_pic(s, figs / 'F_mix3.png', (0.45, ft, 3.45, fh), name='Fig SE clusters')
-    place_pic(s, figs / 'F_mix3_scheme.png', (4.15, ft, 5.3, fh), name='Fig adhesion scheme')
-    note_line(s, (0.45, ft + fh + 0.04, 9.0, 0.5), ['Left: one seed, averaged over the second revolution; whiskers = dump-resolution range. Right: work-of-adhesion argument (γ = surface energy,',
-                                                    'W = work of adhesion, R* = reduced radius, ρ = density of the smaller particle); the uncoated NCM / SE surface-energy ratio is not known.'])
-    D[13] = 'hetero_thesis.md §2 (ΔW = 2(√γ_A − √γ_S)²; SE–SE ≈ 194× AM_P–AM_P at equal γ, arithmetic estimate; γ_A/γ_S < 0.31 unknown); mixer_highbo_devu_prelim_20261006 §3 (SE–SE cluster fraction 0.401 [0.143, 0.542] · 0.954 [0.875, 0.957] · 0.988 [0.981, 0.988]); confirmatory block HOLD (Codex rounds 7–10)'
-    notes(s, 'Sources: docs/hetero_thesis.md (ratified 2026-10-05) §2-1 · §2-2 · §2-8: W_ij ≈ 2√(γ_i γ_j); ΔW = W_AA + W_SS − 2 W_AS = 2(√γ_A − √γ_S)² ≥ 0; pair Bond number ∝ W·R*/(ρ g R³) of the smaller particle — '
-             'at equal surface energy the SE–SE pair Bond number is about 194× that of the large-NCM pair and SE→NCM adhesion is 1.8× SE–SE (arithmetic estimates); for SE–SE clusters to survive in an uncoated bed the ratio γ_NCM/γ_SE would have to be below about 0.31 — that ratio is not known (open decision). '
-             'Predictions P1–P3 of the thesis: uncoated beds keep SE–SE clustering above random; coating removes it; the mixing difference carries into the compacted SE pathway. The present cohesion model does not yet contain that mechanism (NCM–NCM cohesion was varied, not SE–SE). '
-             'Left figure: docs/data/mixer_highbo_devu_prelim_20261006/README.md §3 — fraction of SE in SE–SE clusters (bin 1, after two revolutions): 0.401 [0.143, 0.542] without NCM–NCM cohesion; 0.954 [0.875, 0.957] all pairs ×10; 0.988 [0.981, 0.988] all pairs ×14 '
-             '(ranges = dump-resolution [certain, possible]; difference only where ranges do not overlap; one seed; development data). '
-             'Confirmatory 18-run block: registered, on hold after the Codex rounds (docs/reviews/mixer_highbo_prereg_20260927.md); no "real coating effect" sentence.')
+    place_pic(s, figs / 'F_mix3.png', (0.45, ft, 3.95, fh), name='Fig SE clusters')
+    place_pic(s, figs / 'F_mix3_scheme.png', (4.55, ft, 4.9, fh), name='Fig adhesion scheme')
+    note_line(s, (0.45, ft + fh + 0.04, 9.0, 0.5), ['Left: one seed, mean over the second revolution; whiskers = dump-resolution range, not a confidence interval.',
+                                                    'Right: γ = surface energy, W = work of adhesion; the uncoated NCM / SE surface-energy ratio is not known.'])
+    c3 = {k: f"{v[0]:.3f} [{v[1]:.3f}, {v[2]:.3f}]" for k, v in cl.items()}
+    D[13] = ('hetero_thesis.md §2 (ΔW = 2(√γ_A − √γ_S)² under an assumed geometric-mean rule at equal contact areas; γ_NCM/γ_SE < 0.309 / 0.391 = two-contact pull-off comparison); '
+             'devu_contact.json bin 1 (SE–SE cluster fraction ' + c3['low'] + ' · ' + c3['CED10'] + ' · ' + c3['CED14'] + '); confirmatory block HOLD')
+    notes(s, 'Sources: docs/hetero_thesis.md (ratified 2026-10-05) §2-1 · §2-2 · §2-8. With W_AA = 2γ_A, W_SS = 2γ_S and an assumed geometric-mean rule W_AS = 2√(γ_A γ_S), '
+             'ΔW = W_AA + W_SS − 2 W_AS = 2(√γ_A − √γ_S)² ≥ 0 (J m⁻²) is a per-area comparison at equal contact areas (ΔU = −A·ΔW for a common area A); real exchanges also change contact areas, '
+             'deformation energy and dynamics, so contact counts alone do not fix the sign of the released energy. '
+             'Pull-off force (JKR) scales with W·R*: at equal W the weight-normalized SE–SE adhesion is about 194× that of the large-NCM self-pair (arithmetic estimate), but for one SE particle the '
+             'SE–NCM pull-off exceeds SE–SE by 2r_NCM/(r_NCM + r_SE) = 1.8 (large NCM) and 1.6 (small NCM). Under the geometric-mean rule the SE–SE pull-off exceeds the SE–large-NCM pull-off only if '
+             'γ_NCM/γ_SE < 0.309 (small NCM: 0.391) — a two-contact force comparison, not a necessary or sufficient condition for cluster survival; that ratio is not known (open decision). '
+             'Predictions P1–P3 of the thesis: uncoated beds keep SE–SE clustering above random; coating removes it; the mixing difference carries into the compacted SE pathway. '
+             'The all-pair CED runs also scale SE–SE cohesion; the model is not calibrated to measured surface energies or coating selectivity, so the CED-scaling runs do not validate a surface-energy-based coating mechanism. '
+             'Left figure: docs/data/mixer_highbo_devu_prelim_20261006/devu_contact.json — fraction of SE in SE–SE clusters (second revolution, 100 frames): ' + c3['low'] + ' low NCM–NCM cohesion; '
+             + c3['CED10'] + ' all-pair CED ×10; ' + c3['CED14'] + ' all-pair CED ×14.42 (ranges = dump-resolution [certain, possible], not confidence intervals; one seed; development data; '
+             'the lower bounds of the two higher settings exceed the comparator upper bound). Confirmatory 18-run block: registered, on hold after the Codex rounds (docs/reviews/mixer_highbo_prereg_20260927.md).')
 
     # ── 14 Plan ────────────────────────────────────────────────────────
     s = two_column('Plan', 'Tests for unresolved model limits',
@@ -758,7 +797,7 @@ def build(template, repo, figs, lit, out):
              [[('DEM and contact networks: ', BLUE), ('composition trends from one bed per composition', None)],
               [('MPM: ', BLUE), ('plastic deformation, with compaction agreement dependent on initialization and loading protocol', None)],
               [('Voxel transport: ', BLUE), ('ideal-interface calculations with grid dependence and unresolved absolute conductivity', None)],
-              [('Mixing: ', BLUE), ('no segregation detected at the registered resolution; cohesion exploration without a verdict', None)],
+              [('Mixing: ', BLUE), ('unresolved diagnostic mixing-index contrast under an unmet overlap condition; exploratory cohesion results without a verdict', None)],
               [('Final model-validation verdicts remain pending', None)]], line=1.3, after=8)
     place(shape(s, 'Rectangle 4'), (0.61, 1.08, 8.84, 4.2))
     drop(s, 'Conclusion')
@@ -779,7 +818,7 @@ def build(template, repo, figs, lit, out):
             '[15] A. Sakuda, A. Hayashi, M. Tatsumisago, Sci. Rep. 3, 2261 (2013)']
     right = [('h', 'Solid-state battery electrodes'),
              '[8] A.M. Bazzoun et al., J. Power Sources 661, 238682 (2026)',
-             '[9] M. So et al., J. Power Sources 508, 230344 (2021)',
+             '[9] M. So et al., J. Electrochem. Soc. 168, 030538 (2021)',
              '[10] C.A. Varkey et al., Adv. Powder Technol. 37, 105338 (2026)',
              '[11] T. Shi et al., Adv. Energy Mater. 10, 1902881 (2020)',
              '[12] D.J. Lee et al., Nat. Commun. 16, 4200 (2025)',
@@ -818,6 +857,18 @@ FORBIDDEN = ['Large–large', 'large–large', 'follow no power law', 'changes s
              'was retracted', 'Every production number', 'nothing below has a result', '30.7', 'Pressed honestly', 'contact-free branch',
              'Hertz constriction', 'single-crystal LPSCl', 'irreducible', 'closing the three problems', 'gain follows the represented',
              'fixed-platen hold', 'σy 0.05–0.30', 'Geometric tortuosity vs SE fraction (130 beds)', 'real coating effect', 'Figure pending']
+#: Codex v3 재확인 (SEMV3-01~10 · 10-13 밤) — 본문 금지 (대소문자 무시) · notes 금지 · 장별 필수 문구
+FORBIDDEN_CI = ['no segregation detected', 'cohesion removed', 'non-cohesive', 'no ncm–ncm cohesion', 'stronger cohesion lowers',
+                'holds on most', 'like–like contacts best', 'like–like contacts are favoured', 'fully mixed', 'tier 1',
+                'j. power sources 508, 230344']
+NOTES_FORBIDDEN = ['inside the literature range', 'not SE–SE', 'cohesion removed', 'without NCM–NCM cohesion', 'non-cohesive',
+                   'would have to be below about 0.31', 'J. Power Sources 508, 230344', 'fully mixed']
+SLIDE_FORBIDDEN = {12: ['reference cohesion']}
+REQUIRED = {6: ['j. electrochem. soc. 168, 030538'], 7: ['vgcf e = 10 gpa'], 9: ['experimental porosity'],
+            10: ['order-of-magnitude agreement', 'display position only'], 11: ['unresolved', 'overlap condition was not met'],
+            12: ['bond number', 'cohesion-energy densit', 'no verdict'], 13: ['assumed geometric-mean', 'per unit area'],
+            15: ['unresolved diagnostic mixing-index contrast'], 16: ['[9] m. so et al., j. electrochem. soc. 168, 030538 (2021)']}
+NOTES_REQUIRED = {7: ['100 gpa'], 11: ['does not establish compliance'], 13: ['0.309', 'not a necessary or sufficient condition']}
 INTERNAL = r'\b(?:CL-\d+|SELF-\d+|SEM-\d+|SEMV2-\d+|G2RR\d*-\d+|RGL[R0-9]*-\d+|UL-\d+|DEMP-\d+|RB-\d+|MV-\d+|PS45E-\d+|HBR\d*-\d+|stoic-knuth|pqwtv8|kgy|ibb|uma|WSL)\b'
 #: 믹서 팔 코드 (1저자 10-13 — 덱 어디에도 쓰지 않는다 · notes 포함)
 ARM_CODES = r'\b(?:L0|LA|LB[123]|LC|LH|LHx\d*|LU\d*|E0)\b'
@@ -925,7 +976,18 @@ def selftest(out, repo, figs=None, word_cap=100, wide_cap=120, wide=(6, 7, 8, 10
     assert not ov, f'body text would reach the figure zone (slide, est. body bottom, zone top, head chars): {ov}'
     caps10 = '\n'.join(sh.text_frame.text for sh in prs.slides[9].shapes if sh.name == 'Caption')
     assert '130 + 64' in caps10 and 'tortuosity' in caps10 and '130-bed set' in caps10 and 'porosity' in caps10, caps10
-    assert 'registered "no segregation" category' in texts[10] and 'not "no effect"' in texts[10], texts[10][:300]
+    notes_txt = [s.notes_slide.notes_text_frame.text if s.has_notes_slide else '' for s in prs.slides]
+    low = [x.lower() for x in texts]
+    bad_ci = [(i, f) for i, x in enumerate(low, 1) for f in FORBIDDEN_CI if f in x]
+    assert not bad_ci, f'phrases flagged by the Codex v3 re-check still on slides: {bad_ci}'
+    bad_notes = [(i, f) for i, x in enumerate(notes_txt, 1) for f in NOTES_FORBIDDEN if f in x]
+    assert not bad_notes, f'phrases flagged by the Codex v3 re-check still in notes: {bad_notes}'
+    bad_slide = [(i, f) for i, fs in SLIDE_FORBIDDEN.items() for f in fs if f in texts[i - 1]]
+    assert not bad_slide, f'slide-specific wording: {bad_slide}'
+    miss = [(i, r) for i, rs in REQUIRED.items() for r in rs if r not in low[i - 1]]
+    assert not miss, f'required wording missing on slides: {miss}'
+    miss_n = [(i, r) for i, rs in NOTES_REQUIRED.items() for r in rs if r not in notes_txt[i - 1].lower()]
+    assert not miss_n, f'required wording missing in notes: {miss_n}'
     for i in (11, 12, 13):
         assert 'cohesi' in texts[i - 1], i
     stats = slide_stats(prs)
@@ -947,7 +1009,7 @@ def selftest(out, repo, figs=None, word_cap=100, wide_cap=120, wide=(6, 7, 8, 10
 
 def dump_text(deck, out):
     prs = Presentation(deck)
-    lines = ['# 연구세미나 덱 v3 "보는 판" — 장별 글 전문 (생성기 출력에서 추출 · 표 · 출처 줄 · notes 포함)', '']
+    lines = ['# 연구세미나 덱 v3.1 "보는 판" (Codex v3 재확인 반영) — 장별 글 전문 (생성기 출력에서 추출 · 표 · 출처 줄 · notes 포함)', '']
     for i, s in enumerate(prs.slides, 1):
         lines.append(f'## p{i:02d}')
         for sh in s.shapes:

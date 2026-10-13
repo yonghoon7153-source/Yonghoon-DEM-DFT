@@ -1,0 +1,1056 @@
+{
+  "pin": "a0439bdf8156236f454bd3f8b5bf4d044e127039",
+  "source_level": "saved reader JSON, not reconstructed from simulation dumps",
+  "mix1": [
+    {
+      "path": "docs/data/mixer_final10_20260930/LA_s32452843_c16x4.json",
+      "S0": 0.1806478969593958,
+      "SR": 0.06102566507920269,
+      "planned": {
+        "n_revs": 8,
+        "final_bin": 7,
+        "frames_per_rev": 25.000037911438973,
+        "complete": true,
+        "n": 25,
+        "expected": 25,
+        "missing": [],
+        "M_final": 0.981739813664411,
+        "M_final_sd": 0.02633526580045572,
+        "prev_bin": 6,
+        "prev_complete": true,
+        "flat": true,
+        "qc_repr": {
+          "pass": true,
+          "am_mean": 0.976812638611286,
+          "se_mean": 0.997657757793159,
+          "min_by_type": {
+            "1": 0.9371428571428572,
+            "2": 0.9790697674418605,
+            "3": 0.9968170565351437
+          },
+          "rule": "mean(AM, SE) ≥ 0.9 ∧ 프레임별 · 상별 최솟값 ≥ 0.8 (부피 누락 QC — 대표성 보증 아님)"
+        }
+      }
+    },
+    {
+      "path": "docs/data/mixer_final10_20260930/L0_s32452843_c16x4.json",
+      "S0": 0.18424025770328536,
+      "SR": 0.06102566507920269,
+      "planned": {
+        "n_revs": 8,
+        "final_bin": 7,
+        "frames_per_rev": 25.000037911438973,
+        "complete": true,
+        "n": 25,
+        "expected": 25,
+        "missing": [],
+        "M_final": 0.9724110196999857,
+        "M_final_sd": 0.025364111570654355,
+        "prev_bin": 6,
+        "prev_complete": true,
+        "flat": true,
+        "qc_repr": {
+          "pass": true,
+          "am_mean": 0.9795357445992936,
+          "se_mean": 0.9977482948517151,
+          "min_by_type": {
+            "1": 0.9485714285714285,
+            "2": 0.9825581395348839,
+            "3": 0.9968978931945686
+          },
+          "rule": "mean(AM, SE) ≥ 0.9 ∧ 프레임별 · 상별 최솟값 ≥ 0.8 (부피 누락 QC — 대표성 보증 아님)"
+        }
+      }
+    },
+    {
+      "path": "docs/data/mixer_final10_20260930/LA_s49979687_c16x4.json",
+      "S0": 0.1734887838605553,
+      "SR": 0.06123530276908961,
+      "planned": {
+        "n_revs": 8,
+        "final_bin": 7,
+        "frames_per_rev": 25.000037911438973,
+        "complete": true,
+        "n": 25,
+        "expected": 25,
+        "missing": [],
+        "M_final": 0.9725712445773702,
+        "M_final_sd": 0.02927756018723334,
+        "prev_bin": 6,
+        "prev_complete": true,
+        "flat": true,
+        "qc_repr": {
+          "pass": true,
+          "am_mean": 0.979661911672097,
+          "se_mean": 0.9976888799070376,
+          "min_by_type": {
+            "1": 0.9485714285714285,
+            "2": 0.9837209302325582,
+            "3": 0.9965240236447276
+          },
+          "rule": "mean(AM, SE) ≥ 0.9 ∧ 프레임별 · 상별 최솟값 ≥ 0.8 (부피 누락 QC — 대표성 보증 아님)"
+        }
+      }
+    },
+    {
+      "path": "docs/data/mixer_final10_20260930/LA_s67867967_c16x4.json",
+      "S0": 0.18096443122779815,
+      "SR": 0.06351812440427373,
+      "planned": {
+        "n_revs": 8,
+        "final_bin": 7,
+        "frames_per_rev": 25.000037911438973,
+        "complete": true,
+        "n": 25,
+        "expected": 25,
+        "missing": [],
+        "M_final": 0.9903691241678017,
+        "M_final_sd": 0.03126710045374257,
+        "prev_bin": 6,
+        "prev_complete": true,
+        "flat": true,
+        "qc_repr": {
+          "pass": true,
+          "am_mean": 0.9793254661446212,
+          "se_mean": 0.9975660081847115,
+          "min_by_type": {
+            "1": 0.9485714285714286,
+            "2": 0.9790697674418605,
+            "3": 0.9967463244581465
+          },
+          "rule": "mean(AM, SE) ≥ 0.9 ∧ 프레임별 · 상별 최솟값 ≥ 0.8 (부피 누락 QC — 대표성 보증 아님)"
+        }
+      }
+    },
+    {
+      "path": "docs/data/mixer_final10_20260930/LB1_s32452843_c16x4.json",
+      "S0": 0.1818158563430028,
+      "SR": 0.06102566507920269,
+      "planned": {
+        "n_revs": 8,
+        "final_bin": 7,
+        "frames_per_rev": 25.000037911438973,
+        "complete": true,
+        "n": 25,
+        "expected": 25,
+        "missing": [],
+        "M_final": 0.9868689103435208,
+        "M_final_sd": 0.03195387947150633,
+        "prev_bin": 6,
+        "prev_complete": true,
+        "flat": true,
+        "qc_repr": {
+          "pass": true,
+          "am_mean": 0.9774599019795746,
+          "se_mean": 0.997566816551306,
+          "min_by_type": {
+            "1": 0.96,
+            "2": 0.9825581395348837,
+            "3": 0.9966351740514368
+          },
+          "rule": "mean(AM, SE) ≥ 0.9 ∧ 프레임별 · 상별 최솟값 ≥ 0.8 (부피 누락 QC — 대표성 보증 아님)"
+        }
+      }
+    },
+    {
+      "path": "docs/data/mixer_final10_20260930/LB2_s32452843_c16x4.json",
+      "S0": 0.17800451323417896,
+      "SR": 0.06102566507920269,
+      "planned": {
+        "n_revs": 8,
+        "final_bin": 7,
+        "frames_per_rev": 25.000037911438973,
+        "complete": true,
+        "n": 25,
+        "expected": 25,
+        "missing": [],
+        "M_final": 0.9645757917932971,
+        "M_final_sd": 0.030499932302987583,
+        "prev_bin": 6,
+        "prev_complete": true,
+        "flat": true,
+        "qc_repr": {
+          "pass": true,
+          "am_mean": 0.9767962106070146,
+          "se_mean": 0.9976104683473954,
+          "min_by_type": {
+            "1": 0.9542857142857144,
+            "2": 0.9825581395348837,
+            "3": 0.9968372656999996
+          },
+          "rule": "mean(AM, SE) ≥ 0.9 ∧ 프레임별 · 상별 최솟값 ≥ 0.8 (부피 누락 QC — 대표성 보증 아님)"
+        }
+      }
+    },
+    {
+      "path": "docs/data/mixer_final10_20260930/LB3_s32452843_c16x4.json",
+      "S0": 0.18041119776397643,
+      "SR": 0.06102566507920269,
+      "planned": {
+        "n_revs": 8,
+        "final_bin": 7,
+        "frames_per_rev": 25.000037911438973,
+        "complete": true,
+        "n": 25,
+        "expected": 25,
+        "missing": [],
+        "M_final": 0.9775998470217696,
+        "M_final_sd": 0.031254414192846566,
+        "prev_bin": 6,
+        "prev_complete": true,
+        "flat": true,
+        "qc_repr": {
+          "pass": true,
+          "am_mean": 0.9769162445582235,
+          "se_mean": 0.9975498408528267,
+          "min_by_type": {
+            "1": 0.9428571428571428,
+            "2": 0.9813953488372092,
+            "3": 0.9967261152932902
+          },
+          "rule": "mean(AM, SE) ≥ 0.9 ∧ 프레임별 · 상별 최솟값 ≥ 0.8 (부피 누락 QC — 대표성 보증 아님)"
+        }
+      }
+    },
+    {
+      "path": "docs/data/mixer_final10_20260930/LC_s32452843_c16x4.json",
+      "S0": 0.17464576725734918,
+      "SR": 0.06102566507920269,
+      "planned": {
+        "n_revs": 8,
+        "final_bin": 7,
+        "frames_per_rev": 25.000037911438973,
+        "complete": true,
+        "n": 25,
+        "expected": 25,
+        "missing": [],
+        "M_final": 0.9683830481844933,
+        "M_final_sd": 0.02685458564423327,
+        "prev_bin": 6,
+        "prev_complete": true,
+        "flat": true,
+        "qc_repr": {
+          "pass": true,
+          "am_mean": 0.9772020918325438,
+          "se_mean": 0.9976383569948972,
+          "min_by_type": {
+            "1": 0.9485714285714286,
+            "2": 0.9790697674418604,
+            "3": 0.9969686252715654
+          },
+          "rule": "mean(AM, SE) ≥ 0.9 ∧ 프레임별 · 상별 최솟값 ≥ 0.8 (부피 누락 QC — 대표성 보증 아님)"
+        }
+      }
+    },
+    {
+      "path": "docs/data/mixer_final10_20260930/LC_s49979687_c16x4.json",
+      "S0": 0.1771912914551262,
+      "SR": 0.06123530276908961,
+      "planned": {
+        "n_revs": 8,
+        "final_bin": 7,
+        "frames_per_rev": 25.000037911438973,
+        "complete": true,
+        "n": 25,
+        "expected": 25,
+        "missing": [],
+        "M_final": 0.9824199473509948,
+        "M_final_sd": 0.02756705830141769,
+        "prev_bin": 6,
+        "prev_complete": true,
+        "flat": true,
+        "qc_repr": {
+          "pass": true,
+          "am_mean": 0.9793986255236427,
+          "se_mean": 0.9976213812964176,
+          "min_by_type": {
+            "1": 0.9428571428571428,
+            "2": 0.9790697674418605,
+            "3": 0.9968675794472843
+          },
+          "rule": "mean(AM, SE) ≥ 0.9 ∧ 프레임별 · 상별 최솟값 ≥ 0.8 (부피 누락 QC — 대표성 보증 아님)"
+        }
+      }
+    },
+    {
+      "path": "docs/data/mixer_final10_20260930/LC_s67867967_c16x4.json",
+      "S0": 0.1824526625500389,
+      "SR": 0.06351812440427373,
+      "planned": {
+        "n_revs": 8,
+        "final_bin": 7,
+        "frames_per_rev": 25.000037911438973,
+        "complete": true,
+        "n": 25,
+        "expected": 25,
+        "missing": [],
+        "M_final": 0.9975202929688605,
+        "M_final_sd": 0.03045070239355148,
+        "prev_bin": 6,
+        "prev_complete": true,
+        "flat": true,
+        "qc_repr": {
+          "pass": true,
+          "am_mean": 0.9787373435917094,
+          "se_mean": 0.9976242105794977,
+          "min_by_type": {
+            "1": 0.9485714285714285,
+            "2": 0.9790697674418605,
+            "3": 0.9969181023594246
+          },
+          "rule": "mean(AM, SE) ≥ 0.9 ∧ 프레임별 · 상별 최솟값 ≥ 0.8 (부피 누락 QC — 대표성 보증 아님)"
+        }
+      }
+    }
+  ],
+  "mix2": [
+    {
+      "path": "docs/data/mixer_highbo_devbo_prelim_20261003/devbo_c16x4.json",
+      "runs": [
+        {
+          "run": "LC_ref_r2_s32452843",
+          "S0": 0.1874234265083704,
+          "SR": 0.05600892651309651,
+          "planned": {
+            "n_revs": 2,
+            "final_bin": 1,
+            "frames_per_rev": 100.0184635152932,
+            "complete": true,
+            "n": 100,
+            "expected": 100,
+            "missing": [],
+            "M_final": 0.907725885844293,
+            "M_final_sd": 0.07094013760100384,
+            "prev_bin": 0,
+            "prev_complete": true,
+            "flat": false,
+            "qc_repr": {
+              "pass": true,
+              "am_mean": 0.9693157167432811,
+              "se_mean": 0.997570050017683,
+              "min_by_type": {
+                "1": 0.8742514970059879,
+                "2": 0.9516129032258064,
+                "3": 0.9965543373920087
+              },
+              "rule": "mean(AM, SE) ≥ 0.9 ∧ 프레임별 · 상별 최솟값 ≥ 0.8 (부피 누락 QC — 대표성 보증 아님)"
+            }
+          },
+          "delta_from_LC": 0
+        },
+        {
+          "run": "LH_ref_r2_s32452843",
+          "S0": 0.16901950127210774,
+          "SR": 0.05600892651309651,
+          "planned": {
+            "n_revs": 2,
+            "final_bin": 1,
+            "frames_per_rev": 100.0184635152932,
+            "complete": true,
+            "n": 100,
+            "expected": 100,
+            "missing": [],
+            "M_final": 0.8972340464052251,
+            "M_final_sd": 0.05102174271750079,
+            "prev_bin": 0,
+            "prev_complete": true,
+            "flat": false,
+            "qc_repr": {
+              "pass": true,
+              "am_mean": 0.9699009560337291,
+              "se_mean": 0.9973725533785353,
+              "min_by_type": {
+                "1": 0.8802395209580839,
+                "2": 0.936635944700461,
+                "3": 0.9958368279053815
+              },
+              "rule": "mean(AM, SE) ≥ 0.9 ∧ 프레임별 · 상별 최솟값 ≥ 0.8 (부피 누락 QC — 대표성 보증 아님)"
+            }
+          },
+          "delta_from_LC": 0.010491839439067951
+        },
+        {
+          "run": "LHx10_ref_r2_s32452843",
+          "S0": 0.11869756475167169,
+          "SR": 0.05600892651309651,
+          "planned": {
+            "n_revs": 2,
+            "final_bin": 1,
+            "frames_per_rev": 100.0184635152932,
+            "complete": true,
+            "n": 100,
+            "expected": 100,
+            "missing": [],
+            "M_final": 0.08029012708985386,
+            "M_final_sd": 0.16534440944966103,
+            "prev_bin": 0,
+            "prev_complete": true,
+            "flat": false,
+            "qc_repr": {
+              "pass": false,
+              "am_mean": 0.8883564116303337,
+              "se_mean": 0.9898538115230915,
+              "min_by_type": {
+                "1": 0.7305389221556885,
+                "2": 0.6970046082949308,
+                "3": 0.9713693155951224
+              },
+              "rule": "mean(AM, SE) ≥ 0.9 ∧ 프레임별 · 상별 최솟값 ≥ 0.8 (부피 누락 QC — 대표성 보증 아님)"
+            }
+          },
+          "delta_from_LC": 0.8274357587544392
+        },
+        {
+          "run": "LHx30_ref_r2_s32452843",
+          "S0": 0.10435466451882089,
+          "SR": 0.05600892651309651,
+          "planned": {
+            "n_revs": 2,
+            "final_bin": 1,
+            "frames_per_rev": 100.0184635152932,
+            "complete": true,
+            "n": 100,
+            "expected": 100,
+            "missing": [],
+            "M_final": -0.9683468332124474,
+            "M_final_sd": 0.30509249672062166,
+            "prev_bin": 0,
+            "prev_complete": true,
+            "flat": false,
+            "qc_repr": {
+              "pass": false,
+              "am_mean": 0.863134098536338,
+              "se_mean": 0.9867351919551985,
+              "min_by_type": {
+                "1": 0.7425149700598802,
+                "2": 0.7465437788018432,
+                "3": 0.9670774808348556
+              },
+              "rule": "mean(AM, SE) ≥ 0.9 ∧ 프레임별 · 상별 최솟값 ≥ 0.8 (부피 누락 QC — 대표성 보증 아님)"
+            }
+          },
+          "delta_from_LC": 1.8760727190567406
+        }
+      ]
+    },
+    {
+      "path": "docs/data/mixer_highbo_devu_prelim_20261006/devu_c16x4.json",
+      "runs": [
+        {
+          "run": "LC_ref_r2_s32452843",
+          "S0": 0.1874234265083704,
+          "SR": 0.05600892651309651,
+          "planned": {
+            "n_revs": 2,
+            "final_bin": 1,
+            "frames_per_rev": 100.0184635152932,
+            "complete": true,
+            "n": 100,
+            "expected": 100,
+            "missing": [],
+            "M_final": 0.907725885844293,
+            "M_final_sd": 0.07094013760100384,
+            "prev_bin": 0,
+            "prev_complete": true,
+            "flat": false,
+            "qc_repr": {
+              "pass": true,
+              "am_mean": 0.9693157167432811,
+              "se_mean": 0.997570050017683,
+              "min_by_type": {
+                "1": 0.8742514970059879,
+                "2": 0.9516129032258064,
+                "3": 0.9965543373920087
+              },
+              "rule": "mean(AM, SE) ≥ 0.9 ∧ 프레임별 · 상별 최솟값 ≥ 0.8 (부피 누락 QC — 대표성 보증 아님)"
+            }
+          },
+          "delta_from_LC": 0
+        },
+        {
+          "run": "LU212_ref_r2_s32452843",
+          "S0": 0.16222385965413166,
+          "SR": 0.05600892651309651,
+          "planned": {
+            "n_revs": 2,
+            "final_bin": 1,
+            "frames_per_rev": 100.0184635152932,
+            "complete": true,
+            "n": 100,
+            "expected": 100,
+            "missing": [],
+            "M_final": 0.6682819164315181,
+            "M_final_sd": 0.1404010719016201,
+            "prev_bin": 0,
+            "prev_complete": true,
+            "flat": false,
+            "qc_repr": {
+              "pass": true,
+              "am_mean": 0.9688957951436871,
+              "se_mean": 0.9961636942353356,
+              "min_by_type": {
+                "1": 0.8263473053892215,
+                "2": 0.8813364055299538,
+                "3": 0.9943616430051055
+              },
+              "rule": "mean(AM, SE) ≥ 0.9 ∧ 프레임별 · 상별 최솟값 ≥ 0.8 (부피 누락 QC — 대표성 보증 아님)"
+            }
+          },
+          "delta_from_LC": 0.2394439694127749
+        },
+        {
+          "run": "LU637_ref_r2_s32452843",
+          "S0": 0.1316738310429668,
+          "SR": 0.05600892651309651,
+          "planned": {
+            "n_revs": 2,
+            "final_bin": 1,
+            "frames_per_rev": 100.0184635152932,
+            "complete": true,
+            "n": 100,
+            "expected": 100,
+            "missing": [],
+            "M_final": 0.04226525960913681,
+            "M_final_sd": 0.2373270864250272,
+            "prev_bin": 0,
+            "prev_complete": true,
+            "flat": true,
+            "qc_repr": {
+              "pass": false,
+              "am_mean": 0.9246843960630586,
+              "se_mean": 0.9952477138382255,
+              "min_by_type": {
+                "1": 0.7245508982035928,
+                "2": 0.7350230414746544,
+                "3": 0.9929368968827349
+              },
+              "rule": "mean(AM, SE) ≥ 0.9 ∧ 프레임별 · 상별 최솟값 ≥ 0.8 (부피 누락 QC — 대표성 보증 아님)"
+            }
+          },
+          "delta_from_LC": 0.8654606262351562
+        }
+      ]
+    },
+    {
+      "path": "docs/data/mixer_highbo_devbo_prelim_20261003/devbo_c12x3.json",
+      "runs": [
+        {
+          "run": "LC_ref_r2_s32452843",
+          "S0": 0.19133648343103274,
+          "SR": 0.05839197805768544,
+          "planned": {
+            "n_revs": 2,
+            "final_bin": 1,
+            "frames_per_rev": 100.0184635152932,
+            "complete": true,
+            "n": 100,
+            "expected": 100,
+            "missing": [],
+            "M_final": 1.024278367849614,
+            "M_final_sd": 0.07983146510477147,
+            "prev_bin": 0,
+            "prev_complete": true,
+            "flat": false,
+            "qc_repr": {
+              "pass": true,
+              "am_mean": 0.9849163258975154,
+              "se_mean": 0.9988230182387713,
+              "min_by_type": {
+                "1": 0.9221556886227547,
+                "2": 0.9631336405529954,
+                "3": 0.9979487697670696
+              },
+              "rule": "mean(AM, SE) ≥ 0.9 ∧ 프레임별 · 상별 최솟값 ≥ 0.8 (부피 누락 QC — 대표성 보증 아님)"
+            }
+          },
+          "delta_from_LC": 0
+        },
+        {
+          "run": "LH_ref_r2_s32452843",
+          "S0": 0.1595334137163057,
+          "SR": 0.05839197805768544,
+          "planned": {
+            "n_revs": 2,
+            "final_bin": 1,
+            "frames_per_rev": 100.0184635152932,
+            "complete": true,
+            "n": 100,
+            "expected": 100,
+            "missing": [],
+            "M_final": 1.0306493469349816,
+            "M_final_sd": 0.06907209274011772,
+            "prev_bin": 0,
+            "prev_complete": true,
+            "flat": false,
+            "qc_repr": {
+              "pass": true,
+              "am_mean": 0.9859291012154882,
+              "se_mean": 0.9987096187464002,
+              "min_by_type": {
+                "1": 0.9580838323353292,
+                "2": 0.9619815668202767,
+                "3": 0.9978072612996599
+              },
+              "rule": "mean(AM, SE) ≥ 0.9 ∧ 프레임별 · 상별 최솟값 ≥ 0.8 (부피 누락 QC — 대표성 보증 아님)"
+            }
+          },
+          "delta_from_LC": -0.006370979085367656
+        },
+        {
+          "run": "LHx10_ref_r2_s32452843",
+          "S0": 0.11129111900446477,
+          "SR": 0.05839197805768544,
+          "planned": {
+            "n_revs": 2,
+            "final_bin": 1,
+            "frames_per_rev": 100.0184635152932,
+            "complete": true,
+            "n": 100,
+            "expected": 100,
+            "missing": [],
+            "M_final": 0.09679223673992307,
+            "M_final_sd": 0.3252162391784249,
+            "prev_bin": 0,
+            "prev_complete": true,
+            "flat": true,
+            "qc_repr": {
+              "pass": true,
+              "am_mean": 0.9583370089399023,
+              "se_mean": 0.9959530578177954,
+              "min_by_type": {
+                "1": 0.8922155688622754,
+                "2": 0.8352534562211982,
+                "3": 0.9880924680054429
+              },
+              "rule": "mean(AM, SE) ≥ 0.9 ∧ 프레임별 · 상별 최솟값 ≥ 0.8 (부피 누락 QC — 대표성 보증 아님)"
+            }
+          },
+          "delta_from_LC": 0.9274861311096908
+        },
+        {
+          "run": "LHx30_ref_r2_s32452843",
+          "S0": 0.09495530555029189,
+          "SR": 0.05839197805768544,
+          "planned": {
+            "n_revs": 2,
+            "final_bin": 1,
+            "frames_per_rev": 100.0184635152932,
+            "complete": true,
+            "n": 100,
+            "expected": 100,
+            "missing": [],
+            "M_final": -1.4072430600033454,
+            "M_final_sd": 0.5439628900444681,
+            "prev_bin": 0,
+            "prev_complete": true,
+            "flat": true,
+            "qc_repr": {
+              "pass": true,
+              "am_mean": 0.9423690459403818,
+              "se_mean": 0.995157219966176,
+              "min_by_type": {
+                "1": 0.8682634730538922,
+                "2": 0.858294930875576,
+                "3": 0.984971695342625
+              },
+              "rule": "mean(AM, SE) ≥ 0.9 ∧ 프레임별 · 상별 최솟값 ≥ 0.8 (부피 누락 QC — 대표성 보증 아님)"
+            }
+          },
+          "delta_from_LC": 2.4315214278529593
+        }
+      ]
+    },
+    {
+      "path": "docs/data/mixer_highbo_devu_prelim_20261006/devu_c12x3.json",
+      "runs": [
+        {
+          "run": "LC_ref_r2_s32452843",
+          "S0": 0.19133648343103274,
+          "SR": 0.05839197805768544,
+          "planned": {
+            "n_revs": 2,
+            "final_bin": 1,
+            "frames_per_rev": 100.0184635152932,
+            "complete": true,
+            "n": 100,
+            "expected": 100,
+            "missing": [],
+            "M_final": 1.024278367849614,
+            "M_final_sd": 0.07983146510477147,
+            "prev_bin": 0,
+            "prev_complete": true,
+            "flat": false,
+            "qc_repr": {
+              "pass": true,
+              "am_mean": 0.9849163258975154,
+              "se_mean": 0.9988230182387713,
+              "min_by_type": {
+                "1": 0.9221556886227547,
+                "2": 0.9631336405529954,
+                "3": 0.9979487697670696
+              },
+              "rule": "mean(AM, SE) ≥ 0.9 ∧ 프레임별 · 상별 최솟값 ≥ 0.8 (부피 누락 QC — 대표성 보증 아님)"
+            }
+          },
+          "delta_from_LC": 0
+        },
+        {
+          "run": "LU212_ref_r2_s32452843",
+          "S0": 0.17354552546873855,
+          "SR": 0.05839197805768544,
+          "planned": {
+            "n_revs": 2,
+            "final_bin": 1,
+            "frames_per_rev": 100.0184635152932,
+            "complete": true,
+            "n": 100,
+            "expected": 100,
+            "missing": [],
+            "M_final": 0.8588584706524387,
+            "M_final_sd": 0.12907181031361373,
+            "prev_bin": 0,
+            "prev_complete": true,
+            "flat": false,
+            "qc_repr": {
+              "pass": true,
+              "am_mean": 0.9867523054795678,
+              "se_mean": 0.998062143181933,
+              "min_by_type": {
+                "1": 0.8982035928143712,
+                "2": 0.9527649769585251,
+                "3": 0.9974031223159578
+              },
+              "rule": "mean(AM, SE) ≥ 0.9 ∧ 프레임별 · 상별 최솟값 ≥ 0.8 (부피 누락 QC — 대표성 보증 아님)"
+            }
+          },
+          "delta_from_LC": 0.1654198971971752
+        },
+        {
+          "run": "LU637_ref_r2_s32452843",
+          "S0": 0.16974936488464534,
+          "SR": 0.05839197805768544,
+          "planned": {
+            "n_revs": 2,
+            "final_bin": 1,
+            "frames_per_rev": 100.0184635152932,
+            "complete": true,
+            "n": 100,
+            "expected": 100,
+            "missing": [],
+            "M_final": 0.5398631725848718,
+            "M_final_sd": 0.17661869155524373,
+            "prev_bin": 0,
+            "prev_complete": true,
+            "flat": false,
+            "qc_repr": {
+              "pass": true,
+              "am_mean": 0.9694960376773176,
+              "se_mean": 0.997863487091396,
+              "min_by_type": {
+                "1": 0.8323353293413174,
+                "2": 0.8513824884792627,
+                "3": 0.9964330824028581
+              },
+              "rule": "mean(AM, SE) ≥ 0.9 ∧ 프레임별 · 상별 최솟값 ≥ 0.8 (부피 누락 QC — 대표성 보증 아님)"
+            }
+          },
+          "delta_from_LC": 0.4844151952647421
+        }
+      ]
+    },
+    {
+      "path": "docs/data/mixer_highbo_devbo_prelim_20261003/devbo_c8x2.json",
+      "runs": [
+        {
+          "run": "LC_ref_r2_s32452843",
+          "S0": 0.1814740006993433,
+          "SR": 0.01796120463449988,
+          "planned": {
+            "n_revs": 2,
+            "final_bin": 1,
+            "frames_per_rev": 100.0184635152932,
+            "complete": true,
+            "n": 100,
+            "expected": 100,
+            "missing": [],
+            "M_final": 0.8813552069319794,
+            "M_final_sd": 0.0888997001374306,
+            "prev_bin": 0,
+            "prev_complete": true,
+            "flat": false,
+            "qc_repr": {
+              "pass": true,
+              "am_mean": 0.9950303167037984,
+              "se_mean": 0.9994915374122164,
+              "min_by_type": {
+                "1": 0.9640718562874251,
+                "2": 0.9769585253456214,
+                "3": 0.9989491234274396
+              },
+              "rule": "mean(AM, SE) ≥ 0.9 ∧ 프레임별 · 상별 최솟값 ≥ 0.8 (부피 누락 QC — 대표성 보증 아님)"
+            }
+          },
+          "delta_from_LC": 0
+        },
+        {
+          "run": "LH_ref_r2_s32452843",
+          "S0": 0.14680288662042096,
+          "SR": 0.01796120463449988,
+          "planned": {
+            "n_revs": 2,
+            "final_bin": 1,
+            "frames_per_rev": 100.0184635152932,
+            "complete": true,
+            "n": 100,
+            "expected": 100,
+            "missing": [],
+            "M_final": 0.873538084424332,
+            "M_final_sd": 0.07624906002090107,
+            "prev_bin": 0,
+            "prev_complete": true,
+            "flat": false,
+            "qc_repr": {
+              "pass": true,
+              "am_mean": 0.992435714487154,
+              "se_mean": 0.9994366581449632,
+              "min_by_type": {
+                "1": 0.9760479041916166,
+                "2": 0.9815668202764976,
+                "3": 0.9988884734698472
+              },
+              "rule": "mean(AM, SE) ≥ 0.9 ∧ 프레임별 · 상별 최솟값 ≥ 0.8 (부피 누락 QC — 대표성 보증 아님)"
+            }
+          },
+          "delta_from_LC": 0.007817122507647434
+        },
+        {
+          "run": "LHx10_ref_r2_s32452843",
+          "S0": 0.08134509352738349,
+          "SR": 0.01796120463449988,
+          "planned": {
+            "n_revs": 2,
+            "final_bin": 1,
+            "frames_per_rev": 100.0184635152932,
+            "complete": true,
+            "n": 100,
+            "expected": 100,
+            "missing": [],
+            "M_final": -0.10655228213198688,
+            "M_final_sd": 0.42409252392610997,
+            "prev_bin": 0,
+            "prev_complete": true,
+            "flat": true,
+            "qc_repr": {
+              "pass": true,
+              "am_mean": 0.9886835500155108,
+              "se_mean": 0.9990669229601903,
+              "min_by_type": {
+                "1": 0.9640718562874253,
+                "2": 0.9470046082949307,
+                "3": 0.9973392685517373
+              },
+              "rule": "mean(AM, SE) ≥ 0.9 ∧ 프레임별 · 상별 최솟값 ≥ 0.8 (부피 누락 QC — 대표성 보증 아님)"
+            }
+          },
+          "delta_from_LC": 0.9879074890639663
+        },
+        {
+          "run": "LHx30_ref_r2_s32452843",
+          "S0": 0.05134115940497339,
+          "SR": 0.01796120463449988,
+          "planned": {
+            "n_revs": 2,
+            "final_bin": 1,
+            "frames_per_rev": 100.0184635152932,
+            "complete": true,
+            "n": 100,
+            "expected": 100,
+            "missing": [],
+            "M_final": -2.2825836972179645,
+            "M_final_sd": 0.8724254353531707,
+            "prev_bin": 0,
+            "prev_complete": true,
+            "flat": true,
+            "qc_repr": {
+              "pass": true,
+              "am_mean": 0.9793356270622408,
+              "se_mean": 0.99920645690502,
+              "min_by_type": {
+                "1": 0.934131736526946,
+                "2": 0.9308755760368664,
+                "3": 0.9978227186648372
+              },
+              "rule": "mean(AM, SE) ≥ 0.9 ∧ 프레임별 · 상별 최솟값 ≥ 0.8 (부피 누락 QC — 대표성 보증 아님)"
+            }
+          },
+          "delta_from_LC": 3.163938904149944
+        }
+      ]
+    },
+    {
+      "path": "docs/data/mixer_highbo_devu_prelim_20261006/devu_c8x2.json",
+      "runs": [
+        {
+          "run": "LC_ref_r2_s32452843",
+          "S0": 0.1814740006993433,
+          "SR": 0.01796120463449988,
+          "planned": {
+            "n_revs": 2,
+            "final_bin": 1,
+            "frames_per_rev": 100.0184635152932,
+            "complete": true,
+            "n": 100,
+            "expected": 100,
+            "missing": [],
+            "M_final": 0.8813552069319794,
+            "M_final_sd": 0.0888997001374306,
+            "prev_bin": 0,
+            "prev_complete": true,
+            "flat": false,
+            "qc_repr": {
+              "pass": true,
+              "am_mean": 0.9950303167037984,
+              "se_mean": 0.9994915374122164,
+              "min_by_type": {
+                "1": 0.9640718562874251,
+                "2": 0.9769585253456214,
+                "3": 0.9989491234274396
+              },
+              "rule": "mean(AM, SE) ≥ 0.9 ∧ 프레임별 · 상별 최솟값 ≥ 0.8 (부피 누락 QC — 대표성 보증 아님)"
+            }
+          },
+          "delta_from_LC": 0
+        },
+        {
+          "run": "LU212_ref_r2_s32452843",
+          "S0": 0.19172361376705674,
+          "SR": 0.01796120463449988,
+          "planned": {
+            "n_revs": 2,
+            "final_bin": 1,
+            "frames_per_rev": 100.0184635152932,
+            "complete": true,
+            "n": 100,
+            "expected": 100,
+            "missing": [],
+            "M_final": 0.7783885694407714,
+            "M_final_sd": 0.1017189165849881,
+            "prev_bin": 0,
+            "prev_complete": true,
+            "flat": false,
+            "qc_repr": {
+              "pass": true,
+              "am_mean": 0.9953567218477677,
+              "se_mean": 0.9990631031172635,
+              "min_by_type": {
+                "1": 0.9700598802395209,
+                "2": 0.9804147465437785,
+                "3": 0.9985449401303155
+              },
+              "rule": "mean(AM, SE) ≥ 0.9 ∧ 프레임별 · 상별 최솟값 ≥ 0.8 (부피 누락 QC — 대표성 보증 아님)"
+            }
+          },
+          "delta_from_LC": 0.10296663749120805
+        },
+        {
+          "run": "LU637_ref_r2_s32452843",
+          "S0": 0.19791828890139096,
+          "SR": 0.01796120463449988,
+          "planned": {
+            "n_revs": 2,
+            "final_bin": 1,
+            "frames_per_rev": 100.0184635152932,
+            "complete": true,
+            "n": 100,
+            "expected": 100,
+            "missing": [],
+            "M_final": 0.6140755134168406,
+            "M_final_sd": 0.12310451957564138,
+            "prev_bin": 0,
+            "prev_complete": true,
+            "flat": false,
+            "qc_repr": {
+              "pass": true,
+              "am_mean": 0.9872256408810174,
+              "se_mean": 0.9990411761733945,
+              "min_by_type": {
+                "1": 0.9161676646706586,
+                "2": 0.9447004608294929,
+                "3": 0.9981205476683337
+              },
+              "rule": "mean(AM, SE) ≥ 0.9 ∧ 프레임별 · 상별 최솟값 ≥ 0.8 (부피 누락 QC — 대표성 보증 아님)"
+            }
+          },
+          "delta_from_LC": 0.2672796935151388
+        }
+      ]
+    }
+  ],
+  "mix3": [
+    {
+      "path": "docs/data/mixer_highbo_devu_prelim_20261006/devu_contact.json",
+      "run": "LC_ref_r2_s32452843",
+      "frames": 100,
+      "mean_saved": 0.40049148688930436,
+      "mean_recomputed": 0.40049148688930425,
+      "lo_saved": 0.14341908755620675,
+      "hi_saved": 0.5419858535846006,
+      "lo_recomputed": 0.1434190875562068,
+      "hi_recomputed": 0.5419858535846006
+    },
+    {
+      "path": "docs/data/mixer_highbo_devu_prelim_20261006/devu_contact.json",
+      "run": "LU212_ref_r2_s32452843",
+      "frames": 100,
+      "mean_saved": 0.9539938362047189,
+      "mean_recomputed": 0.9539938362047192,
+      "lo_saved": 0.8753685646440659,
+      "hi_saved": 0.9566338604557169,
+      "lo_recomputed": 0.8753685646440662,
+      "hi_recomputed": 0.9566338604557173
+    },
+    {
+      "path": "docs/data/mixer_highbo_devu_prelim_20261006/devu_contact.json",
+      "run": "LU637_ref_r2_s32452843",
+      "frames": 100,
+      "mean_saved": 0.9878931945637346,
+      "mean_recomputed": 0.9878931945637345,
+      "lo_saved": 0.980641539938362,
+      "hi_saved": 0.987929571060476,
+      "lo_recomputed": 0.9806415399383621,
+      "hi_recomputed": 0.9879295710604761
+    }
+  ],
+  "mix1_contrasts": {
+    "16x4": {
+      "d": [
+        -0.01335676547991771,
+        0.009848702773624596,
+        0.007151168801058816
+      ],
+      "mean": 0.0012143686982552342,
+      "se": 0.007327064801406413,
+      "absolute_mean_leq_SE": true
+    },
+    "12x3": {
+      "d": [
+        -0.012210744499197013,
+        -0.007720588832176745,
+        -0.02694886620885062
+      ],
+      "mean": -0.015626733180074792,
+      "se": 0.005807563939079533,
+      "absolute_mean_leq_SE": false
+    },
+    "8x2": {
+      "d": [
+        -0.019933904609400588,
+        0.02798853687550895,
+        0.01632776229884736
+      ],
+      "mean": 0.008127464854985242,
+      "se": 0.014428834072722848,
+      "absolute_mean_leq_SE": true
+    }
+  }
+}

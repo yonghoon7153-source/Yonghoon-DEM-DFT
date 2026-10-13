@@ -1,0 +1,315 @@
+## Slide 1
+Yonghoon
+ An
+Division of Materials Science & Engineering, 
+Hanyang
+ University
+(E-mail : yonghoon71@hanyang.ac.kr)
+[date — to be set]
+Research
+ 
+Seminar
+Particle-resolved multiscale simulation of sulfide all-solid-state composite cathodes:
+from powder packing to transport
+NOTES
+Title. Date to be set by the presenter.
+
+## Slide 2
+A coupled DEM–MPM–transport workflow
+Each stage has specific 
+calibration targets
+ and unresolved validation tasks.
+Agreement between models sharing inputs is a 
+consistency check, not independent validation
+.
+Introduction
+DEM packing
+soft-sphere DEM
+(contact law)
+Plastic compaction
+MPM: J2 plasticity
+DEM scaffold
+Voxel transport
+finite-volume solver
+ionic · electronic · thermal
+Electrode response
+reaction distribution
+(in development)
+calibration target:
+compaction data
+calibration target:
+pure-SE compaction
+comparison target:
+conductivity data
+DEM packing → plastic compaction → voxel transport → electrode response; targets are what each stage is calibrated or compared against
+NOTES
+No numbers. Calibration targets per stage: DEM — compaction experiments; MPM (material point method) — pure-electrolyte compaction (lab reference sample, unpublished); voxel transport — comparison with conductivity measurements (not yet matched). Agreement between stages that share inputs is a consistency check (SEM-01).
+
+## Slide 3
+Composition-dependent porosity in five simulated beds
+Soft-sphere DEM with a linear hysteretic contact law, pressed to 300 MPa; 
+one bed per composition, no seed replicates
+.
+One 7:3 bed: porosity 31.8 → 25.1 → 16.7 → 16.5 % (final state relaxed at fixed platen); 
+7:3 (large : small NCM) is the lowest of the five beds
+.
+DEM
+This work — DEM, five NCM–SE beds (one bed per composition)
+Left: four stages of one 7:3 bed, 0 · 47 · 296 · 165 MPa (last = relaxed at fixed platen); porosity = exact union of spheres.
+Right: final porosity of the five beds (one bed each; the red bar is the minimum).
+NOTES
+Sources: docs/data/ps73_compaction_curve_20261006/stages_20261012/README.md §6; docs/report_20261021/summary.json G1 (figure F_poro redrawn from the same values). Qualifiers: one bed per composition, no seed replicates; porosity = exact union of spheres; "lowest of five" is a statement about these five single beds, not an optimum ratio; the 165 MPa panel is the relaxed state at fixed platen, not an unloaded state.
+
+## Slide 4
+From the contact network to Li⁺ transport
+Contact-network approach [8]: bulk resistance + 
+Holm/Maxwell constriction
+ using Hertz contact radii; chosen σ₀ = 1.5 mS cm⁻¹ (pellet-literature range).
+Transport tortuosity T = φ_SE σ₀ / σ_eff: 7.2 → 5.0 (0:10 → 7:3). Contact constriction accounts for 
+73–75 % of Joule dissipation
+ in this network model.
+DEM
+This work (left) · Bazzoun et al., J. Power Sources 661, 238682 (2026), Fig. 2 (right) [8]
+Literature: 
+SE resistor network [8]
+Reproduced from Bazzoun et al., J. Power Sources 661, 238682 (2026), Fig. 2
+(a) transport tortuosity (Hertz), (b) σ(Li⁺) at σ₀ = 1.5 mS cm⁻¹; one bed per composition;
+T is the literature "tortuosity factor" (not its square root); red = extreme of the five
+NOTES
+Sources: docs/data/ps45_r45_network_g2_20261007/README.md (values, σ0 = 1.5 section, decomposition section); figure F_trans redrawn from those values (y-axes start at 0). Qualifiers: transport tortuosity T = φ_SE σ0 / σ_eff (the literature "tortuosity factor"; not its square root); Hertz H0 = primary; the 73–75 % share = ΣI²R(constriction) / ΣI²R(total) of the same FULL network solution — a model-internal ratio, not evidence that contact necks explain 75 % of a real electrode. No seed replicates for these five beds; the 7:3 vs 10:0 difference is not resolved. [8] = Bazzoun 2026 (same network approach; the crop shows their resistor-network scheme). A 3D current-pathway view of the 7:3 bed is on the transport slide (presenter figure).
+
+## Slide 5
+Fixed-shape DEM limits and the material point method (MPM)
+No shape change and no yield cap: 
+overlap is the only plasticity proxy
+; the softened SE modulus (1.35 vs ≈ 22 GPa) is an 
+effective parameter, not a property
+ [1, 7].
+J2 plasticity on a background grid: 
+shape change and void filling
+ that a fixed-shape sphere cannot represent; active material is kept rigid (DEM skeleton), only the electrolyte flows.
+DEM → MPM
+Luding 2008, Fig. 1 [1] (left) · figure: presenter — MPM 3D view of the DEM-scaffold bed (right)
+Literature: 
+hysteretic contact law [1]
+Reproduced from Luding, Granul. Matter 10, 235 (2008), Fig. 1
+δ = overlap; piece-wise linear loading / unloading branches;
+the implementation used here is the LIGGGHTS hysteretic law [7]
+NOTES
+Sources: docs/dem_governing_equations_background_20261011.md (§5.3; §10.3 literature counts; §11 limits); CLAUDE.md MPM sections (2026-06-07 … 06-17). In one 7:3 bed, global viscous damping carries 58 % of the plate reaction during compression — an open issue (damping share 57.9 % measured on one 7:3 bed during compression; ledger DEMP-01, open). Selected literature survey (22 studies; author classification, not a systematic review): softened SE modulus 0/22; yield or hardness cap 7/22; linear hysteretic law 1/22; global damping in dry compaction none. Young's modulus reference: our DFT E_VRH = 22.06 GPa (literature DEM input 22.1 GPa, Bazzoun 2026 [8]); the bulk modulus K / B0 = 26.23 GPa is a separate quantity; the glass-electrolyte value 24 GPa (Sakuda 2013 [15]) is a different material system. The DEM statement is about this implementation (fixed spherical shapes, hooke/hysteresis), not about DEM in general. MPM parameters: 2D E = 1.53 GPa, σy = 0.15 GPa; 3D E = 1.53 GPa, ν = 0.49, σy = 0.30 GPa (next slide). Presenter figure (right, blank): MPM 3D render of the DEM-scaffold bed (AM fixed, SE material points), e.g. python3 scripts/viz_mpm_morphology.py --se <SE material points .npy> --scaffold <AM scaffold .csv> --y 0.5 --out morphology.png (actual files required; MPM renders are not tracked in the repository). Do not present the MPM image as an independent validation of the DEM bed.
+
+## Slide 6
+Effective material inputs and their status
+Bulk modulus from DFT; 
+shear softening and yield stress
+ from a pure-electrolyte calibration sweep.
+Historical and current scaffold calculations use different electrolyte initializations and run configurations; 
+they are not one validation series
+.
+MPM
+This work (left) · So et al., J. Power Sources 508, 230344 (2021), Fig. 4a (right) [9]
+Input
+Value and status
+LPSCl reference
+E ≈ 22 GPa (our DFT E_VRH; literature DEM input 22.1 GPa [8])
+DEM effective
+E = 1.35 GPa — reproduces compaction, not a property
+MPM
+E = 1.53 GPa, ν = 0.49, σy = 0.30 GPa; K = 25.5 ≈ DFT 26.2 GPa
+Calibration target
+pure-SE porosity 10 % at 300 MPa (lab reference sample, unpublished)
+Validation
+against independent experiments: pending
+Tested alternatives (volumetric cap, real E) did not remove the need for effective parameters.
+Literature: 
+DEM vs SE density–pressure data [9]
+Reproduced from So et al., J. Power Sources 508, 230344 (2021), Fig. 4a
+NOTES
+Sources: CLAUDE.md "3D MPM compaction — 3-fix calibration" (K = E/(3(1−2ν)) = 25.5 GPa vs DFT B0 26.23); our DFT E_VRH 22.06 GPa; Bazzoun 2026 [8] uses E_SE = 22.1 GPa for Li6PS5Cl; the sulfide-glass value 24 GPa (75Li2S·25P2S5, Sakuda 2013 [15]) is a different material system and is not used on the slide. σy = 0.30 GPa was selected in the pure-SE calibration sweep (0.15 → 5.6 %, 0.20 → 6.7 %, 0.25 → 9.0 %, 0.30 → 10.0 %), inside the literature range. Claims ledger CL-94: the pure-SE 10 % value is a calibration target (lab standard sample, unpublished); it is not a literature anchor — our earlier literature attribution was withdrawn. Shear-only softening (ν = 0.49) keeps K = 25.5 GPa close to the DFT reference B0 = 26.23 GPa; softening the bulk modulus over-crushed the bed. "Tested alternatives" = DPC volumetric cap and real-E runs (docs/mpm_dpc_cap_crosscheck.md); the statement is limited to the tested models. Scaffold calculations (AM skeleton from the DEM bed) — status: Earlier: cell-filled SE, bidirectional servo — historical, not a DEM-seeded validation. Current registered runs: DEM-seeded SE, stress-controlled servo — f = 0 completed; f(a) execution failed. AM-load-sharing hypothesis: verdict pending. The current statuses refer to the registered servo runs (--protocol servo; primary endpoint = final thickness after servo convergence). AM load sharing remains a candidate explanation for over-compaction; the final hypothesis verdict is pending. The earlier thickness agreement is not shown: it comes from a different initialization and loading protocol and cannot serve as the validation value of the DEM-seeded runs (SEM-02). Literature crop: So et al. 2021 calibrate a contact-plasticity parameter on the relative density vs pressure of a sulfide SE (their Fig. 4a, experimental points from Sakuda et al.) — a literature example of calibrating an effective contact parameter on pure-SE compaction data.
+
+## Slide 7
+Voxelizing the compacted microstructure into a transport mesh
+Faces are joined by a harmonic mean with 
+no interface-resistance term
+: an ideal-interface voxel model — an 
+upper bound only within the same geometry, properties and boundaries
+.
+VGCF as diameter-preserving segments, PTFE as a centre-line insulator, polymer as spheres; a registered 104-arm study keeps the σ(e⁻) 
+order across 1–4 wt% VGCF
+ on all tested grids (72/72).
+Transport
+figure: presenter — 3D current-flow views, contact network and voxel (left) · this work, 104-arm study (right)
+σ(e⁻) vs VGCF wt%: campaign means (96 primary arms), three voxel sizes;
+no contact resistance
+NOTES
+Sources: CLAUDE.md "σ 를 내는 솔버는 둘이다" table and CL-81. Finite-volume conservation on the phase grid gives electrical (σ, φ) and thermal (κ, T) transport on the same structure. The voxel solver has no interface-resistance term by default (the film mechanism exists but is off): this makes it an ideal-interface model and an upper bound only for the same geometry, phase properties and boundary conditions — not a physical upper bound; geometric necks still cost resistance inside the voxel grid. The 4.04× (contact-free / full network, n = 157) is a ratio inside the contact-network model. Additives: carbon fibres (VGCF) as diameter-preserving segments, PTFE as a centre-line insulator, a conductive polymer as true-diameter spheres. Pre-registered 104-arm study: the electronic-conductivity order across 1–4 wt% VGCF holds across the tested voxel sizes and grid-origin offsets (72/72) — docs/data/phase_a_rep100_20260930/README.md (104 arms, 72/72 adjacent-composition comparisons with no threshold violation; order only is the registered estimand; increments are technical report only; replay difference 0.00000 %); docs/report_20261021 G6 (voxel σe means; contact resistance not included; figure F_vgcf redrawn from G6). Stamp conventions: CLAUDE.md SR-01 (sphere stamp, centerline PTFE = CL-60). Presenter figures (left, blank): (i) contact-network current pathways of the 7:3 bed — scripts/network_current.py dump <7:3 result folder> → webapp DEM 3D viewer "current flow" (same bed, same H0/FULL ionic solution, 1 V, colour = j = |I|/A; "top 50 % of current" = edges carrying the top half of the current share, not the top half by count); (ii) STEP3 phase grid and the 1 V current-density field of the same voxel solution (A cm⁻²; state origin, voxel size, phase mapping, electrode rule, run hash).
+
+## Slide 8
+Problems 1 and 2: grid dependence and absolute σ(e⁻)
+The electronic ratio decreases across the three tested voxel spacings (0.4, 0.3, 0.25 µm); the ionic ratio crosses 1. 
+Grid convergence has not been established
+.
+Voxel predictions 
+exceed
+ the available DC-polarization estimates; measurement conditions remain 
+unverified
+. The NCM–SE comparison uses a common reference conductivity and a specified contact model.
+Limits
+This work — voxel transport solver (a, b) · contact network, five NCM–SE beds (c)
+(a) same bed pair and convention; no converged conductivity ratio is reported · (b) log scale; conditions not yet matched ·
+(c) no carbon/binder; Hertz H0; common NCM reference 4.1 mS cm⁻¹ [16]; size factor off; one bed per composition
+NOTES
+Sources: claims ledger CL-24 (public values at vox 0.4/0.3/0.25); CL-41 (vox ≤ 0.15 values on hold — not shown); CL-72 ("lower bound" retracted). The three public points admit an exact power-law fit (three points, three parameters), so no statement about power laws or extrapolation is made from them (SEM-03); the earlier manuscript headline at 0.4 µm is superseded. Finer grids reach the memory limit of one GPU (peak RSS 35.6 GB at vox 0.115; 0.10 µm ≈ 54 GB). Panel (b): docs/reviews/sdcp_sigma_e_dcp_anchor_registration_20261012.md (DC-polarization values 4.47 and 12.4 mS/cm, measurement conditions unverified; model 54.0 and 70.6; re-run registered, no results yet). Panel (c): docs/data/ps45_sigmae_factor_off_20261013/README.md (0.391 · 0.406 · 0.402 · 0.375 · 0.467 mS/cm; raw minimum 0.3747). Footnote (Codex §6-1): computed effective electronic conductivity of the DEM particle arrangement; Hertz H0 / Holm–Maxwell constriction; common reference conductivity 4.1 mS/cm for polycrystalline and single-crystal NCM (Wang 2018 [16], SPS pellet NMC811 at 20 °C, designated reference); no empirical size factor; absolute values conditional on this reference and contact model; single bed per composition, scatter not evaluated; carbon- and binder-free AM–SE composite.
+
+## Slide 9
+Problem 3: Load sharing during compaction
+NCM–NCM contacts contribute 
+48–60 % of vertical stress
+ after relaxation at fixed platen position; 
+7:3 is the minimum
+.
+The porosity ranking agrees for the selected five compositions (exploratory comparison, n = 5).
+Limits
+This work — DEM, five beds (left) · one 7:3 bed, four stages (right)
+Left: contribution to σ_zz by contact type, 21 planes, load-weighted; relaxed at fixed platen.
+Right: SE von Mises stress in one 7:3 bed, four stages (0 · 47 · 296 · 165 MPa), 0–150 MPa; wall SE excluded.
+NOTES
+Sources: docs/data/ps45_plane_load_20261007/ps45_v2/plane_load.json (21-plane load-weighted shares; figure F_load redrawn from contribution_sigma_zz_pct: NCM–NCM 59.56 · 54.63 · 52.37 · 48.46 · 56.91 % for 0:10 → 10:0; all NCM–NCM contacts, not large–large — the 0:10 bed has no large particles); state = relaxed at fixed platen (mean plane load 158–175 MPa, not the 300 MPa peak). Codex 2026-10-09 verdict: correlation observed; "springback" interpretation and stiffness inversion on hold (RB-01/RB-02); experimental thickness = selected 3-of-n average. SE stress figure: ps73 stages README §6 (wall SE excluded, linear 0–150 MPa). A 3D view of NCM particle stress / force chains of the same bed can be added by the presenter from the webapp.
+
+## Slide 10
+Registered studies and a 194-bed dataset for machine learning
+The table summarizes the current status of each registered study.
+130 + 64 Latin-hypercube beds (composition, particle sizes) → structure and transport descriptors, released as v1.2 (
+conditional use as model descriptors
+).
+Progress
+This work — registered studies (left) · dataset v1.2 (right)
+Registered study
+Status
+Historical eight-origin study
+Conductivity estimates and inference remain on hold
+VGCF ordering study (104 arms)
+Ordering holds across tested grids and offsets (72/72)
+Absolute-conductivity comparison [12]
+R = 2.07 (Tier 1); Q = 0.84
+194-bed dataset v1.2
+Released for conditional use as model descriptors
+Updated transport software
+Seven reviews completed; production remains pending
+R: model / literature conductivity. Q: conductivity retained after PTFE treatment
+(registered model-sensitivity prediction).
+(a) geometric tortuosity, 130 + 64 beds; ×: 24 non-percolating beds in the 130-bed set;
+not transport tortuosity · (b) porosity, 130-bed set
+NOTES
+Sources: docs/reviews/sdcp_gain_prereg_v2_20260816.md — the eight-origin (voxel 0.15 µm) study: numerical ratios and the h1 inference are on hold in the claims ledger (CL-33/34/41), so no result is reported; docs/data/phase_a_rep100_20260930/README.md (104 arms; 72/72; replay 0.00000 %); docs/reviews/lee_abs_sigma_e_prereg_20260923.md §5 (R = 2.074 ± 0.004, Tier 1 "order-of-magnitude", not "within band"; Q = 0.840 = registered model-sensitivity prediction met, not an experimental hit; comparison with Lee 2025 [12]); docs/data/lhs_release_20261006_v12/README.md (130 × 132 and 64 × 131; physical-target HOLD 59/130 and 62/64 — released as model descriptors, not validated physical targets; figure F_dataset drawn from the released CSV columns se_of_solid_vol, tortuosity_SE_wall, porosity_union_exact_pct); docs/reviews/codex_review_gen2_network_reverify7_20261012.md (seven software re-verification rounds completed; the updated 194-bed production run, v1.3 and the 20-bed extension are not yet launched or approved). "Origin" = voxel-grid origin offsets of the same bed, not independent replicate beds. In the 130-bed set: SE percolation 106/130; geometric shortest-path tortuosity 1.3–4.2 (percolating beds; not transport tortuosity); 64-bed set 1.3–1.6. Loading is not a free design axis (derived from thickness and composition). The collaborator porosity model (OOF R² 0.99) and our five-knob fit (0.98) use unverified and different CV protocols; no comparison is claimed.
+
+## Slide 11
+Drum mixing of a layered NCM–SE bed: no segregation detected
+Rotating-drum DEM with a cohesive soft-contact model: 
+ten runs from a layered initial state, eight revolutions
+; Lacey index M on a 16×16×4 bin grid vs a random reference.
+No NCM–NCM cohesion vs reference cohesion: ΔM within seed-to-seed scatter = the 
+registered "no segregation" category
+ (not "no effect"), direction and size unresolved.
+Mixing
+This work (left) · figure: presenter — bed view, layered start and after eight revolutions (right)
+M = 1: fully mixed; error bars = within-run SD; all ten runs reach M ≈ 0.96–1.00, so this bin grid cannot separate the arms;
+the registered 1 % overlap condition of the contact model was not met (diagnostic)
+NOTES
+Sources: docs/reviews/mixer_layered_prereg_20260921.md §2 (verdict line), §5 (report wording), §6 (readout 2026-09-30); docs/data/mixer_final10_20260930/ (ten runs; figure F_mix1 redrawn from the registered final values, report_20261021 G7). Registered estimand: paired contrast of the final Lacey index between the arm without NCM–NCM cohesion and the reference-cohesion arm, three seeds, 16×16×4 bins: Δ = +0.0012, seed-to-seed SE 0.0073 ⇒ |Δ| ≤ SE ⇒ registered "no segregation" category ("direction and size not resolved" — in this model, this drum, the tested inputs and this bin convention; not "no effect", not "equivalent"). Coarser grids (report only): 12×12×3 Δ −0.0156, SE 0.0058 (ambiguous); 8×8×2 Δ +0.0081, SE 0.0144. Negative control (no cohesion): M ≥ 0.8 in all three grids; floor check 10/10; flatness 30/30; QC 30/30. The two cohesion matrices differ in NCM–NCM and NCM–wall adhesion together; the comparison is not a reproduction of real coating or of powder flowability. Contract qualifier (Codex wording, 2026-09-28): the result is a comparison of mixing indices after eight revolutions in the specified soft-contact model; in the reference state the maximum stored-frame overlap was 4.7–5.8 % particle–particle and 4.5–5.7 % at the wall, so the registered 1 % condition was not met; the effect of the overlap error on the mixing index has not been verified. Conditions: three phases, 100,000 particles, drum radius 13.1 mm, 75 rpm. Presenter figure (right, blank): bed view of one run, layered start and after eight revolutions (webapp bed view; display only).
+
+## Slide 12
+Cohesion exploration: stronger cohesion lowers mixing
+Exploratory single-seed runs, two revolutions: NCM–NCM cohesion raised 
+10× and 30×
+, or all contact pairs raised 
+10× and 14×
+, vs the run without NCM–NCM cohesion.
+ΔM grows with the Bond number in every bin grid, but each arm is 
+one seed chosen after earlier runs
+, and wall adhesion changes with the pair — 
+no verdict
+ is drawn.
+Mixing
+This work (left) · figure: presenter — bed snapshots, non-cohesive vs cohesive NCM, two revolutions (right)
+hatched: bin grid failed the volume-coverage check; ΔM mixes the start-state difference
+with the post-rotation difference; M < 0 is outside the Lacey range
+NOTES
+Sources: docs/data/mixer_highbo_devrot_prelim_20261002/README.md, mixer_highbo_devbo_prelim_20261003/README.md, mixer_highbo_devu_prelim_20261006/README.md (development data; one seed; two revolutions; no pass/fail line; not used for any verdict; not mixed with the confirmatory seeds). ΔM = M(arm without NCM–NCM cohesion) − M(arm), bins 16×16×4 · 12×12×3 · 8×8×2: reference cohesion +0.010 / −0.006 / +0.008; NCM–NCM cohesion ×10 +0.83 / +0.93 / +0.99; ×30 +1.88 / +2.43 / +3.16; all pairs ×10 +0.24 / +0.17 / +0.10; all pairs ×14 +0.87 (16×16×4 failed the volume-coverage check) / +0.48 / +0.27. The 16×16×4 cells of the ×10 and ×30 NCM runs also failed that check. Negative M values of the strongly cohesive arms lie outside the Lacey range [0, 1] (their start-state variance is smaller); ΔM therefore mixes a start-state difference with the post-rotation difference. The ×10 / ×30 levels were chosen after seeing the first exploratory contrast (post-hoc); NCM–NCM and NCM–wall adhesion change together (joint intervention); the uniform runs scale all nine cohesion matrix elements and include SE stiffening. No sentence about "real coating effect" or "real powder" is made. Presenter figure (right, blank): bed snapshots of the arm without NCM–NCM cohesion vs a cohesive arm after two revolutions (webapp bed view).
+
+## Slide 13
+Surface energy and coating: SE–SE adhesion is the open term
+Two NCM–SE contacts → NCM–NCM + SE–SE frees 
+ΔW = 2(√γ_A − √γ_S)² ≥ 0
+; the small SE phase keeps like–like contacts best, so uncoated beds can retain SE–SE clusters.
+Uniformly cohesive runs keep most SE in SE–SE clusters after two revolutions, unlike the run without NCM–NCM cohesion; the 
+confirmatory 18-run block stays on hold
+.
+Mixing
+This work — exploratory runs (left) · ratified thesis argument (right)
+Left: one seed, averaged over the second revolution; whiskers = dump-resolution range. Right: work-of-adhesion argument (γ = surface energy,
+W = work of adhesion, R* = reduced radius, ρ = density of the smaller particle); the uncoated NCM / SE surface-energy ratio is not known.
+NOTES
+Sources: docs/hetero_thesis.md (ratified 2026-10-05) §2-1 · §2-2 · §2-8: W_ij ≈ 2√(γ_i γ_j); ΔW = W_AA + W_SS − 2 W_AS = 2(√γ_A − √γ_S)² ≥ 0; pair Bond number ∝ W·R*/(ρ g R³) of the smaller particle — at equal surface energy the SE–SE pair Bond number is about 194× that of the large-NCM pair and SE→NCM adhesion is 1.8× SE–SE (arithmetic estimates); for SE–SE clusters to survive in an uncoated bed the ratio γ_NCM/γ_SE would have to be below about 0.31 — that ratio is not known (open decision). Predictions P1–P3 of the thesis: uncoated beds keep SE–SE clustering above random; coating removes it; the mixing difference carries into the compacted SE pathway. The present cohesion model does not yet contain that mechanism (NCM–NCM cohesion was varied, not SE–SE). Left figure: docs/data/mixer_highbo_devu_prelim_20261006/README.md §3 — fraction of SE in SE–SE clusters (bin 1, after two revolutions): 0.401 [0.143, 0.542] without NCM–NCM cohesion; 0.954 [0.875, 0.957] all pairs ×10; 0.988 [0.981, 0.988] all pairs ×14 (ranges = dump-resolution [certain, possible]; difference only where ranges do not overlap; one seed; development data). Confirmatory 18-run block: registered, on hold after the Codex rounds (docs/reviews/mixer_highbo_prereg_20260927.md); no "real coating effect" sentence.
+
+## Slide 14
+Plan
+Tests for unresolved model limits
+Grid sensitivity remains unresolved. Diagnostic results exist, while final hypothesis verdicts remain pending.
+Electronic transport
+Interface resistance: film model implemented, production on hold
+Carbon conductivity: comparison with DC polarization
+NCM conductivity: literature-based input review
+Compaction and mixing
+AM load sharing: final hypothesis verdict pending
+Unloading: springback and measured thickness
+Mixing: an adhesion parameter for SE–SE contacts
+Pending: 
+separate launch approvals for the updated 194-bed run and the 20-bed extension.
+NOTES
+Sources: docs/reviews/contact_resistance_pipeline_draft_v3_1_20261007.md; docs/reviews/fam_platen_prereg_20260812.md §12; docs/reviews/dem_unloading_ps45_prereg_20261009.md §12–13; docs/hetero_thesis.md §4. Grid sensitivity: no new grid campaign is promised here. The updated 194-bed production run and the 20-bed extension have separate launch approvals pending (software review complete).
+
+## Slide 15
+Summary
+Current findings and limitations
+DEM and contact networks: 
+composition trends from one bed per composition
+MPM: 
+plastic deformation, with compaction agreement dependent on initialization and loading protocol
+Voxel transport: 
+ideal-interface calculations with grid dependence and unresolved absolute conductivity
+Mixing: 
+no segregation detected at the registered resolution; cohesion exploration without a verdict
+Final model-validation verdicts remain pending
+NOTES
+Summary; no new numbers. No universal guarantee about registration or verification is claimed (SEM-06).
+
+## Slide 16
+References
+Contact mechanics and DEM
+[1] S. Luding, Granul. Matter 10, 235–246 (2008)
+[2] C. Thornton, Z. Ning, Powder Technol. 99, 154–162 (1998)
+[3] M. Paulick, M. Morgeneyer, A. Kwade, Powder Technol. 283, 66–76 (2015)
+[4] C.J. Coetzee, Powder Technol. 310, 104–142 (2017)
+[5] K. Giannis et al., Granul. Matter 23, 17 (2021)
+[6] W. Zunker, K. Kamrin, J. Mech. Phys. Solids 183, 105492 (2024)
+[7] LIGGGHTS-PUBLIC 3.8.0 (commit 3d5c00f, 2024), github.com/CFDEMproject/LIGGGHTS-PUBLIC
+[15] A. Sakuda, A. Hayashi, M. Tatsumisago, Sci. Rep. 3, 2261 (2013)
+Solid-state battery electrodes
+[8] A.M. Bazzoun et al., J. Power Sources 661, 238682 (2026)
+[9] M. So et al., J. Power Sources 508, 230344 (2021)
+[10] C.A. Varkey et al., Adv. Powder Technol. 37, 105338 (2026)
+[11] T. Shi et al., Adv. Energy Mater. 10, 1902881 (2020)
+[12] D.J. Lee et al., Nat. Commun. 16, 4200 (2025)
+[13] P. Minnmann et al., J. Electrochem. Soc. 168, 040537 (2021)
+[14] V. Miß, F. Lange, S. Staubitz, B. Roling, ACS Appl. Mater. Interfaces 18, 32830–32836 (2026)
+[16] S. Wang, M. Yan, Y. Li, C. Vinado, J. Yang, J. Power Sources 393, 75–82 (2018)
+NOTES
+All entries are taken from the canonical literature cards (original PDFs); no bibliographic field was filled from memory. The constriction law (Holm/Maxwell) and the MLS-MPM numerical method have no canonical card yet and are cited as the models used, without a bibliographic entry. Literature crops on slides 4–6 are reproduced from the papers of [8], [1] and [9] (canonical figure crops).
+
+## Slide 17
+Thank you
+For more information or any questions, please e-mail at yonghoon71@
+hanyang
+.ac.kr
+NOTES

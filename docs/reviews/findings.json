@@ -10049,6 +10049,158 @@
         "docs/reviews/codex_seminar_deck_review_evidence_20261013/v2_recheck/evidence/arithmetic_rerun.txt"
       ],
       "claimed_fixed_sha": "9991b17a5"
+    },
+    {
+      "id": "SEMV3-01",
+      "severity": "P1",
+      "status": "open",
+      "owner": "claude",
+      "found_by": "codex 10-13 v3 재확인 (조건부 GO · PPTX sha256 baf2bb98… · PDF bb94b5de… · ZIP ad85809c… · 본문 · notes · 미디어 · PDF 렌더 대조 · 저장 자료 산술 재계산 — 솔버 미실행) · 우리 재현: 판독 JSON planned.M_final (ΔM 0.927486 · 0.865461) · devu_contact.json (0.400491) · LC 덱 CED 108,795 · 142,562 · readback.json 큰 NCM CED 3,563,480 · 7,677,280 · 11,072,500 · litdb figures.json src",
+      "opened_in": "docs/reviews/codex_review_seminar_deck_v3_recheck_20261013.md",
+      "title": "p6 So 크롭 = J. Electrochem. Soc. 168, 030538 (2021) Fig. 4 (정본 figures.json src) 인데 [9] · 출처 줄 · 크레딧이 다른 논문 J. Power Sources 508, 230344 로 인용 · 크롭 오른쪽 500 MPa 눈금 잘림",
+      "note": "교체 = [9] = JES 168, 030538 (16 개 유지 · 옛 JPS 논문은 다른 장에 인용 없음) · SO_CROP 0.475 → 0.515 · ⚠ 정본 카드 머리 DOI abe796 ↔ 출판사 abed23 (Codex) — 덱에는 DOI 를 쓰지 않음 · 카드 정정은 원문 확인 뒤 (litdb) — 수정 = 덱 v3.1 (생성기 build_seminar_v3.py · 그림 figs_v3 · 시험 먼저: v3 덱에서 실패 확인 · 이 커밋 뒤 claimed_fixed · 종결 확인 = Codex)",
+      "evidence_tests": [
+        "docs/reviews/codex_review_seminar_deck_v3_recheck_20261013.md (§4 SEMV3-01)",
+        "docs/reviews/codex_seminar_deck_review_evidence_20261013/v3_recheck/evidence/so_source_verification.md",
+        "docs/reviews/codex_seminar_deck_review_evidence_20261013/v3_recheck/evidence/so_figures_source.json"
+      ]
+    },
+    {
+      "id": "SEMV3-02",
+      "severity": "P1",
+      "status": "open",
+      "owner": "claude",
+      "found_by": "codex 10-13 v3 재확인 (조건부 GO · PPTX sha256 baf2bb98… · PDF bb94b5de… · ZIP ad85809c… · 본문 · notes · 미디어 · PDF 렌더 대조 · 저장 자료 산술 재계산 — 솔버 미실행) · 우리 재현: 판독 JSON planned.M_final (ΔM 0.927486 · 0.865461) · devu_contact.json (0.400491) · LC 덱 CED 108,795 · 142,562 · readback.json 큰 NCM CED 3,563,480 · 7,677,280 · 11,072,500 · litdb figures.json src",
+      "opened_in": "docs/reviews/codex_review_seminar_deck_v3_recheck_20261013.md",
+      "title": "p11–13 작지만 0 아닌 비교군 (LC · CED 108,795 · 142,562 J/m³ · Bo_code 0.00109 · 0.00553) 을 `no cohesion / cohesion removed / non-cohesive` 로 명명 — 철회된 해석 (HBR8-02) 재도입",
+      "note": "교체 = `Low NCM–NCM cohesion` · `low-cohesion comparator` (본문 · 그림 · CSV · notes) · L0 `no cohesion (control)` 유지 — 수정 = 덱 v3.1 (생성기 build_seminar_v3.py · 그림 figs_v3 · 시험 먼저: v3 덱에서 실패 확인 · 이 커밋 뒤 claimed_fixed · 종결 확인 = Codex)",
+      "evidence_tests": [
+        "docs/reviews/codex_review_seminar_deck_v3_recheck_20261013.md (§4 SEMV3-02)",
+        "docs/reviews/codex_seminar_deck_review_evidence_20261013/v3_recheck/evidence/mixing_repro.json"
+      ]
+    },
+    {
+      "id": "SEMV3-03",
+      "severity": "P1",
+      "status": "open",
+      "owner": "claude",
+      "found_by": "codex 10-13 v3 재확인 (조건부 GO · PPTX sha256 baf2bb98… · PDF bb94b5de… · ZIP ad85809c… · 본문 · notes · 미디어 · PDF 렌더 대조 · 저장 자료 산술 재계산 — 솔버 미실행) · 우리 재현: 판독 JSON planned.M_final (ΔM 0.927486 · 0.865461) · devu_contact.json (0.400491) · LC 덱 CED 108,795 · 142,562 · readback.json 큰 NCM CED 3,563,480 · 7,677,280 · 11,072,500 · litdb figures.json src",
+      "opened_in": "docs/reviews/codex_review_seminar_deck_v3_recheck_20261013.md",
+      "title": "p11 제목 · p15 요약 `no segregation detected` — 후속 진단 분류 (원 등록 1 % 겹침 NOT_MET) 를 물리적 무분리처럼 읽게 함",
+      "note": "교체 = 제목 `Layered-bed mixing: unresolved mixing-index contrast` · 본문 ΔM 0.0012 · SE 0.0073 + `Subsequent diagnostic classification; the original 1% overlap condition was not met.` · 등록 범주 문장 + 비준수 · 비동등 · 물리 무분리 아님 = notes · p15 교체 — 수정 = 덱 v3.1 (생성기 build_seminar_v3.py · 그림 figs_v3 · 시험 먼저: v3 덱에서 실패 확인 · 이 커밋 뒤 claimed_fixed · 종결 확인 = Codex)",
+      "evidence_tests": [
+        "docs/reviews/codex_review_seminar_deck_v3_recheck_20261013.md (§4 SEMV3-03)",
+        "docs/reviews/codex_seminar_deck_review_evidence_20261013/v3_recheck/evidence/mixing_frame_recalculation.json"
+      ]
+    },
+    {
+      "id": "SEMV3-04",
+      "severity": "P1",
+      "status": "open",
+      "owner": "claude",
+      "found_by": "codex 10-13 v3 재확인 (조건부 GO · PPTX sha256 baf2bb98… · PDF bb94b5de… · ZIP ad85809c… · 본문 · notes · 미디어 · PDF 렌더 대조 · 저장 자료 산술 재계산 — 솔버 미실행) · 우리 재현: 판독 JSON planned.M_final (ΔM 0.927486 · 0.865461) · devu_contact.json (0.400491) · LC 덱 CED 108,795 · 142,562 · readback.json 큰 NCM CED 3,563,480 · 7,677,280 · 11,072,500 · litdb figures.json src",
+      "opened_in": "docs/reviews/codex_review_seminar_deck_v3_recheck_20261013.md",
+      "title": "p12 Bo ×10 · ×30 (큰 NCM 자기쌍 Bo_code 38.4 → 384 → 1152 · CED 로는 ×2.154 · ×3.107) 과 all-pair CED ×10 · ×14.42 를 같은 `×10` 으로 표기 · p12 `reference cohesion` = Bo 38.4 (p11 의 reference = Bo 3.0) · 제목 `stronger cohesion lowers mixing`",
+      "note": "교체 = 범주 = NCM-pair Bo 38.4 / 384 / 1152 · all-pair CED ×10 / ×14.42 (두 계열 구획) · 제목 `Exploratory cohesion settings produce different mixing indices` · 사후 수준 · 벽 동반 · 시작 상태 · no verdict — 수정 = 덱 v3.1 (생성기 build_seminar_v3.py · 그림 figs_v3 · 시험 먼저: v3 덱에서 실패 확인 · 이 커밋 뒤 claimed_fixed · 종결 확인 = Codex)",
+      "evidence_tests": [
+        "docs/reviews/codex_review_seminar_deck_v3_recheck_20261013.md (§4 SEMV3-04)",
+        "docs/reviews/codex_seminar_deck_review_evidence_20261013/v3_recheck/evidence/mixing_numeric_checks.json"
+      ]
+    },
+    {
+      "id": "SEMV3-05",
+      "severity": "P1",
+      "status": "open",
+      "owner": "claude",
+      "found_by": "codex 10-13 v3 재확인 (조건부 GO · PPTX sha256 baf2bb98… · PDF bb94b5de… · ZIP ad85809c… · 본문 · notes · 미디어 · PDF 렌더 대조 · 저장 자료 산술 재계산 — 솔버 미실행) · 우리 재현: 판독 JSON planned.M_final (ΔM 0.927486 · 0.865461) · devu_contact.json (0.400491) · LC 덱 CED 108,795 · 142,562 · readback.json 큰 NCM CED 3,563,480 · 7,677,280 · 11,072,500 · litdb figures.json src",
+      "opened_in": "docs/reviews/codex_review_seminar_deck_v3_recheck_20261013.md",
+      "title": "p13 ΔW = 2(√γ_A − √γ_S)² 의 가정 (기하평균 결합 · 같은 접촉 면적 · J m⁻²) 생략 · `small SE holds like–like contacts best` 단정 (같은 SE 의 SE–NCM pull-off = SE–SE 의 1.8 · 1.6 배) · notes 0.31 = 두 접촉 힘 비교 조건인데 군집 생존 조건처럼 · all-pair 런도 SE–SE 를 바꾸는데 `not SE–SE`",
+      "note": "교체 = 본문 · 도식 · notes 교체 (조건부 접착일 · 단위 · 생존은 크기만으로 정해지지 않음 · γ_NCM/γ_SE < 0.309 / 0.391 = 두 접촉 비교 · CED 런은 표면 에너지 기전 검증 아님) — 수정 = 덱 v3.1 (생성기 build_seminar_v3.py · 그림 figs_v3 · 시험 먼저: v3 덱에서 실패 확인 · 이 커밋 뒤 claimed_fixed · 종결 확인 = Codex)",
+      "evidence_tests": [
+        "docs/reviews/codex_review_seminar_deck_v3_recheck_20261013.md (§4 SEMV3-05)"
+      ]
+    },
+    {
+      "id": "SEMV3-06",
+      "severity": "P2",
+      "status": "open",
+      "owner": "claude",
+      "found_by": "codex 10-13 v3 재확인 (조건부 GO · PPTX sha256 baf2bb98… · PDF bb94b5de… · ZIP ad85809c… · 본문 · notes · 미디어 · PDF 렌더 대조 · 저장 자료 산술 재계산 — 솔버 미실행) · 우리 재현: 판독 JSON planned.M_final (ΔM 0.927486 · 0.865461) · devu_contact.json (0.400491) · LC 덱 CED 108,795 · 142,562 · readback.json 큰 NCM CED 3,563,480 · 7,677,280 · 11,072,500 · litdb figures.json src",
+      "opened_in": "docs/reviews/codex_review_seminar_deck_v3_recheck_20261013.md",
+      "title": "반올림 세 곳 = README 요약값을 베낌: Bo 384 12×12×3 0.928 (원 0.927486) · CED ×14.42 16×16×4 0.866 (0.865461) · 비교군 군집 0.401 (0.400491) · 그림 selftest 가 README 문자열만 검사",
+      "note": "교체 = 그림 · CSV · notes 값 = 판독 JSON 직접 (dev_planned_m · dev_delta_m · dev_cluster) · selftest 가 세 값을 고정 검사 — 수정 = 덱 v3.1 (생성기 build_seminar_v3.py · 그림 figs_v3 · 시험 먼저: v3 덱에서 실패 확인 · 이 커밋 뒤 claimed_fixed · 종결 확인 = Codex)",
+      "evidence_tests": [
+        "docs/reviews/codex_review_seminar_deck_v3_recheck_20261013.md (§6 SEMV3-06)",
+        "docs/reviews/codex_seminar_deck_review_evidence_20261013/v3_recheck/evidence/mixing_frame_recalculation.json"
+      ]
+    },
+    {
+      "id": "SEMV3-07",
+      "severity": "P2",
+      "status": "open",
+      "owner": "claude",
+      "found_by": "codex 10-13 v3 재확인 (조건부 GO · PPTX sha256 baf2bb98… · PDF bb94b5de… · ZIP ad85809c… · 본문 · notes · 미디어 · PDF 렌더 대조 · 저장 자료 산술 재계산 — 솔버 미실행) · 우리 재현: 판독 JSON planned.M_final (ΔM 0.927486 · 0.865461) · devu_contact.json (0.400491) · LC 덱 CED 108,795 · 142,562 · readback.json 큰 NCM CED 3,563,480 · 7,677,280 · 11,072,500 · litdb figures.json src",
+      "opened_in": "docs/reviews/codex_review_seminar_deck_v3_recheck_20261013.md",
+      "title": "p7 σ(e⁻)–VGCF 그림 = 원판 Phase A (VGCF E = 10 GPa) 평균인데 notes 는 100 GPa 재현과 연결",
+      "note": "교체 = 해석 줄 `Original Phase A campaign (VGCF E = 10 GPa): means of 96 primary arms` · notes 에 100 GPa 재현 72/72 따로 — 수정 = 덱 v3.1 (생성기 build_seminar_v3.py · 그림 figs_v3 · 시험 먼저: v3 덱에서 실패 확인 · 이 커밋 뒤 claimed_fixed · 종결 확인 = Codex)",
+      "evidence_tests": [
+        "docs/reviews/codex_review_seminar_deck_v3_recheck_20261013.md (§6 SEMV3-07)",
+        "docs/reviews/codex_seminar_deck_review_evidence_20261013/v3_recheck/notes/sources/report_make_figs.py"
+      ]
+    },
+    {
+      "id": "SEMV3-08",
+      "severity": "P2",
+      "status": "open",
+      "owner": "claude",
+      "found_by": "codex 10-13 v3 재확인 (조건부 GO · PPTX sha256 baf2bb98… · PDF bb94b5de… · ZIP ad85809c… · 본문 · notes · 미디어 · PDF 렌더 대조 · 저장 자료 산술 재계산 — 솔버 미실행) · 우리 재현: 판독 JSON planned.M_final (ΔM 0.927486 · 0.865461) · devu_contact.json (0.400491) · LC 덱 CED 108,795 · 142,562 · readback.json 큰 NCM CED 3,563,480 · 7,677,280 · 11,072,500 · litdb figures.json src",
+      "opened_in": "docs/reviews/codex_review_seminar_deck_v3_recheck_20261013.md",
+      "title": "p9 `The porosity ranking agrees …` — 일치 대상 (선택된 실험 공극률 요약) 이 빠져 DEM 공극률 순위로 읽힘 (DEM 공극률 ↔ 하중 몫 Spearman 0.7)",
+      "note": "교체 = `The NCM–NCM stress-share ranking matches the experimental porosity summaries for the selected five compositions (exploratory, n = 5).` — 수정 = 덱 v3.1 (생성기 build_seminar_v3.py · 그림 figs_v3 · 시험 먼저: v3 덱에서 실패 확인 · 이 커밋 뒤 claimed_fixed · 종결 확인 = Codex)",
+      "evidence_tests": [
+        "docs/reviews/codex_review_seminar_deck_v3_recheck_20261013.md (§6 SEMV3-08)"
+      ]
+    },
+    {
+      "id": "SEMV3-09",
+      "severity": "P2",
+      "status": "open",
+      "owner": "claude",
+      "found_by": "codex 10-13 v3 재확인 (조건부 GO · PPTX sha256 baf2bb98… · PDF bb94b5de… · ZIP ad85809c… · 본문 · notes · 미디어 · PDF 렌더 대조 · 저장 자료 산술 재계산 — 솔버 미실행) · 우리 재현: 판독 JSON planned.M_final (ΔM 0.927486 · 0.865461) · devu_contact.json (0.400491) · LC 덱 CED 108,795 · 142,562 · readback.json 큰 NCM CED 3,563,480 · 7,677,280 · 11,072,500 · litdb figures.json src",
+      "opened_in": "docs/reviews/codex_review_seminar_deck_v3_recheck_20261013.md",
+      "title": "렌더 조판: p6 크롭 500 눈금 잘림 · p8 범례 ↔ (c) 세로축 · (b)(c) 제목 붙음 · p11 · p12 x 범주 겹침",
+      "note": "교체 = 그림 글자 겹침 검사 상주 (그려진 모든 글 상자 · v3 그림에서 일곱 쌍 → 0) · 패널 제목 (a)(b)(c) · 범례 · 간격 · 그림 크기 = 덱 그림 띠 1:1 — 수정 = 덱 v3.1 (생성기 build_seminar_v3.py · 그림 figs_v3 · 시험 먼저: v3 덱에서 실패 확인 · 이 커밋 뒤 claimed_fixed · 종결 확인 = Codex)",
+      "evidence_tests": [
+        "docs/reviews/codex_review_seminar_deck_v3_recheck_20261013.md (§6 SEMV3-09)"
+      ]
+    },
+    {
+      "id": "SEMV3-10",
+      "severity": "P2",
+      "status": "open",
+      "owner": "claude",
+      "found_by": "codex 10-13 v3 재확인 (조건부 GO · PPTX sha256 baf2bb98… · PDF bb94b5de… · ZIP ad85809c… · 본문 · notes · 미디어 · PDF 렌더 대조 · 저장 자료 산술 재계산 — 솔버 미실행) · 우리 재현: 판독 JSON planned.M_final (ΔM 0.927486 · 0.865461) · devu_contact.json (0.400491) · LC 덱 CED 108,795 · 142,562 · readback.json 큰 NCM CED 3,563,480 · 7,677,280 · 11,072,500 · litdb figures.json src",
+      "opened_in": "docs/reviews/codex_review_seminar_deck_v3_recheck_20261013.md",
+      "title": "제한 설명 잔여: p6 notes `inside the literature range` (근거 없음) · p5 한계를 모든 DEM 처럼 · p11 `M = 1: fully mixed` · p13 notes 현재 모델 설명",
+      "note": "교체 = p6 notes 삭제 · p5 `Our fixed-shape implementation …` · p11 `M = 1: random-reference variance` · p13 notes 교체 — 수정 = 덱 v3.1 (생성기 build_seminar_v3.py · 그림 figs_v3 · 시험 먼저: v3 덱에서 실패 확인 · 이 커밋 뒤 claimed_fixed · 종결 확인 = Codex)",
+      "evidence_tests": [
+        "docs/reviews/codex_review_seminar_deck_v3_recheck_20261013.md (§6 SEMV3-10)"
+      ]
+    },
+    {
+      "id": "SELF-111",
+      "severity": "P2",
+      "status": "open",
+      "owner": "claude",
+      "found_by": "codex 10-13 v3 재확인 (SEMV3-01 · 02 · 04 · 05 · §2 selftest 지적)",
+      "opened_in": "docs/reviews/codex_review_seminar_deck_v3_recheck_20261013.md",
+      "title": "덱 v3 믹서 · 문헌 장을 정본과 대조하지 않고 썼다: 크롭 src (JES) ↔ [9] (JPS) · 등록 정정 (LC ≠ 0 · HBR8-02) 을 어기고 `cohesion removed` · p12 `reference cohesion` 에 Bo 38.4 팔 · Bo 배율 ↔ CED 배율 혼동 · 논지 자체의 SE→NCM 1.8 배와 반대인 `small SE holds like–like best` · 그림 selftest 는 README 문자열만 검사",
+      "note": "수정 = 덱 v3.1 — 금지 문구 (본문 · notes) · 장별 필수 문구 · 그림 라벨 · 판독 JSON 값 · 글자 겹침 검사를 생성기 · 그림 selftest 에 상주 (v3 덱 · 그림에서 실패 확인 뒤 고침) · 이 커밋 뒤 claimed_fixed",
+      "evidence_tests": [
+        "docs/reviews/codex_review_seminar_deck_v3_recheck_20261013.md (§2 · §4)",
+        "docs/seminar_20261013/build_seminar_v3.py (selftest)",
+        "docs/seminar_20261013/figs_v3/make_seminar_figs.py (--selftest)"
+      ]
     }
   ]
 }

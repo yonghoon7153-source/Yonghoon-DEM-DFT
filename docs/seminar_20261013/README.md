@@ -1,5 +1,17 @@
 # 연구세미나 덱 (2026-10 · 1저자 비준 개요 v1) — 생성기 · 그림 · 출처
 
+## v3.1 (2026-10-13 · Codex v3 재확인 = 조건부 GO 반영) — 같은 파일 (`build_seminar_v3.py` · `figs_v3/` · `slide_text_v3.md` = v3.1 글 전문 · `slide_sources_v3.json`)
+
+- 판정 = `docs/reviews/codex_review_seminar_deck_v3_recheck_20261013.md` (증거 `docs/reviews/codex_seminar_deck_review_evidence_20261013/v3_recheck/`) · 원장 `SEMV3-01`~`10` · `SELF-111`.  새 시뮬레이션 · 값 변경 없음 — 출처 · 비교군 이름 · 배율 정의 · 결론 강도 · 반올림 · 조판만.
+- 6 장 · [9] = So et al., **J. Electrochem. Soc. 168, 030538 (2021), Fig. 4a** (크롭의 정본 출처 · 옛 JPS 인용 = 다른 논문) · 크롭 오른쪽 경계 0.475 → 0.515 (500 MPa 눈금까지).  덱에는 DOI 를 쓰지 않는다 (정본 카드 머리 DOI ↔ 출판사 DOI 어긋남 = litdb 원문 확인 전).
+- 믹서 11–13 장: 작지만 0 아닌 비교군 = **low NCM–NCM cohesion · low-cohesion comparator** (`no cohesion (control)` = 따로 있는 음성 대조만) · 11 장 제목 = *unresolved mixing-index contrast* + 화면 한정 (후속 진단 분류 · 원 등록 1 % 겹침 조건 미충족) · 12 장 = 두 계열을 따로 정의 (큰 NCM 자기쌍 model Bond number 38.4 / 384 / 1152 ↔ all-pair CED ×10 / ×14.42) · 인과 제목 철회 · 13 장 = 접착일 식의 가정 (기하평균 결합 · 같은 접촉 면적 · J m⁻²) 과 조건부 해석 · 15 장 요약 교체.
+- 반올림 = 판독 JSON 에서 직접 (`dev_planned_m` · `dev_delta_m` · `dev_cluster` — README 요약값을 베끼지 않는다): Bo 384 12×12×3 **0.927** · CED ×14.42 16×16×4 **0.865** · 비교군 군집 **0.400**.
+- 7 장 해석 줄 = 원판 Phase A (VGCF E = 10 GPa) · 96 팔 평균 · 100 GPa 재현은 notes.  9 장 = 일치 대상 = *experimental porosity summaries* (선택된 다섯 조성 · 탐색).  10 장 = *order-of-magnitude agreement* · 비관통 표지 = *display position only* · 범례 대신 직접 라벨.
+- selftest 추가 (생성기): 장별 금지 문구 (본문 · notes) · 장별 필수 문구 (본문 · notes) · 12 장 전용 금지어.  그림 selftest 추가: 그려진 모든 글 상자의 겹침 0 · 믹서 그림 라벨 (0 점착 표현 금지 · Bo / CED 구분 · 도식 가정) · 판독 JSON 값 고정 검사.  **고치기 전 실패 확인** = 새 검사를 Codex 가 받은 v3 덱 (sha256 `baf2bb98…`) 과 v3 커밋 (`0c6f5c84e`) 의 그림 스크립트에 돌린 기록 `docs/reviews/codex_seminar_deck_review_evidence_20261013/v3_1_fix/testfirst_v31.json` (하네스 = 같은 폴더 `testfirst_v31.py` · 덱 31 건 = 금지 문구 16 · 필수 문구 누락 15 · 그림 21 건 = 글자 겹침 7 쌍 · 라벨 13 · CSV 값 1 → v3.1 덱 0 건 · v3.1 그림 = 그림 selftest 통과).
+- 그림 배치 배율 (덱에 놓인 폭 ÷ 그림 원래 폭) = F_poro 1.024 · F_trans 0.895 · F_vgcf 0.984 · F_limits 0.846 · F_load 0.960 · F_dataset 0.974 · F_mix1 · F_mix2 · F_mix3 1.011 · 도식 0.963 ⇒ 배치 뒤 가장 작은 글씨 = 4 장 조성 눈금 8.5 pt · 8 장 (c) 조성 눈금 · 범례 8.9 pt · 믹서 그림 ≥ 10.1 pt.  ⚠ 아래 v3 절의 *"글씨 = 배치 1:1 ≈ 12 pt"* 는 4 · 8 장에서 틀린 서술이다 (이번에 글씨 크기는 바꾸지 않음 · 요청서 Q5).
+- 선택 개선 (P2) 중 미적용 = 9 장 색막대 (1저자 비준 ps73 최종 판 그림 · 해석 줄에 0–150 MPa) · 5 장 감쇠 58 % · 6 장 실행 상태의 화면 복구 (Codex: 필수 아님).
+- ⬜ 1저자 = 8–10 장 (문제 1·2 · 문제 3 · 194 침대 자료) 축소 검토 중 — 줄이면 같은 생성기로 장만 빼고 종결 확인 묶음 (ZIP v7) 을 만든다.  요청서 `docs/reviews/codex_seminar_deck_v3_1_closure_request_20261013.md`.
+
 ## v3 "보는 판" (2026-10-13 밤 · 1저자 지시) — `build_seminar_v3.py` · `figs_v3/` · `slide_text_v3.md` · `slide_sources_v3.json`
 
 - 장 문법 = 10-13 덱 4 장: ■ 제목 **한 줄** + 소불릿 ≤ 2 (15 pt · 핵심어 빨강) + 그림 한 띠 (본문 높이 추정값 아래 · 바닥 6.45 in) + 우상단 출처 줄 (10 pt 기울임 · ≤ 110 자) + 그림 아래 해석 조건 한 줄 (12 pt 회색 · 꺾쇠 캡션 없음) · 문헌 크롭 = 위 꼬리표 + 아래 출처.  **빈 자리 = 도형 없음** — 출처 줄의 `figure: presenter — …` 가 무엇을 붙일지 적는다 (5 장 우 = MPM 3D · 7 장 좌 = 3D 전류 흐름 (접촉망 · 복셀) · 11 장 우 = 층상 침대 전 · 후 · 12 장 우 = 침대 스냅샷).

@@ -1,0 +1,443 @@
+{
+  "archive": {
+    "name": "seminar_20261013_v3_codex_recheck.zip",
+    "bytes": 22320045,
+    "sha256": "ad85809cee600a8ed7300ceee04797ff1bf23f37fbd7d45e12d294093423c72d"
+  },
+  "inventory": [
+    {
+      "path": "codex_seminar_deck_v3_recheck_request_20261013.md",
+      "bytes": 8973,
+      "sha256": "8afb555dd02c2d479c906c9f62af55802b1ad4007a80194584f304f1db9f2ede"
+    },
+    {
+      "path": "lit/luding2008_cohesive_frictional_contact_models/tab_2.png",
+      "bytes": 462406,
+      "sha256": "c34f6aad8efaf8c067b732e101e9fc0ac620f977e9f56cafc9fc0f9ff5d881e8"
+    },
+    {
+      "path": "lit/luding2008_cohesive_frictional_contact_models/fig_1.png",
+      "bytes": 27203,
+      "sha256": "278a4e37ed44440cfcd5e82bf4a0b8378b0e0c72ecfacc3948af4b9b0cf595d4"
+    },
+    {
+      "path": "lit/luding2008_cohesive_frictional_contact_models/fig_3.png",
+      "bytes": 111604,
+      "sha256": "2564ec78c6ef4bcf802968d19aa7a53ad4647335ad55cc81ca3abd9b7f174bc7"
+    },
+    {
+      "path": "lit/luding2008_cohesive_frictional_contact_models/fig_4.png",
+      "bytes": 87125,
+      "sha256": "f20b08b5efd58ecfa0cc57828477b3f1fade8f1d0daee5c45a7f1086b3c6382f"
+    },
+    {
+      "path": "lit/luding2008_cohesive_frictional_contact_models/figures.json",
+      "bytes": 3195,
+      "sha256": "6011e3c7e65cdad14fa1a1f3cad0dbbb1c6ea61e6894ae3eee89b61a13619eb0"
+    },
+    {
+      "path": "lit/luding2008_cohesive_frictional_contact_models/fig_2.png",
+      "bytes": 59015,
+      "sha256": "8fe3ddd2ff00b296b4de0c6a97885efd3580ca9e610ffab699e8cf54389f098e"
+    },
+    {
+      "path": "lit/bazzoun2026_dem_fem_rnm_ionic/tab_3.png",
+      "bytes": 492362,
+      "sha256": "1b9333017ef29c30438002387d85973a158f0bb6f77caa0775c3c890bbd4cd79"
+    },
+    {
+      "path": "lit/bazzoun2026_dem_fem_rnm_ionic/fig_5.png",
+      "bytes": 98319,
+      "sha256": "d489df01acf72673ef5142f60f9e27cdccc8bac853a817149361352193a451b5"
+    },
+    {
+      "path": "lit/bazzoun2026_dem_fem_rnm_ionic/tab_2.png",
+      "bytes": 551776,
+      "sha256": "3d814f88676ca0dd85c2c8d28b3582e86c0d0097311922b651622f7264d75dcb"
+    },
+    {
+      "path": "lit/bazzoun2026_dem_fem_rnm_ionic/fig_1.png",
+      "bytes": 228351,
+      "sha256": "e934ad180993c881f4ad0989669d2ce3db2c49e02b1b0a8c8e57c869edf544e8"
+    },
+    {
+      "path": "lit/bazzoun2026_dem_fem_rnm_ionic/tab_1.png",
+      "bytes": 551422,
+      "sha256": "e0804493123ad874e1ace2b5e3b44991942aef042bbce1a784fa69f9a2ab6791"
+    },
+    {
+      "path": "lit/bazzoun2026_dem_fem_rnm_ionic/fig_3.png",
+      "bytes": 238445,
+      "sha256": "478e264cf14148d4f207dd4f0abfb1684bbb50a1fba74329c53b2a9c15e4a66b"
+    },
+    {
+      "path": "lit/bazzoun2026_dem_fem_rnm_ionic/fig_4.png",
+      "bytes": 51269,
+      "sha256": "80ddc6fea847783ec24a7b7414732491890a9f996edb008e41e03fba0b8905dc"
+    },
+    {
+      "path": "lit/bazzoun2026_dem_fem_rnm_ionic/figures.json",
+      "bytes": 12657,
+      "sha256": "762424ba8cd9eca114335f5c8c452a5c329a4a0b6e8b4186c8537cec567d0c9b"
+    },
+    {
+      "path": "lit/bazzoun2026_dem_fem_rnm_ionic/tab_4.png",
+      "bytes": 535112,
+      "sha256": "bf159e07a3fd8e6bd3c0b616cb4d982d81d8fc3678b13479c01e7c4a57f65465"
+    },
+    {
+      "path": "lit/bazzoun2026_dem_fem_rnm_ionic/fig_8.png",
+      "bytes": 93036,
+      "sha256": "ea1473872ab9199c14cc71cfee37a1512e55ac887f3040f58d7510aac2578111"
+    },
+    {
+      "path": "lit/bazzoun2026_dem_fem_rnm_ionic/fig_2.png",
+      "bytes": 104653,
+      "sha256": "4982417daea8b6b833debe9d239b706ec070256cded0d9e74428773af0866cfc"
+    },
+    {
+      "path": "lit/bazzoun2026_dem_fem_rnm_ionic/tab_5.png",
+      "bytes": 598217,
+      "sha256": "c0c74bfc3e55ec25ff23e89a77e9217b45fc5a5a6a33210b3ce6ff2c45e7879c"
+    },
+    {
+      "path": "lit/bazzoun2026_dem_fem_rnm_ionic/fig_6.png",
+      "bytes": 53636,
+      "sha256": "6e75e5ebc840fafa34bddd8421af924d93fff74466bd954a1a16a3138ad77de7"
+    },
+    {
+      "path": "lit/bazzoun2026_dem_fem_rnm_ionic/fig_7.png",
+      "bytes": 93135,
+      "sha256": "6681a0d07602c2db46ea9845f560b72d9ebf048a2ce4eada79e15cb16a064648"
+    },
+    {
+      "path": "lit/so2021_fig4a_crop.png",
+      "bytes": 43050,
+      "sha256": "2f7d556bb0a596621b3f639afaaef8774330b256d6465678616d55b4730dcbf0"
+    },
+    {
+      "path": "render/p-16.png",
+      "bytes": 182619,
+      "sha256": "84242ed6185bedba3b39968118116a25522043e7af5183ecd26efff07c2522a1"
+    },
+    {
+      "path": "render/p-03.png",
+      "bytes": 523162,
+      "sha256": "9460c0762425a57b6d764d6cd90c5b90b842874e74fa54b622702dd5e60f944e"
+    },
+    {
+      "path": "render/contact_sheet.jpg",
+      "bytes": 759518,
+      "sha256": "49435976ac4b31d73d9315dfabe211f50613f9ae856b2de32c78940299cf97a2"
+    },
+    {
+      "path": "render/p-12.png",
+      "bytes": 185927,
+      "sha256": "5406a0b287cdae6faa3eda7c48f3e9df611b0b1a3732a3dd23a00dbdff89403a"
+    },
+    {
+      "path": "render/p-17.png",
+      "bytes": 1057754,
+      "sha256": "87b4a1079d5f0355d9c0a1137036941839817c793021f0e65d5bd1c791cbb075"
+    },
+    {
+      "path": "render/p-06.png",
+      "bytes": 202153,
+      "sha256": "d2e975c3c157a299bd9175874dd65180d39434999dbb8071e94e35e26d0b4d1e"
+    },
+    {
+      "path": "render/p-14.png",
+      "bytes": 115336,
+      "sha256": "dc9eb9bc3ef300a70c9d010e5e8131ab28a7f6828000e658f7343febfa90748a"
+    },
+    {
+      "path": "render/p-10.png",
+      "bytes": 257026,
+      "sha256": "421131e3cf8adc1fff27ea8f237990c71b45da1d835c6b077dbb892a60f88502"
+    },
+    {
+      "path": "render/p-08.png",
+      "bytes": 231961,
+      "sha256": "30e9f80da785d81838effdfd34e3f1e6bf2baa4c0c4241cc3ff27bb08de07766"
+    },
+    {
+      "path": "render/p-15.png",
+      "bytes": 94676,
+      "sha256": "5a4627b457d416a4d7998a51546fac9294aadbf83ea824a12a05df78bface03b"
+    },
+    {
+      "path": "render/p-04.png",
+      "bytes": 265673,
+      "sha256": "ba0c18790a156e07252ce4132feb682215603a2af13946c7d140791e7fc6ed26"
+    },
+    {
+      "path": "render/p-11.png",
+      "bytes": 180066,
+      "sha256": "101a4693bcb9c02d93bf463278bdedc2f89600ebad61800aac3e5161cb2e0f67"
+    },
+    {
+      "path": "render/p-13.png",
+      "bytes": 235264,
+      "sha256": "a87a1e0e29d3a5b2b2a4581635853415079f15ff4004d91c7c99be492f5b761a"
+    },
+    {
+      "path": "render/p-05.png",
+      "bytes": 168024,
+      "sha256": "fb20f9b68e7bf440cdc25e130271eec5ad97c9857d7a31ca5eba20901722afc2"
+    },
+    {
+      "path": "render/p-07.png",
+      "bytes": 177464,
+      "sha256": "eedab0def77c2ce80dd1dd29e3b7034a5e7c104032230c0253cdfbf0abab1855"
+    },
+    {
+      "path": "render/p-02.png",
+      "bytes": 125130,
+      "sha256": "c6a44ebbf839a9264a9ced26c6889765572f631b64f62feea59bfd98e56d5170"
+    },
+    {
+      "path": "render/p-09.png",
+      "bytes": 454645,
+      "sha256": "48dabb3da85a7679c51b1f4183c86cbcb40b6ffbae06499de2fae74772985e7f"
+    },
+    {
+      "path": "render/p-01.png",
+      "bytes": 628940,
+      "sha256": "681ddf08aabfe13cc203aa17d7f3afc3aedc0cc7e33b281b6053e70cd2276f1f"
+    },
+    {
+      "path": "repo/docs/seminar_20261013/figs_v3/F_vgcf.svg",
+      "bytes": 16057,
+      "sha256": "9d504ea60f39c7e9a87fd9bf08fafc9ab32b7f073d8d37e38f79fbce04fa737c"
+    },
+    {
+      "path": "repo/docs/seminar_20261013/figs_v3/F_mix3_scheme.svg",
+      "bytes": 18833,
+      "sha256": "8d2190c21e894e5ff39c13365853d2c56434ec4a9d742224193b36f21ea04a68"
+    },
+    {
+      "path": "repo/docs/seminar_20261013/figs_v3/make_seminar_figs.py",
+      "bytes": 25336,
+      "sha256": "9dec06f9db985b6bf08b3d380c395819748b02275d0566133300ef1add349e9d"
+    },
+    {
+      "path": "repo/docs/seminar_20261013/figs_v3/F_mix2.png",
+      "bytes": 99321,
+      "sha256": "69c5e48ba9f1d1d6228b86ee0466173edc36c7d68b20ff3371e265fb48198f7e"
+    },
+    {
+      "path": "repo/docs/seminar_20261013/figs_v3/F_trans.svg",
+      "bytes": 19096,
+      "sha256": "4bb588a2a34a55c50559a18e4340893de8382429ea1d50c96e960749d2970a5e"
+    },
+    {
+      "path": "repo/docs/seminar_20261013/figs_v3/F_limits.svg",
+      "bytes": 26784,
+      "sha256": "f4256fa899f1d249ed2de893e1cf689f96f75cbee7154ea0f3301ba922b6be55"
+    },
+    {
+      "path": "repo/docs/seminar_20261013/figs_v3/F_vgcf.png",
+      "bytes": 98953,
+      "sha256": "83804979ac8937af0325f9d21d2eb51dc2ea10778c6faaba5370277e38aaaa4d"
+    },
+    {
+      "path": "repo/docs/seminar_20261013/figs_v3/F_load.csv",
+      "bytes": 161,
+      "sha256": "6a521c536d08450a8801c23fcc013d84983debfb74dd6fb9e276ae2705bf3d8c"
+    },
+    {
+      "path": "repo/docs/seminar_20261013/figs_v3/F_poro.csv",
+      "bytes": 76,
+      "sha256": "4bfc44975e46f56db0cfa0fb2670ca007807fd683fe131ce8e9455c252274e0b"
+    },
+    {
+      "path": "repo/docs/seminar_20261013/figs_v3/F_mix3_scheme.png",
+      "bytes": 110115,
+      "sha256": "116710e15dea713cbb03782581bb00dbd406d7dc44aa1f623ea01d5982666cb2"
+    },
+    {
+      "path": "repo/docs/seminar_20261013/figs_v3/F_limits.csv",
+      "bytes": 260,
+      "sha256": "4c46338663eaed441ab5ddec6c7c62bceda047cd2636b84a915bf6cf5b9c1dcd"
+    },
+    {
+      "path": "repo/docs/seminar_20261013/figs_v3/F_dataset.svg",
+      "bytes": 47221,
+      "sha256": "bd01e935c69432a5b03b7b61d4f99a95c80807d5faf4a33fcaea3c7b85b5477f"
+    },
+    {
+      "path": "repo/docs/seminar_20261013/figs_v3/F_limits.png",
+      "bytes": 213031,
+      "sha256": "753871b051bfe5cf1e01f72e64de2796fe6cd1230f7904f6a6a74476849ce773"
+    },
+    {
+      "path": "repo/docs/seminar_20261013/figs_v3/F_dataset.csv",
+      "bytes": 9237,
+      "sha256": "ed16292f5da4a59b5a9973866193385d0c45ce6932b7f44c44c5c3fa3cde7034"
+    },
+    {
+      "path": "repo/docs/seminar_20261013/figs_v3/F_mix2.csv",
+      "bytes": 566,
+      "sha256": "7137034513309f5b7a3dd7d98bbb65f56109383c758c93f249686d545d2867b1"
+    },
+    {
+      "path": "repo/docs/seminar_20261013/figs_v3/F_dataset.png",
+      "bytes": 123419,
+      "sha256": "9a9b017c049e9adc4df919853e426aa3d4430c95450944ae3e3cdf750b3e633f"
+    },
+    {
+      "path": "repo/docs/seminar_20261013/figs_v3/F_load.png",
+      "bytes": 69704,
+      "sha256": "9a270c823b1d81c2a4b04be70ce7704f117cc938ba9bfdc7f3570ce4863afe44"
+    },
+    {
+      "path": "repo/docs/seminar_20261013/figs_v3/F_load.svg",
+      "bytes": 14420,
+      "sha256": "fb1804a59194d20e3dc54bb94e2a6b5a09dbf65373dde822b89aa3917e222cb2"
+    },
+    {
+      "path": "repo/docs/seminar_20261013/figs_v3/F_mix3.png",
+      "bytes": 62634,
+      "sha256": "8f7dbde57270ec410a9a5f06c29e24ac5c02b7c5f258b6ef344f575b90ec1ffb"
+    },
+    {
+      "path": "repo/docs/seminar_20261013/figs_v3/F_trans.png",
+      "bytes": 115958,
+      "sha256": "9e2d47474bb2adde250be17a83b3b3be5a89d8a0c18868cfcad8ffcc0397bc48"
+    },
+    {
+      "path": "repo/docs/seminar_20261013/figs_v3/F_mix2.svg",
+      "bytes": 13278,
+      "sha256": "de1af1592f66e93c1454046663c964aaf49d505f5c08229a49eab3402b170526"
+    },
+    {
+      "path": "repo/docs/seminar_20261013/figs_v3/F_mix1.png",
+      "bytes": 80366,
+      "sha256": "f33ef3c37881f86d84337cf9ce654b1f9a0610045a0adc51ad6f46bb421476dd"
+    },
+    {
+      "path": "repo/docs/seminar_20261013/figs_v3/F_mix3.svg",
+      "bytes": 8259,
+      "sha256": "893bf72a3ceda100d32e906ab2a3bf2b9b58a41ec73e96b20831b0f34edbfac2"
+    },
+    {
+      "path": "repo/docs/seminar_20261013/figs_v3/F_mix1.csv",
+      "bytes": 494,
+      "sha256": "3bc50bae771f78145d514cc43ee706581436a1111066b1db347da7341fefdcaa"
+    },
+    {
+      "path": "repo/docs/seminar_20261013/figs_v3/F_trans.csv",
+      "bytes": 160,
+      "sha256": "6374d0786866d2d5d055add0a738a20bae8545e710e9a82aea7df7611ad2ccce"
+    },
+    {
+      "path": "repo/docs/seminar_20261013/figs_v3/F_mix3.csv",
+      "bytes": 159,
+      "sha256": "80d44e3b24250b48fa612ace5118a7274ed8575689a8fef64e9c8526a3ae1da4"
+    },
+    {
+      "path": "repo/docs/seminar_20261013/figs_v3/F_poro.svg",
+      "bytes": 8981,
+      "sha256": "967a29d25e6a8b7c28623ad128256fbc0687464afe4c7f8752ee8cfd0c8087e2"
+    },
+    {
+      "path": "repo/docs/seminar_20261013/figs_v3/F_vgcf.csv",
+      "bytes": 218,
+      "sha256": "341ff430eee55068b6f7ac1cff7d60d8946ddb1d61bdbb6f995d82cd051f1310"
+    },
+    {
+      "path": "repo/docs/seminar_20261013/figs_v3/F_mix1.svg",
+      "bytes": 14393,
+      "sha256": "326c1c061dc10fac780bbdf737a7973d7499ff4c0fb966515a384ca748a55bba"
+    },
+    {
+      "path": "repo/docs/seminar_20261013/figs_v3/F_poro.png",
+      "bytes": 55044,
+      "sha256": "8e088aefcfe7b62fa0607f13fc373fb59e953f086ad07715774615b79d10c3be"
+    },
+    {
+      "path": "repo/docs/seminar_20261013/build_seminar_v3.py",
+      "bytes": 74399,
+      "sha256": "4b9176bd066ecbb7662fe96d569468b6f0e62a89510bfe6ac8375018540c0033"
+    },
+    {
+      "path": "repo/docs/seminar_20261013/slide_sources_v3.json",
+      "bytes": 3615,
+      "sha256": "7a32238bbb59a47b26592d6a4e7a45cbb5a053398407c01f2b5125b753ebbd7e"
+    },
+    {
+      "path": "repo/docs/seminar_20261013/README.md",
+      "bytes": 9686,
+      "sha256": "8ac2688788ec0ff954b6424b2d2b60c0994f5f024da761c4c9bb2387b8accd03"
+    },
+    {
+      "path": "repo/docs/seminar_20261013/slide_text_v3.md",
+      "bytes": 30562,
+      "sha256": "6f32aefacdd47a3af5ce85f6be06ca2b43e2a7de516c768d14b767f16d9c7544"
+    },
+    {
+      "path": "seminar_20261013_v3.pptx",
+      "bytes": 8880590,
+      "sha256": "baf2bb9899c23bbe94d50ee35f9fc5ccedb8f1fe6121afab2baf248fe2148d9c"
+    },
+    {
+      "path": "seminar_20261013_v3.pdf",
+      "bytes": 2677468,
+      "sha256": "bb94b5de7f16c9a52d4e281728883f9b9930fd79547d2f7ddcf1033cba28e726"
+    }
+  ],
+  "slides": 17,
+  "pages": 17,
+  "mapping_v3_to_v2": {
+    "1": [
+      1
+    ],
+    "2": [
+      2
+    ],
+    "3": [
+      3
+    ],
+    "4": [
+      4
+    ],
+    "5": [
+      5,
+      6
+    ],
+    "6": [
+      7,
+      8
+    ],
+    "7": [
+      9,
+      10
+    ],
+    "8": [
+      11,
+      12
+    ],
+    "9": [
+      13
+    ],
+    "10": [
+      14,
+      15
+    ],
+    "11": [],
+    "12": [],
+    "13": [],
+    "14": [
+      16
+    ],
+    "15": [
+      17
+    ],
+    "16": [
+      18
+    ],
+    "17": [
+      19
+    ]
+  }
+}

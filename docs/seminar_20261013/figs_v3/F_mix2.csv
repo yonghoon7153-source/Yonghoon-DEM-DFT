@@ -1,16 +1,16 @@
-arm,bin grid,delta M (non-cohesive AM minus arm),note
-reference cohesion,16×16×4,0.01,
-reference cohesion,12×12×3,-0.006,
-reference cohesion,8×8×2,0.008,
-NCM–NCM ×10,16×16×4,0.827,QC not met
-NCM–NCM ×10,12×12×3,0.928,
-NCM–NCM ×10,8×8×2,0.988,
-NCM–NCM ×30,16×16×4,1.876,QC not met
-NCM–NCM ×30,12×12×3,2.432,
-NCM–NCM ×30,8×8×2,3.164,
-all pairs ×10,16×16×4,0.239,
-all pairs ×10,12×12×3,0.165,
-all pairs ×10,8×8×2,0.103,
-all pairs ×14,16×16×4,0.866,QC not met
-all pairs ×14,12×12×3,0.484,
-all pairs ×14,8×8×2,0.267,
+setting,bin grid,delta M = M(low-cohesion comparator) - M(setting),note
+NCM-pair Bo 38.4,16×16×4,0.010491839439067951,
+NCM-pair Bo 38.4,12×12×3,-0.006370979085367656,
+NCM-pair Bo 38.4,8×8×2,0.007817122507647434,
+NCM-pair Bo 384,16×16×4,0.8274357587544392,volume-coverage check not met
+NCM-pair Bo 384,12×12×3,0.9274861311096908,
+NCM-pair Bo 384,8×8×2,0.9879074890639663,
+NCM-pair Bo 1152,16×16×4,1.8760727190567406,volume-coverage check not met
+NCM-pair Bo 1152,12×12×3,2.4315214278529593,
+NCM-pair Bo 1152,8×8×2,3.163938904149944,
+All-pair CED ×10,16×16×4,0.2394439694127749,
+All-pair CED ×10,12×12×3,0.1654198971971752,
+All-pair CED ×10,8×8×2,0.10296663749120805,
+All-pair CED ×14.42,16×16×4,0.8654606262351562,volume-coverage check not met
+All-pair CED ×14.42,12×12×3,0.4844151952647421,
+All-pair CED ×14.42,8×8×2,0.2672796935151388,

@@ -1,11 +1,11 @@
-arm,run,M after 8 revolutions (16x16x4),within-run SD
-no cohesion (control),L0,0.9724,0.0254
-NCM–NCM cohesion removed,LC s1,0.9684,0.0269
-NCM–NCM cohesion removed,LC s2,0.9824,0.0276
-NCM–NCM cohesion removed,LC s3,0.9975,0.0305
-reference cohesion,LA s1,0.9817,0.0263
-reference cohesion,LA s2,0.9726,0.0293
-reference cohesion,LA s3,0.9904,0.0313
-lower cohesion (three levels),LB1,0.9869,0.032
-lower cohesion (three levels),LB2,0.9646,0.0305
-lower cohesion (three levels),LB3,0.9776,0.0313
+setting,member,M after 8 revolutions (16x16x4),within-run SD
+no cohesion (control),seed 1,0.9724,0.0254
+low NCM–NCM cohesion,seed 1,0.9684,0.0269
+low NCM–NCM cohesion,seed 2,0.9824,0.0276
+low NCM–NCM cohesion,seed 3,0.9975,0.0305
+reference cohesion,seed 1,0.9817,0.0263
+reference cohesion,seed 2,0.9726,0.0293
+reference cohesion,seed 3,0.9904,0.0313
+lower cohesion (3 levels),Bo 0.1,0.9869,0.032
+lower cohesion (3 levels),Bo 0.5,0.9646,0.0305
+lower cohesion (3 levels),Bo 1.5,0.9776,0.0313

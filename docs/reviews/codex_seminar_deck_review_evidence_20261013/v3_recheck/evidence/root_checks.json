@@ -1,0 +1,62 @@
+{
+  "input_identity": [
+    {
+      "path": "seminar_20261013_v3.pptx",
+      "sha256": "baf2bb9899c23bbe94d50ee35f9fc5ccedb8f1fe6121afab2baf248fe2148d9c"
+    },
+    {
+      "path": "seminar_20261013_v3.pdf",
+      "sha256": "bb94b5de7f16c9a52d4e281728883f9b9930fd79547d2f7ddcf1033cba28e726"
+    }
+  ],
+  "static_checks": {
+    "slide_count_17": true,
+    "servo_current_status_preserved_in_notes": true,
+    "not_one_validation_series_on_screen": true,
+    "dataset_a_130_plus_64": true,
+    "dataset_b_130": true,
+    "dataset_nonspan_24": true,
+    "young_bulk_moduli_separated": true,
+    "no_yield_strength_literature_band_on_screen": true,
+    "pending_validation_on_screen": true,
+    "zero_comparator_mislabel_present": true,
+    "physical_mixing_headline_present": true,
+    "adhesion_unqualified_preference_present": true
+  },
+  "so_source": {
+    "figure_src": "DEM 논문/37. So_2021_J._Electrochem._Soc._168_030538.pdf",
+    "deck_citation": "J. Power Sources 508, 230344 (2021)",
+    "correct_source": "J. Electrochem. Soc. 168, 030538 (2021), DOI 10.1149/1945-7111/abed23"
+  },
+  "adhesion_size_counterexamples": [
+    {
+      "r_NCM_um": 4.5,
+      "r_SE_um": 0.5,
+      "equal_W_F_AS_over_F_SS": 1.8,
+      "geometric_mean_gamma_ratio_for_equal_force": 0.30864197530864196
+    },
+    {
+      "r_NCM_um": 2.0,
+      "r_SE_um": 0.5,
+      "equal_W_F_AS_over_F_SS": 1.6,
+      "geometric_mean_gamma_ratio_for_equal_force": 0.39062499999999994
+    }
+  ],
+  "equal_area_counterexample": {
+    "gamma_A": 4.0,
+    "gamma_S": 1.0,
+    "W_AA": 8.0,
+    "W_SS": 2.0,
+    "W_AS": 4.0,
+    "per_area_delta_W": 2.0,
+    "assumed_contact_areas": {
+      "AA": 0.1,
+      "SS": 0.1,
+      "AS1": 1.0,
+      "AS2": 1.0
+    },
+    "adhesive_energy_release": -7.0,
+    "status": "synthetic algebra counterexample, not a measured bed"
+  },
+  "SE_SS_over_large_NCM_AA_Bo_at_equal_W": 194.4
+}
