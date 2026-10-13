@@ -48,7 +48,7 @@
 | A. Jarray (교신) · H. Shi · B. J. Scheper · M. Habibi · S. Luding (Univ. Twente MSM · Wageningen Univ.) | *Sci. Rep.* 9, 13480 (2019) · 12 쪽 + SI 5 쪽 | 10.1038/s41598-019-49451-z | 붕규산 유리구 r = 0.85 · 1.25 · 2 mm · ρ 2500 kg m⁻³ · 점착 = 5 % (v/v) 디메틸디클로로실란/헵탄 실란화 (≈ 30 nm 피막) | **실험** (회전 드럼 혼합 · 미세저울 떼는 힘 · AFM · 고속 영상 → 엔트로피 MI) + **해석 모델** (Bouvard–Lange 배위수 · 결합 일 · Bond 수).  **DEM 없음** (Yazdani 2019 · Aarons 2012 · Chaudhuri 2006 · Sarkar 2010 · Halidan 2016 의 DEM 결과를 정성 인용) |
 
 > ★ **계보**: 교신 그룹 = Stefan Luding (Twente MSM) — 정본 카드 [`luding2008_cohesive_frictional_contact_models`](luding2008_cohesive_frictional_contact_models.md) 의 저자 (우리 LIGGGHTS `hooke/hysteresis` + adhesion 접촉의 이론 정의서).  1저자의 선행 = 액체 다리 점착 드럼 (본문 ref 18 · 19, *Powder Technol.* 341 (2019) 126) — 이 논문은 그 다음 단계로 **액체 없는 건식 점착** 을 만든 것.
-> ★ **본문 ref 52 = Chandratilleke · Yu · Bridgwater · Shinohara, *AIChE J.* 58 (2012) 1099** — 입자 스케일 혼합지수 (PSMI) 원저 (같은 날 입고 카드 `chandratilleke2012_particle_scale_mixing_index` · 배위수로 혼합을 재는 지표).
+> ★ **본문 ref 52 = Chandratilleke · Yu · Bridgwater · Shinohara, *AIChE J.* 58 (2012) 1099** — 입자 스케일 혼합지수 (PSMI) 원저 (같은 날 카드 [`chandratilleke2012_particle_scale_mixing_index`](chandratilleke2012_particle_scale_mixing_index.md) · 배위수로 혼합을 재는 지표).
 
 ## 3. 핵심 수치 (★ 전부 쪽 · 표지 병기)
 
@@ -328,7 +328,7 @@ HCl 세척 → 물 헹굼 → 60 °C 건조 → 5 % 디메틸디클로로실란 
 | 47 | Weinhart, T., Thornton, A. R., Luding, S. & Bokhove, O. *Granul. Matter* 14, 289–294 (2012) | 거칠게 하기 (CG) — 우리 연속장 판독의 원전 후보 · 카드 없음 |
 | 48 | Schutyser, M. et al. *Biotechnol. Bioeng.* 75, 666–675 (2001) | 엔트로피 혼합지수 원전 — 카드 없음 |
 | 50 | Bouvard, D. & Lange, F. *Acta Metall. Mater.* 39, 3083–3090 (1991) | 이원 배위수 (식 8–11 의 원전) — 카드 없음 (같은 저자의 정본 카드 `bouvard2000_hard_soft_powder_densification` · `martinbouvard2003_dem_composite_cold_compaction` 은 **다른 논문**) |
-| 52 | Chandratilleke, G., Yu, A., Bridgwater, J. & Shinohara, K. *AIChE J.* 58, 1099–1118 (2012) | **PSMI 원저** — 같은 날 입고 카드 `chandratilleke2012_particle_scale_mixing_index` (이 카드 다음 커밋) |
+| 52 | Chandratilleke, G., Yu, A., Bridgwater, J. & Shinohara, K. *AIChE J.* 58, 1099–1118 (2012) | **PSMI 원저** — 같은 날 카드 [`chandratilleke2012_particle_scale_mixing_index`](chandratilleke2012_particle_scale_mixing_index.md) |
 | 53 | Israelachvili, J. N. *Intermolecular and surface forces* (2011) | 식 (13) 의 출처 |
 
 ## 원문 대조 기록 (이 카드 작성 중 직접 확인한 것 · 2026-10-13)
@@ -338,7 +338,7 @@ HCl 세척 → 물 헹굼 → 60 °C 건조 → 5 % 디메틸디클로로실란 
 - 정본 litdb 중복 확인: DOI `s41598-019-49451` · 제목 낱말 'Cohesion-driven mixing' · 1저자 'Jarray' 로 `litdb/` 전수 grep — 없음.
 
 ## 🔗 관련 카드
-- 혼합 지수: `chandratilleke2012_particle_scale_mixing_index` (본문 ref 52 · 배위수 지수 — 같은 날 입고 · 이 카드 다음 커밋) · [`nadeem2023_gnn_mixing_index`](nadeem2023_gnn_mixing_index.md) · [`chibwe2020_nnsi_segregation_index`](chibwe2020_nnsi_segregation_index.md) · [`jadidi2023_dem_batch_solid_mixers_review`](jadidi2023_dem_batch_solid_mixers_review.md).
+- 혼합 지수: [`chandratilleke2012_particle_scale_mixing_index`](chandratilleke2012_particle_scale_mixing_index.md) (본문 ref 52 · 배위수 지수) · [`nadeem2023_gnn_mixing_index`](nadeem2023_gnn_mixing_index.md) · [`chibwe2020_nnsi_segregation_index`](chibwe2020_nnsi_segregation_index.md) · [`jadidi2023_dem_batch_solid_mixers_review`](jadidi2023_dem_batch_solid_mixers_review.md).
 - 건식 혼합 DEM: [`hare2026_dem_pept_dry_mixing_nmc622_eirich`](hare2026_dem_pept_dry_mixing_nmc622_eirich.md) · [`lischka2025_dem_eirich_intensive_mixer_dry_mixing`](lischka2025_dem_eirich_intensive_mixer_dry_mixing.md) · [`frankenberg2024_dem_high_intensity_mixer_assb`](frankenberg2024_dem_high_intensity_mixer_assb.md) · [`otani2025_dem_se_dispersion_aggregation_compression`](otani2025_dem_se_dispersion_aggregation_compression.md) (응집 상태 → 압축).
 - 점착 접촉: [`luding2008_cohesive_frictional_contact_models`](luding2008_cohesive_frictional_contact_models.md) (같은 교신 그룹) · [`thorntonning1998_adhesive_elastoplastic_contact`](thorntonning1998_adhesive_elastoplastic_contact.md) · [`molerus1975_theory_of_yield_cohesive_powders`](molerus1975_theory_of_yield_cohesive_powders.md).
 - 보정: [`coetzee2017_dem_calibration_review`](coetzee2017_dem_calibration_review.md).

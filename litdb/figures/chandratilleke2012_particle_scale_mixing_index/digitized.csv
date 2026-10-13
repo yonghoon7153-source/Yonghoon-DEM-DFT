@@ -1,0 +1,61 @@
+# chandratilleke2012_particle_scale_mixing_index — 손 판독 (2026-10-13). 크롭 = 같은 폴더 fig_*.png (원본 래스터 200 dpi · 300 dpi 렌더 · 확대 판독).
+# 정밀도: 혼합지수 M ±0.01 (평탄값은 눈대중 평균) · 배위수 ±0.1 · 시간 ±0.5 s. TREND 용 — 본문에 숫자가 있으면 본문값 (stated 열) 을 쓸 것.
+figure,panel,series,x,x_unit,y,y_unit,stated,note
+3,-,macro M case1 (T-B) start,0,s,0.07,M,,
+3,-,macro M case1 (T-B) end,21,s,0.87,M,,
+3,-,macro M case2 (S-S) start,0,s,0.17,M,,0.5 s 근처 0.10 까지 내려갔다 오름
+3,-,macro M case2 (S-S) end,21,s,0.91,M,,본문: S-S 가 20 s 뒤 약간 높다
+4,a+b,total CN steady,10-22,s,6.0,CN,,G = 1.5 d · 시작 직후 6.5 → 6.0 (팽창)
+4,a,W-W = B-B steady (S-S),22,s,3.1,CN,,
+4,a,B-W = W-B steady (S-S),22,s,3.0,CN,,시작 2.1
+6,-,PSMI case1 (T-B) start,1,s,0.18,M,,
+6,-,PSMI case2 (S-S) start,1,s,0.03,M,,
+6,-,PSMI crossing,10.5,s,,,10.5 s,본문 값
+6,-,PSMI case1 end,22,s,0.95,M,,
+6,-,PSMI case2 end,22,s,0.97,M,0.964 (우리 산술: S_t^2 0.0434 · p 0.5),
+7,-,total CN vs gap,0.5,% d,4.85,CN,,
+7,-,total CN vs gap,1,% d,5.05,CN,,
+7,-,total CN vs gap,3,% d,5.55,CN,,
+7,-,total CN vs gap,5,% d,6.0,CN,,생산 기준
+7,-,total CN vs gap,7,% d,6.3,CN,,
+7,-,total CN vs gap,10,% d,6.8,CN,,
+7,-,total CN vs gap,12,% d,7.1,CN,,
+7,-,total CN vs gap,20,% d,8.25,CN,,
+7,-,PSMI steady vs gap,0.5,% d,0.91,M,,
+7,-,PSMI steady vs gap,1,% d,0.92,M,,
+7,-,PSMI steady vs gap,3,% d,0.92,M,,
+7,-,PSMI steady vs gap,5,% d,0.93,M,,
+7,-,PSMI steady vs gap,7,% d,0.945,M,,
+7,-,PSMI steady vs gap,10,% d,0.94,M,,
+7,-,PSMI steady vs gap,12,% d,0.945,M,,
+7,-,PSMI steady vs gap,20,% d,0.945,M,,
+10,-,macro M case4 (a=0.5),end,s,0.33,M,0.33,본문 값 · 시작 ≈ 0 · 정점 ≈ 0.60 (≈ 6 s)
+10,-,macro M case5 (a=0.9),end,s,0.43,M,0.43 (34 s),본문 값 · 시작 ≈ 0.40 · 정점 ≈ 0.62 (≈ 3.5 s)
+10,-,macro M case3 (a=0.1),2-10,s,0.80-0.88,M,,요동 (혼합 · 분리 반복)
+11,a,total CN case3/4/5,steady,s,6.0 / 5.8 / 5.3,CN,,
+11,a,S-L CN case3/4/5,steady,s,1.15 / 1.6 / 1.92,CN,1.15 · 1.6 · 1.92,본문 값
+11,b,L-S CN case3/4/5,steady,s,11.4 / 6.6 / 3.2,CN,11.4 · 6.6 · 3.2,본문 값 · Pinson 1998 예측 13.5 · 10.6 · 3.6
+12,-,PSMI case3 (a=0.1),0 / min / 10.5,s,0.68 / 0.57 / 0.76,M,,
+12,-,PSMI case4 (a=0.5),0 / peak 7 s / 16 s,s,0.31 / 0.63 / 0.59,M,,
+12,-,PSMI case5 (a=0.9),0 / peak 3 s / 16 s,s,0.57 / 0.75 / 0.50,M,≈0.4 (34 s),본문 값 (34 s)
+13,b,macro final vs size ratio r,0.5,r,0.30,M,,
+13,b,macro final vs size ratio r,0.8,r,0.70,M,,
+13,b,macro final vs size ratio r,0.9,r,0.82,M,,
+13,b,macro final vs size ratio r,0.95,r,0.84,M,,
+13,b,macro final vs size ratio r,1,r,0.89,M,,
+15,b,PSMI final vs size ratio r,0.5,r,0.585,M,,
+15,b,PSMI final vs size ratio r,0.8,r,0.83,M,,
+15,b,PSMI final vs size ratio r,0.9,r,0.88,M,,본문: r 0.9 = r 1 의 약 92 %
+15,b,PSMI final vs size ratio r,0.95,r,0.915,M,,
+15,b,PSMI final vs size ratio r,1,r,0.94,M,,
+17,b,macro final vs density ratio,0.3,gamma,0.525,M,,
+17,b,macro final vs density ratio,0.4,gamma,0.57,M,,
+17,b,macro final vs density ratio,0.5,gamma,0.63,M,,
+17,b,macro final vs density ratio,1,gamma,0.89,M,,
+19,b,PSMI steady / peak vs density ratio,0.3,gamma,0.69 / 0.79,M,,
+19,b,PSMI steady / peak vs density ratio,0.35,gamma,0.73 / 0.81,M,,
+19,b,PSMI steady / peak vs density ratio,0.4,gamma,0.75 / 0.835,M,,
+19,b,PSMI steady / peak vs density ratio,0.45,gamma,0.80 / 0.865,M,,
+19,b,PSMI steady / peak vs density ratio,0.5,gamma,0.83 / 0.885,M,,
+19,b,PSMI steady / peak vs density ratio,0.66,gamma,0.92 / 0.93,M,,
+19,b,PSMI steady / peak vs density ratio,1,gamma,0.975 / 0.975,M,,
