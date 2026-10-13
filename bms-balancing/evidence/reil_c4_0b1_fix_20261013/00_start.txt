@@ -1,0 +1,6 @@
+t0_utc 2026-10-13T14:40:29Z
+uptime_s 68.80
+head_start 3f719cde013e955a198cacda67191d3b0a42bec1
+approval 상태 문서 §49 (사용자 "승인이야 / 권고대로 해")
+limits identity 60 · red 600 · green 600 · compute 1260 · work 7200 · auto_retest 0
+fixed controls 7133c550628c819c2eadca1d2e4e468ce9373d0907ccd9dc098a4c471f4e1297 · patch 5d2b887c16d0315bea96e90995c3b45c207b05025a38ef162525c3323148387d

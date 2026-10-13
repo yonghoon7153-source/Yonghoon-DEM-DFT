@@ -338,12 +338,12 @@ def test_07_witness_reasons_are_the_registered_three():
     assert h.witness(solver_error=False, value=0.1, residuals=good) == "valid"
 
 
-def test_07_termination_is_converged_budget_or_solver_error():
+def test_07_termination_is_converged_budget_or_unclassified():
     from scipy._lib.cobyqa.settings import ExitStatus
     assert h.termination(SimpleNamespace(success=True, status=0)) == "converged"
     assert h.termination(SimpleNamespace(success=False, status=ExitStatus.MAX_EVAL_WARNING.value)) == "budget"
     assert h.termination(SimpleNamespace(success=False, status=ExitStatus.MAX_ITER_WARNING.value)) == "budget"
-    assert h.termination(SimpleNamespace(success=False, status=ExitStatus.LINALG_ERROR.value)) == "solver_error"
+    assert h.termination(SimpleNamespace(success=False, status=ExitStatus.LINALG_ERROR.value)) == "unclassified"   # C4 v2 §5-4 (C4-0B1-N2)
 
 
 def test_07_active_bounds_and_g_are_recorded():
@@ -518,8 +518,8 @@ def test_09_common_update_refuses_a_final_above_the_pre_update_value():
         h.common_update(rec, pre={("J_V", "A1", 0): 0.02})
 
 
-# ======================================================================== (10) 건조 — 계획 9,856 · 게이트 · 합성 표본 (상태 §46)
-def test_10_dryrun_writes_the_plan_and_a_synthetic_sample(tmp_path):
+# ======================================================================== (10) 건조 — 계획 9,856 · 게이트 · 읽기만 (상태 §46 · §48 승인 경계 A1)
+def test_10_dryrun_writes_only_the_plan(tmp_path):
     harr = tmp_path / "h_arrays"
     seal = h.seal_h_arrays(harr, p0_result=P0_RESULT)
     fake_ident = lambda **kw: {"ok": True, "problems": [], "record": {}, "full_c6_check": "NOT_RUN"}
@@ -531,10 +531,8 @@ def test_10_dryrun_writes_the_plan_and_a_synthetic_sample(tmp_path):
     assert rec["ok"] and plan["phase_a"]["registered_runs"] == 9856
     assert plan["phase_a"]["wave1_runs"] == 66 * 128 and plan["phase_a"]["wave2_rho_runs"] == 11 * 128
     assert set(plan["gates"]["h4_endpoint"]) == {str(r) for r in range(11)}
-    sample = json.loads((out / "SYNTHETIC_SAMPLE.json").read_text(encoding="utf-8"))
-    assert sample["banner"].startswith("합성") and {r["objective"] for r in sample["rows"]} == {"J_V", "J_D", "rho", "J_Vs"}
-    assert all(r["state"] == "COMPLETED" for r in sample["rows"])
-    assert set(sample["summaries"]) and "common_update" in sample and "thresholds" in sample
+    assert not (out / "SYNTHETIC_SAMPLE.json").exists()                 # 승인 경계 C4-0B1-A1 — 건조는 계획 · seed · 봉인만 읽는다
+    assert plan["execution"] == {"optimizer_calls": 0, "objective_calls": 0, "util_imported": False, "sobol_generated": 0}
     with pytest.raises(h.HStop):
         h.dryrun(out, venv="/v", seal=NEW_SEAL, manifest_sha256=NEW_SEAL_MANIFEST, arrays_dir=PHASE_A_ARRAYS,
                  h_arrays_dir=harr, h_manifest_sha256=seal["manifest_sha256"], util_copy=UTIL_COPY,
