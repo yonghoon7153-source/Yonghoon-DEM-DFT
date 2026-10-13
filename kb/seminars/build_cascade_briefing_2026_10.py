@@ -601,10 +601,10 @@ def build_lean():
     #      pilot has no verdict, so no answer is implied. In the box, 'Al + O' is what the compound brings with it.
     name, t = fresh('overview', 'Overview')
     lean_body(t, 'Choosing a dopant precursor for Li₆PS₅Cl',
-              ['[[b:In the lab]]: dopants added as compounds, not as bare elements',
-               '[[b:This work]]: 91 candidate precursors, screened by simulation before synthesis'], h=1.35)
+              ['In the lab, dopants are added as [[b:compounds]], not as bare elements.',      # no 'label: …' lines —
+               'This work screens [[b:91 candidate precursors]] by simulation before synthesis.'], h=1.35)   # user 10-13
     fx, fy, fw, fh = 0.57, 2.6, 8.86, 2.3
-    dashed_frame(t, 'Example: one cation, two precursors', fx, fy, fw, fh, tw=3.45)   # user 10-13: the pair is one example,
+    dashed_frame(t, 'An example', fx, fy, fw, fh, tw=1.2)   # user 10-13: the pair is one example,
     #      not the scope — Stage 1 covered all 91 precursors and the Stage 2 roster holds 237 designs
     for k, (cmp, an) in enumerate([('Al₂O₃', 'O'), ('Al₂S₃', 'S')]):
         yy = fy + 0.36 + k * 0.98
@@ -618,7 +618,7 @@ def build_lean():
            + P('Does the anion change', 'p', 1800, 110, 'l', BLUE, spcbef=900)     # broken by hand: 'Li transport' stays
            + P('stability or Li transport?', 'p', 1800, 110, 'l', BLUE), anchor='ctr'))   # on one line
     down_arrow(t, name, fy + fh + 0.11, x=fx + fw / 2 - 1.405)
-    add(t, line_under(ids(), 'Today: the 91-precursor screen, its audit, and [[b:the first test of this question]]', 5.83))
+    add(t, line_under(ids(), 'This talk covers the 91-precursor screen, its audit, and [[b:the first test of this question.]]', 5.83))
     save(t, name)
 
     # ---- 4 failure modes: orig slide 3, unchanged

@@ -60,9 +60,9 @@ evidenceScope: multi-source-mixed
 **[클릭]**
 
 ## 3. Overview ⏱ 4:30
-> 화면 (사용자 10-13 · 질문으로 다시 짬): ■ *Choosing a dopant precursor for Li₆PS₅Cl* · bullet 둘 (*In the lab* · *This work*) ·
-> 점선 상자 *Example: one cation, two precursors* — Al₂O₃ → Al + O / Al₂S₃ → Al + S } *Same Al, different partner anion* · *Does the anion change stability or Li transport?* ·
-> 화살표 · 아래 줄 *Today: the 91-precursor screen, its audit, and the first test of this question*
+> 화면 (사용자 10-13 · 질문으로 다시 짬 · 콜론 줄 없앰): ■ *Choosing a dopant precursor for Li₆PS₅Cl* · bullet 둘 (*In the lab, dopants are added as compounds, not as bare elements.* · *This work screens 91 candidate precursors by simulation before synthesis.*) ·
+> 점선 상자 *An example* — Al₂O₃ → Al + O / Al₂S₃ → Al + S } *Same Al, different partner anion* · *Does the anion change stability or Li transport?* ·
+> 화살표 · 아래 줄 *This talk covers the 91-precursor screen, its audit, and the first test of this question.*
 > 상자는 **예 하나**다 (사용자 10-13 *'이건 하나의 예인거지?'*) — 1단계는 91 개 전부 · 2단계 설계 목록은 237 · Al₂O₃ 대 Al₂S₃ 는 MD 방법을 먼저 시험하는 파일럿 쌍.
 > 왜 바꿨나: 사용자 10-13 *"너무 단조롭다 · 다 밝히고 하는 건 별로 · 기대를 가질 만하고 집중할 수 있는 페이지"* — 단계 상자 · 진행 숫자는 뒤 장 (11 감사 · 13 파일럿 · 15 요약) 으로.
 > (사용자 덱에서는 4쪽 — 앞에 한 장이 더 있다.)
@@ -297,7 +297,7 @@ MLIP 지표의 기준이 되는 DFT 계산입니다. **[가리킴: 두 곡선]**
 | 장 | 슬림판 화면 | 말로 채울 것 |
 |---|---|---|
 | 2 | ■ 'Earlier DFT studies: the basis of this screening' · bullet 둘 (Top row: bulk materials and their doped or coated forms · Bottom row: SEI components, interfaces, and binders in a battery cell) + 그림 자리 8칸 (제목 + `< 키워드 >`) | 칸마다 한 줄 (대본 2장) · 마무리 '이 경험들이 스크리닝의 단계가 됐다' + 짝 다섯 (EOS → 기준 계산 · BVSE → Li 지형 · MD → 수송 · 대권위 상도표 → 안정창 · 계면 에너지 → 계면 반응성) — 숫자는 0 개 |
-| 3 | ■ 'Choosing a dopant precursor for Li₆PS₅Cl' · bullet 둘 (In the lab: dopants added as compounds, not as bare elements · This work: 91 candidate precursors, screened by simulation before synthesis) + 점선 박스 'Example: one cation, two precursors' (Al₂O₃ → Al + O · Al₂S₃ → Al + S · Same Al, different partner anion · Does the anion change stability or Li transport?) + 화살표 + 'Today: the 91-precursor screen, its audit, and the first test of this question' | 청중에게 질문으로 연다 (대본 3장) · 답은 말하지 않는다 · 진행 숫자는 13장에서 |
+| 3 | ■ 'Choosing a dopant precursor for Li₆PS₅Cl' · bullet 둘 (In the lab, dopants are added as compounds, not as bare elements. · This work screens 91 candidate precursors by simulation before synthesis.) + 점선 박스 'An example' (Al₂O₃ → Al + O · Al₂S₃ → Al + S · Same Al, different partner anion · Does the anion change stability or Li transport?) + 화살표 + 'This talk covers the 91-precursor screen, its audit, and the first test of this question.' | 청중에게 질문으로 연다 (대본 3장) · 상자는 예 하나 · 답은 말하지 않는다 · 진행 숫자는 13장에서 |
 | 4 | 원래 장 그대로 | 그대로 |
 | 5 | bullet 하나 + 원래 표 (14 pt) | 기존 스크린 셋 (대본 5장) · 비슷한 최근 연구 Jung · Park · Muy 는 이름만 (화면 줄은 뺐다 · 17장에 있다) |
 | 6 | 08-18 덱의 족별 표 (family · n · examples — 'role in the design' 열은 뺐다 · 사용자 10-13) + **[문헌] 'Literature example: SiO₂ co-doping'** Jung 2026 Fig. 3d | 족별 역할은 말로: 산화물 = 강한 M–O 결합 · 염화물 = 호스트에 이미 Cl · 황화물 = 호스트와 같은 음이온 (대조) · 플루오르화물 = 가장 강한 결합 · 이동성 위험 · 브로민화물 · 요오드화물 = 더 큰 할라이드 (대조) · 질화물 = 더 높은 음이온 전하 (대조) · 공치환 실험 선례 CuCl · MgF₂ · ZnO · La₂O₃ · Nd₂O₃ · SiO₂ (17장) · 문헌 그림은 '선례' 이지 우리 후보의 검증이 아니다 · As₂S₃ 재실행은 7장 |

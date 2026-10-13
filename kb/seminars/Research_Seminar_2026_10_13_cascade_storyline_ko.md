@@ -72,9 +72,10 @@ evidenceScope: multi-source-mixed
 ### 3. Overview — 질문으로 연다 (1.5 분)
 **핵심**: 도핑 실험에서 넣는 건 원소가 아니라 화합물이다 → 같은 Al 이라도 Al₂O₃ 와 Al₂S₃ 는 다른 음이온을 데려온다 → 그게 안정성 · Li 이동을 바꾸나? →
 그래서 단위를 전구체 화합물로 잡고 91 개를 합성 전에 계산으로 걸렀다 → 오늘: 스크린 · 감사 · 이 질문의 첫 시험.
-- 화면 (사용자 10-13 · 질문으로 다시 짬): ■ *Choosing a dopant precursor for Li₆PS₅Cl* · bullet 둘 — *In the lab: dopants added as compounds, not as bare elements* ·
-  *This work: 91 candidate precursors, screened by simulation before synthesis* · 점선 상자 *Example: one cation, two precursors* (Al₂O₃ → Al + O · Al₂S₃ → Al + S } *Same Al, different
-  partner anion* · *Does the anion change stability or Li transport?*) · 화살표 · 아래 줄 *Today: the 91-precursor screen, its audit, and the first test of this question*
+- 화면 (사용자 10-13 · 질문으로 다시 짬 · 콜론 줄 없앰): ■ *Choosing a dopant precursor for Li₆PS₅Cl* · bullet 둘 —
+  *In the lab, dopants are added as compounds, not as bare elements.* · *This work screens 91 candidate precursors by simulation before synthesis.* ·
+  점선 상자 *An example* (Al₂O₃ → Al + O · Al₂S₃ → Al + S } *Same Al, different partner anion* · *Does the anion change stability or Li transport?*) ·
+  화살표 · 아래 줄 *This talk covers the 91-precursor screen, its audit, and the first test of this question.*
 - 상자는 **예 하나**다 (사용자 10-13 *'이건 하나의 예인거지?'*): 1단계는 91 개 전부 (3,675 구조) · 2단계 설계 목록은 조성 단위 237 (09-12 비준) ·
   Al₂O₃ 대 Al₂S₃ 는 MD 방법이 설계 사이 차이를 가려낼 수 있는지 먼저 보는 **파일럿 쌍** — 같은 Al · 같은 공공 수 · 같은 배치 · 같은 부피에서 음이온만 다른
   가장 깨끗한 대조. 파일럿 40 런에 GPU 약 2 주라, 237 중 무엇을 얼마나 돌릴지는 파일럿 뒤에 결과를 보기 전에 정한다.
