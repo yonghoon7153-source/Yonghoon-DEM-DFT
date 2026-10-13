@@ -1,0 +1,131 @@
+{
+  "archive": {
+    "path": "C:\\Users\\Administrator\\Downloads\\codex_seminar_deck_v3_1_closure_20261013.zip",
+    "bytes": 18109282,
+    "sha256": "1abdd488fbbffadebe50b9a7343899601e81a2e9d7d3b55cd4a0c37d5601ad3a"
+  },
+  "verified_declared_manifest_files": 83,
+  "slides": 17,
+  "pages": 17,
+  "pptx_sha256": "73fa2dc3b5629eabb9ec744b47495512db477dd962753a003820ad02b525401b",
+  "pdf_sha256": "5335e3fe61715eff556258dbb50946174a3d7b043db02a341294bf6107eaf474",
+  "closure_checks": {
+    "01_correct_JES_source_p6_p16": true,
+    "02_nonzero_comparator_in_actual_notes": true,
+    "02_no_zero_mislabel_body": true,
+    "03_diagnostic_qualifier_visible": true,
+    "03_summary_unresolved": true,
+    "04_Bo_CED_separated": true,
+    "04_posthoc_no_verdict": true,
+    "05_assumptions_visible": true,
+    "05_per_area_units_in_notes": true,
+    "05_cluster_survival_not_force_criterion": true,
+    "07_10GPa_100GPa_separated": true,
+    "08_experimental_rank": true,
+    "10_implementation_qualified": true,
+    "10_random_reference": true,
+    "10_no_unsupported_sigma_y_band": true
+  },
+  "actual_PPTX_chart_media": [
+    {
+      "page": 3,
+      "figure": "F_poro",
+      "sha256": "8e088aefcfe7b62fa0607f13fc373fb59e953f086ad07715774615b79d10c3be",
+      "embedded_exact_match": true
+    },
+    {
+      "page": 4,
+      "figure": "F_trans",
+      "sha256": "bbd574dde482cd376a588f8010dd96123bb51fd1d0d934cb9784f0100a161dca",
+      "embedded_exact_match": true
+    },
+    {
+      "page": 7,
+      "figure": "F_vgcf",
+      "sha256": "83804979ac8937af0325f9d21d2eb51dc2ea10778c6faaba5370277e38aaaa4d",
+      "embedded_exact_match": true
+    },
+    {
+      "page": 8,
+      "figure": "F_limits",
+      "sha256": "23edbc1bb5466050e620853d3a538ca5cefa98ae451f14d6be58a49221b89856",
+      "embedded_exact_match": true
+    },
+    {
+      "page": 9,
+      "figure": "F_load",
+      "sha256": "9a270c823b1d81c2a4b04be70ce7704f117cc938ba9bfdc7f3570ce4863afe44",
+      "embedded_exact_match": true
+    },
+    {
+      "page": 10,
+      "figure": "F_dataset",
+      "sha256": "8f2224e166fe20208526a17742733d5bc840150bb8fbee9644ab114105806569",
+      "embedded_exact_match": true
+    },
+    {
+      "page": 11,
+      "figure": "F_mix1",
+      "sha256": "d64f8d824b2e00d17d6cf2503f95e2c66b676da6cb0d320ac0d771c478d83ec9",
+      "embedded_exact_match": true
+    },
+    {
+      "page": 12,
+      "figure": "F_mix2",
+      "sha256": "b115805661e42e8a18d25271b84e04f596eb89b1bb5b2b009f6fae3a98024f09",
+      "embedded_exact_match": true
+    },
+    {
+      "page": 13,
+      "figure": "F_mix3",
+      "sha256": "f37698dd92cbe03d2e8a7a7228601393219834e1879dd154af96928556d95ba8",
+      "embedded_exact_match": true
+    },
+    {
+      "page": 13,
+      "figure": "F_mix3_scheme",
+      "sha256": "3823375fc8466bbb74ac242e53eeaa52eba53a7c7fb08dce889a9b743376ab25",
+      "embedded_exact_match": true
+    }
+  ],
+  "So_crop_prefix_pixels_match_previous_and_original": true,
+  "So_crop_dimensions": {
+    "old": [
+      1045,
+      1005
+    ],
+    "new": [
+      1133,
+      1005
+    ],
+    "original": [
+      2201,
+      1005
+    ]
+  },
+  "actual_PPTX_So_crop_sha256": "dac42775fe263fc8795d98620aae41e38e4c1c5bc2ed38a3516be575b4ac3da0",
+  "source_line_bounds": [
+    {
+      "page": 11,
+      "width_pt": 720,
+      "right_edge_pt": 687.6315919999998,
+      "right_margin_pt": 32.36840800000016,
+      "text": "This work (left) · figure: presenter — bed view, layered start and after eight revolutions (right)"
+    },
+    {
+      "page": 12,
+      "width_pt": 720,
+      "right_edge_pt": 687.634302,
+      "right_margin_pt": 32.36569799999995,
+      "text": "This work (left) · figure: presenter — low versus higher NCM cohesion, two revolutions (right)"
+    },
+    {
+      "page": 13,
+      "width_pt": 720,
+      "right_edge_pt": 687.6040819999997,
+      "right_margin_pt": 32.39591800000028,
+      "text": "This work: exploratory contact statistics (left), conditional adhesion model (right)"
+    }
+  ],
+  "note": "Checks support targeted closure only. Producer selftests not run. Visual review and numeric audit remain separate."
+}

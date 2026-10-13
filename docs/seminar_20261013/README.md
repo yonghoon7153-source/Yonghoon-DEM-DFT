@@ -10,7 +10,8 @@
 - selftest 추가 (생성기): 장별 금지 문구 (본문 · notes) · 장별 필수 문구 (본문 · notes) · 12 장 전용 금지어.  그림 selftest 추가: 그려진 모든 글 상자의 겹침 0 · 믹서 그림 라벨 (0 점착 표현 금지 · Bo / CED 구분 · 도식 가정) · 판독 JSON 값 고정 검사.  **고치기 전 실패 확인** = 새 검사를 Codex 가 받은 v3 덱 (sha256 `baf2bb98…`) 과 v3 커밋 (`0c6f5c84e`) 의 그림 스크립트에 돌린 기록 `docs/reviews/codex_seminar_deck_review_evidence_20261013/v3_1_fix/testfirst_v31.json` (하네스 = 같은 폴더 `testfirst_v31.py` · 덱 31 건 = 금지 문구 16 · 필수 문구 누락 15 · 그림 21 건 = 글자 겹침 7 쌍 · 라벨 13 · CSV 값 1 → v3.1 덱 0 건 · v3.1 그림 = 그림 selftest 통과).
 - 그림 배치 배율 (덱에 놓인 폭 ÷ 그림 원래 폭) = F_poro 1.024 · F_trans 0.895 · F_vgcf 0.984 · F_limits 0.846 · F_load 0.960 · F_dataset 0.974 · F_mix1 · F_mix2 · F_mix3 1.011 · 도식 0.963 ⇒ 배치 뒤 가장 작은 글씨 = 4 장 조성 눈금 8.5 pt · 8 장 (c) 조성 눈금 · 범례 8.9 pt · 믹서 그림 ≥ 10.1 pt.  ⚠ 아래 v3 절의 *"글씨 = 배치 1:1 ≈ 12 pt"* 는 4 · 8 장에서 틀린 서술이다 (이번에 글씨 크기는 바꾸지 않음 · 요청서 Q5).
 - 선택 개선 (P2) 중 미적용 = 9 장 색막대 (1저자 비준 ps73 최종 판 그림 · 해석 줄에 0–150 MPa) · 5 장 감쇠 58 % · 6 장 실행 상태의 화면 복구 (Codex: 필수 아님).
-- ⬜ 1저자 = 8–10 장 (문제 1·2 · 문제 3 · 194 침대 자료) 축소 검토 중 — 줄이면 같은 생성기로 장만 빼고 종결 확인 묶음 (ZIP v7) 을 만든다.  요청서 `docs/reviews/codex_seminar_deck_v3_1_closure_request_20261013.md`.
+- ✅ 1저자 10-13 = 8–10 장 축소 안 함 (17 장 최종) → 종결 확인 묶음 ZIP v7 (요청서 `docs/reviews/codex_seminar_deck_v3_1_closure_request_20261013.md`).
+- ✅ **Codex 종결 10-13 = GO** (`docs/reviews/codex_review_seminar_deck_v3_1_closure_20261013.md` · 증거 `docs/reviews/codex_seminar_deck_review_evidence_20261013/v3_1_closure/`) — SEMV3-01~10 닫힘 · 원장 SEM-01~14 · SEMV2-01~07 · SEMV3-01~10 · SELF-110 · 111 = verified (발표물 범위) · 발표 전 = p4 · p8 그림 글씨 (8.5 · 8.9 pt) 를 발표장 화면에서 확인 · PowerPoint 로 열 때 글꼴 대체로 줄바꿈이 바뀌는지 확인 · 비차단 잔여 `SEMV3-11` (생성기 머리말 주석 `:13` 옛 용어 — 출력 무관 · 다음 유지보수).
 
 ## v3 "보는 판" (2026-10-13 밤 · 1저자 지시) — `build_seminar_v3.py` · `figs_v3/` · `slide_text_v3.md` · `slide_sources_v3.json`
 

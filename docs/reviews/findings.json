@@ -9708,7 +9708,7 @@
     {
       "id": "SEM-01",
       "severity": "P1",
-      "status": "claimed_fixed",
+      "status": "verified",
       "owner": "claude",
       "found_by": "codex 10-13 연구세미나 덱 검토 — 첫 판 과학 리뷰 (핀 a0439bdf8 사본 · SEM-01~14) + v3 묶음 통합 판정 (NO-GO · 편집 P0/P1/P2 · 새 시뮬레이션 불요) · 우리 트리 재현 = ps45 AM–AM 21 단면 하중 가중 몫 59.562243 · 54.634924 · 52.371659 · 48.463893 · 56.914398 % · 단면 평균 축응력 158.25 · 159.93 · 164.44 · 167.14 · 175.48 MPa · 공개 격자 3 점 Δ비 3.360104 · p 3.131238 · CL-33 · CL-34 = hold — 판정값 차이 0",
       "opened_in": "docs/reviews/codex_review_seminar_deck_20261013.md",
@@ -9717,14 +9717,21 @@
       "evidence_tests": [
         "docs/reviews/codex_review_seminar_deck_v3_20261013.md (통합 판정 §1 · §9 · §10)",
         "docs/reviews/codex_seminar_deck_review_evidence_20261013/first/evidence/independent_arithmetic.json",
-        "docs/reviews/codex_seminar_deck_review_evidence_20261013/v3/evidence/saved_data_recheck_stdout.txt"
+        "docs/reviews/codex_seminar_deck_review_evidence_20261013/v3/evidence/saved_data_recheck_stdout.txt",
+        "docs/reviews/codex_review_seminar_deck_v2_recheck_20261013.md",
+        "docs/reviews/codex_review_seminar_deck_v3_1_closure_20261013.md"
       ],
-      "claimed_fixed_sha": "8bc5fe1fb"
+      "claimed_fixed_sha": "8bc5fe1fb",
+      "verified_by": "codex",
+      "verified_in": "docs/reviews/codex_review_seminar_deck_v2_recheck_20261013.md",
+      "verified_sha": "8bc5fe1fb",
+      "verified_scope": "v2 덱 (8bc5fe1fb · ZIP v4) 에서 Codex v2 재확인이 닫거나 수용 (§1 표 · 조건부 GO) · 잔여 손질 = SEMV2-01~07 → v3 재확인 · v3.1 종결 GO 에서 모두 닫힘.  범위 = 연구세미나 발표물 (17 장 v3.1) — 믹서 모델 물리 검증 · 미달 겹침 조건 해소 · 18 런 발사 · 194/보충 20 생산 · v1.3 배포 승인 아님 (종결 판정 §1).",
+      "verification_note": "2026-10-13 Codex v3.1 종결 판정 GO 로 세미나 덱 검토 사슬 (첫 판 → v2 → v2.1 → v3 → v3.1) 이 끝나 원장 상태를 옮겼다 · verified_sha = Codex 가 받은 파일을 만든 커밋 (Codex 는 리포 HEAD 가 아니라 받은 파일을 대조했다)."
     },
     {
       "id": "SEM-02",
       "severity": "P1",
-      "status": "claimed_fixed",
+      "status": "verified",
       "owner": "claude",
       "found_by": "codex 10-13 연구세미나 덱 검토 — 첫 판 과학 리뷰 (핀 a0439bdf8 사본 · SEM-01~14) + v3 묶음 통합 판정 (NO-GO · 편집 P0/P1/P2 · 새 시뮬레이션 불요) · 우리 트리 재현 = ps45 AM–AM 21 단면 하중 가중 몫 59.562243 · 54.634924 · 52.371659 · 48.463893 · 56.914398 % · 단면 평균 축응력 158.25 · 159.93 · 164.44 · 167.14 · 175.48 MPa · 공개 격자 3 점 Δ비 3.360104 · p 3.131238 · CL-33 · CL-34 = hold — 판정값 차이 0",
       "opened_in": "docs/reviews/codex_review_seminar_deck_20261013.md",
@@ -9733,14 +9740,22 @@
       "evidence_tests": [
         "docs/reviews/codex_review_seminar_deck_v3_20261013.md (통합 판정 §1 · §9 · §10)",
         "docs/reviews/codex_seminar_deck_review_evidence_20261013/first/evidence/independent_arithmetic.json",
-        "docs/reviews/codex_seminar_deck_review_evidence_20261013/v3/evidence/saved_data_recheck_stdout.txt"
+        "docs/reviews/codex_seminar_deck_review_evidence_20261013/v3/evidence/saved_data_recheck_stdout.txt",
+        "docs/reviews/codex_review_seminar_deck_v3_recheck_20261013.md",
+        "docs/reviews/codex_review_seminar_deck_v2_recheck_20261013.md",
+        "docs/reviews/codex_review_seminar_deck_v3_1_closure_20261013.md"
       ],
-      "claimed_fixed_sha": "8bc5fe1fb"
+      "claimed_fixed_sha": "8bc5fe1fb",
+      "verified_by": "codex",
+      "verified_in": "docs/reviews/codex_review_seminar_deck_v3_recheck_20261013.md",
+      "verified_sha": "0c6f5c84e",
+      "verified_scope": "v2 재확인 = 부분 닫힘 · 잔여 (현재 f = 0 / f(a) 런 = servo 라벨) = SEMV2-01 → v3 재확인 닫힘.  범위 = 연구세미나 발표물 (17 장 v3.1) — 믹서 모델 물리 검증 · 미달 겹침 조건 해소 · 18 런 발사 · 194/보충 20 생산 · v1.3 배포 승인 아님 (종결 판정 §1).",
+      "verification_note": "2026-10-13 Codex v3.1 종결 판정 GO 로 세미나 덱 검토 사슬 (첫 판 → v2 → v2.1 → v3 → v3.1) 이 끝나 원장 상태를 옮겼다 · verified_sha = Codex 가 받은 파일을 만든 커밋 (Codex 는 리포 HEAD 가 아니라 받은 파일을 대조했다)."
     },
     {
       "id": "SEM-03",
       "severity": "P1",
-      "status": "claimed_fixed",
+      "status": "verified",
       "owner": "claude",
       "found_by": "codex 10-13 연구세미나 덱 검토 — 첫 판 과학 리뷰 (핀 a0439bdf8 사본 · SEM-01~14) + v3 묶음 통합 판정 (NO-GO · 편집 P0/P1/P2 · 새 시뮬레이션 불요) · 우리 트리 재현 = ps45 AM–AM 21 단면 하중 가중 몫 59.562243 · 54.634924 · 52.371659 · 48.463893 · 56.914398 % · 단면 평균 축응력 158.25 · 159.93 · 164.44 · 167.14 · 175.48 MPa · 공개 격자 3 점 Δ비 3.360104 · p 3.131238 · CL-33 · CL-34 = hold — 판정값 차이 0",
       "opened_in": "docs/reviews/codex_review_seminar_deck_20261013.md",
@@ -9749,14 +9764,21 @@
       "evidence_tests": [
         "docs/reviews/codex_review_seminar_deck_v3_20261013.md (통합 판정 §1 · §9 · §10)",
         "docs/reviews/codex_seminar_deck_review_evidence_20261013/first/evidence/independent_arithmetic.json",
-        "docs/reviews/codex_seminar_deck_review_evidence_20261013/v3/evidence/saved_data_recheck_stdout.txt"
+        "docs/reviews/codex_seminar_deck_review_evidence_20261013/v3/evidence/saved_data_recheck_stdout.txt",
+        "docs/reviews/codex_review_seminar_deck_v2_recheck_20261013.md",
+        "docs/reviews/codex_review_seminar_deck_v3_1_closure_20261013.md"
       ],
-      "claimed_fixed_sha": "8bc5fe1fb"
+      "claimed_fixed_sha": "8bc5fe1fb",
+      "verified_by": "codex",
+      "verified_in": "docs/reviews/codex_review_seminar_deck_v2_recheck_20261013.md",
+      "verified_sha": "8bc5fe1fb",
+      "verified_scope": "v2 덱 (8bc5fe1fb · ZIP v4) 에서 Codex v2 재확인이 닫거나 수용 (§1 표 · 조건부 GO) · 잔여 손질 = SEMV2-01~07 → v3 재확인 · v3.1 종결 GO 에서 모두 닫힘.  범위 = 연구세미나 발표물 (17 장 v3.1) — 믹서 모델 물리 검증 · 미달 겹침 조건 해소 · 18 런 발사 · 194/보충 20 생산 · v1.3 배포 승인 아님 (종결 판정 §1).",
+      "verification_note": "2026-10-13 Codex v3.1 종결 판정 GO 로 세미나 덱 검토 사슬 (첫 판 → v2 → v2.1 → v3 → v3.1) 이 끝나 원장 상태를 옮겼다 · verified_sha = Codex 가 받은 파일을 만든 커밋 (Codex 는 리포 HEAD 가 아니라 받은 파일을 대조했다)."
     },
     {
       "id": "SEM-04",
       "severity": "P1",
-      "status": "claimed_fixed",
+      "status": "verified",
       "owner": "claude",
       "found_by": "codex 10-13 연구세미나 덱 검토 — 첫 판 과학 리뷰 (핀 a0439bdf8 사본 · SEM-01~14) + v3 묶음 통합 판정 (NO-GO · 편집 P0/P1/P2 · 새 시뮬레이션 불요) · 우리 트리 재현 = ps45 AM–AM 21 단면 하중 가중 몫 59.562243 · 54.634924 · 52.371659 · 48.463893 · 56.914398 % · 단면 평균 축응력 158.25 · 159.93 · 164.44 · 167.14 · 175.48 MPa · 공개 격자 3 점 Δ비 3.360104 · p 3.131238 · CL-33 · CL-34 = hold — 판정값 차이 0",
       "opened_in": "docs/reviews/codex_review_seminar_deck_20261013.md",
@@ -9765,14 +9787,21 @@
       "evidence_tests": [
         "docs/reviews/codex_review_seminar_deck_v3_20261013.md (통합 판정 §1 · §9 · §10)",
         "docs/reviews/codex_seminar_deck_review_evidence_20261013/first/evidence/independent_arithmetic.json",
-        "docs/reviews/codex_seminar_deck_review_evidence_20261013/v3/evidence/saved_data_recheck_stdout.txt"
+        "docs/reviews/codex_seminar_deck_review_evidence_20261013/v3/evidence/saved_data_recheck_stdout.txt",
+        "docs/reviews/codex_review_seminar_deck_v2_recheck_20261013.md",
+        "docs/reviews/codex_review_seminar_deck_v3_1_closure_20261013.md"
       ],
-      "claimed_fixed_sha": "8bc5fe1fb"
+      "claimed_fixed_sha": "8bc5fe1fb",
+      "verified_by": "codex",
+      "verified_in": "docs/reviews/codex_review_seminar_deck_v2_recheck_20261013.md",
+      "verified_sha": "8bc5fe1fb",
+      "verified_scope": "v2 덱 (8bc5fe1fb · ZIP v4) 에서 Codex v2 재확인이 닫거나 수용 (§1 표 · 조건부 GO) · 잔여 손질 = SEMV2-01~07 → v3 재확인 · v3.1 종결 GO 에서 모두 닫힘.  범위 = 연구세미나 발표물 (17 장 v3.1) — 믹서 모델 물리 검증 · 미달 겹침 조건 해소 · 18 런 발사 · 194/보충 20 생산 · v1.3 배포 승인 아님 (종결 판정 §1).",
+      "verification_note": "2026-10-13 Codex v3.1 종결 판정 GO 로 세미나 덱 검토 사슬 (첫 판 → v2 → v2.1 → v3 → v3.1) 이 끝나 원장 상태를 옮겼다 · verified_sha = Codex 가 받은 파일을 만든 커밋 (Codex 는 리포 HEAD 가 아니라 받은 파일을 대조했다)."
     },
     {
       "id": "SEM-05",
       "severity": "P1",
-      "status": "claimed_fixed",
+      "status": "verified",
       "owner": "claude",
       "found_by": "codex 10-13 연구세미나 덱 검토 — 첫 판 과학 리뷰 (핀 a0439bdf8 사본 · SEM-01~14) + v3 묶음 통합 판정 (NO-GO · 편집 P0/P1/P2 · 새 시뮬레이션 불요) · 우리 트리 재현 = ps45 AM–AM 21 단면 하중 가중 몫 59.562243 · 54.634924 · 52.371659 · 48.463893 · 56.914398 % · 단면 평균 축응력 158.25 · 159.93 · 164.44 · 167.14 · 175.48 MPa · 공개 격자 3 점 Δ비 3.360104 · p 3.131238 · CL-33 · CL-34 = hold — 판정값 차이 0",
       "opened_in": "docs/reviews/codex_review_seminar_deck_20261013.md",
@@ -9781,14 +9810,21 @@
       "evidence_tests": [
         "docs/reviews/codex_review_seminar_deck_v3_20261013.md (통합 판정 §1 · §9 · §10)",
         "docs/reviews/codex_seminar_deck_review_evidence_20261013/first/evidence/independent_arithmetic.json",
-        "docs/reviews/codex_seminar_deck_review_evidence_20261013/v3/evidence/saved_data_recheck_stdout.txt"
+        "docs/reviews/codex_seminar_deck_review_evidence_20261013/v3/evidence/saved_data_recheck_stdout.txt",
+        "docs/reviews/codex_review_seminar_deck_v2_recheck_20261013.md",
+        "docs/reviews/codex_review_seminar_deck_v3_1_closure_20261013.md"
       ],
-      "claimed_fixed_sha": "8bc5fe1fb"
+      "claimed_fixed_sha": "8bc5fe1fb",
+      "verified_by": "codex",
+      "verified_in": "docs/reviews/codex_review_seminar_deck_v2_recheck_20261013.md",
+      "verified_sha": "8bc5fe1fb",
+      "verified_scope": "v2 덱 (8bc5fe1fb · ZIP v4) 에서 Codex v2 재확인이 닫거나 수용 (§1 표 · 조건부 GO) · 잔여 손질 = SEMV2-01~07 → v3 재확인 · v3.1 종결 GO 에서 모두 닫힘.  범위 = 연구세미나 발표물 (17 장 v3.1) — 믹서 모델 물리 검증 · 미달 겹침 조건 해소 · 18 런 발사 · 194/보충 20 생산 · v1.3 배포 승인 아님 (종결 판정 §1).",
+      "verification_note": "2026-10-13 Codex v3.1 종결 판정 GO 로 세미나 덱 검토 사슬 (첫 판 → v2 → v2.1 → v3 → v3.1) 이 끝나 원장 상태를 옮겼다 · verified_sha = Codex 가 받은 파일을 만든 커밋 (Codex 는 리포 HEAD 가 아니라 받은 파일을 대조했다)."
     },
     {
       "id": "SEM-06",
       "severity": "P1",
-      "status": "claimed_fixed",
+      "status": "verified",
       "owner": "claude",
       "found_by": "codex 10-13 연구세미나 덱 검토 — 첫 판 과학 리뷰 (핀 a0439bdf8 사본 · SEM-01~14) + v3 묶음 통합 판정 (NO-GO · 편집 P0/P1/P2 · 새 시뮬레이션 불요) · 우리 트리 재현 = ps45 AM–AM 21 단면 하중 가중 몫 59.562243 · 54.634924 · 52.371659 · 48.463893 · 56.914398 % · 단면 평균 축응력 158.25 · 159.93 · 164.44 · 167.14 · 175.48 MPa · 공개 격자 3 점 Δ비 3.360104 · p 3.131238 · CL-33 · CL-34 = hold — 판정값 차이 0",
       "opened_in": "docs/reviews/codex_review_seminar_deck_20261013.md",
@@ -9797,14 +9833,21 @@
       "evidence_tests": [
         "docs/reviews/codex_review_seminar_deck_v3_20261013.md (통합 판정 §1 · §9 · §10)",
         "docs/reviews/codex_seminar_deck_review_evidence_20261013/first/evidence/independent_arithmetic.json",
-        "docs/reviews/codex_seminar_deck_review_evidence_20261013/v3/evidence/saved_data_recheck_stdout.txt"
+        "docs/reviews/codex_seminar_deck_review_evidence_20261013/v3/evidence/saved_data_recheck_stdout.txt",
+        "docs/reviews/codex_review_seminar_deck_v2_recheck_20261013.md",
+        "docs/reviews/codex_review_seminar_deck_v3_1_closure_20261013.md"
       ],
-      "claimed_fixed_sha": "8bc5fe1fb"
+      "claimed_fixed_sha": "8bc5fe1fb",
+      "verified_by": "codex",
+      "verified_in": "docs/reviews/codex_review_seminar_deck_v2_recheck_20261013.md",
+      "verified_sha": "8bc5fe1fb",
+      "verified_scope": "v2 덱 (8bc5fe1fb · ZIP v4) 에서 Codex v2 재확인이 닫거나 수용 (§1 표 · 조건부 GO) · 잔여 손질 = SEMV2-01~07 → v3 재확인 · v3.1 종결 GO 에서 모두 닫힘.  범위 = 연구세미나 발표물 (17 장 v3.1) — 믹서 모델 물리 검증 · 미달 겹침 조건 해소 · 18 런 발사 · 194/보충 20 생산 · v1.3 배포 승인 아님 (종결 판정 §1).",
+      "verification_note": "2026-10-13 Codex v3.1 종결 판정 GO 로 세미나 덱 검토 사슬 (첫 판 → v2 → v2.1 → v3 → v3.1) 이 끝나 원장 상태를 옮겼다 · verified_sha = Codex 가 받은 파일을 만든 커밋 (Codex 는 리포 HEAD 가 아니라 받은 파일을 대조했다)."
     },
     {
       "id": "SEM-07",
       "severity": "P2",
-      "status": "claimed_fixed",
+      "status": "verified",
       "owner": "claude",
       "found_by": "codex 10-13 연구세미나 덱 검토 — 첫 판 과학 리뷰 (핀 a0439bdf8 사본 · SEM-01~14) + v3 묶음 통합 판정 (NO-GO · 편집 P0/P1/P2 · 새 시뮬레이션 불요) · 우리 트리 재현 = ps45 AM–AM 21 단면 하중 가중 몫 59.562243 · 54.634924 · 52.371659 · 48.463893 · 56.914398 % · 단면 평균 축응력 158.25 · 159.93 · 164.44 · 167.14 · 175.48 MPa · 공개 격자 3 점 Δ비 3.360104 · p 3.131238 · CL-33 · CL-34 = hold — 판정값 차이 0",
       "opened_in": "docs/reviews/codex_review_seminar_deck_20261013.md",
@@ -9813,14 +9856,22 @@
       "evidence_tests": [
         "docs/reviews/codex_review_seminar_deck_v3_20261013.md (통합 판정 §1 · §9 · §10)",
         "docs/reviews/codex_seminar_deck_review_evidence_20261013/first/evidence/independent_arithmetic.json",
-        "docs/reviews/codex_seminar_deck_review_evidence_20261013/v3/evidence/saved_data_recheck_stdout.txt"
+        "docs/reviews/codex_seminar_deck_review_evidence_20261013/v3/evidence/saved_data_recheck_stdout.txt",
+        "docs/reviews/codex_review_seminar_deck_v3_1_closure_20261013.md",
+        "docs/reviews/codex_review_seminar_deck_v2_recheck_20261013.md",
+        "docs/reviews/codex_review_seminar_deck_v3_recheck_20261013.md"
       ],
-      "claimed_fixed_sha": "8bc5fe1fb"
+      "claimed_fixed_sha": "8bc5fe1fb",
+      "verified_by": "codex",
+      "verified_in": "docs/reviews/codex_review_seminar_deck_v3_1_closure_20261013.md",
+      "verified_sha": "9c45ec296",
+      "verified_scope": "v2 재확인이 핵심 (σy 0.30 보정 선택 · 미출판 랩 보정 표적 · 문헌 귀속 철회) 을 닫고 잔여 = SEMV2-05 · 06 → v3 재확인 닫힘 · SEMV2-06 notes 잔여 = SEMV3-10 → v3.1 덱 (9c45ec296 · ZIP v7 sha256 1abdd488…) 에서 Codex 종결 판정 GO (§3 · §6).  범위 = 연구세미나 발표물 (17 장 v3.1) — 믹서 모델 물리 검증 · 미달 겹침 조건 해소 · 18 런 발사 · 194/보충 20 생산 · v1.3 배포 승인 아님 (종결 판정 §1).",
+      "verification_note": "2026-10-13 Codex v3.1 종결 판정 GO 로 세미나 덱 검토 사슬 (첫 판 → v2 → v2.1 → v3 → v3.1) 이 끝나 원장 상태를 옮겼다 · verified_sha = Codex 가 받은 파일을 만든 커밋 (Codex 는 리포 HEAD 가 아니라 받은 파일을 대조했다)."
     },
     {
       "id": "SEM-08",
       "severity": "P2",
-      "status": "claimed_fixed",
+      "status": "verified",
       "owner": "claude",
       "found_by": "codex 10-13 연구세미나 덱 검토 — 첫 판 과학 리뷰 (핀 a0439bdf8 사본 · SEM-01~14) + v3 묶음 통합 판정 (NO-GO · 편집 P0/P1/P2 · 새 시뮬레이션 불요) · 우리 트리 재현 = ps45 AM–AM 21 단면 하중 가중 몫 59.562243 · 54.634924 · 52.371659 · 48.463893 · 56.914398 % · 단면 평균 축응력 158.25 · 159.93 · 164.44 · 167.14 · 175.48 MPa · 공개 격자 3 점 Δ비 3.360104 · p 3.131238 · CL-33 · CL-34 = hold — 판정값 차이 0",
       "opened_in": "docs/reviews/codex_review_seminar_deck_20261013.md",
@@ -9829,14 +9880,21 @@
       "evidence_tests": [
         "docs/reviews/codex_review_seminar_deck_v3_20261013.md (통합 판정 §1 · §9 · §10)",
         "docs/reviews/codex_seminar_deck_review_evidence_20261013/first/evidence/independent_arithmetic.json",
-        "docs/reviews/codex_seminar_deck_review_evidence_20261013/v3/evidence/saved_data_recheck_stdout.txt"
+        "docs/reviews/codex_seminar_deck_review_evidence_20261013/v3/evidence/saved_data_recheck_stdout.txt",
+        "docs/reviews/codex_review_seminar_deck_v2_recheck_20261013.md",
+        "docs/reviews/codex_review_seminar_deck_v3_1_closure_20261013.md"
       ],
-      "claimed_fixed_sha": "8bc5fe1fb"
+      "claimed_fixed_sha": "8bc5fe1fb",
+      "verified_by": "codex",
+      "verified_in": "docs/reviews/codex_review_seminar_deck_v2_recheck_20261013.md",
+      "verified_sha": "8bc5fe1fb",
+      "verified_scope": "v2 덱 (8bc5fe1fb · ZIP v4) 에서 Codex v2 재확인이 닫거나 수용 (§1 표 · 조건부 GO) · 잔여 손질 = SEMV2-01~07 → v3 재확인 · v3.1 종결 GO 에서 모두 닫힘.  범위 = 연구세미나 발표물 (17 장 v3.1) — 믹서 모델 물리 검증 · 미달 겹침 조건 해소 · 18 런 발사 · 194/보충 20 생산 · v1.3 배포 승인 아님 (종결 판정 §1).",
+      "verification_note": "2026-10-13 Codex v3.1 종결 판정 GO 로 세미나 덱 검토 사슬 (첫 판 → v2 → v2.1 → v3 → v3.1) 이 끝나 원장 상태를 옮겼다 · verified_sha = Codex 가 받은 파일을 만든 커밋 (Codex 는 리포 HEAD 가 아니라 받은 파일을 대조했다)."
     },
     {
       "id": "SEM-09",
       "severity": "P2",
-      "status": "claimed_fixed",
+      "status": "verified",
       "owner": "claude",
       "found_by": "codex 10-13 연구세미나 덱 검토 — 첫 판 과학 리뷰 (핀 a0439bdf8 사본 · SEM-01~14) + v3 묶음 통합 판정 (NO-GO · 편집 P0/P1/P2 · 새 시뮬레이션 불요) · 우리 트리 재현 = ps45 AM–AM 21 단면 하중 가중 몫 59.562243 · 54.634924 · 52.371659 · 48.463893 · 56.914398 % · 단면 평균 축응력 158.25 · 159.93 · 164.44 · 167.14 · 175.48 MPa · 공개 격자 3 점 Δ비 3.360104 · p 3.131238 · CL-33 · CL-34 = hold — 판정값 차이 0",
       "opened_in": "docs/reviews/codex_review_seminar_deck_20261013.md",
@@ -9845,14 +9903,21 @@
       "evidence_tests": [
         "docs/reviews/codex_review_seminar_deck_v3_20261013.md (통합 판정 §1 · §9 · §10)",
         "docs/reviews/codex_seminar_deck_review_evidence_20261013/first/evidence/independent_arithmetic.json",
-        "docs/reviews/codex_seminar_deck_review_evidence_20261013/v3/evidence/saved_data_recheck_stdout.txt"
+        "docs/reviews/codex_seminar_deck_review_evidence_20261013/v3/evidence/saved_data_recheck_stdout.txt",
+        "docs/reviews/codex_review_seminar_deck_v2_recheck_20261013.md",
+        "docs/reviews/codex_review_seminar_deck_v3_1_closure_20261013.md"
       ],
-      "claimed_fixed_sha": "8bc5fe1fb"
+      "claimed_fixed_sha": "8bc5fe1fb",
+      "verified_by": "codex",
+      "verified_in": "docs/reviews/codex_review_seminar_deck_v2_recheck_20261013.md",
+      "verified_sha": "8bc5fe1fb",
+      "verified_scope": "v2 덱 (8bc5fe1fb · ZIP v4) 에서 Codex v2 재확인이 닫거나 수용 (§1 표 · 조건부 GO) · 잔여 손질 = SEMV2-01~07 → v3 재확인 · v3.1 종결 GO 에서 모두 닫힘.  범위 = 연구세미나 발표물 (17 장 v3.1) — 믹서 모델 물리 검증 · 미달 겹침 조건 해소 · 18 런 발사 · 194/보충 20 생산 · v1.3 배포 승인 아님 (종결 판정 §1).",
+      "verification_note": "2026-10-13 Codex v3.1 종결 판정 GO 로 세미나 덱 검토 사슬 (첫 판 → v2 → v2.1 → v3 → v3.1) 이 끝나 원장 상태를 옮겼다 · verified_sha = Codex 가 받은 파일을 만든 커밋 (Codex 는 리포 HEAD 가 아니라 받은 파일을 대조했다)."
     },
     {
       "id": "SEM-10",
       "severity": "P2",
-      "status": "claimed_fixed",
+      "status": "verified",
       "owner": "claude",
       "found_by": "codex 10-13 연구세미나 덱 검토 — 첫 판 과학 리뷰 (핀 a0439bdf8 사본 · SEM-01~14) + v3 묶음 통합 판정 (NO-GO · 편집 P0/P1/P2 · 새 시뮬레이션 불요) · 우리 트리 재현 = ps45 AM–AM 21 단면 하중 가중 몫 59.562243 · 54.634924 · 52.371659 · 48.463893 · 56.914398 % · 단면 평균 축응력 158.25 · 159.93 · 164.44 · 167.14 · 175.48 MPa · 공개 격자 3 점 Δ비 3.360104 · p 3.131238 · CL-33 · CL-34 = hold — 판정값 차이 0",
       "opened_in": "docs/reviews/codex_review_seminar_deck_20261013.md",
@@ -9861,14 +9926,21 @@
       "evidence_tests": [
         "docs/reviews/codex_review_seminar_deck_v3_20261013.md (통합 판정 §1 · §9 · §10)",
         "docs/reviews/codex_seminar_deck_review_evidence_20261013/first/evidence/independent_arithmetic.json",
-        "docs/reviews/codex_seminar_deck_review_evidence_20261013/v3/evidence/saved_data_recheck_stdout.txt"
+        "docs/reviews/codex_seminar_deck_review_evidence_20261013/v3/evidence/saved_data_recheck_stdout.txt",
+        "docs/reviews/codex_review_seminar_deck_v2_recheck_20261013.md",
+        "docs/reviews/codex_review_seminar_deck_v3_1_closure_20261013.md"
       ],
-      "claimed_fixed_sha": "8bc5fe1fb"
+      "claimed_fixed_sha": "8bc5fe1fb",
+      "verified_by": "codex",
+      "verified_in": "docs/reviews/codex_review_seminar_deck_v2_recheck_20261013.md",
+      "verified_sha": "8bc5fe1fb",
+      "verified_scope": "v2 덱 (8bc5fe1fb · ZIP v4) 에서 Codex v2 재확인이 닫거나 수용 (§1 표 · 조건부 GO) · 잔여 손질 = SEMV2-01~07 → v3 재확인 · v3.1 종결 GO 에서 모두 닫힘.  범위 = 연구세미나 발표물 (17 장 v3.1) — 믹서 모델 물리 검증 · 미달 겹침 조건 해소 · 18 런 발사 · 194/보충 20 생산 · v1.3 배포 승인 아님 (종결 판정 §1).",
+      "verification_note": "2026-10-13 Codex v3.1 종결 판정 GO 로 세미나 덱 검토 사슬 (첫 판 → v2 → v2.1 → v3 → v3.1) 이 끝나 원장 상태를 옮겼다 · verified_sha = Codex 가 받은 파일을 만든 커밋 (Codex 는 리포 HEAD 가 아니라 받은 파일을 대조했다)."
     },
     {
       "id": "SEM-11",
       "severity": "P2",
-      "status": "claimed_fixed",
+      "status": "verified",
       "owner": "claude",
       "found_by": "codex 10-13 연구세미나 덱 검토 — 첫 판 과학 리뷰 (핀 a0439bdf8 사본 · SEM-01~14) + v3 묶음 통합 판정 (NO-GO · 편집 P0/P1/P2 · 새 시뮬레이션 불요) · 우리 트리 재현 = ps45 AM–AM 21 단면 하중 가중 몫 59.562243 · 54.634924 · 52.371659 · 48.463893 · 56.914398 % · 단면 평균 축응력 158.25 · 159.93 · 164.44 · 167.14 · 175.48 MPa · 공개 격자 3 점 Δ비 3.360104 · p 3.131238 · CL-33 · CL-34 = hold — 판정값 차이 0",
       "opened_in": "docs/reviews/codex_review_seminar_deck_20261013.md",
@@ -9877,14 +9949,21 @@
       "evidence_tests": [
         "docs/reviews/codex_review_seminar_deck_v3_20261013.md (통합 판정 §1 · §9 · §10)",
         "docs/reviews/codex_seminar_deck_review_evidence_20261013/first/evidence/independent_arithmetic.json",
-        "docs/reviews/codex_seminar_deck_review_evidence_20261013/v3/evidence/saved_data_recheck_stdout.txt"
+        "docs/reviews/codex_seminar_deck_review_evidence_20261013/v3/evidence/saved_data_recheck_stdout.txt",
+        "docs/reviews/codex_review_seminar_deck_v2_recheck_20261013.md",
+        "docs/reviews/codex_review_seminar_deck_v3_1_closure_20261013.md"
       ],
-      "claimed_fixed_sha": "8bc5fe1fb"
+      "claimed_fixed_sha": "8bc5fe1fb",
+      "verified_by": "codex",
+      "verified_in": "docs/reviews/codex_review_seminar_deck_v2_recheck_20261013.md",
+      "verified_sha": "8bc5fe1fb",
+      "verified_scope": "v2 덱 (8bc5fe1fb · ZIP v4) 에서 Codex v2 재확인이 닫거나 수용 (§1 표 · 조건부 GO) · 잔여 손질 = SEMV2-01~07 → v3 재확인 · v3.1 종결 GO 에서 모두 닫힘.  범위 = 연구세미나 발표물 (17 장 v3.1) — 믹서 모델 물리 검증 · 미달 겹침 조건 해소 · 18 런 발사 · 194/보충 20 생산 · v1.3 배포 승인 아님 (종결 판정 §1).",
+      "verification_note": "2026-10-13 Codex v3.1 종결 판정 GO 로 세미나 덱 검토 사슬 (첫 판 → v2 → v2.1 → v3 → v3.1) 이 끝나 원장 상태를 옮겼다 · verified_sha = Codex 가 받은 파일을 만든 커밋 (Codex 는 리포 HEAD 가 아니라 받은 파일을 대조했다)."
     },
     {
       "id": "SEM-12",
       "severity": "P2",
-      "status": "claimed_fixed",
+      "status": "verified",
       "owner": "claude",
       "found_by": "codex 10-13 연구세미나 덱 검토 — 첫 판 과학 리뷰 (핀 a0439bdf8 사본 · SEM-01~14) + v3 묶음 통합 판정 (NO-GO · 편집 P0/P1/P2 · 새 시뮬레이션 불요) · 우리 트리 재현 = ps45 AM–AM 21 단면 하중 가중 몫 59.562243 · 54.634924 · 52.371659 · 48.463893 · 56.914398 % · 단면 평균 축응력 158.25 · 159.93 · 164.44 · 167.14 · 175.48 MPa · 공개 격자 3 점 Δ비 3.360104 · p 3.131238 · CL-33 · CL-34 = hold — 판정값 차이 0",
       "opened_in": "docs/reviews/codex_review_seminar_deck_20261013.md",
@@ -9893,14 +9972,21 @@
       "evidence_tests": [
         "docs/reviews/codex_review_seminar_deck_v3_20261013.md (통합 판정 §1 · §9 · §10)",
         "docs/reviews/codex_seminar_deck_review_evidence_20261013/first/evidence/independent_arithmetic.json",
-        "docs/reviews/codex_seminar_deck_review_evidence_20261013/v3/evidence/saved_data_recheck_stdout.txt"
+        "docs/reviews/codex_seminar_deck_review_evidence_20261013/v3/evidence/saved_data_recheck_stdout.txt",
+        "docs/reviews/codex_review_seminar_deck_v2_recheck_20261013.md",
+        "docs/reviews/codex_review_seminar_deck_v3_1_closure_20261013.md"
       ],
-      "claimed_fixed_sha": "8bc5fe1fb"
+      "claimed_fixed_sha": "8bc5fe1fb",
+      "verified_by": "codex",
+      "verified_in": "docs/reviews/codex_review_seminar_deck_v2_recheck_20261013.md",
+      "verified_sha": "8bc5fe1fb",
+      "verified_scope": "v2 덱 (8bc5fe1fb · ZIP v4) 에서 Codex v2 재확인이 닫거나 수용 (§1 표 · 조건부 GO) · 잔여 손질 = SEMV2-01~07 → v3 재확인 · v3.1 종결 GO 에서 모두 닫힘.  범위 = 연구세미나 발표물 (17 장 v3.1) — 믹서 모델 물리 검증 · 미달 겹침 조건 해소 · 18 런 발사 · 194/보충 20 생산 · v1.3 배포 승인 아님 (종결 판정 §1).",
+      "verification_note": "2026-10-13 Codex v3.1 종결 판정 GO 로 세미나 덱 검토 사슬 (첫 판 → v2 → v2.1 → v3 → v3.1) 이 끝나 원장 상태를 옮겼다 · verified_sha = Codex 가 받은 파일을 만든 커밋 (Codex 는 리포 HEAD 가 아니라 받은 파일을 대조했다)."
     },
     {
       "id": "SEM-13",
       "severity": "P2",
-      "status": "claimed_fixed",
+      "status": "verified",
       "owner": "claude",
       "found_by": "codex 10-13 연구세미나 덱 검토 — 첫 판 과학 리뷰 (핀 a0439bdf8 사본 · SEM-01~14) + v3 묶음 통합 판정 (NO-GO · 편집 P0/P1/P2 · 새 시뮬레이션 불요) · 우리 트리 재현 = ps45 AM–AM 21 단면 하중 가중 몫 59.562243 · 54.634924 · 52.371659 · 48.463893 · 56.914398 % · 단면 평균 축응력 158.25 · 159.93 · 164.44 · 167.14 · 175.48 MPa · 공개 격자 3 점 Δ비 3.360104 · p 3.131238 · CL-33 · CL-34 = hold — 판정값 차이 0",
       "opened_in": "docs/reviews/codex_review_seminar_deck_20261013.md",
@@ -9909,14 +9995,21 @@
       "evidence_tests": [
         "docs/reviews/codex_review_seminar_deck_v3_20261013.md (통합 판정 §1 · §9 · §10)",
         "docs/reviews/codex_seminar_deck_review_evidence_20261013/first/evidence/independent_arithmetic.json",
-        "docs/reviews/codex_seminar_deck_review_evidence_20261013/v3/evidence/saved_data_recheck_stdout.txt"
+        "docs/reviews/codex_seminar_deck_review_evidence_20261013/v3/evidence/saved_data_recheck_stdout.txt",
+        "docs/reviews/codex_review_seminar_deck_v2_recheck_20261013.md",
+        "docs/reviews/codex_review_seminar_deck_v3_1_closure_20261013.md"
       ],
-      "claimed_fixed_sha": "8bc5fe1fb"
+      "claimed_fixed_sha": "8bc5fe1fb",
+      "verified_by": "codex",
+      "verified_in": "docs/reviews/codex_review_seminar_deck_v2_recheck_20261013.md",
+      "verified_sha": "8bc5fe1fb",
+      "verified_scope": "v2 덱 (8bc5fe1fb · ZIP v4) 에서 Codex v2 재확인이 닫거나 수용 (§1 표 · 조건부 GO) · 잔여 손질 = SEMV2-01~07 → v3 재확인 · v3.1 종결 GO 에서 모두 닫힘.  범위 = 연구세미나 발표물 (17 장 v3.1) — 믹서 모델 물리 검증 · 미달 겹침 조건 해소 · 18 런 발사 · 194/보충 20 생산 · v1.3 배포 승인 아님 (종결 판정 §1).",
+      "verification_note": "2026-10-13 Codex v3.1 종결 판정 GO 로 세미나 덱 검토 사슬 (첫 판 → v2 → v2.1 → v3 → v3.1) 이 끝나 원장 상태를 옮겼다 · verified_sha = Codex 가 받은 파일을 만든 커밋 (Codex 는 리포 HEAD 가 아니라 받은 파일을 대조했다)."
     },
     {
       "id": "SEM-14",
       "severity": "P3",
-      "status": "claimed_fixed",
+      "status": "verified",
       "owner": "claude",
       "found_by": "codex 10-13 연구세미나 덱 검토 — 첫 판 과학 리뷰 (핀 a0439bdf8 사본 · SEM-01~14) + v3 묶음 통합 판정 (NO-GO · 편집 P0/P1/P2 · 새 시뮬레이션 불요) · 우리 트리 재현 = ps45 AM–AM 21 단면 하중 가중 몫 59.562243 · 54.634924 · 52.371659 · 48.463893 · 56.914398 % · 단면 평균 축응력 158.25 · 159.93 · 164.44 · 167.14 · 175.48 MPa · 공개 격자 3 점 Δ비 3.360104 · p 3.131238 · CL-33 · CL-34 = hold — 판정값 차이 0",
       "opened_in": "docs/reviews/codex_review_seminar_deck_20261013.md",
@@ -9925,14 +10018,21 @@
       "evidence_tests": [
         "docs/reviews/codex_review_seminar_deck_v3_20261013.md (통합 판정 §1 · §9 · §10)",
         "docs/reviews/codex_seminar_deck_review_evidence_20261013/first/evidence/independent_arithmetic.json",
-        "docs/reviews/codex_seminar_deck_review_evidence_20261013/v3/evidence/saved_data_recheck_stdout.txt"
+        "docs/reviews/codex_seminar_deck_review_evidence_20261013/v3/evidence/saved_data_recheck_stdout.txt",
+        "docs/reviews/codex_review_seminar_deck_v2_recheck_20261013.md",
+        "docs/reviews/codex_review_seminar_deck_v3_1_closure_20261013.md"
       ],
-      "claimed_fixed_sha": "8bc5fe1fb"
+      "claimed_fixed_sha": "8bc5fe1fb",
+      "verified_by": "codex",
+      "verified_in": "docs/reviews/codex_review_seminar_deck_v2_recheck_20261013.md",
+      "verified_sha": "8bc5fe1fb",
+      "verified_scope": "v2 덱 (8bc5fe1fb · ZIP v4) 에서 Codex v2 재확인이 닫거나 수용 (§1 표 · 조건부 GO) · 잔여 손질 = SEMV2-01~07 → v3 재확인 · v3.1 종결 GO 에서 모두 닫힘.  범위 = 연구세미나 발표물 (17 장 v3.1) — 믹서 모델 물리 검증 · 미달 겹침 조건 해소 · 18 런 발사 · 194/보충 20 생산 · v1.3 배포 승인 아님 (종결 판정 §1).",
+      "verification_note": "2026-10-13 Codex v3.1 종결 판정 GO 로 세미나 덱 검토 사슬 (첫 판 → v2 → v2.1 → v3 → v3.1) 이 끝나 원장 상태를 옮겼다 · verified_sha = Codex 가 받은 파일을 만든 커밋 (Codex 는 리포 HEAD 가 아니라 받은 파일을 대조했다)."
     },
     {
       "id": "SELF-110",
       "severity": "P3",
-      "status": "claimed_fixed",
+      "status": "verified",
       "owner": "claude",
       "found_by": "codex v3 통합 판정 §3 (실제 PPTX XML 대조) — 요청서 codex_seminar_deck_review_request_20261013 §2 의 두 사실 오기",
       "opened_in": "docs/reviews/codex_review_seminar_deck_v3_20261013.md",
@@ -9940,14 +10040,21 @@
       "note": "수정 = 요청서 정오표 (머리 표지) · 생성기: 제목 18 유지 · 출처는 캡션 [n] 으로 (작은 출처 상자 복원 대신) — docs/reviews/seminar_deck_fix_plan_20261013.md  ✅ 수정 = 덱 v2 (생성기 v2 · 8bc5fe1fb · 대응표 docs/reviews/codex_seminar_deck_v2_recheck_request_20261013.md §1).  Codex 재확인 10-13 = 수용 (조건부 GO · 잔여 손질 = SEMV2-03~07)",
       "evidence_tests": [
         "docs/reviews/codex_seminar_deck_review_evidence_20261013/v3/notes/visual_1_9.md",
-        "docs/reviews/codex_seminar_deck_review_evidence_20261013/v3/evidence/v3_pptx.json"
+        "docs/reviews/codex_seminar_deck_review_evidence_20261013/v3/evidence/v3_pptx.json",
+        "docs/reviews/codex_review_seminar_deck_v2_recheck_20261013.md",
+        "docs/reviews/codex_review_seminar_deck_v3_1_closure_20261013.md"
       ],
-      "claimed_fixed_sha": "8bc5fe1fb"
+      "claimed_fixed_sha": "8bc5fe1fb",
+      "verified_by": "codex",
+      "verified_in": "docs/reviews/codex_review_seminar_deck_v2_recheck_20261013.md",
+      "verified_sha": "8bc5fe1fb",
+      "verified_scope": "v2 덱 (8bc5fe1fb · ZIP v4) 에서 Codex v2 재확인이 닫거나 수용 (§1 표 · 조건부 GO) · 잔여 손질 = SEMV2-01~07 → v3 재확인 · v3.1 종결 GO 에서 모두 닫힘.  범위 = 연구세미나 발표물 (17 장 v3.1) — 믹서 모델 물리 검증 · 미달 겹침 조건 해소 · 18 런 발사 · 194/보충 20 생산 · v1.3 배포 승인 아님 (종결 판정 §1).",
+      "verification_note": "2026-10-13 Codex v3.1 종결 판정 GO 로 세미나 덱 검토 사슬 (첫 판 → v2 → v2.1 → v3 → v3.1) 이 끝나 원장 상태를 옮겼다 · verified_sha = Codex 가 받은 파일을 만든 커밋 (Codex 는 리포 HEAD 가 아니라 받은 파일을 대조했다)."
     },
     {
       "id": "SEMV2-01",
       "severity": "P1",
-      "status": "claimed_fixed",
+      "status": "verified",
       "owner": "claude",
       "found_by": "codex 10-13 v2 재확인 (조건부 GO · PPTX sha256 5d577203… · PDF 044eba08… · ZIP v4 ef3edae4… · 본문 · notes · 미디어 · PDF 렌더 대조 · 저장 자료 산술 재검산 — 솔버 미실행) · 우리 재현: fam_platen_prereg §12 `--protocol servo` 6 회 · summary.json G5 n130/n64",
       "opened_in": "docs/reviews/codex_review_seminar_deck_v2_recheck_20261013.md",
@@ -9956,14 +10063,21 @@
       "evidence_tests": [
         "docs/reviews/codex_review_seminar_deck_v2_recheck_20261013.md (§2 · §5 · §6)",
         "docs/reviews/codex_seminar_deck_review_evidence_20261013/v2_recheck/evidence/recheck_proof.json",
-        "docs/reviews/codex_seminar_deck_review_evidence_20261013/v2_recheck/evidence/arithmetic_rerun.txt"
+        "docs/reviews/codex_seminar_deck_review_evidence_20261013/v2_recheck/evidence/arithmetic_rerun.txt",
+        "docs/reviews/codex_review_seminar_deck_v3_recheck_20261013.md",
+        "docs/reviews/codex_review_seminar_deck_v3_1_closure_20261013.md"
       ],
-      "claimed_fixed_sha": "9991b17a5"
+      "claimed_fixed_sha": "9991b17a5",
+      "verified_by": "codex",
+      "verified_in": "docs/reviews/codex_review_seminar_deck_v3_recheck_20261013.md",
+      "verified_sha": "0c6f5c84e",
+      "verified_scope": "v3 덱 (0c6f5c84e · ZIP v6) 에서 Codex v3 재확인이 닫음 (§2 표) · v3.1 종결 GO 가 이어받음.  범위 = 연구세미나 발표물 (17 장 v3.1) — 믹서 모델 물리 검증 · 미달 겹침 조건 해소 · 18 런 발사 · 194/보충 20 생산 · v1.3 배포 승인 아님 (종결 판정 §1).",
+      "verification_note": "2026-10-13 Codex v3.1 종결 판정 GO 로 세미나 덱 검토 사슬 (첫 판 → v2 → v2.1 → v3 → v3.1) 이 끝나 원장 상태를 옮겼다 · verified_sha = Codex 가 받은 파일을 만든 커밋 (Codex 는 리포 HEAD 가 아니라 받은 파일을 대조했다)."
     },
     {
       "id": "SEMV2-02",
       "severity": "P1",
-      "status": "claimed_fixed",
+      "status": "verified",
       "owner": "claude",
       "found_by": "codex 10-13 v2 재확인 (조건부 GO · PPTX sha256 5d577203… · PDF 044eba08… · ZIP v4 ef3edae4… · 본문 · notes · 미디어 · PDF 렌더 대조 · 저장 자료 산술 재검산 — 솔버 미실행) · 우리 재현: fam_platen_prereg §12 `--protocol servo` 6 회 · summary.json G5 n130/n64",
       "opened_in": "docs/reviews/codex_review_seminar_deck_v2_recheck_20261013.md",
@@ -9972,14 +10086,21 @@
       "evidence_tests": [
         "docs/reviews/codex_review_seminar_deck_v2_recheck_20261013.md (§2 · §5 · §6)",
         "docs/reviews/codex_seminar_deck_review_evidence_20261013/v2_recheck/evidence/recheck_proof.json",
-        "docs/reviews/codex_seminar_deck_review_evidence_20261013/v2_recheck/evidence/arithmetic_rerun.txt"
+        "docs/reviews/codex_seminar_deck_review_evidence_20261013/v2_recheck/evidence/arithmetic_rerun.txt",
+        "docs/reviews/codex_review_seminar_deck_v3_recheck_20261013.md",
+        "docs/reviews/codex_review_seminar_deck_v3_1_closure_20261013.md"
       ],
-      "claimed_fixed_sha": "9991b17a5"
+      "claimed_fixed_sha": "9991b17a5",
+      "verified_by": "codex",
+      "verified_in": "docs/reviews/codex_review_seminar_deck_v3_recheck_20261013.md",
+      "verified_sha": "0c6f5c84e",
+      "verified_scope": "v3 덱 (0c6f5c84e · ZIP v6) 에서 Codex v3 재확인이 닫음 (§2 표) · v3.1 종결 GO 가 이어받음.  범위 = 연구세미나 발표물 (17 장 v3.1) — 믹서 모델 물리 검증 · 미달 겹침 조건 해소 · 18 런 발사 · 194/보충 20 생산 · v1.3 배포 승인 아님 (종결 판정 §1).",
+      "verification_note": "2026-10-13 Codex v3.1 종결 판정 GO 로 세미나 덱 검토 사슬 (첫 판 → v2 → v2.1 → v3 → v3.1) 이 끝나 원장 상태를 옮겼다 · verified_sha = Codex 가 받은 파일을 만든 커밋 (Codex 는 리포 HEAD 가 아니라 받은 파일을 대조했다)."
     },
     {
       "id": "SEMV2-03",
       "severity": "P2",
-      "status": "claimed_fixed",
+      "status": "verified",
       "owner": "claude",
       "found_by": "codex 10-13 v2 재확인 (조건부 GO · PPTX sha256 5d577203… · PDF 044eba08… · ZIP v4 ef3edae4… · 본문 · notes · 미디어 · PDF 렌더 대조 · 저장 자료 산술 재검산 — 솔버 미실행) · 우리 재현: fam_platen_prereg §12 `--protocol servo` 6 회 · summary.json G5 n130/n64",
       "opened_in": "docs/reviews/codex_review_seminar_deck_v2_recheck_20261013.md",
@@ -9988,14 +10109,22 @@
       "evidence_tests": [
         "docs/reviews/codex_review_seminar_deck_v2_recheck_20261013.md (§2 · §5 · §6)",
         "docs/reviews/codex_seminar_deck_review_evidence_20261013/v2_recheck/evidence/recheck_proof.json",
-        "docs/reviews/codex_seminar_deck_review_evidence_20261013/v2_recheck/evidence/arithmetic_rerun.txt"
+        "docs/reviews/codex_seminar_deck_review_evidence_20261013/v2_recheck/evidence/arithmetic_rerun.txt",
+        "docs/reviews/codex_review_seminar_deck_v3_1_closure_20261013.md",
+        "docs/reviews/codex_review_seminar_deck_v3_recheck_20261013.md",
+        "docs/reviews/codex_seminar_deck_review_evidence_20261013/v3_1_closure/evidence/closure_checks.json"
       ],
-      "claimed_fixed_sha": "9991b17a5"
+      "claimed_fixed_sha": "9991b17a5",
+      "verified_by": "codex",
+      "verified_in": "docs/reviews/codex_review_seminar_deck_v3_1_closure_20261013.md",
+      "verified_sha": "9c45ec296",
+      "verified_scope": "v3 재확인 = 부분 (p8 범례 ↔ 옆 세로축) → SEMV3-09 → v3.1 덱 (9c45ec296 · ZIP v7 sha256 1abdd488…) 에서 Codex 종결 판정 GO (§3 · §6).  범위 = 연구세미나 발표물 (17 장 v3.1) — 믹서 모델 물리 검증 · 미달 겹침 조건 해소 · 18 런 발사 · 194/보충 20 생산 · v1.3 배포 승인 아님 (종결 판정 §1).",
+      "verification_note": "2026-10-13 Codex v3.1 종결 판정 GO 로 세미나 덱 검토 사슬 (첫 판 → v2 → v2.1 → v3 → v3.1) 이 끝나 원장 상태를 옮겼다 · verified_sha = Codex 가 받은 파일을 만든 커밋 (Codex 는 리포 HEAD 가 아니라 받은 파일을 대조했다)."
     },
     {
       "id": "SEMV2-04",
       "severity": "P2",
-      "status": "claimed_fixed",
+      "status": "verified",
       "owner": "claude",
       "found_by": "codex 10-13 v2 재확인 (조건부 GO · PPTX sha256 5d577203… · PDF 044eba08… · ZIP v4 ef3edae4… · 본문 · notes · 미디어 · PDF 렌더 대조 · 저장 자료 산술 재검산 — 솔버 미실행) · 우리 재현: fam_platen_prereg §12 `--protocol servo` 6 회 · summary.json G5 n130/n64",
       "opened_in": "docs/reviews/codex_review_seminar_deck_v2_recheck_20261013.md",
@@ -10004,14 +10133,21 @@
       "evidence_tests": [
         "docs/reviews/codex_review_seminar_deck_v2_recheck_20261013.md (§2 · §5 · §6)",
         "docs/reviews/codex_seminar_deck_review_evidence_20261013/v2_recheck/evidence/recheck_proof.json",
-        "docs/reviews/codex_seminar_deck_review_evidence_20261013/v2_recheck/evidence/arithmetic_rerun.txt"
+        "docs/reviews/codex_seminar_deck_review_evidence_20261013/v2_recheck/evidence/arithmetic_rerun.txt",
+        "docs/reviews/codex_review_seminar_deck_v3_recheck_20261013.md",
+        "docs/reviews/codex_review_seminar_deck_v3_1_closure_20261013.md"
       ],
-      "claimed_fixed_sha": "9991b17a5"
+      "claimed_fixed_sha": "9991b17a5",
+      "verified_by": "codex",
+      "verified_in": "docs/reviews/codex_review_seminar_deck_v3_recheck_20261013.md",
+      "verified_sha": "0c6f5c84e",
+      "verified_scope": "v3 덱 (0c6f5c84e · ZIP v6) 에서 Codex v3 재확인이 닫음 (§2 표) · v3.1 종결 GO 가 이어받음.  범위 = 연구세미나 발표물 (17 장 v3.1) — 믹서 모델 물리 검증 · 미달 겹침 조건 해소 · 18 런 발사 · 194/보충 20 생산 · v1.3 배포 승인 아님 (종결 판정 §1).",
+      "verification_note": "2026-10-13 Codex v3.1 종결 판정 GO 로 세미나 덱 검토 사슬 (첫 판 → v2 → v2.1 → v3 → v3.1) 이 끝나 원장 상태를 옮겼다 · verified_sha = Codex 가 받은 파일을 만든 커밋 (Codex 는 리포 HEAD 가 아니라 받은 파일을 대조했다)."
     },
     {
       "id": "SEMV2-05",
       "severity": "P2",
-      "status": "claimed_fixed",
+      "status": "verified",
       "owner": "claude",
       "found_by": "codex 10-13 v2 재확인 (조건부 GO · PPTX sha256 5d577203… · PDF 044eba08… · ZIP v4 ef3edae4… · 본문 · notes · 미디어 · PDF 렌더 대조 · 저장 자료 산술 재검산 — 솔버 미실행) · 우리 재현: fam_platen_prereg §12 `--protocol servo` 6 회 · summary.json G5 n130/n64",
       "opened_in": "docs/reviews/codex_review_seminar_deck_v2_recheck_20261013.md",
@@ -10020,14 +10156,21 @@
       "evidence_tests": [
         "docs/reviews/codex_review_seminar_deck_v2_recheck_20261013.md (§2 · §5 · §6)",
         "docs/reviews/codex_seminar_deck_review_evidence_20261013/v2_recheck/evidence/recheck_proof.json",
-        "docs/reviews/codex_seminar_deck_review_evidence_20261013/v2_recheck/evidence/arithmetic_rerun.txt"
+        "docs/reviews/codex_seminar_deck_review_evidence_20261013/v2_recheck/evidence/arithmetic_rerun.txt",
+        "docs/reviews/codex_review_seminar_deck_v3_recheck_20261013.md",
+        "docs/reviews/codex_review_seminar_deck_v3_1_closure_20261013.md"
       ],
-      "claimed_fixed_sha": "9991b17a5"
+      "claimed_fixed_sha": "9991b17a5",
+      "verified_by": "codex",
+      "verified_in": "docs/reviews/codex_review_seminar_deck_v3_recheck_20261013.md",
+      "verified_sha": "0c6f5c84e",
+      "verified_scope": "v3 덱 (0c6f5c84e · ZIP v6) 에서 Codex v3 재확인이 닫음 (§2 표) · v3.1 종결 GO 가 이어받음.  범위 = 연구세미나 발표물 (17 장 v3.1) — 믹서 모델 물리 검증 · 미달 겹침 조건 해소 · 18 런 발사 · 194/보충 20 생산 · v1.3 배포 승인 아님 (종결 판정 §1).",
+      "verification_note": "2026-10-13 Codex v3.1 종결 판정 GO 로 세미나 덱 검토 사슬 (첫 판 → v2 → v2.1 → v3 → v3.1) 이 끝나 원장 상태를 옮겼다 · verified_sha = Codex 가 받은 파일을 만든 커밋 (Codex 는 리포 HEAD 가 아니라 받은 파일을 대조했다)."
     },
     {
       "id": "SEMV2-06",
       "severity": "P2",
-      "status": "claimed_fixed",
+      "status": "verified",
       "owner": "claude",
       "found_by": "codex 10-13 v2 재확인 (조건부 GO · PPTX sha256 5d577203… · PDF 044eba08… · ZIP v4 ef3edae4… · 본문 · notes · 미디어 · PDF 렌더 대조 · 저장 자료 산술 재검산 — 솔버 미실행) · 우리 재현: fam_platen_prereg §12 `--protocol servo` 6 회 · summary.json G5 n130/n64",
       "opened_in": "docs/reviews/codex_review_seminar_deck_v2_recheck_20261013.md",
@@ -10036,14 +10179,21 @@
       "evidence_tests": [
         "docs/reviews/codex_review_seminar_deck_v2_recheck_20261013.md (§2 · §5 · §6)",
         "docs/reviews/codex_seminar_deck_review_evidence_20261013/v2_recheck/evidence/recheck_proof.json",
-        "docs/reviews/codex_seminar_deck_review_evidence_20261013/v2_recheck/evidence/arithmetic_rerun.txt"
+        "docs/reviews/codex_seminar_deck_review_evidence_20261013/v2_recheck/evidence/arithmetic_rerun.txt",
+        "docs/reviews/codex_review_seminar_deck_v3_1_closure_20261013.md",
+        "docs/reviews/codex_review_seminar_deck_v3_recheck_20261013.md"
       ],
-      "claimed_fixed_sha": "9991b17a5"
+      "claimed_fixed_sha": "9991b17a5",
+      "verified_by": "codex",
+      "verified_in": "docs/reviews/codex_review_seminar_deck_v3_1_closure_20261013.md",
+      "verified_sha": "9c45ec296",
+      "verified_scope": "v3 재확인 = 닫힘 · notes 잔여 표현 → SEMV3-10 → v3.1 덱 (9c45ec296 · ZIP v7 sha256 1abdd488…) 에서 Codex 종결 판정 GO (§3 · §6).  범위 = 연구세미나 발표물 (17 장 v3.1) — 믹서 모델 물리 검증 · 미달 겹침 조건 해소 · 18 런 발사 · 194/보충 20 생산 · v1.3 배포 승인 아님 (종결 판정 §1).",
+      "verification_note": "2026-10-13 Codex v3.1 종결 판정 GO 로 세미나 덱 검토 사슬 (첫 판 → v2 → v2.1 → v3 → v3.1) 이 끝나 원장 상태를 옮겼다 · verified_sha = Codex 가 받은 파일을 만든 커밋 (Codex 는 리포 HEAD 가 아니라 받은 파일을 대조했다)."
     },
     {
       "id": "SEMV2-07",
       "severity": "P2",
-      "status": "claimed_fixed",
+      "status": "verified",
       "owner": "claude",
       "found_by": "codex 10-13 v2 재확인 (조건부 GO · PPTX sha256 5d577203… · PDF 044eba08… · ZIP v4 ef3edae4… · 본문 · notes · 미디어 · PDF 렌더 대조 · 저장 자료 산술 재검산 — 솔버 미실행) · 우리 재현: fam_platen_prereg §12 `--protocol servo` 6 회 · summary.json G5 n130/n64",
       "opened_in": "docs/reviews/codex_review_seminar_deck_v2_recheck_20261013.md",
@@ -10052,14 +10202,21 @@
       "evidence_tests": [
         "docs/reviews/codex_review_seminar_deck_v2_recheck_20261013.md (§2 · §5 · §6)",
         "docs/reviews/codex_seminar_deck_review_evidence_20261013/v2_recheck/evidence/recheck_proof.json",
-        "docs/reviews/codex_seminar_deck_review_evidence_20261013/v2_recheck/evidence/arithmetic_rerun.txt"
+        "docs/reviews/codex_seminar_deck_review_evidence_20261013/v2_recheck/evidence/arithmetic_rerun.txt",
+        "docs/reviews/codex_review_seminar_deck_v3_recheck_20261013.md",
+        "docs/reviews/codex_review_seminar_deck_v3_1_closure_20261013.md"
       ],
-      "claimed_fixed_sha": "9991b17a5"
+      "claimed_fixed_sha": "9991b17a5",
+      "verified_by": "codex",
+      "verified_in": "docs/reviews/codex_review_seminar_deck_v3_recheck_20261013.md",
+      "verified_sha": "0c6f5c84e",
+      "verified_scope": "v3 덱 (0c6f5c84e · ZIP v6) 에서 Codex v3 재확인이 닫음 (§2 표) · v3.1 종결 GO 가 이어받음.  범위 = 연구세미나 발표물 (17 장 v3.1) — 믹서 모델 물리 검증 · 미달 겹침 조건 해소 · 18 런 발사 · 194/보충 20 생산 · v1.3 배포 승인 아님 (종결 판정 §1).",
+      "verification_note": "2026-10-13 Codex v3.1 종결 판정 GO 로 세미나 덱 검토 사슬 (첫 판 → v2 → v2.1 → v3 → v3.1) 이 끝나 원장 상태를 옮겼다 · verified_sha = Codex 가 받은 파일을 만든 커밋 (Codex 는 리포 HEAD 가 아니라 받은 파일을 대조했다)."
     },
     {
       "id": "SEMV3-01",
       "severity": "P1",
-      "status": "claimed_fixed",
+      "status": "verified",
       "owner": "claude",
       "found_by": "codex 10-13 v3 재확인 (조건부 GO · PPTX sha256 baf2bb98… · PDF bb94b5de… · ZIP ad85809c… · 본문 · notes · 미디어 · PDF 렌더 대조 · 저장 자료 산술 재계산 — 솔버 미실행) · 우리 재현: 판독 JSON planned.M_final (ΔM 0.927486 · 0.865461) · devu_contact.json (0.400491) · LC 덱 CED 108,795 · 142,562 · readback.json 큰 NCM CED 3,563,480 · 7,677,280 · 11,072,500 · litdb figures.json src",
       "opened_in": "docs/reviews/codex_review_seminar_deck_v3_recheck_20261013.md",
@@ -10068,14 +10225,21 @@
       "evidence_tests": [
         "docs/reviews/codex_review_seminar_deck_v3_recheck_20261013.md (§4 SEMV3-01)",
         "docs/reviews/codex_seminar_deck_review_evidence_20261013/v3_recheck/evidence/so_source_verification.md",
-        "docs/reviews/codex_seminar_deck_review_evidence_20261013/v3_recheck/evidence/so_figures_source.json"
+        "docs/reviews/codex_seminar_deck_review_evidence_20261013/v3_recheck/evidence/so_figures_source.json",
+        "docs/reviews/codex_review_seminar_deck_v3_1_closure_20261013.md",
+        "docs/reviews/codex_seminar_deck_review_evidence_20261013/v3_1_closure/evidence/closure_checks.json"
       ],
-      "claimed_fixed_sha": "9c45ec296"
+      "claimed_fixed_sha": "9c45ec296",
+      "verified_by": "codex",
+      "verified_in": "docs/reviews/codex_review_seminar_deck_v3_1_closure_20261013.md",
+      "verified_sha": "9c45ec296",
+      "verified_scope": "v3.1 덱 (9c45ec296 · ZIP v7 sha256 1abdd488…) 에서 Codex 종결 판정 GO (§3 · §6).  항목별 근거 = 종결 판정 §3 표 (SEMV3-06 반올림 = §4 원 판독값 대조).  범위 = 연구세미나 발표물 (17 장 v3.1) — 믹서 모델 물리 검증 · 미달 겹침 조건 해소 · 18 런 발사 · 194/보충 20 생산 · v1.3 배포 승인 아님 (종결 판정 §1).",
+      "verification_note": "2026-10-13 Codex v3.1 종결 판정 GO 로 세미나 덱 검토 사슬 (첫 판 → v2 → v2.1 → v3 → v3.1) 이 끝나 원장 상태를 옮겼다 · verified_sha = Codex 가 받은 파일을 만든 커밋 (Codex 는 리포 HEAD 가 아니라 받은 파일을 대조했다)."
     },
     {
       "id": "SEMV3-02",
       "severity": "P1",
-      "status": "claimed_fixed",
+      "status": "verified",
       "owner": "claude",
       "found_by": "codex 10-13 v3 재확인 (조건부 GO · PPTX sha256 baf2bb98… · PDF bb94b5de… · ZIP ad85809c… · 본문 · notes · 미디어 · PDF 렌더 대조 · 저장 자료 산술 재계산 — 솔버 미실행) · 우리 재현: 판독 JSON planned.M_final (ΔM 0.927486 · 0.865461) · devu_contact.json (0.400491) · LC 덱 CED 108,795 · 142,562 · readback.json 큰 NCM CED 3,563,480 · 7,677,280 · 11,072,500 · litdb figures.json src",
       "opened_in": "docs/reviews/codex_review_seminar_deck_v3_recheck_20261013.md",
@@ -10083,14 +10247,21 @@
       "note": "교체 = `Low NCM–NCM cohesion` · `low-cohesion comparator` (본문 · 그림 · CSV · notes) · L0 `no cohesion (control)` 유지 — 수정 = 덱 v3.1 (생성기 build_seminar_v3.py · 그림 figs_v3 · 시험 먼저: v3 덱에서 실패 확인 · claimed_fixed = `9c45ec296` · 종결 확인 = Codex (요청서 docs/reviews/codex_seminar_deck_v3_1_closure_request_20261013.md) · 종결 확인 = Codex)",
       "evidence_tests": [
         "docs/reviews/codex_review_seminar_deck_v3_recheck_20261013.md (§4 SEMV3-02)",
-        "docs/reviews/codex_seminar_deck_review_evidence_20261013/v3_recheck/evidence/mixing_repro.json"
+        "docs/reviews/codex_seminar_deck_review_evidence_20261013/v3_recheck/evidence/mixing_repro.json",
+        "docs/reviews/codex_review_seminar_deck_v3_1_closure_20261013.md",
+        "docs/reviews/codex_seminar_deck_review_evidence_20261013/v3_1_closure/evidence/closure_checks.json"
       ],
-      "claimed_fixed_sha": "9c45ec296"
+      "claimed_fixed_sha": "9c45ec296",
+      "verified_by": "codex",
+      "verified_in": "docs/reviews/codex_review_seminar_deck_v3_1_closure_20261013.md",
+      "verified_sha": "9c45ec296",
+      "verified_scope": "v3.1 덱 (9c45ec296 · ZIP v7 sha256 1abdd488…) 에서 Codex 종결 판정 GO (§3 · §6).  항목별 근거 = 종결 판정 §3 표 (SEMV3-06 반올림 = §4 원 판독값 대조).  범위 = 연구세미나 발표물 (17 장 v3.1) — 믹서 모델 물리 검증 · 미달 겹침 조건 해소 · 18 런 발사 · 194/보충 20 생산 · v1.3 배포 승인 아님 (종결 판정 §1).",
+      "verification_note": "2026-10-13 Codex v3.1 종결 판정 GO 로 세미나 덱 검토 사슬 (첫 판 → v2 → v2.1 → v3 → v3.1) 이 끝나 원장 상태를 옮겼다 · verified_sha = Codex 가 받은 파일을 만든 커밋 (Codex 는 리포 HEAD 가 아니라 받은 파일을 대조했다)."
     },
     {
       "id": "SEMV3-03",
       "severity": "P1",
-      "status": "claimed_fixed",
+      "status": "verified",
       "owner": "claude",
       "found_by": "codex 10-13 v3 재확인 (조건부 GO · PPTX sha256 baf2bb98… · PDF bb94b5de… · ZIP ad85809c… · 본문 · notes · 미디어 · PDF 렌더 대조 · 저장 자료 산술 재계산 — 솔버 미실행) · 우리 재현: 판독 JSON planned.M_final (ΔM 0.927486 · 0.865461) · devu_contact.json (0.400491) · LC 덱 CED 108,795 · 142,562 · readback.json 큰 NCM CED 3,563,480 · 7,677,280 · 11,072,500 · litdb figures.json src",
       "opened_in": "docs/reviews/codex_review_seminar_deck_v3_recheck_20261013.md",
@@ -10098,14 +10269,21 @@
       "note": "교체 = 제목 `Layered-bed mixing: unresolved mixing-index contrast` · 본문 ΔM 0.0012 · SE 0.0073 + `Subsequent diagnostic classification; the original 1% overlap condition was not met.` · 등록 범주 문장 + 비준수 · 비동등 · 물리 무분리 아님 = notes · p15 교체 — 수정 = 덱 v3.1 (생성기 build_seminar_v3.py · 그림 figs_v3 · 시험 먼저: v3 덱에서 실패 확인 · claimed_fixed = `9c45ec296` · 종결 확인 = Codex (요청서 docs/reviews/codex_seminar_deck_v3_1_closure_request_20261013.md) · 종결 확인 = Codex)",
       "evidence_tests": [
         "docs/reviews/codex_review_seminar_deck_v3_recheck_20261013.md (§4 SEMV3-03)",
-        "docs/reviews/codex_seminar_deck_review_evidence_20261013/v3_recheck/evidence/mixing_frame_recalculation.json"
+        "docs/reviews/codex_seminar_deck_review_evidence_20261013/v3_recheck/evidence/mixing_frame_recalculation.json",
+        "docs/reviews/codex_review_seminar_deck_v3_1_closure_20261013.md",
+        "docs/reviews/codex_seminar_deck_review_evidence_20261013/v3_1_closure/evidence/closure_checks.json"
       ],
-      "claimed_fixed_sha": "9c45ec296"
+      "claimed_fixed_sha": "9c45ec296",
+      "verified_by": "codex",
+      "verified_in": "docs/reviews/codex_review_seminar_deck_v3_1_closure_20261013.md",
+      "verified_sha": "9c45ec296",
+      "verified_scope": "v3.1 덱 (9c45ec296 · ZIP v7 sha256 1abdd488…) 에서 Codex 종결 판정 GO (§3 · §6).  항목별 근거 = 종결 판정 §3 표 (SEMV3-06 반올림 = §4 원 판독값 대조).  범위 = 연구세미나 발표물 (17 장 v3.1) — 믹서 모델 물리 검증 · 미달 겹침 조건 해소 · 18 런 발사 · 194/보충 20 생산 · v1.3 배포 승인 아님 (종결 판정 §1).",
+      "verification_note": "2026-10-13 Codex v3.1 종결 판정 GO 로 세미나 덱 검토 사슬 (첫 판 → v2 → v2.1 → v3 → v3.1) 이 끝나 원장 상태를 옮겼다 · verified_sha = Codex 가 받은 파일을 만든 커밋 (Codex 는 리포 HEAD 가 아니라 받은 파일을 대조했다)."
     },
     {
       "id": "SEMV3-04",
       "severity": "P1",
-      "status": "claimed_fixed",
+      "status": "verified",
       "owner": "claude",
       "found_by": "codex 10-13 v3 재확인 (조건부 GO · PPTX sha256 baf2bb98… · PDF bb94b5de… · ZIP ad85809c… · 본문 · notes · 미디어 · PDF 렌더 대조 · 저장 자료 산술 재계산 — 솔버 미실행) · 우리 재현: 판독 JSON planned.M_final (ΔM 0.927486 · 0.865461) · devu_contact.json (0.400491) · LC 덱 CED 108,795 · 142,562 · readback.json 큰 NCM CED 3,563,480 · 7,677,280 · 11,072,500 · litdb figures.json src",
       "opened_in": "docs/reviews/codex_review_seminar_deck_v3_recheck_20261013.md",
@@ -10113,28 +10291,42 @@
       "note": "교체 = 범주 = NCM-pair Bo 38.4 / 384 / 1152 · all-pair CED ×10 / ×14.42 (두 계열 구획) · 제목 `Exploratory cohesion settings produce different mixing indices` · 사후 수준 · 벽 동반 · 시작 상태 · no verdict — 수정 = 덱 v3.1 (생성기 build_seminar_v3.py · 그림 figs_v3 · 시험 먼저: v3 덱에서 실패 확인 · claimed_fixed = `9c45ec296` · 종결 확인 = Codex (요청서 docs/reviews/codex_seminar_deck_v3_1_closure_request_20261013.md) · 종결 확인 = Codex)",
       "evidence_tests": [
         "docs/reviews/codex_review_seminar_deck_v3_recheck_20261013.md (§4 SEMV3-04)",
-        "docs/reviews/codex_seminar_deck_review_evidence_20261013/v3_recheck/evidence/mixing_numeric_checks.json"
+        "docs/reviews/codex_seminar_deck_review_evidence_20261013/v3_recheck/evidence/mixing_numeric_checks.json",
+        "docs/reviews/codex_review_seminar_deck_v3_1_closure_20261013.md",
+        "docs/reviews/codex_seminar_deck_review_evidence_20261013/v3_1_closure/evidence/closure_checks.json"
       ],
-      "claimed_fixed_sha": "9c45ec296"
+      "claimed_fixed_sha": "9c45ec296",
+      "verified_by": "codex",
+      "verified_in": "docs/reviews/codex_review_seminar_deck_v3_1_closure_20261013.md",
+      "verified_sha": "9c45ec296",
+      "verified_scope": "v3.1 덱 (9c45ec296 · ZIP v7 sha256 1abdd488…) 에서 Codex 종결 판정 GO (§3 · §6).  항목별 근거 = 종결 판정 §3 표 (SEMV3-06 반올림 = §4 원 판독값 대조).  범위 = 연구세미나 발표물 (17 장 v3.1) — 믹서 모델 물리 검증 · 미달 겹침 조건 해소 · 18 런 발사 · 194/보충 20 생산 · v1.3 배포 승인 아님 (종결 판정 §1).",
+      "verification_note": "2026-10-13 Codex v3.1 종결 판정 GO 로 세미나 덱 검토 사슬 (첫 판 → v2 → v2.1 → v3 → v3.1) 이 끝나 원장 상태를 옮겼다 · verified_sha = Codex 가 받은 파일을 만든 커밋 (Codex 는 리포 HEAD 가 아니라 받은 파일을 대조했다)."
     },
     {
       "id": "SEMV3-05",
       "severity": "P1",
-      "status": "claimed_fixed",
+      "status": "verified",
       "owner": "claude",
       "found_by": "codex 10-13 v3 재확인 (조건부 GO · PPTX sha256 baf2bb98… · PDF bb94b5de… · ZIP ad85809c… · 본문 · notes · 미디어 · PDF 렌더 대조 · 저장 자료 산술 재계산 — 솔버 미실행) · 우리 재현: 판독 JSON planned.M_final (ΔM 0.927486 · 0.865461) · devu_contact.json (0.400491) · LC 덱 CED 108,795 · 142,562 · readback.json 큰 NCM CED 3,563,480 · 7,677,280 · 11,072,500 · litdb figures.json src",
       "opened_in": "docs/reviews/codex_review_seminar_deck_v3_recheck_20261013.md",
       "title": "p13 ΔW = 2(√γ_A − √γ_S)² 의 가정 (기하평균 결합 · 같은 접촉 면적 · J m⁻²) 생략 · `small SE holds like–like contacts best` 단정 (같은 SE 의 SE–NCM pull-off = SE–SE 의 1.8 · 1.6 배) · notes 0.31 = 두 접촉 힘 비교 조건인데 군집 생존 조건처럼 · all-pair 런도 SE–SE 를 바꾸는데 `not SE–SE`",
       "note": "교체 = 본문 · 도식 · notes 교체 (조건부 접착일 · 단위 · 생존은 크기만으로 정해지지 않음 · γ_NCM/γ_SE < 0.309 / 0.391 = 두 접촉 비교 · CED 런은 표면 에너지 기전 검증 아님) — 수정 = 덱 v3.1 (생성기 build_seminar_v3.py · 그림 figs_v3 · 시험 먼저: v3 덱에서 실패 확인 · claimed_fixed = `9c45ec296` · 종결 확인 = Codex (요청서 docs/reviews/codex_seminar_deck_v3_1_closure_request_20261013.md) · 종결 확인 = Codex)",
       "evidence_tests": [
-        "docs/reviews/codex_review_seminar_deck_v3_recheck_20261013.md (§4 SEMV3-05)"
+        "docs/reviews/codex_review_seminar_deck_v3_recheck_20261013.md (§4 SEMV3-05)",
+        "docs/reviews/codex_review_seminar_deck_v3_1_closure_20261013.md",
+        "docs/reviews/codex_seminar_deck_review_evidence_20261013/v3_1_closure/evidence/closure_checks.json"
       ],
-      "claimed_fixed_sha": "9c45ec296"
+      "claimed_fixed_sha": "9c45ec296",
+      "verified_by": "codex",
+      "verified_in": "docs/reviews/codex_review_seminar_deck_v3_1_closure_20261013.md",
+      "verified_sha": "9c45ec296",
+      "verified_scope": "v3.1 덱 (9c45ec296 · ZIP v7 sha256 1abdd488…) 에서 Codex 종결 판정 GO (§3 · §6).  항목별 근거 = 종결 판정 §3 표 (SEMV3-06 반올림 = §4 원 판독값 대조).  범위 = 연구세미나 발표물 (17 장 v3.1) — 믹서 모델 물리 검증 · 미달 겹침 조건 해소 · 18 런 발사 · 194/보충 20 생산 · v1.3 배포 승인 아님 (종결 판정 §1).",
+      "verification_note": "2026-10-13 Codex v3.1 종결 판정 GO 로 세미나 덱 검토 사슬 (첫 판 → v2 → v2.1 → v3 → v3.1) 이 끝나 원장 상태를 옮겼다 · verified_sha = Codex 가 받은 파일을 만든 커밋 (Codex 는 리포 HEAD 가 아니라 받은 파일을 대조했다)."
     },
     {
       "id": "SEMV3-06",
       "severity": "P2",
-      "status": "claimed_fixed",
+      "status": "verified",
       "owner": "claude",
       "found_by": "codex 10-13 v3 재확인 (조건부 GO · PPTX sha256 baf2bb98… · PDF bb94b5de… · ZIP ad85809c… · 본문 · notes · 미디어 · PDF 렌더 대조 · 저장 자료 산술 재계산 — 솔버 미실행) · 우리 재현: 판독 JSON planned.M_final (ΔM 0.927486 · 0.865461) · devu_contact.json (0.400491) · LC 덱 CED 108,795 · 142,562 · readback.json 큰 NCM CED 3,563,480 · 7,677,280 · 11,072,500 · litdb figures.json src",
       "opened_in": "docs/reviews/codex_review_seminar_deck_v3_recheck_20261013.md",
@@ -10142,14 +10334,22 @@
       "note": "교체 = 그림 · CSV · notes 값 = 판독 JSON 직접 (dev_planned_m · dev_delta_m · dev_cluster) · selftest 가 세 값을 고정 검사 — 수정 = 덱 v3.1 (생성기 build_seminar_v3.py · 그림 figs_v3 · 시험 먼저: v3 덱에서 실패 확인 · claimed_fixed = `9c45ec296` · 종결 확인 = Codex (요청서 docs/reviews/codex_seminar_deck_v3_1_closure_request_20261013.md) · 종결 확인 = Codex)",
       "evidence_tests": [
         "docs/reviews/codex_review_seminar_deck_v3_recheck_20261013.md (§6 SEMV3-06)",
-        "docs/reviews/codex_seminar_deck_review_evidence_20261013/v3_recheck/evidence/mixing_frame_recalculation.json"
+        "docs/reviews/codex_seminar_deck_review_evidence_20261013/v3_recheck/evidence/mixing_frame_recalculation.json",
+        "docs/reviews/codex_review_seminar_deck_v3_1_closure_20261013.md",
+        "docs/reviews/codex_seminar_deck_review_evidence_20261013/v3_1_closure/evidence/closure_checks.json",
+        "docs/reviews/codex_seminar_deck_review_evidence_20261013/v3_1_closure/evidence/numeric_closure.json"
       ],
-      "claimed_fixed_sha": "9c45ec296"
+      "claimed_fixed_sha": "9c45ec296",
+      "verified_by": "codex",
+      "verified_in": "docs/reviews/codex_review_seminar_deck_v3_1_closure_20261013.md",
+      "verified_sha": "9c45ec296",
+      "verified_scope": "v3.1 덱 (9c45ec296 · ZIP v7 sha256 1abdd488…) 에서 Codex 종결 판정 GO (§3 · §6).  항목별 근거 = 종결 판정 §3 표 (SEMV3-06 반올림 = §4 원 판독값 대조).  범위 = 연구세미나 발표물 (17 장 v3.1) — 믹서 모델 물리 검증 · 미달 겹침 조건 해소 · 18 런 발사 · 194/보충 20 생산 · v1.3 배포 승인 아님 (종결 판정 §1).",
+      "verification_note": "2026-10-13 Codex v3.1 종결 판정 GO 로 세미나 덱 검토 사슬 (첫 판 → v2 → v2.1 → v3 → v3.1) 이 끝나 원장 상태를 옮겼다 · verified_sha = Codex 가 받은 파일을 만든 커밋 (Codex 는 리포 HEAD 가 아니라 받은 파일을 대조했다)."
     },
     {
       "id": "SEMV3-07",
       "severity": "P2",
-      "status": "claimed_fixed",
+      "status": "verified",
       "owner": "claude",
       "found_by": "codex 10-13 v3 재확인 (조건부 GO · PPTX sha256 baf2bb98… · PDF bb94b5de… · ZIP ad85809c… · 본문 · notes · 미디어 · PDF 렌더 대조 · 저장 자료 산술 재계산 — 솔버 미실행) · 우리 재현: 판독 JSON planned.M_final (ΔM 0.927486 · 0.865461) · devu_contact.json (0.400491) · LC 덱 CED 108,795 · 142,562 · readback.json 큰 NCM CED 3,563,480 · 7,677,280 · 11,072,500 · litdb figures.json src",
       "opened_in": "docs/reviews/codex_review_seminar_deck_v3_recheck_20261013.md",
@@ -10157,56 +10357,84 @@
       "note": "교체 = 해석 줄 `Original Phase A campaign (VGCF E = 10 GPa): means of 96 primary arms` · notes 에 100 GPa 재현 72/72 따로 — 수정 = 덱 v3.1 (생성기 build_seminar_v3.py · 그림 figs_v3 · 시험 먼저: v3 덱에서 실패 확인 · claimed_fixed = `9c45ec296` · 종결 확인 = Codex (요청서 docs/reviews/codex_seminar_deck_v3_1_closure_request_20261013.md) · 종결 확인 = Codex)",
       "evidence_tests": [
         "docs/reviews/codex_review_seminar_deck_v3_recheck_20261013.md (§6 SEMV3-07)",
-        "docs/reviews/codex_seminar_deck_review_evidence_20261013/v3_recheck/notes/sources/report_make_figs.py"
+        "docs/reviews/codex_seminar_deck_review_evidence_20261013/v3_recheck/notes/sources/report_make_figs.py",
+        "docs/reviews/codex_review_seminar_deck_v3_1_closure_20261013.md",
+        "docs/reviews/codex_seminar_deck_review_evidence_20261013/v3_1_closure/evidence/closure_checks.json"
       ],
-      "claimed_fixed_sha": "9c45ec296"
+      "claimed_fixed_sha": "9c45ec296",
+      "verified_by": "codex",
+      "verified_in": "docs/reviews/codex_review_seminar_deck_v3_1_closure_20261013.md",
+      "verified_sha": "9c45ec296",
+      "verified_scope": "v3.1 덱 (9c45ec296 · ZIP v7 sha256 1abdd488…) 에서 Codex 종결 판정 GO (§3 · §6).  항목별 근거 = 종결 판정 §3 표 (SEMV3-06 반올림 = §4 원 판독값 대조).  범위 = 연구세미나 발표물 (17 장 v3.1) — 믹서 모델 물리 검증 · 미달 겹침 조건 해소 · 18 런 발사 · 194/보충 20 생산 · v1.3 배포 승인 아님 (종결 판정 §1).",
+      "verification_note": "2026-10-13 Codex v3.1 종결 판정 GO 로 세미나 덱 검토 사슬 (첫 판 → v2 → v2.1 → v3 → v3.1) 이 끝나 원장 상태를 옮겼다 · verified_sha = Codex 가 받은 파일을 만든 커밋 (Codex 는 리포 HEAD 가 아니라 받은 파일을 대조했다)."
     },
     {
       "id": "SEMV3-08",
       "severity": "P2",
-      "status": "claimed_fixed",
+      "status": "verified",
       "owner": "claude",
       "found_by": "codex 10-13 v3 재확인 (조건부 GO · PPTX sha256 baf2bb98… · PDF bb94b5de… · ZIP ad85809c… · 본문 · notes · 미디어 · PDF 렌더 대조 · 저장 자료 산술 재계산 — 솔버 미실행) · 우리 재현: 판독 JSON planned.M_final (ΔM 0.927486 · 0.865461) · devu_contact.json (0.400491) · LC 덱 CED 108,795 · 142,562 · readback.json 큰 NCM CED 3,563,480 · 7,677,280 · 11,072,500 · litdb figures.json src",
       "opened_in": "docs/reviews/codex_review_seminar_deck_v3_recheck_20261013.md",
       "title": "p9 `The porosity ranking agrees …` — 일치 대상 (선택된 실험 공극률 요약) 이 빠져 DEM 공극률 순위로 읽힘 (DEM 공극률 ↔ 하중 몫 Spearman 0.7)",
       "note": "교체 = `The NCM–NCM stress-share ranking matches the experimental porosity summaries for the selected five compositions (exploratory, n = 5).` — 수정 = 덱 v3.1 (생성기 build_seminar_v3.py · 그림 figs_v3 · 시험 먼저: v3 덱에서 실패 확인 · claimed_fixed = `9c45ec296` · 종결 확인 = Codex (요청서 docs/reviews/codex_seminar_deck_v3_1_closure_request_20261013.md) · 종결 확인 = Codex)",
       "evidence_tests": [
-        "docs/reviews/codex_review_seminar_deck_v3_recheck_20261013.md (§6 SEMV3-08)"
+        "docs/reviews/codex_review_seminar_deck_v3_recheck_20261013.md (§6 SEMV3-08)",
+        "docs/reviews/codex_review_seminar_deck_v3_1_closure_20261013.md",
+        "docs/reviews/codex_seminar_deck_review_evidence_20261013/v3_1_closure/evidence/closure_checks.json"
       ],
-      "claimed_fixed_sha": "9c45ec296"
+      "claimed_fixed_sha": "9c45ec296",
+      "verified_by": "codex",
+      "verified_in": "docs/reviews/codex_review_seminar_deck_v3_1_closure_20261013.md",
+      "verified_sha": "9c45ec296",
+      "verified_scope": "v3.1 덱 (9c45ec296 · ZIP v7 sha256 1abdd488…) 에서 Codex 종결 판정 GO (§3 · §6).  항목별 근거 = 종결 판정 §3 표 (SEMV3-06 반올림 = §4 원 판독값 대조).  범위 = 연구세미나 발표물 (17 장 v3.1) — 믹서 모델 물리 검증 · 미달 겹침 조건 해소 · 18 런 발사 · 194/보충 20 생산 · v1.3 배포 승인 아님 (종결 판정 §1).",
+      "verification_note": "2026-10-13 Codex v3.1 종결 판정 GO 로 세미나 덱 검토 사슬 (첫 판 → v2 → v2.1 → v3 → v3.1) 이 끝나 원장 상태를 옮겼다 · verified_sha = Codex 가 받은 파일을 만든 커밋 (Codex 는 리포 HEAD 가 아니라 받은 파일을 대조했다)."
     },
     {
       "id": "SEMV3-09",
       "severity": "P2",
-      "status": "claimed_fixed",
+      "status": "verified",
       "owner": "claude",
       "found_by": "codex 10-13 v3 재확인 (조건부 GO · PPTX sha256 baf2bb98… · PDF bb94b5de… · ZIP ad85809c… · 본문 · notes · 미디어 · PDF 렌더 대조 · 저장 자료 산술 재계산 — 솔버 미실행) · 우리 재현: 판독 JSON planned.M_final (ΔM 0.927486 · 0.865461) · devu_contact.json (0.400491) · LC 덱 CED 108,795 · 142,562 · readback.json 큰 NCM CED 3,563,480 · 7,677,280 · 11,072,500 · litdb figures.json src",
       "opened_in": "docs/reviews/codex_review_seminar_deck_v3_recheck_20261013.md",
       "title": "렌더 조판: p6 크롭 500 눈금 잘림 · p8 범례 ↔ (c) 세로축 · (b)(c) 제목 붙음 · p11 · p12 x 범주 겹침",
       "note": "교체 = 그림 글자 겹침 검사 상주 (그려진 모든 글 상자 · v3 그림에서 일곱 쌍 → 0) · 패널 제목 (a)(b)(c) · 범례 · 간격 · 그림 크기 = 덱 그림 띠 1:1 — 수정 = 덱 v3.1 (생성기 build_seminar_v3.py · 그림 figs_v3 · 시험 먼저: v3 덱에서 실패 확인 · claimed_fixed = `9c45ec296` · 종결 확인 = Codex (요청서 docs/reviews/codex_seminar_deck_v3_1_closure_request_20261013.md) · 종결 확인 = Codex)",
       "evidence_tests": [
-        "docs/reviews/codex_review_seminar_deck_v3_recheck_20261013.md (§6 SEMV3-09)"
+        "docs/reviews/codex_review_seminar_deck_v3_recheck_20261013.md (§6 SEMV3-09)",
+        "docs/reviews/codex_review_seminar_deck_v3_1_closure_20261013.md",
+        "docs/reviews/codex_seminar_deck_review_evidence_20261013/v3_1_closure/evidence/closure_checks.json"
       ],
-      "claimed_fixed_sha": "9c45ec296"
+      "claimed_fixed_sha": "9c45ec296",
+      "verified_by": "codex",
+      "verified_in": "docs/reviews/codex_review_seminar_deck_v3_1_closure_20261013.md",
+      "verified_sha": "9c45ec296",
+      "verified_scope": "v3.1 덱 (9c45ec296 · ZIP v7 sha256 1abdd488…) 에서 Codex 종결 판정 GO (§3 · §6).  항목별 근거 = 종결 판정 §3 표 (SEMV3-06 반올림 = §4 원 판독값 대조).  범위 = 연구세미나 발표물 (17 장 v3.1) — 믹서 모델 물리 검증 · 미달 겹침 조건 해소 · 18 런 발사 · 194/보충 20 생산 · v1.3 배포 승인 아님 (종결 판정 §1).",
+      "verification_note": "2026-10-13 Codex v3.1 종결 판정 GO 로 세미나 덱 검토 사슬 (첫 판 → v2 → v2.1 → v3 → v3.1) 이 끝나 원장 상태를 옮겼다 · verified_sha = Codex 가 받은 파일을 만든 커밋 (Codex 는 리포 HEAD 가 아니라 받은 파일을 대조했다)."
     },
     {
       "id": "SEMV3-10",
       "severity": "P2",
-      "status": "claimed_fixed",
+      "status": "verified",
       "owner": "claude",
       "found_by": "codex 10-13 v3 재확인 (조건부 GO · PPTX sha256 baf2bb98… · PDF bb94b5de… · ZIP ad85809c… · 본문 · notes · 미디어 · PDF 렌더 대조 · 저장 자료 산술 재계산 — 솔버 미실행) · 우리 재현: 판독 JSON planned.M_final (ΔM 0.927486 · 0.865461) · devu_contact.json (0.400491) · LC 덱 CED 108,795 · 142,562 · readback.json 큰 NCM CED 3,563,480 · 7,677,280 · 11,072,500 · litdb figures.json src",
       "opened_in": "docs/reviews/codex_review_seminar_deck_v3_recheck_20261013.md",
       "title": "제한 설명 잔여: p6 notes `inside the literature range` (근거 없음) · p5 한계를 모든 DEM 처럼 · p11 `M = 1: fully mixed` · p13 notes 현재 모델 설명",
       "note": "교체 = p6 notes 삭제 · p5 `Our fixed-shape implementation …` · p11 `M = 1: random-reference variance` · p13 notes 교체 — 수정 = 덱 v3.1 (생성기 build_seminar_v3.py · 그림 figs_v3 · 시험 먼저: v3 덱에서 실패 확인 · claimed_fixed = `9c45ec296` · 종결 확인 = Codex (요청서 docs/reviews/codex_seminar_deck_v3_1_closure_request_20261013.md) · 종결 확인 = Codex)",
       "evidence_tests": [
-        "docs/reviews/codex_review_seminar_deck_v3_recheck_20261013.md (§6 SEMV3-10)"
+        "docs/reviews/codex_review_seminar_deck_v3_recheck_20261013.md (§6 SEMV3-10)",
+        "docs/reviews/codex_review_seminar_deck_v3_1_closure_20261013.md",
+        "docs/reviews/codex_seminar_deck_review_evidence_20261013/v3_1_closure/evidence/closure_checks.json"
       ],
-      "claimed_fixed_sha": "9c45ec296"
+      "claimed_fixed_sha": "9c45ec296",
+      "verified_by": "codex",
+      "verified_in": "docs/reviews/codex_review_seminar_deck_v3_1_closure_20261013.md",
+      "verified_sha": "9c45ec296",
+      "verified_scope": "v3.1 덱 (9c45ec296 · ZIP v7 sha256 1abdd488…) 에서 Codex 종결 판정 GO (§3 · §6).  항목별 근거 = 종결 판정 §3 표 (SEMV3-06 반올림 = §4 원 판독값 대조).  범위 = 연구세미나 발표물 (17 장 v3.1) — 믹서 모델 물리 검증 · 미달 겹침 조건 해소 · 18 런 발사 · 194/보충 20 생산 · v1.3 배포 승인 아님 (종결 판정 §1).",
+      "verification_note": "2026-10-13 Codex v3.1 종결 판정 GO 로 세미나 덱 검토 사슬 (첫 판 → v2 → v2.1 → v3 → v3.1) 이 끝나 원장 상태를 옮겼다 · verified_sha = Codex 가 받은 파일을 만든 커밋 (Codex 는 리포 HEAD 가 아니라 받은 파일을 대조했다)."
     },
     {
       "id": "SELF-111",
       "severity": "P2",
-      "status": "claimed_fixed",
+      "status": "verified",
       "owner": "claude",
       "found_by": "codex 10-13 v3 재확인 (SEMV3-01 · 02 · 04 · 05 · §2 selftest 지적)",
       "opened_in": "docs/reviews/codex_review_seminar_deck_v3_recheck_20261013.md",
@@ -10215,9 +10443,29 @@
       "evidence_tests": [
         "docs/reviews/codex_review_seminar_deck_v3_recheck_20261013.md (§2 · §4)",
         "docs/seminar_20261013/build_seminar_v3.py (selftest)",
-        "docs/seminar_20261013/figs_v3/make_seminar_figs.py (--selftest)"
+        "docs/seminar_20261013/figs_v3/make_seminar_figs.py (--selftest)",
+        "docs/reviews/codex_review_seminar_deck_v3_1_closure_20261013.md",
+        "docs/reviews/codex_seminar_deck_review_evidence_20261013/v3_1_closure/evidence/closure_checks.json"
       ],
-      "claimed_fixed_sha": "9c45ec296"
+      "claimed_fixed_sha": "9c45ec296",
+      "verified_by": "codex",
+      "verified_in": "docs/reviews/codex_review_seminar_deck_v3_1_closure_20261013.md",
+      "verified_sha": "9c45ec296",
+      "verified_scope": "같은 수정 범위 = SEMV3-01~05 (출처 · 비교군 이름 · 진단 지위 · Bo / CED 배율 · 접착일 가정) — v3.1 덱 (9c45ec296 · ZIP v7 sha256 1abdd488…) 에서 Codex 종결 판정 GO (§3 · §6).  범위 = 연구세미나 발표물 (17 장 v3.1) — 믹서 모델 물리 검증 · 미달 겹침 조건 해소 · 18 런 발사 · 194/보충 20 생산 · v1.3 배포 승인 아님 (종결 판정 §1).",
+      "verification_note": "2026-10-13 Codex v3.1 종결 판정 GO 로 세미나 덱 검토 사슬 (첫 판 → v2 → v2.1 → v3 → v3.1) 이 끝나 원장 상태를 옮겼다 · verified_sha = Codex 가 받은 파일을 만든 커밋 (Codex 는 리포 HEAD 가 아니라 받은 파일을 대조했다)."
+    },
+    {
+      "id": "SEMV3-11",
+      "severity": "P3",
+      "status": "open",
+      "owner": "claude",
+      "found_by": "codex 10-13 연구세미나 v3.1 종결 판정 (§7 비차단 잔여 · 받은 ZIP v7 파일 대조 · 시뮬레이션 미실행)",
+      "opened_in": "docs/reviews/codex_review_seminar_deck_v3_1_closure_20261013.md",
+      "title": "생성기 머리말 `docs/seminar_20261013/build_seminar_v3.py:13` 의 옛 용어 `cohesive / non-cohesive NCM` — 본문 · 그림 · CSV · notes 로는 나가지 않는 주석 (SEMV3-02 재개방 아님)",
+      "note": "다음 생성기 유지보수 때 `low NCM–NCM cohesion · low-cohesion comparator` 용어로 정리.  지금 고치지 않는 이유: 덱 출력은 그대로인데 GO 받은 묶음 (ZIP v7) 의 생성기 사본과 리포가 갈린다.",
+      "evidence_tests": [
+        "docs/reviews/codex_review_seminar_deck_v3_1_closure_20261013.md"
+      ]
     },
     {
       "id": "ULK-01",

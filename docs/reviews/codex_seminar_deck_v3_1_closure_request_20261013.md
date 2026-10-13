@@ -16,6 +16,7 @@
 - PowerPoint 앱 렌더는 우리도 하지 않았다.  PDF 는 LibreOffice 에 Calibri 와 폭이 같은 Carlito 를 넣어 만들었다.
 - ⚠ **1저자가 p8–p10 (Problem 1·2 · Problem 3 · 194-bed dataset) 을 줄일지 검토 중이다.**  줄이면 같은 생성기로 그 장만 빼서 다시 만들고, 남는 장의 값 · 문장은 바꾸지 않는다.  그때 ZIP v7 의 `MANIFEST` 에 새 PPT · PDF 해시와 장 번호 대응 (v3.1 17 장 → 축소판) 을 적는다.  아래 장 번호는 v3.1 17 장 기준이다.
 - ✅ **1저자 결정 10-13: 줄이지 않는다 — 17 장 그대로가 최종판** (*"ppt는 오케이 · 더 수정은 지금 하는거까지만"*).  ZIP v7 (sha256 `1abdd488fbbffadebe50b9a7343899601e81a2e9d7d3b55cd4a0c37d5601ad3a`) 안의 이 요청서 사본은 결정 전 판이다 (윗줄 "검토 중") — 발송 글에 이 결정을 한 줄로 적는다.
+- ✅ **Codex 종결 판정 10-13 = GO** — `docs/reviews/codex_review_seminar_deck_v3_1_closure_20261013.md` (증거 `docs/reviews/codex_seminar_deck_review_evidence_20261013/v3_1_closure/`) · SEMV3-01~10 닫힘 · 새 발표 차단 항목 없음 · 발표물 한정 (모델 검증 · 보류 실험 승인 아님) · p4 · p8 그림 글씨 8.5 · 8.9 pt = 발표장 화면에서 한 번 확인 (비차단) · Q6 (축소판 승계) = 17 장 유지로 해당 없음 · 비차단 잔여 = 원장 `SEMV3-11` (생성기 주석).
 
 ## 1. 항목별 수정
 
