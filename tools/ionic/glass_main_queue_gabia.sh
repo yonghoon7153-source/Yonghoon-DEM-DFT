@@ -474,7 +474,9 @@ s=$(sha256sum "$DRV" 2>/dev/null | cut -c1-16)
 miss=$(el_missing)
 [ -z "$miss" ] || { say "⛔ PWX_WATCH 작업방에 *.out 이 없다: $miss — 가드 ④ 가 말없이 무력해진다 (작업방을 맞게 준다 · 시작하지 않는다)"; exit 14; }
 say "결정 active ✓${CARD_DECISION:+ · 카드 $CARD_DECISION ✓} · 드라이버 sha16 $s ✓ · 기준 설정 $REF_META · 가드 합계 $TOTALCAP · 우리 $OURCAP · host $HOSTFLOOR MiB"
-say "판 — $(versions || true) · repo $(git -C "$REPO" rev-parse --short=9 HEAD 2>/dev/null || echo '?') · 가드 ④ 최신 출력: $(el_latest | tr '\n' ' ')"
+# 판 줄은 여기서 찍지 않는다 — torch·fairchem import 가 uma env 에서 수 초 걸려 계획 줄·잠금 시점이 밀린다
+#   (2026-10-13 gabia selftest: '구조 없음' 알림 · lock → 10 두 시험이 그 지연으로 빨강). DRY_RUN 끝과 잠금 뒤에서 찍는다.
+ver_line(){ say "판 — $(versions || true) · repo $(git -C "$REPO" rev-parse --short=9 HEAD 2>/dev/null || echo '?') · 가드 ④ 최신 출력: $(el_latest | tr '\n' ' ')"; }
 for q in $QUEUE; do
   parse_q "$q" || { say "⛔ 큐 항목 형식 오류 '$q' (T:seed[:prod] · 숫자) — 시작하지 않는다"; exit 13; }
   T=$QT; S=$QS; X=$(struct_of "$S"); R=$(rec_of "$S")
@@ -485,12 +487,14 @@ for q in $QUEUE; do
   say "  계획 T$T seed$S · prod $QP ps · 드라이버 --seed $QV · 라벨 $(label_of "$S" "$T") · $X · $st"
 done
 if [ -n "${DRY_RUN:-}" ]; then
+  ver_line
   say "  점유 표본 (시각 · 우리 · 합): $(pmon_sample $$ | tr '\t' ' ') — 우리 0 이 정상 (아직 안 띄웠다)"
   say "⇢ DRY_RUN — 띄우지 않았다 · GPU $(gpu_total) MiB · host $(host_mib) MiB"; exit 0; fi
 # 중복 실행 가드 — pgrep 은 자기 자신·watch 를 센다(CLAUDE.md) · flock 은 프로세스가 죽으면 풀린다.
 #   fd 9 는 MD 자식에게도 넘어가서, 러너가 죽어도 MD 가 살아 있는 동안은 새 큐가 못 뜬다 (한 번에 하나 유지).
 mkdir -p "$ROOT"; exec 9>"$ROOT/.queue_coexist.lock"
 flock -n 9 || { say "⛔ 큐가 이미 돌고 있다 (lock $ROOT/.queue_coexist.lock) — 둘을 동시에 띄우지 않는다"; exit 10; }
+ver_line
 
 mkdir -p "$ROOT/queue_logs"; TSV=$ROOT/queue_coexist.tsv
 [ -f "$TSV" ] || printf "T\tseed\trc\tdone\twall_s\tpeak_total_MiB\tpeak_ours_MiB\tkilled\tstart\thost_min_MiB\n" > "$TSV"
