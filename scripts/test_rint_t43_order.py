@@ -76,8 +76,10 @@ def main():
         c = np.array([[1., 1., 1.], [1., 1., 2.9]]); r = np.ones(2); t = np.array([2, 2])
         R = D.order_diag_raster(c, r, t, (0.0, 0.0, 0.0), (2.0, 2.0, 3.9), 0.1, 0.24, [np.array([0, 1]), np.array([1, 0])])
         p = R['perms'][0]
-        chk('O3 sid 다른 셀 0 · pid 다른 셀 > 0 (렌즈) · 렌즈 종류 AM_S', p['n_sid_diff'] == 0 and p['n_pid_diff'] > 0
-            and p['pid_loc']['lens'] == p['n_pid_diff'], repr(p)[:300])
+        #  ⚠ 정정 (구현 전 · 10-13): 시험 먼저 커밋은 "pid 차이 = 렌즈뿐" 을 기대했다 — 틀렸다.  같은 종류 쌍의 브리지 pid = soft = (i, j) 의 j
+        #    (`rasterize` 브리지 줄) 라 행 순서를 따른다 → 브리지 셀 (구 하나 안) 의 pid 도 바뀐다.  옳은 불변식 = 렌즈 · 브리지 밖 pid 변화 0.
+        chk('O3 sid 다른 셀 0 · pid 다른 셀 > 0 (렌즈 덮어쓰기 + 브리지 soft = j) · 렌즈 · 브리지 밖 pid 변화 0',
+            p['n_sid_diff'] == 0 and p['n_pid_diff'] > 0 and p['pid_loc']['lens'] > 0 and p['pid_loc']['other'] == 0, repr(p)[:300])
 
     @case
     def o4():
