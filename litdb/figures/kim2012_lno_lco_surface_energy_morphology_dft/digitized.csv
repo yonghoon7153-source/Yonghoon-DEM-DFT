@@ -1,0 +1,79 @@
+# kim2012_lno_lco_surface_energy_morphology_dft — values read from the main PDF's native 300-ppi figure rasters (embedded images, extracted with PyMuPDF; no resampling).
+# Method: plot frame and tick marks detected in pixels; markers isolated by colour (blue / red / black / teal); value = marker centroid mapped linearly through the ticks.
+# Calibration check against printed numbers: Fig 6a x=0/x=1 end points reproduce Table 1 within 0.015 eV/nm2; Fig 9 (104) within 0.03; Fig 10 (104) 3.013 vs printed 3.019.
+# Precision: about +-0.03 eV/nm2 on Figs 4, 6, 15 (triangles: centroid, not bounding box); +-0.05 on Figs 9, 10. TREND / consistency use only. Unit as printed on the axes: eV/nm2 (1 eV/nm2 = 0.1602 J/m2, our arithmetic).
+figure,panel,series,x,value,unit,note
+4,a (Li-terminated (003)),E_surf,8 f.u.,1.83,eV/nm2,material not named in caption; n=12 values equal Table 1 LNO -> LNO
+4,a (Li-terminated (003)),E_surf,12 f.u.,1.33,eV/nm2,Table 1 LNO Li(O) 1.338
+4,a (Li-terminated (003)),E_surf,16 f.u.,1.13,eV/nm2,
+4,a (Li-terminated (003)),E_surf,20 f.u.,0.88,eV/nm2,still decreasing at the largest model (-34 % vs 12 f.u.)
+4,a (Li-terminated (003)),E_cleave,8 f.u.,5.02,eV/nm2,
+4,a (Li-terminated (003)),E_cleave,12 f.u.,3.43,eV/nm2,Table 1 3.428
+4,a (Li-terminated (003)),E_cleave,16 f.u.,2.72,eV/nm2,
+4,a (Li-terminated (003)),E_cleave,20 f.u.,2.13,eV/nm2,
+4,a (Li-terminated (003)),E_relax,8 f.u.,-3.17,eV/nm2,
+4,a (Li-terminated (003)),E_relax,12 f.u.,-2.09,eV/nm2,Table 1 -2.090
+4,a (Li-terminated (003)),E_relax,16 f.u.,-1.57,eV/nm2,
+4,a (Li-terminated (003)),E_relax,20 f.u.,-1.26,eV/nm2,
+4,b (O-terminated (003)),E_surf,8 f.u.,4.15,eV/nm2,
+4,b (O-terminated (003)),E_surf,12 f.u.,2.85,eV/nm2,Table 1 LNO O(Ni) 2.850
+4,b (O-terminated (003)),E_surf,16 f.u.,2.24,eV/nm2,
+4,b (O-terminated (003)),E_surf,20 f.u.,1.79,eV/nm2,-37 % vs 12 f.u.
+4,b (O-terminated (003)),E_cleave,8 f.u.,5.02,eV/nm2,
+4,b (O-terminated (003)),E_cleave,12 f.u.,3.42,eV/nm2,
+4,b (O-terminated (003)),E_cleave,16 f.u.,2.72,eV/nm2,
+4,b (O-terminated (003)),E_cleave,20 f.u.,2.14,eV/nm2,
+4,b (O-terminated (003)),E_relax,8 f.u.,-0.87,eV/nm2,
+4,b (O-terminated (003)),E_relax,12 f.u.,-0.76,eV/nm2,MISMATCH: Table 1 prints -0.578 and the plotted E_surf - E_cleave at 12 f.u. = -0.57; other n add up within 0.02
+4,b (O-terminated (003)),E_relax,16 f.u.,-0.47,eV/nm2,
+4,b (O-terminated (003)),E_relax,20 f.u.,-0.35,eV/nm2,
+6,a (003),LNO,Li fraction 0.00,2.86,eV/nm2,= O(Ni) 2.850 (Table 1)
+6,a (003),LNO,Li fraction 0.25,2.33,eV/nm2,
+6,a (003),LNO,Li fraction 0.50,1.25,eV/nm2,symmetric nonpolar Li0.5(O)
+6,a (003),LNO,Li fraction 0.75,1.17,eV/nm2,authors' 'most stable' LNO (003) surface
+6,a (003),LNO,Li fraction 1.00,1.33,eV/nm2,= Li(O) 1.338 (Table 1)
+6,a (003),LCO,Li fraction 0.00,4.64,eV/nm2,= O(Co) 4.635 (Table 1)
+6,a (003),LCO,Li fraction 0.25,3.14,eV/nm2,
+6,a (003),LCO,Li fraction 0.50,1.81,eV/nm2,LCO minimum (Li0.5(O))
+6,a (003),LCO,Li fraction 0.75,3.01,eV/nm2,
+6,a (003),LCO,Li fraction 1.00,4.84,eV/nm2,= Li(O) 4.833 (Table 1)
+6,b (1-1-1),LNO,Li fraction 0.00,7.25,eV/nm2,
+6,b (1-1-1),LNO,Li fraction 0.25,5.31,eV/nm2,
+6,b (1-1-1),LNO,Li fraction 0.50,4.74,eV/nm2,LNO minimum
+6,b (1-1-1),LNO,Li fraction 0.75,5.23,eV/nm2,
+6,b (1-1-1),LNO,Li fraction 1.00,5.96,eV/nm2,
+6,b (1-1-1),LCO,Li fraction 0.00,14.23,eV/nm2,
+6,b (1-1-1),LCO,Li fraction 0.25,10.51,eV/nm2,
+6,b (1-1-1),LCO,Li fraction 0.50,9.95,eV/nm2,LCO minimum
+6,b (1-1-1),LCO,Li fraction 0.75,10.15,eV/nm2,
+6,b (1-1-1),LCO,Li fraction 1.00,12.81,eV/nm2,
+9,-,E_surf LNO,(003),1.16,eV/nm2,= Fig 6a LNO x=0.75
+9,-,E_surf LCO,(003),1.84,eV/nm2,= Fig 6a LCO x=0.50 (1.81) within reading error
+9,-,LNO/LCO ratio (diamond),(003),64.6,%,1.17/1.81 = 64.7 % (our arithmetic)
+9,-,E_surf LNO,(104),3.04,eV/nm2,text 3.019
+9,-,E_surf LCO,(104),7.03,eV/nm2,text 7.008
+9,-,LNO/LCO ratio (diamond),(104),43.0,%,text values give 43.1 %
+9,-,E_surf LNO,(1-1-1),4.76,eV/nm2,= Fig 6b LNO x=0.50
+9,-,E_surf LCO,(1-1-1),10.13,eV/nm2,Fig 6b minimum is 9.95 (x=0.50); 10.13 is nearer the x=0.75 point
+9,-,LNO/LCO ratio (diamond),(1-1-1),46.7,%,
+9,-,E_surf LNO,(012),7.57,eV/nm2,text 7.554
+9,-,E_surf LCO,(012),13.88,eV/nm2,MISMATCH: text prints 13.169; the ratio diamond (54.7 %) agrees with 13.9 not 13.169 (57.4 %)
+9,-,LNO/LCO ratio (diamond),(012),54.7,%,
+9,-,E_surf LNO,(102),8.63,eV/nm2,(102) appears only in Fig 9; no text
+9,-,E_surf LCO,(102),16.90,eV/nm2,(102) appears only in Fig 9; no text
+9,-,LNO/LCO ratio (diamond),(102),51.1,%,
+10,-,(003) black circle,0 bonds/nm2,1.30,eV/nm2,= Li(O) 1.338
+10,-,(003) black circle,0 bonds/nm2,2.83,eV/nm2,= O(Ni) 2.850
+10,-,(003) black circle (two overlapping),~20.2 bonds/nm2,3.13 and 3.46,eV/nm2,configurations not described in the text
+10,-,(003) black circle (two overlapping),~40.5 bonds/nm2,7.39 and 7.62,eV/nm2,= Ni(O) 7.415 / O(Li) 7.628
+10,-,(1-1-1) red square,~28.4 bonds/nm2,5.96 and 7.23,eV/nm2,= Fig 6b LNO x=1.00 / x=0.00 (polar Li-O cleavage)
+10,-,(1-1-1) red square,~42.6 bonds/nm2,7.41 and 8.19,eV/nm2,not described in the text
+10,-,(1-1-1) red square,~85.3 bonds/nm2,11.47 and 12.97,eV/nm2,not described in the text
+10,-,(104) blue triangle,~47.1 bonds/nm2,3.01,eV/nm2,text 3.019
+10,-,(012) teal down-triangle,~81.6 bonds/nm2,8.60,eV/nm2,MISMATCH: text (012) 7.554 and Fig 9 (012) 7.57; equals Fig 9 (102) 8.63
+15,-,LNCO (LiNi0.9Co0.1O2),Li fraction 0.00 / 0.25 / 0.50 / 0.75 / 1.00,3.57 / 2.81 / 1.92 / 1.62 / 2.00,eV/nm2,minimum at 0.75; dopant placement in the 12 f.u. model not stated
+15,-,LNMO (LiNi0.9Mn0.1O2),Li fraction 0.00 / 0.25 / 0.50 / 0.75 / 1.00,2.75 / 2.42 / 1.46 / 1.27 / 1.11,eV/nm2,minimum at 1.00 (slightly below LNO's 1.17)
+15,-,LNO / LCO,same as Fig 6a,-,eV/nm2,open-symbol series re-read at x=0 and x=1: identical to Fig 6a within 0.01
+S1,-,optimum firing T of LiNi1-xCoxO2,x = 0 / 0.3 / 0.5 / 0.6 / 0.8 / 0.9 / 1.0,800 / 800 / ~850 / ~880 / ~950 / ~980 / 1000,degC,read by eye from gridlines (SI raster ~220 ppi)
+S5-1,-,primary-particle size mode (volume %),LNO 800 / LNO 900 / LCO 800 / LCO 900 degC,~1.8 / ~2.2 / ~4.2 / ~5.6,um,bins 0.2 um; LCO 900 tail to 10 um; measurement method not stated
+S5-2,-,primary-particle size mode (volume %),LNO 800 / LNO:Co / LNO:Mn (800 degC),~1.8 / ~4.0 / ~1.8,um,peak heights ~23 / ~23 / ~43 %
