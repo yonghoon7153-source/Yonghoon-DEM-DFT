@@ -975,7 +975,14 @@ IFACE_POWER_EVAL = 'cell_centre_ball_formula_grid_units_x_vox2_float64'   # p = 
 IFACE_EPS_P_UM2 = 1.0e-9                                       # ε_p [µm²] — 절대값 하나 · 봉인 (반올림 잡음 ≲ 1e−12 µm² 의 ≥ 1e3 배)
 IFACE_BRIDGE_CLAIM = 'union_both_orders_v1'                    # v3.1 §2 권고 = 1저자 10-07 확인 (*"권고대로 진행"*) · 다음 Codex 검토에서 재확인
 IFACE_AREA_LAW = 'contact_normalized_coarse_closure'
-IFACE_AREA_SOURCE = 'scaffold_lens_geometry'                   # 덤프 (c_cpl[22]) 경로 · 조인 관문 = 미구현 (T4-2 · N5′)
+IFACE_AREA_SOURCE = 'scaffold_lens_geometry'                   # 덤프 (c_cpl[22]) 부류 · 면적 채택 = 미구현 · 조인 관문 (T4-2 · N5′) = 출처 증명만 (10-13)
+#: 조인 관문 (T4-2 · N5′ · `rint_iface_join.am_iface_join` · 10-13) 의 계획 기록 문구 — 요청 없음 · 통과 · 실패.
+IFACE_JOIN_KIND = 'am_iface_join'
+IFACE_JOIN_STATUS_OFF = ('조인 요청 없음 — scaffold 재계산만 (덤프 경로 G-geo · G-frame 조인 관문 = rint_iface_join.am_iface_join · '
+                         'T4-2 · N5′ · 기구만)')
+IFACE_JOIN_STATUS_PASS = ('G-geo · G-frame 조인 관문 통과 (T4-2 · N5′) — 출처 증명만 · 면적 원천은 scaffold lens 그대로 '
+                          '(덤프 c_cpl[22] 부류 · 면적 채택 = 미구현)')
+IFACE_JOIN_STATUS_FAIL = 'G-geo · G-frame 조인 관문 실패 — 정량 거부 (join_gate_failed · join_particles_mismatch · join_record_tampered)'
 IFACE_CARBON_LAWS = ('remove_area', 'renormalize')
 IFACE_EXCEPTION_LAWS = ('cut', 'fused', 'reject')
 IFACE_AMBIGUOUS_ARMS = ('cut', 'a_hi')
@@ -1363,7 +1370,88 @@ def _iface_rows_fp(axes):
     return h.hexdigest()
 
 
-def am_iface_plan(ledger, r_type, *, carbon_cover='remove_area', gap_law=None, unreg_law=None, ambiguous_arm=None):
+def iface_join_fp(join):
+    """조인 기록 지문 (`fp_join` 을 뺀 전체 — dict 는 키 정렬 · 배열은 dtype · 모양 · 바이트 · 그 밖은 repr).  조인 (`rint_iface_join`) 이
+    찍고 계획 (`am_iface_plan(join=…)`) 이 다시 계산해 대조한다 (만든 뒤 바뀐 조인 = 정량 거부 · E5 와 같은 부류)."""
+    h = hashlib.blake2b(digest_size=16)
+
+    def upd(x):
+        if isinstance(x, dict):
+            h.update(b'{')
+            for k in sorted(x, key=str):
+                h.update(repr(k).encode()); upd(x[k])
+            h.update(b'}')
+        elif isinstance(x, (list, tuple)):
+            h.update(b'(' if isinstance(x, tuple) else b'[')
+            for v in x:
+                upd(v)
+            h.update(b')')
+        elif isinstance(x, np.ndarray):
+            if x.dtype == object:
+                raise TypeError('조인 지문: object 배열은 지문을 정할 수 없다')
+            a = np.ascontiguousarray(x)
+            h.update(a.dtype.str.encode()); h.update(repr(a.shape).encode()); h.update(a.data)
+        else:
+            h.update(repr(x).encode())
+    upd({k: v for k, v in join.items() if k != 'fp_join'})
+    return h.hexdigest()
+
+
+def _iface_join_crosscheck(ledger, join):
+    """원장 접점 부류 ↔ DEM AM–AM 접촉 (조인의 비주기 행) 대조 — **보고만** (원장 부류는 scaffold δ · δ_bound 로 정한다 · 덤프 경로 부류 채택 =
+    미구현).  canonical id = 조인 입자의 중심 사전순 순위 (원장과 같은 규칙 · 입자 지문이 같을 때만 부른다)."""
+    C = ledger['contacts']; D = join['dem_am_am']; c = np.asarray(join['particles']['c_um'], np.float64)
+    order = np.lexsort((c[:, 2], c[:, 1], c[:, 0])) if len(c) else np.zeros(0, np.int64)
+    rank = np.empty(len(c), np.int64); rank[order] = np.arange(len(c))
+    ns = ~np.asarray(D['seam'], bool)
+    ra, rb = rank[np.asarray(D['row_a'])[ns]], rank[np.asarray(D['row_b'])[ns]]
+    dem = set(zip(np.minimum(ra, rb).tolist(), np.maximum(ra, rb).tolist()))
+    reg = list(zip(C['a'].tolist(), C['b'].tolist()))
+    by = {}
+    for k_, nm in enumerate(IFACE_CONTACT_CLASSES):
+        sel = [p for p, cl in zip(reg, C['cls'].tolist()) if cl == k_]
+        by[nm] = {'n': len(sel), 'in_dem': int(sum(1 for p in sel if p in dem)), 'not_in_dem': int(sum(1 for p in sel if p not in dem))}
+    return {'n_dem_am_am': int(len(D['row_a'])), 'n_dem_seam': int((~ns).sum()), 'n_dem_non_seam': len(dem),
+            'n_dem_not_registered': len(dem - set(reg)), 'by_class': by,
+            'meaning': ('보고만 — 원장 부류는 scaffold δ (δ_bound) 로 정한다 · 덤프 경로 부류 채택 = 미구현 · 이음매 (seam) = 비주기 raster 가 '
+                        '표현 못 하는 DEM 접점 (seam_unrepresented)')}
+
+
+def _iface_join_record(ledger, join, rej):
+    """`am_iface_plan(join=…)` — 조인 기록 → (iface_join 요약, iface_join_status, iface_geom_reuse) · 실패 · 다른 입자 · 변조 = 거부 사유 추가.
+    join None → (None, IFACE_JOIN_STATUS_OFF, None)."""
+    if join is None:
+        return None, IFACE_JOIN_STATUS_OFF, None
+    if not isinstance(join, dict) or join.get('kind') != IFACE_JOIN_KIND:
+        raise TypeError('join 은 rint_iface_join.am_iface_join 의 결과여야 한다')
+    _miss = [k for k in ('version', 'status', 'rejections', 'g_geo', 'g_frame', 'geom_reuse', 'files', 'steps', 'particles',
+                         'dem_am_am', 'fp_particles', 'fp_join', 'scaffold_frame_claim') if k not in join]
+    if _miss:
+        raise TypeError(f'join 모양이 틀렸다 (빠진 키 {_miss}) — am_iface_join 의 결과를 그대로 줄 것')
+    ok = True
+    if iface_join_fp(join) != join['fp_join']:
+        rej.append({'code': 'join_record_tampered', 'test': 'T4-2', 'n': 1,
+                    'why': '조인 기록이 만든 뒤 바뀌었다 (fp_join 불일치) — 출처 증명으로 쓸 수 없다'})
+        ok = False
+    if join['status'] != 'PASS' or join['rejections']:
+        rej.append({'code': 'join_gate_failed', 'test': 'T4-2', 'n': max(1, len(join['rejections'])),
+                    'detail': [x.get('code') for x in join['rejections']],
+                    'why': 'G-geo · G-frame 조인 관문 실패 — 덤프 경로 출처를 주장할 수 없다 (N5′ · N1 포함)'})
+        ok = False
+    if join['fp_particles'] != ledger.get('fp_particles'):
+        rej.append({'code': 'join_particles_mismatch', 'test': 'T4-2', 'n': 1,
+                    'why': '원장을 만든 입자 ≠ 조인이 인증한 입자 (입자 집합 지문) — 다른 침대 · 다른 좌표 변환'})
+        ok = False
+    xc = _iface_join_crosscheck(ledger, join) if (ok and ledger.get('owner') is not None) else None
+    rec = {'kind': join['kind'], 'version': join['version'], 'status': ('PASS' if ok else 'REJECT'),
+           'gate_rejections': [x.get('code') for x in join['rejections']],
+           'gates': {'g_geo': join['g_geo'], 'g_frame': join['g_frame']}, 'files': join['files'], 'steps': join['steps'],
+           'scaffold_frame_claim': join['scaffold_frame_claim'], 'fp_join': join['fp_join'], 'fp_particles': join['fp_particles'],
+           'ledger_crosscheck': xc}
+    return rec, (IFACE_JOIN_STATUS_PASS if ok else IFACE_JOIN_STATUS_FAIL), (join['geom_reuse'] if ok else None)
+
+
+def am_iface_plan(ledger, r_type, *, carbon_cover='remove_area', gap_law=None, unreg_law=None, ambiguous_arm=None, join=None):
     """①′ **막 · 절단 간선 계획** = 원장 + 막 표 + 법칙 → `solve_sigma_z(..., iface=plan)` 이 받는 것.
 
     r_type         {'AM_S|AM_S': r, 'AM_P|AM_P': r, 'AM_S|AM_P': r} [Ω·cm²] — 막을 진 접점의 종류 쌍이 표에 없으면 거부
@@ -1372,6 +1460,9 @@ def am_iface_plan(ledger, r_type, *, carbon_cover='remove_area', gap_law=None, u
     gap_law        gap_bridged (−tol ≤ δ < −δ_bound) 법칙 'cut' | 'fused' | 'reject' — 그 부류가 있으면 선언 필수 (N6)
     unreg_law      미등록 owner 쌍 면 (등록 쌍이 아닌데 두 주인이 면을 공유) 법칙 — 최종 마스크에 있으면 선언 필수 (N6)
     ambiguous_arm  모호 (|δ| ≤ δ_bound) 팔 'cut' | 'a_hi' — 있으면 선언 필수 (N4) · 두 팔을 모두 보고하는 것은 소비자 몫
+    join           덤프 경로 조인 관문 결과 (`rint_iface_join.am_iface_join` · T4-2 · N5′ · 10-13) — 주면 기록 `iface_join` ·
+                   `iface_geom_reuse` 를 채우고, 실패 · 다른 입자 · 변조 = 정량 거부.  출처 증명만 (행 · σ 무변경 · 면적 원천 그대로).
+                   None (기본) = 조인 요청 없음 (행 · σ · 다른 기록 키 그대로 — 조인 상태 문구만 "요청 없음")
     ⚠ 자동 fallback 없음 (L1 · 막 생략 = fused 로 조용히 돌아가지 않는다 · RINT-08).  cut = g 0 · 원장에 tombstone 행 (E6).
     → dict (`kind = am_iface_plan`): axes (축마다 활성 행: lin · rface · cut · ck · cid · olo) · record (v3 §6-6 이름) ·
       rejections (정량 모드 거부 사유 — 하나라도 있으면 솔브가 거부한다)."""
@@ -1484,6 +1575,7 @@ def am_iface_plan(ledger, r_type, *, carbon_cover='remove_area', gap_law=None, u
                     n_film_rows=int(act.sum()), n_cut_rows=int(cut_face.sum()))
     plan['axes'] = axes
     plan['fp_rows'] = _iface_rows_fp(axes)
+    _jrec, _jstat, _jreuse = _iface_join_record(ledger, join, rej)      # 조인 (T4-2 · N5′) — 출처 증명만 · 거부 사유를 rej 에 더한다
     plan['rejections'] = rej
     plan['record'] = {
         'iface_model': IFACE_MODEL_VERSION, 'iface_model_label': IFACE_MODEL_LABEL,
@@ -1491,9 +1583,9 @@ def am_iface_plan(ledger, r_type, *, carbon_cover='remove_area', gap_law=None, u
         'iface_eps_p_um2': ledger['iface_eps_p_um2'], 'iface_power_eval': IFACE_POWER_EVAL,
         'iface_bridge_claim': IFACE_BRIDGE_CLAIM, 'iface_bridge_claim_status': '1저자 10-07 확인 (권고대로) · Codex 재확인 대기 (v3.1 §2)',
         'iface_area_law': IFACE_AREA_LAW, 'iface_carbon_cover': carbon_cover,
-        'iface_area_source': IFACE_AREA_SOURCE, 'iface_join': None,
-        'iface_join_status': '덤프 (c_cpl[22]) 경로 · G-geo · G-frame 조인 관문 미구현 (T4-2 · N5′) — scaffold 재계산만',
-        'iface_geom_reuse': None,
+        'iface_area_source': IFACE_AREA_SOURCE, 'iface_join': _jrec,
+        'iface_join_status': _jstat,
+        'iface_geom_reuse': _jreuse,
         'iface_exception_law': {'gap': gap_law, 'unregistered': unreg_law, 'ambiguous_arm': ambiguous_arm},
         'iface_r_type_ohm_cm2': rt, 'unit': 'ohm_cm2',
         'iface_contact_ledger': summary,
