@@ -1,0 +1,183 @@
+{
+ "slug": "balasubramanian2026_rfb_electrolyte_kmc_lbm_preprint",
+ "dpi": 300,
+ "generated": "2026-10-13",
+ "sources": [
+  "11._Insights_into_Electrolyte_Effects_on_Interfacial_Kinetics_and_Transport_in_Porous_Redox_Flow_Battery_Electrodes_A_Multiparadigm_Modelling_Study.pdf"
+ ],
+ "method": "수동 크롭 (PyMuPDF clip 렌더 300 dpi) — 래스터 그림은 bbox 그대로 · 벡터 그림 (Fig. 5 · 6) 은 그림 요소 합집합 + 여백 (본문 · 캡션 제외). ⚠ ChemRxiv 프리프린트 (미심사). SI 미보유.",
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 7,
+   "file": "fig_1.png",
+   "caption": "Figure 1: A schematic illustration of our multiscale framework to study the coupled effects of electrolyte concentrations and electrode microstructures on interfacial kinetics and porous transport in redox flow batteries.",
+   "rotated_deg": 0,
+   "bbox": [
+    72.0,
+    72.0,
+    524.3,
+    328.1
+   ],
+   "w": 1885,
+   "h": 1067,
+   "dpi": 300,
+   "src": "11._Insights_into_Electrolyte_Effects_on_Interfacial_Kinetics_and_Transport_in_Porous_Redox_Flow_Battery_Electrodes_A_Multiparadigm_Modelling_Study.pdf",
+   "viewed": true,
+   "crop_note": "래스터 bbox 그대로 · 가장자리 흰 띠 다듬음 (px L0 T0 R0 B28 · bbox 같이 이동)"
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 11,
+   "file": "fig_2.png",
+   "caption": "Figure 2: A schematic of a φ-t curve of a Redox Flow Battery (RFB) anolyte in galvanostatic discharge (blue curve) over the full discharge time-scale. δV is given as its initial slope (the cyan dashed line). The red emphatic region shows the kMC simulation potential (in purple), and δV is the slope of the potential obtained in the kMC simulation.",
+   "rotated_deg": 0,
+   "bbox": [
+    154.6,
+    74.6,
+    444.4,
+    296.9
+   ],
+   "w": 1208,
+   "h": 926,
+   "dpi": 300,
+   "src": "11._Insights_into_Electrolyte_Effects_on_Interfacial_Kinetics_and_Transport_in_Porous_Redox_Flow_Battery_Electrodes_A_Multiparadigm_Modelling_Study.pdf",
+   "viewed": true,
+   "crop_note": "래스터 bbox 그대로 · 가장자리 흰 띠 다듬음 (px L23 T11 R5 B41 · bbox 같이 이동)"
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 16,
+   "file": "fig_3.png",
+   "caption": "Figure 3: A schematic illustrating the kMC-LBM coupling workflow employed in this work.",
+   "rotated_deg": 0,
+   "bbox": [
+    73.8,
+    72.0,
+    521.5,
+    338.8
+   ],
+   "w": 1866,
+   "h": 1112,
+   "dpi": 300,
+   "src": "11._Insights_into_Electrolyte_Effects_on_Interfacial_Kinetics_and_Transport_in_Porous_Redox_Flow_Battery_Electrodes_A_Multiparadigm_Modelling_Study.pdf",
+   "viewed": true,
+   "crop_note": "래스터 bbox 그대로"
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 19,
+   "file": "fig_4.png",
+   "caption": "Figure 4: (a) δV (in V/ns) obtained for various boundary layer concentrations of MV (in M) (b) 2D slices of snapshots of kMC simulations of 1 M MV (top) and 0.05 M MV (bottom) viewed along their Debye length (LD). Heatmaps of δV (in V/ns) interpolated for various boundary layer concentrations of MV (in x-axis) and supporting electrolyte concentrations of (c) NaCl and (d) K2SO4 in the y-axes. The concentrations are represented with “[]”, in units of mol/L.",
+   "rotated_deg": 0,
+   "bbox": [
+    74.9,
+    72.0,
+    520.4,
+    453.0
+   ],
+   "w": 1857,
+   "h": 1588,
+   "dpi": 300,
+   "src": "11._Insights_into_Electrolyte_Effects_on_Interfacial_Kinetics_and_Transport_in_Porous_Redox_Flow_Battery_Electrodes_A_Multiparadigm_Modelling_Study.pdf",
+   "viewed": true,
+   "crop_note": "래스터 bbox 그대로"
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 21,
+   "file": "fig_5.png",
+   "caption": "Figure 5: Graph of LBM-calculated permeabilities (in 10-10 m2) in the y-axis versus SSA (in m-1) in X-axis for the five microstructures considered, plotted as scatters with different shapes and colours, as in the legend at top-right, and connected by a dotted line to help visualizing the trend. Next to each point, there is the respective 3D carbon felt electrode microstructure.",
+   "rotated_deg": 0,
+   "bbox": [
+    154.2,
+    280.7,
+    440.6,
+    517.4
+   ],
+   "w": 1194,
+   "h": 987,
+   "dpi": 300,
+   "src": "11._Insights_into_Electrolyte_Effects_on_Interfacial_Kinetics_and_Transport_in_Porous_Redox_Flow_Battery_Electrodes_A_Multiparadigm_Modelling_Study.pdf",
+   "viewed": true,
+   "crop_note": "벡터 그림 + 작은 래스터 6 (미세구조 그림) — 그림 요소 합집합 (145.9, 275.6, 445.6, 525.2) + 여백 (위 본문 · 아래 캡션 제외) · 가장자리 흰 띠 다듬음 (px L59 T53 R60 B94 · bbox 같이 이동)"
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 22,
+   "file": "fig_6.png",
+   "caption": "Figure 6: The values of 𝛿𝑉̅̅̅̅ (in V/ns) obtained for the five electrode microstructures with the four electrolyte compositions considered at a pressure of (a) 100 Pa and (b) 10 Pa applied across the edges of the microstructures. Convective areas 𝐶𝐴𝑀𝑉(c) and 𝐶𝐴𝑁𝑎(d) at a pressure of 100 Pa.",
+   "rotated_deg": 0,
+   "bbox": [
+    77.0,
+    279.4,
+    527.9,
+    560.7
+   ],
+   "w": 1880,
+   "h": 1173,
+   "dpi": 300,
+   "src": "11._Insights_into_Electrolyte_Effects_on_Interfacial_Kinetics_and_Transport_in_Porous_Redox_Flow_Battery_Electrodes_A_Multiparadigm_Modelling_Study.pdf",
+   "viewed": true,
+   "crop_note": "벡터 그림 + 작은 래스터 4 (범례) — 그림 요소 합집합 (79.5, 280.7, 534.0, 561.2) + 여백 · 가장자리 흰 띠 다듬음 (px L4 T31 R38 B22 · bbox 같이 이동)"
+  },
+  {
+   "key": "f7",
+   "kind": "figure",
+   "label": "7",
+   "page": 24,
+   "file": "fig_7.png",
+   "caption": "Figure 7: Comparison of LBM and surrogate δVv modelling from different electrolyte concentrations (before the slash “/”) in different electrode microstructures (after the slash “/”). Each panel contains the steady state concentration distributions of MV and Na+ ([MV]v and [Na]v respectively) at the LBM boundary voxels (bottom) and the corresponding δVv values (top) in the y-axes, versus the position of the boundary voxels v along the flow direction x (in m), in the x-axis.",
+   "rotated_deg": 0,
+   "bbox": [
+    72.0,
+    72.0,
+    523.3,
+    521.5
+   ],
+   "w": 1881,
+   "h": 1873,
+   "dpi": 300,
+   "src": "11._Insights_into_Electrolyte_Effects_on_Interfacial_Kinetics_and_Transport_in_Porous_Redox_Flow_Battery_Electrodes_A_Multiparadigm_Modelling_Study.pdf",
+   "viewed": true,
+   "crop_note": "래스터 bbox 그대로"
+  },
+  {
+   "key": "f8",
+   "kind": "figure",
+   "label": "8",
+   "page": 27,
+   "file": "fig_8.png",
+   "caption": "Figure 8: A comparison of Na+ concentrations of the 1M_0.5MNaCl electrolyte through the 22.3_0.14 microstructures at pressures of (a) 100 Pa and (b) 10 Pa.",
+   "rotated_deg": 0,
+   "bbox": [
+    89.0,
+    444.6,
+    489.3,
+    748.3
+   ],
+   "w": 1669,
+   "h": 1267,
+   "dpi": 300,
+   "src": "11._Insights_into_Electrolyte_Effects_on_Interfacial_Kinetics_and_Transport_in_Porous_Redox_Flow_Battery_Electrodes_A_Multiparadigm_Modelling_Study.pdf",
+   "viewed": true,
+   "crop_note": "래스터 bbox 그대로 (캡션은 다음 쪽 p.28 머리) · 가장자리 흰 띠 다듬음 (px L7 T0 R78 B9 · bbox 같이 이동)"
+  }
+ ],
+ "missing_labels": [
+  "SI (Sections S1–S9, Tables S4 · S6) — 미보유"
+ ],
+ "note_manual": "2026-10-13 큐레이터 크롭 — 8 장 (Figure 1–8) 접촉 시트로 열람. 본문 캡션 Figure 1–8 = 크롭 8 (표 없음). Fig. 8 캡션은 p.28 머리에서 이어 붙임."
+}
