@@ -199,7 +199,7 @@
 ### 1저자 확인이 필요한 것
 
 1. 논지 §6 의 **KETI 논문 단서** 가 B2-4 (*Shear force effect of the dry process …*) 인가.
-2. `lee2026_mechanical_halogen_argyrodite_drycoating` 카드 저자 목록의 *Yonghoon An* 이 본인인가 (그렇다면 W_ad 측정 원자료 · AFM 조건 확보가 쉽다).
+2. `lee2026_mechanical_halogen_argyrodite_drycoating` 카드 저자 *Yonghoon An* = ✅ 1저자 본인 (10-13 확인).
 3. Part D 의 PDF 중 이미 가진 것 · 받을 수 있는 것.
 
 ---
