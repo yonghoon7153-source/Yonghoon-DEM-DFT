@@ -176,3 +176,5 @@ reil_c4_arrays_20261013/** -text
 reviews/r14_repros/codex63/comsol_microshort_s1_open_r1_003_review_20261013/** -text
 # 2026-10-13: REIL C4-0a 결과 검토 회신 (26 시험 기록 · Phase A 배열 4 한정 수용 · C4-0a 종결 보류 · P2 C4-0A-N1–N4 한정 보완 필요 · source/ = 검토자가 본 저장소 사본) — bytes 그대로
 reviews/review_reil_c4_0a_result_20261013/** -text
+# 2026-10-13: REIL C4-0a 한정 보완 (N1–N4) 실행 기록 (identity · RED · 패치 적용 · GREEN · NSGA2 합성 outcome · 시작/끝 HEAD · porcelain) — bytes 그대로
+evidence/reil_c4_0a_fix_20261013/** -text
