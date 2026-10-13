@@ -1043,3 +1043,40 @@ rc 0 → **옛 봉인 대조 (§2-4) 에서 허용 밖 차이** → 정지. 원�
 - **폴더:** 증거 `evidence/reil_c4_0b1_fix_20261013/` — 착수 때 있으면 중지한다 (2026-10-13T14:39Z 확인: 없음).
 - **번호:** 결과 기록은 §50 이다 (요청문 §6-8 의 "§49" 는 이 승인 기록이 먼저 들어가 하나 밀린다).
 - 이 승인은 C4-0b2 · C4-E / A / B · 자료 개봉 · 맞춤 · 설치 · 환경 재구축 · COMSOL 승인이 아니다.
+
+## §50 C4-0b1 한정 보완 결과 — RED 선언대로 · 고정 패치 · GREEN 66 통과 (2026-10-13 · 검토 대기 · 덧붙임 — 위 §0–§49 는 그대로)
+
+- **대상 커밋:** `d02e1507` (대조 · 패치된 코드 · 증거). 착수 HEAD 는 `3f719cde` (§49 승인 기록 · 보존 규칙).
+- **시간:** t0 2026-10-13T14:40:29Z · 끝 기록 129.1 s / 7,200 s — 커밋 · push · 문서 작성 **전** snapshot 이다 (`04_end.json`).
+  계산 합 54.249 s / 1,260 s. 자동 수정 · 재시험 0.
+- **단계 (`evidence/reil_c4_0b1_fix_20261013/`):**
+
+  | 단계 | 배정 | 실측 | rc | 결과 |
+  |---|---|---|---|---|
+  | 01 identity (C4-0b1 과 같은 스크립트 · 인자) | 60 s | 22.884 s | 0 | ok · problems [] |
+  | 02 RED (새 15 만 · 패치 전) | 600 s | 10.666 s | 1 | 10 실패 · 5 통과 — 승인 요청 §4 의 선언과 같음 (실패 종류 포함) |
+  | 패치 적용 | — | — | — | `git apply` 고정본 `5d2b887c…` · 결과 sha 둘 다 = 기대 (`03_patch_applied.txt`) |
+  | 03 GREEN (기존 51 + 새 15 · `-rP`) | 600 s | 20.699 s | 0 | 66 통과 · stderr 0 B |
+
+  - RED 실패 종류: n1_a `(3, None) ≠ (3, 2)` · n1_b partial 없음 (`0 > 0`) · n1_c partial 이 task 셋뿐 (`None` ×4) · n2_a `'solver_error'` ·
+    n2_b `DID NOT RAISE` · n2_d `global_stop None` · n3_a `invalid:NONFINITE` · a1_a 건조가 `qmc.Sobol` 을 부름 · a1_b · a1_c `TypeError` (`regenerate`).
+    통과 5 는 n1_d · n2_c ×2 · n3_b · n3_c — 선언 그대로다. 행동 반례 8 · 인터페이스 부재 2.
+  - 대조 `tests/test_reil_c4_0b1_fix.py` 는 `docs/` 고정본과 바이트 동일하다 (`7133c550…`). GREEN 직전 원천 sha 와 끝의 sha 가 같고,
+    e3a · monitor · c5 · p0 · c6_profile 은 RED → 끝 그대로다.
+  - 커밋한 29 파일: 비밀값 검사 0 · blob 29 / 29 일치.
+- **바뀐 것 (`scripts/reil_c4_h.py` `676b0847…` → `7d49f132…`):** N1 `_partial` — 모든 구조 중지 경로가 그때까지의 행 · 계수 · 경고 · 중지 오류를 보냄 ·
+  N2 `termination` = C5 `termination_of` · 미분류는 재평가 전에 `UnclassifiedTermination` 구조 중지 · N3 `invalid:REEVAL_ERROR` ·
+  A1 건조는 PLAN.json 하나 (`execution` 최적화 · 목적 호출 · util import · Sobol 생성 0) · 봉인은 바이트 대조 (`check_h_arrays(regenerate=False)`).
+  기존 시험 두 기대값 (test_07 termination · test_10 건조) 을 승인대로 고쳤다 (`6afd6d98…` → `1040e531…`).
+- **밝힐 것:**
+  1. 착수 직전 컨테이너가 재시작됐다 (t0 의 uptime 68.8 s). identity 대조가 통과해 시작했다 (C4-0a 보완 때와 같은 처리 · 원인을 추정하지 않는다).
+  2. 승인 요청 §7-1 의 위험 (기존 실제 COBYQA 실행이 미분류 status 로 멈춤) 은 이번 GREEN 에서 일어나지 않았다 — 66 통과. 그 실행들의 개별 termination 은
+     기록하지 않았다.
+  3. GREEN 안의 합성 실행은 승인 요청 §5 의 표대로다 (시험 코드가 정한다 · 실행별 로그는 남기지 않음). 보존 util + COBYQA 합성 표본은 0 이다.
+  4. RED 명령은 `--tb=line`, GREEN 은 `-rP` 다. GREEN 로그의 argparse 오류 문구는 test_10_the_cli 가 기대하는 SystemExit 출력이다.
+  5. 단계 실행기는 C4-0b1 의 것에서 증거 경로 · scratch 폴더 · env 두 이름만 다르다 (`00_step_runner.py`).
+  6. RED / GREEN 은 C4-0 전체로 각 4 회가 됐다 (0a · 0a 보완 · 0b1 · 0b1 보완).
+- **넣지 않은 것:** 건조 재실행 · 배열 재봉인 · full C6 check · 전체 suite · 환경 재구축 · C4-0b2 · C4-E / A / B · 자료 · 맞춤 · 설치 · COMSOL.
+  05 의 `SYNTHETIC_SAMPLE.json` 등 기존 증거는 그대로다 (§48 A1).
+- **다음:** 재검토 요청 (`docs/REIL_C4_0B1_FIX_RESULT_REVIEW_SEND_20261013.md`). C4-0b1 종결은 재검토 판정 뒤다. C4-0b2 범위 (H4 대조 · ray —
+  회신 권고: 합성 구현 대조 유지 · 이 자료의 H4 / ray 실제 탐색은 UNFIT 로 건너뜀) 는 그 뒤 사용자 확인으로 정한다.
