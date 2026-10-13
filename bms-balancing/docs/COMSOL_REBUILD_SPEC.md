@@ -4489,3 +4489,13 @@ gate INCOMPLETE · 실효 정책 UNVERIFIED · native 미승인 · 게이트 리
   검증안 제안 1,350 s (하네스 봉인 600 · Python 180 · javac 90 · Java helper 60 · 보존 · 전달 300 · 미완 정리 120) · 세션 자동 확대 없음 · 첫 예상 밖 실패 / 시간 초과에서 중지 ·
   javac / java 는 이 작은 helper 에만 (COMSOL 모델 컴파일 · native 아님). 회신에 채택 문구 초안이 없어 이 저장소가 썼다 — 발송 프롬프트 `docs/COMSOL_MICROSHORT_S1_OPEN_R1_VALIDATION_SEND_20261012.md`.
   통과해도 OPEN 4 종결 · 설치본 관측 · P0 실행 승인이 아니다. 이 절은 승인이 아니다.
+
+## 88. 93 사례 변경부 한정 검증 — 사용자 승인 (2026-10-13 · "권고대로" · 발송은 사용자 · 실행 0)
+
+- 사용자 원문 (2026-10-13): "1. COMSOL: 93사례 한정 검증을 승인해 실행 Codex에 보낼지. 2. REIL: C4 요청서를 Codex 사전검토에 보낼지, C4-0을 승인할지. 권고대로".
+  → §87 발송 프롬프트 `docs/COMSOL_MICROSHORT_S1_OPEN_R1_VALIDATION_SEND_20261012.md` (sha256 `f8d207e05a9e1a6cb6ce8f60af6105830e195a756f270eca48882bbe4785e281`) 의 §0 채택 문구를
+  **그대로 승인**한 것으로 기록한다. 범위 = §0 원문 (메타데이터 정정 2 건 봉인 부속서 → 하네스 · fixture · 실제 엔진 바이트 · 명령 봉인 → Python 87 사례 1 세션 · javac 1 회 +
+  Java helper 6 사례 1 세션 · 새 원점 1,350 s · 첫 예상 밖 실패 중지 · COMSOL · native · 설치본 관측 0).
+- 발송: 사용자 몫 — 발송문의 `---` 사이 본문 + 재검토 회신 zip (`COMSOL_MICROSHORT_S1_OPEN_CONNECTION_R1_REVIEW_20261011.zip` · 4,038,610 B · `4fcb4c32…432a`) → 실행 담당 Codex.
+  이 저장소는 발송 사실을 직접 보지 못한다 — 결과 묶음이 오면 그 ORIGIN · 승인 기록과 이 절을 대조한다.
+- 유지: OPEN 4 · `native_ready=false` · 다음은 결과 검토 → 설치본 관측 → P0 (각각 별도 승인).
