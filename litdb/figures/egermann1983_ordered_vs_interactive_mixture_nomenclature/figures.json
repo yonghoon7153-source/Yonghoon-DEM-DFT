@@ -1,0 +1,145 @@
+{
+ "slug": "egermann1983_ordered_vs_interactive_mixture_nomenclature",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-10-13",
+ "sources": [
+  "3104931e-63._Ordered_mixtures___interactive_mixtures.pdf"
+ ],
+ "figures": [
+  {
+   "key": "x1",
+   "kind": "text",
+   "label": "p117-title",
+   "page": 1,
+   "file": "txt_p117_title_first_paragraph.png",
+   "caption": "p.117 left: title 'Ordered mixtures — Interactive mixtures', authors/affiliations, received dates, first paragraph ending ''Interactive' rather than 'ordered' is proposed to describe mixtures with interacting constituents.'",
+   "rotated_deg": 0,
+   "bbox": [
+    37.9,
+    127.9,
+    282.0,
+    410.4
+   ],
+   "w": 1017,
+   "h": 1177,
+   "dpi": 300,
+   "src": "3104931e-63._Ordered_mixtures___interactive_mixtures.pdf",
+   "blank": 0.838,
+   "manual_crop": "text-region hand crop at the native 300 ppi (1-bit scan; quotes transcribed in the card from these crops, not from the OCR layer) (2026-10-13)",
+   "viewed": true
+  },
+  {
+   "key": "x2",
+   "kind": "text",
+   "label": "p117-left",
+   "page": 1,
+   "file": "txt_p117_left_terminology_history.png",
+   "caption": "p.117 left: 'The terms 'ordered' and 'random' were adopted to differentiate between the mixing of interactive particles, and the mixing of free-flowing powders [2] …'; 'Order and interaction, however, are not equivalent terms.'",
+   "rotated_deg": 0,
+   "bbox": [
+    37.9,
+    410.4,
+    282.0,
+    646.1
+   ],
+   "w": 1017,
+   "h": 982,
+   "dpi": 300,
+   "src": "3104931e-63._Ordered_mixtures___interactive_mixtures.pdf",
+   "blank": 0.773,
+   "manual_crop": "text-region hand crop at the native 300 ppi (1-bit scan; quotes transcribed in the card from these crops, not from the OCR layer) (2026-10-13)",
+   "viewed": true
+  },
+  {
+   "key": "x3",
+   "kind": "text",
+   "label": "p117-right",
+   "page": 1,
+   "file": "txt_p117_right_order_vs_interaction.png",
+   "caption": "p.117 right: order vs interaction (crystallography analogy); binary ordered systems (σ < σR) need manual ordering or splitting/recombining; 'ordered adhesion'; mixing = disordering; best mix of interactive powders = pseudorandom (σ = σR); interactive mixes frequently remain incomplete [2].",
+   "rotated_deg": 0,
+   "bbox": [
+    285.8,
+    127.9,
+    538.1,
+    646.1
+   ],
+   "w": 1051,
+   "h": 2159,
+   "dpi": 300,
+   "src": "3104931e-63._Ordered_mixtures___interactive_mixtures.pdf",
+   "blank": 0.801,
+   "manual_crop": "text-region hand crop at the native 300 ppi (1-bit scan; quotes transcribed in the card from these crops, not from the OCR layer) (2026-10-13)",
+   "viewed": true
+  },
+  {
+   "key": "x4",
+   "kind": "text",
+   "label": "p118-left",
+   "page": 2,
+   "file": "txt_p118_left_nomenclature_proposal.png",
+   "caption": "p.118 left: interactive mixes may be incomplete (σ > σR), complete (σ = σR) and, theoretically, ordered (σ < σR) by mechanical co-ordination; two types of terms; ''interactive' and 'non-interactive' are suggested'.",
+   "rotated_deg": 0,
+   "bbox": [
+    37.9,
+    72.0,
+    283.9,
+    361.9
+   ],
+   "w": 1025,
+   "h": 1208,
+   "dpi": 300,
+   "src": "3104931e-63._Ordered_mixtures___interactive_mixtures.pdf",
+   "blank": 0.793,
+   "manual_crop": "text-region hand crop at the native 300 ppi (1-bit scan; quotes transcribed in the card from these crops, not from the OCR layer) (2026-10-13)",
+   "viewed": true
+  },
+  {
+   "key": "x5",
+   "kind": "text",
+   "label": "p118-reasons",
+   "page": 2,
+   "file": "txt_p118_right_reasons.png",
+   "caption": "p.118 right: reasons (1) interaction is not identical to order — the terms carry no defined degree of homogeneity; (2) unambiguous reference to degree of mixing (ordered, random, incomplete) and type (interactive, non-interactive).",
+   "rotated_deg": 0,
+   "bbox": [
+    289.9,
+    72.0,
+    533.8,
+    202.1
+   ],
+   "w": 1016,
+   "h": 542,
+   "dpi": 300,
+   "src": "3104931e-63._Ordered_mixtures___interactive_mixtures.pdf",
+   "blank": 0.813,
+   "manual_crop": "text-region hand crop at the native 300 ppi (1-bit scan; quotes transcribed in the card from these crops, not from the OCR layer) (2026-10-13)",
+   "viewed": true
+  },
+  {
+   "key": "x6",
+   "kind": "text",
+   "label": "p118-refs",
+   "page": 2,
+   "file": "txt_p118_references.png",
+   "caption": "p.118 right: REFERENCES 1-8 as printed (ref 7 reads 'Powder Tzchnol.' in the scan — typo or scan damage, undecidable).",
+   "rotated_deg": 0,
+   "bbox": [
+    289.9,
+    222.0,
+    535.9,
+    361.9
+   ],
+   "w": 1025,
+   "h": 583,
+   "dpi": 300,
+   "src": "3104931e-63._Ordered_mixtures___interactive_mixtures.pdf",
+   "blank": 0.862,
+   "manual_crop": "text-region hand crop at the native 300 ppi (1-bit scan; quotes transcribed in the card from these crops, not from the OCR layer) (2026-10-13)",
+   "viewed": true
+  }
+ ],
+ "missing_labels": [],
+ "note": "2-page short communication without figures or tables — all crops are text evidence for the terminology quotes; page = PDF page (PDF 1 = printed p.117)"
+}
