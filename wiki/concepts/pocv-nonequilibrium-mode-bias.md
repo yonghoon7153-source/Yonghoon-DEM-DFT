@@ -5,7 +5,7 @@ created: 2026-10-06
 updated: 2026-10-13
 type: concept
 tags: [battery, degradation, research]
-sources: [raw/papers/asheruddin2025_phantom-lam-lli-ir-hysteresis-dma.md, raw/papers/schmitt2022_sic-ocp-shape-change-degradation-modes.md, raw/papers/2026-09-21-siwon-kim-si-gr-ica-lam-si-gitt-ocp.md, raw/papers/sun2025_dl-eis-degradation-mode-diagnostics.md, raw/papers/rhyu2025_systematic-feature-design-formation.md, raw/papers/li2026_half-cell-fitting-multiobjective-benchmark.md, raw/repositories/2026-10-05-ampworks-on-synthetic-truth.md, raw/repositories/2026-10-01-pyprobe-dma-on-synthetic-truth.md, raw/articles/2026-10-13-github-research-briefing.md]
+sources: [raw/papers/asheruddin2025_phantom-lam-lli-ir-hysteresis-dma.md, raw/papers/schmitt2022_sic-ocp-shape-change-degradation-modes.md, raw/papers/2026-09-21-siwon-kim-si-gr-ica-lam-si-gitt-ocp.md, raw/papers/sun2025_dl-eis-degradation-mode-diagnostics.md, raw/papers/rhyu2025_systematic-feature-design-formation.md, raw/papers/li2026_half-cell-fitting-multiobjective-benchmark.md, raw/repositories/2026-10-05-ampworks-on-synthetic-truth.md, raw/repositories/2026-10-01-pyprobe-dma-on-synthetic-truth.md, raw/articles/2026-10-13-github-research-briefing.md, raw/repositories/2026-10-13-ocvfit-on-synthetic-truth.md]
 confidence: medium
 explored: false
 verificationStatus: unverified
@@ -156,5 +156,7 @@ LAM_PE 과소 · 흑연 LAM 과대 → 격차 −) 과 **반대 부호**다. NE 
 - [[data-window-identifiability]] — 창이 어느 전극 (성분) 을 보이게 하는가
 - [[thermo-kinetic-loss-partition]] — `η_kin` 쪽 분해
 - [[pyprobe]] · [[ampworks]] — 같은 계열 도구 (원문이 쓴 도구 · 적합 `iR`)
-- [[ocvfit]] — 기준 곡선 섭동 예산의 균일 오프셋 (기본 ±3 mV) 이 이 페이지의 +δ 통로와 같은 축 · 8 회 무작위의 최대 (우리 `ocpbias` PE 다리는 고정 크기 · 부호별) · 2026-10-13 1차 대조
+- [[ocvfit]] — 기준 곡선 섭동 예산의 균일 오프셋 (기본 ±3 mV) 이 이 페이지의 +δ 통로와 같은 축 · 8 회 무작위의 최대 (우리 `ocpbias` PE 다리는 고정 크기 · 부호별) · 2026-10-13 1차 대조.
+  **E1 관측 (P5 의 재료 · 판정 아님):** ocvfit 은 적합 상수 오프셋 `R` 을 두므로 균일 PE +10 mV 가 `R` 로 정확히 상쇄된다 (V ≥ 3.50 V 창에서 모드 · 반폭 차이 0 · R 만 +10.0 mV) —
+  우리 정본의 5–10 mV 파탄은 상수 오프셋이 없는 목적함수의 성질일 수 있다 (가설 · 우리 매개변수는 `a_pe · b_pe · a_ne · b_ne` 넷뿐 — `degradation-degeneracy/src/fitting.py:48` · 미측정). 반면 SOC 따라 변하는 성분 (0.05 C 과전압) 은 `R` 이 못 흡수해 잔차 상관 ≈ 0.96 으로 남았다.
 - [[22p-physics-or-degeneracy]] · [[degradation-degeneracy]] · [[mode-observability]] · [[isu-uconn-lfp-gr-emulated-degradation]]

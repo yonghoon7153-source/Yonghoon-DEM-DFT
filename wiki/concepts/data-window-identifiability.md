@@ -4,7 +4,7 @@ created: 2026-09-04
 updated: 2026-10-13
 type: concept
 tags: [battery, degradation, research]
-sources: [raw/papers/asheruddin2025_phantom-lam-lli-ir-hysteresis-dma.md, raw/papers/xie2008_lco-thin-film-orientation-diffusion-gitt-pitt-eis.md, raw/papers/lee2020_estimation-error-bound-limited-data-window.md, raw/papers/mohtat2019_electrode-soh-estimability-expansion.md, raw/papers/marongiu2016_lfp-onboard-capacity-halfcell.md, raw/papers/kim2019_assb-ekf-soc-estimation-weak-observability.md, raw/articles/2026-10-13-github-research-briefing.md]
+sources: [raw/papers/asheruddin2025_phantom-lam-lli-ir-hysteresis-dma.md, raw/papers/xie2008_lco-thin-film-orientation-diffusion-gitt-pitt-eis.md, raw/papers/lee2020_estimation-error-bound-limited-data-window.md, raw/papers/mohtat2019_electrode-soh-estimability-expansion.md, raw/papers/marongiu2016_lfp-onboard-capacity-halfcell.md, raw/papers/kim2019_assb-ekf-soc-estimation-weak-observability.md, raw/articles/2026-10-13-github-research-briefing.md, raw/repositories/2026-10-13-ocvfit-on-synthetic-truth.md]
 confidence: medium
 explored: false
 verificationStatus: unverified
@@ -120,7 +120,8 @@ DOD = Q / C              C = V_max·V_min 로 정의된 셀 용량
 - [[np-lip-ocv-reparametrization]] — 같은 창 좌표를 최소 매개화로 다시 쓴 계보
 - [[birkl-ocv-degradation-diagnostic]] — 창 끝점을 컷오프 등식으로 죽이는 처방
 - [[fitting-degeneracy]] — 창이 좁을 때 드러나는 축퇴 그 자체
-- [[ocvfit]] — LFP 평탄부의 가파른 끝이 창 밖이면 양극 용량 (LAM_PE) 을 '식별 불가' 로 내는 시험을 둔 외부 도구 (2026-10-13 1차 대조 · 실행 0) — 이 페이지 규칙의 제3자 구현
+- [[ocvfit]] — LFP 평탄부의 가파른 끝이 창 밖이면 양극 용량 (LAM_PE) 을 '식별 불가' 로 내는 시험을 둔 외부 도구 (2026-10-13 1차 대조) — 이 페이지 규칙의 제3자 구현.
+  같은 날 E1 대조군 (우리 화학 · 자기 모델 합성 곡선): 깊은 방전 끝을 자른 창에서 LAM_NE 만 1 / 11 식별 — 규칙대로. 우리 DFN 곡선에서는 창보다 모델 불일치가 판정을 지배했다.
 - [[pvs-sev-lli-lampe-separability]] — "무엇을 더하면 갈리는가" 의 열린 질문
 - [[assb-sensitivity-sweep-vs-identifiability]] — 99호 절: 같은 편의 '민감도 분석'(축약 오차 OAT)과 관측성 논증
 - [[spm-grouped-parameter-identifiability]] — 102호 행: 측정 D̃ 의 두 곱(D̃·(S/Vm)² ↔ D̃/L²)과 방법별 τ

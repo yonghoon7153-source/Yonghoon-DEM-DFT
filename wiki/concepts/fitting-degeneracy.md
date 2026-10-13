@@ -5,7 +5,7 @@ created: 2026-08-11
 updated: 2026-10-13
 type: concept
 tags: [battery, degradation, research]
-sources: [raw/papers/asheruddin2025_phantom-lam-lli-ir-hysteresis-dma.md, raw/repositories/degradation-degeneracy-audit.md, raw/papers/lin2024_ocv-degradation-mode-identifiability.md, raw/papers/schaeffer2024_nullspace-regularization-interpretation.md, raw/papers/navidi2024_piml-degradation-diagnostics-comparison.md, raw/papers/marongiu2016_lfp-onboard-capacity-halfcell.md, raw/papers/vadhva2021_eis-for-assb-theory-methods.md, raw/papers/yu2024_drt-time-resolved-aging-sulfide-assb-fullcell.md, raw/papers/kouhestani2022_phm-solid-state-batteries-perspective.md, raw/papers/zheng2026_assb-grid-realistic-appraisal.md, raw/papers/oh2025_maxwell-protocol-nondestructive-assb-health.md, raw/papers/li2026_half-cell-fitting-multiobjective-benchmark.md, raw/articles/2026-10-13-github-research-briefing.md]
+sources: [raw/papers/asheruddin2025_phantom-lam-lli-ir-hysteresis-dma.md, raw/repositories/degradation-degeneracy-audit.md, raw/papers/lin2024_ocv-degradation-mode-identifiability.md, raw/papers/schaeffer2024_nullspace-regularization-interpretation.md, raw/papers/navidi2024_piml-degradation-diagnostics-comparison.md, raw/papers/marongiu2016_lfp-onboard-capacity-halfcell.md, raw/papers/vadhva2021_eis-for-assb-theory-methods.md, raw/papers/yu2024_drt-time-resolved-aging-sulfide-assb-fullcell.md, raw/papers/kouhestani2022_phm-solid-state-batteries-perspective.md, raw/papers/zheng2026_assb-grid-realistic-appraisal.md, raw/papers/oh2025_maxwell-protocol-nondestructive-assb-health.md, raw/papers/li2026_half-cell-fitting-multiobjective-benchmark.md, raw/articles/2026-10-13-github-research-briefing.md, raw/repositories/2026-10-13-ocvfit-on-synthetic-truth.md]
 confidence: high
 explored: false
 verificationStatus: unverified
@@ -390,4 +390,6 @@ high-fidelity, cell-level models of chemo-mechanical stress evolution. These mod
 - [[pyprobe]] — 같은 electrode balancing 피팅을 구현한 외부 도구. **2026-10-01 실측**: 우리 합성 truth 에서 범위 자르기 → RMSE 하강 + 답 1–2 %p 이동 (flat valley) · 초기값 → RMSE 2–4 배 먼 골 (multimodal) · dVdQ target 불안정 — 두 구분이 한 도구에서 함께 보인다
 - [[ocvfit]] — 같은 계열 (반쪽전지 OCP 로 전지 OCV · `n_li` · `Q_pe` · `Q_ne`). 2026-10-13 1차 대조 (실행 0): 식별 판정을 출력에 둔다 — 잔차 상관 보정 프로파일 구간 +
   기준 곡선 섭동 예산 → 반폭 > 1 %p 면 '구간만'. 위 'LFP 평탄부' 절의 현상을 '식별 불가' 로 막는 설계지만, 모드마다 따로 구간을 내므로 축퇴 방향 (두 모드의 공분산) 은 보여 주지 않는다 · watch.
+  **2026-10-13 E1 실측** (우리 DFN 0.05 C truth 72 평가 + 자기 모델 합성 대조군): 우리 곡선에서는 '식별 가능' 0 / 216 (잔차 상관 ≈ 0.96 → 구간 수십 배 · 위험 판정 0) ·
+  위쪽을 자른 창에서 점 추정이 최대 16 %p 틀렸지만 같은 창의 자기 모델 곡선은 0.3 %p 안 — 축퇴가 '창 × 모델 불일치' 의 결합으로 드러난 사례이고, 이진 판정은 맞는 창과 틀린 창을 가르지 못했다.
 - [[ampworks]] — 같은 계열 (창 4 + iR · 전압 / dQdV / dVdQ MAPE). 2026-10-05 실측: 틀린 답은 국소 최소 (목적함수 2.8–4.9 배) 라 축퇴 표본은 아니지만, 불확도는 Hessian **대각만** 쓰고 그 Hessian 이 적합 32 중 28 에서 양정치가 아니다 — 이 페이지의 축퇴 방향을 보여 줄 수 없고, 틀린 적합에서 참 오차를 덮지 못했다 · watch.

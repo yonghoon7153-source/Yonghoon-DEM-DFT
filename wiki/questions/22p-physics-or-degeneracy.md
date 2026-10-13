@@ -5,7 +5,7 @@ created: 2026-08-11
 updated: 2026-10-13
 type: research-question
 tags: [battery, degradation, research]
-sources: [raw/papers/asheruddin2025_phantom-lam-lli-ir-hysteresis-dma.md, raw/repositories/degradation-degeneracy-audit.md, raw/papers/schmitt2022_sic-ocp-shape-change-degradation-modes.md, raw/papers/2026-09-21-siwon-kim-si-gr-ica-lam-si-gitt-ocp.md, raw/papers/birkl2017_degradation-diagnostics-ocv.md, raw/papers/rhyu2025_systematic-feature-design-formation.md, raw/papers/lin2024_ocv-degradation-mode-identifiability.md, raw/papers/schaeffer2024_nullspace-regularization-interpretation.md, raw/papers/cui2024_electrode-utilization-formation-cycle-life.md, raw/papers/navidi2024_piml-degradation-diagnostics-comparison.md, raw/papers/marongiu2016_lfp-onboard-capacity-halfcell.md, raw/papers/mohtat2019_electrode-soh-estimability-expansion.md, raw/papers/natterer2026_re-halfcell-anode-potential-aging.md, raw/papers/bizeray2019_spm-identifiability-parameter-estimation.md, raw/papers/sun2025_dl-eis-degradation-mode-diagnostics.md, raw/papers/oney2025_dead-slow-overworked-graphite-operando-microxrd.md, raw/papers/li2026_half-cell-fitting-multiobjective-benchmark.md, raw/articles/2026-10-13-github-research-briefing.md]
+sources: [raw/papers/asheruddin2025_phantom-lam-lli-ir-hysteresis-dma.md, raw/repositories/degradation-degeneracy-audit.md, raw/papers/schmitt2022_sic-ocp-shape-change-degradation-modes.md, raw/papers/2026-09-21-siwon-kim-si-gr-ica-lam-si-gitt-ocp.md, raw/papers/birkl2017_degradation-diagnostics-ocv.md, raw/papers/rhyu2025_systematic-feature-design-formation.md, raw/papers/lin2024_ocv-degradation-mode-identifiability.md, raw/papers/schaeffer2024_nullspace-regularization-interpretation.md, raw/papers/cui2024_electrode-utilization-formation-cycle-life.md, raw/papers/navidi2024_piml-degradation-diagnostics-comparison.md, raw/papers/marongiu2016_lfp-onboard-capacity-halfcell.md, raw/papers/mohtat2019_electrode-soh-estimability-expansion.md, raw/papers/natterer2026_re-halfcell-anode-potential-aging.md, raw/papers/bizeray2019_spm-identifiability-parameter-estimation.md, raw/papers/sun2025_dl-eis-degradation-mode-diagnostics.md, raw/papers/oney2025_dead-slow-overworked-graphite-operando-microxrd.md, raw/papers/li2026_half-cell-fitting-multiobjective-benchmark.md, raw/articles/2026-10-13-github-research-briefing.md, raw/repositories/2026-10-13-ocvfit-on-synthetic-truth.md]
 confidence: medium
 explored: false
 verificationStatus: unverified
@@ -1169,6 +1169,12 @@ LAM_PE ≈ LAM_NE 는 물리가 아니라 **flat valley 방향에서 두 전극�
   **모드마다 따로 구간을 내므로 격차 (PE − NE) 의 구간 · 축퇴 방향이 직접 나오지 않는다**는 것 — 우리 truth 로 재는 E1 은 미착수 (사용자 승인 대상).
   ② [[pybamm]] 26.10.0.0 = #5813 이 든 첫 릴리스 (2026-10-03 실측의 열린 물음) · 다상 총 표면적비 수정 #5805 는 `"surface form": "false"` 인 우리 DFN 에 안 쓰이는 경로
   (소스 정적 판단 · 실측 아님) — 버전 판단 · 정본 수치 불변. 원문 · 대조: `raw/articles/2026-10-13-github-research-briefing.md`.
+- **[2026-10-13 (2)] ocvfit E1 실측 (사용자 "할만하면 해보고" · 버리는 venv) — Evidence 에는 넣지 않음 (도구 판정의 성질), 카드에 닿는 관측 셋.** `active` 유지.
+  [[ocvfit]] 을 우리 DFN 0.05 C truth (72 평가) 와 같은 화학의 자기 모델 합성 곡선 (대조군) 에 걸었다 (`raw/repositories/2026-10-13-ocvfit-on-synthetic-truth.md`).
+  ① 위쪽을 자른 창 (V ≤ 3.95 V) 에서 점 추정이 최대 16 %p · 격차는 최대 25 %p 틀렸고, 같은 창의 자기 모델 곡선은 0.3 %p 안이었다 — **격차 오류가 창 단독이 아니라
+  창 × 모델 불일치 (SOC 의존 과전압) 의 결합에서 나온 사례**. ② 두 모드 구간을 독립으로 묶은 격차 구간은 25–40 %p 폭 — 격차의 판정 도구가 못 된다 (카드의 '두 모드의 차' 문제 그대로).
+  ③ 균일 PE +10 mV 는 ocvfit 의 적합 상수 오프셋이 정확히 흡수했다 — 우리 정본 (§7.10) 의 5–10 mV 파탄이 오프셋 없는 4 매개 목적함수의 성질인지는 [[pocv-nonequilibrium-mode-bias]]
+  P5 와 같은 축의 열린 물음 (우리 파이프라인에서 미측정 · 수치 정본은 `docs/09_22P_GAP.md`).
 
 ### 이 카드가 속한 논지 (2026-09-03)
 

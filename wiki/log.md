@@ -3590,3 +3590,14 @@ to the C-rate" 인데 Fig. 15(a) `[도표]` SOH 79.4 % 에서 C/3 ≈18 % vs C/2
 - 경로 밖으로 판정 (페이지 없음): #5888 (Ai2020 — 우리는 `Chen2020`) · #5875 (열화 발열 — 우리는 등온 · ISC 카드에 열 기준선 후보로만) · impedance.py (PyPI 미반영 · 브리핑 주장)
 - 기록 공백 하나: 2026-10-07 브리핑 raw 는 그날 커밋됐지만 (`3a7d6806` · sha 정정 `fe72f9b8`) log 항목 · 카드 라우팅이 없었다 — 이번 항목과 ISC 카드 줄로 메웠다 (소급 날짜 항목은 만들지 않음)
 - 하지 않은 것: PyBaMM 26.10 설치 · 우리 truth 재측정 · ocvfit · 추정기 실행 · requirements 변경 (RUN_SCOPE) — 전부 별도 승인
+
+## [2026-10-13] ingest | ocvfit E1 실측 — 우리 DFN truth 72 평가 + 자기 모델 합성 대조군 36 (버리는 venv · RUN_SCOPE 0)
+- 사용자 지시: "ocvfit 실험 E1 뭔가 할만하면 해보고" (entity 의 제안 실험 E1 승인으로 읽음 · 쉬는 시간 중 진행)
+- raw: `raw/repositories/2026-10-13-ocvfit-on-synthetic-truth.md` (조건 · 탐침 · 실행 로그 · 요약 · 스크립트 6 원문) + 결과 JSON 둘 (`.results.json` · `.ctrl.results.json` · 바이트 그대로)
+- 입력 재현: 반쪽전지 OCP npz 를 `git archive f27006370` 으로 다시 만들어 2026-10-05 ampworks 실험의 npz 와 **sha256 동일** (`9f606a6f…`) · 곡선 parquet sha 대조
+- 결과 요지: 우리 곡선에서 '식별 가능' 0 / 216 (잔차 상관 ≈ 0.96 · 위험 판정 0) ↔ 대조군은 창 규칙대로 판정 (깊은 방전 끝 자른 창의 LAM_NE 1 / 11 등) — 판정은 정보량보다 모델 불일치를 본다 ·
+  위쪽 자른 창에서 점 추정 최대 16 %p · 격차 25 %p 오차 (대조군은 0.3 %p 안 → 창 × 불일치 결합) · 균일 PE +10 mV 는 상수 R 이 정확히 흡수 (V ≥ 3.50 V 창에서 차이 0)
+- 갱신: [[ocvfit]] (실측 절 · 판정 = watch · 채택 안 함 · 남은 제안 E2) · [[22p-physics-or-degeneracy]] Status Log (Evidence 아님 · 관측 셋) · [[fitting-degeneracy]] · [[data-window-identifiability]] ·
+  [[pocv-nonequilibrium-mode-bias]] (P5 재료 — 우리 4 매개 목적함수에 오프셋 없음 `src/fitting.py:48` · 가설로만) · index ocvfit 줄
+- 격리: ocvfit · 대조 스크립트는 스크래치패드의 버리는 venv (pybamm 26.8.0.0 · pybammsolvers 0.9.1 · casadi 3.7.2 는 기준 곡선 재생성용) · 운영 환경 · 저장소 산출물 · 등록부 쓰기 0
+- 하지 않은 것: 우리 파이프라인에 상수 오프셋을 넣어 재는 일 (RUN_SCOPE · 게이트) · E2 · upstream 알림 (발견한 결함 없음 — 대조군 합성 실패 3 은 우리 설계의 `v_full` 고정 탓)
