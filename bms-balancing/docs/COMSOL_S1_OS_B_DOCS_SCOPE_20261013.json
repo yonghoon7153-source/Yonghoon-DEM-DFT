@@ -1,0 +1,318 @@
+{
+ "schema": "comsol-s1-os-b-docs-scope-v1",
+ "basis": "OS B v2 비활성 초안 §3 의 범주 1–7 (검토 회신 2026-10-13 · 원장 §92) — 실제 후보가 쓸 의존 문서만",
+ "route": "(b) 이 저장소 (클라우드 세션) 가 받아 사본 묶음으로 전달 · 실행 PC 네트워크 0",
+ "body_definition": "HTTP 응답 본문 — 전송 압축 (Content-Encoding) 을 푼 바이트 그대로 저장 (curl --compressed). 원 전송 바이트는 저장하지 않는다",
+ "per_item_record": [
+  "id",
+  "category",
+  "url_original",
+  "url_final",
+  "fetched_utc",
+  "http_status",
+  "content_type",
+  "content_encoding",
+  "body_bytes",
+  "body_sha256",
+  "title",
+  "updated_marker (ms.date 등)",
+  "sections (h2/h3)",
+  "expected_title_found"
+ ],
+ "reject_rule": "HTTP 200 이 아니거나 <title> 에 기대 이름이 없으면 (오류 · 로그인 화면) 채택하지 않고 묶음을 만들지 않는다",
+ "not_included": {
+  "microsoft/hcsshim class28 소스": "검토 회신 — Learn 묶음에 자동 추가하지 않음 · class28 채택 안 함",
+  "Python time.monotonic 문서": "Microsoft 문서 아님 — 실행기 wrapper 의 시계 연결은 실행 측 근거로 적거나 OPEN",
+  "COMSOL 6.3 도움말": "실행 PC 에 이미 로컬로 있음 (v2 §2) — 묶음 대상 아님"
+ },
+ "items": [
+  {
+   "id": "D01",
+   "category": 1,
+   "category_name": "RSS",
+   "url": "https://learn.microsoft.com/en-us/windows/win32/api/psapi/nf-psapi-getprocessmemoryinfo",
+   "expect_title": "GetProcessMemoryInfo",
+   "purpose": "구성원 RSS (WorkingSetSize) · 필요 권한"
+  },
+  {
+   "id": "D02",
+   "category": 1,
+   "category_name": "RSS",
+   "url": "https://learn.microsoft.com/en-us/windows/win32/api/psapi/ns-psapi-process_memory_counters_ex",
+   "expect_title": "PROCESS_MEMORY_COUNTERS_EX",
+   "purpose": "WorkingSetSize · PrivateUsage 필드 · 구조체 길이"
+  },
+  {
+   "id": "D03",
+   "category": 1,
+   "category_name": "RSS",
+   "url": "https://learn.microsoft.com/en-us/windows/win32/procthread/process-security-and-access-rights",
+   "expect_title": "Process Security and Access Rights",
+   "purpose": "PROCESS_QUERY_(LIMITED_)INFORMATION · PROCESS_VM_READ 등 권한"
+  },
+  {
+   "id": "D04",
+   "category": 2,
+   "category_name": "host commit / RAM",
+   "url": "https://learn.microsoft.com/en-us/windows/win32/api/psapi/nf-psapi-getperformanceinfo",
+   "expect_title": "GetPerformanceInfo",
+   "purpose": "host commit 조회"
+  },
+  {
+   "id": "D05",
+   "category": 2,
+   "category_name": "host commit / RAM",
+   "url": "https://learn.microsoft.com/en-us/windows/win32/api/psapi/ns-psapi-performance_information",
+   "expect_title": "PERFORMANCE_INFORMATION",
+   "purpose": "CommitTotal · CommitLimit · PhysicalAvailable · PageSize 단위"
+  },
+  {
+   "id": "D06",
+   "category": 2,
+   "category_name": "host commit / RAM",
+   "url": "https://learn.microsoft.com/en-us/windows/win32/api/sysinfoapi/nf-sysinfoapi-globalmemorystatusex",
+   "expect_title": "GlobalMemoryStatusEx",
+   "purpose": "기존 host RAM 경로 (legacy) — 재사용 시"
+  },
+  {
+   "id": "D07",
+   "category": 2,
+   "category_name": "host commit / RAM",
+   "url": "https://learn.microsoft.com/en-us/windows/win32/api/sysinfoapi/ns-sysinfoapi-memorystatusex",
+   "expect_title": "MEMORYSTATUSEX",
+   "purpose": "ullAvailPhys · ullTotalPageFile 등 의미 · dwLength"
+  },
+  {
+   "id": "D08",
+   "category": 3,
+   "category_name": "Job",
+   "url": "https://learn.microsoft.com/en-us/windows/win32/api/jobapi2/nf-jobapi2-queryinformationjobobject",
+   "expect_title": "QueryInformationJobObject",
+   "purpose": "information class 표 (현재 commit class 확인) · NULL Job 의미"
+  },
+  {
+   "id": "D09",
+   "category": 3,
+   "category_name": "Job",
+   "url": "https://learn.microsoft.com/en-us/windows/win32/api/jobapi2/nf-jobapi2-setinformationjobobject",
+   "expect_title": "SetInformationJobObject",
+   "purpose": "상한 설정 · 오류"
+  },
+  {
+   "id": "D10",
+   "category": 3,
+   "category_name": "Job",
+   "url": "https://learn.microsoft.com/en-us/windows/win32/api/winnt/ns-winnt-jobobject_basic_limit_information",
+   "expect_title": "JOBOBJECT_BASIC_LIMIT_INFORMATION",
+   "purpose": "LimitFlags (KILL_ON_JOB_CLOSE · BREAKAWAY_OK 등)"
+  },
+  {
+   "id": "D11",
+   "category": 3,
+   "category_name": "Job",
+   "url": "https://learn.microsoft.com/en-us/windows/win32/api/winnt/ns-winnt-jobobject_extended_limit_information",
+   "expect_title": "JOBOBJECT_EXTENDED_LIMIT_INFORMATION",
+   "purpose": "JobMemoryLimit · PeakJobMemoryUsed (peak) · ProcessMemoryLimit"
+  },
+  {
+   "id": "D12",
+   "category": 3,
+   "category_name": "Job",
+   "url": "https://learn.microsoft.com/en-us/windows/win32/api/winnt/ns-winnt-jobobject_basic_process_id_list",
+   "expect_title": "JOBOBJECT_BASIC_PROCESS_ID_LIST",
+   "purpose": "구성원 PID 목록 · 용량 · 반환 수"
+  },
+  {
+   "id": "D13",
+   "category": 3,
+   "category_name": "Job",
+   "url": "https://learn.microsoft.com/en-us/windows/win32/api/winnt/ns-winnt-jobobject_limit_violation_information_2",
+   "expect_title": "JOBOBJECT_LIMIT_VIOLATION_INFORMATION_2",
+   "purpose": "JobMemory (notification 시점 값 — 현재값 아님)"
+  },
+  {
+   "id": "D14",
+   "category": 3,
+   "category_name": "Job",
+   "url": "https://learn.microsoft.com/en-us/windows/win32/api/jobapi2/nf-jobapi2-createjobobjectw",
+   "expect_title": "CreateJobObjectW",
+   "purpose": "소유 Job 생성 · 이름 Job 재사용 위험"
+  },
+  {
+   "id": "D15",
+   "category": 3,
+   "category_name": "Job",
+   "url": "https://learn.microsoft.com/en-us/windows/win32/api/jobapi2/nf-jobapi2-assignprocesstojobobject",
+   "expect_title": "AssignProcessToJobObject",
+   "purpose": "할당 순서 · 할당 전 메모리 · nested 제약"
+  },
+  {
+   "id": "D16",
+   "category": 3,
+   "category_name": "Job",
+   "url": "https://learn.microsoft.com/en-us/windows/win32/api/jobapi/nf-jobapi-isprocessinjob",
+   "expect_title": "IsProcessInJob",
+   "purpose": "NULL Job 인수 의미 (소유 증거 아님)"
+  },
+  {
+   "id": "D17",
+   "category": 3,
+   "category_name": "Job",
+   "url": "https://learn.microsoft.com/en-us/windows/win32/procthread/job-object-security-and-access-rights",
+   "expect_title": "Job Object Security and Access Rights",
+   "purpose": "JOB_OBJECT_QUERY · SET_ATTRIBUTES · TERMINATE · ASSIGN_PROCESS"
+  },
+  {
+   "id": "D18",
+   "category": 3,
+   "category_name": "Job",
+   "url": "https://learn.microsoft.com/en-us/windows/win32/procthread/job-objects",
+   "expect_title": "Job Objects",
+   "purpose": "Job 수명 · breakaway · 개요"
+  },
+  {
+   "id": "D19",
+   "category": 3,
+   "category_name": "Job",
+   "url": "https://learn.microsoft.com/en-us/windows/win32/procthread/nested-jobs",
+   "expect_title": "Nested Jobs",
+   "purpose": "nested Job 제약 · 상한 상속"
+  },
+  {
+   "id": "D20",
+   "category": 4,
+   "category_name": "process / handle / ABI",
+   "url": "https://learn.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-createprocessw",
+   "expect_title": "CreateProcessW",
+   "purpose": "CREATE_SUSPENDED · 생성 순서"
+  },
+  {
+   "id": "D21",
+   "category": 4,
+   "category_name": "process / handle / ABI",
+   "url": "https://learn.microsoft.com/en-us/windows/win32/procthread/process-creation-flags",
+   "expect_title": "Process Creation Flags",
+   "purpose": "CREATE_SUSPENDED · CREATE_BREAKAWAY_FROM_JOB (우회 금지 대상)"
+  },
+  {
+   "id": "D22",
+   "category": 4,
+   "category_name": "process / handle / ABI",
+   "url": "https://learn.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-openprocess",
+   "expect_title": "OpenProcess",
+   "purpose": "retained handle · 권한"
+  },
+  {
+   "id": "D23",
+   "category": 4,
+   "category_name": "process / handle / ABI",
+   "url": "https://learn.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-getprocesstimes",
+   "expect_title": "GetProcessTimes",
+   "purpose": "생성 시각 (PID 재사용 구분)"
+  },
+  {
+   "id": "D24",
+   "category": 4,
+   "category_name": "process / handle / ABI",
+   "url": "https://learn.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-resumethread",
+   "expect_title": "ResumeThread",
+   "purpose": "상한 readback · 할당 · 소유 확인 뒤에만"
+  },
+  {
+   "id": "D25",
+   "category": 4,
+   "category_name": "process / handle / ABI",
+   "url": "https://learn.microsoft.com/en-us/windows/win32/api/synchapi/nf-synchapi-waitforsingleobject",
+   "expect_title": "WaitForSingleObject",
+   "purpose": "root signaled 확인"
+  },
+  {
+   "id": "D26",
+   "category": 4,
+   "category_name": "process / handle / ABI",
+   "url": "https://learn.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-getexitcodeprocess",
+   "expect_title": "GetExitCodeProcess",
+   "purpose": "exit query (STILL_ACTIVE 주의)"
+  },
+  {
+   "id": "D27",
+   "category": 4,
+   "category_name": "process / handle / ABI",
+   "url": "https://learn.microsoft.com/en-us/windows/win32/api/handleapi/nf-handleapi-closehandle",
+   "expect_title": "CloseHandle",
+   "purpose": "handle 수명 · kill-on-close 연결"
+  },
+  {
+   "id": "D28",
+   "category": 4,
+   "category_name": "process / handle / ABI",
+   "url": "https://learn.microsoft.com/en-us/windows/win32/api/errhandlingapi/nf-errhandlingapi-getlasterror",
+   "expect_title": "GetLastError",
+   "purpose": "오류 보존"
+  },
+  {
+   "id": "D29",
+   "category": 4,
+   "category_name": "process / handle / ABI",
+   "url": "https://learn.microsoft.com/en-us/windows/win32/winprog/windows-data-types",
+   "expect_title": "Windows Data Types",
+   "purpose": "ABI 폭 (DWORD · SIZE_T · ULONG_PTR · HANDLE)"
+  },
+  {
+   "id": "D30",
+   "category": 5,
+   "category_name": "시계",
+   "url": "https://learn.microsoft.com/en-us/windows/win32/api/profileapi/nf-profileapi-queryperformancecounter",
+   "expect_title": "QueryPerformanceCounter",
+   "purpose": "단조 시계"
+  },
+  {
+   "id": "D31",
+   "category": 5,
+   "category_name": "시계",
+   "url": "https://learn.microsoft.com/en-us/windows/win32/api/profileapi/nf-profileapi-queryperformancefrequency",
+   "expect_title": "QueryPerformanceFrequency",
+   "purpose": "시계 주파수 · 단위"
+  },
+  {
+   "id": "D32",
+   "category": 5,
+   "category_name": "시계",
+   "url": "https://learn.microsoft.com/en-us/windows/win32/sysinfo/acquiring-high-resolution-time-stamps",
+   "expect_title": "Acquiring high-resolution time stamps",
+   "purpose": "QPC 의미 · 단조성"
+  },
+  {
+   "id": "D33",
+   "category": 6,
+   "category_name": "디스크 / 산출",
+   "url": "https://learn.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-getdiskfreespaceexw",
+   "expect_title": "GetDiskFreeSpaceExW",
+   "purpose": "caller-available · volume-free 의미"
+  },
+  {
+   "id": "D34",
+   "category": 6,
+   "category_name": "디스크 / 산출",
+   "url": "https://learn.microsoft.com/en-us/windows/win32/fileio/reparse-points",
+   "expect_title": "Reparse Points",
+   "purpose": "reparse 확인 근거 (walk 에서 따라가지 않음)"
+  },
+  {
+   "id": "D35",
+   "category": 6,
+   "category_name": "디스크 / 산출",
+   "url": "https://learn.microsoft.com/en-us/windows/win32/fileio/file-attribute-constants",
+   "expect_title": "File Attribute Constants",
+   "purpose": "FILE_ATTRIBUTE_REPARSE_POINT"
+  },
+  {
+   "id": "D36",
+   "category": 7,
+   "category_name": "강제 종료",
+   "url": "https://learn.microsoft.com/en-us/windows/win32/api/jobapi2/nf-jobapi2-terminatejobobject",
+   "expect_title": "TerminateJobObject",
+   "purpose": "강제 종료 (요청 반환 ≠ 실제 종료 확인)"
+  }
+ ]
+}
