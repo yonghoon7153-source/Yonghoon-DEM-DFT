@@ -8,10 +8,10 @@
 
 ## 최근 갱신 상위 20 (frontmatter `updated` 기준 · 전체 318건)
 - 2026-10-13 · `kb/reviews/codex_CW_reply_seminar_lean_deck_aesthetics_2026_10_13.md` — CW 회신 — 10-13 세미나 슬림판 덱 미감: 조건부 GO · P0 = p11 표가 없는 대응을 암시 · p12 문헌 그림과 우리 설계 구분 · p13 문헌 그림 역할 표시 · P1 = 그림 확대 · 글 덜기 · 규율 문장 반복 · 흐린 화살표 · 수령 2026-10-13 (사용자 붙여넣기 · 원문 보존 · 표는 붙…
+- 2026-10-13 · `kb/seminars/Research_Seminar_2026_10_13_cascade_script_ko.md` — 연구세미나 2026-10-13 — cascade 진행 브리핑 발표 대본 (장별) · 진행
 - 2026-10-12 · `kb/reviews/INDEX.md` — 리뷰 사슬 색인 — 프롬프트↔회신 (자동 생성) · 자동생성
 - 2026-10-12 · `kb/reviews/codex_CW_prompt_seminar_lean_deck_aesthetics_2026_10_12.md` — CW 프롬프트 — 10-13 연구실 세미나 cascade 슬림판 덱 19장 미감 리뷰: 글 밀도 · AI 티 · 08-18 덱 문법 일관성 · 문헌 그림 · 확인 요청 여덟 · 발송 2026-10-13 · ✅ 회신 수령 2026-10-13 → `…
 - 2026-10-12 · `kb/seminars/Research_Seminar_2026_10_13_cascade_defense_ko.md` — 연구세미나 2026-10-13 — cascade 진행 브리핑 디펜스 (예상 질문 · 개념 설명 · 숫자 카드) · 진행
-- 2026-10-12 · `kb/seminars/Research_Seminar_2026_10_13_cascade_script_ko.md` — 연구세미나 2026-10-13 — cascade 진행 브리핑 발표 대본 (장별) · 진행
 - 2026-10-12 · `kb/seminars/Research_Seminar_2026_10_13_cascade_storyline_ko.md` — 연구세미나 2026-10-13 — cascade 진행 브리핑 스토리라인 (대본 준비용) · 진행
 - 2026-10-12 · `kb/seminars/cascade_briefing_2026_10_direction.md` — cascade 진행 브리핑 (2026-10) — 08-18 덱 판정 · 13장 구성 · 현재 상황 · 방향 · 참고문헌 · 진행
 - 2026-10-12 · `kb/seminars/cascade_db_reading_2026_10_12.md` — cascade 원장 정독 — 단계별 커버리지 · 9월 재건 · 세미나 덱 정정 (2026-10-12) · 진행
@@ -545,7 +545,7 @@
 - `kb/seminars/Research_Seminar_2026_08_cascade_final_source_ledger.md` — Research Seminar — Slide Source Ledger
 - `kb/seminars/Research_Seminar_2026_08_cascade_final_terminology_symbols.md` — Research Seminar — 용어·기호 규약
 - `kb/seminars/Research_Seminar_2026_10_13_cascade_defense_ko.md` — 연구세미나 2026-10-13 — cascade 진행 브리핑 디펜스 (예상 질문 · 개념 설명 · 숫자 카드)  (2026-10-12 · 진행)
-- `kb/seminars/Research_Seminar_2026_10_13_cascade_script_ko.md` — 연구세미나 2026-10-13 — cascade 진행 브리핑 발표 대본 (장별)  (2026-10-12 · 진행)
+- `kb/seminars/Research_Seminar_2026_10_13_cascade_script_ko.md` — 연구세미나 2026-10-13 — cascade 진행 브리핑 발표 대본 (장별)  (2026-10-13 · 진행)
 - `kb/seminars/Research_Seminar_2026_10_13_cascade_storyline_ko.md` — 연구세미나 2026-10-13 — cascade 진행 브리핑 스토리라인 (대본 준비용)  (2026-10-12 · 진행)
 - `kb/seminars/cascade_briefing_2026_10_direction.md` — cascade 진행 브리핑 (2026-10) — 08-18 덱 판정 · 13장 구성 · 현재 상황 · 방향 · 참고문헌  (2026-10-12 · 진행)
 - `kb/seminars/cascade_content_edit_directive_2026_08_11.md` — Cascade 세미나 내용 편집 지시서 — 기준본 24장 (Codex 편집용)
