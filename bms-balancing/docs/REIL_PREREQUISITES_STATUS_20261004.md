@@ -858,3 +858,37 @@ rc 0 → **옛 봉인 대조 (§2-4) 에서 허용 밖 차이** → 정지. 원�
   과 다르거나 GREEN 에 예상 밖 실패가 나면 원문을 보존하고 멈춘다.
 - **증거 폴더:** `evidence/reil_c4_0a_fix_20261013/` — 착수 때 있으면 중지한다 (2026-10-13T10:2xZ 확인: 없음).
 - 이 승인은 C4-0b · C4-E / A / B · 자료 개봉 · 맞춤 · 설치 · 환경 재구축 · COMSOL 승인이 아니다.
+
+## §44 C4-0a 한정 보완 결과 — RED 선언대로 · 고정 패치 · GREEN 40 통과 (2026-10-13 · 검토 대기 · 덧붙임 — 위 §0–§43 은 그대로)
+
+- **대상 커밋:** `97cad936` (대조 · 패치된 코드 · 증거). 착수 HEAD 는 `33b58cd7` (§43 승인 기록 · 보존 규칙).
+- **시간:** t0 2026-10-13T10:25:55Z · 끝 기록 10:27:38Z = 103.5 s / 7,200 s. 커밋 · push · 문서 작성 **전**에 쓴 기록이다 (`04_end.json`).
+  계산 합 52.484 s / 1,260 s.
+- **단계 (`evidence/reil_c4_0a_fix_20261013/`):**
+
+  | 단계 | 배정 | 실측 | rc | 결과 |
+  |---|---|---|---|---|
+  | 01 identity (C4-0a 와 같은 스크립트 · 인자) | 60 s | 21.893 s | 0 | ok · problems [] |
+  | 02 RED (새 시험 14 · 지금 코드) | 600 s | 12.284 s | 1 | 10 실패 · 4 통과 — §3 선언과 같음 |
+  | 패치 적용 | — | — | — | `git apply` 고정본 `a3f527a4…` · 결과 sha = 기대 (`03_patch_applied.txt`) |
+  | 03 GREEN (기존 26 + 새 14 · `-rP`) | 600 s | 18.307 s | 0 | 40 통과 · stderr 0 B · 자동 수정 · 재시험 0 |
+
+  - RED 실패 종류: `DID NOT RAISE` 1 (n1_a) · `TypeError` seal 2 (n1_b · c) · `COMPLETE` 2 (n2_a · b) · `limit_violations` 없음 1 (n2_d) ·
+    `global_stop None` 1 (n3_a) · `Watch.stale` 없음 1 (n3_c) · partial 없음 2 (n4_a · b). 통과 4 는 n2_c · n3_b · n4_c · out — 선언 그대로다.
+  - 대조 `tests/test_reil_c4_0a_fix.py` 는 `docs/` 고정본과 바이트 동일하다 (`b2137e11…`). GREEN 직전 원천 sha 8 개와 끝의 sha 가 같다.
+  - 커밋한 31 파일: 비밀값 검사 0 · blob 31 / 31 일치.
+- **합성 NSGA2 outcome (검토 회신 요청 · 이제 파일로 있다):**
+  - `02_red.nsga2_synthetic_outcome.json` · `03_green.nsga2_synthetic_outcome.json` — 둘 다 `returned` · 평가 5,000 / 5,000 · 해 50 ·
+    비유한 0 · 경고 0. 벽시계 밖 필드는 두 파일이 같다.
+  - GREEN 로그의 기존 test_07 출력: `NSGA2_SYNTHETIC_OUTCOME returned 5000` (`-rP`).
+  - 따라서 C4-0a GREEN 의 같은 시험도 같은 분기였을 가능성이 높지만, 그 실행 자체의 원문은 여전히 없다 — 소급 주장하지 않는다.
+- **밝힐 것:**
+  1. 합성 NSGA2 호출은 승인 문서대로 3 회다 (RED `out` 1 · GREEN test_07 1 · GREEN `out` 1).
+  2. RED 명령에는 `-r` 를 붙이지 않았다 (기본 요약 fE). GREEN 은 승인대로 `-rP` 다.
+     그래서 GREEN 로그에 test_08 의 argparse 오류 문구 (`--seal, --seal-manifest-sha256` 필요) 가 보이는데, 그 시험이 기대하는 SystemExit 의 출력이다.
+  3. 단계 실행기는 C4-0a 의 것에서 증거 경로 · scratch 폴더 · env 두 개 (`REIL_C4_FIX_EVIDENCE` · `REIL_C4_FIX_STEP`) 만 다르다
+     (승인 §4 · `00_step_runner.py`). 두 env 는 각 meta 의 `env_set` 에도 적혔다.
+  4. identity 는 컨테이너 재시작 뒤 21.9 s 였다. 원인을 추정하지 않는다.
+- **넣지 않은 것:** 건조 재실행 · 배열 재봉인 · full C6 check · 전체 suite · 환경 재구축 · C4-0b · C4-E / A / B · 자료 · 맞춤 · 설치 · COMSOL.
+- **다음:** 재검토 요청 (`docs/REIL_C4_0A_FIX_RESULT_REVIEW_SEND_20261013.md`). C4-0a 종결은 재검토 판정 뒤다.
+  C4-0b 는 그 뒤 사용자 확인 (배열 3 종 목록 · 배정 포함 — §42) 으로 시작한다.
