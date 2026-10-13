@@ -626,7 +626,26 @@ def build_lean():
                              'Li transport [[b:separately.]]', 5.83, sz=1350))
     save(t, name)
 
-    # ---- 4 failure modes: orig slide 3, unchanged
+    # ---- 4 failure modes: orig slide 3, wording fixed with the user 10-13. A failure mode is not 'improved' (the old
+    #      bullet said so) and the second bullet repeated 'coupled'; the figure is Kang et al. 2026 Fig. 16 (our group's
+    #      review) and shows cell-level modes (CAM cracking, anode volume change), so the title names the batteries. The
+    #      figure's 'decompostion' typo is in the published figure and stays. The first author joins the citation.
+    t = load('slide3.xml')
+    assert set_texts(t, {
+        'Failure modes in sulfide solid electrolytes': 'Failure modes in sulfide-based all-solid-state batteries',
+        'Electrochemical and mechanical degradation are coupled.': 'Electrochemical and mechanical degradation reinforce each other.',
+        'Because these failure modes are coupled, improving one of them can ': 'A dopant that suppresses one mode can ',
+        'degrade another': 'worsen the other',
+        ', and the loss is ': ', and the trade-off ',
+        'not detected ': 'goes undetected ',
+        ',\xa062, 10277 (2026).': '\xa062, 10277 (2026)'}) == 7
+    chem = next(r for r in t.getroot().iter(f'{{{NS["a"]}}}r') if r.findtext('a:t', namespaces=NS) == 'Chem')
+    auth = etree.fromstring(etree.tostring(chem))          # same size and colour, upright
+    auth.find('a:t', NS).text = 'Kang et al., '
+    for k in ('i', 'err'):
+        auth.find('a:rPr', NS).attrib.pop(k, None)
+    chem.addprevious(auth)
+    save(t, 'slide3.xml')
 
     # ---- 5 prior screens (orig slide 7): one bullet + the table, larger (CW P1: n column narrower, 14 pt; the
     #      'earlier screens …' sentence repeated the table, and the related-screens line is on p17)

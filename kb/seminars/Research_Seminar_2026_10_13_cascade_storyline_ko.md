@@ -92,11 +92,16 @@ evidenceScope: multi-source-mixed
 - ⚠ 질문은 질문으로만 — 답 (음이온이 바꾼다 / 안 바꾼다) 은 말하지 않는다 (파일럿 판정 전). 'Al + O' 는 화합물이 가져오는 것이지 '격자에 들어간다' 가 아니다.
 - ➜ "왜 따로 봐야 하는지부터 보겠습니다."
 
-### 4. Introduction — 결합된 실패 모드 (1.5 분)
-**핵심**: 전기화학 열화와 기계 열화가 엮여 있어서, 한 축만 고치면 다른 축이 나빠질 수 있다.
-- Kang et al., Chem. Commun. 2026 그림으로 설명한다 — 양극 산화 분해, 음극 환원, 균열·접촉 손실.
-- ➜ "그래서 여러 축을 한꺼번에 거르는 스크린이 필요한데, 선행 연구는 무엇을 바꿔 가며 걸렀는지 보겠습니다."
-
+### 4. Introduction — 두 열화는 서로를 키운다 (1.5 분)
+**핵심**: 앞 장의 '왜 따로?' 에 답한다 — 전기화학 열화와 기계 열화는 서로를 키우는 고리다 (저희 그룹 리뷰 Kang 2026 Fig. 16) →
+전해질 도핑은 그 한가운데 있어 두 쪽을 동시에 바꾼다 → 한쪽만 보면 다른 쪽 손해를 놓친다 → 그래서 따로 잰다.
+- 화면 (사용자 10-13 · 문구 넷 고침): ■ *Failure modes in sulfide-based all-solid-state batteries* (그림이 셀 단위 — 양극재 균열 · 음극 부피 변화 — 라 'electrolytes' 에서 바꿈) ·
+  *Electrochemical and mechanical degradation reinforce each other.* (리뷰 §4 의 말 · 그림의 위아래 화살표) ·
+  *A dopant that suppresses one mode can worsen the other, and the trade-off goes undetected unless each mode is evaluated separately.* (옛 문장은 '실패 모드를 개선' 이라 뜻이 거꾸로 읽혔고 'coupled' 를 되풀이했다) ·
+  출처 *Kang et al., Chem. Commun. 62, 10277 (2026)*.
+- 가리키는 순서: 왼쪽 빨간 제목 → 오른쪽 파란 제목 → 위아래 화살표 (고리) → 가운데 SE doping → 둘째 bullet.
+- ⚠ 그림 속 'decompostion' 오타는 원 논문 그림 그대로 (고치지 않는다). 우리 값으로 '한쪽 막고 다른 쪽 나빠진 예' 를 들지 않는다.
+- ➜ "그러면 지금까지의 도핑 스크린은 이 축들을 어떻게 다뤘는지, 선행 연구부터 보겠습니다." (5장 표의 mechanical axis 열이 받는다)
 ### 5. Prior work — 선행 스크린이 바꾼 것 (1 분)
 **핵심**: 선행 스크린은 **원소 하나를 자리 하나에** 넣거나 **호스트 없이 화합물만** 걸렀다. 우리는 **전구체 화합물 하나가 양이온·음이온 자리 두 개를 동시에** 채운다.
 - 표를 읽는다:

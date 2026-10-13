@@ -32,8 +32,9 @@ evidenceScope: multi-source-mixed
 > | 슬림판 장 | 내용 | 상태 | 확정 커밋 |
 > |---|---|---|---|
 > | 2 | Background — Earlier DFT studies | ✅ 확정 10-13 | 6e568c4 · e70e1d6 (Li₂S 칸 = li2s/LPSCl 계면상) |
-> | 3 | Overview — 하나씩에서 여럿으로 · 예 하나 (Al₂O₃ / Al₂S₃) | ✅ 확정 10-13 | b464c62 (한 장 PPT + 노트 전달) |
-> | 1 · 4–19 | 나머지 | ⏳ 그 장을 볼 때 확정 | — |
+> | 3 | Overview — 하나씩에서 여럿으로 · 예 하나 (Al₂O₃ / Al₂S₃) | ✅ 확정 10-13 | b464c62 · fa4a120 · 9b4f498 (화살표 줄 → 다음 장 다리 · 'we must check') · 한 장 PPT + 노트 |
+> | 4 | Introduction — 두 열화는 서로를 키운다 (Kang 2026 Fig. 16) | ✍ 수정안 10-13 (사용자 확인 중) | 문구 넷 · 출처 줄 |
+> | 1 · 5–19 | 나머지 | ⏳ 그 장을 볼 때 확정 | — |
 
 ---
 
@@ -103,16 +104,32 @@ evidenceScope: multi-source-mixed
   (⚠ 질문은 질문으로만 — 음이온이 Li 이동을 바꾼다 / 안 바꾼다는 말하지 않는다 · 파일럿 판정 전. 진행 숫자 (12/40) 는 이 장에서 말하지 않는다 — 13장에서.
   'Al + O' 는 화합물이 **가져오는 것**이다 — '격자에 들어간다' 고 말하지 않는다 (모델의 가정 · 디펜스 S3).)
 
-## 4. 왜 여러 축인가 ⏱ 6:00
-왜 여러 축을 한꺼번에 봐야 하는지부터 말씀드리겠습니다. **[가리킴: 그림]**
-- 황화물 고체전해질의 열화는 전기화학 쪽과 기계 쪽이 서로 엮여 있습니다.
-  - 양극 쪽에서는 산화 분해와 접촉 손실이,
-  - 음극 쪽에서는 환원 분해와 덴드라이트가 함께 일어납니다.
-- 그래서 한 축을 개선하면 다른 축이 나빠질 수 있습니다. **각 축을 따로 재지 않으면 그 손실이 보이지 않습니다.**
+## 4. 왜 따로 재나 — 두 열화는 서로를 키운다 ⏱ 6:00
+> 화면 (사용자 10-13 · 사용자 덱 5쪽): ■ *Failure modes in sulfide-based all-solid-state batteries* · bullet 둘
+> (*Electrochemical and mechanical degradation reinforce each other.* · *A dopant that suppresses one mode can worsen the other, and the trade-off goes undetected unless each mode is evaluated separately.*) ·
+> 그림 = Kang 등 2026 Chem. Commun. **Fig. 16** (저희 그룹 리뷰 · litdb `kang2026_intertwined_…` fig_16 과 대조) · 출처 줄 *Kang et al., Chem. Commun. 62, 10277 (2026)*.
+> 앞 장 마지막 줄 (*'…반드시 따로따로 봐야 합니다. 왜 따로 봐야 하는지부터 보겠습니다.'*) 에 이 장이 답한다.
+> ⚠ 그림 속 'SE reductive decompostion' 오타는 **원 논문 그림 그대로**다 — 실린 그림이라 고치지 않는다.
 
-이 그림은 Kang 등의 2026년 Chem. Commun. 리뷰에서 가져왔습니다.
+이 그림은 저희 랩에서 낸 리뷰, Kang 등의 2026년 Chem. Commun. 논문의 요약 그림입니다.
+
+**[가리킴: 왼쪽 빨간 제목]** 왼쪽은 전기화학 열화입니다. 양극 쪽에서는 전해질이 산화되거나 양극재 · 도전재와 만나 분해되고, 음극 쪽에서는 환원 분해와 Li 덴드라이트가 생깁니다.
+
+**[가리킴: 오른쪽 파란 제목]** 오른쪽은 기계적 열화입니다. 만들 때 생긴 공극, 양극재와 전해질 사이의 접촉 손실, 양극재 균열, 그리고 음극의 부피 변화와 덴드라이트 전파가 있습니다.
+
+**[가리킴: 위아래 화살표 → 첫 bullet]** 이 둘은 따로 가지 않습니다. 분해가 생기면 재료가 약해져 깨지고, 깨져서 드러난 새 표면에서 분해가 또 일어납니다. 서로를 키우는 고리입니다.
+
+**[가리킴: 가운데 SE doping]** 그리고 전해질 도핑은 이 그림 한가운데, 두 원이 겹치는 자리에 있습니다. 도펀트 하나가 두 쪽을 동시에 바꾼다는 뜻입니다.
+
+**[가리킴: 둘째 bullet]** 그래서 한쪽을 막으려고 고른 도펀트가 다른 쪽을 나쁘게 만들 수 있고, 이 손해는 둘을 따로 재지 않으면 보이지 않습니다.
+앞 장에서 세 가지를 반드시 따로 봐야 한다고 한 이유가 이것입니다.
+
+그러면 지금까지의 도핑 스크린은 이 축들을 어떻게 다뤘는지, 선행 연구부터 보겠습니다.
 
 **[클릭]**
+
+  (⚠ 고리 설명은 리뷰 §4 문장 그대로다 — *'reaction-induced fragility leads to fracture, and the exposed surfaces accelerate ongoing interfacial degradation'*.
+  '도펀트가 한쪽을 막고 다른 쪽을 나쁘게 한 예' 를 우리 값으로 들지 않는다 — 계 간 Ea · σ 비교는 인용위험 (HZ-cross-system-Ea · HZ-b2o3-md-ea).)
 
 ## 5. 선행 스크린과의 차이 ⏱ 7:00
 그러면 기존 스크리닝은 무엇을 바꿔 가며 걸렀는지 보겠습니다. **[가리킴: 표]**
@@ -314,7 +331,7 @@ MLIP 지표의 기준이 되는 DFT 계산입니다. **[가리킴: 두 곡선]**
 |---|---|---|
 | 2 | ■ 'Earlier DFT studies: the basis of this screening' · bullet 둘 (Top row: bulk materials and their doped or coated forms · Bottom row: SEI components, interfaces, and binders in a battery cell) + 그림 자리 8칸 (제목 + `< 키워드 >`) | 칸마다 한 줄 (대본 2장) · 마무리 '이 경험들이 스크리닝의 단계가 됐다' + 짝 다섯 (EOS → 기준 계산 · BVSE → Li 지형 · MD → 수송 · 대권위 상도표 → 안정창 · 계면 에너지 → 계면 반응성) — 숫자는 0 개 |
 | 3 | ■ 'Choosing a dopant precursor for Li₆PS₅Cl' · bullet 둘 (In the lab, dopants are added as compounds, not as bare elements. · This work screens 91 candidate precursors by simulation before synthesis.) + 점선 박스 'An example' (Al₂O₃ → Al + O · Al₂S₃ → Al + S · Same Al, different partner anion · Does the anion change stability or Li transport?) + 화살표 + 'To answer this question, we must check electrochemical stability, mechanical stability, and Li transport separately.' | 앞 장의 도핑 계산 → 범위를 넓힘 → 넣는 건 화합물 → 예 · 질문 → 세 가지를 따로 (대본 3장) · 아래 줄 = 다음 장으로 가는 다리 · 상자는 예 하나 · 답은 말하지 않는다 · 진행 숫자는 13장에서 |
-| 4 | 원래 장 그대로 | 그대로 |
+| 4 | ■ 'Failure modes in sulfide-based all-solid-state batteries' · bullet 둘 (reinforce each other · A dopant that suppresses one mode can worsen the other, and the trade-off goes undetected unless each mode is evaluated separately.) + Kang 2026 Fig. 16 + 출처 'Kang et al., …' | 앞 장 '왜 따로' 에 답 · 두 열화 → 서로 키우는 고리 → 가운데 SE doping → 따로 재는 이유 (대본 4장) · 그림 오타는 원 논문 그대로 |
 | 5 | bullet 하나 + 원래 표 (14 pt) | 기존 스크린 셋 (대본 5장) · 비슷한 최근 연구 Jung · Park · Muy 는 이름만 (화면 줄은 뺐다 · 17장에 있다) |
 | 6 | 08-18 덱의 족별 표 (family · n · examples — 'role in the design' 열은 뺐다 · 사용자 10-13) + **[문헌] 'Literature example: SiO₂ co-doping'** Jung 2026 Fig. 3d | 족별 역할은 말로: 산화물 = 강한 M–O 결합 · 염화물 = 호스트에 이미 Cl · 황화물 = 호스트와 같은 음이온 (대조) · 플루오르화물 = 가장 강한 결합 · 이동성 위험 · 브로민화물 · 요오드화물 = 더 큰 할라이드 (대조) · 질화물 = 더 높은 음이온 전하 (대조) · 공치환 실험 선례 CuCl · MgF₂ · ZnO · La₂O₃ · Nd₂O₃ · SiO₂ (17장) · 문헌 그림은 '선례' 이지 우리 후보의 검증이 아니다 · As₂S₃ 재실행은 7장 |
 | 7 | bullet: 3,675 완화 · **선별된 693 담금질** + 그림 하나: 표마다 담은 전구체 수 (91 · 90 · 89) | 단계별 방법 (UMA · FIRE · 500 K 50 ps) · 90 · 89 인 이유 · '9월 감사 이후 탐색 자료' (화면 줄은 뺐다 · 15장에 있다) |
