@@ -1,0 +1,162 @@
+{
+ "slug": "zhang2026_polymer_electrolyte_modeling_perspective",
+ "dpi": 300,
+ "generated": "2026-10-13",
+ "sources": [
+  "10._Modeling_Approaches_for_Polymer-Based_Electrolytes_in_Advanced_Batteries_Bridging_Processing_Structure_and_Performance.pdf"
+ ],
+ "method": "수동 크롭 (PyMuPDF clip 렌더 300 dpi) — 그림 = 임베드 래스터 bbox · 표 = 텍스트 표 (제목 ~ Note). SI (Table S1, DOCX) 는 받지 못함.",
+ "figures": [
+  {
+   "key": "fTOC",
+   "kind": "figure",
+   "label": "TOC",
+   "page": 1,
+   "file": "toc.png",
+   "caption": "Abstract/TOC graphic (캡션 없음 — 큐레이터 표기)",
+   "rotated_deg": 0,
+   "bbox": [
+    316.5,
+    241.5,
+    555.8,
+    376.4
+   ],
+   "w": 998,
+   "h": 563,
+   "dpi": 300,
+   "src": "10._Modeling_Approaches_for_Polymer-Based_Electrolytes_in_Advanced_Batteries_Bridging_Processing_Structure_and_Performance.pdf",
+   "viewed": true,
+   "crop_note": "임베드 래스터 bbox 그대로"
+  },
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 4,
+   "file": "fig_1.png",
+   "caption": "Figure 1. Schematic overview of modeling approaches and measurable quantities across scales in polymer-based battery electrolyte systems. Arrows denote information flow among experimental measurements, modeling representations, scale-associated quantities, multiscale complexities, and formulation–processing–structure–property–performance factors.",
+   "rotated_deg": 0,
+   "bbox": [
+    68.8,
+    66.3,
+    538.9,
+    507.8
+   ],
+   "w": 1960,
+   "h": 1840,
+   "dpi": 300,
+   "src": "10._Modeling_Approaches_for_Polymer-Based_Electrolytes_in_Advanced_Batteries_Bridging_Processing_Structure_and_Performance.pdf",
+   "viewed": true,
+   "crop_note": "임베드 래스터 bbox 그대로"
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 5,
+   "file": "fig_2.png",
+   "caption": "Figure 2. Diagnostic framework used in this Perspective to classify modeling studies according to modeling objective, modeling basis, degree of process coupling, and characteristic scale or data level.",
+   "rotated_deg": 0,
+   "bbox": [
+    325.8,
+    330.2,
+    545.9,
+    531.4
+   ],
+   "w": 918,
+   "h": 840,
+   "dpi": 300,
+   "src": "10._Modeling_Approaches_for_Polymer-Based_Electrolytes_in_Advanced_Batteries_Bridging_Processing_Structure_and_Performance.pdf",
+   "viewed": true,
+   "crop_note": "임베드 래스터 bbox 그대로"
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 7,
+   "file": "fig_3.png",
+   "caption": "Figure 3. Distribution of (a) modeling basis and (b) modeling objective and process coupling across scale/data levels in the identified ionogel electrolyte studies, with multilevel studies counted in each applicable category and, in panel b, color and bubble size denoting coupling and study placements, respectively.",
+   "rotated_deg": 0,
+   "bbox": [
+    153.8,
+    66.3,
+    453.9,
+    347.9
+   ],
+   "w": 1252,
+   "h": 1174,
+   "dpi": 300,
+   "src": "10._Modeling_Approaches_for_Polymer-Based_Electrolytes_in_Advanced_Batteries_Bridging_Processing_Structure_and_Performance.pdf",
+   "viewed": true,
+   "crop_note": "임베드 래스터 bbox 그대로"
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 10,
+   "file": "fig_4.png",
+   "caption": "Figure 4. Two strategies for transferring and adapting existing materials–processing–microstructure–performance models to polymer-electrolytecontaining composite electrodes: the hard-carbon electrode calendering model adapted from ref 145 under the terms of the Creative Commons Attribution License and the solid-state battery composite electrode model adapted from ref 154 with permission from Elsevier.",
+   "rotated_deg": 0,
+   "bbox": [
+    108.7,
+    461.2,
+    498.8,
+    708.0
+   ],
+   "w": 1627,
+   "h": 1029,
+   "dpi": 300,
+   "src": "10._Modeling_Approaches_for_Polymer-Based_Electrolytes_in_Advanced_Batteries_Bridging_Processing_Structure_and_Performance.pdf",
+   "viewed": true,
+   "crop_note": "임베드 래스터 bbox 그대로"
+  },
+  {
+   "key": "t1",
+   "kind": "table",
+   "label": "1",
+   "page": 5,
+   "file": "tab_1.png",
+   "caption": "Table 1. Representative Modeling Methods for Polymer-Based Battery Electrolytes and Their Integration in Battery Electrodesa",
+   "rotated_deg": 0,
+   "bbox": [
+    50.5,
+    62.0,
+    557.5,
+    308.0
+   ],
+   "w": 2113,
+   "h": 1026,
+   "dpi": 300,
+   "src": "10._Modeling_Approaches_for_Polymer-Based_Electrolytes_in_Advanced_Batteries_Bridging_Processing_Structure_and_Performance.pdf",
+   "viewed": true,
+   "crop_note": "텍스트 표 — 제목 줄부터 표 아래 Note 까지 + 2 pt"
+  },
+  {
+   "key": "t2",
+   "kind": "table",
+   "label": "2",
+   "page": 8,
+   "file": "tab_2.png",
+   "caption": "Table 2. Representative Polymer-Based Electrolyte Modeling Studies beyond Ionogels Classified Using the Same Frameworka",
+   "rotated_deg": 0,
+   "bbox": [
+    50.5,
+    62.0,
+    557.0,
+    369.0
+   ],
+   "w": 2111,
+   "h": 1280,
+   "dpi": 300,
+   "src": "10._Modeling_Approaches_for_Polymer-Based_Electrolytes_in_Advanced_Batteries_Bridging_Processing_Structure_and_Performance.pdf",
+   "viewed": true,
+   "crop_note": "텍스트 표 — 제목 줄부터 표 아래 Note 까지 + 2 pt"
+  }
+ ],
+ "missing_labels": [
+  "Table S1 (SI DOCX — 미보유)"
+ ],
+ "note_manual": "2026-10-13 큐레이터 크롭 — 7 장 (TOC · Figure 1–4 · Table 1–2) 접촉 시트로 열람. 본문 캡션 목록 = Figure 1–4 · Table 1–2 (6) + TOC 그림 1 = 크롭 7. SI 의 Table S1 (이온겔 모델링 연구 24 편 분류표) 는 업로드에 없다."
+}
