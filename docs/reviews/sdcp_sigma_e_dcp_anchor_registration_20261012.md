@@ -80,3 +80,14 @@ PY
 ```
 
 S1 결과 (세 로그 끝 · 팔 JSON 의 σ_e) 를 받으면 S2 로 σ* 를 정해 S3 명령을 준다 (S3 = 위 표 설정 · 8 팔 × 두 침대).
+
+## 6. 실행 기록 (10-13 밤 · 규칙 변경 없음)
+
+- 작업트리 = kgy `~/dem-anchor1012` (`cf67e8b4f` · 이 브랜치 · 그 뒤 커밋은 문서뿐 — STEP3 · payload · 러너 코드 같음).
+- S1 7.854 (팔 0) = σ_e **7.4443 mS/cm** · cg_info 0 · unconverged False · 잔차 9.97e-9 · 매니페스트 σ_VGCF 7.854 · σ_AM_S 0.0041 · vox 0.15 · bridge 0.48 (등록값 그대로) · 호스트 RSS 최대 20.4 GB.
+  러너 줄 *"킷이 SDCP 기본이 아니다 (kit_SBE) — 계약 봉인을 돌리지 않는다"* = 단일 킷 진단 런의 설계대로 (`scripts/sdcp_gain_vox015_8arm.sh` 의 KITS ≠ 기본 가지).
+- 1저자 10-13 *"kgy 추가로 돌리자"* → S2 · S3 를 kgy 사슬 (`~/anchor_chain_s2s3.sh`) 로 잇는다.  S2 계산 = §3 규칙 그대로 (4.47 을 끼는 두 점의 ln σ_e ↔ ln σ_VGCF 직선 보간 · 유효숫자 3 자리) — 계산 주체만 kgy 로 옮겼다.
+  멈춤 조건 = 팔 JSON 이 셋이 아님 · 매니페스트 σ_VGCF / σ_AM_S 가 등록과 다름 · cg_info ≠ 0 또는 unconverged ≠ False · 4.47 이 세 점 밖 (그때는 §3 의 ÷1.5 / ×1.5 추가를 사람이 정한다) · 6 시간 초과.
+  S3 = §3 표 그대로 (`VOX=0.15 SDCP_SPHERE_D=0.30 PTFE_STAMP=centerline ARMS=8 LEAN=4 SIGMA_AM_S_OVERRIDE=0.0041 SIGMA_SDCP_OVERRIDE=256.6 SIGMA_ION_SE=0.0015 SIGMA_VGCF_OVERRIDE=σ*` · KITS 기본 = kit_SBE kit_DBE).
+  러너가 끝나면 봉인 (`sdcp_gain_verdict.py --seal-only --require-arms 8 --require-digest --require-ionic`) 이 돌고, 통과 (rc 0) 일 때만 사슬이 16 팔 값과 SBE 평균 · DBE/SBE 비 평균 · SD (n−1) 를 찍는다.  J1 · J2 판정은 그 출력으로 따로 한다 (J1 밖이면 §3 의 한 번 보정).
+
