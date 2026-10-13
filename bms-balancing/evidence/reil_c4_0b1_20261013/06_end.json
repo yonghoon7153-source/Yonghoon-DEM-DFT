@@ -1,0 +1,95 @@
+{
+ "approval": "상태 문서 §46 (사용자 'b로 진행') — C4-0b1 = 배열 · 규칙 봉인 + H 핵심 · RED 1 · GREEN 1 · 건조 1",
+ "arrays": {
+  "dir": "reil_c4_arrays_0b1_20261013",
+  "index_sha256": "b0fd41a01684bf84bfccbdad9d3c92f56e3efba652ffb5e5e58328c357db6534",
+  "label_seed_table_sha256": "64c696038141802c45d723d5f57e68a60bc778356368ef8aec09a12f219afb1c",
+  "manifest_sha256": "d122117f4b9dc70988b8636be7f2de91fa8e285dfff7c5340dcebac2e1f24b33",
+  "n_files_incl_manifest": 152,
+  "n_labels": 10466,
+  "n_profile_labels": 10332,
+  "n_simultaneous_labels": 134,
+  "n_skipped_simultaneous": 20,
+  "rules_sha256": "8c1d0632ca3b49dd0d9ecf4774827b4619f2892ebbb72d0a9a8c235aaf594dce"
+ },
+ "auto_fix_or_retest": 0,
+ "compute_sum_s": 45.778,
+ "dryrun": {
+  "h4_endpoint_gated_units": 22,
+  "plan_sha256": "99d956dc65c2a1d6404d37bf094e2073cffb823bdd83bfa8f5f59406c11aa97f",
+  "registered_runs": 9856,
+  "runs_after_p0_gates": 7040,
+  "sample_sha256": "1fd188b490f8e8726fa76c51df964cde71349c6ce5b74e01498a08f5b74944b6",
+  "synthetic_sample_rows": 20,
+  "wave1": 8448,
+  "wave2_rho": 1408
+ },
+ "end_record_utc": "2026-10-13T11:44:57Z",
+ "green": "51 passed (16.61 s) · stderr 0 B (03_green.stdout.log · -rP)",
+ "limits_s": {
+  "arrays": 240,
+  "compute": 1800,
+  "dry": 300,
+  "green": 600,
+  "identity": 60,
+  "red": 600,
+  "work": 14400
+ },
+ "note": "이 기록은 커밋 · push · 문서 작성 전에 썼다 — 그 뒤 작업은 work_elapsed 에 들어 있지 않다",
+ "red": "51 failed · 0 passed — 51 건 모두 골격의 NotImplementedError (scripts/reil_c4_h.py:24 · 02_red.stdout.log) · 다른 실패 종류 0 · stderr 0 B",
+ "static_review_between_red_and_green": "ast parse · symtable 미해결 이름 (거짓 양성 __file__ 1 = 시험 파일) · 모듈 속성 AST 대조 (거짓 양성 <모듈>.__file__ 3) — 대상 코드 실행 0",
+ "steps": {
+  "01_identity": {
+   "elapsed_s": 5.95,
+   "end_utc": "2026-10-13T11:31:35.002Z",
+   "head_end": "d800acafb83a7f7bc49f2a10cb954a7c5ca4d995",
+   "head_start": "d800acafb83a7f7bc49f2a10cb954a7c5ca4d995",
+   "rc": 0,
+   "start_utc": "2026-10-13T11:31:29.052Z",
+   "timed_out": false,
+   "timeout_s": 60.0
+  },
+  "02_red": {
+   "elapsed_s": 3.884,
+   "end_utc": "2026-10-13T11:31:46.576Z",
+   "head_end": "d800acafb83a7f7bc49f2a10cb954a7c5ca4d995",
+   "head_start": "d800acafb83a7f7bc49f2a10cb954a7c5ca4d995",
+   "rc": 1,
+   "start_utc": "2026-10-13T11:31:42.692Z",
+   "timed_out": false,
+   "timeout_s": 600.0
+  },
+  "03_green": {
+   "elapsed_s": 17.304,
+   "end_utc": "2026-10-13T11:43:18.771Z",
+   "head_end": "d800acafb83a7f7bc49f2a10cb954a7c5ca4d995",
+   "head_start": "d800acafb83a7f7bc49f2a10cb954a7c5ca4d995",
+   "rc": 0,
+   "start_utc": "2026-10-13T11:43:01.466Z",
+   "timed_out": false,
+   "timeout_s": 600.0
+  },
+  "04_seal_arrays": {
+   "elapsed_s": 5.597,
+   "end_utc": "2026-10-13T11:43:36.998Z",
+   "head_end": "d800acafb83a7f7bc49f2a10cb954a7c5ca4d995",
+   "head_start": "d800acafb83a7f7bc49f2a10cb954a7c5ca4d995",
+   "rc": 0,
+   "start_utc": "2026-10-13T11:43:31.402Z",
+   "timed_out": false,
+   "timeout_s": 240.0
+  },
+  "05_dryrun": {
+   "elapsed_s": 13.043,
+   "end_utc": "2026-10-13T11:44:02.489Z",
+   "head_end": "d800acafb83a7f7bc49f2a10cb954a7c5ca4d995",
+   "head_start": "d800acafb83a7f7bc49f2a10cb954a7c5ca4d995",
+   "rc": 0,
+   "start_utc": "2026-10-13T11:43:49.446Z",
+   "timed_out": false,
+   "timeout_s": 300.0
+  }
+ },
+ "t0_utc": "2026-10-13T11:15:21Z",
+ "work_elapsed_s_at_record": 1776.9
+}
