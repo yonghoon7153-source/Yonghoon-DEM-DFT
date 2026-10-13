@@ -1,0 +1,299 @@
+{
+ "slug": "begat2004_cohesive_adhesive_balance_afm_colloid_probe",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-10-13",
+ "sources": [
+  "93bb0fa4-36._The_cohesive-adhesive_balances_in_dry_powder_inhaler_formulations_I_direct_quantification_by_atomic_force_microscopy.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 2,
+   "file": "fig_1.png",
+   "caption": "Fig. 1. Schematic representation of the anti-solvent recrystallization step: (A) saturated solution droplet, (B) glass slide, (C) crystalline dish containing the anti-solvent, (D) beaker.",
+   "rotated_deg": 0,
+   "bbox": [
+    288,
+    58,
+    530,
+    284
+   ],
+   "w": 1009,
+   "h": 943,
+   "dpi": 300,
+   "src": "93bb0fa4-36._The_cohesive-adhesive_balances_in_dry_powder_inhaler_formulations_I_direct_quantification_by_atomic_force_microscopy.pdf",
+   "blank": 0.758,
+   "manual_crop": "hand crop (300 dpi render; the figure itself is an embedded 144-ppi JPEG): ink extent of the figure + its caption within one column (2026-10-13)",
+   "viewed": true
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 3,
+   "file": "fig_2.png",
+   "caption": "Fig. 2. Representative SEM images and corresponding simulated morphologies (α) of recrystallized budesonide (A), salbutamol sulfate (B), and α-lactose monohydrate (C).",
+   "rotated_deg": 0,
+   "bbox": [
+    288,
+    56,
+    530,
+    419
+   ],
+   "w": 1009,
+   "h": 1513,
+   "dpi": 300,
+   "src": "93bb0fa4-36._The_cohesive-adhesive_balances_in_dry_powder_inhaler_formulations_I_direct_quantification_by_atomic_force_microscopy.pdf",
+   "blank": 0.386,
+   "manual_crop": "hand crop (300 dpi render; the figure itself is an embedded 144-ppi JPEG): ink extent of the figure + its caption within one column (2026-10-13)",
+   "viewed": true
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 4,
+   "file": "fig_3.png",
+   "caption": "Fig. 3. Representative AFM amplitude images of the surface of recrystallized budesonide (A), salbutamol sulfate (B), and α-lactose monohydrate (C).",
+   "rotated_deg": 0,
+   "bbox": [
+    36,
+    56,
+    280,
+    508
+   ],
+   "w": 1017,
+   "h": 1884,
+   "dpi": 300,
+   "src": "93bb0fa4-36._The_cohesive-adhesive_balances_in_dry_powder_inhaler_formulations_I_direct_quantification_by_atomic_force_microscopy.pdf",
+   "blank": 0.514,
+   "manual_crop": "hand crop (300 dpi render; the figure itself is an embedded 144-ppi JPEG): ink extent of the figure + its caption within one column (2026-10-13)",
+   "viewed": true
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 4,
+   "file": "fig_4.png",
+   "caption": "Fig. 4. Interaction forces between budesonide probes and α-lactose monohydrate, salbutamol sulfate, and budesonide crystal substrates.",
+   "rotated_deg": 0,
+   "bbox": [
+    288,
+    544,
+    530,
+    740
+   ],
+   "w": 1009,
+   "h": 818,
+   "dpi": 300,
+   "src": "93bb0fa4-36._The_cohesive-adhesive_balances_in_dry_powder_inhaler_formulations_I_direct_quantification_by_atomic_force_microscopy.pdf",
+   "blank": 0.866,
+   "manual_crop": "hand crop (300 dpi render; the figure itself is an embedded 144-ppi JPEG): ink extent of the figure + its caption within one column (2026-10-13)",
+   "viewed": true
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 5,
+   "file": "fig_5.png",
+   "caption": "Fig. 5. Interaction forces between salbutamol sulfate probes and α-lactose monohydrate, salbutamol sulfate, and budesonide crystal substrates.",
+   "rotated_deg": 0,
+   "bbox": [
+    36,
+    57,
+    280,
+    262
+   ],
+   "w": 1017,
+   "h": 855,
+   "dpi": 300,
+   "src": "93bb0fa4-36._The_cohesive-adhesive_balances_in_dry_powder_inhaler_formulations_I_direct_quantification_by_atomic_force_microscopy.pdf",
+   "blank": 0.893,
+   "manual_crop": "hand crop (300 dpi render; the figure itself is an embedded 144-ppi JPEG): ink extent of the figure + its caption within one column (2026-10-13)",
+   "viewed": true
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 5,
+   "file": "fig_6.png",
+   "caption": "Fig. 6. Interaction forces between lactose probes and α-lactose monohydrate, salbutamol sulfate, and budesonide crystal substrates.",
+   "rotated_deg": 0,
+   "bbox": [
+    36,
+    544,
+    280,
+    740
+   ],
+   "w": 1017,
+   "h": 818,
+   "dpi": 300,
+   "src": "93bb0fa4-36._The_cohesive-adhesive_balances_in_dry_powder_inhaler_formulations_I_direct_quantification_by_atomic_force_microscopy.pdf",
+   "blank": 0.857,
+   "manual_crop": "hand crop; the extractor merged Fig 6 with the neighbouring Fig 7 and cut the axis label — re-cropped to the left column (2026-10-13)",
+   "viewed": true
+  },
+  {
+   "key": "f7",
+   "kind": "figure",
+   "label": "7",
+   "page": 5,
+   "file": "fig_7.png",
+   "caption": "Fig. 7. Description of a CAB-graph for a theoretical binary system.",
+   "rotated_deg": 0,
+   "bbox": [
+    288,
+    533,
+    532,
+    740
+   ],
+   "w": 1017,
+   "h": 864,
+   "dpi": 300,
+   "src": "93bb0fa4-36._The_cohesive-adhesive_balances_in_dry_powder_inhaler_formulations_I_direct_quantification_by_atomic_force_microscopy.pdf",
+   "blank": 0.434,
+   "manual_crop": "hand crop; missed by the extractor (merged into Fig 6) — right column of p.1595 (2026-10-13)",
+   "viewed": true
+  },
+  {
+   "key": "f8",
+   "kind": "figure",
+   "label": "8",
+   "page": 6,
+   "file": "fig_8.png",
+   "caption": "Fig. 8. Comparison between forces of adhesion and force of adhesion in a binary lactose/budesonide system. [card note: printed regression labels y = 4.5371x / 2.0186x disagree with the plotted points and drawn lines (≈3.9 / ≈2.4) — see card §10-1]",
+   "rotated_deg": 0,
+   "bbox": [
+    36,
+    57,
+    280,
+    261
+   ],
+   "w": 1017,
+   "h": 851,
+   "dpi": 300,
+   "src": "93bb0fa4-36._The_cohesive-adhesive_balances_in_dry_powder_inhaler_formulations_I_direct_quantification_by_atomic_force_microscopy.pdf",
+   "blank": 0.926,
+   "manual_crop": "hand crop (300 dpi render; the figure itself is an embedded 144-ppi JPEG): ink extent of the figure + its caption within one column (2026-10-13)",
+   "viewed": true
+  },
+  {
+   "key": "f9",
+   "kind": "figure",
+   "label": "9",
+   "page": 6,
+   "file": "fig_9.png",
+   "caption": "Fig. 9. Comparison between forces of adhesion and force of adhesion in a binary lactose/salbutamol sulfate system.",
+   "rotated_deg": 0,
+   "bbox": [
+    288,
+    57,
+    530,
+    263
+   ],
+   "w": 1009,
+   "h": 859,
+   "dpi": 300,
+   "src": "93bb0fa4-36._The_cohesive-adhesive_balances_in_dry_powder_inhaler_formulations_I_direct_quantification_by_atomic_force_microscopy.pdf",
+   "blank": 0.926,
+   "manual_crop": "hand crop (300 dpi render; the figure itself is an embedded 144-ppi JPEG): ink extent of the figure + its caption within one column (2026-10-13)",
+   "viewed": true
+  },
+  {
+   "key": "t1",
+   "kind": "table",
+   "label": "1",
+   "page": 4,
+   "file": "tab_1.png",
+   "caption": "Table I. Roughness Properties of Budesonide, Salbutamol Sulfate, and α-Lactose Monohydrate (Rugosity 0.681 / 2.258 / 1.837 nm; RMS 0.872 / 3.142 / 2.284 nm).",
+   "rotated_deg": 0,
+   "bbox": [
+    36,
+    653,
+    280,
+    738
+   ],
+   "w": 1017,
+   "h": 355,
+   "dpi": 300,
+   "src": "93bb0fa4-36._The_cohesive-adhesive_balances_in_dry_powder_inhaler_formulations_I_direct_quantification_by_atomic_force_microscopy.pdf",
+   "blank": 0.862,
+   "manual_crop": "hand crop; table not detected by the extractor (2026-10-13)",
+   "viewed": true
+  },
+  {
+   "key": "t2",
+   "kind": "table",
+   "label": "2",
+   "page": 6,
+   "file": "tab_2.png",
+   "caption": "Table II. Cohesive-Adhesive Balance Dependency Between Salbutamol Sulfate, Lactose, and Budesonide Interaction Combinations (* probe, † substrate, ‡ p < 0.01).",
+   "rotated_deg": 0,
+   "bbox": [
+    288,
+    595,
+    530,
+    740
+   ],
+   "w": 1009,
+   "h": 605,
+   "dpi": 300,
+   "src": "93bb0fa4-36._The_cohesive-adhesive_balances_in_dry_powder_inhaler_formulations_I_direct_quantification_by_atomic_force_microscopy.pdf",
+   "blank": 0.881,
+   "manual_crop": "hand crop; table not detected by the extractor (2026-10-13)",
+   "viewed": true
+  },
+  {
+   "key": "e1",
+   "kind": "equation",
+   "label": "eq1-2",
+   "page": 1,
+   "file": "eq_01_02_vdw_capillary.png",
+   "caption": "Equations (1)-(2), p.1591: F_vdw = nπR*W_ad (n = 3/2 JKR, 2 DMT); capillary force F_c = 4πR*γ_L cos σ + 4πR*γ_SL (Fisher & Israelachvili).",
+   "rotated_deg": 0,
+   "bbox": [
+    288,
+    272,
+    530,
+    511
+   ],
+   "w": 1009,
+   "h": 997,
+   "dpi": 300,
+   "src": "93bb0fa4-36._The_cohesive-adhesive_balances_in_dry_powder_inhaler_formulations_I_direct_quantification_by_atomic_force_microscopy.pdf",
+   "blank": 0.875,
+   "manual_crop": "equation-region hand crop, right column p.1591 (2026-10-13)",
+   "viewed": true
+  },
+  {
+   "key": "e3",
+   "kind": "equation",
+   "label": "eq3",
+   "page": 5,
+   "file": "eq_03_cab_ratio.png",
+   "caption": "Equation (3), p.1595: F_A-A/F_A-B = R*_A-A[nπW_A-A + (4πγ_water cos θ_A-A + 4πγ_A-water)] / R*_A-B[nπW_A-B + (4πγ_water cos θ_A-B + 4πγ_A-water)].",
+   "rotated_deg": 0,
+   "bbox": [
+    288,
+    128,
+    530,
+    166
+   ],
+   "w": 1345,
+   "h": 212,
+   "dpi": 400,
+   "src": "93bb0fa4-36._The_cohesive-adhesive_balances_in_dry_powder_inhaler_formulations_I_direct_quantification_by_atomic_force_microscopy.pdf",
+   "blank": 0.912,
+   "manual_crop": "equation-region hand crop at 400 dpi (2026-10-13)",
+   "viewed": true
+  }
+ ],
+ "missing_labels": [],
+ "note": "figures are embedded 144-ppi JPEGs (480 px wide); crops are 300-dpi renders incl. captions; page = PDF page (PDF n = printed p.1590+n)"
+}
