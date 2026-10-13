@@ -15,6 +15,7 @@
 - 생성기 · 그림 스크립트 · 글 전문 = 이 요청서와 같은 커밋의 `docs/seminar_20261013/build_seminar_v3.py` · `docs/seminar_20261013/figs_v3/make_seminar_figs.py` · `docs/seminar_20261013/slide_text_v3.md` (v3.1 글 전문 · 표 · 출처 줄 · notes 포함).
 - PowerPoint 앱 렌더는 우리도 하지 않았다.  PDF 는 LibreOffice 에 Calibri 와 폭이 같은 Carlito 를 넣어 만들었다.
 - ⚠ **1저자가 p8–p10 (Problem 1·2 · Problem 3 · 194-bed dataset) 을 줄일지 검토 중이다.**  줄이면 같은 생성기로 그 장만 빼서 다시 만들고, 남는 장의 값 · 문장은 바꾸지 않는다.  그때 ZIP v7 의 `MANIFEST` 에 새 PPT · PDF 해시와 장 번호 대응 (v3.1 17 장 → 축소판) 을 적는다.  아래 장 번호는 v3.1 17 장 기준이다.
+- ✅ **1저자 결정 10-13: 줄이지 않는다 — 17 장 그대로가 최종판** (*"ppt는 오케이 · 더 수정은 지금 하는거까지만"*).  ZIP v7 (sha256 `1abdd488fbbffadebe50b9a7343899601e81a2e9d7d3b55cd4a0c37d5601ad3a`) 안의 이 요청서 사본은 결정 전 판이다 (윗줄 "검토 중") — 발송 글에 이 결정을 한 줄로 적는다.
 
 ## 1. 항목별 수정
 
@@ -97,7 +98,7 @@ selftest ok — values match canonical sources and the readout JSONs · no banne
 | Q5 | 세 반올림과 p6 · p8 · p11 · p12 조판이 실제 PPT · PDF 에서 닫혔는가 (SEMV3-06 · 09).  §1 끝 표의 배치 뒤 글씨 (p4 8.5 pt · p8 8.9 pt 가 가장 작다) 가 발표 전 고칠 문제인지도 봐 주십시오. |
 | Q6 | 1저자가 p8–p10 을 빼기만 하면 (남는 장의 문장 · 값 무변경), 해시 · 장 번호 대응표 확인만으로 이 종결 판정을 이어받아도 되는가. |
 
-## 5. 묶음 (ZIP v7 · 발송 = 1저자 · p8–p10 결정 뒤)
+## 5. 묶음 (ZIP v7 · 발송 = 1저자 · p8–p10 결정 뒤) · ✅ 10-13 결정 = 축소 안 함 (17 장)
 
 - 덱 PPTX + PDF + 렌더 PNG (17 장 또는 축소판) + `MANIFEST` (해시 · 장 번호 대응).
 - `docs/seminar_20261013/` (생성기 · 그림 스크립트 · `figs_v3/` 그림 png / svg / csv · `slide_text_v3.md` · `slide_sources_v3.json` · README).
