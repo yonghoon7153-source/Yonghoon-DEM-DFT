@@ -186,3 +186,5 @@ reviews/review_reil_c4_0a_fix_result_20261013/** -text
 evidence/reil_c4_0b1_20261013/** -text
 # 2026-10-13: REIL C4-0b1 고정 배열 · 규칙 봉인 (profile Sobol 2 · 동시 Sobol 16 · label → seed 표 · 규칙 / label 형식) — bytes 그대로
 reil_c4_arrays_0b1_20261013/** -text
+# 2026-10-13: REIL C4-0b1 결과 검토 회신 (배열 봉인 수용 · 구현 종결 보류 · P2 N1–N3 · 승인 경계 A1) — bytes 그대로
+reviews/review_reil_c4_0b1_result_20261013/** -text
