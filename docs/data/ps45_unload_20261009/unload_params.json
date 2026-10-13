@@ -248,7 +248,36 @@
    "2": "SEPARATE",
    "3": "POST",
    "4": "HOLD0"
-  }
+  },
+  "thermo_style": "step atoms ke c_ul_erot v_ul_Ps v_pressMPa cpu",
+  "thermo_cols": [
+   "Step",
+   "Atoms",
+   "KinEng",
+   "ul_erot",
+   "ul_Ps",
+   "pressMPa",
+   "CPU"
+  ],
+  "thermo_note": "LIGGGHTS 3d5c00f thermo.cpp — c_ · v_ 열 머리 = ID 앞 8 글자 (접두 없이) · 읽는 쪽은 이 이름만 쓴다 (생성기 selftest 가 덱 thermo_style 과 대조)"
+ },
+ "ut0": {
+  "note": "Ut0 문법 (7:3 · 판정 자료 아님 · REG §3-2) — 짧은 창 · 짧은 이동 · P_meas 크게 (k = 1 에서 교차) · 분리 문턱 크게 (첫 창부터 0 으로 센다) · S2 문턱 크게 → 머리 · k = 0 · A 한 단 · B 단 · R_M · 분리 · 끝을 한 번씩 지나간다",
+  "W": 100,
+  "nA": 400,
+  "nB": 100,
+  "ave_nevery": 10,
+  "ave_nrepeat": 10,
+  "thermo": 10,
+  "P_meas_deck": 1.0,
+  "sep_nmax": 1000000000,
+  "S2max": 1.0,
+  "k0_min": 3,
+  "k0_max": 12,
+  "general_min": 4,
+  "budget_max": 12,
+  "post_sep": 4,
+  "sep_declare": 2
  },
  "ext_10_0": {
   "start_ckpt": "restart_settling_3600000.bin",
