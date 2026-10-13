@@ -195,6 +195,7 @@
 | **[Nisar21Coat]** ⛔ **자체 실험·원자단위 계산 0 · 아지로다이트 물성 0 → A–D 4축 진입 금지** · 코팅 두께 t = l²/D 논증의 리뷰판 원형 · SSB 코팅 요건표(전자 절연) | **Umair Nisar**#/**Nitin Muralidharan**#/R. Essehli/**Ruhul Amin\***/**Ilias Belharouak\*** (ORNL · ZSW) 2021 ***Energy Storage Mater.* 38, 309–328** (DOI 10.1016/j.ensm.2021.03.015) — "Valuation of Surface Coatings in High-Energy Density Lithium-ion Battery Cathode Materials" | `papers/nisar2021_cathode_coating_review_critical_thickness.md` ✅ (2026-10-13) — 판정은 **§J-62** | 리뷰 (액체 LIB 중심 + §8 SSB) |
 | **[Liu24SNi90]** ⛔ **물성값 0 → A–D 물성 4축 진입 금지** · 황 처리 10–20 nm 피막 (상 동정 없음 · SE 선코팅 아님) | **Huan Liu** · **Yue Wang** (공동1) · L. Chen · H. Li · **Fan Wu\*** (IOP CAS · Tianmu Lake), *Adv. Funct. Mater.* **2024**, 34, 2315701 | ✅ `papers/liu2024_sc_ni90_sulfur_coating_sulfide_assb.md` (2026-10-13) | 실험 전용 (계산 0) |
 | **[Garcia17NMC]** ⛔ 청정 0 K γ — 분말 점착 W 아님 · NMC111 (811 아님) | Garcia · Bareño · Yan · Chen · Hauser · Croy · Iddir 2017 *J. Phys. Chem. C* 121, 8290–8299 | `papers/garcia2017_nmc111_surface_energy_wulff_dft.md` ✅ | DFT (GGA+U → HSE06) + 단결정 형상 실험 |
+| **[Kim12LNO]** ⛔ 청정 0 K γ (GGA+U · 48 원자 비수렴 · μ 없음) — 분말 점착 W 아님 · LiNiO₂/LiCoO₂ 끝 조성 (NCM 아님) | Y. Kim · H. Lee · S. Kang 2012 *J. Mater. Chem.* 22, 12874–12881 | `papers/kim2012_lno_lco_surface_energy_morphology_dft.md` ✅ | DFT (VASP GGA+U 슬랩) + DV-Xα 클러스터 + 고상 합성 · SEM |
 | **[vanOss88]** 결합 규칙 범위 원전 (LW 만 기하평균) | van Oss · Chaudhury · Good 1988 *Chem. Rev.* 88, 927–941 | `papers/vanoss1988_lifshitz_vdw_acid_base_interfacial.md` ✅ | 리뷰 · 이론 |
 | **[Fowkes64]** 분산 성분 γ^d · 기하평균 원전 | Fowkes 1964 *Ind. Eng. Chem.* 56(12), 40–52 | `papers/fowkes1964_attractive_forces_interfaces_dispersion.md` ✅ | 이론 + 자료 모음 |
 | **[MJ14IGC]** IGC 방법 (덮임률 명시 필수) | Mohammadi-Jam · Waters 2014 *Adv. Colloid Interface Sci.* 212, 21–44 | `papers/mohammadijam2014_inverse_gas_chromatography_review.md` ✅ | 리뷰 + SEA 자료 |
@@ -918,6 +919,7 @@
 > 두께 통계 없음(TEM 입자 1개·화살표 1개), 입도분포 데이터 없음.
 
 > 2026-10-13 추가 — **NCM 표면 에너지 (청정 DFT) [Garcia17NMC]**: NMC111 (104) 0.76 · (001) 0.89 · (012) 1.97 · (100) 2.27 J/m² (면당) — LPSCl 면당 0.10–0.37 [Pust25] 과의 비 ≈ 2–20 [우리 산술] ⇒ 청정 벽개 수준에선 논지 0.31 문턱과 반대 쪽. ⛔ 분말 점착 W 로 쓰지 않음 · 표↔그림 불일치 (2.10↔1.97 · 1.45↔0.89).
+> 2026-10-13 추가 — **LiNiO₂ · LiCoO₂ 표면 에너지 (청정 DFT) [Kim12LNO]**: (104) 3.019 · 7.008 · (012) 7.554 · 13.169 eV nm⁻² [인쇄] = 0.48 · 1.12 · 1.21 · 2.11 J/m² [우리 산술] · (003) 대칭 Li0.5 ≈0.20 · ≈0.29 J/m² [판독→산술] — 모든 면에서 Ni 끝이 낮다 · LPSCl 면당 0.10–0.37 [Pust25] 과의 비는 LNO (003) 에서 0.5–2.0 (여전히 논지 0.31 위). ⛔ 12 f.u. 비수렴 · μ 없음 · 분말 W 로 쓰지 않음 · 본문 LCO (012) 13.169 ↔ Fig 9 ≈13.9.
 
 
 

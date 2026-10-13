@@ -155,6 +155,13 @@
    "93bb0fa4-36._The_cohesive-adhesive_balances_in_dry_powder_inhaler_formulations_I_direct_quantification_by_atomic_force_microscopy.pdf"
   ]
  },
+ "begat2004_cohesive_adhesive_balance_partII_fine_particle_delivery": {
+  "figures": 15,
+  "generated": "2026-10-13",
+  "pdfs": [
+   "c197a5ce-62._The_cohesive-adhesive_balances_in_dry_powder_inhaler_formulations_II_influence_on_fine_particle_delivery_characteristics.pdf"
+  ]
+ },
  "bielefeld2019_microstructural_modeling_composite_cathode": {
   "figures": 11,
   "generated": "2026-08-05",
@@ -456,6 +463,13 @@
    "DFT 먹인 논문/12. Hopping models for ion conduction in noncrystals.pdf"
   ]
  },
+ "egermann1983_ordered_vs_interactive_mixture_nomenclature": {
+  "figures": 6,
+  "generated": "2026-10-13",
+  "pdfs": [
+   "3104931e-63._Ordered_mixtures___interactive_mixtures.pdf"
+  ]
+ },
  "eizenhammer2026_lfp_psd_halfcell_many_particle_fullcell": {
   "figures": 15,
   "generated": "2026-09-29",
@@ -582,6 +596,13 @@
    "0929-1. ChemComm_2026_Gan_defective_carbon_ORR_2e4e_selectivity_review_MAIN.pdf"
   ]
  },
+ "gandla2026_layered_cathode_degradation_diagnostics_review": {
+  "figures": 17,
+  "generated": "2026-10-13",
+  "pdfs": [
+   "efd3b507-2._Decoding_Multiscale_Degradation_of_Layered_Cathodes_in_All_Solid_State_Lithium_Batteries_An_Advanced_Diagnostics_Driven_Framework.pdf"
+  ]
+ },
  "gao2026_sib_electrolyte_ai_review": {
   "figures": 21,
   "generated": "2026-09-27",
@@ -623,6 +644,13 @@
   "generated": "2026-09-09",
   "pdfs": [
    "295b265a-81._Uncertainty_in_the_era_of_machine_learning_for_atomistic_modeling.pdf"
+  ]
+ },
+ "grey1969_hausner_ratio_metal_powders": {
+  "figures": 13,
+  "generated": "2026-10-13",
+  "pdfs": [
+   "bad428e6-64._On_the_Hausner_ratio_and_its_relationship_to_some_properties_of_metal_powders.pdf"
   ]
  },
  "guo2025_kinetic_cathode_se_interface": {
@@ -1014,6 +1042,14 @@
    "★ 랩실 논문/01. Intertwined nature of electrochemical reactions and mechanical instability in sulfide-based all-solid-state batteries.pdf"
   ]
  },
+ "kang2026_multiscale_inverse_design_ptfe_fibrillation_dry_electrode": {
+  "figures": 19,
+  "generated": "2026-10-13",
+  "pdfs": [
+   "cf16f39a-5._Multiscale_insights_enable_rational_design_of_solvent-free_dry_electrode_processing_for_advanced_battery_electrode_fabrication.pdf",
+   "f4777437-5._Sup_Multiscale_insights_enable_rational_design_of_solvent-free_dry_electrode_processing_for_advanced_battery_electrode_fabrication.pdf"
+  ]
+ },
  "kato2018_thick_electrode_assb_cycle_tortuosity": {
   "figures": 17,
   "generated": "2026-10-03",
@@ -1059,6 +1095,14 @@
   "pdfs": [
    "Ketter_2025_NatCommun_16_1411_resistor_network_models_MAIN.pdf",
    "Ketter_2025_NatCommun_16_1411_resistor_network_models_Sup.pdf"
+  ]
+ },
+ "kim2012_lno_lco_surface_energy_morphology_dft": {
+  "figures": 28,
+  "generated": "2026-10-13",
+  "pdfs": [
+   "95fb07e3-65._First-principles_and_experimental_investigation_of_the_morphology_of_layer-structured_LiNiO2_and_LiCoO2.pdf",
+   "8777ae01-65._Sup_First-principles_and_experimental_investigation_of_the_morphology_of_layer-structured_LiNiO2_and_LiCoO2.pdf"
   ]
  },
  "kim2021_review_oxide_sulfide_se_interfaces": {
@@ -1205,6 +1249,22 @@
    "1._Sup_Interior_transport_degradation_hotspots_in_high-loading_NMC811_sulfide_all-solid-state_batteries_revealed_by_operando_neutron_imaging.pdf"
   ]
  },
+ "kim2026_pregranulation_ptfe_dry_nca_cathode_crack_delithiation": {
+  "figures": 51,
+  "generated": "2026-10-13",
+  "pdfs": [
+   "29688ace-3._Disrupting_the_crack-delithiation_feedback_loop_in_dry-processed_high-nickel_cathodes_through_early-stage_granule_engineering.pdf",
+   "48cae2e4-3._Sup_Disrupting_the_crack-delithiation_feedback_loop_in_dry-processed_high-nickel_cathodes_through_early-stage_granule_engineering.pdf"
+  ]
+ },
+ "kissel2026_mechanofusion_derived_cathode_composite_microstructures_scalable": {
+  "figures": 46,
+  "generated": "2026-10-13",
+  "pdfs": [
+   "afd01d0a-61._Mechanofusion-derived_cathode_composite_microstructures_with_scalable_mixed_conducting_matrix_coatings_for_solid_state_batteries.pdf",
+   "d634e536-61._Sup_Mechanofusion-derived_cathode_composite_microstructures_with_scalable_mixed_conducting_matrix_coatings_for_solid_state_batteries.pdf"
+  ]
+ },
  "klar2016_dp_sand_animation": {
   "figures": 17,
   "generated": "2026-08-05",
@@ -1339,6 +1399,14 @@
   "pdfs": [
    "3. Characterization of densification behavior and mechanical properties of solid electrolyte powders for all solid-state batteries.pdf",
    "3. Sup) Characterization of densification behavior and mechanical properties of solid electrolyte powders for all solid-state batteries.pdf"
+  ]
+ },
+ "lee2026_li_underlayer_primer_free_dry_prelithiated_thick_anode": {
+  "figures": 35,
+  "generated": "2026-10-13",
+  "pdfs": [
+   "b0e029b2-4._Integrated_one-step_dry_process_enabling_prelithiated_thick_electrodes_without_primer_coating_for_high_energy_density_and_initial_coulombic_efficiency.pdf",
+   "f13c3292-4._Sup_Integrated_one-step_dry_process_enabling_prelithiated_thick_electrodes_without_primer_coating_for_high_energy_density_and_initial_coulombic_efficiency.pdf"
   ]
  },
  "lee2026_lpscl_coating_thickness_ncm811": {
@@ -1986,6 +2054,13 @@
   "pdfs": [
    "88._Microstructural_insights_into_fast_ion_transport_in_solid_electrolytes_via_multiscale_modeling.pdf",
    "88._Sup_Microstructural_insights_into_fast_ion_transport_in_solid_electrolytes_via_multiscale_modeling.pdf"
+  ]
+ },
+ "pan2026_thesis_rate_capable_energy_dense_cathode_composites": {
+  "figures": 45,
+  "generated": "2026-10-13",
+  "pdfs": [
+   "1. Engineering Rate Capable, Energy-Dense Lithium-Ion Battery Cathode Composites.pdf"
   ]
  },
  "park2019_electrode_design_methodology_assb_3d": {
