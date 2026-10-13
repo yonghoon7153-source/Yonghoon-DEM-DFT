@@ -1,0 +1,262 @@
+# source: Kissel et al. Nat. Commun. 17 (2026) 3215 Source Data file (Figures_DataFile.xlsx) — only values cited in the litdb card; sheet/column = workbook sheet name and Excel column letter
+sheet,item,column,value,unit,note
+Figure2b,coating 0 wt% (no CB),x10 from Q3 [µm] (col B),2.00897,µm,coating wt%=0 is pristine NCM
+Figure2b,coating 0 wt% (no CB),x50 from Q3 [µm] (col C),3.32345,µm,coating wt%=0 is pristine NCM
+Figure2b,coating 0 wt% (no CB),x90 from Q3 [µm] (col D),4.69186,µm,coating wt%=0 is pristine NCM
+Figure2b,coating 1 wt% (no CB),x10 from Q3 [µm] (col B),2.02782,µm,coating wt%=0 is pristine NCM
+Figure2b,coating 1 wt% (no CB),x50 from Q3 [µm] (col C),3.81166,µm,coating wt%=0 is pristine NCM
+Figure2b,coating 1 wt% (no CB),x90 from Q3 [µm] (col D),5.40824,µm,coating wt%=0 is pristine NCM
+Figure2b,coating 2 wt% (no CB),x10 from Q3 [µm] (col B),2.23183,µm,coating wt%=0 is pristine NCM
+Figure2b,coating 2 wt% (no CB),x50 from Q3 [µm] (col C),3.85622,µm,coating wt%=0 is pristine NCM
+Figure2b,coating 2 wt% (no CB),x90 from Q3 [µm] (col D),5.23369,µm,coating wt%=0 is pristine NCM
+Figure2b,coating 5 wt% (no CB),x10 from Q3 [µm] (col B),2.46707,µm,coating wt%=0 is pristine NCM
+Figure2b,coating 5 wt% (no CB),x50 from Q3 [µm] (col C),4.69922,µm,coating wt%=0 is pristine NCM
+Figure2b,coating 5 wt% (no CB),x90 from Q3 [µm] (col D),8.77044,µm,coating wt%=0 is pristine NCM
+Figure2b,coating 10 wt% (no CB),x10 from Q3 [µm] (col B),2.61884,µm,coating wt%=0 is pristine NCM
+Figure2b,coating 10 wt% (no CB),x50 from Q3 [µm] (col C),4.79872,µm,coating wt%=0 is pristine NCM
+Figure2b,coating 10 wt% (no CB),x90 from Q3 [µm] (col D),7.66187,µm,coating wt%=0 is pristine NCM
+Figure2b,coating 20 wt% (no CB),x10 from Q3 [µm] (col B),3.18219,µm,coating wt%=0 is pristine NCM
+Figure2b,coating 20 wt% (no CB),x50 from Q3 [µm] (col C),5.91073,µm,coating wt%=0 is pristine NCM
+Figure2b,coating 20 wt% (no CB),x90 from Q3 [µm] (col D),10.0645,µm,coating wt%=0 is pristine NCM
+Figure2c,"with CB, coating 22.4 wt%",Porosity [-] (col B) ± StabWN (col C),0.25686 ± 0.01770,-,"pellet at 3.45 MPa, n=3"
+Figure2c,"without CB, coating 20 wt%",Porosity [-] (col E) ± StabWN (col F),0.27481 ± 0.01474,-,"pellet at 3.45 MPa, n=3"
+Figure2c,"with CB, coating 11.37 wt%",Porosity [-] (col B) ± StabWN (col C),0.30821 ± 0.01122,-,"pellet at 3.45 MPa, n=3"
+Figure2c,"without CB, coating 10 wt%",Porosity [-] (col E) ± StabWN (col F),0.32118 ± 0.02198,-,"pellet at 3.45 MPa, n=3"
+Figure2c,"with CB, coating 5.73 wt%",Porosity [-] (col B) ± StabWN (col C),0.34081 ± 0.00453,-,"pellet at 3.45 MPa, n=3"
+Figure2c,"without CB, coating 5 wt%",Porosity [-] (col E) ± StabWN (col F),0.32927 ± 0.01954,-,"pellet at 3.45 MPa, n=3"
+Figure2c,"with CB, coating 2.3 wt%",Porosity [-] (col B) ± StabWN (col C),0.34917 ± 0.01751,-,"pellet at 3.45 MPa, n=3"
+Figure2c,"without CB, coating 2 wt%",Porosity [-] (col E) ± StabWN (col F),0.38871 ± 0.01778,-,"pellet at 3.45 MPa, n=3"
+Figure2c,"with CB, coating 1.15 wt%",Porosity [-] (col B) ± StabWN (col C),0.36338 ± 0.01832,-,"pellet at 3.45 MPa, n=3"
+Figure2c,"without CB, coating 1 wt%",Porosity [-] (col E) ± StabWN (col F),0.40467 ± 0.00778,-,"pellet at 3.45 MPa, n=3"
+Figure4b,"with CB, coating 22.4 wt%",Coverage [-] (col B),0.9877,-,"10,000 rpm 60 min"
+Figure4b,"without CB, coating 20 wt%",Coverage [-] (col D),0.998,-,"10,000 rpm 60 min"
+Figure4b,"with CB, coating 11.37 wt%",Coverage [-] (col B),0.95681,-,"10,000 rpm 60 min"
+Figure4b,"without CB, coating 10 wt%",Coverage [-] (col D),0.93744,-,"10,000 rpm 60 min"
+Figure4b,"with CB, coating 5.73 wt%",Coverage [-] (col B),0.94425,-,"10,000 rpm 60 min"
+Figure4b,"without CB, coating 5 wt%",Coverage [-] (col D),0.86279,-,"10,000 rpm 60 min"
+Figure4b,"with CB, coating 2.3 wt%",Coverage [-] (col B),0.88247,-,"10,000 rpm 60 min"
+Figure4b,"without CB, coating 2 wt%",Coverage [-] (col D),0.72071,-,"10,000 rpm 60 min"
+Figure4b,"with CB, coating 1.15 wt%",Coverage [-] (col B),0.69584,-,"10,000 rpm 60 min"
+Figure4b,"without CB, coating 1 wt%",Coverage [-] (col D),0.53345,-,"10,000 rpm 60 min"
+Figure5a,80:20:3 1000 rpm 5 min,Em [J/kg] (col A) / Coverage [-] (col B),31291.1 / 0.88411,J/kg / -,"time order 5,10,30,60 min per sheet row 4-7"
+Figure5a,80:20:3 1000 rpm 10 min,Em [J/kg] (col A) / Coverage [-] (col B),60729.1 / 0.88782,J/kg / -,"time order 5,10,30,60 min per sheet row 4-7"
+Figure5a,80:20:3 1000 rpm 30 min,Em [J/kg] (col A) / Coverage [-] (col B),160337 / 0.89502,J/kg / -,"time order 5,10,30,60 min per sheet row 4-7"
+Figure5a,80:20:3 1000 rpm 60 min,Em [J/kg] (col A) / Coverage [-] (col B),283852 / 0.90804,J/kg / -,"time order 5,10,30,60 min per sheet row 4-7"
+Figure5a,80:20:3 2500 rpm 5 min,Em [J/kg] (col C) / Coverage [-] (col D),242202 / 0.92378,J/kg / -,"time order 5,10,30,60 min per sheet row 4-7"
+Figure5a,80:20:3 2500 rpm 10 min,Em [J/kg] (col C) / Coverage [-] (col D),476952 / 0.94893,J/kg / -,"time order 5,10,30,60 min per sheet row 4-7"
+Figure5a,80:20:3 2500 rpm 30 min,Em [J/kg] (col C) / Coverage [-] (col D),1.36962e+06 / 0.93572,J/kg / -,"time order 5,10,30,60 min per sheet row 4-7"
+Figure5a,80:20:3 2500 rpm 60 min,Em [J/kg] (col C) / Coverage [-] (col D),2.6134e+06 / 0.96178,J/kg / -,"time order 5,10,30,60 min per sheet row 4-7"
+Figure5a,80:20:3 5000 rpm 5 min,Em [J/kg] (col E) / Coverage [-] (col F),1.4804e+06 / 0.98812,J/kg / -,"time order 5,10,30,60 min per sheet row 4-7"
+Figure5a,80:20:3 5000 rpm 10 min,Em [J/kg] (col E) / Coverage [-] (col F),2.62805e+06 / 0.98159,J/kg / -,"time order 5,10,30,60 min per sheet row 4-7"
+Figure5a,80:20:3 5000 rpm 30 min,Em [J/kg] (col E) / Coverage [-] (col F),6.12415e+06 / 0.99154,J/kg / -,"time order 5,10,30,60 min per sheet row 4-7"
+Figure5a,80:20:3 5000 rpm 60 min,Em [J/kg] (col E) / Coverage [-] (col F),1.05363e+07 / 0.99976,J/kg / -,"time order 5,10,30,60 min per sheet row 4-7"
+Figure5a,80:20:3 7500 rpm 5 min,Em [J/kg] (col G) / Coverage [-] (col H),2.96347e+06 / 0.96874,J/kg / -,"time order 5,10,30,60 min per sheet row 4-7"
+Figure5a,80:20:3 7500 rpm 10 min,Em [J/kg] (col G) / Coverage [-] (col H),5.53855e+06 / 0.98329,J/kg / -,"time order 5,10,30,60 min per sheet row 4-7"
+Figure5a,80:20:3 7500 rpm 30 min,Em [J/kg] (col G) / Coverage [-] (col H),1.51649e+07 / 0.98122,J/kg / -,"time order 5,10,30,60 min per sheet row 4-7"
+Figure5a,80:20:3 7500 rpm 60 min,Em [J/kg] (col G) / Coverage [-] (col H),2.80274e+07 / 0.97387,J/kg / -,"time order 5,10,30,60 min per sheet row 4-7"
+Figure5a,80:20:3 10000 rpm 5 min,Em [J/kg] (col I) / Coverage [-] (col J),5.92938e+06 / 0.99534,J/kg / -,"time order 5,10,30,60 min per sheet row 4-7"
+Figure5a,80:20:3 10000 rpm 10 min,Em [J/kg] (col I) / Coverage [-] (col J),1.00934e+07 / 0.99253,J/kg / -,"time order 5,10,30,60 min per sheet row 4-7"
+Figure5a,80:20:3 10000 rpm 30 min,Em [J/kg] (col I) / Coverage [-] (col J),2.4733e+07 / 0.98456,J/kg / -,"time order 5,10,30,60 min per sheet row 4-7"
+Figure5a,80:20:3 10000 rpm 60 min,Em [J/kg] (col I) / Coverage [-] (col J),3.81356e+07 / 0.99410,J/kg / -,"time order 5,10,30,60 min per sheet row 4-7"
+Figure5a,global fit (cols N-O),1-(a)/(x+b^c),a=78419.91792±33603.77269; b=4501310.05128±8.99937E7; c=0.8737±1.19186; R2(COD)=0.88863,-,fit over all 20 points
+Figure5b,80:20:3 1000 rpm 60 min,Em [J/kg] (col A) / Porosity (col B) ± StabWN (col C),283852 / 0.44438 ± 0.00644,J/kg / -,"pellet at 3.45 MPa, n=3"
+Figure5b,80:20:3 2500 rpm 60 min,Em [J/kg] (col A) / Porosity (col B) ± StabWN (col C),2.6134e+06 / 0.38027 ± 0.01745,J/kg / -,"pellet at 3.45 MPa, n=3"
+Figure5b,80:20:3 5000 rpm 60 min,Em [J/kg] (col A) / Porosity (col B) ± StabWN (col C),1.05363e+07 / 0.34922 ± 0.01792,J/kg / -,"pellet at 3.45 MPa, n=3"
+Figure5b,80:20:3 7500 rpm 60 min,Em [J/kg] (col A) / Porosity (col B) ± StabWN (col C),2.80274e+07 / 0.33903 ± 0.00627,J/kg / -,"pellet at 3.45 MPa, n=3"
+Figure5b,80:20:3 10000 rpm 60 min,Em [J/kg] (col A) / Porosity (col B) ± StabWN (col C),3.81356e+07 / 0.29477 ± 0.01646,J/kg / -,"pellet at 3.45 MPa, n=3"
+Figure6b,1000 rpm,Mean power Simulation (col B) ± StabWN (col C),45.8913 ± 9.59842,W/kg (sheet header says [W]),DEM steady state
+Figure6b,1000 rpm,Mean power Experimentell (col E) ± StabWN (col F),74.248 ± 15.737,W/kg (sheet header says [W]),"experiment, 60 min"
+Figure6b,2500 rpm,Mean power Simulation (col B) ± StabWN (col C),368.207 ± 27.7575,W/kg (sheet header says [W]),DEM steady state
+Figure6b,2500 rpm,Mean power Experimentell (col E) ± StabWN (col F),727.625 ± 45.91,W/kg (sheet header says [W]),"experiment, 60 min"
+Figure6b,5000 rpm,Mean power Simulation (col B) ± StabWN (col C),2184.04 ± 78.2558,W/kg (sheet header says [W]),DEM steady state
+Figure6b,5000 rpm,Mean power Experimentell (col E) ± StabWN (col F),2765.43 ± 806.512,W/kg (sheet header says [W]),"experiment, 60 min"
+Figure6b,7500 rpm,Mean power Simulation (col B) ± StabWN (col C),6180.15 ± 107.8,W/kg (sheet header says [W]),DEM steady state
+Figure6b,7500 rpm,Mean power Experimentell (col E) ± StabWN (col F),6272.48 ± 1180.65,W/kg (sheet header says [W]),"experiment, 60 min"
+Figure6b,10000 rpm,Mean power Simulation (col B) ± StabWN (col C),12942 ± 197.895,W/kg (sheet header says [W]),DEM steady state
+Figure6b,10000 rpm,Mean power Experimentell (col E) ± StabWN (col F),10011.1 ± 3999.5,W/kg (sheet header says [W]),"experiment, 60 min"
+Figure6c,1000 rpm,SI [J/kg] (col A),0.00643,J/kg,one SI per speed (DEM)
+Figure6c,2500 rpm,SI [J/kg] (col A),0.03297,J/kg,one SI per speed (DEM)
+Figure6c,5000 rpm,SI [J/kg] (col A),0.12302,J/kg,one SI per speed (DEM)
+Figure6c,7500 rpm,SI [J/kg] (col A),0.23278,J/kg,one SI per speed (DEM)
+Figure6c,10000 rpm,SI [J/kg] (col A),0.35514,J/kg,one SI per speed (DEM)
+Figure6d,1000 rpm 5 min,SN_p [-] (col A),2214950.0,-,
+Figure6d,1000 rpm 60 min,SN_p [-] (col A),26579300,-,SN_p(60)/SN_p(5)=12.00 for all speeds
+Figure6d,2500 rpm 5 min,SN_p [-] (col A),3520650.0,-,
+Figure6d,2500 rpm 60 min,SN_p [-] (col A),42247800,-,SN_p(60)/SN_p(5)=12.00 for all speeds
+Figure6d,5000 rpm 5 min,SN_p [-] (col A),5587140.0,-,
+Figure6d,5000 rpm 60 min,SN_p [-] (col A),67045700,-,SN_p(60)/SN_p(5)=12.00 for all speeds
+Figure6d,7500 rpm 5 min,SN_p [-] (col A),8352650.0,-,
+Figure6d,7500 rpm 60 min,SN_p [-] (col A),100232000,-,SN_p(60)/SN_p(5)=12.00 for all speeds
+Figure6d,10000 rpm 5 min,SN_p [-] (col A),11455600,-,
+Figure6d,10000 rpm 60 min,SN_p [-] (col A),137468000,-,SN_p(60)/SN_p(5)=12.00 for all speeds
+Figure8a,CB in matrix 0 wt%,sigma_e matrix (col B),--,mS/cm,'--' = not measured/not plotted
+Figure8a,CB in matrix 0 wt%,sigma_e cathode composite (col C),0.03404,mS/cm,'--' = not measured/not plotted
+Figure8a,CB in matrix 0 wt%,sigma_ion matrix (col D),0.74312,mS/cm,'--' = not measured/not plotted
+Figure8a,CB in matrix 0 wt%,sigma_ion cathode composite (col E),0.01838,mS/cm,'--' = not measured/not plotted
+Figure8a,CB in matrix 1 wt%,sigma_e matrix (col B),2.67319e-07,mS/cm,'--' = not measured/not plotted
+Figure8a,CB in matrix 1 wt%,sigma_e cathode composite (col C),0.11314,mS/cm,'--' = not measured/not plotted
+Figure8a,CB in matrix 1 wt%,sigma_ion matrix (col D),0.63217,mS/cm,'--' = not measured/not plotted
+Figure8a,CB in matrix 1 wt%,sigma_ion cathode composite (col E),0.04564,mS/cm,'--' = not measured/not plotted
+Figure8a,CB in matrix 2.5 wt%,sigma_e matrix (col B),0.01067,mS/cm,'--' = not measured/not plotted
+Figure8a,CB in matrix 2.5 wt%,sigma_e cathode composite (col C),0.09263,mS/cm,'--' = not measured/not plotted
+Figure8a,CB in matrix 2.5 wt%,sigma_ion matrix (col D),0.66509,mS/cm,'--' = not measured/not plotted
+Figure8a,CB in matrix 2.5 wt%,sigma_ion cathode composite (col E),0.03328,mS/cm,'--' = not measured/not plotted
+Figure8a,CB in matrix 5 wt%,sigma_e matrix (col B),167.5,mS/cm,'--' = not measured/not plotted
+Figure8a,CB in matrix 5 wt%,sigma_e cathode composite (col C),0.1267,mS/cm,'--' = not measured/not plotted
+Figure8a,CB in matrix 5 wt%,sigma_ion matrix (col D),0.37735,mS/cm,'--' = not measured/not plotted
+Figure8a,CB in matrix 5 wt%,sigma_ion cathode composite (col E),0.02981,mS/cm,'--' = not measured/not plotted
+Figure8a,CB in matrix 10 wt%,sigma_e matrix (col B),725.2,mS/cm,'--' = not measured/not plotted
+Figure8a,CB in matrix 10 wt%,sigma_e cathode composite (col C),0.18982,mS/cm,'--' = not measured/not plotted
+Figure8a,CB in matrix 10 wt%,sigma_ion matrix (col D),0.02137,mS/cm,'--' = not measured/not plotted
+Figure8a,CB in matrix 10 wt%,sigma_ion cathode composite (col E),0.01522,mS/cm,'--' = not measured/not plotted
+Figure8a,CB in matrix 15 wt%,sigma_e matrix (col B),943.7,mS/cm,'--' = not measured/not plotted
+Figure8a,CB in matrix 15 wt%,sigma_e cathode composite (col C),1.8347,mS/cm,'--' = not measured/not plotted
+Figure8a,CB in matrix 15 wt%,sigma_ion matrix (col D),0.0328,mS/cm,'--' = not measured/not plotted
+Figure8a,CB in matrix 15 wt%,sigma_ion cathode composite (col E),0.00577,mS/cm,'--' = not measured/not plotted
+Figure9a,80:20:0,std column header (cols H-M),Standard Deviation (n=2),-,'n=0' and all-zero std for 80:20:3
+Figure9a,80:20:0 cycle 1,Composite specific capacity (col B) ± std (col H),78.91 ± 0.6307,mAh/g,"cycles 1-4 0.1C, 5-14 0.3C, 15-94 1C (sheet rows)"
+Figure9a,80:20:0 cycle 4,Composite specific capacity (col B) ± std (col H),110.7 ± 3.125,mAh/g,"cycles 1-4 0.1C, 5-14 0.3C, 15-94 1C (sheet rows)"
+Figure9a,80:20:0 cycle 14,Composite specific capacity (col B) ± std (col H),109.79 ± 4.584,mAh/g,"cycles 1-4 0.1C, 5-14 0.3C, 15-94 1C (sheet rows)"
+Figure9a,80:20:0 cycle 15,Composite specific capacity (col B) ± std (col H),83.873 ± 1.054,mAh/g,"cycles 1-4 0.1C, 5-14 0.3C, 15-94 1C (sheet rows)"
+Figure9a,80:20:0 cycle 94,Composite specific capacity (col B) ± std (col H),82.475 ± 7.31,mAh/g,"cycles 1-4 0.1C, 5-14 0.3C, 15-94 1C (sheet rows)"
+Figure9a,80:20:0.2,std column header (cols H-M),Standard Deviation (n=2),-,'n=0' and all-zero std for 80:20:3
+Figure9a,80:20:0.2 cycle 1,Composite specific capacity (col C) ± std (col I),78.396 ± 2.136,mAh/g,"cycles 1-4 0.1C, 5-14 0.3C, 15-94 1C (sheet rows)"
+Figure9a,80:20:0.2 cycle 4,Composite specific capacity (col C) ± std (col I),91.524 ± 1.392,mAh/g,"cycles 1-4 0.1C, 5-14 0.3C, 15-94 1C (sheet rows)"
+Figure9a,80:20:0.2 cycle 14,Composite specific capacity (col C) ± std (col I),91.198 ± 0.2575,mAh/g,"cycles 1-4 0.1C, 5-14 0.3C, 15-94 1C (sheet rows)"
+Figure9a,80:20:0.2 cycle 15,Composite specific capacity (col C) ± std (col I),77.38 ± 2.328,mAh/g,"cycles 1-4 0.1C, 5-14 0.3C, 15-94 1C (sheet rows)"
+Figure9a,80:20:0.2 cycle 94,Composite specific capacity (col C) ± std (col I),76.229 ± 11.31,mAh/g,"cycles 1-4 0.1C, 5-14 0.3C, 15-94 1C (sheet rows)"
+Figure9a,80:20:0.5,std column header (cols H-M),Standard Deviation (n=2),-,'n=0' and all-zero std for 80:20:3
+Figure9a,80:20:0.5 cycle 1,Composite specific capacity (col D) ± std (col J),103.41 ± 0.7767,mAh/g,"cycles 1-4 0.1C, 5-14 0.3C, 15-94 1C (sheet rows)"
+Figure9a,80:20:0.5 cycle 4,Composite specific capacity (col D) ± std (col J),117.55 ± 2.224,mAh/g,"cycles 1-4 0.1C, 5-14 0.3C, 15-94 1C (sheet rows)"
+Figure9a,80:20:0.5 cycle 14,Composite specific capacity (col D) ± std (col J),115.72 ± 2.546,mAh/g,"cycles 1-4 0.1C, 5-14 0.3C, 15-94 1C (sheet rows)"
+Figure9a,80:20:0.5 cycle 15,Composite specific capacity (col D) ± std (col J),103.29 ± 5.395,mAh/g,"cycles 1-4 0.1C, 5-14 0.3C, 15-94 1C (sheet rows)"
+Figure9a,80:20:0.5 cycle 94,Composite specific capacity (col D) ± std (col J),97.715 ± 7.61,mAh/g,"cycles 1-4 0.1C, 5-14 0.3C, 15-94 1C (sheet rows)"
+Figure9a,80:20:1,std column header (cols H-M),Standard Deviation (n=3),-,'n=0' and all-zero std for 80:20:3
+Figure9a,80:20:1 cycle 1,Composite specific capacity (col E) ± std (col K),80.207 ± 9.809,mAh/g,"cycles 1-4 0.1C, 5-14 0.3C, 15-94 1C (sheet rows)"
+Figure9a,80:20:1 cycle 4,Composite specific capacity (col E) ± std (col K),100.48 ± 10.7,mAh/g,"cycles 1-4 0.1C, 5-14 0.3C, 15-94 1C (sheet rows)"
+Figure9a,80:20:1 cycle 14,Composite specific capacity (col E) ± std (col K),93.695 ± 9.497,mAh/g,"cycles 1-4 0.1C, 5-14 0.3C, 15-94 1C (sheet rows)"
+Figure9a,80:20:1 cycle 15,Composite specific capacity (col E) ± std (col K),66.04 ± 2.67,mAh/g,"cycles 1-4 0.1C, 5-14 0.3C, 15-94 1C (sheet rows)"
+Figure9a,80:20:1 cycle 94,Composite specific capacity (col E) ± std (col K),39.25 ± 12.58,mAh/g,"cycles 1-4 0.1C, 5-14 0.3C, 15-94 1C (sheet rows)"
+Figure9a,80:20:2,std column header (cols H-M),Standard Deviation (n=2),-,'n=0' and all-zero std for 80:20:3
+Figure9a,80:20:2 cycle 1,Composite specific capacity (col F) ± std (col L),103.83 ± 9.744,mAh/g,"cycles 1-4 0.1C, 5-14 0.3C, 15-94 1C (sheet rows)"
+Figure9a,80:20:2 cycle 4,Composite specific capacity (col F) ± std (col L),101.89 ± 2.63,mAh/g,"cycles 1-4 0.1C, 5-14 0.3C, 15-94 1C (sheet rows)"
+Figure9a,80:20:2 cycle 14,Composite specific capacity (col F) ± std (col L),50.951 ± 0.7561,mAh/g,"cycles 1-4 0.1C, 5-14 0.3C, 15-94 1C (sheet rows)"
+Figure9a,80:20:2 cycle 15,Composite specific capacity (col F) ± std (col L),9.8429 ± 0.8858,mAh/g,"cycles 1-4 0.1C, 5-14 0.3C, 15-94 1C (sheet rows)"
+Figure9a,80:20:2 cycle 94,Composite specific capacity (col F) ± std (col L),2.2228 ± 0.1119,mAh/g,"cycles 1-4 0.1C, 5-14 0.3C, 15-94 1C (sheet rows)"
+Figure9a,80:20:3,std column header (cols H-M),Standard Deviation (n=0),-,'n=0' and all-zero std for 80:20:3
+Figure9a,80:20:3 cycle 1,Composite specific capacity (col G) ± std (col M),129.41 ± 0,mAh/g,"cycles 1-4 0.1C, 5-14 0.3C, 15-94 1C (sheet rows)"
+Figure9a,80:20:3 cycle 4,Composite specific capacity (col G) ± std (col M),116.46 ± 0,mAh/g,"cycles 1-4 0.1C, 5-14 0.3C, 15-94 1C (sheet rows)"
+Figure9a,80:20:3 cycle 14,Composite specific capacity (col G) ± std (col M),45.827 ± 0,mAh/g,"cycles 1-4 0.1C, 5-14 0.3C, 15-94 1C (sheet rows)"
+Figure9a,80:20:3 cycle 15,Composite specific capacity (col G) ± std (col M),10.046 ± 0,mAh/g,"cycles 1-4 0.1C, 5-14 0.3C, 15-94 1C (sheet rows)"
+Figure9a,80:20:3 cycle 94,Composite specific capacity (col G) ± std (col M),3.0212 ± 0,mAh/g,"cycles 1-4 0.1C, 5-14 0.3C, 15-94 1C (sheet rows)"
+Figure9b,80:20:0,Active specific capacity at 1C (col B) ± Error Cap (col D),155.29 ± 2.87,mAh/g,
+Figure9b,80:20:0,CAM utilization (col C) ± Error Utilization (col E),67.43 ± 2.21,%,
+Figure9b,80:20:0.2,Active specific capacity at 1C (col B) ± Error Cap (col D),171.19 ± 6.21,mAh/g,
+Figure9b,80:20:0.2,CAM utilization (col C) ± Error Utilization (col E),56.62 ± 0.35,%,
+Figure9b,80:20:0.5,Active specific capacity at 1C (col B) ± Error Cap (col D),182.26 ± 5.84,mAh/g,
+Figure9b,80:20:0.5,CAM utilization (col C) ± Error Utilization (col E),71.15 ± 1.44,%,
+Figure9b,80:20:1,Active specific capacity at 1C (col B) ± Error Cap (col D),109.3 ± 16.83,mAh/g,
+Figure9b,80:20:1,CAM utilization (col C) ± Error Utilization (col E),77.32 ± 9.22,%,
+Figure9b,80:20:2,Active specific capacity at 1C (col B) ± Error Cap (col D),17.07 ± 2.47,mAh/g,
+Figure9b,80:20:2,CAM utilization (col C) ± Error Utilization (col E),74.14 ± 4.09,%,
+Figure9b,80:20:3,Active specific capacity at 1C (col B) ± Error Cap (col D),14.29 ± 0,mAh/g,
+Figure9b,80:20:3,CAM utilization (col C) ± Error Utilization (col E),90.54 ± 0,%,
+Figure9d,80:20:0,CAM utilization at 1C cycles 0/20/40/60/80 (col B),67.43 / 77.32 / 76.69 / 76.26 / 75.6,%,
+Figure9d,80:20:0.2,CAM utilization at 1C cycles 0/20/40/60/80 (col C),56.62 / 63.29 / 63.32 / 63.61 / 62.73,%,
+Figure9d,80:20:0.5,CAM utilization at 1C cycles 0/20/40/60/80 (col D),71.15 / 76.75 / 75.93 / 71.2 / 69.67,%,
+Figure9d,80:20:1,CAM utilization at 1C cycles 0/20/40/60/80 (col E),77.32 / 78.74 / 76.07 / 71.72 / 41.64,%,
+Figure9d,80:20:2,CAM utilization at 1C cycles 0/20/40/60/80 (col F),74.14 / 66.89 / 58.64 / 47.08 / 35.67,%,
+Figure9d,80:20:3,CAM utilization at 1C cycles 0/20/40/60/80 (col G),90.54 / 63.57 / 47.79 / 36.89 / 29.29,%,
+Figure9e,CB in matrix 1 wt%,Plastic part (col B) ± StabWN (col C),30.4 ± 2.33,%,elastic = 100 - plastic
+Figure9e,CB in matrix 2.5 wt%,Plastic part (col B) ± StabWN (col C),20.7 ± 3.17,%,elastic = 100 - plastic
+Figure9e,CB in matrix 5 wt%,Plastic part (col B) ± StabWN (col C),28.44 ± 2.03,%,elastic = 100 - plastic
+Figure9e,CB in matrix 10 wt%,Plastic part (col B) ± StabWN (col C),42.56 ± 5.89,%,elastic = 100 - plastic
+Figure9e,CB in matrix 15 wt%,Plastic part (col B) ± StabWN (col C),51.62 ± 5.8,%,elastic = 100 - plastic
+FigureS1d,coating 20 wt% (no CB),Circularity (col B) ± (col C) / Aspect ratio (col D) ± (col E),0.7667 ± 0.0205 / 1.27 ± 0.0141,-,n=3 SEM images
+FigureS1d,coating 10 wt% (no CB),Circularity (col B) ± (col C) / Aspect ratio (col D) ± (col E),0.7333 ± 0.0125 / 1.527 ± 0.0826,-,n=3 SEM images
+FigureS1d,coating 5 wt% (no CB),Circularity (col B) ± (col C) / Aspect ratio (col D) ± (col E),0.72 ± 0.02 / 1.565 ± 0.085,-,n=3 SEM images
+FigureS1d,coating 2 wt% (no CB),Circularity (col B) ± (col C) / Aspect ratio (col D) ± (col E),0.7167 ± 0.0236 / 1.533 ± 0.0741,-,n=3 SEM images
+FigureS1d,coating 1 wt% (no CB),Circularity (col B) ± (col C) / Aspect ratio (col D) ± (col E),0.72 ± 0.0216 / 1.573 ± 0.0899,-,n=3 SEM images
+FigureS1d,coating 0 wt% (no CB),Circularity (col B) ± (col C) / Aspect ratio (col D) ± (col E),0.7 ± 0.0198 / 1.57 ± 0.0879,-,n=3 SEM images
+FigureS3,"with CB, coating 22.4 wt%",Thickness [nm] (col B),161.784,nm,q0 d50 2.05 µm basis
+FigureS3,"without CB, coating 20 wt%",Thickness [nm] (col D),137.408,nm,q0 d50 2.05 µm basis
+FigureS3,"with CB, coating 11.37 wt%",Thickness [nm] (col B),77.7923,nm,q0 d50 2.05 µm basis
+FigureS3,"without CB, coating 10 wt%",Thickness [nm] (col D),65.3661,nm,q0 d50 2.05 µm basis
+FigureS3,"with CB, coating 5.73 wt%",Thickness [nm] (col B),38.2793,nm,q0 d50 2.05 µm basis
+FigureS3,"without CB, coating 5 wt%",Thickness [nm] (col D),31.9718,nm,q0 d50 2.05 µm basis
+FigureS3,"with CB, coating 2.3 wt%",Thickness [nm] (col B),15.1609,nm,q0 d50 2.05 µm basis
+FigureS3,"without CB, coating 2 wt%",Thickness [nm] (col D),12.6316,nm,q0 d50 2.05 µm basis
+FigureS3,"with CB, coating 1.15 wt%",Thickness [nm] (col B),7.54793,nm,q0 d50 2.05 µm basis
+FigureS3,"without CB, coating 1 wt%",Thickness [nm] (col D),6.29069,nm,q0 d50 2.05 µm basis
+FigureS7d,80:20:3 1000 rpm,Allometric1 y=a*x^b (x = min): a (col I) / b,8575.13703 ± 623.49596 / 0.85568 ± 0.01873,J/kg,Em(t) fit rows 1007-1008; b<1 = net power falls with time
+FigureS7d,80:20:3 2500 rpm,Allometric1 y=a*x^b (x = min): a (col K) / b,54756.42896 ± 1666.15456 / 0.94443 ± 0.00778,J/kg,Em(t) fit rows 1007-1008; b<1 = net power falls with time
+FigureS7d,80:20:3 5000 rpm,Allometric1 y=a*x^b (x = min): a (col M) / b,429730.08243 ± 7915.9852 / 0.78142 ± 0.00478,J/kg,Em(t) fit rows 1007-1008; b<1 = net power falls with time
+FigureS7d,80:20:3 7500 rpm,Allometric1 y=a*x^b (x = min): a (col O) / b,709600.66723 ± 19260.9375 / 0.8982 ± 0.00697,J/kg,Em(t) fit rows 1007-1008; b<1 = net power falls with time
+FigureS7d,80:20:3 10000 rpm,Allometric1 y=a*x^b (x = min): a (col Q) / b,2044691.29189 ± 332871.17325 / 0.7178 ± 0.04261,J/kg,Em(t) fit rows 1007-1008; b<1 = net power falls with time
+FigureS7e,95:5:0.8 1000 rpm,Allometric1 y=a*x^b (x = min): a (col I) / b,5927.40773 ± 791.57384 / 0.81016 ± 0.03457,J/kg,Em(t) fit rows 1007-1008; b<1 = net power falls with time
+FigureS7e,95:5:0.8 2500 rpm,Allometric1 y=a*x^b (x = min): a (col K) / b,80933.47032 ± 10195.35029 / 0.60784 ± 0.03354,J/kg,Em(t) fit rows 1007-1008; b<1 = net power falls with time
+FigureS7e,95:5:0.8 5000 rpm,Allometric1 y=a*x^b (x = min): a (col M) / b,392012.38726 ± 102328.24735 / 0.60183 ± 0.06957,J/kg,Em(t) fit rows 1007-1008; b<1 = net power falls with time
+FigureS7e,95:5:0.8 7500 rpm,Allometric1 y=a*x^b (x = min): a (col O) / b,694766.18124 ± 25961.13354 / 0.79851 ± 0.00968,J/kg,Em(t) fit rows 1007-1008; b<1 = net power falls with time
+FigureS7e,95:5:0.8 10000 rpm,Allometric1 y=a*x^b (x = min): a (col Q) / b,1328735.98557 ± 64047.00382 / 0.72745 ± 0.0126,J/kg,Em(t) fit rows 1007-1008; b<1 = net power falls with time
+FigureS8a,95:5:0.8 fit,0.95-(a)/(x+b^c) ('NewXPSlimit (User)'),a=35736.75609±9495.69342; b=629218.31197±1.13817E7; c=0.87183±1.22017; R2(COD)=0.96786,-,plateau fixed at 0.95
+FigureS8b,95:5:0.8 1000 rpm 60 min,Em (col A) / Porosity (col B) ± (col C),162125 / 0.44308 ± 0.01794,J/kg / -,
+FigureS8b,95:5:0.8 2500 rpm 60 min,Em (col A) / Porosity (col B) ± (col C),962380 / 0.42215 ± 0.01161,J/kg / -,
+FigureS8b,95:5:0.8 5000 rpm 60 min,Em (col A) / Porosity (col B) ± (col C),4.47683e+06 / 0.36821 ± 0.00979,J/kg / -,
+FigureS8b,95:5:0.8 7500 rpm 60 min,Em (col A) / Porosity (col B) ± (col C),1.82638e+07 / 0.35041 ± 0.01327,J/kg / -,
+FigureS8b,95:5:0.8 10000 rpm 60 min,Em (col A) / Porosity (col B) ± (col C),2.60232e+07 / 0.34179 ± 0.01710,J/kg / -,
+FigureS8a,95:5:0.8 1000 rpm 5 / 60 min,Coverage (col B),0.66705 / 0.84575,-,
+FigureS8a,95:5:0.8 2500 rpm 5 / 60 min,Coverage (col D),0.84276 / 0.89787,-,
+FigureS8a,95:5:0.8 5000 rpm 5 / 60 min,Coverage (col F),0.89935 / 0.94873,-,
+FigureS8a,95:5:0.8 7500 rpm 5 / 60 min,Coverage (col H),0.95461 / 0.93513,-,
+FigureS8a,95:5:0.8 10000 rpm 5 / 60 min,Coverage (col J),0.93767 / 0.93928,-,
+FigureS11a,"Em,sim/Em,exp min",cols C/A (same coverage rows),"0.455 (Em,exp 31291.1, Em,sim 14250.6)",-,our arithmetic on source values
+FigureS11a,"Em,sim/Em,exp max",cols C/A (same coverage rows),"1.280 (Em,exp 3.81356e+07, Em,sim 4.88208e+07)",-,our arithmetic on source values
+FigureS11b,max relative error,Relative Error [-] (col F) at Em (col E),2.0489 at 430000 J/kg,% (axis) ,between the two coverage fit curves
+FigureS17a,CB in matrix 1 wt%,"Porosity (col B, values in %) ± (col C) / Bulk density (col D) ± (col E)",2.665 ± 0.0186 / 2.513 ± 0.0481,% / g/cm3,header says [-] but values are %
+FigureS17a,CB in matrix 2.5 wt%,"Porosity (col B, values in %) ± (col C) / Bulk density (col D) ± (col E)",3.993 ± 0.00796 / 2.467 ± 0.0204,% / g/cm3,header says [-] but values are %
+FigureS17a,CB in matrix 5 wt%,"Porosity (col B, values in %) ± (col C) / Bulk density (col D) ± (col E)",4.385 ± 0.00467 / 2.438 ± 0.0119,% / g/cm3,header says [-] but values are %
+FigureS17a,CB in matrix 10 wt%,"Porosity (col B, values in %) ± (col C) / Bulk density (col D) ± (col E)",23.93 ± 0.00627 / 1.914 ± 0.0158,% / g/cm3,header says [-] but values are %
+FigureS17a,CB in matrix 15 wt%,"Porosity (col B, values in %) ± (col C) / Bulk density (col D) ± (col E)",28.94 ± 0.00809 / 1.765 ± 0.0201,% / g/cm3,header says [-] but values are %
+FigureS17b,1 wt% CB in matrix,max indentation (col A) / max force (col B),8.159 / 1.433,µm / N,average curve of 25 indents
+FigureS17b,2.5 wt% CB in matrix,max indentation (col C) / max force (col D),9.992 / 1.293,µm / N,average curve of 25 indents
+FigureS17b,5 wt% CB in matrix,max indentation (col E) / max force (col F),10.01 / 1.132,µm / N,average curve of 25 indents
+FigureS17b,10 wt% CB in matrix,max indentation (col G) / max force (col H),10.09 / 0.06283,µm / N,average curve of 25 indents
+FigureS17b,15 wt% CB in matrix,max indentation (col I) / max force (col J),10.06 / 0.03265,µm / N,average curve of 25 indents
+FigureS7a,99:1:0,Specific power (col B) first / last / min / max,22398.8 / 11637.4 / 7554.23 / 22398.8,W/kg,"10,000 rpm; t_last=59.75 min"
+FigureS7a,98:2:0,Specific power (col D) first / last / min / max,21557.9 / 16198.7 / 15612.7 / 21714.4,W/kg,"10,000 rpm; t_last=59.83 min"
+FigureS7a,95:5:0,Specific power (col F) first / last / min / max,17605.1 / 15623.6 / 14709.8 / 17968.6,W/kg,"10,000 rpm; t_last=59.73 min"
+FigureS7a,90:10:0,Specific power (col H) first / last / min / max,14691.8 / 15864.5 / 14691.8 / 16071.8,W/kg,"10,000 rpm; t_last=59.87 min"
+FigureS7a,80:20:0,Specific power (col J) first / last / min / max,17248.8 / 14117.4 / 14117.4 / 17248.8,W/kg,"10,000 rpm; t_last=59.72 min"
+FigureS7b,99:1:0.2,Specific power (col B) first / last / min / max,17766.3 / 9170 / 7046.55 / 17766.3,W/kg,"10,000 rpm; t_last=59.92 min"
+FigureS7b,98:2:0.3,Specific power (col D) first / last / min / max,18476.7 / 11935.6 / 7184.3 / 18476.7,W/kg,"10,000 rpm; t_last=59.87 min"
+FigureS7b,95:5:0.8,Specific power (col F) first / last / min / max,17591.6 / 11052.3 / 10408.6 / 20558,W/kg,"10,000 rpm; t_last=59.93 min"
+FigureS7b,90:10:1.5,Specific power (col H) first / last / min / max,20119.2 / 10372.4 / 10372.4 / 20119.2,W/kg,"10,000 rpm; t_last=59.97 min"
+FigureS7b,80:20:3,Specific power (col J) first / last / min / max,27003.1 / 12798.1 / 12547.5 / 27003.1,W/kg,"10,000 rpm; t_last=60.05 min"
+FigureS10a,"curve 1 (Coarse grains, Simulation)",min separation (col A),2.889,mm,force up to ~987 N
+FigureS10a,"curve 2 (1000 rpm, Experiment)",min separation (col C),3.219,mm,force up to ~987 N
+FigureS10a,"curve 3 (1000 rpm, Experiment)",min separation (col E),3.233,mm,force up to ~987 N
+FigureS10a,"curve 4 (1000 rpm, Experiment)",min separation (col G),3.319,mm,force up to ~987 N
+FigureS10a,"curve 5 (2500 rpm, Experiment)",min separation (col I),3.071,mm,force up to ~987 N
+FigureS10a,"curve 6 (2500 rpm, Experiment)",min separation (col K),3.043,mm,force up to ~987 N
+FigureS10a,"curve 7 (2500 rpm, Experiment)",min separation (col M),2.878,mm,force up to ~987 N
+FigureS10a,"curve 8 (5000 rpm, Experiment)",min separation (col O),2.863,mm,force up to ~987 N
+FigureS10a,"curve 9 (5000 rpm, Experiment)",min separation (col Q),2.786,mm,force up to ~987 N
+FigureS10a,"curve 10 (5000 rpm, Experiment)",min separation (col S),2.319,mm,force up to ~987 N
+FigureS10a,"curve 11 (7500 rpm, Experiment)",min separation (col U),2.903,mm,force up to ~987 N
+FigureS10a,"curve 12 (7500 rpm, Experiment)",min separation (col W),2.853,mm,force up to ~987 N
+FigureS10a,"curve 13 (7500 rpm, Experiment)",min separation (col Y),2.879,mm,force up to ~987 N
+FigureS10a,"curve 14 (10 000 rpm, Experiment)",min separation (col AA),2.757,mm,force up to ~987 N
+FigureS10a,"curve 15 (10 000 rpm, Experiment)",min separation (col AC),2.633,mm,force up to ~987 N
+FigureS13c,NCM side 0-30 nm,mean Ni (col D) / mean O (col B) wt%,62.6 / 23.8,wt%,54 points
+FigureS13c,first position with Cl > 50 wt%,Position (col A),0.054,µm,
+FigureS13c,first position with Ni < 30 wt% (after 20 nm),Position (col A),0.049,µm,
+FigureS13c,scan length,max Position (col A),0.13,µm,
+FigureS15b,80:20:0 (Cell 1) cycle 1,Coulomb efficiency (col B),84.4416,%,equals Table S4 ICE
+FigureS15b,80:20:0.2 (Cell 1) cycle 1,Coulomb efficiency (col C),84.1935,%,equals Table S4 ICE
+FigureS15b,80:20:0.5 (Cell 1) cycle 1,Coulomb efficiency (col D),87.0913,%,equals Table S4 ICE
+FigureS15b,80:20:1 (Cell 1) cycle 1,Coulomb efficiency (col E),84.1339,%,equals Table S4 ICE
+FigureS15b,80:20:2 (Cell 1) cycle 1,Coulomb efficiency (col F),83.59,%,equals Table S4 ICE
+FigureS15b,80:20:3 (Cell 1) cycle 1,Coulomb efficiency (col G),84.9661,%,equals Table S4 ICE
+FigureS16a,80:20:3 1st cycle 0.1C charge,max of 'Capacity / mAh/g' (col U),2.2954,header says mAh/g; value behaves as absolute mAh,vs Table S4 Q0 CC+CV 142.0+10.3 mAh/g
+FigureS19,SSB cell (composition not stated),max Gross (col E) / max Active (col F) specific capacity,140.2 / 194.7,mAh/g,ratio = utilization
+FigureS19,Pristine CAM in LIB,max Capacity (col A),221.92,mAh/g,

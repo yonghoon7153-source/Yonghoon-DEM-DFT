@@ -1,66 +1,553 @@
-<!-- 🌱 research-agent 가 만든 **뼈대**다.  실물(PDF·SI)을 읽고 채워야 digest 가 된다.
-     깊이 기준 = litdb/papers/_TEMPLATE.md · 실제 사례 = bazzoun2026_dem_fem_rnm_ionic.md.
-     ⛔ `⏳ 문서 대기` 가 하나라도 남아 있으면 이 카드를 **인용하지 않는다**. -->
-# Mechanofusion-derived cathode composite microstructures with scalable mixed conducting matrix coatings for solid state batteries — Maximilian Kissel (Nature Communications 2026)
+<!-- digest 표준 양식 확장 (paper-level STANDALONE). ★ = 사용자가 특히 원한 항목. 깊이 기준 = bazzoun2026_dem_fem_rnm_ionic.md ·
+     형식 이웃 = kim2023_mechanofusion_ncm811_lpscl_core_shell_intimate_contact.md · kawaguchi2023_doe_electrode_fabrication_dry_coated_ncm_lps.md · 같은 그룹 DEM 선행 = frankenberg2024_dem_high_intensity_mixer_assb.md.
+     쪽 표기 = 본문 "p.N" (본문 PDF N 쪽 = 학술지 인쇄 쪽 N, 1–18 · Nat. Commun. 17:3215) · SI "SI p.N" (SI PDF N 쪽, 1–18 · 인쇄 쪽 번호 없음).
+     값 표지: [인쇄] = 본문 · SI · 표 · 그림 안에 숫자로 적힌 값 · [원자료 <시트>] = 저자 Source Data 파일 (Figures_DataFile.xlsx) 의 그 시트 값 (인용 값만
+     litdb/figures/<slug>/source_data_extract.csv 에 시트 · 열과 함께) · [판독] = 그림에서 읽은 값 · [우리 산술] = 인쇄 · 원자료 값으로 우리가 다시 한 계산 ·
+     [추정] = 우리 해석 · 가정이 든 어림 (가정을 그 자리에 적음) · [미확인] = 본문 18 쪽 + SI 18 쪽 + 원자료 47 시트 어디에도 없음.
+     본문 · SI 텍스트 층 전수 · 원자료 47 시트 전수 목록 · Figure 1 원본 묶음 (zip, tif 7 개) 메타데이터 · 그림 크롭 46 장 전부 렌더로 열람. -->
 
-> slug `kissel2026_mechanofusion_derived_cathode_composite_microstructures_scalable` · DOI `10.1038/s41467-026-71305-2` · type `⏳ 문서 대기 (exp|DFT|AIMD|MLIP|DEM|MPM|FEM|mixed)`
-> · PDF `⏳ 미확보` · digested `2026-09-03` · status `🌱 skeleton (문서 대기)`
-> · evidence_level `snippet`  ← 2026-09-09 정정: PDF `⏳ 미확보` 인데 `fulltext` 로 찍혀 있었다.
->   (CLAUDE.md — 전문이 없으면 snippet/title. 그대로 두면 나중에 들어오는 진짜 초록 분석이
->    충돌 규칙 `fulltext > abstract > snippet > title` 에서 이 빈 카드에 진다.)
-> · IF `15.7` · tier `A` · relevance `0.9`
+# 메카노퓨전 (Hosokawa Picoline + Nobilta · 1,000–10,000 rpm · 5–60 min) 으로 단결정 NCM82 위에 Li₃InCl₆ (+ CB) 껍질 — TEM 두께 ≈5 nm (99:1:0) · ≈100 nm (80:20:1) · XPS 피복률 γ 0.53 → 1.00 · 저압 (3.45 MPa) 공극률 0.405 → 0.257 (코팅량) · 0.444 → 0.295 (혼합 강도) · DEM (Rocky · 300 µm 거친 입자 · Thornton–Ning · 점착 없음) 응력강도 SI 0.0064–0.355 J/kg 가 피복을 정하고 응력수 SN 은 아니다 · CB 0–15 wt% 매트릭스는 σ_e ↑ σ_ion ↓ — 80:20:0.5 가 1 C 에서 100 mAh/g (복합체 질량) — Maximilian Kissel · Finn Frankenberg … Arno Kwade · Jürgen Janek (JLU Gießen · TU Braunschweig · Marburg, Nat. Commun. 2026)
 
-## 0. 왜 이 카드가 열렸나 (research-agent 판정)
-Nature Communications(IF 15.7)에 실린 2026년 논문이면서, 내 주축인 'DEM으로 composite cathode 미세구조를 설계한다'는 문제의식을 공정(혼합) 단계에서 다룬다. 내 DEM은 압축(compaction) 단계, 이 논문은 혼합 단계라 서로 보완적이고, DEM 결과를 실험 지표(피복률, 입도, 공극률)로 검증한 사례라서 내 porosity 보정·검증 논리의 근거로 바로 쓸 수 있다.
+> slug `kissel2026_mechanofusion_derived_cathode_composite_microstructures_scalable` · DOI `10.1038/s41467-026-71305-2` · type `exp + DEM (메카노퓨전 건식 코팅 · SEM/EDX · 입자 분할 AI · (S)TEM · SPED · XPS 피복률 · XRD/Rietveld · 3.45 MPa 공극률 · DC 분극 부분 전도도 σ_e/σ_ion · 나노압입 · In/InLi 반쪽셀 · CAM 이용률 + Rocky 2024 R1 거친 입자 DEM (Thornton–Ning · 점착 없음 · 단일 입자종) · Kwade 응력 모델 SI/SN/E_m; 전달 σ 계산 · 압축 DEM 없음)` · PDF `afd01d0a-61._Mechanofusion-derived_cathode_composite_microstructures_with_scalable_mixed_conducting_matrix_coatings_for_solid_state_batteries.pdf` · SI `d634e536-61._Sup_Mechanofusion-derived_cathode_composite_microstructures_with_scalable_mixed_conducting_matrix_coatings_for_solid_state_batteries.pdf` · 원자료 `d5347448-Figures_DataFile.xlsx` (47 시트) · `b7e10fe7-Figure_1.zip` (Fig 1 원본 tif 7) · digested `2026-10-13` · status ✅
+> · evidence_level `fulltext` (본문 + SI + 저자 Source Data) · tier `A` · relevance `0.9` (두 칸 = 내부 분류 — 원문 값 아님)
+>
+> **원제**: *Mechanofusion-derived cathode composite microstructures with scalable mixed conducting matrix coatings for solid state batteries* (p.1)
+> **저자 · 소속 (p.1 · SI p.1)**: Maximilian Kissel¹˒⁴ · Finn Frankenberg²˒⁴ · Thomas Demuth³ · Anton Lai¹ · Niklas Laser² · Daniel Wagner¹ · Ahmed Eisa² · Peter Michalowski² · Kerstin Volz³ · **Arno Kwade²\*** · **Jürgen Janek¹\*** (⁴ 동등 기여 Kissel · Frankenberg · \* 교신) — ¹ Institute of Physical Chemistry & Center for Materials Research, **Justus-Liebig-Universität Gießen** (SI: Heinrich-Buff-Ring 17, 35392 Gießen) · ² Institute for Particle Technology, **Technische Universität Braunschweig** (SI: Volkmaroder Straße 5, 38104 Braunschweig) · ³ Materials Science Center (WZMW) and Department of Physics, **Philipps-University Marburg** (교신 메일 p.1: arno.kwade@tu-braunschweig.de · juergen.janek@uni-giessen.de — SI p.1 은 Janek 메일을 juergen.janek@pc.jlug.de 로 적는다)
+> *Nature Communications* **17**, 3215 (2026) · 접수 2025-06-04 · 수락 2026-03-04 (p.1) · 온라인 게재일 [미확인] (PDF 메타데이터 생성일 2026-04-03) · CC BY 4.0 · 연구비 DFG SPP 2289 (project 462470125) · BMFTR 03XP0430A · 03XP0430C (FestBatt, FB2-Thio) · 03XP0590D (FoFeBat) · 이해상충 없음 · 동료심사 Bohua Wen + 익명 · 원고 문장 일부를 DeepL Write · ChatGPT4.0 으로 다듬었다고 밝힘 (p.18) · 원자료 = Zenodo `10.5281/zenodo.18493074` (p.16) · LIB 기준 셀 자료 = Zenodo `10.5281/zenodo.14065128` (p.15)
+> **같은 그룹 · 같은 축 카드 (링크만)**: [`frankenberg2024_dem_high_intensity_mixer_assb`](frankenberg2024_dem_high_intensity_mixer_assb.md) (ref 43 — 같은 믹서 · 같은 응력 모델의 DEM 선행 · DEM 절차를 *"following the approach by Frankenberg et al.43"* 로 가져온다) · [`frankenberg2025_milling_dry_processed_sulfide_cathode_microstructure`](frankenberg2025_milling_dry_processed_sulfide_cathode_microstructure.md) (ref 76 — 같은 그룹 · 황화물 건식 양극 · 밀링) · [`kim2023_mechanofusion_ncm811_lpscl_core_shell_intimate_contact`](kim2023_mechanofusion_ncm811_lpscl_core_shell_intimate_contact.md) (ref 39 — 황화물 메카노퓨전 선행) · [`lee2024_shear_force_dry_process_cathode_coverage`](lee2024_shear_force_dry_process_cathode_coverage.md) (ref 40) · [`kawaguchi2017_dry_coating_parametric_na2so4_model_se`](kawaguchi2017_dry_coating_parametric_na2so4_model_se.md) (ref 61) · [`reisacher2023_percolation_sulfide_carbon_matrix`](reisacher2023_percolation_sulfide_carbon_matrix.md) (ref 77 — LPSCl + C65 매트릭스 퍼콜레이션).
+> **원자료 발췌**: `litdb/figures/kissel2026_mechanofusion_derived_cathode_composite_microstructures_scalable/source_data_extract.csv` (260 행 — 이 카드가 인용한 원자료 값만 · 시트 · Excel 열 표기) · 크롭 46 장 `figures.json` (본문 그림 9 + 패널 묶음 13 + 표 1 · SI 그림 19 + 표 4).
+
+---
+
+## 0. 결론 먼저 — 우리 질문에 대한 답
+
+**한 문장**: 단결정 NCM82 (Q3 중앙 3.3 µm) 을 할라이드 SE Li₃InCl₆ (LIC) 또는 LIC + 카본블랙 (CB) 예비혼합물과 함께 **고강도 믹서 (Hosokawa Picoline + Nobilta, 10,000 rpm = 날개 끝 40 m/s, 60 min, 충전율 10 %, 약 20 g)** 에서 돌리면 LIC 가 NCM 표면을 덮는 연속 껍질이 되고 (TEM ≈5 nm @ 99:1:0 · ≈100 nm @ 80:20:1), 같은 조성에서도 **회전수 (= DEM 응력강도 SI) 가 피복 · 매끈함 · 저압 공극률을 정한다** — 이 껍질 입자 ("building block") 그대로 만든 양극은 CB 가 매트릭스 안에 있을수록 CAM 이용률이 오르지만 (65 → 90 %) 이온 경로 · 율속 · 사이클 안정성이 나빠져 **80:20:0.5 (NCM:LIC:CB) 가 1 C 100 mAh/g (복합체 질량)** 로 가장 좋았다 (p.1–12).
+
+| 우리 질문 | 이 논문이 주는 것 | 표지 · 쪽 |
+|---|---|---|
+| ① 공정 변수 (장치 · 속도 · 시간 · 에너지 · 온도) | Picoline + Nobilta · 1,000 / 2,500 / 5,000 / 7,500 / 10,000 rpm · 5 / 10 / 30 / 60 min · 충전 부피 **4.91 mL** (진밀도 기준 고정) · 충전율 **10 %** · 배치 19.40–23.15 g · 10,000 rpm = 날개 끝 **40 m/s** · CB 는 LIC 와 **5,000 rpm 10 min 예비혼합** 뒤 NCM 투입 · 연속 냉각 (온도 [미확인]) · 건조실 이슬점 −60 °C · 비에너지 E_m,exp = ∫(P − P₀)dt / m — 80:20:3 의 60 min 값 0.28 / 2.6 / 10.5 / 28.0 / **38.1 MJ/kg** (1,000 → 10,000 rpm) | [인쇄] p.3 · p.13 · 표 1 · SI 표 S1 · [원자료 Figure5b] |
+| ② 피복 · 두께를 어떻게 쟀나 · 값 | (S)TEM: **≈5 nm** (99:1:0) · **≈100 nm** (80:20:1) · 이론 두께 (구 · 균일 · 무기공 · q₀ 중앙 2.05 µm) **6.3 → 137 nm** (1 → 20 wt%, CB 없음) · **7.5 → 162 nm** (CB 있음) · XPS 피복률 **γ = (I_Cl + I_In)/(I_Cl + I_In + I_Ni + I_Mn)** — 0.533 / 0.721 / 0.863 / 0.937 / 0.998 (1 / 2 / 5 / 10 / 20 wt%, CB 없음) · ≈10 nm 넘으면 γ ≈ 1 로 포화 (정보 깊이) · SEM 원형도 0.70 → 0.77 | [인쇄] p.4–5 · SI Note 2 · 식 11 · [원자료 Figure4b · FigureS3 · FigureS1d] |
+| ③ ★ DEM — 무엇을 · 어떻게 | Rocky 2024 R1 · 입자 = **300 µm 거친 입자 (실입자 ≈100 배) 단일 종** (80:20:3 혼합물 하나를 대표 · 밀도 2.417 g/cm³ · 내부 공극 0.39) · **Thornton–Ning 탄소성 접촉 · 점착 항 없음** (SI 표 S2: 마찰 · 항복비 · 반발계수 · E 0.228 GPa · ν 0.3) · 믹서 부피 1/5 · 3.88 g · 0.1 s 투입 + 0.4 s 회전 · 출력 간격 0.005 s · 보정 = 압축 시험 (1 g · 1000 N) + 동적 안식각 (GranuDrum 20 rpm) + 충전율 · 검증 = 순 비동력 · **응력강도 SI_CG = 입자 하나가 출력 구간에 받은 충돌들의 평균 소산 에너지 ÷ 거친 입자 질량 [J/kg]** · **응력수 SN_p = 공정 시간 동안 입자당 응력 사건 수** · E_m,sim = SI_CG · SN_p | [인쇄] p.6–8 · p.13–14 · 식 2 · 4 · 5 · SI Note 3 · SI 표 S2 · [원자료 TableS2] |
+| ④ DEM 결과 | SI_CG = **0.00643 / 0.03297 / 0.12302 / 0.23278 / 0.35514 J/kg** (1,000 → 10,000 rpm) · SN_p = 2.2×10⁶ (1,000 rpm · 5 min) → 1.37×10⁸ (10,000 rpm · 60 min) · **SI 가 높아야 피복이 오른다 · 같은 (또는 더 큰) SN_p 로는 못 따라간다** · SI ∝ n² 는 본문의 *기대* — 원자료 기울기는 **1.76** (국소 1.47–1.90) [우리 산술] | [인쇄] p.8 · [원자료 Figure6c · Figure6d] |
+| ⑤ σ_e · σ_ion · 공극 · 용량 | 3.45 MPa 공극률 0.405 → 0.275 (CB 없음 1 → 20 wt%) · 0.363 → 0.257 (CB 있음) · DC 분극 (380 MPa 펠릿): **매트릭스** σ_e 2.7×10⁻⁷ → 943.7 mS/cm (CB 1 → 15 wt%) · σ_ion 0.743 → 0.0328 · **복합체 (80:20:x)** σ_e **0.034 → 1.83** · σ_ion 0.018 · **0.046 (최대, 매트릭스 CB 1 wt%)** · 0.006 (최소) mS/cm · 반쪽셀 (In/InLi · 80 MPa · 25 °C · 2.0–3.7 V) 80:20:0.5 = 1 C 첫 사이클 **103.3** → 94 번째 97.7 mAh/g_comp · 80:20:3 = 0.1 C 첫 방전 **129.4** 이지만 1 C 에서 **10.0 → 3.0** | [원자료 Figure2c · Figure8a · Figure9a] · [인쇄] SI 표 S4 |
+| ⑥ "같은 총 SE 에서 코팅 상태" 실험에 주는 것 | ★ **공정 변수 시리즈 (80:20:3 × 5 회전수 × 4 시간) = 같은 조성 · 다른 코팅 상태** — 피복 (γ 0.884 → 0.9998) · 원형도 (0.67 → 0.75) · 3.45 MPa 공극률 (0.444 → 0.295, 60 min) 이 함께 움직인다 · 그러나 **그 상태들의 σ_ion · σ_e · 전기화학은 재지 않았다** (전도도 · 셀 = 10,000 rpm · 60 min 하나) · 비코팅 대조 (손 혼합 등) 없음 | [원자료 Figure5a · Figure5b] · [인쇄] p.7 · 표 1 |
+| ⑦ 이종기술 논지의 응집 (SE–SE) | 1,000 rpm 시료에서 *"inhomogeneous and particulate deposition of CB and LIC … cluster-like agglomerates … single LIC particles … which have not taken part in the coating"* (SEM 정성) · 무작위 대비 응집 정량 · 표면 에너지 · 점착 DEM 은 **없다** | [인쇄] p.6 · Fig 5c · SI 표 S2 |
+
+⛔ **한정어 (떼지 말 것)**: ① SE = **할라이드 Li₃InCl₆** (수계 합성 · 볼밀 · *"malleable … model catholyte"*) — 황화물 아님 ② CAM = **단결정 NCM82 단봉** (Q3 x₁₀ / x₅₀ / x₉₀ = 2.01 / 3.32 / 4.69 µm [원자료 Figure2b]) — 바이모달 아님 ③ 양극 ≈15 mg / Ø10 mm ≈ **19 mg/cm²** (명목 ≈3 mAh/cm² [우리 산술]) — 후막 아님 ④ DEM = **단일 입자종 · 점착 없음 · 정상 상태 0.5 s** — 상별 혼합 · 응집 · 코팅 형성은 시뮬레이션하지 않는다 (*"does not retain information on the original coating progression"* [인쇄 p.6]) ⑤ 피복 · 공극률 시리즈에 비코팅 대조가 없고, 전도도 · 셀은 10,000 rpm · 60 min 한 조건 ⑥ 전도도 = **DC 분극** (EIS 아님) · 반복 수 · 오차 막대 없음 ⑦ 80:20:3 셀은 원자료상 **셀 1 개** (표준편차 열 머리 *"n=0"* · 값 전부 0 [원자료 Figure9a]) — 캡션의 *"at least n = 2"* 와 다르다 (§10).
+
+---
 
 ## 1. 한 줄 요약
-Kissel et al.(Janek group)은 mechanofusion 고강도 건식 혼합으로 single-crystal NCM82 위에 Li₃InCl₆ 코팅(5 nm~100 nm)을 만들고, DEM으로 계산한 stress intensity(SI ∝ n²)와 코팅 피복률·공극률을 연결해 80:20:0.5(NCM:LIC:CB) 조성에서 1 C에서 100 mAh g⁻¹(복합전극 질량 기준)을 얻었다.
+
+전고체 양극의 미세구조는 입자 혼합 단계에서 대부분 정해지는데, 학계는 손 막자 혼합에 머물러 있고 기계 혼합도 "무작위 배열" 에 그친다는 문제의식에서, 이 논문은 **고강도 건식 믹서의 메카노퓨전으로 SE (할라이드 LIC) — 필요하면 CB 까지 — 를 NCM 표면에 직접 입혀 "building block" (코어–셸 이종응집체) 을 만들고 그것을 그대로 양극으로 쓰는** 하향식이 아닌 상향식 (bottom-up) 미세구조 설계를 제안한다 (Fig 1).  ① 코팅량 1–20 wt% 를 바꾸면 껍질이 ≈5 nm 에서 ≈100 nm 로 두꺼워지고 피복률 · 원형도가 오르며 저압 공극률이 떨어진다 (Fig 2–4) · ② 80:20:3 을 1,000–10,000 rpm · 5–60 min 으로 섞으면 비에너지가 같아도 회전수가 높을수록 껍질이 매끈하고 공극률이 낮다 (Fig 5) · ③ 거친 입자 DEM 으로 응력강도 SI · 응력수 SN 을 뽑아 보면 피복은 **SI 가 정하고 SN 으로는 대체가 잘 안 된다** (Fig 6) · ④ SPED · XRD · STEM 선분석으로 10,000 rpm · 60 min 에서도 NCM 손상 · 원소 확산이 없다 (Fig 7 · S12 · S13 — 단 다결정 NCM 은 큰 입자 일부가 깨진다 · S14) · ⑤ CB–LIC 매트릭스의 CB 를 0–15 wt% 로 바꾸면 전자 · 이온 부분 전도도가 반대로 움직이고 (Fig 8), 반쪽셀에서는 CB 가 많을수록 CAM 이용률은 오르지만 율속 · 사이클이 나빠진다 — 저자 해석은 CB 가 이온 경로를 막고 매트릭스를 다공 · 소성으로 만들어 NCM 부피 변화를 못 받아 접촉을 잃는다는 것 (Fig 9, 나노압입).  결론: 80:20:0.5 가 최적이고 부분 전도도만으로는 셀 성능을 설명할 수 없다.
 
 ## 2. 메타
-| 저자 | 저널/년 | DOI | 조성·계 | 연구유형 |
+
+| 저자 | 저널/년 | DOI | 소재 (AM / SE / 도전재) | 연구유형 |
 |---|---|---|---|---|
-| Maximilian Kissel, Finn Frankenberg, Thomas Demuth, Anton Lai, Niklas Laser | Nature Communications 2026 | 10.1038/s41467-026-71305-2 | ⏳ 문서 대기 | ⏳ 문서 대기 |
+| M. Kissel¹˒⁴ · F. Frankenberg²˒⁴ · T. Demuth³ · A. Lai¹ · N. Laser² · D. Wagner¹ · A. Eisa² · P. Michalowski² · K. Volz³ · A. Kwade²\* · J. Janek¹\* (JLU Gießen · TU Braunschweig · Marburg) | *Nat. Commun.* 17, 3215 (2026) | 10.1038/s41467-026-71305-2 | 단결정 LiNi₀.₈₂Mn₀.₀₇Co₀.₁₁O₂ (MSE Supplies) / Li₃InCl₆ 자체 수계 합성 / Super C65 (Imerys) — 셀 분리층에 Li₆PS₅Cl (Posco JK Solid Solution Argyrodite-CMP5) | 실험 (건식 코팅 · 미세구조 · 전도도 · 반쪽셀) + DEM (공정 응력) |
 
-## 3. 핵심 물성 (수치) ★ 실물 필요
-> ⛔ 초록만으로 채우지 말 것.  단위·조건 없는 값은 우리 db 와 **같은 표에 놓을 수 없다**.
-| 물성 | 값 | 조건 | 비고 |
-|---|---|---|---|
-| ⏳ 문서 대기 |  |  |  |
+- 저자 기여 (p.18): 착상 M.K. · F.F. · A.K. · J.J. · 혼합 · 공극률 · **DEM** = F.F. (N.L. 도움) · 전기화학 · SEM-EDX · XPS = M.K. (A.L. 도움) · STEM-EDX · TEM = T.D. · XRD = D.W.
+- 같은 그룹 계보: 이 논문의 DEM 은 `frankenberg2024_…` (LFP + LIC + CB · 같은 믹서) 의 방법을 NCM 계로 옮긴 것 · 정적 CAM 이용률 정의 = Kissel 2025 (ref 34, 카드 없음) · XPS 피복률 정의 = Kissel 2025 *Chem. Mater.* (ref 66, 카드 없음).
 
-## 4. 방법 ★ 실물 필요
-- **code / version**: ⏳ 문서 대기
-- **축 A(DEM/MPM/복셀)**: 접촉모델·강성·마찰·압축압력·입경분포·셀·복셀 크기 —
-- **축 B(DFT/MLIP)**: functional·vdW·pseudo/PAW·k-points·ecut·supercell·U·MLIP 학습셋 —
-- **축 C(실험)**: 셀 구성·면적용량·온도·율·EIS 조건·등가회로 —
-- **무질서·상태 선택 규칙**(있으면):
-- **특이사항**:
+---
 
-## 5. Figure set ★ 실물 필요
-| Fig | 내용 | 우리가 참고할 점 |
+## 3. 핵심 수치 (★ 전부 쪽 · 표지 병기)
+
+### 3-1. 재료 · 조성 (p.3 · p.13 · SI 표 S1)
+
+| 항목 | 값 | 표지 · 쪽 |
 |---|---|---|
-| ⏳ 문서 대기 |  |  |
+| NCM | 단결정 NCM82 (MSE Supplies) · d50 = **3.3 µm** (본문) · Q3 (부피) x₁₀ 2.01 · x₅₀ 3.32 · x₉₀ 4.69 µm · q₀ (개수) 중앙 **2.05 µm** (SI Note 2) · 진밀도 4.75 g/cm³ | [인쇄] p.3 · p.15 · SI p.5 · [원자료 Figure2b] |
+| LIC 합성 | LiCl (99 %) : InCl₃ (99.995 %) = 0.365 : 0.635 (질량) · 탈이온수 40 °C 2 h → 80 °C 열린 용기 24 h → 진공 200 °C 4 h · 배치당 32 g · Pulverisette 7, 600 rpm 4 min (ZrO₂ 5 mm 구 · 구 충전 50 %) · 입경 **100 nm – 100 µm** · 밀도 2.59 g/cm³ | [인쇄] p.3 · p.13 · p.15 |
+| LIC σ_ion | **0.743 mS/cm** (CB 0 wt% 매트릭스 = 순 LIC · DC 분극 · 380 MPa 펠릿) — 본문은 숫자를 적지 않는다 | [원자료 Figure8a] |
+| CB | Super C65 · d50,aggregates ≈ 250 nm · 밀도 1.96 g/cm³ | [인쇄] p.3 · p.15 |
+| 조성 표기 | NCM:LIC:CB (w/w/w) · 코팅 두께 시리즈 99:1:0 … 80:20:0 · CB 있는 시리즈 99:1:0.2 … 80:20:3 (*"Fixed CB-LIC ratio (20 vol%)"*) · 공정 시리즈 95:5:0.8 · 80:20:3 · 매트릭스 최적화 80:20:0 / 0.2 / 0.5 / 1 / 2 / 3 | [인쇄] 표 1 |
+| 배치 (표 S1) | 진부피 합 **4.90–4.92 cm³** 로 고정 → 질량 23.15 g (99:1:0) · 20.00 g (80:20:0) · 19.40 g (80:20:3) · 혼합 밀도 ρ_mix 4.71 → 3.94 g/cm³ | [인쇄] SI 표 S1 |
+| 매트릭스 안 CB (표 S1 에서) | CB 있는 코팅 시리즈 = 매트릭스 CB **13.2–14.8 wt% (17–18 vol%, V_CB/V_LIC 0.20–0.22)** · 80:20:x = 1.00 / 2.46 / 4.85 / 9.22 / 13.36 wt% (x = 0.2 / 0.5 / 1 / 2 / 3) | [우리 산술] SI 표 S1 |
+| 압축 가능 성분 부피 | 80:20 = **31.4 %** → 80:20:3 = **35.6 %** (본문) — 표 S1 부피로 재현 (1.54/4.91 · 1.75/4.92) | [인쇄] p.4 · [우리 산술] |
 
-## 6. Post-processing ★ 실물 필요
-- **무엇**: (NEB / BVSE / COHP / TauFactor / Kirchhoff / Heckel / CNLS fit …)
-- **도구**:
-- **수치화·플롯 방식**:
+### 3-2. ★ 메카노퓨전 공정 (p.3 · p.6 · p.13 · 표 1 · SI Fig S7)
 
-## 7. 우리 대비 ★ 실물 필요 — 이 카드의 값어치는 여기서 나온다
-- **어느 축인가**: (A: DEM/MPM/복셀 · B: DFT/MLIP · C: 실험 EIS · none)
-- **우리 확보값과의 일치/충돌**: → `db/properties/canonical_registry.json`(축 B) ·
-  `docs/db/section7_10case_sweep.csv`(축 A) 와 대조
-- **인용 포인트**: (축 A = `main.tex` 절 이름 / 축 B = `kb/` 카드 또는 `db/properties/` 항목)
-- **비판 포인트**: (보고량 정의가 있는가 · 상태 선택 규칙이 있는가 · 수렴을 보였는가 ·
-  DEM↔MPM 을 서로 보정했는가[frame[4] 위반] · DOS-threshold 갭 · 단일시드 σ 비)
+- 장치 [인쇄 p.13]: **Picoline high-intensity mixer + Nobilta attachment (Hosokawa Alpine AG)** · 건조실 (공급 공기 이슬점 −60 °C) · 연속 냉각 · 충전 부피 4.91 mL (ρ_mix 기준 · 시험 사이 응력 조건을 같게) · 샘플링 5 · 10 · 30 · 60 min · Ar 밀봉 백 보관.  날개 끝 속도: 10,000 rpm ↔ **40 m/s** [인쇄 p.3] → 날개 끝 지름 ≈ **76 mm** · 1,000 / 2,500 / 5,000 / 7,500 rpm ↔ 4 / 10 / 20 / 30 m/s [우리 산술 — 같은 반경 가정] · 틈 (gap) 폭 [미확인] · 용기 부피 ≈ 49 mL [우리 산술 — 충전율 10 % = 4.91 mL 진부피 / 용기 부피로 읽을 때].
+- 순서 [인쇄 p.13]: CB 있는 시료는 **CB + LIC 를 5,000 rpm · 10 min 예비혼합** ("pre-structure the matrix coating") → NCM 투입 → 최대 60 min.  ⚠ 비에너지 E_m,exp 는 **3 성분 60 min 단계만** 계산 (예비혼합 에너지 제외) [인쇄 p.13].
+- 동력 → 비에너지 (식 1 · 3) [인쇄 p.6 · p.13–14]: 동력 P 를 5 s 간격 기록 → Savitzky–Golay (50 점) → 회전수별 공회전 동력 P₀ 빼기 → 총질량으로 나눔 → 시간 적분.
+- 80:20:3 의 E_m,exp (5 / 10 / 30 / 60 min) [원자료 Figure5a]:
 
-## 8. research-agent 초록 판정 (실물 판독으로 대체될 것)
-- 코팅 함량 1~20 wt%, 회전속도 1,000~10,000 rpm, 혼합 5~60 min 조건에서 균일 코팅을 얻었고, XPS 피복률은 최고 함량에서 1.0에 근접했다(≥5,000 rpm, 5~10 min이면 97~100 %).
-- DEM(coarse-graining)으로 계산한 stress intensity는 회전속도의 제곱에 비례(SI ∝ n²)했고, specific energy input이 커질수록 코팅이 두꺼워지고 피복률이 올라갔다.
-- 복합전극 공극률은 코팅 함량과 혼합 강도가 커질수록 약 40 %에서 약 25 %로 떨어졌다(압축 후 기준).
-- LIC 매트릭스에 carbon black을 넣으면 전자 percolation threshold가 2~5 wt% 사이에서 나타났고, 전자 부분 전도도는 <0.01 → ~1,000 mS cm⁻¹(0 → 15 % CB)로 올라간 반면 이온 부분 전도도는 ~0.7 → ~0.03 mS cm⁻¹로 떨어졌다.
-- 80:20:0.5 조성에서 1 C에 100 mAh g⁻¹(복합전극 질량 기준), CB 과다(3 %)에서는 1 C 용량이 <10 mAh g⁻¹로 급락해 kinetics·chemo-mechanics 악화를 보였다(CAM 이용률은 65 → 90 %로 올라감).
+| rpm | 5 min | 10 min | 30 min | 60 min | 60 min 평균 순 비동력 [우리 산술] |
+|---|---|---|---|---|---|
+| 1,000 | 3.13×10⁴ | 6.07×10⁴ | 1.60×10⁵ | **2.84×10⁵** J/kg | 79 W/kg |
+| 2,500 | 2.42×10⁵ | 4.77×10⁵ | 1.37×10⁶ | **2.61×10⁶** | 726 |
+| 5,000 | 1.48×10⁶ | 2.63×10⁶ | 6.12×10⁶ | **1.05×10⁷** | 2,927 |
+| 7,500 | 2.96×10⁶ | 5.54×10⁶ | 1.52×10⁷ | **2.80×10⁷** | 7,785 |
+| 10,000 | 5.93×10⁶ | 1.01×10⁷ | 2.47×10⁷ | **3.81×10⁷** (= 10.6 kWh/kg [우리 산술]) | 10,593 |
 
-## 9. 남은 일
-- [ ] PDF·SI 확보 → §3–§7 채우기
-- [ ] `status` 를 `✅` 로, `evidence_level` 을 `fulltext` 로
-- [ ] `INDEX.md`(argyrodite SE 축) 또는 `INDEX_DEM.md`(DEM 축)에 **손으로** 등재
+- E_m(t) = a·t^b 맞춤 (SI Fig S7d · e) 의 지수 b = **0.86 / 0.94 / 0.78 / 0.90 / 0.72** (80:20:3, 1,000 → 10,000 rpm) · 0.81 / 0.61 / 0.60 / 0.80 / 0.73 (95:5:0.8) — **모두 1 보다 작다** = 섞는 동안 순 동력이 떨어진다 (10,000 rpm 80:20:3: 첫 5 min 평균 19.8 kW/kg vs 60 min 평균 10.6 kW/kg [우리 산술]) · 원문은 이 하락을 논하지 않는다 [원자료 FigureS7d · FigureS7e].
+- 원 동력 곡선 (SI Fig S7a–c · 5 s 간격): 10,000 rpm 코팅량 시리즈 비동력 범위 = CB 없음 98:2:0–80:20:0 1.41–2.17×10⁴ W/kg · 99:1:0 은 시작 22,399 → 60 min 무렵 11,637 W/kg (최저 7,554) · CB 있음 0.70–2.70×10⁴ W/kg (80:20:3 시작 27,003 → 끝 12,798) [원자료 FigureS7a · FigureS7b] · 80:20:3 1,000 rpm 410–456 W/kg … 10,000 rpm 9,931–25,994 W/kg [원자료 FigureS7c] — 같은 1,000 rpm 의 순 비동력 (74 W/kg, Fig 6b) 보다 커서 공회전 P₀ 를 빼기 전 총 비동력으로 보인다 [추정 — 캡션은 "Specific power" 만 적음].
+
+### 3-3. ★ 코팅 형태 · 두께 · 피복 (p.3–5 · Fig 2–4 · SI Fig S1–S6)
+
+- SEM-EDX (Fig 2a, 10,000 rpm · 60 min): 네 조성 모두 코팅됨 · Cl 신호가 코팅량과 함께 줄어든다 (같은 EDX 조건) [인쇄 p.3].
+- 형태 지표 (particleOS.ai — Meta SAM 분할 · 원형도 4π·면적/둘레² · 종횡비 = 최대/최소 Feret) [원자료 FigureS1d · 인쇄 SI p.2–3]:
+
+| 코팅 wt% (CB 없음) | 0 (NCM) | 1 | 2 | 5 | 10 | 20 |
+|---|---|---|---|---|---|---|
+| 원형도 | 0.700 | 0.720 | 0.717 | 0.720 | 0.733 | **0.767** |
+| 종횡비 | 1.57 | 1.57 | 1.53 | 1.57 | 1.53 | **1.27** |
+| Q3 x₅₀ (µm) | 3.32 | 3.81 | 3.86 | 4.70 | 4.80 | **5.91** (x₉₀ 10.06) |
+
+  → 원형도 · 종횡비 변화의 대부분이 20 wt% 에서 생긴다 (1–10 wt% 는 0.72–0.73 · 오차 ±0.01–0.02 안팎) [원자료 FigureS1d] · PSD 가 넓어지는 것은 껍질 두께가 아니라 **여러 NCM 이 한 껍질에 싸인 응집** 때문이라는 해석 (이론 최대 평균 두께 ≈150 nm) [인쇄 p.3–4].
+- 이론 두께 (SI Note 2 · Fig S3: 구 · 균일 · 무기공 · R = 2.05/2 µm · 코팅 밀도 2.59 (CB 없음) · 2.48 g/cm³ (CB 있음)) [원자료 FigureS3]: CB 없음 **6.3 / 12.6 / 32.0 / 65.4 / 137.4 nm** (1 / 2 / 5 / 10 / 20 wt%) · CB 있음 **7.5 / 15.2 / 38.3 / 77.8 / 161.8 nm** (1.15 / 2.3 / 5.73 / 11.37 / 22.4 wt%) · 선형 맞춤 기울기 6.90 · 7.26 nm/wt% — [우리 산술] 같은 식 재현 137.4 · 161.4 nm · 같은 식에 Q3 중앙 (3.3 µm) 을 넣으면 221 · 260 nm (반경 선택에 비례).
+- TEM (Fig 3 · S4 · S6) [인쇄 p.5]: 80:20:1 = 암시야에서 껍질 안 작은 결정 (밝은 점 = LIC 격자면, S4a HR-TEM) · STEM-EDX 에 C 가 든 **≈100 nm 껍질** (Fig 3b) · 99:1:0 = **≈5 nm** 껍질이 입자 표면 전체에 (Fig 3c · d · S6).  XRD (S5): LIC 결정상 유지 · Rietveld 질량비가 기대와 *"in line"* (표 S3 — §10-19 참고) · 큰 비정질화 없음.
+- XPS 피복률 γ (식 11 · Fig 4) [인쇄 p.5 · p.15 · 원자료 Figure4b] — 10,000 rpm · 60 min:
+
+| 코팅 wt% (CB 없음) | 1 | 2 | 5 | 10 | 20 |
+|---|---|---|---|---|---|
+| γ | 0.533 | 0.721 | 0.863 | 0.937 | **0.998** |
+| **코팅 wt% (CB 있음)** | 1.15 | 2.3 | 5.73 | 11.37 | 22.4 |
+| γ | 0.696 | 0.882 | 0.944 | 0.957 | **0.988** |
+
+  - 해석 규칙 [인쇄 p.5 · p.15]: γ ≈ 1 = 두께 ≥ ≈10 nm (XPS 정보 깊이) 의 덮는 층 · 10 nm 보다 얇으면 완전히 덮어도 γ < 1 · 10 nm 넘는 층끼리는 구분 못 함 · 형태 · 두께 분포 정보 없음 · >1000 입자 평균 (빔 200 µm).  CB 가 들면 같은 질량에서 부피가 커 (낮은 밀도) 얇은 쪽에서 γ 가 크다.
+  - ⚠ γ 는 같은 에너지 창의 CPS 원강도 비 — 상대 감도 보정은 언급이 없고 [미확인] · 식에 Co 2p · O 1s 는 들어 있지 않다 · C 1s 는 표면 탄소 오염과 CB 를 못 가려 뺐다 [인쇄 p.15].  맨 NCM 의 γ (= 0 이어야 함) 는 보고 없음 [미확인].
+- 공극률 (3.45 MPa = 395 N · 1 g · ZWICK · 기하 밀도 / ρ_mix, n = 3) [원자료 Figure2c]: CB 없음 **0.405 / 0.389 / 0.329 / 0.321 / 0.275** (1 / 2 / 5 / 10 / 20 wt%) · CB 있음 **0.363 / 0.349 / 0.341 / 0.308 / 0.257** (1.15 … 22.4 wt%) · 최고 코팅량 ≈25 % = *"approximately … cubic closed packing of spheres"* [인쇄 p.4–5].  [우리 산술] 395 N / 3.45 MPa → 다이 지름 ≈12.1 mm.
+
+### 3-4. ★ 공정–구조 관계 (p.6–7 · Fig 5 · SI Fig S8 · S9)
+
+- 80:20:3 피복 γ (Fig 5a) [원자료 Figure5a]:
+
+| rpm | 5 min | 10 min | 30 min | 60 min |
+|---|---|---|---|---|
+| 1,000 | 0.884 | 0.888 | 0.895 | 0.908 |
+| 2,500 | 0.924 | 0.949 | 0.936 | 0.962 |
+| 5,000 | **0.988** | 0.982 | 0.992 | 0.9998 |
+| 7,500 | 0.969 | 0.983 | 0.981 | 0.974 |
+| 10,000 | **0.995** | 0.993 | 0.985 | 0.994 |
+
+  - 저자 서술 [인쇄 p.6]: 저속 (1,000 · 2,500 rpm) 은 시간 · 에너지와 함께 γ 상승 · **n ≥ 5,000 rpm 은 5–10 min 안에 97–100 %** ("Target region") · 60 min 까지 늘려도 변화 미미.  95:5:0.8 도 비슷 (S8a) — 단 그 시리즈는 γ ≤ 0.955 에서 평탄 (맞춤도 상한 0.95 로 고정 · "NewXPSlimit") [원자료 FigureS8a].
+  - 전 20 점 맞춤 γ = 1 − a/(E + b^c): a = 78,420 ± 33,604 · **b = 4.50×10⁶ ± 9.0×10⁷ · c = 0.874 ± 1.19** · R² 0.889 [원자료 Figure5a] — b · c 의 불확도가 값보다 크다 (§10-13).
+- 공극률 (3.45 MPa · 60 min 시료 · Fig 5b) [원자료 Figure5b]: **0.444 / 0.380 / 0.349 / 0.339 / 0.295** (1,000 → 10,000 rpm) — γ 가 평탄해진 뒤에도 공극률은 계속 떨어진다 = *"the morphology … can continue to evolve"* [인쇄 p.6].  95:5:0.8 = 0.443 → 0.342 [원자료 FigureS8b].
+- SEM (Fig 5c · S9) [인쇄 p.6]: 1,000 rpm = CB · LIC 가 입자 모양으로 불균일하게 붙은 덩어리 + 코팅에 안 들어간 LIC 낱알 · 5,000 rpm = LIC · CB 입자가 표면에 아직 보임 · 10,000 rpm = 매끈한 껍질 · 원형도 **0.67 / 0.69 / 0.75** (1,000 / 5,000 / 10,000 rpm, 60 min) [인쇄 Fig 5c] · S9 의 γ 표기 0.91 / 0.96 / 1.00 / 0.97 / 0.99 = 60 min 값.
+- 결론 [인쇄 p.6]: 같은 비에너지라도 회전수 (믹서 강도) 가 높을수록 매끈 · 덜 입자형 — XPS 피복률은 이 형태 차이를 못 가린다 (SEM 보완 필요).
+
+### 3-5. ★★ DEM — 공정 응력 (p.6–9 · p.13–14 · Fig 6 · SI Note 3 · 표 S2 · Fig S10 · S11)
+
+- 무엇을 위해 [인쇄 p.6]: 믹서 안 입자가 받는 응력 조건 (stressing conditions) 을 거시적으로 정량 — *"While this approach does not retain information on the original coating progression, it allows for the determination of the mixer's overall stressing conditions."*
+- 입자 · 접촉 (SI 표 S2 · 원자료 TableS2) [인쇄 p.13 · SI p.10]:
+
+| 매개변수 | 입자–입자 | 입자–벽 |
+|---|---|---|
+| 정지 마찰 | 0.46 | 0.45 |
+| 동마찰 | 0.31 | 0.25 |
+| 항복비 (yield ratio) | 0.00756 | 0.0256 |
+| 반발계수 | 0.3 | 0.3 |
+| **물성** | **입자** | **로터 벽 · 용기 벽** |
+| 밀도 (g/cm³) | 2.417\* | 4.510 · 7.850 |
+| 영률 (GPa) | **0.228** | 120 · 200 |
+| 푸아송비 | 0.3 | 0.3 · 0.3 |
+
+  - 접촉 모델 = **elasto-plastic Thornton–Ning** (소성 · 탄성) [인쇄 p.13] · 표에 **점착 (JKR 표면 에너지 · 구름 저항) 항이 없다** — 선행 Frankenberg 2024 (카드 기준) 는 Hertz–Mindlin + JKR (Γ 0.0045 J/m²) + 구름 마찰 0.2 를 썼다.  "yield ratio" 정의 [미확인] (원문 · SI 에 식 없음).
+  - 입자 = **300 µm 거친 입자** (실입자의 ≈100 배) · 크기 분포 · 개수 · 시간 간격 [미확인] — [우리 산술] 단분산 300 µm · 2.417 g/cm³ 이면 3.88 g ≈ **1.1×10⁵ 개**.
+  - 밀도 2.417 g/cm³ (SI Note 3 · Fig S10c): 원문은 *"internal porosity of 0.39 is assumed"* 라고 적지만, [우리 산술] 숫자는 ρ_bulk 1.45 / (1 − **ε_external 0.4**) = 2.4167 로 맞고 ε_internal = 1 − 2.4167/3.944 = 0.387 은 그 결과다 (3.944 × 0.61 = 2.406 ≠ 2.417) — 가정한 쪽은 바깥 공극 0.4.
+- 보정 · 검증 (SI Fig S10 · S11) [인쇄 p.6 · p.13]:
+  1. 압축 시험 (ZWICK · 80:20:3 1 g · 1000 N) ↔ 가상 실린더 압축 — 항복비 · 영률 · 마찰 조정 (S10a: 실험 14 곡선 (1,000–7,500 rpm 각 3 · 10,000 rpm 2) · 최소 분리 거리 2.32–3.32 mm · 시뮬 2.89 mm [원자료 FigureS10a]).
+  2. 동적 안식각 (GranuDrum · 20 rpm · 51.2 g · 60 장 평균) ↔ 드럼 15 % 길이 조각 (7.68 g) — 마찰 조정 · 실험 **31.28° ± 7.4°** vs 시뮬 **31.14° ± 0.25°** [인쇄 S10b].
+  3. 충전율 대조 — 실험 33.6 % vs 시뮬 33.4 % (밀도 확인) [인쇄 S10d].
+  4. 믹서: 용기 부피 1/5 · 재료 1/5 (3.88 g) 을 입구 둘로 0–0.1 s 투입 → 0.4 s 회전 (정상 상태) → 로터에 걸린 기계 동력 ↔ 실험 순 동력 (Fig 6b) [인쇄 p.13].
+- 순 비동력 (Fig 6b · 시뮬 0.5 s / 실험 60 min 평균) [원자료 Figure6b]:
+
+| rpm | 시뮬 (W/kg) | 실험 (W/kg) | 시뮬/실험 [우리 산술] |
+|---|---|---|---|
+| 1,000 | 45.9 ± 9.6 | 74.2 ± 15.7 | **0.62** |
+| 2,500 | 368 ± 28 | 728 ± 46 | **0.51** |
+| 5,000 | 2,184 ± 78 | 2,765 ± 807 | 0.79 |
+| 7,500 | 6,180 ± 108 | 6,272 ± 1,181 | 0.99 |
+| 10,000 | 12,942 ± 198 | 10,011 ± 4,000 | 1.29 |
+
+  - 저자: *"Both specific power data show a high degree of agreement"* [인쇄 p.6] — 고속에서는 맞고 저속 둘은 오차 밖으로 절반 수준 (§10-11).
+- ★ 응력 모델 (Kwade, ref 69 · 식 2 · 4 · 5) [인쇄 p.6–7 · p.14 · SI Note 3]:
+  - **SI_CG,i = P_i^diss / (c_i · m_particle,CG) = Σ_{c=1..N_c,i} W_c^diss / (N_c,i · m_particle,CG)** — 출력 구간 Δt_out = 0.005 s 동안 입자 i 의 충돌 N_c,i 회에서 **소산된 일** 의 평균을 거친 입자 질량으로 나눈 값 [J/kg].  각 구간 값은 N_c,i 번 저장 (충돌 가중) → SI–응력 빈도 분포 → 평균 SI_CG (회전수마다 하나).
+  - SF_CG = 모든 입자의 거친 입자 충돌 사건 수 / s · **SN_p = SF_CG · t_mix · m_particle,CG / m_total** (응력 빈도를 시간 적분한 입자당 응력 사건 수).
+  - **E_m,sim = SI_CG · SN_p** (식 2).
+  - 크기 불변성 (SI Note 3): 충돌 에너지 · 입자 질량 둘 다 f³ 로 커져 SI 는 일정해야 하지만, 로터–벽 좁은 틈 때문에 거친 입자의 SE 가 조금 과대일 수 있어 "SI_CG" 로 표기 · SN_p 도 응력 빈도 ∝ 1/f³ · 질량 ∝ f³ 로 불변 (Sakai 2014) [인쇄 SI p.9–10].
+- 결과 [원자료 Figure6c · Figure6d · 인쇄 p.8]:
+
+| rpm | SI_CG (J/kg) | SN_p 5 min | SN_p 60 min | E_m,sim (60 min) [우리 산술] | E_m,sim / E_m,exp (60 min) [우리 산술] |
+|---|---|---|---|---|---|
+| 1,000 | **0.00643** | 2.21×10⁶ | 2.66×10⁷ | 1.71×10⁵ J/kg | 0.60 |
+| 2,500 | **0.03297** | 3.52×10⁶ | 4.22×10⁷ | 1.39×10⁶ | 0.53 |
+| 5,000 | **0.12302** | 5.59×10⁶ | 6.70×10⁷ | 8.25×10⁶ | 0.78 |
+| 7,500 | **0.23278** | 8.35×10⁶ | 1.00×10⁸ | 2.33×10⁷ | 0.83 |
+| 10,000 | **0.35514** | 1.15×10⁷ | 1.37×10⁸ | 4.88×10⁷ | 1.28 |
+
+  - SN_p(60)/SN_p(5) = **12.00** (전 회전수) — 정상 상태 비율을 시간에 곱한 값 (구성상 선형) · 입자당 응력 사건률 ∝ n^0.70 [우리 산술].
+  - SI(10,000)/SI(1,000) = **55** (n² 이면 100) · 로그 기울기 1.76 · 국소 1.78 → 1.90 → 1.57 → 1.47 [우리 산술] — 본문 *"An approximate increase of SI_CG ∝ n² can be expected"* 는 ref 43 의 기대.
+  - 같은 피복 γ 에서 E_m,sim / E_m,exp = **0.46–1.28** (20 점) [우리 산술 — 원자료 FigureS11a] · SI Note 3 의 *"maximum deviation … 2 %"* 는 두 맞춤 곡선의 피복 상대오차 (2.05 % @ 4.3×10⁵ J/kg [원자료 FigureS11b]).
+  - [우리 산술 · 직관용] √(2·SI) = 0.11 (1,000 rpm) – 0.84 m/s (10,000 rpm) — 날개 끝 4–40 m/s 보다 훨씬 작다 = 평균 충돌 대부분이 부드럽다 (소산 에너지 ≠ 전 운동에너지라 비유일 뿐).
+- 해석 [인쇄 p.8–9]: SI 는 로터 끝과 로터–벽 틈에서 가장 크다 (Fig 6a — 색 막대 없음) · γ 는 SI 와 함께 오르고 SI(5,000) = 0.123 J/kg 에서 5 min 만에 >97 % · **같거나 더 큰 SN_p (영역 1) 로는 같은 γ 에 못 간다 = 높은 SI (영역 2) 가 고른 코팅에 유리** · 낮은 SI 도 시간으로 천천히 보상되지만 형태가 다를 것 · 1,000 rpm 으로 γ ≈97.5 % 를 내려면 *"extending the mixing time by 200%, i.e., to a total of ~3 h"* (산출법 미기재 — §10-14) · 높은 SI 에서는 열화 감시 필요 · DEM 은 열화를 피하는 낮은 SI 를 더 긴 시간으로 보상하는 길잡이가 될 수 있다.
+
+### 3-6. 구조 손상 · 계면 (p.9 · Fig 7 · SI Fig S12–S14 · 표 S3)
+
+- SPED (JEOL 3010 · NanoMEGAS ASTAR · 세차 0.6°) [인쇄 p.9 · p.15]: 80:20:3 의 NCM 표면 영역 상 지도에 **층상상 + 코팅층만** · 암염상 (NiO) 없음 · 검은 점 = 비정질 · 공극 · 계면 회절 패턴 수동 확인도 같음.
+- XRD (Mo Kα · 투과 · 모세관) + Rietveld (표 S3) [인쇄 SI p.12]:
+
+| 시료 | a (Å) | c (Å) | 격자 변형 (%) | NCM / LIC (wt%) |
+|---|---|---|---|---|
+| 맨 NCM | 2.895739 | 14.304153 | 0.037 | 100 / – |
+| 95:5:0 | 2.895918 | 14.304236 | 0.05 | **92 / 8** |
+| 80:20:3 | 2.895848 | 14.303675 | 0.045 | 79 / 21 |
+
+- STEM-EDX 선분석 (S13 · FIB 박편 · W 보호층) [인쇄 p.9 · 원자료 FigureS13c]: NCM 쪽 (0–30 nm 평균) Ni 62.6 · O 23.8 wt% → Ni 이 30 wt% 아래로 49 nm · Cl 이 50 wt% 위로 54 nm (선 길이 130 nm) · 겹침 폭 **10–15 nm** (표면 기울기 탓) 밖 확산 없음 [인쇄 S13 캡션].
+- 다결정 NCM (S14 · 10,000 rpm · 60 min · LIC 20 wt%) [인쇄 p.9]: 대부분 형태 유지 · **가장 큰 입자 몇 개가 깨짐** — Rumpf (응집체 강도 σ ∝ 1/d²) · Tavares–King (1 차 입자 σ ∝ 1/d^(1…2)) 근거로 큰 입자 · 다결정 · 황화물 SE · 밀은 같은 SI 에서도 파쇄 위험 (수식은 쪽 렌더로 확인 — 텍스트 층에서는 깨진다).
+
+### 3-7. ★ 부분 전도도 (p.9–10 · Fig 8 · p.15)
+
+- 셀 [인쇄 p.15]: **전자** = 이온 차단 대칭 셀 (스테인리스 막대) · 분말 120 mg · 380 MPa · 3 min · **이온** = 전자 차단 대칭 셀 — 복합체 240 mg 손 압착 + 양쪽 LPSCl 60 mg · 380 MPa · 3 min · In 박 (100 µm · Ø9 mm) + Li 박 (100 µm · Ø4 mm) 양쪽 · **DC 분극** (전압 단계마다 정상 전류까지 시간전류법 → V–I 선형 맞춤 → 옴 법칙) · 이온 셀은 Li-In \| LPSCl \| In-Li 기준 저항을 뺐다 · 측정 중 압력 ≈80 MPa (모든 전기화학 측정 공통 프레임) [인쇄 p.15].
+- 값 [원자료 Figure8a]:
+
+| 매트릭스 CB (wt%) | 0 | 1 | 2.5 | 5 | 10 | 15 |
+|---|---|---|---|---|---|---|
+| 매트릭스 σ_e (mS/cm) | (측정 없음) | 2.67×10⁻⁷ | 0.0107 | **167.5** | 725.2 | 943.7 |
+| 매트릭스 σ_ion | **0.743** | 0.632 | 0.665 | 0.377 | 0.0214 | 0.0328 |
+| 복합체 80:20:x σ_e | **0.034** | 0.113 | 0.093 | 0.127 | 0.190 | **1.835** |
+| 복합체 σ_ion | 0.0184 | **0.0456** | 0.0333 | 0.0298 | 0.0152 | **0.0058** |
+
+  - 복합체 점의 실제 매트릭스 CB = 0 / 1.00 / 2.46 / 4.85 / 9.22 / 13.36 wt% (80:20:0 … 80:20:3) [우리 산술 — SI 표 S1] — 그림은 1 / 2.5 / 5 / 10 / 15 에 놓았다.
+  - 저자 [인쇄 p.9–10]: 매트릭스 전자 퍼콜레이션 문턱 **p_c = 2–5 wt%** · 그 아래 < 0.01 mS/cm · 5 wt% 에서 4 자릿수 상승 · 이온은 반대 추세 · 단조가 아닌 점은 CB 분산 불균일 · 건조실 조건 탓 · **벌크 펠릿 (> 550 µm) 의 p_c 는 얇은 코팅 (유한 크기) 보다 높을 것이므로 상한으로 봐야 한다** (Fig 8b 도식) · 부분 전도도는 CAM 이 완전 리튬화된 상태의 벌크 수송만 보며 계면 전하 이동을 못 본다.
+  - [우리 산술] 매트릭스 → 복합체 비 (최고 CB): σ_e **943.7 → 1.83 (×1/514)** · σ_ion 0.0328 → 0.0058 (×1/5.7) · CB 없는 복합체의 f_ion = 0.0184/0.743 = 0.025 → 수송 tortuosity (φ·σ₀/σ_eff, φ_LIC = 1.54/4.91 = 0.314) **≈12.7 (공극 0) · ≈11.4 (공극 10 % 가정)** — 380 MPa 복합체 공극률은 보고 없음 [미확인] · LIC \| LPSCl 계면 저항은 빼지 않았으므로 σ_ion 은 하한 쪽 [추정].
+
+### 3-8. ★ 전기화학 (p.10–12 · Fig 9 · SI Fig S15 · S16 · S18 · S19 · 표 S4)
+
+- 반쪽셀 [인쇄 p.15]: PEEK Ø10 mm · LPSCl 40 mg 손 압착 + LIC 40 mg 손 압착 (2 층 분리막) · 양극 ≈15 mg 을 LIC 층 위에 · LPSCl 쪽 In 박 (100 µm · Ø9 mm) + Li 박 (100 µm · Ø6 mm) → In/InLi · **≈380 MPa · 3 min** · 2.0–3.7 V vs In/InLi · 실온 / 25 °C · CCCV 충전 (컷오프 1 h 유지) · CC 방전 · C-율 = 200 mAh/g_NCM 명목 (1 C ≈ 200 mA/g ≈ 3 mA/cm²) · 스택압 **≈80 MPa (10 N·m)**.  [우리 산술] 15 mg × 0.8 / 0.785 cm² = NCM 15.3 mg/cm² → 명목 3.06 mAh/cm².
+- 프로토콜 [원자료 Figure9a]: 사이클 1–4 = 0.1 C · 5–14 = 0.3 C · 15–94 = 1 C (80 회) · 20 사이클마다 이용률 점검 사이클 (SI Note 4 — CE 주기성의 원인).
+- 복합체 비용량 (mAh/g_comp · 평균 ± 표준편차) [원자료 Figure9a]:
+
+| 조성 | 셀 수 (열 머리) | 1 (0.1 C) | 4 (0.1 C) | 14 (0.3 C) | 15 (1 C 첫) | 94 (1 C 끝) |
+|---|---|---|---|---|---|---|
+| 80:20:0 | n=2 | 78.9 | 110.7 | 109.8 | 83.9 | 82.5 |
+| 80:20:0.2 | n=2 | 78.4 | 91.5 | 91.2 | 77.4 | 76.2 |
+| 80:20:0.5 | n=2 | 103.4 | 117.6 | 115.7 | **103.3** | **97.7** |
+| 80:20:1 | n=3 | 80.2 ± 9.8 | 100.5 | 93.7 | 66.0 | 39.3 |
+| 80:20:2 | n=2 | 103.8 | 101.9 | 51.0 | 9.8 | 2.2 |
+| 80:20:3 | **n=0 (표준편차 0)** | **129.4** | 116.5 | 45.8 | 10.0 | 3.0 |
+
+- 표 S4 (첫 사이클 · 복합체 질량 기준 · 1 C 80 회 유지율) [인쇄 SI p.16]: Q₀,charge CC / CV · Q₀,discharge · ICE · 유지율 = 80:20:0 85.3 / 7.5 / 78.3 / 84.4 % / 91.7 % · 80:20:0.2 85.2 / 5.3 / 76.2 / 84.2 % / 108.5 % · 80:20:0.5 113.0 / 4.8 / 102.6 / 87.1 % / 96.7 % · 80:20:1 75.4 / 8.3 / 70.4 / 84.1 % / 81.8 % · 80:20:2 102.1 / 10.5 / 94.1 / 83.6 % / 21.8 % · 80:20:3 142.0 / 10.3 / 129.4 / 85.0 % / 30.1 %.  ⚠ ICE 가 S15b *"(Cell 1)"* 첫 CE 와 같다 → 표 S4 는 **셀 하나의 값** [우리 산술] (§10-6).
+- 정적 CAM 이용률 · 1 C 활성 비용량 (Fig 9b · d) [원자료 Figure9b · Figure9d]:
+
+| 조성 | 이용률 0 → 20 → 40 → 60 → 80 사이클 (%) | 1 C 활성 비용량 (mAh/g_CAM,act) |
+|---|---|---|
+| 80:20:0 | 67.4 → 77.3 → 76.7 → 76.3 → 75.6 | 155.3 ± 2.9 |
+| 80:20:0.2 | 56.6 → 63.3 → 63.3 → 63.6 → 62.7 | 171.2 ± 6.2 |
+| 80:20:0.5 | 71.1 → 76.7 → 75.9 → 71.2 → 69.7 | **182.3 ± 5.8** |
+| 80:20:1 | 77.3 → 78.7 → 76.1 → 71.7 → 41.6 | 109.3 ± 16.8 |
+| 80:20:2 | 74.1 → 66.9 → 58.6 → 47.1 → 35.7 | 17.1 ± 2.5 |
+| 80:20:3 | **90.5** → 63.6 → 47.8 → 36.9 → **29.3** | 14.3 (오차 0) |
+
+  - [우리 산술] 1 C 활성 비용량 = 15 번째 사이클 복합체 용량 ÷ (NCM 질량분율 × 초기 이용률) 과 0.1 % 안에서 같다 (예: 80:20:0.5 = 182.26 × 0.7115 × 80/100.5 = 103.2 vs 103.3).
+  - 저자 [인쇄 p.10–12]: CB 가 p_c 위 (80:20:1 / 2 / 3) 인 셀은 0.1 C 는 비슷하나 0.3 · 1 C 에서 급락 · CB 없는 80:20:0 도 1 C ≈85 mAh/g (80 MPa 에서 NCM–NCM 점 접촉 전도로 충분 — Kim 2023 과 같은 결론) · 80:20:0.5 가 최고 · 저 CB (0–0.5 %) 는 CAM 의 ≈65 % 만 전자적으로 연결 · 80:20:3 은 ≈90 % 연결이지만 활성 비용량 *"only about 10 mAh g−1"* (1 C · 원자료는 14.3) · dQ/dV (Fig 9c) · CV 단계 용량 (S16) 이 동역학 차이를 보임 · 이용률 감소 (= 접촉 손실) 는 고 CB 에서 크다 · **명확한 단조 추세 없음 = CB 분포 최적화가 덜 됐다**.
+- CAM 이용률 측정 (ref 34 방식) [인쇄 p.15]: 0.1 C 로 3.1 V 까지 충전 · 3 h 유지 · 3 h 휴지 → V₁ · 0.05 C 로 3.4 V · 5 h 휴지 → V₂ · 액체 기준 셀 (준 OCP · 0.02 C) 의 [V₁, V₂] 용량 q_ref,LIB 대비 q_measured (식 12) · 활성 비용량 = 측정 용량 / 이용률.  S18: 기준 셀의 저율 충전 곡선 ≈ GITT 휴지 OCV (노란 창) · S19: SSB 의 활성 비용량 곡선이 LIB 곡선과 같은 모양 (가로 이동 = 율 차이) — S19 의 SSB 조성 [미확인] · 그 셀 총 / 활성 = 140.2 / 194.7 mAh/g → 72 % [우리 산술 · 원자료 FigureS19].
+
+### 3-9. ★ CB–LIC 매트릭스 기계 성질 (p.12 · Fig 9e · SI Fig S17)
+
+- 펠릿: 예비혼합 0.69 g · 380 MPa · 3 min (LaboPress P200S) · 에폭시로 유리판 고정 · 플라스틱 칼라 + 덮개 유리 밀봉 · TriboIndenter (Hysitron) · Ar 퍼지 · **Ø100 µm 평편 압자** · 변위 제어 10 µm · 500 nm/s · 펠릿당 25 회 평균 · W_elastic = ∫(s₀→s_max) F_unloading ds · W_plastic = W_total − W_elastic (식 6–8) [인쇄 p.14].
+- 값 [원자료 Figure9e · FigureS17a · FigureS17b]:
+
+| 매트릭스 CB (wt%) | 1 | 2.5 | 5 | 10 | 15 |
+|---|---|---|---|---|---|
+| 소성 몫 (%) | 30.4 ± 2.3 | **20.7 ± 3.2** | 28.4 ± 2.0 | 42.6 ± 5.9 | **51.6 ± 5.8** |
+| 380 MPa 펠릿 공극률 (%) | 2.7 | 4.0 | 4.4 | **23.9** | **28.9** |
+| 벌크 밀도 (g/cm³) | 2.51 | 2.47 | 2.44 | 1.91 | 1.76 |
+| 10 µm 근처 최대 힘 (N) | 1.43 (최대 깊이 8.2 µm) | 1.29 | 1.13 | **0.063** | **0.033** |
+
+  - 저자 [인쇄 p.12]: 고 CB 매트릭스는 다공 · 소성 → NCM 부피 변화를 수용하지 못해 접촉 손실 (Fig 9f 도식: 탄성 코팅 = 탄성 회복으로 접촉 유지 · 소성 코팅 = 비가역 변형으로 접촉 손실).
+  - [우리 산술] 10 · 15 wt% 펠릿은 같은 깊이에서 힘이 1–5 wt% 의 **1/18–1/43** — 탄성 · 소성 비율보다 "단단함 자체" 의 차이가 훨씬 크다.  1 wt% 의 소성 몫 30.4 % 는 2.5 wt% (20.7 %) 보다 높아 단조가 아니다 (원문 언급 없음).
+
+---
+
+## 4. ★ 방법 — 측정 사슬 · DEM · 입자 처리
+
+### 4-1. 측정 사슬
+LIC 수계 합성 → (CB + LIC 예비혼합 5,000 rpm · 10 min) → NCM 과 메카노퓨전 (회전수 · 시간 · 조성) → 분말 SEM-EDX · 입자 분할 (원형도 · 종횡비 · Q3 PSD) · (S)TEM · SPED · XRD/Rietveld · XPS 피복률 γ · 3.45 MPa 공극률 → 동력 기록 → E_m,exp → (병렬) 거친 입자 DEM 보정 → SI_CG · SN_p · E_m,sim → γ 와 대조 → 매트릭스 · 복합체 DC 부분 전도도 · 매트릭스 나노압입 · 공극률 (380 MPa) → 반쪽셀 (0.1 / 0.3 / 1 C · CCCV) · CAM 이용률 (20 사이클마다) · 활성 비용량.
+
+### 4-2. ★ DEM 상세 (우리 축 언어로)
+- **code**: Rocky 2024 R1 (상용) [인쇄 p.13].
+- **목적**: 공정 응력 지표 (SI · SN · E_m) — 미세구조 (상 분포 · 코팅) 계산 아님.
+- **입자 처리**: 강체 구 · 단일 종 · 300 µm (≈실입자 ×100) · 80:20:3 혼합물 전체를 "겉보기 성질" 하나로 (밀도에 바깥 공극 0.4 를 넣은 2.417 g/cm³) — NCM · LIC · CB 를 **구분하지 않는다** · 형상 변화 · 코팅 형성 · 파쇄 없음.
+- **접촉**: Thornton–Ning 탄소성 (Hertz → 항복 → 소성 가지 · 잔류 겹침) — 접촉 소성 (CONTACT plasticity) 이지 입자 형상 소성 (SHAPE flow) 이 아니다 · 점착 · 구름 저항 표에 없음.
+- **보정**: 압축 시험 (1 g · 1000 N · 힘–변위) → 항복비 · 영률 · 마찰 / GranuDrum 동적 안식각 → 정지 · 동마찰 / 충전율 → 밀도 확인 / 순 동력 → 검증.
+- **영역 · 시간**: 용기 1/5 · 재료 1/5 · 0–0.1 s 투입 · 0.1–0.5 s 회전 · 실험 60 min 의 정상 상태 대리 (시간 비 ×7,200 [우리 산술]).
+- **후처리**: 입자별 소산 동력 / 충돌 빈도 / 거친 입자 질량 → SI 분포 · 평균 → SN_p = SF · t · m_CG/m_tot → E_m,sim.
+- **없는 것**: 시간 간격 · 입자 수 · 경계 조건 (주기 여부) · 감쇠 모델 · yield ratio 의 정의 [미확인] · SI 분포 그림 (평균만 · 선행 논문은 분포 그림을 실었다 — `frankenberg2024_…` 카드).
+
+### 4-3. 입자 처리 — 실험 쪽
+- LIC 는 *"good deformability"* 로 **소성 변형 · 합체해 연속 껍질** (TEM) · CB 는 예비혼합에서 LIC 에 먼저 붙어 껍질 안에 분산 (STEM-EDX · S13a 의 C 지도) · 고 CB 매트릭스는 다공 (24–29 %) · 소성.
+- 코팅 = **SE 전부가 껍질** (자유 SE 를 따로 넣지 않는다) — 저속에서는 코팅에 안 들어간 LIC 낱알이 남는다 (SEM 정성 · 정량 없음).
+
+### 4-4. 기법 미니 용어집
+- **메카노퓨전 (mechanofusion)**: 고속 로터와 용기 벽 사이 좁은 틈에서 분말에 충돌 · 압축 · 전단을 반복해 작은 손님 (guest) 입자를 큰 숙주 (host) 입자 표면에 바인더 · 용매 없이 입히는 건식 공정.
+- **Kwade 응력 모델**: 공정 (분쇄 · 분산 · 코팅) 을 "충돌 하나의 세기 (응력강도 SI)" 와 "충돌 횟수 (응력수 SN)" 로 기술 · 비에너지 E_m = SI × SN.
+- **응력강도 SI_CG [J/kg]**: 충돌 하나에서 소산된 에너지의 평균을 거친 입자 질량으로 나눈 값.  **응력수 SN_p [–]**: 공정 시간 동안 입자 하나가 받은 응력 사건 수.
+- **거친 입자 (coarse-graining)**: 실입자 여러 개를 큰 입자 하나로 대표해 입자 수를 줄이는 DEM 기법 (여기 300 µm ≈ ×100).
+- **Thornton–Ning**: 탄성 (Hertz) → 항복 접촉 압력 이후 선형 소성 하중 가지 → 잔류 겹침이 남는 하중 제거를 갖는 탄소성 접촉 법칙.
+- **XPS 피복률 γ**: 코팅 원소 (Cl · In) 신호 / (코팅 + NCM (Ni · Mn) 신호) — 정보 깊이 ≈10 nm.
+- **SPED**: 전자빔을 세차 운동시키며 주사해 각 픽셀의 회절 패턴으로 상 · 방위 지도를 만드는 TEM 기법.
+- **DC 분극 부분 전도도**: 한 종류 전하만 통하는 차단 전극 셀에 전압 단계를 걸어 정상 전류로 옴 저항을 구하는 법.
+- **정적 CAM 이용률**: 저율 · 긴 휴지로 잰 두 평형 전위 사이 충전량 ÷ 액체 기준 셀의 같은 전위 창 용량 = 전자 · 이온적으로 연결된 CAM 몫.  **활성 비용량** = 측정 용량 ÷ (CAM 질량 × 이용률).
+
+---
+
+## 5. Figure set ★ (크롭 46 장 = `litdb/figures/kissel2026_mechanofusion_derived_cathode_composite_microstructures_scalable/`)
+
+| Fig | 내용 | 우리 활용 |
+|---|---|---|
+| 1 | (a) 원료 SEM (축척 막대 NCM · LIC 3 µm · CB 1 µm) (b) 고강도 믹서 도식 (n · t_mix · φ) (c) 혼합 전도 매트릭스 코팅 building block 도식 + TEM (200 nm) (d) 상향식 미세구조 도식 + 단면 | 개념도 — 원본 tif 의 SEM 조건 = 2 kV · InLens · WD 2.9–3.0 mm (원자료 zip) |
+| Table 1 | 네 조사 (CB 없는 두께 · CB 있는 두께 · 공정 변수 · 매트릭스 최적화) 의 변수 · 고정값 · 조성 | ★ 실험 설계 형판 |
+| 2 (a · b–c) | (a) 90:10:0 · 95:5:0 · 98:2:0 · 99:1:0 SEM + Ni · Cl EDX (b) Q3 PSD (x₁₀–x₅₀ · x₅₀–x₉₀ 막대) (c) 3.45 MPa 공극률 (CB 있음 · 없음) | ★ 코팅량 → 저압 공극률 (원자료) |
+| 3 | (a · b) 80:20:1 암시야 TEM · STEM-EDX Ni · Cl · C (≈100 nm) (c · d) 99:1:0 HR-TEM · EDX (≈5 nm) | 껍질 두께 실측 |
+| 4 (a · b) | (a) 피복 유형 도식 (두꺼운 덮개 · 얇은 덮개 · 다른 형태 · 부분 덮개) (b) XPS γ vs 코팅 wt% | ★ γ 의 해석 한계 (>10 nm 포화) |
+| 5 (a–b · c) | (a) 80:20:3 γ vs E_m,exp (5 회전수 × 4 시간 · 목표 영역) (b) 60 min 공극률 vs E_m,exp (c) 1,000 · 5,000 · 10,000 rpm SEM + Cl · Ni · O EDX · 원형도 0.67 · 0.69 · 0.75 | ★★ 같은 조성 · 다른 코팅 상태 (V1 · V2) |
+| 6 (a–b · c–d) | (a) DEM 스냅숏 · 응력강도 도식 (색 막대 없음) (b) 순 비동력 시뮬 vs 실험 (c) γ vs SI_CG (d) γ vs SN_p (캡션의 영역 1 · 2 는 그림에 없음) | ★★ 공정 응력 DEM · 검증 방식 |
+| 7 | (a) 80:20:3 TEM (붉은 상자 = SPED 영역) (b) SPED 상 지도 (NCM · 암염 · LIC) | 손상 없음 근거 |
+| 8 (a · b) | (a) 매트릭스 · 복합체 전자 · 이온 부분 전도도 vs CB + 측정 셀 도식 (b) 시료 크기와 퍼콜레이션 도식 (벌크 > 550 µm vs 코팅 ~500 nm) | ★ 매트릭스 ↔ 복합체 σ (원자료) |
+| 9 (a–b · c–d · e–f) | (a) 복합체 비용량 vs 사이클 (0.1 / 0.3 / 1 C) + 셀 도식 (b) 1 C 활성 비용량 · CAM 이용률 막대 (오른쪽 축 52 % 시작) (c) dQ/dV 0.3 · 1 C (d) 이용률 vs 1 C 사이클 (e) 나노압입 탄성 · 소성 몫 (f) 탄성 · 소성 코팅 도식 | 셀 성능 · 이용률 |
+| Table S1 | 질량 · 부피 · 혼합 밀도 (네 조사) | 조성 산술의 근거 |
+| S1 | particleOS.ai 분할 · 깊이 · 이진 영상 + 원형도 · 종횡비 vs 코팅량 + 원형도 도식 | 형태 정량 방법 (SAM) |
+| S2 | 맨 NCM vs LIC 코팅 NCM (80:20:0) SEM | 응집 경계가 덮인 모습 |
+| S3 | 이론 두께 vs 코팅량 (CB 있음 · 없음 · 선형 맞춤) | 두께 산술 (반경 의존) |
+| S4 | 80:20:1 HR-TEM (LIC 격자면) · STEM-EDX Ni · Cl · C | 껍질 결정성 |
+| S5 | XRD (Cu · 반사) LIC · CB:LIC (1 %) · 복합체 (범례 "80:20:02") | LIC 상 유지 |
+| S6 | 99:1:0 STEM-EDX · HR-TEM | ≈5 nm 껍질 |
+| S7 | 비동력 곡선 (코팅량 시리즈 · 회전수 시리즈) · E_m 시간 곡선 (캡션 a/b · d/e 뒤바뀜) | ★ 동력 하락 (b < 1) |
+| S8 | 95:5:0.8 γ · 공극률 vs E_m | 얇은 코팅의 γ 평탄 (≈0.95) |
+| S9 | 80:20:3 회전수별 SEM + γ | 형태 변화 |
+| Table S2 | DEM 매개변수 (마찰 · 항복비 · 반발 · 밀도 · E · ν) | ★★ 우리 믹서 DEM 과 대조 |
+| S10 | DEM 보정: 압축 곡선 · 동적 안식각 (31.28 vs 31.14°) · 거친 입자 밀도 도식 · 충전율 (33.6 vs 33.4 %) | ★ 보정 절차 형판 (D3) |
+| S11 | γ vs E_m,exp · E_m,sim + 맞춤 · 상대오차 (최대 ≈2 %) | 검증 지표의 한계 |
+| S12 | XRD (Mo · 투과) + Rietveld (맨 · 95:5 · 80:20:3) | 격자 변형 |
+| Table S3 | 격자 상수 · 변형 · 질량비 | 표 S3 의 92:8 |
+| S13 | STEM-EDX 지도 (C · Cl · Ni · W) · 선 방향 · 질량분율 곡선 | 계면 확산 없음 · 박편 C 지도 |
+| S14 | 다결정 NCM 처리 전 · 후 (깨진 큰 입자 · Ni · Cl EDX) | 파쇄 위험 |
+| S15 | CAM 비용량 vs 사이클 · CE (Cell 1) | 표 S4 와의 관계 |
+| S16 | 전압 곡선 · dQ/dV (첫 · 넷째 0.1 C · 0.3 C · 1 C) | 동역학 차이 |
+| Table S4 | 첫 사이클 충 · 방전 · ICE · 1 C 80 회 유지율 | 셀 하나 값 (§10-6) |
+| S17 | 매트릭스 펠릿 공극률 · 밀도 vs CB · 나노압입 곡선 | ★ 매트릭스 기계 · 공극 |
+| S18 | LIB 기준 셀 0.05 C vs GITT (노란 창) | 이용률 측정 근거 |
+| S19 | LIB vs SSB (총 · 활성 비용량) 곡선 | 활성 비용량 정의 확인 |
+
+## 6. Post-processing ★
+- **무엇을**: SEM 분할 (원형도 · 종횡비 · q₀ → Q3 PSD) · 이론 두께 · XPS γ (식 11) · 3.45 MPa 공극률 (식 9 · 10) · 동력 → E_m (식 1 · 3) · DEM 충돌 기록 → SI · SN_p · E_m,sim (식 2 · 4 · 5) · γ–E_m 맞춤 (1 − a/(E + b^c)) · 시뮬–실험 상대오차 · Rietveld · SPED 상 지도 · DC V–I 맞춤 · 나노압입 일 적분 (식 6–8) · CAM 이용률 (식 12) · 활성 비용량 · dQ/dV.
+- **도구**: particleOS.ai (TU-BS · Meta SAM) · Rocky · CasaXPS · NanoMEGAS DiffGen 2 / Index 2 / MapViewer 2 + 자체 Python · Esprit 2.3 · Origin (원자료 시트의 독일어 맞춤 표 *"Gleichung · Kor. R-Quadrat"*).
+- **안 한 것**: SE 덩어리 · 자유 SE 의 정량 (개수 · 크기) · 무작위 대비 분포 지수 · 380 MPa 복합체 공극률 · 공정 조건별 σ · 셀 · 혼합 배치 반복 · 전도도 반복 · EIS.
+- **우리 후처리 (이 카드)**: 원자료 47 시트 전수 확인 · SI 지수 · 시뮬/실험 비 · 맞춤 역산 · 매트릭스 CB 환산 · 두께 재현 · 거친 입자 밀도 역산 · 활성 비용량 검산 · 수송 tortuosity 어림.
+
+---
+
+## 7. 우리 작업에 주는 것 → `our_dem_baseline.md` (⚠ 정본 브랜치에서는 값 자리표시 상태 — 우리 수치는 메인 리포 `docs/data/ps45_r45_network_g2_20261007/README.md` · `docs/data/ps45_sigmae_factor_off_20261013/README.md` · CLAUDE.md 의 ps45 · σ_e 앵커 줄을 병기해 적는다)
+
+### 7-1. 비교표
+
+| 항목 | 이 논문 | 우리 | 같음 / 다름 · 왜 |
+|---|---|---|---|
+| DEM 의 일 | 공정 응력 (SI · SN · E_m) · 순 동력 검증 | 믹서 DEM = 상별 혼합 상태 (Lacey M 16×16×4 · s1 SE–SE 군집 · s2 AM–SE 부착) · 압축 DEM → 접촉망 σ | ⛔ 같은 양이 없다 — 이 논문 DEM 은 **상을 구분하지 않는다** |
+| 입자 · 접촉 | Rocky · 단일 종 300 µm (×≈100) · Thornton–Ning · **점착 없음** · E 0.228 GPa (보정) | LIGGGHTS · 3 상 (AM_P 9 · AM_S 4 · SE 1 µm) · CGF 151.4 · 상 쌍별 SJKR 점착 (CED) · 압축 DEM E_SE 1.35 GPa (연화) | 둘 다 **보정된 유효 강성** (frame [2] 류) · 우리는 점착이 핵심 노브 · 이 논문은 마찰만 |
+| 믹서 | Nobilta 고강도 (날개 끝 4–40 m/s) | 저-Fr 회전 드럼 (75 rpm · Fr 0.0827) · 랩 실험 = Thinky (≈268 G) | 강도 영역이 다르다 — SI 절대값 이전 불가 |
+| 혼합 지표 | XPS γ · SEM 원형도 · 3.45 MPa 공극률 | Lacey M · s1 · s2 | 실험 지표 ↔ 모델 지표 대응표 없음 (§7-2-4) |
+| SE · CAM | LIC (할라이드 · 0.743 mS/cm DC) · 단결정 NCM82 3.3 µm 단봉 | LPSCl (σ₀ 1.5 mS/cm 보고 기준) · NCM811 PC 9 / SC 4 µm 바이모달 | 재료 전이 불가 — 방향 · 방법만 |
+| 조성 | 80:20 (SE 31.4 vol%) · CB 0–3 | 81.6:18.4 wt% (SE ≈35 vol%) · 무탄소 (ps45) | 비슷한 SE 분율 |
+| 압력 | 380 MPa 성형 · 80 MPa 스택 · 3.45 MPa 공극률 | 300 MPa | — |
+| σ_ion | 복합체 0.006–0.046 mS/cm (DC) · 80:20:0 수송 tortuosity ≈11–13 [우리 산술 · 상한 쪽] | Hertz 0.0587–0.0893 · Tabor 0.103–0.162 mS/cm · 수송 tortuosity Hertz 7.24–5.03 · Tabor 4.12–2.78 · CF 1.25–1.79 | 이 논문 값이 Hertz 보다도 높다 — 재료 · 방법 · 계면 (LIC \| LPSCl) 이 섞여 **자릿수 · 방향만** |
+| σ_e (무탄소) | 80:20:0 복합체 **0.034 mS/cm** (껍질이 NCM 을 거의 다 덮음 · γ 0.998) | ps45 Hertz · PC 인자 끔 **0.375–0.467 mS/cm** (σ_AM 4.1) | 우리 값이 **11–14 배** 높다 [우리 산술] — 우리 망은 맨 AM–AM 접촉을 가정 (껍질 없음) |
+| σ_e (탄소) | 80:20:3 (C65 ≈2.9 wt% · 껍질 안) **1.83 mS/cm** | σ_e 실험 앵커 kgy DC SBE 4.47 · DBE 12.4 mS/cm (VGCF) · 모델 54.0 · 70.6 | 탄소 형태 · 위치가 다르다 — 크기 비교 불가 |
+| 껍질 | 5–162 nm 연속 LIC (+ CB) | DEM = 없음 (구) · STEP3 복셀 0.15–0.4 µm | ⛔ 껍질은 우리 해상도 밖 |
+
+### 7-2. (i) 믹서 DEM 캠페인 · 믹서/코팅 논문 계획 (`docs/mixer_paper_pipeline_draft_20261013.md` V1 코팅 상태 · V2 혼합 시간 · V3 SE 함량)
+1. **V1 (같은 총 SE 에서 코팅 상태) 의 실험 쪽 형판**: 공정 변수 시리즈 (80:20:3 × 5 회전수 × 4 시간) 는 **조성을 고정하고 코팅 상태만 바꾼** 실험이다 — 가장 잘 갈리는 숫자는 **3.45 MPa 공극률** (60 min: 0.444 → 0.295, Δ = 14.9 %p · 오차 ±0.006–0.018) 이고 γ 는 5,000 rpm 이상에서 0.97–1.00 으로 포화 · 원형도는 0.67 → 0.75 [원자료 Figure5a · Figure5b · 인쇄 Fig 5c].  ⇒ V1 실험 분말에서 **저압 공극률 · 원형도 · EDS 를 같이** 기록하면 "코팅 상태" 를 숫자로 둘 수 있다 [추정].  ⚠ 그러나 이 논문은 그 상태들의 σ · 셀을 재지 않았다 → 우리 V1 은 같은 상태에서 σ_ion (TLM) · σ_e 를 함께 재야 P3 를 시험한다.
+2. **V1 무탄소 코팅 팔의 전자 붕괴**: 80:20:0 (γ 0.998) 의 복합체 σ_e 0.034 mS/cm · 초기 CAM 이용률 67 % (≈1/3 단절) · 1 C ≈84 mAh/g (80 MPa) [원자료 Figure8a · Figure9a · Figure9b] — 같은 방향의 `kawaguchi2023_…` (코팅 Xs 0.3 전자 붕괴) · `lee2026_lpscl_coating_thickness_ncm811` (σ_e 단조 감소) 와 합쳐 **무탄소 코팅 팔에서는 R_ele 를 반드시 같이** 잰다.
+3. **V2 (혼합 시간) 의 시간점**: 높은 강도에서 γ 는 5–10 min 에 포화하고 공극률 · 형태는 60 min 까지 변한다 · 낮은 강도에서는 γ 가 60 min 동안 0.884 → 0.908 로 천천히 오른다 [원자료 Figure5a] — V2 는 **이른 점 (≤10 min) 과 늦은 점 (60 min)** 을 두고 피복 외 지표 (공극률 · 형태 · EDS) 로 본다 [추정].  또 E_m(t) ∝ t^0.72–0.94 (순 동력 하락) 이므로 **시간 대신 E_m (동력 적분) 도 기록** [원자료 FigureS7d].
+4. **V3 (SE 함량)**: 코팅 wt% 가 ≈10 보다 작으면 γ < 0.95 (CB 없음 0.53 / 0.72 / 0.86 / 0.94 @ 1 / 2 / 5 / 10 wt%) · 이론 두께 6–65 nm [원자료 Figure4b · FigureS3] — 파이프라인 V3 의 희박 수준 (AM 90 wt%) 이면 "전부 코팅" 이어도 껍질 ≈65 nm (q₀ 반경 기준) · 3.45 MPa 공극률 0.32 (20 wt% 의 0.27 보다 큼).
+5. **강도 지표 (SI · SN · E_m) 를 우리 드럼 DEM 출력에 넣을 수 있다**: 우리 믹서 DEM 도 충돌별 소산 에너지를 기록하면 같은 정의의 SI · SN 을 낼 수 있어 "8 바퀴 = 실공정의 몇 %" 를 회전 수가 아닌 응력 사건 수로 말할 수 있다 [추정].  ⚠ 단 **SI 절대값은 모델 의존**: 같은 믹서 · 같은 그룹인데 Frankenberg 2024 (카드 기준 · LFP/LIC/CB · JKR · 힘 스케일링) 는 5,000 / 10,000 rpm 에서 0.78 / 3.35 J/kg, 이 논문은 0.123 / 0.355 J/kg — **6–9 배** 차이 [우리 산술] · SI ∝ n 지수도 2.1 (선행 카드) vs 1.76 (이 논문 원자료).  ⇒ 같은 모델 안의 상대 비교에만 쓴다.
+6. **동력 검증은 저강도에서 깨진다**: 순 비동력 시뮬/실험 = 0.62 · 0.51 (1,000 · 2,500 rpm) vs 0.99 · 1.29 (7,500 · 10,000 rpm) [원자료 Figure6b · 우리 산술] — 이 DEM 에는 점착이 없다.  우리 드럼은 저강도 쪽 (점착 · 마찰이 소산을 지배할 영역) 이라 **점착 없는 거친 입자 DEM 은 우리 영역에서 맞지 않을 가능성이 크다** [추정] → SJKR 점착 유지 · 우리 DEM 을 토크 · 동력으로 검증한다면 저속 끝에서.
+7. **D3 (SE–SE 점착 앵커) 의 보정 절차 형판**: 압축 시험 (1 g · 1000 N) + 동적 안식각 (GranuDrum 20 rpm · 51.2 g · 60 장) + 충전율 + 동력 — 단 이 논문은 **혼합물 (80:20:3) 하나** 를 마찰만으로 맞췄고 안식각 실험 산포가 ±7.4° 다 [인쇄 S10b] → 우리 D3 은 **상별 분말 (SE · 비코팅 NCM · 코팅 NCM)** 과 점착 매개변수를 따로 앵커해야 한다 [추정] · 51.2 g 은 글러브박스 SE 분말로는 큰 양 [추정].
+8. **정상 상태 창의 외삽 주의**: SN_p 는 0.5 s 정상 상태 비율 × t (구성상 선형 · 60/5 = 12.00) 인데 실제 순 동력은 섞는 동안 떨어진다 (10,000 rpm 80:20:3: 첫 5 min 평균 19.8 kW/kg vs 60 min 전체 평균 10.6 kW/kg [우리 산술 — 원자료 Figure5a 의 E_m]) — 재료가 변하면 역학도 변한다.  우리 8 바퀴 드럼 런을 실공정 시간으로 늘려 말할 때도 같은 한계 (파이프라인 G12 · LY "8 바퀴 = 실공정 4,000 회전의 0.2 %") [추정].
+
+### 7-3. (ii) 이종기술 논지 (`docs/hetero_thesis.md` 비준 블록 2026-10-05) 와의 관계
+- **지지하는 곳 (방향만)**:
+  - 혼합 강도가 모자라면 SE 가 AM 표면으로 다 가지 않는다 — 1,000 rpm 60 min 에도 코팅에 안 들어간 LIC 낱알 · 입자형 덩어리가 남고 (SEM 정성) γ 는 0.884 → 0.908 에 그친다 [인쇄 p.6 · 원자료 Figure5a].  P1 의 *"혼합 시간을 늘려도 남는다"* 와 같은 모양의 **정성** 관찰.  ⚠ 저자의 원인은 **충돌 에너지 (SI) 부족**이지 표면 에너지 차이가 아니고, 무작위 대비 응집 정량은 없다.
+  - 같은 조성에서 코팅 상태가 바뀌면 압축된 분말 구조가 크게 바뀐다 (3.45 MPa 공극률 −14.9 %p) — P3 의 *"혼합 상태 → 압축 뒤 구조"* 와 같은 방향 · 단 **3.45 MPa 공극률만** (300–380 MPa 구조 · σ_ion 없음).
+- **지지하지 않는 곳 · 시험하지 않는 곳**:
+  - 같은 총 SE 에서 **비코팅 vs 코팅** 을 σ_ion · 셀로 비교한 팔이 없다 (전도도 · 셀 = 10,000 rpm 60 min 하나).
+  - SE–SE 응집 지표 · 표면 에너지 · 점착 DEM 이 없다 — DEM 은 **단일 종 · 점착 없음** (SI 표 S2) 이라 논지의 사슬 (혼합 응집 → 압축 → 접촉망) 을 보일 수 없는 **공정 응력 DEM** 이다.
+  - 재료 · 범위가 다르다: 할라이드 (황화물 아님) · 단결정 단봉 (바이모달 아님) · ≈19 mg/cm² (후막 아님).
+  - 이 논문의 전부-코팅 복합체 (80:20:0) 이온 수송 tortuosity 어림 ≈11–13 [우리 산술 · 상한 쪽] 은 우리 Hertz 망 (5–7) 보다도 높다 — 대조군이 없어 "코팅이 이온 경로를 좋게/나쁘게 했다" 어느 쪽도 이 논문으로는 말할 수 없다.
+- **빌리지 않는 말 (비준 블록의 "하지 않는 말")**: 원문의 설명 축 — *"protective coatings employing soft SEs … to prevent interfacial degradation"* (p.5) · *"intimate and mechanically as well as (electro)chemically stable solid-solid contacts"* (p.2) · *"good interfacial connectivity"* (p.13) · 탄성 매트릭스가 *"preserving interfacial contact"* (Fig 9f) — 는 **계면 면적 · 보호막** 축이므로 가져오지 않는다.  CB 가 든 *"mixed conducting matrix coating"* 은 우리 코팅 정의 (설파이드 SE 선코팅) 밖이다.  이 논문 수치로 **"실제 코팅 효과의 크기"** 를 말하지 않는다 (재료 · 조건 · 대조 없음).
+- **빌릴 수 있는 것**: 공정 → 피복 · 형태 · 저압 공극률 원자료 (V1 · V2 의 실험 지표 후보) · 응력 모델 (SI · SN · E_m) 의 정의 · 거친 입자 DEM 보정 · 검증 절차.
+
+### 7-4. (iii) DEM 접촉망 · STEP3 복셀 σ_e · σ_ion
+1. **ps45 무탄소 σ_e 와의 거리**: 우리 ps45 (Hertz H0 · PC 인자 끔 · σ_AM 4.1 mS/cm) 0.375–0.467 mS/cm vs 이 논문 80:20:0 (γ 0.998 · 380 MPa 성형) 0.034 mS/cm → **11–14 배** [우리 산술].  재료 (NCM82 SC · σ_NCM 미보고) · 성형압 · 측정법이 달라 원인을 하나로 못 박을 수 없지만, 우리 망은 AM–AM 접촉을 **맨 표면 접촉**으로 계산한다 → 논지의 코팅 팔 (P2 · P3) 을 접촉망으로 풀면 σ_e 를 과대평가할 쪽 [추정] · 하한 대리 = 코팅 쌍의 AM–AM 전도 끊음 · 또는 AM–AM 계면 항 (Rint ①′ 계열 · `docs/voxel_contact_free_gap.md` §8) 으로 껍질 차폐를 넣는다 (제안 · 미등록).
+2. **매트릭스 ↔ 복합체: 얇은 껍질 안 탄소는 접촉이 지배한다**: 최고 CB 에서 매트릭스 σ_e 943.7 → 복합체 1.83 mS/cm (×1/514) · 같은 자리 σ_ion 은 ×1/5.7 [원자료 Figure8a · 우리 산술] — 껍질 망의 전자 전도는 기하 tortuosity 로 설명이 안 되는 크기로 껍질–껍질 접촉에 막힌다 [추정].  ⇒ 껍질에 벌크 매트릭스 σ 를 주고 면을 조화평균으로만 잇는 복셀 연속체 (STEP3 = CONTACT_FREE 가지, `CL-81`) 는 이 구조에서 자릿수로 과대할 것 [추정] · 게다가 껍질 5–162 nm 은 STEP3 복셀 (0.15–0.4 µm) 아래 = 해상 불가 (A14 SWCNT 껍질 미해상 `CL-63` 과 같은 부류).
+3. **σ_ion · 수송 tortuosity 대조 (자릿수만)**: 80:20:0 의 f_ion = 0.025 · 수송 tortuosity ≈11–13 (공극 0–10 % 가정 · φ_LIC 0.314) [우리 산술] vs 우리 ps45 Hertz 5.03–7.24 · Tabor 2.78–4.12 · 협착 뺀 CF 1.25–1.79 — 껍질 입자끼리의 점 접촉만으로 SE 망을 잇는 구조는 접촉 협착이 지배할 것이라는 우리 그림 (Hertz tau2 의 73–75 % 가 SE–SE 협착) 과 **같은 방향** [추정].  ⚠ 전자 차단 셀의 LIC \| LPSCl 두 계면 저항이 빠지지 않아 σ_ion 은 하한 · tortuosity 는 상한 쪽 [추정] · DC 법 · 할라이드.
+4. **σ_e 앵커 측정 기록의 체크리스트**: 이 논문의 DC 프로토콜 (이온 차단 스테인리스 셀 · 분말 120 mg · 380 MPa 3 min · 전압 단계마다 정상 전류 · V–I 선형 맞춤 · 측정 중 압력 프레임 ≈80 MPa) 은 우리 σ_e 실험 앵커 (kgy DC SBE 4.47 · DBE 12.4 mS/cm — *"측정 조건 미확인"*) 에 비어 있는 칸 (질량 · 두께 · 성형압 · 측정 중 압력 · 전압 단계 · 정상 판정) 을 채울 목록으로 쓸 수 있다 [추정].  크기 대조는 하지 않는다 (C65 를 SE 껍질 안에 둔 1.83 mS/cm vs VGCF 무작위 혼합 — 탄소 형태 · 위치가 다르다).
+5. **벌크 매트릭스 p_c 는 SE 종류와 비슷**: LIC + C65 벌크 p_c 2.5–5 wt% (이 논문) · LPSCl + C65 ≈4 wt% (`reisacher2023_…` 카드 기준) — 두 SE 에서 같은 범위 [카드 대조].  저자의 *"유한 크기에서 p_c 가 더 낮다"* (Fig 8b) 는 도식이고, 같은 그림의 복합체 σ_e 는 벌크 p_c 위 (매트릭스 CB 4.85 wt%) 에서도 0.127 mS/cm (CB 없는 0.034 의 3.7 배) 에 그치다 13.4 wt% 에서야 1.83 으로 뛴다 → **복합체 수준의 전자 퍼콜레이션은 오히려 늦다** [원자료 Figure8a · 우리 해석 · 추정].
+
+### 7-5. frame[5] — 어느 반쪽을 가졌나
+- **가진 것**: 공정 (동력 · 에너지 · 회전수 · 시간) → 코팅 형태 (SEM · TEM · XPS · 원형도) → 저압 공극률 · 부분 전도도 · 셀 (실험) + 공정 응력 (DEM).
+- **없는 것**: 상을 구분한 혼합 · 압축 미세구조 계산 · 접촉망 σ · 코팅 형성 (입자 형상 소성) 계산 · 공정 조건별 σ.  ⇒ 우리 몫과 겹치지 않는다: **믹서 DEM (상별 혼합 상태) · 압축 DEM + 접촉망 (σ) · MPM (껍질 같은 형상 소성)** 이 이 논문이 비운 칸이다.
+
+---
+
+## 8. ★★ 우리 연구에 주는 insight (번호마다: 논문이 보인 것 → 우리에게 뜻 → 할 일)
+
+**8-1. 코팅 상태를 가르는 숫자는 피복률보다 저압 공극률이다.**
+- 논문: 80:20:3 · 60 min 에서 γ 0.908 → 0.9998 (포화) 인데 3.45 MPa 공극률은 0.444 → 0.295 로 계속 내려간다 [원자료 Figure5a · Figure5b].
+- 뜻: XPS γ 는 >10 nm 껍질끼리 못 가르고, 형태 (매끈함 · 응집) 는 공극률에 나타난다.
+- 할 일: V1 · V2 실험 분말에 저압 공극률 (같은 장치 · 같은 하중) · 원형도 · EDS 를 결과 전 측정 항목으로 등록 (제안).
+
+**8-2. 피복은 충돌 세기 (SI) 가 정하고 횟수 (SN) 로는 잘 대체되지 않는다.**
+- 논문: SI 0.123 J/kg (5,000 rpm) 은 5 min 에 γ 0.988 · SI 0.0064 J/kg (1,000 rpm) 은 SN_p 를 12 배로 늘려도 (60 min) 0.908 [원자료 Figure6c · Figure6d].
+- 뜻: 저강도 드럼 (우리 모델) 에서 혼합 상태가 천천히 변하는 것은 장치 강도 탓일 수 있다 — 모델 회전 수를 실시간으로 바꿔 말하려면 강도 지표가 필요하다 [추정].
+- 할 일: 우리 믹서 DEM 에 충돌별 소산 에너지 기록을 더해 SI · SN 분포를 뽑는다 (제안 · 미등록 · 같은 모델 안의 상대 비교로만).
+
+**8-3. 전부-코팅 · 무탄소는 CAM 을 전자적으로 끊는다.**
+- 논문: 80:20:0 = σ_e 0.034 mS/cm · 초기 이용률 67 % · CB 0.5 % 만 넣어도 1 C 103 mAh/g_comp [원자료].
+- 뜻: 논지의 코팅 팔이 무탄소면 이온 경로가 좋아져도 전자 경로가 막혀 성능이 떨어질 수 있다 — P3 해석에 σ_e 를 함께 둬야 한다.
+- 할 일: 대칭셀 · 반쪽셀 계획 (`docs/symmetric_cell_ionic_plan_20261013.md`) 의 코팅 팔에 R_ele 를 같이 기록 · 모델 쪽 "코팅 쌍 AM–AM 전도 끊음" σ_e 하한 대리 (제안).
+
+**8-4. 얇은 껍질 망의 전자 전도는 접촉이 지배한다 — 복셀 연속체로는 못 낸다.**
+- 논문: 매트릭스 σ_e 943.7 → 복합체 1.83 mS/cm (×1/514) · 이온은 ×1/5.7 [원자료 Figure8a].
+- 뜻: STEP3 (CONTACT_FREE) 로 코팅 미세구조를 풀면 σ_e 가 자릿수로 틀릴 수 있다 · 껍질은 해상도 밖.
+- 할 일: 코팅 미세구조의 σ 는 접촉망 쪽 (계면 항 포함) 에서만 다룬다는 한정어를 보고 · 원고에 미리 둔다 (제안).
+
+**8-5. 점착 없는 거친 입자 DEM 은 저강도에서 동력을 반만 낸다.**
+- 논문: 시뮬/실험 0.62 · 0.51 (1,000 · 2,500 rpm) [원자료 Figure6b].
+- 뜻: 저-G 드럼인 우리 믹서에는 점착이 빠질 수 없다 (논지 D2 · D3 와 같은 방향) [추정].
+- 할 일: 우리 DEM 을 동력 · 토크로 검증한다면 저속 끝에서 · 점착 수준별로 (제안).
+
+**8-6. 같은 그룹 · 같은 믹서에서도 SI 값이 6–9 배 다르다.**
+- 논문 + 선행 카드: 0.123 / 0.355 (이 논문) vs 0.78 / 3.35 J/kg (Frankenberg 2024, 카드 기준) @ 5,000 / 10,000 rpm.
+- 뜻: SI 는 재료 · 거친 입자 크기 · 접촉 모델에 걸린 모델 출력 — 장치 사이 · 논문 사이 절대 대조에 쓰지 않는다.
+
+## 9. 인용 가능 문장 (deck/paper용 — 표지 그대로)
+- "Kissel et al. (*Nat. Commun.* 2026) coated single-crystalline NCM82 with Li₃InCl₆ by mechanofusion in a high-intensity mixer and showed with coarse-grained DEM that coating coverage follows the mean stress intensity rather than the stress number: at 5000 rpm (SI_CG = 0.123 J kg⁻¹) the XPS coverage exceeded 0.97 within 5 min, whereas at 1000 rpm (SI_CG = 0.006 J kg⁻¹) it rose only from 0.88 to 0.91 over 60 min."
+- "In the same study, the porosity of the 80:20:3 powders compacted at 3.45 MPa fell from 0.44 to 0.30 as the rotational speed increased from 1000 to 10,000 rpm (60 min), although the XPS coverage had already saturated — values from the authors' source data."
+- 국문: *"같은 조성 (NCM:LIC:CB 80:20:3) 이라도 고강도 믹서의 회전수만 바꾸면 3.45 MPa 공극률이 0.44 → 0.30 으로 바뀐다 — 피복률 (XPS) 이 포화된 뒤에도 (Kissel 2026 원자료)."*
+- 국문: *"CB 를 SE 껍질 안에 둔 복합체의 전자 전도도는 같은 매트릭스 펠릿의 약 1/500 (1.8 vs 944 mS/cm, Kissel 2026 원자료로 우리가 계산) — 얇은 껍질 망은 접촉이 지배한다 [우리 해석]."*
+
+## 10. 주의/한계 · 레드 플래그 (본문 ↔ 그림 ↔ 원자료 불일치 · 빠진 조건)
+
+**본문 ↔ 그림 ↔ 원자료**
+1. **Fig 6b 캡션** *"net specific power depending on process time"* — 가로축은 회전수 (min⁻¹) 다.
+2. **Fig 6d 캡션 · 본문 p.8 의 "Regions 1 and 2"** — Fig 6c · d 에 영역 표시가 없다 (그림 렌더 · 텍스트 층 모두).
+3. **Fig 7a**: 캡션 *"TEM bright-field image"* ↔ 본문 p.9 *"In the dark-field TEM shown in Fig. 7a"*.
+4. **SI Fig S7 캡션이 그림과 뒤바뀜**: 캡션 *"a with CB and b without CB … d 95:5:0.8 and e 80:20:3"* ↔ 그림 · 원자료 (S7a = CB 없음 · S7d = 80:20:3) · S7a 가로축 *"Process time / time"* · S7d/e *"Specifc"*.
+5. **셀 수**: Fig 9a · 9b · S15 캡션 *"at least n = 2"* / *"n = 2"* ↔ 원자료 표준편차 열 머리 80:20:1 *"n=3"* · **80:20:3 *"n=0"* + 모든 값 0** (Fig 9b 막대에도 오차 없음) → 80:20:3 은 셀 1 개로 보인다 [원자료 Figure9a · Figure9b].
+6. **표 S4 = 셀 하나**: ICE 가 S15b *"(Cell 1)"* 의 첫 CE 와 여섯 조성 모두 같고, 첫 방전 (80:20:1 70.4 vs 평균 80.2) · 유지율 (80:20:1 81.8 % vs Fig 9a 평균의 사이클 94/15 = 59.4 % · 80:20:0.2 108.5 % vs 98.5 %) 이 Fig 9a 평균과 다르다 [우리 산술] · 캡션은 이를 밝히지 않는다.
+7. 본문 p.4 *"porosity of the composite mixtures containing CB is consistently slightly lower"* ↔ ≈5 wt% 짝은 CB 쪽이 높다 (0.341 vs 0.329) [원자료 Figure2c] (오차 안이지만 "consistently" 아님).
+8. 본문 p.5 *"80:20:3 … the maximum possible coverage value of 1 is reached"* ↔ Fig 4b 원자료 0.988 (80:20:3) · 0.998 (80:20:0) · 같은 공칭 조건 (10,000 rpm · 60 min) 이 Fig 5a · 6 에서는 0.994 — 배치가 다른지 [미확인].
+9. 본문 p.9 *"Below this range [2–5 wt%], the partial electronic conductivity of the matrix remains below 0.01 mS cm−1"* ↔ 2.5 wt% = 0.0107 (조금 위) · 측정점은 1 / 2.5 / 5 (2 아님) [원자료 Figure8a].
+10. 본문 p.8 *"An approximate increase of SI_CG ∝ n² can be expected"* ↔ 자기 DEM: 10 배 회전수에 ×55 (기울기 1.76 · 국소 1.47–1.90) [우리 산술].
+11. 본문 p.6 *"Both specific power data show a high degree of agreement"* ↔ 시뮬/실험 0.62 · 0.51 · 0.79 · 0.99 · 1.29 — 1,000 · 2,500 rpm 은 실험 오차 밖 [우리 산술].  또 Fig 6b 의 7,500 rpm 실험 평균 (6,272 W/kg) 은 E_m,exp(60 min)/3600 s (7,785) 보다 19 % 낮다 (나머지 회전수는 0–6 % 안) — 평균 창 [미확인].
+12. SI Note 3 *"maximum deviation … 2 %"* = 피복 맞춤 곡선 두 개의 상대오차 (피복은 0.88–1.00 의 좁은 범위) — 같은 피복에서 E_m,sim/E_m,exp 는 0.46–1.28 [우리 산술].
+13. **맞춤 식별성**: γ–E_m 맞춤의 b = 4.50×10⁶ ± 9.0×10⁷ · c = 0.874 ± 1.19 (불확도 > 값) · R² 0.889 [원자료 Figure5a] · 95:5:0.8 맞춤은 상한을 0.95 로 고정 (*"NewXPSlimit (User)"*) — 본문 언급 없음 [원자료 FigureS8a].
+14. *"to achieve a target coverage of approximately 97.5% would require extending the mixing time by 200%, i.e., to a total of ~3 h"* (p.9) — 산출법 미기재.  [우리 산술] 1,000 rpm 네 점의 시간–피복 직선 외삽 = ≈219 min (3.6 h) · 논문 자신의 전체 맞춤 (97.5 % → E ≈2.5×10⁶ J/kg) 을 1,000 rpm E_m(t) 맞춤 (a 8,575 · b 0.856) 으로 시간으로 바꾸면 ≈755 min (12.6 h).  거꾸로 2,500 rpm 60 min 은 이미 2.6×10⁶ J/kg 인데 γ 0.962 — E_m 만으로 피복이 안 정해진다는 저자 주장 자체와 맞는다.
+15. **Fig 8b 의 "~500 nm"** 코팅 ↔ TEM ≈100 nm (80:20:1) · 이론 ≤162 nm (80:20:3).
+16. **"유한 크기 p_c < 벌크 p_c"** (Fig 8b) 는 도식 · 가설 — 복합체 σ_e 는 오히려 늦게 오른다 (§7-4-5) [우리 해석].
+17. SI Note 2 *"fixed volume ratio between CB and LIC (20:80 vol.%)"* ↔ 표 S1 부피는 CB 17–18 vol% (V_CB/V_LIC 0.20–0.22) 이고 코팅 밀도 2.48 은 17:83 과 맞는다 (20:80 이면 2.46) [우리 산술] · 본문 *"CB:LIC ratio of 20 vol% CB"* 도 모호.
+18. Fig 8a 복합체 점의 가로 위치 (1 / 2.5 / 5 / 10 / 15 wt%) ↔ 실제 매트릭스 CB 1.00 / 2.46 / 4.85 / 9.22 / 13.36 wt% [우리 산술 — 표 S1].
+19. 본문 p.5 *"mass ratios after Rietveld refinement … are in line with the expected values"* ↔ 95:5:0 이 **92:8** (LIC 상대 +60 %) [인쇄 표 S3].
+20. 압입 반복 수: Fig 9e · S17a 캡션 *"n = 24 indentations"* ↔ Methods · S17b *"25"* · S17a 는 **공극률** 오차를 압입 수로 적었다 · 1 wt% 곡선은 최대 깊이 ≈8.2 µm (Methods 는 10 µm) [원자료 FigureS17b].
+21. 본문 p.12 *"approximately 20% plastic portion at 2.5 wt% … around 50% at 15 wt%"* — 1 wt% 의 30.4 % (비단조) 는 언급 없음 [원자료 Figure9e].
+22. LIB 기준 셀 율속: Methods p.15 · S19 캡션 *"0.02 C"* ↔ S18 캡션 · 범례 *"0.05C"*.
+23. Methods p.15 *"The CAM utilization was then calculated with Eq. 11"* — 실린 식은 (12) (식 11 = XPS 피복률).
+24. Methods p.15 *"The relaxed OCP values are given in the Supplementary Source Data File"* ↔ 제공된 원자료 47 시트에 없다 (Zenodo 추가 자료일 수 있음 [미확인]).
+25. **원자료 표기 결함**: Figure6b 열 머리 *"[W]"* (그림 축은 W kg⁻¹) · FigureS17a *"Porosity [-]"* 인데 값은 % · FigureS16 a–h 의 *"Capacity / mAh/g"* 열은 **절대 mAh** (80:20:3 첫 충전 2.2954 mAh ÷ 152.3 mAh/g = 15.07 mg 전극 [우리 산술]) · FigureS15a 열 머리 *"Composite specific capacity"* 인데 값은 CAM 기준 · Excel 이 조성 표기를 시간으로 바꿈 (TableS1 · TableS3 · FigureS5 의 99:1:0 · 80:20:3 · 95:5 칸).
+26. 그림 표기: Fig 5c 1,000 rpm EDX 칸 안에 패널 글자 "c" 가 하나 더 찍혀 있다 · S5 범례 *"80:20:02"* (= 80:20:0.2) · S8b 범례 *"95:5:08"* · Fig 9b 오른쪽 축이 52 % 에서 시작 (막대 높이가 비례하지 않음) · Fig 6a 색 막대 없음.
+27. **분말 시료 STEM-EDX 의 C 지도**: Methods p.14 는 분말을 *"carbon film-coated Cu-mesh TEM grids"* 에 올렸다 — CB 없는 99:1:0 (Fig 3d) 에도 같은 파란 (C) 그물이 보인다 → Fig 3b 의 *"presence of carbon in the … coating"* 는 지지막 탄소와 가르기 어렵다 [추정] · FIB 박편 (S13a) 의 C 지도가 더 나은 근거.
+
+**빠진 조건**
+- 믹서 온도 (연속 냉각만) · 틈 폭 · 로터 지름 (날개 끝 속도에서 역산 76 mm [우리 산술]) · 배치 반복 수 · γ · 원형도의 반복 (Fig 4b · 5a 오차 없음).
+- DEM: 시간 간격 · 입자 수 · 크기 분포 · 경계 · 감쇠 · yield ratio 정의 · 점착 · 구름 저항 (없음) · SI 분포 그림.
+- XPS: 상대 감도 보정 언급 없음 (CPS 원강도) · Co · O 는 식 밖 · 맨 NCM γ · 시료당 측정 반복.
+- 전도도: 반복 수 · 펠릿 두께 · 측정 압력 (공통 80 MPa 프레임으로 읽음) · 전압 단계 · LIC \| LPSCl 계면 저항.
+- 380 MPa 복합체 공극률 · 순 원료 (LIC · CB · NCM) 의 3.45 MPa 공극률 (측정했다고 썼으나 값 없음) · S19 의 SSB 조성.
+- 전이 한계: 할라이드 · 단결정 단봉 · 박형 양극 · In/InLi 반쪽셀 · 80 MPa · 25 °C · 한 장치 · 한 연구실 · CB 분산 미최적화 (저자 인정).
+
+## 11. 원자료 (저자 Source Data · Figure 1 묶음) — 무엇이 있었고 무엇을 썼나
+
+**`d5347448-Figures_DataFile.xlsx` (16.6 MB · 47 시트)** — 본문 그림 2b · 2c · 4b · 5a · 5b · 6b · 6c · 6d · 8a · 9a–e · SI 표 S1–S4 · SI 그림 S1d · S3 · S5 · S7a–e · S8a–b · S10a · S11a–b · S12 · S13c · S15a–b · S16a–h · S17a–b · S18 · S19 (그림 1 · 3 · 7 · S2 · S4 · S6 · S9 · S10b–d · S13a–b · S14 = 영상이라 시트 없음).
+
+| 시트 | 내용 | 이 카드에서 |
+|---|---|---|
+| Figure2b · Figure2c · Figure4b | Q3 x₁₀/x₅₀/x₉₀ · 3.45 MPa 공극률 ± · XPS γ (CB 있음 · 없음) | §3-3 표 전부 |
+| Figure5a · Figure5b | 80:20:3 γ–E_m 20 점 + 맞춤 (a · b · c · R²) · 60 min 공극률 ± | §3-4 · §10-13 · 14 |
+| Figure6b · Figure6c · Figure6d | 순 비동력 시뮬/실험 ± · SI 다섯 값 · SN_p 20 값 | §3-5 표 · §7-2 |
+| Figure8a | 매트릭스 · 복합체 σ_e · σ_ion (6 × 4) | §3-7 표 · §7-4 |
+| Figure9a–e | 비용량 94 사이클 ± (셀 수 열 머리) · 활성 비용량 · 이용률 · dQ/dV · 압입 몫 | §3-8 · 3-9 · §10-5 · 6 |
+| TableS1 · TableS2 · TableS3 · Table S4 | 인쇄 표와 같은 값 (조성 표기 일부가 Excel 시간 값으로 깨짐) | 인쇄값과 대조만 |
+| FigureS1d · FigureS3 | 원형도 · 종횡비 ± · 이론 두께 + 선형 맞춤 | §3-3 |
+| FigureS7a–e | 비동력 시간 곡선 (5 s 간격 ≈700 점) · E_m(t) + 거듭제곱 맞춤 | §3-2 · §7-2-3 · 8 |
+| FigureS8a · FigureS8b | 95:5:0.8 γ (상한 0.95 맞춤) · 공극률 | §3-4 · §10-13 |
+| FigureS10a | 압축 힘–분리 거리 (시뮬 1 + 실험 14 곡선) | §3-5 |
+| FigureS11a · FigureS11b | γ vs E_m,exp · E_m,sim + 맞춤 · 상대오차 | §3-5 · §10-12 |
+| FigureS5 · FigureS12 | XRD (Cu 반사 · Mo 투과 + Rietveld 맞춤 · NCM 반사 위치) | 열람만 |
+| FigureS13c | 선분석 O · Cl · Ni · In wt% (0–0.13 µm) | §3-6 |
+| FigureS15a–b · FigureS16a–h | CAM 비용량 · CE (Cell 1) · 전압 · dQ/dV (용량 열 = 절대 mAh) | §3-8 · §10-6 · 25 |
+| FigureS17a · FigureS17b | 매트릭스 공극률 (%) · 밀도 · 압입 곡선 (곡선당 32,000 점) | §3-9 |
+| FigureS18 · FigureS19 | LIB GITT · OCV · 0.05 C (≈1.04 M 행) · LIB vs SSB 곡선 | §3-8 |
+
+**`b7e10fe7-Figure_1.zip` (27 MB · tif 7 개)** — Fig 1a 원료 SEM 원본 6 장 (`a-CB1` 10 k× · `a-CB2` 30 k× · `a-LIC1` 2 k× · `a-LIC2` 10 k× · `a-NCM1` 2 k× · `a-NCM2` 10 k× · 2048 × 1536 · Zeiss GeminiSEM 560 · **EHT 2.00 kV · InLens · WD 2.9–3.0 mm** · 촬영 2025-03-13 — Methods p.14 의 2 kV · 3 mm 와 같다) + Fig 1c TEM 원본 1 장 (`c-LIC-coated-NCM_TEM` · 4096 × 4096 · TVIPS 태그 · TIFF 해상도 태그 환산 ≈0.43 nm/px · 시야 ≈1.75 µm [우리 산술]).  쓴 것 = 메타데이터 (촬영 조건 확인) 뿐 · 영상은 리포에 넣지 않았다 (크롭은 PDF 렌더).
+
+## 12. 참고문헌 — 우리가 더 볼 것 (원문 목록 서지 그대로 + 이유 한 줄)
+
+| 번호 | 서지 (원문 목록 그대로) | 왜 · 카드 |
+|---|---|---|
+| 34 | Kissel, M. et al. Quantifying the impact of cathode composite mixing quality on active mass utilization and reproducibility of solid-state battery cells. Adv. Energy Mater. 15, 2405405 (2025). | 카드 없음 — 정적 CAM 이용률 측정법의 출처 (이 논문 Fig 9b · d) |
+| 39 | Kim, J. et al. High-performance all-solid-state batteries enabled by intimate interfacial contact between the cathode and sulfide-based solid electrolytes. Adv. Funct. Mater. 33, 2211355 (2023). | 정본 카드 `kim2023_mechanofusion_ncm811_lpscl_core_shell_intimate_contact` — 황화물 메카노퓨전 · τ² |
+| 40 | Lee, D. et al. Shear force effect of the dry process on cathode contact coverage in all-solid-state batteries. Nat. Commun. 15, 4763 (2024). | 정본 카드 `lee2024_shear_force_dry_process_cathode_coverage` |
+| 43 | Frankenberg, F. et al. Investigating the production of all-solid-state battery composite cathodes by numerical simulation of the stressing conditions in a high-intensity mixer. Powder Technol. 435, 119403 (2024). | 정본 카드 `frankenberg2024_dem_high_intensity_mixer_assb` — 같은 믹서 DEM · SI 절대값 비교 (§8-6) |
+| 59 | Lee, W. et al. Advanced parametrization for the production of high-energy solid-state lithium pouch cells containing polymer electrolytes. Nat. Commun. 15, 5860 (2024). | 카드 없음 — "building block" 개념의 출처 |
+| 61 | Kawaguchi, T., Nakamura, H. & Watano, S. Parametric study of dry coating process of electrode particle with model material of sulfide solid electrolytes for all-solid-state battery. Powder Technol. 305, 241–249 (2017). | 정본 카드 `kawaguchi2017_dry_coating_parametric_na2so4_model_se` |
+| 63 | Hayakawa, E., Nakamura, H., Ohsaki, S. & Watano, S. Design of active-material/solid-electrolyte composite particles with conductive additives for all-solid-state lithium-ion batteries. J. Power Sources 555, 232379 (2023). | 카드 없음 — 코팅 입자 + 도전재 (이 논문의 혼합 전도 껍질과 같은 질문) |
+| 64 | Friebel, J. M., Ditscherlein, R., Ditscherlein, L. & Peuker, U. A. Three-dimensional characterization of dry particle coating structures originating from the mechano-fusion process. Microsc. Microanal. 30, 179–191 (2024). | 카드 없음 — 메카노퓨전 껍질의 3D 정량 (우리 V1 코팅 상태 지표 후보) |
+| 65 | Jin, F. et al. Elucidating the impact of Li3InCl6-coated LiNi0.8Co0.15Al0.05O2 on the electro-chemo-mechanics of Li6PS5Cl-based solid-state batteries. Chem. Mater. 36, 6017–6026 (2024). | 카드 없음 — LIC 껍질 + 황화물 양극 (이종 SE 조합) |
+| 66 | Kissel, M. et al. Engineering the artificial cathode-electrolyte interphase coating for solid-state batteries via tailored annealing. Chem. Mater. 37, 2192–2203 (2025). | 카드 없음 — XPS 피복률 γ 정의의 출처 |
+| 68 | Tanno, K. Current status of the mechanofusion process for producing composite particles. KONA Powder Part. J. 8, 74–82 (1990). | 카드 없음 — 회전수별 코팅 구조 (느슨한 부착 → 연속 껍질) 의 원전 |
+| 69 | Kwade, A. A stressing model for the description and optimization of grinding processes. Chem. Eng. Technol. 26, 199–205 (2003). | 카드 없음 — SI · SN · E_m 정의의 원전 (§7-2-5) |
+| 72 | Burmeister, C. F., Hofer, M., Molaiyan, P., Michalowski, P. & Kwade, A. Characterization of stressing conditions in a high energy ball mill by discrete element simulations. Processes 10, 692 (2022). | 카드 없음 — DEM 응력 조건 추출의 방법 |
+| 76 | Frankenberg, F. et al. Tailoring composite microstructure through milling for dry-processed sulfide-based solid-state battery cathodes. Small 21, e07279 (2025). | 정본 카드 `frankenberg2025_milling_dry_processed_sulfide_cathode_microstructure` |
+| 77 | Reisacher, E., Kaya, P. & Knoblauch, V. Percolation behavior of a sulfide electrolyte–carbon additive matrix for composite cathodes in all-solid-state batteries. Batteries 9, 595 (2023). | 정본 카드 `reisacher2023_percolation_sulfide_carbon_matrix` — p_c 대조 (§7-4-5) |
+| 78 | Puls, S., Ketter, L., Zeier, W. G. & Vargas-Barbosa, N. M. Opportunities and limitations of partial transport quantification in all-solid-state composite electrodes. ACS Electrochem. 1, 2432–2447 (2025). | 카드 없음 — 부분 전도도의 한계 (이 논문 결론과 같은 질문) |
+| 85 | Li, X. et al. Water-mediated synthesis of a superionic halide solid electrolyte. Angew. Chem. 131, 16579–16584 (2019). | 카드 없음 — LIC 합성법 |
+| 97 | Rosenbach, C. et al. Visualizing the chemical incompatibility of halide and sulfide-based electrolytes in solid-state batteries. Adv. Energy Mater. 13, 2203673 (2022). | 카드 없음 — LIC \| LPSCl 2 층 분리막 · 계면 (§7-4-3 의 계면 저항) |
+
+## 13. 다른 카드 정정 후보 (보고만 · 이 커밋에서 고치지 않음)
+1. `asylbekov2023_cb_fragmentation_pbe_dem_dry_mixing` 29 행 — 이 논문을 *"mechanofusion **실험**"* 으로 적음 → **실험 + DEM** (Rocky 거친 입자 · Kwade 응력 모델).
+2. `frankenberg2024_dem_high_intensity_mixer_assb` — 정정이 아니라 보충 후보: 같은 믹서 · 같은 그룹의 후속 (이 카드) 에서 SI 가 0.123 / 0.355 J/kg (5,000 / 10,000 rpm) · 지수 1.76 이라 그 카드의 0.78 / 3.35 J/kg · n^2.1 이 **모델 의존** 값이라는 한 줄을 붙일 자리.
+3. `reisacher2023_percolation_sulfide_carbon_matrix` — 보충 후보: 할라이드 LIC + C65 벌크 p_c 2.5–5 wt% (이 카드) 가 LPSCl + C65 ≈4 wt% 와 같은 범위.
+4. `litdb/INDEX_DEM.md` 97 행 · `litdb/_INDEX_proposals.md` 6 행 — 이 카드를 아직 원문 없는 미완성 상태 (유형 칸 비움) 로 적고 있다 (공유 파일 — 다른 세션이 반영).
+5. 메인 리포 `docs/mixer_coating_reading_list_20261013.md` Part A 행 · Part D 10 번 — *"카드 = 뼈대"* → 원문 카드 완성 (litdb 밖 문서 · 1저자 세션 몫).
+
+## 14. 뼈대 정정 (2026-09-03 research-agent 뼈대 → 원문 대조 · 2026-10-13)
+- **메타**: 저자 5 명 → **11 명** (소속 세 곳 · 교신 Kwade · Janek) · 유형 · 조성 칸 채움 · digested 2026-09-03 → 2026-10-13 · evidence_level snippet → fulltext · **IF 15.7 삭제** (원문 · SI 에 없는 값 — 내부 분류 tier · relevance 만 남김).
+- **§0 판정**: *"DEM 결과를 실험 지표 (피복률, 입도, 공극률) 로 검증한 사례"* → DEM 은 **압축 시험 · 동적 안식각 · 충전율로 보정하고 순 동력으로 검증**했고, 피복률은 DEM 이 낸 SI · SN 과 **대조**했을 뿐 입도 · 공극률은 DEM 과 잇지 않았다.  *"내 porosity 보정 · 검증 논리의 근거로 바로 쓸 수 있다"* → 공극률은 3.45 MPa 분말값 (압축 DEM 검증 아님) 이라 **바로는 못 쓴다**.
+- **§1 한 줄**: *"stress intensity (SI ∝ n²)"* → SI ∝ n² 는 본문의 **기대 (ref 43)** · 자기 원자료 기울기는 1.76 [우리 산술].  코팅 5–100 nm · 80:20:0.5 · 1 C 100 mAh/g 는 맞음.
+- **§8-1**: *"…조건에서 균일 코팅을 얻었고"* → 1,000 rpm 은 **불균일 · 입자형 · 코팅 안 된 LIC 낱알** · *"≥5,000 rpm, 5–10 min 이면 97–100 %"* 는 대략 맞음 (7,500 rpm 5 min 0.969).
+- **§8-2**: *"specific energy input 이 커질수록 코팅이 두꺼워지고"* → 두께는 **조성 (코팅량)** 이 정한다 · 에너지는 피복 · 매끈함 · 저압 공극률을 바꾼다.
+- **§8-3**: *"약 40 % 에서 약 25 % (압축 후 기준)"* → 3.45 MPa 분말 공극률 (셀 성형 380 MPa 아님) · 코팅량 0.405 → 0.257 · 강도 0.444 → 0.295.
+- **§8-4**: *"<0.01 → ~1,000 mS cm⁻¹ (0 → 15 % CB)"* → 0 wt% 매트릭스 σ_e 는 **측정 없음** · 1 wt% 2.7×10⁻⁷ · 2.5 wt% 0.0107 · 15 wt% 943.7 · 이온 ~0.7 → ~0.03 은 맞음 (최소는 10 wt% 0.021).
+- **§8-5**: 80:20:3 1 C <10 mAh/g · 이용률 65 → 90 % 는 맞음 (첫 1 C 사이클 10.0 · 저 CB 셋 평균 65.0 % [우리 산술]).
+
+## 원문 대조 기록 (이 카드 작성 중 직접 확인한 것 · 2026-10-13)
+- 본문 18 쪽 · SI 18 쪽 텍스트 층 전수 (pdftotext) · 저자 · 소속 · 날짜 · 연구비 · 데이터 = p.1 · p.15–18 · SI p.1.  DOI = PDF 메타데이터 (Subject) · 쪽 머리말 `https://doi.org/10.1038/s41467-026-71305-2` 와 같다.
+- SI 표 S2–S4 는 영상 (텍스트 층 없음) → 크롭 렌더와 원자료 TableS2 · TableS3 · Table S4 시트로 칸마다 대조 (표 S3 은 인쇄가 6 자리 · 원자료는 5 자리로 반올림).
+- 원자료 47 시트 전수 목록 · 인용값 260 행 발췌 (시트 · 열) · 파생값은 발췌 값으로 다시 계산 (SI 기울기 · 시뮬/실험 비 · 맞춤 역산 · 두께 재현 · 매트릭스 CB 환산 · 활성 비용량 검산 0.1 % 안 · 밀도 역산).
+- 그림 크롭 46 장: 본문 = 300 dpi 렌더 (본문 래스터 원본 300 ppi · 벡터 부분 포함) · SI = 원 래스터 해상도 (176–248 ppi) 를 200–250 dpi 로 (업샘플 ≤1.14 배) · 표 S1 = 벡터 300 dpi · 패널 묶음 13 장은 패널 사이 빈 줄 · 빈 열에서 잘랐다 (경계 띠 점검 시트로 확인) · 크롭마다 렌더로 열람.
+- Figure 1 zip 은 새 빈 폴더에서만 풀고 tif 메타데이터만 읽었다 (실행 없음).
+- 정본 litdb 중복 확인: `git grep` 으로 `litdb/` 전체에서 DOI 조각 `71305` · 제목 낱말 *"mechanofusion-derived"* → 이 카드 (뼈대) 뿐 · Li₃InCl₆ 언급 카드는 다른 논문.
+
+## 🔗 관련 카드
+- 같은 그룹 (Kwade · Janek): `frankenberg2024_dem_high_intensity_mixer_assb` (같은 믹서 DEM) · `frankenberg2025_milling_dry_processed_sulfide_cathode_microstructure` · `asylbekov2023_cb_fragmentation_pbe_dem_dry_mixing` · `minnmann2021_jes_charge_transport_bottlenecks` · `minnmann2022_designing_cathodes_solidstate` · `minnmann2024_microstructure_porosity_visualization` · `trevisanello2021_sc_pc_ncm_cracking_diffusion` · `bielefeld2019_microstructural_modeling_composite_cathode` · `bielefeld2020_effective_ionic_conductivity_binder`.
+- SE 건식 코팅: `kim2023_mechanofusion_ncm811_lpscl_core_shell_intimate_contact` · `kawaguchi2017_dry_coating_parametric_na2so4_model_se` · `kawaguchi2023_doe_electrode_fabrication_dry_coated_ncm_lps` · `nakamura2020_dry_coating_ncm_li3ps4_core_shell` · `lee2026_lpscl_coating_thickness_ncm811` · `kim2024_optimal_cathode_composite_mechanical_mixing_se_coverage` · `lee2024_shear_force_dry_process_cathode_coverage`.
+- 혼합 DEM · 보정: `hare2026_dem_pept_dry_mixing_nmc622_eirich` · `lischka2025_dem_eirich_intensive_mixer_dry_mixing` · `otani2025_dem_se_dispersion_aggregation_compression` · `so2022_dem_compaction_coated_particles_assb` · `thorntonning1998_adhesive_elastoplastic_contact`.
+- 탄소 매트릭스 · 수송: `reisacher2023_percolation_sulfide_carbon_matrix` · `kaiser2018_ion_transport_limitations_assb_sulfide_electrodes` · `schlautmann2023_se_particle_size_composite_transport`.
+
+## 🗨️ Q&A 로그
+<!-- "Q&A 작성해줘" 트리거 시 직전 질문/답 누적 -->
