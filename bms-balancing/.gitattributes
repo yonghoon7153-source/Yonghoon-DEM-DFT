@@ -182,3 +182,7 @@ evidence/reil_c4_0a_fix_20261013/** -text
 reviews/r14_repros/codex63/comsol_microshort_s1_os_b_scope_review_20261013/** -text
 # 2026-10-13: REIL C4-0a 한정 보완 결과 재검토 회신 (N1–N4 종결 수용 · C4-0a 한정 구현 종결 수용 · 새 차단 0 · source/ = 검토자가 본 저장소 사본) — bytes 그대로
 reviews/review_reil_c4_0a_fix_result_20261013/** -text
+# 2026-10-13: REIL C4-0b1 실행 기록 (identity · RED · GREEN · 배열 봉인 · 건조 · 시작/끝 HEAD · porcelain) — bytes 그대로
+evidence/reil_c4_0b1_20261013/** -text
+# 2026-10-13: REIL C4-0b1 고정 배열 · 규칙 봉인 (profile Sobol 2 · 동시 Sobol 16 · label → seed 표 · 규칙 / label 형식) — bytes 그대로
+reil_c4_arrays_0b1_20261013/** -text
