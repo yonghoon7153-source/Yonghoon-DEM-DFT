@@ -180,3 +180,5 @@ reviews/review_reil_c4_0a_result_20261013/** -text
 evidence/reil_c4_0a_fix_20261013/** -text
 # 2026-10-13: 미세단락 S1 OPEN ④ OS B 단계 범위 검토 회신 (수정 조건부 적합 · 정정 3 · 비활성 발송문 v2 · basis/ = 검토자가 본 근거 사본 · received/ = 검토한 제안 · 발송문 v1) — bytes 그대로
 reviews/r14_repros/codex63/comsol_microshort_s1_os_b_scope_review_20261013/** -text
+# 2026-10-13: REIL C4-0a 한정 보완 결과 재검토 회신 (N1–N4 종결 수용 · C4-0a 한정 구현 종결 수용 · 새 차단 0 · source/ = 검토자가 본 저장소 사본) — bytes 그대로
+reviews/review_reil_c4_0a_fix_result_20261013/** -text
