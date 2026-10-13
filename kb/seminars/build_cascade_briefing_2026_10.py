@@ -620,8 +620,10 @@ def build_lean():
     down_arrow(t, name, fy + fh + 0.11, x=fx + fw / 2 - 1.405)
     # under the arrow: what answering the question takes — it hands over to the next slide ('evaluated separately');
     # the agenda line it replaces did not follow from the box (user 10-13)
-    add(t, line_under(ids(), 'To answer this question, we check electrochemical stability, mechanical stability, and Li transport '
-                             '[[b:separately.]]', 5.83))
+    # user 10-13: keep 'we' (the subject of 'To answer …'; a passive would dangle) and say it as a must;
+    # 13.5 pt leaves room on one line (8.94 in at 14 pt of ~9.1 in)
+    add(t, line_under(ids(), 'To answer this question, we must check electrochemical stability, mechanical stability, and '
+                             'Li transport [[b:separately.]]', 5.83, sz=1350))
     save(t, name)
 
     # ---- 4 failure modes: orig slide 3, unchanged
