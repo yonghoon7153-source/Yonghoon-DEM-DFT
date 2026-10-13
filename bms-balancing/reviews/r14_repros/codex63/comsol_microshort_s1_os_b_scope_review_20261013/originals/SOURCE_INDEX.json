@@ -1,0 +1,77 @@
+{
+  "kind": "REVIEW_SOURCE_IDENTITIES",
+  "observed_utc": "2026-10-13T10:21:58.991669+00:00",
+  "sources": [
+    {
+      "source": "C:\\Users\\Administrator\\Downloads\\COMSOL_MICROSHORT_S1_OPEN_NEXT_SCOPE_PROPOSAL_20261013.md",
+      "copy": "received/NEXT_SCOPE_PROPOSAL.md",
+      "bytes": 10420,
+      "sha256": "a7e376074cd97195e63098ccd25a921e678538ba0c6e880eaba1934dadd3b5ef",
+      "git_blob_sha": "7140bbf673065a146ffa575606dbdfd5d775d893",
+      "unchanged_from_intake": true
+    },
+    {
+      "source": "C:\\Users\\Administrator\\Downloads\\COMSOL_MICROSHORT_S1_OS_B_SEND_20261013.md",
+      "copy": "received/OS_B_SEND_V1.md",
+      "bytes": 11151,
+      "sha256": "2181ddf1faca7b416eac709ebc7bc6f217f5c1522b7fa46089240b603a04c095",
+      "git_blob_sha": "9ee24da43aa5bf48829f997476e703affd134bfd",
+      "unchanged_from_intake": true
+    },
+    {
+      "source": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\outputs\\microshort_s1_open_connection_review_20261010\\received\\SEPARATE_ALLOWLIST_DRAFT_KO.md",
+      "copy": "basis/SEPARATE_ALLOWLIST_DRAFT_KO.md",
+      "bytes": 4759,
+      "sha256": "da407349e62a25800236a32ef9fba0752ab5bdda0f013667f16fd52f6f0e3087",
+      "git_blob_sha": "b02ee72fb5688800aceed67cb65e9038cfc50796",
+      "unchanged_from_intake": true
+    },
+    {
+      "source": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\outputs\\s1_open_r1_003_review_20261013\\evidence\\reference\\067_RESOURCE_CONTRACT.json",
+      "copy": "basis/RESOURCE_CONTRACT.json",
+      "bytes": 7175,
+      "sha256": "e45837427b1b8a69d53b10119ce7ab072bacb869bcdd53c863366c7bd04c67c1",
+      "git_blob_sha": "3cbbe98b490d353059a8a92cfa0e923d51c9c1f4",
+      "unchanged_from_intake": true
+    },
+    {
+      "source": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\outputs\\microshort_s1_open_connection_r1_review_20261011\\received\\CODE_MANIFEST.json",
+      "copy": "basis/CODE_MANIFEST.json",
+      "bytes": 2820,
+      "sha256": "feb12ef6991141aab59fd2fbc0d5f0d138bdd735255aa7123274503ce80b8ecc",
+      "git_blob_sha": "689a1c4040b2f638eef5f177fcaa626d7638b201",
+      "unchanged_from_intake": true
+    },
+    {
+      "source": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\outputs\\microshort_s1_open_connection_r1_review_20261011\\received\\candidate\\resource_connection.py.inactive.txt",
+      "copy": "basis/resource_connection.py.inactive.txt",
+      "bytes": 10846,
+      "sha256": "f45e6531383d03daa2e968437c6188be0229c144c6956647b0b0f81fae795816",
+      "git_blob_sha": "ea2f691b0ab4b75a76d9270de2400e9a8ad44d5c",
+      "unchanged_from_intake": true
+    },
+    {
+      "source": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\outputs\\microshort_s1_open_connection_r1_review_20261011\\received\\OS_API_MATRIX.json",
+      "copy": "basis/OS_API_MATRIX.json",
+      "bytes": 4115,
+      "sha256": "ec3ab0c209a5aab458fada593c31c63b73f6eec43b902a718823a2391d57622c",
+      "git_blob_sha": "6bd07719e4d66caaca0efd6cd2fe1c30f6090894",
+      "unchanged_from_intake": true
+    },
+    {
+      "source": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\outputs\\s1_open_r1_003_review_20261013\\REVIEW_KO.md",
+      "copy": "basis/REVIEW_003_KO.md",
+      "bytes": 11230,
+      "sha256": "bbc1247b38afcd965cf04034baf9bb3b90acb326ea81ced68ca48f11abe82507",
+      "git_blob_sha": "02eff32203bb77f3d9ef515fd19a90cc84d2820c",
+      "unchanged_from_intake": true
+    }
+  ],
+  "attachment_git_blobs_match_fixed_ref": true,
+  "prior_review_zip": {
+    "path": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\outputs\\s1_open_r1_003_review_20261013\\COMSOL_MICROSHORT_S1_OPEN_R1_003_REVIEW_REPLY_20261013.zip",
+    "bytes": 38949,
+    "sha256": "879cff578dfa52a7dcf0c008cded5f42698bb3b2916570b9e4b5da0b31e10d17"
+  },
+  "scope": "Selected reviewer-local source bytes only; no observation of BML execution machine"
+}

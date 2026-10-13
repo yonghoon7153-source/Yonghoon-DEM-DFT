@@ -1,0 +1,26 @@
+[
+  {
+    "repository": "yonghoon7153-source/Yonghoon-DEM-DFT",
+    "ref": "c134f8b21ccd360715efbfbd0cad66068429341e",
+    "path": "bms-balancing/docs/COMSOL_MICROSHORT_S1_OPEN_NEXT_SCOPE_PROPOSAL_20261013.md",
+    "git_blob_sha": "7140bbf673065a146ffa575606dbdfd5d775d893",
+    "url": "https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT/blob/c134f8b21ccd360715efbfbd0cad66068429341e/bms-balancing/docs/COMSOL_MICROSHORT_S1_OPEN_NEXT_SCOPE_PROPOSAL_20261013.md",
+    "scope": "Compared attachment identity to registry, blob cross-check by review packaging tool"
+  },
+  {
+    "repository": "yonghoon7153-source/Yonghoon-DEM-DFT",
+    "ref": "c134f8b21ccd360715efbfbd0cad66068429341e",
+    "path": "bms-balancing/docs/COMSOL_MICROSHORT_S1_OS_B_SEND_20261013.md",
+    "git_blob_sha": "9ee24da43aa5bf48829f997476e703affd134bfd",
+    "url": "https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT/blob/c134f8b21ccd360715efbfbd0cad66068429341e/bms-balancing/docs/COMSOL_MICROSHORT_S1_OS_B_SEND_20261013.md",
+    "scope": "Compared attachment identity to registry, blob cross-check by review packaging tool"
+  },
+  {
+    "repository": "yonghoon7153-source/Yonghoon-DEM-DFT",
+    "ref": "c134f8b21ccd360715efbfbd0cad66068429341e",
+    "path": "bms-balancing/docs/COMSOL_REBUILD_SPEC.md",
+    "git_blob_sha": "e224696c8ca37ce2894842878ea0eecbf6be1bf2",
+    "url": "https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT/blob/c134f8b21ccd360715efbfbd0cad66068429341e/bms-balancing/docs/COMSOL_REBUILD_SPEC.md",
+    "scope": "Read sections 89-91; excerpt retained"
+  }
+]

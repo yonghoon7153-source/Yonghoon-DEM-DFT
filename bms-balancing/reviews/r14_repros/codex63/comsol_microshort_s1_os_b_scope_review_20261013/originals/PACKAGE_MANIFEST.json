@@ -1,0 +1,90 @@
+{
+  "kind": "REVIEW_PACKAGE_MANIFEST",
+  "files": [
+    {
+      "path": "basis/CODE_MANIFEST.json",
+      "bytes": 2820,
+      "sha256": "feb12ef6991141aab59fd2fbc0d5f0d138bdd735255aa7123274503ce80b8ecc"
+    },
+    {
+      "path": "basis/OS_API_MATRIX.json",
+      "bytes": 4115,
+      "sha256": "ec3ab0c209a5aab458fada593c31c63b73f6eec43b902a718823a2391d57622c"
+    },
+    {
+      "path": "basis/REGISTRY_89_91_EXCERPT.md",
+      "bytes": 10122,
+      "sha256": "d56c022c1be0770976ebe95c3290ad17eff46be7150d4306d9e7ee043e31b0ea"
+    },
+    {
+      "path": "basis/resource_connection.py.inactive.txt",
+      "bytes": 10846,
+      "sha256": "f45e6531383d03daa2e968437c6188be0229c144c6956647b0b0f81fae795816"
+    },
+    {
+      "path": "basis/RESOURCE_CONTRACT.json",
+      "bytes": 7175,
+      "sha256": "e45837427b1b8a69d53b10119ce7ab072bacb869bcdd53c863366c7bd04c67c1"
+    },
+    {
+      "path": "basis/REVIEW_003_KO.md",
+      "bytes": 11230,
+      "sha256": "bbc1247b38afcd965cf04034baf9bb3b90acb326ea81ced68ca48f11abe82507"
+    },
+    {
+      "path": "basis/SEPARATE_ALLOWLIST_DRAFT_KO.md",
+      "bytes": 4759,
+      "sha256": "da407349e62a25800236a32ef9fba0752ab5bdda0f013667f16fd52f6f0e3087"
+    },
+    {
+      "path": "CLAUDE_REPLY_KO.md",
+      "bytes": 4143,
+      "sha256": "9c823a7b3a54cbe793d3aebe79576903b92ad7313552e2eeb504489dc879e4e8"
+    },
+    {
+      "path": "DECISION.json",
+      "bytes": 2083,
+      "sha256": "056cc0dd8d26eb4b5884ec0bbf6cc8347af8cfdcaa9f2ce73e323f7d60bcc251"
+    },
+    {
+      "path": "OS_B_SEND_V2_INACTIVE_KO.md",
+      "bytes": 13892,
+      "sha256": "65f9b72b51f3682e9460da4cad7fe983a015cd7bbda8eaaf3f5d75878bf68fb4"
+    },
+    {
+      "path": "package_review.py",
+      "bytes": 5716,
+      "sha256": "6a1d3b1730b4d47fc6d79ade0d9a760bcb72a80fac53c251801dee5c6697c821"
+    },
+    {
+      "path": "README_KO.md",
+      "bytes": 1015,
+      "sha256": "6a65745821c1e35e8831b45439fc1eaef99b2da94e96c05371480e4c0d977fbe"
+    },
+    {
+      "path": "received/NEXT_SCOPE_PROPOSAL.md",
+      "bytes": 10420,
+      "sha256": "a7e376074cd97195e63098ccd25a921e678538ba0c6e880eaba1934dadd3b5ef"
+    },
+    {
+      "path": "received/OS_B_SEND_V1.md",
+      "bytes": 11151,
+      "sha256": "2181ddf1faca7b416eac709ebc7bc6f217f5c1522b7fa46089240b603a04c095"
+    },
+    {
+      "path": "REMOTE_SOURCES.json",
+      "bytes": 1567,
+      "sha256": "b2c9030bf42438acace5fb75e9c2803676a44f72b6f43167e46390a65c63fc81"
+    },
+    {
+      "path": "REVIEW_KO.md",
+      "bytes": 14441,
+      "sha256": "b8ac2dc16ed20cd09a374fe6d26837777380020c7d1fbecdb9f636e7894b01ee"
+    },
+    {
+      "path": "SOURCE_INDEX.json",
+      "bytes": 4152,
+      "sha256": "58aee742ea1beea1770264c53dfdc46145c49cd19990c17c6f8a9c7c873d838b"
+    }
+  ]
+}
