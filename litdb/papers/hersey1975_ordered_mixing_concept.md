@@ -46,7 +46,7 @@
 | J.A. Hersey (Victorian College of Pharmacy, Australia) | *Powder Technol.* 11 (1975) 41–44 | [미확인] (PII 0032-5910(75)80021-0, PDF 메타데이터) | 가상의 예: 미분 d = 5 × 10⁻⁴ cm (5 µm) 1 wt% · 운반체 D = 5 × 10⁻² cm (500 µm) · 밀도 1.2 g cm⁻³ | **이론 · 개념** (실험 · 모사 없음) |
 
 > ★ **계보**: 제약 분체 (미량 약물 · 윤활제 혼합) 맥락.  저자 선행 = Hersey 1967 (*J. Pharm. Pharmacol. Suppl.* 19, 168S–176S — 혼합물 균질 평가, ref 11) · Hersey 1972 (*Australian J. Pharm. Sci.* NS1(3), 76–78 — 혼합 문제 피하기, ref 4).  균질 지수 = Buslik 1973 (*Powder Technol.* 7, 111–116, ref 12).  무작위 혼합 기준의 예 = **Lacey 1954** (ref 8 — 같은 날 카드 후보 #30) · Ashton & Valentin 1966 (ref 9) · Stange 1954 (ref 10).
-> ★ 용어 주의: 이 논문이 쓰는 말은 *"cohesive, interacting particulate systems"* 와 *"ordered mixing"* 이다 — **'interactive mixing' 이라는 이름은 이 논문에 없다**.  논지 §2-5 · §6 의 *"상호작용 (ordered/interactive) 혼합"* 표기 중 'interactive' 쪽 근거는 이 카드로 닫히지 않는다 [미확인 — 별도 원문 필요].
+> ★ 용어 주의: 이 논문이 쓰는 말은 *"cohesive, interacting particulate systems"* 와 *"ordered mixing"* 이다 — **'interactive mixing' 이라는 이름은 이 논문에 없다**.  논지 §2-5 · §6 의 *"상호작용 (ordered/interactive) 혼합"* 표기 중 'interactive' 쪽 근거는 이 카드로 닫히지 않는다 — 같은 날 카드 [`pfeffer2001_dry_particle_coating_engineered_particulates`](pfeffer2001_dry_particle_coating_engineered_particulates.md) 가 'regimented · interactive mix' 를 **Orr [20–22]** 에 귀속한다 (2 차 귀속 · Orr 원문 [미확인]).
 
 ## 3. 핵심 수치 · 식 (★ 전부 쪽 · 표지 병기)
 
@@ -153,7 +153,7 @@
 
 ## 8. ★★ 우리 연구에 주는 insight (번호마다: 논문이 보인 것 → 우리에게 뜻 → 할 일)
 
-1. **논지 §2-5 의 [미확인] 표지를 절반 걷을 수 있다 — '정렬 혼합' 의 원전은 이 논문.**  "정렬 혼합" = 상호작용하는 미분이 운반체에 붙어 같은 단위체들을 이루는 혼합 (Hersey 1975).  → 논지 문서의 해당 문장에 이 카드를 근거로 걸 수 있다 (§2-5 는 비준 블록 밖 문장이지만 수정 여부는 1저자 결정).  ⚠ 'interactive mixing' 이라는 이름의 근거는 이 논문에 없다 — 그 절반은 [미확인] 그대로.
+1. **논지 §2-5 의 [미확인] 표지를 절반 걷을 수 있다 — '정렬 혼합' 의 원전은 이 논문.**  "정렬 혼합" = 상호작용하는 미분이 운반체에 붙어 같은 단위체들을 이루는 혼합 (Hersey 1975).  → 논지 문서의 해당 문장에 이 카드를 근거로 걸 수 있다 (§2-5 는 비준 블록 밖 문장이지만 수정 여부는 1저자 결정).  ⚠ 'interactive mixing' 이라는 이름의 근거는 이 논문에 없다 — 그 절반은 Pfeffer 2001 의 2 차 귀속 (Orr) 까지만 (원문 [미확인]).
 2. **우리 조성은 '포화 이하' 와 '과잉' 의 경계 근처 — f 가 가른다.**  SE 18 wt% 를 다 붙여도 단층 (f = 1) 의 70–88 % 이지만, 포화 분율이 Hersey 예처럼 0.25 면 SE 의 64–72 % 가 남는다 (§3-7).  → 논지 P1 ("비코팅에서 SE–SE 응집이 무작위보다 크게 남는다") 의 '남는 SE' 는 Hersey 의 **과잉 미분** 에 해당하고, 그 양은 **SE 함량 (포화 비)** 과 **붙는 정도 (f — 표면 에너지 · 코팅이 바꾸는 쪽)** 가 **같이** 정한다 [추정].  → 코팅 ↔ 비코팅 대조를 한 조성에서만 하면 두 효과가 섞인다 — DEV 설계에 **SE 함량 축** (단층 수용량 대비 0.5 · 1 · 2 배) 을 두면 정렬 ↔ 과잉의 경계를 직접 볼 수 있다 [제안 · 결과 전 등록 대상].
 3. **정렬 혼합은 무작위 기준 지표를 넘어선다 — 상한을 두지 말 것.**  Fig 1 판독에서 이웃이 다른 비율이 무작위의 약 2 배.  → Lacey 형 · PSMI 형 지표에서 코팅 팔이 **M > 1** 을 내면 그것은 오류가 아니라 정렬 신호일 수 있다 — 판독기에서 [0, 1] 로 자르지 말고 그대로 보고 (같은 날 카드 `chandratilleke2012_particle_scale_mixing_index` §8 항목 5 와 같은 결론).
 4. **★ s1 (SE–SE 접촉 군집) 단독으로는 '자유 SE 덩어리' 와 'AM 표면의 SE 껍질' 을 못 가른다.**  완전 정렬 (코팅된 상태) 에서도 한 AM 표면의 SE 들은 옆으로 서로 닿아 **연결된 SE 군집** 을 이룬다 — 우리 조성은 단층 수용량의 70–88 % 라 껍질이 촘촘하다 (§3-7).  `scripts/mixer_contact_reader.py` 의 s1 은 "겹친 SE–SE 쌍의 연결 성분" 이라 AM 접촉 여부를 보지 않는다 ⇒ **s1 이 크다 = SE–SE 응집 (P1)** 으로 바로 읽으면 정렬 (P2 쪽) 과 혼동할 수 있다 [추정].  → 군집마다 AM 접촉 여부를 붙인 분해 (AM 에 닿지 않은 SE 군집 = Hersey 의 자유 미분 덩어리) 가 P1 의 깨끗한 신호다 — 새 관측량이면 **결과 전 등록** 대상 [제안].
@@ -203,6 +203,7 @@
 
 ## 🔗 관련 카드
 - 같은 날 · 혼합 지표: [`chandratilleke2012_particle_scale_mixing_index`](chandratilleke2012_particle_scale_mixing_index.md) (정렬 = M > 1 가능) · [`jarray2019_cohesion_driven_mixing_segregation_drum`](jarray2019_cohesion_driven_mixing_segregation_drum.md) · [`nadeem2023_gnn_mixing_index`](nadeem2023_gnn_mixing_index.md).
+- 같은 날 · 이 논문을 인용 · 확장: [`pfeffer2001_dry_particle_coating_engineered_particulates`](pfeffer2001_dry_particle_coating_engineered_particulates.md) (정렬 혼합 ↔ 건식 코팅 · 세 단계 탈응집 → 부착 → 재분배) · [`nase2001_granular_bond_collision_number_wet_cohesion`](nase2001_granular_bond_collision_number_wet_cohesion.md) (Bo_g · Co 로 '한 종이 다른 종에 선택적으로 붙는 정렬 혼합' — ⚠ 그 논문 참고문헌 44 는 이 논문 쪽을 149–153 으로 잘못 적었다).
 - 같은 날 · 점착 균형 · 보정: [`begat2004_cohesive_adhesive_balance_afm_colloid_probe`](begat2004_cohesive_adhesive_balance_afm_colloid_probe.md) (CAB — salbutamol on lactose = 정렬 쪽 극단 · min 규칙 충돌 §7-3) · [`alizadeh2018_dem_adhesion_calibration_segregation_heap`](alizadeh2018_dem_adhesion_calibration_segregation_heap.md) (과점착 = 미분이 붙은 덩어리).
 - SE 건식 코팅 NCM (실물 · 정렬 혼합의 배터리판): [`nakamura2020_dry_coating_ncm_li3ps4_core_shell`](nakamura2020_dry_coating_ncm_li3ps4_core_shell.md) (충격 블렌딩 껍질 · 같은 SE 량의 막자 혼합 대비) · [`lee2026_mechanical_halogen_argyrodite_drycoating`](lee2026_mechanical_halogen_argyrodite_drycoating.md) · [`kim2025_conductive_agent_se_coating_cathode`](kim2025_conductive_agent_se_coating_cathode.md) · [`lee2026_lpscl_coating_thickness_ncm811`](lee2026_lpscl_coating_thickness_ncm811.md) · 압축 DEM [`so2022_dem_compaction_coated_particles_assb`](so2022_dem_compaction_coated_particles_assb.md).
 

@@ -1,0 +1,254 @@
+{
+ "slug": "nase2001_granular_bond_collision_number_wet_cohesion",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-10-13",
+ "sources": [
+  "1eba5498-34._Discrete_characterization_tools_for_cohesive_granular_material.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 2,
+   "file": "fig_1.png",
+   "caption": "Fig. 1. A symmetric liquid bridge. In this paper, cohesive forces are assumed to arise due to interstitial liquid (both surface tension and pressure forces). Solving the Laplace–Young equation for the bridge neck, Y, allows calculation of these forces.",
+   "rotated_deg": 0,
+   "bbox": [
+    54.3,
+    46.3,
+    281.4,
+    171.3
+   ],
+   "w": 1893,
+   "h": 1043,
+   "dpi": 600,
+   "src": "1eba5498-34._Discrete_characterization_tools_for_cohesive_granular_material.pdf",
+   "blank": 0.964,
+   "recrop": "2026-10-13 크롭 = 그림 래스터 경계 + 2 pt · 원 래스터 600 dpi (1860×1009 px) 그대로 렌더",
+   "viewed": true
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 5,
+   "file": "fig_2.png",
+   "caption": "Fig. 2. Experimental set-up for three prototypical granular systems: (a) static angle of repose, (b) dynamic surface angle, (c) hopper discharge rates.",
+   "rotated_deg": 0,
+   "bbox": [
+    52.3,
+    46.3,
+    282.4,
+    316.3
+   ],
+   "w": 1919,
+   "h": 2251,
+   "dpi": 600,
+   "src": "1eba5498-34._Discrete_characterization_tools_for_cohesive_granular_material.pdf",
+   "blank": 0.939,
+   "recrop": "2026-10-13 크롭 = 그림 래스터 경계 + 2 pt · 원 래스터 600 dpi (1884×2217 px) 그대로 렌더",
+   "viewed": true
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 5,
+   "file": "fig_3.png",
+   "caption": "Fig. 3. Experimental example of heaping results. On the left is a free-flowing (dry) heap; on the right is a cohesive (wet) heap.",
+   "rotated_deg": 0,
+   "bbox": [
+    132.0,
+    554.6,
+    467.1,
+    704.6
+   ],
+   "w": 1397,
+   "h": 626,
+   "dpi": 300,
+   "src": "1eba5498-34._Discrete_characterization_tools_for_cohesive_granular_material.pdf",
+   "blank": 0.435,
+   "recrop": "2026-10-13 크롭 = 그림 래스터 경계 + 2 pt · 원 래스터 200 dpi (919×406 px) 를 300 dpi 로 렌더 (업샘플)",
+   "viewed": true
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 6,
+   "file": "fig_4.png",
+   "caption": "Fig. 4. Computational example of heaping results. On the left is a free-flowing (dry) heap; on the right is a cohesive (wet) heap.",
+   "rotated_deg": 0,
+   "bbox": [
+    132.5,
+    46.3,
+    466.7,
+    166.3
+   ],
+   "w": 1393,
+   "h": 501,
+   "dpi": 300,
+   "src": "1eba5498-34._Discrete_characterization_tools_for_cohesive_granular_material.pdf",
+   "blank": 0.772,
+   "recrop": "2026-10-13 크롭 = 그림 래스터 경계 + 2 pt · 원 래스터 200 dpi (917×322 px) 를 300 dpi 로 렌더 (업샘플)",
+   "viewed": true
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 6,
+   "file": "fig_5.png",
+   "caption": "Fig. 5. Static heap angle as a function of Bo_g. A marked increase is seen to occur at roughly Bo_g ≈ 1 for a wide variety of materials (a soft material refers to particles with the properties of acrylic, yet with a Young's modulus two orders of magnitude smaller). The dashed line represents the approximate value of the dry material angle of repose.",
+   "rotated_deg": 0,
+   "bbox": [
+    57.3,
+    446.8,
+    277.3,
+    664.8
+   ],
+   "w": 1834,
+   "h": 1817,
+   "dpi": 600,
+   "src": "1eba5498-34._Discrete_characterization_tools_for_cohesive_granular_material.pdf",
+   "blank": 0.959,
+   "recrop": "2026-10-13 크롭 = 그림 래스터 경계 + 2 pt · 원 래스터 600 dpi (1801×1783 px) 그대로 렌더",
+   "viewed": true
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 7,
+   "file": "fig_6.png",
+   "caption": "Fig. 6. Hopper discharge rate as a function of Bo_g. As with the static heap angle, a marked change is seen to occur at roughly Bo_g ≈ 1.",
+   "rotated_deg": 0,
+   "bbox": [
+    57.8,
+    46.3,
+    276.9,
+    258.3
+   ],
+   "w": 1827,
+   "h": 1768,
+   "dpi": 600,
+   "src": "1eba5498-34._Discrete_characterization_tools_for_cohesive_granular_material.pdf",
+   "blank": 0.982,
+   "recrop": "2026-10-13 크롭 = 그림 래스터 경계 + 2 pt · 원 래스터 600 dpi (1792×1733 px) 그대로 렌더",
+   "viewed": true
+  },
+  {
+   "key": "f7",
+   "kind": "figure",
+   "label": "7",
+   "page": 7,
+   "file": "fig_7.png",
+   "caption": "Fig. 7. Experimental example of dynamic angle results. On the left is a free-flowing (dry) tumbler experiment; on the right is a cohesive (wet) tumbler experiment.",
+   "rotated_deg": 0,
+   "bbox": [
+    133.0,
+    496.8,
+    466.2,
+    693.8
+   ],
+   "w": 1389,
+   "h": 821,
+   "dpi": 300,
+   "src": "1eba5498-34._Discrete_characterization_tools_for_cohesive_granular_material.pdf",
+   "blank": 0.398,
+   "recrop": "2026-10-13 크롭 = 그림 래스터 경계 + 2 pt · 원 래스터 200 dpi (914×537 px) 를 300 dpi 로 렌더 (업샘플)",
+   "viewed": true
+  },
+  {
+   "key": "f8",
+   "kind": "figure",
+   "label": "8",
+   "page": 8,
+   "file": "fig_8.png",
+   "caption": "Fig. 8. Computational example of dynamic angle results. On the left is a free-flowing (dry) tumbler simulation; on the right is a cohesive (wet) tumbler simulation.",
+   "rotated_deg": 0,
+   "bbox": [
+    132.5,
+    46.3,
+    466.5,
+    244.3
+   ],
+   "w": 1392,
+   "h": 826,
+   "dpi": 300,
+   "src": "1eba5498-34._Discrete_characterization_tools_for_cohesive_granular_material.pdf",
+   "blank": 0.701,
+   "recrop": "2026-10-13 크롭 = 그림 래스터 경계 + 2 pt · 원 래스터 200 dpi (916×540 px) 를 300 dpi 로 렌더 (업샘플)",
+   "viewed": true
+  },
+  {
+   "key": "f9",
+   "kind": "figure",
+   "label": "9",
+   "page": 8,
+   "file": "fig_9.png",
+   "caption": "Fig. 9. Dynamic angle as a function of Bo_g. In contrast to both the hopper and the static heap angle, only a small change is seen with increasing Bo_g over many decades. Additionally, no clear transition point between free-flowing and cohesive behavior is evident.",
+   "rotated_deg": 0,
+   "bbox": [
+    57.3,
+    456.8,
+    277.3,
+    673.8
+   ],
+   "w": 1834,
+   "h": 1809,
+   "dpi": 600,
+   "src": "1eba5498-34._Discrete_characterization_tools_for_cohesive_granular_material.pdf",
+   "blank": 0.967,
+   "recrop": "2026-10-13 크롭 = 그림 래스터 경계 + 2 pt · 원 래스터 600 dpi (1801×1776 px) 그대로 렌더",
+   "viewed": true
+  },
+  {
+   "key": "f10",
+   "kind": "figure",
+   "label": "10",
+   "page": 8,
+   "file": "fig_10.png",
+   "caption": "Fig. 10. Dynamic angles change with rotation rate. When cohesion is minimal—as in a dry system—the surface angle increases with increasing rotation rate. When cohesion is important, however, it is possible for the surface angle to decrease with increasing rotation rate—contrary to conventional wisdom.",
+   "rotated_deg": 0,
+   "bbox": [
+    319.8,
+    443.9,
+    541.8,
+    663.9
+   ],
+   "w": 1850,
+   "h": 1834,
+   "dpi": 600,
+   "src": "1eba5498-34._Discrete_characterization_tools_for_cohesive_granular_material.pdf",
+   "blank": 0.962,
+   "recrop": "2026-10-13 크롭 = 그림 래스터 경계 + 2 pt · 원 래스터 600 dpi (1817×1801 px) 그대로 렌더",
+   "viewed": true
+  },
+  {
+   "key": "f11",
+   "kind": "figure",
+   "label": "11",
+   "page": 9,
+   "file": "fig_11.png",
+   "caption": "Fig. 11. Dynamic angle difference as a function of Co. When the difference between the wet and dry dynamic angle is plotted vs. Co, a dramatic transition is seen to occur near Co ≈ 1—similar to the effect of Bo_g on the static heap angle. The dashed line represents the asymptotic value of the angle difference (i.e., the difference becomes zero as cohesion vanishes).",
+   "rotated_deg": 0,
+   "bbox": [
+    57.3,
+    46.3,
+    277.3,
+    259.3
+   ],
+   "w": 1834,
+   "h": 1776,
+   "dpi": 600,
+   "src": "1eba5498-34._Discrete_characterization_tools_for_cohesive_granular_material.pdf",
+   "blank": 0.954,
+   "recrop": "2026-10-13 크롭 = 그림 래스터 경계 + 2 pt · 원 래스터 600 dpi (1801×1741 px) 그대로 렌더",
+   "viewed": true
+  }
+ ],
+ "missing_labels": []
+}
