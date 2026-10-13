@@ -275,7 +275,7 @@ def two_lines(tc, first, second):
 
 # The 08-18 family table's third column ('role in the design'), rewritten for the p03 question (user 10-13): each
 # family's anion compared with the host's S2- and Cl-. Sulfides and chlorides change only the cation.
-ANION_VS_HOST = {'role in the design': 'anion vs. host',
+ANION_VS_HOST = {'role in the design': 'anion vs host',   # 'vs' without a period, like every other 'vs' in the deck (user 10-13)
                  'oxides': 'O²⁻, smaller than S²⁻', 'chlorides': 'Cl⁻, already in the host',
                  'sulfides': 'S²⁻, already in the host', 'fluorides': 'F⁻, smaller than Cl⁻',
                  'bromides': 'Br⁻, larger than Cl⁻', 'nitrides': 'N³⁻, higher charge than S²⁻',

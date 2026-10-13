@@ -36,7 +36,7 @@ evidenceScope: multi-source-mixed
 > | 3 | Overview — 하나씩에서 여럿으로 · 예 하나 (Al₂O₃ / Al₂S₃) | ✅ 확정 10-13 | b464c62 · fa4a120 · 9b4f498 (화살표 줄 → 다음 장 다리 · 'we must check') · 한 장 PPT + 노트 |
 > | 4 | Introduction — 두 열화는 서로를 키운다 (Kang 2026 Fig. 16) | ✅ 확정 10-13 (*'됐어 저정도면'*) | 9c4bbde (문구 넷 · 출처는 랩 표준 그대로) |
 > | 5 | Introduction — 선행 스크린과 이번 작업 (novelty · Muy 2025 · Jung 2026 추가) | ✅ 확정 10-13 (사용자 최종판 · 출처 오른쪽 위) · 논문별 원문 대조 뒤 재확정 (Miara n 128 · Lee 칸 · bullet 둘 · Anderson 참고문헌 뺌 · 'gate' 뺌) · **대본 최종 10-13** (기계 축 이유 한 줄) | 34adf6e · 이번 반영 커밋 · 디펜스 S5 브리핑 (Miara · Xiao · Lee 확인 ✅ · Muy · Jung 남음) |
-> | 6 | Results & Discussion — 91 전구체 · 일곱 음이온족 (08-18 표로 되돌림 · 셋째 열 *anion vs. host*) | ✅ 확정 10-13 (사용자 *'이걸로 대체'*) | 이번 커밋 · 한 장짜리 PPT |
+> | 6 | Results & Discussion — 91 전구체 · 일곱 음이온족 (08-18 표로 되돌림 · 셋째 열 *anion vs host*) | ✅ 확정 10-13 (사용자 최종판 · 제목 Results & Discussion · 열 이름 *anion vs host* — 덱의 다른 'vs' 처럼 마침표 없음) | a2b62c9 · d936867 · 한 장짜리 PPT |
 > | 1 · 7–19 | 나머지 | ⏳ 그 장을 볼 때 확정 | — |
 
 ---
@@ -172,12 +172,12 @@ evidenceScope: multi-source-mixed
 ## 6. 후보군 ⏱ 8:00
 > 화면 (사용자 10-13 · 사용자 덱 7쪽): 08-18 덱의 Candidate set 표로 되돌림 — ■ *91 precursors in seven anion families* · bullet 둘
 > (*Every precursor is an existing compound, with a cation from +1 to +6.* · *Al, Li, and Mg appear in all seven families, so their partner anions can be compared.*) ·
-> 표 4 열 (family · n · **anion vs. host** · examples) — 'role in the design' 열을 호스트 음이온 (S²⁻ · Cl⁻) 과의 비교로 바꿨다 · 막대그림과 SiO₂ 문헌 그림은 뺐다.
+> 표 4 열 (family · n · **anion vs host** · examples) — 'role in the design' 열을 호스트 음이온 (S²⁻ · Cl⁻) 과의 비교로 바꿨다 · 막대그림과 SiO₂ 문헌 그림은 뺐다.
 > 앞 장 끝: *'그러면 이 91개 전구체가 어떤 화합물들인지 보겠습니다.'*
 
 후보는 91 개 전구체, 일곱 음이온족입니다. **[가리킴: 첫 bullet]** 전부 실제로 있는 화합물이고, 양이온은 +1 가부터 +6 가까지입니다.
 
-**[가리킴: anion vs. host 열]** 음이온을 호스트에 있는 S²⁻, Cl⁻ 와 비교해 정리했습니다.
+**[가리킴: anion vs host 열]** 음이온을 호스트에 있는 S²⁻, Cl⁻ 와 비교해 정리했습니다.
 - 황화물과 염화물은 음이온이 호스트에 이미 있어서, 새로 들어오는 원소는 양이온뿐입니다.
 - 나머지 다섯은 음이온이 다릅니다. 산화물은 S²⁻ 보다 작은 O²⁻, 플루오린화물 · 브로민화물 · 요오드화물은 Cl⁻ 보다 작거나 큰 할로겐, 질화물은 전하가 더 큰 N³⁻ 입니다.
 
