@@ -650,8 +650,10 @@ def build_lean():
     t = load('slide7.xml')
     replace_body(t, P('Prior dopant screens and what this study adds', 'h', ln=130)
                  + P('Earlier screens varied one or two elements, or a coating compound without a host.', 'b', ln=130)
-                 + P('Here one [[b:precursor compound]] adds a cation and an anion, charge-balanced within the salt.',
-                     'b', ln=130), y=1.08, h=1.35)   # one line (7.7 in of ~8.1 in at 15 pt)
+                 + P('Here one [[b:precursor compound]] adds a cation and an anion in the ratio of its formula.',
+                     'b', ln=130), y=1.08, h=1.35)   # one line (7.1 in at 15 pt)
+    # user 10-13 asked what 'charge-balanced within the salt' meant: it over-claimed. Our builds also balance charge in
+    # the host with Li vacancies or interstitials (contract rule ②); what the salt fixes is the cation:anion ratio.
     drop(t, lambda el: etree.QName(el).localname == 'grpSp' or name_of(el) == 'TextBox 3')
     assert set_texts(t, {'47': '91', ' (': '', '91': '', ' planned)': ''}) == 4
     A = f'{{{NS["a"]}}}'
@@ -682,7 +684,8 @@ def build_lean():
     assert set(rows) == {'study', 'Miara 2015 (via Anderson)', 'Lee 2024', 'Xiao 2019', 'this work'}, set(rows)
     new_rows = {}
     for key, cells in (('Muy 2025', ['Muy 2025', 'argyrodite (Li₇PS₆)', 'one element, site-resolved', '24', None]),
-                       ('Jung 2026', ['Jung 2026', 'LGPS', 'two elements, Li-compensated', '2,550', 'ML-predicted G and G/K (gate)'])):
+                       ('Jung 2026', ['Jung 2026', 'LGPS', 'two elements, chosen independently', '2,550',
+                                      'ML-predicted G and G/K (gate)'])):   # both of us adjust Li; not a contrast
         tr = etree.fromstring(etree.tostring(rows['Lee 2024']))
         for tc, text in zip(tr.findall('a:tc', NS), cells):
             if text is not None:

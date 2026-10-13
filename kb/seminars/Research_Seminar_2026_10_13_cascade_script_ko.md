@@ -134,7 +134,7 @@ evidenceScope: multi-source-mixed
 
 ## 5. 선행 스크린과 이번 작업의 차이 ⏱ 7:00
 > 화면 (사용자 10-13 · novelty 장 · 사용자 덱 6쪽): ■ *Prior dopant screens and what this study adds* · bullet 둘
-> (*Earlier screens varied one or two elements, or a coating compound without a host.* · *Here one precursor compound adds a cation and an anion, charge-balanced within the salt.*) ·
+> (*Earlier screens varied one or two elements, or a coating compound without a host.* · *Here one precursor compound adds a cation and an anion in the ratio of its formula.*) ·
 > 표 = 선행 다섯 편 + 이번 작업 (오래된 순 · **Muy 2025 · Jung 2026 를 litdb 에서 더함**) · 출처는 study 칸에 랩 표준 표기.
 > 앞 장 끝: *'그러면 지금까지의 도핑 스크린은 무엇을 바꿔 가며 걸렀는지, 선행 연구부터 보겠습니다.'*
 
@@ -144,9 +144,11 @@ evidenceScope: multi-source-mixed
   (Anderson 2024 결론 — litdb `anderson2024_…` §결론 2: 자기 기준 다섯을 순서대로 걸면 59 종 중 0 종)
 - **[가리킴: Xiao]** Xiao 등은 호스트 없이, 코팅으로 쓸 화합물 자체를 10만 개 넘게 걸렀습니다.
 - **[가리킴: Lee · Muy]** 아지로다이트에서는 원래 화학식에 있는 원소 조합을 바꾸거나, 원소 하나를 자리별로 넣어 봤습니다.
-- **[가리킴: Jung]** 가장 가까운 건 올해 나온 Jung 등의 연구입니다. LGPS 에 원소 두 개를 넣고, 전하는 Li 양으로 맞췄습니다.
+- **[가리킴: Jung]** 가장 가까운 건 올해 나온 Jung 등의 연구입니다. LGPS 에 원소 두 개를 따로 골라 넣었습니다.
 
-**[가리킴: this work 행]** 이번 작업은 원소가 아니라 전구체 화합물 하나를 넣습니다. 양이온과 음이온이 같은 화합물에서 함께 들어가고, 전하는 그 화합물 안에서 맞춰집니다. 실험에서 실제로 넣는 단위 그대로입니다.
+**[가리킴: this work 행]** 이번 작업은 원소가 아니라 전구체 화합물 하나를 넣습니다. 양이온과 음이온이 같은 화합물에서, 그 화학식의 비율대로 함께 들어갑니다.
+예를 들어 Al₂O₃ 면 Al 둘에 O 셋입니다. 실험에서 실제로 넣는 단위 그대로입니다.
+  (호스트 자리와 전하가 안 맞는 만큼은 Li 빈자리나 여분 Li 로 맞춘다 — 생성 규칙 ② 전체 전하 수지 · 이건 Jung 등도 같다 → 차이로 말하지 않는다)
 
 **[가리킴: mechanical axis 열]** 기계 축은 대부분 없었고, Jung 등은 ML 로 예측한 탄성 값을 거름 기준으로 썼습니다. 저희는 DFT 기준 계산과 MLIP 지표로 기록하되, 아직 거름 기준으로는 쓰지 않습니다.
 
