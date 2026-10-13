@@ -1,0 +1,167 @@
+figure,series,x_name,x,y_name,y,note
+fig2b,MV350 direct gap Gamma_D,qL_N_per_mm,122,gap_um,135.5,"visual read on 300 dpi crop (grid-line interpolation); qL +-10 N/mm; gap +-2 um; pixel check (half-filled marker centroid, ~+1.2 um bias): 136.6/118.0/105.3/83.6; target-gap markers same bias: 132.0/102.5/76.3/21.4 vs set 20 um"
+fig2b,MV350 direct gap Gamma_D,qL_N_per_mm,340,gap_um,117,"visual read on 300 dpi crop (grid-line interpolation); qL +-10 N/mm; gap +-2 um; pixel check (half-filled marker centroid, ~+1.2 um bias): 136.6/118.0/105.3/83.6; target-gap markers same bias: 132.0/102.5/76.3/21.4 vs set 20 um"
+fig2b,MV350 direct gap Gamma_D,qL_N_per_mm,560,gap_um,104.5,"visual read on 300 dpi crop (grid-line interpolation); qL +-10 N/mm; gap +-2 um; pixel check (half-filled marker centroid, ~+1.2 um bias): 136.6/118.0/105.3/83.6; target-gap markers same bias: 132.0/102.5/76.3/21.4 vs set 20 um"
+fig2b,MV350 direct gap Gamma_D,qL_N_per_mm,1015,gap_um,82,"visual read on 300 dpi crop (grid-line interpolation); qL +-10 N/mm; gap +-2 um; pixel check (half-filled marker centroid, ~+1.2 um bias): 136.6/118.0/105.3/83.6; target-gap markers same bias: 132.0/102.5/76.3/21.4 vs set 20 um"
+fig2b,MV350 target gap Gamma_T,qL_N_per_mm,122,gap_um,131,visual read on 300 dpi crop (grid-line interpolation); qL +-10 N/mm
+fig2b,MV350 target gap Gamma_T,qL_N_per_mm,340,gap_um,101,visual read on 300 dpi crop (grid-line interpolation); qL +-10 N/mm
+fig2b,MV350 target gap Gamma_T,qL_N_per_mm,560,gap_um,75,visual read on 300 dpi crop (grid-line interpolation); qL +-10 N/mm
+fig2b,MV350 target gap Gamma_T,qL_N_per_mm,1015,gap_um,20.5,visual read on 300 dpi crop (grid-line interpolation); qL +-10 N/mm
+fig2b,MV350 roll shift,qL_N_per_mm,122,shift_um,4.5,visual read on 300 dpi crop (grid-line interpolation); qL +-10 N/mm
+fig2b,MV350 roll shift,qL_N_per_mm,340,shift_um,16,visual read on 300 dpi crop (grid-line interpolation); qL +-10 N/mm
+fig2b,MV350 roll shift,qL_N_per_mm,560,shift_um,29.5,visual read on 300 dpi crop (grid-line interpolation); qL +-10 N/mm
+fig2b,MV350 roll shift,qL_N_per_mm,1015,shift_um,62.5,visual read on 300 dpi crop (grid-line interpolation); qL +-10 N/mm
+fig3a,MV200 roll shift,qL_N_per_mm,95,shift_um,8.3,visual read on 300 dpi crop (grid-line interpolation); qL +-10 N/mm; +-1 um
+fig3a,MV200 roll shift,qL_N_per_mm,190,shift_um,14.2,visual read on 300 dpi crop (grid-line interpolation); qL +-10 N/mm; +-1 um
+fig3a,MV200 roll shift,qL_N_per_mm,455,shift_um,29.6,visual read on 300 dpi crop (grid-line interpolation); qL +-10 N/mm; +-1 um
+fig3a,MV200 roll shift,qL_N_per_mm,615,shift_um,39.5,visual read on 300 dpi crop (grid-line interpolation); qL +-10 N/mm; +-1 um
+fig3a,MV250 roll shift,qL_N_per_mm,140,shift_um,9.2,visual read on 300 dpi crop (grid-line interpolation); qL +-10 N/mm
+fig3a,MV250 roll shift,qL_N_per_mm,255,shift_um,14.3,visual read on 300 dpi crop (grid-line interpolation); qL +-10 N/mm
+fig3a,MV250 roll shift,qL_N_per_mm,420,shift_um,23.2,visual read on 300 dpi crop (grid-line interpolation); qL +-10 N/mm
+fig3a,MV250 roll shift,qL_N_per_mm,770,shift_um,46.5,visual read on 300 dpi crop (grid-line interpolation); qL +-10 N/mm
+fig3a,MV300 roll shift,qL_N_per_mm,100,shift_um,5.0,visual read on 300 dpi crop (grid-line interpolation); qL +-10 N/mm
+fig3a,MV300 roll shift,qL_N_per_mm,265,shift_um,13.0,visual read on 300 dpi crop (grid-line interpolation); qL +-10 N/mm
+fig3a,MV300 roll shift,qL_N_per_mm,475,shift_um,23.8,visual read on 300 dpi crop (grid-line interpolation); qL +-10 N/mm
+fig3a,MV300 roll shift,qL_N_per_mm,890,shift_um,53.8,visual read on 300 dpi crop (grid-line interpolation); qL +-10 N/mm
+fig3a,MV350 roll shift,qL_N_per_mm,120,shift_um,4.5,visual read on 300 dpi crop (grid-line interpolation); qL +-10 N/mm
+fig3a,MV350 roll shift,qL_N_per_mm,340,shift_um,16.0,visual read on 300 dpi crop (grid-line interpolation); qL +-10 N/mm
+fig3a,MV350 roll shift,qL_N_per_mm,560,shift_um,29.5,visual read on 300 dpi crop (grid-line interpolation); qL +-10 N/mm
+fig3a,MV350 roll shift,qL_N_per_mm,1020,shift_um,62.6,visual read on 300 dpi crop (grid-line interpolation); qL +-10 N/mm
+fig3b,BV 95.5:3:1.5 roll shift,qL_N_per_mm,130,shift_um,5.5,visual read on 300 dpi crop (grid-line interpolation); qL +-10 N/mm
+fig3b,BV 95.5:3:1.5 roll shift,qL_N_per_mm,295,shift_um,16.8,visual read on 300 dpi crop (grid-line interpolation); qL +-10 N/mm
+fig3b,BV 95.5:3:1.5 roll shift,qL_N_per_mm,465,shift_um,23.8,visual read on 300 dpi crop (grid-line interpolation); qL +-10 N/mm
+fig3b,BV 95.5:3:1.5 roll shift,qL_N_per_mm,730,shift_um,41.7,visual read on 300 dpi crop (grid-line interpolation); qL +-10 N/mm
+fig3b,BV 95:3:2 roll shift,qL_N_per_mm,60,shift_um,-2.5,visual read on 300 dpi crop (grid-line interpolation); qL +-10 N/mm
+fig3b,BV 95:3:2 roll shift,qL_N_per_mm,185,shift_um,2.2,visual read on 300 dpi crop (grid-line interpolation); qL +-10 N/mm
+fig3b,BV 95:3:2 roll shift,qL_N_per_mm,360,shift_um,14.2,visual read on 300 dpi crop (grid-line interpolation); qL +-10 N/mm
+fig3b,BV 95:3:2 roll shift,qL_N_per_mm,755,shift_um,42.8,visual read on 300 dpi crop (grid-line interpolation); qL +-10 N/mm
+fig3b,BV 94:3:3 roll shift,qL_N_per_mm,140,shift_um,9.5,visual read on 300 dpi crop (grid-line interpolation); qL +-10 N/mm
+fig3b,BV 94:3:3 roll shift,qL_N_per_mm,255,shift_um,14.5,visual read on 300 dpi crop (grid-line interpolation); qL +-10 N/mm
+fig3b,BV 94:3:3 roll shift,qL_N_per_mm,420,shift_um,23.3,visual read on 300 dpi crop (grid-line interpolation); qL +-10 N/mm
+fig3b,BV 94:3:3 roll shift,qL_N_per_mm,770,shift_um,46.8,visual read on 300 dpi crop (grid-line interpolation); qL +-10 N/mm
+fig3b,BV 93:3:4 roll shift,qL_N_per_mm,130,shift_um,5.2,visual read on 300 dpi crop (grid-line interpolation); qL +-10 N/mm
+fig3b,BV 93:3:4 roll shift,qL_N_per_mm,345,shift_um,16.2,visual read on 300 dpi crop (grid-line interpolation); qL +-10 N/mm
+fig3b,BV 93:3:4 roll shift,qL_N_per_mm,625,shift_um,33.5,visual read on 300 dpi crop (grid-line interpolation); qL +-10 N/mm
+fig3b,BV 93:3:4 roll shift,qL_N_per_mm,790,shift_um,41.0,visual read on 300 dpi crop (grid-line interpolation); qL +-10 N/mm
+fig3c,MV normalized roll shift (200/250/300/350 at max qL),qL_N_per_mm,615,shift_over_coating,0.422,visual read on 300 dpi crop (grid-line interpolation); qL +-10 N/mm; text: max ~0.41
+fig3c,MV normalized roll shift (200/250/300/350 at max qL),qL_N_per_mm,770,shift_over_coating,0.417,visual read on 300 dpi crop (grid-line interpolation); qL +-10 N/mm; text: max ~0.41
+fig3c,MV normalized roll shift (200/250/300/350 at max qL),qL_N_per_mm,890,shift_over_coating,0.41,visual read on 300 dpi crop (grid-line interpolation); qL +-10 N/mm; text: max ~0.41
+fig3c,MV normalized roll shift (200/250/300/350 at max qL),qL_N_per_mm,1020,shift_over_coating,0.418,visual read on 300 dpi crop (grid-line interpolation); qL +-10 N/mm; text: max ~0.41
+fig5a,MV200 density,qL_N_per_mm,0,rhoC_g_cm3,2.45,visual read on 300 dpi crop (grid-line interpolation); qL +-10 N/mm; +-0.02; 615 N/mm = 3.18 printed p.7
+fig5a,MV200 density,qL_N_per_mm,95,rhoC_g_cm3,2.745,visual read on 300 dpi crop (grid-line interpolation); qL +-10 N/mm; +-0.02; 615 N/mm = 3.18 printed p.7
+fig5a,MV200 density,qL_N_per_mm,190,rhoC_g_cm3,2.865,visual read on 300 dpi crop (grid-line interpolation); qL +-10 N/mm; +-0.02; 615 N/mm = 3.18 printed p.7
+fig5a,MV200 density,qL_N_per_mm,455,rhoC_g_cm3,3.135,visual read on 300 dpi crop (grid-line interpolation); qL +-10 N/mm; +-0.02; 615 N/mm = 3.18 printed p.7
+fig5a,MV200 density,qL_N_per_mm,615,rhoC_g_cm3,3.18,visual read on 300 dpi crop (grid-line interpolation); qL +-10 N/mm; +-0.02; 615 N/mm = 3.18 printed p.7
+fig5a,MV250 density,qL_N_per_mm,0,rhoC_g_cm3,2.46,visual read on 300 dpi crop (grid-line interpolation); qL +-10 N/mm
+fig5a,MV250 density,qL_N_per_mm,140,rhoC_g_cm3,2.77,visual read on 300 dpi crop (grid-line interpolation); qL +-10 N/mm
+fig5a,MV250 density,qL_N_per_mm,255,rhoC_g_cm3,2.96,visual read on 300 dpi crop (grid-line interpolation); qL +-10 N/mm
+fig5a,MV250 density,qL_N_per_mm,420,rhoC_g_cm3,3.105,visual read on 300 dpi crop (grid-line interpolation); qL +-10 N/mm
+fig5a,MV250 density,qL_N_per_mm,770,rhoC_g_cm3,3.27,visual read on 300 dpi crop (grid-line interpolation); qL +-10 N/mm
+fig5a,MV300 density,qL_N_per_mm,0,rhoC_g_cm3,2.47,visual read on 300 dpi crop (grid-line interpolation); qL +-10 N/mm
+fig5a,MV300 density,qL_N_per_mm,100,rhoC_g_cm3,2.735,visual read on 300 dpi crop (grid-line interpolation); qL +-10 N/mm
+fig5a,MV300 density,qL_N_per_mm,265,rhoC_g_cm3,2.98,visual read on 300 dpi crop (grid-line interpolation); qL +-10 N/mm
+fig5a,MV300 density,qL_N_per_mm,475,rhoC_g_cm3,3.105,visual read on 300 dpi crop (grid-line interpolation); qL +-10 N/mm
+fig5a,MV300 density,qL_N_per_mm,890,rhoC_g_cm3,3.34,visual read on 300 dpi crop (grid-line interpolation); qL +-10 N/mm
+fig5a,MV350 density,qL_N_per_mm,0,rhoC_g_cm3,2.505,visual read on 300 dpi crop (grid-line interpolation); qL +-10 N/mm; 1015 N/mm = 3.41 printed p.7
+fig5a,MV350 density,qL_N_per_mm,120,rhoC_g_cm3,2.75,visual read on 300 dpi crop (grid-line interpolation); qL +-10 N/mm; 1015 N/mm = 3.41 printed p.7
+fig5a,MV350 density,qL_N_per_mm,340,rhoC_g_cm3,2.98,visual read on 300 dpi crop (grid-line interpolation); qL +-10 N/mm; 1015 N/mm = 3.41 printed p.7
+fig5a,MV350 density,qL_N_per_mm,560,rhoC_g_cm3,3.125,visual read on 300 dpi crop (grid-line interpolation); qL +-10 N/mm; 1015 N/mm = 3.41 printed p.7
+fig5a,MV350 density,qL_N_per_mm,1015,rhoC_g_cm3,3.41,visual read on 300 dpi crop (grid-line interpolation); qL +-10 N/mm; 1015 N/mm = 3.41 printed p.7
+fig5b,BV 95.5:3:1.5 density,qL_N_per_mm,0,rhoC_g_cm3,2.53,visual read on 300 dpi crop (grid-line interpolation); qL +-10 N/mm
+fig5b,BV 95.5:3:1.5 density,qL_N_per_mm,120,rhoC_g_cm3,2.81,visual read on 300 dpi crop (grid-line interpolation); qL +-10 N/mm
+fig5b,BV 95.5:3:1.5 density,qL_N_per_mm,290,rhoC_g_cm3,3.06,visual read on 300 dpi crop (grid-line interpolation); qL +-10 N/mm
+fig5b,BV 95.5:3:1.5 density,qL_N_per_mm,445,rhoC_g_cm3,3.135,visual read on 300 dpi crop (grid-line interpolation); qL +-10 N/mm
+fig5b,BV 95.5:3:1.5 density,qL_N_per_mm,715,rhoC_g_cm3,3.31,visual read on 300 dpi crop (grid-line interpolation); qL +-10 N/mm
+fig5b,BV 95:3:2 density,qL_N_per_mm,0,rhoC_g_cm3,2.505,visual read on 300 dpi crop (grid-line interpolation); qL +-10 N/mm
+fig5b,BV 95:3:2 density,qL_N_per_mm,50,rhoC_g_cm3,2.65,visual read on 300 dpi crop (grid-line interpolation); qL +-10 N/mm
+fig5b,BV 95:3:2 density,qL_N_per_mm,170,rhoC_g_cm3,2.855,visual read on 300 dpi crop (grid-line interpolation); qL +-10 N/mm
+fig5b,BV 95:3:2 density,qL_N_per_mm,340,rhoC_g_cm3,3.01,visual read on 300 dpi crop (grid-line interpolation); qL +-10 N/mm
+fig5b,BV 95:3:2 density,qL_N_per_mm,740,rhoC_g_cm3,3.31,visual read on 300 dpi crop (grid-line interpolation); qL +-10 N/mm
+fig5b,BV 94:3:3 density,qL_N_per_mm,0,rhoC_g_cm3,2.465,visual read on 300 dpi crop (grid-line interpolation); qL +-10 N/mm
+fig5b,BV 94:3:3 density,qL_N_per_mm,125,rhoC_g_cm3,2.775,visual read on 300 dpi crop (grid-line interpolation); qL +-10 N/mm
+fig5b,BV 94:3:3 density,qL_N_per_mm,240,rhoC_g_cm3,2.955,visual read on 300 dpi crop (grid-line interpolation); qL +-10 N/mm
+fig5b,BV 94:3:3 density,qL_N_per_mm,410,rhoC_g_cm3,3.11,visual read on 300 dpi crop (grid-line interpolation); qL +-10 N/mm
+fig5b,BV 94:3:3 density,qL_N_per_mm,755,rhoC_g_cm3,3.275,visual read on 300 dpi crop (grid-line interpolation); qL +-10 N/mm
+fig5b,BV 93:3:4 density,qL_N_per_mm,0,rhoC_g_cm3,2.49,visual read on 300 dpi crop (grid-line interpolation); qL +-10 N/mm; legend misprint 93-4-4
+fig5b,BV 93:3:4 density,qL_N_per_mm,125,rhoC_g_cm3,2.8,visual read on 300 dpi crop (grid-line interpolation); qL +-10 N/mm; legend misprint 93-4-4
+fig5b,BV 93:3:4 density,qL_N_per_mm,325,rhoC_g_cm3,3.03,visual read on 300 dpi crop (grid-line interpolation); qL +-10 N/mm; legend misprint 93-4-4
+fig5b,BV 93:3:4 density,qL_N_per_mm,620,rhoC_g_cm3,3.22,visual read on 300 dpi crop (grid-line interpolation); qL +-10 N/mm; legend misprint 93-4-4
+fig5b,BV 93:3:4 density,qL_N_per_mm,765,rhoC_g_cm3,3.28,visual read on 300 dpi crop (grid-line interpolation); qL +-10 N/mm; legend misprint 93-4-4
+fig6a,MV200 SB,qL_N_per_mm,95,SB,0.057,visual read on 300 dpi crop (grid-line interpolation); qL +-10 N/mm; SB +-0.005
+fig6a,MV200 SB,qL_N_per_mm,190,SB,0.113,visual read on 300 dpi crop (grid-line interpolation); qL +-10 N/mm; SB +-0.005
+fig6a,MV200 SB,qL_N_per_mm,455,SB,0.266,visual read on 300 dpi crop (grid-line interpolation); qL +-10 N/mm; SB +-0.005
+fig6a,MV200 SB,qL_N_per_mm,615,SB,0.397,visual read on 300 dpi crop (grid-line interpolation); qL +-10 N/mm; SB +-0.005
+fig6a,MV250 SB,qL_N_per_mm,140,SB,0.068,visual read on 300 dpi crop (grid-line interpolation); qL +-10 N/mm
+fig6a,MV250 SB,qL_N_per_mm,255,SB,0.133,visual read on 300 dpi crop (grid-line interpolation); qL +-10 N/mm
+fig6a,MV250 SB,qL_N_per_mm,420,SB,0.25,visual read on 300 dpi crop (grid-line interpolation); qL +-10 N/mm
+fig6a,MV250 SB,qL_N_per_mm,770,SB,0.465,visual read on 300 dpi crop (grid-line interpolation); qL +-10 N/mm
+fig6a,MV300 SB,qL_N_per_mm,95,SB,0.08,visual read on 300 dpi crop (grid-line interpolation); qL +-10 N/mm
+fig6a,MV300 SB,qL_N_per_mm,265,SB,0.152,visual read on 300 dpi crop (grid-line interpolation); qL +-10 N/mm
+fig6a,MV300 SB,qL_N_per_mm,470,SB,0.261,visual read on 300 dpi crop (grid-line interpolation); qL +-10 N/mm
+fig6a,MV300 SB,qL_N_per_mm,890,SB,0.509,visual read on 300 dpi crop (grid-line interpolation); qL +-10 N/mm
+fig6a,MV350 SB,qL_N_per_mm,120,SB,0.101,visual read on 300 dpi crop (grid-line interpolation); qL +-10 N/mm
+fig6a,MV350 SB,qL_N_per_mm,340,SB,0.19,visual read on 300 dpi crop (grid-line interpolation); qL +-10 N/mm
+fig6a,MV350 SB,qL_N_per_mm,560,SB,0.28,visual read on 300 dpi crop (grid-line interpolation); qL +-10 N/mm
+fig6a,MV350 SB,qL_N_per_mm,1015,SB,0.505,visual read on 300 dpi crop (grid-line interpolation); qL +-10 N/mm
+fig6b,BV 95.5:3:1.5 SB,qL_N_per_mm,130,SB,0.148,visual read on 300 dpi crop (grid-line interpolation); qL +-10 N/mm
+fig6b,BV 95.5:3:1.5 SB,qL_N_per_mm,295,SB,0.222,visual read on 300 dpi crop (grid-line interpolation); qL +-10 N/mm
+fig6b,BV 95.5:3:1.5 SB,qL_N_per_mm,465,SB,0.36,visual read on 300 dpi crop (grid-line interpolation); qL +-10 N/mm
+fig6b,BV 95.5:3:1.5 SB,qL_N_per_mm,730,SB,0.565,visual read on 300 dpi crop (grid-line interpolation); qL +-10 N/mm
+fig6b,BV 95:3:2 SB,qL_N_per_mm,60,SB,0.096,visual read on 300 dpi crop (grid-line interpolation); qL +-10 N/mm
+fig6b,BV 95:3:2 SB,qL_N_per_mm,185,SB,0.169,visual read on 300 dpi crop (grid-line interpolation); qL +-10 N/mm
+fig6b,BV 95:3:2 SB,qL_N_per_mm,360,SB,0.255,visual read on 300 dpi crop (grid-line interpolation); qL +-10 N/mm
+fig6b,BV 95:3:2 SB,qL_N_per_mm,755,SB,0.525,visual read on 300 dpi crop (grid-line interpolation); qL +-10 N/mm
+fig6b,BV 94:3:3 SB,qL_N_per_mm,140,SB,0.07,visual read on 300 dpi crop (grid-line interpolation); qL +-10 N/mm
+fig6b,BV 94:3:3 SB,qL_N_per_mm,255,SB,0.135,visual read on 300 dpi crop (grid-line interpolation); qL +-10 N/mm
+fig6b,BV 94:3:3 SB,qL_N_per_mm,420,SB,0.253,visual read on 300 dpi crop (grid-line interpolation); qL +-10 N/mm
+fig6b,BV 94:3:3 SB,qL_N_per_mm,770,SB,0.468,visual read on 300 dpi crop (grid-line interpolation); qL +-10 N/mm
+fig6b,BV 93:3:4 SB,qL_N_per_mm,130,SB,0.073,visual read on 300 dpi crop (grid-line interpolation); qL +-10 N/mm
+fig6b,BV 93:3:4 SB,qL_N_per_mm,345,SB,0.195,visual read on 300 dpi crop (grid-line interpolation); qL +-10 N/mm
+fig6b,BV 93:3:4 SB,qL_N_per_mm,625,SB,0.366,visual read on 300 dpi crop (grid-line interpolation); qL +-10 N/mm
+fig6b,BV 93:3:4 SB,qL_N_per_mm,790,SB,0.58,visual read on 300 dpi crop (grid-line interpolation); qL +-10 N/mm
+fig6c,MV slope dSB/dqL,MC_g_m2,200,slope_mm_per_N,0.000624,visual read on 300 dpi crop (grid-line interpolation); qL +-10 N/mm; fit printed -7.7E-7*MC + 7.8E-4 (R2 0.94)
+fig6c,MV slope dSB/dqL,MC_g_m2,250,slope_mm_per_N,0.000591,visual read on 300 dpi crop (grid-line interpolation); qL +-10 N/mm; fit printed -7.7E-7*MC + 7.8E-4 (R2 0.94)
+fig6c,MV slope dSB/dqL,MC_g_m2,300,slope_mm_per_N,0.000566,visual read on 300 dpi crop (grid-line interpolation); qL +-10 N/mm; fit printed -7.7E-7*MC + 7.8E-4 (R2 0.94)
+fig6c,MV slope dSB/dqL,MC_g_m2,350,slope_mm_per_N,0.000504,visual read on 300 dpi crop (grid-line interpolation); qL +-10 N/mm; fit printed -7.7E-7*MC + 7.8E-4 (R2 0.94)
+fig6d,BV slope dSB/dqL,binder_wt_pct,1.5,slope_mm_per_N,0.000781,visual read on 300 dpi crop (grid-line interpolation); qL +-10 N/mm; fit printed -1.3E-4*wcB + 9.7E-4 (R2 0.99) excludes 4 wt% (star)
+fig6d,BV slope dSB/dqL,binder_wt_pct,2.0,slope_mm_per_N,0.000711,visual read on 300 dpi crop (grid-line interpolation); qL +-10 N/mm; fit printed -1.3E-4*wcB + 9.7E-4 (R2 0.99) excludes 4 wt% (star)
+fig6d,BV slope dSB/dqL,binder_wt_pct,3.0,slope_mm_per_N,0.000591,visual read on 300 dpi crop (grid-line interpolation); qL +-10 N/mm; fit printed -1.3E-4*wcB + 9.7E-4 (R2 0.99) excludes 4 wt% (star)
+fig6d,BV slope dSB/dqL,binder_wt_pct,4.0,slope_mm_per_N,0.00066,visual read on 300 dpi crop (grid-line interpolation); qL +-10 N/mm; fit printed -1.3E-4*wcB + 9.7E-4 (R2 0.99) excludes 4 wt% (star)
+fig7a,slope vs MC*wcB,MCxwcB,375,slope_mm_per_N,0.000781,"visual read on 300 dpi crop (grid-line interpolation); qL +-10 N/mm; fit printed -3.85E-7*MC*wcB + 8.97E-4 (R2 0.92); text p.9 kM -3.85e-7, CSB 8.97e-4"
+fig7a,slope vs MC*wcB,MCxwcB,500,slope_mm_per_N,0.000711,"visual read on 300 dpi crop (grid-line interpolation); qL +-10 N/mm; fit printed -3.85E-7*MC*wcB + 8.97E-4 (R2 0.92); text p.9 kM -3.85e-7, CSB 8.97e-4"
+fig7a,slope vs MC*wcB,MCxwcB,600,slope_mm_per_N,0.000624,"visual read on 300 dpi crop (grid-line interpolation); qL +-10 N/mm; fit printed -3.85E-7*MC*wcB + 8.97E-4 (R2 0.92); text p.9 kM -3.85e-7, CSB 8.97e-4"
+fig7a,slope vs MC*wcB,MCxwcB,750,slope_mm_per_N,0.000591,"visual read on 300 dpi crop (grid-line interpolation); qL +-10 N/mm; fit printed -3.85E-7*MC*wcB + 8.97E-4 (R2 0.92); text p.9 kM -3.85e-7, CSB 8.97e-4"
+fig7a,slope vs MC*wcB,MCxwcB,900,slope_mm_per_N,0.000566,"visual read on 300 dpi crop (grid-line interpolation); qL +-10 N/mm; fit printed -3.85E-7*MC*wcB + 8.97E-4 (R2 0.92); text p.9 kM -3.85e-7, CSB 8.97e-4"
+fig7a,slope vs MC*wcB,MCxwcB,1050,slope_mm_per_N,0.000504,"visual read on 300 dpi crop (grid-line interpolation); qL +-10 N/mm; fit printed -3.85E-7*MC*wcB + 8.97E-4 (R2 0.92); text p.9 kM -3.85e-7, CSB 8.97e-4"
+fig8a,MV200 elastic ratio,qL_N_per_mm,95,delta_el_n_pct,36.8,visual read on 300 dpi crop (grid-line interpolation); qL +-10 N/mm; +-0.5 %
+fig8a,MV200 elastic ratio,qL_N_per_mm,190,delta_el_n_pct,44.0,visual read on 300 dpi crop (grid-line interpolation); qL +-10 N/mm; +-0.5 %
+fig8a,MV200 elastic ratio,qL_N_per_mm,455,delta_el_n_pct,49.8,visual read on 300 dpi crop (grid-line interpolation); qL +-10 N/mm; +-0.5 %
+fig8a,MV200 elastic ratio,qL_N_per_mm,615,delta_el_n_pct,55.7,visual read on 300 dpi crop (grid-line interpolation); qL +-10 N/mm; +-0.5 %
+fig8a,MV250 elastic ratio,qL_N_per_mm,140,delta_el_n_pct,37.8,visual read on 300 dpi crop (grid-line interpolation); qL +-10 N/mm
+fig8a,MV250 elastic ratio,qL_N_per_mm,255,delta_el_n_pct,41.8,visual read on 300 dpi crop (grid-line interpolation); qL +-10 N/mm
+fig8a,MV250 elastic ratio,qL_N_per_mm,420,delta_el_n_pct,49.0,visual read on 300 dpi crop (grid-line interpolation); qL +-10 N/mm
+fig8a,MV250 elastic ratio,qL_N_per_mm,770,delta_el_n_pct,55.0,visual read on 300 dpi crop (grid-line interpolation); qL +-10 N/mm
+fig8a,MV300 elastic ratio,qL_N_per_mm,100,delta_el_n_pct,44.0,visual read on 300 dpi crop (grid-line interpolation); qL +-10 N/mm
+fig8a,MV300 elastic ratio,qL_N_per_mm,265,delta_el_n_pct,43.0,visual read on 300 dpi crop (grid-line interpolation); qL +-10 N/mm
+fig8a,MV300 elastic ratio,qL_N_per_mm,475,delta_el_n_pct,49.0,visual read on 300 dpi crop (grid-line interpolation); qL +-10 N/mm
+fig8a,MV300 elastic ratio,qL_N_per_mm,890,delta_el_n_pct,53.8,visual read on 300 dpi crop (grid-line interpolation); qL +-10 N/mm
+fig8a,MV350 elastic ratio,qL_N_per_mm,120,delta_el_n_pct,52.0,visual read on 300 dpi crop (grid-line interpolation); qL +-10 N/mm
+fig8a,MV350 elastic ratio,qL_N_per_mm,340,delta_el_n_pct,49.4,visual read on 300 dpi crop (grid-line interpolation); qL +-10 N/mm
+fig8a,MV350 elastic ratio,qL_N_per_mm,560,delta_el_n_pct,51.0,visual read on 300 dpi crop (grid-line interpolation); qL +-10 N/mm
+fig8a,MV350 elastic ratio,qL_N_per_mm,1015,delta_el_n_pct,52.6,visual read on 300 dpi crop (grid-line interpolation); qL +-10 N/mm
+fig8b,BV 95.5:3:1.5 elastic ratio,qL_N_per_mm,130,delta_el_n_pct,56.0,visual read on 300 dpi crop (grid-line interpolation); qL +-10 N/mm
+fig8b,BV 95.5:3:1.5 elastic ratio,qL_N_per_mm,295,delta_el_n_pct,50.5,visual read on 300 dpi crop (grid-line interpolation); qL +-10 N/mm
+fig8b,BV 95.5:3:1.5 elastic ratio,qL_N_per_mm,465,delta_el_n_pct,56.7,visual read on 300 dpi crop (grid-line interpolation); qL +-10 N/mm
+fig8b,BV 95.5:3:1.5 elastic ratio,qL_N_per_mm,730,delta_el_n_pct,58.6,visual read on 300 dpi crop (grid-line interpolation); qL +-10 N/mm
+fig8b,BV 95:3:2 elastic ratio,qL_N_per_mm,60,delta_el_n_pct,65.0,visual read on 300 dpi crop (grid-line interpolation); qL +-10 N/mm
+fig8b,BV 95:3:2 elastic ratio,qL_N_per_mm,185,delta_el_n_pct,56.0,visual read on 300 dpi crop (grid-line interpolation); qL +-10 N/mm
+fig8b,BV 95:3:2 elastic ratio,qL_N_per_mm,360,delta_el_n_pct,55.5,visual read on 300 dpi crop (grid-line interpolation); qL +-10 N/mm
+fig8b,BV 95:3:2 elastic ratio,qL_N_per_mm,755,delta_el_n_pct,57.6,visual read on 300 dpi crop (grid-line interpolation); qL +-10 N/mm
+fig8b,BV 94:3:3 elastic ratio,qL_N_per_mm,140,delta_el_n_pct,37.8,visual read on 300 dpi crop (grid-line interpolation); qL +-10 N/mm
+fig8b,BV 94:3:3 elastic ratio,qL_N_per_mm,255,delta_el_n_pct,41.8,visual read on 300 dpi crop (grid-line interpolation); qL +-10 N/mm
+fig8b,BV 94:3:3 elastic ratio,qL_N_per_mm,420,delta_el_n_pct,49.0,visual read on 300 dpi crop (grid-line interpolation); qL +-10 N/mm
+fig8b,BV 94:3:3 elastic ratio,qL_N_per_mm,770,delta_el_n_pct,55.0,visual read on 300 dpi crop (grid-line interpolation); qL +-10 N/mm
+fig8b,BV 93:3:4 elastic ratio,qL_N_per_mm,130,delta_el_n_pct,39.7,visual read on 300 dpi crop (grid-line interpolation); qL +-10 N/mm
+fig8b,BV 93:3:4 elastic ratio,qL_N_per_mm,345,delta_el_n_pct,48.0,visual read on 300 dpi crop (grid-line interpolation); qL +-10 N/mm
+fig8b,BV 93:3:4 elastic ratio,qL_N_per_mm,625,delta_el_n_pct,53.2,visual read on 300 dpi crop (grid-line interpolation); qL +-10 N/mm
+fig8b,BV 93:3:4 elastic ratio,qL_N_per_mm,790,delta_el_n_pct,59.3,visual read on 300 dpi crop (grid-line interpolation); qL +-10 N/mm
