@@ -309,6 +309,8 @@ def replace_body(t, paras, x=0.61, y=1.0, w=8.84, h=0.5):
 
 
 def header(t, text):
+    # Section titles follow the 08-18 deck: Introduction (p04-p05), then Results & Discussion for every body slide
+    # (p06-p13); the user (10-13) put the order back after 'Approach' / 'Progress' had replaced it.
     hit = 0
     for at in t.getroot().iter(f'{{{NS["a"]}}}t'):
         if at.text in ('Introduction', 'Results &amp; Discussion', 'Results & Discussion'):
@@ -398,7 +400,7 @@ def slide_sampling(note, color=BLUE, hx=0.5, hy=2.6, hw=4.6, ax=5.55, ay=2.6, aw
     The geometry arguments let the lean deck enlarge the heat map (CW P1); the defaults are the full deck's layout.
     The anneal ran on selected structures only (693 of 3,675 — `anneal_converged` in cascade_all_302), not on each."""
     t = load('slide11.xml')
-    header(t, 'Approach')
+    header(t, 'Results & Discussion')
     grp = t.getroot().find('.//p:grpSp', NS)
     emf_rid, emf_ext = None, None
     for p_ in grp.iter(f'{{{NS["p"]}}}pic'):
@@ -428,7 +430,7 @@ def slide_sampling(note, color=BLUE, hx=0.5, hy=2.6, hw=4.6, ax=5.55, ay=2.6, aw
 
 def slide_dft_reference():
     t = load('slide16.xml')
-    header(t, 'Approach')
+    header(t, 'Results & Discussion')
     replace_body(t, P('DFT reference calculations: equation of state and elastic constants', 'h')
                  + P('B₀ and equilibrium volume from a [[b:Birch–Murnaghan]] equation-of-state fit.', 'b', ln=130)
                  + P('Elastic constants (C[[_:ij]]) from finite strains are running on GPU.', 'b', ln=130),
@@ -803,7 +805,7 @@ def build_lean():
     #      (same cation, other partner anion). Al, Li and Mg appear in all seven families (cascade_all_302 ledger,
     #      91 precursors). The SiO2 literature example is gone; the co-doping papers stay on p17.
     t = load('slide8.xml')
-    header(t, 'Approach')
+    header(t, 'Results & Discussion')
     replace_body(t, P('91 precursors in seven anion families', 'h', ln=130)
                  + P('Every precursor is an [[b:existing compound]], with a cation from +1 to +6.', 'b', ln=130)
                  + P('[[b:Al, Li, and Mg]] appear in all seven families, so their partner anions can be compared.',
@@ -813,7 +815,7 @@ def build_lean():
 
     # ---- 7 Stage 1: what each Stage-1 table holds (CW P1: one figure — p06 already shows the families). The anneal ran
     #      on 693 selected structures, not on every placement (cascade_all_302 `anneal_converged`).
-    name, t = fresh('workflow', 'Approach')
+    name, t = fresh('workflow', 'Results & Discussion')
     lean_body(t, 'Stage 1: calculation coverage',
               ['Every charge-balanced placement was relaxed with [[b:UMA]] (3,675 structures); '
                '693 selected structures were then annealed (500 K, 50 ps).',
@@ -833,7 +835,7 @@ def build_lean():
 
     # ---- 10 stability window: our host window (left) + the window definitions from the literature (right). CW P1: the
     #      crop is larger; 'the earlier definition gave wider windows' and the interface re-derivation are said.
-    name, t = fresh('stability', 'Approach')
+    name, t = fresh('stability', 'Results & Discussion')
     lean_body(t, 'Decomposition stability window',
               ['The Li chemical potential is scanned as a voltage on a [[b:grand-potential phase diagram]] (MP phases, 0 K).',
                'Recomputed for 90 precursors with this definition.'], h=1.5)
@@ -855,7 +857,7 @@ def build_lean():
 
     # ---- 11 September audit: two independent lists (CW P0-1 — one table with shared row numbers read as
     #      finding → fix pairs, and they are not pairs: e.g. finding 4 is answered by decision 1)
-    name, t = fresh('audit', 'Progress')
+    name, t = fresh('audit', 'Results & Discussion')
     lean_body(t, 'September audit of Stage 1', ['Stage 1 was re-checked against the ledger.'], h=0.95)
     found = ['Concentration labels did not change the dopant level',
              'Volume filter: host reference ~40 % above the DFT volume',
@@ -875,7 +877,7 @@ def build_lean():
 
     # ---- 12 Stage 2 pilot design: the paper's figure says why repeats and a fixed window matter; our numbers are
     #      on a separate line (CW P0-2 — 'Hence …' read as if 10 × 2 and 2–50 ps came from that figure)
-    name, t = fresh('md_setup', 'Progress')
+    name, t = fresh('md_setup', 'Results & Discussion')
     lean_body(t, 'Stage 2 pilot: does the precursor anion change Li transport?',
               ['Al₂O₃- vs Al₂S₃-derived Al doping in the [[b:same host configuration and cell volume]].',
                'Reported: [[b:D(Al₂O₃) / D(Al₂S₃)]]; checks and an equivalence test (±ln 1.5) fixed before the runs.'], h=1.3)
@@ -887,7 +889,7 @@ def build_lean():
 
     # ---- 13 Stage 2 pilot status: run roster (ours, left) + Jung 2026 Fig. 5b (literature, right; CW P0-3 — the
     #      role tag sits above the crop so it is not read as a third result next to our roster)
-    name, t = fresh('md_status', 'Progress')
+    name, t = fresh('md_status', 'Results & Discussion')
     lean_body(t, 'Stage 2 pilot at 1000 K',
               ['600 K, this UMA cell: no diffusivity reported ([[r:non-linear MSD]], 2–100 ps).',
                '[[b:Predefined probe]]: 800 K failed; 1000 K was selected.'], h=1.3)
@@ -1034,7 +1036,7 @@ save(t, 'slide7.xml')
 
 # ---- 6 candidate set (orig slide 8)
 t = load('slide8.xml')
-header(t, 'Approach')
+header(t, 'Results & Discussion')
 replace_body(t, P('91 precursors in seven anion families', 'h', ln=130)   # = the lean slide (user 10-13)
              + P('Every precursor is an [[b:existing compound]], with a cation from +1 to +6.', 'b', ln=130)
              + P('[[b:Al, Li, and Mg]] appear in all seven families, so their partner anions can be compared.', 'b', ln=130),
@@ -1054,7 +1056,7 @@ add(t, refs_line(ids(), 'Precursor-derived co-doping of argyrodites: CuCl — Ta
 save(t, 'slide8.xml')
 
 # ---- 7 workflow table
-name, t = fresh('workflow', 'Approach')
+name, t = fresh('workflow', 'Results & Discussion')
 add(t, heading(ids(), 'Stage 1 — exploration screen (Jun–Aug): workflow and status'))
 DONE, RECO, RUN, PLAN = ('E8F3EA', '1B5E20'), ('FFF4E0', '8A5A00'), ('DCEBF8', '0B5394'), ('EFEFEF', '4B5563')
 rows = [['#', 'Step', 'Method', 'Scale', 'Status'],
@@ -1085,7 +1087,7 @@ slide_sampling('Configurations of the same precursor can differ as much as diffe
 slide_dft_reference()
 
 # ---- 10 stability window + interface
-name, t = fresh('stability', 'Approach')
+name, t = fresh('stability', 'Results & Discussion')
 add(t, heading(ids(), 'Electrochemical stability window and interfacial reactivity'))
 add(t, tb(ids(), 'Window bullets', 0.55, 1.5, 4.55, 2.55,
           P('Grand-potential phase diagram: the Li chemical potential is scanned as a voltage (0 K, bulk thermodynamics).', 'cb', 1250, 110, spcaft=500)
@@ -1120,7 +1122,7 @@ add(t, pic(ids(), 'Sundar 2025 Fig 2', rid31, 5.3, 1.55, 4.15, 4.15 * 805 / 2118
 save(t, name)
 
 # ---- 10b September audit -> Stage 2 rules (fixed before any new result)
-name, t = fresh('audit', 'Progress')
+name, t = fresh('audit', 'Results & Discussion')
 add(t, heading(ids(), 'September audit → Stage 2: rules fixed before new results'))
 found = (P('What the audit of Stage 1 found', 'p', 1300, 100, color=NAVY, bold=True, spcaft=600)
          + P('Concentration labels did not change the dopant level: every configuration has one precursor unit per four formula units.', 'cb', 1150, 108, spcaft=450)
@@ -1151,7 +1153,7 @@ add(t, tb(ids(), 'Scope note', 0.55, 6.15, 8.9, 0.5,
 save(t, name)
 
 # ---- 11 MD setup
-name, t = fresh('md_setup', 'Progress')
+name, t = fresh('md_setup', 'Results & Discussion')
 add(t, heading(ids(), 'Stage 2 pilot — Li transport by MLIP molecular dynamics: setup'))
 add(t, tb(ids(), 'Setup bullets', 0.55, 1.5, 4.6, 2.9,
           P('[[B:Pilot question]]: does the precursor anion (Al₂O₃ vs Al₂S₃) change Li diffusivity in Al-doped Li₆PS₅Cl — and can the protocol resolve it?', 'cb', 1250, 110, spcaft=600)
@@ -1179,7 +1181,7 @@ add(t, table(ids(), 'Settings table', 5.3, 1.5, [1.4, 2.75], rows, [0.34, 0.42, 
 save(t, name)
 
 # ---- 12 MD status + limits
-name, t = fresh('md_status', 'Progress')
+name, t = fresh('md_status', 'Results & Discussion')
 add(t, heading(ids(), 'Stage 2 pilot — temperature choice, status and limits'))
 add(t, tb(ids(), 'Status bullets', 0.55, 1.5, 4.75, 3.1,
           P('[[B:600 K pilot]] (40 runs, 200 ps): Li hopped (~4,000 hops per run) but the MSD never became linear over 2–100 ps → no diffusivity reported (UMA, this cell and volume).', 'cb', 1200, 108, spcaft=500)
