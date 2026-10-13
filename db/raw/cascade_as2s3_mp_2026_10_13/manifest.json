@@ -1,0 +1,68 @@
+{
+  "date": "2026-10-14 02:11:18",
+  "repo_head": "38670f5eb15b0ade5286a655ca11897767d02b15",
+  "mp_db_version": "2026.04.13",
+  "v3_pinned_db_version": "2026.04.13",
+  "seconds": 322,
+  "window": {
+    "file": "db/properties/oxidation_stability_cascade_as2s3_addendum_2026_10_13.json",
+    "rows": {
+      "As2S3_x020_cP4baS4a_s03": {
+        "dopant": "As2S3",
+        "window_V": 0.297,
+        "reduction_limit_V": 1.843,
+        "oxidation_limit_V": 2.14,
+        "db_version": "2026.04.13"
+      },
+      "As2S3_x050_cP4baCl4d_s01": {
+        "dopant": "As2S3",
+        "window_V": null,
+        "reduction_limit_V": null,
+        "oxidation_limit_V": 2.14,
+        "db_version": "2026.04.13"
+      },
+      "As2S3_x100_cP4baS16e_s03": {
+        "dopant": "As2S3",
+        "window_V": 0.297,
+        "reduction_limit_V": 1.843,
+        "oxidation_limit_V": 2.14,
+        "db_version": "2026.04.13"
+      },
+      "__HOST__@As-Cl-Li-P-S": {
+        "dopant": "Li24P4S20Cl4",
+        "window_V": 0.423,
+        "reduction_limit_V": 1.717,
+        "oxidation_limit_V": 2.14,
+        "db_version": "2026.04.13"
+      },
+      "__HOST__": {
+        "dopant": "Li24P4S20Cl4",
+        "window_V": 0.423,
+        "reduction_limit_V": 1.717,
+        "oxidation_limit_V": 2.14,
+        "db_version": "2026.04.13"
+      }
+    }
+  },
+  "interface_rows_added": {
+    "db/properties/cascade_interface_90.jsonl": 3,
+    "db/properties/cascade_interface_li.jsonl": 1,
+    "db/properties/cascade_interface_carbon.jsonl": 1
+  },
+  "product_gaps": {
+    "file": "db/properties/cascade_product_gaps.json",
+    "n_formulas": 540,
+    "n_e_above_hull_gt_0": 16,
+    "sha16": "ec5defffde85ac75"
+  },
+  "tools_sha16": {
+    "tools/oxidation/esw_cascade_batch.py": "016f57789147ee0c",
+    "tools/oxidation/interface_reactivity_v2.py": "c99a2511e94fd229",
+    "tools/oxidation/sei_product_gaps.py": "f92cc6e94686192c"
+  },
+  "not_done": [
+    "stability_axes · funnel 표 (풀 고정)",
+    "cascade_product_bvse.json (HOLD 유지)",
+    "AlI3 1순위 배치 UMA 탄성·EOS·BVS (GPU)"
+  ]
+}

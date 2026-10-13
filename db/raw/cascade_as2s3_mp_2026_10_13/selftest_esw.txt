@@ -1,0 +1,3 @@
+    (예상 밖 예외 ValueError: boom)
+
+selftest: 52 passed, 0 failed
