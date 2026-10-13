@@ -65,21 +65,23 @@ evidenceScope: multi-source-mixed
 > 화살표 · 아래 줄 *This talk covers the 91-precursor screen, its audit, and the first test of this question.*
 > 상자는 **예 하나**다 (사용자 10-13 *'이건 하나의 예인거지?'*) — 1단계는 91 개 전부 · 2단계 설계 목록은 237 · Al₂O₃ 대 Al₂S₃ 는 MD 방법을 먼저 시험하는 파일럿 쌍.
 > 왜 바꿨나: 사용자 10-13 *"너무 단조롭다 · 다 밝히고 하는 건 별로 · 기대를 가질 만하고 집중할 수 있는 페이지"* — 단계 상자 · 진행 숫자는 뒤 장 (11 감사 · 13 파일럿 · 15 요약) 으로.
+> 말하는 흐름 (사용자 10-13 *"이런 dopant 치환을 진행하다 보니 범위를 높여 여러 도펀트를 lpscl 에 치환한 것에 관심을 갖게 되었다"*):
+> 앞 장의 도핑 계산 → 범위를 넓히고 싶어짐 → 넓히려니 넣는 건 화합물 → 91 개 → 예 · 질문 → 오늘 세 가지. 화면을 위에서 아래로 읽는 순서와 같다.
+> ⚠ 시기를 못 박지 않는다 — 1단계 (6–8월) 는 B₂O₃ · Nd 계산과 시기가 겹친다. '끝내고 나서' 가 아니라 '하나씩 하다 보니'.
 > (사용자 덱에서는 4쪽 — 앞에 한 장이 더 있다.)
 
-**[화면이 뜨면 1–2 초 멈춘다]**
-질문 하나로 시작하겠습니다. 예를 들어 Li₆PS₅Cl 에 Al 을 도핑하고 싶으면, 실제로 무엇을 넣으시겠습니까?
+앞에서 보신 것처럼, 지금까지는 Nd 나 B₂O₃ 같은 도펀트를 하나씩 계산해 왔습니다.
+하나씩 하다 보니, 범위를 넓혀서 여러 도펀트를 Li₆PS₅Cl 에 넣어 보면 어떨까 하는 데 관심이 생겼습니다.
 
-**[가리킴: In the lab]** Al 원소를 그대로 넣지는 않습니다. 화합물을 넣습니다.
+**[가리킴: 첫 bullet]** 그런데 여러 도펀트를 넣으려고 보니, 실험에서는 도펀트를 원소가 아니라 화합물로 넣습니다.
 
-**[가리킴: 상자 왼쪽]** Al₂O₃ 에는 Al 과 함께 산소가, Al₂S₃ 에는 Al 과 함께 황이 따라옵니다.
+**[가리킴: 둘째 bullet]** 그래서 이번 작업은 원소 대신 그 화합물, 즉 전구체를 단위로 잡았습니다. 후보 91개를 합성하기 전에 계산으로 먼저 걸렀습니다. 찾는 것은 안정성은 높이면서 Li 이동은 늦추지 않는 전구체입니다.
 
-**[가리킴: 상자 오른쪽]** 같은 Al 인데, 따라오는 음이온이 다릅니다. 그러면 전해질의 안정성이나 Li 이동도 달라질까요?
-이건 예 하나입니다. 같은 질문을 전구체 하나하나에 던질 수 있습니다.
+**[가리킴: 상자 왼쪽]** 예를 하나 들겠습니다. Al 을 넣는다면 Al₂O₃ 를 넣을 수도 있고, Al₂S₃ 를 넣을 수도 있습니다. Al₂O₃ 에는 산소가, Al₂S₃ 에는 황이 따라옵니다.
 
-**[가리킴: This work]** 그래서 이번 작업은 원소가 아니라, 실제로 넣는 화합물인 전구체를 단위로 잡았습니다. 후보 91개를 합성하기 전에 계산으로 먼저 걸렀습니다. 찾는 것은 안정성은 높이면서 Li 이동은 늦추지 않는 전구체입니다.
+**[가리킴: 상자 오른쪽]** 같은 Al 인데 따라오는 음이온이 다르면, 전해질의 안정성이나 Li 이동도 달라질까요? 이런 질문을 전구체 하나하나에 던질 수 있습니다.
 
-**[가리킴: 아래 줄]** 오늘은 세 가지를 보여 드리겠습니다. 91개를 어떻게 걸렀는지, 9월에 그 결과를 어떻게 다시 점검했는지, 그리고 바로 이 예, Al₂O₃ 와 Al₂S₃ 로 MD 방법이 두 전구체를 가려낼 수 있는지 먼저 시험하고 있는 계산입니다. 그다음에 범위를 넓힙니다.
+**[가리킴: 아래 줄]** 오늘은 세 가지를 보여 드리겠습니다. 91개를 어떻게 걸렀는지, 9월에 그 결과를 어떻게 다시 점검했는지, 그리고 바로 이 예, Al₂O₃ 와 Al₂S₃ 로 MD 방법이 두 전구체를 가려낼 수 있는지 먼저 시험하고 있는 계산입니다.
 먼저 왜 안정성과 수송을 같이 봐야 하는지부터 보겠습니다.
 
 **[클릭]**
@@ -297,7 +299,7 @@ MLIP 지표의 기준이 되는 DFT 계산입니다. **[가리킴: 두 곡선]**
 | 장 | 슬림판 화면 | 말로 채울 것 |
 |---|---|---|
 | 2 | ■ 'Earlier DFT studies: the basis of this screening' · bullet 둘 (Top row: bulk materials and their doped or coated forms · Bottom row: SEI components, interfaces, and binders in a battery cell) + 그림 자리 8칸 (제목 + `< 키워드 >`) | 칸마다 한 줄 (대본 2장) · 마무리 '이 경험들이 스크리닝의 단계가 됐다' + 짝 다섯 (EOS → 기준 계산 · BVSE → Li 지형 · MD → 수송 · 대권위 상도표 → 안정창 · 계면 에너지 → 계면 반응성) — 숫자는 0 개 |
-| 3 | ■ 'Choosing a dopant precursor for Li₆PS₅Cl' · bullet 둘 (In the lab, dopants are added as compounds, not as bare elements. · This work screens 91 candidate precursors by simulation before synthesis.) + 점선 박스 'An example' (Al₂O₃ → Al + O · Al₂S₃ → Al + S · Same Al, different partner anion · Does the anion change stability or Li transport?) + 화살표 + 'This talk covers the 91-precursor screen, its audit, and the first test of this question.' | 청중에게 질문으로 연다 (대본 3장) · 상자는 예 하나 · 답은 말하지 않는다 · 진행 숫자는 13장에서 |
+| 3 | ■ 'Choosing a dopant precursor for Li₆PS₅Cl' · bullet 둘 (In the lab, dopants are added as compounds, not as bare elements. · This work screens 91 candidate precursors by simulation before synthesis.) + 점선 박스 'An example' (Al₂O₃ → Al + O · Al₂S₃ → Al + S · Same Al, different partner anion · Does the anion change stability or Li transport?) + 화살표 + 'This talk covers the 91-precursor screen, its audit, and the first test of this question.' | 앞 장의 도핑 계산 → 범위를 넓힘 → 넣는 건 화합물 → 예 · 질문 (대본 3장) · 상자는 예 하나 · 답은 말하지 않는다 · 진행 숫자는 13장에서 |
 | 4 | 원래 장 그대로 | 그대로 |
 | 5 | bullet 하나 + 원래 표 (14 pt) | 기존 스크린 셋 (대본 5장) · 비슷한 최근 연구 Jung · Park · Muy 는 이름만 (화면 줄은 뺐다 · 17장에 있다) |
 | 6 | 08-18 덱의 족별 표 (family · n · examples — 'role in the design' 열은 뺐다 · 사용자 10-13) + **[문헌] 'Literature example: SiO₂ co-doping'** Jung 2026 Fig. 3d | 족별 역할은 말로: 산화물 = 강한 M–O 결합 · 염화물 = 호스트에 이미 Cl · 황화물 = 호스트와 같은 음이온 (대조) · 플루오르화물 = 가장 강한 결합 · 이동성 위험 · 브로민화물 · 요오드화물 = 더 큰 할라이드 (대조) · 질화물 = 더 높은 음이온 전하 (대조) · 공치환 실험 선례 CuCl · MgF₂ · ZnO · La₂O₃ · Nd₂O₃ · SiO₂ (17장) · 문헌 그림은 '선례' 이지 우리 후보의 검증이 아니다 · As₂S₃ 재실행은 7장 |
