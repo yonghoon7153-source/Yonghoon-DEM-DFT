@@ -1,0 +1,384 @@
+# ============================================================
+# DEM 언로딩 키트 — ps_3_7_r45 · U_UVb — 언로딩 팔 UVb (튜플 t4 · 전체 멈춤 규칙)
+#   생성: make_unload_decks.py (손으로 고치지 말 것 — 생성기를 고치고 다시 만든다 · SHA256SUMS)
+#   정본: docs/data/ps45_unload_20261009/README.md · 등록 docs/reviews/dem_unloading_ps45_prereg_20261009.md §12 · §13
+#   변수 (run_unload.sh 가 -var 로 준다): out (이 런 폴더) · plate_stl (판 STL · 자료는 restart 에서) · ckpt (읽을 restart) ·
+#     ul_base (KE 기준 파일 · S2) · ul_state (상태 파일 · 이어 돌림 · 중력 팔) · ul_resume (1 = 이어 돌림) · ul_s0 (10:0 S0′ 결정)
+#   모델 머리 = 원 덱 글자 · 언로딩 블록 숫자 = unload_params.json (덱 안 상수로 다시 적지 않는다 · 생성기 selftest 가 검사)
+# ============================================================
+
+# >>> block head — 원 마지막 조각 덱 (r8 꼴) 이 S0 에 켜 둔 정의 그대로 · 순서 = 원 PHASE 4 (zwall_bot → integr → gravi → top_mesh → zwall_top → damp)
+#     (r8 글자에서 뽑았다 · 판 STL 경로만 ${plate_stl} — 메시 자료는 restart 에서 · 압축 감쇠 0.5 · 판 이동 fix 는 S0 에 없다)
+atom_style granular
+atom_modify map array sort 0 0
+boundary p p f
+newton off
+soft_particles yes
+communicate single vel yes
+units si
+
+variable r_AM_P equal 4.5e-3
+variable r_AM_S equal 2.0e-3
+variable r_SE equal 0.5e-3
+variable dt equal 1.0e-6
+timestep ${dt}
+processors * * 1
+
+read_restart ${ckpt}
+
+neighbor 0.002 bin
+neigh_modify delay 0 check yes
+
+fix m1 all property/global youngsModulus peratomtype 1.4e8 1.4e8 0.135e7
+fix m2 all property/global poissonsRatio peratomtype 0.25 0.25 0.30
+fix m3 all property/global coefficientRestitution peratomtypepair 3 0.3 0.3 0.3 0.3 0.3 0.3 0.3 0.3 0.3
+fix m4 all property/global coefficientFriction peratomtypepair 3 0.5 0.5 0.5 0.5 0.5 0.5 0.5 0.5 0.5
+fix m5 all property/global coefficientRollingFriction peratomtypepair 3 0.2 0.2 0.1 0.2 0.2 0.1 0.1 0.1 0.1
+fix m6 all property/global coefficientMaxElasticStiffness peratomtypepair 3 1.5 1.5 3.0 1.5 1.5 3.0 3.0 3.0 5.0
+fix m7 all property/global coefficientAdhesionStiffness peratomtypepair 3 1.0e5 1.0e5 2.0e5 1.0e5 1.0e5 2.0e5 2.0e5 2.0e5 1.0e6
+fix m8 all property/global coefficientPlasticityDepth peratomtypepair 3 0.05 0.05 0.01 0.05 0.05 0.01 0.01 0.01 0.005
+fix m9 all property/global characteristicVelocity scalar 2.0
+
+pair_style gran model hooke/hysteresis tangential history rolling_friction cdt
+pair_coeff * *
+
+compute strs all stress/atom
+compute ke all ke/atom
+compute cpl all pair/gran/local pos id force force_normal force_tangential torque contactArea delta contactPoint
+
+fix zwall_bot all wall/gran model hooke/hysteresis tangential history rolling_friction cdt primitive type 1 zplane 0.0
+
+fix integr all nve/sphere
+fix gravi all gravity 9.81 vector 0.0 0.0 -1.0
+fix top_mesh all mesh/surface/stress file ${plate_stl} type 1 scale 1.0 reference_point 0 0 0
+fix zwall_top all wall/gran model hooke/hysteresis tangential history rolling_friction cdt mesh n_meshes 1 meshes top_mesh
+fix damp all viscous 1.0e-5
+fix_modify zwall_top energy yes
+
+variable pressMPa equal abs(f_top_mesh[3])/0.0025/1000000
+# <<< block head
+
+# >>> block arm_dt — 등록된 팔 dt (read_restart 뒤 — restart 파일이 dt 를 되살리는 규약 · REG §4-3)
+variable dt equal 5e-07
+timestep ${dt}
+# <<< block arm_dt
+
+# >>> block ul_params — 표 (unload_params.json) 에서 온 숫자 · 이름 (덱 생성기가 적는다)
+variable ul_arm string U_UVb
+variable ul_bed string ps_3_7_r45
+variable ul_s0 index 3200000
+variable ul_atoms0 equal 162093
+variable ul_h0 equal 0.114361
+variable ul_v equal 0.005
+variable ul_W equal 10000
+variable ul_nA equal 80000
+variable ul_nB equal 20000
+variable ul_k0min equal 3
+variable ul_k0max equal 24
+variable ul_wmin0 equal 8
+variable ul_wmax0 equal 24
+variable ul_sepreq equal 2
+variable ul_sepnmax equal 0
+variable ul_postn equal 4
+variable ul_ave_ne equal 200
+variable ul_ave_nr equal 50
+variable ul_thermo equal 1000
+variable ul_big equal 1000000000
+variable ul_Pm equal 0.001
+variable ul_PB equal 0.003
+variable ul_S1r equal 0.005
+variable ul_S1a equal 5e-05
+variable ul_cap equal 0.016
+variable ul_conf equal 2
+variable ul_glost equal 50
+variable ul_gleak equal 100
+variable ul_gke equal 0.0017
+variable ul_resume index 0
+variable ul_dzA equal ${ul_v}*${dt}*${ul_nA}
+variable ul_dzB equal ${ul_v}*${dt}*${ul_nB}
+variable ul_amin equal ${ul_atoms0}-${ul_glost}
+include ${ul_base}
+# <<< block ul_params
+
+# >>> block ul_obs — 관측 (ul_ 접두 · 동역학 없음 · 판 압력 부호 있음 = Ps · 보고 MPa = 1000 · Ps)
+compute ul_ke all ke
+compute ul_erot all erotate/sphere
+compute ul_wh all wall/gran/local id force_normal
+variable ul_Ps equal f_top_mesh[3]/0.0025/1000000
+fix ul_av all ave/time ${ul_ave_ne} ${ul_ave_nr} ${ul_W} v_ul_Ps c_ul_ke c_ul_erot
+group ul_t1 type 1
+group ul_t2 type 2
+group ul_t3 type 3
+region ul_bel block INF INF INF INF INF 0.0 units box
+variable ul_lo1 equal ${ul_h0}-${r_AM_P}
+region ul_c1 block INF INF INF INF ${ul_lo1} ${ul_h0} units box
+variable ul_lo2 equal ${ul_h0}-${r_AM_S}
+region ul_c2 block INF INF INF INF ${ul_lo2} ${ul_h0} units box
+variable ul_lo3 equal ${ul_h0}-${r_SE}
+region ul_c3 block INF INF INF INF ${ul_lo3} ${ul_h0} units box
+region ul_abv block INF INF INF INF ${ul_h0} INF units box
+thermo_style custom step atoms ke c_ul_erot v_ul_Ps v_pressMPa cpu
+thermo ${ul_thermo}
+variable ul_dnext equal step+${ul_big}
+dump ul_da all custom ${ul_W} ${out}/dump/atom_*.dump id type x y z radius mass vx vy vz omegax omegay omegaz fx fy fz
+dump_modify ul_da every v_ul_dnext format "%d %d %.10g %.10g %.10g %.10g %.10g %.10g %.10g %.10g %.10g %.10g %.10g %.10g %.10g %.10g %.10g"
+dump ul_dw all local ${ul_W} ${out}/dump/wall_*.dump c_ul_wh[1] c_ul_wh[2] c_ul_wh[3] c_ul_wh[4] c_ul_wh[5] c_ul_wh[6]
+dump_modify ul_dw every v_ul_dnext format "%.10g %.10g %.10g %.10g %.10g %.10g"
+dump ul_dc all local ${ul_W} ${out}/dump/contact_*.dump c_cpl[1] c_cpl[2] c_cpl[3] c_cpl[4] c_cpl[5] c_cpl[6] c_cpl[7] c_cpl[8] c_cpl[9] c_cpl[10] c_cpl[11] c_cpl[12] c_cpl[13] c_cpl[14] c_cpl[15] c_cpl[16] c_cpl[17] c_cpl[18] c_cpl[19] c_cpl[20] c_cpl[21] c_cpl[22] c_cpl[23] c_cpl[24] c_cpl[25] c_cpl[26]
+dump_modify ul_dc every v_ul_dnext
+dump ul_dm all mesh/stl ${ul_W} ${out}/dump/mesh_*.stl top_mesh
+# <<< block ul_obs
+
+# >>> block start — 처음 (S0) 또는 이어 돌림 (단 끝 restart + 상태 파일 · 같은 덱)
+#   상태 파일은 늘 맨 바깥에서 include (if 안 include = 3d5c00f input.cpp 845 ERROR) — 처음이면 러너가 빈 파일 (주석뿐) 을 준다
+include ${ul_state}
+if "${ul_resume} == 1" then "jump SELF ul_resumed"
+variable ul_step equal step
+variable ul_step equal ${ul_step}
+variable ul_na equal atoms
+variable ul_na equal ${ul_na}
+if "${ul_step} != ${ul_s0}" then "print 'UL_ABORT reason=start_step step=${ul_step} expect=${ul_s0}'" "quit"
+if "${ul_na} != ${ul_atoms0}" then "print 'UL_ABORT reason=start_atoms atoms=${ul_na} expect=${ul_atoms0}'" "quit"
+variable ul_k equal 0
+variable ul_phase equal 4
+variable ul_modeB equal 0
+variable ul_pz equal ${ul_h0}
+variable ul_lift equal 0
+variable ul_ncross equal 0
+variable ul_xk equal -1
+variable ul_Pbar equal 0
+variable ul_kind string 0
+variable ul_why string none
+variable ul_result string RUNNING
+variable ul_postw equal 0
+variable ul_steady equal 0
+variable ul_dz equal 0
+variable ul_n equal 0
+variable ul_lk0 equal count(all,ul_bel)+count(all,ul_abv)
+variable ul_lk0 equal ${ul_lk0}
+print "arm,bed,k,w,phase,step,plate_z,lift,Ps_avg,ke_tr_avg,ke_rot_avg,ke_tot_avg,S1,S2,ok,n_contact_geo,atoms,leak,ke_inst" file ${out}/ul_windows.csv screen no
+print "arm,bed,k,kind,dz,n_move,step,plate_z,lift,Pbar,n_windows,steady,phase,modeB,n_contact_last" file ${out}/ul_steps.csv screen no
+print "event,k,step,plate_z,lift,detail" file ${out}/ul_events.csv screen no
+print "START,${ul_k},${ul_step},${ul_pz},${ul_lift},s0" append ${out}/ul_events.csv screen no
+print "UL_START arm=${ul_arm} bed=${ul_bed} step=${ul_step} atoms=${ul_na} leak0=${ul_lk0} plate_z=${ul_pz}"
+jump SELF ul_hold_start
+label ul_resumed
+variable ul_step equal step
+variable ul_step equal ${ul_step}
+if "${ul_step} != ${ul_rstep}" then "print 'UL_ABORT reason=resume_step step=${ul_step} expect=${ul_rstep}'" "quit"
+variable ul_why string none
+variable ul_result string RUNNING
+variable ul_postw equal 0
+variable ul_steady equal 0
+variable ul_dz equal 0
+variable ul_n equal 0
+region ul_c1 delete
+region ul_c2 delete
+region ul_c3 delete
+region ul_abv delete
+variable ul_lo1 equal ${ul_pz}-${r_AM_P}
+region ul_c1 block INF INF INF INF ${ul_lo1} ${ul_pz} units box
+variable ul_lo2 equal ${ul_pz}-${r_AM_S}
+region ul_c2 block INF INF INF INF ${ul_lo2} ${ul_pz} units box
+variable ul_lo3 equal ${ul_pz}-${r_SE}
+region ul_c3 block INF INF INF INF ${ul_lo3} ${ul_pz} units box
+region ul_abv block INF INF INF INF ${ul_pz} INF units box
+print "RESUME,${ul_k},${ul_step},${ul_pz},${ul_lift},state" append ${out}/ul_events.csv screen no
+print "UL_RESUME arm=${ul_arm} bed=${ul_bed} step=${ul_step} k=${ul_k} phase=${ul_phase}"
+jump SELF ul_next
+# <<< block start
+
+# >>> block machine — 상태 기계 (단계 ul_phase: 4 HOLD0 · 0 SEARCH · 1 CONFIRM · 2 SEPARATE · 3 POST)
+label ul_hold_start
+variable ul_w equal 0
+variable ul_okn equal 0
+variable ul_sepn equal 0
+variable ul_Pprev equal 0
+variable ul_Pbar2 equal 0
+if "${ul_phase} == 4" then "variable ul_wmin equal ${ul_k0min}" "variable ul_wmax equal ${ul_k0max}" else "variable ul_wmin equal ${ul_wmin0}" "variable ul_wmax equal ${ul_wmax0}"
+variable ul_dnext equal (floor(step/${ul_W})+1)*${ul_W}
+label ul_win
+run ${ul_W}
+variable ul_step equal step
+variable ul_step equal ${ul_step}
+variable ul_P equal f_ul_av[1]
+variable ul_P equal ${ul_P}
+variable ul_Kt equal f_ul_av[2]
+variable ul_Kt equal ${ul_Kt}
+variable ul_Kr equal f_ul_av[3]
+variable ul_Kr equal ${ul_Kr}
+variable ul_Kti equal ke
+variable ul_Kti equal ${ul_Kti}
+variable ul_na equal atoms
+variable ul_na equal ${ul_na}
+variable ul_nc equal count(ul_t1,ul_c1)+count(ul_t2,ul_c2)+count(ul_t3,ul_c3)
+variable ul_nc equal ${ul_nc}
+variable ul_lk equal count(all,ul_bel)+count(all,ul_abv)
+variable ul_lk equal ${ul_lk}
+variable ul_lkd equal ${ul_lk}-${ul_lk0}
+variable ul_w equal ${ul_w}+1
+variable ul_K equal ${ul_Kt}+${ul_Kr}
+variable ul_S1 equal (${ul_w}>1)&&((abs(${ul_P}-${ul_Pprev})<=${ul_S1r}*abs(${ul_P}))||(abs(${ul_P}-${ul_Pprev})<=${ul_S1a}))
+variable ul_S2 equal ${ul_K}<=${ul_S2max}
+variable ul_ok equal ${ul_S1}&&${ul_S2}
+variable ul_Pbar2 equal (${ul_P}+${ul_Pprev})/2
+variable ul_Pprev equal ${ul_P}
+if "${ul_ok} == 1" then "variable ul_okn equal ${ul_okn}+1" else "variable ul_okn equal 0"
+if "${ul_nc} <= ${ul_sepnmax}" then "variable ul_sepn equal ${ul_sepn}+1" else "variable ul_sepn equal 0"
+print "${ul_arm},${ul_bed},${ul_k},${ul_w},${ul_phase},${ul_step},${ul_pz},${ul_lift},${ul_P},${ul_Kt},${ul_Kr},${ul_K},${ul_S1},${ul_S2},${ul_ok},${ul_nc},${ul_na},${ul_lk},${ul_Kti}" append ${out}/ul_windows.csv screen no
+if "${ul_na} < ${ul_amin}" then "variable ul_why string atoms_lost" "jump SELF ul_guard"
+if "${ul_lkd} > ${ul_gleak}" then "variable ul_why string leak" "jump SELF ul_guard"
+if "${ul_Kt} > ${ul_gke}" then "variable ul_why string ke_trans_avg" "jump SELF ul_guard"
+if "${ul_Kti} > ${ul_gke}" then "variable ul_why string ke_trans_inst" "jump SELF ul_guard"
+if "${ul_phase} == 3" then "jump SELF ul_win_post"
+if "${ul_phase} == 2" then "jump SELF ul_win_sep"
+label ul_win_gen
+if "(${ul_w} >= ${ul_wmin}) && (${ul_okn} >= 2)" then "variable ul_steady equal 1" "jump SELF ul_hold_end"
+if "${ul_w} >= ${ul_wmax}" then "variable ul_steady equal 0" "jump SELF ul_hold_end"
+jump SELF ul_win
+label ul_win_sep
+if "${ul_sepn} >= ${ul_sepreq}" then "jump SELF ul_declare_sep"
+jump SELF ul_win_gen
+label ul_declare_sep
+variable ul_phase equal 3
+variable ul_postw equal 1
+print "SEPARATED,${ul_k},${ul_step},${ul_pz},${ul_lift},w${ul_w}" append ${out}/ul_events.csv screen no
+if "${ul_postw} >= ${ul_postn}" then "jump SELF ul_finish_ok"
+jump SELF ul_win
+label ul_win_post
+if "${ul_nc} > ${ul_sepnmax}" then "jump SELF ul_recontact"
+variable ul_postw equal ${ul_postw}+1
+if "${ul_postw} >= ${ul_postn}" then "jump SELF ul_finish_ok"
+jump SELF ul_win
+label ul_recontact
+variable ul_phase equal 2
+variable ul_postw equal 0
+print "RECONTACT,${ul_k},${ul_step},${ul_pz},${ul_lift},n${ul_nc}" append ${out}/ul_events.csv screen no
+jump SELF ul_win_gen
+# 단 끝 — P̄_k = 마지막 두 창 평균 · 단 줄 기록 뒤 단계 전이
+label ul_hold_end
+variable ul_Pbar equal ${ul_Pbar2}
+print "${ul_arm},${ul_bed},${ul_k},${ul_kind},${ul_dz},${ul_n},${ul_step},${ul_pz},${ul_lift},${ul_Pbar},${ul_w},${ul_steady},${ul_phase},${ul_modeB},${ul_nc}" append ${out}/ul_steps.csv screen no
+if "${ul_phase} == 4" then "jump SELF ul_end_hold0"
+if "${ul_phase} == 0" then "jump SELF ul_end_search"
+if "${ul_phase} == 1" then "jump SELF ul_end_confirm"
+jump SELF ul_step_done
+label ul_end_hold0
+if "${ul_steady} == 0" then "variable ul_why string k0_unsteady" "jump SELF ul_tech"
+variable ul_phase equal 0
+print "HOLD0_DONE,${ul_k},${ul_step},${ul_pz},${ul_lift},Pbar0" append ${out}/ul_events.csv screen no
+jump SELF ul_step_done
+label ul_end_search
+if "${ul_Pbar} <= ${ul_Pm}" then "jump SELF ul_cross"
+if "(${ul_modeB} == 0) && (${ul_Pbar} <= ${ul_PB})" then "jump SELF ul_modeb"
+jump SELF ul_step_done
+label ul_modeb
+variable ul_modeB equal 1
+print "MODE_B,${ul_k},${ul_step},${ul_pz},${ul_lift},next" append ${out}/ul_events.csv screen no
+jump SELF ul_step_done
+label ul_cross
+variable ul_phase equal 1
+variable ul_modeB equal 1
+variable ul_ncross equal 0
+variable ul_xk equal ${ul_k}
+print "CROSS,${ul_k},${ul_step},${ul_pz},${ul_lift},first" append ${out}/ul_events.csv screen no
+jump SELF ul_step_done
+label ul_end_confirm
+variable ul_ncross equal ${ul_ncross}+1
+if "${ul_ncross} >= ${ul_conf}" then "jump SELF ul_rm"
+jump SELF ul_step_done
+label ul_rm
+variable ul_phase equal 2
+print "RM,${ul_k},${ul_step},${ul_pz},${ul_lift},ncross${ul_ncross}" append ${out}/ul_events.csv screen no
+write_restart ${out}/restart/restart_RM_${ul_step}.bin
+print "variable ul_rstep equal ${ul_step}" file ${out}/restart/state_RM_${ul_step}.in screen no
+print "variable ul_k equal ${ul_k}" append ${out}/restart/state_RM_${ul_step}.in screen no
+print "variable ul_phase equal ${ul_phase}" append ${out}/restart/state_RM_${ul_step}.in screen no
+print "variable ul_modeB equal ${ul_modeB}" append ${out}/restart/state_RM_${ul_step}.in screen no
+print "variable ul_pz equal ${ul_pz}" append ${out}/restart/state_RM_${ul_step}.in screen no
+print "variable ul_lift equal ${ul_lift}" append ${out}/restart/state_RM_${ul_step}.in screen no
+print "variable ul_ncross equal ${ul_ncross}" append ${out}/restart/state_RM_${ul_step}.in screen no
+print "variable ul_xk equal ${ul_xk}" append ${out}/restart/state_RM_${ul_step}.in screen no
+print "variable ul_lk0 equal ${ul_lk0}" append ${out}/restart/state_RM_${ul_step}.in screen no
+print "variable ul_Pbar equal ${ul_Pbar}" append ${out}/restart/state_RM_${ul_step}.in screen no
+print "variable ul_kind string ${ul_kind}" append ${out}/restart/state_RM_${ul_step}.in screen no
+jump SELF ul_step_done
+# 단 끝 restart + 이어 돌릴 상태 (다음 이동 결정 뒤의 단계 · 방식)
+label ul_step_done
+write_restart ${out}/restart/restart_unload_${ul_step}.bin
+print "variable ul_rstep equal ${ul_step}" file ${out}/restart/state_unload_${ul_step}.in screen no
+print "variable ul_k equal ${ul_k}" append ${out}/restart/state_unload_${ul_step}.in screen no
+print "variable ul_phase equal ${ul_phase}" append ${out}/restart/state_unload_${ul_step}.in screen no
+print "variable ul_modeB equal ${ul_modeB}" append ${out}/restart/state_unload_${ul_step}.in screen no
+print "variable ul_pz equal ${ul_pz}" append ${out}/restart/state_unload_${ul_step}.in screen no
+print "variable ul_lift equal ${ul_lift}" append ${out}/restart/state_unload_${ul_step}.in screen no
+print "variable ul_ncross equal ${ul_ncross}" append ${out}/restart/state_unload_${ul_step}.in screen no
+print "variable ul_xk equal ${ul_xk}" append ${out}/restart/state_unload_${ul_step}.in screen no
+print "variable ul_lk0 equal ${ul_lk0}" append ${out}/restart/state_unload_${ul_step}.in screen no
+print "variable ul_Pbar equal ${ul_Pbar}" append ${out}/restart/state_unload_${ul_step}.in screen no
+print "variable ul_kind string ${ul_kind}" append ${out}/restart/state_unload_${ul_step}.in screen no
+jump SELF ul_next
+# 다음 이동 — A (Δz_A) · B (Δz_B · P̄ ≤ 3 P_meas 다음 단부터 · 교차 뒤 확인 · 분리) · 들어 올림 상한 (같은 Δz_B 배수 규칙)
+label ul_next
+variable ul_n equal ${ul_nA}
+variable ul_dz equal ${ul_dzA}
+variable ul_kind string A
+if "${ul_modeB} == 1" then "variable ul_n equal ${ul_nB}" "variable ul_dz equal ${ul_dzB}" "variable ul_kind string B"
+variable ul_capx equal (${ul_lift}+${ul_dz})>(${ul_cap}+${ul_dzB}/2)
+if "${ul_capx} == 1" then "jump SELF ul_cap_stop"
+variable ul_k equal ${ul_k}+1
+variable ul_dnext equal step+${ul_big}
+fix ul_mv all move/mesh mesh top_mesh linear 0.0 0.0 ${ul_v}
+run ${ul_n}
+unfix ul_mv
+variable ul_pz equal ${ul_pz}+${ul_dz}
+variable ul_lift equal ${ul_pz}-${ul_h0}
+region ul_c1 delete
+region ul_c2 delete
+region ul_c3 delete
+region ul_abv delete
+variable ul_lo1 equal ${ul_pz}-${r_AM_P}
+region ul_c1 block INF INF INF INF ${ul_lo1} ${ul_pz} units box
+variable ul_lo2 equal ${ul_pz}-${r_AM_S}
+region ul_c2 block INF INF INF INF ${ul_lo2} ${ul_pz} units box
+variable ul_lo3 equal ${ul_pz}-${r_SE}
+region ul_c3 block INF INF INF INF ${ul_lo3} ${ul_pz} units box
+region ul_abv block INF INF INF INF ${ul_pz} INF units box
+jump SELF ul_hold_start
+label ul_cap_stop
+print "LIFT_CAP,${ul_k},${ul_step},${ul_pz},${ul_lift},cap" append ${out}/ul_events.csv screen no
+variable ul_result string LIFT_CAP
+jump SELF ul_summary
+label ul_finish_ok
+print "POST_DONE,${ul_k},${ul_step},${ul_pz},${ul_lift},w${ul_w}" append ${out}/ul_events.csv screen no
+variable ul_result string DONE
+write_restart ${out}/restart/restart_final_${ul_step}.bin
+jump SELF ul_summary
+label ul_guard
+print "GUARD,${ul_k},${ul_step},${ul_pz},${ul_lift},${ul_why}" append ${out}/ul_events.csv screen no
+variable ul_result string GUARD
+write_restart ${out}/restart/restart_guard_${ul_step}.bin
+jump SELF ul_summary
+label ul_tech
+print "TECH,${ul_k},${ul_step},${ul_pz},${ul_lift},${ul_why}" append ${out}/ul_events.csv screen no
+variable ul_result string TECH
+jump SELF ul_summary
+label ul_summary
+print "result=${ul_result}" file ${out}/ul_summary.txt screen no
+print "arm=${ul_arm}" append ${out}/ul_summary.txt screen no
+print "bed=${ul_bed}" append ${out}/ul_summary.txt screen no
+print "step=${ul_step}" append ${out}/ul_summary.txt screen no
+print "k=${ul_k}" append ${out}/ul_summary.txt screen no
+print "phase=${ul_phase}" append ${out}/ul_summary.txt screen no
+print "modeB=${ul_modeB}" append ${out}/ul_summary.txt screen no
+print "pz=${ul_pz}" append ${out}/ul_summary.txt screen no
+print "lift=${ul_lift}" append ${out}/ul_summary.txt screen no
+print "xk=${ul_xk}" append ${out}/ul_summary.txt screen no
+print "ncross=${ul_ncross}" append ${out}/ul_summary.txt screen no
+print "why=${ul_why}" append ${out}/ul_summary.txt screen no
+print "UL_SUMMARY arm=${ul_arm} bed=${ul_bed} result=${ul_result} step=${ul_step} k=${ul_k} plate_z=${ul_pz} lift=${ul_lift} why=${ul_why}"
+jump SELF ul_end
+# <<< block machine
+
+label ul_end
+print "UL_SCRIPT_END arm=${ul_arm} bed=${ul_bed} result=${ul_result}"

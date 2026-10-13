@@ -1,0 +1,69 @@
+# Codex 요청 — DEM 언로딩 키트 재검토 (키트 증거 + 개정 2 · 2026-10-13 · 결과 0 건 · 초안 · 발송 = 1저자)
+
+> **지위: 초안 — 보내지 않았다.**  발송 = 1저자 (부록 초안 비준 뒤 · ibb 작은 이력 시험 결과를 함께 보낼지는 1저자).
+> 등록 §13-6 순서 = ① 개정 2 → ② 키트 코드 (시험 먼저) + fixture → 덧붙임 비준 → ③ ibb 작은 시험 → **④ Codex (키트 증거 + 개정 2)** → GO → R · 10:0 연장 → 7:3 개발 팔 → 본 U.
+> 이 요청 = ④.  ⛔ 이 검토가 GO 여도 실행 순서 · 관문은 등록 그대로 (키트 관문이 강제한다).
+
+## 0. 대상
+
+- 키트 폴더 `docs/data/ps45_unload_20261009/` (README = 이름 · 명령 정본) · 봉인 `SHA256SUMS` (76 파일) · `active_rules.json` · 이력 시험 `history_test/` (따로 봉인 · 14 파일).
+- 커밋 (작업 브랜치 → 본 브랜치 병합 = 1저자 · 핀 = 병합 뒤 커밋 ⬜): 82b5ca37a · 51f648800 (이력 시험) · 12a2d989d (표 · 공용 · K5 · K6) · 518fea594 (K7) · bdd500f0c (K6 열 이름 `ULK-01`) ·
+  b161b649b (K2 덱 64 · K3 러너 · 래퍼) · 3a8c1b5d2 (K4 판독기) · bafeac076 (K8 봉인 · 러너 모의) · 7ae6789df (판독기 — 복원 판정 ↔ 이력 시험 · 중력 팔 복원 · 복사 명령) · 문서 커밋 (이 요청서 · 부록 초안 · README · 원장).
+- 등록 `docs/reviews/dem_unloading_ps45_prereg_20261009.md` (§12 개정 1 · §13 개정 2) · 반영 계획 `docs/reviews/dem_unloading_ulr1_fix_plan_20261012.md` · 판정문 CX1 `docs/reviews/codex_review_dem_unloading_prereg_20261011.md` ·
+  CX2 `docs/reviews/codex_review_dem_unloading_prereg_rereview_20261012.md` · 증거 `docs/reviews/codex_dem_unloading_prereg_rereview_evidence_20261012/`.
+- 권고 기본값 (C1–C20 · 1저자 비준 대기) = 부록 초안 `docs/reviews/dem_unloading_kit_section13_appendix_draft_20261013.md`.
+- 이 컨테이너에는 LIGGGHTS 가 없다 — DEM 실행 0 건 · 덱 문법 = 3d5c00f 원문 판독 + 생성기 selftest + 이력 시험 SYN (ibb 결과 ⬜).
+
+## 1. 만든 것
+
+| 묶음 | 파일 | 하는 일 |
+|---|---|---|
+| K2 덱 | `make_unload_decks.py` · `decks/<침대>/in.<종류>.liggghts` 64 | R · UNread · UK · UC · U_UB · U_UVa · U_UVb · U_UT3 · G_ 넷 (다섯 침대) + 7:3 UT · Ut0 + 10:0 EXT · EXT2 · 모델 머리 = r8 원 글자 · 숫자 = 표 하나 · 상태 기계 (창 · 유지 · 교차 · 확인 · R_M · 분리 · 분리 뒤 · 재접촉 · 상한 · 가드) |
+| K3 러너 | `run_unload.sh` · `run_unload_ibb.sbatch` · `ul_runner_test.py` | kit 사본 · SHA256SUMS · LMP · in/ 해시 · 관문 · `-n 6` ↔ `-np 6` · Loop time procs · 이어 돌림 한 번 · 보고 묶음 |
+| K4 판독기 | `ul_reader.py` | 창 접촉 상태 · 분리 · 끝점 유효 · 교차 · 괄호 · 비단조 합집합 · 상태 두 축 · 상쇄 진단값 · 선택 · 관문 · 복원 판정 · 중력 팔 복원 · KE 기준 · S0′ · 10 쌍 표 |
+| K5 · K6 · K7 | `ul_s3.py` · `ul_observers.py` · `ul_gates.py` | S3 총힘 · σ_P · 표면 · S4 · ε · W_proxy · KE 기준 · G0 · G1 · G2 · G2c · G3 · 판 z · S0′ · 복원 판정 |
+| K8 봉인 | `seal_kit.py` · `SHA256SUMS` · `active_rules.json` | 활성 규칙 12 (코드 자리 · 증인 시험) · 폐기 규칙 (옛 b · 동시 UV 제출) 0 건 |
+| 이력 시험 | `history_test/` | 작은 침대 H0–H5 (round-trip · NP 바꿈 · 바닥 · 판 소거 · 잘못된 ID · 0 뿐) + SYN (본 키트 문법 · 판 접촉 법선력 부호) |
+
+## 2. 판정문 해결 증거 (CX2 §7 · 원장 — 항목은 open 그대로 · 닫힘 = 이 재검토)
+
+| 원장 | 증거 (시험 이름 — 다시 돌릴 명령 §5) |
+|---|---|
+| ULR1-01 끝점 → 선택 → 다음 제출 | 판독기 R2 (결정표 네 행 · 경계 0.10 = 부동소수 0.10000000000000009 → ≤) · R3 (UNSTEADY · NaN · 무교차 → SELECTION_UNRESOLVED · 다음 제출 없음) · R5 관문 · 러너 모의 M5 |
+| ULR1-02 측정 뒤 TIMEOUT | 판독기 R1 — 판정문 state.json 사다리 → ρ 0.2026077873428664 % · trajectory TIMEOUT · 교차 전 = 하한 (정상 · 접촉 · 단조) · 비단조 = UNIDENTIFIED |
+| ULR1-03 상쇄 · 분리 · 재접촉 · 결손 | 판독기 R6 ([2, 0, 0] · [0, 0, 1, 1] · [0, 결손, 0] · 순힘 0 = TENSION) · R7 (+1.6 / −0.6 → CONTACT · 상쇄 표지 · 진단값 · 세 칸) |
+| ULR1-04 물리 창 | 생성기 GD6 (생성된 UB · UT · UVa · UVb · UT3 덱에서 T_W · 이동 · 유지 · 표본 · thermo 다시 계산) · 판독기 R9 (생성된 U_UT3 덱 창으로 만든 표면 0.6 µm/s → S4 FAIL · 옛 5,000 step 덱 → PASS = 판별력) |
+| ULR1-05 활성 규칙 · 옛 b · 동시 UV · 3 행 후속 | 봉인 K1–K7 · 생성기 GD11 · GD12 · 판독기 R8 (비단조 합집합 · b 없음) · R5 (t3 → UTc · G_UT3 · S0 새 UT3 거부) · 러너 모의 M9 |
+| UL-01 – UL-10 | 원장 각 항목 note 의 "★ 10-13 키트" 줄 (UL-10 = 문서 몫 · 키트 코드 해당 없음) |
+
+## 3. 시험 수 (고치기 전 실패 → 고친 뒤 · README §9)
+
+K2 284 중 282 → 285 / 285 · K4 33 → 40 / 40 (R14 · R15 · R16 덧붙임 포함) · K3 모의 12 → 12 / 12 · K8 10 → 10 / 10 · K5 13 → 14 / 14 · K6 16 → 17 / 17 (+ O4b) · K7 34 → 34 / 34 · 이력 시험 생성기 115 → 122 / 122 · 읽는 쪽 38 → 38 / 38.
+고치는 중 스스로 잡은 것: ① 처음 쓴 GD7 이 `if` 안 `include` 를 요구했다 — 3d5c00f input.cpp 845–846 이 금지 (ERROR) → 상태 파일 맨 바깥 include · GD3b 추가 (고친 시험이 고치기 전 덱에서 실패 확인) ② σ_P 기본 열 'v_Ps' ≠ thermo 머리 'ul_Ps' (`ULK-01` · P3 · 원장 open) ③ PRE_SETUP 관측에서 힘 열 뺌 (setup 전) ④ 러너 모의의 가짜 S0 파일이 덤프 꼴이 아니라 판독기가 끝점을 무효로 막았다 (실패 닫힘 = 의도) — 모의 자료를 고침.
+
+## 4. 질문
+
+- **Q1.** §2 표의 종단 시험이 CX2 §7 "해결 증거" 로 충분한가 — 남는 반례가 있으면 그 입력.
+- **Q2.** 덱 상태 기계 (`make_unload_decks._machine`) 가 등록 §4-2 · §5 · §12 · §13 과 맞나 — 특히 (가) 단 끝 P̄ = 마지막 두 창 평균 (나) B 전환 = P̄ ≤ 3 P_meas 인 단 다음부터 (k = 0 제외) (다) 교차 뒤 확인 두 단 = 늘 B (라) 분리 선언 창 = 분리 뒤 첫 창 (마) 재접촉 = SEPARATE 로 되돌리고 같은 유지 예산 안에서 계속 (바) 상한 이산 규칙 (C11).
+- **Q3.** 덱 언어 (3d5c00f): 맨 바깥 `include ${ul_state}` + `if … then "jump SELF ul_resumed"` · `dump_modify … every v_ul_dnext` (setup 덤프 없음 · 이동 중 없음) · `region … delete` · `fix … move/mesh` 반복 · `fix ave/time` 출력의 run 사이 읽기 · `compute wall/gran/local id force_normal` (열 순서 id → fn) — 문법 · 의미 문제가 있나.  이력 시험 SYN 이 지나가는 문법과 겹치지 않는 것은 (변수 주기 덤프 · 맨 바깥 include) ibb 결과 전이다.
+- **Q4.** 판독기 규칙 C6 · C14 · C15 (창 P = ave/time 창 평균 · 끝점 = 판 접촉 필요 · 확인 두 단 미완료 = UNIDENTIFIED · 교차 = 부호 바뀜 띠 없음) 가 등록 §12-3 · §13-1 · §13-2 · §13-3 과 맞나.
+- **Q5.** 권고 기본값 C1–C20 (부록 초안) 가운데 결과 전에 바꿔야 할 것 · 등록 문안과 어긋나는 것.
+- **Q6.** 복원 판정 (§12-1 ⑤ — RESTORED = reset 로그 다섯 · G0 · G1 · G2 · G2c · mesh md5 · G3 · 바닥 이력 PRE = POST · UN 소거 보임 · 이력 시험 rc 0 + SYN 부호 = 표) 과 중력 팔 복원 (C12 · G3 해당 없음) 이 충분한가.
+- **Q7.** 관문 (`ul_reader.gate`) 이 §13-1 · §13-5 ② ③ 을 지키나 — UV 는 UB · UT 끝점 판독 뒤 dt* 의 하나만 · 7:3 t3 = UT + UTc (S0 새 UT3 거부) · 다른 침대 = 최종 튜플 팔만 · 10:0 = S0′ 뒤.
+- **Q8.** 매 창 쌍 접촉 덤프 (§13-3 Q4 (가) 그대로 · 팔 하나 ≈ 30–40 GB 어림) — 대안 (벽 덤프 매 창 + 쌍 덤프 단 끝) 이 S3 · 분리 판정에 충분한지.
+- **Q9.** 이력 시험 (H0–H5) 결과가 오면 본 키트에 바로 반영해야 할 것 (SYN 부호 · 자동 restart · 총힘 시점) 의 순서.
+
+## 5. 다시 돌릴 명령 (네트워크 · LIGGGHTS 없음)
+
+```bash
+K=docs/data/ps45_unload_20261009
+for t in ul_lib ul_s3 ul_observers ul_gates ul_reader seal_kit make_unload_decks ul_runner_test; do python3 -I $K/$t.py --selftest | tail -1; done
+python3 -I $K/make_unload_decks.py --check && python3 -I $K/seal_kit.py --check && python3 -I $K/seal_kit.py --rules
+python3 -I $K/history_test/make_history_decks.py --check && python3 -I $K/history_test/read_history.py --selftest | tail -1
+```
+
+## 6. 한정
+
+- 결과 0 건 · DEM 실행 0 건 · 실제 바이너리 문법 = 이력 시험 SYN (ibb ⬜) 이 처음.  덱 상태 기계는 합성 기록으로만 시험했다 (가짜 lmp 는 덱을 해석하지 않는다).
+- 숫자 기본값 (C1–C20) = 1저자 비준 전 — 비준되면 등록 §13 덧붙임.
+- 디스크 · 시간 어림 (README §3) = 산술 · 실측 아님.
