@@ -34,6 +34,7 @@ import json
 import math
 import os
 import re
+import subprocess
 import sys
 
 KB_EV = 8.617333262e-5          # eV/K
@@ -509,6 +510,17 @@ def selftest():
         "[관측창 음성] T·t·ν₀ 가 양수 유한이 아니거나 n < 1 이면 None")
     chk(w1["rule"] == "D-2026-10-05-md-observation-window" and "장벽 값" in w1["⚠"] and "못 본다" in w1["line"],
         "[관측창] 결정 ID · '장벽 값 아님' 경고 · 읽는 법이 결과에 붙는다")
+    # CLI 경로 — 함수만 시험하면 main 의 인자 배선이 틀려도 초록이었다 (2026-10-13 · 셋째 값이 ν₀ 로 들어감)
+    def _cli(*xs):
+        r = subprocess.run([sys.executable, os.path.abspath(__file__), "--obs_window", *map(str, xs)],
+                           capture_output=True, text=True, timeout=120)
+        return r.returncode, r.stdout.strip()
+    _rc3, _o3 = _cli(298.0, 5e-12, 100)
+    chk(_rc3 == 0 and _o3 == observation_window(298.0, 5e-12, n_sites=100)["line"],
+        f"[관측창 CLI 음성] 셋째 값은 반응 자리 n 이다 (ν₀ 가 아니다) — {_o3[:80]}")
+    _rc2, _o2 = _cli(350.0, 20e-9)
+    chk(_rc2 == 0 and _o2 == w2["line"], "[관측창 CLI] 두 값이면 함수와 같은 줄")
+    chk(_cli(298.0)[0] == 2 and _cli(298.0, 1e-12, 1, 1)[0] == 2, "[관측창 CLI 음성] 값이 둘·셋이 아니면 2")
 
     shutil.rmtree(td, ignore_errors=True)
     print("selftest " + ("PASS" if ok else "FAIL"))
@@ -544,7 +556,10 @@ def main():
         if len(a.obs_window) not in (2, 3):
             print("⛔ --obs_window T_K t_s [n_sites]")
             return 2
-        w = observation_window(*a.obs_window)
+        # ⛔ 위치 인자로 넘기지 않는다 — observation_window(T, t, nu0, n_sites) 라서 셋째 값이 ν₀ 로 들어갔다
+        #   (2026-10-13 litdb 에이전트가 발견: n 100 이 ν₀ = 100 s⁻¹ 가 돼 0.00 eV · 조용히 틀린 경로).
+        w = observation_window(a.obs_window[0], a.obs_window[1],
+                               n_sites=(a.obs_window[2] if len(a.obs_window) == 3 else 1))
         if w is None:
             print("⛔ 관측창을 낼 수 없다 — T·t 는 양수, n ≥ 1")
             return 2
