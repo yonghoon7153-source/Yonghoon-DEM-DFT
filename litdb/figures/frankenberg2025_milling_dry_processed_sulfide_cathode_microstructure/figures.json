@@ -1,0 +1,770 @@
+{
+ "slug": "frankenberg2025_milling_dry_processed_sulfide_cathode_microstructure",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-10-13",
+ "sources": [
+  "8e444bcc-22._Tailoring_Composite_Microstructure_Through_Milling_for_Dry-Processed_Sulfide-Based_Solid-State_Battery_Cathodes.pdf",
+  "97805094-22._Sup_Tailoring_Composite_Microstructure_Through_Milling_for_Dry-Processed_Sulfide-Based_Solid-State_Battery_Cathodes.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 3,
+   "file": "fig_1.png",
+   "caption": "Figure 1. a) SEM images of the starting materials NCM (top) and LPSCl (bottom). b) Schematic representation for the planetary ball milling process of NCM – LPSCl composites showing the influencing factors: rotational speed n, milling time tprocess, milling bead size dMB, and filling ratio φ on the cathode composite.",
+   "rotated_deg": 0,
+   "bbox": [
+    52.8,
+    77.2,
+    545.1,
+    226.7
+   ],
+   "w": 2052,
+   "h": 624,
+   "dpi": 300,
+   "src": "8e444bcc-22._Tailoring_Composite_Microstructure_Through_Milling_for_Dry-Processed_Sulfide-Based_Solid-State_Battery_Cathodes.pdf",
+   "blank": 0.609,
+   "auto_bbox": [
+    44.8,
+    71.2,
+    552.9,
+    230.7
+   ],
+   "native_dpi": 300.0,
+   "recrop": "2026-10-13 래스터 원본 경계로 다시 자름 (원 해상도 그대로 — 자동 bbox 는 래스터 바깥 흰 여백 · 캡션 포함)",
+   "viewed": true
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 3,
+   "file": "fig_2.png",
+   "caption": "Figure 2. a) SEM images of NCM – LPSCl composite powders processed at different rotational speeds for 20 min. b) Volume-based particle size distributions of the NCM–LPSCl composites processed at different rotational speeds for 5 to 30 min c) FIB-SEM images of the pressed cathode composites produced at 200 rpm and 30 min, 600 rpm and 10 min, and 1000 rpm and 20 min of milling.",
+   "rotated_deg": 0,
+   "bbox": [
+    52.8,
+    281.4,
+    545.1,
+    672.4
+   ],
+   "w": 2052,
+   "h": 1630,
+   "dpi": 300,
+   "src": "8e444bcc-22._Tailoring_Composite_Microstructure_Through_Milling_for_Dry-Processed_Sulfide-Based_Solid-State_Battery_Cathodes.pdf",
+   "blank": 0.381,
+   "auto_bbox": [
+    44.8,
+    275.4,
+    552.9,
+    676.5
+   ],
+   "native_dpi": 300.0,
+   "recrop": "2026-10-13 래스터 원본 경계로 다시 자름 (원 해상도 그대로 — 자동 bbox 는 래스터 바깥 흰 여백 · 캡션 포함)",
+   "viewed": true
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 5,
+   "file": "fig_3.png",
+   "caption": "Figure 3. a) Stress frequency–stress energy distribution of milling bead collisions for different rotational speeds. b) Motion pattern of the milling beads in the milling chamber for different rotational speeds.",
+   "rotated_deg": 0,
+   "bbox": [
+    118.8,
+    76.4,
+    478.8,
+    210.7
+   ],
+   "w": 1501,
+   "h": 560,
+   "dpi": 300,
+   "src": "8e444bcc-22._Tailoring_Composite_Microstructure_Through_Milling_for_Dry-Processed_Sulfide-Based_Solid-State_Battery_Cathodes.pdf",
+   "blank": 0.748,
+   "auto_bbox": [
+    44.8,
+    70.4,
+    552.9,
+    214.7
+   ],
+   "native_dpi": 300.0,
+   "recrop": "2026-10-13 래스터 원본 경계로 다시 자름 (원 해상도 그대로 — 자동 bbox 는 래스터 바깥 흰 여백 · 캡션 포함)",
+   "viewed": true
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 5,
+   "file": "fig_4.png",
+   "caption": "Figure 4. a) Influence of milling bead size on the SF for different rotational speeds. b) Stress energy dependency on the milling bead size for different rotational speeds and filling ratios.",
+   "rotated_deg": 0,
+   "bbox": [
+    52.8,
+    503.5,
+    545.1,
+    696.9
+   ],
+   "w": 2052,
+   "h": 807,
+   "dpi": 300,
+   "src": "8e444bcc-22._Tailoring_Composite_Microstructure_Through_Milling_for_Dry-Processed_Sulfide-Based_Solid-State_Battery_Cathodes.pdf",
+   "blank": 0.835,
+   "auto_bbox": [
+    44.8,
+    497.5,
+    552.8,
+    698.9
+   ],
+   "native_dpi": 300.0,
+   "recrop": "2026-10-13 래스터 원본 경계로 다시 자름 (원 해상도 그대로 — 자동 bbox 는 래스터 바깥 흰 여백 · 캡션 포함)",
+   "viewed": true
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 7,
+   "file": "fig_5.png",
+   "caption": "Figure 5. a) Measured particle size as a function of the specific energy input. b) Porosity of compacted cathode composite processed at different rotational speeds. c) μ-CT scans of the composites processed at 200 rpm for 30 min and 800 rpm for 20 min. d) Effective partial electronic and ionic conductivity of selected composites shown as a function of the specific energy input.",
+   "rotated_deg": 0,
+   "bbox": [
+    52.8,
+    77.1,
+    545.1,
+    481.7
+   ],
+   "w": 2052,
+   "h": 1687,
+   "dpi": 300,
+   "src": "8e444bcc-22._Tailoring_Composite_Microstructure_Through_Milling_for_Dry-Processed_Sulfide-Based_Solid-State_Battery_Cathodes.pdf",
+   "blank": 0.73,
+   "auto_bbox": [
+    44.8,
+    71.1,
+    552.9,
+    485.7
+   ],
+   "native_dpi": 300.0,
+   "recrop": "2026-10-13 래스터 원본 경계로 다시 자름 (원 해상도 그대로 — 자동 bbox 는 래스터 바깥 흰 여백 · 캡션 포함)",
+   "viewed": true
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 8,
+   "file": "fig_6.png",
+   "caption": "Figure 6. a) Mean discharge capacity of two cells cycled over 20 cycles with the respective cathode composites at 0.1C/0.1C, plotted as a function of specific energy input. b) dQ dU−1 diagrams of the first charge and discharge of selected composites. c) NCM strain and LPSCl crystallite size as a function of the specific energy input. d) The mean specific discharge capacity as a function of the LPSCl crystallite size and the NCM strain.",
+   "rotated_deg": 0,
+   "bbox": [
+    50.0,
+    76.9,
+    542.2,
+    464.7
+   ],
+   "w": 2052,
+   "h": 1617,
+   "dpi": 300,
+   "src": "8e444bcc-22._Tailoring_Composite_Microstructure_Through_Milling_for_Dry-Processed_Sulfide-Based_Solid-State_Battery_Cathodes.pdf",
+   "blank": 0.778,
+   "auto_bbox": [
+    42.0,
+    70.9,
+    550.0,
+    468.7
+   ],
+   "native_dpi": 300.0,
+   "recrop": "2026-10-13 래스터 원본 경계로 다시 자름 (원 해상도 그대로 — 자동 bbox 는 래스터 바깥 흰 여백 · 캡션 포함)",
+   "viewed": true
+  },
+  {
+   "key": "f7",
+   "kind": "figure",
+   "label": "7",
+   "page": 10,
+   "file": "fig_7.png",
+   "caption": "Figure 7. a) Schematic representation of the fibrillation and dry film production step. b) SEM cross-section image with EDS mapping of the dry produced film for which the composite was pre-milled at 200 rpm for 5 min. c) SEM cross-section image with EDS mapping of the dry produced film for which the composite was pre-milled at 600 rpm for 10 min. d) C-rate tests for two pre-milled composites: The cathode composite prepared at 600 rpm and 10 min, and the cathode composite prepared at 200 rpm and 5 min, as well as their further mixture with PTFE and the dry produced electrode from these mixtures. e) dQ dU−1 diagrams of the second charge and discharge of pre-milled composite and dry films. f) 60 cycles at 0.1C of the dry produced electrodes with dry films previously milled at 200 rpm and 5 min, as well as 600 rpm and 10 min.",
+   "rotated_deg": 0,
+   "bbox": [
+    84.6,
+    76.7,
+    507.4,
+    658.7
+   ],
+   "w": 1763,
+   "h": 2426,
+   "dpi": 300,
+   "src": "8e444bcc-22._Tailoring_Composite_Microstructure_Through_Milling_for_Dry-Processed_Sulfide-Based_Solid-State_Battery_Cathodes.pdf",
+   "blank": 0.674,
+   "auto_bbox": [
+    42.0,
+    70.7,
+    550.1,
+    662.7
+   ],
+   "native_dpi": 299.8,
+   "recrop": "2026-10-13 래스터 원본 경계로 다시 자름 (원 해상도 그대로 — 자동 bbox 는 래스터 바깥 흰 여백 · 캡션 포함)",
+   "viewed": true
+  },
+  {
+   "key": "f8",
+   "kind": "figure",
+   "label": "8",
+   "page": 12,
+   "file": "fig_8.png",
+   "caption": "Figure 8. Process–Structure–Property relationships in cathode composite formation: Planetary ball milling strongly influences the microstructure of the cathode composite through variations in rotational speed, milling time, and thus stress energy, frequency, and specific energy input. Key microstructural changes include the comminution of LPSCl, aggregation with NCM, reduced LPSCl crystallite size, and increased lattice strain in NCM. These structural modifications directly affect electrochemical performance. Enhancing effective conductivity and heterocontacts can lead to higher specific discharge capacities, while degradation mechanisms from excessive stress may reduce capacity.",
+   "rotated_deg": 0,
+   "bbox": [
+    50.0,
+    76.3,
+    542.2,
+    421.7
+   ],
+   "w": 2052,
+   "h": 1440,
+   "dpi": 300,
+   "src": "8e444bcc-22._Tailoring_Composite_Microstructure_Through_Milling_for_Dry-Processed_Sulfide-Based_Solid-State_Battery_Cathodes.pdf",
+   "blank": 0.711,
+   "auto_bbox": [
+    42.0,
+    70.3,
+    550.1,
+    425.7
+   ],
+   "native_dpi": 300.0,
+   "recrop": "2026-10-13 래스터 원본 경계로 다시 자름 (원 해상도 그대로 — 자동 bbox 는 래스터 바깥 흰 여백 · 캡션 포함)",
+   "viewed": true
+  },
+  {
+   "key": "fS1",
+   "kind": "figure",
+   "label": "S1",
+   "page": 1,
+   "file": "fig_S1.png",
+   "caption": "Figure S1: Volume-based particle size distributions and SEM images of the NCM – LPSCl composites processed at different rotational speeds. a) Processing at 400 rpm for 5 minutes to 30 minutes. b) Processing at 800 rpm for 5 minutes to 20 minutes.",
+   "rotated_deg": 0,
+   "bbox": [
+    76.2,
+    414.6,
+    534.7,
+    592.2
+   ],
+   "w": 1402,
+   "h": 544,
+   "dpi": 220,
+   "src": "97805094-22._Sup_Tailoring_Composite_Microstructure_Through_Milling_for_Dry-Processed_Sulfide-Based_Solid-State_Battery_Cathodes.pdf",
+   "blank": 0.769,
+   "auto_bbox": [
+    64.8,
+    335.3,
+    540.7,
+    598.2
+   ],
+   "native_dpi": 220.5,
+   "recrop": "2026-10-13 래스터 원본 경계로 다시 자름 (원 해상도 그대로 — 자동 bbox 는 래스터 바깥 흰 여백 · 캡션 포함)",
+   "viewed": true
+  },
+  {
+   "key": "fS2",
+   "kind": "figure",
+   "label": "S2",
+   "page": 2,
+   "file": "fig_S2.png",
+   "caption": "Figure S2: a) and b) Top-view images of the pressed cathode composites produced at 600 rpm for 10 minutes.",
+   "rotated_deg": 0,
+   "bbox": [
+    76.2,
+    70.8,
+    509.2,
+    276.3
+   ],
+   "w": 1564,
+   "h": 743,
+   "dpi": 260,
+   "src": "97805094-22._Sup_Tailoring_Composite_Microstructure_Through_Milling_for_Dry-Processed_Sulfide-Based_Solid-State_Battery_Cathodes.pdf",
+   "blank": 0.143,
+   "auto_bbox": [
+    70.2,
+    64.8,
+    534.0,
+    276.6
+   ],
+   "native_dpi": 251.9,
+   "recrop": "2026-10-13 래스터 원본 경계로 다시 자름 (원 해상도 그대로 — 자동 bbox 는 래스터 바깥 흰 여백 · 캡션 포함) · 원본 251.9 dpi → 260 dpi",
+   "viewed": true
+  },
+  {
+   "key": "fS3",
+   "kind": "figure",
+   "label": "S3",
+   "page": 3,
+   "file": "fig_S3.png",
+   "caption": "Figure S3: a) Influence of the rotational speed of the milling chamber on the stress frequency SF. b) Influence of the rotational speed of the milling chamber on the stress energy SE (mean).",
+   "rotated_deg": 0,
+   "bbox": [
+    76.2,
+    169.7,
+    528.5,
+    344.9
+   ],
+   "w": 1383,
+   "h": 536,
+   "dpi": 220,
+   "src": "97805094-22._Sup_Tailoring_Composite_Microstructure_Through_Milling_for_Dry-Processed_Sulfide-Based_Solid-State_Battery_Cathodes.pdf",
+   "blank": 0.848,
+   "auto_bbox": [
+    70.2,
+    163.7,
+    534.5,
+    350.9
+   ],
+   "native_dpi": 219.9,
+   "recrop": "2026-10-13 래스터 여러 장 (패널) 의 합집합 경계로 220 dpi (원본 ≈220 dpi) — 자동 bbox 는 캡션 · 흰 여백 포함",
+   "viewed": true
+  },
+  {
+   "key": "fS4",
+   "kind": "figure",
+   "label": "S4",
+   "page": 3,
+   "file": "fig_S4.png",
+   "caption": "Figure S4: a) Influence of the milling bead filling ratio on the stress frequency SF. b) Influence of the milling beads filling ratio on the stress energy SE (mean).",
+   "rotated_deg": 0,
+   "bbox": [
+    76.2,
+    412.3,
+    527.6,
+    587.4
+   ],
+   "w": 1381,
+   "h": 536,
+   "dpi": 220,
+   "src": "97805094-22._Sup_Tailoring_Composite_Microstructure_Through_Milling_for_Dry-Processed_Sulfide-Based_Solid-State_Battery_Cathodes.pdf",
+   "blank": 0.859,
+   "auto_bbox": [
+    64.8,
+    406.3,
+    533.6,
+    593.4
+   ],
+   "native_dpi": 220.0,
+   "recrop": "2026-10-13 래스터 여러 장 (패널) 의 합집합 경계로 220 dpi (원본 ≈220 dpi) — 자동 bbox 는 캡션 · 흰 여백 포함",
+   "viewed": true
+  },
+  {
+   "key": "fS5",
+   "kind": "figure",
+   "label": "S5",
+   "page": 4,
+   "file": "fig_S5.png",
+   "caption": "Figure S5: Detailed comparison of composites produced at 600 rpm and 10 min and 400 rpm and 30 min milling time. All electrochemical analyses show a high degree of consistency within the standard deviation, which is due in particular to the cell assembly.",
+   "rotated_deg": 0,
+   "bbox": [
+    76.2,
+    70.8,
+    537.0,
+    442.2
+   ],
+   "w": 1409,
+   "h": 1136,
+   "dpi": 220,
+   "src": "97805094-22._Sup_Tailoring_Composite_Microstructure_Through_Milling_for_Dry-Processed_Sulfide-Based_Solid-State_Battery_Cathodes.pdf",
+   "blank": 0.846,
+   "auto_bbox": [
+    64.8,
+    64.8,
+    543.0,
+    443.2
+   ],
+   "native_dpi": 220.8,
+   "recrop": "2026-10-13 래스터 여러 장 (패널) 의 합집합 경계로 220 dpi (원본 ≈220 dpi) — 자동 bbox 는 캡션 · 흰 여백 포함",
+   "viewed": true
+  },
+  {
+   "key": "fS6",
+   "kind": "figure",
+   "label": "S6",
+   "page": 4,
+   "file": "fig_S6.png",
+   "caption": "Figure S6: dQ dU-1 diagrams of different composites cycled for 20 cycles at 0.1C/0.1C.",
+   "rotated_deg": 0,
+   "bbox": [
+    76.2,
+    509.6,
+    537.8,
+    750.2
+   ],
+   "w": 1412,
+   "h": 736,
+   "dpi": 220,
+   "src": "97805094-22._Sup_Tailoring_Composite_Microstructure_Through_Milling_for_Dry-Processed_Sulfide-Based_Solid-State_Battery_Cathodes.pdf",
+   "blank": 0.885,
+   "auto_bbox": [
+    70.2,
+    503.6,
+    543.8,
+    756.2
+   ],
+   "native_dpi": 220.9,
+   "recrop": "2026-10-13 래스터 원본 경계로 다시 자름 (원 해상도 그대로 — 자동 bbox 는 래스터 바깥 흰 여백 · 캡션 포함)",
+   "viewed": true
+  },
+  {
+   "key": "fS7",
+   "kind": "figure",
+   "label": "S7",
+   "page": 5,
+   "file": "fig_S7.png",
+   "caption": "Figure S7: a) XRD analysis of cathode composites produced at different rotational speeds for different milling times. b) Influence of stress number SN on the NCM strain and LPSCl crystallite size.",
+   "rotated_deg": 0,
+   "bbox": [
+    76.2,
+    97.3,
+    530.9,
+    406.3
+   ],
+   "w": 1391,
+   "h": 945,
+   "dpi": 220,
+   "src": "97805094-22._Sup_Tailoring_Composite_Microstructure_Through_Milling_for_Dry-Processed_Sulfide-Based_Solid-State_Battery_Cathodes.pdf",
+   "blank": 0.887,
+   "auto_bbox": [
+    64.8,
+    91.3,
+    538.5,
+    412.3
+   ],
+   "native_dpi": 222.5,
+   "recrop": "2026-10-13 래스터 여러 장 (패널) 의 합집합 경계로 220 dpi (원본 ≈220 dpi) — 자동 bbox 는 캡션 · 흰 여백 포함",
+   "viewed": true
+  },
+  {
+   "key": "fS8",
+   "kind": "figure",
+   "label": "S8",
+   "page": 5,
+   "file": "fig_S8.png",
+   "caption": "Figure S8: a) dQ dU-1 plots of the highly stressed composite (1000 rpm, 20 min) after 1 and 20 cycles. b) Optical image showing a Raman measurement spot. c) Raman spectra of pure LPSCl, LPSCl within the highly stressed composite (pre-mortem), and post-mortem (after 1 cycle). d) SEM images of the composite surface: pre-mortem, post-mortem after 1 cycle, and post-mortem after 20 cycles.",
+   "rotated_deg": 0,
+   "bbox": [
+    76.2,
+    473.3,
+    533.8,
+    712.0
+   ],
+   "w": 1400,
+   "h": 730,
+   "dpi": 220,
+   "src": "97805094-22._Sup_Tailoring_Composite_Microstructure_Through_Milling_for_Dry-Processed_Sulfide-Based_Solid-State_Battery_Cathodes.pdf",
+   "blank": 0.591,
+   "auto_bbox": [
+    64.8,
+    467.3,
+    539.8,
+    711.6
+   ],
+   "native_dpi": 221.2,
+   "recrop": "2026-10-13 래스터 원본 경계로 다시 자름 (원 해상도 그대로 — 자동 bbox 는 래스터 바깥 흰 여백 · 캡션 포함)",
+   "viewed": true
+  },
+  {
+   "key": "fS9",
+   "kind": "figure",
+   "label": "S9",
+   "page": 6,
+   "file": "fig_S9.png",
+   "caption": "Figure S9: SEM cross-section of the dry produced films. a) Cross section from the film that was produced with the composite which was milled at 200 rpm for 5 minutes. b) Cross section from the film that was produced with the composite which was milled at 600 rpm for 10 minutes.",
+   "rotated_deg": 0,
+   "bbox": [
+    76.2,
+    70.8,
+    537.5,
+    204.6
+   ],
+   "w": 1411,
+   "h": 410,
+   "dpi": 220,
+   "src": "97805094-22._Sup_Tailoring_Composite_Microstructure_Through_Milling_for_Dry-Processed_Sulfide-Based_Solid-State_Battery_Cathodes.pdf",
+   "blank": 0.157,
+   "auto_bbox": [
+    64.8,
+    64.8,
+    544.1,
+    205.1
+   ],
+   "native_dpi": 221.6,
+   "recrop": "2026-10-13 래스터 원본 경계로 다시 자름 (원 해상도 그대로 — 자동 bbox 는 래스터 바깥 흰 여백 · 캡션 포함)",
+   "viewed": true
+  },
+  {
+   "key": "fS10",
+   "kind": "figure",
+   "label": "S10",
+   "page": 6,
+   "file": "fig_S10.png",
+   "caption": "Figure S10: Calibration experiments for milling beads. a) Drop-down test for the determination of the restitution coefficient. b) Rolling friction in the milling chamber: Experiment and simulation. c) Static angle of repose determination.",
+   "rotated_deg": 0,
+   "bbox": [
+    76.2,
+    271.4,
+    537.8,
+    510.3
+   ],
+   "w": 1412,
+   "h": 731,
+   "dpi": 220,
+   "src": "97805094-22._Sup_Tailoring_Composite_Microstructure_Through_Milling_for_Dry-Processed_Sulfide-Based_Solid-State_Battery_Cathodes.pdf",
+   "blank": 0.598,
+   "auto_bbox": [
+    64.8,
+    265.4,
+    543.8,
+    516.3
+   ],
+   "native_dpi": 220.9,
+   "recrop": "2026-10-13 래스터 원본 경계로 다시 자름 (원 해상도 그대로 — 자동 bbox 는 래스터 바깥 흰 여백 · 캡션 포함)",
+   "viewed": true
+  },
+  {
+   "key": "fS11",
+   "kind": "figure",
+   "label": "S11",
+   "page": 7,
+   "file": "fig_S11.png",
+   "caption": "Figure S11: Example plot for an exemplary Rietveld Refinement for PXRD data of the sample milled at 400 rpm for 20 minutes.",
+   "rotated_deg": 0,
+   "bbox": [
+    193.0,
+    70.8,
+    401.8,
+    287.1
+   ],
+   "w": 639,
+   "h": 662,
+   "dpi": 220,
+   "src": "97805094-22._Sup_Tailoring_Composite_Microstructure_Through_Milling_for_Dry-Processed_Sulfide-Based_Solid-State_Battery_Cathodes.pdf",
+   "blank": 0.805,
+   "auto_bbox": [
+    64.8,
+    64.8,
+    527.3,
+    293.1
+   ],
+   "native_dpi": 212.7,
+   "recrop": "2026-10-13 래스터 원본 경계로 다시 자름 (원 해상도 그대로 — 자동 bbox 는 래스터 바깥 흰 여백 · 캡션 포함) · 원본 212.7 dpi → 220 dpi 로 (조금 확대 · 축소 없음)",
+   "viewed": true
+  },
+  {
+   "key": "fS12",
+   "kind": "figure",
+   "label": "S12",
+   "page": 9,
+   "file": "fig_S12.png",
+   "caption": "Figure S12: a) Cell set-up for cyclization tests of powders and dry produced films. b) Voltage over time curves for the active mass determination of the pre-milled composites (200 rpm, 5 minutes & 600 rpm, 10 minutes) and the produced dry films from these composites.",
+   "rotated_deg": 0,
+   "bbox": [
+    76.2,
+    501.2,
+    529.6,
+    676.3
+   ],
+   "w": 1387,
+   "h": 536,
+   "dpi": 220,
+   "src": "97805094-22._Sup_Tailoring_Composite_Microstructure_Through_Milling_for_Dry-Processed_Sulfide-Based_Solid-State_Battery_Cathodes.pdf",
+   "blank": 0.715,
+   "auto_bbox": [
+    70.2,
+    495.2,
+    540.0,
+    682.3
+   ],
+   "native_dpi": 220.3,
+   "recrop": "2026-10-13 래스터 여러 장 (패널) 의 합집합 경계로 220 dpi (원본 ≈220 dpi) — 자동 bbox 는 캡션 · 흰 여백 포함",
+   "viewed": true
+  },
+  {
+   "key": "tS1",
+   "kind": "table",
+   "label": "S1",
+   "page": 2,
+   "file": "tab_S1.png",
+   "caption": "Table S1: Mean stress energy and stress frequency of the ball milling process simulated for a filling ratio of 0.5.",
+   "rotated_deg": 0,
+   "bbox": [
+    67.6,
+    329.6,
+    522.6,
+    482.4
+   ],
+   "w": 1897,
+   "h": 638,
+   "dpi": 300,
+   "src": "97805094-22._Sup_Tailoring_Composite_Microstructure_Through_Milling_for_Dry-Processed_Sulfide-Based_Solid-State_Battery_Cathodes.pdf",
+   "blank": 0.587,
+   "auto_bbox": [
+    65.8,
+    324.9,
+    528.9,
+    659.7
+   ],
+   "recrop": "2026-10-13 벡터 표를 비백색 경계 + 3 pt 로 다시 자름 (자동 bbox 가 다음 표 · 캡션까지 포함)",
+   "viewed": true
+  },
+  {
+   "key": "tS2",
+   "kind": "table",
+   "label": "S2",
+   "page": 2,
+   "file": "tab_S2.png",
+   "caption": "Table S2: Mean stress energy and stress frequency of the ball milling process simulated for a filling ratio of 0.3.",
+   "rotated_deg": 0,
+   "bbox": [
+    67.6,
+    505.6,
+    527.4,
+    658.0
+   ],
+   "w": 1917,
+   "h": 636,
+   "dpi": 300,
+   "src": "97805094-22._Sup_Tailoring_Composite_Microstructure_Through_Milling_for_Dry-Processed_Sulfide-Based_Solid-State_Battery_Cathodes.pdf",
+   "blank": 0.59,
+   "auto_bbox": [
+    65.9,
+    500.6,
+    528.9,
+    790.0
+   ],
+   "recrop": "2026-10-13 벡터 표를 비백색 경계 + 3 pt 로 다시 자름 (자동 bbox 가 다음 표 · 캡션까지 포함)",
+   "viewed": true
+  },
+  {
+   "key": "tS3",
+   "kind": "table",
+   "label": "S3",
+   "page": 2,
+   "file": "tab_S3.png",
+   "caption": "Table S3: Mean stress energy and stress frequency of the ball milling process simulated for a filling ratio of 0.1.",
+   "rotated_deg": 0,
+   "bbox": [
+    67.6,
+    681.3,
+    526.9,
+    787.0
+   ],
+   "w": 1915,
+   "h": 684,
+   "dpi": 300,
+   "src": "97805094-22._Sup_Tailoring_Composite_Microstructure_Through_Milling_for_Dry-Processed_Sulfide-Based_Solid-State_Battery_Cathodes.pdf",
+   "blank": 0.615,
+   "auto_bbox": [
+    65.9,
+    676.6,
+    528.9,
+    790.0
+   ],
+   "recrop": "2026-10-13 벡터 표를 비백색 경계 + 3 pt 로 다시 자름 (자동 bbox 가 다음 표 · 캡션까지 포함)",
+   "manual_crop": "2026-10-13 표 S3 는 SI p.2 아래 (200 · 400 rpm 행) 와 p.3 위 (600–1000 rpm 행) 에 걸친다 — 두 조각을 같은 300 dpi 로 렌더해 세로로 붙이고 사이에 회색 점선 (쪽 경계 표시)",
+   "page_cont": 3,
+   "bbox_cont": [
+    67.6,
+    68.0,
+    526.9,
+    120.2
+   ],
+   "viewed": true
+  },
+  {
+   "key": "tS4",
+   "kind": "table",
+   "label": "S4",
+   "page": 7,
+   "file": "tab_S4.png",
+   "caption": "Table S4: Crystallographic data of NCM and LPSCl as used to refine Mo-X-Ray diffraction data, indicating applied restraints as variables. Fixed values for occupancies for both materials were obtained by refining against diffraction data of the pristine materials or, in case of the lithium site occupancies in LPSCl, taken from literature. Statistical standard deviation for each refined parameter is shown in parentheses.",
+   "rotated_deg": 0,
+   "bbox": [
+    73.3,
+    348.8,
+    521.4,
+    694.7
+   ],
+   "w": 1868,
+   "h": 1442,
+   "dpi": 300,
+   "src": "97805094-22._Sup_Tailoring_Composite_Microstructure_Through_Milling_for_Dry-Processed_Sulfide-Based_Solid-State_Battery_Cathodes.pdf",
+   "blank": 0.765,
+   "auto_bbox": [
+    65.8,
+    344.1,
+    528.7,
+    736.7
+   ],
+   "recrop": "2026-10-13 벡터 표를 비백색 경계 + 3 pt 로 다시 자름 (자동 bbox 가 다음 표 · 캡션까지 포함)",
+   "viewed": true
+  },
+  {
+   "key": "tS5",
+   "kind": "table",
+   "label": "S5",
+   "page": 8,
+   "file": "tab_S5.png",
+   "caption": "Table S5: Crystallographic data of NCM and LPSCl as obtained from refinements against Mo-X-Ray diffraction data for composites milled at different speeds and times. Listed are all refined values, as indicated in Table S4. Statistical standard deviation for each refined parameter is shown in parentheses.",
+   "rotated_deg": 0,
+   "bbox": [
+    73.1,
+    70.8,
+    521.4,
+    644.6
+   ],
+   "w": 1869,
+   "h": 2392,
+   "dpi": 300,
+   "src": "97805094-22._Sup_Tailoring_Composite_Microstructure_Through_Milling_for_Dry-Processed_Sulfide-Based_Solid-State_Battery_Cathodes.pdf",
+   "blank": 0.674,
+   "auto_bbox": [
+    65.8,
+    65.8,
+    528.7,
+    700.3
+   ],
+   "recrop": "2026-10-13 벡터 표를 비백색 경계 + 3 pt 로 다시 자름 (자동 bbox 가 다음 표 · 캡션까지 포함)",
+   "viewed": true
+  },
+  {
+   "key": "tS6",
+   "kind": "table",
+   "label": "S6",
+   "page": 9,
+   "file": "tab_S6.png",
+   "caption": "Table S6: Refined e0-microstrain values and integral breadth (LVol) of NCM and LPSCl as obtained from refinements against Mo-X-Ray diffraction data for composites milled at different speeds and times according to Balzar et. al.[1] No values for the integral breadth of NCM are listed since no broadening due to reduced crystal domain size could be observed. In addition, the quality parameters of the refinements Rwp and GoF are listed. Statistical standard deviation for each refined parameter is shown in parentheses.",
+   "rotated_deg": 0,
+   "bbox": [
+    73.1,
+    70.8,
+    521.4,
+    478.0
+   ],
+   "w": 1869,
+   "h": 1698,
+   "dpi": 300,
+   "src": "97805094-22._Sup_Tailoring_Composite_Microstructure_Through_Milling_for_Dry-Processed_Sulfide-Based_Solid-State_Battery_Cathodes.pdf",
+   "blank": 0.746,
+   "auto_bbox": [
+    65.8,
+    65.8,
+    528.7,
+    496.8
+   ],
+   "recrop": "2026-10-13 벡터 표를 비백색 경계 + 3 pt 로 다시 자름 (자동 bbox 가 다음 표 · 캡션까지 포함)",
+   "viewed": true
+  }
+ ],
+ "missing_labels": [],
+ "note_manual": "2026-10-13 수동 재크롭: 본문 그림 8 장 = 래스터 원본 경계 · 원 해상도 300 dpi / SI 그림 12 장 = 래스터 (합집합) 경계 · ≈220 dpi / SI 표 6 장 = 벡터 300 dpi · 표 S3 은 두 쪽을 이어 붙임. 크롭마다 렌더로 열어 축 제목 · 범례 · 패널 표지 확인."
+}
