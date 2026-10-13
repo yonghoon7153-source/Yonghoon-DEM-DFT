@@ -1,0 +1,238 @@
+{
+ "slug": "kawaguchi2017_dry_coating_parametric_na2so4_model_se",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-10-13",
+ "sources": [
+  "040ad7d4-25._Parametric_study_of_dry_coating_process_of_electrode_particle_with_model_material_of_sulfide_solid_electrolytes_for_all-solid-state_battery.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 2,
+   "file": "fig_1.png",
+   "caption": "Fig. 1. Schematic of dry impact-blending device (Hybridizer).",
+   "rotated_deg": 0,
+   "bbox": [
+    299.1,
+    71.2,
+    554.8,
+    289.3
+   ],
+   "w": 1066,
+   "h": 910,
+   "dpi": 300,
+   "src": "040ad7d4-25._Parametric_study_of_dry_coating_process_of_electrode_particle_with_model_material_of_sulfide_solid_electrolytes_for_all-solid-state_battery.pdf",
+   "blank": 0.83,
+   "auto_bbox": [
+    295.7,
+    71.2,
+    558.9,
+    291.4
+   ],
+   "recrop": "2026-10-13 손 재크롭 — 자동 bbox 를 비백색 내용 경계 + 4 pt 여백으로 좁힘 (300 dpi · SEM 래스터 원본 ≈200 dpi + 벡터 그래프).",
+   "viewed": true,
+   "caption_note": "자동 캡션이 본문 문단까지 끌어와 인쇄 캡션 한 줄로 고침 (2026-10-13)"
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 3,
+   "file": "fig_2.png",
+   "caption": "Fig. 2. (a) Volume based particle size distributions of LiNi1/3Co1/3Mn1/3O2 (NCM) and Na2SO4. FESEM images of (b) NCM and (c) Na2SO4.",
+   "rotated_deg": 0,
+   "bbox": [
+    141.6,
+    50.9,
+    461.9,
+    385.3
+   ],
+   "w": 1335,
+   "h": 1394,
+   "dpi": 300,
+   "src": "040ad7d4-25._Parametric_study_of_dry_coating_process_of_electrode_particle_with_model_material_of_sulfide_solid_electrolytes_for_all-solid-state_battery.pdf",
+   "blank": 0.67,
+   "auto_bbox": [
+    102.9,
+    48.9,
+    501.1,
+    387.1
+   ],
+   "recrop": "2026-10-13 손 재크롭 — 자동 bbox 를 비백색 내용 경계 + 4 pt 여백으로 좁힘 (300 dpi · SEM 래스터 원본 ≈200 dpi + 벡터 그래프).",
+   "viewed": true
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 4,
+   "file": "fig_3.png",
+   "caption": "Fig. 3. Effects of tip speed of rotor (Run No. 1, 2 and 3). (a) FESEM and EDX images of coated particles. (b) Increase in electrical resistivity as a function of tip speed of rotor. (c) Volume based size distributions of NCM particles after washing out Na2SO4 from coated particles.",
+   "rotated_deg": 0,
+   "bbox": [
+    113.7,
+    320.0,
+    473.1,
+    721.1
+   ],
+   "w": 1499,
+   "h": 1672,
+   "dpi": 300,
+   "src": "040ad7d4-25._Parametric_study_of_dry_coating_process_of_electrode_particle_with_model_material_of_sulfide_solid_electrolytes_for_all-solid-state_battery.pdf",
+   "blank": 0.52,
+   "auto_bbox": [
+    27.7,
+    318.0,
+    558.8,
+    723.0
+   ],
+   "recrop": "2026-10-13 손 재크롭 — 자동 bbox 를 비백색 내용 경계 + 4 pt 여백으로 좁힘 (300 dpi · SEM 래스터 원본 ≈200 dpi + 벡터 그래프).",
+   "viewed": true
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 5,
+   "file": "fig_4.png",
+   "caption": "Fig. 4. Effects of processing time (Run No. 3, 4, 5, 6 and 7). (a) FESEM and EDX images of coated particles. (b) Increase in electrical resistivity as a function of processing time. (c) Volume based particle size distributions of NCM particles after washing out Na2SO4 from coated particles.",
+   "rotated_deg": 0,
+   "bbox": [
+    127.8,
+    337.8,
+    476.1,
+    720.6
+   ],
+   "w": 1452,
+   "h": 1596,
+   "dpi": 300,
+   "src": "040ad7d4-25._Parametric_study_of_dry_coating_process_of_electrode_particle_with_model_material_of_sulfide_solid_electrolytes_for_all-solid-state_battery.pdf",
+   "blank": 0.512,
+   "auto_bbox": [
+    36.5,
+    336.0,
+    567.6,
+    722.5
+   ],
+   "recrop": "2026-10-13 손 재크롭 — 자동 bbox 를 비백색 내용 경계 + 4 pt 여백으로 좁힘 (300 dpi · SEM 래스터 원본 ≈200 dpi + 벡터 그래프).",
+   "viewed": true
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 6,
+   "file": "fig_5.png",
+   "caption": "Fig. 5. Effects of initial weight fraction of NCM and Na2SO4 (Run No. 3, 8, 9 and 10). (a) FESEM and EDX images of coated particles. (b) Increase in electrical resistivity as a function of initial weight fraction of Na2SO4. (c) Volume based particle size distributions of NCM particles after washing out Na2SO4 from coated particles prepared at different initial weight fraction of Na2SO4.",
+   "rotated_deg": 0,
+   "bbox": [
+    119.2,
+    325.7,
+    467.5,
+    712.7
+   ],
+   "w": 1453,
+   "h": 1613,
+   "dpi": 300,
+   "src": "040ad7d4-25._Parametric_study_of_dry_coating_process_of_electrode_particle_with_model_material_of_sulfide_solid_electrolytes_for_all-solid-state_battery.pdf",
+   "blank": 0.502,
+   "auto_bbox": [
+    27.7,
+    323.7,
+    558.8,
+    714.1
+   ],
+   "recrop": "2026-10-13 손 재크롭 — 자동 bbox 를 비백색 내용 경계 + 4 pt 여백으로 좁힘 (300 dpi · SEM 래스터 원본 ≈200 dpi + 벡터 그래프).",
+   "viewed": true
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 7,
+   "file": "fig_6.png",
+   "caption": "Fig. 6. Mechanism of dry coating in this study.",
+   "rotated_deg": 0,
+   "bbox": [
+    99.4,
+    398.4,
+    504.6,
+    730.4
+   ],
+   "w": 1689,
+   "h": 1384,
+   "dpi": 300,
+   "src": "040ad7d4-25._Parametric_study_of_dry_coating_process_of_electrode_particle_with_model_material_of_sulfide_solid_electrolytes_for_all-solid-state_battery.pdf",
+   "blank": 0.845,
+   "auto_bbox": [
+    148.0,
+    396.4,
+    506.4,
+    732.2
+   ],
+   "recrop": "2026-10-13 손 재크롭 — 자동 bbox 가 왼쪽 (a) 초기 상태 · 'Na2SO4 (soft)' · 'NCM (rigid)' 표지를 잘랐다 (x 148 → 99 pt) · 그림 그리기 범위 (x 103.6) 기준.",
+   "viewed": true
+  },
+  {
+   "key": "f7",
+   "kind": "figure",
+   "label": "7",
+   "page": 8,
+   "file": "fig_7.png",
+   "caption": "Fig. 7. Coated particles prepared at optimal processing conditions (Run No. 11). FESEM images of (a) coated particles and (b) cross-section of single coated particles. Light gray and dark gray region corresponds to NCM and Na2SO4, respectively. (b) Volume based particle size distribution and (c) FESEM images of NCM particles after washing out Na2SO4 from coated particles. FESEM images of cross-section of compressed pellet prepared from coated particles at (e) lower magniﬁcation (×2000) and (b) higher magniﬁcation (×5000). Light gray and dark gray region corresponds to NCM and Na2SO4, respectively.",
+   "rotated_deg": 0,
+   "bbox": [
+    119.2,
+    50.2,
+    467.8,
+    454.7
+   ],
+   "w": 1454,
+   "h": 1686,
+   "dpi": 300,
+   "src": "040ad7d4-25._Parametric_study_of_dry_coating_process_of_electrode_particle_with_model_material_of_sulfide_solid_electrolytes_for_all-solid-state_battery.pdf",
+   "blank": 0.397,
+   "auto_bbox": [
+    27.7,
+    48.2,
+    558.9,
+    456.4
+   ],
+   "recrop": "2026-10-13 손 재크롭 — 자동 bbox 를 비백색 내용 경계 + 4 pt 여백으로 좁힘 (300 dpi · SEM 래스터 원본 ≈200 dpi + 벡터 그래프).",
+   "viewed": true
+  },
+  {
+   "key": "t1",
+   "kind": "table",
+   "label": "1",
+   "page": 3,
+   "file": "tab_1.png",
+   "caption": "Table 1 Experimental conditions and net weight fraction of NCM and Na2SO4 after dry coating.",
+   "rotated_deg": 0,
+   "bbox": [
+    40.0,
+    600.0,
+    562.0,
+    748.0
+   ],
+   "w": 2176,
+   "h": 617,
+   "dpi": 300,
+   "src": "040ad7d4-25._Parametric_study_of_dry_coating_process_of_electrode_particle_with_model_material_of_sulfide_solid_electrolytes_for_all-solid-state_battery.pdf",
+   "blank": 0.946,
+   "auto_bbox": [
+    28.7,
+    32.7,
+    557.9,
+    750.7
+   ],
+   "manual_crop": "2026-10-13 손 크롭 — 자동 추출이 p.6 본문 문장 ('Table 1 (Run No. 3, 8, 9 and 10) shows …') 을 캡션으로 오인해 쪽 전체를 잘랐다 → 실제 표 (p.3 아래) 를 벡터 300 dpi 로.",
+   "viewed": true
+  }
+ ],
+ "missing_labels": [],
+ "note_manual": "2026-10-13 큐레이터 검수 — 8 장 전부 Read 로 열람 (viewed). 본문 그림 7 + 표 1 = 캡션 목록 8 과 같다 (SI 없음). 표 1 = 손 크롭 (자동 추출이 p.6 본문 문장을 표 캡션으로 오인) · 그림 7 = 비백색 경계로 좁힌 손 재크롭 (Fig 6 은 왼쪽 표지 잘림 복구). PNG 는 PIL optimize 로 무손실 재압축. ⚠ litdb/figures/_sources.json 은 건드리지 않았다 (공유 파일 — 메인 세션이 반영)."
+}
