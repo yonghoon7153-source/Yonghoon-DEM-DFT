@@ -315,5 +315,12 @@
       "상한": "140 GPU-h (개정 CS) → 남은 91.05 · 600 K MD 견적 등분 19.2–23.1 · 벽시계 극단 43.2 (개정 CS ③) ⇒ 상한 안 · 멈춤 경로 발동 없음"
     },
     "⏭": "① 600 K 러너 B 일반화 ✅ (gabia tools/ionic/glass_main_queue_gabia.sh SYSTEM=B sha16 23b8fd45aafbeb31 · selftest 56 · 깨기 7/7 · kgy db/inputs/lpscl_glass_control_li3ps4_2026_10_05/run_600k_kgy.sh sha16 4683a0dd9d8ff1aa → v2 러너 3aef029a 를 B 설정으로 · selftest 16 · 깨기 4/4) ② gabia 공존 예외 (6) D-2026-10-13-gabia-uma-coexist-pwx-li2s-control-600k proposed → 사용자 비준 ③ kgy 몫 시점 (cascade v7 상한 여유와 맞바꿈) = 사용자 ④ 판독 도구 대조 모드 · 도구 점검 목록 커밋 (카드 §2 · 판독 전) ⑤ 다음 편지 (외부 1저자): 시드 게이트 5/5 · 밀도 기준 1.88 의 상·출처 미기재 · T₅₀ 정의와 값 · 기계별 갈림 기록 · 장부 · 기계 배정 · gabia 점유 표본 정의"
+  },
+  "✅_기계_결정_2026_10_13": {
+    "at": "2026-10-13 · 사용자 AskUserQuestion",
+    "gabia": "공존 예외 (6) D-2026-10-13-gabia-uma-coexist-pwx-li2s-control-600k **비준 · active** (곁의 GPU pw.x = Li₃Nd r2 → 재개되는 탄성 · seed2·4·5 한 번에 하나 · 러너 tools/ionic/glass_main_queue_gabia.sh SYSTEM=B). 예외 (5) 는 10-11 소멸 → 원장 superseded (지문만 다시 냄)",
+    "kgy": "사용자 '지금 cascade 옆에서 (Recommended)' — seed1·3 을 cascade v7 본 라운드와 GPU 를 나눠 지금 돌린다 (db/inputs/lpscl_glass_control_li3ps4_2026_10_05/run_600k_kgy.sh). 비용은 우리 장부에 등분 (동시 GPU 잡 수 = cascade + 우리 = 2 · Unity 그리기 부하는 세지 않음 = 우리 몫 과대 = 보수)",
+    "시드_기계_대응": "카드 §1b 그대로 (gabia {2, 4, 5} · kgy {1, 3}) — 판독 전에 적을 어긋남 없음",
+    "⏭": "붙여넣기 블록 (gabia · kgy 각각 새 worktree → selftest → DRY_RUN → tmux) → 사용자 실행 → 감시 → 5 런 끝 → 판독 도구 대조 모드 · 점검 목록 (판독 전) → 판독 → 편지"
   }
 }
