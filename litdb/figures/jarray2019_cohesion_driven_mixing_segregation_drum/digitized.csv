@@ -1,0 +1,38 @@
+# jarray2019_cohesion_driven_mixing_segregation_drum — 손 판독 (2026-10-13). 그림 크롭 = 같은 폴더의 fig_*.png (원본 300 dpi · 확대 판독).
+# 정밀도: 힘 ±0.002 mN · 각도 ±0.3 deg · MI ±0.02 (평탄값 = 평활 곡선의 30–40 s 눈대중 평균) · ΔMI ±0.01 · ΔW ±0.3 mN/m · Bo_g ±0.02.
+# 이 값들은 TREND 용이다 — 인쇄값 (Table 1 · 본문 숫자) 이 있는 곳은 인쇄값을 쓸 것. 오차막대 칸 = 막대 끝까지의 반폭 (정의는 원문에 없다).
+figure,panel,series,x,x_unit,y,y_unit,y_err_halfwidth,note
+1,e,F_AA,30,min,0.060,mN,0.013,Table 1 case 2 와 같은 값
+1,e,F_AA,60,min,0.075,mN,0.011,Table 1 case 3
+1,e,F_AA,90,min,0.110,mN,0.013,Table 1 case 4
+1,e,F_AB,30,min,0.028,mN,0.011,Table 1 case 2 (0.85/0.85)
+1,e,F_AB,60,min,0.040,mN,0.013,Table 1 case 3
+1,e,F_AB,90,min,0.060,mN,0.008,Table 1 case 4
+3,b,theta_av,0.000,mN (F_AA),35.0,deg,1.5,cohesionless
+3,b,theta_av,0.060,mN (F_AA),37.8,deg,2.7,x 오차 반폭 ≈ 0.013 mN
+3,b,theta_av,0.075,mN (F_AA),45.1,deg,1.4,x 오차 반폭 ≈ 0.011 mN
+3,b,theta_av,0.110,mN (F_AA),48.9,deg,3.3,x 오차 반폭 ≈ 0.013 mN
+5,a,case1 plateau,30-40,s,0.91,MI,,non-cohesive mono · 시작 MI ≈ 0.09
+5,a,case2 plateau,30-40,s,0.80,MI,,low · 시작 ≈ 0.09
+5,a,case3 plateau,30-40,s,0.73,MI,,medium · 시작 ≈ 0.0
+5,a,case4 plateau,30-40,s,0.65,MI,,high · 시작 ≈ 0.0 · 본문 '약 0.6'
+5,b,case5 plateau,30-40,s,0.52,MI,,non-cohesive 0.85/1.25 · 시작 ≈ 0.05 · 본문 '약 0.5'
+5,b,case6 plateau,30-40,s,0.59,MI,,low · 시작 ≈ 0.21
+5,b,case7 plateau,30-40,s,0.64,MI,,medium · 시작 ≈ 0.24
+5,b,case8 plateau,30-40,s,0.78,MI,,high · 시작 ≈ 0.15 · 28–30 s 최대 ≈ 0.82
+5,c,case9 plateau,30-40,s,0.49,MI,,non-cohesive 0.85/2 · 시작 ≈ 0.0 · 본문 '약 0.48'
+5,c,case10 plateau,30-40,s,0.47,MI,,low · 시작 ≈ 0.0
+5,c,case11 plateau,30-40,s,0.51,MI,,medium · 시작 ≈ 0.06 · 9 s 최대 ≈ 0.72 뒤 하강
+5,c,case12 plateau,30-40,s,0.69,MI,,high · 시작 ≈ 0.33
+6,a+b,mono case2,-2.2,mN/m (ΔW) | Bo_g 0.95,-0.05,ΔMI,0.05,Fig 5 평탄값 차는 -0.11
+6,a+b,mono case3,2.8,mN/m (ΔW) | Bo_g 1.19,-0.12,ΔMI,0.03,Fig 5 평탄값 차는 -0.18
+6,a+b,mono case4,5.7,mN/m (ΔW) | Bo_g 1.75,-0.19,ΔMI,0.025,Fig 5 평탄값 차는 -0.26
+6,a+b,0.85/1.25 case6,-7.7,mN/m (ΔW) | Bo_g 0.56,0.085,ΔMI,0.035,Fig 5 차 +0.07
+6,a+b,0.85/1.25 case7,15.3,mN/m (ΔW) | Bo_g 0.75,0.12,ΔMI,0.035,Fig 5 차 +0.12
+6,a+b,0.85/1.25 case8,24.5,mN/m (ΔW) | Bo_g 1.13,0.265,ΔMI,0.05,Fig 5 차 +0.26
+6,a+b,0.85/2 case10,-3.3,mN/m (ΔW) | Bo_g 0.38,-0.01,ΔMI,0.05,Fig 5 차 -0.02
+6,a+b,0.85/2 case11,8.5,mN/m (ΔW) | Bo_g 0.63,0.02,ΔMI,0.065,Fig 5 차 +0.02
+6,a+b,0.85/2 case12,16.7,mN/m (ΔW) | Bo_g 0.98,0.18,ΔMI,0.055,Fig 5 차 +0.20
+S4,-,Bo_g^c level mono,0.95/1.19/1.74,Bo_g,1.0,Bo_g^c,,식 재계산 1.000
+S4,-,Bo_g^c level 0.85/1.25,0.56/0.75/1.13,Bo_g,1.89,Bo_g^c,,식 재계산 1.885
+S4,-,Bo_g^c level 0.85/2,0.38/0.63/0.98,Bo_g,4.71,Bo_g^c,,식 재계산 4.712

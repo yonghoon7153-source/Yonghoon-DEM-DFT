@@ -1,0 +1,910 @@
+{
+ "slug": "lee2024_shear_force_dry_process_cathode_coverage",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-10-13",
+ "sources": [
+  "3c621cf8-27._Shear_force_effect_of_the_dry_process_on_cathode_contact_coverage_in_all-solid-state_batteries.pdf",
+  "da465ce2-27._Sup_Shear_force_effect_of_the_dry_process_on_cathode_contact_coverage_in_all-solid-state_batteries.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 3,
+   "file": "fig_1.png",
+   "caption": "Fig. 1 | Disparity between wet- and dry-processed electrodes. Schematic illustration of the difference between wet-processed electrodes and dry-processed electrodes.",
+   "rotated_deg": 0,
+   "bbox": [
+    33.7,
+    42.8,
+    567.3,
+    278.8
+   ],
+   "w": 2224,
+   "h": 984,
+   "dpi": 300,
+   "src": "3c621cf8-27._Shear_force_effect_of_the_dry_process_on_cathode_contact_coverage_in_all-solid-state_batteries.pdf",
+   "blank": 0.73,
+   "viewed": true
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 3,
+   "file": "fig_2.png",
+   "caption": "Fig. 2 | Extraction and quantiﬁcation of coverage. Cross-sectional scanning electron microscope (SEM) images of a wet- and b dry-processed electrodes in different scale bars of 50 μm and 10 μm. The digitally processed images for coverage measurement of each electrode.",
+   "rotated_deg": 0,
+   "bbox": [
+    33.7,
+    301.8,
+    567.4,
+    563.6
+   ],
+   "w": 2225,
+   "h": 1092,
+   "dpi": 300,
+   "src": "3c621cf8-27._Shear_force_effect_of_the_dry_process_on_cathode_contact_coverage_in_all-solid-state_batteries.pdf",
+   "blank": 0.176,
+   "viewed": true
+  },
+  {
+   "kind": "figure",
+   "label": "3",
+   "page": 4,
+   "bbox": [
+    46.0,
+    44.0,
+    552.0,
+    424.0
+   ],
+   "dpi": 300,
+   "src": "3c621cf8-27._Shear_force_effect_of_the_dry_process_on_cathode_contact_coverage_in_all-solid-state_batteries.pdf",
+   "caption": "Fig. 3 | Resistance analyses of electrode configurations. a Nyquist plots of pellet, wet, and dry electrodes at 25 °C and 60 °C. b Discharge capacities at 0.1 C (17 mA g–1) and coverages of each electrode with different process. The error bars indicate standard error. Galvanostatic intermittent titration technique (GITT) curves of pellet, wet, and dry electrodes during (c) charging or d discharging with voltage polarization (ΔV) at 0.2 C (34 mA g–1). Li-In∥LiNi0.5Mn0.3Co0.2O2 pressure cells. The mass loading and areal capacity of the cathode were 23.5 mg cm−2 and 4.23 mAh cm−2, respectively. All the cells were tested at 60 °C.",
+   "manual_crop": "2026-10-13 손 크롭 — 자동 추출이 '영역 없음' 으로 건너뜀 (벡터 그림 · 캡션이 두 단으로 나뉨). 그림 영역 = 텍스트 블록 좌표로 정함 (y 44–424 pt, 캡션 y 431 위).",
+   "key": "f3",
+   "file": "fig_3.png",
+   "w": 2109,
+   "h": 1584,
+   "blank": 0.841,
+   "rotated_deg": 0,
+   "viewed": true
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 5,
+   "file": "fig_4.png",
+   "caption": "Fig. 4 | Electrochemical modeling of coverage-induced behaviors. Electro- chemical modeling results of single lithium nickel manganese cobalt oxide (NMC) particle with different coverages and C-rates. a Lithium-ion concentration contours in the NMC particles at the end of discharging. Voltage proﬁles at different C-rates",
+   "rotated_deg": 0,
+   "bbox": [
+    52.0,
+    45.0,
+    548.0,
+    347.0
+   ],
+   "w": 2068,
+   "h": 1259,
+   "dpi": 300,
+   "src": "3c621cf8-27._Shear_force_effect_of_the_dry_process_on_cathode_contact_coverage_in_all-solid-state_batteries.pdf",
+   "blank": 0.718,
+   "auto_bbox": [
+    33.7,
+    65.7,
+    409.7,
+    344.1
+   ],
+   "recrop": "2026-10-13 손 재크롭 — 자동 bbox 가 래스터 (a) 만 잡아 'Coverage' 머리 행이 잘리고 벡터 패널 (b)–(d) 가 빠졌다 → 네 패널 전체.",
+   "viewed": true
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 7,
+   "file": "fig_5.png",
+   "caption": "Fig. 5 | Electrochemical performances of electrode conﬁgurations. Rate capability of pellet, wet, and dry electrodes at a 25 °C and b 60 °C. Cycling test results at c 25 °C and d 60 °C. Li-In∥LiNi0.5Mn0.3Co0.2O2 pressure cells. The mass loading and areal capacity of the cathode were 23.5 mg cm−2 and 4.23 mAh cm−2, respectively.",
+   "rotated_deg": 0,
+   "bbox": [
+    46.0,
+    40.0,
+    556.0,
+    434.0
+   ],
+   "w": 2126,
+   "h": 1643,
+   "dpi": 300,
+   "src": "3c621cf8-27._Shear_force_effect_of_the_dry_process_on_cathode_contact_coverage_in_all-solid-state_batteries.pdf",
+   "blank": 0.897,
+   "auto_bbox": [
+    33.7,
+    67.0,
+    567.4,
+    433.3
+   ],
+   "recrop": "2026-10-13 손 재크롭 — 자동 bbox 위쪽이 y 67 pt 에서 잘려 패널 표지 (a)(b) · 'Temp.' · 'Mass loading' 머리 글과 눈금 200 이 빠졌다.",
+   "viewed": true
+  },
+  {
+   "key": "fS1",
+   "kind": "figure",
+   "label": "S1",
+   "page": 4,
+   "file": "fig_S1.png",
+   "caption": "Figure S1. Process for pellet, wet, and dry electrodes.",
+   "rotated_deg": 0,
+   "bbox": [
+    72.0,
+    85.0,
+    523.3,
+    393.1
+   ],
+   "w": 1379,
+   "h": 943,
+   "dpi": 220,
+   "src": "da465ce2-27._Sup_Shear_force_effect_of_the_dry_process_on_cathode_contact_coverage_in_all-solid-state_batteries.pdf",
+   "blank": 0.293,
+   "auto_bbox": [
+    66.0,
+    79.0,
+    529.3,
+    399.1
+   ],
+   "native_dpi": 220.0,
+   "recrop": "2026-10-13 손 재크롭 — 래스터 경계 그대로 · 원본 해상도 220 dpi (업샘플 없음). 자동 bbox 는 래스터보다 넓은 여백 + 300 dpi 업샘플.",
+   "viewed": true
+  },
+  {
+   "key": "fS2",
+   "kind": "figure",
+   "label": "S2",
+   "page": 5,
+   "file": "fig_S2.png",
+   "caption": "Figure S2. Characterization of pellet electrode. Cross-sectional scanning electron microscope (SEM) image and energy-dispersive X-ray spectroscopy (EDS) mapping in C-K, S-K and Ni-K of pellet electrodes.",
+   "rotated_deg": 0,
+   "bbox": [
+    72.0,
+    85.0,
+    523.3,
+    425.7
+   ],
+   "w": 1254,
+   "h": 947,
+   "dpi": 200,
+   "src": "da465ce2-27._Sup_Shear_force_effect_of_the_dry_process_on_cathode_contact_coverage_in_all-solid-state_batteries.pdf",
+   "blank": 0.074,
+   "auto_bbox": [
+    66.0,
+    79.0,
+    532.2,
+    431.7
+   ],
+   "native_dpi": 199.9,
+   "recrop": "2026-10-13 손 재크롭 — 래스터 경계 그대로 · 원본 해상도 200 dpi (업샘플 없음). 자동 bbox 는 래스터보다 넓은 여백 + 300 dpi 업샘플.",
+   "viewed": true
+  },
+  {
+   "key": "fS3",
+   "kind": "figure",
+   "label": "S3",
+   "page": 6,
+   "file": "fig_S3.png",
+   "caption": "Figure S3. Characterization of wet electrode. Cross-sectional scanning electron microscope (SEM) image and energy-dispersive X-ray spectroscopy (EDS) mapping in C-K, S-K and Ni-K of wet electrodes.",
+   "rotated_deg": 0,
+   "bbox": [
+    72.0,
+    85.0,
+    523.3,
+    427.6
+   ],
+   "w": 1254,
+   "h": 952,
+   "dpi": 200,
+   "src": "da465ce2-27._Sup_Shear_force_effect_of_the_dry_process_on_cathode_contact_coverage_in_all-solid-state_batteries.pdf",
+   "blank": 0.065,
+   "auto_bbox": [
+    66.0,
+    79.0,
+    532.2,
+    433.6
+   ],
+   "native_dpi": 199.9,
+   "recrop": "2026-10-13 손 재크롭 — 래스터 경계 그대로 · 원본 해상도 200 dpi (업샘플 없음). 자동 bbox 는 래스터보다 넓은 여백 + 300 dpi 업샘플.",
+   "viewed": true
+  },
+  {
+   "key": "fS4",
+   "kind": "figure",
+   "label": "S4",
+   "page": 7,
+   "file": "fig_S4.png",
+   "caption": "Figure S4. Characterization of dry electrode. Cross-sectional scanning electron microscope (SEM) image and energy-dispersive X-ray spectroscopy (EDS) mapping in C-K, S-K and Ni-K of dry electrodes.",
+   "rotated_deg": 0,
+   "bbox": [
+    72.0,
+    98.7,
+    523.3,
+    440.2
+   ],
+   "w": 1254,
+   "h": 949,
+   "dpi": 200,
+   "src": "da465ce2-27._Sup_Shear_force_effect_of_the_dry_process_on_cathode_contact_coverage_in_all-solid-state_batteries.pdf",
+   "blank": 0.056,
+   "auto_bbox": [
+    66.0,
+    92.7,
+    532.1,
+    446.2
+   ],
+   "native_dpi": 199.9,
+   "recrop": "2026-10-13 손 재크롭 — 래스터 경계 그대로 · 원본 해상도 200 dpi (업샘플 없음). 자동 bbox 는 래스터보다 넓은 여백 + 300 dpi 업샘플.",
+   "viewed": true
+  },
+  {
+   "key": "fS5",
+   "kind": "figure",
+   "label": "S5",
+   "page": 8,
+   "file": "fig_S5.png",
+   "caption": "Figure S5. Characterization of wet electrode before pressing. Cross-sectional scanning electron microscope (SEM) image and energy-dispersive X-ray spectroscopy (EDS) mapping in C-K, S-K and Ni-K of wet electrodes before pressing.",
+   "rotated_deg": 0,
+   "bbox": [
+    72.0,
+    85.0,
+    523.3,
+    426.6
+   ],
+   "w": 1254,
+   "h": 950,
+   "dpi": 200,
+   "src": "da465ce2-27._Sup_Shear_force_effect_of_the_dry_process_on_cathode_contact_coverage_in_all-solid-state_batteries.pdf",
+   "blank": 0.055,
+   "auto_bbox": [
+    66.0,
+    79.0,
+    532.2,
+    432.6
+   ],
+   "native_dpi": 199.9,
+   "recrop": "2026-10-13 손 재크롭 — 래스터 경계 그대로 · 원본 해상도 200 dpi (업샘플 없음). 자동 bbox 는 래스터보다 넓은 여백 + 300 dpi 업샘플.",
+   "viewed": true
+  },
+  {
+   "key": "fS6",
+   "kind": "figure",
+   "label": "S6",
+   "page": 9,
+   "file": "fig_S6.png",
+   "caption": "Figure S6. Characterization of dry electrode before pressing. Cross-sectional scanning electron microscope (SEM) image and energy-dispersive X-ray spectroscopy (EDS) mapping in C-K, S-K and Ni-K of dry electrodes before pressing.",
+   "rotated_deg": 0,
+   "bbox": [
+    72.0,
+    85.0,
+    523.3,
+    427.0
+   ],
+   "w": 1254,
+   "h": 951,
+   "dpi": 200,
+   "src": "da465ce2-27._Sup_Shear_force_effect_of_the_dry_process_on_cathode_contact_coverage_in_all-solid-state_batteries.pdf",
+   "blank": 0.056,
+   "auto_bbox": [
+    66.0,
+    79.0,
+    530.5,
+    433.0
+   ],
+   "native_dpi": 199.9,
+   "recrop": "2026-10-13 손 재크롭 — 래스터 경계 그대로 · 원본 해상도 200 dpi (업샘플 없음). 자동 bbox 는 래스터보다 넓은 여백 + 300 dpi 업샘플.",
+   "viewed": true
+  },
+  {
+   "key": "fS7",
+   "kind": "figure",
+   "label": "S7",
+   "page": 10,
+   "file": "fig_S7.png",
+   "caption": "Figure S7. Image refinements. Original and refined scanning electron microscope (SEM) images of (a) pellet, (b) wet-processed, and (c) dry-processed electrodes.",
+   "rotated_deg": 0,
+   "bbox": [
+    99.3,
+    85.1,
+    496.0,
+    307.7
+   ],
+   "w": 1213,
+   "h": 682,
+   "dpi": 220,
+   "src": "da465ce2-27._Sup_Shear_force_effect_of_the_dry_process_on_cathode_contact_coverage_in_all-solid-state_batteries.pdf",
+   "blank": 0.174,
+   "auto_bbox": [
+    66.0,
+    79.1,
+    532.2,
+    313.7
+   ],
+   "native_dpi": 220.3,
+   "recrop": "2026-10-13 손 재크롭 — 래스터 경계 그대로 · 원본 해상도 220 dpi (업샘플 없음). 자동 bbox 는 래스터보다 넓은 여백 + 300 dpi 업샘플.",
+   "viewed": true
+  },
+  {
+   "key": "fS8",
+   "kind": "figure",
+   "label": "S8",
+   "page": 10,
+   "file": "fig_S8.png",
+   "caption": "Figure S8. Coverage extraction of pellet electrode. Cross-sectional scanning electron microscope (SEM) images of pellet electrodes.",
+   "rotated_deg": 0,
+   "bbox": [
+    72.0,
+    438.7,
+    523.3,
+    552.5
+   ],
+   "w": 1379,
+   "h": 349,
+   "dpi": 220,
+   "src": "da465ce2-27._Sup_Shear_force_effect_of_the_dry_process_on_cathode_contact_coverage_in_all-solid-state_batteries.pdf",
+   "blank": 0.057,
+   "auto_bbox": [
+    66.0,
+    432.7,
+    532.1,
+    558.5
+   ],
+   "native_dpi": 220.0,
+   "recrop": "2026-10-13 손 재크롭 — 래스터 경계 그대로 · 원본 해상도 220 dpi (업샘플 없음). 자동 bbox 는 래스터보다 넓은 여백 + 300 dpi 업샘플.",
+   "viewed": true
+  },
+  {
+   "key": "fS9",
+   "kind": "figure",
+   "label": "S9",
+   "page": 11,
+   "file": "fig_S9.png",
+   "caption": "Figure S9. Resistance analysis of electrode configurations. Distribution of relaxation time (DRT) profiles of (a, d) pellet, (b, e) wet-processed, and (c ,f) dry-processed electrodes at 25oC and 60oC.",
+   "rotated_deg": 0,
+   "bbox": [
+    72.0,
+    85.0,
+    523.3,
+    331.0
+   ],
+   "w": 1379,
+   "h": 753,
+   "dpi": 220,
+   "src": "da465ce2-27._Sup_Shear_force_effect_of_the_dry_process_on_cathode_contact_coverage_in_all-solid-state_batteries.pdf",
+   "blank": 0.476,
+   "auto_bbox": [
+    66.0,
+    79.0,
+    532.2,
+    337.0
+   ],
+   "native_dpi": 220.0,
+   "recrop": "2026-10-13 손 재크롭 — 래스터 경계 그대로 · 원본 해상도 220 dpi (업샘플 없음). 자동 bbox 는 래스터보다 넓은 여백 + 300 dpi 업샘플.",
+   "viewed": true
+  },
+  {
+   "key": "fS10",
+   "kind": "figure",
+   "label": "S10",
+   "page": 11,
+   "file": "fig_S10.png",
+   "caption": "Figure S10. Chemical stability of solid electrolytes and solvents. Optical images of pristine butyl butyrate solvent, after adding solid electrolytes, after shaking solution, and after 24 hours of rest.",
+   "rotated_deg": 0,
+   "bbox": [
+    72.0,
+    462.0,
+    523.2,
+    613.7
+   ],
+   "w": 1254,
+   "h": 422,
+   "dpi": 200,
+   "src": "da465ce2-27._Sup_Shear_force_effect_of_the_dry_process_on_cathode_contact_coverage_in_all-solid-state_batteries.pdf",
+   "blank": 0.081,
+   "auto_bbox": [
+    66.0,
+    456.0,
+    532.0,
+    619.7
+   ],
+   "native_dpi": 201.1,
+   "recrop": "2026-10-13 손 재크롭 — 래스터 경계 그대로 · 원본 해상도 200 dpi (업샘플 없음). 자동 bbox 는 래스터보다 넓은 여백 + 300 dpi 업샘플.",
+   "viewed": true
+  },
+  {
+   "key": "fS11",
+   "kind": "figure",
+   "label": "S11",
+   "page": 12,
+   "file": "fig_S11.png",
+   "caption": "Figure S11. Stability analysis of solid electrolytes and solvents. (a) X-ray diffraction (XRD) spectra and X-ray photoelectron spectroscopy (XPS) spectra of pristine Li6PS5Cl (LPSCl) and LPSCl after exposure to butyl butyrate solvent (denoted as LPSCl_BB). (b) P 2p, (c) S 2p, and (d) Cl 2p.",
+   "rotated_deg": 0,
+   "bbox": [
+    72.0,
+    85.0,
+    523.3,
+    471.1
+   ],
+   "w": 1379,
+   "h": 1181,
+   "dpi": 220,
+   "src": "da465ce2-27._Sup_Shear_force_effect_of_the_dry_process_on_cathode_contact_coverage_in_all-solid-state_batteries.pdf",
+   "blank": 0.929,
+   "auto_bbox": [
+    66.0,
+    79.0,
+    532.2,
+    477.1
+   ],
+   "native_dpi": 220.0,
+   "recrop": "2026-10-13 손 재크롭 — 래스터 경계 그대로 · 원본 해상도 220 dpi (업샘플 없음). 자동 bbox 는 래스터보다 넓은 여백 + 300 dpi 업샘플.",
+   "viewed": true
+  },
+  {
+   "key": "fS12",
+   "kind": "figure",
+   "label": "S12",
+   "page": 13,
+   "file": "fig_S12.png",
+   "caption": "Figure S12. Ionic conductivity of solid electrolytes. (a) Electrochemical impedance spectroscopy (EIS) spectra and (b) ionic conductivities of pristine Li6PS5Cl (LPSCl) and LPSCl after exposure to butyl butyrate solvent at 25oC.",
+   "rotated_deg": 0,
+   "bbox": [
+    72.0,
+    85.0,
+    523.2,
+    264.4
+   ],
+   "w": 1335,
+   "h": 532,
+   "dpi": 213,
+   "src": "da465ce2-27._Sup_Shear_force_effect_of_the_dry_process_on_cathode_contact_coverage_in_all-solid-state_batteries.pdf",
+   "blank": 0.82,
+   "auto_bbox": [
+    66.0,
+    79.0,
+    535.9,
+    270.4
+   ],
+   "native_dpi": 213.4,
+   "recrop": "2026-10-13 손 재크롭 — 래스터 경계 그대로 · 원본 해상도 213 dpi (업샘플 없음). 자동 bbox 는 래스터보다 넓은 여백 + 300 dpi 업샘플.",
+   "viewed": true
+  },
+  {
+   "key": "fS13",
+   "kind": "figure",
+   "label": "S13",
+   "page": 13,
+   "file": "fig_S13.png",
+   "caption": "Figure S13. Coverage distribution in electrode configurations. Distribution of sample particle coverages in pellet, wet-processed, and dry-processed electrodes.",
+   "rotated_deg": 0,
+   "bbox": [
+    110.9,
+    350.7,
+    483.8,
+    657.1
+   ],
+   "w": 829,
+   "h": 682,
+   "dpi": 160,
+   "src": "da465ce2-27._Sup_Shear_force_effect_of_the_dry_process_on_cathode_contact_coverage_in_all-solid-state_batteries.pdf",
+   "blank": 0.806,
+   "auto_bbox": [
+    66.0,
+    344.7,
+    532.0,
+    663.1
+   ],
+   "native_dpi": 159.7,
+   "recrop": "2026-10-13 손 재크롭 — 래스터 경계 그대로 · 원본 해상도 160 dpi (업샘플 없음). 자동 bbox 는 래스터보다 넓은 여백 + 300 dpi 업샘플.",
+   "viewed": true
+  },
+  {
+   "key": "fS14",
+   "kind": "figure",
+   "label": "S14",
+   "page": 14,
+   "file": "fig_S14.png",
+   "caption": "Figure S14. Different types of coverages. Schematic illustration of clumped or spaced particles with different coverages.",
+   "rotated_deg": 0,
+   "bbox": [
+    72.0,
+    85.0,
+    523.3,
+    315.1
+   ],
+   "w": 1254,
+   "h": 640,
+   "dpi": 200,
+   "src": "da465ce2-27._Sup_Shear_force_effect_of_the_dry_process_on_cathode_contact_coverage_in_all-solid-state_batteries.pdf",
+   "blank": 0.347,
+   "auto_bbox": [
+    66.0,
+    79.0,
+    532.0,
+    321.1
+   ],
+   "native_dpi": 199.9,
+   "recrop": "2026-10-13 손 재크롭 — 래스터 경계 그대로 · 원본 해상도 200 dpi (업샘플 없음). 자동 bbox 는 래스터보다 넓은 여백 + 300 dpi 업샘플.",
+   "viewed": true
+  },
+  {
+   "key": "fS15",
+   "kind": "figure",
+   "label": "S15",
+   "page": 15,
+   "file": "fig_S15.png",
+   "caption": "Figure S15. Simulation results with enhanced conductivity. Electrochemical modeling results of single lithium nickel manganese cobalt oxide (NMC) particle with different coverages and C-rates. Lithium-ion concentration contours in the NMC particles at the end of discharging. The modelling parameters: R = 10 µm, cond. = 5 mS cm−1, and clumped configuration, where R indicates the radius of the particle and cond. indicates the ionic conductivity of solid electrolytes.",
+   "rotated_deg": 0,
+   "bbox": [
+    72.0,
+    85.0,
+    523.3,
+    497.1
+   ],
+   "w": 1254,
+   "h": 1145,
+   "dpi": 200,
+   "src": "da465ce2-27._Sup_Shear_force_effect_of_the_dry_process_on_cathode_contact_coverage_in_all-solid-state_batteries.pdf",
+   "blank": 0.658,
+   "auto_bbox": [
+    66.0,
+    79.0,
+    531.9,
+    503.1
+   ],
+   "native_dpi": 199.9,
+   "recrop": "2026-10-13 손 재크롭 — 래스터 경계 그대로 · 원본 해상도 200 dpi (업샘플 없음). 자동 bbox 는 래스터보다 넓은 여백 + 300 dpi 업샘플.",
+   "viewed": true
+  },
+  {
+   "key": "fS16",
+   "kind": "figure",
+   "label": "S16",
+   "page": 16,
+   "file": "fig_S16.png",
+   "caption": "Figure S16. Simulation results with reduced conductivity. Electrochemical modeling results of single lithium nickel manganese cobalt oxide (NMC) particle with different coverages and C-rates. Lithium-ion concentration contours in the NMC particles at the end of discharging. The modelling parameters: R = 10 µm, cond. = 0.2 mS cm−1, and clumped configuration, where R indicates the radius of the particle and cond. indicates the ionic conductivity of solid electrolytes.",
+   "rotated_deg": 0,
+   "bbox": [
+    72.0,
+    85.0,
+    523.3,
+    494.5
+   ],
+   "w": 1254,
+   "h": 1138,
+   "dpi": 200,
+   "src": "da465ce2-27._Sup_Shear_force_effect_of_the_dry_process_on_cathode_contact_coverage_in_all-solid-state_batteries.pdf",
+   "blank": 0.657,
+   "auto_bbox": [
+    66.0,
+    79.0,
+    531.9,
+    500.5
+   ],
+   "native_dpi": 199.9,
+   "recrop": "2026-10-13 손 재크롭 — 래스터 경계 그대로 · 원본 해상도 200 dpi (업샘플 없음). 자동 bbox 는 래스터보다 넓은 여백 + 300 dpi 업샘플.",
+   "viewed": true
+  },
+  {
+   "key": "fS17",
+   "kind": "figure",
+   "label": "S17",
+   "page": 17,
+   "file": "fig_S17.png",
+   "caption": "Figure S17. Simulation results with medium particle size. Electrochemical modeling results of single lithium nickel manganese cobalt oxide (NMC) particle with different coverages and C-rates. Lithium-ion concentration contours in the NMC particles at the end of discharging. The modelling parameters: R = 5 µm, cond. = 1 mS cm−1, and clumped configuration, where R indicates the radius of the particle and cond. indicates the ionic conductivity of solid electrolytes.",
+   "rotated_deg": 0,
+   "bbox": [
+    72.0,
+    85.0,
+    523.3,
+    513.6
+   ],
+   "w": 1254,
+   "h": 1191,
+   "dpi": 200,
+   "src": "da465ce2-27._Sup_Shear_force_effect_of_the_dry_process_on_cathode_contact_coverage_in_all-solid-state_batteries.pdf",
+   "blank": 0.659,
+   "auto_bbox": [
+    66.0,
+    79.0,
+    531.9,
+    519.6
+   ],
+   "native_dpi": 199.9,
+   "recrop": "2026-10-13 손 재크롭 — 래스터 경계 그대로 · 원본 해상도 200 dpi (업샘플 없음). 자동 bbox 는 래스터보다 넓은 여백 + 300 dpi 업샘플.",
+   "viewed": true
+  },
+  {
+   "key": "fS18",
+   "kind": "figure",
+   "label": "S18",
+   "page": 18,
+   "file": "fig_S18.png",
+   "caption": "Figure S18. Simulation results with small particle size. Electrochemical modeling results of single lithium nickel manganese cobalt oxide (NMC) particle with different coverages and C-rates. The modelling parameters: R = 2 µm, cond. = 1 mS cm−1, and clumped configuration, where R indicates the radius of the particle and cond. indicates the ionic conductivity of solid electrolytes.",
+   "rotated_deg": 0,
+   "bbox": [
+    72.0,
+    85.0,
+    523.3,
+    502.9
+   ],
+   "w": 1254,
+   "h": 1161,
+   "dpi": 200,
+   "src": "da465ce2-27._Sup_Shear_force_effect_of_the_dry_process_on_cathode_contact_coverage_in_all-solid-state_batteries.pdf",
+   "blank": 0.66,
+   "auto_bbox": [
+    66.0,
+    79.0,
+    531.9,
+    508.9
+   ],
+   "native_dpi": 199.9,
+   "recrop": "2026-10-13 손 재크롭 — 래스터 경계 그대로 · 원본 해상도 200 dpi (업샘플 없음). 자동 bbox 는 래스터보다 넓은 여백 + 300 dpi 업샘플.",
+   "viewed": true
+  },
+  {
+   "key": "fS19",
+   "kind": "figure",
+   "label": "S19",
+   "page": 19,
+   "file": "fig_S19.png",
+   "caption": "Figure S19. Simulation results spaced coverages. Electrochemical modeling results of single lithium nickel manganese cobalt oxide (NMC) particle with different coverages and C-rates. (a) Lithium-ion concentration contours in the NMC particles at the end of discharging. Voltage profiles at different C-rates of (b) 0.2C, (c) 1C, and (d) 5C. The modelling parameters: R = 10 µm, cond. = 1 mS cm−1, and spaced configuration, where R indicates the radius of the particle and cond. indicates the ionic conductivity of solid electrolytes.",
+   "rotated_deg": 0,
+   "bbox": [
+    72.0,
+    85.0,
+    523.3,
+    382.6
+   ],
+   "w": 1254,
+   "h": 827,
+   "dpi": 200,
+   "src": "da465ce2-27._Sup_Shear_force_effect_of_the_dry_process_on_cathode_contact_coverage_in_all-solid-state_batteries.pdf",
+   "blank": 0.694,
+   "auto_bbox": [
+    66.0,
+    79.0,
+    575.1,
+    388.6
+   ],
+   "native_dpi": 199.9,
+   "recrop": "2026-10-13 손 재크롭 — 래스터 경계 그대로 · 원본 해상도 200 dpi (업샘플 없음). 자동 bbox 는 래스터보다 넓은 여백 + 300 dpi 업샘플.",
+   "viewed": true
+  },
+  {
+   "key": "fS20",
+   "kind": "figure",
+   "label": "S20",
+   "page": 20,
+   "file": "fig_S20.png",
+   "caption": "Figure S20. Expansion to multi-particle model. (a) Schematics of single-particle and multi-particle models. (b) Lithium-ion concentration contours of multi-particle models at the end of discharge, depending on longitudinal direction.",
+   "rotated_deg": 0,
+   "bbox": [
+    72.0,
+    85.0,
+    523.3,
+    449.6
+   ],
+   "w": 1379,
+   "h": 1115,
+   "dpi": 220,
+   "src": "da465ce2-27._Sup_Shear_force_effect_of_the_dry_process_on_cathode_contact_coverage_in_all-solid-state_batteries.pdf",
+   "blank": 0.63,
+   "auto_bbox": [
+    66.0,
+    79.0,
+    532.2,
+    455.6
+   ],
+   "native_dpi": 219.8,
+   "recrop": "2026-10-13 손 재크롭 — 래스터 경계 그대로 · 원본 해상도 220 dpi (업샘플 없음). 자동 bbox 는 래스터보다 넓은 여백 + 300 dpi 업샘플.",
+   "viewed": true
+  },
+  {
+   "key": "fS21",
+   "kind": "figure",
+   "label": "S21",
+   "page": 21,
+   "file": "fig_S21.png",
+   "caption": "Figure S21. Simulation results with multiple particles. Lithium-ion concentration contours at the end of discharge of multi-particle models with different coverages, C-rates, and same orientations.",
+   "rotated_deg": 0,
+   "bbox": [
+    72.0,
+    85.1,
+    523.3,
+    265.5
+   ],
+   "w": 1379,
+   "h": 553,
+   "dpi": 220,
+   "src": "da465ce2-27._Sup_Shear_force_effect_of_the_dry_process_on_cathode_contact_coverage_in_all-solid-state_batteries.pdf",
+   "blank": 0.776,
+   "auto_bbox": [
+    66.0,
+    79.1,
+    532.1,
+    271.5
+   ],
+   "native_dpi": 220.0,
+   "recrop": "2026-10-13 손 재크롭 — 래스터 경계 그대로 · 원본 해상도 220 dpi (업샘플 없음). 자동 bbox 는 래스터보다 넓은 여백 + 300 dpi 업샘플.",
+   "viewed": true
+  },
+  {
+   "key": "fS22",
+   "kind": "figure",
+   "label": "S22",
+   "page": 21,
+   "file": "fig_S22.png",
+   "caption": "Figure S22. Simulation results random orientations. Lithium-ion concentration contours at the end of discharge of multi-particle models with different coverages, C-rates, and random orientations.",
+   "rotated_deg": 0,
+   "bbox": [
+    72.0,
+    364.0,
+    523.3,
+    546.8
+   ],
+   "w": 1379,
+   "h": 559,
+   "dpi": 220,
+   "src": "da465ce2-27._Sup_Shear_force_effect_of_the_dry_process_on_cathode_contact_coverage_in_all-solid-state_batteries.pdf",
+   "blank": 0.765,
+   "auto_bbox": [
+    66.0,
+    358.0,
+    532.1,
+    552.8
+   ],
+   "native_dpi": 220.0,
+   "recrop": "2026-10-13 손 재크롭 — 래스터 경계 그대로 · 원본 해상도 220 dpi (업샘플 없음). 자동 bbox 는 래스터보다 넓은 여백 + 300 dpi 업샘플.",
+   "viewed": true
+  },
+  {
+   "key": "fS23",
+   "kind": "figure",
+   "label": "S23",
+   "page": 22,
+   "file": "fig_S23.png",
+   "caption": "Figure S23. Rate capability tests with liquid electrolyte. Rate capability of cells with liquid electrolyte at (a) 25oC and (b) 60oC. The mass loading and areal capacity were 23.5 mg cm−2 and 4.23 mAh cm−2, respectively.",
+   "rotated_deg": 0,
+   "bbox": [
+    72.0,
+    85.0,
+    523.3,
+    271.6
+   ],
+   "w": 1379,
+   "h": 571,
+   "dpi": 220,
+   "src": "da465ce2-27._Sup_Shear_force_effect_of_the_dry_process_on_cathode_contact_coverage_in_all-solid-state_batteries.pdf",
+   "blank": 0.915,
+   "auto_bbox": [
+    66.0,
+    79.0,
+    532.2,
+    277.6
+   ],
+   "native_dpi": 220.0,
+   "recrop": "2026-10-13 손 재크롭 — 래스터 경계 그대로 · 원본 해상도 220 dpi (업샘플 없음). 자동 bbox 는 래스터보다 넓은 여백 + 300 dpi 업샘플.",
+   "viewed": true
+  },
+  {
+   "key": "fS24",
+   "kind": "figure",
+   "label": "S24",
+   "page": 22,
+   "file": "fig_S24.png",
+   "caption": "Figure S24. Voltage profiles at 0.1C. Voltage profiles of liquid electrolyte, pellet, wet, and dry electrodes at (a) 25oC and (b) 60oC.",
+   "rotated_deg": 0,
+   "bbox": [
+    72.0,
+    394.6,
+    523.3,
+    583.9
+   ],
+   "w": 1379,
+   "h": 580,
+   "dpi": 220,
+   "src": "da465ce2-27._Sup_Shear_force_effect_of_the_dry_process_on_cathode_contact_coverage_in_all-solid-state_batteries.pdf",
+   "blank": 0.851,
+   "auto_bbox": [
+    66.0,
+    388.6,
+    532.2,
+    589.9
+   ],
+   "native_dpi": 220.0,
+   "recrop": "2026-10-13 손 재크롭 — 래스터 경계 그대로 · 원본 해상도 220 dpi (업샘플 없음). 자동 bbox 는 래스터보다 넓은 여백 + 300 dpi 업샘플.",
+   "viewed": true
+  },
+  {
+   "key": "fS25",
+   "kind": "figure",
+   "label": "S25",
+   "page": 23,
+   "file": "fig_S25.png",
+   "caption": "Figure S25. Voltage profiles at different C-rates. Voltage profiles of (a, d) pellet, (b, e) wet, and (e, f) dry electrodes with various C-rates at 25oC and 60oC.",
+   "rotated_deg": 0,
+   "bbox": [
+    72.0,
+    85.0,
+    523.3,
+    341.1
+   ],
+   "w": 1379,
+   "h": 784,
+   "dpi": 220,
+   "src": "da465ce2-27._Sup_Shear_force_effect_of_the_dry_process_on_cathode_contact_coverage_in_all-solid-state_batteries.pdf",
+   "blank": 0.799,
+   "auto_bbox": [
+    66.0,
+    79.0,
+    532.2,
+    347.1
+   ],
+   "native_dpi": 220.0,
+   "recrop": "2026-10-13 손 재크롭 — 래스터 경계 그대로 · 원본 해상도 220 dpi (업샘플 없음). 자동 bbox 는 래스터보다 넓은 여백 + 300 dpi 업샘플.",
+   "viewed": true
+  },
+  {
+   "key": "fS26",
+   "kind": "figure",
+   "label": "S26",
+   "page": 23,
+   "file": "fig_S26.png",
+   "caption": "Figure S26. Analysis of overpotential. Overpotential of pellet, wet, and dry electrodes at (a) 25oC and (b) 60oC.",
+   "rotated_deg": 0,
+   "bbox": [
+    72.0,
+    472.5,
+    523.3,
+    664.2
+   ],
+   "w": 1254,
+   "h": 534,
+   "dpi": 200,
+   "src": "da465ce2-27._Sup_Shear_force_effect_of_the_dry_process_on_cathode_contact_coverage_in_all-solid-state_batteries.pdf",
+   "blank": 0.702,
+   "auto_bbox": [
+    66.0,
+    466.5,
+    532.2,
+    670.2
+   ],
+   "native_dpi": 199.9,
+   "recrop": "2026-10-13 손 재크롭 — 래스터 경계 그대로 · 원본 해상도 200 dpi (업샘플 없음). 자동 bbox 는 래스터보다 넓은 여백 + 300 dpi 업샘플.",
+   "viewed": true
+  },
+  {
+   "kind": "table",
+   "label": "S1",
+   "page": 24,
+   "bbox": [
+    72.0,
+    85.0,
+    541.0,
+    412.0
+   ],
+   "dpi": 300,
+   "src": "da465ce2-27._Sup_Shear_force_effect_of_the_dry_process_on_cathode_contact_coverage_in_all-solid-state_batteries.pdf",
+   "caption": "Table S1. Modeling parameters. Parameter ranges used for various modeling.",
+   "manual_crop": "2026-10-13 손 크롭 — 자동 추출이 '거의 백지' 로 건너뜀 (표가 캡션 위에 있음). 벡터 표 300 dpi.",
+   "key": "tS1",
+   "file": "tab_S1.png",
+   "w": 1955,
+   "h": 1363,
+   "blank": 0.882,
+   "rotated_deg": 0,
+   "viewed": true
+  }
+ ],
+ "missing_labels": [],
+ "note_manual": "2026-10-13 큐레이터 검수 — 32 장 전부 Read 로 열람 (viewed). 본문 그림 5 + SI 그림 26 + SI 표 1 = 캡션 목록 32 와 같다 (빠진 번호 없음 · 본문 표 없음). 손 크롭 2 (fig_3 · tab_S1 — 자동 추출이 건너뜀) · 손 재크롭 28 (fig_4 · fig_5 = 자동 bbox 가 패널 · 머리 글을 잘랐다 / SI 26 = 래스터 경계 · 원본 해상도 160–220 dpi, 업샘플 없음). fig_1 · fig_2 = 자동 크롭 그대로 (래스터 300 dpi · 잘림 없음). PNG 는 PIL optimize 로 무손실 재압축. ⚠ litdb/figures/_sources.json 은 건드리지 않았다 (공유 파일 — 메인 세션이 반영)."
+}

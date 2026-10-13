@@ -369,6 +369,13 @@
    "DEM 논문/29. Transport and mechanical aspects of all-solid-state lithium batteries.pdf"
   ]
  },
+ "diener2022_roll_gap_springback_calendering": {
+  "figures": 11,
+  "generated": "2026-10-13",
+  "pdfs": [
+   "7. Evaluation of deformation behavior and fast elastic recovery of lithium‐ion battery cathodes via direct roll‐gap detection during calendering.pdf"
+  ]
+ },
  "dmt1975_adhesion_contact_deformation": {
   "figures": 2,
   "generated": "2026-08-05",
@@ -629,6 +636,14 @@
   "pdfs": [
    "102._Halogen_chemistry_of_solid_electrolytes_in_allsolidstate_batteries.pdf",
    "102._Sup_Halogen_chemistry_of_solid_electrolytes_in_allsolidstate_batteries.pdf"
+  ]
+ },
+ "heck2026_densification_sulfide_se_binder_scalable": {
+  "figures": 34,
+  "generated": "2026-10-13",
+  "pdfs": [
+   "6. Evaluating densification effects on sulfide-based electrolytes to examine an application in scalable solid-state battery manufacturing.pdf",
+   "6. Sup) Evaluating densification effects on sulfide-based electrolytes to examine an application in scalable solid-state battery manufacturing.pdf"
   ]
  },
  "hikima2022_operando_band_structure_assb": {

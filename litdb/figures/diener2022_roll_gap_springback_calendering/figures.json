@@ -1,0 +1,265 @@
+{
+ "slug": "diener2022_roll_gap_springback_calendering",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-10-13",
+ "sources": [
+  "7. Evaluation of deformation behavior and fast elastic recovery of lithium‐ion battery cathodes via direct roll‐gap detection during calendering.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 4,
+   "file": "fig_1.png",
+   "caption": "Figure 1. a) Direct gap detection system, 1) upper roll, 2) lower roll, 3) position sensor detecting the position of the upper roll, 4) position sensor detection position of the lower roll, 5) sensor bracket for the insertion into the gap, 6) roll bearing, and 7) roll shaft. b) Indirect gap detection system used for gap control by the GKL400 calender. 1) Tactile gauge indirectly detecting the roll position through a 2) bolt attached to the 3) roll mill.",
+   "rotated_deg": 0,
+   "bbox": [
+    42.0,
+    65.5,
+    550.1,
+    480.9
+   ],
+   "w": 2117,
+   "h": 1732,
+   "dpi": 300,
+   "src": "7. Evaluation of deformation behavior and fast elastic recovery of lithium‐ion battery cathodes via direct roll‐gap detection during calendering.pdf",
+   "blank": 0.635,
+   "viewed": true
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 5,
+   "file": "fig_2.png",
+   "caption": "Figure 2. a) Comparison of the direct and indirect detection of the roll position. 1) Detected displacement of the upper roll by the direct detection of the roll position, 2) detected displacement of the lower roll by the direct detection of the roll position, 3) peak of the displacement and a certain correction by the gap control system, 4) peak of the displacement measured by the indirect detection system, suggesting a good correction of the displacement by the gap control system, and 5) opening of the lower roll through the displacement correction of the upper roll. b) Correlation of the directly measured roll gap ΓD and the line load qL in comparison with the target gap ΓT and the resulting roll shift ΔΓD-T.",
+   "rotated_deg": 0,
+   "bbox": [
+    45.0,
+    65.5,
+    553.0,
+    251.6
+   ],
+   "w": 2118,
+   "h": 777,
+   "dpi": 300,
+   "src": "7. Evaluation of deformation behavior and fast elastic recovery of lithium‐ion battery cathodes via direct roll‐gap detection during calendering.pdf",
+   "blank": 0.922,
+   "viewed": true
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 5,
+   "file": "fig_3.png",
+   "caption": "Figure 3. a) Comparison of the roll shift for different mass loadings and b) binder weight content. c) Impact of the coating thickness on the roll shift and the corresponding line load.",
+   "rotated_deg": 0,
+   "bbox": [
+    45.0,
+    324.6,
+    553.0,
+    696.0
+   ],
+   "w": 2118,
+   "h": 1549,
+   "dpi": 300,
+   "src": "7. Evaluation of deformation behavior and fast elastic recovery of lithium‐ion battery cathodes via direct roll‐gap detection during calendering.pdf",
+   "blank": 0.952,
+   "viewed": true
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 6,
+   "file": "fig_4.png",
+   "caption": "Figure 4. Schematic view of the in-gap circumstances including the roll force FN, the electrode thickness before (δEl,ρ0) and after (δEl,ρi) the calen- dering, the in-gap width (δΓ), the plastic (δpl) and elastic (δel) coating deformation, and the depth of roll penetration (hR).",
+   "rotated_deg": 0,
+   "bbox": [
+    42.0,
+    65.5,
+    295.0,
+    236.9
+   ],
+   "w": 1055,
+   "h": 715,
+   "dpi": 300,
+   "src": "7. Evaluation of deformation behavior and fast elastic recovery of lithium‐ion battery cathodes via direct roll‐gap detection during calendering.pdf",
+   "blank": 0.539,
+   "viewed": true
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 7,
+   "file": "fig_5.png",
+   "caption": "Figure 5. a) Compaction behavior for the variation of mass loading MV and b) the variation of binder weight content BV.",
+   "rotated_deg": 0,
+   "bbox": [
+    300.0,
+    65.5,
+    553.0,
+    471.1
+   ],
+   "w": 1055,
+   "h": 1691,
+   "dpi": 300,
+   "src": "7. Evaluation of deformation behavior and fast elastic recovery of lithium‐ion battery cathodes via direct roll‐gap detection during calendering.pdf",
+   "blank": 0.913,
+   "viewed": true
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 8,
+   "file": "fig_6.png",
+   "caption": "Figure 6. a) Correlation of the SB effect and line load for different cathode mass loadings and b) different binder weight contents. Impact of c) the mass loading and d) the binder weight content on the SB effect.",
+   "rotated_deg": 0,
+   "bbox": [
+    42.0,
+    308.4,
+    550.0,
+    696.1
+   ],
+   "w": 2117,
+   "h": 1617,
+   "dpi": 300,
+   "src": "7. Evaluation of deformation behavior and fast elastic recovery of lithium‐ion battery cathodes via direct roll‐gap detection during calendering.pdf",
+   "blank": 0.929,
+   "viewed": true
+  },
+  {
+   "key": "f7",
+   "kind": "figure",
+   "label": "7",
+   "page": 9,
+   "file": "fig_7.png",
+   "caption": "Figure 7. a) Correlation of the SB slope ΔSB/ΔqL with the product of mass loading and binder content MC * wCB. b) Comparison of the SB model with empirical data for the mass loading and c) binder content variation.",
+   "rotated_deg": 0,
+   "bbox": [
+    45.0,
+    318.1,
+    553.0,
+    696.5
+   ],
+   "w": 2118,
+   "h": 1578,
+   "dpi": 300,
+   "src": "7. Evaluation of deformation behavior and fast elastic recovery of lithium‐ion battery cathodes via direct roll‐gap detection during calendering.pdf",
+   "blank": 0.946,
+   "viewed": true
+  },
+  {
+   "key": "f8",
+   "kind": "figure",
+   "label": "8",
+   "page": 10,
+   "file": "fig_8.png",
+   "caption": "Figure 8. a) Correlation of the elastic deformation ratio and line load for the variations of mass loading and b) the variation of binder weight content.",
+   "rotated_deg": 0,
+   "bbox": [
+    42.0,
+    511.3,
+    550.1,
+    706.6
+   ],
+   "w": 2117,
+   "h": 814,
+   "dpi": 300,
+   "src": "7. Evaluation of deformation behavior and fast elastic recovery of lithium‐ion battery cathodes via direct roll‐gap detection during calendering.pdf",
+   "blank": 0.927,
+   "viewed": true
+  },
+  {
+   "key": "t1",
+   "kind": "table",
+   "label": "1",
+   "page": 2,
+   "file": "tab_1.png",
+   "caption": "Table 1. Structural parameters of the manufactured cathodes for binder variation (BV).",
+   "rotated_deg": 0,
+   "bbox": [
+    300.0,
+    616.0,
+    547.0,
+    718.0
+   ],
+   "w": 1030,
+   "h": 426,
+   "dpi": 300,
+   "src": "7. Evaluation of deformation behavior and fast elastic recovery of lithium‐ion battery cathodes via direct roll‐gap detection during calendering.pdf",
+   "blank": 0.871,
+   "auto_bbox": [
+    43.0,
+    11.9,
+    589.3,
+    771.9
+   ],
+   "recrop": "2026-10-13 수동 재크롭 — 자동 bbox 가 쪽 전체 (2156x2999). clip = 캡션 'Table 1.' (y 619.5) ~ 마지막 행 'Coating thickness' (y 713.5) + 여백 · x = 오른 단 (303–544).",
+   "viewed": true
+  },
+  {
+   "key": "t2",
+   "kind": "table",
+   "label": "2",
+   "page": 3,
+   "file": "tab_2.png",
+   "caption": "Table 2. Structural parameters of the manufactured cathodes for mass loading variation (MV).",
+   "rotated_deg": 0,
+   "bbox": [
+    48.0,
+    68.0,
+    295.0,
+    180.0
+   ],
+   "w": 1030,
+   "h": 467,
+   "dpi": 300,
+   "src": "7. Evaluation of deformation behavior and fast elastic recovery of lithium‐ion battery cathodes via direct roll‐gap detection during calendering.pdf",
+   "blank": 0.876,
+   "auto_bbox": [
+    46.0,
+    11.9,
+    589.3,
+    771.9
+   ],
+   "recrop": "2026-10-13 수동 재크롭 — 자동 bbox 가 쪽 전체 (2144x2999). clip = 캡션 'Table 2.' (y 71.5) ~ 'Coating thickness' 행 (y 176.4) + 여백 · x = 왼 단 (51–292).",
+   "viewed": true
+  },
+  {
+   "key": "t3",
+   "kind": "table",
+   "label": "3",
+   "page": 6,
+   "file": "tab_3.png",
+   "caption": "Table 3. Roll ﬂattening w0 of the calender rolls for increasing roll force FN regarding Equation (7).",
+   "rotated_deg": 0,
+   "bbox": [
+    300.0,
+    655.0,
+    547.0,
+    717.0
+   ],
+   "w": 1030,
+   "h": 259,
+   "dpi": 300,
+   "src": "7. Evaluation of deformation behavior and fast elastic recovery of lithium‐ion battery cathodes via direct roll‐gap detection during calendering.pdf",
+   "blank": 0.854,
+   "auto_bbox": [
+    43.0,
+    11.9,
+    589.3,
+    771.9
+   ],
+   "recrop": "2026-10-13 수동 재크롭 — 자동 bbox 가 쪽 전체 (2156x2999). clip = 캡션 'Table 3.' (y 658.2) ~ 'w0 [μm]' 행 (y 713.5) + 여백 · x = 오른 단.",
+   "viewed": true
+  }
+ ],
+ "missing_labels": [],
+ "note_manual": "2026-10-13 — 손 크롭 3 장 (tab_1 · tab_2 · tab_3 = 자동 bbox 가 쪽 전체) · 판독 원자료 digitized.csv 166 행 · Fig 2b 직접 간극은 축 눈금 + 색 표지 무게중심으로 대조 · 크롭 전부 Read (낱장 또는 contact sheet) 로 확인"
+}

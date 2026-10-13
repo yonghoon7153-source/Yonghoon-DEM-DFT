@@ -1,0 +1,41 @@
+# begat2004_cohesive_adhesive_balance_afm_colloid_probe — hand/pixel-read values.
+# Source images: the PDF's embedded 144-ppi JPEG figures (pdfimages, 480 px wide) — figure crops in this folder are 300-dpi renders of the same rasters.
+# Bars (Figs 4-6): baseline row and y-ticks detected (0..350 nN, 43.14 px per 50 nN); bar top = median over the bar width; precision ±1 px = ±1.2 nN (small bars <15 nN: ±20 %). Error-bar caps excluded.
+# Fig 8: point centroids (calibrated on the printed axes, bisector line reads slope 1.00-1.03); drawn regression lines traced by single dotted pixels. TREND / consistency checks only.
+figure,series,substrate_or_axis,value_nN_or_slope,method,note
+4,budesonide probe 1,lactose,80.0,bar height (n+1)/0.8629 px/nN; ±1.2 nN (1 px),
+4,budesonide probe 2,lactose,52.1,bar height (n+1)/0.8629 px/nN; ±1.2 nN (1 px),
+4,budesonide probe 3,lactose,44.0,bar height (n+1)/0.8629 px/nN; ±1.2 nN (1 px),
+4,budesonide probe 1,salbutamol sulfate,61.4,bar height (n+1)/0.8629 px/nN; ±1.2 nN (1 px),
+4,budesonide probe 2,salbutamol sulfate,44.0,bar height (n+1)/0.8629 px/nN; ±1.2 nN (1 px),
+4,budesonide probe 3,salbutamol sulfate,35.9,bar height (n+1)/0.8629 px/nN; ±1.2 nN (1 px),
+4,budesonide probe 1,budesonide,299.0,bar height (n+1)/0.8629 px/nN; ±1.2 nN (1 px),
+4,budesonide probe 2,budesonide,204.0,bar height (n+1)/0.8629 px/nN; ±1.2 nN (1 px),
+4,budesonide probe 3,budesonide,178.5,bar height (n+1)/0.8629 px/nN; ±1.2 nN (1 px),
+5,salbutamol sulfate probe 1,lactose,163.4,bar height (n+1)/0.8629 px/nN; ±1.2 nN (1 px),
+5,salbutamol sulfate probe 2,lactose,155.3,bar height (n+1)/0.8629 px/nN; ±1.2 nN (1 px),
+5,salbutamol sulfate probe 3,lactose,132.1,bar height (n+1)/0.8629 px/nN; ±1.2 nN (1 px),
+5,salbutamol sulfate probe 1,salbutamol sulfate,11.6,bar height (n+1)/0.8629 px/nN; ±1.2 nN (1 px),
+5,salbutamol sulfate probe 2,salbutamol sulfate,11.6,bar height (n+1)/0.8629 px/nN; ±1.2 nN (1 px),
+5,salbutamol sulfate probe 3,salbutamol sulfate,,bar too short to segment (<10 nN); read by eye ~8 nN,"native image img (480x335, 144 ppi)"
+5,salbutamol sulfate probe 1,budesonide,67.2,bar height (n+1)/0.8629 px/nN; ±1.2 nN (1 px),
+5,salbutamol sulfate probe 2,budesonide,61.4,bar height (n+1)/0.8629 px/nN; ±1.2 nN (1 px),
+5,salbutamol sulfate probe 3,budesonide,51.0,bar height (n+1)/0.8629 px/nN; ±1.2 nN (1 px),
+6,lactose probe 1,lactose,181.9,bar height (n+1)/0.8629 px/nN; ±1.2 nN (1 px),
+6,lactose probe 2,lactose,143.7,bar height (n+1)/0.8629 px/nN; ±1.2 nN (1 px),
+6,lactose probe 3,lactose,119.4,bar height (n+1)/0.8629 px/nN; ±1.2 nN (1 px),
+6,lactose probe 1,salbutamol sulfate,221.3,bar height (n+1)/0.8629 px/nN; ±1.2 nN (1 px),
+6,lactose probe 2,salbutamol sulfate,172.7,bar height (n+1)/0.8629 px/nN; ±1.2 nN (1 px),
+6,lactose probe 3,salbutamol sulfate,137.9,bar height (n+1)/0.8629 px/nN; ±1.2 nN (1 px),
+6,lactose probe 1,budesonide,70.7,bar height (n+1)/0.8629 px/nN; ±1.2 nN (1 px),
+6,lactose probe 2,budesonide,61.4,bar height (n+1)/0.8629 px/nN; ±1.2 nN (1 px),
+6,lactose probe 3,budesonide,52.1,bar height (n+1)/0.8629 px/nN; ±1.2 nN (1 px),
+8,budesonide probe (filled),x=F_adh(bud-lac) / y=F_coh(bud-bud),"(43.8, 177.3)",point centroid,
+8,budesonide probe (filled),x / y,"(52.3, 203.0)",point centroid,
+8,budesonide probe (filled),x / y,"(79.2, 301.8)",point centroid,
+8,lactose probe (grey),x=F_adh(lac-bud) / y=F_coh(lac-lac),"(50.6, 118.5)",point centroid,
+8,lactose probe (grey),x / y,"(61.1, 143.2)",point centroid,
+8,lactose probe (grey),x / y,"(70.2, 168.8)",point centroid,Fig 6 bar for the same probe reads 181.9 nN (7 % higher)
+8,drawn regression line (steep),slope,3.9 (3.87-4.00 along the line),dotted-pixel trace,printed label y = 4.5371x; text 3.84
+8,drawn regression line (second),slope,2.4 (2.36-2.44 along the line),dotted-pixel trace,printed label y = 2.0186x; text 2.36
+8,bisector F_adh = F_coh,slope,1.00-1.03,dotted-pixel trace,calibration check

@@ -1,0 +1,110 @@
+# nakamura2020_dry_coating_ncm_li3ps4_core_shell — figure readings (판독) · 2026-10-13
+# method: Fig 6b raster (300 dpi native) — plot frame and x ticks located by pixel scan (x: 17.25 px/cycle, cycle 10 at px 889; y: 0 at px 426.5, 200 at px 38),
+#   red/black blobs classified by fill ratio (filled square = charge, open ring = discharge). Precision about +-2 mAh/g (overlapping charge/discharge markers
+#   in the same cycle shift blob centres). Cycle-1 simple-mixture markers merge with the left frame (not read; printed 1st-cycle discharge 131).
+# printed (인쇄) values are NOT repeated here (card §3: 150/131/151 mAh/g 1st cycle; 76->63 and 131->123 mAh/g at cycles 26/50; Table 1, Table 2).
+# columns: figure,panel,series,x,x_unit,y,y_unit,note
+figure,panel,series,x,x_unit,y,y_unit,note
+6,b,NCM@LPS charge,1,cycle,172.7,mAh/g-NCM,raster pixel filled square; 0.064 mA/cm2 (0.05C)
+6,b,NCM@LPS charge (block start),5,cycle,152.9,mAh/g-NCM,raster pixel filled square; plotted = recharge after previous discharge
+6,b,NCM@LPS charge (block start),9,cycle,134.4,mAh/g-NCM,raster pixel filled square; plotted = recharge after previous discharge
+6,b,NCM@LPS charge (block start),13,cycle,99.1,mAh/g-NCM,raster pixel filled square; plotted = recharge after previous discharge
+6,b,NCM@LPS charge (block start),17,cycle,81.9,mAh/g-NCM,raster pixel filled square; plotted = recharge after previous discharge
+6,b,NCM@LPS charge (block start),21,cycle,36.3,mAh/g-NCM,raster pixel filled square; plotted = recharge after previous discharge
+6,b,NCM@LPS charge (block start),25,cycle,5.7,mAh/g-NCM,raster pixel filled square; plotted = recharge after previous discharge
+6,b,NCM@LPS discharge,1,cycle,150.3,mAh/g-NCM,raster pixel ring centre; 0.064 mA/cm2 (0.05C)
+6,b,NCM@LPS discharge,2,cycle,150.6,mAh/g-NCM,raster pixel ring centre; 0.064 mA/cm2 (0.05C); may be biased <=2 by overlapping charge marker
+6,b,NCM@LPS discharge,3,cycle,150.3,mAh/g-NCM,raster pixel ring centre; 0.064 mA/cm2 (0.05C); may be biased <=2 by overlapping charge marker
+6,b,NCM@LPS discharge,4,cycle,150.1,mAh/g-NCM,raster pixel ring centre; 0.064 mA/cm2 (0.05C); may be biased <=2 by overlapping charge marker
+6,b,NCM@LPS discharge,5,cycle,136.9,mAh/g-NCM,raster pixel ring centre; 0.26 mA/cm2 (0.2C); may be biased <=2 by overlapping charge marker
+6,b,NCM@LPS discharge,6,cycle,136.4,mAh/g-NCM,raster pixel ring centre; 0.26 mA/cm2 (0.2C); may be biased <=2 by overlapping charge marker
+6,b,NCM@LPS discharge,7,cycle,135.1,mAh/g-NCM,raster pixel ring centre; 0.26 mA/cm2 (0.2C); may be biased <=2 by overlapping charge marker
+6,b,NCM@LPS discharge,8,cycle,134.4,mAh/g-NCM,raster pixel ring centre; 0.26 mA/cm2 (0.2C); may be biased <=2 by overlapping charge marker
+6,b,NCM@LPS discharge,9,cycle,102.4,mAh/g-NCM,raster pixel ring centre; 0.64 mA/cm2 (0.5C); may be biased <=2 by overlapping charge marker
+6,b,NCM@LPS discharge,10,cycle,101.7,mAh/g-NCM,raster pixel ring centre; 0.64 mA/cm2 (0.5C); may be biased <=2 by overlapping charge marker
+6,b,NCM@LPS discharge,11,cycle,100.4,mAh/g-NCM,raster pixel ring centre; 0.64 mA/cm2 (0.5C); may be biased <=2 by overlapping charge marker
+6,b,NCM@LPS discharge,12,cycle,99.4,mAh/g-NCM,raster pixel ring centre; 0.64 mA/cm2 (0.5C); may be biased <=2 by overlapping charge marker
+6,b,NCM@LPS discharge,14,cycle,85.2,mAh/g-NCM,raster pixel ring centre; 1.28 mA/cm2 (1C); may be biased <=2 by overlapping charge marker
+6,b,NCM@LPS discharge,15,cycle,83.7,mAh/g-NCM,raster pixel ring centre; 1.28 mA/cm2 (1C); may be biased <=2 by overlapping charge marker
+6,b,NCM@LPS discharge,16,cycle,82.4,mAh/g-NCM,raster pixel ring centre; 1.28 mA/cm2 (1C); may be biased <=2 by overlapping charge marker
+6,b,NCM@LPS discharge,17,cycle,41.7,mAh/g-NCM,raster pixel ring centre; 2.56 mA/cm2 (2C); may be biased <=2 by overlapping charge marker
+6,b,NCM@LPS discharge,18,cycle,40.7,mAh/g-NCM,raster pixel ring centre; 2.56 mA/cm2 (2C); may be biased <=2 by overlapping charge marker
+6,b,NCM@LPS discharge,19,cycle,38.4,mAh/g-NCM,raster pixel ring centre; 2.56 mA/cm2 (2C); may be biased <=2 by overlapping charge marker
+6,b,NCM@LPS discharge,20,cycle,36.8,mAh/g-NCM,raster pixel ring centre; 2.56 mA/cm2 (2C); may be biased <=2 by overlapping charge marker
+6,b,NCM@LPS discharge,22,cycle,6.7,mAh/g-NCM,raster pixel ring centre; 6.40 mA/cm2 (5C); may be biased <=2 by overlapping charge marker
+6,b,NCM@LPS discharge,23,cycle,5.9,mAh/g-NCM,raster pixel ring centre; 6.40 mA/cm2 (5C); may be biased <=2 by overlapping charge marker
+6,b,NCM@LPS discharge,24,cycle,5.7,mAh/g-NCM,raster pixel ring centre; 6.40 mA/cm2 (5C); may be biased <=2 by overlapping charge marker
+6,b,NCM@LPS discharge,25,cycle,128.7,mAh/g-NCM,raster pixel ring centre; 0.26 mA/cm2 (0.2C); may be biased <=2 by overlapping charge marker
+6,b,NCM@LPS discharge,26,cycle,129.2,mAh/g-NCM,raster pixel ring centre; 0.26 mA/cm2 (0.2C); may be biased <=2 by overlapping charge marker
+6,b,NCM@LPS discharge,27,cycle,131.0,mAh/g-NCM,raster pixel ring centre; 0.26 mA/cm2 (0.2C); may be biased <=2 by overlapping charge marker
+6,b,NCM@LPS discharge,28,cycle,131.0,mAh/g-NCM,raster pixel ring centre; 0.26 mA/cm2 (0.2C); may be biased <=2 by overlapping charge marker
+6,b,NCM@LPS discharge,29,cycle,130.5,mAh/g-NCM,raster pixel ring centre; 0.26 mA/cm2 (0.2C); may be biased <=2 by overlapping charge marker
+6,b,NCM@LPS discharge,30,cycle,130.0,mAh/g-NCM,raster pixel ring centre; 0.26 mA/cm2 (0.2C); may be biased <=2 by overlapping charge marker
+6,b,NCM@LPS discharge,31,cycle,130.0,mAh/g-NCM,raster pixel ring centre; 0.26 mA/cm2 (0.2C); may be biased <=2 by overlapping charge marker
+6,b,NCM@LPS discharge,32,cycle,129.2,mAh/g-NCM,raster pixel ring centre; 0.26 mA/cm2 (0.2C); may be biased <=2 by overlapping charge marker
+6,b,NCM@LPS discharge,33,cycle,129.0,mAh/g-NCM,raster pixel ring centre; 0.26 mA/cm2 (0.2C); may be biased <=2 by overlapping charge marker
+6,b,NCM@LPS discharge,34,cycle,128.7,mAh/g-NCM,raster pixel ring centre; 0.26 mA/cm2 (0.2C); may be biased <=2 by overlapping charge marker
+6,b,NCM@LPS discharge,35,cycle,128.2,mAh/g-NCM,raster pixel ring centre; 0.26 mA/cm2 (0.2C); may be biased <=2 by overlapping charge marker
+6,b,NCM@LPS discharge,36,cycle,127.9,mAh/g-NCM,raster pixel ring centre; 0.26 mA/cm2 (0.2C); may be biased <=2 by overlapping charge marker
+6,b,NCM@LPS discharge,37,cycle,127.7,mAh/g-NCM,raster pixel ring centre; 0.26 mA/cm2 (0.2C); may be biased <=2 by overlapping charge marker
+6,b,NCM@LPS discharge,38,cycle,127.2,mAh/g-NCM,raster pixel ring centre; 0.26 mA/cm2 (0.2C); may be biased <=2 by overlapping charge marker
+6,b,NCM@LPS discharge,39,cycle,126.9,mAh/g-NCM,raster pixel ring centre; 0.26 mA/cm2 (0.2C); may be biased <=2 by overlapping charge marker
+6,b,NCM@LPS discharge,40,cycle,126.4,mAh/g-NCM,raster pixel ring centre; 0.26 mA/cm2 (0.2C); may be biased <=2 by overlapping charge marker
+6,b,NCM@LPS discharge,41,cycle,126.1,mAh/g-NCM,raster pixel ring centre; 0.26 mA/cm2 (0.2C); may be biased <=2 by overlapping charge marker
+6,b,NCM@LPS discharge,42,cycle,125.9,mAh/g-NCM,raster pixel ring centre; 0.26 mA/cm2 (0.2C); may be biased <=2 by overlapping charge marker
+6,b,NCM@LPS discharge,43,cycle,125.1,mAh/g-NCM,raster pixel ring centre; 0.26 mA/cm2 (0.2C); may be biased <=2 by overlapping charge marker
+6,b,NCM@LPS discharge,44,cycle,124.8,mAh/g-NCM,raster pixel ring centre; 0.26 mA/cm2 (0.2C); may be biased <=2 by overlapping charge marker
+6,b,NCM@LPS discharge,45,cycle,124.8,mAh/g-NCM,raster pixel ring centre; 0.26 mA/cm2 (0.2C); may be biased <=2 by overlapping charge marker
+6,b,NCM@LPS discharge,46,cycle,124.6,mAh/g-NCM,raster pixel ring centre; 0.26 mA/cm2 (0.2C); may be biased <=2 by overlapping charge marker
+6,b,NCM@LPS discharge,47,cycle,124.1,mAh/g-NCM,raster pixel ring centre; 0.26 mA/cm2 (0.2C); may be biased <=2 by overlapping charge marker
+6,b,NCM@LPS discharge,48,cycle,123.8,mAh/g-NCM,raster pixel ring centre; 0.26 mA/cm2 (0.2C); may be biased <=2 by overlapping charge marker
+6,b,NCM@LPS discharge,49,cycle,123.6,mAh/g-NCM,raster pixel ring centre; 0.26 mA/cm2 (0.2C); may be biased <=2 by overlapping charge marker
+6,b,simple mixture charge (block start),5,cycle,129.2,mAh/g-NCM,raster pixel filled square
+6,b,simple mixture charge (block start),9,cycle,86.0,mAh/g-NCM,raster pixel; plotted = recharge after previous discharge
+6,b,simple mixture charge (block start),13,cycle,44.5,mAh/g-NCM,raster pixel; plotted = recharge after previous discharge
+6,b,simple mixture charge (block start),17,cycle,31.1,mAh/g-NCM,raster pixel; plotted = recharge after previous discharge
+6,b,simple mixture charge (block start),21,cycle,12.1,mAh/g-NCM,raster pixel; plotted = recharge after previous discharge
+6,b,simple mixture discharge,2,cycle,128.4,mAh/g-NCM,raster pixel ring centre; 0.064 mA/cm2 (0.05C); may be biased <=2 by overlapping charge marker
+6,b,simple mixture discharge,3,cycle,126.9,mAh/g-NCM,raster pixel ring centre; 0.064 mA/cm2 (0.05C); may be biased <=2 by overlapping charge marker
+6,b,simple mixture discharge,4,cycle,125.4,mAh/g-NCM,raster pixel ring centre; 0.064 mA/cm2 (0.05C); may be biased <=2 by overlapping charge marker
+6,b,simple mixture discharge,5,cycle,91.6,mAh/g-NCM,raster pixel ring centre; 0.26 mA/cm2 (0.2C); may be biased <=2 by overlapping charge marker
+6,b,simple mixture discharge,6,cycle,90.6,mAh/g-NCM,raster pixel ring centre; 0.26 mA/cm2 (0.2C); may be biased <=2 by overlapping charge marker
+6,b,simple mixture discharge,7,cycle,88.5,mAh/g-NCM,raster pixel ring centre; 0.26 mA/cm2 (0.2C); may be biased <=2 by overlapping charge marker
+6,b,simple mixture discharge,8,cycle,87.3,mAh/g-NCM,raster pixel ring centre; 0.26 mA/cm2 (0.2C); may be biased <=2 by overlapping charge marker
+6,b,simple mixture discharge,9,cycle,45.6,mAh/g-NCM,raster pixel ring centre; 0.64 mA/cm2 (0.5C); may be biased <=2 by overlapping charge marker
+6,b,simple mixture discharge,10,cycle,46.8,mAh/g-NCM,raster pixel ring centre; 0.64 mA/cm2 (0.5C); may be biased <=2 by overlapping charge marker
+6,b,simple mixture discharge,11,cycle,46.1,mAh/g-NCM,raster pixel ring centre; 0.64 mA/cm2 (0.5C); may be biased <=2 by overlapping charge marker
+6,b,simple mixture discharge,12,cycle,45.3,mAh/g-NCM,raster pixel ring centre; 0.64 mA/cm2 (0.5C); may be biased <=2 by overlapping charge marker
+6,b,simple mixture discharge,13,cycle,34.0,mAh/g-NCM,raster pixel ring centre; 1.28 mA/cm2 (1C); may be biased <=2 by overlapping charge marker
+6,b,simple mixture discharge,14,cycle,34.0,mAh/g-NCM,raster pixel ring centre; 1.28 mA/cm2 (1C); may be biased <=2 by overlapping charge marker
+6,b,simple mixture discharge,15,cycle,33.2,mAh/g-NCM,raster pixel ring centre; 1.28 mA/cm2 (1C); may be biased <=2 by overlapping charge marker
+6,b,simple mixture discharge,16,cycle,32.7,mAh/g-NCM,raster pixel ring centre; 1.28 mA/cm2 (1C); may be biased <=2 by overlapping charge marker
+6,b,simple mixture discharge,17,cycle,13.9,mAh/g-NCM,raster pixel ring centre; 2.56 mA/cm2 (2C); may be biased <=2 by overlapping charge marker
+6,b,simple mixture discharge,18,cycle,14.2,mAh/g-NCM,raster pixel ring centre; 2.56 mA/cm2 (2C); may be biased <=2 by overlapping charge marker
+6,b,simple mixture discharge,19,cycle,13.6,mAh/g-NCM,raster pixel ring centre; 2.56 mA/cm2 (2C); may be biased <=2 by overlapping charge marker
+6,b,simple mixture discharge,20,cycle,13.4,mAh/g-NCM,raster pixel ring centre; 2.56 mA/cm2 (2C); may be biased <=2 by overlapping charge marker
+6,b,simple mixture discharge,25,cycle,78.2,mAh/g-NCM,raster pixel ring centre; 0.26 mA/cm2 (0.2C); may be biased <=2 by overlapping charge marker
+6,b,simple mixture discharge,26,cycle,75.7,mAh/g-NCM,raster pixel ring centre; 0.26 mA/cm2 (0.2C); may be biased <=2 by overlapping charge marker
+6,b,simple mixture discharge,27,cycle,76.7,mAh/g-NCM,raster pixel ring centre; 0.26 mA/cm2 (0.2C); may be biased <=2 by overlapping charge marker
+6,b,simple mixture discharge,28,cycle,76.7,mAh/g-NCM,raster pixel ring centre; 0.26 mA/cm2 (0.2C); may be biased <=2 by overlapping charge marker
+6,b,simple mixture discharge,29,cycle,75.9,mAh/g-NCM,raster pixel ring centre; 0.26 mA/cm2 (0.2C); may be biased <=2 by overlapping charge marker
+6,b,simple mixture discharge,30,cycle,75.2,mAh/g-NCM,raster pixel ring centre; 0.26 mA/cm2 (0.2C); may be biased <=2 by overlapping charge marker
+6,b,simple mixture discharge,31,cycle,74.4,mAh/g-NCM,raster pixel ring centre; 0.26 mA/cm2 (0.2C); may be biased <=2 by overlapping charge marker
+6,b,simple mixture discharge,32,cycle,73.9,mAh/g-NCM,raster pixel ring centre; 0.26 mA/cm2 (0.2C); may be biased <=2 by overlapping charge marker
+6,b,simple mixture discharge,33,cycle,73.6,mAh/g-NCM,raster pixel ring centre; 0.26 mA/cm2 (0.2C); may be biased <=2 by overlapping charge marker
+6,b,simple mixture discharge,34,cycle,73.4,mAh/g-NCM,raster pixel ring centre; 0.26 mA/cm2 (0.2C); may be biased <=2 by overlapping charge marker
+6,b,simple mixture discharge,35,cycle,72.3,mAh/g-NCM,raster pixel ring centre; 0.26 mA/cm2 (0.2C); may be biased <=2 by overlapping charge marker
+6,b,simple mixture discharge,36,cycle,71.6,mAh/g-NCM,raster pixel ring centre; 0.26 mA/cm2 (0.2C); may be biased <=2 by overlapping charge marker
+6,b,simple mixture discharge,37,cycle,70.5,mAh/g-NCM,raster pixel ring centre; 0.26 mA/cm2 (0.2C); may be biased <=2 by overlapping charge marker
+6,b,simple mixture discharge,38,cycle,70.0,mAh/g-NCM,raster pixel ring centre; 0.26 mA/cm2 (0.2C); may be biased <=2 by overlapping charge marker
+6,b,simple mixture discharge,39,cycle,69.5,mAh/g-NCM,raster pixel ring centre; 0.26 mA/cm2 (0.2C); may be biased <=2 by overlapping charge marker
+6,b,simple mixture discharge,40,cycle,69.0,mAh/g-NCM,raster pixel ring centre; 0.26 mA/cm2 (0.2C); may be biased <=2 by overlapping charge marker
+6,b,simple mixture discharge,41,cycle,68.0,mAh/g-NCM,raster pixel ring centre; 0.26 mA/cm2 (0.2C); may be biased <=2 by overlapping charge marker
+6,b,simple mixture discharge,42,cycle,67.4,mAh/g-NCM,raster pixel ring centre; 0.26 mA/cm2 (0.2C); may be biased <=2 by overlapping charge marker
+6,b,simple mixture discharge,43,cycle,66.9,mAh/g-NCM,raster pixel ring centre; 0.26 mA/cm2 (0.2C); may be biased <=2 by overlapping charge marker
+6,b,simple mixture discharge,44,cycle,66.4,mAh/g-NCM,raster pixel ring centre; 0.26 mA/cm2 (0.2C); may be biased <=2 by overlapping charge marker
+6,b,simple mixture discharge,45,cycle,65.9,mAh/g-NCM,raster pixel ring centre; 0.26 mA/cm2 (0.2C); may be biased <=2 by overlapping charge marker
+6,b,simple mixture discharge,46,cycle,65.1,mAh/g-NCM,raster pixel ring centre; 0.26 mA/cm2 (0.2C); may be biased <=2 by overlapping charge marker
+6,b,simple mixture discharge,47,cycle,64.9,mAh/g-NCM,raster pixel ring centre; 0.26 mA/cm2 (0.2C); may be biased <=2 by overlapping charge marker
+6,b,simple mixture discharge,48,cycle,64.4,mAh/g-NCM,raster pixel ring centre; 0.26 mA/cm2 (0.2C); may be biased <=2 by overlapping charge marker
+6,b,simple mixture discharge,49,cycle,64.1,mAh/g-NCM,raster pixel ring centre; 0.26 mA/cm2 (0.2C); may be biased <=2 by overlapping charge marker
