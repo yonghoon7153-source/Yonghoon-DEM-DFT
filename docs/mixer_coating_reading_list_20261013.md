@@ -152,7 +152,7 @@
 | NCM · 황화물 SE **분말의 실측 표면 에너지** (IGC · AFM) | 배터리 분말을 직접 잰 문헌을 못 찾음 | 방법론만 (B4-2 · B4-7) · 같은 랩의 AFM-FS W_ad (`lee2026_mechanical_halogen_…`) |
 | **황화물 SE 분말 유동성** (안식각 · Hausner 비 · 전단셀) | 못 찾음 | D3 앵커는 우리 SE 분말로 직접 재야 할 가능성 (B5-1 · B5-3 · B5-4 방법) |
 | 회전 드럼에서 **JKR 점착 · 크기가 다른 이원 미분 혼합** 을 Bond 수로 쓸어 본 DEM | 정확히 맞는 것을 못 찾음 | Jarray 2019 실험 (B3-3) · 정본 `jadidi2023_…` 카드가 모은 원저들 (점착 텀블러 DEM 포함) |
-| 논지 §6 의 **KETI 논문 단서** (10-02 #59 · #62) | 후보 하나 (B2-4) · 소속 확인 못 함 | 1저자 확인 |
+| 논지 §6 의 **KETI 논문 단서** (10-02 #59 · #62) | 후보 하나 (B2-4) · ✅ 10-13 카드 대조: B2-4 (`lee2024_shear_force_dry_process_cathode_coverage`) = KETI 교신 (Seung Ho Choi · KyungSu Kim) 맞음 · 단서 문구 없음 · #62 발화의 *"케티에서 나온 유지성 박사님"* = 새 26 편 저자에 없음 · 정본 카드 중 KETI J.-S. Yu (Ji-Sang Yu · 한글 이름 [미확인]) 공저 = `kim2024_carbon_volumetric_occupation_se_domain` · `jung2023_single_crystal_ncm_morphology` (둘 다 다른 주제 — 카드 기준) | 1저자 확인 (제목 · PDF) |
 | **Hausner 비 원전** (1967) | 제목을 확인하지 못해 뺐다 | B5-3 이 Hausner 비와의 일치를 다룬다 |
 | 작은 입자–큰 입자 부착의 곡률 (R\*) · 임계 부착 속도 | 새 문헌을 따로 찾지 않음 | 정본 `thorntonning1998_…` · `dmt1975_…` |
 | 습식 SE 코팅 경로 (용액 침투 · 용액 코팅) | 검색에 나왔지만 건식 논지와 별개라 목록에서 뺐다 | — |
@@ -198,7 +198,7 @@
 
 ### 1저자 확인이 필요한 것
 
-1. 논지 §6 의 **KETI 논문 단서** 가 B2-4 (*Shear force effect of the dry process …*) 인가.
+1. 논지 §6 의 **KETI 논문 단서** 가 B2-4 (*Shear force effect of the dry process …*) 인가. → 10-13 대조: B2-4 = KETI 소속 · 문구 없음 · 10-02 #62 발화 = *"주 포인트로는 케티에서 나온 유지성 박사님 해서 문구는 있었는데 이제 그렇게 주로 한 내용은 아니었던 것"* → 다른 KETI 논문일 가능성 [추정] · 1저자 확인 대기.
 2. `lee2026_mechanical_halogen_argyrodite_drycoating` 카드 저자 *Yonghoon An* = ✅ 1저자 본인 (10-13 확인).
 3. Part D 의 PDF 중 이미 가진 것 · 받을 수 있는 것.
 
