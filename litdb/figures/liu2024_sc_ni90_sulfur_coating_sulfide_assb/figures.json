@@ -215,18 +215,18 @@
    "caption": "Figure S1. Line profiles across crystal planes of atomic-resolution images are shown in figure 2c.",
    "rotated_deg": 0,
    "bbox": [
-    151.8,
-    76.3,
-    443.5,
+    161.9,
+    77.0,
+    436.8,
     223.6
    ],
-   "w": 1216,
-   "h": 615,
+   "w": 1146,
+   "h": 612,
    "dpi": 300,
    "src": "2._Sup_High_Capacity_Long_Life_Sulfide_All_Solid_State_Batteries_With_Single_Crystal_Ni_Rich_Layered_Oxide_Cathodes.pdf",
    "viewed": true,
    "si": true,
-   "crop_note": "래스터 bbox 그대로"
+   "crop_note": "래스터 bbox 그대로 · 가장자리 흰 띠 다듬음 (px L42 T3 R28 B0 · bbox 같이 이동)"
   },
   {
    "key": "fS2",

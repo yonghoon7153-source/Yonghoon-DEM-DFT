@@ -1,0 +1,75 @@
+figure,series,x_name,x,y_name,y,note
+fig1,LPSCl compression,p_MPa,334,absorption_density_g_cm3,1.562,Beer-Lambert; error bars ~±0.03-0.04
+fig1,LPSCl compression,p_MPa,479,absorption_density_g_cm3,1.828,Beer-Lambert; error bars ~±0.03-0.04
+fig1,LPSCl compression,p_MPa,822,absorption_density_g_cm3,1.917,Beer-Lambert; error bars ~±0.03-0.04
+fig1,LPSCl compression,p_MPa,1154,absorption_density_g_cm3,1.985,Beer-Lambert; error bars ~±0.03-0.04
+fig1,LPSCl compression,p_MPa,1461,absorption_density_g_cm3,2.028,Beer-Lambert; error bars ~±0.03-0.04
+fig1,LPSCl compression,p_MPa,2554,absorption_density_g_cm3,2.095,Beer-Lambert; error bars ~±0.03-0.04
+fig1,LPSCl compression,p_MPa,3770,absorption_density_g_cm3,2.089,Beer-Lambert; error bars ~±0.03-0.04
+fig1,LPSCl decompression,p_MPa,3120,absorption_density_g_cm3,2.034,
+fig1,LPSCl decompression,p_MPa,1931,absorption_density_g_cm3,1.944,
+fig1,LPSCl decompression,p_MPa,1144,absorption_density_g_cm3,1.862,
+fig1,LPS (branch assignment per figure lines),p_MPa,67,absorption_density_g_cm3,1.138,1140 point likely decompression
+fig1,LPS (branch assignment per figure lines),p_MPa,137,absorption_density_g_cm3,1.138,1140 point likely decompression
+fig1,LPS (branch assignment per figure lines),p_MPa,333,absorption_density_g_cm3,1.135,1140 point likely decompression
+fig1,LPS (branch assignment per figure lines),p_MPa,480,absorption_density_g_cm3,1.45,1140 point likely decompression
+fig1,LPS (branch assignment per figure lines),p_MPa,686,absorption_density_g_cm3,1.695,1140 point likely decompression
+fig1,LPS (branch assignment per figure lines),p_MPa,820,absorption_density_g_cm3,1.804,1140 point likely decompression
+fig1,LPS (branch assignment per figure lines),p_MPa,1153,absorption_density_g_cm3,2.101,1140 point likely decompression
+fig1,LPS (branch assignment per figure lines),p_MPa,1460,absorption_density_g_cm3,2.085,1140 point likely decompression
+fig1,LPS (branch assignment per figure lines),p_MPa,1930,absorption_density_g_cm3,2.108,1140 point likely decompression
+fig1,LPS (branch assignment per figure lines),p_MPa,2554,absorption_density_g_cm3,2.204,1140 point likely decompression
+fig1,LPS (branch assignment per figure lines),p_MPa,3120,absorption_density_g_cm3,2.225,1140 point likely decompression
+fig1,LPS (branch assignment per figure lines),p_MPa,3772,absorption_density_g_cm3,2.242,1140 point likely decompression
+fig1,LPS (branch assignment per figure lines),p_MPa,1140,absorption_density_g_cm3,2.049,1140 point likely decompression
+figS2,LPSCl compression,p_MPa,67,crystallographic_density_g_cm3,1.864,"Le Bail, ED-XRD"
+figS2,LPSCl compression,p_MPa,136,crystallographic_density_g_cm3,1.8563,"Le Bail, ED-XRD"
+figS2,LPSCl compression,p_MPa,331,crystallographic_density_g_cm3,1.8609,"Le Bail, ED-XRD"
+figS2,LPSCl compression,p_MPa,480,crystallographic_density_g_cm3,1.8678,"Le Bail, ED-XRD"
+figS2,LPSCl compression,p_MPa,822,crystallographic_density_g_cm3,1.8793,"Le Bail, ED-XRD"
+figS2,LPSCl compression,p_MPa,1155,crystallographic_density_g_cm3,1.8956,"Le Bail, ED-XRD"
+figS2,LPSCl compression,p_MPa,1461,crystallographic_density_g_cm3,1.8976,"Le Bail, ED-XRD"
+figS2,LPSCl compression,p_MPa,2552,crystallographic_density_g_cm3,1.9463,"Le Bail, ED-XRD"
+figS2,LPSCl compression,p_MPa,3122,crystallographic_density_g_cm3,1.9781,"Le Bail, ED-XRD"
+figS2,LPSCl compression,p_MPa,3770,crystallographic_density_g_cm3,2.0077,"Le Bail, ED-XRD"
+figS2,LPSCl decompression,p_MPa,1931,crystallographic_density_g_cm3,1.9379,
+figS2,LPSCl decompression,p_MPa,1143,crystallographic_density_g_cm3,1.9247,
+fig8,LPSCl compression,p_MPa,66,sigma_ion_mS_per_cm,2.62,66/682/1155 MPa read by eye (marker overlap)
+fig8,LPSCl compression,p_MPa,135,sigma_ion_mS_per_cm,3.338,66/682/1155 MPa read by eye (marker overlap)
+fig8,LPSCl compression,p_MPa,329,sigma_ion_mS_per_cm,3.207,66/682/1155 MPa read by eye (marker overlap)
+fig8,LPSCl compression,p_MPa,478,sigma_ion_mS_per_cm,2.917,66/682/1155 MPa read by eye (marker overlap)
+fig8,LPSCl compression,p_MPa,682,sigma_ion_mS_per_cm,2.61,66/682/1155 MPa read by eye (marker overlap)
+fig8,LPSCl compression,p_MPa,821,sigma_ion_mS_per_cm,2.266,66/682/1155 MPa read by eye (marker overlap)
+fig8,LPSCl compression,p_MPa,1013,sigma_ion_mS_per_cm,1.929,66/682/1155 MPa read by eye (marker overlap)
+fig8,LPSCl compression,p_MPa,1155,sigma_ion_mS_per_cm,1.61,66/682/1155 MPa read by eye (marker overlap)
+fig8,LPSCl compression,p_MPa,1461,sigma_ion_mS_per_cm,1.149,66/682/1155 MPa read by eye (marker overlap)
+fig8,LPSCl compression,p_MPa,2554,sigma_ion_mS_per_cm,0.437,66/682/1155 MPa read by eye (marker overlap)
+fig8,LPSCl compression,p_MPa,3124,sigma_ion_mS_per_cm,0.282,66/682/1155 MPa read by eye (marker overlap)
+fig8,LPSCl compression,p_MPa,3772,sigma_ion_mS_per_cm,0.139,66/682/1155 MPa read by eye (marker overlap)
+fig8,LPSCl decompression,p_MPa,1930,sigma_ion_mS_per_cm,0.936,1143 read by eye
+fig8,LPSCl decompression,p_MPa,1143,sigma_ion_mS_per_cm,2.21,1143 read by eye
+fig8,LPS compression (right axis),p_MPa,64,sigma_ion_mS_per_cm,0.1202,text quotes 0.33 @479 and 0.06 @3771 — figure reads 0.24 / 0.026
+fig8,LPS compression (right axis),p_MPa,132,sigma_ion_mS_per_cm,0.1657,text quotes 0.33 @479 and 0.06 @3771 — figure reads 0.24 / 0.026
+fig8,LPS compression (right axis),p_MPa,330,sigma_ion_mS_per_cm,0.2197,text quotes 0.33 @479 and 0.06 @3771 — figure reads 0.24 / 0.026
+fig8,LPS compression (right axis),p_MPa,478,sigma_ion_mS_per_cm,0.2394,text quotes 0.33 @479 and 0.06 @3771 — figure reads 0.24 / 0.026
+fig8,LPS compression (right axis),p_MPa,685,sigma_ion_mS_per_cm,0.2199,text quotes 0.33 @479 and 0.06 @3771 — figure reads 0.24 / 0.026
+fig8,LPS compression (right axis),p_MPa,821,sigma_ion_mS_per_cm,0.1979,text quotes 0.33 @479 and 0.06 @3771 — figure reads 0.24 / 0.026
+fig8,LPS compression (right axis),p_MPa,1154,sigma_ion_mS_per_cm,0.1636,text quotes 0.33 @479 and 0.06 @3771 — figure reads 0.24 / 0.026
+fig8,LPS compression (right axis),p_MPa,1462,sigma_ion_mS_per_cm,0.1336,text quotes 0.33 @479 and 0.06 @3771 — figure reads 0.24 / 0.026
+fig8,LPS compression (right axis),p_MPa,2553,sigma_ion_mS_per_cm,0.0658,text quotes 0.33 @479 and 0.06 @3771 — figure reads 0.24 / 0.026
+fig8,LPS compression (right axis),p_MPa,3120,sigma_ion_mS_per_cm,0.0482,text quotes 0.33 @479 and 0.06 @3771 — figure reads 0.24 / 0.026
+fig8,LPS compression (right axis),p_MPa,3771,sigma_ion_mS_per_cm,0.0261,text quotes 0.33 @479 and 0.06 @3771 — figure reads 0.24 / 0.026
+fig8,LPS decompression (right axis),p_MPa,1930,sigma_ion_mS_per_cm,0.1558,
+fig8,LPS decompression (right axis),p_MPa,1140,sigma_ion_mS_per_cm,0.2997,
+figS6,LPSCl WH strain compression,p_MPa,66,strain_WH_pct,0.4,read by eye on 300-dpi crop
+figS6,LPSCl WH strain compression,p_MPa,135,strain_WH_pct,0.45,read by eye on 300-dpi crop
+figS6,LPSCl WH strain compression,p_MPa,331,strain_WH_pct,1.03,read by eye on 300-dpi crop
+figS6,LPSCl WH strain compression,p_MPa,479,strain_WH_pct,1.12,read by eye on 300-dpi crop
+figS6,LPSCl WH strain compression,p_MPa,821,strain_WH_pct,1.75,read by eye on 300-dpi crop
+figS6,LPSCl WH strain compression,p_MPa,1155,strain_WH_pct,1.81,read by eye on 300-dpi crop
+figS6,LPSCl WH strain compression,p_MPa,1461,strain_WH_pct,1.9,read by eye on 300-dpi crop
+figS6,LPSCl WH strain compression,p_MPa,2553,strain_WH_pct,1.99,read by eye on 300-dpi crop
+figS6,LPSCl WH strain compression,p_MPa,3120,strain_WH_pct,2.0,read by eye on 300-dpi crop
+figS6,LPSCl WH strain compression,p_MPa,3771,strain_WH_pct,2.0,read by eye on 300-dpi crop
+figS6,LPSCl WH strain decompression,p_MPa,1931,strain_WH_pct,2.05,read by eye
+figS6,LPSCl WH strain decompression,p_MPa,1143,strain_WH_pct,1.97,read by eye

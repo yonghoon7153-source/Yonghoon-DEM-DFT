@@ -238,18 +238,18 @@
    "caption": "Fig. S3. Voltage profile of the cell charged at C/50 for the in-operando Raman measurements.",
    "rotated_deg": 0,
    "bbox": [
-    114.0,
-    72.0,
-    498.0,
-    381.6
+    115.7,
+    76.8,
+    486.2,
+    378.2
    ],
-   "w": 1600,
-   "h": 1290,
+   "w": 1544,
+   "h": 1256,
    "dpi": 300,
    "src": "1._Sup_Interior_transport_degradation_hotspots_in_high-loading_NMC811_sulfide_all-solid-state_batteries_revealed_by_operando_neutron_imaging.pdf",
    "viewed": true,
    "si": true,
-   "crop_note": "래스터 bbox 그대로 (원본 200 ppi)"
+   "crop_note": "래스터 bbox 그대로 (원본 200 ppi) · 가장자리 흰 띠 다듬음 (px L7 T20 R49 B14 · bbox 같이 이동)"
   },
   {
    "key": "fS4",
@@ -261,17 +261,17 @@
    "rotated_deg": 0,
    "bbox": [
     72.0,
-    72.0,
+    82.8,
     540.0,
-    316.5
+    313.9
    ],
    "w": 1950,
-   "h": 1019,
+   "h": 963,
    "dpi": 300,
    "src": "1._Sup_Interior_transport_degradation_hotspots_in_high-loading_NMC811_sulfide_all-solid-state_batteries_revealed_by_operando_neutron_imaging.pdf",
    "viewed": true,
    "si": true,
-   "crop_note": "래스터 bbox 그대로 (원본 226 ppi)"
+   "crop_note": "래스터 bbox 그대로 (원본 226 ppi) · 가장자리 흰 띠 다듬음 (px L0 T45 R0 B11 · bbox 같이 이동)"
   },
   {
    "key": "fS5",
