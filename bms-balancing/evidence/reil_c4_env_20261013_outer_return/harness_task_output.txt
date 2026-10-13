@@ -1,0 +1,32 @@
+[2026-10-13T06:06:17.006Z +0.1s] S0 ok head=8e2985d6d752 free=27102740480
+[2026-10-13T06:06:17.006Z +0.1s] 01_venv start (timeout 120s)
+[2026-10-13T06:06:20.837Z +4.0s] 01_venv end rc=0 timed_out=False elapsed=3.83s
+[2026-10-13T06:06:20.837Z +4.0s] 02_download_science start (timeout 480s)
+[2026-10-13T06:06:28.841Z +12.0s] 02_download_science end rc=0 timed_out=False elapsed=8.004s
+[2026-10-13T06:06:28.856Z +12.0s] disk S2: 120001547 B
+[2026-10-13T06:06:28.856Z +12.0s] 03_download_test start (timeout 120s)
+[2026-10-13T06:06:30.018Z +13.1s] 03_download_test end rc=0 timed_out=False elapsed=1.162s
+[2026-10-13T06:06:30.029Z +13.1s] disk S3: 121669149 B
+[2026-10-13T06:06:30.029Z +13.1s] 04a_artifacts_science start (timeout 30s)
+[2026-10-13T06:06:30.245Z +13.4s] 04a_artifacts_science end rc=0 timed_out=False elapsed=0.215s
+[2026-10-13T06:06:30.245Z +13.4s] 04b_artifacts_test start (timeout 30s)
+[2026-10-13T06:06:30.310Z +13.4s] 04b_artifacts_test end rc=0 timed_out=False elapsed=0.065s
+[2026-10-13T06:06:30.311Z +13.4s] 05_install_science start (timeout 300s)
+[2026-10-13T06:06:48.308Z +31.4s] 05_install_science end rc=0 timed_out=False elapsed=17.997s
+[2026-10-13T06:06:48.336Z +31.5s] disk S5: 542885260 B
+[2026-10-13T06:06:48.337Z +31.5s] 06_install_test start (timeout 120s)
+[2026-10-13T06:06:49.755Z +32.9s] 06_install_test end rc=0 timed_out=False elapsed=1.418s
+[2026-10-13T06:06:49.802Z +32.9s] disk S6: 554898246 B
+[2026-10-13T06:06:49.802Z +32.9s] 07_emit start (timeout 180s)
+[2026-10-13T06:06:51.475Z +34.6s] 07_emit end rc=0 timed_out=False elapsed=1.672s
+[2026-10-13T06:06:51.476Z +34.6s] 08_check start (timeout 180s)
+[2026-10-13T06:06:53.098Z +36.2s] 08_check end rc=0 timed_out=False elapsed=1.622s
+[2026-10-13T06:06:53.128Z +36.2s] disk S8: 554926814 B
+[2026-10-13T06:06:53.128Z +36.2s] 09_compare start (timeout 120s)
+[2026-10-13T06:06:53.243Z +36.4s] 09_compare end rc=0 timed_out=False elapsed=0.114s
+[2026-10-13T06:06:53.328Z +36.4s] disk S10: 556020307 B
+[2026-10-13T06:06:53.526Z +36.6s] commit rc=0  — +36.6s
+[2026-10-13T06:06:53.526Z +36.6s] DONE rc=0
+exit=0
+
+[exited with code 0]
