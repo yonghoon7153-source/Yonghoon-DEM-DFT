@@ -1,0 +1,16 @@
+arm,bin grid,delta M (non-cohesive AM minus arm),note
+reference cohesion,16×16×4,0.01,
+reference cohesion,12×12×3,-0.006,
+reference cohesion,8×8×2,0.008,
+NCM–NCM ×10,16×16×4,0.827,QC not met
+NCM–NCM ×10,12×12×3,0.928,
+NCM–NCM ×10,8×8×2,0.988,
+NCM–NCM ×30,16×16×4,1.876,QC not met
+NCM–NCM ×30,12×12×3,2.432,
+NCM–NCM ×30,8×8×2,3.164,
+all pairs ×10,16×16×4,0.239,
+all pairs ×10,12×12×3,0.165,
+all pairs ×10,8×8×2,0.103,
+all pairs ×14,16×16×4,0.866,QC not met
+all pairs ×14,12×12×3,0.484,
+all pairs ×14,8×8×2,0.267,

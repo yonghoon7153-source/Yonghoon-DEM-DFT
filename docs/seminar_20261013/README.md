@@ -1,5 +1,18 @@
 # 연구세미나 덱 (2026-10 · 1저자 비준 개요 v1) — 생성기 · 그림 · 출처
 
+## v3 "보는 판" (2026-10-13 밤 · 1저자 지시) — `build_seminar_v3.py` · `figs_v3/` · `slide_text_v3.md` · `slide_sources_v3.json`
+
+- 장 문법 = 10-13 덱 4 장: ■ 제목 **한 줄** + 소불릿 ≤ 2 (15 pt · 핵심어 빨강) + 그림 한 띠 (본문 높이 추정값 아래 · 바닥 6.45 in) + 우상단 출처 줄 (10 pt 기울임 · ≤ 110 자) + 그림 아래 해석 조건 한 줄 (12 pt 회색 · 꺾쇠 캡션 없음) · 문헌 크롭 = 위 꼬리표 + 아래 출처.  **빈 자리 = 도형 없음** — 출처 줄의 `figure: presenter — …` 가 무엇을 붙일지 적는다 (5 장 우 = MPM 3D · 7 장 좌 = 3D 전류 흐름 (접촉망 · 복셀) · 11 장 우 = 층상 침대 전 · 후 · 12 장 우 = 침대 스냅샷).
+- 17 장 = 표지 · Introduction (흐름도 = PPT 도형) · DEM 2 · DEM → MPM · MPM (표 + 문헌) · Transport · Limits 2 · Progress (표 + 산점) · **Mixing 3** · Plan · Summary · References 16 (불변) · Thank you.  v2.1 → v3 대응표 = `docs/reviews/codex_seminar_deck_v3_recheck_request_20261013.md` §1 (Codex 가 닫은 값 · 문장은 그대로 · 옮긴 문장은 notes 전문).
+- 그림 10 = `figs_v3/make_seminar_figs.py` (`--selftest` = 정본값 대조: `docs/report_20261021/summary.json` G1 · G6 · G7 · ps45 README · `plane_load.json` · 인자 끔 README · CL-24 공개값 · DC 분극 등록 · 믹서 prelim README 셋 · 철회값 0 · 팔 코드 0 · 조성 라벨 5) — F_poro · F_trans · F_limits (a b c) · F_load · F_vgcf · F_dataset (배포 v1.2 CSV 직접) · F_mix1 · F_mix2 · F_mix3 · F_mix3_scheme · 글씨 = 배치 1:1 ≈ 12 pt · png + svg + csv.
+- 문헌 크롭 3 = litdb 정본 브랜치 `litdb/figures/` 의 Bazzoun 2026 Fig. 2 · Luding 2008 Fig. 1 · So 2021 Fig. 4 (a 패널만 잘라) — 생성기가 빌드 때 `git show` 로 `--lit` 폴더에 받는다 (리포에 사본 없음).  Lee 2025 = 자리 없어 미배치 (1저자 결정).
+- 믹서 용어 = 분야 표준 (팔 코드 없음 — selftest 가 notes 까지 검사): cohesive / non-cohesive NCM · Bond number · Lacey mixing index M · bin grid · registered "no segregation" category (not "no effect") · 개발 런 = 그림 + 한정어 (숫자는 notes).
+- selftest (v2.1 항목 + 추가 · 고치기 전 = v2.1 덱에서 실패 확인): 17 장 · 꺾쇠 캡션 0 · 빈 자리 장의 출처 줄 · 출처 줄 ≤ 110 자 · 제목 한 줄 (≤ 62 자 · 글꼴 폭) · **겹침 검사** (본문 바닥 추정 ≤ 그림 띠 윗선 — 줄바꿈 = Carlito (Calibri 폭) 로 잰다 · 없으면 DejaVu = 보수적) · 단어 ≤ 100/120 (출처 줄 · 꼬리표 · 표 제외) · bullet ≥ 15 pt · 해석 줄 ≥ 12 pt · 10 장 해석 줄 ↔ 집단 · 11 장 등록 범주 문구.
+- 렌더 QA = LibreOffice + Carlito (fonts-crosextra-carlito · Calibri 와 폭 같음) → 17 장 겹침 0.  덱 · PDF 는 리포 밖 (ZIP v6 = Codex · 1저자).
+- 실행: `python3 build_seminar_v3.py --template <10-13 덱.pptx> --repo <리포> --figs figs_v3 --out <폴더>/seminar_20261013_v3.pptx` (크롭은 `<폴더>/lit` 에 자동 수령) · `--selftest-only <덱> --repo <리포> --figs figs_v3` · `--dump <덱> --out slide_text_v3.md`.
+
+## v2.1 까지 (아래 = 10-13 낮 판 · 역사)
+
 - **덱 pptx 는 리포에 없다** (사용자 덱 미반입 규약) — 1저자에게 전달 · Codex 검토 ZIP 으로.  글의 정본 사본 = `slide_text_draft3.md` (장별 전문 + 발표자 메모).
 - 흐름 (1저자 지정) = ① 파이프라인 → ② DEM 한계 → ③ MPM · SE 물성 · DEM↔MPM → ④ voxelization → ⑤ 첨가제 → ⑥ 문제 셋 → ⑦ 진행 → ⑧ 계획 · 본문 15 장 (2–16) + 표지 · 요약 · 참고문헌 · 끝 = 19 장.
 - 양식 = 1저자 10-13 연구세미나 덱 (Codex 리뷰를 거친 밀도 · 리포 밖) 의 장을 프로토타입으로 복제 — 표지 · 그림 본문 · 두 칸 · 점선 틀 · 요약 · 참고문헌 · Thank you.

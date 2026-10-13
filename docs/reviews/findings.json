@@ -9941,107 +9941,114 @@
     {
       "id": "SEMV2-01",
       "severity": "P1",
-      "status": "open",
+      "status": "claimed_fixed",
       "owner": "claude",
       "found_by": "codex 10-13 v2 재확인 (조건부 GO · PPTX sha256 5d577203… · PDF 044eba08… · ZIP v4 ef3edae4… · 본문 · notes · 미디어 · PDF 렌더 대조 · 저장 자료 산술 재검산 — 솔버 미실행) · 우리 재현: fam_platen_prereg §12 `--protocol servo` 6 회 · summary.json G5 n130/n64",
       "opened_in": "docs/reviews/codex_review_seminar_deck_v2_recheck_20261013.md",
       "title": "p8 — 현재 등록 f = 0 / f(a) 런을 `fixed-platen hold` 라 표기 — 실제 = `--protocol servo` (primary = 서보 수렴 최종 두께 · fam_platen_prereg §12-5 · 12-6) · 결과 상태는 맞고 조건 이름이 틀림 (SEM-02 잔여)",
-      "note": "교체 = `stress-controlled servo` · 상단 `different electrolyte initializations and run configurations` · notes 한 줄 — 수정 = 덱 v2.1 (이 커밋 뒤 claimed_fixed)",
+      "note": "교체 = `stress-controlled servo` · 상단 `different electrolyte initializations and run configurations` · notes 한 줄 — 수정 = 덱 v2.1 (덱 v2.1 커밋 9991b17a5 · 종결 확인 = Codex)",
       "evidence_tests": [
         "docs/reviews/codex_review_seminar_deck_v2_recheck_20261013.md (§2 · §5 · §6)",
         "docs/reviews/codex_seminar_deck_review_evidence_20261013/v2_recheck/evidence/recheck_proof.json",
         "docs/reviews/codex_seminar_deck_review_evidence_20261013/v2_recheck/evidence/arithmetic_rerun.txt"
-      ]
+      ],
+      "claimed_fixed_sha": "9991b17a5"
     },
     {
       "id": "SEMV2-02",
       "severity": "P1",
-      "status": "open",
+      "status": "claimed_fixed",
       "owner": "claude",
       "found_by": "codex 10-13 v2 재확인 (조건부 GO · PPTX sha256 5d577203… · PDF 044eba08… · ZIP v4 ef3edae4… · 본문 · notes · 미디어 · PDF 렌더 대조 · 저장 자료 산술 재검산 — 솔버 미실행) · 우리 재현: fam_platen_prereg §12 `--protocol servo` 6 회 · summary.json G5 n130/n64",
       "opened_in": "docs/reviews/codex_review_seminar_deck_v2_recheck_20261013.md",
       "title": "p15 — 두 그림 캡션의 집단이 반대 (왼쪽 G5a 범례 = 130 set + 64 SE-rich set 인데 `(130 beds)` · 오른쪽 G3 = 130 design points 인데 `130 + 64 beds`) · 130 집단 유한 τ 106 (1.2919–4.1506) · 64 집단 64 (1.2622–1.5999) · 비관통 24 = 130 집단",
-      "note": "교체 = 왼쪽 `— 130 + 64 beds` / `×: 24 non-percolating beds in the 130-bed set` · 오른쪽 `— 130-bed set` · 본문 `In the 130-bed set:` — 수정 = 덱 v2.1 (이 커밋 뒤 claimed_fixed)",
+      "note": "교체 = 왼쪽 `— 130 + 64 beds` / `×: 24 non-percolating beds in the 130-bed set` · 오른쪽 `— 130-bed set` · 본문 `In the 130-bed set:` — 수정 = 덱 v2.1 (덱 v2.1 커밋 9991b17a5 · 종결 확인 = Codex)",
       "evidence_tests": [
         "docs/reviews/codex_review_seminar_deck_v2_recheck_20261013.md (§2 · §5 · §6)",
         "docs/reviews/codex_seminar_deck_review_evidence_20261013/v2_recheck/evidence/recheck_proof.json",
         "docs/reviews/codex_seminar_deck_review_evidence_20261013/v2_recheck/evidence/arithmetic_rerun.txt"
-      ]
+      ],
+      "claimed_fixed_sha": "9991b17a5"
     },
     {
       "id": "SEMV2-03",
       "severity": "P2",
-      "status": "open",
+      "status": "claimed_fixed",
       "owner": "claude",
       "found_by": "codex 10-13 v2 재확인 (조건부 GO · PPTX sha256 5d577203… · PDF 044eba08… · ZIP v4 ef3edae4… · 본문 · notes · 미디어 · PDF 렌더 대조 · 저장 자료 산술 재검산 — 솔버 미실행) · 우리 재현: fam_platen_prereg §12 `--protocol servo` 6 회 · summary.json G5 n130/n64",
       "opened_in": "docs/reviews/codex_review_seminar_deck_v2_recheck_20261013.md",
       "title": "p12 — F3 · F4 세로축 제목 `Electronic conductivity (mS cm⁻¹)` 위 끝 잘림 (그림 캔버스 자체) · 오른쪽 조건 캡션 4 줄",
-      "note": "축 제목 두 줄 · 캡션 3 줄 (`NCM–SE beds, no carbon/binder; Hertz H0` / `common NCM reference 4.1 mS cm⁻¹ [16]; size factor off` / `one bed per composition`) — 수정 = 덱 v2.1 (이 커밋 뒤 claimed_fixed)",
+      "note": "축 제목 두 줄 · 캡션 3 줄 (`NCM–SE beds, no carbon/binder; Hertz H0` / `common NCM reference 4.1 mS cm⁻¹ [16]; size factor off` / `one bed per composition`) — 수정 = 덱 v2.1 (덱 v2.1 커밋 9991b17a5 · 종결 확인 = Codex)",
       "evidence_tests": [
         "docs/reviews/codex_review_seminar_deck_v2_recheck_20261013.md (§2 · §5 · §6)",
         "docs/reviews/codex_seminar_deck_review_evidence_20261013/v2_recheck/evidence/recheck_proof.json",
         "docs/reviews/codex_seminar_deck_review_evidence_20261013/v2_recheck/evidence/arithmetic_rerun.txt"
-      ]
+      ],
+      "claimed_fixed_sha": "9991b17a5"
     },
     {
       "id": "SEMV2-04",
       "severity": "P2",
-      "status": "open",
+      "status": "claimed_fixed",
       "owner": "claude",
       "found_by": "codex 10-13 v2 재확인 (조건부 GO · PPTX sha256 5d577203… · PDF 044eba08… · ZIP v4 ef3edae4… · 본문 · notes · 미디어 · PDF 렌더 대조 · 저장 자료 산술 재검산 — 솔버 미실행) · 우리 재현: fam_platen_prereg §12 `--protocol servo` 6 회 · summary.json G5 n130/n64",
       "opened_in": "docs/reviews/codex_review_seminar_deck_v2_recheck_20261013.md",
       "title": "p2 — F1 상자 밖으로 나오는 글 (`Plastic compaction` · `Electrode response` · 부연)",
-      "note": "제목 두 줄 · 부연 축약 · 띠 `compaction data` · `pure-SE compaction` · `conductivity data` — 수정 = 덱 v2.1 (이 커밋 뒤 claimed_fixed)",
+      "note": "제목 두 줄 · 부연 축약 · 띠 `compaction data` · `pure-SE compaction` · `conductivity data` — 수정 = 덱 v2.1 (덱 v2.1 커밋 9991b17a5 · 종결 확인 = Codex)",
       "evidence_tests": [
         "docs/reviews/codex_review_seminar_deck_v2_recheck_20261013.md (§2 · §5 · §6)",
         "docs/reviews/codex_seminar_deck_review_evidence_20261013/v2_recheck/evidence/recheck_proof.json",
         "docs/reviews/codex_seminar_deck_review_evidence_20261013/v2_recheck/evidence/arithmetic_rerun.txt"
-      ]
+      ],
+      "claimed_fixed_sha": "9991b17a5"
     },
     {
       "id": "SEMV2-05",
       "severity": "P2",
-      "status": "open",
+      "status": "claimed_fixed",
       "owner": "claude",
       "found_by": "codex 10-13 v2 재확인 (조건부 GO · PPTX sha256 5d577203… · PDF 044eba08… · ZIP v4 ef3edae4… · 본문 · notes · 미디어 · PDF 렌더 대조 · 저장 자료 산술 재검산 — 솔버 미실행) · 우리 재현: fam_platen_prereg §12 `--protocol servo` 6 회 · summary.json G5 n130/n64",
       "opened_in": "docs/reviews/codex_review_seminar_deck_v2_recheck_20261013.md",
       "title": "p5 notes — `Bulk modulus reference ≈ 22 GPa = … E_VRH` (E_VRH 22.06 은 영률 · K/B0 26.23 은 별도 양)",
-      "note": "notes = `Young's modulus reference: our DFT E_VRH = 22.06 GPa` · K/B0 별도 — 수정 = 덱 v2.1 (이 커밋 뒤 claimed_fixed)",
+      "note": "notes = `Young's modulus reference: our DFT E_VRH = 22.06 GPa` · K/B0 별도 — 수정 = 덱 v2.1 (덱 v2.1 커밋 9991b17a5 · 종결 확인 = Codex)",
       "evidence_tests": [
         "docs/reviews/codex_review_seminar_deck_v2_recheck_20261013.md (§2 · §5 · §6)",
         "docs/reviews/codex_seminar_deck_review_evidence_20261013/v2_recheck/evidence/recheck_proof.json",
         "docs/reviews/codex_seminar_deck_review_evidence_20261013/v2_recheck/evidence/arithmetic_rerun.txt"
-      ]
+      ],
+      "claimed_fixed_sha": "9991b17a5"
     },
     {
       "id": "SEMV2-06",
       "severity": "P2",
-      "status": "open",
+      "status": "claimed_fixed",
       "owner": "claude",
       "found_by": "codex 10-13 v2 재확인 (조건부 GO · PPTX sha256 5d577203… · PDF 044eba08… · ZIP v4 ef3edae4… · 본문 · notes · 미디어 · PDF 렌더 대조 · 저장 자료 산술 재검산 — 솔버 미실행) · 우리 재현: fam_platen_prereg §12 `--protocol servo` 6 회 · summary.json G5 n130/n64",
       "opened_in": "docs/reviews/codex_review_seminar_deck_v2_recheck_20261013.md",
       "title": "p7 — `σy 0.05–0.30 GPa` 가 [8] 이 보증하는 독립 물성 범위처럼 읽힘 (출처 · 시험법 미확인) · 철회 이력 · K 중복 문장으로 밀도 120 단어",
-      "note": "범위 삭제 · 첫 행 `LPSCl reference: E ≈ 22 GPa (our DFT E_VRH; literature DEM input 22.1 GPa [8])` · 철회 이력 · 중복 → notes — 수정 = 덱 v2.1 (이 커밋 뒤 claimed_fixed)",
+      "note": "범위 삭제 · 첫 행 `LPSCl reference: E ≈ 22 GPa (our DFT E_VRH; literature DEM input 22.1 GPa [8])` · 철회 이력 · 중복 → notes — 수정 = 덱 v2.1 (덱 v2.1 커밋 9991b17a5 · 종결 확인 = Codex)",
       "evidence_tests": [
         "docs/reviews/codex_review_seminar_deck_v2_recheck_20261013.md (§2 · §5 · §6)",
         "docs/reviews/codex_seminar_deck_review_evidence_20261013/v2_recheck/evidence/recheck_proof.json",
         "docs/reviews/codex_seminar_deck_review_evidence_20261013/v2_recheck/evidence/arithmetic_rerun.txt"
-      ]
+      ],
+      "claimed_fixed_sha": "9991b17a5"
     },
     {
       "id": "SEMV2-07",
       "severity": "P2",
-      "status": "open",
+      "status": "claimed_fixed",
       "owner": "claude",
       "found_by": "codex 10-13 v2 재확인 (조건부 GO · PPTX sha256 5d577203… · PDF 044eba08… · ZIP v4 ef3edae4… · 본문 · notes · 미디어 · PDF 렌더 대조 · 저장 자료 산술 재검산 — 솔버 미실행) · 우리 재현: fam_platen_prereg §12 `--protocol servo` 6 회 · summary.json G5 n130/n64",
       "opened_in": "docs/reviews/codex_review_seminar_deck_v2_recheck_20261013.md",
       "title": "p4 — `σ₀ = 1.5 mS cm⁻¹ [8]` 이 [8] 의 값처럼 보임 (실제 = 펠릿 문헌 범위 안 선택 기준값 · Bazzoun 펠릿 1.02 mS/cm)",
-      "note": "교체 = `Contact-network approach [8]: … chosen σ₀ = 1.5 mS cm⁻¹ (pellet-literature range)` — 수정 = 덱 v2.1 (이 커밋 뒤 claimed_fixed)",
+      "note": "교체 = `Contact-network approach [8]: … chosen σ₀ = 1.5 mS cm⁻¹ (pellet-literature range)` — 수정 = 덱 v2.1 (덱 v2.1 커밋 9991b17a5 · 종결 확인 = Codex)",
       "evidence_tests": [
         "docs/reviews/codex_review_seminar_deck_v2_recheck_20261013.md (§2 · §5 · §6)",
         "docs/reviews/codex_seminar_deck_review_evidence_20261013/v2_recheck/evidence/recheck_proof.json",
         "docs/reviews/codex_seminar_deck_review_evidence_20261013/v2_recheck/evidence/arithmetic_rerun.txt"
-      ]
+      ],
+      "claimed_fixed_sha": "9991b17a5"
     }
   ]
 }
