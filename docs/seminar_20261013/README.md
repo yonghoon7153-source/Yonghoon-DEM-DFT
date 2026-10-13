@@ -37,3 +37,12 @@
 - 철회값 (`docs/reviews/claims.json` `quotation_ban`) 0 · 8팔 계열 비 · 이득 (CL-33 · CL-41 hold) 안 씀 — 절차 · 판정만 · 순수 SE 10 % = 보정 표적 (외부 앵커 아님 · CL-94) · 격자 비는 CL-24 공개값만.
 - 수치는 전부 정본 문서에서 — `slide_sources.json` · 각 장 notes.  참고문헌 14 = litdb 정본 카드 서지 그대로.
 - Codex 검토 요청서 = `docs/reviews/codex_seminar_deck_review_request_20261013.md` (발송 = 1저자).
+
+## v2 (2026-10-13 · Codex NO-GO 판정 반영 · 1저자 Q1–Q6)
+
+- 판정 = `docs/reviews/codex_review_seminar_deck_20261013.md` (첫 판 · SEM-01~14) + `codex_review_seminar_deck_v3_20261013.md` (통합 판정) · 계획 `docs/reviews/seminar_deck_fix_plan_20261013.md` · 재확인 요청서 `docs/reviews/codex_seminar_deck_v2_recheck_request_20261013.md` (대응표 SEM ↔ v2 · 발송 = 1저자).
+- 1저자 결정: Q1 7 장 E ≈ **22 GPa** (우리 DFT E_VRH · DEM 문헌 입력 22.1 GPa [8]; Sakuda 24 GPa 유리값 = notes) · Q2 8 장 30.7 비교 삭제 (상태표 · 새 숫자 없음) · Q3 자리 표시 = 한 줄 라벨 + 명령 notes · Q4 14 장 상태표 다섯 행 · Q5 `transport tortuosity` + 정의식 · Q6 v2 → Codex 재확인.
+- 생성기 v2: ■ 제목 18 pt (상속) · 본문 15 pt (125 % · 뒤 5 pt) · 캡션 12 pt · 그림 위로 · Codex §9 좌표.  **selftest (고치기 전 덱에서 실패 확인 뒤 고침)** = 지적 문구 16 본문 금지 · F4 조성 라벨 5 (svg) · 장당 단어 ≤ 100 (두 칸 · 점선 장 ≤ 120 · 자리 표시 제외) · bullet ≥ 15 pt · 캡션 ≥ 12 pt · 금지값 42 · 내부 용어 (`uma` · `WSL` 포함) 0 · 19 장.
+- 새 그림 v2: F2–F4 글씨 = 최종 배치 기준 ≈ 12 pt · F4 라벨 5/5 (`_fmt` 의 x locator 를 범주 축에 안 씀 — 옛 판 결함 SEM-09) · F1 상자 문구 축약 + 띠 = 보정 **표적**.  값 불변 (selftest 정본 대조).
+- 글 전문 v2 = `slide_text_v2.md` (덱에서 추출 · notes 포함) · `slide_text_draft3.md` = 초안 4 (역사).  참고문헌 16 (+ [15] Sakuda 2013 · [16] Wang 2018 — 정본 카드).
+- 덱 pptx · PDF · 렌더 = 리포 밖 (ZIP v4) — Codex 재확인은 **수정 PPT + 그 PDF** 로.

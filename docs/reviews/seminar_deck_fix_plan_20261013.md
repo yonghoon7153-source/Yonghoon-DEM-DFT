@@ -1,5 +1,7 @@
 # 연구세미나 덱 — Codex 10-13 NO-GO 반영 수정 계획 (1저자 비준 대기)
 
+> ✅ **비준 · 적용 10-13** — 1저자: Q1 = 22 GPa (논문 reference 있음 · DFT E_VRH + DEM 문헌 입력 22.1 [8]) · Q2 권고 (가) · Q3–Q6 권고대로.  구현 = 생성기 v2 (`docs/seminar_20261013/build_seminar.py` · 시험 먼저) · 재확인 요청서 `docs/reviews/codex_seminar_deck_v2_recheck_request_20261013.md`.  아래 본문은 비준 전 계획 원문.
+
 > 대상 = 초안 4 (19 장 · `docs/seminar_20261013/build_seminar.py` 생성).  판정 = `docs/reviews/codex_review_seminar_deck_20261013.md` (첫 판 과학 리뷰 · SEM-01~14) + `codex_review_seminar_deck_v3_20261013.md` (v3 묶음 통합 판정 · 장별 교체문 · 좌표 · pt).  **NO-GO = 현재 파일 그대로의 발표판 확정 불가.  새 시뮬레이션 · 재계산 요구 없음 — 문장 · 출처 · 표시 편집.**  재확인 = **수정된 PPT + 그 파일에서 내보낸 PDF**.
 
 ## 0. 판정 요약
