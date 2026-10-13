@@ -26,7 +26,8 @@
    "h": 1372,
    "dpi": 300,
    "src": "Yuan2026 ChemRxiv Reversible Ion Transport Through an Irreversibly Percolating Li2S Interphase at the Li-Li6PS5Cl Interface.pdf",
-   "blank": 0.848
+   "blank": 0.848,
+   "viewed": true
   },
   {
    "key": "f2",
@@ -46,7 +47,8 @@
    "h": 659,
    "dpi": 300,
    "src": "Yuan2026 ChemRxiv Reversible Ion Transport Through an Irreversibly Percolating Li2S Interphase at the Li-Li6PS5Cl Interface.pdf",
-   "blank": 0.955
+   "blank": 0.955,
+   "viewed": true
   },
   {
    "key": "f3",
@@ -66,7 +68,8 @@
    "h": 1611,
    "dpi": 300,
    "src": "Yuan2026 ChemRxiv Reversible Ion Transport Through an Irreversibly Percolating Li2S Interphase at the Li-Li6PS5Cl Interface.pdf",
-   "blank": 0.887
+   "blank": 0.887,
+   "viewed": true
   },
   {
    "key": "f4",
@@ -87,7 +90,8 @@
    "dpi": 300,
    "src": "Yuan2026 ChemRxiv Reversible Ion Transport Through an Irreversibly Percolating Li2S Interphase at the Li-Li6PS5Cl Interface.pdf",
    "blank": 0.739,
-   "recrop": "auto crop kept only the lower half (panels c Li charge / d P charge, old bbox [79.0, 438.3, 544.6, 675.0]) and dropped the timeline (E = +0.1 / -0.1 V/A), panel a Structure and panel b Composition; clip = union of the vector drawings on main p.8 (85.0,126.8,538.5,669.0) + 2 pt (2026-10-13, litdb-curator)"
+   "recrop": "auto crop kept only the lower half (panels c Li charge / d P charge, old bbox [79.0, 438.3, 544.6, 675.0]) and dropped the timeline (E = +0.1 / -0.1 V/A), panel a Structure and panel b Composition; clip = union of the vector drawings on main p.8 (85.0,126.8,538.5,669.0) + 2 pt (2026-10-13, litdb-curator)",
+   "viewed": true
   },
   {
    "key": "f5",
@@ -107,7 +111,8 @@
    "h": 664,
    "dpi": 300,
    "src": "Yuan2026 ChemRxiv Reversible Ion Transport Through an Irreversibly Percolating Li2S Interphase at the Li-Li6PS5Cl Interface.pdf",
-   "blank": 0.938
+   "blank": 0.938,
+   "viewed": true
   },
   {
    "key": "f6",
@@ -127,7 +132,8 @@
    "h": 1284,
    "dpi": 300,
    "src": "Yuan2026 ChemRxiv Reversible Ion Transport Through an Irreversibly Percolating Li2S Interphase at the Li-Li6PS5Cl Interface.pdf",
-   "blank": 0.908
+   "blank": 0.908,
+   "viewed": true
   },
   {
    "key": "f7",
@@ -147,7 +153,8 @@
    "h": 1912,
    "dpi": 300,
    "src": "Yuan2026 ChemRxiv Reversible Ion Transport Through an Irreversibly Percolating Li2S Interphase at the Li-Li6PS5Cl Interface.pdf",
-   "blank": 0.878
+   "blank": 0.878,
+   "viewed": true
   },
   {
    "key": "fS1",
@@ -168,7 +175,8 @@
    "dpi": 300,
    "src": "Sup) Yuan2026 ChemRxiv Reversible Ion Transport Through an Irreversibly Percolating Li2S Interphase at the Li-Li6PS5Cl Interface.pdf",
    "blank": 0.907,
-   "manual_crop": "auto extractor returned 0 SI captions: this SI writes captions as 'FIG. S.1.' / 'TABLE S.1.' (dot between S and the number), which CAP_RE label (?:ST|S)?\\d+ does not match; clip = union of 5 rasters + vector frame + axis labels, above the caption (2026-10-13, litdb-curator)"
+   "manual_crop": "auto extractor returned 0 SI captions: this SI writes captions as 'FIG. S.1.' / 'TABLE S.1.' (dot between S and the number), which CAP_RE label (?:ST|S)?\\d+ does not match; clip = union of 5 rasters + vector frame + axis labels, above the caption (2026-10-13, litdb-curator)",
+   "viewed": true
   },
   {
    "key": "fS2",
@@ -189,7 +197,8 @@
    "dpi": 300,
    "src": "Sup) Yuan2026 ChemRxiv Reversible Ion Transport Through an Irreversibly Percolating Li2S Interphase at the Li-Li6PS5Cl Interface.pdf",
    "blank": 0.957,
-   "manual_crop": "auto extractor returned 0 SI captions: this SI writes captions as 'FIG. S.1.' / 'TABLE S.1.' (dot between S and the number), which CAP_RE label (?:ST|S)?\\d+ does not match; clip = vector drawings (85.0,93.6,538.6,433.7) + 2 pt, above the caption (2026-10-13, litdb-curator)"
+   "manual_crop": "auto extractor returned 0 SI captions: this SI writes captions as 'FIG. S.1.' / 'TABLE S.1.' (dot between S and the number), which CAP_RE label (?:ST|S)?\\d+ does not match; clip = vector drawings (85.0,93.6,538.6,433.7) + 2 pt, above the caption (2026-10-13, litdb-curator)",
+   "viewed": true
   },
   {
    "key": "fS3",
@@ -210,7 +219,8 @@
    "dpi": 300,
    "src": "Sup) Yuan2026 ChemRxiv Reversible Ion Transport Through an Irreversibly Percolating Li2S Interphase at the Li-Li6PS5Cl Interface.pdf",
    "blank": 0.966,
-   "manual_crop": "auto extractor returned 0 SI captions: this SI writes captions as 'FIG. S.1.' / 'TABLE S.1.' (dot between S and the number), which CAP_RE label (?:ST|S)?\\d+ does not match; clip = vector drawings (153.1,93.6,470.5,322.5) + 2 pt, above the caption (2026-10-13, litdb-curator)"
+   "manual_crop": "auto extractor returned 0 SI captions: this SI writes captions as 'FIG. S.1.' / 'TABLE S.1.' (dot between S and the number), which CAP_RE label (?:ST|S)?\\d+ does not match; clip = vector drawings (153.1,93.6,470.5,322.5) + 2 pt, above the caption (2026-10-13, litdb-curator)",
+   "viewed": true
   },
   {
    "key": "fS4",
@@ -231,7 +241,8 @@
    "dpi": 300,
    "src": "Sup) Yuan2026 ChemRxiv Reversible Ion Transport Through an Irreversibly Percolating Li2S Interphase at the Li-Li6PS5Cl Interface.pdf",
    "blank": 0.956,
-   "manual_crop": "auto extractor returned 0 SI captions: this SI writes captions as 'FIG. S.1.' / 'TABLE S.1.' (dot between S and the number), which CAP_RE label (?:ST|S)?\\d+ does not match; clip = vector drawings (85.0,238.6,538.5,367.1) + axis label 'Distance' + 2 pt (2026-10-13, litdb-curator)"
+   "manual_crop": "auto extractor returned 0 SI captions: this SI writes captions as 'FIG. S.1.' / 'TABLE S.1.' (dot between S and the number), which CAP_RE label (?:ST|S)?\\d+ does not match; clip = vector drawings (85.0,238.6,538.5,367.1) + axis label 'Distance' + 2 pt (2026-10-13, litdb-curator)",
+   "viewed": true
   },
   {
    "key": "fS5",
@@ -252,7 +263,8 @@
    "dpi": 300,
    "src": "Sup) Yuan2026 ChemRxiv Reversible Ion Transport Through an Irreversibly Percolating Li2S Interphase at the Li-Li6PS5Cl Interface.pdf",
    "blank": 0.918,
-   "manual_crop": "auto extractor returned 0 SI captions: this SI writes captions as 'FIG. S.1.' / 'TABLE S.1.' (dot between S and the number), which CAP_RE label (?:ST|S)?\\d+ does not match; clip = 3 rasters + vector drawings (85.0,93.6,538.5,414.2) + 2 pt, above the caption (2026-10-13, litdb-curator)"
+   "manual_crop": "auto extractor returned 0 SI captions: this SI writes captions as 'FIG. S.1.' / 'TABLE S.1.' (dot between S and the number), which CAP_RE label (?:ST|S)?\\d+ does not match; clip = 3 rasters + vector drawings (85.0,93.6,538.5,414.2) + 2 pt, above the caption (2026-10-13, litdb-curator)",
+   "viewed": true
   },
   {
    "key": "tS1",
@@ -273,7 +285,8 @@
    "dpi": 300,
    "src": "Sup) Yuan2026 ChemRxiv Reversible Ion Transport Through an Irreversibly Percolating Li2S Interphase at the Li-Li6PS5Cl Interface.pdf",
    "blank": 0.957,
-   "manual_crop": "auto extractor returned 0 SI captions: this SI writes captions as 'FIG. S.1.' / 'TABLE S.1.' (dot between S and the number), which CAP_RE label (?:ST|S)?\\d+ does not match; clip = caption top to the last table row (2026-10-13, litdb-curator)"
+   "manual_crop": "auto extractor returned 0 SI captions: this SI writes captions as 'FIG. S.1.' / 'TABLE S.1.' (dot between S and the number), which CAP_RE label (?:ST|S)?\\d+ does not match; clip = caption top to the last table row (2026-10-13, litdb-curator)",
+   "viewed": true
   },
   {
    "key": "tS2",
@@ -294,7 +307,8 @@
    "dpi": 300,
    "src": "Sup) Yuan2026 ChemRxiv Reversible Ion Transport Through an Irreversibly Percolating Li2S Interphase at the Li-Li6PS5Cl Interface.pdf",
    "blank": 0.936,
-   "manual_crop": "auto extractor returned 0 SI captions: this SI writes captions as 'FIG. S.1.' / 'TABLE S.1.' (dot between S and the number), which CAP_RE label (?:ST|S)?\\d+ does not match; clip = caption top to the last table row (2026-10-13, litdb-curator)"
+   "manual_crop": "auto extractor returned 0 SI captions: this SI writes captions as 'FIG. S.1.' / 'TABLE S.1.' (dot between S and the number), which CAP_RE label (?:ST|S)?\\d+ does not match; clip = caption top to the last table row (2026-10-13, litdb-curator)",
+   "viewed": true
   }
  ],
  "missing_labels": []
