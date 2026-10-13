@@ -27,7 +27,8 @@
    "dpi": 300,
    "src": "Nisar2021 EnergyStorageMater Valuation of Surface Coatings in High-Energy Density Lithium-ion Battery Cathode Materials.pdf",
    "blank": 0.702,
-   "manual_crop": "Elsevier side-caption layout: caption sits in the right column (x 410-562) and the tool searched only above/below it in that column, so the raster in the left column was reported as 'graphics none (img0/draw0)'; clip = embedded raster rect (38, 58, 398, 470) on PDF p.3 + 6 pt margin (2026-10-13, litdb-curator)"
+   "manual_crop": "Elsevier side-caption layout: caption sits in the right column (x 410-562) and the tool searched only above/below it in that column, so the raster in the left column was reported as 'graphics none (img0/draw0)'; clip = embedded raster rect (38, 58, 398, 470) on PDF p.3 + 6 pt margin (2026-10-13, litdb-curator)",
+   "viewed": true
   },
   {
    "key": "f2",
@@ -48,7 +49,8 @@
    "dpi": 300,
    "src": "Nisar2021 EnergyStorageMater Valuation of Surface Coatings in High-Energy Density Lithium-ion Battery Cathode Materials.pdf",
    "blank": 0.399,
-   "manual_crop": "Elsevier side-caption layout: caption sits in the right column (x 410-562) and the tool searched only above/below it in that column, so the raster in the left column was reported as 'graphics none (img0/draw0)'; clip = embedded raster rect (38, 57, 398, 292) on PDF p.4 + 6 pt margin (2026-10-13, litdb-curator)"
+   "manual_crop": "Elsevier side-caption layout: caption sits in the right column (x 410-562) and the tool searched only above/below it in that column, so the raster in the left column was reported as 'graphics none (img0/draw0)'; clip = embedded raster rect (38, 57, 398, 292) on PDF p.4 + 6 pt margin (2026-10-13, litdb-curator)",
+   "viewed": true
   },
   {
    "key": "f3",
@@ -69,7 +71,8 @@
    "dpi": 300,
    "src": "Nisar2021 EnergyStorageMater Valuation of Surface Coatings in High-Energy Density Lithium-ion Battery Cathode Materials.pdf",
    "blank": 0.734,
-   "manual_crop": "Elsevier side-caption layout: caption sits in the right column (x 410-562) and the tool searched only above/below it in that column, so the raster in the left column was reported as 'graphics none (img0/draw0)'; clip = embedded raster rect (38, 57, 398, 353) on PDF p.6 + 6 pt margin (2026-10-13, litdb-curator)"
+   "manual_crop": "Elsevier side-caption layout: caption sits in the right column (x 410-562) and the tool searched only above/below it in that column, so the raster in the left column was reported as 'graphics none (img0/draw0)'; clip = embedded raster rect (38, 57, 398, 353) on PDF p.6 + 6 pt margin (2026-10-13, litdb-curator)",
+   "viewed": true
   },
   {
    "key": "f4",
@@ -90,7 +93,8 @@
    "dpi": 300,
    "src": "Nisar2021 EnergyStorageMater Valuation of Surface Coatings in High-Energy Density Lithium-ion Battery Cathode Materials.pdf",
    "blank": 0.662,
-   "manual_crop": "Elsevier side-caption layout: caption sits in the right column (x 410-562) and the tool searched only above/below it in that column, so the raster in the left column was reported as 'graphics none (img0/draw0)'; clip = embedded raster rect (38, 57, 398, 521) on PDF p.7 + 6 pt margin (2026-10-13, litdb-curator)"
+   "manual_crop": "Elsevier side-caption layout: caption sits in the right column (x 410-562) and the tool searched only above/below it in that column, so the raster in the left column was reported as 'graphics none (img0/draw0)'; clip = embedded raster rect (38, 57, 398, 521) on PDF p.7 + 6 pt margin (2026-10-13, litdb-curator)",
+   "viewed": true
   },
   {
    "key": "f5",
@@ -111,7 +115,8 @@
    "dpi": 300,
    "src": "Nisar2021 EnergyStorageMater Valuation of Surface Coatings in High-Energy Density Lithium-ion Battery Cathode Materials.pdf",
    "blank": 0.512,
-   "manual_crop": "Elsevier side-caption layout: caption sits in the right column (x 410-562) and the tool searched only above/below it in that column, so the raster in the left column was reported as 'graphics none (img0/draw0)'; clip = embedded raster rect (38, 215, 398, 438) on PDF p.8 + 6 pt margin (2026-10-13, litdb-curator)"
+   "manual_crop": "Elsevier side-caption layout: caption sits in the right column (x 410-562) and the tool searched only above/below it in that column, so the raster in the left column was reported as 'graphics none (img0/draw0)'; clip = embedded raster rect (38, 215, 398, 438) on PDF p.8 + 6 pt margin (2026-10-13, litdb-curator)",
+   "viewed": true
   },
   {
    "key": "f6",
@@ -131,7 +136,8 @@
    "h": 895,
    "dpi": 300,
    "src": "Nisar2021 EnergyStorageMater Valuation of Surface Coatings in High-Energy Density Lithium-ion Battery Cathode Materials.pdf",
-   "blank": 0.715
+   "blank": 0.715,
+   "viewed": true
   },
   {
    "key": "f7",
@@ -152,7 +158,8 @@
    "dpi": 300,
    "src": "Nisar2021 EnergyStorageMater Valuation of Surface Coatings in High-Energy Density Lithium-ion Battery Cathode Materials.pdf",
    "blank": 0.69,
-   "manual_crop": "Elsevier side-caption layout: caption sits in the right column (x 410-562) and the tool searched only above/below it in that column, so the raster in the left column was reported as 'graphics none (img0/draw0)'; clip = embedded raster rect (38, 57, 398, 345) on PDF p.10 + 6 pt margin (2026-10-13, litdb-curator)"
+   "manual_crop": "Elsevier side-caption layout: caption sits in the right column (x 410-562) and the tool searched only above/below it in that column, so the raster in the left column was reported as 'graphics none (img0/draw0)'; clip = embedded raster rect (38, 57, 398, 345) on PDF p.10 + 6 pt margin (2026-10-13, litdb-curator)",
+   "viewed": true
   },
   {
    "key": "f8",
@@ -172,7 +179,8 @@
    "h": 1061,
    "dpi": 300,
    "src": "Nisar2021 EnergyStorageMater Valuation of Surface Coatings in High-Energy Density Lithium-ion Battery Cathode Materials.pdf",
-   "blank": 0.726
+   "blank": 0.726,
+   "viewed": true
   },
   {
    "key": "f9",
@@ -193,7 +201,8 @@
    "dpi": 300,
    "src": "Nisar2021 EnergyStorageMater Valuation of Surface Coatings in High-Energy Density Lithium-ion Battery Cathode Materials.pdf",
    "blank": 0.834,
-   "manual_crop": "Elsevier side-caption layout: caption sits in the right column (x 410-562) and the tool searched only above/below it in that column, so the raster in the left column was reported as 'graphics none (img0/draw0)'; clip = embedded raster rect (38, 58, 398, 270) on PDF p.12 + 6 pt margin (2026-10-13, litdb-curator)"
+   "manual_crop": "Elsevier side-caption layout: caption sits in the right column (x 410-562) and the tool searched only above/below it in that column, so the raster in the left column was reported as 'graphics none (img0/draw0)'; clip = embedded raster rect (38, 58, 398, 270) on PDF p.12 + 6 pt margin (2026-10-13, litdb-curator)",
+   "viewed": true
   },
   {
    "key": "f10",
@@ -213,7 +222,8 @@
    "h": 556,
    "dpi": 300,
    "src": "Nisar2021 EnergyStorageMater Valuation of Surface Coatings in High-Energy Density Lithium-ion Battery Cathode Materials.pdf",
-   "blank": 0.881
+   "blank": 0.881,
+   "viewed": true
   },
   {
    "key": "f11",
@@ -234,7 +244,8 @@
    "dpi": 300,
    "src": "Nisar2021 EnergyStorageMater Valuation of Surface Coatings in High-Energy Density Lithium-ion Battery Cathode Materials.pdf",
    "blank": 0.496,
-   "manual_crop": "Elsevier side-caption layout: caption sits in the right column (x 410-562) and the tool searched only above/below it in that column, so the raster in the left column was reported as 'graphics none (img0/draw0)'; clip = embedded raster rect (38, 57, 398, 326) on PDF p.15 + 6 pt margin (2026-10-13, litdb-curator)"
+   "manual_crop": "Elsevier side-caption layout: caption sits in the right column (x 410-562) and the tool searched only above/below it in that column, so the raster in the left column was reported as 'graphics none (img0/draw0)'; clip = embedded raster rect (38, 57, 398, 326) on PDF p.15 + 6 pt margin (2026-10-13, litdb-curator)",
+   "viewed": true
   },
   {
    "key": "f12",
@@ -255,7 +266,8 @@
    "dpi": 300,
    "src": "Nisar2021 EnergyStorageMater Valuation of Surface Coatings in High-Energy Density Lithium-ion Battery Cathode Materials.pdf",
    "blank": 0.486,
-   "manual_crop": "Elsevier side-caption layout: caption sits in the right column (x 410-562) and the tool searched only above/below it in that column, so the raster in the left column was reported as 'graphics none (img0/draw0)'; clip = embedded raster rect (38, 346, 398, 536) on PDF p.15 + 6 pt margin (2026-10-13, litdb-curator)"
+   "manual_crop": "Elsevier side-caption layout: caption sits in the right column (x 410-562) and the tool searched only above/below it in that column, so the raster in the left column was reported as 'graphics none (img0/draw0)'; clip = embedded raster rect (38, 346, 398, 536) on PDF p.15 + 6 pt margin (2026-10-13, litdb-curator)",
+   "viewed": true
   },
   {
    "key": "t1",

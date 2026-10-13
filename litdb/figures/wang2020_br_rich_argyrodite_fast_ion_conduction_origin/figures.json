@@ -26,7 +26,8 @@
    "h": 1298,
    "dpi": 300,
    "src": "Wang2020 ChemMater Fast Ion Conduction and Its Origin in Li6-xPS5-xBr1+x.pdf",
-   "blank": 0.919
+   "blank": 0.919,
+   "viewed": true
   },
   {
    "key": "f2",
@@ -46,7 +47,8 @@
    "h": 568,
    "dpi": 300,
    "src": "Wang2020 ChemMater Fast Ion Conduction and Its Origin in Li6-xPS5-xBr1+x.pdf",
-   "blank": 0.927
+   "blank": 0.927,
+   "viewed": true
   },
   {
    "key": "f3",
@@ -66,7 +68,8 @@
    "h": 575,
    "dpi": 300,
    "src": "Wang2020 ChemMater Fast Ion Conduction and Its Origin in Li6-xPS5-xBr1+x.pdf",
-   "blank": 0.933
+   "blank": 0.933,
+   "viewed": true
   },
   {
    "key": "f4",
@@ -86,7 +89,8 @@
    "h": 615,
    "dpi": 300,
    "src": "Wang2020 ChemMater Fast Ion Conduction and Its Origin in Li6-xPS5-xBr1+x.pdf",
-   "blank": 0.946
+   "blank": 0.946,
+   "viewed": true
   },
   {
    "key": "f5",
@@ -106,7 +110,8 @@
    "h": 1510,
    "dpi": 300,
    "src": "Wang2020 ChemMater Fast Ion Conduction and Its Origin in Li6-xPS5-xBr1+x.pdf",
-   "blank": 0.916
+   "blank": 0.916,
+   "viewed": true
   },
   {
    "key": "f6",
@@ -126,7 +131,8 @@
    "h": 662,
    "dpi": 300,
    "src": "Wang2020 ChemMater Fast Ion Conduction and Its Origin in Li6-xPS5-xBr1+x.pdf",
-   "blank": 0.951
+   "blank": 0.951,
+   "viewed": true
   },
   {
    "key": "f7",
@@ -146,7 +152,8 @@
    "h": 521,
    "dpi": 300,
    "src": "Wang2020 ChemMater Fast Ion Conduction and Its Origin in Li6-xPS5-xBr1+x.pdf",
-   "blank": 0.754
+   "blank": 0.754,
+   "viewed": true
   },
   {
    "key": "f8",
@@ -166,7 +173,8 @@
    "h": 620,
    "dpi": 300,
    "src": "Wang2020 ChemMater Fast Ion Conduction and Its Origin in Li6-xPS5-xBr1+x.pdf",
-   "blank": 0.893
+   "blank": 0.893,
+   "viewed": true
   },
   {
    "key": "fS1",
@@ -186,7 +194,8 @@
    "h": 1205,
    "dpi": 300,
    "src": "Sup) Wang2020 ChemMater Fast Ion Conduction and Its Origin in Li6-xPS5-xBr1+x.pdf",
-   "blank": 0.944
+   "blank": 0.944,
+   "viewed": true
   },
   {
    "key": "fS2",
@@ -206,7 +215,8 @@
    "h": 1130,
    "dpi": 300,
    "src": "Sup) Wang2020 ChemMater Fast Ion Conduction and Its Origin in Li6-xPS5-xBr1+x.pdf",
-   "blank": 0.825
+   "blank": 0.825,
+   "viewed": true
   },
   {
    "key": "fS3",
@@ -226,7 +236,113 @@
    "h": 841,
    "dpi": 300,
    "src": "Sup) Wang2020 ChemMater Fast Ion Conduction and Its Origin in Li6-xPS5-xBr1+x.pdf",
-   "blank": 0.867
+   "blank": 0.867,
+   "viewed": true
+  },
+  {
+   "key": "tS1",
+   "kind": "table",
+   "label": "S1",
+   "page": 1,
+   "file": "tab_S1.png",
+   "caption": "Table S1. Crystallographic information of Li6PS5Br (atomic coordinates, site occupancy, and Uiso), obtained from Rietveld Refinement of X-ray diffraction.",
+   "rotated_deg": 0,
+   "bbox": [
+    66,
+    276,
+    548,
+    509
+   ],
+   "w": 2009,
+   "h": 971,
+   "dpi": 300,
+   "src": "Sup) Wang2020 ChemMater Fast Ion Conduction and Its Origin in Li6-xPS5-xBr1+x.pdf",
+   "manual_crop": "auto extractor found no table captions in this SI (Word-PDF text layer splits sub/superscripts, e.g. 'Li\\n6 PS\\n5Br'); clip = caption top to table bottom rule, located from pymupdf word coordinates, rendered at 300 dpi (2026-10-13, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "tS2",
+   "kind": "table",
+   "label": "S2",
+   "page": 1,
+   "file": "tab_S2.png",
+   "caption": "Table S2. Atomic arrangement in a 2 × 1 × 1 supercell of Li6−xPS5−xBr1+x for Density Function Theory calculations.",
+   "rotated_deg": 0,
+   "bbox": [
+    66,
+    512,
+    548,
+    698
+   ],
+   "w": 2009,
+   "h": 776,
+   "dpi": 300,
+   "src": "Sup) Wang2020 ChemMater Fast Ion Conduction and Its Origin in Li6-xPS5-xBr1+x.pdf",
+   "manual_crop": "auto extractor found no table captions in this SI (Word-PDF text layer splits sub/superscripts, e.g. 'Li\\n6 PS\\n5Br'); clip = caption top to table bottom rule, located from pymupdf word coordinates, rendered at 300 dpi (2026-10-13, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "tS3",
+   "kind": "table",
+   "label": "S3",
+   "page": 3,
+   "file": "tab_S3.png",
+   "caption": "Table S3. Li isotropic chemical shifts of different Li ions and the distance to their neighboring Li ions (within 3 Å) in Li6PS5Br structure with Li located exclusively at 48h sites.",
+   "rotated_deg": 0,
+   "bbox": [
+    66,
+    257,
+    548,
+    686
+   ],
+   "w": 2009,
+   "h": 1789,
+   "dpi": 300,
+   "src": "Sup) Wang2020 ChemMater Fast Ion Conduction and Its Origin in Li6-xPS5-xBr1+x.pdf",
+   "manual_crop": "auto extractor found no table captions in this SI (Word-PDF text layer splits sub/superscripts, e.g. 'Li\\n6 PS\\n5Br'); clip = caption top to table bottom rule, located from pymupdf word coordinates, rendered at 300 dpi (2026-10-13, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "tS4",
+   "kind": "table",
+   "label": "S4",
+   "page": 4,
+   "file": "tab_S4.png",
+   "caption": "Table S4. Limiting jump rates of Li+ of different configurations at 4d sites in Li6PS5Cl.(2)  [ref (2) = de Klerk et al. Chem. Mater. 2016, 28, 7955]",
+   "rotated_deg": 0,
+   "bbox": [
+    66,
+    319,
+    530,
+    424
+   ],
+   "w": 1934,
+   "h": 438,
+   "dpi": 300,
+   "src": "Sup) Wang2020 ChemMater Fast Ion Conduction and Its Origin in Li6-xPS5-xBr1+x.pdf",
+   "manual_crop": "auto extractor found no table captions in this SI (Word-PDF text layer splits sub/superscripts, e.g. 'Li\\n6 PS\\n5Br'); clip = caption top to table bottom rule, located from pymupdf word coordinates, rendered at 300 dpi (2026-10-13, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "tS5",
+   "kind": "table",
+   "label": "S5",
+   "page": 4,
+   "file": "tab_S5.png",
+   "caption": "Table S5. Overall jump rates in Li6−xPS5−xBr1+x, calculated based on Equation 5 given in main text.",
+   "rotated_deg": 0,
+   "bbox": [
+    66,
+    434,
+    530,
+    580
+   ],
+   "w": 1934,
+   "h": 609,
+   "dpi": 300,
+   "src": "Sup) Wang2020 ChemMater Fast Ion Conduction and Its Origin in Li6-xPS5-xBr1+x.pdf",
+   "manual_crop": "auto extractor found no table captions in this SI (Word-PDF text layer splits sub/superscripts, e.g. 'Li\\n6 PS\\n5Br'); clip = caption top to table bottom rule, located from pymupdf word coordinates, rendered at 300 dpi (2026-10-13, litdb-curator)",
+   "viewed": true
   }
  ],
  "missing_labels": []
