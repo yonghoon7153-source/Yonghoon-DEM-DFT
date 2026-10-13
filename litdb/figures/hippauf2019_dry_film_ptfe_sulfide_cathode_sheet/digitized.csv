@@ -1,0 +1,35 @@
+# hippauf2019_dry_film_ptfe_sulfide_cathode_sheet — figure readings (판독) · 2026-10-13
+# Fig 6 (main p.6, 300 dpi native raster, re-cropped to include the y label): x calibrated on the printed tick labels 0 (px 132.5) and 240 (px 779.0) -> 2.694 px per mAh/g;
+#   V gridlines 2.0/2.4/2.8/3.2/3.6 V every 62.3 px. Each curve class is told apart by its darkest pixel (solid black < 70 = 0.07 mA/cm2; dashed grey 100-150 = 0.75; dotted light grey 150-200 = 1.5).
+#   end capacity = right-most crossing in the rows 3-10 px below the 2.0 V gridline (1.94-1.98 V, cut-off 1.93 V); where a dashed/dotted curve has a gap there, the 2.1 V crossing is used (flag) -> reads a few mAh/g low.
+# precision: +-2 mAh/g (black), +-4 mAh/g (dashed/dotted). Check: 0 wt% 0.07 mA/cm2 reads 203.4 (printed 203) and 0.1 wt% reads 202.5 (printed 202).
+# Fig S7 (SI Sup2 p.6, 194 dpi native raster, reproduced cells): x calibrated on tick marks every 20 mAh/g (43.3 px; frame 0-260 = px 148-710.5);
+#   crossings in the rows 4-26 px above each panel's bottom frame (~1.93-2.0 V); right-most black run = 0.07, next black (dashed) = 0.45, grey dash-dot = 0.75, light-grey dotted = 1.5 mA/cm2. precision +-3 mAh/g.
+figure,sample,ptfe_wt_pct,discharge_current_mA_cm2,capacity_mAh_per_gNCM,note
+Fig 6A,NCM85,0.0,0.07,203.4,
+Fig 6A,NCM85,0.0,0.75,173,2.1 V crossing (dash gap near cut-off)
+Fig 6A,NCM85,0.0,1.5,158,2.1 V crossing (dot gap near cut-off)
+Fig 6B,NCM85_01,0.1,0.07,202.5,
+Fig 6B,NCM85_01,0.1,0.75,167.4,
+Fig 6B,NCM85_01,0.1,1.5,154.8,
+Fig 6C,NCM85_03,0.3,0.07,214.9,
+Fig 6C,NCM85_03,0.3,0.75,185.2,
+Fig 6C,NCM85_03,0.3,1.5,173.6,
+Fig 6D,NCM85_07,0.7,0.07,213.1,
+Fig 6D,NCM85_07,0.7,0.75,157,2.1 V crossing (dash gap near cut-off)
+Fig 6D,NCM85_07,0.7,1.5,137.9,
+Fig 6E,NCM85_10,1.0,0.07,210.7,
+Fig 6E,NCM85_10,1.0,0.75,164.7,
+Fig 6E,NCM85_10,1.0,1.5,141.4,
+Fig S7A,NCM85_03 (reproduced),0.3,0.07,212.8,
+Fig S7A,NCM85_03 (reproduced),0.3,0.45,191.6,
+Fig S7A,NCM85_03 (reproduced),0.3,0.75,185.6,
+Fig S7A,NCM85_03 (reproduced),0.3,1.5,175.9,
+Fig S7B,NCM85_07 (reproduced),0.7,0.07,210.1,
+Fig S7B,NCM85_07 (reproduced),0.7,0.45,182.8,
+Fig S7B,NCM85_07 (reproduced),0.7,0.75,172.9,
+Fig S7B,NCM85_07 (reproduced),0.7,1.5,150.5,
+Fig S7C,NCM85_10 (reproduced),1.0,0.07,199.4,
+Fig S7C,NCM85_10 (reproduced),1.0,0.45,148.8,
+Fig S7C,NCM85_10 (reproduced),1.0,0.75,128.5,
+Fig S7C,NCM85_10 (reproduced),1.0,1.5,100.3,

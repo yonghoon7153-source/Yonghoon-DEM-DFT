@@ -1,0 +1,35 @@
+# kawaguchi2023_doe_electrode_fabrication_dry_coated_ncm_lps — bar heights read from VECTOR paths (판독) + our recomputation (우리 산술) · 2026-10-13
+# method: main PDF p.7 (Fig 4) / p.12 (Fig 8): blue fill (0.33,0.47,0.78) bar rectangles and the y-axis tick marks are PDF vector paths;
+#   value = (zero line - bar edge) / (half the distance between the +1.0 and -1.0 tick marks). Coordinates exact to 0.01 pt, scale 40-45 pt per unit -> +-0.001.
+# recomputed = standardized partial regression coefficient b_i * sd(X_i) / sd(Y) (paper eq. 18) from the printed DOE responses (Tables 1a, 2a, 3a);
+#   balanced 2^3 design, interaction columns centred (Xs-0.2)(P-270) etc. (the centring that reproduces every printed MLR coefficient), sample sd (n-1).
+#   Qr inputs are the printed integer percentages -> recomputed Fig 8a values carry +-0.01 rounding. Bars not drawn (factor not 'dominant') are not listed.
+# Fig 4c (simple-mixture Rct1st) agrees with Table 1(a) data, NOT with the printed Table 1(d) ANOVA (which is identical to Table 2(d)).
+figure,panel,sample,response,factor,value_vector_read,value_recomputed_from_table
+Fig 4,a,simple mixture,Q1st,P,0.864,0.866
+Fig 4,a,simple mixture,Q1st,Xs,0.361,0.359
+Fig 4,a,simple mixture,Q1st,Ts,0.299,0.3
+Fig 4,b,simple mixture,Rs1st,P,-0.971,-0.972
+Fig 4,b,simple mixture,Rs1st,Ts,-0.204,-0.202
+Fig 4,b,simple mixture,Rs1st,XsP,-0.095,-0.095
+Fig 4,b,simple mixture,Rs1st,Xs,0.06,0.062
+Fig 4,c,simple mixture,Rct1st,Xs,0.594,0.595
+Fig 4,c,simple mixture,Rct1st,P,-0.475,-0.475
+Fig 4,c,simple mixture,Rct1st,XsP,-0.443,-0.444
+Fig 4,c,simple mixture,Rct1st,Ts,-0.386,-0.386
+Fig 4,d,dry-coated,Q1st,Xs,-0.943,-0.942
+Fig 4,d,dry-coated,Q1st,Ts,0.245,0.245
+Fig 4,d,dry-coated,Q1st,XsTs,-0.188,-0.187
+Fig 4,e,dry-coated,Rs1st,P,-0.684,-0.684
+Fig 4,e,dry-coated,Rs1st,Ts,-0.555,-0.555
+Fig 4,e,dry-coated,Rs1st,PTs,-0.45,-0.45
+Fig 4,f,dry-coated,Rct1st,Xs,0.792,0.793
+Fig 4,f,dry-coated,Rct1st,Ts,-0.451,-0.452
+Fig 8,a,simple mixture,Qr1st-50th,Xs,0.804,0.802
+Fig 8,a,simple mixture,Qr1st-50th,Ts,0.424,0.427
+Fig 8,a,simple mixture,Qr1st-50th,XsP,0.382,0.386
+Fig 8,a,simple mixture,Qr1st-50th,XsTs,-0.123,-0.115
+Fig 8,a,simple mixture,Qr1st-50th,P,0.097,0.094
+Fig 8,b,simple mixture,dRs1st-50th,P,-0.789,-0.789
+Fig 8,c,simple mixture,dRct1st-50th,XsP,-0.705,-0.704
+Fig 8,c,simple mixture,dRct1st-50th,Ts,-0.682,-0.683

@@ -1,0 +1,502 @@
+{
+ "slug": "hippauf2019_dry_film_ptfe_sulfide_cathode_sheet",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-10-13",
+ "sources": [
+  "e02a571e-21._Overcoming_binder_limitations_of_sheet-type_solid-state_cathodes_using_a_solvent-free_dry-film_approach.pdf",
+  "7fb09899-21._Sup2_Overcoming_binder_limitations_of_sheet-type_solid-state_cathodes_using_a_solvent-free_dry-film_approach.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 2,
+   "file": "fig_1.png",
+   "caption": "Fig. 1. Schematic diagram of DF-fabrication based on a dry premixing of NCM, C, SE, and PTFE binder followed by shearing force induced film formation. After characterization of the dry-film, small and larger sized test cells were fabricated.",
+   "rotated_deg": 0,
+   "bbox": [
+    313.3,
+    55.4,
+    550.9,
+    150.2
+   ],
+   "w": 991,
+   "h": 395,
+   "dpi": 300,
+   "src": "e02a571e-21._Overcoming_binder_limitations_of_sheet-type_solid-state_cathodes_using_a_solvent-free_dry-film_approach.pdf",
+   "blank": 0.741,
+   "auto_bbox": [
+    300.6,
+    49.4,
+    563.7,
+    156.2
+   ],
+   "native_dpi": 300.0,
+   "recrop": "2026-10-13 래스터 원본 경계로 다시 자름 (원 해상도 300 dpi) — 자동 bbox 는 래스터 바깥 흰 여백 포함",
+   "viewed": true
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 4,
+   "file": "fig_2.png",
+   "caption": "Fig. 2. (A) Calculations [SI] for theoretical cathode densities of a composite of 85 wt% NCM, 13 wt% SE, and 2 wt% C as a function of the binder content and the porosity of the compressed cathode. (B) Mass loss of argyrodite electrolyte Li6PS5Cl during TGA/DSC measurement under dry synthetic air (temperature range = 25–180 °C) (C) Room temperature XRD patterns of NCM85_03 showing diffraction peaks of NCM, Li6PS5Cl and carbon.",
+   "rotated_deg": 0,
+   "bbox": [
+    127.6,
+    55.4,
+    467.9,
+    323.0
+   ],
+   "w": 1419,
+   "h": 1115,
+   "dpi": 300,
+   "src": "e02a571e-21._Overcoming_binder_limitations_of_sheet-type_solid-state_cathodes_using_a_solvent-free_dry-film_approach.pdf",
+   "blank": 0.903,
+   "auto_bbox": [
+    31.6,
+    49.4,
+    563.7,
+    329.0
+   ],
+   "native_dpi": 300.0,
+   "recrop": "2026-10-13 래스터 원본 경계로 다시 자름 (원 해상도 300 dpi) — 자동 bbox 는 래스터 바깥 흰 여백 포함",
+   "viewed": true
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 4,
+   "file": "fig_3.png",
+   "caption": "Fig. 3. (A) Photo images of a 4 × 3.5 cm2 free-standing and flexible NCM85_03 dry-film (200 μm thickness, 0.3 wt% PTFE) before and after it was folded and lifted up with tweezers (B) 3 × 3 cm2 free-standing and flexible NCM85_03 dry-film (93 μm thickness, 0.3 wt% PTFE) during thickness measurement.",
+   "rotated_deg": 0,
+   "bbox": [
+    124.2,
+    564.0,
+    471.2,
+    716.7
+   ],
+   "w": 1447,
+   "h": 637,
+   "dpi": 300,
+   "src": "e02a571e-21._Overcoming_binder_limitations_of_sheet-type_solid-state_cathodes_using_a_solvent-free_dry-film_approach.pdf",
+   "blank": 0.035,
+   "auto_bbox": [
+    31.6,
+    558.0,
+    563.6,
+    721.2
+   ],
+   "native_dpi": 300.0,
+   "recrop": "2026-10-13 래스터 원본 경계로 다시 자름 (원 해상도 300 dpi) — 자동 bbox 는 래스터 바깥 흰 여백 포함",
+   "viewed": true
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 5,
+   "file": "fig_4.png",
+   "caption": "Fig. 4. SEM images of (A) NCM85 cathode powder mixture, NCM85_03 dry-film before (B) and after (C) compression with 300 MPa and a cross section of the same compressed cathode.",
+   "rotated_deg": 0,
+   "bbox": [
+    128.0,
+    55.4,
+    467.4,
+    298.9
+   ],
+   "w": 1415,
+   "h": 1015,
+   "dpi": 300,
+   "src": "e02a571e-21._Overcoming_binder_limitations_of_sheet-type_solid-state_cathodes_using_a_solvent-free_dry-film_approach.pdf",
+   "blank": 0.013,
+   "auto_bbox": [
+    31.6,
+    49.4,
+    563.6,
+    304.9
+   ],
+   "native_dpi": 300.0,
+   "recrop": "2026-10-13 래스터 원본 경계로 다시 자름 (원 해상도 300 dpi) — 자동 bbox 는 래스터 바깥 흰 여백 포함",
+   "viewed": true
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 6,
+   "file": "fig_5.png",
+   "caption": "Fig. 5. (A) EI Spectrum of the pure SE and a pure SE dry-film including calculated ionic-conductivities (B) Discharge rate performance of a test cell with NCM85 without PTFE-binder within a voltage range of 1.93–3.63 V vs Li-In. The charge rate was fixed at 0.15 mA cm−2 and the discharge rate was varied between 0.07 and 1.5 mA cm−2, measurements were conducted at 25 °C.",
+   "rotated_deg": 0,
+   "bbox": [
+    127.6,
+    55.4,
+    467.9,
+    207.9
+   ],
+   "w": 1419,
+   "h": 636,
+   "dpi": 300,
+   "src": "e02a571e-21._Overcoming_binder_limitations_of_sheet-type_solid-state_cathodes_using_a_solvent-free_dry-film_approach.pdf",
+   "blank": 0.893,
+   "auto_bbox": [
+    31.6,
+    49.4,
+    563.7,
+    213.9
+   ],
+   "native_dpi": 300.0,
+   "recrop": "2026-10-13 래스터 원본 경계로 다시 자름 (원 해상도 300 dpi) — 자동 bbox 는 래스터 바깥 흰 여백 포함",
+   "viewed": true
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 6,
+   "file": "fig_6.png",
+   "caption": "Fig. 6. Discharge rate performance of the test cells adopting (A) 0 wt% (NCM85), (B) 0.1 wt% (NCM85_01), (C) 0.3 wt% (NCM85_03), (D) 0.7 wt% (NCM85_07), and (E) 1 wt% PTFE binder (NCM85_10). The charge rate was fixed at 0.15 mA cm-2, measurements were conducted at 25 °C.",
+   "rotated_deg": 0,
+   "bbox": [
+    62.2,
+    263.6,
+    264.5,
+    641.3
+   ],
+   "w": 843,
+   "h": 1574,
+   "dpi": 300,
+   "src": "e02a571e-21._Overcoming_binder_limitations_of_sheet-type_solid-state_cathodes_using_a_solvent-free_dry-film_approach.pdf",
+   "blank": 0.894,
+   "auto_bbox": [
+    31.6,
+    259.7,
+    294.7,
+    645.0
+   ],
+   "native_dpi": 300.0,
+   "recrop": "2026-10-13 래스터 경계 (x0 64.1) 로 자르면 세로축 제목 'U vs. Li-In [V]' 이 잘려 왼쪽으로 넓혀 다시 자름 (비백색 경계 + 2 pt)",
+   "viewed": true
+  },
+  {
+   "key": "f7",
+   "kind": "figure",
+   "label": "7",
+   "page": 7,
+   "file": "fig_7.png",
+   "caption": "Fig. 7. Electrochemical impedance Nyquist plot of the test cells with samples NCM85 (A), and NCM83_01,03,10 (B) in the charged state after the rate test, measurements were conducted at 25 °C.",
+   "rotated_deg": 0,
+   "bbox": [
+    137.5,
+    55.4,
+    457.9,
+    212.8
+   ],
+   "w": 1335,
+   "h": 656,
+   "dpi": 300,
+   "src": "e02a571e-21._Overcoming_binder_limitations_of_sheet-type_solid-state_cathodes_using_a_solvent-free_dry-film_approach.pdf",
+   "blank": 0.895,
+   "auto_bbox": [
+    31.6,
+    49.4,
+    563.6,
+    218.8
+   ],
+   "native_dpi": 300.1,
+   "recrop": "2026-10-13 래스터 원본 경계로 다시 자름 (원 해상도 300 dpi) — 자동 bbox 는 래스터 바깥 흰 여백 포함",
+   "viewed": true
+  },
+  {
+   "key": "f8",
+   "kind": "figure",
+   "label": "8",
+   "page": 8,
+   "file": "fig_8.png",
+   "caption": "Fig. 8. (A) Discharge rate performance and (B) Cycle characteristic of rocking-chair pouch cell NCM vs graphite. For the cycling characteristic, the cut off potentials are 4.0 and 2.5 V and the charge and discharge current is 0.35 and 0.7 mA cm−2, respectively. Measurements were conducted at 25 °C.",
+   "rotated_deg": 0,
+   "bbox": [
+    139.2,
+    55.4,
+    456.2,
+    175.1
+   ],
+   "w": 1322,
+   "h": 499,
+   "dpi": 300,
+   "src": "e02a571e-21._Overcoming_binder_limitations_of_sheet-type_solid-state_cathodes_using_a_solvent-free_dry-film_approach.pdf",
+   "blank": 0.746,
+   "auto_bbox": [
+    31.6,
+    49.4,
+    563.6,
+    181.1
+   ],
+   "native_dpi": 300.0,
+   "recrop": "2026-10-13 래스터 원본 경계로 다시 자름 (원 해상도 300 dpi) — 자동 bbox 는 래스터 바깥 흰 여백 포함",
+   "viewed": true
+  },
+  {
+   "page": 2,
+   "bbox": [
+    70.8,
+    70.9,
+    524.4,
+    339.1
+   ],
+   "dpi": 220,
+   "src": "7fb09899-21._Sup2_Overcoming_binder_limitations_of_sheet-type_solid-state_cathodes_using_a_solvent-free_dry-film_approach.pdf",
+   "caption": "Figure S 1 A) Tensile force-time plot of dry-film electrode B) averaged tensile force at breaking point for different binder contents C) photographs of dry-film samples at the beginning of the experiment (t0), after reaching the breaking point (t1), and after complete disintegration of the sample (t2).",
+   "kind": "figure",
+   "native_dpi": 220.0,
+   "label": "S1",
+   "manual_crop": "2026-10-13 손 크롭 — 자동 추출이 SI 의 띄어 쓴 표지 ('Figure S 1') 를 못 잡음 · 래스터 원본 경계 · 원 해상도 그대로 (220.0 dpi · 업샘플 없음)",
+   "key": "fS1",
+   "file": "fig_S1.png",
+   "w": 1387,
+   "h": 821,
+   "blank": 0.841,
+   "rotated_deg": 0,
+   "viewed": true
+  },
+  {
+   "page": 2,
+   "bbox": [
+    70.8,
+    419.6,
+    441.7,
+    703.5
+   ],
+   "dpi": 150,
+   "src": "7fb09899-21._Sup2_Overcoming_binder_limitations_of_sheet-type_solid-state_cathodes_using_a_solvent-free_dry-film_approach.pdf",
+   "caption": "Figure S 2 DSC measurement of argyrodite electrolyte Li6PS5Cl under dry synthetic air (temperature range = 60-195°C).",
+   "kind": "figure",
+   "native_dpi": 149.9,
+   "label": "S2",
+   "manual_crop": "2026-10-13 손 크롭 — 자동 추출이 SI 의 띄어 쓴 표지 ('Figure S 1') 를 못 잡음 · 래스터 원본 경계 · 원 해상도 그대로 (149.9 dpi · 업샘플 없음)",
+   "key": "fS2",
+   "file": "fig_S2.png",
+   "w": 774,
+   "h": 592,
+   "blank": 0.922,
+   "rotated_deg": 0,
+   "viewed": true
+  },
+  {
+   "page": 3,
+   "bbox": [
+    70.8,
+    70.8,
+    524.4,
+    257.8
+   ],
+   "dpi": 200,
+   "src": "7fb09899-21._Sup2_Overcoming_binder_limitations_of_sheet-type_solid-state_cathodes_using_a_solvent-free_dry-film_approach.pdf",
+   "caption": "Figure S 3 Raman shifts of solid electrolyte Li6PS5Cl samples treated at room temperature (RT), 100°C for 15 min, 150°C for 15 min, and 150°C for 120 min.",
+   "kind": "figure",
+   "native_dpi": 199.9,
+   "label": "S3",
+   "manual_crop": "2026-10-13 손 크롭 — 자동 추출이 SI 의 띄어 쓴 표지 ('Figure S 1') 를 못 잡음 · 래스터 원본 경계 · 원 해상도 그대로 (199.9 dpi · 업샘플 없음)",
+   "key": "fS3",
+   "file": "fig_S3.png",
+   "w": 1261,
+   "h": 521,
+   "blank": 0.893,
+   "rotated_deg": 0,
+   "viewed": true
+  },
+  {
+   "page": 3,
+   "bbox": [
+    70.8,
+    302.3,
+    483.1,
+    617.5
+   ],
+   "dpi": 150,
+   "src": "7fb09899-21._Sup2_Overcoming_binder_limitations_of_sheet-type_solid-state_cathodes_using_a_solvent-free_dry-film_approach.pdf",
+   "caption": "Figure S 4 Cyclic voltammogram of dry-film samples with 0.3 and 1% PTFE (scan speed of 0.02mV s-1), measurements were conducted at 25 °C.",
+   "kind": "figure",
+   "native_dpi": 150.0,
+   "label": "S4",
+   "manual_crop": "2026-10-13 손 크롭 — 자동 추출이 SI 의 띄어 쓴 표지 ('Figure S 1') 를 못 잡음 · 래스터 원본 경계 · 원 해상도 그대로 (150.0 dpi · 업샘플 없음)",
+   "key": "fS4",
+   "file": "fig_S4.png",
+   "w": 860,
+   "h": 658,
+   "blank": 0.903,
+   "rotated_deg": 0,
+   "viewed": true
+  },
+  {
+   "page": 4,
+   "bbox": [
+    70.8,
+    70.8,
+    454.6,
+    621.7
+   ],
+   "dpi": 150,
+   "src": "7fb09899-21._Sup2_Overcoming_binder_limitations_of_sheet-type_solid-state_cathodes_using_a_solvent-free_dry-film_approach.pdf",
+   "caption": "Figure S 5 dQ/dV plot of reproduced test cells adopting 0.3 wt% (NCM85_03), and 1 wt% PTFE binder (NCM85_10). The charge rate was fixed at 0.15 mA cm-2. The discharge rate was increased from 0.07 mA/cm² to 1.5 mA/cm², measurements were conducted at 25 °C.",
+   "kind": "figure",
+   "native_dpi": 150.1,
+   "label": "S5",
+   "manual_crop": "2026-10-13 손 크롭 — 자동 추출이 SI 의 띄어 쓴 표지 ('Figure S 1') 를 못 잡음 · 래스터 원본 경계 · 원 해상도 그대로 (150.1 dpi · 업샘플 없음)",
+   "key": "fS5",
+   "file": "fig_S5.png",
+   "w": 801,
+   "h": 1149,
+   "blank": 0.894,
+   "rotated_deg": 0,
+   "viewed": true
+  },
+  {
+   "page": 5,
+   "bbox": [
+    70.8,
+    70.8,
+    471.0,
+    470.9
+   ],
+   "dpi": 150,
+   "src": "7fb09899-21._Sup2_Overcoming_binder_limitations_of_sheet-type_solid-state_cathodes_using_a_solvent-free_dry-film_approach.pdf",
+   "caption": "Figure S 6 Electrochemical impedance Nyquist plot of the test cells with samples NCM85 (A), and NCM83_01,03,10 (B) in the charged state after first charge, measurements were conducted at 25 °C.",
+   "kind": "figure",
+   "native_dpi": 149.9,
+   "label": "S6",
+   "manual_crop": "2026-10-13 손 크롭 — 자동 추출이 SI 의 띄어 쓴 표지 ('Figure S 1') 를 못 잡음 · 래스터 원본 경계 · 원 해상도 그대로 (149.9 dpi · 업샘플 없음)",
+   "key": "fS6",
+   "file": "fig_S6.png",
+   "w": 835,
+   "h": 835,
+   "blank": 0.949,
+   "rotated_deg": 0,
+   "viewed": true
+  },
+  {
+   "page": 6,
+   "bbox": [
+    70.8,
+    70.8,
+    378.1,
+    722.8
+   ],
+   "dpi": 194,
+   "src": "7fb09899-21._Sup2_Overcoming_binder_limitations_of_sheet-type_solid-state_cathodes_using_a_solvent-free_dry-film_approach.pdf",
+   "caption": "Figure S 7 Reproduced discharge rate performance of the test cells adopting 0.3 wt%, 0.7 wt%, and 1 wt% PTFE binder. The charge rate was fixed at 0.15 mA cm-2. The discharge rate was increased from 0.07 mA/cm² to 1.5 mA/cm², measurements were conducted at 25 °C.",
+   "kind": "figure",
+   "native_dpi": 193.8,
+   "label": "S7",
+   "manual_crop": "2026-10-13 손 크롭 — 자동 추출이 SI 의 띄어 쓴 표지 ('Figure S 1') 를 못 잡음 · 래스터 원본 경계 · 원 해상도 그대로 (193.8 dpi · 업샘플 없음)",
+   "key": "fS7",
+   "file": "fig_S7.png",
+   "w": 829,
+   "h": 1758,
+   "blank": 0.895,
+   "rotated_deg": 0,
+   "viewed": true
+  },
+  {
+   "page": 7,
+   "bbox": [
+    70.8,
+    198.1,
+    524.4,
+    687.7
+   ],
+   "dpi": 220,
+   "src": "7fb09899-21._Sup2_Overcoming_binder_limitations_of_sheet-type_solid-state_cathodes_using_a_solvent-free_dry-film_approach.pdf",
+   "caption": "Figure S 8 SEM images of post-mortem analyzed pouch cell (A) free-standing SE dry-film, (B) free-standing SE dry-film, (C) breaking edge of NCM85_03 sheet, (D) breaking edge of NCM85_03 sheet showing intact contact between SE and NCM, (E) breaking edge of NCM85_03 sheet with broken NCM sphere, (F) breaking edge of a graphite dry-film.",
+   "kind": "figure",
+   "native_dpi": 220.2,
+   "label": "S8",
+   "manual_crop": "2026-10-13 손 크롭 — 자동 추출이 SI 의 띄어 쓴 표지 ('Figure S 1') 를 못 잡음 · 래스터 원본 경계 · 원 해상도 그대로 (220.2 dpi · 업샘플 없음)",
+   "key": "fS8",
+   "file": "fig_S8.png",
+   "w": 1387,
+   "h": 1497,
+   "blank": 0.052,
+   "rotated_deg": 0,
+   "viewed": true
+  },
+  {
+   "key": "t1",
+   "kind": "table",
+   "label": "1",
+   "page": 4,
+   "file": "tab_1.png",
+   "caption": "Table 1 Sample composition of free-standing sheet-type NCM cathodes consisting of NCM, carbon additive (C), and solid electrolyte (SE).",
+   "rotated_deg": 0,
+   "bbox": [
+    34.6,
+    377.6,
+    292.0,
+    472.0
+   ],
+   "w": 1073,
+   "h": 394,
+   "dpi": 300,
+   "src": "e02a571e-21._Overcoming_binder_limitations_of_sheet-type_solid-state_cathodes_using_a_solvent-free_dry-film_approach.pdf",
+   "blank": 0.902,
+   "auto_bbox": [
+    32.6,
+    31.2,
+    562.7,
+    748.1
+   ],
+   "manual_crop": "2026-10-13 자동 추출이 쪽 전체를 표로 잘라 (bbox p4 전면) 실제 벡터 표 경계 + 3 pt 로 다시 자름",
+   "viewed": true
+  },
+  {
+   "page": 5,
+   "bbox": [
+    66.0,
+    514.3,
+    530.0,
+    630.0
+   ],
+   "dpi": 300,
+   "src": "7fb09899-21._Sup2_Overcoming_binder_limitations_of_sheet-type_solid-state_cathodes_using_a_solvent-free_dry-film_approach.pdf",
+   "caption": "Table S 1 Table S 2 Deconvolution results according to the equivalent circuit shown in Figure S 6 of the main manuscript. R1 is attributed to electronic and ionic resistance of the cell. R2 is attributed to grain boundary effects of solid electrolyte. R3 is attributed to the anode-electrolyte interface. R4 is attributed to the cathode-electrolyte interface.",
+   "kind": "table",
+   "label": "S1",
+   "manual_crop": "2026-10-13 손 크롭 (자동 추출은 SI 의 'Figure S 1' 처럼 띄어 쓴 표지를 못 잡아 SI 를 하나도 못 잘랐다) — 벡터 표 300 dpi",
+   "key": "tS1",
+   "file": "tab_S1.png",
+   "w": 1934,
+   "h": 483,
+   "blank": 0.868,
+   "rotated_deg": 0,
+   "viewed": true
+  },
+  {
+   "page": 5,
+   "bbox": [
+    66.0,
+    653.0,
+    530.0,
+    754.6
+   ],
+   "dpi": 300,
+   "src": "7fb09899-21._Sup2_Overcoming_binder_limitations_of_sheet-type_solid-state_cathodes_using_a_solvent-free_dry-film_approach.pdf",
+   "caption": "Table S 3 Deconvolution results according to the equivalent circuit shown in Figure S 6. R1 is attributed to electronic and ionic resistance of the cell. R2 is attributed to the anode-electrolyte interface. R3 is attributed to the cathode-electrolyte interface.",
+   "kind": "table",
+   "label": "S3",
+   "manual_crop": "2026-10-13 손 크롭 — 벡터 표 300 dpi",
+   "key": "tS3",
+   "file": "tab_S3.png",
+   "w": 1934,
+   "h": 423,
+   "blank": 0.884,
+   "rotated_deg": 0,
+   "viewed": true
+  }
+ ],
+ "missing_labels": [],
+ "note_manual": "2026-10-13 수동 재크롭: 본문 그림 8 장 = 래스터 원본 경계 300 dpi (그림 6 은 세로축 제목 때문에 넓힘) / 표 1 = 벡터 300 dpi / SI (Sup2 파일) 그림 8 장 = 래스터 원본 해상도 (150–220 dpi, 업샘플 없음) · SI 표 2 장 = 벡터 300 dpi. 'Sup' 파일 (29 쪽) = 저자 원고판 — 그림이 출판본보다 화소가 적어 크롭하지 않음. 크롭마다 렌더로 열어 확인."
+}

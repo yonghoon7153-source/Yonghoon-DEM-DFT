@@ -265,7 +265,7 @@ DEM **혼합 통계 · 지표 설계** 만.  점착 · 압축 · 전달 · 형�
 
 ## 8. ★★ 우리 연구에 주는 insight (번호마다: 논문이 보인 것 → 우리에게 뜻 → 할 일)
 
-1. **음수 M 의 처방 = 이론 분모.**  PSMI · 이 논문의 거시 지수 둘 다 완전 분리 분산을 **p(1−p)** 로 고정한다 → 런의 시작 상태가 무엇이든 분모가 같다 (시작 지수는 0 이 아닐 수 있지만 **음수는 안 된다** — §3-9 ③).  → 논지 §5 · 파이프라인 D9 의 "이론 분모 Lacey" 에 이 논문을 **선례로** 인용.  ⚠ 우리 p_i 는 칸의 AM **부피분율** 이고 분산은 쓰인 칸을 **같은 무게** 로 센다 (`scripts/measure_mixing_index.py` 의 `p.var(ddof=0)`).  완전 분리 (칸마다 p_i = 0 또는 1) 의 분산은 칸을 고체 부피로 가중하면 정확히 **p_V(1 − p_V)** 이지만, 같은 무게로 세면 **f(1 − f)** (f = 순수 AM 칸의 개수 분율) 이다 — 둘은 칸 고체 부피가 고를 때만 같다 [우리 산술].  ⇒ 이론 분모를 쓰려면 **가중 정의를 함께 바꾼다** (Lacey 1954 원저 = 같은 날 카드 후보 #30).
+1. **음수 M 의 처방 = 이론 분모.**  PSMI · 이 논문의 거시 지수 둘 다 완전 분리 분산을 **p(1−p)** 로 고정한다 → 런의 시작 상태가 무엇이든 분모가 같다 (시작 지수는 0 이 아닐 수 있지만 **음수는 안 된다** — §3-9 ③).  → 논지 §5 · 파이프라인 D9 의 "이론 분모 Lacey" 에 이 논문을 **선례로** 인용.  ⚠ 우리 p_i 는 칸의 AM **부피분율** 이고 분산은 쓰인 칸을 **같은 무게** 로 센다 (`scripts/measure_mixing_index.py` 의 `p.var(ddof=0)`).  완전 분리 (칸마다 p_i = 0 또는 1) 의 분산은 칸을 고체 부피로 가중하면 정확히 **p_V(1 − p_V)** 이지만, 같은 무게로 세면 **f(1 − f)** (f = 순수 AM 칸의 개수 분율) 이다 — 둘은 칸 고체 부피가 고를 때만 같다 [우리 산술].  ⇒ 이론 분모를 쓰려면 **가중 정의를 함께 바꾼다** (Lacey 1954 원저 = [`lacey1954_particle_mixing_theory_index`](lacey1954_particle_mixing_theory_index.md) — 원 정의의 s₀² 는 이론값 P(1−P), 편차는 P 기준).
 2. **s1 · s2 에 기준 둘을 붙이는 법.**  PSMI 의 구조 (국소 조성 → 분산 → 분리 · 무작위 기준 사이 정규화) 를 우리 s2 (AM–SE 부착) 에 그대로 옮기면 "각 AM 의 이웃 중 SE 분율" 의 분산을 정규화하는 지표가 된다.  ⚠ 무작위 기준은 **n = 7 고정이 아니라 입자마다 자기 배위수** (S_R² ≈ p(1−p)·E[1/(Cn_i+1)]) 로 — 또는 같은 흐름 상태의 **점착 0 무작위 런** 에서 실측 (우리 E0 방식).  → 결과 전 등록 후보 (파이프라인 D9 (가)).
 3. **크기비 1:9 에서 개수 기준 PSMI 는 SE 가 지배.**  개수비 SE/AM_P ≈ 562 라 N 개 표본의 대부분이 SE 중심이고, AM 중심의 p_i (이웃 수백) 는 분산에 거의 안 들어간다.  → **상별 분해 (AM 중심 · SE 중심 따로)** 또는 **부피 가중** 이 필요하다 [추정].  Fig 14 의 "L–L 불변 · S–S ↑ ⇒ 작은 입자 일부만 따로 모인다" 같은 판독이 바로 상별 분해의 예.
 4. **같은 침대를 스케일마다 다르게 매긴다 — 둘 다 보고하라.**  r 0.5 에서 거시 0.30 ↔ PSMI 0.585 (§3-6).  → 우리 보고서에서 칸 Lacey 와 입자 스케일 지표가 **다른 숫자** 를 내는 것은 결함이 아니라 **스케일 정보** — "칸 스케일 분리 + 입자 스케일 접촉 혼합" 을 함께 적는다 (Danckwerts 의 scale vs intensity · `chibwe2020_…` §13 의 같은 구분).
@@ -300,7 +300,7 @@ DEM **혼합 통계 · 지표 설계** 만.  점착 · 압축 · 전달 · 형�
 |---|---|---|
 | 8 | Akao Y, Kunisawa H, Fan LT, Lai FS, Wang RH. Degree of mixedness and contact number. *Powder Technol.* 1976;15:267–277 | 배위수 혼합도 원조 (식 1) — 카드 없음 |
 | 9 · 28 | Akao Y, Shindo H, … *Powder Technol.* 1976;15:207–214 · Shindo H, … *Powder Technol.* 1978;21:105–111 | 점 표본 추출 오차 — 카드 없음 |
-| 10 | Lacey PMC. Developments in the theory of particle mixing. *J Appl Chem.* 1954;4:257–268 | **Lacey 원저** — 같은 날 카드 후보 (#30) |
+| 10 | Lacey PMC. Developments in the theory of particle mixing. *J Appl Chem.* 1954;4:257–268 | ✅ [`lacey1954_particle_mixing_theory_index`](lacey1954_particle_mixing_theory_index.md) |
 | 11 | Siiriä S, Yliruusi J. *Powder Technol.* 2009;196:309–317 | 위치 변화 기반 혼합도 — 카드 없음 |
 | 12 | Stewart RL, Bridgwater J, Zhou YC, Yu AB. *Chem Eng Sci.* 2001;56:5457–5471 | 같은 믹서 DEM ↔ PEPT 대조 (연화 정당화의 근거) — 카드 없음 |
 | 16 | Zhou YC, Yu AB, Bridgwater J. *J Chem Technol Biotechnol.* 2003;78:187–193 | 날개 믹서 크기 · 밀도 분리 — 카드 없음 |

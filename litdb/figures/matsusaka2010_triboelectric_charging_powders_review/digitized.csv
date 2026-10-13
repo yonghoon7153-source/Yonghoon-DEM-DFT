@@ -1,0 +1,143 @@
+# matsusaka2010 digitized values. Vector rows: PDF drawing path centres mapped to axes through tick-label centres (precision about 0.2 % of axis span; marker-shape centring may shift by <= 0.1 unit). Fig 10 series names assigned by following leader lines - ambiguous clusters given as ranges. Fig 20 = numbers printed inside the figure. Fig 63 by eye. Trend use only.
+figure,series,x,x_unit,y,y_unit,source,note
+Fig 14,10 C,0.1,relative humidity (-),21.0,charge (nC),"vector path centre, axis from tick-label centres",12.7 mm metal sphere (Greason 2000)
+Fig 14,10 C,0.2,relative humidity (-),20.0,charge (nC),"vector path centre, axis from tick-label centres",12.7 mm metal sphere (Greason 2000)
+Fig 14,10 C,0.3,relative humidity (-),19.1,charge (nC),"vector path centre, axis from tick-label centres",12.7 mm metal sphere (Greason 2000)
+Fig 14,10 C,0.4,relative humidity (-),18.4,charge (nC),"vector path centre, axis from tick-label centres",12.7 mm metal sphere (Greason 2000)
+Fig 14,10 C,0.5,relative humidity (-),15.8,charge (nC),"vector path centre, axis from tick-label centres",12.7 mm metal sphere (Greason 2000)
+Fig 14,10 C,0.6,relative humidity (-),14.8,charge (nC),"vector path centre, axis from tick-label centres",12.7 mm metal sphere (Greason 2000)
+Fig 14,10 C,0.7,relative humidity (-),11.9,charge (nC),"vector path centre, axis from tick-label centres",12.7 mm metal sphere (Greason 2000)
+Fig 14,20 C,0.1,relative humidity (-),16.6,charge (nC),"vector path centre, axis from tick-label centres",12.7 mm metal sphere (Greason 2000)
+Fig 14,20 C,0.2,relative humidity (-),16.2,charge (nC),"vector path centre, axis from tick-label centres",12.7 mm metal sphere (Greason 2000)
+Fig 14,20 C,0.3,relative humidity (-),16.8,charge (nC),"vector path centre, axis from tick-label centres",12.7 mm metal sphere (Greason 2000)
+Fig 14,20 C,0.4,relative humidity (-),14.8,charge (nC),"vector path centre, axis from tick-label centres",12.7 mm metal sphere (Greason 2000)
+Fig 14,20 C,0.5,relative humidity (-),14.3,charge (nC),"vector path centre, axis from tick-label centres",12.7 mm metal sphere (Greason 2000)
+Fig 14,20 C,0.6,relative humidity (-),14.1,charge (nC),"vector path centre, axis from tick-label centres",12.7 mm metal sphere (Greason 2000)
+Fig 14,20 C,0.7,relative humidity (-),13.7,charge (nC),"vector path centre, axis from tick-label centres",12.7 mm metal sphere (Greason 2000)
+Fig 14,30 C,0.1,relative humidity (-),13.7,charge (nC),"vector path centre, axis from tick-label centres",12.7 mm metal sphere (Greason 2000)
+Fig 14,30 C,0.2,relative humidity (-),14.1,charge (nC),"vector path centre, axis from tick-label centres",12.7 mm metal sphere (Greason 2000)
+Fig 14,30 C,0.3,relative humidity (-),13.1,charge (nC),"vector path centre, axis from tick-label centres",12.7 mm metal sphere (Greason 2000)
+Fig 14,30 C,0.4,relative humidity (-),13.0,charge (nC),"vector path centre, axis from tick-label centres",12.7 mm metal sphere (Greason 2000)
+Fig 14,30 C,0.5,relative humidity (-),12.5,charge (nC),"vector path centre, axis from tick-label centres",12.7 mm metal sphere (Greason 2000)
+Fig 14,30 C,0.6,relative humidity (-),12.0,charge (nC),"vector path centre, axis from tick-label centres",12.7 mm metal sphere (Greason 2000)
+Fig 14,30 C,0.7,relative humidity (-),11.5,charge (nC),"vector path centre, axis from tick-label centres",12.7 mm metal sphere (Greason 2000)
+Fig 15,RH 0.1,10,temperature (C),21.1,charge (nC),"vector path centre, axis from tick-label centres",12.7 mm metal sphere (Greason 2000)
+Fig 15,RH 0.1,15,temperature (C),18.1,charge (nC),"vector path centre, axis from tick-label centres",12.7 mm metal sphere (Greason 2000)
+Fig 15,RH 0.1,20,temperature (C),16.6,charge (nC),"vector path centre, axis from tick-label centres",12.7 mm metal sphere (Greason 2000)
+Fig 15,RH 0.1,25,temperature (C),15.0,charge (nC),"vector path centre, axis from tick-label centres",12.7 mm metal sphere (Greason 2000)
+Fig 15,RH 0.1,30,temperature (C),13.7,charge (nC),"vector path centre, axis from tick-label centres",12.7 mm metal sphere (Greason 2000)
+Fig 15,RH 0.3,10,temperature (C),19.2,charge (nC),"vector path centre, axis from tick-label centres",12.7 mm metal sphere (Greason 2000)
+Fig 15,RH 0.3,15,temperature (C),17.9,charge (nC),"vector path centre, axis from tick-label centres",12.7 mm metal sphere (Greason 2000)
+Fig 15,RH 0.3,20,temperature (C),16.9,charge (nC),"vector path centre, axis from tick-label centres",12.7 mm metal sphere (Greason 2000)
+Fig 15,RH 0.3,25,temperature (C),14.2,charge (nC),"vector path centre, axis from tick-label centres",12.7 mm metal sphere (Greason 2000)
+Fig 15,RH 0.3,30,temperature (C),13.1,charge (nC),"vector path centre, axis from tick-label centres",12.7 mm metal sphere (Greason 2000)
+Fig 15,RH 0.5,10,temperature (C),15.8,charge (nC),"vector path centre, axis from tick-label centres",12.7 mm metal sphere (Greason 2000)
+Fig 15,RH 0.5,15,temperature (C),15.6,charge (nC),"vector path centre, axis from tick-label centres",12.7 mm metal sphere (Greason 2000)
+Fig 15,RH 0.5,20,temperature (C),14.2,charge (nC),"vector path centre, axis from tick-label centres",12.7 mm metal sphere (Greason 2000)
+Fig 15,RH 0.5,25,temperature (C),14.2,charge (nC),"vector path centre, axis from tick-label centres",12.7 mm metal sphere (Greason 2000)
+Fig 15,RH 0.5,30,temperature (C),12.5,charge (nC),"vector path centre, axis from tick-label centres",12.7 mm metal sphere (Greason 2000)
+Fig 15,RH 0.7,10,temperature (C),11.8,charge (nC),"vector path centre, axis from tick-label centres",12.7 mm metal sphere (Greason 2000)
+Fig 15,RH 0.7,15,temperature (C),13.0,charge (nC),"vector path centre, axis from tick-label centres",12.7 mm metal sphere (Greason 2000)
+Fig 15,RH 0.7,20,temperature (C),13.5,charge (nC),"vector path centre, axis from tick-label centres",12.7 mm metal sphere (Greason 2000)
+Fig 15,RH 0.7,25,temperature (C),11.1,charge (nC),"vector path centre, axis from tick-label centres",12.7 mm metal sphere (Greason 2000)
+Fig 15,RH 0.7,30,temperature (C),11.5,charge (nC),"vector path centre, axis from tick-label centres",12.7 mm metal sphere (Greason 2000)
+Fig 20,sugar granules 500-600 um,7,impact velocity (m/s),-0.5,impact charge at zero initial charge dq0 (pC),printed in figure,equilibrium charge qe = -16 pC (printed)
+Fig 20,sugar granules 500-600 um,9,impact velocity (m/s),-0.9,impact charge at zero initial charge dq0 (pC),printed in figure,equilibrium charge qe = -16 pC (printed)
+Fig 20,sugar granules 500-600 um,13,impact velocity (m/s),-1.6,impact charge at zero initial charge dq0 (pC),printed in figure,equilibrium charge qe = -16 pC (printed)
+Fig 21,EC ethylcellulose (printed +10 pC),16.7,impact velocity (m/s),9.2,equilibrium charge (pC),"vector path centre, axis from tick-label centres",marker-to-series by legend shape; triangles vs squares assignment from legend order
+Fig 21,EC ethylcellulose (printed +10 pC),17.1,impact velocity (m/s),10.7,equilibrium charge (pC),"vector path centre, axis from tick-label centres",marker-to-series by legend shape; triangles vs squares assignment from legend order
+Fig 21,EC ethylcellulose (printed +10 pC),22.6,impact velocity (m/s),9.5,equilibrium charge (pC),"vector path centre, axis from tick-label centres",marker-to-series by legend shape; triangles vs squares assignment from legend order
+Fig 21,EC ethylcellulose (printed +10 pC),22.7,impact velocity (m/s),10.3,equilibrium charge (pC),"vector path centre, axis from tick-label centres",marker-to-series by legend shape; triangles vs squares assignment from legend order
+Fig 21,EC ethylcellulose (printed +10 pC),26.7,impact velocity (m/s),11.1,equilibrium charge (pC),"vector path centre, axis from tick-label centres",marker-to-series by legend shape; triangles vs squares assignment from legend order
+Fig 21,EC ethylcellulose (printed +10 pC),27.2,impact velocity (m/s),10.8,equilibrium charge (pC),"vector path centre, axis from tick-label centres",marker-to-series by legend shape; triangles vs squares assignment from legend order
+Fig 21,SG sugar granules (printed -16 pC),6.6,impact velocity (m/s),-17.6,equilibrium charge (pC),"vector path centre, axis from tick-label centres",marker-to-series by legend shape; triangles vs squares assignment from legend order
+Fig 21,SG sugar granules (printed -16 pC),9.0,impact velocity (m/s),-14.0,equilibrium charge (pC),"vector path centre, axis from tick-label centres",marker-to-series by legend shape; triangles vs squares assignment from legend order
+Fig 21,SG sugar granules (printed -16 pC),9.0,impact velocity (m/s),-15.3,equilibrium charge (pC),"vector path centre, axis from tick-label centres",marker-to-series by legend shape; triangles vs squares assignment from legend order
+Fig 21,SG sugar granules (printed -16 pC),13.0,impact velocity (m/s),-14.3,equilibrium charge (pC),"vector path centre, axis from tick-label centres",marker-to-series by legend shape; triangles vs squares assignment from legend order
+Fig 21,SG sugar granules (printed -16 pC),13.0,impact velocity (m/s),-16.3,equilibrium charge (pC),"vector path centre, axis from tick-label centres",marker-to-series by legend shape; triangles vs squares assignment from legend order
+Fig 21,SG sugar granules (printed -16 pC),14.4,impact velocity (m/s),-15.4,equilibrium charge (pC),"vector path centre, axis from tick-label centres",marker-to-series by legend shape; triangles vs squares assignment from legend order
+Fig 21,SG sugar granules (printed -16 pC),20.0,impact velocity (m/s),-15.3,equilibrium charge (pC),"vector path centre, axis from tick-label centres",marker-to-series by legend shape; triangles vs squares assignment from legend order
+Fig 21,SG sugar granules (printed -16 pC),21.0,impact velocity (m/s),-15.8,equilibrium charge (pC),"vector path centre, axis from tick-label centres",marker-to-series by legend shape; triangles vs squares assignment from legend order
+Fig 21,aLM alpha-lactose monohydrate (printed -18 pC),9.8,impact velocity (m/s),-11.7,equilibrium charge (pC),"vector path centre, axis from tick-label centres",marker-to-series by legend shape; triangles vs squares assignment from legend order
+Fig 21,aLM alpha-lactose monohydrate (printed -18 pC),9.9,impact velocity (m/s),-20.1,equilibrium charge (pC),"vector path centre, axis from tick-label centres",marker-to-series by legend shape; triangles vs squares assignment from legend order
+Fig 21,aLM alpha-lactose monohydrate (printed -18 pC),14.2,impact velocity (m/s),-17.8,equilibrium charge (pC),"vector path centre, axis from tick-label centres",marker-to-series by legend shape; triangles vs squares assignment from legend order
+Fig 21,aLM alpha-lactose monohydrate (printed -18 pC),14.6,impact velocity (m/s),-19.3,equilibrium charge (pC),"vector path centre, axis from tick-label centres",marker-to-series by legend shape; triangles vs squares assignment from legend order
+Fig 21,aLM alpha-lactose monohydrate (printed -18 pC),19.1,impact velocity (m/s),-21.2,equilibrium charge (pC),"vector path centre, axis from tick-label centres",marker-to-series by legend shape; triangles vs squares assignment from legend order
+Fig 21,aLM alpha-lactose monohydrate (printed -18 pC),22.8,impact velocity (m/s),-17.8,equilibrium charge (pC),"vector path centre, axis from tick-label centres",marker-to-series by legend shape; triangles vs squares assignment from legend order
+Fig 21,ASP aspirin (printed -40 pC),10.5,impact velocity (m/s),-39.1,equilibrium charge (pC),"vector path centre, axis from tick-label centres",marker-to-series by legend shape; triangles vs squares assignment from legend order
+Fig 21,ASP aspirin (printed -40 pC),11.0,impact velocity (m/s),-44.0,equilibrium charge (pC),"vector path centre, axis from tick-label centres",marker-to-series by legend shape; triangles vs squares assignment from legend order
+Fig 21,ASP aspirin (printed -40 pC),15.6,impact velocity (m/s),-36.8,equilibrium charge (pC),"vector path centre, axis from tick-label centres",marker-to-series by legend shape; triangles vs squares assignment from legend order
+Fig 21,ASP aspirin (printed -40 pC),15.8,impact velocity (m/s),-48.1,equilibrium charge (pC),"vector path centre, axis from tick-label centres",marker-to-series by legend shape; triangles vs squares assignment from legend order
+Fig 21,ASP aspirin (printed -40 pC),19.0,impact velocity (m/s),-35.6,equilibrium charge (pC),"vector path centre, axis from tick-label centres",marker-to-series by legend shape; triangles vs squares assignment from legend order
+Fig 21,ASP aspirin (printed -40 pC),23.0,impact velocity (m/s),-39.1,equilibrium charge (pC),"vector path centre, axis from tick-label centres",marker-to-series by legend shape; triangles vs squares assignment from legend order
+Fig 29,10 s interval (squares),0,number of impacts (-),-4.6,charge of sphere (nC),"vector path centre, axis from tick-label centres",31 mm synthetic rubber sphere (Matsusaka et al. 2000); x read 13.8-13.9 for the 14th point
+Fig 29,10 s interval (squares),1,number of impacts (-),-2.7,charge of sphere (nC),"vector path centre, axis from tick-label centres",31 mm synthetic rubber sphere (Matsusaka et al. 2000); x read 13.8-13.9 for the 14th point
+Fig 29,10 s interval (squares),2,number of impacts (-),-1.0,charge of sphere (nC),"vector path centre, axis from tick-label centres",31 mm synthetic rubber sphere (Matsusaka et al. 2000); x read 13.8-13.9 for the 14th point
+Fig 29,10 s interval (squares),3,number of impacts (-),1.4,charge of sphere (nC),"vector path centre, axis from tick-label centres",31 mm synthetic rubber sphere (Matsusaka et al. 2000); x read 13.8-13.9 for the 14th point
+Fig 29,10 s interval (squares),4,number of impacts (-),2.4,charge of sphere (nC),"vector path centre, axis from tick-label centres",31 mm synthetic rubber sphere (Matsusaka et al. 2000); x read 13.8-13.9 for the 14th point
+Fig 29,10 s interval (squares),6,number of impacts (-),6.3,charge of sphere (nC),"vector path centre, axis from tick-label centres",31 mm synthetic rubber sphere (Matsusaka et al. 2000); x read 13.8-13.9 for the 14th point
+Fig 29,10 s interval (squares),9,number of impacts (-),9.7,charge of sphere (nC),"vector path centre, axis from tick-label centres",31 mm synthetic rubber sphere (Matsusaka et al. 2000); x read 13.8-13.9 for the 14th point
+Fig 29,10 s interval (squares),14,number of impacts (-),14.6,charge of sphere (nC),"vector path centre, axis from tick-label centres",31 mm synthetic rubber sphere (Matsusaka et al. 2000); x read 13.8-13.9 for the 14th point
+Fig 29,10 s interval (squares),19,number of impacts (-),17.0,charge of sphere (nC),"vector path centre, axis from tick-label centres",31 mm synthetic rubber sphere (Matsusaka et al. 2000); x read 13.8-13.9 for the 14th point
+Fig 29,20 s interval (triangles),0,number of impacts (-),-3.2,charge of sphere (nC),"vector path centre, axis from tick-label centres",31 mm synthetic rubber sphere (Matsusaka et al. 2000); x read 13.8-13.9 for the 14th point
+Fig 29,20 s interval (triangles),1,number of impacts (-),-1.7,charge of sphere (nC),"vector path centre, axis from tick-label centres",31 mm synthetic rubber sphere (Matsusaka et al. 2000); x read 13.8-13.9 for the 14th point
+Fig 29,20 s interval (triangles),2,number of impacts (-),0.3,charge of sphere (nC),"vector path centre, axis from tick-label centres",31 mm synthetic rubber sphere (Matsusaka et al. 2000); x read 13.8-13.9 for the 14th point
+Fig 29,20 s interval (triangles),3,number of impacts (-),1.3,charge of sphere (nC),"vector path centre, axis from tick-label centres",31 mm synthetic rubber sphere (Matsusaka et al. 2000); x read 13.8-13.9 for the 14th point
+Fig 29,20 s interval (triangles),4,number of impacts (-),3.5,charge of sphere (nC),"vector path centre, axis from tick-label centres",31 mm synthetic rubber sphere (Matsusaka et al. 2000); x read 13.8-13.9 for the 14th point
+Fig 29,20 s interval (triangles),6,number of impacts (-),6.9,charge of sphere (nC),"vector path centre, axis from tick-label centres",31 mm synthetic rubber sphere (Matsusaka et al. 2000); x read 13.8-13.9 for the 14th point
+Fig 29,20 s interval (triangles),9,number of impacts (-),10.6,charge of sphere (nC),"vector path centre, axis from tick-label centres",31 mm synthetic rubber sphere (Matsusaka et al. 2000); x read 13.8-13.9 for the 14th point
+Fig 29,20 s interval (triangles),14,number of impacts (-),12.7,charge of sphere (nC),"vector path centre, axis from tick-label centres",31 mm synthetic rubber sphere (Matsusaka et al. 2000); x read 13.8-13.9 for the 14th point
+Fig 29,20 s interval (triangles),19,number of impacts (-),14.7,charge of sphere (nC),"vector path centre, axis from tick-label centres",31 mm synthetic rubber sphere (Matsusaka et al. 2000); x read 13.8-13.9 for the 14th point
+Fig 29,30 s interval (circles),0,number of impacts (-),-6.3,charge of sphere (nC),"vector path centre, axis from tick-label centres",31 mm synthetic rubber sphere (Matsusaka et al. 2000); x read 13.8-13.9 for the 14th point
+Fig 29,30 s interval (circles),1,number of impacts (-),-3.4,charge of sphere (nC),"vector path centre, axis from tick-label centres",31 mm synthetic rubber sphere (Matsusaka et al. 2000); x read 13.8-13.9 for the 14th point
+Fig 29,30 s interval (circles),2,number of impacts (-),-0.1,charge of sphere (nC),"vector path centre, axis from tick-label centres",31 mm synthetic rubber sphere (Matsusaka et al. 2000); x read 13.8-13.9 for the 14th point
+Fig 29,30 s interval (circles),3,number of impacts (-),1.9,charge of sphere (nC),"vector path centre, axis from tick-label centres",31 mm synthetic rubber sphere (Matsusaka et al. 2000); x read 13.8-13.9 for the 14th point
+Fig 29,30 s interval (circles),4,number of impacts (-),3.9,charge of sphere (nC),"vector path centre, axis from tick-label centres",31 mm synthetic rubber sphere (Matsusaka et al. 2000); x read 13.8-13.9 for the 14th point
+Fig 29,30 s interval (circles),6,number of impacts (-),6.9,charge of sphere (nC),"vector path centre, axis from tick-label centres",31 mm synthetic rubber sphere (Matsusaka et al. 2000); x read 13.8-13.9 for the 14th point
+Fig 29,30 s interval (circles),9,number of impacts (-),8.6,charge of sphere (nC),"vector path centre, axis from tick-label centres",31 mm synthetic rubber sphere (Matsusaka et al. 2000); x read 13.8-13.9 for the 14th point
+Fig 29,30 s interval (circles),14,number of impacts (-),10.4,charge of sphere (nC),"vector path centre, axis from tick-label centres",31 mm synthetic rubber sphere (Matsusaka et al. 2000); x read 13.8-13.9 for the 14th point
+Fig 29,30 s interval (circles),19,number of impacts (-),11.0,charge of sphere (nC),"vector path centre, axis from tick-label centres",31 mm synthetic rubber sphere (Matsusaka et al. 2000); x read 13.8-13.9 for the 14th point
+Fig 34,SUS 316 (open circles),0,pipe length (m),-0.05,specific charge (mC/kg),"vector path centre, axis from tick-label centres","micrometre-sized alumina, 40 m/s (Matsusaka et al. 2007)"
+Fig 34,SUS 316 (open circles),0.5,pipe length (m),1.96,specific charge (mC/kg),"vector path centre, axis from tick-label centres","micrometre-sized alumina, 40 m/s (Matsusaka et al. 2007)"
+Fig 34,SUS 316 (open circles),1,pipe length (m),4.49,specific charge (mC/kg),"vector path centre, axis from tick-label centres","micrometre-sized alumina, 40 m/s (Matsusaka et al. 2007)"
+Fig 34,SUS 316 (open circles),2,pipe length (m),6.67,specific charge (mC/kg),"vector path centre, axis from tick-label centres","micrometre-sized alumina, 40 m/s (Matsusaka et al. 2007)"
+Fig 34,SUS 316 (open circles),3,pipe length (m),7.02,specific charge (mC/kg),"vector path centre, axis from tick-label centres","micrometre-sized alumina, 40 m/s (Matsusaka et al. 2007)"
+Fig 34,SUS 304 (filled circles),0,pipe length (m),-0.33,specific charge (mC/kg),"vector path centre, axis from tick-label centres","micrometre-sized alumina, 40 m/s (Matsusaka et al. 2007)"
+Fig 34,SUS 304 (filled circles),0.5,pipe length (m),2.69,specific charge (mC/kg),"vector path centre, axis from tick-label centres","micrometre-sized alumina, 40 m/s (Matsusaka et al. 2007)"
+Fig 34,SUS 304 (filled circles),1,pipe length (m),4.86,specific charge (mC/kg),"vector path centre, axis from tick-label centres","micrometre-sized alumina, 40 m/s (Matsusaka et al. 2007)"
+Fig 34,SUS 304 (filled circles),2,pipe length (m),6.37,specific charge (mC/kg),"vector path centre, axis from tick-label centres","micrometre-sized alumina, 40 m/s (Matsusaka et al. 2007)"
+Fig 34,SUS 304 (filled circles),3,pipe length (m),6.53,specific charge (mC/kg),"vector path centre, axis from tick-label centres","micrometre-sized alumina, 40 m/s (Matsusaka et al. 2007)"
+Fig 34,aluminium (open triangles),0,pipe length (m),-0.21,specific charge (mC/kg),"vector path centre, axis from tick-label centres","micrometre-sized alumina, 40 m/s (Matsusaka et al. 2007)"
+Fig 34,aluminium (open triangles),0.5,pipe length (m),-2.14,specific charge (mC/kg),"vector path centre, axis from tick-label centres","micrometre-sized alumina, 40 m/s (Matsusaka et al. 2007)"
+Fig 34,aluminium (open triangles),1,pipe length (m),-3.37,specific charge (mC/kg),"vector path centre, axis from tick-label centres","micrometre-sized alumina, 40 m/s (Matsusaka et al. 2007)"
+Fig 34,aluminium (open triangles),2,pipe length (m),-2.97,specific charge (mC/kg),"vector path centre, axis from tick-label centres","micrometre-sized alumina, 40 m/s (Matsusaka et al. 2007)"
+Fig 34,aluminium (open triangles),3,pipe length (m),-4.39,specific charge (mC/kg),"vector path centre, axis from tick-label centres","micrometre-sized alumina, 40 m/s (Matsusaka et al. 2007)"
+Fig 34,copper (filled triangles),0,pipe length (m),0.51,specific charge (mC/kg),"vector path centre, axis from tick-label centres","micrometre-sized alumina, 40 m/s (Matsusaka et al. 2007)"
+Fig 34,copper (filled triangles),0.5,pipe length (m),-4.08,specific charge (mC/kg),"vector path centre, axis from tick-label centres","micrometre-sized alumina, 40 m/s (Matsusaka et al. 2007)"
+Fig 34,copper (filled triangles),1,pipe length (m),-5.29,specific charge (mC/kg),"vector path centre, axis from tick-label centres","micrometre-sized alumina, 40 m/s (Matsusaka et al. 2007)"
+Fig 34,copper (filled triangles),2,pipe length (m),-6.92,specific charge (mC/kg),"vector path centre, axis from tick-label centres","micrometre-sized alumina, 40 m/s (Matsusaka et al. 2007)"
+Fig 34,copper (filled triangles),3,pipe length (m),-7.72,specific charge (mC/kg),"vector path centre, axis from tick-label centres","micrometre-sized alumina, 40 m/s (Matsusaka et al. 2007)"
+Fig 34,brass (open squares),0.5,pipe length (m),-3.48,specific charge (mC/kg),"vector path centre, axis from tick-label centres","micrometre-sized alumina, 40 m/s (Matsusaka et al. 2007)"
+Fig 34,brass (open squares),1,pipe length (m),-5.66,specific charge (mC/kg),"vector path centre, axis from tick-label centres","micrometre-sized alumina, 40 m/s (Matsusaka et al. 2007)"
+Fig 34,brass (open squares),2,pipe length (m),-7.62,specific charge (mC/kg),"vector path centre, axis from tick-label centres","micrometre-sized alumina, 40 m/s (Matsusaka et al. 2007)"
+Fig 34,brass (open squares),3,pipe length (m),-8.55,specific charge (mC/kg),"vector path centre, axis from tick-label centres","micrometre-sized alumina, 40 m/s (Matsusaka et al. 2007)"
+Fig 65,32 sites (squares),30,vibration time (s),5.19,specific charge (uC/kg),"vector path centre, axis from tick-label centres",DEM (Yoshida et al. 2003); negative charge
+Fig 65,200 sites (triangles),30,vibration time (s),4.98,specific charge (uC/kg),"vector path centre, axis from tick-label centres",DEM (Yoshida et al. 2003); negative charge
+Fig 65,392 sites (circles),30,vibration time (s),4.89,specific charge (uC/kg),"vector path centre, axis from tick-label centres",DEM (Yoshida et al. 2003); negative charge
+Fig 10,MgO,,generalized electronegativity,273,specific charge (mC/kg),"vector path centre, axis from tick-label centres; series assigned by leader lines (group ranges where ambiguous)","0.3-0.5 um oxides vs surface-oxidized iron 44-74 um, blow-off (Oguchi and Tamatani 1986)"
+Fig 10,ZnO,,generalized electronegativity,169,specific charge (mC/kg),"vector path centre, axis from tick-label centres; series assigned by leader lines (group ranges where ambiguous)","0.3-0.5 um oxides vs surface-oxidized iron 44-74 um, blow-off (Oguchi and Tamatani 1986)"
+Fig 10,PbO,,generalized electronegativity,145,specific charge (mC/kg),"vector path centre, axis from tick-label centres; series assigned by leader lines (group ranges where ambiguous)","0.3-0.5 um oxides vs surface-oxidized iron 44-74 um, blow-off (Oguchi and Tamatani 1986)"
+Fig 10,HgO,,generalized electronegativity,94,specific charge (mC/kg),"vector path centre, axis from tick-label centres; series assigned by leader lines (group ranges where ambiguous)","0.3-0.5 um oxides vs surface-oxidized iron 44-74 um, blow-off (Oguchi and Tamatani 1986)"
+Fig 10,Al2O3,,generalized electronegativity,85,specific charge (mC/kg),"vector path centre, axis from tick-label centres; series assigned by leader lines (group ranges where ambiguous)","0.3-0.5 um oxides vs surface-oxidized iron 44-74 um, blow-off (Oguchi and Tamatani 1986)"
+Fig 10,In2O3,,generalized electronegativity,79,specific charge (mC/kg),"vector path centre, axis from tick-label centres; series assigned by leader lines (group ranges where ambiguous)","0.3-0.5 um oxides vs surface-oxidized iron 44-74 um, blow-off (Oguchi and Tamatani 1986)"
+Fig 10,rare-earth sesquioxides Eu/Nd/Tm/Dy/Y (group),,generalized electronegativity,73 to 99,specific charge (mC/kg),"vector path centre, axis from tick-label centres; series assigned by leader lines (group ranges where ambiguous)","0.3-0.5 um oxides vs surface-oxidized iron 44-74 um, blow-off (Oguchi and Tamatani 1986)"
+Fig 10,CeO2,,generalized electronegativity,49,specific charge (mC/kg),"vector path centre, axis from tick-label centres; series assigned by leader lines (group ranges where ambiguous)","0.3-0.5 um oxides vs surface-oxidized iron 44-74 um, blow-off (Oguchi and Tamatani 1986)"
+Fig 10,"CuO, Ga2O3, Sc2O3, Cr2O3 (group)",,generalized electronegativity,-20 to 37,specific charge (mC/kg),"vector path centre, axis from tick-label centres; series assigned by leader lines (group ranges where ambiguous)","0.3-0.5 um oxides vs surface-oxidized iron 44-74 um, blow-off (Oguchi and Tamatani 1986)"
+Fig 10,"ZrO2, As2O3, Fe2O3 (group)",,generalized electronegativity,-11 to -20,specific charge (mC/kg),"vector path centre, axis from tick-label centres; series assigned by leader lines (group ranges where ambiguous)","0.3-0.5 um oxides vs surface-oxidized iron 44-74 um, blow-off (Oguchi and Tamatani 1986)"
+Fig 10,TiO2,,generalized electronegativity,-122,specific charge (mC/kg),"vector path centre, axis from tick-label centres; series assigned by leader lines (group ranges where ambiguous)","0.3-0.5 um oxides vs surface-oxidized iron 44-74 um, blow-off (Oguchi and Tamatani 1986)"
+Fig 10,GeO2,,generalized electronegativity,-191,specific charge (mC/kg),"vector path centre, axis from tick-label centres; series assigned by leader lines (group ranges where ambiguous)","0.3-0.5 um oxides vs surface-oxidized iron 44-74 um, blow-off (Oguchi and Tamatani 1986)"
+Fig 10,SiO2,,generalized electronegativity,-203,specific charge (mC/kg),"vector path centre, axis from tick-label centres; series assigned by leader lines (group ranges where ambiguous)","0.3-0.5 um oxides vs surface-oxidized iron 44-74 um, blow-off (Oguchi and Tamatani 1986)"
+Fig 10,Nb2O3,,generalized electronegativity,-206,specific charge (mC/kg),"vector path centre, axis from tick-label centres; series assigned by leader lines (group ranges where ambiguous)","0.3-0.5 um oxides vs surface-oxidized iron 44-74 um, blow-off (Oguchi and Tamatani 1986)"
+Fig 10,V2O5,,generalized electronegativity,-289,specific charge (mC/kg),"vector path centre, axis from tick-label centres; series assigned by leader lines (group ranges where ambiguous)","0.3-0.5 um oxides vs surface-oxidized iron 44-74 um, blow-off (Oguchi and Tamatani 1986)"
+Fig 63,impact charge,1,number of impact,about 100,pC,raster/vector by eye +/-10,"decays to about 0 by about 20 impacts; eps = 6, Dp = 3.2 mm (Monte Carlo)"
+Fig 63,accumulated charge,40,number of impact,about 840,pC,by eye +/-20,plateau from about 40 impacts

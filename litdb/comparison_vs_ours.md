@@ -194,6 +194,10 @@
 | **[Yuan26Perc]** 🔧🔴 **PREPRINT (ChemRxiv v1 · 미심사) · ⛔ A–D 물성 4축 진입 금지 (σ·D 는 425 K Li 과잉 혼합영역·장 구동값 · Ea 0)** · ⚠ `[Yuan26LCE]` 와 다른 논문 | **Tianmu Yuan**/Zhimin Chen/**James A. Dawson\*** (Newcastle · Faraday Institution) 2026 ***ChemRxiv*** (DOI 10.26434/chemrxiv.15010110/v1 · 2026-10-08 · CC-BY 4.0) — "Reversible Ion Transport Through an Irreversibly Percolating Li₂S Interphase at the Li/Li₆PS₅Cl Interface" | ✅ `papers/yuan2026_percolating_li2s_interphase_efield_md.md` (2026-10-13 · 그림 14/14 실독) — 판정은 **§J-61** | MLIP-MD (미세조정 CHGNet + GFN1-xTB 동적 전하 + 전기장) + DFT 보조 (PBEsol DOS) |
 | **[Nisar21Coat]** ⛔ **자체 실험·원자단위 계산 0 · 아지로다이트 물성 0 → A–D 4축 진입 금지** · 코팅 두께 t = l²/D 논증의 리뷰판 원형 · SSB 코팅 요건표(전자 절연) | **Umair Nisar**#/**Nitin Muralidharan**#/R. Essehli/**Ruhul Amin\***/**Ilias Belharouak\*** (ORNL · ZSW) 2021 ***Energy Storage Mater.* 38, 309–328** (DOI 10.1016/j.ensm.2021.03.015) — "Valuation of Surface Coatings in High-Energy Density Lithium-ion Battery Cathode Materials" | `papers/nisar2021_cathode_coating_review_critical_thickness.md` ✅ (2026-10-13) — 판정은 **§J-62** | 리뷰 (액체 LIB 중심 + §8 SSB) |
 | **[Liu24SNi90]** ⛔ **물성값 0 → A–D 물성 4축 진입 금지** · 황 처리 10–20 nm 피막 (상 동정 없음 · SE 선코팅 아님) | **Huan Liu** · **Yue Wang** (공동1) · L. Chen · H. Li · **Fan Wu\*** (IOP CAS · Tianmu Lake), *Adv. Funct. Mater.* **2024**, 34, 2315701 | ✅ `papers/liu2024_sc_ni90_sulfur_coating_sulfide_assb.md` (2026-10-13) | 실험 전용 (계산 0) |
+| **[Garcia17NMC]** ⛔ 청정 0 K γ — 분말 점착 W 아님 · NMC111 (811 아님) | Garcia · Bareño · Yan · Chen · Hauser · Croy · Iddir 2017 *J. Phys. Chem. C* 121, 8290–8299 | `papers/garcia2017_nmc111_surface_energy_wulff_dft.md` ✅ | DFT (GGA+U → HSE06) + 단결정 형상 실험 |
+| **[vanOss88]** 결합 규칙 범위 원전 (LW 만 기하평균) | van Oss · Chaudhury · Good 1988 *Chem. Rev.* 88, 927–941 | `papers/vanoss1988_lifshitz_vdw_acid_base_interfacial.md` ✅ | 리뷰 · 이론 |
+| **[Fowkes64]** 분산 성분 γ^d · 기하평균 원전 | Fowkes 1964 *Ind. Eng. Chem.* 56(12), 40–52 | `papers/fowkes1964_attractive_forces_interfaces_dispersion.md` ✅ | 이론 + 자료 모음 |
+| **[MJ14IGC]** IGC 방법 (덮임률 명시 필수) | Mohammadi-Jam · Waters 2014 *Adv. Colloid Interface Sci.* 212, 21–44 | `papers/mohammadijam2014_inverse_gas_chromatography_review.md` ✅ | 리뷰 + SEA 자료 |
 
 ---
 
@@ -913,6 +917,8 @@
 > 구형 코어–쉘 `w = 3tρ_LNO/(Rρ_LCO)` 로 15 µm 입자 + 3 nm 는 **0.11 wt%**, 거꾸로 1 wt% 면 **D≈1.7 µm** 여야 한다.
 > 두께 통계 없음(TEM 입자 1개·화살표 1개), 입도분포 데이터 없음.
 
+> 2026-10-13 추가 — **NCM 표면 에너지 (청정 DFT) [Garcia17NMC]**: NMC111 (104) 0.76 · (001) 0.89 · (012) 1.97 · (100) 2.27 J/m² (면당) — LPSCl 면당 0.10–0.37 [Pust25] 과의 비 ≈ 2–20 [우리 산술] ⇒ 청정 벽개 수준에선 논지 0.31 문턱과 반대 쪽. ⛔ 분말 점착 W 로 쓰지 않음 · 표↔그림 불일치 (2.10↔1.97 · 1.45↔0.89).
+
 
 
 ## D. 전자구조 / band gap — *방법 의존, 절대 비교 금지*
@@ -1208,6 +1214,7 @@
 | **🔴 🆕 우리 ESW 출력에 `ΔE_D(V)` 열이 없다 — 창을 *에너지로* 교차확인할 수단이 없고, 동역학 연장창을 정의할 수도 없다** (2026-09-22 신설) | **[Jang26NaHSE]** `Table S3` 이 전 분해 사다리를 **(임계전위, ΔE_D[eV/atom], 평형상)** 세 열로 인쇄한다. 그 두 번째 열이 있어서 저들은 ① 창 판정을 **ΔE_D = 0 으로도** 할 수 있고(= `Na uptake = 0` 과 **중복 선언** ⇒ 라벨이 틀리면 눈에 보인다) ② **`Fig. 2a` 형 프로파일**을 그릴 수 있고 ③ **문턱 기반 동역학 연장창**(`ΔE_D > −25 meV/atom` ⇒ 산화 +0.16 … +0.42 V)을 정의할 수 있다. 우리 `db/properties/esw_lis4excluded.json` 의 `steps` 는 **`[전압, evolution, 반응식]` 세 칸뿐**이라 셋 다 못 한다 — 그리고 **중복 선언이 없었기 때문에 `reduction_V` 라벨 오류가 3개월 넘게 살아남았다**(`HZ-esw-reduction-limit-label`) | **① `ΔE_D(V)` 열을 `esw_*.json` `steps` 에 추가** (각 breakpoint 에서 SE 의 hull 거리). ⛔ **던지기 전 보고량 카드** — *"ΔE_D ≡ 그 μ_Li 에서 SE 조성의 평형에너지 − SE 자신의 에너지, eV/atom"* 을 먼저 적는다. **② 그림 표준 변경**: `Li uptake per f.u.` 계단과 `ΔE_D(V)` 프로파일을 **같은 x축으로 나란히** 그린다(= `[Jang26NaHSE]` `Fig. 2` 양식) — **둘이 어긋나면 눈에 보인다**. **③ 동역학 문턱은 베끼지 않는다** — 저들 25 meV/atom 은 **근거 문장이 0**이다. 우리가 쓰려면 **`[Du22LMR]`·`[Wei23LNO]`·`[Deng26PS]` 의 실측 과전압(0.05–0.45 V)에서 역산**한다. 📎 출처: `papers/jang2026_halide_se_interfacial_stability_highv_na.md` §4-2·§7-8·§12-3 |
 | **🔴🔴 🆕 우리는 SEI 와 MCI 를 가를 계산 수단이 하나도 없다 — 연결성·형태·교차수송·전자수송 전부 0** (2026-09-23 신설) | **[Li26MCI]** 가 최소 체크리스트를 보인다: (t,z) 배위수 지도 · 결합그래프 관통 · 결정성 τ · Onsager Lᵢⱼ — **그리고 그 구현의 함정 목록**(고정 평면 사이 관통 · 0 K 정적 결정 기준 · 기준틀 미선언 Lᵢⱼ · "멈춤" 정의 부재 · 전자 계산 0). 우리 음극 자산은 **산물 갭 한 축**(`sei_products.json` · `anode_interface_b2o3.json`)이고 반응 계면 MD 경험 **0**(`[Chaney24SEI]` §H 행과 같은 결손) | ① **표기부터**(무료·즉시): 음극 서사에 *"갭은 필요조건 · 연결성/형태 미계산"* 을 같이 적는다 ② ✎ **값싼 정적 계산 후보**: SQS 반형석 고용체(`Li₁₄PS₅Cl` 계, `[Chaney24SEI]` 그림)에서 **Li-다리 P 망의 두께별 관통확률** — 무작위 고용체면 P 음이온 분율 ≈0.14 < fcc 자리 퍼콜레이션 문턱 ≈0.20 이라 무한계 비관통이 예상된다(가정 명시, 얇은 층은 유한크기 효과) · ⚠ **보고량 카드(`kb/templates/estimand_card.md`) 먼저** — 배열 앙상블 집계 규칙·컷오프·두께 정의 선언 ③ 계면 MD 를 연다면 **첫날부터 게이트 셋**: Σᵢ mᵢ Lᵢⱼ = 0 검사 · **시간의존 경계 사이** 관통 · **동온도 결정 MD** 기준 τ ④ ⛔ UMA 에는 γ 가 정의되지 않는다 — 외삽 감시는 다른 대리지표로(`kim2026` digest §15.4) ⑤ ⛔ **"전자 차단 정지" 는 MD 과제가 아니다** — stepwise CV 등 실험이 답한다 |
 | **🔴 ⭐ 10–20 nm 표면 피막 (황 처리 SC-Ni90) — 계산 축 밖 · R_ct/i0 실험 앵커 후보** (2026-10-13) | **[Liu24SNi90]** — S 0.2 wt% 피막 (상 동정 없음) 에서 1C 500 사이클 86.9 % · 10C 71.3 mAh g⁻¹ [인쇄] · EIS 반원 ≈ 85 → ≈ 15 Ω [판독] · 원문 내부 불일치 4 건 (카드 §10) | STEP4 BV i0 · R_ct 스윕의 실험 앵커 **후보**로만 (물성 4축 진입 금지) · DEM/MPM 해상도 밖 |
+| **🔴 같은 방법으로 잰 NCM811 · LPSCl 의 γ (LW·AB 분해) 가 없다 — 이종기술 논지의 판가름 비 γ_A/γ_S** (2026-10-13) | **[vanOss88][Fowkes64][MJ14IGC]** — 기하평균은 분산 성분에만 · 산화물·황화물은 비대칭 극성 · TiO₂ γ^d 가 방법 따라 58 (FD-IGC) ↔ 89–148 (π_e) | D4 (코팅 전후 γ · W_ad DFT) 와 IGC (같은 덮임률) 둘 다 미실행 → 같은 방법 · 같은 표면 상태로 잰다 · 결합 규칙 없이 비를 주는 측정 = 같은 탐침 CAB (`begat2004_cohesive_adhesive_balance_afm_colloid_probe`) |
 
 ---
 

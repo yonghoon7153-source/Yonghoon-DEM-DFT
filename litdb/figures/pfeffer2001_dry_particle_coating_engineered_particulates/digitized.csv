@@ -1,0 +1,84 @@
+# pfeffer2001_dry_particle_coating_engineered_particulates — 손 판독 (2026-10-13). 크롭 = 같은 폴더 fig_*.png (원 래스터 200 dpi 그림은 300 dpi 렌더 · 600 dpi 그림은 600 dpi (긴 변 3000 px 상한) 렌더).
+# printed=yes = 그림 안에 숫자로 인쇄된 값 (범례 · 라벨) · no = 축 눈금으로 읽은 값.
+# 정밀도: 각도 ±0.5 deg · 피복률 ±1 %p (오차막대 = 원문 ±5 %) · 흡수량 ±2 %p · 입도 ±0.5 um · 충돌 수 ±10 (벽-호스트 ±0.005e4) · 로그 축 힘 ±15 %.
+figure,panel,series,x,x_unit,y,y_unit,printed,note
+11,-,cornstarch AOR (MAIC 1% silica),0,min,59.0,deg,no,오차막대 약 ±1.5
+11,-,cornstarch AOR,5,min,49.1,deg,no,
+11,-,cornstarch AOR,10,min,47.7,deg,no,
+11,-,cornstarch AOR,20,min,46.7,deg,no,
+12,-,cellulose AOR (MAIC 1% silica),0,min,49.6,deg,no,
+12,-,cellulose AOR,5,min,39.6,deg,no,
+12,-,cellulose AOR,10,min,37.5,deg,no,
+12,-,cellulose AOR,20,min,43.8,deg,no,20 분 = 섬유 파쇄로 다시 나빠짐 (본문)
+13,a,silica water absorbed,300,s,92,mass %,no,본문 '5 min 노출 110 %' 와 어긋남 — 곡선 끝 (~920 s) 은 109
+13,b,uncoated cornstarch,300,s,60,mass %,no,곡선 끝 ~65 (본문 60)
+13,c,cornstarch 5 min processed,300,s,13,mass %,no,곡선 끝 ~24 (본문 28 — 그림 어디에도 28 없음)
+13,d,cornstarch 20 min processed,300,s,5,mass %,no,곡선 끝 ~17 (본문 18)
+13,a,silica water absorbed,920,s,109,mass %,no,곡선 끝
+13,b,uncoated cornstarch,920,s,65,mass %,no,곡선 끝
+13,c,cornstarch 5 min processed,920,s,24,mass %,no,곡선 끝
+13,d,cornstarch 20 min processed,920,s,17,mass %,no,곡선 끝
+14,a,uncoated cellulose,600,s,62,mass %,no,
+14,b,cellulose 20 min,600,s,48,mass %,no,
+14,c,cellulose 5 min,600,s,36.5,mass %,no,
+14,d,cellulose 10 min,600,s,30,mass %,no,10 분이 가장 낮음
+18,-,AOR (theta composer 1% silica),0,min,54.2,deg,no,
+18,-,AOR,2,min,43.2,deg,no,
+18,-,AOR,4,min,42.0,deg,no,
+18,-,AOR,6,min,38.6,deg,no,
+18,-,AOR,8,min,31.3,deg,no,최소
+18,-,AOR,10,min,37.8,deg,no,
+18,-,specific surface area,0,min,2.71,m2/g,no,오른쪽 축
+18,-,specific surface area,2,min,2.60,m2/g,no,
+18,-,specific surface area,4,min,2.40,m2/g,no,
+18,-,specific surface area,6,min,2.20,m2/g,no,
+18,-,specific surface area,8,min,1.95,m2/g,no,최소
+18,-,specific surface area,10,min,2.15,m2/g,no,
+19,-,moisture 8 min processed,10,h,24.7,%,no,가장 낮음
+19,-,moisture physical mixture,10,h,29.8,%,no,2 · 4 · 10 min 곡선과 거의 겹침
+19,-,moisture 6 min processed,10,h,27.8,%,no,
+20,-,coverage PMMA 200 um / alumina 0.2 um (MAIC),1,min,35,%,no,오차막대 ±5 (원문 '실험 오차 약 5 %')
+20,-,coverage,3,min,45,%,no,
+20,-,coverage,5,min,68.5,%,no,맞춤 곡선보다 위
+20,-,coverage,7,min,60,%,no,
+20,-,coverage,10,min,63,%,no,맞춤 곡선 끝 ~66.5
+21,-,coverage vs guest size (wt% for monolayer 0.25/1.0/2.0/5.0 = 인쇄),0.05,um,69,%,no,
+21,-,coverage vs guest size,0.2,um,51.5,%,no,
+21,-,coverage vs guest size,0.4,um,27.5,%,no,
+21,-,coverage vs guest size,1.0,um,11,%,no,
+22,-,coverage vs magnet size,150,um,42,%,no,
+22,-,coverage vs magnet size,800,um,52,%,no,
+22,-,coverage vs magnet size,2700,um,60,%,no,본문: 2.7 mm 자석이 가장 좋음
+23,-,coverage vs magnet rotational speed,79.6,rev/s,51 / 54,%,no,같은 속도 두 점
+23,-,coverage vs magnet rotational speed,85.4,rev/s,65,%,no,
+23,-,coverage vs magnet rotational speed,89,rev/s,69,%,no,
+23,-,coverage vs magnet rotational speed,93.5,rev/s,67,%,no,
+23,-,coverage vs magnet rotational speed,103,rev/s,71,%,no,직선 맞춤 ~55 (79) -> ~75 (104)
+24,-,coverage vs magnet translational speed,36.5,cm/s,65,%,no,
+24,-,coverage vs magnet translational speed,39,cm/s,71,%,no,
+24,-,coverage vs magnet translational speed,55,cm/s,68.7,%,no,
+24,-,coverage vs magnet translational speed,60,cm/s,67,%,no,수평선 ~67.8
+28,a,as-received Mg weight increase,96,h,19.2,%,no,
+28,b,Mg/wax by HB weight increase,96,h,12.7,%,no,원 · 삼각 두 계열이 겹치는데 라벨은 하나
+28,c,wax weight increase,96,h,0.3,%,no,
+29,-,H2 pressure as-received Mg,160,h,300,psi,no,곡선 끝
+29,-,H2 pressure Mg coated with silica,220,h,190,psi,no,곡선 끝
+29,-,H2 pressure Mg coated with wax,200,h,105,psi,no,곡선 끝
+32,a,volume-mean size uncoated catalytic support,-,-,36.0,um,no,
+32,b,2.5-min MAIC,-,-,30.6,um,no,
+32,c,5-min MAIC,-,-,23.9,um,no,
+32,d,10-min MAIC,-,-,20.2,um,no,
+32,e,2-min HB,-,-,17.8,um,no,본문 'severe size reduction in the HB'
+33,-,sintering onset (legend),-,-,1180 / 1320,degC,yes,(a) uncoated · (b) 2.5 min MAIC — 본문 +140 degC
+35,-,sticking ratio 5.0 1/s,60,min,7,%,no,u/umf = 2.0 (인쇄)
+35,-,sticking ratio 10.0 1/s,60,min,23,%,no,
+35,-,sticking ratio 15.0 1/s,60,min,38,%,no,
+35,-,sticking ratio 20.0 1/s,60,min,45.5,%,no,
+35,-,sticking ratio 25.0 1/s,60,min,51,%,no,
+38,-,host-host collisions per host,10 / 50 / 80,magnets,778 / 967 / 668,count,no,1000 PMMA 200 um · 자석 2.36 mm (본문)
+38,-,wall-host collisions per host,10 / 50 / 80,magnets,1.363e4 / 1.409e4 / 1.168e4,count,no,
+38,-,magnet-host collisions per host,10 / 50 / 80,magnets,50 / 1780 / 2660,count,no,
+42,a,normal force wedge / scraper area,1.0,min,1.5e-3 / 1.6e-3,N,no,로그 축 · 2D 기계융합 DEM (입자 크기 원문에 없음)
+42,a,normal force input / free-diffusion area,1.0,min,9e-4 / 6.5e-4,N,no,
+42,b,tangential force wedge / scraper area,1.0,min,3e-4 / 3e-4,N,no,
+42,b,tangential force input / free-diffusion area,1.0,min,1.8e-4 / 1.3e-4,N,no,

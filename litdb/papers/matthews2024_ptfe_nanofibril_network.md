@@ -96,7 +96,7 @@ L 수백 µm) → secondary → "10s nm 이하"** 까지 계단을 따라 내려
    ③ **PTFE-fibrillation**.  ③ 이 산업 관심(Tesla Battery Day 2020, Maxwell 2003 특허; Samsung·LG
    의 PTFE 기반 ASSB 논문)의 초점이다.  ③ 은 (i) 건식혼합 → (ii) **피브릴화** → (iii) 열압연.
 3. **공백** — PTFE-fibrillation 연구는 **ASSB 복합양극·SE 분리막에 편중**돼 있고
-   (Hippauf 2019: NMC + Li₆PS₅Cl + CNF + **0.1–1 wt% PTFE**, 가열 mortar 1 min → 열압연 ~100 µm ·
+   (Hippauf 2019: NMC + Li₆PS₅Cl + CNF + **0.1–1 wt% PTFE**, 가열 mortar 1 min → 열판 압연 막 ≈200 µm (그림 3A 시료 · 자립 최소 91 µm) → 300 MPa 압축 뒤 ≈100 µm (⚠ 정정 2026-10-13: 옛 표기 "열압연 ~100 µm" 은 압축 뒤 두께 — `hippauf2019_dry_film_ptfe_sulfide_cathode_sheet` [인쇄 p.3–5]) ·
    Zhang 2021: Li₆PS₅Cl + **0.2 wt% PTFE** 볼밀 → 80 °C 열압연 → **30 µm** 분리막 ·
    Lee 2023: Li₆PS₅Cl + **0.2–5 wt% PTFE** mortar 전단 → 20–120 °C 압연 → **300 µm**),
    **LiB 쪽은 오히려 PTFE 를 많이 쓴다**(Zhang 2022 흑연 + 5 wt% CB + **5 wt% PTFE** jet-mill →

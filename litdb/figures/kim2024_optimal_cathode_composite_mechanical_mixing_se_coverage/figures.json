@@ -1,0 +1,1143 @@
+{
+ "slug": "kim2024_optimal_cathode_composite_mechanical_mixing_se_coverage",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-10-13",
+ "sources": [
+  "9673bc77-28._Exploring_optimal_cathode_composite_design_for_high-performance_all-solid-state_batteries.pdf",
+  "3f432922-28._Sup_Exploring_optimal_cathode_composite_design_for_high-performance_all-solid-state_batteries.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 3,
+   "file": "fig_1.png",
+   "caption": "Fig. 1. (a) Surface coverage of NCM particle based on the coating weight ratio of SE for different thickness of SE coating layer. The shaded colors indicate the variance in surface coverage reflecting the error bars in Fig. S1. (b–d) (Upper) Low- and high-magnification SEM images of LNO-coated NCM, NCM@10SE, and HM-NCM@10SE, and (bottom) corresponding EDS mapping with regard to nickel and sulfur. (e) XRD and (f) XPS spectra of LPSCl, NCM, NCM@10SE, and NCM@23SE samples, respectively. (g) SEM images of bare NCM, NCM@10SE, and NCM@23SE. (h) PSA results showing mainly two peaks near 1 and 13.5 μm for bare NCM, HM, and MM samples with different SE contents. The numbers in parentheses in the legend indicate the average particle diameters of the samples based on the large peak, and small peaks indicate residual SE.",
+   "rotated_deg": 0,
+   "bbox": [
+    57.0,
+    411.0,
+    538.3,
+    678.4
+   ],
+   "w": 2006,
+   "h": 1115,
+   "dpi": 300,
+   "src": "9673bc77-28._Exploring_optimal_cathode_composite_design_for_high-performance_all-solid-state_batteries.pdf",
+   "blank": 0.491,
+   "auto_bbox": [
+    31.6,
+    405.0,
+    565.8,
+    683.0
+   ],
+   "native_dpi": 300.1,
+   "recrop": "2026-10-13 래스터 원본 경계로 다시 자름 · 원 해상도 그대로 (300.1 dpi · 업샘플 없음) — 자동 bbox 는 흰 여백 · 캡션 일부 포함",
+   "viewed": true
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 5,
+   "file": "fig_2.png",
+   "caption": "Fig. 2. (a) SEM images of HM23, MM10, and MM23 composites and their EDS elemental mapping for oxygen and sulfur. (b) (Upper) Low- and (bottom) high-magnification cross-sectional CP-SEM images of HM23, MM10, and MM23 composites. (c) EIS spectra for ionic conductivity measurement of the HM23, MM10, and MM23 composites in the electron-blocking cell. (d) Electronic conductivities of the HM23, MM10, and MM23 composites measured by DC polarization in the ion-blocking cell. (e) The 3D electrode structure with different coating weight ratios of SE to NCM: (left) HM23, (middle) MM10, and (right) MM23 composites, respectively. (f) Contact area ratio of VGCF to NCM and SE to NCM for HM23, MM10, and MM23 composites.",
+   "rotated_deg": 0,
+   "bbox": [
+    45.4,
+    55.4,
+    549.9,
+    395.4
+   ],
+   "w": 2104,
+   "h": 1418,
+   "dpi": 300,
+   "src": "9673bc77-28._Exploring_optimal_cathode_composite_design_for_high-performance_all-solid-state_batteries.pdf",
+   "blank": 0.313,
+   "auto_bbox": [
+    31.6,
+    49.4,
+    566.0,
+    400.0
+   ],
+   "native_dpi": 300.0,
+   "recrop": "2026-10-13 래스터 원본 경계로 다시 자름 · 원 해상도 그대로 (300.0 dpi · 업샘플 없음) — 자동 bbox 는 흰 여백 · 캡션 일부 포함",
+   "viewed": true
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 6,
+   "file": "fig_3.png",
+   "caption": "Fig. 3. (a) Cycling performances and (b) corresponding voltage profiles of HM23, MM10, and MM23 cells with an In anode at 0.3 C. (c) Schematic diagram showing in situ internal pressure measurement. (d) In situ internal cell pressure changes in the HM23 and MM10 cells during initial cycling. (e) Rate performances for the HM23, MM10, and MM23 cells at different C-rates from 0.1 to 4 C. The loading density of the NCM is 10 mg cm−2. (f) Cycling performances of the HM23 and MM10 cells and (g) voltage profiles of the MM10 cell with a loading density of 5 mg cm−2 and a Li-metal anode at 1 C and 23 °C.",
+   "rotated_deg": 0,
+   "bbox": [
+    45.0,
+    385.4,
+    550.3,
+    697.5
+   ],
+   "w": 2106,
+   "h": 1302,
+   "dpi": 300,
+   "src": "9673bc77-28._Exploring_optimal_cathode_composite_design_for_high-performance_all-solid-state_batteries.pdf",
+   "blank": 0.74,
+   "auto_bbox": [
+    31.6,
+    379.4,
+    565.8,
+    702.1
+   ],
+   "native_dpi": 300.0,
+   "recrop": "2026-10-13 래스터 원본 경계로 다시 자름 · 원 해상도 그대로 (300.0 dpi · 업샘플 없음) — 자동 bbox 는 흰 여백 · 캡션 일부 포함",
+   "viewed": true
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 7,
+   "file": "fig_4.png",
+   "caption": "Fig. 4. (a) 3D contour plots for HM23, MM10, and MM23 composites showing SOC and electrolyte current density at the end of the discharging process under an NCM weight fraction of 75 wt%. (b) Overpotential and surface coverage plots for HM23, MM10, and MM23 composites. (c) Distribution of active and inactive NCM particles in the composites. Gray color represents active NCM, and pale gray color indicates inactive NCM particles. (d) CUE for HM and MM-based composites with different NCM weight fractions. (e) Contour plot of average von Mises stress (σv) in NCM and SE in the composite after discharging with a cut-off voltage of 3 VLi. (f) Line plots showing a direct comparison of von Mises stress for different cases shown in Fig. (e) depending on the normalized capacity.",
+   "rotated_deg": 0,
+   "bbox": [
+    46.4,
+    416.7,
+    548.8,
+    688.0
+   ],
+   "w": 2094,
+   "h": 1131,
+   "dpi": 300,
+   "src": "9673bc77-28._Exploring_optimal_cathode_composite_design_for_high-performance_all-solid-state_batteries.pdf",
+   "blank": 0.684,
+   "auto_bbox": [
+    31.6,
+    410.7,
+    565.8,
+    692.6
+   ],
+   "native_dpi": 300.0,
+   "recrop": "2026-10-13 래스터 원본 경계로 다시 자름 · 원 해상도 그대로 (300.0 dpi · 업샘플 없음) — 자동 bbox 는 흰 여백 · 캡션 일부 포함",
+   "viewed": true
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 9,
+   "file": "fig_5.png",
+   "caption": "Fig. 5. (Top row) Top-view and (bottom row) cross-sectional SEM images of (a) HM23 and (b) MM10 electrodes shown in Fig. 3a at the pristine state and after 500 cycles. (Upper) Low- and (bottom) high-magnification cross-sectional CP-SEM images of the cathode/SE interface of the (c) HM23 and (d) MM10 cells after 500 cycles. Right panels are magnified SEM images from the red boxes in the left panels and corresponding EDS mapping with regard to nickel and sulfur. Cycling performances of HM15 and MM10 cells with a total 15 wt% SE and loading densities of (e) 10 and (f) 23 mg cm−2, respectively. (g) Cycling performances of HM7 and MM5 cells with a total 7 wt% SE and a loading density of 10 mg cm−2. All cell tests were conducted at 0.3 C and a temperature of 55 °C.",
+   "rotated_deg": 0,
+   "bbox": [
+    45.5,
+    55.4,
+    549.8,
+    415.8
+   ],
+   "w": 2102,
+   "h": 1503,
+   "dpi": 300,
+   "src": "9673bc77-28._Exploring_optimal_cathode_composite_design_for_high-performance_all-solid-state_batteries.pdf",
+   "blank": 0.29,
+   "auto_bbox": [
+    31.6,
+    49.4,
+    566.0,
+    420.3
+   ],
+   "native_dpi": 300.1,
+   "recrop": "2026-10-13 래스터 원본 경계로 다시 자름 · 원 해상도 그대로 (300.1 dpi · 업샘플 없음) — 자동 bbox 는 흰 여백 · 캡션 일부 포함",
+   "viewed": true
+  },
+  {
+   "key": "fS1",
+   "kind": "figure",
+   "label": "S1",
+   "page": 7,
+   "file": "fig_S1.png",
+   "caption": "Fig. S1. A trend line showing SE coating thickness experimentally formed on the NCM surface after the MM process based on the weight ratio of SE used for actual synthesis to NCM weight ratio. The data for this trend line was derived from the PSA data in Fig. 1h. In addition, the error bars represent the standard error of the results from 10 SE thickness measurements obtained from the SEM images.",
+   "rotated_deg": 0,
+   "bbox": [
+    176.9,
+    85.0,
+    418.3,
+    241.0
+   ],
+   "w": 671,
+   "h": 435,
+   "dpi": 200,
+   "src": "3f432922-28._Sup_Exploring_optimal_cathode_composite_design_for_high-performance_all-solid-state_batteries.pdf",
+   "blank": 0.921,
+   "auto_bbox": [
+    66.0,
+    79.0,
+    532.1,
+    247.0
+   ],
+   "native_dpi": 199.8,
+   "recrop": "2026-10-13 래스터 원본 경계로 다시 자름 · 원 해상도 그대로 (199.8 dpi · 업샘플 없음) — 자동 bbox 는 흰 여백 · 캡션 일부 포함",
+   "viewed": true
+  },
+  {
+   "key": "fS2",
+   "kind": "figure",
+   "label": "S2",
+   "page": 7,
+   "file": "fig_S2.png",
+   "caption": "Fig. S2. Visualization of SE-coated NCM for surface coverage prediction shown in Fig. 1a under different thicknesses of SE coating layer. For this simulation, when the SE coating weight of 10 wt% was experimentally set, the actual coating weight ratio was adjusted to 8.5 wt% due to SE loss during the MM process.",
+   "rotated_deg": 0,
+   "bbox": [
+    72.0,
+    503.2,
+    524.0,
+    578.7
+   ],
+   "w": 1382,
+   "h": 232,
+   "dpi": 220,
+   "src": "3f432922-28._Sup_Exploring_optimal_cathode_composite_design_for_high-performance_all-solid-state_batteries.pdf",
+   "blank": 0.593,
+   "auto_bbox": [
+    66.0,
+    360.0,
+    532.4,
+    584.7
+   ],
+   "native_dpi": 219.8,
+   "recrop": "2026-10-13 래스터 원본 경계로 다시 자름 · 원 해상도 그대로 (219.8 dpi · 업샘플 없음) — 자동 bbox 는 흰 여백 · 캡션 일부 포함",
+   "viewed": true
+  },
+  {
+   "key": "fS3",
+   "kind": "figure",
+   "label": "S3",
+   "page": 8,
+   "file": "fig_S3.png",
+   "caption": "Fig. S3. SEM and corresponding EDS mapping images of pristine NCM and LNO-coated NCM particles.",
+   "rotated_deg": 0,
+   "bbox": [
+    72.0,
+    85.0,
+    524.0,
+    189.5
+   ],
+   "w": 1382,
+   "h": 321,
+   "dpi": 220,
+   "src": "3f432922-28._Sup_Exploring_optimal_cathode_composite_design_for_high-performance_all-solid-state_batteries.pdf",
+   "blank": 0.166,
+   "auto_bbox": [
+    66.0,
+    79.0,
+    532.4,
+    195.5
+   ],
+   "native_dpi": 219.8,
+   "recrop": "2026-10-13 래스터 원본 경계로 다시 자름 · 원 해상도 그대로 (219.8 dpi · 업샘플 없음) — 자동 bbox 는 흰 여백 · 캡션 일부 포함",
+   "viewed": true
+  },
+  {
+   "key": "fS4",
+   "kind": "figure",
+   "label": "S4",
+   "page": 8,
+   "file": "fig_S4.png",
+   "caption": "Fig. S4. (a) Digital photograph images showing the change in NCM@10SE weight before and after the ethanol (EtOH) washing process to determine the SE content coated on NCM@10SE. (b) Digital photographs showing residual SE attached to the blade after the MM process.",
+   "rotated_deg": 0,
+   "bbox": [
+    72.0,
+    452.2,
+    524.0,
+    599.7
+   ],
+   "w": 1256,
+   "h": 410,
+   "dpi": 200,
+   "src": "3f432922-28._Sup_Exploring_optimal_cathode_composite_design_for_high-performance_all-solid-state_batteries.pdf",
+   "blank": 0.303,
+   "auto_bbox": [
+    66.0,
+    226.0,
+    532.1,
+    605.7
+   ],
+   "native_dpi": 199.9,
+   "recrop": "2026-10-13 래스터 원본 경계로 다시 자름 · 원 해상도 그대로 (199.9 dpi · 업샘플 없음) — 자동 bbox 는 흰 여백 · 캡션 일부 포함",
+   "viewed": true
+  },
+  {
+   "key": "fS5",
+   "kind": "figure",
+   "label": "S5",
+   "page": 9,
+   "file": "fig_S5.png",
+   "caption": "Fig. S5. An SEM image of the NCM@10SE sample and corresponding EDS mapping with regard to nickel and sulfur, showing the exposed NCM surface without an SE coating layer.",
+   "rotated_deg": 0,
+   "bbox": [
+    176.6,
+    85.0,
+    418.6,
+    201.5
+   ],
+   "w": 741,
+   "h": 357,
+   "dpi": 220,
+   "src": "3f432922-28._Sup_Exploring_optimal_cathode_composite_design_for_high-performance_all-solid-state_batteries.pdf",
+   "blank": 0.018,
+   "auto_bbox": [
+    66.0,
+    79.0,
+    532.2,
+    207.5
+   ],
+   "native_dpi": 219.9,
+   "recrop": "2026-10-13 래스터 원본 경계로 다시 자름 · 원 해상도 그대로 (219.9 dpi · 업샘플 없음) — 자동 bbox 는 흰 여백 · 캡션 일부 포함",
+   "viewed": true
+  },
+  {
+   "key": "fS6",
+   "kind": "figure",
+   "label": "S6",
+   "page": 9,
+   "file": "fig_S6.png",
+   "caption": "Fig. S6. SEM images of hand-mixed NCM@10SE samples showing (a) NCM particles unevenly coated with SE or (b) NCM particles having almost no SE coating layer.",
+   "rotated_deg": 0,
+   "bbox": [
+    72.0,
+    491.8,
+    524.0,
+    637.8
+   ],
+   "w": 1382,
+   "h": 447,
+   "dpi": 220,
+   "src": "3f432922-28._Sup_Exploring_optimal_cathode_composite_design_for_high-performance_all-solid-state_batteries.pdf",
+   "blank": 0.173,
+   "auto_bbox": [
+    66.0,
+    485.8,
+    532.1,
+    643.8
+   ],
+   "native_dpi": 219.8,
+   "recrop": "2026-10-13 래스터 원본 경계로 다시 자름 · 원 해상도 그대로 (219.8 dpi · 업샘플 없음) — 자동 bbox 는 흰 여백 · 캡션 일부 포함",
+   "viewed": true
+  },
+  {
+   "key": "fS7",
+   "kind": "figure",
+   "label": "S7",
+   "page": 10,
+   "file": "fig_S7.png",
+   "caption": "Fig. S7. S 2p XPS spectra of NCM, LPSCl, NCM@10SE, and NCM@23SE samples.",
+   "rotated_deg": 0,
+   "bbox": [
+    176.6,
+    85.0,
+    418.6,
+    232.5
+   ],
+   "w": 673,
+   "h": 410,
+   "dpi": 200,
+   "src": "3f432922-28._Sup_Exploring_optimal_cathode_composite_design_for_high-performance_all-solid-state_batteries.pdf",
+   "blank": 0.704,
+   "auto_bbox": [
+    66.0,
+    79.0,
+    493.3,
+    238.5
+   ],
+   "native_dpi": 199.9,
+   "recrop": "2026-10-13 래스터 원본 경계로 다시 자름 · 원 해상도 그대로 (199.9 dpi · 업샘플 없음) — 자동 bbox 는 흰 여백 · 캡션 일부 포함",
+   "viewed": true
+  },
+  {
+   "key": "fS8",
+   "kind": "figure",
+   "label": "S8",
+   "page": 10,
+   "file": "fig_S8.png",
+   "caption": "Fig. S8. (a) Co 2p XPS spectra and (b) XPS survey scans of NCM, LPSCl, NCM@10SE, and NCM@23SE. When considering the analyzable depth of XPS and the weakly detected LNO- NCM related peaks, these spectroscopy results verify that the 10 wt% SE does not fully cover the NCM surface, as shown in Fig. 1f and S8.",
+   "rotated_deg": 0,
+   "bbox": [
+    72.0,
+    439.5,
+    524.0,
+    582.5
+   ],
+   "w": 1256,
+   "h": 399,
+   "dpi": 200,
+   "src": "3f432922-28._Sup_Exploring_optimal_cathode_composite_design_for_high-performance_all-solid-state_batteries.pdf",
+   "blank": 0.769,
+   "auto_bbox": [
+    66.0,
+    433.5,
+    532.2,
+    588.5
+   ],
+   "native_dpi": 199.9,
+   "recrop": "2026-10-13 래스터 원본 경계로 다시 자름 · 원 해상도 그대로 (199.9 dpi · 업샘플 없음) — 자동 bbox 는 흰 여백 · 캡션 일부 포함",
+   "viewed": true
+  },
+  {
+   "key": "fS9",
+   "kind": "figure",
+   "label": "S9",
+   "page": 11,
+   "file": "fig_S9.png",
+   "caption": "Fig. S9. SEM images of the NCM@23SE sample showing agglomerated residual SE.",
+   "rotated_deg": 0,
+   "bbox": [
+    72.0,
+    85.0,
+    522.5,
+    204.0
+   ],
+   "w": 1377,
+   "h": 365,
+   "dpi": 220,
+   "src": "3f432922-28._Sup_Exploring_optimal_cathode_composite_design_for_high-performance_all-solid-state_batteries.pdf",
+   "blank": 0.178,
+   "auto_bbox": [
+    66.0,
+    79.0,
+    528.5,
+    210.0
+   ],
+   "native_dpi": 219.9,
+   "recrop": "2026-10-13 래스터 원본 경계로 다시 자름 · 원 해상도 그대로 (219.9 dpi · 업샘플 없음) — 자동 bbox 는 흰 여백 · 캡션 일부 포함",
+   "viewed": true
+  },
+  {
+   "key": "fS10",
+   "kind": "figure",
+   "label": "S10",
+   "page": 11,
+   "file": "fig_S10.png",
+   "caption": "Fig. S10. SEM and corresponding EDS mapping images of NCM@5SE particles. To prepare sample for SEM analysis, we used the polymer poly(ethylene-co-propylene-co-5-methylene- 2-norbornene) (PEPMNB) as a binder.",
+   "rotated_deg": 0,
+   "bbox": [
+    176.6,
+    438.6,
+    418.6,
+    529.1
+   ],
+   "w": 741,
+   "h": 277,
+   "dpi": 220,
+   "src": "3f432922-28._Sup_Exploring_optimal_cathode_composite_design_for_high-performance_all-solid-state_batteries.pdf",
+   "blank": 0.037,
+   "auto_bbox": [
+    66.0,
+    432.6,
+    532.0,
+    535.1
+   ],
+   "native_dpi": 219.9,
+   "recrop": "2026-10-13 래스터 원본 경계로 다시 자름 · 원 해상도 그대로 (219.9 dpi · 업샘플 없음) — 자동 bbox 는 흰 여백 · 캡션 일부 포함",
+   "viewed": true
+  },
+  {
+   "key": "fS11",
+   "kind": "figure",
+   "label": "S11",
+   "page": 12,
+   "file": "fig_S11.png",
+   "caption": "Fig. S11. The first voltage profiles of the MM10 cells with additional SE sizes of 1, 3, and 8 μm at 0.1 C. In this test, the total SE content is 23 wt%.",
+   "rotated_deg": 0,
+   "bbox": [
+    176.9,
+    85.2,
+    418.3,
+    249.3
+   ],
+   "w": 671,
+   "h": 457,
+   "dpi": 200,
+   "src": "3f432922-28._Sup_Exploring_optimal_cathode_composite_design_for_high-performance_all-solid-state_batteries.pdf",
+   "blank": 0.886,
+   "auto_bbox": [
+    66.0,
+    79.2,
+    532.0,
+    255.3
+   ],
+   "native_dpi": 199.8,
+   "recrop": "2026-10-13 래스터 원본 경계로 다시 자름 · 원 해상도 그대로 (199.8 dpi · 업샘플 없음) — 자동 bbox 는 흰 여백 · 캡션 일부 포함",
+   "viewed": true
+  },
+  {
+   "key": "fS12",
+   "kind": "figure",
+   "label": "S12",
+   "page": 12,
+   "file": "fig_S12.png",
+   "caption": "Fig. S12. SEM and corresponding EDS mapping images of HM-NCM@23SE samples for the fabrication of the HM23 composite. Orange arrows indicate NCM particles that are not sufficiently coated with SE, and white arrows indicate the residual SE.",
+   "rotated_deg": 0,
+   "bbox": [
+    127.7,
+    503.9,
+    467.6,
+    603.4
+   ],
+   "w": 1039,
+   "h": 305,
+   "dpi": 220,
+   "src": "3f432922-28._Sup_Exploring_optimal_cathode_composite_design_for_high-performance_all-solid-state_batteries.pdf",
+   "blank": 0.248,
+   "auto_bbox": [
+    66.0,
+    497.9,
+    532.3,
+    609.4
+   ],
+   "native_dpi": 220.0,
+   "recrop": "2026-10-13 래스터 원본 경계로 다시 자름 · 원 해상도 그대로 (220.0 dpi · 업샘플 없음) — 자동 bbox 는 흰 여백 · 캡션 일부 포함",
+   "viewed": true
+  },
+  {
+   "key": "fS13",
+   "kind": "figure",
+   "label": "S13",
+   "page": 13,
+   "file": "fig_S13.png",
+   "caption": "Fig. S13. Packing densities of HM23, MM10, and MM23 composites after cold pressing.",
+   "rotated_deg": 0,
+   "bbox": [
+    127.4,
+    84.9,
+    467.5,
+    260.9
+   ],
+   "w": 945,
+   "h": 490,
+   "dpi": 200,
+   "src": "3f432922-28._Sup_Exploring_optimal_cathode_composite_design_for_high-performance_all-solid-state_batteries.pdf",
+   "blank": 0.269,
+   "auto_bbox": [
+    66.0,
+    78.9,
+    510.1,
+    266.9
+   ],
+   "native_dpi": 199.9,
+   "recrop": "2026-10-13 래스터 원본 경계로 다시 자름 · 원 해상도 그대로 (199.9 dpi · 업샘플 없음) — 자동 bbox 는 흰 여백 · 캡션 일부 포함",
+   "viewed": true
+  },
+  {
+   "key": "fS14",
+   "kind": "figure",
+   "label": "S14",
+   "page": 13,
+   "file": "fig_S14.png",
+   "caption": "Fig. S14. (Top row) Top-view and (bottom row) cross-sectional SEM images of MM23 electrodes (a) before cycling and (b) after 500 cycles, respectively.",
+   "rotated_deg": 0,
+   "bbox": [
+    72.0,
+    475.9,
+    524.0,
+    640.4
+   ],
+   "w": 1382,
+   "h": 503,
+   "dpi": 220,
+   "src": "3f432922-28._Sup_Exploring_optimal_cathode_composite_design_for_high-performance_all-solid-state_batteries.pdf",
+   "blank": 0.158,
+   "auto_bbox": [
+    66.0,
+    469.9,
+    532.2,
+    646.4
+   ],
+   "native_dpi": 219.8,
+   "recrop": "2026-10-13 래스터 원본 경계로 다시 자름 · 원 해상도 그대로 (219.8 dpi · 업샘플 없음) — 자동 bbox 는 흰 여백 · 캡션 일부 포함",
+   "viewed": true
+  },
+  {
+   "key": "fS15",
+   "kind": "figure",
+   "label": "S15",
+   "page": 14,
+   "file": "fig_S15.png",
+   "caption": "Fig. S15. CP-SEM images of NCM@5SE after cold pressing. The SE coated on NCM spread laterally due to the ductility of SE, allowing physical contact between NCM particles.",
+   "rotated_deg": 0,
+   "bbox": [
+    72.0,
+    85.0,
+    524.0,
+    212.0
+   ],
+   "w": 1382,
+   "h": 389,
+   "dpi": 220,
+   "src": "3f432922-28._Sup_Exploring_optimal_cathode_composite_design_for_high-performance_all-solid-state_batteries.pdf",
+   "blank": 0.255,
+   "auto_bbox": [
+    66.0,
+    79.0,
+    532.0,
+    218.0
+   ],
+   "native_dpi": 219.8,
+   "recrop": "2026-10-13 래스터 원본 경계로 다시 자름 · 원 해상도 그대로 (219.8 dpi · 업샘플 없음) — 자동 bbox 는 흰 여백 · 캡션 일부 포함",
+   "viewed": true
+  },
+  {
+   "key": "fS16",
+   "kind": "figure",
+   "label": "S16",
+   "page": 14,
+   "file": "fig_S16.png",
+   "caption": "Fig. S16. CP-SEM images of the MM composite consisting of NCM@23SE and corresponding EDS mapping with regard to nickel and sulfur, showing isolated NCM particles.",
+   "rotated_deg": 0,
+   "bbox": [
+    72.0,
+    502.3,
+    524.0,
+    629.3
+   ],
+   "w": 1382,
+   "h": 389,
+   "dpi": 220,
+   "src": "3f432922-28._Sup_Exploring_optimal_cathode_composite_design_for_high-performance_all-solid-state_batteries.pdf",
+   "blank": 0.042,
+   "auto_bbox": [
+    66.0,
+    496.3,
+    532.2,
+    635.3
+   ],
+   "native_dpi": 219.8,
+   "recrop": "2026-10-13 래스터 원본 경계로 다시 자름 · 원 해상도 그대로 (219.8 dpi · 업샘플 없음) — 자동 bbox 는 흰 여백 · 캡션 일부 포함",
+   "viewed": true
+  },
+  {
+   "key": "fS17",
+   "kind": "figure",
+   "label": "S17",
+   "page": 15,
+   "file": "fig_S17.png",
+   "caption": "Fig. S17. Nyquist plots for the HM23, MM10, and MM23 cells shown in Fig. 3a during 100 cycles.",
+   "rotated_deg": 0,
+   "bbox": [
+    72.0,
+    85.0,
+    524.0,
+    199.0
+   ],
+   "w": 1256,
+   "h": 317,
+   "dpi": 200,
+   "src": "3f432922-28._Sup_Exploring_optimal_cathode_composite_design_for_high-performance_all-solid-state_batteries.pdf",
+   "blank": 0.892,
+   "auto_bbox": [
+    66.0,
+    79.0,
+    532.4,
+    205.0
+   ],
+   "native_dpi": 199.9,
+   "recrop": "2026-10-13 래스터 원본 경계로 다시 자름 · 원 해상도 그대로 (199.9 dpi · 업샘플 없음) — 자동 bbox 는 흰 여백 · 캡션 일부 포함",
+   "viewed": true
+  },
+  {
+   "key": "fS18",
+   "kind": "figure",
+   "label": "S18",
+   "page": 15,
+   "file": "fig_S18.png",
+   "caption": "Fig. S18. (a) 3D contour plots for the MM5 and MM15 composite with a total SE content of 23 wt%, showing SOC and electrolyte current density at the end of the discharging process under an NCM weight fraction of 75 wt%. (b) Overpotential for the HM23, MM5, MM10, MM15, and MM23 composites with a total SE contents of 23 wt%. (c) Contour plot of average von Mises stress (σv) in NCM and SE within the MM5 and MM15 composites after discharging with a cut-off voltage of 3 VLi. (d) Line plots showing a direct comparison of von Mises stress for the HM23, MM5, MM10, MM15, and MM23 composites with a total SE contents of 23 wt% depending on the normalized capacity.",
+   "rotated_deg": 0,
+   "bbox": [
+    72.0,
+    295.9,
+    523.0,
+    523.9
+   ],
+   "w": 1253,
+   "h": 635,
+   "dpi": 200,
+   "src": "3f432922-28._Sup_Exploring_optimal_cathode_composite_design_for_high-performance_all-solid-state_batteries.pdf",
+   "blank": 0.709,
+   "auto_bbox": [
+    66.0,
+    235.1,
+    532.0,
+    529.9
+   ],
+   "native_dpi": 199.9,
+   "recrop": "2026-10-13 래스터 원본 경계로 다시 자름 · 원 해상도 그대로 (199.9 dpi · 업샘플 없음) — 자동 bbox 는 흰 여백 · 캡션 일부 포함",
+   "viewed": true
+  },
+  {
+   "key": "fS19",
+   "kind": "figure",
+   "label": "S19",
+   "page": 16,
+   "file": "fig_S19.png",
+   "caption": "Fig. S19. (a) Cycling performances of the MM5, MM10, and MM15 cells prepared using a dispersion machine (denoted as D-MM5, D-MM10, and D-MM15, respectively) at 45 ℃ under a total SE content of 23 wt%. (b) CP-SEM and EDS mapping images of the MM5 electrode with a total SE content of 23 wt%. (c) A CP-SEM image of the NCM@15SE (MM15) composite.",
+   "rotated_deg": 0,
+   "bbox": [
+    72.0,
+    453.9,
+    523.0,
+    560.4
+   ],
+   "w": 1253,
+   "h": 297,
+   "dpi": 200,
+   "src": "3f432922-28._Sup_Exploring_optimal_cathode_composite_design_for_high-performance_all-solid-state_batteries.pdf",
+   "blank": 0.413,
+   "auto_bbox": [
+    66.0,
+    447.9,
+    532.4,
+    566.4
+   ],
+   "native_dpi": 199.9,
+   "recrop": "2026-10-13 래스터 원본 경계로 다시 자름 · 원 해상도 그대로 (199.9 dpi · 업샘플 없음) — 자동 bbox 는 흰 여백 · 캡션 일부 포함",
+   "viewed": true
+  },
+  {
+   "key": "fS20",
+   "kind": "figure",
+   "label": "S20",
+   "page": 17,
+   "file": "fig_S20.png",
+   "caption": "Fig. S20. Cycling performances of HM23 and MM10 cells prepared using a dispersion machine (denoted as D-HM23 and D-MM10, respectively) with an NCM loading density of 10 mg cm- 2 at 45 ℃. When compared to Fig. 3a, a similar trend in cycling performance was observed, with the D-MM10 cell showing better performance compared to the D-HM23 cell.",
+   "rotated_deg": 0,
+   "bbox": [
+    176.9,
+    85.2,
+    418.3,
+    198.7
+   ],
+   "w": 671,
+   "h": 316,
+   "dpi": 200,
+   "src": "3f432922-28._Sup_Exploring_optimal_cathode_composite_design_for_high-performance_all-solid-state_batteries.pdf",
+   "blank": 0.763,
+   "auto_bbox": [
+    66.0,
+    79.2,
+    532.2,
+    204.7
+   ],
+   "native_dpi": 199.8,
+   "recrop": "2026-10-13 래스터 원본 경계로 다시 자름 · 원 해상도 그대로 (199.8 dpi · 업샘플 없음) — 자동 bbox 는 흰 여백 · 캡션 일부 포함",
+   "viewed": true
+  },
+  {
+   "key": "fS21",
+   "kind": "figure",
+   "label": "S21",
+   "page": 17,
+   "file": "fig_S21.png",
+   "caption": "Fig. S21. Voltage profiles of the HM23, MM10, and MM23 cells at different C-rates from 0.1 to 4 C during the rate performance tests shown in Fig. 3e.",
+   "rotated_deg": 0,
+   "bbox": [
+    72.0,
+    508.3,
+    524.0,
+    622.3
+   ],
+   "w": 1256,
+   "h": 317,
+   "dpi": 200,
+   "src": "3f432922-28._Sup_Exploring_optimal_cathode_composite_design_for_high-performance_all-solid-state_batteries.pdf",
+   "blank": 0.829,
+   "auto_bbox": [
+    66.0,
+    410.1,
+    532.3,
+    628.3
+   ],
+   "native_dpi": 199.9,
+   "recrop": "2026-10-13 래스터 원본 경계로 다시 자름 · 원 해상도 그대로 (199.9 dpi · 업샘플 없음) — 자동 bbox 는 흰 여백 · 캡션 일부 포함",
+   "viewed": true
+  },
+  {
+   "key": "fS22",
+   "kind": "figure",
+   "label": "S22",
+   "page": 18,
+   "file": "fig_S22.png",
+   "caption": "Fig. S22. 3D electrode structures with different NCM weight fractions from 75 to 92 wt%. Top and bottom row images indicate HM and MM composites, respectively.",
+   "rotated_deg": 0,
+   "bbox": [
+    176.6,
+    85.0,
+    418.6,
+    289.0
+   ],
+   "w": 741,
+   "h": 625,
+   "dpi": 220,
+   "src": "3f432922-28._Sup_Exploring_optimal_cathode_composite_design_for_high-performance_all-solid-state_batteries.pdf",
+   "blank": 0.457,
+   "auto_bbox": [
+    66.0,
+    79.0,
+    532.4,
+    295.0
+   ],
+   "native_dpi": 219.9,
+   "recrop": "2026-10-13 래스터 원본 경계로 다시 자름 · 원 해상도 그대로 (219.9 dpi · 업샘플 없음) — 자동 bbox 는 흰 여백 · 캡션 일부 포함",
+   "viewed": true
+  },
+  {
+   "key": "fS23",
+   "kind": "figure",
+   "label": "S23",
+   "page": 18,
+   "file": "fig_S23.png",
+   "caption": "Fig. S23. (a) Contour plot of average von Mises stress (σv) in NCM and SE in the composite after charging with a cut-off voltage of 4.3 VLi. (b) Line plots showing a direct comparison of von Mises stress for different cases shown in Fig. (a) depending on the normalized capacity.",
+   "rotated_deg": 0,
+   "bbox": [
+    72.0,
+    476.4,
+    524.0,
+    616.4
+   ],
+   "w": 1256,
+   "h": 390,
+   "dpi": 200,
+   "src": "3f432922-28._Sup_Exploring_optimal_cathode_composite_design_for_high-performance_all-solid-state_batteries.pdf",
+   "blank": 0.779,
+   "auto_bbox": [
+    66.0,
+    470.4,
+    532.2,
+    622.4
+   ],
+   "native_dpi": 199.9,
+   "recrop": "2026-10-13 래스터 원본 경계로 다시 자름 · 원 해상도 그대로 (199.9 dpi · 업샘플 없음) — 자동 bbox 는 흰 여백 · 캡션 일부 포함",
+   "viewed": true
+  },
+  {
+   "key": "fS24",
+   "kind": "figure",
+   "label": "S24",
+   "page": 19,
+   "file": "fig_S24.png",
+   "caption": "Fig. S24. EIS spectra for ionic conductivity measurement of the HM15 and MM10 composites with a total SE content of 15 wt% in the electron-blocking cell.",
+   "rotated_deg": 0,
+   "bbox": [
+    176.6,
+    85.0,
+    418.6,
+    258.0
+   ],
+   "w": 673,
+   "h": 481,
+   "dpi": 200,
+   "src": "3f432922-28._Sup_Exploring_optimal_cathode_composite_design_for_high-performance_all-solid-state_batteries.pdf",
+   "blank": 0.842,
+   "auto_bbox": [
+    66.0,
+    79.0,
+    532.1,
+    264.0
+   ],
+   "native_dpi": 199.9,
+   "recrop": "2026-10-13 래스터 원본 경계로 다시 자름 · 원 해상도 그대로 (199.9 dpi · 업샘플 없음) — 자동 bbox 는 흰 여백 · 캡션 일부 포함",
+   "viewed": true
+  },
+  {
+   "key": "fS25",
+   "kind": "figure",
+   "label": "S25",
+   "page": 20,
+   "file": "fig_S25.png",
+   "caption": "Fig. S25. (a) 3D contour plots for the MM10 composite with a total SE content of 15 wt%, showing SOC and electrolyte current density at the end of the discharging process under an NCM weight fraction of 83 wt%. (b) Overpotential for the MM10 composites with total SE contents of 15 and 23 wt%. (c) Contour plot of average von Mises stress (σv) in NCM and SE within the MM10 composites with a total SE content of 15 wt% after discharging with a cut- off voltage of 3 VLi. (d) Line plots showing a direct comparison of von Mises stress for the MM10 cases with total SE contents of 15 and 23 wt% depending on the normalized capacity. (e) A CP-SEM image of the MM10 cell with a total SE content of 15 wt% after 500 cycles shown in Fig. 5e.",
+   "rotated_deg": 0,
+   "bbox": [
+    72.0,
+    85.2,
+    523.0,
+    262.8
+   ],
+   "w": 1253,
+   "h": 494,
+   "dpi": 200,
+   "src": "3f432922-28._Sup_Exploring_optimal_cathode_composite_design_for_high-performance_all-solid-state_batteries.pdf",
+   "blank": 0.598,
+   "auto_bbox": [
+    66.0,
+    79.2,
+    532.0,
+    268.8
+   ],
+   "native_dpi": 199.9,
+   "recrop": "2026-10-13 래스터 원본 경계로 다시 자름 · 원 해상도 그대로 (199.9 dpi · 업샘플 없음) — 자동 bbox 는 흰 여백 · 캡션 일부 포함",
+   "viewed": true
+  },
+  {
+   "key": "fS26",
+   "kind": "figure",
+   "label": "S26",
+   "page": 21,
+   "file": "fig_S26.png",
+   "caption": "Fig. S26. (a) Digital photograph images showing HM21.5 and MM10 dry electrodes. (b) Cycling performances of dry electrode cells with an NCM loading density of 23 mg cm-2 at 55 ℃. The vague orange and grey colors indicate the results of the HM21.5 and MM10 cells prepared using dispersion and kneading machines (inset) without the HM process (denoted as DK-HM21.5 and DK-MM10, respectively). These cells do not show noticeable differences compared to the results of the cells prepared with the HM process (distinct red and black colors).",
+   "rotated_deg": 0,
+   "bbox": [
+    72.0,
+    84.9,
+    523.0,
+    212.9
+   ],
+   "w": 1253,
+   "h": 357,
+   "dpi": 200,
+   "src": "3f432922-28._Sup_Exploring_optimal_cathode_composite_design_for_high-performance_all-solid-state_batteries.pdf",
+   "blank": 0.571,
+   "auto_bbox": [
+    66.0,
+    78.9,
+    532.4,
+    218.9
+   ],
+   "native_dpi": 199.9,
+   "recrop": "2026-10-13 래스터 원본 경계로 다시 자름 · 원 해상도 그대로 (199.9 dpi · 업샘플 없음) — 자동 bbox 는 흰 여백 · 캡션 일부 포함",
+   "viewed": true
+  },
+  {
+   "key": "fS27",
+   "kind": "figure",
+   "label": "S27",
+   "page": 22,
+   "file": "fig_S27.png",
+   "caption": "Fig. S27. Voltage profiles of DK-HM18.5 and DK-MM10 pouch-type cells during 20 cycles with an NCM loading density of 30 mg cm-2 at 55 ℃. For this test, a 0.1 C constant current and 4.3 V constant voltage (CC-CV) mode was adopted for the charging process, and a 0.3 C constant current mode was applied for the discharging process in the voltage rage of 2.5 – 4.3 V vs. Li/Li+.",
+   "rotated_deg": 0,
+   "bbox": [
+    72.0,
+    84.9,
+    523.0,
+    231.8
+   ],
+   "w": 1253,
+   "h": 410,
+   "dpi": 200,
+   "src": "3f432922-28._Sup_Exploring_optimal_cathode_composite_design_for_high-performance_all-solid-state_batteries.pdf",
+   "blank": 0.795,
+   "auto_bbox": [
+    66.0,
+    78.9,
+    532.3,
+    237.8
+   ],
+   "native_dpi": 199.9,
+   "recrop": "2026-10-13 래스터 원본 경계로 다시 자름 · 원 해상도 그대로 (199.9 dpi · 업샘플 없음) — 자동 bbox 는 흰 여백 · 캡션 일부 포함",
+   "viewed": true
+  },
+  {
+   "key": "fS28",
+   "kind": "figure",
+   "label": "S28",
+   "page": 23,
+   "file": "fig_S28.png",
+   "caption": "Fig. S28. A CP-SEM image of the MM5 composite electrode with a total SE content of 7 wt% before cycling, showing poor interparticle contact.",
+   "rotated_deg": 0,
+   "bbox": [
+    176.9,
+    85.2,
+    418.3,
+    227.3
+   ],
+   "w": 671,
+   "h": 396,
+   "dpi": 200,
+   "src": "3f432922-28._Sup_Exploring_optimal_cathode_composite_design_for_high-performance_all-solid-state_batteries.pdf",
+   "blank": 0.162,
+   "auto_bbox": [
+    66.0,
+    79.2,
+    532.4,
+    233.3
+   ],
+   "native_dpi": 199.8,
+   "recrop": "2026-10-13 래스터 원본 경계로 다시 자름 · 원 해상도 그대로 (199.8 dpi · 업샘플 없음) — 자동 bbox 는 흰 여백 · 캡션 일부 포함",
+   "viewed": true
+  },
+  {
+   "key": "fS29",
+   "kind": "figure",
+   "label": "S29",
+   "page": 23,
+   "file": "fig_S29.png",
+   "caption": "Fig. S29. Voltage profiles of HM7 and MM5 cells with a total SE content of 7 wt% and an In anode at 0.3 C, shown in Fig. 5g.",
+   "rotated_deg": 0,
+   "bbox": [
+    72.0,
+    499.4,
+    524.0,
+    618.4
+   ],
+   "w": 1256,
+   "h": 331,
+   "dpi": 200,
+   "src": "3f432922-28._Sup_Exploring_optimal_cathode_composite_design_for_high-performance_all-solid-state_batteries.pdf",
+   "blank": 0.898,
+   "auto_bbox": [
+    66.0,
+    263.2,
+    532.4,
+    624.4
+   ],
+   "native_dpi": 199.9,
+   "recrop": "2026-10-13 래스터 원본 경계로 다시 자름 · 원 해상도 그대로 (199.9 dpi · 업샘플 없음) — 자동 bbox 는 흰 여백 · 캡션 일부 포함",
+   "viewed": true
+  },
+  {
+   "key": "fS30",
+   "kind": "figure",
+   "label": "S30",
+   "page": 24,
+   "file": "fig_S30.png",
+   "caption": "Fig. S30. (a) Illustration of two different designs of SE-coated NCM particles. Uniform filling indicates the regular distribution of SE particles on the NCM surface. The centers of coating particles lie on the NCM particle surface. The radius of each coating particle equals the coating thickness. Random filling indicates the random positioning of coating particles on the NCM surface. The distance between coating particles and the NCM center equals the summation of the NCM radius and one-half of the coating thickness. The radius of each coating particle equals one-half of the coating thickness. (b) Surface coverage with respect to the weight ratio of SE to NCM. Results are plotted for coating thicknesses ranging from 200 to 800 nm. The analytical data was reused from Fig. 1a.",
+   "rotated_deg": 0,
+   "bbox": [
+    72.4,
+    85.0,
+    522.9,
+    313.0
+   ],
+   "w": 1252,
+   "h": 634,
+   "dpi": 200,
+   "src": "3f432922-28._Sup_Exploring_optimal_cathode_composite_design_for_high-performance_all-solid-state_batteries.pdf",
+   "blank": 0.768,
+   "auto_bbox": [
+    66.0,
+    79.0,
+    532.2,
+    319.0
+   ],
+   "native_dpi": 199.9,
+   "recrop": "2026-10-13 래스터 원본 경계로 다시 자름 · 원 해상도 그대로 (199.9 dpi · 업샘플 없음) — 자동 bbox 는 흰 여백 · 캡션 일부 포함",
+   "viewed": true
+  },
+  {
+   "key": "fS31",
+   "kind": "figure",
+   "label": "S31",
+   "page": 25,
+   "file": "fig_S31.png",
+   "caption": "Fig. S31. Illustration of LPSCl-coated NCM particles featuring two designs: (left) uniform and (right) random filling. The images are presented side-by-side for direct comparison. The thickness of the SE coating layer varies between 200 and 800 nm. The coating weight ratios of SE to NCM were set at 3, 5, 7.3, and 8.5 %. For the coating thickness of 200 nm, the maximum achievable coating weight ratio of SE to NCM for complete coverage is 4.51 %. Therefore, in this case, there are no particles with a coating weight ratio greater than 4.51 %.",
+   "rotated_deg": 0,
+   "bbox": [
+    72.4,
+    85.0,
+    522.9,
+    338.5
+   ],
+   "w": 1377,
+   "h": 776,
+   "dpi": 220,
+   "src": "3f432922-28._Sup_Exploring_optimal_cathode_composite_design_for_high-performance_all-solid-state_batteries.pdf",
+   "blank": 0.651,
+   "auto_bbox": [
+    66.0,
+    79.0,
+    532.2,
+    344.5
+   ],
+   "native_dpi": 219.9,
+   "recrop": "2026-10-13 래스터 원본 경계로 다시 자름 · 원 해상도 그대로 (219.9 dpi · 업샘플 없음) — 자동 bbox 는 흰 여백 · 캡션 일부 포함",
+   "viewed": true
+  },
+  {
+   "key": "s1",
+   "kind": "scheme",
+   "label": "1",
+   "page": 2,
+   "file": "sch_1.png",
+   "caption": "Scheme 1. Schematic illustrations of (a) an ASSB with (left) HM or (right) MM cathode composite, showing ionic and electronic conductions in the composite, and (b) the MM process for synthesizing NCM@xSE composite using a mechanical milling machine (top left, digital images).",
+   "rotated_deg": 0,
+   "bbox": [
+    81.0,
+    589.6,
+    514.3,
+    716.7
+   ],
+   "w": 1806,
+   "h": 531,
+   "dpi": 300,
+   "src": "9673bc77-28._Exploring_optimal_cathode_composite_design_for_high-performance_all-solid-state_batteries.pdf",
+   "blank": 0.325,
+   "auto_bbox": [
+    31.6,
+    583.6,
+    565.8,
+    721.3
+   ],
+   "native_dpi": 300.0,
+   "recrop": "2026-10-13 래스터 원본 경계로 다시 자름 · 원 해상도 그대로 (300.0 dpi · 업샘플 없음) — 자동 bbox 는 흰 여백 · 캡션 일부 포함",
+   "viewed": true
+  },
+  {
+   "key": "tS1",
+   "kind": "table",
+   "label": "S1",
+   "page": 26,
+   "file": "tab_S1.png",
+   "caption": "Table S1. Summary of properties of HM23, MM10, and MM23 electrodes with a total SE content of 23 wt% in this work.",
+   "rotated_deg": 0,
+   "bbox": [
+    69.0,
+    85.0,
+    533.9,
+    488.0
+   ],
+   "w": 1938,
+   "h": 1680,
+   "dpi": 300,
+   "src": "3f432922-28._Sup_Exploring_optimal_cathode_composite_design_for_high-performance_all-solid-state_batteries.pdf",
+   "blank": 0.904,
+   "auto_bbox": [
+    67.0,
+    80.6,
+    535.6,
+    489.7
+   ],
+   "recrop": "2026-10-13 벡터 표를 비백색 경계 + 3 pt 로 다시 자름 (300 dpi)",
+   "viewed": true
+  },
+  {
+   "key": "tS2",
+   "kind": "table",
+   "label": "S2",
+   "page": 27,
+   "file": "tab_S2.png",
+   "caption": "Table S2. Material properties and parameters used for simulations in this study.",
+   "rotated_deg": 0,
+   "bbox": [
+    68.3,
+    85.0,
+    529.8,
+    657.0
+   ],
+   "w": 1924,
+   "h": 2384,
+   "dpi": 300,
+   "src": "3f432922-28._Sup_Exploring_optimal_cathode_composite_design_for_high-performance_all-solid-state_batteries.pdf",
+   "blank": 0.94,
+   "auto_bbox": [
+    67.0,
+    80.6,
+    526.6,
+    649.8
+   ],
+   "recrop": "2026-10-13 벡터 표를 비백색 경계 + 3 pt 로 다시 자름 (300 dpi)",
+   "viewed": true
+  }
+ ],
+ "missing_labels": [],
+ "note_manual": "2026-10-13 수동 재크롭: 본문 Scheme 1 + 그림 5 장 = 래스터 원본 300 dpi / SI 그림 31 장 = 래스터 원본 해상도 (200–220 dpi, 업샘플 없음) / SI 표 2 장 = 벡터 300 dpi. 크롭마다 렌더 (축소 모음) 로 열어 확인 · 본문 그림은 원 크기로 읽음."
+}

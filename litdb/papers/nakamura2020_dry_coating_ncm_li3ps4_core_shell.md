@@ -356,6 +356,7 @@ NCM (LiNbO₃) + 분쇄 LPS → 막자 예비 혼합 → 건식 충격 블렌딩
 - 코팅 vs 혼합 DEM: `so2022_dem_compaction_coated_particles_assb` · `so2022_dem_contact_model_assb_compaction_sintering` · `so2021_dem_mold_pressure_assb_coldpress` · `otani2025_dem_se_dispersion_aggregation_compression`.
 - 같은 계 측정: `asano2017_ncm111_li3ps4_composite_electronic_ionic_conductivity` · `sakuda2013_sulfide_mechanical_property` · `minnmann2021_jes_charge_transport_bottlenecks`.
 - 건식 공정 · 피복: `lee2024_shear_force_dry_process_cathode_coverage` · `lee2026_unveiling_ptfe_dry_electrode_digital_twin`.
+- 같은 그룹 · 같은 날 묶음: `kawaguchi2017_dry_coating_parametric_na2so4_model_se` (ref 25 — 공정 창) · `kawaguchi2023_doe_electrode_fabrication_dry_coated_ncm_lps` (같은 장치 · 조건의 코팅 분말로 전극 제작 조건 2³ DOE — 순 LPS 10 → 5.6 wt% · 무탄소 Xs 0.3 에서 전자 붕괴) · `kim2023_mechanofusion_ncm811_lpscl_core_shell_intimate_contact` · `kim2024_optimal_cathode_composite_mechanical_mixing_se_coverage` · `frankenberg2025_milling_dry_processed_sulfide_cathode_microstructure` · `hippauf2019_dry_film_ptfe_sulfide_cathode_sheet` · `otani2023_ionic_conductivity_path_resistance_separation_model`.
 
 ## 🗨️ Q&A 로그
 <!-- "Q&A 작성해줘" 트리거 시 직전 질문/답 누적 -->

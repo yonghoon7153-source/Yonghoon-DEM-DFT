@@ -163,7 +163,7 @@ backlog **B6(σ-vs-compaction)** 의 물리다 — 단 그들은 σ를 **FEM 연
 - **표면적**: S_a = 3ε_AM/R_p (eq34). 압축↑ → ε_AM↑ → S_a↑.
 - **AM 전자전도(다공)**: κ_AM = κ_AM,0·2(1−θ)/(2+θ) (eq35, **Maxwell** 다공 소결체 전도식, θ=compact porosity 0–1).
 - **SE 유효 이온전도**: σ_SE,eff = σ_SE·ε_SE / τ_{L/S_all} (eq37). 굴곡도 τ_{L/S_all} = **−11.7·ε_SE + 8.54** (eq38,
-  **선형 경험식**, Otani 2023 ref46). ε_SE↑ → τ↓ → σ_SE,eff↑.
+  **선형 경험식** · 원문 귀속 ref 46).  ⚠ 정정 2026-10-13: 이 카드 초판은 ref 46 을 *"Otani 2023"* 으로 적었으나 `otani2023_ionic_conductivity_path_resistance_separation_model` 원문 (본문 식 1–9 · 그림 7 장 전수) 에 이 선형식이 **없다** — ref 46 이 Otani 2023 인지 · 식 38 이 이 논문 자체 맞춤인지 [미확인] (원문 참고문헌 대조 전).  ε_SE↑ → τ↓ → σ_SE,eff↑.
 - **SE 이온전도 vs stack pressure**: σ_SE = σ_SEmax − (σ_SEmax − σ_SE0)·exp(−k₃·E_xsl) (eq36, Doux 2020 ref45 데이터
   외삽 반-경험식; LGPS σ₀=0.002, σ_max=0.0002 S/cm, k₃=70/GPa).
 - ★ **결정적 차이**: 이 σ 식들은 전부 **연속체 유효-매질**(Maxwell/Bruggeman/선형 굴곡도) — **점접촉 구속저항(Holm/
@@ -305,7 +305,7 @@ backlog **B6(σ-vs-compaction)** 의 물리다 — 단 그들은 σ를 **FEM 연
 - **흡수 방식**: 우리는 같은 인과를 *접촉망*으로 이미 푼다(σ-vs-porosity, Kirchhoff). 그들 식은 우리의 **상한 sanity-
   check**으로 쓸 수 있다 — "같은 ε_SE에서 그들 σ_SE,eff(eq37, 연속체 상한) > 우리 σ_ionic(constriction)?" 가 성립해야
   우리 constriction이 옳게 깎고 있다는 증거. (Bielefeld 2020을 쓰는 방식과 동일.)
-- ★ **단 소재가 LGPS**라 σ 절대값은 못 가져오고 *형태/스케일링*만: σ_SE,eff ∝ ε_SE/τ, τ = −11.7ε_SE+8.54 (선형 굴곡도)
+- ★ **단 소재가 LGPS**라 σ 절대값은 못 가져오고 *형태/스케일링*만: σ_SE,eff ∝ ε_SE/τ, τ = −11.7ε_SE+8.54 (선형 굴곡도 · 출처 귀속 [미확인] — 위 정정 2026-10-13)
   → 우리 τ_Laplace(ε) 관계와 *형태* 대조. 우리 τ는 constriction 포함 → 그들보다 가파를 것(예상).
 
 ### B.2 그들 DEM→FEM 데이터-전달 = 우리 DEM→MPM scaffold의 *대안 커플링*

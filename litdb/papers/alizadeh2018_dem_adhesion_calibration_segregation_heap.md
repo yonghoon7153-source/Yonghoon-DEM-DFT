@@ -275,7 +275,7 @@ XRT (Phoenix Nanotom) → Avizo 3D 재구성 → STL → **ASG (Cogency) sphere-
 | 30 | M. Alizadeh, A. Hassanpour, M. Pasha, M. Ghadiri, A. Bayly, The effect of particle shape on predicted segregation in binary powder mixtures, Powder Technol. 319 (2017) 313–322 | 마찰 · 모양 보정 원전 — 카드 없음 |
 | 33 | S.C. Thakur, J.Y. Ooi, H. Ahmadian, Scaling of discrete element model parameters for cohesionless and cohesive solid, Powder Technol. 293 (2016) 130–137 | Γ ∝ R² 스케일링 (대안) — 카드 없음 |
 | 43 | G.R. Chandratilleke, A.B. Yu, J. Bridgwater, K. Shinohara, A particle-scale index in the quantification of mixing of particles, AICHE J. 58 (2012) 1099–1118 | 정본 카드 `chandratilleke2012_particle_scale_mixing_index` |
-| 44 | P.M.C. Lacey, The mixing of solid particles, Chem. Eng. Res. Des. 75 (1997) S49–S55 | Lacey 재수록판 (원저 1954 = 같은 날 카드 후보 #30) |
+| 44 | P.M.C. Lacey, The mixing of solid particles, Chem. Eng. Res. Des. 75 (1997) S49–S55 | Lacey 재수록판 (원저 1954 = [`lacey1954_particle_mixing_theory_index`](lacey1954_particle_mixing_theory_index.md)) |
 | 45 · 46 | A. Kukukova, J. Aubin, S.M. Kresta, Chem. Eng. Res. Des. 87 (2009) 633–647 · AICHE J. 54 (2008) 3068–3083 | 혼합의 세 차원 · 표본 방법 · 척도의 CoV 영향 — 카드 없음 |
 | 49 | G.Y. Onoda, E.G. Liniger, Random loose packings of uniform spheres and the dilatancy onset, Phys. Rev. Lett. 64 (1990) 2727–2730 | CoV_r 의 0.6 출처 — 카드 없음 |
 | 55 | G. Félix, N. Thomas, Evidence of two effects in the size segregation process in dry granular media, Phys. Rev. E 70 (2004) 051307 | push-away 효과 — 카드 없음 |

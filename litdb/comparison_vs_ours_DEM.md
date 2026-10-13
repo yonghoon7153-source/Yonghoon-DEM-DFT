@@ -923,6 +923,10 @@
 > 2026-10-13 추가 — 하중 · 치밀화 6 편 (`miss2026_pressure_tortuosity_composite_cathode_coating` · `lee2025_heckel_argyrodite_powder_densification_nanoindentation` · `faka2026_particle_size_consolidation_strain_lpscl` · `thompson2026_high_pressure_densification_lps_lpscl_xrd_tomography` · `heck2026_densification_sulfide_se_binder_scalable` · `diener2022_roll_gap_springback_calendering`):
 > · 실험 밀도 · 두께는 **가압 중 (in-die) / 놓은 뒤 (out-of-die)** 를 병기한다 (정의 = Faka 2026 p.10 · Heck 2026 p.13).  회복값은 진밀도로 먼저 점검한다 — Diener 고하중 SB 는 간극 안 밀도 > 진밀도 (상한 ≈ 20–24 %) · Lee 2025 인쇄 TD 1.64 는 결정학 밀도보다 12 % 낮다 (CL-94 후보 보류) · Thompson 흡수 밀도 > 결정 밀도 (≥ 800 MPa).
 > · 순수 황화물 SE 가압 중 300 MPa 공극 ≈ 13–26 % [판독 · 재료 · TD 표지 필수] (Faka 입경 40 → 4 µm 12.9 → 26.3 % · Lee 2025 LPSCl ≈ 15 %) · Heckel P_y 294–344 MPa (Lee 2025 LPSCl) ↔ 우리 DEM 138 MPa = 2.1–2.5 배 · Thompson NPD 격자 BM3 K₀ 22.9 GPa [우리 산술] ↔ MPM K 25.5 · DFT B₀ 26.23 (ν_SE 0.49 선택의 실험 근거) · Heck springback 6.7–10.4 % (LPS + HNBR) = 우리 언로딩 ρ_c 와 같은 꼴의 정의이지 앵커가 아니다 (RB-01 · 02 HOLD 그대로).
+> 2026-10-13 추가 — `hippauf2019_dry_film_ptfe_sulfide_cathode_sheet` — PTFE 막을 300 MPa 로 누르면 ≈100 µm · 3.45 g/cm³ (계산 기공 ≈12 %, 입경 미확인).
+> 2026-10-13 추가 — `frankenberg2025_milling_dry_processed_sulfide_cathode_microstructure` — 같은 조성에서 밀링만으로 기공 37.6 → 26.5 % — 혼합 · 분쇄 에너지가 압밀 뒤 기공을 바꾼다.
+> 2026-10-13 추가 — `kawaguchi2023_doe_electrode_fabrication_dry_coated_ncm_lps` — 압축압 180 → 360 MPa 의 첫 용량 이득이 막자 혼합 +60.7 · 코팅 +10.8 mAh/g (Xs 0.1, 카드 산술) — 코팅이 압축압 의존을 줄인다.
+> 2026-10-13 추가 — `kim2023_mechanofusion_ncm811_lpscl_core_shell_intimate_contact` — 300 MPa 양극의 계산 기공 36.6–42.4 % (측정법 미확인 — 우리 ps45 union 16.5–20.6 % 보다 큼).
 
 ## B. 전달 삼중항 — σ_ionic은 교차검증, σ_e/σ_thermal은 우리만
 
@@ -1930,6 +1934,12 @@
 
 > 2026-10-13 추가 — `lee2026_unveiling_ptfe_dry_electrode_digital_twin` — 실구조 (FIB-SEM 20.83 nm) 복셀 FV ÷ EIS = σ_ion 1.46 · 1.42 (σ_LPSCl 입력 1.0 mS/cm, 출처 미기재) · σ_e 0.99 · 0.97 — 우리 STEP3 (CONTACT_FREE, CL-81) 와 같은 범주.  같은 구조에 σ₀ 3.0 이면 4.3–4.4 배 = σ₀ 선택이 격차를 지배.  같은 LPSCl 부피 (23.5 ↔ 23.6 vol%) 에서 배치만으로 σ_ion +57 % · σ_e +101 % (시뮬). (카드 §3-5 · §3-6 · §8-4)
 > 2026-10-13 추가 — `zhang2026_polymer_electrolyte_modeling_perspective` — 외부 권고 절차의 RRN 갈래 = 우리 접촉망 (위치 표시 · 근거 아님).  이온겔 모델 24 편 중 메조 · 완전결합 0.
+> 2026-10-13 추가 — `nakamura2020_dry_coating_ncm_li3ps4_core_shell` — 같은 순 SE (86.9 : 13.1 wt%) 에서 껍질 코팅 대 막자 혼합: DC σ_ion +58 % · σ_e −94 % (무탄소).
+> 2026-10-13 추가 — `kim2024_optimal_cathode_composite_mechanical_mixing_se_coverage` — 총 SE 23 wt% 고정에서 σ_ion MM10 6.53 > HM23 5.81 > MM23 2.69 ×10⁻⁵ S/cm — 입히는 SE 몫에 최적점 (전부 입히면 나빠짐).
+> 2026-10-13 추가 — `kawaguchi2023_doe_electrode_fabrication_dry_coated_ncm_lps` — 무탄소 코팅 Xs 0.3 은 1.8–11.0 mAh/g (NCM–NCM 전자 접촉 소실) · Rs (> 100 kHz) 는 분리막을 포함 → 복합 σ_ion 대리로 쓰지 않는다.
+> 2026-10-13 추가 — `lee2024_shear_force_dry_process_cathode_coverage` — 같은 조성 세 공정의 2D 단면 SE 피복 30.6 (무바인더 펠릿) · 33.3 (습식) · 67.2 % (PTFE 건식) · 복합 σ_ion 미측정.
+> 2026-10-13 추가 — `hippauf2019_dry_film_ptfe_sulfide_cathode_sheet` — PTFE ≥ 0.7 wt% 에서 양극 계면 R 41 → 61 Ω · SE 펠릿 σ 3.1 → 2.7 mS/cm (≤ 0.3 wt% 는 무바인더와 같은 율속).
+> 2026-10-13 추가 — `frankenberg2025_milling_dry_processed_sulfide_cathode_microstructure` — σ_ion 최대 600 rpm/10 min · 과밀링 (≈4,700 J/g) 에서 결정자 < 25 nm · 용량 ≈90 mAh/g.
 
 
 ## C. 역학 / morphology — MPM 고유 (문헌 DEM은 형상 못 바꿈)
@@ -2535,6 +2545,8 @@
 
 > 2026-10-13 추가 — `lee2026_unveiling_ptfe_dry_electrode_digital_twin` — PTFE 건식 혼합이 LPSCl 을 부숴 NCM 위에 100–500 nm 막으로 문지른다 (S3 주석 중앙 229 nm) = 형상 소성 + 파쇄 + 혼합 전단 — DEM 강체 구로 불가 · MPM 압밀에도 혼합 전단 없음 (카드 §4-7).
 > 2026-10-13 추가 — `li2026_electrochemomechanical_coupling_asslmb_review` — 표 3 의 LPSCl E 4.7 GPa = 13 % 다공 펠릿 벌크값 · 인용 번호 +7 어긋남 → E_SE 입력 금지.  DEM 언급 0.  복합양극 기계 문헌 지도로만 쓴다.
+> 2026-10-13 추가 — `kawaguchi2017_dry_coating_parametric_na2so4_model_se` · `nakamura2020_dry_coating_ncm_li3ps4_core_shell` — SE 껍질은 소성 변형 · 합체로 생기고 (낱알 → 연속), 게스트가 NCM 파쇄를 완충한다 — 우리 DEM · MPM 에는 둘 다 없다.
+> 2026-10-13 추가 — `kawaguchi2023_doe_electrode_fabrication_dry_coated_ncm_lps` — 막자 혼합 Xs 0.1 에서 NCM 균열 · Xs 0.3 과 코팅에서는 균열 억제 (SEM 정성).
 
 ## D. 패킹 / Furnas dip — DEM·기하 소유, 소성 MPM 불가
 > ★ **할라이드 cross-check (Varkey ↔ Kim 2025):** Varkey 2026 (할라이드 Li₃YBrCl₆) = 할라이드 *압밀/σ* (E=10.58 →
@@ -2672,6 +2684,8 @@
     축**으로 쓸 것.
 
 > 2026-10-13 추가 — `lee2026_unveiling_ptfe_dry_electrode_digital_twin` — NCM 85 wt% 실측 σ_ion 0.030–0.049 mS/cm ↔ 우리 ps45 Hertz 0.0587–0.0893 (81.6 wt%, σ₀ 1.5) = 같은 자릿수 · CAM 적은 쪽이 높은 방향.  그들 수송 tortuosity 5.34 · 3.42 (우리 산술) = 우리 Tabor 2.78–4.12 ~ Hertz 5.03–7.24 띠 안 (φ_SE 0.235 ↔ 0.28–0.30 — 자릿수 대조까지).
+> 2026-10-13 추가 — `jarray2019_cohesion_driven_mixing_segregation_drum` 인쇄 식 (11) · (14) 오류를 우리가 찾음 (고친 식으로만 Fig 6a 재현) · `lacey1954_particle_mixing_theory_index` Fig 11 = 식 19 재현.
+> 2026-10-13 추가 — `otani2023_ionic_conductivity_path_resistance_separation_model` — 경로 · 접촉 분해 모형 (τ_all = τ_macro · τ_micro) 이 ps45 다섯 침대에서 우리 Hertz tau2 의 0.94–1.02 배 [카드 산술] — 모형 대 모형의 일치이고 실험 앵커가 아니다.
 
 ## F. 우리가 아직 못 하는 것 / 흡수할 것 (정직 목록 → 향후)
 
@@ -3750,6 +3764,11 @@
 > 2026-10-13 추가 — `lee2026_unveiling_ptfe_dry_electrode_digital_twin` — PTFE 구조 효과 (≤ 0.2 wt%: 분산 · 치밀화 · SE 코팅 → σ_e ×2.05 · σ_ion ×1.61 실측) 는 centerline 절연 스탬프로 표현 불가 → 우리 모델로 "PTFE 있음 vs 없음" 주장은 하지 않는다.  0.5 → 1 wt% σ_e 비 실측 0.70 ↔ 모델 Q 0.840 ↔ Lee 곡선 0.44.
 > 2026-10-13 추가 — `kim2026_operando_neutron_thick_nmc811_interior_hotspot` — 6 mAh cm⁻² 후막 operando 중성자: 0.5 mA cm⁻² 가운데 반응대 / 1.0 mA cm⁻² SE 계면 Li 결핍 (상대값 · 복합체 σ 미보고).  DEM 망은 유효 σ 한 값만 → 깊이 · 시간 지도 대조는 STEP4 몫.  ps45 R_ion,양극 124–189 Ω·cm² [우리 산술].
 > 2026-10-13 추가 — `balasubramanian2026_rfb_electrolyte_kmc_lbm_preprint` (미심사 preprint) — 일방 결합 + 결합 가정 유효성 지표 (Pe > 1 비율).  우리 단계 결합에 그런 표시가 없다는 점을 비추는 외부 사례 (관련도 낮음).
+> 2026-10-13 추가 — **★★ F-ESTAT · 정전기 (마찰 대전) 항이 없다** (2026-10-13, `papers/matsusaka2010_triboelectric_charging_powders_review.md`): 충돌당 Δq = k_c(ε₀S/z₀)(V_c − k_e q − k_b q) + 쿨롱·영상력 — 입력 V_c·k_c·z₀·k_r 전부 [미확인] → 먼저 NCM·LPSCl CPD (Kelvin–Zisman) · Faraday · blow-off (Ar).  CG 규칙이 Bo 와 다르다.
+> 2026-10-13 추가 — **★★ F-PAIRW · 쌍별 W (AM–AM · AM–SE · SE–SE) 측정 앵커가 없다** (2026-10-13, `begat2004_cohesive_adhesive_balance_afm_colloid_probe` · `mohammadijam2014_inverse_gas_chromatography_review` · `deng2021_mechanical_surface_energy_tester_bond_number`): 같은 탐침 CAB 가 결합 규칙 없이 비를 준다 · IGC 는 γ^D 끼리 (같은 덮임률) · 낙하 탈착 장치는 기판에 눈멀어 불가.
+> 2026-10-13 추가 — 믹서 등록에 충돌 수 Co 와 흐름층 두께 측정이 없음 (`nase2001_granular_bond_collision_number_wet_cohesion`) · 코팅 공정 (탈응집 → 부착) 을 모델이 만들지 못함 (`pfeffer2001_dry_particle_coating_engineered_particulates`) · SE 분말 안식각 · Hausner 실측 미실시 (`geldart2006_powder_flowability_angle_of_repose_tester`) · 정전기 정렬 없음 (`hersey1975_ordered_mixing_concept` · `pfeffer2001_dry_particle_coating_engineered_particulates`).
+> 2026-10-13 추가 — 코어–셸 껍질 표현이 없다 (`nakamura2020_dry_coating_ncm_li3ps4_core_shell` σ_e −94 % · `kawaguchi2023_doe_electrode_fabrication_dry_coated_ncm_lps` 무탄소 붕괴 · `kim2024_optimal_cathode_composite_mechanical_mixing_se_coverage` 껍질 몫 최적).
+> 2026-10-13 추가 — 공정 에너지 축이 없다 (`kawaguchi2017_dry_coating_parametric_na2so4_model_se` 선속도 · `frankenberg2025_milling_dry_processed_sulfide_cathode_microstructure` E_m · `lee2024_shear_force_dry_process_cathode_coverage` 반죽 전단).
 
 
 ## G. AM 입자 **내부**(sub-particle) 미세구조 — 우리 축 **아래 한 칸**, 접점은 방법론뿐 (2026-08-25 신설)
@@ -4275,6 +4294,35 @@ Faraday FutureCat; 2026-09-26 추가; 원장 **SELF-51** 뿌리 감사 — [Sedl
 > · **frame[4] 위치**: 실험 앵커도 DEM 도 없으므로 **교차검증 상대가 아니다** — *"일치/불일치"* 를 말할 대상이 아니다.
 
 > 2026-10-13 추가 — `lee2026_unveiling_ptfe_dry_electrode_digital_twin` — Fig. S7 혼합 시간 열 = PTFE 섬유가 LPSCl 을 NCM 옆에 가둬 부수고 문질러 코팅 형성 — 우리 믹서 DEM 에 없는 기전 (LC 팔의 코팅은 입력이지 결과가 아님).  2.5 µm 하위부피 SD 는 무작위 기준 없이 보고됨 → Lacey 정규화로만 비교.
+> 2026-10-13 추가 — `lacey1954_particle_mixing_theory_index` — Lacey 원 정의는 s₀² = P(1−P) (표본 크기 무관) → 우리 판독기 (t₀ 실측 S₀²) 의 M < 0 과 시작상태 정규화의 처방 근거 · 덩어리형이면 1 − M ≈ n_g/n → 칸 사다리로 덩어리 크기 추정 가능 · 주판정 칸 n_eff ≈ 3.6–3.7 (작은 n 영역).
+> 2026-10-13 추가 — `hersey1975_ordered_mixing_concept` — 논지 §2-5 '정렬 혼합' 원전 · 우리 조성 SE = AM 단층 수용량의 0.70–0.88 · s1 단독으로는 SE 껍질과 자유 덩어리를 못 가름.
+> 2026-10-13 추가 — `pfeffer2001_dry_particle_coating_engineered_particulates` — 건식 코팅 = 정렬 혼합의 영구판 · 'interactive mix' = Orr (2차 귀속) · 1 µm 게스트 피복 11 % · 우리 드럼 (Fr ≈ 0.08) 은 코팅 장치 아님 → LC 코팅 = 입력 상태.
+> 2026-10-13 추가 — `nase2001_granular_bond_collision_number_wet_cohesion` — 드럼에서는 Bo 가 아니라 충돌 수 Co 가 전이를 가름 · 우리 등록에 Co 없음 · 점착 계는 회전 ↑ 에 각 ↓.
+> 2026-10-13 추가 — `chandratilleke2012_particle_scale_mixing_index` — 이론 분모 PSMI (M ≥ 0) · n = 7 무작위 기준은 1:9 크기비에서 붕괴.
+> 2026-10-13 추가 — `jarray2019_cohesion_driven_mixing_segregation_drum` — 한 상만 점착 → 혼합 대신 분리 (논지 P1 방향의 실물) · 실측 F_AB 는 min · 기하평균 아닌 산술평균에 가까움.
+> 2026-10-13 추가 — `alizadeh2018_dem_adhesion_calibration_segregation_heap` · `roessler2019_dem_cohesive_aor_cylinder_lift_calibration` · `geldart2006_powder_flowability_angle_of_repose_tester` — D3 앵커 절차 셋 (단일 성분 안식각 → JKR Γ / 원통 인양 상 전이로 SJKR CED / 소량 동적 안식각 + Hausner 비) · 점착 분말의 안식각 자체는 앵커로 부적합 (Roessler).
+> 2026-10-13 추가 — `kim2024_optimal_cathode_composite_mechanical_mixing_se_coverage` — 믹서 논문 V1 (같은 총 SE 에서 코팅 상태) 의 "입히는 SE 몫" 2 수준 설계의 실험 선례 (부분 코팅 + 자유 SE 가 최적).
+> 2026-10-13 추가 — `kawaguchi2023_doe_electrode_fabrication_dry_coated_ncm_lps` — 같은 Xs 비교인데 껍질 몫이 Xs 와 함께 53 → 14 % 로 움직이는 교락 설계 · 코팅 이점 180 MPa ×3.2–3.6 → 360 MPa ×1.09–1.21 [카드 산술] → 300 MPa 단일 수준이면 차이가 작게 나올 수 있다.
+> 2026-10-13 추가 — `kawaguchi2017_dry_coating_parametric_na2so4_model_se` — 코팅 형태가 SE 비율에 걸린다 (V1 코팅 상태 · V3 SE 함량 교락) → 코팅 뒤 순조성 측정 필수 (게스트 30 wt% 투입 → 순 ≈20 wt%).
+> 2026-10-13 추가 — `lee2024_shear_force_dry_process_cathode_coverage` — 건식이 2D 피복을 두 배로 올리지만 바인더 · SE 함량 · 성형이 함께 다른 결합 효과 (전단 단독 효과 아님).
+
+### H-10. `johnson1971_jkr_surface_energy_contact_elastic_solids` — JKR 원전: γ = 두 표면 합 (= W) · SJKR CED ↔ W 대응식
+> 떼는 힘 (3/2)πWR\* — 탄성률 무관 · 같은 물질이면 3πγ_sR\* (원문 p.304·306) ⇒ HB-02 "2 배 모호" 의 원전 쪽 닫힘 (EDEM/Hare 규약 [미확인]).
+> CED = [9WE\*²/(4π²R\*)]^{1/3} [우리 산술] → LC 세 동종 쌍 W 6.27–6.30 µJ/m² (parcel) 로 같음 · 벽 규칙 = JKR 힘비 대비 SE 0.51 · AM_P 1.41 배.
+> ⛔ 단단한 고체는 돌기 지배 (p.312) → 문턱 0.31 → 1 쪽 [추정] · 고무·젤라틴 값 이식 금지.
+
+### H-11. `begat2004_cohesive_adhesive_balance_afm_colloid_probe` — 같은 탐침 CAB = 결합 규칙 없이 W 비 (논지 §2-8 판가름 측정의 원형)
+> CAB_A × CAB_B = W_AA·W_BB/W_AB² — 9.06 · 0.050 ⇒ 기하평균 대비 W_AB 0.33 · 4.49 배 [우리 산술] · 덱 min 혼합쌍 규칙은 "접착 > 두 응집" 을 못 낸다.
+> ⛔ Fig 8 인쇄 기울기 ≠ 그림·본문 · 35 % RH · 탐침 3 개.
+
+### H-12. `deng2021_mechanical_surface_energy_tester_bond_number` — ⛔ "측정된 Bond 수" 는 감속도의 g 배수 — D3 앵커로 쓰지 않는다
+> Table 2 Bo = 1 + a₅₀/g (15/15) · 창 ≈ 5.4–11.7 (Bo < 1 원리상 불가 — nase2001 의 Bo_g ≈ 1 문턱을 못 짚음) · 같은 논문 γ^d 로 JKR Bo 245–2.2×10⁶ · 기판 8 종 ≤ 2.5 % (W_AS↔W_SS 못 가름) · Fig 13 모형값 단위 10³ [우리 산술].
+> 남는 것: FD-IGC γ^d 6 분말 42–58 mJ/m² · DEM 으로 흉내 낼 수 있는 낙하 탈착 형식 (곡선끼리 비교).
+
+### H-13. `matsusaka2010_triboelectric_charging_powders_review` — 덱에 없는 힘 (마찰 대전): 원리 · 크기 · 측정
+> CPD 구동 전자 이동 · q = q₀e^{−n/n₀} + q∞(1 − e^{−n/n₀}) · 평형 전하 충돌 속도 무관 (n₀ 10–32 회 [우리 산술]) · 코팅이 부호를 바꿈 · RH↑ → 대전↓.
+> σ ≈ 10⁻⁵ C/m² 이면 5 µm 접촉 영상력 ≈ 매끈한 구 JKR 의 10⁻³ · 비 ∝ D → CG parcel 에서 f 배 부풀어짐 [우리 산술].
+> ⛔ 배터리·황화물 자료 없음 · k_c·z₀ 맞춤 상수 · 최저 RH 0.1.
 
 ## I. 계면 점착 · 인터레이어 트랙 — **W_ad ↔ G_c 를 섞지 않는 축** (2026-09-23 신설)
 
@@ -4454,6 +4502,8 @@ Faraday FutureCat; 2026-09-26 추가; 원장 **SELF-51** 뿌리 감사 — [Sedl
 > · **frame[4]**: 이 값은 **그들 실험에 대한 그들 보정**이다 — 우리 보정 표적이 아니다.
 > 상세: digest §3.4 · §8 ③ · §12 D6.
 
+> 2026-10-13 추가 — `johnson1971_jkr_surface_energy_contact_elastic_solids` — W_ad (열역학 접착일) 의 접촉역학 정의 원전: JKR 의 γ = 두 표면 합 = W.  실용 박리 인성 G_c 와 같은 양 아님 (I 축 규약 그대로).
+
 
 ## J. tortuosity 정의 묶음 — **같은 양 · 다른 이름** (2026-10-03 신설 7 편 · 같은 날 10 편 + 10 편 추가 = 27 편)
 
@@ -4499,6 +4549,11 @@ Faraday FutureCat; 2026-09-26 추가; 원장 **SELF-51** 뿌리 감사 — [Sedl
 
 > 2026-10-13 추가 — `lee2026_unveiling_ptfe_dry_electrode_digital_twin` — "tortuosity" 2.16 · 1.75 = 무작위 Li⁺ 경로 20 개 평균 길이 ÷ 25 µm = τ_geo (최단 경로 아님).  같은 논문 FV σ 로 tau2 = 5.34 · 3.42 → tau2/τ_geo² = 1.14 · 1.12.  실측 기준 7.8 · 4.9 (σ₀ 1.0 가정).
 > 2026-10-13 추가 — `miss2026_pressure_tortuosity_composite_cathode_coating` — 압력별 τ_eon · τ_ion 은 tau2 꼴이지만 σ₀ = 같은 압력의 순수 펠릿값 · φ = 공극을 뺀 명목값 → 우리 tau2 와 나란히 놓지 않는다 (기준 상태 다름).  τ_eon 한 자릿수 하락 (pc 무코팅 ≈ 1000 → 51 [판독]) · τ_ion ≈ 3.4 → 2.6 [판독].
+> 2026-10-13 추가 — `nakamura2020_dry_coating_ncm_li3ps4_core_shell` — 원문 τ = Φσ_B/σ_eff = tau2 · 복셀 5.49 (코팅) / 8.86 (혼합) · 측정 σ (압분 펠릿 σ₀) 로는 3.3 / 5.5 [카드 산술].
+> 2026-10-13 추가 — `kim2023_mechanofusion_ncm811_lpscl_core_shell_intimate_contact` — 원문 τ²_ion = tau2 · 2.21–4.28 (같은 분말 σ_bulk 1.40 mS/cm) · 계산 기공 36.6–42.4 % 를 20 % 로 놓으면 ≈3.3 · 3.0 [카드 산술].
+> 2026-10-13 추가 — `kim2024_optimal_cathode_composite_mechanical_mixing_se_coverage` — 원문 "Ionic tortuosity τ" = tau2 · 8.62 · 9.65 · 20.8 (σ₀ = 문헌 1.7 mS/cm).
+> 2026-10-13 추가 — `otani2023_ionic_conductivity_path_resistance_separation_model` — τ_macro (β 1.5) × τ_micro (β 4) = tau2 꼴 · 순수 LPSCl 층 공극 30 % 에서 저하 ≈3 = 경로 ≈1.2 × 접촉 면적 ≈2.5.
+> 2026-10-13 추가 — 건식 공정 묶음 종합 — 같은 정의의 tau2 가 랩마다 갈린다 (Kim 2023 2.21–4.28 · Nakamura 2020 5.49–8.86 · Kim 2024 8.62–20.8) — 이 폭이 우리 ps45 Hertz 5.03–7.24 ↔ Tabor 2.78–4.12 차이보다 크다 → 같은 날 같은 분말 대칭셀이 필요.
 
 ## 🗨️ Q&A 로그
 <!-- "Q&A 작성해줘" 트리거 시 직전 질문/답 누적 -->
