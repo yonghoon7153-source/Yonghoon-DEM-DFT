@@ -1,0 +1,68 @@
+{
+ "auto_fix_or_retest": 0,
+ "compute_limit_s": 1260,
+ "compute_sum_s": 52.484,
+ "green": "40 passed (기존 26 + 새 14) · stderr 0 B",
+ "note": "이 기록은 커밋 · push · 문서 작성 전에 썼다 — 그 뒤 작업은 work_elapsed 에 들어 있지 않다",
+ "nsga2_synthetic_outcome": {
+  "fields_equal_except_wall": {
+   "error": true,
+   "expected_evals": true,
+   "n_eval": true,
+   "n_nonfinite": true,
+   "n_out_eval_any": true,
+   "n_solutions": true,
+   "termination": true,
+   "warnings_count": true
+  },
+  "green": {
+   "n_eval": 5000,
+   "n_solutions": 50,
+   "termination": "returned"
+  },
+  "green_test07_print": "NSGA2_SYNTHETIC_OUTCOME returned 5000 (03_green.stdout.log · -rP)",
+  "red": {
+   "n_eval": 5000,
+   "n_solutions": 50,
+   "termination": "returned"
+  }
+ },
+ "patch": "docs/REIL_C4_0A_FIX_PATCH_DRAFT_20261013.diff (a3f527a4…) git apply · 결과 sha = 기대 (03_patch_applied.txt)",
+ "red": "10 failed · 4 passed (n2_c · n3_b · n4_c · out) — 선언과 같음 (실패 종류: DID NOT RAISE 1 · TypeError seal 2 · COMPLETE 2 · limit_violations 없음 1 · global_stop None 1 · Watch.stale 없음 1 · partial 없음 2)",
+ "steps": {
+  "01_identity": {
+   "elapsed_s": 21.893,
+   "end_utc": "2026-10-13T10:26:18.013Z",
+   "head_end": "33b58cd7b01a1d2f6e7887a714f6d2d2afc2669c",
+   "head_start": "33b58cd7b01a1d2f6e7887a714f6d2d2afc2669c",
+   "rc": 0,
+   "start_utc": "2026-10-13T10:25:56.120Z",
+   "timed_out": false,
+   "timeout_s": 60.0
+  },
+  "02_red": {
+   "elapsed_s": 12.284,
+   "end_utc": "2026-10-13T10:26:40.678Z",
+   "head_end": "33b58cd7b01a1d2f6e7887a714f6d2d2afc2669c",
+   "head_start": "33b58cd7b01a1d2f6e7887a714f6d2d2afc2669c",
+   "rc": 1,
+   "start_utc": "2026-10-13T10:26:28.394Z",
+   "timed_out": false,
+   "timeout_s": 600.0
+  },
+  "03_green": {
+   "elapsed_s": 18.307,
+   "end_utc": "2026-10-13T10:27:20.157Z",
+   "head_end": "33b58cd7b01a1d2f6e7887a714f6d2d2afc2669c",
+   "head_start": "33b58cd7b01a1d2f6e7887a714f6d2d2afc2669c",
+   "rc": 0,
+   "start_utc": "2026-10-13T10:27:01.850Z",
+   "timed_out": false,
+   "timeout_s": 600.0
+  }
+ },
+ "t0_utc": "2026-10-13T10:25:55Z",
+ "t_end_utc": "2026-10-13T10:27:38Z",
+ "work_elapsed_s_at_this_record": 103.5,
+ "work_limit_s": 7200
+}

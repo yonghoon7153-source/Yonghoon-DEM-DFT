@@ -1,0 +1,224 @@
+[
+  {
+    "repository_path": "bms-balancing/docs/REIL_C4_0A_FIX_APPROVAL_REQUEST_20261013.md",
+    "ref": "6832a6b078b8ce4a116bb0a8a5b8057b08a70e6f",
+    "git_blob": "aae453bd9b4a91260fca745517fe8e5a279fffc6",
+    "capture": "source/bms-balancing/docs/REIL_C4_0A_FIX_APPROVAL_REQUEST_20261013.md"
+  },
+  {
+    "repository_path": "bms-balancing/docs/REIL_C4_0A_FIX_CONTROLS_DRAFT_20261013.py.txt",
+    "ref": "6832a6b078b8ce4a116bb0a8a5b8057b08a70e6f",
+    "git_blob": "626abed0d1df0065f208f562545fc18f4f248443",
+    "capture": "source/bms-balancing/docs/REIL_C4_0A_FIX_CONTROLS_DRAFT_20261013.py.txt"
+  },
+  {
+    "repository_path": "bms-balancing/docs/REIL_C4_0A_FIX_PATCH_DRAFT_20261013.diff",
+    "ref": "6832a6b078b8ce4a116bb0a8a5b8057b08a70e6f",
+    "git_blob": "bfc967abb1b36a7528cedaf2bc8ad4d5e5aa7f9a",
+    "capture": "source/bms-balancing/docs/REIL_C4_0A_FIX_PATCH_DRAFT_20261013.diff"
+  },
+  {
+    "repository_path": "bms-balancing/scripts/reil_c4_monitor.py",
+    "ref": "6832a6b078b8ce4a116bb0a8a5b8057b08a70e6f",
+    "git_blob": "0daf23bfac51f77a15a8586a55f898031011d3bf",
+    "capture": "source/bms-balancing/scripts/reil_c4_monitor.py"
+  },
+  {
+    "repository_path": "bms-balancing/scripts/reil_c4_e3a.py",
+    "ref": "6832a6b078b8ce4a116bb0a8a5b8057b08a70e6f",
+    "git_blob": "2c5e614eb5b565e9c9bab410ae741ffec1d2fca5",
+    "capture": "source/bms-balancing/scripts/reil_c4_e3a.py"
+  },
+  {
+    "repository_path": "bms-balancing/tests/test_reil_c4_0a_fix.py",
+    "ref": "6832a6b078b8ce4a116bb0a8a5b8057b08a70e6f",
+    "git_blob": "626abed0d1df0065f208f562545fc18f4f248443",
+    "capture": "source/bms-balancing/tests/test_reil_c4_0a_fix.py"
+  },
+  {
+    "repository_path": "bms-balancing/docs/REIL_C4_0A_FIX_RESULT_REVIEW_SEND_20261013.md",
+    "ref": "6832a6b078b8ce4a116bb0a8a5b8057b08a70e6f",
+    "git_blob": "19731f4e95849db679ec962f175980323214c969",
+    "capture": "source/bms-balancing/docs/REIL_C4_0A_FIX_RESULT_REVIEW_SEND_20261013.md"
+  },
+  {
+    "repository_path": "bms-balancing/evidence/reil_c4_0a_fix_20261013/00_identity_c4.py",
+    "ref": "6832a6b078b8ce4a116bb0a8a5b8057b08a70e6f",
+    "git_blob": "d29186ee0914992c67a23e9915a68c2d81077f8b",
+    "capture": "source/bms-balancing/evidence/reil_c4_0a_fix_20261013/00_identity_c4.py"
+  },
+  {
+    "repository_path": "bms-balancing/evidence/reil_c4_0a_fix_20261013/00_porcelain_start.txt",
+    "ref": "6832a6b078b8ce4a116bb0a8a5b8057b08a70e6f",
+    "git_blob": "12915d541cf2146d7ee7b726fba82b95fc098b23",
+    "capture": "source/bms-balancing/evidence/reil_c4_0a_fix_20261013/00_porcelain_start.txt"
+  },
+  {
+    "repository_path": "bms-balancing/evidence/reil_c4_0a_fix_20261013/00_start.txt",
+    "ref": "6832a6b078b8ce4a116bb0a8a5b8057b08a70e6f",
+    "git_blob": "557a6aae7f9a98d9f9c1e61e1225b4ecda82f0de",
+    "capture": "source/bms-balancing/evidence/reil_c4_0a_fix_20261013/00_start.txt"
+  },
+  {
+    "repository_path": "bms-balancing/evidence/reil_c4_0a_fix_20261013/00_step_runner.py",
+    "ref": "6832a6b078b8ce4a116bb0a8a5b8057b08a70e6f",
+    "git_blob": "f468ec18d2ca6ab6b6ba99e00d0979e9fb0b97b9",
+    "capture": "source/bms-balancing/evidence/reil_c4_0a_fix_20261013/00_step_runner.py"
+  },
+  {
+    "repository_path": "bms-balancing/evidence/reil_c4_0a_fix_20261013/01_identity.json",
+    "ref": "6832a6b078b8ce4a116bb0a8a5b8057b08a70e6f",
+    "git_blob": "3df21137b342dfac889cd5ed04e3e03ec6c9067d",
+    "capture": "source/bms-balancing/evidence/reil_c4_0a_fix_20261013/01_identity.json"
+  },
+  {
+    "repository_path": "bms-balancing/evidence/reil_c4_0a_fix_20261013/01_identity.meta.json",
+    "ref": "6832a6b078b8ce4a116bb0a8a5b8057b08a70e6f",
+    "git_blob": "6faf52b3046fd06d4a202865a074759145c3dc2a",
+    "capture": "source/bms-balancing/evidence/reil_c4_0a_fix_20261013/01_identity.meta.json"
+  },
+  {
+    "repository_path": "bms-balancing/evidence/reil_c4_0a_fix_20261013/01_identity.porcelain_end.txt",
+    "ref": "6832a6b078b8ce4a116bb0a8a5b8057b08a70e6f",
+    "git_blob": "5ef91235c926a8571c0af9a2a349da76db532d81",
+    "capture": "source/bms-balancing/evidence/reil_c4_0a_fix_20261013/01_identity.porcelain_end.txt"
+  },
+  {
+    "repository_path": "bms-balancing/evidence/reil_c4_0a_fix_20261013/01_identity.porcelain_start.txt",
+    "ref": "6832a6b078b8ce4a116bb0a8a5b8057b08a70e6f",
+    "git_blob": "265ca77685d50d783424062855db4a04fc7b8139",
+    "capture": "source/bms-balancing/evidence/reil_c4_0a_fix_20261013/01_identity.porcelain_start.txt"
+  },
+  {
+    "repository_path": "bms-balancing/evidence/reil_c4_0a_fix_20261013/01_identity.stderr.log",
+    "ref": "6832a6b078b8ce4a116bb0a8a5b8057b08a70e6f",
+    "git_blob": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+    "capture": "source/bms-balancing/evidence/reil_c4_0a_fix_20261013/01_identity.stderr.log"
+  },
+  {
+    "repository_path": "bms-balancing/evidence/reil_c4_0a_fix_20261013/01_identity.stdout.log",
+    "ref": "6832a6b078b8ce4a116bb0a8a5b8057b08a70e6f",
+    "git_blob": "f937346f0986d1fbf954437c0afc2aa1908415f6",
+    "capture": "source/bms-balancing/evidence/reil_c4_0a_fix_20261013/01_identity.stdout.log"
+  },
+  {
+    "repository_path": "bms-balancing/evidence/reil_c4_0a_fix_20261013/02_red.meta.json",
+    "ref": "6832a6b078b8ce4a116bb0a8a5b8057b08a70e6f",
+    "git_blob": "dad6dcd7575294e0ccc6fa2a45fd9fc278157e73",
+    "capture": "source/bms-balancing/evidence/reil_c4_0a_fix_20261013/02_red.meta.json"
+  },
+  {
+    "repository_path": "bms-balancing/evidence/reil_c4_0a_fix_20261013/02_red.nsga2_synthetic_outcome.json",
+    "ref": "6832a6b078b8ce4a116bb0a8a5b8057b08a70e6f",
+    "git_blob": "30b9376f1a6173a06218fbcc385dcd5a285c756b",
+    "capture": "source/bms-balancing/evidence/reil_c4_0a_fix_20261013/02_red.nsga2_synthetic_outcome.json"
+  },
+  {
+    "repository_path": "bms-balancing/evidence/reil_c4_0a_fix_20261013/02_red.porcelain_end.txt",
+    "ref": "6832a6b078b8ce4a116bb0a8a5b8057b08a70e6f",
+    "git_blob": "dac9f2118498e49b5308c0d779d3b9b148800d98",
+    "capture": "source/bms-balancing/evidence/reil_c4_0a_fix_20261013/02_red.porcelain_end.txt"
+  },
+  {
+    "repository_path": "bms-balancing/evidence/reil_c4_0a_fix_20261013/02_red.porcelain_start.txt",
+    "ref": "6832a6b078b8ce4a116bb0a8a5b8057b08a70e6f",
+    "git_blob": "d6075225be3c4a7f3166547371e7f28bd8c96c74",
+    "capture": "source/bms-balancing/evidence/reil_c4_0a_fix_20261013/02_red.porcelain_start.txt"
+  },
+  {
+    "repository_path": "bms-balancing/evidence/reil_c4_0a_fix_20261013/02_red.source_sha256.txt",
+    "ref": "6832a6b078b8ce4a116bb0a8a5b8057b08a70e6f",
+    "git_blob": "22ebdb7be091c909aa819211c32c9ed67fd471dc",
+    "capture": "source/bms-balancing/evidence/reil_c4_0a_fix_20261013/02_red.source_sha256.txt"
+  },
+  {
+    "repository_path": "bms-balancing/evidence/reil_c4_0a_fix_20261013/02_red.stderr.log",
+    "ref": "6832a6b078b8ce4a116bb0a8a5b8057b08a70e6f",
+    "git_blob": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+    "capture": "source/bms-balancing/evidence/reil_c4_0a_fix_20261013/02_red.stderr.log"
+  },
+  {
+    "repository_path": "bms-balancing/evidence/reil_c4_0a_fix_20261013/02_red.stdout.log",
+    "ref": "6832a6b078b8ce4a116bb0a8a5b8057b08a70e6f",
+    "git_blob": "7391ccc83b72f00f08f733ffe2838d1e9504faac",
+    "capture": "source/bms-balancing/evidence/reil_c4_0a_fix_20261013/02_red.stdout.log"
+  },
+  {
+    "repository_path": "bms-balancing/evidence/reil_c4_0a_fix_20261013/03_green.meta.json",
+    "ref": "6832a6b078b8ce4a116bb0a8a5b8057b08a70e6f",
+    "git_blob": "c61d2a140d89325e5f23f5f5d9f8fe22f8f49d81",
+    "capture": "source/bms-balancing/evidence/reil_c4_0a_fix_20261013/03_green.meta.json"
+  },
+  {
+    "repository_path": "bms-balancing/evidence/reil_c4_0a_fix_20261013/03_green.nsga2_synthetic_outcome.json",
+    "ref": "6832a6b078b8ce4a116bb0a8a5b8057b08a70e6f",
+    "git_blob": "ff7a5149bfd677fcf3a8427ccecd5ad3bce207e8",
+    "capture": "source/bms-balancing/evidence/reil_c4_0a_fix_20261013/03_green.nsga2_synthetic_outcome.json"
+  },
+  {
+    "repository_path": "bms-balancing/evidence/reil_c4_0a_fix_20261013/03_green.porcelain_end.txt",
+    "ref": "6832a6b078b8ce4a116bb0a8a5b8057b08a70e6f",
+    "git_blob": "268a849ca49714f398a1a4d54f938741b42c60ac",
+    "capture": "source/bms-balancing/evidence/reil_c4_0a_fix_20261013/03_green.porcelain_end.txt"
+  },
+  {
+    "repository_path": "bms-balancing/evidence/reil_c4_0a_fix_20261013/03_green.porcelain_start.txt",
+    "ref": "6832a6b078b8ce4a116bb0a8a5b8057b08a70e6f",
+    "git_blob": "772a728ce12b0eb1490266da5a3d3e8e61bd3260",
+    "capture": "source/bms-balancing/evidence/reil_c4_0a_fix_20261013/03_green.porcelain_start.txt"
+  },
+  {
+    "repository_path": "bms-balancing/evidence/reil_c4_0a_fix_20261013/03_green.source_sha256.txt",
+    "ref": "6832a6b078b8ce4a116bb0a8a5b8057b08a70e6f",
+    "git_blob": "fbc6ad87a3cea1cf215893d92e3d54c7f0014d69",
+    "capture": "source/bms-balancing/evidence/reil_c4_0a_fix_20261013/03_green.source_sha256.txt"
+  },
+  {
+    "repository_path": "bms-balancing/evidence/reil_c4_0a_fix_20261013/03_green.stderr.log",
+    "ref": "6832a6b078b8ce4a116bb0a8a5b8057b08a70e6f",
+    "git_blob": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+    "capture": "source/bms-balancing/evidence/reil_c4_0a_fix_20261013/03_green.stderr.log"
+  },
+  {
+    "repository_path": "bms-balancing/evidence/reil_c4_0a_fix_20261013/03_green.stdout.log",
+    "ref": "6832a6b078b8ce4a116bb0a8a5b8057b08a70e6f",
+    "git_blob": "b5bba7a949a03a69019a3b44debd905337a64173",
+    "capture": "source/bms-balancing/evidence/reil_c4_0a_fix_20261013/03_green.stdout.log"
+  },
+  {
+    "repository_path": "bms-balancing/evidence/reil_c4_0a_fix_20261013/03_patch_applied.txt",
+    "ref": "6832a6b078b8ce4a116bb0a8a5b8057b08a70e6f",
+    "git_blob": "35fd60b66a27520b3290a140688c5a443bfd5b42",
+    "capture": "source/bms-balancing/evidence/reil_c4_0a_fix_20261013/03_patch_applied.txt"
+  },
+  {
+    "repository_path": "bms-balancing/evidence/reil_c4_0a_fix_20261013/04_end.json",
+    "ref": "6832a6b078b8ce4a116bb0a8a5b8057b08a70e6f",
+    "git_blob": "62855ba7f6156e7c06b1c18ff34398eba20fc8b6",
+    "capture": "source/bms-balancing/evidence/reil_c4_0a_fix_20261013/04_end.json"
+  },
+  {
+    "repository_path": "bms-balancing/evidence/reil_c4_0a_fix_20261013/04_porcelain_end.txt",
+    "ref": "6832a6b078b8ce4a116bb0a8a5b8057b08a70e6f",
+    "git_blob": "eb34dd3b048c12253bfb1b9813b8594604863f7e",
+    "capture": "source/bms-balancing/evidence/reil_c4_0a_fix_20261013/04_porcelain_end.txt"
+  },
+  {
+    "repository_path": "bms-balancing/evidence/reil_c4_0a_fix_20261013/04_source_sha256_end.txt",
+    "ref": "6832a6b078b8ce4a116bb0a8a5b8057b08a70e6f",
+    "git_blob": "fbc6ad87a3cea1cf215893d92e3d54c7f0014d69",
+    "capture": "source/bms-balancing/evidence/reil_c4_0a_fix_20261013/04_source_sha256_end.txt"
+  },
+  {
+    "repository_path": "bms-balancing/docs/REIL_PREREQUISITES_STATUS_20261004.md",
+    "ref": "6832a6b078b8ce4a116bb0a8a5b8057b08a70e6f",
+    "git_blob": "20269e258f096c55e697aad654ec78e4802700c3",
+    "capture": "source/bms-balancing/docs/REIL_PREREQUISITES_STATUS_20261004.md"
+  },
+  {
+    "repository_path": "bms-balancing/tests/test_reil_c4_0a.py",
+    "ref": "6832a6b078b8ce4a116bb0a8a5b8057b08a70e6f",
+    "git_blob": "c183015e58570b50b6d9bb98a429ddcbad0529cf",
+    "capture": "source/bms-balancing/tests/test_reil_c4_0a.py"
+  }
+]

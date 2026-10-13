@@ -892,3 +892,90 @@ rc 0 → **옛 봉인 대조 (§2-4) 에서 허용 밖 차이** → 정지. 원�
 - **넣지 않은 것:** 건조 재실행 · 배열 재봉인 · full C6 check · 전체 suite · 환경 재구축 · C4-0b · C4-E / A / B · 자료 · 맞춤 · 설치 · COMSOL.
 - **다음:** 재검토 요청 (`docs/REIL_C4_0A_FIX_RESULT_REVIEW_SEND_20261013.md`). C4-0a 종결은 재검토 판정 뒤다.
   C4-0b 는 그 뒤 사용자 확인 (배열 3 종 목록 · 배정 포함 — §42) 으로 시작한다.
+
+## §45 C4-0a 종결 — 보완 결과 재검토 회신 접수 (2026-10-13 · 덧붙임 — 위 §0–§44 는 그대로)
+
+- **보존:** `reviews/review_reil_c4_0a_fix_result_20261013/`
+  - zip 133,676 B · sha256 `e64fca8880929bfebbb07a096deb72ed5e9c7f41468ef2fae2528873e48334df` (사용자 업로드 원파일과 바이트 동일).
+  - `originals/` 47 · PACKAGE_MANIFEST (`members`) 46 / 46 일치 · 목록 밖 파일 0 · 비밀 0. 동봉 `package_review.ps1` 은 실행하지 않았다.
+  - `source/` 37 은 검토 고정 HEAD `6832a6b0` 의 저장소 파일과 바이트 동일하다.
+  - 규칙 커밋 `a22e4c4c` → 보존 커밋 `bc32a6ee` (blob 48 / 48 일치).
+- **판정 (`DECISION.json`):** `C4_0A_LIMITED_IMPLEMENTATION_CLOSED_WITH_DOCUMENTED_SCOPE` — N1 · N2 · N3 · N4 모두 CLOSED · 차단 0 · 재시험 요구 0.
+- **읽는 법 (회신 지시 · 원 기록은 고치지 않는다):**
+  - RED 10 실패 = **행동 반례 7** (n1_a · n2_a · n2_b · n2_d · n3_a · n4_a · n4_b) + **인터페이스 부재 3** (n1_b · n1_c · n3_c).
+  - 52.484 s 는 세 단계 실행의 합이다. 103.5 s 는 커밋 · push · 문서 작성 **전** snapshot 이고, 전체 작업의 마지막 종료 관측이 아니다.
+  - 실행 HEAD 가 같다는 것을 clean tree 라고 부르지 않는다 — 당시 porcelain 기록 그대로 둔다.
+  - N3 은 세 위치 각각의 독립 동적 증거나 OS hard limit 까지 검증한 것이 아니다.
+  - 이전 C4-0a GREEN 의 미기록 NSGA2 분기는 소급 확인하지 않는다.
+- **상태:** C4-0a 종결 (한정 구현 · 기록된 범위). 배열 표기 `Phase A 완료 / 3종 미완·0b 이월 제안` (§42) 은 그대로다.
+- **권한 (회신):** C4-0b 구현 · 실자료 개봉 · 연구 실행 · 설치 · 환경 재구축 · COMSOL — 모두 아니다.
+- **다음:** C4-0b 사용자 확인 — 미봉인 배열 3 종의 목록 · 배정 · 봉인 시점 포함 (`docs/REIL_C4_0B_CONFIRMATION_REQUEST_20261013.md`).
+
+## §46 C4-0b 를 둘로 — 사용자 결정 B · C4-0b1 착수 (2026-10-13 · 착수 전 기록 · 덧붙임 — 위 §0–§45 는 그대로)
+
+- **사용자 (2026-10-13):** "b로 진행" — `docs/REIL_C4_0B_CONFIRMATION_REQUEST_20261013.md` §3 의 안 B (둘로 나눔) 와, §4-1 의 배열 목록 · label 토큰 ·
+  해석 ("label-seed 배열" = label → seed 표) 으로 진행한다 (사용자가 다른 지시를 하지 않았다 — 검토 때 이 해석을 다시 묻는다).
+- **C4-0b1:** 배열 · 규칙 봉인 넷 (profile Sobol 2 · 동시 Sobol 16 · label → seed 표 · 규칙 / label 형식) + H 핵심 (목적 넷 · Phase A · 결합 ρ ·
+  증인 분류 · 정확 잔차 · 문턱 · 공통 갱신).
+- **배정:** identity 60 · RED 600 · GREEN 600 · 배열 봉인 240 · 건조 300 = 계산 1,800 s · 전체 작업 4 h (14,400 s) · 자동 재시험 0.
+  GREEN 의 예상 밖 실패나 RED 의 무관한 하네스 실패는 원문을 보존하고 멈춘다. 넘치면 미완으로 멈추고 다시 확인한다.
+- **C4-0b2** (Phase B · H4 대조 · ray · 표지) 는 C4-0b1 결과를 낸 뒤 다시 사용자에게 확인한다.
+- **밝힐 것:** RED / GREEN 이 C4-0 전체로 각 3 회가 된다 (0a · 0b1 · 0b2).
+- **폴더:** 증거 `evidence/reil_c4_0b1_20261013/` · 배열 `reil_c4_arrays_0b1_20261013/` — 착수 때 있으면 중지한다 (확인: 없음).
+- 이 결정은 C4-E / A / B · 자료 개봉 · 맞춤 · 설치 · 환경 재구축 승인이 아니다.
+
+## §47 C4-0b1 결과 — 배열 · 규칙 봉인 + H 핵심 · RED 51 → GREEN 51 · 건조 (2026-10-13 · 검토 대기 · 덧붙임 — 위 §0–§46 은 그대로)
+
+- **대상 커밋:** `0039b96b` (코드 · 시험 · 증거 · 배열). 착수 HEAD 는 `d800acaf` (§46).
+- **시간:** t0 2026-10-13T11:15:21Z · 끝 기록 11:44:57Z = 1,776.9 s / 14,400 s. 커밋 · push · 문서 작성 **전** snapshot 이다 (`06_end.json`).
+  계산 합 45.778 s / 1,800 s. 자동 수정 · 재시험 0.
+- **단계 (`evidence/reil_c4_0b1_20261013/` · 실행기 `00_step_runner.py` = C4-0a 보완 실행기에서 증거 경로 · scratch · env 두 이름만 바꿈):**
+
+  | 단계 | 배정 | 실측 | rc | 결과 |
+  |---|---|---|---|---|
+  | 01 identity (C4-0a 와 같은 스크립트 · 인자) | 60 s | 5.950 s | 0 | ok · problems [] |
+  | 02 RED (새 시험 · 골격 `NotImplementedError`) | 600 s | 3.884 s | 1 | 51 실패 · 0 통과 — 51 건 모두 골격 `reil_c4_h.py:24` 의 NotImplementedError · 다른 실패 종류 0 |
+  | (정적 검토) | — | — | — | ast parse · symtable 미해결 이름 · 모듈 속성 AST 대조 — 대상 코드 실행 0 · 거짓 양성 4 (`__file__`) |
+  | 03 GREEN (새 시험 · `-rP`) | 600 s | 17.304 s | 0 | 51 통과 · stderr 0 B |
+  | 04 배열 봉인 | 240 s | 5.597 s | 0 | `reil_c4_arrays_0b1_20261013/` · MANIFEST `d122117f…4b33` |
+  | 05 무자료 건조 | 300 s | 13.043 s | 0 | `05_dryrun/PLAN.json` (`99d956dc…`) · `SYNTHETIC_SAMPLE.json` (`1fd188b4…`) |
+
+  - 시험 파일 `tests/test_reil_c4_0b1.py` (`6afd6d98…`) 는 RED · GREEN · 끝에서 같다. 구현 `scripts/reil_c4_h.py` 는 골격 `e2295942…` → `676b0847…`.
+    e3a · monitor · c5 · p0 · c6_profile 의 sha 는 RED · GREEN · 끝에서 같다 (이번에 고치지 않았다).
+  - RED 는 골격 (이름은 있고 동작은 없음) 에 대해 돌렸다 — 51 건이 모두 같은 종류다. 각 시험이 **틀린 구현**을 잡는지는 이 RED 가 보이지 않는다 (밝힐 것 1).
+  - 커밋한 191 파일: 비밀값 검사 0 · blob 191 / 191 일치.
+- **봉인 (B §2-1 첫 행 · 맞춤 전):**
+  - profile Sobol 2 = **10,332 label** (77 단위 × 3 좌표 × 격자 41–45 점) · 동시 Sobol 16 = **134 label** (154 − PRIOR_INCOMPATIBLE 20) · 합 10,466.
+  - 파일: 단위마다 npy (`profile/` 77 · `simultaneous/` 71 — #3 의 A0 · A1 여섯 단위는 τ 둘 다 PRIOR_INCOMPATIBLE) · `INDEX.json` (label · seed · 행 범위 ·
+    블록 raw float64 sha · 격자점 · 상자) · `LABEL_SEED_TABLE.json` · `RULES.json` (label 형식 · 토큰 · 부속 A · B 원문 줄 범위 + 문서 sha256) · `MANIFEST.json`.
+  - 생성 호출은 C6 봉인 `sobol` 과 같다 (`qmc.Sobol(d, scramble=True, rng=seed).random_base2(m)` → `qmc.scale`) — Phase A 봉인 배열과 바이트 대조 시험 통과.
+  - 대조 (`check_h_arrays`): MANIFEST 를 명시 sha 로 인증 · 파일 목록 · 바이트 · P0 sha · **배열 전부 재생성 대조** · INDEX · 표 · 규칙 기록 재생성 대조. 건조가 이것을 통과했다.
+  - 봉인하지 않은 것: 적응적 시작점 (profile s1 · s2 · 동시 상위 증인) — 쓰는 실행 직전 (B §2-1 둘째 행 · C4-0b2).
+- **H 핵심 (`scripts/reil_c4_h.py`):** 목적 J_V · J_D (그들 objective_fun 1 회) · ρ (A §1-3) · J_V^s (B §3 격자 index 교차 · A §4-2 span · §4-3 끝점 ν) ·
+  Phase A 실행기 (COBYQA 8 옵션 · 영역 bounds · A0 · A1 의 G 선형 제약 · 독립 재평가 · 정확 잔차 · feasibility_class · 활성 경계 · n_out 라벨 ·
+  `mon.supervise` 의 task_fn 계약) · Phase A 요약 (Ĵ⁽⁰⁾ · seed 별 최소 · 무효 이유 · UNFIT) · ρ 분모 · 문턱 (A §1-2 대응표) · 판독 (경계 근접 1e-9) · 공통 갱신 (A §1-1).
+- **건조 결과:**
+  - Phase A 계획 **9,856** = 1 파 66 단위 × 128 (8,448) + 결합 ρ 2 파 11 × 128 (1,408).
+  - **P0 끝점 게이트 — 11 셀 모두 H4 끝점 수용 실패.** P0 기록의 V_first 가 가까운 cutoff 2.0 V 에서 0.3365–0.6097 V 떨어져 있다 (ν = 0.01 V).
+    V_last 쪽은 #4 · #6 · #7 · #8 만 ν 안이다. 부속 A §4-3 대로 그 셀의 H4 = UNFIT → **H4 22 단위 전부 UNFIT · 게이트 뒤 Phase A 7,040.**
+    ν 는 P0 전에 정한 수용 폭이고 "P0 에서 끝점을 본 뒤 바꾸지 않는다" (A §4-3) — 고치지 않는다. 이 귀결은 2026-10-06 P0 기록에서 이미 계산할 수 있었지만
+    지금까지 계산한 기록이 없다 (P0 결과 검토도 다루지 않음). 이번 건조에서 처음 계산했다.
+  - σ̂_v 11 셀 모두 유한한 양수 (P0). J_D 빈 마스크는 자료 쪽 판정이라 C4-A 에서 본다.
+  - 합성 표본 20 실행 (해석식 곡선 · 건조 옵션 maxfev 50 · 합성 σ̂_v 0.001 — **증거 · 비용 근거 아님**): 목적 넷 + 결합 ρ 모두 경로 통과 ·
+    J_V A2 의 2 실행은 util 오류 → SOLVER_ERROR (지역 분류 경로) · 나머지 유효 · 공통 갱신 (Phase B 없음이라 최종 = 갱신 전) · 문턱 계산.
+- **밝힐 것 (검토 질문으로 보낸다):**
+  1. RED 는 골격 대상이라 실패 종류가 하나다 (위).
+  2. 해석: "label-seed 배열" = label → seed 표 (§46 그대로 다시 묻는다) · "41 등분점" = 양 끝 포함 41 점 (상한 46 = 41 + 5 와 맞는 읽기) ·
+     격자점은 정확 유리수로 만든 뒤 float · 중복은 float 비교 (41 등분점이 먼저).
+  3. J_V^s: 실험 쪽 V_exp(s_k) = `V_exp_interp[k]` (그들 Q_exp_interp = linspace(0, Q_exp_max, 100) 이 곧 s 격자 — 보간 없음) · 모델 쪽 V_sim(s_k) =
+     V_full(Q_a + s_k·span) 직접 평가 · V_full 은 objective_fun 173–189 와 같은 구성을 다시 쓴 것 (합성에서 그들 `Vf_sim` 과 비트 동일 시험) ·
+     슬라이스 2 점 미만이면 예외 대신 비유한 (사유 기록).
+  4. 재평가 중 util 예외 → `invalid:NONFINITE` + `reeval_error` 기록 (등록된 이유는 셋 · C5 의 REEVAL_ERROR 는 C5 한정이었다).
+  5. termination: 성공 · 예산 밖 status (INFEASIBLE_ERROR · LINALG_ERROR) → `solver_error` + 원 status (증인은 따로 판정).
+  6. 끝점 게이트의 동률 (|V_first − 2.0| = |V_first − 3.6|) 은 2.0 으로 — 등록에 없는 규칙이지만 그 점 (2.8 V) 에서는 어차피 수용 실패다.
+  7. 오류 분류는 C5 규칙에 '우리' 파일 집합만 넓혔다 (이 파일 · e3a · monitor · c5). 우리 코드의 예외는 `mon.Structural`.
+  8. ρ 는 성분 하나라도 비유한이면 nan (Python `max` 가 nan 을 숨기는 것을 막음) · 공통 갱신은 최종 > 갱신 전이면 중지 (불변식).
+  9. 부분 봉인 (시험용 `units=`) 은 요청 순서 · 전체 봉인은 units() 순서. RED / GREEN 은 C4-0 전체로 각 3 회가 된다 (§46).
+- **넣지 않은 것:** Phase B · H4 대조 · ray · 표지 (C4-0b2) · 전체 suite · full C6 check · 환경 재구축 · C4-E / A / B · 자료 · 맞춤 · 설치 · COMSOL.
+- **다음:** 검토 요청 (`docs/REIL_C4_0B1_RESULT_REVIEW_SEND_20261013.md`). C4-0b2 는 사용자 확인 뒤 — H4 가 전 셀 UNFIT 인 귀결이 0b2 의 H4 대조 · ray 범위에
+  주는 영향을 그때 함께 정한다.

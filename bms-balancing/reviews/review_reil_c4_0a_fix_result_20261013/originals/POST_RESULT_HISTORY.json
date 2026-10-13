@@ -1,0 +1,156 @@
+{
+  "base": "97cad936b6bc2e59b9ecddd469621965ad96efe9",
+  "head": "6832a6b078b8ce4a116bb0a8a5b8057b08a70e6f",
+  "status": "ahead",
+  "total_commits": 5,
+  "commits": [
+    {
+      "sha": "cbcf0896bdb3f7acd3fd6f1fe13b693b79907e15",
+      "subject": "REIL §44 — C4-0a 한정 보완 결과 기록 · 재검토 발송문 (RED 선언대로 · GREEN 40 · NSGA2 합성 outcome = returned 5,000)",
+      "committer_date": "2026-10-13T10:28:53Z"
+    },
+    {
+      "sha": "90e49ca9055ddb8c78adcfc0066a99a31619a51a",
+      "subject": "bms-balancing/.gitattributes: COMSOL S1 OS B 범위 검토 회신 보존 규칙 (-text) — 보존 전",
+      "committer_date": "2026-10-13T10:29:13Z"
+    },
+    {
+      "sha": "a7198659bd9d83be073bd71bfdabbdbeb629ef38",
+      "subject": "COMSOL S1 OS B 범위 검토 회신 보존 — zip d9c5ce16… (57,349 B) · originals 18 · manifest 17/17 · received/ 2 = 이 저장소 제안 · 발송문 v1 과 바이트 동일 · 비밀 0 · 동봉 스크립트 실행 0",
+      "committer_date": "2026-10-13T10:29:21Z"
+    },
+    {
+      "sha": "5b3ff082410e436495c168df4380d71dc869a1fa",
+      "subject": "COMSOL §92 — OS B 범위 검토 회신 접수: 수정 조건부 적합 · 정정 3 (④ 전체 종결 아님 · 허용 읽기 / 금지 실험 구분 · 마지막 기록 뒤 시간 · 최신성) · 근거 (b) 권고",
+      "committer_date": "2026-10-13T10:31:03Z"
+    },
+    {
+      "sha": "6832a6b078b8ce4a116bb0a8a5b8057b08a70e6f",
+      "subject": "COMSOL OS B 공식 문서 묶음 — 수집 범위 고정 (Learn 36 쪽 · v2 §3 범주 1–7 · 묶음 생성 전 · 네트워크 정책이 learn.microsoft.com 을 막아 아직 받지 못함)",
+      "committer_date": "2026-10-13T10:33:44Z"
+    }
+  ],
+  "files": [
+    {
+      "path": "bms-balancing/.gitattributes",
+      "status": "modified",
+      "git_blob": "532f58b52c4fa23388f513f6f9330d9861d4385b"
+    },
+    {
+      "path": "bms-balancing/docs/COMSOL_REBUILD_SPEC.md",
+      "status": "modified",
+      "git_blob": "63e931024f42ac2081d7e4514068cd301202f591"
+    },
+    {
+      "path": "bms-balancing/docs/COMSOL_S1_OS_B_DOCS_SCOPE_20261013.json",
+      "status": "added",
+      "git_blob": "40a1be49d3001a4bceccea4eec969c4ac9a89937"
+    },
+    {
+      "path": "bms-balancing/docs/REIL_C4_0A_FIX_RESULT_REVIEW_SEND_20261013.md",
+      "status": "added",
+      "git_blob": "19731f4e95849db679ec962f175980323214c969"
+    },
+    {
+      "path": "bms-balancing/docs/REIL_PREREQUISITES_STATUS_20261004.md",
+      "status": "modified",
+      "git_blob": "20269e258f096c55e697aad654ec78e4802700c3"
+    },
+    {
+      "path": "bms-balancing/reviews/r14_repros/codex63/comsol_microshort_s1_os_b_scope_review_20261013/COMSOL_MICROSHORT_S1_OS_B_SCOPE_REVIEW_20261013.zip",
+      "status": "added",
+      "git_blob": "05d92c829e5cb9694b1977db5514f35366a702ae"
+    },
+    {
+      "path": "bms-balancing/reviews/r14_repros/codex63/comsol_microshort_s1_os_b_scope_review_20261013/originals/CLAUDE_REPLY_KO.md",
+      "status": "added",
+      "git_blob": "1eb4a3ec1f46893190a0abadb36d07894460b760"
+    },
+    {
+      "path": "bms-balancing/reviews/r14_repros/codex63/comsol_microshort_s1_os_b_scope_review_20261013/originals/DECISION.json",
+      "status": "added",
+      "git_blob": "ebac3c71cc1cb844699951eb5332fb1189b4a3ea"
+    },
+    {
+      "path": "bms-balancing/reviews/r14_repros/codex63/comsol_microshort_s1_os_b_scope_review_20261013/originals/OS_B_SEND_V2_INACTIVE_KO.md",
+      "status": "added",
+      "git_blob": "b97ef19f18e1959e6306a8a56dc8923285da1d70"
+    },
+    {
+      "path": "bms-balancing/reviews/r14_repros/codex63/comsol_microshort_s1_os_b_scope_review_20261013/originals/PACKAGE_MANIFEST.json",
+      "status": "added",
+      "git_blob": "c25678df8b0eb9f194d3589f368e1fadf190d5d1"
+    },
+    {
+      "path": "bms-balancing/reviews/r14_repros/codex63/comsol_microshort_s1_os_b_scope_review_20261013/originals/README_KO.md",
+      "status": "added",
+      "git_blob": "27f0fec3880bcc6b61050532ec51897485eaa5e5"
+    },
+    {
+      "path": "bms-balancing/reviews/r14_repros/codex63/comsol_microshort_s1_os_b_scope_review_20261013/originals/REMOTE_SOURCES.json",
+      "status": "added",
+      "git_blob": "83500eb36de1d242c5ddffedcca36b05fd4fb1ea"
+    },
+    {
+      "path": "bms-balancing/reviews/r14_repros/codex63/comsol_microshort_s1_os_b_scope_review_20261013/originals/REVIEW_KO.md",
+      "status": "added",
+      "git_blob": "e3ae404815665c3d161548754491110f702f7305"
+    },
+    {
+      "path": "bms-balancing/reviews/r14_repros/codex63/comsol_microshort_s1_os_b_scope_review_20261013/originals/SOURCE_INDEX.json",
+      "status": "added",
+      "git_blob": "7064489346042af2e041770f14ea05c2d169dcab"
+    },
+    {
+      "path": "bms-balancing/reviews/r14_repros/codex63/comsol_microshort_s1_os_b_scope_review_20261013/originals/basis/CODE_MANIFEST.json",
+      "status": "added",
+      "git_blob": "689a1c4040b2f638eef5f177fcaa626d7638b201"
+    },
+    {
+      "path": "bms-balancing/reviews/r14_repros/codex63/comsol_microshort_s1_os_b_scope_review_20261013/originals/basis/OS_API_MATRIX.json",
+      "status": "added",
+      "git_blob": "6bd07719e4d66caaca0efd6cd2fe1c30f6090894"
+    },
+    {
+      "path": "bms-balancing/reviews/r14_repros/codex63/comsol_microshort_s1_os_b_scope_review_20261013/originals/basis/REGISTRY_89_91_EXCERPT.md",
+      "status": "added",
+      "git_blob": "64b39bf8bb4e133e2dacc17cc9029dbb0aec4e11"
+    },
+    {
+      "path": "bms-balancing/reviews/r14_repros/codex63/comsol_microshort_s1_os_b_scope_review_20261013/originals/basis/RESOURCE_CONTRACT.json",
+      "status": "added",
+      "git_blob": "3cbbe98b490d353059a8a92cfa0e923d51c9c1f4"
+    },
+    {
+      "path": "bms-balancing/reviews/r14_repros/codex63/comsol_microshort_s1_os_b_scope_review_20261013/originals/basis/REVIEW_003_KO.md",
+      "status": "added",
+      "git_blob": "02eff32203bb77f3d9ef515fd19a90cc84d2820c"
+    },
+    {
+      "path": "bms-balancing/reviews/r14_repros/codex63/comsol_microshort_s1_os_b_scope_review_20261013/originals/basis/SEPARATE_ALLOWLIST_DRAFT_KO.md",
+      "status": "added",
+      "git_blob": "b02ee72fb5688800aceed67cb65e9038cfc50796"
+    },
+    {
+      "path": "bms-balancing/reviews/r14_repros/codex63/comsol_microshort_s1_os_b_scope_review_20261013/originals/basis/resource_connection.py.inactive.txt",
+      "status": "added",
+      "git_blob": "ea2f691b0ab4b75a76d9270de2400e9a8ad44d5c"
+    },
+    {
+      "path": "bms-balancing/reviews/r14_repros/codex63/comsol_microshort_s1_os_b_scope_review_20261013/originals/package_review.py",
+      "status": "added",
+      "git_blob": "e359ed5c0229345f82cf2c6412cba2c8c7952659"
+    },
+    {
+      "path": "bms-balancing/reviews/r14_repros/codex63/comsol_microshort_s1_os_b_scope_review_20261013/originals/received/NEXT_SCOPE_PROPOSAL.md",
+      "status": "added",
+      "git_blob": "7140bbf673065a146ffa575606dbdfd5d775d893"
+    },
+    {
+      "path": "bms-balancing/reviews/r14_repros/codex63/comsol_microshort_s1_os_b_scope_review_20261013/originals/received/OS_B_SEND_V1.md",
+      "status": "added",
+      "git_blob": "9ee24da43aa5bf48829f997476e703affd134bfd"
+    }
+  ],
+  "scope": "Read-only GitHub comparison; later COMSOL files are excluded from this REIL review."
+}

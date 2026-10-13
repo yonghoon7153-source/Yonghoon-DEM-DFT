@@ -1,0 +1,34 @@
+{
+  "kind": "REVIEWER_STATIC_AUDIT_SUMMARY",
+  "ref": "6832a6b078b8ce4a116bb0a8a5b8057b08a70e6f",
+  "capture_count": 37,
+  "git_blob_matches": 37,
+  "local_attachment_matches_fixed_request": true,
+  "attachment_sha256": "d5981024f76e3418caaf0c953346e45dfc2a3045a57de9a27d4c5333571de7f5",
+  "draft_and_executed_test_same_bytes": true,
+  "test_bytes": 19183,
+  "test_sha256": "b2137e1119049f4f2b87c096fbb77a3de26304ea355adac98da85d796728004c",
+  "patch_sha256": "a3f527a4957f70c4bb3f0b4473b7d12c33e695a43f5e1afd00e68d4a18037874",
+  "green_end_hash_list_equal": true,
+  "selected_source_hashes_checked": 8,
+  "selected_source_hashes_matched": 8,
+  "prior_capture_reference": "outputs/reil_c4_0a_review_20261013/source",
+  "unchanged_functions": [
+    "classify",
+    "run_e3a_call",
+    "seal_arrays"
+  ],
+  "unchanged_function_comparison": "Source-text segments only; no candidate import or execution.",
+  "nsga2_outcomes": {
+    "equal_fields_except_wall": 8,
+    "termination": "returned",
+    "n_eval": 5000,
+    "n_solutions": 50,
+    "n_nonfinite": 0,
+    "n_out_eval_any": 4987,
+    "warnings_count": {}
+  },
+  "reader_check_tool_chunk": "4ed527",
+  "candidate_or_test_execution": 0,
+  "limits": "Repository and selected captured bytes; not whole-machine preservation or a fresh operating-system audit."
+}
