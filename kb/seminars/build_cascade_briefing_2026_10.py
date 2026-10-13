@@ -249,6 +249,30 @@ def set_texts(t, mapping):
     return hits
 
 
+def two_lines(tc, first, second):
+    """Table cell text on two lines: `first`, a line break, then `second` (both in the first run's style).
+    Used so a parenthetical never splits mid-phrase (user 10-13: '(not / used for screening)' read badly)."""
+    A = f'{{{NS["a"]}}}'
+    ps = tc.findall('.//a:p', NS)
+    for extra in ps[1:]:
+        extra.getparent().remove(extra)
+    p = ps[0]
+    for el in p.findall('a:br', NS):
+        p.remove(el)
+    rs = p.findall('a:r', NS)
+    rs[0].find('a:t', NS).text = first
+    for r in rs[1:]:
+        p.remove(r)
+    br = etree.Element(A + 'br')
+    rpr = rs[0].find('a:rPr', NS)
+    if rpr is not None:
+        br.append(etree.fromstring(etree.tostring(rpr)))
+    r2 = etree.fromstring(etree.tostring(rs[0]))
+    r2.find('a:t', NS).text = second
+    rs[0].addnext(br)
+    br.addnext(r2)
+
+
 def replace_body(t, paras, x=0.61, y=1.0, w=8.84, h=0.5):
     """Remove the original body 'Rectangle 4' and put a fresh one with the same bullet styles."""
     drop(t, lambda el: name_of(el) == 'Rectangle 4')
@@ -678,7 +702,7 @@ def build_lean():
     hits = 0
     for tc in tbl.iter(A + 'tc'):
         if shape_text(tc).startswith('Included'):
-            cell_set(tc, 'DFT reference + MLIP descriptor (not a gate)')
+            two_lines(tc, 'DFT reference + MLIP descriptor', '(not used for screening)')   # user 10-13: no 'gate'
             hits += 1
     assert hits == 1, hits
     grid = tbl.find('.//a:tbl', NS)
@@ -687,12 +711,14 @@ def build_lean():
     new_rows = {}
     for key, cells in (('Muy 2025', ['Muy 2025', 'argyrodite (Li₇PS₆)', 'one element, site-resolved', '24', None]),
                        ('Jung 2026', ['Jung 2026', 'LGPS', 'two elements, chosen independently', '2,550',
-                                      'ML-predicted G and G/K (gate)'])):   # both of us adjust Li; not a contrast
+                                      'ML-predicted G and G/K (used for screening)'])):   # both of us adjust Li; not a contrast
+                                      # Jung Fig. 2a: G_VRH > 8.4 GPa and G/K < 0.7 cut 987 -> 873 (user 10-13: no 'gate')
         tr = etree.fromstring(etree.tostring(rows['Lee 2024']))
         for tc, text in zip(tr.findall('a:tc', NS), cells):
             if text is not None:
                 cell_set(tc, text, INK if text.startswith('ML-predicted') else None)
         new_rows[key] = tr
+    two_lines(new_rows['Jung 2026'].findall('a:tc', NS)[4], 'ML-predicted G and G/K', '(used for screening)')
     # user 10-13 after reading each original: Miara computes 128 dopant species on Li, La and Zr (Table 1, p. 4041);
     # 45 was Anderson's citation of it, so the row drops 'via Anderson'. Lee varies P-site cations and the halide.
     _m = rows['Miara 2015 (via Anderson)'].findall('a:tc', NS)
@@ -725,7 +751,8 @@ def build_lean():
             ppr = etree.SubElement(para, A + 'pPr')
             para.insert(0, ppr)
         ppr.set('latinLnBrk', '0')
-    cols = [2.1, 1.5, 2.5, 0.75, 2.35]   # measured: the longest cell texts fit without mid-word breaks
+    cols = [1.6, 1.5, 2.5, 0.75, 2.85]   # measured: the longest cell texts fit without mid-word breaks; the study
+    #                                       column gave 0.5 in to the mechanical one once 'via Anderson' left (10-13)
     gcs = tbl.findall('.//a:gridCol', NS)
     assert len(gcs) == len(cols), len(gcs)
     for gc, w in zip(gcs, cols):
@@ -990,14 +1017,7 @@ cell_hits = 0
 for tc in tbl.iter(f'{{{NS["a"]}}}tc'):
     txt = shape_text(tc)
     if txt.startswith('Included'):  # runs: 'I' 'ncluded' '(reported as sensitivity, ' 'not a gate)'
-        ps = tc.findall('.//a:p', NS)
-        first = ps[0]
-        for extra in ps[1:]:
-            extra.getparent().remove(extra)
-        rs = first.findall('a:r', NS)
-        rs[0].find('a:t', NS).text = 'DFT reference + MLIP descriptor (not a gate)'
-        for r in rs[1:]:
-            first.remove(r)
+        two_lines(tc, 'DFT reference + MLIP descriptor', '(not used for screening)')   # user 10-13: no 'gate'
         cell_hits += 1
 assert cell_hits == 1, cell_hits
 tbl.find('.//p:xfrm/a:off', NS).set('y', str(E(2.62)))

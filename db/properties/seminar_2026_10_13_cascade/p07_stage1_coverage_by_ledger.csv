@@ -9,5 +9,5 @@ workflow_row,step_or_ledger,n_precursors,n_rows,row_unit,As2S3_included,AlI3_inc
 7,Interface: doped composition vs Li metal,90,90,reaction rows,no,yes,cascade_interface_li.jsonl
 7,Interface: doped composition vs carbon,90,90,reaction rows,no,yes,cascade_interface_carbon.jsonl
 — (slide 10 text),"Precursor as a separate phase (coating view) vs H2O (H2S release), LiCoO2, Li6PS5Cl, Li metal, LiNiO2",89,89,precursors,no,no,cascade_stability_axes.csv
-— (not on slides),"Literature-style gate funnel (diagnostic, unvalidated)",89,89,precursors,no,no,cascade_screening_funnel_v2.json pool_names
+— (not on slides),"Literature-style threshold table (diagnostic, unvalidated)",89,89,precursors,no,no,cascade_screening_funnel_v2.json pool_names
 — (not on slides),"Concentration set x = 0.0625 / 0.25 in a 16 f.u. cell (exploratory, incomplete)",13,450,configurations,no,no,cascade_all_302_2026_08_25.csv family dualx_v23

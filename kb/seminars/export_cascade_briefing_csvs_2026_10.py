@@ -140,7 +140,7 @@ def p07():
              ('iface_li', '7', 'Interface: doped composition vs Li metal', 'cascade_interface_li.jsonl', 'reaction rows'),
              ('iface_carbon', '7', 'Interface: doped composition vs carbon', 'cascade_interface_carbon.jsonl', 'reaction rows'),
              ('separate_phase', '— (slide 10 text)', 'Precursor as a separate phase (coating view) vs H2O (H2S release), LiCoO2, Li6PS5Cl, Li metal, LiNiO2', 'cascade_stability_axes.csv', 'precursors'),
-             ('gate_eval', '— (not on slides)', 'Literature-style gate funnel (diagnostic, unvalidated)', 'cascade_screening_funnel_v2.json pool_names', 'precursors'),
+             ('gate_eval', '— (not on slides)', 'Literature-style threshold table (diagnostic, unvalidated)', 'cascade_screening_funnel_v2.json pool_names', 'precursors'),
              ('dualx', '— (not on slides)', 'Concentration set x = 0.0625 / 0.25 in a 16 f.u. cell (exploratory, incomplete)', 'cascade_all_302_2026_08_25.csv family dualx_v23', 'configurations')]
     rows = []
     for key, row_no, what, src, unit in steps:
@@ -409,7 +409,7 @@ def figures():
     short = [('Site enumeration', 'relaxed'), ('Short anneal', 'annealed'), ('Stability window', 'stability window'),
              ('Interface: doped composition vs LiCoO2', 'interface vs cathodes'), ('Interface: doped composition vs Li metal', 'interface vs Li'),
              ('Interface: doped composition vs carbon', 'interface vs C'), ('Precursor as a separate phase', 'separate phase'),
-             ('Literature-style gate funnel', 'gate funnel')]
+             ('Literature-style threshold table', 'literature thresholds')]   # user 10-13: no 'gate' on the slides
     lab = [next(v for k, v in short if r[i['step_or_ledger']].startswith(k)) for r in keep]
     n = [int(r[i['n_precursors']]) for r in keep]
     miss = [', '.join(sp for sp, col in (('As$_2$S$_3$', 'As2S3_included'), ('AlI$_3$', 'AlI3_included')) if r[i[col]] == 'no') for r in keep]

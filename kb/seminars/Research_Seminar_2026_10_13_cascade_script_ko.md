@@ -137,7 +137,8 @@ evidenceScope: multi-source-mixed
 > (*Earlier screens varied elements, or a coating compound without a host.* · *Here one precursor compound adds its cation and anion together, in its formula ratio.*) ·
 > 표 = 선행 다섯 편 + 이번 작업 (오래된 순 · **Muy 2025 · Jung 2026 를 litdb 에서 더함**) · 출처는 **오른쪽 위 다섯 줄** (랩 표준 표기 · 사용자 최종판 10-13).
 > ⚠ 10-13 논문별 원문 대조 뒤 사용자 반영: Miara 행 = *Miara 2015 · one cation, 3 sites (Li, La, Zr) · 128* (45 는 Miara 원문에 없는 Anderson 의 인용 수 → 'via Anderson' 과 Anderson 참고문헌을 같이 뺌) ·
-> Lee 칸 = *P-site cations and halides* · Xiao = *no host (coating layer)* · 첫 bullet 에서 'one or two' 를 뺌 (Lee 는 P 자리 양이온 셋까지 + 할로겐).
+> Lee 칸 = *P-site cations and halides* · Xiao = *no host (coating layer)* · 첫 bullet 에서 'one or two' 를 뺌 (Lee 는 P 자리 양이온 셋까지 + 할로겐) ·
+> mechanical axis 열에서 'gate' 를 뺌 (사용자 10-13) — Jung *(used for screening)* · this work *(not used for screening)*.
 > 앞 장 끝: *'그러면 지금까지의 도핑 스크린은 무엇을 바꿔 가며 걸렀는지, 선행 연구부터 보겠습니다.'*
 
 지금까지의 도핑 스크린 다섯 편을 이번 작업과 나란히 놓았습니다. **[가리킴: what is varied 열]** 이 열이 핵심입니다. 무엇을 바꿔 가며 걸렀는지입니다.
@@ -152,7 +153,9 @@ evidenceScope: multi-source-mixed
 예를 들어 Al₂O₃ 면 Al 둘에 O 셋입니다. 실험에서 실제로 넣는 단위 그대로입니다.
   (호스트 자리와 전하가 안 맞는 만큼은 Li 빈자리나 여분 Li 로 맞춘다 — 생성 규칙 ② 전체 전하 수지 · 이건 Jung 등도 같다 → 차이로 말하지 않는다)
 
-**[가리킴: mechanical axis 열]** 기계 축은 대부분 없었고, Jung 등은 ML 로 예측한 탄성 값을 거름 기준으로 썼습니다. 저희는 DFT 기준 계산과 MLIP 지표로 기록하되, 아직 거름 기준으로는 쓰지 않습니다.
+**[가리킴: mechanical axis 열]** 기계 축은 대부분 없었고, Jung 등은 ML 로 예측한 탄성 값 (G 와 G/K) 으로 후보를 걸렀습니다. 저희는 DFT 기준 계산과 MLIP 지표로 기록하되, 아직 후보를 거르는 데는 쓰지 않습니다.
+  (화면 칸 — Jung *ML-predicted G and G/K (used for screening)* · this work *DFT reference + MLIP descriptor (not used for screening)* · 괄호는 둘째 줄.
+  사용자 10-13: 'gate' 같은 말은 안 쓴다.)
 
 그러면 이 91개 전구체가 어떤 화합물들인지 보겠습니다.
 
