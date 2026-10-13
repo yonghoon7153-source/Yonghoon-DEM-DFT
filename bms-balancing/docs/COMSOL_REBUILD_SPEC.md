@@ -4645,3 +4645,27 @@ gate INCOMPLETE · 실효 정책 UNVERIFIED · native 미승인 · 게이트 리
      의 §0 식별 칸 넷만 채운 최종 v2 를 `docs/` 에 새로 만든다. 그 밖의 문장은 바꾸지 않고, 바꾼 줄을 원장에 적는다.
   5. 묶음 zip 과 최종 v2 를 사용자에게 보내고, B 준비 승인 (v2 §0 채택 문구) 을 묻는다. 그 전에는 실행 Codex 에 보내지 않는다.
 - 이 절은 B 착수 · 실행 PC 관측 · COMSOL 승인이 아니다.
+
+## 94. 공식 문서 묶음 생성 · 최종 v2 식별 기입 (2026-10-13 · 새 세션 · 실행 PC 0 · COMSOL 0 · B 승인 아님)
+
+- **전제 확인:** 새 세션에서 `learn.microsoft.com` 이 열렸다 — §93 1 단계 curl (`…/nf-jobapi2-terminatejobobject`) → `200`.
+  범위 `docs/COMSOL_S1_OS_B_DOCS_SCOPE_20261013.json` (`3afe79ef…d5f5`) · 생성기 `scripts/comsol_os_b_docs_bundle.py` (`c396b0a1…63c5`) 는
+  §93 기록과 sha256 일치 (변경 0).
+- **생성 (§93 2 단계 · 1 회 · 재시도 0):** 출력 `ok: true` · 36 항목 · zip 구성원 75 (MANIFEST · SCOPE · BUILD_SCRIPT · 헤더 36 · 본문 36).
+  - 묶음 `COMSOL_S1_OS_B_OFFICIAL_DOCS_20261013.zip` · **525,600 B** · sha256 `6579d317bfe43129e7364c973882912f95d29c8b0031115f6263fb82d1207dd6`.
+  - 묶음 내 `MANIFEST.json` sha256 `8ce680e44907fa710e64ccfedc5ec7c57b83ceba22629e105d721c0389e81253` (zip 에서 꺼낸 바이트로 재계산 일치).
+  - 가져온 시각 (UTC) 2026-10-13T11:07:07.561Z – 11:07:20.183Z · `built_utc_end` 11:07:20.378Z.
+  - 36 / 36 HTTP 200 · 기대 제목 일치 · `rejected` 0 · 원 URL = 최종 URL (리다이렉트 0). 응답에 `Content-Encoding` 이 없어 MANIFEST 값은 `null` 이다
+    (헤더 파일에서 확인 · 본문 = 받은 바이트 그대로).
+  - 원문 HTML · zip 은 저장소에 넣지 않았다 (§93 3 단계). 세션 scratchpad 에만 있고 사용자에게 파일로 전달한다.
+  - 한계 (MANIFEST `provenance_limit` 그대로): sha 는 이 사본의 동일성만 묶는다. Microsoft 진본성 · OS 지원을 단독으로 증명하지 않는다.
+- **최종 v2:** `docs/COMSOL_MICROSHORT_S1_OS_B_SEND_V2_20261013.md` · 14,053 B · sha256 `3198daf6f5f028af403b17ea027bea52b603234b47e8fbc4f4bd1e24fc6113e9`.
+  - 원본 = 검토자 비활성 v2 `reviews/…/originals/OS_B_SEND_V2_INACTIVE_KO.md` (13,892 B · `65f9b72b…8fb4` · 회신 PACKAGE_MANIFEST 와 일치).
+  - **바꾼 줄 (§0 · 11–14 행만 · 그 밖 바이트 동일 · `diff` 확인):**
+    - 11 `공식 문서 묶음 파일명: null` → `COMSOL_S1_OS_B_OFFICIAL_DOCS_20261013.zip`
+    - 12 `파일 크기: null` → `525600 B`
+    - 13 `SHA256: null` → `6579d317…07dd6`
+    - 14 `묶음 내 manifest SHA256: null` → `8ce680e4…81253`
+  - 15 행 `본 v2 최종 식별 및 사용자 채택: PENDING` · 3 · 5 행의 미채택 / `approved=false` 문구는 그대로 둔다 — 채택은 사용자가 한다.
+- **다음:** 사용자가 묶음 zip + 최종 v2 를 보고 §0 채택 문구로 B 오프라인 준비를 승인할지 정한다. 승인 전에는 실행 담당 Codex 에 보내지 않는다.
+- **유지:** OPEN 4 · `native_ready / approved / usable = false` · INCOMPLETE · UNVERIFIED. 이 절은 B 착수 · 실행 PC 관측 · OS 시험 · COMSOL / native 승인이 아니다.
