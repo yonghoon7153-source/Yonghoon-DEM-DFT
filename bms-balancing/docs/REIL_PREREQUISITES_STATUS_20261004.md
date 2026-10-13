@@ -892,3 +892,21 @@ rc 0 → **옛 봉인 대조 (§2-4) 에서 허용 밖 차이** → 정지. 원�
 - **넣지 않은 것:** 건조 재실행 · 배열 재봉인 · full C6 check · 전체 suite · 환경 재구축 · C4-0b · C4-E / A / B · 자료 · 맞춤 · 설치 · COMSOL.
 - **다음:** 재검토 요청 (`docs/REIL_C4_0A_FIX_RESULT_REVIEW_SEND_20261013.md`). C4-0a 종결은 재검토 판정 뒤다.
   C4-0b 는 그 뒤 사용자 확인 (배열 3 종 목록 · 배정 포함 — §42) 으로 시작한다.
+
+## §45 C4-0a 종결 — 보완 결과 재검토 회신 접수 (2026-10-13 · 덧붙임 — 위 §0–§44 는 그대로)
+
+- **보존:** `reviews/review_reil_c4_0a_fix_result_20261013/`
+  - zip 133,676 B · sha256 `e64fca8880929bfebbb07a096deb72ed5e9c7f41468ef2fae2528873e48334df` (사용자 업로드 원파일과 바이트 동일).
+  - `originals/` 47 · PACKAGE_MANIFEST (`members`) 46 / 46 일치 · 목록 밖 파일 0 · 비밀 0. 동봉 `package_review.ps1` 은 실행하지 않았다.
+  - `source/` 37 은 검토 고정 HEAD `6832a6b0` 의 저장소 파일과 바이트 동일하다.
+  - 규칙 커밋 `a22e4c4c` → 보존 커밋 `bc32a6ee` (blob 48 / 48 일치).
+- **판정 (`DECISION.json`):** `C4_0A_LIMITED_IMPLEMENTATION_CLOSED_WITH_DOCUMENTED_SCOPE` — N1 · N2 · N3 · N4 모두 CLOSED · 차단 0 · 재시험 요구 0.
+- **읽는 법 (회신 지시 · 원 기록은 고치지 않는다):**
+  - RED 10 실패 = **행동 반례 7** (n1_a · n2_a · n2_b · n2_d · n3_a · n4_a · n4_b) + **인터페이스 부재 3** (n1_b · n1_c · n3_c).
+  - 52.484 s 는 세 단계 실행의 합이다. 103.5 s 는 커밋 · push · 문서 작성 **전** snapshot 이고, 전체 작업의 마지막 종료 관측이 아니다.
+  - 실행 HEAD 가 같다는 것을 clean tree 라고 부르지 않는다 — 당시 porcelain 기록 그대로 둔다.
+  - N3 은 세 위치 각각의 독립 동적 증거나 OS hard limit 까지 검증한 것이 아니다.
+  - 이전 C4-0a GREEN 의 미기록 NSGA2 분기는 소급 확인하지 않는다.
+- **상태:** C4-0a 종결 (한정 구현 · 기록된 범위). 배열 표기 `Phase A 완료 / 3종 미완·0b 이월 제안` (§42) 은 그대로다.
+- **권한 (회신):** C4-0b 구현 · 실자료 개봉 · 연구 실행 · 설치 · 환경 재구축 · COMSOL — 모두 아니다.
+- **다음:** C4-0b 사용자 확인 — 미봉인 배열 3 종의 목록 · 배정 · 봉인 시점 포함 (`docs/REIL_C4_0B_CONFIRMATION_REQUEST_20261013.md`).
