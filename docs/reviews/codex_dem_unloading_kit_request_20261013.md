@@ -11,7 +11,7 @@
   b161b649b (K2 덱 64 · K3 러너 · 래퍼) · 3a8c1b5d2 (K4 판독기) · bafeac076 (K8 봉인 · 러너 모의) · 7ae6789df (판독기 — 복원 판정 ↔ 이력 시험 · 중력 팔 복원 · 복사 명령) · 문서 커밋 (이 요청서 · 부록 초안 · README · 원장).
 - 등록 `docs/reviews/dem_unloading_ps45_prereg_20261009.md` (§12 개정 1 · §13 개정 2) · 반영 계획 `docs/reviews/dem_unloading_ulr1_fix_plan_20261012.md` · 판정문 CX1 `docs/reviews/codex_review_dem_unloading_prereg_20261011.md` ·
   CX2 `docs/reviews/codex_review_dem_unloading_prereg_rereview_20261012.md` · 증거 `docs/reviews/codex_dem_unloading_prereg_rereview_evidence_20261012/`.
-- 권고 기본값 (C1–C20 · 1저자 비준 대기) = 부록 초안 `docs/reviews/dem_unloading_kit_section13_appendix_draft_20261013.md`.
+- 권고 기본값 (C1–C20 · ✅ 1저자 비준 10-13 → 등록 §13-7) = 부록 초안 `docs/reviews/dem_unloading_kit_section13_appendix_draft_20261013.md`.
 - 이 컨테이너에는 LIGGGHTS 가 없다 — DEM 실행 0 건 · 덱 문법 = 3d5c00f 원문 판독 + 생성기 selftest + 이력 시험 SYN (ibb 결과 ⬜).
 
 ## 1. 만든 것
