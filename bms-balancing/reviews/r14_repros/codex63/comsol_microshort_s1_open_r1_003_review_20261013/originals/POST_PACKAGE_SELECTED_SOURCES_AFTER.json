@@ -1,0 +1,579 @@
+{
+  "files": [
+    {
+      "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\outputs\\microshort_s1_open_connection_r1_20261010\\proposed_changed_validation_003\\java_tail.txt",
+      "bytes": 16503,
+      "sha256": "51247d4a236660aef26d79098aac3997aae25dc4a6aa5ed66c1c7f737b4f0690"
+    },
+    {
+      "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\outputs\\microshort_s1_open_connection_r1_20261010\\proposed_changed_validation_002\\SOURCE_PRESERVATION.json",
+      "bytes": 33157,
+      "sha256": "971be3ae7e8bb795aa4237275c32077f841e61aab003e9d5d0d7146c62904f2e"
+    },
+    {
+      "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\outputs\\microshort_s1_open_connection_r1_20261010\\proposed_changed_validation_002\\C05_ACCEPTED_EXPECTED.json",
+      "bytes": 122636,
+      "sha256": "02b188da35e8a18fc5e6c8738185fdc9d865e9a35bfeea33d47883c68eefd920"
+    },
+    {
+      "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\outputs\\microshort_s1_open_connection_r1_20261010\\proposed_changed_validation_002\\INITIAL_IDENTITIES.json",
+      "bytes": 13829,
+      "sha256": "e83e0c8cc727b91b45e1fe3d6d0eaae72cbd11a2355822cebe7f516ee8fdc280"
+    },
+    {
+      "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\outputs\\microshort_s1_open_connection_r1_20261010\\OS_API_MATRIX.json",
+      "bytes": 4115,
+      "sha256": "ec3ab0c209a5aab458fada593c31c63b73f6eec43b902a718823a2391d57622c"
+    },
+    {
+      "path": "C:\\Users\\BML\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\Lib\\pathlib.py",
+      "bytes": 51052,
+      "sha256": "10ba48ae8063cfe7589436041d0d4628c05f427c7709cf8e75e486f8930cc32c"
+    },
+    {
+      "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\outputs\\microshort_s1_open_connection_r1_20261010\\proposed_changed_validation_003\\run_python.py",
+      "bytes": 12785,
+      "sha256": "067cc389553f3634ffd8a7c4241e1990c2a8c88228287cbc5dc8819c8bd7b54f"
+    },
+    {
+      "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\outputs\\microshort_s1_open_connection_r1_20261010\\proposed_changed_validation_003\\contracts\\POLICY_VARIANTS.json",
+      "bytes": 42337,
+      "sha256": "8ec8f376060c9008502560674d6fc2e02fce643c676ddd852c808a3711838bdd"
+    },
+    {
+      "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\outputs\\microshort_s1_open_connection_r1_20261010\\candidate\\P0.connection.diff.txt",
+      "bytes": 3801,
+      "sha256": "7113aefd75a09fc82fe0d55c61c790f8315efe65abbc2d93acd73fd3d6ba3702"
+    },
+    {
+      "path": "C:\\Users\\BML\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\Lib\\io.py",
+      "bytes": 3582,
+      "sha256": "7cec3cb8ac004058dd0a5af246e6d950fb59c7ddd0058fda48bcb3fcb98d8822"
+    },
+    {
+      "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\outputs\\microshort_s1_open_connection_r1_20261010\\OPEN_CONNECTION_MAP.json",
+      "bytes": 2801,
+      "sha256": "93319429cad4ba89b74c69c64da55a5ffcd0ddc4c6758d33328b31a1b871203f"
+    },
+    {
+      "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\outputs\\microshort_s1_open_connection_r1_20261010\\proposed_changed_validation_003\\STATIC_PRESEAL_CHECK.json",
+      "bytes": 43149,
+      "sha256": "cf7e9e92f16791526fafe5d887865202d0f62b6a71e896bef5ed2977c2cbc0e3"
+    },
+    {
+      "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\outputs\\microshort_s1_open_connection_r1_20261010\\candidate\\InstalledReadback.fragment.java.inactive.txt",
+      "bytes": 2512,
+      "sha256": "844ccbb7259ba55bf3deacaf38bf17932c0b9f6ccc43017d80907c46b5b216c6"
+    },
+    {
+      "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\outputs\\microshort_s1_open_connection_r1_20261010\\proposed_changed_validation_003\\RAW_RESOURCE_CONTRACT.json",
+      "bytes": 7175,
+      "sha256": "e45837427b1b8a69d53b10119ce7ab072bacb869bcdd53c863366c7bd04c67c1"
+    },
+    {
+      "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\outputs\\microshort_s1_open_connection_r1_20261010\\proposed_changed_validation_002\\HISTORICAL_CONSUMER_INPUT_IDENTITIES.json",
+      "bytes": 50616,
+      "sha256": "4fb48047325936654d304b2c54df8ae31d5ba5696374e0ebfd5074370fa92864"
+    },
+    {
+      "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\outputs\\microshort_s1_open_connection_r1_20261010\\proposed_changed_validation_002\\java_tail.txt",
+      "bytes": 16503,
+      "sha256": "51247d4a236660aef26d79098aac3997aae25dc4a6aa5ed66c1c7f737b4f0690"
+    },
+    {
+      "path": "C:\\Users\\BML\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\Lib\\typing.py",
+      "bytes": 118836,
+      "sha256": "be92d60fb8382bb29ead21c128825d7c96d0e8c915b44f840791e49f5a8d554c"
+    },
+    {
+      "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\outputs\\microshort_s1_open_connection_r1_20261010\\RESOURCE_CLOCK_CONTRACT.json",
+      "bytes": 2589,
+      "sha256": "781a54aabeb60a516274e230da25b3b11b8b79c1eb61846ed5061e22e9402fb3"
+    },
+    {
+      "path": "C:\\Program Files\\COMSOL\\COMSOL63\\Multiphysics\\java\\win64\\jre\\bin\\java.exe",
+      "bytes": 46824,
+      "sha256": "e8228b02b882a4aa1a2333ede4a341b15e761cd897433d2661f2b96d7ad4952b"
+    },
+    {
+      "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\outputs\\microshort_s1_open_connection_r1_20261010\\proposed_changed_validation_003\\OpenReadbackHarness.java",
+      "bytes": 24285,
+      "sha256": "4664c984db7d34fa66596176c8912f3ce33910f1df9c58ead439b4c5252da639"
+    },
+    {
+      "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\outputs\\microshort_s1_open_connection_r1_20261010\\proposed_changed_validation_002\\RESOURCE_CASE_INPUTS.json",
+      "bytes": 152931,
+      "sha256": "d7bc28e9fb254e5706fd34fa27550428a6f0577cdf5566c16b5d324c6ba83b42"
+    },
+    {
+      "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\outputs\\microshort_s1_open_connection_r1_20261010\\proposed_changed_validation_002\\contracts\\POLICY_VARIANTS.json",
+      "bytes": 42337,
+      "sha256": "8ec8f376060c9008502560674d6fc2e02fce643c676ddd852c808a3711838bdd"
+    },
+    {
+      "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\outputs\\microshort_s1_open_connection_r1_20261010\\proposed_changed_validation_002\\FIRST_ERROR.json",
+      "bytes": 1033,
+      "sha256": "60b5d56e267d8d9a48e9a1c1a2a7fc2ae6c6aa5bd8d6162f2ada3378a6092dc6"
+    },
+    {
+      "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\outputs\\microshort_s1_open_connection_r1_20261010\\proposed_changed_validation_003\\ORIGIN.json",
+      "bytes": 351,
+      "sha256": "9a38f059d1d9716e03be535565d73d8b9a4543b1b6152b2d25fe5770fcd7cecd"
+    },
+    {
+      "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\outputs\\microshort_s1_open_connection_r1_20261010\\proposed_changed_validation_003\\cases_raw.py",
+      "bytes": 11376,
+      "sha256": "566a90b4098087772e2e1afe57d2dcf2367fe8a5255431563a92019d14f12b7a"
+    },
+    {
+      "path": "C:\\Users\\BML\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\Lib\\json\\scanner.py",
+      "bytes": 2434,
+      "sha256": "572958017eae8842eeddd0e3d18d3c56cc0a197348224915e1d87ce937841764"
+    },
+    {
+      "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\outputs\\microshort_s1_open_connection_r1_20261010\\candidate\\resource_connection.py.inactive.txt",
+      "bytes": 10846,
+      "sha256": "f45e6531383d03daa2e968437c6188be0229c144c6956647b0b0f81fae795816"
+    },
+    {
+      "path": "C:\\Users\\BML\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\python3.dll",
+      "bytes": 71120,
+      "sha256": "afa6cc673944dcb13c91474d51e3c707c7ecc6ab0cc6005bc91e92eb02f488f1"
+    },
+    {
+      "path": "C:\\Users\\BML\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\Lib\\functools.py",
+      "bytes": 37940,
+      "sha256": "de4a1d37c795e2a065124b5c49357893433bc6bb111b41277ccc9930ef08d4c9"
+    },
+    {
+      "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\outputs\\microshort_s1_open_connection_r1_20261010\\proposed_changed_validation_002\\RESULT_KO.md",
+      "bytes": 2559,
+      "sha256": "782a2bc57c6438e31bc92f94794dab5b97eef30ac05ae39e35491a6ef024ea73"
+    },
+    {
+      "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\outputs\\microshort_s1_open_connection_r1_validation_addendum_20261013\\PLAN_EXECUTION_ADDENDUM.json",
+      "bytes": 5380,
+      "sha256": "5bf46bfe914a5657c21f5da7a39c56560b9eb468554639794f82a76ef2ec8c60"
+    },
+    {
+      "path": "C:\\Users\\BML\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\Lib\\dataclasses.py",
+      "bytes": 62085,
+      "sha256": "d242aea5fcf6408b1c1f622442f88f68b9526ce1f8bd2890d74a144677c427d9"
+    },
+    {
+      "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\outputs\\microshort_s1_open_connection_r1_20261010\\proposed_changed_validation_002\\JAVA_EXTRACTION.json",
+      "bytes": 11384,
+      "sha256": "60f1dc59eea88f1be88ed6e1e6a5d08115b511d4e62149a55a0056716aea2b6f"
+    },
+    {
+      "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\outputs\\microshort_s1_open_connection_r1_20261010\\REVISION_BINDING.json",
+      "bytes": 4432,
+      "sha256": "bbb1ef6d82c58a8d8b70fcc2727a44a28316da6cc0c38781699f39b16580df55"
+    },
+    {
+      "path": "C:\\Users\\BML\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\python312.dll",
+      "bytes": 6984656,
+      "sha256": "c19758a4dfccc35b5f4da513945dfab85e70bed8cdbf4bc25587662fa7f457d2"
+    },
+    {
+      "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\outputs\\microshort_s1_open_connection_r1_20261010\\proposed_changed_validation_002\\run_stage.ps1",
+      "bytes": 4806,
+      "sha256": "c94b76ba2cfd155d965a398c1a69c3e0bd20ced467f270d0a77ab55b181bab11"
+    },
+    {
+      "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\outputs\\microshort_s1_open_connection_r1_20261010\\proposed_changed_validation_003\\HISTORICAL_CONSUMER_INPUT_IDENTITIES.json",
+      "bytes": 50616,
+      "sha256": "4fb48047325936654d304b2c54df8ae31d5ba5696374e0ebfd5074370fa92864"
+    },
+    {
+      "path": "C:\\Users\\BML\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\Lib\\_pydecimal.py",
+      "bytes": 227283,
+      "sha256": "87a3372df4c4269adcdac5725e04675d306abcfa8d65e8dda59c1846e3d202ac"
+    },
+    {
+      "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\outputs\\microshort_s1_open_connection_r1_20261010\\proposed_changed_validation_002\\CASE_RESULTS.json",
+      "bytes": 42868,
+      "sha256": "fe87f0f8a94d8f570d372bd368c68cfb5efe4f4874cc8ac68430a6bcf250dcbd"
+    },
+    {
+      "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\outputs\\microshort_s1_open_connection_r1_20261010\\proposed_changed_validation_002\\RAW_CASE_INPUTS.json",
+      "bytes": 39104,
+      "sha256": "d045dbfb50412ba7c28798c1bfc452bc628af86efa74a1f3e786d982c9327fb3"
+    },
+    {
+      "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\outputs\\microshort_s1_open_connection_r1_20261010\\proposed_changed_validation_003\\ENGINE_PATH_APPROVAL_ADDENDUM.json",
+      "bytes": 13584,
+      "sha256": "796909cca1fba0c953a5a979798037957e61846931cc5a9e7af02e00a8184648"
+    },
+    {
+      "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\outputs\\microshort_s1_open_connection_r1_validation_addendum_20261013\\EFFECTIVE_VALIDATION_PLAN.json",
+      "bytes": 181326,
+      "sha256": "88a56e55f2b5a94956a708ed1e84a97c0c5531bf461cb6d76165b178717b34e5"
+    },
+    {
+      "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\outputs\\microshort_s1_open_connection_r1_20261010\\candidate\\raw_connection.py.inactive.txt.diff.txt",
+      "bytes": 9696,
+      "sha256": "82ca6d81e9ec98ef93b2d528c1731222eda293cdac7d5f0d7ba0dbbe765cbffa"
+    },
+    {
+      "path": "C:\\Users\\BML\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\Lib\\inspect.py",
+      "bytes": 127125,
+      "sha256": "5c54ebf0bfdc25397750e5d0f63800751650ee50e65325ff3ea4069c9bfa5f75"
+    },
+    {
+      "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\outputs\\microshort_s1_open_r1_python_preflight_20261013\\ENGINE_IDENTITIES.json",
+      "bytes": 2182,
+      "sha256": "9e5cb2dd12e5354e1e8a52cf4b904a2b1f8396b68d16cd7e2997feea24c00618"
+    },
+    {
+      "path": "C:\\Users\\BML\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\DLLs\\_decimal.pyd",
+      "bytes": 263120,
+      "sha256": "b2f69ce91756cac13b5ca29933440bb8501feabfda39a2d70872e0bc7a9b9ef4"
+    },
+    {
+      "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\outputs\\microshort_s1_open_connection_r1_20261010\\proposed_changed_validation_003\\java_header.txt",
+      "bytes": 912,
+      "sha256": "9925a6eda4d2d2794c470ffe5a3c2acbf2a9953c346e629add73c1c5ba34cbc1"
+    },
+    {
+      "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\outputs\\microshort_s1_open_connection_r1_20261010\\proposed_changed_validation_002\\run_python.py",
+      "bytes": 12785,
+      "sha256": "067cc389553f3634ffd8a7c4241e1990c2a8c88228287cbc5dc8819c8bd7b54f"
+    },
+    {
+      "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\outputs\\microshort_s1_open_connection_r1_20261010\\proposed_changed_validation_003\\JAVA_EXTRACTION.json",
+      "bytes": 11384,
+      "sha256": "60f1dc59eea88f1be88ed6e1e6a5d08115b511d4e62149a55a0056716aea2b6f"
+    },
+    {
+      "path": "C:\\Users\\BML\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\Lib\\importlib\\_bootstrap.py",
+      "bytes": 57057,
+      "sha256": "d112d54b7831cf4a818d4841d5ff8003b54df220a6dabafa61f67d7c7a5603f7"
+    },
+    {
+      "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\outputs\\microshort_s1_open_connection_r1_20261010\\NATIVE_CONNECTION_STATUS.json",
+      "bytes": 700,
+      "sha256": "1947da06fb8b168025d25ae7467cac260b7be58d7d237aae8f97214fceb0b21a"
+    },
+    {
+      "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\outputs\\microshort_s1_open_connection_r1_20261010\\proposed_changed_validation_002\\cases_raw.py",
+      "bytes": 11376,
+      "sha256": "566a90b4098087772e2e1afe57d2dcf2367fe8a5255431563a92019d14f12b7a"
+    },
+    {
+      "path": "C:\\Users\\BML\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\Lib\\enum.py",
+      "bytes": 81540,
+      "sha256": "f35e542d8c4c1d2b5e910138d726fa48774925f3c4dc5462793ebcb66aa55501"
+    },
+    {
+      "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\outputs\\microshort_s1_open_connection_r1_20261010\\proposed_changed_validation_003\\run_stage.ps1",
+      "bytes": 4806,
+      "sha256": "c94b76ba2cfd155d965a398c1a69c3e0bd20ced467f270d0a77ab55b181bab11"
+    },
+    {
+      "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\outputs\\microshort_s1_open_connection_r1_20261010\\proposed_changed_validation_002\\DECISION.json",
+      "bytes": 689,
+      "sha256": "8183b3784d521b08b685232237ab9ac38a2dedb581977590d7ce18d0f564c32e"
+    },
+    {
+      "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\outputs\\microshort_s1_open_connection_r1_20261010\\FUNCTION_SPANS.json",
+      "bytes": 52077,
+      "sha256": "8002e9ea5ecf7b56b04f00f35426e23a3bba0c958b4f24f3997a1e45f862e7ab"
+    },
+    {
+      "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\outputs\\microshort_s1_open_connection_r1_20261010\\proposed_changed_validation_002\\FIRST_ERROR_TOOL_RETURN_EXCERPT.json",
+      "bytes": 692,
+      "sha256": "3e6527a95ba7d88e0f560f8f4cc404b984bd8ea1af883bafdff27cd08a7875bb"
+    },
+    {
+      "path": "C:\\Users\\BML\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\Lib\\importlib\\_bootstrap_external.py",
+      "bytes": 69428,
+      "sha256": "e6ad72f3f0f9b65c99ab52598cd02ab748511dcdce1dd51f18dace9be9a680c6"
+    },
+    {
+      "path": "C:\\Users\\BML\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\Lib\\importlib\\util.py",
+      "bytes": 10994,
+      "sha256": "671f2995653f673f6d5056a1089debef473bc28ae7114f7a8db71475733d6876"
+    },
+    {
+      "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\outputs\\microshort_s1_open_connection_r1_20261010\\proposed_changed_validation_003\\EFFECTIVE_VALIDATION_PLAN.json",
+      "bytes": 181326,
+      "sha256": "88a56e55f2b5a94956a708ed1e84a97c0c5531bf461cb6d76165b178717b34e5"
+    },
+    {
+      "path": "C:\\Users\\BML\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\Lib\\importlib\\__init__.py",
+      "bytes": 4784,
+      "sha256": "d540b5ac137fcb3e26a8d5f2939649e34373c6685f98a30a9f682cf231be5854"
+    },
+    {
+      "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\outputs\\microshort_s1_open_connection_r1_20261010\\proposed_changed_validation_002\\EFFECTIVE_VALIDATION_PLAN.json",
+      "bytes": 181326,
+      "sha256": "88a56e55f2b5a94956a708ed1e84a97c0c5531bf461cb6d76165b178717b34e5"
+    },
+    {
+      "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\outputs\\microshort_s1_open_r1_python_preflight_20261013\\PYTHON_ENVIRONMENT_OBSERVATION.json",
+      "bytes": 21075,
+      "sha256": "a138fe5fbe8610032faf11dcb1a70ad08251b2df2e8dde81bb1cbe9866e43db3"
+    },
+    {
+      "path": "C:\\Users\\BML\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\Lib\\hashlib.py",
+      "bytes": 9349,
+      "sha256": "6dbdebf270868b391080e21dc9687eddfaf321c965ad979f68d3f5c423c613ab"
+    },
+    {
+      "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\outputs\\microshort_s1_open_connection_r1_20261010\\proposed_changed_validation_003\\JAVA_CASE_INPUTS.json",
+      "bytes": 15496,
+      "sha256": "c3f0a517dee93c9cd8ec8df52e1379573b9d573e6e84f752c1e0abaf01bcd1b7"
+    },
+    {
+      "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\outputs\\microshort_s1_open_connection_r1_20261010\\proposed_changed_validation_003\\RAW_CASE_INPUTS.json",
+      "bytes": 39104,
+      "sha256": "d045dbfb50412ba7c28798c1bfc452bc628af86efa74a1f3e786d982c9327fb3"
+    },
+    {
+      "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\outputs\\microshort_s1_open_connection_r1_20261010\\proposed_changed_validation_003\\C05_ACCEPTED_EXPECTED.json",
+      "bytes": 122636,
+      "sha256": "02b188da35e8a18fc5e6c8738185fdc9d865e9a35bfeea33d47883c68eefd920"
+    },
+    {
+      "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\outputs\\microshort_s1_open_connection_r1_20261010\\candidate\\P0.connection.java.inactive.txt",
+      "bytes": 84529,
+      "sha256": "39c2b9929e0d4c4ca8c442f5d0f0485581342b8be7a993d3820870bba8002a8b"
+    },
+    {
+      "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\outputs\\microshort_s1_open_connection_r1_20261010\\proposed_changed_validation_002\\PREPARATION_ACTIVITY_NOTE.json",
+      "bytes": 528,
+      "sha256": "b554419b24256121b7f97a7168c68fe5472109ca206068cd42c4767624fbc630"
+    },
+    {
+      "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\outputs\\microshort_s1_open_connection_r1_20261010\\proposed_changed_validation_003\\cases_resource.py",
+      "bytes": 6574,
+      "sha256": "a26723576d16d8aea2267e3bb3f0947db62e388530bf41089df7db1e59276510"
+    },
+    {
+      "path": "C:\\Users\\BML\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\Lib\\copy.py",
+      "bytes": 8412,
+      "sha256": "cbd25547933176fcf6bb05c2adc9f4796d15ac20b9b82dcf890daea7203daeab"
+    },
+    {
+      "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\outputs\\microshort_s1_open_connection_r1_20261010\\basis\\prior_preparation\\reference\\r1\\candidate\\Parent.ps1.inactive.txt",
+      "bytes": 25787,
+      "sha256": "e9f8d366ca9931b84ded5753a560369b72fea8737a77075bc2b80ec771bc56ff"
+    },
+    {
+      "path": "C:\\Users\\BML\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\vcruntime140_1.dll",
+      "bytes": 49792,
+      "sha256": "1f2d41c4aa5db0bc33ebf7b66d72943a817d7ce6cbe880502a9403823633093f"
+    },
+    {
+      "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\outputs\\microshort_s1_open_connection_r1_20261010\\proposed_changed_validation_002\\historical\\harness\\shared_fixture.py",
+      "bytes": 6420,
+      "sha256": "84e4ce3c1e8c7d99549cbaeba29872bc841dc8da69f74d95b05f4fd7ec0c61c4"
+    },
+    {
+      "path": "C:\\Users\\BML\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\Lib\\json\\decoder.py",
+      "bytes": 12525,
+      "sha256": "382cd02af6f7efede5a6d4abbcda1015e5c7a75794b0016022878f9cf32a24f6"
+    },
+    {
+      "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\outputs\\microshort_s1_open_connection_r1_20261010\\proposed_changed_validation_003\\RESOURCE_CASE_INPUTS.json",
+      "bytes": 152931,
+      "sha256": "d7bc28e9fb254e5706fd34fa27550428a6f0577cdf5566c16b5d324c6ba83b42"
+    },
+    {
+      "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\outputs\\microshort_s1_open_connection_r1_20261010\\proposed_changed_validation_002\\RAW_RESOURCE_CONTRACT.json",
+      "bytes": 7175,
+      "sha256": "e45837427b1b8a69d53b10119ce7ab072bacb869bcdd53c863366c7bd04c67c1"
+    },
+    {
+      "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\outputs\\microshort_s1_open_connection_r1_20261010\\LIMITED_VALIDATION_PLAN.json",
+      "bytes": 178519,
+      "sha256": "6702a6be556f0f5b4512dd221c08f77d39111606f1d9f97511dd796f2d3d20c9"
+    },
+    {
+      "path": "C:\\Users\\BML\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\DLLs\\_hashlib.pyd",
+      "bytes": 69584,
+      "sha256": "75f84c83b8590db1ea38e1eeaf9372ae517456300876a4702e7b13429193daa3"
+    },
+    {
+      "path": "C:\\Users\\BML\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\Lib\\unittest\\mock.py",
+      "bytes": 106317,
+      "sha256": "1de18141992c6742bff27e77c0cbe46d53d6a5ab1850574a536910508823fc5c"
+    },
+    {
+      "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\outputs\\microshort_s1_open_connection_r1_20261010\\proposed_changed_validation_003\\INITIAL_IDENTITIES.json",
+      "bytes": 25990,
+      "sha256": "62c4102dd05debd5934e15b308ca59be93a3908a20d4c57eb46ee09375a56d38"
+    },
+    {
+      "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\outputs\\microshort_s1_open_connection_r1_20261010\\proposed_changed_validation_002\\ENGINE_PATH_APPROVAL_ADDENDUM.json",
+      "bytes": 13282,
+      "sha256": "be19ee075d4affbbd1a09864f61cb40f01bd4e467e0a1477eabdf37a144e45f1"
+    },
+    {
+      "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\outputs\\microshort_s1_open_connection_r1_20261010\\proposed_changed_validation_002\\PREPARED_FILE_IDENTITIES.json",
+      "bytes": 9148,
+      "sha256": "6f028ef2b2cd172e8c5574fdae9e3ce6425e8acda7190ebd0291ab8da63d5031"
+    },
+    {
+      "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\outputs\\microshort_s1_open_connection_r1_20261010\\basis\\prior_preparation\\reference\\r1\\candidate\\variants\\P0.java.inactive.txt",
+      "bytes": 81976,
+      "sha256": "6d10c8910e3b7301778112b676be604eccc22aae41fa87cb719a94218e2384fa"
+    },
+    {
+      "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\outputs\\microshort_s1_open_connection_r1_20261010\\proposed_changed_validation_002\\cases_resource.py",
+      "bytes": 6574,
+      "sha256": "a26723576d16d8aea2267e3bb3f0947db62e388530bf41089df7db1e59276510"
+    },
+    {
+      "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\outputs\\microshort_s1_open_connection_r1_20261010\\proposed_changed_validation_002\\java_header.txt",
+      "bytes": 912,
+      "sha256": "9925a6eda4d2d2794c470ffe5a3c2acbf2a9953c346e629add73c1c5ba34cbc1"
+    },
+    {
+      "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\outputs\\microshort_s1_open_connection_r1_20261010\\proposed_changed_validation_002\\JAVA_CASE_INPUTS.json",
+      "bytes": 15496,
+      "sha256": "c3f0a517dee93c9cd8ec8df52e1379573b9d573e6e84f752c1e0abaf01bcd1b7"
+    },
+    {
+      "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\outputs\\microshort_s1_open_connection_r1_20261010\\proposed_changed_validation_002\\OpenReadbackHarness.java",
+      "bytes": 24285,
+      "sha256": "4664c984db7d34fa66596176c8912f3ce33910f1df9c58ead439b4c5252da639"
+    },
+    {
+      "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\outputs\\microshort_s1_open_connection_r1_20261010\\proposed_changed_validation_002\\TIME_BOUNDARY_NOTE.json",
+      "bytes": 1095,
+      "sha256": "0409ca870d8b812c90319ac7e3d122ffeaa4b20301cb5663f7a763930138aa92"
+    },
+    {
+      "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\outputs\\microshort_s1_open_connection_r1_20261010\\basis\\prior_preparation\\reference\\r1\\contracts\\RESOURCE_CONTRACT.json",
+      "bytes": 7175,
+      "sha256": "e45837427b1b8a69d53b10119ce7ab072bacb869bcdd53c863366c7bd04c67c1"
+    },
+    {
+      "path": "C:\\Users\\BML\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\Lib\\json\\encoder.py",
+      "bytes": 16075,
+      "sha256": "52bfb1b66029cc70fa3bd7fe11df9f2e03922d413407a341b387a22c987f24f8"
+    },
+    {
+      "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\outputs\\microshort_s1_open_connection_r1_20261010\\basis\\prior_preparation\\reference\\r1\\candidate\\consumer.py.inactive.txt",
+      "bytes": 27987,
+      "sha256": "0cb1aa3cc4593dcb041115baf208c4dd09186fcc75055ddcde53c68086cc6b79"
+    },
+    {
+      "path": "C:\\Users\\BML\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\Lib\\collections\\__init__.py",
+      "bytes": 52378,
+      "sha256": "7fdb04dd248ab37909f46d2085bfee56b32d7e91e49ad3a2fad99c453295659b"
+    },
+    {
+      "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\outputs\\microshort_s1_open_connection_r1_20261010\\proposed_changed_validation_003\\historical\\harness\\shared_fixture.py",
+      "bytes": 6420,
+      "sha256": "84e4ce3c1e8c7d99549cbaeba29872bc841dc8da69f74d95b05f4fd7ec0c61c4"
+    },
+    {
+      "path": "C:\\Users\\BML\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\Lib\\json\\__init__.py",
+      "bytes": 14020,
+      "sha256": "d5d41e2c29049515d295d81a6d40b4890fbec8d8482cfb401630f8ef2f77e4d5"
+    },
+    {
+      "path": "C:\\Users\\BML\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\Lib\\types.py",
+      "bytes": 10993,
+      "sha256": "345474ef027a1273f353da9bdc1f7c18f65335e72e681bcc0376774cc51f2405"
+    },
+    {
+      "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\outputs\\microshort_s1_open_connection_r1_20261010\\candidate\\resource_connection.py.inactive.txt.diff.txt",
+      "bytes": 8100,
+      "sha256": "538aa7cb31429d1709ef0b114c1f44850335b937d11826aee6073ae622e13844"
+    },
+    {
+      "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\outputs\\microshort_s1_open_connection_r1_20261010\\CODE_MANIFEST.json",
+      "bytes": 2820,
+      "sha256": "feb12ef6991141aab59fd2fbc0d5f0d138bdd735255aa7123274503ce80b8ecc"
+    },
+    {
+      "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\outputs\\microshort_s1_open_connection_r1_20261010\\proposed_changed_validation_002\\CLOSEOUT_ORIGIN.json",
+      "bytes": 232,
+      "sha256": "643d1cd10ba10e75babbbe9d5d910bacfffb29a2f256669065c9382983db5e77"
+    },
+    {
+      "path": "C:\\Users\\BML\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\vcruntime140.dll",
+      "bytes": 124544,
+      "sha256": "d5e4d9a3e835fa679450145d6a7d94e36573a509317111904d9b3712c30d9066"
+    },
+    {
+      "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\outputs\\microshort_s1_open_connection_r1_20261010\\proposed_changed_validation_002\\VALIDATION_SCOPE_RECORD.json",
+      "bytes": 1110,
+      "sha256": "674a4257421eae9f0d1cab83ad761b6cce520aca932271b0f5c04fae7c905b44"
+    },
+    {
+      "path": "C:\\Users\\BML\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\Lib\\ast.py",
+      "bytes": 64452,
+      "sha256": "b515c23dbbc459329d3b802a3aac742cc456d7472e66f7ed6e9dc97e40596d7d"
+    },
+    {
+      "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\outputs\\microshort_s1_open_connection_r1_20261010\\proposed_changed_validation_002\\PREPACKAGE_SNAPSHOT.json",
+      "bytes": 210,
+      "sha256": "3bccbd3e8da3ee48745c9e2dc6279e64f2e9fac3f1b83eee51e39c0caddfa705"
+    },
+    {
+      "path": "C:\\Users\\BML\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\include\\patchlevel.h",
+      "bytes": 1301,
+      "sha256": "66ff726e200a2eba15cfedee752bf6a59e20d6741a7c45f7a2c424dea649f473"
+    },
+    {
+      "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\outputs\\microshort_s1_open_connection_r1_20261010\\candidate\\raw_connection.py.inactive.txt",
+      "bytes": 9426,
+      "sha256": "3de2c292bf03088db1171b0d5cd4cc36a9e53f17385839eb7812bebb094d8d9c"
+    },
+    {
+      "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\outputs\\microshort_s1_open_connection_r1_20261010\\proposed_changed_validation_002\\ORIGIN.json",
+      "bytes": 322,
+      "sha256": "afc3b01d729454030865efe80eccc6fded5f1b3951635e2b2700e96cec65a448"
+    },
+    {
+      "path": "C:\\Users\\BML\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\Lib\\re\\__init__.py",
+      "bytes": 16315,
+      "sha256": "8ff3c37c63b917fcf8dc8d50993a502292a3dc159e41de4f4018c72a53d1c07b"
+    },
+    {
+      "path": "C:\\Users\\BML\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\Lib\\csv.py",
+      "bytes": 17132,
+      "sha256": "2fd2a39ec59a5cbcd71596a93205001e593c65dc2ca3bef6028f148372028a88"
+    },
+    {
+      "path": "C:\\Users\\BML\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\Lib\\site.py",
+      "bytes": 23198,
+      "sha256": "b39ab288cc7a6d0cb3bb2655179221411340b22418e4efdee4c20175537a5fa2"
+    },
+    {
+      "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\outputs\\microshort_s1_open_connection_r1_20261010\\basis\\prior_preparation\\reference\\r1\\candidate\\control.py.inactive.txt",
+      "bytes": 18304,
+      "sha256": "8ec75e57336c4ffa33e61d513076fb1facd1cf90430b1e1ce1c15f9bb57ac00d"
+    },
+    {
+      "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\outputs\\microshort_s1_open_connection_r1_20261010\\proposed_changed_validation_002\\STAGE_RESULTS.json",
+      "bytes": 402,
+      "sha256": "9fe2004e03cac837081b887030a58ab0cd6223f8c8761cdaab8e3df84ebe2817"
+    },
+    {
+      "path": "C:\\Program Files\\COMSOL\\COMSOL63\\Multiphysics\\java\\win64\\jre\\bin\\javac.exe",
+      "bytes": 20712,
+      "sha256": "c60a376855051d615b0c7cf2712573a19ed4e02b905c9d1a274ff990dac85659"
+    },
+    {
+      "path": "C:\\Users\\BML\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\Lib\\decimal.py",
+      "bytes": 2805,
+      "sha256": "c3e37c55ef72b3dd6cb7b466a907b966467b6a9c58d85302193e64cbb5fd53d0"
+    },
+    {
+      "path": "C:\\Users\\BML\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\python.exe",
+      "bytes": 106448,
+      "sha256": "10d845f50a2af64e3500bb2fcb348b5bc98a75d8ddada63e45ba1da6a1fc79d1"
+    }
+  ],
+  "count": 114,
+  "all_match": true,
+  "snapshot_seconds": 809.7362866,
+  "phase": "After ZIP packaging and package tool return; before current recordwrite",
+  "scope": "Only114pretestselectedpaths, including candidate/harness/dependency/engine/priorattemptrecords"
+}

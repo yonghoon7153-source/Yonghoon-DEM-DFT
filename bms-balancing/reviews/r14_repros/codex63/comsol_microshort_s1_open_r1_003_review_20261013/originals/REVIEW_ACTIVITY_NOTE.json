@@ -1,0 +1,9 @@
+{
+  "kind": "REVIEWER_UTILITY_NOTE",
+  "event": "The first reviewer-owned JSON aggregation attempt treated the Java stdout summary footer as a case and raised KeyError id.",
+  "tool_chunk": "ce990e",
+  "exit_code": 1,
+  "effect": "No supplied program, test or engine was run. No source/evidence changed; no reconciliation result was written by that attempt.",
+  "correction": "Separate six case rows with id from the one summary footer. Rerun only reviewer-owned static JSON comparison.",
+  "not_a_candidate_test_failure": true
+}

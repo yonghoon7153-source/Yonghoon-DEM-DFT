@@ -1,0 +1,25 @@
+{
+  "archive": {
+    "path": "C:\\Users\\Administrator\\Downloads\\COMSOL_MICROSHORT_S1_OPEN_R1_VALIDATION_003_20261013.zip",
+    "bytes": 665105,
+    "sha256": "6458419127231ce44203ddef9d10981954ae877fdbf990faab5d3649db172bb3"
+  },
+  "entries": 139,
+  "payload_count": 138,
+  "decompressed_bytes": 5961794,
+  "verification": "Exact set, size, SHA256, CRC, casefold, path and symlink checks",
+  "after_attachment": {
+    "path": "C:\\Users\\Administrator\\.codex\\attachments\\76a81b79-7d12-4f4c-a60d-79b054a5e148\\붙여넣은 텍스트.txt",
+    "bytes": 34659,
+    "sha256": "b22417b5f8a42da934f58bc73941c40eb1fd35d557a7e3eaaa2c347652757e4d",
+    "top_keys": [
+      "files",
+      "count",
+      "all_match",
+      "snapshot_seconds",
+      "phase",
+      "scope"
+    ]
+  },
+  "execution": "No supplied code imported or executed. Reviewer data utility only."
+}

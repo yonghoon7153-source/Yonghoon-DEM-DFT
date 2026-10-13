@@ -1,0 +1,97 @@
+{
+  "schema": "S1_OPEN_R1_003_PROVENANCE_SUPPLEMENT_REVIEW_V1",
+  "review_date": "2026-10-13",
+  "supplements": "PROVENANCE_AUDIT.json; the original review note is preserved unchanged",
+  "method": "Read ZIP directory, decompressed bytes, UTF-8 text and JSON using reviewer-owned data operations. No ZIP contents were extracted or executed. No candidate import, test, engine/version probe, or COMSOL invocation.",
+  "user_scope_correction": "This supplement documents only the 2026-10-13 02:04-02:07 KST preflight observation interval. Do not extend its preservation observations to the later _003 execution interval.",
+  "zip": {
+    "path": "C:/Users/Administrator/Downloads/COMSOL_MICROSHORT_S1_OPEN_R1_PYTHON_PREFLIGHT_20261013.zip",
+    "bytes": 53751,
+    "sha256": "45bdff07b0db0d24f96766e6224807822ddae6278405a663924c4080edbb8fe8",
+    "entries": 22,
+    "manifest_payload_entries": 21,
+    "manifest_self_excluded": true,
+    "unsafe_or_duplicate_paths": [],
+    "manifest_size_or_sha256_mismatches": [],
+    "unmanifested_payload": [],
+    "all_21_payload_rows_verified_against_actual_decompressed_bytes": true
+  },
+  "prior_001_original": {
+    "entry": "reference/PRIOR_FIRST_ERROR.json",
+    "bytes": 1448,
+    "sha256": "df14d1c180cecf5b4dd51816321b6d5d201649254e9c8fbaaf42b9d4b6be0269",
+    "matches_current_003_addendum_preserved_first_error_identity": true,
+    "status": "STOPPED_ENGINE_IDENTITY_MISMATCH",
+    "expected_python_bytes": 107312,
+    "expected_python_sha256": "b7a12c3af0b4db44191eec14ea095eba731b7328917f570806183093d19ddca2",
+    "observed_python_bytes": 106448,
+    "observed_python_sha256": "10d845f50a2af64e3500bb2fcb348b5bc98a75d8ddada63e45ba1da6a1fc79d1",
+    "functional_test_sessions": 0,
+    "candidate_imports_calls": 0,
+    "helper_compile_sessions": 0,
+    "helper_JVM_sessions": 0,
+    "COMSOL_calls": 0,
+    "preflight_own_Python_data_helper_invocations": 1,
+    "scope_note": "The prior _001 metadata helper invocation must not be described as zero Python invocations across all attempts. It was distinct from functional validation; the recorded identity assertion failed before candidate execution."
+  },
+  "preservation_interval": {
+    "before_entry": "evidence/SELECTED_SOURCES_BEFORE.json",
+    "before_bytes": 12150,
+    "before_sha256": "73ab265491a27c95bfe1aedc7938ccdf30f00ee240c6da78b96d0502c020f00e",
+    "before_observed_utc": "2026-10-12T17:04:13.8117324Z",
+    "before_observed_kst": "2026-10-13T02:04:13.8117324+09:00",
+    "after_entry": "evidence/SELECTED_SOURCES_AFTER.json",
+    "after_bytes": 12172,
+    "after_sha256": "c97ec9b5e075be3370501f4506b0006c93171a4dfd781fc761a6422af93632a7",
+    "after_observed_utc": "2026-10-12T17:07:28.2691467Z",
+    "after_observed_kst": "2026-10-13T02:07:28.2691467+09:00",
+    "before_unique_paths": 38,
+    "after_unique_paths": 38,
+    "all_before_after_size_and_hash_pairs_equal": true,
+    "prior_001_selected_paths": 15,
+    "prior_001_file_names": [
+      "CASE_RESULTS.json",
+      "COMSOL_MICROSHORT_S1_OPEN_R1_VALIDATION_STOP_20261013.zip",
+      "DECISION.json",
+      "DELIVERY_RECEIPT.json",
+      "FINAL_CHECK_TOOL_RETURN.json",
+      "FINAL_PACKAGE_TOOL_RETURN.json",
+      "FINAL_SUBMISSION_CHECK.json",
+      "FIRST_ERROR.json",
+      "ORIGIN.json",
+      "PACKAGE_MANIFEST.json",
+      "PREFLIGHT_TOOL_RETURN.json",
+      "PREPACKAGE_SNAPSHOT.json",
+      "REPORT_KO.md",
+      "SOURCE_PRESERVATION.json",
+      "STAGE_RESULTS.json"
+    ],
+    "supplied_prior_copies": [
+      {"entry": "reference/PRIOR_FIRST_ERROR.json", "bytes": 1448, "sha256": "df14d1c180cecf5b4dd51816321b6d5d201649254e9c8fbaaf42b9d4b6be0269"},
+      {"entry": "reference/PRIOR_DECISION.json", "bytes": 787, "sha256": "55e49cb193681fb3f940a2a58051e350f8a0ded3570570d048346c2b8d7976b7"}
+    ],
+    "limits": "The 38-path snapshots show identical recorded identities at the two specified preflight times. Only PRIOR_FIRST_ERROR and PRIOR_DECISION are supplied as direct _001 copies here; the other 13 _001 paths have before/after identity records. No continuous monitoring or later _003 preservation claim follows from these snapshots."
+  },
+  "same_source_binding": {
+    "all_three_engine_paths_sizes_and_hashes_match_003_proposed_engine_pins": true,
+    "byte_identical_supplement_to_existing_review_pairs": [
+      {"supplement": "ENGINE_IDENTITIES.json", "existing": "evidence/reference/034_ENGINE_IDENTITIES.json", "sha256": "9e5cb2dd12e5354e1e8a52cf4b904a2b1f8396b68d16cd7e2997feea24c00618"},
+      {"supplement": "PYTHON_ENVIRONMENT_OBSERVATION.json", "existing": "evidence/reference/046_PYTHON_ENVIRONMENT_OBSERVATION.json", "sha256": "a138fe5fbe8610032faf11dcb1a70ad08251b2df2e8dde81bb1cbe9866e43db3"},
+      {"supplement": "ENGINE_PATH_APPROVAL_ADDENDUM.json", "existing": "evidence/reference/059_ENGINE_PATH_APPROVAL_ADDENDUM.json", "sha256": "be19ee075d4affbbd1a09864f61cb40f01bd4e467e0a1477eabdf37a144e45f1"},
+      {"supplement": "reference/BASE_EFFECTIVE_VALIDATION_PLAN.json", "existing": "evidence/EFFECTIVE_VALIDATION_PLAN.json", "sha256": "88a56e55f2b5a94956a708ed1e84a97c0c5531bf461cb6d76165b178717b34e5"},
+      {"supplement": "reference/BASE_PLAN_EXECUTION_ADDENDUM.json", "existing": "evidence/reference/024_PLAN_EXECUTION_ADDENDUM.json", "sha256": "5bf46bfe914a5657c21f5da7a39c56560b9eb468554639794f82a76ef2ec8c60"},
+      {"supplement": "reference/ORIGINAL_CODE_MANIFEST.json", "existing": "evidence/reference/071_CODE_MANIFEST.json", "sha256": "feb12ef6991141aab59fd2fbc0d5f0d138bdd735255aa7123274503ce80b8ecc"}
+    ],
+    "meaning": "The supplemental preflight records are byte-identical to the records already referenced by the _003 submission; the newly supplied _001 error copy also matches its expected identity. This binds evidence content and engine identity, but does not extend the preflight observation timestamps."
+  },
+  "disposition": {
+    "PROV_001_original_copy_missing": "RESOLVED_BY_SUPPLEMENT",
+    "PROV_001_prior_observation_preservation": "VERIFIED_WITHIN_2026_10_13_0204_TO_0207_KST_INTERVAL",
+    "prior_001_preservation_across_003": "NOT_ESTABLISHED_AND_NOT_CLAIMED",
+    "new_mismatch_findings": [],
+    "functional_93_case_result": "Unaffected by this provenance-only supplement; reviewed separately",
+    "native_ready": false,
+    "approved": false,
+    "usable": false
+  }
+}

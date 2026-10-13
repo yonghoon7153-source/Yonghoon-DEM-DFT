@@ -1,0 +1,165 @@
+{
+  "kind": "INDEPENDENT_S1_OPEN_R1_003_REVIEW",
+  "review_date": "2026-10-13",
+  "verdict": "LIMITED_VALIDATION_ACCEPTED_WITH_DOCUMENTED_SCOPE",
+  "functional_validation_accepted": true,
+  "blocking_functional_findings": [],
+  "input_archive": {
+    "name": "COMSOL_MICROSHORT_S1_OPEN_R1_VALIDATION_003_20261013.zip",
+    "bytes": 665105,
+    "sha256": "6458419127231ce44203ddef9d10981954ae877fdbf990faab5d3649db172bb3",
+    "payload_count": 138,
+    "entries": 139,
+    "verified": "exact set/size/SHA/CRC/casefold/path/symlink"
+  },
+  "supplement_archive": {
+    "name": "COMSOL_MICROSHORT_S1_OPEN_R1_PYTHON_PREFLIGHT_20261013.zip",
+    "bytes": 53751,
+    "sha256": "45bdff07b0db0d24f96766e6224807822ddae6278405a663924c4080edbb8fe8",
+    "purpose": "Existing _001 error and prior Python preflight preservation interval only"
+  },
+  "identity": {
+    "code_manifest_sha256": "feb12ef6991141aab59fd2fbc0d5f0d138bdd735255aa7123274503ce80b8ecc",
+    "effective_plan_sha256": "88a56e55f2b5a94956a708ed1e84a97c0c5531bf461cb6d76165b178717b34e5",
+    "case_result_map_sha256": "b220139aeb41f0d797ab5e203c430046280b39990b6711e362c6316df1c0a2cd",
+    "java_helper_sha256": "4664c984db7d34fa66596176c8912f3ce33910f1df9c58ead439b4c5252da639"
+  },
+  "case_evidence": {
+    "groups": 9,
+    "unique_cases": 93,
+    "python": 87,
+    "java_helper": 6,
+    "pass": 93,
+    "fail": 0,
+    "not_run_final": 0,
+    "python_stage_not_run": 6,
+    "python_stage_not_run_meaning": "Java six at Python stage completion, not missing Python cases",
+    "actuals_equal_raw_engine_results": true,
+    "expected_equal_sealed_plan": true,
+    "python_count_expectations_compared": 331,
+    "python_named_forbidden_counts_compared": 136,
+    "java_exact_source_spans_verified": 12
+  },
+  "engine_records": {
+    "python_sessions": 1,
+    "helper_compile_attempts": 1,
+    "helper_jvm_sessions": 1,
+    "all_child_rc": 0,
+    "current_python_version_reported_in_session": "3.12.14",
+    "current_python_sha256": "10d845f50a2af64e3500bb2fcb348b5bc98a75d8ddada63e45ba1da6a1fc79d1",
+    "version_probe_added": false,
+    "observational_limit": "Historic recorded execution identities, not fresh reviewer engine measurements"
+  },
+  "preservation": {
+    "selected_before_after_postpackage_paths": 114,
+    "selected_unique_paths": 114,
+    "selected_identity_differences": 0,
+    "postpackage_raw_file": {
+      "bytes": 34659,
+      "sha256": "b22417b5f8a42da934f58bc73941c40eb1fd35d557a7e3eaaa2c347652757e4d",
+      "verified": true
+    },
+    "prior002_selected_files_in_003": 33,
+    "prior001_selected_files_in_003": 0,
+    "prior001_error_raw_verified": true,
+    "prior001_error": {
+      "bytes": 1448,
+      "sha256": "df14d1c180cecf5b4dd51816321b6d5d201649254e9c8fbaaf42b9d4b6be0269"
+    },
+    "prior001_preflight_preservation_verified": true,
+    "prior001_preflight_interval_kst": [
+      "2026-10-13T02:04:13.8117324+09:00",
+      "2026-10-13T02:07:28.2691467+09:00"
+    ],
+    "prior001_preservation_during_003": "UNVERIFIED_NOT_IN_SELECTED_SET",
+    "whole_machine_preservation_verified": false
+  },
+  "findings": [
+    {
+      "id": "S1-003-P2-01",
+      "priority": "P2",
+      "status": "SCOPE_CORRECTION_ACCEPTED_WITH_SUPPLEMENT",
+      "blocking_functional_result": false,
+      "locations": [
+        "REPORT_KO.md:14",
+        "RESULT_SUMMARY.json:108",
+        "ENGINE_PATH_APPROVAL_ADDENDUM.json:25-29"
+      ],
+      "issue": "Combined prior001002_preserved assertion must not imply both were in _003 before/after measured set.",
+      "resolution": "_001 raw and its preflight interval are verified from supplement; _003 interval remains unverified. Preserve original sealed records and add this bounded clarification; no new measurement/retest."
+    }
+  ],
+  "timing": {
+    "harness_seal_s": 499.0560668,
+    "harness_seal_limit_s": 600,
+    "python_external_s": 10.8930094,
+    "python_limit_s": 180,
+    "helper_compile_s": 1.7277404,
+    "helper_compile_limit_s": 90,
+    "helper_jvm_s": 0.5369169,
+    "helper_jvm_limit_s": 60,
+    "delivery_origin_s": 561.0808747,
+    "final_check_snapshot_s": 809.8249618,
+    "overall_limit_s": 1350,
+    "reported_final_delivery_s": 248.7441909,
+    "delivery_limit_s": 300,
+    "recorded_snapshot_limits_satisfied": true,
+    "final_snapshot_boundary": "After final-check write/reread/hash; before tool return and final follow-up transcription",
+    "complete_post_return_handoff_elapsed_verified": false,
+    "wall_times_added": false,
+    "external_sidecar_provenance": "User-pasted subsequent transcriptions, except raw AFTER attachment verified by reviewer."
+  },
+  "remaining_open": [
+    "installed_post_consistency_t0",
+    "installed_effective_coefficient_mapping",
+    "raw_native_evidence_adapter",
+    "OS_resource_ownership_stop_adapters"
+  ],
+  "state_preserved": {
+    "native_ready": false,
+    "approved": false,
+    "usable": false,
+    "overall": "INCOMPLETE",
+    "normal_gate": "INCOMPLETE",
+    "effective_policy": "UNVERIFIED",
+    "actual_cores": "UNVERIFIED"
+  },
+  "not_demonstrated": [
+    "Installed COMSOL API compatibility",
+    "Physical microshort effect",
+    "Installed t0 and effective coefficients",
+    "Actual OS ownership/resource/stop operation",
+    "Native-to-Parent production end-to-end execution"
+  ],
+  "new_authority": {
+    "retest": false,
+    "production_changes": false,
+    "installed_observations": false,
+    "os_experiments": false,
+    "native_execution": false,
+    "comsol": false
+  },
+  "next": "Receive this review and preserve bounded labels. A next OPEN-closure scope/plan may be proposed; implementation or native action requires separate user approval.",
+  "reviewer_execution": {
+    "supplied_code_import_or_run": 0,
+    "tests": 0,
+    "compiler": 0,
+    "jvm": 0,
+    "comsol": 0,
+    "engine_probe": 0,
+    "external_messages": 0,
+    "own_tools": "Archive/text/hash/JSON checks and review artifact creation only; own data-reader error disclosed separately."
+  },
+  "attachments": [
+    "REVIEW_KO.md",
+    "CLAUDE_REPLY_KO.md",
+    "INTAKE_CHECK.json",
+    "USER_SIDECAR_RECONCILIATION.json",
+    "notes/CASE_RECONCILIATION.json",
+    "notes/PYTHON_AUDIT.json",
+    "notes/JAVA_AUDIT.json",
+    "notes/PROVENANCE_AUDIT.json",
+    "notes/PROVENANCE_SUPPLEMENT_AUDIT.json"
+  ],
+  "precedence": "Final DECISION and review incorporate later supplement. Initial PROVENANCE_AUDIT's missing-original finding is resolved only for the earlier preflight interval, not for _003."
+}

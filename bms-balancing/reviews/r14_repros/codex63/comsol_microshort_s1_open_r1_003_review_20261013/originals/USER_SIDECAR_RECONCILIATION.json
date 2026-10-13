@@ -1,0 +1,69 @@
+{
+  "kind": "USER_SIDECAR_FACTS_AND_REVIEWER_RECONCILIATION",
+  "provenance": "Receipt/package/final-check objects were pasted by the user, not received as byte-exact standalone JSON files. POST_PACKAGE_SELECTED_SOURCES_AFTER was additionally supplied as a byte-exact attachment.",
+  "archive": {
+    "bytes": 665105,
+    "sha256": "6458419127231ce44203ddef9d10981954ae877fdbf990faab5d3649db172bb3",
+    "reviewer_verified": true
+  },
+  "external_originals": [
+    {
+      "file": "POST_PACKAGE_SELECTED_SOURCES_AFTER.json",
+      "bytes": 34659,
+      "sha256": "b22417b5f8a42da934f58bc73941c40eb1fd35d557a7e3eaaa2c347652757e4d",
+      "byte_exact_attachment_verified": true
+    },
+    {
+      "file": "DELIVERY_RECEIPT.json",
+      "bytes": 1216,
+      "sha256": "62de89f9bc7492b117f79717d3c36cfcb4c6c025c5592fceaf663753e8bc4863",
+      "byte_exact_attachment_verified": false
+    },
+    {
+      "file": "FINAL_PACKAGE_TOOL_RETURN.json",
+      "bytes": 1439,
+      "sha256": "499179ff5d2d6f8732cd5416e9c97f59b986b1b804bd51dbf12289fc3fb3be8e",
+      "byte_exact_attachment_verified": false
+    },
+    {
+      "file": "FINAL_SUBMISSION_CHECK.json",
+      "bytes": 2937,
+      "sha256": "cebf17e5aaaa80d799937a08205c33f4210a4dece16b4a1452ff523c8144cd74",
+      "byte_exact_attachment_verified": false
+    }
+  ],
+  "tool_transcriptions": [
+    {
+      "chunk_id": "daeba7",
+      "exit_code": 0,
+      "wall_time_seconds": 8.39288,
+      "snapshot_seconds": 759.8979689,
+      "delivery_seconds": 198.81718590000003,
+      "boundary": "After ZIP readback and receipt write, before stdout write/tool return"
+    },
+    {
+      "chunk_id": "05adaf",
+      "exit_code": 0,
+      "wall_time_seconds": 7.1607228,
+      "snapshot_seconds": 809.8249618,
+      "delivery_seconds": 248.74419090000004,
+      "boundary": "Final check written/read/hashed; before tool return and follow-up transcription"
+    }
+  ],
+  "budget": {
+    "delivery_origin_seconds": 561.0808747,
+    "overall_limit_seconds": 1350,
+    "delivery_limit_seconds": 300,
+    "reported_final_snapshot_within_limits": true,
+    "final_transcription_write_and_return_elapsed_observed": false,
+    "wall_times_added": false
+  },
+  "arithmetic": {
+    "final_overall_minus_origin_seconds": 248.7440871,
+    "reported_delivery_seconds": 248.74419090000004,
+    "note": "Difference 0.0001038 s is consistent with separate clock reads; exact simultaneity is not claimed, no limit impact."
+  },
+  "not_independent_os_audit": true,
+  "raw_original_after_snapshot_seconds": 809.7362866,
+  "source_claim_limit": "Selected114 path identity records can be compared. Remote actual engine/production files were not directly reread by reviewer."
+}

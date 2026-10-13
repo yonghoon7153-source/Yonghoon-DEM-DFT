@@ -1,0 +1,24 @@
+{
+  "kind": "REVIEW_INPUT_IDENTITIES",
+  "files": [
+    {
+      "path": "C:/Users/Administrator/Downloads/COMSOL_MICROSHORT_S1_OPEN_R1_VALIDATION_003_20261013.zip",
+      "bytes": 665105,
+      "sha256": "6458419127231ce44203ddef9d10981954ae877fdbf990faab5d3649db172bb3",
+      "unchanged_at_review_packaging": true
+    },
+    {
+      "path": "C:/Users/Administrator/Downloads/COMSOL_MICROSHORT_S1_OPEN_R1_PYTHON_PREFLIGHT_20261013.zip",
+      "bytes": 53751,
+      "sha256": "45bdff07b0db0d24f96766e6224807822ddae6278405a663924c4080edbb8fe8",
+      "unchanged_at_review_packaging": true
+    },
+    {
+      "path": "C:/Users/Administrator/.codex/attachments/76a81b79-7d12-4f4c-a60d-79b054a5e148/붙여넣은 텍스트.txt",
+      "bytes": 34659,
+      "sha256": "b22417b5f8a42da934f58bc73941c40eb1fd35d557a7e3eaaa2c347652757e4d",
+      "unchanged_at_review_packaging": true
+    }
+  ],
+  "scope": "Read-only source attachments; no remote live filesystem observation."
+}

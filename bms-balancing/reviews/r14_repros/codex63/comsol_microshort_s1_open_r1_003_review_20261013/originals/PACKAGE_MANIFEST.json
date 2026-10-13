@@ -1,0 +1,86 @@
+{
+  "kind": "REVIEW_REPLY_MANIFEST",
+  "scope": "Review decision/notes and reviewer data utilities. Not a native approval, test execution package or scientific result.",
+  "files": [
+    {
+      "path": "CLAUDE_REPLY_KO.md",
+      "bytes": 2424,
+      "sha256": "38180d2c607c54910c105183487e289df3be319e0d09e4ae56527883e57e6821"
+    },
+    {
+      "path": "DECISION.json",
+      "bytes": 6482,
+      "sha256": "2fed8cd214355b86cdf007f5b64192c45b395cb0635af627dbdcd27e974a9b94"
+    },
+    {
+      "path": "INPUTS.json",
+      "bytes": 969,
+      "sha256": "c4226b98854b51cedb931d0e1c1e1f6c30893c29a32eee313073ad758a80d9e2"
+    },
+    {
+      "path": "INTAKE_CHECK.json",
+      "bytes": 888,
+      "sha256": "0b8876d5542965459454efae2eabfe12cf3058dcc80be7f6450304051a1ab881"
+    },
+    {
+      "path": "POST_PACKAGE_SELECTED_SOURCES_AFTER.json",
+      "bytes": 34659,
+      "sha256": "b22417b5f8a42da934f58bc73941c40eb1fd35d557a7e3eaaa2c347652757e4d"
+    },
+    {
+      "path": "REVIEW_ACTIVITY_NOTE.json",
+      "bytes": 530,
+      "sha256": "c4811215fcd45343fe696bfaa47c4c07b7b9e4aa007c8e8675d97469d006f0f4"
+    },
+    {
+      "path": "REVIEW_KO.md",
+      "bytes": 11230,
+      "sha256": "bbc1247b38afcd965cf04034baf9bb3b90acb326ea81ced68ca48f11abe82507"
+    },
+    {
+      "path": "USER_SIDECAR_RECONCILIATION.json",
+      "bytes": 2690,
+      "sha256": "d86d609945a11bfe1d391f65923a7a5efed20d614b5a2a932b42b30ca38eedbd"
+    },
+    {
+      "path": "notes/CASE_RECONCILIATION.json",
+      "bytes": 969,
+      "sha256": "059a6c5304cd84501c62b21a2461a3f23913749a39ae551f66c5af265514775e"
+    },
+    {
+      "path": "notes/JAVA_AUDIT.json",
+      "bytes": 7042,
+      "sha256": "a00388dda3a88579f976d6cb7e95f6f8618e71042bee9e7380e1411852168880"
+    },
+    {
+      "path": "notes/PROVENANCE_AUDIT.json",
+      "bytes": 7852,
+      "sha256": "f9f90ce271e12b08650bb9f883b45801a6d3d7757dac1ded719f2ac716ef13ae"
+    },
+    {
+      "path": "notes/PROVENANCE_SUPPLEMENT_AUDIT.json",
+      "bytes": 6323,
+      "sha256": "2776088ad0ca1e07c248eea39510f4b940ef7a00344a511884772c2b5ef2161d"
+    },
+    {
+      "path": "notes/PYTHON_AUDIT.json",
+      "bytes": 6236,
+      "sha256": "c859c682f5a6f168d9f18f85b15d98174e4a8697fe83150855c6ac5b939a056c"
+    },
+    {
+      "path": "package_review.py",
+      "bytes": 3561,
+      "sha256": "68af4a463a6bc28804867d9930558041917473119c09906cbeb008d28bc1b8bc"
+    },
+    {
+      "path": "review_counts.py",
+      "bytes": 3165,
+      "sha256": "50b279f139a70a92d202e1ab8435148772eb97c0387a6713a744adb88f25507a"
+    },
+    {
+      "path": "review_intake.py",
+      "bytes": 2719,
+      "sha256": "479c3ac5699820fb34a21b514302aa82a83e2370c2f2091c05b3c5d149143b75"
+    }
+  ]
+}

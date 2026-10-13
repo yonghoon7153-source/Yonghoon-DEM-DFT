@@ -1,0 +1,75 @@
+{
+  "review_scope": "Read-only acceptance review of existing S1 OPEN-R1 _003 Python evidence; no candidate or harness import, compilation, execution, retest or native experiment performed by reviewer.",
+  "result": "NO_CURRENT_BLOCKING_DEFECT_FOUND_IN_THE_87_CASE_PYTHON_EVIDENCE",
+  "counts": {
+    "plan_python_cases": 87,
+    "plan_unique_python_ids": 87,
+    "result_python_cases": 87,
+    "reported_python_passes": 87,
+    "trace_case_ids": 87,
+    "stage_order_ids": 87,
+    "stage_order_unique_ids": 87,
+    "resource_manifest_cases": 43,
+    "resource_manifest_unique_ids": 43,
+    "plan_call_count_expectations_independently_compared": 331,
+    "named_forbidden_function_expectations_independently_compared": 136,
+    "case_id_set_differences": [],
+    "call_count_or_forbidden_function_differences": []
+  },
+  "verification": [
+    "All Python plan, result, trace and execution-order ID sets agree. C01-C07 supply 44 cases and C09 supplies 43 distinct cases.",
+    "All result expected_assertion objects agree with plan. All C09 fixture expected_assertion objects agree with plan. Direct structured return and expected exception reason/stage/message comparisons agree with recorded observations.",
+    "Recorded raw/resource calls and interesting consumer/control calls agree with per-case trace call events. Missing Counter entries are interpreted as zero, as in the submitted driver.",
+    "Expected exception cases have corresponding actual trace exception messages. Every C09 projection rejection has its expected ResourceConnectionError trace in resource_decision, and control.assess_resources is absent as required.",
+    "No result-producing replacement of raw/resource/consumer/control target functions was found. The driver compiles original source bytes into modules and records actual production function calls, returns and exceptions.",
+    "Safety installation precedes candidate loads. The targets and historical fixture text contain no native process or Job dispatch. The explicitly supplied C05 proof provider is an inert fixture and is not represented as installed proof.",
+    "PYTHON_RUNTIME_OBSERVATION records optimize=0, so harness assert statements were enabled. Python.RETURN records child_rc=0, timeout=false, empty stderr and elapsed_s=10.8930094 within 180 seconds. PYTHON_SESSION records 10.556126500014216 seconds and no first error."
+  ],
+  "c05": {
+    "source_references": [
+      "cases_raw.py:97",
+      "cases_raw.py:106",
+      "cases_raw.py:115",
+      "cases_raw.py:119",
+      "run_python.py:207",
+      "reference/075_raw_connection.py.inactive.txt:178",
+      "reference/068_consumer.py.inactive.txt:355"
+    ],
+    "actual_consumer_analyze_calls": 1,
+    "actual_consumer_analyze_return_events": 1,
+    "actual_consumer_connection_return_events": 1,
+    "preserved_expected_equals_recorded_observation": true,
+    "inner_trace_return_equals_recorded_observation": true,
+    "outer_trace_return_equals_inner_trace_return": true,
+    "consumer_errors": [],
+    "consumer_evidence_validity": "VALID",
+    "interpretation": "Actual consumer computation on the presealed accepted historical synthetic fixture is supported. Harness also checks returned object identity. This does not validate an installed proof provider, installed COMSOL observations or native execution."
+  },
+  "c09": {
+    "source_references": [
+      "cases_resource.py:40",
+      "cases_resource.py:51",
+      "cases_resource.py:68",
+      "cases_resource.py:74",
+      "reference/022_resource_connection.py.inactive.txt:65",
+      "reference/022_resource_connection.py.inactive.txt:85",
+      "reference/022_resource_connection.py.inactive.txt:129",
+      "reference/022_resource_connection.py.inactive.txt:177",
+      "reference/077_control.py.inactive.txt:143"
+    ],
+    "C09_01": "One session construction and two actual decisions/projections/assessments; native elapsed 11,16 and overall elapsed 111,116 from fixed origins 200 and 100. Session, clock and anchor tuple identities are checked between samples.",
+    "C09_02_03": "Origin drift rejects via bind_sample_clock and resource_decision catches the exact ResourceConnectionError before assess_resources.",
+    "C09_04": "Actual projector returns native=7081 and overall=7181; actual control.assess_resources returns STOP_RESERVE_ENTERED:native_elapsed_s.",
+    "C09_05": "Actual projector returns native=8781 and overall=8881; actual control.assess_resources returns both native and overall stop-reserve reasons.",
+    "C09_18": "Caller start and anchor dictionaries are mutated after construction. Retained clock/anchor fields and decision remain the original fixed values.",
+    "C09_19_20": "Trace records generated ResourceSession.__setattr__ and ExecutionClockContext.__setattr__ calls raising the exact FrozenInstanceError messages. No decide/assess call is made. The original session fields remain unchanged.",
+    "C09_25_43": "Malformed process counter schema, keys, typed identities and values reach the actual projection guards and return the sealed reasons through resource_decision; no assess_resources call occurs."
+  },
+  "scope_limits_and_nonblocking_clarifications": [
+    "Evidence acceptance is for the sealed synthetic pure-function and integration cases. It does not prove installed native observations, OS collector behavior, Job ownership measurement, stop dispatch, native-to-Parent adaptation or authorization to run COMSOL.",
+    "PYTHON_SESSION.not_run=6 counts the six Java cases in the shared 93-case RESULTS array at Python stage completion. It is not six missing Python cases and should not be used as the final combined Java/Python verdict.",
+    "The driver's generic forbidden-reach labels are enforced by inert adapters and audit hooks, while actual named function exclusions are counted. This supports the declared fixture scope, not independent OS observation.",
+    "StopIteration in CSV iteration and GeneratorExit from short-circuited generators appear in the trace but are normal internal events. Expected rejection reasons and complete returned results still match; these events are not unexpected case failures.",
+    "native_ready remains false and overall remains INCOMPLETE in Python session evidence."
+  ]
+}

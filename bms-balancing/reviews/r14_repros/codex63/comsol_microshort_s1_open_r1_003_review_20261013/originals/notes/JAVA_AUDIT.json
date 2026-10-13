@@ -1,0 +1,55 @@
+{
+  "review_scope": "Read-only recipient evidence audit of S1 OPEN-R1 _003 Java C08 cases",
+  "review_method": "Text, JSON, byte-slice equality, SHA-256 and Base64 decoding only; no received program imported/executed/tested, no compiler/JVM/COMSOL invocation",
+  "conclusion": "The six recorded C08 passes are supported for the sealed inert helper scope. No current blocking Java discrepancy identified. Installed COMSOL API/native compatibility remains unverified.",
+  "blocking_findings": [],
+  "source_binding": {
+    "harness": "evidence/OpenReadbackHarness.java",
+    "bytes": 24285,
+    "sha256": "4664c984db7d34fa66596176c8912f3ce33910f1df9c58ead439b4c5252da639",
+    "manifest_hash_verified": true,
+    "exact_source_spans_verified": 12,
+    "source_files": [
+      {"path": "evidence/reference/011_InstalledReadback.fragment.java.inactive.txt", "bytes": 2512, "sha256": "844ccbb7259ba55bf3deacaf38bf17932c0b9f6ccc43017d80907c46b5b216c6", "included_lines": ["4-13", "14-26", "27-38"]},
+      {"path": "evidence/reference/061_P0.java.inactive.txt", "bytes": 81976, "sha256": "6d10c8910e3b7301778112b676be604eccc22aae41fa87cb719a94218e2384fa", "included_lines": ["17", "28", "30-37", "38-42", "43-49", "63", "64-73", "338-349", "493-509"]}
+    ],
+    "each_span_checks": ["whole source bytes/hash", "source slice SHA-256", "source slice equals declared harness slice"],
+    "composition": {"header_bytes": 912, "source_span_bytes": 6870, "tail_bytes": 16503, "header_exact": true, "tail_exact": true, "combined_exact": true},
+    "coordinates": {"production_slices": "OpenReadbackHarness.java:21-117", "inert_type_surface": "OpenReadbackHarness.java:7-19,138-202", "assertions": "OpenReadbackHarness.java:225-230"}
+  },
+  "plan_binding": {
+    "six_case_objects_exactly_equal": true,
+    "inputs": "evidence/JAVA_CASE_INPUTS.json:15-428",
+    "plan": "evidence/EFFECTIVE_VALIDATION_PLAN.json:1924-2337",
+    "contract": "evidence/EFFECTIVE_VALIDATION_PLAN.json:4653-4687",
+    "note": "NOT_EXECUTED in the sealed input document describes pre-run input state; the later raw result records report the executions without modifying the input."
+  },
+  "recorded_engine_evidence": {
+    "compile": {"attempt": 1, "child_rc": 0, "timeout": false, "elapsed_s": 1.7277404, "limit_s": 90, "stdout_bytes": 0, "stderr_bytes": 0},
+    "helper": {"attempt": 1, "child_rc": 0, "timeout": false, "elapsed_s": 0.5369169, "limit_s": 60, "stdout_bytes": 13475, "stderr_bytes": 0},
+    "all_four_stream_bytes_and_hashes_match_returns": true,
+    "stdout_sha256": "5d7f706aa673361dfcd6ab428142c23cb2cde4a1a82adb248b13396add437ff5",
+    "raw_summary": "Java_helper.stdout.txt:7 records passed=6, failed=0, not_run=[], native_ready=false",
+    "engine_paths": "Recorded javac/java are the bundled COMSOL JRE executables; helper source/classes are local inert fixtures. This does not test COMSOL API compatibility."
+  },
+  "cases": [
+    {"id": "C08-01", "stdout_line": 1, "assertion_line": 225, "finding": "Exact two decoded type/property tables match input. One property helper invocation and one readSetting getter call; expected String getter reached; no exception."},
+    {"id": "C08-02", "stdout_line": 2, "assertion_line": 226, "finding": "Exact IllegalArgumentException/S1_UNKNOWN_TYPE originates at original readSetting default (harness line 115; P0 line 507), propagates through s1OpenProperties. Only type table exists; no property value getter/table. readSetting-getValueType=2 means switch discriminator plus exception message getter, not two readSetting invocations."},
+    {"id": "C08-03", "stdout_line": 3, "assertion_line": 227, "finding": "Property order cdi,time,pcb1,pce1,pce2; 12 exact feature/kind/recursive/all calls; all 12 decoded frozen-sentinel equation tables match input. Total tables=22, configured helper=1, property helper=5, FeatureInfo calls=12."},
+    {"id": "C08-04", "stdout_line": 4, "assertion_line": 228, "finding": "Exact configured/evaluated unit tables and stored-grid rows match; getReal/evaluate/stored helper once, two unit reads. Original checkShape changes TIMES from null to exact 0,1,120; stored zero remains POST_CONSISTENCY_PROOF_OPEN."},
+    {"id": "C08-05", "stdout_line": 5, "assertion_line": 229, "finding": "Only fixture first time changes to 0.5, with TIMES reset. Exact IllegalStateException/TIME_ORIGIN:s1openstoredgrid originates at original checkShape (harness line62; P0 line34). One getReal, one configured-unit read/table, no evaluated-unit or stored-grid table."},
+    {"id": "C08-06", "stdout_line": 6, "assertion_line": 230, "finding": "Same preconstructed IllegalStateException/C08_READBACK_SENTINEL identity propagates from cdi.getString. Only cdi type table; no sol/component/equation calls. Recorded stack at <clinit>:128 is expected for a preconstructed sentinel; synchronous getter events/reach supply the actual path evidence."}
+  ],
+  "all_raw_table_pairs_have_matching_row_count_and_valid_base64": true,
+  "reach_interpretation": [
+    "Counters originate at inert surface calls (getType/model.study/numerical.create/getReal), rather than instrumentation inserted into production methods. Exact source and one direct invocation per case make the proposed call counts inferable for these fixed paths.",
+    "Positive checkShape reach is explicitly added after verifying TIMES transition at harness line228. The exact evaluate body calls checkShape once after getReal at line97, and successful evaluated-unit and stored-grid output follow it. This is state/control-flow evidence, not an independent runtime entry trace.",
+    "FeatureInfo.getInfoTable is a nested class, so the outer-class-only REACH collection omits its name. Explicit events, counter=12 and equation arguments/tables provide the required reach evidence."
+  ],
+  "scope_limits_not_current_blockers": [
+    {"limit": "Source-local com/Model/PhysicsFeature/FeatureInfo/NumericalFeature stubs replace installed API object/type surfaces; no installed COMSOL API types or runtime are loaded.", "coordinates": "OpenReadbackHarness.java:5-19,138-202; REPORT_KO.md:10; RESULT_SUMMARY.json:124"},
+    {"limit": "Six cases cover the specified String property path, unknown type, configured call ordering, one positive time grid, one origin rejection and early exception propagation. They do not cover every readSetting type, binding/unit/shape guard or full model path.", "coordinates": "OpenReadbackHarness.java:101-117,145-149,216-230"},
+    {"limit": "Post-consistency t0 provenance and physical coefficient mapping remain open: getReal and FeatureInfo values are frozen fixtures.", "coordinates": "OpenReadbackHarness.java:44-54,151-153,201; RESULT_SUMMARY.json:118-119"},
+    {"limit": "Additive installed helpers have no activated call sites in the inactive candidate; full P0 model compilation, solution execution and native linkage are outside this six-case result.", "coordinates": "reference/011_InstalledReadback.fragment.java.inactive.txt:1,28-29; reference/050_P0.connection.java.inactive.txt:64,74,87,483"}
+  ]
+}

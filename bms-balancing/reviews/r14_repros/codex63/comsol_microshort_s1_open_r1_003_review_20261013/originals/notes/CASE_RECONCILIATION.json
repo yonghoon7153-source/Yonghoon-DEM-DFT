@@ -1,0 +1,36 @@
+{
+  "kind": "REVIEWER_CASE_AND_RETURN_RECONCILIATION",
+  "plan_sha256": "88a56e55f2b5a94956a708ed1e84a97c0c5531bf461cb6d76165b178717b34e5",
+  "map_sha256": "b220139aeb41f0d797ab5e203c430046280b39990b6711e362c6316df1c0a2cd",
+  "group_counts": {
+    "C01": 7,
+    "C02": 6,
+    "C03": 5,
+    "C04": 5,
+    "C05": 7,
+    "C06": 8,
+    "C07": 6,
+    "C08": 6,
+    "C09": 43
+  },
+  "expected_engine_counts": {
+    "Python": 87,
+    "Java_helper": 6
+  },
+  "python_stage_status_counts": {
+    "PASS": 87,
+    "NOT_RUN": 6
+  },
+  "java_status_counts": {
+    "PASS": 6
+  },
+  "combined_status_counts": {
+    "PASS": 93
+  },
+  "ids_exact_set": true,
+  "expected_reach_counts_equal_to_plan": true,
+  "combined_actuals_equal_original_engine_results": true,
+  "three_return_stream_hashes_equal": true,
+  "reference_copies_hashes_matched": 78,
+  "scope": "Data comparisons only; does not execute cases or prove installed COMSOL/API/OS behavior."
+}

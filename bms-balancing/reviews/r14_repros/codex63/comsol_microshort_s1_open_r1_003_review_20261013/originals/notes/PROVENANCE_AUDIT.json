@@ -1,0 +1,103 @@
+{
+  "schema": "S1_OPEN_R1_003_READ_ONLY_PROVENANCE_REVIEW_V1",
+  "review_date": "2026-10-13",
+  "method": "Read supplied text/JSON and hash supplied bytes only. No supplied Python/PowerShell/Java code was imported or executed; no engine/version probe, retest, or COMSOL invocation.",
+  "overall_scope": "Provenance, authorization records, selected preservation identities, command binding and recorded timing. Functional case acceptance and package-wide completeness are reviewed separately.",
+  "selected_preservation": {
+    "pretest_entries": 114,
+    "pretest_unique_normalized_paths": 114,
+    "after_entries": 114,
+    "post_package_entries": 114,
+    "identity_differences": [],
+    "comparison": "Normalize Windows path separators and case; compare bytes and SHA-256 exactly by normalized path. All 114 records agree across PRETEST_SEAL.json, SELECTED_SOURCES_AFTER.json and POST_PACKAGE_SELECTED_SOURCES_AFTER.json.",
+    "initial_identity_entries": 95,
+    "initial_unique_paths": 92,
+    "initial_identical_duplicate_paths": [
+      "python.exe",
+      "FUNCTION_SPANS.json",
+      "RESOURCE_CLOCK_CONTRACT.json"
+    ],
+    "initial_identity_differences_against_seal": [],
+    "reference_index_entries_checked_against_actual_supplied_bytes_and_seal": 78,
+    "reference_index_mismatches": [],
+    "current_attempt_files_checked_against_actual_supplied_bytes_and_seal": 21,
+    "current_attempt_mismatches": [],
+    "runtime_engine_identity_records": 36,
+    "prior_002_selected_files": 33,
+    "prior_001_selected_files": 0,
+    "raw_post_package_attachment": {
+      "bytes": 34659,
+      "sha256": "b22417b5f8a42da934f58bc73941c40eb1fd35d557a7e3eaaa2c347652757e4d",
+      "snapshot_seconds": 809.7362866,
+      "phase": "After ZIP packaging and package tool return; before current recordwrite"
+    },
+    "limits": "The 36 runtime/engine binaries are represented by historical recorded identities, not copied binaries rehashed on this review machine. The identity equality claim covers the selected 114 paths, not the whole PC or unselected prior-attempt paths."
+  },
+  "current_findings": [
+    {
+      "id": "PROV-001",
+      "kind": "PRESERVATION_EVIDENCE_INCOMPLETE",
+      "claim_file": "evidence/RESULT_SUMMARY.json",
+      "claim_line": 108,
+      "claim": "prior001002_preserved=true",
+      "finding": "The _002 preserved files are directly represented in the 114-path seal and both after snapshots, but the supplied set contains no _001 FIRST_ERROR original and no direct _001 before/after preservation entry. ENGINE_PATH_APPROVAL_ADDENDUM.json:25-29 supplies only its expected identity. Reference 041_DECISION.json:19 is an assertion, not a fresh measurement of that original.",
+      "narrow_search": "reference/002_SOURCE_PRESERVATION.json, reference/004_INITIAL_IDENTITIES.json and reference/060_PREPARED_FILE_IDENTITIES.json contain no _001 original identity measurement. Remaining _001 references are historical proposed command paths, repeated expected FIRST_ERROR identity, or prior_001_preserved assertions.",
+      "expected_missing_original": {
+        "path": "proposed_changed_validation_001/FIRST_ERROR.json",
+        "bytes": 1448,
+        "sha256": "df14d1c180cecf5b4dd51816321b6d5d201649254e9c8fbaaf42b9d4b6be0269"
+      },
+      "effect": "Do not attest that _001 preservation has been directly verified from this submission. This is missing preservation evidence, not evidence that _001 was changed, and is separable from the current 93-case functional result.",
+      "permitted_resolution": "Inspect an already-existing _001 original and contemporaneous preservation record if supplied; do not rerun tests or take a new engine measurement."
+    }
+  ],
+  "authorization_and_binding": {
+    "records": [
+      "evidence/reference/073_VALIDATION_SCOPE_RECORD.json:3 records the new Python/_002 approval",
+      "evidence/reference/041_DECISION.json:2-12 retains _002 stopped before test, all 93 NOT_RUN and zero engine calls",
+      "evidence/ORIGIN.json:8 records the direct renewed _003 request",
+      "evidence/ENGINE_PATH_APPROVAL_ADDENDUM.json:309-316 records direct user text, preserved _002 path, fresh _003 path, same cases/budgets and no native authorization"
+    ],
+    "scope_conclusion": "The recorded renewed _003 scope supersedes the old attempt path. Original effective-plan/source pins are retained. Draft/native false fields are retained and must not be interpreted as native approval.",
+    "source_conclusion": "run_python.py:7-8 derives SOURCE from the original attempt parent; lines 171-176 bind raw/resource and consumer/control/contract under the original source tree. The reference/ copies in the delivery are review copies. All seven plan source/core pins match the pretest seal.",
+    "plan_sha256": "88a56e55f2b5a94956a708ed1e84a97c0c5531bf461cb6d76165b178717b34e5",
+    "python_current_pin": {
+      "bytes": 106448,
+      "sha256": "10d845f50a2af64e3500bb2fcb348b5bc98a75d8ddada63e45ba1da6a1fc79d1",
+      "observed_in_sole_session_version": "3.12.14"
+    },
+    "python_historical_pin_retained": {
+      "bytes": 107312,
+      "sha256": "b7a12c3af0b4db44191eec14ea095eba731b7328917f570806183093d19ddca2"
+    },
+    "command_checks": "For Python, Java_compile and Java_helper, argv, cwd and timeout agree across approval binding, PRETEST_SEAL, RESERVATION and RETURN; proposed engine pins agree with sealed records.",
+    "runtime_observation_checks": "All eight module file identities in PYTHON_RUNTIME_OBSERVATION.json agree with selected sealed pins. io is explicitly recorded as frozen and math as built-in; the io source-file hash must not be confused with proof of a source-loaded implementation."
+  },
+  "timing": {
+    "seal_seconds": 499.0560668,
+    "seal_limit_seconds": 600,
+    "first_python_reservation_seconds": 518.0755253,
+    "seal_precedes_first_reservation_by_seconds": 19.0194585,
+    "stages": [
+      {"stage": "Python", "elapsed_seconds": 10.8930094, "limit_seconds": 180, "return_total_seconds": 528.9734691, "child_rc": 0, "timeout": false},
+      {"stage": "Java_compile", "elapsed_seconds": 1.7277404, "limit_seconds": 90, "return_total_seconds": 548.2995619, "child_rc": 0, "timeout": false},
+      {"stage": "Java_helper", "elapsed_seconds": 0.5369169, "limit_seconds": 60, "return_total_seconds": 561.0808747, "child_rc": 0, "timeout": false}
+    ],
+    "all_reservation_elapsed_values_match_origin_tick_arithmetic": true,
+    "preservation_delivery_origin_seconds": 561.0808747,
+    "pasted_final_check_snapshot_seconds": 809.8249618,
+    "pasted_delivery_elapsed_seconds": 248.7441909,
+    "snapshot_difference_seconds": 248.7440871,
+    "difference_between_two_reported_calculations_seconds": 0.0001038,
+    "preservation_delivery_limit_seconds": 300,
+    "overall_limit_seconds": 1350,
+    "conclusion": "Seal and stage records satisfy their limits. Both pasted final-check time observations are below their limits. Treat the tiny difference as distinct supplied observations, not a reason to add tool walltime; a pre-return snapshot alone does not establish elapsed time at the final tool return or actual final handoff."
+  },
+  "provenance_distinctions": [
+    "POST_PACKAGE_SELECTED_SOURCES_AFTER.json is supplied raw attachment bytes whose length and hash were verified.",
+    "ENGINE_TOOL_RETURNS.json:2 explicitly says its tool envelopes are transcribed metadata; separately retained child stdout/stderr are not interchangeable with original tool return envelopes.",
+    "reference/043_FIRST_ERROR_TOOL_RETURN_EXCERPT.json explicitly marks the _002 error as a transcribed excerpt, not byte-exact full raw output.",
+    "The authorization quotations inside these artifacts are records of prior user scope; they are not an independent export of the prior conversation.",
+    "No tool walltime was added to monotonic elapsed snapshots."
+  ]
+}
