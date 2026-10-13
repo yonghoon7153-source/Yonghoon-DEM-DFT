@@ -398,7 +398,7 @@ SBA 내성(74.7 %) → 12 µm 막(2.34 mS cm⁻¹) → 파우치 250 사이클 8
 
 ### 7c. 허용 / 금지 문구
 
-**허용 (이대로만)**
+**허용 (이대로만 · ⚠ 우리 쪽 절은 μ_O 카드가 `citable` 이 아니므로 내부 논의·세미나 답변용이다 — 원고에 넣기 전 원장 재확인)**
 > *"Zhang et al. (Adv. Mater. 2026) exposed Li₅.₄PS₄.₄Cl₁.₆ — the same nominal composition as our modelc — to dry O₂ for 1 h and observed a larger conductivity loss than for Li₆PS₅Cl (49 % vs 76 % retained). Our 0 K O-chemical-potential hull screen orders the onset in the same direction (modelc before Li₆PS₅Cl); the screen is a composition-hull estimate and does not address mechanism or air stability."*
 
 **금지**
