@@ -20,7 +20,7 @@
 > **저자**: Jing Zhang¹², Jiejie Li¹, Jianmin Guan¹, **Ziqi Tian\***¹² (계산), **Ziyang Ning\***³, **Zhaoxin Yu\***³, **Xiayin Yao\***¹² (¹ **NIMTE**, CAS Ningbo · ² UCAS 재료·광전자공학센터 · ³ **CATL 21C LAB**, Ningde) · 접수 2026-01-02 / 수정 2026-04-30 / 수락 2026-06-01 · *Adv. Mater.* 2026, 38(40), e73671 · © Wiley-VCH (OA 표기 없음) · 참고문헌 41편 · 데이터 *"요청 시 제공"* (원자료·슬랩 구조 비공개) · COI 없음 선언 · 지원: 국가과기중대전항 2024ZD0607100 · NSFC 22309194·52372244 · 닝보·저장·장쑤 과제 · CAS 청년혁신촉진회 Y2021080
 > **산업 공저**: 교신 4인 중 2인(Ning·Yu)이 **CATL 21C LAB** — 습식 막·파우치 쪽 파트로 읽힌다(역할 분담 서술은 없음).
 > **같은 교신의 다른 digest**: Xiayin Yao = `papers/wu2026_asslsb_li2s_reaction_mechanisms_engineering_review.md` 의 교신. 그 digest 가 저자 소개에서 **한양대 방문(2012–2013)** 을 적었다 — ⚠ 이 논문 PDF 에는 저자 소개가 없어 출처는 그 digest 다.
-> **인용 계보 중 litdb 에 있는 것**: ref [28] = `papers/liu2023_electron_redistribution_redox_resistible_mgf2.md` (Li 덴드라이트 서술에 인용). ref [20] Peng 2020 (Li₆₋ₓPS₅₋ₓCl₁₊ₓ) · ref [21] Wang 2020 (Li₆₋ₓPS₅₋ₓBr₁₊ₓ) 는 같은 업로드 묶음에 원문이 있다 — digest 되면 교차 링크.
+> **인용 계보 중 litdb 에 있는 것**: ref [20] = `papers/feng2020_li_deficient_argyrodite_cl_disorder.md` (Cl-rich 의 "S/Cl 무질서 → 24g Li" 근거 · ⚠ 이 논문 참고문헌엔 1저자가 **"X. Peng"**, 식이 **"Cl₁₋ₓ"** 로 잘못 적혀 있다 — DOI `10.1016/j.ensm.2020.04.042` 는 맞고 실제 1저자는 Xuyong **Feng**) · ref [21] = `papers/wang2020_br_rich_argyrodite_fast_ion_conduction_origin.md` (Br-rich 짝) · ref [28] = `papers/liu2023_electron_redistribution_redox_resistible_mgf2.md` (Li 덴드라이트 서술에 인용). 앞 두 편은 같은 날(2026-10-13) 다른 에이전트가 digest 했다.
 > **관련 digest (같은 '대기·수분' 축)**: `kim2026_moisture_surface_degradation_lpscl_dryroom` (Li₆PS₅Cl 드라이룸 · 가수분해 표면 DFT) · `hyun_han_argyrodite_moisture_degradation_design_principles` (가수분해 DFT) · `xu2026_ndo_codoping_argyrodite` (**같은 시험 틀** — 드라이룸 12 h · 30 % RH H₂S · LCO 1 C 1000 사이클) · `taklu2021_cucl_dualdoping_air_stability_argyrodite` (Cu, H₂S 절반) · `deng2026_polysulfate_layer_moisture_oxidation_lpsc` (표면 코팅) · `zhu2020_air_stable_se_design_principles` (HSAB·가수분해 열역학 지도) · `nosrati2026_anion_engineering_sulfide_se_review` (O 치환 리뷰) · `zuo2022_chlorination_cathode_interface` (Cl-rich 가 전기화학적으로도 더 분해된다).
 
 > 🎤 talk 역링크: **해당 없음** — 인입 대기열이 있는 유일한 talk(`talks/lee2026_skku_mlip_materials_design.md` §99-10)에 이 논문이 없다 (2026-10-13 확인).
@@ -478,7 +478,7 @@ SBA 내성(74.7 %) → 12 µm 막(2.34 mS cm⁻¹) → 파우치 250 사이클 8
 
 ## 10. 비판 — 이 논문의 약한 곳 ★
 
-**① 🔴 PS₃Cl 단위에 구조 근거가 없다.** 저자 자신이 본문에서 Cl-rich 의 효과를 *"intensified S/Cl disorder"* (인용 [20,21])로 서술한다 — argyrodite 의 S/Cl 무질서는 **자유 음이온 자리(4a/4d) 사이의 섞임**이다 (우리 modelc 도 그 그림). 그런데 계산 모델은 Cl 을 **PS₄ 사면체 안**(P–Cl 결합)에 넣었다. 우리 modelc 구조에는 P–Cl 이 0개다(§7a). 이 논문의 Raman 도 Cl1.6 에서 PS₄³⁻ 단일 봉우리(≈425 cm⁻¹)만 보이고 PS₃Cl 같은 낮은 대칭 단위의 증거(별도 Raman 띠·³¹P NMR·회절 정련)는 **하나도 없다**. ⇒ *"약한 P–Cl 결합이 Cl-rich 의 열세 원인"* 은 **확립되지 않은 단위 위의 결론**이다.
+**① 🔴 PS₃Cl 단위에 구조 근거가 없다.** 저자 자신이 본문에서 Cl-rich 의 효과를 *"intensified S/Cl disorder"* (인용 [20,21])로 서술한다 — argyrodite 의 S/Cl 무질서는 **자유 음이온 자리(4a/4d) 사이의 섞임**이다 (우리 modelc 도 그 그림). 그런데 계산 모델은 Cl 을 **PS₄ 사면체 안**(P–Cl 결합)에 넣었다. 우리 modelc 구조에는 P–Cl 이 0개다(§7a). 이 논문이 그 서술의 근거로 인용한 ref [20] 도 Cl-rich 시료(x = 0.3–0.7)의 Cl 을 **³⁵Cl NMR 로 4a·4d 두 자리에만** 배정하고(x = 0.7 에서 4a 0.59 · 4d 0.40), 싱크로트론 Rietveld(x = 0 만)는 **PS₄ 의 S(16e) 를 S 100 %** 로 둔다 (`feng2020_li_deficient_argyrodite_cl_disorder.md` §3c·NMR 표 — 그 digest 는 4a/4d 점유 정량 자체가 약하다고 판정하지만, PS₄ 안에 Cl 을 넣는 해석은 거기에 없다). 이 논문의 Raman 도 Cl1.6 에서 PS₄³⁻ 단일 봉우리(≈425 cm⁻¹)만 보이고 PS₃Cl 같은 낮은 대칭 단위의 증거(별도 Raman 띠·³¹P NMR·회절 정련)는 **하나도 없다**. ⇒ *"약한 P–Cl 결합이 Cl-rich 의 열세 원인"* 은 **확립되지 않은 단위 위의 결론**이다. (⚠ 이름 주의: ref [20] 의 ³¹P 환경 *"3S1Cl · 2S2Cl · 1S3Cl"* 은 PS₄ 를 둘러싼 **4d 자리 네 개**의 S/Cl 구성 — 2차 껍질 — 이지 P–Cl 결합이 아니다. 이 논문의 "PS₃Cl motif" 와 이름이 닮았을 뿐 다른 것이다. 저자가 둘을 혼동했는지는 판정하지 않는다.)
 
 **② 🔴 S 자리 대 Cl 자리 비교는 기준 저장소가 정한다.** 식 13·14 가 떠난 S 와 Cl 에 서로 다른 **수용액 이온 상수**(+0.96 · −2.72 eV, 0 V vs SHE)를 붙인다. 건조 기체–고체 반응에는 수용액도 전극도 없다. 원소 기준(고체 S · Cl₂ 기체 — 기체가 고체를 직접 산화하는 닫힌 반응)으로 바꾸면 3.68 eV 가 옮겨가 순위가 뒤집힌다(§3e 우리 산수 ②: Cl 자리 −3.78 → −1.06, S 자리 −1.76 → −2.72). `Fig. 1l` 의 핵심 비교가 정확히 이 교차 비교다. **회신 N 의 문구 그대로 — admissible 한 행선지가 여럿인데 선택 규칙이 없으면 스칼라 보고량은 정의되지 않는다.** 추가로 `Fig. S5` 의 Cl 자리 산물은 표면이 크게 재배열돼 있어 −3.78 eV 에 **인공 출발 구조(PS₃Cl)가 풀리는 이완 에너지**가 섞였을 수 있다 (분리 안 됨).
 
@@ -509,6 +509,8 @@ SBA 내성(74.7 %) → 12 µm 막(2.34 mS cm⁻¹) → 파우치 250 사이클 8
 **⑮ ⚠ O 가 정말 PS₄ 안에 들어갔는지 확인이 없다.** O 도핑 시료 노출 전 P 2p 에 P–O 성분이 없다 (`Fig. 2d` · `Fig. S21a`) · O 1s · ³¹P NMR · 회절 정련 없음. P 의 1/5 이 PS₃O 라도 P 2p 이동이 작아 분해가 안 될 수는 있다 — 그래서 *"확인 안 됨"* 이지 *"틀렸다"* 가 아니다. ⚠ **우리 LPSOCl 도 같은 가정(PS₃O)** 이다 — 이 논문은 그 가정의 실험 확인을 주지 않는다.
 
 **⑯ (질문으로 남긴다) P₂S₆⁴⁻ 를 '가수분해' 지표로 쓴다.** P₂S₆⁴⁻ 는 P⁴⁺(P–P 결합) 단위라 PS₄³⁻ 에서 생기려면 P 가 환원되고 S 일부가 산화되는 내부 산화환원이 낀다. 가수분해(H₂O 만)는 redox 가 아니다 (`kim2026_moisture…` §7d). 드라이룸에는 O₂ 가 21 % 있다 — 어느 경로인지 논문이 논의하지 않는다.
+
+**⑰ ⚠ 참고문헌 오기.** ref [20] 의 1저자 "X. Peng" (실제 Xuyong Feng) · 식 "Li₆₋ₓPS₅₋ₓCl₁₋ₓ" (실제 Cl₁₊ₓ). DOI 는 맞다. 우리 원고에서 이 편을 재인용할 때 이 오기를 따라 쓰지 않는다.
 
 **잘한 점 (공정하게)**: N₂ 절차 대조군 · 네 조성 × 네 기체 조건의 완전한 행렬 · σ·XPS 순서의 일관성 · 실험 조성에 맞춘 두 O 도핑 계열 · 산업 공저(습식 막·파우치까지 감).
 
