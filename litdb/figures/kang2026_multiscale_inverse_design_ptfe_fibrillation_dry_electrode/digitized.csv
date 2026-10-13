@@ -1,0 +1,86 @@
+# kang2026_multiscale_inverse_design_ptfe_fibrillation_dry_electrode — figure readings (판독) · 2026-10-13
+# Method: pixel reading on the native rasters of this folder (main figures = 300 ppi native JPEG raster, no vector overlay;
+#   SI = Word-export raster 150-220 ppi). Axes calibrated from frame lines + tick labels of each panel (gridded zooms).
+#   Log axes calibrated per decade from tick labels. Marker centres read by eye on 1.4-2.5x zooms.
+# Self-checks (against PRINTED values in the same figure / text, or against the supplementary-code tables [SI 코드]):
+#   Fig 2b sigma_T dashed line read 45.0 MPa vs constraint 45 MPa (text p.5) · tick 16.8 MPa at strain 1.13 is printed on the axis.
+#   Fig 3b sigma_T dashed line read 44.7 MPa vs 45.
+#   Fig 5e points 15-20 MPa read 57.5 / 61.5 / 58.3 / 55.9 / 48.7 / 46.3 vs notebook bimodal row '10' 57.684 / 61.593 / 58.407 / 56.02 / 48.679 / 46.309 -> |err| <= 0.2 MPa.
+#   Fig 5c P_lm = 45 MPa boundary at 10 um read 14.2 MPa vs notebook table linear-interpolated crossing 14.38 MPa (our arithmetic).
+#   Fig 6e semicircle chords read 27.2 / 33.4 ohm vs printed fitted R_ct 25.84 / 33.42 ohm (text p.8) — chord != fit, consistency only.
+#   Fig 6g 7 mAh/cm2 series read 7.08 vs nominal 7.
+# Precision (TREND use only — never quote as printed values): SS-curve stress +-0.5 MPa, strain +-0.03; PSD mode +-5 % in diameter;
+#   MIP mode +-10 % in diameter; bar loads +-0.01 N; capacities +-0.1 mAh/cm2 and +-1 mAh/g; Nyquist +-1 ohm; LFP particle size +-0.3 um.
+figure,panel,series,x,x_unit,y,y_unit,method,note
+Fig 2b,SS curve,PTFE (configuration not stated),0.30,strain,14.2,MPa,yield marker (I/II boundary),x axis label spacing slightly uneven -> x +-0.05
+Fig 2b,SS curve,PTFE,1.13,strain,16.8,MPa,printed tick (II/III boundary),text p.2 says 16.9 MPa
+Fig 2b,SS curve,PTFE,2.62,strain,29.0,MPa,curve end marker,
+Fig 3a,PSD mode,0.1 um SiO2,0.19,um,41,%,peak position (log axis),nominal 0.1 um — mode ~2x nominal; caption prints '0'
+Fig 3a,PSD mode,1.5 um SiO2,1.48,um,39,%,peak position,
+Fig 3a,PSD mode,10 um SiO2,12.4,um,11,%,peak position,broad (~5-30 um)
+Fig 3a,PSD mode,20 um SiO2,22.0,um,13,%,peak position,small bump near 400-500 um
+Fig 3b,yield marker (circle),20 um,0.64,strain,27.0,MPa,marker centre,text '27 MPa (strain 0.6)' attributed to 10 um
+Fig 3b,fibrillation onset (square),20 um,1.70,strain,28.8,MPa,marker centre,text '30 MPa (strain 1.8)' attributed to 10 um
+Fig 3b,sigma_T crossing,20 um,2.50,strain,45,MPa,curve crosses dashed line,
+Fig 3b,curve end,20 um,3.11,strain,58.8,MPa,curve end,
+Fig 3b,yield marker (circle),10 um,0.575,strain,25.1,MPa,marker centre,
+Fig 3b,fibrillation onset (square),10 um,1.67,strain,26.1,MPa,marker centre,
+Fig 3b,curve end,10 um,2.69,strain,40.3,MPa,curve end,notebook unimodal 10 um @13 MPa = 38.279 MPa / 2.767 [SI 코드]
+Fig 3b,yield marker (circle),1.5 um,0.255,strain,11.2,MPa,marker centre,
+Fig 3b,curve end,1.5 um,0.975,strain,13.9,MPa,curve end,notebook 1.5 um @13 MPa = 8.868 / 0.5959 ; @20 MPa = 13.432 / 0.9432 [SI 코드]
+Fig 3b,curve end,0.1 um,0.175,strain,2.4,MPa,curve end,
+Fig 3b,blue region start,—,1.665,strain,,,region edge,Fig 2b region III starts at 1.13 ; Fig 4b at 1.32
+Fig 3c,cohesive strength,0.1 um,,,,N,bar,'Failure' (no bar)
+Fig 3c,cohesive strength,1.5 um,,,0.045,N,bar top,
+Fig 3c,cohesive strength,10 um,,,0.736,N,bar top,
+Fig 3c,cohesive strength,20 um,,,0.311,N,bar top,
+Fig 3h,MIP mode,1.5 um film,0.36,um,1.26,mL/g (log diff. intrusion),peak position,printed porosity 46.7 %
+Fig 3h,MIP mode,10 um film,0.86,um,0.28,mL/g,peak position,printed porosity 32.2 %
+Fig 3h,MIP mode,20 um film,2.3,um,0.35,mL/g,peak position,printed porosity 37.2 %
+Fig 4a,PSD mode,10+1.5 um,1.31,um,9,%,peak 1,
+Fig 4a,PSD mode,10+1.5 um,9.6,um,11,%,peak 2,
+Fig 4a,PSD mode,10+5 um,12.8,um,12.8,%,main peak,no separate ~5 um mode visible
+Fig 4a,PSD mode,10+5 um,1.9,um,0.8,%,small bump,
+Fig 4a,PSD mode,10+10 um,12.4,um,11.2,%,peak,
+Fig 4b,yield marker (circle),10+10 um,0.595,strain,25.5,MPa,marker centre,
+Fig 4b,fibrillation onset (square),10+10 um,1.39,strain,24.9,MPa,marker centre,
+Fig 4b,curve end,10+10 um,2.68,strain,40.7,MPa,curve end,notebook bimodal '10' @13 MPa = 42.692 / 2.6735 [SI 코드]
+Fig 4b,yield marker (circle),10+5 um,0.571,strain,23.7,MPa,marker centre,
+Fig 4b,fibrillation onset (square),10+5 um,1.33,strain,24.2,MPa,marker centre,
+Fig 4b,curve end,10+5 um,2.88,strain,41.0,MPa,curve end,notebook bimodal '5' @13 MPa = 40.860 / 2.8930 [SI 코드] ; end-strain ratio 2.88/2.68 = 1.075 (text '7.4 % increase')
+Fig 4b,yield marker (circle),10+1.5 um,0.463,strain,18.3,MPa,marker centre,
+Fig 4b,fibrillation onset (square),10+1.5 um,1.31,strain,19.1,MPa,marker centre,
+Fig 4b,curve end,10+1.5 um,1.41,strain,19.6,MPa,curve end,
+Fig 4c,cohesive strength,10+10 um,,,0.734,N,bar top,same value as Fig 3c 10 um
+Fig 4c,cohesive strength,10+5 um,,,0.884,N,bar top,+20 % vs 10+10 [우리 산술]
+Fig 4c,cohesive strength,10+1.5 um,,,0.089,N,bar top,
+Fig 4g,MIP mode,10+1.5 um film,0.30,um,0.40,mL/g,peak position,printed porosity 36.1 %
+Fig 4g,MIP mode,10+5 um film,0.82,um,0.27,mL/g,peak position,printed porosity 29.9 %
+Fig 4g,MIP mode,10+10 um film,0.91,um,0.28,mL/g,peak position,printed porosity 32.2 % (same as Fig 3h 10 um)
+Fig 5c,P_lm = 45 MPa boundary,unimodal,10,um,14.2,MPa,colour-map edge,notebook crossing 14.38 MPa (linear interp.)
+Fig 5e,GPR points,bimodal (caption: 10+5),15,MPa,57.5,MPa,marker,= notebook row '10' (57.684) not row '5' (60.232)
+Fig 5e,GPR points,bimodal (caption: 10+5),16,MPa,61.5,MPa,marker,row '10' 61.593 ; row '5' 73.77
+Fig 5e,GPR points,bimodal (caption: 10+5),17,MPa,58.3,MPa,marker,row '10' 58.407 ; row '5' 81.821
+Fig 5e,GPR points,bimodal (caption: 10+5),18,MPa,55.9,MPa,marker,row '10' 56.02 ; row '5' 82.049
+Fig 5e,GPR points,bimodal (caption: 10+5),19,MPa,48.7,MPa,marker,row '10' 48.679 ; row '5' 78.48
+Fig 5e,GPR points,bimodal (caption: 10+5),20,MPa,46.3,MPa,marker,row '10' 46.309 ; row '5' 74.525
+Fig 5f,P_lm = 45 MPa boundary,bimodal,3,um,15.0,MPa,colour-map edge,notebook crossing 15.38
+Fig 5f,P_lm = 45 MPa boundary,bimodal,6-10,um,13.1,MPa,colour-map edge (flat),notebook crossings 13.16-13.62
+Fig 6a,particle diameter,LFP '5 um',,,4.6,um,scale-bar measurement,single particle
+Fig 6a,particle diameter,LFP '10 um',,,9.3,um,scale-bar measurement,single particle
+Fig 6e,high-frequency intercept,7 mAh/cm2,0.5,ohm,,,first point,
+Fig 6e,semicircle minimum,7 mAh/cm2,27.7,ohm,,,local minimum of -Z_im,fitted R_ct 25.84 (text)
+Fig 6e,high-frequency intercept,10 mAh/cm2,2.4,ohm,,,first point,
+Fig 6e,semicircle minimum,10 mAh/cm2,35.8,ohm,,,local minimum of -Z_im,fitted R_ct 33.42 (text)
+Fig 6f,charge plateau,both,~80,mAh/g,3.51,V,flat region,
+Fig 6f,discharge plateau,both,~80,mAh/g,3.37,V,flat region,midpoint 3.44 V (text 3.43 V) ; dV ~0.14 V
+Fig 6f,discharge end (2.5 V),7 mAh/cm2,159.7,mAh/g,2.5,V,curve end,
+Fig 6f,discharge end (2.5 V),10 mAh/cm2,158.2,mAh/g,2.5,V,curve end,
+Fig 6g,areal capacity,7 mAh/cm2,1,cycle,7.08,mAh/cm2,marker,flat to cycle 50
+Fig 6g,areal capacity,10 mAh/cm2,1,cycle,10.14,mAh/cm2,marker,
+Fig 6g,areal capacity,10 mAh/cm2,50,cycle,9.24,mAh/cm2,marker,-8.9 % [우리 산술] ; text p.8 'no degradation'
+Fig 6g,Coulombic efficiency,both,1-50,cycle,~100,%,marker (right axis),text '>99 %'
+SI Fig 1,PTFE body size (equivalent circle from deformed area; 2D incompressible assumption),panel a (0.1 um AM),,,~1,um,area estimate,rough
+SI Fig 1,PTFE body size (equivalent circle),panels b-d (1.5/10/20 um AM),,,3.6-4.5,um,area estimate,rough — PTFE initial size / rule not printed
+SI Fig 6,SS curve plateau,10 um SiO2 = LFP,0.5-1.25,strain,18-19,MPa,flat region,differs from Fig 3b 10 um plateau (~25 MPa)
+SI Fig 6,curve end,10 um SiO2 = LFP,2.63,strain,44,MPa,curve end,
