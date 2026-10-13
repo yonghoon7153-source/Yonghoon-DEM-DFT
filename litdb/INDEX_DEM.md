@@ -2,7 +2,7 @@
 
 > **이 파일은 `tools/litdb/build_index.py` 가 생성한다 — 손으로 고치지 말 것.**
 > 논평·우선순위가 붙는 SE 축 인덱스는 `INDEX.md` (사람이 큐레이션).
-> digest 189편 · 생성 2026-10-13
+> digest 211편 · 생성 2026-10-13
 
 왜 따로 두나 — `INDEX.md` 는 argyrodite 전해질 축이라 접촉역학·MPM·건식전극
 digest 가 들어갈 자리가 없다. 그래서 한때 64편이 **어느 인덱스에도 없었다**
@@ -20,14 +20,17 @@ digest 가 들어갈 자리가 없다. 그래서 한때 64편이 **어느 인덱
 | `pycompact2025_dem_mpfem_workflow` | PyCompact — LIGGGHTS DEM → MPFEM(OpenRadioss) 분말압축 오픈소스 워크플로 ★★ 우리 DEM→MPM scaffold 인계의 독립 선례 (인계 시점은 정반대) — Mohammadhosseinzadeh (SoftwareX 2026) | DEM+MPFEM (workflow/software) | 2026-08-25 | — |
 | `stomakhin2013_mpm_snow_elastoplastic` | 눈(snow) 시뮬레이션을 위한 Material Point Method — Stomakhin (ACM TOG 2013, SIGGRAPH) | MPM | 2026-06-26 | 🖼 12 |
 
-## 접촉역학 · 소성 (DEM 이론) (38편)
+## 접촉역학 · 소성 (DEM 이론) (46편)
 
 | slug | 논문 | 유형 | digest | 그림 |
 |---|---|---|---|---|
 | `alabdali2023_cgmd_wet_manufacturing_ssb_cathode` | ASSB 양극 습식 제조 사슬 전체(슬러리→건조→압연)를 CGMD(LAMMPS, LJ + Granular-Hertz) 로 — 유변학(점도·밀도)으로 force field 를 보정하고 GeoDict 로 δ_e·τ_g 산출 — Franco 그룹 ASSB 제조모델 1호(구형 AM) — Alabdali / Zanotto / Du | CGMD/DEM (LAMMPS, Lennard-Jones + Granular-Hertzian; 슬러리 NPT | 2026-08-19 | 🖼 11 |
+| `alizadeh2018_dem_adhesion_calibration_segregation_heap` | 코팅으로 끈적해진 소량 성분의 점착을 안식각으로 보정 하는 DEM 절차 — PEG 400 코팅 효소 위약 과립 (2 wt%) + 세제 분말 3 성분 더미 형성 · JKR 계면 에너지 Γ 를 응집수 (Cohesion number) 불변 으로 강성 · 크기 환산 · 코팅–비코팅 접촉 = Γ 의 절반 · 코팅이 분리 지수를 낮 | DEM (EDEM 2.7.1, Hertz–Mindlin + JKR adhesion, sphere clumps | 2026-10-13 | 🖼 23 |
 | `arzt1982_particle_coordination_densification_spheres` | 구형 분말 치밀화에서 배위수 증가의 영향 — 무작위 조밀 충전 RDF + Voronoi 셀 해석 모델 (The influence of an increasing particle coordination on the densification of spherical powders) — Arzt (Acta Metall. 1982) | theory (analytic powder-densification geometry: random-dense | 2026-10-02 | 🖼 6 |
+| `begat2004_cohesive_adhesive_balance_afm_colloid_probe` | The Cohesive-Adhesive Balances in Dry Powder Inhaler Formulations I: Direct Quantification by Atomic Force Microscopy — AFM 콜로이드 탐침 한 개를 "자기 물질" 결정면과 "상대 물질" 결정면에 번갈아 대어 떼는 힘의 비 (C | experiment (AFM colloid-probe pull-off forces on engineered  | 2026-10-13 | 🖼 13 |
 | `bouvard2000_hard_soft_powder_densification` | 경/연 분말 혼합물의 가압 압밀 거동 — Bouvard (Powder Technology 2000) | exp+theory(review) | 2026-06-23 | — |
 | `coetzee2017_dem_calibration_review` | DEM 파라미터 보정(calibration) 방법론 리뷰 — 두 학파(직접측정 vs 벌크 역보정)·해의 비유일성·접촉강성(contact stiffness) 감소 — Coetzee (Powder Technology 2017) | DEM (review — 보정 방법론) | 2026-08-25 | — |
+| `deng2021_mechanical_surface_energy_tester_bond_number` | A study of particle adhesion for cohesive powders using a novel mechanical surface energy tester — 분말 단층 (≤ 20 mg) 을 ⌀40 mm 원판에 뿌려 떨어뜨리고, 멈출 때의 감속도와 그때 떨어져 나간 질량 분율을 잰다 · "Bond 수"  | experiment (drop-impact detachment "mechanical surface energ | 2026-10-13 | 🖼 22 |
 | `dmt1975_adhesion_contact_deformation` | Effect of Contact Deformations on the Adhesion of Particles (DMT 이론) — Derjaguin, Muller, Toporov (J. Colloid Interface Sci. 1975) | continuum (점착 접촉역학 이론) | 2026-06-26 | 🖼 2 |
 | `electromechanical_contact_model_particulate_systems` | An electro-mechanical contact model for particulate systems — Chao Zhang (Powder Technology 2024) | DEM (Hertz-Mindlin 역학 + Holm/constriction 전기접촉저항 + Kirchhoff | 2026-06-26 | 🖼 22 |
 | `giannis2021_stress_based_multicontact_dem` | 입자 응력텐서 trace 로 모든 접촉을 서로 묶은 non-binary DEM 접촉모델 (MC-stress) — Giannis (Granular Matter 2021) | DEM (contact-LAW theory, non-binary multi-contact) | 2026-08-25 | — |
@@ -35,6 +38,10 @@ digest 가 들어갈 자리가 없다. 그래서 한때 64편이 **어느 인덱
 | `he2026_dem_calendering_inhomogeneity_areal_density` | NCM 양극 calendering(롤 압연) 불균일성을 DEM 으로 — 면적로딩(areal density) 15.2→20.0 mg cm⁻² 가 힘분포·접촉수·입자 integrity 를 어떻게 가르나 · EDEM 2024 + EEPA 탄소성 접촉 · 나노압입 + Hg 압입 이중검증 — He·Zhang·Hao·Sun·Xu·C | DEM (EDEM 2024 상용, EEPA 탄소성 접촉 + JKR 집전체; 나노압입·Hg압입 검증; 액체계  | 2026-09-15 | — |
 | `heck2026_densification_sulfide_se_binder_scalable` | 황화물 SE 바인더 분리막의 일축 치밀화 — β-Li₃PS₄ (LPS) + HNBR 0 · 3 · 4.3 wt% 슬러리 시트 (+ Li₆PS₅Cl 대조): 제조압 · 적층압 · 치밀화 온도 · 층 두께가 밀도 (in-die 0.01 → 1.5 → 0.01 GPa · out-of-die) · 접착 · 나노압입 · σ_ion | experiment (일축 치밀화 — 실험실 프레스 · CompreDrive in-die 밀도 + EIS · | 2026-10-13 | 🖼 34 |
 | `jacksongreen2005_fem_elastoplastic_hemispherical_contact` | 탄소성 반구–강체평판 접촉의 유한요소 연구 — Jackson & Green (J. Tribology 2005) | FEM (continuum, single-contact) | 2026-06-26 | 🖼 13 |
+| `jarray2019_cohesion_driven_mixing_segregation_drum` | 점착을 켜고 끄는 것만으로 혼합 ↔ 분리를 뒤집는다 — 같은 크기 이원계에서 한 쪽만 점착이면 분리 (MI 0.91 → 0.65), 크기가 다른 이원계에서 작은 쪽이 점착이면 크기 분리가 줄어든다 (0.52 → 0.78) · 실란화 유리구 (반경 0.85 · 1.25 · 2 mm) 회전 드럼 실험 · 미세저울로 잰 떼는  | exp (rotating-drum cohesive powder mixing · silanized glass  | 2026-10-13 | 🖼 21 |
+| `johnson1971_jkr_surface_energy_contact_elastic_solids` | Surface energy and the contact of elastic solids — 표면 에너지가 있는 두 탄성 구의 접촉: 무하중에서도 유한한 접촉 반경 a³ = R(6γπR)/K · 떼는 힘 P = −(3/2)γπR (탄성률 무관) · γ = "energy of adhesion of both surfaces"  | theory (adhesive elastic contact — energy balance, JKR) + ex | 2026-10-13 | 🖼 14 |
+| `kim2023_mechanofusion_ncm811_lpscl_core_shell_intimate_contact` | 메카노퓨전 (MF) 으로 NCM811 위에 Li₆PS₅Cl 껍질 (80:20 ≈500 nm · 90:10 ≈350 nm) 을 만들면 같은 SE 총량에서 SE 덩어리 · 공극이 사라지고 이온 경로가 산다 — 수송 tortuosity (τ²_ion = Φ_SE·σ_bulk/σ_eff) 2.38 → 2.21 (80:20) ·  | exp (메카노퓨전 SE 코팅 · FIB-EDS 껍질 두께 · XRD/XPS · 전자 차단 셀 EIS → σ | 2026-10-13 | 🖼 27 |
+| `kim2024_optimal_cathode_composite_mechanical_mixing_se_coverage` | 같은 총 SE (23 wt%) 에서 SE 를 얼마나 "입히느냐" 의 최적점 — 칼날 분쇄기 (blade mill) 건식 혼합 (MM) 으로 LNO-NCM811 에 LPSCl 을 일부만 입힌 NCM@10SE (껍질 ≈300–400 nm · 피복 < 100 %) + 3 µm 자유 SE = MM10 이 손 혼합 HM23 · 다 | exp + DEM + FEA (건식 MM SE 코팅 · 피복률 설계 계산 · 에탄올 용해 코팅량 · CP-S | 2026-10-13 | 🖼 39 |
 | `kogutetsion2002_ep_sphere_rigid_flat` | 변형 탄소성 구 ↔ 강체 평판 접촉의 탄소성 FEM 해석 (KE 모델) — Kogut & Etsion (J. Appl. Mech. 2002) | FEM (continuum, single-contact) | 2026-06-26 | 🖼 8 |
 | `lee2025_heckel_argyrodite_powder_densification_nanoindentation` | 분말 다이 압축 (DIC 로 펀치 탄성 뺀 가압 중 높이) 의 Heckel 단계 I–III 로 아지로다이트 SE 의 소성 순위 — Li₆PS₅Cl (상용 · 볼밀 · 합성) · Li₆PS₅Br · BH₄⁻ 치환 2 종: K (stage II) 25.0–41.3 ×10⁻⁴ MPa⁻¹ · 97 % TD 압력 510–725 M | experiment (in-die 일축 압축 + DIC 높이 · Heckel · 이온밀링 단면 SEM 공극  | 2026-10-13 | 🖼 11 |
 | `liao2025_interfacial_adhesion_li_plating_carbon_interlayer` | 탄소 인터레이어 ↔ LPSCl 계면의 박리 인성 Γ 가 anode-free 전지의 Li 석출 위치를 정한다 — lamination(제조 압착)압 100 → 400 MPa 에서 Γ 9 → 41 J m⁻² · 문턱 ≈10 J m⁻² · 180° peel + tape 소성굽힘 보정 — Liao · Zeng · Mulla · M | exp (180° peel 박리시험 + tape 소성굽힘 보정 해석 · adhesive/cohesive fa | 2026-09-23 | 🖼 17 |
@@ -47,6 +54,7 @@ digest 가 들어갈 자리가 없다. 그래서 한때 64편이 **어느 인덱
 | `park2020_dimension_controlled_se_percolation_contact_area` | 치수 제어 산화물 고체전해질 (0D 구 · 1D 원기둥 · 2D 판) 을 넣은 전고체 전극 — 퍼콜레이션 경로 · specific contact area · 유효 이온전도도 (GeoDict 복셀 가상 전극 → COMSOL P2D) — Park (Chem. Eng. J. 2020) | voxel-sim (GeoDict 확률 배치 · PoroDict 접촉면적 · ConductoDict Ohm  | 2026-10-03 | 🖼 17 |
 | `pasha2014_linear_elastoplastic_adhesive_contact` | 선형 탄소성·점착 접촉 변형 모델 (미세 점착분말용 piecewise-linear LAW) — Pasha (Granular Matter 2014) | DEM (contact-LAW theory + EDEM 구현/검증) | 2026-06-26 | 🖼 23 |
 | `paulick2015_elastic_particle_properties_dem_review` | DEM 결과에 대한 입자 탄성 물성(Young's modulus E · shear modulus G · 접촉강성 contact stiffness)의 영향 리뷰 — 조밀계 vs 희박계 · 오버랩 1 % 규칙 · "밀할수록 강성이 중요해진다" — Paulick, Morgeneyer, Kwade (Powder Technolog | DEM (review — 탄성 파라미터 민감도) | 2026-08-25 | — |
+| `roessler2019_dem_cohesive_aor_cylinder_lift_calibration` | LIGGGHTS SJKR 의 cohesionEnergyDensity (CED) 를 원통 인양 시험으로 보정 — 점착 분말 (젖은 모래 9.5 wt% 수분) 은 안식각이 40–84° 로 재현되지 않으니, 대신 기둥이 서 있다 → 볼록하게 휜다 → 무너진다 의 상 전이와 슬라이스별 지름 (상대 굽힘) 을 기준으로 · 상 전이 | DEM (LIGGGHTS 3.01, Hertz–Mindlin + simplified JKR cohesion  | 2026-10-13 | 🖼 20 |
 | `schreiner2020_dem_calendering_lib` | LIB 전극 calendering(압연)을 DEM으로 — NMC622 양극 · EDEM(상용) + EEPA 탄소성 접촉 + Bonding(Potyondy–Cundall) · 3-모듈 "USER TOOL"(공정 파라미터 예측) — Schreiner·Klinger·Reinhart (Procedia CIRP 2020, 짧은 학 | DEM (EDEM 상용, EEPA+Bonding; 나노압입 보정 + 공정 USER TOOL) | 2026-06-27 | 🖼 6 |
 | `sharma2023_nmc_single_crystal_anisotropic_nanoindentation` | 단결정 NMC622 결정립을 EBSD 방위와 짝지어 나노압입 → 이방 탄성상수 C_ij 6개 역산 (VRH: E 140.16 GPa · ν 0.253) + 소결 펠릿 NMC111/532/622/811 의 압입탄성률 M · 경도 H · 압입인성 K_c — Sharma, Meng, Wu, de Vasconcelos, Li,  | exp (EBSD-correlated Berkovich CSM nanoindentation + Vlassak | 2026-09-26 | 🖼 12 |
 | `shi2019_high_am_loading_particle_size_assb` | 입자 크기비 λ=D_CAM/D_SE 로 고-CAM 로딩(>50 vol%) 달성 — 우리와 같은 LIGGGHTS DEM + Hertz 로 "작은 SE + 큰 CAM"을 모델+실험 동시 증명 — Shi (Ceder 그룹, Adv. Energy Mater. 2019/2020) | mixed (DEM-LIGGGHTS modeling + experiment) | 2026-06-26 | 🖼 12 |
@@ -63,7 +71,7 @@ digest 가 들어갈 자리가 없다. 그래서 한때 64편이 **어느 인덱
 | `zunker2024_mdr_contact_model_partI` | 층(2.75) 발견 — 점착 탄소성 입자의 역학적으로 유도된 접촉모델, Part I: 차원축소법(MDR) — Zunker & Kamrin (J. Mech. Phys. Solids 2024) | contact-mechanics theory (MDR) + FEM(Abaqus) 검증 | 2026-08-25 | — |
 | `zunker2025_dem_large_deformation_compaction` | 실험검증된 대변형 압밀 DEM (Experimentally validated DEM for large deformation powder compaction: mechanically-derived contact model and screening of non-physical contacts) — Zunker, Dunatun | DEM (LAMMPS, MDR 접촉모델 다체 확장) + MPFEM(Abaqus) 검증 + 제약 tableti | 2026-08-25 | — |
 
-## 복합양극 미세구조 · percolation (44편)
+## 복합양극 미세구조 · percolation (46편)
 
 | slug | 논문 | 유형 | digest | 그림 |
 |---|---|---|---|---|
@@ -74,6 +82,7 @@ digest 가 들어갈 자리가 없다. 그래서 한때 64편이 **어느 인덱
 | `cooper2017_simulated_impedance_diffusion_porous_media` | 다공 미세구조 확산 임피던스의 주파수 영역 유한차분 직접 모사 — 개방계 저주파 절편 = τ/ε · 같은 τ·ε 라도 스펙트럼은 다르다 · 다공도 구배의 순수 확산 이중 피크 (DRT 오독 경고) · TauFactor 확산 임피던스 모드의 원전 — Cooper (Electrochim. Acta 2017) | computational (frequency-domain finite-difference diffusion  | 2026-10-03 | 🖼 6 |
 | `cronk2026_lis_positive_electrode_geometry_fem` | 확률적 voxel 기하 생성(MATLAB) + TauFactor τ + FEM 팽창응력으로 설계한 Li–S 전환형 양극 (LPSCl 촉매전해질) — 11 mAh cm⁻² · 10 MPa anode-free 파우치 — Cronk (Nat. Commun. 2026) | FEM (COMSOL 6.1, 선형탄성+등방 eigenstrain) + 확률적 voxel 기하생성(MATLA | 2026-09-03 | 🖼 50 |
 | `duquesnoy2020_calendering_ml_mesostructure_generator` | 캘린더링(압연)을 "porosity 를 입력으로 받는" 확률적 전극 생성기 + TauFactor + SISSO 로 — 실험 54셀 → 8,800 in-silico 전극 → 해석식 — Duquesnoy (J. Power Sources 2020) | hybrid (exp 54-electrode 다항회귀 → MATLAB voxel 확률생성기 → TauFact | 2026-09-03 | 🖼 12 |
+| `frankenberg2025_milling_dry_processed_sulfide_cathode_microstructure` | 유성 볼밀로 단결정 NCM83–LPSCl 복합양극을 만들 때 "얼마나 세게 · 얼마나 오래" 가 미세구조를 정한다 — 볼 DEM (Rocky 2024) 으로 충돌 에너지 E_col · 빈도 f_col · 비에너지 E_m 을 구하고 공정–구조–성능을 잇는다: 에너지 ↑ = LPSCl 분쇄 + NCM–LPSCl 융합 응집체  | exp + DEM (유성 볼밀 공정 매개변수 · 볼만 푼 Rocky DEM → E_col · f_col ·  | 2026-10-13 | 🖼 26 |
 | `froboese2019_microstructure_ionic_conductivity_assb_electrode` | ASSB 전극 미세구조 ↔ 이온전도도 실측 — 고분자 SE (PEO:LiTFSI:SiO₂) + 비활성 유리구 모델 전극에서 "AM" 입경 4 종 × 부피분율 0–60 % 스윕, 기공률 · tortuosity (= τ², Eq 15) · Bruggeman τ = γφ^(1−α) 맞춤 · Li 계면저항 — Froboese ( | exp (EIS — Li/모델 전극/Li 대칭 코인셀, 80 °C; 고분자 SE + 비활성 유리구 모델 전극 | 2026-10-03 | 🖼 19 |
 | `galvezaranda2024_time_dependent_dl_calendering_microstructure` | 압연(calendering) DEM 궤적을 1D-CNN 시간-surrogate 로 대체하다 — 3 프레임 lag → 다음 프레임 3D 복셀 미세구조, NMC111 96 % / CBD 4 %, CD 20–50 % — Galvez-Aranda / Le Dinh / Vijay / Zanotto / Franco (Advanced | DL 시간-surrogate(1D-CNN, TensorFlow/Keras) on DEM 압연 궤적 + Geo | 2026-09-11 | 🖼 13 |
 | `hamann2026_llzo_bilayer_porosity_asr_dendrite_ccd` | Effects of LLZO Microstructure Porosity, LLZO/Li-Metal Interfacial Polarization Resistance, and Applied Areal Current Density on Li-Metal Dendrite Formation in LLZO Bilayer Symmetr | FDM voxel electrochemistry (steady/uniform-state Poisson in  | 2026-09-29 | 🖼 22 |
@@ -96,6 +105,7 @@ digest 가 들어갈 자리가 없다. 그래서 한때 64편이 **어느 인덱
 | `miss2026_insitu_conductivity_porosity_pressure_compaction` | 가압 중 (in situ) 두께로 잰 Conductivity–Porosity–Pressure 관계 — µc-Li₅.₅PS₄.₅Cl₁.₅ SE · pc-NMC622 CAM 단일상 powder 펠릿: 가압↔제거 두께 표 (SE 회복 0.3–2.8 % · CAM 0.7–8.6 %) · 두 공극 영역 (ε > 0.2 접촉 지배  | experiment (in situ 가압 셀 — 마이크로미터 두께 + impedance (EIS) · 단일상 | 2026-10-09 | 🖼 13 |
 | `miss2026_pressure_tortuosity_composite_cathode_coating` | 압밀 중 (in situ) 잰 복합 양극의 전자 · 이온 tortuosity — NMC622 단결정 / 다결정 × LiNbO₃ 코팅 유무 × CAM 부피분율 (0.3–0.7) · 0.67Li₃PS₄–0.33LiI 유리 SE · 8.8 → 663 MPa 단조 가압: τ_eon 은 압력으로 한 자릿수 떨어지고 τ_ion (같 | experiment (in situ 가압 셀 CompreDrive · 이온 차단 WC 전극 EIS · 복합  | 2026-10-13 | 🖼 16 |
 | `morasch2018_binder_gradient_impedance_tortuosity` | 차단 EIS 의 겉보기 τ 는 방향을 본다 — 같은 총 이온 저항이라도 분리막 쪽에 몰리면 +25 · +66 %, 집전체 쪽이면 −25 · −46 % (RC 전송선 모의) · 급속 건조 바인더 구배로 겉보기 τ 3.4 → 5.7, 같은 전극을 뒤집으면 2.7 · 위상각 극소로 구배 검출 — Morasch (J. Elect | exp + model (COMSOL RC-TLM 차단 EIS 모의 · EDS 바인더 구배 · 차단 대칭셀 겉 | 2026-10-03 | 🖼 7 |
+| `nakamura2020_dry_coating_ncm_li3ps4_core_shell` | NCM 단입자를 황화물 SE (Li₃PS₄ 유리) 로 건식 충격 코팅 — 13,000 rpm · 300 s · 고체 농도 ≈1 vol% 장치에서 0.1–0.2 µm 연속 껍질 (NCM 파손 없음) → 같은 SE 량 (86.9 : 13.1 wt%) 의 막자 혼합 대비 3D FIB-SEM 수송 tortuosity (원문 τ  | exp + 3D 복셀 수송 (건식 충격 블렌딩 코팅 · SEM/EDX · 입도 · UV-vis 순조성 · 반 | 2026-10-13 | 🖼 10 |
 | `nguyen2020_electrode_tortuosity_factor` | 전극 tortuosity factor τ_e — 관통형(flow-through) tortuosity factor τ 는 다공 전극 수송을 잘못 재고, 대칭셀 임피던스(eSCM)로 정한 τ_e 를 P2D 에 넣으라 — Nguyen (npj Comput. Mater. 2020) | computational (TauFactor voxel FD/SOR · eRDM vs eSCM impedan | 2026-10-03 | 🖼 8 |
 | `nisar2024_dem_effective_electrical_conductivity_sps` | 부분소결 다공성 재료의 유효 전기전도도를 위한 DEM 저항망 모델 (sinter-neck conductance) — Nisar (Comp. Part. Mech. 2024) | DEM+RNM | 2026-06-26 | 🖼 10 |
 | `pouraghajan2018_tortuosity_polarization_interrupt_vs_blocking_electrolyte` | 두 τ 측정법의 실측 비교 — DC 편극-중단 (polarization-interrupt, 확산 · eRDM) vs 차단 전해질 EIS (blocking-electrolyte, 전도 · eSCM) + 접촉저항 · 전하이동 · 전자 레일을 넣은 일반 전송선 모델 — Pouraghajan (J. Electrochem. Soc | exp (liquid-LIB tortuosity 측정법 비교 — DC polarization-interrup | 2026-10-03 | 🖼 15 |
@@ -112,7 +122,7 @@ digest 가 들어갈 자리가 없다. 그래서 한때 64편이 **어느 인덱
 | `yoo2026_porosity_gradient_dry_electrode` | Yoo 2026 (Energy Storage Materials, ENSM 105331) — Porosity-구배 건식 흑연 전극 + 변형성 Primer Layer | MPM | 2026-07-28 | 🖼 7 |
 | `zhang2026_dryprocess_electrode_architecture_cell_level` | 건식(dry-process) 후막 NMC811 전극 — VGCF–PTFE 전단 커플링이 CBD 도전망 percolation 연결성을 17.1 → 61.2 % 로 올려 99 wt% 활물질 · >5 mAh cm⁻² · 4.70 V 를 연다 — CGMD(LAMMPS) + PFIB-SEM 3D + COMSOL 전자전류 + Tau | exp 주도 + CGMD (LAMMPS, Martini-3 유래 LJ 12-6; VGCF+PTFE 2성분 전 | 2026-08-19 | 🖼 42 |
 
-## 공정 — 캘린더링 · 압축 · 건식전극 (39편)
+## 공정 — 캘린더링 · 압축 · 건식전극 (44편)
 
 | slug | 논문 | 유형 | digest | 그림 |
 |---|---|---|---|---|
@@ -127,14 +137,18 @@ digest 가 들어갈 자리가 없다. 그래서 한때 64편이 **어느 인덱
 | `galvezaranda2025_paml_vgg16_dem_slurry_drying` | 건조(slurry drying) DEM 궤적을 predictor–corrector 로 쪼개다 — VGG16→Conv1D 가 프레임 한 칸(1,500,000 DEM step)을 건너뛰고 nDEM(5–10 k) 실제 DEM step 이 그것을 물리 위로 되돌린다, NMC111 96 % AM / 4 % CBD 학습 → 94/6 | PAML 하이브리드(predictor–corrector): per-particle VGG16→Conv1D 시 | 2026-09-11 | 🖼 13 |
 | `han2025_icep_conductive_elastic_binder` | 이온전도성 탄성 고분자(ICEP) 바인더로 초고로딩 NCM811 전극 — Han (Adv. Mater. 2025) | exp (+DFT 흡착) | 2026-07-08 | — |
 | `hare2026_dem_pept_dry_mixing_nmc622_eirich` | NMC 622 건식 혼합(dry mixing) 의 3D 유동을 PEPT 로 실측하고 그것으로 DEM 을 검증 — Eirich EL1 집약믹서, rotor tip-speed 10/20/30 m/s — Hare (Powder Technology 2026) | DEM (EDEM 2023, coarse-grained Hertz–Mindlin + JKR) + PEPT 실 | 2026-09-19 | 🖼 19 |
+| `hippauf2019_dry_film_ptfe_sulfide_cathode_sheet` | 용매 없는 건식 막 (dry-film, DF) 으로 황화물 복합양극 시트를 PTFE 0.1 wt% 까지 줄여 만든다 — NCM90 (LZO 코팅) : VG-CNF : Li₆PS₅Cl = 85:2:13 + PTFE 0.1–1 wt% · 가열 막자 1 min → 박편 → 열판 압연 (막 기공 ≈50 %) → 300 MPa 뒤 | exp (건식 막 공정 · PTFE 함량 0–1 wt% · 기계 인장 · TGA/DSC · XRD · 라만  | 2026-10-13 | 🖼 19 |
 | `hong2026_sulfide_cathode_binder_digitaltwin` | Hong 2026 (Energy Storage Materials 86, 104930) — 황화물 복합양극 열화 메커니즘 (디지털트윈): Dry(PTFE) vs Wet(NBR) 바인더 ★우리 소재계(LPSCl+NCM) | FEM·digital-twin | 2026-07-28 | — |
 | `jadidi2023_dem_batch_solid_mixers_review` | 배치(batch) 고체 믹서의 DEM 적용 종합 리뷰 — 믹서 분류 · 혼합/분리 기전 · 혼합지수(mixing index) 8종 전수 · 접촉·점착모델 표준 · 보정 · coarse-graining · 미해결 목록 — Jadidi, Ebrahimi, Ein-Mozaffari, Lohi (Reviews in Chemica | DEM (REVIEW — 배치 고체 믹싱; 7개 믹서족 문헌표 + 혼합지수 카탈로그) | 2026-09-19 | 🖼 3 |
 | `jeong2025_tough_adhesive_binder_shield_ncm811` | A Tough, Adhesive, and Protective Binder Shield for Stabilizing High-Nickel Cathodes in Lithium-Ion Batteries — Jeong et al. (Adv. Energy Mater. 2025, 15, e02765) | exp 주도 + 보조 DFT 9점(Gaussian 16 분자계산 — 고체 DFT 아님) | 2026-09-22 | 🖼 19 |
 | `jun2026_ppma_econductive_binder_si_lowpressure_assb` | Electron-conductive binder for silicon negative electrode enabling low-pressure all-solid-state batteries — Jun & Jeong et al. (Nat. Commun. 2026) | exp (계산 0) | 2026-07-15 | 🖼 5 |
 | `kang2025_bollard_anchored_binder_dry_electrode` | Bollard-Anchored Binder System for High-Loading Cathodes Fabricated via Dry Electrode Process — Kang, Jihyeon (Adv. Mater. 2025) | exp + NNP(PFP) 흡착/MD + Gaussian16 DFT(IR) | 2026-09-03 | 🖼 42 |
+| `kawaguchi2017_dry_coating_parametric_na2so4_model_se` | 건식 충격 블렌딩 (Hybridizer NHS-0) 코팅의 공정 창 — 황화물 SE 의 모델 물질 Na₂SO₄ (연성 · 상온 가압 소결) 로 NCM111 을 코팅: 회전자 선속도 50 m/s = 부분 피복 · ≥ 80 m/s = 완전 피복 · 시간 ↑ (60 → 1800 s) = 불연속 → 연속 막 · 게스트 비율 ↓  | exp (건식 코팅 공정 매개변수 연구 — 모델 SE · SEM/EDX · ICP-AES 순조성 · 세척 후 | 2026-10-13 | 🖼 8 |
+| `kawaguchi2023_doe_electrode_fabrication_dry_coated_ncm_lps` | 건식 충격 코팅 NCM@Li₃PS₄ 코어–셸 vs 막자 단순 혼합 — 전극 제작 조건 (SE 질량비 Xs 0.1 / 0.3 · 압축압 P 180 / 360 MPa · 셀 체결 토크 Ts 0.5 / 2.5 N·m) 2³ 완전요인 DOE · ANOVA · 다중선형회귀: 단순 혼합은 P 가, 코팅은 Xs 가 첫 방전 용량을 좌 | exp + 통계 (건식 충격 블렌딩 코팅 · SEM/EDX · 입도 · UV-vis 순조성 · 반쪽셀 충방전 | 2026-10-13 | 🖼 17 |
 | `kim2026_charge_engineered_cnf_binder` | Kim 2026 (Nature Communications, DOI 10.1038/s41467-026-73909-0) — 전하조작(charge-engineered) 셀룰로오스 나노피브릴 바인더로 PFAS-free 고로딩 양극 | experiment | 2026-07-28 | 🖼 43 |
 | `koo2025_cnt_wrapped_sc_nca_dry_cathode` | Koo 2025 (Energy Storage Materials 78, 104270) — anti-solvent로 MWCNT 감싼 단결정 SC-NCA dry 양극 (99.6 wt%, 4.0 g/cm³) ★ #275(Joule 2026)의 2025 PRECURSOR / SISTER 논문 | FEM·digital-twin | 2026-07-28 | — |
 | `koo2026_swcnt_sheath_thick_electrode` | Koo 2026 (Joule 10, 102392) — 연속 SWCNT sheath가 두꺼운 dry 전극에서 초고에너지밀도 + 급속충전 (★ 우리 CBD SuperP-vs-VGCF 발견의 실험적 증명) | FEM·digital-twin | 2026-07-28 | 🖼 59 |
+| `lee2024_shear_force_dry_process_cathode_coverage` | 건식 공정의 전단이 양극 활물질의 SE 피복률을 두 배로 — 무바인더 손혼합 펠릿 30.6 % · 습식 (NdBR) 33.3 % · 건식 (PTFE 반죽 · 밀대 압연) 67.2 % (SEM 2D 단면 화상 처리) → 0.1 C · 60 °C 방전 139.4 · 152.4 · 169.0 mAh g⁻¹ · COMSOL 2D | exp + COMSOL 2D 전기화학 모델 (SEM 2D 피복 화상 처리 · EIS/DRT · GITT ·  | 2026-10-13 | 🖼 32 |
 | `lee2025_corolling_dryprocess_lpscl_ptfe` | Co-rolling dry-process로 만든 박막 LPSCl SSE — robust 계면 + 저압(2 MPa) 작동 — Lee (Nat. Commun. 2025) | exp | 2026-06-24 | 🖼 6 |
 | `lee2025_dual_fibrous_ptfe_dry_electrode` | Dual-fibrous PTFE (fibre + rope) 로 균일·후막 건식전극 — Kwon-Hyung Lee / Tae-Hee Kim / Gyujin Song (Energy Environ. Sci. 2025) | exp | 2026-09-04 | 🖼 33 |
 | `lippke2023_dem_drying_structure_formation_lib` | 습식 슬러리 건조(drying) 중의 전극 구조형성을 DEM으로 — CFD 없이 유체를 4개 대리모델(부력·Stokes·윤활·모세관)로 갈음하고, 하강하는 가상 액면(fluid level)의 모세관력이 입자를 끌어내려 자립 골격을 만든다 · 공정스케일 1D 건조기 모델과 반복 양방향 커플링 · 4개 areal loadin | DEM (유체-대리 건조; Hertz–Mindlin + Hamaker vdW + Kroupa 윤활 + Bre | 2026-09-19 | 🖼 9 |
@@ -145,6 +159,7 @@ digest 가 들어갈 자리가 없다. 그래서 한때 64편이 **어느 인덱
 | `nam2026_primer_layer_dry_electrode_collector` | Nam 2026 (ACS Energy Letters, acsenergylett.6c01260) — 건식전극(DPE)↔집전체 계면을 지배하는 Primer Layer 설계 (Super P/CNT 비율) ★ 우리 R_collector(N) 항과 PTFE 건식전극 계면의 직접 대응 논문 | exp + FEM·digital-twin (전자전도) | 2026-08-11 | 🖼 33 |
 | `ngandjong2021_dem_calendering_digital_twin` | LIB 전극 calendering(압연)을 DEM으로 — AM + carbon-binder domain 명시 + 슬러리→건조→압연→전기화학 "디지털 트윈" 파이프라인 — Ngandjong (J. Power Sources 2021) [2판] | DEM (+ CGMD 슬러리/건조 + FEM 전기화학; exp 검증) | 2026-06-26 | 🖼 10 |
 | `park2026_thiolene_sbr_binder_assb` | Park 2026 (Adv. Funct. Mater. 36, e16017) — Thiol-Ene Click으로 SBR 바인더 다면 개질(접착 grafting + 가교 cross-linking), 저압 작동 ASSB ★우리 소재계(LPSCl+NCM)·BINDER-화학 중심 | MPM | 2026-07-28 | 🖼 5 |
+| `pfeffer2001_dry_particle_coating_engineered_particulates` | 건식 입자 코팅 총설 — 큰 호스트 (1–200 µm) 에 서브마이크론 게스트를 기계력만으로 붙이는 다섯 장치 (Mechanofusion · Hybridizer · MAIC · Theta Composer · 회전 유동층) · 정렬 혼합 (Hersey) 의 영구판 · 탈응집 → 부착 → 재분배 세 단계 · 피복률은 게스트가 | review + exp + DEM (dry particle coating devices — mechanofu | 2026-10-13 | 🖼 44 |
 | `qin2026_bilayer_cathode_cgmd_dem_graded_thick_electrode` | 이중층(bilayer) NMC111 후막 양극의 제조 이력 전체(슬러리 → 적층 → 건조 → 캘린더링 → 스프링백)를 CGMD-DEM 으로 — 설계한 공극 경사는 건조 뒤엔 살아 있지만 캘린더링에서 뒤집힌다 · 혼합 영역 확대 · τ_z 급증 — Qin · Fernandez · Scurtu · Wohlfahrt-Mehre | CGMD/DEM (LAMMPS; LJ + JKR; XCT 실형상 다구 응집체 AM + CBSA→CBD; 슬러 | 2026-09-27 | 🖼 8 |
 | `sangros2019_dem_calendering_lib_electrode` | LIB 전극 calendering(압연)을 DEM으로 — 단일 NMC 입자 탄소성 접촉모델(나노압입 보정) + 바인더 bond 모델 + ~17% 점탄성 회복 — Sangrós Giménez (Powder Technology 2019) | DEM (in-house, 나노압입 실험 보정 + calendering 실측 검증) | 2026-06-26 | 🖼 14 |
 | `sangros2020_lib_electrode_dem_mech_elec_ionic` | LIB 전극의 역학·전기·이온 거동을 DEM으로 — calendering + 바인더 bond 모델 + 삼중 전달 — Sangrós Giménez (Energy Technology 2020) | DEM (+ analytic homogenization, exp 검증) | 2026-06-26 | 🖼 12 |
@@ -186,7 +201,7 @@ digest 가 들어갈 자리가 없다. 그래서 한때 64편이 **어느 인덱
 | `lee2023_sicspe_digitaltwin_assb` | Lee 2023 (Battery Energy 2, 20220061) — 디지털트윈 기반 SIC-SPE vs LPSCl 복합양극 구조·전기화학 분석 ★ DTBL 디지털트윈 계보의 가장 이른 논문(2023) + LPSCl 전극 구조지표 | DEM | 2026-07-28 | — |
 | `park2020_digitaltwin_assb_foundational` | Park 2020 (Adv. Energy Mater. 10, 2001563) — Digital-Twin-Driven All-Solid-State Battery: 물리·전기화학 거동 규명 ★ DTBL 디지털트윈 계보의 시조(FOUNDATIONAL ROOT, 2020) | FEM·digital-twin | 2026-07-28 | 🖼 26 |
 
-## 기타 (41편)
+## 기타 (48편)
 
 | slug | 논문 | 유형 | digest | 그림 |
 |---|---|---|---|---|
@@ -195,6 +210,7 @@ digest 가 들어갈 자리가 없다. 그래서 한때 64편이 **어느 인덱
 | `bazzoun2025_dem_parameter_sensitivity_assb_cathode` | DEM 파라미터 민감도 분석 + 캘리브레이션 — 냉간가압 ASSB 양극 미세구조 (Bazzoun & Piruzjam, Electrochim. Acta 2025) | DEM | 2026-06-26 | — |
 | `bazzoun2026_dem_fem_rnm_ionic` | DEM-기반 미세구조 생성 + FEM·RNM으로 복합 양극 이온전도도 평가 — Bazzoun (J. Power Sources 2026) | DEM+FEM+RNM | 2026-06-23 | 🖼 13 |
 | `boschpadros2014_dem_liggghts_msc_thesis` | Discrete element simulations with LIGGGHTS — Carles Bosch Padrós (Swansea MSc Thesis, 2014) | DEM (LIGGGHTS — methods/validation thesis) | 2026-06-26 | 🖼 4 |
+| `chandratilleke2012_particle_scale_mixing_index` | 배위수로 정의한 입자 스케일 혼합지수 (PSMI) — 각 입자 + 그와 닿은 이웃 (≈ 7 개) 을 "표본" 으로 삼아 Lacey 꼴로 정규화 · 기준 분산 둘을 이론값 (완전 분리 p(1−p) · 완전 혼합 p(1−p)/7) 으로 고정해 칸 크기 · 표본 수 의존을 없앤다 · 2 날개 수직 믹서 DEM (17,500 개 | DEM (bladed vertical mixer · in-house DEM, elastic + damping | 2026-10-13 | 🖼 21 |
 | `chibwe2020_nnsi_segregation_index` | 근접이웃 분리지수 (NNSI) — 입상물질 분리(segregation)의 정량화 — Chibwe (Powder Technology 2020) | DEM (LIGGGHTS) — 혼합·분리 지표 제안 + DEM 검증 | 2026-09-19 | 🖼 19 |
 | `cho2026_eipc_zn_anode_azib` | Cho 2026 (Energy Storage Materials 89 (2026) 105186, DOI 10.1016/j.ensm.2026.105186) — 전자-이온 폴리머 복합막(EIPC=GO+PAA) + PCET 반응으로 Zn 음극 안정화 (수계 Zn-ion, AZIB) | DEM | 2026-07-28 | — |
 | `choi2026_elastomeric_li_metal_anode` | Choi 2026 (Advanced Energy Materials, DOI 10.1002/aenm.71104) — 친리튬(lithiophilic) 단분자층 + 나노-크럼플/마이크로-오목 탄성 Li metal anode | DEM | 2026-07-28 | — |
@@ -204,6 +220,8 @@ digest 가 들어갈 자리가 없다. 그래서 한때 64편이 **어느 인덱
 | `ender2011_3d_reconstruction_composite_cathode` | Three-dimensional reconstruction of a composite cathode for lithium-ion cells — LiFePO₄ 복합양극 FIB/SEM 3상 재구성 (카본블랙 · LiFePO₄ · 기공) 과 상별 τ 세 가지 (FEM Laplace τ_FEM · 최단경로 τ_geom · Bru | image-based (FIB/SEM 3D 재구성 + FEM Laplace τ · 기하 τ · Bruggem | 2026-10-03 | 🖼 4 |
 | `endo2001_vgcf_basic_properties_battery_applications` | 기상성장 탄소섬유(VGCF) — 단섬유 4단자 저항률 · 압착분말 부피저항률(HTT·충전밀도 의존) · 인장물성 · 납축/Li-ion 전극 첨가 효과 — Endo et al. (Carbon 2001, Review article · Shinshu Univ. + Showa Denko + MIT) | experiment + review (single-fibre 4-point resistivity · comp | 2026-09-25 | 🖼 16 |
 | `faka2026_particle_size_consolidation_strain_lpscl` | 입경 분포 (D50 4 · 11 · 20 · 40 µm, AMG) 가 Li₆PS₅Cl 압밀 · 격자 변형 · σ_ion 에 미치는 영향 — in situ 가압 EIS (0.1 → 1.5 GPa → 다시 내림) · in-die Heckel · 실험실 / 싱크로트론 XRD (Williamson–Hall · Stephens)  | experiment + DEM (in situ 가압 EIS · in-die Heckel · XRD/PDF/N | 2026-10-13 | 🖼 31 |
+| `geldart2006_powder_flowability_angle_of_repose_tester` | 안식각 (AOR) 으로 분말 유동성을 재는 소량 시험기 — Powder Research Ltd. Mark 4 (진동 경사판 → 깔때기 → 뒤판에 반원뿔 · 100 g) · AOR 과 Hausner 비 (HR) 가 직선 상관 (θ = 36.2 HR − 13.4 · 29.8 HR − 5.4, R² 0.97) · 7 µm 미분 | exp (powder flowability characterization — dynamic angle-of- | 2026-10-13 | 🖼 12 |
+| `hersey1975_ordered_mixing_concept` | 정렬 혼합 (ordered mixing) — 점착 · 상호작용하는 미분은 "무작위로 섞이는 것" 이 아니라 큰 운반 입자 표면에 붙어 단위체를 이루며 (무질서 → 질서) 섞인다 · 단층 부착 수 n = 4fD²/d² · 미분이 모자라면 다성분 · 넘치면 "정렬 단위체 + 남는 미분" 의 이원 혼합 · 정렬 혼합물은 무작위 | theory (powder mixing concept — ordered vs random mixing of  | 2026-10-13 | 🖼 1 |
 | `hollmann2025_tabpfn_tabular_foundation_model` | Hollmann 2025 — TabPFN: 소데이터 표형(tabular) 파운데이션 모델 (Nature) |  | — | — |
 | `hong2026_cbd_viscoelasticity_springback` | Hong 2026 (Energy Storage Materials, ENSM 105321) — CBD 점탄성이 단결정 cathode의 시간의존 Spring-Back을 억제 | FEM·digital-twin | 2026-07-28 | — |
 | `huang2025_dem_lbm_heat_conduction_composite_cathode` | DEM으로 생성한 3D 복합 양극 미세구조에 3D Lattice Boltzmann 열전도 모델로 ETC를 푼 연구 — Huang (J. Energy Storage 2025) | DEM+LBM (mixed) | 2026-06-26 | 🖼 21 |
@@ -213,13 +231,17 @@ digest 가 들어갈 자리가 없다. 그래서 한때 64편이 **어느 인덱
 | `kang2026_intertwined_electrochemo_mechanical_sulfide_assb_review` | Intertwined Nature of Electrochemical Reactions and Mechanical Instability in Sulfide-Based All-Solid-State Batteries — Kang, Shin, Lee & Jong-Won Lee (Chem. Commun. Feature Articl | review (Feature Article; exp+DFT+FEM 문헌 종합, 자체 신규 데이터 無) | 2026-06-26 | 🖼 17 |
 | `kim2025_conductive_agent_se_coating_cathode` | Impact of Conductive Agents in Sulfide Electrolyte Coating on Cathode Active Materials for Composite Electrodes in All-Solid-State Batteries — Kim et al. (Battery Energy 2025) | exp (전극 제작·미세구조·전기화학 — DFT/계산 없음) | 2026-06-25 | 🖼 5 |
 | `kim2026_operando_neutron_thick_nmc811_interior_hotspot` | 후막 (≈150 µm · >6 mAh cm⁻²) NMC811–LPSCl 양극의 "가운데 반응대" — operando 중성자 투과 영상 + 사후 중성자 단층 + 단면 Raman 지도로 본 두께 방향 Li 재분포와 촉매전해질 (thiophosphate) 분해 위치 · 전류를 올리면 반응이 SE 계면 쪽으로 몰린다 — Kim  | experiment (dry-process 후막 복합양극 · operando 중성자 투과 영상 + 사후 중성 | 2026-10-13 | 🖼 13 |
+| `lacey1954_particle_mixing_theory_index` | Lacey 혼합 지수의 원전 — 무작위 혼합의 분산 s_r² = P(1−P)/n · 완전 미혼합 s₀² = P(1−P) (표본 크기와 무관) · M = (s₀² − s²)/(s₀² − s_r²) (Kramers 식의 분산판) · 1 − M = s_m²/(s₀² − s_r²) = 혼합 상태의 "기본 식" · 확산형 혼합이면 | theory + review (powder mixing index definitions — random an | 2026-10-13 | 🖼 12 |
 | `lawrence2008_single_vgcnf_elastic_modulus_morphology` | 개별 기상성장 탄소나노섬유(VGCNF) 17가닥의 탄성률 6–207 GPa 와 벽 구조 — AFM 3점 굽힘 · FIB Pt 양단고정 · HRTEM — Lawrence, Berhan, Nadarajah (ACS Nano 2008) | experiment (single-nanofibre AFM three-point bending, FIB Pt | 2026-09-26 | 🖼 8 |
 | `lee2024_multiphysics_dem_fem_initial_pressure_assb` | 초기압력의 ASSB 역학·전기화학 성능 영향 — DEM+FEM 멀티피직스 (Lee, J. Energy Storage 2024) | DEM+FEM (mixed, echem-mech coupled) | 2026-06-26 | 🖼 11 |
 | `lee2026_eecfp_dnn_electrolyte_ce_lmb` | Interpretable Enhanced-ECFP-Guided Deep Learning for Rational Electrolyte Design and Coulombic Efficiency Prediction in Lithium Metal Batteries — Lee et al. (Energy Storage Materia | exp(셀·Raman·SEM·XPS) + ML(e-ECFP/DNN/SHAP) — **자체 DFT/MD 0** | 2026-07-17 | — |
 | `luan2025_graded_cathode_400whkg_pouch` | Luan 2025 (Adv. Funct. Mater. 36, e26239) — 이온/전자 flux 에 맞춘 전하운반체 공간분포로 만든 graded 복합양극 → 5 Ah 파우치 404 Wh/kg ★ 우리 Phase-5(층상 양극) + 백로그 A7(graded-z) 의 실험적 실현판 | exp + FEM (COMSOL phase-field) | 2026-08-11 | 🖼 7 |
+| `matsusaka2010_triboelectric_charging_powders_review` | Triboelectric charging of powders: A review — 분말은 손대는 공정마다 마찰 대전된다 · 전하 이동 기전 (전자 · 이온 · 물질) · 축전기 모형 Δq = k_c·C·V 와 전하 완화 (Paschen) 모형 이 반복 충돌에서 같은 지수식 q = q₀e^{−n/n₀} + q∞(1 − e^ | review (triboelectric / contact charging of powders: electro | 2026-10-13 | 🖼 92 |
 | `minnmann2022_designing_cathodes_solidstate` | Minnmann 2022 (Adv. Energy Mater. 12, 2201425) — "Designing Cathodes and Cathode Active Materials for Solid-State Batteries" (설계 Perspective) | DEM | 2026-07-28 | 🖼 7 |
 | `nadeem2023_gnn_mixing_index` | 입자 스케일 혼합도(mixedness)를 이웃 구성으로 재는 지표 — GNN (generalized nearest neighbor) mixing index: Godlieb 의 50:50 전용 이웃지표를 불균등 조성과 3종 이상으로 일반화하고, X-ray CT 로 잰 이성분 침대에서 Lacey(SD계)·MGMMI(위치계)와 | metric/method (X-ray CT 실험 + 혼합지표 정식화; DEM 없음) | 2026-09-19 | 🖼 9 |
+| `nase2001_granular_bond_collision_number_wet_cohesion` | 점착 분체의 두 무차원 수 — 입자 Bond 수 Bo_g = F_c/W (정지 더미 · 호퍼는 Bo_g ≈ 1 에서 급변) 와 충돌 수 Co = F_c/F_Bagnold (회전 드럼의 동적 안식각은 Bo_g 로는 전이가 안 보이고 Co 로 보면 전이) — 모세관 (액체 다리) 점착 · 유리구 0.5–10 mm · 실험 + | exp + DEM (particle dynamics with capillary liquid-bridge co | 2026-10-13 | 🖼 11 |
 | `oh2026_carbon_coating_siox_ion_electron_balance` | Oh 2026 (Journal of Power Sources 689, 240698) — SiOx 탄소코팅 두께가 이온/전자 수송 BALANCE + 균일분산을 결정 | FEM·digital-twin | 2026-07-28 | — |
+| `otani2023_ionic_conductivity_path_resistance_separation_model` | 황화물 복합양극의 이온전도 저하 인자를 셋으로 가르고 (공극 우회 · 입자 접촉 면적 · 계면 접촉 저항) "경로 저항 계수" 곱 모형으로 예측 — 순수 LPSCl 층은 Bruggeman β = 4 (공극 30 % 에서 경로 저항 ≈3 = 경로 ≈1.2 × 접촉 면적 ≈2.5 · 격자 부정합 저항은 무시 가능) · 복합  | exp + 해석 모형 (LPSCl 층 · NCM523 복합 공극률 열 EIS · 2D SEM 무작위 행보 경 | 2026-10-13 | 🖼 7 |
 | `otani2025_dem_se_dispersion_aggregation_compression` | SE 입자 분산상태(응집수) 를 정량 제어해 압축·전극구조를 평가한 DEM — Otani (Electrochemistry 2025) | DEM | 2026-09-19 | 🖼 6 |
 | `park2019_electrode_design_methodology_assb_3d` | 전고체 전극 설계 방법론 — GeoDict 복셀 3D 구조 (GrainGeo) → 접촉면적 (PoroDict) · 유효전도도 · MacMullin 수 N_m = τ/ε (ConductoDict FVM) → COMSOL P2D 성능 예측 (흑연 NG + 산화물 LSTP 음극 · 실험 없음) — Park (Energy Sto | sim (GeoDict voxel microstructure → ConductoDict FVM · MacMu | 2026-10-03 | 🖼 16 |
 | `park2026_ceramic_pp_separator` | Park 2026 (Chemical Engineering Journal 532 (2026) 174523, DOI 10.1016/j.cej.2026.174523) — 초박막 세라믹(Al₂O₃ 스퍼터) 코팅 건식 이축연신 PP 분리막(C-DB-PP): 이온수송 ↔ 내부단락저항 균형 (Li metal battery) | DEM | 2026-07-28 | — |

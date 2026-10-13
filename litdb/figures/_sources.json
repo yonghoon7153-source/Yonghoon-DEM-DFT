@@ -31,6 +31,13 @@
    "592ec934-92._Comparing_finetuning_strategies_for_machine_learning_force_fields_in_lithiumion_diffusion.pdf"
   ]
  },
+ "alizadeh2018_dem_adhesion_calibration_segregation_heap": {
+  "figures": 23,
+  "generated": "2026-10-13",
+  "pdfs": [
+   "6d4100ce-43._A_methodology_for_calibration_of_DEM_input_parameters_in_simulation_of_segregation_of_powder_mixtures_a_special_focus_on_adhesion.pdf"
+  ]
+ },
  "aminchiang2016_nmc_electronic_ionic_transport_vs_li": {
   "figures": 6,
   "generated": "2026-08-25",
@@ -141,6 +148,13 @@
    "DEM 논문/01. Integration of DEM-based microstructure generation with FEM and RNM simulations for evaluating ionic conductivity in composite cathodes of all-solid-state batteries.pdf"
   ]
  },
+ "begat2004_cohesive_adhesive_balance_afm_colloid_probe": {
+  "figures": 13,
+  "generated": "2026-10-13",
+  "pdfs": [
+   "93bb0fa4-36._The_cohesive-adhesive_balances_in_dry_powder_inhaler_formulations_I_direct_quantification_by_atomic_force_microscopy.pdf"
+  ]
+ },
  "bielefeld2019_microstructural_modeling_composite_cathode": {
   "figures": 11,
   "generated": "2026-08-05",
@@ -210,6 +224,13 @@
   "generated": "2026-08-05",
   "pdfs": [
    "★ 랩실 논문/05. Stabilizing the interface between high-Ni oxide cathode and Li6PS5Cl for all-solid-state batteries via dual-compatible halides.pdf"
+  ]
+ },
+ "chandratilleke2012_particle_scale_mixing_index": {
+  "figures": 21,
+  "generated": "2026-10-13",
+  "pdfs": [
+   "c013eb37-33._A_particle-scale_index_in_the_quantification_of_mixing_of_particles.pdf"
   ]
  },
  "chaney2024_two_step_sei_growth_argyrodite_li_metal": {
@@ -352,6 +373,13 @@
   "generated": "2026-08-05",
   "pdfs": [
    "DFT 먹인 논문/34. Elastic Properties of Alkali Superionic Conductor Electrolytes from First Principles Calculations.pdf"
+  ]
+ },
+ "deng2021_mechanical_surface_energy_tester_bond_number": {
+  "figures": 22,
+  "generated": "2026-10-13",
+  "pdfs": [
+   "3065876f-45._A_study_of_particle_adhesion_for_cohesive_powders_using_a_novel_mechanical_surface_energy_tester.pdf"
   ]
  },
  "deng2026_polysulfate_layer_moisture_oxidation_lpsc": {
@@ -502,6 +530,21 @@
    "7. Sup) FirstPrinciples_prediction_ESW_SI.pdf"
   ]
  },
+ "fowkes1964_attractive_forces_interfaces_dispersion": {
+  "figures": 24,
+  "generated": "2026-10-13",
+  "pdfs": [
+   "e9acc8f0-37._ATTRACTIVE_FORCES_AT_INTERFACES.pdf"
+  ]
+ },
+ "frankenberg2025_milling_dry_processed_sulfide_cathode_microstructure": {
+  "figures": 26,
+  "generated": "2026-10-13",
+  "pdfs": [
+   "8e444bcc-22._Tailoring_Composite_Microstructure_Through_Milling_for_Dry-Processed_Sulfide-Based_Solid-State_Battery_Cathodes.pdf",
+   "97805094-22._Sup_Tailoring_Composite_Microstructure_Through_Milling_for_Dry-Processed_Sulfide-Based_Solid-State_Battery_Cathodes.pdf"
+  ]
+ },
  "froboese2019_microstructure_ionic_conductivity_assb_electrode": {
   "figures": 19,
   "generated": "2026-10-03",
@@ -545,6 +588,20 @@
   "pdfs": [
    "0927-2. ElectrochemEnergyRev_2026_Gao_SIB_electrolyte_property_framework_AI_review_MAIN.pdf",
    "0927-2. Sup) ElectrochemEnergyRev_2026_Gao_SIB_electrolyte_AI_review_SI.pdf"
+  ]
+ },
+ "garcia2017_nmc111_surface_energy_wulff_dft": {
+  "figures": 14,
+  "generated": "2026-10-13",
+  "pdfs": [
+   "72c25f8c-40._Surface_Structure_Morphology_and_Stability_of_LiNi13Mn13Co13O2_Cathode_Material.pdf"
+  ]
+ },
+ "geldart2006_powder_flowability_angle_of_repose_tester": {
+  "figures": 12,
+  "generated": "2026-10-13",
+  "pdfs": [
+   "5a6475a4-44._Characterization_of_powder_flowability_using_measurement_of_angle_of_repose.pdf"
   ]
  },
  "gilgonzalez2022_synergistic_cl_constricted_esw": {
@@ -646,11 +703,26 @@
    "6. Sup) Evaluating densification effects on sulfide-based electrolytes to examine an application in scalable solid-state battery manufacturing.pdf"
   ]
  },
+ "hersey1975_ordered_mixing_concept": {
+  "figures": 1,
+  "generated": "2026-10-13",
+  "pdfs": [
+   "ab654539-31._Ordered_mixing_A_new_concept_in_powder_mixing_practice.pdf"
+  ]
+ },
  "hikima2022_operando_band_structure_assb": {
   "figures": 4,
   "generated": "2026-08-05",
   "pdfs": [
    "DFT 먹인 논문/25. Operando analysis of electronic band structure in an all-solid-state thin-film battery.pdf"
+  ]
+ },
+ "hippauf2019_dry_film_ptfe_sulfide_cathode_sheet": {
+  "figures": 19,
+  "generated": "2026-10-13",
+  "pdfs": [
+   "e02a571e-21._Overcoming_binder_limitations_of_sheet-type_solid-state_cathodes_using_a_solvent-free_dry-film_approach.pdf",
+   "7fb09899-21._Sup2_Overcoming_binder_limitations_of_sheet-type_solid-state_cathodes_using_a_solvent-free_dry-film_approach.pdf"
   ]
  },
  "hlushkou2018_void_space_ion_transport_assb_cathode": {
@@ -788,6 +860,15 @@
    "13. Sup) Interfacial_stability_halide_SE_highV_Na_SI.pdf"
   ]
  },
+ "jarray2019_cohesion_driven_mixing_segregation_drum": {
+  "figures": 21,
+  "generated": "2026-10-13",
+  "pdfs": [
+   "ca9ad870-32._Cohesion-driven_mixing_and_segregation_of_dry_granular_media.pdf",
+   "761dbec1-32._Sup_Cohesion-driven_mixing_and_segregation_of_dry_granular_media.pdf",
+   "8a2acbff-32._Sup2_Cohesion-driven_mixing_and_segregation_of_dry_granular_media.pdf"
+  ]
+ },
  "jeon2026_concerted_li_motion_argyrodite_assi": {
   "figures": 35,
   "generated": "2026-09-09",
@@ -810,6 +891,13 @@
   "pdfs": [
    "c57b2ffb-100._Sedoped_Li6PS5Cl_and_Li5.5PS4.5Cl1.5_with_improved_ionic_conductivity_and_interfacial_compatibility_a_highthroughput_DFT_study.pdf",
    "b669285a-100._Sup_Sedoped_Li6PS5Cl_and_Li5.5PS4.5Cl1.5_with_improved_ionic_conductivity_and_interfacial_compatibility_a_highthroughput_DFT_study.pdf"
+  ]
+ },
+ "johnson1971_jkr_surface_energy_contact_elastic_solids": {
+  "figures": 14,
+  "generated": "2026-10-13",
+  "pdfs": [
+   "303e5223-35._Surface_energy_and_the_contact_of_elastic_solids.pdf"
   ]
  },
  "jun2022_argyrodite_ion_cage_size_descriptor": {
@@ -942,6 +1030,21 @@
    "Sup) ch6_Kauwe2021_extraordinary.pdf"
   ]
  },
+ "kawaguchi2017_dry_coating_parametric_na2so4_model_se": {
+  "figures": 8,
+  "generated": "2026-10-13",
+  "pdfs": [
+   "040ad7d4-25._Parametric_study_of_dry_coating_process_of_electrode_particle_with_model_material_of_sulfide_solid_electrolytes_for_all-solid-state_battery.pdf"
+  ]
+ },
+ "kawaguchi2023_doe_electrode_fabrication_dry_coated_ncm_lps": {
+  "figures": 17,
+  "generated": "2026-10-13",
+  "pdfs": [
+   "d9f5750a-26._Statistical_analysis_of_electrode_fabrication_process_for_all-solid-state_batteries_and_effects_of_electrode_fabrication_conditions_on_battery_performance.pdf",
+   "264c2375-26._Sup_Statistical_analysis_of_electrode_fabrication_process_for_all-solid-state_batteries_and_effects_of_electrode_fabrication_conditions_on_battery_performance.pdf"
+  ]
+ },
  "ke2025_orbital_hybridization_mgclo": {
   "figures": 38,
   "generated": "2026-08-05",
@@ -973,6 +1076,14 @@
    "★ 랩실 논문/08. Chemo-mechanical failure of solid composite cathodes accelerated by high-strain anodes in all-solid-state batteries.pdf"
   ]
  },
+ "kim2023_mechanofusion_ncm811_lpscl_core_shell_intimate_contact": {
+  "figures": 27,
+  "generated": "2026-10-13",
+  "pdfs": [
+   "0f58580d-29._High-Performance_All-Solid-State_Batteries_Enabled_by_Intimate_Interfacial_Contact_Between_the_Cathode_and_Sulfide-Based_Solid_Electrolytes.pdf",
+   "6553306b-29._Sup_High-Performance_All-Solid-State_Batteries_Enabled_by_Intimate_Interfacial_Contact_Between_the_Cathode_and_Sulfide-Based_Solid_Electrolytes.pdf"
+  ]
+ },
  "kim2024_carbon_volumetric_occupation_se_domain": {
   "figures": 5,
   "generated": "2026-08-05",
@@ -993,6 +1104,14 @@
   "pdfs": [
    "DFT 먹인 논문/35. Highly reliable and large-scale simulations of promising argyrodite solid-state electrolytes using a machine-learned moment tensor potential.pdf",
    "DFT 먹인 논문/35. Sup) Highly reliable and large-scale simulations of promising argyrodite solid-state electrolytes using a machine-learned moment tensor potential.pdf"
+  ]
+ },
+ "kim2024_optimal_cathode_composite_mechanical_mixing_se_coverage": {
+  "figures": 39,
+  "generated": "2026-10-13",
+  "pdfs": [
+   "9673bc77-28._Exploring_optimal_cathode_composite_design_for_high-performance_all-solid-state_batteries.pdf",
+   "3f432922-28._Sup_Exploring_optimal_cathode_composite_design_for_high-performance_all-solid-state_batteries.pdf"
   ]
  },
  "kim2025_conductive_agent_se_coating_cathode": {
@@ -1123,6 +1242,13 @@
    "3501d83b-80._Comparative_study_of_ensemblebased_uncertainty_quantification_methods_for_neural_network_interatomic_potentials.pdf"
   ]
  },
+ "lacey1954_particle_mixing_theory_index": {
+  "figures": 12,
+  "generated": "2026-10-13",
+  "pdfs": [
+   "8975f2be-30._Developments_in_the_theory_of_particle_mixing.pdf"
+  ]
+ },
  "lai2020_li2s_interfacial_layer_amorphous_sulfide_cse": {
   "figures": 11,
   "generated": "2026-09-01",
@@ -1173,6 +1299,14 @@
   "generated": "2026-08-05",
   "pdfs": [
    "DEM 논문/51. Multiphysics modeling of the influence of initial pressure on mechanical and electrochemical performance of all-solid-state batteries.pdf"
+  ]
+ },
+ "lee2024_shear_force_dry_process_cathode_coverage": {
+  "figures": 32,
+  "generated": "2026-10-13",
+  "pdfs": [
+   "3c621cf8-27._Shear_force_effect_of_the_dry_process_on_cathode_contact_coverage_in_all-solid-state_batteries.pdf",
+   "da465ce2-27._Sup_Shear_force_effect_of_the_dry_process_on_cathode_contact_coverage_in_all-solid-state_batteries.pdf"
   ]
  },
  "lee2025_corolling_dryprocess_lpscl_ptfe": {
@@ -1536,6 +1670,13 @@
    "10. Sup) Ionic_correlations_failure_NE_SI.pdf"
   ]
  },
+ "matsusaka2010_triboelectric_charging_powders_review": {
+  "figures": 92,
+  "generated": "2026-10-13",
+  "pdfs": [
+   "0c514d40-39._Triboelectric_charging_of_powders_A_review.pdf"
+  ]
+ },
  "matthews2024_ptfe_nanofibril_network": {
   "figures": 9,
   "generated": "2026-09-04",
@@ -1632,6 +1773,13 @@
    "2. Sup) Pressure-Dependent Electronic and Ionic Tortuosities During Fabrication of Composite Cathodes for All-Solid-State Batteries Influence of Active Material Particle Morphology, Volume Fraction, and Coating.pdf"
   ]
  },
+ "mohammadijam2014_inverse_gas_chromatography_review": {
+  "figures": 22,
+  "generated": "2026-10-13",
+  "pdfs": [
+   "dbaae954-41._Inverse_gas_chromatography_applications_A_review.pdf"
+  ]
+ },
  "molerus1975_theory_of_yield_cohesive_powders": {
   "figures": 12,
   "generated": "2026-10-03",
@@ -1684,12 +1832,27 @@
    "801db51f-05._A_particle_scale_mixing_measurement_method_using_a_generalized_nearest_neighbor_mixing_index.pdf"
   ]
  },
+ "nakamura2020_dry_coating_ncm_li3ps4_core_shell": {
+  "figures": 10,
+  "generated": "2026-10-13",
+  "pdfs": [
+   "7d0ecf0f-24._Dry_coating_of_active_material_particles_with_sulfide_solid_electrolytes_for_an_all-solid-state_lithium_battery.pdf",
+   "5f74c477-24._Sup_Dry_coating_of_active_material_particles_with_sulfide_solid_electrolytes_for_an_all-solid-state_lithium_battery.pdf"
+  ]
+ },
  "nam2026_primer_layer_dry_electrode_collector": {
   "figures": 33,
   "generated": "2026-08-11",
   "pdfs": [
    "e8080c51-3._____revisitingprimerlayerdesignforrobustdryelectrodecurrentcollectorinterfacesinlithiumionbatteries.pdf",
    "c93d2ee5-23._Sup_____revisitingprimerlayerdesignforrobustdryelectrodecurrentcollectorinterfacesinlithiumionbatteries.pdf"
+  ]
+ },
+ "nase2001_granular_bond_collision_number_wet_cohesion": {
+  "figures": 11,
+  "generated": "2026-10-13",
+  "pdfs": [
+   "1eba5498-34._Discrete_characterization_tools_for_cohesive_granular_material.pdf"
   ]
  },
  "ncube2026_ionic_interdiffusion_lco_lgps_multiscale": {
@@ -1803,6 +1966,13 @@
    "DFT 먹인 논문/43. Phase stability, electrochemical stability and ionic conductivity of the Li10±1MP2X12 (M = Ge, Si, Sn, Al or P, and X = O, S or Se) family of superionic conductors.pdf"
   ]
  },
+ "otani2023_ionic_conductivity_path_resistance_separation_model": {
+  "figures": 7,
+  "generated": "2026-10-13",
+  "pdfs": [
+   "5d4c2f6e-46._Ionic_conductivity_prediction_model_for_composite_electrodes_and_quantification_of_ionic_conductivity_reduction_factors_in_sulfide-based_all-solid-state_batteries.pdf"
+  ]
+ },
  "otani2025_dem_se_dispersion_aggregation_compression": {
   "figures": 6,
   "generated": "2026-09-19",
@@ -1885,6 +2055,13 @@
   "pdfs": [
    "34b02e87-63._PETMAD_as_a_lightweight_universal_interatomic_potential_for_advanced_materials_modeling.pdf",
    "c90694f1-63._Sup_PETMAD_as_a_lightweight_universal_interatomic_potential_for_advanced_materials_modeling.pdf"
+  ]
+ },
+ "pfeffer2001_dry_particle_coating_engineered_particulates": {
+  "figures": 44,
+  "generated": "2026-10-13",
+  "pdfs": [
+   "008731cb-23._Synthesis_of_engineered_particulates_with_tailored_properties_using_dry_particle_coating.pdf"
   ]
  },
  "phuthi2026_mlip_ssb_perspective": {
@@ -1983,6 +2160,13 @@
   "pdfs": [
    "DFT 먹인 논문/39. Interface Stability in Solid-State Batteries.pdf",
    "DFT 먹인 논문/39. Sup) Interface Stability in Solid-State Batteries.pdf"
+  ]
+ },
+ "roessler2019_dem_cohesive_aor_cylinder_lift_calibration": {
+  "figures": 20,
+  "generated": "2026-10-13",
+  "pdfs": [
+   "4ac47ba6-42._DEM_parameter_calibration_of_cohesive_bulk_materials_using_a_simple_angle_of_repose_test.pdf"
   ]
  },
  "sakuda2013_sulfide_mechanical_property": {
@@ -2348,6 +2532,13 @@
   "generated": "2026-08-25",
   "pdfs": [
    "90f2f374-Modifying_Young_s_modulus_in_DEM_simulations_based_on_distributions_of_experimental_measurements.pdf"
+  ]
+ },
+ "vanoss1988_lifshitz_vdw_acid_base_interfacial": {
+  "figures": 16,
+  "generated": "2026-10-13",
+  "pdfs": [
+   "8e4064d0-38._Interfacial_Lifshitz-van_der_Waals_and_polar_interactions_in_macroscopic_systems.pdf"
   ]
  },
  "vijay2025_hybrid_cgmd_dl_slurry_microstructure": {
