@@ -1080,3 +1080,28 @@ rc 0 → **옛 봉인 대조 (§2-4) 에서 허용 밖 차이** → 정지. 원�
   05 의 `SYNTHETIC_SAMPLE.json` 등 기존 증거는 그대로다 (§48 A1).
 - **다음:** 재검토 요청 (`docs/REIL_C4_0B1_FIX_RESULT_REVIEW_SEND_20261013.md`). C4-0b1 종결은 재검토 판정 뒤다. C4-0b2 범위 (H4 대조 · ray —
   회신 권고: 합성 구현 대조 유지 · 이 자료의 H4 / ray 실제 탐색은 UNFIT 로 건너뜀) 는 그 뒤 사용자 확인으로 정한다.
+
+## §51 C4-0b1 한정 보완 재검토 회신 접수 — N2 · N3 · A1 수용 · N1 잔여 P2 1 건 · 전체 종결 보류 (2026-10-14 KST · 덧붙임 — 위 §0–§50 은 그대로)
+
+- **보존:** `reviews/review_reil_c4_0b1_fix_result_20261014/`
+  - zip 511,296 B · sha256 `2c78701df85d9d02b86a265e704b69f8a1fb4f50d6a829a4ed14ffbe1d51dd28` (사용자 업로드 원파일과 바이트 동일).
+  - `originals/` 51 · PACKAGE_MANIFEST (`members`) 50 / 50 일치 · 목록 밖 파일 0 · 비밀 0. 동봉 `package_review.ps1` · `audit_review.ps1` 은 실행하지 않았다.
+  - `source/` 39 는 검토 고정 HEAD `c6787db2` 의 저장소 파일과 바이트 동일하다.
+  - 규칙 커밋 `d926fa0c` → 보존 커밋 `e150c4dd` (blob 52 / 52 일치).
+- **판정 (`DECISION.json`):** `C4_0B1_IMPLEMENTATION_CLOSURE_HELD_N1_REMAINDER` — N2 `CLOSED` · N3 `CLOSED` ·
+  A1 `ACCEPTED_WITH_HISTORICAL_SCOPE_DEVIATION_PRESERVED` · 배열 `PRIOR_ACCEPTANCE_MAINTAINED` · N1 `PARTIALLY_ACCEPTED_RETURN_FIELDS_LOST_ON_OPTION_WARNING`.
+  검토자 재시험 · 수신 코드 실행 · 자료 개봉 0. 새 승인 없음 (구현 · 시험 · 건조 · 재봉인 · 0b2 · C4-E / A / B · COMSOL 모두 false).
+  - **수용:** N1 핵심 (NaN 두 번 → MemoryError 의 실제 worker 반례 · 평가 3 / 비유한 2 · 경고 · 원 오류 보존) · N2 (unclassified 전역 중지) ·
+    N3 (REEVAL_ERROR / NONFINITE 분리 · 집계) · A1 (§48 의 과거 범위 이탈 신고 · 원 기록 보존 · §49 의 이후 보완 승인 · PLAN-only / 바이트 대조 건조) ·
+    고정 대조 / 패치와 실행 파일 해시 일치 · RED 10 / 5 · GREEN 66 · 계산 54.249 / 1,260 s. 기존 두 배열 tree · 과거 증거 36 항목 (05 tree 포함) 불변.
+  - **C4-0B1-N1 잔여 (P2):** `scripts/reil_c4_h.py` 779–780 에서 minimize 가 정상 반환해 `res` 를 얻은 뒤, 788–791 의 모르는 옵션 경고 분기가
+    797–799 의 반환점 · status · message · termination 기록 **전에** 구조 중지한다 — 그 partial 에 이미 받은 반환 필드가 없다. 승인 요청 §2 (24 행) 의
+    "반환점이 있으면 x · status · message · termination" 과 다르다. 새 n1_b 는 계수 · 경고 · stop_error 만 단언해 66 통과와 양립했다 (정적 반례 · 잘못된
+    성공 판정이나 수치 오류는 아님 · 실패 기록 보존 문제).
+  - **한정 닫힘 조건:** 정상 반환이 있으면 경고 중지 전에 그 반환 필드를 partial 에 결속 (중지 이유는 OptimizeWarning · 재평가 · 증인 · 정상 완료로 가지
+    않음) · 반환이 없으면 x · status · termination 등을 성공값 · 0 으로 채우지 않고 원 오류를 덮지 않음 · 대조: 경고 + 알려진 정상 반환 (반환 필드 · 계수 ·
+    경고 · 중지 오류 보존 · 재평가 미진입) · 같은 경로 무경고 양성 · 반환 없는 오류 · worker → supervisor 보존.
+- **유지할 조건 (회신):** 0b2 범위는 N1 종결 뒤 확인 — H4 합성 양성 / 음성 대조 유지 · 이 자료의 H4 / ray 실제 탐색은 끝점 규칙의 UNFIT 로 건너뜀 (가설 반증
+  아님) · ray 구현 유보는 별도 결정 (미구현을 완료로 세지 않음) · 7,040 은 끝점 게이트만 반영한 계획 수. 실제 연결부에서 ρ 는 두 단일 목적 Phase A 뒤 ·
+  공통 갱신은 등록 탐색 종료 뒤 1 회. 129.1 s 는 기록 시점 snapshot 으로만 읽는다.
+- **다음:** N1 잔여 한 건만 다루는 한정 보완 승인 요청 (`docs/REIL_C4_0B1_FIX2_APPROVAL_REQUEST_20261014.md`) — 대조 · 패치 고정본을 먼저 커밋 · 승인 전 실행 0.
