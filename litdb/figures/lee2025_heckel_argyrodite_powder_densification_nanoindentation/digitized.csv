@@ -1,0 +1,78 @@
+figure,series,x_name,x,y_name,y,note
+fig1c,commercial Li6PS5Cl,level,(1) maximum load level,displacement_mm,6.711,horizontal annotation lines; y ticks 5.8..7.2 mm at 185 px/mm; +-0.005 mm
+fig1c,commercial Li6PS5Cl,level,(1)-(Δd_elastic) level,displacement_mm,6.511,horizontal annotation lines; y ticks 5.8..7.2 mm at 185 px/mm; +-0.005 mm
+fig1c,commercial Li6PS5Cl,level,(3) zero-load level,displacement_mm,6.278,horizontal annotation lines; y ticks 5.8..7.2 mm at 185 px/mm; +-0.005 mm
+fig1c,commercial Li6PS5Cl,quantity,Δd_elastic (plunger),mm,0.2,6.711-6.511
+fig1c,commercial Li6PS5Cl,quantity,ΔE_SE-powder (pellet recovery),mm,0.233,6.511-6.278
+fig1d,commercial Li6PS5Cl,sigma_MPa,10,minus_ln_1_minus_rho,0.752,"porosity_their_TD_basis=0.4714; band median, native 836x690"
+fig1d,commercial Li6PS5Cl,sigma_MPa,25,minus_ln_1_minus_rho,0.906,"porosity_their_TD_basis=0.4041; band median, native 836x690"
+fig1d,commercial Li6PS5Cl,sigma_MPa,50,minus_ln_1_minus_rho,1.06,"porosity_their_TD_basis=0.3465; band median, native 836x690"
+fig1d,commercial Li6PS5Cl,sigma_MPa,100,minus_ln_1_minus_rho,1.244,"porosity_their_TD_basis=0.2882; band median, native 836x690"
+fig1d,commercial Li6PS5Cl,sigma_MPa,150,minus_ln_1_minus_rho,1.413,"porosity_their_TD_basis=0.2434; band median, native 836x690"
+fig1d,commercial Li6PS5Cl,sigma_MPa,200,minus_ln_1_minus_rho,1.582,"porosity_their_TD_basis=0.2056; band median, native 836x690"
+fig1d,commercial Li6PS5Cl,sigma_MPa,250,minus_ln_1_minus_rho,1.735,"porosity_their_TD_basis=0.1764; band median, native 836x690"
+fig1d,commercial Li6PS5Cl,sigma_MPa,300,minus_ln_1_minus_rho,1.904,"porosity_their_TD_basis=0.1490; band median, native 836x690"
+fig1d,commercial Li6PS5Cl,sigma_MPa,350,minus_ln_1_minus_rho,2.073,"porosity_their_TD_basis=0.1258; band median, native 836x690"
+fig1d,commercial Li6PS5Cl,sigma_MPa,400,minus_ln_1_minus_rho,2.273,"porosity_their_TD_basis=0.1030; band median, native 836x690"
+fig1d,commercial Li6PS5Cl,sigma_MPa,500,minus_ln_1_minus_rho,2.749,"porosity_their_TD_basis=0.0640; band median, native 836x690"
+fig1d,commercial Li6PS5Cl,sigma_MPa,600,minus_ln_1_minus_rho,3.424,"porosity_their_TD_basis=0.0326; band median, native 836x690"
+fig1d,commercial Li6PS5Cl,sigma_MPa,650,minus_ln_1_minus_rho,4.115,"porosity_their_TD_basis=0.0163; band median, native 836x690"
+fig1d,commercial Li6PS5Cl,sigma_MPa,680,minus_ln_1_minus_rho,4.345,"porosity_their_TD_basis=0.0130; band median, native 836x690"
+fig2a,commercial Li6PS5Cl (as received),sigma_MPa,150,minus_ln_1_minus_rho,1.35,porosity=0.2592; partly hidden under milled markers <=350 MPa (bias low)
+fig2a,commercial Li6PS5Cl (as received),sigma_MPa,200,minus_ln_1_minus_rho,1.515,porosity=0.2198; partly hidden under milled markers <=350 MPa (bias low)
+fig2a,commercial Li6PS5Cl (as received),sigma_MPa,250,minus_ln_1_minus_rho,1.67,porosity=0.1882; partly hidden under milled markers <=350 MPa (bias low)
+fig2a,commercial Li6PS5Cl (as received),sigma_MPa,300,minus_ln_1_minus_rho,1.825,porosity=0.1612; partly hidden under milled markers <=350 MPa (bias low)
+fig2a,commercial Li6PS5Cl (as received),sigma_MPa,350,minus_ln_1_minus_rho,1.99,porosity=0.1367; partly hidden under milled markers <=350 MPa (bias low)
+fig2a,commercial Li6PS5Cl (as received),sigma_MPa,400,minus_ln_1_minus_rho,2.204,porosity=0.1104; partly hidden under milled markers <=350 MPa (bias low)
+fig2a,commercial Li6PS5Cl (as received),sigma_MPa,450,minus_ln_1_minus_rho,2.408,porosity=0.0900; partly hidden under milled markers <=350 MPa (bias low)
+fig2a,commercial Li6PS5Cl (as received),sigma_MPa,500,minus_ln_1_minus_rho,2.612,porosity=0.0734; partly hidden under milled markers <=350 MPa (bias low)
+fig2a,commercial Li6PS5Cl (as received),sigma_MPa,550,minus_ln_1_minus_rho,2.854,porosity=0.0576; partly hidden under milled markers <=350 MPa (bias low)
+fig2a,commercial Li6PS5Cl (as received),sigma_MPa,600,minus_ln_1_minus_rho,3.087,porosity=0.0456; partly hidden under milled markers <=350 MPa (bias low)
+fig2a,commercial Li6PS5Cl (as received),sigma_MPa,650,minus_ln_1_minus_rho,3.524,porosity=0.0295; partly hidden under milled markers <=350 MPa (bias low)
+fig2a,commercial Li6PS5Cl (as received),sigma_MPa,700,minus_ln_1_minus_rho,4.165,porosity=0.0155; partly hidden under milled markers <=350 MPa (bias low)
+fig2a,commercial Li6PS5Cl (ball-milled),sigma_MPa,25,minus_ln_1_minus_rho,0.874,porosity=0.4173
+fig2a,commercial Li6PS5Cl (ball-milled),sigma_MPa,50,minus_ln_1_minus_rho,1.029,porosity=0.3574
+fig2a,commercial Li6PS5Cl (ball-milled),sigma_MPa,100,minus_ln_1_minus_rho,1.262,porosity=0.2831
+fig2a,commercial Li6PS5Cl (ball-milled),sigma_MPa,150,minus_ln_1_minus_rho,1.417,porosity=0.2424
+fig2a,commercial Li6PS5Cl (ball-milled),sigma_MPa,200,minus_ln_1_minus_rho,1.592,porosity=0.2035
+fig2a,commercial Li6PS5Cl (ball-milled),sigma_MPa,250,minus_ln_1_minus_rho,1.738,porosity=0.1759
+fig2a,commercial Li6PS5Cl (ball-milled),sigma_MPa,300,minus_ln_1_minus_rho,1.913,porosity=0.1476
+fig2a,commercial Li6PS5Cl (ball-milled),sigma_MPa,350,minus_ln_1_minus_rho,2.097,porosity=0.1228
+fig2a,commercial Li6PS5Cl (ball-milled),sigma_MPa,400,minus_ln_1_minus_rho,2.311,porosity=0.0992
+fig2a,commercial Li6PS5Cl (ball-milled),sigma_MPa,450,minus_ln_1_minus_rho,2.553,porosity=0.0778
+fig2a,commercial Li6PS5Cl (ball-milled),sigma_MPa,500,minus_ln_1_minus_rho,2.874,porosity=0.0565
+fig2a,commercial Li6PS5Cl (ball-milled),sigma_MPa,550,minus_ln_1_minus_rho,3.282,porosity=0.0376
+fig2a,commercial Li6PS5Cl (ball-milled),sigma_MPa,600,minus_ln_1_minus_rho,3.981,porosity=0.0187
+fig2b,Li6PS5Cl (synthesis),sigma_MPa,25,minus_ln_1_minus_rho,0.816,"porosity=0.4422; native 977x377 (low res, +-0.03 in y)"
+fig2b,Li6PS5Cl (synthesis),sigma_MPa,100,minus_ln_1_minus_rho,1.146,"porosity=0.3179; native 977x377 (low res, +-0.03 in y)"
+fig2b,Li6PS5Cl (synthesis),sigma_MPa,150,minus_ln_1_minus_rho,1.282,"porosity=0.2775; native 977x377 (low res, +-0.03 in y)"
+fig2b,Li6PS5Cl (synthesis),sigma_MPa,300,minus_ln_1_minus_rho,1.738,"porosity=0.1759; native 977x377 (low res, +-0.03 in y)"
+fig2b,Li6PS5Cl (synthesis),sigma_MPa,400,minus_ln_1_minus_rho,2.01,"porosity=0.1340; native 977x377 (low res, +-0.03 in y)"
+fig2b,Li6PS5Cl (synthesis),sigma_MPa,500,minus_ln_1_minus_rho,2.388,"porosity=0.0918; native 977x377 (low res, +-0.03 in y)"
+fig2b,Li6PS5Cl (synthesis),sigma_MPa,600,minus_ln_1_minus_rho,2.913,"porosity=0.0543; native 977x377 (low res, +-0.03 in y)"
+fig2b,Li6PS5Cl (synthesis),sigma_MPa,700,minus_ln_1_minus_rho,3.961,"porosity=0.0190; native 977x377 (low res, +-0.03 in y)"
+fig2b,Li6PS5Br (synthesis),sigma_MPa,25,minus_ln_1_minus_rho,0.971,"porosity=0.3787; native 977x377 (low res, +-0.03 in y)"
+fig2b,Li6PS5Br (synthesis),sigma_MPa,100,minus_ln_1_minus_rho,1.223,"porosity=0.2943; native 977x377 (low res, +-0.03 in y)"
+fig2b,Li6PS5Br (synthesis),sigma_MPa,150,minus_ln_1_minus_rho,1.34,"porosity=0.2618; native 977x377 (low res, +-0.03 in y)"
+fig2b,Li6PS5Br (synthesis),sigma_MPa,200,minus_ln_1_minus_rho,1.456,"porosity=0.2332; native 977x377 (low res, +-0.03 in y)"
+fig2b,Li6PS5Br (synthesis),sigma_MPa,300,minus_ln_1_minus_rho,1.67,"porosity=0.1882; native 977x377 (low res, +-0.03 in y)"
+fig2b,Li6PS5Br (synthesis),sigma_MPa,400,minus_ln_1_minus_rho,1.922,"porosity=0.1463; native 977x377 (low res, +-0.03 in y)"
+fig2b,Li6PS5Br (synthesis),sigma_MPa,500,minus_ln_1_minus_rho,2.233,"porosity=0.1072; native 977x377 (low res, +-0.03 in y)"
+fig2b,Li6PS5Br (synthesis),sigma_MPa,600,minus_ln_1_minus_rho,2.621,"porosity=0.0727; native 977x377 (low res, +-0.03 in y)"
+fig2b,Li6PS5Br (synthesis),sigma_MPa,700,minus_ln_1_minus_rho,3.184,"porosity=0.0414; native 977x377 (low res, +-0.03 in y)"
+fig2b,Li5.55PS4.55(BH4)1.45,sigma_MPa,25,minus_ln_1_minus_rho,1.097,"porosity=0.3339; native 977x377 (low res, +-0.03 in y)"
+fig2b,Li5.55PS4.55(BH4)1.45,sigma_MPa,100,minus_ln_1_minus_rho,1.485,"porosity=0.2265; native 977x377 (low res, +-0.03 in y)"
+fig2b,Li5.55PS4.55(BH4)1.45,sigma_MPa,150,minus_ln_1_minus_rho,1.68,"porosity=0.1864; native 977x377 (low res, +-0.03 in y)"
+fig2b,Li5.55PS4.55(BH4)1.45,sigma_MPa,200,minus_ln_1_minus_rho,1.864,"porosity=0.1551; native 977x377 (low res, +-0.03 in y)"
+fig2b,Li5.55PS4.55(BH4)1.45,sigma_MPa,300,minus_ln_1_minus_rho,2.252,"porosity=0.1052; native 977x377 (low res, +-0.03 in y)"
+fig2b,Li5.55PS4.55(BH4)1.45,sigma_MPa,400,minus_ln_1_minus_rho,2.757,"porosity=0.0635; native 977x377 (low res, +-0.03 in y)"
+fig2b,Li5.55PS4.55(BH4)1.45,sigma_MPa,500,minus_ln_1_minus_rho,3.631,"porosity=0.0265; native 977x377 (low res, +-0.03 in y)"
+fig2b,Li5.15PS4.15(BH4)1.85,sigma_MPa,25,minus_ln_1_minus_rho,1.049,"porosity=0.3503; native 977x377 (low res, +-0.03 in y)"
+fig2b,Li5.15PS4.15(BH4)1.85,sigma_MPa,100,minus_ln_1_minus_rho,1.379,"porosity=0.2518; native 977x377 (low res, +-0.03 in y)"
+fig2b,Li5.15PS4.15(BH4)1.85,sigma_MPa,150,minus_ln_1_minus_rho,1.573,"porosity=0.2074; native 977x377 (low res, +-0.03 in y)"
+fig2b,Li5.15PS4.15(BH4)1.85,sigma_MPa,200,minus_ln_1_minus_rho,1.757,"porosity=0.1726; native 977x377 (low res, +-0.03 in y)"
+fig2b,Li5.15PS4.15(BH4)1.85,sigma_MPa,300,minus_ln_1_minus_rho,2.117,"porosity=0.1204; native 977x377 (low res, +-0.03 in y)"
+fig2b,Li5.15PS4.15(BH4)1.85,sigma_MPa,400,minus_ln_1_minus_rho,2.524,"porosity=0.0801; native 977x377 (low res, +-0.03 in y)"
+fig2b,Li5.15PS4.15(BH4)1.85,sigma_MPa,500,minus_ln_1_minus_rho,2.99,"porosity=0.0503; native 977x377 (low res, +-0.03 in y)"
+fig2b,Li5.15PS4.15(BH4)1.85,sigma_MPa,600,minus_ln_1_minus_rho,3.573,"porosity=0.0281; native 977x377 (low res, +-0.03 in y)"
+fig2b,Li5.15PS4.15(BH4)1.85,sigma_MPa,700,minus_ln_1_minus_rho,4.602,"porosity=0.0100; native 977x377 (low res, +-0.03 in y)"
