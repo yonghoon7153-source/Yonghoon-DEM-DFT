@@ -278,7 +278,7 @@ SE (또는 SE + NCM 막자 혼합) → SUS 판 사이 펠릿 → 성형 압력 �
 - 같은 계보 (Inoue): `so2021_dem_mold_pressure_assb_coldpress` · `so2022_dem_contact_model_assb_compaction_sintering` · `so2022_dem_compaction_coated_particles_assb` · `otani2025_dem_se_dispersion_aggregation_compression`.
 - 복합 σ 실측 · 모형: `asano2017_ncm111_li3ps4_composite_electronic_ionic_conductivity` · `minnmann2021_jes_charge_transport_bottlenecks` · `hlushkou2018_void_space_ion_transport_assb_cathode` · `bielefeld2019_microstructural_modeling_composite_cathode` · `bazzoun2026_dem_fem_rnm_ionic` · `miss2026_insitu_conductivity_porosity_pressure_compaction`.
 - τ 규약: `tjaden2018_tortuosity_review_calculation_approaches` · `siroma2015_transmission_line_model_porous_electrode_impedance` · `kato2018_thick_electrode_assb_cycle_tortuosity`.
-- 같은 날 묶음: `nakamura2020_dry_coating_ncm_li3ps4_core_shell` (귀무 모형 대조 §7-3) · `lee2024_shear_force_dry_process_cathode_coverage`.
+- 같은 날 묶음: `nakamura2020_dry_coating_ncm_li3ps4_core_shell` (귀무 모형 대조 §7-3) · `lee2024_shear_force_dry_process_cathode_coverage` · `kim2023_mechanofusion_ncm811_lpscl_core_shell_intimate_contact` (같은 정의의 수송 tortuosity 실측 2.21–4.28) · `kim2024_optimal_cathode_composite_mechanical_mixing_se_coverage` (8.62–20.8) · `kawaguchi2023_doe_electrode_fabrication_dry_coated_ncm_lps`.
 
 ## 🗨️ Q&A 로그
 <!-- "Q&A 작성해줘" 트리거 시 직전 질문/답 누적 -->

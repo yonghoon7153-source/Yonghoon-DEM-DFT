@@ -286,7 +286,7 @@
 - 정본 litdb 중복 확인: `git ls-tree` 로 `litdb/papers/` 전수 + DOI · 제목 낱말 grep — 이 논문 카드 없음 (`comparison_vs_ours_DEM.md` 에 위시리스트 언급만).
 
 ## 🔗 관련 카드
-- 같은 축 (건식 SE 코팅): `kim2023_mechanofusion_ncm811_lpscl_core_shell_intimate_contact` · `lee2026_lpscl_coating_thickness_ncm811` · `nakamura2020_dry_coating_ncm_li3ps4_core_shell` · `kawaguchi2017_dry_coating_parametric_na2so4_model_se` · `kissel2026_mechanofusion_derived_cathode_composite_microstructures_scalable` · `frankenberg2025_milling_dry_processed_sulfide_cathode_microstructure`.
+- 같은 축 (건식 SE 코팅): `kim2023_mechanofusion_ncm811_lpscl_core_shell_intimate_contact` · `lee2026_lpscl_coating_thickness_ncm811` · `nakamura2020_dry_coating_ncm_li3ps4_core_shell` · `kawaguchi2017_dry_coating_parametric_na2so4_model_se` · `kawaguchi2023_doe_electrode_fabrication_dry_coated_ncm_lps` (같은 총 SE 비교인데 껍질 몫이 SE 비와 함께 53 → 14 % 로 움직이는 설계) · `kissel2026_mechanofusion_derived_cathode_composite_microstructures_scalable` · `frankenberg2025_milling_dry_processed_sulfide_cathode_microstructure`.
 - DEM · 퍼콜레이션 · FEA: `shi2019_high_am_loading_particle_size_assb` · `yun2023_deciphering_degradation_halide_vs_sulfide` · `bielefeld2019_microstructural_modeling_composite_cathode`.
 - 측정: `kaiser2018_ion_transport_limitations_assb_sulfide_electrodes` · `asano2017_ncm111_li3ps4_composite_electronic_ionic_conductivity` · `hippauf2019_dry_film_ptfe_sulfide_cathode_sheet`.
 

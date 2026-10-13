@@ -355,7 +355,7 @@ E_m = E_col · f_col · t / m_total — 논문의 인쇄값 (*"Em = 10 J g−1 (
 | 27 | O. Maus, M. A. Lange, F. Frankenberg, F. Stainer, V. Faka, E. Schlautmann, C. Rosenbach, A. Jodlbauer, J. Schubert, J. Janek, C. Li, P. Michalowski, H. M. R. Wilkening, A. Kwade, W. G. Zeier, Adv. Energy Mater. 2024, 15, 2403291. | 카드 없음 — LPSCl 단독 건식 분쇄 · DEM E_m ↔ 결맞음 길이 (이 논문의 선행) |
 | 31 | M. Kissel, M. Schosland, J. Töws, D. Kalita, Y. Schneider, J. Kessler-Kühn, S. Schröder, J. Schubert, F. Frankenberg, A. Kwade, A. Bielefeld, F. H. Richter, J. Janek, Adv. Energy Mater. 2025, 15, 2405405. | 카드 없음 — 정적 CAM 이용률 · 2 차 혼합도 정의 |
 | 35 | D. Lee, Y. Shim, Y. Kim, G. Kwon, S. H. Choi, K. Kim, D.-J. Yoo, Nat. Commun. 2024, 15, 4763. | 정본 카드 `lee2024_shear_force_dry_process_cathode_coverage` |
-| 37 | F. Hippauf, B. Schumm, S. Doerfler, H. Althues, S. Fujiki, T. Shiratsuchi, T. Tsujimura, Y. Aihara, S. Kaskel, Energy Storage Mater. 2019, 21, 390. | 같은 날 묶음 (PTFE 건식 막 원전) |
+| 37 | F. Hippauf, B. Schumm, S. Doerfler, H. Althues, S. Fujiki, T. Shiratsuchi, T. Tsujimura, Y. Aihara, S. Kaskel, Energy Storage Mater. 2019, 21, 390. | 정본 카드 `hippauf2019_dry_film_ptfe_sulfide_cathode_sheet` (같은 날 묶음 · PTFE 건식 막 원전) |
 | 52 | P. Minnmann, F. Strauss, A. Bielefeld, R. Ruess, P. Adelhelm, S. Burkhardt, S. L. Dreyer, E. Trevisanello, H. Ehrenberg, T. Brezesinski, F. H. Richter, J. Janek, Adv. Energy Mater. 2022, 12, 2201425. | 정본 카드 `minnmann2022_designing_cathodes_solidstate` |
 | 62 | T. Kawaguchi, H. Nakamura, S. Watano, Powder Technol. 2017, 305, 241. | 정본 카드 `kawaguchi2017_dry_coating_parametric_na2so4_model_se` |
 | 69 | A. Bielefeld, D. A. Weber, J. Janek, J. Phys. Chem. C 2019, 123, 1626. | 정본 카드 `bielefeld2019_microstructural_modeling_composite_cathode` |
@@ -372,7 +372,7 @@ E_m = E_col · f_col · t / m_total — 논문의 인쇄값 (*"Em = 10 J g−1 (
 ## 🔗 관련 카드
 - 같은 그룹 · 공정: `frankenberg2024_dem_high_intensity_mixer_assb` · `kissel2026_mechanofusion_derived_cathode_composite_microstructures_scalable` · `heck2026_densification_sulfide_se_binder_scalable`.
 - SE 입경 · 밀링 · 결정자: `cronau2022_wet_milling_particle_size_ionic_conductivity` · `schlautmann2023_se_particle_size_composite_transport` · `faka2026_particle_size_consolidation_strain_lpscl`.
-- 건식 공정 · 코팅: `lee2024_shear_force_dry_process_cathode_coverage` · `kawaguchi2017_dry_coating_parametric_na2so4_model_se` · `nakamura2020_dry_coating_ncm_li3ps4_core_shell` · `lee2026_unveiling_ptfe_dry_electrode_digital_twin`.
+- 건식 공정 · 코팅: `lee2024_shear_force_dry_process_cathode_coverage` · `kawaguchi2017_dry_coating_parametric_na2so4_model_se` · `nakamura2020_dry_coating_ncm_li3ps4_core_shell` · `kawaguchi2023_doe_electrode_fabrication_dry_coated_ncm_lps` · `hippauf2019_dry_film_ptfe_sulfide_cathode_sheet` · `kim2023_mechanofusion_ncm811_lpscl_core_shell_intimate_contact` · `kim2024_optimal_cathode_composite_mechanical_mixing_se_coverage` · `lee2026_unveiling_ptfe_dry_electrode_digital_twin`.
 - 같은 그룹 수송 앵커: `minnmann2021_jes_charge_transport_bottlenecks` · `minnmann2022_designing_cathodes_solidstate` · `bielefeld2019_microstructural_modeling_composite_cathode`.
 
 ## 🗨️ Q&A 로그

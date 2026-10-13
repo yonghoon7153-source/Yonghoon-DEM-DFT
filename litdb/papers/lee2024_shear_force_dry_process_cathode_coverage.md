@@ -413,6 +413,7 @@
 - SE 코팅 · 피복: `lee2026_mechanical_halogen_argyrodite_drycoating` (1저자 공저) · `lee2026_lpscl_coating_thickness_ncm811` · `kim2025_conductive_agent_se_coating_cathode` · `kissel2026_mechanofusion_derived_cathode_composite_microstructures_scalable` · `so2022_dem_compaction_coated_particles_assb`.
 - SE 분산 · 응집 (DEM): `otani2025_dem_se_dispersion_aggregation_compression` · `frankenberg2024_dem_high_intensity_mixer_assb`.
 - 공극 · 이용률: `hlushkou2018_void_space_ion_transport_assb_cathode` · `minnmann2022_designing_cathodes_solidstate` · `bielefeld2019_microstructural_modeling_composite_cathode`.
+- 같은 날 묶음 (건식 공정 · SE 건식 코팅 · 복합 설계): `nakamura2020_dry_coating_ncm_li3ps4_core_shell` · `kawaguchi2017_dry_coating_parametric_na2so4_model_se` · `kawaguchi2023_doe_electrode_fabrication_dry_coated_ncm_lps` · `kim2023_mechanofusion_ncm811_lpscl_core_shell_intimate_contact` · `kim2024_optimal_cathode_composite_mechanical_mixing_se_coverage` · `frankenberg2025_milling_dry_processed_sulfide_cathode_microstructure` · `hippauf2019_dry_film_ptfe_sulfide_cathode_sheet` · `otani2023_ionic_conductivity_path_resistance_separation_model`.
 
 ## 🗨️ Q&A 로그
 <!-- "Q&A 작성해줘" 트리거 시 직전 질문/답 누적 -->

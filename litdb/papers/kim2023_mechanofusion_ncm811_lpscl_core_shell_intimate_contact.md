@@ -290,7 +290,7 @@ LPSCl 합성 → MF (NCM + LPSCl, 80:20 · 90:10) → SEM · FIB-EDS (두께) ·
 
 ## 🔗 관련 카드
 - 같은 그룹: `lee2026_lpscl_coating_thickness_ncm811`.
-- SE 건식 코팅 · 공정: `nakamura2020_dry_coating_ncm_li3ps4_core_shell` · `kawaguchi2017_dry_coating_parametric_na2so4_model_se` · `kissel2026_mechanofusion_derived_cathode_composite_microstructures_scalable` · `lee2026_mechanical_halogen_argyrodite_drycoating` · `frankenberg2025_milling_dry_processed_sulfide_cathode_microstructure` · `hippauf2019_dry_film_ptfe_sulfide_cathode_sheet`.
+- SE 건식 코팅 · 공정: `nakamura2020_dry_coating_ncm_li3ps4_core_shell` · `kawaguchi2017_dry_coating_parametric_na2so4_model_se` · `kawaguchi2023_doe_electrode_fabrication_dry_coated_ncm_lps` · `kissel2026_mechanofusion_derived_cathode_composite_microstructures_scalable` · `lee2026_mechanical_halogen_argyrodite_drycoating` · `frankenberg2025_milling_dry_processed_sulfide_cathode_microstructure` · `hippauf2019_dry_film_ptfe_sulfide_cathode_sheet`.
 - 피복 · 수송: `lee2024_shear_force_dry_process_cathode_coverage` · `otani2023_ionic_conductivity_path_resistance_separation_model` · `kaiser2018_ion_transport_limitations_assb_sulfide_electrodes` (τ² 정의 원전).
 - 스택압: `doux2020_stack_pressure_assb`.
 

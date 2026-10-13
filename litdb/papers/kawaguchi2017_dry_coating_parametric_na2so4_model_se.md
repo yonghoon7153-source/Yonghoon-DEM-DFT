@@ -244,7 +244,8 @@ NCM + 분쇄 Na₂SO₄ → 막자 30 min 예비 혼합 → Hybridizer (선속�
 - Fig 2 · 5 · 6 · 7 크롭을 다시 열어 §3-1 (입도 구간) · §3-5 (Fig 5c 곡선 순서) · §3-6 (화살표 방향) · §10-4 (Fig 7 패널 표지 · "fragtion" 위치) 를 고쳤다 (같은 날).
 
 ## 🔗 관련 카드
-- 같은 그룹: `nakamura2020_dry_coating_ncm_li3ps4_core_shell`.
+- 같은 그룹: `nakamura2020_dry_coating_ncm_li3ps4_core_shell` · `kawaguchi2023_doe_electrode_fabrication_dry_coated_ncm_lps` (실제 Li₃PS₄ 10 wt% 투입 → 순 5.6 wt% — 이 논문의 Na₂SO₄ "≤ 10 wt% 손실 없음" 과 다르다).
+- 같은 날 묶음: `kim2023_mechanofusion_ncm811_lpscl_core_shell_intimate_contact` · `kim2024_optimal_cathode_composite_mechanical_mixing_se_coverage` · `frankenberg2025_milling_dry_processed_sulfide_cathode_microstructure` · `hippauf2019_dry_film_ptfe_sulfide_cathode_sheet` · `lee2024_shear_force_dry_process_cathode_coverage` · `otani2023_ionic_conductivity_path_resistance_separation_model`.
 - SE 건식 코팅: `lee2026_lpscl_coating_thickness_ncm811` · `lee2026_mechanical_halogen_argyrodite_drycoating` (1저자 공저) · `kim2025_conductive_agent_se_coating_cathode` · `kissel2026_mechanofusion_derived_cathode_composite_microstructures_scalable` · `choi2026_bzox_dry_zro2x_nmc_shell_coating`.
 - 혼합 장치 DEM: `frankenberg2024_dem_high_intensity_mixer_assb` · `lischka2025_dem_eirich_intensive_mixer_dry_mixing` · `hare2026_dem_pept_dry_mixing_nmc622_eirich` · `jadidi2023_dem_batch_solid_mixers_review`.
 - SE 기계 물성: `sakuda2013_sulfide_mechanical_property`.

@@ -287,7 +287,7 @@
 
 ## 🔗 관련 카드
 - PTFE 건식 전극: `lee2026_unveiling_ptfe_dry_electrode_digital_twin` · `matthews2024_ptfe_nanofibril_network` · `mun2025_dry_electrode_technology_assb_review` · `lee2024_shear_force_dry_process_cathode_coverage`.
-- 혼합 · 밀링 · 코팅 공정: `frankenberg2025_milling_dry_processed_sulfide_cathode_microstructure` · `kawaguchi2017_dry_coating_parametric_na2so4_model_se` · `nakamura2020_dry_coating_ncm_li3ps4_core_shell`.
+- 혼합 · 밀링 · 코팅 공정: `frankenberg2025_milling_dry_processed_sulfide_cathode_microstructure` · `kawaguchi2017_dry_coating_parametric_na2so4_model_se` · `nakamura2020_dry_coating_ncm_li3ps4_core_shell` · `kawaguchi2023_doe_electrode_fabrication_dry_coated_ncm_lps`.
 - SE 펠릿 σ 규약: `cronau2021_stack_pressure_ionic_conductivity` · `minnmann2021_jes_charge_transport_bottlenecks`.
 
 ## 🗨️ Q&A 로그
