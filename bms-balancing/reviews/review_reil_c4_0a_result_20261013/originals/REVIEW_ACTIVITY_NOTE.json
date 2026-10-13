@@ -1,0 +1,54 @@
+{
+  "reviewer_only": true,
+  "received_source_import_execution": 0,
+  "scientific_tests": 0,
+  "data_xlsx_pickle_notebook_open": 0,
+  "fits": 0,
+  "COMSOL": 0,
+  "environment_install": 0,
+  "sobol_regeneration": 0,
+  "actions": [
+    "Read GitHub fixed-ref code/docs/raw logs/JSON and fixed synthetic array bytes",
+    "Local byte-exact capture conversion and Git blob verification",
+    "Reviewer-only JSON arithmetic, hashing and archive packaging",
+    "Static parallel source review"
+  ],
+  "review_tool_notes": [
+    "Initial text capture method added terminal LF; corrected captures from original connector content. 55 Git blob hashes matched. Not a remote source discrepancy.",
+    "One apply_patch attempt used delete/add on same path and was rejected without mutation; replaced with update.",
+    "Reviewer array hashing helper first used default Windows cp949 text decoding and failed reading UTF-8 metadata (40e4ca). Explicit UTF-8 correction passed (e944c2). No candidate executed.",
+    "During expansion of capture list, new nested source directory was absent (ef4018). Local capture helper added parent directory creation under validated source root and all55captures then matched (215580). A premature note read before agent completion and subsequent source read after capture error reported missing local paths; no original data modified."
+  ],
+  "forbidden_side_effects": "No remote writes/messages, no installed-runner calls, no source repair, no execution GO",
+  "source_compare": {
+    "from": "979e0633",
+    "to": "c542e056b33d25100bc0519ce492c98d3bcce172",
+    "status": "ahead",
+    "changed_paths": [
+      "bms-balancing/.gitattributes",
+      "bms-balancing/docs/COMSOL_REBUILD_SPEC.md",
+      "bms-balancing/docs/REIL_C4_0A_RESULT_REVIEW_SEND_20261013.md",
+      "bms-balancing/docs/REIL_PREREQUISITES_STATUS_20261004.md",
+      "bms-balancing/reviews/r14_repros/codex63/comsol_microshort_s1_open_r1_003_review_20261013/COMSOL_MICROSHORT_S1_OPEN_R1_003_REVIEW_REPLY_20261013.zip",
+      "bms-balancing/reviews/r14_repros/codex63/comsol_microshort_s1_open_r1_003_review_20261013/originals/CLAUDE_REPLY_KO.md",
+      "bms-balancing/reviews/r14_repros/codex63/comsol_microshort_s1_open_r1_003_review_20261013/originals/DECISION.json",
+      "bms-balancing/reviews/r14_repros/codex63/comsol_microshort_s1_open_r1_003_review_20261013/originals/INPUTS.json",
+      "bms-balancing/reviews/r14_repros/codex63/comsol_microshort_s1_open_r1_003_review_20261013/originals/INTAKE_CHECK.json",
+      "bms-balancing/reviews/r14_repros/codex63/comsol_microshort_s1_open_r1_003_review_20261013/originals/PACKAGE_MANIFEST.json",
+      "bms-balancing/reviews/r14_repros/codex63/comsol_microshort_s1_open_r1_003_review_20261013/originals/POST_PACKAGE_SELECTED_SOURCES_AFTER.json",
+      "bms-balancing/reviews/r14_repros/codex63/comsol_microshort_s1_open_r1_003_review_20261013/originals/REVIEW_ACTIVITY_NOTE.json",
+      "bms-balancing/reviews/r14_repros/codex63/comsol_microshort_s1_open_r1_003_review_20261013/originals/REVIEW_KO.md",
+      "bms-balancing/reviews/r14_repros/codex63/comsol_microshort_s1_open_r1_003_review_20261013/originals/USER_SIDECAR_RECONCILIATION.json",
+      "bms-balancing/reviews/r14_repros/codex63/comsol_microshort_s1_open_r1_003_review_20261013/originals/notes/CASE_RECONCILIATION.json",
+      "bms-balancing/reviews/r14_repros/codex63/comsol_microshort_s1_open_r1_003_review_20261013/originals/notes/JAVA_AUDIT.json",
+      "bms-balancing/reviews/r14_repros/codex63/comsol_microshort_s1_open_r1_003_review_20261013/originals/notes/PROVENANCE_AUDIT.json",
+      "bms-balancing/reviews/r14_repros/codex63/comsol_microshort_s1_open_r1_003_review_20261013/originals/notes/PROVENANCE_SUPPLEMENT_AUDIT.json",
+      "bms-balancing/reviews/r14_repros/codex63/comsol_microshort_s1_open_r1_003_review_20261013/originals/notes/PYTHON_AUDIT.json",
+      "bms-balancing/reviews/r14_repros/codex63/comsol_microshort_s1_open_r1_003_review_20261013/originals/package_review.py",
+      "bms-balancing/reviews/r14_repros/codex63/comsol_microshort_s1_open_r1_003_review_20261013/originals/review_counts.py",
+      "bms-balancing/reviews/r14_repros/codex63/comsol_microshort_s1_open_r1_003_review_20261013/originals/review_intake.py"
+    ],
+    "reviewed_implementation_changed_after_execution": false
+  },
+  "scope": "Tool errors above belong only to reviewer-owned material handling; not submitter tests or candidate results. Findings are static, not dynamically reproduced."
+}

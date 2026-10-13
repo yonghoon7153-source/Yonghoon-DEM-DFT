@@ -1,0 +1,65 @@
+{
+ "auto_fix_or_retest": 0,
+ "compute_limit_s": 1800,
+ "compute_sum_s": 38.342,
+ "green": "26 passed · stderr 0 B",
+ "note": "이 기록은 커밋 · push 전에 썼다 — 그 뒤의 작업 (커밋 · 문서) 은 work_elapsed 에 들어 있지 않다 (C4-ENV ENV-P2-01 의 교훈)",
+ "red": "26 failed — 전부 NotImplementedError('C4-0a RED — 구현 전') · 그 밖 오류 0",
+ "steps": {
+  "01_identity": {
+   "elapsed_s": 17.496,
+   "end_utc": "2026-10-13T06:59:57.097Z",
+   "head_end": "3fabeb70e83931bfd8b46d6bde267b2b0e832ea1",
+   "head_start": "3fabeb70e83931bfd8b46d6bde267b2b0e832ea1",
+   "rc": 0,
+   "start_utc": "2026-10-13T06:59:39.601Z",
+   "timed_out": false,
+   "timeout_s": 60.0
+  },
+  "02_red": {
+   "elapsed_s": 4.386,
+   "end_utc": "2026-10-13T07:00:18.267Z",
+   "head_end": "3fabeb70e83931bfd8b46d6bde267b2b0e832ea1",
+   "head_start": "3fabeb70e83931bfd8b46d6bde267b2b0e832ea1",
+   "rc": 1,
+   "start_utc": "2026-10-13T07:00:13.881Z",
+   "timed_out": false,
+   "timeout_s": 600.0
+  },
+  "03_green": {
+   "elapsed_s": 12.769,
+   "end_utc": "2026-10-13T07:24:46.587Z",
+   "head_end": "3fabeb70e83931bfd8b46d6bde267b2b0e832ea1",
+   "head_start": "3fabeb70e83931bfd8b46d6bde267b2b0e832ea1",
+   "rc": 0,
+   "start_utc": "2026-10-13T07:24:33.817Z",
+   "timed_out": false,
+   "timeout_s": 600.0
+  },
+  "04_seal_arrays": {
+   "elapsed_s": 2.523,
+   "end_utc": "2026-10-13T07:25:07.007Z",
+   "head_end": "3fabeb70e83931bfd8b46d6bde267b2b0e832ea1",
+   "head_start": "3fabeb70e83931bfd8b46d6bde267b2b0e832ea1",
+   "rc": 0,
+   "start_utc": "2026-10-13T07:25:04.483Z",
+   "timed_out": false,
+   "timeout_s": 240.0
+  },
+  "05_dryrun": {
+   "elapsed_s": 1.168,
+   "end_utc": "2026-10-13T07:25:23.726Z",
+   "head_end": "3fabeb70e83931bfd8b46d6bde267b2b0e832ea1",
+   "head_start": "3fabeb70e83931bfd8b46d6bde267b2b0e832ea1",
+   "rc": 0,
+   "start_utc": "2026-10-13T07:25:22.558Z",
+   "timed_out": false,
+   "timeout_s": 300.0
+  }
+ },
+ "t0_utc": "2026-10-13T06:51:10Z",
+ "t_end_utc": "2026-10-13T07:25:43Z",
+ "timeouts_sum_s": 1800.0,
+ "work_elapsed_s_at_this_record": 2074.0,
+ "work_limit_s": 14400
+}

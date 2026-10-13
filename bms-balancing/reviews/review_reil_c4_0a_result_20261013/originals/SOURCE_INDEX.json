@@ -1,0 +1,445 @@
+{
+  "mode": "read-only remote sources; local byte-exact captures; no captured imports/execution",
+  "files": [
+    {
+      "path": "bms-balancing/docs/REIL_C4_APPROVAL_REQUEST_v2_20261013.md",
+      "ref": "c542e056b33d25100bc0519ce492c98d3bcce172",
+      "bytes": 22921,
+      "sha256": "22dcc8e5ef6430253f55834743e10808b0c3547c8fb560d0ad415dce77da8f87",
+      "git_blob": "5abd201780c9db4685a289053d6eb79d8b0ef8e5",
+      "url": "https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT/blob/c542e056b33d25100bc0519ce492c98d3bcce172/bms-balancing/docs/REIL_C4_APPROVAL_REQUEST_v2_20261013.md"
+    },
+    {
+      "path": "bms-balancing/docs/REIL_PREREQUISITES_STATUS_20261004.md",
+      "ref": "c542e056b33d25100bc0519ce492c98d3bcce172",
+      "bytes": 102227,
+      "sha256": "814dfad63a7572f12d18d4127bfc8b4d90423f7b05d37c8a4283f51e14d2b991",
+      "git_blob": "02907ae7342ea4b6363f554c62256d9bf8c72a30",
+      "url": "https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT/blob/c542e056b33d25100bc0519ce492c98d3bcce172/bms-balancing/docs/REIL_PREREQUISITES_STATUS_20261004.md"
+    },
+    {
+      "path": "bms-balancing/scripts/reil_c4_monitor.py",
+      "ref": "c542e056b33d25100bc0519ce492c98d3bcce172",
+      "bytes": 16166,
+      "sha256": "0c6ed54ff79422ad2a3d3964a0f743a0b5616da2c21138ddad8ddd85a9c6e892",
+      "git_blob": "0b677c9c9d694e41a8d93ee38ee50a3138db13bb",
+      "url": "https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT/blob/c542e056b33d25100bc0519ce492c98d3bcce172/bms-balancing/scripts/reil_c4_monitor.py"
+    },
+    {
+      "path": "bms-balancing/scripts/reil_c4_e3a.py",
+      "ref": "c542e056b33d25100bc0519ce492c98d3bcce172",
+      "bytes": 31358,
+      "sha256": "14751a75e14728bb1ddfc8656d736b84b9298d399f932a0c56a35987b3045bb0",
+      "git_blob": "bf9a2a20ae53f7309a0cf04841406ddc5ecb958d",
+      "url": "https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT/blob/c542e056b33d25100bc0519ce492c98d3bcce172/bms-balancing/scripts/reil_c4_e3a.py"
+    },
+    {
+      "path": "bms-balancing/tests/test_reil_c4_0a.py",
+      "ref": "c542e056b33d25100bc0519ce492c98d3bcce172",
+      "bytes": 20404,
+      "sha256": "6b2635d4a97e296a4d2d8749209b66461d3bbfd9009465aaeac3d80a57197e17",
+      "git_blob": "c183015e58570b50b6d9bb98a429ddcbad0529cf",
+      "url": "https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT/blob/c542e056b33d25100bc0519ce492c98d3bcce172/bms-balancing/tests/test_reil_c4_0a.py"
+    },
+    {
+      "path": "bms-balancing/scripts/reil_c5_pilot.py",
+      "ref": "c542e056b33d25100bc0519ce492c98d3bcce172",
+      "bytes": 47164,
+      "sha256": "73bee8dc412b39863afb64b70bc128cbecee2075a3a17914fc7288f353ef11a6",
+      "git_blob": "0e5a9f3a83ca419d311f27e0a63d9f0f7ade0d6b",
+      "url": "https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT/blob/c542e056b33d25100bc0519ce492c98d3bcce172/bms-balancing/scripts/reil_c5_pilot.py"
+    },
+    {
+      "path": "bms-balancing/evidence/reil_c4_0a_20261013/00_identity_c4.py",
+      "ref": "c542e056b33d25100bc0519ce492c98d3bcce172",
+      "bytes": 1506,
+      "sha256": "92bb3bca2dcd56982bd4d4ddc02bb8ed84615d5b1b6af6385d69b66c8f5df900",
+      "git_blob": "d29186ee0914992c67a23e9915a68c2d81077f8b",
+      "url": "https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT/blob/c542e056b33d25100bc0519ce492c98d3bcce172/bms-balancing/evidence/reil_c4_0a_20261013/00_identity_c4.py"
+    },
+    {
+      "path": "bms-balancing/evidence/reil_c4_0a_20261013/00_porcelain_start.txt",
+      "ref": "c542e056b33d25100bc0519ce492c98d3bcce172",
+      "bytes": 128,
+      "sha256": "8a78a6c6893a77e6d541985f1440b0c2d3535529bf6c120880bf91960488db33",
+      "git_blob": "426f942bb94ee3872a8eb009c0659e2d74ae91e6",
+      "url": "https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT/blob/c542e056b33d25100bc0519ce492c98d3bcce172/bms-balancing/evidence/reil_c4_0a_20261013/00_porcelain_start.txt"
+    },
+    {
+      "path": "bms-balancing/evidence/reil_c4_0a_20261013/00_start.txt",
+      "ref": "c542e056b33d25100bc0519ce492c98d3bcce172",
+      "bytes": 489,
+      "sha256": "a907fd8f2a03c5805593cf77f057445af66c5685f8f19222f4a9213f90aaf725",
+      "git_blob": "936655dd1c858ad708b0ee8662c6e7558b0f48dc",
+      "url": "https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT/blob/c542e056b33d25100bc0519ce492c98d3bcce172/bms-balancing/evidence/reil_c4_0a_20261013/00_start.txt"
+    },
+    {
+      "path": "bms-balancing/evidence/reil_c4_0a_20261013/00_step_runner.py",
+      "ref": "c542e056b33d25100bc0519ce492c98d3bcce172",
+      "bytes": 3333,
+      "sha256": "86deedb4186b853c19196a3e2b0111893bef6c2ef0cfed2567e6b510879456d7",
+      "git_blob": "269c048cb1f20dba6d6865c2425f9969ded9a92d",
+      "url": "https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT/blob/c542e056b33d25100bc0519ce492c98d3bcce172/bms-balancing/evidence/reil_c4_0a_20261013/00_step_runner.py"
+    },
+    {
+      "path": "bms-balancing/evidence/reil_c4_0a_20261013/01_identity.json",
+      "ref": "c542e056b33d25100bc0519ce492c98d3bcce172",
+      "bytes": 1116,
+      "sha256": "483dfda676c5dc030c3ded1951ac210dd6fde11ebd171e98c6f7ab41484ec224",
+      "git_blob": "3df21137b342dfac889cd5ed04e3e03ec6c9067d",
+      "url": "https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT/blob/c542e056b33d25100bc0519ce492c98d3bcce172/bms-balancing/evidence/reil_c4_0a_20261013/01_identity.json"
+    },
+    {
+      "path": "bms-balancing/evidence/reil_c4_0a_20261013/01_identity.meta.json",
+      "ref": "c542e056b33d25100bc0519ce492c98d3bcce172",
+      "bytes": 1726,
+      "sha256": "7412dc7d517d24154f9e3ee2bd68488c62b831d64ab58299309aa3afa03d3a59",
+      "git_blob": "eab479024f41a937ae7fcc6508dfbb58fb2b84ec",
+      "url": "https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT/blob/c542e056b33d25100bc0519ce492c98d3bcce172/bms-balancing/evidence/reil_c4_0a_20261013/01_identity.meta.json"
+    },
+    {
+      "path": "bms-balancing/evidence/reil_c4_0a_20261013/01_identity.porcelain_end.txt",
+      "ref": "c542e056b33d25100bc0519ce492c98d3bcce172",
+      "bytes": 523,
+      "sha256": "0641da8a698c98e99695e7bae98fec15b7dc14a1632eceb68daf9f10f55a8c55",
+      "git_blob": "10b4cd9b907013888f9435734da987cb84a8b125",
+      "url": "https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT/blob/c542e056b33d25100bc0519ce492c98d3bcce172/bms-balancing/evidence/reil_c4_0a_20261013/01_identity.porcelain_end.txt"
+    },
+    {
+      "path": "bms-balancing/evidence/reil_c4_0a_20261013/01_identity.porcelain_start.txt",
+      "ref": "c542e056b33d25100bc0519ce492c98d3bcce172",
+      "bytes": 382,
+      "sha256": "ad5ab42b75ae1a7bf7d5c74468cf92c88885a99084b2a43e4b456c903241cbb6",
+      "git_blob": "cf4a619ecf4483c3472bc4ee98501896642418c1",
+      "url": "https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT/blob/c542e056b33d25100bc0519ce492c98d3bcce172/bms-balancing/evidence/reil_c4_0a_20261013/01_identity.porcelain_start.txt"
+    },
+    {
+      "path": "bms-balancing/evidence/reil_c4_0a_20261013/01_identity.stderr.log",
+      "ref": "c542e056b33d25100bc0519ce492c98d3bcce172",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "git_blob": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+      "url": "https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT/blob/c542e056b33d25100bc0519ce492c98d3bcce172/bms-balancing/evidence/reil_c4_0a_20261013/01_identity.stderr.log"
+    },
+    {
+      "path": "bms-balancing/evidence/reil_c4_0a_20261013/01_identity.stdout.log",
+      "ref": "c542e056b33d25100bc0519ce492c98d3bcce172",
+      "bytes": 29,
+      "sha256": "4781be4bc0d8289b1b2acdd74186539ec14eabf86683c4b0ed65fea3a405ba53",
+      "git_blob": "f937346f0986d1fbf954437c0afc2aa1908415f6",
+      "url": "https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT/blob/c542e056b33d25100bc0519ce492c98d3bcce172/bms-balancing/evidence/reil_c4_0a_20261013/01_identity.stdout.log"
+    },
+    {
+      "path": "bms-balancing/evidence/reil_c4_0a_20261013/02_red.meta.json",
+      "ref": "c542e056b33d25100bc0519ce492c98d3bcce172",
+      "bytes": 1520,
+      "sha256": "f24734d162403d7ea2638728aba2d07542265fb646edfc64a18cd0706072d6cc",
+      "git_blob": "4f47d5c13c7ce498eccff5aabaf50de550f7d145",
+      "url": "https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT/blob/c542e056b33d25100bc0519ce492c98d3bcce172/bms-balancing/evidence/reil_c4_0a_20261013/02_red.meta.json"
+    },
+    {
+      "path": "bms-balancing/evidence/reil_c4_0a_20261013/02_red.porcelain_end.txt",
+      "ref": "c542e056b33d25100bc0519ce492c98d3bcce172",
+      "bytes": 811,
+      "sha256": "b8f40260fb5aa9cf4035e6f21f32aa769ae1bdc15d44255da9841a2e65bfc7fe",
+      "git_blob": "8939fb7059023513cd28a2ac6157dffd1fcfdc4e",
+      "url": "https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT/blob/c542e056b33d25100bc0519ce492c98d3bcce172/bms-balancing/evidence/reil_c4_0a_20261013/02_red.porcelain_end.txt"
+    },
+    {
+      "path": "bms-balancing/evidence/reil_c4_0a_20261013/02_red.porcelain_start.txt",
+      "ref": "c542e056b33d25100bc0519ce492c98d3bcce172",
+      "bytes": 738,
+      "sha256": "82eb1cf545f3d35541f72b7157f58372380e2a48b4fb39f3a97560566accd0fb",
+      "git_blob": "0e6b237e7fddbfef21bf902c2351b210fee56a4b",
+      "url": "https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT/blob/c542e056b33d25100bc0519ce492c98d3bcce172/bms-balancing/evidence/reil_c4_0a_20261013/02_red.porcelain_start.txt"
+    },
+    {
+      "path": "bms-balancing/evidence/reil_c4_0a_20261013/02_red.source_sha256.txt",
+      "ref": "c542e056b33d25100bc0519ce492c98d3bcce172",
+      "bytes": 273,
+      "sha256": "0248ac24c223609b6f289ad43693cd7968987b7d969a36c39ba5695d57a9456e",
+      "git_blob": "ebb93693c4fe04635a49dd0ddc6244155558a495",
+      "url": "https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT/blob/c542e056b33d25100bc0519ce492c98d3bcce172/bms-balancing/evidence/reil_c4_0a_20261013/02_red.source_sha256.txt"
+    },
+    {
+      "path": "bms-balancing/evidence/reil_c4_0a_20261013/02_red.stderr.log",
+      "ref": "c542e056b33d25100bc0519ce492c98d3bcce172",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "git_blob": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+      "url": "https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT/blob/c542e056b33d25100bc0519ce492c98d3bcce172/bms-balancing/evidence/reil_c4_0a_20261013/02_red.stderr.log"
+    },
+    {
+      "path": "bms-balancing/evidence/reil_c4_0a_20261013/02_red.stdout.log",
+      "ref": "c542e056b33d25100bc0519ce492c98d3bcce172",
+      "bytes": 7029,
+      "sha256": "efaa5349c02dfd74086694e2502e6cd33f3ebd3822e1ca84e943761561e9b097",
+      "git_blob": "0786a33201bd024f59694bf2275a1d3caf5750c4",
+      "url": "https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT/blob/c542e056b33d25100bc0519ce492c98d3bcce172/bms-balancing/evidence/reil_c4_0a_20261013/02_red.stdout.log"
+    },
+    {
+      "path": "bms-balancing/evidence/reil_c4_0a_20261013/03_green.meta.json",
+      "ref": "c542e056b33d25100bc0519ce492c98d3bcce172",
+      "bytes": 1523,
+      "sha256": "51708296c133e8fd4d14c6a67c06c634a7a2b33dca5a085d86e09f9ffb302823",
+      "git_blob": "d682ca394d2a54173b47cfb55913dc089f14a1c3",
+      "url": "https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT/blob/c542e056b33d25100bc0519ce492c98d3bcce172/bms-balancing/evidence/reil_c4_0a_20261013/03_green.meta.json"
+    },
+    {
+      "path": "bms-balancing/evidence/reil_c4_0a_20261013/03_green.porcelain_end.txt",
+      "ref": "c542e056b33d25100bc0519ce492c98d3bcce172",
+      "bytes": 1093,
+      "sha256": "d4401b7ca95f3badcf296516aac61733a167028918da49438f5ceb217171ce75",
+      "git_blob": "29ba04a02a2054d2892dd925f444e1e78ff31ccb",
+      "url": "https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT/blob/c542e056b33d25100bc0519ce492c98d3bcce172/bms-balancing/evidence/reil_c4_0a_20261013/03_green.porcelain_end.txt"
+    },
+    {
+      "path": "bms-balancing/evidence/reil_c4_0a_20261013/03_green.porcelain_start.txt",
+      "ref": "c542e056b33d25100bc0519ce492c98d3bcce172",
+      "bytes": 1018,
+      "sha256": "479277e1a95f217a6607105c5f2194a5e5e2016d7271b7b82047df90e2056c3a",
+      "git_blob": "c5bdf18f1c23db2ee62e3e74cc77e9caf6c93817",
+      "url": "https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT/blob/c542e056b33d25100bc0519ce492c98d3bcce172/bms-balancing/evidence/reil_c4_0a_20261013/03_green.porcelain_start.txt"
+    },
+    {
+      "path": "bms-balancing/evidence/reil_c4_0a_20261013/03_green.source_sha256.txt",
+      "ref": "c542e056b33d25100bc0519ce492c98d3bcce172",
+      "bytes": 626,
+      "sha256": "d780b7e488245417e41344ef184479b65e4eb557756cf317afd4ef22d0dff241",
+      "git_blob": "feba254904e02186deaf1bd24d367466985d51a1",
+      "url": "https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT/blob/c542e056b33d25100bc0519ce492c98d3bcce172/bms-balancing/evidence/reil_c4_0a_20261013/03_green.source_sha256.txt"
+    },
+    {
+      "path": "bms-balancing/evidence/reil_c4_0a_20261013/03_green.stderr.log",
+      "ref": "c542e056b33d25100bc0519ce492c98d3bcce172",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "git_blob": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+      "url": "https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT/blob/c542e056b33d25100bc0519ce492c98d3bcce172/bms-balancing/evidence/reil_c4_0a_20261013/03_green.stderr.log"
+    },
+    {
+      "path": "bms-balancing/evidence/reil_c4_0a_20261013/03_green.stdout.log",
+      "ref": "c542e056b33d25100bc0519ce492c98d3bcce172",
+      "bytes": 100,
+      "sha256": "02d915b8660f51a976dc80acd4893719f198f21991fec3ad9fe9f2e68ae9b5ea",
+      "git_blob": "58596bdbb9561c553825bb4254bb30ff26345a62",
+      "url": "https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT/blob/c542e056b33d25100bc0519ce492c98d3bcce172/bms-balancing/evidence/reil_c4_0a_20261013/03_green.stdout.log"
+    },
+    {
+      "path": "bms-balancing/evidence/reil_c4_0a_20261013/04_seal_arrays.meta.json",
+      "ref": "c542e056b33d25100bc0519ce492c98d3bcce172",
+      "bytes": 1763,
+      "sha256": "276a65fa7aa9ef9188b8f8e466d7c3c93b6f739ff852fcbc3a39c24b493a6c7a",
+      "git_blob": "4fa5539475a02fa931b4bafcb511b71f6ec0761d",
+      "url": "https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT/blob/c542e056b33d25100bc0519ce492c98d3bcce172/bms-balancing/evidence/reil_c4_0a_20261013/04_seal_arrays.meta.json"
+    },
+    {
+      "path": "bms-balancing/evidence/reil_c4_0a_20261013/04_seal_arrays.porcelain_end.txt",
+      "ref": "c542e056b33d25100bc0519ce492c98d3bcce172",
+      "bytes": 1704,
+      "sha256": "80a2ab6eba03ced150b04a9ceb3a9518c7f93b2c0c3e6c1e0e30f334126146dc",
+      "git_blob": "a737cb1a462f3a63cb4444f1c56a1995197c77d8",
+      "url": "https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT/blob/c542e056b33d25100bc0519ce492c98d3bcce172/bms-balancing/evidence/reil_c4_0a_20261013/04_seal_arrays.porcelain_end.txt"
+    },
+    {
+      "path": "bms-balancing/evidence/reil_c4_0a_20261013/04_seal_arrays.porcelain_start.txt",
+      "ref": "c542e056b33d25100bc0519ce492c98d3bcce172",
+      "bytes": 1231,
+      "sha256": "685b1a8f282d46c57fc57a7a80dc52df8ad9f1cb653ebc14740b46dcff533a29",
+      "git_blob": "29dfc74fd4b0b112eb7c2bda7af03ce846460fc6",
+      "url": "https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT/blob/c542e056b33d25100bc0519ce492c98d3bcce172/bms-balancing/evidence/reil_c4_0a_20261013/04_seal_arrays.porcelain_start.txt"
+    },
+    {
+      "path": "bms-balancing/evidence/reil_c4_0a_20261013/04_seal_arrays.stderr.log",
+      "ref": "c542e056b33d25100bc0519ce492c98d3bcce172",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "git_blob": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+      "url": "https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT/blob/c542e056b33d25100bc0519ce492c98d3bcce172/bms-balancing/evidence/reil_c4_0a_20261013/04_seal_arrays.stderr.log"
+    },
+    {
+      "path": "bms-balancing/evidence/reil_c4_0a_20261013/04_seal_arrays.stdout.log",
+      "ref": "c542e056b33d25100bc0519ce492c98d3bcce172",
+      "bytes": 1927,
+      "sha256": "ff0158c875d3df96b7d74a8c0474eafc8a23c37ad7611b88d065681df4258405",
+      "git_blob": "84dc2a20b19416a9583580dcf552c339f14bf4fa",
+      "url": "https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT/blob/c542e056b33d25100bc0519ce492c98d3bcce172/bms-balancing/evidence/reil_c4_0a_20261013/04_seal_arrays.stdout.log"
+    },
+    {
+      "path": "bms-balancing/evidence/reil_c4_0a_20261013/05_dryrun.meta.json",
+      "ref": "c542e056b33d25100bc0519ce492c98d3bcce172",
+      "bytes": 2086,
+      "sha256": "30e7f4a3e08cd35391280930ef4ac875ad891abed6207b0947aa4029ba91bdad",
+      "git_blob": "bc0cf82cac6b72c7e15ed23a6bf512df2de8386f",
+      "url": "https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT/blob/c542e056b33d25100bc0519ce492c98d3bcce172/bms-balancing/evidence/reil_c4_0a_20261013/05_dryrun.meta.json"
+    },
+    {
+      "path": "bms-balancing/evidence/reil_c4_0a_20261013/05_dryrun.porcelain_end.txt",
+      "ref": "c542e056b33d25100bc0519ce492c98d3bcce172",
+      "bytes": 1996,
+      "sha256": "4a2353eb36b48f95b81f1ae309d3af6a0222c3fe6baee8dcc83c96c0ad082fb1",
+      "git_blob": "70d67a24cb61e4b9e1e10a6892e9cd266eec968b",
+      "url": "https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT/blob/c542e056b33d25100bc0519ce492c98d3bcce172/bms-balancing/evidence/reil_c4_0a_20261013/05_dryrun.porcelain_end.txt"
+    },
+    {
+      "path": "bms-balancing/evidence/reil_c4_0a_20261013/05_dryrun.porcelain_start.txt",
+      "ref": "c542e056b33d25100bc0519ce492c98d3bcce172",
+      "bytes": 1854,
+      "sha256": "1e9a734b57675f133caf9ad3f390330fdc5af2b025037fd591f4a81ffe4467c0",
+      "git_blob": "b262f807c09701f10f5e351a75270277f0bd9e1d",
+      "url": "https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT/blob/c542e056b33d25100bc0519ce492c98d3bcce172/bms-balancing/evidence/reil_c4_0a_20261013/05_dryrun.porcelain_start.txt"
+    },
+    {
+      "path": "bms-balancing/evidence/reil_c4_0a_20261013/05_dryrun.stderr.log",
+      "ref": "c542e056b33d25100bc0519ce492c98d3bcce172",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "git_blob": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+      "url": "https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT/blob/c542e056b33d25100bc0519ce492c98d3bcce172/bms-balancing/evidence/reil_c4_0a_20261013/05_dryrun.stderr.log"
+    },
+    {
+      "path": "bms-balancing/evidence/reil_c4_0a_20261013/05_dryrun.stdout.log",
+      "ref": "c542e056b33d25100bc0519ce492c98d3bcce172",
+      "bytes": 278,
+      "sha256": "970580fc9c1a061afc147f763335c45964822fb639260c1062b89bb1e0dc1acd",
+      "git_blob": "a69ea70bd21ca2ccc6680813cb39db2ee40ae909",
+      "url": "https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT/blob/c542e056b33d25100bc0519ce492c98d3bcce172/bms-balancing/evidence/reil_c4_0a_20261013/05_dryrun.stdout.log"
+    },
+    {
+      "path": "bms-balancing/evidence/reil_c4_0a_20261013/06_end.json",
+      "ref": "c542e056b33d25100bc0519ce492c98d3bcce172",
+      "bytes": 2111,
+      "sha256": "d14037a641916da3a7bc34db93899969c57d8b42b200c70179a5f4c20f16b130",
+      "git_blob": "92b9b824abe0bb063f5df4cb238bad5b4cf01129",
+      "url": "https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT/blob/c542e056b33d25100bc0519ce492c98d3bcce172/bms-balancing/evidence/reil_c4_0a_20261013/06_end.json"
+    },
+    {
+      "path": "bms-balancing/evidence/reil_c4_0a_20261013/06_porcelain_end.txt",
+      "ref": "c542e056b33d25100bc0519ce492c98d3bcce172",
+      "bytes": 2274,
+      "sha256": "64e3e4695c7dad9fbedda3f6dddef5d09a312729af291548fa1eabd278e346ea",
+      "git_blob": "469d298d8ab6535b4a57473d03a183571cc7f09e",
+      "url": "https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT/blob/c542e056b33d25100bc0519ce492c98d3bcce172/bms-balancing/evidence/reil_c4_0a_20261013/06_porcelain_end.txt"
+    },
+    {
+      "path": "bms-balancing/evidence/reil_c4_0a_20261013/06_source_sha256_end.txt",
+      "ref": "c542e056b33d25100bc0519ce492c98d3bcce172",
+      "bytes": 626,
+      "sha256": "d780b7e488245417e41344ef184479b65e4eb557756cf317afd4ef22d0dff241",
+      "git_blob": "feba254904e02186deaf1bd24d367466985d51a1",
+      "url": "https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT/blob/c542e056b33d25100bc0519ce492c98d3bcce172/bms-balancing/evidence/reil_c4_0a_20261013/06_source_sha256_end.txt"
+    },
+    {
+      "path": "bms-balancing/evidence/reil_c4_0a_20261013/05_dryrun/PLAN.json",
+      "ref": "c542e056b33d25100bc0519ce492c98d3bcce172",
+      "bytes": 42782,
+      "sha256": "8f034bf4dd0d797edaf930ffb1119a9dfb9815ad6789db74d1975250dacdb64a",
+      "git_blob": "9ce16b32aa8f37602829ac4cf7154843db618111",
+      "url": "https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT/blob/c542e056b33d25100bc0519ce492c98d3bcce172/bms-balancing/evidence/reil_c4_0a_20261013/05_dryrun/PLAN.json"
+    },
+    {
+      "path": "bms-balancing/reil_c4_arrays_20261013/MANIFEST.json",
+      "ref": "c542e056b33d25100bc0519ce492c98d3bcce172",
+      "bytes": 495,
+      "sha256": "861c33aceb40befd3f707f2aa0b53fe159031f75766e91fff765666254d8b06c",
+      "git_blob": "bf05cc7147095b8be45e3faaa5751412ca4ba9f0",
+      "url": "https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT/blob/c542e056b33d25100bc0519ce492c98d3bcce172/bms-balancing/reil_c4_arrays_20261013/MANIFEST.json"
+    },
+    {
+      "path": "bms-balancing/reil_c4_arrays_20261013/ARRAYS.json",
+      "ref": "c542e056b33d25100bc0519ce492c98d3bcce172",
+      "bytes": 4045,
+      "sha256": "c06929b45e24ce65c5468663cfa52ee12079dea8cdcc69553c5db1c099c208fe",
+      "git_blob": "8939f274f89058be906d1b4cf97d4c16c9030875",
+      "url": "https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT/blob/c542e056b33d25100bc0519ce492c98d3bcce172/bms-balancing/reil_c4_arrays_20261013/ARRAYS.json"
+    },
+    {
+      "path": "bms-balancing/scripts/reil_c6_profile.py",
+      "ref": "c542e056b33d25100bc0519ce492c98d3bcce172",
+      "bytes": 15915,
+      "sha256": "408afc4bb5eb1069583b955e0eb6215bf48dd9259ad474c230549d1b3642df5d",
+      "git_blob": "c32ecdc3c4cdb456514e3abc14975103f412f32d",
+      "url": "https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT/blob/c542e056b33d25100bc0519ce492c98d3bcce172/bms-balancing/scripts/reil_c6_profile.py"
+    },
+    {
+      "path": "bms-balancing/docs/REIL_EXTERNAL_VALIDATION_PROTOCOL_v2_ANNEX_A.md",
+      "ref": "c542e056b33d25100bc0519ce492c98d3bcce172",
+      "bytes": 37308,
+      "sha256": "94b0892a4e7fc7a4dc916fa785d1029f269d61dec3c8826d08f83aa9ffeedcca",
+      "git_blob": "9f49d6061cf3c9e69ed35e3b00e5e0addafd8fd3",
+      "url": "https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT/blob/c542e056b33d25100bc0519ce492c98d3bcce172/bms-balancing/docs/REIL_EXTERNAL_VALIDATION_PROTOCOL_v2_ANNEX_A.md"
+    },
+    {
+      "path": "bms-balancing/docs/REIL_EXTERNAL_VALIDATION_PROTOCOL_v2_ANNEX_B.md",
+      "ref": "c542e056b33d25100bc0519ce492c98d3bcce172",
+      "bytes": 17210,
+      "sha256": "fe2b39b222c84b61a39a14c05047ca7ca86cbb2872925c58eca400c7de673f95",
+      "git_blob": "b25f9c4eb56d0cfe609b47c5d8463e9f17fac53b",
+      "url": "https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT/blob/c542e056b33d25100bc0519ce492c98d3bcce172/bms-balancing/docs/REIL_EXTERNAL_VALIDATION_PROTOCOL_v2_ANNEX_B.md"
+    },
+    {
+      "path": "bms-balancing/scripts/reil_p0.py",
+      "ref": "c542e056b33d25100bc0519ce492c98d3bcce172",
+      "bytes": 23941,
+      "sha256": "793b326ebf86a6db3b855d828aff4d6b6dddc824bed8d00f4161537b1cc06e3a",
+      "git_blob": "b7ef272f412e1b10f35ae841d961377ff4854d64",
+      "url": "https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT/blob/c542e056b33d25100bc0519ce492c98d3bcce172/bms-balancing/scripts/reil_p0.py"
+    },
+    {
+      "path": "bms-balancing/tests/conftest.py",
+      "ref": "c542e056b33d25100bc0519ce492c98d3bcce172",
+      "bytes": 6170,
+      "sha256": "6ecf97fbdeeb4919bb467a88558d09bfc9c7d4c317816e5c92a693858f360bc7",
+      "git_blob": "2152158ba5963551950ee85c08a2859eb8a2c0b6",
+      "url": "https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT/blob/c542e056b33d25100bc0519ce492c98d3bcce172/bms-balancing/tests/conftest.py"
+    },
+    {
+      "path": "bms-balancing/docs/REIL_C4_0A_RESULT_REVIEW_SEND_20261013.md",
+      "ref": "c542e056b33d25100bc0519ce492c98d3bcce172",
+      "bytes": 8162,
+      "sha256": "dda2997e82617ea00ecbceffd07ddc977a3707d3a0f166df6269f19cbf47bfb1",
+      "git_blob": "804534cdedc4041e6d5bd46124e4aa1abe9d28be",
+      "url": "https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT/blob/c542e056b33d25100bc0519ce492c98d3bcce172/bms-balancing/docs/REIL_C4_0A_RESULT_REVIEW_SEND_20261013.md"
+    },
+    {
+      "path": "bms-balancing/reviews/prereview_pybamm_reil_20261003/external/util_LFP.py.txt",
+      "ref": "c542e056b33d25100bc0519ce492c98d3bcce172",
+      "bytes": 32909,
+      "sha256": "bdf78273d50f40ce3154d01a3ef8d36f0f5ea5ec1b04539584809d7b19b46f9c",
+      "git_blob": "1d4afe9f5ef451b9cf479640fd5e361fdbd08bd0",
+      "url": "https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT/blob/c542e056b33d25100bc0519ce492c98d3bcce172/bms-balancing/reviews/prereview_pybamm_reil_20261003/external/util_LFP.py.txt"
+    },
+    {
+      "path": "bms-balancing/reviews/prereview_pybamm_reil_20261003/external/NOTEBOOK_SOURCE_EXCERPTS.json",
+      "ref": "c542e056b33d25100bc0519ce492c98d3bcce172",
+      "bytes": 7543,
+      "sha256": "95cca5f35aaaf72757812068251d72064b464cff6ef3f523c756f33d27d243a9",
+      "git_blob": "12a4e5e795724127a482135f04a8397d96fa496f",
+      "url": "https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT/blob/c542e056b33d25100bc0519ce492c98d3bcce172/bms-balancing/reviews/prereview_pybamm_reil_20261003/external/NOTEBOOK_SOURCE_EXCERPTS.json"
+    },
+    {
+      "path": "bms-balancing/evidence/reil_p0_20261006/P0_RESULT.json",
+      "ref": "c542e056b33d25100bc0519ce492c98d3bcce172",
+      "bytes": 127971,
+      "sha256": "3875e65092b38c9b08c907926bd8d1f4ee25674c97c28b5ada935e9027d12a90",
+      "git_blob": "2aa50f0bcb6e3bf3ff9fdfc15729458e6df6c024",
+      "url": "https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT/blob/c542e056b33d25100bc0519ce492c98d3bcce172/bms-balancing/evidence/reil_p0_20261006/P0_RESULT.json"
+    },
+    {
+      "path": "bms-balancing/reil_c6_rebuild_20261013/MANIFEST.json",
+      "ref": "c542e056b33d25100bc0519ce492c98d3bcce172",
+      "bytes": 954,
+      "sha256": "4f12094897b53463097e78dafc0bfe5f37c1d76bb1a6266c0a907d755fb2ebdc",
+      "git_blob": "cd54ebec8949abbcf05c7cf7147178289a32196d",
+      "url": "https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT/blob/c542e056b33d25100bc0519ce492c98d3bcce172/bms-balancing/reil_c6_rebuild_20261013/MANIFEST.json"
+    },
+    {
+      "path": "bms-balancing/reil_c6_rebuild_20261013/SOBOL_PHASE_A.json",
+      "ref": "c542e056b33d25100bc0519ce492c98d3bcce172",
+      "bytes": 2641,
+      "sha256": "887654728fc3d58c4a7c596e3254560a2d48a07dca0e1a50d7d4da007e18cc52",
+      "git_blob": "c923f7ea51b48f44a3bfb074ff339c0015d16dbb",
+      "url": "https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT/blob/c542e056b33d25100bc0519ce492c98d3bcce172/bms-balancing/reil_c6_rebuild_20261013/SOBOL_PHASE_A.json"
+    }
+  ]
+}

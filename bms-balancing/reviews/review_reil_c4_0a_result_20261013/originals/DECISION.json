@@ -1,0 +1,101 @@
+{
+  "kind": "REIL_C4_0A_RESULT_REVIEW",
+  "review_date": "2026-10-13",
+  "review_ref": "c542e056b33d25100bc0519ce492c98d3bcce172",
+  "execution_evidence_ref": "979e0633",
+  "start_ref": "3fabeb70e83931bfd8b46d6bde267b2b0e832ea1",
+  "decision": "EVIDENCE_ACCEPTED_WITH_SCOPE_IMPLEMENTATION_CLOSURE_HELD",
+  "findings": [
+    {
+      "id": "C4-0A-N1",
+      "priority": "P2",
+      "path": "bms-balancing/scripts/reil_c4_e3a.py",
+      "lines": [
+        398,
+        406
+      ],
+      "summary": "C4 local array self-consistency is not independently bound to accepted C6 payload or pinned C4 manifest"
+    },
+    {
+      "id": "C4-0A-N2",
+      "priority": "P2",
+      "path": "bms-balancing/scripts/reil_c4_monitor.py",
+      "lines": [
+        317,
+        339
+      ],
+      "summary": "Final write/read/hash/size traversal may exceed deadline but return COMPLETE"
+    },
+    {
+      "id": "C4-0A-N3",
+      "priority": "P2",
+      "path": "bms-balancing/scripts/reil_c4_monitor.py",
+      "lines": [
+        269,
+        280
+      ],
+      "summary": "Terminal slow disk observation can leave stale RSS beyond gap limit without stop"
+    },
+    {
+      "id": "C4-0A-N4",
+      "priority": "P2",
+      "path": "bms-balancing/scripts/reil_c4_monitor.py",
+      "lines": [
+        160,
+        162
+      ],
+      "summary": "Structural.partial diagnostic counters dropped at worker boundary"
+    }
+  ],
+  "accepted": {
+    "green_record": 26,
+    "green_rc": 0,
+    "red_stub_failures": 26,
+    "red_actual_old_production_defects_claimed": false,
+    "unchanged_pre_green_end_source_hashes": 7,
+    "phase_a_arrays_byte_verified": 4,
+    "plan_calls": 66,
+    "planned_optimizer_runs": 275,
+    "expected_evals_arithmetic": 1501500,
+    "actual_dryrun_optimizer_calls": 0,
+    "step_seconds_sum": 38.342,
+    "step_seconds_limit": 1800,
+    "work_snapshot_recorded_s": 2074,
+    "work_limit_s": 14400,
+    "work_snapshot_scope": "before commit/push/docs, not final submission duration"
+  },
+  "array_deferral": {
+    "technical_design": "reasonable",
+    "prior_user_confirmation": false,
+    "status": "three groups remain incomplete; user confirmation required in C4-0b scope; first confirmatory C4 local run cannot precede full fixed-array seal"
+  },
+  "limitations": [
+    "Actual synthetic NSGA2 branch not preserved; returned or util-local error was accepted by test",
+    "Environment timing cache explanation unverified",
+    "No actual C4-E supervisory CLI integration acceptance",
+    "Submitted runtime logs are preserved producer evidence, not reviewer OS audit"
+  ],
+  "authorization": {
+    "correction_implementation": false,
+    "new_tests": false,
+    "c4_0b": false,
+    "c4_e": false,
+    "c4_a": false,
+    "c4_b": false,
+    "data_opening": false,
+    "fit": false,
+    "install": false,
+    "environment_rebuild": false,
+    "COMSOL": false
+  },
+  "review_actions": {
+    "received_code_execution": 0,
+    "received_imports": 0,
+    "tests": 0,
+    "scientific_data_opened": 0,
+    "sobol_regeneration": 0,
+    "read_only_source_and_fixed_array_bytes": true
+  },
+  "next": "User-approved limited corrective round for N1-N4, preserve accepted evidence; re-review, then user confirmation of C4-0b scope",
+  "recipient": null
+}

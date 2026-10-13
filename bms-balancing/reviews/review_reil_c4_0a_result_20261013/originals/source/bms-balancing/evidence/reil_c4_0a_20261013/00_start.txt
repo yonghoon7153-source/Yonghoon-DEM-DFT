@@ -1,0 +1,6 @@
+c4_0a_t0_utc: 2026-10-13T06:51:10Z
+c4_0a_t0_uptime_s: 294.94
+head_start: 3fabeb70e83931bfd8b46d6bde267b2b0e832ea1
+approval: docs/REIL_PREREQUISITES_STATUS_20261004.md §36 (B) · §39 (분할) · 검토 수용 §38
+seal: bms-balancing/reil_c6_rebuild_20261013/ · manifest_sha256 4f12094897b53463097e78dafc0bfe5f37c1d76bb1a6266c0a907d755fb2ebdc
+limits: identity 60 s · RED 600 s · GREEN 600 s · 배열 봉인 240 s · 건조 300 s (계산 1,800 s) · 전체 작업 14,400 s (t0 부터)

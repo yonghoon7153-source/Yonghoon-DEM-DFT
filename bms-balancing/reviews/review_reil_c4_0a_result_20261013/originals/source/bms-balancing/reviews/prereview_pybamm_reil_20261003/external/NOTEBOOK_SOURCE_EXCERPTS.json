@@ -1,0 +1,192 @@
+{
+  "scope": "Selected source cells parsed as JSON data, not executed; outputs excluded",
+  "source_commit": "1188c371e5836df4a7e5f5acf336a34ffd4027e6",
+  "source_git_blob_sha1": "9ae0e837e9bb040cea912fb9b894bee8aa11717d",
+  "cells": [
+    {
+      "cell_index": 3,
+      "type": "code",
+      "source": [
+        "# Six cases for the single- and multi-objective optimization\n",
+        "case_selection = {0:[1],\n",
+        "                  1:[0,1],\n",
+        "                  2:[2,3],\n",
+        "                  3:[0,1,2],\n",
+        "                  4:[0,1,3],\n",
+        "                  5:[0,1,2,3],}"
+      ]
+    },
+    {
+      "cell_index": 4,
+      "type": "code",
+      "source": [
+        "# Calculate the mass of half cell electrodes, based on nominal values\n",
+        "\n",
+        "# LFP mass loading: 13.5 mg/cm2\n",
+        "# Graphite mass loading: 5.77 mg/cm2\n",
+        "# Electrode diameter: 1.2 cm\n",
+        "\n",
+        "area = 0.25 * np.pi * 1.2**2  # cm^2\n",
+        "LFP_mass_12 = 13.5 *  area  # mg\n",
+        "Gr_mass_12 = 5.77 * area  # mg\n",
+        "\n",
+        "# Mass factors for normalization to % mass remaining\n",
+        "LFP_mass_factor = 20.16\n",
+        "Gr_mass_factor = 11.4"
+      ]
+    },
+    {
+      "cell_index": 6,
+      "type": "code",
+      "source": [
+        "LFP_data = visualize_LFP_data(data_file=data_file,\n",
+        "                              sheet_name='12-LFP C_20 Updated',\n",
+        "                              step_idx=6)\n",
+        "Gr_data = visualize_LFP_data(data_file=data_file,\n",
+        "                              sheet_name='12-Graphite Half-cell @ C_20',\n",
+        "                              step_idx=6)\n",
+        "\n",
+        "# Create specific capacity voltage curves for LFP and Gr\n",
+        "# Select both cells for the full cell\n",
+        "\n",
+        "# LFP half-cell\n",
+        "PE_data = LFP_data[1]\n",
+        "PE_cc_idx_max = np.argmax(PE_data[0]) # End of CC\n",
+        "PE_cc_idx_min = np.argmin(PE_data[0]) # Start of CC\n",
+        "q_PE_hc = PE_data[0][PE_cc_idx_min:PE_cc_idx_max]/LFP_mass_12 * LFP_mass_factor # mAh per 100 % mass remaining\n",
+        "V_PE_hc = PE_data[1][PE_cc_idx_min:PE_cc_idx_max]  # V\n",
+        "\n",
+        "# Gr half-cell\n",
+        "NE_data = Gr_data[1]\n",
+        "NE_cc_idx_max = np.argmax(NE_data[0]) # End of CC\n",
+        "NE_cc_idx_min = np.argmin(NE_data[0]) # Start of CC\n",
+        "q_NE_hc = NE_data[0][NE_cc_idx_min:NE_cc_idx_max]/Gr_mass_12 * Gr_mass_factor # mAh per 100 % mass remaining\n",
+        "V_NE_hc = NE_data[1][NE_cc_idx_min:NE_cc_idx_max]  # V\n",
+        "\n",
+        "# Create as a list\n",
+        "halfcell = [q_PE_hc, V_PE_hc, q_NE_hc, V_NE_hc]"
+      ]
+    },
+    {
+      "cell_index": 8,
+      "type": "code",
+      "source": [
+        "# Create a dictionary to hold the data for each case\n",
+        "LFP_Models = {case: [] for case in case_selection.keys()}\n",
+        "\n",
+        "\n",
+        "# list of sheets and list of cell ID for each sheet\n",
+        "sheets = ['15-LFP 16-Gr Full-cell @ C_20',\n",
+        "          '15-LFP 16-Gr SOC-10',\n",
+        "          '15-LFP 16-Gr SOC-20',\n",
+        "          '12-LFP 16-Gr SOC-100',\n",
+        "          '15-LFP 12-Gr Full-cell @ C_20',\n",
+        "          'Full cell after FM SOC 0',\n",
+        "          'Full cell after FM SOC 10',\n",
+        "          '15-LFP 12-Gr SOC-10',\n",
+        "          '15-LFP 12-Gr SOC-20',\n",
+        "          '12-LFP 12-Gr SOC-10',\n",
+        "          '12-LFP 12-Gr SOC-20',\n",
+        "          ]\n",
+        "\n",
+        "cell_idx = [1,0,0,0,0,0,1,1,1,0,0]\n",
+        "\n",
+        "step_idx = [6,6,6,7,6,0,0,6,6,6,6]\n",
+        "\n",
+        "selections = ['Fresh',\n",
+        "            'LLI-1',\n",
+        "            'LLI-2',\n",
+        "            'LAM$_\\mathrm{PE}$-1',\n",
+        "            'LAM$_\\mathrm{NE}$-1',\n",
+        "            'LAM$_\\mathrm{PE,LLI}$-1',\n",
+        "            'LAM$_\\mathrm{PE,LLI}$-2',\n",
+        "            'LAM$_\\mathrm{NE,LLI}$-1',\n",
+        "            'LAM$_\\mathrm{NE,LLI}$-2',\n",
+        "            'All mode-1',\n",
+        "            'All mode-2',]\n",
+        "\n",
+        "\n",
+        "for i, sheet in enumerate(sheets):\n",
+        "    data_dict = visualize_LFP_data(data_file=data_file,\n",
+        "                                   sheet_name=sheet,\n",
+        "                                      step_idx=step_idx[i],\n",
+        "                                      visualize=False)\n",
+        "    data_extract=extract_battery_data(data=data_dict,\n",
+        "                                                   idx=cell_idx[i],\n",
+        "                                                   )\n",
+        "    for case in LFP_Models.keys():\n",
+        "        LFP_Models[case].append(data_extract)\n",
+        "\n",
+        "    "
+      ]
+    },
+    {
+      "cell_index": 9,
+      "type": "code",
+      "source": [
+        "# Theoretical values of HPs\n",
+        "theoretical = [[1,1,1],\n",
+        "                        [1,1,0.9],\n",
+        "                        [1,1,0.8],\n",
+        "                        [0.64,1,1],\n",
+        "                        [1,0.56,1],\n",
+        "                        [0.64,1,0.64],\n",
+        "                        [0.64,1,0.58],\n",
+        "                        [1,0.56,0.9],\n",
+        "                        [1,0.56,0.8],\n",
+        "                        [0.64,0.56,0.58],\n",
+        "                        [0.64,0.56,0.51],\n",
+        "                        ]\n",
+        "                        "
+      ]
+    },
+    {
+      "cell_index": 11,
+      "type": "code",
+      "source": [
+        "LFP_Results = {case:[] for case in case_selection.keys()}\n",
+        "\n",
+        "for iii, cellID in enumerate(selections):\n",
+        "    for case in case_selection.keys():\n",
+        "        Model = LFP_Models[case][iii]\n",
+        "        print(f\"Running Case {case} Optimization for {cellID}...\")\n",
+        "        obj_selection = case_selection[case]\n",
+        "        result = run_optimization(Model, halfcell, obj_selection, pop_size=50)\n",
+        "\n",
+        "        LFP_Results[case].append(result)"
+      ]
+    },
+    {
+      "cell_index": 12,
+      "type": "code",
+      "source": [
+        "# Save the results to files for later analysis\n",
+        "with open(\"results/LFP_Models_R1.pkl\", \"wb\") as f:\n",
+        "    pickle.dump(LFP_Models, f)\n",
+        "with open(\"results/LFP_Results_R1.pkl\", \"wb\") as f:\n",
+        "    pickle.dump(LFP_Results, f)\n",
+        "print(\"LFP optimization completed and results saved.\")"
+      ]
+    },
+    {
+      "cell_index": 13,
+      "type": "code",
+      "source": [
+        "LFP_hps = {}\n",
+        "for case in case_selection.keys():\n",
+        "    # print(f\"Case {case} results:\")\n",
+        "    Models = LFP_Models[case]\n",
+        "    Results = LFP_Results[case]\n",
+        "    LFP_hps[case] = []\n",
+        "    for iii in range(len(selections)):\n",
+        "        health_param = extract_health_parameter(Results[iii],halfcell)\n",
+        "        LFP_hps[case].append(health_param)\n",
+        "\n",
+        "# Save the health parameters to a file\n",
+        "with open(\"results/LFP_hps_R1.pkl\", \"wb\") as f:\n",
+        "    pickle.dump(LFP_hps, f)\n",
+        "print(\"Health parameters saved.\")"
+      ]
+    }
+  ]
+}
