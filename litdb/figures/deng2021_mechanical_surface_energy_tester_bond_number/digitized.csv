@@ -1,0 +1,164 @@
+# deng2021 digitized values. Vector rows: PDF drawing path centres mapped to axes via the figure's own gridlines (precision about 0.1 % of axis span; marker-shape centring may shift y by <=0.03 units). Raster rows (Fig 10): 300 dpi render of the 300 ppi embedded image, colour-matched bar outline +/-25 nN (Lactose 230) or by eye +/-40 nN. Trend use only; printed numbers in the card take precedence.
+figure,series,x,x_unit,y,y_unit,source,note
+Fig 7,Eskal 15,51.00,m/s2,48.12,% w/w detached,vector path centre,tablet substrate (same powder)
+Fig 7,Eskal 15,65.00,m/s2,67.84,% w/w detached,vector path centre,tablet substrate (same powder)
+Fig 7,Eskal 15,69.99,m/s2,72.17,% w/w detached,vector path centre,tablet substrate (same powder)
+Fig 7,Eskal 15,85.99,m/s2,80.82,% w/w detached,vector path centre,tablet substrate (same powder)
+Fig 7,Eskal 15,90.99,m/s2,84.19,% w/w detached,vector path centre,tablet substrate (same powder)
+Fig 7 (derived),Eskal 15,52.3,m/s2,50,% w/w,our arithmetic: linear interpolation of vector points,Table 2 prints 50.45 m/s2
+Fig 7,Eskal 10,53.00,m/s2,48.12,% w/w detached,vector path centre,tablet substrate (same powder)
+Fig 7,Eskal 10,65.00,m/s2,63.51,% w/w detached,vector path centre,tablet substrate (same powder)
+Fig 7,Eskal 10,72.00,m/s2,69.29,% w/w detached,vector path centre,tablet substrate (same powder)
+Fig 7,Eskal 10,90.99,m/s2,77.95,% w/w detached,vector path centre,tablet substrate (same powder)
+Fig 7,Eskal 10,94.00,m/s2,80.82,% w/w detached,vector path centre,tablet substrate (same powder)
+Fig 7 (derived),Eskal 10,54.5,m/s2,50,% w/w,our arithmetic: linear interpolation of vector points,Table 2 prints 53.13 m/s2
+Fig 7,Eskal 4,56.00,m/s2,40.43,% w/w detached,vector path centre,tablet substrate (same powder)
+Fig 7,Eskal 4,67.99,m/s2,44.26,% w/w detached,vector path centre,tablet substrate (same powder)
+Fig 7,Eskal 4,85.99,m/s2,58.69,% w/w detached,vector path centre,tablet substrate (same powder)
+Fig 7,Eskal 4,95.00,m/s2,64.96,% w/w detached,vector path centre,tablet substrate (same powder)
+Fig 7,Eskal 4,103.00,m/s2,71.21,% w/w detached,vector path centre,tablet substrate (same powder)
+Fig 7 (derived),Eskal 4,75.2,m/s2,50,% w/w,our arithmetic: linear interpolation of vector points,Table 2 prints 75.03 m/s2
+Fig 7,Eskal 2,42.97,m/s2,17.34,% w/w detached,vector path centre,tablet substrate (same powder)
+Fig 7,Eskal 2,52.99,m/s2,23.12,% w/w detached,vector path centre,tablet substrate (same powder)
+Fig 7,Eskal 2,61.99,m/s2,29.85,% w/w detached,vector path centre,tablet substrate (same powder)
+Fig 7,Eskal 2,85.98,m/s2,43.33,% w/w detached,vector path centre,tablet substrate (same powder)
+Fig 7,Eskal 2,100.98,m/s2,51.98,% w/w detached,vector path centre,tablet substrate (same powder)
+Fig 7 (derived),Eskal 2,97.5,m/s2,50,% w/w,our arithmetic: linear interpolation of vector points,Table 2 prints 98.24 m/s2
+Fig 7,Ibuprofen,51.00,m/s2,21.64,% w/w detached,vector path centre,tablet substrate (same powder)
+Fig 7,Ibuprofen,63.99,m/s2,25.50,% w/w detached,vector path centre,tablet substrate (same powder)
+Fig 7,Ibuprofen,81.99,m/s2,33.69,% w/w detached,vector path centre,tablet substrate (same powder)
+Fig 7,Ibuprofen,92.99,m/s2,51.96,% w/w detached,vector path centre,tablet substrate (same powder)
+Fig 7,Ibuprofen,95.00,m/s2,54.86,% w/w detached,vector path centre,tablet substrate (same powder)
+Fig 7 (derived),Ibuprofen,91.8,m/s2,50,% w/w,our arithmetic: linear interpolation of vector points,Table 2 prints 88.04 m/s2
+Fig 7,Ibuprofen 25,42.97,m/s2,39.00,% w/w detached,vector path centre,tablet substrate (same powder)
+Fig 7,Ibuprofen 25,52.99,m/s2,44.29,% w/w detached,vector path centre,tablet substrate (same powder)
+Fig 7,Ibuprofen 25,61.99,m/s2,50.53,% w/w detached,vector path centre,tablet substrate (same powder)
+Fig 7,Ibuprofen 25,93.99,m/s2,67.37,% w/w detached,vector path centre,tablet substrate (same powder)
+Fig 7,Ibuprofen 25,100.98,m/s2,76.05,% w/w detached,vector path centre,tablet substrate (same powder)
+Fig 7 (derived),Ibuprofen 25,61.2,m/s2,50,% w/w,our arithmetic: linear interpolation of vector points,Table 2 prints 60.62 m/s2
+Fig 7,Ibuprofen 50,42.99,m/s2,43.30,% w/w detached,vector path centre,tablet substrate (same powder)
+Fig 7,Ibuprofen 50,53.00,m/s2,48.12,% w/w detached,vector path centre,tablet substrate (same powder)
+Fig 7,Ibuprofen 50,62.00,m/s2,57.24,% w/w detached,vector path centre,tablet substrate (same powder)
+Fig 7,Ibuprofen 50,94.00,m/s2,79.40,% w/w detached,vector path centre,tablet substrate (same powder)
+Fig 7,Ibuprofen 50,101.00,m/s2,83.72,% w/w detached,vector path centre,tablet substrate (same powder)
+Fig 7 (derived),Ibuprofen 50,54.9,m/s2,50,% w/w,our arithmetic: linear interpolation of vector points,Table 2 prints 54.61 m/s2
+Fig 7,Ibuprofen 50_Jet milled,42.97,m/s2,36.59,% w/w detached,vector path centre,tablet substrate (same powder)
+Fig 7,Ibuprofen 50_Jet milled,52.99,m/s2,40.92,% w/w detached,vector path centre,tablet substrate (same powder)
+Fig 7,Ibuprofen 50_Jet milled,61.99,m/s2,47.65,% w/w detached,vector path centre,tablet substrate (same powder)
+Fig 7,Ibuprofen 50_Jet milled,93.99,m/s2,62.58,% w/w detached,vector path centre,tablet substrate (same powder)
+Fig 7,Ibuprofen 50_Jet milled,100.98,m/s2,67.37,% w/w detached,vector path centre,tablet substrate (same powder)
+Fig 7 (derived),Ibuprofen 50_Jet milled,67.0,m/s2,50,% w/w,our arithmetic: linear interpolation of vector points,Table 2 prints 70.11 m/s2
+Fig 7,Lactose 230,53.99,m/s2,47.63,% w/w detached,vector path centre,tablet substrate (same powder)
+Fig 7,Lactose 230,65.00,m/s2,58.23,% w/w detached,vector path centre,tablet substrate (same powder)
+Fig 7,Lactose 230,74.00,m/s2,64.47,% w/w detached,vector path centre,tablet substrate (same powder)
+Fig 7,Lactose 230,85.99,m/s2,74.08,% w/w detached,vector path centre,tablet substrate (same powder)
+Fig 7,Lactose 230,95.99,m/s2,77.95,% w/w detached,vector path centre,tablet substrate (same powder)
+Fig 7 (derived),Lactose 230,56.5,m/s2,50,% w/w,our arithmetic: linear interpolation of vector points,Table 2 prints 56.26 m/s2
+Fig 7,Lactose 140,42.99,m/s2,38.02,% w/w detached,vector path centre,tablet substrate (same powder)
+Fig 7,Lactose 140,53.00,m/s2,40.43,% w/w detached,vector path centre,tablet substrate (same powder)
+Fig 7,Lactose 140,62.00,m/s2,45.22,% w/w detached,vector path centre,tablet substrate (same powder)
+Fig 7,Lactose 140,90.99,m/s2,53.87,% w/w detached,vector path centre,tablet substrate (same powder)
+Fig 7,Lactose 140,97.00,m/s2,59.65,% w/w detached,vector path centre,tablet substrate (same powder)
+Fig 7,Lactose 140,104.99,m/s2,64.47,% w/w detached,vector path centre,tablet substrate (same powder)
+Fig 7 (derived),Lactose 140,78.0,m/s2,50,% w/w,our arithmetic: linear interpolation of vector points,Table 2 prints 76.49 m/s2
+Fig 7,Lactose 70,42.97,m/s2,25.03,% w/w detached,vector path centre,tablet substrate (same powder)
+Fig 7,Lactose 70,52.99,m/s2,30.81,% w/w detached,vector path centre,tablet substrate (same powder)
+Fig 7,Lactose 70,61.99,m/s2,37.55,% w/w detached,vector path centre,tablet substrate (same powder)
+Fig 7,Lactose 70,92.98,m/s2,52.94,% w/w detached,vector path centre,tablet substrate (same powder)
+Fig 7,Lactose 70,98.98,m/s2,57.76,% w/w detached,vector path centre,tablet substrate (same powder)
+Fig 7 (derived),Lactose 70,87.1,m/s2,50,% w/w,our arithmetic: linear interpolation of vector points,Table 2 prints 85.23 m/s2
+Fig 7,Lactose 200,56.00,m/s2,45.22,% w/w detached,vector path centre,tablet substrate (same powder)
+Fig 7,Lactose 200,62.00,m/s2,53.41,% w/w detached,vector path centre,tablet substrate (same powder)
+Fig 7,Lactose 200,74.99,m/s2,58.23,% w/w detached,vector path centre,tablet substrate (same powder)
+Fig 7,Lactose 200,85.99,m/s2,67.84,% w/w detached,vector path centre,tablet substrate (same powder)
+Fig 7,Lactose 200,94.00,m/s2,72.66,% w/w detached,vector path centre,tablet substrate (same powder)
+Fig 7 (derived),Lactose 200,59.5,m/s2,50,% w/w,our arithmetic: linear interpolation of vector points,Table 2 prints 59.98 m/s2
+Fig 7,MCC,42.97,m/s2,45.24,% w/w detached,vector path centre,tablet substrate (same powder)
+Fig 7,MCC,48.98,m/s2,50.53,% w/w detached,vector path centre,tablet substrate (same powder)
+Fig 7,MCC,62.98,m/s2,56.80,% w/w detached,vector path centre,tablet substrate (same powder)
+Fig 7,MCC,85.98,m/s2,67.86,% w/w detached,vector path centre,tablet substrate (same powder)
+Fig 7,MCC,90.97,m/s2,72.68,% w/w detached,vector path centre,tablet substrate (same powder)
+Fig 7 (derived),MCC,48.4,m/s2,50,% w/w,our arithmetic: linear interpolation of vector points,Table 2 prints 48.02 m/s2
+Fig 7,Paracetamol,58.97,m/s2,21.66,% w/w detached,vector path centre,tablet substrate (same powder)
+Fig 7,Paracetamol,67.98,m/s2,25.53,% w/w detached,vector path centre,tablet substrate (same powder)
+Fig 7,Paracetamol,86.99,m/s2,33.71,% w/w detached,vector path centre,tablet substrate (same powder)
+Fig 7,Paracetamol,94.98,m/s2,51.98,% w/w detached,vector path centre,tablet substrate (same powder)
+Fig 7,Paracetamol,95.97,m/s2,54.88,% w/w detached,vector path centre,tablet substrate (same powder)
+Fig 7 (derived),Paracetamol,94.1,m/s2,50,% w/w,our arithmetic: linear interpolation of vector points,Table 2 prints 89.46 m/s2
+Fig 7,Titanium dioxide,51.98,m/s2,21.66,% w/w detached,vector path centre,tablet substrate (same powder)
+Fig 7,Titanium dioxide,79.97,m/s2,25.53,% w/w detached,vector path centre,tablet substrate (same powder)
+Fig 7,Titanium dioxide,83.98,m/s2,33.71,% w/w detached,vector path centre,tablet substrate (same powder)
+Fig 7,Titanium dioxide,93.99,m/s2,51.98,% w/w detached,vector path centre,tablet substrate (same powder)
+Fig 7,Titanium dioxide,96.98,m/s2,54.88,% w/w detached,vector path centre,tablet substrate (same powder)
+Fig 7 (derived),Titanium dioxide,92.9,m/s2,50,% w/w,our arithmetic: linear interpolation of vector points,Table 2 prints 89.44 m/s2
+Fig 12,Eskal 2 Bond number,2.02,um (D50 axis),11.01,Bond number,vector path centre,
+Fig 12,Eskal 2 adhesion force,2.02,um (D50 axis),0.00127,nN (log axis),vector path centre,
+Fig 12,Eskal 4 Bond number,3.99,um (D50 axis),8.65,Bond number,vector path centre,
+Fig 12,Eskal 4 adhesion force,3.99,um (D50 axis),0.00799,nN (log axis),vector path centre,
+Fig 12,Ibuprofen 50_Jet milled Bond number,3.99,um (D50 axis),8.15,Bond number,vector path centre,
+Fig 12,Ibuprofen 50_Jet milled adhesion force,3.99,um (D50 axis),0.00299,nN (log axis),vector path centre,
+Fig 12,Eskal 10 Bond number,10.01,um (D50 axis),6.42,Bond number,vector path centre,
+Fig 12,Eskal 10 adhesion force,10.01,um (D50 axis),0.0926,nN (log axis),vector path centre,
+Fig 12,Ibuprofen 25 Bond number,13.00,um (D50 axis),7.18,Bond number,vector path centre,
+Fig 12,Ibuprofen 25 adhesion force,13.00,um (D50 axis),0.092,nN (log axis),vector path centre,
+Fig 12,Eskal 15 Bond number,15.00,um (D50 axis),6.14,Bond number,vector path centre,
+Fig 12,Eskal 15 adhesion force,15.00,um (D50 axis),0.299,nN (log axis),vector path centre,
+Fig 12,Ibuprofen 50 Bond number,26.00,um (D50 axis),6.57,Bond number,vector path centre,
+Fig 12,Ibuprofen 50 adhesion force,26.00,um (D50 axis),0.66,nN (log axis),vector path centre,
+Fig 12,MCC Bond number,45.72,um (D50 axis),5.89,Bond number,vector path centre,MCC plotted at 45.7 um = Table 1 D90 (Table 2 D50 = 22.7)
+Fig 12,MCC adhesion force,45.72,um (D50 axis),4.61,nN (log axis),vector path centre,MCC plotted at 45.7 um = Table 1 D90 (Table 2 D50 = 22.7)
+Fig 12,Paracetamol Bond number,49.00,um (D50 axis),10.12,Bond number,vector path centre,
+Fig 12,Paracetamol adhesion force,49.00,um (D50 axis),7.87,nN (log axis),vector path centre,
+Fig 12,Titanium dioxide Bond number,68.00,um (D50 axis),10.11,Bond number,vector path centre,
+Fig 12,Titanium dioxide adhesion force,68.00,um (D50 axis),73.3,nN (log axis),vector path centre,
+Fig 12,Ibuprofen Bond number,70.00,um (D50 axis),9.98,Bond number,vector path centre,
+Fig 12,Ibuprofen adhesion force,70.00,um (D50 axis),19.8,nN (log axis),vector path centre,
+Fig 12,Lactose 70 Bond number,90.00,um (D50 axis),9.69,Bond number,vector path centre,
+Fig 12,Lactose 70 adhesion force,90.00,um (D50 axis),56.9,nN (log axis),vector path centre,
+Fig 12,Lactose 140 Bond number,150.00,um (D50 axis),8.80,Bond number,vector path centre,
+Fig 12,Lactose 140 adhesion force,150.00,um (D50 axis),238.5,nN (log axis),vector path centre,
+Fig 12,Lactose 200 Bond number,200.00,um (D50 axis),7.12,Bond number,vector path centre,
+Fig 12,Lactose 200 adhesion force,200.00,um (D50 axis),458,nN (log axis),vector path centre,
+Fig 12,Lactose 230 Bond number,230.00,um (D50 axis),6.73,Bond number,vector path centre,
+Fig 12,Lactose 230 adhesion force,230.00,um (D50 axis),659,nN (log axis),vector path centre,
+Fig 13,Lactose 230 JKR,655.50,nN measured (axis),23.8,nN model (axis label),vector path centre,equals 1.5*pi*(D50/2 in um)*(gamma in J/m2) - unit of that product is uN
+Fig 13,Lactose 230 DMT,655.50,nN measured (axis),31.8,nN model (axis label),vector path centre,equals 2*pi*(D50/2 in um)*(gamma in J/m2)
+Fig 13,Lactose 200 JKR,455.30,nN measured (axis),20.7,nN model (axis label),vector path centre,equals 1.5*pi*(D50/2 in um)*(gamma in J/m2) - unit of that product is uN
+Fig 13,Lactose 200 DMT,455.30,nN measured (axis),27.6,nN model (axis label),vector path centre,equals 2*pi*(D50/2 in um)*(gamma in J/m2)
+Fig 13,Lactose 140 JKR,237.40,nN measured (axis),15.6,nN model (axis label),vector path centre,equals 1.5*pi*(D50/2 in um)*(gamma in J/m2) - unit of that product is uN
+Fig 13,Lactose 140 DMT,237.40,nN measured (axis),20.7,nN model (axis label),vector path centre,equals 2*pi*(D50/2 in um)*(gamma in J/m2)
+Fig 13,Titanium dioxide JKR,72.90,nN measured (axis),9.3,nN model (axis label),vector path centre,equals 1.5*pi*(D50/2 in um)*(gamma in J/m2) - unit of that product is uN
+Fig 13,Titanium dioxide DMT,72.90,nN measured (axis),12.4,nN model (axis label),vector path centre,equals 2*pi*(D50/2 in um)*(gamma in J/m2)
+Fig 13,Lactose 70 JKR,56.40,nN measured (axis),9.33,nN model (axis label),vector path centre,equals 1.5*pi*(D50/2 in um)*(gamma in J/m2) - unit of that product is uN
+Fig 13,Lactose 70 DMT,56.40,nN measured (axis),12.4,nN model (axis label),vector path centre,equals 2*pi*(D50/2 in um)*(gamma in J/m2)
+Fig 13,Ibuprofen JKR,19.50,nN measured (axis),6.93,nN model (axis label),vector path centre,equals 1.5*pi*(D50/2 in um)*(gamma in J/m2) - unit of that product is uN
+Fig 13,Ibuprofen DMT,19.50,nN measured (axis),9.24,nN model (axis label),vector path centre,equals 2*pi*(D50/2 in um)*(gamma in J/m2)
+Fig 13,Paracetamol JKR,7.75,nN measured (axis),5.09,nN model (axis label),vector path centre,equals 1.5*pi*(D50/2 in um)*(gamma in J/m2) - unit of that product is uN
+Fig 13,Paracetamol DMT,7.75,nN measured (axis),6.78,nN model (axis label),vector path centre,equals 2*pi*(D50/2 in um)*(gamma in J/m2)
+Fig 13,Ibuprofen 50 JKR,0.61,nN measured (axis),2.58,nN model (axis label),vector path centre,equals 1.5*pi*(D50/2 in um)*(gamma in J/m2) - unit of that product is uN
+Fig 13,Ibuprofen 50 DMT,0.61,nN measured (axis),3.44,nN model (axis label),vector path centre,equals 2*pi*(D50/2 in um)*(gamma in J/m2)
+Fig 13,Eskal 15 JKR,0.22,nN measured (axis),1.92,nN model (axis label),vector path centre,equals 1.5*pi*(D50/2 in um)*(gamma in J/m2) - unit of that product is uN
+Fig 13,Eskal 15 DMT,0.22,nN measured (axis),2.55,nN model (axis label),vector path centre,equals 2*pi*(D50/2 in um)*(gamma in J/m2)
+Fig 13,Ibuprofen 25 JKR,0.00,nN measured (axis),1.3,nN model (axis label),vector path centre,equals 1.5*pi*(D50/2 in um)*(gamma in J/m2) - unit of that product is uN
+Fig 13,Ibuprofen 25 DMT,0.00,nN measured (axis),1.72,nN model (axis label),vector path centre,equals 2*pi*(D50/2 in um)*(gamma in J/m2)
+Fig 13,Eskal 10 JKR,0.00,nN measured (axis),1.28,nN model (axis label),vector path centre,equals 1.5*pi*(D50/2 in um)*(gamma in J/m2) - unit of that product is uN
+Fig 13,Eskal 10 DMT,0.00,nN measured (axis),1.7,nN model (axis label),vector path centre,equals 2*pi*(D50/2 in um)*(gamma in J/m2)
+Fig 13,Eskal 4 JKR,0.00,nN measured (axis),0.51,nN model (axis label),vector path centre,equals 1.5*pi*(D50/2 in um)*(gamma in J/m2) - unit of that product is uN
+Fig 13,Eskal 4 DMT,0.00,nN measured (axis),0.68,nN model (axis label),vector path centre,equals 2*pi*(D50/2 in um)*(gamma in J/m2)
+Fig 13,Ibuprofen 50_Jet milled JKR,0.00,nN measured (axis),0.405,nN model (axis label),vector path centre,equals 1.5*pi*(D50/2 in um)*(gamma in J/m2) - unit of that product is uN
+Fig 13,Ibuprofen 50_Jet milled DMT,0.00,nN measured (axis),0.537,nN model (axis label),vector path centre,equals 2*pi*(D50/2 in um)*(gamma in J/m2)
+Fig 13,Eskal 2 JKR,0.00,nN measured (axis),0.26,nN model (axis label),vector path centre,equals 1.5*pi*(D50/2 in um)*(gamma in J/m2) - unit of that product is uN
+Fig 13,Eskal 2 DMT,0.00,nN measured (axis),0.344,nN model (axis label),vector path centre,equals 2*pi*(D50/2 in um)*(gamma in J/m2)
+Fig 13,MCC JKR,4.49,nN measured (axis),,nN model (axis label),vector path centre,no JKR marker drawn for MCC (14 JKR vs 15 DMT markers)
+Fig 13,MCC DMT,4.49,nN measured (axis),6.03,nN model (axis label),vector path centre,equals 2*pi*(D50/2 in um)*(gamma in J/m2); MCC uses D = 45.7 um
+Fig 10,Lactose 230 powder,Lactose 70 tablet,substrate,5536,nN,"raster bar top (300 dpi crop, colour-matched outline) +/-25 nN",
+Fig 10,Lactose 230 powder,Lactose 140 tablet,substrate,5491,nN,"raster bar top (300 dpi crop, colour-matched outline) +/-25 nN",
+Fig 10,Lactose 230 powder,Lactose 200 tablet,substrate,5491,nN,"raster bar top (300 dpi crop, colour-matched outline) +/-25 nN",
+Fig 10,Lactose 230 powder,Lactose 230 tablet,substrate,5513,nN,"raster bar top (300 dpi crop, colour-matched outline) +/-25 nN",
+Fig 10,Lactose 230 powder,Stainless steel,substrate,5393,nN,"raster bar top (300 dpi crop, colour-matched outline) +/-25 nN",
+Fig 10,Lactose 230 powder,TIVAR-88,substrate,5174,nN,"raster bar top (300 dpi crop, colour-matched outline) +/-25 nN",
+Fig 10,Lactose 230 powder,Glass,substrate,5536,nN,"raster bar top (300 dpi crop, colour-matched outline) +/-25 nN",
+Fig 10,Lactose 230 powder,Mild steel,substrate,5476,nN,"raster bar top (300 dpi crop, colour-matched outline) +/-25 nN",
+Fig 10,Lactose 200 powder,all 8 substrates,substrate,3750-3940,nN,"raster, by eye +/-40 nN",printed variation 1.7 %
+Fig 10,Lactose 140 powder,all 8 substrates,substrate,2150-2240,nN,"raster, by eye +/-40 nN",printed variation 1.5 %
+Fig 10,Lactose 70 powder,all 8 substrates,substrate,520-560,nN,"raster, by eye +/-40 nN",printed variation 1.6 %
