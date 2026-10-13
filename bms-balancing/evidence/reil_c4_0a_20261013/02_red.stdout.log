@@ -1,0 +1,82 @@
+FFFFFFFFFFFFFFFFFFFFFFFFFF                                               [100%]
+=================================== FAILURES ===================================
+E   NotImplementedError: C4-0a RED — 구현 전
+/home/user/Yonghoon-DEM-DFT/bms-balancing/scripts/reil_c4_monitor.py:14: NotImplementedError: C4-0a RED — 구현 전
+E   NotImplementedError: C4-0a RED — 구현 전
+/home/user/Yonghoon-DEM-DFT/bms-balancing/scripts/reil_c4_monitor.py:14: NotImplementedError: C4-0a RED — 구현 전
+E   NotImplementedError: C4-0a RED — 구현 전
+/home/user/Yonghoon-DEM-DFT/bms-balancing/scripts/reil_c4_monitor.py:14: NotImplementedError: C4-0a RED — 구현 전
+E   NotImplementedError: C4-0a RED — 구현 전
+/home/user/Yonghoon-DEM-DFT/bms-balancing/scripts/reil_c4_monitor.py:14: NotImplementedError: C4-0a RED — 구현 전
+E   NotImplementedError: C4-0a RED — 구현 전
+/home/user/Yonghoon-DEM-DFT/bms-balancing/scripts/reil_c4_monitor.py:14: NotImplementedError: C4-0a RED — 구현 전
+E   NotImplementedError: C4-0a RED — 구현 전
+/home/user/Yonghoon-DEM-DFT/bms-balancing/scripts/reil_c4_monitor.py:14: NotImplementedError: C4-0a RED — 구현 전
+E   NotImplementedError: C4-0a RED — 구현 전
+/home/user/Yonghoon-DEM-DFT/bms-balancing/scripts/reil_c4_monitor.py:14: NotImplementedError: C4-0a RED — 구현 전
+E   NotImplementedError: C4-0a RED — 구현 전
+/home/user/Yonghoon-DEM-DFT/bms-balancing/scripts/reil_c4_monitor.py:14: NotImplementedError: C4-0a RED — 구현 전
+E   NotImplementedError: C4-0a RED — 구현 전
+/home/user/Yonghoon-DEM-DFT/bms-balancing/scripts/reil_c4_monitor.py:14: NotImplementedError: C4-0a RED — 구현 전
+E   NotImplementedError: C4-0a RED — 구현 전
+/home/user/Yonghoon-DEM-DFT/bms-balancing/scripts/reil_c4_monitor.py:14: NotImplementedError: C4-0a RED — 구현 전
+E   NotImplementedError: C4-0a RED — 구현 전
+/home/user/Yonghoon-DEM-DFT/bms-balancing/scripts/reil_c4_monitor.py:14: NotImplementedError: C4-0a RED — 구현 전
+E   NotImplementedError: C4-0a RED — 구현 전
+/home/user/Yonghoon-DEM-DFT/bms-balancing/scripts/reil_c4_monitor.py:14: NotImplementedError: C4-0a RED — 구현 전
+E   NotImplementedError: C4-0a RED — 구현 전
+/home/user/Yonghoon-DEM-DFT/bms-balancing/scripts/reil_c4_e3a.py:10: NotImplementedError: C4-0a RED — 구현 전
+E   NotImplementedError: C4-0a RED — 구현 전
+/home/user/Yonghoon-DEM-DFT/bms-balancing/scripts/reil_c4_e3a.py:10: NotImplementedError: C4-0a RED — 구현 전
+E   NotImplementedError: C4-0a RED — 구현 전
+/home/user/Yonghoon-DEM-DFT/bms-balancing/scripts/reil_c4_e3a.py:10: NotImplementedError: C4-0a RED — 구현 전
+E   NotImplementedError: C4-0a RED — 구현 전
+/home/user/Yonghoon-DEM-DFT/bms-balancing/scripts/reil_c4_e3a.py:10: NotImplementedError: C4-0a RED — 구현 전
+E   NotImplementedError: C4-0a RED — 구현 전
+/home/user/Yonghoon-DEM-DFT/bms-balancing/scripts/reil_c4_e3a.py:10: NotImplementedError: C4-0a RED — 구현 전
+E   NotImplementedError: C4-0a RED — 구현 전
+/home/user/Yonghoon-DEM-DFT/bms-balancing/scripts/reil_c4_e3a.py:10: NotImplementedError: C4-0a RED — 구현 전
+E   NotImplementedError: C4-0a RED — 구현 전
+/home/user/Yonghoon-DEM-DFT/bms-balancing/scripts/reil_c4_e3a.py:10: NotImplementedError: C4-0a RED — 구현 전
+E   NotImplementedError: C4-0a RED — 구현 전
+/home/user/Yonghoon-DEM-DFT/bms-balancing/scripts/reil_c4_e3a.py:10: NotImplementedError: C4-0a RED — 구현 전
+E   NotImplementedError: C4-0a RED — 구현 전
+/home/user/Yonghoon-DEM-DFT/bms-balancing/scripts/reil_c4_e3a.py:10: NotImplementedError: C4-0a RED — 구현 전
+E   NotImplementedError: C4-0a RED — 구현 전
+/home/user/Yonghoon-DEM-DFT/bms-balancing/scripts/reil_c4_e3a.py:10: NotImplementedError: C4-0a RED — 구현 전
+E   NotImplementedError: C4-0a RED — 구현 전
+/home/user/Yonghoon-DEM-DFT/bms-balancing/scripts/reil_c4_e3a.py:10: NotImplementedError: C4-0a RED — 구현 전
+E   NotImplementedError: C4-0a RED — 구현 전
+/home/user/Yonghoon-DEM-DFT/bms-balancing/scripts/reil_c4_e3a.py:10: NotImplementedError: C4-0a RED — 구현 전
+E   NotImplementedError: C4-0a RED — 구현 전
+/home/user/Yonghoon-DEM-DFT/bms-balancing/scripts/reil_c4_e3a.py:10: NotImplementedError: C4-0a RED — 구현 전
+E   NotImplementedError: C4-0a RED — 구현 전
+/home/user/Yonghoon-DEM-DFT/bms-balancing/scripts/reil_c4_e3a.py:10: NotImplementedError: C4-0a RED — 구현 전
+=========================== short test summary info ============================
+FAILED tests/test_reil_c4_0a.py::test_01_a_late_successful_sample_does_not_hide_the_gap
+FAILED tests/test_reil_c4_0a.py::test_01_the_gap_is_measured_when_the_sample_arrives_not_when_it_was_requested
+FAILED tests/test_reil_c4_0a.py::test_01_none_exception_and_first_delay_are_told_apart
+FAILED tests/test_reil_c4_0a.py::test_02_a_slow_sample_past_the_deadline_stops_before_new_tasks_start
+FAILED tests/test_reil_c4_0a.py::test_02_workers_check_the_deadline_themselves
+FAILED tests/test_reil_c4_0a.py::test_02_a_late_rss_sample_inside_supervise_is_a_global_stop
+FAILED tests/test_reil_c4_0a.py::test_02_all_tasks_complete_without_a_stop - ...
+FAILED tests/test_reil_c4_0a.py::test_03_output_bytes_sum_every_owned_root_once
+FAILED tests/test_reil_c4_0a.py::test_03_a_size_limit_broken_by_the_final_write_is_not_success
+FAILED tests/test_reil_c4_0a.py::test_03_final_record_within_limits_is_complete_and_hashed
+FAILED tests/test_reil_c4_0a.py::test_04_exact_and_sub_paths_are_owned_but_prefix_siblings_are_not
+FAILED tests/test_reil_c4_0a.py::test_04_split_dirty_keeps_the_raw_text_and_does_not_own_ambiguous_lines
+FAILED tests/test_reil_c4_0a.py::test_05_phase_a_arrays_regenerate_byte_for_byte_against_the_accepted_seal
+FAILED tests/test_reil_c4_0a.py::test_05_seal_arrays_writes_a_new_folder_with_manifest_and_refuses_an_existing_one
+FAILED tests/test_reil_c4_0a.py::test_05_a_mismatch_with_the_accepted_seal_writes_nothing
+FAILED tests/test_reil_c4_0a.py::test_06_algorithm_branches_follow_the_util_code
+FAILED tests/test_reil_c4_0a.py::test_06_the_plan_has_66_calls_fixed_by_call_id
+FAILED tests/test_reil_c4_0a.py::test_07_a_call_records_counts_extrapolation_and_actual_violation
+FAILED tests/test_reil_c4_0a.py::test_07_missing_G_is_recorded_as_missing_not_zero
+FAILED tests/test_reil_c4_0a.py::test_07_the_original_model_and_util_functions_are_unchanged
+FAILED tests/test_reil_c4_0a.py::test_07_a_util_value_error_is_a_local_error_row_and_memory_error_is_structural
+FAILED tests/test_reil_c4_0a.py::test_07_the_preserved_util_copy_runs_one_nsga2_case_on_synthetic_curves
+FAILED tests/test_reil_c4_0a.py::test_08_identity_requires_the_full_manifest_sha_of_the_named_seal
+FAILED tests/test_reil_c4_0a.py::test_08_the_cli_has_no_default_seal - NotImp...
+FAILED tests/test_reil_c4_0a.py::test_09_dryrun_writes_the_plan_without_calling_the_optimizer
+FAILED tests/test_reil_c4_0a.py::test_09_data_paths_are_refused - NotImplemen...
+26 failed in 3.60s
