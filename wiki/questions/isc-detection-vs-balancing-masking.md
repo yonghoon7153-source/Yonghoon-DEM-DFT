@@ -2,10 +2,10 @@
 title: 팩 ISC/누설 검출에서 균등화 전류가 관측을 덮는가
 description: "In a liquid-cell pack, when detecting/quantifying an internal short or leakage, does the balancing current mask the observation — and if so, what separates leakage from self-discharge spread, capacity spread and the balancer itself"
 created: 2026-09-22
-updated: 2026-10-03
+updated: 2026-10-13
 type: research-question
 tags: [battery, research, pack-fault]
-sources: [raw/papers/lai2025_balanced-capacity-isc-detection-modules.md, raw/papers/zhang2026_si-anode-interphase-calendar-ageing.md]
+sources: [raw/papers/lai2025_balanced-capacity-isc-detection-modules.md, raw/papers/zhang2026_si-anode-interphase-calendar-ageing.md, raw/articles/2026-10-13-github-research-briefing.md, raw/articles/2026-10-07-github-research-briefing.md]
 confidence: low
 explored: false
 verificationStatus: unverified
@@ -150,6 +150,15 @@ feedsInto: "bms-balancing/docs/NEW_MODEL_REQUIREMENTS.md — §3 후보 원인 �
   붙이지 않았다(열화 기구 페이지 — SCHEMA 경계 ②) · 채움표 행 없음 · 카드 status 그대로(open). 새 개념
   [[potentiostatic-hold-current-attribution]] — 유지 전류 = 가역 이완 + 부반응 + 단락, 단락의 부호는 셀 구성에 따라 다르다.
 - [2026-10-03] 탐색 음성 2 회째 (단일 출처) — GitHub 브리핑 (2026-10-02 조사분) 이 "추가 추천할 만큼 검증된 실제 미세단락 전용 새 도구는 확인하지 못했다" 고 보고. 후보 둘은 ISC 판별 도구가 아니다: [[pyimpspec]] (EIS · DRT — 브리핑도 "피크만으로 미세단락 원인을 확정할 수 없다") · [[isu-uconn-lfp-gr-emulated-degradation]] (모사 LLI/LAM · 단락 라벨 없음).
+- [2026-10-07 · 기록은 2026-10-13] 탐색 — **데이터 후보 1 (브리핑 주장 · 미대조)**: public-battery-field-data v1.0.0 (Xie 현장 데이터 로더 · 코드 MIT · 원본 데이터 CC BY 4.0 ·
+  관리자 집계 271 팩 중 MSC 라벨 24 셀 · 22 팩 · 저용량 28 셀) — 미세단락 ↔ 저용량 · 저SOC 혼동 검증 후보. 고장 시작 시점 · 누설저항 정답은 없다 (브리핑).
+  raw `raw/articles/2026-10-07-github-research-briefing.md` 는 그날 저장만 되고 log · 이 카드 라우팅이 빠져 있었다 — 이 줄로 메운다.
+- [2026-10-13] 탐색 3 회째 — **비교 대상 후보 1 (채택 아님)** · 1차 대조 (코드 읽기만 · 실행 0 · `raw/articles/2026-10-13-github-research-briefing.md`):
+  Short-circuit-resistance-estimator (Jia · Xu 2023 *J. Energy Chem.* 79 의 코드 · MIT · 마지막 커밋 2024-06-04) — **외부 병렬저항을 붙여 모사한** 실험으로 누설저항을 회귀한다
+  (자연 발생 내부단락 아님). 원문에서 확인한 데이터 누출 셋: 겹치는 창 (간격 10 < 창 길이) · 30 개 실험 파일의 창을 섞은 무작위 90/10 분할 (실험 · 셀 단위 분리 없음) ·
+  분할 전 전체 입력으로 정규화 통계 (`Training in hpc.py:74–75`) → 원 정확도를 새 셀 성능으로 받지 않는다. 쓴다면 **셀 · 실험 단위 분할로 다시 재는 비교 기준**으로만
+  (P1 라벨 층위 = 외부 저항 설계값 — 1호와 같은 designed-R 계열 · 논문 원문은 읽지 않아 채움표 행은 없다 · 데이터 라이선스 별도 확인 필요). 같은 브리핑의 PyBaMM #5875 (SEI · 도금 발열 추가 · 미병합) 는 정상 열화의 발열을 단락 신호로
+  오인하지 않게 하는 **열 신호 기준선** 후보 — 이 카드의 관측 채널 (전압 · 전류) 밖이라 watch 만.
 
 ## 이 카드가 주장하지 않는 것
 

@@ -2,10 +2,10 @@
 title: 22p 결과는 물리인가 fitting degeneracy 인가
 description: "Is the seminar 22p LLI/LAM decomposition (LAM_PE=LAM_NE=13%, LLI=17%) real physics or an artifact of non-identifiability"
 created: 2026-08-11
-updated: 2026-10-06
+updated: 2026-10-13
 type: research-question
 tags: [battery, degradation, research]
-sources: [raw/papers/asheruddin2025_phantom-lam-lli-ir-hysteresis-dma.md, raw/repositories/degradation-degeneracy-audit.md, raw/papers/schmitt2022_sic-ocp-shape-change-degradation-modes.md, raw/papers/2026-09-21-siwon-kim-si-gr-ica-lam-si-gitt-ocp.md, raw/papers/birkl2017_degradation-diagnostics-ocv.md, raw/papers/rhyu2025_systematic-feature-design-formation.md, raw/papers/lin2024_ocv-degradation-mode-identifiability.md, raw/papers/schaeffer2024_nullspace-regularization-interpretation.md, raw/papers/cui2024_electrode-utilization-formation-cycle-life.md, raw/papers/navidi2024_piml-degradation-diagnostics-comparison.md, raw/papers/marongiu2016_lfp-onboard-capacity-halfcell.md, raw/papers/mohtat2019_electrode-soh-estimability-expansion.md, raw/papers/natterer2026_re-halfcell-anode-potential-aging.md, raw/papers/bizeray2019_spm-identifiability-parameter-estimation.md, raw/papers/sun2025_dl-eis-degradation-mode-diagnostics.md, raw/papers/oney2025_dead-slow-overworked-graphite-operando-microxrd.md, raw/papers/li2026_half-cell-fitting-multiobjective-benchmark.md]
+sources: [raw/papers/asheruddin2025_phantom-lam-lli-ir-hysteresis-dma.md, raw/repositories/degradation-degeneracy-audit.md, raw/papers/schmitt2022_sic-ocp-shape-change-degradation-modes.md, raw/papers/2026-09-21-siwon-kim-si-gr-ica-lam-si-gitt-ocp.md, raw/papers/birkl2017_degradation-diagnostics-ocv.md, raw/papers/rhyu2025_systematic-feature-design-formation.md, raw/papers/lin2024_ocv-degradation-mode-identifiability.md, raw/papers/schaeffer2024_nullspace-regularization-interpretation.md, raw/papers/cui2024_electrode-utilization-formation-cycle-life.md, raw/papers/navidi2024_piml-degradation-diagnostics-comparison.md, raw/papers/marongiu2016_lfp-onboard-capacity-halfcell.md, raw/papers/mohtat2019_electrode-soh-estimability-expansion.md, raw/papers/natterer2026_re-halfcell-anode-potential-aging.md, raw/papers/bizeray2019_spm-identifiability-parameter-estimation.md, raw/papers/sun2025_dl-eis-degradation-mode-diagnostics.md, raw/papers/oney2025_dead-slow-overworked-graphite-operando-microxrd.md, raw/papers/li2026_half-cell-fitting-multiobjective-benchmark.md, raw/articles/2026-10-13-github-research-briefing.md]
 confidence: medium
 explored: false
 verificationStatus: unverified
@@ -1164,6 +1164,11 @@ LAM_PE ≈ LAM_NE 는 물리가 아니라 **flat valley 방향에서 두 전극�
   3. **값싼 대조 다섯 (미실행 · 사용자 승인 대상)** — 개념 페이지 "이 위키에서의 적용" P1–P5: §7.10 격차 bias **부호**와 이 편 방향의 대조
      (부호 규약 · 지표 차이 먼저 고정) · 꼭대기 무거운 SOC 의존 오프셋 다리 · `φ_Si` 자유 5 매개 적합 · 충전 가지 + 가지 불일치 기준 ·
      적합 R 열 각도 (ampworks `iR` · PyDMA 옵션). 수치는 이 카드에 옮기지 않는다 — 정본은 artifact + `docs/RESULTS*.md` · `docs/09_22P_GAP.md`.
+- **[2026-10-13] GitHub 브리핑 (2026-10-12~13 전달분 · 항목 7) — 새 근거 0, 판정 대상 후보 1 · 의존성 열린 물음 1 닫힘.** `active` 유지.
+  ① [[ocvfit]] (1차 대조 · 실행 0): 식별 판정을 출력에 두는 OCV 도구 — LFP 평탄부 끝이 창 밖이면 LAM_PE 를 '구간만' 으로 낸다. 이 카드에 닿는 점은
+  **모드마다 따로 구간을 내므로 격차 (PE − NE) 의 구간 · 축퇴 방향이 직접 나오지 않는다**는 것 — 우리 truth 로 재는 E1 은 미착수 (사용자 승인 대상).
+  ② [[pybamm]] 26.10.0.0 = #5813 이 든 첫 릴리스 (2026-10-03 실측의 열린 물음) · 다상 총 표면적비 수정 #5805 는 `"surface form": "false"` 인 우리 DFN 에 안 쓰이는 경로
+  (소스 정적 판단 · 실측 아님) — 버전 판단 · 정본 수치 불변. 원문 · 대조: `raw/articles/2026-10-13-github-research-briefing.md`.
 
 ### 이 카드가 속한 논지 (2026-09-03)
 

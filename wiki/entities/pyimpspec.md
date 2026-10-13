@@ -2,10 +2,10 @@
 title: pyimpspec (EIS 분석 도구 · KK · DRT)
 description: "임피던스 스펙트럼의 Kramers–Kronig 검사 · DRT · 피크 · 등가회로 분석을 하는 Python 라이브러리 (GPL-3.0-or-later · Python ≥3.12). 우리에게는 운영 밖 분석 전용 후보 — 버리는 venv 에서 참값을 아는 합성 2-RC 로 설치 · 동작을 확인했다 (2026-10-03)"
 created: 2026-10-03
-updated: 2026-10-03
+updated: 2026-10-13
 type: entity
 tags: [battery, tooling, research]
-sources: [raw/articles/2026-10-02-github-research-briefing.md, raw/repositories/2026-10-03-pyimpspec-5.2-smoke-synthetic-2rc.md]
+sources: [raw/articles/2026-10-02-github-research-briefing.md, raw/repositories/2026-10-03-pyimpspec-5.2-smoke-synthetic-2rc.md, raw/articles/2026-10-13-github-research-briefing.md]
 confidence: medium
 explored: false
 verificationStatus: unverified
@@ -70,6 +70,8 @@ R0 10 Ω + (R1 20 Ω ∥ C1 10 µF) + (R2 50 Ω ∥ C2 1 mF) — 참값 τ1 = 2e
 - 같은 브리핑: [[pybamm]] (#5813) · [[isu-uconn-lfp-gr-emulated-degradation]] · 처리 기준: [[daily-github-briefing-triage]]
 
 ## 관련
+- impedance.py (외부 · MIT · 엔티티 없음 — 단발 언급) — 2026-10-13 브리핑: v1.8.0 GitHub 릴리스에 NumPy 2 Lin-KK 수정 (#322) · PyPI 게시 실패로 1.7.1 그대로 (브리핑 주장 · 미대조 · `raw/articles/2026-10-13-github-research-briefing.md`).
+  KK 검사의 두 번째 구현 후보 — 브리핑의 '작은 검증' (같은 설정의 pyimpspec 과 잔차 비교) 은 이 페이지의 제안 실험과 같은 축이다 (미착수).
 - [[drt-peak-count-nonidentifiability]]
 - [[zhang2020-eis-aging-dataset]]
 - [[daily-github-briefing-triage]]

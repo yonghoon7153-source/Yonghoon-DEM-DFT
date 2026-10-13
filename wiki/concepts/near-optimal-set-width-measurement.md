@@ -2,10 +2,10 @@
 title: 근최적 집합의 폭을 재는 법 (표집·Hessian 이 못 답하는 것)
 description: "유도량이 근최적 집합 위에서 훑는 범위를 직접 미는 방법 — 등방 표집이 참 폭 40 %p 를 0.00 %p 로 보고한 반례에서 나왔다"
 created: 2026-09-14
-updated: 2026-10-05
+updated: 2026-10-13
 type: concept
 tags: [research, degradation, design]
-sources: [raw/transcripts/2026-09-14-bms-handoff-width-and-wiki-candidates.md, raw/papers/li2026_half-cell-fitting-multiobjective-benchmark.md]
+sources: [raw/transcripts/2026-09-14-bms-handoff-width-and-wiki-candidates.md, raw/papers/li2026_half-cell-fitting-multiobjective-benchmark.md, raw/articles/2026-10-13-github-research-briefing.md]
 confidence: medium
 explored: false
 verificationStatus: unverified
@@ -117,3 +117,4 @@ identifiability" 라고 부른다 (LCO 두 셀 · 주변분포만). 이 페이�
 - [[constrained-crb-identifiability]] — 통계적 식별 가능성 쪽 언어
 - [[provenance-fail-closed-verification]] — 옮길 때 지켜야 할 규율
 - [[22p-physics-or-degeneracy]] — 이 폭이 답하게 될 질문
+- [[ocvfit]] — 매개변수 하나씩의 프로파일 (나머지 재적합 · 잔차 lag-1 상관으로 Δχ² 문턱 부풀림) 로 모드 구간을 내는 외부 도구 — 유도량 (두 모드의 차) 의 폭은 직접 밀지 않는다 (2026-10-13 1차 대조)

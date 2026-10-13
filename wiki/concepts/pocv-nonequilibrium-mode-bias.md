@@ -2,10 +2,10 @@
 title: "pOCV 의 비평형 성분이 모드로 새는 경로 — IR · 이력(가지) · 창"
 description: "A low-rate pseudo-OCV still carries ohmic drop, branch hysteresis and window boundaries, and an electrode-balancing fit projects them onto LLI/LAM parameters (phantom modes). Same symptom as fitting degeneracy, different cause. Two ways to treat IR (measured R(SOC) pre-correction vs a fitted constant offset), where our synthetic truth sits, and what transfers to the REIL charge-curve fits"
 created: 2026-10-06
-updated: 2026-10-06
+updated: 2026-10-13
 type: concept
 tags: [battery, degradation, research]
-sources: [raw/papers/asheruddin2025_phantom-lam-lli-ir-hysteresis-dma.md, raw/papers/schmitt2022_sic-ocp-shape-change-degradation-modes.md, raw/papers/2026-09-21-siwon-kim-si-gr-ica-lam-si-gitt-ocp.md, raw/papers/sun2025_dl-eis-degradation-mode-diagnostics.md, raw/papers/rhyu2025_systematic-feature-design-formation.md, raw/papers/li2026_half-cell-fitting-multiobjective-benchmark.md, raw/repositories/2026-10-05-ampworks-on-synthetic-truth.md, raw/repositories/2026-10-01-pyprobe-dma-on-synthetic-truth.md]
+sources: [raw/papers/asheruddin2025_phantom-lam-lli-ir-hysteresis-dma.md, raw/papers/schmitt2022_sic-ocp-shape-change-degradation-modes.md, raw/papers/2026-09-21-siwon-kim-si-gr-ica-lam-si-gitt-ocp.md, raw/papers/sun2025_dl-eis-degradation-mode-diagnostics.md, raw/papers/rhyu2025_systematic-feature-design-formation.md, raw/papers/li2026_half-cell-fitting-multiobjective-benchmark.md, raw/repositories/2026-10-05-ampworks-on-synthetic-truth.md, raw/repositories/2026-10-01-pyprobe-dma-on-synthetic-truth.md, raw/articles/2026-10-13-github-research-briefing.md]
 confidence: medium
 explored: false
 verificationStatus: unverified
@@ -156,4 +156,5 @@ LAM_PE 과소 · 흑연 LAM 과대 → 격차 −) 과 **반대 부호**다. NE 
 - [[data-window-identifiability]] — 창이 어느 전극 (성분) 을 보이게 하는가
 - [[thermo-kinetic-loss-partition]] — `η_kin` 쪽 분해
 - [[pyprobe]] · [[ampworks]] — 같은 계열 도구 (원문이 쓴 도구 · 적합 `iR`)
+- [[ocvfit]] — 기준 곡선 섭동 예산의 균일 오프셋 (기본 ±3 mV) 이 이 페이지의 +δ 통로와 같은 축 · 8 회 무작위의 최대 (우리 `ocpbias` PE 다리는 고정 크기 · 부호별) · 2026-10-13 1차 대조
 - [[22p-physics-or-degeneracy]] · [[degradation-degeneracy]] · [[mode-observability]] · [[isu-uconn-lfp-gr-emulated-degradation]]

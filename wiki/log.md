@@ -3578,3 +3578,15 @@ to the C-rate" 인데 Fig. 15(a) `[도표]` SOH 79.4 % 에서 C/3 ≈18 % vs C/2
 - 출처: 사용자 "논문 후속도 REIL랑 병렬로 진행해보고" · 정본 `degradation-degeneracy/docs/09_22P_GAP.md` §7.10 표 재집계 · 부호 규약은 `src/halfcell.py` 143–145 · `tools/diagnose_pini_transition.py` `gap_stats` 에서 확인
 - 더한 것: 개념 페이지 "P1 결과" 절 — 원점 건강 PE 오프셋 다리 다섯의 0 mV 대비 Δ 가 모두 + (수치는 정본 §7.10 · 위키에 옮기지 않음) · 원문 IR 방향 (격차 −) 과 반대 부호 · 공통 모드 대조 0 · 반대 부호를 모순으로 읽지 않는 이유 넷 · 성분별 부호는 원 fit 부재로 미확인
 - 하지 않은 것: fit 재실행 · 새 다리 · RUN_SCOPE 변경 (P2–P5 는 실행이 필요 — 사용자 승인 대상)
+
+## [2026-10-13] ingest | GitHub 연구 브리핑 (2026-10-12~13 전달분 · 항목 7) — PyBaMM 26.10 · ocvfit · 단락저항 추정기 1차 대조 (실행 0)
+- raw: `raw/articles/2026-10-13-github-research-briefing.md` (채팅 원문 블록 + 1차 대조 — 공개 저장소를 git 으로 직접 받아 읽은 원문 · PyBaMM 태그 트리 depth 1 · ocvfit · 추정기 얕은 clone · 받은 코드 · 시험 실행 0)
+- 사용자 지시: "좀 많은데 천천히 훑어보고 우리가 참고할만한것 있으면 가져오자" · 수집 목적 = 2026-10-01 브리핑 처리 기준 (목적 질문은 그때 한 번 받았다 — [[daily-github-briefing-triage]])
+- 새 페이지 1: [[ocvfit]] — ② 경쟁 도구 · ④ 실험 아이디어 (식별 판정을 출력에 두는 OCV 도구 · 프로파일 구간 + 섭동 예산 · 두 모드의 차의 구간은 직접 안 나옴 · E1 미착수)
+- 갱신: [[pybamm]] (26.10.0.0 절 · #5813 첫 릴리스 = 26.10 → 2026-10-03 열린 물음 닫힘 · **브리핑에 없던 #5805** 다상 총 표면적비 수정은 surface form `"false"` 인 우리 DFN 에 안 쓰이는 경로 — 소스 정적 판단 · `pybammsolvers>=0.11` 동반) ·
+  [[22p-physics-or-degeneracy]] Status Log · [[isc-detection-vs-balancing-masking]] Status Log 둘 (10-13 추정기 = 비교 기준 후보 · 데이터 누출 셋 원문 확인 / **10-07 브리핑 raw 의 빠진 라우팅을 메움**) ·
+  [[fitting-degeneracy]] · [[data-window-identifiability]] · [[near-optimal-set-width-measurement]] · [[pocv-nonequilibrium-mode-bias]] (ocvfit 역링크) · [[assb-tortuosity-factor-effective-conductivity-split]] (#5835 방향별 계수 메모) ·
+  [[pyimpspec]] (impedance.py 한 줄 · 미대조) · index 한 줄 + 머리 (61 → 62)
+- 경로 밖으로 판정 (페이지 없음): #5888 (Ai2020 — 우리는 `Chen2020`) · #5875 (열화 발열 — 우리는 등온 · ISC 카드에 열 기준선 후보로만) · impedance.py (PyPI 미반영 · 브리핑 주장)
+- 기록 공백 하나: 2026-10-07 브리핑 raw 는 그날 커밋됐지만 (`3a7d6806` · sha 정정 `fe72f9b8`) log 항목 · 카드 라우팅이 없었다 — 이번 항목과 ISC 카드 줄로 메웠다 (소급 날짜 항목은 만들지 않음)
+- 하지 않은 것: PyBaMM 26.10 설치 · 우리 truth 재측정 · ocvfit · 추정기 실행 · requirements 변경 (RUN_SCOPE) — 전부 별도 승인

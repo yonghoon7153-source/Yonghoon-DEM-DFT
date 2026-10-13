@@ -2,10 +2,10 @@
 title: PyBaMM (합성 truth 엔진 · 의존성)
 description: "degradation-degeneracy 의 합성 truth 를 만드는 전기화학 모델 라이브러리 — 우리가 쓰는 경로(full DFN · composite 음극 · 기본 uniform submesh · LLI 자체 계산)와 릴리스별 영향 판정, 그리고 requirements 상한 부재라는 재현성 위험"
 created: 2026-10-01
-updated: 2026-10-04
+updated: 2026-10-13
 type: entity
 tags: [pybamm, tooling, degradation]
-sources: [raw/articles/2026-10-01-github-research-briefing.md, raw/repositories/2026-10-01-pybamm-26.8-vs-26.9-synthetic-truth.md, raw/articles/2026-10-02-github-research-briefing.md, raw/repositories/2026-10-03-pybamm-pr5813-graded-electrode-and-synthetic-truth.md]
+sources: [raw/articles/2026-10-01-github-research-briefing.md, raw/repositories/2026-10-01-pybamm-26.8-vs-26.9-synthetic-truth.md, raw/articles/2026-10-02-github-research-briefing.md, raw/repositories/2026-10-03-pybamm-pr5813-graded-electrode-and-synthetic-truth.md, raw/articles/2026-10-13-github-research-briefing.md]
 confidence: medium
 explored: false
 verificationStatus: unverified
@@ -108,7 +108,23 @@ PyBaMM 의 수치가 바뀌면 "참값" 자체가 움직인다 — 이 페이지
 - **앞으로 닿는 조건** (그때는 #5813 이 든 버전 · 또는 리튬 재고를 손으로 계산): 구배 전극 · x 로 변하는 활물질 분율을 truth 에
   넣을 때 (예: ASSB 접촉 손실 truth 에서 비연결 입자 몫을 활물질 분율 `ε_p` 로 넣되 두께 방향으로 다르게 줄 때 — 그 표현은 [[assb-synthetic-truth-contact-loss-requirements]] 표의 '활물질 분율' 행),
   또는 PyBaMM `LLI [%]` · `Total lithium` 변수를 라벨 · 보존 검사로 쓰기 시작할 때.
-- 열린 물음: #5813 이 든 첫 릴리스 번호 (2026-10-03 원격 태그에 26.9.0.0 뒤 릴리스 없음 — watch).
+- ~~열린 물음: #5813 이 든 첫 릴리스 번호 (2026-10-03 원격 태그에 26.9.0.0 뒤 릴리스 없음 — watch).~~ → **닫힘 (2026-10-13): 26.10.0.0** (아래 절).
+
+### 26.10.0.0 (태그 2026-10-09 · 2026-10-13 브리핑) — 우리 영향 판정 (변경기록 · 소스 정적 대조 · 실측 아님)
+
+출처: `raw/articles/2026-10-13-github-research-briefing.md` 의 1차 대조 (태그 `pybamm-v26.10.0.0` = `b5f49ae1…` · 커밋 "Release v26.10.0.0 (#5883)" · `CHANGELOG.md` 26.10 절 원문 ·
+소스는 depth 1 로 받은 태그 트리를 읽기만). 브리핑이 말한 "이전 변경기록의 버전 배치 정정" 은 26.10 절에 #5813 이 들어 있는 것으로 확인된다.
+
+| 변경 | 무엇 | 우리 경로 | 판정 |
+|---|---|---|---|
+| #5813 (Bug fixes) | `x_average` 등이 보조 domain 에 의존하는 인자를 곱에서 빼지 않음 — "nonzero `LLI [%]` and wrong total particle lithium in the DFN when the active material volume fraction varies in x" | 2026-10-03 실측대로 우리 truth 에는 용량 0 · 전압 ≤5e-8 V · 바이트는 바뀜 | **#5813 이 든 첫 릴리스 = 26.10.0.0** (26.9.0.0 에는 없다) |
+| #5805 (issue #5802 · Bug fixes · **브리핑에 없음**) | 다상 전극의 총 표면적비를 상별 비의 합으로 — 예전 식은 같은 두 상에서 18 배 작았다 · "It sets the double-layer charging of a composite electrode under `"surface form": "differential"`" | 우리 DFN 은 composite 음극 (`"particle phases": ("2", "1")`) 이지만 surface form 미지정 = 기본 `"false"` · 총 표면적비 (`total_active_material.py:64`) 를 읽는 것은 surface-form 전도도 submodel 뿐 (`dfn.py:118–127`) | **경로 밖 (정적 판단)** — 같은 composite 를 쓰므로 표시해 둔다 · surface form 을 켜면 닿는다 · 실측 안 함 |
+| #5835 (Features) | `FiniteVolumeUnstructured` 이방성 계수 — 면마다 법선 n·K·n 만 · 접선 성분 없음 · 주축이 면과 맞을 때만 정확 | 우리는 1D DFN (unstructured FV 안 씀) | 경로 밖 · DEM→voxel 방향별 계수의 후보로 [[assb-tortuosity-factor-effective-conductivity-split]] 에 메모 |
+| Breaking | `pybamm` now requires `pybammsolvers>=0.11.0` | 검증 프로필 C 는 `pybammsolvers==0.9.1` (lock) | 26.10 으로 올리면 solver 도 함께 바뀐다 — 비교 대상이 둘로 늘어난다 |
+| #5875 (열화 발열 · 미병합) · #5888 (Ai2020 확산계수 단위 · 미병합) | 26.10 절에 없음 (grep) | 우리는 등온 · `Chen2020` (`configs/base.yaml`) | 경로 밖 · watch 만 (브리핑 주장 · PR 미대조) |
+
+- 정리: 26.10 은 우리 truth 의 **값**을 움직일 근거를 새로 주지 않지만 (위 두 수정 모두 경로 밖 · #5813 은 바이트만), 버전 판단 (C · B · D 프로필) 은 그대로다.
+  올린다면 26.8 ↔ 26.9 때처럼 버리는 venv 에서 우리 truth 를 다시 재는 것이 먼저다 (사용자 승인 대상 · RUN_SCOPE 변경은 게이트).
 
 ### 위험과 할 일
 
@@ -128,7 +144,7 @@ PyBaMM 의 수치가 바뀌면 "참값" 자체가 움직인다 — 이 페이지
   26.7.1 ↔ 26.8 측정은 고정 결정의 선행 조건이 아니다 (동등 · 대체를 주장할 때만 사전 고정 비교). 세 배포판 고정 ≠ 환경 drift
   전부 (Python · 전이 의존성 · 플랫폼 · 배포 바이트 · 패치가 남는다). 배치: **G87-N1 종결 뒤 별도 사용자 승인 · 별도 라운드.**
 - **#5813 (2026-10-03 실측)**: 우리 truth 에는 용량 0 · 전압 ≤5e-8 V — 경로 밖이지만 바이트는 바뀐다. 구배 활물질 분율 ·
-  PyBaMM 리튬 재고 변수를 쓰게 되면 그 전에 #5813 이 든 버전 (26.9.0.0 에는 없다) 을 요구 조건으로 적는다. 상한 고정 판단은 그대로.
+  PyBaMM 리튬 재고 변수를 쓰게 되면 그 전에 #5813 이 든 버전 (26.9.0.0 에는 없다 → **26.10.0.0 이상** · 2026-10-13 대조) 을 요구 조건으로 적는다. 상한 고정 판단은 그대로.
 - **환경 고정 라운드 착수 (2026-10-04 · 원장 §135 · 고정 표 `degradation-degeneracy/docs/22p_gap/PYBAMM_PIN_ROUND_SPEC.md`):**
   사용자 결정 = C + B 이번 라운드 · C 는 **기록 대조** (불일치여도 시험을 막지 않는다) · 새 lock 파일 (`requirements.txt` 하한 유지) ·
   B 는 v4 producer manifest 의 기록만 · D 는 새 생산 계획이 생길 때 별도 라운드 · 재생성 · 버전 비교는 범위 밖. **구현 전**
