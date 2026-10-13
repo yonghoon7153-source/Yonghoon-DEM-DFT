@@ -1,0 +1,28 @@
+{
+  "patterns": 42,
+  "literal_hits": [],
+  "not_an_OCR_or_semantic_status_test": true,
+  "body_internal_tokens": {
+    "ps45": [
+      4
+    ],
+    "uma": [
+      6
+    ],
+    "WSL": [
+      4
+    ],
+    "real_14": [
+      6,
+      8
+    ],
+    "STEP3": [
+      9
+    ]
+  },
+  "semantic_status_issues": [
+    "slide 11: different grid series for power-law claim",
+    "slide 14: held h1 conclusion",
+    "slide 14: v1.2/gen2 chronology"
+  ]
+}

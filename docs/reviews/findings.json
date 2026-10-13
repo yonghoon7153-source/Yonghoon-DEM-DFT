@@ -9698,6 +9698,230 @@
         "docs/reviews/codex_review_ps45_sigmae_reporting_20261013.md (§4 — native_unsupported_pair 전수 · \"Electronic conductivity (Tabor)\" 는 이 전자 가지를 잘못 설명)",
         "docs/data/ps45_r45_network_g2_20261007/make_sigma_tabor_figs.py (고친 표지 — 값 · 파일 이름 무변경)"
       ]
+    },
+    {
+      "id": "SEM-01",
+      "severity": "P1",
+      "status": "open",
+      "owner": "claude",
+      "found_by": "codex 10-13 연구세미나 덱 검토 — 첫 판 과학 리뷰 (핀 a0439bdf8 사본 · SEM-01~14) + v3 묶음 통합 판정 (NO-GO · 편집 P0/P1/P2 · 새 시뮬레이션 불요) · 우리 트리 재현 = ps45 AM–AM 21 단면 하중 가중 몫 59.562243 · 54.634924 · 52.371659 · 48.463893 · 56.914398 % · 단면 평균 축응력 158.25 · 159.93 · 164.44 · 167.14 · 175.48 MPa · 공개 격자 3 점 Δ비 3.360104 · p 3.131238 · CL-33 · CL-34 = hold — 판정값 차이 0",
+      "opened_in": "docs/reviews/codex_review_seminar_deck_20261013.md",
+      "title": "2·17 장 — 세 단계가 각각 실험으로 보정 · 교차검증됐다는 총론 (`each calibrated to its own experiment` · `cross-validation`) — 복셀 입력에 미보정 상 전도도 · 다른 적합식에서 이식한 값이 있어 공유 입력 모델 간 일치 = 일관성 검사이지 독립 실험 검증 아님 · F1 `anchored to conductivity measurements` 도 같음",
+      "note": "v3 §1 표 · 2 장 교체문 · F1 문구 정정.  수정 = docs/reviews/seminar_deck_fix_plan_20261013.md P0-2",
+      "evidence_tests": [
+        "docs/reviews/codex_review_seminar_deck_v3_20261013.md (통합 판정 §1 · §9 · §10)",
+        "docs/reviews/codex_seminar_deck_review_evidence_20261013/first/evidence/independent_arithmetic.json",
+        "docs/reviews/codex_seminar_deck_review_evidence_20261013/v3/evidence/saved_data_recheck_stdout.txt"
+      ]
+    },
+    {
+      "id": "SEM-02",
+      "severity": "P1",
+      "status": "open",
+      "owner": "claude",
+      "found_by": "codex 10-13 연구세미나 덱 검토 — 첫 판 과학 리뷰 (핀 a0439bdf8 사본 · SEM-01~14) + v3 묶음 통합 판정 (NO-GO · 편집 P0/P1/P2 · 새 시뮬레이션 불요) · 우리 트리 재현 = ps45 AM–AM 21 단면 하중 가중 몫 59.562243 · 54.634924 · 52.371659 · 48.463893 · 56.914398 % · 단면 평균 축응력 158.25 · 159.93 · 164.44 · 167.14 · 175.48 MPa · 공개 격자 3 점 Δ비 3.360104 · p 3.131238 · CL-33 · CL-34 = hold — 판정값 차이 0",
+      "opened_in": "docs/reviews/codex_review_seminar_deck_20261013.md",
+      "title": "8·16·17 장 — 두께 30.7 vs 30.28 µm 는 옛 cell-filled SE · 양방향 servo 결과인데 DEM 씨앗 계산처럼 연결 · 현재 등록 f=0 결과 25.842 µm · f(a) 실행 실패 · 판정 미완료 · 16 장 `nothing below has a result yet` 거짓 · AM 하중분담 = 후보 설명",
+      "note": "v3 §1 · 8 장 최소안 (30.7 비교 삭제 또는 `Earlier cell-filled SE calculation with bidirectional servo` 한정) · 정본 docs/mpm3d_calibration.md · docs/reviews/fam_platen_prereg_20260812.md §12-6-2",
+      "evidence_tests": [
+        "docs/reviews/codex_review_seminar_deck_v3_20261013.md (통합 판정 §1 · §9 · §10)",
+        "docs/reviews/codex_seminar_deck_review_evidence_20261013/first/evidence/independent_arithmetic.json",
+        "docs/reviews/codex_seminar_deck_review_evidence_20261013/v3/evidence/saved_data_recheck_stdout.txt"
+      ]
+    },
+    {
+      "id": "SEM-03",
+      "severity": "P1",
+      "status": "open",
+      "owner": "claude",
+      "found_by": "codex 10-13 연구세미나 덱 검토 — 첫 판 과학 리뷰 (핀 a0439bdf8 사본 · SEM-01~14) + v3 묶음 통합 판정 (NO-GO · 편집 P0/P1/P2 · 새 시뮬레이션 불요) · 우리 트리 재현 = ps45 AM–AM 21 단면 하중 가중 몫 59.562243 · 54.634924 · 52.371659 · 48.463893 · 56.914398 % · 단면 평균 축응력 158.25 · 159.93 · 164.44 · 167.14 · 175.48 MPa · 공개 격자 3 점 Δ비 3.360104 · p 3.131238 · CL-33 · CL-34 = hold — 판정값 차이 0",
+      "opened_in": "docs/reviews/codex_review_seminar_deck_20261013.md",
+      "title": "11 장 — 공개 격자 3 점 (vox 0.4 · 0.3 · 0.25) 에 다른 HOLD 계열 (CL-41 · vox ≤ 0.15) 의 \"멱법칙 불성립\" 추론을 적용 — 공개 3 점은 R = A + C·h^p 가 p 3.1312 로 정확히 맞는다 (3 점 · 3 매개변수) · `ratio changes sign` 은 비가 1 을 통과하는 것",
+      "note": "우리 재현 p 3.131238 · Δ비 3.360104.  교체문 `Grid convergence has not been established.` · `The ionic ratio crosses 1.` · 외삽 · 미세 격자값 추가 없음",
+      "evidence_tests": [
+        "docs/reviews/codex_review_seminar_deck_v3_20261013.md (통합 판정 §1 · §9 · §10)",
+        "docs/reviews/codex_seminar_deck_review_evidence_20261013/first/evidence/independent_arithmetic.json",
+        "docs/reviews/codex_seminar_deck_review_evidence_20261013/v3/evidence/saved_data_recheck_stdout.txt"
+      ]
+    },
+    {
+      "id": "SEM-04",
+      "severity": "P1",
+      "status": "open",
+      "owner": "claude",
+      "found_by": "codex 10-13 연구세미나 덱 검토 — 첫 판 과학 리뷰 (핀 a0439bdf8 사본 · SEM-01~14) + v3 묶음 통합 판정 (NO-GO · 편집 P0/P1/P2 · 새 시뮬레이션 불요) · 우리 트리 재현 = ps45 AM–AM 21 단면 하중 가중 몫 59.562243 · 54.634924 · 52.371659 · 48.463893 · 56.914398 % · 단면 평균 축응력 158.25 · 159.93 · 164.44 · 167.14 · 175.48 MPa · 공개 격자 3 점 Δ비 3.360104 · p 3.131238 · CL-33 · CL-34 = hold — 판정값 차이 0",
+      "opened_in": "docs/reviews/codex_review_seminar_deck_20261013.md",
+      "title": "13 장 — `Large–large NCM contacts carry 48–60 %` 오기 — 값은 AM–AM 전체 (21 단면 하중 가중 몫 · 0:10 에는 큰 입자가 없는데 59.6 %) · 상태 = 고정판 이완 (가압 최고점 아님)",
+      "note": "우리 재현 다섯 값 판정값 차이 0 (docs/data/ps45_plane_load_20261007/ps45_v2/plane_load.json).  교체 `NCM–NCM contacts contribute 48–60 % of vertical stress after relaxation at fixed platen position.`",
+      "evidence_tests": [
+        "docs/reviews/codex_review_seminar_deck_v3_20261013.md (통합 판정 §1 · §9 · §10)",
+        "docs/reviews/codex_seminar_deck_review_evidence_20261013/first/evidence/independent_arithmetic.json",
+        "docs/reviews/codex_seminar_deck_review_evidence_20261013/v3/evidence/saved_data_recheck_stdout.txt"
+      ]
+    },
+    {
+      "id": "SEM-05",
+      "severity": "P1",
+      "status": "open",
+      "owner": "claude",
+      "found_by": "codex 10-13 연구세미나 덱 검토 — 첫 판 과학 리뷰 (핀 a0439bdf8 사본 · SEM-01~14) + v3 묶음 통합 판정 (NO-GO · 편집 P0/P1/P2 · 새 시뮬레이션 불요) · 우리 트리 재현 = ps45 AM–AM 21 단면 하중 가중 몫 59.562243 · 54.634924 · 52.371659 · 48.463893 · 56.914398 % · 단면 평균 축응력 158.25 · 159.93 · 164.44 · 167.14 · 175.48 MPa · 공개 격자 3 점 Δ비 3.360104 · p 3.131238 · CL-33 · CL-34 = hold — 판정값 차이 0",
+      "opened_in": "docs/reviews/codex_review_seminar_deck_20261013.md",
+      "title": "14 장 — `gain follows the represented additive volume` = 원장 hold (CL-33 · CL-34) 인 h1 추론을 살아 있는 성과로 제시 (숫자만 숨김)",
+      "note": "교체 = 상태표 행 `Historical eight-origin study | Conductivity estimates and inference remain on hold`",
+      "evidence_tests": [
+        "docs/reviews/codex_review_seminar_deck_v3_20261013.md (통합 판정 §1 · §9 · §10)",
+        "docs/reviews/codex_seminar_deck_review_evidence_20261013/first/evidence/independent_arithmetic.json",
+        "docs/reviews/codex_seminar_deck_review_evidence_20261013/v3/evidence/saved_data_recheck_stdout.txt"
+      ]
+    },
+    {
+      "id": "SEM-06",
+      "severity": "P1",
+      "status": "open",
+      "owner": "claude",
+      "found_by": "codex 10-13 연구세미나 덱 검토 — 첫 판 과학 리뷰 (핀 a0439bdf8 사본 · SEM-01~14) + v3 묶음 통합 판정 (NO-GO · 편집 P0/P1/P2 · 새 시뮬레이션 불요) · 우리 트리 재현 = ps45 AM–AM 21 단면 하중 가중 몫 59.562243 · 54.634924 · 52.371659 · 48.463893 · 56.914398 % · 단면 평균 축응력 158.25 · 159.93 · 164.44 · 167.14 · 175.48 MPa · 공개 격자 3 점 Δ비 3.360104 · p 3.131238 · CL-33 · CL-34 = hold — 판정값 차이 0",
+      "opened_in": "docs/reviews/codex_review_seminar_deck_20261013.md",
+      "title": "14·16·17 장 — 이미 배포된 v1.2 와 세대 2 소프트웨어 재검증 7 회를 한 이력으로 합침 · `Every production number is pre-registered, sealed and externally re-verified` 전칭 보증 · 7차 판정은 194 발사 · v1.3 · 보충 20 승인 아님",
+      "note": "교체 = 14 장 다섯 행 상태표 (배포 행 · 소프트웨어 심사 행 분리) · 16 장 `Pending: separate launch approvals …` · 17 장 전칭 보증 삭제",
+      "evidence_tests": [
+        "docs/reviews/codex_review_seminar_deck_v3_20261013.md (통합 판정 §1 · §9 · §10)",
+        "docs/reviews/codex_seminar_deck_review_evidence_20261013/first/evidence/independent_arithmetic.json",
+        "docs/reviews/codex_seminar_deck_review_evidence_20261013/v3/evidence/saved_data_recheck_stdout.txt"
+      ]
+    },
+    {
+      "id": "SEM-07",
+      "severity": "P2",
+      "status": "open",
+      "owner": "claude",
+      "found_by": "codex 10-13 연구세미나 덱 검토 — 첫 판 과학 리뷰 (핀 a0439bdf8 사본 · SEM-01~14) + v3 묶음 통합 판정 (NO-GO · 편집 P0/P1/P2 · 새 시뮬레이션 불요) · 우리 트리 재현 = ps45 AM–AM 21 단면 하중 가중 몫 59.562243 · 54.634924 · 52.371659 · 48.463893 · 56.914398 % · 단면 평균 축응력 158.25 · 159.93 · 164.44 · 167.14 · 175.48 MPa · 공개 격자 3 점 Δ비 3.360104 · p 3.131238 · CL-33 · CL-34 = hold — 판정값 차이 0",
+      "opened_in": "docs/reviews/codex_review_seminar_deck_20261013.md",
+      "title": "7 장 — E ≈ 24 GPa 를 LPSCl 단결정 값으로 표기 (정본 카드 sakuda2013 = 75Li₂S·25P₂S₅ 유리 · 18–25 GPa) · σy 0.30 GPa 를 문헌에서 독립 고정한 듯 표현 (보정 스윕 선택값) · `irreducible` 보편 주장 · `the earlier citation was retracted` (논문 철회처럼 읽힘)",
+      "note": "교체 = 재료 라벨 정정 · `The tested alternatives did not remove the need for effective parameters.` · `Our earlier attribution to the literature was withdrawn.`",
+      "evidence_tests": [
+        "docs/reviews/codex_review_seminar_deck_v3_20261013.md (통합 판정 §1 · §9 · §10)",
+        "docs/reviews/codex_seminar_deck_review_evidence_20261013/first/evidence/independent_arithmetic.json",
+        "docs/reviews/codex_seminar_deck_review_evidence_20261013/v3/evidence/saved_data_recheck_stdout.txt"
+      ]
+    },
+    {
+      "id": "SEM-08",
+      "severity": "P2",
+      "status": "open",
+      "owner": "claude",
+      "found_by": "codex 10-13 연구세미나 덱 검토 — 첫 판 과학 리뷰 (핀 a0439bdf8 사본 · SEM-01~14) + v3 묶음 통합 판정 (NO-GO · 편집 P0/P1/P2 · 새 시뮬레이션 불요) · 우리 트리 재현 = ps45 AM–AM 21 단면 하중 가중 몫 59.562243 · 54.634924 · 52.371659 · 48.463893 · 56.914398 % · 단면 평균 축응력 158.25 · 159.93 · 164.44 · 167.14 · 175.48 MPa · 공개 격자 3 점 Δ비 3.360104 · p 3.131238 · CL-33 · CL-34 = hold — 판정값 차이 0",
+      "opened_in": "docs/reviews/codex_review_seminar_deck_20261013.md",
+      "title": "9·17 장 — 이상 계면 복셀 모델 = 접촉망 CF = 실험 대비 상한으로 혼동 · 전기식 한 식으로 열까지 표현",
+      "note": "교체 = `ideal-interface voxel model` (같은 기하 · 물성 · 경계의 모형 내 상한) · 전기 (σ, φ) · 열 (κ, T) 구분",
+      "evidence_tests": [
+        "docs/reviews/codex_review_seminar_deck_v3_20261013.md (통합 판정 §1 · §9 · §10)",
+        "docs/reviews/codex_seminar_deck_review_evidence_20261013/first/evidence/independent_arithmetic.json",
+        "docs/reviews/codex_seminar_deck_review_evidence_20261013/v3/evidence/saved_data_recheck_stdout.txt"
+      ]
+    },
+    {
+      "id": "SEM-09",
+      "severity": "P2",
+      "status": "open",
+      "owner": "claude",
+      "found_by": "codex 10-13 연구세미나 덱 검토 — 첫 판 과학 리뷰 (핀 a0439bdf8 사본 · SEM-01~14) + v3 묶음 통합 판정 (NO-GO · 편집 P0/P1/P2 · 새 시뮬레이션 불요) · 우리 트리 재현 = ps45 AM–AM 21 단면 하중 가중 몫 59.562243 · 54.634924 · 52.371659 · 48.463893 · 56.914398 % · 단면 평균 축응력 158.25 · 159.93 · 164.44 · 167.14 · 175.48 MPa · 공개 격자 3 점 Δ비 3.360104 · p 3.131238 · CL-33 · CL-34 = hold — 판정값 차이 0",
+      "opened_in": "docs/reviews/codex_review_seminar_deck_20261013.md",
+      "title": "12 장 — 비교의 핵심 조건 (측정 조건 미확인 · Hertz H0 · 공통 4.1 mS/cm · 크기 인자 OFF · 탄소 · 바인더 없음 · 조성당 침대 1) 이 notes 에만 · F4 조성 축 라벨 5 중 3 누락 (make_seminar_figs.py: set_xticklabels 뒤 _fmt 가 MaxNLocator 로 덮음) · 본문 범위 `0.38–0.47` 은 이중 반올림 (원값 0.3747 → `0.375–0.467`)",
+      "note": "수정 = 라벨 복구 (시험 먼저 · 값 불변) · 조건을 화면 캡션 12 pt 로",
+      "evidence_tests": [
+        "docs/reviews/codex_review_seminar_deck_v3_20261013.md (통합 판정 §1 · §9 · §10)",
+        "docs/reviews/codex_seminar_deck_review_evidence_20261013/first/evidence/independent_arithmetic.json",
+        "docs/reviews/codex_seminar_deck_review_evidence_20261013/v3/evidence/saved_data_recheck_stdout.txt"
+      ]
+    },
+    {
+      "id": "SEM-10",
+      "severity": "P2",
+      "status": "open",
+      "owner": "claude",
+      "found_by": "codex 10-13 연구세미나 덱 검토 — 첫 판 과학 리뷰 (핀 a0439bdf8 사본 · SEM-01~14) + v3 묶음 통합 판정 (NO-GO · 편집 P0/P1/P2 · 새 시뮬레이션 불요) · 우리 트리 재현 = ps45 AM–AM 21 단면 하중 가중 몫 59.562243 · 54.634924 · 52.371659 · 48.463893 · 56.914398 % · 단면 평균 축응력 158.25 · 159.93 · 164.44 · 167.14 · 175.48 MPa · 공개 격자 3 점 Δ비 3.360104 · p 3.131238 · CL-33 · CL-34 = hold — 판정값 차이 0",
+      "opened_in": "docs/reviews/codex_review_seminar_deck_20261013.md",
+      "title": "15 장 — 협력자 OOF R² 0.99 와 우리 0.98 을 CV · 입력 규약 미확인인 채 직접 비교 · loading 을 자유 설계축으로 기재 · 130 + 64 코호트 · 조건부 모델 디스크립터 지위 누락",
+      "note": "수정 = 비교 문장 삭제 (notes 에도 승패 비교 없음) · loading 삭제 · 조건부 디스크립터 명시",
+      "evidence_tests": [
+        "docs/reviews/codex_review_seminar_deck_v3_20261013.md (통합 판정 §1 · §9 · §10)",
+        "docs/reviews/codex_seminar_deck_review_evidence_20261013/first/evidence/independent_arithmetic.json",
+        "docs/reviews/codex_seminar_deck_review_evidence_20261013/v3/evidence/saved_data_recheck_stdout.txt"
+      ]
+    },
+    {
+      "id": "SEM-11",
+      "severity": "P2",
+      "status": "open",
+      "owner": "claude",
+      "found_by": "codex 10-13 연구세미나 덱 검토 — 첫 판 과학 리뷰 (핀 a0439bdf8 사본 · SEM-01~14) + v3 묶음 통합 판정 (NO-GO · 편집 P0/P1/P2 · 새 시뮬레이션 불요) · 우리 트리 재현 = ps45 AM–AM 21 단면 하중 가중 몫 59.562243 · 54.634924 · 52.371659 · 48.463893 · 56.914398 % · 단면 평균 축응력 158.25 · 159.93 · 164.44 · 167.14 · 175.48 MPa · 공개 격자 3 점 Δ비 3.360104 · p 3.131238 · CL-33 · CL-34 = hold — 판정값 차이 0",
+      "opened_in": "docs/reviews/codex_review_seminar_deck_20261013.md",
+      "title": "4 장 — `Hertz constriction` · 길이 효과와의 이분법 · 시드 산포 일반화 — T = φ_SE σ₀ / σ_eff 식과 모형 내부 I²R 몫 (73–75 % = ΣI²R_constr / ΣI²R_total · 실물 전극 원인 증거 아님) 을 화면에",
+      "note": "교체 = `Holm/Maxwell constriction using Hertz contact radii` · `Contact constriction accounts for 73–75 % of Joule dissipation in this network model.`",
+      "evidence_tests": [
+        "docs/reviews/codex_review_seminar_deck_v3_20261013.md (통합 판정 §1 · §9 · §10)",
+        "docs/reviews/codex_seminar_deck_review_evidence_20261013/first/evidence/independent_arithmetic.json",
+        "docs/reviews/codex_seminar_deck_review_evidence_20261013/v3/evidence/saved_data_recheck_stdout.txt"
+      ]
+    },
+    {
+      "id": "SEM-12",
+      "severity": "P2",
+      "status": "open",
+      "owner": "claude",
+      "found_by": "codex 10-13 연구세미나 덱 검토 — 첫 판 과학 리뷰 (핀 a0439bdf8 사본 · SEM-01~14) + v3 묶음 통합 판정 (NO-GO · 편집 P0/P1/P2 · 새 시뮬레이션 불요) · 우리 트리 재현 = ps45 AM–AM 21 단면 하중 가중 몫 59.562243 · 54.634924 · 52.371659 · 48.463893 · 56.914398 % · 단면 평균 축응력 158.25 · 159.93 · 164.44 · 167.14 · 175.48 MPa · 공개 격자 3 점 Δ비 3.360104 · p 3.131238 · CL-33 · CL-34 = hold — 판정값 차이 0",
+      "opened_in": "docs/reviews/codex_review_seminar_deck_20261013.md",
+      "title": "4·6·8·9·10 장 — 자리 표시 명령 일부 불능 (6 장 `viz_mpm_morphology.py <run> --slice xz` 는 parser 와 불일치 — 실제 `--se` · `--scaffold` · `--y`) · 8 장은 초기화 · 하중 이력이 다른 자료를 비교하라는 지시 · 10 장 합성 미리보기가 실제 Phase A 스탬프처럼 읽힘",
+      "note": "수정 = 명령 정정 (notes) · 발표판 자리 표시 = 한 줄 라벨 · 10 장 `illustration` · `synthetic` 라벨 12 pt",
+      "evidence_tests": [
+        "docs/reviews/codex_review_seminar_deck_v3_20261013.md (통합 판정 §1 · §9 · §10)",
+        "docs/reviews/codex_seminar_deck_review_evidence_20261013/first/evidence/independent_arithmetic.json",
+        "docs/reviews/codex_seminar_deck_review_evidence_20261013/v3/evidence/saved_data_recheck_stdout.txt"
+      ]
+    },
+    {
+      "id": "SEM-13",
+      "severity": "P2",
+      "status": "open",
+      "owner": "claude",
+      "found_by": "codex 10-13 연구세미나 덱 검토 — 첫 판 과학 리뷰 (핀 a0439bdf8 사본 · SEM-01~14) + v3 묶음 통합 판정 (NO-GO · 편집 P0/P1/P2 · 새 시뮬레이션 불요) · 우리 트리 재현 = ps45 AM–AM 21 단면 하중 가중 몫 59.562243 · 54.634924 · 52.371659 · 48.463893 · 56.914398 % · 단면 평균 축응력 158.25 · 159.93 · 164.44 · 167.14 · 175.48 MPa · 공개 격자 3 점 Δ비 3.360104 · p 3.131238 · CL-33 · CL-34 = hold — 판정값 차이 0",
+      "opened_in": "docs/reviews/codex_review_seminar_deck_20261013.md",
+      "title": "7·12·18 장 — 핵심 입력 (E 24 GPa · NCM 4.1 mS/cm) · MPM 수치법 · 협착 법칙의 인용 연결 없음 · 본문 ↔ 참고문헌 번호 연결 없음",
+      "note": "정본 카드 있음 = sakuda2013_sulfide_mechanical_property · wang2018_lco_nmc_electronic_ionic_conductivity_vs_ni → 참고문헌 추가 + [n] · Holm · MPM 수치법 = 정본 카드 없음 → 사용 모델 지위만 명시 (기억으로 서지 채우지 않음)",
+      "evidence_tests": [
+        "docs/reviews/codex_review_seminar_deck_v3_20261013.md (통합 판정 §1 · §9 · §10)",
+        "docs/reviews/codex_seminar_deck_review_evidence_20261013/first/evidence/independent_arithmetic.json",
+        "docs/reviews/codex_seminar_deck_review_evidence_20261013/v3/evidence/saved_data_recheck_stdout.txt"
+      ]
+    },
+    {
+      "id": "SEM-14",
+      "severity": "P3",
+      "status": "open",
+      "owner": "claude",
+      "found_by": "codex 10-13 연구세미나 덱 검토 — 첫 판 과학 리뷰 (핀 a0439bdf8 사본 · SEM-01~14) + v3 묶음 통합 판정 (NO-GO · 편집 P0/P1/P2 · 새 시뮬레이션 불요) · 우리 트리 재현 = ps45 AM–AM 21 단면 하중 가중 몫 59.562243 · 54.634924 · 52.371659 · 48.463893 · 56.914398 % · 단면 평균 축응력 158.25 · 159.93 · 164.44 · 167.14 · 175.48 MPa · 공개 격자 3 점 Δ비 3.360104 · p 3.131238 · CL-33 · CL-34 = hold — 판정값 차이 0",
+      "opened_in": "docs/reviews/codex_review_seminar_deck_20261013.md",
+      "title": "1·2·7 장 등 — 표지 이메일 ↔ 캠퍼스 그림 겹침 · F1 상자 글 넘침 · 7 장 소제목 가로선 겹침 · 17 장 본문 상자 밖 글",
+      "note": "수정 = 저자 블록 (0.68, 2.98, 8.40, 0.75) · F1 축약 · 7 장 소제목 단축 · 17 장 상자 (0.61, 1.08, 8.84, 3.75)",
+      "evidence_tests": [
+        "docs/reviews/codex_review_seminar_deck_v3_20261013.md (통합 판정 §1 · §9 · §10)",
+        "docs/reviews/codex_seminar_deck_review_evidence_20261013/first/evidence/independent_arithmetic.json",
+        "docs/reviews/codex_seminar_deck_review_evidence_20261013/v3/evidence/saved_data_recheck_stdout.txt"
+      ]
+    },
+    {
+      "id": "SELF-110",
+      "severity": "P3",
+      "status": "open",
+      "owner": "claude",
+      "found_by": "codex v3 통합 판정 §3 (실제 PPTX XML 대조) — 요청서 codex_seminar_deck_review_request_20261013 §2 의 두 사실 오기",
+      "opened_in": "docs/reviews/codex_review_seminar_deck_v3_20261013.md",
+      "title": "요청서 §2 가 ■ 제목을 15 pt 라 적었으나 실제는 master otherStyle 18 pt 상속 · \"출처 줄 우상단 10 pt\" 를 우리 덱 문법으로 적었으나 생성기 build_seminar.py:239–241 이 프로토타입 TextBox 69 를 지우고 tag() 를 한 번도 부르지 않아 p01–p19 에 출처 줄이 없다",
+      "note": "수정 = 요청서 정오표 (머리 표지) · 생성기: 제목 18 유지 · 출처는 캡션 [n] 으로 (작은 출처 상자 복원 대신) — docs/reviews/seminar_deck_fix_plan_20261013.md",
+      "evidence_tests": [
+        "docs/reviews/codex_seminar_deck_review_evidence_20261013/v3/notes/visual_1_9.md",
+        "docs/reviews/codex_seminar_deck_review_evidence_20261013/v3/evidence/v3_pptx.json"
+      ]
     }
   ]
 }

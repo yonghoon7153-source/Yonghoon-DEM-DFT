@@ -1,0 +1,90 @@
+[
+  {
+    "path": "docs/data/ps73_compaction_curve_20261006/stages_20261012/aligned_ckpt/t1_geometry/ps73_geom3d_4panel_porosity_preview.png",
+    "sha256": "8fc8fe9392cfa398e1d9db12720fadbf8921ad68e0d0e40a75a7d9e56ae43f78",
+    "git_blob": "539abed68a7532139949f4fe480563374f096dab",
+    "bytes": 1946571
+  },
+  {
+    "path": "docs/report_20261021/previews/G1.png",
+    "sha256": "abf1814c7cf2d3ecadce16d2667d58cf360ba1f10f11f33afa91357cff979e08",
+    "git_blob": "95e7485c1f0a89ba01bbded20aa1ec680e3dae7d",
+    "bytes": 105207
+  },
+  {
+    "path": "docs/data/ps45_r45_network_g2_20261007/deck_p14p15_20261012/p14_tortuosity_hertz.png",
+    "sha256": "03dde93f542dcfd64256afbe00c232904c8c5b59c8d6a8b884fa4ae8f9cf9a13",
+    "git_blob": "f4f145c51cf1ce9a8bff37569891cb645b9ecc2f",
+    "bytes": 33794
+  },
+  {
+    "path": "docs/data/ps45_r45_network_g2_20261007/deck_p14p15_20261012/p15_sigmaLi_hertz_s0_1p5.png",
+    "sha256": "eb408b528f1e21032229d8eaa8d31e410c90839ec601f267938235cae1f5c43a",
+    "git_blob": "70413ed3980381dc95466c24d1facb720a208c07",
+    "bytes": 31043
+  },
+  {
+    "path": "docs/data/dem_governing_equations_report_20261011/fig2_hysteresis_cycle.png",
+    "sha256": "a29f1da80959f1755ca7ffd720ef59a349acb6b98251544ab3641142f5db3aec",
+    "git_blob": "36688c9fcb64818b784f5e5d8883d772c05a2d0a",
+    "bytes": 155760
+  },
+  {
+    "path": "docs/figures/additive_seed_vgcf_ptfe.png",
+    "sha256": "6d576b3a8153ab97575dcbb542ed760bb555a9f12c9b78d27073ba9557d12b42",
+    "git_blob": "0414d74821b1cbc4dcc3bb651a534fd349dacac4",
+    "bytes": 1184937
+  },
+  {
+    "path": "docs/figures/additives_preview.png",
+    "sha256": "a1d6468ede32cfa7c2c82a3e6436dbd0dcb7db7ce26db635a059959155b84208",
+    "git_blob": "ab34a5a2850a033bed4800298fdba29d99f67247",
+    "bytes": 280857
+  },
+  {
+    "path": "docs/report_20261021/previews/G6.png",
+    "sha256": "913308827757132ce7fc17dcdb09d17694dd92d383fb1bea41208a566d0773e5",
+    "git_blob": "fa1c4801b9887a6b20fe61721fc7ce9f04e23c45",
+    "bytes": 104260
+  },
+  {
+    "path": "docs/data/ps45_plane_load_20261007/slide/contribution_sigma_zz.png",
+    "sha256": "0cabcb412c5be5d97161857c866d35824d8b25effe12fd8ff54e18d782694c51",
+    "git_blob": "2eac0615a87d419ddf54ffb47f99906b25123c3d",
+    "bytes": 58660
+  },
+  {
+    "path": "docs/data/ps73_compaction_curve_20261006/stages_20261012/aligned_ckpt/t3_vm_se/ps73_se_vm3d_4panel_nowall_linear_0_150_preview.png",
+    "sha256": "845c1b5653786df24126a78b5d58f8c28d2f56305b5e529f1b1319db6065117a",
+    "git_blob": "6c2eec995057cacbd6401d3c55d4ee34210cf2ed",
+    "bytes": 2335177
+  },
+  {
+    "path": "docs/report_20261021/previews/G5a.png",
+    "sha256": "d5cf34a18467643589a95072a3b118ddcd12222b576608c0288518850509a2bd",
+    "git_blob": "27b2db92faa9d6158f844764b152ec6173b3c0bd",
+    "bytes": 121140
+  },
+  {
+    "path": "docs/report_20261021/previews/G5b.png",
+    "sha256": "012ab1486ad3db8ae8bc18f46f7dc4efbd10f46b74bdb2e19f11f04b1a715c24",
+    "git_blob": "7bbc108dcd4279ffb332c9e3d8506fde78b4d74d",
+    "bytes": 99402
+  },
+  {
+    "path": "docs/report_20261021/previews/G3.png",
+    "sha256": "c3455eb8e59be7566dc6ed6b7818e5f22eeed046e9f6733f87ba20d34feb14e6",
+    "git_blob": "993519993b01da8d5e07379f174d4c6800bf355c",
+    "bytes": 121712
+  },
+  {
+    "path": "docs/mpm3d_calibration.md",
+    "sha256": "95e478b6afedc89582a02b877411bc94e4425022199b5f34a34fadcb21b4b369",
+    "git_blob": "87d51afbed84e77b3095f892b1511c1b6ae9e2eb",
+    "bytes": 20453
+  },
+  {
+    "path": "docs/report_20261021/build_report_figs.py",
+    "missing": true
+  }
+]

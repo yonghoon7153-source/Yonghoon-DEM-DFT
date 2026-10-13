@@ -1,0 +1,9 @@
+12Battery Materials Lab.
+ Problem 2 — absolute electronic conductivity sits far above DC-
+polarization measurements
+• Voxel model 54 and 71 vs 4.5 and 12 mS cm⁻¹ measured (×12, ×5.7): no interface 
+resistance, unanchored carbon conductivity.
+• Carbon- and binder-free NCM–SE beds, common NCM reference 4.1 mS cm⁻¹: 0.38–0.47 
+mS cm⁻¹ across the five compositions.
+Limits
+< voxel model vs experiment (log scale) > < NCM–SE beds, common-conductivity network >

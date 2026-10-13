@@ -1,0 +1,548 @@
+{
+  "originals": [
+    {
+      "name": "seminar_20261013_codex_review_v2.zip",
+      "bytes": 19305333,
+      "sha256": "83ed120dd3f34f304f9a189a3fcc36d5738afba763c97b56364e8fd5d2e5465f"
+    },
+    {
+      "name": "seminar_20261013_codex_review_v3.zip",
+      "bytes": 19305352,
+      "sha256": "59d8f5cb9bb6662bd8743c50e0832e219c73672d33ae1571f67d5382d796e52b"
+    },
+    {
+      "name": "codex_seminar_deck_review_request_20261013.md",
+      "bytes": 18050,
+      "sha256": "e94c40cb5f193401691f92f6834f332aa4c74c5fdbe9a5819e09462070fb4e3f"
+    }
+  ],
+  "inventory": {
+    "v2": [
+      {
+        "path": "render/p-16.png",
+        "bytes": 144204,
+        "sha256": "c5048b1823ce8a1a9e1e199edef53763235f5b4b38fbc05e9b118191ec958711"
+      },
+      {
+        "path": "render/p-03.png",
+        "bytes": 489852,
+        "sha256": "8f89af16c0e877fc0997de7c39d13918c840a58e615896d11f258d99e5c189ec"
+      },
+      {
+        "path": "render/contact_sheet.jpg",
+        "bytes": 1044495,
+        "sha256": "2bf1f526c195d478f17694ac67bd026ad47f7990e03d14e7e210da0678860aab"
+      },
+      {
+        "path": "render/p-19.png",
+        "bytes": 1059748,
+        "sha256": "b606b9f4fa400595e3df1cad520617799efa244263b2612673d9a2a46975fbd2"
+      },
+      {
+        "path": "render/p-12.png",
+        "bytes": 120015,
+        "sha256": "dbf01785c244b296991b0c7770107f4ddfa8de69566a5b50f40692c6d75bb05b"
+      },
+      {
+        "path": "render/p-17.png",
+        "bytes": 107558,
+        "sha256": "b9b7f131ee107c9a3f9d17dbc63677f191893055cd976ae33d205ddc1e6c0514"
+      },
+      {
+        "path": "render/p-06.png",
+        "bytes": 115036,
+        "sha256": "d91d44c9ec96dd3aef74108b5e89b14a0a28d6d0217c2e83752a68a98f5c36d8"
+      },
+      {
+        "path": "render/p-14.png",
+        "bytes": 160794,
+        "sha256": "1a8d5d6c4b636eb1a0f8f8e3e90ce584d7acabe23ee9025c0bc7d651c0917e67"
+      },
+      {
+        "path": "render/p-10.png",
+        "bytes": 462015,
+        "sha256": "1cea8b64e7f07c5cbf8434dd22a67e9ada7d2e2ba22eca2a41a2878f19149096"
+      },
+      {
+        "path": "render/p-18.png",
+        "bytes": 175140,
+        "sha256": "5b0557032807be4df0fe30ae5167d8efba3f1af3b3806a43d8f99c8a4fb663c1"
+      },
+      {
+        "path": "render/p-08.png",
+        "bytes": 115192,
+        "sha256": "44cebbddeeace00e199f2485cf0ac4c24d37d94b4765a0f85403d39920b4e35c"
+      },
+      {
+        "path": "render/p-15.png",
+        "bytes": 213353,
+        "sha256": "e2ad80f3530d9ae125a5d8ab12612246e1b23947234d42e2402903bf2a7f14f6"
+      },
+      {
+        "path": "render/p-04.png",
+        "bytes": 146707,
+        "sha256": "6d803c058783c7f520c626fed60fd8f7de7c4008897e2275e500c66cc5e749d5"
+      },
+      {
+        "path": "render/p-11.png",
+        "bytes": 129689,
+        "sha256": "bab821df55449ca60790fd7dab31753bbff657171db99313fea3e1cbd7951ab9"
+      },
+      {
+        "path": "render/p-13.png",
+        "bytes": 394546,
+        "sha256": "aac2d5e11aa611786bf486c64e5dfb81f8e38f0ddb73530798fb7d0bba875cc2"
+      },
+      {
+        "path": "render/p-05.png",
+        "bytes": 177294,
+        "sha256": "e8a51285602d8eaa58915d99885f67e37ea817e5e785478a564ea9b759d5e33d"
+      },
+      {
+        "path": "render/p-07.png",
+        "bytes": 164138,
+        "sha256": "783eeec792e20b48e37d088b77b501d574a70ed0dd4e1b7248cdad8e60def015"
+      },
+      {
+        "path": "render/p-02.png",
+        "bytes": 162448,
+        "sha256": "c7e1c2a0bc239b2c541e0b1df6e8fdaee1b02fc5997c7a0ed9c8b9967270b550"
+      },
+      {
+        "path": "render/p-09.png",
+        "bytes": 140462,
+        "sha256": "875226c4a98ac2aa355cf7b23d816a8ff53c9e5a3038c65587942aa51f9a3a89"
+      },
+      {
+        "path": "render/p-01.png",
+        "bytes": 629976,
+        "sha256": "ed2d304354aa82bec38a2077f18bec8a608448cc6a44e10e3521f3b8faf3524e"
+      },
+      {
+        "path": "seminar_20261013_draft.pptx",
+        "bytes": 10610049,
+        "sha256": "c7849af7809a04ce19c4e301da9002d80d737bd6e2364c92f9c2667644ef3d7f"
+      },
+      {
+        "path": "seminar_20261013_draft.pdf",
+        "bytes": 2709157,
+        "sha256": "f795f0228abb6c40ba4253246f7670bf4686cdc62e810ecd2d19fc8f71d4e97f"
+      },
+      {
+        "path": "docs/reviews/codex_seminar_deck_review_request_20261013.md",
+        "bytes": 18050,
+        "sha256": "e94c40cb5f193401691f92f6834f332aa4c74c5fdbe9a5819e09462070fb4e3f"
+      },
+      {
+        "path": "docs/seminar_20261013/slide_text_draft3.md",
+        "bytes": 18179,
+        "sha256": "bcd933411fcac0db34f1c9fb38690abe65b1cc66f9e9a333df415ef1134e1bdc"
+      },
+      {
+        "path": "docs/seminar_20261013/README.md",
+        "bytes": 3839,
+        "sha256": "5e4dd21ea80015c35686fb352b9c9290c212f29dc672b516b5cfac75401d2df4"
+      },
+      {
+        "path": "docs/seminar_20261013/figs/F4_ps45_sigma_e.csv",
+        "bytes": 125,
+        "sha256": "145ac6148c9f69a2389504771d31b0c7aeda631a8fedb2908647f2aada523799"
+      },
+      {
+        "path": "docs/seminar_20261013/figs/F3_sigma_e_model_vs_exp.csv",
+        "bytes": 82,
+        "sha256": "5e2210a8a76350cb185d5affe7de9680c3dabbbc8eea3593b70a437f70fcec1a"
+      },
+      {
+        "path": "docs/seminar_20261013/figs/make_seminar_figs.py",
+        "bytes": 9094,
+        "sha256": "8d411dc8b89a032a16748e75d969d14d6eb73c4d3dc8a3a67b6a4f4678c324cc"
+      },
+      {
+        "path": "docs/seminar_20261013/figs/F4_ps45_sigma_e.png",
+        "bytes": 33338,
+        "sha256": "62be5f94b025cdcba9760e40c8abf3597392b7d5ac93883350f11623461cb47f"
+      },
+      {
+        "path": "docs/seminar_20261013/figs/F2_grid_dependence.svg",
+        "bytes": 8542,
+        "sha256": "9e0c93e3888e813865bed6eab67adb5e2f773a438ce2acee26387b148204c586"
+      },
+      {
+        "path": "docs/seminar_20261013/figs/F3_sigma_e_model_vs_exp.png",
+        "bytes": 32095,
+        "sha256": "58cf37f515899c5b8b3913595ab1dd700ad582bd1fe7bc400129e417b54ae603"
+      },
+      {
+        "path": "docs/seminar_20261013/figs/F2_grid_dependence.csv",
+        "bytes": 101,
+        "sha256": "935e2a45e00e9f17394b8b9708d8c1c64a316733d07ffd225eabef7d43e91bec"
+      },
+      {
+        "path": "docs/seminar_20261013/figs/F1_pipeline.png",
+        "bytes": 154887,
+        "sha256": "06553d9bf2fd7809ee48e9febc7d6d348a5a7e2260d6de2a6c351b70b8b63f4f"
+      },
+      {
+        "path": "docs/seminar_20261013/figs/F1_pipeline.svg",
+        "bytes": 8860,
+        "sha256": "0f83d5dcc5af48391d6122427ac238228037f39e5c50e1c41a84285f1978f0b9"
+      },
+      {
+        "path": "docs/seminar_20261013/figs/F3_sigma_e_model_vs_exp.svg",
+        "bytes": 13512,
+        "sha256": "d291ae5015a0b4f9c0d63638128b3cff966e76f6a6607724bce98141afd5bf4d"
+      },
+      {
+        "path": "docs/seminar_20261013/figs/F2_grid_dependence.png",
+        "bytes": 55857,
+        "sha256": "c7e88f8efff636d13f4081ccbe2fdca0bdc11ee8838fa4ca814374618754d374"
+      },
+      {
+        "path": "docs/seminar_20261013/figs/F4_ps45_sigma_e.svg",
+        "bytes": 10071,
+        "sha256": "24d24e6be8984dc05eb8e9011a25a39d8031418983058f02ec8a9c74e367f84f"
+      },
+      {
+        "path": "docs/seminar_20261013/outline_v1.md",
+        "bytes": 12274,
+        "sha256": "5bbe657a03657158d197e10f72dc45259bbf4d6b80335dd1a71a81edaca314de"
+      },
+      {
+        "path": "docs/seminar_20261013/build_seminar.py",
+        "bytes": 42152,
+        "sha256": "5cb6accaa1f330b906749f665b7e32b58a4be19b61a6f39a2b2907f6e25282fd"
+      },
+      {
+        "path": "docs/seminar_20261013/slide_sources.json",
+        "bytes": 2081,
+        "sha256": "82fc1b0183a255c1c48e0e038f4ba5480066607b1fa9a26cd8a4080fbca9e079"
+      }
+    ],
+    "v3": [
+      {
+        "path": "render/p-16.png",
+        "bytes": 144204,
+        "sha256": "c5048b1823ce8a1a9e1e199edef53763235f5b4b38fbc05e9b118191ec958711"
+      },
+      {
+        "path": "render/p-03.png",
+        "bytes": 489852,
+        "sha256": "8f89af16c0e877fc0997de7c39d13918c840a58e615896d11f258d99e5c189ec"
+      },
+      {
+        "path": "render/contact_sheet.jpg",
+        "bytes": 1044495,
+        "sha256": "2bf1f526c195d478f17694ac67bd026ad47f7990e03d14e7e210da0678860aab"
+      },
+      {
+        "path": "render/p-19.png",
+        "bytes": 1059748,
+        "sha256": "b606b9f4fa400595e3df1cad520617799efa244263b2612673d9a2a46975fbd2"
+      },
+      {
+        "path": "render/p-12.png",
+        "bytes": 120015,
+        "sha256": "dbf01785c244b296991b0c7770107f4ddfa8de69566a5b50f40692c6d75bb05b"
+      },
+      {
+        "path": "render/p-17.png",
+        "bytes": 107558,
+        "sha256": "b9b7f131ee107c9a3f9d17dbc63677f191893055cd976ae33d205ddc1e6c0514"
+      },
+      {
+        "path": "render/p-06.png",
+        "bytes": 115036,
+        "sha256": "d91d44c9ec96dd3aef74108b5e89b14a0a28d6d0217c2e83752a68a98f5c36d8"
+      },
+      {
+        "path": "render/p-14.png",
+        "bytes": 160794,
+        "sha256": "1a8d5d6c4b636eb1a0f8f8e3e90ce584d7acabe23ee9025c0bc7d651c0917e67"
+      },
+      {
+        "path": "render/p-10.png",
+        "bytes": 462015,
+        "sha256": "1cea8b64e7f07c5cbf8434dd22a67e9ada7d2e2ba22eca2a41a2878f19149096"
+      },
+      {
+        "path": "render/p-18.png",
+        "bytes": 175140,
+        "sha256": "5b0557032807be4df0fe30ae5167d8efba3f1af3b3806a43d8f99c8a4fb663c1"
+      },
+      {
+        "path": "render/p-08.png",
+        "bytes": 115192,
+        "sha256": "44cebbddeeace00e199f2485cf0ac4c24d37d94b4765a0f85403d39920b4e35c"
+      },
+      {
+        "path": "render/p-15.png",
+        "bytes": 213353,
+        "sha256": "e2ad80f3530d9ae125a5d8ab12612246e1b23947234d42e2402903bf2a7f14f6"
+      },
+      {
+        "path": "render/p-04.png",
+        "bytes": 146707,
+        "sha256": "6d803c058783c7f520c626fed60fd8f7de7c4008897e2275e500c66cc5e749d5"
+      },
+      {
+        "path": "render/p-11.png",
+        "bytes": 129689,
+        "sha256": "bab821df55449ca60790fd7dab31753bbff657171db99313fea3e1cbd7951ab9"
+      },
+      {
+        "path": "render/p-13.png",
+        "bytes": 394546,
+        "sha256": "aac2d5e11aa611786bf486c64e5dfb81f8e38f0ddb73530798fb7d0bba875cc2"
+      },
+      {
+        "path": "render/p-05.png",
+        "bytes": 177294,
+        "sha256": "e8a51285602d8eaa58915d99885f67e37ea817e5e785478a564ea9b759d5e33d"
+      },
+      {
+        "path": "render/p-07.png",
+        "bytes": 164138,
+        "sha256": "783eeec792e20b48e37d088b77b501d574a70ed0dd4e1b7248cdad8e60def015"
+      },
+      {
+        "path": "render/p-02.png",
+        "bytes": 162448,
+        "sha256": "c7e1c2a0bc239b2c541e0b1df6e8fdaee1b02fc5997c7a0ed9c8b9967270b550"
+      },
+      {
+        "path": "render/p-09.png",
+        "bytes": 140462,
+        "sha256": "875226c4a98ac2aa355cf7b23d816a8ff53c9e5a3038c65587942aa51f9a3a89"
+      },
+      {
+        "path": "render/p-01.png",
+        "bytes": 629976,
+        "sha256": "ed2d304354aa82bec38a2077f18bec8a608448cc6a44e10e3521f3b8faf3524e"
+      },
+      {
+        "path": "seminar_20261013_draft.pptx",
+        "bytes": 10610049,
+        "sha256": "c7849af7809a04ce19c4e301da9002d80d737bd6e2364c92f9c2667644ef3d7f"
+      },
+      {
+        "path": "seminar_20261013_draft.pdf",
+        "bytes": 2709157,
+        "sha256": "f795f0228abb6c40ba4253246f7670bf4686cdc62e810ecd2d19fc8f71d4e97f"
+      },
+      {
+        "path": "docs/reviews/codex_seminar_deck_review_request_20261013.md",
+        "bytes": 18050,
+        "sha256": "e94c40cb5f193401691f92f6834f332aa4c74c5fdbe9a5819e09462070fb4e3f"
+      },
+      {
+        "path": "docs/seminar_20261013/slide_text_draft3.md",
+        "bytes": 18179,
+        "sha256": "bcd933411fcac0db34f1c9fb38690abe65b1cc66f9e9a333df415ef1134e1bdc"
+      },
+      {
+        "path": "docs/seminar_20261013/README.md",
+        "bytes": 3839,
+        "sha256": "5e4dd21ea80015c35686fb352b9c9290c212f29dc672b516b5cfac75401d2df4"
+      },
+      {
+        "path": "docs/seminar_20261013/figs/F4_ps45_sigma_e.csv",
+        "bytes": 125,
+        "sha256": "145ac6148c9f69a2389504771d31b0c7aeda631a8fedb2908647f2aada523799"
+      },
+      {
+        "path": "docs/seminar_20261013/figs/F3_sigma_e_model_vs_exp.csv",
+        "bytes": 82,
+        "sha256": "5e2210a8a76350cb185d5affe7de9680c3dabbbc8eea3593b70a437f70fcec1a"
+      },
+      {
+        "path": "docs/seminar_20261013/figs/make_seminar_figs.py",
+        "bytes": 9094,
+        "sha256": "8d411dc8b89a032a16748e75d969d14d6eb73c4d3dc8a3a67b6a4f4678c324cc"
+      },
+      {
+        "path": "docs/seminar_20261013/figs/F4_ps45_sigma_e.png",
+        "bytes": 33338,
+        "sha256": "62be5f94b025cdcba9760e40c8abf3597392b7d5ac93883350f11623461cb47f"
+      },
+      {
+        "path": "docs/seminar_20261013/figs/F2_grid_dependence.svg",
+        "bytes": 8542,
+        "sha256": "9e0c93e3888e813865bed6eab67adb5e2f773a438ce2acee26387b148204c586"
+      },
+      {
+        "path": "docs/seminar_20261013/figs/F3_sigma_e_model_vs_exp.png",
+        "bytes": 32095,
+        "sha256": "58cf37f515899c5b8b3913595ab1dd700ad582bd1fe7bc400129e417b54ae603"
+      },
+      {
+        "path": "docs/seminar_20261013/figs/F2_grid_dependence.csv",
+        "bytes": 101,
+        "sha256": "935e2a45e00e9f17394b8b9708d8c1c64a316733d07ffd225eabef7d43e91bec"
+      },
+      {
+        "path": "docs/seminar_20261013/figs/F1_pipeline.png",
+        "bytes": 154887,
+        "sha256": "06553d9bf2fd7809ee48e9febc7d6d348a5a7e2260d6de2a6c351b70b8b63f4f"
+      },
+      {
+        "path": "docs/seminar_20261013/figs/F1_pipeline.svg",
+        "bytes": 8860,
+        "sha256": "0f83d5dcc5af48391d6122427ac238228037f39e5c50e1c41a84285f1978f0b9"
+      },
+      {
+        "path": "docs/seminar_20261013/figs/F3_sigma_e_model_vs_exp.svg",
+        "bytes": 13512,
+        "sha256": "d291ae5015a0b4f9c0d63638128b3cff966e76f6a6607724bce98141afd5bf4d"
+      },
+      {
+        "path": "docs/seminar_20261013/figs/F2_grid_dependence.png",
+        "bytes": 55857,
+        "sha256": "c7e88f8efff636d13f4081ccbe2fdca0bdc11ee8838fa4ca814374618754d374"
+      },
+      {
+        "path": "docs/seminar_20261013/figs/F4_ps45_sigma_e.svg",
+        "bytes": 10071,
+        "sha256": "24d24e6be8984dc05eb8e9011a25a39d8031418983058f02ec8a9c74e367f84f"
+      },
+      {
+        "path": "docs/seminar_20261013/outline_v1.md",
+        "bytes": 12334,
+        "sha256": "ef620b8c3bd5cbe6ce90e13a30cddaabb547c4e7b71e7e25965ed4cca30aac11"
+      },
+      {
+        "path": "docs/seminar_20261013/build_seminar.py",
+        "bytes": 42152,
+        "sha256": "5cb6accaa1f330b906749f665b7e32b58a4be19b61a6f39a2b2907f6e25282fd"
+      },
+      {
+        "path": "docs/seminar_20261013/slide_sources.json",
+        "bytes": 2081,
+        "sha256": "82fc1b0183a255c1c48e0e038f4ba5480066607b1fa9a26cd8a4080fbca9e079"
+      }
+    ]
+  },
+  "versions": {
+    "changed": [
+      "docs/seminar_20261013/outline_v1.md"
+    ],
+    "v2_only": [],
+    "v3_only": [],
+    "slides_old_to_v3": [
+      {
+        "slide": 1,
+        "body": false,
+        "notes": false,
+        "image_bytes_changed": false
+      },
+      {
+        "slide": 2,
+        "body": false,
+        "notes": false,
+        "image_bytes_changed": false
+      },
+      {
+        "slide": 3,
+        "body": false,
+        "notes": false,
+        "image_bytes_changed": false
+      },
+      {
+        "slide": 4,
+        "body": false,
+        "notes": false,
+        "image_bytes_changed": false
+      },
+      {
+        "slide": 5,
+        "body": false,
+        "notes": false,
+        "image_bytes_changed": false
+      },
+      {
+        "slide": 6,
+        "body": false,
+        "notes": false,
+        "image_bytes_changed": false
+      },
+      {
+        "slide": 7,
+        "body": false,
+        "notes": false,
+        "image_bytes_changed": false
+      },
+      {
+        "slide": 8,
+        "body": false,
+        "notes": false,
+        "image_bytes_changed": false
+      },
+      {
+        "slide": 9,
+        "body": false,
+        "notes": false,
+        "image_bytes_changed": false
+      },
+      {
+        "slide": 10,
+        "body": false,
+        "notes": false,
+        "image_bytes_changed": false
+      },
+      {
+        "slide": 11,
+        "body": false,
+        "notes": false,
+        "image_bytes_changed": false
+      },
+      {
+        "slide": 12,
+        "body": false,
+        "notes": false,
+        "image_bytes_changed": false
+      },
+      {
+        "slide": 13,
+        "body": false,
+        "notes": false,
+        "image_bytes_changed": false
+      },
+      {
+        "slide": 14,
+        "body": false,
+        "notes": false,
+        "image_bytes_changed": false
+      },
+      {
+        "slide": 15,
+        "body": false,
+        "notes": false,
+        "image_bytes_changed": false
+      },
+      {
+        "slide": 16,
+        "body": false,
+        "notes": false,
+        "image_bytes_changed": false
+      },
+      {
+        "slide": 17,
+        "body": false,
+        "notes": false,
+        "image_bytes_changed": false
+      },
+      {
+        "slide": 18,
+        "body": false,
+        "notes": false,
+        "image_bytes_changed": false
+      },
+      {
+        "slide": 19,
+        "body": false,
+        "notes": false,
+        "image_bytes_changed": false
+      }
+    ]
+  }
+}

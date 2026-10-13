@@ -1,0 +1,22 @@
+9Battery Materials Lab.
+ Voxelizing the compacted microstructure turns morphology into a 
+transport mesh
+• Finite-volume ∇·(σ∇φ) = 0 on the phase grid gives ionic, electronic and thermal 
+conductivity on the same structure.
+• Faces are joined by a harmonic mean, so there is no interface-resistance term: the voxel 
+solver sits on the contact-free branch.
+Transport
+Figure to add
+Voxelized phase grid of a compacted bed (AM · SE · pore · 
+additives)
+STEP3 phase grid from the MPM payload 
+(scripts/step3_sigma.py); manuscript Fig. S16/S17 style
+export a mid-plane slice of the sid grid (phase colours) at 
+vox 0.15 µm
+Figure to add
+Electronic current-density field at 1 V (manuscript 
+S16/S17)
+manuscript SI figures (rendered by the presenter, outside 
+the repository)
+reuse the S16/S17 panels; colourbar in A cm⁻²
+< phase grid > < current density at 1 V >

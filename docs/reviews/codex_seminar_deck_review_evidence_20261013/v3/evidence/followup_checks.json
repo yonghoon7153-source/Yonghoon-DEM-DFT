@@ -1,0 +1,131 @@
+{
+  "artifact_identity": {
+    "pptx": {
+      "sha256": {
+        "previous": "c7849af7809a04ce19c4e301da9002d80d737bd6e2364c92f9c2667644ef3d7f",
+        "v2": "c7849af7809a04ce19c4e301da9002d80d737bd6e2364c92f9c2667644ef3d7f",
+        "v3": "c7849af7809a04ce19c4e301da9002d80d737bd6e2364c92f9c2667644ef3d7f"
+      },
+      "identical": true
+    },
+    "pdf": {
+      "sha256": {
+        "previous": "f795f0228abb6c40ba4253246f7670bf4686cdc62e810ecd2d19fc8f71d4e97f",
+        "v2": "f795f0228abb6c40ba4253246f7670bf4686cdc62e810ecd2d19fc8f71d4e97f",
+        "v3": "f795f0228abb6c40ba4253246f7670bf4686cdc62e810ecd2d19fc8f71d4e97f"
+      },
+      "identical": true
+    }
+  },
+  "limitations": [
+    "Original template and native PowerPoint rendering unavailable.",
+    "No DEM, MPM, FV, network or campaign solver executed.",
+    "Pixel content is inspected visually, not exhaustively certified by OCR.",
+    "Selftest not executed: bundled runtime has no matplotlib; constants and CSVs independently checked."
+  ],
+  "literal_ban_scan": {
+    "patterns": 42,
+    "text_units": 45,
+    "hits": [],
+    "scope": "PPTX text and notes, supplied figure CSV/SVG text. Raster figures require visual inspection."
+  },
+  "F4_saved_data_recheck": [
+    {
+      "label": "0:10",
+      "csv": 0.391,
+      "source": 0.3908020433660936,
+      "round3_matches": true,
+      "q_times_reference_error": 0.0
+    },
+    {
+      "label": "3:7",
+      "csv": 0.406,
+      "source": 0.40581501708504375,
+      "round3_matches": true,
+      "q_times_reference_error": 0.0
+    },
+    {
+      "label": "5:5",
+      "csv": 0.402,
+      "source": 0.40246594614845277,
+      "round3_matches": true,
+      "q_times_reference_error": 5.551115123125783e-17
+    },
+    {
+      "label": "7:3",
+      "csv": 0.375,
+      "source": 0.37469729093619897,
+      "round3_matches": true,
+      "q_times_reference_error": 0.0
+    },
+    {
+      "label": "10:0",
+      "csv": 0.467,
+      "source": 0.46717454462346836,
+      "round3_matches": true,
+      "q_times_reference_error": 0.0
+    }
+  ],
+  "F4_range_mScm": [
+    0.37469729093619897,
+    0.46717454462346836
+  ],
+  "plot_constants": {
+    "GRID": {
+      "vox_um": [
+        0.4,
+        0.3,
+        0.25
+      ],
+      "sigma_e_ratio": [
+        1.4215,
+        1.1621,
+        1.0849
+      ],
+      "sigma_ion_ratio": [
+        1.0742,
+        0.9926,
+        0.9908
+      ]
+    },
+    "SIGMA_E_EXP": {
+      "labels": [
+        "SBE",
+        "DBE"
+      ],
+      "model": [
+        54.0,
+        70.6
+      ],
+      "exp": [
+        4.47,
+        12.4
+      ]
+    },
+    "PS45": {
+      "ps": [
+        "0:10",
+        "3:7",
+        "5:5",
+        "7:3",
+        "10:0"
+      ],
+      "sigma_e": [
+        0.391,
+        0.406,
+        0.402,
+        0.375,
+        0.467
+      ]
+    }
+  },
+  "saved_data_recheck": {
+    "exit_code": 0,
+    "method": "Prior transparent read-only arithmetic script rerun on pinned saved data."
+  },
+  "original_inputs_sha256": {
+    "C:\\Users\\Administrator\\Downloads\\seminar_20261013_codex_review_v2.zip": "83ed120dd3f34f304f9a189a3fcc36d5738afba763c97b56364e8fd5d2e5465f",
+    "C:\\Users\\Administrator\\Downloads\\seminar_20261013_codex_review_v3.zip": "59d8f5cb9bb6662bd8743c50e0832e219c73672d33ae1571f67d5382d796e52b",
+    "C:\\Users\\Administrator\\Downloads\\codex_seminar_deck_review_request_20261013.md": "e94c40cb5f193401691f92f6834f332aa4c74c5fdbe9a5819e09462070fb4e3f"
+  }
+}

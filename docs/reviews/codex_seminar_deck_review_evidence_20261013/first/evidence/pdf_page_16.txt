@@ -1,0 +1,23 @@
+16Battery Materials Lab.
+Plan
+ Next steps — closing the three problems
+• Each item is registered before it is run; nothing below has a result yet.
+Transport
+• Interface resistance in the voxel solver: 
+AM–AM film implemented (default off), 
+production on hold
+• Anchor the carbon conductivity with the 
+SBE/DBE DC-polarization values (re-run 
+registered)
+• Polycrystalline vs single-crystal NCM 
+conductivity: literature first, then the model
+Mechanics and mixing
+• AM load sharing in the MPM platen 
+(registered contract)
+• Stepwise unloading of the five beds: 
+springback vs measured thickness 
+(registration revised twice)
+• Coating-aware mixing: surface-energy 
+anchor for SE–SE adhesion before the 
+confirmatory runs
+Decisions pending: launch of the 194 + 20 network batch after the final external check.

@@ -1,0 +1,16 @@
+14Battery Materials Lab.
+Progress
+ Pre-registered, origin-replicated runs — what each one settled
+• Every production run is registered before launch (hypotheses, decision lines, 
+sealed code) and judged by an independent reviewer.
+Registered 
+campaigns
+1. 8-arm origin factorial, voxel 0.15 µm gain follows the represented additive 
+volume (procedure and verdict only)
+2. Phase A: 104 arms, VGCF 1–4 wt% order robust, 72/72; replay 0.00000 %
+3. Lee-2025 absolute comparison, 16 arms R = 2.07 → order-of-magnitude 
+agreement; Q = 0.84 → prediction met
+4. 194 LHS beds → descriptor dataset v1.2 sealed pipeline; 7 external re-
+verification rounds before launch
+Ratios and gains of the 8-arm series are on hold — only the procedure and the verdict are 
+reported.
