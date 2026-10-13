@@ -1,0 +1,301 @@
+{
+ "slug": "liu2024_sc_ni90_sulfur_coating_sulfide_assb",
+ "dpi": 300,
+ "generated": "2026-10-13",
+ "sources": [
+  "2._High_Capacity_Long_Life_Sulfide_All_Solid_State_Batteries_With_Single_Crystal_Ni_Rich_Layered_Oxide_Cathodes.pdf",
+  "2._Sup_High_Capacity_Long_Life_Sulfide_All_Solid_State_Batteries_With_Single_Crystal_Ni_Rich_Layered_Oxide_Cathodes.pdf"
+ ],
+ "method": "수동 크롭 (PyMuPDF clip 렌더 300 dpi) — 본문 그림 = 임베드 래스터 1 장씩 → clip = 래스터 bbox 그대로. SI 표 = 표 틀 래스터 + 글자 → 표 제목 줄부터 아래 괘선 + 2 pt. SI Fig. S3 · S4 는 래스터 bbox 가 캡션 윗줄과 몇 pt 겹치지만 겹친 부분은 그림 쪽 여백이라 bbox 그대로 (렌더에 캡션 글자 없음 확인).",
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 2,
+   "file": "fig_1.png",
+   "caption": "Figure 1. a) XRD patterns of pristine SC-Ni90 and sulfurized SC-Ni90-S. b–d) magnified images of three regions in a).",
+   "rotated_deg": 0,
+   "bbox": [
+    116.0,
+    76.5,
+    476.0,
+    341.7
+   ],
+   "w": 1501,
+   "h": 1106,
+   "dpi": 300,
+   "src": "2._High_Capacity_Long_Life_Sulfide_All_Solid_State_Batteries_With_Single_Crystal_Ni_Rich_Layered_Oxide_Cathodes.pdf",
+   "viewed": true,
+   "crop_note": "래스터 bbox 그대로",
+   "panels": "a–d"
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 3,
+   "file": "fig_2.png",
+   "caption": "Figure 2. a) TEM image of SC-Ni90 particle. b,c) HRTEM images of the surface region of SC-Ni90. d) Diffraction pattern of SC-Ni90. e–i) STEM dark-field image and EDS mappings of a SC-Ni90 particle. j) TEM image of SC-Ni90-0.2%S. k,l) Surface lattice structure of SC-Ni90-0.2%S. m) Diffraction pattern of SC-Ni90-0.2%S. n–s) STEM dark-field image and EDS mappings of a SC-Ni90-0.2%S particle.",
+   "rotated_deg": 0,
+   "bbox": [
+    52.8,
+    77.1,
+    544.8,
+    497.7
+   ],
+   "w": 2050,
+   "h": 1753,
+   "dpi": 300,
+   "src": "2._High_Capacity_Long_Life_Sulfide_All_Solid_State_Batteries_With_Single_Crystal_Ni_Rich_Layered_Oxide_Cathodes.pdf",
+   "viewed": true,
+   "crop_note": "래스터 bbox 그대로",
+   "panels": "a–s"
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 4,
+   "file": "fig_3.png",
+   "caption": "Figure 3. a–c) Charge/discharge profiles of SC-Ni90 and SC-Ni90-S in Sulfide ASSBs at various rates. d) Rate performance of SC-Ni90 and SC-Ni90-S in Sulfide ASSBs. e) CV curves of SC-Ni90 and SC-Ni90-S at 0.05 mV s−1 in Sulfide ASSBs. f) Cycling performance of SC-Ni90 and SC-Ni90-S in Sulfide ASSBs at 0.3 C.",
+   "rotated_deg": 0,
+   "bbox": [
+    50.0,
+    77.0,
+    542.0,
+    342.7
+   ],
+   "w": 2051,
+   "h": 1108,
+   "dpi": 300,
+   "src": "2._High_Capacity_Long_Life_Sulfide_All_Solid_State_Batteries_With_Single_Crystal_Ni_Rich_Layered_Oxide_Cathodes.pdf",
+   "viewed": true,
+   "crop_note": "래스터 bbox 그대로",
+   "panels": "a–f"
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 5,
+   "file": "fig_4.png",
+   "caption": "Figure 4. a–c) Charge/discharge profiles of SC-Ni90 and SC-Ni90-S in Sulfide ASSBs at various cycles. d) Long cycling performance of SC-Ni90 and SC-Ni90-S in Sulfide ASSBs at 1 C. e–g) Nyquist plots of SC-Ni90 and SC-Ni90-S in Sulfide ASSBs at various cycles.",
+   "rotated_deg": 0,
+   "bbox": [
+    52.8,
+    76.2,
+    544.8,
+    488.7
+   ],
+   "w": 2050,
+   "h": 1720,
+   "dpi": 300,
+   "src": "2._High_Capacity_Long_Life_Sulfide_All_Solid_State_Batteries_With_Single_Crystal_Ni_Rich_Layered_Oxide_Cathodes.pdf",
+   "viewed": true,
+   "crop_note": "래스터 bbox 그대로",
+   "panels": "a–g"
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 6,
+   "file": "fig_5.png",
+   "caption": "Figure 5. a–c) Charge/discharge profiles of SC-Ni90 and SC-Ni90-S at various mass loadings in Sulfide ASSBs. d–f) Relationship of the areal capacity and the mass loading. g–i) Discharge capacity of SC-Ni90 and SC-Ni90-S.",
+   "rotated_deg": 0,
+   "bbox": [
+    50.0,
+    76.3,
+    542.0,
+    446.7
+   ],
+   "w": 2051,
+   "h": 1545,
+   "dpi": 300,
+   "src": "2._High_Capacity_Long_Life_Sulfide_All_Solid_State_Batteries_With_Single_Crystal_Ni_Rich_Layered_Oxide_Cathodes.pdf",
+   "viewed": true,
+   "crop_note": "래스터 bbox 그대로",
+   "panels": "a–i"
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 7,
+   "file": "fig_6.png",
+   "caption": "Figure 6. a–c) CV curves of SC-Ni90 and SC-Ni90-S in sulfide ASSBs at various scan rates. d) Relationship of the peak current (ip) in CV and the square root of the scan rate (v1/2).",
+   "rotated_deg": 0,
+   "bbox": [
+    118.8,
+    76.9,
+    478.8,
+    350.7
+   ],
+   "w": 1500,
+   "h": 1142,
+   "dpi": 300,
+   "src": "2._High_Capacity_Long_Life_Sulfide_All_Solid_State_Batteries_With_Single_Crystal_Ni_Rich_Layered_Oxide_Cathodes.pdf",
+   "viewed": true,
+   "crop_note": "래스터 bbox 그대로",
+   "panels": "a–d"
+  },
+  {
+   "key": "tS1",
+   "kind": "table",
+   "label": "S1",
+   "page": 2,
+   "file": "si_tab_S1.png",
+   "caption": "Table S1. The crystal parameter of SC-Ni90 and SC-Ni90-S material",
+   "rotated_deg": 0,
+   "bbox": [
+    99.0,
+    196.0,
+    496.0,
+    355.0
+   ],
+   "w": 1655,
+   "h": 664,
+   "dpi": 300,
+   "src": "2._Sup_High_Capacity_Long_Life_Sulfide_All_Solid_State_Batteries_With_Single_Crystal_Ni_Rich_Layered_Oxide_Cathodes.pdf",
+   "viewed": true,
+   "si": true,
+   "crop_note": "표 제목 줄 포함 · 표 틀 래스터 (101.2, 212.5, 493.7, 352.7) + 글자"
+  },
+  {
+   "key": "tS2",
+   "kind": "table",
+   "label": "S2",
+   "page": 2,
+   "file": "si_tab_S2.png",
+   "caption": "Table S2. The element ratio of SC-Ni90 measured by EDS",
+   "rotated_deg": 0,
+   "bbox": [
+    99.0,
+    367.5,
+    496.0,
+    519.5
+   ],
+   "w": 1655,
+   "h": 634,
+   "dpi": 300,
+   "src": "2._Sup_High_Capacity_Long_Life_Sulfide_All_Solid_State_Batteries_With_Single_Crystal_Ni_Rich_Layered_Oxide_Cathodes.pdf",
+   "viewed": true,
+   "si": true,
+   "crop_note": "표 제목 줄 포함 · 표 틀 래스터 (101.8, 391.2, 493.5, 517.2) + 글자 (S3 와 같은 틀 객체를 공유 — 숫자는 서로 다름)"
+  },
+  {
+   "key": "tS3",
+   "kind": "table",
+   "label": "S3",
+   "page": 2,
+   "file": "si_tab_S3.png",
+   "caption": "Table S3. The element ratio of SC-Ni90-0.2%S measured by EDS",
+   "rotated_deg": 0,
+   "bbox": [
+    99.0,
+    539.0,
+    496.0,
+    691.0
+   ],
+   "w": 1655,
+   "h": 635,
+   "dpi": 300,
+   "src": "2._Sup_High_Capacity_Long_Life_Sulfide_All_Solid_State_Batteries_With_Single_Crystal_Ni_Rich_Layered_Oxide_Cathodes.pdf",
+   "viewed": true,
+   "si": true,
+   "crop_note": "표 제목 줄 포함 · 표 틀 래스터 (101.9, 562.8, 493.1, 688.6) + 글자"
+  },
+  {
+   "key": "fS1",
+   "kind": "figure",
+   "label": "S1",
+   "page": 3,
+   "file": "si_fig_S1.png",
+   "caption": "Figure S1. Line profiles across crystal planes of atomic-resolution images are shown in figure 2c.",
+   "rotated_deg": 0,
+   "bbox": [
+    151.8,
+    76.3,
+    443.5,
+    223.6
+   ],
+   "w": 1216,
+   "h": 615,
+   "dpi": 300,
+   "src": "2._Sup_High_Capacity_Long_Life_Sulfide_All_Solid_State_Batteries_With_Single_Crystal_Ni_Rich_Layered_Oxide_Cathodes.pdf",
+   "viewed": true,
+   "si": true,
+   "crop_note": "래스터 bbox 그대로"
+  },
+  {
+   "key": "fS2",
+   "kind": "figure",
+   "label": "S2",
+   "page": 3,
+   "file": "si_fig_S2.png",
+   "caption": "Figure S2. Line profiles across crystal planes of atomic-resolution images are shown in figure 2m.",
+   "rotated_deg": 0,
+   "bbox": [
+    161.5,
+    265.1,
+    433.7,
+    409.3
+   ],
+   "w": 1136,
+   "h": 602,
+   "dpi": 300,
+   "src": "2._Sup_High_Capacity_Long_Life_Sulfide_All_Solid_State_Batteries_With_Single_Crystal_Ni_Rich_Layered_Oxide_Cathodes.pdf",
+   "viewed": true,
+   "si": true,
+   "crop_note": "래스터 bbox 그대로",
+   "caption_note": "⚠ 캡션은 \"figure 2m\" 이라 하지만 2m 은 회절 (FFT) 그림이고 격자상은 2l 이다 (원문 그대로 둠)."
+  },
+  {
+   "key": "fS3",
+   "kind": "figure",
+   "label": "S3",
+   "page": 3,
+   "file": "si_fig_S3.png",
+   "caption": "Figure S3. Nyquist plot of Li6PS5Cl solid-state electrolyte (80 mg) without attaching the battery electrodes.",
+   "rotated_deg": 0,
+   "bbox": [
+    154.3,
+    450.0,
+    441.0,
+    676.8
+   ],
+   "w": 1196,
+   "h": 945,
+   "dpi": 300,
+   "src": "2._Sup_High_Capacity_Long_Life_Sulfide_All_Solid_State_Batteries_With_Single_Crystal_Ni_Rich_Layered_Oxide_Cathodes.pdf",
+   "viewed": true,
+   "si": true,
+   "crop_note": "래스터 bbox 그대로 (아래 7.8 pt 가 캡션 윗줄과 겹치지만 래스터 여백 — 렌더에 캡션 글자 없음)"
+  },
+  {
+   "key": "fS4",
+   "kind": "figure",
+   "label": "S4",
+   "page": 4,
+   "file": "si_fig_S4.png",
+   "caption": "Figure S4. Cycling performance curves of SC-Ni90-0.2%S/LPSC/Li-In ASSBs with 6.37 mg cm-2 cathode loadings at 1 C.",
+   "rotated_deg": 0,
+   "bbox": [
+    144.6,
+    75.6,
+    450.7,
+    302.4
+   ],
+   "w": 1276,
+   "h": 945,
+   "dpi": 300,
+   "src": "2._Sup_High_Capacity_Long_Life_Sulfide_All_Solid_State_Batteries_With_Single_Crystal_Ni_Rich_Layered_Oxide_Cathodes.pdf",
+   "viewed": true,
+   "si": true,
+   "crop_note": "래스터 bbox 그대로 (아래 9 pt 가 캡션 윗줄과 겹치지만 래스터 여백 — 렌더에 캡션 글자 없음)"
+  }
+ ],
+ "missing_labels": [],
+ "note_manual": "2026-10-13 큐레이터 크롭 — 13 장 전부 Read 로 열람 (viewed). 캡션 목록 대조: 본문 Figure 1–6 (본문 표 없음) · SI Table S1–S3 · SI Figure S1–S4 = 13 = 크롭 13 (빠진 번호 없음). 파일 이름 = 본문 fig_N / SI si_fig_SN · si_tab_SN (키는 webapp figref 규약 fN · fSN · tSN)."
+}
