@@ -4669,3 +4669,19 @@ gate INCOMPLETE · 실효 정책 UNVERIFIED · native 미승인 · 게이트 리
   - 15 행 `본 v2 최종 식별 및 사용자 채택: PENDING` · 3 · 5 행의 미채택 / `approved=false` 문구는 그대로 둔다 — 채택은 사용자가 한다.
 - **다음:** 사용자가 묶음 zip + 최종 v2 를 보고 §0 채택 문구로 B 오프라인 준비를 승인할지 정한다. 승인 전에는 실행 담당 Codex 에 보내지 않는다.
 - **유지:** OPEN 4 · `native_ready / approved / usable = false` · INCOMPLETE · UNVERIFIED. 이 절은 B 착수 · 실행 PC 관측 · OS 시험 · COMSOL / native 승인이 아니다.
+
+## 95. S1 OS B 오프라인 준비 — 사용자 승인 (2026-10-13 · "승인이야" · 발송은 사용자 · 실행 0)
+
+- 사용자 원문 (2026-10-13): "승인이야" — §94 보고의 물음 ("v2 §0 의 채택 문구로 B 오프라인 준비를 승인할지") 에 대한 답이다.
+  → 최종 v2 `docs/COMSOL_MICROSHORT_S1_OS_B_SEND_V2_20261013.md` (14,053 B · sha256 `3198daf6f5f028af403b17ea027bea52b603234b47e8fbc4f4bd1e24fc6113e9`)
+  의 §0 채택 문구를 **그대로 승인**한 것으로 기록한다 (§88 과 같은 방식).
+- 승인 범위 = §0 채택 문구 원문: 식별이 완성된 v2 의 S1 OS B 오프라인 준비 1 건 — 공식 근거 대응 · 새 비활성 provider 후보와 최소 diff ·
+  변경부 검증안 작성 · 정적 봉인 후 멈춤. 자체 정적 자료 도구와 본문에 열거된 메타데이터 읽기만 허용한다. 묶어 둔 식별:
+  묶음 `COMSOL_S1_OS_B_OFFICIAL_DOCS_20261013.zip` · 525,600 B · `6579d317…07dd6` · MANIFEST `8ce680e4…81253` (§94).
+- 승인이 아닌 것 (§0 원문): 후보 / 수신 코드 실행 · 기능 시험 · 시험 / native 자식 · Job · 실제 자원 / 중지 어댑터 실험 · COMSOL / JVM / 컴파일 ·
+  설치본 관측 · 정책 변경 · 실제 approval / release / runtime / token 생성. 이후 변경부 검증 · E · C · P0 는 각각 별도 승인이다.
+- v2 파일은 고치지 않는다 — §0 15 행 `PENDING` 과 3 · 5 행 문구는 승인 전 상태를 적은 원문이고, 승인 사실은 이 절이 정본이다
+  (파일을 고치면 승인한 바이트의 sha 가 바뀐다).
+- 발송: 사용자 몫 — 최종 v2 전문 + 묶음 zip → 실행 담당 Codex (COMSOL PC · 네트워크 0). 이 저장소는 발송 사실을 직접 보지 못한다 —
+  결과 묶음이 오면 그 ORIGIN · 승인 기록과 이 절 (v2 sha · 묶음 sha) 을 대조한다.
+- 유지: OPEN 4 · `native_ready / approved / usable = false` · INCOMPLETE · UNVERIFIED. 이 절은 B 착수 승인이며 실행 PC 관측 · OS 시험 · COMSOL / native 승인이 아니다.
