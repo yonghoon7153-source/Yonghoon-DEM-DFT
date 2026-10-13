@@ -11,6 +11,7 @@
     python3 ul_reader.py select  <root>                  # 7:3 결정표 (§12-4 · §13-1) → ps_7_3_r45/selection.json
     python3 ul_reader.py gate    <root> <bed> <job>      # 그 잡을 지금 낼 수 있나 (rc 0 허용 · 2 거부 — 러너가 부른다)
     python3 ul_reader.py report  <root>                  # 다섯 침대 · 10 쌍 괄호 표 → report.json
+    python3 ul_reader.py copycmd <bed>                   # 원 파일 복사 명령 여섯 (표에서 · ~ 경로)
 
 폴더 (정본 이름 = README §0):  <root>/<침대>/in/ (원 파일) · RJ/ (Ut0 · R · UN · UK) · RJ2/ (10:0 S0′ 에서) · EXT/ · EXT2/ (10:0) ·
   <팔>/ (UB · UT · UC · UVa · UVb · UT3 · UTc · G_<팔>) · ul_base.in · s0_decision.json · selection.json.
@@ -452,7 +453,39 @@ def arm_verdict(d, bed, job, P=None, root=None):
         v['s4_status'] = 'FAIL' if 'FAIL' in s4 else ('PASS' if s4 and all(x == 'PASS' for x in s4) else 'NOT_COMPUTED')
     if v['trajectory_status'] == 'DONE' and not (sep['separated_final'] and len(sep['post_windows']) >= P['windows']['post_sep']):
         v['why'].append('끝 = DONE 인데 판독기 분리 · 분리 뒤 창이 모자란다 (덱 기하 개수 ↔ 벽 덤프)')
+    if gravity:
+        g = _g_restore(d, run, root, bed, job)
+        v['g_restore'] = g
+        if g['status'] != 'PASS':
+            v['primary_status'] = 'TECH'
+            v['rank_eligible'] = False
+            v['why'].append(f'중력 팔 R_M 복원 {g["status"]} (G1 {g.get("G1")} · G2 {g.get("G2")} · G2c {g.get("G2c")}) — choice C12')
     return v
+
+
+def _g_restore(d, run, root, bed, job):
+    """중력 팔 복원 (choice C12): R_M 의 run 0 setup — G1 (출처 팔 로그의 R_M 정규 줄) · G2 (원자) · G2c (쌍) = 출처 팔의 R_M 창 끝 덤프 · G3 해당 없음."""
+    out = {'status': 'NOT_COMPUTED', 'why': []}
+    st = [e for e in run['events'] if e['event'] == 'START']
+    if not st or st[0]['step'] is None:
+        out['why'].append('START 사건 없음')
+        return out
+    rm = st[0]['step']
+    man = os.path.join(d, 'run_manifest.txt')
+    m = re.search(r'source=(\S+)', open(man, encoding='utf-8').read()) if os.path.exists(man) else None
+    src = m.group(1) if m else os.path.join(root, bed, 'UT' if (bed == B73 and job == 'G_UT3') else job[2:])
+    row = _thermo(src)['regular'].get(rm)
+    scrp = os.path.join(d, 'screen.txt')
+    if row is None or not os.path.exists(scrp):
+        out['why'].append(f'출처 팔 R_M 정규 줄 · 중력 팔 화면 없음 ({src})')
+        return out
+    ref = f'{rm} {int(row["Atoms"])} {row["KinEng"]!r} 0 0'
+    g1 = ul_gates.g1_check(open(scrp, encoding='utf-8', errors='replace').read(), ref, rm)
+    g2 = ul_gates.g2_compare(os.path.join(d, 'dump', f'atom_{rm}.dump'), os.path.join(src, 'dump', f'atom_{rm}.dump'))
+    g2c = ul_gates.g2c_compare(os.path.join(d, 'dump', f'contact_{rm}.dump'), os.path.join(src, 'dump', f'contact_{rm}.dump'))
+    out.update(rm_step=rm, source=src, G1=g1['status'], G2=g2['status'], G2c=g2c['status'], G3='해당 없음 (중력 교체)')
+    out['status'] = 'PASS' if (g1['status'], g2['status'], g2c['status']) == ('PASS', 'PASS', 'PASS') else 'FAIL'
+    return out
 
 
 def _valid_rho(vd):
@@ -679,8 +712,12 @@ def restore_verdict(root, bed, job='RJ', hist=None, P=None):
     seen = _erasure_seen(end['rows'], un['rows'])
     out['checks']['un_erasure'] = {'seen': seen}
     h = _readjson(hist) if hist else None
-    hpass = None if h is None else (h.get('expected_all') is True or h.get('verdict') == 'PASS' or h.get('rc') == 0)
-    out['checks']['history_test'] = {'pass': hpass, 'source': hist}
+    sign = ((h or {}).get('info') or {}).get('syn', {}).get('plate_fn_sign') if h else None
+    hpass = None if h is None else (h.get('exit_code') == 0 and all(((h.get('rows') or {}).get(f'H{i}') or {}).get('status') == 'PASS' for i in range(6))
+                                     and (sign is None or sign == P['plate_fn_compressive_sign']))
+    out['checks']['history_test'] = {'pass': hpass, 'source': hist, 'plate_fn_sign': sign, 'table_sign': P['plate_fn_compressive_sign'],
+                                     'note': ('SYN 부호 ≠ 표 — 표를 결과 0 건에서 고친 뒤 다시' if sign is not None and sign != P['plate_fn_compressive_sign']
+                                              else ('SYN 부호 미측정 (표 가정 그대로)' if h is not None and sign is None else ''))}
     prepost = all(out['checks'][k].get('status') == 'PASS' for k in ('G1', 'G2', 'G2c', 'mesh_md5', 'G3')) and out['checks']['pre_post']['ok']
     out['status'] = ul_gates.restoration_verdict(out['checks']['reset_log']['ok'], out['checks']['g0']['ok'], bool(syntax), prepost, hpass, seen)
     return out
@@ -812,6 +849,19 @@ def inputs_check(root, bed, P=None):
         out['files'][key] = 'ok (sha256 기록)' if os.path.exists(p) else 'missing'
         out['ok'] = out['ok'] and os.path.exists(p)
     return out
+
+
+def copy_commands(bed, P=None):
+    """원 파일 복사 명령 (침대마다 · 표에서 · 읽기만 · 있으면 덮지 않는다 · REG §8-2 꼴 · 주소 · 사용자 이름 없이 ~ 경로)."""
+    P = P or ul_lib.load_params()
+    B = P['beds'][bed]
+    c, f = B['case'], B['in_files']
+    dst = f'~/ps45_unload_20261009/{bed}/in/'
+    src = f'~/dem_test/ps45/{c}'
+    return [f'# {bed} — 원 파일 여섯 (sha256 = 표 · 러너 사전 점검이 대조)', f'mkdir -p {dst}',
+            f'cp -n {src}/restart_{c}/{f["ckpt"]["file"]} {dst}', f'cp -n {src}/post_{c}/{f["atom"]["file"]} {dst}',
+            f'cp -n {src}/post_{c}/{f["contact"]["file"]} {dst}', f'cp -n {src}/post_{c}/{f["mesh"]["file"]} {dst}',
+            f'cp -n ~/dem_test/ps45/logs/{B["orig_log"]} {dst}', f'cp -n {src}/{B["last_deck"]} {dst}']
 
 
 def report(root, P=None):
@@ -1216,13 +1266,102 @@ def selftest() -> int:
         _w(os.path.join(ext, 'restart', 'restart_ext_3660000.bin'), 'x')
         chk('R13 10:0 S0′: EXT 로그 ± 5,000 · 마지막 25 줄 1 % 안 → S0′ = 3,650,000 · KE 병진 기준 = 5 줄 창 평균 다섯의 중앙값 · 체크포인트 실재',
             lambda: (lambda s: s['status'] == 'PASS' and s['s0'] == 3650000 and abs(s['ke_trans'] - 3e-7) < 1e-18)(s0p_decision(root, P, write=False)))
+    with tempfile.TemporaryDirectory() as root:
+        # ── 복원 판정 조립 (§12-1 ⑤) — 합성 RJ 폴더 (화면 · G2 · G2c · mesh · PRE · POST · R_END · UN) ──
+        B = P['beds'][B73]
+        J = os.path.join(root, B73, 'RJ')
+        g1, g3 = B['g1'].split(), B['g3'].split()
+        resets = ''.join(f'Resetting {k} state of Fix {f} Style {s} from restart file info\n' for f, s, ks in EXPECTED_RESETS for k in ks)
+        head = '    Step    Atoms         KinEng        ul_erot          ul_Ps       pressMPa            CPU \n'
+        scr = ('LIGGGHTS (Version LIGGGHTS-PUBLIC 3.8.0, git commit 3d5c00f)\n' + resets + head + f' {g1[0]} {g1[1]} {g1[2]} 1e-08 {g1[4]} {g1[4]} 0\n'
+               'Loop time of 0 on 6 procs for 0 steps with 160417 atoms\n' + head + f' {g1[0]} {g1[1]} {g1[2]} 1e-08 {g1[4]} {g1[4]} 0\n'
+               f' {g3[0]} {g3[1]} {g3[2]} 1e-08 {g3[4]} {g3[4]} 1\n Loop time of 1 on 6 procs for 2000 steps with 160417 atoms\nUL_R_DONE\n')
+        _w(os.path.join(J, 'R', 'screen.txt'), scr.replace('\n Loop', '\nLoop'))
+        _w(os.path.join(J, 'g0.json'), json.dumps({'status': 'PASS', 'violations': []}))
+        cols = ['id', 'type', 'x', 'y', 'z', 'radius', 'vx', 'vy', 'vz', 'c_strs[1]', 'c_strs[2]', 'c_strs[3]', 'c_ke']
+        rows = [{'id': i, 'type': 3, 'x': 0.001 * i, 'y': 0.002, 'z': 0.003, 'radius': 0.0005, 'vx': 1e-6, 'vy': 0.0, 'vz': 0.0, 'c_strs[1]': 0.0,
+                 'c_strs[2]': 0.0, 'c_strs[3]': 0.0, 'c_ke': 0.0} for i in range(1, 4)]
+        for p in (os.path.join(root, B73, 'in', 'atom_3200000.liggghts'), os.path.join(J, 'R', 'g2', 'atom_3200000.liggghts')):
+            os.makedirs(os.path.dirname(p), exist_ok=True)
+            ul_lib.write_custom(p, 3200000, cols, rows, fmt=lambda x: f'{x:g}')
+        ccols = [f'c_cpl[{c}]' for c in range(1, 27)]
+        crow = dict(zip(ccols, [0.001, 0.01, 0.01, 0.0015, 0.01, 0.01, 1, 2, 0, -0.5, 0, 0, -0.5, 0, 0, 0, 0.01, 0, 0, 0, 0, 1e-8, 1e-5, 0.00125, 0.01, 0.01]))
+        for p in (os.path.join(root, B73, 'in', 'contact_3200000.liggghts'), os.path.join(J, 'R', 'g2', 'contact_3200000.liggghts')):
+            ul_lib.write_local(p, 3200000, ccols, [crow])
+        stl = 'solid LIGGGHTS_STL_EXPORT\n facet normal 0 0 -1\n  outer loop\n   vertex 0 0 0.111052\n   vertex 0.05 0.05 0.111052\n   vertex 0.05 0 0.111052\n'
+        for p in (os.path.join(root, B73, 'in', 'mesh_3200000.stl'), os.path.join(J, 'R', 'g2', 'mesh_3200000.stl')):
+            _w(p, stl)
+        hc = ['id', 'type', 'f_history_zwall_bot[1]', 'f_history_zwall_bot[2]', 'f_history_zwall_bot[3]', 'f_history_zwall_bot[4]']
+        hist = [{'id': 1, 'type': 1, 'f_history_zwall_bot[1]': 2e-5, 'f_history_zwall_bot[2]': 1e-6, 'f_history_zwall_bot[3]': 0.0,
+                 'f_history_zwall_bot[4]': 0.0}, {'id': 2, 'type': 3, 'f_history_zwall_bot[1]': 0.0, 'f_history_zwall_bot[2]': 0.0,
+                                                  'f_history_zwall_bot[3]': 0.0, 'f_history_zwall_bot[4]': 0.0}]
+        zero = [dict(h, **{c: 0.0 for c in hc[2:]}) for h in hist]
+        for p, rr in ((os.path.join(J, 'R', 'obs', 'pre_bot.dump'), hist), (os.path.join(J, 'R', 'obs', 'post_atom_3200000.dump'), hist),
+                      (os.path.join(J, 'R', 'obs', 'end_pre_bot.dump'), hist), (os.path.join(J, 'UN', 'obs', 'un_pre_bot.dump'), zero)):
+            os.makedirs(os.path.dirname(p), exist_ok=True)
+            ul_lib.write_custom(p, 3200000, hc, rr)
+        hv = os.path.join(root, 'hist_verdict.json')
+
+        def rv(h):
+            if h is None:
+                return restore_verdict(root, B73, 'RJ', None, P)['status']
+            _w(hv, json.dumps(h))
+            return restore_verdict(root, B73, 'RJ', hv, P)['status']
+        good = {'exit_code': 0, 'rows': {f'H{i}': {'status': 'PASS'} for i in range(6)}, 'info': {'syn': {'status': 'PASS', 'plate_fn_sign': -1}}}
+        chk('R14 복원 판정 조립: reset 로그 다섯 · G0 · G1 · G2 · G2c · mesh md5 · G3 · PRE = POST · UN 소거 보임 · 이력 시험 rc 0 (H0–H5 PASS) → RESTORED',
+            lambda: rv(good) == 'RESTORED')
+        chk('R14 이력 시험 없음 · rc 2 → UNCONFIRMED (표지만 달아 U 로 넘기지 않는다)',
+            lambda: rv(None) == 'UNCONFIRMED' and rv(dict(good, exit_code=2)) == 'UNCONFIRMED')
+        chk('R14 이력 시험 SYN 의 판 접촉 법선력 부호 (+1) ≠ 표 plate_fn_compressive_sign (−1) → UNCONFIRMED (표를 결과 0 건에서 고친 뒤)',
+            lambda: rv(dict(good, info={'syn': {'status': 'PASS', 'plate_fn_sign': 1}})) == 'UNCONFIRMED')
+        _w(os.path.join(J, 'R', 'screen.txt'), scr.replace('Resetting per-atom state of Fix history_zwall_bot', 'x'))
+        chk('R14 바닥 primitive per-atom reset 로그 빠짐 → VALUE_MISMATCH', lambda: rv(good) == 'VALUE_MISMATCH')
+    with tempfile.TemporaryDirectory() as root:
+        # ── 중력 팔 복원 (choice C12) — R_M 의 setup (G1 · G2 · G2c) ↔ 출처 팔의 R_M 창 끝 (같은 머리 · run 0) ──
+        src = _mk_arm(root, B73, 'UB', {'W': 5000, 'dt': 1e-6, 'steps': _ladder([0.2, 0.25, 0.3, 0.35], [1.2, 0.8, 0.6, 0.4]),
+                                        'events': [('CROSS', 2, 'first'), ('RM', 4, 'ncross2')], 'summary': 'DONE'}, P)
+        rm = int([ln.split(',') for ln in open(os.path.join(src, 'ul_events.csv')).read().splitlines() if ln.startswith('RM,')][0][2])
+        gd = os.path.join(root, B73, 'G_UB')
+        os.makedirs(os.path.join(gd, 'dump'))
+        for nm in (f'atom_{rm}.dump', f'contact_{rm}.dump'):
+            shutil.copy(os.path.join(src, 'dump', nm), os.path.join(gd, 'dump', nm))
+        hdr = '    Step    Atoms         KinEng        ul_erot          ul_Ps       pressMPa            CPU \n'
+        _w(os.path.join(gd, 'screen.txt'), 'LIGGGHTS-PUBLIC 3.8.0 (git 3d5c00f)\n' + hdr + f' {rm} 160417 1e-07 1e-08 0.0004 0.0004 0\n'
+           'Loop time of 0 on 6 procs for 0 steps with 160417 atoms\n')
+        R = P['records']
+        _w(os.path.join(gd, 'ul_events.csv'), ','.join(R['events_cols']) + f'\nSTART,4,{rm},0.111402,0.00035,RM_branch\nGRAVITY_ON,0,{rm},0.111402,0.00035,g_aux\n'
+           f'NO_BRACKET,0,{rm + 20000},0.111402,0.00035,le_Pmeas\n')
+        _w(os.path.join(gd, 'ul_windows.csv'), ','.join(R['windows_cols']) + '\n')
+        _w(os.path.join(gd, 'ul_steps.csv'), ','.join(R['steps_cols']) + '\n')
+        _w(os.path.join(gd, 'run_manifest.txt'), f'source={src} rm_step={rm}\n')
+        gv = None
+        try:
+            gv = arm_verdict(gd, B73, 'G_UB', P, root=root)
+        except Exception:  # noqa: BLE001
+            gv = None
+        chk('R16 중력 팔 복원: R_M setup 줄 (KE · 원자) = 출처 팔 R_M 정규 줄 · G2 원자 · G2c 쌍 = 출처 팔 R_M 창 끝 덤프 → PASS · 판정 NO_BRACKET',
+            lambda: gv['g_restore']['status'] == 'PASS' and gv['primary_status'] == 'NO_BRACKET')
+        A = ul_lib.read_dump(os.path.join(gd, 'dump', f'atom_{rm}.dump'), 'custom')
+        rows = A['rows']
+        rows[0]['z'] += 1e-6
+        ul_lib.write_custom(os.path.join(gd, 'dump', f'atom_{rm}.dump'), rm, A['cols'], rows)
+        chk('R16 중력 팔 R_M 원자 하나 다름 → G2 FAIL → 복원 실패 = TECH (그 팔 값 없음)',
+            lambda: (lambda g: g['g_restore']['status'] == 'FAIL' and g['primary_status'] == 'TECH')(arm_verdict(gd, B73, 'G_UB', P, root=root)))
+    cc = None
+    try:
+        cc = {b: copy_commands(b, P) for b in BEDS}
+    except Exception:  # noqa: BLE001
+        cc = None
+    chk('R15 원 파일 복사 명령 (침대마다 · 표에서): 체크포인트 · atom · contact · mesh · 원 로그 · 원 마지막 조각 덱 = cp -n 여섯 줄 · 10:0 = restart_settling_3600000 · 주소 · 사용자 이름 없음',
+        lambda: all(len([x for x in cc[b] if x.startswith('cp -n ')]) == 6 for b in BEDS) and any('restart_settling_3600000.bin' in x for x in cc[B100])
+        and not any(re.search(r'/home/|lustre|ibb-master|yonghoon', x) for b in BEDS for x in cc[b]))
     print(f'selftest: {"PASS" if not fails else "FAIL"} ({len(fails)} 실패)')
     return 1 if fails else 0
 
 
 def main(argv=None):
     ap = argparse.ArgumentParser(description='DEM 언로딩 키트 K4 읽는 쪽')
-    ap.add_argument('cmd', nargs='?', choices=['inputs', 'restore', 'kebase', 's0p', 'arm', 'select', 'gate', 'report'])
+    ap.add_argument('cmd', nargs='?', choices=['inputs', 'restore', 'kebase', 's0p', 'arm', 'select', 'gate', 'report', 'copycmd'])
     ap.add_argument('args', nargs='*')
     ap.add_argument('--hist')
     ap.add_argument('--job', default='RJ')
@@ -1233,6 +1372,11 @@ def main(argv=None):
     if not a.cmd:
         ap.error('명령 (또는 --selftest)')
     P = ul_lib.load_params()
+    if a.cmd == 'copycmd':
+        if len(a.args) != 1 or a.args[0] not in BEDS:
+            ap.error('copycmd <침대>')
+        print('\n'.join(copy_commands(a.args[0], P)))
+        return 0
     need = {'inputs': 2, 'restore': 2, 'kebase': 2, 's0p': 1, 'arm': 3, 'select': 1, 'gate': 3, 'report': 1}[a.cmd]
     if len(a.args) != need:
         ap.error(f'{a.cmd}: 인자 {need} 개')
