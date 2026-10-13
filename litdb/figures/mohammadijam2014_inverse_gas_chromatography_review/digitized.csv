@@ -1,0 +1,26 @@
+# mohammadijam2014_inverse_gas_chromatography_review — hand/pixel-read values.
+# Fig 8: point centroids from the PDF's native 200-ppi raster (pdfimages p7-000, 686x511 px); axis calibration from tick marks (x: 0.1 per 98.8 px, 0 at px 78.2; y: 10 mJ/m2 per 108.75 px, 30 at px 445). Precision ±0.003 coverage, ±0.2 mJ/m2.
+# Figs 4, 6, 9: read by eye on the 300-dpi crops (±0.1 axis units); used only to check the printed derived numbers (Schultz/Dorris-Gray/Gutmann).
+figure,series,x,y,unit_x,unit_y,note
+8,quartz gamma_D profile (C6-C10),0.006,66.5,n/nm,mJ/m2,"text p.26 says 31 to ~60 mJ/m2 — figure reads 38.0-66.5"
+8,quartz gamma_D profile (C6-C10),0.011,62.2,n/nm,mJ/m2,
+8,quartz gamma_D profile (C6-C10),0.021,57.9,n/nm,mJ/m2,
+8,quartz gamma_D profile (C6-C10),0.031,55.4,n/nm,mJ/m2,
+8,quartz gamma_D profile (C6-C10),0.040,53.6,n/nm,mJ/m2,
+8,quartz gamma_D profile (C6-C10),0.051,52.2,n/nm,mJ/m2,"Table 1 (5 % coverage, Schultz) 52.76"
+8,quartz gamma_D profile (C6-C10),0.060,51.1,n/nm,mJ/m2,
+8,quartz gamma_D profile (C6-C10),0.080,49.3,n/nm,mJ/m2,
+8,quartz gamma_D profile (C6-C10),0.100,48.0,n/nm,mJ/m2,
+8,quartz gamma_D profile (C6-C10),0.150,45.4,n/nm,mJ/m2,
+8,quartz gamma_D profile (C6-C10),0.200,43.7,n/nm,mJ/m2,
+8,quartz gamma_D profile (C6-C10),0.249,42.3,n/nm,mJ/m2,
+8,quartz gamma_D profile (C6-C10),0.300,41.2,n/nm,mJ/m2,
+8,quartz gamma_D profile (C6-C10),0.349,40.2,n/nm,mJ/m2,
+8,quartz gamma_D profile (C6-C10),0.399,39.3,n/nm,mJ/m2,
+8,quartz gamma_D profile (C6-C10),0.449,38.6,n/nm,mJ/m2,
+8,quartz gamma_D profile (C6-C10),0.499,38.0,n/nm,mJ/m2,
+4,Schultz alkane line hexane..decane,7.0 / 11.5,-3.5 / 8.9,a*sqrt(gammaL_D) x1e20,RTlnVN x1e-3 J/mol,"slope 2.756e23 -> gamma_S^D = (slope/2N_A)^2 = 52.4 mJ/m2 (printed 52.76)"
+4,dichloromethane,3.8,-1.2,a*sqrt(gammaL_D) x1e20,RTlnVN x1e-3 J/mol,"vertical distance to alkane line 11.1 kJ/mol (printed 11.05)"
+4,ethyl acetate,4.6,3.9,a*sqrt(gammaL_D) x1e20,RTlnVN x1e-3 J/mol,"vertical distance 14.0 kJ/mol (printed 13.96)"
+6,Dorris-Gray alkane line hexane..decane,6 / 10,-3.6 / 8.9,carbon number,RTlnVN x1e-3 J/mol,"-dG_CH2 = 3.13 kJ/mol -> gamma_S^D 53.4 mJ/m2 with a_CH2 = 6 A2 (our assumption) and gamma_CH2(303 K) 35.0 (printed 52.61)"
+9,Gutmann line,0 / 11.4,0.28 / 2.7,DN/AN,dG/AN,"slope ~0.21 = K_A (printed 0.2119); intercept ~0.28 = K_B (printed 0.2874)"
