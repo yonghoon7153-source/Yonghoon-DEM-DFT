@@ -74,8 +74,9 @@ region u_c1 block INF INF INF INF ${u_lo1} ${u_pz} units box
 region u_c2 block INF INF INF INF ${u_lo2} ${u_pz} units box
 region u_c3 block INF INF INF INF ${u_lo3} ${u_pz} units box
 variable u_nc equal count(u_t1,u_c1)+count(u_t2,u_c2)+count(u_t3,u_c3)
-compute u_wh all wall/gran/local id
-dump u_dw all local 100 ${out}/probe/mesh_*.dump c_u_wh[1] c_u_wh[2] c_u_wh[3]
+# 판 접촉 = (mesh index · 삼각형 · 입자 id · 입자가 받는 법선력 x y z) — 본 키트 TENSION 판별의 부호 약속 (압축 = fn_z 음수?) 을 먼저 잰다
+compute u_wh all wall/gran/local id force_normal
+dump u_dw all local 100 ${out}/probe/mesh_*.dump c_u_wh[1] c_u_wh[2] c_u_wh[3] c_u_wh[4] c_u_wh[5] c_u_wh[6]
 dump u_dm all mesh/stl 100 ${out}/probe/plate_*.stl top_mesh
 thermo_style custom step atoms ke c_u_erot v_Ps v_pressMPa dt cpu
 thermo 10

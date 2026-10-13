@@ -660,8 +660,9 @@ def _probe(P, H):
           'region u_c2 block INF INF INF INF ${u_lo2} ${u_pz} units box',
           'region u_c3 block INF INF INF INF ${u_lo3} ${u_pz} units box',
           'variable u_nc equal count(u_t1,u_c1)+count(u_t2,u_c2)+count(u_t3,u_c3)',
-          'compute u_wh all wall/gran/local id',
-          f'dump u_dw all local {nf} ${{out}}/probe/mesh_*.dump c_u_wh[1] c_u_wh[2] c_u_wh[3]',
+          '# 판 접촉 = (mesh index · 삼각형 · 입자 id · 입자가 받는 법선력 x y z) — 본 키트 TENSION 판별의 부호 약속 (압축 = fn_z 음수?) 을 먼저 잰다',
+          'compute u_wh all wall/gran/local id force_normal',
+          f'dump u_dw all local {nf} ${{out}}/probe/mesh_*.dump ' + ' '.join(f'c_u_wh[{i}]' for i in range(1, 7)),
           f'dump u_dm all mesh/stl {nf} ${{out}}/probe/plate_*.stl top_mesh',
           'thermo_style custom step atoms ke c_u_erot v_Ps v_pressMPa dt cpu', f'thermo {Y["thermo"]}',
           f'restart {Y["restart_every"]} ${{out}}/restart/probe_auto_*.bin', '',
@@ -888,6 +889,9 @@ def selftest() -> int:
         and _idx(s, 'unfix u_lift') > _idx(s, 'fix u_lift all move/mesh mesh top_mesh linear 0.0 0.0 0.01')
         and _idx(s, 'write_restart ${out}/probe_end.bin') > _last(s, 'run '))
     chk('⑨ SYN: 적분 fix 없음 (운동학 · 판 이동 기하만)', lambda: not any(x.startswith('fix integr') for x in s))
+    chk('⑨ SYN: 판 접촉 local = id force_normal (6 열 — 본 키트 TENSION 판별의 부호 약속을 먼저 잰다)',
+        lambda: 'compute u_wh all wall/gran/local id force_normal' in s
+        and any(x.startswith('dump u_dw all local ') and x.endswith(' '.join(f'c_u_wh[{i}]' for i in range(1, 7))) for x in s))
     # ⑩ 판 STL · 러너 짝 · 봉인
     chk('⑩ 판 STL: 삼각형 둘 · 높이 하나 = z_plate', lambda: plate_stl(P).count('vertex') == 6
         and set(re.findall(r'vertex \S+ \S+ (\S+)', plate_stl(P))) == {repr(P['z_plate'])})

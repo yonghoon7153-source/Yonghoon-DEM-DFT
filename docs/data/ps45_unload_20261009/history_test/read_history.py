@@ -455,7 +455,7 @@ def erasure(prod, ers, cons, ctrl_rt, wall, P):
 
 def syn_info(run_dir, prod, P):
     d = os.path.join(run_dir, 'SYN')
-    out = {'status': 'NOT_RUN', 'checks': {}}
+    out = {'status': 'NOT_RUN', 'checks': {}, 'plate_fn_sign': None}
     if not os.path.isdir(d):
         return out
     S = screen_info(d)
@@ -477,13 +477,19 @@ def syn_info(run_dir, prod, P):
     try:
         c['dt_after_read_restart'] = float(W['W0']['dt']) == Y['dt'] and float(W['W1']['dt']) == Y['dt']
         c['Ps_signed_positive'] = float(W['W0']['Ps_avg']) > 0
+        wcols = [f'c_u_wh[{i}]' for i in range(1, 7)]
         for tag, z in (('W0', zp), ('W1', zp + lift)):
             s = int(W[tag]['step'])
-            dm = read_dump(os.path.join(d, 'probe', f'mesh_{s}.dump'), 'local', ['c_u_wh[1]', 'c_u_wh[2]', 'c_u_wh[3]'])
+            dm = read_dump(os.path.join(d, 'probe', f'mesh_{s}.dump'), 'local', wcols)
             pids = {int(r['c_u_wh[3]']) for r in dm['rows']}
             below = {i for i in pids if A[i]['z'] < z}
             c[f'count_{tag}'] = dm['ok'] and int(W[tag]['n_contact_geo']) == len(below)
             c[f'n_{tag}'] = len(below)
+            if tag == 'W0':
+                fz = [r['c_u_wh[6]'] for r in dm['rows'] if int(r['c_u_wh[3]']) in below]
+                sign = (-1 if fz and all(v < 0 for v in fz) else 1 if fz and all(v > 0 for v in fz) else ('MIXED' if fz else None))
+                out['plate_fn_sign'] = sign
+                c['fn_sign_uniform'] = sign in (-1, 1)
         sl = int(W['W1']['step']) - Y['window']
         stl = os.path.join(d, 'probe', f'plate_{sl}.stl')
         zs = {float(x) for x in re.findall(r'vertex\s+\S+\s+\S+\s+(\S+)', open(stl).read())} if os.path.exists(stl) else set()
@@ -495,6 +501,8 @@ def syn_info(run_dir, prod, P):
         out['status'] = 'FAIL'
         return out
     out['status'] = 'PASS' if all(v is True for k, v in c.items() if not k.startswith('n_')) else 'FAIL'
+    out['plate_fn_note'] = ('판 접촉에서 입자가 받는 법선력 fn_z 의 부호 (압축 상태) — 본 키트 unload_params.json 의 plate_fn_compressive_sign 과 '
+                            '대조한다 (다르면 표를 고친다 · 결과 0 건에서)')
     return out
 
 
@@ -787,10 +795,12 @@ def synth_stage(stage, d, P=None, scenario='good', np_override=None, write_meta=
         T = [a for a in A.values() if a['z'] < zp and a['z'] + a['radius'] > zp]
         s0, s1 = step + Y['window'], step + Y['window'] + Y['lift_steps'] + Y['window']
         T1 = [a for a in T if a['z'] + a['radius'] > zp + lift]
-        _wlocal(os.path.join(d, 'probe', f'mesh_{s0}.dump'), s0, ['c_u_wh[1]', 'c_u_wh[2]', 'c_u_wh[3]'],
-                [[0.0, 0.0, float(a['id'])] for a in T])
-        _wlocal(os.path.join(d, 'probe', f'mesh_{s1}.dump'), s1, ['c_u_wh[1]', 'c_u_wh[2]', 'c_u_wh[3]'],
-                [[0.0, 0.0, float(a['id'])] for a in T1])
+        wcols = [f'c_u_wh[{i}]' for i in range(1, 7)]
+        sg = {'syn_fn_positive': [1.0], 'syn_fn_mixed': [-1.0, 1.0]}.get(scenario, [-1.0])
+        _wlocal(os.path.join(d, 'probe', f'mesh_{s0}.dump'), s0, wcols,
+                [[0.0, 0.0, float(a['id']), 0.0, 0.0, sg[j % len(sg)] * 0.5] for j, a in enumerate(T)])
+        _wlocal(os.path.join(d, 'probe', f'mesh_{s1}.dump'), s1, wcols,
+                [[0.0, 0.0, float(a['id']), 0.0, 0.0, sg[j % len(sg)] * 0.3] for j, a in enumerate(T1)])
         for s, z in ((s0, zp), (s1 - Y['window'], zp + lift)):
             with open(os.path.join(d, 'probe', f'plate_{s}.stl'), 'w') as f:
                 f.write('solid LIGGGHTS_STL_EXPORT\n' + ''.join(f'      vertex 0 0 {z:g}\n' for _ in range(6)) + 'endsolid LIGGGHTS_STL_EXPORT\n')
@@ -879,6 +889,11 @@ def selftest() -> int:
     chk('S22 run 끝 자동 restart (auto_2000) = 정보 auto_end_of_run_restart True', lambda: run('auto_end')['info']['auto_end_of_run_restart'] is True)
     chk('S23 SYN 판 접촉 개수 (영역) ≠ 벽 local 덤프 = 정보 SYN FAIL (판정 밖)',
         lambda: (lambda v: v['info']['syn']['status'] == 'FAIL' and v['exit_code'] == 0)(run('syn_count_wrong')))
+    chk('S30 SYN 판 접촉 법선력 (입자가 받는 힘) 이 모두 −z = 정보 plate_fn_sign −1 (압축 = 음수 약속)',
+        lambda: (lambda s: s['plate_fn_sign'] == -1 and s['status'] == 'PASS')(run()['info']['syn']))
+    chk('S31 SYN 판 접촉 법선력이 모두 +z = 정보 plate_fn_sign +1 (약속을 거꾸로 — 본 키트 표를 고칠 근거 · SYN 은 PASS)',
+        lambda: (lambda s: s['plate_fn_sign'] == 1 and s['status'] == 'PASS')(run('syn_fn_positive')['info']['syn']))
+    chk('S32 SYN 판 접촉 법선력 부호가 섞임 = 정보 MIXED · SYN FAIL', lambda: (lambda s: s['plate_fn_sign'] == 'MIXED' and s['status'] == 'FAIL')(run('syn_fn_mixed')['info']['syn']))
     chk('S24 생산자 폴더 없음 = H0–H5 TECH · rc ≠ 0', lambda: (lambda v: all(s == 'TECH' for s in rows(v).values()) and v['exit_code'] != 0)(run(skip=('P',))))
     # 러너 모의 (LIGGGHTS 대신 가짜 mpirun · lmp — 덤프 · 화면은 synth_stage) — 러너 흐름 · 단계 순서 · NP · 보고 묶음
     M = {}

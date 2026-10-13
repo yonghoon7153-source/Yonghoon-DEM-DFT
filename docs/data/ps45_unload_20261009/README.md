@@ -43,7 +43,7 @@
 | Etop → Ctop | `in.hist_erase_top` → 소비자 | 6 | 같은 꼴 · `unfix zwall_top` (top_mesh 기하는 그대로) | H4 |
 | Enone → Cnone | `in.hist_erase_none` → 소비자 | 6 | 양성 대조 — 같은 직렬화 횟수 · unfix 없음 | H3 · H4 대조 |
 | BAD | `in.hist_badid` | 6 | 잘못된 내부 ID (`history_zwallbot`) — ERROR 가 나야 한다 (rc ≠ 0 이 기대값) | H5 |
-| SYN | `in.hist_syntax_probe` | 6 | 본 키트 덱 문법 미리 지나가기 (read_restart 뒤 dt 5e-7 · erotate/sphere · ave/time · 부호 있는 Ps · 영역 개수 판 접촉 ↔ 벽 local 덤프 · move/mesh +z · mesh 덤프 · 명시 write_restart) | 정보 (판정 밖) |
+| SYN | `in.hist_syntax_probe` | 6 | 본 키트 덱 문법 미리 지나가기 (read_restart 뒤 dt 5e-7 · erotate/sphere · ave/time · 부호 있는 Ps · 영역 개수 판 접촉 ↔ 벽 local 덤프 · move/mesh +z · mesh 덤프 · 명시 write_restart) + **판 접촉 법선력 부호** (입자가 받는 fn_z · 압축 상태) | 정보 (판정 밖) |
 | PZ → CZ | `in.hist_producer_zero` → 소비자 | 6 | 0 뿐 fixture (모든 겹침 −1e-4) | H5 |
 
 ### 1-3. 판정 (읽는 쪽 `read_history.py` · 결과 전 고정 · CX2 §5-2 표 그대로)
@@ -58,8 +58,10 @@
 
 - sentinel = 생산자 끝에서 저장 deltaMax − 현재 겹침 ≥ 1e-9 이고 \|shear\| ≥ 1e-9 (덱 m) 인 접촉 (CX2 §5-2 비퇴화 조건).  설계상 primitive 4 · mesh 4 · pair 5.
 - 정보 (판정 밖): ⓐ **run 끝 자동 restart** — 생산자 run 끝 (10 · 1010 · 2000 · 1500 의 배수 아님) 에 `auto_*.bin` 이 생기는가 (CX2 §6 — 10:0 연장 끝 3,660,000 은 50,000 배수가 아니다 · 본 키트 연장 덱은 어느 쪽이든 끝에서 **명시 write_restart** 하고 러너가 파일을 확인한다)
-  ⓑ **총힘 출력 시점** — 접촉 없는 Z 입자의 덤프 fz = −m g · fx = fy = 0 (덤프 f 가 중력까지 더한 총힘 = S3 함수 입력 · K5) ⓒ SYN 문법.
-- 결과 전 기대: H0–H5 PASS · ⓑ PASS · SYN = 판 접촉 4 → 3 (T4 가 1e-5 들어 올림에서 떨어진다) · ⓐ 미리 정하지 않는다.  다르면 그대로 보고한다 — 덱을 손으로 고치지 않는다 (생성기 → 새 SHA256SUMS → 다시).
+  ⓑ **총힘 출력 시점** — 접촉 없는 Z 입자의 덤프 fz = −m g · fx = fy = 0 (덤프 f 가 중력까지 더한 총힘 = S3 함수 입력 · K5) ⓒ SYN 문법
+  ⓓ **판 접촉 법선력 부호** `plate_fn_sign` — 압축 중인 판 접촉에서 입자가 받는 fn_z 가 모두 음수면 −1 · 모두 양수면 +1 · 섞이면 SYN FAIL.  본 키트 상쇄 (TENSION) 판별이 이 약속을 쓴다 —
+  결과가 표의 `plate_fn_compressive_sign` 과 다르면 표를 고친다 (결과 0 건 상태 · 판정 전).
+- 결과 전 기대: H0–H5 PASS · ⓑ PASS · SYN = 판 접촉 4 → 3 (T4 가 1e-5 들어 올림에서 떨어진다) · ⓓ −1 (판이 위에서 누르면 입자가 받는 힘은 −z — 내 추정 · 미확인) · ⓐ 미리 정하지 않는다.  다르면 그대로 보고한다 — 덱을 손으로 고치지 않는다 (생성기 → 새 SHA256SUMS → 다시).
 
 ### 1-4. ibb 명령 (1저자 · 꺾쇠 자리표시 = 접속 정보뿐 · 나머지는 그대로 붙여 넣는다)
 
@@ -93,3 +95,4 @@ WSL 로 가져오는 꼴 (접속 정보는 자리표시): `scp -P <port> <user>@
 | `history_test/make_history_decks.py --selftest` (덱 · 설계 · run 사이 읽기 · 러너 짝 · 검사기 자신) | 121 중 115 실패 (표 검사 6 만 통과) | 121 / 121 |
 | `history_test/read_history.py --selftest` 판정 24 시나리오 (S1–S24) | 27 중 27 실패 | 27 / 27 |
 | 같은 파일 러너 모의 (S25–S29 · 가짜 mpirun · lmp) | 8 중 8 실패 (덱 · SHA256SUMS 없음) | 8 / 8 |
+| 판 접촉 법선력 부호 (생성기 ⑨ 1 · 읽는 쪽 S30–S32 3) | 4 중 4 실패 | 생성기 122 / 122 · 읽는 쪽 38 / 38 |
