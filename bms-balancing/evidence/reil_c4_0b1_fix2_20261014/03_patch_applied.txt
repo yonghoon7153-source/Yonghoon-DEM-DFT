@@ -1,0 +1,2 @@
+patch docs/REIL_C4_0B1_FIX2_PATCH_DRAFT_20261014.diff sha256 dd4b1be3203cf429ac8518a89374a4f6288bdcc42eb1d75390ddc90ffc3ef2d7 · git apply at 2026-10-13T17:08:21Z
+scripts/reil_c4_h.py f69a4ad19a065c6a822c6de452174b39909d508fade468d44e524433b01ababb (= 기대)

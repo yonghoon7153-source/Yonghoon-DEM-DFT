@@ -1,0 +1,32 @@
+FFF.F                                                                    [100%]
+=================================== FAILURES ===================================
+E   AssertionError: assert {'x': None, '...e': None, ...} == {'x': [0.9, 0... status', ...}
+      
+      Differing items:
+      {'fun': None} != {'fun': 0.5}
+      {'nit': None} != {'nit': 1}
+      {'x': None} != {'x': [0.9, 0.8, 0.3, 0.1]}
+      {'status': None} != {'status': 0}
+      {'message': None} != {'message': 'fake status'}...
+      
+      ...Full output truncated (3 lines hidden), use '-vv' to show
+/home/user/Yonghoon-DEM-DFT/bms-balancing/tests/test_reil_c4_0b1_fix2.py:91: AssertionError: assert {'x': None, '...e': None, ...} == {'x': [0.9, 0... status', ...}
+E   AssertionError: assert (None, None, None, 2) == ([0.9, 0.8, 0...converged', 2)
+      
+      At index 0 diff: None != [0.9, 0.8, 0.3, 0.1]
+      Use -v to get more diff
+/home/user/Yonghoon-DEM-DFT/bms-balancing/tests/test_reil_c4_0b1_fix2.py:106: AssertionError: assert (None, None, None, 2) == ([0.9, 0.8, 0...converged', 2)
+E   AssertionError: assert (None, None, None) == ('local', 'ut... 'ValueError')
+      
+      At index 0 diff: None != 'local'
+      Use -v to get more diff
+/home/user/Yonghoon-DEM-DFT/bms-balancing/tests/test_reil_c4_0b1_fix2.py:120: AssertionError: assert (None, None, None) == ('local', 'ut... 'ValueError')
+E   assert (False)
+     +  where False = isinstance(None, list)
+/home/user/Yonghoon-DEM-DFT/bms-balancing/tests/test_reil_c4_0b1_fix2.py:142: assert (False)
+=========================== short test summary info ============================
+FAILED tests/test_reil_c4_0b1_fix2.py::test_r1_a_a_known_return_survives_the_option_warning_stop
+FAILED tests/test_reil_c4_0b1_fix2.py::test_r1_b_the_return_fields_cross_the_worker_boundary
+FAILED tests/test_reil_c4_0b1_fix2.py::test_r1_c_without_a_return_nothing_is_filled_and_the_original_error_is_kept
+FAILED tests/test_reil_c4_0b1_fix2.py::test_r1_e_the_real_scipy_warning_path_keeps_the_returned_point
+4 failed, 1 passed in 0.69s
