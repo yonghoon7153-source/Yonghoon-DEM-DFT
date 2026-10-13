@@ -1,0 +1,6 @@
+t0_utc 2026-10-13T10:25:55Z
+uptime_s 1229.14
+head_start 33b58cd7b01a1d2f6e7887a714f6d2d2afc2669c
+approval 상태 문서 §43 (사용자 'reil은 승인이야')
+limits identity 60 · red 600 · green 600 · compute 1260 · work 7200 · auto_retest 0
+expected red: 10 failed · 4 passed (n2_c · n3_b · n4_c · out) · green: 40 passed

@@ -1,0 +1,54 @@
+{
+  "kind": "REIL_C4_0A_FIX_REVIEW_DECISION",
+  "review_date": "2026-10-13",
+  "reviewed_ref": "6832a6b078b8ce4a116bb0a8a5b8057b08a70e6f",
+  "implementation_commit": "97cad936b6bc2e59b9ecddd469621965ad96efe9",
+  "execution_head": "33b58cd7b01a1d2f6e7887a714f6d2d2afc2669c",
+  "decision": "C4_0A_LIMITED_IMPLEMENTATION_CLOSED_WITH_DOCUMENTED_SCOPE",
+  "items": {
+    "N1": "CLOSED",
+    "N2": "CLOSED",
+    "N3": "CLOSED",
+    "N4": "CLOSED"
+  },
+  "blocking_findings": [],
+  "evidence": {
+    "red": {
+      "failed": 10,
+      "passed": 4,
+      "behavior_failures": 7,
+      "interface_absence_failures": 3
+    },
+    "green": {
+      "passed": 40,
+      "rc": 0,
+      "external_elapsed_s": 18.307,
+      "pytest_elapsed_s": 17.68
+    },
+    "approved_synthetic_nsga2_calls": 3,
+    "selected_source_hashes": 8,
+    "source_capture_blobs_matched": 37,
+    "compute_sum_s": 52.484,
+    "compute_limit_s": 1260,
+    "precommit_snapshot_s": 103.5,
+    "full_post_delivery_elapsed_verified": false
+  },
+  "permissions": {
+    "c4_0b_implementation_approved": false,
+    "real_data_opening_approved": false,
+    "research_execution_approved": false,
+    "installation_approved": false,
+    "environment_rebuild_approved": false,
+    "COMSOL_approved": false
+  },
+  "next": "C4-0b requires a new user confirmation including the three deferred array groups and sealing schedule.",
+  "reviewer_actions": {
+    "received_code_imports": 0,
+    "received_test_runs": 0,
+    "sobol_generation": 0,
+    "raw_data_or_pickle_or_notebook_opening": 0,
+    "COMSOL_calls": 0,
+    "external_messages_sent": 0
+  },
+  "recipient": null
+}
