@@ -1,0 +1,8 @@
+{
+  "kind": "USER_CLARIFICATION_TRANSCRIPTION",
+  "source": "User answer received in this review chat; not an OS audit or a new execution approval",
+  "question": "Was there prior approval for 20 synthetic optimizations during 05 independent dryrun?",
+  "answer_verbatim": "답: 없습니다. 05 단계에서 합성 최적화 20회를 돌리도록 미리 허용한 문구는 당시 기록 어디에도 없습니다. 기록에 남은 건조 정의는 \"계획 · seed · 봉인만 읽음\" 하나뿐이고, C4-0b에서 이 정의를 바꾼 문구도 없습니다.",
+  "review_disposition": "CONFIRMED_EXECUTION_OUTSIDE_APPROVED_SCOPE",
+  "new_approval": false
+}

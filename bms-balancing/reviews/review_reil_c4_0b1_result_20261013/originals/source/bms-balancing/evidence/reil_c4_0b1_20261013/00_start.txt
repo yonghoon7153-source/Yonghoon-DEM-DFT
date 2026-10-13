@@ -1,0 +1,5 @@
+t0_utc 2026-10-13T11:15:21Z
+uptime_s 1463.09
+head_start d800acafb83a7f7bc49f2a10cb954a7c5ca4d995
+approval 상태 문서 §46 (사용자 'b로 진행')
+limits identity 60 · red 600 · green 600 · arrays 240 · dry 300 · compute 1800 · work 14400 · auto_retest 0

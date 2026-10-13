@@ -1,0 +1,73 @@
+{
+  "kind": "REVIEWER_STATIC_AUDIT",
+  "reviewed_ref": "7505bd0089ae6730fdf8e4eba326869f7c273715",
+  "scope": "Read-only source/log/document and NPY byte inspection. No received code/test/import, numpy load, Sobol regeneration or original experiment data access.",
+  "captured_repository_files": 205,
+  "arrays": {
+    "manifest_sha256": "d122117f4b9dc70988b8636be7f2de91fa8e285dfff7c5340dcebac2e1f24b33",
+    "payload_exact_set": 151,
+    "npy_files": 148,
+    "npy_bytes": 583488,
+    "npy_rows": 22808,
+    "verified_raw_blocks": 10466,
+    "labels": 10466,
+    "unique_seeds": 10466,
+    "profile_labels": 10332,
+    "simultaneous_labels": 134,
+    "excluded_simultaneous": 20,
+    "grids": 231,
+    "regular_grid_points": 9471,
+    "nominal_extra_points": 861,
+    "observed_grid_size_min": 43,
+    "observed_grid_size_max": 46,
+    "rule_excerpts_matched": 21,
+    "method": "NPY header and raw byte slices/.NET SHA/JSON/BigInteger rational arithmetic. No regeneration.",
+    "reviewer_tool_chunks": [
+      "3130b5",
+      "322e12"
+    ]
+  },
+  "execution_evidence": {
+    "start_end_head": "d800acafb83a7f7bc49f2a10cb954a7c5ca4d995",
+    "step_rc": [
+      0,
+      1,
+      0,
+      0,
+      0
+    ],
+    "elapsed_s": [
+      5.95,
+      3.884,
+      17.304,
+      5.597,
+      13.043
+    ],
+    "compute_sum_s": 45.778,
+    "compute_limit_s": 1800,
+    "green_passed": 51,
+    "red_failed": 51,
+    "red_cause": "All skeleton NotImplementedError; not independent behavioral mutation evidence.",
+    "dryrun_rows": 20,
+    "dryrun_valid": 18,
+    "dryrun_local_solver_error": 2,
+    "work_snapshot_s": 1776.9,
+    "work_snapshot_boundary": "Before commit/push/documentation; not final full-work timing.",
+    "clean_tree_claim": false
+  },
+  "reviewer_actions": {
+    "submitted_program_runs": 0,
+    "tests": 0,
+    "raw_xlsx_pkl_notebooks_opened": 0,
+    "COMSOL": 0,
+    "solver_fits": 0,
+    "source_edits": 0,
+    "external_messages": 0
+  },
+  "limitations": [
+    "Hash identity proves captured bytes, not producer OS audit.",
+    "Sobol generation was not independently rerun.",
+    "User confirmed no prior authorization for 05 synthetic optimizer 20: a documented scope deviation, not a compliant dryrun.",
+    "Final whole work elapsed after commit/push/docs is not in 1776.9-second record."
+  ]
+}

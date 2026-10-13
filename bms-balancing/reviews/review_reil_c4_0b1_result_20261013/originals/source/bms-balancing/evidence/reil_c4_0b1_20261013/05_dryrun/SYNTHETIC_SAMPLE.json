@@ -1,0 +1,1974 @@
+{
+ "banner": "합성 입력 (해석식 곡선 · REIL 자료 아님) · 건조 옵션 maxfev 50 · 합성 σ̂_v 0.001 — 경로 확인용이며 증거 · 비용 근거가 아니다",
+ "common_update": {
+  "combined_lower": [],
+  "final": {
+   "J_D|A0|0": 0.39761825785411453,
+   "J_Vs|A0|0": 0.48798927721094915,
+   "J_V|A0|0": 0.6325884713809998,
+   "J_V|A2|0": 0.3812831017105826
+  },
+  "pre": {
+   "J_D|A0|0": 0.39761825785411453,
+   "J_Vs|A0|0": 0.48798927721094915,
+   "J_V|A0|0": 0.6325884713809998,
+   "J_V|A2|0": 0.3812831017105826
+  },
+  "rho_hat": {
+   "0": {
+    "final": 1.222805126174607,
+    "search": 1.222805126174607
+   }
+  }
+ },
+ "gate_synthetic": {
+  "V_first": 2.0,
+  "V_last": 3.6,
+  "accepted": true,
+  "c_a": 2.0,
+  "c_b": 3.6,
+  "dev_first": 0.0,
+  "dev_last": 8.881784197001253e-17,
+  "nu": 0.01
+ },
+ "options": {
+  "disp": "False",
+  "f_target": "-inf",
+  "feasibility_tol": "1e-12",
+  "final_tr_radius": "1e-06",
+  "initial_tr_radius": "1.0",
+  "maxfev": "50",
+  "maxiter": "100",
+  "scale": "True"
+ },
+ "rho_denominators": [
+  0.6325884713809998,
+  0.39761825785411453
+ ],
+ "rows": [
+  {
+   "active": {
+    "bounds": [
+     [
+      "m_P",
+      "hi"
+     ],
+     [
+      "m_N",
+      "hi"
+     ],
+     [
+      "d_P",
+      "lo"
+     ],
+     [
+      "d_N",
+      "lo"
+     ]
+    ],
+    "g": false
+   },
+   "components": null,
+   "cpu": 0.12309846600000007,
+   "error": null,
+   "feasibility_class": "numerically_accepted",
+   "fun": 0.6325884713809998,
+   "message": "The lower bound for the trust-region radius has been reached",
+   "n_eval": 35,
+   "n_nonfinite": 0,
+   "n_out_NE": 0,
+   "n_out_PE": 1,
+   "nfev": 35,
+   "nit": 32,
+   "objective": "J_V",
+   "options_received": {
+    "disp": "False",
+    "f_target": "-inf",
+    "feasibility_tol": "1e-12",
+    "final_tr_radius": "1e-06",
+    "initial_tr_radius": "1.0",
+    "maxfev": "50",
+    "maxiter": "100",
+    "scale": "True"
+   },
+   "reeval_error": null,
+   "region": "A0",
+   "residuals": {
+    "box": "1/11258999068426240",
+    "box_by_coord": [
+     "1/11258999068426240",
+     "1/11258999068426240",
+     "0",
+     "0"
+    ],
+    "g": "0"
+   },
+   "row": 0,
+   "run_id": 0,
+   "seed": 0,
+   "state": "COMPLETED",
+   "status": 0,
+   "t_end": 3180.690036607,
+   "t_start": 3180.561800677,
+   "task_id": 0,
+   "termination": "converged",
+   "unit": "J_V|A0|0",
+   "value": 0.6325884713809998,
+   "wall": 0.12823592999984612,
+   "warnings": [],
+   "witness": "valid",
+   "worker": 0,
+   "x": [
+    1.1,
+    1.1,
+    0.0050000000000000044,
+    0.0
+   ],
+   "x0": [
+    0.8049747942946852,
+    1.0784721311181784,
+    0.4295391631964594,
+    0.663762946613133
+   ]
+  },
+  {
+   "active": {
+    "bounds": [
+     [
+      "m_P",
+      "hi"
+     ],
+     [
+      "m_N",
+      "hi"
+     ],
+     [
+      "d_P",
+      "lo"
+     ],
+     [
+      "d_N",
+      "lo"
+     ]
+    ],
+    "g": false
+   },
+   "components": null,
+   "cpu": 0.1316047109999996,
+   "error": null,
+   "feasibility_class": "numerically_accepted",
+   "fun": 0.6325884713809998,
+   "message": "The lower bound for the trust-region radius has been reached",
+   "n_eval": 34,
+   "n_nonfinite": 0,
+   "n_out_NE": 0,
+   "n_out_PE": 1,
+   "nfev": 34,
+   "nit": 33,
+   "objective": "J_V",
+   "options_received": {
+    "disp": "False",
+    "f_target": "-inf",
+    "feasibility_tol": "1e-12",
+    "final_tr_radius": "1e-06",
+    "initial_tr_radius": "1.0",
+    "maxfev": "50",
+    "maxiter": "100",
+    "scale": "True"
+   },
+   "reeval_error": null,
+   "region": "A0",
+   "residuals": {
+    "box": "1/11258999068426240",
+    "box_by_coord": [
+     "1/11258999068426240",
+     "1/11258999068426240",
+     "0",
+     "0"
+    ],
+    "g": "0"
+   },
+   "row": 0,
+   "run_id": 1,
+   "seed": 0,
+   "state": "COMPLETED",
+   "status": 0,
+   "t_end": 3180.840937193,
+   "t_start": 3180.690076531,
+   "task_id": 1,
+   "termination": "converged",
+   "unit": "J_V|A0|0",
+   "value": 0.6325884713809998,
+   "wall": 0.1508606620000137,
+   "warnings": [],
+   "witness": "valid",
+   "worker": 0,
+   "x": [
+    1.1,
+    1.1,
+    0.0050000000000000044,
+    0.0
+   ],
+   "x0": [
+    0.9281815228983761,
+    0.6582783754914999,
+    0.24555541313719004,
+    0.34777980111539364
+   ]
+  },
+  {
+   "active": {
+    "bounds": [
+     [
+      "m_P",
+      "hi"
+     ],
+     [
+      "m_N",
+      "hi"
+     ],
+     [
+      "d_P",
+      "lo"
+     ],
+     [
+      "d_N",
+      "lo"
+     ]
+    ],
+    "g": false
+   },
+   "components": null,
+   "cpu": 0.19070885600000054,
+   "error": null,
+   "feasibility_class": "numerically_accepted",
+   "fun": 0.6325884713809998,
+   "message": "The lower bound for the trust-region radius has been reached",
+   "n_eval": 44,
+   "n_nonfinite": 0,
+   "n_out_NE": 0,
+   "n_out_PE": 1,
+   "nfev": 44,
+   "nit": 41,
+   "objective": "J_V",
+   "options_received": {
+    "disp": "False",
+    "f_target": "-inf",
+    "feasibility_tol": "1e-12",
+    "final_tr_radius": "1e-06",
+    "initial_tr_radius": "1.0",
+    "maxfev": "50",
+    "maxiter": "100",
+    "scale": "True"
+   },
+   "reeval_error": null,
+   "region": "A0",
+   "residuals": {
+    "box": "1/11258999068426240",
+    "box_by_coord": [
+     "1/11258999068426240",
+     "1/11258999068426240",
+     "0",
+     "0"
+    ],
+    "g": "0"
+   },
+   "row": 0,
+   "run_id": 64,
+   "seed": 1,
+   "state": "COMPLETED",
+   "status": 0,
+   "t_end": 3181.031745895,
+   "t_start": 3180.840981022,
+   "task_id": 64,
+   "termination": "converged",
+   "unit": "J_V|A0|0",
+   "value": 0.6325884713809998,
+   "wall": 0.19076487299980727,
+   "warnings": [],
+   "witness": "valid",
+   "worker": 0,
+   "x": [
+    1.1,
+    1.1,
+    0.0050000000000000044,
+    0.0
+   ],
+   "x0": [
+    0.7430845810100436,
+    0.5975811824202537,
+    0.29623799459077416,
+    0.2868441781029105
+   ]
+  },
+  {
+   "active": {
+    "bounds": [
+     [
+      "m_P",
+      "hi"
+     ],
+     [
+      "m_N",
+      "hi"
+     ],
+     [
+      "d_P",
+      "lo"
+     ],
+     [
+      "d_N",
+      "lo"
+     ]
+    ],
+    "g": false
+   },
+   "components": null,
+   "cpu": 0.1377469290000004,
+   "error": null,
+   "feasibility_class": "numerically_accepted",
+   "fun": 0.6325884713809998,
+   "message": "The lower bound for the trust-region radius has been reached",
+   "n_eval": 35,
+   "n_nonfinite": 0,
+   "n_out_NE": 0,
+   "n_out_PE": 1,
+   "nfev": 35,
+   "nit": 30,
+   "objective": "J_V",
+   "options_received": {
+    "disp": "False",
+    "f_target": "-inf",
+    "feasibility_tol": "1e-12",
+    "final_tr_radius": "1e-06",
+    "initial_tr_radius": "1.0",
+    "maxfev": "50",
+    "maxiter": "100",
+    "scale": "True"
+   },
+   "reeval_error": null,
+   "region": "A0",
+   "residuals": {
+    "box": "1/11258999068426240",
+    "box_by_coord": [
+     "1/11258999068426240",
+     "1/11258999068426240",
+     "0",
+     "0"
+    ],
+    "g": "0"
+   },
+   "row": 0,
+   "run_id": 65,
+   "seed": 1,
+   "state": "COMPLETED",
+   "status": 0,
+   "t_end": 3181.171481931,
+   "t_start": 3181.031791889,
+   "task_id": 65,
+   "termination": "converged",
+   "unit": "J_V|A0|0",
+   "value": 0.6325884713809998,
+   "wall": 0.1396900419999838,
+   "warnings": [],
+   "witness": "valid",
+   "worker": 0,
+   "x": [
+    1.1,
+    1.1,
+    0.0050000000000000044,
+    0.0
+   ],
+   "x0": [
+    0.9749152743257583,
+    0.9859072076156736,
+    0.19438930324278772,
+    0.5042646080255508
+   ]
+  },
+  {
+   "active": null,
+   "components": null,
+   "cpu": 0.011916241999999855,
+   "error": {
+    "kind": "local",
+    "message": "cannot reshape array of size 0 into shape (0,newaxis)",
+    "origin": "util",
+    "stage": "optimize",
+    "traceback": [
+     "reil_c4_h.py:720:fun",
+     "reil_c4_h.py:685:_evaluate",
+     "reil_c4_h.py:437:jv_jd",
+     "util_LFP.py.txt:184:objective_fun",
+     "_interpolate.py:333:__init__",
+     "_polyint.py:118:_reshape_yi"
+    ],
+    "type": "ValueError"
+   },
+   "feasibility_class": null,
+   "fun": null,
+   "message": null,
+   "n_eval": 6,
+   "n_nonfinite": 0,
+   "n_out_NE": null,
+   "n_out_PE": null,
+   "nfev": null,
+   "nit": null,
+   "objective": "J_V",
+   "options_received": {
+    "disp": "False",
+    "f_target": "-inf",
+    "feasibility_tol": "1e-12",
+    "final_tr_radius": "1e-06",
+    "initial_tr_radius": "1.0",
+    "maxfev": "50",
+    "maxiter": "100",
+    "scale": "True"
+   },
+   "reeval_error": null,
+   "region": "A2",
+   "residuals": null,
+   "row": 0,
+   "run_id": 0,
+   "seed": 0,
+   "state": "COMPLETED",
+   "status": null,
+   "t_end": 3181.184143894,
+   "t_start": 3181.171528709,
+   "task_id": 128,
+   "termination": "solver_error",
+   "unit": "J_V|A2|0",
+   "value": null,
+   "wall": 0.012615184999958728,
+   "warnings": [],
+   "witness": "invalid:SOLVER_ERROR",
+   "worker": 0,
+   "x": null,
+   "x0": [
+    0.7919395063072443,
+    1.4569442622363566,
+    1.215309750288725,
+    0.8275258932262659
+   ]
+  },
+  {
+   "active": {
+    "bounds": [
+     [
+      "m_P",
+      "hi"
+     ],
+     [
+      "m_N",
+      "hi"
+     ],
+     [
+      "d_P",
+      "lo"
+     ],
+     [
+      "d_N",
+      "lo"
+     ]
+    ],
+    "g": null
+   },
+   "components": null,
+   "cpu": 0.1581123850000008,
+   "error": null,
+   "feasibility_class": "exact_feasible",
+   "fun": 0.3812831017105826,
+   "message": "The lower bound for the trust-region radius has been reached",
+   "n_eval": 49,
+   "n_nonfinite": 0,
+   "n_out_NE": 17,
+   "n_out_PE": 17,
+   "nfev": 49,
+   "nit": 44,
+   "objective": "J_V",
+   "options_received": {
+    "disp": "False",
+    "f_target": "-inf",
+    "feasibility_tol": "1e-12",
+    "final_tr_radius": "1e-06",
+    "initial_tr_radius": "1.0",
+    "maxfev": "50",
+    "maxiter": "100",
+    "scale": "True"
+   },
+   "reeval_error": null,
+   "region": "A2",
+   "residuals": {
+    "box": "0",
+    "box_by_coord": [
+     "0",
+     "0",
+     "0",
+     "0"
+    ],
+    "g": null
+   },
+   "row": 0,
+   "run_id": 1,
+   "seed": 0,
+   "state": "COMPLETED",
+   "status": 0,
+   "t_end": 3181.346679042,
+   "t_start": 3181.184171009,
+   "task_id": 129,
+   "termination": "converged",
+   "unit": "J_V|A2|0",
+   "value": 0.3812831017105826,
+   "wall": 0.1625080329999946,
+   "warnings": [],
+   "witness": "valid",
+   "worker": 0,
+   "x": [
+    1.5,
+    1.5,
+    -0.5,
+    -0.5
+   ],
+   "x0": [
+    1.0876356549561024,
+    0.6165567509829998,
+    0.47194106318056583,
+    0.19555960223078728
+   ]
+  },
+  {
+   "active": null,
+   "components": null,
+   "cpu": 0.008397139999999581,
+   "error": {
+    "kind": "local",
+    "message": "cannot reshape array of size 0 into shape (0,newaxis)",
+    "origin": "util",
+    "stage": "optimize",
+    "traceback": [
+     "reil_c4_h.py:720:fun",
+     "reil_c4_h.py:685:_evaluate",
+     "reil_c4_h.py:437:jv_jd",
+     "util_LFP.py.txt:185:objective_fun",
+     "_interpolate.py:333:__init__",
+     "_polyint.py:118:_reshape_yi"
+    ],
+    "type": "ValueError"
+   },
+   "feasibility_class": null,
+   "fun": null,
+   "message": null,
+   "n_eval": 5,
+   "n_nonfinite": 0,
+   "n_out_NE": null,
+   "n_out_PE": null,
+   "nfev": null,
+   "nit": null,
+   "objective": "J_V",
+   "options_received": {
+    "disp": "False",
+    "f_target": "-inf",
+    "feasibility_tol": "1e-12",
+    "final_tr_radius": "1e-06",
+    "initial_tr_radius": "1.0",
+    "maxfev": "50",
+    "maxiter": "100",
+    "scale": "True"
+   },
+   "reeval_error": null,
+   "region": "A2",
+   "residuals": null,
+   "row": 0,
+   "run_id": 64,
+   "seed": 1,
+   "state": "COMPLETED",
+   "status": null,
+   "t_end": 3181.355195159,
+   "t_start": 3181.346714771,
+   "task_id": 192,
+   "termination": "solver_error",
+   "unit": "J_V|A2|0",
+   "value": null,
+   "wall": 0.008480387999952654,
+   "warnings": [],
+   "witness": "invalid:SOLVER_ERROR",
+   "worker": 0,
+   "x": null,
+   "x0": [
+    0.6434029944241046,
+    0.49516236484050746,
+    0.676719170063734,
+    0.07368835620582104
+   ]
+  },
+  {
+   "active": {
+    "bounds": [
+     [
+      "m_P",
+      "hi"
+     ],
+     [
+      "m_N",
+      "hi"
+     ],
+     [
+      "d_P",
+      "lo"
+     ],
+     [
+      "d_N",
+      "lo"
+     ]
+    ],
+    "g": null
+   },
+   "components": null,
+   "cpu": 0.12565446199999997,
+   "error": null,
+   "feasibility_class": "exact_feasible",
+   "fun": 0.3812831017105826,
+   "message": "The lower bound for the trust-region radius has been reached",
+   "n_eval": 43,
+   "n_nonfinite": 0,
+   "n_out_NE": 17,
+   "n_out_PE": 17,
+   "nfev": 43,
+   "nit": 40,
+   "objective": "J_V",
+   "options_received": {
+    "disp": "False",
+    "f_target": "-inf",
+    "feasibility_tol": "1e-12",
+    "final_tr_radius": "1e-06",
+    "initial_tr_radius": "1.0",
+    "maxfev": "50",
+    "maxiter": "100",
+    "scale": "True"
+   },
+   "reeval_error": null,
+   "region": "A2",
+   "residuals": {
+    "box": "0",
+    "box_by_coord": [
+     "0",
+     "0",
+     "0",
+     "0"
+    ],
+    "g": null
+   },
+   "row": 0,
+   "run_id": 65,
+   "seed": 1,
+   "state": "COMPLETED",
+   "status": 0,
+   "t_end": 3181.482559404,
+   "t_start": 3181.355228872,
+   "task_id": 193,
+   "termination": "converged",
+   "unit": "J_V|A2|0",
+   "value": 0.3812831017105826,
+   "wall": 0.1273305319996325,
+   "warnings": [],
+   "witness": "valid",
+   "worker": 0,
+   "x": [
+    1.5,
+    1.5,
+    -0.5,
+    -0.5
+   ],
+   "x0": [
+    1.1997966583818196,
+    1.271814415231347,
+    0.26520930603146553,
+    0.5085292160511017
+   ]
+  },
+  {
+   "active": {
+    "bounds": [
+     [
+      "m_P",
+      "hi"
+     ],
+     [
+      "d_P",
+      "hi"
+     ]
+    ],
+    "g": true
+   },
+   "components": null,
+   "cpu": 0.17418167099999948,
+   "error": null,
+   "feasibility_class": "numerically_accepted",
+   "fun": 0.39761825785411453,
+   "message": "The maximum number of function evaluations has been exceeded",
+   "n_eval": 50,
+   "n_nonfinite": 0,
+   "n_out_NE": 0,
+   "n_out_PE": 1,
+   "nfev": 50,
+   "nit": 30,
+   "objective": "J_D",
+   "options_received": {
+    "disp": "False",
+    "f_target": "-inf",
+    "feasibility_tol": "1e-12",
+    "final_tr_radius": "1e-06",
+    "initial_tr_radius": "1.0",
+    "maxfev": "50",
+    "maxiter": "100",
+    "scale": "True"
+   },
+   "reeval_error": null,
+   "region": "A0",
+   "residuals": {
+    "box": "1/11258999068426240",
+    "box_by_coord": [
+     "1/11258999068426240",
+     "0",
+     "0",
+     "0"
+    ],
+    "g": "31/2814749767106560000"
+   },
+   "row": 0,
+   "run_id": 0,
+   "seed": 0,
+   "state": "COMPLETED",
+   "status": 5,
+   "t_end": 3181.673251954,
+   "t_start": 3181.482597908,
+   "task_id": 256,
+   "termination": "budget",
+   "unit": "J_D|A0|0",
+   "value": 0.39761825785411453,
+   "wall": 0.19065404599996327,
+   "warnings": [],
+   "witness": "valid",
+   "worker": 0,
+   "x": [
+    1.1,
+    1.011888426266458,
+    0.5,
+    0.4999
+   ],
+   "x0": [
+    0.8049747942946852,
+    1.0784721311181784,
+    0.4295391631964594,
+    0.663762946613133
+   ]
+  },
+  {
+   "active": {
+    "bounds": [
+     [
+      "m_N",
+      "hi"
+     ]
+    ],
+    "g": true
+   },
+   "components": null,
+   "cpu": 0.17060554100000047,
+   "error": null,
+   "feasibility_class": "numerically_accepted",
+   "fun": 0.7373097878624295,
+   "message": "The maximum number of function evaluations has been exceeded",
+   "n_eval": 50,
+   "n_nonfinite": 0,
+   "n_out_NE": 0,
+   "n_out_PE": 26,
+   "nfev": 50,
+   "nit": 31,
+   "objective": "J_D",
+   "options_received": {
+    "disp": "False",
+    "f_target": "-inf",
+    "feasibility_tol": "1e-12",
+    "final_tr_radius": "1e-06",
+    "initial_tr_radius": "1.0",
+    "maxfev": "50",
+    "maxiter": "100",
+    "scale": "True"
+   },
+   "reeval_error": null,
+   "region": "A0",
+   "residuals": {
+    "box": "1/11258999068426240",
+    "box_by_coord": [
+     "0",
+     "1/11258999068426240",
+     "0",
+     "0"
+    ],
+    "g": "31/2814749767106560000"
+   },
+   "row": 0,
+   "run_id": 1,
+   "seed": 0,
+   "state": "COMPLETED",
+   "status": 5,
+   "t_end": 3181.858316699,
+   "t_start": 3181.673288539,
+   "task_id": 257,
+   "termination": "budget",
+   "unit": "J_D|A0|0",
+   "value": 0.7373097878624295,
+   "wall": 0.18502816000000166,
+   "warnings": [],
+   "witness": "valid",
+   "worker": 0,
+   "x": [
+    0.79953689689666,
+    1.1,
+    0.2897497036547529,
+    0.2896497036547529
+   ],
+   "x0": [
+    0.9281815228983761,
+    0.6582783754914999,
+    0.24555541313719004,
+    0.34777980111539364
+   ]
+  },
+  {
+   "active": {
+    "bounds": [],
+    "g": false
+   },
+   "components": null,
+   "cpu": 0.18899248199999974,
+   "error": null,
+   "feasibility_class": "exact_feasible",
+   "fun": 1.1817847198294469,
+   "message": "The maximum number of function evaluations has been exceeded",
+   "n_eval": 50,
+   "n_nonfinite": 0,
+   "n_out_NE": 0,
+   "n_out_PE": 20,
+   "nfev": 50,
+   "nit": 25,
+   "objective": "J_D",
+   "options_received": {
+    "disp": "False",
+    "f_target": "-inf",
+    "feasibility_tol": "1e-12",
+    "final_tr_radius": "1e-06",
+    "initial_tr_radius": "1.0",
+    "maxfev": "50",
+    "maxiter": "100",
+    "scale": "True"
+   },
+   "reeval_error": null,
+   "region": "A0",
+   "residuals": {
+    "box": "0",
+    "box_by_coord": [
+     "0",
+     "0",
+     "0",
+     "0"
+    ],
+    "g": "0"
+   },
+   "row": 0,
+   "run_id": 64,
+   "seed": 1,
+   "state": "COMPLETED",
+   "status": 5,
+   "t_end": 3182.052048617,
+   "t_start": 3181.858355592,
+   "task_id": 320,
+   "termination": "budget",
+   "unit": "J_D|A0|0",
+   "value": 1.1817847198294469,
+   "wall": 0.19369302499990226,
+   "warnings": [],
+   "witness": "valid",
+   "worker": 0,
+   "x": [
+    0.7927944272220308,
+    1.099829869879128,
+    0.1178326937712561,
+    0.1150478165063249
+   ],
+   "x0": [
+    0.7430845810100436,
+    0.5975811824202537,
+    0.29623799459077416,
+    0.2868441781029105
+   ]
+  },
+  {
+   "active": {
+    "bounds": [
+     [
+      "d_P",
+      "hi"
+     ]
+    ],
+    "g": true
+   },
+   "components": null,
+   "cpu": 0.21340214100000132,
+   "error": null,
+   "feasibility_class": "numerically_accepted",
+   "fun": 0.42458235372743375,
+   "message": "The maximum number of function evaluations has been exceeded",
+   "n_eval": 50,
+   "n_nonfinite": 0,
+   "n_out_NE": 0,
+   "n_out_PE": 26,
+   "nfev": 50,
+   "nit": 27,
+   "objective": "J_D",
+   "options_received": {
+    "disp": "False",
+    "f_target": "-inf",
+    "feasibility_tol": "1e-12",
+    "final_tr_radius": "1e-06",
+    "initial_tr_radius": "1.0",
+    "maxfev": "50",
+    "maxiter": "100",
+    "scale": "True"
+   },
+   "reeval_error": null,
+   "region": "A0",
+   "residuals": {
+    "box": "0",
+    "box_by_coord": [
+     "0",
+     "0",
+     "0",
+     "0"
+    ],
+    "g": "31/2814749767106560000"
+   },
+   "row": 0,
+   "run_id": 65,
+   "seed": 1,
+   "state": "COMPLETED",
+   "status": 5,
+   "t_end": 3182.265712527,
+   "t_start": 3182.052080714,
+   "task_id": 321,
+   "termination": "budget",
+   "unit": "J_D|A0|0",
+   "value": 0.42458235372743375,
+   "wall": 0.21363181299966527,
+   "warnings": [],
+   "witness": "valid",
+   "worker": 0,
+   "x": [
+    0.8611009445434438,
+    1.091623319821776,
+    0.5,
+    0.4999
+   ],
+   "x0": [
+    0.9749152743257583,
+    0.9859072076156736,
+    0.19438930324278772,
+    0.5042646080255508
+   ]
+  },
+  {
+   "active": {
+    "bounds": [
+     [
+      "m_P",
+      "lo"
+     ],
+     [
+      "m_N",
+      "hi"
+     ],
+     [
+      "d_P",
+      "hi"
+     ],
+     [
+      "d_N",
+      "lo"
+     ]
+    ],
+    "g": false
+   },
+   "components": {
+    "Q_a": 0.07869969140246352,
+    "Q_b": 1.3602319992500542,
+    "crossings": {
+     "2.0": {
+      "c": 2.0,
+      "flat": false,
+      "items": [
+       {
+        "Q": 0.07869969140246352,
+        "interval": [
+         55,
+         56
+        ],
+        "kind": "interior"
+       }
+      ],
+      "n_unique": 1
+     },
+     "3.6": {
+      "c": 3.6,
+      "flat": false,
+      "items": [
+       {
+        "Q": 1.3602319992500542,
+        "interval": [
+         956,
+         957
+        ],
+        "kind": "interior"
+       }
+      ],
+      "n_unique": 1
+     }
+    },
+    "max_Q_PE": 1.4200000000000004,
+    "reason": null,
+    "span": 1.2815323078475906,
+    "value": 0.48798927721094915
+   },
+   "cpu": 0.14193607099999994,
+   "error": null,
+   "feasibility_class": "numerically_accepted",
+   "fun": 0.48798927721094915,
+   "message": "The lower bound for the trust-region radius has been reached",
+   "n_eval": 43,
+   "n_nonfinite": 6,
+   "n_out_NE": 0,
+   "n_out_PE": 54,
+   "nfev": 43,
+   "nit": 33,
+   "objective": "J_Vs",
+   "options_received": {
+    "disp": "False",
+    "f_target": "-inf",
+    "feasibility_tol": "1e-12",
+    "final_tr_radius": "1e-06",
+    "initial_tr_radius": "1.0",
+    "maxfev": "50",
+    "maxiter": "100",
+    "scale": "True"
+   },
+   "reeval_error": null,
+   "region": "A0",
+   "residuals": {
+    "box": "1/11258999068426240",
+    "box_by_coord": [
+     "0",
+     "1/11258999068426240",
+     "0",
+     "0"
+    ],
+    "g": "0"
+   },
+   "row": 0,
+   "run_id": 0,
+   "seed": 0,
+   "state": "COMPLETED",
+   "status": 0,
+   "t_end": 3182.418840923,
+   "t_start": 3182.265754993,
+   "task_id": 384,
+   "termination": "converged",
+   "unit": "J_Vs|A0|0",
+   "value": 0.48798927721094915,
+   "wall": 0.1530859300000884,
+   "warnings": [],
+   "witness": "valid",
+   "worker": 0,
+   "x": [
+    0.6000000000000001,
+    1.1,
+    0.5,
+    0.0
+   ],
+   "x0": [
+    0.8049747942946852,
+    1.0784721311181784,
+    0.4295391631964594,
+    0.663762946613133
+   ]
+  },
+  {
+   "active": {
+    "bounds": [
+     [
+      "m_P",
+      "lo"
+     ],
+     [
+      "m_N",
+      "hi"
+     ],
+     [
+      "d_P",
+      "hi"
+     ],
+     [
+      "d_N",
+      "lo"
+     ]
+    ],
+    "g": false
+   },
+   "components": {
+    "Q_a": 0.07869969140246352,
+    "Q_b": 1.3602319992500542,
+    "crossings": {
+     "2.0": {
+      "c": 2.0,
+      "flat": false,
+      "items": [
+       {
+        "Q": 0.07869969140246352,
+        "interval": [
+         55,
+         56
+        ],
+        "kind": "interior"
+       }
+      ],
+      "n_unique": 1
+     },
+     "3.6": {
+      "c": 3.6,
+      "flat": false,
+      "items": [
+       {
+        "Q": 1.3602319992500542,
+        "interval": [
+         956,
+         957
+        ],
+        "kind": "interior"
+       }
+      ],
+      "n_unique": 1
+     }
+    },
+    "max_Q_PE": 1.4200000000000004,
+    "reason": null,
+    "span": 1.2815323078475906,
+    "value": 0.48798927721094915
+   },
+   "cpu": 0.15613394300000039,
+   "error": null,
+   "feasibility_class": "numerically_accepted",
+   "fun": 0.48798927721094915,
+   "message": "The lower bound for the trust-region radius has been reached",
+   "n_eval": 47,
+   "n_nonfinite": 3,
+   "n_out_NE": 0,
+   "n_out_PE": 54,
+   "nfev": 47,
+   "nit": 37,
+   "objective": "J_Vs",
+   "options_received": {
+    "disp": "False",
+    "f_target": "-inf",
+    "feasibility_tol": "1e-12",
+    "final_tr_radius": "1e-06",
+    "initial_tr_radius": "1.0",
+    "maxfev": "50",
+    "maxiter": "100",
+    "scale": "True"
+   },
+   "reeval_error": null,
+   "region": "A0",
+   "residuals": {
+    "box": "1/11258999068426240",
+    "box_by_coord": [
+     "0",
+     "1/11258999068426240",
+     "0",
+     "0"
+    ],
+    "g": "0"
+   },
+   "row": 0,
+   "run_id": 1,
+   "seed": 0,
+   "state": "COMPLETED",
+   "status": 0,
+   "t_end": 3182.580490485,
+   "t_start": 3182.418874441,
+   "task_id": 385,
+   "termination": "converged",
+   "unit": "J_Vs|A0|0",
+   "value": 0.48798927721094915,
+   "wall": 0.16161604400031138,
+   "warnings": [],
+   "witness": "valid",
+   "worker": 0,
+   "x": [
+    0.6000000000000001,
+    1.1,
+    0.5,
+    0.0
+   ],
+   "x0": [
+    0.9281815228983761,
+    0.6582783754914999,
+    0.24555541313719004,
+    0.34777980111539364
+   ]
+  },
+  {
+   "active": {
+    "bounds": [
+     [
+      "m_P",
+      "lo"
+     ],
+     [
+      "d_N",
+      "lo"
+     ]
+    ],
+    "g": false
+   },
+   "components": {
+    "Q_a": 0.07384756367725695,
+    "Q_b": 1.3662819760851512,
+    "crossings": {
+     "2.0": {
+      "c": 2.0,
+      "flat": false,
+      "items": [
+       {
+        "Q": 0.07384756367725695,
+        "interval": [
+         51,
+         52
+        ],
+        "kind": "interior"
+       }
+      ],
+      "n_unique": 1
+     },
+     "3.6": {
+      "c": 3.6,
+      "flat": false,
+      "items": [
+       {
+        "Q": 1.3662819760851512,
+        "interval": [
+         954,
+         955
+        ],
+        "kind": "interior"
+       }
+      ],
+      "n_unique": 1
+     }
+    },
+    "max_Q_PE": 1.4293156203141058,
+    "reason": null,
+    "span": 1.2924344124078944,
+    "value": 0.5110956563744132
+   },
+   "cpu": 0.17211284600000099,
+   "error": null,
+   "feasibility_class": "exact_feasible",
+   "fun": 0.5110956563744132,
+   "message": "The maximum number of function evaluations has been exceeded",
+   "n_eval": 50,
+   "n_nonfinite": 6,
+   "n_out_NE": 0,
+   "n_out_PE": 53,
+   "nfev": 50,
+   "nit": 26,
+   "objective": "J_Vs",
+   "options_received": {
+    "disp": "False",
+    "f_target": "-inf",
+    "feasibility_tol": "1e-12",
+    "final_tr_radius": "1e-06",
+    "initial_tr_radius": "1.0",
+    "maxfev": "50",
+    "maxiter": "100",
+    "scale": "True"
+   },
+   "reeval_error": null,
+   "region": "A0",
+   "residuals": {
+    "box": "0",
+    "box_by_coord": [
+     "0",
+     "0",
+     "0",
+     "0"
+    ],
+    "g": "0"
+   },
+   "row": 0,
+   "run_id": 64,
+   "seed": 1,
+   "state": "COMPLETED",
+   "status": 5,
+   "t_end": 3182.762901603,
+   "t_start": 3182.580529915,
+   "task_id": 448,
+   "termination": "budget",
+   "unit": "J_Vs|A0|0",
+   "value": 0.5110956563744132,
+   "wall": 0.18237168799987558,
+   "warnings": [],
+   "witness": "valid",
+   "worker": 0,
+   "x": [
+    0.6000000000000001,
+    1.026362143116534,
+    0.49068437968589473,
+    0.0
+   ],
+   "x0": [
+    0.7430845810100436,
+    0.5975811824202537,
+    0.29623799459077416,
+    0.2868441781029105
+   ]
+  },
+  {
+   "active": {
+    "bounds": [
+     [
+      "m_P",
+      "lo"
+     ],
+     [
+      "m_N",
+      "hi"
+     ],
+     [
+      "d_P",
+      "hi"
+     ],
+     [
+      "d_N",
+      "lo"
+     ]
+    ],
+    "g": false
+   },
+   "components": {
+    "Q_a": 0.07869969140246352,
+    "Q_b": 1.3602319992500542,
+    "crossings": {
+     "2.0": {
+      "c": 2.0,
+      "flat": false,
+      "items": [
+       {
+        "Q": 0.07869969140246352,
+        "interval": [
+         55,
+         56
+        ],
+        "kind": "interior"
+       }
+      ],
+      "n_unique": 1
+     },
+     "3.6": {
+      "c": 3.6,
+      "flat": false,
+      "items": [
+       {
+        "Q": 1.3602319992500542,
+        "interval": [
+         956,
+         957
+        ],
+        "kind": "interior"
+       }
+      ],
+      "n_unique": 1
+     }
+    },
+    "max_Q_PE": 1.4200000000000004,
+    "reason": null,
+    "span": 1.2815323078475906,
+    "value": 0.48798927721094915
+   },
+   "cpu": 0.15509306000000045,
+   "error": null,
+   "feasibility_class": "numerically_accepted",
+   "fun": 0.48798927721094915,
+   "message": "The lower bound for the trust-region radius has been reached",
+   "n_eval": 50,
+   "n_nonfinite": 6,
+   "n_out_NE": 0,
+   "n_out_PE": 54,
+   "nfev": 50,
+   "nit": 39,
+   "objective": "J_Vs",
+   "options_received": {
+    "disp": "False",
+    "f_target": "-inf",
+    "feasibility_tol": "1e-12",
+    "final_tr_radius": "1e-06",
+    "initial_tr_radius": "1.0",
+    "maxfev": "50",
+    "maxiter": "100",
+    "scale": "True"
+   },
+   "reeval_error": null,
+   "region": "A0",
+   "residuals": {
+    "box": "1/11258999068426240",
+    "box_by_coord": [
+     "0",
+     "1/11258999068426240",
+     "0",
+     "0"
+    ],
+    "g": "0"
+   },
+   "row": 0,
+   "run_id": 65,
+   "seed": 1,
+   "state": "COMPLETED",
+   "status": 0,
+   "t_end": 3182.922191128,
+   "t_start": 3182.762934901,
+   "task_id": 449,
+   "termination": "converged",
+   "unit": "J_Vs|A0|0",
+   "value": 0.48798927721094915,
+   "wall": 0.15925622700024178,
+   "warnings": [],
+   "witness": "valid",
+   "worker": 0,
+   "x": [
+    0.6000000000000001,
+    1.1,
+    0.5,
+    0.0
+   ],
+   "x0": [
+    0.9749152743257583,
+    0.9859072076156736,
+    0.19438930324278772,
+    0.5042646080255508
+   ]
+  },
+  {
+   "active": {
+    "bounds": [
+     [
+      "m_P",
+      "hi"
+     ]
+    ],
+    "g": true
+   },
+   "components": {
+    "J_D": 0.4741043326507692,
+    "J_V": 0.7735324255636452
+   },
+   "cpu": 0.18382448699999898,
+   "error": null,
+   "feasibility_class": "numerically_accepted",
+   "fun": 1.222805126174607,
+   "message": "The maximum number of function evaluations has been exceeded",
+   "n_eval": 50,
+   "n_nonfinite": 0,
+   "n_out_NE": 0,
+   "n_out_PE": 1,
+   "nfev": 50,
+   "nit": 27,
+   "objective": "rho",
+   "options_received": {
+    "disp": "False",
+    "f_target": "-inf",
+    "feasibility_tol": "1e-12",
+    "final_tr_radius": "1e-06",
+    "initial_tr_radius": "1.0",
+    "maxfev": "50",
+    "maxiter": "100",
+    "scale": "True"
+   },
+   "reeval_error": null,
+   "region": "A0",
+   "residuals": {
+    "box": "1/11258999068426240",
+    "box_by_coord": [
+     "1/11258999068426240",
+     "0",
+     "0",
+     "0"
+    ],
+    "g": "31/2814749767106560000"
+   },
+   "row": 0,
+   "run_id": 0,
+   "seed": 0,
+   "state": "COMPLETED",
+   "status": 5,
+   "t_end": 3183.108078441,
+   "t_start": 3182.922803517,
+   "task_id": 16,
+   "termination": "budget",
+   "unit": "rho|A0|0",
+   "value": 1.222805126174607,
+   "wall": 0.18527492400016854,
+   "warnings": [],
+   "witness": "valid",
+   "worker": 0,
+   "x": [
+    1.1,
+    1.0937987880399205,
+    0.4499024988240702,
+    0.4498024988240702
+   ],
+   "x0": [
+    0.8049747942946852,
+    1.0784721311181784,
+    0.4295391631964594,
+    0.663762946613133
+   ]
+  },
+  {
+   "active": {
+    "bounds": [
+     [
+      "m_N",
+      "hi"
+     ]
+    ],
+    "g": true
+   },
+   "components": {
+    "J_D": 0.7888426108813542,
+    "J_V": 0.8628314743290865
+   },
+   "cpu": 0.1691327610000002,
+   "error": null,
+   "feasibility_class": "numerically_accepted",
+   "fun": 1.9839194888550093,
+   "message": "The maximum number of function evaluations has been exceeded",
+   "n_eval": 50,
+   "n_nonfinite": 0,
+   "n_out_NE": 0,
+   "n_out_PE": 28,
+   "nfev": 50,
+   "nit": 25,
+   "objective": "rho",
+   "options_received": {
+    "disp": "False",
+    "f_target": "-inf",
+    "feasibility_tol": "1e-12",
+    "final_tr_radius": "1e-06",
+    "initial_tr_radius": "1.0",
+    "maxfev": "50",
+    "maxiter": "100",
+    "scale": "True"
+   },
+   "reeval_error": null,
+   "region": "A0",
+   "residuals": {
+    "box": "1/11258999068426240",
+    "box_by_coord": [
+     "0",
+     "1/11258999068426240",
+     "0",
+     "0"
+    ],
+    "g": "31/2814749767106560000"
+   },
+   "row": 0,
+   "run_id": 1,
+   "seed": 0,
+   "state": "COMPLETED",
+   "status": 5,
+   "t_end": 3183.279064347,
+   "t_start": 3183.108112094,
+   "task_id": 17,
+   "termination": "budget",
+   "unit": "rho|A0|0",
+   "value": 1.9839194888550093,
+   "wall": 0.17095225299999584,
+   "warnings": [],
+   "witness": "valid",
+   "worker": 0,
+   "x": [
+    0.7637687133047201,
+    1.1,
+    0.265534907197833,
+    0.265434907197833
+   ],
+   "x0": [
+    0.9281815228983761,
+    0.6582783754914999,
+    0.24555541313719004,
+    0.34777980111539364
+   ]
+  },
+  {
+   "active": {
+    "bounds": [
+     [
+      "m_N",
+      "hi"
+     ]
+    ],
+    "g": true
+   },
+   "components": {
+    "J_D": 0.48138169361267796,
+    "J_V": 1.2072128402167674
+   },
+   "cpu": 0.1664545920000009,
+   "error": null,
+   "feasibility_class": "numerically_accepted",
+   "fun": 1.9083699669412388,
+   "message": "The maximum number of function evaluations has been exceeded",
+   "n_eval": 50,
+   "n_nonfinite": 0,
+   "n_out_NE": 0,
+   "n_out_PE": 50,
+   "nfev": 50,
+   "nit": 28,
+   "objective": "rho",
+   "options_received": {
+    "disp": "False",
+    "f_target": "-inf",
+    "feasibility_tol": "1e-12",
+    "final_tr_radius": "1e-06",
+    "initial_tr_radius": "1.0",
+    "maxfev": "50",
+    "maxiter": "100",
+    "scale": "True"
+   },
+   "reeval_error": null,
+   "region": "A0",
+   "residuals": {
+    "box": "1/11258999068426240",
+    "box_by_coord": [
+     "0",
+     "1/11258999068426240",
+     "0",
+     "0"
+    ],
+    "g": "31/2814749767106560000"
+   },
+   "row": 0,
+   "run_id": 64,
+   "seed": 1,
+   "state": "COMPLETED",
+   "status": 5,
+   "t_end": 3183.450787315,
+   "t_start": 3183.279104208,
+   "task_id": 80,
+   "termination": "budget",
+   "unit": "rho|A0|0",
+   "value": 1.9083699669412388,
+   "wall": 0.17168310700026268,
+   "warnings": [],
+   "witness": "valid",
+   "worker": 0,
+   "x": [
+    0.6282188850106902,
+    1.1,
+    0.46274536739144456,
+    0.4626453673914446
+   ],
+   "x0": [
+    0.7430845810100436,
+    0.5975811824202537,
+    0.29623799459077416,
+    0.2868441781029105
+   ]
+  },
+  {
+   "active": {
+    "bounds": [
+     [
+      "m_N",
+      "hi"
+     ]
+    ],
+    "g": false
+   },
+   "components": {
+    "J_D": 0.43451114453285544,
+    "J_V": 0.8906442675243871
+   },
+   "cpu": 0.20261681900000106,
+   "error": null,
+   "feasibility_class": "numerically_accepted",
+   "fun": 1.407936293211331,
+   "message": "The maximum number of function evaluations has been exceeded",
+   "n_eval": 50,
+   "n_nonfinite": 0,
+   "n_out_NE": 0,
+   "n_out_PE": 27,
+   "nfev": 50,
+   "nit": 27,
+   "objective": "rho",
+   "options_received": {
+    "disp": "False",
+    "f_target": "-inf",
+    "feasibility_tol": "1e-12",
+    "final_tr_radius": "1e-06",
+    "initial_tr_radius": "1.0",
+    "maxfev": "50",
+    "maxiter": "100",
+    "scale": "True"
+   },
+   "reeval_error": null,
+   "region": "A0",
+   "residuals": {
+    "box": "1/11258999068426240",
+    "box_by_coord": [
+     "0",
+     "1/11258999068426240",
+     "0",
+     "0"
+    ],
+    "g": "0"
+   },
+   "row": 0,
+   "run_id": 65,
+   "seed": 1,
+   "state": "COMPLETED",
+   "status": 5,
+   "t_end": 3183.654922946,
+   "t_start": 3183.450824039,
+   "task_id": 81,
+   "termination": "budget",
+   "unit": "rho|A0|0",
+   "value": 1.407936293211331,
+   "wall": 0.20409890700011601,
+   "warnings": [],
+   "witness": "valid",
+   "worker": 0,
+   "x": [
+    0.8533289675048636,
+    1.1,
+    0.4962148618204357,
+    0.4926735923988678
+   ],
+   "x0": [
+    0.9749152743257583,
+    0.9859072076156736,
+    0.19438930324278772,
+    0.5042646080255508
+   ]
+  }
+ ],
+ "summaries": {
+  "J_D|A0|0": {
+   "J0": 0.39761825785411453,
+   "argmin_run_id": 0,
+   "complete": true,
+   "expected": 4,
+   "invalid_by_reason": {},
+   "n_rows": 4,
+   "n_valid": 4,
+   "per_seed_min": {
+    "0": 0.39761825785411453,
+    "1": 0.42458235372743375
+   },
+   "ranked_run_ids": [
+    0,
+    65,
+    1,
+    64
+   ],
+   "termination_counts": {
+    "budget": 4
+   },
+   "unfit": false,
+   "x_hat": [
+    1.1,
+    1.011888426266458,
+    0.5,
+    0.4999
+   ]
+  },
+  "J_Vs|A0|0": {
+   "J0": 0.48798927721094915,
+   "argmin_run_id": 0,
+   "complete": true,
+   "expected": 4,
+   "invalid_by_reason": {},
+   "n_rows": 4,
+   "n_valid": 4,
+   "per_seed_min": {
+    "0": 0.48798927721094915,
+    "1": 0.48798927721094915
+   },
+   "ranked_run_ids": [
+    0,
+    1,
+    65,
+    64
+   ],
+   "termination_counts": {
+    "budget": 1,
+    "converged": 3
+   },
+   "unfit": false,
+   "x_hat": [
+    0.6000000000000001,
+    1.1,
+    0.5,
+    0.0
+   ]
+  },
+  "J_V|A0|0": {
+   "J0": 0.6325884713809998,
+   "argmin_run_id": 0,
+   "complete": true,
+   "expected": 4,
+   "invalid_by_reason": {},
+   "n_rows": 4,
+   "n_valid": 4,
+   "per_seed_min": {
+    "0": 0.6325884713809998,
+    "1": 0.6325884713809998
+   },
+   "ranked_run_ids": [
+    0,
+    1,
+    64,
+    65
+   ],
+   "termination_counts": {
+    "converged": 4
+   },
+   "unfit": false,
+   "x_hat": [
+    1.1,
+    1.1,
+    0.0050000000000000044,
+    0.0
+   ]
+  },
+  "J_V|A2|0": {
+   "J0": 0.3812831017105826,
+   "argmin_run_id": 1,
+   "complete": true,
+   "expected": 4,
+   "invalid_by_reason": {
+    "SOLVER_ERROR": 2
+   },
+   "n_rows": 4,
+   "n_valid": 2,
+   "per_seed_min": {
+    "0": 0.3812831017105826,
+    "1": 0.3812831017105826
+   },
+   "ranked_run_ids": [
+    1,
+    65
+   ],
+   "termination_counts": {
+    "converged": 2,
+    "solver_error": 2
+   },
+   "unfit": false,
+   "x_hat": [
+    1.5,
+    1.5,
+    -0.5,
+    -0.5
+   ]
+  },
+  "rho|A0|0": {
+   "J0": 1.222805126174607,
+   "argmin_run_id": 0,
+   "complete": true,
+   "expected": 4,
+   "invalid_by_reason": {},
+   "n_rows": 4,
+   "n_valid": 4,
+   "per_seed_min": {
+    "0": 1.222805126174607,
+    "1": 1.407936293211331
+   },
+   "ranked_run_ids": [
+    0,
+    65,
+    64,
+    1
+   ],
+   "termination_counts": {
+    "budget": 4
+   },
+   "unfit": false,
+   "x_hat": [
+    1.1,
+    1.0937987880399205,
+    0.4499024988240702,
+    0.4498024988240702
+   ]
+  }
+ },
+ "thresholds": {
+  "J_D|A0|0": {
+   "H3": {
+    "T_by_delta": {
+     "0.01": 0.4015944404326557,
+     "0.05": 0.4174991707468203,
+     "0.1": 0.437380083639526,
+     "0.2": 0.4771419094249374
+    },
+    "status": "OK"
+   }
+  },
+  "J_Vs|A0|0": {
+   "H4": {
+    "T": 0.48998927721094915,
+    "status": "OK"
+   }
+  },
+  "J_V|A0|0": {
+   "H2": {
+    "T": 0.6345884713809998,
+    "status": "OK"
+   },
+   "H3": {
+    "T_by_delta": {
+     "0.01": 0.6389143560948098,
+     "0.05": 0.6642178949500499,
+     "0.1": 0.6958473185190999,
+     "0.2": 0.7591061656571998
+    },
+    "status": "OK"
+   }
+  },
+  "J_V|A2|0": {
+   "H2": {
+    "T": 0.3832831017105826,
+    "status": "OK"
+   }
+  },
+  "rho|A0|0": {
+   "H3": {
+    "T_by_delta": {
+     "0.01": 1.01,
+     "0.05": 1.05,
+     "0.1": 1.1,
+     "0.2": 1.2
+    },
+    "status": "OK"
+   }
+  }
+ },
+ "util_copy_sha256": "bdf78273d50f40ce3154d01a3ef8d36f0f5ea5ec1b04539584809d7b19b46f9c"
+}

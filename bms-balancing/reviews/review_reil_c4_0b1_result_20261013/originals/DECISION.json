@@ -1,0 +1,76 @@
+{
+  "kind": "INDEPENDENT_STATIC_REVIEW",
+  "reviewed_ref": "7505bd0089ae6730fdf8e4eba326869f7c273715",
+  "decision": "C4_0B1_IMPLEMENTATION_CLOSURE_HELD",
+  "array_seal": "ACCEPTED_WITH_DOCUMENTED_SCOPE",
+  "implementation_closed": false,
+  "findings": [
+    {
+      "id": "C4-0B1-N1",
+      "priority": "P2",
+      "kind": "CODE",
+      "summary": "Structural optimize/unknown-option failure drops existing partial counts and warnings",
+      "file": "bms-balancing/scripts/reil_c4_h.py",
+      "lines": [
+        736,
+        737,
+        740,
+        742
+      ]
+    },
+    {
+      "id": "C4-0B1-N2",
+      "priority": "P2",
+      "kind": "CODE_AND_APPROVAL_CONTRACT",
+      "summary": "Unclassified termination mapped to local solver_error instead of required global stop",
+      "file": "bms-balancing/scripts/reil_c4_h.py",
+      "lines": [
+        600,
+        607,
+        751
+      ]
+    },
+    {
+      "id": "C4-0B1-N3",
+      "priority": "P2",
+      "kind": "CODE_AND_APPROVAL_CONTRACT",
+      "summary": "Independent reeval exception grouped as NONFINITE despite C4 REEVAL_ERROR registration",
+      "file": "bms-balancing/scripts/reil_c4_h.py",
+      "lines": [
+        591,
+        597,
+        755,
+        767,
+        799
+      ]
+    }
+  ],
+  "procedural_issue": {
+    "id": "C4-0B1-A1",
+    "status": "CONFIRMED_EXECUTION_OUTSIDE_APPROVED_SCOPE",
+    "scope": "05 independent dryrun synthetic optimizer 20; original dryrun is read-only",
+    "user_answer": "No prior authorization for 05 synthetic optimizer 20; no change to read-only dryrun definition.",
+    "required_disposition": "Record scope deviation, preserve results, separate future read-only dryrun from synthetic execution; no retroactive compliant-PASS."
+  },
+  "nonblocking": [
+    "Actual profile grid size 43–46, not 41–45",
+    "20 synthetic rows describes 05 only",
+    "1776.9 seconds is pre-commit/push/docs snapshot"
+  ],
+  "h4": {
+    "all_11_cells_endpoint_unfit": true,
+    "eligible_units": 0,
+    "scientific_hypothesis_rejected": false,
+    "threshold_change_approved": false
+  },
+  "new_approval": {
+    "implementation": false,
+    "tests": false,
+    "C4_0b2": false,
+    "C4_E": false,
+    "C4_A": false,
+    "C4_B": false,
+    "COMSOL": false
+  },
+  "reviewer_received_code_runs": 0
+}

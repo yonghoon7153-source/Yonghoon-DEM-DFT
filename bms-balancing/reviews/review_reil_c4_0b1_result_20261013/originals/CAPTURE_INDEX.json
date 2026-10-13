@@ -1,0 +1,1232 @@
+[
+  {
+    "repository_path": "bms-balancing/scripts/reil_c4_h.py",
+    "capture": "source/bms-balancing/scripts/reil_c4_h.py",
+    "git_blob": "0888808217e8272494e1873b1c7a4cf31a91bdf6",
+    "ref": "7505bd0089ae6730fdf8e4eba326869f7c273715"
+  },
+  {
+    "repository_path": "bms-balancing/tests/test_reil_c4_0b1.py",
+    "capture": "source/bms-balancing/tests/test_reil_c4_0b1.py",
+    "git_blob": "c3b32f2150b69beb0cdcf064f72b6600db228254",
+    "ref": "7505bd0089ae6730fdf8e4eba326869f7c273715"
+  },
+  {
+    "repository_path": "bms-balancing/docs/REIL_C4_0B_CONFIRMATION_REQUEST_20261013.md",
+    "capture": "source/bms-balancing/docs/REIL_C4_0B_CONFIRMATION_REQUEST_20261013.md",
+    "git_blob": "06543b771e9177c954857722a5643ef4ef00b917",
+    "ref": "7505bd0089ae6730fdf8e4eba326869f7c273715"
+  },
+  {
+    "repository_path": "bms-balancing/docs/REIL_C4_0B1_RESULT_REVIEW_SEND_20261013.md",
+    "capture": "source/bms-balancing/docs/REIL_C4_0B1_RESULT_REVIEW_SEND_20261013.md",
+    "git_blob": "c129414f3d03ed55aa0024203754f002f83543c5",
+    "ref": "7505bd0089ae6730fdf8e4eba326869f7c273715"
+  },
+  {
+    "repository_path": "bms-balancing/docs/REIL_PREREQUISITES_STATUS_20261004.md",
+    "capture": "source/bms-balancing/docs/REIL_PREREQUISITES_STATUS_20261004.md",
+    "git_blob": "b829deefecc4b1be0d875b9c8712bdf340769032",
+    "ref": "7505bd0089ae6730fdf8e4eba326869f7c273715"
+  },
+  {
+    "repository_path": "bms-balancing/docs/REIL_EXTERNAL_VALIDATION_PROTOCOL_v2.md",
+    "capture": "source/bms-balancing/docs/REIL_EXTERNAL_VALIDATION_PROTOCOL_v2.md",
+    "git_blob": "872ca88b3b5c57aebf295bd0109e95a830b3ae13",
+    "ref": "7505bd0089ae6730fdf8e4eba326869f7c273715"
+  },
+  {
+    "repository_path": "bms-balancing/docs/REIL_EXTERNAL_VALIDATION_PROTOCOL_v2_ANNEX_A.md",
+    "capture": "source/bms-balancing/docs/REIL_EXTERNAL_VALIDATION_PROTOCOL_v2_ANNEX_A.md",
+    "git_blob": "9f49d6061cf3c9e69ed35e3b00e5e0addafd8fd3",
+    "ref": "7505bd0089ae6730fdf8e4eba326869f7c273715"
+  },
+  {
+    "repository_path": "bms-balancing/docs/REIL_EXTERNAL_VALIDATION_PROTOCOL_v2_ANNEX_B.md",
+    "capture": "source/bms-balancing/docs/REIL_EXTERNAL_VALIDATION_PROTOCOL_v2_ANNEX_B.md",
+    "git_blob": "b25f9c4eb56d0cfe609b47c5d8463e9f17fac53b",
+    "ref": "7505bd0089ae6730fdf8e4eba326869f7c273715"
+  },
+  {
+    "repository_path": "bms-balancing/docs/REIL_EXTERNAL_VALIDATION_PROTOCOL_v2_ANNEX_C.md",
+    "capture": "source/bms-balancing/docs/REIL_EXTERNAL_VALIDATION_PROTOCOL_v2_ANNEX_C.md",
+    "git_blob": "f47c1fc2cad5b8e8c2e692f6ee5b93a12d8ae547",
+    "ref": "7505bd0089ae6730fdf8e4eba326869f7c273715"
+  },
+  {
+    "repository_path": "bms-balancing/evidence/reil_p0_20261006/P0_RESULT.json",
+    "capture": "source/bms-balancing/evidence/reil_p0_20261006/P0_RESULT.json",
+    "git_blob": "2aa50f0bcb6e3bf3ff9fdfc15729458e6df6c024",
+    "ref": "7505bd0089ae6730fdf8e4eba326869f7c273715"
+  },
+  {
+    "repository_path": "bms-balancing/reil_c6_rebuild_20261013/COBYQA_OPTIONS.json",
+    "capture": "source/bms-balancing/reil_c6_rebuild_20261013/COBYQA_OPTIONS.json",
+    "git_blob": "f99f007e405e18f100671bf5d0458f790ea6a3ae",
+    "ref": "7505bd0089ae6730fdf8e4eba326869f7c273715"
+  },
+  {
+    "repository_path": "bms-balancing/evidence/reil_c4_0b1_20261013/00_identity_c4.py",
+    "capture": "source/bms-balancing/evidence/reil_c4_0b1_20261013/00_identity_c4.py",
+    "git_blob": "d29186ee0914992c67a23e9915a68c2d81077f8b",
+    "ref": "7505bd0089ae6730fdf8e4eba326869f7c273715"
+  },
+  {
+    "repository_path": "bms-balancing/evidence/reil_c4_0b1_20261013/00_porcelain_start.txt",
+    "capture": "source/bms-balancing/evidence/reil_c4_0b1_20261013/00_porcelain_start.txt",
+    "git_blob": "4fc154ada8f1b2bd887f905da2b42070e812b554",
+    "ref": "7505bd0089ae6730fdf8e4eba326869f7c273715"
+  },
+  {
+    "repository_path": "bms-balancing/evidence/reil_c4_0b1_20261013/00_start.txt",
+    "capture": "source/bms-balancing/evidence/reil_c4_0b1_20261013/00_start.txt",
+    "git_blob": "6dd11124cd0441fcae7b5acb455ac655788c832e",
+    "ref": "7505bd0089ae6730fdf8e4eba326869f7c273715"
+  },
+  {
+    "repository_path": "bms-balancing/evidence/reil_c4_0b1_20261013/00_step_runner.py",
+    "capture": "source/bms-balancing/evidence/reil_c4_0b1_20261013/00_step_runner.py",
+    "git_blob": "1df21181c4b545a639ad469066ef9558c491f6d0",
+    "ref": "7505bd0089ae6730fdf8e4eba326869f7c273715"
+  },
+  {
+    "repository_path": "bms-balancing/evidence/reil_c4_0b1_20261013/01_identity.json",
+    "capture": "source/bms-balancing/evidence/reil_c4_0b1_20261013/01_identity.json",
+    "git_blob": "3df21137b342dfac889cd5ed04e3e03ec6c9067d",
+    "ref": "7505bd0089ae6730fdf8e4eba326869f7c273715"
+  },
+  {
+    "repository_path": "bms-balancing/evidence/reil_c4_0b1_20261013/01_identity.meta.json",
+    "capture": "source/bms-balancing/evidence/reil_c4_0b1_20261013/01_identity.meta.json",
+    "git_blob": "160949c293c9e5ba65a433ae5b07fe3700e22258",
+    "ref": "7505bd0089ae6730fdf8e4eba326869f7c273715"
+  },
+  {
+    "repository_path": "bms-balancing/evidence/reil_c4_0b1_20261013/01_identity.porcelain_end.txt",
+    "capture": "source/bms-balancing/evidence/reil_c4_0b1_20261013/01_identity.porcelain_end.txt",
+    "git_blob": "b352a9564a6f4eb18ccfb7a231aad424e4c79285",
+    "ref": "7505bd0089ae6730fdf8e4eba326869f7c273715"
+  },
+  {
+    "repository_path": "bms-balancing/evidence/reil_c4_0b1_20261013/01_identity.porcelain_start.txt",
+    "capture": "source/bms-balancing/evidence/reil_c4_0b1_20261013/01_identity.porcelain_start.txt",
+    "git_blob": "5ab22ad30153de8a33306bd1eb72394012fe5ab8",
+    "ref": "7505bd0089ae6730fdf8e4eba326869f7c273715"
+  },
+  {
+    "repository_path": "bms-balancing/evidence/reil_c4_0b1_20261013/01_identity.stderr.log",
+    "capture": "source/bms-balancing/evidence/reil_c4_0b1_20261013/01_identity.stderr.log",
+    "git_blob": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+    "ref": "7505bd0089ae6730fdf8e4eba326869f7c273715"
+  },
+  {
+    "repository_path": "bms-balancing/evidence/reil_c4_0b1_20261013/01_identity.stdout.log",
+    "capture": "source/bms-balancing/evidence/reil_c4_0b1_20261013/01_identity.stdout.log",
+    "git_blob": "f937346f0986d1fbf954437c0afc2aa1908415f6",
+    "ref": "7505bd0089ae6730fdf8e4eba326869f7c273715"
+  },
+  {
+    "repository_path": "bms-balancing/evidence/reil_c4_0b1_20261013/02_red.meta.json",
+    "capture": "source/bms-balancing/evidence/reil_c4_0b1_20261013/02_red.meta.json",
+    "git_blob": "5cc3b8157c994d7497851f4ac8b6bc3675166516",
+    "ref": "7505bd0089ae6730fdf8e4eba326869f7c273715"
+  },
+  {
+    "repository_path": "bms-balancing/evidence/reil_c4_0b1_20261013/02_red.porcelain_end.txt",
+    "capture": "source/bms-balancing/evidence/reil_c4_0b1_20261013/02_red.porcelain_end.txt",
+    "git_blob": "64564d13d73d1ba35db592dc2fb24eb58209515e",
+    "ref": "7505bd0089ae6730fdf8e4eba326869f7c273715"
+  },
+  {
+    "repository_path": "bms-balancing/evidence/reil_c4_0b1_20261013/02_red.porcelain_start.txt",
+    "capture": "source/bms-balancing/evidence/reil_c4_0b1_20261013/02_red.porcelain_start.txt",
+    "git_blob": "1a690aeb769118c5f122e53cfea5a2ca97d70120",
+    "ref": "7505bd0089ae6730fdf8e4eba326869f7c273715"
+  },
+  {
+    "repository_path": "bms-balancing/evidence/reil_c4_0b1_20261013/02_red.source_sha256.txt",
+    "capture": "source/bms-balancing/evidence/reil_c4_0b1_20261013/02_red.source_sha256.txt",
+    "git_blob": "1b20f21e2ef5a253b496a0d2628eeb69d766bb95",
+    "ref": "7505bd0089ae6730fdf8e4eba326869f7c273715"
+  },
+  {
+    "repository_path": "bms-balancing/evidence/reil_c4_0b1_20261013/02_red.stderr.log",
+    "capture": "source/bms-balancing/evidence/reil_c4_0b1_20261013/02_red.stderr.log",
+    "git_blob": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+    "ref": "7505bd0089ae6730fdf8e4eba326869f7c273715"
+  },
+  {
+    "repository_path": "bms-balancing/evidence/reil_c4_0b1_20261013/02_red.stdout.log",
+    "capture": "source/bms-balancing/evidence/reil_c4_0b1_20261013/02_red.stdout.log",
+    "git_blob": "70ae48681b44a1a9b4d79c44967fadaf79274cb9",
+    "ref": "7505bd0089ae6730fdf8e4eba326869f7c273715"
+  },
+  {
+    "repository_path": "bms-balancing/evidence/reil_c4_0b1_20261013/03_green.meta.json",
+    "capture": "source/bms-balancing/evidence/reil_c4_0b1_20261013/03_green.meta.json",
+    "git_blob": "b74e10ed42649d944a56445c66656bab2c041390",
+    "ref": "7505bd0089ae6730fdf8e4eba326869f7c273715"
+  },
+  {
+    "repository_path": "bms-balancing/evidence/reil_c4_0b1_20261013/03_green.porcelain_end.txt",
+    "capture": "source/bms-balancing/evidence/reil_c4_0b1_20261013/03_green.porcelain_end.txt",
+    "git_blob": "6791176b022137b7976da252c41b97f18d08e0e0",
+    "ref": "7505bd0089ae6730fdf8e4eba326869f7c273715"
+  },
+  {
+    "repository_path": "bms-balancing/evidence/reil_c4_0b1_20261013/03_green.porcelain_start.txt",
+    "capture": "source/bms-balancing/evidence/reil_c4_0b1_20261013/03_green.porcelain_start.txt",
+    "git_blob": "ebfc2611ca194e73a39e923ad6f9fa4953e923b9",
+    "ref": "7505bd0089ae6730fdf8e4eba326869f7c273715"
+  },
+  {
+    "repository_path": "bms-balancing/evidence/reil_c4_0b1_20261013/03_green.source_sha256.txt",
+    "capture": "source/bms-balancing/evidence/reil_c4_0b1_20261013/03_green.source_sha256.txt",
+    "git_blob": "9a91602498de1aecc7ffd99b476be46a2848c27c",
+    "ref": "7505bd0089ae6730fdf8e4eba326869f7c273715"
+  },
+  {
+    "repository_path": "bms-balancing/evidence/reil_c4_0b1_20261013/03_green.stderr.log",
+    "capture": "source/bms-balancing/evidence/reil_c4_0b1_20261013/03_green.stderr.log",
+    "git_blob": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+    "ref": "7505bd0089ae6730fdf8e4eba326869f7c273715"
+  },
+  {
+    "repository_path": "bms-balancing/evidence/reil_c4_0b1_20261013/03_green.stdout.log",
+    "capture": "source/bms-balancing/evidence/reil_c4_0b1_20261013/03_green.stdout.log",
+    "git_blob": "a2da58b3061f88709ac6e55f398d962ae6365d2e",
+    "ref": "7505bd0089ae6730fdf8e4eba326869f7c273715"
+  },
+  {
+    "repository_path": "bms-balancing/evidence/reil_c4_0b1_20261013/04_seal_arrays.meta.json",
+    "capture": "source/bms-balancing/evidence/reil_c4_0b1_20261013/04_seal_arrays.meta.json",
+    "git_blob": "2f86055dd83a4611102bfe8d9265d79ae239b565",
+    "ref": "7505bd0089ae6730fdf8e4eba326869f7c273715"
+  },
+  {
+    "repository_path": "bms-balancing/evidence/reil_c4_0b1_20261013/04_seal_arrays.porcelain_end.txt",
+    "capture": "source/bms-balancing/evidence/reil_c4_0b1_20261013/04_seal_arrays.porcelain_end.txt",
+    "git_blob": "3d0f703a997fa1c36e3b99e940d36f34fa3511ed",
+    "ref": "7505bd0089ae6730fdf8e4eba326869f7c273715"
+  },
+  {
+    "repository_path": "bms-balancing/evidence/reil_c4_0b1_20261013/04_seal_arrays.porcelain_start.txt",
+    "capture": "source/bms-balancing/evidence/reil_c4_0b1_20261013/04_seal_arrays.porcelain_start.txt",
+    "git_blob": "a22df9a93d3d3d47424c46e4e9371e5c6d9b1628",
+    "ref": "7505bd0089ae6730fdf8e4eba326869f7c273715"
+  },
+  {
+    "repository_path": "bms-balancing/evidence/reil_c4_0b1_20261013/04_seal_arrays.stderr.log",
+    "capture": "source/bms-balancing/evidence/reil_c4_0b1_20261013/04_seal_arrays.stderr.log",
+    "git_blob": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+    "ref": "7505bd0089ae6730fdf8e4eba326869f7c273715"
+  },
+  {
+    "repository_path": "bms-balancing/evidence/reil_c4_0b1_20261013/04_seal_arrays.stdout.log",
+    "capture": "source/bms-balancing/evidence/reil_c4_0b1_20261013/04_seal_arrays.stdout.log",
+    "git_blob": "2844e9947d4713f3adb8330c512ee2ca0614b3bd",
+    "ref": "7505bd0089ae6730fdf8e4eba326869f7c273715"
+  },
+  {
+    "repository_path": "bms-balancing/evidence/reil_c4_0b1_20261013/05_dryrun.meta.json",
+    "capture": "source/bms-balancing/evidence/reil_c4_0b1_20261013/05_dryrun.meta.json",
+    "git_blob": "d68d83ca6db56c5905059d678d7df7be8f2d84f6",
+    "ref": "7505bd0089ae6730fdf8e4eba326869f7c273715"
+  },
+  {
+    "repository_path": "bms-balancing/evidence/reil_c4_0b1_20261013/05_dryrun.porcelain_end.txt",
+    "capture": "source/bms-balancing/evidence/reil_c4_0b1_20261013/05_dryrun.porcelain_end.txt",
+    "git_blob": "0e57d027bf0547f1a42c78601fe50c0d445fb9c4",
+    "ref": "7505bd0089ae6730fdf8e4eba326869f7c273715"
+  },
+  {
+    "repository_path": "bms-balancing/evidence/reil_c4_0b1_20261013/05_dryrun.porcelain_start.txt",
+    "capture": "source/bms-balancing/evidence/reil_c4_0b1_20261013/05_dryrun.porcelain_start.txt",
+    "git_blob": "d78259e02375021780359b13ca06180418bc536a",
+    "ref": "7505bd0089ae6730fdf8e4eba326869f7c273715"
+  },
+  {
+    "repository_path": "bms-balancing/evidence/reil_c4_0b1_20261013/05_dryrun.stderr.log",
+    "capture": "source/bms-balancing/evidence/reil_c4_0b1_20261013/05_dryrun.stderr.log",
+    "git_blob": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+    "ref": "7505bd0089ae6730fdf8e4eba326869f7c273715"
+  },
+  {
+    "repository_path": "bms-balancing/evidence/reil_c4_0b1_20261013/05_dryrun.stdout.log",
+    "capture": "source/bms-balancing/evidence/reil_c4_0b1_20261013/05_dryrun.stdout.log",
+    "git_blob": "98712478425382cb8c14ea6918f08d94a23e0e7a",
+    "ref": "7505bd0089ae6730fdf8e4eba326869f7c273715"
+  },
+  {
+    "repository_path": "bms-balancing/evidence/reil_c4_0b1_20261013/06_end.json",
+    "capture": "source/bms-balancing/evidence/reil_c4_0b1_20261013/06_end.json",
+    "git_blob": "9d71ebd1675d6de3a9bd58a4bd2d6aeb870cd1ff",
+    "ref": "7505bd0089ae6730fdf8e4eba326869f7c273715"
+  },
+  {
+    "repository_path": "bms-balancing/evidence/reil_c4_0b1_20261013/06_porcelain_end.txt",
+    "capture": "source/bms-balancing/evidence/reil_c4_0b1_20261013/06_porcelain_end.txt",
+    "git_blob": "93d8f68ddbe8bf064e34955134fd4283b19771fa",
+    "ref": "7505bd0089ae6730fdf8e4eba326869f7c273715"
+  },
+  {
+    "repository_path": "bms-balancing/evidence/reil_c4_0b1_20261013/06_source_sha256_end.txt",
+    "capture": "source/bms-balancing/evidence/reil_c4_0b1_20261013/06_source_sha256_end.txt",
+    "git_blob": "9a91602498de1aecc7ffd99b476be46a2848c27c",
+    "ref": "7505bd0089ae6730fdf8e4eba326869f7c273715"
+  },
+  {
+    "repository_path": "bms-balancing/evidence/reil_c4_0b1_20261013/05_dryrun/PLAN.json",
+    "capture": "source/bms-balancing/evidence/reil_c4_0b1_20261013/05_dryrun/PLAN.json",
+    "git_blob": "d1a449103b27d9e503c02efc6e78216df63eda48",
+    "ref": "7505bd0089ae6730fdf8e4eba326869f7c273715"
+  },
+  {
+    "repository_path": "bms-balancing/evidence/reil_c4_0b1_20261013/05_dryrun/SYNTHETIC_SAMPLE.json",
+    "capture": "source/bms-balancing/evidence/reil_c4_0b1_20261013/05_dryrun/SYNTHETIC_SAMPLE.json",
+    "git_blob": "f551ba4fe7836852a90d3bfa46965477c76bb831",
+    "ref": "7505bd0089ae6730fdf8e4eba326869f7c273715"
+  },
+  {
+    "repository_path": "bms-balancing/reil_c4_arrays_0b1_20261013/MANIFEST.json",
+    "capture": "source/bms-balancing/reil_c4_arrays_0b1_20261013/MANIFEST.json",
+    "git_blob": "f8c990cafe03b5aef6e19f45bb1cab1224070a5c",
+    "ref": "7505bd0089ae6730fdf8e4eba326869f7c273715"
+  },
+  {
+    "repository_path": "bms-balancing/reil_c4_arrays_0b1_20261013/RULES.json",
+    "capture": "source/bms-balancing/reil_c4_arrays_0b1_20261013/RULES.json",
+    "git_blob": "3ede165b393de71accaa7843e4d89bc1556b721a",
+    "ref": "7505bd0089ae6730fdf8e4eba326869f7c273715"
+  },
+  {
+    "repository_path": "bms-balancing/reil_c4_arrays_0b1_20261013/LABEL_SEED_TABLE.json",
+    "capture": "source/bms-balancing/reil_c4_arrays_0b1_20261013/LABEL_SEED_TABLE.json",
+    "git_blob": "77e2e33e2ccde69c0748dbae5eac82d18cc747bf",
+    "ref": "7505bd0089ae6730fdf8e4eba326869f7c273715"
+  },
+  {
+    "repository_path": "bms-balancing/reil_c4_arrays_0b1_20261013/INDEX.json",
+    "capture": "source/bms-balancing/reil_c4_arrays_0b1_20261013/INDEX.json",
+    "git_blob": "26b86dfa44acc675ba64f145eac6a0e529f593d3",
+    "ref": "7505bd0089ae6730fdf8e4eba326869f7c273715"
+  },
+  {
+    "repository_path": "bms-balancing/reil_c4_arrays_0b1_20261013/profile/J_D_A0_0.npy",
+    "capture": "source/bms-balancing/reil_c4_arrays_0b1_20261013/profile/J_D_A0_0.npy",
+    "git_blob": "b78bde24a7c7fca523139cf6d51f193218f64a8a",
+    "ref": "7505bd0089ae6730fdf8e4eba326869f7c273715"
+  },
+  {
+    "repository_path": "bms-balancing/reil_c4_arrays_0b1_20261013/profile/J_D_A0_1.npy",
+    "capture": "source/bms-balancing/reil_c4_arrays_0b1_20261013/profile/J_D_A0_1.npy",
+    "git_blob": "4d40da291c54429f7a93c1a4a9538de86a08a4ea",
+    "ref": "7505bd0089ae6730fdf8e4eba326869f7c273715"
+  },
+  {
+    "repository_path": "bms-balancing/reil_c4_arrays_0b1_20261013/profile/J_D_A0_10.npy",
+    "capture": "source/bms-balancing/reil_c4_arrays_0b1_20261013/profile/J_D_A0_10.npy",
+    "git_blob": "7423a98ebdd2a5b8bdaab2412390fdebc23b96ed",
+    "ref": "7505bd0089ae6730fdf8e4eba326869f7c273715"
+  },
+  {
+    "repository_path": "bms-balancing/reil_c4_arrays_0b1_20261013/profile/J_D_A0_2.npy",
+    "capture": "source/bms-balancing/reil_c4_arrays_0b1_20261013/profile/J_D_A0_2.npy",
+    "git_blob": "df1908b6b3686be3aa98eab233dbf78c40f13d1b",
+    "ref": "7505bd0089ae6730fdf8e4eba326869f7c273715"
+  },
+  {
+    "repository_path": "bms-balancing/reil_c4_arrays_0b1_20261013/profile/J_D_A0_3.npy",
+    "capture": "source/bms-balancing/reil_c4_arrays_0b1_20261013/profile/J_D_A0_3.npy",
+    "git_blob": "d550403fa9a2c660842a5b9da738ae1026f9e0eb",
+    "ref": "7505bd0089ae6730fdf8e4eba326869f7c273715"
+  },
+  {
+    "repository_path": "bms-balancing/reil_c4_arrays_0b1_20261013/profile/J_D_A0_4.npy",
+    "capture": "source/bms-balancing/reil_c4_arrays_0b1_20261013/profile/J_D_A0_4.npy",
+    "git_blob": "f4c56d7c881afc3a5ae2718cec5996399b1e26fb",
+    "ref": "7505bd0089ae6730fdf8e4eba326869f7c273715"
+  },
+  {
+    "repository_path": "bms-balancing/reil_c4_arrays_0b1_20261013/profile/J_D_A0_5.npy",
+    "capture": "source/bms-balancing/reil_c4_arrays_0b1_20261013/profile/J_D_A0_5.npy",
+    "git_blob": "ec6954e8cafea810646d42285798ff0e80810207",
+    "ref": "7505bd0089ae6730fdf8e4eba326869f7c273715"
+  },
+  {
+    "repository_path": "bms-balancing/reil_c4_arrays_0b1_20261013/profile/J_D_A0_6.npy",
+    "capture": "source/bms-balancing/reil_c4_arrays_0b1_20261013/profile/J_D_A0_6.npy",
+    "git_blob": "2d53382c56abb4bc5bd8058e70c48b936c8ef01a",
+    "ref": "7505bd0089ae6730fdf8e4eba326869f7c273715"
+  },
+  {
+    "repository_path": "bms-balancing/reil_c4_arrays_0b1_20261013/profile/J_D_A0_7.npy",
+    "capture": "source/bms-balancing/reil_c4_arrays_0b1_20261013/profile/J_D_A0_7.npy",
+    "git_blob": "8f6c94e3e0e53d90e01b4c6c35f6058daf20e4d9",
+    "ref": "7505bd0089ae6730fdf8e4eba326869f7c273715"
+  },
+  {
+    "repository_path": "bms-balancing/reil_c4_arrays_0b1_20261013/profile/J_D_A0_8.npy",
+    "capture": "source/bms-balancing/reil_c4_arrays_0b1_20261013/profile/J_D_A0_8.npy",
+    "git_blob": "d91be9fd3197612a589ad2910ec753bbbfdeb9c7",
+    "ref": "7505bd0089ae6730fdf8e4eba326869f7c273715"
+  },
+  {
+    "repository_path": "bms-balancing/reil_c4_arrays_0b1_20261013/profile/J_D_A0_9.npy",
+    "capture": "source/bms-balancing/reil_c4_arrays_0b1_20261013/profile/J_D_A0_9.npy",
+    "git_blob": "ed00d4336b34cd370ce46069af0add6dc71517b4",
+    "ref": "7505bd0089ae6730fdf8e4eba326869f7c273715"
+  },
+  {
+    "repository_path": "bms-balancing/reil_c4_arrays_0b1_20261013/profile/J_V_A0_0.npy",
+    "capture": "source/bms-balancing/reil_c4_arrays_0b1_20261013/profile/J_V_A0_0.npy",
+    "git_blob": "d700c0b08f98016def9a21f37aff35243f3fe4bd",
+    "ref": "7505bd0089ae6730fdf8e4eba326869f7c273715"
+  },
+  {
+    "repository_path": "bms-balancing/reil_c4_arrays_0b1_20261013/profile/J_V_A0_1.npy",
+    "capture": "source/bms-balancing/reil_c4_arrays_0b1_20261013/profile/J_V_A0_1.npy",
+    "git_blob": "8bb04aeab55e9dbc2e908110dbc4224d10bb845b",
+    "ref": "7505bd0089ae6730fdf8e4eba326869f7c273715"
+  },
+  {
+    "repository_path": "bms-balancing/reil_c4_arrays_0b1_20261013/profile/J_V_A0_10.npy",
+    "capture": "source/bms-balancing/reil_c4_arrays_0b1_20261013/profile/J_V_A0_10.npy",
+    "git_blob": "06e35d3c8a620af06c7a7c1e67b7b1a6f4d1dca0",
+    "ref": "7505bd0089ae6730fdf8e4eba326869f7c273715"
+  },
+  {
+    "repository_path": "bms-balancing/reil_c4_arrays_0b1_20261013/profile/J_V_A0_2.npy",
+    "capture": "source/bms-balancing/reil_c4_arrays_0b1_20261013/profile/J_V_A0_2.npy",
+    "git_blob": "8a9df1976fd38e34027111efb83898b7b65ca21d",
+    "ref": "7505bd0089ae6730fdf8e4eba326869f7c273715"
+  },
+  {
+    "repository_path": "bms-balancing/reil_c4_arrays_0b1_20261013/profile/J_V_A0_3.npy",
+    "capture": "source/bms-balancing/reil_c4_arrays_0b1_20261013/profile/J_V_A0_3.npy",
+    "git_blob": "0eff41d05db0a4aca649bfc126da772329861097",
+    "ref": "7505bd0089ae6730fdf8e4eba326869f7c273715"
+  },
+  {
+    "repository_path": "bms-balancing/reil_c4_arrays_0b1_20261013/profile/J_V_A0_4.npy",
+    "capture": "source/bms-balancing/reil_c4_arrays_0b1_20261013/profile/J_V_A0_4.npy",
+    "git_blob": "adb356e6705b756a9f4dc3aa9ceebe6d78caa2d2",
+    "ref": "7505bd0089ae6730fdf8e4eba326869f7c273715"
+  },
+  {
+    "repository_path": "bms-balancing/reil_c4_arrays_0b1_20261013/profile/J_V_A0_5.npy",
+    "capture": "source/bms-balancing/reil_c4_arrays_0b1_20261013/profile/J_V_A0_5.npy",
+    "git_blob": "416fbc2666d6ed7fbc9efda9b987b73f73030158",
+    "ref": "7505bd0089ae6730fdf8e4eba326869f7c273715"
+  },
+  {
+    "repository_path": "bms-balancing/reil_c4_arrays_0b1_20261013/profile/J_V_A0_6.npy",
+    "capture": "source/bms-balancing/reil_c4_arrays_0b1_20261013/profile/J_V_A0_6.npy",
+    "git_blob": "ab8c49595ea5f5aed20c1f6cff82cdb7e3119b80",
+    "ref": "7505bd0089ae6730fdf8e4eba326869f7c273715"
+  },
+  {
+    "repository_path": "bms-balancing/reil_c4_arrays_0b1_20261013/profile/J_V_A0_7.npy",
+    "capture": "source/bms-balancing/reil_c4_arrays_0b1_20261013/profile/J_V_A0_7.npy",
+    "git_blob": "9fcf4ac0fa5746d0bc6280a20a710c6679d97997",
+    "ref": "7505bd0089ae6730fdf8e4eba326869f7c273715"
+  },
+  {
+    "repository_path": "bms-balancing/reil_c4_arrays_0b1_20261013/profile/J_V_A0_8.npy",
+    "capture": "source/bms-balancing/reil_c4_arrays_0b1_20261013/profile/J_V_A0_8.npy",
+    "git_blob": "ff9c3f9710d488129cb7c582fe1ca34fa1fdef64",
+    "ref": "7505bd0089ae6730fdf8e4eba326869f7c273715"
+  },
+  {
+    "repository_path": "bms-balancing/reil_c4_arrays_0b1_20261013/profile/J_V_A0_9.npy",
+    "capture": "source/bms-balancing/reil_c4_arrays_0b1_20261013/profile/J_V_A0_9.npy",
+    "git_blob": "18ee6ba68f8d8f1ed77f9fc1f200785f655ac434",
+    "ref": "7505bd0089ae6730fdf8e4eba326869f7c273715"
+  },
+  {
+    "repository_path": "bms-balancing/reil_c4_arrays_0b1_20261013/profile/J_V_A1_0.npy",
+    "capture": "source/bms-balancing/reil_c4_arrays_0b1_20261013/profile/J_V_A1_0.npy",
+    "git_blob": "e4ff67602e90c8184112548153a91958e2a93e11",
+    "ref": "7505bd0089ae6730fdf8e4eba326869f7c273715"
+  },
+  {
+    "repository_path": "bms-balancing/reil_c4_arrays_0b1_20261013/profile/J_V_A1_1.npy",
+    "capture": "source/bms-balancing/reil_c4_arrays_0b1_20261013/profile/J_V_A1_1.npy",
+    "git_blob": "5c6f1fdb50c1ed3ce3fdaac2de25b4b5f9e3f21b",
+    "ref": "7505bd0089ae6730fdf8e4eba326869f7c273715"
+  },
+  {
+    "repository_path": "bms-balancing/reil_c4_arrays_0b1_20261013/profile/J_V_A1_10.npy",
+    "capture": "source/bms-balancing/reil_c4_arrays_0b1_20261013/profile/J_V_A1_10.npy",
+    "git_blob": "f1ade122ea179edb826db999f59c1dc03b4f0f80",
+    "ref": "7505bd0089ae6730fdf8e4eba326869f7c273715"
+  },
+  {
+    "repository_path": "bms-balancing/reil_c4_arrays_0b1_20261013/profile/J_V_A1_2.npy",
+    "capture": "source/bms-balancing/reil_c4_arrays_0b1_20261013/profile/J_V_A1_2.npy",
+    "git_blob": "e95436390bb323982345218cd821db9dfda3caa7",
+    "ref": "7505bd0089ae6730fdf8e4eba326869f7c273715"
+  },
+  {
+    "repository_path": "bms-balancing/reil_c4_arrays_0b1_20261013/profile/J_V_A1_3.npy",
+    "capture": "source/bms-balancing/reil_c4_arrays_0b1_20261013/profile/J_V_A1_3.npy",
+    "git_blob": "e61dd2819d483d81dc7950985af5d53dec0a19ef",
+    "ref": "7505bd0089ae6730fdf8e4eba326869f7c273715"
+  },
+  {
+    "repository_path": "bms-balancing/reil_c4_arrays_0b1_20261013/profile/J_V_A1_4.npy",
+    "capture": "source/bms-balancing/reil_c4_arrays_0b1_20261013/profile/J_V_A1_4.npy",
+    "git_blob": "c775cfb560731547569aebf43ace73caac6c0fe4",
+    "ref": "7505bd0089ae6730fdf8e4eba326869f7c273715"
+  },
+  {
+    "repository_path": "bms-balancing/reil_c4_arrays_0b1_20261013/profile/J_V_A1_5.npy",
+    "capture": "source/bms-balancing/reil_c4_arrays_0b1_20261013/profile/J_V_A1_5.npy",
+    "git_blob": "8993dcd0cc2a5c908b74522254900e257066cc5c",
+    "ref": "7505bd0089ae6730fdf8e4eba326869f7c273715"
+  },
+  {
+    "repository_path": "bms-balancing/reil_c4_arrays_0b1_20261013/profile/J_V_A1_6.npy",
+    "capture": "source/bms-balancing/reil_c4_arrays_0b1_20261013/profile/J_V_A1_6.npy",
+    "git_blob": "53514200e36ab8523735adcb13213a8aecb66ccb",
+    "ref": "7505bd0089ae6730fdf8e4eba326869f7c273715"
+  },
+  {
+    "repository_path": "bms-balancing/reil_c4_arrays_0b1_20261013/profile/J_V_A1_7.npy",
+    "capture": "source/bms-balancing/reil_c4_arrays_0b1_20261013/profile/J_V_A1_7.npy",
+    "git_blob": "53374227d0c3042347640bbf4d615e363c8995e3",
+    "ref": "7505bd0089ae6730fdf8e4eba326869f7c273715"
+  },
+  {
+    "repository_path": "bms-balancing/reil_c4_arrays_0b1_20261013/profile/J_V_A1_8.npy",
+    "capture": "source/bms-balancing/reil_c4_arrays_0b1_20261013/profile/J_V_A1_8.npy",
+    "git_blob": "ee63af0cbc251cea62e4a83ed95b44f87dea9a95",
+    "ref": "7505bd0089ae6730fdf8e4eba326869f7c273715"
+  },
+  {
+    "repository_path": "bms-balancing/reil_c4_arrays_0b1_20261013/profile/J_V_A1_9.npy",
+    "capture": "source/bms-balancing/reil_c4_arrays_0b1_20261013/profile/J_V_A1_9.npy",
+    "git_blob": "c7b54657c8ac1c94c6f6a9fa642bbaadbad2524f",
+    "ref": "7505bd0089ae6730fdf8e4eba326869f7c273715"
+  },
+  {
+    "repository_path": "bms-balancing/reil_c4_arrays_0b1_20261013/profile/J_V_A2_0.npy",
+    "capture": "source/bms-balancing/reil_c4_arrays_0b1_20261013/profile/J_V_A2_0.npy",
+    "git_blob": "3275b4136615cbe8cd89d927633c907ba7b6aff8",
+    "ref": "7505bd0089ae6730fdf8e4eba326869f7c273715"
+  },
+  {
+    "repository_path": "bms-balancing/reil_c4_arrays_0b1_20261013/profile/J_V_A2_1.npy",
+    "capture": "source/bms-balancing/reil_c4_arrays_0b1_20261013/profile/J_V_A2_1.npy",
+    "git_blob": "610da3a7c2f818213c53d952a1ea1aefea2f16ca",
+    "ref": "7505bd0089ae6730fdf8e4eba326869f7c273715"
+  },
+  {
+    "repository_path": "bms-balancing/reil_c4_arrays_0b1_20261013/profile/J_V_A2_10.npy",
+    "capture": "source/bms-balancing/reil_c4_arrays_0b1_20261013/profile/J_V_A2_10.npy",
+    "git_blob": "2e8de452cf87c12d225ea54daa74a1021c1f6e43",
+    "ref": "7505bd0089ae6730fdf8e4eba326869f7c273715"
+  },
+  {
+    "repository_path": "bms-balancing/reil_c4_arrays_0b1_20261013/profile/J_V_A2_2.npy",
+    "capture": "source/bms-balancing/reil_c4_arrays_0b1_20261013/profile/J_V_A2_2.npy",
+    "git_blob": "bbf35c712dbc6883213445b05bbd377c799b399e",
+    "ref": "7505bd0089ae6730fdf8e4eba326869f7c273715"
+  },
+  {
+    "repository_path": "bms-balancing/reil_c4_arrays_0b1_20261013/profile/J_V_A2_3.npy",
+    "capture": "source/bms-balancing/reil_c4_arrays_0b1_20261013/profile/J_V_A2_3.npy",
+    "git_blob": "ab0e4d32f1178d675e47d71259f425f470b7d3cf",
+    "ref": "7505bd0089ae6730fdf8e4eba326869f7c273715"
+  },
+  {
+    "repository_path": "bms-balancing/reil_c4_arrays_0b1_20261013/profile/J_V_A2_4.npy",
+    "capture": "source/bms-balancing/reil_c4_arrays_0b1_20261013/profile/J_V_A2_4.npy",
+    "git_blob": "750b17ddc9fb387f0112ef4d09078c864761e5fb",
+    "ref": "7505bd0089ae6730fdf8e4eba326869f7c273715"
+  },
+  {
+    "repository_path": "bms-balancing/reil_c4_arrays_0b1_20261013/profile/J_V_A2_5.npy",
+    "capture": "source/bms-balancing/reil_c4_arrays_0b1_20261013/profile/J_V_A2_5.npy",
+    "git_blob": "954532df65602908c773ca352638e210456d8c7d",
+    "ref": "7505bd0089ae6730fdf8e4eba326869f7c273715"
+  },
+  {
+    "repository_path": "bms-balancing/reil_c4_arrays_0b1_20261013/profile/J_V_A2_6.npy",
+    "capture": "source/bms-balancing/reil_c4_arrays_0b1_20261013/profile/J_V_A2_6.npy",
+    "git_blob": "f795229a3455fae4b4a98f1fdf8eecf8ca91778a",
+    "ref": "7505bd0089ae6730fdf8e4eba326869f7c273715"
+  },
+  {
+    "repository_path": "bms-balancing/reil_c4_arrays_0b1_20261013/profile/J_V_A2_7.npy",
+    "capture": "source/bms-balancing/reil_c4_arrays_0b1_20261013/profile/J_V_A2_7.npy",
+    "git_blob": "4774d2f61703f3b02249c67c28026a6d2874afa0",
+    "ref": "7505bd0089ae6730fdf8e4eba326869f7c273715"
+  },
+  {
+    "repository_path": "bms-balancing/reil_c4_arrays_0b1_20261013/profile/J_V_A2_8.npy",
+    "capture": "source/bms-balancing/reil_c4_arrays_0b1_20261013/profile/J_V_A2_8.npy",
+    "git_blob": "08e526df03be3518d75f15f3fbca1593aa64e825",
+    "ref": "7505bd0089ae6730fdf8e4eba326869f7c273715"
+  },
+  {
+    "repository_path": "bms-balancing/reil_c4_arrays_0b1_20261013/profile/J_V_A2_9.npy",
+    "capture": "source/bms-balancing/reil_c4_arrays_0b1_20261013/profile/J_V_A2_9.npy",
+    "git_blob": "c518d6451f390135ce41839e48041b8f507e4eaa",
+    "ref": "7505bd0089ae6730fdf8e4eba326869f7c273715"
+  },
+  {
+    "repository_path": "bms-balancing/reil_c4_arrays_0b1_20261013/profile/J_Vs_A0_0.npy",
+    "capture": "source/bms-balancing/reil_c4_arrays_0b1_20261013/profile/J_Vs_A0_0.npy",
+    "git_blob": "d50489f0354dafd646ec227541b2e55a931185bf",
+    "ref": "7505bd0089ae6730fdf8e4eba326869f7c273715"
+  },
+  {
+    "repository_path": "bms-balancing/reil_c4_arrays_0b1_20261013/profile/J_Vs_A0_1.npy",
+    "capture": "source/bms-balancing/reil_c4_arrays_0b1_20261013/profile/J_Vs_A0_1.npy",
+    "git_blob": "73493784af900d13caba69ad056de072f375979a",
+    "ref": "7505bd0089ae6730fdf8e4eba326869f7c273715"
+  },
+  {
+    "repository_path": "bms-balancing/reil_c4_arrays_0b1_20261013/profile/J_Vs_A0_10.npy",
+    "capture": "source/bms-balancing/reil_c4_arrays_0b1_20261013/profile/J_Vs_A0_10.npy",
+    "git_blob": "c90883293ff255388e8e31adc46465d86537d513",
+    "ref": "7505bd0089ae6730fdf8e4eba326869f7c273715"
+  },
+  {
+    "repository_path": "bms-balancing/reil_c4_arrays_0b1_20261013/profile/J_Vs_A0_2.npy",
+    "capture": "source/bms-balancing/reil_c4_arrays_0b1_20261013/profile/J_Vs_A0_2.npy",
+    "git_blob": "6a3050550159e5ed190ed9dc6103cf57cc46e5e6",
+    "ref": "7505bd0089ae6730fdf8e4eba326869f7c273715"
+  },
+  {
+    "repository_path": "bms-balancing/reil_c4_arrays_0b1_20261013/profile/J_Vs_A0_3.npy",
+    "capture": "source/bms-balancing/reil_c4_arrays_0b1_20261013/profile/J_Vs_A0_3.npy",
+    "git_blob": "49e62b5ebea12d48d68ced0db06d2485f93ce775",
+    "ref": "7505bd0089ae6730fdf8e4eba326869f7c273715"
+  },
+  {
+    "repository_path": "bms-balancing/reil_c4_arrays_0b1_20261013/profile/J_Vs_A0_4.npy",
+    "capture": "source/bms-balancing/reil_c4_arrays_0b1_20261013/profile/J_Vs_A0_4.npy",
+    "git_blob": "d5c92d396f1b78fb94b9d8346d0161a146b012fa",
+    "ref": "7505bd0089ae6730fdf8e4eba326869f7c273715"
+  },
+  {
+    "repository_path": "bms-balancing/reil_c4_arrays_0b1_20261013/profile/J_Vs_A0_5.npy",
+    "capture": "source/bms-balancing/reil_c4_arrays_0b1_20261013/profile/J_Vs_A0_5.npy",
+    "git_blob": "c37730c5276979ec7c93f8b0cca2544a3e55c6f8",
+    "ref": "7505bd0089ae6730fdf8e4eba326869f7c273715"
+  },
+  {
+    "repository_path": "bms-balancing/reil_c4_arrays_0b1_20261013/profile/J_Vs_A0_6.npy",
+    "capture": "source/bms-balancing/reil_c4_arrays_0b1_20261013/profile/J_Vs_A0_6.npy",
+    "git_blob": "9d06de42aafe1d8fc78d5b6ae13b8a27f7328c7c",
+    "ref": "7505bd0089ae6730fdf8e4eba326869f7c273715"
+  },
+  {
+    "repository_path": "bms-balancing/reil_c4_arrays_0b1_20261013/profile/J_Vs_A0_7.npy",
+    "capture": "source/bms-balancing/reil_c4_arrays_0b1_20261013/profile/J_Vs_A0_7.npy",
+    "git_blob": "269fc7512c8ea761e46d6deae9017c535fb75c66",
+    "ref": "7505bd0089ae6730fdf8e4eba326869f7c273715"
+  },
+  {
+    "repository_path": "bms-balancing/reil_c4_arrays_0b1_20261013/profile/J_Vs_A0_8.npy",
+    "capture": "source/bms-balancing/reil_c4_arrays_0b1_20261013/profile/J_Vs_A0_8.npy",
+    "git_blob": "f299ffdc1f63974455f2060c91c6f36e971da474",
+    "ref": "7505bd0089ae6730fdf8e4eba326869f7c273715"
+  },
+  {
+    "repository_path": "bms-balancing/reil_c4_arrays_0b1_20261013/profile/J_Vs_A0_9.npy",
+    "capture": "source/bms-balancing/reil_c4_arrays_0b1_20261013/profile/J_Vs_A0_9.npy",
+    "git_blob": "8617337606411e3ec20295cd5be9fbd3eaa868c5",
+    "ref": "7505bd0089ae6730fdf8e4eba326869f7c273715"
+  },
+  {
+    "repository_path": "bms-balancing/reil_c4_arrays_0b1_20261013/profile/J_Vs_A1_0.npy",
+    "capture": "source/bms-balancing/reil_c4_arrays_0b1_20261013/profile/J_Vs_A1_0.npy",
+    "git_blob": "c713269ea340155d5662b8c93eba5a8cccdee6c6",
+    "ref": "7505bd0089ae6730fdf8e4eba326869f7c273715"
+  },
+  {
+    "repository_path": "bms-balancing/reil_c4_arrays_0b1_20261013/profile/J_Vs_A1_1.npy",
+    "capture": "source/bms-balancing/reil_c4_arrays_0b1_20261013/profile/J_Vs_A1_1.npy",
+    "git_blob": "d892f58a2eb69384f6e66a422dbdf5e81d85acb6",
+    "ref": "7505bd0089ae6730fdf8e4eba326869f7c273715"
+  },
+  {
+    "repository_path": "bms-balancing/reil_c4_arrays_0b1_20261013/profile/J_Vs_A1_10.npy",
+    "capture": "source/bms-balancing/reil_c4_arrays_0b1_20261013/profile/J_Vs_A1_10.npy",
+    "git_blob": "553615df6153ecc7113460b5f20772ed4c2d6696",
+    "ref": "7505bd0089ae6730fdf8e4eba326869f7c273715"
+  },
+  {
+    "repository_path": "bms-balancing/reil_c4_arrays_0b1_20261013/profile/J_Vs_A1_2.npy",
+    "capture": "source/bms-balancing/reil_c4_arrays_0b1_20261013/profile/J_Vs_A1_2.npy",
+    "git_blob": "12d71ff283d7106723588b31230032894ec9fecb",
+    "ref": "7505bd0089ae6730fdf8e4eba326869f7c273715"
+  },
+  {
+    "repository_path": "bms-balancing/reil_c4_arrays_0b1_20261013/profile/J_Vs_A1_3.npy",
+    "capture": "source/bms-balancing/reil_c4_arrays_0b1_20261013/profile/J_Vs_A1_3.npy",
+    "git_blob": "910bdb6b52a72eef4c96987df54f4d8be5ccb43b",
+    "ref": "7505bd0089ae6730fdf8e4eba326869f7c273715"
+  },
+  {
+    "repository_path": "bms-balancing/reil_c4_arrays_0b1_20261013/profile/J_Vs_A1_4.npy",
+    "capture": "source/bms-balancing/reil_c4_arrays_0b1_20261013/profile/J_Vs_A1_4.npy",
+    "git_blob": "5b4e908c3ff68310ede75b1075ba6d1e40d3d9dc",
+    "ref": "7505bd0089ae6730fdf8e4eba326869f7c273715"
+  },
+  {
+    "repository_path": "bms-balancing/reil_c4_arrays_0b1_20261013/profile/J_Vs_A1_5.npy",
+    "capture": "source/bms-balancing/reil_c4_arrays_0b1_20261013/profile/J_Vs_A1_5.npy",
+    "git_blob": "c4984c2c0cff75b6e3307d9511e13cb872e66d97",
+    "ref": "7505bd0089ae6730fdf8e4eba326869f7c273715"
+  },
+  {
+    "repository_path": "bms-balancing/reil_c4_arrays_0b1_20261013/profile/J_Vs_A1_6.npy",
+    "capture": "source/bms-balancing/reil_c4_arrays_0b1_20261013/profile/J_Vs_A1_6.npy",
+    "git_blob": "ebc973e1cd218ee0f920f4e261c1ad6fac43a26d",
+    "ref": "7505bd0089ae6730fdf8e4eba326869f7c273715"
+  },
+  {
+    "repository_path": "bms-balancing/reil_c4_arrays_0b1_20261013/profile/J_Vs_A1_7.npy",
+    "capture": "source/bms-balancing/reil_c4_arrays_0b1_20261013/profile/J_Vs_A1_7.npy",
+    "git_blob": "23e3ea4f102394a17085933814ddea2ea8c5fca1",
+    "ref": "7505bd0089ae6730fdf8e4eba326869f7c273715"
+  },
+  {
+    "repository_path": "bms-balancing/reil_c4_arrays_0b1_20261013/profile/J_Vs_A1_8.npy",
+    "capture": "source/bms-balancing/reil_c4_arrays_0b1_20261013/profile/J_Vs_A1_8.npy",
+    "git_blob": "c3371105915d3a2843bf023322ac6a5fc4d3c492",
+    "ref": "7505bd0089ae6730fdf8e4eba326869f7c273715"
+  },
+  {
+    "repository_path": "bms-balancing/reil_c4_arrays_0b1_20261013/profile/J_Vs_A1_9.npy",
+    "capture": "source/bms-balancing/reil_c4_arrays_0b1_20261013/profile/J_Vs_A1_9.npy",
+    "git_blob": "03cd44dabeed72101a171da2a6edb69614142cf1",
+    "ref": "7505bd0089ae6730fdf8e4eba326869f7c273715"
+  },
+  {
+    "repository_path": "bms-balancing/reil_c4_arrays_0b1_20261013/profile/rho_A0_0.npy",
+    "capture": "source/bms-balancing/reil_c4_arrays_0b1_20261013/profile/rho_A0_0.npy",
+    "git_blob": "6cbf92d9a1279830f5d1cddd602ae342fcd1a1c9",
+    "ref": "7505bd0089ae6730fdf8e4eba326869f7c273715"
+  },
+  {
+    "repository_path": "bms-balancing/reil_c4_arrays_0b1_20261013/profile/rho_A0_1.npy",
+    "capture": "source/bms-balancing/reil_c4_arrays_0b1_20261013/profile/rho_A0_1.npy",
+    "git_blob": "c68dc583f9192470e516a71c6b8640145357db00",
+    "ref": "7505bd0089ae6730fdf8e4eba326869f7c273715"
+  },
+  {
+    "repository_path": "bms-balancing/reil_c4_arrays_0b1_20261013/profile/rho_A0_10.npy",
+    "capture": "source/bms-balancing/reil_c4_arrays_0b1_20261013/profile/rho_A0_10.npy",
+    "git_blob": "43d93aa59b92933baa227aff2f9bc8c8fb88a20a",
+    "ref": "7505bd0089ae6730fdf8e4eba326869f7c273715"
+  },
+  {
+    "repository_path": "bms-balancing/reil_c4_arrays_0b1_20261013/profile/rho_A0_2.npy",
+    "capture": "source/bms-balancing/reil_c4_arrays_0b1_20261013/profile/rho_A0_2.npy",
+    "git_blob": "5f7ac21231ee824f13ddbeae265f250ffa668d64",
+    "ref": "7505bd0089ae6730fdf8e4eba326869f7c273715"
+  },
+  {
+    "repository_path": "bms-balancing/reil_c4_arrays_0b1_20261013/profile/rho_A0_3.npy",
+    "capture": "source/bms-balancing/reil_c4_arrays_0b1_20261013/profile/rho_A0_3.npy",
+    "git_blob": "b2462f6126f59f54fc2622810c661e1994009dcf",
+    "ref": "7505bd0089ae6730fdf8e4eba326869f7c273715"
+  },
+  {
+    "repository_path": "bms-balancing/reil_c4_arrays_0b1_20261013/profile/rho_A0_4.npy",
+    "capture": "source/bms-balancing/reil_c4_arrays_0b1_20261013/profile/rho_A0_4.npy",
+    "git_blob": "60b433a696e0263bfbb4896403895d030b0ac1cd",
+    "ref": "7505bd0089ae6730fdf8e4eba326869f7c273715"
+  },
+  {
+    "repository_path": "bms-balancing/reil_c4_arrays_0b1_20261013/profile/rho_A0_5.npy",
+    "capture": "source/bms-balancing/reil_c4_arrays_0b1_20261013/profile/rho_A0_5.npy",
+    "git_blob": "ae4ed9dabb50914f4c45abd27dd5ff9e472b89ba",
+    "ref": "7505bd0089ae6730fdf8e4eba326869f7c273715"
+  },
+  {
+    "repository_path": "bms-balancing/reil_c4_arrays_0b1_20261013/profile/rho_A0_6.npy",
+    "capture": "source/bms-balancing/reil_c4_arrays_0b1_20261013/profile/rho_A0_6.npy",
+    "git_blob": "49c86dcae63bc9d2374456570a6fb2072f8fd90e",
+    "ref": "7505bd0089ae6730fdf8e4eba326869f7c273715"
+  },
+  {
+    "repository_path": "bms-balancing/reil_c4_arrays_0b1_20261013/profile/rho_A0_7.npy",
+    "capture": "source/bms-balancing/reil_c4_arrays_0b1_20261013/profile/rho_A0_7.npy",
+    "git_blob": "e4b77e9cf80e54448cc6ee6b9fc873a03e36c99e",
+    "ref": "7505bd0089ae6730fdf8e4eba326869f7c273715"
+  },
+  {
+    "repository_path": "bms-balancing/reil_c4_arrays_0b1_20261013/profile/rho_A0_8.npy",
+    "capture": "source/bms-balancing/reil_c4_arrays_0b1_20261013/profile/rho_A0_8.npy",
+    "git_blob": "ac86234845e3248d5a5a9d50815be5f3c75fb25e",
+    "ref": "7505bd0089ae6730fdf8e4eba326869f7c273715"
+  },
+  {
+    "repository_path": "bms-balancing/reil_c4_arrays_0b1_20261013/profile/rho_A0_9.npy",
+    "capture": "source/bms-balancing/reil_c4_arrays_0b1_20261013/profile/rho_A0_9.npy",
+    "git_blob": "831e4dc41bfe679fd6cc2ea6eb365e7c2ace3180",
+    "ref": "7505bd0089ae6730fdf8e4eba326869f7c273715"
+  },
+  {
+    "repository_path": "bms-balancing/reil_c4_arrays_0b1_20261013/simultaneous/J_D_A0_0.npy",
+    "capture": "source/bms-balancing/reil_c4_arrays_0b1_20261013/simultaneous/J_D_A0_0.npy",
+    "git_blob": "c6d77475f3f6954566542716e74bba086b0f6698",
+    "ref": "7505bd0089ae6730fdf8e4eba326869f7c273715"
+  },
+  {
+    "repository_path": "bms-balancing/reil_c4_arrays_0b1_20261013/simultaneous/J_D_A0_1.npy",
+    "capture": "source/bms-balancing/reil_c4_arrays_0b1_20261013/simultaneous/J_D_A0_1.npy",
+    "git_blob": "64235f791cc4f18da9757ffd8ab7bf120df6ea55",
+    "ref": "7505bd0089ae6730fdf8e4eba326869f7c273715"
+  },
+  {
+    "repository_path": "bms-balancing/reil_c4_arrays_0b1_20261013/simultaneous/J_D_A0_10.npy",
+    "capture": "source/bms-balancing/reil_c4_arrays_0b1_20261013/simultaneous/J_D_A0_10.npy",
+    "git_blob": "70e859aed251c56af141d907b21885ccff03b72b",
+    "ref": "7505bd0089ae6730fdf8e4eba326869f7c273715"
+  },
+  {
+    "repository_path": "bms-balancing/reil_c4_arrays_0b1_20261013/simultaneous/J_D_A0_2.npy",
+    "capture": "source/bms-balancing/reil_c4_arrays_0b1_20261013/simultaneous/J_D_A0_2.npy",
+    "git_blob": "38395a4a20a6d8d12721b0d24cf46c4fd8c6b93f",
+    "ref": "7505bd0089ae6730fdf8e4eba326869f7c273715"
+  },
+  {
+    "repository_path": "bms-balancing/reil_c4_arrays_0b1_20261013/simultaneous/J_D_A0_4.npy",
+    "capture": "source/bms-balancing/reil_c4_arrays_0b1_20261013/simultaneous/J_D_A0_4.npy",
+    "git_blob": "5273a4cf59745d959c7f0c661899e9279c256ede",
+    "ref": "7505bd0089ae6730fdf8e4eba326869f7c273715"
+  },
+  {
+    "repository_path": "bms-balancing/reil_c4_arrays_0b1_20261013/simultaneous/J_D_A0_5.npy",
+    "capture": "source/bms-balancing/reil_c4_arrays_0b1_20261013/simultaneous/J_D_A0_5.npy",
+    "git_blob": "14b0d39a28c1f09110a850c3f14d1a6d1a9f1524",
+    "ref": "7505bd0089ae6730fdf8e4eba326869f7c273715"
+  },
+  {
+    "repository_path": "bms-balancing/reil_c4_arrays_0b1_20261013/simultaneous/J_D_A0_6.npy",
+    "capture": "source/bms-balancing/reil_c4_arrays_0b1_20261013/simultaneous/J_D_A0_6.npy",
+    "git_blob": "a641f4d16fd9efd8de7cb0845cb9cf38c131229c",
+    "ref": "7505bd0089ae6730fdf8e4eba326869f7c273715"
+  },
+  {
+    "repository_path": "bms-balancing/reil_c4_arrays_0b1_20261013/simultaneous/J_D_A0_7.npy",
+    "capture": "source/bms-balancing/reil_c4_arrays_0b1_20261013/simultaneous/J_D_A0_7.npy",
+    "git_blob": "e84dfd327fc186b6211dd6376ec1e04bd91f88ea",
+    "ref": "7505bd0089ae6730fdf8e4eba326869f7c273715"
+  },
+  {
+    "repository_path": "bms-balancing/reil_c4_arrays_0b1_20261013/simultaneous/J_D_A0_8.npy",
+    "capture": "source/bms-balancing/reil_c4_arrays_0b1_20261013/simultaneous/J_D_A0_8.npy",
+    "git_blob": "f8ef20bcf1cbc6d61a40d6950a7a7dd31598f4a8",
+    "ref": "7505bd0089ae6730fdf8e4eba326869f7c273715"
+  },
+  {
+    "repository_path": "bms-balancing/reil_c4_arrays_0b1_20261013/simultaneous/J_D_A0_9.npy",
+    "capture": "source/bms-balancing/reil_c4_arrays_0b1_20261013/simultaneous/J_D_A0_9.npy",
+    "git_blob": "aa1491091c13cd19dedc1871462f365708e57249",
+    "ref": "7505bd0089ae6730fdf8e4eba326869f7c273715"
+  },
+  {
+    "repository_path": "bms-balancing/reil_c4_arrays_0b1_20261013/simultaneous/J_V_A0_0.npy",
+    "capture": "source/bms-balancing/reil_c4_arrays_0b1_20261013/simultaneous/J_V_A0_0.npy",
+    "git_blob": "58219c553a4f29a1d74f606b2db218ebf4d84125",
+    "ref": "7505bd0089ae6730fdf8e4eba326869f7c273715"
+  },
+  {
+    "repository_path": "bms-balancing/reil_c4_arrays_0b1_20261013/simultaneous/J_V_A0_1.npy",
+    "capture": "source/bms-balancing/reil_c4_arrays_0b1_20261013/simultaneous/J_V_A0_1.npy",
+    "git_blob": "bf2f1b8839b174b9d50c0d8960a2d069102e0fcc",
+    "ref": "7505bd0089ae6730fdf8e4eba326869f7c273715"
+  },
+  {
+    "repository_path": "bms-balancing/reil_c4_arrays_0b1_20261013/simultaneous/J_V_A0_10.npy",
+    "capture": "source/bms-balancing/reil_c4_arrays_0b1_20261013/simultaneous/J_V_A0_10.npy",
+    "git_blob": "99d6dc8c1815d3b67a0d4500f7c5087191dcf75e",
+    "ref": "7505bd0089ae6730fdf8e4eba326869f7c273715"
+  },
+  {
+    "repository_path": "bms-balancing/reil_c4_arrays_0b1_20261013/simultaneous/J_V_A0_2.npy",
+    "capture": "source/bms-balancing/reil_c4_arrays_0b1_20261013/simultaneous/J_V_A0_2.npy",
+    "git_blob": "5f9867353bc2844f1193469d7f9d9e64f86859f5",
+    "ref": "7505bd0089ae6730fdf8e4eba326869f7c273715"
+  },
+  {
+    "repository_path": "bms-balancing/reil_c4_arrays_0b1_20261013/simultaneous/J_V_A0_4.npy",
+    "capture": "source/bms-balancing/reil_c4_arrays_0b1_20261013/simultaneous/J_V_A0_4.npy",
+    "git_blob": "f6e0bff985b3b97d1b17229f3ef13477aae7eae7",
+    "ref": "7505bd0089ae6730fdf8e4eba326869f7c273715"
+  },
+  {
+    "repository_path": "bms-balancing/reil_c4_arrays_0b1_20261013/simultaneous/J_V_A0_5.npy",
+    "capture": "source/bms-balancing/reil_c4_arrays_0b1_20261013/simultaneous/J_V_A0_5.npy",
+    "git_blob": "a64491fe158ad4fae88d45b07364c466c96eaa1d",
+    "ref": "7505bd0089ae6730fdf8e4eba326869f7c273715"
+  },
+  {
+    "repository_path": "bms-balancing/reil_c4_arrays_0b1_20261013/simultaneous/J_V_A0_6.npy",
+    "capture": "source/bms-balancing/reil_c4_arrays_0b1_20261013/simultaneous/J_V_A0_6.npy",
+    "git_blob": "837f1b5f5e5b317be2fb37b8e9a65b8e8b3d0751",
+    "ref": "7505bd0089ae6730fdf8e4eba326869f7c273715"
+  },
+  {
+    "repository_path": "bms-balancing/reil_c4_arrays_0b1_20261013/simultaneous/J_V_A0_7.npy",
+    "capture": "source/bms-balancing/reil_c4_arrays_0b1_20261013/simultaneous/J_V_A0_7.npy",
+    "git_blob": "9584c993c342854c05b3d8415b3e6c50718d377c",
+    "ref": "7505bd0089ae6730fdf8e4eba326869f7c273715"
+  },
+  {
+    "repository_path": "bms-balancing/reil_c4_arrays_0b1_20261013/simultaneous/J_V_A0_8.npy",
+    "capture": "source/bms-balancing/reil_c4_arrays_0b1_20261013/simultaneous/J_V_A0_8.npy",
+    "git_blob": "abb812f04c49e5b71cbd44ad13d7911c8ab02e5e",
+    "ref": "7505bd0089ae6730fdf8e4eba326869f7c273715"
+  },
+  {
+    "repository_path": "bms-balancing/reil_c4_arrays_0b1_20261013/simultaneous/J_V_A0_9.npy",
+    "capture": "source/bms-balancing/reil_c4_arrays_0b1_20261013/simultaneous/J_V_A0_9.npy",
+    "git_blob": "802a569778a59bbe2ceeb78382b6e36b1dadf2aa",
+    "ref": "7505bd0089ae6730fdf8e4eba326869f7c273715"
+  },
+  {
+    "repository_path": "bms-balancing/reil_c4_arrays_0b1_20261013/simultaneous/J_V_A1_0.npy",
+    "capture": "source/bms-balancing/reil_c4_arrays_0b1_20261013/simultaneous/J_V_A1_0.npy",
+    "git_blob": "aa06ae12e8fd223fb24548474e0e9f349a71ecee",
+    "ref": "7505bd0089ae6730fdf8e4eba326869f7c273715"
+  },
+  {
+    "repository_path": "bms-balancing/reil_c4_arrays_0b1_20261013/simultaneous/J_V_A1_1.npy",
+    "capture": "source/bms-balancing/reil_c4_arrays_0b1_20261013/simultaneous/J_V_A1_1.npy",
+    "git_blob": "78ba6bd24546fdae3fbf69cef8d9d7b987b7741c",
+    "ref": "7505bd0089ae6730fdf8e4eba326869f7c273715"
+  },
+  {
+    "repository_path": "bms-balancing/reil_c4_arrays_0b1_20261013/simultaneous/J_V_A1_10.npy",
+    "capture": "source/bms-balancing/reil_c4_arrays_0b1_20261013/simultaneous/J_V_A1_10.npy",
+    "git_blob": "4a3a8c33fa766a8dc789e9da4352e550fbe17509",
+    "ref": "7505bd0089ae6730fdf8e4eba326869f7c273715"
+  },
+  {
+    "repository_path": "bms-balancing/reil_c4_arrays_0b1_20261013/simultaneous/J_V_A1_2.npy",
+    "capture": "source/bms-balancing/reil_c4_arrays_0b1_20261013/simultaneous/J_V_A1_2.npy",
+    "git_blob": "b1a5bc51c106c96d652d49f6a625cef213d227c5",
+    "ref": "7505bd0089ae6730fdf8e4eba326869f7c273715"
+  },
+  {
+    "repository_path": "bms-balancing/reil_c4_arrays_0b1_20261013/simultaneous/J_V_A1_4.npy",
+    "capture": "source/bms-balancing/reil_c4_arrays_0b1_20261013/simultaneous/J_V_A1_4.npy",
+    "git_blob": "e5cdb463baea2be939594d17abadb641db0ea674",
+    "ref": "7505bd0089ae6730fdf8e4eba326869f7c273715"
+  },
+  {
+    "repository_path": "bms-balancing/reil_c4_arrays_0b1_20261013/simultaneous/J_V_A1_5.npy",
+    "capture": "source/bms-balancing/reil_c4_arrays_0b1_20261013/simultaneous/J_V_A1_5.npy",
+    "git_blob": "952e65e1c438dd2fb1eca798af4068b2fd6e40e5",
+    "ref": "7505bd0089ae6730fdf8e4eba326869f7c273715"
+  },
+  {
+    "repository_path": "bms-balancing/reil_c4_arrays_0b1_20261013/simultaneous/J_V_A1_6.npy",
+    "capture": "source/bms-balancing/reil_c4_arrays_0b1_20261013/simultaneous/J_V_A1_6.npy",
+    "git_blob": "8b66f9ad21fce49421ffa1ea2c411a12305a81c6",
+    "ref": "7505bd0089ae6730fdf8e4eba326869f7c273715"
+  },
+  {
+    "repository_path": "bms-balancing/reil_c4_arrays_0b1_20261013/simultaneous/J_V_A1_7.npy",
+    "capture": "source/bms-balancing/reil_c4_arrays_0b1_20261013/simultaneous/J_V_A1_7.npy",
+    "git_blob": "f6edc450139d49057d5c27527ccc441eae4a38b3",
+    "ref": "7505bd0089ae6730fdf8e4eba326869f7c273715"
+  },
+  {
+    "repository_path": "bms-balancing/reil_c4_arrays_0b1_20261013/simultaneous/J_V_A1_8.npy",
+    "capture": "source/bms-balancing/reil_c4_arrays_0b1_20261013/simultaneous/J_V_A1_8.npy",
+    "git_blob": "d83fa919b8a4e98a67ce8696454b283db31c87f9",
+    "ref": "7505bd0089ae6730fdf8e4eba326869f7c273715"
+  },
+  {
+    "repository_path": "bms-balancing/reil_c4_arrays_0b1_20261013/simultaneous/J_V_A1_9.npy",
+    "capture": "source/bms-balancing/reil_c4_arrays_0b1_20261013/simultaneous/J_V_A1_9.npy",
+    "git_blob": "50ee73d5eeee5a66f6891948115ad7c05ea6e755",
+    "ref": "7505bd0089ae6730fdf8e4eba326869f7c273715"
+  },
+  {
+    "repository_path": "bms-balancing/reil_c4_arrays_0b1_20261013/simultaneous/J_V_A2_0.npy",
+    "capture": "source/bms-balancing/reil_c4_arrays_0b1_20261013/simultaneous/J_V_A2_0.npy",
+    "git_blob": "1291af9ed4f5369a3f425f596e5d5ef1b76343a9",
+    "ref": "7505bd0089ae6730fdf8e4eba326869f7c273715"
+  },
+  {
+    "repository_path": "bms-balancing/reil_c4_arrays_0b1_20261013/simultaneous/J_V_A2_1.npy",
+    "capture": "source/bms-balancing/reil_c4_arrays_0b1_20261013/simultaneous/J_V_A2_1.npy",
+    "git_blob": "d838c0e480c9b6afbf281b32ff88bd9be82d44d5",
+    "ref": "7505bd0089ae6730fdf8e4eba326869f7c273715"
+  },
+  {
+    "repository_path": "bms-balancing/reil_c4_arrays_0b1_20261013/simultaneous/J_V_A2_10.npy",
+    "capture": "source/bms-balancing/reil_c4_arrays_0b1_20261013/simultaneous/J_V_A2_10.npy",
+    "git_blob": "08bb5870019ca152dc0a0b181cdd951e496d5a07",
+    "ref": "7505bd0089ae6730fdf8e4eba326869f7c273715"
+  },
+  {
+    "repository_path": "bms-balancing/reil_c4_arrays_0b1_20261013/simultaneous/J_V_A2_2.npy",
+    "capture": "source/bms-balancing/reil_c4_arrays_0b1_20261013/simultaneous/J_V_A2_2.npy",
+    "git_blob": "0b8cf763fcfc62391ff2f3191b06942986cf93e9",
+    "ref": "7505bd0089ae6730fdf8e4eba326869f7c273715"
+  },
+  {
+    "repository_path": "bms-balancing/reil_c4_arrays_0b1_20261013/simultaneous/J_V_A2_3.npy",
+    "capture": "source/bms-balancing/reil_c4_arrays_0b1_20261013/simultaneous/J_V_A2_3.npy",
+    "git_blob": "cfb091ea8b65c574ab7daf766be9026fe5f82fd5",
+    "ref": "7505bd0089ae6730fdf8e4eba326869f7c273715"
+  },
+  {
+    "repository_path": "bms-balancing/reil_c4_arrays_0b1_20261013/simultaneous/J_V_A2_4.npy",
+    "capture": "source/bms-balancing/reil_c4_arrays_0b1_20261013/simultaneous/J_V_A2_4.npy",
+    "git_blob": "c5990d8799fef186f75db11b5dcc203fe34b435a",
+    "ref": "7505bd0089ae6730fdf8e4eba326869f7c273715"
+  },
+  {
+    "repository_path": "bms-balancing/reil_c4_arrays_0b1_20261013/simultaneous/J_V_A2_5.npy",
+    "capture": "source/bms-balancing/reil_c4_arrays_0b1_20261013/simultaneous/J_V_A2_5.npy",
+    "git_blob": "34cd96089f4f966def27444e5ee0ffa468bb1377",
+    "ref": "7505bd0089ae6730fdf8e4eba326869f7c273715"
+  },
+  {
+    "repository_path": "bms-balancing/reil_c4_arrays_0b1_20261013/simultaneous/J_V_A2_6.npy",
+    "capture": "source/bms-balancing/reil_c4_arrays_0b1_20261013/simultaneous/J_V_A2_6.npy",
+    "git_blob": "7484529685d175d475f7f56e6785f2e4d3db114d",
+    "ref": "7505bd0089ae6730fdf8e4eba326869f7c273715"
+  },
+  {
+    "repository_path": "bms-balancing/reil_c4_arrays_0b1_20261013/simultaneous/J_V_A2_7.npy",
+    "capture": "source/bms-balancing/reil_c4_arrays_0b1_20261013/simultaneous/J_V_A2_7.npy",
+    "git_blob": "1b5a53aa39793432b2e00d866e96a30379c902cc",
+    "ref": "7505bd0089ae6730fdf8e4eba326869f7c273715"
+  },
+  {
+    "repository_path": "bms-balancing/reil_c4_arrays_0b1_20261013/simultaneous/J_V_A2_8.npy",
+    "capture": "source/bms-balancing/reil_c4_arrays_0b1_20261013/simultaneous/J_V_A2_8.npy",
+    "git_blob": "31f9e4accd7f4878ae88afe490ad29da4a7c588c",
+    "ref": "7505bd0089ae6730fdf8e4eba326869f7c273715"
+  },
+  {
+    "repository_path": "bms-balancing/reil_c4_arrays_0b1_20261013/simultaneous/J_V_A2_9.npy",
+    "capture": "source/bms-balancing/reil_c4_arrays_0b1_20261013/simultaneous/J_V_A2_9.npy",
+    "git_blob": "3c9b756943ddcd13257a1d9719c47dfbcde327d6",
+    "ref": "7505bd0089ae6730fdf8e4eba326869f7c273715"
+  },
+  {
+    "repository_path": "bms-balancing/reil_c4_arrays_0b1_20261013/simultaneous/J_Vs_A0_0.npy",
+    "capture": "source/bms-balancing/reil_c4_arrays_0b1_20261013/simultaneous/J_Vs_A0_0.npy",
+    "git_blob": "4b47fba1b31214dddb0190cb498dbe144d78c5b7",
+    "ref": "7505bd0089ae6730fdf8e4eba326869f7c273715"
+  },
+  {
+    "repository_path": "bms-balancing/reil_c4_arrays_0b1_20261013/simultaneous/J_Vs_A0_1.npy",
+    "capture": "source/bms-balancing/reil_c4_arrays_0b1_20261013/simultaneous/J_Vs_A0_1.npy",
+    "git_blob": "a9380be574588252ab81b625fac27d45a62d023e",
+    "ref": "7505bd0089ae6730fdf8e4eba326869f7c273715"
+  },
+  {
+    "repository_path": "bms-balancing/reil_c4_arrays_0b1_20261013/simultaneous/J_Vs_A0_10.npy",
+    "capture": "source/bms-balancing/reil_c4_arrays_0b1_20261013/simultaneous/J_Vs_A0_10.npy",
+    "git_blob": "f536fa274f8b37903be8c3e9fdb5637b67963462",
+    "ref": "7505bd0089ae6730fdf8e4eba326869f7c273715"
+  },
+  {
+    "repository_path": "bms-balancing/reil_c4_arrays_0b1_20261013/simultaneous/J_Vs_A0_2.npy",
+    "capture": "source/bms-balancing/reil_c4_arrays_0b1_20261013/simultaneous/J_Vs_A0_2.npy",
+    "git_blob": "fd2a6f33369b63ba44fce4da5db9e2b49322bd4f",
+    "ref": "7505bd0089ae6730fdf8e4eba326869f7c273715"
+  },
+  {
+    "repository_path": "bms-balancing/reil_c4_arrays_0b1_20261013/simultaneous/J_Vs_A0_4.npy",
+    "capture": "source/bms-balancing/reil_c4_arrays_0b1_20261013/simultaneous/J_Vs_A0_4.npy",
+    "git_blob": "8fb03e0df5caba40b8b9c2802ab9b86e71ffc86c",
+    "ref": "7505bd0089ae6730fdf8e4eba326869f7c273715"
+  },
+  {
+    "repository_path": "bms-balancing/reil_c4_arrays_0b1_20261013/simultaneous/J_Vs_A0_5.npy",
+    "capture": "source/bms-balancing/reil_c4_arrays_0b1_20261013/simultaneous/J_Vs_A0_5.npy",
+    "git_blob": "a5f50278b716f0aeb61d8622c5f42c74c1962eca",
+    "ref": "7505bd0089ae6730fdf8e4eba326869f7c273715"
+  },
+  {
+    "repository_path": "bms-balancing/reil_c4_arrays_0b1_20261013/simultaneous/J_Vs_A0_6.npy",
+    "capture": "source/bms-balancing/reil_c4_arrays_0b1_20261013/simultaneous/J_Vs_A0_6.npy",
+    "git_blob": "0e71f28f7e4decd6aff1538bb33fe3cd807d351a",
+    "ref": "7505bd0089ae6730fdf8e4eba326869f7c273715"
+  },
+  {
+    "repository_path": "bms-balancing/reil_c4_arrays_0b1_20261013/simultaneous/J_Vs_A0_7.npy",
+    "capture": "source/bms-balancing/reil_c4_arrays_0b1_20261013/simultaneous/J_Vs_A0_7.npy",
+    "git_blob": "235d8f65300bb6b8e4f8bceea740f5bd85f10621",
+    "ref": "7505bd0089ae6730fdf8e4eba326869f7c273715"
+  },
+  {
+    "repository_path": "bms-balancing/reil_c4_arrays_0b1_20261013/simultaneous/J_Vs_A0_8.npy",
+    "capture": "source/bms-balancing/reil_c4_arrays_0b1_20261013/simultaneous/J_Vs_A0_8.npy",
+    "git_blob": "0d74d848322937b46606c899db710872b60022ed",
+    "ref": "7505bd0089ae6730fdf8e4eba326869f7c273715"
+  },
+  {
+    "repository_path": "bms-balancing/reil_c4_arrays_0b1_20261013/simultaneous/J_Vs_A0_9.npy",
+    "capture": "source/bms-balancing/reil_c4_arrays_0b1_20261013/simultaneous/J_Vs_A0_9.npy",
+    "git_blob": "c1ac0ce8f9f7a9747744ab31a030379800d5229b",
+    "ref": "7505bd0089ae6730fdf8e4eba326869f7c273715"
+  },
+  {
+    "repository_path": "bms-balancing/reil_c4_arrays_0b1_20261013/simultaneous/J_Vs_A1_0.npy",
+    "capture": "source/bms-balancing/reil_c4_arrays_0b1_20261013/simultaneous/J_Vs_A1_0.npy",
+    "git_blob": "51ffb32987e8cea6ce41be53e07fcd30166bf153",
+    "ref": "7505bd0089ae6730fdf8e4eba326869f7c273715"
+  },
+  {
+    "repository_path": "bms-balancing/reil_c4_arrays_0b1_20261013/simultaneous/J_Vs_A1_1.npy",
+    "capture": "source/bms-balancing/reil_c4_arrays_0b1_20261013/simultaneous/J_Vs_A1_1.npy",
+    "git_blob": "914e1b2af08d97ef14627ba8eb8089518539969f",
+    "ref": "7505bd0089ae6730fdf8e4eba326869f7c273715"
+  },
+  {
+    "repository_path": "bms-balancing/reil_c4_arrays_0b1_20261013/simultaneous/J_Vs_A1_10.npy",
+    "capture": "source/bms-balancing/reil_c4_arrays_0b1_20261013/simultaneous/J_Vs_A1_10.npy",
+    "git_blob": "bc8477faff28597fb06ffedd9fd0548bf2fe9a29",
+    "ref": "7505bd0089ae6730fdf8e4eba326869f7c273715"
+  },
+  {
+    "repository_path": "bms-balancing/reil_c4_arrays_0b1_20261013/simultaneous/J_Vs_A1_2.npy",
+    "capture": "source/bms-balancing/reil_c4_arrays_0b1_20261013/simultaneous/J_Vs_A1_2.npy",
+    "git_blob": "bda82f03200dcd4143c3e6518c1fbc046989d2df",
+    "ref": "7505bd0089ae6730fdf8e4eba326869f7c273715"
+  },
+  {
+    "repository_path": "bms-balancing/reil_c4_arrays_0b1_20261013/simultaneous/J_Vs_A1_4.npy",
+    "capture": "source/bms-balancing/reil_c4_arrays_0b1_20261013/simultaneous/J_Vs_A1_4.npy",
+    "git_blob": "6e76e4cbe34152f6bbc95be1dbf6d1995c749fb2",
+    "ref": "7505bd0089ae6730fdf8e4eba326869f7c273715"
+  },
+  {
+    "repository_path": "bms-balancing/reil_c4_arrays_0b1_20261013/simultaneous/J_Vs_A1_5.npy",
+    "capture": "source/bms-balancing/reil_c4_arrays_0b1_20261013/simultaneous/J_Vs_A1_5.npy",
+    "git_blob": "fbb39e1b57e4a7d22875cab0dd9ec0e752ef4487",
+    "ref": "7505bd0089ae6730fdf8e4eba326869f7c273715"
+  },
+  {
+    "repository_path": "bms-balancing/reil_c4_arrays_0b1_20261013/simultaneous/J_Vs_A1_6.npy",
+    "capture": "source/bms-balancing/reil_c4_arrays_0b1_20261013/simultaneous/J_Vs_A1_6.npy",
+    "git_blob": "63a79bb6aa2a197b1149641e01aeef25c57b316a",
+    "ref": "7505bd0089ae6730fdf8e4eba326869f7c273715"
+  },
+  {
+    "repository_path": "bms-balancing/reil_c4_arrays_0b1_20261013/simultaneous/J_Vs_A1_7.npy",
+    "capture": "source/bms-balancing/reil_c4_arrays_0b1_20261013/simultaneous/J_Vs_A1_7.npy",
+    "git_blob": "cde3d68e215c5fa45fda2f2114cec6b7c4c5942d",
+    "ref": "7505bd0089ae6730fdf8e4eba326869f7c273715"
+  },
+  {
+    "repository_path": "bms-balancing/reil_c4_arrays_0b1_20261013/simultaneous/J_Vs_A1_8.npy",
+    "capture": "source/bms-balancing/reil_c4_arrays_0b1_20261013/simultaneous/J_Vs_A1_8.npy",
+    "git_blob": "75510dda50d92945babb048a20f64882a783f572",
+    "ref": "7505bd0089ae6730fdf8e4eba326869f7c273715"
+  },
+  {
+    "repository_path": "bms-balancing/reil_c4_arrays_0b1_20261013/simultaneous/J_Vs_A1_9.npy",
+    "capture": "source/bms-balancing/reil_c4_arrays_0b1_20261013/simultaneous/J_Vs_A1_9.npy",
+    "git_blob": "5ed1fc27d3292d2ce4a7d235a86b38f5f82bde13",
+    "ref": "7505bd0089ae6730fdf8e4eba326869f7c273715"
+  },
+  {
+    "repository_path": "bms-balancing/reil_c4_arrays_0b1_20261013/simultaneous/rho_A0_0.npy",
+    "capture": "source/bms-balancing/reil_c4_arrays_0b1_20261013/simultaneous/rho_A0_0.npy",
+    "git_blob": "db5edb7b3abaf85988f9344cff3849493345ba57",
+    "ref": "7505bd0089ae6730fdf8e4eba326869f7c273715"
+  },
+  {
+    "repository_path": "bms-balancing/reil_c4_arrays_0b1_20261013/simultaneous/rho_A0_1.npy",
+    "capture": "source/bms-balancing/reil_c4_arrays_0b1_20261013/simultaneous/rho_A0_1.npy",
+    "git_blob": "e77cc8c74eaa809edfd6ea40993a864a6ccdcaa6",
+    "ref": "7505bd0089ae6730fdf8e4eba326869f7c273715"
+  },
+  {
+    "repository_path": "bms-balancing/reil_c4_arrays_0b1_20261013/simultaneous/rho_A0_10.npy",
+    "capture": "source/bms-balancing/reil_c4_arrays_0b1_20261013/simultaneous/rho_A0_10.npy",
+    "git_blob": "003e02fbfc2c740f4bbc8bd6bf84730c9432befb",
+    "ref": "7505bd0089ae6730fdf8e4eba326869f7c273715"
+  },
+  {
+    "repository_path": "bms-balancing/reil_c4_arrays_0b1_20261013/simultaneous/rho_A0_2.npy",
+    "capture": "source/bms-balancing/reil_c4_arrays_0b1_20261013/simultaneous/rho_A0_2.npy",
+    "git_blob": "f9ed080b76f019f77dd499e6cdcd211e770f2fe5",
+    "ref": "7505bd0089ae6730fdf8e4eba326869f7c273715"
+  },
+  {
+    "repository_path": "bms-balancing/reil_c4_arrays_0b1_20261013/simultaneous/rho_A0_4.npy",
+    "capture": "source/bms-balancing/reil_c4_arrays_0b1_20261013/simultaneous/rho_A0_4.npy",
+    "git_blob": "c5c7c31e678325d54687cd1df959068ca6b6f1e6",
+    "ref": "7505bd0089ae6730fdf8e4eba326869f7c273715"
+  },
+  {
+    "repository_path": "bms-balancing/reil_c4_arrays_0b1_20261013/simultaneous/rho_A0_5.npy",
+    "capture": "source/bms-balancing/reil_c4_arrays_0b1_20261013/simultaneous/rho_A0_5.npy",
+    "git_blob": "efff0fe60d3cb2edc43421184a3491c1aaf01552",
+    "ref": "7505bd0089ae6730fdf8e4eba326869f7c273715"
+  },
+  {
+    "repository_path": "bms-balancing/reil_c4_arrays_0b1_20261013/simultaneous/rho_A0_6.npy",
+    "capture": "source/bms-balancing/reil_c4_arrays_0b1_20261013/simultaneous/rho_A0_6.npy",
+    "git_blob": "3d55e8299270ec0d1b8ee012ed83df539f339af1",
+    "ref": "7505bd0089ae6730fdf8e4eba326869f7c273715"
+  },
+  {
+    "repository_path": "bms-balancing/reil_c4_arrays_0b1_20261013/simultaneous/rho_A0_7.npy",
+    "capture": "source/bms-balancing/reil_c4_arrays_0b1_20261013/simultaneous/rho_A0_7.npy",
+    "git_blob": "07452511a8a0256b37e529141c7f3139ed1b3c4e",
+    "ref": "7505bd0089ae6730fdf8e4eba326869f7c273715"
+  },
+  {
+    "repository_path": "bms-balancing/reil_c4_arrays_0b1_20261013/simultaneous/rho_A0_8.npy",
+    "capture": "source/bms-balancing/reil_c4_arrays_0b1_20261013/simultaneous/rho_A0_8.npy",
+    "git_blob": "f0a73e9ac73e32a46a868fbddb55b41b98b88b64",
+    "ref": "7505bd0089ae6730fdf8e4eba326869f7c273715"
+  },
+  {
+    "repository_path": "bms-balancing/reil_c4_arrays_0b1_20261013/simultaneous/rho_A0_9.npy",
+    "capture": "source/bms-balancing/reil_c4_arrays_0b1_20261013/simultaneous/rho_A0_9.npy",
+    "git_blob": "17a7fd5298e1a022af7f451ce8bcbc2c32e5594f",
+    "ref": "7505bd0089ae6730fdf8e4eba326869f7c273715"
+  },
+  {
+    "repository_path": "bms-balancing/docs/REIL_C4_APPROVAL_REQUEST_v2_20261013.md",
+    "capture": "source/bms-balancing/docs/REIL_C4_APPROVAL_REQUEST_v2_20261013.md",
+    "git_blob": "5abd201780c9db4685a289053d6eb79d8b0ef8e5",
+    "ref": "7505bd0089ae6730fdf8e4eba326869f7c273715"
+  },
+  {
+    "repository_path": "bms-balancing/scripts/reil_c4_monitor.py",
+    "capture": "source/bms-balancing/scripts/reil_c4_monitor.py",
+    "git_blob": "0daf23bfac51f77a15a8586a55f898031011d3bf",
+    "ref": "7505bd0089ae6730fdf8e4eba326869f7c273715"
+  },
+  {
+    "repository_path": "bms-balancing/scripts/reil_c4_e3a.py",
+    "capture": "source/bms-balancing/scripts/reil_c4_e3a.py",
+    "git_blob": "2c5e614eb5b565e9c9bab410ae741ffec1d2fca5",
+    "ref": "7505bd0089ae6730fdf8e4eba326869f7c273715"
+  },
+  {
+    "repository_path": "bms-balancing/reviews/prereview_pybamm_reil_20261003/external/util_LFP.py.txt",
+    "capture": "source/bms-balancing/reviews/prereview_pybamm_reil_20261003/external/util_LFP.py.txt",
+    "git_blob": "1d4afe9f5ef451b9cf479640fd5e361fdbd08bd0",
+    "ref": "7505bd0089ae6730fdf8e4eba326869f7c273715"
+  },
+  {
+    "repository_path": "bms-balancing/scripts/reil_c5_pilot.py",
+    "capture": "source/bms-balancing/scripts/reil_c5_pilot.py",
+    "git_blob": "0e5a9f3a83ca419d311f27e0a63d9f0f7ade0d6b",
+    "ref": "7505bd0089ae6730fdf8e4eba326869f7c273715"
+  }
+]

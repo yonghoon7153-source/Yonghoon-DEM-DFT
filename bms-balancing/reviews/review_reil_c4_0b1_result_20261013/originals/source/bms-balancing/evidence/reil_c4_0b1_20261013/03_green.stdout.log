@@ -1,0 +1,22 @@
+...................................................                      [100%]
+==================================== PASSES ====================================
+___________________ test_10_the_cli_requires_explicit_paths ____________________
+----------------------------- Captured stderr call -----------------------------
+usage: reil_c4_h seal-arrays [-h] --out OUT --p0-result P0_RESULT
+reil_c4_h seal-arrays: error: the following arguments are required: --p0-result
+usage: reil_c4_h dryrun [-h] --venv VENV --seal SEAL --seal-manifest-sha256
+                        SEAL_MANIFEST_SHA256 --arrays ARRAYS --h-arrays
+                        H_ARRAYS --h-manifest-sha256 H_MANIFEST_SHA256
+                        --util-copy UTIL_COPY --p0-result P0_RESULT --out OUT
+                        [--n-workers N_WORKERS]
+reil_c4_h dryrun: error: the following arguments are required: --seal, --seal-manifest-sha256, --arrays, --h-arrays, --h-manifest-sha256, --util-copy, --p0-result, --out
+============================= slowest 8 durations ==============================
+13.29s call     tests/test_reil_c4_0b1.py::test_10_dryrun_writes_the_plan_and_a_synthetic_sample
+0.97s setup    tests/test_reil_c4_0b1.py::test_06_v_full_is_the_same_curve_objective_fun_builds
+0.83s call     tests/test_reil_c4_0b1.py::test_05_sobol_points_use_the_c6_generator_call
+0.30s call     tests/test_reil_c4_0b1.py::test_05_seal_writes_index_seed_table_rules_and_manifest_and_check_regenerates
+0.19s call     tests/test_reil_c4_0b1.py::test_05_the_array_plan_from_p0_has_134_simultaneous_labels_and_unique_seeds
+0.16s call     tests/test_reil_c4_0b1.py::test_08_a_run_records_reeval_residuals_class_termination_and_constraints
+0.15s call     tests/test_reil_c4_0b1.py::test_10_dryrun_refuses_incomplete_arrays_and_data_paths
+0.12s call     tests/test_reil_c4_0b1.py::test_08_rho_runs_use_the_phase_a_denominators_and_record_both_components
+51 passed in 16.61s

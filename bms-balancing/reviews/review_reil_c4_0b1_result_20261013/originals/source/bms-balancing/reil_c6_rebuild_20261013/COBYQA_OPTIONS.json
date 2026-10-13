@@ -1,0 +1,67 @@
+{
+ "accepted": true,
+ "all_documented": true,
+ "implementation_files_sha256": {
+  "scipy/_lib/cobyqa/framework.py": "94878a0a40cbc476cc9924e231cc9ab2f55eefb8d5be1fd84ce617d079cae109",
+  "scipy/_lib/cobyqa/main.py": "c33d0cda2a857f379369952afe3d53905ffd57f489d6def703ed1f747d1e4ace",
+  "scipy/_lib/cobyqa/problem.py": "4a23e09a2153c625b9c89fc555fdfb67d1901a8e86c7f7c9dd15ccce1b2b9f8d",
+  "scipy/_lib/cobyqa/settings.py": "a207e24a1c6e3c7b0c7d6d7a3864b007dfa620f462b9665219704e08ed870efc"
+ },
+ "options": {
+  "disp": {
+   "description": "Set to True to print information about the optimization procedure. Default is ``False``.",
+   "documented": true,
+   "planned": "False",
+   "type": "bool"
+  },
+  "f_target": {
+   "description": "Target value for the objective function. The optimization procedure is terminated when the objective function value of a feasible point (see `feasibility_tol` below) is less than or equal to this target. Default is ``-numpy.inf``.",
+   "documented": true,
+   "planned": "-inf",
+   "type": "float"
+  },
+  "feasibility_tol": {
+   "description": "Absolute tolerance for the constraint violation. Default is ``1e-8``.",
+   "documented": true,
+   "planned": "1e-12",
+   "type": "float"
+  },
+  "final_tr_radius": {
+   "description": "Final trust-region radius. It should indicate the accuracy required in the final values of the variables. If provided, this option overrides the value of `tol` in the `minimize` function. Default is ``1e-6``.",
+   "documented": true,
+   "planned": "1e-06",
+   "type": "float"
+  },
+  "initial_tr_radius": {
+   "description": "Initial trust-region radius. Typically, this value should be in the order of one tenth of the greatest expected change to the variables. Default is ``1.0``.",
+   "documented": true,
+   "planned": "1.0",
+   "type": "float"
+  },
+  "maxfev": {
+   "description": "Maximum number of function evaluations. Default is ``500 * n``, where ``n`` is the number of variables.",
+   "documented": true,
+   "planned": "2000",
+   "type": "int"
+  },
+  "maxiter": {
+   "description": "Maximum number of iterations. Default is ``1000 * n``, where ``n`` is the number of variables.",
+   "documented": true,
+   "planned": "4000",
+   "type": "int"
+  },
+  "scale": {
+   "description": "Set to True to scale the variables according to the bounds. If True and if all the lower and upper bounds are finite, the variables are scaled to be within the range :math:`[-1, 1]`. If any of the lower or upper bounds is infinite, the variables are not scaled. Default is ``False``.",
+   "documented": true,
+   "planned": "True",
+   "type": "bool"
+  }
+ },
+ "synthetic_call": {
+  "function": "sum((x - 0.3)**2) · x0 = 0.9 × 4 · bounds [0, 1]^4 (REIL 자료 아님)",
+  "success": true,
+  "unknown_option_warnings": [],
+  "warnings": [],
+  "x_within_1e-6_of_0.3": true
+ }
+}

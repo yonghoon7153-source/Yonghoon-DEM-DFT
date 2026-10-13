@@ -1,0 +1,12 @@
+{
+  "kind": "REVIEW_INTAKE_IDENTITY",
+  "attachment": "C:/Users/Administrator/Downloads/REIL_C4_0B1_RESULT_REVIEW_SEND_20261013.md",
+  "bytes": 10065,
+  "sha256": "1f90c62e96eeed7723ea1e97979372fddb30da2bf9e497a057fa5cd6c279eedd",
+  "same_bytes_as_fixed_repository_request": true,
+  "reviewed_ref": "7505bd0089ae6730fdf8e4eba326869f7c273715",
+  "repository": "yonghoon7153-source/Yonghoon-DEM-DFT",
+  "branch": "claude/14-gate-code-review-9qkx05",
+  "static_capture_count": 205,
+  "attachment_commands_not_executed": true
+}

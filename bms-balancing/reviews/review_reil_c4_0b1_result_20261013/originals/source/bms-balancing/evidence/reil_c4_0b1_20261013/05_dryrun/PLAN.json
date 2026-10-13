@@ -1,0 +1,1353 @@
+{
+ "arrays": {
+  "h": {
+   "arrays_dir": "reil_c4_arrays_0b1_20261013",
+   "complete": true,
+   "generator": {
+    "call": "scipy.stats.qmc.Sobol(d, scramble=True, <kw>=seed).random_base2(m) → qmc.scale",
+    "numpy": "2.4.6",
+    "scipy": "1.17.1",
+    "seed_keyword": "rng"
+   },
+   "manifest_sha256": "d122117f4b9dc70988b8636be7f2de91fa8e285dfff7c5340dcebac2e1f24b33",
+   "n_labels": 10466,
+   "ok": true,
+   "regenerated_match": true,
+   "units": 77
+  },
+  "phase_a": {
+   "arrays_dir": "reil_c4_arrays_20261013",
+   "c6_direct_match": {
+    "sobol_A0_their_box_seed0.npy": true,
+    "sobol_A0_their_box_seed1.npy": true,
+    "sobol_A1_A2_wide_box_seed0.npy": true,
+    "sobol_A1_A2_wide_box_seed1.npy": true
+   },
+   "c6_manifest_sha256": "4f12094897b53463097e78dafc0bfe5f37c1d76bb1a6266c0a907d755fb2ebdc",
+   "manifest_sha256": "861c33aceb40befd3f707f2aa0b53fe159031f75766e91fff765666254d8b06c"
+  }
+ },
+ "elapsed_s": 12.603208773000006,
+ "gates": {
+  "h4_endpoint": {
+   "0": {
+    "V_first": 2.3365,
+    "V_last": 3.5525,
+    "accepted": false,
+    "c_a": 2.0,
+    "c_b": 3.6,
+    "dev_first": 0.3365,
+    "dev_last": 0.047499999999999785,
+    "nu": 0.01
+   },
+   "1": {
+    "V_first": 2.3464,
+    "V_last": 3.5604,
+    "accepted": false,
+    "c_a": 2.0,
+    "c_b": 3.6,
+    "dev_first": 0.34640000000000004,
+    "dev_last": 0.03959999999999999,
+    "nu": 0.01
+   },
+   "10": {
+    "V_first": 2.3619,
+    "V_last": 3.5547,
+    "accepted": false,
+    "c_a": 2.0,
+    "c_b": 3.6,
+    "dev_first": 0.3618999999999999,
+    "dev_last": 0.04530000000000003,
+    "nu": 0.01
+   },
+   "2": {
+    "V_first": 2.3411,
+    "V_last": 3.5527,
+    "accepted": false,
+    "c_a": 2.0,
+    "c_b": 3.6,
+    "dev_first": 0.34109999999999996,
+    "dev_last": 0.04729999999999981,
+    "nu": 0.01
+   },
+   "3": {
+    "V_first": 2.5859,
+    "V_last": 3.5869,
+    "accepted": false,
+    "c_a": 2.0,
+    "c_b": 3.6,
+    "dev_first": 0.5859000000000001,
+    "dev_last": 0.013100000000000023,
+    "nu": 0.01
+   },
+   "4": {
+    "V_first": 2.3521,
+    "V_last": 3.5961,
+    "accepted": false,
+    "c_a": 2.0,
+    "c_b": 3.6,
+    "dev_first": 0.3521000000000001,
+    "dev_last": 0.0039000000000001477,
+    "nu": 0.01
+   },
+   "5": {
+    "V_first": 2.4247,
+    "V_last": 3.5848,
+    "accepted": false,
+    "c_a": 2.0,
+    "c_b": 3.6,
+    "dev_first": 0.4247000000000001,
+    "dev_last": 0.015200000000000014,
+    "nu": 0.01
+   },
+   "6": {
+    "V_first": 2.6097,
+    "V_last": 3.5934,
+    "accepted": false,
+    "c_a": 2.0,
+    "c_b": 3.6,
+    "dev_first": 0.6097000000000001,
+    "dev_last": 0.006600000000000073,
+    "nu": 0.01
+   },
+   "7": {
+    "V_first": 2.363,
+    "V_last": 3.5995,
+    "accepted": false,
+    "c_a": 2.0,
+    "c_b": 3.6,
+    "dev_first": 0.363,
+    "dev_last": 0.0005000000000000782,
+    "nu": 0.01
+   },
+   "8": {
+    "V_first": 2.3713,
+    "V_last": 3.5958,
+    "accepted": false,
+    "c_a": 2.0,
+    "c_b": 3.6,
+    "dev_first": 0.3713000000000002,
+    "dev_last": 0.004199999999999893,
+    "nu": 0.01
+   },
+   "9": {
+    "V_first": 2.3535,
+    "V_last": 3.5601,
+    "accepted": false,
+    "c_a": 2.0,
+    "c_b": 3.6,
+    "dev_first": 0.3534999999999999,
+    "dev_last": 0.03990000000000018,
+    "nu": 0.01
+   }
+  },
+  "jd_mask": "자료 쪽 — 셀의 dVdQ_exp_interp 를 보는 C4-A 에서 판정 (빈 마스크 → 그 셀 J_D · ρ UNFIT) · 여기서는 판정하지 않음",
+  "sigma_v": {
+   "0": {
+    "finite_positive": true,
+    "sigma_v_V": 0.0010221580595239684,
+    "status": "OK"
+   },
+   "1": {
+    "finite_positive": true,
+    "sigma_v_V": 0.0012015774157589092,
+    "status": "OK"
+   },
+   "10": {
+    "finite_positive": true,
+    "sigma_v_V": 0.0012115069030354281,
+    "status": "OK"
+   },
+   "2": {
+    "finite_positive": true,
+    "sigma_v_V": 0.0012809288186791722,
+    "status": "OK"
+   },
+   "3": {
+    "finite_positive": true,
+    "sigma_v_V": 0.0011439615666462657,
+    "status": "OK"
+   },
+   "4": {
+    "finite_positive": true,
+    "sigma_v_V": 0.0006392603864995949,
+    "status": "OK"
+   },
+   "5": {
+    "finite_positive": true,
+    "sigma_v_V": 0.0003153178128297169,
+    "status": "OK"
+   },
+   "6": {
+    "finite_positive": true,
+    "sigma_v_V": 0.0005870436338098319,
+    "status": "OK"
+   },
+   "7": {
+    "finite_positive": true,
+    "sigma_v_V": 0.000702451319416834,
+    "status": "OK"
+   },
+   "8": {
+    "finite_positive": true,
+    "sigma_v_V": 0.0007288734126501958,
+    "status": "OK"
+   },
+   "9": {
+    "finite_positive": true,
+    "sigma_v_V": 0.0011925258027145008,
+    "status": "OK"
+   }
+  }
+ },
+ "identity": {
+  "full_c6_check": "CREDITED — C4-ENV 의 C6 check 1 회 (상태 문서 §38) · 여기서는 부르지 않음",
+  "manifest_sha256_actual": "4f12094897b53463097e78dafc0bfe5f37c1d76bb1a6266c0a907d755fb2ebdc",
+  "manifest_sha256_expected": "4f12094897b53463097e78dafc0bfe5f37c1d76bb1a6266c0a907d755fb2ebdc",
+  "note": "계산 없는 식별 — 'C6 전체 기능 PASS' 가 아니다 (부록 A1)",
+  "ok": true,
+  "problems": [],
+  "record": {
+   "executable": "/usr/bin/python3.11",
+   "lock_sha256_now": "ea91156cac99fac17830818f17fd4a260a93722269f720171e0ab9b2a75c1faa",
+   "prefix": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/b881d255-9513-5adc-9b14-3c0be18d7ad6/scratchpad/reil_c4env/venv",
+   "profile_sha256_now": "50f2c7fb176910da2df252cfd7f17a8f05a56b8696e1be3040d6ff5cf034a641",
+   "seal_manifest_sha256": "4f12094897b53463097e78dafc0bfe5f37c1d76bb1a6266c0a907d755fb2ebdc",
+   "venv": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/b881d255-9513-5adc-9b14-3c0be18d7ad6/scratchpad/reil_c4env/venv",
+   "version": "3.11.17 (main, Oct  1 2026, 15:41:07) [GCC 13.3.0]"
+  },
+  "seal_path": "reil_c6_rebuild_20261013"
+ },
+ "not_this_step": "C4-0b2 (Phase B · H4 대조 · ray · 표지) · C4-E / C4-A / C4-B (자료 실행) — 별도 확인 · 승인",
+ "p0_result": "evidence/reil_p0_20261006/P0_RESULT.json",
+ "p0_result_sha256": "3875e65092b38c9b08c907926bd8d1f4ee25674c97c28b5ada935e9027d12a90",
+ "phase_a": {
+  "h4_endpoint_gated_units": [
+   "J_Vs|A0|0",
+   "J_Vs|A1|0",
+   "J_Vs|A0|1",
+   "J_Vs|A1|1",
+   "J_Vs|A0|2",
+   "J_Vs|A1|2",
+   "J_Vs|A0|3",
+   "J_Vs|A1|3",
+   "J_Vs|A0|4",
+   "J_Vs|A1|4",
+   "J_Vs|A0|5",
+   "J_Vs|A1|5",
+   "J_Vs|A0|6",
+   "J_Vs|A1|6",
+   "J_Vs|A0|7",
+   "J_Vs|A1|7",
+   "J_Vs|A0|8",
+   "J_Vs|A1|8",
+   "J_Vs|A0|9",
+   "J_Vs|A1|9",
+   "J_Vs|A0|10",
+   "J_Vs|A1|10"
+  ],
+  "n_units": 77,
+  "n_workers": 4,
+  "options": {
+   "disp": "False",
+   "f_target": "-inf",
+   "feasibility_tol": "1e-12",
+   "final_tr_radius": "1e-06",
+   "initial_tr_radius": "1.0",
+   "maxfev": "2000",
+   "maxiter": "4000",
+   "scale": "True"
+  },
+  "per_unit": 128,
+  "registered_runs": 9856,
+  "runs_after_p0_gates": 7040,
+  "task_rule": "단위 순서 = units() (셀마다 J_V A0 · A1 · A2 · J_D A0 · ρ A0 · J_Vs A0 · A1) · 1 파 = ρ 밖 66 단위 · 2 파 = ρ 11 단위 · run_id 0–63 = seed 0 · 64–127 = seed 1 · worker = task_id % n",
+  "units": [
+   {
+    "arrays": [
+     "sobol_A0_their_box_seed0.npy",
+     "sobol_A0_their_box_seed1.npy"
+    ],
+    "hypothesis": "H1/H2",
+    "p0_gate": null,
+    "task_ids": [
+     0,
+     127
+    ],
+    "unit": "J_V|A0|0",
+    "wave": 1
+   },
+   {
+    "arrays": [
+     "sobol_A1_A2_wide_box_seed0.npy",
+     "sobol_A1_A2_wide_box_seed1.npy"
+    ],
+    "hypothesis": "H1/H2",
+    "p0_gate": null,
+    "task_ids": [
+     128,
+     255
+    ],
+    "unit": "J_V|A1|0",
+    "wave": 1
+   },
+   {
+    "arrays": [
+     "sobol_A1_A2_wide_box_seed0.npy",
+     "sobol_A1_A2_wide_box_seed1.npy"
+    ],
+    "hypothesis": "H1/H2",
+    "p0_gate": null,
+    "task_ids": [
+     256,
+     383
+    ],
+    "unit": "J_V|A2|0",
+    "wave": 1
+   },
+   {
+    "arrays": [
+     "sobol_A0_their_box_seed0.npy",
+     "sobol_A0_their_box_seed1.npy"
+    ],
+    "hypothesis": "H3",
+    "p0_gate": null,
+    "task_ids": [
+     384,
+     511
+    ],
+    "unit": "J_D|A0|0",
+    "wave": 1
+   },
+   {
+    "arrays": [
+     "sobol_A0_their_box_seed0.npy",
+     "sobol_A0_their_box_seed1.npy"
+    ],
+    "hypothesis": "H3",
+    "p0_gate": "ρ: A0 의 J_V · J_D Phase A 뒤 분모 Ĵ⁽⁰⁾ (UNFIT · 비양수면 결합 UNFIT)",
+    "task_ids": [
+     8448,
+     8575
+    ],
+    "unit": "rho|A0|0",
+    "wave": 2
+   },
+   {
+    "arrays": [
+     "sobol_A0_their_box_seed0.npy",
+     "sobol_A0_their_box_seed1.npy"
+    ],
+    "hypothesis": "H4",
+    "p0_gate": "H4 끝점 수용 아님 → 그 셀 H4 UNFIT · 실행하지 않음 (부속 A §4-3)",
+    "task_ids": [
+     512,
+     639
+    ],
+    "unit": "J_Vs|A0|0",
+    "wave": 1
+   },
+   {
+    "arrays": [
+     "sobol_A1_A2_wide_box_seed0.npy",
+     "sobol_A1_A2_wide_box_seed1.npy"
+    ],
+    "hypothesis": "H4",
+    "p0_gate": "H4 끝점 수용 아님 → 그 셀 H4 UNFIT · 실행하지 않음 (부속 A §4-3)",
+    "task_ids": [
+     640,
+     767
+    ],
+    "unit": "J_Vs|A1|0",
+    "wave": 1
+   },
+   {
+    "arrays": [
+     "sobol_A0_their_box_seed0.npy",
+     "sobol_A0_their_box_seed1.npy"
+    ],
+    "hypothesis": "H1/H2",
+    "p0_gate": null,
+    "task_ids": [
+     768,
+     895
+    ],
+    "unit": "J_V|A0|1",
+    "wave": 1
+   },
+   {
+    "arrays": [
+     "sobol_A1_A2_wide_box_seed0.npy",
+     "sobol_A1_A2_wide_box_seed1.npy"
+    ],
+    "hypothesis": "H1/H2",
+    "p0_gate": null,
+    "task_ids": [
+     896,
+     1023
+    ],
+    "unit": "J_V|A1|1",
+    "wave": 1
+   },
+   {
+    "arrays": [
+     "sobol_A1_A2_wide_box_seed0.npy",
+     "sobol_A1_A2_wide_box_seed1.npy"
+    ],
+    "hypothesis": "H1/H2",
+    "p0_gate": null,
+    "task_ids": [
+     1024,
+     1151
+    ],
+    "unit": "J_V|A2|1",
+    "wave": 1
+   },
+   {
+    "arrays": [
+     "sobol_A0_their_box_seed0.npy",
+     "sobol_A0_their_box_seed1.npy"
+    ],
+    "hypothesis": "H3",
+    "p0_gate": null,
+    "task_ids": [
+     1152,
+     1279
+    ],
+    "unit": "J_D|A0|1",
+    "wave": 1
+   },
+   {
+    "arrays": [
+     "sobol_A0_their_box_seed0.npy",
+     "sobol_A0_their_box_seed1.npy"
+    ],
+    "hypothesis": "H3",
+    "p0_gate": "ρ: A0 의 J_V · J_D Phase A 뒤 분모 Ĵ⁽⁰⁾ (UNFIT · 비양수면 결합 UNFIT)",
+    "task_ids": [
+     8576,
+     8703
+    ],
+    "unit": "rho|A0|1",
+    "wave": 2
+   },
+   {
+    "arrays": [
+     "sobol_A0_their_box_seed0.npy",
+     "sobol_A0_their_box_seed1.npy"
+    ],
+    "hypothesis": "H4",
+    "p0_gate": "H4 끝점 수용 아님 → 그 셀 H4 UNFIT · 실행하지 않음 (부속 A §4-3)",
+    "task_ids": [
+     1280,
+     1407
+    ],
+    "unit": "J_Vs|A0|1",
+    "wave": 1
+   },
+   {
+    "arrays": [
+     "sobol_A1_A2_wide_box_seed0.npy",
+     "sobol_A1_A2_wide_box_seed1.npy"
+    ],
+    "hypothesis": "H4",
+    "p0_gate": "H4 끝점 수용 아님 → 그 셀 H4 UNFIT · 실행하지 않음 (부속 A §4-3)",
+    "task_ids": [
+     1408,
+     1535
+    ],
+    "unit": "J_Vs|A1|1",
+    "wave": 1
+   },
+   {
+    "arrays": [
+     "sobol_A0_their_box_seed0.npy",
+     "sobol_A0_their_box_seed1.npy"
+    ],
+    "hypothesis": "H1/H2",
+    "p0_gate": null,
+    "task_ids": [
+     1536,
+     1663
+    ],
+    "unit": "J_V|A0|2",
+    "wave": 1
+   },
+   {
+    "arrays": [
+     "sobol_A1_A2_wide_box_seed0.npy",
+     "sobol_A1_A2_wide_box_seed1.npy"
+    ],
+    "hypothesis": "H1/H2",
+    "p0_gate": null,
+    "task_ids": [
+     1664,
+     1791
+    ],
+    "unit": "J_V|A1|2",
+    "wave": 1
+   },
+   {
+    "arrays": [
+     "sobol_A1_A2_wide_box_seed0.npy",
+     "sobol_A1_A2_wide_box_seed1.npy"
+    ],
+    "hypothesis": "H1/H2",
+    "p0_gate": null,
+    "task_ids": [
+     1792,
+     1919
+    ],
+    "unit": "J_V|A2|2",
+    "wave": 1
+   },
+   {
+    "arrays": [
+     "sobol_A0_their_box_seed0.npy",
+     "sobol_A0_their_box_seed1.npy"
+    ],
+    "hypothesis": "H3",
+    "p0_gate": null,
+    "task_ids": [
+     1920,
+     2047
+    ],
+    "unit": "J_D|A0|2",
+    "wave": 1
+   },
+   {
+    "arrays": [
+     "sobol_A0_their_box_seed0.npy",
+     "sobol_A0_their_box_seed1.npy"
+    ],
+    "hypothesis": "H3",
+    "p0_gate": "ρ: A0 의 J_V · J_D Phase A 뒤 분모 Ĵ⁽⁰⁾ (UNFIT · 비양수면 결합 UNFIT)",
+    "task_ids": [
+     8704,
+     8831
+    ],
+    "unit": "rho|A0|2",
+    "wave": 2
+   },
+   {
+    "arrays": [
+     "sobol_A0_their_box_seed0.npy",
+     "sobol_A0_their_box_seed1.npy"
+    ],
+    "hypothesis": "H4",
+    "p0_gate": "H4 끝점 수용 아님 → 그 셀 H4 UNFIT · 실행하지 않음 (부속 A §4-3)",
+    "task_ids": [
+     2048,
+     2175
+    ],
+    "unit": "J_Vs|A0|2",
+    "wave": 1
+   },
+   {
+    "arrays": [
+     "sobol_A1_A2_wide_box_seed0.npy",
+     "sobol_A1_A2_wide_box_seed1.npy"
+    ],
+    "hypothesis": "H4",
+    "p0_gate": "H4 끝점 수용 아님 → 그 셀 H4 UNFIT · 실행하지 않음 (부속 A §4-3)",
+    "task_ids": [
+     2176,
+     2303
+    ],
+    "unit": "J_Vs|A1|2",
+    "wave": 1
+   },
+   {
+    "arrays": [
+     "sobol_A0_their_box_seed0.npy",
+     "sobol_A0_their_box_seed1.npy"
+    ],
+    "hypothesis": "H1/H2",
+    "p0_gate": null,
+    "task_ids": [
+     2304,
+     2431
+    ],
+    "unit": "J_V|A0|3",
+    "wave": 1
+   },
+   {
+    "arrays": [
+     "sobol_A1_A2_wide_box_seed0.npy",
+     "sobol_A1_A2_wide_box_seed1.npy"
+    ],
+    "hypothesis": "H1/H2",
+    "p0_gate": null,
+    "task_ids": [
+     2432,
+     2559
+    ],
+    "unit": "J_V|A1|3",
+    "wave": 1
+   },
+   {
+    "arrays": [
+     "sobol_A1_A2_wide_box_seed0.npy",
+     "sobol_A1_A2_wide_box_seed1.npy"
+    ],
+    "hypothesis": "H1/H2",
+    "p0_gate": null,
+    "task_ids": [
+     2560,
+     2687
+    ],
+    "unit": "J_V|A2|3",
+    "wave": 1
+   },
+   {
+    "arrays": [
+     "sobol_A0_their_box_seed0.npy",
+     "sobol_A0_their_box_seed1.npy"
+    ],
+    "hypothesis": "H3",
+    "p0_gate": null,
+    "task_ids": [
+     2688,
+     2815
+    ],
+    "unit": "J_D|A0|3",
+    "wave": 1
+   },
+   {
+    "arrays": [
+     "sobol_A0_their_box_seed0.npy",
+     "sobol_A0_their_box_seed1.npy"
+    ],
+    "hypothesis": "H3",
+    "p0_gate": "ρ: A0 의 J_V · J_D Phase A 뒤 분모 Ĵ⁽⁰⁾ (UNFIT · 비양수면 결합 UNFIT)",
+    "task_ids": [
+     8832,
+     8959
+    ],
+    "unit": "rho|A0|3",
+    "wave": 2
+   },
+   {
+    "arrays": [
+     "sobol_A0_their_box_seed0.npy",
+     "sobol_A0_their_box_seed1.npy"
+    ],
+    "hypothesis": "H4",
+    "p0_gate": "H4 끝점 수용 아님 → 그 셀 H4 UNFIT · 실행하지 않음 (부속 A §4-3)",
+    "task_ids": [
+     2816,
+     2943
+    ],
+    "unit": "J_Vs|A0|3",
+    "wave": 1
+   },
+   {
+    "arrays": [
+     "sobol_A1_A2_wide_box_seed0.npy",
+     "sobol_A1_A2_wide_box_seed1.npy"
+    ],
+    "hypothesis": "H4",
+    "p0_gate": "H4 끝점 수용 아님 → 그 셀 H4 UNFIT · 실행하지 않음 (부속 A §4-3)",
+    "task_ids": [
+     2944,
+     3071
+    ],
+    "unit": "J_Vs|A1|3",
+    "wave": 1
+   },
+   {
+    "arrays": [
+     "sobol_A0_their_box_seed0.npy",
+     "sobol_A0_their_box_seed1.npy"
+    ],
+    "hypothesis": "H1/H2",
+    "p0_gate": null,
+    "task_ids": [
+     3072,
+     3199
+    ],
+    "unit": "J_V|A0|4",
+    "wave": 1
+   },
+   {
+    "arrays": [
+     "sobol_A1_A2_wide_box_seed0.npy",
+     "sobol_A1_A2_wide_box_seed1.npy"
+    ],
+    "hypothesis": "H1/H2",
+    "p0_gate": null,
+    "task_ids": [
+     3200,
+     3327
+    ],
+    "unit": "J_V|A1|4",
+    "wave": 1
+   },
+   {
+    "arrays": [
+     "sobol_A1_A2_wide_box_seed0.npy",
+     "sobol_A1_A2_wide_box_seed1.npy"
+    ],
+    "hypothesis": "H1/H2",
+    "p0_gate": null,
+    "task_ids": [
+     3328,
+     3455
+    ],
+    "unit": "J_V|A2|4",
+    "wave": 1
+   },
+   {
+    "arrays": [
+     "sobol_A0_their_box_seed0.npy",
+     "sobol_A0_their_box_seed1.npy"
+    ],
+    "hypothesis": "H3",
+    "p0_gate": null,
+    "task_ids": [
+     3456,
+     3583
+    ],
+    "unit": "J_D|A0|4",
+    "wave": 1
+   },
+   {
+    "arrays": [
+     "sobol_A0_their_box_seed0.npy",
+     "sobol_A0_their_box_seed1.npy"
+    ],
+    "hypothesis": "H3",
+    "p0_gate": "ρ: A0 의 J_V · J_D Phase A 뒤 분모 Ĵ⁽⁰⁾ (UNFIT · 비양수면 결합 UNFIT)",
+    "task_ids": [
+     8960,
+     9087
+    ],
+    "unit": "rho|A0|4",
+    "wave": 2
+   },
+   {
+    "arrays": [
+     "sobol_A0_their_box_seed0.npy",
+     "sobol_A0_their_box_seed1.npy"
+    ],
+    "hypothesis": "H4",
+    "p0_gate": "H4 끝점 수용 아님 → 그 셀 H4 UNFIT · 실행하지 않음 (부속 A §4-3)",
+    "task_ids": [
+     3584,
+     3711
+    ],
+    "unit": "J_Vs|A0|4",
+    "wave": 1
+   },
+   {
+    "arrays": [
+     "sobol_A1_A2_wide_box_seed0.npy",
+     "sobol_A1_A2_wide_box_seed1.npy"
+    ],
+    "hypothesis": "H4",
+    "p0_gate": "H4 끝점 수용 아님 → 그 셀 H4 UNFIT · 실행하지 않음 (부속 A §4-3)",
+    "task_ids": [
+     3712,
+     3839
+    ],
+    "unit": "J_Vs|A1|4",
+    "wave": 1
+   },
+   {
+    "arrays": [
+     "sobol_A0_their_box_seed0.npy",
+     "sobol_A0_their_box_seed1.npy"
+    ],
+    "hypothesis": "H1/H2",
+    "p0_gate": null,
+    "task_ids": [
+     3840,
+     3967
+    ],
+    "unit": "J_V|A0|5",
+    "wave": 1
+   },
+   {
+    "arrays": [
+     "sobol_A1_A2_wide_box_seed0.npy",
+     "sobol_A1_A2_wide_box_seed1.npy"
+    ],
+    "hypothesis": "H1/H2",
+    "p0_gate": null,
+    "task_ids": [
+     3968,
+     4095
+    ],
+    "unit": "J_V|A1|5",
+    "wave": 1
+   },
+   {
+    "arrays": [
+     "sobol_A1_A2_wide_box_seed0.npy",
+     "sobol_A1_A2_wide_box_seed1.npy"
+    ],
+    "hypothesis": "H1/H2",
+    "p0_gate": null,
+    "task_ids": [
+     4096,
+     4223
+    ],
+    "unit": "J_V|A2|5",
+    "wave": 1
+   },
+   {
+    "arrays": [
+     "sobol_A0_their_box_seed0.npy",
+     "sobol_A0_their_box_seed1.npy"
+    ],
+    "hypothesis": "H3",
+    "p0_gate": null,
+    "task_ids": [
+     4224,
+     4351
+    ],
+    "unit": "J_D|A0|5",
+    "wave": 1
+   },
+   {
+    "arrays": [
+     "sobol_A0_their_box_seed0.npy",
+     "sobol_A0_their_box_seed1.npy"
+    ],
+    "hypothesis": "H3",
+    "p0_gate": "ρ: A0 의 J_V · J_D Phase A 뒤 분모 Ĵ⁽⁰⁾ (UNFIT · 비양수면 결합 UNFIT)",
+    "task_ids": [
+     9088,
+     9215
+    ],
+    "unit": "rho|A0|5",
+    "wave": 2
+   },
+   {
+    "arrays": [
+     "sobol_A0_their_box_seed0.npy",
+     "sobol_A0_their_box_seed1.npy"
+    ],
+    "hypothesis": "H4",
+    "p0_gate": "H4 끝점 수용 아님 → 그 셀 H4 UNFIT · 실행하지 않음 (부속 A §4-3)",
+    "task_ids": [
+     4352,
+     4479
+    ],
+    "unit": "J_Vs|A0|5",
+    "wave": 1
+   },
+   {
+    "arrays": [
+     "sobol_A1_A2_wide_box_seed0.npy",
+     "sobol_A1_A2_wide_box_seed1.npy"
+    ],
+    "hypothesis": "H4",
+    "p0_gate": "H4 끝점 수용 아님 → 그 셀 H4 UNFIT · 실행하지 않음 (부속 A §4-3)",
+    "task_ids": [
+     4480,
+     4607
+    ],
+    "unit": "J_Vs|A1|5",
+    "wave": 1
+   },
+   {
+    "arrays": [
+     "sobol_A0_their_box_seed0.npy",
+     "sobol_A0_their_box_seed1.npy"
+    ],
+    "hypothesis": "H1/H2",
+    "p0_gate": null,
+    "task_ids": [
+     4608,
+     4735
+    ],
+    "unit": "J_V|A0|6",
+    "wave": 1
+   },
+   {
+    "arrays": [
+     "sobol_A1_A2_wide_box_seed0.npy",
+     "sobol_A1_A2_wide_box_seed1.npy"
+    ],
+    "hypothesis": "H1/H2",
+    "p0_gate": null,
+    "task_ids": [
+     4736,
+     4863
+    ],
+    "unit": "J_V|A1|6",
+    "wave": 1
+   },
+   {
+    "arrays": [
+     "sobol_A1_A2_wide_box_seed0.npy",
+     "sobol_A1_A2_wide_box_seed1.npy"
+    ],
+    "hypothesis": "H1/H2",
+    "p0_gate": null,
+    "task_ids": [
+     4864,
+     4991
+    ],
+    "unit": "J_V|A2|6",
+    "wave": 1
+   },
+   {
+    "arrays": [
+     "sobol_A0_their_box_seed0.npy",
+     "sobol_A0_their_box_seed1.npy"
+    ],
+    "hypothesis": "H3",
+    "p0_gate": null,
+    "task_ids": [
+     4992,
+     5119
+    ],
+    "unit": "J_D|A0|6",
+    "wave": 1
+   },
+   {
+    "arrays": [
+     "sobol_A0_their_box_seed0.npy",
+     "sobol_A0_their_box_seed1.npy"
+    ],
+    "hypothesis": "H3",
+    "p0_gate": "ρ: A0 의 J_V · J_D Phase A 뒤 분모 Ĵ⁽⁰⁾ (UNFIT · 비양수면 결합 UNFIT)",
+    "task_ids": [
+     9216,
+     9343
+    ],
+    "unit": "rho|A0|6",
+    "wave": 2
+   },
+   {
+    "arrays": [
+     "sobol_A0_their_box_seed0.npy",
+     "sobol_A0_their_box_seed1.npy"
+    ],
+    "hypothesis": "H4",
+    "p0_gate": "H4 끝점 수용 아님 → 그 셀 H4 UNFIT · 실행하지 않음 (부속 A §4-3)",
+    "task_ids": [
+     5120,
+     5247
+    ],
+    "unit": "J_Vs|A0|6",
+    "wave": 1
+   },
+   {
+    "arrays": [
+     "sobol_A1_A2_wide_box_seed0.npy",
+     "sobol_A1_A2_wide_box_seed1.npy"
+    ],
+    "hypothesis": "H4",
+    "p0_gate": "H4 끝점 수용 아님 → 그 셀 H4 UNFIT · 실행하지 않음 (부속 A §4-3)",
+    "task_ids": [
+     5248,
+     5375
+    ],
+    "unit": "J_Vs|A1|6",
+    "wave": 1
+   },
+   {
+    "arrays": [
+     "sobol_A0_their_box_seed0.npy",
+     "sobol_A0_their_box_seed1.npy"
+    ],
+    "hypothesis": "H1/H2",
+    "p0_gate": null,
+    "task_ids": [
+     5376,
+     5503
+    ],
+    "unit": "J_V|A0|7",
+    "wave": 1
+   },
+   {
+    "arrays": [
+     "sobol_A1_A2_wide_box_seed0.npy",
+     "sobol_A1_A2_wide_box_seed1.npy"
+    ],
+    "hypothesis": "H1/H2",
+    "p0_gate": null,
+    "task_ids": [
+     5504,
+     5631
+    ],
+    "unit": "J_V|A1|7",
+    "wave": 1
+   },
+   {
+    "arrays": [
+     "sobol_A1_A2_wide_box_seed0.npy",
+     "sobol_A1_A2_wide_box_seed1.npy"
+    ],
+    "hypothesis": "H1/H2",
+    "p0_gate": null,
+    "task_ids": [
+     5632,
+     5759
+    ],
+    "unit": "J_V|A2|7",
+    "wave": 1
+   },
+   {
+    "arrays": [
+     "sobol_A0_their_box_seed0.npy",
+     "sobol_A0_their_box_seed1.npy"
+    ],
+    "hypothesis": "H3",
+    "p0_gate": null,
+    "task_ids": [
+     5760,
+     5887
+    ],
+    "unit": "J_D|A0|7",
+    "wave": 1
+   },
+   {
+    "arrays": [
+     "sobol_A0_their_box_seed0.npy",
+     "sobol_A0_their_box_seed1.npy"
+    ],
+    "hypothesis": "H3",
+    "p0_gate": "ρ: A0 의 J_V · J_D Phase A 뒤 분모 Ĵ⁽⁰⁾ (UNFIT · 비양수면 결합 UNFIT)",
+    "task_ids": [
+     9344,
+     9471
+    ],
+    "unit": "rho|A0|7",
+    "wave": 2
+   },
+   {
+    "arrays": [
+     "sobol_A0_their_box_seed0.npy",
+     "sobol_A0_their_box_seed1.npy"
+    ],
+    "hypothesis": "H4",
+    "p0_gate": "H4 끝점 수용 아님 → 그 셀 H4 UNFIT · 실행하지 않음 (부속 A §4-3)",
+    "task_ids": [
+     5888,
+     6015
+    ],
+    "unit": "J_Vs|A0|7",
+    "wave": 1
+   },
+   {
+    "arrays": [
+     "sobol_A1_A2_wide_box_seed0.npy",
+     "sobol_A1_A2_wide_box_seed1.npy"
+    ],
+    "hypothesis": "H4",
+    "p0_gate": "H4 끝점 수용 아님 → 그 셀 H4 UNFIT · 실행하지 않음 (부속 A §4-3)",
+    "task_ids": [
+     6016,
+     6143
+    ],
+    "unit": "J_Vs|A1|7",
+    "wave": 1
+   },
+   {
+    "arrays": [
+     "sobol_A0_their_box_seed0.npy",
+     "sobol_A0_their_box_seed1.npy"
+    ],
+    "hypothesis": "H1/H2",
+    "p0_gate": null,
+    "task_ids": [
+     6144,
+     6271
+    ],
+    "unit": "J_V|A0|8",
+    "wave": 1
+   },
+   {
+    "arrays": [
+     "sobol_A1_A2_wide_box_seed0.npy",
+     "sobol_A1_A2_wide_box_seed1.npy"
+    ],
+    "hypothesis": "H1/H2",
+    "p0_gate": null,
+    "task_ids": [
+     6272,
+     6399
+    ],
+    "unit": "J_V|A1|8",
+    "wave": 1
+   },
+   {
+    "arrays": [
+     "sobol_A1_A2_wide_box_seed0.npy",
+     "sobol_A1_A2_wide_box_seed1.npy"
+    ],
+    "hypothesis": "H1/H2",
+    "p0_gate": null,
+    "task_ids": [
+     6400,
+     6527
+    ],
+    "unit": "J_V|A2|8",
+    "wave": 1
+   },
+   {
+    "arrays": [
+     "sobol_A0_their_box_seed0.npy",
+     "sobol_A0_their_box_seed1.npy"
+    ],
+    "hypothesis": "H3",
+    "p0_gate": null,
+    "task_ids": [
+     6528,
+     6655
+    ],
+    "unit": "J_D|A0|8",
+    "wave": 1
+   },
+   {
+    "arrays": [
+     "sobol_A0_their_box_seed0.npy",
+     "sobol_A0_their_box_seed1.npy"
+    ],
+    "hypothesis": "H3",
+    "p0_gate": "ρ: A0 의 J_V · J_D Phase A 뒤 분모 Ĵ⁽⁰⁾ (UNFIT · 비양수면 결합 UNFIT)",
+    "task_ids": [
+     9472,
+     9599
+    ],
+    "unit": "rho|A0|8",
+    "wave": 2
+   },
+   {
+    "arrays": [
+     "sobol_A0_their_box_seed0.npy",
+     "sobol_A0_their_box_seed1.npy"
+    ],
+    "hypothesis": "H4",
+    "p0_gate": "H4 끝점 수용 아님 → 그 셀 H4 UNFIT · 실행하지 않음 (부속 A §4-3)",
+    "task_ids": [
+     6656,
+     6783
+    ],
+    "unit": "J_Vs|A0|8",
+    "wave": 1
+   },
+   {
+    "arrays": [
+     "sobol_A1_A2_wide_box_seed0.npy",
+     "sobol_A1_A2_wide_box_seed1.npy"
+    ],
+    "hypothesis": "H4",
+    "p0_gate": "H4 끝점 수용 아님 → 그 셀 H4 UNFIT · 실행하지 않음 (부속 A §4-3)",
+    "task_ids": [
+     6784,
+     6911
+    ],
+    "unit": "J_Vs|A1|8",
+    "wave": 1
+   },
+   {
+    "arrays": [
+     "sobol_A0_their_box_seed0.npy",
+     "sobol_A0_their_box_seed1.npy"
+    ],
+    "hypothesis": "H1/H2",
+    "p0_gate": null,
+    "task_ids": [
+     6912,
+     7039
+    ],
+    "unit": "J_V|A0|9",
+    "wave": 1
+   },
+   {
+    "arrays": [
+     "sobol_A1_A2_wide_box_seed0.npy",
+     "sobol_A1_A2_wide_box_seed1.npy"
+    ],
+    "hypothesis": "H1/H2",
+    "p0_gate": null,
+    "task_ids": [
+     7040,
+     7167
+    ],
+    "unit": "J_V|A1|9",
+    "wave": 1
+   },
+   {
+    "arrays": [
+     "sobol_A1_A2_wide_box_seed0.npy",
+     "sobol_A1_A2_wide_box_seed1.npy"
+    ],
+    "hypothesis": "H1/H2",
+    "p0_gate": null,
+    "task_ids": [
+     7168,
+     7295
+    ],
+    "unit": "J_V|A2|9",
+    "wave": 1
+   },
+   {
+    "arrays": [
+     "sobol_A0_their_box_seed0.npy",
+     "sobol_A0_their_box_seed1.npy"
+    ],
+    "hypothesis": "H3",
+    "p0_gate": null,
+    "task_ids": [
+     7296,
+     7423
+    ],
+    "unit": "J_D|A0|9",
+    "wave": 1
+   },
+   {
+    "arrays": [
+     "sobol_A0_their_box_seed0.npy",
+     "sobol_A0_their_box_seed1.npy"
+    ],
+    "hypothesis": "H3",
+    "p0_gate": "ρ: A0 의 J_V · J_D Phase A 뒤 분모 Ĵ⁽⁰⁾ (UNFIT · 비양수면 결합 UNFIT)",
+    "task_ids": [
+     9600,
+     9727
+    ],
+    "unit": "rho|A0|9",
+    "wave": 2
+   },
+   {
+    "arrays": [
+     "sobol_A0_their_box_seed0.npy",
+     "sobol_A0_their_box_seed1.npy"
+    ],
+    "hypothesis": "H4",
+    "p0_gate": "H4 끝점 수용 아님 → 그 셀 H4 UNFIT · 실행하지 않음 (부속 A §4-3)",
+    "task_ids": [
+     7424,
+     7551
+    ],
+    "unit": "J_Vs|A0|9",
+    "wave": 1
+   },
+   {
+    "arrays": [
+     "sobol_A1_A2_wide_box_seed0.npy",
+     "sobol_A1_A2_wide_box_seed1.npy"
+    ],
+    "hypothesis": "H4",
+    "p0_gate": "H4 끝점 수용 아님 → 그 셀 H4 UNFIT · 실행하지 않음 (부속 A §4-3)",
+    "task_ids": [
+     7552,
+     7679
+    ],
+    "unit": "J_Vs|A1|9",
+    "wave": 1
+   },
+   {
+    "arrays": [
+     "sobol_A0_their_box_seed0.npy",
+     "sobol_A0_their_box_seed1.npy"
+    ],
+    "hypothesis": "H1/H2",
+    "p0_gate": null,
+    "task_ids": [
+     7680,
+     7807
+    ],
+    "unit": "J_V|A0|10",
+    "wave": 1
+   },
+   {
+    "arrays": [
+     "sobol_A1_A2_wide_box_seed0.npy",
+     "sobol_A1_A2_wide_box_seed1.npy"
+    ],
+    "hypothesis": "H1/H2",
+    "p0_gate": null,
+    "task_ids": [
+     7808,
+     7935
+    ],
+    "unit": "J_V|A1|10",
+    "wave": 1
+   },
+   {
+    "arrays": [
+     "sobol_A1_A2_wide_box_seed0.npy",
+     "sobol_A1_A2_wide_box_seed1.npy"
+    ],
+    "hypothesis": "H1/H2",
+    "p0_gate": null,
+    "task_ids": [
+     7936,
+     8063
+    ],
+    "unit": "J_V|A2|10",
+    "wave": 1
+   },
+   {
+    "arrays": [
+     "sobol_A0_their_box_seed0.npy",
+     "sobol_A0_their_box_seed1.npy"
+    ],
+    "hypothesis": "H3",
+    "p0_gate": null,
+    "task_ids": [
+     8064,
+     8191
+    ],
+    "unit": "J_D|A0|10",
+    "wave": 1
+   },
+   {
+    "arrays": [
+     "sobol_A0_their_box_seed0.npy",
+     "sobol_A0_their_box_seed1.npy"
+    ],
+    "hypothesis": "H3",
+    "p0_gate": "ρ: A0 의 J_V · J_D Phase A 뒤 분모 Ĵ⁽⁰⁾ (UNFIT · 비양수면 결합 UNFIT)",
+    "task_ids": [
+     9728,
+     9855
+    ],
+    "unit": "rho|A0|10",
+    "wave": 2
+   },
+   {
+    "arrays": [
+     "sobol_A0_their_box_seed0.npy",
+     "sobol_A0_their_box_seed1.npy"
+    ],
+    "hypothesis": "H4",
+    "p0_gate": "H4 끝점 수용 아님 → 그 셀 H4 UNFIT · 실행하지 않음 (부속 A §4-3)",
+    "task_ids": [
+     8192,
+     8319
+    ],
+    "unit": "J_Vs|A0|10",
+    "wave": 1
+   },
+   {
+    "arrays": [
+     "sobol_A1_A2_wide_box_seed0.npy",
+     "sobol_A1_A2_wide_box_seed1.npy"
+    ],
+    "hypothesis": "H4",
+    "p0_gate": "H4 끝점 수용 아님 → 그 셀 H4 UNFIT · 실행하지 않음 (부속 A §4-3)",
+    "task_ids": [
+     8320,
+     8447
+    ],
+    "unit": "J_Vs|A1|10",
+    "wave": 1
+   }
+  ],
+  "wave1_runs": 8448,
+  "wave2_rho_runs": 1408,
+  "x0_float64_sha256": "2802840ce17e322bf3bb2574f2fb1cba8c02c5cdd1f5ffd0a8d27bf103642174"
+ },
+ "schema": "reil-c4-0b1-plan-v1",
+ "scope": "C4-0b1 무자료 건조 (상태 §46) — Phase A 계획 · P0 게이트 · 봉인 대조. 자료 개봉 0 · 실제 셀 맞춤 0. 합성 표본은 SYNTHETIC_SAMPLE.json",
+ "util_copy": "reviews/prereview_pybamm_reil_20261003/external/util_LFP.py.txt",
+ "util_copy_sha256": "bdf78273d50f40ce3154d01a3ef8d36f0f5ea5ec1b04539584809d7b19b46f9c"
+}
