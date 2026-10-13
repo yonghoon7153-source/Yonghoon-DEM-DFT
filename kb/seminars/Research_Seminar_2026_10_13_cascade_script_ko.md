@@ -34,7 +34,7 @@ evidenceScope: multi-source-mixed
 > | 2 | Background — Earlier DFT studies | ✅ 확정 10-13 | 6e568c4 · e70e1d6 (Li₂S 칸 = li2s/LPSCl 계면상) |
 > | 3 | Overview — 하나씩에서 여럿으로 · 예 하나 (Al₂O₃ / Al₂S₃) | ✅ 확정 10-13 | b464c62 · fa4a120 · 9b4f498 (화살표 줄 → 다음 장 다리 · 'we must check') · 한 장 PPT + 노트 |
 > | 4 | Introduction — 두 열화는 서로를 키운다 (Kang 2026 Fig. 16) | ✅ 확정 10-13 (*'됐어 저정도면'*) | 9c4bbde (문구 넷 · 출처는 랩 표준 그대로) |
-> | 5 | Introduction — 선행 스크린과 이번 작업 (novelty · Muy 2025 · Jung 2026 추가) | ✅ 확정 10-13 (사용자 최종판 · 출처 오른쪽 위) · 논문별 원문 대조 뒤 재확정 (Miara n 128 · Lee 칸 · bullet 둘 · Anderson 참고문헌 뺌) | 34adf6e · 이번 반영 커밋 · 디펜스 S5 브리핑 (Miara · Xiao · Lee 확인 ✅ · Muy · Jung 남음) |
+> | 5 | Introduction — 선행 스크린과 이번 작업 (novelty · Muy 2025 · Jung 2026 추가) | ✅ 확정 10-13 (사용자 최종판 · 출처 오른쪽 위) · 논문별 원문 대조 뒤 재확정 (Miara n 128 · Lee 칸 · bullet 둘 · Anderson 참고문헌 뺌 · 'gate' 뺌) · **대본 최종 10-13** (기계 축 이유 한 줄) | 34adf6e · 이번 반영 커밋 · 디펜스 S5 브리핑 (Miara · Xiao · Lee 확인 ✅ · Muy · Jung 남음) |
 > | 1 · 6–19 | 나머지 | ⏳ 그 장을 볼 때 확정 | — |
 
 ---
@@ -153,9 +153,12 @@ evidenceScope: multi-source-mixed
 예를 들어 Al₂O₃ 면 Al 둘에 O 셋입니다. 실험에서 실제로 넣는 단위 그대로입니다.
   (호스트 자리와 전하가 안 맞는 만큼은 Li 빈자리나 여분 Li 로 맞춘다 — 생성 규칙 ② 전체 전하 수지 · 이건 Jung 등도 같다 → 차이로 말하지 않는다)
 
-**[가리킴: mechanical axis 열]** 기계 축은 대부분 없었고, Jung 등은 ML 로 예측한 탄성 값 (G 와 G/K) 으로 후보를 걸렀습니다. 저희는 DFT 기준 계산과 MLIP 지표로 기록하되, 아직 후보를 거르는 데는 쓰지 않습니다.
+**[가리킴: mechanical axis 열]** 앞의 네 편에는 기계 축이 없었고, Jung 등은 ML 로 예측한 탄성 값으로 후보를 걸렀습니다.
+저희는 기준 조성은 DFT 로 계산하고, 전구체마다 MLIP 지표를 기록합니다. 다만 같은 전구체 안에서도 원자 배치에 따라 이 값이 전구체끼리의 차이만큼 흔들려서,
+아직 후보를 거르는 데는 쓰지 않습니다. 이건 뒤의 9월 감사에서 다시 말씀드리겠습니다.
   (화면 칸 — Jung *ML-predicted G and G/K (used for screening)* · this work *DFT reference + MLIP descriptor (not used for screening)* · 괄호는 둘째 줄.
-  사용자 10-13: 'gate' 같은 말은 안 쓴다.)
+  사용자 10-13: 'gate' 같은 말은 안 쓴다. '흔들린다' 의 근거 = 9월 감사 잡음비 — 영률 1.104 · 치환에너지 0.205 (디펜스 S8 · S11) · 11장 'spread within a precursor ≈ between precursors'.
+  DFT 탄성상수는 기준 조성에만 — 한 조성에 GPU 로 몇 주 (9장 · 12 변형점 중 9). 3,675 구조 전부에 쓸 수 있는 건 MLIP 뿐.)
 
 그러면 이 91개 전구체가 어떤 화합물들인지 보겠습니다.
 
