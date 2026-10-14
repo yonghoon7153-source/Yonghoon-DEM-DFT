@@ -56,6 +56,9 @@ RULES = (
      'ul_observers.py', 'sigma_P', ('ul_observers O1–O4b',)),
     ('resume_once', '기계 실패 이어 돌림 = 마지막 restart_unload_* + 짝 상태 파일에서 한 번 · 두 번째 = 거부 (§4-4 · §13-1)',
      'run_unload.sh', 'screen_a2.txt', ('ul_runner_test M7',)),
+    ('restore_complete', '복원 판정 = Ut0 (7:3) · R · UN 단계 기술 성공 · PRE · POST · R_END · UN 전부 읽힘 · 머리 step · 고유 ID · S0 ID 집합 · '
+     'R_END ↔ UN 같은 대상 · 이력 시험 H0–H5 + SYN PASS · 부호 = 표 · 총힘 시점 · 관문 = RESTORED + RJ 잡 기술 실패 0 (개정 3 §14-10 · ULKR-05 · 08)',
+     'ul_reader.py', 'restore_verdict', ('ul_reader R17', 'ul_reader R18', 'ul_gates F2')),
 )
 
 

@@ -347,12 +347,13 @@ def s0p_condition(log_text, s0p, window=5000, frac=0.01, tail=25, col_p='pressMP
 
 
 def restoration_verdict(reset_ok, g0_ok, obs_syntax_ok, prepost_equal, history_test_pass, un_erasure_seen):
-    """§12-1 ⑤ — 문법 실패 · 값 불일치 · 미확인을 따로 적는다 · RESTORED 일 때만 본 U (미확인을 표지만 달아 넘기지 않는다)."""
+    """§12-1 ⑤ · 개정 3 §14-10 — 문법 · 기술 실패 · 값 불일치 · 미확인을 따로 적는다 · RESTORED 일 때만 본 U (미확인을 표지만 달아 넘기지 않는다).
+    prepost_equal · un_erasure_seen = True / False / None (None = 관측 결손으로 비교 미계산 → 미확인 · 수치 불일치와 섞지 않는다)."""
     if obs_syntax_ok is not True:
         return 'SYNTAX_FAIL'
-    if reset_ok is not True or g0_ok is not True or prepost_equal is not True:
+    if reset_ok is not True or g0_ok is not True or prepost_equal is False:
         return 'VALUE_MISMATCH'
-    if history_test_pass is not True or un_erasure_seen is not True:
+    if prepost_equal is not True or history_test_pass is not True or un_erasure_seen is not True:
         return 'UNCONFIRMED'
     return 'RESTORED'
 
@@ -503,6 +504,10 @@ def selftest():
         and restoration_verdict(True, False, True, True, True, True) == 'VALUE_MISMATCH'
         and restoration_verdict(True, True, True, False, True, True) == 'VALUE_MISMATCH')
     chk('F1 보조 소거 진단 (UN) 이 아무 차이도 못 봄 = UNCONFIRMED (판별력 없음)', lambda: restoration_verdict(True, True, True, True, True, False) == 'UNCONFIRMED')
+    chk('F2 ULKR-05 PRE · POST 관측 결손 (비교 미계산 = None) = UNCONFIRMED — 수치 불일치 (False = VALUE_MISMATCH) 와 따로 · 소거 진단 미계산 (None) 도 UNCONFIRMED',
+        lambda: restoration_verdict(True, True, True, None, True, True) == 'UNCONFIRMED'
+        and restoration_verdict(True, True, True, True, True, None) == 'UNCONFIRMED'
+        and restoration_verdict(False, True, True, None, True, True) == 'VALUE_MISMATCH')
     print(f'selftest: {"PASS" if not fails else "FAIL"} ({len(fails)} 실패)')
     return 1 if fails else 0
 

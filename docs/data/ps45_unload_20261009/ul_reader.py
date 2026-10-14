@@ -559,10 +559,25 @@ def selection_state(root, P=None):
     return s
 
 
+def _job_restored(root, bed, job):
+    """복원 증서 RESTORED + 그 RJ · RJ2 잡의 러너 기록 끝 줄 (end= … fails=0) — 같은 실행 끝의 기술 실패가 있으면 증서를 믿지 않는다 (ULKR-05)."""
+    r = _readjson(os.path.join(root, bed, job, 'restore_verdict.json'))
+    if not (r and r.get('status') == 'RESTORED'):
+        return False, f'{job} 복원 판정 RESTORED 아님 ({(r or {}).get("status")})'
+    man = os.path.join(root, bed, job, 'run_manifest.txt')
+    ends = [ln for ln in open(man, encoding='utf-8', errors='replace').read().splitlines() if ln.startswith('end=')] if os.path.exists(man) else []
+    if not ends:
+        return False, f'{job} 잡 기록 (run_manifest.txt) 에 끝 줄 없음 — 러너가 끝내지 못했다'
+    m = re.search(r'\bfails=(\d+)\b', ends[-1])
+    if not m or int(m.group(1)) != 0:
+        return False, f'{job} 잡 기록 끝 줄 = 기술 실패 ({ends[-1].strip()}) — 증서를 다시 쓰지 않는다 (새 시도)'
+    return True, f'{job} RESTORED · 잡 기술 실패 0'
+
+
 def _restored(root, bed, P):
     job = 'RJ2' if bed == B100 else 'RJ'
-    r = _readjson(os.path.join(root, bed, job, 'restore_verdict.json'))
-    return r is not None and r.get('status') == 'RESTORED', job
+    ok, why = _job_restored(root, bed, job)
+    return ok, job, why
 
 
 def _has_event(root, bed, job, name):
@@ -580,16 +595,16 @@ def gate(root, bed, job, P=None):
     if job == 'EXT':
         if bed != B100:
             return False, 'EXT = 10:0 전용'
-        r = _readjson(os.path.join(root, bed, 'RJ', 'restore_verdict.json'))
-        return (bool(r and r.get('status') == 'RESTORED'), '10:0 이완 연장 = 3,600,000 복원 관문 통과 뒤 (§12-11)')
+        ok, why = _job_restored(root, bed, 'RJ')
+        return ok, f'10:0 이완 연장 = 3,600,000 복원 관문 통과 뒤 (§12-11) — {why}'
     if job == 'RJ2':
         if bed != B100:
             return False, 'RJ2 = 10:0 전용 (S0′ 복원 · UK)'
         dec = _readjson(os.path.join(root, bed, 's0_decision.json'))
         return (bool(dec and dec.get('status') == 'PASS'), 'S0′ 결정 PASS 뒤 (§12-11 · F3 이면 없음)')
-    ok, rj = _restored(root, bed, P)
+    ok, rj, why = _restored(root, bed, P)
     if not ok:
-        return False, f'{rj} 복원 판정 RESTORED 전 (§12-1 ⑤ — 미확인 · 실패면 U 없음)'
+        return False, f'{rj} 복원 관문 미통과 — {why} (§12-1 ⑤ · 개정 3 §14-10 — 미확인 · 실패면 U 없음)'
     if not os.path.exists(os.path.join(root, bed, 'ul_base.in')):
         return False, 'KE 기준 파일 ul_base.in 없음 (kebase · UK 뒤)'
     if job == 'UC':
@@ -668,19 +683,97 @@ EXPECTED_RESETS = (('history_zwall_bot', 'property/atom', ('global', 'per-atom')
                    ('tracker_top_mesh', 'contacthistory/mesh', ('global', 'per-atom')), ('contacthistory', 'contacthistory', ('global', 'per-atom')))
 
 
+#: R · UNread 덱의 바닥 이력 관측 열 (make_unload_decks._hist_dump_cols 와 같음 — selftest R19 가 대조)
+HIST_PRE_COLS = ('id', 'type', 'x', 'y', 'z', 'radius', 'mass', 'vx', 'vy', 'vz', 'omegax', 'omegay', 'omegaz',
+                 'f_history_zwall_bot[1]', 'f_history_zwall_bot[2]', 'f_history_zwall_bot[3]', 'f_history_zwall_bot[4]')
+HIST_POST_COLS = HIST_PRE_COLS[:13] + ('fx', 'fy', 'fz') + HIST_PRE_COLS[13:]
+STAGE_NP = 6           # 러너 NP (README §3 · #SBATCH -n 6 ↔ -np 6)
+
+
+def _stage_tech(sdir, kind, marker=None, np_=STAGE_NP):
+    """러너가 쓴 단계 기록 (run_check.txt — 줄마다 '<덱 종류> <화면> PASS rc=0 procs=N' · 아니면 FAIL · missing_ckpt) + 그 화면 —
+    PASS 줄 하나 이상 · 다른 줄 없음 · 배너 · ERROR 없음 · Loop time procs = NP · 표지 (ULKR-05 · ULKR-11)."""
+    pr = []
+    rc = os.path.join(sdir, 'run_check.txt')
+    lines = [ln.split() for ln in open(rc, encoding='utf-8', errors='replace').read().splitlines() if ln.strip()] if os.path.exists(rc) else None
+    if lines is None:
+        pr.append('단계 기록 run_check.txt 없음')
+    else:
+        if not any(len(t) >= 4 and t[0] == kind and t[2] == 'PASS' and t[3] == 'rc=0' for t in lines):
+            pr.append(f'{kind} PASS 줄 없음')
+        bad = [' '.join(t) for t in lines if not (len(t) >= 4 and t[0] == kind and t[2] == 'PASS' and t[3] == 'rc=0')]
+        if bad:
+            pr.append(f'단계 기록 실패 줄: {bad[:2]}')
+    si = _screen_info(os.path.join(sdir, 'screen.txt'))
+    if not (si['banner'] and si['git']):
+        pr.append('배너 LIGGGHTS-PUBLIC 3.8.0 · 3d5c00f 없음')
+    if si['errors']:
+        pr.append(f'화면 ERROR: {si["errors"][:2]}')
+    if not si['loops'] or any(n != np_ for n in si['loops']):
+        pr.append(f'Loop time procs {si["loops"]} ≠ {np_}')
+    if marker and not any(m.startswith(marker) for m in si['markers']):
+        pr.append(f'{marker} 표지 없음')
+    return {'ok': not pr, 'problems': pr, 'loops': si['loops'], 'errors': si['errors'][:3]}
+
+
+def _obs_frame(path, cols, step, ids):
+    """관측 덤프 한 장 — 전부 읽힘 (머리 · 열 이름 · 행 수 · 유한 — 파서가 버린 행이 있으면 실패) · 머리 step = 기대 · ID 고유 ·
+    ID 집합 = 기대 (S0) → (행 목록 | None, 문제).  버린 행을 정상 부분 관측으로 쓰지 않는다 (ULKR-04 · 05)."""
+    d = ul_lib.read_dump(path, 'custom', list(cols))
+    pr = [f'{os.path.basename(path or "")}: {p}' for p in d['problems']]
+    if step is None or d['step'] != step:
+        pr.append(f'{os.path.basename(path or "")}: 머리 step {d["step"]} ≠ 기대 {step}')
+    got = [int(r['id']) for r in d['rows']]
+    if len(set(got)) != len(got):
+        pr.append(f'{os.path.basename(path or "")}: ID 중복')
+    if ids is None:
+        pr.append('기대 ID 집합 (S0) 없음')
+    elif set(got) != ids:
+        pr.append(f'{os.path.basename(path or "")}: ID 집합 ≠ S0 (빠짐 {len(ids - set(got))} · 더 있음 {len(set(got) - ids)})')
+    return (d['rows'] if not pr else None), pr
+
+
+def _hist_qualifies(h, P):
+    """이력 시험 자격 (ULKR-08 · §14-10): schema · rc 0 · H0–H5 PASS · SYN PASS · 측정 부호 = 표 · 총힘 출력 시점 PASS — SYN 없음 = 자격 없음."""
+    if h is None:
+        return None, ['이력 시험 판정 없음']
+    why = []
+    if h.get('schema') != 'ps45_unload_history_verdict_v1':
+        why.append(f'판정 schema {h.get("schema")!r} (이력 시험 판정 파일이 아니다)')
+    if h.get('exit_code') != 0:
+        why.append(f'이력 시험 rc {h.get("exit_code")}')
+    rows = h.get('rows') or {}
+    bad = [f'H{i}' for i in range(6) if (rows.get(f'H{i}') or {}).get('status') != 'PASS']
+    if bad:
+        why.append(f'{" · ".join(bad)} PASS 아님')
+    info = h.get('info') or {}
+    syn = info.get('syn') or {}
+    if syn.get('status') != 'PASS':
+        why.append(f'SYN {syn.get("status")} (SYN PASS 필수 — 없으면 자격 없음)')
+    if syn.get('plate_fn_sign') != P['plate_fn_compressive_sign']:
+        why.append(f'SYN 판 법선력 부호 {syn.get("plate_fn_sign")} ≠ 표 {P["plate_fn_compressive_sign"]} (측정된 같은 부호 필수)')
+    if info.get('force_timing') != 'PASS':
+        why.append(f'총힘 출력 시점 {info.get("force_timing")} (C1 선행조건)')
+    return (not why), why
+
+
 def restore_verdict(root, bed, job='RJ', hist=None, P=None):
-    """§12-1 복원 판정 — G0 (러너가 실행 전 원 덱으로 남긴 g0.json) · reset 로그 · G1 · G2 · G2c · 판 mesh md5 · G3 · PRE = POST (바닥 이력) ·
-    보조 소거 진단 (R_END ↔ UN) · 작은 침대 이력 시험 (H0–H5) → RESTORED · UNCONFIRMED · SYNTAX_FAIL · VALUE_MISMATCH."""
+    """§12-1 복원 판정 · 개정 3 §14-10 — 단계 기술 성공 (Ut0 · R · UN) · G0 (러너가 실행 전 원 덱으로 남긴 g0.json) · reset 로그 · G1 · G2 · G2c ·
+    판 mesh md5 · G3 · PRE = POST (바닥 이력 · 전부 읽힘 · S0 ID 전부) · 보조 소거 진단 (R_END ↔ UN · 같은 대상) · 이력 시험 (H0–H5 + SYN + 총힘 시점) →
+    RESTORED · UNCONFIRMED (관측 결손 · 미확인) · SYNTAX_FAIL (문법 · 기술 실패) · VALUE_MISMATCH (수치 불일치)."""
     P = P or ul_lib.load_params()
     B = P['beds'][bed]
     J = os.path.join(root, bed, job)
     R, UN = os.path.join(J, 'R'), os.path.join(J, 'UN')
     s0 = B['s0'] if bed != B100 else (P['ext_10_0']['start_step'] if job == 'RJ' else _bed_s0(root, bed, P))
+    s_end = s0 + P['windows']['R_steps'] if s0 is not None else None
     out = {'bed': bed, 'job': job, 's0': s0, 'checks': {}, 'status': None}
+    stages = {'R': _stage_tech(R, 'R', 'UL_R_DONE'), 'UN': _stage_tech(UN, 'UNread', 'UL_UN_DONE')}
+    if bed == B73 and job == 'RJ':
+        stages['Ut0'] = _stage_tech(os.path.join(J, 'Ut0'), 'Ut0')
+    syntax = all(s['ok'] for s in stages.values())
     si = _screen_info(os.path.join(R, 'screen.txt'))
-    syntax = si['banner'] and si['git'] and not si['errors'] and si['loops'] and all(n == 6 for n in si['loops']) \
-        and any(m.startswith('UL_R_DONE') for m in si['markers'])
-    out['checks']['syntax'] = {'ok': bool(syntax), 'loops': si['loops'], 'errors': si['errors'][:3]}
+    out['checks']['syntax'] = {'ok': syntax, 'stages': {k: v['problems'] for k, v in stages.items()}, 'loops': si['loops'], 'errors': si['errors'][:3]}
     miss = [(f, s, k) for f, s, ks in EXPECTED_RESETS for k in ks if (f, s, k) not in si['resets']]
     out['checks']['reset_log'] = {'ok': not miss, 'missing': miss}
     g0 = _readjson(os.path.join(J, 'g0.json'))
@@ -700,26 +793,40 @@ def restore_verdict(root, bed, job='RJ', hist=None, P=None):
     g2m = os.path.join(R, 'g2', f'mesh_{s0}.stl')
     out['checks']['G2'] = ul_gates.g2_compare(g2a, orig_atom) if orig_atom and os.path.exists(g2a) else {'status': 'NOT_COMPUTED'}
     out['checks']['G2c'] = ul_gates.g2c_compare(g2c, orig_con) if orig_con and os.path.exists(g2c) else {'status': 'NOT_COMPUTED'}
-    out['checks']['mesh_md5'] = {'status': 'PASS' if orig_mesh and os.path.exists(g2m) and ul_gates.mesh_md5_equal(g2m, orig_mesh) else 'FAIL'}
+    out['checks']['mesh_md5'] = {'status': ('NOT_COMPUTED' if not (orig_mesh and os.path.exists(g2m))
+                                            else ('PASS' if ul_gates.mesh_md5_equal(g2m, orig_mesh) else 'FAIL'))}
     log = _orig_log_text(root, bed, job, P)
     out['checks']['G3'] = ul_gates.g3_check(scr, log, s0) if log else {'status': 'NOT_COMPUTED'}
-    pre = ul_lib.read_dump(os.path.join(R, 'obs', 'pre_bot.dump'), 'custom')
-    posts = sorted(x for x in os.listdir(os.path.join(R, 'obs')) if x.startswith('post_atom_')) if os.path.isdir(os.path.join(R, 'obs')) else []
-    post = ul_lib.read_dump(os.path.join(R, 'obs', posts[0]), 'custom') if posts else {'rows': []}
-    out['checks']['pre_post'] = {'ok': _hist_equal(pre['rows'], post['rows'])}
-    end = ul_lib.read_dump(os.path.join(R, 'obs', 'end_pre_bot.dump'), 'custom')
-    un = ul_lib.read_dump(os.path.join(UN, 'obs', 'un_pre_bot.dump'), 'custom')
-    seen = _erasure_seen(end['rows'], un['rows'])
-    out['checks']['un_erasure'] = {'seen': seen}
+    # 관측 대상 = S0 원자 전부 (원 atom_S0 · 전부 읽힘 · 고유 ID)
+    s0d = ul_lib.read_dump(orig_atom, 'custom') if orig_atom else None
+    s0_ids = None
+    if s0d and s0d['ok'] and s0d['step'] == s0 and len({int(r['id']) for r in s0d['rows']}) == len(s0d['rows']):
+        s0_ids = {int(r['id']) for r in s0d['rows']}
+    obs = os.path.join(R, 'obs')
+    pre, pre_pr = _obs_frame(os.path.join(obs, 'pre_bot.dump'), HIST_PRE_COLS, s0, s0_ids)
+    posts = sorted(x for x in os.listdir(obs) if x.startswith('post_atom_')) if os.path.isdir(obs) else []
+    post, post_pr = _obs_frame(os.path.join(obs, f'post_atom_{s0}.dump'), HIST_POST_COLS, s0, s0_ids)
+    if posts != [f'post_atom_{s0}.dump']:
+        post, post_pr = None, post_pr + [f'POST 덤프 목록 {posts[:3]} ≠ [post_atom_{s0}.dump]']
+    equal = None if (pre is None or post is None) else _hist_equal(pre, post)
+    out['checks']['pre_post'] = {'ok': equal is True, 'equal': equal, 'problems': (pre_pr + post_pr)[:6]}
+    end, end_pr = _obs_frame(os.path.join(obs, 'end_pre_bot.dump'), HIST_PRE_COLS, s_end, s0_ids)
+    un, un_pr = _obs_frame(os.path.join(UN, 'obs', 'un_pre_bot.dump'), HIST_PRE_COLS, s_end, s0_ids)
+    seen = None if (end is None or un is None) else _erasure_seen(end, un)
+    out['checks']['un_erasure'] = {'seen': seen, 'problems': (end_pr + un_pr)[:6]}
     h = _readjson(hist) if hist else None
-    sign = ((h or {}).get('info') or {}).get('syn', {}).get('plate_fn_sign') if h else None
-    hpass = None if h is None else (h.get('exit_code') == 0 and all(((h.get('rows') or {}).get(f'H{i}') or {}).get('status') == 'PASS' for i in range(6))
-                                     and (sign is None or sign == P['plate_fn_compressive_sign']))
-    out['checks']['history_test'] = {'pass': hpass, 'source': hist, 'plate_fn_sign': sign, 'table_sign': P['plate_fn_compressive_sign'],
-                                     'note': ('SYN 부호 ≠ 표 — 표를 결과 0 건에서 고친 뒤 다시' if sign is not None and sign != P['plate_fn_compressive_sign']
-                                              else ('SYN 부호 미측정 (표 가정 그대로)' if h is not None and sign is None else ''))}
-    prepost = all(out['checks'][k].get('status') == 'PASS' for k in ('G1', 'G2', 'G2c', 'mesh_md5', 'G3')) and out['checks']['pre_post']['ok']
-    out['status'] = ul_gates.restoration_verdict(out['checks']['reset_log']['ok'], out['checks']['g0']['ok'], bool(syntax), prepost, hpass, seen)
+    hpass, hwhy = _hist_qualifies(h, P)
+    sign = (((h or {}).get('info') or {}).get('syn') or {}).get('plate_fn_sign')
+    out['checks']['history_test'] = {'pass': hpass, 'why': hwhy, 'source': hist, 'source_sha256': ul_lib.sha256_file(hist) if h is not None else None,
+                                     'plate_fn_sign': sign, 'table_sign': P['plate_fn_compressive_sign']}
+    gs = [out['checks'][k].get('status') for k in ('G1', 'G2', 'G2c', 'mesh_md5', 'G3')]
+    if 'FAIL' in gs or equal is False:
+        prepost = False
+    elif all(s == 'PASS' for s in gs) and equal is True:
+        prepost = True
+    else:
+        prepost = None
+    out['status'] = ul_gates.restoration_verdict(out['checks']['reset_log']['ok'], out['checks']['g0']['ok'], syntax, prepost, hpass, seen)
     return out
 
 
@@ -770,10 +877,13 @@ def _hist_equal(pre, post, rel=1e-12, floor=1e-18):
 
 
 def _erasure_seen(end_rows, un_rows):
-    """보조 소거 진단 — R_END 의 바닥 이력에 0 아닌 값이 있고 UN (소거 뒤 새 프로세스) 에서는 전부 0 이면 참."""
+    """보조 소거 진단 — 같은 관측 대상 (ID 집합 같음) 에서 R_END 의 바닥 이력에 0 아닌 값이 있고 UN (소거 뒤 새 프로세스) 에서는 전부 0 이면 참.
+    ID 집합이 다르면 비교 미계산 (None — ULKR-05)."""
     if not end_rows or not un_rows:
         return None
     a, b = _hist_cols(end_rows), _hist_cols(un_rows)
+    if set(a) != set(b) or len(a) != len(end_rows) or len(b) != len(un_rows):
+        return None
     nz_end = any(any(x not in (None, 0.0) for x in v) for v in a.values())
     zero_un = all(all(x == 0.0 for x in v) for v in b.values())
     return bool(nz_end and zero_un)
@@ -1004,6 +1114,105 @@ def _ladder(lifts, Ps, steady=True, nw=4, **kw):
     return steps
 
 
+_HIST_PRE = list(HIST_PRE_COLS)
+_HIST_POST = list(HIST_POST_COLS)
+
+
+def _patch_count(path, n):
+    """합성 반례 — 덤프 머리의 개수 줄만 바꾼다 (선언 ≠ 실제 행)."""
+    L = open(path).read().splitlines()
+    k = next(i for i, x in enumerate(L) if x.startswith('ITEM: NUMBER OF'))
+    L[k + 1] = str(n)
+    open(path, 'w').write('\n'.join(L) + '\n')
+
+
+def _mk_rj(root, bed, P, mut=None):
+    """합성 RJ 폴더 (러너 · R · UNread 덱이 쓰는 꼴 그대로 · 7:3) — Ut0 · R · UN 단계 기록 (run_check) · 화면 · G0 · G2 · G2c · mesh ·
+    PRE · POST · R_END · UN 관측 · RJ 잡 기록 (end= fails=0).  mut = 반례 하나 (ULKR-05 시험 전용)."""
+    B = P['beds'][bed]
+    s0 = B['s0']
+    s_end = s0 + P['windows']['R_steps']
+    J = os.path.join(root, bed, 'RJ')
+    R_, UN = os.path.join(J, 'R'), os.path.join(J, 'UN')
+    g1, g3 = B['g1'].split(), B['g3'].split()
+    resets = ''.join(f'Resetting {k} state of Fix {f} Style {s} from restart file info\n' for f, s, ks in EXPECTED_RESETS for k in ks)
+    head = '    Step    Atoms         KinEng        ul_erot          ul_Ps       pressMPa            CPU \n'
+    scr = ('LIGGGHTS (Version LIGGGHTS-PUBLIC 3.8.0, git commit 3d5c00f)\n' + resets + head + f' {g1[0]} {g1[1]} {g1[2]} 1e-08 {g1[4]} {g1[4]} 0\n'
+           'Loop time of 0 on 6 procs for 0 steps with 160417 atoms\n' + head + f' {g1[0]} {g1[1]} {g1[2]} 1e-08 {g1[4]} {g1[4]} 0\n'
+           f' {g3[0]} {g3[1]} {g3[2]} 1e-08 {g3[4]} {g3[4]} 1\nLoop time of 1 on 6 procs for 2000 steps with 160417 atoms\nUL_R_DONE\n')
+    _w(os.path.join(R_, 'screen.txt'), scr)
+    if mut != 'r_runcheck_missing':
+        _w(os.path.join(R_, 'run_check.txt'), 'R screen.txt PASS rc=0 procs=6\n')
+    _w(os.path.join(J, 'Ut0', 'run_check.txt'), 'Ut0 screen.txt ' + ('FAIL rc=1\n' if mut == 'ut0_fail' else 'PASS rc=0 procs=6\n'))
+    _w(os.path.join(J, 'Ut0', 'screen.txt'), 'LIGGGHTS (Version LIGGGHTS-PUBLIC 3.8.0, git commit 3d5c00f)\nLoop time of 1 on 6 procs for 100 steps with 160417 atoms\n'
+       'UL_SUMMARY arm=Ut0 bed=x result=DONE\n' + ('ERROR: synthetic Ut0 failure\n' if mut == 'ut0_fail' else ''))
+    _w(os.path.join(J, 'g0.json'), json.dumps({'status': 'PASS', 'violations': []}))
+    cols = ['id', 'type', 'x', 'y', 'z', 'radius', 'vx', 'vy', 'vz', 'c_strs[1]', 'c_strs[2]', 'c_strs[3]', 'c_ke']
+    rows = [{'id': i, 'type': 3, 'x': 0.001 * i, 'y': 0.002, 'z': 0.003, 'radius': 0.0005, 'vx': 1e-6, 'vy': 0.0, 'vz': 0.0, 'c_strs[1]': 0.0,
+             'c_strs[2]': 0.0, 'c_strs[3]': 0.0, 'c_ke': 0.0} for i in range(1, 4)]
+    for p in (os.path.join(root, bed, 'in', f'atom_{s0}.liggghts'), os.path.join(R_, 'g2', f'atom_{s0}.liggghts')):
+        os.makedirs(os.path.dirname(p), exist_ok=True)
+        ul_lib.write_custom(p, s0, cols, rows, fmt=lambda x: f'{x:g}')
+    ccols = [f'c_cpl[{c}]' for c in range(1, 27)]
+    crow = dict(zip(ccols, [0.001, 0.01, 0.01, 0.0015, 0.01, 0.01, 1, 2, 0, -0.5, 0, 0, -0.5, 0, 0, 0, 0.01, 0, 0, 0, 0, 1e-8, 1e-5, 0.00125, 0.01, 0.01]))
+    for p in (os.path.join(root, bed, 'in', f'contact_{s0}.liggghts'), os.path.join(R_, 'g2', f'contact_{s0}.liggghts')):
+        ul_lib.write_local(p, s0, ccols, [crow])
+    stl = 'solid LIGGGHTS_STL_EXPORT\n facet normal 0 0 -1\n  outer loop\n   vertex 0 0 0.111052\n   vertex 0.05 0.05 0.111052\n   vertex 0.05 0 0.111052\n'
+    for p in (os.path.join(root, bed, 'in', f'mesh_{s0}.stl'), os.path.join(R_, 'g2', f'mesh_{s0}.stl')):
+        _w(p, stl)
+
+    def atom(i, h):
+        a = {'id': i, 'type': 1 if i == 1 else 3, 'x': 0.001 * i, 'y': 0.002, 'z': 0.003, 'radius': 0.0005, 'mass': 1e-6, 'vx': 1e-6, 'vy': 0.0,
+             'vz': 0.0, 'omegax': 0.0, 'omegay': 0.0, 'omegaz': 0.0, 'fx': 0.0, 'fy': 0.0, 'fz': 0.0}
+        a.update({f'f_history_zwall_bot[{c}]': v for c, v in zip(range(1, 5), h)})
+        return a
+    hist = [atom(1, (2e-5, 1e-6, 0.0, 0.0)), atom(2, (0.0,) * 4), atom(3, (0.0,) * 4)]
+    zero = [atom(i, (0.0,) * 4) for i in (1, 2, 3)]
+    obs = os.path.join(R_, 'obs')
+    pre, post = os.path.join(obs, 'pre_bot.dump'), os.path.join(obs, f'post_atom_{s0}.dump')
+    end, unp = os.path.join(obs, 'end_pre_bot.dump'), os.path.join(UN, 'obs', 'un_pre_bot.dump')
+    os.makedirs(obs, exist_ok=True)
+    os.makedirs(os.path.dirname(unp), exist_ok=True)
+    ul_lib.write_custom(pre, s0, _HIST_PRE, hist[:1] if mut == 'trunc_prepost' else hist)
+    ul_lib.write_custom(post, s0, _HIST_POST, (hist[:1] if mut == 'trunc_prepost' else hist) + (hist[:1] if mut == 'post_dup_id' else []))
+    if mut == 'trunc_prepost':
+        _patch_count(pre, 3)
+        _patch_count(post, 3)
+    if mut == 'pre_nan':
+        L = open(pre).read().splitlines()
+        L[-2] = L[-2].rsplit(' ', 1)[0] + ' nan'
+        open(pre, 'w').write('\n'.join(L) + '\n')
+    ul_lib.write_custom(end, s_end - 1000 if mut == 'end_wrong_step' else s_end, _HIST_PRE, hist)
+    ul_lib.write_custom(unp, s_end, _HIST_PRE, [dict(zero[0], id=999)] if mut == 'un_other_ids' else zero)
+    _w(os.path.join(UN, 'screen.txt'), 'LIGGGHTS (Version LIGGGHTS-PUBLIC 3.8.0, git commit 3d5c00f)\nUL_UN_START\n'
+       'Loop time of 0 on 6 procs for 0 steps with 160417 atoms\nUL_UN_DONE\n' + ('ERROR: synthetic failure after a partial dump\n' if mut == 'un_tech_fail' else ''))
+    _w(os.path.join(UN, 'run_check.txt'), 'UNread screen.txt ' + ('FAIL rc=1\n' if mut == 'un_tech_fail' else 'PASS rc=0 procs=6\n'))
+    _w(os.path.join(J, 'run_manifest.txt'), f'bed={bed}\njob=RJ\nresume=0\nstart=x\n'
+       + ('' if mut == 'manifest_no_end' else f'end=x fails={1 if mut == "manifest_fail" else 0} reader_rc=0\n'))
+    return J
+
+
+_HIST_TGZ = ('docs/reviews/dem_unloading_history_test_20261014/hist_20261014_094731.report.tgz',
+             'be0acbd7841d0922604eee8aa31524fcddbe179a8240f937b317432dbebb0ca0')
+
+
+def _repo_history_verdict():
+    """반입된 실제 이력 시험 판정 (10-14 · job 283122) — 리포 보고 묶음 (sha256 대조) 안 history_verdict.json 을 자료로만 읽는다 (시험 전용)."""
+    import tarfile
+    p = os.path.join(ul_lib.REPO, _HIST_TGZ[0])
+    if not os.path.exists(p) or ul_lib.sha256_file(p) != _HIST_TGZ[1]:
+        return None
+    with tarfile.open(p, 'r:gz') as t:
+        ms = [m for m in t.getmembers() if m.isfile() and m.name.endswith('/history_verdict.json')]
+        return json.load(t.extractfile(ms[0])) if len(ms) == 1 else None
+
+
+def _fake_restored(root, bed, job='RJ'):
+    """관문 순서 시험 전용 — RESTORED 증서 + 그 RJ 잡 기록 (end= fails=0)."""
+    _w(os.path.join(root, bed, job, 'restore_verdict.json'), json.dumps({'status': 'RESTORED'}))
+    _w(os.path.join(root, bed, job, 'run_manifest.txt'), f'bed={bed}\njob={job}\nresume=0\nend=x fails=0 reader_rc=0\n')
+
+
 def selftest() -> int:
     import tempfile
     fails = []
@@ -1137,7 +1346,7 @@ def selftest() -> int:
         # ── ULR1-05 결정표 3 행 → UTc 후속 산출물 · 다음 제출 관문 ──
         for j in ('UB', 'UT', 'UVa', 'UVb'):
             shutil.rmtree(os.path.join(root, B73, j), ignore_errors=True)
-        _w(os.path.join(root, B73, 'RJ', 'restore_verdict.json'), json.dumps({'status': 'RESTORED'}))
+        _fake_restored(root, B73)
         _w(os.path.join(root, B73, 'ul_base.in'), 'variable ul_S2max equal 1e-05\n')
         arm('UB', rho_lifts(1.0), Ps4)
         chk('R5 관문: UB · UT 판독 전 UVa · UVb 거부 (동시 UV 제출 없음 · §13-5 ②)', lambda: not gate(root, B73, 'UVa', P)[0] and not gate(root, B73, 'UVb', P)[0])
@@ -1147,7 +1356,7 @@ def selftest() -> int:
         chk('R5 ULR1-05 결정표 3 행 (UT 채택) → UTc (UT 의 R_M 에서 이어 돌림) 허용 · UT3 를 S0 에서 새로 (7:3) 거부 · G_UT3 허용 (R_M = UT)',
             lambda: gate(root, B73, 'UTc', P)[0] and not gate(root, B73, 'UT3', P)[0] and gate(root, B73, 'G_UT3', P)[0])
         chk('R5 다른 침대: 복원 전 거부 · 복원 뒤에는 최종 튜플의 팔 (UT3) 만 허용 · UB · UVa 거부',
-            lambda: (not gate(root, 'ps_3_7_r45', 'UT3', P)[0]) and (_w(os.path.join(root, 'ps_3_7_r45', 'RJ', 'restore_verdict.json'), json.dumps({'status': 'RESTORED'})) or True)
+            lambda: (not gate(root, 'ps_3_7_r45', 'UT3', P)[0]) and (_fake_restored(root, 'ps_3_7_r45') or True)
             and (_w(os.path.join(root, 'ps_3_7_r45', 'ul_base.in'), 'x\n') or True)
             and gate(root, 'ps_3_7_r45', 'UT3', P)[0] and not gate(root, 'ps_3_7_r45', 'UB', P)[0] and not gate(root, 'ps_3_7_r45', 'UVa', P)[0])
         chk('R5 10:0: 이완 연장 결정 (S0′) 전 RJ2 · U 거부', lambda: not gate(root, B100, 'RJ2', P)[0] and not gate(root, B100, 'UT3', P)[0])
@@ -1267,55 +1476,66 @@ def selftest() -> int:
         chk('R13 10:0 S0′: EXT 로그 ± 5,000 · 마지막 25 줄 1 % 안 → S0′ = 3,650,000 · KE 병진 기준 = 5 줄 창 평균 다섯의 중앙값 · 체크포인트 실재',
             lambda: (lambda s: s['status'] == 'PASS' and s['s0'] == 3650000 and abs(s['ke_trans'] - 3e-7) < 1e-18)(s0p_decision(root, P, write=False)))
     with tempfile.TemporaryDirectory() as root:
-        # ── 복원 판정 조립 (§12-1 ⑤) — 합성 RJ 폴더 (화면 · G2 · G2c · mesh · PRE · POST · R_END · UN) ──
-        B = P['beds'][B73]
-        J = os.path.join(root, B73, 'RJ')
-        g1, g3 = B['g1'].split(), B['g3'].split()
-        resets = ''.join(f'Resetting {k} state of Fix {f} Style {s} from restart file info\n' for f, s, ks in EXPECTED_RESETS for k in ks)
-        head = '    Step    Atoms         KinEng        ul_erot          ul_Ps       pressMPa            CPU \n'
-        scr = ('LIGGGHTS (Version LIGGGHTS-PUBLIC 3.8.0, git commit 3d5c00f)\n' + resets + head + f' {g1[0]} {g1[1]} {g1[2]} 1e-08 {g1[4]} {g1[4]} 0\n'
-               'Loop time of 0 on 6 procs for 0 steps with 160417 atoms\n' + head + f' {g1[0]} {g1[1]} {g1[2]} 1e-08 {g1[4]} {g1[4]} 0\n'
-               f' {g3[0]} {g3[1]} {g3[2]} 1e-08 {g3[4]} {g3[4]} 1\n Loop time of 1 on 6 procs for 2000 steps with 160417 atoms\nUL_R_DONE\n')
-        _w(os.path.join(J, 'R', 'screen.txt'), scr.replace('\n Loop', '\nLoop'))
-        _w(os.path.join(J, 'g0.json'), json.dumps({'status': 'PASS', 'violations': []}))
-        cols = ['id', 'type', 'x', 'y', 'z', 'radius', 'vx', 'vy', 'vz', 'c_strs[1]', 'c_strs[2]', 'c_strs[3]', 'c_ke']
-        rows = [{'id': i, 'type': 3, 'x': 0.001 * i, 'y': 0.002, 'z': 0.003, 'radius': 0.0005, 'vx': 1e-6, 'vy': 0.0, 'vz': 0.0, 'c_strs[1]': 0.0,
-                 'c_strs[2]': 0.0, 'c_strs[3]': 0.0, 'c_ke': 0.0} for i in range(1, 4)]
-        for p in (os.path.join(root, B73, 'in', 'atom_3200000.liggghts'), os.path.join(J, 'R', 'g2', 'atom_3200000.liggghts')):
-            os.makedirs(os.path.dirname(p), exist_ok=True)
-            ul_lib.write_custom(p, 3200000, cols, rows, fmt=lambda x: f'{x:g}')
-        ccols = [f'c_cpl[{c}]' for c in range(1, 27)]
-        crow = dict(zip(ccols, [0.001, 0.01, 0.01, 0.0015, 0.01, 0.01, 1, 2, 0, -0.5, 0, 0, -0.5, 0, 0, 0, 0.01, 0, 0, 0, 0, 1e-8, 1e-5, 0.00125, 0.01, 0.01]))
-        for p in (os.path.join(root, B73, 'in', 'contact_3200000.liggghts'), os.path.join(J, 'R', 'g2', 'contact_3200000.liggghts')):
-            ul_lib.write_local(p, 3200000, ccols, [crow])
-        stl = 'solid LIGGGHTS_STL_EXPORT\n facet normal 0 0 -1\n  outer loop\n   vertex 0 0 0.111052\n   vertex 0.05 0.05 0.111052\n   vertex 0.05 0 0.111052\n'
-        for p in (os.path.join(root, B73, 'in', 'mesh_3200000.stl'), os.path.join(J, 'R', 'g2', 'mesh_3200000.stl')):
-            _w(p, stl)
-        hc = ['id', 'type', 'f_history_zwall_bot[1]', 'f_history_zwall_bot[2]', 'f_history_zwall_bot[3]', 'f_history_zwall_bot[4]']
-        hist = [{'id': 1, 'type': 1, 'f_history_zwall_bot[1]': 2e-5, 'f_history_zwall_bot[2]': 1e-6, 'f_history_zwall_bot[3]': 0.0,
-                 'f_history_zwall_bot[4]': 0.0}, {'id': 2, 'type': 3, 'f_history_zwall_bot[1]': 0.0, 'f_history_zwall_bot[2]': 0.0,
-                                                  'f_history_zwall_bot[3]': 0.0, 'f_history_zwall_bot[4]': 0.0}]
-        zero = [dict(h, **{c: 0.0 for c in hc[2:]}) for h in hist]
-        for p, rr in ((os.path.join(J, 'R', 'obs', 'pre_bot.dump'), hist), (os.path.join(J, 'R', 'obs', 'post_atom_3200000.dump'), hist),
-                      (os.path.join(J, 'R', 'obs', 'end_pre_bot.dump'), hist), (os.path.join(J, 'UN', 'obs', 'un_pre_bot.dump'), zero)):
-            os.makedirs(os.path.dirname(p), exist_ok=True)
-            ul_lib.write_custom(p, 3200000, hc, rr)
+        # ── 복원 판정 조립 (§12-1 ⑤ · 개정 3 §14-10) — 합성 RJ 폴더 (단계 기록 · 화면 · G2 · G2c · mesh · PRE · POST · R_END · UN) ──
         hv = os.path.join(root, 'hist_verdict.json')
+        good = {'schema': 'ps45_unload_history_verdict_v1', 'exit_code': 0, 'rows': {f'H{i}': {'status': 'PASS'} for i in range(6)},
+                'info': {'syn': {'status': 'PASS', 'plate_fn_sign': -1}, 'force_timing': 'PASS'}}
 
-        def rv(h):
-            if h is None:
-                return restore_verdict(root, B73, 'RJ', None, P)['status']
-            _w(hv, json.dumps(h))
-            return restore_verdict(root, B73, 'RJ', hv, P)['status']
-        good = {'exit_code': 0, 'rows': {f'H{i}': {'status': 'PASS'} for i in range(6)}, 'info': {'syn': {'status': 'PASS', 'plate_fn_sign': -1}}}
+        def rv(h, mut=None, full=False):
+            shutil.rmtree(os.path.join(root, B73), ignore_errors=True)
+            J = _mk_rj(root, B73, P, mut)
+            if mut == 'reset_missing':
+                sp = os.path.join(J, 'R', 'screen.txt')
+                _w(sp, open(sp).read().replace('Resetting per-atom state of Fix history_zwall_bot', 'x'))
+            if h is not None:
+                _w(hv, json.dumps(h))
+            r = restore_verdict(root, B73, 'RJ', hv if h is not None else None, P)
+            return r if full else r['status']
+
+        def rv_gate(h, mut=None):
+            """복원 판정을 러너처럼 증서로 쓴 뒤 다음 제출 관문 (UB) — (판정, 관문 허용?)."""
+            r = rv(h, mut, full=True)
+            _w(os.path.join(root, B73, 'RJ', 'restore_verdict.json'), json.dumps(r, default=lambda o: sorted(o) if isinstance(o, set) else str(o)))
+            _w(os.path.join(root, B73, 'ul_base.in'), 'variable ul_S2max equal 1e-05\n')
+            return r['status'], gate(root, B73, 'UB', P)[0]
         chk('R14 복원 판정 조립: reset 로그 다섯 · G0 · G1 · G2 · G2c · mesh md5 · G3 · PRE = POST · UN 소거 보임 · 이력 시험 rc 0 (H0–H5 PASS) → RESTORED',
             lambda: rv(good) == 'RESTORED')
         chk('R14 이력 시험 없음 · rc 2 → UNCONFIRMED (표지만 달아 U 로 넘기지 않는다)',
             lambda: rv(None) == 'UNCONFIRMED' and rv(dict(good, exit_code=2)) == 'UNCONFIRMED')
         chk('R14 이력 시험 SYN 의 판 접촉 법선력 부호 (+1) ≠ 표 plate_fn_compressive_sign (−1) → UNCONFIRMED (표를 결과 0 건에서 고친 뒤)',
-            lambda: rv(dict(good, info={'syn': {'status': 'PASS', 'plate_fn_sign': 1}})) == 'UNCONFIRMED')
-        _w(os.path.join(J, 'R', 'screen.txt'), scr.replace('Resetting per-atom state of Fix history_zwall_bot', 'x'))
-        chk('R14 바닥 primitive per-atom reset 로그 빠짐 → VALUE_MISMATCH', lambda: rv(good) == 'VALUE_MISMATCH')
+            lambda: rv(dict(good, info={'syn': {'status': 'PASS', 'plate_fn_sign': 1}, 'force_timing': 'PASS'})) == 'UNCONFIRMED')
+        chk('R14 바닥 primitive per-atom reset 로그 빠짐 → VALUE_MISMATCH', lambda: rv(good, 'reset_missing') == 'VALUE_MISMATCH')
+        # ── ULKR-05 반례 (Codex history_restore — 판정문 §3) · 각 변이에서 복원 + 다음 제출 (UB) 함께 거부 ──
+        chk('R14 정상 RJ 폴더 + 증서 → 다음 제출 (UB) 허용 (반례의 대조)', lambda: rv_gate(good) == ('RESTORED', True))
+        for mut, want, what in (('trunc_prepost', 'UNCONFIRMED', 'PRE · POST 가 3 원자를 선언하고 1 행만 (둘 다 파서 ok=false)'),
+                                ('post_dup_id', 'UNCONFIRMED', 'POST 에 같은 ID 둘 (선언 = 행 수)'),
+                                ('pre_nan', 'UNCONFIRMED', 'PRE 한 행 NaN (파서가 버림 — 관측 결손 · 수치 불일치가 아니다)'),
+                                ('end_wrong_step', 'UNCONFIRMED', 'R_END 머리 step = S0 + 1,000 (기대 S0 + 2,000)'),
+                                ('un_other_ids', 'UNCONFIRMED', 'UN = ID 999 하나의 0 (R_END = ID 1 · 2 · 3 · ID 1 이력 비영)'),
+                                ('un_tech_fail', 'SYNTAX_FAIL', 'UN 화면 ERROR · 단계 기록 FAIL rc=1 (부분 덤프는 남음)'),
+                                ('r_runcheck_missing', 'SYNTAX_FAIL', 'R 단계 기록 (run_check.txt) 없음'),
+                                ('ut0_fail', 'SYNTAX_FAIL', '7:3 Ut0 단계 기록 FAIL rc=1 (R 의 선행 단계)')):
+            chk(f'R17 ULKR-05 {what} → {want} · 다음 제출 (UB) 거부', lambda mut=mut, want=want: rv_gate(good, mut) == (want, False))
+        chk('R17 ULKR-05 RESTORED 증서인데 RJ 잡 기록 끝 줄 fails=1 (러너가 같은 실행 끝에 기술 실패) → 다음 제출 (UB) 거부',
+            lambda: rv_gate(good, 'manifest_fail') == ('RESTORED', False))
+        chk('R17 ULKR-05 RESTORED 증서인데 RJ 잡 기록에 끝 줄 없음 (러너가 끝내지 못함) → 다음 제출 거부',
+            lambda: rv_gate(good, 'manifest_no_end') == ('RESTORED', False))
+        # ── ULKR-08 — SYN PASS + 측정 부호 = 표 · 총힘 시점 PASS 필수 (SYN 없음 = 자격 없음) ──
+        for name, h in (('SYN 없음 (NOT_RUN · 부호 null — Codex actual_bundle_without_SYN)', dict(good, info={'syn': {'status': 'NOT_RUN', 'plate_fn_sign': None},
+                                                                                                                'force_timing': 'PASS'})),
+                        ('SYN FAIL (부호는 표와 같음)', dict(good, info={'syn': {'status': 'FAIL', 'plate_fn_sign': -1}, 'force_timing': 'PASS'})),
+                        ('총힘 출력 시점 FAIL (C1 선행조건)', dict(good, info={'syn': {'status': 'PASS', 'plate_fn_sign': -1}, 'force_timing': 'FAIL'})),
+                        ('판정 schema 다름 (다른 판정 파일)', dict(good, schema='x'))):
+            chk(f'R18 ULKR-08 이력 시험 H0–H5 PASS · rc 0 인데 {name} → UNCONFIRMED · 다음 제출 거부',
+                lambda h=h: rv_gate(h) == ('UNCONFIRMED', False))
+        chk('R19 판독기의 바닥 이력 관측 열 = 생성기가 R · UNread 덱에 쓰는 열 (PRE write_dump · POST 덤프 — 따로 적은 사본이 어긋나면 관측 전부 결손)',
+            lambda: list(HIST_PRE_COLS) == mk._hist_dump_cols(forces=False).split() and list(HIST_POST_COLS) == mk._hist_dump_cols().split()
+            and f'write_dump all custom ${{out}}/obs/pre_bot.dump {" ".join(HIST_PRE_COLS)}' in mk.render(B73, 'R', P)
+            and f'write_dump all custom ${{out}}/obs/un_pre_bot.dump {" ".join(HIST_PRE_COLS)}' in mk.render(B73, 'UNread', P))
+        real = _repo_history_verdict()
+        chk('R18 ULKR-08 실제 반입 이력 판정 (10-14 job 283122 · SYN PASS −1 · 총힘 PASS) → RESTORED · 같은 판정에서 SYN 만 뺌 → UNCONFIRMED',
+            lambda: real is not None and rv(real) == 'RESTORED'
+            and rv(dict(real, info=dict(real['info'], syn={'status': 'NOT_RUN', 'checks': {}, 'plate_fn_sign': None}))) == 'UNCONFIRMED')
     with tempfile.TemporaryDirectory() as root:
         # ── 중력 팔 복원 (choice C12) — R_M 의 setup (G1 · G2 · G2c) ↔ 출처 팔의 R_M 창 끝 (같은 머리 · run 0) ──
         src = _mk_arm(root, B73, 'UB', {'W': 5000, 'dt': 1e-6, 'steps': _ladder([0.2, 0.25, 0.3, 0.35], [1.2, 0.8, 0.6, 0.4]),
