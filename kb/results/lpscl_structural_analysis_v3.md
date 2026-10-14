@@ -1,5 +1,7 @@
 # LPSCl vs LPSCl1.6 — 구조/결합 정밀 분석 (v3, DFT V0)
 
+> ⛔ **정정 2026-10-14 (사용자 결정 · 트랙 우리 DFT 기준선 · 원문은 그대로 둔다)** — 이 문서의 *'modelc 4d anti-site 12.5 % (1/8)'* 는 Li 배위수 분류기 (Z(Li) ≥ 5 → 4a · < 5 → 4d) 의 산물로 보인다. P 배위 기하 (4d = P 4 개 사면체 · 4a = P 6 개 팔면체) 로 세면 modelc 의 4d 다섯 자리 중 Cl 3 (60 %) · Cl 8 개 중 3 개가 4d (37.5 %) · 4a 의 S 0 — 화학량론이 강제한 최소 혼합이다 (`db/compositions/modelc_v3.json`). 근거 `litdb/papers/feng2020_li_deficient_argyrodite_cl_disorder.md` §7a · §7d-1. 이 값에 기댄 결론 (예: 4d-Cl 과 4a-Cl 의 결합 비교 `db/properties/bonds.json`) 은 자리를 다시 가른 뒤 다시 판정한다.
+
 `lpscl_vs_lpscl16_v3_comparison.md`의 결합환경 절을 더 깊이 들여다보는
 분석 문서. 결합 길이, 배위수, Voronoi, anti-site, paper 함의까지.
 

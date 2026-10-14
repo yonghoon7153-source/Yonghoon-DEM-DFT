@@ -1,5 +1,7 @@
 # LPSCl vs LPSCl₁.₆ Seminar — Slide Master v1
 
+> ⛔ **정정 2026-10-14 (사용자 결정 · 트랙 우리 DFT 기준선 · 원문은 그대로 둔다)** — 이 문서의 *'modelc 4d anti-site 12.5 % (1/8)'* 는 Li 배위수 분류기 (Z(Li) ≥ 5 → 4a · < 5 → 4d) 의 산물로 보인다. P 배위 기하 (4d = P 4 개 사면체 · 4a = P 6 개 팔면체) 로 세면 modelc 의 4d 다섯 자리 중 Cl 3 (60 %) · Cl 8 개 중 3 개가 4d (37.5 %) · 4a 의 S 0 — 화학량론이 강제한 최소 혼합이다 (`db/compositions/modelc_v3.json`). 근거 `litdb/papers/feng2020_li_deficient_argyrodite_cl_disorder.md` §7a · §7d-1. 이 값에 기댄 결론 (예: 4d-Cl 과 4a-Cl 의 결합 비교 `db/properties/bonds.json`) 은 자리를 다시 가른 뒤 다시 판정한다.
+
 > **목적**: paper #1 (comp1 vs modelc 단독 비교) head-to-head 발표용 슬라이드 master.
 > paper #2 (adhesion, doping cascade, Li₃N, Nd-doping) 모두 분리됨.
 > **저장 정책**: 이 문서는 발표 자료의 single source of truth. 새 슬라이드/스크립트

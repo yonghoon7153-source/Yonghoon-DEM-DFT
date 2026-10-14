@@ -404,7 +404,8 @@
     },
     "delta_eV": -0.809,
     "ratio_4d_over_4a": 1.4,
-    "headline": "4d-Cl anti-site forms 40% stronger Li-Cl bonds than 4a-Cl. Despite being only 12.5% of Cl (1/8), it contributes substantially to mean ICOHP (-2.103 avg vs -2.026 if 4a-only). Direct quantitative origin of the deeper second peak in Li-Cl pCOHP panel."
+    "headline": "4d-Cl anti-site forms 40% stronger Li-Cl bonds than 4a-Cl. Despite being only 12.5% of Cl (1/8), it contributes substantially to mean ICOHP (-2.103 avg vs -2.026 if 4a-only). Direct quantitative origin of the deeper second peak in Li-Cl pCOHP panel.",
+    "⛔_정정_2026_10_14": "재판정 대기 (사용자 2026-10-14 · 트랙 우리 DFT 기준선) — 이 headline 의 4d / 4a 구분은 Li 배위수 분류기 기준이다. P 배위 기하로 세면 modelc 의 Cl 8 개 중 3 개가 4d 다 (1/8 이 아니다 · `db/compositions/modelc_v3.json` 37.5 %). 어느 Cl 이 4d 냐가 바뀌므로 '4d-Cl 이 Li–Cl 결합 40 % 강하다' 는 자리를 다시 가른 뒤 다시 판정한다. ICOHP 값 자체는 그대로다. 근거 `litdb/papers/feng2020_li_deficient_argyrodite_cl_disorder.md` §7d-1."
    },
    "Li_Cl_vacancy_antisite_decomposition": {
     "_method": "Compare comp1 4a-only ICOHP (no vacancy) with modelc 4a (with vacancy) to isolate vacancy effect, then compare modelc 4a with modelc 4d to isolate anti-site effect.",

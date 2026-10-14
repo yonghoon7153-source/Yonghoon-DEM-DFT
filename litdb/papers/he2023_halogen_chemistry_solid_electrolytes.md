@@ -494,6 +494,8 @@ SI 는 6쪽이고 내용물은 **`Table S1` 하나뿐**이다. 그런데 그 하
 | **기계적 물성** | "high deformability"(본문-ref 17) — **수치 0** | E_VRH 22.06 → 27.66 GPa · B₀ 26.23 → 21.71 GPa | **n/a** |
 | **계면(Li 금속)** | `Fig. 7d`: Li₆PS₅Cl → Li₁₁PS₅Cl → {Li₂S,LiCl,S} → {Li₃P,LiCl,Li₂S}, **전자 차단 = 자기제한** | 우리 grand-potential 환원한계 1.242 V / OCV 1.717 V | **✅ 정성 정합** (분해 산물 종류가 우리 hull 산물과 같은 계열). ⛔ 전압 대 전압 비교는 리뷰에 수치가 없어 불가 |
 
+> ⛔ **정정 2026-10-14 (사용자 '권고대로' · 트랙 우리 DFT 기준선)** — 위 행의 *'에너지 지형이지 Li 결핍이 아니다'* 는 Feng 2020 원문보다 세다. 원문은 AIMD 로 혼합이 Ea 를, 결핍이 σ 의 크기를 정한다고 쓰고 둘을 '완전히 분리하기 어렵다' 고 한다 (`papers/feng2020_li_deficient_argyrodite_cl_disorder.md` §7d-2). 우리 쪽 문장도 같이 고쳤다 — `db/properties/comp2_md_arrhenius.json` physics_verdict ('공공과 4d-Cl 둘 다 레버 · 우리 자료로는 우열을 못 가린다').
+
 ---
 
 ## 15. 적용 인사이트 — **우리 연구에 어떻게**

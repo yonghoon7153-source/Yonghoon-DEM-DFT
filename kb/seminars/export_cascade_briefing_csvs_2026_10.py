@@ -123,7 +123,7 @@ def p06():
     planned = {r[i['anion_family']]: int(r[i['n_planned']]) for r in body}
     assert sum(planned.values()) == len(relaxed) == 91, (sum(planned.values()), len(relaxed))
     note = {'As2S3': 'relaxed in the August re-run (08-20~25, valence table fixed); added to the stability-window and interface tables on 2026-10-14; not in the gate table',
-            'AlI3': 'relaxed; rank-1 configuration lacks elastic/EOS/bond-valence descriptors — using rank 2 is an open decision'}
+            'AlI3': 'relaxed; rank-1 configuration lacks elastic/EOS/bond-valence descriptors — rank 2 is not used (user 2026-10-14); the rank-1 descriptors wait for a free GPU'}
     rows = []
     for fam, n_pl in planned.items():
         sp_rel = sorted(x for x in relaxed if anion_family(x) == fam)
