@@ -196,3 +196,5 @@ reviews/review_reil_c4_0b1_fix_result_20261014/** -text
 evidence/reil_c4_0b1_fix2_20261014/** -text
 # 2026-10-14: REIL C4-0b1 한정 보완 2 결과 재검토 회신 (N1 잔여 수용 · N1 전체 종결 · C4-0b1 제한 오프라인 구현 종결 수용 · 새 차단 0 · source/ = 검토자가 본 저장소 사본) — bytes 그대로
 reviews/review_reil_c4_0b1_fix2_result_20261014/** -text
+# 2026-10-14: REIL C4-0b2 실행 기록 (identity · RED · GREEN · 읽기 전용 건조 · 시작/끝 HEAD · porcelain · 자원 관측) — bytes 그대로
+evidence/reil_c4_0b2_20261014/** -text
