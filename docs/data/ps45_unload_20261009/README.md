@@ -2,7 +2,7 @@
 
 - 등록 (정본): `docs/reviews/dem_unloading_ps45_prereg_20261009.md` (이하 REG — §12 개정 1 · §13 개정 2) · 반영 계획 `docs/reviews/dem_unloading_ulr1_fix_plan_20261012.md` (✅ 1저자 10-12 Q1–Q4 권고대로) ·
   Codex 판정문 `docs/reviews/codex_review_dem_unloading_prereg_20261011.md` (CX1) · `docs/reviews/codex_review_dem_unloading_prereg_rereview_20261012.md` (CX2).
-- ⛔ **10-14 Codex 키트 재검토 (핀 `2783061ea`) = HOLD** — 이력 시험은 수용 · 본 키트 판독 · 복원 · 후속 · 러너에 P1 여섯 (`ULKR-01`~`06`) · P2 여섯 · 판정문 `docs/reviews/codex_review_dem_unloading_kit_20261014.md` · 수정 계획 `docs/reviews/dem_unloading_kit_fix_plan_20261014.md` (⬜ 1저자) — §2–§6 은 수정 전 판이다.
+- ⛔ **10-14 Codex 키트 재검토 (핀 `2783061ea`) = HOLD** — 이력 시험은 수용 · 본 키트 판독 · 복원 · 후속 · 러너에 P1 여섯 (`ULKR-01`~`06`) · P2 여섯 · 판정문 `docs/reviews/codex_review_dem_unloading_kit_20261014.md` · 수정 계획 `docs/reviews/dem_unloading_kit_fix_plan_20261014.md` (✅ 1저자 10-14 Q1–Q9 권고대로 = 전부 (가)) — §2–§6 은 수정 전 판이다.
 - 이 README 가 **이름의 정본**이다 (REG §8-2 "이름은 가칭 · 키트 README 가 정본").
 - 지금 할 수 있는 것 = **§1 작은 침대 이력 시험 (H0–H5) 만** — 본 키트 봉인과 따로 봉인 (`history_test/SHA256SUMS`) 해서 먼저 돌릴 수 있다.
   ⛔ 이 시험이 PASS 여도 본 R · 10:0 연장 · U 의 GO 가 아니다 (CX2 §0 · REG §13-6 — 키트 증거 → Codex 재검토 → 본 실행).
