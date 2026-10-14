@@ -1257,3 +1257,70 @@ rc 0 → **옛 봉인 대조 (§2-4) 에서 허용 밖 차이** → 정지. 원�
 - **넣지 않은 것:** ray · 보고 서식 (H1 머리말 · U-a…U-e) · E3a 완료 확인 · 비용 중단 규칙 · reserve · 배열 재봉인 · Sobol 재생성 · full C6 check ·
   전체 suite · 환경 재구축 · C4-E / A / B · 자료 개봉 · 맞춤 · 설치 · COMSOL.
 - **다음:** 검토 요청 (`docs/REIL_C4_0B2_RESULT_REVIEW_SEND_20261014.md`). C4-0b2 종결은 검토 판정 뒤다.
+
+## §57 C4-0b2 결과 검토 회신 접수 — 종결 보류 · P2 N1–N3 · 기록 수용 · 문구 정정 · C4-E / A / B 조건 (2026-10-14 KST · 덧붙임 — 위 §0–§56 은 그대로)
+
+- **보존:** `reviews/review_reil_c4_0b2_result_20261014/`
+  - zip 473,635 B · sha256 `2513c78bc176b28f9a4d1b45ba4aec057a23661b0ea7de5cf922505eca718067` (사용자 업로드 원파일과 바이트 동일).
+  - `originals/` 69 · PACKAGE_MANIFEST (`members`) 68 / 68 일치 · 목록 밖 파일 0 (manifest 자신은 `self_excluded`) · 비밀 0.
+    동봉 `package_review.ps1` · `audit_review.ps1` 은 실행하지 않았다.
+  - `source/` 52 는 검토 고정 HEAD `5810f355` 의 저장소 파일과 바이트 동일하다. `red_fixed/` 2 는 `540208aa` (RED 전 골격 `310f1988…` · 대조 원문 `01f58c6d…`) 와 같다.
+  - 규칙 커밋 `66d378b8` → 보존 커밋 `64d3211d` (blob 70 / 70 일치).
+  - 처음 생긴 일 하나: `originals/source/.gitattributes` (검토자 사본 = `5810f355` 의 `bms-balancing/.gitattributes`) 가 그 하위 경로에서 활성이다 —
+    git 은 더 깊은 `.gitattributes` 를 먼저 따르므로 source/ 의 20 파일이 부모 규칙 `-text` 대신 text (auto 9 · set 11) · eol=lf 로 잡힌다.
+    52 파일 모두 CR 바이트 0 이고 무필터 blob 이 받은 bytes 와 같아 체크아웃 결과도 같다. CR 이 든 zip · PACKAGE_MANIFEST.json 은 부모 규칙 `-text` 그대로다.
+    바이트 정본은 zip 이다.
+- **판정 (`DECISION.json`):** `C4_0B2_REVIEWED_CHANGES_REQUIRED` — `limited_evidence_accepted` true · `implementation_closed` false · 차단 P2 셋
+  (C4B2-N1 · N2 · N3). 검토자 실행 (수신 코드 import · 실행 · 시험 · 최적화 · Sobol 생성 · 자료 개봉 · COMSOL · JVM) 0 · 소스 변경 0.
+  새 승인 없음 (구현 · 재시험 · C4-E · C4-A · C4-B · COMSOL 모두 false).
+- **수용 (회신 §5 · §6-1 — 114 를 부정하거나 재시험한 판정이 아니다):**
+  - 기록: identity rc 0 · RED 42 골격 실패 / 1 통과 · GREEN 114 · 건조 PLAN_B 하나 · 단계 합 55.700 / 1,560 s · 새 시험 sha `01f58c6d…` RED 전 · 후 동일 ·
+    stderr 넷 0 B — 명시된 증거 범위에서.
+  - Q2 의 **정상 완료 경로**: 두 단일 목적 Phase A 완료 · 유한 양수 분모 뒤 ρ · 등록 탐색 대조 · 공통 갱신 1 회 · 같은 최종 저장점의 전후 판독 ·
+    모든 유효 (J_V, J_D) 최종 재비교. 중지 경로는 N1 때문에 미종결.
+  - 구현: Phase A 지역 실행기 일반화 (b0_1 · 기존 71 — 모든 수치 입력의 동등성 증명은 아님) · `phase_a_complete` · `rho_wave` 의 검사 · 등록 탐색 누락 거부 ·
+    프로파일 등식 소거 · LII / G 제약 · s2 사슬 · 실행 직전 적응 봉인 · 동시 min(4, n_valid) + Sobol 12 · P0 PRIOR_INCOMPATIBLE 유지 · 명목 d_N 구간 · 201 점 ·
+    다듬기 1 회 · H4 대조 (반증과 구분 · 대조점 풀 제외 · 22 단위 끝점 게이트 = 적용 가능성 실패) · ray 도달 중지 · 격자점 최소를 주증인으로.
+- **차단 (P2 셋 · 좌표는 `5810f355` 의 `bms-balancing/`):**
+  1. **C4B2-N1 중단 집계** — `scripts/reil_c4_hb.py:1070–1076` (`stage_a` 가 1 파 global_stop 에서 ρ 분류 전에 예외) · `:1305–1310` (`plan_counts` 가
+     phase_a 키만으로 실행 단위 · 완료 여부 없이 UNFIT · COMPLETED 만 셈 · NOT_STARTED / STARTED_INTERRUPTED 칸 없음).
+     - 반례: J_V A0 · J_D A0 · ρ A0 셋 · 작업자 1 의 첫 실행 구조 오류 → 1 STARTED_INTERRUPTED + 255 NOT_STARTED · ρ 미분류 → 계획 3 · 실행 단위 2 ·
+       미실행 0 · 계획 실행 384 · 완료 0 · 미실행 실행 0 · UNFIT 2. 오류 뒤 최적화를 계속하는 우회가 아니라 **중지 결과의 결손 · 오분류**다.
+     - 정정: 중지 원문 보존 · 남은 ρ 의 선행 미완 사유 · COMPLETED / STARTED_INTERRUPTED / NOT_STARTED / gate 미실행을 겹치지 않게 · 항등식 정의 명시 ·
+       UNFIT 은 완결된 Phase A 의 유효 증인 0 만.
+     - 대조: 실제 `stage_a` + 제공 runner 의 첫 구조 중지 → ρ 호출 0 · 사유 · 모든 계획 행 분류 · UNFIT 오승격 0 (c_1 · c_7 · c_8 은 이 경로를 단언하지 않는다).
+  2. **C4B2-N2 프로파일 중심** — `:491–494` (`run_profile_k` 가 반올림 전 `g["t_fraction"]` 으로 중심 · 순서를 정한다 · 실행은 저장 float `g["t"]`).
+     - 반례 (`CENTER_COUNTEREXAMPLE.json` — 검토자 자체 정확 산술 · 후보 코드 호출 0 · 실자료 결과 아님): A0 · #1 · m_P · 가상의 유효 Phase A 최적 증인
+       (float(0.61875), 0.75, 0.25, 0.125) → 저장 float 두 점까지의 거리가 같다 (56294995342131/9007199254740992) → 동률 규칙으로 index 1 · 지금 코드는 index 2.
+     - 정정: 중심 · 순회와 실행에 같은 저장 float (정확 분수로 바꿔 비교). 배열 · seed · label 재생성 · 자료 맞춤 불필요.
+     - 대조: 위 입력의 `run_profile_k` 중심 · 순서 · s2 근거 (p_1 은 helper 에 직접 넣고 · p_6 은 중심 / 순서를 보지 않는다).
+  3. **C4B2-N3 발견 폭 라벨** — `:830–849` (`width` 가 value · unresolved · observed 만) · `:882` (`_read_unit` 이 그대로 저장). 부가 라벨은 양립 판정
+     (`_compat`) 으로만 붙고 개별 양립의 근거는 명목 근처 격자점이다.
+     - 반례: #0 · #4 · #5 의 LII 에서 명목 ± 0.05 밖 충족 증인 둘이 0.1 넘게 떨어지면 WIDE 인데, 개별 양립은 NOT_FOUND · extra 빈칸 · 제약 절단 없음.
+       수치 수용 WIDE 에 선형 제약 경계 없음 · 폭 판독에 등급별 증인 수 없음.
+     - 정정: 폭 주장마다 근거 증인의 식별 / 좌표 · 등급 수 · 부가 라벨을 폭 결과에 직접 · 경계 행 LII 의 제약 절단은 폭 판독 자체에.
+     - 대조: 명목 양립 NOT_FOUND + WIDE · 경계 행 LII · 수치 수용에만 기대는 WIDE · budget / 외삽 / 목적 경계 동반 — 최종 `_read_unit` / 연결 판독에서
+       (l_2 · l_3 은 helper 를 따로 본다).
+- **기록 문구 정정 (회신 §6-3 — 위 §56 과 결과 발송문은 그대로 두고 여기서 고친다):**
+  1. "Sobol 생성 0" (§56 의 합성 호출 · 발송문 §5-2 · §7) → **"새 43 대조 · 독립 건조의 Sobol 생성 0 · 기존 71 의 승인된 임시 Sobol 생성 / 재생성 대조는
+     GREEN 에서 실행 · 기존 등록 배열 디렉터리 재봉인 0"**. 다시 읽어 확인했다: `tests/test_reil_c4_0b1.py:161–205` (test_05 셋) 가 `sobol_points`
+     (메모리) 와 tmp 폴더의 `seal_h_arrays` · `check_h_arrays` (기본값 = 재생성 대조) 를 부른다.
+  2. 가짜 util 명목 격자 평가 402 (n_1 · n_2 각 201) → 승인된 대조 내용 · 호출 표의 **독립 칸** (최적화기 없음 · 보존 util 사본 아님). "미승인 최적화" 가 아니다.
+  3. RED 전 NumPy 설계 산술 1 회 → **"대상 import / 최적화 0 인 설계 산술로 신고됨 · 독립 확인과 완전 승인 준수 판정은 보류"** — 명령 · 출력 · 시각 원문이 없고,
+     재실행으로 채우지 않는다.
+  4. 합성 호출 수 (≤ 982 · 5 · 22) 는 시험 구조의 정적 집계이지 실행별 계수 로그가 아니다. c_8 의 RSS / disk 는 대역이다 (OS 자원 감시 증명 아님).
+  5. 2,502.9 / 14,400 s 는 커밋 · push · 최종 문서 전 snapshot 이다 (`whole_work_completion_observed: false`).
+- **C4-E / A / B 승인 요청에 남길 조건 (회신 §7 — 이번 보완 범위 밖 · 실행 승인 아님):**
+  - 7-1 배열 인증을 실제 착수 경로에: `sealed_block:306–321` 은 INDEX 의 블록 해시만 대조하고 `check_h_arrays` 호출은 건조 `:1356` 뿐이다 —
+    `stage_b → run_searches` 에 신뢰 MANIFEST sha 확인이 없어 NPY + INDEX 동시 변경을 막았다고 할 수 없다. 향후 실행기는 수용 MANIFEST sha · P0 · 정확 파일
+    집합 · 실제 소비 바이트를 결속하고, 실패하면 적응 봉인 · 목적 · 최적화 전에 멈춘다. 구체 방법과 NPY + INDEX 동시 변경 대조를 승인 요청에 고정한다
+    (Sobol 재생성 불요 · 이번 배열이 바뀌었다는 증거는 없다).
+  - 7-2 H4 대조 근거의 저장 범위: `h4_positive:645` (원래 교차 항목을 버림) · `record_h4:691–692` (values · diffs · points · tried 미저장) ·
+    `_h4_controls:712–717` → H4 가 도달 가능한 실행을 승인하기 전에 원시 교차 · 후보 탈락 이유 · 선택점 · ΔJ · 음성 D_abs / 구간의 보존 범위를 정한다
+    (현재 자료는 gate 뒤 미실행이라 이번 P2 가 아니다).
+  - 7-3 실행 승인서: E3a 범위 · 비용 측정치의 사용 · 조기 중지 · reserve · 단일 원점 · 시작 / 끝 HEAD · 파일 목록 · lock / 배열 / P0 결속 · 부분 / 중단 결과
+    저장 · 최종 전달 경과를 미리 쓴다. C4-A (E3a 완료 증거 · 실행기 입력 계약) 와 C4-B (등록 탐색 · 최종 판독 · 배열 인증 · 중단 집계) 를 나눠
+    C4-E 승인이 A / B 포괄 승인이 되지 않게 한다. H4 gate · ray 유보 · 기존 실패 · 승인 이탈 기록을 유지하고 ν · seed · 기존 배열을 결과에 맞춰 바꾸지 않는다.
+- **상태:** C4-0b2 **종결 보류** (P2 셋). 기존 통과 · 실패 · 이탈 기록은 그대로 보존한다.
+- **다음:** N1–N3 한정 보완 승인 요청 (`docs/REIL_C4_0B2_FIX_APPROVAL_REQUEST_20261014.md`) — 대조 원문 · 패치 · 호출 상한 · 기록 범위를 먼저 고정한다.
+  승인 전 구현 · 실행 0.
