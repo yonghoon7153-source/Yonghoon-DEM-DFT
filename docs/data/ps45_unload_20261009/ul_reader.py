@@ -333,11 +333,11 @@ def _wall_rows(path, step=None, cols=WALL_U):
     return [{n: r[f'c_ul_wh[{c}]'] for c, n in enumerate(cols, 1)} for r in d['rows']]
 
 
-def _s0_frame(root, bed, P):
-    """S0 원자 (in/atom_<S0>.liggghts — 10:0 은 s0_decision 의 S0′ 프레임) → (id 집합, 원자 목록, step) — 전부 읽힘 · 머리 step = S0 · 고유 ID 일 때만 (ULKR-04)."""
+def _s0_dump(root, bed, P):
+    """S0 원자 덤프 (in/atom_<S0>.liggghts — 10:0 은 s0_decision 의 S0′ 프레임) → (덤프 | None, S0) — 전부 읽힘 · 머리 step = S0 · 고유 ID 일 때만 (ULKR-04)."""
     s0 = _bed_s0(root, bed, P)
     if s0 is None:
-        return None, None, None
+        return None, None
     cand = [os.path.join(root, bed, 'in', f'atom_{s0}.liggghts'), os.path.join(root, bed, 'EXT', 'post', f'atom_{s0}.liggghts'),
             os.path.join(root, bed, 'EXT2', 'post', f'atom_{s0}.liggghts')]
     for p in cand:
@@ -345,9 +345,74 @@ def _s0_frame(root, bed, P):
             d = ul_lib.read_dump(p, 'custom')
             ids = [int(r['id']) for r in d['rows']]
             if d['ok'] and d['rows'] and d['step'] == s0 and len(set(ids)) == len(ids):
-                return set(ids), d['rows'], s0
-            return None, None, s0
-    return None, None, s0
+                return d, s0
+            return None, s0
+    return None, s0
+
+
+def _s0_frame(root, bed, P):
+    """S0 원자 → (id 집합, 원자 목록, step) — _s0_dump 와 같은 자격 (ULKR-04)."""
+    d, s0 = _s0_dump(root, bed, P)
+    if d is None:
+        return None, None, s0
+    return {int(r['id']) for r in d['rows']}, d['rows'], s0
+
+
+A_PS = 0.0025   # 덱 Ps 식의 면적 글자 (덱 m² — f_top_mesh[3] / 0.0025 / 1e6) · W_proxy 의 힘 = P̄ · A_PS (압력과 같은 면적)
+
+
+def _aux_eps_w(v, steps, cross, s0d, fp, s0_ids, h0, P):
+    """ε_sphere · W_proxy (§12-9 · 개정 3 §14-8 · Q7 · ULKR-12) — 보조 관측 (주 ρ 무영향) → (eps, w_proxy_J, w_proxy).
+    ε: C_all = 검증한 S0 프레임 (전부 읽힘 · 머리 step · 고유 ID · 유한 양의 반경) 에서 봉인한 Σ V ÷ A (A = S0 상자 x · y) — 프레임마다 다시 계산하지 않는다 ·
+       자리 = S0 (판 h0) · 첫 교차 끝점 둘 (단 끝 프레임 — S0 ID 전부 · 같은 반경 아니면 그 자리 NOT_COMPUTED) · M (보간 높이 · ε_all 만 · 주 값 OK 일 때).
+    W_proxy: 주 값 OK · 단 k 0 … k* − 1 연속 · 전부 정상 (S1 ∧ S2) · 유한 → 정착 단 사다리꼴 + 끝 조각 k* − 1 → M (P_meas) · A_PS × 1e-6 = 보고 J
+       (판이 받은 일 아님) · 아니면 None (0 J 아님)."""
+    scale = P['units']['report_MPa_per_Ps']
+    Pm = P['P_meas_report_MPa']
+    ok_cross = isinstance(cross, tuple) and len(cross) == 2 and all(isinstance(x, int) for x in cross)
+    okM = v['primary_status'] == 'OK' and v['rho_pct'] is not None and ok_cross
+    hM = h0 * (1.0 + v['rho_pct'] / 100.0) if okM else None
+    eps = {'status': 'NOT_COMPUTED', 'C_all_m': None, 'area_m2': None, 'n_s0': None, 'S0': None, 'endpoints': [], 'M': None, 'why': []}
+    vol = ul_observers.s0_volumes(s0d['rows']) if s0d else None
+    box = (s0d or {}).get('box')
+    area = (box[0][1] - box[0][0]) * (box[1][1] - box[1][0]) if box and len(box) >= 2 else None
+    if vol is None or area is None or not area > 0:
+        eps['why'].append('S0 프레임 봉인 없음 (결손 · 중복 · 비유한 반경 · 상자 없음) — ε 미계산')
+    else:
+        s0e = ul_observers.eps_sphere(s0d['rows'], vol, area, h0)
+        eps.update(status='OK', C_all_m=s0e['C_all'], area_m2=area, n_s0=len(vol),
+                   S0=dict({k: s0e[k] for k in ('status', 'eps_all', 'eps_inside', 'n_inside')}, h_m=h0))
+        if ok_cross:
+            for x in cross:
+                s = steps[x]
+                rec = {'k': s['k'], 'step': s['step'], 'h_m': s['plate_z'], 'status': 'NOT_COMPUTED', 'eps_all': None, 'eps_inside': None,
+                       'n_inside': None, 'why': []}
+                A, pr = _atom_frame(fp(f'dump/atom_{s["step"]}.dump', s['step']), s['step'], s0_ids)
+                if A is None or s['plate_z'] is None:
+                    rec['why'] = pr or ['판 높이 비유한']
+                else:
+                    e = ul_observers.eps_sphere(A['rows'], vol, area, s['plate_z'])
+                    rec.update({k: e[k] for k in ('status', 'eps_all', 'eps_inside', 'n_inside')}, why=e['why'])
+                eps['endpoints'].append(rec)
+        if okM:
+            e = ul_observers.eps_sphere(None, vol, area, hM)
+            eps['M'] = {'h_m': hM, 'status': e['status'], 'eps_all': e['eps_all'], 'eps_inside': None}
+    w = {'status': 'NOT_COMPUTED', 'n_points': 0, 'why': []}
+    wJ = None
+    if not okM:
+        w['why'].append('주 값 OK 아님 — M (보간 높이) 없음')
+    else:
+        rng = steps[:cross[0] + 1]
+        bad = [s['k'] for s in rng if not s['steady'] or s.get('P_deck') is None or s['plate_z'] is None]
+        if [s['k'] for s in rng] != list(range(len(rng))):
+            w['why'].append(f'단 k 0 … k* − 1 불연속 ({[s["k"] for s in rng][:8]})')
+        if bad:
+            w['why'].append(f'구간 (k 0 → M) 비정상 · 비유한 단 k {bad[:5]}')
+        if not w['why']:
+            pts = [(s['plate_z'], s['P_deck']) for s in rng] + [(hM, Pm / scale)]
+            wJ = ul_observers.w_proxy(pts, A_PS)
+            w.update(status='OK' if wJ is not None else 'NOT_COMPUTED', n_points=len(pts))
+    return eps, wJ, w
 
 
 def _atom_frame(path, step, s0_ids=None):
@@ -441,8 +506,9 @@ def arm_verdict(d, bed, job, P=None, root=None):
     um = P['units']['um_per_deck_m']
     conf = P['protocol']['confirm_steps']
     h0_um = P['beds'][bed]['h0'] * um
-    N_per_MPa = 0.0025 * 1e6 / scale   # 1 보고 MPa = 0.001 덱 MPa → 0.001 × 0.0025 m² × 1e6 = 2.5 N (덱 Ps 식의 A · 1e6)
-    s0_ids, s0_atoms, _ = _s0_frame(root, bed, P)
+    N_per_MPa = A_PS * 1e6 / scale   # 1 보고 MPa = 0.001 덱 MPa → 0.001 × 0.0025 m² × 1e6 = 2.5 N (덱 Ps 식의 A · 1e6)
+    s0d, _s0 = _s0_dump(root, bed, P)
+    s0_ids, s0_atoms = ({int(r['id']) for r in s0d['rows']}, s0d['rows']) if s0d else (None, None)
     v = {'job': job, 'bed': bed, 'dir': d, 'problems': list(run['problems']), 'n_superseded_rows': run['n_superseded_rows'],
          'primary_status': None, 'rho_pct': None, 'bracket_um': None, 'bracket_pct': None, 'union_bracket_um': None, 'union_bracket_pct': None,
          'lower_bound_pct': None, 'nonmonotone': False, 'cancellation': None, 'disposition': None, 'rank_eligible': False,
@@ -484,7 +550,7 @@ def arm_verdict(d, bed, job, P=None, root=None):
     for s in run['steps']:
         Pb = s.get('Pbar')
         steps.append({'k': s.get('k'), 'kind': s.get('kind'), 'step': s.get('step'), 'lift_um': (s['lift'] * um) if s.get('lift') is not None else None,
-                      'plate_z': s.get('plate_z'), 'P': Pb * scale if Pb is not None else None, 'steady': s.get('steady') == 1,
+                      'plate_z': s.get('plate_z'), 'P': Pb * scale if Pb is not None else None, 'P_deck': Pb, 'steady': s.get('steady') == 1,
                       'phase': s.get('phase')})
     last_state = {}
     for st in states:
@@ -693,6 +759,8 @@ def arm_verdict(d, bed, job, P=None, root=None):
             v['primary_status'] = 'TECH'
             v['rank_eligible'] = False
             v['why'].append(f'중력 팔 R_M 복원 {g["status"]} (G1 {g.get("G1")} · G2 {g.get("G2")} · G2c {g.get("G2c")}) — choice C12')
+    # ε_sphere · W_proxy (개정 3 §14-8 · Q7 · ULKR-12) — 보조 관측 (주 값 판정이 끝난 뒤 · 주 ρ 무영향)
+    v['eps'], v['w_proxy_J'], v['w_proxy'] = _aux_eps_w(v, steps, first, s0d, fp, s0_ids, P['beds'][bed]['h0'], P)
     return v
 
 
@@ -1316,6 +1384,12 @@ def _chain_atoms(ids, plate_z, bad=False, m=1e-6, g=9.81):
     return rows
 
 
+def _surf_atoms():
+    """합성 S0 의 표면 원자 100 (id 1000–1099 · z 0.05 · 반경 0.0005) — 단 끝 프레임 완전 (full_frames) 용 · 총힘 0 · 접촉 없음."""
+    return [{'id': 1000 + i, 'type': 3, 'x': 0.0025, 'y': 0.0025, 'z': 0.05, 'radius': 0.0005, 'mass': 1e-6, 'vx': 0.0, 'vy': 0.0, 'vz': 0.0,
+             'omegax': 0.0, 'omegay': 0.0, 'omegaz': 0.0, 'fx': 0.0, 'fy': 0.0, 'fz': 0.0} for i in range(100)]
+
+
 def _chain_contacts(ids, m=1e-6, g=9.81):
     out = []
     for k in range(len(ids) - 1):
@@ -1398,8 +1472,8 @@ def _mk_arm(root, bed, job, spec, P):
         sl.append(f'U,{bed},{k},{st.get("kind", "0")},{lift},{n_move},{step},{pz},{lift},{Pbar},{st["nw"]},{steady},{st.get("phase", 0)},'
                   f'{st.get("modeB", 0)},1' + (',x' if st.get('mut') == 'csv_bad' else ''))
         ap, cp = os.path.join(d, 'dump', f'atom_{step}.dump'), os.path.join(d, 'dump', f'contact_{step}.dump')
-        if st.get('surface') is None:
-            ul_lib.write_custom(ap, step, ATOM_COLS, _chain_atoms(ids, pz, bad=(st.get('s3') == 'bad')))
+        if st.get('surface') is None:   # full_frames = 단 끝 프레임에 S0 원자 전부 (사슬 5 + 표면 100 · 같은 반경 — ε 비교 프레임 완전)
+            ul_lib.write_custom(ap, step, ATOM_COLS, _chain_atoms(ids, pz, bad=(st.get('s3') == 'bad')) + (_surf_atoms() if spec.get('full_frames') else []))
         ul_lib.write_local(cp, step, [f'c_cpl[{c}]' for c in range(1, 27)], _chain_contacts(ids))
         mut = st.get('mut')
         if mut == 'atom_nan':          # 한 원자의 fz = nan (파서가 그 행을 버린다 — ULKR-04 · Codex nonfinite_atom_salvaged)
@@ -1413,6 +1487,8 @@ def _mk_arm(root, bed, job, spec, P):
         if mut == 'free_fall_aux':     # 무접촉 저압 끝점 — 쌍 접촉 0 · 원자마다 총힘 = −m g_aux (중력 팔에서 자유 낙하 = 평형 아님 · ULKR-10 B)
             ul_lib.write_custom(ap, step, ATOM_COLS, [dict(a, fz=-a['mass'] * P['g_aux']) for a in _chain_atoms(ids, pz)])
             ul_lib.write_local(cp, step, CPL_COLS, [])
+        if mut == 'drop_s0_atom':      # 단 끝 프레임에서 S0 원자 한 행이 빠짐 (선언 수도 맞춤 — 파서 결손 아님 · ε 비교 프레임 불완전 · Codex fixed_volume)
+            ul_lib.write_custom(ap, step, ATOM_COLS, (_chain_atoms(ids, pz) + (_surf_atoms() if spec.get('full_frames') else []))[:-1])
         if mut == 'dumps_past':        # 원자 · 쌍 덤프 머리 step 둘 다 100,000 과거 (서로는 같다 — 요청 끝점 시점이 아니다)
             for p in (ap, cp):
                 _restep(p, step - 100000)
@@ -1951,6 +2027,52 @@ def selftest() -> int:
             lambda: any('단 2 S3 FAIL' in w for w in ff_arm('G_UB')['why']))
         chk('R26 ULKR-10 B _arm_g: 일반 팔 · UTc = 표 S3 g 9.81 · 중력 팔 G_UB · G_UVa · G_UVb · G_UT3 = g_aux 9.81e-6',
             lambda: _arm_g('UB', P) == 9.81 and _arm_g('UTc', P) == 9.81 and all(_arm_g(j, P) == P['g_aux'] for j in ('G_UB', 'G_UVa', 'G_UVb', 'G_UT3')))
+    with tempfile.TemporaryDirectory() as root:
+        # ── ULKR-12 · Q7 (개정 3 §14-8) — ε_sphere (S0 봉인 C_all) · W_proxy (k 0 → M) 를 파일 → 팔 판정 → 최종 보고까지 (Codex observer_production_calls) ──
+        _fake_restored(root, B73)
+        _w(os.path.join(root, B73, 'ul_base.in'), 'variable ul_S2max equal 1e-05\n')
+        lifts, Ps4 = [0.2, 0.25, 0.3, 0.35], [1.2, 0.8, 0.6, 0.4]
+        ev = [('CROSS', 2, 'first'), ('RM', 4, 'ncross2')]
+
+        def put(job, steps, W=5000, dt=1e-6):
+            shutil.rmtree(os.path.join(root, B73, job), ignore_errors=True)
+            _mk_arm(root, B73, job, {'W': W, 'dt': dt, 'steps': steps, 'full_frames': True, 'events': ev + ([('RM_STOP', 4, 'UT')] if job == 'UT' else []),
+                                     'summary': 'RM_STOP' if job == 'UT' else 'DONE'}, P)
+            return arm_verdict(os.path.join(root, B73, job), B73, job, P, root=root)
+        u = put('UB', _ladder(lifts, Ps4))
+        put('UT', _ladder(lifts, Ps4), 10000, 5e-7)
+        put('UVa', _ladder(lifts, Ps4))
+        h0 = P['beds'][B73]['h0']
+        C = 105 * 4.0 / 3.0 * math.pi * 0.0005 ** 3 / 0.0025          # 합성 S0 = 사슬 5 + 표면 100 · 반경 0.0005 · 상자 0.05 × 0.05
+        hM = h0 + 0.225 / 1000.0                                       # M = 보간 들어 올림 0.225 µm
+        pts = [(h0, 0.16), (h0 + 0.0002, 0.0012), (hM, 0.001)]          # k 0 (P̄ 160) · k* − 1 (1.2) · M (P_meas 1) — 덱 MPa
+        W_exp = sum(0.5 * (p0 + p1) * 1e6 * 0.0025 * (h1 - h0_) for (h0_, p0), (h1, p1) in zip(pts, pts[1:])) * 1e-6
+
+        def close(a, b, rel=1e-12):
+            return a is not None and b is not None and abs(a - b) <= rel * max(abs(b), 1e-300)
+        chk('R27 ULKR-12 팔 판정 ε: C_all = S0 봉인 (Σ V ÷ A) · S0 · 교차 끝점 둘 (k 1 · 2 · 완전 프레임) · M (보간 높이 · ε_all 만) = 1 − C_all / h',
+            lambda: u['eps']['status'] == 'OK' and close(u['eps']['C_all_m'], C) and close(u['eps']['S0']['eps_all'], 1 - C / h0)
+            and [e['k'] for e in u['eps']['endpoints']] == [1, 2] and all(e['status'] == 'OK' for e in u['eps']['endpoints'])
+            and close(u['eps']['endpoints'][0]['eps_all'], 1 - C / (h0 + 0.0002)) and close(u['eps']['endpoints'][1]['eps_all'], 1 - C / (h0 + 0.00025))
+            and close(u['eps']['M']['eps_all'], 1 - C / hM) and u['eps']['M']['eps_inside'] is None)
+        chk('R27 ULKR-12 팔 판정 W_proxy = k 0 → M 정착 단 사다리꼴 (끝 조각 k* − 1 → M 은 P_meas) × 1e-6 = 4.036875e-8 J 보고 (판이 받은 일 아님)',
+            lambda: close(u['w_proxy_J'], W_exp) and close(W_exp, 4.036875e-8, 1e-9) and u['w_proxy']['status'] == 'OK')
+        rep = report(root, P)
+        e = (rep['beds'] or {}).get(B73) or {}
+        chk('R27 ULKR-12 최종 보고 (t1 = UB) 에 같은 ε · W_proxy (파일 → 팔 판정 → report)',
+            lambda: rep['selection']['tuple'] == 't1' and e.get('eps') == u['eps'] and e.get('w_proxy_J') == u['w_proxy_J'])
+        st = _ladder(lifts, Ps4)
+        st[2]['mut'] = 'drop_s0_atom'
+        ud = put('UB', st)
+        chk('R27 ULKR-12 Codex fixed_volume (판독기) — 교차 끝점 k 2 프레임에서 S0 원자 한 행이 빠짐 → 그 끝점 ε NOT_COMPUTED (C_all 다시 계산해 줄이지 않는다) · '
+            'S0 · k 1 · M 그대로 · 주 값 OK',
+            lambda: ud['primary_status'] == 'OK' and ud['eps']['endpoints'][1]['status'] == 'NOT_COMPUTED' and ud['eps']['endpoints'][1]['eps_all'] is None
+            and close(ud['eps']['C_all_m'], C) and ud['eps']['endpoints'][0]['status'] == 'OK' and close(ud['eps']['M']['eps_all'], 1 - C / hM))
+        st = _ladder([0.1] + lifts, [3.0] + Ps4)
+        st[1]['steady'] = False
+        uw = put('UB', st)
+        chk('R27 ULKR-12 W_proxy 구간 (k 0 → M) 에 비정상 (UNSTEADY) 단 하나 = 미계산 (None · 0 J 아님) · 주 값 OK 그대로 (끝점 · 확인 단 정상)',
+            lambda: uw['primary_status'] == 'OK' and uw['w_proxy_J'] is None and uw['w_proxy']['status'] == 'NOT_COMPUTED')
     with tempfile.TemporaryDirectory() as root:
         # ── ULR1-03 접촉 상태 · 상쇄 · 분리 · 창 결손 ──
         def wins(counts, pressures):

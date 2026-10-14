@@ -176,22 +176,22 @@ def P_bed(bed):
     return ul_lib.load_params()['beds'][bed]
 
 
-def _setup(td):
+def _setup(td, beds=(B73, 'ps_3_7_r45')):
     """임시 키트 · 작업 폴더 · 가짜 원 파일 (in/) · 가짜 바이너리."""
     work = os.path.join(td, 'work')
     os.makedirs(work)
     P = ul_lib.load_params()
     fake = {}
-    for bed in (B73, 'ps_3_7_r45'):
+    for bed in beds:
         ind = os.path.join(work, bed, 'in')
         os.makedirs(ind)
         B = P['beds'][bed]
         for key, rec in B['in_files'].items():
             p = os.path.join(ind, rec['file'])
-            if key == 'atom':   # S0 프레임 = 진짜 덤프 꼴 (판독기 S3 · 표면 고정 집합이 읽는다)
+            if key == 'atom':   # S0 프레임 = 진짜 덤프 꼴 (판독기 S3 · 표면 고정 집합이 읽는다 · 10:0 = 원 3,600,000)
                 import ul_reader as R
                 atoms = R._chain_atoms([1, 2, 3, 4, 5], B['h0'])
-                ul_lib.write_custom(p, B['s0'], ['id', 'type', 'x', 'y', 'z', 'radius', 'vx', 'vy', 'vz'],
+                ul_lib.write_custom(p, B['s0'] or P['ext_10_0']['start_step'], ['id', 'type', 'x', 'y', 'z', 'radius', 'vx', 'vy', 'vz'],
                                     [{c: a[c] for c in ('id', 'type', 'x', 'y', 'z', 'radius', 'vx', 'vy', 'vz')} for a in atoms])
             else:
                 open(p, 'w').write(f'fake {bed} {key}\n')
@@ -222,7 +222,7 @@ def selftest() -> int:
 
     if not (os.path.exists(os.path.join(HERE, 'run_unload.sh')) and os.path.exists(os.path.join(HERE, 'SHA256SUMS'))):
         for n in ('M1', 'M2', 'M3', 'M4a', 'M4b', 'M4c', 'M5', 'M6', 'M7a', 'M7b', 'M7c', 'M8', 'M9', 'M10', 'M11', 'M12', 'M13', 'M14', 'M15',
-                  'M16', 'M17', 'M18'):
+                  'M16', 'M17', 'M18', 'M19'):
             chk(f'{n} (러너 · 봉인 SHA256SUMS 없음 — 시험 먼저)', False)
         print(f'selftest: FAIL ({len(fails)} 실패)')
         return 1
@@ -378,6 +378,27 @@ def selftest() -> int:
         chk('M18 ULKR-09 UK 한 줄 (step 1 · w 1 · 회전 0.001 J) = kebase rc 2 · ul_base.in 없음 · 잡 기록 reader_kebase_rc=2 · 러너 rc ≠ 0 → UB 관문 거부 (lmp 호출 없음)',
             lambda: rc != 0 and re.search(r'^stage=UK .*rc=0 check=PASS', man_f, re.M) and re.search(r'^reader_kebase_rc=2$', man_f, re.M)
             and not os.path.exists(os.path.join(work_f, B73, 'ul_base.in')) and rc2 != 0 and 'REFUSE' in out2 and not _lmp(log_f, 'UB'))
+        # ── ULKR-12 경량 보고 묶음 — 판정에 쓴 결정 파일을 함께 (RJ · RJ2 = ul_base.in · 7:3 = selection.json · EXT = EXT2 · s0_decision.json) ──
+        import tarfile
+        kit_g, work_g, log_g = _setup(os.path.join(td, 'g'), beds=(B73, 'ps_10_0_r45'))
+        tg = os.path.join(td, 'g')
+
+        def members(bed, job):
+            p = os.path.join(work_g, bed, f'{job}.report.tgz')
+            return set(tarfile.open(p).getnames()) if os.path.exists(p) else set()
+        rc_rj, out_rj = _run(tg, kit_g, B73, 'RJ')
+        open(os.path.join(work_g, B73, 'RJ', 'restore_verdict.json'), 'w').write(json.dumps({'status': 'RESTORED'}))
+        rc_ub, out_ub = _run(tg, kit_g, B73, 'UB')
+        for f, t in (('restore_verdict.json', json.dumps({'status': 'RESTORED'})), ('run_manifest.txt', 'bed=ps_10_0_r45\njob=RJ\nresume=0\nend=x fails=0 reader_rc=0\n')):
+            os.makedirs(os.path.join(work_g, 'ps_10_0_r45', 'RJ'), exist_ok=True)
+            open(os.path.join(work_g, 'ps_10_0_r45', 'RJ', f), 'w').write(t)
+        rc_ext, out_ext = _run(tg, kit_g, 'ps_10_0_r45', 'EXT')
+        m_rj, m_ub, m_ext = members(B73, 'RJ'), members(B73, 'UB'), members('ps_10_0_r45', 'EXT')
+        chk('M19 ULKR-12 경량 묶음에 판정 결정 파일: RJ (7:3) = ul_base.in · UB (7:3) = selection.json · EXT = EXT2/ · s0_decision.json · '
+            '보낼 것 줄 = "모든 관측을 다시 검증하는 원천 아님"',
+            lambda: 'ul_base.in' in m_rj and any(n.startswith('RJ/') for n in m_rj) and 'selection.json' in m_ub
+            and any(n.startswith('EXT2/') for n in m_ext) and 's0_decision.json' in m_ext and any(n.startswith('EXT/') for n in m_ext)
+            and '다시 검증하는 원천 아님' in out_ub and not [n for n in m_ext if n.endswith('.bin')])
     finally:
         shutil.rmtree(td, ignore_errors=True)
     print(f'selftest: {"PASS" if not fails else "FAIL"} ({len(fails)} 실패)')

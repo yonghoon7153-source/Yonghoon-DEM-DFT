@@ -62,7 +62,14 @@ RULES = (
      'make_unload_decks.py', '_render_U', ('make_unload_decks GD16',)),
     ('s3_arm_g', 'S3 무게 항 g = 그 팔의 실제 중력 (중력 팔 G_* = g_aux 9.81e-6 · 그 밖 = 9.81) — 표에서 판독기로 (개정 3 §14-6 · Q5 · ULKR-10 B)',
      'ul_reader.py', '_arm_g', ('ul_reader R26',)),
-    ('kebase_uk3', 'KE 기준 파일 = UK 가 정확히 S0 무이동 완전 세 창일 때만 (단계 기술 성공 · 요약 DONE · START = S0 · arm UK · k 0 · 단계 4 · w 1–3 연속 · '
+    ('eps_wproxy', 'ε_sphere = 검증한 S0 에서 봉인한 C_all (Σ V ÷ A · 프레임마다 다시 계산 없음) · 자리 S0 · 교차 끝점 (S0 ID 전부 · 같은 반경 아니면 그 자리 '
+     'NOT_COMPUTED) · M (ε_all 만) · W_proxy = k 0 → M 정착 단 사다리꼴 (끝 조각 P_meas) × 1e-6 J · 비정상 · 비유한 = 미계산 — 팔 판정 · 최종 보고에 '
+     '(보조 · 주 ρ 무영향 · 개정 3 §14-8 · Q7 · ULKR-12)',
+     'ul_reader.py', '_aux_eps_w', ('ul_reader R27', 'ul_observers O11–O12')),
+    ('bundle_scope', '경량 보고 묶음 (큰 덤프 · restart 제외) = 모든 관측을 다시 검증하는 원천 아님 (원자료 = ibb) · 판정 결정 파일 함께 (EXT = EXT2 · '
+     's0_decision.json · RJ · RJ2 = ul_base.in · 7:3 = selection.json) (개정 3 §14-8 · ULKR-12)',
+     'run_unload.sh', 'bundle()', ('ul_runner_test M19',)),
+    ('kebase_uk3','KE 기준 파일 = UK 가 정확히 S0 무이동 완전 세 창일 때만 (단계 기술 성공 · 요약 DONE · START = S0 · arm UK · k 0 · 단계 4 · w 1–3 연속 · '
      'step = S0 + w · W0 · 판 = h0 · 들어 올림 0 · 결손 줄 없음) · 아니면 미발행 (rc 2) → S2 쓰는 팔 관문 거부 · 문턱 계수 10 그대로 '
      '(개정 3 §14-10 · ULKR-09)',
      'ul_reader.py', '_uk_check', ('ul_reader R25', 'ul_runner_test M18')),

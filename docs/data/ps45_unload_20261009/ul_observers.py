@@ -12,8 +12,9 @@
                xy 를 [0, L) 로 감아 고정 원점 0 의 10 × 10 칸 · 칸 = 중심이 든 칸 · 칸 값 = max(z + r) · 지표 = 칸 값 평균 ·
                빈 칸 1 개라도 = NOT_COMPUTED (0 을 넣지도 빼지도 않는다) · p99.9 = nearest-rank (보조) · 비유한 = NOT_COMPUTED · 보고 µm.
   S4         : 창 끝 프레임 사이 표면 지표 변화 ≤ 0.002 µm / 창 (창 = 물리 시간 T_W — W(dt) = T_W / dt · §13-4).
-  ε_sphere   : all = 고정 S0 ID · 반경 집합 (C_sphere = ΣV/A 일정) · inside = 그 프레임 판 안 중심 (별도 이름 · C 보존 요구 없음) · §12-9.
-  W_proxy    : 정착 P(h) 사다리꼴 Σ ½(P̄_{k−1} + P̄_k) A Δh (덱 단위) × 1e-6 = 보고 J (판이 받은 일 아님 · §12-9).
+  ε_sphere   : all = 검증한 S0 에서 봉인한 부피 (C_all = ΣV_S0/A · 프레임마다 다시 계산하지 않는다) · 비교 프레임 = S0 ID 전부 · 같은 반경 (완전) ·
+               아니면 NOT_COMPUTED · inside = 그 프레임 판 안 중심 (별도 이름) · §12-9 · 개정 3 §14-8 (ULKR-12).
+  W_proxy    : 정착 P(h) 사다리꼴 Σ ½(P̄_{k−1} + P̄_k) A Δh (덱 단위) × 1e-6 = 보고 J (판이 받은 일 아님 · §12-9) · 비유한 · 점 하나 = None.
   KE 기준 (C4): 회전 = UK (S0 무이동 3 창) 창 평균의 중앙값 · 병진 = 원 로그 (표) · KE_base = 합 · S2 문턱 = 10 × KE_base.
 """
 from __future__ import annotations
@@ -101,17 +102,55 @@ def s4_check(h_prev_um, h_cur_um, limit=0.002):
     return 'PASS' if abs(h_cur_um - h_prev_um) <= limit else 'FAIL'
 
 
-def eps_sphere(atoms, s0_ids, area, h):
-    vol = {int(a['id']): 4.0 / 3.0 * math.pi * a['radius'] ** 3 for a in atoms if int(a['id']) in s0_ids}
-    inside = [int(a['id']) for a in atoms if int(a['id']) in s0_ids and 0.0 <= a['z'] <= h]
-    v_all = sum(vol.values())
-    v_in = sum(vol[i] for i in inside)
-    return {'C_all': v_all / area, 'eps_all': 1.0 - v_all / (area * h), 'eps_inside': 1.0 - v_in / (area * h), 'n_inside': len(inside),
-            'n_all': len(vol)}
+def s0_volumes(s0_atoms):
+    """검증한 S0 프레임 → 봉인 부피 {id: (반경, 4πr³/3)} (개정 3 §14-8 · ULKR-12) — ID 고유 · 반경 유한 · 양수가 아니면 None (봉인하지 않는다)."""
+    out = {}
+    for a in s0_atoms or []:
+        i, r = int(a['id']), a.get('radius')
+        if i in out or not _fin(r) or r <= 0.0:
+            return None
+        out[i] = (r, 4.0 / 3.0 * math.pi * r ** 3)
+    return out or None
+
+
+def eps_sphere(atoms, s0_vol, area, h):
+    """ε_sphere (§12-9 · 개정 3 §14-8 · ULKR-12) — C_all = Σ V_S0 ÷ A (s0_volumes 로 검증한 S0 에서 봉인 · 프레임마다 다시 계산하지 않는다) ·
+    ε_all = 1 − C_all / h · ε_inside = 1 − Σ_{그 프레임 중심 ∈ [0, h]} V_S0 ÷ (A h) (별도 이름).
+    비교 프레임 = S0 ID 전부 · 한 번씩 · 같은 반경 (완전) 이어야 — 아니면 NOT_COMPUTED (ε_all 도 내지 않는다 · 프레임 결손을 부피로 흘리지 않는다).
+    atoms = None = 프레임 없는 높이 (보간 높이 M) — ε_all 만."""
+    out = {'status': 'NOT_COMPUTED', 'C_all': None, 'eps_all': None, 'eps_inside': None, 'n_inside': None, 'n_all': None, 'why': []}
+    if not s0_vol or not _fin(area, h) or area <= 0.0 or h <= 0.0:
+        out['why'].append('S0 봉인 · 면적 · 높이 없음 (비유한 · ≤ 0)')
+        return out
+    out['C_all'] = sum(v for _r, v in s0_vol.values()) / area
+    out['n_all'] = len(s0_vol)
+    if atoms is not None:
+        seen, v_in, n_in = set(), 0.0, 0
+        for a in atoms:
+            i = int(a['id'])
+            if i in seen or i not in s0_vol:
+                out['why'].append(f'프레임 ID {i} 중복 · S0 밖')
+                return out
+            seen.add(i)
+            if not _fin(a.get('radius'), a.get('z')) or a['radius'] != s0_vol[i][0]:
+                out['why'].append(f'프레임 반경 · 높이 ≠ S0 (id {i})')
+                return out
+            if 0.0 <= a['z'] <= h:
+                v_in += s0_vol[i][1]
+                n_in += 1
+        if len(seen) != len(s0_vol):
+            out['why'].append(f'프레임 S0 ID {len(seen)} / {len(s0_vol)} (불완전)')
+            return out
+        out['eps_inside'], out['n_inside'] = 1.0 - v_in / (area * h), n_in
+    out['eps_all'] = 1.0 - out['C_all'] / h
+    out['status'] = 'OK'
+    return out
 
 
 def w_proxy(steps, area, unit=1e-6):
-    """steps = [(판 높이 덱 m, P̄ 덱 MPa)] (정상 단 · 순서대로) → 보고 J (W_deck × 1e-6 · 판이 받은 일 아님)."""
+    """steps = [(판 높이 덱 m, P̄ 덱 MPa)] (정상 단 · 순서대로) → 보고 J (W_deck × 1e-6 · 판이 받은 일 아님) · 점 둘 미만 · 비유한 = None (0 J 아님)."""
+    if len(steps) < 2 or not _fin(area, *(x for pt in steps for x in pt)):
+        return None
     w = 0.0
     for (h0, p0), (h1, p1) in zip(steps, steps[1:]):
         w += 0.5 * (p0 + p1) * 1e6 * area * (h1 - h0)
@@ -183,17 +222,30 @@ def selftest():
     v, T_W = 0.6, 0.005
     chk('O10 S4: 0.003 µm / 창 = FAIL (물리 창) · 같은 속도를 반 창으로 재면 0.0015 = PASS (창 정의가 판정을 바꾼다 — 덱은 W(dt) = T_W / dt)',
         lambda: s4_check(100.0, 100.0 + v * T_W) == 'FAIL' and s4_check(100.0, 100.0 + v * T_W / 2) == 'PASS')
-    # ε_sphere — 고정 집합의 C 보존
+    # ε_sphere — 검증한 S0 에서 봉인한 부피 (개정 3 §14-8 · ULKR-12): C_all 은 프레임마다 다시 계산하지 않는다 · 비교 프레임은 완전해야
     at = [{'id': i, 'z': 0.001 * i, 'radius': 0.0005} for i in range(1, 6)]
+    v1 = 4.0 / 3.0 * math.pi * 0.0005 ** 3
     try:
-        e1, e2 = eps_sphere(at, {1, 2, 3, 4, 5}, 0.0025, 0.004), eps_sphere(at, {1, 2, 3, 4, 5}, 0.0025, 0.006)
+        vol = s0_volumes(at)
+        e1, e2 = eps_sphere(at, vol, 0.0025, 0.004), eps_sphere(at, vol, 0.0025, 0.006)
     except Exception:  # noqa: BLE001 — 빈 구현
-        e1 = e2 = {}
-    chk('O11 ε_sphere,all: 고정 S0 집합 → C_sphere 같음 (h 가 달라도) · inside 는 판 안 중심만 (별도 이름)',
-        lambda: e1['C_all'] == e2['C_all'] and e1['n_inside'] == 4 and e2['n_inside'] == 5 and e1['eps_inside'] != e1['eps_all'])
+        vol, e1, e2 = None, {}, {}
+    chk('O11 ε_sphere,all: 검증한 S0 부피 봉인 (C_all = 5 V ÷ A) → h 가 달라도 같은 C · inside 는 판 안 중심만 (별도 이름)',
+        lambda: e1['status'] == 'OK' and abs(e1['C_all'] - 5 * v1 / 0.0025) < 1e-20 and e1['C_all'] == e2['C_all'] and e1['n_inside'] == 4
+        and e2['n_inside'] == 5 and e1['eps_inside'] != e1['eps_all'])
+    chk('O11 ULKR-12 Codex fixed_volume — 비교 프레임에서 한 행이 빠짐 (5 → 4) = NOT_COMPUTED (옛 helper: C_all 20 % 감소 · 예외 없음) · 봉인 C 그대로',
+        lambda: (lambda e: e['status'] == 'NOT_COMPUTED' and e['eps_all'] is None and e['C_all'] == e1['C_all'])(eps_sphere(at[:-1], vol, 0.0025, 0.006)))
+    chk('O11 ULKR-12 비교 프레임의 반경 ≠ S0 (한 입자 0.0006) · ID 중복 · S0 밖 ID = NOT_COMPUTED (프레임 결손 · 변조를 부피로 흘리지 않는다)',
+        lambda: all(eps_sphere(f, vol, 0.0025, 0.006)['status'] == 'NOT_COMPUTED'
+                    for f in ([dict(at[0], radius=0.0006)] + at[1:], at + [at[0]], at + [{'id': 9, 'z': 0.001, 'radius': 0.0005}])))
+    chk('O11 보간 높이 M (프레임 없음) = ε_all 만 (1 − C_all / h) · inside 미계산 · S0 프레임 결손 (중복 · 비유한 반경) = 봉인 없음',
+        lambda: (lambda e: e['status'] == 'OK' and abs(e['eps_all'] - (1.0 - 5 * v1 / 0.0025 / 0.005)) < 1e-15 and e['eps_inside'] is None)(
+            eps_sphere(None, vol, 0.0025, 0.005)) and s0_volumes(at + [at[0]]) is None and s0_volumes([dict(at[0], radius=float('nan'))] + at[1:]) is None)
     # W_proxy — CX1 §6: 10 → 1 MPa (보고) · 1 µm · A = 2.5e-9 m² (실제) → 1.375e-8 J
     chk('O12 W_proxy (덱 A 0.0025 · Δh 1e-3 덱 m · P 0.01 → 0.001 덱 MPa) = 1.375e-8 J 보고',
         lambda: abs(w_proxy([(0.111052, 0.01), (0.112052, 0.001)], 0.0025) - 1.375e-8) < 1e-20)
+    chk('O12 W_proxy 비유한 점 · 점 하나 = 미계산 (None — 0 J 아님)',
+        lambda: w_proxy([(0.111052, float('nan')), (0.112052, 0.001)], 0.0025) is None and w_proxy([(0.111052, 0.01)], 0.0025) is None)
     chk('O13 KE 기준: 회전 = UK 창 평균 중앙값 · S2 문턱 = 10 × (병진 + 회전)',
         lambda: (lambda k: k['rot'] == 2.0e-7 and abs(k['base'] - 4.04e-7) < 1e-20 and abs(k['s2_limit'] - 4.04e-6) < 1e-19)(
             ke_base(2.04e-7, [1.0e-7, 3.0e-7, 2.0e-7])))

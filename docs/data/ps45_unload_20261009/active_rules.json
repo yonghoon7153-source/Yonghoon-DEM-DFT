@@ -108,6 +108,25 @@
    ]
   },
   {
+   "id": "eps_wproxy",
+   "rule": "ε_sphere = 검증한 S0 에서 봉인한 C_all (Σ V ÷ A · 프레임마다 다시 계산 없음) · 자리 S0 · 교차 끝점 (S0 ID 전부 · 같은 반경 아니면 그 자리 NOT_COMPUTED) · M (ε_all 만) · W_proxy = k 0 → M 정착 단 사다리꼴 (끝 조각 P_meas) × 1e-6 J · 비정상 · 비유한 = 미계산 — 팔 판정 · 최종 보고에 (보조 · 주 ρ 무영향 · 개정 3 §14-8 · Q7 · ULKR-12)",
+   "where": "ul_reader.py:_aux_eps_w",
+   "where_exists": true,
+   "witness": [
+    "ul_reader R27",
+    "ul_observers O11–O12"
+   ]
+  },
+  {
+   "id": "bundle_scope",
+   "rule": "경량 보고 묶음 (큰 덤프 · restart 제외) = 모든 관측을 다시 검증하는 원천 아님 (원자료 = ibb) · 판정 결정 파일 함께 (EXT = EXT2 · s0_decision.json · RJ · RJ2 = ul_base.in · 7:3 = selection.json) (개정 3 §14-8 · ULKR-12)",
+   "where": "run_unload.sh:bundle()",
+   "where_exists": true,
+   "witness": [
+    "ul_runner_test M19"
+   ]
+  },
+  {
    "id": "kebase_uk3",
    "rule": "KE 기준 파일 = UK 가 정확히 S0 무이동 완전 세 창일 때만 (단계 기술 성공 · 요약 DONE · START = S0 · arm UK · k 0 · 단계 4 · w 1–3 연속 · step = S0 + w · W0 · 판 = h0 · 들어 올림 0 · 결손 줄 없음) · 아니면 미발행 (rc 2) → S2 쓰는 팔 관문 거부 · 문턱 계수 10 그대로 (개정 3 §14-10 · ULKR-09)",
    "where": "ul_reader.py:_uk_check",

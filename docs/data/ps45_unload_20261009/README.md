@@ -198,6 +198,8 @@ scp -P <port> <user>@<ibb-host>:~/ps45_unload_20261009/<침대>/<잡>.report.tgz
 ```
 
 - 보고 묶음 = 런 폴더에서 큰 덤프 (원자 · 쌍 · obs · G2 원자 / 쌍 · post) 와 restart 를 뺀 것 (기록 CSV · 요약 · 화면 · 로그 · 벽 · mesh 덤프 · 판정 JSON · manifest · run_check).  큰 파일은 ibb 에 둔다.
+  ⚠ **경량 묶음 = 모든 관측을 다시 검증하는 원천이 아니다** (개정 3 §14-8 · `ULKR-12`) — S3 · ε · 표면 · 복원 G2 를 다시 계산하려면 ibb 의 원자료 (큰 덤프 · restart) 가 필요하다.
+  판정에 쓴 결정 파일은 함께 넣는다: `EXT` 묶음 = `EXT2/` · `s0_decision.json` · `RJ` · `RJ2` 묶음 = `ul_base.in` · 7:3 묶음 = `selection.json` (러너 `bundle` · 모의 M19).
 - 디스크 어림 (§13-3 Q4 (가) 매 창 끝): 창마다 원자 ≈ 35 MB + 쌍 ≈ 175 MB → 팔 하나 ≈ 150–200 창 ≈ 30–40 GB · 단 끝 restart 81 MB × 단 수 · 7:3 개발 팔 넷 + UTc · G ≈ 200 GB 안팎 (/lustre 남음 148 T · quota 없음 — 1 차 점검 ⓖ).
 
 ## 4. 읽는 쪽 (K4 · `ul_reader.py`) — 판정 규칙 (등록 §12 · §13 · 권고 기본값 = 부록 초안)

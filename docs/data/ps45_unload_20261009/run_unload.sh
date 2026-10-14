@@ -178,11 +178,17 @@ run_deck() {   # $1 = 단계 폴더  $2 = 덱 종류  $3 = 읽을 restart  $4 = 
   else echo "$kind $scr FAIL$why" >> "$dir/run_check.txt"; say "✗ $kind FAIL$why"; FAILS=$((FAILS + 1)); return 1; fi
 }
 
-bundle() {
-  local rep="$WORK_ROOT/$BED/$JOB.report.tgz"
+bundle() {   # 경량 보고 묶음 — 큰 덤프 · restart 제외 = 모든 관측을 다시 검증하는 원천이 아니다 (원자료 = 이 기계) · 판정에 쓴 결정 파일은 함께
+  #   (EXT = EXT2 · s0_decision.json · RJ · RJ2 = ul_base.in · 7:3 = selection.json — 개정 3 §14-8 · ULKR-12)
+  local rep="$WORK_ROOT/$BED/$JOB.report.tgz" extra=() x
+  case "$JOB" in
+    EXT) for x in EXT2 s0_decision.json; do [ -e "$WORK_ROOT/$BED/$x" ] && extra+=("$x"); done ;;
+    RJ|RJ2) [ -e "$WORK_ROOT/$BED/ul_base.in" ] && extra+=(ul_base.in) ;;
+  esac
+  if [ "$BED" = ps_7_3_r45 ] && [ -e "$WORK_ROOT/$BED/selection.json" ]; then extra+=(selection.json); fi
   ( cd "$WORK_ROOT/$BED" && tar --exclude='*.bin' --exclude='*/dump/atom_*' --exclude='*/dump/contact_*' --exclude='*/obs/*.dump' \
-      --exclude='*/g2/atom_*' --exclude='*/g2/contact_*' --exclude='*/post/*' -czf "$rep" "$JOB" ) \
-    && say "보낼 것: $rep  sha256 $(sha256sum "$rep" | cut -d' ' -f1)"
+      --exclude='*/g2/atom_*' --exclude='*/g2/contact_*' --exclude='*/post/*' -czf "$rep" "$JOB" ${extra[@]+"${extra[@]}"} ) \
+    && say "보낼 것: $rep  sha256 $(sha256sum "$rep" | cut -d' ' -f1) (경량 묶음 — 큰 덤프 · restart 제외 · 모든 관측을 다시 검증하는 원천 아님 · 원자료 = 이 기계)"
 }
 
 # ── 3. 잡 ────────────────────────────────────────────────────────────────────
