@@ -1708,3 +1708,21 @@ rc 0 → **옛 봉인 대조 (§2-4) 에서 허용 밖 차이** → 정지. 원�
   (검토자가 원 대화를 관측하지 않음) · E1 에서는 실제 외부 meta 와 결합한 단계 판정을 남긴다.
 - **다음:** N1 한정 정정의 범위 · 검증안 · 예산을 승인 요청으로 낸다 (`docs/REIL_C4E_E0_FIX_APPROVAL_REQUEST_20261014.md` · 대조 초안 · 패치 초안 · 정적 검사만).
   사용자 별도 승인 전에는 정정 시험 · 자동 재시험 · E1 fetch / run · C4-A / B · COMSOL 을 시작하지 않는다.
+
+## §70 C4-E · E0 한정 정정 (C4E-E0-N1) — 사용자 승인 (2026-10-14 KST · 착수 전 기록 · 덧붙임 — 위 §0–§69 는 그대로)
+
+- **사용자 (2026-10-14):** "권고대로 승인" — 승인 요청 (`docs/REIL_C4E_E0_FIX_APPROVAL_REQUEST_20261014.md` · `e28be013…` · 커밋 `0d065e84`) §10 을 권장안대로:
+  1. 범위 그대로 승인 (변경 = §3 · 대조 = §4 의 6 · 순서 · 배정 = §5 · GREEN 계산 = §6). Codex 사전 검토 없이 실행 → 결과 검토 순서.
+  2. GREEN 에 기존 0a · 0b 159 를 넣지 않는다 (§6 — 실제 pymoo · COBYQA · 보존 util · Sobol 0).
+  3. E1 단계 실행기의 독립 사전 대조를 E1 승인 요청에 넣는다 (§7 — 이번 범위 밖 · E1 때).
+- **고정본:** 대조 `docs/REIL_C4E_E0_FIX_CONTROLS_DRAFT_20261014.py.txt` (`7a09d438…`) · 패치 `docs/REIL_C4E_E0_FIX_PATCH_DRAFT_20261014.diff` (`ed14409a…`) ·
+  패치 전 `scripts/reil_c4e_run.py` `0a9ddb83…` → 기대 `a94f535f…`.
+- **배정:** identity 60 · RED 600 · GREEN 600 · seal-sources 60 = 계산 1,320 s · 전체 작업 2 h (7,200 s) · 자동 재시험 0. 자원은 사후 관측 (최대 단일 자식 RSS ≤ 4 GiB ·
+  증거 ≤ 64 MiB · 착수 때 디스크 여유 ≥ 5 GiB).
+- **RED 예상 (요청 §4):** 6 실패 = AttributeError 3 (n1_a `load_sources` · n1_e `build_parser` · n1_f `seal_sources` 없음) + TypeError 3 (n1_b · n1_c `prepare` 의
+  `sources` · n1_d `identity_problems` 의 `required`). 다르면 원문을 보존하고 멈춘다.
+- **GREEN:** `tests/test_reil_c4e.py` (E0 21 · 바이트 그대로) + `tests/test_reil_c4e_fix.py` (새 6) = 27. 이번 GREEN 1 회의 계산: 실제 fork 5 (E0 의 m_1 · r_6 (a)(b) · s_4) ·
+  가짜 util 평가 393 · 로컬 git 직접 호출 16 (GIT_ALLOW_PROTOCOL=file) · plan-e 2 (가짜 identity · E0 s_5 와 n1_f) · 새 6 은 fork · optimizer 0.
+- **폴더:** 증거 `evidence/reil_c4e0_fix_20261014/` — 착수 때 있으면 중지한다 (이 기록 시점 확인: 없음). `tests/test_reil_c4e_fix.py` 도 아직 없다.
+- **번호:** 결과 기록은 §71 이다.
+- 이 승인은 E1 (fetch · 66 호출) · 자료 반입 · 개봉 · C4-A / B · 설치 · 환경 재구축 · COMSOL 승인이 아니다.
