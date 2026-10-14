@@ -113,21 +113,44 @@ def features(f):
 
 
 # ---------------------------------------------------------------- labels
-def load_stage1(path=MASTER):
+def load_stage1(path=MASTER, report=None):
+    """Main-family rows, one per configuration name. as2s3_recover re-ran the 15 AlI3 configurations of v23 (same names ·
+    de equal to ≤ 1e-4 eV/atom) — the v23 row is kept (MAIN_FAMILIES order). `report` (dict) gets the dropped names."""
     with open(path, encoding='utf-8') as fh:
-        return [r for r in csv.DictReader(fh) if r['family'] in MAIN_FAMILIES]
+        rows = [r for r in csv.DictReader(fh) if r['family'] in MAIN_FAMILIES]
+    rows.sort(key=lambda r: MAIN_FAMILIES.index(r['family']))          # stable: file order kept inside a family
+    seen, out, dropped = set(), [], []
+    for r in rows:
+        if r['name'] in seen:
+            dropped.append((r['family'], r['name']))
+            continue
+        seen.add(r['name'])
+        out.append(r)
+    if report is not None:
+        report['dropped_duplicates'] = dropped
+    return out
 
 
-def config_label(rows, col):
-    """{precursor: [values of every configuration]} for a Stage-1 column (blank / non-numeric skipped)."""
-    out = {}
+def slot(name):
+    """Stage-1 x020 · x050 · x100 are not concentrations: the three names of a (precursor · site variant · seed) slot carry
+    the same composition (1,220 slots × 3 · 2026-10-14). 807 slots agree to 0.1 meV/atom, 127 differ by > 1 meV/atom."""
+    return re.sub(r'_x\d{3}(?=_|$)', '', name)
+
+
+def config_label(rows, col, collapse=True):
+    """{precursor: [one value per configuration]} for a Stage-1 column (blank / non-numeric skipped). collapse=True takes the
+    median of the x-label copies of a slot — counting the copies as three configurations made bootstrap bands too narrow."""
+    by = {}
     for r in rows:
         try:
             v = float(r[col])
         except (TypeError, ValueError):
             continue
         if math.isfinite(v):
-            out.setdefault(base(r['dopant']), []).append(v)
+            by.setdefault((base(r['dopant']), slot(r['name']) if collapse else r['name']), []).append(v)
+    out = {}
+    for (p, _), vals in sorted(by.items()):
+        out.setdefault(p, []).append(float(np.median(vals)))
     return out
 
 
@@ -350,13 +373,22 @@ def predict_report(prec_value, better, n_perm, rng, extra=None, use=None):
 
 
 # ---------------------------------------------------------------- ④ dissolution energy
+def key_element(prec):
+    """The element that counts precursor units: its first element no reservoir carries (cation first, then anion);
+    Li only when every element is a host element (Li₂S · LiCl). Li₂O · LiF · Li₃N are counted by O · F · N — counting them
+    by Li gave n = 0 whenever the anion swaps onto a host anion site."""
+    res = {e for r in RESERVOIRS.values() for e in r}
+    foreign = [e for e in prec if e not in res]
+    return ([e for e in foreign if e not in ANION] + [e for e in foreign if e in ANION] + ['Li'])[0]
+
+
 def balance(config, host, prec):
     """config − host = n·precursor − Σ ν_k reservoir_k. Returns (n, {reservoir: ν}); raises if it does not close."""
     els = sorted(set(config) | set(host) | set(prec) | {e for r in RESERVOIRS.values() for e in r})
     d = np.array([config.get(e, 0) - host.get(e, 0) for e in els], float)
     pv = np.array([prec.get(e, 0) for e in els], float)
-    cat = [e for e in prec if e not in ANION and e not in HOST_CELL] or [e for e in prec if e not in ANION]
-    n = d[els.index(cat[0])] / prec[cat[0]]
+    k = key_element(prec)
+    n = d[els.index(k)] / prec[k]
     R = np.array([[RESERVOIRS[k].get(e, 0) for k in RESERVOIRS] for e in els], float)
     rhs = -(d - n * pv)
     nu, *_ = np.linalg.lstsq(R, rhs, rcond=None)
@@ -528,12 +560,15 @@ def demo(out, n_boot, n_perm, seed, extra=None):
                 f'Made by `tools/cascade/element_effects.py --demo --seed {seed} --n_boot {n_boot} --n_perm {n_perm}`. '
                 'One JSON + two CSVs per label; '
                 f'`{os.path.basename(fig)}` = anion effects with 5–95 % bands (configuration bootstrap; interface labels have '
-                'one value per precursor, so no band).\n\nInputs (sha256):\n\n'
+                'one value per precursor, so no band).\n\nConfigurations: one per slot — the x020 · x050 · x100 names of a '
+                '(precursor · site variant · seed) are copies of one composition, so their median is one configuration; '
+                'the 15 AlI3 rows that as2s3_recover re-ran are counted once (v23 rows).\n\nInputs (sha256):\n\n'
                 + ''.join(f'- `{k}` {v}\n' for k, v in sha.items()))
     return runs
 
 
 def _selftest():
+    import tempfile
     rng = np.random.default_rng(0)
     ok = []
 
@@ -606,6 +641,27 @@ def _selftest():
         'Li18Al2O3Cl4P4S17: host + Al2O3 → config + 3 Li2S')
     n, nu = balance({'Li': 17, 'Al': 2, 'O': 3, 'Cl': 5, 'P': 4, 'S': 16}, HOST_CELL, {'Al': 2, 'O': 3})
     chk(abs(nu['Li2S'] - 4) < 1e-9 and abs(nu['LiCl'] + 1) < 1e-9, 'Li17Al2O3Cl5P4S16: + 4 Li2S − 1 LiCl')
+    n, nu = balance({'Li': 24, 'O': 1, 'Cl': 4, 'P': 4, 'S': 19}, HOST_CELL, {'Li': 2, 'O': 1})
+    chk(abs(n - 1) < 1e-12 and abs(nu['Li2S'] - 1) < 1e-9, 'Li2O with O on an S site counts by O: host + Li2O → config + Li2S')
+    n, nu = balance({'Li': 25, 'Cl': 5, 'P': 4, 'S': 20}, HOST_CELL, {'Li': 1, 'Cl': 1})
+    chk(abs(n - 1) < 1e-12 and all(abs(v) < 1e-9 for v in nu.values()), 'LiCl (host elements only) counts by Li')
+    cr = [{'dopant': 'MgO', 'name': f'MgO_{x}_cLi24gaS16e_s0{k}', 'v': str(5.0 if (x, k) == ('x100', 1) else v)}
+          for x in ('x020', 'x050', 'x100') for k, v in ((0, 1.0), (1, 2.0))]
+    chk(slot('AlI3_x020_s04') == 'AlI3_s04' and slot('MgO_x050_cLi24gaS16e_s01') == 'MgO_cLi24gaS16e_s01'
+        and sorted(config_label(cr, 'v')['MgO']) == [1.0, 2.0]
+        and sorted(config_label(cr, 'v', collapse=False)['MgO']) == [1.0, 1.0, 1.0, 2.0, 2.0, 5.0],
+        'x-label copies collapse to one configuration per slot (median · one odd copy does not move it)')
+    with tempfile.TemporaryDirectory() as td:
+        fake = os.path.join(td, 'm.csv')
+        with open(fake, 'w', encoding='utf-8', newline='') as f:
+            w = csv.writer(f)
+            w.writerow(['name', 'family', 'dopant'])
+            w.writerows([['A_s0', 'as2s3_recover', 'AlI3'], ['A_s0', MAIN_FAMILIES[0], 'AlI3'], ['B_s0', MAIN_FAMILIES[0], 'MgO'],
+                         ['C_s0', 'dualx_v23', 'MgO']])
+        rep_ = {}
+        got = load_stage1(fake, rep_)
+        chk([(r['name'], r['family']) for r in got] == [('A_s0', MAIN_FAMILIES[0]), ('B_s0', MAIN_FAMILIES[0])]
+            and rep_['dropped_duplicates'] == [('as2s3_recover', 'A_s0')], 'duplicate names: v23 row kept, other family dropped')
     try:
         balance({'Li': 18, 'Al': 2, 'O': 3, 'Cl': 4, 'P': 4, 'S': 17, 'Br': 1}, HOST_CELL, {'Al': 2, 'O': 3})
         chk(False, 'unbalanceable composition refused')
@@ -616,7 +672,6 @@ def _selftest():
     exp = (48 * (-4.1) + 3 * (-12.0) - 52 * (-4.0) + 30.0)
     chk(abs(e - exp) < 1e-9, f'dissolution energy arithmetic ({e:.3f} eV per unit)')
     # analyse() end to end — with configurations (bands) and with one value per precursor (the --label_csv path)
-    import tempfile
     with tempfile.TemporaryDirectory() as td:
         pcs = {k: list(v + rng.normal(0, 0.05, 4)) for k, v in sig.items()}
         r1 = analyse('with_configs', pcs, {k: float(np.median(v)) for k, v in pcs.items()}, 'low', td, 20, 9, rng, 'test',

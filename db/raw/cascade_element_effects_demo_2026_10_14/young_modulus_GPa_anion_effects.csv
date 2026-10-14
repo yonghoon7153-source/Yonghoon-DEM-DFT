@@ -1,10 +1,10 @@
 # DEMO on Stage-1 labels (2026-10-14): the labels are flawed (configuration noise, composition-referenced energy, one dopant level, n = 91) — this tests the code, not the chemistry. Not citable.
 # label young_modulus_GPa · additive model · effects centred
 anion,effect,band5,band95
-O,-2.0512,-3.9351,-0.75126
-Br,-2.0252,-3.8786,0.90007
-N,-1.9056,-6.5059,0.49766
-F,-0.7791,-2.6897,1.8073
-Cl,0.64701,-1.2621,1.856
-I,2.6026,1.0328,5.6031
-S,3.5115,1.7638,5.4839
+N,-1.9807,-4.0853,-1.2958
+Br,-1.9725,-3.5054,0.64849
+O,-1.6165,-3.0052,-0.64358
+F,-1.0569,-1.971,1.074
+Cl,1.003,-0.4527,1.9691
+I,1.8805,0.46125,3.6694
+S,3.7432,1.8081,5.9226

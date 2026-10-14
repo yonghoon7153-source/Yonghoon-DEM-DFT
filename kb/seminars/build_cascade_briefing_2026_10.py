@@ -879,19 +879,28 @@ def build_lean():
     #      finding → fix pairs, and they are not pairs: e.g. finding 4 is answered by decision 1)
     name, t = fresh('audit', 'Results & Discussion')
     lean_body(t, 'September audit of Stage 1', ['Stage 1 was re-checked against the ledger.'], h=0.95)
-    found = ['Concentration labels did not change the dopant level',
-             'Volume filter: host reference ~40 % above the DFT volume',
-             'Elastic descriptor: spread within a precursor ≈ between precursors',
-             'Several descriptors merged without a primary objective']
-    fixed = ['One primary readout: D[[_:rel]] = D*(design) / D*(host)',
-             'Design roster: 237 (one design = one composition)',
-             'Build rules: parent sites fixed, full charge balance',
-             'Representative: the median-energy configuration']
-    for x, w, title, items in ((0.55, 4.25, 'Audit findings', found), (5.05, 4.4, 'Decisions recorded on Sep 12', fixed)):
+    #      2026-10-14 (user 'yes' to putting the energy-reference issue on screen): it was found on Oct 14 while
+    #      rescoring, not by the September audit, so it gets its own block under the decisions — not a fifth finding.
+    #      Same day the slide's 'label: content' colons were rewritten (house rule 10-13): findings are sentences,
+    #      decisions are noun phrases. No demo numbers here (the energy-reference evidence is DEMO · not citable).
+    found = ['Concentration labels did not change the dopant level.',
+             'The volume filter used a host volume ~40 % above the DFT value.',
+             'Elastic moduli varied as much within a precursor as between precursors.',
+             'Several descriptors were merged without a primary objective.']
+    fixed = ['One primary readout, D[[_:rel]] = D*(design) / D*(host)',
+             'A roster of 237 designs, one composition each',
+             'Fixed parent sites and full charge balance',
+             'One median-energy configuration per design']
+    for x, w, title, items, h in ((0.55, 4.25, 'Audit findings', found, 2.75), (5.05, 4.4, 'Decisions recorded on Sep 12', fixed, 1.7)):
         add(t, tb(ids(), title, x, 2.2, w, 0.36, P(title, 'p', 1400, 100, color=INK, bold=True)),
             box(ids(), f'{title} rule', x + 0.05, 2.58, w - 0.1, 0.014, fill='9CA3AF', geom='rect'),
-            tb(ids(), f'{title} items', x, 2.66, w, 2.75, ''.join(P(s, 'cb', 1400, 110, spcbef=700) for s in items)))
-    add(t, line_under(ids(), '[[r:Ranking margin δ: proposed, not yet set]]', 5.55, h=0.38, sz=1400),
+            tb(ids(), f'{title} items', x, 2.66, w, h, ''.join(P(s, 'cb', 1400, 110, spcbef=700) for s in items)))
+    oct14 = ['The energy term lacked element references.',
+             'Oxides ranked high partly on bond strength.']
+    add(t, tb(ids(), 'Oct 14 title', 5.05, 4.22, 4.4, 0.36, P('Found on Oct 14 while rescoring', 'p', 1400, 100, color=INK, bold=True)),
+        box(ids(), 'Oct 14 rule', 5.1, 4.6, 4.3, 0.014, fill='9CA3AF', geom='rect'),
+        tb(ids(), 'Oct 14 items', 5.05, 4.68, 4.4, 0.85, ''.join(P(s, 'cb', 1400, 110, spcbef=700) for s in oct14)))
+    add(t, line_under(ids(), '[[r:Ranking margin δ proposed, not yet set]]', 5.55, h=0.38, sz=1400),
         line_under(ids(), 'The run scope is set after the pilot.', 6.03, h=0.4, sz=1350))
     save(t, name)
 
@@ -1145,10 +1154,11 @@ save(t, name)
 name, t = fresh('audit', 'Results & Discussion')
 add(t, heading(ids(), 'September audit → Stage 2: rules fixed before new results'))
 found = (P('What the audit of Stage 1 found', 'p', 1300, 100, color=NAVY, bold=True, spcaft=600)
-         + P('Concentration labels did not change the dopant level: every configuration has one precursor unit per four formula units.', 'cb', 1150, 108, spcaft=450)
-         + P('The volume filter used a host reference ~40 % above the DFT equilibrium volume of the same composition → Stage 2 builds from the DFT-equilibrium host.', 'cb', 1150, 108, spcaft=450)
-         + P('Young\'s modulus: scatter among configurations of one precursor ≈ spread between precursors (ratio 1.1; substitution energy 0.2).', 'cb', 1150, 108, spcaft=450)
-         + P('Several descriptors were merged into one score without a stated primary objective.', 'cb', 1150, 108))
+         + P('Concentration labels did not change the dopant level: every configuration has one precursor unit per four formula units.', 'cb', 1150, 108, spcaft=330)
+         + P('The volume filter used a host reference ~40 % above the DFT equilibrium volume of the same composition → Stage 2 builds from the DFT-equilibrium host.', 'cb', 1150, 108, spcaft=330)
+         + P('Young\'s modulus scattered among configurations of one precursor as much as between precursors (ratio 1.1; substitution energy 0.2).', 'cb', 1150, 108, spcaft=330)
+         + P('Several descriptors were merged into one score without a stated primary objective.', 'cb', 1150, 108, spcaft=330)
+         + P('Found on Oct 14 while rescoring — the energy term had no reference for the added elements, so part of the oxide lead reflects bond strength.', 'cb', 1150, 108, color=BLUE))
 add(t, box(ids(), 'Audit findings', 0.55, 1.55, 4.3, 3.6, fill='F5F7FA', paras=found, ins=(0.16, 0.12, 0.16, 0.1)),
     box(ids(), 'Audit verdict', 0.55, 5.27, 4.3, 0.62, fill='FDF1F1', anchor='ctr',
         paras=P('→ Stage-1 outputs are kept as [[B:exploratory data]]; approved dopant ranking: none.', 'p', 1150, 105, color=BUL)))

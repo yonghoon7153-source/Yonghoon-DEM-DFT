@@ -37,16 +37,16 @@
    "Q2": -0.1763632235911008,
    "spearman": 0.06050275788334026,
    "enrichment_top10": 2.4,
-   "perm_p": 0.985,
-   "perm_null_Q2_mean": -0.03935952899473504
+   "perm_p": 0.99,
+   "perm_null_Q2_mean": -0.03745921884352863
   },
   "leave_one_anion_family_out": {
    "Q2": -0.15444221381667345,
    "spearman": 0.323955788392735
   },
   "random_5fold": {
-   "Q2": -0.1510283597265658,
-   "spearman": -0.02250135479468618
+   "Q2": -0.043214204824165714,
+   "spearman": 0.11537420325700154
   },
   "ridge_lambda_full": 1.0,
   "standardized_coef": {

@@ -8232,6 +8232,58 @@
     }
    ],
    "_note": "proposed — 사용자 (1저자) 비준 대기."
+  },
+  {
+   "id": "D-2026-10-14-cascade-dissolution-energy",
+   "schema_version": 2,
+   "kind": "estimand",
+   "scope": "cascade.dissolution_energy.uma_balanced",
+   "slot": "cascade_stage1_dissolution_energy_uma_demo",
+   "applies_to": {
+    "systems": [
+     "cascade_stage1_v23"
+    ],
+    "tasks": [
+     "dissolution_energy_balanced"
+    ],
+    "methods": [
+     "uma-s-1p1-omat"
+    ],
+    "use_cases": [
+     "exploratory"
+    ]
+   },
+   "title": "cascade 1단계 구성의 녹아 들어가는 에너지 — UMA · 교환상 Li₂S · LiCl · Li₃PS₄ 조성 균형 · 데모 (트랙 cascade · 1저자 = 사용자)",
+   "statement": "카드 db/properties/cascade_dissolution_energy_estimand_2026_10_14.json. ΔE_diss = [E(구성) + Σν E(교환상) − E(호스트) − n·E(전구체)] / (n · 기준 원자 수) · 적격 = 형식전하 0 · 호스트와 다른 조성 · 교환상 셋으로 닫힘 (2,835 / 3,660 구성 · 82 전구체) · E(구성) = 1단계 원본 · 전구체 · 교환상 = MP 창 0.03 eV/atom 후보를 1단계와 같은 run_uma_screening.py 로 이완한 최저 · 호스트 = canonical 재이완 (1단계 baseline 재현 0.5 meV/atom 안이 아니면 결과 없음) 과 comp1_k444 중 최저 · 칸 (x 복사본) 중앙값 → 칸 최저. UMA 내부 데모 — 인용 · 발표 화면 금지.",
+   "rationale": "사용자 10-14 '한번 해보지 뭐' · 'mp 받고 바로 돌릴 수 있도록 코드 짜자' — 원자당 de 의 원소 기준 문제 (element_effects 데모 ρ 0.48) 를 고친 라벨 · 2단계 구조에 같은 코드를 쓴다.",
+   "decision_state": "proposed",
+   "record_kind": "estimand",
+   "results_seen": false,
+   "exploratory": true,
+   "results_seen_note": "MP 조회 0 · UMA 이완 0 · 녹는 에너지 0 건 — 조성 계수 (적격 · 비중성 · null) 와 가짜 에너지 실행기 시험만 봤다",
+   "card": "db/properties/cascade_dissolution_energy_estimand_2026_10_14.json",
+   "evidence": [
+    "db/raw/cascade_element_effects_demo_2026_10_14/READING.md",
+    "db/properties/cascade_reanchor_comp1k444_2026_09_12.json",
+    "db/properties/cascade_base_strain_2026_09_12.json"
+   ],
+   "reopen_criteria": [
+    "2단계 구조 (9월 규칙 ②) 가 나오면 같은 합치기를 그 구성에 돌린다",
+    "G1 (기준 재현) 이 떨어지면 허용폭을 바꾸지 않는다 — 계속할지는 사용자가 정한다",
+    "'구성 · 다형을 하나 더 봤다' 는 재개 사유가 아니다"
+   ],
+   "track": {
+    "name": "cascade",
+    "first_author": "사용자"
+   },
+   "proposed_by": [
+    {
+     "actor_type": "agent",
+     "actor_id": "claude",
+     "date": "2026-10-14"
+    }
+   ],
+   "_note": "proposed — 사용자 (1저자) 비준 대기. 실행 (gabia CPU) 은 사용자 10-14 '이건 gabia에서 해도 될듯' 으로 승인."
   }
  ]
 }

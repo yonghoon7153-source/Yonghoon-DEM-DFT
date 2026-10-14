@@ -4,6 +4,8 @@ DEMO on Stage-1 labels (2026-10-14): the labels are flawed (configuration noise,
 
 Made by `tools/cascade/element_effects.py --demo --seed 20261014 --n_boot 200 --n_perm 199`. One JSON + two CSVs per label; `anion_effects_demo.png` = anion effects with 5–95 % bands (configuration bootstrap; interface labels have one value per precursor, so no band).
 
+Configurations: one per slot — the x020 · x050 · x100 names of a (precursor · site variant · seed) are copies of one composition, so their median is one configuration; the 15 AlI3 rows that as2s3_recover re-ran are counted once (v23 rows).
+
 Inputs (sha256):
 
 - `db/properties/cascade_all_302_2026_08_25.csv` 0d9a839e2dc208d8b020ab73087f068bf91a4c1d6fefa81090b762667f265c30

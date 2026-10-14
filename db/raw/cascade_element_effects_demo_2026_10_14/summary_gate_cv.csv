@@ -2,8 +2,8 @@
 # noise_ratio = within-precursor SD / between-precursor SD (blank = one value per precursor)
 # Q2 columns = cross-validated ridge on 12 element features; perm_p and enrichment are leave-one-cation-out
 label,n_precursors,noise_ratio,anion_family_R2,Q2_leave_one_cation_out,Q2_leave_one_anion_family_out,Q2_random_5fold,perm_p_LOCO,enrichment_top10_LOCO
-energy_de_per_atom,91,0.2705,0.3981,0.6239,0.4278,0.6391,0.005,3.6
-dopant_blocking_fraction,91,0.3767,0.4841,0.5607,-0.3711,0.7135,0.005,2.8
-young_modulus_GPa,91,1.59,0.3007,0.07843,-0.3219,-0.2155,0.01,0
-interface_vs_Li_metal_minus_host,91,,0.02769,-0.1764,-0.1544,-0.151,0.985,2.4
-interface_vs_LCO_4V_minus_host,91,,0.2323,-0.173,-1.118,-0.1841,0.99,0
+energy_de_per_atom,91,0.2671,0.3986,0.6273,0.4302,0.656,0.005,3.6
+dopant_blocking_fraction,91,0.376,0.4877,0.5672,-0.3361,0.7153,0.005,2.8
+young_modulus_GPa,91,0.9491,0.3012,0.04531,-0.4408,0.01146,0.005,0.4
+interface_vs_Li_metal_minus_host,91,,0.02769,-0.1764,-0.1544,-0.04321,0.99,2.4
+interface_vs_LCO_4V_minus_host,91,,0.2323,-0.173,-1.118,-0.06481,0.975,0

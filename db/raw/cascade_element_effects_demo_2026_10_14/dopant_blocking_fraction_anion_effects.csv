@@ -1,10 +1,10 @@
 # DEMO on Stage-1 labels (2026-10-14): the labels are flawed (configuration noise, composition-referenced energy, one dopant level, n = 91) — this tests the code, not the chemistry. Not citable.
 # label dopant_blocking_fraction · additive model · effects centred
 anion,effect,band5,band95
-Cl,-0.29757,-0.30401,-0.284
-S,-0.14247,-0.16895,-0.13394
-N,0.036371,0.0099049,0.064268
-O,0.04133,0.0296,0.054304
-I,0.080864,0.061902,0.10001
-Br,0.10719,0.079836,0.13656
-F,0.17429,0.16184,0.19472
+Cl,-0.29808,-0.31074,-0.28413
+S,-0.14537,-0.17841,-0.13045
+N,0.0356,-0.010831,0.076429
+O,0.042312,0.021147,0.058564
+I,0.086114,0.058938,0.11231
+Br,0.1065,0.065951,0.14906
+F,0.17293,0.15562,0.20385
