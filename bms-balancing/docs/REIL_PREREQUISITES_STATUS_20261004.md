@@ -1726,3 +1726,59 @@ rc 0 → **옛 봉인 대조 (§2-4) 에서 허용 밖 차이** → 정지. 원�
 - **폴더:** 증거 `evidence/reil_c4e0_fix_20261014/` — 착수 때 있으면 중지한다 (이 기록 시점 확인: 없음). `tests/test_reil_c4e_fix.py` 도 아직 없다.
 - **번호:** 결과 기록은 §71 이다.
 - 이 승인은 E1 (fetch · 66 호출) · 자료 반입 · 개봉 · C4-A / B · 설치 · 환경 재구축 · COMSOL 승인이 아니다.
+
+## §71 C4-E · E0 한정 정정 (C4E-E0-N1) 결과 — RED 선언대로 6 / 0 · 고정 패치 · GREEN 27 · 신뢰 소스 목록 봉인 (2026-10-15 KST = 2026-10-14 UTC · 검토 대기 · 덧붙임 — 위 §0–§70 은 그대로)
+
+- **날짜 표기 정정:** §70 머리의 "2026-10-14 KST" 는 KST 로는 틀렸다 — §70 커밋 `f4efff51` 은 2026-10-14T17:03:03Z = **2026-10-15 02:03 KST** 다 (§69 커밋
+  `cc05822b` 11:42:53Z = 10-14 20:42 KST 까지는 맞다). 덧붙임 원칙대로 §70 은 고치지 않고 여기 적는다. 이번 정정의 파일 · 폴더 이름 (`…_20261014`) 은 승인 요청
+  (10-14 20:52 KST) 때 정한 이름을 따른다 — UTC 날짜와 같다.
+- **대상 커밋:** `e22840b2` (목록 봉인 · 끝 기록). 패치 + GREEN `61b9037e` · RED 증거 `72844b29` · 대조 복사 + 착수 기록 + identity `9ce78031` · 착수 HEAD `f4efff51`
+  (§70 승인 기록 · 보존 규칙). 승인 요청 `0d065e84` (`e28be013…`).
+- **시간:** t0 2026-10-14T17:03:49Z · 끝 기록 117.4 s / 7,200 s — 커밋 · push · 결과 기록 · 발송문 작성 **전** snapshot 이다 (`06_end.json`).
+  계산 합 25.559 s / 1,320 s. 자동 수정 · 재시험 0.
+- **단계 (`evidence/reil_c4e0_fix_20261014/` · 실행기 `00_step_runner.py` — E0 실행기와 다른 곳은 docstring 첫 줄 · 증거 경로 · scratch 경로 (MPLCONFIGDIR · TMPDIR) 뿐):**
+
+  | 단계 | 배정 | 실측 | rc | 결과 |
+  |---|---|---|---|---|
+  | 01 identity (`00_identity_c4.py` = E0 와 같은 바이트 · 같은 venv · 봉인 · MANIFEST sha 인자 · 스크립트 / 출력 경로만 이 폴더) | 60 s | 21.699 s | 0 | ok · problems [] |
+  | 02 RED (새 6 만 · 패치 전) | 600 s | 1.07 s | 1 | 6 실패 = AttributeError 3 (n1_a · n1_e · n1_f) + TypeError 3 (n1_b · n1_c · n1_d) · 선언대로 |
+  | (패치) | — | — | — | `git apply` 고정본 (`ed14409a…`) → `reil_c4e_run.py` `0a9ddb83…` → `a94f535f…` (기대값과 같음) |
+  | 03 GREEN (E0 21 + 새 6) | 600 s | 2.675 s | 0 | 27 passed (pytest 2.36 s) · stderr 0 B |
+  | 04 seal-sources (CLI · 커밋 `61b9037e` 의 바이트) | 60 s | 0.115 s | 0 | `04_sources/SOURCES.json` 하나 |
+
+- **GREEN 과 커밋의 관계:** GREEN 은 HEAD `72844b29` 위 작업 트리 (패치 적용 · 아직 커밋 전) 에서 돌았고, 그 바이트를 그대로 `61b9037e` 로 커밋했다.
+  `03_green.source_sha256.txt` 의 여덟 파일 sha 는 커밋 `61b9037e` 의 blob 과 모두 같고, `05_source_sha256_end.txt` 와 바이트가 같다 (`cmp`).
+- **바뀐 파일:** `scripts/reil_c4e_run.py` (위) · `tests/test_reil_c4e_fix.py` 새 (`7a09d438…` = 대조 고정본 · RED 뒤 바꾸지 않음). E0 시험 (`687de63c…`) · 감시 · e3a ·
+  c5 · p0 · E0 증거는 그대로다.
+- **신뢰 소스 목록:** `evidence/reil_c4e0_fix_20261014/04_sources/SOURCES.json` · 1,100 B · **sha256 `2a7b2b49b9809d1a9301398388894a1f7a73afb55acc1a5070e3f77ce0393d52`**.
+  다섯 항목은 커밋 `61b9037e` 의 파일과 같고, 따로 계산한 `sha256sum` 과도 같다.
+
+  | 경로 | bytes | sha256 |
+  |---|---:|---|
+  | `scripts/reil_c4e_run.py` | 53,853 | `a94f535fd8ab5718b0ed47e0322a067300f808ef42c530cd95668aa77f0a53a9` |
+  | `scripts/reil_c4_e3a.py` | 32,311 | `33b855378fb76634eb314f8cfb0428151ce1ec8b9045bc8447d8e17354a41ac3` |
+  | `scripts/reil_c4_monitor.py` | 21,546 | `e6ef8ff617342393a9d3a45c98751b563a3f1e9871c6fa3b540b47f4bfbc071b` |
+  | `scripts/reil_c5_pilot.py` | 47,164 | `73bee8dc412b39863afb64b70bc128cbecee2075a3a17914fc7288f353ef11a6` |
+  | `scripts/reil_p0.py` | 23,941 | `793b326ebf86a6db3b855d828aff4d6b6dddc824bed8d00f4161537b1cc06e3a` |
+
+- **자원 (사후 관측):** 최대 단일 자식 RSS 91,024 KiB (01 identity) · 증거 25,354 B (끝 기록 `06_end.json` 쓰기 **전**) → 28,891 B (끝 기록 3,537 B 포함 · N2 의
+  표기 교훈) · 디스크 여유 26,211,078,144 B (착수) → 26,207,506,432 B (끝 기록).
+- **검증 축 ↔ 대조 (`tests/test_reil_c4e_fix.py`):** 정상 기대값 n1_a (`:167` — 순서 identity → 목록 → sha → 경로 · util import 1 · 실제 finalize 사전 · 최종 COMPLETE ·
+  끝 표에 같은 기대값) · 기대 항목 누락 · 형식 · 목록 sha n1_b (`:202` — 7 변형 (누락 · 목록 밖 · sha 63 자 · 대문자 · bytes 음수 · schema · 목록 sha) + 하나만 2 ·
+  util import 0 · 출력 폴더 없음 · 필수 행의 기대 누락 / 행 없음 → 사전 판정 INCOMPLETE) · 시작부터 틀렸으나 끝까지 같은 소스 n1_c (`:242` — e3a 기대 sha 틀림 → 적재 전
+  멈춤 · 시작 = 끝 미승인 바이트 → 사전 · 최종 INCOMPLETE) · 실행 중 변화 n1_d (`:265` — 사본 · 실제 finalize INCOMPLETE · `changed` · 양성 대조 COMPLETE) · CLI 가 목록
+  요구 n1_e (`:306`) · 목록 작성 · plan-e 범위 n1_f (`:320`).
+- **이번 GREEN 의 계산 (시험 코드의 정적 집계 · 실행 중 계수 아님 — §70 과 같음):** E0 21 의 실제 fork 5 · 가짜 util 평가 393 · 로컬 git 직접 호출 16 · plan-e 1.
+  새 6 은 fork · optimizer 0 · plan-e 1 (n1_f) — plan-e 합 2. 실제 pymoo · COBYQA · 보존 util · Sobol · 자료 · 네트워크 0.
+- **밝힐 것 (검토 대상):**
+  1. 목록 없는 라이브러리 경로 (legacy) 가 남는다 — E0 시험을 바꾸지 않기 위해서다. 머리말 기록에 `legacy` 로 남고, E1 CLI 는 목록 없이는 거부한다 (n1_e).
+  2. 끝 표의 기대 대조는 `required` 와 관계없이 더했다 — E0 21 의 판정은 그대로 통과했다 (GREEN).
+  3. 목록은 커밋 `61b9037e` 의 바이트를 고정한다. 다섯 모듈이 다시 바뀌면 목록 봉인 · 검토 · 승인을 다시 한다.
+  4. 실행 모듈 자신이 고의로 바뀌어 자기 대조를 건너뛰는 경우는 run 안에서 막지 못한다 — E1 단계 실행기의 독립 사전 대조를 E1 승인 요청에 넣는다 (§70 의 3).
+  5. RED 는 인터페이스 수준이다 (E0 와 같음). 틀린 구현을 잡는 근거는 GREEN 의 음성 대조 (n1_b · n1_c · n1_d) 다.
+  6. 승인 요청 §2 의 거부 조건 중 셋은 구현돼 있으나 대조 6 이 직접 부르지 않는다 — sha 인자가 소문자 16 진 64 자가 아님 (`load_sources` `:509`) · 목록이 JSON 아님
+     (`:514–517`) · 크기만 다름 (`identity_problems` `:335` 의 bytes 비교). 이 셋의 근거는 정적 검토뿐이다. 실행 모듈 경로 집합 자기 확인 (`:507` · `:543`) 도 같다.
+  7. GREEN 에서 기존 0a · 0b 159 를 뺐다 (§70 의 2). 그 일곱 시험 파일은 `reil_c4e_run` 을 참조하지 않는다 (grep — 참조하는 시험 파일은 `test_reil_c4e.py` ·
+     `test_reil_c4e_fix.py` 둘뿐).
+- **다음:** 재검토 발송 (사용자 결정) → 수용 → E1 승인 요청 (`SOURCES.json` sha256 · fetch argv / env · 단계 실행기 독립 사전 대조) → 사용자 E1 GO.
+  이 결과는 E1 · 자료 반입 · 개봉 · C4-A / B 승인이 아니다.
