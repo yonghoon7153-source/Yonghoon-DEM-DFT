@@ -19,6 +19,12 @@
 #   시작할 때 torch · fairchem · ase 판과 repo HEAD 를 찍는다 (B 담금질 밀도·T₅₀ 이 담금질 기계별로 갈렸는데 plan.json 에
 #   판이 없었다 — 2026-10-13 · 판정 아님).
 #
+# B 측정 가능 조건 카드 (2026-10-14 · lpscl_smallcell_glass_control_bmeasurable_estimand_2026_10_14.json · 잠정 · 카드 결정
+#   D-2026-10-14-lpscl-smallcell-glass-control-bmeasurable = proposed) — PRESET=bmeas650 이면 kgy 몫 {1, 3} 를 650 K 로:
+#   QUEUE "650:1:400 650:3:400" · VSEED_OFFSET 2000 (새 난수) · ROOT ~/work/runs/lpscl_glass_bmeas_650K_2026_10_14 · CARD_DECISION = 위 ·
+#   CARD_STATE_OK "active proposed" (기본은 "active" — active 가 아니면 '잠정 실행' 줄을 찍는다 · 외부 1저자 동의 전 · 결과는 회신 전까지
+#   안 연다). 구조 · 기록값 · v2 러너 · 설정 대조 기준은 그대로 (run_meta 대조는 T · seed · v0 · prod 를 빼고 본다). 모르는 PRESET → 13.
+#
 # 쓰는 법 (kgy · repo worktree 안에서)
 #   SELFTEST_PY=<numpy·ase 있는 python> bash db/inputs/lpscl_glass_control_li3ps4_2026_10_05/run_600k_kgy.sh --selftest
 #   DRY_RUN=1 bash db/inputs/lpscl_glass_control_li3ps4_2026_10_05/run_600k_kgy.sh
@@ -34,6 +40,17 @@ set -u
 HERE=$(cd "$(dirname "$(realpath "$0")")" && pwd)
 REPO=${REPO:-$(cd "$HERE/../../.." && pwd)}
 DECISIONS=${DECISIONS:-$REPO/db/governance/decisions.json}
+PRESET=${PRESET:-}
+case "$PRESET" in
+  "") ;;
+  bmeas650)   # B 측정 가능 조건 카드 (2026-10-14 · 잠정) — 머리글
+    QUEUE=${QUEUE:-"650:1:400 650:3:400"}; VSEED_OFFSET=${VSEED_OFFSET:-2000}
+    ROOT=${ROOT:-$HOME/work/runs/lpscl_glass_bmeas_650K_2026_10_14}
+    CARD_DECISION=${CARD_DECISION:-D-2026-10-14-lpscl-smallcell-glass-control-bmeasurable}
+    CARD_STATE_OK=${CARD_STATE_OK:-active proposed} ;;
+  *) echo "⛔ PRESET=$PRESET — bmeas650 만 안다 (시작하지 않는다)"; exit 13 ;;
+esac
+CARD_STATE_OK=${CARD_STATE_OK:-active}
 CARD_DECISION=${CARD_DECISION:-D-2026-10-05-lpscl-smallcell-glass-control-li3ps4}
 RUNNER=${RUNNER:-$REPO/db/raw/lpscl_glass_md_v2_2026_09_30/glass_kgy_q_v2.sh}
 RUNNER_SHA16=${RUNNER_SHA16:-3aef029aced0de77}
@@ -56,21 +73,25 @@ export REC_1=${REC_1:-"2.0214 15 1.6222"}
 export REC_3=${REC_3:-"2.0065 15 1.5143"}
 
 say(){ echo "[$(date '+%F %T')] $*"; }
-decision_active(){ python3 - "$DECISIONS" "$1" <<'PY'
+decision_state_of(){ python3 - "$DECISIONS" "$1" <<'PY'
 import json, sys
 try:
     D = json.load(open(sys.argv[1]))
 except Exception:
-    sys.exit(1)
+    sys.exit(0)
 L = D["decisions"] if isinstance(D, dict) else D
 x = [e for e in L if e.get("id") == sys.argv[2]]
-sys.exit(0 if x and x[0].get("decision_state") == "active" else 1)
+print(x[0].get("decision_state", "") if x else "")
 PY
 }
+# 카드 결정의 상태가 CARD_STATE_OK 안에 있나 — 빈 상태 (원장에 없음 · 못 읽음) 는 늘 거부
+state_ok(){ local w; [ -n "$1" ] || return 1; for w in $CARD_STATE_OK; do [ "$1" = "$w" ] && return 0; done; return 1; }
 versions(){ "$PY" -c "import torch, ase; import fairchem.core as f; print('torch', torch.__version__, '· fairchem', getattr(f, '__version__', '?'), '· ase', ase.__version__)" 2>/dev/null | tail -1; }
 
 gatekeep(){
-  decision_active "$CARD_DECISION" || { say "⛔ 카드 결정 $CARD_DECISION 가 원장 ($DECISIONS) 에서 active 가 아니다 — 시작하지 않는다"; return 6; }
+  local cs; cs=$(decision_state_of "$CARD_DECISION")
+  state_ok "$cs" || { say "⛔ 카드 결정 $CARD_DECISION 가 원장 ($DECISIONS) 에서 [$CARD_STATE_OK] 중 하나가 아니다 (지금: ${cs:-없음}) — 시작하지 않는다"; return 6; }
+  [ "$cs" = active ] || say "⚠ 카드 결정 $CARD_DECISION = $cs — 잠정 실행 (CARD_STATE_OK '$CARD_STATE_OK' · 사용자 실행 승인 · 규칙 동의는 외부 1저자 회신 · 결과는 회신 전까지 안 연다)"
   local s; s=$(sha256sum "$RUNNER" 2>/dev/null | cut -c1-16)
   [ "$s" = "$RUNNER_SHA16" ] || { say "⛔ v2 러너 sha16 ${s:-없음} ≠ $RUNNER_SHA16 ($RUNNER) — 시작하지 않는다"; return 7; }
   local q sd
@@ -82,7 +103,7 @@ gatekeep(){
   [ -s "$src" ] || { say "⛔ seed3 구조 원본이 없다 ($src · repo 회수본 faa6dac)"; return 8; }
   if [ -e "$dst" ]; then cmp -s "$src" "$dst" || { say "⛔ $dst 가 이미 있는데 원본과 바이트가 다르다 — 덮지 않는다"; return 8; }
   else mkdir -p "$INIT" && cp "$src" "$dst" || { say "⛔ seed3 구조를 $dst 로 못 옮겼다"; return 8; }; fi
-  say "문지기 ✓ — 카드 $CARD_DECISION active · 러너 sha16 $s · 큐 $QUEUE · seed3 $(sha256sum "$dst" | cut -c1-16) (= repo 원본)"
+  say "문지기 ✓ — 카드 $CARD_DECISION ($cs) · 러너 sha16 $s · 큐 $QUEUE · seed3 $(sha256sum "$dst" | cut -c1-16) (= repo 원본)"
   say "판 — $(versions || true) · repo $(git -C "$REPO" rev-parse --short=9 HEAD 2>/dev/null || echo '?') · ROOT $ROOT"
   return 0
 }
@@ -110,6 +131,15 @@ if [ "${1:-}" = "--selftest" ]; then
   ck "양성: 다시 돌려도 (init 에 같은 파일) 통과 (0)" "$(run)" 0
   ck "⛔음성 카드 결정 proposed → 6"                "$(run CARD_DECISION=D-PROP)" 6
   ck "⛔음성 카드 결정 원장에 없음 → 6"              "$(run CARD_DECISION=D-NONE)" 6
+  # ── B 측정 가능 조건 카드 (2026-10-14 · 잠정): PRESET=bmeas650 · CARD_STATE_OK ──
+  ck "프리셋 bmeas650: 카드 proposed 허용 · DRY_RUN 끝까지 (0)" "$(run PRESET=bmeas650 CARD_DECISION=D-PROP ROOT="$T/rootP")" 0
+  ck "프리셋 bmeas650: 계획 줄 — T650 · 라벨 ctrlB_s<S>_T650 · --seed 2001 · 2003 · prod 400" \
+     "$(grep -cE "계획 T650 seed(1 .*lpscl_glass_ctrlB_s1_T650 .*--seed 2001 .*--prod_ps 400|3 .*lpscl_glass_ctrlB_s3_T650 .*--seed 2003 .*--prod_ps 400)" "$T/out")" 2
+  ck "프리셋 bmeas650: '잠정 실행' 줄을 찍는다" "$(grep -c '⚠ 카드 결정 D-PROP = proposed — 잠정 실행' "$T/out")" 1
+  ck "⛔음성 프리셋 · 카드 결정 원장에 없음 → 6"     "$(run PRESET=bmeas650 CARD_DECISION=D-NONE ROOT="$T/rootP")" 6
+  ck "⛔음성 프리셋 · CARD_STATE_OK 를 active 로 좁히면 → 6" "$(run PRESET=bmeas650 CARD_DECISION=D-PROP CARD_STATE_OK=active ROOT="$T/rootP")" 6
+  ck "⛔음성 프리셋 · 큐에 seed2 (gabia 몫) → 13"    "$(run PRESET=bmeas650 CARD_DECISION=D-PROP QUEUE='650:2:400' ROOT="$T/rootP")" 13
+  ck "⛔음성 모르는 PRESET → 13"                      "$(run PRESET=bmeas600)" 13
   ck "⛔음성 러너 sha 다름 → 7"                      "$(run RUNNER_SHA16=0000000000000000)" 7
   ck "⛔음성 큐에 seed2 (gabia 몫) → 13"             "$(run QUEUE='600:2:400')" 13
   ck "⛔음성 기준 run_meta 없음 → 9"                 "$(run V2="$T/empty")" 9
@@ -123,7 +153,7 @@ if [ "${1:-}" = "--selftest" ]; then
   ck "⛔음성 seed1 기록값이 틀리면 러너 값 게이트 → 8" "$(run REC_1='2.0214 15 1.6300')" 8
   ck "⛔음성 seed3 자리에 seed1 파일 → 러너 값 게이트 8" \
      "$(mkdir -p "$T/swap/gabia/B/seed3" && cp "$BSRC/kgy/B/seed1/final.xyz" "$T/swap/gabia/B/seed3/final.xyz" && run BSRC="$T/swap" A="$BSRC/kgy/B" ROOT="$T/root2")" 8
-  rm -rf "$T"; [ "$f" = 0 ] && echo "selftest ✅ (음성 10 포함)" || echo "selftest ⛔"; exit "$f"
+  rm -rf "$T"; [ "$f" = 0 ] && echo "selftest ✅ (음성 14 포함)" || echo "selftest ⛔"; exit "$f"
 fi
 
 gatekeep; rc=$?; [ "$rc" = 0 ] || exit "$rc"

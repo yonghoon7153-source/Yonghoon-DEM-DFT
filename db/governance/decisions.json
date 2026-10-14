@@ -8019,10 +8019,10 @@
    "amends": [],
    "amends_note": "비준되면 CLAUDE.md §계산 자원 gabia 에 이 예외 줄을 더한다 (같은 커밋 · 규칙 본문은 그대로).",
    "schema_version": 2,
-   "decision_state": "active",
+   "decision_state": "superseded",
    "results_seen": false,
    "proposed_by": "claude-session-2026-10-13 (friendly)",
-   "status": "active",
+   "status": "superseded",
    "status_history": [
     {
      "at": "2026-10-13",
@@ -8035,6 +8035,12 @@
      "state": "active",
      "by": "사용자 (gabia 운용 · Li₃Nd · 탄성 1저자)",
      "note": "비준 — AskUserQuestion '비준 (Recommended)'. 같은 물음의 kgy 몫 시점 답 '지금 cascade 옆에서 (Recommended)' 는 이 결정의 범위 밖이다 (kgy 는 공존 예외 대상이 아니다 · 기록 = lpscl_glass_control_li3ps4_runlog_2026_10_05.json · cascade_v7_main_runlog_2026_10_07.json). 트랙: gabia 운용 = 우리 · li2s 과학 규칙은 카드·회신 CR 그대로 (외부 1저자에게는 기계 배정 사실만 다음 편지에)."
+    },
+    {
+     "at": "2026-10-14",
+     "state": "superseded",
+     "by": "사용자 (gabia 운용)",
+     "note": "자기 조건 ('3 런이 끝나면 소멸') 대로 **2026-10-14 19:47:20 소멸** — gabia 몫 3 런 rc 0 · 가드 발동 0 · 피크 합계 39,351 MiB (runlog lpscl_glass_control_li3ps4_runlog_2026_10_05.json ✅_완주_600K_2026_10_14). 같은 slot 의 예외 (7) D-2026-10-14-gabia-uma-coexist-pwx-li2s-bmeas-650k 가 명시적으로 대체한다 — 원장 규칙 '충돌 해소는 명시적 supersedes 로만' (systems li3ps4_glass · li3nd_pristine_333_control · modelc_2x_elastic 이 겹친다). 승인 내용 (statement · 가드 · 범위) 은 그대로 · 지문만 다시 냄 · 결속 커밋은 그대로 (예외 (5) 선례 10-13)."
     }
    ],
    "supersedes": [
@@ -8048,8 +8054,9 @@
     "commit": "9dbb300937320d7a76ce71cab19a3ab9b9162694",
     "⚠_digest_의_뜻": "`ratification` 을 뺀 결정 내용의 sha256 이다.",
     "근거_발화": "AskUserQuestion 답 (2026-10-13 · 이 세션): 'gabia 공존 예외 (6)를 비준할까요?' → '비준 (Recommended)' — 앞선 발화 '저번처럼 gabia, kgy에서 나눠 돌리자 ㅇㅇ'",
-    "decision_digest": "sha256:c0b976daa7d40d70689d0c2ee689627a9765cfde379d1b540a919dcd5d1e1008"
-   }
+    "decision_digest": "sha256:c3f932e6605b7129f3c749679a28e34f44e2323bdd44b40b9b5cf6ad93aeb300"
+   },
+   "superseded_by": "D-2026-10-14-gabia-uma-coexist-pwx-li2s-bmeas-650k"
   },
   {
    "id": "D-2026-10-14-elastic-60bfgs-gate-continue",
@@ -8358,6 +8365,78 @@
     }
    ],
    "_note": "proposed — 트랙 li2s (외부 1저자). 사용자 실행 승인은 규칙 동의를 대신하지 않는다."
+  },
+  {
+   "id": "D-2026-10-14-gabia-uma-coexist-pwx-li2s-bmeas-650k",
+   "kind": "policy",
+   "scope": "ops.gabia.gpu.concurrency",
+   "slot": "gabia_gpu_pwx_uma_coexist_exception",
+   "applies_to": {
+    "systems": [
+     "li3ps4_glass",
+     "lpscl_smallcell_glass",
+     "li3nd_pristine_333_control",
+     "modelc_2x_elastic"
+    ],
+    "tasks": [
+     "li2s_glass_bmeas_650k_gabia_3runs"
+    ],
+    "methods": [
+     "uma_md_nvt",
+     "qe_gpu_relax"
+    ],
+    "use_cases": [
+     "internal"
+    ]
+   },
+   "title": "gabia GPU — 'pw.x ↔ UMA 동시 실행 금지' 의 범위 한정 예외 (7): li2s B 측정 가능 조건 카드 (잠정) 의 B 650 K · 400 ps gabia 몫 3 런 (seed2·4·5) 을 지금 도는 GPU pw.x (Li₃Nd P0-2 control r2 → 그 뒤 재개되는 탄성 modelc_2x) 옆에서 한 번에 하나씩 — 예외 (6) 과 같은 가드",
+   "statement": "li2s B 측정 가능 조건 카드 (db/properties/lpscl_smallcell_glass_control_bmeasurable_estimand_2026_10_14.json · 결정 D-2026-10-14-lpscl-smallcell-glass-control-bmeasurable = proposed · 잠정 실행) 의 ① 단계 gabia 몫 **3 런** (T650 seed2·4·5 · prod 400 ps · 드라이버 --seed 2002 · 2004 · 2005 · 구조 = repo 담금질 회수본 relax 판 (seed2 kgy · seed4·5 gabia) · 설정 = A v2 600 K gabia 판과 run_meta·dt 대조 (T · seed · v0 · prod 만 다름)) 에 한해, gabia A6000 에서 지금 도는 GPU pw.x — Li₃Nd P0-2 control r2 restart relax (VRAM ≈ 37.2 GB) — 그리고 그사이 재개되면 탄성 modelc_2x (기록 피크 41.2 GB) — 옆에 UMA MD 를 **한 번에 하나씩** 올려도 된다. 러너 tools/ionic/glass_main_queue_gabia.sh PRESET=bmeas650 (sha16 49fd37e8351a50a0 · EXCEPTION_ID 기본값 = 이 결정 · CARD_DECISION = 카드 결정 · CARD_STATE_OK 'active proposed' — 카드가 proposed 면 '잠정 실행' 줄을 찍는다 · 이 예외 결정은 늘 active 여야 한다) 가 예외 (6) 과 같은 가드를 기계로 건다: ① GPU 합계 > 46,000 MiB 면 우리 MD kill ② 우리 MD (PID 트리) > 3,500 MiB (시작 300 s 뒤부터) 면 kill ③ host MemAvailable < 8,192 MiB 면 kill ④ 감시 작업방 (PWX_WATCH = /data/work/runs/sei_control/li3nd_mp-976264_p333_r2 · /data/work/runs/elastic_modelc_2x) 의 *.out 어느 것이든 우리 런 시작 뒤 GPU 메모리 오류가 새로 쓰이면 kill ⑤ 시작은 GPU 합계 ≤ 42,500 · host ≥ 12,288 MiB 일 때만 ⑥ ①–④ 가 한 번이라도 발동하면 **예외를 닫는다** (큐 멈춤 · 자동 재시작 없음) ⑦ pw.x 와 그 러너는 건드리지 않는다 ⑧ 감시 작업방 하나라도 *.out 이 없으면 시작하지 않는다 (14) · 60 s 마다 nvidia-smi pmon 점유 표본 (회신 CS Q-CS-1). 메모리 산수: r2 37.2 GB + 우리 ≤ 2.1 GB (B 600 K 우리 피크 1,836–2,096 MiB) ≈ 39.3 GB · 탄성이면 41.2 + 2.1 = 43.3 GB (예외 (3)–(6) 과 같다).",
+   "rationale": "gabia 운용 = 우리 트랙 → 결정 = 사용자 (li2s 과학 판정과 무관한 기계 배정 · Li₃Nd · 탄성 1저자 = 사용자). 사용자 10-14 '(나) 카드 하나 더 … 한번 해봐' → AskUserQuestion 'B 650 K 다섯 런을 언제 시작할까요?' 답 '지금 시작 (잠정) (Recommended)' — 그 선택지가 'gabia 몫 3 런은 Li₃Nd r2 옆이라 공존 예외 (7) 을 새로 비준하는 걸로 받아요 (예외 (6) 과 같은 가드)' 를 적고 있었다. 예외 (6) 은 '다른 온도로 넘어가지 않는다' 였고 10-14 19:47:20 소멸 — 650 K 는 새 결정이다. 예외 (6) 은 B 600 K 3 런을 가드 발동 0 · 피크 합계 39,351 MiB 로 끝냈다.",
+   "record_kind": "scope_declaration",
+   "card": "db/properties/lpscl_smallcell_glass_control_bmeasurable_estimand_2026_10_14.json",
+   "record": "tools/ionic/glass_main_queue_gabia.sh",
+   "evidence": [
+    "D-2026-10-13-gabia-uma-coexist-pwx-li2s-control-600k (예외 (6) · B 600 K 3 런 rc 0 · 가드 발동 0 · 피크 합계 39,247–39,351 MiB · 우리 1,836–2,096 MiB · 10-14 19:47:20 소멸)",
+    "tools/ionic/glass_main_queue_gabia.sh --selftest 65 ✔ (음성 34 · 프리셋 9 — 실물 B 구조 650 K 계획 · proposed 카드 허용 · 예외 결정 active 강제 · 모르는 프리셋 13) · 일부러 깨기 G1–G6 6/6 빨강",
+    "db/inputs/lpscl_glass_control_li3ps4_2026_10_05/run_600k_kgy.sh --selftest 23 ✔ (음성 14) · 깨기 K1–K6 6/6 빨강 (kgy 몫은 공존 예외 대상이 아니다)"
+   ],
+   "method_ref": "glass_main_queue_gabia.sh PRESET=bmeas650 — SYSTEM B · QUEUE '650:2:400 650:4:400 650:5:400' · VSEED_OFFSET 2000 · LABEL_PREFIX lpscl_glass_ctrlB · ROOT /data/work/runs/lpscl_glass_bmeas_650K_2026_10_14 · REF = /data/work/runs/lpscl_glass_md_v2_2026_09_30/seed2/T600 · TOTALCAP 46000 · OURCAP 3500 · WARM 300 s · HOSTFLOOR 8192 · START_MAX 42500 · SAMPLE 2 s · POLL 60 s · PMON_S 60 s · PWX_WATCH r2 + 탄성",
+   "reopen_criteria": "가드 ①–④ 가 한 번이라도 발동하거나 공존 중 곁의 pw.x 가 비정상 종료하면 **예외를 닫고** 원 규칙 (동시 금지) 으로 돌아간다. 3 런이 끝나면 예외는 소멸한다. ② 단계 A 650 K 런 · 다른 UMA 런 · 다른 GPU pw.x 잡 · 둘 이상 동시 · 다른 온도 · kgy 몫 시드로 **넘어가지 않는다** — 필요하면 새 결정.",
+   "enforcement": "러너가 ①–③ 을 2 s 표본으로 · ④ 를 60 s 마다 · ⑤ 시작 문턱 · ⑧ 과 결정 검사를 시작 전에 건다. ⚠ 확률적 보호다 — 표본 간격보다 빠른 VRAM 급등은 못 막는다. ⚠ SM 을 나눠 써서 곁의 pw.x 스텝이 느려질 수 있다.",
+   "amends": [],
+   "amends_note": "비준과 함께 CLAUDE.md §계산 자원 gabia 에 이 예외 줄을 더한다 (같은 커밋 · 규칙 본문은 그대로).",
+   "schema_version": 2,
+   "decision_state": "active",
+   "results_seen": false,
+   "proposed_by": "claude-session-2026-10-14 (friendly)",
+   "status": "active",
+   "status_history": [
+    {
+     "at": "2026-10-14",
+     "state": "proposed",
+     "by": "agent",
+     "note": "사용자 10-14 '(나) 카드 하나 더 … 한번 해봐' (실행 승인) → B 650 K gabia 몫 3 런의 공존 예외 초안. 예외 (6) 이 소멸했고 650 K 는 그 범위 밖이라 새 결정이다. 비준 = 사용자 (gabia 운용 · Li₃Nd · 탄성 1저자)."
+    },
+    {
+     "at": "2026-10-14",
+     "state": "active",
+     "by": "사용자 (gabia 운용 · Li₃Nd · 탄성 1저자)",
+     "note": "비준 — AskUserQuestion '지금 시작 (잠정) (Recommended)' (선택지 설명에 '공존 예외 (7) 을 새로 비준하는 걸로 받아요 (예외 (6) 과 같은 가드)'). kgy 몫 (seed1·3) 은 이 결정의 범위 밖이다 (kgy 는 공존 예외 대상이 아니다 · cascade v7 · Nd 어닐 옆 · 같은 답). 트랙: gabia 운용 = 우리 · li2s 과학 규칙은 카드 (잠정) · 편지 CX."
+    }
+   ],
+   "ratification": {
+    "state": "ratified",
+    "role": "scientific_owner",
+    "actor_id": "yonghoon7153@gmail.com",
+    "timestamp": "2026-10-14T18:12:02Z",
+    "commit": "8a1ce02c49c2dfb4c42aaed1391164bb6f20b757",
+    "⚠_digest_의_뜻": "`ratification` 을 뺀 결정 내용의 sha256 이다.",
+    "근거_발화": "AskUserQuestion 답 (2026-10-14 · 이 세션): 'B 650 K 다섯 런을 언제 시작할까요?' → '지금 시작 (잠정) (Recommended)' — 앞선 발화 '(나) 카드 하나 더: B 측정 가능 조건 카드 하나를 돌리고, 결과와 상관없이 그걸로 트랙을 닫아요. 한번 해봐'",
+    "decision_digest": "sha256:4d691045fc305925990db7fb9623907faa3cade70a1b459f4c430fdca675e77f"
+   },
+   "supersedes": [
+    "D-2026-10-13-gabia-uma-coexist-pwx-li2s-control-600k"
+   ]
   }
  ]
 }

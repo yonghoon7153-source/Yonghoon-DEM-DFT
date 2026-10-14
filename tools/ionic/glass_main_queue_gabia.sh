@@ -37,6 +37,15 @@
 #   · 시작 때 torch · fairchem · ase 판과 repo HEAD 를 로그에 찍는다 (B 담금질 밀도·T₅₀ 이 담금질 기계별로 갈렸는데
 #     plan.json 에 판이 없었다 — 2026-10-13 · 판정 아님).
 #
+# B 측정 가능 조건 카드 (2026-10-14 · lpscl_smallcell_glass_control_bmeasurable_estimand_2026_10_14.json · 잠정 · 카드 결정
+#   D-2026-10-14-lpscl-smallcell-glass-control-bmeasurable = proposed) 에서 더한 것 — PRESET 을 안 주면 옛 동작 그대로:
+#   · PRESET=bmeas650 → SYSTEM=B · QUEUE "650:2:400 650:4:400 650:5:400" (같은 시드–기계 대응) · VSEED_OFFSET 2000 (600 K 의 1000 과
+#     다른 새 난수) · ROOT /data/work/runs/lpscl_glass_bmeas_650K_2026_10_14 · EXCEPTION_ID D-2026-10-14-gabia-uma-coexist-pwx-li2s-bmeas-650k ·
+#     CARD_DECISION = 위 카드 결정 · CARD_STATE_OK "active proposed". 구조 · 기록값 · 가드 · PWX_WATCH · 설정 대조 기준은 B 그대로.
+#   · CARD_STATE_OK (기본 "active") — 카드 결정이 이 상태 중 하나여야 시작한다. active 가 아니면 '잠정 실행' 줄을 찍는다
+#     (li2s = 외부 1저자 트랙: 사용자 실행 승인 · 규칙 동의는 회신 · 결과는 회신 전까지 안 연다 — v2 선례). 예외 결정은 늘 active.
+#   · 모르는 PRESET → 13.
+#
 # 큐 QUEUE="T:seed[:prod] ..." (기본 465:5 550:3 550:4 550:5 465:1 465:2 550:2 — 09-29 본 런 · gabia 에 구조가 있는 것 먼저)
 #   ⛔ 550:1 은 **없다** — 550 K seed1 은 파일럿 P-2 가 본 런을 겸한다 (편지 CH · 회신 CH '그대로 가세요').
 #     2026-09-29 에 기본값이 550:1 을 넣은 8 런이었다 (셈 오류 · 실제 남은 본 런 7). 1저자 09-29 저녁: seed1·2 세 런은 kgy.
@@ -78,6 +87,19 @@ REPO=${REPO:-$(cd "$(dirname "$(realpath "$0")")/../.." 2>/dev/null && pwd)}
 SYSTEM=${SYSTEM:-A}
 QUEUE_DEFAULT="465:5 550:3 550:4 550:5 465:1 465:2 550:2"   # 550:1 없음 — 위 머리글 (SYSTEM=A)
 QUEUE_DEFAULT_B="600:2:400 600:4:400 600:5:400"              # 카드 §1b gabia 몫 {2, 4, 5} (SYSTEM=B)
+PRESET=${PRESET:-}
+case "$PRESET" in
+  "") ;;
+  bmeas650)   # B 측정 가능 조건 카드 (2026-10-14 · 잠정) — 머리글 'B 측정 가능 조건 카드'
+    SYSTEM=B
+    QUEUE=${QUEUE:-"650:2:400 650:4:400 650:5:400"}
+    VSEED_OFFSET=${VSEED_OFFSET:-2000}
+    ROOT=${ROOT:-/data/work/runs/lpscl_glass_bmeas_650K_2026_10_14}
+    EXCEPTION_ID=${EXCEPTION_ID:-D-2026-10-14-gabia-uma-coexist-pwx-li2s-bmeas-650k}
+    CARD_DECISION=${CARD_DECISION:-D-2026-10-14-lpscl-smallcell-glass-control-bmeasurable}
+    CARD_STATE_OK=${CARD_STATE_OK:-active proposed} ;;
+  *) echo "⛔ PRESET=$PRESET — bmeas650 만 안다 (시작하지 않는다)"; exit 13 ;;
+esac
 if [ "$SYSTEM" = B ]; then   # 대조 계 B — 머리글 '대조 계 B'
   _V2=/data/work/runs/lpscl_glass_md_v2_2026_09_30/seed2/T600          # A v2 600 K (gabia) — 설정 기준
   ROOT=${ROOT:-/data/work/runs/lpscl_glass_control_li3ps4_600K_2026_10_13}
@@ -106,6 +128,7 @@ HOSTFLOOR=${HOSTFLOOR:-8192}; SAMPLE=${SAMPLE:-2}; WARM=${WARM:-300}; POLL=${POL
 META_WAIT=${META_WAIT:-900}; STRUCT_WAIT=${STRUCT_WAIT:-600}; KILL_GRACE=${KILL_GRACE:-10}
 EXCEPTION_ID=${EXCEPTION_ID:-D-2026-09-30-gabia-uma-coexist-elastic-li2s-v2}
 CARD_DECISION=${CARD_DECISION:-}
+CARD_STATE_OK=${CARD_STATE_OK:-active}   # 카드 결정이 이 상태 중 하나여야 시작 (머리글 'B 측정 가능 조건 카드')
 PROD_DEFAULT=${PROD_DEFAULT:-400}; VSEED_OFFSET=${VSEED_OFFSET:-0}; LABEL_PREFIX=${LABEL_PREFIX:-}
 
 # seed → "최단P–S PS₄개수 ρ" (relax 판 기록값). REC_<S> 로 덮을 수 있다 (selftest 용).
@@ -138,16 +161,20 @@ kill_tree(){ local ps i=0; ps=$(tree_pids "$1"); kill -TERM $ps 2>/dev/null
   while [ "$i" -lt "$KILL_GRACE" ]; do kill -0 "$1" 2>/dev/null || break; sleep 1; i=$((i+1)); done
   kill -KILL $ps 2>/dev/null; return 0; }
 
-decision_active(){ python3 - "$REPO/db/governance/decisions.json" "${1:-$EXCEPTION_ID}" <<'PY'
+decision_state_of(){ python3 - "$REPO/db/governance/decisions.json" "$1" <<'PY'
 import json, sys
 try:
     D = json.load(open(sys.argv[1]))
 except Exception:
-    sys.exit(1)
+    sys.exit(0)
 L = D["decisions"] if isinstance(D, dict) else D
 x = [e for e in L if e.get("id") == sys.argv[2]]
-sys.exit(0 if x and x[0].get("decision_state") == "active" else 1)
+print(x[0].get("decision_state", "") if x else "")
 PY
+}
+# 카드 결정의 상태가 CARD_STATE_OK 안에 있나 — 빈 상태 (원장에 없음 · 못 읽음) 는 늘 거부
+state_ok(){ local w; [ -n "$1" ] || return 1; for w in $CARD_STATE_OK; do [ "$1" = "$w" ] && return 0; done; return 1; }
+decision_active(){ [ "$(decision_state_of "${1:-$EXCEPTION_ID}")" = active ]
 }
 
 check_struct(){  # $1 xyz · $2 "ps n4 rho" → OK/FAIL 한 줄 · 0 = OK
@@ -448,6 +475,21 @@ PY
   mkdir -p "$T/el_empty"
   ck "⛔음성 PWX_WATCH 작업방 하나에 *.out 없음 → 14" "$(bq QUEUE='600:2:400' PWX_WATCH="$T/el $T/el_empty")" 14
   ck "⛔음성 SYSTEM=C → 13"                           "$(bq QUEUE='600:2:400' SYSTEM=C)" 13
+  # ── B 측정 가능 조건 카드 (2026-10-14 · 잠정): PRESET=bmeas650 · CARD_STATE_OK ──
+  r=$(run SYSTEM=B PRESET=bmeas650 ROOT="$T/rootP" BSRC="$REALREPO/db/raw/lpscl_glass_control_li3ps4_2026_10_05" CARD_DECISION=D-PROP \
+          PWX_WATCH="$T/el $T/el2" REC_4= REC_5= DRY_RUN=1)
+  ck "프리셋 bmeas650 실물: 카드 proposed 허용 · 기본 큐 DRY_RUN (0)" "$r" 0
+  ck "프리셋 bmeas650 실물: 세 계획 줄 = T650 · --seed 200S · 라벨 ctrlB_s<S>_T650 (seed2 kgy · seed4·5 gabia)" \
+     "$(grep -cE "계획 T650 seed(2 · prod 400 ps · 드라이버 --seed 2002 · 라벨 lpscl_glass_ctrlB_s2_T650 · [^ ]*/kgy/B/seed2/final.xyz|4 · prod 400 ps · 드라이버 --seed 2004 · 라벨 lpscl_glass_ctrlB_s4_T650 · [^ ]*/gabia/B/seed4/final.xyz|5 · prod 400 ps · 드라이버 --seed 2005 · 라벨 lpscl_glass_ctrlB_s5_T650 · [^ ]*/gabia/B/seed5/final.xyz)" "$T/out")" 3
+  ck "프리셋 bmeas650: '잠정 실행' 줄을 찍는다 (카드 proposed)" "$(grep -c '⚠ 카드 결정 D-PROP = proposed — 잠정 실행' "$T/out")" 1
+  ck "프리셋 양성: 650:2:400 끝까지 (0)"              "$(bq PRESET=bmeas650 ROOT="$T/rootP" CARD_DECISION=D-PROP QUEUE='650:2:400' FAKE_SLEEP=2)" 0
+  ck "프리셋 양성: run_meta T 650 · seed 2002 · 라벨 lpscl_glass_ctrlB_s2_T650" \
+     "$(python3 -c "import json;m=json.load(open('$T/rootP/seed2/T650/run_meta.json'));print(m['temperatures'],m['seed'],m['label'])")" \
+     "[650.0] 2002 lpscl_glass_ctrlB_s2_T650"
+  ck "⛔음성 프리셋이어도 예외 결정은 active 여야 한다 (proposed → 6)" "$(bq PRESET=bmeas650 ROOT="$T/rootP" CARD_DECISION=D-PROP EXCEPTION_ID=D-PROP QUEUE='650:4:400' DRY_RUN=1)" 6
+  ck "⛔음성 프리셋 · 카드 결정이 원장에 없음 → 6"   "$(bq PRESET=bmeas650 ROOT="$T/rootP" CARD_DECISION=D-NONE QUEUE='650:4:400' DRY_RUN=1)" 6
+  ck "⛔음성 CARD_STATE_OK 를 active 로 좁히면 proposed 카드 → 6" "$(bq PRESET=bmeas650 ROOT="$T/rootP" CARD_DECISION=D-PROP CARD_STATE_OK=active QUEUE='650:4:400' DRY_RUN=1)" 6
+  ck "⛔음성 모르는 PRESET → 13"                      "$(bq PRESET=bmeas600 QUEUE='600:2:400' DRY_RUN=1)" 13
   rm -rf "$T"/rootB/seed2; printf 'old: CUDA error: out of memory (지난 일)\n' >> "$T/el2/r2.out"
   ( after_start "$T/rootB/seed2/T600/run_meta.json"; sleep 0.5
     printf '     0: ALLOCATE: 1 bytes requested; status = 2(out of memory)\n' >> "$T/el2/r2.out" ) &
@@ -459,21 +501,25 @@ PY
     printf 'cudaErrorMemoryAllocation\n' > "$T/el/strain_12_p.out" ) &
   ck "⛔음성 가드④ 시작 뒤 새로 생긴 *.out (탄성 재개) 의 OOM → 5" "$(bq QUEUE='600:2:400' FAKE_SLEEP=30)" 5
   wait; rm -f "$T/el/strain_12_p.out"
-  rm -rf "$T"; [ "$f" = 0 ] && echo "selftest ✅ (음성 30 포함)" || echo "selftest ⛔"; exit "$f"
+  rm -rf "$T"; [ "$f" = 0 ] && echo "selftest ✅ (음성 34 포함)" || echo "selftest ⛔"; exit "$f"
 fi
 
 # ── 본 실행 ────────────────────────────────────────────────────────────────────
 say "════ li2s 유리 MD · gabia 공존 큐 · 계 $SYSTEM · 예외 $EXCEPTION_ID ════"
 case "$SYSTEM" in A|B) ;; *) say "⛔ SYSTEM=$SYSTEM — A 또는 B 만 — 시작하지 않는다"; exit 13;; esac
 decision_active || { say "⛔ 결정 $EXCEPTION_ID 가 원장($REPO)에서 active 가 아니다 — 시작하지 않는다"; exit 6; }
-if [ -n "$CARD_DECISION" ]; then decision_active "$CARD_DECISION" || {
-  say "⛔ 카드 결정 $CARD_DECISION 가 원장($REPO)에서 active 가 아니다 — 시작하지 않는다"; exit 6; }; fi
+cs=
+if [ -n "$CARD_DECISION" ]; then
+  cs=$(decision_state_of "$CARD_DECISION")
+  state_ok "$cs" || { say "⛔ 카드 결정 $CARD_DECISION 가 원장($REPO)에서 [$CARD_STATE_OK] 중 하나가 아니다 (지금: ${cs:-없음}) — 시작하지 않는다"; exit 6; }
+  [ "$cs" = active ] || say "⚠ 카드 결정 $CARD_DECISION = $cs — 잠정 실행 (CARD_STATE_OK '$CARD_STATE_OK' · 사용자 실행 승인 · 규칙 동의는 외부 1저자 회신 · 결과는 회신 전까지 안 연다)"
+fi
 s=$(sha256sum "$DRV" 2>/dev/null | cut -c1-16)
 [ "$s" = "$DRV_SHA16" ] || { say "⛔ 드라이버 sha16 ${s:-없음} ≠ $DRV_SHA16 ($DRV) — 시작하지 않는다"; exit 7; }
 [ -s "$REF_META" ] || { say "⛔ 기준 run_meta 없음 ($REF_META) — 설정을 대조할 수 없다"; exit 9; }
 miss=$(el_missing)
 [ -z "$miss" ] || { say "⛔ PWX_WATCH 작업방에 *.out 이 없다: $miss — 가드 ④ 가 말없이 무력해진다 (작업방을 맞게 준다 · 시작하지 않는다)"; exit 14; }
-say "결정 active ✓${CARD_DECISION:+ · 카드 $CARD_DECISION ✓} · 드라이버 sha16 $s ✓ · 기준 설정 $REF_META · 가드 합계 $TOTALCAP · 우리 $OURCAP · host $HOSTFLOOR MiB"
+say "결정 active ✓${CARD_DECISION:+ · 카드 $CARD_DECISION ($cs) ✓} · 드라이버 sha16 $s ✓ · 기준 설정 $REF_META · 가드 합계 $TOTALCAP · 우리 $OURCAP · host $HOSTFLOOR MiB"
 # 판 줄은 여기서 찍지 않는다 — torch·fairchem import 가 uma env 에서 수 초 걸려 계획 줄·잠금 시점이 밀린다
 #   (2026-10-13 gabia selftest: '구조 없음' 알림 · lock → 10 두 시험이 그 지연으로 빨강). DRY_RUN 끝과 잠금 뒤에서 찍는다.
 ver_line(){ say "판 — $(versions || true) · repo $(git -C "$REPO" rev-parse --short=9 HEAD 2>/dev/null || echo '?') · 가드 ④ 최신 출력: $(el_latest | tr '\n' ' ')"; }

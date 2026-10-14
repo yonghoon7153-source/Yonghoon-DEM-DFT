@@ -1,0 +1,28 @@
+{
+  "schema": "runlog/v1",
+  "record_kind": "runlog",
+  "date": "2026-10-14",
+  "track": "li2s — ⛔ 외부 1저자 트랙 (사용자 = 실행 승인 · 카드 잠정 · 규칙 동의는 편지 CX Q-CX-3)",
+  "card": "db/properties/lpscl_smallcell_glass_control_bmeasurable_estimand_2026_10_14.json",
+  "decision": "D-2026-10-14-lpscl-smallcell-glass-control-bmeasurable (proposed · 잠정 실행)",
+  "exception": "D-2026-10-14-gabia-uma-coexist-pwx-li2s-bmeas-650k (예외 (7) · active · gabia 몫 3 런만)",
+  "results_seen": false,
+  "results_seen_note": "⛔ 650 K 결과는 외부 1저자 회신 (편지 CX) 전까지 열지 않는다 — 회신이 설계를 바꾸면 이 런은 쓰지도 판독하지도 않는다 (v2 선례)",
+  "결정_경위": [
+    "10-14 사용자 *'(나) 카드 하나 더: B 측정 가능 조건 카드 하나를 돌리고, 결과와 상관없이 그걸로 트랙을 닫아요. 한번 해봐'*",
+    "10-14 AskUserQuestion 'B 650 K 다섯 런을 언제 시작할까요?' → '지금 시작 (잠정) (Recommended)' — gabia 공존 예외 (7) 비준 포함 (선택지 설명)"
+  ],
+  "계획": {
+    "①_B_650K": "B 650 K × 5 · 400 ps · 같은 시작 구조 · --seed 2000 + 시드 · gabia {2, 4, 5} (예외 (7)) · kgy {1, 3} (cascade v7 · Nd 어닐 옆)",
+    "판독": "회신 CX 뒤 — 대조 모드를 온도 인자로 넓힌 도구 (판독 전 커밋 · 점검 목록 재사용)",
+    "②_A_650K": "N_B ≥ 3 일 때만 (카드 §1b) — 새 공존 결정이 필요하다 (예외 (7) 은 B 3 런만)"
+  },
+  "코드": {
+    "gabia": "tools/ionic/glass_main_queue_gabia.sh PRESET=bmeas650 · sha16 49fd37e8351a50a0 · selftest 65 ✔ (음성 34) · 깨기 G1–G6 6/6 빨강",
+    "kgy": "db/inputs/lpscl_glass_control_li3ps4_2026_10_05/run_600k_kgy.sh PRESET=bmeas650 · sha16 6e4775abf57cfba5 · selftest 23 ✔ (음성 14) · 깨기 K1–K6 6/6 빨강 · 실행은 v2 kgy 러너 (sha16 3aef029aced0de77 · 원자료 그대로)",
+    "감시": "w_li3ps4_600k_g.sh · w_li3ps4_600k_k.sh — TT · TS · R 로 650 K (기본값 600 K 그대로 · 가짜 큐 로그로 확인)",
+    "ROOT": "gabia /data/work/runs/lpscl_glass_bmeas_650K_2026_10_14 · kgy ~/work/runs/lpscl_glass_bmeas_650K_2026_10_14"
+  },
+  "비용": "카드 §4c — 상한 66 GPU-h (대조 계 140 의 남은 몫) · ① 견적 ≈ 24.8 GPU-h (등분) · 멈춤 경로 결과 전",
+  "⏭": "사용자: gabia · kgy 발사 블록 → 첫 run_meta · dt 확인 줄 → 편지 CX 발송 (Q-CX-3 = (나)) → 회신 → 카드 개정 · 비준 → 판독 도구 온도 인자 (판독 전 커밋) → B 판독 → (N_B ≥ 3) A 650 K 새 공존 결정"
+}
