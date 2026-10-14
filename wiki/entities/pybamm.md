@@ -2,10 +2,10 @@
 title: PyBaMM (합성 truth 엔진 · 의존성)
 description: "degradation-degeneracy 의 합성 truth 를 만드는 전기화학 모델 라이브러리 — 우리가 쓰는 경로(full DFN · composite 음극 · 기본 uniform submesh · LLI 자체 계산)와 릴리스별 영향 판정, 그리고 requirements 상한 부재라는 재현성 위험"
 created: 2026-10-01
-updated: 2026-10-13
+updated: 2026-10-14
 type: entity
 tags: [pybamm, tooling, degradation]
-sources: [raw/articles/2026-10-01-github-research-briefing.md, raw/repositories/2026-10-01-pybamm-26.8-vs-26.9-synthetic-truth.md, raw/articles/2026-10-02-github-research-briefing.md, raw/repositories/2026-10-03-pybamm-pr5813-graded-electrode-and-synthetic-truth.md, raw/articles/2026-10-13-github-research-briefing.md]
+sources: [raw/articles/2026-10-01-github-research-briefing.md, raw/repositories/2026-10-01-pybamm-26.8-vs-26.9-synthetic-truth.md, raw/articles/2026-10-02-github-research-briefing.md, raw/repositories/2026-10-03-pybamm-pr5813-graded-electrode-and-synthetic-truth.md, raw/articles/2026-10-13-github-research-briefing.md, raw/articles/2026-10-14-github-research-briefing.md]
 confidence: medium
 explored: false
 verificationStatus: unverified
@@ -121,10 +121,24 @@ PyBaMM 의 수치가 바뀌면 "참값" 자체가 움직인다 — 이 페이지
 | #5805 (issue #5802 · Bug fixes · **브리핑에 없음**) | 다상 전극의 총 표면적비를 상별 비의 합으로 — 예전 식은 같은 두 상에서 18 배 작았다 · "It sets the double-layer charging of a composite electrode under `"surface form": "differential"`" | 우리 DFN 은 composite 음극 (`"particle phases": ("2", "1")`) 이지만 surface form 미지정 = 기본 `"false"` · 총 표면적비 (`total_active_material.py:64`) 를 읽는 것은 surface-form 전도도 submodel 뿐 (`dfn.py:118–127`) | **경로 밖 (정적 판단)** — 같은 composite 를 쓰므로 표시해 둔다 · surface form 을 켜면 닿는다 · 실측 안 함 |
 | #5835 (Features) | `FiniteVolumeUnstructured` 이방성 계수 — 면마다 법선 n·K·n 만 · 접선 성분 없음 · 주축이 면과 맞을 때만 정확 | 우리는 1D DFN (unstructured FV 안 씀) | 경로 밖 · DEM→voxel 방향별 계수의 후보로 [[assb-tortuosity-factor-effective-conductivity-split]] 에 메모 |
 | Breaking | `pybamm` now requires `pybammsolvers>=0.11.0` | 검증 프로필 C 는 `pybammsolvers==0.9.1` (lock) | 26.10 으로 올리면 solver 도 함께 바뀐다 — 비교 대상이 둘로 늘어난다 |
-| #5875 (열화 발열 · 미병합) · #5888 (Ai2020 확산계수 단위 · 미병합) | 26.10 절에 없음 (grep) | 우리는 등온 · `Chen2020` (`configs/base.yaml`) | 경로 밖 · watch 만 (브리핑 주장 · PR 미대조) |
+| #5875 (열화 발열 · 미병합) · #5888 (Ai2020 확산계수 단위 · 미병합) | 26.10 절에 없음 (grep) | 우리는 등온 · `Chen2020` (`configs/base.yaml`) | 경로 밖 · watch 만 (브리핑 주장 · PR 미대조) → #5888 은 2026-10-13 main 병합 (아래 절) |
 
 - 정리: 26.10 은 우리 truth 의 **값**을 움직일 근거를 새로 주지 않지만 (위 두 수정 모두 경로 밖 · #5813 은 바이트만), 버전 판단 (C · B · D 프로필) 은 그대로다.
   올린다면 26.8 ↔ 26.9 때처럼 버리는 venv 에서 우리 truth 를 다시 재는 것이 먼저다 (사용자 승인 대상 · RUN_SCOPE 변경은 게이트).
+
+### main 병합 셋 (2026-10-13 병합 · 26.10 미포함 · 2026-10-14 브리핑) — 우리 영향 판정 (변경기록 · diff 정적 대조 · 실측 아님)
+
+출처: `raw/articles/2026-10-14-github-research-briefing.md` 의 1차 대조 (main 을 bounded fetch · 세 병합 커밋의 diff 와 `CHANGELOG.md` 원문 ·
+셋 다 26.10 태그 커밋 `b5f49ae1` 뒤라 정식판에 없다).
+
+| 변경 | 무엇 | 우리 경로 | 판정 |
+|---|---|---|---|
+| #5888 (`343ece20`) | `Ai2020` 의 전해질 확산계수 (Valoen–Reimers 식) 를 cm²/s → m²/s (×1e-4) — "It was 1e4 times too large, so DFN simulations with Ai2020 had almost no electrolyte concentration gradient" | 우리는 `Chen2020_composite` (`configs/base.yaml:19`) · `src tools configs scripts run.sh` 에 Ai2020 0 (grep) | **경로 밖** — 바뀐 소스는 `Ai2020.py` 하나 |
+| #5893 (`caa0e532`) | `"quartic profile"` 입자 모델의 농도식에 입자 반지름 인자 누락 (전극을 푸는 모델에서 비물리 값으로 발산) | `"particle"` 옵션을 쓰지 않음 → 기본 입자 모델 (`src/model.py:5–6 · 34–35`) | **경로 밖** — `polynomial_profile.py` 한 줄 |
+| #5842 (`9d8df9d0`) | `Maximum/Minimum {domain} particle stoichiometry` 와 짝 농도 변수가 표면값을 포함 (예전엔 cell-centre 만 — 충전 중 최대가 표면 최대보다 낮을 수 있었다) | 우리는 `Average … particle concentration` 만 읽는다 (`src/baseline.py:97–102` · `src/halfcell.py:210–212`) · Max/Min 사용 0 | **경로 밖** — 같은 diff 에 Average 정의 변경 없음 |
+
+- 정리: 세 수정 모두 우리 truth 의 값을 움직일 근거가 아니다 (정적 판단 · 수치 대조 안 함). 다음 정식판에 들면 26.10 때처럼 변경기록을 다시 대조한다 (watch).
+- 브리핑의 작은 검증 제안 (Ai2020 방전을 26.10 ↔ 수정본) 은 우리 경로 밖이라 후보로 올리지 않는다 — 한다면 버리는 venv · 별도 승인.
 
 ### 위험과 할 일
 

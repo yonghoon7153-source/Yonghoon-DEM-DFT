@@ -3611,3 +3611,12 @@ to the C-rate" 인데 Fig. 15(a) `[도표]` SOH 79.4 % 에서 C/3 ≈18 % vs C/2
 - 요지 `[해석]`: 형상 표현만 바꿔도 LAM 은 크게 움직이고 LLI 는 거의 그대로다. half-cell 은 큰 PE / NE 격차를 시사하는데, 우리 결론 2 에서는 큰 격차의
   붕괴가 드물었다 (1/245 · 전체 64/604) → 원인은 모델 안 축퇴보다 오설정 쪽 (같은 증상 · 다른 원인).
 - 하지 않은 것: raw digest · 그림 크롭 · 녹취 저장 · 덱 수치 인용 · 게이트 실험 (RUN_SCOPE). 사용자에게는 저장소 밖 비공개 메모로 따로 전달했다.
+
+## [2026-10-14] ingest | GitHub 연구 브리핑 (2026-10-14 전달분 · 항목 2) — PyBaMM #5888 · #5893 · #5842 · Battery-EIS-Fit 1차 대조 (실행 0)
+- raw: `raw/articles/2026-10-14-github-research-briefing.md` (채팅 원문 블록 + 1차 대조 — PyBaMM 은 depth 1 clone + main fetch depth 120 · Battery-EIS-Fit 은 depth 1 clone · 받은 코드 · 시험 실행 0)
+- 사용자 지시: "참고할거 있음 참고해용" · 수집 목적 = 2026-10-01 브리핑 처리 기준 ([[daily-github-briefing-triage]])
+- 갱신: [[pybamm]] — 26.10 표의 #5875 / #5888 줄에 "2026-10-13 main 병합" 표시 · "main 병합 셋" 절 (#5888 Ai2020 확산계수 ×1e-4 · #5893 quartic profile 반지름 인자 · #5842 Max/Min 에 표면값 —
+  셋 다 26.10 태그 커밋 `b5f49ae1` 뒤 · 우리 경로 밖: `Chen2020_composite` · 기본 입자 모델 · Average 변수만 읽음 · 정적 판단 · 다음 정식판 watch) ·
+  [[pyimpspec]] (Battery-EIS-Fit 한 줄 · 저장소 원문 대조 · watch)
+- 새 페이지 0 — Battery-EIS-Fit 은 지금 EIS 를 쓰는 흐름이 없어 단발 언급 (식별 가능성은 도구 스스로 `not_assessed`)
+- 하지 않은 것: 브리핑의 작은 검증 제안 (Ai2020 방전 26.10 ↔ 수정본 — 우리 경로 밖 · 버리는 venv 라도 별도 승인) · PyBaMM 수정본 · Battery-EIS-Fit 설치 · 실행 · Zenodo 자료 열람 · requirements 변경 (RUN_SCOPE)
