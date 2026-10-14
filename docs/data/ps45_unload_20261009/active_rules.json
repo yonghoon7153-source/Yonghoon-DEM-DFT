@@ -42,11 +42,30 @@
   },
   {
    "id": "nonmonotone_union",
-   "rule": "첫 교차 = 점 추정 + 비단조 표지 · 보고 괄호 = 모든 교차 괄호의 합집합 · 7:3 b 재이식 없음 (§13-5 ①)",
+   "rule": "첫 교차 = 점 추정 + 비단조 표지 · 보고 괄호 = k = 0 부터 모든 교차 괄호의 외곽 구간 [최소, 최대] ⊇ 첫 교차 괄호 · 기록 단 비유한 = 미계산 · 7:3 b 재이식 없음 (§13-5 ① · 개정 3 §14-2 · ULKR-02)",
    "where": "ul_reader.py:arm_verdict",
    "where_exists": true,
    "witness": [
-    "ul_reader R8"
+    "ul_reader R8",
+    "ul_reader R21"
+   ]
+  },
+  {
+   "id": "confirmation_steps",
+   "rule": "주 측정 = 첫 교차 + 실제로 이어지는 B 확인 두 단 (k* + 1 · k* + 2 · CONFIRM) 의 등록 정상 완료 (덱 정상 · S3 PASS · 유한 · 순서 · 누락 없음 · 판 접촉 요구 없음) — 아니면 주 값 UNIDENTIFIED · 선택 UNRESOLVED (개정 3 §14-1 · Q1 · ULKR-01)",
+   "where": "ul_reader.py:arm_verdict",
+   "where_exists": true,
+   "witness": [
+    "ul_reader R20"
+   ]
+  },
+  {
+   "id": "parse_complete",
+   "rule": "모든 관측 덤프 = 전부 읽힘 · 머리 step = 요청 step · 고유 ID · S0 에 없는 ID 없음 · CSV 결손 · 단 k 불연속 = 주 값 미식별 · 버린 행 재사용 없음 (개정 3 §14-10 · ULKR-04)",
+   "where": "ul_reader.py:_atom_frame",
+   "where_exists": true,
+   "witness": [
+    "ul_reader R22"
    ]
   },
   {

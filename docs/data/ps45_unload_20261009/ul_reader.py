@@ -48,6 +48,8 @@ TUPLE_ARM = {'t1': 'UB', 't2': 'UVa', 't3': 'UT3', 't4': 'UVb'}
 EPS_PP = 1e-9          # δ 경계 비교 — 부동소수 반올림 허용 (%p · choice C13)
 WALL_U = ('mesh', 'tri', 'id', 'fnx', 'fny', 'fnz')                                         # compute wall/gran/local id force_normal
 WALL_R = ('mesh', 'tri', 'id', 'fnx', 'fny', 'fnz', 'deltaMax', 'shearx', 'sheary', 'shearz')  # id history force_normal → 열 순서 = id · fn · history
+ATOM_COLS = ['id', 'type', 'x', 'y', 'z', 'radius', 'mass', 'vx', 'vy', 'vz', 'omegax', 'omegay', 'omegaz', 'fx', 'fy', 'fz']   # U · G 덱 창 끝 원자 덤프 열
+CPL_COLS = [f'c_cpl[{c}]' for c in range(1, 27)]                                            # r8 머리 cpl (pair/gran/local 26 열)
 
 
 # ── 구현 (아래 selftest 를 먼저 썼다) ─────────────────────────────────────────
@@ -211,18 +213,18 @@ def interp_rho(a, b, Pm, h0_um):
     return 100.0 * hc / h0_um, br, brp
 
 
-def _wall_rows(path, cols=WALL_U):
-    """창 끝 벽 local 덤프 → 접촉 목록 · 없음 · 깨짐 (머리 · 열 · 행 수 · 비유한) = None (OBS_MISSING — 0 으로 세지 않는다)."""
-    if not os.path.exists(path):
+def _wall_rows(path, step=None, cols=WALL_U):
+    """창 끝 벽 local 덤프 → 접촉 목록 · 없음 · 깨짐 (머리 · 열 · 행 수 · 비유한) · 머리 step ≠ 요청 창 끝 = None (OBS_MISSING — 0 으로 세지 않는다 · ULKR-04)."""
+    if not path or not os.path.exists(path):
         return None
     d = ul_lib.read_dump(path, 'local', [f'c_ul_wh[{c}]' for c in range(1, len(cols) + 1)])
-    if not d['ok']:
+    if not d['ok'] or (step is not None and d['step'] != step):
         return None
     return [{n: r[f'c_ul_wh[{c}]'] for c, n in enumerate(cols, 1)} for r in d['rows']]
 
 
 def _s0_frame(root, bed, P):
-    """S0 원자 (in/atom_<S0>.liggghts — 10:0 은 s0_decision 의 S0′ 프레임) → (id 집합, 원자 목록, step)."""
+    """S0 원자 (in/atom_<S0>.liggghts — 10:0 은 s0_decision 의 S0′ 프레임) → (id 집합, 원자 목록, step) — 전부 읽힘 · 머리 step = S0 · 고유 ID 일 때만 (ULKR-04)."""
     s0 = _bed_s0(root, bed, P)
     if s0 is None:
         return None, None, None
@@ -231,9 +233,28 @@ def _s0_frame(root, bed, P):
     for p in cand:
         if os.path.exists(p):
             d = ul_lib.read_dump(p, 'custom')
-            if d['rows']:
-                return {int(r['id']) for r in d['rows']}, d['rows'], s0
+            ids = [int(r['id']) for r in d['rows']]
+            if d['ok'] and d['rows'] and d['step'] == s0 and len(set(ids)) == len(ids):
+                return set(ids), d['rows'], s0
+            return None, None, s0
     return None, None, s0
+
+
+def _atom_frame(path, step, s0_ids=None):
+    """창 · 단 끝 원자 덤프 (덱 꼴 열) — 전부 읽힘 · 머리 step = 요청 · 고유 ID · (주면) S0 에 없는 ID 없음 → (덤프 | None, 문제).
+    합법적 공간 제외 (S0 ID ∩ 프레임 ∩ [0, 판]) 는 쓰는 쪽 몫이고 깨진 프레임은 여기서 거부한다 (ULKR-04)."""
+    if not path or not os.path.exists(path):
+        return None, [f'원자 덤프 없음 ({os.path.basename(path or "")})']
+    A = ul_lib.read_dump(path, 'custom', ATOM_COLS)
+    pr = list(A['problems'][:2])
+    if A['step'] != step:
+        pr.append(f'원자 덤프 머리 step {A["step"]} ≠ 요청 {step}')
+    ids = [int(r['id']) for r in A['rows']]
+    if len(set(ids)) != len(ids):
+        pr.append('원자 ID 중복')
+    if s0_ids is not None and set(ids) - s0_ids:
+        pr.append(f'S0 에 없는 원자 ID {len(set(ids) - s0_ids)}')
+    return (A if not pr else None), pr
 
 
 def _bed_s0(root, bed, P):
@@ -251,16 +272,27 @@ def _readjson(p):
         return None
 
 
-def _s3_at(d, step, plate_z, s0_ids):
-    ap, cp = os.path.join(d, 'dump', f'atom_{step}.dump'), os.path.join(d, 'dump', f'contact_{step}.dump')
-    if s0_ids is None or not (os.path.exists(ap) and os.path.exists(cp)):
+def _arm_g(job, P):
+    """S3 무게 항의 g — 표의 S3 기준 중력 (모든 팔 같음)."""
+    return P['s3']['g']
+
+
+def _s3_at(d, step, plate_z, s0_ids, g=ul_s3.G, ap=None, cp=None):
+    """단 끝 S3 — 원자 · 쌍 덤프 전부 읽힘 · 두 머리 step = 요청 step (서로 같은 것만으로는 아니다) · 고유 ID · S0 에 없는 ID 없음 (ULKR-04) ·
+    무게 항 g = 그 팔의 실제 중력 (Q5 · ULKR-10 B)."""
+    ap = ap or (os.path.join(d, 'dump', f'atom_{step}.dump') if d else None)
+    cp = cp or (os.path.join(d, 'dump', f'contact_{step}.dump') if d else None)
+    if s0_ids is None or not (ap and cp and os.path.exists(ap) and os.path.exists(cp)):
         return {'status': 'NOT_COMPUTED', 'why': ['S3 입력 덤프 · S0 집합 없음']}
-    A = ul_lib.read_dump(ap, 'custom')
-    C = ul_lib.read_dump(cp, 'local', [f'c_cpl[{c}]' for c in range(1, 27)])
-    if not (A['rows'] and C['ok']):
-        return {'status': 'NOT_COMPUTED', 'why': A['problems'][:2] + C['problems'][:2]}
+    A, pr = _atom_frame(ap, step, s0_ids)
+    C = ul_lib.read_dump(cp, 'local', CPL_COLS)
+    pr += C['problems'][:2]
+    if C['step'] != step:
+        pr.append(f'쌍 덤프 머리 step {C["step"]} ≠ 요청 {step}')
+    if A is None or pr:
+        return {'status': 'NOT_COMPUTED', 'why': pr}
     con = [{'id1': r['c_cpl[7]'], 'id2': r['c_cpl[8]'], 'fx': r['c_cpl[10]'], 'fy': r['c_cpl[11]'], 'fz': r['c_cpl[12]']} for r in C['rows']]
-    return ul_s3.s3_residual(A['rows'], con, s0_ids, plate_z, atom_step=A['step'], contact_step=C['step'])
+    return ul_s3.s3_residual(A['rows'], con, s0_ids, plate_z, atom_step=A['step'], contact_step=C['step'], g=g)
 
 
 def _thermo(d):
@@ -299,11 +331,12 @@ def arm_verdict(d, bed, job, P=None, root=None):
          'lower_bound_pct': None, 'nonmonotone': False, 'cancellation': None, 'disposition': None, 'rank_eligible': False,
          'endpoint_states': [], 'sigma_P': None, 'trajectory_status': None, 'separation': None, 's4_status': 'NOT_COMPUTED', 'why': []}
     gravity = job.startswith('G_')
+    g_arm = _arm_g(job, P)
     summ = run['summary']
     res = (summ or {}).get('result')
     v['trajectory_status'] = {'DONE': 'DONE', 'LIFT_CAP': 'LIFT_CAP', 'GUARD': 'GUARD', 'TECH': 'TECH', 'RM_STOP': 'RM_STOP'}.get(res, 'TIMEOUT')
     wins = run['windows']
-    walls = {w['step']: _wall_rows(os.path.join(d, 'dump', f'wall_{w["step"]}.dump')) for w in wins if w.get('step') is not None}
+    walls = {w['step']: _wall_rows(os.path.join(d, 'dump', f'wall_{w["step"]}.dump'), w['step']) for w in wins if w.get('step') is not None}
     states = window_states(wins, walls, P)
     for st, w in zip(states, wins):
         st['k'] = w.get('k')
@@ -316,22 +349,48 @@ def arm_verdict(d, bed, job, P=None, root=None):
     last_state = {}
     for st in states:
         last_state[st['k']] = st
+    # 기록 자체의 결손 (ULKR-04 · 개정 3 §14-10) — CSV 가 버린 줄 · 머리 ≠ 표 · 단 k 불연속 (누락 · 중복 · 순서) 이면 주 값을 내지 않는다
+    rec_why = []
+    if run['problems']:
+        rec_why.append(f'CSV 기록 결손 ({" · ".join(run["problems"][:3])}) — 버린 줄을 정상 기록으로 쓰지 않는다')
+    ks = [s['k'] for s in steps]
+    if ks and ks != list(range(len(ks))):
+        rec_why.append(f'단 기록 k 불연속 ({ks[:12]}) — 누락 · 중복 · 순서')
 
-    def endpoint(i):
+    def endpoint(i, contact=True):
         s = steps[i]
         why = []
         if s['P'] is None or s['lift_um'] is None:
             why.append(f'단 {s["k"]} P̄ · 높이 비유한')
         if not s['steady']:
             why.append(f'단 {s["k"]} UNSTEADY (S1 ∧ S2 두 창 없음)')
-        s3 = _s3_at(d, s['step'], s['plate_z'], s0_ids)
+        s3 = _s3_at(d, s['step'], s['plate_z'], s0_ids, g_arm)
         s['s3'] = s3['status']
         if s3['status'] != 'PASS':
             why.append(f'단 {s["k"]} S3 {s3["status"]}')
         st = last_state.get(s['k'], {}).get('state')
         s['state'] = st
-        if st not in ('CONTACT', 'TENSION'):
+        if contact and st not in ('CONTACT', 'TENSION'):
             why.append(f'단 {s["k"]} 판 접촉 {st}')
+        return why
+
+    def confirmations(j):
+        """ULKR-01 · Q1 — 실제로 이어지는 B 확인 두 단 (k* + 1 · k* + 2 · 단계 CONFIRM) 의 등록 정상 완료 (덱 정상 · S3 · 유한 · 순서 · 누락 없음 · 판 접촉은 요구하지 않음)."""
+        why = []
+        for c in range(1, conf + 1):
+            x = j + c
+            if x >= len(steps):
+                why.append(f'확인 단 {c} 없음 (주 측정 미완료 · 하한 · 점 추정 자동 발행 없음)')
+                continue
+            s = steps[x]
+            if s['k'] != steps[j]['k'] + c:
+                why.append(f'확인 단 {c} k {s["k"]} ≠ {steps[j]["k"] + c} (단 기록 불연속 — 누락 · 순서)')
+                continue
+            if s.get('kind') != 'B':
+                why.append(f'확인 단 {c} (k {s["k"]}) 이 B 단 아님 ({s.get("kind")})')
+            if s.get('phase') != 1:
+                why.append(f'확인 단 {c} (k {s["k"]}) 단계 {s.get("phase")} ≠ CONFIRM 1')
+            why += [f'확인 단 {c}: {w}' for w in endpoint(x, contact=False)]
         return why
 
     # 첫 교차 (k ≥ 1 의 사다리 · 비유한 단을 사이에 둔 교차 = 끝점 무효)
@@ -359,7 +418,7 @@ def arm_verdict(d, bed, job, P=None, root=None):
         v['why'].append('출발 (k = 0 · 중력 팔 첫 유지) 부터 P̄ ≤ P_meas — 교차 없음')
     elif first:
         i, j = first
-        why = endpoint(i) + endpoint(j)
+        why = rec_why + endpoint(i) + endpoint(j) + confirmations(j)
         v['endpoint_states'] = [steps[i].get('state'), steps[j].get('state')]
         rho, br, brp = interp_rho(steps[i], steps[j], Pm, h0_um)
         v['rho_pct'], v['bracket_um'], v['bracket_pct'] = rho, br, brp
@@ -375,7 +434,6 @@ def arm_verdict(d, bed, job, P=None, root=None):
             nf = 'OBS_MISSING'
         if rho is None:
             why.append('보간 불가 (분모 0 · 비유한)')
-        n_after = len(steps) - 1 - j
         if why:
             v['primary_status'] = 'UNIDENTIFIED'
             v['why'] += why
@@ -387,20 +445,21 @@ def arm_verdict(d, bed, job, P=None, root=None):
             v['primary_status'] = 'UNIDENTIFIED'
             v['why'].append(f'σ_P {nf}')
             v['rho_pct'] = None
-        elif n_after < conf:
-            v['primary_status'] = 'UNIDENTIFIED'
-            v['why'].append(f'확인 단 {n_after} < {conf} (주 측정 미완료 · 하한 자동 발행 없음)')
-            v['rho_pct'] = None
         else:
             v['primary_status'] = 'OK'
-        # 비단조 — 모든 교차 괄호의 합집합 (§13-5 ① · b 판정 없음)
-        cr = crossings(steps[1:], Pm)
-        cr = [(a + 1, b + 1) for a, b in cr]
+        # 비단조 — k = 0 부터 모든 교차 괄호의 외곽 구간 [최소, 최대] (§13-5 ① · 개정 3 §14-2 · b 판정 없음 · ULKR-02)
+        cr = crossings(steps, Pm)
         v['nonmonotone'] = len(cr) > 1
-        if cr:
+        bad = [s['k'] for s in steps if s['P'] is None or s['lift_um'] is None]
+        if bad:
+            v['why'].append(f'합집합 미계산 — 기록된 단 P̄ · 높이 비유한 (k {bad[:5]}) · 10 쌍 표 미식별')
+        elif cr:
             lifts = [steps[x]['lift_um'] for pair in cr for x in pair]
             v['union_bracket_um'] = [min(lifts), max(lifts)]
             v['union_bracket_pct'] = [100.0 * x / h0_um for x in v['union_bracket_um']]
+            if br and not (v['union_bracket_um'][0] <= br[0] and br[1] <= v['union_bracket_um'][1]):
+                v['why'].append('합집합 ⊉ 첫 교차 괄호 (불변식 위반) — 합집합 미계산')
+                v['union_bracket_um'] = v['union_bracket_pct'] = None
         # 상쇄 — 교차 끝점 마지막 창의 인장 합 ≥ 0.5 · P_meas · A (힘)
         tens = [last_state.get(steps[x]['k'], {}).get('tension_N') for x in (i, j)]
         thr = 0.5 * Pm * N_per_MPa
@@ -412,7 +471,7 @@ def arm_verdict(d, bed, job, P=None, root=None):
             v['primary_status'] = 'NO_CROSSING'
             v['why'].append('끝났는데 교차 없음')
         else:
-            why = []
+            why = list(rec_why)
             ks = list(range(1, len(steps)))
             for x in ks:
                 why += endpoint(x)
@@ -443,10 +502,10 @@ def arm_verdict(d, bed, job, P=None, root=None):
         hs = []
         for idx in sep['post_windows'][:P['windows']['post_sep']]:
             stp = states[idx]['step']
-            ad = ul_lib.read_dump(os.path.join(d, 'dump', f'atom_{stp}.dump'), 'custom')
-            box = ((0.0, 0.05), (0.0, 0.05)) if not ad['box'] else (ad['box'][0], ad['box'][1])
+            ad, _pr = _atom_frame(os.path.join(d, 'dump', f'atom_{stp}.dump'), stp, s0_ids)   # 전부 읽힘 · 머리 step · 고유 ID (ULKR-04)
+            box = ((0.0, 0.05), (0.0, 0.05)) if not (ad and ad['box']) else (ad['box'][0], ad['box'][1])
             si = ul_observers.surface_index(ad['rows'], excl, box, grid=P['surface']['grid'], q=P['surface']['quantile'],
-                                            method=P['surface']['quantile_method'], um=um) if ad['rows'] else {'status': 'NOT_COMPUTED', 'mean_um': None}
+                                            method=P['surface']['quantile_method'], um=um) if ad and ad['rows'] else {'status': 'NOT_COMPUTED', 'mean_um': None}
             hs.append(si['mean_um'])
         v['surface_um'] = hs
         s4 = [ul_observers.s4_check(a, b, P['steady']['S4_um_per_window']) for a, b in zip(hs, hs[1:])]
@@ -1014,7 +1073,6 @@ def _chain_contacts(ids, m=1e-6, g=9.81):
     return out
 
 
-ATOM_COLS = ['id', 'type', 'x', 'y', 'z', 'radius', 'mass', 'vx', 'vy', 'vz', 'omegax', 'omegay', 'omegaz', 'fx', 'fy', 'fz']
 
 
 def _mk_arm(root, bed, job, spec, P):
@@ -1082,10 +1140,25 @@ def _mk_arm(root, bed, job, spec, P):
         steady = 1 if st['steady'] else 0
         Pbar = Pd if st.get('Pbar') is None else st['Pbar']
         sl.append(f'U,{bed},{k},{st.get("kind", "0")},{lift},{n_move},{step},{pz},{lift},{Pbar},{st["nw"]},{steady},{st.get("phase", 0)},'
-                  f'{st.get("modeB", 0)},1')
+                  f'{st.get("modeB", 0)},1' + (',x' if st.get('mut') == 'csv_bad' else ''))
+        ap, cp = os.path.join(d, 'dump', f'atom_{step}.dump'), os.path.join(d, 'dump', f'contact_{step}.dump')
         if st.get('surface') is None:
-            ul_lib.write_custom(os.path.join(d, 'dump', f'atom_{step}.dump'), step, ATOM_COLS, _chain_atoms(ids, pz, bad=(st.get('s3') == 'bad')))
-        ul_lib.write_local(os.path.join(d, 'dump', f'contact_{step}.dump'), step, [f'c_cpl[{c}]' for c in range(1, 27)], _chain_contacts(ids))
+            ul_lib.write_custom(ap, step, ATOM_COLS, _chain_atoms(ids, pz, bad=(st.get('s3') == 'bad')))
+        ul_lib.write_local(cp, step, [f'c_cpl[{c}]' for c in range(1, 27)], _chain_contacts(ids))
+        mut = st.get('mut')
+        if mut == 'atom_nan':          # 한 원자의 fz = nan (파서가 그 행을 버린다 — ULKR-04 · Codex nonfinite_atom_salvaged)
+            L = open(ap).read().splitlines()
+            L[-1] = L[-1].rsplit(' ', 1)[0] + ' nan'
+            open(ap, 'w').write('\n'.join(L) + '\n')
+        if mut == 'atom_unbalanced':   # 같은 원자 fz = 1e-3 N (불평형 — S3 FAIL 대조)
+            L = open(ap).read().splitlines()
+            L[-1] = L[-1].rsplit(' ', 1)[0] + ' 0.001'
+            open(ap, 'w').write('\n'.join(L) + '\n')
+        if mut == 'dumps_past':        # 원자 · 쌍 덤프 머리 step 둘 다 100,000 과거 (서로는 같다 — 요청 끝점 시점이 아니다)
+            for p in (ap, cp):
+                _restep(p, step - 100000)
+        if mut == 'wall_past' and os.path.exists(os.path.join(d, 'dump', f'wall_{step}.dump')):
+            _restep(os.path.join(d, 'dump', f'wall_{step}.dump'), step - 100000)
         for name, kk, det in spec.get('events', []):
             if kk == k:
                 el.append(f'{name},{k},{step},{pz},{lift},{det}')
@@ -1106,16 +1179,26 @@ def _mk_arm(root, bed, job, spec, P):
     return d
 
 
-def _ladder(lifts, Ps, steady=True, nw=4, **kw):
-    """사다리 단 (k = 0 은 출발 P̄ 160) + 주어진 단들 (B 단)."""
+def _ladder(lifts, Ps, steady=True, nw=4, Pm=1.0, **kw):
+    """사다리 단 (k = 0 은 출발 P̄ 160) + 주어진 단들 (B 단) — 단계는 덱 꼴 그대로: 첫 P ≤ P_meas 단 (교차 · 그 유지는 SEARCH 0) → 다음 두 단 CONFIRM 1 → 그 뒤 SEPARATE 2."""
     steps = [{'lift_um': 0.0, 'P': 160.0, 'steady': True, 'nw': 3, 'kind': '0', 'phase': 4}]
-    for lift, p in zip(lifts, Ps):
-        steps.append(dict({'lift_um': lift, 'P': p, 'steady': steady, 'nw': nw, 'kind': 'B', 'phase': 0, 'modeB': 1, 'n_move': 0}, **kw))
+    cross = next((i for i, p in enumerate(Ps) if isinstance(p, (int, float)) and p <= Pm), None)
+    for i, (lift, p) in enumerate(zip(lifts, Ps)):
+        ph = 0 if cross is None or i <= cross else (1 if i <= cross + 2 else 2)
+        steps.append(dict({'lift_um': lift, 'P': p, 'steady': steady, 'nw': nw, 'kind': 'B', 'phase': ph, 'modeB': 1, 'n_move': 0}, **kw))
     return steps
 
 
 _HIST_PRE = list(HIST_PRE_COLS)
 _HIST_POST = list(HIST_POST_COLS)
+
+
+def _restep(path, step):
+    """합성 반례 — 덤프 머리의 TIMESTEP 줄만 바꾼다 (파일 이름은 그대로)."""
+    L = open(path).read().splitlines()
+    k = L.index('ITEM: TIMESTEP')
+    L[k + 1] = str(step)
+    open(path, 'w').write('\n'.join(L) + '\n')
 
 
 def _patch_count(path, n):
@@ -1361,6 +1444,94 @@ def selftest() -> int:
             and gate(root, 'ps_3_7_r45', 'UT3', P)[0] and not gate(root, 'ps_3_7_r45', 'UB', P)[0] and not gate(root, 'ps_3_7_r45', 'UVa', P)[0])
         chk('R5 10:0: 이완 연장 결정 (S0′) 전 RJ2 · U 거부', lambda: not gate(root, B100, 'RJ2', P)[0] and not gate(root, B100, 'UT3', P)[0])
     with tempfile.TemporaryDirectory() as root:
+        # ── ULKR-01 확인 두 단 = 실제로 이어지는 B 확인 단의 등록 정상 완료 (Q1 — 판 접촉은 요구하지 않음 · Codex reader_adversarial confirmation_*) ──
+        _fake_restored(root, B73)
+        _w(os.path.join(root, B73, 'ul_base.in'), 'variable ul_S2max equal 1e-05\n')
+        base_l, base_p = [0.2, 0.25, 0.3, 0.35], [1.2, 0.8, 0.6, 0.4]
+
+        def put(job, steps, W=5000, dt=1e-6, events=(('CROSS', 2, 'first'), ('RM', 4, 'ncross2')), summary=None, bed=B73):
+            shutil.rmtree(os.path.join(root, bed, job), ignore_errors=True)
+            return _mk_arm(root, bed, job, {'W': W, 'dt': dt, 'steps': steps, 'events': list(events), 'summary': summary}, P)
+
+        def av(job, bed=B73):
+            return arm_verdict(os.path.join(root, bed, job), bed, job, P, root=root)
+
+        def conf(fn, lifts=base_l, Ps=base_p, which=(3, 4)):
+            st = _ladder(lifts, Ps)
+            for x in which:
+                fn(st[x])
+            return st
+
+        def near(a, b):
+            return a is not None and len(a) == len(b) and all(abs(x - y) < 1e-12 for x, y in zip(a, b))
+
+        def ut_invalid(why_part):
+            u = av('UT')
+            return (u['primary_status'] == 'UNIDENTIFIED' and u['rho_pct'] is None and any(why_part in w for w in u['why'])
+                    and selection_state(root, P)['stage'] == 'SELECTION_UNRESOLVED' and not gate(root, B73, 'UVa', P)[0]
+                    and not gate(root, B73, 'UVb', P)[0])
+        put('UB', _ladder(base_l, base_p), summary='DONE')
+        put('UT', _ladder(base_l, base_p), W=10000, dt=5e-7, summary='RM_STOP')
+        chk('R20 대조: UB · UT 정상 (교차 k 2 · 확인 k 3 · 4 정상) → UT OK · δ_dt 0 → UVa 허용', lambda: av('UT')['primary_status'] == 'OK' and gate(root, B73, 'UVa', P)[0])
+        put('UT', conf(lambda s: s.update(steady=False, nw=12, s3='bad')), W=10000, dt=5e-7, summary='RM_STOP')
+        chk('R20 ULKR-01 확인 두 단 UNSTEADY (12 창 소진 · steady 0) · S3 FAIL (Codex confirmation_invalid) → UT UNIDENTIFIED · SELECTION_UNRESOLVED · UVa · UVb 거부',
+            lambda: ut_invalid('확인 단'))
+        put('UT', conf(lambda s: s.update(Pbar='nan')), W=10000, dt=5e-7, summary='RM_STOP')
+        chk('R20 ULKR-01 확인 두 단 P̄ = NaN 만 (교차 양 끝은 유효 · Codex confirmation_nan) → UNIDENTIFIED · 제출 거부', lambda: ut_invalid('확인 단'))
+        put('UT', conf(lambda s: s.update(steady=False, nw=12), which=(4,)), W=10000, dt=5e-7, summary='RM_STOP')
+        chk('R20 ULKR-01 둘째 확인 단만 UNSTEADY → UNIDENTIFIED · 제출 거부', lambda: ut_invalid('UNSTEADY'))
+        put('UT', conf(lambda s: s.update(s3='bad'), which=(3,)), W=10000, dt=5e-7, summary='RM_STOP')
+        chk('R20 ULKR-01 첫 확인 단 S3 FAIL 만 (정상 · 유한) → UNIDENTIFIED · 제출 거부', lambda: ut_invalid('S3'))
+        put('UT', conf(lambda s: s.update(kind='A'), which=(3,)), W=10000, dt=5e-7, summary='RM_STOP')
+        chk('R20 ULKR-01 확인 단이 B 단이 아님 (A) → UNIDENTIFIED (등록 확인 = B 두 단)', lambda: ut_invalid('B 단'))
+        d_ut = put('UT', _ladder(base_l, base_p), W=10000, dt=5e-7, summary='RM_STOP')
+        sp = os.path.join(d_ut, 'ul_steps.csv')
+        _w(sp, '\n'.join(ln for ln in open(sp).read().splitlines() if ln.split(',')[2] != '3') + '\n')
+        chk('R20 ULKR-01 첫 확인 단 기록 (k 3) 누락 — 남은 단이 k 2 → 4 로 건너뜀 → UNIDENTIFIED (누락 · 순서) · 제출 거부', lambda: ut_invalid('불연속'))
+        put('UT', conf(lambda s: s.update(P=0.0, wall=[[]] * 4), Ps=[1.2, 0.8, 0.0, 0.0]), W=10000, dt=5e-7, summary='RM_STOP')
+        chk('R20 Q1 확인 두 단에서 판이 떨어짐 (벽 접촉 0 · 정상 · S3 PASS · 유한) → 주 값 OK 그대로 (판 접촉은 확인 단 조건이 아니다)',
+            lambda: (lambda u: u['primary_status'] == 'OK' and abs(u['rho_pct'] - 0.2026077873428664) < 1e-12)(av('UT')))
+        # ── ULKR-02 k = 0 → 1 교차를 합집합에 넣는다 (Codex first_step_cross · first_step_rebound) ──
+        put('UB', _ladder([0.2, 0.25, 0.3], [0.8, 0.6, 0.4]), summary='DONE')
+        stA = _ladder([0.2, 0.25, 0.3], [0.8, 0.6, 0.4])
+        stA[1]['kind'] = 'A'
+        put('UB', stA, summary='DONE')
+        chk('R21 ULKR-02 첫 A 단 (k 0 → 1) 교차 · 반등 없음 → ρ 0.1798695599526285 · 괄호 [0, 0.2] µm · 합집합 = 그 괄호 (옛 코드 = null)',
+            lambda: (lambda u: u['primary_status'] == 'OK' and abs(u['rho_pct'] - 0.1798695599526285) < 1e-12 and near(u['bracket_um'], [0.0, 0.2])
+                     and near(u['union_bracket_um'], [0.0, 0.2]))(av('UB')))
+        stR = _ladder([0.2, 0.25, 0.3, 0.35, 0.4], [0.8, 0.6, 0.4, 1.2, 0.7])
+        stR[1]['kind'] = 'A'
+        put('UB', stR, summary='DONE')
+        put('UB', _ladder([0.2, 0.25, 0.3, 0.35], [1.2, 0.8, 0.6, 0.4]), summary='DONE', bed='ps_0_10_r45')
+        chk('R21 ULKR-02 첫 A 단 교차 + 뒤 반등 (1.2 → 0.7) → 합집합 외곽 [0, 0.4] µm (옛 [0.3, 0.4]) · 0:10 괄호 [0.2, 0.25] µm 와 10 쌍 = OVERLAP (옛 SEPARATED)',
+            lambda: (lambda u, o: near(u['union_bracket_um'], [0.0, 0.4]) and u['nonmonotone'] is True and near(o['union_bracket_um'], [0.2, 0.25])
+                     and {(r['a'], r['b']): r['relation'] for r in pair_table({'ps_0_10_r45': o, 'ps_7_3_r45': u})}[('ps_0_10_r45', 'ps_7_3_r45')] == 'OVERLAP')(
+                av('UB'), av('UB', 'ps_0_10_r45')))
+        stN = _ladder([0.2, 0.25, 0.3, 0.35, 0.4], [1.2, 0.8, 0.6, 0.4, 0.3])
+        stN[5]['Pbar'] = 'nan'
+        put('UB', stN, summary='DONE')
+        chk('R21 ULKR-02 확인 뒤 단 하나 P̄ 비유한 → 주 값 OK 그대로 · 합집합 미계산 (null · 사유 — 10 쌍 표 미식별)',
+            lambda: (lambda u: u['primary_status'] == 'OK' and u['union_bracket_um'] is None and any('합집합' in w for w in u['why']))(av('UB')))
+        put('UB', _ladder(base_l, base_p), summary='DONE')
+        chk('R21 ULKR-02 불변식: 보고 합집합 ⊇ 첫 교차 괄호 (B 단 교차 · 반등 없음 = 같음)',
+            lambda: (lambda u: u['union_bracket_um'][0] <= u['bracket_um'][0] and u['bracket_um'][1] <= u['union_bracket_um'][1])(av('UB')))
+        # ── ULKR-04 파서가 버린 행 · 다른 시점 프레임을 정상 관측으로 쓰지 않는다 (Codex observer_adversarial) ──
+        for mut, what, why_part in (('atom_nan', '교차 끝점 원자 덤프 한 행 fz = nan (파서가 그 행을 버림 — 옛 코드는 남은 4 원자로 S3 PASS)', 'S3'),
+                                    ('wall_past', '교차 끝점 마지막 창 벽 덤프 머리 step = 요청 − 100,000', '판 접촉'),
+                                    ('dumps_past', '교차 끝점 원자 · 쌍 덤프 머리 둘 다 100,000 과거 (서로는 같음)', 'S3'),
+                                    ('csv_bad', 'k 1 단 기록 줄 열 수 틀림 (CSV 가 그 줄을 버림 — 옛 코드는 k 0 → 2 를 교차로 씀)', 'CSV')):
+            st = _ladder(base_l, base_p)
+            st[2 if mut != 'csv_bad' else 1]['mut'] = mut
+            put('UB', st, summary='DONE')
+            chk(f'R22 ULKR-04 {what} → UB UNIDENTIFIED (사유) · 선택 UNRESOLVED',
+                lambda why_part=why_part: (lambda u: u['primary_status'] == 'UNIDENTIFIED' and u['rho_pct'] is None and any(why_part in w for w in u['why']))(av('UB'))
+                and selection_state(root, P)['stage'] == 'SELECTION_UNRESOLVED')
+        st = _ladder(base_l, base_p)
+        st[2]['mut'] = 'atom_unbalanced'
+        put('UB', st, summary='DONE')
+        chk('R22 대조: 같은 원자 fz = 1e-3 N (유한 · 불평형) → S3 FAIL → UNIDENTIFIED (nan 행을 버리면 이 실패가 PASS 로 바뀌던 것)',
+            lambda: (lambda u: u['primary_status'] == 'UNIDENTIFIED' and any('S3 FAIL' in w for w in u['why']))(av('UB')))
+    with tempfile.TemporaryDirectory() as root:
         # ── ULR1-03 접촉 상태 · 상쇄 · 분리 · 창 결손 ──
         def wins(counts, pressures):
             return [{'step': 100 + i, 'Ps_avg': p / 1000.0, 'n_contact_geo': c} for i, (c, p) in enumerate(zip(counts, pressures))]
@@ -1531,7 +1702,9 @@ def selftest() -> int:
         chk('R19 판독기의 바닥 이력 관측 열 = 생성기가 R · UNread 덱에 쓰는 열 (PRE write_dump · POST 덤프 — 따로 적은 사본이 어긋나면 관측 전부 결손)',
             lambda: list(HIST_PRE_COLS) == mk._hist_dump_cols(forces=False).split() and list(HIST_POST_COLS) == mk._hist_dump_cols().split()
             and f'write_dump all custom ${{out}}/obs/pre_bot.dump {" ".join(HIST_PRE_COLS)}' in mk.render(B73, 'R', P)
-            and f'write_dump all custom ${{out}}/obs/un_pre_bot.dump {" ".join(HIST_PRE_COLS)}' in mk.render(B73, 'UNread', P))
+            and f'write_dump all custom ${{out}}/obs/un_pre_bot.dump {" ".join(HIST_PRE_COLS)}' in mk.render(B73, 'UNread', P)
+            and all(f'dump ul_da all custom ${{ul_W}} ${{out}}/dump/atom_*.dump {" ".join(ATOM_COLS)}' in mk.render(B73, k, P) for k in ('U_UB', 'UT', 'G_UVb'))
+            and all(f'dump ul_dc all local ${{ul_W}} ${{out}}/dump/contact_*.dump {" ".join(CPL_COLS)}' in mk.render(B73, k, P) for k in ('U_UB', 'UT', 'G_UVb')))
         real = _repo_history_verdict()
         chk('R18 ULKR-08 실제 반입 이력 판정 (10-14 job 283122 · SYN PASS −1 · 총힘 PASS) → RESTORED · 같은 판정에서 SYN 만 뺌 → UNCONFIRMED',
             lambda: real is not None and rv(real) == 'RESTORED'

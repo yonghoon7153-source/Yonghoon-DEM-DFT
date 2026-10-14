@@ -40,8 +40,15 @@ RULES = (
      'make_unload_decks.py', '_machine', ('make_unload_decks GD7',)),
     ('utc', '결정표 3 행 → UTc = U_UT3 덱을 UT 의 R_M (restart + 상태) 에서 이어 돌림 · 7:3 은 S0 에서 새 UT3 없음 (§13-5 ③)',
      'ul_reader.py', 'gate', ('ul_reader R5', 'ul_runner_test M9')),
-    ('nonmonotone_union', '첫 교차 = 점 추정 + 비단조 표지 · 보고 괄호 = 모든 교차 괄호의 합집합 · 7:3 b 재이식 없음 (§13-5 ①)',
-     'ul_reader.py', 'arm_verdict', ('ul_reader R8',)),
+    ('nonmonotone_union', '첫 교차 = 점 추정 + 비단조 표지 · 보고 괄호 = k = 0 부터 모든 교차 괄호의 외곽 구간 [최소, 최대] ⊇ 첫 교차 괄호 · 기록 단 비유한 = 미계산 · '
+     '7:3 b 재이식 없음 (§13-5 ① · 개정 3 §14-2 · ULKR-02)',
+     'ul_reader.py', 'arm_verdict', ('ul_reader R8', 'ul_reader R21')),
+    ('confirmation_steps', '주 측정 = 첫 교차 + 실제로 이어지는 B 확인 두 단 (k* + 1 · k* + 2 · CONFIRM) 의 등록 정상 완료 (덱 정상 · S3 PASS · 유한 · 순서 · 누락 없음 · '
+     '판 접촉 요구 없음) — 아니면 주 값 UNIDENTIFIED · 선택 UNRESOLVED (개정 3 §14-1 · Q1 · ULKR-01)',
+     'ul_reader.py', 'arm_verdict', ('ul_reader R20',)),
+    ('parse_complete', '모든 관측 덤프 = 전부 읽힘 · 머리 step = 요청 step · 고유 ID · S0 에 없는 ID 없음 · CSV 결손 · 단 k 불연속 = 주 값 미식별 · 버린 행 재사용 없음 '
+     '(개정 3 §14-10 · ULKR-04)',
+     'ul_reader.py', '_atom_frame', ('ul_reader R22',)),
     ('separation', '창 접촉 상태 CONTACT · TENSION · ZERO · OBS_MISSING (≠ 0) · 분리 = 연속 두 0 창의 둘째 창 끝 · 재접촉 = 계수 · 분리 뒤 창 초기화 (§13-3)',
      'ul_reader.py', 'separation', ('ul_reader R6',)),
     ('timeout', '측정 뒤 TIMEOUT = 유효 ρ + 실제 괄호 · 교차 전 = 정상 · 접촉 · 단조일 때만 하한 · 아니면 미식별 (§13-2)',
