@@ -35,14 +35,15 @@
   "2_재는_양": {
     "식": "ΔG_site(UMA) = { [E(B@P) − E(B@Li)] − n_B·[4·E(Li₂S) − E(Li₃PS₄)] } / n_B",
     "E": "각 모델 = UMA 어닐 (500 K × 20 ps) + 이완 (셀 포함) 뒤 에너지의 **모델별 최저** (후보 6 개 중)",
-    "기준상": "Li₂S (db/structures/sei_li2s_mp-1153) · Li₃PS₄ (MP 바닥 다형 · gabia MP 키로 받는다) — UMA 이완",
+    "기준상": "Li₂S db/structures/sei_li2s_mp-1153.cif (MP mp-1153 · Fm-3m · 원시 3 원자) · Li₃PS₄ db/structures/li3ps4_mp-985583.cif (MP mp-985583 · Pnma · E_hull 0 · 32 원자 · 2026-10-14 gabia MP 조회 — 다른 다형 mp-2646995 I-42m +0.0074 · mp-1097036 Pnma +0.0138 eV/atom) — UMA 이완, **어닐 없이 이완만** (결정 바닥상태라서 · run_uma_kgy.sh --refs = 후보와 같은 run_anneal.py · --time_ps 0 · FIRE + FrechetCellFilter · fmax 0.05 · 후보 쪽 소스와 바이트 비교)",
     "부호": "> 0 ⇒ P 자리 불리 (Li 자리 유리)"
   },
   "3_잘_정의되는가": "배치가 여럿 → 두 모델 같은 예산 (6 개 · 같은 어닐) · 모델별 최저. 보상 방식은 모델 조건으로 선언했다. UMA 가 B–S/B–O 화학을 얼마나 맞히는지는 이 카드가 검증하지 않는다.",
   "4_게이트_결과_보기_전에": {
     "G1": "두 모델 6 + 6 개 · host 1 · 기준상 2 가 다 있어야 계산한다",
     "G2_여유": "|ΔG_site| < 0.20 eV/B 면 'UMA 로 가를 수 없다 (경계선)' 로 쓴다",
-    "G3_모델_안_산포": "모델별 최저와 둘째의 차를 같이 적는다 — 최저가 한 배치에만 기대면 그 사실을 적는다"
+    "G3_모델_안_산포": "모델별 최저와 둘째의 차를 같이 적는다 — 최저가 한 배치에만 기대면 그 사실을 적는다",
+    "G4_기준상_다형_2026_10_14_결과_전": "기준상 Li₃PS₄ 는 MP (PBE) 바닥 다형 하나다. |ΔG_site| 가 경계 0.20 에서 0.11 eV/B 안 (0.09–0.31) 이면 다른 다형 둘 (mp-2646995 I-42m · mp-1097036 Pnma) 도 같은 --refs 방식으로 이완해 Li₃PS₄ 최저를 쓴다 — 0.11 = MP 다형 차 최대 0.0138 eV/atom × 8 원자 (규모 어림 — UMA 의 다형 차는 아직 모른다) · Li₃PS₄ 가 더 낮은 다형으로 바뀌면 ΔG_site 는 그만큼 내려간다. 안 할 거면 사용자 명시 결정으로 닫는다 (재개 규칙)."
   },
   "5_허용_서술_금지_서술": {
     "허용": [
@@ -59,7 +60,7 @@
   },
   "6_규약_대조": {
     "선례": ["db/properties/site_preference_raw_78.csv (cascade 교환 · 부호만)", "db/properties/y_site_preference_dft_2026_09_07.json (조성 균형 · 회신 BG 조건부)", "db/properties/ndo_lpscl16_site_stability_estimand_2026_10_14.json (같은 실행기 · 같은 어닐)"],
-    "실행": "kgy · db/inputs/ndo_site_2026_10_14/run_uma_kgy.sh (CAND = B · Nd modelc10 · N_EXPECT 25 · SESSION site10_uma · WAIT_FOR ndsite_uma)"
+    "실행": "kgy · db/inputs/ndo_site_2026_10_14/run_uma_kgy.sh (CAND = B · Nd modelc10 · N_EXPECT 25 · SESSION site10_uma · WAIT_FOR ndsite_uma) · 기준상은 같은 실행기 --refs (전경 · 출력 uma_ref_relax · Nd 와 공용)"
   },
-  "8_아직_안_된_것": ["UMA 어닐 (kgy · Nd Rietveld 런 뒤 줄 섬)", "Li₃PS₄ 구조 받기 (gabia MP)", "기준상 UMA 이완"]
+  "8_아직_안_된_것": ["UMA 어닐 (kgy · Nd Rietveld 런 뒤 줄 섬)", "✅ Li₃PS₄ 구조 (2026-10-14 · db/structures/li3ps4_mp-985583.cif)", "기준상 UMA 이완 (kgy · run_uma_kgy.sh --refs · 사용자 실행 대기)"]
 }

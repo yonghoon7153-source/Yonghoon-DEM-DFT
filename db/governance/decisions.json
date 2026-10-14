@@ -25,7 +25,8 @@
   "2026-09-28-wad-cc-graphite": "D-2026-09-28-wad-cc-graphite 신설 (active · 실행 전) — 흑연 C|C W_sep 사전등록 (카드 db/properties/wad_cc_graphite_prereg_2026_09_28.json · 코드 tools/wad/cc_graphite.py). litdb Wang 2015 인입이 09-23 계획의 봉인 조건.",
   "2026-10-14-elastic-60bfgs-gate": "D-2026-10-14-elastic-60bfgs-gate-continue 신설 (active · 1저자 발화 · 결과 본 뒤의 개정) — 60-BFGS 게이트를 넘은 탄성 strain 점을 수렴까지 계속. 기록 db/properties/shear_b2o3_vs_lpscl16_2x_amendment_2026_10_14_bfgs_gate.json.",
   "2026-10-14-ndo-site-stability-estimand": "D-2026-10-14-ndo-site-stability-estimand 신설 (proposed · 트랙 CEI/Nd · 1저자 = 실험) — Nd 자리 조성 균형 · 닫힌계 분해 구동력 · 전자 배치 묘사 보고량 카드. 기록 db/properties/ndo_lpscl16_site_stability_estimand_2026_10_14.json.",
-  "2026-10-14-b2o3-site-screen": "D-2026-10-14-b2o3-site-screen 신설 (proposed · 우리 DFT · 1저자 = 사용자) — B 자리 UMA 조성 균형 탐색. D-2026-10-14-ndo-site-stability-estimand statement 에 보조 host modelc10 덧붙임 (비준 전 · 결과 전)."
+  "2026-10-14-b2o3-site-screen": "D-2026-10-14-b2o3-site-screen 신설 (proposed · 우리 DFT · 1저자 = 사용자) — B 자리 UMA 조성 균형 탐색. D-2026-10-14-ndo-site-stability-estimand statement 에 보조 host modelc10 덧붙임 (비준 전 · 결과 전).",
+  "2026-10-14-site-refs-polymorph-gate": "D-2026-10-14-ndo-site-stability-estimand · D-2026-10-14-b2o3-site-screen statement 개정 (둘 다 proposed · 비준 전 · 결과 전) — 기준상 구조 확정 (Li₃PS₄ MP mp-985583 Pnma E_hull 0 · Li₂S mp-1153) · UMA 기준상은 어닐 없이 이완만 (run_uma_kgy.sh --refs) · 다형 재확인 게이트 (Nd G7 · B G4 · 판정 문턱 ± 0.11 eV/도펀트 = MP 다형 차 최대 0.0138 eV/atom × 8)."
  },
  "decisions": [
   {
@@ -8146,7 +8147,7 @@
     ]
    },
    "title": "Nd/O-LPSCl1.6 — Nd 자리 (Rietveld 4b 대 Li 자리) 조성 균형 비교 · 닫힌계 분해 구동력 · 전자 배치 묘사 (트랙 CEI/Nd · 1저자 = 실험)",
-   "statement": "보고량 카드 db/properties/ndo_lpscl16_site_stability_estimand_2026_10_14.json. Q1 ΔG_site = {[E(M_P) − E(M_Li)] − n_Nd·[4E(Li₂S) − E(Li₃PS₄)]}/n_Nd (eV/Nd · > 0 이면 4b 불리) — Rietveld 정수화 5 f.u. host · Nd/(Nd+P) 0.40 · frozen-4f PBE · Li₃PS₄/Li₂S 교환에 조건부. Q2 같은 상 기저 분해 구동력 (도핑 대 host · 닫힌계). Q3 Bader · ELF · Δρ 는 묘사량 (안정성 판정 아님). 게이트 G1–G6 · 허용/금지 서술은 결과 전에 카드 §4 · §5 에 고정. + 보조 host 정본 LPSCl1.6 10 f.u. (Nd/(Nd+P) 0.2 · UMA 만 · 카드 §1-b 보조_host_modelc10 · 결과 전 추가 2026-10-14).",
+   "statement": "보고량 카드 db/properties/ndo_lpscl16_site_stability_estimand_2026_10_14.json. Q1 ΔG_site = {[E(M_P) − E(M_Li)] − n_Nd·[4E(Li₂S) − E(Li₃PS₄)]}/n_Nd (eV/Nd · > 0 이면 4b 불리) — Rietveld 정수화 5 f.u. host · Nd/(Nd+P) 0.40 · frozen-4f PBE · Li₃PS₄/Li₂S 교환에 조건부. Q2 같은 상 기저 분해 구동력 (도핑 대 host · 닫힌계). Q3 Bader · ELF · Δρ 는 묘사량 (안정성 판정 아님). 게이트 G1–G7 (G7 기준상 Li₃PS₄ 다형 · 결과 전 추가 2026-10-14) · 허용/금지 서술은 결과 전에 카드 §4 · §5 에 고정. + 보조 host 정본 LPSCl1.6 10 f.u. (Nd/(Nd+P) 0.2 · UMA 만 · 카드 §1-b 보조_host_modelc10 · 결과 전 추가 2026-10-14).",
    "rationale": "CEI 트랙 1저자 (실험) 가 '이 물질이 안정한가' 와 전자 배치 설명 (카톡 4 줄 · 전기화학 아님) 을 원한다. 기록 대조 결과 Rietveld 는 Nd 를 4b 에 두는데 Nd 자리의 DFT 판정은 0 건이고, 6 월 'Nd→P 기각' 은 근거가 없었다 (HZ-nd-site-cfg23-mislabeled). Y 는 같은 질문을 조성 균형 QE 로 풀었다 (+1.878 eV/Y · 조건부).",
    "decision_state": "proposed",
    "record_kind": "estimand",
@@ -8203,7 +8204,7 @@
     ]
    },
    "title": "B₂O₃-LPSCl1.6 B 자리 (P 4b 대 Li) UMA 빠른 탐색 — 정본 10 f.u. · 보상까지 맞춘 조성 균형 (트랙 우리 DFT · 1저자 = 사용자)",
-   "statement": "카드 db/properties/b2o3_site_screen_estimand_2026_10_14.json. ΔG_site(UMA) = {[E(B@P) − E(B@Li)] − n_B·[4E(Li₂S) − E(Li₃PS₄)]}/n_B · 모델별 최저 (6 개 · 500 K × 20 ps 어닐 + 이완) · |ΔG| < 0.20 eV/B 면 경계선. UMA 내부 값 — DFT 자리선호가 아니다.",
+   "statement": "카드 db/properties/b2o3_site_screen_estimand_2026_10_14.json. ΔG_site(UMA) = {[E(B@P) − E(B@Li)] − n_B·[4E(Li₂S) − E(Li₃PS₄)]}/n_B · 모델별 최저 (6 개 · 500 K × 20 ps 어닐 + 이완) · |ΔG| < 0.20 eV/B 면 경계선. UMA 내부 값 — DFT 자리선호가 아니다. 기준상 Li₃PS₄ = MP 바닥 다형 mp-985583 (어닐 없이 이완만) · |ΔG| 가 0.20 에서 0.11 eV/B 안이면 다른 다형 둘도 이완해 최저를 쓴다 (카드 G4 · 결과 전 추가 2026-10-14).",
    "rationale": "사용자 10-14 '만약에 없으면 빠르게 uma로 screening 해봐도 돼 nd 때처럼' — cascade 밖 B 자리 계산이 없었다 (06-19 카드 2026-10-14 줄).",
    "decision_state": "proposed",
    "record_kind": "estimand",
