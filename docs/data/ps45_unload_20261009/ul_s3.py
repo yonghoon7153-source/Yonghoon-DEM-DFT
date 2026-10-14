@@ -25,6 +25,9 @@ import sys
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 REPO = os.path.normpath(os.path.join(HERE, '..', '..', '..'))
+sys.path.insert(0, HERE)
+from ul_lib import exact_id  # noqa: E402 — ID = 유한 · 양 · 정확한 정수 (ULKRR-04 · 공용 하나)
+
 THRESHOLD = 1e-3
 G = 9.81
 
@@ -52,7 +55,10 @@ def s3_residual(atoms, contacts, s0_ids, plate_z, *, atom_step=None, contact_ste
             return out
     valid = {}
     for a in atoms:
-        i = int(a['id'])
+        i = exact_id(a['id'])
+        if i is None:   # ULKRR-04 — 소수 ID 를 정수로 잘라 다른 원자로 쓰지 않는다
+            out['why'].append(f'원자 ID {a["id"]!r} 가 유한 · 양의 정확한 정수가 아니다')
+            return out
         if i in valid:
             out['why'].append(f'원자 id 중복 {i}')
             return out
@@ -68,7 +74,10 @@ def s3_residual(atoms, contacts, s0_ids, plate_z, *, atom_step=None, contact_ste
             return out
         m = math.sqrt(c['fx'] ** 2 + c['fy'] ** 2 + c['fz'] ** 2)
         for k in ('id1', 'id2'):
-            j = int(c[k])
+            j = exact_id(c[k])
+            if j is None:   # ULKRR-04 — 쌍 참조도 같은 규약
+                out['why'].append(f'쌍 참조 ID {c[k]!r} 가 유한 · 양의 정확한 정수가 아니다')
+                return out
             if j in mag:
                 mag[j] += m
     num = sum(math.sqrt(a['fx'] ** 2 + a['fy'] ** 2 + a['fz'] ** 2) for a in valid.values())

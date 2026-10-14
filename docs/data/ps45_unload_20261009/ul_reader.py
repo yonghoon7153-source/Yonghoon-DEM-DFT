@@ -13,6 +13,7 @@
     python3 ul_reader.py report  <root>                  # 다섯 침대 · 10 쌍 괄호 표 → report.json
     python3 ul_reader.py copycmd <bed>                   # 원 파일 복사 명령 여섯 (표에서 · ~ 경로)
     python3 ul_reader.py parentsums <UT 런 폴더>          # UTc 의 부모 관측 sha256 목록 (러너가 UTc 시작 때 parent_UT.sha256 으로 쓴다 · 개정 3 §14-3)
+    python3 ul_reader.py grammar <gram_<시각>/grammar_verdict.json> --lmp-sha <sha256>   # 문법 fixture PASS 사전 조건 (Q5 · 러너가 RJ · RJ2 · EXT 의 LIGGGHTS 전에 · rc 0 · 2)
 
 폴더 (정본 이름 = README §0):  <root>/<침대>/in/ (원 파일) · RJ/ (Ut0 · R · UN · UK) · RJ2/ (10:0 S0′ 에서) · EXT/ · EXT2/ (10:0) ·
   <팔>/ (UB · UT · UC · UVa · UVb · UT3 · UTc · G_<팔>) · ul_base.in · s0_decision.json · selection.json.
@@ -52,6 +53,17 @@ WALL_R = ('mesh', 'tri', 'id', 'fnx', 'fny', 'fnz', 'deltaMax', 'shearx', 'shear
 ATOM_COLS = ['id', 'type', 'x', 'y', 'z', 'radius', 'mass', 'vx', 'vy', 'vz', 'omegax', 'omegay', 'omegaz', 'fx', 'fy', 'fz']   # U · G 덱 창 끝 원자 덤프 열
 CPL_COLS = [f'c_cpl[{c}]' for c in range(1, 27)]                                            # r8 머리 cpl (pair/gran/local 26 열)
 
+#: Q5 (1저자 10-14 — 강제) · 개정 3 §14-9: 본 R (RJ · RJ2) · 10:0 연장 (EXT) 의 LIGGGHTS 전 문법 fixture PASS — read_history.py --grammar 판정의 꼴 ·
+#: 단계 폴더 (run_history.sh --grammar-only 가 덱 사본을 둔다) · 그 입력 (덱 둘 + 판 STL) 의 봉인 sha256 = 039abb141 판 (실행 2 대상 — 덱은 그 판 뒤
+#: 바뀌지 않았다 · selftest R32 가 history_test 의 실제 파일과 대조 · 덱이 바뀌면 같은 묶음에서 고친다).  러너 · 판독기 파일 sha256 은 대조하지 않는다 (덱 아님).
+GRAMMAR_SCHEMA = 'ps45_unload_grammar_verdict_v1'
+GRAMMAR_CHECKS = ('P_tech', 'GA_exists', 'GB_exists', 'GA_args', 'GB_args') + tuple(
+    f'{s}_{c}' for s in ('GA', 'GB') for c in ('tech', 'markers', 'atom_dump_steps', 'wall_dump_steps', 'mesh_z', 'restart_state', 'contact_geo'))
+GRAMMAR_STAGES = (('P', 'in.hist_producer.liggghts'), ('GA', 'in.hist_grammar.liggghts'), ('GB', 'in.hist_grammar.liggghts'))
+GRAMMAR_INPUTS = {'in.hist_producer.liggghts': 'bc42a3ad71d5e02f6f21181bed09109dccfa60ad67a5d4a6b3d47f9c472fd70d',
+                  'in.hist_grammar.liggghts': 'a1f0ee432b977d12a415b876ab3aa47225fec8f83c21cdd92948ff3abce8e6ed',
+                  'plate_hist.stl': '5bc74ec7726723ec8e2bbc3dc10fafd639e6175f83a0e0047ca35a44ee7aa65d'}
+
 
 # ── 구현 (아래 selftest 를 먼저 썼다) ─────────────────────────────────────────
 
@@ -82,31 +94,108 @@ def _csv(path, cols):
     return out, pr
 
 
-def _supersede(rows):
-    """이어 돌림: 실패한 시도가 이어 돌림 step 뒤에 남긴 줄 (같은 step 이 다시 나오기 전 줄) 을 버린다 → (남긴 줄 · 버린 수)."""
-    kept, dropped = [], 0
-    for r in rows:
-        s = r.get('step')
-        while s is not None and kept and kept[-1].get('step') is not None and kept[-1]['step'] >= s:
-            kept.pop()
-            dropped += 1
+def _state_vars(path):
+    """덱 상태 파일 (`variable 이름 equal 값` 줄 · make_unload_decks._state) → {이름: 정확한 정수 | None (정수 아님)} · 파일 없음 = {}."""
+    out = {}
+    if not os.path.isfile(path):
+        return out
+    for ln in open(path, encoding='utf-8', errors='replace').read().splitlines():
+        w = ln.split()
+        if len(w) == 4 and w[0] == 'variable' and w[2] == 'equal':
+            v = _f(w[3])
+            out[w[1]] = int(v) if v is not None and v.is_integer() else None
+    return out
+
+
+def _resume_auth(d, events):
+    """승인된 이어 돌림 경계 (ULKRR-02 · 개정 3 §14-4) → [(k, step)] — RESUME 사건 가운데 러너 시도 기록 (run_manifest.txt 의 `resume_from=step` ·
+    러너가 이어 돌린 restart_unload_<step> 의 step) 과 덱 상태 파일 (restart/state_unload_<step>.in 의 ul_rstep = step · ul_k = 사건 k) 이 맞는 것만."""
+    man = os.path.join(d, 'run_manifest.txt')
+    rf = set()
+    if os.path.isfile(man):
+        for ln in open(man, encoding='utf-8', errors='replace').read().splitlines():
+            m = re.fullmatch(r'resume_from=(\d+)', ln.strip())
+            if m:
+                rf.add(int(m.group(1)))
+    out = []
+    for e in events:
+        if e['event'] != 'RESUME' or e['k'] is None or e['step'] is None or e['step'] not in rf:
+            continue
+        st = _state_vars(os.path.join(d, 'restart', f'state_unload_{e["step"]}.in'))
+        if st.get('ul_rstep') == e['step'] and st.get('ul_k') == e['k']:
+            out.append((e['k'], e['step']))
+    return out
+
+
+def _supersede(rows, auth, name):
+    """이어 돌림 경계 (ULKRR-02): 실패한 시도가 남긴 줄을 버리는 것 = 승인된 경계 (k_r, s_r) (_resume_auth) 에서만 —
+    역행 줄 (step ≤ 앞 줄) 이 그 경계 새 시도의 첫 줄 (k = k_r + 1 · step > s_r) 이고 · 버릴 줄 = 끝의 step > s_r 줄 전부 (k > k_r) ·
+    버린 뒤 앞 줄 = 정확히 (k_r, s_r) 일 때만 (경계마다 한 번).  그 밖 중복 · 역행 = 버리지 않고 문제 (→ 주 값 미식별) → (줄 · 버린 수 · 문제)."""
+    kept, dropped, pr, used = [], 0, [], set()
+    for n, r in enumerate(rows, 1):
+        s, k = r.get('step'), r.get('k')
+        prev = kept[-1] if kept else None
+        if prev is not None and s is not None and prev.get('step') is not None and prev['step'] >= s:
+            ok = False
+            for i, (kr, sr) in enumerate(auth):
+                if i in used or k != kr + 1 or not s > sr:
+                    continue
+                j = len(kept)
+                while j > 0 and kept[j - 1].get('step') is not None and kept[j - 1]['step'] > sr:
+                    j -= 1
+                stale = kept[j:]
+                if stale and j > 0 and all(x.get('k') is not None and x['k'] > kr for x in stale) \
+                        and (kept[j - 1].get('k'), kept[j - 1].get('step')) == (kr, sr):
+                    del kept[j:]
+                    dropped += len(stale)
+                    used.add(i)
+                    ok = True
+                    break
+            if not ok:
+                pr.append(f'{name} {n} 째 줄 (k {k} · step {s}) ≤ 앞 줄 (k {prev.get("k")} · step {prev.get("step")}) — 승인된 이어 돌림 경계 '
+                          '(RESUME 사건 + 러너 resume_from + 상태 파일 k) 가 아닌 중복 · 역행 (ULKRR-02)')
         kept.append(r)
-    return kept, dropped
+    return kept, dropped, pr
+
+
+def _order_problems(rows, name, windows):
+    """남은 기록 줄의 순서 (ULKRR-02): k · step (창이면 w) 숫자 · k 가 줄지 않음 · (창) 같은 k 안 w 증가 · (k, w) 고유 — 아니면 문제."""
+    pr = []
+    need = ('k', 'w', 'step') if windows else ('k', 'step')
+    nonnum = [n for n, r in enumerate(rows, 1) if any(r.get(x) is None for x in need)]
+    if nonnum:
+        pr.append(f'{name} {nonnum[:3]} 째 줄 {"/".join(need)} 숫자 아님 (기록 결손 · ULKRR-02)')
+        return pr
+    for n, (a, b) in enumerate(zip(rows, rows[1:]), 2):
+        if b['k'] < a['k']:
+            pr.append(f'{name} {n} 째 줄 k {b["k"]} < 앞 줄 k {a["k"]} (역행 · ULKRR-02)')
+            break
+        if windows and b['k'] == a['k'] and b['w'] <= a['w']:
+            pr.append(f'{name} {n} 째 줄 (k {b["k"]} · w {b["w"]}) ≤ 앞 줄 w {a["w"]} (중복 · 역행 · ULKRR-02)')
+            break
+    return pr
 
 
 def read_run(d, P=None):
     P = P or ul_lib.load_params()
     R = P['records']
-    out = {'dir': d, 'windows': [], 'steps': [], 'events': [], 'summary': None, 'problems': [], 'n_superseded_rows': 0, 'resume_steps': []}
+    out = {'dir': d, 'windows': [], 'steps': [], 'events': [], 'summary': None, 'problems': [], 'n_superseded_rows': 0, 'resume_steps': [],
+           'resume_auth': []}
     ev, pr = _csv(os.path.join(d, 'ul_events.csv'), R['events_cols'])
     out['problems'] += pr
     events = [{'event': r['event'], 'k': _i(r['k']), 'step': _i(r['step']), 'plate_z': _f(r['plate_z']), 'lift': _f(r['lift']),
                'detail': r['detail']} for r in (ev or [])]
     out['resume_steps'] = [e['step'] for e in events if e['event'] == 'RESUME']
+    auth = out['resume_auth'] = _resume_auth(d, events)
     kept = []
-    for e in events:   # RESUME 앞에 실패한 시도가 남긴 그 step 뒤 사건은 버린다
+    for e in events:   # 승인된 RESUME 앞에 실패한 시도가 남긴 그 step 뒤 사건만 버린다 (ULKRR-02 — 아니면 버리지 않고 문제)
         if e['event'] == 'RESUME' and e['step'] is not None:
-            kept = [x for x in kept if x['step'] is None or x['step'] <= e['step']]
+            stale = [x for x in kept if x['step'] is not None and x['step'] > e['step']]
+            if stale and (e['k'], e['step']) in auth:
+                kept = [x for x in kept if x['step'] is None or x['step'] <= e['step']]
+            elif stale:
+                out['problems'].append(f'ul_events.csv: RESUME (k {e["k"]} · step {e["step"]}) 앞 사건 {len(stale)} 개가 그 step 뒤 — 승인된 이어 돌림 경계 '
+                                       '(러너 resume_from + 상태 파일 k) 가 아니어서 버리지 않는다 (ULKRR-02)')
         kept.append(e)
     out['events'] = kept
     for name, key, cols in (('ul_windows.csv', 'windows', R['windows_cols']), ('ul_steps.csv', 'steps', R['steps_cols'])):
@@ -121,7 +210,8 @@ def read_run(d, P=None):
                 if k in c and c[k] is not None:
                     c[k] = int(round(c[k]))
             conv.append(c)
-        conv, dropped = _supersede(conv)
+        conv, dropped, spr = _supersede(conv, auth, name)
+        out['problems'] += spr + ([] if spr else _order_problems(conv, name, key == 'windows'))
         out[key] = conv
         out['n_superseded_rows'] += dropped
     sp = os.path.join(d, 'ul_summary.txt')
@@ -259,14 +349,37 @@ def window_states(windows, wall_by_step, P=None):
     return out
 
 
-def separation(states, sepreq=2):
+def _contiguous(a, b, w_steps):
+    """같은 k 의 앞 창 a → 이 창 b 가 이어지는가 (Q4 가 · 판정문 §6-1): w = 앞 w + 1 · (w_steps 가 있으면) 창 끝 step 간격 = 그 팔 창 W."""
+    if a.get('w') is None or b.get('w') is None or b['w'] != a['w'] + 1:
+        return False
+    if w_steps is None:
+        return True
+    return a.get('step') is not None and b.get('step') is not None and b['step'] - a['step'] == w_steps
+
+
+def _arm_wsteps(d, job, P):
+    """그 팔의 창 W (step) — 런 폴더의 덱 사본 (deck.liggghts · 덱이 증거 · ULR1-04) · 없으면 표 (W0 ÷ 그 팔 dt_factor · 중력 팔 = 부모 · UTc = UT3)."""
+    p = os.path.join(d, 'deck.liggghts')
+    if os.path.isfile(p):
+        w = deck_windows(open(p, encoding='utf-8', errors='replace').read())['W']
+        if w:
+            return w
+    arm = job[2:] if job.startswith('G_') else ('UT3' if job == 'UTc' else job)
+    a = P['arms'].get(arm) or {}
+    return int(round(P['windows']['W0'] / a['dt_factor'])) if a.get('dt_factor') else None
+
+
+def separation(states, sepreq=2, w_steps=None):
     """§13-3: 연속 sepreq 개 ZERO 창의 마지막 창 끝 = 분리 선언 · 그 창부터 분리 뒤 창 · 재접촉 (CONTACT · TENSION) 이면 계수 · 분리 뒤 창 초기화 ·
     OBS_MISSING 은 0 이 아니다 (연속을 끊는다 · 분리 뒤면 그 분리의 표면 관측도 끊긴다).
     덱과 같은 규칙 (개정 3 §14-7 · ULKR-07) — 창에 k · 단계가 있으면: 판 이동 (k 바뀜) = 연속 계수 초기화 (덱 ul_hold_start 의 ul_sepn 0 ·
-    표 separation.reset_on_move) · 분리 뒤 이동이면 그 분리는 끝 · 선언은 SEPARATE 단계 (2) 창에서만 (덱 ul_win_sep)."""
-    out = {'declared_index': None, 'declared_step': None, 'recontact_index': [], 'missing_index': [], 'moved_index': [], 'separated_final': False,
-           'post_windows': []}
-    run, sep, prev_k = 0, False, None
+    표 separation.reset_on_move) · 분리 뒤 이동이면 그 분리는 끝 · 선언은 SEPARATE 단계 (2) 창에서만 (덱 ul_win_sep).
+    Q4 (가 · 판정문 §6-1): 창에 w 가 있으면 같은 k 안 앞 창 → 이 창이 고유 · 연속 w (앞 + 1) 이고 · w_steps (그 팔 창 W) 가 있으면 창 끝 step 간격 = W —
+    아니면 빈 구간 (gap_index) = OBS_MISSING 처럼 연속을 끊는다 (CSV 줄 인접 ≠ 물리 창 연속 · 예산 끝 선언 → 분리 뒤 4 창은 그대로)."""
+    out = {'declared_index': None, 'declared_step': None, 'recontact_index': [], 'missing_index': [], 'moved_index': [], 'gap_index': [],
+           'separated_final': False, 'post_windows': []}
+    run, sep, prev_k, prev = 0, False, None, None
     for i, s in enumerate(states):
         st = s['state']
         k = s.get('k')
@@ -277,7 +390,14 @@ def separation(states, sepreq=2):
                     out['moved_index'].append(i)
                     sep = False
                     out['post_windows'] = []
+            elif prev is not None and prev_k is not None and 'w' in s and 'w' in prev and not _contiguous(prev, s, w_steps):
+                out['gap_index'].append(i)
+                run = 0
+                if sep:
+                    sep = False
+                    out['post_windows'] = []
             prev_k = k
+        prev = s
         if st == 'ZERO':
             run += 1
             if sep:
@@ -343,8 +463,8 @@ def _s0_dump(root, bed, P):
     for p in cand:
         if os.path.exists(p):
             d = ul_lib.read_dump(p, 'custom')
-            ids = [int(r['id']) for r in d['rows']]
-            if d['ok'] and d['rows'] and d['step'] == s0 and len(set(ids)) == len(ids):
+            ids = ul_lib.ids_of(d['rows'])[0] if d['ok'] else None   # 파서 · 필수 열 문제 먼저 · ID = 정확한 양의 정수 (ULKRR-04)
+            if ids is not None and d['rows'] and d['step'] == s0 and len(set(ids)) == len(ids):
                 return d, s0
             return None, s0
     return None, s0
@@ -424,7 +544,11 @@ def _atom_frame(path, step, s0_ids=None):
     pr = list(A['problems'][:2])
     if A['step'] != step:
         pr.append(f'원자 덤프 머리 step {A["step"]} ≠ 요청 {step}')
-    ids = [int(r['id']) for r in A['rows']]
+    if not A['ok']:   # 파서 · 필수 열 문제를 먼저 돌려준다 (ULKRR-04 — 열 결손이면 id 를 읽지 않는다 · 예외 없음)
+        return None, pr or ['원자 덤프 읽기 실패']
+    ids, ipr = ul_lib.ids_of(A['rows'])
+    if ids is None:   # 소수 · 0 이하 ID = 정수로 자르지 않는다 (ULKRR-04)
+        return None, pr + [f'원자 덤프 {x}' for x in ipr]
     if len(set(ids)) != len(ids):
         pr.append('원자 ID 중복')
     if s0_ids is not None and set(ids) - s0_ids:
@@ -472,7 +596,12 @@ def _s3_at(d, step, plate_z, s0_ids, g=ul_s3.G, ap=None, cp=None):
         pr.append(f'쌍 덤프 머리 step {C["step"]} ≠ 요청 {step}')
     if A is None or pr:
         return {'status': 'NOT_COMPUTED', 'why': pr}
-    con = [{'id1': r['c_cpl[7]'], 'id2': r['c_cpl[8]'], 'fx': r['c_cpl[10]'], 'fy': r['c_cpl[11]'], 'fz': r['c_cpl[12]']} for r in C['rows']]
+    con = []
+    for r in C['rows']:
+        i1, i2 = ul_lib.exact_id(r['c_cpl[7]']), ul_lib.exact_id(r['c_cpl[8]'])
+        if i1 is None or i2 is None:   # 쌍 참조도 정확한 양의 정수 (ULKRR-04 — 잘라서 다른 원자에 붙이지 않는다)
+            return {'status': 'NOT_COMPUTED', 'why': [f'쌍 덤프 참조 ID ({r["c_cpl[7]"]!r} · {r["c_cpl[8]"]!r}) 가 유한 · 양의 정확한 정수가 아니다']}
+        con.append({'id1': i1, 'id2': i2, 'fx': r['c_cpl[10]'], 'fy': r['c_cpl[11]'], 'fz': r['c_cpl[12]']})
     return ul_s3.s3_residual(A['rows'], con, s0_ids, plate_z, atom_step=A['step'], contact_step=C['step'], g=g)
 
 
@@ -558,7 +687,7 @@ def arm_verdict(d, bed, job, P=None, root=None):
     # 기록 자체의 결손 (ULKR-04 · 개정 3 §14-10) — CSV 가 버린 줄 · 머리 ≠ 표 · 단 k 불연속 (누락 · 중복 · 순서) 이면 주 값을 내지 않는다
     rec_why = []
     if run['problems']:
-        rec_why.append(f'CSV 기록 결손 ({" · ".join(run["problems"][:3])}) — 버린 줄을 정상 기록으로 쓰지 않는다')
+        rec_why.append(f'CSV 기록 결손 · 무결성 ({" · ".join(run["problems"][:3])}) — 버린 줄 · 승인 안 된 중복 · 역행 줄을 정상 기록으로 쓰지 않는다')
     ks = [s['k'] for s in steps]
     if ks and ks != list(range(len(ks))):
         rec_why.append(f'단 기록 k 불연속 ({ks[:12]}) — 누락 · 중복 · 순서')
@@ -574,7 +703,7 @@ def arm_verdict(d, bed, job, P=None, root=None):
                     cp=fp(f'dump/contact_{s["step"]}.dump', s['step']))
         s['s3'] = s3['status']
         if s3['status'] != 'PASS':
-            why.append(f'단 {s["k"]} S3 {s3["status"]}')
+            why.append(f'단 {s["k"]} S3 {s3["status"]}' + (f' ({s3["why"][0]})' if s3.get('why') else ''))
         st = last_state.get(s['k'], {}).get('state')
         s['state'] = st
         if contact and st not in ('CONTACT', 'TENSION'):
@@ -700,9 +829,9 @@ def arm_verdict(d, bed, job, P=None, root=None):
         v['primary_status'] = 'TECH'
     v['disposition'] = 'DIAGNOSTIC' if v['cancellation'] else ('VALUE' if v['primary_status'] == 'OK' else 'NONE')
     v['rank_eligible'] = v['primary_status'] == 'OK' and not v['cancellation']
-    # 분리 · 분리 뒤 표면 (§13-3) · S4 (창 = 덱 물리 창 — 창 끝 프레임 사이)
-    sep = separation(states, P['windows']['sep_declare'])
-    v['separation'] = {k: sep[k] for k in ('declared_step', 'separated_final', 'recontact_index', 'missing_index', 'moved_index')}
+    # 분리 · 분리 뒤 표면 (§13-3) · S4 (창 = 덱 물리 창 — 창 끝 프레임 사이) · 창 기록 = 같은 k 안 고유 · 연속 w + 그 팔 창 간격 (Q4 가)
+    sep = separation(states, P['windows']['sep_declare'], w_steps=_arm_wsteps(d, job, P))
+    v['separation'] = {k: sep[k] for k in ('declared_step', 'separated_final', 'recontact_index', 'missing_index', 'moved_index', 'gap_index')}
     v['separation']['n_post'] = len(sep['post_windows'])
     v['separation']['declared_w'] = states[sep['declared_index']]['w'] if sep['declared_index'] is not None else None
     if sep['separated_final'] and sep['post_windows']:
@@ -727,7 +856,7 @@ def arm_verdict(d, bed, job, P=None, root=None):
             sw.append('덱 SEP_INCOMPLETE (재접촉 뒤 같은 높이 유지 예산 끝 — 분리 뒤 4 창 미완료)')
         elif not (sep['separated_final'] and len(sep['post_windows']) >= postn):
             sw.append(f'덱 DONE 인데 판독기 최종 분리 · 분리 뒤 창 {len(sep["post_windows"])} < {postn} (재접촉 창 {sep["recontact_index"][:3]} · '
-                      f'벽 덤프 결손 창 {sep["missing_index"][:3]} · 이동 {sep["moved_index"][:3]})')
+                      f'벽 덤프 결손 창 {sep["missing_index"][:3]} · 이동 {sep["moved_index"][:3]} · 창 기록 끊김 (w · 간격) {sep["gap_index"][:3]})')
         else:
             wmax = _hold_wmax(job, P)
             dw = v['separation']['declared_w']
@@ -860,19 +989,39 @@ def selection_state(root, P=None):
     return s
 
 
+def _job_receipt(root, bed, job):
+    """잡 완료 영수증 (ULKRR-03 · 개정 3 §14-10): 러너 run_manifest.txt 의 끝 줄 `end=… fails=N reader_rc=M` — fails · reader_rc 가 둘 다 한 번씩 있고 ·
+    정수 · 0 일 때만 참.  판독기가 결과 파일 (증서 · 기준 파일) 을 쓴 뒤 실패한 잡 = reader_rc ≠ 0 — 그 산출물을 다음 제출 승인으로 다시 쓰지 않는다
+    (판독 오류를 rc 0 으로 삼키지 않는다 · 정상 미식별은 판독기 rc 0 · JSON) → (참?, 이유, 기록 글자)."""
+    man = os.path.join(root, bed, job, 'run_manifest.txt')
+    text = open(man, encoding='utf-8', errors='replace').read() if os.path.isfile(man) else ''
+    ends = [ln for ln in text.splitlines() if ln.startswith('end=')]
+    if not ends:
+        return False, f'{job} 잡 기록 (run_manifest.txt) 에 끝 줄 없음 — 러너가 끝내지 못했다', text
+    kv = {}
+    for tok in ends[-1].split()[1:]:
+        k, _sep, val = tok.partition('=')
+        kv.setdefault(k, []).append(val)
+    bad = [k for k in ('fails', 'reader_rc') if len(kv.get(k, [])) != 1 or not re.fullmatch(r'\d+', kv[k][0]) or int(kv[k][0]) != 0]
+    if bad:
+        return (False, f'{job} 잡 기록 끝 줄 ({ends[-1].strip()}) — {" · ".join(bad)} ≠ 0 · 결손 · 정수 아님 (기술 실패 · 판독기 오류 — fails=0 · reader_rc=0 '
+                f'둘 다 필수 · 산출물을 다시 쓰지 않는다 · 새 시도 · ULKRR-03)', text)
+    return True, f'{job} 잡 끝 fails=0 · reader_rc=0', text
+
+
 def _job_restored(root, bed, job):
-    """복원 증서 RESTORED + 그 RJ · RJ2 잡의 러너 기록 끝 줄 (end= … fails=0) — 같은 실행 끝의 기술 실패가 있으면 증서를 믿지 않는다 (ULKR-05)."""
+    """복원 증서 RESTORED + 그 RJ · RJ2 잡 완료 영수증 (fails=0 · reader_rc=0 · ULKRR-03) + 문법 fixture 사전 점검 PASS 기록 (grammar_prereq=PASS ·
+    Q5 — 그 잡의 R 이 문법 PASS 뒤에 돌았다) — 같은 실행 끝의 기술 실패 · 판독기 오류가 있으면 증서를 믿지 않는다 (ULKR-05)."""
     r = _readjson(os.path.join(root, bed, job, 'restore_verdict.json'))
     if not (r and r.get('status') == 'RESTORED'):
         return False, f'{job} 복원 판정 RESTORED 아님 ({(r or {}).get("status")})'
-    man = os.path.join(root, bed, job, 'run_manifest.txt')
-    ends = [ln for ln in open(man, encoding='utf-8', errors='replace').read().splitlines() if ln.startswith('end=')] if os.path.exists(man) else []
-    if not ends:
-        return False, f'{job} 잡 기록 (run_manifest.txt) 에 끝 줄 없음 — 러너가 끝내지 못했다'
-    m = re.search(r'\bfails=(\d+)\b', ends[-1])
-    if not m or int(m.group(1)) != 0:
-        return False, f'{job} 잡 기록 끝 줄 = 기술 실패 ({ends[-1].strip()}) — 증서를 다시 쓰지 않는다 (새 시도)'
-    return True, f'{job} RESTORED · 잡 기술 실패 0'
+    ok, why, text = _job_receipt(root, bed, job)
+    if not ok:
+        return False, why
+    if not re.search(r'^grammar_prereq=PASS$', text, re.M):
+        return False, (f'{job} 잡 기록에 문법 fixture 사전 점검 PASS 줄 (grammar_prereq=PASS) 없음 — 본 R 전 문법 fixture PASS 필수 '
+                       '(개정 3 §14-9 · Q5) · 새 시도')
+    return True, f'{job} RESTORED · 잡 끝 fails=0 · reader_rc=0 · 문법 fixture 사전 점검 PASS'
 
 
 def _restored(root, bed, P):
@@ -902,7 +1051,10 @@ def gate(root, bed, job, P=None):
         if bed != B100:
             return False, 'RJ2 = 10:0 전용 (S0′ 복원 · UK)'
         dec = _readjson(os.path.join(root, bed, 's0_decision.json'))
-        return (bool(dec and dec.get('status') == 'PASS'), 'S0′ 결정 PASS 뒤 (§12-11 · F3 이면 없음)')
+        if not (dec and dec.get('status') == 'PASS'):
+            return False, 'S0′ 결정 PASS 뒤 (§12-11 · F3 이면 없음)'
+        ok, why, _text = _job_receipt(root, bed, 'EXT')   # ULKRR-03 — 그 결정을 낸 EXT 잡의 완료 영수증도
+        return ok, f'S0′ 결정 PASS + EXT 잡 완료 영수증 — {why}'
     ok, rj, why = _restored(root, bed, P)
     if not ok:
         return False, f'{rj} 복원 관문 미통과 — {why} (§12-1 ⑤ · 개정 3 §14-10 — 미확인 · 실패면 U 없음)'
@@ -1024,7 +1176,11 @@ def _obs_frame(path, cols, step, ids):
     pr = [f'{os.path.basename(path or "")}: {p}' for p in d['problems']]
     if step is None or d['step'] != step:
         pr.append(f'{os.path.basename(path or "")}: 머리 step {d["step"]} ≠ 기대 {step}')
-    got = [int(r['id']) for r in d['rows']]
+    if not d['ok']:   # 파서 · 필수 열 문제를 먼저 (ULKRR-04 — 열 결손이면 id 를 읽지 않는다)
+        return None, pr
+    got, ipr = ul_lib.ids_of(d['rows'])
+    if got is None:   # 소수 · 0 이하 ID = 정수로 자르지 않는다 (ULKRR-04 · Codex fractional_un_id)
+        return None, pr + [f'{os.path.basename(path or "")}: {x}' for x in ipr]
     if len(set(got)) != len(got):
         pr.append(f'{os.path.basename(path or "")}: ID 중복')
     if ids is None:
@@ -1056,6 +1212,89 @@ def _hist_qualifies(h, P):
     if info.get('force_timing') != 'PASS':
         why.append(f'총힘 출력 시점 {info.get("force_timing")} (C1 선행조건)')
     return (not why), why
+
+
+def _readtext(path):
+    try:
+        return open(path, encoding='utf-8', errors='replace').read().strip()
+    except OSError:
+        return None
+
+
+def grammar_prereq(verdict_path, lmp_sha, inputs=None):
+    """문법 fixture PASS 사전 조건 (Q5 — 1저자 10-14 강제 · 개정 3 §14-9) — 러너가 본 R (RJ · RJ2) · 10:0 연장 (EXT) 의 LIGGGHTS **전에** 부른다 →
+    (허용?, 문제 목록, 기록).  ① 판정 JSON: schema · status PASS · exit_code 정수 0 · 검사 열아홉 (GRAMMAR_CHECKS) 전부 참 ② 그 판정의 런 폴더 = 판정 파일이
+    놓인 폴더 (run_dir 대조) · run_manifest mode=gram · end 있음 · lmp_sha256 = 지금 돌릴 바이너리 (lmp_sha) ③ 덱 출처 — 단계 P · GA · GB 의 rc 0 · deck.txt ·
+    덱 사본 · 판 STL 사본 sha256 = 봉인 값 (inputs = GRAMMAR_INPUTS) · 그 런의 kit SHA256SUMS (sha256 = run_manifest sums_sha256) 가 같은 값을 적었다.
+    러너 · 판독기 스크립트 sha256 은 대조하지 않는다 (덱이 아니다 — 러너 수정이 그 판정을 무효로 만들지 않는다)."""
+    inputs = GRAMMAR_INPUTS if inputs is None else inputs
+    rec = {'verdict': verdict_path, 'verdict_sha256': None, 'run_dir': None, 'lmp_sha256': lmp_sha,
+           'grammar_deck_sha256': inputs.get('in.hist_grammar.liggghts'), 'producer_deck_sha256': inputs.get('in.hist_producer.liggghts')}
+    if not verdict_path or not os.path.isfile(verdict_path):
+        return False, [f'문법 fixture 판정 파일 없음 ({verdict_path or "GRAMMAR_VERDICT 비어 있음"})'], rec
+    rec['verdict_sha256'] = ul_lib.sha256_file(verdict_path)
+    v = _readjson(verdict_path)
+    if not isinstance(v, dict):
+        return False, ['문법 fixture 판정이 JSON 객체가 아니다'], rec
+    pr = []
+    if v.get('schema') != GRAMMAR_SCHEMA:
+        pr.append(f'판정 schema {v.get("schema")!r} ≠ {GRAMMAR_SCHEMA}')
+    if v.get('status') != 'PASS':
+        pr.append(f'판정 status {v.get("status")!r} ≠ PASS')
+    ec = v.get('exit_code')
+    if type(ec) is not int or ec != 0:
+        pr.append(f'판정 exit_code {ec!r} ≠ 정수 0')
+    ch = v.get('checks')
+    if not isinstance(ch, dict):
+        pr.append('판정 checks 없음')
+    else:
+        miss = [k for k in GRAMMAR_CHECKS if k not in ch]
+        notok = sorted(k for k, x in ch.items() if x is not True)
+        if miss:
+            pr.append(f'판정 검사 없음 {miss[:4]}')
+        if notok:
+            pr.append(f'판정 검사 참 아님 {notok[:4]}')
+    rd = os.path.dirname(os.path.realpath(verdict_path))
+    rec['run_dir'] = rd
+    vr = v.get('run_dir')
+    if not (isinstance(vr, str) and os.path.realpath(vr) == rd):
+        pr.append(f'판정 run_dir {vr!r} ≠ 판정 파일 폴더 {rd} (다른 런의 판정)')
+    kv = ul_lib.read_kv(os.path.join(rd, 'run_manifest.txt'))
+    if kv.get('mode') != 'gram':
+        pr.append(f'문법 런 run_manifest mode {kv.get("mode")!r} ≠ gram')
+    if 'end' not in kv:
+        pr.append('문법 런 run_manifest end 없음 (끝나지 않은 런)')
+    if not lmp_sha or kv.get('lmp_sha256') != lmp_sha:
+        pr.append(f'문법 런 LMP sha256 {kv.get("lmp_sha256")} ≠ 지금 돌릴 바이너리 {lmp_sha} (같은 바이너리의 문법 PASS 만)')
+    kit = kv.get('kit')
+    sp = os.path.join(kit, 'SHA256SUMS') if kit else None
+    if not (sp and os.path.isfile(sp)):
+        pr.append(f'문법 런 kit SHA256SUMS 없음 ({sp})')
+    elif ul_lib.sha256_file(sp) != kv.get('sums_sha256'):
+        pr.append('문법 런 kit SHA256SUMS 의 sha256 ≠ run_manifest sums_sha256')
+    else:
+        listed = {}
+        for ln in open(sp, encoding='utf-8', errors='replace').read().splitlines():
+            w = ln.split()
+            if len(w) == 2:
+                listed[w[1].lstrip('*')] = w[0]
+        bad = sorted(n for n, h in inputs.items() if listed.get(n) != h)
+        if bad:
+            pr.append(f'문법 런 kit SHA256SUMS 의 {bad} sha256 ≠ 봉인 값')
+    for st, deck in GRAMMAR_STAGES:
+        sd = os.path.join(rd, st)
+        rcv = _readtext(os.path.join(sd, 'rc'))
+        if rcv != '0':
+            pr.append(f'문법 런 {st} rc {rcv!r} ≠ 0')
+        dt = _readtext(os.path.join(sd, 'deck.txt'))
+        if dt != deck:
+            pr.append(f'문법 런 {st} deck.txt {dt!r} ≠ {deck}')
+        for n in (deck, 'plate_hist.stl'):
+            p = os.path.join(sd, n)
+            h = ul_lib.sha256_file(p) if os.path.isfile(p) else None
+            if h != inputs.get(n):
+                pr.append(f'문법 런 {st}/{n} sha256 {h} ≠ 봉인 값 {inputs.get(n)}')
+    return (not pr), pr, rec
 
 
 def restore_verdict(root, bed, job='RJ', hist=None, P=None):
@@ -1101,8 +1340,10 @@ def restore_verdict(root, bed, job='RJ', hist=None, P=None):
     # 관측 대상 = S0 원자 전부 (원 atom_S0 · 전부 읽힘 · 고유 ID)
     s0d = ul_lib.read_dump(orig_atom, 'custom') if orig_atom else None
     s0_ids = None
-    if s0d and s0d['ok'] and s0d['step'] == s0 and len({int(r['id']) for r in s0d['rows']}) == len(s0d['rows']):
-        s0_ids = {int(r['id']) for r in s0d['rows']}
+    if s0d and s0d['ok'] and s0d['step'] == s0:
+        ids = ul_lib.ids_of(s0d['rows'])[0]   # 필수 열 · ID = 정확한 양의 정수 (ULKRR-04 — 열 결손 = 관측 결손 · 예외 없음)
+        if ids is not None and len(set(ids)) == len(ids):
+            s0_ids = set(ids)
     obs = os.path.join(R, 'obs')
     pre, pre_pr = _obs_frame(os.path.join(obs, 'pre_bot.dump'), HIST_PRE_COLS, s0, s0_ids)
     posts = sorted(x for x in os.listdir(obs) if x.startswith('post_atom_')) if os.path.isdir(obs) else []
@@ -2566,8 +2807,11 @@ def selftest() -> int:
             lambda: (lambda u: okp(u) and u['trajectory_status'] == 'SEP_INCOMPLETE')(sep5([[]] * 6, 6, (('SEPARATED', 'w2'), ('POST_DONE', 'w6')), drop_w3)))
         chk('R31 Q4 (가) w 연속인데 창 간격 ≠ 그 팔 W (5,000 step) — w 3 창 끝 + 1,000 → SEP_INCOMPLETE · 주 값 OK',
             lambda: (lambda u: okp(u) and u['trajectory_status'] == 'SEP_INCOMPLETE')(sep5([[]] * 5, 5, (('SEPARATED', 'w2'), ('POST_DONE', 'w5')), shift_w3)))
-        chk('R31 Q4 (가) separation(): 같은 k 안 w 1 · 2 · 4 · 5 (빈 구간) = 연속 끊김 · 분리 뒤 창 초기화 · w 연속인데 간격 ≠ w_steps 도 끊김',
-            lambda: (lambda a, b: a['separated_final'] is False and a['gap_index'] == [2] and b['gap_index'] == [2])(
+        chk('R31 Q4 (가) separation(): 같은 k 안 w 1 · 2 · 4 (빈 구간) = w 2 선언이 끊김 (분리 뒤 창 초기화 · 최종 분리 아님) · 빈 구간 뒤 연속 두 0 창 (w 4 · 5) = '
+            '새 선언 (w 5) · w 연속인데 간격 ≠ w_steps 도 끊김',
+            lambda: (lambda a, a2, b: a['separated_final'] is False and a['gap_index'] == [2] and a['post_windows'] == []
+                     and a2['gap_index'] == [2] and a2['declared_index'] == 3 and a2['post_windows'] == [3] and b['gap_index'] == [2])(
+                separation([{'state': 'ZERO', 'step': 100 * w, 'k': 5, 'w': w, 'phase': 2} for w in (1, 2, 4)], 2, w_steps=100),
                 separation([{'state': 'ZERO', 'step': 100 * w, 'k': 5, 'w': w, 'phase': 2} for w in (1, 2, 4, 5)], 2, w_steps=100),
                 separation([{'state': 'ZERO', 'step': s, 'k': 5, 'w': w, 'phase': 2} for w, s in ((1, 100), (2, 200), (3, 350))], 2, w_steps=100)))
     with tempfile.TemporaryDirectory() as root:
@@ -2638,16 +2882,26 @@ def selftest() -> int:
 
 def main(argv=None):
     ap = argparse.ArgumentParser(description='DEM 언로딩 키트 K4 읽는 쪽')
-    ap.add_argument('cmd', nargs='?', choices=['inputs', 'restore', 'kebase', 's0p', 'arm', 'select', 'gate', 'report', 'copycmd', 'parentsums'])
+    ap.add_argument('cmd', nargs='?', choices=['inputs', 'restore', 'kebase', 's0p', 'arm', 'select', 'gate', 'report', 'copycmd', 'parentsums',
+                                               'grammar'])
     ap.add_argument('args', nargs='*')
     ap.add_argument('--hist')
     ap.add_argument('--job', default='RJ')
+    ap.add_argument('--lmp-sha', help='grammar: 지금 돌릴 LMP 바이너리 sha256 (문법 런의 바이너리와 같아야)')
     ap.add_argument('--selftest', action='store_true')
     a = ap.parse_args(argv)
     if a.selftest:
         return selftest()
     if not a.cmd:
         ap.error('명령 (또는 --selftest)')
+    if a.cmd == 'grammar':   # Q5 — 러너 사전 점검 (본 R · RJ2 · EXT 의 LIGGGHTS 전) · rc 0 허용 · 2 거부
+        if len(a.args) != 1 or not a.lmp_sha:
+            ap.error('grammar <…/gram_<시각>/grammar_verdict.json> --lmp-sha <지금 바이너리 sha256>')
+        ok, pr, rec = grammar_prereq(a.args[0], a.lmp_sha)
+        print(f'GRAMMAR_PREREQ status={"PASS" if ok else "REFUSE"} verdict={rec["verdict"]} verdict_sha256={rec["verdict_sha256"]} run_dir={rec["run_dir"]} '
+              f'lmp_sha256={rec["lmp_sha256"]} grammar_deck_sha256={rec["grammar_deck_sha256"]} producer_deck_sha256={rec["producer_deck_sha256"]}'
+              + ('' if ok else ' why=' + ' · '.join(pr[:6])))
+        return 0 if ok else 2
     P = ul_lib.load_params()
     if a.cmd == 'copycmd':
         if len(a.args) != 1 or a.args[0] not in BEDS:

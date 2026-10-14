@@ -462,6 +462,30 @@ def fnum(x):
     return v if math.isfinite(v) else None
 
 
+ID_MAX = 2 ** 53   # float 로 읽은 정수가 정확한 범위
+
+
+def exact_id(x):
+    """원자 ID (덤프를 float 로 읽은 값) → int — 유한 · 양 · 정확한 정수 (2^53 이하) 일 때만 · 아니면 None.
+    ULKRR-04: 소수 ID 를 정수로 자르지 않는다 (int(2.5) = 2 가 다른 원자로 둔갑) · bool · 글자는 받지 않는다."""
+    if isinstance(x, bool) or not isinstance(x, (int, float)):
+        return None
+    if isinstance(x, float) and not (math.isfinite(x) and x.is_integer()):
+        return None
+    return int(x) if 0 < x <= ID_MAX else None
+
+
+def ids_of(rows, key='id'):
+    """행 목록의 ID → (정수 목록 | None, 문제 목록) — 필수 열 결손 · 소수 · 비유한 · 0 이하 = None + 사유 (예외 없이 · ULKRR-04)."""
+    if any(key not in r for r in rows):
+        return None, [f'{key} 열 없음 (필수 열 결손)']
+    ids = [exact_id(r[key]) for r in rows]
+    bad = [r[key] for r, i in zip(rows, ids) if i is None]
+    if bad:
+        return None, [f'{key} 가 유한 · 양의 정확한 정수가 아니다 ({bad[:3]}) — 정수로 자르지 않는다']
+    return ids, []
+
+
 # ── selftest ─────────────────────────────────────────────────────────────────
 
 def selftest():

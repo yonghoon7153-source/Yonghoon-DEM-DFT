@@ -5,8 +5,10 @@
 #   bash run_unload.sh <침대> <잡>                    # 잡 하나 (아래) — 관문 (ul_reader.py gate) 이 거부하면 런 없이 멈춘다
 #   bash run_unload.sh <침대> <잡> --preflight-only   # 사전 점검만 (런 · kit 사본 없음)
 #   RESUME=1 bash run_unload.sh <침대> <팔>           # 기계 실패 이어 돌림 한 번 (마지막 restart_unload_* + 짝 상태 파일 · §4-4 · §13-1)
-#     ⛔ 개정 3 §14-4: RESUME = 일반 팔 (UB · UT · UC · UVa · UVb · UT3) 만 · 첫 시도가 관문 ALLOW (gate=ALLOW 기록) 를 받았고 덱 요약 없이 끝났을 때 ·
-#        UTc · G_* · RJ · RJ2 · EXT = 거부 — 다시 = 새 시도 (지금 폴더를 이름 바꿔 보존 → RESUME 없이 새 제출 · 관문 다시)
+#     ⛔ 개정 3 §14-4: RESUME = 일반 팔 (UB · UT · UVa · UVb · UT3) 만 · 첫 시도가 관문 ALLOW (gate=ALLOW 기록) 를 받았고 덱 요약 없이 끝났을 때 ·
+#        UC = fresh-attempt-only (UC 덱은 단 끝 restart 를 쓰지 않는다 · Q6) · UTc · G_* · RJ · RJ2 · EXT = 거부 —
+#        다시 = 새 시도 (지금 폴더를 이름 바꿔 보존 → RESUME 없이 새 제출 · 관문 다시 · 새 잡 기록 prior_attempts= 에 앞 시도 폴더 ·
+#        새 폴더는 등록된 재시도 한도 · 결과 선택을 초기화하지 않는다)
 #
 # 잡 (정본 이름 = README §0):
 #   RJ    복원 시험 — G0 (원 마지막 조각 덱 · 정적) → (7:3) Ut0 → R → UN (보조 소거 읽기) → UK (회전 KE) → 복원 판정 · KE 기준 파일
@@ -24,6 +26,8 @@
 #   NP (6) · MPIRUN (mpirun) · MPIRUN_FLAGS (--oversubscribe --bind-to none) · PY (python3)
 #   LMP (/lustre$HOME/LIGGGHTS-PUBLIC/src/lmp_mpi — 표 binary.lmp_sha256 이 아니면 멈춘다 · ALLOW_OTHER_LMP=1 = 이탈 기록)
 #   HIST_VERDICT (이력 시험 history_verdict.json — 복원 판정 ③ · 없으면 UNCONFIRMED) · ALLOW_CONCURRENT=1 (다른 LIGGGHTS 가 돌아도)
+#   GRAMMAR_VERDICT (문법 fixture gram_<시각>/grammar_verdict.json — RJ · RJ2 · EXT 필수: 사전 점검이 판정 PASS · 덱 출처 · 같은 LMP 를 대조하고
+#     아니면 LIGGGHTS 전에 멈춘다 · Q5 · 개정 3 §14-9 · README §1-6)
 #
 # 지키는 것: kit 사본으로 다시 실행 (SHA256SUMS) · 잡 폴더는 새로 (있으면 거부 · 이어 돌림만 예외) · 단계마다 화면 · 로그 · 덱 사본 · rc ·
 #   Loop time 의 procs = NP · ERROR · UL_ABORT 검사 · 런 뒤 읽는 쪽 (판정 JSON) · 보고 묶음 (큰 덤프 · restart 제외) + sha256.
@@ -48,8 +52,9 @@ case "$BED" in ps_0_10_r45|ps_3_7_r45|ps_5_5_r45|ps_7_3_r45|ps_10_0_r45) ;; *) d
 case "$JOB" in RJ|RJ2|EXT|UB|UT|UC|UVa|UVb|UT3|UTc|G_UB|G_UVa|G_UVb|G_UT3) ;; *) die "모르는 잡: $JOB (README §0)";; esac
 case "$WORK_ROOT" in *' '*) die "WORK_ROOT 에 공백 — LIGGGHTS 변수로 넘길 수 없다";; esac
 if [ "${RESUME:-0}" = 1 ]; then   # 개정 3 §14-4 (ULKR-06) — kit 사본 · 사전 점검 전에 거부
-  case "$JOB" in UB|UT|UC|UVa|UVb|UT3) ;;
-    *) die "RESUME 거부 — $JOB 는 이어 돌림을 지원하지 않는다 (등록 개정 3 §14-4: 이어 돌림 = 일반 팔 UB · UT · UC · UVa · UVb · UT3 만).  다시 = 새 시도: 지금 폴더 $WORK_ROOT/$BED/$JOB 를 이름을 바꿔 보존 (예 ${JOB}.try1 · 지우지 · 덮지 않는다) → RESUME 없이 새로 제출 (관문 다시)";;
+  case "$JOB" in UB|UT|UVa|UVb|UT3) ;;
+    UC) die "RESUME 거부 — UC = fresh-attempt-only (새 시도만 · UC 덱은 단 끝 restart 를 쓰지 않는다 · 등록 개정 3 §14-4 · Q6).  다시 = 새 시도: 지금 폴더 $WORK_ROOT/$BED/$JOB 를 이름을 바꿔 보존 (예 ${JOB}.try1 · 지우지 · 덮지 않는다) → RESUME 없이 새로 제출 (관문 다시 · 새 잡 기록 prior_attempts= 에 남는다 — 새 폴더는 등록된 재시도 한도 · 결과 선택을 초기화하지 않는다)";;
+    *) die "RESUME 거부 — $JOB 는 이어 돌림을 지원하지 않는다 (등록 개정 3 §14-4: 이어 돌림 = 일반 팔 UB · UT · UVa · UVb · UT3 만 · UC = fresh-attempt-only).  다시 = 새 시도: 지금 폴더 $WORK_ROOT/$BED/$JOB 를 이름을 바꿔 보존 (예 ${JOB}.try1 · 지우지 · 덮지 않는다) → RESUME 없이 새로 제출 (관문 다시)";;
   esac
 fi
 
@@ -84,6 +89,18 @@ resume_check() {   # 개정 3 §14-4 (ULKR-06) — 같은 승인 팔의 기술 �
   [ ! -e "$jd/ul_summary.txt" ] || die "첫 시도가 덱 요약 (ul_summary.txt) 까지 끝났다 — 기계 실패가 아니다 (이어 돌림 없음)"
   echo "  ✓ 이어 돌림 = 같은 승인 팔 ($BED $JOB · 첫 시도 gate=ALLOW · 요약 없음 · 한 번)"
 }
+GRAMMAR_REC=()
+grammar_check() {   # Q5 (1저자 10-14 — 강제) · 개정 3 §14-9: 본 R (RJ · RJ2) · 10:0 연장 (EXT) 의 LIGGGHTS 전 — 문법 fixture PASS + 그 런의 덱 · 같은 바이너리
+  case "$JOB" in RJ|RJ2|EXT) ;; *) return 0;; esac
+  [ -n "${GRAMMAR_VERDICT:-}" ] || die "문법 fixture 판정 (GRAMMAR_VERDICT=…/gram_<시각>/grammar_verdict.json) 없음 — $JOB 의 LIGGGHTS 전 PASS 필수 (README §1-6 · 개정 3 §14-9 · Q5) · 런 없음"
+  local gout grc
+  gout=$("$PY" -I "$KIT/ul_reader.py" grammar "$GRAMMAR_VERDICT" --lmp-sha "$LMP_SHA"); grc=$?
+  echo "$gout"
+  [ "$grc" = 0 ] || die "문법 fixture 사전 점검 거부 — 위 이유 ($JOB 의 LIGGGHTS 를 돌리지 않는다 · README §1-6 실행 2 의 PASS 판정 · 같은 LMP)"
+  GRAMMAR_REC=("grammar_prereq=PASS" "grammar_verdict=$GRAMMAR_VERDICT" "grammar_verdict_sha256=$(sha256sum "$GRAMMAR_VERDICT" | cut -d' ' -f1)"
+               "grammar_line=$(echo "$gout" | tr '\n' ' ')")
+  echo "  ✓ 문법 fixture PASS (판정 · 덱 둘 + 판 STL sha256 = 봉인 값 · 같은 LMP)"
+}
 preflight() {
   say "사전 점검 — $BED $JOB"
   [ -d "$WORK_ROOT" ] || die "WORK_ROOT 가 없다: $WORK_ROOT"
@@ -103,6 +120,7 @@ preflight() {
   echo "  ✓ $MPIRUN $MPIRUN_FLAGS -np $NP · $PY"
   "$PY" -I "$KIT/ul_reader.py" inputs "$WORK_ROOT" "$BED" > /dev/null || die "in/ 원 파일 sha256 ≠ 표 (또는 원 로그 · 원 마지막 조각 덱 없음) — $WORK_ROOT/$BED/in/"
   echo "  ✓ in/ 원 파일 = 표"
+  grammar_check
   if [ "${RESUME:-0}" = 1 ]; then
     resume_check
     GATE_LINE="gate=RESUME"
@@ -132,11 +150,14 @@ if [ "$BED" = ps_10_0_r45 ] && [ "$JOB" != RJ ] && [ "$JOB" != EXT ]; then
   [ -s "$CKPT0" ] || die "10:0 S0′ 체크포인트 restart_ext_$S0P.bin 없음"
 fi
 
+PRIOR=""
 if [ "${RESUME:-0}" = 1 ]; then
   [ -d "$JD" ] || die "이어 돌릴 잡 폴더가 없다: $JD"
   [ ! -e "$JD/screen_a2.txt" ] || die "이미 이어 돌렸다 (등록 범위 한 번 — §4-4 · §13-1 · 그 밖 = 새 승인 · 등록)"
 else
   mkdir -p "$WORK_ROOT/$BED"
+  # Q6: 새 폴더 = 새 시도 — 이름을 바꿔 보존한 앞 시도 (<잡>.<꼬리> 폴더) 를 새 잡 기록에 남긴다 (재시도 한도 · 결과 선택을 초기화하지 않는다 · 판단 = 1저자)
+  for x in "$WORK_ROOT/$BED/$JOB".*; do [ -d "$x" ] && PRIOR="$PRIOR ${x##*/}"; done
   mkdir "$JD" || die "잡 폴더가 이미 있다 (덮어쓰지 않는다): $JD"
 fi
 {
@@ -144,7 +165,10 @@ fi
   echo "sums_sha256=$(sha256sum "$KIT/SHA256SUMS" | cut -d' ' -f1)"
   echo "lmp=$LMP"; echo "lmp_sha256=$LMP_SHA"; echo "np=$NP"; echo "mpirun=$MPIRUN $MPIRUN_FLAGS"; echo "bed=$BED"; echo "job=$JOB"
   echo "resume=${RESUME:-0}"; echo "slurm_job=${SLURM_JOB_ID:-none} slurm_ntasks=${SLURM_NTASKS:-none} slurm_nodes=${SLURM_JOB_NODELIST:-none}"
-  echo "allow_other_lmp=${ALLOW_OTHER_LMP:-0}"; echo "$GATE_LINE"; [ -n "$GATE_WHY" ] && echo "gate_why=$GATE_WHY"; echo "start=$(date -Iseconds)"
+  echo "allow_other_lmp=${ALLOW_OTHER_LMP:-0}"; echo "$GATE_LINE"; [ -n "$GATE_WHY" ] && echo "gate_why=$GATE_WHY"
+  for x in ${GRAMMAR_REC[@]+"${GRAMMAR_REC[@]}"}; do echo "$x"; done   # Q5 — 문법 fixture 사전 점검 PASS (판정 · sha256 · 줄)
+  [ -n "$PRIOR" ] && echo "prior_attempts=${PRIOR# }"
+  echo "start=$(date -Iseconds)"
 } >> "$JD/run_manifest.txt"
 MAN="$JD/run_manifest.txt"
 note() { echo "$*" >> "$MAN"; }   # 단계 기록 (개정 3 §14-10 · ULKR-11) — 줄을 덧붙이기만 한다
@@ -224,12 +248,16 @@ case "$JOB" in
     ;;
   EXT)
     run_deck "$JD" EXT "$CKPT0" - 0
-    reader s0p "$WORK_ROOT"
-    if [ "$RRC" != 0 ] && [ -s "$JD/restart/restart_ext_$(tbl "d['ext_10_0']['end1']").bin" ]; then
+    END1=$(tbl "d['ext_10_0']['end1']")
+    S0PRC=0; reader s0p "$WORK_ROOT" || S0PRC=$?
+    if [ "$S0PRC" = 2 ] && [ -s "$JD/restart/restart_ext_$END1.bin" ]; then
+      # Q4 (다): s0p rc 2 = 등록된 연장 요청 (S0′ 조건 미달 — 판정이지 오류가 아니다) → EXT2 · 최종 판독 rc = EXT2 뒤 s0p
       mkdir -p "$WORK_ROOT/$BED/EXT2"
       RRC=0
-      run_deck "$WORK_ROOT/$BED/EXT2" EXT2 "$JD/restart/restart_ext_$(tbl "d['ext_10_0']['end1']").bin" - 0
+      run_deck "$WORK_ROOT/$BED/EXT2" EXT2 "$JD/restart/restart_ext_$END1.bin" - 0
       reader s0p "$WORK_ROOT"
+    elif [ "$S0PRC" != 0 ] && [ "$S0PRC" != 2 ]; then
+      say "✗ s0p 판독기 rc=$S0PRC — 프로그램 오류 (등록된 연장 요청 rc 2 아님) · EXT2 를 돌리지 않는다 · 판독기 rc 를 그대로 둔다 (Q4 다)"
     fi
     ;;
   UB|UT|UC|UVa|UVb|UT3)

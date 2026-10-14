@@ -254,7 +254,11 @@ def _contacts(path, box):
     rows, dup, conflicts = {}, 0, []
     for r in d['rows']:
         v = [r[f'c_cpl[{i}]'] for i in range(1, 27)]
-        i, j = int(v[6]), int(v[7])
+        i, j = ul_lib.exact_id(v[6]), ul_lib.exact_id(v[7])
+        if i is None or j is None:   # ULKRR-04 — 쌍 참조 소수 ID 를 정수로 잘라 같은 키로 만들지 않는다
+            d['ok'] = False
+            d['problems'].append(f'쌍 참조 ID ({v[6]!r} · {v[7]!r}) 가 유한 · 양의 정확한 정수가 아니다')
+            continue
         if i > j:
             v = v[3:6] + v[0:3] + v[6:9] + [-x for x in v[9:18]] + v[18:]
         key = (min(i, j), max(i, j))

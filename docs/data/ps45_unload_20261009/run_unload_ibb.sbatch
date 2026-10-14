@@ -9,7 +9,8 @@
 #   하는 일 = run_unload.sh <침대> <잡> 을 NP 6 · lmp_mpi 로.  #SBATCH -n 6 ↔ mpirun --oversubscribe --bind-to none -np 6 짝
 #   (mpirun 줄은 run_unload.sh 가 쓴다 · 여기서는 SLURM_NTASKS = NP 를 대조한다).  5 일 = 등록 §5-2 잡 시간 한도 (cpu-60).
 #   제출 = 작업 폴더에서 (출력 logs/ 는 제출 폴더 기준 — 먼저 만든다):  sbatch <kit>/run_unload_ibb.sbatch <kit> <침대> <잡>
-#   이어 돌림 (기계 실패 한 번):  sbatch --export=ALL,RESUME=1 <kit>/run_unload_ibb.sbatch <kit> <침대> <팔>
+#   이어 돌림 (기계 실패 한 번):  sbatch --export=ALL,RESUME=1 <kit>/run_unload_ibb.sbatch <kit> <침대> <팔>   (UC = fresh-attempt-only)
+#   RJ · RJ2 · EXT = 문법 fixture PASS 판정 필수 (사전 점검이 LIGGGHTS 전에 대조 · Q5):  --export=ALL,GRAMMAR_VERDICT=<…/gram_<시각>/grammar_verdict.json>,…
 #   SLURM 밖에서 bash 로 부르면 = 제출 전 사전 점검만 (같은 환경 · 같은 경로 · 관문 포함 · run_unload.sh --preflight-only · 런 없음).
 #   ⚠ 다른 job 을 끄지 않는다 — cpu-60 이 차 있으면 PD 로 기다리다 저절로 시작한다.
 #   ⚠ 이 파일도 묶음 SHA256SUMS 에 든다 — 고치면 seal_kit.py --write 로 SHA256SUMS 를 다시 쓴다.

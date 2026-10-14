@@ -48,11 +48,17 @@ RULES = (
      '판 접촉 요구 없음) — 아니면 주 값 UNIDENTIFIED · 선택 UNRESOLVED (개정 3 §14-1 · Q1 · ULKR-01)',
      'ul_reader.py', 'arm_verdict', ('ul_reader R20',)),
     ('parse_complete', '모든 관측 덤프 = 전부 읽힘 · 머리 step = 요청 step · 고유 ID · S0 에 없는 ID 없음 · CSV 결손 · 단 k 불연속 = 주 값 미식별 · 버린 행 재사용 없음 '
-     '(개정 3 §14-10 · ULKR-04)',
-     'ul_reader.py', '_atom_frame', ('ul_reader R22',)),
+     '· 필수 열 · 파서 문제를 먼저 (열 결손 = 사유 있는 미식별 · 예외 없음) · ID = 유한 · 양의 정확한 정수 (S0 · 원자 · 복원 관측 · 쌍 참조 — 소수를 정수로 자르지 않는다) '
+     '(개정 3 §14-10 · ULKR-04 · ULKRR-04)',
+     'ul_reader.py', '_atom_frame', ('ul_reader R22', 'ul_reader R30', 'ul_lib L13', 'ul_s3 F12', 'ul_gates C3')),
+    ('resume_boundary', '기록 줄 교체 (끊긴 시도가 남긴 줄 버림) = 승인된 이어 돌림 경계에서만 — RESUME 사건 (k · step) + 러너 시도 기록 resume_from=step + 덱 상태 파일 '
+     '(ul_rstep · ul_k) 이 맞고 · 버릴 줄 = 그 step 뒤 · 버린 뒤 앞 줄 = (k · step) · 새 시도 첫 줄 = k + 1 · 그 밖 중복 · 역행 step · k · w = 버리지 않고 주 값 미식별 '
+     '(개정 3 §14-4 · §14-10 · ULKRR-02)',
+     'ul_reader.py', '_supersede', ('ul_reader R28', 'ul_reader R10', 'ul_runner_test M23')),
     ('separation', '창 접촉 상태 CONTACT · TENSION · ZERO · OBS_MISSING (≠ 0) · 분리 = 같은 단 (k) 안 연속 두 0 창의 둘째 창 끝 (SEPARATE 단계 창 · 이동 = 연속 '
-     '초기화 · 덱과 같은 규칙) · 재접촉 = 계수 · 분리 뒤 창 초기화 (§13-3 · 개정 3 §14-7)',
-     'ul_reader.py', 'separation', ('ul_reader R6', 'ul_reader R24')),
+     '초기화 · 덱과 같은 규칙) · 재접촉 = 계수 · 분리 뒤 창 초기화 · 창 기록 = 같은 k 안 고유 · 연속 w + 그 팔 창 간격 W (빈 구간 = 연속 끊김 · 예산 끝 선언 → '
+     '분리 뒤 4 창은 그대로) (§13-3 · 개정 3 §14-7 · Q4 가)',
+     'ul_reader.py', 'separation', ('ul_reader R6', 'ul_reader R24', 'ul_reader R31')),
     ('recontact_budget', '분리 선언 = 유지 예산 (wmax) 안 · 분리 뒤 4 창 = 예산 밖 별도 관측 · 재접촉 = 같은 높이 · 남은 예산 (k + 1 로 옮기지 않음) · 예산 끝 = '
      'SEP_INCOMPLETE · 덱 DONE ↔ 판독기 (최종 분리 · 분리 뒤 4 창 · 선언 창 ≤ 예산 · SEPARATED · POST_DONE 사건) 불일치 = 보조 미완료 SEP_INCOMPLETE — '
      '주 ρ 무영향 (개정 3 §14-7 · Q6 · ULKR-07)',
@@ -83,15 +89,22 @@ RULES = (
      'ul_s3.py', 's3_residual', ('ul_s3 selftest',)),
     ('sigma_p', 'σ_P = k* 마지막 두 창 thermo 정규 줄 (ul_Ps) · ddof 1 · 최소 10 · NOISE_FLOOR = P_meas < 3 σ_P (choice C3)',
      'ul_observers.py', 'sigma_P', ('ul_observers O1–O4b',)),
-    ('resume_once', '기계 실패 이어 돌림 = 일반 팔 (UB · UT · UC · UVa · UVb · UT3) 만 · 같은 승인 팔 (첫 시도 gate=ALLOW · 요약 없음) · 마지막 restart_unload_* + 짝 상태 '
-     '파일에서 한 번 · 두 번째 = 거부 · UTc · G_* · RJ · RJ2 · EXT = 거부 (다시 = 새 시도) · 기록 덮어쓰지 않음 (§4-4 · §13-1 · 개정 3 §14-4 · ULKR-06)',
-     'run_unload.sh', 'resume_check', ('ul_runner_test M7', 'ul_runner_test M7a', 'ul_runner_test M11–M14')),
+    ('resume_once', '기계 실패 이어 돌림 = 일반 팔 (UB · UT · UVa · UVb · UT3) 만 · UC = fresh-attempt-only (단 끝 restart 없음 · 앞에서 거부) · 같은 승인 팔 '
+     '(첫 시도 gate=ALLOW · 요약 없음) · 마지막 restart_unload_* + 짝 상태 파일에서 한 번 · 두 번째 = 거부 · UTc · G_* · RJ · RJ2 · EXT = 거부 (다시 = 새 시도) · '
+     '기록 덮어쓰지 않음 · 새 폴더 = 새 시도 (앞 시도 보존 · 새 잡 기록 prior_attempts= · 재시도 한도 · 결과 선택을 초기화하지 않는다) '
+     '(§4-4 · §13-1 · 개정 3 §14-4 · ULKR-06 · Q6)',
+     'run_unload.sh', 'resume_check', ('ul_runner_test M7', 'ul_runner_test M7a', 'ul_runner_test M11–M14', 'ul_runner_test M24')),
     ('stage_rc', '단계마다 기술 rc · 판독기 rc 를 잡 기록 (run_manifest.txt) 에 · G0 · Ut0 기술 실패 = R 을 돌리지 않는다 · 판독기 프로그램 오류 (rc ≠ 0) ↔ '
-     '정상 미식별 (rc 0 · JSON) 따로 (개정 3 §14-10 · ULKR-11)',
-     'run_unload.sh', 'reader_${cmd}_rc', ('ul_runner_test M4', 'ul_runner_test M15–M17')),
+     '정상 미식별 (rc 0 · JSON) 따로 · EXT: s0p rc 2 (등록된 연장 요청) 만 EXT2 · 그 밖 비영 rc = 멈춤 · 판독기 rc 보존 (개정 3 §14-10 · ULKR-11 · Q4 다)',
+     'run_unload.sh', 'reader_${cmd}_rc', ('ul_runner_test M4', 'ul_runner_test M15–M17', 'ul_runner_test M21')),
     ('restore_complete', '복원 판정 = Ut0 (7:3) · R · UN 단계 기술 성공 · PRE · POST · R_END · UN 전부 읽힘 · 머리 step · 고유 ID · S0 ID 집합 · '
-     'R_END ↔ UN 같은 대상 · 이력 시험 H0–H5 + SYN PASS · 부호 = 표 · 총힘 시점 · 관문 = RESTORED + RJ 잡 기술 실패 0 (개정 3 §14-10 · ULKR-05 · 08)',
-     'ul_reader.py', 'restore_verdict', ('ul_reader R17', 'ul_reader R18', 'ul_gates F2')),
+     'R_END ↔ UN 같은 대상 · 이력 시험 H0–H5 + SYN PASS · 부호 = 표 · 총힘 시점 · 관문 = RESTORED + RJ 잡 완료 영수증 fails=0 · reader_rc=0 (둘 다 있고 · 정수 · 0) '
+     '+ 문법 fixture 사전 점검 PASS 기록 · RJ2 = S0′ 결정 PASS + EXT 잡 완료 영수증 (개정 3 §14-10 · ULKR-05 · 08 · ULKRR-03)',
+     'ul_reader.py', 'restore_verdict', ('ul_reader R17', 'ul_reader R18', 'ul_reader R29', 'ul_gates F2', 'ul_runner_test M20')),
+    ('grammar_prereq', '본 R (RJ · RJ2) · 10:0 연장 (EXT) 의 LIGGGHTS 전 = 문법 fixture PASS — 판정 JSON (schema · status PASS · exit_code 정수 0 · 검사 19 전부 참) · '
+     '그 런 폴더 (run_dir · mode gram · end) · 같은 바이너리 (lmp_sha256) · 덱 둘 + 판 STL sha256 = 봉인 값 (단계 사본 · 그 런의 kit SHA256SUMS) — 아니면 사전 점검 '
+     '거부 (런 없음) · 잡 기록 grammar_prereq=PASS · 러너 · 판독기 스크립트 sha256 은 대조하지 않는다 (개정 3 §14-9 · Q5 — 1저자 10-14 강제)',
+     'ul_reader.py', 'grammar_prereq', ('ul_reader R32', 'ul_runner_test M22')),
 )
 
 

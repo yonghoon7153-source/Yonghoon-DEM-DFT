@@ -127,17 +127,20 @@ run_stage() {   # $1 = 단계 이름  $2 = 덱  $3 = NP  $4 = 읽을 restart (�
 
 # ── 2b. 문법 fixture 만 (Q8 · 등록 개정 3 §14-9) — P → GA (처음 · 빈 상태 파일) → GB (GA 마지막 단 끝 restart + 짝 상태 파일 · 새 프로세스) ──
 if [ "$GRAMMAR_ONLY" = 1 ]; then
-  run_stage P in.hist_producer.liggghts "$NP" - || say "✗ 생산자 실패 — 문법 단계를 돌리지 않는다"
+  # Q4 (나 · Codex 판정문 10-14 §6-2): 다음 단계 = 앞 단계 rc 0 **과** 그 산출물 둘 다 (파일을 다 쓴 뒤 실패한 단계에서 이어 가지 않는다)
+  PRC=0; run_stage P in.hist_producer.liggghts "$NP" - || PRC=$?
   FIX="$RUN/P/fixture.bin"
-  if [ -s "$FIX" ]; then
+  if [ "$PRC" = 0 ] && [ -s "$FIX" ]; then
     mkdir -p "$RUN/GA" && echo "# 처음 (빈 상태 파일 — 덱은 상태 파일을 늘 맨 바깥에서 include 한다)" > "$RUN/GA/state_fresh.in"
-    run_stage GA in.hist_grammar.liggghts "$NP" "$FIX" gr_state "$RUN/GA/state_fresh.in" gr_resume 0
+    GARC=0; run_stage GA in.hist_grammar.liggghts "$NP" "$FIX" gr_state "$RUN/GA/state_fresh.in" gr_resume 0 || GARC=$?
     LASTS=$(ls "$RUN"/GA/restart/state_g_*.in 2>/dev/null | sed 's/.*state_g_\([0-9]*\)\.in$/\1/' | sort -n | tail -1)
-    if [ -n "$LASTS" ] && [ -s "$RUN/GA/restart/restart_g_$LASTS.bin" ]; then
+    if [ "$GARC" = 0 ] && [ -n "$LASTS" ] && [ -s "$RUN/GA/restart/restart_g_$LASTS.bin" ]; then
       run_stage GB in.hist_grammar.liggghts "$NP" "$RUN/GA/restart/restart_g_$LASTS.bin" gr_state "$RUN/GA/restart/state_g_$LASTS.in" gr_resume 1
     else
-      say "✗ GA 의 마지막 단 끝 restart + 상태 파일이 없다 — GB (이어 돌림) 를 돌리지 않는다"
+      say "✗ GA rc=$GARC · 마지막 단 끝 restart + 상태 파일 — 둘 다 있어야 GB (이어 돌림) 를 돌린다 · GB 없음"
     fi
+  else
+    say "✗ 생산자 rc=$PRC · fixture.bin — 둘 다 있어야 문법 단계를 돌린다 · GA · GB 없음"
   fi
   echo "end=$(date -Iseconds)" >> "$RUN/run_manifest.txt"
   "$PY" -I "$KIT/read_history.py" --grammar "$RUN" --params "$KIT/history_params.json" --out "$RUN/grammar_verdict.json" | tee "$RUN/grammar_verdict.txt"
@@ -148,9 +151,9 @@ if [ "$GRAMMAR_ONLY" = 1 ]; then
   exit "$VRC"
 fi
 
-run_stage P in.hist_producer.liggghts "$NP" - || { say "✗ 생산자 실패 — 뒤 단계를 돌리지 않는다"; }
+PRC=0; run_stage P in.hist_producer.liggghts "$NP" - || { PRC=$?; say "✗ 생산자 실패 (rc $PRC) — 뒤 단계를 돌리지 않는다"; }
 FIX="$RUN/P/fixture.bin"
-if [ -s "$FIX" ]; then
+if [ "$PRC" = 0 ] && [ -s "$FIX" ]; then   # 앞 단계 rc 0 과 fixture 둘 다 (Q4 나 — 파일을 쓴 뒤 실패한 생산자에서 이어 가지 않는다)
   run_stage C6 in.hist_consumer.liggghts "$NP" "$FIX"
   run_stage C4 in.hist_consumer.liggghts "$NP_ALT" "$FIX"
   for m in bot top none; do
