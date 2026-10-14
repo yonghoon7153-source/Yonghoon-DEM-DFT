@@ -1,0 +1,566 @@
+{
+  "repository_full_name": "yonghoon7153-source/Yonghoon-DEM-DFT",
+  "base": "df647d4e3",
+  "head": "1087a9b2f4a93aa6a3b0debc698a14fffa13488d",
+  "status": "ahead",
+  "ahead_by": 2,
+  "behind_by": 0,
+  "total_commits": 2,
+  "too_large": null,
+  "base_commit": {
+    "sha": "df647d4e31224e1a270dae01dd41f91af3048361",
+    "url": "https://api.github.com/repos/yonghoon7153-source/Yonghoon-DEM-DFT/commits/df647d4e31224e1a270dae01dd41f91af3048361",
+    "html_url": "https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT/commit/df647d4e31224e1a270dae01dd41f91af3048361"
+  },
+  "merge_base_commit": {
+    "sha": "df647d4e31224e1a270dae01dd41f91af3048361",
+    "url": "https://api.github.com/repos/yonghoon7153-source/Yonghoon-DEM-DFT/commits/df647d4e31224e1a270dae01dd41f91af3048361",
+    "html_url": "https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT/commit/df647d4e31224e1a270dae01dd41f91af3048361"
+  },
+  "files": [
+    {
+      "filename": "CLAUDE.md",
+      "status": "modified",
+      "additions": 1,
+      "deletions": 1,
+      "changes": 2,
+      "previous_filename": null
+    },
+    {
+      "filename": "docs/data/ps45_unload_20261009/README.md",
+      "status": "modified",
+      "additions": 1,
+      "deletions": 0,
+      "changes": 1,
+      "previous_filename": null
+    },
+    {
+      "filename": "docs/reviews/codex_dem_unloading_kit_request_20261013.md",
+      "status": "modified",
+      "additions": 2,
+      "deletions": 1,
+      "changes": 3,
+      "previous_filename": null
+    },
+    {
+      "filename": "docs/reviews/codex_dem_unloading_kit_review_evidence_20261014/PACKAGE_MANIFEST.json",
+      "status": "added",
+      "additions": 6782,
+      "deletions": 0,
+      "changes": 6782,
+      "previous_filename": null
+    },
+    {
+      "filename": "docs/reviews/codex_dem_unloading_kit_review_evidence_20261014/README.md",
+      "status": "added",
+      "additions": 22,
+      "deletions": 0,
+      "changes": 22,
+      "previous_filename": null
+    },
+    {
+      "filename": "docs/reviews/codex_dem_unloading_kit_review_evidence_20261014/_README_import.md",
+      "status": "added",
+      "additions": 17,
+      "deletions": 0,
+      "changes": 17,
+      "previous_filename": null
+    },
+    {
+      "filename": "docs/reviews/codex_dem_unloading_kit_review_evidence_20261014/_members.tsv",
+      "status": "added",
+      "additions": 1353,
+      "deletions": 0,
+      "changes": 1353,
+      "previous_filename": null
+    },
+    {
+      "filename": "docs/reviews/codex_dem_unloading_kit_review_evidence_20261014/evidence/_cases_20261014.tgz",
+      "status": "added",
+      "additions": 0,
+      "deletions": 0,
+      "changes": 0,
+      "previous_filename": null
+    },
+    {
+      "filename": "docs/reviews/codex_dem_unloading_kit_review_evidence_20261014/evidence/baseline.json",
+      "status": "added",
+      "additions": 328,
+      "deletions": 0,
+      "changes": 328,
+      "previous_filename": null
+    },
+    {
+      "filename": "docs/reviews/codex_dem_unloading_kit_review_evidence_20261014/evidence/deck_control.json",
+      "status": "added",
+      "additions": 686,
+      "deletions": 0,
+      "changes": 686,
+      "previous_filename": null
+    },
+    {
+      "filename": "docs/reviews/codex_dem_unloading_kit_review_evidence_20261014/evidence/final_reproduction.json",
+      "status": "added",
+      "additions": 76,
+      "deletions": 0,
+      "changes": 76,
+      "previous_filename": null
+    },
+    {
+      "filename": "docs/reviews/codex_dem_unloading_kit_review_evidence_20261014/evidence/history_actual_audit.json",
+      "status": "added",
+      "additions": 738,
+      "deletions": 0,
+      "changes": 738,
+      "previous_filename": null
+    },
+    {
+      "filename": "docs/reviews/codex_dem_unloading_kit_review_evidence_20261014/evidence/history_reread.json",
+      "status": "added",
+      "additions": 160,
+      "deletions": 0,
+      "changes": 160,
+      "previous_filename": null
+    },
+    {
+      "filename": "docs/reviews/codex_dem_unloading_kit_review_evidence_20261014/evidence/history_reread.stderr.txt",
+      "status": "added",
+      "additions": 0,
+      "deletions": 0,
+      "changes": 0,
+      "previous_filename": null
+    },
+    {
+      "filename": "docs/reviews/codex_dem_unloading_kit_review_evidence_20261014/evidence/history_reread.stdout.txt",
+      "status": "added",
+      "additions": 16,
+      "deletions": 0,
+      "changes": 16,
+      "previous_filename": null
+    },
+    {
+      "filename": "docs/reviews/codex_dem_unloading_kit_review_evidence_20261014/evidence/history_restore_counterexamples.json",
+      "status": "added",
+      "additions": 102,
+      "deletions": 0,
+      "changes": 102,
+      "previous_filename": null
+    },
+    {
+      "filename": "docs/reviews/codex_dem_unloading_kit_review_evidence_20261014/evidence/history_runner_adapter_results.json",
+      "status": "added",
+      "additions": 12,
+      "deletions": 0,
+      "changes": 12,
+      "previous_filename": null
+    },
+    {
+      "filename": "docs/reviews/codex_dem_unloading_kit_review_evidence_20261014/evidence/history_test_make_history_decks_check.log",
+      "status": "added",
+      "additions": 3,
+      "deletions": 0,
+      "changes": 3,
+      "previous_filename": null
+    },
+    {
+      "filename": "docs/reviews/codex_dem_unloading_kit_review_evidence_20261014/evidence/history_test_make_history_decks_selftest.log",
+      "status": "added",
+      "additions": 142,
+      "deletions": 0,
+      "changes": 142,
+      "previous_filename": null
+    },
+    {
+      "filename": "docs/reviews/codex_dem_unloading_kit_review_evidence_20261014/evidence/history_test_read_history_selftest.log",
+      "status": "added",
+      "additions": 41,
+      "deletions": 0,
+      "changes": 41,
+      "previous_filename": null
+    },
+    {
+      "filename": "docs/reviews/codex_dem_unloading_kit_review_evidence_20261014/evidence/kit_byte_checks.json",
+      "status": "added",
+      "additions": 566,
+      "deletions": 0,
+      "changes": 566,
+      "previous_filename": null
+    },
+    {
+      "filename": "docs/reviews/codex_dem_unloading_kit_review_evidence_20261014/evidence/make_unload_decks_check.log",
+      "status": "added",
+      "additions": 15,
+      "deletions": 0,
+      "changes": 15,
+      "previous_filename": null
+    },
+    {
+      "filename": "docs/reviews/codex_dem_unloading_kit_review_evidence_20261014/evidence/make_unload_decks_selftest.log",
+      "status": "added",
+      "additions": 288,
+      "deletions": 0,
+      "changes": 288,
+      "previous_filename": null
+    },
+    {
+      "filename": "docs/reviews/codex_dem_unloading_kit_review_evidence_20261014/evidence/observer_adversarial.json",
+      "status": "added",
+      "additions": 422,
+      "deletions": 0,
+      "changes": 422,
+      "previous_filename": null
+    },
+    {
+      "filename": "docs/reviews/codex_dem_unloading_kit_review_evidence_20261014/evidence/pin_commit.json",
+      "status": "added",
+      "additions": 196,
+      "deletions": 0,
+      "changes": 196,
+      "previous_filename": null
+    },
+    {
+      "filename": "docs/reviews/codex_dem_unloading_kit_review_evidence_20261014/evidence/reader_adversarial.json",
+      "status": "added",
+      "additions": 308,
+      "deletions": 0,
+      "changes": 308,
+      "previous_filename": null
+    },
+    {
+      "filename": "docs/reviews/codex_dem_unloading_kit_review_evidence_20261014/evidence/reader_continuation.json",
+      "status": "added",
+      "additions": 310,
+      "deletions": 0,
+      "changes": 310,
+      "previous_filename": null
+    },
+    {
+      "filename": "docs/reviews/codex_dem_unloading_kit_review_evidence_20261014/evidence/reproduce_deck_control.log",
+      "status": "added",
+      "additions": 147,
+      "deletions": 0,
+      "changes": 147,
+      "previous_filename": null
+    },
+    {
+      "filename": "docs/reviews/codex_dem_unloading_kit_review_evidence_20261014/evidence/reproduce_history_actual.log",
+      "status": "added",
+      "additions": 27,
+      "deletions": 0,
+      "changes": 27,
+      "previous_filename": null
+    },
+    {
+      "filename": "docs/reviews/codex_dem_unloading_kit_review_evidence_20261014/evidence/reproduce_history_restore.log",
+      "status": "added",
+      "additions": 104,
+      "deletions": 0,
+      "changes": 104,
+      "previous_filename": null
+    },
+    {
+      "filename": "docs/reviews/codex_dem_unloading_kit_review_evidence_20261014/evidence/reproduce_kit_byte_checks.log",
+      "status": "added",
+      "additions": 3,
+      "deletions": 0,
+      "changes": 3,
+      "previous_filename": null
+    },
+    {
+      "filename": "docs/reviews/codex_dem_unloading_kit_review_evidence_20261014/evidence/reproduce_observer_adversarial.log",
+      "status": "added",
+      "additions": 51,
+      "deletions": 0,
+      "changes": 51,
+      "previous_filename": null
+    },
+    {
+      "filename": "docs/reviews/codex_dem_unloading_kit_review_evidence_20261014/evidence/reproduce_reader_adversarial.log",
+      "status": "added",
+      "additions": 310,
+      "deletions": 0,
+      "changes": 310,
+      "previous_filename": null
+    },
+    {
+      "filename": "docs/reviews/codex_dem_unloading_kit_review_evidence_20261014/evidence/reproduce_reader_continuation.log",
+      "status": "added",
+      "additions": 18,
+      "deletions": 0,
+      "changes": 18,
+      "previous_filename": null
+    },
+    {
+      "filename": "docs/reviews/codex_dem_unloading_kit_review_evidence_20261014/evidence/seal_kit_check.log",
+      "status": "added",
+      "additions": 3,
+      "deletions": 0,
+      "changes": 3,
+      "previous_filename": null
+    },
+    {
+      "filename": "docs/reviews/codex_dem_unloading_kit_review_evidence_20261014/evidence/seal_kit_rules.log",
+      "status": "added",
+      "additions": 27,
+      "deletions": 0,
+      "changes": 27,
+      "previous_filename": null
+    },
+    {
+      "filename": "docs/reviews/codex_dem_unloading_kit_review_evidence_20261014/evidence/seal_kit_selftest.log",
+      "status": "added",
+      "additions": 15,
+      "deletions": 0,
+      "changes": 15,
+      "previous_filename": null
+    },
+    {
+      "filename": "docs/reviews/codex_dem_unloading_kit_review_evidence_20261014/evidence/ul_gates_selftest.log",
+      "status": "added",
+      "additions": 37,
+      "deletions": 0,
+      "changes": 37,
+      "previous_filename": null
+    },
+    {
+      "filename": "docs/reviews/codex_dem_unloading_kit_review_evidence_20261014/evidence/ul_lib_selftest.log",
+      "status": "added",
+      "additions": 22,
+      "deletions": 0,
+      "changes": 22,
+      "previous_filename": null
+    },
+    {
+      "filename": "docs/reviews/codex_dem_unloading_kit_review_evidence_20261014/evidence/ul_observers_selftest.log",
+      "status": "added",
+      "additions": 20,
+      "deletions": 0,
+      "changes": 20,
+      "previous_filename": null
+    },
+    {
+      "filename": "docs/reviews/codex_dem_unloading_kit_review_evidence_20261014/evidence/ul_reader_selftest.log",
+      "status": "added",
+      "additions": 43,
+      "deletions": 0,
+      "changes": 43,
+      "previous_filename": null
+    },
+    {
+      "filename": "docs/reviews/codex_dem_unloading_kit_review_evidence_20261014/evidence/ul_runner_test_selftest.log",
+      "status": "added",
+      "additions": 19,
+      "deletions": 0,
+      "changes": 19,
+      "previous_filename": null
+    },
+    {
+      "filename": "docs/reviews/codex_dem_unloading_kit_review_evidence_20261014/evidence/ul_s3_selftest.log",
+      "status": "added",
+      "additions": 17,
+      "deletions": 0,
+      "changes": 17,
+      "previous_filename": null
+    },
+    {
+      "filename": "docs/reviews/codex_dem_unloading_kit_review_evidence_20261014/fetch_more_upstream.py",
+      "status": "added",
+      "additions": 11,
+      "deletions": 0,
+      "changes": 11,
+      "previous_filename": null
+    },
+    {
+      "filename": "docs/reviews/codex_dem_unloading_kit_review_evidence_20261014/notes/decks.md",
+      "status": "added",
+      "additions": 69,
+      "deletions": 0,
+      "changes": 69,
+      "previous_filename": null
+    },
+    {
+      "filename": "docs/reviews/codex_dem_unloading_kit_review_evidence_20261014/notes/history.md",
+      "status": "added",
+      "additions": 44,
+      "deletions": 0,
+      "changes": 44,
+      "previous_filename": null
+    },
+    {
+      "filename": "docs/reviews/codex_dem_unloading_kit_review_evidence_20261014/notes/reader.md",
+      "status": "added",
+      "additions": 80,
+      "deletions": 0,
+      "changes": 80,
+      "previous_filename": null
+    },
+    {
+      "filename": "docs/reviews/codex_dem_unloading_kit_review_evidence_20261014/package_review.py",
+      "status": "added",
+      "additions": 53,
+      "deletions": 0,
+      "changes": 53,
+      "previous_filename": null
+    },
+    {
+      "filename": "docs/reviews/codex_dem_unloading_kit_review_evidence_20261014/prepare_sources.py",
+      "status": "added",
+      "additions": 36,
+      "deletions": 0,
+      "changes": 36,
+      "previous_filename": null
+    },
+    {
+      "filename": "docs/reviews/codex_dem_unloading_kit_review_evidence_20261014/probes/deck_control.py",
+      "status": "added",
+      "additions": 233,
+      "deletions": 0,
+      "changes": 233,
+      "previous_filename": null
+    },
+    {
+      "filename": "docs/reviews/codex_dem_unloading_kit_review_evidence_20261014/probes/history_actual.py",
+      "status": "added",
+      "additions": 82,
+      "deletions": 0,
+      "changes": 82,
+      "previous_filename": null
+    },
+    {
+      "filename": "docs/reviews/codex_dem_unloading_kit_review_evidence_20261014/probes/history_restore.py",
+      "status": "added",
+      "additions": 107,
+      "deletions": 0,
+      "changes": 107,
+      "previous_filename": null
+    },
+    {
+      "filename": "docs/reviews/codex_dem_unloading_kit_review_evidence_20261014/probes/history_runner_adapter.py",
+      "status": "added",
+      "additions": 62,
+      "deletions": 0,
+      "changes": 62,
+      "previous_filename": null
+    },
+    {
+      "filename": "docs/reviews/codex_dem_unloading_kit_review_evidence_20261014/probes/kit_byte_checks.py",
+      "status": "added",
+      "additions": 12,
+      "deletions": 0,
+      "changes": 12,
+      "previous_filename": null
+    },
+    {
+      "filename": "docs/reviews/codex_dem_unloading_kit_review_evidence_20261014/probes/observer_adversarial.py",
+      "status": "added",
+      "additions": 51,
+      "deletions": 0,
+      "changes": 51,
+      "previous_filename": null
+    },
+    {
+      "filename": "docs/reviews/codex_dem_unloading_kit_review_evidence_20261014/probes/reader_adversarial.py",
+      "status": "added",
+      "additions": 146,
+      "deletions": 0,
+      "changes": 146,
+      "previous_filename": null
+    },
+    {
+      "filename": "docs/reviews/codex_dem_unloading_kit_review_evidence_20261014/probes/reader_continuation.py",
+      "status": "added",
+      "additions": 73,
+      "deletions": 0,
+      "changes": 73,
+      "previous_filename": null
+    },
+    {
+      "filename": "docs/reviews/codex_dem_unloading_kit_review_evidence_20261014/reproduce.py",
+      "status": "added",
+      "additions": 52,
+      "deletions": 0,
+      "changes": 52,
+      "previous_filename": null
+    },
+    {
+      "filename": "docs/reviews/codex_dem_unloading_kit_review_evidence_20261014/run_baselines.py",
+      "status": "added",
+      "additions": 21,
+      "deletions": 0,
+      "changes": 21,
+      "previous_filename": null
+    },
+    {
+      "filename": "docs/reviews/codex_dem_unloading_kit_review_evidence_20261014/source_manifest.json",
+      "status": "added",
+      "additions": 1384,
+      "deletions": 0,
+      "changes": 1384,
+      "previous_filename": null
+    },
+    {
+      "filename": "docs/reviews/codex_dem_unloading_kit_review_evidence_20261014/submitted/request.txt",
+      "status": "added",
+      "additions": 56,
+      "deletions": 0,
+      "changes": 56,
+      "previous_filename": null
+    },
+    {
+      "filename": "docs/reviews/codex_dem_unloading_kit_review_evidence_20261014/upstream_manifest.json",
+      "status": "added",
+      "additions": 240,
+      "deletions": 0,
+      "changes": 240,
+      "previous_filename": null
+    },
+    {
+      "filename": "docs/reviews/codex_review_dem_unloading_kit_20261014.md",
+      "status": "added",
+      "additions": 368,
+      "deletions": 0,
+      "changes": 368,
+      "previous_filename": null
+    },
+    {
+      "filename": "docs/reviews/dem_unloading_kit_fix_plan_20261014.md",
+      "status": "added",
+      "additions": 53,
+      "deletions": 0,
+      "changes": 53,
+      "previous_filename": null
+    },
+    {
+      "filename": "docs/reviews/dem_unloading_ps45_prereg_20261009.md",
+      "status": "modified",
+      "additions": 8,
+      "deletions": 0,
+      "changes": 8,
+      "previous_filename": null
+    },
+    {
+      "filename": "docs/reviews/doc_refs_allowlist.tsv",
+      "status": "modified",
+      "additions": 19,
+      "deletions": 0,
+      "changes": 19,
+      "previous_filename": null
+    },
+    {
+      "filename": "docs/reviews/findings.json",
+      "status": "modified",
+      "additions": 175,
+      "deletions": 21,
+      "changes": 196,
+      "previous_filename": null
+    },
+    {
+      "filename": "docs/session_20260923_progress.md",
+      "status": "modified",
+      "additions": 2,
+      "deletions": 0,
+      "changes": 2,
+      "previous_filename": null
+    }
+  ]
+}

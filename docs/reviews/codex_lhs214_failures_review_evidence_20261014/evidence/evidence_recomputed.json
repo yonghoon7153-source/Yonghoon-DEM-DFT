@@ -1,0 +1,3060 @@
+{
+  "review_pin": "1087a9b2f4a93aa6a3b0debc698a14fffa13488d",
+  "files": [
+    {
+      "path": "diag_lhsx054/network_conductivity_hertzian.json",
+      "bytes": 21027,
+      "sha256": "ece4c76b207a1c36cd58f3479546a46265ade581be7d89c9d0d3064ba9caf8f6"
+    },
+    {
+      "path": "diag_lhsx054/network_conductivity_physics.json",
+      "bytes": 14142,
+      "sha256": "52b9df96390acda635ad7cac90d1bc9b298f3a41d8fec08711ddf9cd8752030d"
+    },
+    {
+      "path": "diag_lhsx054/solver_stdout.txt",
+      "bytes": 12068,
+      "sha256": "55def67d28f5eb22acea8f01baca785fc84b5751f2d26e4d5698d12befc531c8"
+    },
+    {
+      "path": "net194_1087a9b2f/failed/lhsx_051/log.txt",
+      "bytes": 1064,
+      "sha256": "6dc53aa14ada57f0066a4ff05caee0fea35cfd10fb34170b694fb35347aeb261"
+    },
+    {
+      "path": "net194_1087a9b2f/failed/lhsx_051/network_attempt.json",
+      "bytes": 1053,
+      "sha256": "7febd9666ae7387c34d0e183fd856aa2c49a0d1c6830350433f531c890a87814"
+    },
+    {
+      "path": "net194_1087a9b2f/failed/lhsx_051/worker.json",
+      "bytes": 3430,
+      "sha256": "399071defb2febf1cf9c6dd96333cb9f9c9d6e9c76f1cbc3341c070af3cc633d"
+    },
+    {
+      "path": "net194_1087a9b2f/failed/lhsx_053/log.txt",
+      "bytes": 1064,
+      "sha256": "78389552f4041116462a3faf8896acf67117c6d44c0b6fb289934d77ead40d7d"
+    },
+    {
+      "path": "net194_1087a9b2f/failed/lhsx_053/network_attempt.json",
+      "bytes": 1053,
+      "sha256": "2c05a32d2a9e69376421db3411fec62b3256d2ba0e75970d3b579d63eba77f84"
+    },
+    {
+      "path": "net194_1087a9b2f/failed/lhsx_053/worker.json",
+      "bytes": 3431,
+      "sha256": "c578e52ea1528ce14001e145ad3fe36b8bd67819af526ef775799edc0e9d25b8"
+    },
+    {
+      "path": "net194_1087a9b2f/failed/lhsx_054/log.txt",
+      "bytes": 1064,
+      "sha256": "e7f7ffc018e69ca8c673d580cee32d7b4ae80bfe4fad3a33c2c34157d62bdb3d"
+    },
+    {
+      "path": "net194_1087a9b2f/failed/lhsx_054/network_attempt.json",
+      "bytes": 1046,
+      "sha256": "54c64948b4fded52e83fb50ca688b48f327eae570193c19e43912eb8424f8a85"
+    },
+    {
+      "path": "net194_1087a9b2f/failed/lhsx_054/worker.json",
+      "bytes": 3424,
+      "sha256": "6e52478f3d0eabee61e94688d08c889ce93e9c7aac3034cb0efd2986cd7f21cc"
+    },
+    {
+      "path": "net194_1087a9b2f/failed/lhsx_060/log.txt",
+      "bytes": 1068,
+      "sha256": "709625b3d2b1b85b58baf4d66a906ee01c192d3f2dff9dab0860b1687475113b"
+    },
+    {
+      "path": "net194_1087a9b2f/failed/lhsx_060/network_attempt.json",
+      "bytes": 1046,
+      "sha256": "aaf1ef7bd0fb12420e749f85a395134400cc4dc0597b16ee599f9c0a655b6aad"
+    },
+    {
+      "path": "net194_1087a9b2f/failed/lhsx_060/worker.json",
+      "bytes": 3428,
+      "sha256": "f49b34f88336b6e443ea697f7ae2b82692c176fa45ca6787d43fc5cffeed95e4"
+    },
+    {
+      "path": "net194_1087a9b2f/failed/lhsx_061/log.txt",
+      "bytes": 1068,
+      "sha256": "5d0aed64ee3619b10420e8f40596ac69dc388c7f7fd894913bb50a8cea6db2d4"
+    },
+    {
+      "path": "net194_1087a9b2f/failed/lhsx_061/network_attempt.json",
+      "bytes": 1053,
+      "sha256": "eab92411776a6c69480d9b53278b18aec5f4f2d824a98324c0ad4fc31967f9f3"
+    },
+    {
+      "path": "net194_1087a9b2f/failed/lhsx_061/worker.json",
+      "bytes": 3436,
+      "sha256": "ae21bae34070ae6a5c94324a2db950c2034ce0fbf04096fed1bef93a47170b4f"
+    },
+    {
+      "path": "net194_1087a9b2f/failed/lhsx_062/log.txt",
+      "bytes": 1068,
+      "sha256": "e6da8ba62c7224628d531e053a7ace5aaaec69ee20854d3315927d9f0b561dae"
+    },
+    {
+      "path": "net194_1087a9b2f/failed/lhsx_062/network_attempt.json",
+      "bytes": 1046,
+      "sha256": "8f5b578a54d26c0c46635ba2ac7712a251b1e756f4264df2c898dc10eabb8c53"
+    },
+    {
+      "path": "net194_1087a9b2f/failed/lhsx_062/worker.json",
+      "bytes": 3426,
+      "sha256": "0f74b2429a03f8b3d8a12ae24ca4d1bc509cc955fc18de349f3a3ff9bc7b0dcc"
+    },
+    {
+      "path": "net194_1087a9b2f/failed/lhsx_063/log.txt",
+      "bytes": 1064,
+      "sha256": "ae4fa6aa4a7e89f7a734b1dee6493f8d918696ebf0490969605665df78703ffd"
+    },
+    {
+      "path": "net194_1087a9b2f/failed/lhsx_063/network_attempt.json",
+      "bytes": 1053,
+      "sha256": "62fa19fe54fe88fb706515c87d05426a5693a4a1e841ef499c8bb30ba6bb3725"
+    },
+    {
+      "path": "net194_1087a9b2f/failed/lhsx_063/worker.json",
+      "bytes": 3431,
+      "sha256": "efb3ee9887e7feaa4a9a1bf18fee75b941035b13181bae2610c9baf5c175dfa1"
+    },
+    {
+      "path": "net194_1087a9b2f/failed/lhsx_064/log.txt",
+      "bytes": 1068,
+      "sha256": "0525854ae77f38280154b0d659a82bffc6f34a48bc1751994cb4fc1896d5ed34"
+    },
+    {
+      "path": "net194_1087a9b2f/failed/lhsx_064/network_attempt.json",
+      "bytes": 1053,
+      "sha256": "2d0110e429601617a6dc22905783d162e2a0d7268d517497b7ab5f0cc229bc19"
+    },
+    {
+      "path": "net194_1087a9b2f/failed/lhsx_064/worker.json",
+      "bytes": 3437,
+      "sha256": "de8f60af96b1f517e1a0343f632a8e6b7c7aa5ff4d474e4620a5336074dc3386"
+    },
+    {
+      "path": "net194_1087a9b2f/manifest.json",
+      "bytes": 34035,
+      "sha256": "533d26b001526e8ad946fdb1ec0c94fb7f1f3dc979b475004e1e10941cf9a65b"
+    },
+    {
+      "path": "net194_1087a9b2f/merge_report.json",
+      "bytes": 2884,
+      "sha256": "256b6a91f0c3746ce9b63f5c3d5450a9c7a5a6db9c724f217d96009f98d84fc5"
+    },
+    {
+      "path": "net194_1087a9b2f/progress.tsv",
+      "bytes": 20032,
+      "sha256": "ebbe1cd0a2d2f3337e57dacac1406c557219dd79b6bea96ac085335476bc253a"
+    },
+    {
+      "path": "net194_1087a9b2f/reread.json",
+      "bytes": 1301465,
+      "sha256": "1f3297aa521caf8e38e41b1a7cc264ba6879310cc1542a910a71dce33b4654ad"
+    },
+    {
+      "path": "net194_1087a9b2f/seal_audit.json",
+      "bytes": 940655,
+      "sha256": "3035ec59ee2b4639a06ea6cba6067aa3ab2b1707e0dfa12649b907802cb1549b"
+    },
+    {
+      "path": "net194_1087a9b2f/seal_audit.tsv",
+      "bytes": 36176,
+      "sha256": "2316a1fc16440b9890ed9b61a492e40200966758278f3ca44be51ef8eeda1541"
+    },
+    {
+      "path": "net194_run_1014_1431.log",
+      "bytes": 40224,
+      "sha256": "4de0af244cc20e3b2c52c635de23067c1d4f33375a8af351b5f53c1d224375f5"
+    },
+    {
+      "path": "netsupp20_1087a9b2f/failed/lhss_001/log.txt",
+      "bytes": 1079,
+      "sha256": "a132a91c5e5ada2e7518db56006b66ab4a649cdd286c63c25503d3cdf11dbe45"
+    },
+    {
+      "path": "netsupp20_1087a9b2f/failed/lhss_001/network_attempt.json",
+      "bytes": 1046,
+      "sha256": "d54d68c6f2d6db028e3fe68147b43c14864a03e1ea275e0d1a5df663e594e63c"
+    },
+    {
+      "path": "netsupp20_1087a9b2f/failed/lhss_001/worker.json",
+      "bytes": 3443,
+      "sha256": "483c1a9dcff720f9fefdfd8ef6b13c9bd3360020eff80adc5243e5ee7c652c4c"
+    },
+    {
+      "path": "netsupp20_1087a9b2f/failed/lhss_003/log.txt",
+      "bytes": 1078,
+      "sha256": "3db00fdaa36c0bf441e553ea6873af8e001c60d7a66f0f475110e354d3ce60f6"
+    },
+    {
+      "path": "netsupp20_1087a9b2f/failed/lhss_003/network_attempt.json",
+      "bytes": 1046,
+      "sha256": "a7edb986bd5aa069a3c3edb18381ae2edae755e9b42ecfaff60e0f85d822e8f6"
+    },
+    {
+      "path": "netsupp20_1087a9b2f/failed/lhss_003/worker.json",
+      "bytes": 3443,
+      "sha256": "4972a034d77491fc87d17e4f62ff396618e2a861cb5e2b836050b76a7b30f003"
+    },
+    {
+      "path": "netsupp20_1087a9b2f/failed/lhss_008/log.txt",
+      "bytes": 1079,
+      "sha256": "5c7477c015d27309b67e7eee5dd1f23ae332d838464236b76b9f111d3ad8cf42"
+    },
+    {
+      "path": "netsupp20_1087a9b2f/failed/lhss_008/network_attempt.json",
+      "bytes": 1053,
+      "sha256": "c176e7c2241851494fc4602ea6bfb819987d007e686035a25fba34dff22a57f9"
+    },
+    {
+      "path": "netsupp20_1087a9b2f/failed/lhss_008/worker.json",
+      "bytes": 3451,
+      "sha256": "ede120a11630ca7ba3d54f6b65f0eb48f34fd95cb8755f27055e126e6351a095"
+    },
+    {
+      "path": "netsupp20_1087a9b2f/failed/lhss_009/log.txt",
+      "bytes": 1082,
+      "sha256": "a43ee990bf884bac223bd1bb48731b1a77079c3dfb67829aef757216639d8e79"
+    },
+    {
+      "path": "netsupp20_1087a9b2f/failed/lhss_009/network_attempt.json",
+      "bytes": 1053,
+      "sha256": "c0ff0093830de6c57a3f3536be500697902eb33fc106aae82ae73d7c94e17e65"
+    },
+    {
+      "path": "netsupp20_1087a9b2f/failed/lhss_009/worker.json",
+      "bytes": 3453,
+      "sha256": "07f377d087e6f8b7b04565d4f30ed1f4558efb9dd5fa4f7e3ae6a8facd0c4d42"
+    },
+    {
+      "path": "netsupp20_1087a9b2f/failed/lhss_011/log.txt",
+      "bytes": 1078,
+      "sha256": "8cf8bbc1b0da0ba7f209bb1a8afd5a93f22467e159b90ad94b638318ee8ecab9"
+    },
+    {
+      "path": "netsupp20_1087a9b2f/failed/lhss_011/network_attempt.json",
+      "bytes": 1053,
+      "sha256": "bb6134d9c8364bd24c4649ed92143726ea25be8bd7a0f52dc62a432340a90447"
+    },
+    {
+      "path": "netsupp20_1087a9b2f/failed/lhss_011/worker.json",
+      "bytes": 3444,
+      "sha256": "157579cae571a436a17ba5cb05153302351395a035b85bf3e51c3c748dae91f5"
+    },
+    {
+      "path": "netsupp20_1087a9b2f/failed/lhss_014/log.txt",
+      "bytes": 1082,
+      "sha256": "5ee74ba2f01114137ecaa6516557a2cc47d8946c9ed333be410288358bdf6094"
+    },
+    {
+      "path": "netsupp20_1087a9b2f/failed/lhss_014/network_attempt.json",
+      "bytes": 1046,
+      "sha256": "3d76c13b6b2c7b4ca41c5018873dfcba068a8638c6303e2e7e9fdd374d166525"
+    },
+    {
+      "path": "netsupp20_1087a9b2f/failed/lhss_014/worker.json",
+      "bytes": 3448,
+      "sha256": "0fca3b5c4a71bc3057f9fdfcb53a84443bd044706f4d4f56a74f006979cea31f"
+    },
+    {
+      "path": "netsupp20_1087a9b2f/manifest.json",
+      "bytes": 11130,
+      "sha256": "85bf6126d50f393232f96d189a36a183faf55d7894ca41ef5435bc8573fc15b0"
+    },
+    {
+      "path": "netsupp20_1087a9b2f/merge_report.json",
+      "bytes": 2273,
+      "sha256": "372e42728f85d5ac4a7cd439a625ad36783b4a8426b2395f7ceca115ab7ad892"
+    },
+    {
+      "path": "netsupp20_1087a9b2f/progress.tsv",
+      "bytes": 2167,
+      "sha256": "8bf68511cdb5685b1b3a5deea8dea009b4c6f7542fbefd7b46025f6e1067e534"
+    },
+    {
+      "path": "netsupp20_1087a9b2f/reread.json",
+      "bytes": 100450,
+      "sha256": "3267f945e6ec4c00f8773d53d7f220683900dc33db0437cc676aa69ff96b4d44"
+    },
+    {
+      "path": "netsupp20_1087a9b2f/seal_audit.json",
+      "bytes": 94880,
+      "sha256": "de480e46332b0b40a2074d01529bc49587bdaf6e69a36bb5df2bfb52c6a404ca"
+    },
+    {
+      "path": "netsupp20_1087a9b2f/seal_audit.tsv",
+      "bytes": 3808,
+      "sha256": "171fce5cecfd90fd9e16557b6da96e44bec4834b47d658a7dbd8c13fd5dee065"
+    },
+    {
+      "path": "netsupp20_run_1014_1502.log",
+      "bytes": 12887,
+      "sha256": "910cc8fc630753b47d747c508a62b7792992ba0f6e3a4c102280c015443c67a5"
+    },
+    {
+      "path": "supp20_postrun_receipt.json",
+      "bytes": 11920,
+      "sha256": "dafa1f7631696b44034919e15ae2716c4c6a90562139b4825b2845b532c1d131"
+    }
+  ],
+  "batches": {
+    "net194_1087a9b2f": {
+      "manifest": {
+        "created": "2026-10-14T14:31:17",
+        "git": {
+          "sha": "1087a9b2f4a93aa6a3b0debc698a14fffa13488d",
+          "short": "1087a9b2f",
+          "branch": "HEAD",
+          "dirty": false,
+          "porcelain": []
+        },
+        "expected_network_generation": "g2",
+        "seal": {
+          "schema": "launch_seal/v3",
+          "launch_format": "network_parallel_launch/v3",
+          "code_fp": "e8b2496b9c2ecf6edad8c6b52d32a2514c96dd54c9a20823c300639249ecae71",
+          "code_root": "/home/yonghoon71/dem-audit",
+          "files": 32,
+          "dirty": false,
+          "allow_dirty": false,
+          "expected_network_generation": "g2"
+        },
+        "input_digest": {
+          "n": 194,
+          "ids_sha256": "a04282d7275bd8f92b0afb4ac8b045f72f3867ccebbb7813b530b3901fd7b3bf",
+          "raw_sha256_table_sha256": "da7c93f9a0887145ff171e381c8608cb79779d96aea5a595a25677dc361ef784",
+          "missing_raw_sha": [],
+          "cohort_tsv_sha256": {
+            "lhs": "32f00daa8394188d1e72531fd7fda1a8b47a9c279be76311ae7f2afa024b2809",
+            "lhsx": "0b85e8589917c9a3936ce29e9f36326993985ddd113ef32353a4ff96d981cb45"
+          }
+        },
+        "import_obs_run_id": "f938819fa4ee2270938943c88fb886d8",
+        "retries": [],
+        "argv": [
+          "scripts/run_network_194_parallel.py",
+          "run",
+          "--root",
+          "/home/yonghoon71/net194_1087a9b2f",
+          "--observe-imports"
+        ],
+        "python_versions": {
+          "python": "3.12.3",
+          "executable": "/home/yonghoon71/Yonghoon-DEM-DFT/.venv/bin/python3",
+          "numpy": "2.5.2",
+          "scipy": "1.18.1",
+          "pandas": "3.0.5"
+        },
+        "lanes": 20
+      },
+      "n_queue": 194,
+      "n_queue_unique": 194,
+      "progress_n": 194,
+      "progress_unique": 194,
+      "outcomes": {
+        "done": 186,
+        "failed": 8
+      },
+      "rcs": {
+        "0": 186,
+        "1": 8
+      },
+      "attempts": {
+        "1": 194
+      },
+      "runs": {
+        "1": 194
+      },
+      "signals": {
+        "": 194
+      },
+      "failed_ids": [
+        "lhsx_051",
+        "lhsx_053",
+        "lhsx_054",
+        "lhsx_060",
+        "lhsx_061",
+        "lhsx_062",
+        "lhsx_063",
+        "lhsx_064"
+      ],
+      "queue_vs_progress_equal": true,
+      "queue_ids_sha256_recomputed": "a04282d7275bd8f92b0afb4ac8b045f72f3867ccebbb7813b530b3901fd7b3bf",
+      "queue_ids_sha256_matches": true,
+      "cohorts": {
+        "lhs": {
+          "done": 130
+        },
+        "lhsx": {
+          "done": 56,
+          "failed": 8
+        }
+      },
+      "time": {
+        "first_start": "2026-10-14T14:31:19",
+        "last_end": "2026-10-14T15:01:52",
+        "timestamp_span_s": 1833.0,
+        "sum_worker_wall_s": 15594.14,
+        "max_timestamp_overlap_half_open": 16,
+        "max_log_running_after_completion": 15,
+        "run_summary_lines": [
+          {
+            "line": 225,
+            "text": "══ 실행 1 끝 — {'done': 186, 'failed': 8} · 0.476 h · 최대 동시 16 · 예산 대기 3394 · backfill 127 · 메모리 바닥 대기 0"
+          }
+        ]
+      },
+      "rss_mb_range_all": [
+        208.7,
+        2501.3
+      ],
+      "rss_mb_range_failed": [
+        878.6,
+        1458.8
+      ],
+      "log": {
+        "progress_n": 194,
+        "progress_cases_equal": true,
+        "progress_outcome_rc_equal": true,
+        "digest_count": 1,
+        "digest_equal_manifest": true
+      },
+      "audit": {
+        "n": 194,
+        "verdicts_recount": {
+          "SEALED": 194
+        },
+        "generations_recount": {
+          "g2": 186,
+          "None": 8
+        },
+        "record_status_recount": {
+          "done": 186,
+          "failed": 8
+        },
+        "ids_equal_progress": true,
+        "progress_status_equal": true,
+        "tsv_n": 194,
+        "tsv_json_rows_equal": true,
+        "fp_start_end_pin_match": true,
+        "problems": {
+          "generation_problems": [],
+          "input_problems": [],
+          "code_root_changed_now": [],
+          "import_observation_problems": []
+        },
+        "audited_at": "2026-10-14T15:01:54"
+      },
+      "import_observation": {
+        "reported": {
+          "n_processes": 970,
+          "n_started": 970,
+          "n_finalized": 970,
+          "outside": [],
+          "problems": [],
+          "tmp_leftover": [],
+          "unfinalized_noncompleted": []
+        },
+        "processes_n": 970,
+        "processes_unique": 970,
+        "all_final": true,
+        "roles": {
+          "worker": 194,
+          "other": 582,
+          "network_solver": 194
+        },
+        "per_case_process_count": {
+          "5": 194
+        },
+        "case_ids_equal_queue": true,
+        "identity_matches_manifest": true,
+        "completed_attempts_n": 186,
+        "completed_cases_equal_done": true,
+        "binding_attempt_n": 186,
+        "binding_cases_equal_done": true,
+        "binding_expected_observed_equal": true,
+        "observed_files_union_count": 30,
+        "files_outside_manifest_code_hashes": []
+      },
+      "reread": {
+        "reported": {
+          "n_fail": 2,
+          "expected_n": 194,
+          "read_n": 186,
+          "set_equal": false,
+          "missing": [
+            [
+              "lhsx_051",
+              "lhsx"
+            ],
+            [
+              "lhsx_053",
+              "lhsx"
+            ],
+            [
+              "lhsx_054",
+              "lhsx"
+            ],
+            [
+              "lhsx_060",
+              "lhsx"
+            ],
+            [
+              "lhsx_061",
+              "lhsx"
+            ],
+            [
+              "lhsx_062",
+              "lhsx"
+            ],
+            [
+              "lhsx_063",
+              "lhsx"
+            ],
+            [
+              "lhsx_064",
+              "lhsx"
+            ]
+          ],
+          "extra": [],
+          "seal_fp": "e8b2496b9c2ecf6edad8c6b52d32a2514c96dd54c9a20823c300639249ecae71",
+          "launch_sha": "1087a9b2f4a93aa6a3b0debc698a14fffa13488d",
+          "manifest_sha256": "533d26b001526e8ad946fdb1ec0c94fb7f1f3dc979b475004e1e10941cf9a65b"
+        },
+        "n_cases": 186,
+        "unique": 186,
+        "ids_equal_progress_done": true,
+        "missing_equal_failed": true,
+        "failed_meta": [
+          {
+            "name": "M2 lhsx 전 케이스 done · partial",
+            "ok": false,
+            "detail": {
+              "lhsx_051": "failed",
+              "lhsx_053": "failed",
+              "lhsx_054": "failed",
+              "lhsx_060": "failed",
+              "lhsx_061": "failed",
+              "lhsx_062": "failed",
+              "lhsx_063": "failed",
+              "lhsx_064": "failed"
+            }
+          },
+          {
+            "name": "M3 읽은 고유 (케이스, 코호트) = 등록 집합 production194 — 기대 194 · 읽음 186",
+            "ok": false,
+            "detail": "빠진 [('lhsx_051', 'lhsx'), ('lhsx_053', 'lhsx'), ('lhsx_054', 'lhsx'), ('lhsx_060', 'lhsx'), ('lhsx_061', 'lhsx')] · 남는 []",
+            "expected_n": 194,
+            "read_n": 186,
+            "set_equal": false,
+            "missing": [
+              [
+                "lhsx_051",
+                "lhsx"
+              ],
+              [
+                "lhsx_053",
+                "lhsx"
+              ],
+              [
+                "lhsx_054",
+                "lhsx"
+              ],
+              [
+                "lhsx_060",
+                "lhsx"
+              ],
+              [
+                "lhsx_061",
+                "lhsx"
+              ],
+              [
+                "lhsx_062",
+                "lhsx"
+              ],
+              [
+                "lhsx_063",
+                "lhsx"
+              ],
+              [
+                "lhsx_064",
+                "lhsx"
+              ]
+            ],
+            "extra": []
+          }
+        ],
+        "failed_case_checks": [],
+        "manifest_sha_matches_actual": true,
+        "physics_model_below_continuum": [
+          {
+            "case": "lhs00_002",
+            "sigma_ratio": 0.59172877
+          },
+          {
+            "case": "lhs00_025",
+            "sigma_ratio": 0.51347883
+          },
+          {
+            "case": "lhs00_031",
+            "sigma_ratio": 0.52597738
+          },
+          {
+            "case": "lhs00_033",
+            "sigma_ratio": 0.51870713
+          },
+          {
+            "case": "lhs00_057",
+            "sigma_ratio": 0.56318806
+          },
+          {
+            "case": "lhs00_064",
+            "sigma_ratio": 0.53328371
+          },
+          {
+            "case": "lhs00_121",
+            "sigma_ratio": 0.56970648
+          },
+          {
+            "case": "lhsx_001",
+            "sigma_ratio": 0.56511301
+          },
+          {
+            "case": "lhsx_002",
+            "sigma_ratio": 0.63129482
+          },
+          {
+            "case": "lhsx_003",
+            "sigma_ratio": 0.63869869
+          },
+          {
+            "case": "lhsx_004",
+            "sigma_ratio": 0.62343691
+          },
+          {
+            "case": "lhsx_009",
+            "sigma_ratio": 0.59504863
+          },
+          {
+            "case": "lhsx_010",
+            "sigma_ratio": 0.78850918
+          },
+          {
+            "case": "lhsx_011",
+            "sigma_ratio": 0.74453092
+          },
+          {
+            "case": "lhsx_012",
+            "sigma_ratio": 0.73564865
+          },
+          {
+            "case": "lhsx_013",
+            "sigma_ratio": 0.81493696
+          },
+          {
+            "case": "lhsx_015",
+            "sigma_ratio": 0.81647314
+          },
+          {
+            "case": "lhsx_016",
+            "sigma_ratio": 0.76174164
+          },
+          {
+            "case": "lhsx_017",
+            "sigma_ratio": 0.85527926
+          },
+          {
+            "case": "lhsx_018",
+            "sigma_ratio": 0.75242313
+          },
+          {
+            "case": "lhsx_019",
+            "sigma_ratio": 1.00220757
+          },
+          {
+            "case": "lhsx_020",
+            "sigma_ratio": 0.88182248
+          },
+          {
+            "case": "lhsx_021",
+            "sigma_ratio": 0.92497133
+          },
+          {
+            "case": "lhsx_022",
+            "sigma_ratio": 0.81738048
+          },
+          {
+            "case": "lhsx_023",
+            "sigma_ratio": 0.80901675
+          },
+          {
+            "case": "lhsx_024",
+            "sigma_ratio": 0.84476631
+          },
+          {
+            "case": "lhsx_025",
+            "sigma_ratio": 1.10137141
+          },
+          {
+            "case": "lhsx_026",
+            "sigma_ratio": 0.98599556
+          },
+          {
+            "case": "lhsx_027",
+            "sigma_ratio": 0.7979622
+          },
+          {
+            "case": "lhsx_028",
+            "sigma_ratio": 1.03521237
+          },
+          {
+            "case": "lhsx_029",
+            "sigma_ratio": 1.07501031
+          },
+          {
+            "case": "lhsx_030",
+            "sigma_ratio": 1.10187462
+          },
+          {
+            "case": "lhsx_031",
+            "sigma_ratio": 0.99959591
+          },
+          {
+            "case": "lhsx_032",
+            "sigma_ratio": 1.07379023
+          },
+          {
+            "case": "lhsx_033",
+            "sigma_ratio": 1.22789715
+          },
+          {
+            "case": "lhsx_034",
+            "sigma_ratio": 1.2333638
+          },
+          {
+            "case": "lhsx_035",
+            "sigma_ratio": 1.25899299
+          },
+          {
+            "case": "lhsx_036",
+            "sigma_ratio": 1.08047839
+          },
+          {
+            "case": "lhsx_037",
+            "sigma_ratio": 1.13713023
+          },
+          {
+            "case": "lhsx_038",
+            "sigma_ratio": 1.18747189
+          },
+          {
+            "case": "lhsx_039",
+            "sigma_ratio": 1.16374435
+          },
+          {
+            "case": "lhsx_040",
+            "sigma_ratio": 0.90758591
+          },
+          {
+            "case": "lhsx_041",
+            "sigma_ratio": 1.2723316
+          },
+          {
+            "case": "lhsx_042",
+            "sigma_ratio": 1.33251069
+          },
+          {
+            "case": "lhsx_043",
+            "sigma_ratio": 1.27268035
+          },
+          {
+            "case": "lhsx_044",
+            "sigma_ratio": 1.30844004
+          },
+          {
+            "case": "lhsx_045",
+            "sigma_ratio": 1.17071586
+          },
+          {
+            "case": "lhsx_046",
+            "sigma_ratio": 1.1086137
+          },
+          {
+            "case": "lhsx_047",
+            "sigma_ratio": 1.35562275
+          },
+          {
+            "case": "lhsx_048",
+            "sigma_ratio": 1.39716131
+          },
+          {
+            "case": "lhsx_049",
+            "sigma_ratio": 1.26196473
+          },
+          {
+            "case": "lhsx_050",
+            "sigma_ratio": 1.47806113
+          },
+          {
+            "case": "lhsx_052",
+            "sigma_ratio": 1.35201093
+          },
+          {
+            "case": "lhsx_055",
+            "sigma_ratio": 1.27988244
+          },
+          {
+            "case": "lhsx_056",
+            "sigma_ratio": 1.14431509
+          },
+          {
+            "case": "lhsx_057",
+            "sigma_ratio": 1.41826563
+          },
+          {
+            "case": "lhsx_058",
+            "sigma_ratio": 1.20515838
+          },
+          {
+            "case": "lhsx_059",
+            "sigma_ratio": 1.46644316
+          }
+        ],
+        "status_counts": {
+          "hertz": {
+            "OK": 162,
+            "NOT_PERCOLATING": 24
+          },
+          "physics": {
+            "OK": 104,
+            "NOT_PERCOLATING": 24,
+            "MODEL_BELOW_CONTINUUM_BOUND": 58
+          },
+          "hertz_h12": {
+            "OK": 158,
+            "NOT_PERCOLATING": 24,
+            "MODEL_BELOW_CONTINUUM_BOUND": 4
+          }
+        }
+      },
+      "merge": {
+        "reported": {
+          "merged_at": "2026-10-14T15:01:52",
+          "cohorts": {
+            "lhs": {
+              "n": 130,
+              "counts": {
+                "done": 130
+              },
+              "n_rows": 130,
+              "wall_s": {
+                "median": 51.3,
+                "p90": 145.0,
+                "max": 237.2,
+                "sum": 8209.6
+              },
+              "peak_rss_mb": {
+                "median": 775.5,
+                "max": 1875.6
+              },
+              "rss_over_est": {
+                "median": 0.9,
+                "max": 1.588
+              }
+            },
+            "lhsx": {
+              "n": 64,
+              "counts": {
+                "done": 56,
+                "failed": 8
+              },
+              "n_rows": 64,
+              "wall_s": {
+                "median": 116.8,
+                "p90": 178.1,
+                "max": 227.24,
+                "sum": 7384.5
+              },
+              "peak_rss_mb": {
+                "median": 1136.8,
+                "max": 2501.3
+              },
+              "rss_over_est": {
+                "median": 1.1,
+                "max": 1.548
+              }
+            }
+          },
+          "failures": [
+            {
+              "case": "lhsx_051",
+              "cohort": "lhsx",
+              "status": "failed",
+              "why": "",
+              "failed_stages": [
+                "Network Solver (both modes)"
+              ]
+            },
+            {
+              "case": "lhsx_053",
+              "cohort": "lhsx",
+              "status": "failed",
+              "why": "",
+              "failed_stages": [
+                "Network Solver (both modes)"
+              ]
+            },
+            {
+              "case": "lhsx_054",
+              "cohort": "lhsx",
+              "status": "failed",
+              "why": "",
+              "failed_stages": [
+                "Network Solver (both modes)"
+              ]
+            },
+            {
+              "case": "lhsx_060",
+              "cohort": "lhsx",
+              "status": "failed",
+              "why": "",
+              "failed_stages": [
+                "Network Solver (both modes)"
+              ]
+            },
+            {
+              "case": "lhsx_061",
+              "cohort": "lhsx",
+              "status": "failed",
+              "why": "",
+              "failed_stages": [
+                "Network Solver (both modes)"
+              ]
+            },
+            {
+              "case": "lhsx_062",
+              "cohort": "lhsx",
+              "status": "failed",
+              "why": "",
+              "failed_stages": [
+                "Network Solver (both modes)"
+              ]
+            },
+            {
+              "case": "lhsx_063",
+              "cohort": "lhsx",
+              "status": "failed",
+              "why": "",
+              "failed_stages": [
+                "Network Solver (both modes)"
+              ]
+            },
+            {
+              "case": "lhsx_064",
+              "cohort": "lhsx",
+              "status": "failed",
+              "why": "",
+              "failed_stages": [
+                "Network Solver (both modes)"
+              ]
+            }
+          ],
+          "structural": [],
+          "mixed_generation": [],
+          "anomalies": [],
+          "allow_mixed_generation": false
+        },
+        "failed_ids_equal_progress": true
+      },
+      "source_hash_checks": {
+        "n_available": 32,
+        "mismatches": [],
+        "unavailable": [],
+        "fp_recomputed_from_manifest": "e8b2496b9c2ecf6edad8c6b52d32a2514c96dd54c9a20823c300639249ecae71",
+        "fp_recomputed_from_source": "e8b2496b9c2ecf6edad8c6b52d32a2514c96dd54c9a20823c300639249ecae71",
+        "fp_matches": true,
+        "handover_n_available": 2,
+        "handover_mismatches": []
+      }
+    },
+    "netsupp20_1087a9b2f": {
+      "manifest": {
+        "created": "2026-10-14T15:02:15",
+        "git": {
+          "sha": "1087a9b2f4a93aa6a3b0debc698a14fffa13488d",
+          "short": "1087a9b2f",
+          "branch": "HEAD",
+          "dirty": false,
+          "porcelain": []
+        },
+        "expected_network_generation": "g2",
+        "seal": {
+          "schema": "launch_seal/v3",
+          "launch_format": "network_parallel_launch/v3",
+          "code_fp": "e8b2496b9c2ecf6edad8c6b52d32a2514c96dd54c9a20823c300639249ecae71",
+          "code_root": "/home/yonghoon71/dem-audit",
+          "files": 32,
+          "dirty": false,
+          "allow_dirty": false,
+          "expected_network_generation": "g2"
+        },
+        "input_digest": {
+          "n": 20,
+          "ids_sha256": "991cf1150b183f64bc69926a8b3e7c05453ec47e13b89ba3a6ad2fd2c981c694",
+          "raw_sha256_table_sha256": "a7aaa3c8c7683f1835a096acb83ecdb055eaf5f129221f7067c5f34462807d0e",
+          "missing_raw_sha": [],
+          "cohort_tsv_sha256": {
+            "lhss": "69d3f913072288b1d6b8ca8a14e43b0bc8f80e8836a8f79a9b26b2d8ed6dcaf7"
+          }
+        },
+        "import_obs_run_id": "81972dd3c3cba224dd7336892b6a8615",
+        "retries": [],
+        "argv": [
+          "scripts/run_network_194_parallel.py",
+          "run",
+          "--root",
+          "/home/yonghoon71/netsupp20_1087a9b2f",
+          "--cohorts",
+          "lhss",
+          "--observe-imports"
+        ],
+        "python_versions": {
+          "python": "3.12.3",
+          "executable": "/home/yonghoon71/Yonghoon-DEM-DFT/.venv/bin/python3",
+          "numpy": "2.5.2",
+          "scipy": "1.18.1",
+          "pandas": "3.0.5"
+        },
+        "lanes": 20
+      },
+      "n_queue": 20,
+      "n_queue_unique": 20,
+      "progress_n": 20,
+      "progress_unique": 20,
+      "outcomes": {
+        "failed": 6,
+        "done": 14
+      },
+      "rcs": {
+        "1": 6,
+        "0": 14
+      },
+      "attempts": {
+        "1": 20
+      },
+      "runs": {
+        "1": 20
+      },
+      "signals": {
+        "": 20
+      },
+      "failed_ids": [
+        "lhss_001",
+        "lhss_003",
+        "lhss_008",
+        "lhss_009",
+        "lhss_011",
+        "lhss_014"
+      ],
+      "queue_vs_progress_equal": true,
+      "queue_ids_sha256_recomputed": "991cf1150b183f64bc69926a8b3e7c05453ec47e13b89ba3a6ad2fd2c981c694",
+      "queue_ids_sha256_matches": true,
+      "cohorts": {
+        "lhss": {
+          "failed": 6,
+          "done": 14
+        }
+      },
+      "time": {
+        "first_start": "2026-10-14T15:02:15",
+        "last_end": "2026-10-14T15:07:38",
+        "timestamp_span_s": 323.0,
+        "sum_worker_wall_s": 1571.56,
+        "max_timestamp_overlap_half_open": 9,
+        "max_log_running_after_completion": 8,
+        "run_summary_lines": [
+          {
+            "line": 50,
+            "text": "══ 실행 1 끝 — {'failed': 6, 'done': 14} · 0.084 h · 최대 동시 9 · 예산 대기 408 · backfill 11 · 메모리 바닥 대기 0"
+          }
+        ]
+      },
+      "rss_mb_range_all": [
+        221.1,
+        2519.4
+      ],
+      "rss_mb_range_failed": [
+        527.8,
+        1937.9
+      ],
+      "log": {
+        "progress_n": 20,
+        "progress_cases_equal": true,
+        "progress_outcome_rc_equal": true,
+        "digest_count": 1,
+        "digest_equal_manifest": true
+      },
+      "audit": {
+        "n": 20,
+        "verdicts_recount": {
+          "SEALED": 20
+        },
+        "generations_recount": {
+          "None": 6,
+          "g2": 14
+        },
+        "record_status_recount": {
+          "failed": 6,
+          "done": 14
+        },
+        "ids_equal_progress": true,
+        "progress_status_equal": true,
+        "tsv_n": 20,
+        "tsv_json_rows_equal": true,
+        "fp_start_end_pin_match": true,
+        "problems": {
+          "generation_problems": [],
+          "input_problems": [],
+          "code_root_changed_now": [],
+          "import_observation_problems": []
+        },
+        "audited_at": "2026-10-14T15:07:39"
+      },
+      "import_observation": {
+        "reported": {
+          "n_processes": 100,
+          "n_started": 100,
+          "n_finalized": 100,
+          "outside": [],
+          "problems": [],
+          "tmp_leftover": [],
+          "unfinalized_noncompleted": []
+        },
+        "processes_n": 100,
+        "processes_unique": 100,
+        "all_final": true,
+        "roles": {
+          "worker": 20,
+          "other": 60,
+          "network_solver": 20
+        },
+        "per_case_process_count": {
+          "5": 20
+        },
+        "case_ids_equal_queue": true,
+        "identity_matches_manifest": true,
+        "completed_attempts_n": 14,
+        "completed_cases_equal_done": true,
+        "binding_attempt_n": 14,
+        "binding_cases_equal_done": true,
+        "binding_expected_observed_equal": true,
+        "observed_files_union_count": 30,
+        "files_outside_manifest_code_hashes": []
+      },
+      "reread": {
+        "reported": {
+          "n_fail": 2,
+          "expected_n": 20,
+          "read_n": 14,
+          "set_equal": false,
+          "missing": [
+            [
+              "lhss_001",
+              "lhss"
+            ],
+            [
+              "lhss_003",
+              "lhss"
+            ],
+            [
+              "lhss_008",
+              "lhss"
+            ],
+            [
+              "lhss_009",
+              "lhss"
+            ],
+            [
+              "lhss_011",
+              "lhss"
+            ],
+            [
+              "lhss_014",
+              "lhss"
+            ]
+          ],
+          "extra": [],
+          "seal_fp": "e8b2496b9c2ecf6edad8c6b52d32a2514c96dd54c9a20823c300639249ecae71",
+          "launch_sha": "1087a9b2f4a93aa6a3b0debc698a14fffa13488d",
+          "manifest_sha256": "85bf6126d50f393232f96d189a36a183faf55d7894ca41ef5435bc8573fc15b0"
+        },
+        "n_cases": 14,
+        "unique": 14,
+        "ids_equal_progress_done": true,
+        "missing_equal_failed": true,
+        "failed_meta": [
+          {
+            "name": "M2 lhss 전 케이스 done · partial",
+            "ok": false,
+            "detail": {
+              "lhss_001": "failed",
+              "lhss_003": "failed",
+              "lhss_008": "failed",
+              "lhss_009": "failed",
+              "lhss_011": "failed",
+              "lhss_014": "failed"
+            }
+          },
+          {
+            "name": "M3 읽은 고유 (케이스, 코호트) = 등록 집합 supp20 — 기대 20 · 읽음 14",
+            "ok": false,
+            "detail": "빠진 [('lhss_001', 'lhss'), ('lhss_003', 'lhss'), ('lhss_008', 'lhss'), ('lhss_009', 'lhss'), ('lhss_011', 'lhss')] · 남는 []",
+            "expected_n": 20,
+            "read_n": 14,
+            "set_equal": false,
+            "missing": [
+              [
+                "lhss_001",
+                "lhss"
+              ],
+              [
+                "lhss_003",
+                "lhss"
+              ],
+              [
+                "lhss_008",
+                "lhss"
+              ],
+              [
+                "lhss_009",
+                "lhss"
+              ],
+              [
+                "lhss_011",
+                "lhss"
+              ],
+              [
+                "lhss_014",
+                "lhss"
+              ]
+            ],
+            "extra": []
+          }
+        ],
+        "failed_case_checks": [],
+        "manifest_sha_matches_actual": true,
+        "physics_model_below_continuum": [
+          {
+            "case": "lhss_002",
+            "sigma_ratio": 1.36691591
+          },
+          {
+            "case": "lhss_004",
+            "sigma_ratio": 1.05200383
+          },
+          {
+            "case": "lhss_010",
+            "sigma_ratio": 1.04030896
+          },
+          {
+            "case": "lhss_020",
+            "sigma_ratio": 1.33970355
+          }
+        ],
+        "status_counts": {
+          "hertz": {
+            "OK": 11,
+            "NOT_PERCOLATING": 3
+          },
+          "physics": {
+            "MODEL_BELOW_CONTINUUM_BOUND": 4,
+            "NOT_PERCOLATING": 3,
+            "OK": 7
+          },
+          "hertz_h12": {
+            "OK": 11,
+            "NOT_PERCOLATING": 3
+          }
+        }
+      },
+      "merge": {
+        "reported": {
+          "merged_at": "2026-10-14T15:07:38",
+          "cohorts": {
+            "lhss": {
+              "n": 20,
+              "counts": {
+                "failed": 6,
+                "done": 14
+              },
+              "n_rows": 20,
+              "wall_s": {
+                "median": 63.6,
+                "p90": 215.2,
+                "max": 224.87,
+                "sum": 1571.6
+              },
+              "peak_rss_mb": {
+                "median": 877.9,
+                "max": 2519.4
+              },
+              "rss_over_est": {
+                "median": 1.1,
+                "max": 1.399
+              }
+            }
+          },
+          "failures": [
+            {
+              "case": "lhss_001",
+              "cohort": "lhss",
+              "status": "failed",
+              "why": "",
+              "failed_stages": [
+                "Network Solver (both modes)"
+              ]
+            },
+            {
+              "case": "lhss_003",
+              "cohort": "lhss",
+              "status": "failed",
+              "why": "",
+              "failed_stages": [
+                "Network Solver (both modes)"
+              ]
+            },
+            {
+              "case": "lhss_008",
+              "cohort": "lhss",
+              "status": "failed",
+              "why": "",
+              "failed_stages": [
+                "Network Solver (both modes)"
+              ]
+            },
+            {
+              "case": "lhss_009",
+              "cohort": "lhss",
+              "status": "failed",
+              "why": "",
+              "failed_stages": [
+                "Network Solver (both modes)"
+              ]
+            },
+            {
+              "case": "lhss_011",
+              "cohort": "lhss",
+              "status": "failed",
+              "why": "",
+              "failed_stages": [
+                "Network Solver (both modes)"
+              ]
+            },
+            {
+              "case": "lhss_014",
+              "cohort": "lhss",
+              "status": "failed",
+              "why": "",
+              "failed_stages": [
+                "Network Solver (both modes)"
+              ]
+            }
+          ],
+          "structural": [],
+          "mixed_generation": [],
+          "anomalies": [],
+          "allow_mixed_generation": false
+        },
+        "failed_ids_equal_progress": true
+      },
+      "source_hash_checks": {
+        "n_available": 32,
+        "mismatches": [],
+        "unavailable": [],
+        "fp_recomputed_from_manifest": "e8b2496b9c2ecf6edad8c6b52d32a2514c96dd54c9a20823c300639249ecae71",
+        "fp_recomputed_from_source": "e8b2496b9c2ecf6edad8c6b52d32a2514c96dd54c9a20823c300639249ecae71",
+        "fp_matches": true,
+        "handover_n_available": 2,
+        "handover_mismatches": []
+      }
+    }
+  },
+  "failures": [
+    {
+      "batch": "net194_1087a9b2f",
+      "case": "lhsx_051",
+      "progress_line": 36,
+      "audit_tsv_line": 182,
+      "worker_attempt_count": 1,
+      "progress_worker_match": {
+        "attempt": true,
+        "run": true,
+        "outcome": true,
+        "rc": true,
+        "wall_s": true,
+        "peak_rss_mb": true,
+        "contacts": true,
+        "start": true,
+        "end": true
+      },
+      "worker": {
+        "start": "2026-10-14T14:36:40",
+        "end": "2026-10-14T14:37:56",
+        "wall_s": 71.2,
+        "batch_elapsed_s": 75.5,
+        "rc": 1,
+        "signal": null,
+        "peak_rss_mb": 896.5,
+        "outcome": "failed",
+        "failed_stages": [
+          "Network Solver (both modes)"
+        ],
+        "network_run_id": null,
+        "stage_plan": {
+          "schema": "np194_stage_plan/v1",
+          "mode": "bimodal",
+          "stop_after": "network",
+          "status": "failed",
+          "stages": [
+            {
+              "step": "Parse",
+              "rc": 0,
+              "ok": true
+            },
+            {
+              "step": "Bimodal Contact Analysis",
+              "rc": 0,
+              "ok": true
+            },
+            {
+              "step": "Coverage Physics vs Hertzian",
+              "rc": 0,
+              "ok": true
+            },
+            {
+              "step": "Network Solver (both modes)",
+              "rc": 0,
+              "ok": false
+            },
+            {
+              "step": "Network Merge / Stage E",
+              "rc": 1,
+              "ok": null
+            }
+          ]
+        }
+      },
+      "attempt": {
+        "schema": "network_attempt/v2",
+        "network_attempt_run_id": "20261014T143729-469670a2",
+        "solver_status": "failed",
+        "latest_attempt_status": "failed",
+        "failure_kind": "solver",
+        "reason": "\n★ 내용 검증 실패 (게시 전 차단): physics.ionic=fail (관통 성분은 있는데 σ_ion 을 풀지 못했다 (solve_failed) — 미퍼콜이 아니다 · 수치 실패 = 게시 차단 (WEB-03 Q1 — 일반 · 정지 경로 모두))",
+        "stage": "Network Solver (both modes)",
+        "active_network_run_id": null,
+        "active_status": "none",
+        "previous_generation_kept": false,
+        "input_digests": {
+          "atoms.csv": "f0c516a211106bec",
+          "contacts.csv": "a353b71a2466dd2c"
+        },
+        "code_sha": "1087a9b2f4a93aa6a3b0debc698a14fffa13488d",
+        "attempted_at": "2026-10-14T14:37:56",
+        "argv": {
+          "type_map": "1:AM_P,2:AM_S,3:SE",
+          "scale": 1000,
+          "contact_mode": "both"
+        }
+      },
+      "seal_matches_audit": true,
+      "log_lines": [
+        "===== attempt 1 (run 1) start 2026-10-14T14:36:40 · cwd /home/yonghoon71/net194_1087a9b2f/cases/lhsx_051 · lock per-case",
+        "===== cmd: /home/yonghoon71/Yonghoon-DEM-DFT/.venv/bin/python3 /home/yonghoon71/dem-audit/scripts/lhs_webapp_batch.py --stop-after network --case lhsx_051 --harvest-dir /home/yonghoon71/dem-audit/docs/data/lhsx_descriptors_cov_1e09f661d --cohort /home/yonghoon71/dem-audit/docs/data/lhsx_descriptors_20260925/_cohort.tsv --work /home/yonghoon71/net194_1087a9b2f/cases/lhsx_051/work --out-dir /home/yonghoon71/net194_1087a9b2f/cases/lhsx_051/out",
+        "[Storage] NOT configured - SUPABASE_URL=False SUPABASE_KEY=False",
+        "[Security] WARNING: auth OFF - local/private only. For public deploy set WEBAPP_REQUIRE_AUTH=1 + WEBAPP_AUTH_TOKEN.",
+        "[1/1] lhsx_051 failed 75.5 s · 남은 0 건 ≈ 0.0 h",
+        "상태: {'failed': 1}",
+        "physics v2 판정: {'ok': 1} (blank 사유는 status.json · metrics_flat.csv 의 coverage_status_physics_v2)",
+        "===== attempt 1 end 2026-10-14T14:37:56 · outcome failed · rc 1 · wall 71.2 s · peak RSS 896 MB · user 78.4 s · sys 2.1 s"
+      ],
+      "import_process_roles": {
+        "worker": 1,
+        "other": 3,
+        "network_solver": 1
+      }
+    },
+    {
+      "batch": "net194_1087a9b2f",
+      "case": "lhsx_053",
+      "progress_line": 46,
+      "audit_tsv_line": 184,
+      "worker_attempt_count": 1,
+      "progress_worker_match": {
+        "attempt": true,
+        "run": true,
+        "outcome": true,
+        "rc": true,
+        "wall_s": true,
+        "peak_rss_mb": true,
+        "contacts": true,
+        "start": true,
+        "end": true
+      },
+      "worker": {
+        "start": "2026-10-14T14:38:50",
+        "end": "2026-10-14T14:40:01",
+        "wall_s": 65.67,
+        "batch_elapsed_s": 70.3,
+        "rc": 1,
+        "signal": null,
+        "peak_rss_mb": 878.6,
+        "outcome": "failed",
+        "failed_stages": [
+          "Network Solver (both modes)"
+        ],
+        "network_run_id": null,
+        "stage_plan": {
+          "schema": "np194_stage_plan/v1",
+          "mode": "bimodal",
+          "stop_after": "network",
+          "status": "failed",
+          "stages": [
+            {
+              "step": "Parse",
+              "rc": 0,
+              "ok": true
+            },
+            {
+              "step": "Bimodal Contact Analysis",
+              "rc": 0,
+              "ok": true
+            },
+            {
+              "step": "Coverage Physics vs Hertzian",
+              "rc": 0,
+              "ok": true
+            },
+            {
+              "step": "Network Solver (both modes)",
+              "rc": 0,
+              "ok": false
+            },
+            {
+              "step": "Network Merge / Stage E",
+              "rc": 1,
+              "ok": null
+            }
+          ]
+        }
+      },
+      "attempt": {
+        "schema": "network_attempt/v2",
+        "network_attempt_run_id": "20261014T143931-c9f9f157",
+        "solver_status": "failed",
+        "latest_attempt_status": "failed",
+        "failure_kind": "solver",
+        "reason": "\n★ 내용 검증 실패 (게시 전 차단): physics.ionic=fail (관통 성분은 있는데 σ_ion 을 풀지 못했다 (solve_failed) — 미퍼콜이 아니다 · 수치 실패 = 게시 차단 (WEB-03 Q1 — 일반 · 정지 경로 모두))",
+        "stage": "Network Solver (both modes)",
+        "active_network_run_id": null,
+        "active_status": "none",
+        "previous_generation_kept": false,
+        "input_digests": {
+          "atoms.csv": "41d5f0ef0c28b9ad",
+          "contacts.csv": "e056ca7e1fc444ea"
+        },
+        "code_sha": "1087a9b2f4a93aa6a3b0debc698a14fffa13488d",
+        "attempted_at": "2026-10-14T14:40:00",
+        "argv": {
+          "type_map": "1:AM_P,2:AM_S,3:SE",
+          "scale": 1000,
+          "contact_mode": "both"
+        }
+      },
+      "seal_matches_audit": true,
+      "log_lines": [
+        "===== attempt 1 (run 1) start 2026-10-14T14:38:50 · cwd /home/yonghoon71/net194_1087a9b2f/cases/lhsx_053 · lock per-case",
+        "===== cmd: /home/yonghoon71/Yonghoon-DEM-DFT/.venv/bin/python3 /home/yonghoon71/dem-audit/scripts/lhs_webapp_batch.py --stop-after network --case lhsx_053 --harvest-dir /home/yonghoon71/dem-audit/docs/data/lhsx_descriptors_cov_1e09f661d --cohort /home/yonghoon71/dem-audit/docs/data/lhsx_descriptors_20260925/_cohort.tsv --work /home/yonghoon71/net194_1087a9b2f/cases/lhsx_053/work --out-dir /home/yonghoon71/net194_1087a9b2f/cases/lhsx_053/out",
+        "[Storage] NOT configured - SUPABASE_URL=False SUPABASE_KEY=False",
+        "[Security] WARNING: auth OFF - local/private only. For public deploy set WEBAPP_REQUIRE_AUTH=1 + WEBAPP_AUTH_TOKEN.",
+        "[1/1] lhsx_053 failed 70.3 s · 남은 0 건 ≈ 0.0 h",
+        "상태: {'failed': 1}",
+        "physics v2 판정: {'ok': 1} (blank 사유는 status.json · metrics_flat.csv 의 coverage_status_physics_v2)",
+        "===== attempt 1 end 2026-10-14T14:40:01 · outcome failed · rc 1 · wall 65.7 s · peak RSS 879 MB · user 72.7 s · sys 2.1 s"
+      ],
+      "import_process_roles": {
+        "worker": 1,
+        "other": 3,
+        "network_solver": 1
+      }
+    },
+    {
+      "batch": "net194_1087a9b2f",
+      "case": "lhsx_054",
+      "progress_line": 23,
+      "audit_tsv_line": 185,
+      "worker_attempt_count": 1,
+      "progress_worker_match": {
+        "attempt": true,
+        "run": true,
+        "outcome": true,
+        "rc": true,
+        "wall_s": true,
+        "peak_rss_mb": true,
+        "contacts": true,
+        "start": true,
+        "end": true
+      },
+      "worker": {
+        "start": "2026-10-14T14:34:16",
+        "end": "2026-10-14T14:35:31",
+        "wall_s": 70.27,
+        "batch_elapsed_s": 74.5,
+        "rc": 1,
+        "signal": null,
+        "peak_rss_mb": 911.0,
+        "outcome": "failed",
+        "failed_stages": [
+          "Network Solver (both modes)"
+        ],
+        "network_run_id": null,
+        "stage_plan": {
+          "schema": "np194_stage_plan/v1",
+          "mode": "standard",
+          "stop_after": "network",
+          "status": "failed",
+          "stages": [
+            {
+              "step": "Parse",
+              "rc": 0,
+              "ok": true
+            },
+            {
+              "step": "Contact Analysis",
+              "rc": 0,
+              "ok": true
+            },
+            {
+              "step": "Coverage Physics vs Hertzian",
+              "rc": 0,
+              "ok": true
+            },
+            {
+              "step": "Network Solver (both modes)",
+              "rc": 0,
+              "ok": false
+            },
+            {
+              "step": "Network Merge / Stage E",
+              "rc": 1,
+              "ok": null
+            }
+          ]
+        }
+      },
+      "attempt": {
+        "schema": "network_attempt/v2",
+        "network_attempt_run_id": "20261014T143504-888f3c34",
+        "solver_status": "failed",
+        "latest_attempt_status": "failed",
+        "failure_kind": "solver",
+        "reason": "\n★ 내용 검증 실패 (게시 전 차단): physics.ionic=fail (관통 성분은 있는데 σ_ion 을 풀지 못했다 (solve_failed) — 미퍼콜이 아니다 · 수치 실패 = 게시 차단 (WEB-03 Q1 — 일반 · 정지 경로 모두))",
+        "stage": "Network Solver (both modes)",
+        "active_network_run_id": null,
+        "active_status": "none",
+        "previous_generation_kept": false,
+        "input_digests": {
+          "atoms.csv": "2b7a95883c81cb6a",
+          "contacts.csv": "25ad436638814779"
+        },
+        "code_sha": "1087a9b2f4a93aa6a3b0debc698a14fffa13488d",
+        "attempted_at": "2026-10-14T14:35:31",
+        "argv": {
+          "type_map": "1:AM_P,2:SE",
+          "scale": 1000,
+          "contact_mode": "both"
+        }
+      },
+      "seal_matches_audit": true,
+      "log_lines": [
+        "===== attempt 1 (run 1) start 2026-10-14T14:34:16 · cwd /home/yonghoon71/net194_1087a9b2f/cases/lhsx_054 · lock per-case",
+        "===== cmd: /home/yonghoon71/Yonghoon-DEM-DFT/.venv/bin/python3 /home/yonghoon71/dem-audit/scripts/lhs_webapp_batch.py --stop-after network --case lhsx_054 --harvest-dir /home/yonghoon71/dem-audit/docs/data/lhsx_descriptors_cov_1e09f661d --cohort /home/yonghoon71/dem-audit/docs/data/lhsx_descriptors_20260925/_cohort.tsv --work /home/yonghoon71/net194_1087a9b2f/cases/lhsx_054/work --out-dir /home/yonghoon71/net194_1087a9b2f/cases/lhsx_054/out",
+        "[Storage] NOT configured - SUPABASE_URL=False SUPABASE_KEY=False",
+        "[Security] WARNING: auth OFF - local/private only. For public deploy set WEBAPP_REQUIRE_AUTH=1 + WEBAPP_AUTH_TOKEN.",
+        "[1/1] lhsx_054 failed 74.5 s · 남은 0 건 ≈ 0.0 h",
+        "상태: {'failed': 1}",
+        "physics v2 판정: {'ok': 1} (blank 사유는 status.json · metrics_flat.csv 의 coverage_status_physics_v2)",
+        "===== attempt 1 end 2026-10-14T14:35:31 · outcome failed · rc 1 · wall 70.3 s · peak RSS 911 MB · user 76.5 s · sys 2.0 s"
+      ],
+      "import_process_roles": {
+        "worker": 1,
+        "other": 3,
+        "network_solver": 1
+      }
+    },
+    {
+      "batch": "net194_1087a9b2f",
+      "case": "lhsx_060",
+      "progress_line": 92,
+      "audit_tsv_line": 191,
+      "worker_attempt_count": 1,
+      "progress_worker_match": {
+        "attempt": true,
+        "run": true,
+        "outcome": true,
+        "rc": true,
+        "wall_s": true,
+        "peak_rss_mb": true,
+        "contacts": true,
+        "start": true,
+        "end": true
+      },
+      "worker": {
+        "start": "2026-10-14T14:45:33",
+        "end": "2026-10-14T14:48:33",
+        "wall_s": 167.53,
+        "batch_elapsed_s": 179.0,
+        "rc": 1,
+        "signal": null,
+        "peak_rss_mb": 1334.4,
+        "outcome": "failed",
+        "failed_stages": [
+          "Network Solver (both modes)"
+        ],
+        "network_run_id": null,
+        "stage_plan": {
+          "schema": "np194_stage_plan/v1",
+          "mode": "standard",
+          "stop_after": "network",
+          "status": "failed",
+          "stages": [
+            {
+              "step": "Parse",
+              "rc": 0,
+              "ok": true
+            },
+            {
+              "step": "Contact Analysis",
+              "rc": 0,
+              "ok": true
+            },
+            {
+              "step": "Coverage Physics vs Hertzian",
+              "rc": 0,
+              "ok": true
+            },
+            {
+              "step": "Network Solver (both modes)",
+              "rc": 0,
+              "ok": false
+            },
+            {
+              "step": "Network Merge / Stage E",
+              "rc": 1,
+              "ok": null
+            }
+          ]
+        }
+      },
+      "attempt": {
+        "schema": "network_attempt/v2",
+        "network_attempt_run_id": "20261014T144608-4f346a13",
+        "solver_status": "failed",
+        "latest_attempt_status": "failed",
+        "failure_kind": "solver",
+        "reason": "\n★ 내용 검증 실패 (게시 전 차단): physics.ionic=fail (관통 성분은 있는데 σ_ion 을 풀지 못했다 (solve_failed) — 미퍼콜이 아니다 · 수치 실패 = 게시 차단 (WEB-03 Q1 — 일반 · 정지 경로 모두))",
+        "stage": "Network Solver (both modes)",
+        "active_network_run_id": null,
+        "active_status": "none",
+        "previous_generation_kept": false,
+        "input_digests": {
+          "atoms.csv": "b6fa33449339c975",
+          "contacts.csv": "14fb7e5226b02f37"
+        },
+        "code_sha": "1087a9b2f4a93aa6a3b0debc698a14fffa13488d",
+        "attempted_at": "2026-10-14T14:48:32",
+        "argv": {
+          "type_map": "1:AM_S,2:SE",
+          "scale": 1000,
+          "contact_mode": "both"
+        }
+      },
+      "seal_matches_audit": true,
+      "log_lines": [
+        "===== attempt 1 (run 1) start 2026-10-14T14:45:33 · cwd /home/yonghoon71/net194_1087a9b2f/cases/lhsx_060 · lock per-case",
+        "===== cmd: /home/yonghoon71/Yonghoon-DEM-DFT/.venv/bin/python3 /home/yonghoon71/dem-audit/scripts/lhs_webapp_batch.py --stop-after network --case lhsx_060 --harvest-dir /home/yonghoon71/dem-audit/docs/data/lhsx_descriptors_cov_1e09f661d --cohort /home/yonghoon71/dem-audit/docs/data/lhsx_descriptors_20260925/_cohort.tsv --work /home/yonghoon71/net194_1087a9b2f/cases/lhsx_060/work --out-dir /home/yonghoon71/net194_1087a9b2f/cases/lhsx_060/out",
+        "[Storage] NOT configured - SUPABASE_URL=False SUPABASE_KEY=False",
+        "[Security] WARNING: auth OFF - local/private only. For public deploy set WEBAPP_REQUIRE_AUTH=1 + WEBAPP_AUTH_TOKEN.",
+        "[1/1] lhsx_060 failed 179.0 s · 남은 0 건 ≈ 0.0 h",
+        "상태: {'failed': 1}",
+        "physics v2 판정: {'ok': 1} (blank 사유는 status.json · metrics_flat.csv 의 coverage_status_physics_v2)",
+        "===== attempt 1 end 2026-10-14T14:48:33 · outcome failed · rc 1 · wall 167.5 s · peak RSS 1334 MB · user 175.9 s · sys 7.6 s"
+      ],
+      "import_process_roles": {
+        "worker": 1,
+        "other": 3,
+        "network_solver": 1
+      }
+    },
+    {
+      "batch": "net194_1087a9b2f",
+      "case": "lhsx_061",
+      "progress_line": 165,
+      "audit_tsv_line": 192,
+      "worker_attempt_count": 1,
+      "progress_worker_match": {
+        "attempt": true,
+        "run": true,
+        "outcome": true,
+        "rc": true,
+        "wall_s": true,
+        "peak_rss_mb": true,
+        "contacts": true,
+        "start": true,
+        "end": true
+      },
+      "worker": {
+        "start": "2026-10-14T14:53:08",
+        "end": "2026-10-14T14:56:51",
+        "wall_s": 209.94,
+        "batch_elapsed_s": 222.3,
+        "rc": 1,
+        "signal": null,
+        "peak_rss_mb": 1447.3,
+        "outcome": "failed",
+        "failed_stages": [
+          "Network Solver (both modes)"
+        ],
+        "network_run_id": null,
+        "stage_plan": {
+          "schema": "np194_stage_plan/v1",
+          "mode": "bimodal",
+          "stop_after": "network",
+          "status": "failed",
+          "stages": [
+            {
+              "step": "Parse",
+              "rc": 0,
+              "ok": true
+            },
+            {
+              "step": "Bimodal Contact Analysis",
+              "rc": 0,
+              "ok": true
+            },
+            {
+              "step": "Coverage Physics vs Hertzian",
+              "rc": 0,
+              "ok": true
+            },
+            {
+              "step": "Network Solver (both modes)",
+              "rc": 0,
+              "ok": false
+            },
+            {
+              "step": "Network Merge / Stage E",
+              "rc": 1,
+              "ok": null
+            }
+          ]
+        }
+      },
+      "attempt": {
+        "schema": "network_attempt/v2",
+        "network_attempt_run_id": "20261014T145359-79f06fdc",
+        "solver_status": "failed",
+        "latest_attempt_status": "failed",
+        "failure_kind": "solver",
+        "reason": "\n★ 내용 검증 실패 (게시 전 차단): physics.ionic=fail (관통 성분은 있는데 σ_ion 을 풀지 못했다 (solve_failed) — 미퍼콜이 아니다 · 수치 실패 = 게시 차단 (WEB-03 Q1 — 일반 · 정지 경로 모두))",
+        "stage": "Network Solver (both modes)",
+        "active_network_run_id": null,
+        "active_status": "none",
+        "previous_generation_kept": false,
+        "input_digests": {
+          "atoms.csv": "5b1476cf31085d29",
+          "contacts.csv": "d621842325641f7d"
+        },
+        "code_sha": "1087a9b2f4a93aa6a3b0debc698a14fffa13488d",
+        "attempted_at": "2026-10-14T14:56:51",
+        "argv": {
+          "type_map": "1:AM_P,2:AM_S,3:SE",
+          "scale": 1000,
+          "contact_mode": "both"
+        }
+      },
+      "seal_matches_audit": true,
+      "log_lines": [
+        "===== attempt 1 (run 1) start 2026-10-14T14:53:08 · cwd /home/yonghoon71/net194_1087a9b2f/cases/lhsx_061 · lock per-case",
+        "===== cmd: /home/yonghoon71/Yonghoon-DEM-DFT/.venv/bin/python3 /home/yonghoon71/dem-audit/scripts/lhs_webapp_batch.py --stop-after network --case lhsx_061 --harvest-dir /home/yonghoon71/dem-audit/docs/data/lhsx_descriptors_cov_1e09f661d --cohort /home/yonghoon71/dem-audit/docs/data/lhsx_descriptors_20260925/_cohort.tsv --work /home/yonghoon71/net194_1087a9b2f/cases/lhsx_061/work --out-dir /home/yonghoon71/net194_1087a9b2f/cases/lhsx_061/out",
+        "[Storage] NOT configured - SUPABASE_URL=False SUPABASE_KEY=False",
+        "[Security] WARNING: auth OFF - local/private only. For public deploy set WEBAPP_REQUIRE_AUTH=1 + WEBAPP_AUTH_TOKEN.",
+        "[1/1] lhsx_061 failed 222.3 s · 남은 0 건 ≈ 0.0 h",
+        "상태: {'failed': 1}",
+        "physics v2 판정: {'ok': 1} (blank 사유는 status.json · metrics_flat.csv 의 coverage_status_physics_v2)",
+        "===== attempt 1 end 2026-10-14T14:56:51 · outcome failed · rc 1 · wall 209.9 s · peak RSS 1447 MB · user 219.7 s · sys 8.7 s"
+      ],
+      "import_process_roles": {
+        "worker": 1,
+        "other": 3,
+        "network_solver": 1
+      }
+    },
+    {
+      "batch": "net194_1087a9b2f",
+      "case": "lhsx_062",
+      "progress_line": 49,
+      "audit_tsv_line": 193,
+      "worker_attempt_count": 1,
+      "progress_worker_match": {
+        "attempt": true,
+        "run": true,
+        "outcome": true,
+        "rc": true,
+        "wall_s": true,
+        "peak_rss_mb": true,
+        "contacts": true,
+        "start": true,
+        "end": true
+      },
+      "worker": {
+        "start": "2026-10-14T14:37:41",
+        "end": "2026-10-14T14:40:35",
+        "wall_s": 160.9,
+        "batch_elapsed_s": 173.0,
+        "rc": 1,
+        "signal": null,
+        "peak_rss_mb": 1458.8,
+        "outcome": "failed",
+        "failed_stages": [
+          "Network Solver (both modes)"
+        ],
+        "network_run_id": null,
+        "stage_plan": {
+          "schema": "np194_stage_plan/v1",
+          "mode": "standard",
+          "stop_after": "network",
+          "status": "failed",
+          "stages": [
+            {
+              "step": "Parse",
+              "rc": 0,
+              "ok": true
+            },
+            {
+              "step": "Contact Analysis",
+              "rc": 0,
+              "ok": true
+            },
+            {
+              "step": "Coverage Physics vs Hertzian",
+              "rc": 0,
+              "ok": true
+            },
+            {
+              "step": "Network Solver (both modes)",
+              "rc": 0,
+              "ok": false
+            },
+            {
+              "step": "Network Merge / Stage E",
+              "rc": 1,
+              "ok": null
+            }
+          ]
+        }
+      },
+      "attempt": {
+        "schema": "network_attempt/v2",
+        "network_attempt_run_id": "20261014T143817-5ecfe85e",
+        "solver_status": "failed",
+        "latest_attempt_status": "failed",
+        "failure_kind": "solver",
+        "reason": "\n★ 내용 검증 실패 (게시 전 차단): physics.ionic=fail (관통 성분은 있는데 σ_ion 을 풀지 못했다 (solve_failed) — 미퍼콜이 아니다 · 수치 실패 = 게시 차단 (WEB-03 Q1 — 일반 · 정지 경로 모두))",
+        "stage": "Network Solver (both modes)",
+        "active_network_run_id": null,
+        "active_status": "none",
+        "previous_generation_kept": false,
+        "input_digests": {
+          "atoms.csv": "f4769775f1fc0703",
+          "contacts.csv": "88c8520779f39859"
+        },
+        "code_sha": "1087a9b2f4a93aa6a3b0debc698a14fffa13488d",
+        "attempted_at": "2026-10-14T14:40:35",
+        "argv": {
+          "type_map": "1:AM_S,2:SE",
+          "scale": 1000,
+          "contact_mode": "both"
+        }
+      },
+      "seal_matches_audit": true,
+      "log_lines": [
+        "===== attempt 1 (run 1) start 2026-10-14T14:37:41 · cwd /home/yonghoon71/net194_1087a9b2f/cases/lhsx_062 · lock per-case",
+        "===== cmd: /home/yonghoon71/Yonghoon-DEM-DFT/.venv/bin/python3 /home/yonghoon71/dem-audit/scripts/lhs_webapp_batch.py --stop-after network --case lhsx_062 --harvest-dir /home/yonghoon71/dem-audit/docs/data/lhsx_descriptors_cov_1e09f661d --cohort /home/yonghoon71/dem-audit/docs/data/lhsx_descriptors_20260925/_cohort.tsv --work /home/yonghoon71/net194_1087a9b2f/cases/lhsx_062/work --out-dir /home/yonghoon71/net194_1087a9b2f/cases/lhsx_062/out",
+        "[Storage] NOT configured - SUPABASE_URL=False SUPABASE_KEY=False",
+        "[Security] WARNING: auth OFF - local/private only. For public deploy set WEBAPP_REQUIRE_AUTH=1 + WEBAPP_AUTH_TOKEN.",
+        "[1/1] lhsx_062 failed 173.0 s · 남은 0 건 ≈ 0.0 h",
+        "상태: {'failed': 1}",
+        "physics v2 판정: {'ok': 1} (blank 사유는 status.json · metrics_flat.csv 의 coverage_status_physics_v2)",
+        "===== attempt 1 end 2026-10-14T14:40:35 · outcome failed · rc 1 · wall 160.9 s · peak RSS 1459 MB · user 168.7 s · sys 7.8 s"
+      ],
+      "import_process_roles": {
+        "worker": 1,
+        "other": 3,
+        "network_solver": 1
+      }
+    },
+    {
+      "batch": "net194_1087a9b2f",
+      "case": "lhsx_063",
+      "progress_line": 54,
+      "audit_tsv_line": 194,
+      "worker_attempt_count": 1,
+      "progress_worker_match": {
+        "attempt": true,
+        "run": true,
+        "outcome": true,
+        "rc": true,
+        "wall_s": true,
+        "peak_rss_mb": true,
+        "contacts": true,
+        "start": true,
+        "end": true
+      },
+      "worker": {
+        "start": "2026-10-14T14:40:15",
+        "end": "2026-10-14T14:41:49",
+        "wall_s": 87.16,
+        "batch_elapsed_s": 93.9,
+        "rc": 1,
+        "signal": null,
+        "peak_rss_mb": 980.4,
+        "outcome": "failed",
+        "failed_stages": [
+          "Network Solver (both modes)"
+        ],
+        "network_run_id": null,
+        "stage_plan": {
+          "schema": "np194_stage_plan/v1",
+          "mode": "bimodal",
+          "stop_after": "network",
+          "status": "failed",
+          "stages": [
+            {
+              "step": "Parse",
+              "rc": 0,
+              "ok": true
+            },
+            {
+              "step": "Bimodal Contact Analysis",
+              "rc": 0,
+              "ok": true
+            },
+            {
+              "step": "Coverage Physics vs Hertzian",
+              "rc": 0,
+              "ok": true
+            },
+            {
+              "step": "Network Solver (both modes)",
+              "rc": 0,
+              "ok": false
+            },
+            {
+              "step": "Network Merge / Stage E",
+              "rc": 1,
+              "ok": null
+            }
+          ]
+        }
+      },
+      "attempt": {
+        "schema": "network_attempt/v2",
+        "network_attempt_run_id": "20261014T144040-27709789",
+        "solver_status": "failed",
+        "latest_attempt_status": "failed",
+        "failure_kind": "solver",
+        "reason": "\n★ 내용 검증 실패 (게시 전 차단): physics.ionic=fail (관통 성분은 있는데 σ_ion 을 풀지 못했다 (solve_failed) — 미퍼콜이 아니다 · 수치 실패 = 게시 차단 (WEB-03 Q1 — 일반 · 정지 경로 모두))",
+        "stage": "Network Solver (both modes)",
+        "active_network_run_id": null,
+        "active_status": "none",
+        "previous_generation_kept": false,
+        "input_digests": {
+          "atoms.csv": "c96e3d69753c6afe",
+          "contacts.csv": "077eda1265074619"
+        },
+        "code_sha": "1087a9b2f4a93aa6a3b0debc698a14fffa13488d",
+        "attempted_at": "2026-10-14T14:41:49",
+        "argv": {
+          "type_map": "1:AM_P,2:AM_S,3:SE",
+          "scale": 1000,
+          "contact_mode": "both"
+        }
+      },
+      "seal_matches_audit": true,
+      "log_lines": [
+        "===== attempt 1 (run 1) start 2026-10-14T14:40:15 · cwd /home/yonghoon71/net194_1087a9b2f/cases/lhsx_063 · lock per-case",
+        "===== cmd: /home/yonghoon71/Yonghoon-DEM-DFT/.venv/bin/python3 /home/yonghoon71/dem-audit/scripts/lhs_webapp_batch.py --stop-after network --case lhsx_063 --harvest-dir /home/yonghoon71/dem-audit/docs/data/lhsx_descriptors_cov_1e09f661d --cohort /home/yonghoon71/dem-audit/docs/data/lhsx_descriptors_20260925/_cohort.tsv --work /home/yonghoon71/net194_1087a9b2f/cases/lhsx_063/work --out-dir /home/yonghoon71/net194_1087a9b2f/cases/lhsx_063/out",
+        "[Storage] NOT configured - SUPABASE_URL=False SUPABASE_KEY=False",
+        "[Security] WARNING: auth OFF - local/private only. For public deploy set WEBAPP_REQUIRE_AUTH=1 + WEBAPP_AUTH_TOKEN.",
+        "[1/1] lhsx_063 failed 93.9 s · 남은 0 건 ≈ 0.0 h",
+        "상태: {'failed': 1}",
+        "physics v2 판정: {'ok': 1} (blank 사유는 status.json · metrics_flat.csv 의 coverage_status_physics_v2)",
+        "===== attempt 1 end 2026-10-14T14:41:49 · outcome failed · rc 1 · wall 87.2 s · peak RSS 980 MB · user 94.1 s · sys 3.7 s"
+      ],
+      "import_process_roles": {
+        "worker": 1,
+        "other": 3,
+        "network_solver": 1
+      }
+    },
+    {
+      "batch": "net194_1087a9b2f",
+      "case": "lhsx_064",
+      "progress_line": 180,
+      "audit_tsv_line": 195,
+      "worker_attempt_count": 1,
+      "progress_worker_match": {
+        "attempt": true,
+        "run": true,
+        "outcome": true,
+        "rc": true,
+        "wall_s": true,
+        "peak_rss_mb": true,
+        "contacts": true,
+        "start": true,
+        "end": true
+      },
+      "worker": {
+        "start": "2026-10-14T14:56:51",
+        "end": "2026-10-14T15:00:02",
+        "wall_s": 176.18,
+        "batch_elapsed_s": 189.5,
+        "rc": 1,
+        "signal": null,
+        "peak_rss_mb": 1159.2,
+        "outcome": "failed",
+        "failed_stages": [
+          "Network Solver (both modes)"
+        ],
+        "network_run_id": null,
+        "stage_plan": {
+          "schema": "np194_stage_plan/v1",
+          "mode": "bimodal",
+          "stop_after": "network",
+          "status": "failed",
+          "stages": [
+            {
+              "step": "Parse",
+              "rc": 0,
+              "ok": true
+            },
+            {
+              "step": "Bimodal Contact Analysis",
+              "rc": 0,
+              "ok": true
+            },
+            {
+              "step": "Coverage Physics vs Hertzian",
+              "rc": 0,
+              "ok": true
+            },
+            {
+              "step": "Network Solver (both modes)",
+              "rc": 0,
+              "ok": false
+            },
+            {
+              "step": "Network Merge / Stage E",
+              "rc": 1,
+              "ok": null
+            }
+          ]
+        }
+      },
+      "attempt": {
+        "schema": "network_attempt/v2",
+        "network_attempt_run_id": "20261014T145738-580140e8",
+        "solver_status": "failed",
+        "latest_attempt_status": "failed",
+        "failure_kind": "solver",
+        "reason": "\n★ 내용 검증 실패 (게시 전 차단): physics.ionic=fail (관통 성분은 있는데 σ_ion 을 풀지 못했다 (solve_failed) — 미퍼콜이 아니다 · 수치 실패 = 게시 차단 (WEB-03 Q1 — 일반 · 정지 경로 모두))",
+        "stage": "Network Solver (both modes)",
+        "active_network_run_id": null,
+        "active_status": "none",
+        "previous_generation_kept": false,
+        "input_digests": {
+          "atoms.csv": "f24f03029f99a9be",
+          "contacts.csv": "1c5faeb58be686ae"
+        },
+        "code_sha": "1087a9b2f4a93aa6a3b0debc698a14fffa13488d",
+        "attempted_at": "2026-10-14T15:00:01",
+        "argv": {
+          "type_map": "1:AM_P,2:AM_S,3:SE",
+          "scale": 1000,
+          "contact_mode": "both"
+        }
+      },
+      "seal_matches_audit": true,
+      "log_lines": [
+        "===== attempt 1 (run 1) start 2026-10-14T14:56:51 · cwd /home/yonghoon71/net194_1087a9b2f/cases/lhsx_064 · lock per-case",
+        "===== cmd: /home/yonghoon71/Yonghoon-DEM-DFT/.venv/bin/python3 /home/yonghoon71/dem-audit/scripts/lhs_webapp_batch.py --stop-after network --case lhsx_064 --harvest-dir /home/yonghoon71/dem-audit/docs/data/lhsx_descriptors_cov_1e09f661d --cohort /home/yonghoon71/dem-audit/docs/data/lhsx_descriptors_20260925/_cohort.tsv --work /home/yonghoon71/net194_1087a9b2f/cases/lhsx_064/work --out-dir /home/yonghoon71/net194_1087a9b2f/cases/lhsx_064/out",
+        "[Storage] NOT configured - SUPABASE_URL=False SUPABASE_KEY=False",
+        "[Security] WARNING: auth OFF - local/private only. For public deploy set WEBAPP_REQUIRE_AUTH=1 + WEBAPP_AUTH_TOKEN.",
+        "[1/1] lhsx_064 failed 189.5 s · 남은 0 건 ≈ 0.0 h",
+        "상태: {'failed': 1}",
+        "physics v2 판정: {'ok': 1} (blank 사유는 status.json · metrics_flat.csv 의 coverage_status_physics_v2)",
+        "===== attempt 1 end 2026-10-14T15:00:02 · outcome failed · rc 1 · wall 176.2 s · peak RSS 1159 MB · user 184.5 s · sys 7.7 s"
+      ],
+      "import_process_roles": {
+        "worker": 1,
+        "other": 3,
+        "network_solver": 1
+      }
+    },
+    {
+      "batch": "netsupp20_1087a9b2f",
+      "case": "lhss_001",
+      "progress_line": 6,
+      "audit_tsv_line": 2,
+      "worker_attempt_count": 1,
+      "progress_worker_match": {
+        "attempt": true,
+        "run": true,
+        "outcome": true,
+        "rc": true,
+        "wall_s": true,
+        "peak_rss_mb": true,
+        "contacts": true,
+        "start": true,
+        "end": true
+      },
+      "worker": {
+        "start": "2026-10-14T15:02:15",
+        "end": "2026-10-14T15:03:32",
+        "wall_s": 72.81,
+        "batch_elapsed_s": 77.1,
+        "rc": 1,
+        "signal": null,
+        "peak_rss_mb": 1050.0,
+        "outcome": "failed",
+        "failed_stages": [
+          "Network Solver (both modes)"
+        ],
+        "network_run_id": null,
+        "stage_plan": {
+          "schema": "np194_stage_plan/v1",
+          "mode": "standard",
+          "stop_after": "network",
+          "status": "failed",
+          "stages": [
+            {
+              "step": "Parse",
+              "rc": 0,
+              "ok": true
+            },
+            {
+              "step": "Contact Analysis",
+              "rc": 0,
+              "ok": true
+            },
+            {
+              "step": "Coverage Physics vs Hertzian",
+              "rc": 0,
+              "ok": true
+            },
+            {
+              "step": "Network Solver (both modes)",
+              "rc": 0,
+              "ok": false
+            },
+            {
+              "step": "Network Merge / Stage E",
+              "rc": 1,
+              "ok": null
+            }
+          ]
+        }
+      },
+      "attempt": {
+        "schema": "network_attempt/v2",
+        "network_attempt_run_id": "20261014T150301-3eb2d60e",
+        "solver_status": "failed",
+        "latest_attempt_status": "failed",
+        "failure_kind": "solver",
+        "reason": "\n★ 내용 검증 실패 (게시 전 차단): physics.ionic=fail (관통 성분은 있는데 σ_ion 을 풀지 못했다 (solve_failed) — 미퍼콜이 아니다 · 수치 실패 = 게시 차단 (WEB-03 Q1 — 일반 · 정지 경로 모두))",
+        "stage": "Network Solver (both modes)",
+        "active_network_run_id": null,
+        "active_status": "none",
+        "previous_generation_kept": false,
+        "input_digests": {
+          "atoms.csv": "4255ca1609fe734a",
+          "contacts.csv": "cb28024acde26bec"
+        },
+        "code_sha": "1087a9b2f4a93aa6a3b0debc698a14fffa13488d",
+        "attempted_at": "2026-10-14T15:03:32",
+        "argv": {
+          "type_map": "1:AM_S,2:SE",
+          "scale": 1000,
+          "contact_mode": "both"
+        }
+      },
+      "seal_matches_audit": true,
+      "log_lines": [
+        "===== attempt 1 (run 1) start 2026-10-14T15:02:15 · cwd /home/yonghoon71/netsupp20_1087a9b2f/cases/lhss_001 · lock per-case",
+        "===== cmd: /home/yonghoon71/Yonghoon-DEM-DFT/.venv/bin/python3 /home/yonghoon71/dem-audit/scripts/lhs_webapp_batch.py --stop-after network --case lhss_001 --harvest-dir /home/yonghoon71/dem-audit/docs/data/lhss_descriptors_cov_1e09f661d --cohort /home/yonghoon71/dem-audit/docs/data/lhss_descriptors_cov_1e09f661d/_cohort.tsv --work /home/yonghoon71/netsupp20_1087a9b2f/cases/lhss_001/work --out-dir /home/yonghoon71/netsupp20_1087a9b2f/cases/lhss_001/out",
+        "[Storage] NOT configured - SUPABASE_URL=False SUPABASE_KEY=False",
+        "[Security] WARNING: auth OFF - local/private only. For public deploy set WEBAPP_REQUIRE_AUTH=1 + WEBAPP_AUTH_TOKEN.",
+        "[1/1] lhss_001 failed 77.1 s · 남은 0 건 ≈ 0.0 h",
+        "상태: {'failed': 1}",
+        "physics v2 판정: {'ok': 1} (blank 사유는 status.json · metrics_flat.csv 의 coverage_status_physics_v2)",
+        "===== attempt 1 end 2026-10-14T15:03:32 · outcome failed · rc 1 · wall 72.8 s · peak RSS 1050 MB · user 78.7 s · sys 2.9 s"
+      ],
+      "import_process_roles": {
+        "worker": 1,
+        "other": 3,
+        "network_solver": 1
+      }
+    },
+    {
+      "batch": "netsupp20_1087a9b2f",
+      "case": "lhss_003",
+      "progress_line": 15,
+      "audit_tsv_line": 4,
+      "worker_attempt_count": 1,
+      "progress_worker_match": {
+        "attempt": true,
+        "run": true,
+        "outcome": true,
+        "rc": true,
+        "wall_s": true,
+        "peak_rss_mb": true,
+        "contacts": true,
+        "start": true,
+        "end": true
+      },
+      "worker": {
+        "start": "2026-10-14T15:04:57",
+        "end": "2026-10-14T15:06:07",
+        "wall_s": 65.29,
+        "batch_elapsed_s": 69.4,
+        "rc": 1,
+        "signal": null,
+        "peak_rss_mb": 843.7,
+        "outcome": "failed",
+        "failed_stages": [
+          "Network Solver (both modes)"
+        ],
+        "network_run_id": null,
+        "stage_plan": {
+          "schema": "np194_stage_plan/v1",
+          "mode": "standard",
+          "stop_after": "network",
+          "status": "failed",
+          "stages": [
+            {
+              "step": "Parse",
+              "rc": 0,
+              "ok": true
+            },
+            {
+              "step": "Contact Analysis",
+              "rc": 0,
+              "ok": true
+            },
+            {
+              "step": "Coverage Physics vs Hertzian",
+              "rc": 0,
+              "ok": true
+            },
+            {
+              "step": "Network Solver (both modes)",
+              "rc": 0,
+              "ok": false
+            },
+            {
+              "step": "Network Merge / Stage E",
+              "rc": 1,
+              "ok": null
+            }
+          ]
+        }
+      },
+      "attempt": {
+        "schema": "network_attempt/v2",
+        "network_attempt_run_id": "20261014T150516-5ecf9488",
+        "solver_status": "failed",
+        "latest_attempt_status": "failed",
+        "failure_kind": "solver",
+        "reason": "\n★ 내용 검증 실패 (게시 전 차단): physics.ionic=fail (관통 성분은 있는데 σ_ion 을 풀지 못했다 (solve_failed) — 미퍼콜이 아니다 · 수치 실패 = 게시 차단 (WEB-03 Q1 — 일반 · 정지 경로 모두))",
+        "stage": "Network Solver (both modes)",
+        "active_network_run_id": null,
+        "active_status": "none",
+        "previous_generation_kept": false,
+        "input_digests": {
+          "atoms.csv": "49a6ff6469a28d07",
+          "contacts.csv": "3b1da7d9f7450fb2"
+        },
+        "code_sha": "1087a9b2f4a93aa6a3b0debc698a14fffa13488d",
+        "attempted_at": "2026-10-14T15:06:07",
+        "argv": {
+          "type_map": "1:AM_S,2:SE",
+          "scale": 1000,
+          "contact_mode": "both"
+        }
+      },
+      "seal_matches_audit": true,
+      "log_lines": [
+        "===== attempt 1 (run 1) start 2026-10-14T15:04:57 · cwd /home/yonghoon71/netsupp20_1087a9b2f/cases/lhss_003 · lock per-case",
+        "===== cmd: /home/yonghoon71/Yonghoon-DEM-DFT/.venv/bin/python3 /home/yonghoon71/dem-audit/scripts/lhs_webapp_batch.py --stop-after network --case lhss_003 --harvest-dir /home/yonghoon71/dem-audit/docs/data/lhss_descriptors_cov_1e09f661d --cohort /home/yonghoon71/dem-audit/docs/data/lhss_descriptors_cov_1e09f661d/_cohort.tsv --work /home/yonghoon71/netsupp20_1087a9b2f/cases/lhss_003/work --out-dir /home/yonghoon71/netsupp20_1087a9b2f/cases/lhss_003/out",
+        "[Storage] NOT configured - SUPABASE_URL=False SUPABASE_KEY=False",
+        "[Security] WARNING: auth OFF - local/private only. For public deploy set WEBAPP_REQUIRE_AUTH=1 + WEBAPP_AUTH_TOKEN.",
+        "[1/1] lhss_003 failed 69.4 s · 남은 0 건 ≈ 0.0 h",
+        "상태: {'failed': 1}",
+        "physics v2 판정: {'ok': 1} (blank 사유는 status.json · metrics_flat.csv 의 coverage_status_physics_v2)",
+        "===== attempt 1 end 2026-10-14T15:06:07 · outcome failed · rc 1 · wall 65.3 s · peak RSS 844 MB · user 70.4 s · sys 3.1 s"
+      ],
+      "import_process_roles": {
+        "worker": 1,
+        "other": 3,
+        "network_solver": 1
+      }
+    },
+    {
+      "batch": "netsupp20_1087a9b2f",
+      "case": "lhss_008",
+      "progress_line": 10,
+      "audit_tsv_line": 9,
+      "worker_attempt_count": 1,
+      "progress_worker_match": {
+        "attempt": true,
+        "run": true,
+        "outcome": true,
+        "rc": true,
+        "wall_s": true,
+        "peak_rss_mb": true,
+        "contacts": true,
+        "start": true,
+        "end": true
+      },
+      "worker": {
+        "start": "2026-10-14T15:03:32",
+        "end": "2026-10-14T15:04:57",
+        "wall_s": 79.62,
+        "batch_elapsed_s": 83.3,
+        "rc": 1,
+        "signal": null,
+        "peak_rss_mb": 1012.6,
+        "outcome": "failed",
+        "failed_stages": [
+          "Network Solver (both modes)"
+        ],
+        "network_run_id": null,
+        "stage_plan": {
+          "schema": "np194_stage_plan/v1",
+          "mode": "bimodal",
+          "stop_after": "network",
+          "status": "failed",
+          "stages": [
+            {
+              "step": "Parse",
+              "rc": 0,
+              "ok": true
+            },
+            {
+              "step": "Bimodal Contact Analysis",
+              "rc": 0,
+              "ok": true
+            },
+            {
+              "step": "Coverage Physics vs Hertzian",
+              "rc": 0,
+              "ok": true
+            },
+            {
+              "step": "Network Solver (both modes)",
+              "rc": 0,
+              "ok": false
+            },
+            {
+              "step": "Network Merge / Stage E",
+              "rc": 1,
+              "ok": null
+            }
+          ]
+        }
+      },
+      "attempt": {
+        "schema": "network_attempt/v2",
+        "network_attempt_run_id": "20261014T150425-11a357d4",
+        "solver_status": "failed",
+        "latest_attempt_status": "failed",
+        "failure_kind": "solver",
+        "reason": "\n★ 내용 검증 실패 (게시 전 차단): physics.ionic=fail (관통 성분은 있는데 σ_ion 을 풀지 못했다 (solve_failed) — 미퍼콜이 아니다 · 수치 실패 = 게시 차단 (WEB-03 Q1 — 일반 · 정지 경로 모두))",
+        "stage": "Network Solver (both modes)",
+        "active_network_run_id": null,
+        "active_status": "none",
+        "previous_generation_kept": false,
+        "input_digests": {
+          "atoms.csv": "17f98abd37727dbf",
+          "contacts.csv": "e59e2dd9928e0f5a"
+        },
+        "code_sha": "1087a9b2f4a93aa6a3b0debc698a14fffa13488d",
+        "attempted_at": "2026-10-14T15:04:56",
+        "argv": {
+          "type_map": "1:AM_P,2:AM_S,3:SE",
+          "scale": 1000,
+          "contact_mode": "both"
+        }
+      },
+      "seal_matches_audit": true,
+      "log_lines": [
+        "===== attempt 1 (run 1) start 2026-10-14T15:03:32 · cwd /home/yonghoon71/netsupp20_1087a9b2f/cases/lhss_008 · lock per-case",
+        "===== cmd: /home/yonghoon71/Yonghoon-DEM-DFT/.venv/bin/python3 /home/yonghoon71/dem-audit/scripts/lhs_webapp_batch.py --stop-after network --case lhss_008 --harvest-dir /home/yonghoon71/dem-audit/docs/data/lhss_descriptors_cov_1e09f661d --cohort /home/yonghoon71/dem-audit/docs/data/lhss_descriptors_cov_1e09f661d/_cohort.tsv --work /home/yonghoon71/netsupp20_1087a9b2f/cases/lhss_008/work --out-dir /home/yonghoon71/netsupp20_1087a9b2f/cases/lhss_008/out",
+        "[Storage] NOT configured - SUPABASE_URL=False SUPABASE_KEY=False",
+        "[Security] WARNING: auth OFF - local/private only. For public deploy set WEBAPP_REQUIRE_AUTH=1 + WEBAPP_AUTH_TOKEN.",
+        "[1/1] lhss_008 failed 83.3 s · 남은 0 건 ≈ 0.0 h",
+        "상태: {'failed': 1}",
+        "physics v2 판정: {'ok': 1} (blank 사유는 status.json · metrics_flat.csv 의 coverage_status_physics_v2)",
+        "===== attempt 1 end 2026-10-14T15:04:57 · outcome failed · rc 1 · wall 79.6 s · peak RSS 1013 MB · user 86.4 s · sys 2.4 s"
+      ],
+      "import_process_roles": {
+        "worker": 1,
+        "other": 3,
+        "network_solver": 1
+      }
+    },
+    {
+      "batch": "netsupp20_1087a9b2f",
+      "case": "lhss_009",
+      "progress_line": 21,
+      "audit_tsv_line": 10,
+      "worker_attempt_count": 1,
+      "progress_worker_match": {
+        "attempt": true,
+        "run": true,
+        "outcome": true,
+        "rc": true,
+        "wall_s": true,
+        "peak_rss_mb": true,
+        "contacts": true,
+        "start": true,
+        "end": true
+      },
+      "worker": {
+        "start": "2026-10-14T15:05:48",
+        "end": "2026-10-14T15:07:38",
+        "wall_s": 102.8,
+        "batch_elapsed_s": 109.2,
+        "rc": 1,
+        "signal": null,
+        "peak_rss_mb": 1070.8,
+        "outcome": "failed",
+        "failed_stages": [
+          "Network Solver (both modes)"
+        ],
+        "network_run_id": null,
+        "stage_plan": {
+          "schema": "np194_stage_plan/v1",
+          "mode": "bimodal",
+          "stop_after": "network",
+          "status": "failed",
+          "stages": [
+            {
+              "step": "Parse",
+              "rc": 0,
+              "ok": true
+            },
+            {
+              "step": "Bimodal Contact Analysis",
+              "rc": 0,
+              "ok": true
+            },
+            {
+              "step": "Coverage Physics vs Hertzian",
+              "rc": 0,
+              "ok": true
+            },
+            {
+              "step": "Network Solver (both modes)",
+              "rc": 0,
+              "ok": false
+            },
+            {
+              "step": "Network Merge / Stage E",
+              "rc": 1,
+              "ok": null
+            }
+          ]
+        }
+      },
+      "attempt": {
+        "schema": "network_attempt/v2",
+        "network_attempt_run_id": "20261014T150618-39edd943",
+        "solver_status": "failed",
+        "latest_attempt_status": "failed",
+        "failure_kind": "solver",
+        "reason": "\n★ 내용 검증 실패 (게시 전 차단): physics.ionic=fail (관통 성분은 있는데 σ_ion 을 풀지 못했다 (solve_failed) — 미퍼콜이 아니다 · 수치 실패 = 게시 차단 (WEB-03 Q1 — 일반 · 정지 경로 모두))",
+        "stage": "Network Solver (both modes)",
+        "active_network_run_id": null,
+        "active_status": "none",
+        "previous_generation_kept": false,
+        "input_digests": {
+          "atoms.csv": "17d0ae2f4d96da17",
+          "contacts.csv": "05632ffdf3cf49c2"
+        },
+        "code_sha": "1087a9b2f4a93aa6a3b0debc698a14fffa13488d",
+        "attempted_at": "2026-10-14T15:07:38",
+        "argv": {
+          "type_map": "1:AM_P,2:AM_S,3:SE",
+          "scale": 1000,
+          "contact_mode": "both"
+        }
+      },
+      "seal_matches_audit": true,
+      "log_lines": [
+        "===== attempt 1 (run 1) start 2026-10-14T15:05:48 · cwd /home/yonghoon71/netsupp20_1087a9b2f/cases/lhss_009 · lock per-case",
+        "===== cmd: /home/yonghoon71/Yonghoon-DEM-DFT/.venv/bin/python3 /home/yonghoon71/dem-audit/scripts/lhs_webapp_batch.py --stop-after network --case lhss_009 --harvest-dir /home/yonghoon71/dem-audit/docs/data/lhss_descriptors_cov_1e09f661d --cohort /home/yonghoon71/dem-audit/docs/data/lhss_descriptors_cov_1e09f661d/_cohort.tsv --work /home/yonghoon71/netsupp20_1087a9b2f/cases/lhss_009/work --out-dir /home/yonghoon71/netsupp20_1087a9b2f/cases/lhss_009/out",
+        "[Storage] NOT configured - SUPABASE_URL=False SUPABASE_KEY=False",
+        "[Security] WARNING: auth OFF - local/private only. For public deploy set WEBAPP_REQUIRE_AUTH=1 + WEBAPP_AUTH_TOKEN.",
+        "[1/1] lhss_009 failed 109.2 s · 남은 0 건 ≈ 0.0 h",
+        "상태: {'failed': 1}",
+        "physics v2 판정: {'ok': 1} (blank 사유는 status.json · metrics_flat.csv 의 coverage_status_physics_v2)",
+        "===== attempt 1 end 2026-10-14T15:07:38 · outcome failed · rc 1 · wall 102.8 s · peak RSS 1071 MB · user 109.6 s · sys 4.3 s"
+      ],
+      "import_process_roles": {
+        "worker": 1,
+        "other": 3,
+        "network_solver": 1
+      }
+    },
+    {
+      "batch": "netsupp20_1087a9b2f",
+      "case": "lhss_011",
+      "progress_line": 2,
+      "audit_tsv_line": 12,
+      "worker_attempt_count": 1,
+      "progress_worker_match": {
+        "attempt": true,
+        "run": true,
+        "outcome": true,
+        "rc": true,
+        "wall_s": true,
+        "peak_rss_mb": true,
+        "contacts": true,
+        "start": true,
+        "end": true
+      },
+      "worker": {
+        "start": "2026-10-14T15:02:15",
+        "end": "2026-10-14T15:02:47",
+        "wall_s": 29.56,
+        "batch_elapsed_s": 31.2,
+        "rc": 1,
+        "signal": null,
+        "peak_rss_mb": 527.8,
+        "outcome": "failed",
+        "failed_stages": [
+          "Network Solver (both modes)"
+        ],
+        "network_run_id": null,
+        "stage_plan": {
+          "schema": "np194_stage_plan/v1",
+          "mode": "bimodal",
+          "stop_after": "network",
+          "status": "failed",
+          "stages": [
+            {
+              "step": "Parse",
+              "rc": 0,
+              "ok": true
+            },
+            {
+              "step": "Bimodal Contact Analysis",
+              "rc": 0,
+              "ok": true
+            },
+            {
+              "step": "Coverage Physics vs Hertzian",
+              "rc": 0,
+              "ok": true
+            },
+            {
+              "step": "Network Solver (both modes)",
+              "rc": 0,
+              "ok": false
+            },
+            {
+              "step": "Network Merge / Stage E",
+              "rc": 1,
+              "ok": null
+            }
+          ]
+        }
+      },
+      "attempt": {
+        "schema": "network_attempt/v2",
+        "network_attempt_run_id": "20261014T150227-82b151d2",
+        "solver_status": "failed",
+        "latest_attempt_status": "failed",
+        "failure_kind": "solver",
+        "reason": "\n★ 내용 검증 실패 (게시 전 차단): physics.ionic=fail (관통 성분은 있는데 σ_ion 을 풀지 못했다 (solve_failed) — 미퍼콜이 아니다 · 수치 실패 = 게시 차단 (WEB-03 Q1 — 일반 · 정지 경로 모두))",
+        "stage": "Network Solver (both modes)",
+        "active_network_run_id": null,
+        "active_status": "none",
+        "previous_generation_kept": false,
+        "input_digests": {
+          "atoms.csv": "03a92d23a1358567",
+          "contacts.csv": "a407d75985ea4b24"
+        },
+        "code_sha": "1087a9b2f4a93aa6a3b0debc698a14fffa13488d",
+        "attempted_at": "2026-10-14T15:02:46",
+        "argv": {
+          "type_map": "1:AM_P,2:AM_S,3:SE",
+          "scale": 1000,
+          "contact_mode": "both"
+        }
+      },
+      "seal_matches_audit": true,
+      "log_lines": [
+        "===== attempt 1 (run 1) start 2026-10-14T15:02:15 · cwd /home/yonghoon71/netsupp20_1087a9b2f/cases/lhss_011 · lock per-case",
+        "===== cmd: /home/yonghoon71/Yonghoon-DEM-DFT/.venv/bin/python3 /home/yonghoon71/dem-audit/scripts/lhs_webapp_batch.py --stop-after network --case lhss_011 --harvest-dir /home/yonghoon71/dem-audit/docs/data/lhss_descriptors_cov_1e09f661d --cohort /home/yonghoon71/dem-audit/docs/data/lhss_descriptors_cov_1e09f661d/_cohort.tsv --work /home/yonghoon71/netsupp20_1087a9b2f/cases/lhss_011/work --out-dir /home/yonghoon71/netsupp20_1087a9b2f/cases/lhss_011/out",
+        "[Storage] NOT configured - SUPABASE_URL=False SUPABASE_KEY=False",
+        "[Security] WARNING: auth OFF - local/private only. For public deploy set WEBAPP_REQUIRE_AUTH=1 + WEBAPP_AUTH_TOKEN.",
+        "[1/1] lhss_011 failed 31.2 s · 남은 0 건 ≈ 0.0 h",
+        "상태: {'failed': 1}",
+        "physics v2 판정: {'ok': 1} (blank 사유는 status.json · metrics_flat.csv 의 coverage_status_physics_v2)",
+        "===== attempt 1 end 2026-10-14T15:02:47 · outcome failed · rc 1 · wall 29.6 s · peak RSS 528 MB · user 32.7 s · sys 1.9 s"
+      ],
+      "import_process_roles": {
+        "worker": 1,
+        "other": 3,
+        "network_solver": 1
+      }
+    },
+    {
+      "batch": "netsupp20_1087a9b2f",
+      "case": "lhss_014",
+      "progress_line": 20,
+      "audit_tsv_line": 15,
+      "worker_attempt_count": 1,
+      "progress_worker_match": {
+        "attempt": true,
+        "run": true,
+        "outcome": true,
+        "rc": true,
+        "wall_s": true,
+        "peak_rss_mb": true,
+        "contacts": true,
+        "start": true,
+        "end": true
+      },
+      "worker": {
+        "start": "2026-10-14T15:05:22",
+        "end": "2026-10-14T15:07:33",
+        "wall_s": 121.82,
+        "batch_elapsed_s": 131.0,
+        "rc": 1,
+        "signal": null,
+        "peak_rss_mb": 1937.9,
+        "outcome": "failed",
+        "failed_stages": [
+          "Network Solver (both modes)"
+        ],
+        "network_run_id": null,
+        "stage_plan": {
+          "schema": "np194_stage_plan/v1",
+          "mode": "standard",
+          "stop_after": "network",
+          "status": "failed",
+          "stages": [
+            {
+              "step": "Parse",
+              "rc": 0,
+              "ok": true
+            },
+            {
+              "step": "Contact Analysis",
+              "rc": 0,
+              "ok": true
+            },
+            {
+              "step": "Coverage Physics vs Hertzian",
+              "rc": 0,
+              "ok": true
+            },
+            {
+              "step": "Network Solver (both modes)",
+              "rc": 0,
+              "ok": false
+            },
+            {
+              "step": "Network Merge / Stage E",
+              "rc": 1,
+              "ok": null
+            }
+          ]
+        }
+      },
+      "attempt": {
+        "schema": "network_attempt/v2",
+        "network_attempt_run_id": "20261014T150648-002a0917",
+        "solver_status": "failed",
+        "latest_attempt_status": "failed",
+        "failure_kind": "solver",
+        "reason": "\n★ 내용 검증 실패 (게시 전 차단): physics.ionic=fail (관통 성분은 있는데 σ_ion 을 풀지 못했다 (solve_failed) — 미퍼콜이 아니다 · 수치 실패 = 게시 차단 (WEB-03 Q1 — 일반 · 정지 경로 모두))",
+        "stage": "Network Solver (both modes)",
+        "active_network_run_id": null,
+        "active_status": "none",
+        "previous_generation_kept": false,
+        "input_digests": {
+          "atoms.csv": "257557350f5e1fe5",
+          "contacts.csv": "1fac4dd1773816fa"
+        },
+        "code_sha": "1087a9b2f4a93aa6a3b0debc698a14fffa13488d",
+        "attempted_at": "2026-10-14T15:07:33",
+        "argv": {
+          "type_map": "1:AM_P,2:SE",
+          "scale": 1000,
+          "contact_mode": "both"
+        }
+      },
+      "seal_matches_audit": true,
+      "log_lines": [
+        "===== attempt 1 (run 1) start 2026-10-14T15:05:22 · cwd /home/yonghoon71/netsupp20_1087a9b2f/cases/lhss_014 · lock per-case",
+        "===== cmd: /home/yonghoon71/Yonghoon-DEM-DFT/.venv/bin/python3 /home/yonghoon71/dem-audit/scripts/lhs_webapp_batch.py --stop-after network --case lhss_014 --harvest-dir /home/yonghoon71/dem-audit/docs/data/lhss_descriptors_cov_1e09f661d --cohort /home/yonghoon71/dem-audit/docs/data/lhss_descriptors_cov_1e09f661d/_cohort.tsv --work /home/yonghoon71/netsupp20_1087a9b2f/cases/lhss_014/work --out-dir /home/yonghoon71/netsupp20_1087a9b2f/cases/lhss_014/out",
+        "[Storage] NOT configured - SUPABASE_URL=False SUPABASE_KEY=False",
+        "[Security] WARNING: auth OFF - local/private only. For public deploy set WEBAPP_REQUIRE_AUTH=1 + WEBAPP_AUTH_TOKEN.",
+        "[1/1] lhss_014 failed 131.0 s · 남은 0 건 ≈ 0.0 h",
+        "상태: {'failed': 1}",
+        "physics v2 판정: {'ok': 1} (blank 사유는 status.json · metrics_flat.csv 의 coverage_status_physics_v2)",
+        "===== attempt 1 end 2026-10-14T15:07:33 · outcome failed · rc 1 · wall 121.8 s · peak RSS 1938 MB · user 130.4 s · sys 3.6 s"
+      ],
+      "import_process_roles": {
+        "worker": 1,
+        "other": 3,
+        "network_solver": 1
+      }
+    }
+  ],
+  "comparisons": {
+    "manifest_code_hashes_equal": true,
+    "manifest_handover_code_hashes_equal": true,
+    "pin_all_match": true,
+    "fp_all_match": true,
+    "failed_attempt_reasons": {
+      "\n★ 내용 검증 실패 (게시 전 차단): physics.ionic=fail (관통 성분은 있는데 σ_ion 을 풀지 못했다 (solve_failed) — 미퍼콜이 아니다 · 수치 실패 = 게시 차단 (WEB-03 Q1 — 일반 · 정지 경로 모두))": 14
+    },
+    "failure_attempt_pins": {
+      "1087a9b2f4a93aa6a3b0debc698a14fffa13488d": 14
+    },
+    "failure_stage_plans": {
+      "[{\"ok\": true, \"rc\": 0, \"step\": \"Parse\"}, {\"ok\": true, \"rc\": 0, \"step\": \"Bimodal Contact Analysis\"}, {\"ok\": true, \"rc\": 0, \"step\": \"Coverage Physics vs Hertzian\"}, {\"ok\": false, \"rc\": 0, \"step\": \"Network Solver (both modes)\"}, {\"ok\": null, \"rc\": 1, \"step\": \"Network Merge / Stage E\"}]": 8,
+      "[{\"ok\": true, \"rc\": 0, \"step\": \"Parse\"}, {\"ok\": true, \"rc\": 0, \"step\": \"Contact Analysis\"}, {\"ok\": true, \"rc\": 0, \"step\": \"Coverage Physics vs Hertzian\"}, {\"ok\": false, \"rc\": 0, \"step\": \"Network Solver (both modes)\"}, {\"ok\": null, \"rc\": 1, \"step\": \"Network Merge / Stage E\"}]": 6
+    }
+  },
+  "diagnostic_lhsx054": {
+    "physics": {
+      "solve_certificate_full": {
+        "electrode_model": "dirichlet_exact",
+        "status": "over_conduction_guard",
+        "reason": "sigma_ratio > 1.5",
+        "method": "cg",
+        "n_free": 32395,
+        "n_fixed": 4090,
+        "n_floating": 0,
+        "n_zero_resistance": null,
+        "I_bottom": 106.85001549443174,
+        "I_top": -106.85001548781166,
+        "conservation_rel": 6.195679060858629e-11,
+        "residual_rel": 9.071411744344477e-11,
+        "conservation_rel_max": 1e-06,
+        "residual_rel_max": 1e-06,
+        "branch": "full",
+        "delta_V": 1.0,
+        "g_to_q": 0.014384959999999995,
+        "geometry": {
+          "plate_z": 0.0359624,
+          "box_x": 0.05,
+          "box_y": 0.05,
+          "scale": 1000
+        },
+        "attempts": [
+          {
+            "method": "cg",
+            "outcome": "pass",
+            "krylov_info": 0,
+            "refine_passes": null,
+            "I_bottom": 106.85001549443174,
+            "I_top": -106.85001548781166,
+            "conservation_rel": 6.195679060858629e-11,
+            "residual_rel": 9.071411744344477e-11,
+            "error": null
+          }
+        ],
+        "channel": "ionic",
+        "role": "physics",
+        "contact_mode": "physics",
+        "sigma_bulk_S_cm": 0.003
+      },
+      "sigma_full": null,
+      "sigma_full_status": "not_computed",
+      "sigma_full_reason": "solve_failed",
+      "ionic_status": "failed",
+      "ionic_status_reason": "관통 성분은 있는데 σ_ion 을 풀지 못했다 (solve_failed) — 미퍼콜이 아니다 · 수치 실패 = 게시 차단 (WEB-03 Q1 — 일반 · 정지 경로 모두)",
+      "electronic_status": "computed",
+      "thermal_status": "computed",
+      "n_boundary_overlap": 0,
+      "n_area_physics_unavailable": 0,
+      "sigma_bulk_net": 2.04783126,
+      "sigma_bulk_net_status": "model_over_conduction",
+      "sigma_constr_net": null,
+      "sigma_constr_net_reason": "zero_resistance_requires_contraction"
+    },
+    "q_reconstructed_from_certificate": 1.5370331988867802,
+    "hertz": {
+      "sigma_full": 0.66147876,
+      "sigma_full_status": "computed",
+      "sigma_full_reason": null,
+      "ionic_status": "computed",
+      "solve_certificate_full": {
+        "electrode_model": "dirichlet_exact",
+        "status": "computed",
+        "reason": null,
+        "method": "cg",
+        "n_free": 32395,
+        "n_fixed": 4090,
+        "n_floating": 0,
+        "n_zero_resistance": null,
+        "I_bottom": 45.98405304774794,
+        "I_top": -45.984053046124984,
+        "conservation_rel": 3.5293926059362145e-11,
+        "residual_rel": 9.198329723927718e-11,
+        "conservation_rel_max": 1e-06,
+        "residual_rel_max": 1e-06,
+        "branch": "full",
+        "delta_V": 1.0,
+        "g_to_q": 0.014384959999999995,
+        "geometry": {
+          "plate_z": 0.0359624,
+          "box_x": 0.05,
+          "box_y": 0.05,
+          "scale": 1000
+        },
+        "attempts": [
+          {
+            "method": "cg",
+            "outcome": "pass",
+            "krylov_info": 0,
+            "refine_passes": null,
+            "I_bottom": 45.98405304774794,
+            "I_top": -45.984053046124984,
+            "conservation_rel": 3.5293926059362145e-11,
+            "residual_rel": 9.198329723927718e-11,
+            "error": null
+          }
+        ],
+        "channel": "ionic",
+        "role": "H0",
+        "contact_mode": "hertzian",
+        "sigma_bulk_S_cm": 0.003
+      }
+    },
+    "source_line_locations": {
+      "physics_guard": [
+        23,
+        24,
+        30,
+        38,
+        51,
+        72,
+        80,
+        93,
+        114,
+        122,
+        158,
+        208,
+        216,
+        229,
+        250,
+        258,
+        271,
+        292,
+        300,
+        313,
+        328,
+        358,
+        366,
+        379,
+        400,
+        408,
+        421,
+        442,
+        450
+      ]
+    }
+  },
+  "receipt": {
+    "n_checks": 39,
+    "n_checks_ok": 39,
+    "failed_checks": [],
+    "scope": "launch",
+    "rc": 0,
+    "generated": "2026-10-14T15:07:41",
+    "manual": [
+      {
+        "item": "사전 점검 결과 — 발사 핀 fast16 + real4 · 깨끗한 트리 (등록 §0 ⑥ · 194 등록 §1 과 같은 단계)",
+        "verified_by_tool": false
+      },
+      {
+        "item": "저자 발사 승인 (판정문 §4 ⑤ — 이 영수증 · 리뷰가 대신하지 않는다)",
+        "verified_by_tool": false
+      },
+      {
+        "item": "새 ROOT 둘 · 같은 발사 커밋 — --manifest 와 --primary-manifest 를 둘 다 주면 기계 대조 (아니면 수동)",
+        "verified_by_tool": false
+      }
+    ],
+    "inputs": {
+      "adapter": "docs/data/lhss_design_adapted_20261012.csv",
+      "approved_sha": "1087a9b2f4a93aa6a3b0debc698a14fffa13488d",
+      "cohort_tsv": "/home/yonghoon71/dem-audit/docs/data/lhss_descriptors_cov_1e09f661d/_cohort.tsv",
+      "design": "docs/data/lhs_supp_design_20261006.csv",
+      "dry_run_log": null,
+      "harvest": "/home/yonghoon71/dem-audit/docs/data/lhss_descriptors_cov_1e09f661d",
+      "manifest": "/home/yonghoon71/netsupp20_1087a9b2f/manifest.json",
+      "preflight_log": {
+        "bytes": 4375,
+        "path": "/home/yonghoon71/netsupp20_1087a9b2f_preflight_1014_141953.log",
+        "sha256": "a8dba071bc00aadd91f0e7f7b4298e870e89750b89afa4357e93cf38ea5eb84c"
+      },
+      "preflight_receipt": "/home/yonghoon71/netsupp20_1087a9b2f_preflight_1014_141953.json",
+      "preflight_receipt_sha256": "cc04b74336a3f0725f03c82ad9e723766acdf84f82b85725ec57def26a45fb9a",
+      "primary_manifest": "/home/yonghoon71/net194_1087a9b2f/manifest.json",
+      "r2_bundle": "docs/data/lhs_supp_runs_20261006/lhss_harvest_20261011_r2.tgz",
+      "r3_bundle": "docs/data/lhs_supp_runs_20261006/lhss_harvest_r3_1e09f661d.tgz",
+      "union": "/home/yonghoon71/dem-audit/docs/data/lhss_union_1e09f661d/lhss20_union.tsv"
+    },
+    "recorded": {
+      "code_fp": "e8b2496b9c2ecf6edad8c6b52d32a2514c96dd54c9a20823c300639249ecae71",
+      "git": {
+        "dirty": false,
+        "porcelain": [],
+        "sha": "1087a9b2f4a93aa6a3b0debc698a14fffa13488d"
+      },
+      "tool_sha256": {
+        "scripts/g2_network_reread.py": "1487ea0116aee5f679eb9de2fc1d089450758810260217c66b6c7a8828518fa6",
+        "scripts/lhs_design_dataset.py": "ed8944dc2507a64824e09314ba5942b20b86ac33f32a62f35706f024be1a2d1d",
+        "scripts/lhs_release_build.py": "729db1fa87f793c63399ffbd84cee708c76a5fd66837fc9421294bcae72b0716",
+        "scripts/run_network_194_parallel.py": "f4048aca55b912628278dbdd7b184ac449723736cd3f4f5cdc7eeca31294921a",
+        "scripts/supp20_input_receipt.py": "0fbec3289aedbbd7362ef4869cb71a1aafeca95e3fd8280c417e6ee2837d6bae"
+      }
+    },
+    "warnings": []
+  }
+}

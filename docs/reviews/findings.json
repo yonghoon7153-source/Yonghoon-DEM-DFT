@@ -10786,6 +10786,46 @@
       "opened_in": "docs/reviews/codex_review_rint_g2_impl_20261014.md",
       "title": "RRM 반환 기록의 표준 iface_contact_ledger · iface_carbon_cover · 균일 rface_c 가 CNC 값으로 남는다 — 정상 A 실제 film 67 · cut 85 ↔ 표준 원장 active 152 · cut 0 · 반쪽 탄소 변형 RRM G 2.754e-6 ↔ 상속 G 2.613e-6 (remove_area) / 5.027e-6 S (renormalize)",
       "note": "판정문 §7.  자리 (핀): scripts/rint_rrm_reference.py:235–244.  무너지는 것: 일반 기록 소비자가 표준 원장을 실제 풀이 요약으로 읽는 것.  무너지지 않는 것: 정상 RRM 행 조립 · σ (iface_rrm.contacts[0] 은 맞다).  최소 해결 = 표준 진단을 실제 RRM 행으로 재계산 또는 CNC 비교값 별도 이름공간 · 행 수 · 순수 막 G ↔ 공개 기록 대조 회귀.  수정 계획 Q3."
+    },
+    {
+      "id": "L214-01",
+      "severity": "P2",
+      "status": "open",
+      "owner": "claude",
+      "found_by": "codex 10-14 LHS214 실패 14 건 · 분류 수정 (가) 구현 전 설계 검토 (검토 핀 1087a9b2f = 발사 핀 · 3 노드 회로 실제 함수 탐침 · 소비 경로 함수 탐침 · 생산 실행 · 실침대 재계산 없음)",
+      "opened_in": "docs/reviews/codex_review_lhs214_failures_20261014.md",
+      "title": "FULL q > 1.5 가드의 사유 이름 (over_conduction_guard → 상위 solve_failed) 만으로는 유효한 모형 한계를 식별하지 못한다 — 같은 0–1–2 직렬 회로에 plate_z = +∞ 를 주면 전류 · 잔차는 통과하고 q = ∞ 로 같은 사유가 난다 · 사유 허용목록만 더하면 비유한 기하도 \"모형 한계\" 로 게시될 수 있다",
+      "note": "판정문 §2 L214-01 · 자리 (핀): scripts/network_conductivity.py:1182–1209 (수치 인증) · :1218–1222 (기하 환산) · :1249–1267 (가드) · :225–246 (상위 상태) · :1898–1910 (채널 실패).  탐침 (실제 solve_network · 두 간선 R_total 0.25 · 정확해 V=(1, 0.5, 0) · G=2 · 전류 ±2 · Σg=8): 유효 회로 q=2 → 수치 pass → over_conduction_guard → 상위 solve_failed · q=1.5 computed · 1.49999998 유지 · 1.50000002 거부 · plate_z=+∞ → 같은 over_conduction_guard · plate_z=NaN → non_finite · 잘못된 해 주입 → current_conservation_failed · 열 FULL q=2 computed (이 단상 가드 대상 아님) — 증거 docs/reviews/codex_lhs214_failures_review_evidence_20261014/evidence/solver_probe_results.json.  무너지는 결론: \"over_conduction_guard · full_over_conduction 이면 수치 실패가 아니므로 허용해도 된다\".  무너지지 않는 것: 현행 관문이 실패 14 건을 차단 (잘못 게시 없음) · lhsx_054 단독 진단 = 수치 인증 통과 뒤 q 1.5370331988867802 (단 입력 digest · provenance 없음 · 나머지 13 건 원인 미확정).  1.5 는 기존 출력 거부 문턱이지 물리 경계 · 오차막대가 아니다.  최소 처방: ① 입력 · 경계 · 수치 검사 먼저 (기하 · 배율 · 전류 · 변환계수 · 재구성 q 유한 · 필요한 양 양수 · NaN/∞/잘못된 타입 묵인 금지) ② 단상 이온 · 전자 FULL · q 유한 · 원 정밀도 엄격 > 1.5 만 (열 제외) ③ 사다리 · 허용치 1e−6 · G > 0 · 병렬 상한 그대로 · 앞 단계 실패는 높은 q 로 구제 안 함 ④ accepted FULL σ · 차원 σ null · 진단 q 별도 키 · 수치 증서 보존 · FULL 유도값 (f · τ · 소산 몫 · 비) 없음 · CF · 협착 진단 기존 정책 ⑤ 생산자 → 소비자 같은 판정 시험.  10-14 실행 (194 실패 8 · 보충 20 실패 6) 의 증상이 이 결함이다 — 수정 계획 docs/reviews/lhs214_fix_plan_20261014.md (Q1–Q3 · A1–A2)."
+    },
+    {
+      "id": "L214-02",
+      "severity": "P2",
+      "status": "open",
+      "owner": "claude",
+      "found_by": "codex 10-14 LHS214 실패 14 건 · 분류 수정 (가) 구현 전 설계 검토 (검토 핀 1087a9b2f = 발사 핀 · 3 노드 회로 실제 함수 탐침 · 소비 경로 함수 탐침 · 생산 실행 · 실침대 재계산 없음)",
+      "opened_in": "docs/reviews/codex_review_lhs214_failures_20261014.md",
+      "title": "새 \"모형 한계\" 범주가 게시되지 않는 실패 레코드의 검사 면제를 상속하면 증서 · 세대 보장이 사라진다 — 진단 복사본에 새 사유를 넣자 CF 증서 residual_rel 1.0 훼손 → certificate_binding_problems == [] · Physics bulk_model 삭제 → _g2_mode_problems == [] · 실제 FULL 수치 증서는 _cert_unpublished_problem 이 \"숫자 없는 가지인데 증서가 해를 주장\" 으로 거부",
+      "note": "판정문 §2 L214-02 · 자리 (핀): scripts/tau_flux.py:616–632 · :747–769 · :793–810.  지금 배포 우회가 재현된 것은 아니다 (다른 관문이 전체를 차단) — 사유 허용목록만 더하면 그 방어의 전제가 사라진다는 설계 반례.  같은 의미로 고칠 경로 (판정문 §2 표): 일반 게시 webapp/app.py:3518–3559 · pipeline_service.py:767–842 · :1119–1165 / 정지 계약 pipeline_service.py:854 · :868 · :989–1041 · :1088–1107 / τ tau_flux.py:1101–1139 / 다시 읽기 g2_network_reread.py:510–520 (K2 · K7 유지) / 인계 · 배포 lhs_design_dataset.py:1935–1978 · :2039–2072 · lhs_release_build.py:652 · :833–930.  전자 · 열 증서는 전파되지만 FULL 상태 · 사유 열은 자동 전파되지 않는다 (network_conductivity.py:1771–1797 · :1821–1857) — \"모드 · 채널 공통\" 은 출력까지 시험.  최소 처방: \"수치 인증 성공 / 출력 채택 거부\" 명시 분리 · 그 범주엔 정상 세대 필드 · 역할 · 채널 · 가지 · 기하 · σ₀ 결합 전부 요구 · 진단 q 를 증서 전류 · 변환계수로 재구성해 대조 · 수치 증서를 버리거나 status 만 computed 로 바꾸지 않음 · 다른 채널 · 진단 가지의 진짜 실패가 우선 · 공용 판정 함수 하나.  증거 evidence/consumer_contracts.json · notes/consumer_review.md.  수정 계획 A1 · A3."
+    },
+    {
+      "id": "L214-03",
+      "severity": "P2",
+      "status": "open",
+      "owner": "claude",
+      "found_by": "codex 10-14 LHS214 실패 14 건 · 분류 수정 (가) 구현 전 설계 검토 (검토 핀 1087a9b2f = 발사 핀 · 3 노드 회로 실제 함수 탐침 · 소비 경로 함수 탐침 · 생산 실행 · 실침대 재계산 없음)",
+      "opened_in": "docs/reviews/codex_review_lhs214_failures_20261014.md",
+      "title": "웹앱 케이스 표 _dual_row 가 Physics σ 가 없으면 Hertz σ 를 Physics 칸에 복사하고 차이를 0 % 로 표시한다 — Hertz 0.6 · Physics null · 사유 full_over_conduction 합성 입력에서 σ_ionic 0.6 / 0.6 (0 %) · σ_brug/σ_ionic 2.0× / 2.0× (0 %) · 전자 2.0 / 2.0 · 기존 Network Solver 표 경로의 파생비 fallback 도 같음",
+      "note": "판정문 §2 L214-03 · 자리 (핀): webapp/app.py:649–655 (_dual_row) · 호출 :3058–3062 · :3114–3129 · 파생비 fallback :3089–3091 · :3207–3209.  탐침 = 핀 파일에서 함수 본문을 AST 추출해 표 생성 함수 실행 (전체 웹서버 · 브라우저 시험 아님) · τ² · 망 상태 줄은 정직하게 공란 · 사유를 낸다 (_dual_row_strict 경로).  현재 14 건은 게시 차단 — 사용자가 이미 틀린 값을 봤다고 주장하지 않는다.  최소 처방: 모드별 값 · 비 · 차이 strict missing (Physics 없으면 칸 · Δ = — + 사유 · 0 · Hertz · H12 대체 금지) · 새 표 / 기존 표 · 이온 / 전자 · 원 결과 / 병합 결과 회귀.  증거 evidence/consumer_contracts.json.  수정 계획 A3 (웹앱 같은 묶음 — 1저자 09-30 코드 → 웹앱 규칙)."
+    },
+    {
+      "id": "SELF-113",
+      "severity": "P3",
+      "status": "open",
+      "owner": "claude",
+      "found_by": "codex 10-14 LHS214 실패 검토 (판정문 §1-2 · §3 Q5 · notes/evidence_review.md)",
+      "opened_in": "docs/reviews/codex_lhs_run214_failures_request_20261014.md",
+      "title": "LHS214 실패 요청서 §1 · §2 의 네 서술이 증거보다 강하거나 틀렸다 — \"망 솔버 rc 1\" (실제 망 솔버 rc 0 · ok=false → 병합 rc 1 → 워커 rc 1) · \"최대 RSS 0.88–1.94 GB (메모리 아님)\" (실제 527.8–1937.9 MiB · ru_maxrss 는 트리 합 아님 · RSS 하나로 배제 확정 불가) · \"Physics σ_ratio 1.04–1.48 (τ MODEL_BELOW_CONTINUUM_BOUND)\" (그 상태는 τ² < 1 판정 · q < 1 사례 있음) · \"≈ 40 분\" (계획 추정 · 실측 30 분 33 초 + 5 분 23 초)",
+      "note": "판정문 §1-2 (실패 단계 = Network Solver rc 0 ok=false → Network Merge / Stage E rc 1 → 외부 worker rc 1 · worker.json:112 · :117) · §3 Q5-3 (RSS 최소 lhss_011 · run_network_194_parallel.py:2211 ru_maxrss/1024) · Q5-4 (progress 시각 30 분 33 초 + 5 분 23 초 · 첫 시작 → 마지막 끝 36 분 19 초 · printed elapsed 합 33 분 36 초) · Q5-5 (MODEL_BELOW_CONTINUUM_BOUND = 보정 f · φ 로 만든 τ² < 1 · tau_flux.py:1133–1136).  내가 화면 판독 · 계획 추정을 사실처럼 적었다.  정정 = 요청서 끝 상태 줄 (보낸 원문 보존) · 반입 README · 수정 계획 §0."
     }
   ]
 }
