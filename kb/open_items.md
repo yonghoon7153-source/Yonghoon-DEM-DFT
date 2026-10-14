@@ -31,6 +31,7 @@
   · ⚠ 내가 10-14 에 사용자에게 'UMA 342 배치에서 Nd@Li 가 Nd@P 보다 1.633 eV/셀 낮다' 고 말한 것은 틀렸다 (위 오표기를 원장 대조 없이 옮김) — 같은 답에서 정정했다.
   · 제안 (잠정 · 1저자 동의 전): ① 보고량 카드 §1–3 먼저 — 닫힌계 자리 비교 (Y 선례 `y_site_preference_dft_2026_09_07.json` 의 조성 균형 QE · 새 Nd PP · 저장소 조건부) + 도핑 전 대비 hull 위 에너지 증가 · 'Nd@P 불리' 로 나올 때 쓸 문장을 결과 전에 ② GPU 로 계산 ③ 그 뒤 ELF · Bader · Δρ (도핑 전과 같은 설정). 1저자에게 물을 것: Rietveld 에서 Nd 를 4b 로 둔 근거 (Li 자리 모델과 R 대조) · '안정' 의 뜻.
   · ▶ **10-14 사용자 *"1,2,3,4를 해보자"* (실행 승인 · GPU 자리 = *'kgy 지금'*)** — ① 카드 `db/properties/ndo_lpscl16_site_stability_estimand_2026_10_14.json` + 결정 `D-2026-10-14-ndo-site-stability-estimand` **proposed** (Q1 ΔG_site 조성 균형 · Q2 닫힌계 분해 구동력 · Q3 Bader/ELF/Δρ 묘사 · G1–G6 · 허용/금지 결과 전 고정 · §6 설정 미기입 = 비준 전 조건) ② 후보 23 개 `db/inputs/ndo_site_2026_10_14/` (M_P 10 · M_Li 10 · host 3 · Rietveld 5 f.u. 같은 격자 · 형식전하 Ewald 같은 예산 · `make_candidates.py` 결정적 재생성) ③ kgy 실행기 `run_uma_kgy.sh` (UMA 500 K × 20 ps + 이완 · VRAM ≥ 4000 MiB · 감시 `~/w_ndsite_uma.sh`) — **사용자 실행 대기**. 다음: 결과 → 모델별 상위 3 → DFT 단일점 (kgy · 같은 nd_scf 설정) + Li₂S · Li₃PS₄ (MP 바닥 다형 · gabia MP 키로 받기) → Q1 · 그 다음 Q3.
+  · 🔎 **10-14 곁가지 — B₂O₃ 의 B 자리 (트랙 우리 DFT · 사용자)**: 'cascade 말고 B 가 Li 보다 P 를 선호한다' 는 계산은 **찾지 못했다** — repo · gabia b2o3md · KISTI 백업 A/B 를 봤다 (안 본 곳과 근거는 `kb/results/site_preference_findings_2026_06_19.md` 2026-10-14 줄). 있는 것은 cascade UMA 교환 (x 따라 뒤집힘) 과 반경 필터가 정한 P_4b 챔피언뿐. 확정하려면 Nd 와 같은 조성 균형 DFT (B@P 대 B@Li) — 제안만 · Nd 가 먼저.
 
 ### ⏭-NOW-z13. 2026-10-13 — 세미나 금요일로 · 덱 장별 확정 · 원격 상태 · li2s 600 K 발사 · litdb 병합 · 🔔 결정 3 건
 

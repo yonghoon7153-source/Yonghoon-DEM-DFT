@@ -20,6 +20,7 @@ Per-element aggregate: `docs/figures/site_preference/site_pref_by_element.csv`.
 - **B@P (PI's DFT setup)**: DEFENSIBLE but borderline. B prefers P at x005/x010 (dE −0.41/−0.21)
   yet flips to Li at x002 (+0.76). B genuinely competes between framework-P and borate(Li/O).
   → Running B@P is valid; do NOT claim "B clearly prefers P" — it is one of two motifs.
+  ⚠ **2026-10-14 추가 (사용자 질문 'cascade 말고 B 가 P 를 선호한다는 계산이 있나')** — **없다.** 찾아본 곳: 이 repo 의 B₂O₃ 기록 전부 · gabia `/data/work/b2o3md/` (kb 옛 사본 · 이 카드뿐) · KISTI 백업 A `kgy_lpscl16_site_pref_2026-07-14` (LPSCl1.6 Cl 배치 모델 A/B/C · B 0 줄) · 백업 B `runs/b2o3_stage0–2 · Odist · anneal · dft3` (생성기 설계상 B@P · Li 자리 표기 0). 안 본 곳: 백업 A 의 `kgy_projects` · `kgy_repo` 스냅숏 · kgy 옛 작업 폴더. cascade 의 B₂O₃ 챔피언이 P_4b 인 것은 경쟁 결과가 아니라 자리 필터가 반경으로 B 를 P_4b 로만 보낸 것이다 (`tools/doping/site_preference.py` · B 항목).
 - **Nd → Li (robust)**: dE +0.33/+0.92/+2.42 across x002/005/010, all Li, mean +1.22.
   Confirms the Nd@Li / Li-channel-blocking picture (consistent with σ↓ vs modelc).
 - **Y vs Nd — NOT a site difference**: Y also → Li (dE +0.47/+2.31/+2.51, mean +1.76), even
