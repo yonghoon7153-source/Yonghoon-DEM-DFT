@@ -210,3 +210,5 @@ reviews/review_reil_c4e_prereview_20261014/** -text
 reviews/review_reil_c4e_v2_prereview_20261014/** -text
 # 2026-10-14: REIL C4-E 요청 정정판 (v3) 사전 재검토 회신 (수용 · E0 명시 승인 대기 · source/ = 검토자가 본 저장소 · basis/ = v2 회신) — bytes 그대로
 reviews/review_reil_c4e_v3_prereview_20261014/** -text
+# 2026-10-14: REIL C4-E · E0 증거 — 단계 기록 · stdout / stderr · porcelain · plan-e 산출 · 끝 기록 (상태 문서 §66 · §67) — bytes 그대로
+evidence/reil_c4e0_20261014/** -text
