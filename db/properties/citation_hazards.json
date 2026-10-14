@@ -656,6 +656,18 @@
     "db/properties/sdcp_c12_v41_eads_ungated_2026_09_21.json",
     "db/properties/sdcp_c12_closed_2026_09_30.json"
    ]
+  },
+  {
+   "file": "kb/methodology/dopant_screening_funnel_2026_06_13.md",
+   "source_path": "db/compositions/modelc_nd_doped.json",
+   "level": "BLOCKED",
+   "added": "2026-10-14",
+   "what": "'Nd@P 가 Nd@Li 보다 **1.633 eV/cell (0.544 eV/O 결함)** 불리 · Boltzmann 비 4×10⁻¹⁷' — cfg141 대 cfg23 비교를 Nd 자리 근거로 쓰는 것 (`kb/methodology/dopant_screening_funnel_2026_06_13.md` §1.2 · `kb/physics/nd_4f_doping_consolidated_corrected_2026_06_24.md` §3-2 · `kb/results/nd2o3_FINAL_summary_2026_06_24.md` 머리 'Nd→P(control)는 less stable로 기각')",
+   "why": "cfg23 은 Track 1B = **O@4d** 이고 Nd 는 두 셀 모두 Li 자리다 (`modelc_nd_doped.json` O_placement_ambiguity · frame_4_cfg23_track1B) — O 자리 비교가 Nd 자리 비교로 잘못 표기돼 세 문서에 퍼졌다. Track 2 (Nd@P) 는 배치 3 개 열거와 계획의 예상값만 있고 에너지가 없다. 2026-10-14 CEI 트랙 1저자 (실험) 의 '이 물질이 안정한가' 질문에 답하다 발견 — Rietveld 는 Nd 를 P 자리 (4b · 점유 0.02) 에 둔다.",
+   "fix": "Nd 자리 서술은 UMA 같은 조성 교환 `db/properties/site_preference_raw_78.csv` 의 **부호만** (Li 자리 우세 · x 0.02/0.05/0.10 전부 · 밀려난 P 의 antisite 벌점 포함이라 크기는 쓰지 않는다). 1.633 eV/cell · 0.544 eV/O 는 'O 는 16e 를 4d 보다 선호 (UMA · Nd@Li 셀)' 로만 쓴다. Nd@P 대 Nd@Li 의 크기는 DFT 조성 균형 비교 (Y 선례 `db/properties/y_site_preference_dft_2026_09_07.json`) 뒤에만.",
+   "id": "HZ-nd-site-cfg23-mislabeled",
+   "binding_scope": "partial",
+   "binding_scope_why": "값이 canonical_registry 에 없고 화면(webapp)에도 없다 (2026-10-14 rg 확인) — kb 문서 세 곳에 정정 줄을 달아 결속 대신 표지로 남긴다."
   }
  ],
  "_history": [
@@ -703,9 +715,14 @@
    "date": "2026-10-14",
    "what": "HZ-cascade-product-gaps-nonground-polymorph — 파일을 고친 도구로 재생성 (gabia · MP db 2026.04.13 · 9225dd9) · 등급 HOLD 유지",
    "why": "선택 버그는 풀렸으나 금속/절연 판정이 바뀌었고 (공통 351 중 20 뒤집힘 · 같은 반응 693 중 97 뒤집힘) R-3c Cr₂O₃ · Fe₂O₃ 의 MP 갭이 0 eV 라 판정이 MP 갭 품질에 민감하다. 통계는 계속 인용하지 않는다."
+  },
+  {
+   "date": "2026-10-14",
+   "what": "HZ-nd-site-cfg23-mislabeled 추가 (BLOCKED) — cfg23 (O@4d) 를 Nd@P 로 잘못 표기한 Nd 자리 근거",
+   "why": "CEI 트랙 1저자의 Nd 안정성 질문에 답하다 원장과 대조해 발견 · 세 kb 문서에 정정 줄"
   }
  ],
- "updated": "2026-09-22",
+ "updated": "2026-10-14",
  "_schema_note": {
   "claim": "화면 결속용 claim id (`<metric>@<system>`, canonical_registry 파생). 이 위험이 **어느 정본 주장**에 대한 것인지 이름을 대면, /governance 표에서 근접성 없이 결속이 성립한다 (회신 BG ②).",
   "id": "안정 hazard 식별자. 화면·handoff 가 `data-claim=\"<id>\"` 로 이 위험을 선언한다 (회신 BG ②).",

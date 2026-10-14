@@ -34,6 +34,7 @@ cfg141 identity: **Nd=[1, 82], vac=[5, 6, 63, 71], O=[37, 95, 109]** (124-atom
 - **Track 1B is a family of basins, all higher**: cfg23 had the largest anneal
   gain (−671.6 meV, rank #4→#2) yet still sits 1.63 eV/cell above cfg141 →
   the advantage is not a single-config fluke.
+- ⛔ **2026-10-14 정정 — cfg23 은 Nd@P 가 아니다.** `db/compositions/modelc_nd_doped.json` 의 Track 1B = **O@4d** (Nd 는 두 셀 모두 Li 자리 · `O_placement_ambiguity` · `frame_4_cfg23_track1B`). 그래서 위 1.633 eV/cell · 0.544 eV/O · Boltzmann 비는 **O 자리 (16e 대 4d) 비교**이고 Nd 자리 비교가 아니다 (아래 §'Anion … Track 1B O@4d' 줄이 맞는 표기). Nd@Li 대 Nd@P 를 실제로 잰 것은 UMA 같은 조성 교환 `db/properties/site_preference_raw_78.csv` (E(Nd@P) − E(Nd@Li) = +0.330 / +0.924 / +2.420 eV/Nd · x 0.02 / 0.05 / 0.10 · 밀려난 P 의 antisite 벌점 포함 · **부호만**) 하나뿐이고 DFT 조성 균형 비교 (Y 선례 `db/properties/y_site_preference_dft_2026_09_07.json`) 는 없다. 원장 `HZ-nd-site-cfg23-mislabeled`.
 - **Robustness QC**: 20 random Li perturbations (≤0.5 Å) + UMA FIRE relax on
   cfg141 — **all 20 ended higher** by 0.4–15.5 meV (mean 2.5). No nearby lower
   minimum → cfg141 is at/very near the MLIP global minimum.
@@ -125,6 +126,7 @@ Stage-03 winners, metric `de_per_atom_vs_baseline` (lower = more favorable):
 
 - **Cation: Y→Li_24g beats Y→P_4b by +0.273 eV/atom** (~13 eV/cell at ~47 atoms —
   far beyond UMA noise) = same as Nd (Nd@Li ≫ Nd@P).
+  ⛔ 2026-10-14: 'Nd@Li ≫ Nd@P' 의 근거로 §1.2 의 cfg23 비교를 쓰지 않는다 (O 자리 비교다) — Nd 쪽 근거는 `site_preference_raw_78.csv` 의 UMA 교환 부호뿐이다 (`HZ-nd-site-cfg23-mislabeled`).
 - **Anion: O@S_16e beats O@S_4a by ~0.07 eV/atom** within the Li group = same
   direction as Nd (Track 1A O@16e ≫ Track 1B O@4d, 0.544 eV/O).
 - **Double match** → the (M³⁺→Li_24g + O→PS₄-corner) motif is common to two

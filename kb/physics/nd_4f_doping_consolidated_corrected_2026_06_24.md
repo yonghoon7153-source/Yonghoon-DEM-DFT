@@ -89,6 +89,7 @@ March 노트의 핵심 물리(4f 국소화·차폐·spectator, Mott-Hubbard vs b
    여전히 **PENDING** 이다 — "UMA 노이즈가 뒤집었을 수 있다" 는 반론을 정량으로 닫는 것이
    그 항목이다. 1.633 eV 는 MLIP 오차보다 훨씬 크지만, **DFT 확인 전까지는 그렇게 말한다.**
    ⇒ 원고 문구는 카드 §1.3 의 *seminar-safe phrasing* 을 그대로 쓸 것.
+   ⛔ **2026-10-14 정정** — 위 '★ 실제로 계산됐다' 단락의 cfg23 은 **Nd@P 가 아니다**: `db/compositions/modelc_nd_doped.json` 의 Track 1B = **O@4d** (Nd 는 두 셀 모두 Li 자리 · `O_placement_ambiguity` · `frame_4_cfg23_track1B`). 1.633 eV/cell 은 O 자리 비교라 Nd 자리 주장의 근거가 아니다. Nd@Li 대 Nd@P 를 직접 잰 것은 UMA 같은 조성 교환 `db/properties/site_preference_raw_78.csv` (E(Nd@P) − E(Nd@Li) = +0.330 / +0.924 / +2.420 eV/Nd · x 0.02 / 0.05 / 0.10 · 밀려난 P 의 antisite 벌점 포함 · **부호만**) 뿐이고, DFT 조성 균형 비교 (Y 선례 `db/properties/y_site_preference_dft_2026_09_07.json`) 는 아직 없다. 또 CEI 트랙 1저자 (실험) 의 Rietveld 는 Nd 를 **P 자리 (4b · 점유 0.02)** 에 둔다 (`db/structures/ndo_lpscl16_rietveld_2026_09_07/00_SOURCE_Rietveld_NdO_LPSCl1.6.cif`). 원장 `HZ-nd-site-cfg23-mislabeled`.
 3. **self-limiting SEI**(분해산물이 wide-gap 전자절연):
    - **bulk/GB·anode**: **O-유래 Li₃PO₄ 5.73 / Li₂O 5.24** → σ_e↓(GB percolation 차단) → dendrite·self-discharge 억제 → cycle↑. (= 논문 central, O 주역)
    - **cathode(고전압)**: **Nd³⁺ 생존 → NdPO₄ 5.55* / NdCl₃ 4.30*** wide-gap passivation. (= 여기서만 Nd가 직접 기여, electron blocking §2-4)

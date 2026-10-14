@@ -4,6 +4,7 @@
 
 - **DFT 조성 (main track, Nd→Li)**: **Li₄.₈Nd₀.₂PS₄.₁O₀.₃Cl₁.₆** = Li₄₈Nd₂P₁₀O₃S₄₁Cl₁₆ (120-atom, net charge 0, x=0.20 과도핑).
 - **실험**: x=0.02 (Li₅.₃₄Nd₀.₀₂PS₄.₃₇O₀.₀₃Cl₁.₆), σ_e 최저·cycle 개선. **Nd→P(control)는 less stable로 기각**(modelc_nd_doped.json Track 2).
+  ⛔ **2026-10-14 정정** — 이 '기각' 은 계산 근거가 없다. Track 2 (Nd@P) 는 배치 3 개 열거와 계획의 예상값 (`expected_outcome` ~1–3 eV · 문장 빈칸 '~X eV') 만 있고 에너지가 없다. kb 의 'cfg23 = Nd@P · 1.633 eV/cell' 은 O 자리 (16e 대 4d) 비교를 잘못 표기한 것이다. Nd 자리에 대해 있는 것은 UMA 같은 조성 교환 `db/properties/site_preference_raw_78.csv` (E(Nd@P) − E(Nd@Li) = +0.330 / +0.924 / +2.420 eV/Nd · x 0.02 / 0.05 / 0.10 · 밀려난 P 의 antisite 벌점 포함 · **부호만**) 뿐이다. CEI 트랙 1저자 Rietveld 는 Nd 를 P 자리 (4b) 에 둔다. 원장 `HZ-nd-site-cfg23-mislabeled`.
 - O speciation (relaxed, 검증): **1×PS₂O₂ + 1×PS₃O + 8×pristine PS₄**, 3 O 중 **2 O가 P–O–Nd 브리지**.
 
 ---
