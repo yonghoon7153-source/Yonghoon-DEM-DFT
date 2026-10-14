@@ -1,0 +1,52 @@
+{
+  "kind": "INDEPENDENT_DOCUMENT_AND_SOURCE_PREREVIEW",
+  "review_date": "2026-10-14",
+  "repository": "yonghoon7153-source/Yonghoon-DEM-DFT",
+  "branch": "claude/14-gate-code-review-9qkx05",
+  "reviewed_head": "89d18f546cef0172ee53105ae04ba66d1e224370",
+  "request_sha256": "b1d8953a346f034a4eecbbc695198f58e1deefcb0a1ba9b00fab631b1d41aa75",
+  "send_sha256": "b648bf9d570c6abb964e08c2ad35b1fc4d8b39e7aadabf40e7c1f19b146c026f",
+  "decision": "REQUEST_REVISION_BEFORE_E0_APPROVAL",
+  "finding_status": "DOCUMENT_CONTRACT_GAPS_NOT_OBSERVED_RUNTIME_FAILURES",
+  "findings": [
+    {"id":"C4E-N1","priority":1,"scope":"E0 regression execution authorization, inherited harness environment and separate E1 GO"},
+    {"id":"C4E-N2","priority":1,"scope":"Observation-row completion versus E3a protocol success; operational and final-record gates"},
+    {"id":"C4E-N3","priority":2,"scope":"Per-call timeout versus late completion; common clock coordinates and auditable cost snapshot"},
+    {"id":"C4E-N4","priority":2,"scope":"Missing NE loading validation and complete consumption-input identity binding"}
+  ],
+  "nonblocking_corrections": [
+    {"id":"M1","scope":"Original/copy util newline byte relationship and v2 section 6-3 citation"}
+  ],
+  "questions": {
+    "Q1":"REVISE_BEFORE_E0_APPROVAL",
+    "Q2":"CORE_CHOICES_ACCEPTABLE_BOUNDARIES_INCOMPLETE",
+    "Q3":"H_ARRAY_H4_DEFERRAL_ACCEPTABLE_E3A_LOADING_BINDING_INCOMPLETE",
+    "Q4":"ERROR_COMPLETED_ROWS_ALLOWED_BUT_NOT_E3A_SUCCESS_OR_H_PREREQUISITE",
+    "Q5":"FIXED_ORIGINAL_UTIL_DIRECTION_ACCEPTABLE_CORRECT_RAW_BYTE_DESCRIPTION"
+  },
+  "prior_C4_0a_0b1_0b2_limited_closure_maintained": true,
+  "prior_failures_missing_records_and_deviations_preserved": true,
+  "H_array_authentication_deferred_not_discharged": true,
+  "H4_recording_deferred_not_discharged": true,
+  "E3a_complete_recommended": "66 returned calls AND record completeness AND identity acceptance AND no global/structural stop AND owned-process/queue closeout accepted AND final record/time/size accepted; no convergence/feasibility/success=True requirement",
+  "reviewer_actions": {
+    "received_program_import_or_execution": 0,
+    "tests": 0,
+    "Python": 0,
+    "optimizer": 0,
+    "Sobol": 0,
+    "REIL_xlsx_pkl_notebook_download_or_opening": 0,
+    "COMSOL_JVM_compile_solve": 0,
+    "environment_rebuild_or_install": 0,
+    "repository_source_changes": 0,
+    "external_message_delivery": 0,
+    "fixed_original_util_source_read_and_capture_only": true,
+    "own_PowerShell_read_hash_JSON_constant_arithmetic_and_review_packaging": true
+  },
+  "new_execution_approval": false,
+  "E0_approved": false,
+  "E1_approved": false,
+  "C4_A_B_approved": false,
+  "data_import_or_opening_approved": false,
+  "next": "Revised request prereview, then explicit user E0 approval; E0 result acceptance followed by separate user E1 GO"
+}
