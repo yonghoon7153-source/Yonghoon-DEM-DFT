@@ -200,3 +200,5 @@ reviews/review_reil_c4_0b1_fix2_result_20261014/** -text
 evidence/reil_c4_0b2_20261014/** -text
 # 2026-10-14: REIL C4-0b2 결과 검토 회신 (종결 보류 · P2 N1–N3 · 기록 수용 범위 · 문구 정정 · C4-E/A/B 조건 · source/ · red_fixed/ = 검토자가 본 저장소 사본) — bytes 그대로
 reviews/review_reil_c4_0b2_result_20261014/** -text
+# 2026-10-14: REIL C4-0b2 한정 보완 (C4B2-N1 · N2 · N3) 증거 — 단계 기록 · stdout / stderr · porcelain · 끝 기록 (상태 문서 §58 · §59) — bytes 그대로
+evidence/reil_c4_0b2_fix_20261014/** -text
