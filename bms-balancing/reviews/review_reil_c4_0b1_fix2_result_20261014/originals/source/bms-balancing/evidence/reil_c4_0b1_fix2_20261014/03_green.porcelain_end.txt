@@ -1,0 +1,17 @@
+ M bms-balancing/scripts/reil_c4_h.py
+?? bms-balancing/evidence/reil_c4_0b1_fix2_20261014/00_identity_c4.py
+?? bms-balancing/evidence/reil_c4_0b1_fix2_20261014/00_porcelain_start.txt
+?? bms-balancing/evidence/reil_c4_0b1_fix2_20261014/00_start.txt
+?? bms-balancing/evidence/reil_c4_0b1_fix2_20261014/00_step_runner.py
+?? bms-balancing/evidence/reil_c4_0b1_fix2_20261014/01_identity.json
+?? bms-balancing/evidence/reil_c4_0b1_fix2_20261014/01_identity.meta.json
+?? bms-balancing/evidence/reil_c4_0b1_fix2_20261014/01_identity.porcelain_end.txt
+?? bms-balancing/evidence/reil_c4_0b1_fix2_20261014/01_identity.porcelain_start.txt
+?? bms-balancing/evidence/reil_c4_0b1_fix2_20261014/02_red.meta.json
+?? bms-balancing/evidence/reil_c4_0b1_fix2_20261014/02_red.porcelain_end.txt
+?? bms-balancing/evidence/reil_c4_0b1_fix2_20261014/02_red.porcelain_start.txt
+?? bms-balancing/evidence/reil_c4_0b1_fix2_20261014/02_red.source_sha256.txt
+?? bms-balancing/evidence/reil_c4_0b1_fix2_20261014/03_green.porcelain_start.txt
+?? bms-balancing/evidence/reil_c4_0b1_fix2_20261014/03_green.source_sha256.txt
+?? bms-balancing/evidence/reil_c4_0b1_fix2_20261014/03_patch_applied.txt
+?? bms-balancing/tests/test_reil_c4_0b1_fix2.py

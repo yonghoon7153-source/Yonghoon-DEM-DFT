@@ -1,0 +1,106 @@
+[
+  {
+    "ref": "c6787db21c6608d3b5ad57fe7e39dfa865b5d6da",
+    "path": "bms-balancing",
+    "entries": [
+      {
+        "path": "bms-balancing/reil_c4_arrays_0b1_20261013",
+        "sha": "e0add8d9cba8e6c7edeb8cec2dd1e5875af1d1e0",
+        "type": "dir"
+      },
+      {
+        "path": "bms-balancing/reil_c4_arrays_20261013",
+        "sha": "e294f648eb6ce51207da3b2021292734556d4e1b",
+        "type": "dir"
+      },
+      {
+        "path": "bms-balancing/reil_c6_20261005",
+        "sha": "3ec46373da366265242e92df9c6e112e5ff100e0",
+        "type": "dir"
+      },
+      {
+        "path": "bms-balancing/reil_c6_rebuild_20261006",
+        "sha": "b55f3a439e23bd41626d64bbb40b8221571f8690",
+        "type": "dir"
+      },
+      {
+        "path": "bms-balancing/reil_c6_rebuild_20261013",
+        "sha": "f4384bb265ccd73ffc39cd4a43d7507014234bde",
+        "type": "dir"
+      }
+    ]
+  },
+  {
+    "ref": "c6787db21c6608d3b5ad57fe7e39dfa865b5d6da",
+    "path": "bms-balancing/evidence",
+    "entries": [
+      {
+        "path": "bms-balancing/evidence/reil_c4_0b1_20261013",
+        "sha": "d91c6243bfbe66e722faa66ffdf3be7d725dacbf",
+        "type": "dir"
+      },
+      {
+        "path": "bms-balancing/evidence/reil_c4_0b1_fix_20261013",
+        "sha": "b23ce24f152ae056f005cc8a37fa8551b421abb5",
+        "type": "dir"
+      },
+      {
+        "path": "bms-balancing/evidence/reil_p0_20261006",
+        "sha": "82a74d69c3f3cad363d6f120fe0e88658af0a496",
+        "type": "dir"
+      }
+    ]
+  },
+  {
+    "ref": "5eeedb4beade319a040c2453e8b447673d425fd6",
+    "path": "bms-balancing",
+    "entries": [
+      {
+        "path": "bms-balancing/reil_c4_arrays_0b1_20261013",
+        "sha": "e0add8d9cba8e6c7edeb8cec2dd1e5875af1d1e0",
+        "type": "dir"
+      },
+      {
+        "path": "bms-balancing/reil_c4_arrays_20261013",
+        "sha": "e294f648eb6ce51207da3b2021292734556d4e1b",
+        "type": "dir"
+      },
+      {
+        "path": "bms-balancing/reil_c6_20261005",
+        "sha": "3ec46373da366265242e92df9c6e112e5ff100e0",
+        "type": "dir"
+      },
+      {
+        "path": "bms-balancing/reil_c6_rebuild_20261006",
+        "sha": "b55f3a439e23bd41626d64bbb40b8221571f8690",
+        "type": "dir"
+      },
+      {
+        "path": "bms-balancing/reil_c6_rebuild_20261013",
+        "sha": "f4384bb265ccd73ffc39cd4a43d7507014234bde",
+        "type": "dir"
+      }
+    ]
+  },
+  {
+    "ref": "5eeedb4beade319a040c2453e8b447673d425fd6",
+    "path": "bms-balancing/evidence",
+    "entries": [
+      {
+        "path": "bms-balancing/evidence/reil_c4_0b1_20261013",
+        "sha": "d91c6243bfbe66e722faa66ffdf3be7d725dacbf",
+        "type": "dir"
+      },
+      {
+        "path": "bms-balancing/evidence/reil_c4_0b1_fix_20261013",
+        "sha": "b23ce24f152ae056f005cc8a37fa8551b421abb5",
+        "type": "dir"
+      },
+      {
+        "path": "bms-balancing/evidence/reil_p0_20261006",
+        "sha": "82a74d69c3f3cad363d6f120fe0e88658af0a496",
+        "type": "dir"
+      }
+    ]
+  }
+]

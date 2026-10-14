@@ -1,0 +1,50 @@
+{
+  "sha": "f5fe055bc370bc5cd36963e7fc90a2284b23c947",
+  "commit": {
+    "author": {
+      "name": "Claude",
+      "email": "noreply@anthropic.com",
+      "date": "2026-10-13T17:08:20Z"
+    },
+    "committer": {
+      "name": "Claude",
+      "email": "noreply@anthropic.com",
+      "date": "2026-10-13T17:08:20Z"
+    },
+    "message": "COMSOL OS B: R2 입력 확인 중지 · 공식 문서 ZIP 원본 재전달 기록 (원장 §97)\n\n실행 PC 바탕화면에 묶음 ZIP 부재 → §94 원본 (6579d317…, 재계산 일치) 재전달.\n재생성 아님. 승인 범위 변경 없음. 실행 0.\n\nCo-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>\nClaude-Session: https://claude.ai/code/session_017D3bGQTgNyU3D6woFi6FnB",
+    "tree": {
+      "sha": "4c30812dd5f5670913da76d7986dd2a33cfa6ddb",
+      "url": "https://api.github.com/repos/yonghoon7153-source/Yonghoon-DEM-DFT/git/trees/4c30812dd5f5670913da76d7986dd2a33cfa6ddb"
+    },
+    "url": "https://api.github.com/repos/yonghoon7153-source/Yonghoon-DEM-DFT/git/commits/f5fe055bc370bc5cd36963e7fc90a2284b23c947",
+    "comment_count": 0,
+    "verification": {
+      "verified": true,
+      "reason": "valid",
+      "signature": "-----BEGIN SSH SIGNATURE-----\nU1NIU0lHAAAAAQAAADMAAAALc3NoLWVkMjU1MTkAAAAgrLzsfFISF4by8Q+FKz27YpkK1USsBB+m\namu1QkJnbDsAAAADZ2l0AAAAAAAAAAZzaGE1MTIAAABTAAAAC3NzaC1lZDI1NTE5AAAAQNpmE9RD\nDNumjiLBluNodnua2eOjeBtkYN3V+oJbZ0FjkiM37n8NUH5+xJvpxyYuDKkp/frFzBB/NgYrOu+1\ngA0=\n-----END SSH SIGNATURE-----",
+      "payload": "tree 4c30812dd5f5670913da76d7986dd2a33cfa6ddb\nparent 7044162c28b3d3c70f68c3e8e3f182013519ee25\nauthor Claude <noreply@anthropic.com> 1791911300 +0000\ncommitter Claude <noreply@anthropic.com> 1791911300 +0000\n\nCOMSOL OS B: R2 입력 확인 중지 · 공식 문서 ZIP 원본 재전달 기록 (원장 §97)\n\n실행 PC 바탕화면에 묶음 ZIP 부재 → §94 원본 (6579d317…, 재계산 일치) 재전달.\n재생성 아님. 승인 범위 변경 없음. 실행 0.\n\nCo-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>\nClaude-Session: https://claude.ai/code/session_017D3bGQTgNyU3D6woFi6FnB\n",
+      "verified_at": "2026-10-13T17:08:24Z"
+    }
+  },
+  "parents": [
+    {
+      "sha": "7044162c28b3d3c70f68c3e8e3f182013519ee25",
+      "url": "https://api.github.com/repos/yonghoon7153-source/Yonghoon-DEM-DFT/commits/7044162c28b3d3c70f68c3e8e3f182013519ee25",
+      "html_url": "https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT/commit/7044162c28b3d3c70f68c3e8e3f182013519ee25"
+    }
+  ],
+  "files": [
+    {
+      "sha": "56cb8f354e695847afb924c68d70818908d8874a",
+      "filename": "bms-balancing/docs/COMSOL_REBUILD_SPEC.md",
+      "status": "modified",
+      "additions": 12,
+      "deletions": 0,
+      "changes": 12,
+      "blob_url": "https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT/blob/f5fe055bc370bc5cd36963e7fc90a2284b23c947/bms-balancing%2Fdocs%2FCOMSOL_REBUILD_SPEC.md",
+      "raw_url": "https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT/raw/f5fe055bc370bc5cd36963e7fc90a2284b23c947/bms-balancing%2Fdocs%2FCOMSOL_REBUILD_SPEC.md",
+      "contents_url": "https://api.github.com/repos/yonghoon7153-source/Yonghoon-DEM-DFT/contents/bms-balancing%2Fdocs%2FCOMSOL_REBUILD_SPEC.md?ref=f5fe055bc370bc5cd36963e7fc90a2284b23c947",
+      "patch": "@@ -4696,3 +4696,15 @@ gate INCOMPLETE · 실효 정책 UNVERIFIED · native 미승인 · 게이트 리\n   — 38,949 B · sha256 `879cff578dfa52a7dcf0c008cded5f42698bb3b2916570b9e4b5da0b31e10d17` (지금 재계산 · v2 §1 · §89 와 일치). 사용자가 실행 Codex 에 첨부한다.\n - 승인 범위 (§95) 는 그대로다 — 첨부 보충은 범위 변경이 아니다. 3,600 s 원점은 실행 측이 이 zip 확인 뒤 새로 시작한다 (중지 전 소비 없음 · 실행 측 보고 기준).\n - 유지: OPEN 4 · `native_ready / approved / usable = false`.\n+\n+## 97. OS B R2 — 입력 확인 단계 중지 (공식 문서 ZIP 지정 위치 부재) · 원본 재전달 (2026-10-14 · 실행 0)\n+\n+- **실행 Codex 보고 (사용자 전달):** `C:/Users/BML/Desktop/COMSOL_S1_OS_B_OFFICIAL_DOCS_20261013.zip` 이 지정 위치에 없어 입력 확인에서 멈췄다.\n+  첫 오류 중지 규칙대로 대체 사본 · 재시도 0. 후보 수정 · 시험 · CIM · COMSOL 0. R2 폴더\n+  `…/outputs/microshort_s1_os_b_prep_R2_20261014/` 는 중지 기록으로 보존 (`COMSOL_MICROSHORT_S1_OS_B_R2_INPUT_STOP_20261014.zip` ·\n+  `DELIVERY_RECEIPT.json` · `FINAL_DELIVERY_TOOL_RETURN.json` — 이 저장소는 아직 받지 않았다 · 식별 미기록).\n+- **재전달:** §94 에서 만든 원본 그대로 (재생성 아님 — 재생성하면 가져온 시각이 MANIFEST 에 들어가 sha 가 바뀐다).\n+  지금 재계산: 525,600 B · sha256 `6579d317bfe43129e7364c973882912f95d29c8b0031115f6263fb82d1207dd6` · 묶음 내 MANIFEST `8ce680e4…81253` — §94 · v2 §0 과 일치.\n+  사용자가 실행 PC 의 지정 경로 (바탕화면) 에 두고 다시 보낸다.\n+- 승인 범위 (§95) 변경 없음. 다음 실행은 새 R 폴더 · 새 3,600 s 원점 (실행 측 규칙).\n+- 유지: OPEN 4 · `native_ready / approved / usable = false`."
+    }
+  ]
+}
