@@ -1488,3 +1488,43 @@ rc 0 → **옛 봉인 대조 (§2-4) 에서 허용 밖 차이** → 정지. 원�
   - 재검토 발송문 `docs/REIL_C4E_PREREVIEW_SEND_v2_20261014.md` · sha256 `56644c3888f7345c26cf41a3a4177d55305d47591a2b5c0de123f3df39991f68`
 - **미정 (재검토 회신 뒤 사용자 결정):** 정정판 §11 의 1–4 — E0 승인 · 비용 중단 규칙 · util 원본 / 사본 · 코드 위치.
 - 이 결정은 E0 · E1 · 구현 · 자료 반입 · 자료 개봉 · 실행 · C4-A / B 승인이 아니다. 회신이 오면 바이트 보존 → 원장 → (정정이 요구되면 정정판) → 사용자 결정 순서로 간다.
+
+## §64 C4-E 요청 정정판 (v2) 사전 재검토 회신 접수 — 주요 정정 수용 · E0 승인 전 문서 보완 셋 (2026-10-14 KST · 덧붙임 — 위 §0–§63 은 그대로)
+
+- **보존:** `reviews/review_reil_c4e_v2_prereview_20261014/`
+  - zip 389,850 B · sha256 `94987e31e92b17c24bc6b7d66c12c6bc4efd4fe5006c1e12f1558413fdcc4995` (사용자 업로드 원파일과 바이트 동일).
+  - `originals/` 49 · PACKAGE_MANIFEST (`members`) 48 / 48 일치 · 목록 밖 파일 0 (manifest 자신은 `self_excluded`) · 비밀 0.
+    동봉 `assemble_audit.ps1` · `capture_data.ps1` · `package_review.ps1` 은 실행하지 않았다.
+  - `source/` 29 는 검토 고정 HEAD `dc6e5b7e` 의 저장소 파일과 바이트 동일하다. `original_util/` 은 이전 회신의 원본 util 사본과 같다. `basis/` 8 은 이전 회신 원문과 같다.
+  - 규칙 커밋 `0b65232a` → 보존 커밋 `eeec26bf` (blob 50 / 50 일치).
+- **판정 (`DECISION.json`):** `REQUEST_REVISION_BEFORE_E0_APPROVAL` — 실행 중 관측한 실패가 아니라 문서 계약 · 정적 계수의 정정이다. 새 승인 없음
+  (E0 · E1 · C4-A / B false). 검토자 실행 0.
+  - **문서상 닫힘:** C4E-N1 의 E0 환경 · 별도 E1 GO · C4E-N2 (관측 행 ≠ E3a 성공) · C4E-N4 (NE · reference 둘 · 실제 소비 입력) · M1.
+    C4E-N3 은 최종 drain 경계를 뺀 나머지가 닫혔다. E0 기능 PASS · C4 전체 7-1 / 7-2 · 실행 승인으로 넓히지 않는다.
+- **남은 셋 (P2 · 좌표는 원문에서 다시 확인했다):**
+  1. **C4E-N1-REMAINING — 회귀시험 계수 단위.**
+     - **실제 fork 는 기존 10 이다 (v2 §6-2 의 11 은 틀렸다 — 제 계수 오류).** `test_reil_c4_0a_fix.py` n3_a · n3_b 는 `_ScriptedCtx` / `_ScriptedProc`
+       (176–237 행) 가 Process 를 대신해 실제 프로세스가 0 이다. 0b2 c_8 은 `stage_a` 의 1 파 (`reil_c4_hb.py:1105`) 와 ρ 파 (`:1165`) 에서 `supervise_runner` 를
+       두 번 불러 2 다. 그래서 0a 3 + 0a 보완 1 + 0b1 보완 3 + 보완 2 1 + 0b2 2 = **10 · 새 5 를 더해 GREEN 15** (상한 17 유지).
+     - **COBYQA 14 실행:** 50 은 실행당 **내부** 목적평가 상한 (`reil_c4_h.py:840–841` 의 maxfev) 이다. 정상 반환 뒤 **독립 재평가**가 최대 1 회 더 있다
+       (`_assess` → `_evaluate` · `:781` · `:875`). 둘을 섞지 않는다. 14 × 50 은 내부의 보수 상한이고 전체 목적 호출 상한이 아니다.
+     - **보존 util 사본 · 최적화 없음** — "몇 회" 대신 함수별 유한 상한을 쓴다 (검토자 정적 상한 · 중첩 진입을 따로 셈 · 서로 더하지 않음):
+       - 0b1 test_06: `extract_battery_data` ≤ 5 · `objective_fun` ≤ 3 · `dVdQ_hc` ≤ 9.
+         제출자도 다시 읽었다: `synthetic_wide_inputs` 를 부르는 시험 5 · 직접 `objective_fun` 2 + `jv_jd` 안 1.
+       - 0b2 h_1–h_4: `extract_battery_data` ≤ 4 · `objective_fun` 0 · `dVdQ_hc` ≤ 48.
+       - 0b2 의 기존 "≤ 120" 과 §56 의 "22" 는 최상위 호출 단위다 (extract 4 · J_V^s 6 · n_out 9 · V_full 3).
+     - 가짜 minimize ≤ 995 · Sobol 관련 15 "시험" (생성 호출 수가 아님) · 159 + 21 = 180 은 그대로 수용.
+  2. **C4E-N2-FINAL-BOUNDARY — 마지막 쓰기 뒤의 수용.** v2 의 순서 `final_record → 끝 sha → 판정 → 끝 기록` 에서 `final_record` (`reil_c4_monitor.py:344–379`) 는
+     자기 parts 의 쓰기 · 재읽기 · 해시 · 용량 조회 뒤 한 번만 판정한다. 그래서 그 뒤의 끝 재해시 · 끝 기록은 덮지 못한다.
+     - 반례 (상수 산술): 첫 검사 1 GiB − 100 B 통과 → 끝 기록 1,024 B → 실제 924 B 초과인데 여섯 조건은 통과한다.
+     - 정정: 끝 식별 재해시와 단계 안의 마지막 끝 기록 저장 · 재읽기까지 포함한 뒤, 같은 산출 루트의 크기와 최종 monotonic snapshot 으로 수용을 확정한다.
+       9,900 s · 10,800 s 가 어느 마지막 작업까지인지 고정한다. snapshot 뒤 외부 반환 (stdout 등) 은 별도다.
+     - s_3 에 끝 재해시 지연 · 마지막 기록에 의한 시간 / 크기 초과 · 66 returned + global_stop / freshness 실패를 각각 둔다.
+  3. **C4E-N3-FINAL-DRAIN — 중지 뒤 도착한 완료 행.** 감시는 중지 · 정리 뒤 마지막 drain 에서 done 을 받으면 COMPLETED 원행을 우선한다 (`:194–199` · `:313–335`).
+     v2 §4-2 의 "진행 중 초과 → 그 호출 STARTED_INTERRUPTED" 와 충돌한다.
+     - 정정: 진행 중 초과는 "중단 요청 대상" 으로 기록하고, 최종 drain 뒤 done 이 없을 때만 STARTED_INTERRUPTED 로 둔다. done 이 있으면 원래 COMPLETED 와
+       termination (returned · error) 을 보존한다. 초과 기록 · global_stop 은 취소하지 않는다.
+     - 마지막 drain 에서 받은 행의 wall 도 상한과 대조해 늦은 완료 목록을 완성한다. 판정은 INCOMPLETE 다 (성공 우회가 아니라 원행 · 증거 보존).
+     - r_6 에 "진행 중 초과 → 중지 요청 → 마지막 drain 에서만 done" 을 넣는다 (순수 fixture 또는 추가 fork 를 미리 정한다).
+- **상태:** v2 (`a4fb2025…`) 는 그대로 둔다. 정정판 v3 → 사전 재검토 → 사용자 E0 별도 승인 → E0 결과 검토 → E1 별도 GO. 지금 구현 · 시험 · 자료 반입 · 개봉 0.
+- **다음:** `docs/REIL_C4E_APPROVAL_REQUEST_v3_20261014.md` · 재검토 발송문 v3.
