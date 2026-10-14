@@ -1,0 +1,53 @@
+path	bytes	sha256	state	why
+_members.tsv	48170	f6af0e6ba87b41027d2dc96861bc83d8d7e15fbf22c5fc1b2f69533536b13842	keep	
+_verdict_file/codex_review_seminar_v32_recheck_20261015.md	20390	00ca2c76fbf0611748e0eb8759ad4a4f2b6661b5fe8c9921b483ced830294629	drop	판정문 둘째 사본 (= seminar_recheck_v32_20261014/codex_review_seminar_v32_recheck_20261015.md · sha256 같음)
+seminar_recheck_v32_20261014/README_REVIEW.md	2640	025a2861a622bccf6a984f33c6b424b3d59ea97483a6a6c2ba62aff08c2c0cdd	keep	
+seminar_recheck_v32_20261014/REVIEW_MANIFEST.sha256	37288	7ce38bfe8aab8634760fff9dc8db232846c7106cc2f85855d297a1caab297bd7	keep	
+seminar_recheck_v32_20261014/agents/equations.md	6721	0fa8fde110a9804eb7e81569148f874af4a3537ffcfe0b6e9e61773964fedd5c	keep	
+seminar_recheck_v32_20261014/agents/equations_probe.json	73212	8174625a873593f468eb158e74c7220c667087d684e5540775ad2d9a792b4f58	keep	
+seminar_recheck_v32_20261014/agents/equations_probe.py	4107	3548ff54dcd46472a46175810e4fa6a278b633fadbc6fc7ed2419c549a9d4650	keep	
+seminar_recheck_v32_20261014/agents/lit/egermann1983_ordered_vs_interactive_mixture_nomenclature.md	34931	cfda396a971f6b211900bb4d6626af2f42756e60ce4c8d1038307cbba5a8cc5e	drop	문헌 카드 6 = 정본 ebfed0ff5 blob + 파일 끝 개행 하나 (판정문 §2 가 적은 그대로 · 끝 개행을 뺀 바이트 같음)
+seminar_recheck_v32_20261014/agents/lit/faka2026_particle_size_consolidation_strain_lpscl.md	38366	1ef6b9a4350296ad0ae26db223fb9d7280ea6310f8d4db60142ec0b5c1245c61	drop	문헌 카드 6 = 정본 ebfed0ff5 blob + 파일 끝 개행 하나 (판정문 §2 가 적은 그대로 · 끝 개행을 뺀 바이트 같음)
+seminar_recheck_v32_20261014/agents/lit/hersey1975_ordered_mixing_concept.md	34845	6542097c00d3d93527d05943afab7c9ddde46aeef148a83c110fd6fab8b33759	drop	문헌 카드 6 = 정본 ebfed0ff5 blob + 파일 끝 개행 하나 (판정문 §2 가 적은 그대로 · 끝 개행을 뺀 바이트 같음)
+seminar_recheck_v32_20261014/agents/lit/kim2012_lno_lco_surface_energy_morphology_dft.md	62472	616905464191583c315ca974e4ed5773718506b3d0d9e4690c0f8da655e34eca	drop	문헌 카드 6 = 정본 ebfed0ff5 blob + 파일 끝 개행 하나 (판정문 §2 가 적은 그대로 · 끝 개행을 뺀 바이트 같음)
+seminar_recheck_v32_20261014/agents/lit/kissel2026_mechanofusion_derived_cathode_composite_microstructures_scalable.md	91525	3b8adeba048937c66653d45cba420b7eb2dbd4fd6c0aafcd66ae8d223d66d7ff	drop	문헌 카드 6 = 정본 ebfed0ff5 blob + 파일 끝 개행 하나 (판정문 §2 가 적은 그대로 · 끝 개행을 뺀 바이트 같음)
+seminar_recheck_v32_20261014/agents/lit/thompson2026_high_pressure_densification_lps_lpscl_xrd_tomography.md	37205	1147568f91930ce32e19481d77d769da2256a27319c410c9a7d2fbb70f55892d	drop	문헌 카드 6 = 정본 ebfed0ff5 blob + 파일 끝 개행 하나 (판정문 §2 가 적은 그대로 · 끝 개행을 뺀 바이트 같음)
+seminar_recheck_v32_20261014/agents/literature.md	10693	c3d679c4519497dd35eff12f3ceece76a08f9fb655c765602a90f8d931f9759a	keep	
+seminar_recheck_v32_20261014/agents/physics.md	11410	cfaace392fcc3c84cf7735afa2ac68e41aadffae7ff3e0e7f78e2e7a4cc1148d	keep	
+seminar_recheck_v32_20261014/agents/physics_probe.py	5660	1fed5fed819728086b9e45bd05c1d1ee1f123b81ef04d232b3a92d6c0eb518a1	keep	
+seminar_recheck_v32_20261014/agents/physics_probe_results.json	4532	449696407862e212c6bb021b6ae6b8282faa9d2a8a955666cfc0a5c6f86b1f27	keep	
+seminar_recheck_v32_20261014/baseline/ps73_logs.tgz	171447	1593cb3fb6003d2a6abf8d4f48a41c56e8781b68d56242074dd381c3051e1cb3	drop	= 리포 docs/data/ps73_compaction_curve_20261006/raw/ps73_logs.tgz (sha256 같음 · 원 고정판 이완 로그)
+seminar_recheck_v32_20261014/codex_review_seminar_v32_recheck_20261015.md	20390	00ca2c76fbf0611748e0eb8759ad4a4f2b6661b5fe8c9921b483ced830294629	verdict	
+seminar_recheck_v32_20261014/evidence/all_slide_text.txt	43700	022e60ecf757afcc59c20e7de519e5197a989d8638bb7694ccad31c0a46129c1	keep	
+seminar_recheck_v32_20261014/evidence/body_notes.diff	45285	3be650c5f95f5a25644fc1396d91ecd9683ece562d68923a823e7253d0a4d662	keep	
+seminar_recheck_v32_20261014/evidence/change_summary.json	1867	ef162056bcb22185640405beef6f440adf90a664a5122b4994524a2453fac0eb	keep	
+seminar_recheck_v32_20261014/evidence/external_sources.json	6155	bb18f301853214cf1c8685b08318c8d60cead5cb108c7ddf351b4940e7f030ff	keep	
+seminar_recheck_v32_20261014/evidence/final_checks.json	9043	f909773f2a2baf2d7d488088df2c9283bb0397bfe15168484f448ffa21e74c75	keep	
+seminar_recheck_v32_20261014/evidence/independent_checks.json	14882	1c5451c5c6f47a53f330ceb98bbf8aac0b4b585650aaa4b91e11ce8fc5d90ed3	keep	
+seminar_recheck_v32_20261014/evidence/lit_branch_commit.json	28487	a40ca10b12b08f52c608da3d0d3e539bc68328c8823110a1f1b8c8707078b926	drop	GitHub API 의 litdb 정본 커밋 ebfed0ff5 응답 (git 이력으로 재현)
+seminar_recheck_v32_20261014/evidence/pdf_text.json	16104	1bf0bab952a98f583ac41e968a863abf0f5085822ece69890d8661871e7dab09	keep	
+seminar_recheck_v32_20261014/evidence/pin_commit.json	314474	1dc57308dc082dcac03919ff40dcda5de8a1acde227a610e9cf92751ea98dd7e	drop	GitHub API 의 우리 커밋 90ca2c8cd 응답 (패치 포함 · git 이력으로 재현)
+seminar_recheck_v32_20261014/evidence/pptx.json	549335	12136c805ed4a12f2b2ff15595c32ca83982db6d76cda4117364c2506b7eb1de	keep	
+seminar_recheck_v32_20261014/evidence/source_manifest.json	37964	f9f0eaab946115ffea0725fd886c9e9d9a8ba015f63a74c8c6a766ba2d497713	keep	
+seminar_recheck_v32_20261014/external_fetched/egermann1983_ordered_vs_interactive_mixture_nomenclature.md	34930	f0156c3226a019ba399070794575c8b461f402a3785abb19866224698ec367c9	drop	문헌 카드 6 = litdb 정본 커밋 ebfed0ff5 의 litdb/papers/ blob 과 sha256 같음 · LIGGGHTS 헤더 4 = source_upstream/ 과 바이트 같음 (공개 LIGGGHTS-PUBLIC 3d5c00f)
+seminar_recheck_v32_20261014/external_fetched/faka2026_particle_size_consolidation_strain_lpscl.md	38365	1ad598fe5f4920501e5f7b0fae5237856e29e86e8fa99d038bc52c1701a439f3	drop	문헌 카드 6 = litdb 정본 커밋 ebfed0ff5 의 litdb/papers/ blob 과 sha256 같음 · LIGGGHTS 헤더 4 = source_upstream/ 과 바이트 같음 (공개 LIGGGHTS-PUBLIC 3d5c00f)
+seminar_recheck_v32_20261014/external_fetched/hersey1975_ordered_mixing_concept.md	34844	6b5d2991c805248fb04c96820e4b4e243d8e1550e43b903f05bfeb14e2446640	drop	문헌 카드 6 = litdb 정본 커밋 ebfed0ff5 의 litdb/papers/ blob 과 sha256 같음 · LIGGGHTS 헤더 4 = source_upstream/ 과 바이트 같음 (공개 LIGGGHTS-PUBLIC 3d5c00f)
+seminar_recheck_v32_20261014/external_fetched/kim2012_lno_lco_surface_energy_morphology_dft.md	62471	74b6fc6bea2837161dc0a517501b8d0ec3d5dbeb14ce26bd7f2c5c6fa5c53adc	drop	문헌 카드 6 = litdb 정본 커밋 ebfed0ff5 의 litdb/papers/ blob 과 sha256 같음 · LIGGGHTS 헤더 4 = source_upstream/ 과 바이트 같음 (공개 LIGGGHTS-PUBLIC 3d5c00f)
+seminar_recheck_v32_20261014/external_fetched/kissel2026_mechanofusion_derived_cathode_composite_microstructures_scalable.md	91524	429b5c9c7c47451ef5f8d052b9441fd6b54b5c0304d66d0d9ff0e9d539177914	drop	문헌 카드 6 = litdb 정본 커밋 ebfed0ff5 의 litdb/papers/ blob 과 sha256 같음 · LIGGGHTS 헤더 4 = source_upstream/ 과 바이트 같음 (공개 LIGGGHTS-PUBLIC 3d5c00f)
+seminar_recheck_v32_20261014/external_fetched/normal_model_hooke_hysteresis.h	11389	fd8c4c713dca0bc2bab757a6484d9429f0362ccd86075f173a162b256674d706	drop	문헌 카드 6 = litdb 정본 커밋 ebfed0ff5 의 litdb/papers/ blob 과 sha256 같음 · LIGGGHTS 헤더 4 = source_upstream/ 과 바이트 같음 (공개 LIGGGHTS-PUBLIC 3d5c00f)
+seminar_recheck_v32_20261014/external_fetched/rolling_model_cdt.h	6905	2e2a03e17b4720f7ece140a08e679ddf2fd9c1fc6e2821dbbded2de38644f4b1	drop	문헌 카드 6 = litdb 정본 커밋 ebfed0ff5 의 litdb/papers/ blob 과 sha256 같음 · LIGGGHTS 헤더 4 = source_upstream/ 과 바이트 같음 (공개 LIGGGHTS-PUBLIC 3d5c00f)
+seminar_recheck_v32_20261014/external_fetched/surface_model_default.h	8945	b1ede302e309481b114e09760739133ac053f0b37489eddf0eccfeb69af9dd68	drop	문헌 카드 6 = litdb 정본 커밋 ebfed0ff5 의 litdb/papers/ blob 과 sha256 같음 · LIGGGHTS 헤더 4 = source_upstream/ 과 바이트 같음 (공개 LIGGGHTS-PUBLIC 3d5c00f)
+seminar_recheck_v32_20261014/external_fetched/tangential_model_history.h	16017	bf3d62f09eda2f9b1ca380ce911c9b85def1df2ae82e885cefe9606ef2be47b5	drop	문헌 카드 6 = litdb 정본 커밋 ebfed0ff5 의 litdb/papers/ blob 과 sha256 같음 · LIGGGHTS 헤더 4 = source_upstream/ 과 바이트 같음 (공개 LIGGGHTS-PUBLIC 3d5c00f)
+seminar_recheck_v32_20261014/external_fetched/thompson2026_high_pressure_densification_lps_lpscl_xrd_tomography.md	37204	d248f7efa559b651692591491560f27acc213aaffea09f280027dbf645f4f2eb	drop	문헌 카드 6 = litdb 정본 커밋 ebfed0ff5 의 litdb/papers/ blob 과 sha256 같음 · LIGGGHTS 헤더 4 = source_upstream/ 과 바이트 같음 (공개 LIGGGHTS-PUBLIC 3d5c00f)
+seminar_recheck_v32_20261014/final_checks.py	3400	b122115e85efcd68613bcb35c5443be4f05b765ffe8b99eb2db6545acd229cea	keep	
+seminar_recheck_v32_20261014/input/MANIFEST.sha256	9388	31181d02d83d1753194bbf0c3de6904ae9bff5268c08f50fabbdae9e353b741f	keep	
+seminar_recheck_v32_20261014/input/PIN.txt	14	9b38d965962a01e77ccf6f5787c4460f92eb13de09c9438f9bd76d6491edb4f0	keep	
+seminar_recheck_v32_20261014/input/codex_seminar_deck_v3_2_recheck_request_20261014.md	19437	323da768ee8b6a998605c167d0448ab788f01dccea11b3bcd6140d451297fa49	drop	우리 요청서 = 핀 90ca2c8cd 의 같은 경로 blob 과 sha256 같음
+seminar_recheck_v32_20261014/inspect_deck.py	5548	1737a52c50cf9e79c5729fd07dc0c147d8d4abe2f7e4e5f98bb237088185bd48	keep	
+seminar_recheck_v32_20261014/package_review.py	1570	e2aada343eb8c69056b4056d658b840a8edbc702a36a44ccacc22e2e43793643	keep	
+seminar_recheck_v32_20261014/prepare_sources.py	3186	afa7b79de0aa514b7930e8517e24fb0dc03ee5095a75969ec092a3c8666130c0	keep	
+seminar_recheck_v32_20261014/source_upstream/normal_model_hooke_hysteresis.h	11389	fd8c4c713dca0bc2bab757a6484d9429f0362ccd86075f173a162b256674d706	drop	LIGGGHTS-PUBLIC 3d5c00f 공개 원본 4 (normal_model_hooke_hysteresis.h · rolling_model_cdt.h · surface_model_default.h · tangential_model_history.h) — 이전 키트 반입과 같은 처리
+seminar_recheck_v32_20261014/source_upstream/rolling_model_cdt.h	6905	2e2a03e17b4720f7ece140a08e679ddf2fd9c1fc6e2821dbbded2de38644f4b1	drop	LIGGGHTS-PUBLIC 3d5c00f 공개 원본 4 (normal_model_hooke_hysteresis.h · rolling_model_cdt.h · surface_model_default.h · tangential_model_history.h) — 이전 키트 반입과 같은 처리
+seminar_recheck_v32_20261014/source_upstream/surface_model_default.h	8945	b1ede302e309481b114e09760739133ac053f0b37489eddf0eccfeb69af9dd68	drop	LIGGGHTS-PUBLIC 3d5c00f 공개 원본 4 (normal_model_hooke_hysteresis.h · rolling_model_cdt.h · surface_model_default.h · tangential_model_history.h) — 이전 키트 반입과 같은 처리
+seminar_recheck_v32_20261014/source_upstream/tangential_model_history.h	16017	bf3d62f09eda2f9b1ca380ce911c9b85def1df2ae82e885cefe9606ef2be47b5	drop	LIGGGHTS-PUBLIC 3d5c00f 공개 원본 4 (normal_model_hooke_hysteresis.h · rolling_model_cdt.h · surface_model_default.h · tangential_model_history.h) — 이전 키트 반입과 같은 처리
+seminar_recheck_v32_20261014/verify_external_sources.py	1897	935ec2c7be8769ce842acf5ede7e1088b5cce6971d0ce1ab6185303f8d64e38a	keep	

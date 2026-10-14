@@ -1,0 +1,427 @@
+{
+  "path": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\seminar_recheck_v32_20261014\\input\\deck\\seminar_20261013_v32.pptx",
+  "sha256": "1b6988f3e55dc6bcf7e81d0ba4ec35b11ed2a0790a1357ba6e6185d22b08f28d",
+  "page": 3,
+  "part": "ppt/slides/slide18.xml",
+  "equations": [
+    {
+      "names": [
+        "eq1",
+        "eq1"
+      ],
+      "tokens": [
+        "𝑚",
+        "𝑖",
+        "𝑑",
+        "𝒗",
+        "𝑖",
+        "𝑑𝑡",
+        "=",
+        "𝑗",
+        "𝑭",
+        "𝑛",
+        ",",
+        "𝑖𝑗",
+        "+",
+        "𝑭",
+        "𝑡",
+        ",",
+        "𝑖𝑗",
+        "+",
+        "𝑚",
+        "𝑖",
+        "𝒈",
+        "−",
+        "𝛾",
+        "𝒗",
+        "𝑖"
+      ],
+      "spacing_tokens_codepoints": [],
+      "omml_c14n_sha256": "08b8b22976446439d9f8b90e6fa4b6d191564d4c31f7e3321e4f2ee8ac9947a2",
+      "omml_xml": "<m:oMathPara xmlns:m=\"http://schemas.openxmlformats.org/officeDocument/2006/math\" xmlns:a14=\"http://schemas.microsoft.com/office/drawing/2010/main\" xmlns:mc=\"http://schemas.openxmlformats.org/markup-compatibility/2006\" xmlns:a=\"http://schemas.openxmlformats.org/drawingml/2006/main\" xmlns:p=\"http://schemas.openxmlformats.org/presentationml/2006/main\" xmlns:r=\"http://schemas.openxmlformats.org/officeDocument/2006/relationships\"><m:oMathParaPr><m:jc m:val=\"left\"/></m:oMathParaPr><m:oMath><m:sSub><m:sSubPr><m:ctrlPr><a:rPr lang=\"en-US\" altLang=\"ko-KR\" sz=\"1200\" i=\"1\" dirty=\"0\"><a:latin typeface=\"Cambria Math\" panose=\"02040503050406030204\" pitchFamily=\"18\" charset=\"0\"/></a:rPr></m:ctrlPr></m:sSubPr><m:e><m:r><a:rPr lang=\"en-US\" altLang=\"ko-KR\" sz=\"1200\" i=\"1\" dirty=\"0\"><a:latin typeface=\"Cambria Math\" panose=\"02040503050406030204\" pitchFamily=\"18\" charset=\"0\"/></a:rPr><m:t>𝑚</m:t></m:r></m:e><m:sub><m:r><a:rPr lang=\"en-US\" altLang=\"ko-KR\" sz=\"1200\" i=\"1\" dirty=\"0\"><a:latin typeface=\"Cambria Math\" panose=\"02040503050406030204\" pitchFamily=\"18\" charset=\"0\"/></a:rPr><m:t>𝑖</m:t></m:r></m:sub></m:sSub><m:f><m:fPr><m:ctrlPr><a:rPr lang=\"en-US\" altLang=\"ko-KR\" sz=\"1200\" i=\"1\" dirty=\"0\"><a:latin typeface=\"Cambria Math\" panose=\"02040503050406030204\" pitchFamily=\"18\" charset=\"0\"/></a:rPr></m:ctrlPr></m:fPr><m:num><m:r><a:rPr lang=\"en-US\" altLang=\"ko-KR\" sz=\"1200\" i=\"1\" dirty=\"0\"><a:latin typeface=\"Cambria Math\" panose=\"02040503050406030204\" pitchFamily=\"18\" charset=\"0\"/></a:rPr><m:t>𝑑</m:t></m:r><m:sSub><m:sSubPr><m:ctrlPr><a:rPr lang=\"en-US\" altLang=\"ko-KR\" sz=\"1200\" i=\"1\" dirty=\"0\"><a:latin typeface=\"Cambria Math\" panose=\"02040503050406030204\" pitchFamily=\"18\" charset=\"0\"/></a:rPr></m:ctrlPr></m:sSubPr><m:e><m:r><a:rPr lang=\"en-US\" altLang=\"ko-KR\" sz=\"1200\" b=\"1\" i=\"1\" dirty=\"0\"><a:latin typeface=\"Cambria Math\" panose=\"02040503050406030204\" pitchFamily=\"18\" charset=\"0\"/></a:rPr><m:t>𝒗</m:t></m:r></m:e><m:sub><m:r><a:rPr lang=\"en-US\" altLang=\"ko-KR\" sz=\"1200\" i=\"1\" dirty=\"0\"><a:latin typeface=\"Cambria Math\" panose=\"02040503050406030204\" pitchFamily=\"18\" charset=\"0\"/></a:rPr><m:t>𝑖</m:t></m:r></m:sub></m:sSub></m:num><m:den><m:r><a:rPr lang=\"en-US\" altLang=\"ko-KR\" sz=\"1200\" i=\"1\" dirty=\"0\"><a:latin typeface=\"Cambria Math\" panose=\"02040503050406030204\" pitchFamily=\"18\" charset=\"0\"/></a:rPr><m:t>𝑑𝑡</m:t></m:r></m:den></m:f><m:r><a:rPr lang=\"en-US\" altLang=\"ko-KR\" sz=\"1200\" i=\"0\" dirty=\"0\"><a:latin typeface=\"Cambria Math\" panose=\"02040503050406030204\" pitchFamily=\"18\" charset=\"0\"/></a:rPr><m:t>=</m:t></m:r><m:nary><m:naryPr><m:chr m:val=\"∑\"/><m:limLoc m:val=\"subSup\"/><m:supHide m:val=\"on\"/><m:ctrlPr><a:rPr lang=\"en-US\" altLang=\"ko-KR\" sz=\"1200\" i=\"1\" dirty=\"0\"><a:latin typeface=\"Cambria Math\" panose=\"02040503050406030204\" pitchFamily=\"18\" charset=\"0\"/></a:rPr></m:ctrlPr></m:naryPr><m:sub><m:r><a:rPr lang=\"en-US\" altLang=\"ko-KR\" sz=\"1200\" i=\"1\" dirty=\"0\"><a:latin typeface=\"Cambria Math\" panose=\"02040503050406030204\" pitchFamily=\"18\" charset=\"0\"/></a:rPr><m:t>𝑗</m:t></m:r></m:sub><m:sup/><m:e><m:d><m:dPr><m:ctrlPr><a:rPr lang=\"en-US\" altLang=\"ko-KR\" sz=\"1200\" i=\"1\" dirty=\"0\"><a:latin typeface=\"Cambria Math\" panose=\"02040503050406030204\" pitchFamily=\"18\" charset=\"0\"/></a:rPr></m:ctrlPr></m:dPr><m:e><m:sSub><m:sSubPr><m:ctrlPr><a:rPr lang=\"en-US\" altLang=\"ko-KR\" sz=\"1200\" i=\"1\" dirty=\"0\"><a:latin typeface=\"Cambria Math\" panose=\"02040503050406030204\" pitchFamily=\"18\" charset=\"0\"/></a:rPr></m:ctrlPr></m:sSubPr><m:e><m:r><a:rPr lang=\"en-US\" altLang=\"ko-KR\" sz=\"1200\" b=\"1\" i=\"1\" dirty=\"0\"><a:latin typeface=\"Cambria Math\" panose=\"02040503050406030204\" pitchFamily=\"18\" charset=\"0\"/></a:rPr><m:t>𝑭</m:t></m:r></m:e><m:sub><m:r><a:rPr lang=\"en-US\" altLang=\"ko-KR\" sz=\"1200\" i=\"1\" dirty=\"0\"><a:latin typeface=\"Cambria Math\" panose=\"02040503050406030204\" pitchFamily=\"18\" charset=\"0\"/></a:rPr><m:t>𝑛</m:t></m:r><m:r><a:rPr lang=\"en-US\" altLang=\"ko-KR\" sz=\"1200\" i=\"1\" dirty=\"0\"><a:latin typeface=\"Cambria Math\" panose=\"02040503050406030204\" pitchFamily=\"18\" charset=\"0\"/></a:rPr><m:t>,</m:t></m:r><m:r><a:rPr lang=\"en-US\" altLang=\"ko-KR\" sz=\"1200\" i=\"1\" dirty=\"0\"><a:latin typeface=\"Cambria Math\" panose=\"02040503050406030204\" pitchFamily=\"18\" charset=\"0\"/></a:rPr><m:t>𝑖𝑗</m:t></m:r></m:sub></m:sSub><m:r><a:rPr lang=\"en-US\" altLang=\"ko-KR\" sz=\"1200\" i=\"0\" dirty=\"0\"><a:latin typeface=\"Cambria Math\" panose=\"02040503050406030204\" pitchFamily=\"18\" charset=\"0\"/></a:rPr><m:t>+</m:t></m:r><m:sSub><m:sSubPr><m:ctrlPr><a:rPr lang=\"en-US\" altLang=\"ko-KR\" sz=\"1200\" i=\"1\" dirty=\"0\"><a:latin typeface=\"Cambria Math\" panose=\"02040503050406030204\" pitchFamily=\"18\" charset=\"0\"/></a:rPr></m:ctrlPr></m:sSubPr><m:e><m:r><a:rPr lang=\"en-US\" altLang=\"ko-KR\" sz=\"1200\" b=\"1\" i=\"1\" dirty=\"0\"><a:latin typeface=\"Cambria Math\" panose=\"02040503050406030204\" pitchFamily=\"18\" charset=\"0\"/></a:rPr><m:t>𝑭</m:t></m:r></m:e><m:sub><m:r><a:rPr lang=\"en-US\" altLang=\"ko-KR\" sz=\"1200\" i=\"1\" dirty=\"0\"><a:latin typeface=\"Cambria Math\" panose=\"02040503050406030204\" pitchFamily=\"18\" charset=\"0\"/></a:rPr><m:t>𝑡</m:t></m:r><m:r><a:rPr lang=\"en-US\" altLang=\"ko-KR\" sz=\"1200\" i=\"1\" dirty=\"0\"><a:latin typeface=\"Cambria Math\" panose=\"02040503050406030204\" pitchFamily=\"18\" charset=\"0\"/></a:rPr><m:t>,</m:t></m:r><m:r><a:rPr lang=\"en-US\" altLang=\"ko-KR\" sz=\"1200\" i=\"1\" dirty=\"0\"><a:latin typeface=\"Cambria Math\" panose=\"02040503050406030204\" pitchFamily=\"18\" charset=\"0\"/></a:rPr><m:t>𝑖𝑗</m:t></m:r></m:sub></m:sSub></m:e></m:d></m:e></m:nary><m:r><a:rPr lang=\"en-US\" altLang=\"ko-KR\" sz=\"1200\" i=\"0\" dirty=\"0\"><a:latin typeface=\"Cambria Math\" panose=\"02040503050406030204\" pitchFamily=\"18\" charset=\"0\"/></a:rPr><m:t>+</m:t></m:r><m:sSub><m:sSubPr><m:ctrlPr><a:rPr lang=\"en-US\" altLang=\"ko-KR\" sz=\"1200\" i=\"1\" dirty=\"0\"><a:latin typeface=\"Cambria Math\" panose=\"02040503050406030204\" pitchFamily=\"18\" charset=\"0\"/></a:rPr></m:ctrlPr></m:sSubPr><m:e><m:r><a:rPr lang=\"en-US\" altLang=\"ko-KR\" sz=\"1200\" i=\"1\" dirty=\"0\"><a:latin typeface=\"Cambria Math\" panose=\"02040503050406030204\" pitchFamily=\"18\" charset=\"0\"/></a:rPr><m:t>𝑚</m:t></m:r></m:e><m:sub><m:r><a:rPr lang=\"en-US\" altLang=\"ko-KR\" sz=\"1200\" i=\"1\" dirty=\"0\"><a:latin typeface=\"Cambria Math\" panose=\"02040503050406030204\" pitchFamily=\"18\" charset=\"0\"/></a:rPr><m:t>𝑖</m:t></m:r></m:sub></m:sSub><m:r><a:rPr lang=\"en-US\" altLang=\"ko-KR\" sz=\"1200\" b=\"1\" i=\"1\" dirty=\"0\"><a:latin typeface=\"Cambria Math\" panose=\"02040503050406030204\" pitchFamily=\"18\" charset=\"0\"/></a:rPr><m:t>𝒈</m:t></m:r><m:r><a:rPr lang=\"en-US\" altLang=\"ko-KR\" sz=\"1200\" i=\"0\" dirty=\"0\"><a:latin typeface=\"Cambria Math\" panose=\"02040503050406030204\" pitchFamily=\"18\" charset=\"0\"/></a:rPr><m:t>−</m:t></m:r><m:r><a:rPr lang=\"en-US\" altLang=\"ko-KR\" sz=\"1200\" i=\"1\" dirty=\"0\"><a:latin typeface=\"Cambria Math\" panose=\"02040503050406030204\" pitchFamily=\"18\" charset=\"0\"/></a:rPr><m:t>𝛾</m:t></m:r><m:sSub><m:sSubPr><m:ctrlPr><a:rPr lang=\"en-US\" altLang=\"ko-KR\" sz=\"1200\" i=\"1\" dirty=\"0\"><a:latin typeface=\"Cambria Math\" panose=\"02040503050406030204\" pitchFamily=\"18\" charset=\"0\"/></a:rPr></m:ctrlPr></m:sSubPr><m:e><m:r><a:rPr lang=\"en-US\" altLang=\"ko-KR\" sz=\"1200\" b=\"1\" i=\"1\" dirty=\"0\"><a:latin typeface=\"Cambria Math\" panose=\"02040503050406030204\" pitchFamily=\"18\" charset=\"0\"/></a:rPr><m:t>𝒗</m:t></m:r></m:e><m:sub><m:r><a:rPr lang=\"en-US\" altLang=\"ko-KR\" sz=\"1200\" i=\"1\" dirty=\"0\"><a:latin typeface=\"Cambria Math\" panose=\"02040503050406030204\" pitchFamily=\"18\" charset=\"0\"/></a:rPr><m:t>𝑖</m:t></m:r></m:sub></m:sSub></m:oMath></m:oMathPara>",
+      "fallback_sha256": [
+        "8a765d6de0abfe578521813986c3be8c9c542505f7b3f4066100841ffdeacb65"
+      ]
+    },
+    {
+      "names": [
+        "eq2",
+        "eq2"
+      ],
+      "tokens": [
+        "𝐼",
+        "𝑖",
+        "𝑑",
+        "𝝎",
+        "𝑖",
+        "𝑑𝑡",
+        "=",
+        "𝑗",
+        "𝑅",
+        "𝑖",
+        "𝒏",
+        "𝑖𝑗",
+        "×",
+        "𝑭",
+        "𝑡",
+        ",",
+        "𝑖𝑗",
+        "+",
+        "𝑴",
+        "𝑟",
+        ",",
+        "𝑖𝑗"
+      ],
+      "spacing_tokens_codepoints": [],
+      "omml_c14n_sha256": "ae8c9401a694325bee45a02ca849f86a8cfdaabfb2b4b9f2bd137d23b035b631",
+      "omml_xml": "<m:oMathPara xmlns:m=\"http://schemas.openxmlformats.org/officeDocument/2006/math\" xmlns:a14=\"http://schemas.microsoft.com/office/drawing/2010/main\" xmlns:mc=\"http://schemas.openxmlformats.org/markup-compatibility/2006\" xmlns:a=\"http://schemas.openxmlformats.org/drawingml/2006/main\" xmlns:p=\"http://schemas.openxmlformats.org/presentationml/2006/main\" xmlns:r=\"http://schemas.openxmlformats.org/officeDocument/2006/relationships\"><m:oMathParaPr><m:jc m:val=\"left\"/></m:oMathParaPr><m:oMath><m:sSub><m:sSubPr><m:ctrlPr><a:rPr lang=\"en-US\" altLang=\"ko-KR\" sz=\"1200\" i=\"1\" dirty=\"0\"><a:latin typeface=\"Cambria Math\" panose=\"02040503050406030204\" pitchFamily=\"18\" charset=\"0\"/></a:rPr></m:ctrlPr></m:sSubPr><m:e><m:r><a:rPr lang=\"en-US\" altLang=\"ko-KR\" sz=\"1200\" i=\"1\" dirty=\"0\"><a:latin typeface=\"Cambria Math\" panose=\"02040503050406030204\" pitchFamily=\"18\" charset=\"0\"/></a:rPr><m:t>𝐼</m:t></m:r></m:e><m:sub><m:r><a:rPr lang=\"en-US\" altLang=\"ko-KR\" sz=\"1200\" i=\"1\" dirty=\"0\"><a:latin typeface=\"Cambria Math\" panose=\"02040503050406030204\" pitchFamily=\"18\" charset=\"0\"/></a:rPr><m:t>𝑖</m:t></m:r></m:sub></m:sSub><m:f><m:fPr><m:ctrlPr><a:rPr lang=\"en-US\" altLang=\"ko-KR\" sz=\"1200\" i=\"1\" dirty=\"0\"><a:latin typeface=\"Cambria Math\" panose=\"02040503050406030204\" pitchFamily=\"18\" charset=\"0\"/></a:rPr></m:ctrlPr></m:fPr><m:num><m:r><a:rPr lang=\"en-US\" altLang=\"ko-KR\" sz=\"1200\" i=\"1\" dirty=\"0\"><a:latin typeface=\"Cambria Math\" panose=\"02040503050406030204\" pitchFamily=\"18\" charset=\"0\"/></a:rPr><m:t>𝑑</m:t></m:r><m:sSub><m:sSubPr><m:ctrlPr><a:rPr lang=\"en-US\" altLang=\"ko-KR\" sz=\"1200\" i=\"1\" dirty=\"0\"><a:latin typeface=\"Cambria Math\" panose=\"02040503050406030204\" pitchFamily=\"18\" charset=\"0\"/></a:rPr></m:ctrlPr></m:sSubPr><m:e><m:r><a:rPr lang=\"en-US\" altLang=\"ko-KR\" sz=\"1200\" b=\"1\" i=\"1\" dirty=\"0\"><a:latin typeface=\"Cambria Math\" panose=\"02040503050406030204\" pitchFamily=\"18\" charset=\"0\"/></a:rPr><m:t>𝝎</m:t></m:r></m:e><m:sub><m:r><a:rPr lang=\"en-US\" altLang=\"ko-KR\" sz=\"1200\" i=\"1\" dirty=\"0\"><a:latin typeface=\"Cambria Math\" panose=\"02040503050406030204\" pitchFamily=\"18\" charset=\"0\"/></a:rPr><m:t>𝑖</m:t></m:r></m:sub></m:sSub></m:num><m:den><m:r><a:rPr lang=\"en-US\" altLang=\"ko-KR\" sz=\"1200\" i=\"1\" dirty=\"0\"><a:latin typeface=\"Cambria Math\" panose=\"02040503050406030204\" pitchFamily=\"18\" charset=\"0\"/></a:rPr><m:t>𝑑𝑡</m:t></m:r></m:den></m:f><m:r><a:rPr lang=\"en-US\" altLang=\"ko-KR\" sz=\"1200\" i=\"0\" dirty=\"0\"><a:latin typeface=\"Cambria Math\" panose=\"02040503050406030204\" pitchFamily=\"18\" charset=\"0\"/></a:rPr><m:t>=</m:t></m:r><m:nary><m:naryPr><m:chr m:val=\"∑\"/><m:limLoc m:val=\"subSup\"/><m:supHide m:val=\"on\"/><m:ctrlPr><a:rPr lang=\"en-US\" altLang=\"ko-KR\" sz=\"1200\" i=\"1\" dirty=\"0\"><a:latin typeface=\"Cambria Math\" panose=\"02040503050406030204\" pitchFamily=\"18\" charset=\"0\"/></a:rPr></m:ctrlPr></m:naryPr><m:sub><m:r><a:rPr lang=\"en-US\" altLang=\"ko-KR\" sz=\"1200\" i=\"1\" dirty=\"0\"><a:latin typeface=\"Cambria Math\" panose=\"02040503050406030204\" pitchFamily=\"18\" charset=\"0\"/></a:rPr><m:t>𝑗</m:t></m:r></m:sub><m:sup/><m:e><m:d><m:dPr><m:ctrlPr><a:rPr lang=\"en-US\" altLang=\"ko-KR\" sz=\"1200\" i=\"1\" dirty=\"0\"><a:latin typeface=\"Cambria Math\" panose=\"02040503050406030204\" pitchFamily=\"18\" charset=\"0\"/></a:rPr></m:ctrlPr></m:dPr><m:e><m:sSub><m:sSubPr><m:ctrlPr><a:rPr lang=\"en-US\" altLang=\"ko-KR\" sz=\"1200\" i=\"1\" dirty=\"0\"><a:latin typeface=\"Cambria Math\" panose=\"02040503050406030204\" pitchFamily=\"18\" charset=\"0\"/></a:rPr></m:ctrlPr></m:sSubPr><m:e><m:r><a:rPr lang=\"en-US\" altLang=\"ko-KR\" sz=\"1200\" i=\"1\" dirty=\"0\"><a:latin typeface=\"Cambria Math\" panose=\"02040503050406030204\" pitchFamily=\"18\" charset=\"0\"/></a:rPr><m:t>𝑅</m:t></m:r></m:e><m:sub><m:r><a:rPr lang=\"en-US\" altLang=\"ko-KR\" sz=\"1200\" i=\"1\" dirty=\"0\"><a:latin typeface=\"Cambria Math\" panose=\"02040503050406030204\" pitchFamily=\"18\" charset=\"0\"/></a:rPr><m:t>𝑖</m:t></m:r></m:sub></m:sSub><m:sSub><m:sSubPr><m:ctrlPr><a:rPr lang=\"en-US\" altLang=\"ko-KR\" sz=\"1200\" i=\"1\" dirty=\"0\"><a:latin typeface=\"Cambria Math\" panose=\"02040503050406030204\" pitchFamily=\"18\" charset=\"0\"/></a:rPr></m:ctrlPr></m:sSubPr><m:e><m:r><a:rPr lang=\"en-US\" altLang=\"ko-KR\" sz=\"1200\" b=\"1\" i=\"1\" dirty=\"0\"><a:latin typeface=\"Cambria Math\" panose=\"02040503050406030204\" pitchFamily=\"18\" charset=\"0\"/></a:rPr><m:t>𝒏</m:t></m:r></m:e><m:sub><m:r><a:rPr lang=\"en-US\" altLang=\"ko-KR\" sz=\"1200\" i=\"1\" dirty=\"0\"><a:latin typeface=\"Cambria Math\" panose=\"02040503050406030204\" pitchFamily=\"18\" charset=\"0\"/></a:rPr><m:t>𝑖𝑗</m:t></m:r></m:sub></m:sSub><m:r><a:rPr lang=\"en-US\" altLang=\"ko-KR\" sz=\"1200\" i=\"0\" dirty=\"0\"><a:latin typeface=\"Cambria Math\" panose=\"02040503050406030204\" pitchFamily=\"18\" charset=\"0\"/></a:rPr><m:t>×</m:t></m:r><m:sSub><m:sSubPr><m:ctrlPr><a:rPr lang=\"en-US\" altLang=\"ko-KR\" sz=\"1200\" i=\"1\" dirty=\"0\"><a:latin typeface=\"Cambria Math\" panose=\"02040503050406030204\" pitchFamily=\"18\" charset=\"0\"/></a:rPr></m:ctrlPr></m:sSubPr><m:e><m:r><a:rPr lang=\"en-US\" altLang=\"ko-KR\" sz=\"1200\" b=\"1\" i=\"1\" dirty=\"0\"><a:latin typeface=\"Cambria Math\" panose=\"02040503050406030204\" pitchFamily=\"18\" charset=\"0\"/></a:rPr><m:t>𝑭</m:t></m:r></m:e><m:sub><m:r><a:rPr lang=\"en-US\" altLang=\"ko-KR\" sz=\"1200\" i=\"1\" dirty=\"0\"><a:latin typeface=\"Cambria Math\" panose=\"02040503050406030204\" pitchFamily=\"18\" charset=\"0\"/></a:rPr><m:t>𝑡</m:t></m:r><m:r><a:rPr lang=\"en-US\" altLang=\"ko-KR\" sz=\"1200\" i=\"1\" dirty=\"0\"><a:latin typeface=\"Cambria Math\" panose=\"02040503050406030204\" pitchFamily=\"18\" charset=\"0\"/></a:rPr><m:t>,</m:t></m:r><m:r><a:rPr lang=\"en-US\" altLang=\"ko-KR\" sz=\"1200\" i=\"1\" dirty=\"0\"><a:latin typeface=\"Cambria Math\" panose=\"02040503050406030204\" pitchFamily=\"18\" charset=\"0\"/></a:rPr><m:t>𝑖𝑗</m:t></m:r></m:sub></m:sSub><m:r><a:rPr lang=\"en-US\" altLang=\"ko-KR\" sz=\"1200\" i=\"0\" dirty=\"0\"><a:latin typeface=\"Cambria Math\" panose=\"02040503050406030204\" pitchFamily=\"18\" charset=\"0\"/></a:rPr><m:t>+</m:t></m:r><m:sSub><m:sSubPr><m:ctrlPr><a:rPr lang=\"en-US\" altLang=\"ko-KR\" sz=\"1200\" i=\"1\" dirty=\"0\"><a:latin typeface=\"Cambria Math\" panose=\"02040503050406030204\" pitchFamily=\"18\" charset=\"0\"/></a:rPr></m:ctrlPr></m:sSubPr><m:e><m:r><a:rPr lang=\"en-US\" altLang=\"ko-KR\" sz=\"1200\" b=\"1\" i=\"1\" dirty=\"0\"><a:latin typeface=\"Cambria Math\" panose=\"02040503050406030204\" pitchFamily=\"18\" charset=\"0\"/></a:rPr><m:t>𝑴</m:t></m:r></m:e><m:sub><m:r><a:rPr lang=\"en-US\" altLang=\"ko-KR\" sz=\"1200\" i=\"1\" dirty=\"0\"><a:latin typeface=\"Cambria Math\" panose=\"02040503050406030204\" pitchFamily=\"18\" charset=\"0\"/></a:rPr><m:t>𝑟</m:t></m:r><m:r><a:rPr lang=\"en-US\" altLang=\"ko-KR\" sz=\"1200\" i=\"1\" dirty=\"0\"><a:latin typeface=\"Cambria Math\" panose=\"02040503050406030204\" pitchFamily=\"18\" charset=\"0\"/></a:rPr><m:t>,</m:t></m:r><m:r><a:rPr lang=\"en-US\" altLang=\"ko-KR\" sz=\"1200\" i=\"1\" dirty=\"0\"><a:latin typeface=\"Cambria Math\" panose=\"02040503050406030204\" pitchFamily=\"18\" charset=\"0\"/></a:rPr><m:t>𝑖𝑗</m:t></m:r></m:sub></m:sSub></m:e></m:d></m:e></m:nary></m:oMath></m:oMathPara>",
+      "fallback_sha256": [
+        "136889481819c47b0b064341be783e04209e3811d7c4298cf1d7ea5f25549be9"
+      ]
+    },
+    {
+      "names": [
+        "eq3_1",
+        "eq3_1"
+      ],
+      "tokens": [
+        "𝐹",
+        "𝑛",
+        "=",
+        "max",
+        "min",
+        "𝑘",
+        "1",
+        "𝛿",
+        ",",
+        "𝑘",
+        "2",
+        "𝛿",
+        "−",
+        "𝛿",
+        "0",
+        ",−",
+        "𝑘",
+        "𝑐",
+        "𝛿",
+        "−",
+        "𝛾",
+        "𝑛",
+        "𝑣",
+        "𝑛",
+        ","
+      ],
+      "spacing_tokens_codepoints": [],
+      "omml_c14n_sha256": "8f3c663ffd9d8a9fcc8505aaf2ea7c7de3fe406bd7750d82fd7ea61100ed6a5d",
+      "omml_xml": "<m:oMathPara xmlns:m=\"http://schemas.openxmlformats.org/officeDocument/2006/math\" xmlns:a14=\"http://schemas.microsoft.com/office/drawing/2010/main\" xmlns:mc=\"http://schemas.openxmlformats.org/markup-compatibility/2006\" xmlns:a=\"http://schemas.openxmlformats.org/drawingml/2006/main\" xmlns:p=\"http://schemas.openxmlformats.org/presentationml/2006/main\" xmlns:r=\"http://schemas.openxmlformats.org/officeDocument/2006/relationships\"><m:oMathParaPr><m:jc m:val=\"left\"/></m:oMathParaPr><m:oMath><m:sSub><m:sSubPr><m:ctrlPr><a:rPr lang=\"en-US\" altLang=\"ko-KR\" sz=\"1200\" i=\"1\" dirty=\"0\"><a:latin typeface=\"Cambria Math\" panose=\"02040503050406030204\" pitchFamily=\"18\" charset=\"0\"/></a:rPr></m:ctrlPr></m:sSubPr><m:e><m:r><a:rPr lang=\"en-US\" altLang=\"ko-KR\" sz=\"1200\" i=\"1\" dirty=\"0\"><a:latin typeface=\"Cambria Math\" panose=\"02040503050406030204\" pitchFamily=\"18\" charset=\"0\"/></a:rPr><m:t>𝐹</m:t></m:r></m:e><m:sub><m:r><a:rPr lang=\"en-US\" altLang=\"ko-KR\" sz=\"1200\" i=\"1\" dirty=\"0\"><a:latin typeface=\"Cambria Math\" panose=\"02040503050406030204\" pitchFamily=\"18\" charset=\"0\"/></a:rPr><m:t>𝑛</m:t></m:r></m:sub></m:sSub><m:r><a:rPr lang=\"en-US\" altLang=\"ko-KR\" sz=\"1200\" i=\"0\" dirty=\"0\"><a:latin typeface=\"Cambria Math\" panose=\"02040503050406030204\" pitchFamily=\"18\" charset=\"0\"/></a:rPr><m:t>=</m:t></m:r><m:func><m:funcPr><m:ctrlPr><a:rPr lang=\"en-US\" altLang=\"ko-KR\" sz=\"1200\" i=\"1\" dirty=\"0\"><a:latin typeface=\"Cambria Math\" panose=\"02040503050406030204\" pitchFamily=\"18\" charset=\"0\"/></a:rPr></m:ctrlPr></m:funcPr><m:fName><m:r><m:rPr><m:sty m:val=\"p\"/></m:rPr><a:rPr lang=\"en-US\" altLang=\"ko-KR\" sz=\"1200\" i=\"0\" dirty=\"0\"><a:latin typeface=\"Cambria Math\" panose=\"02040503050406030204\" pitchFamily=\"18\" charset=\"0\"/></a:rPr><m:t>max</m:t></m:r></m:fName><m:e><m:d><m:dPr><m:begChr m:val=\"{\"/><m:endChr m:val=\"}\"/><m:ctrlPr><a:rPr lang=\"en-US\" altLang=\"ko-KR\" sz=\"1200\" i=\"1\" dirty=\"0\"><a:latin typeface=\"Cambria Math\" panose=\"02040503050406030204\" pitchFamily=\"18\" charset=\"0\"/></a:rPr></m:ctrlPr></m:dPr><m:e><m:func><m:funcPr><m:ctrlPr><a:rPr lang=\"en-US\" altLang=\"ko-KR\" sz=\"1200\" i=\"1\" dirty=\"0\"><a:latin typeface=\"Cambria Math\" panose=\"02040503050406030204\" pitchFamily=\"18\" charset=\"0\"/></a:rPr></m:ctrlPr></m:funcPr><m:fName><m:r><m:rPr><m:sty m:val=\"p\"/></m:rPr><a:rPr lang=\"en-US\" altLang=\"ko-KR\" sz=\"1200\" i=\"0\" dirty=\"0\"><a:latin typeface=\"Cambria Math\" panose=\"02040503050406030204\" pitchFamily=\"18\" charset=\"0\"/></a:rPr><m:t>min</m:t></m:r></m:fName><m:e><m:d><m:dPr><m:begChr m:val=\"[\"/><m:endChr m:val=\"]\"/><m:ctrlPr><a:rPr lang=\"en-US\" altLang=\"ko-KR\" sz=\"1200\" i=\"1\" dirty=\"0\"><a:latin typeface=\"Cambria Math\" panose=\"02040503050406030204\" pitchFamily=\"18\" charset=\"0\"/></a:rPr></m:ctrlPr></m:dPr><m:e><m:sSub><m:sSubPr><m:ctrlPr><a:rPr lang=\"en-US\" altLang=\"ko-KR\" sz=\"1200\" i=\"1\" dirty=\"0\"><a:latin typeface=\"Cambria Math\" panose=\"02040503050406030204\" pitchFamily=\"18\" charset=\"0\"/></a:rPr></m:ctrlPr></m:sSubPr><m:e><m:r><a:rPr lang=\"en-US\" altLang=\"ko-KR\" sz=\"1200\" i=\"1\" dirty=\"0\"><a:latin typeface=\"Cambria Math\" panose=\"02040503050406030204\" pitchFamily=\"18\" charset=\"0\"/></a:rPr><m:t>𝑘</m:t></m:r></m:e><m:sub><m:r><a:rPr lang=\"en-US\" altLang=\"ko-KR\" sz=\"1200\" i=\"1\" dirty=\"0\"><a:latin typeface=\"Cambria Math\" panose=\"02040503050406030204\" pitchFamily=\"18\" charset=\"0\"/></a:rPr><m:t>1</m:t></m:r></m:sub></m:sSub><m:r><a:rPr lang=\"en-US\" altLang=\"ko-KR\" sz=\"1200\" i=\"1\" dirty=\"0\"><a:latin typeface=\"Cambria Math\" panose=\"02040503050406030204\" pitchFamily=\"18\" charset=\"0\"/></a:rPr><m:t>𝛿</m:t></m:r><m:r><a:rPr lang=\"en-US\" altLang=\"ko-KR\" sz=\"1200\" i=\"0\" dirty=\"0\"><a:latin typeface=\"Cambria Math\" panose=\"02040503050406030204\" pitchFamily=\"18\" charset=\"0\"/></a:rPr><m:t>,</m:t></m:r><m:sSub><m:sSubPr><m:ctrlPr><a:rPr lang=\"en-US\" altLang=\"ko-KR\" sz=\"1200\" i=\"1\" dirty=\"0\"><a:latin typeface=\"Cambria Math\" panose=\"02040503050406030204\" pitchFamily=\"18\" charset=\"0\"/></a:rPr></m:ctrlPr></m:sSubPr><m:e><m:r><a:rPr lang=\"en-US\" altLang=\"ko-KR\" sz=\"1200\" i=\"1\" dirty=\"0\"><a:latin typeface=\"Cambria Math\" panose=\"02040503050406030204\" pitchFamily=\"18\" charset=\"0\"/></a:rPr><m:t>𝑘</m:t></m:r></m:e><m:sub><m:r><a:rPr lang=\"en-US\" altLang=\"ko-KR\" sz=\"1200\" i=\"1\" dirty=\"0\"><a:latin typeface=\"Cambria Math\" panose=\"02040503050406030204\" pitchFamily=\"18\" charset=\"0\"/></a:rPr><m:t>2</m:t></m:r></m:sub></m:sSub><m:d><m:dPr><m:ctrlPr><a:rPr lang=\"en-US\" altLang=\"ko-KR\" sz=\"1200\" i=\"1\" dirty=\"0\"><a:latin typeface=\"Cambria Math\" panose=\"02040503050406030204\" pitchFamily=\"18\" charset=\"0\"/></a:rPr></m:ctrlPr></m:dPr><m:e><m:r><a:rPr lang=\"en-US\" altLang=\"ko-KR\" sz=\"1200\" i=\"1\" dirty=\"0\"><a:latin typeface=\"Cambria Math\" panose=\"02040503050406030204\" pitchFamily=\"18\" charset=\"0\"/></a:rPr><m:t>𝛿</m:t></m:r><m:r><a:rPr lang=\"en-US\" altLang=\"ko-KR\" sz=\"1200\" i=\"0\" dirty=\"0\"><a:latin typeface=\"Cambria Math\" panose=\"02040503050406030204\" pitchFamily=\"18\" charset=\"0\"/></a:rPr><m:t>−</m:t></m:r><m:sSub><m:sSubPr><m:ctrlPr><a:rPr lang=\"en-US\" altLang=\"ko-KR\" sz=\"1200\" i=\"1\" dirty=\"0\"><a:latin typeface=\"Cambria Math\" panose=\"02040503050406030204\" pitchFamily=\"18\" charset=\"0\"/></a:rPr></m:ctrlPr></m:sSubPr><m:e><m:r><a:rPr lang=\"en-US\" altLang=\"ko-KR\" sz=\"1200\" i=\"1\" dirty=\"0\"><a:latin typeface=\"Cambria Math\" panose=\"02040503050406030204\" pitchFamily=\"18\" charset=\"0\"/></a:rPr><m:t>𝛿</m:t></m:r></m:e><m:sub><m:r><a:rPr lang=\"en-US\" altLang=\"ko-KR\" sz=\"1200\" i=\"1\" dirty=\"0\"><a:latin typeface=\"Cambria Math\" panose=\"02040503050406030204\" pitchFamily=\"18\" charset=\"0\"/></a:rPr><m:t>0</m:t></m:r></m:sub></m:sSub></m:e></m:d></m:e></m:d></m:e></m:func><m:r><a:rPr lang=\"en-US\" altLang=\"ko-KR\" sz=\"1200\" i=\"0\" dirty=\"0\"><a:latin typeface=\"Cambria Math\" panose=\"02040503050406030204\" pitchFamily=\"18\" charset=\"0\"/></a:rPr><m:t>,−</m:t></m:r><m:sSub><m:sSubPr><m:ctrlPr><a:rPr lang=\"en-US\" altLang=\"ko-KR\" sz=\"1200\" i=\"1\" dirty=\"0\"><a:latin typeface=\"Cambria Math\" panose=\"02040503050406030204\" pitchFamily=\"18\" charset=\"0\"/></a:rPr></m:ctrlPr></m:sSubPr><m:e><m:r><a:rPr lang=\"en-US\" altLang=\"ko-KR\" sz=\"1200\" i=\"1\" dirty=\"0\"><a:latin typeface=\"Cambria Math\" panose=\"02040503050406030204\" pitchFamily=\"18\" charset=\"0\"/></a:rPr><m:t>𝑘</m:t></m:r></m:e><m:sub><m:r><a:rPr lang=\"en-US\" altLang=\"ko-KR\" sz=\"1200\" i=\"1\" dirty=\"0\"><a:latin typeface=\"Cambria Math\" panose=\"02040503050406030204\" pitchFamily=\"18\" charset=\"0\"/></a:rPr><m:t>𝑐</m:t></m:r></m:sub></m:sSub><m:r><a:rPr lang=\"en-US\" altLang=\"ko-KR\" sz=\"1200\" i=\"1\" dirty=\"0\"><a:latin typeface=\"Cambria Math\" panose=\"02040503050406030204\" pitchFamily=\"18\" charset=\"0\"/></a:rPr><m:t>𝛿</m:t></m:r></m:e></m:d></m:e></m:func><m:r><a:rPr lang=\"en-US\" altLang=\"ko-KR\" sz=\"1200\" i=\"0\" dirty=\"0\"><a:latin typeface=\"Cambria Math\" panose=\"02040503050406030204\" pitchFamily=\"18\" charset=\"0\"/></a:rPr><m:t>−</m:t></m:r><m:sSub><m:sSubPr><m:ctrlPr><a:rPr lang=\"en-US\" altLang=\"ko-KR\" sz=\"1200\" i=\"1\" dirty=\"0\"><a:latin typeface=\"Cambria Math\" panose=\"02040503050406030204\" pitchFamily=\"18\" charset=\"0\"/></a:rPr></m:ctrlPr></m:sSubPr><m:e><m:r><a:rPr lang=\"en-US\" altLang=\"ko-KR\" sz=\"1200\" i=\"1\" dirty=\"0\"><a:latin typeface=\"Cambria Math\" panose=\"02040503050406030204\" pitchFamily=\"18\" charset=\"0\"/></a:rPr><m:t>𝛾</m:t></m:r></m:e><m:sub><m:r><a:rPr lang=\"en-US\" altLang=\"ko-KR\" sz=\"1200\" i=\"1\" dirty=\"0\"><a:latin typeface=\"Cambria Math\" panose=\"02040503050406030204\" pitchFamily=\"18\" charset=\"0\"/></a:rPr><m:t>𝑛</m:t></m:r></m:sub></m:sSub><m:sSub><m:sSubPr><m:ctrlPr><a:rPr lang=\"en-US\" altLang=\"ko-KR\" sz=\"1200\" i=\"1\" dirty=\"0\"><a:latin typeface=\"Cambria Math\" panose=\"02040503050406030204\" pitchFamily=\"18\" charset=\"0\"/></a:rPr></m:ctrlPr></m:sSubPr><m:e><m:r><a:rPr lang=\"en-US\" altLang=\"ko-KR\" sz=\"1200\" i=\"1\" dirty=\"0\"><a:latin typeface=\"Cambria Math\" panose=\"02040503050406030204\" pitchFamily=\"18\" charset=\"0\"/></a:rPr><m:t>𝑣</m:t></m:r></m:e><m:sub><m:r><a:rPr lang=\"en-US\" altLang=\"ko-KR\" sz=\"1200\" i=\"1\" dirty=\"0\"><a:latin typeface=\"Cambria Math\" panose=\"02040503050406030204\" pitchFamily=\"18\" charset=\"0\"/></a:rPr><m:t>𝑛</m:t></m:r></m:sub></m:sSub><m:r><a:rPr lang=\"en-US\" altLang=\"ko-KR\" sz=\"1200\" i=\"0\" dirty=\"0\"><a:latin typeface=\"Cambria Math\" panose=\"02040503050406030204\" pitchFamily=\"18\" charset=\"0\"/></a:rPr><m:t>,</m:t></m:r></m:oMath></m:oMathPara>",
+      "fallback_sha256": [
+        "efbc87e7acf75211f79219c3c62c69ee585bbeeeb9b98f9b33d7f18a4cb7038f"
+      ]
+    },
+    {
+      "names": [
+        "eq3_2",
+        "eq3_2"
+      ],
+      "tokens": [
+        "𝛿",
+        "0",
+        "=",
+        "1",
+        "−",
+        "𝑘",
+        "1",
+        "𝑘",
+        "2",
+        "𝛿",
+        "max",
+        ", ",
+        "𝑘",
+        "2",
+        "=",
+        "𝑘",
+        "2",
+        "𝛿",
+        "max"
+      ],
+      "spacing_tokens_codepoints": [
+        [
+          44,
+          8195
+        ]
+      ],
+      "omml_c14n_sha256": "0004fb16d61f1a5965cce942b5826148f55f5d7d9091d37f23d065c7cf6ff936",
+      "omml_xml": "<m:oMathPara xmlns:m=\"http://schemas.openxmlformats.org/officeDocument/2006/math\" xmlns:a14=\"http://schemas.microsoft.com/office/drawing/2010/main\" xmlns:mc=\"http://schemas.openxmlformats.org/markup-compatibility/2006\" xmlns:a=\"http://schemas.openxmlformats.org/drawingml/2006/main\" xmlns:p=\"http://schemas.openxmlformats.org/presentationml/2006/main\" xmlns:r=\"http://schemas.openxmlformats.org/officeDocument/2006/relationships\"><m:oMathParaPr><m:jc m:val=\"left\"/></m:oMathParaPr><m:oMath><m:sSub><m:sSubPr><m:ctrlPr><a:rPr lang=\"en-US\" altLang=\"ko-KR\" sz=\"1200\" i=\"1\" dirty=\"0\"><a:latin typeface=\"Cambria Math\" panose=\"02040503050406030204\" pitchFamily=\"18\" charset=\"0\"/></a:rPr></m:ctrlPr></m:sSubPr><m:e><m:r><a:rPr lang=\"en-US\" altLang=\"ko-KR\" sz=\"1200\" i=\"1\" dirty=\"0\"><a:latin typeface=\"Cambria Math\" panose=\"02040503050406030204\" pitchFamily=\"18\" charset=\"0\"/></a:rPr><m:t>𝛿</m:t></m:r></m:e><m:sub><m:r><a:rPr lang=\"en-US\" altLang=\"ko-KR\" sz=\"1200\" i=\"1\" dirty=\"0\"><a:latin typeface=\"Cambria Math\" panose=\"02040503050406030204\" pitchFamily=\"18\" charset=\"0\"/></a:rPr><m:t>0</m:t></m:r></m:sub></m:sSub><m:r><a:rPr lang=\"en-US\" altLang=\"ko-KR\" sz=\"1200\" i=\"0\" dirty=\"0\"><a:latin typeface=\"Cambria Math\" panose=\"02040503050406030204\" pitchFamily=\"18\" charset=\"0\"/></a:rPr><m:t>=</m:t></m:r><m:d><m:dPr><m:ctrlPr><a:rPr lang=\"en-US\" altLang=\"ko-KR\" sz=\"1200\" i=\"1\" dirty=\"0\"><a:latin typeface=\"Cambria Math\" panose=\"02040503050406030204\" pitchFamily=\"18\" charset=\"0\"/></a:rPr></m:ctrlPr></m:dPr><m:e><m:r><a:rPr lang=\"en-US\" altLang=\"ko-KR\" sz=\"1200\" i=\"1\" dirty=\"0\"><a:latin typeface=\"Cambria Math\" panose=\"02040503050406030204\" pitchFamily=\"18\" charset=\"0\"/></a:rPr><m:t>1</m:t></m:r><m:r><a:rPr lang=\"en-US\" altLang=\"ko-KR\" sz=\"1200\" i=\"0\" dirty=\"0\"><a:latin typeface=\"Cambria Math\" panose=\"02040503050406030204\" pitchFamily=\"18\" charset=\"0\"/></a:rPr><m:t>−</m:t></m:r><m:f><m:fPr><m:ctrlPr><a:rPr lang=\"en-US\" altLang=\"ko-KR\" sz=\"1200\" i=\"1\" dirty=\"0\"><a:latin typeface=\"Cambria Math\" panose=\"02040503050406030204\" pitchFamily=\"18\" charset=\"0\"/></a:rPr></m:ctrlPr></m:fPr><m:num><m:sSub><m:sSubPr><m:ctrlPr><a:rPr lang=\"en-US\" altLang=\"ko-KR\" sz=\"1200\" i=\"1\" dirty=\"0\"><a:latin typeface=\"Cambria Math\" panose=\"02040503050406030204\" pitchFamily=\"18\" charset=\"0\"/></a:rPr></m:ctrlPr></m:sSubPr><m:e><m:r><a:rPr lang=\"en-US\" altLang=\"ko-KR\" sz=\"1200\" i=\"1\" dirty=\"0\"><a:latin typeface=\"Cambria Math\" panose=\"02040503050406030204\" pitchFamily=\"18\" charset=\"0\"/></a:rPr><m:t>𝑘</m:t></m:r></m:e><m:sub><m:r><a:rPr lang=\"en-US\" altLang=\"ko-KR\" sz=\"1200\" i=\"1\" dirty=\"0\"><a:latin typeface=\"Cambria Math\" panose=\"02040503050406030204\" pitchFamily=\"18\" charset=\"0\"/></a:rPr><m:t>1</m:t></m:r></m:sub></m:sSub></m:num><m:den><m:sSub><m:sSubPr><m:ctrlPr><a:rPr lang=\"en-US\" altLang=\"ko-KR\" sz=\"1200\" i=\"1\" dirty=\"0\"><a:latin typeface=\"Cambria Math\" panose=\"02040503050406030204\" pitchFamily=\"18\" charset=\"0\"/></a:rPr></m:ctrlPr></m:sSubPr><m:e><m:r><a:rPr lang=\"en-US\" altLang=\"ko-KR\" sz=\"1200\" i=\"1\" dirty=\"0\"><a:latin typeface=\"Cambria Math\" panose=\"02040503050406030204\" pitchFamily=\"18\" charset=\"0\"/></a:rPr><m:t>𝑘</m:t></m:r></m:e><m:sub><m:r><a:rPr lang=\"en-US\" altLang=\"ko-KR\" sz=\"1200\" i=\"1\" dirty=\"0\"><a:latin typeface=\"Cambria Math\" panose=\"02040503050406030204\" pitchFamily=\"18\" charset=\"0\"/></a:rPr><m:t>2</m:t></m:r></m:sub></m:sSub></m:den></m:f></m:e></m:d><m:sSub><m:sSubPr><m:ctrlPr><a:rPr lang=\"en-US\" altLang=\"ko-KR\" sz=\"1200\" i=\"1\" dirty=\"0\"><a:latin typeface=\"Cambria Math\" panose=\"02040503050406030204\" pitchFamily=\"18\" charset=\"0\"/></a:rPr></m:ctrlPr></m:sSubPr><m:e><m:r><a:rPr lang=\"en-US\" altLang=\"ko-KR\" sz=\"1200\" i=\"1\" dirty=\"0\"><a:latin typeface=\"Cambria Math\" panose=\"02040503050406030204\" pitchFamily=\"18\" charset=\"0\"/></a:rPr><m:t>𝛿</m:t></m:r></m:e><m:sub><m:r><m:rPr><m:nor/></m:rPr><a:rPr lang=\"en-US\" altLang=\"ko-KR\" sz=\"1200\" i=\"0\" dirty=\"0\"><a:latin typeface=\"Cambria Math\" panose=\"02040503050406030204\" pitchFamily=\"18\" charset=\"0\"/></a:rPr><m:t>max</m:t></m:r></m:sub></m:sSub><m:r><a:rPr lang=\"en-US\" altLang=\"ko-KR\" sz=\"1200\" i=\"0\" dirty=\"0\"><a:latin typeface=\"Cambria Math\" panose=\"02040503050406030204\" pitchFamily=\"18\" charset=\"0\"/></a:rPr><m:t>, </m:t></m:r><m:sSub><m:sSubPr><m:ctrlPr><a:rPr lang=\"en-US\" altLang=\"ko-KR\" sz=\"1200\" i=\"1\" dirty=\"0\"><a:latin typeface=\"Cambria Math\" panose=\"02040503050406030204\" pitchFamily=\"18\" charset=\"0\"/></a:rPr></m:ctrlPr></m:sSubPr><m:e><m:r><a:rPr lang=\"en-US\" altLang=\"ko-KR\" sz=\"1200\" i=\"1\" dirty=\"0\"><a:latin typeface=\"Cambria Math\" panose=\"02040503050406030204\" pitchFamily=\"18\" charset=\"0\"/></a:rPr><m:t>𝑘</m:t></m:r></m:e><m:sub><m:r><a:rPr lang=\"en-US\" altLang=\"ko-KR\" sz=\"1200\" i=\"1\" dirty=\"0\"><a:latin typeface=\"Cambria Math\" panose=\"02040503050406030204\" pitchFamily=\"18\" charset=\"0\"/></a:rPr><m:t>2</m:t></m:r></m:sub></m:sSub><m:r><a:rPr lang=\"en-US\" altLang=\"ko-KR\" sz=\"1200\" i=\"0\" dirty=\"0\"><a:latin typeface=\"Cambria Math\" panose=\"02040503050406030204\" pitchFamily=\"18\" charset=\"0\"/></a:rPr><m:t>=</m:t></m:r><m:sSub><m:sSubPr><m:ctrlPr><a:rPr lang=\"en-US\" altLang=\"ko-KR\" sz=\"1200\" i=\"1\" dirty=\"0\"><a:latin typeface=\"Cambria Math\" panose=\"02040503050406030204\" pitchFamily=\"18\" charset=\"0\"/></a:rPr></m:ctrlPr></m:sSubPr><m:e><m:r><a:rPr lang=\"en-US\" altLang=\"ko-KR\" sz=\"1200\" i=\"1\" dirty=\"0\"><a:latin typeface=\"Cambria Math\" panose=\"02040503050406030204\" pitchFamily=\"18\" charset=\"0\"/></a:rPr><m:t>𝑘</m:t></m:r></m:e><m:sub><m:r><a:rPr lang=\"en-US\" altLang=\"ko-KR\" sz=\"1200\" i=\"1\" dirty=\"0\"><a:latin typeface=\"Cambria Math\" panose=\"02040503050406030204\" pitchFamily=\"18\" charset=\"0\"/></a:rPr><m:t>2</m:t></m:r></m:sub></m:sSub><m:d><m:dPr><m:ctrlPr><a:rPr lang=\"en-US\" altLang=\"ko-KR\" sz=\"1200\" i=\"1\" dirty=\"0\"><a:latin typeface=\"Cambria Math\" panose=\"02040503050406030204\" pitchFamily=\"18\" charset=\"0\"/></a:rPr></m:ctrlPr></m:dPr><m:e><m:sSub><m:sSubPr><m:ctrlPr><a:rPr lang=\"en-US\" altLang=\"ko-KR\" sz=\"1200\" i=\"1\" dirty=\"0\"><a:latin typeface=\"Cambria Math\" panose=\"02040503050406030204\" pitchFamily=\"18\" charset=\"0\"/></a:rPr></m:ctrlPr></m:sSubPr><m:e><m:r><a:rPr lang=\"en-US\" altLang=\"ko-KR\" sz=\"1200\" i=\"1\" dirty=\"0\"><a:latin typeface=\"Cambria Math\" panose=\"02040503050406030204\" pitchFamily=\"18\" charset=\"0\"/></a:rPr><m:t>𝛿</m:t></m:r></m:e><m:sub><m:r><m:rPr><m:nor/></m:rPr><a:rPr lang=\"en-US\" altLang=\"ko-KR\" sz=\"1200\" i=\"0\" dirty=\"0\"><a:latin typeface=\"Cambria Math\" panose=\"02040503050406030204\" pitchFamily=\"18\" charset=\"0\"/></a:rPr><m:t>max</m:t></m:r></m:sub></m:sSub></m:e></m:d></m:oMath></m:oMathPara>",
+      "fallback_sha256": [
+        "f0628904d7f0322f8635ff40051a503552fbc75b8872a5a0c4075b85e6cd0aa3"
+      ]
+    },
+    {
+      "names": [
+        "eq4_1",
+        "eq4_1"
+      ],
+      "tokens": [
+        "𝑭",
+        "𝑡",
+        ",",
+        "spring",
+        "=−",
+        "𝑘",
+        "𝑡",
+        "𝜹",
+        "𝑡",
+        ", ",
+        "𝑭",
+        "𝑡",
+        ",",
+        "spring",
+        "≤",
+        "𝜇",
+        "𝐹",
+        "𝑛"
+      ],
+      "spacing_tokens_codepoints": [
+        [
+          44,
+          8195
+        ]
+      ],
+      "omml_c14n_sha256": "bf145ccd2543feb2186eaa317cf9148e852b136c5243772d0b29e300e296aac0",
+      "omml_xml": "<m:oMathPara xmlns:m=\"http://schemas.openxmlformats.org/officeDocument/2006/math\" xmlns:a14=\"http://schemas.microsoft.com/office/drawing/2010/main\" xmlns:mc=\"http://schemas.openxmlformats.org/markup-compatibility/2006\" xmlns:a=\"http://schemas.openxmlformats.org/drawingml/2006/main\" xmlns:p=\"http://schemas.openxmlformats.org/presentationml/2006/main\" xmlns:r=\"http://schemas.openxmlformats.org/officeDocument/2006/relationships\"><m:oMathParaPr><m:jc m:val=\"left\"/></m:oMathParaPr><m:oMath><m:sSub><m:sSubPr><m:ctrlPr><a:rPr lang=\"en-US\" altLang=\"ko-KR\" sz=\"1200\" i=\"1\" dirty=\"0\"><a:latin typeface=\"Cambria Math\" panose=\"02040503050406030204\" pitchFamily=\"18\" charset=\"0\"/></a:rPr></m:ctrlPr></m:sSubPr><m:e><m:r><a:rPr lang=\"en-US\" altLang=\"ko-KR\" sz=\"1200\" b=\"1\" i=\"1\" dirty=\"0\"><a:latin typeface=\"Cambria Math\" panose=\"02040503050406030204\" pitchFamily=\"18\" charset=\"0\"/></a:rPr><m:t>𝑭</m:t></m:r></m:e><m:sub><m:r><a:rPr lang=\"en-US\" altLang=\"ko-KR\" sz=\"1200\" i=\"1\" dirty=\"0\"><a:latin typeface=\"Cambria Math\" panose=\"02040503050406030204\" pitchFamily=\"18\" charset=\"0\"/></a:rPr><m:t>𝑡</m:t></m:r><m:r><a:rPr lang=\"en-US\" altLang=\"ko-KR\" sz=\"1200\" i=\"1\" dirty=\"0\"><a:latin typeface=\"Cambria Math\" panose=\"02040503050406030204\" pitchFamily=\"18\" charset=\"0\"/></a:rPr><m:t>,</m:t></m:r><m:r><m:rPr><m:nor/></m:rPr><a:rPr lang=\"en-US\" altLang=\"ko-KR\" sz=\"1200\" i=\"0\" dirty=\"0\"><a:latin typeface=\"Cambria Math\" panose=\"02040503050406030204\" pitchFamily=\"18\" charset=\"0\"/></a:rPr><m:t>spring</m:t></m:r></m:sub></m:sSub><m:r><a:rPr lang=\"en-US\" altLang=\"ko-KR\" sz=\"1200\" i=\"0\" dirty=\"0\"><a:latin typeface=\"Cambria Math\" panose=\"02040503050406030204\" pitchFamily=\"18\" charset=\"0\"/></a:rPr><m:t>=−</m:t></m:r><m:sSub><m:sSubPr><m:ctrlPr><a:rPr lang=\"en-US\" altLang=\"ko-KR\" sz=\"1200\" i=\"1\" dirty=\"0\"><a:latin typeface=\"Cambria Math\" panose=\"02040503050406030204\" pitchFamily=\"18\" charset=\"0\"/></a:rPr></m:ctrlPr></m:sSubPr><m:e><m:r><a:rPr lang=\"en-US\" altLang=\"ko-KR\" sz=\"1200\" i=\"1\" dirty=\"0\"><a:latin typeface=\"Cambria Math\" panose=\"02040503050406030204\" pitchFamily=\"18\" charset=\"0\"/></a:rPr><m:t>𝑘</m:t></m:r></m:e><m:sub><m:r><a:rPr lang=\"en-US\" altLang=\"ko-KR\" sz=\"1200\" i=\"1\" dirty=\"0\"><a:latin typeface=\"Cambria Math\" panose=\"02040503050406030204\" pitchFamily=\"18\" charset=\"0\"/></a:rPr><m:t>𝑡</m:t></m:r></m:sub></m:sSub><m:sSub><m:sSubPr><m:ctrlPr><a:rPr lang=\"en-US\" altLang=\"ko-KR\" sz=\"1200\" i=\"1\" dirty=\"0\"><a:latin typeface=\"Cambria Math\" panose=\"02040503050406030204\" pitchFamily=\"18\" charset=\"0\"/></a:rPr></m:ctrlPr></m:sSubPr><m:e><m:r><a:rPr lang=\"en-US\" altLang=\"ko-KR\" sz=\"1200\" b=\"1\" i=\"1\" dirty=\"0\"><a:latin typeface=\"Cambria Math\" panose=\"02040503050406030204\" pitchFamily=\"18\" charset=\"0\"/></a:rPr><m:t>𝜹</m:t></m:r></m:e><m:sub><m:r><a:rPr lang=\"en-US\" altLang=\"ko-KR\" sz=\"1200\" i=\"1\" dirty=\"0\"><a:latin typeface=\"Cambria Math\" panose=\"02040503050406030204\" pitchFamily=\"18\" charset=\"0\"/></a:rPr><m:t>𝑡</m:t></m:r></m:sub></m:sSub><m:r><a:rPr lang=\"en-US\" altLang=\"ko-KR\" sz=\"1200\" i=\"0\" dirty=\"0\"><a:latin typeface=\"Cambria Math\" panose=\"02040503050406030204\" pitchFamily=\"18\" charset=\"0\"/></a:rPr><m:t>, </m:t></m:r><m:d><m:dPr><m:begChr m:val=\"‖\"/><m:endChr m:val=\"‖\"/><m:ctrlPr><a:rPr lang=\"en-US\" altLang=\"ko-KR\" sz=\"1200\" i=\"1\" dirty=\"0\"><a:latin typeface=\"Cambria Math\" panose=\"02040503050406030204\" pitchFamily=\"18\" charset=\"0\"/></a:rPr></m:ctrlPr></m:dPr><m:e><m:sSub><m:sSubPr><m:ctrlPr><a:rPr lang=\"en-US\" altLang=\"ko-KR\" sz=\"1200\" i=\"1\" dirty=\"0\"><a:latin typeface=\"Cambria Math\" panose=\"02040503050406030204\" pitchFamily=\"18\" charset=\"0\"/></a:rPr></m:ctrlPr></m:sSubPr><m:e><m:r><a:rPr lang=\"en-US\" altLang=\"ko-KR\" sz=\"1200\" b=\"1\" i=\"1\" dirty=\"0\"><a:latin typeface=\"Cambria Math\" panose=\"02040503050406030204\" pitchFamily=\"18\" charset=\"0\"/></a:rPr><m:t>𝑭</m:t></m:r></m:e><m:sub><m:r><a:rPr lang=\"en-US\" altLang=\"ko-KR\" sz=\"1200\" i=\"1\" dirty=\"0\"><a:latin typeface=\"Cambria Math\" panose=\"02040503050406030204\" pitchFamily=\"18\" charset=\"0\"/></a:rPr><m:t>𝑡</m:t></m:r><m:r><a:rPr lang=\"en-US\" altLang=\"ko-KR\" sz=\"1200\" i=\"1\" dirty=\"0\"><a:latin typeface=\"Cambria Math\" panose=\"02040503050406030204\" pitchFamily=\"18\" charset=\"0\"/></a:rPr><m:t>,</m:t></m:r><m:r><m:rPr><m:nor/></m:rPr><a:rPr lang=\"en-US\" altLang=\"ko-KR\" sz=\"1200\" i=\"0\" dirty=\"0\"><a:latin typeface=\"Cambria Math\" panose=\"02040503050406030204\" pitchFamily=\"18\" charset=\"0\"/></a:rPr><m:t>spring</m:t></m:r></m:sub></m:sSub></m:e></m:d><m:r><a:rPr lang=\"en-US\" altLang=\"ko-KR\" sz=\"1200\" i=\"0\" dirty=\"0\"><a:latin typeface=\"Cambria Math\" panose=\"02040503050406030204\" pitchFamily=\"18\" charset=\"0\"/></a:rPr><m:t>≤</m:t></m:r><m:r><a:rPr lang=\"en-US\" altLang=\"ko-KR\" sz=\"1200\" i=\"1\" dirty=\"0\"><a:latin typeface=\"Cambria Math\" panose=\"02040503050406030204\" pitchFamily=\"18\" charset=\"0\"/></a:rPr><m:t>𝜇</m:t></m:r><m:d><m:dPr><m:begChr m:val=\"|\"/><m:endChr m:val=\"|\"/><m:ctrlPr><a:rPr lang=\"en-US\" altLang=\"ko-KR\" sz=\"1200\" i=\"1\" dirty=\"0\"><a:latin typeface=\"Cambria Math\" panose=\"02040503050406030204\" pitchFamily=\"18\" charset=\"0\"/></a:rPr></m:ctrlPr></m:dPr><m:e><m:sSub><m:sSubPr><m:ctrlPr><a:rPr lang=\"en-US\" altLang=\"ko-KR\" sz=\"1200\" i=\"1\" dirty=\"0\"><a:latin typeface=\"Cambria Math\" panose=\"02040503050406030204\" pitchFamily=\"18\" charset=\"0\"/></a:rPr></m:ctrlPr></m:sSubPr><m:e><m:r><a:rPr lang=\"en-US\" altLang=\"ko-KR\" sz=\"1200\" i=\"1\" dirty=\"0\"><a:latin typeface=\"Cambria Math\" panose=\"02040503050406030204\" pitchFamily=\"18\" charset=\"0\"/></a:rPr><m:t>𝐹</m:t></m:r></m:e><m:sub><m:r><a:rPr lang=\"en-US\" altLang=\"ko-KR\" sz=\"1200\" i=\"1\" dirty=\"0\"><a:latin typeface=\"Cambria Math\" panose=\"02040503050406030204\" pitchFamily=\"18\" charset=\"0\"/></a:rPr><m:t>𝑛</m:t></m:r></m:sub></m:sSub></m:e></m:d></m:oMath></m:oMathPara>",
+      "fallback_sha256": [
+        "fe8fe938c4720ff013ccb71ce70c280d35d2060749fb7ee4ed68d28edaa9403c"
+      ]
+    },
+    {
+      "names": [
+        "eq4_2",
+        "eq4_2"
+      ],
+      "tokens": [
+        "𝑴",
+        "𝑟",
+        "=−",
+        "𝜇",
+        "𝑟",
+        "𝑘",
+        "1",
+        "𝛿",
+        "𝑅",
+        "∗",
+        "·",
+        "𝝎",
+        "𝑟",
+        "−",
+        "𝝎",
+        "𝑟",
+        "·",
+        "𝒏",
+        "𝑖𝑗",
+        "𝒏",
+        "𝑖𝑗",
+        "𝝎",
+        "𝑟"
+      ],
+      "spacing_tokens_codepoints": [],
+      "omml_c14n_sha256": "051227ff00ea96548dfd43cc7db54bb8485a20d41780ee792185812c57d54729",
+      "omml_xml": "<m:oMathPara xmlns:m=\"http://schemas.openxmlformats.org/officeDocument/2006/math\" xmlns:a14=\"http://schemas.microsoft.com/office/drawing/2010/main\" xmlns:mc=\"http://schemas.openxmlformats.org/markup-compatibility/2006\" xmlns:a=\"http://schemas.openxmlformats.org/drawingml/2006/main\" xmlns:p=\"http://schemas.openxmlformats.org/presentationml/2006/main\" xmlns:r=\"http://schemas.openxmlformats.org/officeDocument/2006/relationships\"><m:oMathParaPr><m:jc m:val=\"left\"/></m:oMathParaPr><m:oMath><m:sSub><m:sSubPr><m:ctrlPr><a:rPr lang=\"en-US\" altLang=\"ko-KR\" sz=\"1200\" i=\"1\" dirty=\"0\"><a:latin typeface=\"Cambria Math\" panose=\"02040503050406030204\" pitchFamily=\"18\" charset=\"0\"/></a:rPr></m:ctrlPr></m:sSubPr><m:e><m:r><a:rPr lang=\"en-US\" altLang=\"ko-KR\" sz=\"1200\" b=\"1\" i=\"1\" dirty=\"0\"><a:latin typeface=\"Cambria Math\" panose=\"02040503050406030204\" pitchFamily=\"18\" charset=\"0\"/></a:rPr><m:t>𝑴</m:t></m:r></m:e><m:sub><m:r><a:rPr lang=\"en-US\" altLang=\"ko-KR\" sz=\"1200\" i=\"1\" dirty=\"0\"><a:latin typeface=\"Cambria Math\" panose=\"02040503050406030204\" pitchFamily=\"18\" charset=\"0\"/></a:rPr><m:t>𝑟</m:t></m:r></m:sub></m:sSub><m:r><a:rPr lang=\"en-US\" altLang=\"ko-KR\" sz=\"1200\" i=\"0\" dirty=\"0\"><a:latin typeface=\"Cambria Math\" panose=\"02040503050406030204\" pitchFamily=\"18\" charset=\"0\"/></a:rPr><m:t>=−</m:t></m:r><m:sSub><m:sSubPr><m:ctrlPr><a:rPr lang=\"en-US\" altLang=\"ko-KR\" sz=\"1200\" i=\"1\" dirty=\"0\"><a:latin typeface=\"Cambria Math\" panose=\"02040503050406030204\" pitchFamily=\"18\" charset=\"0\"/></a:rPr></m:ctrlPr></m:sSubPr><m:e><m:r><a:rPr lang=\"en-US\" altLang=\"ko-KR\" sz=\"1200\" i=\"1\" dirty=\"0\"><a:latin typeface=\"Cambria Math\" panose=\"02040503050406030204\" pitchFamily=\"18\" charset=\"0\"/></a:rPr><m:t>𝜇</m:t></m:r></m:e><m:sub><m:r><a:rPr lang=\"en-US\" altLang=\"ko-KR\" sz=\"1200\" i=\"1\" dirty=\"0\"><a:latin typeface=\"Cambria Math\" panose=\"02040503050406030204\" pitchFamily=\"18\" charset=\"0\"/></a:rPr><m:t>𝑟</m:t></m:r></m:sub></m:sSub><m:sSub><m:sSubPr><m:ctrlPr><a:rPr lang=\"en-US\" altLang=\"ko-KR\" sz=\"1200\" i=\"1\" dirty=\"0\"><a:latin typeface=\"Cambria Math\" panose=\"02040503050406030204\" pitchFamily=\"18\" charset=\"0\"/></a:rPr></m:ctrlPr></m:sSubPr><m:e><m:r><a:rPr lang=\"en-US\" altLang=\"ko-KR\" sz=\"1200\" i=\"1\" dirty=\"0\"><a:latin typeface=\"Cambria Math\" panose=\"02040503050406030204\" pitchFamily=\"18\" charset=\"0\"/></a:rPr><m:t>𝑘</m:t></m:r></m:e><m:sub><m:r><a:rPr lang=\"en-US\" altLang=\"ko-KR\" sz=\"1200\" i=\"1\" dirty=\"0\"><a:latin typeface=\"Cambria Math\" panose=\"02040503050406030204\" pitchFamily=\"18\" charset=\"0\"/></a:rPr><m:t>1</m:t></m:r></m:sub></m:sSub><m:r><a:rPr lang=\"en-US\" altLang=\"ko-KR\" sz=\"1200\" i=\"1\" dirty=\"0\"><a:latin typeface=\"Cambria Math\" panose=\"02040503050406030204\" pitchFamily=\"18\" charset=\"0\"/></a:rPr><m:t>𝛿</m:t></m:r><m:sSup><m:sSupPr><m:ctrlPr><a:rPr lang=\"en-US\" altLang=\"ko-KR\" sz=\"1200\" i=\"1\" dirty=\"0\"><a:latin typeface=\"Cambria Math\" panose=\"02040503050406030204\" pitchFamily=\"18\" charset=\"0\"/></a:rPr></m:ctrlPr></m:sSupPr><m:e><m:r><a:rPr lang=\"en-US\" altLang=\"ko-KR\" sz=\"1200\" i=\"1\" dirty=\"0\"><a:latin typeface=\"Cambria Math\" panose=\"02040503050406030204\" pitchFamily=\"18\" charset=\"0\"/></a:rPr><m:t>𝑅</m:t></m:r></m:e><m:sup><m:r><a:rPr lang=\"en-US\" altLang=\"ko-KR\" sz=\"1200\" i=\"1\" dirty=\"0\"><a:latin typeface=\"Cambria Math\" panose=\"02040503050406030204\" pitchFamily=\"18\" charset=\"0\"/></a:rPr><m:t>∗</m:t></m:r></m:sup></m:sSup><m:r><a:rPr lang=\"en-US\" altLang=\"ko-KR\" sz=\"1200\" i=\"0\" dirty=\"0\"><a:latin typeface=\"Cambria Math\" panose=\"02040503050406030204\" pitchFamily=\"18\" charset=\"0\"/></a:rPr><m:t>·</m:t></m:r><m:f><m:fPr><m:ctrlPr><a:rPr lang=\"en-US\" altLang=\"ko-KR\" sz=\"1200\" i=\"1\" dirty=\"0\"><a:latin typeface=\"Cambria Math\" panose=\"02040503050406030204\" pitchFamily=\"18\" charset=\"0\"/></a:rPr></m:ctrlPr></m:fPr><m:num><m:sSub><m:sSubPr><m:ctrlPr><a:rPr lang=\"en-US\" altLang=\"ko-KR\" sz=\"1200\" i=\"1\" dirty=\"0\"><a:latin typeface=\"Cambria Math\" panose=\"02040503050406030204\" pitchFamily=\"18\" charset=\"0\"/></a:rPr></m:ctrlPr></m:sSubPr><m:e><m:r><a:rPr lang=\"en-US\" altLang=\"ko-KR\" sz=\"1200\" b=\"1\" i=\"1\" dirty=\"0\"><a:latin typeface=\"Cambria Math\" panose=\"02040503050406030204\" pitchFamily=\"18\" charset=\"0\"/></a:rPr><m:t>𝝎</m:t></m:r></m:e><m:sub><m:r><a:rPr lang=\"en-US\" altLang=\"ko-KR\" sz=\"1200\" i=\"1\" dirty=\"0\"><a:latin typeface=\"Cambria Math\" panose=\"02040503050406030204\" pitchFamily=\"18\" charset=\"0\"/></a:rPr><m:t>𝑟</m:t></m:r></m:sub></m:sSub><m:r><a:rPr lang=\"en-US\" altLang=\"ko-KR\" sz=\"1200\" i=\"0\" dirty=\"0\"><a:latin typeface=\"Cambria Math\" panose=\"02040503050406030204\" pitchFamily=\"18\" charset=\"0\"/></a:rPr><m:t>−</m:t></m:r><m:d><m:dPr><m:ctrlPr><a:rPr lang=\"en-US\" altLang=\"ko-KR\" sz=\"1200\" i=\"1\" dirty=\"0\"><a:latin typeface=\"Cambria Math\" panose=\"02040503050406030204\" pitchFamily=\"18\" charset=\"0\"/></a:rPr></m:ctrlPr></m:dPr><m:e><m:sSub><m:sSubPr><m:ctrlPr><a:rPr lang=\"en-US\" altLang=\"ko-KR\" sz=\"1200\" i=\"1\" dirty=\"0\"><a:latin typeface=\"Cambria Math\" panose=\"02040503050406030204\" pitchFamily=\"18\" charset=\"0\"/></a:rPr></m:ctrlPr></m:sSubPr><m:e><m:r><a:rPr lang=\"en-US\" altLang=\"ko-KR\" sz=\"1200\" b=\"1\" i=\"1\" dirty=\"0\"><a:latin typeface=\"Cambria Math\" panose=\"02040503050406030204\" pitchFamily=\"18\" charset=\"0\"/></a:rPr><m:t>𝝎</m:t></m:r></m:e><m:sub><m:r><a:rPr lang=\"en-US\" altLang=\"ko-KR\" sz=\"1200\" i=\"1\" dirty=\"0\"><a:latin typeface=\"Cambria Math\" panose=\"02040503050406030204\" pitchFamily=\"18\" charset=\"0\"/></a:rPr><m:t>𝑟</m:t></m:r></m:sub></m:sSub><m:r><a:rPr lang=\"en-US\" altLang=\"ko-KR\" sz=\"1200\" i=\"0\" dirty=\"0\"><a:latin typeface=\"Cambria Math\" panose=\"02040503050406030204\" pitchFamily=\"18\" charset=\"0\"/></a:rPr><m:t>·</m:t></m:r><m:sSub><m:sSubPr><m:ctrlPr><a:rPr lang=\"en-US\" altLang=\"ko-KR\" sz=\"1200\" i=\"1\" dirty=\"0\"><a:latin typeface=\"Cambria Math\" panose=\"02040503050406030204\" pitchFamily=\"18\" charset=\"0\"/></a:rPr></m:ctrlPr></m:sSubPr><m:e><m:r><a:rPr lang=\"en-US\" altLang=\"ko-KR\" sz=\"1200\" b=\"1\" i=\"1\" dirty=\"0\"><a:latin typeface=\"Cambria Math\" panose=\"02040503050406030204\" pitchFamily=\"18\" charset=\"0\"/></a:rPr><m:t>𝒏</m:t></m:r></m:e><m:sub><m:r><a:rPr lang=\"en-US\" altLang=\"ko-KR\" sz=\"1200\" i=\"1\" dirty=\"0\"><a:latin typeface=\"Cambria Math\" panose=\"02040503050406030204\" pitchFamily=\"18\" charset=\"0\"/></a:rPr><m:t>𝑖𝑗</m:t></m:r></m:sub></m:sSub></m:e></m:d><m:sSub><m:sSubPr><m:ctrlPr><a:rPr lang=\"en-US\" altLang=\"ko-KR\" sz=\"1200\" i=\"1\" dirty=\"0\"><a:latin typeface=\"Cambria Math\" panose=\"02040503050406030204\" pitchFamily=\"18\" charset=\"0\"/></a:rPr></m:ctrlPr></m:sSubPr><m:e><m:r><a:rPr lang=\"en-US\" altLang=\"ko-KR\" sz=\"1200\" b=\"1\" i=\"1\" dirty=\"0\"><a:latin typeface=\"Cambria Math\" panose=\"02040503050406030204\" pitchFamily=\"18\" charset=\"0\"/></a:rPr><m:t>𝒏</m:t></m:r></m:e><m:sub><m:r><a:rPr lang=\"en-US\" altLang=\"ko-KR\" sz=\"1200\" i=\"1\" dirty=\"0\"><a:latin typeface=\"Cambria Math\" panose=\"02040503050406030204\" pitchFamily=\"18\" charset=\"0\"/></a:rPr><m:t>𝑖𝑗</m:t></m:r></m:sub></m:sSub></m:num><m:den><m:d><m:dPr><m:begChr m:val=\"‖\"/><m:endChr m:val=\"‖\"/><m:ctrlPr><a:rPr lang=\"en-US\" altLang=\"ko-KR\" sz=\"1200\" i=\"1\" dirty=\"0\"><a:latin typeface=\"Cambria Math\" panose=\"02040503050406030204\" pitchFamily=\"18\" charset=\"0\"/></a:rPr></m:ctrlPr></m:dPr><m:e><m:sSub><m:sSubPr><m:ctrlPr><a:rPr lang=\"en-US\" altLang=\"ko-KR\" sz=\"1200\" i=\"1\" dirty=\"0\"><a:latin typeface=\"Cambria Math\" panose=\"02040503050406030204\" pitchFamily=\"18\" charset=\"0\"/></a:rPr></m:ctrlPr></m:sSubPr><m:e><m:r><a:rPr lang=\"en-US\" altLang=\"ko-KR\" sz=\"1200\" b=\"1\" i=\"1\" dirty=\"0\"><a:latin typeface=\"Cambria Math\" panose=\"02040503050406030204\" pitchFamily=\"18\" charset=\"0\"/></a:rPr><m:t>𝝎</m:t></m:r></m:e><m:sub><m:r><a:rPr lang=\"en-US\" altLang=\"ko-KR\" sz=\"1200\" i=\"1\" dirty=\"0\"><a:latin typeface=\"Cambria Math\" panose=\"02040503050406030204\" pitchFamily=\"18\" charset=\"0\"/></a:rPr><m:t>𝑟</m:t></m:r></m:sub></m:sSub></m:e></m:d></m:den></m:f></m:oMath></m:oMathPara>",
+      "fallback_sha256": [
+        "e777bbd37d484a1fa122b700c69253cf5f99c0be6ead0bfe36e43f3196d1d463"
+      ]
+    },
+    {
+      "names": [
+        "eq5_1",
+        "eq5_1"
+      ],
+      "tokens": [
+        "𝑘",
+        "1",
+        "=",
+        "16",
+        "15",
+        "𝑅",
+        "∗",
+        "𝐸",
+        "∗",
+        "15",
+        "𝑚",
+        "∗",
+        "𝑉",
+        "2",
+        "16",
+        "𝑅",
+        "∗",
+        "𝐸",
+        "∗",
+        "1",
+        "/",
+        "5"
+      ],
+      "spacing_tokens_codepoints": [],
+      "omml_c14n_sha256": "14d59e762e96dc29eee2dda1f2f56b23c9d1997af0615ed16f7981fb06f3933f",
+      "omml_xml": "<m:oMathPara xmlns:m=\"http://schemas.openxmlformats.org/officeDocument/2006/math\" xmlns:a14=\"http://schemas.microsoft.com/office/drawing/2010/main\" xmlns:mc=\"http://schemas.openxmlformats.org/markup-compatibility/2006\" xmlns:a=\"http://schemas.openxmlformats.org/drawingml/2006/main\" xmlns:p=\"http://schemas.openxmlformats.org/presentationml/2006/main\" xmlns:r=\"http://schemas.openxmlformats.org/officeDocument/2006/relationships\"><m:oMathParaPr><m:jc m:val=\"left\"/></m:oMathParaPr><m:oMath><m:sSub><m:sSubPr><m:ctrlPr><a:rPr lang=\"en-US\" altLang=\"ko-KR\" sz=\"1200\" i=\"1\" dirty=\"0\"><a:latin typeface=\"Cambria Math\" panose=\"02040503050406030204\" pitchFamily=\"18\" charset=\"0\"/></a:rPr></m:ctrlPr></m:sSubPr><m:e><m:r><a:rPr lang=\"en-US\" altLang=\"ko-KR\" sz=\"1200\" i=\"1\" dirty=\"0\"><a:latin typeface=\"Cambria Math\" panose=\"02040503050406030204\" pitchFamily=\"18\" charset=\"0\"/></a:rPr><m:t>𝑘</m:t></m:r></m:e><m:sub><m:r><a:rPr lang=\"en-US\" altLang=\"ko-KR\" sz=\"1200\" i=\"1\" dirty=\"0\"><a:latin typeface=\"Cambria Math\" panose=\"02040503050406030204\" pitchFamily=\"18\" charset=\"0\"/></a:rPr><m:t>1</m:t></m:r></m:sub></m:sSub><m:r><a:rPr lang=\"en-US\" altLang=\"ko-KR\" sz=\"1200\" i=\"0\" dirty=\"0\"><a:latin typeface=\"Cambria Math\" panose=\"02040503050406030204\" pitchFamily=\"18\" charset=\"0\"/></a:rPr><m:t>=</m:t></m:r><m:f><m:fPr><m:ctrlPr><a:rPr lang=\"en-US\" altLang=\"ko-KR\" sz=\"1200\" i=\"1\" dirty=\"0\"><a:latin typeface=\"Cambria Math\" panose=\"02040503050406030204\" pitchFamily=\"18\" charset=\"0\"/></a:rPr></m:ctrlPr></m:fPr><m:num><m:r><a:rPr lang=\"en-US\" altLang=\"ko-KR\" sz=\"1200\" i=\"1\" dirty=\"0\"><a:latin typeface=\"Cambria Math\" panose=\"02040503050406030204\" pitchFamily=\"18\" charset=\"0\"/></a:rPr><m:t>16</m:t></m:r></m:num><m:den><m:r><a:rPr lang=\"en-US\" altLang=\"ko-KR\" sz=\"1200\" i=\"1\" dirty=\"0\"><a:latin typeface=\"Cambria Math\" panose=\"02040503050406030204\" pitchFamily=\"18\" charset=\"0\"/></a:rPr><m:t>15</m:t></m:r></m:den></m:f><m:rad><m:radPr><m:degHide m:val=\"on\"/><m:ctrlPr><a:rPr lang=\"en-US\" altLang=\"ko-KR\" sz=\"1200\" i=\"1\" dirty=\"0\"><a:latin typeface=\"Cambria Math\" panose=\"02040503050406030204\" pitchFamily=\"18\" charset=\"0\"/></a:rPr></m:ctrlPr></m:radPr><m:deg/><m:e><m:sSup><m:sSupPr><m:ctrlPr><a:rPr lang=\"en-US\" altLang=\"ko-KR\" sz=\"1200\" i=\"1\" dirty=\"0\"><a:latin typeface=\"Cambria Math\" panose=\"02040503050406030204\" pitchFamily=\"18\" charset=\"0\"/></a:rPr></m:ctrlPr></m:sSupPr><m:e><m:r><a:rPr lang=\"en-US\" altLang=\"ko-KR\" sz=\"1200\" i=\"1\" dirty=\"0\"><a:latin typeface=\"Cambria Math\" panose=\"02040503050406030204\" pitchFamily=\"18\" charset=\"0\"/></a:rPr><m:t>𝑅</m:t></m:r></m:e><m:sup><m:r><a:rPr lang=\"en-US\" altLang=\"ko-KR\" sz=\"1200\" i=\"1\" dirty=\"0\"><a:latin typeface=\"Cambria Math\" panose=\"02040503050406030204\" pitchFamily=\"18\" charset=\"0\"/></a:rPr><m:t>∗</m:t></m:r></m:sup></m:sSup></m:e></m:rad><m:sSup><m:sSupPr><m:ctrlPr><a:rPr lang=\"en-US\" altLang=\"ko-KR\" sz=\"1200\" i=\"1\" dirty=\"0\"><a:latin typeface=\"Cambria Math\" panose=\"02040503050406030204\" pitchFamily=\"18\" charset=\"0\"/></a:rPr></m:ctrlPr></m:sSupPr><m:e><m:r><a:rPr lang=\"en-US\" altLang=\"ko-KR\" sz=\"1200\" i=\"1\" dirty=\"0\"><a:latin typeface=\"Cambria Math\" panose=\"02040503050406030204\" pitchFamily=\"18\" charset=\"0\"/></a:rPr><m:t>𝐸</m:t></m:r></m:e><m:sup><m:r><a:rPr lang=\"en-US\" altLang=\"ko-KR\" sz=\"1200\" i=\"1\" dirty=\"0\"><a:latin typeface=\"Cambria Math\" panose=\"02040503050406030204\" pitchFamily=\"18\" charset=\"0\"/></a:rPr><m:t>∗</m:t></m:r></m:sup></m:sSup><m:sSup><m:sSupPr><m:ctrlPr><a:rPr lang=\"en-US\" altLang=\"ko-KR\" sz=\"1200\" i=\"1\" dirty=\"0\"><a:latin typeface=\"Cambria Math\" panose=\"02040503050406030204\" pitchFamily=\"18\" charset=\"0\"/></a:rPr></m:ctrlPr></m:sSupPr><m:e><m:d><m:dPr><m:ctrlPr><a:rPr lang=\"en-US\" altLang=\"ko-KR\" sz=\"1200\" i=\"1\" dirty=\"0\"><a:latin typeface=\"Cambria Math\" panose=\"02040503050406030204\" pitchFamily=\"18\" charset=\"0\"/></a:rPr></m:ctrlPr></m:dPr><m:e><m:f><m:fPr><m:ctrlPr><a:rPr lang=\"en-US\" altLang=\"ko-KR\" sz=\"1200\" i=\"1\" dirty=\"0\"><a:latin typeface=\"Cambria Math\" panose=\"02040503050406030204\" pitchFamily=\"18\" charset=\"0\"/></a:rPr></m:ctrlPr></m:fPr><m:num><m:r><a:rPr lang=\"en-US\" altLang=\"ko-KR\" sz=\"1200\" i=\"1\" dirty=\"0\"><a:latin typeface=\"Cambria Math\" panose=\"02040503050406030204\" pitchFamily=\"18\" charset=\"0\"/></a:rPr><m:t>15</m:t></m:r><m:sSup><m:sSupPr><m:ctrlPr><a:rPr lang=\"en-US\" altLang=\"ko-KR\" sz=\"1200\" i=\"1\" dirty=\"0\"><a:latin typeface=\"Cambria Math\" panose=\"02040503050406030204\" pitchFamily=\"18\" charset=\"0\"/></a:rPr></m:ctrlPr></m:sSupPr><m:e><m:r><a:rPr lang=\"en-US\" altLang=\"ko-KR\" sz=\"1200\" i=\"1\" dirty=\"0\"><a:latin typeface=\"Cambria Math\" panose=\"02040503050406030204\" pitchFamily=\"18\" charset=\"0\"/></a:rPr><m:t>𝑚</m:t></m:r></m:e><m:sup><m:r><a:rPr lang=\"en-US\" altLang=\"ko-KR\" sz=\"1200\" i=\"1\" dirty=\"0\"><a:latin typeface=\"Cambria Math\" panose=\"02040503050406030204\" pitchFamily=\"18\" charset=\"0\"/></a:rPr><m:t>∗</m:t></m:r></m:sup></m:sSup><m:sSup><m:sSupPr><m:ctrlPr><a:rPr lang=\"en-US\" altLang=\"ko-KR\" sz=\"1200\" i=\"1\" dirty=\"0\"><a:latin typeface=\"Cambria Math\" panose=\"02040503050406030204\" pitchFamily=\"18\" charset=\"0\"/></a:rPr></m:ctrlPr></m:sSupPr><m:e><m:r><a:rPr lang=\"en-US\" altLang=\"ko-KR\" sz=\"1200\" i=\"1\" dirty=\"0\"><a:latin typeface=\"Cambria Math\" panose=\"02040503050406030204\" pitchFamily=\"18\" charset=\"0\"/></a:rPr><m:t>𝑉</m:t></m:r></m:e><m:sup><m:r><a:rPr lang=\"en-US\" altLang=\"ko-KR\" sz=\"1200\" i=\"1\" dirty=\"0\"><a:latin typeface=\"Cambria Math\" panose=\"02040503050406030204\" pitchFamily=\"18\" charset=\"0\"/></a:rPr><m:t>2</m:t></m:r></m:sup></m:sSup></m:num><m:den><m:r><a:rPr lang=\"en-US\" altLang=\"ko-KR\" sz=\"1200\" i=\"1\" dirty=\"0\"><a:latin typeface=\"Cambria Math\" panose=\"02040503050406030204\" pitchFamily=\"18\" charset=\"0\"/></a:rPr><m:t>16</m:t></m:r><m:rad><m:radPr><m:degHide m:val=\"on\"/><m:ctrlPr><a:rPr lang=\"en-US\" altLang=\"ko-KR\" sz=\"1200\" i=\"1\" dirty=\"0\"><a:latin typeface=\"Cambria Math\" panose=\"02040503050406030204\" pitchFamily=\"18\" charset=\"0\"/></a:rPr></m:ctrlPr></m:radPr><m:deg/><m:e><m:sSup><m:sSupPr><m:ctrlPr><a:rPr lang=\"en-US\" altLang=\"ko-KR\" sz=\"1200\" i=\"1\" dirty=\"0\"><a:latin typeface=\"Cambria Math\" panose=\"02040503050406030204\" pitchFamily=\"18\" charset=\"0\"/></a:rPr></m:ctrlPr></m:sSupPr><m:e><m:r><a:rPr lang=\"en-US\" altLang=\"ko-KR\" sz=\"1200\" i=\"1\" dirty=\"0\"><a:latin typeface=\"Cambria Math\" panose=\"02040503050406030204\" pitchFamily=\"18\" charset=\"0\"/></a:rPr><m:t>𝑅</m:t></m:r></m:e><m:sup><m:r><a:rPr lang=\"en-US\" altLang=\"ko-KR\" sz=\"1200\" i=\"1\" dirty=\"0\"><a:latin typeface=\"Cambria Math\" panose=\"02040503050406030204\" pitchFamily=\"18\" charset=\"0\"/></a:rPr><m:t>∗</m:t></m:r></m:sup></m:sSup></m:e></m:rad><m:sSup><m:sSupPr><m:ctrlPr><a:rPr lang=\"en-US\" altLang=\"ko-KR\" sz=\"1200\" i=\"1\" dirty=\"0\"><a:latin typeface=\"Cambria Math\" panose=\"02040503050406030204\" pitchFamily=\"18\" charset=\"0\"/></a:rPr></m:ctrlPr></m:sSupPr><m:e><m:r><a:rPr lang=\"en-US\" altLang=\"ko-KR\" sz=\"1200\" i=\"1\" dirty=\"0\"><a:latin typeface=\"Cambria Math\" panose=\"02040503050406030204\" pitchFamily=\"18\" charset=\"0\"/></a:rPr><m:t>𝐸</m:t></m:r></m:e><m:sup><m:r><a:rPr lang=\"en-US\" altLang=\"ko-KR\" sz=\"1200\" i=\"1\" dirty=\"0\"><a:latin typeface=\"Cambria Math\" panose=\"02040503050406030204\" pitchFamily=\"18\" charset=\"0\"/></a:rPr><m:t>∗</m:t></m:r></m:sup></m:sSup></m:den></m:f></m:e></m:d></m:e><m:sup><m:r><a:rPr lang=\"en-US\" altLang=\"ko-KR\" sz=\"1200\" i=\"1\" dirty=\"0\"><a:latin typeface=\"Cambria Math\" panose=\"02040503050406030204\" pitchFamily=\"18\" charset=\"0\"/></a:rPr><m:t>1</m:t></m:r><m:r><a:rPr lang=\"en-US\" altLang=\"ko-KR\" sz=\"1200\" i=\"0\" dirty=\"0\"><a:latin typeface=\"Cambria Math\" panose=\"02040503050406030204\" pitchFamily=\"18\" charset=\"0\"/></a:rPr><m:t>/</m:t></m:r><m:r><a:rPr lang=\"en-US\" altLang=\"ko-KR\" sz=\"1200\" i=\"1\" dirty=\"0\"><a:latin typeface=\"Cambria Math\" panose=\"02040503050406030204\" pitchFamily=\"18\" charset=\"0\"/></a:rPr><m:t>5</m:t></m:r></m:sup></m:sSup></m:oMath></m:oMathPara>",
+      "fallback_sha256": [
+        "894eee5d745579de8e87f8d9da0588c283e1e2b258164c4364aff597c71eb774"
+      ]
+    },
+    {
+      "names": [
+        "eq5_2",
+        "eq5_2"
+      ],
+      "tokens": [
+        "1",
+        "𝐸",
+        "∗",
+        "=",
+        "1",
+        "−",
+        "𝜈",
+        "𝑖",
+        "2",
+        "𝐸",
+        "𝑖",
+        "+",
+        "1",
+        "−",
+        "𝜈",
+        "𝑗",
+        "2",
+        "𝐸",
+        "𝑗"
+      ],
+      "spacing_tokens_codepoints": [],
+      "omml_c14n_sha256": "5300c831fa686d7c37f32b2903457483813ab9a1c4d8f876cca271a97ab737f6",
+      "omml_xml": "<m:oMathPara xmlns:m=\"http://schemas.openxmlformats.org/officeDocument/2006/math\" xmlns:a14=\"http://schemas.microsoft.com/office/drawing/2010/main\" xmlns:mc=\"http://schemas.openxmlformats.org/markup-compatibility/2006\" xmlns:a=\"http://schemas.openxmlformats.org/drawingml/2006/main\" xmlns:p=\"http://schemas.openxmlformats.org/presentationml/2006/main\" xmlns:r=\"http://schemas.openxmlformats.org/officeDocument/2006/relationships\"><m:oMathParaPr><m:jc m:val=\"left\"/></m:oMathParaPr><m:oMath><m:f><m:fPr><m:ctrlPr><a:rPr lang=\"en-US\" altLang=\"ko-KR\" sz=\"1200\" i=\"1\" dirty=\"0\"><a:latin typeface=\"Cambria Math\" panose=\"02040503050406030204\" pitchFamily=\"18\" charset=\"0\"/></a:rPr></m:ctrlPr></m:fPr><m:num><m:r><a:rPr lang=\"en-US\" altLang=\"ko-KR\" sz=\"1200\" i=\"1\" dirty=\"0\"><a:latin typeface=\"Cambria Math\" panose=\"02040503050406030204\" pitchFamily=\"18\" charset=\"0\"/></a:rPr><m:t>1</m:t></m:r></m:num><m:den><m:sSup><m:sSupPr><m:ctrlPr><a:rPr lang=\"en-US\" altLang=\"ko-KR\" sz=\"1200\" i=\"1\" dirty=\"0\"><a:latin typeface=\"Cambria Math\" panose=\"02040503050406030204\" pitchFamily=\"18\" charset=\"0\"/></a:rPr></m:ctrlPr></m:sSupPr><m:e><m:r><a:rPr lang=\"en-US\" altLang=\"ko-KR\" sz=\"1200\" i=\"1\" dirty=\"0\"><a:latin typeface=\"Cambria Math\" panose=\"02040503050406030204\" pitchFamily=\"18\" charset=\"0\"/></a:rPr><m:t>𝐸</m:t></m:r></m:e><m:sup><m:r><a:rPr lang=\"en-US\" altLang=\"ko-KR\" sz=\"1200\" i=\"1\" dirty=\"0\"><a:latin typeface=\"Cambria Math\" panose=\"02040503050406030204\" pitchFamily=\"18\" charset=\"0\"/></a:rPr><m:t>∗</m:t></m:r></m:sup></m:sSup></m:den></m:f><m:r><a:rPr lang=\"en-US\" altLang=\"ko-KR\" sz=\"1200\" i=\"0\" dirty=\"0\"><a:latin typeface=\"Cambria Math\" panose=\"02040503050406030204\" pitchFamily=\"18\" charset=\"0\"/></a:rPr><m:t>=</m:t></m:r><m:f><m:fPr><m:ctrlPr><a:rPr lang=\"en-US\" altLang=\"ko-KR\" sz=\"1200\" i=\"1\" dirty=\"0\"><a:latin typeface=\"Cambria Math\" panose=\"02040503050406030204\" pitchFamily=\"18\" charset=\"0\"/></a:rPr></m:ctrlPr></m:fPr><m:num><m:r><a:rPr lang=\"en-US\" altLang=\"ko-KR\" sz=\"1200\" i=\"1\" dirty=\"0\"><a:latin typeface=\"Cambria Math\" panose=\"02040503050406030204\" pitchFamily=\"18\" charset=\"0\"/></a:rPr><m:t>1</m:t></m:r><m:r><a:rPr lang=\"en-US\" altLang=\"ko-KR\" sz=\"1200\" i=\"0\" dirty=\"0\"><a:latin typeface=\"Cambria Math\" panose=\"02040503050406030204\" pitchFamily=\"18\" charset=\"0\"/></a:rPr><m:t>−</m:t></m:r><m:sSubSup><m:sSubSupPr><m:ctrlPr><a:rPr lang=\"en-US\" altLang=\"ko-KR\" sz=\"1200\" i=\"1\" dirty=\"0\"><a:latin typeface=\"Cambria Math\" panose=\"02040503050406030204\" pitchFamily=\"18\" charset=\"0\"/></a:rPr></m:ctrlPr></m:sSubSupPr><m:e><m:r><a:rPr lang=\"en-US\" altLang=\"ko-KR\" sz=\"1200\" i=\"1\" dirty=\"0\"><a:latin typeface=\"Cambria Math\" panose=\"02040503050406030204\" pitchFamily=\"18\" charset=\"0\"/></a:rPr><m:t>𝜈</m:t></m:r></m:e><m:sub><m:r><a:rPr lang=\"en-US\" altLang=\"ko-KR\" sz=\"1200\" i=\"1\" dirty=\"0\"><a:latin typeface=\"Cambria Math\" panose=\"02040503050406030204\" pitchFamily=\"18\" charset=\"0\"/></a:rPr><m:t>𝑖</m:t></m:r></m:sub><m:sup><m:r><a:rPr lang=\"en-US\" altLang=\"ko-KR\" sz=\"1200\" i=\"1\" dirty=\"0\"><a:latin typeface=\"Cambria Math\" panose=\"02040503050406030204\" pitchFamily=\"18\" charset=\"0\"/></a:rPr><m:t>2</m:t></m:r></m:sup></m:sSubSup></m:num><m:den><m:sSub><m:sSubPr><m:ctrlPr><a:rPr lang=\"en-US\" altLang=\"ko-KR\" sz=\"1200\" i=\"1\" dirty=\"0\"><a:latin typeface=\"Cambria Math\" panose=\"02040503050406030204\" pitchFamily=\"18\" charset=\"0\"/></a:rPr></m:ctrlPr></m:sSubPr><m:e><m:r><a:rPr lang=\"en-US\" altLang=\"ko-KR\" sz=\"1200\" i=\"1\" dirty=\"0\"><a:latin typeface=\"Cambria Math\" panose=\"02040503050406030204\" pitchFamily=\"18\" charset=\"0\"/></a:rPr><m:t>𝐸</m:t></m:r></m:e><m:sub><m:r><a:rPr lang=\"en-US\" altLang=\"ko-KR\" sz=\"1200\" i=\"1\" dirty=\"0\"><a:latin typeface=\"Cambria Math\" panose=\"02040503050406030204\" pitchFamily=\"18\" charset=\"0\"/></a:rPr><m:t>𝑖</m:t></m:r></m:sub></m:sSub></m:den></m:f><m:r><a:rPr lang=\"en-US\" altLang=\"ko-KR\" sz=\"1200\" i=\"0\" dirty=\"0\"><a:latin typeface=\"Cambria Math\" panose=\"02040503050406030204\" pitchFamily=\"18\" charset=\"0\"/></a:rPr><m:t>+</m:t></m:r><m:f><m:fPr><m:ctrlPr><a:rPr lang=\"en-US\" altLang=\"ko-KR\" sz=\"1200\" i=\"1\" dirty=\"0\"><a:latin typeface=\"Cambria Math\" panose=\"02040503050406030204\" pitchFamily=\"18\" charset=\"0\"/></a:rPr></m:ctrlPr></m:fPr><m:num><m:r><a:rPr lang=\"en-US\" altLang=\"ko-KR\" sz=\"1200\" i=\"1\" dirty=\"0\"><a:latin typeface=\"Cambria Math\" panose=\"02040503050406030204\" pitchFamily=\"18\" charset=\"0\"/></a:rPr><m:t>1</m:t></m:r><m:r><a:rPr lang=\"en-US\" altLang=\"ko-KR\" sz=\"1200\" i=\"0\" dirty=\"0\"><a:latin typeface=\"Cambria Math\" panose=\"02040503050406030204\" pitchFamily=\"18\" charset=\"0\"/></a:rPr><m:t>−</m:t></m:r><m:sSubSup><m:sSubSupPr><m:ctrlPr><a:rPr lang=\"en-US\" altLang=\"ko-KR\" sz=\"1200\" i=\"1\" dirty=\"0\"><a:latin typeface=\"Cambria Math\" panose=\"02040503050406030204\" pitchFamily=\"18\" charset=\"0\"/></a:rPr></m:ctrlPr></m:sSubSupPr><m:e><m:r><a:rPr lang=\"en-US\" altLang=\"ko-KR\" sz=\"1200\" i=\"1\" dirty=\"0\"><a:latin typeface=\"Cambria Math\" panose=\"02040503050406030204\" pitchFamily=\"18\" charset=\"0\"/></a:rPr><m:t>𝜈</m:t></m:r></m:e><m:sub><m:r><a:rPr lang=\"en-US\" altLang=\"ko-KR\" sz=\"1200\" i=\"1\" dirty=\"0\"><a:latin typeface=\"Cambria Math\" panose=\"02040503050406030204\" pitchFamily=\"18\" charset=\"0\"/></a:rPr><m:t>𝑗</m:t></m:r></m:sub><m:sup><m:r><a:rPr lang=\"en-US\" altLang=\"ko-KR\" sz=\"1200\" i=\"1\" dirty=\"0\"><a:latin typeface=\"Cambria Math\" panose=\"02040503050406030204\" pitchFamily=\"18\" charset=\"0\"/></a:rPr><m:t>2</m:t></m:r></m:sup></m:sSubSup></m:num><m:den><m:sSub><m:sSubPr><m:ctrlPr><a:rPr lang=\"en-US\" altLang=\"ko-KR\" sz=\"1200\" i=\"1\" dirty=\"0\"><a:latin typeface=\"Cambria Math\" panose=\"02040503050406030204\" pitchFamily=\"18\" charset=\"0\"/></a:rPr></m:ctrlPr></m:sSubPr><m:e><m:r><a:rPr lang=\"en-US\" altLang=\"ko-KR\" sz=\"1200\" i=\"1\" dirty=\"0\"><a:latin typeface=\"Cambria Math\" panose=\"02040503050406030204\" pitchFamily=\"18\" charset=\"0\"/></a:rPr><m:t>𝐸</m:t></m:r></m:e><m:sub><m:r><a:rPr lang=\"en-US\" altLang=\"ko-KR\" sz=\"1200\" i=\"1\" dirty=\"0\"><a:latin typeface=\"Cambria Math\" panose=\"02040503050406030204\" pitchFamily=\"18\" charset=\"0\"/></a:rPr><m:t>𝑗</m:t></m:r></m:sub></m:sSub></m:den></m:f></m:oMath></m:oMathPara>",
+      "fallback_sha256": [
+        "a6fcf6c5cf21aeea839a85136c20033350bed9a9f5d77ec702a20f7911efce29"
+      ]
+    }
+  ],
+  "normal_text": [
+    "DEM governing equations: particle motion and contact forces",
+    "Model",
+    "This work — implemented equations of LIGGGHTS-PUBLIC 3.8.0 [2]; linear hysteretic law [1]",
+    "DEM model",
+    "Governing equations · calculation steps",
+    "every ",
+    "Δt",
+    "Contact detection",
+    "Contact forces ③–⑤",
+    "Time integration ①–②",
+    "Update ",
+    "x",
+    " · ",
+    "v",
+    " · ",
+    "ω",
+    "① Translation",
+    "Newton's 2nd law",
+    "contact + gravity + global damping",
+    "② Rotation",
+    "contact torque",
+    "+ rolling resistance ",
+    "M",
+    "r",
+    " (④)",
+    "③ Normal contact force",
+    "linear hysteresis + adhesion",
+    "(non-saturated branch)",
+    "④ Tangential friction · rolling resistance",
+    "tangential spring (Coulomb limit)",
+    "rolling resistance (CDT)",
+    "ω",
+    "r",
+    " = ",
+    "ω",
+    "i",
+    " − ",
+    "ω",
+    "j",
+    "⑤ Contact stiffness",
+    "material (",
+    "E",
+    ", ",
+    "ν",
+    ") → contact stiffness ",
+    "k",
+    "1",
+    "V",
+    ": characteristic impact velocity",
+    " ",
+    " ",
+    " ",
+    " ",
+    " ",
+    " ",
+    " ",
+    " ",
+    "Load",
+    "i",
+    "j",
+    "F",
+    "n",
+    "F",
+    "t",
+    "M",
+    "r",
+    "m",
+    "i",
+    "g",
+    "Forces on particle i",
+    "(same model for particle–particle",
+    "and particle–wall contacts)",
+    "Per particle: ",
+    "translational and rotational equations of motion",
+    "; per contact pair: contact force and rolling-resistance torque.",
+    "Global damping −γv_i in ①: ",
+    "γ = 0.5 during stabilization and compression, 1e-5 during settling and relaxation (input-deck units) — see Problem 4.",
+    "Next: what a fixed-sphere contact law cannot capture"
+  ],
+  "notes": [
+    "Sources: docs/dem_governing_equations_report_20261009.md §1 (literature form ↔ implemented form ↔ source lines of LIGGGHTS-PUBLIC 3.8.0, commit 3d5c00f) and §3 (deck values); docs/dem_governing_equations_background_20261011.md §2.3 (order of one time step: contact detection → contact forces → integration → update), §3.1 (translational and rotational equations, eqs 1–2), §5.2 (k1 from E*, R*, m* and V), §5.3 (hooke/hysteresis), §6 (tangential spring with Coulomb limit), §7 (rolling resistance, CDT), §8.2 (global viscous damping), §9 (compression procedure), §11 (limits). Equations ①–⑤, the force diagram and the process strip are copied from the author's 10-09 slide: equation objects and pictures unchanged, Korean labels translated, project header removed. Qualifiers: these are the implemented equations of the LIGGGHTS-PUBLIC 3.8.0 hooke/hysteresis model [2], read from the source code, not re-derived by a run; the linear hysteretic law (loading stiffness k1, unloading/reloading stiffness k2, adhesion branch −k_c δ) follows Luding 2008 [1]; ③ shows the non-saturated branch only (the saturated branch and the k2(δmax) interpolation are in the report); ④ shows the spring part (tangential damping in non-slip steps is omitted); k_t = k_n in this model; the rolling torque uses k_n δ, not the hysteretic normal force; k1 depends on mass and the characteristic velocity V (k1 ∝ m*^(1/5) V^(2/5)), so V acts as a stiffness input in quasi-static compaction; the SE modulus 1.35 GPa entering E* is a calibrated input. The global damping term −γv_i in ① takes a large share of the plate reaction during compression (ledger DEMP-01, open) — see the Problem 4 slide. Particle–particle and particle–wall contacts use the same model."
+  ],
+  "available_originals": [
+    {
+      "path": "C:\\Users\\Administrator\\Downloads\\DEM_Equations_final_20261009 (1).pptx",
+      "sha256": "bb32eb04439e3a7ecf75cf6cef859b31b46f31bbea1ad25dcfa09a10ec581046",
+      "pages": []
+    },
+    {
+      "path": "C:\\Users\\Administrator\\Downloads\\DEM_Equations_final_20261009 (2).pptx",
+      "sha256": "9f5e52f95c0ba95b715b021012727f1b6749de15a98cd7c7e5f86878905f4258",
+      "pages": []
+    },
+    {
+      "path": "C:\\Users\\Administrator\\Downloads\\DEM_Equations_Final_20261009.pptx",
+      "sha256": "2855b74c338790fd33abcc8e75667e96820d0519d92ac63b2f9a671afbadd392",
+      "inspection_error": "\"There is no item named '/ppt/notesSlides/notesSlide1.xml' in the archive\""
+    },
+    {
+      "path": "C:\\Users\\Administrator\\Downloads\\DEM_Equations_ours_20261009 (1).pptx",
+      "sha256": "9b5ad9bd1a801916953298ef6f4f19537cf827cbd13b7f31f4bb7bfb53b7bdaf",
+      "pages": []
+    },
+    {
+      "path": "C:\\Users\\Administrator\\Downloads\\DEM_Equations_ours_20261009 (2).pptx",
+      "sha256": "946cf628a7b95f86172426e0358eb9823d076b98ee953cf438017b6bb62365a5",
+      "pages": []
+    },
+    {
+      "path": "C:\\Users\\Administrator\\Downloads\\DEM_Equations_ours_20261009.pptx",
+      "sha256": "fbf0d4fcb4068f979779b4d05758775d31a7389eb7f85fa0163255fe5b07a569",
+      "pages": []
+    }
+  ],
+  "torque_lever_counterexample": {
+    "R_um": 0.5,
+    "overlap_um": 0.1,
+    "Ft_uN": 1.0,
+    "source_c_r_um": 0.45,
+    "slide_torque_uN_um": 0.5,
+    "source_torque_uN_um": 0.45,
+    "relative_excess": 0.11111111111111116
+  }
+}

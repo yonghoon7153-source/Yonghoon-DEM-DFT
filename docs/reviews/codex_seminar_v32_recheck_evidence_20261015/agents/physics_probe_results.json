@@ -1,0 +1,144 @@
+{
+  "scope": "Archive reads and independent arithmetic only; no simulation or producer import",
+  "archives": [
+    {
+      "path": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\seminar_recheck_v32_20261014\\source\\docs\\data\\ps73_damping_branch_20261007\\ibb_20261009\\B_20261009_101443.report.tgz",
+      "sha256": "9cb7100b5ce1da6e32bc87975af2dfc25ca6ff81804b05fdf0424b58b12f5db1",
+      "bytes": 97891
+    },
+    {
+      "path": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\seminar_recheck_v32_20261014\\baseline\\ps73_logs.tgz",
+      "sha256": "1593cb3fb6003d2a6abf8d4f48a41c56e8781b68d56242074dd381c3051e1cb3",
+      "bytes": 171447
+    }
+  ],
+  "thermo": {
+    "B_stop_all_same_step_rows": [
+      {
+        "step": 3125000,
+        "atoms": 160420,
+        "ke_J": 1.6950666e-05,
+        "cpu_s": 249.61713,
+        "pressure_deck_MPa": 0.30090644,
+        "pressure_physical_MPa": 300.90644
+      },
+      {
+        "step": 3125000,
+        "atoms": 160420,
+        "ke_J": 1.6950666e-05,
+        "cpu_s": 0.0,
+        "pressure_deck_MPa": 0.32670943,
+        "pressure_physical_MPa": 326.70943
+      },
+      {
+        "step": 3125000,
+        "atoms": 160420,
+        "ke_J": 1.6950666e-05,
+        "cpu_s": 0.0,
+        "pressure_deck_MPa": 0.0,
+        "pressure_physical_MPa": 0.0
+      }
+    ],
+    "B_end_all_same_step_rows": [
+      {
+        "step": 3735000,
+        "atoms": 160407,
+        "ke_J": 2.175747e-07,
+        "cpu_s": 255.23587,
+        "pressure_deck_MPa": 0.29927373,
+        "pressure_physical_MPa": 299.27373
+      },
+      {
+        "step": 3735000,
+        "atoms": 160407,
+        "ke_J": 2.175747e-07,
+        "cpu_s": 0.0,
+        "pressure_deck_MPa": 0.32605006,
+        "pressure_physical_MPa": 326.05006
+      }
+    ],
+    "selected_regular_stop": {
+      "step": 3125000,
+      "atoms": 160420,
+      "ke_J": 1.6950666e-05,
+      "cpu_s": 249.61713,
+      "pressure_deck_MPa": 0.30090644,
+      "pressure_physical_MPa": 300.90644
+    },
+    "selected_regular_end": {
+      "step": 3735000,
+      "atoms": 160407,
+      "ke_J": 2.175747e-07,
+      "cpu_s": 255.23587,
+      "pressure_deck_MPa": 0.29927373,
+      "pressure_physical_MPa": 299.27373
+    },
+    "original_relax": {
+      "step": 3225000,
+      "atoms": 160417,
+      "ke_J": 1.2554088e-07,
+      "cpu_s": 3677.268,
+      "pressure_deck_MPa": 0.16534203,
+      "pressure_physical_MPa": 165.34203
+    }
+  },
+  "mesh": {
+    "stop": {
+      "vertices": 6,
+      "z_deck_m": 0.111052,
+      "physical_um": 111.05199999999999
+    },
+    "end": {
+      "vertices": 6,
+      "z_deck_m": 0.105842,
+      "physical_um": 105.842
+    }
+  },
+  "derived_from_saved_analyzer_output_not_raw_atoms": {
+    "stop_eps_pct": 14.953059590495876,
+    "end_eps_pct": 10.769254596541355,
+    "stop_drag_N": 434.18047796400066,
+    "drag_share_target_pct": 57.89073039520009,
+    "sphere_volume_loss_um3": 6.806784084539526,
+    "thirteen_SE_spheres_um3": 6.806784082777885,
+    "phase_counts_stop": {
+      "1": 280,
+      "2": 1376,
+      "3": 158764
+    },
+    "phase_counts_end": {
+      "1": 280,
+      "2": 1376,
+      "3": 158751
+    }
+  },
+  "arithmetic": {
+    "delta_h_um": -5.209999999999994,
+    "delta_eps_pp": -4.183804993954521,
+    "relaxation_pressure_drop_fraction_pct": 45.05201350958124,
+    "physical_target_force_N_for_50um_square": 0.75
+  },
+  "checks": {
+    "B_archive_receipt_sha": true,
+    "normal_stop_rounds_to_slide": true,
+    "normal_end_rounds_to_slide": true,
+    "original_relax_rounds_to_slide": true,
+    "stop_mesh_rounds_to_slide": true,
+    "end_mesh_rounds_to_slide": true,
+    "atom_loss_13_in_thermo": true,
+    "trace_129_rows": true,
+    "trace_hold_122_rows": true,
+    "analysis_pressure_matches_trace": true,
+    "analysis_eps_rounds_to_slide": true,
+    "analysis_drag_rounds_to_slide": true,
+    "no_atom_dumps_in_report": true,
+    "analysis_stop_eps_arithmetic": true,
+    "analysis_end_eps_arithmetic": true
+  },
+  "all_checks_pass": true,
+  "limits": [
+    "Atom dumps are absent: drag/porosity phase sums cannot be reconstructed from individual velocities/radii.",
+    "Numerical self-consistency does not certify equilibrium, conservation, or experimental validity.",
+    "The original relaxed pressure belongs to the original path, not the B servo path."
+  ]
+}

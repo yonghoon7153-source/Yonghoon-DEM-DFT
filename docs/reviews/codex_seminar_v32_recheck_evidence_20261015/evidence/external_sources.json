@@ -1,0 +1,106 @@
+{
+  "lit_pin": "ebfed0ff5cb3ef81d386ca0575037469a824e3e5",
+  "liggghts_pin": "3d5c00f20519e6bb6eb6756f51f1ad36564e649d",
+  "files": [
+    {
+      "path": "agents\\lit\\egermann1983_ordered_vs_interactive_mixture_nomenclature.md",
+      "raw_path": "external_fetched\\egermann1983_ordered_vs_interactive_mixture_nomenclature.md",
+      "url": "https://raw.githubusercontent.com/yonghoon7153-source/Yonghoon-DEM-DFT/ebfed0ff5cb3ef81d386ca0575037469a824e3e5/litdb/papers/egermann1983_ordered_vs_interactive_mixture_nomenclature.md",
+      "bytes": 34930,
+      "local_equal": false,
+      "equal_ignoring_final_newline": true,
+      "sha256": "f0156c3226a019ba399070794575c8b461f402a3785abb19866224698ec367c9",
+      "blob_sha": "e3da7226572b4cf9a7195e47db031840625d8362"
+    },
+    {
+      "path": "agents\\lit\\faka2026_particle_size_consolidation_strain_lpscl.md",
+      "raw_path": "external_fetched\\faka2026_particle_size_consolidation_strain_lpscl.md",
+      "url": "https://raw.githubusercontent.com/yonghoon7153-source/Yonghoon-DEM-DFT/ebfed0ff5cb3ef81d386ca0575037469a824e3e5/litdb/papers/faka2026_particle_size_consolidation_strain_lpscl.md",
+      "bytes": 38365,
+      "local_equal": false,
+      "equal_ignoring_final_newline": true,
+      "sha256": "1ad598fe5f4920501e5f7b0fae5237856e29e86e8fa99d038bc52c1701a439f3",
+      "blob_sha": "e5e3c668b0d365be193712b730daf356f1701aac"
+    },
+    {
+      "path": "agents\\lit\\hersey1975_ordered_mixing_concept.md",
+      "raw_path": "external_fetched\\hersey1975_ordered_mixing_concept.md",
+      "url": "https://raw.githubusercontent.com/yonghoon7153-source/Yonghoon-DEM-DFT/ebfed0ff5cb3ef81d386ca0575037469a824e3e5/litdb/papers/hersey1975_ordered_mixing_concept.md",
+      "bytes": 34844,
+      "local_equal": false,
+      "equal_ignoring_final_newline": true,
+      "sha256": "6b5d2991c805248fb04c96820e4b4e243d8e1550e43b903f05bfeb14e2446640",
+      "blob_sha": "39dc6f23a1d7f7947cee0160610229a224848edc"
+    },
+    {
+      "path": "agents\\lit\\kim2012_lno_lco_surface_energy_morphology_dft.md",
+      "raw_path": "external_fetched\\kim2012_lno_lco_surface_energy_morphology_dft.md",
+      "url": "https://raw.githubusercontent.com/yonghoon7153-source/Yonghoon-DEM-DFT/ebfed0ff5cb3ef81d386ca0575037469a824e3e5/litdb/papers/kim2012_lno_lco_surface_energy_morphology_dft.md",
+      "bytes": 62471,
+      "local_equal": false,
+      "equal_ignoring_final_newline": true,
+      "sha256": "74b6fc6bea2837161dc0a517501b8d0ec3d5dbeb14ce26bd7f2c5c6fa5c53adc",
+      "blob_sha": "2c4c8ac524dd4accc25021baac58ffdb248546bd"
+    },
+    {
+      "path": "agents\\lit\\kissel2026_mechanofusion_derived_cathode_composite_microstructures_scalable.md",
+      "raw_path": "external_fetched\\kissel2026_mechanofusion_derived_cathode_composite_microstructures_scalable.md",
+      "url": "https://raw.githubusercontent.com/yonghoon7153-source/Yonghoon-DEM-DFT/ebfed0ff5cb3ef81d386ca0575037469a824e3e5/litdb/papers/kissel2026_mechanofusion_derived_cathode_composite_microstructures_scalable.md",
+      "bytes": 91524,
+      "local_equal": false,
+      "equal_ignoring_final_newline": true,
+      "sha256": "429b5c9c7c47451ef5f8d052b9441fd6b54b5c0304d66d0d9ff0e9d539177914",
+      "blob_sha": "74e763b6ec716ae909400434bd49ff61aa534126"
+    },
+    {
+      "path": "agents\\lit\\thompson2026_high_pressure_densification_lps_lpscl_xrd_tomography.md",
+      "raw_path": "external_fetched\\thompson2026_high_pressure_densification_lps_lpscl_xrd_tomography.md",
+      "url": "https://raw.githubusercontent.com/yonghoon7153-source/Yonghoon-DEM-DFT/ebfed0ff5cb3ef81d386ca0575037469a824e3e5/litdb/papers/thompson2026_high_pressure_densification_lps_lpscl_xrd_tomography.md",
+      "bytes": 37204,
+      "local_equal": false,
+      "equal_ignoring_final_newline": true,
+      "sha256": "d248f7efa559b651692591491560f27acc213aaffea09f280027dbf645f4f2eb",
+      "blob_sha": "7a7ac7dfaf91d47172596c3e1c589af897ad3de2"
+    },
+    {
+      "path": "source_upstream\\surface_model_default.h",
+      "raw_path": "external_fetched\\surface_model_default.h",
+      "url": "https://raw.githubusercontent.com/CFDEMproject/LIGGGHTS-PUBLIC/3d5c00f20519e6bb6eb6756f51f1ad36564e649d/src/surface_model_default.h",
+      "bytes": 8945,
+      "local_equal": true,
+      "equal_ignoring_final_newline": true,
+      "sha256": "b1ede302e309481b114e09760739133ac053f0b37489eddf0eccfeb69af9dd68",
+      "blob_sha": "2451e0c53e4605d375a072289ee1d0d6b360b233"
+    },
+    {
+      "path": "source_upstream\\tangential_model_history.h",
+      "raw_path": "external_fetched\\tangential_model_history.h",
+      "url": "https://raw.githubusercontent.com/CFDEMproject/LIGGGHTS-PUBLIC/3d5c00f20519e6bb6eb6756f51f1ad36564e649d/src/tangential_model_history.h",
+      "bytes": 16017,
+      "local_equal": true,
+      "equal_ignoring_final_newline": true,
+      "sha256": "bf3d62f09eda2f9b1ca380ce911c9b85def1df2ae82e885cefe9606ef2be47b5",
+      "blob_sha": "3015cde4f1cad4612c08e49682143aee3492b746"
+    },
+    {
+      "path": "source_upstream\\normal_model_hooke_hysteresis.h",
+      "raw_path": "external_fetched\\normal_model_hooke_hysteresis.h",
+      "url": "https://raw.githubusercontent.com/CFDEMproject/LIGGGHTS-PUBLIC/3d5c00f20519e6bb6eb6756f51f1ad36564e649d/src/normal_model_hooke_hysteresis.h",
+      "bytes": 11389,
+      "local_equal": true,
+      "equal_ignoring_final_newline": true,
+      "sha256": "fd8c4c713dca0bc2bab757a6484d9429f0362ccd86075f173a162b256674d706",
+      "blob_sha": "3921ff5c767324e8825e76ff7528563e92e8efd7"
+    },
+    {
+      "path": "source_upstream\\rolling_model_cdt.h",
+      "raw_path": "external_fetched\\rolling_model_cdt.h",
+      "url": "https://raw.githubusercontent.com/CFDEMproject/LIGGGHTS-PUBLIC/3d5c00f20519e6bb6eb6756f51f1ad36564e649d/src/rolling_model_cdt.h",
+      "bytes": 6905,
+      "local_equal": true,
+      "equal_ignoring_final_newline": true,
+      "sha256": "2e2a03e17b4720f7ece140a08e679ddf2fd9c1fc6e2821dbbded2de38644f4b1",
+      "blob_sha": "8d7f2476d709a153aebcdb8f8ca68881889373d5"
+    }
+  ]
+}
