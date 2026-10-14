@@ -823,4 +823,8 @@ S1 · S2 · S4 문턱 · P_meas 1 MPa · 사다리 · Δz_A · Δz_B · v₀ · 
   r8 머리 `compute cpl` (pair/gran/local) 과 관측 `compute hb_ph` 가 함께 살았다 (LIGGGHTS 는 compute 를 만들 때 등록하고 하나만 받는다).
 - 고침 (1저자 Q1 *"권고대로 해"*) = 이력 시험 생성기만 — `hb_ph` 앞 `uncompute cpl` · 머리 글자 그대로 · 시험 먼저 ⑮ (131 중 7 실패 → 139 / 139) · 새 봉인 ·
   키트 `docs/data/ps45_unload_20261009/README.md` §1-5 · 원장 `ULK-02`.  판정 규칙 · 문턱 · 등록 값 · 본 키트 덱 64 (같은 규칙으로 문제 0) 변경 없음.
-- ⬜ 재실행 (같은 명령 · 새 커밋 작업 트리) → 결과를 이 절에 덧붙인다.
+- ✅ **재실행 10-14 (ibb job 283122 · 작업 트리 `f9edcc416` · dirty 0 · 이력 시험 봉인 `241277b2…` · 등록 빌드 LMP) = H0–H5 전부 PASS** (읽는 쪽 rc 0) —
+  ⓐ run 끝 자동 restart 없음 (주기 배수만 · 본 키트 연장 덱의 명시 write_restart 그대로) · ⓑ 총힘 출력 시점 PASS (C1 가정과 같음) · SYN PASS (판 접촉 4 → 3) ·
+  ⓓ 판 법선력 부호 −1 = 표 (`plate_fn_compressive_sign` 바꿀 것 없음) — 결과 전 기대 (키트 README §1-3) 와 전부 같다.  컨테이너 재판독 = 같은 판정 JSON ·
+  본 키트 복원 판정의 이력 시험 칸 식 = 통과.  증거 = `docs/reviews/dem_unloading_history_test_20261014/` (보고 묶음 바이트 그대로 · sha256 `be0acbd7…`) · 원장 `ULK-02` claimed_fixed.
+  ⛔ 본 R · 10:0 연장 · U 의 GO 아님 — 다음 = §13-6 ④ Codex 키트 재검토 (`docs/reviews/codex_dem_unloading_kit_request_20261013.md` · 이 결과 동봉).

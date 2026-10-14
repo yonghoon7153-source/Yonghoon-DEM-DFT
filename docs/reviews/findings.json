@@ -10510,12 +10510,17 @@
     {
       "id": "ULK-02",
       "severity": "P2",
-      "status": "open",
+      "status": "claimed_fixed",
       "owner": "claude",
       "found_by": "1저자 ibb 이력 시험 첫 실행 10-13 (job 281180 · H0–H5 TECH · LIGGGHTS ERROR `Pair gran allows only one compute of type pair/local` · 3d5c00f pair_gran.cpp 581)",
       "opened_in": "docs/data/ps45_unload_20261009/README.md",
       "title": "이력 시험 덱 일곱이 pair/gran/local compute 둘 (r8 머리 cpl + 관측 hb_ph) 을 함께 살렸다 — LIGGGHTS 는 compute 를 만들 때 등록하고 하나만 받아 H0 에서 멈춤 (전 단계 TECH) · 생성기 selftest 가 이 등록 규칙을 몰랐다",
-      "note": "고침 = 생성기 `docs/data/ps45_unload_20261009/history_test/make_history_decks.py` (hb_ph 앞 `uncompute cpl` · 머리 글자 그대로 · 덱 일곱 · SHA256SUMS 새 봉인 sha256 241277b2…) — 1저자 Q1 *\"권고대로 해\"* · 이 원장 줄과 같은 커밋.  시험 먼저 ⑮ (함께 사는 pair/gran/local ≤ 1 · wall/gran/local ≤ 1 · 내리는 compute 를 쓰는 덤프 없음 + 규칙 자체 반례 넷) = 고치기 전 131 중 7 실패 → 139 / 139.  본 키트 덱 64 = 같은 규칙 문제 0.  판정 규칙 변경 없음.  claimed_fixed = ibb 재실행 H0 통과 뒤 · 닫힘 = Codex 키트 재검토.  자리 = 키트 README §1-5 · 등록 §13-7-4."
+      "note": "고침 = 생성기 `docs/data/ps45_unload_20261009/history_test/make_history_decks.py` (hb_ph 앞 `uncompute cpl` · 머리 글자 그대로 · 덱 일곱 · SHA256SUMS 새 봉인 sha256 241277b2…) — 1저자 Q1 *\"권고대로 해\"* · 이 원장 줄과 같은 커밋.  시험 먼저 ⑮ (함께 사는 pair/gran/local ≤ 1 · wall/gran/local ≤ 1 · 내리는 compute 를 쓰는 덤프 없음 + 규칙 자체 반례 넷) = 고치기 전 131 중 7 실패 → 139 / 139.  본 키트 덱 64 = 같은 규칙 문제 0.  판정 규칙 변경 없음.  claimed_fixed = ibb 재실행 H0 통과 뒤 · 닫힘 = Codex 키트 재검토.  자리 = 키트 README §1-5 · 등록 §13-7-4.  ★ 10-14 claimed_fixed — ibb 재실행 (job 283122) H0 PASS (H1–H5 · SYN 도 PASS · ⓓ 판 법선력 부호 −1 = 표) · 증거 = docs/reviews/dem_unloading_history_test_20261014/ (보고 묶음 바이트 그대로 sha256 be0acbd7…) · 닫힘 = Codex 키트 재검토.",
+      "claimed_fixed_sha": "dc6d285a9",
+      "evidence_tests": [
+        "docs/data/ps45_unload_20261009/history_test/make_history_decks.py (--selftest ⑮ 함께 사는 pair/gran/local ≤ 1 · wall/gran/local ≤ 1 · 규칙 자체 반례 넷 — 고치기 전 131 중 7 실패 → 139/139 at dc6d285a9)",
+        "docs/reviews/dem_unloading_history_test_20261014/README.md (ibb 재실행 job 283122 · 작업 트리 f9edcc416 · 봉인 241277b2… · 등록 빌드 LMP — H0–H5 전부 PASS · 읽는 쪽 rc 0 · 컨테이너 재판독 같은 판정 JSON)"
+      ]
     }
   ]
 }

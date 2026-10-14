@@ -1,0 +1,52 @@
+job 283122 · 노드 node01 · 시작 2026-10-14T09:47:30+09:00 · kit /home/yonghoon/unload_src_f9edcc41/docs/data/ps45_unload_20261009/history_test · LMP /lustre/home/yonghoon/LIGGGHTS-PUBLIC/src/lmp_mpi · mpirun /home/yonghoon/.conda/envs/myenv/bin/mpirun
+[09:47:31] kit = /home/yonghoon/ps45_unload_hist_20261013/kit_20261014_094731
+[09:47:31] 사전 점검
+  ✓ 묶음 SHA256SUMS
+  ✓ LMP /lustre/home/yonghoon/LIGGGHTS-PUBLIC/src/lmp_mpi · sha256 = 등록 §11-1 ⓖ 빌드
+  ✓ mpirun --oversubscribe --bind-to none -np 6 (H2 = -np 4) · python3
+[09:47:31] 런 폴더 = /home/yonghoon/ps45_unload_hist_20261013/hist_20261014_094731
+[09:47:31] ▶ P (in.hist_producer.liggghts · -np 6)
+[09:47:36] ■ P rc=0
+[09:47:36] ▶ C6 (in.hist_consumer.liggghts · -np 6)
+[09:47:38] ■ C6 rc=0
+[09:47:38] ▶ C4 (in.hist_consumer.liggghts · -np 4)
+[09:47:39] ■ C4 rc=0
+[09:47:39] ▶ Ebot (in.hist_erase_bot.liggghts · -np 6)
+[09:47:41] ■ Ebot rc=0
+[09:47:42] ▶ Cbot (in.hist_consumer.liggghts · -np 6)
+[09:47:43] ■ Cbot rc=0
+[09:47:43] ▶ Etop (in.hist_erase_top.liggghts · -np 6)
+[09:47:45] ■ Etop rc=0
+[09:47:45] ▶ Ctop (in.hist_consumer.liggghts · -np 6)
+[09:47:47] ■ Ctop rc=0
+[09:47:47] ▶ Enone (in.hist_erase_none.liggghts · -np 6)
+[09:47:49] ■ Enone rc=0
+[09:47:49] ▶ Cnone (in.hist_consumer.liggghts · -np 6)
+[09:47:51] ■ Cnone rc=0
+[09:47:51] ▶ BAD (in.hist_badid.liggghts · -np 6)
+[09:47:53] ■ BAD rc=1
+[09:47:53]   (BAD 은 rc ≠ 0 이 기대값 — 잘못된 내부 ID)
+[09:47:53] ▶ SYN (in.hist_syntax_probe.liggghts · -np 6)
+[09:47:55] ■ SYN rc=0
+[09:47:55] ▶ PZ (in.hist_producer_zero.liggghts · -np 6)
+[09:47:57] ■ PZ rc=0
+[09:47:57] ▶ CZ (in.hist_consumer.liggghts · -np 6)
+[09:47:59] ■ CZ rc=0
+HISTORY_VERDICT H0=PASS H1=PASS H2=PASS H3=PASS H4=PASS H5=PASS
+  H0 PASS          문법 · 기술 (rc · 배너 · NP · 덤프 · reset 로그)
+  H1 PASS          같은 NP round-trip
+      primitive PASS · mesh PASS · pair PASS · sentinel {'primitive': 4, 'mesh': 4, 'pair': 5} · 같은 값 중복 0
+  H2 PASS          NP 바꿈 round-trip
+      primitive PASS · mesh PASS · pair PASS · sentinel {'primitive': 4, 'mesh': 4, 'pair': 5} · 같은 값 중복 0
+  H3 PASS          바닥 (primitive) 만 소거
+      pre_erase_observation=PASS · pre_all_zero=True · post_regen_ok=True · sentinel_erased=4 / 4 · control=PASS
+  H4 PASS          판 (mesh) 만 소거
+      pre_erase_observation=PASS · post_regen_ok=True · sentinel_erased=4 / 4 · control=PASS
+  H5 PASS          결손 · 0 뿐 분류
+      잘못된 ID → TECH (기대 TECH) · 0 뿐 → INCONCLUSIVE (기대 INCONCLUSIVE)
+  정보: 자동 restart step [1500] — run 끝 자동 restart 없음 — 주기 배수만 (10:0 연장 끝 3,660,000 은 명시 write_restart 가 필요)
+  정보: 총힘 출력 시점 (Z 입자 fz = −m g) = PASS
+  정보: SYN 문법 미리 지나가기 = PASS {'rc0_no_error': True, 'markers': True, 'dt_after_read_restart': True, 'Ps_signed_positive': True, 'count_W0': True, 'n_W0': 4, 'fn_sign_uniform': True, 'count_W1': True, 'n_W1': 3, 'lift_mesh_z': True, 'plate_z_formula': True, 'restart_end_written': True}
+  rc = 0 (0 = H0–H5 전부 기대대로)
+[09:47:59] 보낼 것: /home/yonghoon/ps45_unload_hist_20261013/hist_20261014_094731.report.tgz  sha256 be0acbd7841d0922604eee8aa31524fcddbe179a8240f937b317432dbebb0ca0
+[09:47:59] 끝 — 읽는 쪽 rc=0 (0 = H0–H5 전부 기대대로)

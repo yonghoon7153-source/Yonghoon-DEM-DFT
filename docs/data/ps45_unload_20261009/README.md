@@ -114,7 +114,12 @@ WSL 로 가져오는 꼴 (접속 정보는 자리표시): `scp -P <port> <user>@
   고친 뒤 139 / 139 (+ 머리 cpl 글자 그대로 8) · 읽는 쪽 38 / 38 그대로.  바뀐 파일 = 덱 일곱 · 생성기 · `SHA256SUMS` (SYN · 판 STL · 표 · 읽는 쪽 · 러너 · 래퍼 = 바이트 그대로) ·
   판정 규칙 (§1-3 · 읽는 쪽) 변경 없음.
 - 본 키트 덱 64 = 같은 ⑮ 규칙으로 문제 0 (pair/gran/local = 머리 cpl 하나).
-- 새 봉인 `history_test/SHA256SUMS` sha256 `241277b20aaccb8d1ab73c79fb9e0758138a3bed64751add98f7849b44697bf6` · ⬜ 재실행 = §1-4 그대로 (새 커밋 = 새 작업 트리 · 결과는 `hist_<시각>/` 로 갈린다).
+- 새 봉인 `history_test/SHA256SUMS` sha256 `241277b20aaccb8d1ab73c79fb9e0758138a3bed64751add98f7849b44697bf6` · 재실행 = §1-4 그대로 (새 커밋 = 새 작업 트리 · 결과는 `hist_<시각>/` 로 갈린다).
+- **재실행 10-14 (job 283122 · 작업 트리 `f9edcc416` · dirty 0 · kit 봉인 `241277b2…` · 등록 빌드 LMP) = H0–H5 전부 PASS** · 읽는 쪽 rc 0 · 30 초 ·
+  ⓐ run 끝 자동 restart 없음 (1500 배수만 — 본 키트 연장 덱의 명시 write_restart 그대로) · ⓑ 총힘 출력 시점 PASS (S3 C1 가정과 같음) · SYN PASS (판 접촉 4 → 3) ·
+  ⓓ 판 법선력 부호 **−1** = 표 `plate_fn_compressive_sign` (표 바꿀 것 없음) — 결과 전 기대와 전부 같다.  컨테이너 재판독 = 같은 판정 JSON (`run_dir` 만 다름) ·
+  본 키트 복원 판정의 이력 시험 칸 식 = 통과.  반입 · 대조 = `docs/reviews/dem_unloading_history_test_20261014/README.md` (보고 묶음 sha256 `be0acbd7…` · 바이트 그대로).
+  ⛔ 본 R · 10:0 연장 · U 의 GO 아님 — 다음 = Codex 키트 재검토.  ibb 의 런 폴더 `hist_20261014_094731/` 는 지우지 않는다 (§3 ③ 7:3 `RJ` 의 `HIST_VERDICT`).
 
 ## 2. 덱 (K2 · `make_unload_decks.py`) — 결과 0 건 · 실행은 Codex GO 뒤
 
@@ -165,7 +170,7 @@ conda activate myenv && python3 -I $K/make_unload_decks.py --check && python3 -I
 python3 -I $K/ul_reader.py copycmd ps_7_3_r45
 U=$HOME/ps45_unload_20261009 && mkdir -p $U/logs && python3 -I $K/ul_reader.py inputs $U ps_7_3_r45
 # ③ 7:3 복원 시험 (Ut0 → G0 → R → UN → UK) — 이력 시험 판정 JSON 을 넘긴다 (없으면 복원 판정 UNCONFIRMED)
-HV=$(ls -dt ~/ps45_unload_hist_20261013/hist_*/ | head -1)history_verdict.json
+HV=$HOME/ps45_unload_hist_20261013/hist_20261014_094731/history_verdict.json        # 10-14 재실행 PASS 런 (§1-5) — 이름으로 고정 (ls -dt 로 고르지 않는다 · 10-13 TECH 런이 같은 폴더에 있다)
 cd $U && bash $K/run_unload_ibb.sbatch $K ps_7_3_r45 RJ                                    # 사전 점검만 (끝 줄 "통과")
 cd $U && sbatch --export=ALL,HIST_VERDICT=$HV $K/run_unload_ibb.sbatch $K ps_7_3_r45 RJ
 head -3 $U/ps_7_3_r45/RJ/restore_verdict.json
