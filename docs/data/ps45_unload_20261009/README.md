@@ -3,7 +3,7 @@
 - 등록 (정본): `docs/reviews/dem_unloading_ps45_prereg_20261009.md` (이하 REG — §12 개정 1 · §13 개정 2) · 반영 계획 `docs/reviews/dem_unloading_ulr1_fix_plan_20261012.md` (✅ 1저자 10-12 Q1–Q4 권고대로) ·
   Codex 판정문 `docs/reviews/codex_review_dem_unloading_prereg_20261011.md` (CX1) · `docs/reviews/codex_review_dem_unloading_prereg_rereview_20261012.md` (CX2).
 - ⛔ **10-14 Codex 키트 재검토 (핀 `2783061ea`) = HOLD** — 이력 시험은 수용 · 본 키트 판독 · 복원 · 후속 · 러너에 P1 여섯 (`ULKR-01`~`06`) · P2 여섯 · 판정문 `docs/reviews/codex_review_dem_unloading_kit_20261014.md` · 수정 계획 `docs/reviews/dem_unloading_kit_fix_plan_20261014.md` (✅ 1저자 10-14 Q1–Q9 권고대로 = 전부 (가)).
-  → ✅ **수정 10-14 (시험 먼저 · 등록 개정 3 = REG §14 · 실행 기록 = 계획 §5)** — §2–§5 = 수정 뒤 판 · ⬜ 문법 fixture ibb 한 번 (§1-6 · 1저자) · ⬜ Codex 짧은 재확인
+  → ✅ **수정 10-14 (시험 먼저 · 등록 개정 3 = REG §14 · 실행 기록 = 계획 §5)** — §2–§5 = 수정 뒤 판 · ⬜ 문법 fixture ibb (§1-6 · 실행 1 = fixture 결함 `SELF-115` · 고침 `039abb141` → 실행 2 · 1저자) · ⬜ Codex 짧은 재확인
   (`docs/reviews/codex_dem_unloading_kit_fix_recheck_request_20261014.md` · 발송 = 1저자) · ⛔ 본 R · 10:0 연장 · U = 재확인 GO 뒤.
 - 이 README 가 **이름의 정본**이다 (REG §8-2 "이름은 가칭 · 키트 README 가 정본").
 - 지금 할 수 있는 것 = **§1 작은 침대 이력 시험 (H0–H5) 만** — 본 키트 봉인과 따로 봉인 (`history_test/SHA256SUMS`) 해서 먼저 돌릴 수 있다.
@@ -125,6 +125,8 @@ WSL 로 가져오는 꼴 (접속 정보는 자리표시): `scp -P <port> <user>@
   ⛔ 본 R · 10:0 연장 · U 의 GO 아님 — 다음 = Codex 키트 재검토.  ibb 의 런 폴더 `hist_20261014_094731/` 는 지우지 않는다 (§3 ③ 7:3 `RJ` 의 `HIST_VERDICT`).
 
 ### 1-6. 문법 fixture (Q8 · 등록 개정 3 §14-9 · Codex 판정문 10-14 §6) — ⬜ 1저자 ibb 한 번 · 본 R 전 PASS · 결과 0 건
+
+> **실행 1 (10-14 19:26 · ibb job 285220 · 작업 트리 `a30fe150e`) = FAIL (rc 2) — fixture 결함 (`SELF-115`)**: P ✓ · GA 기술 ✗ = 첫 창 (step 2100) 뒤 `ERROR: Mismatched fix in variable formula (../variable.cpp:1315)` — fixture 의 `gr_av` ave/time 입력이 하나 (= 전역 스칼라) 인데 `f_gr_av[1]` (벡터) 로 읽었다 · 그 뒤 표지 · 상태 파일 · restart · GB = 돌지 않음 (판정 칸 ✗ 는 전부 이 한 원인의 뒤따름) · 보고 묶음 `gram_20261014_192604.report.tgz` sha256 `015bd82b…` (반입 대기).  본 키트 덱 (`ul_av` 입력 셋) 은 해당 없음.  고침 `039abb141` = 본 키트 꼴 그대로 (입력 셋) + 검사 ⑰ (f_ID 읽는 꼴 ↔ fix 전역 출력 꼴 · `--selftest` · `--check`) · 판정 규칙 · 기대값 변경 없음 → ⬜ **실행 2** (같은 명령 · 새 핀).
 
 **왜**: SYN 은 move/mesh 한 번만 · 상태 파일 복귀 · 변수 주기 덤프를 지나가지 않았다 (판정문 §6 — *"SYN이 지나가지 않은 경로까지 실제 바이너리 PASS라고 확대하지 말 것"*).
 빠진 경로만 이 fixture 가 한 번씩 지나간다 · H0–H5 는 다시 돌리지 않는다.
