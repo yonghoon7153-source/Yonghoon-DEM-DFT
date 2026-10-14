@@ -1,0 +1,332 @@
+{
+  "results": [
+    {
+      "name": "ul_lib_selftest",
+      "argv": [
+        "C:\\Users\\Administrator\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\python.exe",
+        "-X",
+        "utf8",
+        "-B",
+        "-I",
+        "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\dem_unloading_kit_reverify_20261014\\source\\docs\\data\\ps45_unload_20261009\\ul_lib.py",
+        "--selftest"
+      ],
+      "rc": 0,
+      "seconds": 0.11396980285644531,
+      "tail": [
+        "  ✓ L8 thermo: setup 줄 둘 · 정규 줄 = 600 · 1100 · 1600 · 겹친 1100 은 정규 (앞 줄) 값",
+        "  ✓ L9 덤프 custom 왕복",
+        "  ✓ L10 덤프: 비유한 · 행 수 어긋남 = 문제",
+        "  ✓ L11 덤프 local 왕복 · 열 이름 대조",
+        "  ✓ L12 fnum: NaN · inf · 빈 = None",
+        "selftest: PASS (0 실패)",
+        "",
+        "STDERR"
+      ]
+    },
+    {
+      "name": "ul_s3_selftest",
+      "argv": [
+        "C:\\Users\\Administrator\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\python.exe",
+        "-X",
+        "utf8",
+        "-B",
+        "-I",
+        "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\dem_unloading_kit_reverify_20261014\\source\\docs\\data\\ps45_unload_20261009\\ul_s3.py",
+        "--selftest"
+      ],
+      "rc": 0,
+      "seconds": 0.7292001247406006,
+      "tail": [
+        "  ✓ F8 단위 환산 (힘 · 무게 × 1000) = 같은 R",
+        "  ✓ F9 누락 열 (fz 없음) = NOT_COMPUTED",
+        "  ✓ F9 비유한 힘 (NaN) = NOT_COMPUTED (비교로 흘려보내지 않는다)",
+        "  ✓ F10 두 덤프의 step 이 다름 (동일 시점 아님) = NOT_COMPUTED",
+        "  ✓ F11 판 위로 이탈한 입자 · S0 에 없던 id 는 집합 밖 (자유 낙하 −m g 가 잔차에 안 들어간다)",
+        "selftest: PASS (0 실패)",
+        "",
+        "STDERR"
+      ]
+    },
+    {
+      "name": "ul_observers_selftest",
+      "argv": [
+        "C:\\Users\\Administrator\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\python.exe",
+        "-X",
+        "utf8",
+        "-B",
+        "-I",
+        "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\dem_unloading_kit_reverify_20261014\\source\\docs\\data\\ps45_unload_20261009\\ul_observers.py",
+        "--selftest"
+      ],
+      "rc": 0,
+      "seconds": 0.08393120765686035,
+      "tail": [
+        "  ✓ O11 보간 높이 M (프레임 없음) = ε_all 만 (1 − C_all / h) · inside 미계산 · S0 프레임 결손 (중복 · 비유한 반경) = 봉인 없음",
+        "  ✓ O12 W_proxy (덱 A 0.0025 · Δh 1e-3 덱 m · P 0.01 → 0.001 덱 MPa) = 1.375e-8 J 보고",
+        "  ✓ O12 W_proxy 비유한 점 · 점 하나 = 미계산 (None — 0 J 아님)",
+        "  ✓ O13 KE 기준: 회전 = UK 창 평균 중앙값 · S2 문턱 = 10 × (병진 + 회전)",
+        "  ✓ O13 UK 창 결손 (0 개 · 비유한) = 기준 없음 (None — S2 판정 불가로 넘긴다)",
+        "selftest: PASS (0 실패)",
+        "",
+        "STDERR"
+      ]
+    },
+    {
+      "name": "ul_gates_selftest",
+      "argv": [
+        "C:\\Users\\Administrator\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\python.exe",
+        "-X",
+        "utf8",
+        "-B",
+        "-I",
+        "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\dem_unloading_kit_reverify_20261014\\source\\docs\\data\\ps45_unload_20261009\\ul_gates.py",
+        "--selftest"
+      ],
+      "rc": 0,
+      "seconds": 0.2099761962890625,
+      "tail": [
+        "  ✓ F1 복원 판정: 다 참 = RESTORED",
+        "  ✓ F1 이력 시험 미통과 · 미실행 = UNCONFIRMED (표지만 달아 U 로 넘기지 않는다)",
+        "  ✓ F1 관측 문법 실패 = SYNTAX_FAIL · reset 로그 결손 · G0 위반 · PRE ≠ POST = VALUE_MISMATCH",
+        "  ✓ F1 보조 소거 진단 (UN) 이 아무 차이도 못 봄 = UNCONFIRMED (판별력 없음)",
+        "  ✓ F2 ULKR-05 PRE · POST 관측 결손 (비교 미계산 = None) = UNCONFIRMED — 수치 불일치 (False = VALUE_MISMATCH) 와 따로 · 소거 진단 미계산 (None) 도 UNCONFIRMED",
+        "selftest: PASS (0 실패)",
+        "",
+        "STDERR"
+      ]
+    },
+    {
+      "name": "ul_reader_selftest",
+      "argv": [
+        "C:\\Users\\Administrator\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\python.exe",
+        "-X",
+        "utf8",
+        "-B",
+        "-I",
+        "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\dem_unloading_kit_reverify_20261014\\source\\docs\\data\\ps45_unload_20261009\\ul_reader.py",
+        "--selftest"
+      ],
+      "rc": 0,
+      "seconds": 9.09144639968872,
+      "tail": [
+        "  ✓ R19 판독기의 바닥 이력 관측 열 = 생성기가 R · UNread 덱에 쓰는 열 (PRE write_dump · POST 덤프 — 따로 적은 사본이 어긋나면 관측 전부 결손)",
+        "  ✓ R18 ULKR-08 실제 반입 이력 판정 (10-14 job 283122 · SYN PASS −1 · 총힘 PASS) → RESTORED · 같은 판정에서 SYN 만 뺌 → UNCONFIRMED",
+        "  ✓ R16 중력 팔 복원: R_M setup 줄 (KE · 원자) = 출처 팔 R_M 정규 줄 · G2 원자 · G2c 쌍 = 출처 팔 R_M 창 끝 덤프 → PASS · 판정 NO_BRACKET",
+        "  ✓ R16 중력 팔 R_M 원자 하나 다름 → G2 FAIL → 복원 실패 = TECH (그 팔 값 없음)",
+        "  ✓ R15 원 파일 복사 명령 (침대마다 · 표에서): 체크포인트 · atom · contact · mesh · 원 로그 · 원 마지막 조각 덱 = cp -n 여섯 줄 · 10:0 = restart_settling_3600000 · 주소 · 사용자 이름 없음",
+        "selftest: PASS (0 실패)",
+        "",
+        "STDERR"
+      ]
+    },
+    {
+      "name": "seal_kit_selftest",
+      "argv": [
+        "C:\\Users\\Administrator\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\python.exe",
+        "-X",
+        "utf8",
+        "-B",
+        "-I",
+        "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\dem_unloading_kit_reverify_20261014\\source\\docs\\data\\ps45_unload_20261009\\seal_kit.py",
+        "--selftest"
+      ],
+      "rc": 0,
+      "seconds": 7.961817026138306,
+      "tail": [
+        "  ✓ K5 러너에 동시 UV 제출 고리 (for A in UB UVa UT UC) 를 넣으면 걸린다",
+        "  ✓ K5 한 줄에 sbatch 둘 (UB 와 UV 를 같이) 도 걸린다",
+        "  ✓ K6 덱 주석이라도 옛 b (δ_num · r_int) 글자가 있으면 걸린다",
+        "  ✓ K6 README 의 동시 제출 꼴 (for A in UB UV UT UC) 도 걸린다 (명령 꼴을 사람이 붙여 넣는다)",
+        "  ✓ K7 활성 규칙 목록: 선택 (SELECTION_UNRESOLVED) · 제출 순서 (UB · UT · UC → UV) · UT R_M 멈춤 · UTc · 비단조 합집합 · 분리 · TIMEOUT 세 경우 · 상쇄 진단값 · 물리 창 · S3 총힘 · σ_P — 규칙마다 코드 자리 (실재) · 증인 시험 이름 · 폐기 규칙 0 건",
+        "selftest: PASS (0 실패)",
+        "",
+        "STDERR"
+      ]
+    },
+    {
+      "name": "make_unload_decks_selftest",
+      "argv": [
+        "C:\\Users\\Administrator\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\python.exe",
+        "-X",
+        "utf8",
+        "-B",
+        "-I",
+        "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\dem_unloading_kit_reverify_20261014\\source\\docs\\data\\ps45_unload_20261009\\make_unload_decks.py",
+        "--selftest"
+      ],
+      "rc": 1,
+      "seconds": 3.5980889797210693,
+      "tail": [
+        "  ✓ GD11 덱 어디에도 옛 띠 b (2 δ_num + r_int) 판정이 없다",
+        "  ✓ GD12 러너 · 래퍼: #SBATCH -n 6 ↔ \"$MPIRUN\" $MPIRUN_FLAGS -np \"$NP\" (기본 --oversubscribe --bind-to none · NP 6)",
+        "  ✓ GD12 러너: 동시 UV 제출 줄이 없다 (for A in UB UV UT UC) · UV = 선택 판독 뒤",
+        "  ✗ GD12 bash -n run_unload_ibb.sbatch  — ",
+        "  ✗ GD12 bash -n run_unload.sh  — ",
+        "selftest: FAIL (2 실패)",
+        "",
+        "STDERR"
+      ]
+    },
+    {
+      "name": "ul_runner_test_selftest",
+      "argv": [
+        "C:\\Users\\Administrator\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\python.exe",
+        "-X",
+        "utf8",
+        "-B",
+        "-I",
+        "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\dem_unloading_kit_reverify_20261014\\source\\docs\\data\\ps45_unload_20261009\\ul_runner_test.py",
+        "--selftest"
+      ],
+      "rc": 1,
+      "seconds": 1.7596354484558105,
+      "tail": [
+        "             ^^^^^^",
+        "  File \"C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\dem_unloading_kit_reverify_20261014\\source\\docs\\data\\ps45_unload_20261009\\ul_runner_test.py\", line 411, in main",
+        "    return selftest()",
+        "           ^^^^^^^^^^",
+        "  File \"C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\dem_unloading_kit_reverify_20261014\\source\\docs\\data\\ps45_unload_20261009\\ul_runner_test.py\", line 263, in selftest",
+        "    open(os.path.join(ul, 'RJ', 'restore_verdict.json'), 'w').write(json.dumps({'status': 'RESTORED'}))",
+        "    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^",
+        "FileNotFoundError: [Errno 2] No such file or directory: 'C:\\\\Users\\\\Administrator\\\\Documents\\\\Codex\\\\2026-08-24\\\\claude-stoic-knuth-nobvq-x20\\\\dem_unloading_kit_reverify_20261014\\\\tmp_baseline\\\\ul_runner_mock_c1zmvifo\\\\b\\\\work\\\\ps_7_3_r45\\\\RJ\\\\restore_verdict.json'"
+      ]
+    },
+    {
+      "name": "history_test_make_history_decks_selftest",
+      "argv": [
+        "C:\\Users\\Administrator\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\python.exe",
+        "-X",
+        "utf8",
+        "-B",
+        "-I",
+        "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\dem_unloading_kit_reverify_20261014\\source\\docs\\data\\ps45_unload_20261009\\history_test\\make_history_decks.py",
+        "--selftest"
+      ],
+      "rc": 1,
+      "seconds": 0.45317649841308594,
+      "tail": [
+        "  ✓ ⑯ 모의기 GA (처음): run = 창 · 이동 · 창 · 이동 · 창 · 변수 주기 덤프 (원자 · 판) = 창 끝만 (setup · 이동 중 없음) · restart = 창 끝 · 오류 없음",
+        "  ✓ ⑯ 모의기 GA: 판 z (mesh/stl 고정 주기) = 읽는 쪽 기대 (두 번째 이동이 앞 이동 위로 쌓인다 · 창 동안 그대로) · 상태 파일 셋 = (rstep · k · pz)",
+        "  ✓ ⑯ 모의기 GB (GA 마지막 상태 파일 그대로 include · 새 프로세스): 이어 돌림 분기 → 이동 하나 → 창 · 덤프 = 그 창 끝 · restart 하나 · 판 z 이어서",
+        "  ✓ ⑯ 모의기 화면 표지 = 읽는 쪽이 읽는 꼴 (GA: GRAM_START · GRAM_STEP k 0 … · GRAM_DONE / GB: GRAM_RESUMED · GRAM_STEP k k_fresh + 1 · GRAM_DONE)",
+        "  ✓ ⑯ 모의기 자신 (판별력): 이동 전 gr_dnext = step + big 을 빼면 이동 중 덤프 · dump_modify 에 first yes 를 더하면 setup 덤프 를 잡는다",
+        "selftest: FAIL (2 실패)",
+        "",
+        "STDERR"
+      ]
+    },
+    {
+      "name": "history_test_read_history_selftest",
+      "argv": [
+        "C:\\Users\\Administrator\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\python.exe",
+        "-X",
+        "utf8",
+        "-B",
+        "-I",
+        "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\dem_unloading_kit_reverify_20261014\\source\\docs\\data\\ps45_unload_20261009\\history_test\\read_history.py",
+        "--selftest"
+      ],
+      "rc": 1,
+      "seconds": 10.480345964431763,
+      "tail": [
+        "  ✗ S28 러너 모의: NP_ALT = NP 거부 (H2 가 시험되지 않는다)  — ",
+        "  ✗ S29 러너 모의: --preflight-only = 런 · kit 사본 없음  — ",
+        "  ✗ S37 러너 모의 --grammar-only: 단계 = P → GA → GB (H0–H5 단계 없음) · NP 6 · 판정 grammar_verdict PASS · rc 0 · 보고 묶음 gram_*.report.tgz  — ",
+        "  ✗ S37 러너 모의 --grammar-only: GA = 생산자 fixture.bin · 빈 상태 파일 · gr_resume 0 / GB = GA 마지막 단 끝 restart + 짝 상태 파일 · gr_resume 1  — ",
+        "  ✗ S37 러너 모의 --grammar-only: GA 실패 = GB 없음 · rc 2  — ",
+        "selftest: FAIL (11 실패)",
+        "",
+        "STDERR"
+      ]
+    },
+    {
+      "name": "make_unload_decks_check",
+      "argv": [
+        "C:\\Users\\Administrator\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\python.exe",
+        "-X",
+        "utf8",
+        "-B",
+        "-I",
+        "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\dem_unloading_kit_reverify_20261014\\source\\docs\\data\\ps45_unload_20261009\\make_unload_decks.py",
+        "--check"
+      ],
+      "rc": 1,
+      "seconds": 1.512772560119629,
+      "tail": [
+        "    self.run()",
+        "  File \"C:\\Users\\Administrator\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\Lib\\threading.py\", line 1012, in run",
+        "    self._target(*self._args, **self._kwargs)",
+        "  File \"C:\\Users\\Administrator\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\Lib\\subprocess.py\", line 1599, in _readerthread",
+        "    buffer.append(fh.read())",
+        "                  ^^^^^^^^^",
+        "  File \"<frozen codecs>\", line 322, in decode",
+        "UnicodeDecodeError: 'utf-8' codec can't decode byte 0xc6 in position 539: invalid continuation byte"
+      ]
+    },
+    {
+      "name": "seal_kit_check",
+      "argv": [
+        "C:\\Users\\Administrator\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\python.exe",
+        "-X",
+        "utf8",
+        "-B",
+        "-I",
+        "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\dem_unloading_kit_reverify_20261014\\source\\docs\\data\\ps45_unload_20261009\\seal_kit.py",
+        "--check"
+      ],
+      "rc": 0,
+      "seconds": 1.0250325202941895,
+      "tail": [
+        "✓ seal — 파일 76 · SHA256SUMS 일치 · 폐기 규칙 0 건 · 활성 규칙 22 (증인 실재 True)",
+        "",
+        "STDERR"
+      ]
+    },
+    {
+      "name": "seal_kit_rules",
+      "argv": [
+        "C:\\Users\\Administrator\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\python.exe",
+        "-X",
+        "utf8",
+        "-B",
+        "-I",
+        "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\dem_unloading_kit_reverify_20261014\\source\\docs\\data\\ps45_unload_20261009\\seal_kit.py",
+        "--rules"
+      ],
+      "rc": 0,
+      "seconds": 0.981520414352417,
+      "tail": [
+        "                   자리 run_unload.sh:resume_check · 증인 ul_runner_test M7, ul_runner_test M7a, ul_runner_test M11–M14",
+        "stage_rc           단계마다 기술 rc · 판독기 rc 를 잡 기록 (run_manifest.txt) 에 · G0 · Ut0 기술 실패 = R 을 돌리지 않는다 · 판독기 프로그램 오류 (rc ≠ 0) ↔ 정상 미식별 (rc 0 · JSON) 따로 (개정 3 §14-10 · ULKR-11)",
+        "                   자리 run_unload.sh:reader_${cmd}_rc · 증인 ul_runner_test M4, ul_runner_test M15–M17",
+        "restore_complete   복원 판정 = Ut0 (7:3) · R · UN 단계 기술 성공 · PRE · POST · R_END · UN 전부 읽힘 · 머리 step · 고유 ID · S0 ID 집합 · R_END ↔ UN 같은 대상 · 이력 시험 H0–H5 + SYN PASS · 부호 = 표 · 총힘 시점 · 관문 = RESTORED + RJ 잡 기술 실패 0 (개정 3 §14-10 · ULKR-05 · 08)",
+        "                   자리 ul_reader.py:restore_verdict · 증인 ul_reader R17, ul_reader R18, ul_gates F2",
+        "폐기 규칙 0 건",
+        "",
+        "STDERR"
+      ]
+    },
+    {
+      "name": "history_test_make_history_decks_check",
+      "argv": [
+        "C:\\Users\\Administrator\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\python.exe",
+        "-X",
+        "utf8",
+        "-B",
+        "-I",
+        "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\dem_unloading_kit_reverify_20261014\\source\\docs\\data\\ps45_unload_20261009\\history_test\\make_history_decks.py",
+        "--check"
+      ],
+      "rc": 0,
+      "seconds": 0.16275906562805176,
+      "tail": [
+        "✓ check: 덱 9 · 판 STL = 생성 결과 · SHA256SUMS 일치 (15 파일 · 러너 · 래퍼 · 읽는 쪽 포함)",
+        "",
+        "STDERR"
+      ]
+    }
+  ],
+  "source_bytes_unchanged": true,
+  "changed": []
+}

@@ -10610,7 +10610,7 @@
     {
       "id": "ULKR-01",
       "severity": "P1",
-      "status": "claimed_fixed",
+      "status": "verified",
       "owner": "claude",
       "found_by": "codex 10-14 DEM 언로딩 키트 재검토 (고정 핀 2783061ea · 실제 판독 함수에 저장 파일 · 실제 덱 분기 해석 — DEM · MPI · 셸 러너 실행 없음 · Windows 셸 제한으로 러너 모의는 소스 증명)",
       "opened_in": "docs/reviews/codex_review_dem_unloading_kit_20261014.md",
@@ -10621,12 +10621,17 @@
         "docs/data/ps45_unload_20261009/ (ul_reader R20 — 시험 먼저 · 고치기 전 실패 확인)",
         "docs/reviews/dem_unloading_kit_fix_plan_20261014.md §5 (실행 기록)",
         "docs/reviews/dem_unloading_ps45_prereg_20261009.md §14 (등록 개정 3 · 결과 0 건)"
-      ]
+      ],
+      "verified_by": "codex",
+      "verified_sha": "a30fe150e",
+      "verified_in": "docs/reviews/codex_review_dem_unloading_kit_reverify_20261014.md",
+      "verified_scope": "해당 수정 — UNSTEADY · NaN · S3 실패 · 잘못된 kind/phase · 누락이 주 값 · UVa 를 막고 접촉 없는 정상 확인 두 단은 통과 (중복 행 결함은 ULKRR-02 로 따로)",
+      "verification_note": "2026-10-14 Codex DEM 언로딩 키트 재확인 (고정 핀 a30fe150e · 판정 HOLD) §3 의 닫힘 판정으로 상태를 옮겼다 — 범위 = verified_scope (전체 키트 실행 인증 · 실제 분말 물리 검증 아님)."
     },
     {
       "id": "ULKR-02",
       "severity": "P1",
-      "status": "claimed_fixed",
+      "status": "verified",
       "owner": "claude",
       "found_by": "codex 10-14 DEM 언로딩 키트 재검토 (고정 핀 2783061ea · 실제 판독 함수에 저장 파일 · 실제 덱 분기 해석 — DEM · MPI · 셸 러너 실행 없음 · Windows 셸 제한으로 러너 모의는 소스 증명)",
       "opened_in": "docs/reviews/codex_review_dem_unloading_kit_20261014.md",
@@ -10637,12 +10642,17 @@
         "docs/data/ps45_unload_20261009/ (ul_reader R21 — 시험 먼저 · 고치기 전 실패 확인)",
         "docs/reviews/dem_unloading_kit_fix_plan_20261014.md §5 (실행 기록)",
         "docs/reviews/dem_unloading_ps45_prereg_20261009.md §14 (등록 개정 3 · 결과 0 건)"
-      ]
+      ],
+      "verified_by": "codex",
+      "verified_sha": "a30fe150e",
+      "verified_in": "docs/reviews/codex_review_dem_unloading_kit_reverify_20261014.md",
+      "verified_scope": "첫 A 교차 포함 · 여러 교차 합집합 · 옛 거짓 SEPARATED = OVERLAP · 뒤쪽 비유한 압력은 주 값 보존 · 합집합 미계산",
+      "verification_note": "2026-10-14 Codex DEM 언로딩 키트 재확인 (고정 핀 a30fe150e · 판정 HOLD) §3 의 닫힘 판정으로 상태를 옮겼다 — 범위 = verified_scope (전체 키트 실행 인증 · 실제 분말 물리 검증 아님)."
     },
     {
       "id": "ULKR-03",
       "severity": "P1",
-      "status": "claimed_fixed",
+      "status": "verified",
       "owner": "claude",
       "found_by": "codex 10-14 DEM 언로딩 키트 재검토 (고정 핀 2783061ea · 실제 판독 함수에 저장 파일 · 실제 덱 분기 해석 — DEM · MPI · 셸 러너 실행 없음 · Windows 셸 제한으로 러너 모의는 소스 증명)",
       "opened_in": "docs/reviews/codex_review_dem_unloading_kit_20261014.md",
@@ -10653,7 +10663,12 @@
         "docs/data/ps45_unload_20261009/ (ul_reader R23 · ul_runner_test M9 — 시험 먼저 · 고치기 전 실패 확인)",
         "docs/reviews/dem_unloading_kit_fix_plan_20261014.md §5 (실행 기록)",
         "docs/reviews/dem_unloading_ps45_prereg_20261009.md §14 (등록 개정 3 · 결과 0 건)"
-      ]
+      ],
+      "verified_by": "codex",
+      "verified_sha": "a30fe150e",
+      "verified_in": "docs/reviews/codex_review_dem_unloading_kit_reverify_20261014.md",
+      "verified_scope": "해당 수정 — 정상 t3 최종 ρ 0.3827035983143033 % 보존 · 부모 파일 변조 · 해시 결손 · 경계 중복 · 첫 단/창 누락 · RESUME 부재 = 이어 돌림 거부",
+      "verification_note": "2026-10-14 Codex DEM 언로딩 키트 재확인 (고정 핀 a30fe150e · 판정 HOLD) §3 의 닫힘 판정으로 상태를 옮겼다 — 범위 = verified_scope (전체 키트 실행 인증 · 실제 분말 물리 검증 아님)."
     },
     {
       "id": "ULKR-04",
@@ -10669,7 +10684,8 @@
         "docs/data/ps45_unload_20261009/ (ul_reader R22 — 시험 먼저 · 고치기 전 실패 확인)",
         "docs/reviews/dem_unloading_kit_fix_plan_20261014.md §5 (실행 기록)",
         "docs/reviews/dem_unloading_ps45_prereg_20261009.md §14 (등록 개정 3 · 결과 0 건)"
-      ]
+      ],
+      "partial_note": "부분 (Codex 재확인 10-14 · 핀 a30fe150e) — 옛 NaN 행 재활용 · 시점 · 정수 중복 ID · CSV 열 수 · k 결손 반례는 차단 · 남은 것 = ULKRR-02 (no-RESUME 중복 행 소거) · ULKRR-04 (소수 ID · 필수 열 결손)"
     },
     {
       "id": "ULKR-05",
@@ -10685,7 +10701,8 @@
         "docs/data/ps45_unload_20261009/ (ul_reader R17 · R18 · ul_gates F2 — 시험 먼저 · 고치기 전 실패 확인)",
         "docs/reviews/dem_unloading_kit_fix_plan_20261014.md §5 (실행 기록)",
         "docs/reviews/dem_unloading_ps45_prereg_20261009.md §14 (등록 개정 3 · 결과 0 건)"
-      ]
+      ],
+      "partial_note": "부분 (Codex 재확인 10-14) — 불완전 PRE/POST · UN 다른 정수 ID · 잘못된 네 시점 · Ut0/R/UN 기술 실패는 차단 · 남은 것 = ULKRR-04 (소수 ID) · ULKRR-03 (판독기 실패 증서 재사용)"
     },
     {
       "id": "ULKR-06",
@@ -10701,12 +10718,13 @@
         "docs/data/ps45_unload_20261009/ (ul_runner_test M7 · M7a · M11–M14 — 시험 먼저 · 고치기 전 실패 확인)",
         "docs/reviews/dem_unloading_kit_fix_plan_20261014.md §5 (실행 기록)",
         "docs/reviews/dem_unloading_ps45_prereg_20261009.md §14 (등록 개정 3 · 결과 0 건)"
-      ]
+      ],
+      "partial_note": "소스 수정 수용 / 실행 확인 부분 (Codex 재확인 10-14) — 미지원 JOB 선행 거부 · 같은 ALLOW 팔 · 한 번 · 로그 분리 · 덱 대조 있음 · Codex 환경 Bash 막힘으로 모의 러너 실행 인증 못 함 → 우리 Linux 전체 로그 (수정 계획 Q7)"
     },
     {
       "id": "ULKR-07",
       "severity": "P2",
-      "status": "claimed_fixed",
+      "status": "verified",
       "owner": "claude",
       "found_by": "codex 10-14 DEM 언로딩 키트 재검토 (고정 핀 2783061ea · 실제 판독 함수에 저장 파일 · 실제 덱 분기 해석 — DEM · MPI · 셸 러너 실행 없음 · Windows 셸 제한으로 러너 모의는 소스 증명)",
       "opened_in": "docs/reviews/codex_review_dem_unloading_kit_20261014.md",
@@ -10717,12 +10735,17 @@
         "docs/data/ps45_unload_20261009/ (make_unload_decks GD15 · ul_reader R24 — 시험 먼저 · 고치기 전 실패 확인)",
         "docs/reviews/dem_unloading_kit_fix_plan_20261014.md §5 (실행 기록)",
         "docs/reviews/dem_unloading_ps45_prereg_20261009.md §14 (등록 개정 3 · 결과 0 건)"
-      ]
+      ],
+      "verified_by": "codex",
+      "verified_sha": "a30fe150e",
+      "verified_in": "docs/reviews/codex_review_dem_unloading_kit_reverify_20261014.md",
+      "verified_scope": "원 반례 + 승인된 예산 해석 — 재접촉 같은 k 유지 · 남은 예산 종료 · DONE 사건 · 벽 관측 불일치 = 보조 미완료 (창 간격 완전성 = 판정문 §6-1 보강)",
+      "verification_note": "2026-10-14 Codex DEM 언로딩 키트 재확인 (고정 핀 a30fe150e · 판정 HOLD) §3 의 닫힘 판정으로 상태를 옮겼다 — 범위 = verified_scope (전체 키트 실행 인증 · 실제 분말 물리 검증 아님)."
     },
     {
       "id": "ULKR-08",
       "severity": "P2",
-      "status": "claimed_fixed",
+      "status": "verified",
       "owner": "claude",
       "found_by": "codex 10-14 DEM 언로딩 키트 재검토 (고정 핀 2783061ea · 실제 판독 함수에 저장 파일 · 실제 덱 분기 해석 — DEM · MPI · 셸 러너 실행 없음 · Windows 셸 제한으로 러너 모의는 소스 증명)",
       "opened_in": "docs/reviews/codex_review_dem_unloading_kit_20261014.md",
@@ -10733,12 +10756,17 @@
         "docs/data/ps45_unload_20261009/ (ul_reader R18 — 시험 먼저 · 고치기 전 실패 확인)",
         "docs/reviews/dem_unloading_kit_fix_plan_20261014.md §5 (실행 기록)",
         "docs/reviews/dem_unloading_ps45_prereg_20261009.md §14 (등록 개정 3 · 결과 0 건)"
-      ]
+      ],
+      "verified_by": "codex",
+      "verified_sha": "a30fe150e",
+      "verified_in": "docs/reviews/codex_review_dem_unloading_kit_reverify_20261014.md",
+      "verified_scope": "SYN 부재/실패 · 잘못된 부호 · 총힘 시점 부재 · 잘못된 schema = 복원/UB 차단 · 기존 실제 이력 판정 수용",
+      "verification_note": "2026-10-14 Codex DEM 언로딩 키트 재확인 (고정 핀 a30fe150e · 판정 HOLD) §3 의 닫힘 판정으로 상태를 옮겼다 — 범위 = verified_scope (전체 키트 실행 인증 · 실제 분말 물리 검증 아님)."
     },
     {
       "id": "ULKR-09",
       "severity": "P2",
-      "status": "claimed_fixed",
+      "status": "verified",
       "owner": "claude",
       "found_by": "codex 10-14 DEM 언로딩 키트 재검토 (고정 핀 2783061ea · 실제 판독 함수에 저장 파일 · 실제 덱 분기 해석 — DEM · MPI · 셸 러너 실행 없음 · Windows 셸 제한으로 러너 모의는 소스 증명)",
       "opened_in": "docs/reviews/codex_review_dem_unloading_kit_20261014.md",
@@ -10749,12 +10777,17 @@
         "docs/data/ps45_unload_20261009/ (ul_reader R25 · ul_runner_test M18 — 시험 먼저 · 고치기 전 실패 확인)",
         "docs/reviews/dem_unloading_kit_fix_plan_20261014.md §5 (실행 기록)",
         "docs/reviews/dem_unloading_ps45_prereg_20261009.md §14 (등록 개정 3 · 결과 0 건)"
-      ]
+      ],
+      "verified_by": "codex",
+      "verified_sha": "a30fe150e",
+      "verified_in": "docs/reviews/codex_review_dem_unloading_kit_reverify_20261014.md",
+      "verified_scope": "새 기준 파일 생성 경로 — 정상 3 창 S2 2.24e−6 덱 J · 1/2 창 · 중복 · 간격 누락 · 이동 · NaN · 다른 S0 · 기술 실패 = 기준 파일 미발행 (남겨 둔 옛 파일 폐기까지는 아님)",
+      "verification_note": "2026-10-14 Codex DEM 언로딩 키트 재확인 (고정 핀 a30fe150e · 판정 HOLD) §3 의 닫힘 판정으로 상태를 옮겼다 — 범위 = verified_scope (전체 키트 실행 인증 · 실제 분말 물리 검증 아님)."
     },
     {
       "id": "ULKR-10",
       "severity": "P2",
-      "status": "claimed_fixed",
+      "status": "verified",
       "owner": "claude",
       "found_by": "codex 10-14 DEM 언로딩 키트 재검토 (고정 핀 2783061ea · 실제 판독 함수에 저장 파일 · 실제 덱 분기 해석 — DEM · MPI · 셸 러너 실행 없음 · Windows 셸 제한으로 러너 모의는 소스 증명)",
       "opened_in": "docs/reviews/codex_review_dem_unloading_kit_20261014.md",
@@ -10765,7 +10798,12 @@
         "docs/data/ps45_unload_20261009/ (make_unload_decks GD16 · ul_reader R26 — 시험 먼저 · 고치기 전 실패 확인)",
         "docs/reviews/dem_unloading_kit_fix_plan_20261014.md §5 (실행 기록)",
         "docs/reviews/dem_unloading_ps45_prereg_20261009.md §14 (등록 개정 3 · 결과 0 건)"
-      ]
+      ],
+      "verified_by": "codex",
+      "verified_sha": "a30fe150e",
+      "verified_in": "docs/reviews/codex_review_dem_unloading_kit_reverify_20261014.md",
+      "verified_scope": "A/B — 20 덱 첫 4–12 창 · 이후 UB/UT3 4–12 · UVa/UVb 8–24 · 실제 g 배선 합성 시험 (일반 R≈1e−6 PASS · G_* R=1 FAIL)",
+      "verification_note": "2026-10-14 Codex DEM 언로딩 키트 재확인 (고정 핀 a30fe150e · 판정 HOLD) §3 의 닫힘 판정으로 상태를 옮겼다 — 범위 = verified_scope (전체 키트 실행 인증 · 실제 분말 물리 검증 아님)."
     },
     {
       "id": "ULKR-11",
@@ -10781,12 +10819,13 @@
         "docs/data/ps45_unload_20261009/ (ul_runner_test M4 · M15–M17 — 시험 먼저 · 고치기 전 실패 확인)",
         "docs/reviews/dem_unloading_kit_fix_plan_20261014.md §5 (실행 기록)",
         "docs/reviews/dem_unloading_ps45_prereg_20261009.md §14 (등록 개정 3 · 결과 0 건)"
-      ]
+      ],
+      "partial_note": "원 수정 수용 / 종단 관문 부분 (Codex 재확인 10-14) — G0/Ut0 실패 뒤 R 중단 · 판독 rc 기록은 소스상 구현 · 그 rc 를 다음 관문이 안 읽는 것 = ULKRR-03"
     },
     {
       "id": "ULKR-12",
       "severity": "P2",
-      "status": "claimed_fixed",
+      "status": "verified",
       "owner": "claude",
       "found_by": "codex 10-14 DEM 언로딩 키트 재검토 (고정 핀 2783061ea · 실제 판독 함수에 저장 파일 · 실제 덱 분기 해석 — DEM · MPI · 셸 러너 실행 없음 · Windows 셸 제한으로 러너 모의는 소스 증명)",
       "opened_in": "docs/reviews/codex_review_dem_unloading_kit_20261014.md",
@@ -10797,7 +10836,12 @@
         "docs/data/ps45_unload_20261009/ (ul_observers O11–O12 · ul_reader R27 · ul_runner_test M19 — 시험 먼저 · 고치기 전 실패 확인)",
         "docs/reviews/dem_unloading_kit_fix_plan_20261014.md §5 (실행 기록)",
         "docs/reviews/dem_unloading_ps45_prereg_20261009.md §14 (등록 개정 3 · 결과 0 건)"
-      ]
+      ],
+      "verified_by": "codex",
+      "verified_sha": "a30fe150e",
+      "verified_in": "docs/reviews/codex_review_dem_unloading_kit_reverify_20261014.md",
+      "verified_scope": "판독 · 보고 수정 — S0 고정 부피 · 끝점 불완전 시 해당 ε 만 미계산 · S0→M W · 최종 보고 보존 (포장 = 소스 확인만 · 셸 포장 실행 미검증)",
+      "verification_note": "2026-10-14 Codex DEM 언로딩 키트 재확인 (고정 핀 a30fe150e · 판정 HOLD) §3 의 닫힘 판정으로 상태를 옮겼다 — 범위 = verified_scope (전체 키트 실행 인증 · 실제 분말 물리 검증 아님)."
     },
     {
       "id": "RIMP-01",
@@ -10927,12 +10971,56 @@
       "found_by": "ibb job 285220 (10-14 19:26 · 1저자 실행 · 작업 트리 a30fe150e · 문법 fixture 첫 실제 LIGGGHTS 실행 · 판정 rc 2)",
       "opened_in": "docs/data/ps45_unload_20261009/README.md",
       "title": "언로딩 문법 fixture (ULKR 수정 묶음 Q8) 의 관측 블록이 본 키트와 다른 꼴 — ave/time 입력 하나 (= 전역 스칼라) 인데 f_gr_av[1] (벡터) 로 읽어 GA 첫 창 뒤 'ERROR: Mismatched fix in variable formula (../variable.cpp:1315)' · LIGGGHTS 없는 모의기 (grammar_sim) 는 f_* 를 0 으로 둬 못 잡았다",
-      "note": "본 키트 덱 (ul_av = 입력 셋 · f_ul_av[1–3]) 은 해당 없음 — 새 검사 ⑰ 로 본 키트 덱 64 개 전수 문제 0.  fixture 결함이라 본 키트 결과 · 판정 규칙 변경 없음.  고침 = 본 키트 ul_obs 꼴 그대로 (compute gr_ke · gr_erot + 입력 셋 gr_av) + 검사 ⑰ (f_ID 를 읽는 꼴 ↔ fix 전역 출력 꼴 · 첨자 범위 · 표에 없는 스타일 fail-closed) 를 --selftest 와 sbatch 앞 --check 에 넣음.  시험 먼저 = 고치기 전 덱에서 ⑰ 이 grammar 하나만 실패 (정확히 285220 의 줄).  남은 위험 = GA 가 첫 창에서 멈춰 뒤 문법 (상태 파일 · write_restart · move/mesh 여러 번 · GB 이어 돌림) 은 아직 실제 바이너리 미통과 → 다시 실행.  보고 묶음 gram_20261014_192604.report.tgz sha256 015bd82ba266a3438db003a0e6cf025d4ad38ac51133ab75307be402c60ca7ee (ibb · 반입 대기).",
+      "note": "본 키트 덱 (ul_av = 입력 셋 · f_ul_av[1–3]) 은 해당 없음 — 새 검사 ⑰ 로 본 키트 덱 64 개 전수 문제 0.  fixture 결함이라 본 키트 결과 · 판정 규칙 변경 없음.  고침 = 본 키트 ul_obs 꼴 그대로 (compute gr_ke · gr_erot + 입력 셋 gr_av) + 검사 ⑰ (f_ID 를 읽는 꼴 ↔ fix 전역 출력 꼴 · 첨자 범위 · 표에 없는 스타일 fail-closed) 를 --selftest 와 sbatch 앞 --check 에 넣음.  시험 먼저 = 고치기 전 덱에서 ⑰ 이 grammar 하나만 실패 (정확히 285220 의 줄).  남은 위험 = GA 가 첫 창에서 멈춰 뒤 문법 (상태 파일 · write_restart · move/mesh 여러 번 · GB 이어 돌림) 은 아직 실제 바이너리 미통과 → 다시 실행.  보고 묶음 gram_20261014_192604.report.tgz sha256 015bd82ba266a3438db003a0e6cf025d4ad38ac51133ab75307be402c60ca7ee (ibb · 반입 대기).  ★ Codex 재확인 (10-14 · 핀 a30fe150e) 이 같은 결함을 고정 C++ 소스로 독립 증명 = ULKRR-01.",
       "claimed_fixed_sha": "039abb141",
       "evidence_tests": [
         "docs/data/ps45_unload_20261009/history_test/make_history_decks.py --selftest ⑰ (고치기 전 1 실패 = grammar · 고친 뒤 0) · --check (⑰ 포함)",
         "docs/data/ps45_unload_20261009/history_test/read_history.py --selftest PASS"
       ]
+    },
+    {
+      "id": "ULKRR-01",
+      "severity": "P1",
+      "status": "claimed_fixed",
+      "owner": "claude",
+      "found_by": "codex 10-14 DEM 언로딩 키트 재확인 (고정 핀 a30fe150e · 203 파일 blob 대조 · 실제 판독 함수 · 합성 입력 · DEM · LIGGGHTS · Bash 러너 실행 없음)",
+      "opened_in": "docs/reviews/codex_review_dem_unloading_kit_reverify_20261014.md",
+      "title": "새 문법 fixture 가 단일값 ave/time (전역 스칼라) 를 벡터 f_gr_av[1] 로 읽는다 — 고정 소스 (fix_ave_time.cpp:350–368 · variable.cpp:1182 · 1198 · 1315) 상 GA 첫 창 뒤 Mismatched fix 로 멈춰 반복 이동 · 상태 복귀 · GB 재개를 시험할 수 없다 · 모의기는 f_* 를 0 으로 둬 판별 못 함",
+      "note": "같은 결함을 우리 ibb 첫 실행 (job 285220 · 같은 핀 · 10-14 19:26) 이 실제 바이너리에서 먼저 보였다 = SELF-115 (같은 고침).  고침 039abb141 = 본 키트 꼴 (입력 셋 · f_gr_av[1] 유효) + 타입 음성 검사 ⑰ (--selftest · --check) · 재생성 · 재봉인.  판정문의 해결 증거 중 남은 것 = 수정 키트의 실제 바이너리 문법 PASS (실행 2).",
+      "claimed_fixed_sha": "039abb141",
+      "evidence_tests": [
+        "docs/data/ps45_unload_20261009/history_test/make_history_decks.py --selftest ⑰ (고치기 전 grammar 1 실패 · 고친 뒤 0) · --check"
+      ]
+    },
+    {
+      "id": "ULKRR-02",
+      "severity": "P1",
+      "status": "open",
+      "owner": "claude",
+      "found_by": "codex 10-14 DEM 언로딩 키트 재확인 (고정 핀 a30fe150e · 203 파일 blob 대조 · 실제 판독 함수 · 합성 입력 · DEM · LIGGGHTS · Bash 러너 실행 없음)",
+      "opened_in": "docs/reviews/codex_review_dem_unloading_kit_reverify_20261014.md",
+      "title": "RESUME 사건이 없어도 _supersede 가 같은 step 중복 행을 지운다 — 정상 UT k=3 확인 단 앞에 steady=0 행 하나를 더하면 n_superseded_rows 1 · primary OK (ρ 0.2026077873428664 %) · UVa ALLOW (합성 입력 · 실제 파일 → 판독 → 선택 → 관문)",
+      "note": "최소 해결 = 정식 재개 경계 (RESUME 사건 · 시도 기록) 에서만 행 교체 · 그 밖 중복 · 역행 step/k = 미식별 · no-RESUME 반례와 진짜 RESUME 양성 대조를 선택 · 관문까지.  수정 계획 docs/reviews/dem_unloading_kit_reverify_fix_plan_20261014.md Q1."
+    },
+    {
+      "id": "ULKRR-03",
+      "severity": "P1",
+      "status": "open",
+      "owner": "claude",
+      "found_by": "codex 10-14 DEM 언로딩 키트 재확인 (고정 핀 a30fe150e · 203 파일 blob 대조 · 실제 판독 함수 · 합성 입력 · DEM · LIGGGHTS · Bash 러너 실행 없음)",
+      "opened_in": "docs/reviews/codex_review_dem_unloading_kit_reverify_20261014.md",
+      "title": "러너가 기록한 판독기 실패 reader_rc ≠ 0 을 다음 관문 (_job_restored) 이 안 읽는다 — 수정 안 한 실제 Python CLI 가 RESTORED · 기준 파일을 발행한 뒤 출력 flush 에서 rc 120 으로 끝나도 UB ALLOW (러너 합산 기록은 소스대로 재구성 · 전체 Bash 러너 실행은 아님)",
+      "note": "최소 해결 = 완료 영수증의 fails=0 과 reader_rc=0 둘 다 필수 · 누락 · 비정수 · 비영 = 거부 · 파일 발행 뒤 실패 음성 · 정상 UNIDENTIFIED/rc 0 양성 대조 (판독 오류를 삼켜 rc 0 으로 바꾸지 않는다).  수정 계획 Q2."
+    },
+    {
+      "id": "ULKRR-04",
+      "severity": "P2",
+      "status": "open",
+      "owner": "claude",
+      "found_by": "codex 10-14 DEM 언로딩 키트 재확인 (고정 핀 a30fe150e · 203 파일 blob 대조 · 실제 판독 함수 · 합성 입력 · DEM · LIGGGHTS · Bash 러너 실행 없음)",
+      "opened_in": "docs/reviews/codex_review_dem_unloading_kit_reverify_20261014.md",
+      "title": "소수 ID 가 int() 로 잘려 정상 입자로 쓰인다 (UN 첫 ID 1→1.5 = RESTORED · UB 허용 · 끝점 ID 2→2.5 = primary OK) · 필수 id 열 결손은 관측 결손 대신 KeyError",
+      "note": "정상 LIGGGHTS 출력이 소수 ID 를 만든다는 주장 아님 — 손상 입력 방어 계약의 결함.  최소 해결 = 필수 열 · 파서 오류 먼저 반환 · ID = 유한 · 양 · 정확한 정수 검사 뒤 변환 (S0 · 현재 원자 · 복원 관측 · 쌍 참조) · 회귀 둘.  수정 계획 Q3."
     }
   ]
 }

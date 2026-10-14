@@ -1,0 +1,2988 @@
+{
+  "pin": "a30fe150e21f66aea2f1c360593e1cd781689b14",
+  "run_dir": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\dem_unloading_kit_reverify_20261014\\evidence\\runner_cases_to2z2msd",
+  "source_sha256": {
+    "ul_reader.py": "1bbe0939931cf42b29a7a2e10f3e54ec7d5009d0c15ec4e1945fc44a5d91e108",
+    "ul_gates.py": "139939578ced541d7497821233c0bfe959d6baa5a3734f5be9024f578d892703",
+    "run_unload.sh": "29abf7491e9a40ea62323c69fce23f8107afdc76eab1dfcec2e23cdc7f91525f"
+  },
+  "results": {
+    "baseline": {
+      "restore": "RESTORED",
+      "next_UB_allowed": true,
+      "gate_reason": "7:3 개발 팔 (UB · UT · UC 먼저 · 서로 독립 · §13-5 ②)",
+      "checks": {
+        "syntax": {
+          "ok": true,
+          "stages": {
+            "R": [],
+            "UN": [],
+            "Ut0": []
+          },
+          "loops": [
+            6,
+            6
+          ],
+          "errors": []
+        },
+        "reset_log": {
+          "ok": true,
+          "missing": []
+        },
+        "g0": {
+          "ok": true,
+          "violations": []
+        },
+        "G1": {
+          "status": "PASS",
+          "why": [],
+          "step": 3200000,
+          "atoms": 160417,
+          "ke": 1.3419507e-06,
+          "rel": 0.0
+        },
+        "G2": {
+          "status": "PASS",
+          "why": [],
+          "n_atoms": 3,
+          "n_mismatch": 0,
+          "missing": [],
+          "extra": [],
+          "example": [],
+          "note": "omega 는 원 덤프에 없다 — 과거 직접 비교 미확보 (새 덤프에는 출력)"
+        },
+        "G2c": {
+          "status": "PASS",
+          "why": [],
+          "n_orig": 1,
+          "n_test": 1,
+          "n_mismatch": 0,
+          "missing": [],
+          "extra": [],
+          "n_dup_consistent": 0,
+          "dup_conflicts": [],
+          "discriminating_frac": 1.0,
+          "note": "초기 접촉 힘 재현 검사 — 숨은 이력 동일성의 단독 증명 아님 (§12-1) · 토크 · 주기 플래그 제외"
+        },
+        "mesh_md5": {
+          "status": "PASS"
+        },
+        "G3": {
+          "status": "PASS",
+          "why": [],
+          "step": 3201000,
+          "atoms": [
+            160417.0,
+            160417.0
+          ],
+          "press": [
+            0.16542994,
+            0.16542994
+          ],
+          "rel": 0.0
+        },
+        "pre_post": {
+          "ok": true,
+          "equal": true,
+          "problems": []
+        },
+        "un_erasure": {
+          "seen": true,
+          "problems": []
+        },
+        "history_test": {
+          "pass": true,
+          "why": [],
+          "source": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\dem_unloading_kit_reverify_20261014\\evidence\\runner_cases_to2z2msd\\baseline\\history.json",
+          "source_sha256": "e2c2d3a3696f1e990830d08f20b2d81ad7eb6c1b86db1e1d3f7f62d62b1ea663",
+          "plate_fn_sign": -1,
+          "table_sign": -1
+        }
+      },
+      "expected": {
+        "restore": "RESTORED",
+        "next_UB_allowed": true
+      },
+      "matches_expected": true
+    },
+    "truncated_pre_post": {
+      "restore": "UNCONFIRMED",
+      "next_UB_allowed": false,
+      "gate_reason": "RJ 복원 관문 미통과 — RJ 복원 판정 RESTORED 아님 (UNCONFIRMED) (§12-1 ⑤ · 개정 3 §14-10 — 미확인 · 실패면 U 없음)",
+      "checks": {
+        "syntax": {
+          "ok": true,
+          "stages": {
+            "R": [],
+            "UN": [],
+            "Ut0": []
+          },
+          "loops": [
+            6,
+            6
+          ],
+          "errors": []
+        },
+        "reset_log": {
+          "ok": true,
+          "missing": []
+        },
+        "g0": {
+          "ok": true,
+          "violations": []
+        },
+        "G1": {
+          "status": "PASS",
+          "why": [],
+          "step": 3200000,
+          "atoms": 160417,
+          "ke": 1.3419507e-06,
+          "rel": 0.0
+        },
+        "G2": {
+          "status": "PASS",
+          "why": [],
+          "n_atoms": 3,
+          "n_mismatch": 0,
+          "missing": [],
+          "extra": [],
+          "example": [],
+          "note": "omega 는 원 덤프에 없다 — 과거 직접 비교 미확보 (새 덤프에는 출력)"
+        },
+        "G2c": {
+          "status": "PASS",
+          "why": [],
+          "n_orig": 1,
+          "n_test": 1,
+          "n_mismatch": 0,
+          "missing": [],
+          "extra": [],
+          "n_dup_consistent": 0,
+          "dup_conflicts": [],
+          "discriminating_frac": 1.0,
+          "note": "초기 접촉 힘 재현 검사 — 숨은 이력 동일성의 단독 증명 아님 (§12-1) · 토크 · 주기 플래그 제외"
+        },
+        "mesh_md5": {
+          "status": "PASS"
+        },
+        "G3": {
+          "status": "PASS",
+          "why": [],
+          "step": 3201000,
+          "atoms": [
+            160417.0,
+            160417.0
+          ],
+          "press": [
+            0.16542994,
+            0.16542994
+          ],
+          "rel": 0.0
+        },
+        "pre_post": {
+          "ok": false,
+          "equal": null,
+          "problems": [
+            "pre_bot.dump: 행 수 3 ≠ 머리 20",
+            "post_atom_3200000.dump: 행 수 3 ≠ 머리 20"
+          ]
+        },
+        "un_erasure": {
+          "seen": true,
+          "problems": []
+        },
+        "history_test": {
+          "pass": true,
+          "why": [],
+          "source": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\dem_unloading_kit_reverify_20261014\\evidence\\runner_cases_to2z2msd\\truncated_pre_post\\history.json",
+          "source_sha256": "e2c2d3a3696f1e990830d08f20b2d81ad7eb6c1b86db1e1d3f7f62d62b1ea663",
+          "plate_fn_sign": -1,
+          "table_sign": -1
+        }
+      },
+      "expected": {
+        "restore": "UNCONFIRMED",
+        "next_UB_allowed": false
+      },
+      "matches_expected": true
+    },
+    "nan_pre": {
+      "restore": "UNCONFIRMED",
+      "next_UB_allowed": false,
+      "gate_reason": "RJ 복원 관문 미통과 — RJ 복원 판정 RESTORED 아님 (UNCONFIRMED) (§12-1 ⑤ · 개정 3 §14-10 — 미확인 · 실패면 U 없음)",
+      "checks": {
+        "syntax": {
+          "ok": true,
+          "stages": {
+            "R": [],
+            "UN": [],
+            "Ut0": []
+          },
+          "loops": [
+            6,
+            6
+          ],
+          "errors": []
+        },
+        "reset_log": {
+          "ok": true,
+          "missing": []
+        },
+        "g0": {
+          "ok": true,
+          "violations": []
+        },
+        "G1": {
+          "status": "PASS",
+          "why": [],
+          "step": 3200000,
+          "atoms": 160417,
+          "ke": 1.3419507e-06,
+          "rel": 0.0
+        },
+        "G2": {
+          "status": "PASS",
+          "why": [],
+          "n_atoms": 3,
+          "n_mismatch": 0,
+          "missing": [],
+          "extra": [],
+          "example": [],
+          "note": "omega 는 원 덤프에 없다 — 과거 직접 비교 미확보 (새 덤프에는 출력)"
+        },
+        "G2c": {
+          "status": "PASS",
+          "why": [],
+          "n_orig": 1,
+          "n_test": 1,
+          "n_mismatch": 0,
+          "missing": [],
+          "extra": [],
+          "n_dup_consistent": 0,
+          "dup_conflicts": [],
+          "discriminating_frac": 1.0,
+          "note": "초기 접촉 힘 재현 검사 — 숨은 이력 동일성의 단독 증명 아님 (§12-1) · 토크 · 주기 플래그 제외"
+        },
+        "mesh_md5": {
+          "status": "PASS"
+        },
+        "G3": {
+          "status": "PASS",
+          "why": [],
+          "step": 3201000,
+          "atoms": [
+            160417.0,
+            160417.0
+          ],
+          "press": [
+            0.16542994,
+            0.16542994
+          ],
+          "rel": 0.0
+        },
+        "pre_post": {
+          "ok": false,
+          "equal": null,
+          "problems": [
+            "pre_bot.dump: 비유한 값: 2 3 0.002 0.002 0.003 0.0005 1e-06 1e-06 0.0 0.0 0.0 0.0 0.0",
+            "pre_bot.dump: ID 집합 ≠ S0 (빠짐 1 · 더 있음 0)"
+          ]
+        },
+        "un_erasure": {
+          "seen": true,
+          "problems": []
+        },
+        "history_test": {
+          "pass": true,
+          "why": [],
+          "source": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\dem_unloading_kit_reverify_20261014\\evidence\\runner_cases_to2z2msd\\nan_pre\\history.json",
+          "source_sha256": "e2c2d3a3696f1e990830d08f20b2d81ad7eb6c1b86db1e1d3f7f62d62b1ea663",
+          "plate_fn_sign": -1,
+          "table_sign": -1
+        }
+      },
+      "expected": {
+        "restore": "UNCONFIRMED",
+        "next_UB_allowed": false
+      },
+      "matches_expected": true
+    },
+    "duplicate_post": {
+      "restore": "UNCONFIRMED",
+      "next_UB_allowed": false,
+      "gate_reason": "RJ 복원 관문 미통과 — RJ 복원 판정 RESTORED 아님 (UNCONFIRMED) (§12-1 ⑤ · 개정 3 §14-10 — 미확인 · 실패면 U 없음)",
+      "checks": {
+        "syntax": {
+          "ok": true,
+          "stages": {
+            "R": [],
+            "UN": [],
+            "Ut0": []
+          },
+          "loops": [
+            6,
+            6
+          ],
+          "errors": []
+        },
+        "reset_log": {
+          "ok": true,
+          "missing": []
+        },
+        "g0": {
+          "ok": true,
+          "violations": []
+        },
+        "G1": {
+          "status": "PASS",
+          "why": [],
+          "step": 3200000,
+          "atoms": 160417,
+          "ke": 1.3419507e-06,
+          "rel": 0.0
+        },
+        "G2": {
+          "status": "PASS",
+          "why": [],
+          "n_atoms": 3,
+          "n_mismatch": 0,
+          "missing": [],
+          "extra": [],
+          "example": [],
+          "note": "omega 는 원 덤프에 없다 — 과거 직접 비교 미확보 (새 덤프에는 출력)"
+        },
+        "G2c": {
+          "status": "PASS",
+          "why": [],
+          "n_orig": 1,
+          "n_test": 1,
+          "n_mismatch": 0,
+          "missing": [],
+          "extra": [],
+          "n_dup_consistent": 0,
+          "dup_conflicts": [],
+          "discriminating_frac": 1.0,
+          "note": "초기 접촉 힘 재현 검사 — 숨은 이력 동일성의 단독 증명 아님 (§12-1) · 토크 · 주기 플래그 제외"
+        },
+        "mesh_md5": {
+          "status": "PASS"
+        },
+        "G3": {
+          "status": "PASS",
+          "why": [],
+          "step": 3201000,
+          "atoms": [
+            160417.0,
+            160417.0
+          ],
+          "press": [
+            0.16542994,
+            0.16542994
+          ],
+          "rel": 0.0
+        },
+        "pre_post": {
+          "ok": false,
+          "equal": null,
+          "problems": [
+            "post_atom_3200000.dump: ID 중복",
+            "post_atom_3200000.dump: ID 집합 ≠ S0 (빠짐 1 · 더 있음 0)"
+          ]
+        },
+        "un_erasure": {
+          "seen": true,
+          "problems": []
+        },
+        "history_test": {
+          "pass": true,
+          "why": [],
+          "source": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\dem_unloading_kit_reverify_20261014\\evidence\\runner_cases_to2z2msd\\duplicate_post\\history.json",
+          "source_sha256": "e2c2d3a3696f1e990830d08f20b2d81ad7eb6c1b86db1e1d3f7f62d62b1ea663",
+          "plate_fn_sign": -1,
+          "table_sign": -1
+        }
+      },
+      "expected": {
+        "restore": "UNCONFIRMED",
+        "next_UB_allowed": false
+      },
+      "matches_expected": true
+    },
+    "un_wrong_id": {
+      "restore": "UNCONFIRMED",
+      "next_UB_allowed": false,
+      "gate_reason": "RJ 복원 관문 미통과 — RJ 복원 판정 RESTORED 아님 (UNCONFIRMED) (§12-1 ⑤ · 개정 3 §14-10 — 미확인 · 실패면 U 없음)",
+      "checks": {
+        "syntax": {
+          "ok": true,
+          "stages": {
+            "R": [],
+            "UN": [],
+            "Ut0": []
+          },
+          "loops": [
+            6,
+            6
+          ],
+          "errors": []
+        },
+        "reset_log": {
+          "ok": true,
+          "missing": []
+        },
+        "g0": {
+          "ok": true,
+          "violations": []
+        },
+        "G1": {
+          "status": "PASS",
+          "why": [],
+          "step": 3200000,
+          "atoms": 160417,
+          "ke": 1.3419507e-06,
+          "rel": 0.0
+        },
+        "G2": {
+          "status": "PASS",
+          "why": [],
+          "n_atoms": 3,
+          "n_mismatch": 0,
+          "missing": [],
+          "extra": [],
+          "example": [],
+          "note": "omega 는 원 덤프에 없다 — 과거 직접 비교 미확보 (새 덤프에는 출력)"
+        },
+        "G2c": {
+          "status": "PASS",
+          "why": [],
+          "n_orig": 1,
+          "n_test": 1,
+          "n_mismatch": 0,
+          "missing": [],
+          "extra": [],
+          "n_dup_consistent": 0,
+          "dup_conflicts": [],
+          "discriminating_frac": 1.0,
+          "note": "초기 접촉 힘 재현 검사 — 숨은 이력 동일성의 단독 증명 아님 (§12-1) · 토크 · 주기 플래그 제외"
+        },
+        "mesh_md5": {
+          "status": "PASS"
+        },
+        "G3": {
+          "status": "PASS",
+          "why": [],
+          "step": 3201000,
+          "atoms": [
+            160417.0,
+            160417.0
+          ],
+          "press": [
+            0.16542994,
+            0.16542994
+          ],
+          "rel": 0.0
+        },
+        "pre_post": {
+          "ok": true,
+          "equal": true,
+          "problems": []
+        },
+        "un_erasure": {
+          "seen": null,
+          "problems": [
+            "un_pre_bot.dump: ID 집합 ≠ S0 (빠짐 1 · 더 있음 1)"
+          ]
+        },
+        "history_test": {
+          "pass": true,
+          "why": [],
+          "source": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\dem_unloading_kit_reverify_20261014\\evidence\\runner_cases_to2z2msd\\un_wrong_id\\history.json",
+          "source_sha256": "e2c2d3a3696f1e990830d08f20b2d81ad7eb6c1b86db1e1d3f7f62d62b1ea663",
+          "plate_fn_sign": -1,
+          "table_sign": -1
+        }
+      },
+      "expected": {
+        "restore": "UNCONFIRMED",
+        "next_UB_allowed": false
+      },
+      "matches_expected": true
+    },
+    "pre_wrong_step": {
+      "restore": "UNCONFIRMED",
+      "next_UB_allowed": false,
+      "gate_reason": "RJ 복원 관문 미통과 — RJ 복원 판정 RESTORED 아님 (UNCONFIRMED) (§12-1 ⑤ · 개정 3 §14-10 — 미확인 · 실패면 U 없음)",
+      "checks": {
+        "syntax": {
+          "ok": true,
+          "stages": {
+            "R": [],
+            "UN": [],
+            "Ut0": []
+          },
+          "loops": [
+            6,
+            6
+          ],
+          "errors": []
+        },
+        "reset_log": {
+          "ok": true,
+          "missing": []
+        },
+        "g0": {
+          "ok": true,
+          "violations": []
+        },
+        "G1": {
+          "status": "PASS",
+          "why": [],
+          "step": 3200000,
+          "atoms": 160417,
+          "ke": 1.3419507e-06,
+          "rel": 0.0
+        },
+        "G2": {
+          "status": "PASS",
+          "why": [],
+          "n_atoms": 3,
+          "n_mismatch": 0,
+          "missing": [],
+          "extra": [],
+          "example": [],
+          "note": "omega 는 원 덤프에 없다 — 과거 직접 비교 미확보 (새 덤프에는 출력)"
+        },
+        "G2c": {
+          "status": "PASS",
+          "why": [],
+          "n_orig": 1,
+          "n_test": 1,
+          "n_mismatch": 0,
+          "missing": [],
+          "extra": [],
+          "n_dup_consistent": 0,
+          "dup_conflicts": [],
+          "discriminating_frac": 1.0,
+          "note": "초기 접촉 힘 재현 검사 — 숨은 이력 동일성의 단독 증명 아님 (§12-1) · 토크 · 주기 플래그 제외"
+        },
+        "mesh_md5": {
+          "status": "PASS"
+        },
+        "G3": {
+          "status": "PASS",
+          "why": [],
+          "step": 3201000,
+          "atoms": [
+            160417.0,
+            160417.0
+          ],
+          "press": [
+            0.16542994,
+            0.16542994
+          ],
+          "rel": 0.0
+        },
+        "pre_post": {
+          "ok": false,
+          "equal": null,
+          "problems": [
+            "pre_bot.dump: 머리 step 3200001 ≠ 기대 3200000"
+          ]
+        },
+        "un_erasure": {
+          "seen": true,
+          "problems": []
+        },
+        "history_test": {
+          "pass": true,
+          "why": [],
+          "source": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\dem_unloading_kit_reverify_20261014\\evidence\\runner_cases_to2z2msd\\pre_wrong_step\\history.json",
+          "source_sha256": "e2c2d3a3696f1e990830d08f20b2d81ad7eb6c1b86db1e1d3f7f62d62b1ea663",
+          "plate_fn_sign": -1,
+          "table_sign": -1
+        }
+      },
+      "expected": {
+        "restore": "UNCONFIRMED",
+        "next_UB_allowed": false
+      },
+      "matches_expected": true
+    },
+    "post_wrong_step": {
+      "restore": "UNCONFIRMED",
+      "next_UB_allowed": false,
+      "gate_reason": "RJ 복원 관문 미통과 — RJ 복원 판정 RESTORED 아님 (UNCONFIRMED) (§12-1 ⑤ · 개정 3 §14-10 — 미확인 · 실패면 U 없음)",
+      "checks": {
+        "syntax": {
+          "ok": true,
+          "stages": {
+            "R": [],
+            "UN": [],
+            "Ut0": []
+          },
+          "loops": [
+            6,
+            6
+          ],
+          "errors": []
+        },
+        "reset_log": {
+          "ok": true,
+          "missing": []
+        },
+        "g0": {
+          "ok": true,
+          "violations": []
+        },
+        "G1": {
+          "status": "PASS",
+          "why": [],
+          "step": 3200000,
+          "atoms": 160417,
+          "ke": 1.3419507e-06,
+          "rel": 0.0
+        },
+        "G2": {
+          "status": "PASS",
+          "why": [],
+          "n_atoms": 3,
+          "n_mismatch": 0,
+          "missing": [],
+          "extra": [],
+          "example": [],
+          "note": "omega 는 원 덤프에 없다 — 과거 직접 비교 미확보 (새 덤프에는 출력)"
+        },
+        "G2c": {
+          "status": "PASS",
+          "why": [],
+          "n_orig": 1,
+          "n_test": 1,
+          "n_mismatch": 0,
+          "missing": [],
+          "extra": [],
+          "n_dup_consistent": 0,
+          "dup_conflicts": [],
+          "discriminating_frac": 1.0,
+          "note": "초기 접촉 힘 재현 검사 — 숨은 이력 동일성의 단독 증명 아님 (§12-1) · 토크 · 주기 플래그 제외"
+        },
+        "mesh_md5": {
+          "status": "PASS"
+        },
+        "G3": {
+          "status": "PASS",
+          "why": [],
+          "step": 3201000,
+          "atoms": [
+            160417.0,
+            160417.0
+          ],
+          "press": [
+            0.16542994,
+            0.16542994
+          ],
+          "rel": 0.0
+        },
+        "pre_post": {
+          "ok": false,
+          "equal": null,
+          "problems": [
+            "post_atom_3200000.dump: 머리 step 3200001 ≠ 기대 3200000"
+          ]
+        },
+        "un_erasure": {
+          "seen": true,
+          "problems": []
+        },
+        "history_test": {
+          "pass": true,
+          "why": [],
+          "source": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\dem_unloading_kit_reverify_20261014\\evidence\\runner_cases_to2z2msd\\post_wrong_step\\history.json",
+          "source_sha256": "e2c2d3a3696f1e990830d08f20b2d81ad7eb6c1b86db1e1d3f7f62d62b1ea663",
+          "plate_fn_sign": -1,
+          "table_sign": -1
+        }
+      },
+      "expected": {
+        "restore": "UNCONFIRMED",
+        "next_UB_allowed": false
+      },
+      "matches_expected": true
+    },
+    "end_wrong_step": {
+      "restore": "UNCONFIRMED",
+      "next_UB_allowed": false,
+      "gate_reason": "RJ 복원 관문 미통과 — RJ 복원 판정 RESTORED 아님 (UNCONFIRMED) (§12-1 ⑤ · 개정 3 §14-10 — 미확인 · 실패면 U 없음)",
+      "checks": {
+        "syntax": {
+          "ok": true,
+          "stages": {
+            "R": [],
+            "UN": [],
+            "Ut0": []
+          },
+          "loops": [
+            6,
+            6
+          ],
+          "errors": []
+        },
+        "reset_log": {
+          "ok": true,
+          "missing": []
+        },
+        "g0": {
+          "ok": true,
+          "violations": []
+        },
+        "G1": {
+          "status": "PASS",
+          "why": [],
+          "step": 3200000,
+          "atoms": 160417,
+          "ke": 1.3419507e-06,
+          "rel": 0.0
+        },
+        "G2": {
+          "status": "PASS",
+          "why": [],
+          "n_atoms": 3,
+          "n_mismatch": 0,
+          "missing": [],
+          "extra": [],
+          "example": [],
+          "note": "omega 는 원 덤프에 없다 — 과거 직접 비교 미확보 (새 덤프에는 출력)"
+        },
+        "G2c": {
+          "status": "PASS",
+          "why": [],
+          "n_orig": 1,
+          "n_test": 1,
+          "n_mismatch": 0,
+          "missing": [],
+          "extra": [],
+          "n_dup_consistent": 0,
+          "dup_conflicts": [],
+          "discriminating_frac": 1.0,
+          "note": "초기 접촉 힘 재현 검사 — 숨은 이력 동일성의 단독 증명 아님 (§12-1) · 토크 · 주기 플래그 제외"
+        },
+        "mesh_md5": {
+          "status": "PASS"
+        },
+        "G3": {
+          "status": "PASS",
+          "why": [],
+          "step": 3201000,
+          "atoms": [
+            160417.0,
+            160417.0
+          ],
+          "press": [
+            0.16542994,
+            0.16542994
+          ],
+          "rel": 0.0
+        },
+        "pre_post": {
+          "ok": true,
+          "equal": true,
+          "problems": []
+        },
+        "un_erasure": {
+          "seen": null,
+          "problems": [
+            "end_pre_bot.dump: 머리 step 3202001 ≠ 기대 3202000"
+          ]
+        },
+        "history_test": {
+          "pass": true,
+          "why": [],
+          "source": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\dem_unloading_kit_reverify_20261014\\evidence\\runner_cases_to2z2msd\\end_wrong_step\\history.json",
+          "source_sha256": "e2c2d3a3696f1e990830d08f20b2d81ad7eb6c1b86db1e1d3f7f62d62b1ea663",
+          "plate_fn_sign": -1,
+          "table_sign": -1
+        }
+      },
+      "expected": {
+        "restore": "UNCONFIRMED",
+        "next_UB_allowed": false
+      },
+      "matches_expected": true
+    },
+    "un_wrong_step": {
+      "restore": "UNCONFIRMED",
+      "next_UB_allowed": false,
+      "gate_reason": "RJ 복원 관문 미통과 — RJ 복원 판정 RESTORED 아님 (UNCONFIRMED) (§12-1 ⑤ · 개정 3 §14-10 — 미확인 · 실패면 U 없음)",
+      "checks": {
+        "syntax": {
+          "ok": true,
+          "stages": {
+            "R": [],
+            "UN": [],
+            "Ut0": []
+          },
+          "loops": [
+            6,
+            6
+          ],
+          "errors": []
+        },
+        "reset_log": {
+          "ok": true,
+          "missing": []
+        },
+        "g0": {
+          "ok": true,
+          "violations": []
+        },
+        "G1": {
+          "status": "PASS",
+          "why": [],
+          "step": 3200000,
+          "atoms": 160417,
+          "ke": 1.3419507e-06,
+          "rel": 0.0
+        },
+        "G2": {
+          "status": "PASS",
+          "why": [],
+          "n_atoms": 3,
+          "n_mismatch": 0,
+          "missing": [],
+          "extra": [],
+          "example": [],
+          "note": "omega 는 원 덤프에 없다 — 과거 직접 비교 미확보 (새 덤프에는 출력)"
+        },
+        "G2c": {
+          "status": "PASS",
+          "why": [],
+          "n_orig": 1,
+          "n_test": 1,
+          "n_mismatch": 0,
+          "missing": [],
+          "extra": [],
+          "n_dup_consistent": 0,
+          "dup_conflicts": [],
+          "discriminating_frac": 1.0,
+          "note": "초기 접촉 힘 재현 검사 — 숨은 이력 동일성의 단독 증명 아님 (§12-1) · 토크 · 주기 플래그 제외"
+        },
+        "mesh_md5": {
+          "status": "PASS"
+        },
+        "G3": {
+          "status": "PASS",
+          "why": [],
+          "step": 3201000,
+          "atoms": [
+            160417.0,
+            160417.0
+          ],
+          "press": [
+            0.16542994,
+            0.16542994
+          ],
+          "rel": 0.0
+        },
+        "pre_post": {
+          "ok": true,
+          "equal": true,
+          "problems": []
+        },
+        "un_erasure": {
+          "seen": null,
+          "problems": [
+            "un_pre_bot.dump: 머리 step 3202001 ≠ 기대 3202000"
+          ]
+        },
+        "history_test": {
+          "pass": true,
+          "why": [],
+          "source": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\dem_unloading_kit_reverify_20261014\\evidence\\runner_cases_to2z2msd\\un_wrong_step\\history.json",
+          "source_sha256": "e2c2d3a3696f1e990830d08f20b2d81ad7eb6c1b86db1e1d3f7f62d62b1ea663",
+          "plate_fn_sign": -1,
+          "table_sign": -1
+        }
+      },
+      "expected": {
+        "restore": "UNCONFIRMED",
+        "next_UB_allowed": false
+      },
+      "matches_expected": true
+    },
+    "Ut0_receipt_fail": {
+      "restore": "SYNTAX_FAIL",
+      "next_UB_allowed": false,
+      "gate_reason": "RJ 복원 관문 미통과 — RJ 복원 판정 RESTORED 아님 (SYNTAX_FAIL) (§12-1 ⑤ · 개정 3 §14-10 — 미확인 · 실패면 U 없음)",
+      "checks": {
+        "syntax": {
+          "ok": false,
+          "stages": {
+            "R": [],
+            "UN": [],
+            "Ut0": [
+              "Ut0 PASS 줄 없음",
+              "단계 기록 실패 줄: ['Ut0 screen.txt FAIL rc=1']"
+            ]
+          },
+          "loops": [
+            6,
+            6
+          ],
+          "errors": []
+        },
+        "reset_log": {
+          "ok": true,
+          "missing": []
+        },
+        "g0": {
+          "ok": true,
+          "violations": []
+        },
+        "G1": {
+          "status": "PASS",
+          "why": [],
+          "step": 3200000,
+          "atoms": 160417,
+          "ke": 1.3419507e-06,
+          "rel": 0.0
+        },
+        "G2": {
+          "status": "PASS",
+          "why": [],
+          "n_atoms": 3,
+          "n_mismatch": 0,
+          "missing": [],
+          "extra": [],
+          "example": [],
+          "note": "omega 는 원 덤프에 없다 — 과거 직접 비교 미확보 (새 덤프에는 출력)"
+        },
+        "G2c": {
+          "status": "PASS",
+          "why": [],
+          "n_orig": 1,
+          "n_test": 1,
+          "n_mismatch": 0,
+          "missing": [],
+          "extra": [],
+          "n_dup_consistent": 0,
+          "dup_conflicts": [],
+          "discriminating_frac": 1.0,
+          "note": "초기 접촉 힘 재현 검사 — 숨은 이력 동일성의 단독 증명 아님 (§12-1) · 토크 · 주기 플래그 제외"
+        },
+        "mesh_md5": {
+          "status": "PASS"
+        },
+        "G3": {
+          "status": "PASS",
+          "why": [],
+          "step": 3201000,
+          "atoms": [
+            160417.0,
+            160417.0
+          ],
+          "press": [
+            0.16542994,
+            0.16542994
+          ],
+          "rel": 0.0
+        },
+        "pre_post": {
+          "ok": true,
+          "equal": true,
+          "problems": []
+        },
+        "un_erasure": {
+          "seen": true,
+          "problems": []
+        },
+        "history_test": {
+          "pass": true,
+          "why": [],
+          "source": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\dem_unloading_kit_reverify_20261014\\evidence\\runner_cases_to2z2msd\\Ut0_receipt_fail\\history.json",
+          "source_sha256": "e2c2d3a3696f1e990830d08f20b2d81ad7eb6c1b86db1e1d3f7f62d62b1ea663",
+          "plate_fn_sign": -1,
+          "table_sign": -1
+        }
+      },
+      "expected": {
+        "restore": "SYNTAX_FAIL",
+        "next_UB_allowed": false
+      },
+      "matches_expected": true
+    },
+    "Ut0_screen_error": {
+      "restore": "SYNTAX_FAIL",
+      "next_UB_allowed": false,
+      "gate_reason": "RJ 복원 관문 미통과 — RJ 복원 판정 RESTORED 아님 (SYNTAX_FAIL) (§12-1 ⑤ · 개정 3 §14-10 — 미확인 · 실패면 U 없음)",
+      "checks": {
+        "syntax": {
+          "ok": false,
+          "stages": {
+            "R": [],
+            "UN": [],
+            "Ut0": [
+              "화면 ERROR: ['ERROR: synthetic late failure']"
+            ]
+          },
+          "loops": [
+            6,
+            6
+          ],
+          "errors": []
+        },
+        "reset_log": {
+          "ok": true,
+          "missing": []
+        },
+        "g0": {
+          "ok": true,
+          "violations": []
+        },
+        "G1": {
+          "status": "PASS",
+          "why": [],
+          "step": 3200000,
+          "atoms": 160417,
+          "ke": 1.3419507e-06,
+          "rel": 0.0
+        },
+        "G2": {
+          "status": "PASS",
+          "why": [],
+          "n_atoms": 3,
+          "n_mismatch": 0,
+          "missing": [],
+          "extra": [],
+          "example": [],
+          "note": "omega 는 원 덤프에 없다 — 과거 직접 비교 미확보 (새 덤프에는 출력)"
+        },
+        "G2c": {
+          "status": "PASS",
+          "why": [],
+          "n_orig": 1,
+          "n_test": 1,
+          "n_mismatch": 0,
+          "missing": [],
+          "extra": [],
+          "n_dup_consistent": 0,
+          "dup_conflicts": [],
+          "discriminating_frac": 1.0,
+          "note": "초기 접촉 힘 재현 검사 — 숨은 이력 동일성의 단독 증명 아님 (§12-1) · 토크 · 주기 플래그 제외"
+        },
+        "mesh_md5": {
+          "status": "PASS"
+        },
+        "G3": {
+          "status": "PASS",
+          "why": [],
+          "step": 3201000,
+          "atoms": [
+            160417.0,
+            160417.0
+          ],
+          "press": [
+            0.16542994,
+            0.16542994
+          ],
+          "rel": 0.0
+        },
+        "pre_post": {
+          "ok": true,
+          "equal": true,
+          "problems": []
+        },
+        "un_erasure": {
+          "seen": true,
+          "problems": []
+        },
+        "history_test": {
+          "pass": true,
+          "why": [],
+          "source": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\dem_unloading_kit_reverify_20261014\\evidence\\runner_cases_to2z2msd\\Ut0_screen_error\\history.json",
+          "source_sha256": "e2c2d3a3696f1e990830d08f20b2d81ad7eb6c1b86db1e1d3f7f62d62b1ea663",
+          "plate_fn_sign": -1,
+          "table_sign": -1
+        }
+      },
+      "expected": {
+        "restore": "SYNTAX_FAIL",
+        "next_UB_allowed": false
+      },
+      "matches_expected": true
+    },
+    "R_receipt_fail": {
+      "restore": "SYNTAX_FAIL",
+      "next_UB_allowed": false,
+      "gate_reason": "RJ 복원 관문 미통과 — RJ 복원 판정 RESTORED 아님 (SYNTAX_FAIL) (§12-1 ⑤ · 개정 3 §14-10 — 미확인 · 실패면 U 없음)",
+      "checks": {
+        "syntax": {
+          "ok": false,
+          "stages": {
+            "R": [
+              "R PASS 줄 없음",
+              "단계 기록 실패 줄: ['R screen.txt FAIL rc=1']"
+            ],
+            "UN": [],
+            "Ut0": []
+          },
+          "loops": [
+            6,
+            6
+          ],
+          "errors": []
+        },
+        "reset_log": {
+          "ok": true,
+          "missing": []
+        },
+        "g0": {
+          "ok": true,
+          "violations": []
+        },
+        "G1": {
+          "status": "PASS",
+          "why": [],
+          "step": 3200000,
+          "atoms": 160417,
+          "ke": 1.3419507e-06,
+          "rel": 0.0
+        },
+        "G2": {
+          "status": "PASS",
+          "why": [],
+          "n_atoms": 3,
+          "n_mismatch": 0,
+          "missing": [],
+          "extra": [],
+          "example": [],
+          "note": "omega 는 원 덤프에 없다 — 과거 직접 비교 미확보 (새 덤프에는 출력)"
+        },
+        "G2c": {
+          "status": "PASS",
+          "why": [],
+          "n_orig": 1,
+          "n_test": 1,
+          "n_mismatch": 0,
+          "missing": [],
+          "extra": [],
+          "n_dup_consistent": 0,
+          "dup_conflicts": [],
+          "discriminating_frac": 1.0,
+          "note": "초기 접촉 힘 재현 검사 — 숨은 이력 동일성의 단독 증명 아님 (§12-1) · 토크 · 주기 플래그 제외"
+        },
+        "mesh_md5": {
+          "status": "PASS"
+        },
+        "G3": {
+          "status": "PASS",
+          "why": [],
+          "step": 3201000,
+          "atoms": [
+            160417.0,
+            160417.0
+          ],
+          "press": [
+            0.16542994,
+            0.16542994
+          ],
+          "rel": 0.0
+        },
+        "pre_post": {
+          "ok": true,
+          "equal": true,
+          "problems": []
+        },
+        "un_erasure": {
+          "seen": true,
+          "problems": []
+        },
+        "history_test": {
+          "pass": true,
+          "why": [],
+          "source": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\dem_unloading_kit_reverify_20261014\\evidence\\runner_cases_to2z2msd\\R_receipt_fail\\history.json",
+          "source_sha256": "e2c2d3a3696f1e990830d08f20b2d81ad7eb6c1b86db1e1d3f7f62d62b1ea663",
+          "plate_fn_sign": -1,
+          "table_sign": -1
+        }
+      },
+      "expected": {
+        "restore": "SYNTAX_FAIL",
+        "next_UB_allowed": false
+      },
+      "matches_expected": true
+    },
+    "R_screen_error": {
+      "restore": "SYNTAX_FAIL",
+      "next_UB_allowed": false,
+      "gate_reason": "RJ 복원 관문 미통과 — RJ 복원 판정 RESTORED 아님 (SYNTAX_FAIL) (§12-1 ⑤ · 개정 3 §14-10 — 미확인 · 실패면 U 없음)",
+      "checks": {
+        "syntax": {
+          "ok": false,
+          "stages": {
+            "R": [
+              "화면 ERROR: ['ERROR: synthetic late failure']"
+            ],
+            "UN": [],
+            "Ut0": []
+          },
+          "loops": [
+            6,
+            6
+          ],
+          "errors": [
+            "ERROR: synthetic late failure"
+          ]
+        },
+        "reset_log": {
+          "ok": true,
+          "missing": []
+        },
+        "g0": {
+          "ok": true,
+          "violations": []
+        },
+        "G1": {
+          "status": "PASS",
+          "why": [],
+          "step": 3200000,
+          "atoms": 160417,
+          "ke": 1.3419507e-06,
+          "rel": 0.0
+        },
+        "G2": {
+          "status": "PASS",
+          "why": [],
+          "n_atoms": 3,
+          "n_mismatch": 0,
+          "missing": [],
+          "extra": [],
+          "example": [],
+          "note": "omega 는 원 덤프에 없다 — 과거 직접 비교 미확보 (새 덤프에는 출력)"
+        },
+        "G2c": {
+          "status": "PASS",
+          "why": [],
+          "n_orig": 1,
+          "n_test": 1,
+          "n_mismatch": 0,
+          "missing": [],
+          "extra": [],
+          "n_dup_consistent": 0,
+          "dup_conflicts": [],
+          "discriminating_frac": 1.0,
+          "note": "초기 접촉 힘 재현 검사 — 숨은 이력 동일성의 단독 증명 아님 (§12-1) · 토크 · 주기 플래그 제외"
+        },
+        "mesh_md5": {
+          "status": "PASS"
+        },
+        "G3": {
+          "status": "PASS",
+          "why": [],
+          "step": 3201000,
+          "atoms": [
+            160417.0,
+            160417.0
+          ],
+          "press": [
+            0.16542994,
+            0.16542994
+          ],
+          "rel": 0.0
+        },
+        "pre_post": {
+          "ok": true,
+          "equal": true,
+          "problems": []
+        },
+        "un_erasure": {
+          "seen": true,
+          "problems": []
+        },
+        "history_test": {
+          "pass": true,
+          "why": [],
+          "source": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\dem_unloading_kit_reverify_20261014\\evidence\\runner_cases_to2z2msd\\R_screen_error\\history.json",
+          "source_sha256": "e2c2d3a3696f1e990830d08f20b2d81ad7eb6c1b86db1e1d3f7f62d62b1ea663",
+          "plate_fn_sign": -1,
+          "table_sign": -1
+        }
+      },
+      "expected": {
+        "restore": "SYNTAX_FAIL",
+        "next_UB_allowed": false
+      },
+      "matches_expected": true
+    },
+    "UN_receipt_fail": {
+      "restore": "SYNTAX_FAIL",
+      "next_UB_allowed": false,
+      "gate_reason": "RJ 복원 관문 미통과 — RJ 복원 판정 RESTORED 아님 (SYNTAX_FAIL) (§12-1 ⑤ · 개정 3 §14-10 — 미확인 · 실패면 U 없음)",
+      "checks": {
+        "syntax": {
+          "ok": false,
+          "stages": {
+            "R": [],
+            "UN": [
+              "UNread PASS 줄 없음",
+              "단계 기록 실패 줄: ['UNread screen.txt FAIL rc=1']"
+            ],
+            "Ut0": []
+          },
+          "loops": [
+            6,
+            6
+          ],
+          "errors": []
+        },
+        "reset_log": {
+          "ok": true,
+          "missing": []
+        },
+        "g0": {
+          "ok": true,
+          "violations": []
+        },
+        "G1": {
+          "status": "PASS",
+          "why": [],
+          "step": 3200000,
+          "atoms": 160417,
+          "ke": 1.3419507e-06,
+          "rel": 0.0
+        },
+        "G2": {
+          "status": "PASS",
+          "why": [],
+          "n_atoms": 3,
+          "n_mismatch": 0,
+          "missing": [],
+          "extra": [],
+          "example": [],
+          "note": "omega 는 원 덤프에 없다 — 과거 직접 비교 미확보 (새 덤프에는 출력)"
+        },
+        "G2c": {
+          "status": "PASS",
+          "why": [],
+          "n_orig": 1,
+          "n_test": 1,
+          "n_mismatch": 0,
+          "missing": [],
+          "extra": [],
+          "n_dup_consistent": 0,
+          "dup_conflicts": [],
+          "discriminating_frac": 1.0,
+          "note": "초기 접촉 힘 재현 검사 — 숨은 이력 동일성의 단독 증명 아님 (§12-1) · 토크 · 주기 플래그 제외"
+        },
+        "mesh_md5": {
+          "status": "PASS"
+        },
+        "G3": {
+          "status": "PASS",
+          "why": [],
+          "step": 3201000,
+          "atoms": [
+            160417.0,
+            160417.0
+          ],
+          "press": [
+            0.16542994,
+            0.16542994
+          ],
+          "rel": 0.0
+        },
+        "pre_post": {
+          "ok": true,
+          "equal": true,
+          "problems": []
+        },
+        "un_erasure": {
+          "seen": true,
+          "problems": []
+        },
+        "history_test": {
+          "pass": true,
+          "why": [],
+          "source": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\dem_unloading_kit_reverify_20261014\\evidence\\runner_cases_to2z2msd\\UN_receipt_fail\\history.json",
+          "source_sha256": "e2c2d3a3696f1e990830d08f20b2d81ad7eb6c1b86db1e1d3f7f62d62b1ea663",
+          "plate_fn_sign": -1,
+          "table_sign": -1
+        }
+      },
+      "expected": {
+        "restore": "SYNTAX_FAIL",
+        "next_UB_allowed": false
+      },
+      "matches_expected": true
+    },
+    "UN_screen_error": {
+      "restore": "SYNTAX_FAIL",
+      "next_UB_allowed": false,
+      "gate_reason": "RJ 복원 관문 미통과 — RJ 복원 판정 RESTORED 아님 (SYNTAX_FAIL) (§12-1 ⑤ · 개정 3 §14-10 — 미확인 · 실패면 U 없음)",
+      "checks": {
+        "syntax": {
+          "ok": false,
+          "stages": {
+            "R": [],
+            "UN": [
+              "화면 ERROR: ['ERROR: synthetic late failure']"
+            ],
+            "Ut0": []
+          },
+          "loops": [
+            6,
+            6
+          ],
+          "errors": []
+        },
+        "reset_log": {
+          "ok": true,
+          "missing": []
+        },
+        "g0": {
+          "ok": true,
+          "violations": []
+        },
+        "G1": {
+          "status": "PASS",
+          "why": [],
+          "step": 3200000,
+          "atoms": 160417,
+          "ke": 1.3419507e-06,
+          "rel": 0.0
+        },
+        "G2": {
+          "status": "PASS",
+          "why": [],
+          "n_atoms": 3,
+          "n_mismatch": 0,
+          "missing": [],
+          "extra": [],
+          "example": [],
+          "note": "omega 는 원 덤프에 없다 — 과거 직접 비교 미확보 (새 덤프에는 출력)"
+        },
+        "G2c": {
+          "status": "PASS",
+          "why": [],
+          "n_orig": 1,
+          "n_test": 1,
+          "n_mismatch": 0,
+          "missing": [],
+          "extra": [],
+          "n_dup_consistent": 0,
+          "dup_conflicts": [],
+          "discriminating_frac": 1.0,
+          "note": "초기 접촉 힘 재현 검사 — 숨은 이력 동일성의 단독 증명 아님 (§12-1) · 토크 · 주기 플래그 제외"
+        },
+        "mesh_md5": {
+          "status": "PASS"
+        },
+        "G3": {
+          "status": "PASS",
+          "why": [],
+          "step": 3201000,
+          "atoms": [
+            160417.0,
+            160417.0
+          ],
+          "press": [
+            0.16542994,
+            0.16542994
+          ],
+          "rel": 0.0
+        },
+        "pre_post": {
+          "ok": true,
+          "equal": true,
+          "problems": []
+        },
+        "un_erasure": {
+          "seen": true,
+          "problems": []
+        },
+        "history_test": {
+          "pass": true,
+          "why": [],
+          "source": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\dem_unloading_kit_reverify_20261014\\evidence\\runner_cases_to2z2msd\\UN_screen_error\\history.json",
+          "source_sha256": "e2c2d3a3696f1e990830d08f20b2d81ad7eb6c1b86db1e1d3f7f62d62b1ea663",
+          "plate_fn_sign": -1,
+          "table_sign": -1
+        }
+      },
+      "expected": {
+        "restore": "SYNTAX_FAIL",
+        "next_UB_allowed": false
+      },
+      "matches_expected": true
+    },
+    "G0_fail": {
+      "restore": "VALUE_MISMATCH",
+      "next_UB_allowed": false,
+      "gate_reason": "RJ 복원 관문 미통과 — RJ 복원 판정 RESTORED 아님 (VALUE_MISMATCH) (§12-1 ⑤ · 개정 3 §14-10 — 미확인 · 실패면 U 없음)",
+      "checks": {
+        "syntax": {
+          "ok": true,
+          "stages": {
+            "R": [],
+            "UN": [],
+            "Ut0": []
+          },
+          "loops": [
+            6,
+            6
+          ],
+          "errors": []
+        },
+        "reset_log": {
+          "ok": true,
+          "missing": []
+        },
+        "g0": {
+          "ok": false,
+          "violations": [
+            "synthetic"
+          ]
+        },
+        "G1": {
+          "status": "PASS",
+          "why": [],
+          "step": 3200000,
+          "atoms": 160417,
+          "ke": 1.3419507e-06,
+          "rel": 0.0
+        },
+        "G2": {
+          "status": "PASS",
+          "why": [],
+          "n_atoms": 3,
+          "n_mismatch": 0,
+          "missing": [],
+          "extra": [],
+          "example": [],
+          "note": "omega 는 원 덤프에 없다 — 과거 직접 비교 미확보 (새 덤프에는 출력)"
+        },
+        "G2c": {
+          "status": "PASS",
+          "why": [],
+          "n_orig": 1,
+          "n_test": 1,
+          "n_mismatch": 0,
+          "missing": [],
+          "extra": [],
+          "n_dup_consistent": 0,
+          "dup_conflicts": [],
+          "discriminating_frac": 1.0,
+          "note": "초기 접촉 힘 재현 검사 — 숨은 이력 동일성의 단독 증명 아님 (§12-1) · 토크 · 주기 플래그 제외"
+        },
+        "mesh_md5": {
+          "status": "PASS"
+        },
+        "G3": {
+          "status": "PASS",
+          "why": [],
+          "step": 3201000,
+          "atoms": [
+            160417.0,
+            160417.0
+          ],
+          "press": [
+            0.16542994,
+            0.16542994
+          ],
+          "rel": 0.0
+        },
+        "pre_post": {
+          "ok": true,
+          "equal": true,
+          "problems": []
+        },
+        "un_erasure": {
+          "seen": true,
+          "problems": []
+        },
+        "history_test": {
+          "pass": true,
+          "why": [],
+          "source": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\dem_unloading_kit_reverify_20261014\\evidence\\runner_cases_to2z2msd\\G0_fail\\history.json",
+          "source_sha256": "e2c2d3a3696f1e990830d08f20b2d81ad7eb6c1b86db1e1d3f7f62d62b1ea663",
+          "plate_fn_sign": -1,
+          "table_sign": -1
+        }
+      },
+      "expected": {
+        "restore": "VALUE_MISMATCH",
+        "next_UB_allowed": false
+      },
+      "matches_expected": true
+    },
+    "manifest_fails1": {
+      "restore": "RESTORED",
+      "next_UB_allowed": false,
+      "gate_reason": "RJ 복원 관문 미통과 — RJ 잡 기록 끝 줄 = 기술 실패 (end=x fails=1 reader_rc=0) — 증서를 다시 쓰지 않는다 (새 시도) (§12-1 ⑤ · 개정 3 §14-10 — 미확인 · 실패면 U 없음)",
+      "checks": {
+        "syntax": {
+          "ok": true,
+          "stages": {
+            "R": [],
+            "UN": [],
+            "Ut0": []
+          },
+          "loops": [
+            6,
+            6
+          ],
+          "errors": []
+        },
+        "reset_log": {
+          "ok": true,
+          "missing": []
+        },
+        "g0": {
+          "ok": true,
+          "violations": []
+        },
+        "G1": {
+          "status": "PASS",
+          "why": [],
+          "step": 3200000,
+          "atoms": 160417,
+          "ke": 1.3419507e-06,
+          "rel": 0.0
+        },
+        "G2": {
+          "status": "PASS",
+          "why": [],
+          "n_atoms": 3,
+          "n_mismatch": 0,
+          "missing": [],
+          "extra": [],
+          "example": [],
+          "note": "omega 는 원 덤프에 없다 — 과거 직접 비교 미확보 (새 덤프에는 출력)"
+        },
+        "G2c": {
+          "status": "PASS",
+          "why": [],
+          "n_orig": 1,
+          "n_test": 1,
+          "n_mismatch": 0,
+          "missing": [],
+          "extra": [],
+          "n_dup_consistent": 0,
+          "dup_conflicts": [],
+          "discriminating_frac": 1.0,
+          "note": "초기 접촉 힘 재현 검사 — 숨은 이력 동일성의 단독 증명 아님 (§12-1) · 토크 · 주기 플래그 제외"
+        },
+        "mesh_md5": {
+          "status": "PASS"
+        },
+        "G3": {
+          "status": "PASS",
+          "why": [],
+          "step": 3201000,
+          "atoms": [
+            160417.0,
+            160417.0
+          ],
+          "press": [
+            0.16542994,
+            0.16542994
+          ],
+          "rel": 0.0
+        },
+        "pre_post": {
+          "ok": true,
+          "equal": true,
+          "problems": []
+        },
+        "un_erasure": {
+          "seen": true,
+          "problems": []
+        },
+        "history_test": {
+          "pass": true,
+          "why": [],
+          "source": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\dem_unloading_kit_reverify_20261014\\evidence\\runner_cases_to2z2msd\\manifest_fails1\\history.json",
+          "source_sha256": "e2c2d3a3696f1e990830d08f20b2d81ad7eb6c1b86db1e1d3f7f62d62b1ea663",
+          "plate_fn_sign": -1,
+          "table_sign": -1
+        }
+      },
+      "expected": {
+        "restore": "RESTORED",
+        "next_UB_allowed": false
+      },
+      "matches_expected": true
+    },
+    "manifest_no_end": {
+      "restore": "RESTORED",
+      "next_UB_allowed": false,
+      "gate_reason": "RJ 복원 관문 미통과 — RJ 잡 기록 (run_manifest.txt) 에 끝 줄 없음 — 러너가 끝내지 못했다 (§12-1 ⑤ · 개정 3 §14-10 — 미확인 · 실패면 U 없음)",
+      "checks": {
+        "syntax": {
+          "ok": true,
+          "stages": {
+            "R": [],
+            "UN": [],
+            "Ut0": []
+          },
+          "loops": [
+            6,
+            6
+          ],
+          "errors": []
+        },
+        "reset_log": {
+          "ok": true,
+          "missing": []
+        },
+        "g0": {
+          "ok": true,
+          "violations": []
+        },
+        "G1": {
+          "status": "PASS",
+          "why": [],
+          "step": 3200000,
+          "atoms": 160417,
+          "ke": 1.3419507e-06,
+          "rel": 0.0
+        },
+        "G2": {
+          "status": "PASS",
+          "why": [],
+          "n_atoms": 3,
+          "n_mismatch": 0,
+          "missing": [],
+          "extra": [],
+          "example": [],
+          "note": "omega 는 원 덤프에 없다 — 과거 직접 비교 미확보 (새 덤프에는 출력)"
+        },
+        "G2c": {
+          "status": "PASS",
+          "why": [],
+          "n_orig": 1,
+          "n_test": 1,
+          "n_mismatch": 0,
+          "missing": [],
+          "extra": [],
+          "n_dup_consistent": 0,
+          "dup_conflicts": [],
+          "discriminating_frac": 1.0,
+          "note": "초기 접촉 힘 재현 검사 — 숨은 이력 동일성의 단독 증명 아님 (§12-1) · 토크 · 주기 플래그 제외"
+        },
+        "mesh_md5": {
+          "status": "PASS"
+        },
+        "G3": {
+          "status": "PASS",
+          "why": [],
+          "step": 3201000,
+          "atoms": [
+            160417.0,
+            160417.0
+          ],
+          "press": [
+            0.16542994,
+            0.16542994
+          ],
+          "rel": 0.0
+        },
+        "pre_post": {
+          "ok": true,
+          "equal": true,
+          "problems": []
+        },
+        "un_erasure": {
+          "seen": true,
+          "problems": []
+        },
+        "history_test": {
+          "pass": true,
+          "why": [],
+          "source": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\dem_unloading_kit_reverify_20261014\\evidence\\runner_cases_to2z2msd\\manifest_no_end\\history.json",
+          "source_sha256": "e2c2d3a3696f1e990830d08f20b2d81ad7eb6c1b86db1e1d3f7f62d62b1ea663",
+          "plate_fn_sign": -1,
+          "table_sign": -1
+        }
+      },
+      "expected": {
+        "restore": "RESTORED",
+        "next_UB_allowed": false
+      },
+      "matches_expected": true
+    },
+    "missing_SYN": {
+      "restore": "UNCONFIRMED",
+      "next_UB_allowed": false,
+      "gate_reason": "RJ 복원 관문 미통과 — RJ 복원 판정 RESTORED 아님 (UNCONFIRMED) (§12-1 ⑤ · 개정 3 §14-10 — 미확인 · 실패면 U 없음)",
+      "checks": {
+        "syntax": {
+          "ok": true,
+          "stages": {
+            "R": [],
+            "UN": [],
+            "Ut0": []
+          },
+          "loops": [
+            6,
+            6
+          ],
+          "errors": []
+        },
+        "reset_log": {
+          "ok": true,
+          "missing": []
+        },
+        "g0": {
+          "ok": true,
+          "violations": []
+        },
+        "G1": {
+          "status": "PASS",
+          "why": [],
+          "step": 3200000,
+          "atoms": 160417,
+          "ke": 1.3419507e-06,
+          "rel": 0.0
+        },
+        "G2": {
+          "status": "PASS",
+          "why": [],
+          "n_atoms": 3,
+          "n_mismatch": 0,
+          "missing": [],
+          "extra": [],
+          "example": [],
+          "note": "omega 는 원 덤프에 없다 — 과거 직접 비교 미확보 (새 덤프에는 출력)"
+        },
+        "G2c": {
+          "status": "PASS",
+          "why": [],
+          "n_orig": 1,
+          "n_test": 1,
+          "n_mismatch": 0,
+          "missing": [],
+          "extra": [],
+          "n_dup_consistent": 0,
+          "dup_conflicts": [],
+          "discriminating_frac": 1.0,
+          "note": "초기 접촉 힘 재현 검사 — 숨은 이력 동일성의 단독 증명 아님 (§12-1) · 토크 · 주기 플래그 제외"
+        },
+        "mesh_md5": {
+          "status": "PASS"
+        },
+        "G3": {
+          "status": "PASS",
+          "why": [],
+          "step": 3201000,
+          "atoms": [
+            160417.0,
+            160417.0
+          ],
+          "press": [
+            0.16542994,
+            0.16542994
+          ],
+          "rel": 0.0
+        },
+        "pre_post": {
+          "ok": true,
+          "equal": true,
+          "problems": []
+        },
+        "un_erasure": {
+          "seen": true,
+          "problems": []
+        },
+        "history_test": {
+          "pass": false,
+          "why": [
+            "SYN None (SYN PASS 필수 — 없으면 자격 없음)",
+            "SYN 판 법선력 부호 None ≠ 표 -1 (측정된 같은 부호 필수)"
+          ],
+          "source": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\dem_unloading_kit_reverify_20261014\\evidence\\runner_cases_to2z2msd\\missing_SYN\\history.json",
+          "source_sha256": "e80daf420579d318e1ab4263b6cf0ca27339d54c2a22b6e407511f6cd1d240d0",
+          "plate_fn_sign": null,
+          "table_sign": -1
+        }
+      },
+      "expected": {
+        "restore": "UNCONFIRMED",
+        "next_UB_allowed": false
+      },
+      "matches_expected": true
+    },
+    "SYN_wrong_sign": {
+      "restore": "UNCONFIRMED",
+      "next_UB_allowed": false,
+      "gate_reason": "RJ 복원 관문 미통과 — RJ 복원 판정 RESTORED 아님 (UNCONFIRMED) (§12-1 ⑤ · 개정 3 §14-10 — 미확인 · 실패면 U 없음)",
+      "checks": {
+        "syntax": {
+          "ok": true,
+          "stages": {
+            "R": [],
+            "UN": [],
+            "Ut0": []
+          },
+          "loops": [
+            6,
+            6
+          ],
+          "errors": []
+        },
+        "reset_log": {
+          "ok": true,
+          "missing": []
+        },
+        "g0": {
+          "ok": true,
+          "violations": []
+        },
+        "G1": {
+          "status": "PASS",
+          "why": [],
+          "step": 3200000,
+          "atoms": 160417,
+          "ke": 1.3419507e-06,
+          "rel": 0.0
+        },
+        "G2": {
+          "status": "PASS",
+          "why": [],
+          "n_atoms": 3,
+          "n_mismatch": 0,
+          "missing": [],
+          "extra": [],
+          "example": [],
+          "note": "omega 는 원 덤프에 없다 — 과거 직접 비교 미확보 (새 덤프에는 출력)"
+        },
+        "G2c": {
+          "status": "PASS",
+          "why": [],
+          "n_orig": 1,
+          "n_test": 1,
+          "n_mismatch": 0,
+          "missing": [],
+          "extra": [],
+          "n_dup_consistent": 0,
+          "dup_conflicts": [],
+          "discriminating_frac": 1.0,
+          "note": "초기 접촉 힘 재현 검사 — 숨은 이력 동일성의 단독 증명 아님 (§12-1) · 토크 · 주기 플래그 제외"
+        },
+        "mesh_md5": {
+          "status": "PASS"
+        },
+        "G3": {
+          "status": "PASS",
+          "why": [],
+          "step": 3201000,
+          "atoms": [
+            160417.0,
+            160417.0
+          ],
+          "press": [
+            0.16542994,
+            0.16542994
+          ],
+          "rel": 0.0
+        },
+        "pre_post": {
+          "ok": true,
+          "equal": true,
+          "problems": []
+        },
+        "un_erasure": {
+          "seen": true,
+          "problems": []
+        },
+        "history_test": {
+          "pass": false,
+          "why": [
+            "SYN 판 법선력 부호 1 ≠ 표 -1 (측정된 같은 부호 필수)"
+          ],
+          "source": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\dem_unloading_kit_reverify_20261014\\evidence\\runner_cases_to2z2msd\\SYN_wrong_sign\\history.json",
+          "source_sha256": "ef223ad9c11dff8e1ec0951732919a65c4b9a2bc9905497bef5390da716d738a",
+          "plate_fn_sign": 1,
+          "table_sign": -1
+        }
+      },
+      "expected": {
+        "restore": "UNCONFIRMED",
+        "next_UB_allowed": false
+      },
+      "matches_expected": true
+    },
+    "SYN_fail": {
+      "restore": "UNCONFIRMED",
+      "next_UB_allowed": false,
+      "gate_reason": "RJ 복원 관문 미통과 — RJ 복원 판정 RESTORED 아님 (UNCONFIRMED) (§12-1 ⑤ · 개정 3 §14-10 — 미확인 · 실패면 U 없음)",
+      "checks": {
+        "syntax": {
+          "ok": true,
+          "stages": {
+            "R": [],
+            "UN": [],
+            "Ut0": []
+          },
+          "loops": [
+            6,
+            6
+          ],
+          "errors": []
+        },
+        "reset_log": {
+          "ok": true,
+          "missing": []
+        },
+        "g0": {
+          "ok": true,
+          "violations": []
+        },
+        "G1": {
+          "status": "PASS",
+          "why": [],
+          "step": 3200000,
+          "atoms": 160417,
+          "ke": 1.3419507e-06,
+          "rel": 0.0
+        },
+        "G2": {
+          "status": "PASS",
+          "why": [],
+          "n_atoms": 3,
+          "n_mismatch": 0,
+          "missing": [],
+          "extra": [],
+          "example": [],
+          "note": "omega 는 원 덤프에 없다 — 과거 직접 비교 미확보 (새 덤프에는 출력)"
+        },
+        "G2c": {
+          "status": "PASS",
+          "why": [],
+          "n_orig": 1,
+          "n_test": 1,
+          "n_mismatch": 0,
+          "missing": [],
+          "extra": [],
+          "n_dup_consistent": 0,
+          "dup_conflicts": [],
+          "discriminating_frac": 1.0,
+          "note": "초기 접촉 힘 재현 검사 — 숨은 이력 동일성의 단독 증명 아님 (§12-1) · 토크 · 주기 플래그 제외"
+        },
+        "mesh_md5": {
+          "status": "PASS"
+        },
+        "G3": {
+          "status": "PASS",
+          "why": [],
+          "step": 3201000,
+          "atoms": [
+            160417.0,
+            160417.0
+          ],
+          "press": [
+            0.16542994,
+            0.16542994
+          ],
+          "rel": 0.0
+        },
+        "pre_post": {
+          "ok": true,
+          "equal": true,
+          "problems": []
+        },
+        "un_erasure": {
+          "seen": true,
+          "problems": []
+        },
+        "history_test": {
+          "pass": false,
+          "why": [
+            "SYN FAIL (SYN PASS 필수 — 없으면 자격 없음)"
+          ],
+          "source": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\dem_unloading_kit_reverify_20261014\\evidence\\runner_cases_to2z2msd\\SYN_fail\\history.json",
+          "source_sha256": "2e1b78a06922aa02de6a5c42b06dca6b36fdedf20cd38a566c9872e20d2669e7",
+          "plate_fn_sign": -1,
+          "table_sign": -1
+        }
+      },
+      "expected": {
+        "restore": "UNCONFIRMED",
+        "next_UB_allowed": false
+      },
+      "matches_expected": true
+    },
+    "force_timing_missing": {
+      "restore": "UNCONFIRMED",
+      "next_UB_allowed": false,
+      "gate_reason": "RJ 복원 관문 미통과 — RJ 복원 판정 RESTORED 아님 (UNCONFIRMED) (§12-1 ⑤ · 개정 3 §14-10 — 미확인 · 실패면 U 없음)",
+      "checks": {
+        "syntax": {
+          "ok": true,
+          "stages": {
+            "R": [],
+            "UN": [],
+            "Ut0": []
+          },
+          "loops": [
+            6,
+            6
+          ],
+          "errors": []
+        },
+        "reset_log": {
+          "ok": true,
+          "missing": []
+        },
+        "g0": {
+          "ok": true,
+          "violations": []
+        },
+        "G1": {
+          "status": "PASS",
+          "why": [],
+          "step": 3200000,
+          "atoms": 160417,
+          "ke": 1.3419507e-06,
+          "rel": 0.0
+        },
+        "G2": {
+          "status": "PASS",
+          "why": [],
+          "n_atoms": 3,
+          "n_mismatch": 0,
+          "missing": [],
+          "extra": [],
+          "example": [],
+          "note": "omega 는 원 덤프에 없다 — 과거 직접 비교 미확보 (새 덤프에는 출력)"
+        },
+        "G2c": {
+          "status": "PASS",
+          "why": [],
+          "n_orig": 1,
+          "n_test": 1,
+          "n_mismatch": 0,
+          "missing": [],
+          "extra": [],
+          "n_dup_consistent": 0,
+          "dup_conflicts": [],
+          "discriminating_frac": 1.0,
+          "note": "초기 접촉 힘 재현 검사 — 숨은 이력 동일성의 단독 증명 아님 (§12-1) · 토크 · 주기 플래그 제외"
+        },
+        "mesh_md5": {
+          "status": "PASS"
+        },
+        "G3": {
+          "status": "PASS",
+          "why": [],
+          "step": 3201000,
+          "atoms": [
+            160417.0,
+            160417.0
+          ],
+          "press": [
+            0.16542994,
+            0.16542994
+          ],
+          "rel": 0.0
+        },
+        "pre_post": {
+          "ok": true,
+          "equal": true,
+          "problems": []
+        },
+        "un_erasure": {
+          "seen": true,
+          "problems": []
+        },
+        "history_test": {
+          "pass": false,
+          "why": [
+            "총힘 출력 시점 None (C1 선행조건)"
+          ],
+          "source": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\dem_unloading_kit_reverify_20261014\\evidence\\runner_cases_to2z2msd\\force_timing_missing\\history.json",
+          "source_sha256": "c0b6186e1897b58b3ce02c1394483226523417aa1ffe62a1e5ca8f7aa3b93213",
+          "plate_fn_sign": -1,
+          "table_sign": -1
+        }
+      },
+      "expected": {
+        "restore": "UNCONFIRMED",
+        "next_UB_allowed": false
+      },
+      "matches_expected": true
+    },
+    "wrong_history_schema": {
+      "restore": "UNCONFIRMED",
+      "next_UB_allowed": false,
+      "gate_reason": "RJ 복원 관문 미통과 — RJ 복원 판정 RESTORED 아님 (UNCONFIRMED) (§12-1 ⑤ · 개정 3 §14-10 — 미확인 · 실패면 U 없음)",
+      "checks": {
+        "syntax": {
+          "ok": true,
+          "stages": {
+            "R": [],
+            "UN": [],
+            "Ut0": []
+          },
+          "loops": [
+            6,
+            6
+          ],
+          "errors": []
+        },
+        "reset_log": {
+          "ok": true,
+          "missing": []
+        },
+        "g0": {
+          "ok": true,
+          "violations": []
+        },
+        "G1": {
+          "status": "PASS",
+          "why": [],
+          "step": 3200000,
+          "atoms": 160417,
+          "ke": 1.3419507e-06,
+          "rel": 0.0
+        },
+        "G2": {
+          "status": "PASS",
+          "why": [],
+          "n_atoms": 3,
+          "n_mismatch": 0,
+          "missing": [],
+          "extra": [],
+          "example": [],
+          "note": "omega 는 원 덤프에 없다 — 과거 직접 비교 미확보 (새 덤프에는 출력)"
+        },
+        "G2c": {
+          "status": "PASS",
+          "why": [],
+          "n_orig": 1,
+          "n_test": 1,
+          "n_mismatch": 0,
+          "missing": [],
+          "extra": [],
+          "n_dup_consistent": 0,
+          "dup_conflicts": [],
+          "discriminating_frac": 1.0,
+          "note": "초기 접촉 힘 재현 검사 — 숨은 이력 동일성의 단독 증명 아님 (§12-1) · 토크 · 주기 플래그 제외"
+        },
+        "mesh_md5": {
+          "status": "PASS"
+        },
+        "G3": {
+          "status": "PASS",
+          "why": [],
+          "step": 3201000,
+          "atoms": [
+            160417.0,
+            160417.0
+          ],
+          "press": [
+            0.16542994,
+            0.16542994
+          ],
+          "rel": 0.0
+        },
+        "pre_post": {
+          "ok": true,
+          "equal": true,
+          "problems": []
+        },
+        "un_erasure": {
+          "seen": true,
+          "problems": []
+        },
+        "history_test": {
+          "pass": false,
+          "why": [
+            "판정 schema 'other' (이력 시험 판정 파일이 아니다)"
+          ],
+          "source": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\dem_unloading_kit_reverify_20261014\\evidence\\runner_cases_to2z2msd\\wrong_history_schema\\history.json",
+          "source_sha256": "1c327e63882797aa23df5e7002b527b753e2423883216008f8abae39877b196f",
+          "plate_fn_sign": -1,
+          "table_sign": -1
+        }
+      },
+      "expected": {
+        "restore": "UNCONFIRMED",
+        "next_UB_allowed": false
+      },
+      "matches_expected": true
+    },
+    "manifest_reader_rc1": {
+      "restore": "RESTORED",
+      "next_UB_allowed": true,
+      "gate_reason": "7:3 개발 팔 (UB · UT · UC 먼저 · 서로 독립 · §13-5 ②)",
+      "checks": {
+        "syntax": {
+          "ok": true,
+          "stages": {
+            "R": [],
+            "UN": [],
+            "Ut0": []
+          },
+          "loops": [
+            6,
+            6
+          ],
+          "errors": []
+        },
+        "reset_log": {
+          "ok": true,
+          "missing": []
+        },
+        "g0": {
+          "ok": true,
+          "violations": []
+        },
+        "G1": {
+          "status": "PASS",
+          "why": [],
+          "step": 3200000,
+          "atoms": 160417,
+          "ke": 1.3419507e-06,
+          "rel": 0.0
+        },
+        "G2": {
+          "status": "PASS",
+          "why": [],
+          "n_atoms": 3,
+          "n_mismatch": 0,
+          "missing": [],
+          "extra": [],
+          "example": [],
+          "note": "omega 는 원 덤프에 없다 — 과거 직접 비교 미확보 (새 덤프에는 출력)"
+        },
+        "G2c": {
+          "status": "PASS",
+          "why": [],
+          "n_orig": 1,
+          "n_test": 1,
+          "n_mismatch": 0,
+          "missing": [],
+          "extra": [],
+          "n_dup_consistent": 0,
+          "dup_conflicts": [],
+          "discriminating_frac": 1.0,
+          "note": "초기 접촉 힘 재현 검사 — 숨은 이력 동일성의 단독 증명 아님 (§12-1) · 토크 · 주기 플래그 제외"
+        },
+        "mesh_md5": {
+          "status": "PASS"
+        },
+        "G3": {
+          "status": "PASS",
+          "why": [],
+          "step": 3201000,
+          "atoms": [
+            160417.0,
+            160417.0
+          ],
+          "press": [
+            0.16542994,
+            0.16542994
+          ],
+          "rel": 0.0
+        },
+        "pre_post": {
+          "ok": true,
+          "equal": true,
+          "problems": []
+        },
+        "un_erasure": {
+          "seen": true,
+          "problems": []
+        },
+        "history_test": {
+          "pass": true,
+          "why": [],
+          "source": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\dem_unloading_kit_reverify_20261014\\evidence\\runner_cases_to2z2msd\\manifest_reader_rc1\\history.json",
+          "source_sha256": "e2c2d3a3696f1e990830d08f20b2d81ad7eb6c1b86db1e1d3f7f62d62b1ea663",
+          "plate_fn_sign": -1,
+          "table_sign": -1
+        }
+      }
+    },
+    "manifest_G0_rc1": {
+      "restore": "RESTORED",
+      "next_UB_allowed": true,
+      "gate_reason": "7:3 개발 팔 (UB · UT · UC 먼저 · 서로 독립 · §13-5 ②)",
+      "checks": {
+        "syntax": {
+          "ok": true,
+          "stages": {
+            "R": [],
+            "UN": [],
+            "Ut0": []
+          },
+          "loops": [
+            6,
+            6
+          ],
+          "errors": []
+        },
+        "reset_log": {
+          "ok": true,
+          "missing": []
+        },
+        "g0": {
+          "ok": true,
+          "violations": []
+        },
+        "G1": {
+          "status": "PASS",
+          "why": [],
+          "step": 3200000,
+          "atoms": 160417,
+          "ke": 1.3419507e-06,
+          "rel": 0.0
+        },
+        "G2": {
+          "status": "PASS",
+          "why": [],
+          "n_atoms": 3,
+          "n_mismatch": 0,
+          "missing": [],
+          "extra": [],
+          "example": [],
+          "note": "omega 는 원 덤프에 없다 — 과거 직접 비교 미확보 (새 덤프에는 출력)"
+        },
+        "G2c": {
+          "status": "PASS",
+          "why": [],
+          "n_orig": 1,
+          "n_test": 1,
+          "n_mismatch": 0,
+          "missing": [],
+          "extra": [],
+          "n_dup_consistent": 0,
+          "dup_conflicts": [],
+          "discriminating_frac": 1.0,
+          "note": "초기 접촉 힘 재현 검사 — 숨은 이력 동일성의 단독 증명 아님 (§12-1) · 토크 · 주기 플래그 제외"
+        },
+        "mesh_md5": {
+          "status": "PASS"
+        },
+        "G3": {
+          "status": "PASS",
+          "why": [],
+          "step": 3201000,
+          "atoms": [
+            160417.0,
+            160417.0
+          ],
+          "press": [
+            0.16542994,
+            0.16542994
+          ],
+          "rel": 0.0
+        },
+        "pre_post": {
+          "ok": true,
+          "equal": true,
+          "problems": []
+        },
+        "un_erasure": {
+          "seen": true,
+          "problems": []
+        },
+        "history_test": {
+          "pass": true,
+          "why": [],
+          "source": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\dem_unloading_kit_reverify_20261014\\evidence\\runner_cases_to2z2msd\\manifest_G0_rc1\\history.json",
+          "source_sha256": "e2c2d3a3696f1e990830d08f20b2d81ad7eb6c1b86db1e1d3f7f62d62b1ea663",
+          "plate_fn_sign": -1,
+          "table_sign": -1
+        }
+      }
+    },
+    "fractional_un_id": {
+      "restore": "RESTORED",
+      "next_UB_allowed": true,
+      "gate_reason": "7:3 개발 팔 (UB · UT · UC 먼저 · 서로 독립 · §13-5 ②)",
+      "checks": {
+        "syntax": {
+          "ok": true,
+          "stages": {
+            "R": [],
+            "UN": [],
+            "Ut0": []
+          },
+          "loops": [
+            6,
+            6
+          ],
+          "errors": []
+        },
+        "reset_log": {
+          "ok": true,
+          "missing": []
+        },
+        "g0": {
+          "ok": true,
+          "violations": []
+        },
+        "G1": {
+          "status": "PASS",
+          "why": [],
+          "step": 3200000,
+          "atoms": 160417,
+          "ke": 1.3419507e-06,
+          "rel": 0.0
+        },
+        "G2": {
+          "status": "PASS",
+          "why": [],
+          "n_atoms": 3,
+          "n_mismatch": 0,
+          "missing": [],
+          "extra": [],
+          "example": [],
+          "note": "omega 는 원 덤프에 없다 — 과거 직접 비교 미확보 (새 덤프에는 출력)"
+        },
+        "G2c": {
+          "status": "PASS",
+          "why": [],
+          "n_orig": 1,
+          "n_test": 1,
+          "n_mismatch": 0,
+          "missing": [],
+          "extra": [],
+          "n_dup_consistent": 0,
+          "dup_conflicts": [],
+          "discriminating_frac": 1.0,
+          "note": "초기 접촉 힘 재현 검사 — 숨은 이력 동일성의 단독 증명 아님 (§12-1) · 토크 · 주기 플래그 제외"
+        },
+        "mesh_md5": {
+          "status": "PASS"
+        },
+        "G3": {
+          "status": "PASS",
+          "why": [],
+          "step": 3201000,
+          "atoms": [
+            160417.0,
+            160417.0
+          ],
+          "press": [
+            0.16542994,
+            0.16542994
+          ],
+          "rel": 0.0
+        },
+        "pre_post": {
+          "ok": true,
+          "equal": true,
+          "problems": []
+        },
+        "un_erasure": {
+          "seen": true,
+          "problems": []
+        },
+        "history_test": {
+          "pass": true,
+          "why": [],
+          "source": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\dem_unloading_kit_reverify_20261014\\evidence\\runner_cases_to2z2msd\\fractional_un_id\\history.json",
+          "source_sha256": "e2c2d3a3696f1e990830d08f20b2d81ad7eb6c1b86db1e1d3f7f62d62b1ea663",
+          "plate_fn_sign": -1,
+          "table_sign": -1
+        }
+      }
+    },
+    "receipt_screen_mismatch": {
+      "restore": "RESTORED",
+      "next_UB_allowed": true,
+      "gate_reason": "7:3 개발 팔 (UB · UT · UC 먼저 · 서로 독립 · §13-5 ②)",
+      "checks": {
+        "syntax": {
+          "ok": true,
+          "stages": {
+            "R": [],
+            "UN": [],
+            "Ut0": []
+          },
+          "loops": [
+            6,
+            6
+          ],
+          "errors": []
+        },
+        "reset_log": {
+          "ok": true,
+          "missing": []
+        },
+        "g0": {
+          "ok": true,
+          "violations": []
+        },
+        "G1": {
+          "status": "PASS",
+          "why": [],
+          "step": 3200000,
+          "atoms": 160417,
+          "ke": 1.3419507e-06,
+          "rel": 0.0
+        },
+        "G2": {
+          "status": "PASS",
+          "why": [],
+          "n_atoms": 3,
+          "n_mismatch": 0,
+          "missing": [],
+          "extra": [],
+          "example": [],
+          "note": "omega 는 원 덤프에 없다 — 과거 직접 비교 미확보 (새 덤프에는 출력)"
+        },
+        "G2c": {
+          "status": "PASS",
+          "why": [],
+          "n_orig": 1,
+          "n_test": 1,
+          "n_mismatch": 0,
+          "missing": [],
+          "extra": [],
+          "n_dup_consistent": 0,
+          "dup_conflicts": [],
+          "discriminating_frac": 1.0,
+          "note": "초기 접촉 힘 재현 검사 — 숨은 이력 동일성의 단독 증명 아님 (§12-1) · 토크 · 주기 플래그 제외"
+        },
+        "mesh_md5": {
+          "status": "PASS"
+        },
+        "G3": {
+          "status": "PASS",
+          "why": [],
+          "step": 3201000,
+          "atoms": [
+            160417.0,
+            160417.0
+          ],
+          "press": [
+            0.16542994,
+            0.16542994
+          ],
+          "rel": 0.0
+        },
+        "pre_post": {
+          "ok": true,
+          "equal": true,
+          "problems": []
+        },
+        "un_erasure": {
+          "seen": true,
+          "problems": []
+        },
+        "history_test": {
+          "pass": true,
+          "why": [],
+          "source": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\dem_unloading_kit_reverify_20261014\\evidence\\runner_cases_to2z2msd\\receipt_screen_mismatch\\history.json",
+          "source_sha256": "e2c2d3a3696f1e990830d08f20b2d81ad7eb6c1b86db1e1d3f7f62d62b1ea663",
+          "plate_fn_sign": -1,
+          "table_sign": -1
+        }
+      }
+    },
+    "actual_restore_cli_closed_stdout": {
+      "restore": "RESTORED",
+      "next_UB_allowed": true,
+      "gate_reason": "7:3 개발 팔 (UB · UT · UC 먼저 · 서로 독립 · §13-5 ②)",
+      "cli_rc": 120,
+      "kebase_cli_rc": 120,
+      "runner_aggregate_rc_by_source": 2,
+      "argv": [
+        "C:\\Users\\Administrator\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\python.exe",
+        "-X",
+        "utf8",
+        "-B",
+        "-I",
+        "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\dem_unloading_kit_reverify_20261014\\source\\docs\\data\\ps45_unload_20261009\\ul_reader.py",
+        "restore",
+        "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\dem_unloading_kit_reverify_20261014\\evidence\\runner_cases_to2z2msd\\actual_restore_cli_closed_stdout",
+        "ps_7_3_r45",
+        "--hist",
+        "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\dem_unloading_kit_reverify_20261014\\evidence\\runner_cases_to2z2msd\\actual_restore_cli_closed_stdout\\history.json"
+      ],
+      "stderr": "Exception ignored in: <_io.TextIOWrapper name='<stdout>' mode='w' encoding='utf-8'>\nOSError: [Errno 22] Invalid argument\n",
+      "manifest_origin": "Same reader_<cmd>_rc and end fails=0 reader_rc=<rc> fields the runner emits after reader failure; LMP stages unchanged.",
+      "ke_base_scope": "Complete valid UK evidence; real kebase CLI newly emits ul_base.in after restore, then fails flushing stdout.",
+      "ke_base_text": "# KE 기준 (ul_reader.py kebase) — ps_7_3_r45 · 병진 2.04e-07 J (표 · 원 로그 이완 끝) · 회전 2e-08 J (UK 창 평균 3 의 중앙값) · S2 문턱 = 10.0 × 합\nvariable ul_KEbase equal 2.24e-07\nvariable ul_S2max equal 2.2399999999999997e-06\n"
+    }
+  },
+  "summary": {
+    "baseline": {
+      "restore": "RESTORED",
+      "next_UB_allowed": true,
+      "gate_reason": "7:3 개발 팔 (UB · UT · UC 먼저 · 서로 독립 · §13-5 ②)",
+      "expected": {
+        "restore": "RESTORED",
+        "next_UB_allowed": true
+      },
+      "matches_expected": true
+    },
+    "truncated_pre_post": {
+      "restore": "UNCONFIRMED",
+      "next_UB_allowed": false,
+      "gate_reason": "RJ 복원 관문 미통과 — RJ 복원 판정 RESTORED 아님 (UNCONFIRMED) (§12-1 ⑤ · 개정 3 §14-10 — 미확인 · 실패면 U 없음)",
+      "expected": {
+        "restore": "UNCONFIRMED",
+        "next_UB_allowed": false
+      },
+      "matches_expected": true
+    },
+    "nan_pre": {
+      "restore": "UNCONFIRMED",
+      "next_UB_allowed": false,
+      "gate_reason": "RJ 복원 관문 미통과 — RJ 복원 판정 RESTORED 아님 (UNCONFIRMED) (§12-1 ⑤ · 개정 3 §14-10 — 미확인 · 실패면 U 없음)",
+      "expected": {
+        "restore": "UNCONFIRMED",
+        "next_UB_allowed": false
+      },
+      "matches_expected": true
+    },
+    "duplicate_post": {
+      "restore": "UNCONFIRMED",
+      "next_UB_allowed": false,
+      "gate_reason": "RJ 복원 관문 미통과 — RJ 복원 판정 RESTORED 아님 (UNCONFIRMED) (§12-1 ⑤ · 개정 3 §14-10 — 미확인 · 실패면 U 없음)",
+      "expected": {
+        "restore": "UNCONFIRMED",
+        "next_UB_allowed": false
+      },
+      "matches_expected": true
+    },
+    "un_wrong_id": {
+      "restore": "UNCONFIRMED",
+      "next_UB_allowed": false,
+      "gate_reason": "RJ 복원 관문 미통과 — RJ 복원 판정 RESTORED 아님 (UNCONFIRMED) (§12-1 ⑤ · 개정 3 §14-10 — 미확인 · 실패면 U 없음)",
+      "expected": {
+        "restore": "UNCONFIRMED",
+        "next_UB_allowed": false
+      },
+      "matches_expected": true
+    },
+    "pre_wrong_step": {
+      "restore": "UNCONFIRMED",
+      "next_UB_allowed": false,
+      "gate_reason": "RJ 복원 관문 미통과 — RJ 복원 판정 RESTORED 아님 (UNCONFIRMED) (§12-1 ⑤ · 개정 3 §14-10 — 미확인 · 실패면 U 없음)",
+      "expected": {
+        "restore": "UNCONFIRMED",
+        "next_UB_allowed": false
+      },
+      "matches_expected": true
+    },
+    "post_wrong_step": {
+      "restore": "UNCONFIRMED",
+      "next_UB_allowed": false,
+      "gate_reason": "RJ 복원 관문 미통과 — RJ 복원 판정 RESTORED 아님 (UNCONFIRMED) (§12-1 ⑤ · 개정 3 §14-10 — 미확인 · 실패면 U 없음)",
+      "expected": {
+        "restore": "UNCONFIRMED",
+        "next_UB_allowed": false
+      },
+      "matches_expected": true
+    },
+    "end_wrong_step": {
+      "restore": "UNCONFIRMED",
+      "next_UB_allowed": false,
+      "gate_reason": "RJ 복원 관문 미통과 — RJ 복원 판정 RESTORED 아님 (UNCONFIRMED) (§12-1 ⑤ · 개정 3 §14-10 — 미확인 · 실패면 U 없음)",
+      "expected": {
+        "restore": "UNCONFIRMED",
+        "next_UB_allowed": false
+      },
+      "matches_expected": true
+    },
+    "un_wrong_step": {
+      "restore": "UNCONFIRMED",
+      "next_UB_allowed": false,
+      "gate_reason": "RJ 복원 관문 미통과 — RJ 복원 판정 RESTORED 아님 (UNCONFIRMED) (§12-1 ⑤ · 개정 3 §14-10 — 미확인 · 실패면 U 없음)",
+      "expected": {
+        "restore": "UNCONFIRMED",
+        "next_UB_allowed": false
+      },
+      "matches_expected": true
+    },
+    "Ut0_receipt_fail": {
+      "restore": "SYNTAX_FAIL",
+      "next_UB_allowed": false,
+      "gate_reason": "RJ 복원 관문 미통과 — RJ 복원 판정 RESTORED 아님 (SYNTAX_FAIL) (§12-1 ⑤ · 개정 3 §14-10 — 미확인 · 실패면 U 없음)",
+      "expected": {
+        "restore": "SYNTAX_FAIL",
+        "next_UB_allowed": false
+      },
+      "matches_expected": true
+    },
+    "Ut0_screen_error": {
+      "restore": "SYNTAX_FAIL",
+      "next_UB_allowed": false,
+      "gate_reason": "RJ 복원 관문 미통과 — RJ 복원 판정 RESTORED 아님 (SYNTAX_FAIL) (§12-1 ⑤ · 개정 3 §14-10 — 미확인 · 실패면 U 없음)",
+      "expected": {
+        "restore": "SYNTAX_FAIL",
+        "next_UB_allowed": false
+      },
+      "matches_expected": true
+    },
+    "R_receipt_fail": {
+      "restore": "SYNTAX_FAIL",
+      "next_UB_allowed": false,
+      "gate_reason": "RJ 복원 관문 미통과 — RJ 복원 판정 RESTORED 아님 (SYNTAX_FAIL) (§12-1 ⑤ · 개정 3 §14-10 — 미확인 · 실패면 U 없음)",
+      "expected": {
+        "restore": "SYNTAX_FAIL",
+        "next_UB_allowed": false
+      },
+      "matches_expected": true
+    },
+    "R_screen_error": {
+      "restore": "SYNTAX_FAIL",
+      "next_UB_allowed": false,
+      "gate_reason": "RJ 복원 관문 미통과 — RJ 복원 판정 RESTORED 아님 (SYNTAX_FAIL) (§12-1 ⑤ · 개정 3 §14-10 — 미확인 · 실패면 U 없음)",
+      "expected": {
+        "restore": "SYNTAX_FAIL",
+        "next_UB_allowed": false
+      },
+      "matches_expected": true
+    },
+    "UN_receipt_fail": {
+      "restore": "SYNTAX_FAIL",
+      "next_UB_allowed": false,
+      "gate_reason": "RJ 복원 관문 미통과 — RJ 복원 판정 RESTORED 아님 (SYNTAX_FAIL) (§12-1 ⑤ · 개정 3 §14-10 — 미확인 · 실패면 U 없음)",
+      "expected": {
+        "restore": "SYNTAX_FAIL",
+        "next_UB_allowed": false
+      },
+      "matches_expected": true
+    },
+    "UN_screen_error": {
+      "restore": "SYNTAX_FAIL",
+      "next_UB_allowed": false,
+      "gate_reason": "RJ 복원 관문 미통과 — RJ 복원 판정 RESTORED 아님 (SYNTAX_FAIL) (§12-1 ⑤ · 개정 3 §14-10 — 미확인 · 실패면 U 없음)",
+      "expected": {
+        "restore": "SYNTAX_FAIL",
+        "next_UB_allowed": false
+      },
+      "matches_expected": true
+    },
+    "G0_fail": {
+      "restore": "VALUE_MISMATCH",
+      "next_UB_allowed": false,
+      "gate_reason": "RJ 복원 관문 미통과 — RJ 복원 판정 RESTORED 아님 (VALUE_MISMATCH) (§12-1 ⑤ · 개정 3 §14-10 — 미확인 · 실패면 U 없음)",
+      "expected": {
+        "restore": "VALUE_MISMATCH",
+        "next_UB_allowed": false
+      },
+      "matches_expected": true
+    },
+    "manifest_fails1": {
+      "restore": "RESTORED",
+      "next_UB_allowed": false,
+      "gate_reason": "RJ 복원 관문 미통과 — RJ 잡 기록 끝 줄 = 기술 실패 (end=x fails=1 reader_rc=0) — 증서를 다시 쓰지 않는다 (새 시도) (§12-1 ⑤ · 개정 3 §14-10 — 미확인 · 실패면 U 없음)",
+      "expected": {
+        "restore": "RESTORED",
+        "next_UB_allowed": false
+      },
+      "matches_expected": true
+    },
+    "manifest_no_end": {
+      "restore": "RESTORED",
+      "next_UB_allowed": false,
+      "gate_reason": "RJ 복원 관문 미통과 — RJ 잡 기록 (run_manifest.txt) 에 끝 줄 없음 — 러너가 끝내지 못했다 (§12-1 ⑤ · 개정 3 §14-10 — 미확인 · 실패면 U 없음)",
+      "expected": {
+        "restore": "RESTORED",
+        "next_UB_allowed": false
+      },
+      "matches_expected": true
+    },
+    "missing_SYN": {
+      "restore": "UNCONFIRMED",
+      "next_UB_allowed": false,
+      "gate_reason": "RJ 복원 관문 미통과 — RJ 복원 판정 RESTORED 아님 (UNCONFIRMED) (§12-1 ⑤ · 개정 3 §14-10 — 미확인 · 실패면 U 없음)",
+      "expected": {
+        "restore": "UNCONFIRMED",
+        "next_UB_allowed": false
+      },
+      "matches_expected": true
+    },
+    "SYN_wrong_sign": {
+      "restore": "UNCONFIRMED",
+      "next_UB_allowed": false,
+      "gate_reason": "RJ 복원 관문 미통과 — RJ 복원 판정 RESTORED 아님 (UNCONFIRMED) (§12-1 ⑤ · 개정 3 §14-10 — 미확인 · 실패면 U 없음)",
+      "expected": {
+        "restore": "UNCONFIRMED",
+        "next_UB_allowed": false
+      },
+      "matches_expected": true
+    },
+    "SYN_fail": {
+      "restore": "UNCONFIRMED",
+      "next_UB_allowed": false,
+      "gate_reason": "RJ 복원 관문 미통과 — RJ 복원 판정 RESTORED 아님 (UNCONFIRMED) (§12-1 ⑤ · 개정 3 §14-10 — 미확인 · 실패면 U 없음)",
+      "expected": {
+        "restore": "UNCONFIRMED",
+        "next_UB_allowed": false
+      },
+      "matches_expected": true
+    },
+    "force_timing_missing": {
+      "restore": "UNCONFIRMED",
+      "next_UB_allowed": false,
+      "gate_reason": "RJ 복원 관문 미통과 — RJ 복원 판정 RESTORED 아님 (UNCONFIRMED) (§12-1 ⑤ · 개정 3 §14-10 — 미확인 · 실패면 U 없음)",
+      "expected": {
+        "restore": "UNCONFIRMED",
+        "next_UB_allowed": false
+      },
+      "matches_expected": true
+    },
+    "wrong_history_schema": {
+      "restore": "UNCONFIRMED",
+      "next_UB_allowed": false,
+      "gate_reason": "RJ 복원 관문 미통과 — RJ 복원 판정 RESTORED 아님 (UNCONFIRMED) (§12-1 ⑤ · 개정 3 §14-10 — 미확인 · 실패면 U 없음)",
+      "expected": {
+        "restore": "UNCONFIRMED",
+        "next_UB_allowed": false
+      },
+      "matches_expected": true
+    },
+    "manifest_reader_rc1": {
+      "restore": "RESTORED",
+      "next_UB_allowed": true,
+      "gate_reason": "7:3 개발 팔 (UB · UT · UC 먼저 · 서로 독립 · §13-5 ②)"
+    },
+    "manifest_G0_rc1": {
+      "restore": "RESTORED",
+      "next_UB_allowed": true,
+      "gate_reason": "7:3 개발 팔 (UB · UT · UC 먼저 · 서로 독립 · §13-5 ②)"
+    },
+    "fractional_un_id": {
+      "restore": "RESTORED",
+      "next_UB_allowed": true,
+      "gate_reason": "7:3 개발 팔 (UB · UT · UC 먼저 · 서로 독립 · §13-5 ②)"
+    },
+    "receipt_screen_mismatch": {
+      "restore": "RESTORED",
+      "next_UB_allowed": true,
+      "gate_reason": "7:3 개발 팔 (UB · UT · UC 먼저 · 서로 독립 · §13-5 ②)"
+    },
+    "actual_restore_cli_closed_stdout": {
+      "restore": "RESTORED",
+      "next_UB_allowed": true,
+      "gate_reason": "7:3 개발 팔 (UB · UT · UC 먼저 · 서로 독립 · §13-5 ②)",
+      "cli_rc": 120,
+      "kebase_cli_rc": 120,
+      "runner_aggregate_rc_by_source": 2,
+      "argv": [
+        "C:\\Users\\Administrator\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\python.exe",
+        "-X",
+        "utf8",
+        "-B",
+        "-I",
+        "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\dem_unloading_kit_reverify_20261014\\source\\docs\\data\\ps45_unload_20261009\\ul_reader.py",
+        "restore",
+        "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\dem_unloading_kit_reverify_20261014\\evidence\\runner_cases_to2z2msd\\actual_restore_cli_closed_stdout",
+        "ps_7_3_r45",
+        "--hist",
+        "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\dem_unloading_kit_reverify_20261014\\evidence\\runner_cases_to2z2msd\\actual_restore_cli_closed_stdout\\history.json"
+      ],
+      "stderr": "Exception ignored in: <_io.TextIOWrapper name='<stdout>' mode='w' encoding='utf-8'>\nOSError: [Errno 22] Invalid argument\n",
+      "manifest_origin": "Same reader_<cmd>_rc and end fails=0 reader_rc=<rc> fields the runner emits after reader failure; LMP stages unchanged.",
+      "ke_base_scope": "Complete valid UK evidence; real kebase CLI newly emits ul_base.in after restore, then fails flushing stdout.",
+      "ke_base_text": "# KE 기준 (ul_reader.py kebase) — ps_7_3_r45 · 병진 2.04e-07 J (표 · 원 로그 이완 끝) · 회전 2e-08 J (UK 창 평균 3 의 중앙값) · S2 문턱 = 10.0 × 합\nvariable ul_KEbase equal 2.24e-07\nvariable ul_S2max equal 2.2399999999999997e-06\n"
+    }
+  }
+}

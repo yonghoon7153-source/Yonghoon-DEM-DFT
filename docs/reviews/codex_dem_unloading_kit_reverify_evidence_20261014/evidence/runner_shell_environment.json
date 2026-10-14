@@ -1,0 +1,8 @@
+{
+  "command": ["C:/Program Files/Git/bin/bash.exe", "--noprofile", "--norc", "-c", "printf git_bash_ready"],
+  "exit_code": 1,
+  "output": "0 [main] bash (39868) C:\\Program Files\\Git\\bin\\..\\usr\\bin\\bash.exe: *** fatal error - NtCreateDirectoryObject(\\BaseNamedObjects\\msys-2.0S5-1888ae32e00d56aa): 0xC0000022",
+  "classification": "Environment failure before runner execution; no scientific result",
+  "escalation_attempted": false,
+  "real_simulation_attempted": false
+}

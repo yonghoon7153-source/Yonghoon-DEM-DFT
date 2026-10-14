@@ -1,0 +1,2842 @@
+{
+  "scope": "offline scalar review; no physical/numerical or binary grammar certification",
+  "scheduler": {
+    "status": "PASS",
+    "scope": "reference scheduler unit checks, not a binary run",
+    "three_dump_ids_same_schedule": [
+      [
+        "atom",
+        10,
+        false,
+        "regular"
+      ],
+      [
+        "wall",
+        10,
+        false,
+        "regular"
+      ],
+      [
+        "pair",
+        10,
+        false,
+        "regular"
+      ],
+      [
+        "atom",
+        20,
+        false,
+        "regular"
+      ],
+      [
+        "wall",
+        20,
+        false,
+        "regular"
+      ],
+      [
+        "pair",
+        20,
+        false,
+        "regular"
+      ]
+    ],
+    "checks": [
+      "shared setup timestamp",
+      "variable setup suppression",
+      "reevaluation each setup",
+      "reevaluation after scheduled output",
+      "fixed aligned setup once",
+      "new dump resets last_dump",
+      "first yes exception",
+      "unaligned fixed setup suppression",
+      "nonfuture schedule rejected"
+    ]
+  },
+  "kit": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\dem_unloading_kit_reverify_20261014\\source\\docs\\data\\ps45_unload_20261009",
+  "production": {
+    "normal": {
+      "result": "DONE",
+      "k": 5,
+      "w": 5,
+      "budget": 12,
+      "events": [
+        {
+          "ul_k": 0,
+          "ul_phase": 4,
+          "ul_modeB": 0,
+          "ul_postw": 0,
+          "what": "event",
+          "step": 3200000,
+          "text": "START,0,3200000,0.111052,0,s0"
+        },
+        {
+          "ul_k": 0,
+          "ul_w": 3,
+          "ul_phase": 0,
+          "ul_modeB": 0,
+          "ul_postw": 0,
+          "ul_sepn": 0,
+          "ul_okn": 2,
+          "what": "event",
+          "step": 3215000,
+          "text": "HOLD0_DONE,0,3215000,0.111052,0,Pbar0"
+        },
+        {
+          "ul_k": 1,
+          "ul_w": 4,
+          "ul_phase": 0,
+          "ul_modeB": 1,
+          "ul_postw": 0,
+          "ul_sepn": 0,
+          "ul_okn": 3,
+          "what": "event",
+          "step": 3255000,
+          "text": "MODE_B,1,3255000,0.111252,0.000200000000000006,next"
+        },
+        {
+          "ul_k": 2,
+          "ul_w": 4,
+          "ul_phase": 1,
+          "ul_modeB": 1,
+          "ul_postw": 0,
+          "ul_sepn": 0,
+          "ul_okn": 3,
+          "what": "event",
+          "step": 3280000,
+          "text": "CROSS,2,3280000,0.111302,0.00025,first"
+        },
+        {
+          "ul_k": 4,
+          "ul_w": 4,
+          "ul_phase": 2,
+          "ul_modeB": 1,
+          "ul_postw": 0,
+          "ul_sepn": 0,
+          "ul_okn": 3,
+          "what": "event",
+          "step": 3330000,
+          "text": "RM,4,3330000,0.111402,0.000350000000000003,ncross2"
+        },
+        {
+          "ul_k": 5,
+          "ul_w": 2,
+          "ul_phase": 3,
+          "ul_modeB": 1,
+          "ul_postw": 1,
+          "ul_sepn": 2,
+          "ul_okn": 1,
+          "what": "event",
+          "step": 3345000,
+          "text": "SEPARATED,5,3345000,0.111452,0.000399999999999998,w2"
+        },
+        {
+          "ul_k": 5,
+          "ul_w": 5,
+          "ul_phase": 3,
+          "ul_modeB": 1,
+          "ul_postw": 4,
+          "ul_sepn": 5,
+          "ul_okn": 4,
+          "what": "event",
+          "step": 3360000,
+          "text": "POST_DONE,5,3360000,0.111452,0.000399999999999998,w5"
+        }
+      ],
+      "moves": [
+        {
+          "ul_k": 1,
+          "ul_w": 3,
+          "ul_phase": 0,
+          "ul_modeB": 0,
+          "ul_postw": 0,
+          "ul_sepn": 0,
+          "ul_okn": 2,
+          "what": "run",
+          "step": 3235000,
+          "n": 20000,
+          "moving": true,
+          "observations": {
+            "P": 0.1,
+            "Kt": 1e-08,
+            "Kr": 1e-08,
+            "Kti": 1e-08,
+            "nc": 1,
+            "leak": 0
+          }
+        },
+        {
+          "ul_k": 2,
+          "ul_w": 4,
+          "ul_phase": 0,
+          "ul_modeB": 1,
+          "ul_postw": 0,
+          "ul_sepn": 0,
+          "ul_okn": 3,
+          "what": "run",
+          "step": 3260000,
+          "n": 5000,
+          "moving": true,
+          "observations": {
+            "P": 0.0025,
+            "Kt": 1e-08,
+            "Kr": 1e-08,
+            "Kti": 1e-08,
+            "nc": 1,
+            "leak": 0
+          }
+        },
+        {
+          "ul_k": 3,
+          "ul_w": 4,
+          "ul_phase": 1,
+          "ul_modeB": 1,
+          "ul_postw": 0,
+          "ul_sepn": 0,
+          "ul_okn": 3,
+          "what": "run",
+          "step": 3285000,
+          "n": 5000,
+          "moving": true,
+          "observations": {
+            "P": 0.0009,
+            "Kt": 1e-08,
+            "Kr": 1e-08,
+            "Kti": 1e-08,
+            "nc": 1,
+            "leak": 0
+          }
+        },
+        {
+          "ul_k": 4,
+          "ul_w": 4,
+          "ul_phase": 1,
+          "ul_modeB": 1,
+          "ul_postw": 0,
+          "ul_sepn": 0,
+          "ul_okn": 3,
+          "what": "run",
+          "step": 3310000,
+          "n": 5000,
+          "moving": true,
+          "observations": {
+            "P": 0.0007,
+            "Kt": 1e-08,
+            "Kr": 1e-08,
+            "Kti": 1e-08,
+            "nc": 1,
+            "leak": 0
+          }
+        },
+        {
+          "ul_k": 5,
+          "ul_w": 4,
+          "ul_phase": 2,
+          "ul_modeB": 1,
+          "ul_postw": 0,
+          "ul_sepn": 0,
+          "ul_okn": 3,
+          "what": "run",
+          "step": 3335000,
+          "n": 5000,
+          "moving": true,
+          "observations": {
+            "P": 0.0006,
+            "Kt": 1e-08,
+            "Kr": 1e-08,
+            "Kti": 1e-08,
+            "nc": 1,
+            "leak": 0
+          }
+        }
+      ],
+      "dump_outputs": [
+        [
+          "ul_dm",
+          3200000,
+          false,
+          "setup"
+        ],
+        [
+          "ul_da",
+          3205000,
+          false,
+          "regular"
+        ],
+        [
+          "ul_dw",
+          3205000,
+          false,
+          "regular"
+        ],
+        [
+          "ul_dc",
+          3205000,
+          false,
+          "regular"
+        ],
+        [
+          "ul_dm",
+          3205000,
+          false,
+          "regular"
+        ],
+        [
+          "ul_da",
+          3210000,
+          false,
+          "regular"
+        ],
+        [
+          "ul_dw",
+          3210000,
+          false,
+          "regular"
+        ],
+        [
+          "ul_dc",
+          3210000,
+          false,
+          "regular"
+        ],
+        [
+          "ul_dm",
+          3210000,
+          false,
+          "regular"
+        ],
+        [
+          "ul_da",
+          3215000,
+          false,
+          "regular"
+        ],
+        [
+          "ul_dw",
+          3215000,
+          false,
+          "regular"
+        ],
+        [
+          "ul_dc",
+          3215000,
+          false,
+          "regular"
+        ],
+        [
+          "ul_dm",
+          3215000,
+          false,
+          "regular"
+        ],
+        [
+          "ul_dm",
+          3220000,
+          true,
+          "regular"
+        ],
+        [
+          "ul_dm",
+          3225000,
+          true,
+          "regular"
+        ],
+        [
+          "ul_dm",
+          3230000,
+          true,
+          "regular"
+        ],
+        [
+          "ul_dm",
+          3235000,
+          true,
+          "regular"
+        ],
+        [
+          "ul_da",
+          3240000,
+          false,
+          "regular"
+        ],
+        [
+          "ul_dw",
+          3240000,
+          false,
+          "regular"
+        ],
+        [
+          "ul_dc",
+          3240000,
+          false,
+          "regular"
+        ],
+        [
+          "ul_dm",
+          3240000,
+          false,
+          "regular"
+        ],
+        [
+          "ul_da",
+          3245000,
+          false,
+          "regular"
+        ],
+        [
+          "ul_dw",
+          3245000,
+          false,
+          "regular"
+        ],
+        [
+          "ul_dc",
+          3245000,
+          false,
+          "regular"
+        ],
+        [
+          "ul_dm",
+          3245000,
+          false,
+          "regular"
+        ],
+        [
+          "ul_da",
+          3250000,
+          false,
+          "regular"
+        ],
+        [
+          "ul_dw",
+          3250000,
+          false,
+          "regular"
+        ],
+        [
+          "ul_dc",
+          3250000,
+          false,
+          "regular"
+        ],
+        [
+          "ul_dm",
+          3250000,
+          false,
+          "regular"
+        ],
+        [
+          "ul_da",
+          3255000,
+          false,
+          "regular"
+        ],
+        [
+          "ul_dw",
+          3255000,
+          false,
+          "regular"
+        ],
+        [
+          "ul_dc",
+          3255000,
+          false,
+          "regular"
+        ],
+        [
+          "ul_dm",
+          3255000,
+          false,
+          "regular"
+        ],
+        [
+          "ul_dm",
+          3260000,
+          true,
+          "regular"
+        ],
+        [
+          "ul_da",
+          3265000,
+          false,
+          "regular"
+        ],
+        [
+          "ul_dw",
+          3265000,
+          false,
+          "regular"
+        ],
+        [
+          "ul_dc",
+          3265000,
+          false,
+          "regular"
+        ],
+        [
+          "ul_dm",
+          3265000,
+          false,
+          "regular"
+        ],
+        [
+          "ul_da",
+          3270000,
+          false,
+          "regular"
+        ],
+        [
+          "ul_dw",
+          3270000,
+          false,
+          "regular"
+        ],
+        [
+          "ul_dc",
+          3270000,
+          false,
+          "regular"
+        ],
+        [
+          "ul_dm",
+          3270000,
+          false,
+          "regular"
+        ],
+        [
+          "ul_da",
+          3275000,
+          false,
+          "regular"
+        ],
+        [
+          "ul_dw",
+          3275000,
+          false,
+          "regular"
+        ],
+        [
+          "ul_dc",
+          3275000,
+          false,
+          "regular"
+        ],
+        [
+          "ul_dm",
+          3275000,
+          false,
+          "regular"
+        ],
+        [
+          "ul_da",
+          3280000,
+          false,
+          "regular"
+        ],
+        [
+          "ul_dw",
+          3280000,
+          false,
+          "regular"
+        ],
+        [
+          "ul_dc",
+          3280000,
+          false,
+          "regular"
+        ],
+        [
+          "ul_dm",
+          3280000,
+          false,
+          "regular"
+        ],
+        [
+          "ul_dm",
+          3285000,
+          true,
+          "regular"
+        ],
+        [
+          "ul_da",
+          3290000,
+          false,
+          "regular"
+        ],
+        [
+          "ul_dw",
+          3290000,
+          false,
+          "regular"
+        ],
+        [
+          "ul_dc",
+          3290000,
+          false,
+          "regular"
+        ],
+        [
+          "ul_dm",
+          3290000,
+          false,
+          "regular"
+        ],
+        [
+          "ul_da",
+          3295000,
+          false,
+          "regular"
+        ],
+        [
+          "ul_dw",
+          3295000,
+          false,
+          "regular"
+        ],
+        [
+          "ul_dc",
+          3295000,
+          false,
+          "regular"
+        ],
+        [
+          "ul_dm",
+          3295000,
+          false,
+          "regular"
+        ],
+        [
+          "ul_da",
+          3300000,
+          false,
+          "regular"
+        ],
+        [
+          "ul_dw",
+          3300000,
+          false,
+          "regular"
+        ],
+        [
+          "ul_dc",
+          3300000,
+          false,
+          "regular"
+        ],
+        [
+          "ul_dm",
+          3300000,
+          false,
+          "regular"
+        ],
+        [
+          "ul_da",
+          3305000,
+          false,
+          "regular"
+        ],
+        [
+          "ul_dw",
+          3305000,
+          false,
+          "regular"
+        ],
+        [
+          "ul_dc",
+          3305000,
+          false,
+          "regular"
+        ],
+        [
+          "ul_dm",
+          3305000,
+          false,
+          "regular"
+        ],
+        [
+          "ul_dm",
+          3310000,
+          true,
+          "regular"
+        ],
+        [
+          "ul_da",
+          3315000,
+          false,
+          "regular"
+        ],
+        [
+          "ul_dw",
+          3315000,
+          false,
+          "regular"
+        ],
+        [
+          "ul_dc",
+          3315000,
+          false,
+          "regular"
+        ],
+        [
+          "ul_dm",
+          3315000,
+          false,
+          "regular"
+        ],
+        [
+          "ul_da",
+          3320000,
+          false,
+          "regular"
+        ],
+        [
+          "ul_dw",
+          3320000,
+          false,
+          "regular"
+        ],
+        [
+          "ul_dc",
+          3320000,
+          false,
+          "regular"
+        ],
+        [
+          "ul_dm",
+          3320000,
+          false,
+          "regular"
+        ],
+        [
+          "ul_da",
+          3325000,
+          false,
+          "regular"
+        ],
+        [
+          "ul_dw",
+          3325000,
+          false,
+          "regular"
+        ],
+        [
+          "ul_dc",
+          3325000,
+          false,
+          "regular"
+        ],
+        [
+          "ul_dm",
+          3325000,
+          false,
+          "regular"
+        ],
+        [
+          "ul_da",
+          3330000,
+          false,
+          "regular"
+        ],
+        [
+          "ul_dw",
+          3330000,
+          false,
+          "regular"
+        ],
+        [
+          "ul_dc",
+          3330000,
+          false,
+          "regular"
+        ],
+        [
+          "ul_dm",
+          3330000,
+          false,
+          "regular"
+        ],
+        [
+          "ul_dm",
+          3335000,
+          true,
+          "regular"
+        ],
+        [
+          "ul_da",
+          3340000,
+          false,
+          "regular"
+        ],
+        [
+          "ul_dw",
+          3340000,
+          false,
+          "regular"
+        ],
+        [
+          "ul_dc",
+          3340000,
+          false,
+          "regular"
+        ],
+        [
+          "ul_dm",
+          3340000,
+          false,
+          "regular"
+        ],
+        [
+          "ul_da",
+          3345000,
+          false,
+          "regular"
+        ],
+        [
+          "ul_dw",
+          3345000,
+          false,
+          "regular"
+        ],
+        [
+          "ul_dc",
+          3345000,
+          false,
+          "regular"
+        ],
+        [
+          "ul_dm",
+          3345000,
+          false,
+          "regular"
+        ],
+        [
+          "ul_da",
+          3350000,
+          false,
+          "regular"
+        ],
+        [
+          "ul_dw",
+          3350000,
+          false,
+          "regular"
+        ],
+        [
+          "ul_dc",
+          3350000,
+          false,
+          "regular"
+        ],
+        [
+          "ul_dm",
+          3350000,
+          false,
+          "regular"
+        ],
+        [
+          "ul_da",
+          3355000,
+          false,
+          "regular"
+        ],
+        [
+          "ul_dw",
+          3355000,
+          false,
+          "regular"
+        ],
+        [
+          "ul_dc",
+          3355000,
+          false,
+          "regular"
+        ],
+        [
+          "ul_dm",
+          3355000,
+          false,
+          "regular"
+        ],
+        [
+          "ul_da",
+          3360000,
+          false,
+          "regular"
+        ],
+        [
+          "ul_dw",
+          3360000,
+          false,
+          "regular"
+        ],
+        [
+          "ul_dc",
+          3360000,
+          false,
+          "regular"
+        ],
+        [
+          "ul_dm",
+          3360000,
+          false,
+          "regular"
+        ]
+      ]
+    },
+    "cases": {
+      "early_recontact": {
+        "result": "DONE",
+        "k": 5,
+        "w": 9,
+        "budget": 12,
+        "events": [
+          {
+            "ul_k": 5,
+            "ul_w": 2,
+            "ul_phase": 3,
+            "ul_modeB": 1,
+            "ul_postw": 1,
+            "ul_sepn": 2,
+            "ul_okn": 1,
+            "what": "event",
+            "step": 3210000,
+            "text": "SEPARATED,5,3210000,0.1115,0.000448,w2"
+          },
+          {
+            "ul_k": 5,
+            "ul_w": 4,
+            "ul_phase": 2,
+            "ul_modeB": 1,
+            "ul_postw": 0,
+            "ul_sepn": 0,
+            "ul_okn": 3,
+            "what": "event",
+            "step": 3220000,
+            "text": "RECONTACT,5,3220000,0.1115,0.000448,n1"
+          },
+          {
+            "ul_k": 5,
+            "ul_w": 6,
+            "ul_phase": 3,
+            "ul_modeB": 1,
+            "ul_postw": 1,
+            "ul_sepn": 2,
+            "ul_okn": 5,
+            "what": "event",
+            "step": 3230000,
+            "text": "SEPARATED,5,3230000,0.1115,0.000448,w6"
+          },
+          {
+            "ul_k": 5,
+            "ul_w": 9,
+            "ul_phase": 3,
+            "ul_modeB": 1,
+            "ul_postw": 4,
+            "ul_sepn": 5,
+            "ul_okn": 8,
+            "what": "event",
+            "step": 3245000,
+            "text": "POST_DONE,5,3245000,0.1115,0.000448,w9"
+          }
+        ],
+        "moves": [],
+        "dump_outputs": [
+          [
+            "ul_dm",
+            3200000,
+            false,
+            "setup"
+          ],
+          [
+            "ul_da",
+            3205000,
+            false,
+            "regular"
+          ],
+          [
+            "ul_dw",
+            3205000,
+            false,
+            "regular"
+          ],
+          [
+            "ul_dc",
+            3205000,
+            false,
+            "regular"
+          ],
+          [
+            "ul_dm",
+            3205000,
+            false,
+            "regular"
+          ],
+          [
+            "ul_da",
+            3210000,
+            false,
+            "regular"
+          ],
+          [
+            "ul_dw",
+            3210000,
+            false,
+            "regular"
+          ],
+          [
+            "ul_dc",
+            3210000,
+            false,
+            "regular"
+          ],
+          [
+            "ul_dm",
+            3210000,
+            false,
+            "regular"
+          ],
+          [
+            "ul_da",
+            3215000,
+            false,
+            "regular"
+          ],
+          [
+            "ul_dw",
+            3215000,
+            false,
+            "regular"
+          ],
+          [
+            "ul_dc",
+            3215000,
+            false,
+            "regular"
+          ],
+          [
+            "ul_dm",
+            3215000,
+            false,
+            "regular"
+          ],
+          [
+            "ul_da",
+            3220000,
+            false,
+            "regular"
+          ],
+          [
+            "ul_dw",
+            3220000,
+            false,
+            "regular"
+          ],
+          [
+            "ul_dc",
+            3220000,
+            false,
+            "regular"
+          ],
+          [
+            "ul_dm",
+            3220000,
+            false,
+            "regular"
+          ],
+          [
+            "ul_da",
+            3225000,
+            false,
+            "regular"
+          ],
+          [
+            "ul_dw",
+            3225000,
+            false,
+            "regular"
+          ],
+          [
+            "ul_dc",
+            3225000,
+            false,
+            "regular"
+          ],
+          [
+            "ul_dm",
+            3225000,
+            false,
+            "regular"
+          ],
+          [
+            "ul_da",
+            3230000,
+            false,
+            "regular"
+          ],
+          [
+            "ul_dw",
+            3230000,
+            false,
+            "regular"
+          ],
+          [
+            "ul_dc",
+            3230000,
+            false,
+            "regular"
+          ],
+          [
+            "ul_dm",
+            3230000,
+            false,
+            "regular"
+          ],
+          [
+            "ul_da",
+            3235000,
+            false,
+            "regular"
+          ],
+          [
+            "ul_dw",
+            3235000,
+            false,
+            "regular"
+          ],
+          [
+            "ul_dc",
+            3235000,
+            false,
+            "regular"
+          ],
+          [
+            "ul_dm",
+            3235000,
+            false,
+            "regular"
+          ],
+          [
+            "ul_da",
+            3240000,
+            false,
+            "regular"
+          ],
+          [
+            "ul_dw",
+            3240000,
+            false,
+            "regular"
+          ],
+          [
+            "ul_dc",
+            3240000,
+            false,
+            "regular"
+          ],
+          [
+            "ul_dm",
+            3240000,
+            false,
+            "regular"
+          ],
+          [
+            "ul_da",
+            3245000,
+            false,
+            "regular"
+          ],
+          [
+            "ul_dw",
+            3245000,
+            false,
+            "regular"
+          ],
+          [
+            "ul_dc",
+            3245000,
+            false,
+            "regular"
+          ],
+          [
+            "ul_dm",
+            3245000,
+            false,
+            "regular"
+          ]
+        ]
+      },
+      "late_declaration": {
+        "result": "DONE",
+        "k": 5,
+        "w": 15,
+        "budget": 12,
+        "events": [
+          {
+            "ul_k": 5,
+            "ul_w": 2,
+            "ul_phase": 3,
+            "ul_modeB": 1,
+            "ul_postw": 1,
+            "ul_sepn": 2,
+            "ul_okn": 0,
+            "what": "event",
+            "step": 3210000,
+            "text": "SEPARATED,5,3210000,0.1115,0.000448,w2"
+          },
+          {
+            "ul_k": 5,
+            "ul_w": 4,
+            "ul_phase": 2,
+            "ul_modeB": 1,
+            "ul_postw": 0,
+            "ul_sepn": 0,
+            "ul_okn": 0,
+            "what": "event",
+            "step": 3220000,
+            "text": "RECONTACT,5,3220000,0.1115,0.000448,n1"
+          },
+          {
+            "ul_k": 5,
+            "ul_w": 6,
+            "ul_phase": 3,
+            "ul_modeB": 1,
+            "ul_postw": 1,
+            "ul_sepn": 2,
+            "ul_okn": 0,
+            "what": "event",
+            "step": 3230000,
+            "text": "SEPARATED,5,3230000,0.1115,0.000448,w6"
+          },
+          {
+            "ul_k": 5,
+            "ul_w": 8,
+            "ul_phase": 2,
+            "ul_modeB": 1,
+            "ul_postw": 0,
+            "ul_sepn": 0,
+            "ul_okn": 0,
+            "what": "event",
+            "step": 3240000,
+            "text": "RECONTACT,5,3240000,0.1115,0.000448,n1"
+          },
+          {
+            "ul_k": 5,
+            "ul_w": 12,
+            "ul_phase": 3,
+            "ul_modeB": 1,
+            "ul_postw": 1,
+            "ul_sepn": 2,
+            "ul_okn": 0,
+            "what": "event",
+            "step": 3260000,
+            "text": "SEPARATED,5,3260000,0.1115,0.000448,w12"
+          },
+          {
+            "ul_k": 5,
+            "ul_w": 15,
+            "ul_phase": 3,
+            "ul_modeB": 1,
+            "ul_postw": 4,
+            "ul_sepn": 5,
+            "ul_okn": 0,
+            "what": "event",
+            "step": 3275000,
+            "text": "POST_DONE,5,3275000,0.1115,0.000448,w15"
+          }
+        ],
+        "moves": [],
+        "dump_outputs": [
+          [
+            "ul_dm",
+            3200000,
+            false,
+            "setup"
+          ],
+          [
+            "ul_da",
+            3205000,
+            false,
+            "regular"
+          ],
+          [
+            "ul_dw",
+            3205000,
+            false,
+            "regular"
+          ],
+          [
+            "ul_dc",
+            3205000,
+            false,
+            "regular"
+          ],
+          [
+            "ul_dm",
+            3205000,
+            false,
+            "regular"
+          ],
+          [
+            "ul_da",
+            3210000,
+            false,
+            "regular"
+          ],
+          [
+            "ul_dw",
+            3210000,
+            false,
+            "regular"
+          ],
+          [
+            "ul_dc",
+            3210000,
+            false,
+            "regular"
+          ],
+          [
+            "ul_dm",
+            3210000,
+            false,
+            "regular"
+          ],
+          [
+            "ul_da",
+            3215000,
+            false,
+            "regular"
+          ],
+          [
+            "ul_dw",
+            3215000,
+            false,
+            "regular"
+          ],
+          [
+            "ul_dc",
+            3215000,
+            false,
+            "regular"
+          ],
+          [
+            "ul_dm",
+            3215000,
+            false,
+            "regular"
+          ],
+          [
+            "ul_da",
+            3220000,
+            false,
+            "regular"
+          ],
+          [
+            "ul_dw",
+            3220000,
+            false,
+            "regular"
+          ],
+          [
+            "ul_dc",
+            3220000,
+            false,
+            "regular"
+          ],
+          [
+            "ul_dm",
+            3220000,
+            false,
+            "regular"
+          ],
+          [
+            "ul_da",
+            3225000,
+            false,
+            "regular"
+          ],
+          [
+            "ul_dw",
+            3225000,
+            false,
+            "regular"
+          ],
+          [
+            "ul_dc",
+            3225000,
+            false,
+            "regular"
+          ],
+          [
+            "ul_dm",
+            3225000,
+            false,
+            "regular"
+          ],
+          [
+            "ul_da",
+            3230000,
+            false,
+            "regular"
+          ],
+          [
+            "ul_dw",
+            3230000,
+            false,
+            "regular"
+          ],
+          [
+            "ul_dc",
+            3230000,
+            false,
+            "regular"
+          ],
+          [
+            "ul_dm",
+            3230000,
+            false,
+            "regular"
+          ],
+          [
+            "ul_da",
+            3235000,
+            false,
+            "regular"
+          ],
+          [
+            "ul_dw",
+            3235000,
+            false,
+            "regular"
+          ],
+          [
+            "ul_dc",
+            3235000,
+            false,
+            "regular"
+          ],
+          [
+            "ul_dm",
+            3235000,
+            false,
+            "regular"
+          ],
+          [
+            "ul_da",
+            3240000,
+            false,
+            "regular"
+          ],
+          [
+            "ul_dw",
+            3240000,
+            false,
+            "regular"
+          ],
+          [
+            "ul_dc",
+            3240000,
+            false,
+            "regular"
+          ],
+          [
+            "ul_dm",
+            3240000,
+            false,
+            "regular"
+          ],
+          [
+            "ul_da",
+            3245000,
+            false,
+            "regular"
+          ],
+          [
+            "ul_dw",
+            3245000,
+            false,
+            "regular"
+          ],
+          [
+            "ul_dc",
+            3245000,
+            false,
+            "regular"
+          ],
+          [
+            "ul_dm",
+            3245000,
+            false,
+            "regular"
+          ],
+          [
+            "ul_da",
+            3250000,
+            false,
+            "regular"
+          ],
+          [
+            "ul_dw",
+            3250000,
+            false,
+            "regular"
+          ],
+          [
+            "ul_dc",
+            3250000,
+            false,
+            "regular"
+          ],
+          [
+            "ul_dm",
+            3250000,
+            false,
+            "regular"
+          ],
+          [
+            "ul_da",
+            3255000,
+            false,
+            "regular"
+          ],
+          [
+            "ul_dw",
+            3255000,
+            false,
+            "regular"
+          ],
+          [
+            "ul_dc",
+            3255000,
+            false,
+            "regular"
+          ],
+          [
+            "ul_dm",
+            3255000,
+            false,
+            "regular"
+          ],
+          [
+            "ul_da",
+            3260000,
+            false,
+            "regular"
+          ],
+          [
+            "ul_dw",
+            3260000,
+            false,
+            "regular"
+          ],
+          [
+            "ul_dc",
+            3260000,
+            false,
+            "regular"
+          ],
+          [
+            "ul_dm",
+            3260000,
+            false,
+            "regular"
+          ],
+          [
+            "ul_da",
+            3265000,
+            false,
+            "regular"
+          ],
+          [
+            "ul_dw",
+            3265000,
+            false,
+            "regular"
+          ],
+          [
+            "ul_dc",
+            3265000,
+            false,
+            "regular"
+          ],
+          [
+            "ul_dm",
+            3265000,
+            false,
+            "regular"
+          ],
+          [
+            "ul_da",
+            3270000,
+            false,
+            "regular"
+          ],
+          [
+            "ul_dw",
+            3270000,
+            false,
+            "regular"
+          ],
+          [
+            "ul_dc",
+            3270000,
+            false,
+            "regular"
+          ],
+          [
+            "ul_dm",
+            3270000,
+            false,
+            "regular"
+          ],
+          [
+            "ul_da",
+            3275000,
+            false,
+            "regular"
+          ],
+          [
+            "ul_dw",
+            3275000,
+            false,
+            "regular"
+          ],
+          [
+            "ul_dc",
+            3275000,
+            false,
+            "regular"
+          ],
+          [
+            "ul_dm",
+            3275000,
+            false,
+            "regular"
+          ]
+        ]
+      },
+      "recontact_at_budget": {
+        "result": "SEP_INCOMPLETE",
+        "k": 5,
+        "w": 12,
+        "budget": 12,
+        "events": [
+          {
+            "ul_k": 5,
+            "ul_w": 2,
+            "ul_phase": 3,
+            "ul_modeB": 1,
+            "ul_postw": 1,
+            "ul_sepn": 2,
+            "ul_okn": 0,
+            "what": "event",
+            "step": 3210000,
+            "text": "SEPARATED,5,3210000,0.1115,0.000448,w2"
+          },
+          {
+            "ul_k": 5,
+            "ul_w": 4,
+            "ul_phase": 2,
+            "ul_modeB": 1,
+            "ul_postw": 0,
+            "ul_sepn": 0,
+            "ul_okn": 0,
+            "what": "event",
+            "step": 3220000,
+            "text": "RECONTACT,5,3220000,0.1115,0.000448,n1"
+          },
+          {
+            "ul_k": 5,
+            "ul_w": 6,
+            "ul_phase": 3,
+            "ul_modeB": 1,
+            "ul_postw": 1,
+            "ul_sepn": 2,
+            "ul_okn": 0,
+            "what": "event",
+            "step": 3230000,
+            "text": "SEPARATED,5,3230000,0.1115,0.000448,w6"
+          },
+          {
+            "ul_k": 5,
+            "ul_w": 8,
+            "ul_phase": 2,
+            "ul_modeB": 1,
+            "ul_postw": 0,
+            "ul_sepn": 0,
+            "ul_okn": 0,
+            "what": "event",
+            "step": 3240000,
+            "text": "RECONTACT,5,3240000,0.1115,0.000448,n1"
+          },
+          {
+            "ul_k": 5,
+            "ul_w": 12,
+            "ul_phase": 2,
+            "ul_modeB": 1,
+            "ul_postw": 0,
+            "ul_sepn": 0,
+            "ul_okn": 0,
+            "what": "event",
+            "step": 3260000,
+            "text": "SEP_INCOMPLETE,5,3260000,0.1115,0.000448,w12"
+          }
+        ],
+        "moves": [],
+        "dump_outputs": [
+          [
+            "ul_dm",
+            3200000,
+            false,
+            "setup"
+          ],
+          [
+            "ul_da",
+            3205000,
+            false,
+            "regular"
+          ],
+          [
+            "ul_dw",
+            3205000,
+            false,
+            "regular"
+          ],
+          [
+            "ul_dc",
+            3205000,
+            false,
+            "regular"
+          ],
+          [
+            "ul_dm",
+            3205000,
+            false,
+            "regular"
+          ],
+          [
+            "ul_da",
+            3210000,
+            false,
+            "regular"
+          ],
+          [
+            "ul_dw",
+            3210000,
+            false,
+            "regular"
+          ],
+          [
+            "ul_dc",
+            3210000,
+            false,
+            "regular"
+          ],
+          [
+            "ul_dm",
+            3210000,
+            false,
+            "regular"
+          ],
+          [
+            "ul_da",
+            3215000,
+            false,
+            "regular"
+          ],
+          [
+            "ul_dw",
+            3215000,
+            false,
+            "regular"
+          ],
+          [
+            "ul_dc",
+            3215000,
+            false,
+            "regular"
+          ],
+          [
+            "ul_dm",
+            3215000,
+            false,
+            "regular"
+          ],
+          [
+            "ul_da",
+            3220000,
+            false,
+            "regular"
+          ],
+          [
+            "ul_dw",
+            3220000,
+            false,
+            "regular"
+          ],
+          [
+            "ul_dc",
+            3220000,
+            false,
+            "regular"
+          ],
+          [
+            "ul_dm",
+            3220000,
+            false,
+            "regular"
+          ],
+          [
+            "ul_da",
+            3225000,
+            false,
+            "regular"
+          ],
+          [
+            "ul_dw",
+            3225000,
+            false,
+            "regular"
+          ],
+          [
+            "ul_dc",
+            3225000,
+            false,
+            "regular"
+          ],
+          [
+            "ul_dm",
+            3225000,
+            false,
+            "regular"
+          ],
+          [
+            "ul_da",
+            3230000,
+            false,
+            "regular"
+          ],
+          [
+            "ul_dw",
+            3230000,
+            false,
+            "regular"
+          ],
+          [
+            "ul_dc",
+            3230000,
+            false,
+            "regular"
+          ],
+          [
+            "ul_dm",
+            3230000,
+            false,
+            "regular"
+          ],
+          [
+            "ul_da",
+            3235000,
+            false,
+            "regular"
+          ],
+          [
+            "ul_dw",
+            3235000,
+            false,
+            "regular"
+          ],
+          [
+            "ul_dc",
+            3235000,
+            false,
+            "regular"
+          ],
+          [
+            "ul_dm",
+            3235000,
+            false,
+            "regular"
+          ],
+          [
+            "ul_da",
+            3240000,
+            false,
+            "regular"
+          ],
+          [
+            "ul_dw",
+            3240000,
+            false,
+            "regular"
+          ],
+          [
+            "ul_dc",
+            3240000,
+            false,
+            "regular"
+          ],
+          [
+            "ul_dm",
+            3240000,
+            false,
+            "regular"
+          ],
+          [
+            "ul_da",
+            3245000,
+            false,
+            "regular"
+          ],
+          [
+            "ul_dw",
+            3245000,
+            false,
+            "regular"
+          ],
+          [
+            "ul_dc",
+            3245000,
+            false,
+            "regular"
+          ],
+          [
+            "ul_dm",
+            3245000,
+            false,
+            "regular"
+          ],
+          [
+            "ul_da",
+            3250000,
+            false,
+            "regular"
+          ],
+          [
+            "ul_dw",
+            3250000,
+            false,
+            "regular"
+          ],
+          [
+            "ul_dc",
+            3250000,
+            false,
+            "regular"
+          ],
+          [
+            "ul_dm",
+            3250000,
+            false,
+            "regular"
+          ],
+          [
+            "ul_da",
+            3255000,
+            false,
+            "regular"
+          ],
+          [
+            "ul_dw",
+            3255000,
+            false,
+            "regular"
+          ],
+          [
+            "ul_dc",
+            3255000,
+            false,
+            "regular"
+          ],
+          [
+            "ul_dm",
+            3255000,
+            false,
+            "regular"
+          ],
+          [
+            "ul_da",
+            3260000,
+            false,
+            "regular"
+          ],
+          [
+            "ul_dw",
+            3260000,
+            false,
+            "regular"
+          ],
+          [
+            "ul_dc",
+            3260000,
+            false,
+            "regular"
+          ],
+          [
+            "ul_dm",
+            3260000,
+            false,
+            "regular"
+          ]
+        ]
+      },
+      "recontact_after_budget": {
+        "result": "SEP_INCOMPLETE",
+        "k": 5,
+        "w": 13,
+        "budget": 12,
+        "events": [
+          {
+            "ul_k": 5,
+            "ul_w": 2,
+            "ul_phase": 3,
+            "ul_modeB": 1,
+            "ul_postw": 1,
+            "ul_sepn": 2,
+            "ul_okn": 0,
+            "what": "event",
+            "step": 3210000,
+            "text": "SEPARATED,5,3210000,0.1115,0.000448,w2"
+          },
+          {
+            "ul_k": 5,
+            "ul_w": 4,
+            "ul_phase": 2,
+            "ul_modeB": 1,
+            "ul_postw": 0,
+            "ul_sepn": 0,
+            "ul_okn": 0,
+            "what": "event",
+            "step": 3220000,
+            "text": "RECONTACT,5,3220000,0.1115,0.000448,n1"
+          },
+          {
+            "ul_k": 5,
+            "ul_w": 6,
+            "ul_phase": 3,
+            "ul_modeB": 1,
+            "ul_postw": 1,
+            "ul_sepn": 2,
+            "ul_okn": 0,
+            "what": "event",
+            "step": 3230000,
+            "text": "SEPARATED,5,3230000,0.1115,0.000448,w6"
+          },
+          {
+            "ul_k": 5,
+            "ul_w": 8,
+            "ul_phase": 2,
+            "ul_modeB": 1,
+            "ul_postw": 0,
+            "ul_sepn": 0,
+            "ul_okn": 0,
+            "what": "event",
+            "step": 3240000,
+            "text": "RECONTACT,5,3240000,0.1115,0.000448,n1"
+          },
+          {
+            "ul_k": 5,
+            "ul_w": 12,
+            "ul_phase": 3,
+            "ul_modeB": 1,
+            "ul_postw": 1,
+            "ul_sepn": 2,
+            "ul_okn": 0,
+            "what": "event",
+            "step": 3260000,
+            "text": "SEPARATED,5,3260000,0.1115,0.000448,w12"
+          },
+          {
+            "ul_k": 5,
+            "ul_w": 13,
+            "ul_phase": 2,
+            "ul_modeB": 1,
+            "ul_postw": 0,
+            "ul_sepn": 0,
+            "ul_okn": 0,
+            "what": "event",
+            "step": 3265000,
+            "text": "RECONTACT,5,3265000,0.1115,0.000448,n1"
+          },
+          {
+            "ul_k": 5,
+            "ul_w": 13,
+            "ul_phase": 2,
+            "ul_modeB": 1,
+            "ul_postw": 0,
+            "ul_sepn": 0,
+            "ul_okn": 0,
+            "what": "event",
+            "step": 3265000,
+            "text": "SEP_INCOMPLETE,5,3265000,0.1115,0.000448,w13"
+          }
+        ],
+        "moves": [],
+        "dump_outputs": [
+          [
+            "ul_dm",
+            3200000,
+            false,
+            "setup"
+          ],
+          [
+            "ul_da",
+            3205000,
+            false,
+            "regular"
+          ],
+          [
+            "ul_dw",
+            3205000,
+            false,
+            "regular"
+          ],
+          [
+            "ul_dc",
+            3205000,
+            false,
+            "regular"
+          ],
+          [
+            "ul_dm",
+            3205000,
+            false,
+            "regular"
+          ],
+          [
+            "ul_da",
+            3210000,
+            false,
+            "regular"
+          ],
+          [
+            "ul_dw",
+            3210000,
+            false,
+            "regular"
+          ],
+          [
+            "ul_dc",
+            3210000,
+            false,
+            "regular"
+          ],
+          [
+            "ul_dm",
+            3210000,
+            false,
+            "regular"
+          ],
+          [
+            "ul_da",
+            3215000,
+            false,
+            "regular"
+          ],
+          [
+            "ul_dw",
+            3215000,
+            false,
+            "regular"
+          ],
+          [
+            "ul_dc",
+            3215000,
+            false,
+            "regular"
+          ],
+          [
+            "ul_dm",
+            3215000,
+            false,
+            "regular"
+          ],
+          [
+            "ul_da",
+            3220000,
+            false,
+            "regular"
+          ],
+          [
+            "ul_dw",
+            3220000,
+            false,
+            "regular"
+          ],
+          [
+            "ul_dc",
+            3220000,
+            false,
+            "regular"
+          ],
+          [
+            "ul_dm",
+            3220000,
+            false,
+            "regular"
+          ],
+          [
+            "ul_da",
+            3225000,
+            false,
+            "regular"
+          ],
+          [
+            "ul_dw",
+            3225000,
+            false,
+            "regular"
+          ],
+          [
+            "ul_dc",
+            3225000,
+            false,
+            "regular"
+          ],
+          [
+            "ul_dm",
+            3225000,
+            false,
+            "regular"
+          ],
+          [
+            "ul_da",
+            3230000,
+            false,
+            "regular"
+          ],
+          [
+            "ul_dw",
+            3230000,
+            false,
+            "regular"
+          ],
+          [
+            "ul_dc",
+            3230000,
+            false,
+            "regular"
+          ],
+          [
+            "ul_dm",
+            3230000,
+            false,
+            "regular"
+          ],
+          [
+            "ul_da",
+            3235000,
+            false,
+            "regular"
+          ],
+          [
+            "ul_dw",
+            3235000,
+            false,
+            "regular"
+          ],
+          [
+            "ul_dc",
+            3235000,
+            false,
+            "regular"
+          ],
+          [
+            "ul_dm",
+            3235000,
+            false,
+            "regular"
+          ],
+          [
+            "ul_da",
+            3240000,
+            false,
+            "regular"
+          ],
+          [
+            "ul_dw",
+            3240000,
+            false,
+            "regular"
+          ],
+          [
+            "ul_dc",
+            3240000,
+            false,
+            "regular"
+          ],
+          [
+            "ul_dm",
+            3240000,
+            false,
+            "regular"
+          ],
+          [
+            "ul_da",
+            3245000,
+            false,
+            "regular"
+          ],
+          [
+            "ul_dw",
+            3245000,
+            false,
+            "regular"
+          ],
+          [
+            "ul_dc",
+            3245000,
+            false,
+            "regular"
+          ],
+          [
+            "ul_dm",
+            3245000,
+            false,
+            "regular"
+          ],
+          [
+            "ul_da",
+            3250000,
+            false,
+            "regular"
+          ],
+          [
+            "ul_dw",
+            3250000,
+            false,
+            "regular"
+          ],
+          [
+            "ul_dc",
+            3250000,
+            false,
+            "regular"
+          ],
+          [
+            "ul_dm",
+            3250000,
+            false,
+            "regular"
+          ],
+          [
+            "ul_da",
+            3255000,
+            false,
+            "regular"
+          ],
+          [
+            "ul_dw",
+            3255000,
+            false,
+            "regular"
+          ],
+          [
+            "ul_dc",
+            3255000,
+            false,
+            "regular"
+          ],
+          [
+            "ul_dm",
+            3255000,
+            false,
+            "regular"
+          ],
+          [
+            "ul_da",
+            3260000,
+            false,
+            "regular"
+          ],
+          [
+            "ul_dw",
+            3260000,
+            false,
+            "regular"
+          ],
+          [
+            "ul_dc",
+            3260000,
+            false,
+            "regular"
+          ],
+          [
+            "ul_dm",
+            3260000,
+            false,
+            "regular"
+          ],
+          [
+            "ul_da",
+            3265000,
+            false,
+            "regular"
+          ],
+          [
+            "ul_dw",
+            3265000,
+            false,
+            "regular"
+          ],
+          [
+            "ul_dc",
+            3265000,
+            false,
+            "regular"
+          ],
+          [
+            "ul_dm",
+            3265000,
+            false,
+            "regular"
+          ]
+        ]
+      }
+    },
+    "gravity_budgets": [
+      {
+        "bed": "ps_0_10_r45",
+        "arm": "UB",
+        "first": [
+          4,
+          12
+        ],
+        "later": [
+          4,
+          12
+        ],
+        "steady_exit_w": 4
+      },
+      {
+        "bed": "ps_0_10_r45",
+        "arm": "UVa",
+        "first": [
+          4,
+          12
+        ],
+        "later": [
+          8,
+          24
+        ],
+        "steady_exit_w": 8
+      },
+      {
+        "bed": "ps_0_10_r45",
+        "arm": "UVb",
+        "first": [
+          4,
+          12
+        ],
+        "later": [
+          8,
+          24
+        ],
+        "steady_exit_w": 8
+      },
+      {
+        "bed": "ps_0_10_r45",
+        "arm": "UT3",
+        "first": [
+          4,
+          12
+        ],
+        "later": [
+          4,
+          12
+        ],
+        "steady_exit_w": 4
+      },
+      {
+        "bed": "ps_3_7_r45",
+        "arm": "UB",
+        "first": [
+          4,
+          12
+        ],
+        "later": [
+          4,
+          12
+        ],
+        "steady_exit_w": 4
+      },
+      {
+        "bed": "ps_3_7_r45",
+        "arm": "UVa",
+        "first": [
+          4,
+          12
+        ],
+        "later": [
+          8,
+          24
+        ],
+        "steady_exit_w": 8
+      },
+      {
+        "bed": "ps_3_7_r45",
+        "arm": "UVb",
+        "first": [
+          4,
+          12
+        ],
+        "later": [
+          8,
+          24
+        ],
+        "steady_exit_w": 8
+      },
+      {
+        "bed": "ps_3_7_r45",
+        "arm": "UT3",
+        "first": [
+          4,
+          12
+        ],
+        "later": [
+          4,
+          12
+        ],
+        "steady_exit_w": 4
+      },
+      {
+        "bed": "ps_5_5_r45",
+        "arm": "UB",
+        "first": [
+          4,
+          12
+        ],
+        "later": [
+          4,
+          12
+        ],
+        "steady_exit_w": 4
+      },
+      {
+        "bed": "ps_5_5_r45",
+        "arm": "UVa",
+        "first": [
+          4,
+          12
+        ],
+        "later": [
+          8,
+          24
+        ],
+        "steady_exit_w": 8
+      },
+      {
+        "bed": "ps_5_5_r45",
+        "arm": "UVb",
+        "first": [
+          4,
+          12
+        ],
+        "later": [
+          8,
+          24
+        ],
+        "steady_exit_w": 8
+      },
+      {
+        "bed": "ps_5_5_r45",
+        "arm": "UT3",
+        "first": [
+          4,
+          12
+        ],
+        "later": [
+          4,
+          12
+        ],
+        "steady_exit_w": 4
+      },
+      {
+        "bed": "ps_7_3_r45",
+        "arm": "UB",
+        "first": [
+          4,
+          12
+        ],
+        "later": [
+          4,
+          12
+        ],
+        "steady_exit_w": 4
+      },
+      {
+        "bed": "ps_7_3_r45",
+        "arm": "UVa",
+        "first": [
+          4,
+          12
+        ],
+        "later": [
+          8,
+          24
+        ],
+        "steady_exit_w": 8
+      },
+      {
+        "bed": "ps_7_3_r45",
+        "arm": "UVb",
+        "first": [
+          4,
+          12
+        ],
+        "later": [
+          8,
+          24
+        ],
+        "steady_exit_w": 8
+      },
+      {
+        "bed": "ps_7_3_r45",
+        "arm": "UT3",
+        "first": [
+          4,
+          12
+        ],
+        "later": [
+          4,
+          12
+        ],
+        "steady_exit_w": 4
+      },
+      {
+        "bed": "ps_10_0_r45",
+        "arm": "UB",
+        "first": [
+          4,
+          12
+        ],
+        "later": [
+          4,
+          12
+        ],
+        "steady_exit_w": 4
+      },
+      {
+        "bed": "ps_10_0_r45",
+        "arm": "UVa",
+        "first": [
+          4,
+          12
+        ],
+        "later": [
+          8,
+          24
+        ],
+        "steady_exit_w": 8
+      },
+      {
+        "bed": "ps_10_0_r45",
+        "arm": "UVb",
+        "first": [
+          4,
+          12
+        ],
+        "later": [
+          8,
+          24
+        ],
+        "steady_exit_w": 8
+      },
+      {
+        "bed": "ps_10_0_r45",
+        "arm": "UT3",
+        "first": [
+          4,
+          12
+        ],
+        "later": [
+          4,
+          12
+        ],
+        "steady_exit_w": 4
+      }
+    ],
+    "normal_nonmesh_movement_dump": [],
+    "normal_nonmesh_setup_dump": [],
+    "normal_atom_wall_pair_schedule_equal": true
+  },
+  "grammar_fixture": {
+    "scope": "static C++ type contract plus synthetic file-to-reader tests; no native execution",
+    "upstream_type_contract": [
+      "fix_ave_time.cpp:861 default SCALAR",
+      "fix_ave_time.cpp:350-368 one input scalar; multiple vector",
+      "variable.cpp:1182,1198,1315 scalar vs indexed access"
+    ],
+    "native_blocker": [
+      {
+        "line": 132,
+        "expression": "f_gr_av[1]",
+        "definition_line": 77,
+        "fix_id": "gr_av",
+        "input_count": 1,
+        "native_type": "global scalar",
+        "native_expected_access": "f_gr_av",
+        "native_error": "Mismatched fix in variable formula"
+      }
+    ],
+    "producer_model_blind_spot": {
+      "actual": {
+        "static_access_problems": [
+          {
+            "line": 132,
+            "expression": "f_gr_av[1]",
+            "definition_line": 77,
+            "fix_id": "gr_av",
+            "input_count": 1,
+            "native_type": "global scalar",
+            "native_expected_access": "f_gr_av",
+            "native_error": "Mismatched fix in variable formula"
+          }
+        ],
+        "producer_model_errors": [],
+        "producer_model_screen": [
+          "GRAM_START step=2000 k=0 plate_z=0.03",
+          "GRAM_STEP k=0 step=2100 plate_z=0.03 Ps_avg=0 n_contact_geo=0",
+          "GRAM_STATE_WRITTEN step=2100 k=0",
+          "GRAM_STEP k=1 step=3200 plate_z=0.03001 Ps_avg=0 n_contact_geo=0",
+          "GRAM_STATE_WRITTEN step=3200 k=1",
+          "GRAM_STEP k=2 step=4300 plate_z=0.03002 Ps_avg=0 n_contact_geo=0",
+          "GRAM_STATE_WRITTEN step=4300 k=2",
+          "GRAM_DONE step=4300 k=2 plate_z=0.03002"
+        ],
+        "producer_model_atom_dumps": [
+          2100,
+          3200,
+          4300
+        ]
+      },
+      "scalar_access_in_memory_only": {
+        "static_access_problems": [],
+        "producer_model_errors": [],
+        "producer_model_screen": [
+          "GRAM_START step=2000 k=0 plate_z=0.03",
+          "GRAM_STEP k=0 step=2100 plate_z=0.03 Ps_avg=0 n_contact_geo=0",
+          "GRAM_STATE_WRITTEN step=2100 k=0",
+          "GRAM_STEP k=1 step=3200 plate_z=0.03001 Ps_avg=0 n_contact_geo=0",
+          "GRAM_STATE_WRITTEN step=3200 k=1",
+          "GRAM_STEP k=2 step=4300 plate_z=0.03002 Ps_avg=0 n_contact_geo=0",
+          "GRAM_STATE_WRITTEN step=4300 k=2",
+          "GRAM_DONE step=4300 k=2 plate_z=0.03002"
+        ],
+        "producer_model_atom_dumps": [
+          2100,
+          3200,
+          4300
+        ]
+      },
+      "impossible_index_in_memory_only": {
+        "static_access_problems": [
+          {
+            "line": 132,
+            "expression": "f_gr_av[999]",
+            "definition_line": 77,
+            "fix_id": "gr_av",
+            "input_count": 1,
+            "native_type": "global scalar",
+            "native_expected_access": "f_gr_av",
+            "native_error": "Mismatched fix in variable formula"
+          }
+        ],
+        "producer_model_errors": [],
+        "producer_model_screen": [
+          "GRAM_START step=2000 k=0 plate_z=0.03",
+          "GRAM_STEP k=0 step=2100 plate_z=0.03 Ps_avg=0 n_contact_geo=0",
+          "GRAM_STATE_WRITTEN step=2100 k=0",
+          "GRAM_STEP k=1 step=3200 plate_z=0.03001 Ps_avg=0 n_contact_geo=0",
+          "GRAM_STATE_WRITTEN step=3200 k=1",
+          "GRAM_STEP k=2 step=4300 plate_z=0.03002 Ps_avg=0 n_contact_geo=0",
+          "GRAM_STATE_WRITTEN step=4300 k=2",
+          "GRAM_DONE step=4300 k=2 plate_z=0.03002"
+        ],
+        "producer_model_atom_dumps": [
+          2100,
+          3200,
+          4300
+        ]
+      }
+    },
+    "reader_variants": {
+      "good": {
+        "status": "PASS",
+        "exit_code": 0,
+        "false_checks": [],
+        "problems": []
+      },
+      "ga_rc_failure_with_all_artifacts": {
+        "status": "FAIL",
+        "exit_code": 2,
+        "false_checks": [
+          "GA_tech"
+        ],
+        "problems": [
+          "GA \uae30\uc220: rc 1 \u00b7 \ubc30\ub108 True \u00b7 ERROR [] \u00b7 Loop procs [6, 6, 6, 6, 6] (\uae30\ub300 run 5 \u00b7 NP 6)"
+        ]
+      },
+      "p_rc_failure_with_all_artifacts": {
+        "status": "FAIL",
+        "exit_code": 2,
+        "false_checks": [
+          "P_tech"
+        ],
+        "problems": [
+          "P: rc = 1"
+        ]
+      },
+      "missing_wall_end": {
+        "status": "FAIL",
+        "exit_code": 2,
+        "false_checks": [
+          "GA_wall_dump_steps",
+          "GA_contact_geo"
+        ],
+        "problems": [
+          "GA wall \ub364\ud504 step [2100, 4300] \u2260 \ucc3d \ub05d [2100, 3200, 4300] (setup \u00b7 \uc774\ub3d9 \uc911 \ub364\ud504?)"
+        ]
+      },
+      "header_time_wrong": {
+        "status": "FAIL",
+        "exit_code": 2,
+        "false_checks": [
+          "GA_atom_dump_steps"
+        ],
+        "problems": [
+          "GA atom_3200.dump: [] \u00b7 \uba38\ub9ac step 3199"
+        ]
+      },
+      "mesh_not_restored": {
+        "status": "FAIL",
+        "exit_code": 2,
+        "false_checks": [
+          "GB_mesh_z"
+        ],
+        "problems": [
+          "GB \ud310 z (step \u00b7 \uae30\ub300 \u00b7 \uc2e4\uc81c) [(4300, 0.030019999999999998, 0.03)]"
+        ]
+      },
+      "state_wrong": {
+        "status": "FAIL",
+        "exit_code": 2,
+        "false_checks": [
+          "GA_restart_state"
+        ],
+        "problems": [
+          "GA \uc0c1\ud0dc \ud30c\uc77c state_g_4300.in = 'variable gr_rstep equal 4300\\nvariable gr_k equal 1\\nvariable gr_pz equal 0.03002' \u2260 [('gr_rstep', 4300), ('gr_k', 2), ('gr_pz', 0.030019999999999998)]"
+        ]
+      },
+      "extra_movement_atom_dump": {
+        "status": "FAIL",
+        "exit_code": 2,
+        "false_checks": [
+          "GA_atom_dump_steps"
+        ],
+        "problems": [
+          "GA atom \ub364\ud504 step [2100, 2600, 3200, 4300] \u2260 \ucc3d \ub05d [2100, 3200, 4300] (setup \u00b7 \uc774\ub3d9 \uc911 \ub364\ud504?)"
+        ]
+      }
+    }
+  }
+}
