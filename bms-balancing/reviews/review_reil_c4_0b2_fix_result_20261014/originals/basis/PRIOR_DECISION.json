@@ -1,0 +1,94 @@
+{
+  "schema": "REIL_C4_0B2_INDEPENDENT_REVIEW",
+  "review_date": "2026-10-14",
+  "decision": "C4_0B2_REVIEWED_CHANGES_REQUIRED",
+  "reviewed_ref": "5810f35559c183a4aafeb91f650e354ba0fbe1a5",
+  "implementation_commit": "0c0703971addf152b7408fda38e19bdd4bc901ca",
+  "pre_red_commit": "540208aae135ac1b2fba1382e788b45fc0004c94",
+  "limited_evidence_accepted": true,
+  "implementation_closed": false,
+  "blocking_findings": [
+    {
+      "id": "C4B2-N1",
+      "priority": "P2",
+      "file": "bms-balancing/scripts/reil_c4_hb.py",
+      "lines": [
+        1070,
+        1076,
+        1305,
+        1310
+      ],
+      "title": "Interrupted work omitted from accounting and mislabeled UNFIT"
+    },
+    {
+      "id": "C4B2-N2",
+      "priority": "P2",
+      "file": "bms-balancing/scripts/reil_c4_hb.py",
+      "lines": [
+        491,
+        494
+      ],
+      "title": "Profile center uses pre-rounding fractions instead of stored float grid"
+    },
+    {
+      "id": "C4B2-N3",
+      "priority": "P2",
+      "file": "bms-balancing/scripts/reil_c4_hb.py",
+      "lines": [
+        830,
+        849,
+        882
+      ],
+      "title": "Width claims omit support-specific extra labels and grade counts"
+    }
+  ],
+  "accepted": {
+    "red": {
+      "pass": 1,
+      "fail": 42,
+      "kind": "Declared stub NotImplementedError"
+    },
+    "green": 114,
+    "identity_rc": 0,
+    "dryrun_rc": 0,
+    "normal_completion_rho_prerequisite": true,
+    "registered_search_check": true,
+    "one_common_update": true,
+    "final_rho_all_stored_valid_pairs": true
+  },
+  "report_corrections": [
+    "Sobol zero applies to new controls and independent dryrun, not approved inherited regression generation.",
+    "402 fake-util grid evaluations are disclosed approved n1/n2 content; add separate count category."
+  ],
+  "limits": [
+    "Pre-RED NumPy design arithmetic is submitter disclosure; independent contemporaneous command/output not supplied.",
+    "2502.9 seconds is before commit/push/final documents.",
+    "No raw-data or optimizer rerun by reviewer.",
+    "Git object preservation is not continuous execution-host audit."
+  ],
+  "future_entry_conditions": [
+    "Bind trusted H MANIFEST to the bytes consumed at actual Phase B entry; dryrun-only authentication is insufficient to claim that future entry is closed.",
+    "Fix future H4 control provenance/record scope before reachable H4 execution.",
+    "Separate user approval for minimal corrective implementation/testing and for C4-E/A/B."
+  ],
+  "reviewer_execution": {
+    "received_code_import": 0,
+    "received_code_run": 0,
+    "test_run": 0,
+    "optimizer_run": 0,
+    "Sobol_generation": 0,
+    "raw_REIL_data_opened": 0,
+    "COMSOL": 0,
+    "JVM": 0
+  },
+  "new_authority": {
+    "implementation": false,
+    "retest": false,
+    "C4_E": false,
+    "C4_A": false,
+    "C4_B": false,
+    "COMSOL": false
+  },
+  "source_mutations": 0,
+  "recipient": null
+}

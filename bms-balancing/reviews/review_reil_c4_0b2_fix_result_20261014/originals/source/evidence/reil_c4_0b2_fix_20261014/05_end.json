@@ -1,0 +1,75 @@
+{
+ "auto_fix": 0,
+ "compute_limit_s": 1260,
+ "compute_sum_s": 50.104,
+ "dryrun": "재실행 없음 (요청서 §5 — 패치가 dryrun_b 경로를 바꾸지 않음)",
+ "end_record_utc": "2026-10-14T04:53:09Z",
+ "green": {
+  "files": [
+   "tests/test_reil_c4_0b1.py",
+   "tests/test_reil_c4_0b1_fix.py",
+   "tests/test_reil_c4_0b1_fix2.py",
+   "tests/test_reil_c4_0b2.py",
+   "tests/test_reil_c4_0b2_fix.py"
+  ],
+  "items": 119,
+  "passed": 119
+ },
+ "note": "끝 기록 시점 snapshot — 커밋 · push · 결과 기록 · 발송문 작성 전 (전체 작업시간 준수 PASS 로 넓히지 않는다)",
+ "patch": {
+  "file": "docs/REIL_C4_0B2_FIX_PATCH_DRAFT_20261014.diff",
+  "hb_after": "8b8477238290cb35491c060b231031b79b277098bae1c0e7e48621d720a5aa9d",
+  "hb_before": "76a5d670362564b257bba675c97be2876255437f7e2ffb03b75c25c88be5308b",
+  "sha256": "ed99b056cef6a37d9ed31fd121b89c88a13333a205f75a0a0a27f545c54c6508"
+ },
+ "red": {
+  "failed": 5,
+  "failure_kind": "AssertionError 5 / 5 — 요청서 §3 의 선언된 단언 (n1_a · n1_b: ρ 미분류 · n2_a: 중심 2 · n3_a: grades 없음 · n3_b: support 없음)",
+  "file": "tests/test_reil_c4_0b2_fix.py",
+  "items": 5,
+  "passed": 0
+ },
+ "resources_post_hoc": {
+  "definition": "RUSAGE_CHILDREN 의 최대 단일 자식 RSS (기다린 자식) · 사후 관측 — 실행 중 강제 상한이 아니다",
+  "disk_free_end_bytes": 26272047104,
+  "disk_free_floor_bytes": 5368709120,
+  "disk_free_start_bytes": 26296946688,
+  "evidence_bytes": 27467,
+  "evidence_limit_bytes": 67108864,
+  "max_child_rss_kib": 295436,
+  "rss_limit_kib": 4194304
+ },
+ "retest": 0,
+ "steps": {
+  "01_identity": {
+   "child_maxrss_kib": 90976,
+   "elapsed_s": 21.255,
+   "head_end": "a0604c2e62b8bfc5772c4d647c1c6668e9889ddc",
+   "head_start": "a0604c2e62b8bfc5772c4d647c1c6668e9889ddc",
+   "limit_s": 60,
+   "rc": 0,
+   "timed_out": false
+  },
+  "02_red": {
+   "child_maxrss_kib": 127208,
+   "elapsed_s": 2.027,
+   "head_end": "a0604c2e62b8bfc5772c4d647c1c6668e9889ddc",
+   "head_start": "a0604c2e62b8bfc5772c4d647c1c6668e9889ddc",
+   "limit_s": 600,
+   "rc": 1,
+   "timed_out": false
+  },
+  "03_green": {
+   "child_maxrss_kib": 295436,
+   "elapsed_s": 26.822,
+   "head_end": "a0604c2e62b8bfc5772c4d647c1c6668e9889ddc",
+   "head_start": "a0604c2e62b8bfc5772c4d647c1c6668e9889ddc",
+   "limit_s": 600,
+   "rc": 0,
+   "timed_out": false
+  }
+ },
+ "t0_utc": "2026-10-14T04:51:04Z",
+ "work_elapsed_s_snapshot": 125.5,
+ "work_limit_s": 7200
+}

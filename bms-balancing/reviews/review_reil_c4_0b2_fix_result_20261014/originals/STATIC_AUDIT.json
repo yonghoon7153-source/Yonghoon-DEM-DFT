@@ -1,0 +1,162 @@
+{
+  "kind": "REVIEWER_STATIC_DATA_AUDIT",
+  "status": "MATCH",
+  "reviewed_head": "fe410f93b701e137c3cf2d5aa2e67a6abf4bf908",
+  "checks": [
+    {
+      "check": "48 captures size SHA256 Git blob",
+      "count": 48,
+      "matched": true
+    },
+    {
+      "sha256": "5c0e8bf188e4bb43c16a155a09ef57832ab86a4fd767ba5bdc82879454d050de",
+      "matched": true,
+      "check": "approval-commit fixed bytes",
+      "path": "bms-balancing/docs/REIL_C4_0B2_FIX_APPROVAL_REQUEST_20261014.md",
+      "git_blob": "6d9877e9514289a0ef7828683341de21286d9cca",
+      "ref": "015008fda157da5f768b83dbbc940fd4941f2391"
+    },
+    {
+      "sha256": "169c9ebb1621ee8ee3b05049daec33c6822ebf48b4fac79d883d5c18b99d10f6",
+      "matched": true,
+      "check": "approval-commit fixed bytes",
+      "path": "bms-balancing/docs/REIL_C4_0B2_FIX_CONTROLS_DRAFT_20261014.py.txt",
+      "git_blob": "e169b1676ca747d240836017f265f150071e7020",
+      "ref": "015008fda157da5f768b83dbbc940fd4941f2391"
+    },
+    {
+      "sha256": "ed99b056cef6a37d9ed31fd121b89c88a13333a205f75a0a0a27f545c54c6508",
+      "matched": true,
+      "check": "approval-commit fixed bytes",
+      "path": "bms-balancing/docs/REIL_C4_0B2_FIX_PATCH_DRAFT_20261014.diff",
+      "git_blob": "25bb2192b3b1923cd6ccc6d335c29fe8635e2548",
+      "ref": "015008fda157da5f768b83dbbc940fd4941f2391"
+    },
+    {
+      "sha256": "76a5d670362564b257bba675c97be2876255437f7e2ffb03b75c25c88be5308b",
+      "matched": true,
+      "check": "approval-commit fixed bytes",
+      "path": "bms-balancing/scripts/reil_c4_hb.py",
+      "git_blob": "4d74c74be51c9ec1b51d4f70d97c3abfe7e2c31d",
+      "ref": "015008fda157da5f768b83dbbc940fd4941f2391"
+    },
+    {
+      "check": "new five-test file equals preregistered draft",
+      "matched": true,
+      "sha256": "169c9ebb1621ee8ee3b05049daec33c6822ebf48b4fac79d883d5c18b99d10f6"
+    },
+    {
+      "after_sha256": "8b8477238290cb35491c060b231031b79b277098bae1c0e7e48621d720a5aa9d",
+      "check": "in-memory patch exact post bytes",
+      "before_sha256": "76a5d670362564b257bba675c97be2876255437f7e2ffb03b75c25c88be5308b",
+      "matched": true,
+      "added": 110,
+      "removed": 34,
+      "hunks": 9
+    },
+    {
+      "lists": [
+        {
+          "file": "02_red.source_sha256.txt",
+          "matched": true,
+          "count": 12
+        },
+        {
+          "file": "03_green.source_sha256.txt",
+          "matched": true,
+          "count": 12
+        },
+        {
+          "file": "04_source_sha256_end.txt",
+          "matched": true,
+          "count": 12
+        }
+      ],
+      "check": "RED/GREEN/end source SHA binding",
+      "green_end_lists_byte_equal": true
+    },
+    {
+      "check": "unchanged prior source and test bytes",
+      "count": 10,
+      "matched": true,
+      "files": [
+        "source/scripts/reil_c4_h.py",
+        "source/scripts/reil_c4_e3a.py",
+        "source/scripts/reil_c4_monitor.py",
+        "source/scripts/reil_c5_pilot.py",
+        "source/scripts/reil_p0.py",
+        "source/scripts/reil_c6_profile.py",
+        "source/tests/test_reil_c4_0b1.py",
+        "source/tests/test_reil_c4_0b1_fix.py",
+        "source/tests/test_reil_c4_0b1_fix2.py",
+        "source/tests/test_reil_c4_0b2.py"
+      ]
+    },
+    {
+      "check": "attachment matches fixed repository send document",
+      "matched": true,
+      "sha256": "c36c4c7f91327036a2ad9aec0e303a511d077824ac6d61264938579f13ffa6b5"
+    },
+    {
+      "elapsed_sum_s": 50.104,
+      "red_failed": 5,
+      "observed_captured_pass_sections": [
+        "test_10_the_cli_requires_explicit_paths",
+        "test_d_2_the_phase_b_dry_run_refuses_bad_arrays_data_paths_and_an_existing_output"
+      ],
+      "evidence_files": 25,
+      "before_end_record_bytes": 27467,
+      "green_passed": 119,
+      "current_evidence_bytes": 29944.0,
+      "scope": "Recorded executions only; not reviewer reruns",
+      "steps": [
+        {
+          "rc": 0,
+          "elapsed_s": 21.255,
+          "max_child_rss_kib": 90976,
+          "head": "a0604c2e62b8bfc5772c4d647c1c6668e9889ddc",
+          "name": "01_identity",
+          "limit_s": 60.0
+        },
+        {
+          "rc": 1,
+          "elapsed_s": 2.027,
+          "max_child_rss_kib": 127208,
+          "head": "a0604c2e62b8bfc5772c4d647c1c6668e9889ddc",
+          "name": "02_red",
+          "limit_s": 600.0
+        },
+        {
+          "rc": 0,
+          "elapsed_s": 26.822,
+          "max_child_rss_kib": 295436,
+          "head": "a0604c2e62b8bfc5772c4d647c1c6668e9889ddc",
+          "name": "03_green",
+          "limit_s": 600.0
+        }
+      ],
+      "check": "recorded steps and summaries"
+    },
+    {
+      "ahead_by": 7,
+      "too_large": null,
+      "production_changes": [
+        "bms-balancing/scripts/reil_c4_hb.py"
+      ],
+      "check": "compare scope",
+      "changed_files": 103,
+      "base": "5810f35559c183a4aafeb91f650e354ba0fbe1a5",
+      "behind_by": 0,
+      "head": "fe410f93b701e137c3cf2d5aa2e67a6abf4bf908"
+    }
+  ],
+  "received_program_execution": 0,
+  "test_execution": 0,
+  "data_opening": 0,
+  "network_mutation": 0,
+  "limitations": [
+    "Hash binding is not independent OS execution authentication.",
+    "Recorded post-hoc RSS is not simultaneous aggregate or enforced memory limit.",
+    "125.5-second snapshot precedes commit/push/report; no whole-work duration certification."
+  ]
+}

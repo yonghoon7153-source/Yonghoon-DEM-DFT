@@ -1,0 +1,25 @@
+{
+  "kind": "REVIEWER_OWN_EXACT_ARITHMETIC_NOT_CANDIDATE_TEST",
+  "scope": "Synthetic scalar counterexample; no candidate imports, grid generation, optimizer or raw REIL data.",
+  "row": 1,
+  "region": "A0",
+  "coordinate": "m_P",
+  "hypothetical_valid_phase_a_best": [
+    0.61875,
+    0.75,
+    0.25,
+    0.125
+  ],
+  "condition": "Finite valid independently evaluated Phase A optimum; not an observed fit result.",
+  "a": "2758454771764429/4503599627370496",
+  "m": "5573204538870989/9007199254740992",
+  "b": "5/8",
+  "stored_float_left_distance": "56294995342131/9007199254740992",
+  "stored_float_right_distance": "56294995342131/9007199254740992",
+  "pre_rounding_left_distance": "281474976710657/45035996273704960",
+  "expected_center_index": 1,
+  "current_source_logic_center_index": 2,
+  "source": "source/scripts/reil_c4_hb.py:491-494",
+  "protocol": "source/docs/REIL_EXTERNAL_VALIDATION_PROTOCOL_v2_ANNEX_A.md:213-218",
+  "reviewer_arithmetic_backend": "JavaScript IEEE754 bit decoding and BigInt rational arithmetic; received code execution 0"
+}
