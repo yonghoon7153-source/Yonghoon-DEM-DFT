@@ -1,0 +1,10 @@
+t0_utc 2026-10-14T17:03:49Z
+uptime_s 111.76
+head_start f4efff51545a16c544bd49c0df1d2818d8277f00
+disk_free_bytes 26211078144
+approval 상태 문서 §70 (사용자 "권고대로 승인" — 승인 요청 §10 의 1–3 권장안)
+request docs/REIL_C4E_E0_FIX_APPROVAL_REQUEST_20261014.md e28be013453e6c6dc091c8d4fe5b6946b48537ab944cfd86f9d7c0eb96856fc2 (커밋 0d065e84)
+limits identity 60 · red 600 · green 600 · seal_sources 60 · compute 1320 · work 7200 · auto_retest 0
+resources (사후 관측) child_maxrss ≤ 4 GiB · evidence ≤ 64 MiB · disk_free_at_start ≥ 5 GiB
+fixed controls 7a09d4386a740e9eba9145372e59ed7e1385ce5523fd7ce38dc095d5e4053bd2 · patch ed14409a54613e8bc3c309cabebcd564559bc651fbaa38e258d64cdf3e38594f · reil_c4e_run.py 0a9ddb83… → a94f535f…
+expect RED 6 실패 (AttributeError 3 + TypeError 3) · GREEN 27 (E0 21 + 새 6)
