@@ -1,0 +1,74 @@
+{
+ "auto_fix": 0,
+ "compute_limit_s": 1560,
+ "compute_sum_s": 55.7,
+ "dryrun": {
+  "phase_a_planned_after_endpoint_gate": 7040,
+  "phase_b_upper_bound_local_runs": 31089,
+  "plan": "04_dryrun_b/PLAN_B.json"
+ },
+ "end_record_utc": "2026-10-14T01:43:37Z",
+ "green": {
+  "files": [
+   "tests/test_reil_c4_0b1.py",
+   "tests/test_reil_c4_0b1_fix.py",
+   "tests/test_reil_c4_0b1_fix2.py",
+   "tests/test_reil_c4_0b2.py"
+  ],
+  "items": 114,
+  "passed": 114
+ },
+ "head_end": "540208aae135ac1b2fba1382e788b45fc0004c94",
+ "note": "끝 기록 시점 snapshot — 커밋 · push · 결과 기록 · 발송문 작성 전 (전체 작업시간 준수 PASS 로 넓히지 않는다)",
+ "red": {
+  "failed": 42,
+  "failure_kind": "reil_c4_hb.py:22 NotImplementedError: C4-0b2 골격 (42 / 42)",
+  "items": 43,
+  "passed": 1,
+  "passed_id": "b0_1"
+ },
+ "resources_post_hoc": {
+  "definition": "RUSAGE_CHILDREN 의 최대 단일 자식 RSS (기다린 자식) · 사후 관측 — 실행 중 강제 상한이 아니다",
+  "disk_free_end_bytes": 26304675840,
+  "disk_free_floor_bytes": 5368709120,
+  "disk_free_start_bytes": 26331672576,
+  "evidence_bytes": 48319,
+  "evidence_limit_bytes": 67108864,
+  "max_child_rss_kib": 282736,
+  "rss_limit_kib": 4194304
+ },
+ "retest": 0,
+ "steps": {
+  "01_identity": {
+   "child_maxrss_kib": 88984,
+   "elapsed_s": 19.857,
+   "limit_s": 60,
+   "rc": 0,
+   "timed_out": false
+  },
+  "02_red": {
+   "child_maxrss_kib": 85072,
+   "elapsed_s": 1.672,
+   "limit_s": 600,
+   "rc": 1,
+   "timed_out": false
+  },
+  "03_green": {
+   "child_maxrss_kib": 282736,
+   "elapsed_s": 30.015,
+   "limit_s": 600,
+   "rc": 0,
+   "timed_out": false
+  },
+  "04_dryrun": {
+   "child_maxrss_kib": 167224,
+   "elapsed_s": 4.156,
+   "limit_s": 300,
+   "rc": 0,
+   "timed_out": false
+  }
+ },
+ "t0_utc": "2026-10-14T01:01:55Z",
+ "work_elapsed_s_snapshot": 2502.9,
+ "work_limit_s": 14400
+}

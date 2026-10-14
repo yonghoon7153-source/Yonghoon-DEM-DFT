@@ -1,0 +1,209 @@
+{
+ "arrays": {
+  "h": {
+   "arrays_dir": "/home/user/Yonghoon-DEM-DFT/bms-balancing/reil_c4_arrays_0b1_20261013",
+   "complete": true,
+   "generator": {
+    "call": "scipy.stats.qmc.Sobol(d, scramble=True, <kw>=seed).random_base2(m) → qmc.scale",
+    "numpy": "2.4.6",
+    "scipy": "1.17.1",
+    "seed_keyword": "rng"
+   },
+   "manifest_sha256": "d122117f4b9dc70988b8636be7f2de91fa8e285dfff7c5340dcebac2e1f24b33",
+   "mode": "bytes",
+   "n_labels": 10466,
+   "ok": true,
+   "regenerated_match": null,
+   "units": 77
+  },
+  "phase_a": {
+   "arrays_dir": "/home/user/Yonghoon-DEM-DFT/bms-balancing/reil_c4_arrays_20261013",
+   "c6_direct_match": {
+    "sobol_A0_their_box_seed0.npy": true,
+    "sobol_A0_their_box_seed1.npy": true,
+    "sobol_A1_A2_wide_box_seed0.npy": true,
+    "sobol_A1_A2_wide_box_seed1.npy": true
+   },
+   "c6_manifest_sha256": "4f12094897b53463097e78dafc0bfe5f37c1d76bb1a6266c0a907d755fb2ebdc",
+   "manifest_sha256": "861c33aceb40befd3f707f2aa0b53fe159031f75766e91fff765666254d8b06c"
+  }
+ },
+ "elapsed_s": 3.8963293599999815,
+ "execution": {
+  "objective_calls": 0,
+  "optimizer_calls": 0,
+  "sobol_generated": 0,
+  "util_imported": false
+ },
+ "gates": {
+  "h4_endpoint": {
+   "0": {
+    "V_first": 2.3365,
+    "V_last": 3.5525,
+    "accepted": false,
+    "c_a": 2.0,
+    "c_b": 3.6,
+    "dev_first": 0.3365,
+    "dev_last": 0.047499999999999785,
+    "nu": 0.01
+   },
+   "1": {
+    "V_first": 2.3464,
+    "V_last": 3.5604,
+    "accepted": false,
+    "c_a": 2.0,
+    "c_b": 3.6,
+    "dev_first": 0.34640000000000004,
+    "dev_last": 0.03959999999999999,
+    "nu": 0.01
+   },
+   "10": {
+    "V_first": 2.3619,
+    "V_last": 3.5547,
+    "accepted": false,
+    "c_a": 2.0,
+    "c_b": 3.6,
+    "dev_first": 0.3618999999999999,
+    "dev_last": 0.04530000000000003,
+    "nu": 0.01
+   },
+   "2": {
+    "V_first": 2.3411,
+    "V_last": 3.5527,
+    "accepted": false,
+    "c_a": 2.0,
+    "c_b": 3.6,
+    "dev_first": 0.34109999999999996,
+    "dev_last": 0.04729999999999981,
+    "nu": 0.01
+   },
+   "3": {
+    "V_first": 2.5859,
+    "V_last": 3.5869,
+    "accepted": false,
+    "c_a": 2.0,
+    "c_b": 3.6,
+    "dev_first": 0.5859000000000001,
+    "dev_last": 0.013100000000000023,
+    "nu": 0.01
+   },
+   "4": {
+    "V_first": 2.3521,
+    "V_last": 3.5961,
+    "accepted": false,
+    "c_a": 2.0,
+    "c_b": 3.6,
+    "dev_first": 0.3521000000000001,
+    "dev_last": 0.0039000000000001477,
+    "nu": 0.01
+   },
+   "5": {
+    "V_first": 2.4247,
+    "V_last": 3.5848,
+    "accepted": false,
+    "c_a": 2.0,
+    "c_b": 3.6,
+    "dev_first": 0.4247000000000001,
+    "dev_last": 0.015200000000000014,
+    "nu": 0.01
+   },
+   "6": {
+    "V_first": 2.6097,
+    "V_last": 3.5934,
+    "accepted": false,
+    "c_a": 2.0,
+    "c_b": 3.6,
+    "dev_first": 0.6097000000000001,
+    "dev_last": 0.006600000000000073,
+    "nu": 0.01
+   },
+   "7": {
+    "V_first": 2.363,
+    "V_last": 3.5995,
+    "accepted": false,
+    "c_a": 2.0,
+    "c_b": 3.6,
+    "dev_first": 0.363,
+    "dev_last": 0.0005000000000000782,
+    "nu": 0.01
+   },
+   "8": {
+    "V_first": 2.3713,
+    "V_last": 3.5958,
+    "accepted": false,
+    "c_a": 2.0,
+    "c_b": 3.6,
+    "dev_first": 0.3713000000000002,
+    "dev_last": 0.004199999999999893,
+    "nu": 0.01
+   },
+   "9": {
+    "V_first": 2.3535,
+    "V_last": 3.5601,
+    "accepted": false,
+    "c_a": 2.0,
+    "c_b": 3.6,
+    "dev_first": 0.3534999999999999,
+    "dev_last": 0.03990000000000018,
+    "nu": 0.01
+   }
+  }
+ },
+ "h4": {
+  "controls": "양성 R1–R3 · 음성 D_abs — 끝점 수용 셀에서만 (이 자료에서는 0 셀)",
+  "endpoint_gated_units": 22,
+  "note": "11 셀 모두 끝점 수용 실패 → H4 22 단위 UNFIT (적용 가능성 실패 · 반증 아님 · ν 고정)"
+ },
+ "identity": {
+  "full_c6_check": "CREDITED — C4-ENV 의 C6 check 1 회 (상태 문서 §38) · 여기서는 부르지 않음",
+  "manifest_sha256_actual": "4f12094897b53463097e78dafc0bfe5f37c1d76bb1a6266c0a907d755fb2ebdc",
+  "manifest_sha256_expected": "4f12094897b53463097e78dafc0bfe5f37c1d76bb1a6266c0a907d755fb2ebdc",
+  "note": "계산 없는 식별 — 'C6 전체 기능 PASS' 가 아니다 (부록 A1)",
+  "ok": true,
+  "problems": [],
+  "record": {
+   "executable": "/usr/bin/python3.11",
+   "lock_sha256_now": "ea91156cac99fac17830818f17fd4a260a93722269f720171e0ab9b2a75c1faa",
+   "prefix": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/b881d255-9513-5adc-9b14-3c0be18d7ad6/scratchpad/reil_c4env/venv",
+   "profile_sha256_now": "50f2c7fb176910da2df252cfd7f17a8f05a56b8696e1be3040d6ff5cf034a641",
+   "seal_manifest_sha256": "4f12094897b53463097e78dafc0bfe5f37c1d76bb1a6266c0a907d755fb2ebdc",
+   "venv": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/b881d255-9513-5adc-9b14-3c0be18d7ad6/scratchpad/reil_c4env/venv",
+   "version": "3.11.17 (main, Oct  1 2026, 15:41:07) [GCC 13.3.0]"
+  },
+  "seal_path": "/home/user/Yonghoon-DEM-DFT/bms-balancing/reil_c6_rebuild_20261013"
+ },
+ "not_this_step": "C4-E / C4-A / C4-B (자료 실행) · 비용 중단 규칙 · reserve — 별도 승인",
+ "p0_result": "/home/user/Yonghoon-DEM-DFT/bms-balancing/evidence/reil_p0_20261006/P0_RESULT.json",
+ "p0_result_sha256": "3875e65092b38c9b08c907926bd8d1f4ee25674c97c28b5ada935e9027d12a90",
+ "phase_a": {
+  "note": "끝점 게이트만 반영한 계획 수 — 실행 가능 수 · 완료 수가 아니다. J_D 유효 마스크 · ρ 선행 조건에 따른 미실행 · 미해결은 C4-A 기록에서 따로 센다 (회신 2026-10-14 §5-5)",
+  "planned_after_endpoint_gate": 7040,
+  "registered_runs": 9856
+ },
+ "phase_b": {
+  "nominal_grid_evaluations_ub": 6633,
+  "nominal_refine_ub": 33,
+  "nominal_units": 33,
+  "profile_grid_points": 7380,
+  "profile_runs_ub": 29520,
+  "simultaneous_runs_ub": 1536,
+  "simultaneous_searches": 96,
+  "undetermined": [
+   "J_D 유효 마스크 (자료 쪽 — C4-A 에서 셀마다 판정 · 빈 마스크면 그 셀 J_D · ρ 미실행)",
+   "ρ 선행 조건 (두 단일 목적 Phase A 완료 · 분모 유한 양수 — C4-A 기록)",
+   "Phase A UNFIT (유효 증인 0 이면 그 단위 Phase B 없음 — C4-A 기록)",
+   "시작 부족 (s2 · 중복 · Phase A 증인 수 — 실행 때 기록 · 실행 수를 줄이기만 한다)"
+  ],
+  "units_after_endpoint_gate": 55,
+  "upper_bound_local_runs": 31089
+ },
+ "ray": {
+  "note": "유보 (범위 확인 §9-2) — 이 자료에서 도달 경로 0 · 완료로 세지 않는다",
+  "reached": 0,
+  "status": "미구현"
+ },
+ "schema": "reil-c4-0b2-plan-b-v1",
+ "scope": "읽기 전용 건조 = 계획 · seed · 봉인만 읽음 (C4 v2 §4-5 · A1 이후 규칙) — Phase B 상한 (끝점 게이트 반영) · 미정 항목. 자료 개봉 0 · 맞춤 0",
+ "util_copy": "/home/user/Yonghoon-DEM-DFT/bms-balancing/reviews/prereview_pybamm_reil_20261003/external/util_LFP.py.txt",
+ "util_copy_sha256": "bdf78273d50f40ce3154d01a3ef8d36f0f5ea5ec1b04539584809d7b19b46f9c"
+}
