@@ -1,0 +1,258 @@
+{
+  "pin": "b429c3c1df0956d2721861d89cc29a2d56f2b581",
+  "source_design": {
+    "sha256": "73d9a47f76f49989ddbd2c1237007c8499601d63bd5baf0e1ad11c527f21beb0",
+    "expected_sha256": "73d9a47f76f49989ddbd2c1237007c8499601d63bd5baf0e1ad11c527f21beb0",
+    "rows": 28,
+    "columns": 30,
+    "supp_rows": 20,
+    "thick_rows": 8
+  },
+  "adapted": {
+    "sha256": "df505b79a756ee3fe2759c740bfb43282dd69035c5a9fb9354a657300117dc0c",
+    "rows": 20,
+    "columns": 40,
+    "unique_ids": 20,
+    "kinds": {
+      "mono_AM_S": 4,
+      "bimodal": 14,
+      "mono_AM_P": 2
+    },
+    "rules": {
+      "volfrac_free": 10,
+      "2mAh_fixed": 10
+    },
+    "main_loading": {
+      "": 10,
+      "2.0": 10
+    },
+    "am_range": [
+      30.000000000000004,
+      95.0
+    ],
+    "regeneration": {
+      "equal_bytes": true,
+      "output_sha256": "df505b79a756ee3fe2759c740bfb43282dd69035c5a9fb9354a657300117dc0c"
+    }
+  },
+  "r2_archive": {
+    "sha256": "baa03b6b65d57b7850df151a011d8102b605fc15d81aa9f58969629ac9d00aff",
+    "member_count": 30,
+    "union_rows": 20,
+    "union_case_ids": [
+      "lhss_001",
+      "lhss_002",
+      "lhss_003",
+      "lhss_004",
+      "lhss_005",
+      "lhss_006",
+      "lhss_007",
+      "lhss_008",
+      "lhss_009",
+      "lhss_010",
+      "lhss_011",
+      "lhss_012",
+      "lhss_013",
+      "lhss_014",
+      "lhss_015",
+      "lhss_016",
+      "lhss_017",
+      "lhss_018",
+      "lhss_019",
+      "lhss_020"
+    ],
+    "union_lx_values": [
+      "50.0"
+    ],
+    "union_check": {
+      "refused": false,
+      "result": null
+    }
+  },
+  "new_dictionary_mono_counterexamples": [
+    {
+      "case_id": "lhss_001",
+      "block": "mono_AM_S",
+      "ps_frac": "0.0",
+      "lhss_w_AM_P": "0.3",
+      "lhss_w_AM_S": "0.0"
+    },
+    {
+      "case_id": "lhss_002",
+      "block": "mono_AM_S",
+      "ps_frac": "0.0",
+      "lhss_w_AM_P": "0.3",
+      "lhss_w_AM_S": "0.0"
+    },
+    {
+      "case_id": "lhss_003",
+      "block": "mono_AM_S",
+      "ps_frac": "0.0",
+      "lhss_w_AM_P": "0.3",
+      "lhss_w_AM_S": "0.0"
+    },
+    {
+      "case_id": "lhss_020",
+      "block": "mono_AM_S",
+      "ps_frac": "0.0",
+      "lhss_w_AM_P": "0.375",
+      "lhss_w_AM_S": "0.0"
+    }
+  ],
+  "definition_cross": {
+    "actual": [],
+    "path_only": [],
+    "definition_body": [
+      "열 정의 (열 사전 출처 · 판정 · 뜻 · 주의) 가 데이터셋마다 다른 공유 열 1 — [('am_pct', [['lhs', 'lhsx'], ['lhss']])] — 같은 생성기 · 같은 열 정의로 만든 인계표만 결합한다"
+    ],
+    "caveat": [
+      "열 정의 (열 사전 출처 · 판정 · 뜻 · 주의) 가 데이터셋마다 다른 공유 열 1 — [('am_pct', [['lhs', 'lhsx'], ['lhss']])] — 같은 생성기 · 같은 열 정의로 만든 인계표만 결합한다"
+    ],
+    "source": [
+      "열 정의 (열 사전 출처 · 판정 · 뜻 · 주의) 가 데이터셋마다 다른 공유 열 1 — [('am_pct', [['lhs', 'lhsx'], ['lhss']])] — 같은 생성기 · 같은 열 정의로 만든 인계표만 결합한다"
+    ],
+    "shared_all_three": [
+      "am_pct",
+      "block",
+      "case_id",
+      "d_am_max_um",
+      "d_am_p_um",
+      "d_am_s_um",
+      "d_se_um",
+      "e_se_gpa",
+      "n_am_p_est",
+      "n_am_s_est",
+      "n_se_est",
+      "n_total_est",
+      "pressure_MPa",
+      "ps_frac",
+      "ps_label",
+      "r_AM_P_um",
+      "r_AM_S_um",
+      "r_SE_um",
+      "rve_over_d_am_max",
+      "rve_um",
+      "size_ratio_AM_over_SE",
+      "size_ratio_P_over_S"
+    ]
+  },
+  "loading_blank_contract": {
+    "actual": [],
+    "fixed_case": "lhss_005",
+    "fixed_value_mutations": {
+      "2.0": [],
+      "99": [],
+      "-1": [],
+      "NaN": [],
+      "junk": [],
+      "": [
+        "lhss_005 · loading_mAh_cm2: 설명 안 되는 빈칸 (빈칸 뜻 규칙에 없다 — 추측으로 코드를 달지 않는다)"
+      ]
+    },
+    "free_nonblank": [
+      "lhss_001 · loading_mAh_cm2: 값 '2.0' 이 있는데 빈칸 (NA_NOT_DESIGN_INPUT) 이어야 한다"
+    ],
+    "threshold_cases": [
+      {
+        "am_pct": 69.999998,
+        "code": "NA_NOT_DESIGN_INPUT"
+      },
+      {
+        "am_pct": 69.999999,
+        "code": null
+      },
+      {
+        "am_pct": 69.9999995,
+        "code": null
+      },
+      {
+        "am_pct": 70,
+        "code": null
+      },
+      {
+        "am_pct": 70.000001,
+        "code": null
+      }
+    ],
+    "actual_distance_from_boundary": 7.5,
+    "role": "X_DERIVED"
+  },
+  "refit": {
+    "real_source_generation": "v1.2 / g1; diagnostic algorithm check only",
+    "normal_vs_wrapper_equal": true,
+    "n_total": 194,
+    "n_fit": 170,
+    "n_fit_by_dataset": {
+      "lhs": 106,
+      "lhsx": 64
+    },
+    "excluded": {
+      "NOT_PERCOLATING": 24
+    },
+    "fits": {
+      "locked": {
+        "r2": 0.7939941842127596,
+        "loocv_r2": 0.7915490327281522,
+        "resid_sd": 0.8054242257204007,
+        "by_dataset": {
+          "lhs": {
+            "n": 106,
+            "bias": -0.17447616796524407,
+            "resid_sd": 0.9930020558152072,
+            "r2": 0.6745397660277423
+          },
+          "lhsx": {
+            "n": 64,
+            "bias": 0.2889761531924353,
+            "resid_sd": 0.2999678209747056,
+            "r2": 0.08361728677529556
+          }
+        },
+        "params": {
+          "a": -5.313569721119112,
+          "alpha": 0.5,
+          "beta": 2.0
+        },
+        "se": {
+          "a": 0.06195570967080006
+        },
+        "n_free": 1
+      },
+      "free": {
+        "r2": 0.8502458685434602,
+        "loocv_r2": 0.8362668323396559,
+        "resid_sd": 0.6867115532004673,
+        "by_dataset": {
+          "lhs": {
+            "n": 106,
+            "bias": 0.058948599924645975,
+            "resid_sd": 0.8582878102406989,
+            "r2": 0.7568560173045612
+          },
+          "lhsx": {
+            "n": 64,
+            "bias": -0.0976336186253352,
+            "resid_sd": 0.18034794620424235,
+            "r2": 0.6687545257567623
+          }
+        },
+        "params": {
+          "a": -6.564338783522949,
+          "alpha": 0.629569516074069,
+          "beta": 2.775287174032335
+        },
+        "se": {
+          "a": 0.6325018931827001,
+          "alpha": 0.11878596105144149,
+          "beta": 0.24181282285402536
+        },
+        "n_free": 3
+      }
+    },
+    "has_reference_without_supp": false,
+    "supp20_actual_fit_available": false
+  }
+}
+Independent recalculation mismatches: []
+Maximum integer count error: 0.4699027304183119
+Maximum loading roundoff: 4.923621065755501e-05

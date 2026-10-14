@@ -1,0 +1,19 @@
+{
+  "name": "release_probe",
+  "argv": [
+    "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\sup20_fix_reverify_20261014\\probes\\release_probe.py"
+  ],
+  "rc": 0,
+  "seconds": 11.515000000130385,
+  "tail": [
+    "findfont: Font family 'Liberation Sans' not found.",
+    "findfont: Font family 'Liberation Sans' not found.",
+    "findfont: Font family 'Liberation Sans' not found.",
+    "findfont: Font family 'Liberation Sans' not found.",
+    "findfont: Font family 'Liberation Sans' not found.",
+    "findfont: Font family 'Liberation Sans' not found.",
+    "findfont: Font family 'Liberation Sans' not found.",
+    "findfont: Font family 'Liberation Sans' not found.",
+    "findfont: Font family 'Liberation Sans' not found."
+  ]
+}

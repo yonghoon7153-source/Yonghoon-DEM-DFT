@@ -1,0 +1,242 @@
+{
+  "pin": "a9422d2e772f28417a6e0a5167aaab8d987bf27a",
+  "scope": "Independent SUP20-01 root/allowance probes; no production or solver run.\n\nOnly fixture records are created. Real v13_prepare_batches, seal gate, batch\ngate and cross gate execute without replacement. No full build is needed.\n",
+  "temp_dir": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\sup20_fix_reverify_20261014\\tmp\\release_extra_nyi0hwnc",
+  "prepare_warnings": [],
+  "cases": {
+    "baseline_authority": {
+      "problems": [],
+      "accepted": true,
+      "expected_accept": true,
+      "matches_expectation": true
+    },
+    "copies_location_equivalent_spelling": {
+      "problems": [],
+      "accepted": true,
+      "expected_accept": true,
+      "matches_expectation": true
+    },
+    "no_changes_allowed_missing": {
+      "problems": [],
+      "accepted": true,
+      "expected_accept": true,
+      "matches_expectation": true
+    },
+    "no_changes_allowed_null": {
+      "problems": [],
+      "accepted": true,
+      "expected_accept": true,
+      "matches_expectation": true
+    },
+    "allowed_primary_exact_list": {
+      "problems": [],
+      "accepted": true,
+      "expected_accept": true,
+      "matches_expectation": true
+    },
+    "allowed_supp_exact_list": {
+      "problems": [],
+      "accepted": true,
+      "expected_accept": true,
+      "matches_expectation": true
+    },
+    "allowed_primary_empty_list": {
+      "problems": [
+        "발사 봉인과 다른 파일 ['webapp/app.py'] 이 명시 승인 (--allow-seal-diff) 목록에 없다"
+      ],
+      "accepted": false,
+      "expected_accept": false,
+      "matches_expectation": true
+    },
+    "allowed_supp_empty_list": {
+      "problems": [
+        "supp20 (보충 배치) — 발사 봉인과 다른 파일 ['webapp/app.py'] 이 명시 승인 (--allow-seal-diff) 목록에 없다"
+      ],
+      "accepted": false,
+      "expected_accept": false,
+      "matches_expectation": true
+    },
+    "allowed_primary_string_exact": {
+      "problems": [
+        "발사 봉인 대조 (code_identity) 의 allowed 'webapp/app.py' 가 목록이 아니다 — 명시 승인 (--allow-seal-diff) 은 파일 목록으로만 적힌다 (SUP20-01)"
+      ],
+      "accepted": false,
+      "expected_accept": false,
+      "matches_expectation": true
+    },
+    "allowed_supp_string_exact": {
+      "problems": [
+        "supp20 (보충 배치) — 발사 봉인 대조 (code_identity) 의 allowed 'webapp/app.py' 가 목록이 아니다 — 명시 승인 (--allow-seal-diff) 은 파일 목록으로만 적힌다 (SUP20-01)"
+      ],
+      "accepted": false,
+      "expected_accept": false,
+      "matches_expectation": true
+    },
+    "allowed_primary_string_superpath": {
+      "problems": [
+        "발사 봉인 대조 (code_identity) 의 allowed 'NOT_webapp/app.py_NOT' 가 목록이 아니다 — 명시 승인 (--allow-seal-diff) 은 파일 목록으로만 적힌다 (SUP20-01)"
+      ],
+      "accepted": false,
+      "expected_accept": false,
+      "matches_expectation": true
+    },
+    "allowed_supp_string_superpath": {
+      "problems": [
+        "supp20 (보충 배치) — 발사 봉인 대조 (code_identity) 의 allowed 'NOT_webapp/app.py_NOT' 가 목록이 아니다 — 명시 승인 (--allow-seal-diff) 은 파일 목록으로만 적힌다 (SUP20-01)"
+      ],
+      "accepted": false,
+      "expected_accept": false,
+      "matches_expectation": true
+    },
+    "allowed_primary_list_superpath": {
+      "problems": [
+        "발사 봉인과 다른 파일 ['webapp/app.py'] 이 명시 승인 (--allow-seal-diff) 목록에 없다"
+      ],
+      "accepted": false,
+      "expected_accept": false,
+      "matches_expectation": true
+    },
+    "allowed_supp_list_superpath": {
+      "problems": [
+        "supp20 (보충 배치) — 발사 봉인과 다른 파일 ['webapp/app.py'] 이 명시 승인 (--allow-seal-diff) 목록에 없다"
+      ],
+      "accepted": false,
+      "expected_accept": false,
+      "matches_expectation": true
+    },
+    "allowed_primary_list_wrong_file": {
+      "problems": [
+        "발사 봉인과 다른 파일 ['webapp/app.py'] 이 명시 승인 (--allow-seal-diff) 목록에 없다"
+      ],
+      "accepted": false,
+      "expected_accept": false,
+      "matches_expectation": true
+    },
+    "allowed_supp_list_wrong_file": {
+      "problems": [
+        "supp20 (보충 배치) — 발사 봉인과 다른 파일 ['webapp/app.py'] 이 명시 승인 (--allow-seal-diff) 목록에 없다"
+      ],
+      "accepted": false,
+      "expected_accept": false,
+      "matches_expectation": true
+    },
+    "other_valid_samecode_batches": {
+      "problems": [
+        "배치 교차 — supp20: batches 사본 뿌리 'C:\\\\Users\\\\Administrator\\\\Documents\\\\Codex\\\\2026-08-24\\\\claude-stoic-knuth-nobvq-x20\\\\sup20_fix_reverify_20261014\\\\tmp\\\\release_extra_nyi0hwnc\\\\other_same_code' ≠ 배치 관문 뿌리 C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\sup20_fix_reverify_20261014\\tmp\\release_extra_nyi0hwnc\\supp — 배치 신원이 두 벌 (SUP20-01 · 교차 입력 = 관문 뿌리)"
+      ],
+      "accepted": false,
+      "expected_accept": false,
+      "matches_expectation": true
+    },
+    "other_valid_samecode_cross_batch": {
+      "problems": [
+        "빌드 manifest cross_batch.roots {'production194': 'C:\\\\Users\\\\Administrator\\\\Documents\\\\Codex\\\\2026-08-24\\\\claude-stoic-knuth-nobvq-x20\\\\sup20_fix_reverify_20261014\\\\tmp\\\\release_extra_nyi0hwnc\\\\primary', 'supp20': 'C:\\\\Users\\\\Administrator\\\\Documents\\\\Codex\\\\2026-08-24\\\\claude-stoic-knuth-nobvq-x20\\\\sup20_fix_reverify_20261014\\\\tmp\\\\release_extra_nyi0hwnc\\\\other_same_code'} ≠ 배치 관문 뿌리 {'production194': 'C:\\\\Users\\\\Administrator\\\\Documents\\\\Codex\\\\2026-08-24\\\\claude-stoic-knuth-nobvq-x20\\\\sup20_fix_reverify_20261014\\\\tmp\\\\release_extra_nyi0hwnc\\\\primary', 'supp20': 'C:\\\\Users\\\\Administrator\\\\Documents\\\\Codex\\\\2026-08-24\\\\claude-stoic-knuth-nobvq-x20\\\\sup20_fix_reverify_20261014\\\\tmp\\\\release_extra_nyi0hwnc\\\\supp'} (SUP20-01)"
+      ],
+      "accepted": false,
+      "expected_accept": false,
+      "matches_expectation": true
+    },
+    "n_20.0": {
+      "problems": [
+        "배치 교차 — supp20: batches 사본 n 20.0 ≠ 등록 집합 크기 20 (SUP20-01)"
+      ],
+      "accepted": false,
+      "expected_accept": false,
+      "matches_expectation": true
+    },
+    "n_True": {
+      "problems": [
+        "배치 교차 — supp20: batches 사본 n True ≠ 등록 집합 크기 20 (SUP20-01)"
+      ],
+      "accepted": false,
+      "expected_accept": false,
+      "matches_expectation": true
+    },
+    "n_'20'": {
+      "problems": [
+        "배치 교차 — supp20: batches 사본 n '20' ≠ 등록 집합 크기 20 (SUP20-01)"
+      ],
+      "accepted": false,
+      "expected_accept": false,
+      "matches_expectation": true
+    },
+    "n_19": {
+      "problems": [
+        "배치 교차 — supp20: batches 사본 n 19 ≠ 등록 집합 크기 20 (SUP20-01)"
+      ],
+      "accepted": false,
+      "expected_accept": false,
+      "matches_expectation": true
+    },
+    "n_None": {
+      "problems": [
+        "배치 교차 — supp20: batches 사본 n None ≠ 등록 집합 크기 20 (SUP20-01)"
+      ],
+      "accepted": false,
+      "expected_accept": false,
+      "matches_expectation": true
+    },
+    "whole_consistent_samecode_batch": {
+      "problems": [],
+      "accepted": true,
+      "expected_accept": true,
+      "matches_expectation": true
+    },
+    "producer_allow_scripts/lhs_release_build.py": {
+      "identity": {
+        "sealed": 5,
+        "sealed_changed": [
+          "scripts/lhs_release_build.py"
+        ],
+        "handover": 2,
+        "handover_changed": [],
+        "git_head": null,
+        "git_dirty_tracked": null,
+        "allowed": [
+          "scripts/lhs_release_build.py"
+        ]
+      },
+      "warnings": [],
+      "problems": [],
+      "matches_expectation": true
+    },
+    "producer_allow_./scripts/lhs_release_build.py": {
+      "identity": {
+        "sealed": 5,
+        "sealed_changed": [
+          "scripts/lhs_release_build.py"
+        ],
+        "handover": 2,
+        "handover_changed": [],
+        "git_head": null,
+        "git_dirty_tracked": null,
+        "allowed": [
+          "scripts/lhs_release_build.py"
+        ]
+      },
+      "warnings": [],
+      "problems": [],
+      "matches_expectation": true
+    },
+    "producer_allow_scripts\\lhs_release_build.py": {
+      "identity": {
+        "sealed": 5,
+        "sealed_changed": [
+          "scripts/lhs_release_build.py"
+        ],
+        "handover": 2,
+        "handover_changed": [],
+        "git_head": null,
+        "git_dirty_tracked": null,
+        "allowed": [
+          "scripts/lhs_release_build.py"
+        ]
+      },
+      "warnings": [],
+      "problems": [],
+      "matches_expectation": true
+    }
+  },
+  "all_matched": true,
+  "n_cases": 27
+}

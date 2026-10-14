@@ -1,0 +1,21 @@
+{
+  "name": "receipt_default",
+  "argv": [
+    "scripts/supp20_input_receipt.py",
+    "--json",
+    "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\sup20_fix_reverify_20261014\\evidence\\receipt_default.json"
+  ],
+  "rc": 0,
+  "seconds": 0.625,
+  "tail": [
+    "  ✓ C2  반입 파일 = r3 묶음 바이트 — 기술자 20 (ID = 등록 집합) · _batch_summary · 코호트 TSV · union",
+    "  ✓ C3  설계 CSV (보충 설계) · 어댑터 출력 CSV sha256 = 등록 §2",
+    "  ✓ C4  r2 ↔ r3 키별 대조 (README 끝) — r2 묶음 sha256 = README · 같은 케이스 · 공통 키 값 같음 (수확 체크아웃 경로 1 키만 예외) · r2 에만 = wall_near_tangent 진단 · r3 에만 0 · union 칸 차이 0",
+    "  ✓ D1  이 체크아웃의 봉인 32 code_fp = 등록 §3 (수치 봉인 무변경)",
+    "  다시 계산: 케이스 20 · ids_sha256 991cf1150b183f64bc69926a8b3e7c05453ec47e13b89ba3a6ad2fd2c981c694 · raw_sha256_table_sha256 a7aaa3c8c7683f1835a096acb83ecdb055eaf5f129221f7067c5f34462807d0e · 코호트 TSV {'lhss': '69d3f913072288b1d6b8ca8a14e43b0bc8f80e8836a8f79a9b26b2d8ed6dcaf7'}",
+    "  ⬜ 수동 (도구가 인증하지 않음) — 사전 점검 결과 — 발사 핀 fast16 + real4 · 깨끗한 트리 (등록 §0 ⑥ · 194 등록 §1 과 같은 단계)",
+    "  ⬜ 수동 (도구가 인증하지 않음) — 저자 발사 승인 (판정문 §4 ⑤ — 이 영수증 · 리뷰가 대신하지 않는다)",
+    "  ⬜ 수동 (도구가 인증하지 않음) — 새 ROOT 둘 · 같은 발사 커밋 — --manifest 와 --primary-manifest 를 둘 다 주면 기계 대조 (아니면 수동)",
+    "rc 0 — 대조 11 칸 · 다름 0 (⚠ 발사 승인 아님 — 수동 칸 · 저자 승인은 따로)"
+  ]
+}

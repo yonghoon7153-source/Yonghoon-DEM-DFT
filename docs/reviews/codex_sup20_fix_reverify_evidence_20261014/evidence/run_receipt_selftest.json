@@ -1,0 +1,20 @@
+{
+  "name": "receipt_selftest",
+  "argv": [
+    "scripts/supp20_input_receipt.py",
+    "--selftest"
+  ],
+  "rc": 0,
+  "seconds": 10.827999999979511,
+  "tail": [
+    "  PASS  S8f 보충 manifest 발사 봉인 지문 ≠ 등록 §3 (자기 해시 지도와는 일관) → rc 1 · 실패 칸 ⊇ ['F5']",
+    "  PASS  S8g 보충 · 194 manifest 가 같은 ROOT 폴더 (나머지 칸은 정상) → rc 1 · 실패 칸 ⊇ ['H1']",
+    "  PASS  S8g2 같은 반례 — 실패 칸은 H1 하나 (보충 · 194 manifest 각자는 정상)",
+    "  PASS  S8h 194 자리에 보충 manifest (등록 집합 production194 아님) → rc 1 · 실패 칸 ⊇ ['G2']",
+    "  PASS  S8i 보충 manifest 인계 도구 지문 ≠ 이 체크아웃 (다른 체크아웃에서 만든 영수증) → rc 1 · 실패 칸 ⊇ ['F6']",
+    "  PASS  S8j 보충 manifest 없음 · 깨진 JSON → rc 1 · 실패 칸 ⊇ ['F0']",
+    "  PASS  S9 읽기 전용 — 영수증을 만들어도 등록 문서 · README · 묶음 둘 · 설계 · 어댑터 · 코호트 TSV · union 바이트 그대로",
+    "",
+    "supp20_input_receipt selftest: 40/40 PASS"
+  ]
+}

@@ -1,0 +1,94 @@
+--- b429c3c1df0956d2721861d89cc29a2d56f2b581/scripts/lhs_release_build.py
++++ a9422d2e772f28417a6e0a5167aaab8d987bf27a/scripts/lhs_release_build.py
+@@ -2449,13 +2449,8 @@
+             probs.append(f'τ 다시 읽기 {man.get("tau_reread")!r} — 실제 배포는 load_tau_results 로 다시 읽어야 한다')
+         if not man.get('codex_verdict'):
+             probs.append('빌드 manifest 에 Codex 판정문이 없다')
+-        ci = man.get('code_identity')
+-        if not isinstance(ci, dict) or not isinstance(ci.get('sealed_changed'), list) or not ci.get('sealed'):
+-            probs.append('빌드 manifest 에 발사 봉인 대조 (code_identity) 가 없다 — 실제 배포는 배치 manifest code_hashes 와 대조한 뒤에만')
+-        else:
+-            un = [f for f in ci['sealed_changed'] if f not in (ci.get('allowed') or [])]
+-            if un:
+-                probs.append(f'발사 봉인과 다른 파일 {un} 이 명시 승인 (--allow-seal-diff) 목록에 없다')
++        #  194 배치 (최상위 code_identity) — 보충 배치 (supp_batch.code_identity) 와 같은 도우미 (★ 10-12 SUP20-01 · v13_batch_gate_recheck 가 보충 쪽을 부른다)
++        probs += _v13_code_identity_problems(man.get('code_identity'))
+         #  ★ 10-07 G2RR3-01 — 배치 관문을 빌드가 기록한 배치 뿌리에서 같은 함수로 다시 판정 (옛 판: 빌드 manifest 의 기록이 읽히는 정수 n_fail 일 때만 봤다 —
+         #    기록이 없거나 · null 이면 검사 0 · 감사 판정은 보지 않았다).  빌드 기록 = 지금 배치 뿌리의 기록 (빌드 뒤 증거 교체 · 기록 고침을 잡는다)
+         probs += v13_batch_gate_recheck(man, diagnostic=diagnostic)
+@@ -2490,10 +2485,34 @@
+     return probs
+ 
+ 
++def _v13_code_identity_problems(ci, label=''):
++    """발사 봉인 대조 기록 (`v13_seal_gate` 의 반환 = 빌드 manifest code_identity) 의 계약 → 문제 목록 ([] = 통과) — 있음 · sealed 비지 않음 ·
++    sealed_changed 목록 · allowed 목록 (없으면 = 승인 없음) · 승인 밖 변경 없음.  194 배치 (최상위 code_identity) · 보충 배치 (supp_batch.code_identity) 가
++    **같은 도우미** (194 쪽 문구 그대로 · label = 보충 배치 표지).
++    ★ 10-12 SUP20-01 (Codex 보충 20 지원 검토 §1) — 옛 판: 보충 쪽은 읽지 않았다 (삭제 · 승인 없는 봉인 변경 sealed_changed ['webapp/app.py'] · allowed []
++    도 문제 0) · ★ 같은 부류: allowed 가 문자열이면 `f not in 'webapp/app.py'` 가 부분 문자열 일치로 승인했다 (194 쪽도) — 목록만 받는다."""
++    pre = f'{label} — ' if label else ''
++    if not isinstance(ci, dict) or not isinstance(ci.get('sealed_changed'), list) or not ci.get('sealed'):
++        return [f'{pre}빌드 manifest 에 발사 봉인 대조 (code_identity) 가 없다 — 실제 배포는 배치 manifest code_hashes 와 대조한 뒤에만']
++    al = ci.get('allowed')
++    if al is None:
++        al = []
++    elif not isinstance(al, list):
++        return [f'{pre}발사 봉인 대조 (code_identity) 의 allowed {al!r} 가 목록이 아니다 — 명시 승인 (--allow-seal-diff) 은 파일 목록으로만 적힌다 (SUP20-01)']
++    un = [f for f in ci['sealed_changed'] if f not in al]
++    return [f'{pre}발사 봉인과 다른 파일 {un} 이 명시 승인 (--allow-seal-diff) 목록에 없다'] if un else []
++
++
+ def v13_batch_gate_recheck(man, diagnostic=False):
+     """check_v13 의 배치 관문 재판정 (실제 경로) — 빌드 manifest (dict) → 문제 목록.  194 배치 = 최상위 batch_gate · batch_gate_files · batch_manifest
+     (옛 키 그대로) · ★ 10-12 보충 배치 = supp_batch 의 같은 키 — 배치마다 그 뿌리에서 `v13_batch_gate_problems` (build_v13 · 단계 A 와 같은 함수 · 그 배치의
+-    등록 집합) 를 다시 돌린다 → 기록 ≠ 지금 · manifest sha256 ≠ 지금 · (배포 대조면) 관문 문제 · 배치 교차 (`v13_cross_batch_problems`) 도 다시."""
++    등록 집합) 를 다시 돌린다 → 기록 ≠ 지금 · manifest sha256 ≠ 지금 · (배포 대조면) 관문 문제 · 배치 교차 (`v13_cross_batch_problems`) 도 다시.
++    ★ 10-12 SUP20-01 (Codex 보충 20 지원 검토 §1 · 수정 계획 docs/reviews/sup20_fix_plan_20261012.md §1 · 1저자 Q1 (가)) — 배치 교차의 입력 = 배치별 재판정이
++    **실제로 검사한 관문 뿌리** (권위 · 194 = batch_gate.batch_root · 보충 = supp_batch.batch_gate.batch_root) 하나뿐.  사본 (batches[이름] 의 root ·
++    expect_set · datasets · n · cross_batch.roots) 은 그 권위 입력과 대조만 한다 (다르면 문제) · 권위 뿌리 결손 · 문자열 아님 · 없는 경로 = 거부 (교차를
++    건너뛰지 않는다) · 보충 code_identity = 194 와 같은 계약 (`_v13_code_identity_problems`).  옛 판: 교차가 사본 뿌리를 읽고 (관문 뿌리와 대조 없음) ·
++    사본이 없거나 없는 경로면 교차를 조용히 건너뛰었다 · 보충 code_identity 는 읽지 않았다 (반례 = 시험 V22).
++    build_v13 은 한 뿌리 (`v13_batch_roots`) 로 관문 · 교차 · 사본을 함께 적고 끝에서 check_v13 을 부른다 — 이 대조가 build 산출에도 걸린다."""
+     probs = _v13_gate_recheck_one(man.get('batch_gate'), man.get('batch_gate_files'), man.get('batch_manifest'), diagnostic, V13_PRIMARY_BATCH)
+     bm = man.get('batches') if isinstance(man.get('batches'), dict) else {}
+     if set(bm) != {b for b, _d in V13_BATCHES}:
+@@ -2501,12 +2520,36 @@
+     sb = man.get('supp_batch') if isinstance(man.get('supp_batch'), dict) else {}
+     probs += [f'{V13_SUPP_BATCH} (보충 배치) — {p}' for p in _v13_gate_recheck_one(sb.get('batch_gate'), sb.get('batch_gate_files'), sb.get('batch_manifest'),
+                                                                                 diagnostic, V13_SUPP_BATCH)]
+-    roots = {b: (bm.get(b) or {}).get('root') for b, _d in V13_BATCHES}
+-    if all(isinstance(r, str) and os.path.isdir(r) for r in roots.values()):
++    probs += _v13_code_identity_problems(sb.get('code_identity'), label=f'{V13_SUPP_BATCH} (보충 배치)')
++    gate_of = {V13_PRIMARY_BATCH: man.get('batch_gate'), V13_SUPP_BATCH: sb.get('batch_gate')}
++    roots, rp = {}, []
++    for b, dss in V13_BATCHES:
++        g = gate_of.get(b)
++        r = g.get('batch_root') if isinstance(g, dict) else None
++        if not isinstance(r, str) or not r or not os.path.isdir(r):
++            rp.append(f'{b}: 배치 관문 뿌리 {r!r} 가 없다 (결손 · 문자열 아님 · 없는 경로) — 배치 교차를 다시 판정할 수 없다 · 건너뛰지 않고 거부 (SUP20-01)')
++            continue
++        roots[b] = r
++        c = bm.get(b) if isinstance(bm.get(b), dict) else {}
++        if not isinstance(c.get('root'), str) or not c.get('root') or not _v13_same_path(c['root'], r):
++            rp.append(f'{b}: batches 사본 뿌리 {c.get("root")!r} ≠ 배치 관문 뿌리 {r} — 배치 신원이 두 벌 (SUP20-01 · 교차 입력 = 관문 뿌리)')
++        if c.get('expect_set') != b:
++            rp.append(f'{b}: batches 사본 expect_set {c.get("expect_set")!r} ≠ 배치 이름 {b!r} (SUP20-01)')
++        if list(c.get('datasets') or []) != list(dss):
++            rp.append(f'{b}: batches 사본 datasets {c.get("datasets")!r} ≠ {list(dss)} (SUP20-01)')
++        n_reg = _v13_registered(b)[0]
++        if not _v13_int(c.get('n')) or c.get('n') != n_reg:
++            rp.append(f'{b}: batches 사본 n {c.get("n")!r} ≠ 등록 집합 크기 {n_reg} (SUP20-01)')
++    probs += [f'배치 교차 — {p}' for p in rp]
++    if len(roots) == len(V13_BATCHES):
+         _rec, cp, _cw = v13_cross_batch_problems(roots)
+         probs += [f'배치 교차 — {p}' for p in cp]
+-        if (man.get('cross_batch') or {}).get('code_fp') != _rec.get('code_fp'):
++        cb = man.get('cross_batch') if isinstance(man.get('cross_batch'), dict) else {}
++        if cb.get('code_fp') != _rec.get('code_fp'):
+             probs.append(f'빌드 manifest cross_batch.code_fp ≠ 지금 배치 뿌리의 발사 봉인 지문 ({str(_rec.get("code_fp"))[:16]}…)')
++        cbr = cb.get('roots') if isinstance(cb.get('roots'), dict) else {}
++        if set(cbr) != set(roots) or any(not isinstance(cbr.get(b), str) or not _v13_same_path(cbr[b], roots[b]) for b in roots):
++            probs.append(f'빌드 manifest cross_batch.roots {cbr} ≠ 배치 관문 뿌리 {roots} (SUP20-01)')
+     return probs
+ 
+ 

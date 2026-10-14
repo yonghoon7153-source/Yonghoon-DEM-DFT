@@ -1,0 +1,42 @@
+  PASS  S0 정상 (커밋된 실물 · 컨테이너 범위) → rc 0 · 대조 칸 R0 · A1 · A2 · B1–B3 · C1–C4 · D1 전부 같음 · 범위 container · 수동 칸 셋
+  PASS  S0b 다시 계산 = 등록 §2 (케이스 20 · ids 991cf115… · raw a7aaa3c8… · 코호트 TSV 69d3f913…) — 값은 문서 · 반입 파일에서 (도구에 사본 없음)
+  PASS  S1 raw sha 표 바꿈 (lhss_007 raw.atom.sha256 · 같은 20 ID — 등록 판정은 유지) → rc 1 · 실패 칸 ⊇ ['B3', 'C2']
+  PASS  S1b 같은 반례에서 계획은 여전히 등록 집합 supp20 (B1 · B2 통과) — ID 지문만으로는 못 잡는다는 Codex 관찰 그대로 · 잡는 칸 = B3
+  PASS  S2 코호트 TSV 한 바이트 바꿈 (--lhss-cohort 와 같은 뜻) → rc 1 · 실패 칸 ⊇ ['B3', 'C2']
+  PASS  S3 ID 하나 바꿈 (lhss_005 → lhss_105) → rc 1 · 실패 칸 ⊇ ['B1', 'B2', 'B3', 'C2']
+  PASS  S4 등록 문서 raw_sha256_table_sha256 오타 (끝 한 글자) → rc 1 · 실패 칸 ⊇ ['B3']
+  PASS  S4 등록 문서 ids_sha256 오타 (끝 한 글자) → rc 1 · 실패 칸 ⊇ ['A1', 'B3']
+  PASS  S4 등록 문서 cohort_tsv_sha256 오타 (끝 한 글자) → rc 1 · 실패 칸 ⊇ ['B3']
+  PASS  S4 등록 문서 code_fp 오타 (끝 한 글자) → rc 1 · 실패 칸 ⊇ ['D1']
+  PASS  S4b 등록 문서에 같은 칸이 값 둘 (raw sha 표 두 행) → rc 1 · 실패 칸 ⊇ ['B3', 'R0']
+  PASS  S5 일반 계획 강등 — 수확 폴더에 후막 lhst_045_6m 하나 더 (21 건) → rc 1 · 실패 칸 ⊇ ['B1', 'B2', 'B3', 'C2']
+  PASS  S5b 일반 계획 강등 — 등록 집합 자체가 안 선다 (커밋된 수확 폴더 19 건 · registered_id_set 거부) → rc 1 · 실패 칸 ⊇ ['A2', 'B1', 'B2', 'B3', 'C2']
+  PASS  S6 r3 묶음의 기술자 한 바이트 바뀐 묶음 (README sha 도 맞춘 사본 — 반입 파일 ≠ 묶음 바이트) → rc 1 · 실패 칸 ⊇ ['C2']
+  PASS  S6a 같은 반례 · README 원본 = 묶음 sha 다름 (C1) 도
+  PASS  S6b r3 묶음 harvest_head = 다른 수확기 판 (README sha 맞춘 사본 · 기술자 그대로) → rc 1 · 실패 칸 ⊇ ['C1']
+  PASS  S6c r2 묶음 공통 키 값 하나 다름 (phi_se + 1e-9 · README sha 맞춘 사본) → rc 1 · 실패 칸 ⊇ ['C4']
+  PASS  S6d r2 묶음 union 칸 하나 다름 (README sha 맞춘 사본) → rc 1 · 실패 칸 ⊇ ['C4']
+  PASS  S7 dry-run 화면 (print_preflight 그대로 · 관측 ON 계획 · 깨끗한 트리) → rc 0 · 범위 dry_run · E1–E6 같음
+  PASS  S7b 등록 §4 grep 으로 거른 화면 → rc 0 (코호트 줄 없음 = E6 생략)
+  PASS  S7c dry-run 입력 지문 raw sha 표 다름 → rc 1 · 실패 칸 ⊇ ['E1']
+  PASS  S7d dry-run 이 일반 계획 (케이스 21 · ids 다름) → rc 1 · 실패 칸 ⊇ ['E1']
+  PASS  S7e dry-run 사전 점검 중단 ⛔ (관측 끈 보충 계획) → rc 1 · 실패 칸 ⊇ ['E5']
+  PASS  S7f dry-run dirty=True (--allow-dirty 로 돈 화면) → rc 1 · 실패 칸 ⊇ ['E2']
+  PASS  S7g dry-run 봉인 지문 다름 → rc 1 · 실패 칸 ⊇ ['E2']
+  PASS  S7h dry-run 입력 지문 줄 없음 → rc 1 · 실패 칸 ⊇ ['E1']
+  PASS  S7i dry-run 원자료 · 메시 문제 1 건 → rc 1 · 실패 칸 ⊇ ['E4']
+  PASS  S7j dry-run 기대 망 세대 None (유도 실패) → rc 1 · 실패 칸 ⊇ ['E3']
+  PASS  S8 실제 발사 manifest 둘 (보충 · 194 · 다른 ROOT · 같은 발사 커밋 · 관측 ON) → rc 0 · 범위 launch · F0–F6 · G0–G2 · G4 · G5 · H1 같음
+  PASS  S8b 보충 manifest 관측 끔 (observe_imports false) → rc 1 · 실패 칸 ⊇ ['F4']
+  PASS  S8c 보충 manifest input_digest raw sha 표 다름 → rc 1 · 실패 칸 ⊇ ['F3']
+  PASS  S8d 보충 manifest 계획 = 일반 계획 (후막 하나 더 · 21) → rc 1 · 실패 칸 ⊇ ['F2', 'F3']
+  PASS  S8e 보충 manifest git.dirty true → rc 1 · 실패 칸 ⊇ ['F5']
+  PASS  S8f 보충 manifest 발사 봉인 지문 ≠ 등록 §3 (자기 해시 지도와는 일관) → rc 1 · 실패 칸 ⊇ ['F5']
+  PASS  S8g 보충 · 194 manifest 가 같은 ROOT 폴더 (나머지 칸은 정상) → rc 1 · 실패 칸 ⊇ ['H1']
+  PASS  S8g2 같은 반례 — 실패 칸은 H1 하나 (보충 · 194 manifest 각자는 정상)
+  PASS  S8h 194 자리에 보충 manifest (등록 집합 production194 아님) → rc 1 · 실패 칸 ⊇ ['G2']
+  PASS  S8i 보충 manifest 인계 도구 지문 ≠ 이 체크아웃 (다른 체크아웃에서 만든 영수증) → rc 1 · 실패 칸 ⊇ ['F6']
+  PASS  S8j 보충 manifest 없음 · 깨진 JSON → rc 1 · 실패 칸 ⊇ ['F0']
+  PASS  S9 읽기 전용 — 영수증을 만들어도 등록 문서 · README · 묶음 둘 · 설계 · 어댑터 · 코호트 TSV · union 바이트 그대로
+
+supp20_input_receipt selftest: 40/40 PASS

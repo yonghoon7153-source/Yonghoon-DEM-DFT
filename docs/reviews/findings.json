@@ -9586,7 +9586,7 @@
     {
       "id": "SUP20-01",
       "severity": "P2",
-      "status": "claimed_fixed",
+      "status": "verified",
       "owner": "claude",
       "found_by": "codex 10-12 보충 20 지원 검토 (리뷰 핀 b429c3c1d · 기준 = 재검증 7 핀 3cedd40a5 · 실제 build_v13 · check_v13 합성 214 (τ 실제 원천 재독해 = 대역 · 제출 V21 과 같은 한정) · check · 배치 관문 · 교차 = 대역 없음 · 실제 설계 800 칸 독립 재계산 · 등록 / 관측 술어 탐침 · Windows 스냅샷 — 생산 194 · 보충 20 · check_all · Linux fast16 + real4 미실행)",
       "opened_in": "docs/reviews/codex_review_supp20_support_20261012.md",
@@ -9598,13 +9598,18 @@
         "docs/reviews/codex_supp20_support_review_evidence_20261012/probes/release_probe.py (입력 생성 = 제출 시험 합성 생성기 재사용)",
         "scripts/test_lhs_release_v13.py (V22 — 고치기 전 239 PASS · 17 FAIL (반례 17 오수용: supp_batch 교체 · 사본 뿌리 없는 경로 · 삭제 · 같은 code_fp 의 다른 뿌리 · 보충 code_identity 삭제 · 승인 없는 변경 · 사본 expect_set · datasets · n · cross_batch.roots · allowed 문자열 · build 둘) → 256/256 · 반례마다 사유 낱말 단언)",
         "scripts/lhs_release_build.py --selftest (31/31 · 이 변경과 무관 · 확인만)",
-        "docs/reviews/codex_sup20_fix_probe_rerun_20261012/release_probe.json (Codex release_probe 무변경 · 고친 트리 dfee89184 — README §1 표 · compare_fixed.json)"
-      ]
+        "docs/reviews/codex_sup20_fix_probe_rerun_20261012/release_probe.json (Codex release_probe 무변경 · 고친 트리 dfee89184 — README §1 표 · compare_fixed.json)",
+        "docs/reviews/codex_sup20_fix_reverify_evidence_20261014/evidence/release_probe.json · docs/reviews/codex_sup20_fix_reverify_evidence_20261014/evidence/release_extra.json · docs/reviews/codex_sup20_fix_reverify_evidence_20261014/evidence/design_probe.json · docs/reviews/codex_sup20_fix_reverify_evidence_20261014/evidence/design_extra.json (Codex 10-14 · 핀 a9422d2e7 · 판정문 §1)"
+      ],
+      "verified_by": "codex",
+      "verified_sha": "a9422d2e7",
+      "verified_in": "docs/reviews/codex_review_sup20_fix_reverify_20261014.md",
+      "verified_scope": "배치별 관문 ROOT 만 교차 함수에 입력 · 사본 ROOT 는 비교 대상 · 결손 · 비문자열 · 없는 경로 = 오류 · 194 · 보충 code_identity 공용 도우미 (삭제 · 승인 없는 변경 거부) · V22 22/22 · 옛 release_probe 무변경 = 기존 오수용 반례 거부 · 정상 214 build/check 문제 0 (τ 재독해만 합성 대역 · 실제 g2 수치 검증으로 확대 안 함)"
     },
     {
       "id": "SUP20-02",
       "severity": "P3",
-      "status": "claimed_fixed",
+      "status": "verified",
       "owner": "claude",
       "found_by": "codex 10-12 보충 20 지원 검토 (리뷰 핀 b429c3c1d · 기준 = 재검증 7 핀 3cedd40a5 · 실제 build_v13 · check_v13 합성 214 (τ 실제 원천 재독해 = 대역 · 제출 V21 과 같은 한정) · check · 배치 관문 · 교차 = 대역 없음 · 실제 설계 800 칸 독립 재계산 · 등록 / 관측 술어 탐침 · Windows 스냅샷 — 생산 194 · 보충 20 · check_all · Linux fast16 + real4 미실행)",
       "opened_in": "docs/reviews/codex_review_supp20_support_20261012.md",
@@ -9614,8 +9619,33 @@
       "evidence_tests": [
         "docs/reviews/codex_supp20_support_review_evidence_20261012/evidence/design_probe.json (Codex — mono_AM_S 네 행 원천 슬롯 ↔ 변환 ps_frac)",
         "scripts/lhs_design_dataset.py --selftest (㉛j 원천 슬롯 열 문구 · ㉛j2 어댑터 CSV 실제 값 — 389/389 → 고치기 전 390/391 → 391/391)",
-        "docs/reviews/codex_sup20_fix_probe_rerun_20261012/design_probe.json (Codex design_probe 무변경 · 고친 트리 dfee89184 — new_dictionary_claims 새 문구 · 판정값 차이 = 그 두 칸뿐)"
-      ]
+        "docs/reviews/codex_sup20_fix_probe_rerun_20261012/design_probe.json (Codex design_probe 무변경 · 고친 트리 dfee89184 — new_dictionary_claims 새 문구 · 판정값 차이 = 그 두 칸뿐)",
+        "docs/reviews/codex_sup20_fix_reverify_evidence_20261014/evidence/release_probe.json · docs/reviews/codex_sup20_fix_reverify_evidence_20261014/evidence/release_extra.json · docs/reviews/codex_sup20_fix_reverify_evidence_20261014/evidence/design_probe.json · docs/reviews/codex_sup20_fix_reverify_evidence_20261014/evidence/design_extra.json (Codex 10-14 · 핀 a9422d2e7 · 판정문 §1)"
+      ],
+      "verified_by": "codex",
+      "verified_sha": "a9422d2e7",
+      "verified_in": "docs/reviews/codex_review_sup20_fix_reverify_20261014.md",
+      "verified_scope": "lhss 20 · lhsx 64 행 정의 대조 불일치 0 · mono_AM_S 의 P · S 슬롯 = 실제 ps_frac 0 설명 · 네 문자열 · 자체 시험 밖 생성기 AST 같음 · 변환 CSV df505b79… 유지 · 역사 사전 4 개 전수 재검증 주장 아님"
+    },
+    {
+      "id": "SUPR-01",
+      "severity": "P2",
+      "status": "open",
+      "owner": "claude",
+      "found_by": "codex 10-14 보충 20 수정 재검증 (Codex 표기 SUP20R-01 · 리뷰 핀 a9422d2e7 · 실제 plan_for/build_plan · plan_input_digest · print_preflight 로 만든 로그 · Windows 스냅샷 — 생산 194 · 보충 20 · WSL fast16 + real4 미실행)",
+      "opened_in": "docs/reviews/codex_review_sup20_fix_reverify_20261014.md",
+      "title": "발사 사전 점검 로그의 입력 지문이 코호트 TSV 해시를 싣지 않고 영수증도 비교하지 않는다 — 같은 20 ID · raw 표에서 TSV 만 바꾼 dry-run 로그 (cohort sha 69d3f913… → 8d5dcbd2…) 가 전체 로그 · 등록 §4 grep 로그 모두 rc 0",
+      "note": "판정문 §4.  무너지는 결론: \"WSL dry-run 의 전체 입력 지문이 등록 · 반입본과 같다\".  무너지지 않는 결론: 기본 컨테이너 입력 검증 (11 칸) · SUP20-01 · 02 수정 · 수치 봉인 32 (code_fp e8b2496b…).  자리 (핀 a9422d2e7 = HEAD 같은 줄): scripts/run_network_194_parallel.py:1815–1817 (출력 지문에 cohort_tsv_sha256 없음) · scripts/supp20_input_receipt.py:197–201 (E1 = n · ID · raw 표 · 결손만) · :214–216 (코호트 줄 = 이름 · 개수만).  발사 뒤 F3 는 전체 INPUT_DIGEST_KEYS 를 비교하지만 발사 전 증거 누락을 소급해 채우지 않는다.  우리 트리 재현 (10-14 · docs/reviews/codex_sup20_fix_reverify_evidence_20261014/_README_import.md): wrong_tsv_full_log rc 0.  최소 해결 = 판정문 §4 (전체 INPUT_DIGEST_KEYS 를 기계가 읽는 출력 · 등록값 · 반입 재계산과 비교 · 부재 거부 · TSV 만 바꾼 로그 거부 상주 시험).  수정 계획 = docs/reviews/supr_fix_plan_20261014.md."
+    },
+    {
+      "id": "SUPR-02",
+      "severity": "P2",
+      "status": "open",
+      "owner": "claude",
+      "found_by": "codex 10-14 보충 20 수정 재검증 (Codex 표기 SUP20R-02 · 실제 production_observation_problem 관측 OFF 사유를 사전 점검 fixture 에 넣어 실제 print_preflight 로 출력 · 시스템 · 원자료 상태 = 합성 fixture)",
+      "opened_in": "docs/reviews/codex_review_sup20_fix_reverify_20261014.md",
+      "title": "사전 점검 영수증 E5 가 ⛔ · ✗ 부재만 본다 — 관측 OFF 거부 로그를 중단 사유 앞에서 자른 prefix 와 필수 검사 줄 셋 (전이 의존 · 지연 import · fork) 을 지운 로그가 rc 0 (전체 거부 로그는 rc 1)",
+      "note": "판정문 §5.  무너지는 결론: \"중단 없이 완결된 dry-run 을 이 영수증이 확인했다\".  무너지지 않는 결론: 실제 러너는 관측 OFF 를 막는다 (소스 · 전체 로그) — 영수증 경로의 결함.  자리: scripts/supp20_input_receipt.py:210–213 (E5) · scripts/run_network_194_parallel.py:1818–1823 (중단 사유가 정상처럼 보이는 지문 줄 뒤) · :2381–2387 (stop → rc 2 · 정상 dry-run = 완료 줄 + rc 0 — 영수증이 이 완료 · 종료 상태를 안 봄).  우리 트리 재현 (10-14): observation_off_truncated_before_stop rc 0 · missing_three_prerequisite_lines rc 0 · observation_off_full_log rc 1 (대조).  최소 해결 = 판정문 §5 (필수 세 항목 + observe_imports=true 명시 성공 값 · 한 실행에 결합된 완료 상태 + 정상 종료 · 원본 전체 로그 · 인자 · 출력 해시 · 종료코드 보존 · tee/grep rc 를 러너 rc 로 오인 금지 · 반례 상주 · 등록 §4 grep 명령 정정).  수정 계획 = docs/reviews/supr_fix_plan_20261014.md."
     },
     {
       "id": "SELF-107",

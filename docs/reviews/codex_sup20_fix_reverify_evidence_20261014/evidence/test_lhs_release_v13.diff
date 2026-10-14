@@ -1,0 +1,157 @@
+--- b429c3c1df0956d2721861d89cc29a2d56f2b581/scripts/test_lhs_release_v13.py
++++ a9422d2e772f28417a6e0a5167aaab8d987bf27a/scripts/test_lhs_release_v13.py
+@@ -43,6 +43,12 @@
+       교차 (같은 봉인 지문 · 기대 세대 · 물성 · 열 정의) · 결합 (ID 교집합 공집합 · 고유 214) · 기존 194 행 = 보충 없이 만든 것과 같음 · 하중 빈칸 코드 ·
+       재적합 214 + 194 참고 · 반례 (보충 없음 · 같은 뿌리 · 다른 코호트 · 다른 봉인 지문 · 세대 · 다른 등록 집합 · 관측 없음 · 결손 · 후막 · σ₀ · 열 정의) ·
+       check_v13 재판정 · 단계 A 세 번 · CLI.  ⚠ 기존 V12–V20 의 실제 경로는 정상 보충 배치 (SUPP_ROOT) 를 붙여 214 로 돈다 (build13 · stage13)
++  V22 ★ 10-12 SUP20-01 (Codex 보충 20 지원 검토 §1 · 수정 계획 docs/reviews/sup20_fix_plan_20261012.md §1 · 1저자 Q1 (가)) — check_v13 의 배치 신원이 두 벌:
++      배치 교차의 입력 = 배치별 재판정이 실제로 검사한 관문 뿌리 (batch_gate.batch_root · supp_batch.batch_gate.batch_root) 하나뿐 · 사본 (batches[이름] 의
++      root · expect_set · datasets · n · cross_batch.roots) = 대조만 · 결손 · 없는 경로 = 거부 (생략 아님) · 보충 code_identity = 194 와 같은 계약.
++      반례 (빌드 manifest 만 고쳐 check 를 다시 · 옛 코드 = 문제 0): supp_batch 를 다른 유효 뿌리 증거로 교체 · 사본 뿌리 없는 경로 · 삭제 · 같은 code_fp 의 다른 뿌리 ·
++      보충 code_identity 삭제 · 승인 없는 봉인 변경 · ★ 같은 부류 (사본 expect_set · datasets · n · cross_batch.roots · allowed 가 목록 아님) / build 도 같은
++      대조 (빌드가 사본 뿌리를 어긋나게 적으면 끝의 check_v13 이 거부 — 옛 코드는 만들었다) / 대조 = 교체에 쓴 뿌리 자신의 관문 정상 · 정상 214 · 다른 code_fp 거부 (회귀)
+ 
+   python3 scripts/test_lhs_release_v13.py
+ """
+@@ -2119,6 +2125,141 @@
+ chk('V21m CLI — --supp-batch-root (보충 배치 뿌리) 가 있다 · --pressure-record lhss=… 를 받는다 (데이터셋 셋)',
+     '--supp-batch-root' in _hb21.getvalue() and 'lhss' in tuple(getattr(LRB, 'V13_DATASETS', ())), _hb21.getvalue()[-300:])
+ 
++# ═══ V22 ★ 10-12 SUP20-01 — check_v13 의 배치 신원 두 벌 (Codex 보충 20 지원 검토 §1) ═══════════════════════════════════════════════════════════
++#   반례 먼저 (규율 ②) — 정상 214 를 만든 뒤 빌드 manifest 만 고쳐 check_v13 을 다시 돈다 (Codex release_probe 와 같은 구성 · 합성 τ 다시 읽기 대역 = V21 과
++#   같은 한정 · check · 관문 · 교차 = 대역 없음).  옛 코드: 교차 검사가 사본 batches[이름].root 를 읽고 (관문 뿌리와 대조 없음) · 사본이 없거나 없는 경로면
++#   교차를 건너뛰고 · 보충 code_identity 는 읽지 않았다 → 아래 반례가 문제 0.  고친 뒤: 문제 ≥ 1 + 그 반례의 사유 낱말 (엉뚱한 이유의 실패를 세지 않는다).
++print('V22 ★ 10-12 SUP20-01 — 배포 대조의 배치 신원 (관문 뿌리 = 교차 입력 · 사본 대조 · 결손 거부 · 보충 code_identity)')
++r22 = {}
++_orig_rr22 = LRB.v13_reread_tau
++_orig_prep22 = LRB.v13_prepare_batches
++
++
++def _sb22(root):
++    """그 배치 뿌리를 빌드가 판정했다면 빌드 manifest supp_batch 에 적었을 것과 같은 꼴 (build_v13 의 supp_batch 블록과 같은 키 · 같은 함수)."""
++    g_, _w = LRB.v13_batch_gate_check(root, expect_set='supp20')
++    ci_, _w2 = LRB.v13_seal_gate(os.path.join(root, 'manifest.json'), None)
++    mp_ = os.path.join(root, 'manifest.json')
++    return {'batch_manifest': {'path': LRB._v13_rel(mp_), 'sha256': _sha_path(mp_), 'expected_network_generation': 'g2'},
++            'code_identity': ci_, 'batch_gate_files': g_.get('files'), 'batch_gate': {k: v for k, v in g_.items() if k != 'files'}}
++
++
++def _prep_copy22(new_root):
++    """빌드가 사본 batches.supp20.root 를 관문 뿌리와 다르게 적는 결함 흉내 (v13_prepare_batches 의 결과에서 사본 뿌리만 바꾼다 · 관문 · 교차 기록은 그대로)."""
++    def f(roots, **kw):
++        out, cross, w = _orig_prep22(roots, **kw)
++        out = dict(out)
++        out['supp20'] = dict(out['supp20'], root=new_root)
++        return out, cross, w
++    return f
++
++
++with tempfile.TemporaryDirectory() as td:
++    hd22 = safe(lambda: make_g2_handover_dir(os.path.join(td, 'handover')))
++    b194 = make_batch_root(os.path.join(td, 'b194'))
++    bsup = make_supp_batch_root(os.path.join(td, 'bsup'))
++    #  다른 code_fp 보충 뿌리 — 봉인 파일 하나 더 (이 체크아웃과는 같은 해시 → 발사 봉인 대조는 통과 · 지문만 다르다 = V21 _refuse 와 같은 구성)
++    bsup2 = make_supp_batch_root(os.path.join(td, 'bsup2'), alter={'scripts/lhs_release_build.py': _sha_file('scripts/lhs_release_build.py')})
++    #  같은 code_fp 의 다른 유효 보충 뿌리 — 교차 code_fp 로는 못 가른다 (뿌리 대조만이 잡는다)
++    bsup3 = make_supp_batch_root(os.path.join(td, 'bsup3'))
++    ver22 = os.path.join(td, 'go.md')
++    open(ver22, 'w', encoding='utf-8').write('# GO (합성)\n')
++    LRB.v13_reread_tau = lambda ds, root, rows, gen: []
++    try:
++        o22 = os.path.join(td, 'rel')
++        r22['good'] = safe(lambda: LRB.build_v13(out_dir=o22, handover_dir=hd22, batch_root=b194, supp_batch_root=bsup, date=DATE, codex_verdict=ver22))
++        r22['build_other'] = refusal_msg(lambda: LRB.build_v13(out_dir=os.path.join(td, 'rel2'), handover_dir=hd22, batch_root=b194, supp_batch_root=bsup2,
++                                                               date=DATE, codex_verdict=ver22))
++        #  build 도 같은 대조 — 빌드가 사본 뿌리를 어긋나게 적으면 끝의 check_v13 이 거부 (산출 폴더 없음)
++        nx22 = os.path.join(td, 'no_such_root')
++        for _k22, _nr22 in (('build_copy_other', os.path.realpath(bsup3)), ('build_copy_nx', nx22)):
++            _o_ = os.path.join(td, f'o_{_k22}')
++            LRB.v13_prepare_batches = _prep_copy22(_nr22)
++            try:
++                r22[_k22] = (refusal_msg(lambda: LRB.build_v13(out_dir=_o_, handover_dir=hd22, batch_root=b194, supp_batch_root=bsup, date=DATE,
++                                                               codex_verdict=ver22)), os.path.exists(_o_))
++            finally:
++                LRB.v13_prepare_batches = _orig_prep22
++        if isinstance(r22['good'], dict):
++            r22['check'] = safe(lambda: LRB.check_v13(o22, hd22))
++            mp22 = os.path.join(o22, 'v13_build_manifest.json')
++            morig22 = open(mp22, 'rb').read()
++
++            def _chk22(edit):
++                m = json.loads(morig22)
++                edit(m)
++                with open(mp22, 'w', encoding='utf-8') as f:
++                    f.write(json.dumps(m, ensure_ascii=False, indent=1, sort_keys=True) + '\n')
++                try:
++                    return safe(lambda: LRB.check_v13(o22, hd22))
++                finally:
++                    with open(mp22, 'wb') as f:
++                        f.write(morig22)
++
++            sb2, sb3 = _sb22(bsup2), _sb22(bsup3)
++            r22['other_gate'] = LRB.v13_batch_gate_problems(bsup2, 'supp20')[1]
++            r22['same_fp_gate'] = LRB.v13_batch_gate_problems(bsup3, 'supp20')[1]
++            r22['swap'] = _chk22(lambda m: m.update(supp_batch=sb2))
++            r22['swap_root'] = _chk22(lambda m: (m.update(supp_batch=sb2), m['batches']['supp20'].update(root=os.path.realpath(bsup2))))
++            r22['swap_nx'] = _chk22(lambda m: (m.update(supp_batch=sb2), m['batches']['supp20'].update(root=nx22)))
++            r22['nx_supp'] = _chk22(lambda m: m['batches']['supp20'].update(root=nx22))
++            r22['nx_194'] = _chk22(lambda m: m['batches']['production194'].update(root=nx22))
++            r22['del_root'] = _chk22(lambda m: m['batches']['supp20'].pop('root'))
++            r22['copy_same_fp'] = _chk22(lambda m: m['batches']['supp20'].update(root=os.path.realpath(bsup3)))
++            r22['swap_same_fp'] = _chk22(lambda m: m.update(supp_batch=sb3))
++            r22['ci_del'] = _chk22(lambda m: m['supp_batch'].pop('code_identity'))
++            r22['ci_unappr'] = _chk22(lambda m: m['supp_batch']['code_identity'].update(sealed_changed=['webapp/app.py'], allowed=[]))
++            r22['ci_allow_str'] = _chk22(lambda m: m['supp_batch']['code_identity'].update(sealed_changed=['webapp/app.py'], allowed='webapp/app.py'))
++            r22['ci_allow_str_194'] = _chk22(lambda m: m['code_identity'].update(sealed_changed=['webapp/app.py'], allowed='webapp/app.py'))
++            r22['es'] = _chk22(lambda m: m['batches']['supp20'].update(expect_set='production194'))
++            r22['ds'] = _chk22(lambda m: m['batches']['supp20'].update(datasets=['lhs']))
++            r22['n'] = _chk22(lambda m: m['batches']['supp20'].update(n=19))
++            r22['cb_roots'] = _chk22(lambda m: m['cross_batch']['roots'].update(supp20=os.path.realpath(bsup3)))
++            #  회귀 (옛 코드도 거부) — 관문 뿌리 자신이 없는 경로 · 문자열 아님 · 194 code_identity 승인 없는 변경
++            r22['auth_nx'] = _chk22(lambda m: m['supp_batch']['batch_gate'].update(batch_root=nx22))
++            r22['auth_type'] = _chk22(lambda m: m['supp_batch']['batch_gate'].update(batch_root=123))
++            r22['ci_unappr_194'] = _chk22(lambda m: m['code_identity'].update(sealed_changed=['webapp/app.py'], allowed=[]))
++            r22['restored'] = safe(lambda: LRB.check_v13(o22, hd22))
++    finally:
++        LRB.v13_reread_tau = _orig_rr22
++        LRB.v13_prepare_batches = _orig_prep22
++
++chk('V22a 정상 214 build → check 문제 0 · 다른 code_fp 보충 뿌리 = build 거부 (회귀) · 대조 = 교체에 쓴 뿌리 둘 (다른 code_fp · 같은 code_fp) 자신의 관문 문제 0 '
++    '(아래 실패가 그 뿌리 결손 때문이 아님) · 되돌리면 문제 0',
++    isinstance(r22.get('good'), dict) and r22.get('check') == [] and bool(r22.get('build_other')) and 'code_fp' in str(r22.get('build_other'))
++    and r22.get('other_gate') == [] and r22.get('same_fp_gate') == [] and r22.get('restored') == [],
++    (r22.get('check'), str(r22.get('build_other'))[:200], r22.get('other_gate'), r22.get('same_fp_gate'), r22.get('restored')))
++#  (키, 라벨, 사유 낱말 — 고친 뒤 문제 목록 어딘가에 있어야)
++V22_VARIANTS = (
++    ('swap', 'supp_batch 만 다른 유효 뿌리 (다른 code_fp) 증거로 교체 · batches.supp20.root 원래', 'batches 사본 뿌리'),
++    ('swap_root', '교체 + batches.supp20.root 도 교체 뿌리 (교차 code_fp)', 'code_fp'),
++    ('swap_nx', '교체 + batches.supp20.root = 없는 경로', 'batches 사본 뿌리'),
++    ('nx_supp', '정상 묶음 · batches.supp20.root = 없는 경로', 'batches 사본 뿌리'),
++    ('nx_194', '정상 묶음 · batches.production194.root = 없는 경로', 'batches 사본 뿌리'),
++    ('del_root', '정상 묶음 · batches.supp20.root 삭제', 'batches 사본 뿌리'),
++    ('copy_same_fp', '★ batches.supp20.root = 같은 code_fp 의 다른 유효 보충 뿌리 (교차 code_fp 로는 못 가른다)', 'batches 사본 뿌리'),
++    ('swap_same_fp', '★ supp_batch 만 같은 code_fp 의 다른 유효 보충 뿌리 증거로 교체', 'batches 사본 뿌리'),
++    ('ci_del', 'supp_batch.code_identity 삭제', 'code_identity'),
++    ('ci_unappr', 'supp_batch.code_identity 승인 없는 봉인 변경 (webapp/app.py · allowed [])', '명시 승인'),
++    ('ci_allow_str', '★ supp_batch.code_identity.allowed = 문자열 (부분 문자열 일치로 승인되던 꼴)', 'allowed'),
++    ('ci_allow_str_194', '★ 최상위 194 code_identity.allowed = 문자열 (같은 도우미)', 'allowed'),
++    ('es', '★ batches.supp20.expect_set = production194', 'expect_set'),
++    ('ds', '★ batches.supp20.datasets = [lhs]', 'datasets'),
++    ('n', '★ batches.supp20.n = 19', '사본 n'),
++    ('cb_roots', '★ cross_batch.roots.supp20 = 같은 code_fp 의 다른 뿌리', 'cross_batch.roots'),
++    ('auth_nx', '회귀 — supp_batch.batch_gate.batch_root = 없는 경로', '없다'),
++    ('auth_type', '회귀 — supp_batch.batch_gate.batch_root = 숫자 (문자열 아님)', '배치 관문'),
++    ('ci_unappr_194', '회귀 — 최상위 194 code_identity 승인 없는 봉인 변경', '명시 승인'))
++for _k, _lab, _tag in V22_VARIANTS:
++    _v = r22.get(_k)
++    chk(f'V22 SUP20-01 — {_lab} → check 문제 ≥ 1 (사유 낱말 {_tag!r})',
++        isinstance(_v, list) and len(_v) >= 1 and any(_tag in str(p_) for p_ in _v), _v)
++for _k, _lab in (('build_copy_other', '빌드가 사본 batches.supp20.root 를 같은 code_fp 의 다른 유효 뿌리로 적음'),
++                 ('build_copy_nx', '빌드가 사본 batches.supp20.root 를 없는 경로로 적음')):
++    _m, _made = r22.get(_k) or (None, None)
++    chk(f'V22 SUP20-01 build — {_lab} → 끝의 check_v13 이 거부 (만든 묶음 대조 실패 · 사본 뿌리) · 산출 폴더 없음',
++        isinstance(_m, str) and '만든 묶음 대조 실패' in _m and 'batches 사본 뿌리' in _m and _made is False, (str(_m)[:300], _made))
++
+ print(f'\n{_ok} PASS · {len(_fail)} FAIL')
+ if _fail:
+     for n in _fail:
