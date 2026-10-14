@@ -1,0 +1,22 @@
+........................................................................ [ 60%]
+...............................................                          [100%]
+==================================== PASSES ====================================
+___________________ test_10_the_cli_requires_explicit_paths ____________________
+----------------------------- Captured stderr call -----------------------------
+usage: reil_c4_h seal-arrays [-h] --out OUT --p0-result P0_RESULT
+reil_c4_h seal-arrays: error: the following arguments are required: --p0-result
+usage: reil_c4_h dryrun [-h] --venv VENV --seal SEAL --seal-manifest-sha256
+                        SEAL_MANIFEST_SHA256 --arrays ARRAYS --h-arrays
+                        H_ARRAYS --h-manifest-sha256 H_MANIFEST_SHA256
+                        --util-copy UTIL_COPY --p0-result P0_RESULT --out OUT
+                        [--n-workers N_WORKERS]
+reil_c4_h dryrun: error: the following arguments are required: --seal, --seal-manifest-sha256, --arrays, --h-arrays, --h-manifest-sha256, --util-copy, --p0-result, --out
+_ test_d_2_the_phase_b_dry_run_refuses_bad_arrays_data_paths_and_an_existing_output _
+----------------------------- Captured stderr call -----------------------------
+usage: reil_c4_hb dryrun-b [-h] --venv VENV --seal SEAL --seal-manifest-sha256
+                           SEAL_MANIFEST_SHA256 --arrays ARRAYS --h-arrays
+                           H_ARRAYS --h-manifest-sha256 H_MANIFEST_SHA256
+                           --util-copy UTIL_COPY --p0-result P0_RESULT --out
+                           OUT
+reil_c4_hb dryrun-b: error: the following arguments are required: --seal, --seal-manifest-sha256, --arrays, --h-arrays, --h-manifest-sha256, --util-copy, --p0-result, --out
+119 passed in 26.05s
