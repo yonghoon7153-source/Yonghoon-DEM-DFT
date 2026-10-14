@@ -1,0 +1,52 @@
+{
+ "argv": [
+  "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/b881d255-9513-5adc-9b14-3c0be18d7ad6/scratchpad/reil_c4env/venv/bin/python",
+  "-I",
+  "/home/user/Yonghoon-DEM-DFT/bms-balancing/scripts/reil_c4e_run.py",
+  "seal-sources",
+  "--out",
+  "/home/user/Yonghoon-DEM-DFT/bms-balancing/evidence/reil_c4e0_fix_20261014/04_sources"
+ ],
+ "child_maxrss_kib": 24236,
+ "cwd": "/home/user/Yonghoon-DEM-DFT/bms-balancing",
+ "disk_free_end_bytes": 26207555584,
+ "disk_free_start_bytes": 26207567872,
+ "elapsed_s": 0.115,
+ "end_utc": "2026-10-14T17:05:25.696Z",
+ "env_removed_names": [
+  "AWS_ACCESS_KEY_ID",
+  "AWS_SECRET_ACCESS_KEY",
+  "CLAUDE_CODE_MESSAGING_TOKEN",
+  "CLAUDE_SESSION_INGRESS_TOKEN_FILE",
+  "CLOUDSDK_AUTH_ACCESS_TOKEN",
+  "GH_TOKEN",
+  "GITHUB_TOKEN",
+  "GIT_CONFIG_COUNT",
+  "GIT_CONFIG_KEY_0",
+  "GIT_CONFIG_KEY_1",
+  "GIT_CONFIG_KEY_2",
+  "GIT_CONFIG_VALUE_0",
+  "GIT_CONFIG_VALUE_1",
+  "GIT_CONFIG_VALUE_2",
+  "MAX_THINKING_TOKENS"
+ ],
+ "env_set": {
+  "MKL_NUM_THREADS": "1",
+  "MPLBACKEND": "Agg",
+  "MPLCONFIGDIR": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/b881d255-9513-5adc-9b14-3c0be18d7ad6/scratchpad/c4e0_fix/mpl",
+  "OMP_NUM_THREADS": "1",
+  "OPENBLAS_NUM_THREADS": "1",
+  "PYTHONDONTWRITEBYTECODE": "1",
+  "REIL_C4_FIX_EVIDENCE": "/home/user/Yonghoon-DEM-DFT/bms-balancing/evidence/reil_c4e0_fix_20261014",
+  "REIL_C4_FIX_STEP": "04_seal_sources",
+  "TMPDIR": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/b881d255-9513-5adc-9b14-3c0be18d7ad6/scratchpad/c4e0_fix/tmp"
+ },
+ "evidence_bytes_before_meta": 22474,
+ "head_end": "61b9037e5283419f9ee22129b9a851df06f20cb1",
+ "head_start": "61b9037e5283419f9ee22129b9a851df06f20cb1",
+ "rc": 0,
+ "start_utc": "2026-10-14T17:05:25.581Z",
+ "step": "04_seal_sources",
+ "timed_out": false,
+ "timeout_s": 60.0
+}
