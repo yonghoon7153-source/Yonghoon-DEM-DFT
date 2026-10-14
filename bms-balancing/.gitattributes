@@ -198,3 +198,5 @@ evidence/reil_c4_0b1_fix2_20261014/** -text
 reviews/review_reil_c4_0b1_fix2_result_20261014/** -text
 # 2026-10-14: REIL C4-0b2 실행 기록 (identity · RED · GREEN · 읽기 전용 건조 · 시작/끝 HEAD · porcelain · 자원 관측) — bytes 그대로
 evidence/reil_c4_0b2_20261014/** -text
+# 2026-10-14: REIL C4-0b2 결과 검토 회신 (종결 보류 · P2 N1–N3 · 기록 수용 범위 · 문구 정정 · C4-E/A/B 조건 · source/ · red_fixed/ = 검토자가 본 저장소 사본) — bytes 그대로
+reviews/review_reil_c4_0b2_result_20261014/** -text
