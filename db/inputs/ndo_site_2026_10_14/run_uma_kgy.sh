@@ -4,11 +4,11 @@
 #   트랙 CEI/Nd · 1저자 = 실험. 사용자 10-14 '1,2,3,4를 해보자' + GPU 자리 = 'kgy 지금'.
 #
 # 하는 일 (순서대로 · 하나라도 실패하면 발사 안 함)
-#   ① nd_scf 설정 출력 (O 배치 카드 kgy 런 · 이 카드 §6 칸을 채울 원본 · 읽기만)
+#   ① nd_scf 설정 균일성 (O 배치 카드 kgy 런 · 이 카드 §6 원본 · sort | uniq -c · 읽기만)
 #   ② 후보 해시 대조 (manifest.json · 23 개)
 #   ③ run_anneal.py --selftest (UMA python)
 #   ④ VRAM 여유 ≥ 4000 MiB · tmux 세션 · 같은 출력 폴더의 python 없음
-#   ⑤ tmux ndsite_uma 발사 → 60 초 뒤 로그 꼬리 · GPU 점유
+#   ⑤ tmux ndsite_uma 발사 → WAIT (기본 60) 초 뒤 로그 꼬리 · GPU 점유
 #   --dry-run 이면 ④ 까지 하고 발사 명령만 찍는다.
 #
 # ⛔ 이 스크립트가 못 하는 것: 순위를 매기지 않는다 (anneal_results.json 만 남긴다) · DFT 를 돌리지 않는다 ·
@@ -23,15 +23,16 @@ CAND=$SRC/db/inputs/ndo_site_2026_10_14/candidates
 OUT=$R/uma_anneal
 [ -x "$PY" ] || { echo "⛔ python 없음: $PY"; exit 2; }
 
-echo "== ① nd_scf 설정 (카드 §6 · 읽기만)"
-for f in "$HOME"/work/runs/nd_scf_2026_09_08/*/scf.in; do
-  [ -f "$f" ] || continue
-  echo "-- $f"
-  grep -E "calculation|ecutwfc|ecutrho|occupations|smearing|degauss|conv_thr|nspin|mixing_beta|input_dft|pseudo_dir" "$f" | tr -s ' ' || true
-  awk '/ATOMIC_SPECIES/{s=1;next} s&&NF==3{print "   PP",$0;next} {s=0}' "$f"
-  grep -A1 K_POINTS "$f" | tail -1
-done 2>/dev/null | head -80
-ls "$HOME"/work/runs/nd_scf_2026_09_08/ 2>/dev/null | head -12 || echo "   (nd_scf_2026_09_08 폴더 없음)"
+echo "== ① nd_scf 설정 균일성 (카드 §6 · 읽기만 · 줄마다 '같은 줄이 몇 개 scf.in 에 있나')"
+# ⚠ 2026-10-14 고침: 옛 판은 이 출력을 `| head -80` 으로 잘랐는데 set -o pipefail 이라 SIGPIPE 로 스크립트가 조용히 멈췄다
+#   (kgy 실측 — ① 만 찍고 발사 안 함). 자르지 않고 sort | uniq -c 로 접는다.
+N_SCF=$(ls "$HOME"/work/runs/nd_scf_2026_09_08/*/scf.in 2>/dev/null | wc -l)
+echo "   scf.in $N_SCF 개"
+if [ "$N_SCF" -gt 0 ]; then
+  cat "$HOME"/work/runs/nd_scf_2026_09_08/*/scf.in \
+    | grep -E "ecutwfc|ecutrho|occupations|smearing|degauss|conv_thr|mixing_beta|nspin|input_dft|UPF|^ *[0-9]+ +[0-9]+ +[0-9]+ +[01] +[01] +[01] *$" \
+    | tr -s ' ' | sort | uniq -c || true
+fi
 
 echo "== ② 후보 해시"
 "$PY" - "$CAND" <<'PY'
@@ -77,6 +78,6 @@ nvidia-smi --query-compute-apps=pid,used_memory,process_name --format=csv,nohead
 W
 echo "   감시: watch -n 60 bash ~/w_ndsite_uma.sh"
 tmux new -d -s ndsite_uma "$CMD"
-sleep 60
+sleep "${WAIT:-60}"
 tail -4 "$R/uma_anneal.log" || true
 nvidia-smi --query-compute-apps=pid,used_memory,process_name --format=csv,noheader || true
