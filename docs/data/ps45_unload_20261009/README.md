@@ -15,8 +15,8 @@
 | 무엇 | 이름 |
 |---|---|
 | 키트 폴더 | `docs/data/ps45_unload_20261009/` |
-| 이력 시험 (H0–H5 · 따로 봉인) | `history_test/` — `make_history_decks.py` (생성기 · `--check` · `--selftest`) · `read_history.py` (읽는 쪽 · `--selftest`) · `run_history.sh` (러너) · `run_history_ibb.sbatch` (ibb 래퍼) · `history_params.json` (fixture 표) · 덱 여덟 `in.hist_*.liggghts` · `plate_hist.stl` · `SHA256SUMS` |
-| ibb 작업 폴더 (이력 시험) | `~/ps45_unload_hist_20261013` (런 = 그 아래 `hist_<시각>/` · 보고 묶음 `hist_<시각>.report.tgz`) |
+| 이력 시험 (H0–H5 · 따로 봉인) | `history_test/` — `make_history_decks.py` (생성기 · `--check` · `--selftest`) · `read_history.py` (읽는 쪽 · `--selftest` · `--grammar`) · `run_history.sh` (러너 · `--grammar-only`) · `run_history_ibb.sbatch` (ibb 래퍼 · 둘째 인자 `grammar`) · `history_params.json` (fixture 표) · 덱 아홉 `in.hist_*.liggghts` (H0–H5 여덟 + 문법 fixture `in.hist_grammar.liggghts` · §1-6) · `plate_hist.stl` · `SHA256SUMS` |
+| ibb 작업 폴더 (이력 시험) | `~/ps45_unload_hist_20261013` (런 = 그 아래 `hist_<시각>/` · 보고 묶음 `hist_<시각>.report.tgz` · 문법 fixture = `gram_<시각>/` · `gram_<시각>.report.tgz`) |
 | SLURM job 이름 | `ulHist` (이력 시험) · `ulU` (본 키트 — 잡 하나에 sbatch 하나) |
 | 본 키트 표 (하나뿐) | `unload_params.json` — 덱 생성기 · 러너 · 읽는 쪽이 여기서만 읽는다 |
 | 덱 생성기 · 덱 | `make_unload_decks.py` (`--check` · `--selftest`) · `decks/<침대>/in.<종류>.liggghts` 64 (손으로 고치지 않는다) |
@@ -121,6 +121,53 @@ WSL 로 가져오는 꼴 (접속 정보는 자리표시): `scp -P <port> <user>@
   ⓓ 판 법선력 부호 **−1** = 표 `plate_fn_compressive_sign` (표 바꿀 것 없음) — 결과 전 기대와 전부 같다.  컨테이너 재판독 = 같은 판정 JSON (`run_dir` 만 다름) ·
   본 키트 복원 판정의 이력 시험 칸 식 = 통과.  반입 · 대조 = `docs/reviews/dem_unloading_history_test_20261014/README.md` (보고 묶음 sha256 `be0acbd7…` · 바이트 그대로).
   ⛔ 본 R · 10:0 연장 · U 의 GO 아님 — 다음 = Codex 키트 재검토.  ibb 의 런 폴더 `hist_20261014_094731/` 는 지우지 않는다 (§3 ③ 7:3 `RJ` 의 `HIST_VERDICT`).
+
+### 1-6. 문법 fixture (Q8 · 등록 개정 3 §14-9 · Codex 판정문 10-14 §6) — ⬜ 1저자 ibb 한 번 · 본 R 전 PASS · 결과 0 건
+
+**왜**: SYN 은 move/mesh 한 번만 · 상태 파일 복귀 · 변수 주기 덤프를 지나가지 않았다 (판정문 §6 — *"SYN이 지나가지 않은 경로까지 실제 바이너리 PASS라고 확대하지 말 것"*).
+빠진 경로만 이 fixture 가 한 번씩 지나간다 · H0–H5 는 다시 돌리지 않는다.
+
+- 덱 `in.hist_grammar.liggghts` (생성기 · 봉인 · 입자 20 · 적분 없음) = 본 키트 U 덱 상태 기계 꼴 그대로 (`ul_` → `gr_`): 맨 바깥 `include ${gr_state}` + `if "${gr_resume} == 1" then "jump SELF gr_resumed"` ·
+  변수 주기 덤프 `dump_modify gr_da · gr_dw every v_gr_dnext` (창 전 = 다음 창 끝 · 이동 전 = step + big) · 단마다 `fix gr_mv … move/mesh` → `run` → `unfix` · 단 끝 `write_restart` + 상태 파일 (`print … file` · `append`) ·
+  단마다 판 접촉 영역 다시 만들기 · 판 mesh/stl 고정 주기 덤프 (판 z 관측).
+- 단계 (한 job · `run_history.sh --grammar-only` · 런 폴더 `gram_<시각>/` · NP 6): **P** (생산자 — H0–H5 의 P 와 같은 덱 · `fixture.bin`) → **GA** (처음 · 빈 상태 파일 · `gr_resume 0` · 창 → 이동 → 창 → 이동 → 창) →
+  **GB** (GA 마지막 단 끝 `restart_g_4300.bin` + 짝 `state_g_4300.in` · `gr_resume 1` · 새 프로세스 · 이동 → 창).  GA 가 실패하면 GB 를 돌리지 않는다.
+- 판정 (`read_history.py --grammar` · 표 `grammar_probe` 에서 결과 전 고정 · 전부 참 = PASS · 아니면 FAIL · rc 2):
+
+  | 검사 | PASS 조건 |
+  |---|---|
+  | 기술 | P · GA · GB rc 0 · 배너 · ERROR 없음 · `Loop time … on 6 procs` · run 수 (GA 5 · GB 2) |
+  | 표지 | GA `GRAM_START` (2000 · k 0 · 0.03) · GB `GRAM_RESUMED` (4300 · k 2 · 0.03002 = 상태 파일 값) · `GRAM_STEP` · `GRAM_STATE_WRITTEN` · `GRAM_DONE` · 다른 경로 표지 · `GRAM_ABORT` 없음 |
+  | 변수 주기 덤프 | 원자 · 판 local 덤프 step = 창 끝만 (GA 2100 · 3200 · 4300 · GB 5400) — setup · 이동 중 덤프 없음 · 머리 step = 파일 step · 전부 읽힘 |
+  | 판 z (mesh/stl · 허용 1e-6) | GA 2000 · 2100 = 0.03 · 2600 = 0.030005 · 3100 · 3200 = 0.03001 · 3700 = 0.030015 · 4200 · 4300 = 0.03002 (두 번째 이동이 앞 이동 위로 쌓인다 · 창 동안 그대로) · GB 4300 = 0.03002 (새 프로세스 첫 setup = restart 의 판) · 4800 = 0.030025 · 5300 · 5400 = 0.03003 |
+  | restart · 상태 파일 | 창 끝마다 `restart_g_<step>.bin` + `state_g_<step>.in` = (`gr_rstep` · `gr_k` · `gr_pz`) 세 줄 |
+  | 판 접촉 개수 | 덱 영역 공식 (단마다 다시 만든 영역) = 판 local 덤프 (판 아래 중심) |
+  | 입력 | GA = 생산자 `fixture.bin` · 빈 상태 파일 · `gr_resume 0` · GB = GA 마지막 단 끝 restart + 짝 상태 파일 · `gr_resume 1` |
+
+- 결과 전 기대 = 전부 PASS (생성기 모의기 ⑯ · 읽는 쪽 합성 S33 이 같은 숫자) · 다르면 그대로 보고한다 — 덱을 손으로 고치지 않는다 (생성기 → 새 SHA256SUMS → 다시).
+  ⚠ 짧은 문법 런 = 물리 검증 아님 (C19) · 7:3 `Ut0` 는 그대로 (이중 확인) · PASS 여도 본 R · U 의 GO 아님 (Codex 키트 재확인 뒤).
+- 봉인 `history_test/SHA256SUMS` sha256 `debe83877657978cdaf87b18e08edda501e520979dd40876f5e100c24e902163` (H0–H5 덱 여덟 · 판 STL = 바이트 그대로 ·
+  더해진 것 = 문법 덱 · 표 `grammar_probe` · 생성기 ⑯ · 읽는 쪽 `--grammar` · 러너 `--grammar-only` · 래퍼 둘째 인자 `grammar`).
+
+```bash
+# ① 이 커밋의 새 작업 트리 (커밋마다 새 폴더 · 이미 있으면 다시 체크아웃하지 않는다)
+cd ~/Yonghoon-DEM-DFT && git fetch -q origin claude/stoic-knuth-NObVQ && W=$HOME/unload_src_$(git rev-parse --short FETCH_HEAD) && { [ -d "$W" ] || git worktree add -q --detach "$W" FETCH_HEAD; } && cd "$W" && git log --oneline -1
+H=$W/docs/data/ps45_unload_20261009/history_test
+conda activate myenv && python3 -I $H/make_history_decks.py --check && python3 -I $H/read_history.py --selftest | tail -1   # "✓ check: 덱 9 …" · "selftest: PASS (0 실패)"
+# ② 작업 폴더 · 제출 전 사전 점검 (로그인 노드 · 런 없음 · 같은 LMP 확인)
+R=$HOME/ps45_unload_hist_20261013 && mkdir -p $R/logs
+bash $H/run_history_ibb.sbatch $H grammar                      # 끝 줄 "✓ 사전 점검만 — 통과" 를 본 뒤 ③
+# ③ 제출 (작업 폴더에서 — logs/ 는 제출 폴더 기준) · 다른 job 은 끄지 않는다
+cd $R && J=$(sbatch --parsable $H/run_history_ibb.sbatch $H grammar) && echo "job $J"
+# ④ 진행 · 끝 (수 분)
+squeue -u $USER
+tail -5 $(ls -t $R/logs/ulHist_*.out | head -1)
+cat $(ls -dt $R/gram_*/ | head -1)grammar_verdict.txt
+sha256sum $(ls -t $R/gram_*.report.tgz | head -1)
+```
+
+**보낼 것**: `gram_<시각>.report.tgz` (단계마다 화면 · 로그 · 덤프 · 작은 restart · 상태 파일 · 판정 JSON · kit SHA256SUMS) + sha256 + `logs/ulHist_<job>.out`.
+WSL 로 가져오는 꼴 (접속 정보는 자리표시): `scp -P <port> <user>@<ibb-host>:~/ps45_unload_hist_20261013/gram_<시각>.report.tgz ~/` · rc 0 = 전부 기대대로 · rc 2 = 화면 `GRAMMAR_VERDICT …` 의 ✗ 줄 · 사유.
 
 ## 2. 덱 (K2 · `make_unload_decks.py`) — 결과 0 건 · 실행은 Codex GO 뒤
 
@@ -247,3 +294,5 @@ scp -P <port> <user>@<ibb-host>:~/ps45_unload_20261009/<침대>/<잡>.report.tgz
 | `ul_runner_test.py --selftest` (K3 러너 모의 · 가짜 mpirun · lmp · 임시 키트 다시 봉인) | 12 중 12 실패 (러너 · 봉인 없음) | 12 / 12 |
 | `seal_kit.py --selftest` (K8 봉인 · 활성 규칙 · 폐기 규칙 판별력) | 10 중 10 실패 | 10 / 10 |
 | `history_test/make_history_decks.py --selftest` ⑮ (함께 사는 pair/gran/local ≤ 1 · wall/gran/local ≤ 1 · 첫 ibb 실행 TECH — §1-5 · `ULK-02`) | 131 중 7 실패 (덱 일곱 · SYN 만 통과) | 139 / 139 |
+| `history_test/make_history_decks.py --selftest` ⑯ 문법 fixture (Q8 · §1-6 — 덱 꼴 · 모의기 GA → GB · 모의기 판별력) | 149 중 10 실패 (⑯ 전부 · 덱 없음) | 156 / 156 (+ 아홉째 덱 일반 검사 7) |
+| `history_test/read_history.py --selftest` S33–S37 (문법 판정 · 반례 아홉 · GB 없음 · GA 없음 · 러너 모의 `--grammar-only` 셋) | 53 중 15 실패 (새 시험 전부) | 53 / 53 |

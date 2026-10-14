@@ -60,6 +60,7 @@ DECKS = {
     'erase_none': 'in.hist_erase_none.liggghts',
     'badid': 'in.hist_badid.liggghts',
     'syntax_probe': 'in.hist_syntax_probe.liggghts',
+    'grammar': 'in.hist_grammar.liggghts',
 }
 SUMMED = list(DECKS.values()) + [PLATE_STL, 'history_params.json', 'make_history_decks.py', READER, RUNNER, SBATCH]
 
@@ -142,6 +143,8 @@ LAZY_OK = {
     'u_nc': 'count(group,region) 공식 — run 뒤 영역을 고친 다음 ${u_nc} 로 바로 읽는다 (compute 아님)',
     'hb_step_now': '다음 줄이 즉시 치환으로 얼린다 (step)',
     'hb_n_now': '다음 줄이 즉시 치환으로 얼린다 (atoms)',
+    'gr_dnext': 'dump_modify … every v_gr_dnext 의 다음 덤프 시각 공식 — run setup 과 덤프 뒤에 LIGGGHTS 가 읽는다 (본 키트 ul_dnext 꼴)',
+    'gr_nc': 'count(group,region) 공식 — 창 뒤 ${gr_nc} 로 바로 읽는다 (compute 아님 · 본 키트 판 접촉 개수 꼴)',
 }
 
 
@@ -602,9 +605,12 @@ NOTES = {
     'badid': '#   잘못된 내부 ID (H5a): history_zwallbot (없는 fix) → LIGGGHTS ERROR 가 나야 한다 (읽는 쪽 = TECH)',
     'syntax_probe': '#   SYN (판정 밖 · 정보): 본 키트 덱 문법 — read_restart 뒤 dt · erotate/sphere · ave/time · 부호 있는 Ps · 영역 개수 판 접촉 · '
                     'move/mesh +z · mesh 덤프 · 명시 write_restart',
+    'grammar': '#   문법 fixture (Q8 · 등록 개정 3 §14-9 · Codex 판정문 10-14 §6 · 판정 = read_history.py --grammar): 본 키트 덱 상태 기계의 빠진 경로 —\n'
+               '#     맨 바깥 include 상태 파일 + jump SELF 이어 돌림 · 변수 주기 덤프 (every v_) · 단마다 fix move/mesh 정의 · 해제 (판 z 누적) · 상태 파일 복귀.\n'
+               '#     GA = -var gr_resume 0 (빈 상태 파일) · GB = -var gr_resume 1 (GA 마지막 단 끝 restart + 상태 파일 · 새 프로세스) · 짧은 문법 런 = 물리 검증 아님 (C19)',
 }
 TITLES = {'producer': '생산자', 'producer_zero': '0 생산자', 'consumer': '소비자', 'erase_bot': '바닥 소거', 'erase_top': '판 소거',
-          'erase_none': '양성 대조', 'badid': '잘못된 ID', 'syntax_probe': '문법 미리 지나가기'}
+          'erase_none': '양성 대조', 'badid': '잘못된 ID', 'syntax_probe': '문법 미리 지나가기', 'grammar': '문법 fixture (상태 기계 · 이어 돌림)'}
 
 
 def _producer(P, H, zero):
@@ -695,6 +701,270 @@ def _probe(P, H):
     return L
 
 
+def _gr_regions(z):
+    """판 접촉 영역 (본 키트 ul_c1–3 꼴 · 판 아래 반경 띠) — z = 판 높이 변수 글자."""
+    out = []
+    for i, r in ((1, 'r_AM_P'), (2, 'r_AM_S'), (3, 'r_SE')):
+        out += [f'variable gr_lo{i} equal {z}-${{{r}}}', f'region gr_c{i} block INF INF INF INF ${{gr_lo{i}}} {z} units box']
+    return out
+
+
+def _grammar(P, H):
+    """문법 fixture (Q8 · 등록 개정 3 §14-9) — 본 키트 U 덱 상태 기계의 꼴 그대로 (ul_ → gr_) · 빠진 경로만 한 번씩:
+    맨 바깥 include ${gr_state} + if … jump SELF gr_resumed (이어 돌림) · 변수 주기 덤프 (dump_modify every v_gr_dnext — 창 전 = 다음 창 끝 ·
+    이동 전 = step + big) · 단마다 fix move/mesh → run → unfix (판 z 누적) · 단 끝 write_restart + 상태 파일 (file · append) · 새 프로세스 복귀.
+    적분 없음 (운동학 fixture — 입자는 그대로 · 판만 움직인다)."""
+    Y = P['grammar_probe']
+    ne, nr = Y['ave']
+    afmt = ' '.join('%d' if c in ('id', 'type') else '%.17g' for c in Y['atom_cols'])
+    L = _head_lines(H, P=P) + _dyn_lines(H, integr=False)
+    L += ['', '# >>> block gr_params — 표 (history_params.json grammar_probe) 에서 온 숫자 (본 키트 ul_params 꼴)',
+          f'variable gr_W equal {Y["window"]}', f'variable gr_n equal {Y["n_move"]}', f'variable gr_v equal {Y["v"]!r}',
+          f'variable gr_kfresh equal {Y["k_fresh"]}', f'variable gr_big equal {Y["big"]}', f'variable gr_h0 equal {_r(P["z_plate"])}',
+          'variable gr_resume index 0',
+          '# 이어 돌림 대조 값 — 상태 파일이 다시 정의한다 (처음이면 빈 상태 파일 · −1 그대로)',
+          'variable gr_rstep equal -1',
+          'variable gr_dz equal ${gr_v}*${dt}*${gr_n}',
+          '# <<< block gr_params', '',
+          '# >>> block gr_obs — 관측 (본 키트 ul_obs 꼴 · 원자 · 판 local 덤프 = 변수 주기 · 판 mesh/stl = 고정 주기)',
+          'compute gr_wh all wall/gran/local id force_normal',
+          'variable Ps equal f_top_mesh[3]/0.0025/1000000',
+          f'fix gr_av all ave/time {ne} {nr} ${{gr_W}} v_Ps',
+          'group gr_t1 type 1', 'group gr_t2 type 2', 'group gr_t3 type 3']
+    L += _gr_regions('${gr_h0}')
+    L += ['variable gr_nc equal count(gr_t1,gr_c1)+count(gr_t2,gr_c2)+count(gr_t3,gr_c3)',
+          'thermo_style custom step atoms ke v_Ps v_pressMPa cpu', 'thermo ${gr_W}',
+          'variable gr_dnext equal step+${gr_big}',
+          f'dump gr_da all custom ${{gr_W}} ${{out}}/probe/atom_*.dump {" ".join(Y["atom_cols"])}',
+          f'dump_modify gr_da every v_gr_dnext format "{afmt}"',
+          'dump gr_dw all local ${gr_W} ${out}/probe/wall_*.dump ' + ' '.join(f'c_gr_wh[{i}]' for i in range(1, 7)),
+          'dump_modify gr_dw every v_gr_dnext format "' + ' '.join(['%.17g'] * 6) + '"',
+          'dump gr_dm all mesh/stl ${gr_W} ${out}/probe/mesh_*.stl top_mesh',
+          '# <<< block gr_obs', '',
+          '# >>> block gr_start — 처음 또는 이어 돌림 (본 키트 start 꼴 · 상태 파일은 늘 맨 바깥 include — if 안 include = 3d5c00f input.cpp 845 ERROR)',
+          'include ${gr_state}',
+          'if "${gr_resume} == 1" then "jump SELF gr_resumed"',
+          'variable gr_step equal step', 'variable gr_step equal ${gr_step}',
+          'variable gr_k equal 0', 'variable gr_pz equal ${gr_h0}', 'variable gr_klast equal ${gr_kfresh}',
+          'print "GRAM_START step=${gr_step} k=${gr_k} plate_z=${gr_pz}"',
+          'jump SELF gr_window',
+          'label gr_resumed',
+          'variable gr_step equal step', 'variable gr_step equal ${gr_step}',
+          'if "${gr_step} != ${gr_rstep}" then "print \'GRAM_ABORT reason=resume_step step=${gr_step} expect=${gr_rstep}\'" "quit"',
+          'variable gr_klast equal ${gr_k}+1',
+          'region gr_c1 delete', 'region gr_c2 delete', 'region gr_c3 delete']
+    L += _gr_regions('${gr_pz}')
+    L += ['print "GRAM_RESUMED step=${gr_step} k=${gr_k} plate_z=${gr_pz}"',
+          'jump SELF gr_next',
+          '# <<< block gr_start', '',
+          '# >>> block gr_machine — 창 (덤프 = 창 끝) → 단 끝 restart + 상태 파일 → 이동 (덤프 없음) → 창 …',
+          'label gr_window',
+          'variable gr_dnext equal (floor(step/${gr_W})+1)*${gr_W}',
+          'run ${gr_W}',
+          'variable gr_step equal step', 'variable gr_step equal ${gr_step}',
+          'variable gr_P equal f_gr_av[1]', 'variable gr_P equal ${gr_P}',
+          'variable gr_ncnow equal ${gr_nc}',
+          'print "GRAM_STEP k=${gr_k} step=${gr_step} plate_z=${gr_pz} Ps_avg=${gr_P} n_contact_geo=${gr_ncnow}"',
+          'write_restart ${out}/restart/restart_g_${gr_step}.bin',
+          'print "variable gr_rstep equal ${gr_step}" file ${out}/restart/state_g_${gr_step}.in screen no',
+          'print "variable gr_k equal ${gr_k}" append ${out}/restart/state_g_${gr_step}.in screen no',
+          'print "variable gr_pz equal ${gr_pz}" append ${out}/restart/state_g_${gr_step}.in screen no',
+          'print "GRAM_STATE_WRITTEN step=${gr_step} k=${gr_k}"',
+          'if "${gr_k} >= ${gr_klast}" then "jump SELF gr_done"',
+          'label gr_next',
+          'variable gr_k equal ${gr_k}+1',
+          'variable gr_dnext equal step+${gr_big}',
+          'fix gr_mv all move/mesh mesh top_mesh linear 0.0 0.0 ${gr_v}',
+          'run ${gr_n}',
+          'unfix gr_mv',
+          'variable gr_pz equal ${gr_pz}+${gr_dz}',
+          'region gr_c1 delete', 'region gr_c2 delete', 'region gr_c3 delete']
+    L += _gr_regions('${gr_pz}')
+    L += ['jump SELF gr_window',
+          'label gr_done',
+          'undump gr_da', 'undump gr_dw', 'undump gr_dm',
+          'print "GRAM_DONE step=${gr_step} k=${gr_k} plate_z=${gr_pz}"',
+          '# <<< block gr_machine']
+    return L
+
+
+def grammar_sim(text, start_step, z0, cli=None, includes=None, max_cmds=200000):
+    """문법 fixture 덱의 제어문 · 덤프 시각 · 판 z 를 해석하는 작은 모의기 (입자 계산 없음 · 시험 전용 · Q8 — LIGGGHTS 대신이 아니다).
+    variable (equal = 공식 · ${} 는 정의 때 치환 · 꺼낼 때 %.15g · index = 먼저 정의되면 그대로 · string) · if/then/else · jump SELF · label · quit ·
+    include (includes[경로] 의 줄을 그 자리에서) · timestep · fix move/mesh linear (판 z += v · dt · n) · unfix · dump (custom · local · mesh/stl) ·
+    dump_modify every v_ · first (run setup 에서 공식 = 다음 시각 · 그 시각 ≤ 지금 = 오류 · 쓴 뒤 다시) · undump · write_restart · print (화면 · file · append) ·
+    run (고정 주기 덤프 = setup 에서 step % N = 0 이고 마지막이 그 step 아니면 · 그 뒤 N 배수).  f_* · count() = 0 (값은 보지 않는다).
+    → {'runs': [(시작 step, n, 이동?)], 'dumps': {덤프 ID: [step]}, 'mesh_z': {step: z}, 'restarts': [step], 'files': {경로: 글자}, 'screen': [줄],
+       'aborted', 'errors'}."""
+    import math as _m
+    L = logical_lines(text)
+    Wd = [words(x) for x in L]
+    labels = {w[1]: i for i, w in enumerate(Wd) if w[:1] == ['label']}
+    var = {k: ('index', str(v)) for k, v in (cli or {}).items()}
+    sim = {'step': start_step, 'z': z0, 'dt': None, 'vz': None, 'mover': None, 'runs': [], 'dumps': {}, 'mesh_z': {}, 'restarts': [], 'files': {},
+           'screen': [], 'aborted': None, 'errors': []}
+    dumps = {}
+
+    def num(x):
+        return '%.15g' % x
+
+    def ev(expr, step=None):
+        e = expr.replace('&&', ' and ').replace('||', ' or ')
+        e = re.sub(r'\bf_\w+(?:\[\d+\])?', '0.0', e)
+        e = re.sub(r'\bcount\([^)]*\)', '0', e)
+        e = re.sub(r'\bstep\b', str(sim['step'] if step is None else step), e)
+        return float(eval(e, {'__builtins__': {}}, {'abs': abs, 'floor': _m.floor}))   # noqa: S307 — 생성 덱의 숫자 식 (시험 전용)
+
+    def get(name):
+        st, v = var[name]
+        return num(ev(v)) if st == 'equal' else v
+
+    def sub(s):
+        return re.sub(r'\$\{(\w+)\}', lambda mm: get(mm.group(1)), s)
+
+    def write(did, t):
+        sim['dumps'].setdefault(did, []).append(t)
+        dumps[did]['last'] = t
+        if dumps[did]['style'] == 'mesh/stl':
+            sim['mesh_z'][t] = z_at(t)
+
+    run_ctx = {'s': None, 'z': None, 'vz': 0.0}
+
+    def z_at(t):
+        return run_ctx['z'] + run_ctx['vz'] * sim['dt'] * (t - run_ctx['s'])
+
+    def do(w):
+        c = w[0]
+        if c == 'variable' and len(w) >= 4:
+            if w[2] == 'equal':
+                var[w[1]] = ('equal', sub(' '.join(w[3:])))
+            elif w[2] == 'string':
+                var[w[1]] = ('string', sub(' '.join(w[3:])))
+            elif w[2] == 'index' and w[1] not in var:
+                var[w[1]] = ('index', sub(w[3]))
+        elif c == 'timestep':
+            sim['dt'] = float(sub(w[1]))
+        elif c == 'include':
+            path = sub(w[1])
+            if path not in (includes or {}):
+                raise RuntimeError(f'include 파일 없음: {path}')
+            for ln in logical_lines(includes[path]):
+                r = do(words(ln))
+                if r is not None:
+                    raise RuntimeError(f'include 안의 jump · quit: {ln}')
+        elif c == 'if':
+            branches, cur, conds, k = [], [], [w[1]], 3
+            while k < len(w):
+                if w[k] == 'elif':
+                    branches.append(cur)
+                    cur = []
+                    conds.append(w[k + 1])
+                    k += 2
+                    continue
+                if w[k] == 'else':
+                    branches.append(cur)
+                    cur = []
+                    conds.append('1')
+                else:
+                    cur.append(w[k])
+                k += 1
+            branches.append(cur)
+            for cond, br in zip(conds, branches):
+                if ev(sub(cond)):
+                    for cmd in br:
+                        r = do(words(cmd))
+                        if r is not None:
+                            return r
+                    break
+        elif c == 'jump' and len(w) >= 3 and w[1] == 'SELF':
+            return ('jump', labels[w[2]])
+        elif c == 'quit':
+            return ('quit',)
+        elif c == 'fix' and len(w) >= 8 and w[3] == 'move/mesh':
+            if sim['mover'] is not None:
+                raise RuntimeError(f'move/mesh 가 이미 있다 ({sim["mover"]})')
+            k = w.index('linear')
+            sim['mover'], sim['vz'] = w[1], float(sub(w[k + 3]))
+        elif c == 'unfix' and w[1] == sim['mover']:
+            sim['mover'], sim['vz'] = None, None
+        elif c == 'dump' and len(w) >= 5:
+            dumps[w[1]] = {'style': w[3], 'every': int(float(sub(w[4]))), 'var': None, 'first': False, 'last': None}
+        elif c == 'dump_modify':
+            d = dumps[w[1]]
+            k = 2
+            while k < len(w):
+                if w[k] == 'every':
+                    d['var'] = w[k + 1][2:] if w[k + 1].startswith('v_') else None
+                    if d['var'] is None:
+                        d['every'] = int(float(sub(w[k + 1])))
+                    k += 2
+                elif w[k] == 'first':
+                    d['first'] = w[k + 1] == 'yes'
+                    k += 2
+                elif w[k] == 'format':
+                    k += 2
+                else:
+                    k += 1
+        elif c == 'undump':
+            dumps.pop(w[1], None)
+        elif c == 'run':
+            n = int(float(sub(w[1])))
+            s, e = sim['step'], sim['step'] + n
+            run_ctx.update(s=s, z=sim['z'], vz=sim['vz'] or 0.0)
+            for did, d in dumps.items():
+                if d['var']:
+                    if d['first'] and d['last'] is None:
+                        write(did, s)
+                    nd = int(ev(var[d['var']][1], s))
+                    if nd <= s:
+                        raise RuntimeError(f'dump {did} every 변수가 지난 시각 ({nd} ≤ {s}) — Dump every variable returned a bad timestep')
+                    while nd <= e:
+                        write(did, nd)
+                        nxt = int(ev(var[d['var']][1], nd))
+                        if nxt <= nd:
+                            raise RuntimeError(f'dump {did} every 변수가 지난 시각 ({nxt} ≤ {nd})')
+                        nd = nxt
+                else:
+                    if (s % d['every'] == 0 and d['last'] != s) or (d['first'] and d['last'] is None):
+                        write(did, s)
+                    t = (s // d['every'] + 1) * d['every']
+                    while t <= e:
+                        write(did, t)
+                        t += d['every']
+            sim['runs'].append((s, n, sim['mover'] is not None))
+            sim['z'] = z_at(e)
+            sim['step'] = e
+        elif c == 'write_restart':
+            sim['restarts'].append(sim['step'])
+        elif c == 'print':
+            txt = sub(w[1])
+            if len(w) >= 4 and w[2] in ('file', 'append'):
+                path = sub(w[3])
+                sim['files'][path] = (sim['files'].get(path, '') if w[2] == 'append' else '') + txt + '\n'
+            else:
+                sim['screen'].append(txt)
+                if txt.startswith('GRAM_ABORT'):
+                    sim['aborted'] = txt
+        return None
+
+    pc, n_cmds = 0, 0
+    try:
+        while pc < len(Wd) and n_cmds < max_cmds:
+            n_cmds += 1
+            r = do(Wd[pc])
+            if r is None:
+                pc += 1
+            elif r[0] == 'jump':
+                pc = r[1] + 1
+            else:
+                break
+    except (RuntimeError, KeyError, ValueError, ZeroDivisionError) as ex:
+        sim['errors'].append(f'{type(ex).__name__}: {ex}')
+    if n_cmds >= max_cmds:
+        sim['errors'].append('명령 수 상한 (고리?)')
+    return sim
+
+
 def render(name, P=None):
     P = P or load_params()
     H = extract_head(P)
@@ -715,6 +985,8 @@ def render(name, P=None):
             L.append('print "HIST_CONSUMER_DONE step=${hb_step0} atoms=${hb_n0}"')
     elif name == 'syntax_probe':
         L = _probe(P, H)
+    elif name == 'grammar':
+        L = _grammar(P, H)
     else:
         raise KeyError(name)
     head = HEADER.replace('@TITLE@', TITLES[name]).replace('@NOTE@', NOTES[name])
@@ -761,7 +1033,7 @@ def write_all():
             f.write(text)
     with open(os.path.join(HERE, SUMS), 'w', encoding='utf-8', newline='\n') as f:
         f.write(sums_text())
-    print('✓ 덱 여덟 · 판 STL · SHA256SUMS 를 다시 썼다')
+    print(f'✓ 덱 {len(DECKS)} · 판 STL · SHA256SUMS 를 다시 썼다')
 
 
 def check():
@@ -776,7 +1048,7 @@ def check():
     for b in bad:
         print('✗', b)
     if not bad:
-        print(f'✓ check: 덱 여덟 · 판 STL = 생성 결과 · SHA256SUMS 일치 ({len(SUMMED)} 파일 · 러너 · 래퍼 · 읽는 쪽 포함)')
+        print(f'✓ check: 덱 {len(DECKS)} · 판 STL = 생성 결과 · SHA256SUMS 일치 ({len(SUMMED)} 파일 · 러너 · 래퍼 · 읽는 쪽 포함)')
     return 1 if bad else 0
 
 
@@ -829,14 +1101,15 @@ def selftest() -> int:
     chk('③ 설계: 0 fixture = 접촉 0 (모든 겹침 음수)', lambda: Z.update(fixture_design(P, zero=True)) or Z['n_contacts'] == {'bottom': 0, 'top': 0, 'pair': 0})
     # ④ 덱
     decks = {}
-    chk('④ 덱: 여덟 개가 만들어진다', lambda: decks.update({k: render(k, P) for k in DECKS}) or set(decks) == set(DECKS))
+    chk(f'④ 덱: {len(DECKS)} 개가 만들어진다 (H0–H5 여덟 + 문법 fixture)', lambda: decks.update({k: render(k, P) for k in DECKS}) or set(decks) == set(DECKS))
     cli = {'out', 'plate_stl', 'ckpt'}
     for k in DECKS:
         text = decks.get(k, '')
         chk(f'④ {k}: 채우지 않은 @…@ · 탭 · `$` 꼴 · 주소 / 사용자 이름 없음',
             lambda text=text: text and not re.search(r'@[A-Z0-9_]+@', text) and '\t' not in text and not re.search(r'\$(?!\{)', text)
             and not re.search(r'\b\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}\b|lustre|/home/|yonghoon|ibb-master', text))
-        chk(f'④ {k}: 쓰인 ${{…}} 가 다 정의됨 (덱 안 · CLI out · plate_stl · ckpt)', lambda text=text: text and _undefined(text, cli) == set())
+        chk(f'④ {k}: 쓰인 ${{…}} 가 다 정의됨 (덱 안 · CLI out · plate_stl · ckpt' + (' · gr_state)' if k == 'grammar' else ')'),
+            lambda text=text, k=k: text and _undefined(text, cli | ({'gr_state'} if k == 'grammar' else set())) == set())
         chk(f'④ {k}: run 사이 위험한 읽기 없음 (⑭a — write_restart 뒤 ke · run 0 뒤 메시 힘 · 없는 fix)', lambda text=text: text and scan_between_runs(text) == [])
         chk(f'④ {k}: 살아 있는 equal 정의 다음 줄 = 얼림 (⑭b)', lambda text=text: text and unfrozen_lazy(text) == [])
         chk(f'④ {k}: if 조건 = 숫자 · 비교 · 논리만', lambda text=text: text and _bad_if(text) == [])
@@ -933,6 +1206,66 @@ def selftest() -> int:
     chk('⑪ 검사기: run 0 뒤 메시 힘을 잡는다',
         lambda: {h[2] for h in scan_between_runs(syn + 'run 5\nrun 0\nvariable F equal f_top_mesh[3]\nprint "${F}"\n')} == {'setup'})
     chk('⑪ 검사기: 얼린 정의는 놓아 준다', lambda: unfrozen_lazy('variable k equal ke\nvariable k equal ${k}\n') == [])
+    # ⑯ 문법 fixture (Q8 · 등록 개정 3 §14-9 · Codex 판정문 10-14 §6) — 본 키트 덱 상태 기계의 빠진 경로: 맨 바깥 include 상태 파일 + jump SELF 이어 돌림 ·
+    #    변수 주기 덤프 (every v_) · 단마다 move/mesh 정의 · 해제 (판 z 누적) · 상태 파일 복귀 (새 프로세스).  모의기로 GA (처음) → GB (GA 마지막 상태 파일) 를
+    #    끝까지 해석해 읽는 쪽 기대 (read_history.grammar_expect) 와 대조한다 — 실제 바이너리 확인은 ibb 한 번 (1저자 · README §1-6).
+    g = decks.get('grammar', '')
+    gl = _cmds(g)
+    Y = P.get('grammar_probe', {})
+    chk('⑯ 문법: 덱이 있다 · 상태 파일 include = 맨 바깥 하나 (if 안 아님 · 3d5c00f input.cpp 845) · 이어 돌림 분기 앞 · gr_resume = index (CLI 가 이긴다)',
+        lambda: g and [x for x in gl if x.startswith('include')] == ['include ${gr_state}']
+        and _idx(gl, 'include ${gr_state}') < _idx(gl, 'if "${gr_resume} == 1" then "jump SELF gr_resumed"') < 10 ** 9 and 'variable gr_resume index 0' in gl)
+    chk('⑯ 문법: 변수 주기 덤프 둘 (원자 custom · 판 local) = dump_modify … every v_gr_dnext · first yes 없음 · 판 mesh/stl = 고정 주기 (창)',
+        lambda: any(x.startswith('dump_modify gr_da every v_gr_dnext') for x in gl) and any(x.startswith('dump_modify gr_dw every v_gr_dnext') for x in gl)
+        and not any('first yes' in x for x in gl) and 'dump gr_dm all mesh/stl ${gr_W} ${out}/probe/mesh_*.stl top_mesh' in gl)
+    chk('⑯ 문법: 이동 = fix gr_mv move/mesh → run ${gr_n} → unfix gr_mv (붙어 있다 · 한 자리 — 단마다 다시 정의) · 이동 전 gr_dnext = step + big · 창 전 = 다음 창 끝',
+        lambda: (lambda i: i < 10 ** 9 and gl[i + 1] == 'run ${gr_n}' and gl[i + 2] == 'unfix gr_mv' and gl[i - 1] == 'variable gr_dnext equal step+${gr_big}')(
+            _idx(gl, 'fix gr_mv all move/mesh mesh top_mesh linear 0.0 0.0 ${gr_v}'))
+        and sum(1 for x in gl if x.startswith('fix gr_mv ')) == 1
+        and gl[_idx(gl, 'run ${gr_W}') - 1] == 'variable gr_dnext equal (floor(step/${gr_W})+1)*${gr_W}')
+    chk('⑯ 문법: 단 끝 write_restart → 상태 파일 (file → append 둘) · 이어 돌림 = step 대조 (≠ → quit) · 적분 fix 없음 (운동학 fixture)',
+        lambda: _idx(gl, 'write_restart ${out}/restart/restart_g_${gr_step}.bin') < _idx(gl, 'print "variable gr_rstep equal ${gr_step}" file ')
+        < _idx(gl, 'print "variable gr_k equal ${gr_k}" append ') < _idx(gl, 'print "variable gr_pz equal ${gr_pz}" append ') < 10 ** 9
+        and any(x.startswith('if "${gr_step} != ${gr_rstep}" then') and x.endswith('"quit"') for x in gl) and not any(x.startswith('fix integr') for x in gl))
+    chk('⑯ 표: grammar_probe dt = 머리 dt · 이동 · 반 이동 = 창 배수 · k_fresh ≥ 2 (move/mesh 를 처음 프로세스에서 두 번)',
+        lambda: Y['dt'] == float(head['cmd']['dt'].split()[3]) and Y['n_move'] % Y['window'] == 0 and (Y['n_move'] // 2) % Y['window'] == 0
+        and Y['k_fresh'] >= 2)
+    GS = {}
+
+    def _gsim():
+        sys.path.insert(0, HERE)
+        import read_history as RH  # noqa: E402 — 같은 폴더 읽는 쪽 (기대값 = 표에서)
+        E = RH.grammar_expect(P)
+        a = grammar_sim(g, E['GA']['start'], z0=E['GA']['z0'], cli={'out': 'OUT', 'gr_state': 'FRESH', 'gr_resume': '0'},
+                        includes={'FRESH': '# 처음 (빈 상태 파일)\n'})
+        st = a['files'].get(f'OUT/restart/state_g_{E["GA"]["ends"][-1]}.in', '')
+        b = grammar_sim(g, E['GB']['start'], z0=E['GB']['z0'], cli={'out': 'OUT', 'gr_state': 'STATE', 'gr_resume': '1'}, includes={'STATE': st})
+        GS.update(E=E, A=a, B=b)
+        return True
+    chk('⑯ 모의기 GA (처음): run = 창 · 이동 · 창 · 이동 · 창 · 변수 주기 덤프 (원자 · 판) = 창 끝만 (setup · 이동 중 없음) · restart = 창 끝 · 오류 없음',
+        lambda: _gsim() and not GS['A']['errors'] and GS['A']['aborted'] is None
+        and [(s, n, mv) for s, n, mv in GS['A']['runs']] == GS['E']['GA']['runs']
+        and GS['A']['dumps'].get('gr_da') == GS['E']['GA']['ends'] == GS['A']['dumps'].get('gr_dw') and GS['A']['restarts'] == GS['E']['GA']['ends'])
+    chk('⑯ 모의기 GA: 판 z (mesh/stl 고정 주기) = 읽는 쪽 기대 (두 번째 이동이 앞 이동 위로 쌓인다 · 창 동안 그대로) · 상태 파일 셋 = (rstep · k · pz)',
+        lambda: all(abs(GS['A']['mesh_z'].get(s, -1.0) - z) <= 1e-12 for s, z in GS['E']['GA']['mesh'].items())
+        and all(GS['A']['files'].get(f'OUT/restart/state_g_{e}.in') == f'variable gr_rstep equal {e}\nvariable gr_k equal {k}\nvariable gr_pz equal {"%.15g" % z}\n'
+                for k, (e, z) in enumerate(zip(GS['E']['GA']['ends'], GS['E']['GA']['z']))))
+    chk('⑯ 모의기 GB (GA 마지막 상태 파일 그대로 include · 새 프로세스): 이어 돌림 분기 → 이동 하나 → 창 · 덤프 = 그 창 끝 · restart 하나 · 판 z 이어서',
+        lambda: not GS['B']['errors'] and GS['B']['aborted'] is None and [(s, n, mv) for s, n, mv in GS['B']['runs']] == GS['E']['GB']['runs']
+        and GS['B']['dumps'].get('gr_da') == GS['E']['GB']['ends'] == GS['B']['dumps'].get('gr_dw') and GS['B']['restarts'] == GS['E']['GB']['ends']
+        and all(abs(GS['B']['mesh_z'].get(s, -1.0) - z) <= 1e-12 for s, z in GS['E']['GB']['mesh'].items()))
+    chk('⑯ 모의기 화면 표지 = 읽는 쪽이 읽는 꼴 (GA: GRAM_START · GRAM_STEP k 0 … · GRAM_DONE / GB: GRAM_RESUMED · GRAM_STEP k k_fresh + 1 · GRAM_DONE)',
+        lambda: (lambda RH: RH.gram_markers_ok(GS['A']['screen'], GS['E']['GA'], resumed=False) == []
+                 and RH.gram_markers_ok(GS['B']['screen'], GS['E']['GB'], resumed=True) == [])(__import__('read_history')))
+
+    def _mut(old, new):
+        t = g.replace(old, new, 1)
+        E = GS['E']
+        return grammar_sim(t, E['GA']['start'], z0=E['GA']['z0'], cli={'out': 'OUT', 'gr_state': 'FRESH', 'gr_resume': '0'},
+                           includes={'FRESH': '# 처음\n'})
+    chk('⑯ 모의기 자신 (판별력): 이동 전 gr_dnext = step + big 을 빼면 이동 중 덤프 · dump_modify 에 first yes 를 더하면 setup 덤프 를 잡는다',
+        lambda: GS['E']['GA']['ends'] != _mut('variable gr_dnext equal step+${gr_big}\nfix gr_mv', 'fix gr_mv')['dumps'].get('gr_da')
+        and _mut('dump_modify gr_da every v_gr_dnext', 'dump_modify gr_da first yes every v_gr_dnext')['dumps'].get('gr_da', [None])[0] == GS['E']['GA']['start'])
     print(f'selftest: {"PASS" if not fails else "FAIL"} ({len(fails)} 실패)')
     return 1 if fails else 0
 

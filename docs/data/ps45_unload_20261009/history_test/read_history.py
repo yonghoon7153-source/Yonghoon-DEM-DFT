@@ -3,6 +3,7 @@
 """DEM 언로딩 키트 — 작은 침대 이력 시험 (H0–H5) 읽는 쪽.  표준 라이브러리만 · 읽기 전용.
 
     python3 read_history.py <런 폴더 hist_*> [--params history_params.json] [--out verdict.json]
+    python3 read_history.py --grammar <런 폴더 gram_*> [--out grammar_verdict.json]   # 문법 fixture (Q8 · 등록 개정 3 §14-9)
     python3 read_history.py --selftest
     python3 read_history.py --mock-stage <단계> <폴더> [--scenario good]   # 러너 모의 시험용 (LIGGGHTS 대신 덤프 · 화면을 흉내)
 
@@ -19,6 +20,9 @@
   비퇴화    : sentinel (저장 deltaMax − 현재 δ ≥ 1e-9 · |shear| ≥ 1e-9 덱 m) 이 그 종류 (primitive · mesh · pair) 에 하나도 없으면 그 종류는
               INCONCLUSIVE — 값이 같아도 PASS 가 아니다.
   정보 (판정 밖): H0b run 끝 자동 restart 유무 (10:0 연장 3,660,000 질문) · 총힘 출력 시점 (접촉 없는 입자 fz = −m g) · SYN 문법 미리 지나가기.
+  문법 fixture (--grammar · 등록 개정 3 §14-9 · Q8 · 검사 전부 참 = PASS): P → GA (빈 상태 파일 · 창 → 이동 → 창 → 이동 → 창) → GB (GA 마지막 단 끝
+              restart + 상태 파일 · 새 프로세스 · 이동 → 창) — 기술 · 화면 표지 · 변수 주기 덤프 = 창 끝만 · 판 z (mesh/stl) 누적 · 새 프로세스 복원 ·
+              상태 파일 값 · 영역 판 접촉 ↔ 판 local · GB 입력 = GA 마지막.  짧은 문법 런 = 물리 검증 아님 (C19).
 """
 from __future__ import annotations
 
@@ -129,7 +133,7 @@ def screen_info(d):
         m = re.match(r'Resetting (global|per-atom) state of Fix (\S+) Style (\S+) from restart file info', ln.strip())
         if m:
             info['resets'].add((m.group(2), m.group(3), m.group(1)))
-        if ln.startswith(('HIST_', 'SYN_')):
+        if ln.startswith(('HIST_', 'SYN_', 'GRAM_')):
             info['markers'].append(ln.strip())
     return info
 
@@ -591,6 +595,231 @@ def evaluate(run_dir, P=None):
     return v
 
 
+# ── 문법 fixture (Q8 · 등록 개정 3 §14-9 · Codex 판정문 10-14 §6) — P → GA (처음) → GB (이어 돌림 · 새 프로세스) ──────────────────
+
+def grammar_expect(P):
+    """문법 fixture 기대 (표에서 · 결과 전 고정) — 창 끝 step · 판 z · run 꼴 · 판 mesh/stl 을 볼 step (이동 앞 · 반 · 끝 · 창 끝)."""
+    Y, S = P['grammar_probe'], P['steps']
+    s0 = S['load'] + S['shear'] + S['hold']
+    W, n, kf = Y['window'], Y['n_move'], Y['k_fresh']
+    dz = Y['v'] * Y['dt'] * n
+    zp = P['z_plate']
+    ends = [s0 + W + k * (n + W) for k in range(kf + 2)]
+    z = [zp + k * dz for k in range(kf + 2)]
+
+    def mesh(start, z_start, ks):
+        m = {start: z_start}
+        for k in ks:
+            a = ends[k - 1]
+            m[a] = z[k - 1]
+            m[a + n // 2] = z[k - 1] + dz / 2.0
+            m[a + n] = z[k]
+            m[ends[k]] = z[k]
+        return m
+    ga_mesh = mesh(s0, zp, range(1, kf + 1))
+    ga_mesh[ends[0]] = z[0]
+    ga = {'start': s0, 'z0': zp, 'ks': list(range(kf + 1)), 'ends': ends[:kf + 1], 'z': z[:kf + 1], 'mesh': ga_mesh,
+          'runs': [(s0, W, False)] + [r for k in range(1, kf + 1) for r in ((ends[k - 1], n, True), (ends[k - 1] + n, W, False))]}
+    gb = {'start': ends[kf], 'z0': z[kf], 'ks': [kf + 1], 'ends': [ends[kf + 1]], 'z': [z[kf + 1]], 'mesh': mesh(ends[kf], z[kf], [kf + 1]),
+          'runs': [(ends[kf], n, True), (ends[kf] + n, W, False)]}
+    return {'GA': ga, 'GB': gb, 'dz': dz}
+
+
+def _kv(line):
+    return dict(x.split('=', 1) for x in line.split()[1:] if '=' in x)
+
+
+def _int(x):
+    try:
+        return int(x)
+    except (TypeError, ValueError):
+        return None
+
+
+def _fl(x):
+    try:
+        v = float(x)
+    except (TypeError, ValueError):
+        return None
+    return v if math.isfinite(v) else None
+
+
+def gram_markers_ok(lines, e, resumed):
+    """화면 표지 (GRAM_*) ↔ 기대 → 문제 목록 (빈 목록 = 맞음).  생성기 모의기 시험 (make_history_decks ⑯) 도 같은 함수를 쓴다.
+    처음 (GA) = GRAM_START (S0 · k 0 · 판 z₀) · 이어 돌림 (GB) = GRAM_RESUMED (상태 파일의 step · k · 판 z) — 다른 쪽 표지가 있으면 그 경로가 아니다."""
+    pr = []
+    M = [ln.strip() for ln in lines if ln.strip().startswith('GRAM_')]
+    head, other = ('GRAM_RESUMED', 'GRAM_START') if resumed else ('GRAM_START', 'GRAM_RESUMED')
+    hs = [_kv(m) for m in M if m.split()[0] == head]
+    k0 = e['ks'][0] - 1 if resumed else 0
+    if len(hs) != 1:
+        pr.append(f'{head} {len(hs)} 개 (기대 1)')
+    elif _int(hs[0].get('step')) != e['start'] or _int(hs[0].get('k')) != k0 or _fl(hs[0].get('plate_z')) is None \
+            or abs(_fl(hs[0].get('plate_z')) - e['z0']) > 1e-12:
+        pr.append(f'{head} {hs[0]} ≠ 기대 step {e["start"]} · k {k0} · 판 {e["z0"]!r}')
+    if any(m.split()[0] == other for m in M):
+        pr.append(f'{other} 가 있다 (다른 경로)')
+    if any(m.split()[0] == 'GRAM_ABORT' for m in M):
+        pr.append('GRAM_ABORT')
+    steps = [_kv(m) for m in M if m.split()[0] == 'GRAM_STEP']
+    if [(_int(s.get('k')), _int(s.get('step'))) for s in steps] != list(zip(e['ks'], e['ends'])):
+        pr.append(f'GRAM_STEP (k · step) {[(s.get("k"), s.get("step")) for s in steps]} ≠ {list(zip(e["ks"], e["ends"]))}')
+    for s, z in zip(steps, e['z']):
+        if _fl(s.get('plate_z')) is None or abs(_fl(s.get('plate_z')) - z) > 1e-12 or _fl(s.get('Ps_avg')) is None \
+                or _int(s.get('n_contact_geo')) is None or _int(s.get('n_contact_geo')) < 0:
+            pr.append(f'GRAM_STEP {s} — 판 z ≠ {z!r} · 또는 Ps · 접촉 수 비유한')
+    sw = [_kv(m) for m in M if m.split()[0] == 'GRAM_STATE_WRITTEN']
+    if [(_int(s.get('k')), _int(s.get('step'))) for s in sw] != list(zip(e['ks'], e['ends'])):
+        pr.append(f'GRAM_STATE_WRITTEN {[(s.get("k"), s.get("step")) for s in sw]}')
+    dn = [_kv(m) for m in M if m.split()[0] == 'GRAM_DONE']
+    if len(dn) != 1 or _int(dn[0].get('step')) != e['ends'][-1] or _int(dn[0].get('k')) != e['ks'][-1] \
+            or _fl(dn[0].get('plate_z')) is None or abs(_fl(dn[0].get('plate_z')) - e['z'][-1]) > 1e-12:
+        pr.append(f'GRAM_DONE {dn} ≠ step {e["ends"][-1]} · k {e["ks"][-1]}')
+    return pr
+
+
+def _stl_z(path):
+    if not os.path.exists(path):
+        return None
+    zs = [_fl(x) for x in re.findall(r'vertex\s+\S+\s+\S+\s+(\S+)', open(path, encoding='utf-8', errors='replace').read())]
+    return zs if zs and all(z is not None for z in zs) else None
+
+
+def _vars(d):
+    t = _readf(os.path.join(d, 'vars.txt')) or ''
+    return dict(ln.split('=', 1) for ln in t.splitlines() if '=' in ln)
+
+
+def _same(a, b):
+    return bool(a) and bool(b) and os.path.realpath(a) == os.path.realpath(b)
+
+
+def _gram_stage(run_dir, name, e, P):
+    """GA · GB 한 단계 → 검사 (모두 참이어야) · 문제."""
+    d = os.path.join(run_dir, name)
+    out = {'exists': os.path.isdir(d), 'checks': {}, 'problems': []}
+    if not out['exists']:
+        return out
+    Y = P['grammar_probe']
+    c, pr = out['checks'], out['problems']
+    rc, np_ = _readf(os.path.join(d, 'rc')), _readf(os.path.join(d, 'np.txt'))
+    S = screen_info(d)
+    npi = int(np_) if np_ and np_.isdigit() else None
+    c[f'{name}_tech'] = (rc == '0' and S['banner'] and S['git'] and not S['errors'] and npi is not None and len(S['loops']) == len(e['runs'])
+                         and all(x == npi for x in S['loops']))
+    if not c[f'{name}_tech']:
+        pr.append(f'{name} 기술: rc {rc} · 배너 {S["banner"]} · ERROR {S["errors"][:2]} · Loop procs {S["loops"]} (기대 run {len(e["runs"])} · NP {npi})')
+    mp = gram_markers_ok(S['markers'], e, resumed=(name == 'GB'))
+    c[f'{name}_markers'] = not mp
+    pr += [f'{name} 표지: {x}' for x in mp]
+    # 변수 주기 덤프 (dump_modify every v_) — 창 끝만 · setup · 이동 중 없음 · 머리 step = 파일 step · 전부 읽힘
+    frames = {}
+    for kind, cols, style in (('atom', Y['atom_cols'], 'custom'), ('wall', [f'c_gr_wh[{i}]' for i in range(1, 7)], 'local')):
+        fs = sorted(glob.glob(os.path.join(d, 'probe', f'{kind}_*.dump')))
+        steps = sorted(int(re.search(r'_(\d+)\.dump$', p).group(1)) for p in fs)
+        ok = steps == e['ends']
+        for p in fs:
+            s = int(re.search(r'_(\d+)\.dump$', p).group(1))
+            dd = read_dump(p, style, cols)
+            frames[(kind, s)] = dd
+            if not dd['ok'] or dd['step'] != s or (kind == 'atom' and len(dd['rows']) != len(P['particles'])):
+                ok = False
+                pr.append(f'{name} {os.path.basename(p)}: {dd["problems"][:2]} · 머리 step {dd["step"]}')
+        c[f'{name}_{kind}_dump_steps'] = ok
+        if steps != e['ends']:
+            pr.append(f'{name} {kind} 덤프 step {steps} ≠ 창 끝 {e["ends"]} (setup · 이동 중 덤프?)')
+    # 판 z (mesh/stl 고정 주기) — 이동 앞 · 반 · 끝 · 창 끝 · 새 프로세스 첫 setup (복원)
+    bad = []
+    for s, z in sorted(e['mesh'].items()):
+        zs = _stl_z(os.path.join(d, 'probe', f'mesh_{s}.stl'))
+        if zs is None or any(abs(x - z) > Y['z_tol'] for x in zs):
+            bad.append((s, z, (zs or [None])[0]))
+    c[f'{name}_mesh_z'] = not bad
+    if bad:
+        pr.append(f'{name} 판 z (step · 기대 · 실제) {bad[:4]}')
+    # 단 끝 restart + 상태 파일 (file · append — rstep · k · pz)
+    rs = sorted(int(re.search(r'restart_g_(\d+)\.bin$', p).group(1)) for p in glob.glob(os.path.join(d, 'restart', 'restart_g_*.bin')))
+    ok = rs == e['ends']
+    for k, s, z in zip(e['ks'], e['ends'], e['z']):
+        t = _readf(os.path.join(d, 'restart', f'state_g_{s}.in')) or ''
+        L = [ln.split() for ln in t.splitlines() if ln.strip()]
+        want = [('gr_rstep', s), ('gr_k', k), ('gr_pz', z)]
+        if len(L) != 3 or any(len(w) != 4 or w[:3] != ['variable', nm, 'equal'] or _fl(w[3]) is None or abs(_fl(w[3]) - v) > 1e-12
+                              for w, (nm, v) in zip(L, want)):
+            ok = False
+            pr.append(f'{name} 상태 파일 state_g_{s}.in = {t!r} ≠ {want}')
+    c[f'{name}_restart_state'] = ok
+    if rs != e['ends']:
+        pr.append(f'{name} restart_g step {rs} ≠ {e["ends"]}')
+    # 판 접촉 개수 (영역 공식 · 덱) ↔ 판 local 덤프 (판 아래 중심) — 단마다 영역을 다시 만든 것이 맞는가 (본 키트 ul_c1–3 꼴)
+    ok = True
+    for m in S['markers']:
+        if m.split()[0] != 'GRAM_STEP':
+            continue
+        kv = _kv(m)
+        s, pz, ng = _int(kv.get('step')), _fl(kv.get('plate_z')), _int(kv.get('n_contact_geo'))
+        A, Wl = frames.get(('atom', s)), frames.get(('wall', s))
+        if A is None or Wl is None or pz is None or ng is None:
+            ok = False
+            continue
+        zs = {int(r['id']): r['z'] for r in A['rows']}
+        below = {int(r['c_gr_wh[3]']) for r in Wl['rows'] if zs.get(int(r['c_gr_wh[3]']), math.inf) < pz}
+        if ng != len(below):
+            ok = False
+            pr.append(f'{name} step {s}: 영역 판 접촉 {ng} ≠ 판 local 덤프 {len(below)}')
+    c[f'{name}_contact_geo'] = ok
+    return out
+
+
+def grammar_info(run_dir, P=None):
+    """문법 fixture 판정 (Q8 · 등록 개정 3 §14-9) — 검사 전부 참 = PASS · 하나라도 아니면 FAIL · GA 없음 = NOT_RUN.  짧은 문법 런 = 물리 검증 아님 (C19)."""
+    P = P or load_params()
+    e = grammar_expect(P)
+    out = {'schema': 'ps45_unload_grammar_verdict_v1', 'run_dir': os.path.abspath(run_dir), 'status': 'NOT_RUN', 'checks': {}, 'problems': [],
+           'expect': {s: {'start': e[s]['start'], 'ends': e[s]['ends'], 'z': e[s]['z']} for s in ('GA', 'GB')}}
+    if not os.path.isdir(os.path.join(run_dir, 'GA')):
+        out['problems'].append('GA 단계 폴더 없음')
+        out['exit_code'] = 2
+        return out
+    c = out['checks']
+    prod = load_stage(run_dir, 'P', P)
+    c['P_tech'] = bool(prod.get('tech_ok'))
+    if not c['P_tech']:
+        out['problems'] += [f'P: {p}' for p in prod.get('problems', [])[:4]]
+    for name in ('GA', 'GB'):
+        st = _gram_stage(run_dir, name, e[name], P)
+        c[f'{name}_exists'] = st['exists']
+        if not st['exists']:
+            out['problems'].append(f'{name} 단계 폴더 없음 (이어 돌림 경로 미시험)' if name == 'GB' else f'{name} 없음')
+            continue
+        c.update(st['checks'])
+        out['problems'] += st['problems']
+    ga, gb = os.path.join(run_dir, 'GA'), os.path.join(run_dir, 'GB')
+    va, vb = _vars(ga), _vars(gb)
+    last = e['GA']['ends'][-1]
+    fresh = va.get('gr_state', '')
+    c['GA_args'] = (va.get('gr_resume') == '0' and _same(_readf(os.path.join(ga, 'ckpt.txt')), os.path.join(run_dir, 'P', 'fixture.bin'))
+                    and os.path.exists(fresh) and not re.search(r'^\s*variable', open(fresh, encoding='utf-8').read(), re.M))
+    if c['GB_exists']:
+        c['GB_args'] = (vb.get('gr_resume') == '1' and _same(_readf(os.path.join(gb, 'ckpt.txt')), os.path.join(ga, 'restart', f'restart_g_{last}.bin'))
+                        and _same(vb.get('gr_state'), os.path.join(ga, 'restart', f'state_g_{last}.in')))
+        if not c['GB_args']:
+            out['problems'].append(f'GB 입력 ≠ GA 마지막 단 끝 restart_g_{last}.bin + state_g_{last}.in · gr_resume 1 ({vb} · ckpt {_readf(os.path.join(gb, "ckpt.txt"))})')
+    out['status'] = 'PASS' if all(v is True for v in c.values()) else 'FAIL'
+    out['exit_code'] = 0 if out['status'] == 'PASS' else 2
+    return out
+
+
+def grammar_text(v):
+    L = [f'GRAMMAR_VERDICT status={v["status"]} (0 = 맨 바깥 include 이어 돌림 · 변수 주기 덤프 · move/mesh 여러 번 · 상태 파일 복귀 전부 기대대로)']
+    for k, ok in v['checks'].items():
+        L.append(f'  {"✓" if ok is True else "✗"} {k}')
+    for p in v['problems'][:12]:
+        L.append(f'      · {p}')
+    L.append(f'  rc = {v["exit_code"]} · 짧은 문법 런 = 물리 검증 아님 (C19)')
+    return '\n'.join(L)
+
+
 # ── 합성 단계 (selftest · 러너 모의 시험) — 덱이 쓰는 덤프 · 화면 꼴 그대로 ─────────────────────────────
 
 def _design(P):
@@ -809,6 +1038,8 @@ def synth_stage(stage, d, P=None, scenario='good', np_override=None, write_meta=
         marks = [f'SYN_W0 step={s0} Ps_avg=0.004 ke_avg=0 erot_avg=0 n_contact_geo={n0} plate_z={zp!r} dt=5e-07',
                  f'SYN_W1 step={s1} Ps_avg=0.003 ke_avg=0 erot_avg=0 n_contact_geo={len(T1)} plate_z={zp + lift!r} dt=5e-07', 'SYN_DONE']
         _wscreen(os.path.join(d, 'screen.out'), np_, resets=allreset, markers=marks, loops=3)
+    elif stage in ('GA', 'GB'):
+        rc = _synth_gram(stage, d, P, scenario, np_, A, write_meta)
     else:
         raise KeyError(stage)
     if write_meta:
@@ -823,6 +1054,86 @@ def synth_run(root, P=None, scenario='good', skip=()):
         if s in skip:
             continue
         synth_stage(s, os.path.join(root, s), P, scenario)
+
+
+def _g(x):
+    return '%.15g' % x
+
+
+def _synth_gram(stage, d, P, scenario, np_, A, write_meta):
+    """문법 fixture 단계 (GA · GB) 가 쓸 파일 (덱 in.hist_grammar 꼴 그대로) — 판 z = 선형 이동 모형 · 덤프 = 창 끝 · 상태 파일 · 화면 표지.
+    scenario = 반례 (selftest 표) · write_meta = 러너가 쓰는 np.txt · rc · vars.txt · ckpt.txt 도 쓴다 (selftest)."""
+    E = grammar_expect(P)
+    e = E[stage]
+    Y = P['grammar_probe']
+    W, vdt = Y['window'], Y['v'] * Y['dt']
+    zp = P['z_plate']
+    for sub in ('probe', 'restart'):
+        os.makedirs(os.path.join(d, sub), exist_ok=True)
+    # 판 z — run 마다 (이동이면 v · dt · Δstep) · mesh/stl = 창 배수 step 전부
+    ztab, z = {}, e['z0']
+    for i, (s, n, mv) in enumerate(e['runs']):
+        base = z
+        if scenario == 'gram_rewind' and stage == 'GA' and mv and i > 1:
+            base = zp                                    # 두 번째 이동이 원점에서 다시 (되감김 반례)
+        for t in range(s, s + n + 1, W):
+            ztab.setdefault(t, base + (vdt * (t - s) if mv else 0.0))
+        z = base + (vdt * n if mv else 0.0)
+    if scenario == 'gram_not_restored' and stage == 'GB':
+        ztab[e['start']] = zp                            # 새 프로세스 첫 setup 에서 판이 원 자리
+    for t, zz in ztab.items():
+        with open(os.path.join(d, 'probe', f'mesh_{t}.stl'), 'w') as f:
+            f.write('solid LIGGGHTS_STL_EXPORT\n' + ''.join(f'      vertex 0 0 {zz:g}\n' for _ in range(6)) + 'endsolid LIGGGHTS_STL_EXPORT\n')
+    # 변수 주기 덤프 (원자 · 판 local) — 창 끝
+    dsteps = list(e['ends'])
+    if stage == 'GA' and scenario == 'gram_setup_dump':
+        dsteps = [e['start']] + dsteps
+    if stage == 'GA' and scenario == 'gram_move_dump':
+        dsteps.append(e['ends'][0] + Y['n_move'] // 2)
+    ncon = {}
+    for t in dsteps:
+        pz = ztab.get(t, e['z0'])
+        _wcustom(os.path.join(d, 'probe', f'atom_{t}.dump'), t, Y['atom_cols'], A)
+        rows = [[0.0, 0.0 if a['x'] > a['y'] else 1.0, float(i), 0.0, 0.0, -0.5] for i, a in sorted(A.items()) if a['z'] < pz < a['z'] + a['radius']]
+        _wlocal(os.path.join(d, 'probe', f'wall_{t}.dump'), t, [f'c_gr_wh[{i}]' for i in range(1, 7)], rows)
+        ncon[t] = len(rows)
+    # 단 끝 restart + 상태 파일
+    for k, t, zk in zip(e['ks'], e['ends'], e['z']):
+        open(os.path.join(d, 'restart', f'restart_g_{t}.bin'), 'wb').write(b'\0' * 16)
+        zw = zp if (scenario == 'gram_state_bad' and stage == 'GA' and t == e['ends'][-1]) else zk
+        with open(os.path.join(d, 'restart', f'state_g_{t}.in'), 'w') as f:
+            f.write(f'variable gr_rstep equal {t}\nvariable gr_k equal {k}\nvariable gr_pz equal {_g(zw)}\n')
+    # 화면 표지
+    fresh = stage == 'GA' or scenario == 'gram_resume_fresh'
+    marks = ([f'GRAM_START step={e["start"]} k=0 plate_z={_g(e["z0"])}'] if fresh
+             else [f'GRAM_RESUMED step={e["start"]} k={e["ks"][0] - 1} plate_z={_g(e["z0"])}'])
+    for k, t, zk in zip(e['ks'], e['ends'], e['z']):
+        marks += [f'GRAM_STEP k={k} step={t} plate_z={_g(zk)} Ps_avg=0.001 n_contact_geo={ncon[t]}', f'GRAM_STATE_WRITTEN step={t} k={k}']
+    marks.append(f'GRAM_DONE step={e["ends"][-1]} k={e["ks"][-1]} plate_z={_g(e["z"][-1])}')
+    bad_rc = stage == 'GB' and scenario == 'gram_gb_rc'
+    nloop = len(e['runs']) - (1 if (stage == 'GA' and scenario == 'gram_runs') else 0)
+    _wscreen(os.path.join(d, 'screen.out'), np_, markers=marks, loops=nloop, error='ERROR: mock grammar failure' if bad_rc else None)
+    if write_meta:   # 러너가 쓰는 입력 기록 (selftest 에서 흉내 — GA = 생산자 fixture · 빈 상태 · GB = GA 마지막 단 끝)
+        root = os.path.dirname(d)
+        last = E['GA']['ends'][-1]
+        if stage == 'GA':
+            st = os.path.join(d, 'state_fresh.in')
+            open(st, 'w').write('# 처음 (빈 상태 파일)\n')
+            ck, res = os.path.join(root, 'P', 'fixture.bin'), '0'
+        else:
+            ckstep = E['GA']['ends'][-2] if scenario == 'gram_wrong_ckpt' else last
+            ck, st, res = (os.path.join(root, 'GA', 'restart', f'restart_g_{ckstep}.bin'), os.path.join(root, 'GA', 'restart', f'state_g_{ckstep}.in'), '1')
+        open(os.path.join(d, 'ckpt.txt'), 'w').write(ck + '\n')
+        open(os.path.join(d, 'vars.txt'), 'w').write(f'gr_state={st}\ngr_resume={res}\n')
+    return 1 if bad_rc else 0
+
+
+def synth_gram_run(root, P=None, scenario='good', skip=()):
+    """문법 fixture 합성 런 (P → GA → GB) — selftest 전용."""
+    P = P or load_params()
+    for s in ('P', 'GA', 'GB'):
+        if s not in skip:
+            synth_stage(s, os.path.join(root, s), P, scenario)
 
 
 # ── selftest ─────────────────────────────────────────────────────────────────
@@ -895,6 +1206,25 @@ def selftest() -> int:
         lambda: (lambda s: s['plate_fn_sign'] == 1 and s['status'] == 'PASS')(run('syn_fn_positive')['info']['syn']))
     chk('S32 SYN 판 접촉 법선력 부호가 섞임 = 정보 MIXED · SYN FAIL', lambda: (lambda s: s['plate_fn_sign'] == 'MIXED' and s['status'] == 'FAIL')(run('syn_fn_mixed')['info']['syn']))
     chk('S24 생산자 폴더 없음 = H0–H5 TECH · rc ≠ 0', lambda: (lambda v: all(s == 'TECH' for s in rows(v).values()) and v['exit_code'] != 0)(run(skip=('P',))))
+    # 문법 fixture (Q8 · 등록 개정 3 §14-9) — P → GA (처음 · 이동 둘) → GB (GA 마지막 단 끝 restart + 상태 파일 · 새 프로세스 · 이동 하나)
+    def grun(scenario='good', skip=()):
+        td = tempfile.mkdtemp(prefix='gram_selftest_')
+        try:
+            synth_gram_run(td, P, scenario, skip)
+            return grammar_info(td, P)
+        finally:
+            shutil.rmtree(td, ignore_errors=True)
+    G = {}
+    chk('S33 문법 fixture 정상 = PASS (맨 바깥 include 이어 돌림 · 변수 주기 덤프 = 창 끝만 · move/mesh 셋 판 z 누적 · 상태 파일 복귀 · 새 프로세스 판 z 복원)',
+        lambda: G.update(grun()) or (G['status'] == 'PASS' and G['exit_code'] == 0 and all(v is True for v in G['checks'].values())))
+    for sc, what in (('gram_setup_dump', 'GA 첫 run 시작 (2000) 에 원자 · 판 덤프 (setup 쓰기)'), ('gram_move_dump', 'GA 이동 중 (2600) 원자 덤프'),
+                     ('gram_rewind', '두 번째 이동이 원점에서 다시 (판 z 0.03001 에서 멈춤 · 되감김)'), ('gram_resume_fresh', 'GB 가 처음 경로 (GRAM_START · 이어 돌림 아님)'),
+                     ('gram_not_restored', 'GB 새 프로세스 판 z 복원 안 됨 (4300 = 0.03)'), ('gram_state_bad', 'GA 마지막 상태 파일 gr_pz 틀림'),
+                     ('gram_wrong_ckpt', 'GB 가 GA 마지막이 아닌 restart (3200) 에서'), ('gram_runs', 'GA run 수 ≠ 5 (Loop time 넷)'),
+                     ('gram_gb_rc', 'GB rc 1 · ERROR')):
+        chk(f'S34 문법 fixture 반례 — {what} = FAIL (rc 2)', lambda sc=sc: (lambda v: v['status'] == 'FAIL' and v['exit_code'] == 2)(grun(sc)))
+    chk('S35 문법 fixture GB 폴더 없음 = FAIL (이어 돌림 경로 미시험 — PASS 아님)', lambda: grun(skip=('GB',))['status'] == 'FAIL')
+    chk('S36 문법 fixture 런 폴더에 GA 없음 = NOT_RUN (rc 2)', lambda: (lambda v: v['status'] == 'NOT_RUN' and v['exit_code'] == 2)(grun(skip=('GA', 'GB'))))
     # 러너 모의 (LIGGGHTS 대신 가짜 mpirun · lmp — 덤프 · 화면은 synth_stage) — 러너 흐름 · 단계 순서 · NP · 보고 묶음
     M = {}
     chk('S25 러너 모의: 전 단계 → 읽는 쪽 rc 0 · H0–H5 PASS · 보고 묶음 + sha256', lambda: M.update(_runner_mock()) or
@@ -910,12 +1240,22 @@ def selftest() -> int:
         lambda: (lambda r: r['rc'] == 2 and r['order'] == ['P', 'PZ', 'CZ'])(_runner_mock(fail_stage='P')))
     chk('S28 러너 모의: NP_ALT = NP 거부 (H2 가 시험되지 않는다)', lambda: (lambda r: r['rc'] != 0 and 'NP_ALT = NP' in r['out'])(_runner_mock(np_alt=6)))
     chk('S29 러너 모의: --preflight-only = 런 · kit 사본 없음', lambda: (lambda r: r['rc'] == 0 and not r['run_dirs'] and not r['kit_copy'])(_runner_mock(preflight=True)))
+    GM = {}
+    chk('S37 러너 모의 --grammar-only: 단계 = P → GA → GB (H0–H5 단계 없음) · NP 6 · 판정 grammar_verdict PASS · rc 0 · 보고 묶음 gram_*.report.tgz',
+        lambda: GM.update(_runner_mock(grammar=True)) or (GM['rc'] == 0 and GM['order'] == ['P', 'GA', 'GB'] and GM['np'] == {'P': 6, 'GA': 6, 'GB': 6}
+                                                          and GM['grammar_status'] == 'PASS' and GM['report'] and GM['sha_line']))
+    chk('S37 러너 모의 --grammar-only: GA = 생산자 fixture.bin · 빈 상태 파일 · gr_resume 0 / GB = GA 마지막 단 끝 restart + 짝 상태 파일 · gr_resume 1',
+        lambda: (lambda a, b: a.get('ckpt', '').endswith('/P/fixture.bin') and a.get('gr_resume') == '0' and a.get('gr_state', '').endswith('/GA/state_fresh.in')
+                 and b.get('gr_resume') == '1' and b.get('ckpt', '').endswith(f'/GA/restart/restart_g_{grammar_expect(P)["GA"]["ends"][-1]}.bin')
+                 and b.get('gr_state', '').endswith(f'/GA/restart/state_g_{grammar_expect(P)["GA"]["ends"][-1]}.in'))(GM['args'].get('GA', {}), GM['args'].get('GB', {})))
+    chk('S37 러너 모의 --grammar-only: GA 실패 = GB 없음 · rc 2', lambda: (lambda r: r['rc'] == 2 and r['order'] == ['P', 'GA'])(_runner_mock(grammar=True, fail_stage='GA')))
     print(f'selftest: {"PASS" if not fails else "FAIL"} ({len(fails)} 실패)')
     return 1 if fails else 0
 
 
-def _runner_mock(allow_other=True, fail_stage='', np_alt=4, preflight=False):
-    """가짜 mpirun (인자에서 -np 를 MOCK_NP 로) · 가짜 lmp (-var out 폴더 이름 = 단계 → --mock-stage) 로 run_history.sh 를 돌린다."""
+def _runner_mock(allow_other=True, fail_stage='', np_alt=4, preflight=False, grammar=False):
+    """가짜 mpirun (인자에서 -np 를 MOCK_NP 로) · 가짜 lmp (-var out 폴더 이름 = 단계 → --mock-stage) 로 run_history.sh 를 돌린다.
+    grammar = --grammar-only (P → GA → GB · 런 폴더 gram_* · grammar_verdict.json)."""
     import subprocess
     td = tempfile.mkdtemp(prefix='hist_runner_mock_')
     try:
@@ -929,8 +1269,9 @@ def _runner_mock(allow_other=True, fail_stage='', np_alt=4, preflight=False):
                     '  *) break;; esac; done\n'
                     f'echo "np=$np flags=$flags" >> {log}\nMOCK_NP=$np exec "$@"\n')
         with open(os.path.join(binr, 'lmp'), 'w') as f:
-            f.write('#!/bin/bash\nout=""; while [ $# -gt 0 ]; do case "$1" in -var) [ "$2" = out ] && out=$3; shift 3;; *) shift;; esac; done\n'
-                    f'st=$(basename "$out"); echo "stage=$st np=$MOCK_NP" >> {log}\n'
+            f.write('#!/bin/bash\nout=""; args=""; while [ $# -gt 0 ]; do case "$1" in -var) args="$args $2=$3"; [ "$2" = out ] && out=$3; shift 3;; '
+                    '*) shift;; esac; done\n'
+                    f'st=$(basename "$out"); echo "stage=$st np=$MOCK_NP$args" >> {log}\n'
                     'echo "LIGGGHTS (Version LIGGGHTS-PUBLIC 3.8.0, git commit 3d5c00f)"\n'
                     f'exec python3 {os.path.join(HERE, "read_history.py")} --mock-stage "$st" "$out"\n')
         for b in ('mpirun', 'lmp'):
@@ -941,19 +1282,23 @@ def _runner_mock(allow_other=True, fail_stage='', np_alt=4, preflight=False):
             env['ALLOW_OTHER_LMP'] = '1'
         else:
             env.pop('ALLOW_OTHER_LMP', None)
-        args = ['bash', os.path.join(HERE, 'run_history.sh')] + (['--preflight-only'] if preflight else [])
+        args = ['bash', os.path.join(HERE, 'run_history.sh')] + (['--preflight-only'] if preflight else []) + (['--grammar-only'] if grammar else [])
         p = subprocess.run(args, env=env, capture_output=True, text=True, timeout=900)
         out = p.stdout + p.stderr
-        run_dirs = sorted(glob.glob(os.path.join(work, 'hist_*/')))
+        pre = 'gram' if grammar else 'hist'
+        run_dirs = sorted(glob.glob(os.path.join(work, f'{pre}_*/')))
         calls = open(log).read().splitlines() if os.path.exists(log) else []
         order = [c.split()[0].split('=')[1] for c in calls if c.startswith('stage=')]
         npm = {c.split()[0].split('=')[1]: int(c.split()[1].split('=')[1]) for c in calls if c.startswith('stage=')}
+        sargs = {c.split()[0].split('=')[1]: dict(x.split('=', 1) for x in c.split()[2:] if '=' in x) for c in calls if c.startswith('stage=')}
         flags_ok = all(c.split(' ', 1)[1].strip() == 'flags= o b:none' for c in calls if c.startswith('np=')) and any(c.startswith('np=') for c in calls)
         vpath = os.path.join(run_dirs[0], 'history_verdict.json') if run_dirs else ''
         vrows = {k: r['status'] for k, r in json.load(open(vpath))['rows'].items()} if vpath and os.path.exists(vpath) else {}
+        gpath = os.path.join(run_dirs[0], 'grammar_verdict.json') if run_dirs else ''
+        gstat = json.load(open(gpath)).get('status') if gpath and os.path.exists(gpath) else None
         man = open(os.path.join(run_dirs[0], 'run_manifest.txt')).read() if run_dirs else ''
-        return {'rc': p.returncode, 'out': out, 'run_dirs': run_dirs, 'order': order, 'np': npm, 'flags_ok': flags_ok,
-                'verdict_rows': vrows, 'report': bool(glob.glob(os.path.join(work, 'hist_*.report.tgz'))),
+        return {'rc': p.returncode, 'out': out, 'run_dirs': run_dirs, 'order': order, 'np': npm, 'flags_ok': flags_ok, 'args': sargs,
+                'verdict_rows': vrows, 'grammar_status': gstat, 'report': bool(glob.glob(os.path.join(work, f'{pre}_*.report.tgz'))),
                 'sha_line': '보낼 것:' in out and 'sha256' in out, 'manifest_other': 'allow_other_lmp=1' in man,
                 'kit_copy': bool(glob.glob(os.path.join(work, 'kit_*')))}
     finally:
@@ -968,6 +1313,7 @@ def main(argv=None):
     ap.add_argument('--selftest', action='store_true')
     ap.add_argument('--mock-stage', nargs=2, metavar=('STAGE', 'DIR'))
     ap.add_argument('--scenario', default='good')
+    ap.add_argument('--grammar', action='store_true', help='문법 fixture 판정 (런 폴더 gram_* — P → GA → GB · 등록 개정 3 §14-9)')
     a = ap.parse_args(argv)
     if a.selftest:
         return selftest()
@@ -981,6 +1327,13 @@ def main(argv=None):
         return synth_stage(a.mock_stage[0], a.mock_stage[1], P, a.scenario, np_override=npo, write_meta=False)
     if not a.run_dir:
         ap.error('런 폴더 (또는 --selftest)')
+    if a.grammar:
+        v = grammar_info(a.run_dir, P)
+        if a.out:
+            with open(a.out, 'w', encoding='utf-8') as f:
+                json.dump(v, f, ensure_ascii=False, indent=2)
+        print(grammar_text(v))
+        return v['exit_code']
     v = evaluate(a.run_dir, P)
     if a.out:
         with open(a.out, 'w', encoding='utf-8') as f:

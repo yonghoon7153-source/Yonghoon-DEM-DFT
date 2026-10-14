@@ -1,0 +1,164 @@
+# ============================================================
+# DEM 언로딩 키트 — 작은 침대 이력 시험 (H0–H5) · 문법 fixture (상태 기계 · 이어 돌림)
+#   생성: history_test/make_history_decks.py (손으로 고치지 말 것 — 생성기를 고치고 다시 만든다 · SHA256SUMS)
+#   정본: docs/data/ps45_unload_20261009/README.md §1 · 등록 §12-1 · §13-6 ③ · Codex 판정문 10-12 §5
+#   변수: run_history.sh 가 -var 로 준다 — out (이 단계 폴더) · plate_stl (판 STL · 자료는 restart 에서) · ckpt (읽을 restart)
+#   모델 머리 = r8 원 덱 글자 (재료 · pair · 벽 · 중력 9.81 · 감쇠 1.0e-5 · 메시) — 숫자를 다시 적지 않는다
+#   문법 fixture (Q8 · 등록 개정 3 §14-9 · Codex 판정문 10-14 §6 · 판정 = read_history.py --grammar): 본 키트 덱 상태 기계의 빠진 경로 —
+#     맨 바깥 include 상태 파일 + jump SELF 이어 돌림 · 변수 주기 덤프 (every v_) · 단마다 fix move/mesh 정의 · 해제 (판 z 누적) · 상태 파일 복귀.
+#     GA = -var gr_resume 0 (빈 상태 파일) · GB = -var gr_resume 1 (GA 마지막 단 끝 restart + 상태 파일 · 새 프로세스) · 짧은 문법 런 = 물리 검증 아님 (C19)
+# ============================================================
+
+atom_style granular
+atom_modify map array sort 0 0
+boundary p p f
+newton off
+soft_particles yes
+communicate single vel yes
+units si
+
+variable r_AM_P equal 4.5e-3
+variable r_AM_S equal 2.0e-3
+variable r_SE equal 0.5e-3
+variable dt equal 1.0e-6
+timestep ${dt}
+processors * * 1
+
+read_restart ${ckpt}
+
+neighbor 0.002 bin
+neigh_modify delay 0 check yes
+
+fix m1 all property/global youngsModulus peratomtype 1.4e8 1.4e8 0.135e7
+fix m2 all property/global poissonsRatio peratomtype 0.25 0.25 0.30
+fix m3 all property/global coefficientRestitution peratomtypepair 3 0.3 0.3 0.3 0.3 0.3 0.3 0.3 0.3 0.3
+fix m4 all property/global coefficientFriction peratomtypepair 3 0.5 0.5 0.5 0.5 0.5 0.5 0.5 0.5 0.5
+fix m5 all property/global coefficientRollingFriction peratomtypepair 3 0.2 0.2 0.1 0.2 0.2 0.1 0.1 0.1 0.1
+fix m6 all property/global coefficientMaxElasticStiffness peratomtypepair 3 1.5 1.5 3.0 1.5 1.5 3.0 3.0 3.0 5.0
+fix m7 all property/global coefficientAdhesionStiffness peratomtypepair 3 1.0e5 1.0e5 2.0e5 1.0e5 1.0e5 2.0e5 2.0e5 2.0e5 1.0e6
+fix m8 all property/global coefficientPlasticityDepth peratomtypepair 3 0.05 0.05 0.01 0.05 0.05 0.01 0.01 0.01 0.005
+fix m9 all property/global characteristicVelocity scalar 2.0
+
+pair_style gran model hooke/hysteresis tangential history rolling_friction cdt
+pair_coeff * *
+
+compute strs all stress/atom
+compute ke all ke/atom
+compute cpl all pair/gran/local pos id force force_normal force_tangential torque contactArea delta contactPoint
+
+fix zwall_bot all wall/gran model hooke/hysteresis tangential history rolling_friction cdt primitive type 1 zplane 0.0
+
+# (생산자 · SYN: 적분 fix 없음 — 운동학 fixture · 위치는 명령으로만 바뀐다)
+fix gravi all gravity 9.81 vector 0.0 0.0 -1.0
+fix top_mesh all mesh/surface/stress file ${plate_stl} type 1 scale 1.0 reference_point 0 0 0
+fix zwall_top all wall/gran model hooke/hysteresis tangential history rolling_friction cdt mesh n_meshes 1 meshes top_mesh
+fix damp all viscous 1.0e-5
+fix_modify zwall_top energy yes
+
+variable pressMPa equal abs(f_top_mesh[3])/0.0025/1000000
+thermo_style custom step atoms ke cpu v_pressMPa
+
+# >>> block gr_params — 표 (history_params.json grammar_probe) 에서 온 숫자 (본 키트 ul_params 꼴)
+variable gr_W equal 100
+variable gr_n equal 1000
+variable gr_v equal 0.01
+variable gr_kfresh equal 2
+variable gr_big equal 1000000000
+variable gr_h0 equal 0.03
+variable gr_resume index 0
+# 이어 돌림 대조 값 — 상태 파일이 다시 정의한다 (처음이면 빈 상태 파일 · −1 그대로)
+variable gr_rstep equal -1
+variable gr_dz equal ${gr_v}*${dt}*${gr_n}
+# <<< block gr_params
+
+# >>> block gr_obs — 관측 (본 키트 ul_obs 꼴 · 원자 · 판 local 덤프 = 변수 주기 · 판 mesh/stl = 고정 주기)
+compute gr_wh all wall/gran/local id force_normal
+variable Ps equal f_top_mesh[3]/0.0025/1000000
+fix gr_av all ave/time 10 10 ${gr_W} v_Ps
+group gr_t1 type 1
+group gr_t2 type 2
+group gr_t3 type 3
+variable gr_lo1 equal ${gr_h0}-${r_AM_P}
+region gr_c1 block INF INF INF INF ${gr_lo1} ${gr_h0} units box
+variable gr_lo2 equal ${gr_h0}-${r_AM_S}
+region gr_c2 block INF INF INF INF ${gr_lo2} ${gr_h0} units box
+variable gr_lo3 equal ${gr_h0}-${r_SE}
+region gr_c3 block INF INF INF INF ${gr_lo3} ${gr_h0} units box
+variable gr_nc equal count(gr_t1,gr_c1)+count(gr_t2,gr_c2)+count(gr_t3,gr_c3)
+thermo_style custom step atoms ke v_Ps v_pressMPa cpu
+thermo ${gr_W}
+variable gr_dnext equal step+${gr_big}
+dump gr_da all custom ${gr_W} ${out}/probe/atom_*.dump id type x y z radius
+dump_modify gr_da every v_gr_dnext format "%d %d %.17g %.17g %.17g %.17g"
+dump gr_dw all local ${gr_W} ${out}/probe/wall_*.dump c_gr_wh[1] c_gr_wh[2] c_gr_wh[3] c_gr_wh[4] c_gr_wh[5] c_gr_wh[6]
+dump_modify gr_dw every v_gr_dnext format "%.17g %.17g %.17g %.17g %.17g %.17g"
+dump gr_dm all mesh/stl ${gr_W} ${out}/probe/mesh_*.stl top_mesh
+# <<< block gr_obs
+
+# >>> block gr_start — 처음 또는 이어 돌림 (본 키트 start 꼴 · 상태 파일은 늘 맨 바깥 include — if 안 include = 3d5c00f input.cpp 845 ERROR)
+include ${gr_state}
+if "${gr_resume} == 1" then "jump SELF gr_resumed"
+variable gr_step equal step
+variable gr_step equal ${gr_step}
+variable gr_k equal 0
+variable gr_pz equal ${gr_h0}
+variable gr_klast equal ${gr_kfresh}
+print "GRAM_START step=${gr_step} k=${gr_k} plate_z=${gr_pz}"
+jump SELF gr_window
+label gr_resumed
+variable gr_step equal step
+variable gr_step equal ${gr_step}
+if "${gr_step} != ${gr_rstep}" then "print 'GRAM_ABORT reason=resume_step step=${gr_step} expect=${gr_rstep}'" "quit"
+variable gr_klast equal ${gr_k}+1
+region gr_c1 delete
+region gr_c2 delete
+region gr_c3 delete
+variable gr_lo1 equal ${gr_pz}-${r_AM_P}
+region gr_c1 block INF INF INF INF ${gr_lo1} ${gr_pz} units box
+variable gr_lo2 equal ${gr_pz}-${r_AM_S}
+region gr_c2 block INF INF INF INF ${gr_lo2} ${gr_pz} units box
+variable gr_lo3 equal ${gr_pz}-${r_SE}
+region gr_c3 block INF INF INF INF ${gr_lo3} ${gr_pz} units box
+print "GRAM_RESUMED step=${gr_step} k=${gr_k} plate_z=${gr_pz}"
+jump SELF gr_next
+# <<< block gr_start
+
+# >>> block gr_machine — 창 (덤프 = 창 끝) → 단 끝 restart + 상태 파일 → 이동 (덤프 없음) → 창 …
+label gr_window
+variable gr_dnext equal (floor(step/${gr_W})+1)*${gr_W}
+run ${gr_W}
+variable gr_step equal step
+variable gr_step equal ${gr_step}
+variable gr_P equal f_gr_av[1]
+variable gr_P equal ${gr_P}
+variable gr_ncnow equal ${gr_nc}
+print "GRAM_STEP k=${gr_k} step=${gr_step} plate_z=${gr_pz} Ps_avg=${gr_P} n_contact_geo=${gr_ncnow}"
+write_restart ${out}/restart/restart_g_${gr_step}.bin
+print "variable gr_rstep equal ${gr_step}" file ${out}/restart/state_g_${gr_step}.in screen no
+print "variable gr_k equal ${gr_k}" append ${out}/restart/state_g_${gr_step}.in screen no
+print "variable gr_pz equal ${gr_pz}" append ${out}/restart/state_g_${gr_step}.in screen no
+print "GRAM_STATE_WRITTEN step=${gr_step} k=${gr_k}"
+if "${gr_k} >= ${gr_klast}" then "jump SELF gr_done"
+label gr_next
+variable gr_k equal ${gr_k}+1
+variable gr_dnext equal step+${gr_big}
+fix gr_mv all move/mesh mesh top_mesh linear 0.0 0.0 ${gr_v}
+run ${gr_n}
+unfix gr_mv
+variable gr_pz equal ${gr_pz}+${gr_dz}
+region gr_c1 delete
+region gr_c2 delete
+region gr_c3 delete
+variable gr_lo1 equal ${gr_pz}-${r_AM_P}
+region gr_c1 block INF INF INF INF ${gr_lo1} ${gr_pz} units box
+variable gr_lo2 equal ${gr_pz}-${r_AM_S}
+region gr_c2 block INF INF INF INF ${gr_lo2} ${gr_pz} units box
+variable gr_lo3 equal ${gr_pz}-${r_SE}
+region gr_c3 block INF INF INF INF ${gr_lo3} ${gr_pz} units box
+jump SELF gr_window
+label gr_done
+undump gr_da
+undump gr_dw
+undump gr_dm
+print "GRAM_DONE step=${gr_step} k=${gr_k} plate_z=${gr_pz}"
+# <<< block gr_machine

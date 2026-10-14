@@ -93,5 +93,17 @@
     "lift_steps": 2000,
     "restart_every": 1000,
     "note": "본 키트 덱이 쓸 문법 (read_restart 뒤 dt · erotate/sphere · ave/time · 부호 있는 Ps · 영역 개수 판 접촉 · move/mesh +z · mesh 덤프 · run 끝 write_restart) 을 같은 작은 침대로 미리 지나간다 — H0–H5 판정 밖 · 정보"
+  },
+  "grammar_probe": {
+    "window": 100,
+    "n_move": 1000,
+    "v": 0.01,
+    "dt": 1.0e-6,
+    "k_fresh": 2,
+    "big": 1000000000,
+    "ave": [10, 10],
+    "z_tol": 1.0e-6,
+    "atom_cols": ["id", "type", "x", "y", "z", "radius"],
+    "note": "등록 개정 3 §14-9 (Q8 · Codex 판정문 10-14 §6) — 본 키트 덱 상태 기계의 빠진 경로만: 맨 바깥 include 상태 파일 + jump SELF 이어 돌림 · 변수 주기 덤프 (dump_modify … every v_ · 이동 중 · setup 없음) · 단마다 fix move/mesh 정의 · 해제 (판 z 누적) · 상태 파일 복귀 (새 프로세스).  생산자 fixture (입자 20 · 적분 없음) 에서 GA (처음 · 창 → 이동 → 창 → 이동 → 창) → GB (GA 마지막 단 끝 restart + 상태 파일 · 이동 → 창).  짧은 문법 런 = 물리 검증 아님 (C19) · 판정 = read_history.py --grammar"
   }
 }
