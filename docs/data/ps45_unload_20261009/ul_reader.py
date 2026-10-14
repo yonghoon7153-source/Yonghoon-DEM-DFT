@@ -12,6 +12,7 @@
     python3 ul_reader.py gate    <root> <bed> <job>      # 그 잡을 지금 낼 수 있나 (rc 0 허용 · 2 거부 — 러너가 부른다)
     python3 ul_reader.py report  <root>                  # 다섯 침대 · 10 쌍 괄호 표 → report.json
     python3 ul_reader.py copycmd <bed>                   # 원 파일 복사 명령 여섯 (표에서 · ~ 경로)
+    python3 ul_reader.py parentsums <UT 런 폴더>          # UTc 의 부모 관측 sha256 목록 (러너가 UTc 시작 때 parent_UT.sha256 으로 쓴다 · 개정 3 §14-3)
 
 폴더 (정본 이름 = README §0):  <root>/<침대>/in/ (원 파일) · RJ/ (Ut0 · R · UN · UK) · RJ2/ (10:0 S0′ 에서) · EXT/ · EXT2/ (10:0) ·
   <팔>/ (UB · UT · UC · UVa · UVb · UT3 · UTc · G_<팔>) · ul_base.in · s0_decision.json · selection.json.
@@ -126,6 +127,103 @@ def read_run(d, P=None):
     sp = os.path.join(d, 'ul_summary.txt')
     out['summary'] = ul_lib.read_kv(sp) if os.path.exists(sp) else None
     return out
+
+
+def parent_sums(src):
+    """UTc 의 부모 (UT) 관측 파일 sha256 목록 (sha256sum 꼴 · 상대 경로 · 정렬) — 러너가 UTc 시작 때 한 번 쓴다 (개정 3 §14-3 · ULKR-03).
+    대상 = 기록 CSV · 요약 · 화면 · 로그 · 덱 사본 · 단계 · 잡 기록 · dump/ 전부 · restart/state_*.in · restart_RM_*.bin.
+    뺀다 = 단 끝 restart_unload_*.bin 등 다른 .bin (판독기가 읽지 않는다 · 크다) · arm_verdict.json (판독기 산출물 — 다시 읽으면 바뀐다)."""
+    lines = []
+    for dp, dn, fn in os.walk(src):
+        dn.sort()
+        for name in sorted(fn):
+            p = os.path.join(dp, name)
+            rel = os.path.relpath(p, src).replace(os.sep, '/')
+            if not os.path.isfile(p) or os.path.islink(p) or rel == 'arm_verdict.json':
+                continue
+            if rel.endswith('.bin') and not re.fullmatch(r'restart/restart_RM_\d+\.bin', rel):
+                continue
+            lines.append(f'{ul_lib.sha256_file(p)}  {rel}')
+    return '\n'.join(lines) + ('\n' if lines else '')
+
+
+def _continuation(d):
+    """UTc → 부모 UT (run_manifest 의 continues · parent_dir · rm_step · parent_sums · parent_sums_sha256) — 목록 · 작은 기록 파일 sha256 대조
+    (큰 덤프는 처음 쓸 때 _cont_path 가 대조) → {'status': OK | FAIL, 'dir', 'rm_step', 'sums', 'checked', 'problems'}."""
+    out = {'status': 'FAIL', 'dir': None, 'rm_step': None, 'sums': {}, 'checked': {}, 'problems': []}
+    kv = ul_lib.read_kv(os.path.join(d, 'run_manifest.txt'))
+    pdir, rm = kv.get('parent_dir'), _i(kv.get('rm_step'))
+    sp = os.path.join(d, kv.get('parent_sums') or 'parent_UT.sha256')
+    if kv.get('continues') != 'UT' or not pdir or rm is None:
+        out['problems'].append('run_manifest 에 continues=UT · parent_dir · rm_step 없음 (개정 3 §14-3 러너가 쓴다)')
+        return out
+    if not os.path.isdir(pdir) or not os.path.exists(sp):
+        out['problems'].append(f'부모 폴더 · sha256 목록 없음 ({pdir} · {os.path.basename(sp)})')
+        return out
+    if kv.get('parent_sums_sha256') != ul_lib.sha256_file(sp):
+        out['problems'].append('부모 sha256 목록 파일 자체의 sha256 ≠ run_manifest 기록')
+        return out
+    for ln in open(sp, encoding='utf-8').read().splitlines():
+        if not ln.strip():
+            continue
+        h, rel = ln.split(None, 1)
+        rel = rel.strip().lstrip('*')
+        if rel in out['sums'] or rel.startswith('/') or '..' in rel.split('/'):
+            out['problems'].append(f'부모 sha256 목록의 경로 이상 · 중복: {rel}')
+            return out
+        out['sums'][rel] = h
+    out.update(dir=pdir, rm_step=rm)
+    for rel in ('ul_windows.csv', 'ul_steps.csv', 'ul_events.csv', f'restart/state_RM_{rm}.in'):
+        if _cont_path(out, rel) is None:
+            out['problems'].append(f'부모 필수 파일 {rel} 목록 밖 · sha256 다름')
+    for rel in sorted(out['sums']):
+        if re.fullmatch(r'screen(_a\d+)?\.txt', rel):
+            _cont_path(out, rel)
+    out['status'] = 'OK' if not out['problems'] else 'FAIL'
+    return out
+
+
+def _cont_path(cont, rel):
+    """부모 파일 경로 — 목록에 있고 sha256 이 같을 때만 (처음 쓸 때 대조 · 다르면 관측 결손 + 이어 돌림 무효 · 목록 밖 = 관측 결손)."""
+    if rel not in cont['sums']:
+        return None
+    if rel not in cont['checked']:
+        p = os.path.join(cont['dir'], rel)
+        ok = os.path.isfile(p) and ul_lib.sha256_file(p) == cont['sums'][rel]
+        cont['checked'][rel] = ok
+        if not ok:
+            cont['problems'].append(f'부모 파일 sha256 다름 · 없음: {rel}')
+            cont['status'] = 'FAIL'
+    return os.path.join(cont['dir'], rel) if cont['checked'][rel] else None
+
+
+def _read_run_cont(d, cont, P):
+    """UTc 기록 = 부모 UT 기록 (≤ R_M · 해시 대조된 CSV) + UTc 자기 기록 (> R_M) — 경계 중복 · 누락 검사 (개정 3 §14-3)."""
+    par, own = read_run(cont['dir'], P), read_run(d, P)
+    rm, pr = cont['rm_step'], []
+    rm_ev = [e for e in par['events'] if e['event'] == 'RM']
+    k_rm = rm_ev[0]['k'] if len(rm_ev) == 1 else None
+    if len(rm_ev) != 1 or rm_ev[0]['step'] != rm:
+        pr.append(f'부모 RM 사건 {[(e["k"], e["step"]) for e in rm_ev]} ≠ rm_step {rm}')
+    if not par['steps'] or par['steps'][-1]['step'] != rm or par['steps'][-1]['k'] != k_rm:
+        pr.append('부모 단 기록의 끝 ≠ R_M 단 (부모 기록 끝 · 누락)')
+    if any(w.get('step') is None or w['step'] > rm for w in par['windows']):
+        pr.append('부모 창 기록이 R_M 뒤에도 있다')
+    if any(r.get('step') is None or r['step'] <= rm for r in own['windows'] + own['steps']):
+        pr.append('UTc 기록 중 R_M step 이하 (경계 중복 — 부모 기록을 복사하지 않는다)')
+    if k_rm is not None and own['windows'] and (own['windows'][0].get('k'), own['windows'][0].get('w')) != (k_rm + 1, 1):
+        pr.append(f'UTc 첫 창 (k {own["windows"][0].get("k")} · w {own["windows"][0].get("w")}) ≠ (k_RM + 1 · w 1) (경계 누락)')
+    if k_rm is not None and own['steps'] and own['steps'][0].get('k') != k_rm + 1:
+        pr.append(f'UTc 첫 단 k {own["steps"][0].get("k")} ≠ k_RM + 1 (경계 누락)')
+    rs = [e for e in own['events'] if e['event'] == 'RESUME']
+    if not rs or rs[0]['step'] != rm or rs[0]['k'] != k_rm:
+        pr.append('UTc 의 RESUME 사건 ≠ (k_RM · R_M step)')
+    if pr:
+        cont['problems'] += pr
+        cont['status'] = 'FAIL'
+    return {'dir': d, 'windows': par['windows'] + own['windows'], 'steps': par['steps'] + own['steps'], 'events': par['events'] + own['events'],
+            'summary': own['summary'], 'problems': [f'부모 {x}' for x in par['problems']] + own['problems'],
+            'n_superseded_rows': par['n_superseded_rows'] + own['n_superseded_rows'], 'resume_steps': own['resume_steps']}
 
 
 def window_states(windows, wall_by_step, P=None):
@@ -318,7 +416,8 @@ def arm_verdict(d, bed, job, P=None, root=None):
     """팔 런 폴더 → 판정 (§12-3 · §13-1 · §13-2 · §13-3 · §13-5) — 덱의 단 기록 + 창 끝 덤프 (벽 · 원자 · 쌍) + thermo."""
     P = P or ul_lib.load_params()
     root = root or os.path.dirname(os.path.dirname(d))
-    run = read_run(d, P)
+    cont = _continuation(d) if job == 'UTc' else None          # 개정 3 §14-3 — UT 부모 관측 (경로 + sha256 · 복사 없음)
+    run = _read_run_cont(d, cont, P) if (cont and cont['dir']) else read_run(d, P)
     Pm = P['P_meas_report_MPa']
     scale = P['units']['report_MPa_per_Ps']
     um = P['units']['um_per_deck_m']
@@ -332,11 +431,33 @@ def arm_verdict(d, bed, job, P=None, root=None):
          'endpoint_states': [], 'sigma_P': None, 'trajectory_status': None, 'separation': None, 's4_status': 'NOT_COMPUTED', 'why': []}
     gravity = job.startswith('G_')
     g_arm = _arm_g(job, P)
+
+    def fp(rel, step):
+        """관측 파일 — UTc 의 R_M step 이하 = 부모 UT (목록 · sha256 대조) · 그 밖 = 이 런 폴더."""
+        if cont is not None and cont['dir'] and step is not None and step <= cont['rm_step']:
+            return _cont_path(cont, rel)
+        return os.path.join(d, rel)
+
+    def thermo_regular():
+        if cont is None or not cont['dir']:
+            return _thermo(d)['regular']
+        rm = cont['rm_step']
+        txt = ''
+        for rel in sorted(cont['sums']):
+            if re.fullmatch(r'screen(_a\d+)?\.txt', rel) and _cont_path(cont, rel):
+                txt += open(_cont_path(cont, rel), encoding='utf-8', errors='replace').read() + '\n'
+        reg = {k: r for k, r in ul_lib.parse_thermo(txt)['regular'].items() if k <= rm}
+        own = _thermo(d)['regular']
+        if any(k <= rm for k in own):
+            cont['problems'].append('UTc thermo 정규 줄 중 R_M step 이하 (경계 중복)')
+            cont['status'] = 'FAIL'
+        reg.update({k: r for k, r in own.items() if k > rm})
+        return reg
     summ = run['summary']
     res = (summ or {}).get('result')
     v['trajectory_status'] = {'DONE': 'DONE', 'LIFT_CAP': 'LIFT_CAP', 'GUARD': 'GUARD', 'TECH': 'TECH', 'RM_STOP': 'RM_STOP'}.get(res, 'TIMEOUT')
     wins = run['windows']
-    walls = {w['step']: _wall_rows(os.path.join(d, 'dump', f'wall_{w["step"]}.dump'), w['step']) for w in wins if w.get('step') is not None}
+    walls = {w['step']: _wall_rows(fp(f'dump/wall_{w["step"]}.dump', w['step']), w['step']) for w in wins if w.get('step') is not None}
     states = window_states(wins, walls, P)
     for st, w in zip(states, wins):
         st['k'] = w.get('k')
@@ -364,7 +485,8 @@ def arm_verdict(d, bed, job, P=None, root=None):
             why.append(f'단 {s["k"]} P̄ · 높이 비유한')
         if not s['steady']:
             why.append(f'단 {s["k"]} UNSTEADY (S1 ∧ S2 두 창 없음)')
-        s3 = _s3_at(d, s['step'], s['plate_z'], s0_ids, g_arm)
+        s3 = _s3_at(None, s['step'], s['plate_z'], s0_ids, g_arm, ap=fp(f'dump/atom_{s["step"]}.dump', s['step']),
+                    cp=fp(f'dump/contact_{s["step"]}.dump', s['step']))
         s['s3'] = s3['status']
         if s3['status'] != 'PASS':
             why.append(f'단 {s["k"]} S3 {s3["status"]}')
@@ -426,7 +548,7 @@ def arm_verdict(d, bed, job, P=None, root=None):
         ws = sorted(w['step'] for w in wins if w.get('k') == steps[j]['k'] and w.get('step') is not None)
         if len(ws) >= 2:
             lo = ws[-2] - (ws[-1] - ws[-2])
-            sg = ul_observers.sigma_P(_thermo(d)['regular'], [(lo, ws[-1])], ddof=P['noise_floor']['ddof'], min_n=P['noise_floor']['min_n'],
+            sg = ul_observers.sigma_P(thermo_regular(), [(lo, ws[-1])], ddof=P['noise_floor']['ddof'], min_n=P['noise_floor']['min_n'],
                                       col=P['records']['thermo_cols'][4], scale=scale)
             v['sigma_P'] = sg['sigma']
             nf = ul_observers.noise_floor(sg['sigma'], Pm, P['noise_floor']['factor'])
@@ -502,7 +624,7 @@ def arm_verdict(d, bed, job, P=None, root=None):
         hs = []
         for idx in sep['post_windows'][:P['windows']['post_sep']]:
             stp = states[idx]['step']
-            ad, _pr = _atom_frame(os.path.join(d, 'dump', f'atom_{stp}.dump'), stp, s0_ids)   # 전부 읽힘 · 머리 step · 고유 ID (ULKR-04)
+            ad, _pr = _atom_frame(fp(f'dump/atom_{stp}.dump', stp), stp, s0_ids)   # 전부 읽힘 · 머리 step · 고유 ID (ULKR-04)
             box = ((0.0, 0.05), (0.0, 0.05)) if not (ad and ad['box']) else (ad['box'][0], ad['box'][1])
             si = ul_observers.surface_index(ad['rows'], excl, box, grid=P['surface']['grid'], q=P['surface']['quantile'],
                                             method=P['surface']['quantile_method'], um=um) if ad and ad['rows'] else {'status': 'NOT_COMPUTED', 'mean_um': None}
@@ -512,6 +634,15 @@ def arm_verdict(d, bed, job, P=None, root=None):
         v['s4_status'] = 'FAIL' if 'FAIL' in s4 else ('PASS' if s4 and all(x == 'PASS' for x in s4) else 'NOT_COMPUTED')
     if v['trajectory_status'] == 'DONE' and not (sep['separated_final'] and len(sep['post_windows']) >= P['windows']['post_sep']):
         v['why'].append('끝 = DONE 인데 판독기 분리 · 분리 뒤 창이 모자란다 (덱 기하 개수 ↔ 벽 덤프)')
+    if cont is not None:
+        v['continuation'] = {'status': cont['status'], 'parent_dir': cont['dir'], 'rm_step': cont['rm_step'], 'problems': cont['problems'][:8],
+                             'n_parent_listed': len(cont['sums']), 'n_parent_checked': len(cont['checked'])}
+        if cont['status'] != 'OK':
+            v['primary_status'] = 'UNIDENTIFIED'
+            v['rho_pct'] = None
+            v['rank_eligible'] = False
+            v['disposition'] = 'NONE'
+            v['why'].append(f'UTc 이어 돌림 (UT 부모 관측) 무효 — {" · ".join(cont["problems"][:3])} (개정 3 §14-3)')
     if gravity:
         g = _g_restore(d, run, root, bed, job)
         v['g_restore'] = g
@@ -1033,12 +1164,46 @@ def copy_commands(bed, P=None):
             f'cp -n ~/dem_test/ps45/logs/{B["orig_log"]} {dst}', f'cp -n {src}/{B["last_deck"]} {dst}']
 
 
+AUX_KEYS = ('trajectory_status', 'separation', 's4_status', 'surface_um', 'union_bracket_um', 'union_bracket_pct', 'nonmonotone')
+
+
+def _t3_entry(root, P):
+    """7:3 최종 t3 = UT 주 값 (UT 폴더 판독) + UTc 보조 관측 (분리 · 표면 · 합집합 — 같은 궤적 · 해시로 묶인 부모) (개정 3 §14-3 · ULKR-03).
+    UTc 가 없거나 이어 돌림 무효 · UTc 가 다시 읽은 주 값 ≠ UT 주 값 이면 주 값은 그대로 · 보조 = SEP_INCOMPLETE."""
+    ut, utc = _arm_v(root, B73, 'UT', P), _arm_v(root, B73, 'UTc', P)
+    if ut is None:
+        return None
+    e = dict(ut, job='UT+UTc', primary_source='UT', aux_source=None)
+    why = []
+    if utc is None:
+        why.append('UTc 없음 — 보조 관측 (분리 · 표면) 미완료')
+    elif (utc.get('continuation') or {}).get('status') != 'OK':
+        why.append(f'UTc 이어 돌림 무효 ({" · ".join((utc.get("continuation") or {}).get("problems", [])[:2])}) — 보조 관측 미완료')
+    elif utc.get('primary_status') != ut.get('primary_status') or not (
+            (ut.get('rho_pct') is None and utc.get('rho_pct') is None)
+            or (ut.get('rho_pct') is not None and utc.get('rho_pct') is not None and abs(ut['rho_pct'] - utc['rho_pct']) <= 1e-12)):
+        why.append(f'UTc 가 다시 읽은 주 값 ({utc.get("primary_status")} · {utc.get("rho_pct")}) ≠ UT 주 값 — 보조 관측 미완료')
+    if why:
+        e['trajectory_status'] = 'SEP_INCOMPLETE'
+        e['why'] = list(ut.get('why') or []) + why
+    else:
+        for k in AUX_KEYS:
+            e[k] = utc.get(k)
+        e['aux_source'] = 'UTc'
+        e['why'] = list(ut.get('why') or []) + [w for w in (utc.get('why') or []) if w not in (ut.get('why') or [])]
+    e['utc'] = None if utc is None else {'primary_status': utc.get('primary_status'), 'rho_pct': utc.get('rho_pct'), 'continuation': utc.get('continuation')}
+    return e
+
+
 def report(root, P=None):
     P = P or ul_lib.load_params()
     s = selection_state(root, P)
     vs = {}
     for bed in BEDS:
-        job = ('UTc' if s.get('tuple') == 't3' else s.get('arm')) if bed == B73 else s.get('arm')
+        if bed == B73 and s.get('tuple') == 't3':
+            vs[bed] = _t3_entry(root, P)
+            continue
+        job = s.get('arm')
         if job:
             vs[bed] = _arm_v(root, bed, job, P)
     return {'selection': s, 'beds': vs, 'pairs': pair_table({b: v for b, v in vs.items() if v})}
@@ -1162,6 +1327,10 @@ def _mk_arm(root, bed, job, spec, P):
         for name, kk, det in spec.get('events', []):
             if kk == k:
                 el.append(f'{name},{k},{step},{pz},{lift},{det}')
+                if name == 'RM':   # 덱 ul_rm 꼴 — R_M restart + 이어 돌릴 상태 파일 (단계 2 · 그 단)
+                    _w(os.path.join(d, 'restart', f'restart_RM_{step}.bin'), 'x')
+                    _w(os.path.join(d, 'restart', f'state_RM_{step}.in'), f'variable ul_rstep equal {step}\nvariable ul_k equal {k}\nvariable ul_phase equal 2\n'
+                       f'variable ul_modeB equal 1\nvariable ul_pz equal {pz}\nvariable ul_lift equal {lift}\nvariable ul_ncross equal 2\n')
     _w(os.path.join(d, 'ul_windows.csv'), '\n'.join(wl) + '\n')
     _w(os.path.join(d, 'ul_steps.csv'), '\n'.join(sl) + '\n')
     _w(os.path.join(d, 'ul_events.csv'), '\n'.join(el) + '\n')
@@ -1191,6 +1360,50 @@ def _ladder(lifts, Ps, steady=True, nw=4, Pm=1.0, **kw):
 
 _HIST_PRE = list(HIST_PRE_COLS)
 _HIST_POST = list(HIST_POST_COLS)
+
+
+def _mk_utc(root, bed, ut_spec, cont_steps, P, summary='DONE', events=(), layout='hash'):
+    """합성 UTc (러너 개정 3 §14-3 꼴) — UT (R_M 에서 멈춘 폴더) 가 이미 있을 때.  같은 사다리 + 이어 돌림 단을 임시 폴더에 한 번에 만들어
+    R_M step 뒤 부분만 UTc 로 옮긴다 (경계 step · k 가 정확히 이어진다) · run_manifest (부모 경로 · rm_step · sha256 목록) · 머리만 있는 CSV + 이어 돌림 줄.
+    layout = 'hash' (개정 3) · 'copy' (옛 러너 — UT 기록 CSV 를 복사한 꼴) · 'gap' (첫 이어 돌림 단 k 를 하나 건너뜀)."""
+    import tempfile as _tf
+    ut = os.path.join(root, bed, 'UT')
+    ev = [ln.split(',') for ln in open(os.path.join(ut, 'ul_events.csv')).read().splitlines()[1:]]
+    rm = [e for e in ev if e[0] == 'RM'][0]
+    k_rm, rm_step = int(rm[1]), int(rm[2])
+    d = os.path.join(root, bed, 'UTc')
+    os.makedirs(os.path.join(d, 'dump'), exist_ok=True)
+    R = P['records']
+    with _tf.TemporaryDirectory() as tmp:
+        full = _mk_arm(tmp, bed, 'FULL', dict(ut_spec, steps=list(ut_spec['steps']) + list(cont_steps), summary=summary,
+                                                events=list(ut_spec.get('events', [])) + list(events)), P)
+        for name, cols in (('ul_windows.csv', R['windows_cols']), ('ul_steps.csv', R['steps_cols'])):
+            rows = [ln for ln in open(os.path.join(full, name)).read().splitlines()[1:] if int(ln.split(',')[5 if name == 'ul_windows.csv' else 6]) > rm_step]
+            if layout == 'gap':
+                rows = [ln.replace(f',{k_rm + 1},', f',{k_rm + 2},', 1) for ln in rows]
+            head = open(os.path.join(ut, name)).read().splitlines() if layout == 'copy' else [','.join(cols)]
+            _w(os.path.join(d, name), '\n'.join(head + rows) + '\n')
+        erow = [ln for ln in open(os.path.join(full, 'ul_events.csv')).read().splitlines()[1:] if int(ln.split(',')[2]) > rm_step]
+        head = open(os.path.join(ut, 'ul_events.csv')).read().splitlines() if layout == 'copy' else [','.join(R['events_cols'])]
+        _w(os.path.join(d, 'ul_events.csv'), '\n'.join(head + [f'RESUME,{k_rm},{rm_step},0,0,state'] + erow) + '\n')
+        for nm in os.listdir(os.path.join(full, 'dump')):
+            if int(re.search(r'_(\d+)\.', nm).group(1)) > rm_step:
+                shutil.copy(os.path.join(full, 'dump', nm), os.path.join(d, 'dump', nm))
+        blocks, cur = [], []
+        for ln in open(os.path.join(full, 'screen.txt')).read().splitlines()[1:]:
+            if ln.strip().startswith('Step') and cur:
+                blocks.append(cur)
+                cur = []
+            cur.append(ln)
+        blocks.append(cur)
+        keep = [b for b in blocks if len(b) > 1 and b[0].strip().startswith('Step') and int(b[1].split()[0]) >= rm_step]
+        _w(os.path.join(d, 'screen.txt'), 'LIGGGHTS-PUBLIC 3.8.0 (git 3d5c00f)\n' + '\n'.join(ln for b in keep for ln in b) + '\n')
+        if os.path.exists(os.path.join(full, 'ul_summary.txt')):
+            _w(os.path.join(d, 'ul_summary.txt'), open(os.path.join(full, 'ul_summary.txt')).read().replace('arm=FULL', 'arm=UTc'))
+    _w(os.path.join(d, 'parent_UT.sha256'), parent_sums(ut))
+    _w(os.path.join(d, 'run_manifest.txt'), f'bed={bed}\njob=UTc\nresume=0\ngate=ALLOW\ncontinues=UT\nparent_dir={ut}\nrm_step={rm_step}\n'
+       f'parent_sums=parent_UT.sha256\nparent_sums_sha256={ul_lib.sha256_file(os.path.join(d, "parent_UT.sha256"))}\n')
+    return d
 
 
 def _restep(path, step):
@@ -1532,6 +1745,61 @@ def selftest() -> int:
         chk('R22 대조: 같은 원자 fz = 1e-3 N (유한 · 불평형) → S3 FAIL → UNIDENTIFIED (nan 행을 버리면 이 실패가 PASS 로 바뀌던 것)',
             lambda: (lambda u: u['primary_status'] == 'UNIDENTIFIED' and any('S3 FAIL' in w for w in u['why']))(av('UB')))
     with tempfile.TemporaryDirectory() as root:
+        # ── ULKR-03 UT → UTc 이어 돌림 — UTc 가 해시로 묶인 UT 부모 관측을 읽는다 · 최종 report = UT 주 값 + UTc 보조 관측 (Codex reader_continuation) ──
+        _fake_restored(root, B73)
+        _w(os.path.join(root, B73, 'ul_base.in'), 'variable ul_S2max equal 1e-05\n')
+        Ps4 = [1.2, 0.8, 0.6, 0.4]
+        ev = [('CROSS', 2, 'first'), ('RM', 4, 'ncross2')]
+        _mk_arm(root, B73, 'UB', {'W': 5000, 'dt': 1e-6, 'steps': _ladder([0.2, 0.25, 0.3, 0.35], Ps4), 'events': ev, 'summary': 'DONE'}, P)
+        ut_spec = {'W': 10000, 'dt': 5e-7, 'steps': _ladder([0.4, 0.45, 0.5, 0.55], Ps4), 'events': ev + [('RM_STOP', 4, 'UT')], 'summary': 'RM_STOP'}
+        _mk_arm(root, B73, 'UT', ut_spec, P)
+        _mk_arm(root, B73, 'UVb', dict(ut_spec, events=ev, summary='DONE'), P)
+        cont = [{'lift_um': 0.6, 'P': 0.0, 'steady': True, 'nw': 5, 'kind': 'B', 'phase': 2, 'modeB': 1, 'n_move': 0, 'wall': [[]] * 5, 'surface': [120.0] * 5}]
+        cev = [('SEPARATED', 5, 'w2'), ('POST_DONE', 5, 'w5')]
+        rho_ut = 0.3827035983143033
+
+        def utc(layout='hash', edit=None):
+            try:
+                shutil.rmtree(os.path.join(root, B73, 'UTc'), ignore_errors=True)
+                _mk_utc(root, B73, ut_spec, cont, P, events=cev, layout=layout)
+                if edit:
+                    edit()
+                return report(root, P)['beds'][B73] or {}, _arm_v(root, B73, 'UTc', P) or {}
+            except Exception as ex:  # noqa: BLE001 — 빈 구현 (시험 먼저) · 예외도 실패
+                return {'error': repr(ex)}, {'error': repr(ex)}
+        chk('R23 대조: UB ρ 0.2026 · UT ρ 0.3827 (R_M 에서 멈춤 · RM_STOP) · UVb = UT → 선택 t3 (UT3 = UT + UTc)',
+            lambda: (lambda s: s['stage'] == 'resolved' and s['tuple'] == 't3')(selection_state(root, P)))
+        e, u = utc()
+        chk('R23 ULKR-03 UTc = 해시로 묶인 UT 부모 관측 (복사 없음) + 이어 돌림 → UTc 판독 주 값 = UT 주 값 (OK · ρ 0.3827035983143033) · 이어 돌림 OK',
+            lambda: u['primary_status'] == 'OK' and abs(u['rho_pct'] - rho_ut) < 1e-12 and (u.get('continuation') or {}).get('status') == 'OK')
+        chk('R23 ULKR-03 최종 report (t3) = UT 주 값 (OK · ρ 0.3827) + UTc 보조 관측 (분리 · 분리 뒤 4 창 · trajectory DONE · 출처 UTc)',
+            lambda: e['primary_status'] == 'OK' and abs(e['rho_pct'] - rho_ut) < 1e-12 and e.get('job') == 'UT+UTc' and e.get('aux_source') == 'UTc'
+            and e['trajectory_status'] == 'DONE' and e['separation']['separated_final'] is True and e['separation']['n_post'] == 4)
+        e, u = utc(edit=lambda: open(os.path.join(root, B73, 'UT', 'screen.txt'), 'a').write('# UTc 시작 뒤 부모 파일이 바뀜\n'))
+        chk('R23 ULKR-03 UTc 시작 뒤 UT 부모 파일 (screen.txt) 이 바뀜 (sha256 ≠ 목록) → UTc 이어 돌림 무효 · UTc 주 값 UNIDENTIFIED · report = UT 주 값 그대로 · 보조 SEP_INCOMPLETE',
+            lambda: (u.get('continuation') or {}).get('status') == 'FAIL' and u['primary_status'] == 'UNIDENTIFIED'
+            and e['primary_status'] == 'OK' and abs(e['rho_pct'] - rho_ut) < 1e-12 and e['trajectory_status'] == 'SEP_INCOMPLETE' and e.get('aux_source') is None)
+        shutil.rmtree(os.path.join(root, B73, 'UT'))
+        _mk_arm(root, B73, 'UT', ut_spec, P)
+        e, u = utc('copy')
+        chk('R23 ULKR-03 옛 러너 꼴 (UT 기록 CSV 를 UTc 에 복사) → 경계 중복 (R_M step 이하 UTc 기록) → 이어 돌림 무효 · report = UT 주 값 + 보조 SEP_INCOMPLETE',
+            lambda: (u.get('continuation') or {}).get('status') == 'FAIL' and any('중복' in p for p in u['continuation']['problems'])
+            and e['primary_status'] == 'OK' and e['trajectory_status'] == 'SEP_INCOMPLETE')
+        e, u = utc('gap')
+        chk('R23 ULKR-03 경계 누락 (UTc 첫 단 k = k_RM + 2) → 이어 돌림 무효 · report = UT 주 값 + 보조 SEP_INCOMPLETE',
+            lambda: (u.get('continuation') or {}).get('status') == 'FAIL' and any('누락' in p for p in u['continuation']['problems'])
+            and e['primary_status'] == 'OK' and e['trajectory_status'] == 'SEP_INCOMPLETE')
+        mp = os.path.join(root, B73, 'UTc', 'run_manifest.txt')
+        e, u = utc(edit=lambda: _w(mp, open(mp).read().replace('rm_step=', 'rm_step=1')))
+        chk('R23 ULKR-03 run_manifest 의 rm_step ≠ 부모 RM 사건 step → 이어 돌림 무효 (부모 기록 끝 ≠ R_M)',
+            lambda: (u.get('continuation') or {}).get('status') == 'FAIL' and e['primary_status'] == 'OK' and e['trajectory_status'] == 'SEP_INCOMPLETE')
+        shutil.rmtree(os.path.join(root, B73, 'UTc'), ignore_errors=True)
+        e = report(root, P)['beds'][B73] or {}
+        chk('R23 ULKR-03 UTc 아직 없음 → report = UT 주 값 (OK) · 보조 SEP_INCOMPLETE (UTc 없음)',
+            lambda: e['primary_status'] == 'OK' and abs(e['rho_pct'] - rho_ut) < 1e-12 and e['trajectory_status'] == 'SEP_INCOMPLETE')
+        chk('R23 ULKR-03 parentsums = 부모 UT 의 판독 대상 파일 sha256 (기록 · 화면 · 덤프 · 상태 · R_M restart) — 단 끝 restart_unload · arm_verdict.json 은 뺀다',
+            lambda: (lambda t: 'ul_windows.csv' in t and 'screen.txt' in t and 'dump/' in t and 'arm_verdict.json' not in t)(parent_sums(os.path.join(root, B73, 'UT'))))
+    with tempfile.TemporaryDirectory() as root:
         # ── ULR1-03 접촉 상태 · 상쇄 · 분리 · 창 결손 ──
         def wins(counts, pressures):
             return [{'step': 100 + i, 'Ps_avg': p / 1000.0, 'n_contact_geo': c} for i, (c, p) in enumerate(zip(counts, pressures))]
@@ -1754,7 +2022,7 @@ def selftest() -> int:
 
 def main(argv=None):
     ap = argparse.ArgumentParser(description='DEM 언로딩 키트 K4 읽는 쪽')
-    ap.add_argument('cmd', nargs='?', choices=['inputs', 'restore', 'kebase', 's0p', 'arm', 'select', 'gate', 'report', 'copycmd'])
+    ap.add_argument('cmd', nargs='?', choices=['inputs', 'restore', 'kebase', 's0p', 'arm', 'select', 'gate', 'report', 'copycmd', 'parentsums'])
     ap.add_argument('args', nargs='*')
     ap.add_argument('--hist')
     ap.add_argument('--job', default='RJ')
@@ -1769,6 +2037,11 @@ def main(argv=None):
         if len(a.args) != 1 or a.args[0] not in BEDS:
             ap.error('copycmd <침대>')
         print('\n'.join(copy_commands(a.args[0], P)))
+        return 0
+    if a.cmd == 'parentsums':
+        if len(a.args) != 1 or not os.path.isdir(a.args[0]):
+            ap.error('parentsums <부모 UT 런 폴더>')
+        sys.stdout.write(parent_sums(os.path.abspath(a.args[0])))
         return 0
     need = {'inputs': 2, 'restore': 2, 'kebase': 2, 's0p': 1, 'arm': 3, 'select': 1, 'gate': 3, 'report': 1}[a.cmd]
     if len(a.args) != need:

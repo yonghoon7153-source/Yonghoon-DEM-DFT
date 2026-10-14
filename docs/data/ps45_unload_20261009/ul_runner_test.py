@@ -108,22 +108,22 @@ def mock_lmp(deck, kv):
         W, dt = (10000, 5e-7) if kind in ('UT', 'U_UVb', 'U_UT3') else (5000, 1e-6)
         if kv.get('ul_resume') == '1':
             st = open(kv['ul_state']).read() if os.path.exists(kv.get('ul_state', '')) else ''
-            m = re.search(r'variable ul_rstep equal (\d+)', st)
-            rs = m.group(1) if m else '0'
-            open(os.path.join(out, 'ul_events.csv'), 'a').write(f'RESUME,9,{rs},0,0,state\nPOST_DONE,9,{rs},0,0,w4\n')
+            m, mk = re.search(r'variable ul_rstep equal (\d+)', st), re.search(r'variable ul_k equal (\d+)', st)
+            rs, kr = (m.group(1) if m else '0'), (mk.group(1) if mk else '9')
+            open(os.path.join(out, 'ul_events.csv'), 'a').write(f'RESUME,{kr},{rs},0,0,state\nPOST_DONE,{kr},{rs},0,0,w4\n')
             open(os.path.join(out, 'ul_summary.txt'), 'w').write(f'result=DONE\narm={kind}\nbed={bed}\n')
             print('UL_RESUME')
         else:
             root = os.path.dirname(os.path.dirname(out))
+            # 덱 꼴 그대로: 교차 k 2 · 확인 k 3 · 4 → R_M (restart_RM_<그 step> + state_RM_<그 step> — _mk_arm) · UT 는 R_M 에서 멈춤 (RM_STOP)
+            ev = [('CROSS', 2, 'first'), ('RM', 4, 'ncross2')] + ([('RM_STOP', 4, 'UT')] if kind == 'UT' else [])
+            done = None if (os.environ.get('MOCK_TIMEOUT_KIND') == kind or crash) else ('RM_STOP' if kind == 'UT' else 'DONE')
             R._mk_arm(root, bed, job, {'W': W, 'dt': dt, 'steps': R._ladder([mid - 0.025, mid + 0.025, mid + 0.075, mid + 0.125], [1.2, 0.8, 0.6, 0.4]),
-                                       'events': [('CROSS', 1, 'first'), ('RM', 3, 'ncross2')],
-                                       'summary': None if (os.environ.get('MOCK_TIMEOUT_KIND') == kind or crash) else 'DONE'}, P)
+                                       'events': ev, 'summary': done}, P)
             os.makedirs(os.path.join(out, 'restart'), exist_ok=True)
             for s in (3215000, 3240000, 3260000):
                 open(os.path.join(out, 'restart', f'restart_unload_{s}.bin'), 'w').write('x')
                 open(os.path.join(out, 'restart', f'state_unload_{s}.in'), 'w').write(f'variable ul_rstep equal {s}\n')
-            open(os.path.join(out, 'restart', 'restart_RM_3240000.bin'), 'w').write('x')
-            open(os.path.join(out, 'restart', 'state_RM_3240000.in'), 'w').write('variable ul_rstep equal 3240000\n')
         if crash:
             print('[mock] 기계 실패 — 요약 · Loop time 없이 끝')
             return 1
@@ -296,10 +296,26 @@ def selftest() -> int:
         rc2, out2 = _run(os.path.join(td, 'b'), kit, B73, 'UVb')
         rc3, out3 = _run(os.path.join(td, 'b'), kit, B73, 'UTc')
         utc = _lmp(log, 'UTc')
-        chk('M9 UT (δ_dt 0.2) → UVb 허용 → 튜플 t3 → UTc = U_UT3 덱을 UT 의 R_M restart · 상태에서 ul_resume 1 · UT 기록 이어 받음',
-            lambda: rc == 0 and rc2 == 0 and rc3 == 0 and utc and 'restart_RM_3240000.bin' in utc[0] and 'state_RM_3240000.in' in utc[0]
-            and 'ul_resume=1' in utc[0] and open(os.path.join(ul, 'UTc', 'deck.txt')).read().strip() == 'in.U_UT3.liggghts'
-            and open(os.path.join(ul, 'UTc', 'ul_steps.csv')).read().count('\n') >= 5)
+        rm_ut = [ln.split(',') for ln in _read(os.path.join(ul, 'UT', 'ul_events.csv')).splitlines() if ln.startswith('RM,')]
+        rms = rm_ut[0][2] if rm_ut else 'none'
+        man_c = _read(os.path.join(ul, 'UTc', 'run_manifest.txt'))
+        sums_c = _read(os.path.join(ul, 'UTc', 'parent_UT.sha256'))
+        chk('M9 UT (δ_dt 0.2 · R_M 에서 멈춤) → UVb 허용 → 튜플 t3 → UTc = U_UT3 덱을 UT 의 R_M restart · 상태에서 ul_resume 1',
+            lambda: rc == 0 and rc2 == 0 and rc3 == 0 and utc and f'restart_RM_{rms}.bin' in utc[0] and f'state_RM_{rms}.in' in utc[0]
+            and 'ul_resume=1' in utc[0] and open(os.path.join(ul, 'UTc', 'deck.txt')).read().strip() == 'in.U_UT3.liggghts')
+        chk('M9 ULKR-03 UTc 는 UT 기록 · 덤프를 복사하지 않는다 — 기록 CSV = 머리만 (+ 덱이 쓴 이어 돌림 줄) · run_manifest = continues=UT · parent_dir · rm_step · '
+            'parent_sums (+ 그 sha256) · parent_UT.sha256 = UT 기록 · 덤프 sha256',
+            lambda: _read(os.path.join(ul, 'UTc', 'ul_steps.csv')).count('\n') == 1 and _read(os.path.join(ul, 'UTc', 'ul_windows.csv')).count('\n') == 1
+            and re.search(r'^continues=UT$', man_c, re.M) and re.search(rf'^parent_dir={re.escape(os.path.join(ul, "UT"))}$', man_c, re.M)
+            and re.search(rf'^rm_step={rms}$', man_c, re.M) and re.search(r'^parent_sums=parent_UT\.sha256$', man_c, re.M)
+            and re.search(rf'^parent_sums_sha256={_sha(os.path.join(ul, "UTc", "parent_UT.sha256"))}$', man_c, re.M)
+            and re.search(r'  ul_windows\.csv$', sums_c, re.M) and re.search(r'  dump/atom_\d+\.dump$', sums_c, re.M)
+            and not os.listdir(os.path.join(ul, 'UTc', 'dump')))
+        rep = subprocess.run([sys.executable, '-I', os.path.join(kit, 'ul_reader.py'), 'report', work2], capture_output=True, text=True, timeout=300)
+        r73 = (json.load(open(os.path.join(work2, 'report.json'))).get('beds') or {}).get(B73) or {} if rep.returncode == 0 else {}
+        chk('M9 ULKR-03 최종 report (t3) = UT 주 값 (OK · UT 폴더 판독) + UTc 보조 (부모 해시 대조 · 이어 돌림 OK)',
+            lambda: r73.get('primary_status') == 'OK' and r73.get('job') == 'UT+UTc'
+            and ((r73.get('utc') or {}).get('continuation') or {}).get('status') == 'OK' and (r73.get('utc') or {}).get('primary_status') == 'OK')
         rc, out = _run(os.path.join(td, 'b'), kit, 'ps_3_7_r45', 'UB')
         chk('M10 다른 침대: 복원 전 거부 (최종 튜플이 있어도)', lambda: rc != 0 and 'REFUSE' in out)
         # ── ULKR-06 미지원 JOB 의 RESUME = 거부 (분명한 사유 · 기록 보존 · lmp 호출 없음) ──

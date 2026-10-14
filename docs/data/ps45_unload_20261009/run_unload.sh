@@ -244,8 +244,12 @@ case "$JOB" in
     RM=$(ls "$SRC"/restart/restart_RM_*.bin 2>/dev/null); [ "$(echo "$RM" | grep -c .)" = 1 ] || die "UT 의 R_M restart 가 하나가 아니다: $RM"
     RS=${RM##*/restart_RM_}; RS=${RS%.bin}
     [ -s "$SRC/restart/state_RM_$RS.in" ] || die "UT 의 R_M 상태 파일 없음"
-    for f in ul_windows.csv ul_steps.csv ul_events.csv; do cp -p "$SRC/$f" "$JD/$f" || die "UT 기록 복사 실패: $f"; done
-    echo "continues=UT rm_step=$RS" >> "$JD/run_manifest.txt"
+    # 개정 3 §14-3 (ULKR-03) — UT 의 기록 · 덤프 · thermo 를 복사하지 않는다: 부모 경로 + sha256 목록 (판독기가 거기서 읽고 대조) ·
+    #   UTc 기록 CSV 는 머리만 (덱의 이어 돌림 경로는 머리를 쓰지 않고 줄만 덧붙인다)
+    "$PY" -I "$KIT/ul_reader.py" parentsums "$SRC" > "$JD/parent_UT.sha256" || die "UT 부모 관측 sha256 목록을 쓸 수 없다"
+    for f in windows steps events; do tbl "','.join(d['records']['${f}_cols'])" > "$JD/ul_$f.csv" || die "UTc 기록 머리 실패: ul_$f.csv"; done
+    { echo "continues=UT"; echo "parent_dir=$SRC"; echo "rm_step=$RS"; echo "parent_sums=parent_UT.sha256"
+      echo "parent_sums_sha256=$(sha256sum "$JD/parent_UT.sha256" | cut -d' ' -f1)"; } >> "$JD/run_manifest.txt"
     run_deck "$JD" U_UT3 "$RM" "$SRC/restart/state_RM_$RS.in" 1
     reader arm "$WORK_ROOT" "$BED" "$JOB"
     ;;

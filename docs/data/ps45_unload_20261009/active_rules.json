@@ -32,11 +32,12 @@
   },
   {
    "id": "utc",
-   "rule": "결정표 3 행 → UTc = U_UT3 덱을 UT 의 R_M (restart + 상태) 에서 이어 돌림 · 7:3 은 S0 에서 새 UT3 없음 (§13-5 ③)",
-   "where": "ul_reader.py:gate",
+   "rule": "결정표 3 행 → UTc = U_UT3 덱을 UT 의 R_M (restart + 상태) 에서 이어 돌림 · 7:3 은 S0 에서 새 UT3 없음 · UT 관측은 복사하지 않고 경로 + sha256 (parent_UT.sha256) 으로 읽는다 · 경계 중복 · 누락 = 이어 돌림 무효 · 최종 t3 = UT 주 값 + UTc 보조 (§13-5 ③ · 개정 3 §14-3 · ULKR-03)",
+   "where": "ul_reader.py:_t3_entry",
    "where_exists": true,
    "witness": [
     "ul_reader R5",
+    "ul_reader R23",
     "ul_runner_test M9"
    ]
   },

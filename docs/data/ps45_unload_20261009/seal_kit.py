@@ -38,8 +38,9 @@ RULES = (
      'ul_reader.py', 'gate', ('ul_reader R5', 'ul_runner_test M5')),
     ('ut_rm_stop', 'UT = 첫 교차 + 확인 두 단 → R_M restart + 상태 파일 → 멈춤 (RM_STOP) · UB · UV = 전체 멈춤 규칙 (§13-5 ③)',
      'make_unload_decks.py', '_machine', ('make_unload_decks GD7',)),
-    ('utc', '결정표 3 행 → UTc = U_UT3 덱을 UT 의 R_M (restart + 상태) 에서 이어 돌림 · 7:3 은 S0 에서 새 UT3 없음 (§13-5 ③)',
-     'ul_reader.py', 'gate', ('ul_reader R5', 'ul_runner_test M9')),
+    ('utc', '결정표 3 행 → UTc = U_UT3 덱을 UT 의 R_M (restart + 상태) 에서 이어 돌림 · 7:3 은 S0 에서 새 UT3 없음 · UT 관측은 복사하지 않고 경로 + sha256 '
+     '(parent_UT.sha256) 으로 읽는다 · 경계 중복 · 누락 = 이어 돌림 무효 · 최종 t3 = UT 주 값 + UTc 보조 (§13-5 ③ · 개정 3 §14-3 · ULKR-03)',
+     'ul_reader.py', '_t3_entry', ('ul_reader R5', 'ul_reader R23', 'ul_runner_test M9')),
     ('nonmonotone_union', '첫 교차 = 점 추정 + 비단조 표지 · 보고 괄호 = k = 0 부터 모든 교차 괄호의 외곽 구간 [최소, 최대] ⊇ 첫 교차 괄호 · 기록 단 비유한 = 미계산 · '
      '7:3 b 재이식 없음 (§13-5 ① · 개정 3 §14-2 · ULKR-02)',
      'ul_reader.py', 'arm_verdict', ('ul_reader R8', 'ul_reader R21')),
