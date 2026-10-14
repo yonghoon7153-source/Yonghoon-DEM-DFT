@@ -48,7 +48,7 @@
     "③_600K_MD": "A 600 K 와 같은 시드–기계 대응 (gabia 2·4·5 · kgy 1·3) · gabia 는 그때 탄성이 GPU 를 쓰면 새 공존 결정 · 러너는 v2 러너를 B 로 일반화 (결과 전 · 시험 포함)",
     "④_판독": "대조표 커밋 → 판독 한 번 → 갈래 → 마감"
   },
-  "⏭": "600 K 5 런 끝 ✅ (10-14 · ✅_완주_600K_2026_10_14) → ① 인벤토리 ② kgy → gabia 합치기 ③ 판독 도구 대조 모드 + 점검 목록 커밋 (판독 전) ④ 판독 ⑤ 편지 (외부 1저자)",
+  "⏭": "600 K 5 런 끝 ✅ (10-14) → ③ 판독 도구 대조 모드 + 점검 목록 커밋 ✅ (10-14 · 판독 전 · ✅_판독_도구_점검목록_2026_10_14) → ① 인벤토리 (+ 판 설치 시각 · A v2 msd sha16 대조) ② kgy seed1·3 → gabia 합치기 ④ 판독 (gabia · 새 worktree) ⑤ 편지 (외부 1저자)",
   "발사_2026_10_05": {
     "기계": "kgy (tmux li3ps4q · worktree ~/wt_li3ps4_1005 · c704348b)",
     "START": "2026-10-05 15:35:59 · 변경 0 · 시드 1 2 3 4 5 · seed1 시작 GPU 3117 MiB (cascade v7 탐침만 있던 때)",
@@ -407,5 +407,20 @@
       "⚠": "런 시간은 watch 의 소수 첫째 자리다 — 인벤토리 (queue_coexist.tsv wall_s) 로 바꾼다 · kgy 13:32 는 open_items 기록 시각 (어닐 시작 정확 시각 아님)"
     },
     "⏭": "① 두 기계 인벤토리 (해시 · 크기 · 종료 코드만 · 결과값 출력 없음) ② kgy seed1·3 → gabia 합치기 (rsync · -c 바이트 대조) ③ 판독 도구 대조 모드 + 도구 점검 목록 커밋 (카드 §4 · §5 · 판독 전) ④ 판독 (gabia) ⑤ 편지 (외부 1저자)"
+  },
+  "✅_판독_도구_점검목록_2026_10_14": {
+    "⛔_트랙": "li2s = 외부 1저자 — 결과 전 도구 준비 기록 (규칙 변경 아님 · 카드 §2 '도구 점검 목록 판독 전' 이행)",
+    "results_seen": false,
+    "점검_목록": "db/properties/lpscl_smallcell_glass_control_li3ps4_readout_checklist_2026_10_14.json (카드 §2 18 항목 + §1 보고량 ①–④ + §5 기록 · 도구 출력 키 또는 runlog 위치 · ⏳ 둘 = 인벤토리에서 채움)",
+    "도구": "tools/ionic/glass_v2_readout.py --control · sha16 097c8a8092e011e7 (v2 함수는 한 줄도 안 바뀜 — diff 전부 끼워 넣기 · msd_diffusive_check a2c06ce2bde2e733 · quench_ss_event 02d61d82e9b64cc0 · melt_quench_uma 47c7e0aab5d14fbd · 드라이버 c3e2d358ee53cefa = v2 판독과 같음)",
+    "목록을_맞추다_잡은_것_결과_전": [
+      "p90² 창 수 — 프레임 수 (n−1)·dt/50 로 세어 400 ps (4000 프레임 · 첫 관측이 equilib 뒤 한 간격) 가 7 창이 됐다 (v2 기록 8 창) → aimd_results.json 의 prod_ps / 50 로 센다 · v2 기록을 낸 CLI 와 같은 값 (selftest)",
+      "보고량 ③ (시드 간 상대 산포) 이 출력에 없었다 → R 집합 (주) · N 집합 (기록) · IQR/중앙 · max/min · sd(ln D) (카드가 집합을 안 적어 결과 전에 정함 · 편지에 알림)",
+      "대조 잡 — A 600 K 다섯을 다시 읽어 v2 마감의 D/중앙 · 창별 p90² 를 재현하는지 본다 (D/중앙 어긋남 · 마감 못 읽음 → 판정 보류 · p90² 만 어긋남 → B p90² 를 같은 잣대로 안 읽음)",
+      "N_eff 를 msd_diffusive_check.rsd_report 한 곳으로 (옛 기록이면 msd_Li_A2 배열 max) · 상자 L 열 · 로그 머리에 도구 sha16 (melt_quench_uma · 드라이버 포함)",
+      "다리 S (B seed1 · 3) 확인 — 주인 = R_PS 2.6 Å 안 P 집합이라 진동으로 ②·④ 를 어기지 않는다 (코드 확인 · 변경 없음)"
+    ],
+    "시험": "selftest PASS 68 (음성 포함) · 깨기 CM1–CM12 + N1–N12 24/24 빨강 · CLI 끝까지 (합성 A·B) rc 3 = 합성 A 가 v2 를 재현 못 해 보류 (의도한 경로) · 런 하나 빼면 rc 2 · convention_check 0 위반 · validate_canonical ✅",
+    "⏭": "① 인벤토리 (두 기계 · 판 설치 시각 · A v2 msd sha16 대조) ② 합치기 ③ 판독 블록 (새 worktree · selftest 종료 코드 · sha16 097c8a8092e011e7 확인) ④ 결과 기록 ⑤ 편지"
   }
 }
