@@ -4,13 +4,14 @@
 > 문법 fixture PASS 를 **R · EXT 실행 전 사전 점검**으로 강제했다 (Q5) · UC = fresh-attempt-only (Q6) — 시험 먼저 · LIGGGHTS 없음.  각 반례가 고친 트리에서 거부되고
 > 양성 대조가 그대로인지, Linux 전체 로그가 §9-5 를 채우는지 짧게 판정해 달라.  `ULKRR-01` = `039abb141` (남은 것 = ibb 실제 바이너리 PASS · 실행 2).
 > ✅ **1저자 10-14** — 수정 계획 dem_unloading_kit_reverify_fix_plan_20261014.md Q1–Q7 = 권고대로 (*"권고대로 해요"*).
-> **리뷰 핀** = `eaecfba2a` (코드 · 증거 · 이 요청서가 든 본 가지 커밋 · 원장 claimed_fixed 기록 = 그 다음 커밋) · **기준** = `a30fe150e` (판정문 핀) · 이 수정 가지 시작 = `77b5885e0`.
+> **리뷰 핀** = 이 정정판이 든 본 가지 커밋 (발송 때 1저자가 번호를 적는다 · 키트 코드 · 증거 바이트 = `eaecfba2a` 와 같다 · 원장 claimed_fixed = `4a8b55013`) · **기준** = `a30fe150e` (판정문 핀) · 이 수정 가지 시작 = `77b5885e0`.
+> ⚠ **정정 10-14 밤 (`SELF-116`)**: 첫 판 (`eaecfba2a`) §0 · §3 · §6 의 커밋 번호 셋 (시험 먼저 · 수정 · README) 은 수정 작업 트리 (에이전트) 판이라 원격에 없었다 — 본 가지 번호로 바꿨다 (cherry-pick · `git patch-id` 같음 · 키트 트리 바이트 같음).  증거 폴더 이름 (`before_fix_tests_first_…/` · `after_fix_…/`) · `summary.json` 의 `git_head` 는 로그를 낸 작업 트리 판 그대로 둔다 (대응 = 증거 README §2).
 
 ## 0. 대상 · 지위
 
 - 판정문 codex_review_dem_unloading_kit_reverify_20261014.md · 증거 codex_dem_unloading_kit_reverify_evidence_20261014 (탐침 스크립트는 **실행하지 않았다** — `evidence/*.json` · `notes/` 로
   반례를 읽고 우리 시험으로 다시 만들었다 · 판정문 §10 탐침을 고친 트리에서 다시 돌려 주면 좋다).
-- 커밋: 시험 먼저 `c696dbf0f` → 수정 `ca59641ca` → README `82d532c60` → 증거 · 이 요청서 (그 다음 커밋).
+- 커밋 (본 가지): 시험 먼저 `b1121b6b6` → 수정 `e271bdd48` → README `70b3fefed` → 증거 · 이 요청서 첫 판 `eaecfba2a` → 원장 claimed_fixed `4a8b55013` → 이 정정판.
 - 바뀐 곳 = 키트 `docs/data/ps45_unload_20261009/` — `ul_lib.py` · `ul_s3.py` · `ul_gates.py` · `ul_reader.py` · `run_unload.sh` · `run_unload_ibb.sbatch` (주석) · `seal_kit.py` (활성 규칙 22 → 24) ·
   `ul_runner_test.py` · README · `SHA256SUMS` · `active_rules.json` / 이력 시험 `history_test/` — `run_history.sh` (Q4 나) · `read_history.py` (모의 · 시험만) · `SHA256SUMS`.
 - 바꾸지 않은 것: `unload_params.json` (바이트 = `a30fe150e`) · 생산 덱 64 (`make_unload_decks.py --check`) · 이력 시험 덱 아홉 · 판 STL · 표 · 생성기 (= `039abb141` 바이트) ·
@@ -43,7 +44,7 @@
 
 ## 3. Linux 전체 로그 (판정문 §9-5) — `docs/reviews/dem_unloading_kit_reverify_fix_evidence_20261014/`
 
-| 명령 (`python3 -I …` · 키트 폴더) | 최종 (`82d532c60` · 깨끗) | 시험 먼저 (`c696dbf0f`) |
+| 명령 (`python3 -I …` · 키트 폴더) | 최종 (`70b3fefed` 와 같은 키트 트리 · 깨끗) | 시험 먼저 (`b1121b6b6` 와 같은 키트 트리) |
 |---|---|---|
 | `ul_lib` · `ul_s3` · `ul_observers` · `ul_gates` `--selftest` | rc 0 · 21 · 16 · 21 · 37 | rc 1 · 1 · 0 · 1 (2 · 2 · 0 · 1 실패) |
 | `ul_reader.py --selftest` | rc 0 · 158/158 | rc 1 · 44 실패 |
@@ -84,5 +85,5 @@ python3 docs/reviews/dem_unloading_kit_reverify_fix_evidence_20261014/tools/gram
 ## 6. 남은 것
 
 - ⬜ ibb 문법 fixture **실행 2** (실제 LIGGGHTS · 1저자 · README §1-6 명령 그대로 · `039abb141` 또는 이 판 = 같은 덱) → 보고 묶음 반입 → 그 `grammar_verdict.json` 이 §3 RJ · RJ2 · EXT 의 `GRAMMAR_VERDICT`.
-- ⬜ 원장 (메인 세션): `ULKRR-02` · `03` · `04` → claimed_fixed (`ca59641ca`) · `ULKRR-01` = 실행 2 PASS 뒤.
+- ✅ 원장 (`4a8b55013`): `ULKRR-02` · `03` · `04` → claimed_fixed (`e271bdd48`) · `ULKRR-01` = claimed_fixed `039abb141` (남은 증거 = 실행 2 PASS).
 - ⛔ 본 R · 10:0 연장 · U = 이 재확인 GO + 실행 2 PASS 뒤.

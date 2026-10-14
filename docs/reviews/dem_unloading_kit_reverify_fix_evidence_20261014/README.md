@@ -20,12 +20,14 @@
 | 폴더 | 코드 상태 | 무엇 |
 |---|---|---|
 | `baseline_77b5885e0/` | `77b5885e0` (작업 시작 판 · `039abb141` 문법 fixture 고침 포함) | 이 판의 시험 전부 rc 0 — Linux 에서 원래 시험이 실제로 도는가 (Codex 가 못 돌린 Bash 부분 포함) |
-| `before_fix_tests_first_c696dbf0f/` | `c696dbf0f` (새 시험만 더함 · 키트 코드 그대로) | 시험 먼저 — 새 시험이 고치기 전 코드에서 **의도한 이유로** 실패 (아래 §3 왼쪽 수) |
-| `after_fix_82d532c60/` | `82d532c60` (수정 `ca59641ca` + README) · `git status` 깨끗 · 키트 `SHA256SUMS` sha256 `3bd18ff6adad9e8656721504bcfb58558bc3655b991bc6e73668ceee39a73767` · `history_test/SHA256SUMS` `8ff722d24096c6bd929682842e3b93907951ad29943f180709c914404cdb928d` | 최종 — 전부 rc 0 |
+| `before_fix_tests_first_c696dbf0f/` | 작업 트리 판 (폴더 이름의 번호 · 원격에 없음) = 본 가지 `b1121b6b6` (새 시험만 더함 · 키트 코드 그대로) | 시험 먼저 — 새 시험이 고치기 전 코드에서 **의도한 이유로** 실패 (아래 §3 왼쪽 수) |
+| `after_fix_82d532c60/` | 작업 트리 판 (폴더 이름의 번호 · 원격에 없음) = 본 가지 `70b3fefed` (수정 `e271bdd48` + README) · `git status` 깨끗 · 키트 `SHA256SUMS` sha256 `3bd18ff6adad9e8656721504bcfb58558bc3655b991bc6e73668ceee39a73767` · `history_test/SHA256SUMS` `8ff722d24096c6bd929682842e3b93907951ad29943f180709c914404cdb928d` | 최종 — 전부 rc 0 |
+
+- ⚠ **정정 10-14 밤 (`SELF-116`)**: 시험 먼저 · 최종 두 묶음은 수정 작업 트리 (에이전트) 에서 냈다 — 그 판 번호 (폴더 이름 · `summary.json` 의 `git_head`) 는 원격에 없다.  본 가지 대응 = cherry-pick (`git patch-id` 같음 · 작업 트리 판 ↔ 본 가지의 `git diff -- docs/data/ps45_unload_20261009/` 빈 결과 · 10-14 밤 확인): 시험 먼저 → `b1121b6b6` · 수정 → `e271bdd48` · README → `70b3fefed`.  로그 · rc · 봉인 sha256 은 그대로 유효하다 (키트 트리 같음).
 
 ## 3. 명령 · rc · 검사 수 (✓ 줄 수 / 전체 · 시험 먼저 → 최종)
 
-| 명령 (`python3 -I …`) | 77b5885e0 | 시험 먼저 c696dbf0f | 최종 82d532c60 |
+| 명령 (`python3 -I …`) | 77b5885e0 | 시험 먼저 (= b1121b6b6) | 최종 (= 70b3fefed) |
 |---|---|---|---|
 | `ul_lib.py --selftest` | rc 0 · 19/19 | rc 1 · 19/21 (L13 ×2 = `exact_id` · `ids_of` 없음) | rc 0 · 21/21 |
 | `ul_s3.py --selftest` | rc 0 · 14/14 | rc 1 · 14/16 (F12 ×2 — 소수 원자 ID · 쌍 참조가 PASS) | rc 0 · 16/16 |

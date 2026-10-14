@@ -60,17 +60,19 @@
 - 고치기 전 측정 = 새 시험 + 그 커밋 직전 판의 구현 함수 (같은 파일에서 해당 함수만 옛 판으로 되돌린 혼합 파일 · 잰 뒤 원복 · 바이트 대조) · 러너 = 직전 판 `run_unload.sh` 를 넣고 잰 뒤 원복 ·
   시험 쪽 fixture 를 고친 경우 다시 쟀다.  Codex 증거의 탐침 스크립트는 실행하지 않았다 (자료로만 읽고 반례를 우리 시험으로 다시 만들었다).
 
+> 정정 10-14 밤 (`SELF-116`): 이 표의 커밋 번호 = 본 가지 (cherry-pick · `git patch-id` 같음) — 첫 판은 수정 작업 트리 (에이전트) 판 번호라 원격에 없었다.
+
 | 커밋 | 무엇 | 시험 (고치기 전 → 고친 뒤) |
 |---|---|---|
-| `122abaad8` | 비준 기록 (이 계획 머리 · §3 · 키트 README) | — |
-| `f5c899453` | 등록 개정 3 = REG §14 (Q1 · Q3–Q8 규칙 · §13 표지 · 결과 0 건) | — |
-| `2b6500869` | `ULKR-05` · `08` — 복원 판정 완전성 (PRE · POST · R_END · UN 전부 읽힘 · 머리 step · 고유 ID · S0 집합 · R_END ↔ UN · Ut0 · R · UN 기술 성공) · 이력 자격 (SYN PASS · 부호 = 표 · 총힘 시점) · 관문 = RESTORED + RJ 잡 기술 실패 0 | `ul_reader` 57 중 15 실패 → 57 / 57 · `ul_gates` 35 중 1 → 35 / 35 |
-| `a03cff857` | `ULKR-06` · `11` — RESUME = 일반 팔만 · 같은 승인 팔 (`gate=ALLOW` · 요약 없음) · 한 번 · 나머지 JOB 거부 (새 시도 안내) · 단계 rc · 판독기 rc 잡 기록 · G0 · Ut0 실패 = R 없음 | `ul_runner_test` 21 중 11 → 21 / 21 |
-| `fbf59cc78` | `ULKR-01` · `02` · `04` — 확인 두 단 등록 정상 완료 (판 접촉 요구 없음) · k = 0 부터 합집합 외곽 · 관측 파싱 (전부 읽힘 · 머리 step · 고유 ID · S0 밖 없음 · CSV 결손 · k 불연속) | `ul_reader` 74 중 13 → 74 / 74 |
-| `e90f903f1` | `ULKR-03` — UTc = UT 부모 관측 경로 + sha256 (`parent_UT.sha256` · 복사 없음) · 경계 중복 · 누락 · t3 = UT 주 값 + UTc 보조 | `ul_reader` 83 중 8 → 83 / 83 · `ul_runner_test` 23 중 2 → 23 / 23 |
-| `f67f242bb` | `ULKR-07` (덱 + 판독기) · `09` · `10` — 재접촉 = 같은 높이 남은 예산 · 예산 끝 `SEP_INCOMPLETE` · 판독기 분리 = 덱 규칙 (이동 = 초기화 · SEPARATE 창) · DONE ↔ 사건 대조 · S3 g = 팔 g · KE 기준 = UK 완전 세 창 · 덱 42 재생성 (U · G · UT · Ut0 — UK · UC · R · UNread · EXT · EXT2 = 바이트 그대로) | `ul_reader` 106 중 21 → 106 / 106 · `ul_runner_test` 24 중 1 → 24 / 24 · `make_unload_decks` 291 중 3 → 291 / 291 |
-| `d9e51323d` | `ULKR-12` (Q7) — ε (S0 봉인 C_all · 비교 프레임 완전) · W_proxy (k 0 → M) 를 팔 판정 · report 에 · 묶음에 결정 파일 · 경량 묶음 = 재검증 원천 아님 | `ul_observers` 21 중 5 → 21 / 21 · `ul_reader` 111 중 5 → 111 / 111 · `ul_runner_test` 25 중 1 → 25 / 25 |
-| `e6c9049dc` | Q8 — 이력 시험 키트 문법 fixture (`in.hist_grammar.liggghts` · `run_history.sh --grammar-only` · `read_history.py --grammar` · 생성기 모의기 ⑯ · H0–H5 덱 여덟 바이트 그대로) | `make_history_decks` 149 중 10 → 156 / 156 · `read_history` 53 중 15 → 53 / 53 |
+| `f823bad21` | 비준 기록 (이 계획 머리 · §3 · 키트 README) | — |
+| `5cba214da` | 등록 개정 3 = REG §14 (Q1 · Q3–Q8 규칙 · §13 표지 · 결과 0 건) | — |
+| `eeb99b082` | `ULKR-05` · `08` — 복원 판정 완전성 (PRE · POST · R_END · UN 전부 읽힘 · 머리 step · 고유 ID · S0 집합 · R_END ↔ UN · Ut0 · R · UN 기술 성공) · 이력 자격 (SYN PASS · 부호 = 표 · 총힘 시점) · 관문 = RESTORED + RJ 잡 기술 실패 0 | `ul_reader` 57 중 15 실패 → 57 / 57 · `ul_gates` 35 중 1 → 35 / 35 |
+| `efa935bd7` | `ULKR-06` · `11` — RESUME = 일반 팔만 · 같은 승인 팔 (`gate=ALLOW` · 요약 없음) · 한 번 · 나머지 JOB 거부 (새 시도 안내) · 단계 rc · 판독기 rc 잡 기록 · G0 · Ut0 실패 = R 없음 | `ul_runner_test` 21 중 11 → 21 / 21 |
+| `1b77fe8e9` | `ULKR-01` · `02` · `04` — 확인 두 단 등록 정상 완료 (판 접촉 요구 없음) · k = 0 부터 합집합 외곽 · 관측 파싱 (전부 읽힘 · 머리 step · 고유 ID · S0 밖 없음 · CSV 결손 · k 불연속) | `ul_reader` 74 중 13 → 74 / 74 |
+| `b7ef99f1c` | `ULKR-03` — UTc = UT 부모 관측 경로 + sha256 (`parent_UT.sha256` · 복사 없음) · 경계 중복 · 누락 · t3 = UT 주 값 + UTc 보조 | `ul_reader` 83 중 8 → 83 / 83 · `ul_runner_test` 23 중 2 → 23 / 23 |
+| `cee186e55` | `ULKR-07` (덱 + 판독기) · `09` · `10` — 재접촉 = 같은 높이 남은 예산 · 예산 끝 `SEP_INCOMPLETE` · 판독기 분리 = 덱 규칙 (이동 = 초기화 · SEPARATE 창) · DONE ↔ 사건 대조 · S3 g = 팔 g · KE 기준 = UK 완전 세 창 · 덱 42 재생성 (U · G · UT · Ut0 — UK · UC · R · UNread · EXT · EXT2 = 바이트 그대로) | `ul_reader` 106 중 21 → 106 / 106 · `ul_runner_test` 24 중 1 → 24 / 24 · `make_unload_decks` 291 중 3 → 291 / 291 |
+| `c82cbfdde` | `ULKR-12` (Q7) — ε (S0 봉인 C_all · 비교 프레임 완전) · W_proxy (k 0 → M) 를 팔 판정 · report 에 · 묶음에 결정 파일 · 경량 묶음 = 재검증 원천 아님 | `ul_observers` 21 중 5 → 21 / 21 · `ul_reader` 111 중 5 → 111 / 111 · `ul_runner_test` 25 중 1 → 25 / 25 |
+| `18b798ecc` | Q8 — 이력 시험 키트 문법 fixture (`in.hist_grammar.liggghts` · `run_history.sh --grammar-only` · `read_history.py --grammar` · 생성기 모의기 ⑯ · H0–H5 덱 여덟 바이트 그대로) | `make_history_decks` 149 중 10 → 156 / 156 · `read_history` 53 중 15 → 53 / 53 |
 | (이 문서 커밋) | 키트 README (§0 · §2–§5 · §9) · REG §14 문안 정리 (14-3 · 14-7 · 14-9 · 14-10) · 이 §5 · Codex 재확인 요청서 · 러너 머리 주석 RJ 순서 (G0 → Ut0 · 동작 무변경) + 재봉인 | — |
 
 - 끝 상태 (전부 이 작업 트리 · Linux): `ul_lib` 19 / 19 · `ul_s3` 14 / 14 · `ul_observers` 21 / 21 · `ul_gates` 35 / 35 · `ul_reader` 111 / 111 · `make_unload_decks` 291 / 291 · `--check` (덱 64 = 생성 결과) ·

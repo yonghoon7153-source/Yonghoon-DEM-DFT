@@ -5,6 +5,8 @@
 > ✅ **1저자 10-14** — 수정 계획 `docs/reviews/dem_unloading_kit_fix_plan_20261014.md` Q1–Q9 = 전부 (가) (*"q1~q9는 권고대로야"*) · 실행 기록 = 그 문서 §5.
 > **리뷰 핀** = ⬜ (이 요청서를 담은 커밋이 본 가지에 병합된 뒤의 SHA — 발송 때 1저자가 적는다) · **기준** = `2783061ea` (판정문 핀) · 수정 가지 시작 = `6f80eddb3` (판정문 · 증거 반입).
 
+> ⚠ **정정 표지 10-14 밤 (`SELF-116`)**: 본문 (§1 표) 의 커밋 번호는 수정 작업 트리 (에이전트) 판이라 원격에 없다 — 본 가지 대응 (cherry-pick · `git patch-id` 같음) = `docs/reviews/dem_unloading_kit_fix_plan_20261014.md` §5 표 (정정판) · `docs/reviews/doc_refs_sha_exceptions.tsv`.  본문은 보낸 그대로 둔다 (판정 = 핀 `a30fe150e`).
+
 ## 0. 대상 · 지위
 
 - 판정문 `docs/reviews/codex_review_dem_unloading_kit_20261014.md` · 증거 `docs/reviews/codex_dem_unloading_kit_review_evidence_20261014/` (우리는 그 탐침 스크립트를 **실행하지 않았다** —

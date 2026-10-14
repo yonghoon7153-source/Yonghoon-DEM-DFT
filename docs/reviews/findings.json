@@ -11039,6 +11039,16 @@
         "docs/data/ps45_unload_20261009/ul_lib.py --selftest L13 · F12 · C3",
         "docs/reviews/dem_unloading_kit_reverify_fix_evidence_20261014/"
       ]
+    },
+    {
+      "id": "SELF-116",
+      "severity": "P3",
+      "status": "open",
+      "owner": "claude",
+      "found_by": "10-14 밤 내 점검 (Codex 짧은 재확인 요청서 발송 전 · 문서가 인용한 커밋을 원격 도달 가능성으로 전수 대조)",
+      "opened_in": "docs/reviews/codex_dem_unloading_kit_reverify_fix_recheck_request_20261014.md",
+      "title": "에이전트 작업 트리에서 쓴 언로딩 문서가 그 작업 트리의 커밋 번호를 cherry-pick 뒤에도 그대로 인용 — 원격 어디에도 없는 커밋 12 개 (문서 다섯) · 로컬 검사 check_doc_refs (도달 기준 = rev-list --all) 는 로컬 에이전트 가지가 그 커밋을 붙잡고 있어 초록 · GitHub CI 는 시간 제한으로 늘 cancelled 라 못 봄",
+      "note": "본 가지 대응 = cherry-pick (git patch-id 12/12 같음 · 키트 트리 바이트 같음): 시험 먼저 c696dbf0f→b1121b6b6 · 수정 ca59641ca→e271bdd48 · README 82d532c60→70b3fefed · 첫 수정 묶음 122abaad8→f823bad21 · f5c899453→5cba214da · 2b6500869→eeb99b082 · a03cff857→efa935bd7 · fbf59cc78→1b77fe8e9 · e90f903f1→b7ef99f1c · f67f242bb→cee186e55 · d9e51323d→c82cbfdde · e6c9049dc→18b798ecc.  고침 (이 커밋): 살아 있는 문서 넷 (재확인 요청서 = 정정판 · 그 증거 README · 키트 README · 첫 수정 계획 §5) = 본 가지 번호 · 이미 보낸 첫 재확인 요청서 = 본문 그대로 + 머리 정정 표지 + doc_refs_sha_exceptions.tsv 6 줄 · 쓸모 다한 로컬 에이전트 가지 둘 (작업 트리 깨끗 · git cherry 전부 같은 패치 있음 · tip de089fd94 · 411398d8c) 지움 → 로컬 검사가 원격과 같은 23 자리를 잡는 것을 확인한 뒤 고침.  다른 로컬 에이전트 가지들 = 문서가 인용한 로컬 전용 커밋 0 (전수 대조).  남은 뿌리 = 검사기의 도달 기준이 로컬 가지까지 센다 (원격 추적 ref + HEAD 로 좁히는 안 = 1저자 결정 대기) → 그때까지 open."
     }
   ]
 }
