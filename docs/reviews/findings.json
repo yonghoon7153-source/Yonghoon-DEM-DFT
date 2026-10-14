@@ -9630,22 +9630,34 @@
     {
       "id": "SUPR-01",
       "severity": "P2",
-      "status": "open",
+      "status": "claimed_fixed",
       "owner": "claude",
       "found_by": "codex 10-14 보충 20 수정 재검증 (Codex 표기 SUP20R-01 · 리뷰 핀 a9422d2e7 · 실제 plan_for/build_plan · plan_input_digest · print_preflight 로 만든 로그 · Windows 스냅샷 — 생산 194 · 보충 20 · WSL fast16 + real4 미실행)",
       "opened_in": "docs/reviews/codex_review_sup20_fix_reverify_20261014.md",
       "title": "발사 사전 점검 로그의 입력 지문이 코호트 TSV 해시를 싣지 않고 영수증도 비교하지 않는다 — 같은 20 ID · raw 표에서 TSV 만 바꾼 dry-run 로그 (cohort sha 69d3f913… → 8d5dcbd2…) 가 전체 로그 · 등록 §4 grep 로그 모두 rc 0",
-      "note": "판정문 §4.  무너지는 결론: \"WSL dry-run 의 전체 입력 지문이 등록 · 반입본과 같다\".  무너지지 않는 결론: 기본 컨테이너 입력 검증 (11 칸) · SUP20-01 · 02 수정 · 수치 봉인 32 (code_fp e8b2496b…).  자리 (핀 a9422d2e7 = HEAD 같은 줄): scripts/run_network_194_parallel.py:1815–1817 (출력 지문에 cohort_tsv_sha256 없음) · scripts/supp20_input_receipt.py:197–201 (E1 = n · ID · raw 표 · 결손만) · :214–216 (코호트 줄 = 이름 · 개수만).  발사 뒤 F3 는 전체 INPUT_DIGEST_KEYS 를 비교하지만 발사 전 증거 누락을 소급해 채우지 않는다.  우리 트리 재현 (10-14 · docs/reviews/codex_sup20_fix_reverify_evidence_20261014/_README_import.md): wrong_tsv_full_log rc 0.  최소 해결 = 판정문 §4 (전체 INPUT_DIGEST_KEYS 를 기계가 읽는 출력 · 등록값 · 반입 재계산과 비교 · 부재 거부 · TSV 만 바꾼 로그 거부 상주 시험).  수정 계획 = docs/reviews/supr_fix_plan_20261014.md."
+      "note": "판정문 §4.  무너지는 결론: \"WSL dry-run 의 전체 입력 지문이 등록 · 반입본과 같다\".  무너지지 않는 결론: 기본 컨테이너 입력 검증 (11 칸) · SUP20-01 · 02 수정 · 수치 봉인 32 (code_fp e8b2496b…).  자리 (핀 a9422d2e7 = HEAD 같은 줄): scripts/run_network_194_parallel.py:1815–1817 (출력 지문에 cohort_tsv_sha256 없음) · scripts/supp20_input_receipt.py:197–201 (E1 = n · ID · raw 표 · 결손만) · :214–216 (코호트 줄 = 이름 · 개수만).  발사 뒤 F3 는 전체 INPUT_DIGEST_KEYS 를 비교하지만 발사 전 증거 누락을 소급해 채우지 않는다.  우리 트리 재현 (10-14 · docs/reviews/codex_sup20_fix_reverify_evidence_20261014/_README_import.md): wrong_tsv_full_log rc 0.  최소 해결 = 판정문 §4 (전체 INPUT_DIGEST_KEYS 를 기계가 읽는 출력 · 등록값 · 반입 재계산과 비교 · 부재 거부 · TSV 만 바꾼 로그 거부 상주 시험).  수정 계획 = docs/reviews/supr_fix_plan_20261014.md.  ★ 10-14 claimed_fixed (1저자 Q1–Q4 권고대로 · 시험 먼저 df45a6219 → 구현 8af6cbae3 · 문서 b2c47e4fc) — 코호트 TSV 첫 행 deck_sha256 한 글자만 바꾼 진짜 dry-run (실행기 rc 0) → 값으로 거부 (E1 · P9) · Codex alternate_cohort.tsv (8d5dcbd2…) 같음 · 봉인 32 code_fp e8b2496b… 그대로 · 닫힘 = Codex 짧은 재확인 (docs/reviews/codex_supr_fix_reverify_request_20261014.md).",
+      "claimed_fixed_sha": "8af6cbae3",
+      "evidence_tests": [
+        "scripts/supp20_input_receipt.py (--selftest — 반례 (a)–(i) · 등록 명령 밖 인자 · 승인 SHA · Codex 로그 다섯 상주 · 고치기 전 32/88 (56 실패) → 88/88 at 8af6cbae3)",
+        "scripts/run_network_194_parallel.py (--selftest ㊲a–㊲i · 130/139 → 139/139 at 8af6cbae3)",
+        "docs/reviews/supr_fix_plan_20261014.md (§4 실행 기록 · Codex 로그 다섯 = 고친 뒤 전부 rc 1)"
+      ]
     },
     {
       "id": "SUPR-02",
       "severity": "P2",
-      "status": "open",
+      "status": "claimed_fixed",
       "owner": "claude",
       "found_by": "codex 10-14 보충 20 수정 재검증 (Codex 표기 SUP20R-02 · 실제 production_observation_problem 관측 OFF 사유를 사전 점검 fixture 에 넣어 실제 print_preflight 로 출력 · 시스템 · 원자료 상태 = 합성 fixture)",
       "opened_in": "docs/reviews/codex_review_sup20_fix_reverify_20261014.md",
       "title": "사전 점검 영수증 E5 가 ⛔ · ✗ 부재만 본다 — 관측 OFF 거부 로그를 중단 사유 앞에서 자른 prefix 와 필수 검사 줄 셋 (전이 의존 · 지연 import · fork) 을 지운 로그가 rc 0 (전체 거부 로그는 rc 1)",
-      "note": "판정문 §5.  무너지는 결론: \"중단 없이 완결된 dry-run 을 이 영수증이 확인했다\".  무너지지 않는 결론: 실제 러너는 관측 OFF 를 막는다 (소스 · 전체 로그) — 영수증 경로의 결함.  자리: scripts/supp20_input_receipt.py:210–213 (E5) · scripts/run_network_194_parallel.py:1818–1823 (중단 사유가 정상처럼 보이는 지문 줄 뒤) · :2381–2387 (stop → rc 2 · 정상 dry-run = 완료 줄 + rc 0 — 영수증이 이 완료 · 종료 상태를 안 봄).  우리 트리 재현 (10-14): observation_off_truncated_before_stop rc 0 · missing_three_prerequisite_lines rc 0 · observation_off_full_log rc 1 (대조).  최소 해결 = 판정문 §5 (필수 세 항목 + observe_imports=true 명시 성공 값 · 한 실행에 결합된 완료 상태 + 정상 종료 · 원본 전체 로그 · 인자 · 출력 해시 · 종료코드 보존 · tee/grep rc 를 러너 rc 로 오인 금지 · 반례 상주 · 등록 §4 grep 명령 정정).  수정 계획 = docs/reviews/supr_fix_plan_20261014.md."
+      "note": "판정문 §5.  무너지는 결론: \"중단 없이 완결된 dry-run 을 이 영수증이 확인했다\".  무너지지 않는 결론: 실제 러너는 관측 OFF 를 막는다 (소스 · 전체 로그) — 영수증 경로의 결함.  자리: scripts/supp20_input_receipt.py:210–213 (E5) · scripts/run_network_194_parallel.py:1818–1823 (중단 사유가 정상처럼 보이는 지문 줄 뒤) · :2381–2387 (stop → rc 2 · 정상 dry-run = 완료 줄 + rc 0 — 영수증이 이 완료 · 종료 상태를 안 봄).  우리 트리 재현 (10-14): observation_off_truncated_before_stop rc 0 · missing_three_prerequisite_lines rc 0 · observation_off_full_log rc 1 (대조).  최소 해결 = 판정문 §5 (필수 세 항목 + observe_imports=true 명시 성공 값 · 한 실행에 결합된 완료 상태 + 정상 종료 · 원본 전체 로그 · 인자 · 출력 해시 · 종료코드 보존 · tee/grep rc 를 러너 rc 로 오인 금지 · 반례 상주 · 등록 §4 grep 명령 정정).  수정 계획 = docs/reviews/supr_fix_plan_20261014.md.  ★ 10-14 claimed_fixed (1저자 Q1–Q4 권고대로 · 시험 먼저 df45a6219 → 구현 8af6cbae3 · 문서 b2c47e4fc) — 관측 OFF 전체 · 잘린 prefix · 필수 세 줄 결손 · grep 로그 단독 (E0) · 완료 표지 전 잘림 · exit≠0 · completed false · observe_imports 거짓 · 로그 sha 불일치 → 전부 거부 · 정상 = rc 0 · 봉인 32 code_fp e8b2496b… 그대로 · 닫힘 = Codex 짧은 재확인 (docs/reviews/codex_supr_fix_reverify_request_20261014.md).",
+      "claimed_fixed_sha": "8af6cbae3",
+      "evidence_tests": [
+        "scripts/supp20_input_receipt.py (--selftest — 반례 (a)–(i) · 등록 명령 밖 인자 · 승인 SHA · Codex 로그 다섯 상주 · 고치기 전 32/88 (56 실패) → 88/88 at 8af6cbae3)",
+        "scripts/run_network_194_parallel.py (--selftest ㊲a–㊲i · 130/139 → 139/139 at 8af6cbae3)",
+        "docs/reviews/supr_fix_plan_20261014.md (§4 실행 기록 · Codex 로그 다섯 = 고친 뒤 전부 rc 1)"
+      ]
     },
     {
       "id": "SELF-107",
@@ -10521,6 +10533,21 @@
         "docs/data/ps45_unload_20261009/history_test/make_history_decks.py (--selftest ⑮ 함께 사는 pair/gran/local ≤ 1 · wall/gran/local ≤ 1 · 규칙 자체 반례 넷 — 고치기 전 131 중 7 실패 → 139/139 at dc6d285a9)",
         "docs/reviews/dem_unloading_history_test_20261014/README.md (ibb 재실행 job 283122 · 작업 트리 f9edcc416 · 봉인 241277b2… · 등록 빌드 LMP — H0–H5 전부 PASS · 읽는 쪽 rc 0 · 컨테이너 재판독 같은 판정 JSON)"
       ]
+    },
+    {
+      "id": "SELF-112",
+      "severity": "P3",
+      "status": "claimed_fixed",
+      "owner": "claude",
+      "found_by": "claude 10-14 SUPR 수정 구현 중 (에이전트가 실행기 manifest 칸을 읽다 발견)",
+      "opened_in": "docs/reviews/supr_fix_plan_20261014.md",
+      "title": "수정 계획 머리 범위 줄에 \"실행기 파일 지문은 바뀌므로 발사 manifest 에 기록된다\" 고 썼다 — 거짓 (manifest 코드 지문 칸 = git sha · 봉인 32 code_hashes · 인계 도구 handover_code_hashes 뿐 · 실행기 파일 sha256 칸 없음)",
+      "note": "판정문 §6 ③ \"실행기 · 인계 · 배포 도구 지문도 기록\" 을 manifest 가 이미 한다고 잘못 적은 것.  실행기 판 = git sha · 실행기 파일 지문 = 사전 점검 완료 영수증 runner.sha256 (8af6cbae3) · 보충 20 영수증 도구의 도구 핀 칸.  정정 = 수정 계획 머리 정정 표지 (원문 보존) · §4 ④.",
+      "evidence_tests": [
+        "docs/reviews/supr_fix_plan_20261014.md (머리 정정 표지 · §4 ④)",
+        "scripts/run_network_194_parallel.py (완료 영수증 runner.sha256 — 8af6cbae3)"
+      ],
+      "claimed_fixed_sha": "b2c47e4fc"
     }
   ]
 }
