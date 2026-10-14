@@ -1,0 +1,109 @@
+{
+  "kind": "INDEPENDENT_DOCUMENT_AND_SOURCE_PREREVIEW_V3",
+  "review_date": "2026-10-14",
+  "repository": "yonghoon7153-source/Yonghoon-DEM-DFT",
+  "branch": "claude/14-gate-code-review-9qkx05",
+  "reviewed_head": "05614f07abc559a12254db41ce7301574ddc6f50",
+  "request_sha256": "29cd92a44db97fc29893adc6bc5dda75d610486cdd5d169eafd6df537bd9029a",
+  "send_sha256": "392f10045292d585476271f7cb20b2665643eedfa45032544d9612197f83c84d",
+  "decision": "PREREVIEW_ACCEPTED_READY_FOR_EXPLICIT_E0_APPROVAL",
+  "required_document_revisions": [],
+  "closed_findings": [
+    {
+      "id": "C4E-N1-REMAINING",
+      "status": "CLOSED_DOCUMENT_SCOPE",
+      "request_lines": [
+        304,
+        338,
+        339,
+        342
+      ]
+    },
+    {
+      "id": "C4E-N2-FINAL-BOUNDARY",
+      "status": "CLOSED_DOCUMENT_SCOPE",
+      "request_lines": [
+        127,
+        129,
+        130,
+        131,
+        132,
+        133,
+        134,
+        155,
+        156,
+        158,
+        206,
+        208,
+        209,
+        250,
+        256,
+        258,
+        299
+      ]
+    },
+    {
+      "id": "C4E-N3-FINAL-DRAIN",
+      "status": "CLOSED_DOCUMENT_SCOPE",
+      "request_lines": [
+        171,
+        173,
+        175,
+        255,
+        289,
+        304
+      ]
+    }
+  ],
+  "questions": {
+    "Q1": "READY_FOR_EXPLICIT_USER_E0_APPROVAL_OF_FIXED_SCOPE",
+    "Q2": "FINAL_WRITE_SNAPSHOT_AND_EXTERNAL_PROCESS_EXIT_SEPARATELY_BOUND",
+    "Q3": "PURE_POST_AGGREGATION_FIXTURE_ACCEPTED_NO_OS_RACE_GUARANTEE"
+  },
+  "counts": {
+    "old_tests": 159,
+    "new_ids": 21,
+    "GREEN": 180,
+    "old_real_fork_sessions": 10,
+    "new_real_fork_sessions": 5,
+    "GREEN_real_fork_sessions": 15,
+    "GREEN_fork_session_cap": 17,
+    "COBYQA_calls": 14,
+    "internal_maxfev_per_call": 50,
+    "independent_reevaluation_per_normal_return_max": 1
+  },
+  "recommendation": {
+    "cost_rule": "fixed_projection",
+    "util": "pinned_original",
+    "code_location": "new_module_plus_monitor_optional_argument",
+    "alternative_blanket_acceptance": false
+  },
+  "implementation_checks": [
+    "s_3 invokes real finalization with clock/write/readback/size failures rather than injecting record_state",
+    "no in-root writes after final_record snapshot",
+    "stage success ANDs run final result with external process rc0 and no timeout",
+    "r_6c fixture traverses real post-aggregation function and preserves done and prior stop"
+  ],
+  "E0_functional_pass": false,
+  "E0_approved": false,
+  "E1_approved": false,
+  "C4_A_B_approved": false,
+  "new_execution_approval": false,
+  "previous_limited_closures_maintained": true,
+  "historical_failures_and_authority_deviations_preserved": true,
+  "H_array_and_H4_conditions_not_discharged": true,
+  "reviewer_actions": {
+    "received_program_execution": 0,
+    "tests": 0,
+    "Python": 0,
+    "optimizer": 0,
+    "Sobol": 0,
+    "raw_workbook_pickle_notebook_fetch_or_open": 0,
+    "COMSOL_JVM_compile_solve": 0,
+    "environment_rebuild_install": 0,
+    "repository_mutation": 0,
+    "external_delivery": 0,
+    "read_only_GitHub_and_own_PowerShell_data_tools": true
+  },
+  "next": "Explicit user E0 approval; implement and submit E0 results; independent acceptance; separate user E1 GO"
+}

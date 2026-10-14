@@ -1,0 +1,7 @@
+{
+  "sha": "05614f07abc559a12254db41ce7301574ddc6f50",
+  "message": "REIL C4-E 실행 승인 요청 정정판 v3 · 재검토 발송문 — v2 회신의 문서 경계 셋 반영 (승인 전 실행 0)\n\n- N1 잔여: 실제 fork 기존 10 + 새 5 = 15 (상한 17 · v2 의 11 은 계수 오류 — 모사 Process 둘 ·\n  c_8 두 파) · COBYQA 내부 ≤ 50 / 정상 반환 뒤 독립 재평가 ≤ 1 · 보존 util 함수별 유한 상한\n- N2 최종 경계: 끝 식별 재해시 → 사전 판정 → final_record 한 번 (끝 기록 포함 · 같은 산출 루트\n  크기 · 최종 snapshot) → 최종 판정 stdout (snapshot 뒤 외부 반환) · 9,900 s = 최종 snapshot ·\n  10,800 s = run 프로세스 종료 (단계 실행기 timeout) · s_3 (d)–(g)\n- N3 최종 drain: 진행 중 초과 = 중단 요청 대상 · 마지막 drain 의 done 은 원래 COMPLETED ·\n  termination 보존 · 초과 기록 · global_stop 유지 · 늦은 완료 대조 확장 · r_6 (c) 순수 fixture\n\nCo-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>\nClaude-Session: https://claude.ai/code/session_0157zrP6GFu6cJF5x8CwZaEm",
+  "html_url": "https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT/commit/05614f07abc559a12254db41ce7301574ddc6f50",
+  "branch": "claude/14-gate-code-review-9qkx05",
+  "retrieval": "GitHub connector, branch resolved then fixed-commit file reads"
+}

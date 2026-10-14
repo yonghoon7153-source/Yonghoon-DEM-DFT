@@ -1,0 +1,13 @@
+{
+  "kind": "REVIEWER_TOOL_OBSERVATIONS",
+  "scope": "Reviewer local data-only workflow, not target runtime evidence",
+  "observation": {
+    "chunk_id": "6ec19c",
+    "exit_code": 1,
+    "reason": "Combined readback included an optional read of reviewer package_review.ps1 before it existed; the reply text was read successfully. Missing reviewer packaging file was then created as planned.",
+    "received_code_execution": 0,
+    "candidate_changes": 0,
+    "tests": 0
+  },
+  "statement": "This local file-read result is not a target functional failure or an E0 trial. No no-error claim is made."
+}
