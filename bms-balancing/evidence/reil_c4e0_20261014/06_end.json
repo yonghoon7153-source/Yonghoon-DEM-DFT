@@ -1,0 +1,89 @@
+{
+ "auto_fix": 0,
+ "compute_limit_s": 1560,
+ "compute_sum_s": 71.329,
+ "end_record_utc": "2026-10-14T11:06:10Z",
+ "green": {
+  "existing": 159,
+  "files": [
+   "tests/test_reil_c4_0a.py",
+   "tests/test_reil_c4_0a_fix.py",
+   "tests/test_reil_c4_0b1.py",
+   "tests/test_reil_c4_0b1_fix.py",
+   "tests/test_reil_c4_0b1_fix2.py",
+   "tests/test_reil_c4_0b2.py",
+   "tests/test_reil_c4_0b2_fix.py",
+   "tests/test_reil_c4e.py"
+  ],
+  "items": 180,
+  "new": 21,
+  "outcome_file": "03_green.nsga2_synthetic_outcome.json",
+  "passed": 180
+ },
+ "note": "끝 기록 시점 snapshot — 커밋 · push · 결과 기록 · 발송문 작성 전 (전체 작업시간 준수 PASS 로 넓히지 않는다)",
+ "plan_e": {
+  "optimizer_calls": 0,
+  "out": "04_plan_e_out/PLAN_E.json",
+  "sha256": "1538407567bf1950ff744efe80e39cf3423c0a19f213d9e18db0dd1d91f8fa3a",
+  "util_imported": false
+ },
+ "red": {
+  "failed": 21,
+  "failure_kind": "NotImplementedError 19 (골격) · TypeError 2 (supervise 에 stop_rule 없음 — m_1 · m_2) — v3 §6-1 3 의 선언대로",
+  "file": "tests/test_reil_c4e.py",
+  "items": 21,
+  "passed": 0
+ },
+ "resources_post_hoc": {
+  "definition": "RUSAGE_CHILDREN 의 최대 단일 자식 RSS (기다린 자식) · 사후 관측 — 실행 중 강제 상한이 아니다",
+  "disk_free_end_bytes": 26221273088,
+  "disk_free_floor_bytes": 5368709120,
+  "disk_free_start_bytes": 26250764288,
+  "evidence_bytes": 63527,
+  "evidence_limit_bytes": 67108864,
+  "max_child_rss_kib": 285672,
+  "rss_limit_kib": 4194304
+ },
+ "retest": 0,
+ "steps": {
+  "01_identity": {
+   "child_maxrss_kib": 89296,
+   "elapsed_s": 23.074,
+   "head_end": "cac26575a9d928a22364c3d92d150d623f14856c",
+   "head_start": "cac26575a9d928a22364c3d92d150d623f14856c",
+   "limit_s": 60,
+   "rc": 0,
+   "timed_out": false
+  },
+  "02_red": {
+   "child_maxrss_kib": 54580,
+   "elapsed_s": 1.924,
+   "head_end": "8bfe8d73a3adeb0d388cd32842ee7225ac891bf0",
+   "head_start": "8bfe8d73a3adeb0d388cd32842ee7225ac891bf0",
+   "limit_s": 600,
+   "rc": 1,
+   "timed_out": false
+  },
+  "03_green": {
+   "child_maxrss_kib": 285672,
+   "elapsed_s": 43.901,
+   "head_end": "d2708ab77b310727c4a42730c45322dfebb04ef4",
+   "head_start": "d2708ab77b310727c4a42730c45322dfebb04ef4",
+   "limit_s": 600,
+   "rc": 0,
+   "timed_out": false
+  },
+  "04_plan_e": {
+   "child_maxrss_kib": 83204,
+   "elapsed_s": 2.43,
+   "head_end": "57dfe2903e94cb699151b9a9eca5bfdc46d375d7",
+   "head_start": "57dfe2903e94cb699151b9a9eca5bfdc46d375d7",
+   "limit_s": 300,
+   "rc": 0,
+   "timed_out": false
+  }
+ },
+ "t0_utc": "2026-10-14T10:26:46Z",
+ "work_elapsed_s_snapshot": 2364.4,
+ "work_limit_s": 14400
+}
