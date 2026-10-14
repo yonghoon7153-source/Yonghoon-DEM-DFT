@@ -1,0 +1,130 @@
+.FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF                              [100%]
+=================================== FAILURES ===================================
+E   NotImplementedError: C4-0b2 골격
+/home/user/Yonghoon-DEM-DFT/bms-balancing/scripts/reil_c4_hb.py:22: NotImplementedError: C4-0b2 골격
+E   NotImplementedError: C4-0b2 골격
+/home/user/Yonghoon-DEM-DFT/bms-balancing/scripts/reil_c4_hb.py:22: NotImplementedError: C4-0b2 골격
+E   NotImplementedError: C4-0b2 골격
+/home/user/Yonghoon-DEM-DFT/bms-balancing/scripts/reil_c4_hb.py:22: NotImplementedError: C4-0b2 골격
+E   NotImplementedError: C4-0b2 골격
+/home/user/Yonghoon-DEM-DFT/bms-balancing/scripts/reil_c4_hb.py:22: NotImplementedError: C4-0b2 골격
+E   NotImplementedError: C4-0b2 골격
+/home/user/Yonghoon-DEM-DFT/bms-balancing/scripts/reil_c4_hb.py:22: NotImplementedError: C4-0b2 골격
+E   NotImplementedError: C4-0b2 골격
+/home/user/Yonghoon-DEM-DFT/bms-balancing/scripts/reil_c4_hb.py:22: NotImplementedError: C4-0b2 골격
+E   NotImplementedError: C4-0b2 골격
+/home/user/Yonghoon-DEM-DFT/bms-balancing/scripts/reil_c4_hb.py:22: NotImplementedError: C4-0b2 골격
+E   NotImplementedError: C4-0b2 골격
+/home/user/Yonghoon-DEM-DFT/bms-balancing/scripts/reil_c4_hb.py:22: NotImplementedError: C4-0b2 골격
+E   NotImplementedError: C4-0b2 골격
+/home/user/Yonghoon-DEM-DFT/bms-balancing/scripts/reil_c4_hb.py:22: NotImplementedError: C4-0b2 골격
+E   NotImplementedError: C4-0b2 골격
+/home/user/Yonghoon-DEM-DFT/bms-balancing/scripts/reil_c4_hb.py:22: NotImplementedError: C4-0b2 골격
+E   NotImplementedError: C4-0b2 골격
+/home/user/Yonghoon-DEM-DFT/bms-balancing/scripts/reil_c4_hb.py:22: NotImplementedError: C4-0b2 골격
+E   NotImplementedError: C4-0b2 골격
+/home/user/Yonghoon-DEM-DFT/bms-balancing/scripts/reil_c4_hb.py:22: NotImplementedError: C4-0b2 골격
+E   NotImplementedError: C4-0b2 골격
+/home/user/Yonghoon-DEM-DFT/bms-balancing/scripts/reil_c4_hb.py:22: NotImplementedError: C4-0b2 골격
+E   NotImplementedError: C4-0b2 골격
+/home/user/Yonghoon-DEM-DFT/bms-balancing/scripts/reil_c4_hb.py:22: NotImplementedError: C4-0b2 골격
+E   NotImplementedError: C4-0b2 골격
+/home/user/Yonghoon-DEM-DFT/bms-balancing/scripts/reil_c4_hb.py:22: NotImplementedError: C4-0b2 골격
+E   NotImplementedError: C4-0b2 골격
+/home/user/Yonghoon-DEM-DFT/bms-balancing/scripts/reil_c4_hb.py:22: NotImplementedError: C4-0b2 골격
+E   NotImplementedError: C4-0b2 골격
+/home/user/Yonghoon-DEM-DFT/bms-balancing/scripts/reil_c4_hb.py:22: NotImplementedError: C4-0b2 골격
+E   NotImplementedError: C4-0b2 골격
+/home/user/Yonghoon-DEM-DFT/bms-balancing/scripts/reil_c4_hb.py:22: NotImplementedError: C4-0b2 골격
+E   NotImplementedError: C4-0b2 골격
+/home/user/Yonghoon-DEM-DFT/bms-balancing/scripts/reil_c4_hb.py:22: NotImplementedError: C4-0b2 골격
+E   NotImplementedError: C4-0b2 골격
+/home/user/Yonghoon-DEM-DFT/bms-balancing/scripts/reil_c4_hb.py:22: NotImplementedError: C4-0b2 골격
+E   NotImplementedError: C4-0b2 골격
+/home/user/Yonghoon-DEM-DFT/bms-balancing/scripts/reil_c4_hb.py:22: NotImplementedError: C4-0b2 골격
+E   NotImplementedError: C4-0b2 골격
+/home/user/Yonghoon-DEM-DFT/bms-balancing/scripts/reil_c4_hb.py:22: NotImplementedError: C4-0b2 골격
+E   NotImplementedError: C4-0b2 골격
+/home/user/Yonghoon-DEM-DFT/bms-balancing/scripts/reil_c4_hb.py:22: NotImplementedError: C4-0b2 골격
+E   NotImplementedError: C4-0b2 골격
+/home/user/Yonghoon-DEM-DFT/bms-balancing/scripts/reil_c4_hb.py:22: NotImplementedError: C4-0b2 골격
+E   NotImplementedError: C4-0b2 골격
+/home/user/Yonghoon-DEM-DFT/bms-balancing/scripts/reil_c4_hb.py:22: NotImplementedError: C4-0b2 골격
+E   NotImplementedError: C4-0b2 골격
+/home/user/Yonghoon-DEM-DFT/bms-balancing/scripts/reil_c4_hb.py:22: NotImplementedError: C4-0b2 골격
+E   NotImplementedError: C4-0b2 골격
+/home/user/Yonghoon-DEM-DFT/bms-balancing/scripts/reil_c4_hb.py:22: NotImplementedError: C4-0b2 골격
+E   NotImplementedError: C4-0b2 골격
+/home/user/Yonghoon-DEM-DFT/bms-balancing/scripts/reil_c4_hb.py:22: NotImplementedError: C4-0b2 골격
+E   NotImplementedError: C4-0b2 골격
+/home/user/Yonghoon-DEM-DFT/bms-balancing/scripts/reil_c4_hb.py:22: NotImplementedError: C4-0b2 골격
+E   NotImplementedError: C4-0b2 골격
+/home/user/Yonghoon-DEM-DFT/bms-balancing/scripts/reil_c4_hb.py:22: NotImplementedError: C4-0b2 골격
+E   NotImplementedError: C4-0b2 골격
+/home/user/Yonghoon-DEM-DFT/bms-balancing/scripts/reil_c4_hb.py:22: NotImplementedError: C4-0b2 골격
+E   NotImplementedError: C4-0b2 골격
+/home/user/Yonghoon-DEM-DFT/bms-balancing/scripts/reil_c4_hb.py:22: NotImplementedError: C4-0b2 골격
+E   NotImplementedError: C4-0b2 골격
+/home/user/Yonghoon-DEM-DFT/bms-balancing/scripts/reil_c4_hb.py:22: NotImplementedError: C4-0b2 골격
+E   NotImplementedError: C4-0b2 골격
+/home/user/Yonghoon-DEM-DFT/bms-balancing/scripts/reil_c4_hb.py:22: NotImplementedError: C4-0b2 골격
+E   NotImplementedError: C4-0b2 골격
+/home/user/Yonghoon-DEM-DFT/bms-balancing/scripts/reil_c4_hb.py:22: NotImplementedError: C4-0b2 골격
+E   NotImplementedError: C4-0b2 골격
+/home/user/Yonghoon-DEM-DFT/bms-balancing/scripts/reil_c4_hb.py:22: NotImplementedError: C4-0b2 골격
+E   NotImplementedError: C4-0b2 골격
+/home/user/Yonghoon-DEM-DFT/bms-balancing/scripts/reil_c4_hb.py:22: NotImplementedError: C4-0b2 골격
+E   NotImplementedError: C4-0b2 골격
+/home/user/Yonghoon-DEM-DFT/bms-balancing/scripts/reil_c4_hb.py:22: NotImplementedError: C4-0b2 골격
+E   NotImplementedError: C4-0b2 골격
+/home/user/Yonghoon-DEM-DFT/bms-balancing/scripts/reil_c4_hb.py:22: NotImplementedError: C4-0b2 골격
+E   NotImplementedError: C4-0b2 골격
+/home/user/Yonghoon-DEM-DFT/bms-balancing/scripts/reil_c4_hb.py:22: NotImplementedError: C4-0b2 골격
+E   NotImplementedError: C4-0b2 골격
+/home/user/Yonghoon-DEM-DFT/bms-balancing/scripts/reil_c4_hb.py:22: NotImplementedError: C4-0b2 골격
+E   NotImplementedError: C4-0b2 골격
+/home/user/Yonghoon-DEM-DFT/bms-balancing/scripts/reil_c4_hb.py:22: NotImplementedError: C4-0b2 골격
+=========================== short test summary info ============================
+FAILED tests/test_reil_c4_0b2.py::test_b0_2_the_option_warning_stop_keeps_the_return_fields_in_every_phase_b_problem[profile]
+FAILED tests/test_reil_c4_0b2.py::test_b0_2_the_option_warning_stop_keeps_the_return_fields_in_every_phase_b_problem[simultaneous]
+FAILED tests/test_reil_c4_0b2.py::test_b0_2_the_option_warning_stop_keeps_the_return_fields_in_every_phase_b_problem[nominal]
+FAILED tests/test_reil_c4_0b2.py::test_b0_3_an_unclassified_termination_stops_everything_in_phase_b
+FAILED tests/test_reil_c4_0b2.py::test_b0_4_phase_b_local_errors_are_rows_and_our_errors_are_structural
+FAILED tests/test_reil_c4_0b2.py::test_b0_5_phase_b_rows_record_the_free_and_full_point_and_the_extra_residuals
+FAILED tests/test_reil_c4_0b2.py::test_p_1_profile_order_is_the_center_then_outward_by_distance_and_t
+FAILED tests/test_reil_c4_0b2.py::test_p_2_elimination_rebuilds_the_full_point_and_moves_g_and_the_d_n_box[m_P-0.9-x00]
+FAILED tests/test_reil_c4_0b2.py::test_p_2_elimination_rebuilds_the_full_point_and_moves_g_and_the_d_n_box[m_N-0.8-x01]
+FAILED tests/test_reil_c4_0b2.py::test_p_2_elimination_rebuilds_the_full_point_and_moves_g_and_the_d_n_box[LII-0.8365-x02]
+FAILED tests/test_reil_c4_0b2.py::test_p_3_profile_starts_follow_the_registered_chain_duplicates_and_shortages
+FAILED tests/test_reil_c4_0b2.py::test_p_4_sobol_starts_come_from_the_sealed_block_and_a_changed_block_is_refused
+FAILED tests/test_reil_c4_0b2.py::test_p_5_rounding_clips_are_for_starts_only_and_recorded
+FAILED tests/test_reil_c4_0b2.py::test_p_6_a_grid_point_is_the_valid_minimum_and_unevaluated_points_never_run
+FAILED tests/test_reil_c4_0b2.py::test_p_7_adaptive_starts_are_sealed_before_the_run_and_cannot_be_rewritten
+FAILED tests/test_reil_c4_0b2.py::test_s_1_simultaneous_starts_are_the_top_four_clipped_plus_the_first_twelve_sobol
+FAILED tests/test_reil_c4_0b2.py::test_s_2_simultaneous_shortage_and_duplicates_after_clipping_are_recorded
+FAILED tests/test_reil_c4_0b2.py::test_s_3_the_simultaneous_problem_has_the_box_g_and_both_lii_faces
+FAILED tests/test_reil_c4_0b2.py::test_s_4_prior_incompatible_runs_nothing_and_other_points_never_become_simultaneous_witnesses
+FAILED tests/test_reil_c4_0b2.py::test_n_1_the_nominal_interval_and_201_points_are_exact_and_each_point_is_evaluated
+FAILED tests/test_reil_c4_0b2.py::test_n_2_the_lowest_grid_point_is_refined_once_and_the_smaller_valid_value_wins
+FAILED tests/test_reil_c4_0b2.py::test_h_1_the_positive_control_takes_the_first_valid_candidate_and_checks_symmetry
+FAILED tests/test_reil_c4_0b2.py::test_h_2_a_symmetry_failure_rejects_the_h4_implementation_for_every_cell
+FAILED tests/test_reil_c4_0b2.py::test_h_3_without_a_valid_candidate_the_cell_h4_is_unfit_unverifiable
+FAILED tests/test_reil_c4_0b2.py::test_h_4_the_negative_control_needs_distinguishable_absolute_curves
+FAILED tests/test_reil_c4_0b2.py::test_h_5_control_points_never_enter_the_pools_witnesses_or_readings
+FAILED tests/test_reil_c4_0b2.py::test_r_1_an_h4_unit_that_reaches_ray_stops_the_cell_region_without_an_update
+FAILED tests/test_reil_c4_0b2.py::test_r_2_with_every_h4_unit_endpoint_gated_ray_is_never_reached_and_never_counted_complete
+FAILED tests/test_reil_c4_0b2.py::test_l_1_compatibility_grades_follow_the_exact_set_of_each_claim
+FAILED tests/test_reil_c4_0b2.py::test_l_2_wide_needs_two_satisfied_witnesses_more_than_two_tau_apart_in_actual_h_k
+FAILED tests/test_reil_c4_0b2.py::test_l_3_grid_statuses_and_side_labels_attach_together_and_never_replace_each_other
+FAILED tests/test_reil_c4_0b2.py::test_l_4_the_main_reading_is_after_the_update_and_the_pre_update_reading_is_kept
+FAILED tests/test_reil_c4_0b2.py::test_c_1_rho_never_starts_on_an_incomplete_single_objective_phase_a
+FAILED tests/test_reil_c4_0b2.py::test_c_2_non_positive_denominators_or_an_empty_mask_make_the_combined_unit_unfit
+FAILED tests/test_reil_c4_0b2.py::test_c_3_rho_starts_only_after_both_phase_a_completion_records
+FAILED tests/test_reil_c4_0b2.py::test_c_4_the_common_update_refuses_when_a_registered_search_is_missing
+FAILED tests/test_reil_c4_0b2.py::test_c_5_the_common_update_runs_exactly_once
+FAILED tests/test_reil_c4_0b2.py::test_c_6_the_reading_rereads_the_same_final_stored_points_and_every_rho_pair
+FAILED tests/test_reil_c4_0b2.py::test_c_7_not_run_and_unresolved_are_counted_apart_and_the_plan_adds_up
+FAILED tests/test_reil_c4_0b2.py::test_c_8_end_to_end_one_cell_a0_through_supervise_and_phase_b
+FAILED tests/test_reil_c4_0b2.py::test_d_1_the_phase_b_dry_run_writes_only_plan_b
+FAILED tests/test_reil_c4_0b2.py::test_d_2_the_phase_b_dry_run_refuses_bad_arrays_data_paths_and_an_existing_output
+42 failed, 1 passed in 0.83s

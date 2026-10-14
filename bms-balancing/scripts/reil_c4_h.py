@@ -7,7 +7,8 @@
     <venv>/bin/python -I bms-balancing/scripts/reil_c4_h.py dryrun --venv <venv> --seal <C6 봉인> --seal-manifest-sha256 <sha>
         --arrays <Phase A 배열> --h-arrays <0b1 배열> --h-manifest-sha256 <sha> --util-copy <util 사본> --p0-result <P0> --out <새 폴더>
 
-이 파일이 아닌 것: Phase B (profile 순회 · 대체 사슬 · 적응적 시작점 봉인 연결 · 동시 · 명목) · H4 대조 · ray · 표지 (C4-0b2) ·
+이 파일이 아닌 것: Phase B (profile 순회 · 대체 사슬 · 적응적 시작점 봉인 연결 · 동시 · 명목) · H4 대조 · ray · 표지 (C4-0b2 — reil_c4_hb.py ·
+지역 실행기 `run_local` 은 여기 하나를 같이 쓴다) ·
 자료 개봉 · 맞춤 · 실제 H 실행 (C4-A · C4-B). 건조는 계획 · seed · 봉인만 읽는다 (C4 v2 §4-5 · 승인 경계 C4-0B1-A1) —
 합성 입력 · 보존 util 사본은 시험에서만 쓴다.
 """
@@ -84,7 +85,7 @@ RULE_EXCERPTS = (
     ("annex_B", "부족", (104, 112)), ("annex_B", "중복", (110, 111)), ("annex_B", "동시", (114, 120)),
     ("annex_B", "동률", (116, 116)), ("annex_B", "중복", (119, 119)), ("annex_B", "부족", (118, 118)),
 )
-_OURS = frozenset(os.path.realpath(p) for p in (__file__, e3a.__file__, mon.__file__, c5.__file__))
+_OURS = frozenset(os.path.realpath(p) for p in (__file__, e3a.__file__, mon.__file__, c5.__file__, str(HERE.with_name("reil_c4_hb.py"))))
 
 
 class HStop(Exception):
@@ -747,14 +748,75 @@ def _partial(acc, info) -> dict:
     return part
 
 
-def _run_phase_a(task, ctx, notify, progress, acc) -> dict:
+_ROW_KEYS = ("task_id", "run_id", "unit", "objective", "region", "row", "seed")
+
+
+def phase_a_problem(task, ctx) -> dict:
+    """Phase A 의 지역 문제 (부속 A §3-2) — 자유 변수 = 4 좌표 그대로 · bounds = 영역 상자 · A0 · A1 의 G 선형 제약 · 영역 A 잔차."""
+    import numpy as np
+    region = task["region"]
+    lo, hi = region_bounds(region)
+    return {"x0": [float(v) for v in task["x0"]], "lo": list(lo), "hi": list(hi),
+            "cons": [([[0.0, 0.0, 1.0, -1.0]], float(G_LB), np.inf)] if region in G_REGIONS else [],
+            "full": lambda z: z, "residuals": lambda x: exact_residuals(x, region), "active": lambda x: active_set(x, region),
+            "accept": (), "free": False}
+
+
+def _fmt_resid(v):
+    if v is None:
+        return None
+    if isinstance(v, list):
+        return [frac_str(u) for u in v]
+    return frac_str(v)
+
+
+def _assess(task, ctx, x, prob, acc) -> dict:
+    """기록 점 x 의 독립 평가 (A §2-1) — 재평가 1 회 · 정확 잔차 · 수용 · 등급 · 활성 · 외삽 라벨 (반환점 · 명목 격자점 공통).
+    재평가 중 지역 예외 → REEVAL_ERROR (C4-0B1-N3) · 구조 오류 → mon.Structural. 수용 = 영역 A 잔차와 문제의 추가 제약 (prob["accept"] — 프로파일
+    등식 · 명목 τ 상자) 모두 ≤ 1e-10 · 등급 (feasibility_class) 은 영역 A (상자 · G) 로만 (부속 B §1-2)."""
+    import numpy as np
+    uf = ctx.get("util_file")
+    value, comp, rerr = None, None, None
+    try:
+        value, comp = _evaluate(task, ctx, np.asarray(x, dtype=float), copy.deepcopy(ctx["models"][task["row"]]))
+    except BaseException as e:  # noqa: BLE001
+        info = classify(e, "reeval", uf)
+        if info["kind"] == "structural":
+            raise mon.Structural(info, partial=_partial(acc, info)) from None
+        rerr = info
+    resid = prob["residuals"](x)
+    w = witness(solver_error=False, value=value, residuals=resid, reeval_error=rerr is not None)
+    if w == "valid" and any(resid.get(k) is not None and resid[k] > TOL for k in prob.get("accept", ())):
+        w = "invalid:INFEASIBLE_RETURN"
+    out = {"value": value, "components": comp, "reeval_error": rerr, "witness": w, "feasibility_class": feasibility_class(resid),
+           "residuals": None if resid is None else {k: _fmt_resid(v) for k, v in resid.items()},
+           "active": None if resid is None else prob["active"](x)}
+    lab = {"n_out_PE": "미확인", "n_out_NE": "미확인"}
+    if rerr is None and resid is not None:
+        try:
+            lab = c5.n_out_labels(ctx["util"], x, ctx["halfcell"], ctx["models"][task["row"]]["Q_exp_interp"])
+        except BaseException as e:  # noqa: BLE001 — 라벨 실패는 '미확인' (증인 불변) · 구조 오류는 전역 중단
+            info = classify(e, "label", uf)
+            if info["kind"] == "structural":
+                raise mon.Structural(info, partial=_partial(acc, info)) from None
+            lab = {"n_out_PE": "미확인", "n_out_NE": "미확인", "label_error": info}
+    out.update(lab)
+    return out
+
+
+def _run_local(task, ctx, notify, progress, acc, prob) -> dict:
+    """지역 실행 하나의 몸체 (Phase A · Phase B 공통 — C4-0b2 에서 _run_phase_a 를 일반화). prob = 문제 명세 (x0 · lo · hi · cons · full ·
+    residuals · active · accept · free · row_extra · x0_full). Phase A 는 phase_a_problem 이고 행은 C4-0b1 과 같다."""
     import numpy as np
     from scipy.optimize import Bounds, LinearConstraint, minimize
     _check_task(task, ctx)
-    uf, region = ctx.get("util_file"), task["region"]
+    uf = ctx.get("util_file")
     t0, c0 = time.monotonic(), time.process_time()
-    row = {k: task[k] for k in ("task_id", "run_id", "unit", "objective", "region", "row", "seed")}
-    row.update(x0=[float(v) for v in task["x0"]], worker=task.get("worker"), t_start=t0)
+    row = {k: task[k] for k in _ROW_KEYS}
+    row.update(prob.get("row_extra") or {})
+    row.update(x0=[float(v) for v in prob.get("x0_full", task["x0"])], worker=task.get("worker"), t_start=t0)
+    if prob.get("free"):
+        row["x0_free"] = [float(v) for v in prob["x0"]]
     acc["row"] = row
     model_run = copy.deepcopy(ctx["models"][task["row"]])
     count = acc["count"] = {"n": 0, "nonfinite": 0}
@@ -763,20 +825,19 @@ def _run_phase_a(task, ctx, notify, progress, acc) -> dict:
         count["n"] += 1
         if progress is not None:
             progress(count["n"])
-        v = _evaluate(task, ctx, x, model_run)[0]
+        v = _evaluate(task, ctx, prob["full"](x), model_run)[0]
         if not math.isfinite(v):
             count["nonfinite"] += 1
         return v
     opts = dict(ctx["options"])
     row["options_received"] = {k: repr(v) for k, v in sorted(opts.items())}
-    lo, hi = region_bounds(region)
-    cons = [LinearConstraint([[0.0, 0.0, 1.0, -1.0]], float(G_LB), np.inf)] if region in G_REGIONS else []
+    cons = [LinearConstraint(a, lb, ub) for a, lb, ub in prob["cons"]]
     res, err = None, None
     with warnings.catch_warnings(record=True) as caught:
         acc["caught"] = caught
         warnings.simplefilter("always")
         try:
-            res = minimize(fun, np.asarray(row["x0"], dtype=float), method="COBYQA", bounds=Bounds(list(lo), list(hi)),
+            res = minimize(fun, np.asarray(prob["x0"], dtype=float), method="COBYQA", bounds=Bounds(list(prob["lo"]), list(prob["hi"])),
                            constraints=cons, options=opts)
         except BaseException as e:  # noqa: BLE001 — 분류해서 지역 / 구조로 나눈다
             info = classify(e, "optimize", uf)
@@ -788,7 +849,9 @@ def _run_phase_a(task, ctx, notify, progress, acc) -> dict:
     if err is not None:                                         # 반환 없음 — 원 지역 오류만 적는다 (반환 필드 · termination 을 채우지 않음)
         row["error"] = err
     else:                                                       # 정상 반환 — 경고 중지보다 먼저 받은 반환 필드를 적는다 (C4-0B1-N1 잔여)
-        row.update(x=[float(v) for v in res.x], fun=float(res.fun), status=int(res.status), message=str(res.message),
+        if prob.get("free"):
+            row["x_free"] = [float(v) for v in res.x]
+        row.update(x=[float(v) for v in prob["full"](res.x)], fun=float(res.fun), status=int(res.status), message=str(res.message),
                    nfev=int(getattr(res, "nfev", -1)), nit=int(getattr(res, "nit", -1)), termination=termination(res), error=None)
     if any("Unknown solver options" in m for m in msgs):
         info = {"kind": "structural", "origin": "optimizer", "stage": "optimize", "type": "OptimizeWarning",
@@ -798,6 +861,8 @@ def _run_phase_a(task, ctx, notify, progress, acc) -> dict:
         row.update(termination="solver_error", witness="invalid:SOLVER_ERROR", x=None, fun=None, status=None,
                    message=None, nfev=None, nit=None, value=None, components=None, reeval_error=None, residuals=None,
                    feasibility_class=None, active=None, n_out_PE=None, n_out_NE=None)
+        if prob.get("free"):
+            row["x_free"] = None
     else:
         x = row["x"]
         if row["termination"] == "unclassified":                # C4 v2 §5-4 · §6 — 재평가 · 증인으로 넘어가지 않고 전체 중지 (C4-0B1-N2)
@@ -807,49 +872,32 @@ def _run_phase_a(task, ctx, notify, progress, acc) -> dict:
             raise mon.Structural(info, partial=_partial(acc, info))
         notify("returned", {"run_id": row["run_id"], "x": x, "status": row["status"], "termination": row["termination"],
                             "n_eval": count["n"]})
-        value, comp, rerr = None, None, None
-        try:
-            value, comp = _evaluate(task, ctx, np.asarray(x, dtype=float), copy.deepcopy(ctx["models"][task["row"]]))
-        except BaseException as e:  # noqa: BLE001
-            info = classify(e, "reeval", uf)
-            if info["kind"] == "structural":
-                raise mon.Structural(info, partial=_partial(acc, info)) from None
-            rerr = info
-        resid = exact_residuals(x, region)
-        row.update(value=value, components=comp, reeval_error=rerr,
-                   witness=witness(solver_error=False, value=value, residuals=resid, reeval_error=rerr is not None),
-                   feasibility_class=feasibility_class(resid),
-                   residuals=None if resid is None else {"box": frac_str(resid["box"]),
-                                                         "box_by_coord": [frac_str(v) for v in resid["box_by_coord"]],
-                                                         "g": None if resid["g"] is None else frac_str(resid["g"])},
-                   active=None if resid is None else active_set(x, region))
-        lab = {"n_out_PE": "미확인", "n_out_NE": "미확인"}
-        if rerr is None and resid is not None:
-            try:
-                lab = c5.n_out_labels(ctx["util"], x, ctx["halfcell"], ctx["models"][task["row"]]["Q_exp_interp"])
-            except BaseException as e:  # noqa: BLE001 — 라벨 실패는 '미확인' (증인 불변) · 구조 오류는 전역 중단
-                info = classify(e, "label", uf)
-                if info["kind"] == "structural":
-                    raise mon.Structural(info, partial=_partial(acc, info)) from None
-                lab = {"n_out_PE": "미확인", "n_out_NE": "미확인", "label_error": info}
-        row.update(lab)
+        row.update(_assess(task, ctx, x, prob, acc))
     t1 = time.monotonic()
     row.update(t_end=t1, wall=t1 - t0, cpu=time.process_time() - c0, state="COMPLETED")
     return row
 
 
-def run_phase_a(task, ctx, notify=None, progress=None) -> dict:
-    """Phase A 지역 실행 하나 — 감시 모듈 `supervise` 의 task_fn 계약. 최적화 → 독립 재평가 1 회 → 정확 잔차 · 분류 · 라벨.
-    지역 오류는 행 (SOLVER_ERROR · REEVAL_ERROR · NONFINITE). 구조 목록 오류 · 미분류 termination · 옵션 경고 · 우리 코드의 예외는
-    `mon.Structural` (행을 만들지 않는다 · partial = 그때까지의 행 · 계수 · 경고 · 중지 오류 — C4-0B1-N1)."""
-    acc = {"row": {k: task.get(k) for k in ("task_id", "run_id", "unit", "objective", "region", "row", "seed")}}
+def run_local(task, ctx, make_problem, notify=None, progress=None) -> dict:
+    """지역 실행 하나 — 감시 모듈 `supervise` 의 task_fn 계약 (Phase A · Phase B 공통). make_problem(task, ctx) 는 보호 구간 안에서 부른다
+    (그 오류도 구조 오류). 지역 오류는 행 (SOLVER_ERROR · REEVAL_ERROR · NONFINITE). 구조 목록 오류 · 미분류 termination · 옵션 경고 · 우리
+    코드의 예외는 `mon.Structural` (행을 만들지 않는다 · partial = 그때까지의 행 · 계수 · 경고 · 중지 오류 — C4-0B1-N1)."""
+    acc = {"row": {k: task.get(k) for k in _ROW_KEYS}}
     try:
-        return _run_phase_a(task, ctx, notify or (lambda kind, payload: None), progress, acc)
+        prob = make_problem(task, ctx)
+        return _run_local(task, ctx, notify or (lambda kind, payload: None), progress, acc, prob)
     except mon.Structural:
         raise
     except BaseException as e:  # noqa: BLE001 — 우리 코드 · 설정의 예외 = 구조 오류
         info = classify(e, "ours", ctx.get("util_file"))
         raise mon.Structural(info, partial=_partial(acc, info)) from None
+
+
+def run_phase_a(task, ctx, notify=None, progress=None) -> dict:
+    """Phase A 지역 실행 하나 — 감시 모듈 `supervise` 의 task_fn 계약. 최적화 → 독립 재평가 1 회 → 정확 잔차 · 분류 · 라벨.
+    지역 오류는 행 (SOLVER_ERROR · REEVAL_ERROR · NONFINITE). 구조 목록 오류 · 미분류 termination · 옵션 경고 · 우리 코드의 예외는
+    `mon.Structural` (행을 만들지 않는다 · partial = 그때까지의 행 · 계수 · 경고 · 중지 오류 — C4-0B1-N1). C4-0b2: 몸체는 run_local 과 공통."""
+    return run_local(task, ctx, phase_a_problem, notify, progress)
 
 
 def phase_a_summary(rows, expected=2 * PHASE_A_N) -> dict:

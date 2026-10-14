@@ -1,0 +1,8 @@
+t0_utc 2026-10-14T01:01:55Z
+uptime_s 3247.80
+head_start 7ec65ae2bb60cd7a619186928655ba4f5c29c985
+disk_free_bytes 26331672576
+approval 상태 문서 §55 (사용자 "권고대로" — 범위 확인 요청 §9 의 여섯 권장안)
+limits identity 60 · red 600 · green 600 · dryrun 300 · compute 1560 · work 14400 · auto_retest 0
+resources (사후 관측) child_maxrss ≤ 4 GiB · evidence ≤ 64 MiB · disk_free_at_start ≥ 5 GiB
+controls 39 (요청서 §4 목록 · 원문은 RED 전에 커밋)
