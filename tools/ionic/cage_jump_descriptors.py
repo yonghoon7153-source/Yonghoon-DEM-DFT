@@ -16,7 +16,7 @@ full MIC for triclinic cells.
 
 Usage:
   python3 cage_jump_descriptors.py LABEL=path.xyz [LABEL2=path2.xyz ...] [--out out.csv]
-  python3 cage_jump_descriptors.py --li_sites traj.xyz [more.xyz ...] [--every N] [--tau 0.10 0.15]
+  python3 cage_jump_descriptors.py --li_sites traj.xyz [more.xyz ...] [--every N] [--tau 0.10 0.15] [--blocks 4]
   python3 cage_jump_descriptors.py --selftest
 
 --li_sites (2026-10-14, quick look for the 24g/48h question — EXPLORATORY, not a reported quantity):
@@ -33,6 +33,10 @@ What --li_sites does NOT do:
   * the tau thresholds are arbitrary — report the lambda_min distribution, not one fraction;
   * at 600 K thermal motion smears lambda (a Li passing a face is counted as 24g-like for those frames);
   * frames between saved snapshots are invisible; it does not use velocities or time ordering.
+  * --blocks gives a within-run spread (contiguous time blocks). It cannot see slow modes one run never samples,
+    so it is a floor on the error, not the error — independent seeds are the stronger error bar;
+  * with several files it also prints an across-file mean +- SD. It pools blindly: it is a seed spread only if
+    every file is the same system at the same T (pass one system per call).
 """
 import numpy as np, sys, re, json
 
@@ -196,21 +200,45 @@ def li_face_lambda(sym, pos, L, anions=ANIONS):
     return out
 
 
-def li_sites_report(paths, every=1, taus=(0.10, 0.15)):
-    """Pool lambda_min over Li and frames; print the distribution and the face-like fraction at each tau."""
+def block_fractions(frames_lam, nblocks, taus):
+    """Split the frames into `nblocks` CONTIGUOUS time blocks (interleaving would hide a drift) and return one row per
+    block: [fraction lambda_min < tau for each tau] + [fraction < 0]. Non-finite lambda (degenerate) are left out."""
+    nf = len(frames_lam)
+    if nblocks < 2 or nblocks > nf:
+        raise ValueError(f"--blocks must be 2..{nf} (the frames used), got {nblocks}")
+    out = []
+    for idx in np.array_split(np.arange(nf), nblocks):
+        x = np.concatenate([frames_lam[i] for i in idx])
+        x = x[np.isfinite(x)]
+        if not len(x):
+            raise ValueError("a block has no finite lambda_min")
+        out.append([np.mean(x < t) for t in taus] + [np.mean(x < 0)])
+    return np.array(out)
+
+
+def _spread(v):
+    sd = v.std(ddof=1) if len(v) > 1 else float("nan")
+    return v.mean(), sd, v.min(), v.max()
+
+
+def li_sites_report(paths, every=1, taus=(0.10, 0.15), blocks=0):
+    """Pool lambda_min over Li and frames; print the distribution and the face-like fraction at each tau
+    (optionally a contiguous-block spread per file, and an across-file spread when several files are given)."""
     edges = [-np.inf, 0.0, 0.05, 0.10, 0.15, 0.20, 0.25, np.inf]
     names = ["<0", "0-.05", ".05-.10", ".10-.15", ".15-.20", ".20-.25", ">=.25"]
     rows = []
     for path in paths:
-        lam, nf, nli = [], 0, None
+        per_frame, nf, nli = [], 0, None
         for sym, pos, L in iter_extxyz(path, every):
             x = li_face_lambda(sym, pos, L)
-            lam.append(x); nf += 1; nli = len(x)
-        lam = np.concatenate(lam)
+            per_frame.append(x); nf += 1; nli = len(x)
+        lam = np.concatenate(per_frame)
         good = lam[np.isfinite(lam)]
         hist = np.histogram(good, bins=edges)[0] / max(1, len(good))
-        rows.append((path, nf, nli, len(lam) - len(good), good, hist))
-    for path, nf, nli, nbad, good, hist in rows:
+        blk = block_fractions(per_frame, blocks, taus) if blocks else None
+        rows.append((path, nf, nli, len(lam) - len(good), good, hist, blk))
+    labels = [f"tau {t:.2f}" for t in taus] + ["outside"]
+    for path, nf, nli, nbad, good, hist, blk in rows:
         print(f"== {path}")
         print(f"   frames {nf} · Li {nli} · Li-frames {len(good)}" + (f" · degenerate {nbad}" if nbad else ""))
         print(f"   lambda_min p10 / p50 / p90 = {np.percentile(good, 10):.3f} / {np.percentile(good, 50):.3f} / "
@@ -218,6 +246,19 @@ def li_sites_report(paths, every=1, taus=(0.10, 0.15)):
         print("   " + " · ".join(f"{t} {h:.3f}" for t, h in zip(names, hist)))
         print("   face-like (24g-like) fraction: " + " · ".join(f"tau {t:.2f} -> {np.mean(good < t):.3f}" for t in taus)
               + f" · outside (<0) {np.mean(good < 0):.3f}")
+        if blk is not None:
+            parts = []
+            for j, lab in enumerate(labels):
+                m, sd, lo, hi = _spread(blk[:, j])
+                parts.append(f"{lab} {m:.3f} ± {sd:.3f} (SE {sd / np.sqrt(len(blk)):.3f}) [{lo:.3f}–{hi:.3f}]")
+            print(f"   blocks {len(blk)} (contiguous, ~{nf // len(blk)} frames each): " + " · ".join(parts))
+    if len(rows) > 1:
+        tab = np.array([[np.mean(r[4] < t) for t in taus] + [np.mean(r[4] < 0)] for r in rows])
+        parts = []
+        for j, lab in enumerate(labels):
+            m, sd, lo, hi = _spread(tab[:, j])
+            parts.append(f"{lab} {m:.3f} ± {sd:.3f} [{lo:.3f}–{hi:.3f}]")
+        print(f"== across files (n={len(rows)}) — a seed spread ONLY if all files are one system at one T: " + " · ".join(parts))
     return rows
 
 
@@ -268,6 +309,22 @@ def _selftest():
         chk(False, "[negative] no anions must raise")
     except ValueError:
         ok += 1
+    # 5. blocks are contiguous in time: a drift (first half on faces, second half inside) must show up as spread
+    fl = [np.array([0.0, 0.0])] * 4 + [np.array([0.2, 0.2])] * 4
+    b2 = block_fractions(fl, 2, (0.05,))
+    chk(np.allclose(b2[:, 0], [1.0, 0.0]), "contiguous blocks keep a drift: block fractions [1, 0]")
+    chk(b2[:, 0].std(ddof=1) > 0.5, "[negative] interleaved blocks would read [0.5, 0.5] and hide the drift")
+    chk(np.allclose(block_fractions(fl, 4, (0.05,))[:, 0], [1, 1, 0, 0]), "4 blocks of 2 frames -> [1, 1, 0, 0]")
+    # 6. a degenerate (non-finite) lambda leaves its block's denominator, it is not counted as 'inside'
+    chk(np.allclose(block_fractions([np.array([np.nan, 0.0]), np.array([0.0, 0.0])], 2, (0.05,))[:, 0], [1.0, 1.0]),
+        "non-finite lambda is dropped from the block, not counted as inside")
+    # 7. impossible block counts are refused loudly
+    for nb in (1, 9):
+        try:
+            block_fractions(fl, nb, (0.05,))
+            chk(False, f"[negative] blocks={nb} with 8 frames must raise")
+        except ValueError:
+            ok += 1
     print(f"selftest PASS ({ok})")
 
 
@@ -280,8 +337,10 @@ def main():
         ap.add_argument("--li_sites", nargs="+", required=True, metavar="XYZ")
         ap.add_argument("--every", type=int, default=1, help="use every N-th frame")
         ap.add_argument("--tau", type=float, nargs="+", default=[0.10, 0.15], help="face-like thresholds on lambda_min")
+        ap.add_argument("--blocks", type=int, default=0,
+                        help="contiguous time blocks per file for a within-run spread (0 = off; a floor on the error)")
         a = ap.parse_args(sys.argv[1:])
-        li_sites_report(a.li_sites, a.every, tuple(a.tau))
+        li_sites_report(a.li_sites, a.every, tuple(a.tau), a.blocks)
         return
     args = [a for a in sys.argv[1:] if "=" in a and not a.startswith("--")]
     out = None
