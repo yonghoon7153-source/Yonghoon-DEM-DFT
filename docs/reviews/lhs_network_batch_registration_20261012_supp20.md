@@ -91,4 +91,5 @@ $PY scripts/run_network_194_parallel.py run --root "$R" --cohorts lhss --observe
 
 ## 9. 덧붙임 (결과 칸 · 발사 / 사전 점검 뒤)
 
-(없음)
+- 9-1 **사전 점검 (발사 핀 `1087a9b2f` · WSL 10-14 14:19 KST · 1저자)**: dry-run (`--cohorts lhss --dry-run --observe-imports --preflight-receipt`) rc 0 · 영수증 도구 (`--preflight-receipt … --approved-sha 1087a9b2f4a93aa6a3b0debc698a14fffa13488d`) rc 0 · 24 칸 · 다름 0 (R0 · A1–A2 · B1–B3 · C1–C4 · D1 · P0–P10 · E1 · E2) · 입력 지문 n 20 · `ids_sha256` `991cf1150b183f64bc69926a8b3e7c05453ec47e13b89ba3a6ad2fd2c981c694` · `raw_sha256_table_sha256` `a7aaa3c8c7683f1835a096acb83ecdb055eaf5f129221f7067c5f34462807d0e` · 코호트 lhss `69d3f913072288b1d6b8ca8a14e43b0bc8f80e8836a8f79a9b26b2d8ed6dcaf7` = §2 (E1 기계 대조) · code_fp `e8b2496b…` = §3 (E2) · 로그 sha256 `a8dba071bc00aadd…` (4,375 B) · 영수증 `~/netsupp20_1087a9b2f_preflight_1014_141953` (.json · .log) · 수동 칸 셋 (발사 핀 fast16 + real4 · 저자 승인 · 새 ROOT 둘) = 194 등록 §9-7 과 아래 9-2.
+- 9-2 ✅ **1저자 발사 승인 10-14** (194 등록 §9-7 과 같은 승인 · 같은 핀) — 194 끝난 뒤 보충 20 · 결과 = 완료 뒤 (⬜).
