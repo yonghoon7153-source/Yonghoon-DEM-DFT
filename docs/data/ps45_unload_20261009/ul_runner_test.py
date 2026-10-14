@@ -62,7 +62,11 @@ def _bins(td, log):
                 '  -var) args="$args $2=$3"; shift 3;; *) shift;; esac; done\n'
                 f'echo "lmp deck=$deck $args np=$MOCK_NP" >> {log}\n'
                 f'exec {sys.executable} {os.path.join(HERE, "ul_runner_test.py")} --mock-lmp "$deck" $args\n')
-    for x in ('mpirun', 'lmp'):
+    with open(os.path.join(b, 'pywrap'), 'w') as f:   # 판독기 프로그램 오류 모의 (시험 쪽 감쌈 · 운영 코드에 우회 없음)
+        f.write('#!/bin/bash\nif [ -n "${MOCK_READER_FAIL:-}" ] && [ "${3:-}" = "$MOCK_READER_FAIL" ]; then\n'
+                '  echo "Traceback (most recent call last): [mock] 판독기 $MOCK_READER_FAIL 프로그램 오류" >&2; exit 1; fi\n'
+                f'exec {sys.executable} "$@"\n')
+    for x in ('mpirun', 'lmp', 'pywrap'):
         os.chmod(os.path.join(b, x), 0o755)
     return b
 
@@ -80,10 +84,13 @@ def mock_lmp(deck, kv):
     if os.environ.get('MOCK_FAIL_KIND') == kind:
         print('ERROR: mock failure (모의 — 이 종류는 실패한다)')
         return 1
+    crash = os.environ.get('MOCK_CRASH_KIND') == kind   # 기계 실패 모의 — 기록 · 단 끝 restart 는 남기고 요약 · Loop time 없이 rc 1
     if kind == 'R':
         open(os.path.join(out, 'un_diag.bin'), 'w').write('x')
         print('UL_R_START\nUL_R_SETUP_DONE\nUL_R_END\nUL_R_DONE')
-    elif kind in ('UNread', 'UK', 'UC', 'Ut0', 'EXT', 'EXT2') or kind.startswith('G_'):
+    elif kind == 'UNread':
+        print('UL_UN_START\nUL_UN_DONE')
+    elif kind in ('UK', 'UC', 'Ut0', 'EXT', 'EXT2') or kind.startswith('G_'):
         if kind == 'UK':
             open(os.path.join(out, 'ul_windows.csv'), 'w').write(','.join(P['records']['windows_cols']) + '\n' + '\n'.join(
                 f'UK,{bed},0,{w},4,{3200000 + 5000 * w},0.111052,0,0.16,2e-07,{r},0,-1,-1,-1,400,160417,11,2e-07'
@@ -100,20 +107,26 @@ def mock_lmp(deck, kv):
         job = os.path.basename(out)
         W, dt = (10000, 5e-7) if kind in ('UT', 'U_UVb', 'U_UT3') else (5000, 1e-6)
         if kv.get('ul_resume') == '1':
-            open(os.path.join(out, 'ul_events.csv'), 'a').write('RESUME,9,0,0,0,state\nPOST_DONE,9,0,0,0,w4\n')
+            st = open(kv['ul_state']).read() if os.path.exists(kv.get('ul_state', '')) else ''
+            m = re.search(r'variable ul_rstep equal (\d+)', st)
+            rs = m.group(1) if m else '0'
+            open(os.path.join(out, 'ul_events.csv'), 'a').write(f'RESUME,9,{rs},0,0,state\nPOST_DONE,9,{rs},0,0,w4\n')
             open(os.path.join(out, 'ul_summary.txt'), 'w').write(f'result=DONE\narm={kind}\nbed={bed}\n')
             print('UL_RESUME')
         else:
             root = os.path.dirname(os.path.dirname(out))
             R._mk_arm(root, bed, job, {'W': W, 'dt': dt, 'steps': R._ladder([mid - 0.025, mid + 0.025, mid + 0.075, mid + 0.125], [1.2, 0.8, 0.6, 0.4]),
                                        'events': [('CROSS', 1, 'first'), ('RM', 3, 'ncross2')],
-                                       'summary': None if os.environ.get('MOCK_TIMEOUT_KIND') == kind else 'DONE'}, P)
+                                       'summary': None if (os.environ.get('MOCK_TIMEOUT_KIND') == kind or crash) else 'DONE'}, P)
             os.makedirs(os.path.join(out, 'restart'), exist_ok=True)
             for s in (3215000, 3240000, 3260000):
                 open(os.path.join(out, 'restart', f'restart_unload_{s}.bin'), 'w').write('x')
                 open(os.path.join(out, 'restart', f'state_unload_{s}.in'), 'w').write(f'variable ul_rstep equal {s}\n')
             open(os.path.join(out, 'restart', 'restart_RM_3240000.bin'), 'w').write('x')
             open(os.path.join(out, 'restart', 'state_RM_3240000.in'), 'w').write('variable ul_rstep equal 3240000\n')
+        if crash:
+            print('[mock] 기계 실패 — 요약 · Loop time 없이 끝')
+            return 1
         print(f'UL_SUMMARY arm={kind} bed={bed} result=DONE')
     print(f'Loop time of 1.0 on {procs} procs for 5000 steps with 160417 atoms')
     return 0
@@ -122,7 +135,7 @@ def mock_lmp(deck, kv):
 def _env(td, kit, extra=None):
     env = dict(os.environ, WORK_ROOT=os.path.join(td, 'work'), MPIRUN=os.path.join(td, 'bin', 'mpirun'), LMP=os.path.join(td, 'bin', 'lmp'), NP='6',
                PY=sys.executable, ALLOW_CONCURRENT='1', ALLOW_OTHER_LMP='1', UL_STAMP='20261013_000000')
-    for k in ('MOCK_PROCS', 'MOCK_FAIL_KIND', 'RESUME', 'SLURM_JOB_ID', 'SLURM_NTASKS', 'MOCK_TIMEOUT_KIND'):
+    for k in ('MOCK_PROCS', 'MOCK_FAIL_KIND', 'RESUME', 'SLURM_JOB_ID', 'SLURM_NTASKS', 'MOCK_TIMEOUT_KIND', 'MOCK_CRASH_KIND', 'MOCK_READER_FAIL'):
         env.pop(k, None)
     env.update(extra or {})
     return env
@@ -136,6 +149,23 @@ def _run(td, kit, bed, job, extra=None, args=()):
 
 def _calls(log):
     return open(log).read().splitlines() if os.path.exists(log) else []
+
+
+def _lmp(log, job):
+    """가짜 lmp 호출 중 그 잡 폴더 (-var out …/<잡>) 의 것."""
+    return [c for c in _calls(log) if c.startswith('lmp ') and re.search(rf'\bout=\S*/{re.escape(job)}(\s|$)', c)]
+
+
+def _read(p):
+    return open(p, encoding='utf-8', errors='replace').read() if os.path.exists(p) else ''
+
+
+def _sha_or_none(p):
+    return _sha(p) if os.path.exists(p) else None
+
+
+def P_bed(bed):
+    return ul_lib.load_params()['beds'][bed]
 
 
 def _setup(td):
@@ -183,7 +213,8 @@ def selftest() -> int:
             fails.append(name)
 
     if not (os.path.exists(os.path.join(HERE, 'run_unload.sh')) and os.path.exists(os.path.join(HERE, 'SHA256SUMS'))):
-        for n in ('M1', 'M2', 'M3', 'M4a', 'M4b', 'M5', 'M6', 'M7a', 'M7b', 'M8', 'M9', 'M10'):
+        for n in ('M1', 'M2', 'M3', 'M4a', 'M4b', 'M4c', 'M5', 'M6', 'M7a', 'M7b', 'M7c', 'M8', 'M9', 'M10', 'M11', 'M12', 'M13', 'M14', 'M15',
+                  'M16', 'M17'):
             chk(f'{n} (러너 · 봉인 SHA256SUMS 없음 — 시험 먼저)', False)
         print(f'selftest: FAIL ({len(fails)} 실패)')
         return 1
@@ -215,35 +246,105 @@ def selftest() -> int:
         rc, out = _run(os.path.join(td, 'b'), kit, B73, 'UVa')
         chk('M5 UVa 를 UB · UT 판독 전에 내면 관문이 거부 (lmp 호출 없음 · 동시 UV 제출 없음)', lambda: rc != 0 and 'REFUSE' in out
             and not any('/UVa' in c for c in _calls(log)))
+        man_rj = _read(os.path.join(work2, B73, 'RJ', 'run_manifest.txt'))
+        chk('M4 ULKR-11 RJ 잡 기록에 단계마다 기술 rc (G0 · Ut0 · R · UNread · UK) · 판독기 rc (restore · kebase) · 끝 줄',
+            lambda: all(re.search(rf'^stage={s}( |$).*\brc=0\b', man_rj, re.M) for s in ('G0', 'Ut0', 'R', 'UNread', 'UK'))
+            and re.search(r'^reader_restore_rc=\d+$', man_rj, re.M) and re.search(r'^reader_kebase_rc=0$', man_rj, re.M)
+            and re.search(r'^end=.* fails=0 ', man_rj, re.M))
         ul = os.path.join(work2, B73)
         open(os.path.join(ul, 'RJ', 'restore_verdict.json'), 'w').write(json.dumps({'status': 'RESTORED'}))
         rc, out = _run(os.path.join(td, 'b'), kit, B73, 'UB')
-        ub = [c for c in _calls(log) if '/UB ' in c + ' ' and c.startswith('lmp ')]
-        chk('M6 UB: 원 체크포인트 · 빈 상태 파일 · KE 기준 파일 (kebase) · arm_verdict.json · selection.json',
+        ub = _lmp(log, 'UB')
+        chk('M6 UB: 원 체크포인트 · 빈 상태 파일 · KE 기준 파일 (kebase) · arm_verdict.json · selection.json · 관문 ALLOW 기록 · 판독기 rc 0',
             lambda: rc == 0 and ub and 'ul_resume=0' in ub[0] and 'ckpt=' + os.path.join(ul, 'in', 'restart_compress_3200000.bin') in ub[0]
             and os.path.exists(os.path.join(ul, 'UB', 'arm_verdict.json')) and os.path.exists(os.path.join(ul, 'selection.json'))
-            and os.path.exists(os.path.join(ul, 'ul_base.in')))
+            and os.path.exists(os.path.join(ul, 'ul_base.in')) and re.search(r'^gate=ALLOW$', _read(os.path.join(ul, 'UB', 'run_manifest.txt')), re.M)
+            and re.search(r'^reader_arm_rc=0$', _read(os.path.join(ul, 'UB', 'run_manifest.txt')), re.M))
         rc, out = _run(os.path.join(td, 'b'), kit, B73, 'UB', {'RESUME': '1'})
-        ub = [c for c in _calls(log) if '/UB ' in c + ' ' and c.startswith('lmp ')]
-        chk('M7 이어 돌림 한 번: 마지막 restart_unload_3260000 + 짝 상태 파일 · ul_resume 1 · 화면 screen_a2',
-            lambda: rc == 0 and len(ub) == 2 and 'restart_unload_3260000.bin' in ub[1] and 'state_unload_3260000.in' in ub[1]
-            and 'ul_resume=1' in ub[1] and os.path.exists(os.path.join(ul, 'UB', 'screen_a2.txt')))
-        rc, out = _run(os.path.join(td, 'b'), kit, B73, 'UB', {'RESUME': '1'})
-        chk('M7 두 번째 이어 돌림 = 거부 (등록 범위 한 번 · §13-1)', lambda: rc != 0 and len([c for c in _calls(log) if '/UB ' in c + ' ' and c.startswith('lmp ')]) == 2)
-        rc, out = _run(os.path.join(td, 'b'), kit, B73, 'UT', {'MOCK_PROCS': '4'})
-        chk('M8 화면 "Loop time … on 4 procs" (≠ NP 6) = 기술 실패 (rc ≠ 0 · run_check FAIL)',
-            lambda: rc != 0 and 'FAIL' in open(os.path.join(ul, 'UT', 'run_check.txt')).read())
+        chk('M7a ULKR-06 첫 시도가 덱 요약 (ul_summary.txt) 까지 끝난 팔 = 이어 돌림 거부 (기계 실패가 아니다 · lmp 호출 없음)',
+            lambda: rc != 0 and 'ul_summary' in out and len(_lmp(log, 'UB')) == 1 and not os.path.exists(os.path.join(ul, 'UB', 'screen_a2.txt')))
+        rc, out = _run(os.path.join(td, 'b'), kit, B73, 'UT', {'MOCK_CRASH_KIND': 'UT'})
+        first = {n: _sha_or_none(os.path.join(ul, 'UT', n)) for n in ('screen.txt', 'deck.liggghts')}
+        rc2, out2 = _run(os.path.join(td, 'b'), kit, B73, 'UT', {'RESUME': '1'})
+        ut = _lmp(log, 'UT')
+        man_ut = _read(os.path.join(ul, 'UT', 'run_manifest.txt'))
+        chk('M7 이어 돌림 한 번 (첫 시도 = 기계 실패 · 요약 없음): 마지막 restart_unload_3260000 + 짝 상태 파일 · ul_resume 1 · 화면 screen_a2 · '
+            '첫 시도 화면 · 덱 사본 덮어쓰지 않음 · 잡 기록 덧붙임 (resume=0 · resume=1 둘 다)',
+            lambda: rc != 0 and rc2 == 0 and len(ut) == 2 and 'restart_unload_3260000.bin' in ut[1] and 'state_unload_3260000.in' in ut[1]
+            and 'ul_resume=1' in ut[1] and os.path.exists(os.path.join(ul, 'UT', 'screen_a2.txt')) and all(first.values())
+            and all(_sha_or_none(os.path.join(ul, 'UT', n)) == h for n, h in first.items())
+            and re.search(r'^resume=0$', man_ut, re.M) and re.search(r'^resume=1$', man_ut, re.M))
+        rc, out = _run(os.path.join(td, 'b'), kit, B73, 'UT', {'RESUME': '1'})
+        chk('M7 두 번째 이어 돌림 = 거부 (등록 범위 한 번 · §13-1 · 개정 3 §14-4)', lambda: rc != 0 and len(_lmp(log, 'UT')) == 2)
+        shutil.copytree(os.path.join(ul, 'UB'), os.path.join(ul, 'UVa'))   # 관문을 거치지 않은 폴더 (같은 꼴 · 같은 덱 사본 · 요약 없음)
+        mp = os.path.join(ul, 'UVa', 'run_manifest.txt')
+        mtext = _read(mp).replace('job=UB', 'job=UVa').replace('gate=ALLOW\n', '')
+        open(mp, 'w').write(mtext)
+        os.remove(os.path.join(ul, 'UVa', 'ul_summary.txt'))
+        shutil.copy(os.path.join(kit, 'decks', B73, 'in.U_UVa.liggghts'), os.path.join(ul, 'UVa', 'deck.liggghts'))
+        open(os.path.join(ul, 'UVa', 'deck.txt'), 'w').write('in.U_UVa.liggghts\n')
+        rc, out = _run(os.path.join(td, 'b'), kit, B73, 'UVa', {'RESUME': '1'})
+        chk('M14 ULKR-06 같은 승인 팔의 기술 재개인지 검증 — 첫 시도 기록에 관문 ALLOW 가 없는 폴더 = 이어 돌림 거부 (관문 건너뛰기 없음 · lmp 호출 없음)',
+            lambda: 'job=UVa' in mtext and rc != 0 and '관문 ALLOW' in out and not _lmp(log, 'UVa'))
+        shutil.rmtree(os.path.join(ul, 'UVa'))
+        rc, out = _run(os.path.join(td, 'b'), kit, B73, 'UC', {'MOCK_PROCS': '4'})
+        chk('M8 화면 "Loop time … on 4 procs" (≠ NP 6) = 기술 실패 (rc ≠ 0 · run_check FAIL · 잡 기록 stage 줄)',
+            lambda: rc != 0 and 'FAIL' in open(os.path.join(ul, 'UC', 'run_check.txt')).read()
+            and re.search(r'^stage=UC .*rc=0 check=.*procs', _read(os.path.join(ul, 'UC', 'run_manifest.txt')), re.M))
         shutil.rmtree(os.path.join(ul, 'UT'))
         rc, out = _run(os.path.join(td, 'b'), kit, B73, 'UT')
         rc2, out2 = _run(os.path.join(td, 'b'), kit, B73, 'UVb')
         rc3, out3 = _run(os.path.join(td, 'b'), kit, B73, 'UTc')
-        utc = [c for c in _calls(log) if '/UTc ' in c + ' ' and c.startswith('lmp ')]
+        utc = _lmp(log, 'UTc')
         chk('M9 UT (δ_dt 0.2) → UVb 허용 → 튜플 t3 → UTc = U_UT3 덱을 UT 의 R_M restart · 상태에서 ul_resume 1 · UT 기록 이어 받음',
             lambda: rc == 0 and rc2 == 0 and rc3 == 0 and utc and 'restart_RM_3240000.bin' in utc[0] and 'state_RM_3240000.in' in utc[0]
             and 'ul_resume=1' in utc[0] and open(os.path.join(ul, 'UTc', 'deck.txt')).read().strip() == 'in.U_UT3.liggghts'
             and open(os.path.join(ul, 'UTc', 'ul_steps.csv')).read().count('\n') >= 5)
         rc, out = _run(os.path.join(td, 'b'), kit, 'ps_3_7_r45', 'UB')
         chk('M10 다른 침대: 복원 전 거부 (최종 튜플이 있어도)', lambda: rc != 0 and 'REFUSE' in out)
+        # ── ULKR-06 미지원 JOB 의 RESUME = 거부 (분명한 사유 · 기록 보존 · lmp 호출 없음) ──
+        snap = {n: _sha_or_none(os.path.join(ul, 'UTc', n)) for n in ('screen.txt', 'run_manifest.txt', 'ul_events.csv')}
+        n_utc = len(_lmp(log, 'UTc'))
+        rc, out = _run(os.path.join(td, 'b'), kit, B73, 'UTc', {'RESUME': '1'})
+        chk('M11 ULKR-06 RESUME UTc = 거부 ("RESUME 거부" · 개정 3 §14-4) · lmp 호출 없음 · UTc 화면 · 기록 그대로 · screen_a2 없음',
+            lambda: rc != 0 and 'RESUME 거부' in out and len(_lmp(log, 'UTc')) == n_utc and not os.path.exists(os.path.join(ul, 'UTc', 'screen_a2.txt'))
+            and all(_sha_or_none(os.path.join(ul, 'UTc', n)) == h for n, h in snap.items()))
+        rc, out = _run(os.path.join(td, 'b'), kit, B73, 'G_UT3')
+        n_g = len(_lmp(log, 'G_UT3'))
+        gsnap = _sha_or_none(os.path.join(ul, 'G_UT3', 'screen.txt'))
+        rc2, out2 = _run(os.path.join(td, 'b'), kit, B73, 'G_UT3', {'RESUME': '1'})
+        chk('M12 ULKR-06 RESUME G_UT3 = 거부 · 첫 시도 화면 그대로 · lmp 호출 늘지 않음 (원 팔 R_M 에서 다시 시작하지 않는다)',
+            lambda: rc == 0 and n_g == 1 and rc2 != 0 and 'RESUME 거부' in out2 and len(_lmp(log, 'G_UT3')) == 1
+            and gsnap and _sha_or_none(os.path.join(ul, 'G_UT3', 'screen.txt')) == gsnap)
+        n_all = len(_calls(log))
+        res = [_run(os.path.join(td, 'b'), kit, b, j, {'RESUME': '1'}) for b, j in ((B73, 'RJ'), ('ps_10_0_r45', 'EXT'), ('ps_10_0_r45', 'RJ2'))]
+        chk('M13 ULKR-06 RESUME RJ · EXT · RJ2 = 거부 (사유 · 다시 = 새 시도 안내) · 어떤 lmp · mpirun 호출도 없음',
+            lambda: all(r != 0 and 'RESUME 거부' in o and '새 시도' in o for r, o in res) and len(_calls(log)) == n_all)
+        # ── ULKR-11 G0 · Ut0 기술 실패 = R 을 돌리지 않는다 · 판독기 프로그램 오류 ↔ 정상 미식별 ──
+        kit_c, work_c, log_c = _setup(os.path.join(td, 'c'))
+        ld = os.path.join(work_c, B73, 'in', P_bed(B73)['last_deck'])
+        open(ld, 'w').write(_read(ld).replace('pair_style gran model hooke/hysteresis', 'pair_style gran model hooke'))
+        rc, out = _run(os.path.join(td, 'c'), kit_c, B73, 'RJ')
+        man_c = _read(os.path.join(work_c, B73, 'RJ', 'run_manifest.txt'))
+        chk('M15 ULKR-11 G0 실패 (원 마지막 조각 덱 ≠ 언로딩 머리) = Ut0 · R · UN · UK 를 돌리지 않는다 · 잡 기록 stage=G0 rc≠0 · 복원 증서 RESTORED 아님 · rc ≠ 0',
+            lambda: rc != 0 and not [c for c in _calls(log_c) if c.startswith('lmp ')] and re.search(r'^stage=G0 rc=[1-9]', man_c, re.M)
+            and (json.load(open(os.path.join(work_c, B73, 'RJ', 'restore_verdict.json'))).get('status') != 'RESTORED'))
+        kit_d, work_d, log_d = _setup(os.path.join(td, 'd'))
+        rc, out = _run(os.path.join(td, 'd'), kit_d, B73, 'RJ', {'MOCK_FAIL_KIND': 'Ut0'})
+        kinds_d = [re.search(r'out=\S+/RJ/(\w+)', c).group(1) for c in _calls(log_d) if c.startswith('lmp ')]
+        chk('M16 ULKR-11 7:3 Ut0 기술 실패 = R · UN · UK 를 돌리지 않는다 (lmp 호출 = Ut0 하나) · 잡 기록 stage=Ut0 rc≠0 · rc ≠ 0',
+            lambda: rc != 0 and kinds_d == ['Ut0'] and re.search(r'^stage=Ut0 .*rc=[1-9]', _read(os.path.join(work_d, B73, 'RJ', 'run_manifest.txt')), re.M))
+        kit_e, work_e, log_e = _setup(os.path.join(td, 'e'))
+        rc0, _o = _run(os.path.join(td, 'e'), kit_e, B73, 'RJ')
+        open(os.path.join(work_e, B73, 'RJ', 'restore_verdict.json'), 'w').write(json.dumps({'status': 'RESTORED'}))
+        rc, out = _run(os.path.join(td, 'e'), kit_e, B73, 'UB', {'PY': os.path.join(td, 'e', 'bin', 'pywrap'), 'MOCK_READER_FAIL': 'arm'})
+        man_e = _read(os.path.join(work_e, B73, 'UB', 'run_manifest.txt'))
+        rcu, outu = _run(os.path.join(td, 'e'), kit_e, B73, 'UC')
+        man_u = _read(os.path.join(work_e, B73, 'UC', 'run_manifest.txt'))
+        chk('M17 ULKR-11 판독기 프로그램 오류 (arm rc 1) = 잡 기록 reader_arm_rc=1 · 러너 rc ≠ 0 (LMP 는 성공) ↔ 정상 미식별 (UC 빈 기록 · JSON) = reader_arm_rc=0 · rc 0',
+            lambda: rc != 0 and re.search(r'^reader_arm_rc=1$', man_e, re.M) and re.search(r'^stage=U_UB .*rc=0 check=PASS', man_e, re.M)
+            and rcu == 0 and re.search(r'^reader_arm_rc=0$', man_u, re.M)
+            and json.load(open(os.path.join(work_e, B73, 'UC', 'arm_verdict.json'))).get('primary_status') != 'OK')
     finally:
         shutil.rmtree(td, ignore_errors=True)
     print(f'selftest: {"PASS" if not fails else "FAIL"} ({len(fails)} 실패)')

@@ -54,8 +54,12 @@ RULES = (
      'ul_s3.py', 's3_residual', ('ul_s3 selftest',)),
     ('sigma_p', 'σ_P = k* 마지막 두 창 thermo 정규 줄 (ul_Ps) · ddof 1 · 최소 10 · NOISE_FLOOR = P_meas < 3 σ_P (choice C3)',
      'ul_observers.py', 'sigma_P', ('ul_observers O1–O4b',)),
-    ('resume_once', '기계 실패 이어 돌림 = 마지막 restart_unload_* + 짝 상태 파일에서 한 번 · 두 번째 = 거부 (§4-4 · §13-1)',
-     'run_unload.sh', 'screen_a2.txt', ('ul_runner_test M7',)),
+    ('resume_once', '기계 실패 이어 돌림 = 일반 팔 (UB · UT · UC · UVa · UVb · UT3) 만 · 같은 승인 팔 (첫 시도 gate=ALLOW · 요약 없음) · 마지막 restart_unload_* + 짝 상태 '
+     '파일에서 한 번 · 두 번째 = 거부 · UTc · G_* · RJ · RJ2 · EXT = 거부 (다시 = 새 시도) · 기록 덮어쓰지 않음 (§4-4 · §13-1 · 개정 3 §14-4 · ULKR-06)',
+     'run_unload.sh', 'resume_check', ('ul_runner_test M7', 'ul_runner_test M7a', 'ul_runner_test M11–M14')),
+    ('stage_rc', '단계마다 기술 rc · 판독기 rc 를 잡 기록 (run_manifest.txt) 에 · G0 · Ut0 기술 실패 = R 을 돌리지 않는다 · 판독기 프로그램 오류 (rc ≠ 0) ↔ '
+     '정상 미식별 (rc 0 · JSON) 따로 (개정 3 §14-10 · ULKR-11)',
+     'run_unload.sh', 'reader_${cmd}_rc', ('ul_runner_test M4', 'ul_runner_test M15–M17')),
     ('restore_complete', '복원 판정 = Ut0 (7:3) · R · UN 단계 기술 성공 · PRE · POST · R_END · UN 전부 읽힘 · 머리 step · 고유 ID · S0 ID 집합 · '
      'R_END ↔ UN 같은 대상 · 이력 시험 H0–H5 + SYN PASS · 부호 = 표 · 총힘 시점 · 관문 = RESTORED + RJ 잡 기술 실패 0 (개정 3 §14-10 · ULKR-05 · 08)',
      'ul_reader.py', 'restore_verdict', ('ul_reader R17', 'ul_reader R18', 'ul_gates F2')),

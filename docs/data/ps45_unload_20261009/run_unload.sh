@@ -5,6 +5,8 @@
 #   bash run_unload.sh <침대> <잡>                    # 잡 하나 (아래) — 관문 (ul_reader.py gate) 이 거부하면 런 없이 멈춘다
 #   bash run_unload.sh <침대> <잡> --preflight-only   # 사전 점검만 (런 · kit 사본 없음)
 #   RESUME=1 bash run_unload.sh <침대> <팔>           # 기계 실패 이어 돌림 한 번 (마지막 restart_unload_* + 짝 상태 파일 · §4-4 · §13-1)
+#     ⛔ 개정 3 §14-4: RESUME = 일반 팔 (UB · UT · UC · UVa · UVb · UT3) 만 · 첫 시도가 관문 ALLOW (gate=ALLOW 기록) 를 받았고 덱 요약 없이 끝났을 때 ·
+#        UTc · G_* · RJ · RJ2 · EXT = 거부 — 다시 = 새 시도 (지금 폴더를 이름 바꿔 보존 → RESUME 없이 새 제출 · 관문 다시)
 #
 # 잡 (정본 이름 = README §0):
 #   RJ    복원 시험 — (7:3) Ut0 → G0 (원 마지막 조각 덱) → R → UN (보조 소거 읽기) → UK (회전 KE) → 복원 판정 · KE 기준 파일
@@ -44,6 +46,11 @@ case "$BED" in -h|--help|'') sed -n '2,/^set -uo pipefail/{/^#/p}' "$SELF_DIR/ru
 case "$BED" in ps_0_10_r45|ps_3_7_r45|ps_5_5_r45|ps_7_3_r45|ps_10_0_r45) ;; *) die "모르는 침대: $BED";; esac
 case "$JOB" in RJ|RJ2|EXT|UB|UT|UC|UVa|UVb|UT3|UTc|G_UB|G_UVa|G_UVb|G_UT3) ;; *) die "모르는 잡: $JOB (README §0)";; esac
 case "$WORK_ROOT" in *' '*) die "WORK_ROOT 에 공백 — LIGGGHTS 변수로 넘길 수 없다";; esac
+if [ "${RESUME:-0}" = 1 ]; then   # 개정 3 §14-4 (ULKR-06) — kit 사본 · 사전 점검 전에 거부
+  case "$JOB" in UB|UT|UC|UVa|UVb|UT3) ;;
+    *) die "RESUME 거부 — $JOB 는 이어 돌림을 지원하지 않는다 (등록 개정 3 §14-4: 이어 돌림 = 일반 팔 UB · UT · UC · UVa · UVb · UT3 만).  다시 = 새 시도: 지금 폴더 $WORK_ROOT/$BED/$JOB 를 이름을 바꿔 보존 (예 ${JOB}.try1 · 지우지 · 덮지 않는다) → RESUME 없이 새로 제출 (관문 다시)";;
+  esac
+fi
 
 # ── 0. kit 사본으로 다시 실행 (SHA256SUMS 목록 그대로) ─────────────────────────
 if [ "${UL_KIT:-0}" != 1 ] && [ "$PREFLIGHT_ONLY" = 0 ]; then
@@ -63,6 +70,19 @@ KIT=$SELF_DIR
 
 # ── 1. 사전 점검 ─────────────────────────────────────────────────────────────
 tbl() { "$PY" -I -c 'import json,sys; d=json.load(open(sys.argv[1])); print(eval(sys.argv[2], {}, {"d": d}))' "$KIT/unload_params.json" "$1"; }
+GATE_LINE=""; GATE_WHY=""
+resume_check() {   # 개정 3 §14-4 (ULKR-06) — 같은 승인 팔의 기술 재개인지 (관문을 건너뛰는 대신 첫 시도 기록을 대조)
+  local jd="$WORK_ROOT/$BED/$JOB" man
+  man="$jd/run_manifest.txt"
+  [ -d "$jd" ] || die "이어 돌릴 잡 폴더가 없다: $jd"
+  [ -f "$man" ] || die "첫 시도 기록 run_manifest.txt 가 없다 — 같은 승인 팔의 기술 재개인지 확인할 수 없다 (새 시도)"
+  grep -qx "bed=$BED" "$man" && grep -qx "job=$JOB" "$man" || die "첫 시도 기록의 침대 · 잡이 $BED $JOB 가 아니다 (새 시도)"
+  grep -qx 'resume=0' "$man" || die "첫 시도 (resume=0) 기록이 없다 (새 시도)"
+  grep -qx 'gate=ALLOW' "$man" || die "첫 시도가 관문 ALLOW 를 받은 기록 (gate=ALLOW) 이 없다 — 이어 돌림이 아니라 새 제출 (관문 다시)"
+  [ ! -e "$jd/screen_a2.txt" ] || die "이미 이어 돌렸다 (등록 범위 한 번 — §4-4 · §13-1 · 개정 3 §14-4 · 그 밖 = 새 승인 · 등록)"
+  [ ! -e "$jd/ul_summary.txt" ] || die "첫 시도가 덱 요약 (ul_summary.txt) 까지 끝났다 — 기계 실패가 아니다 (이어 돌림 없음)"
+  echo "  ✓ 이어 돌림 = 같은 승인 팔 ($BED $JOB · 첫 시도 gate=ALLOW · 요약 없음 · 한 번)"
+}
 preflight() {
   say "사전 점검 — $BED $JOB"
   [ -d "$WORK_ROOT" ] || die "WORK_ROOT 가 없다: $WORK_ROOT"
@@ -82,8 +102,15 @@ preflight() {
   echo "  ✓ $MPIRUN $MPIRUN_FLAGS -np $NP · $PY"
   "$PY" -I "$KIT/ul_reader.py" inputs "$WORK_ROOT" "$BED" > /dev/null || die "in/ 원 파일 sha256 ≠ 표 (또는 원 로그 · 원 마지막 조각 덱 없음) — $WORK_ROOT/$BED/in/"
   echo "  ✓ in/ 원 파일 = 표"
-  if [ "${RESUME:-0}" != 1 ]; then
-    "$PY" -I "$KIT/ul_reader.py" gate "$WORK_ROOT" "$BED" "$JOB" || die "관문 거부 — 위 이유 (제출하지 않는다)"
+  if [ "${RESUME:-0}" = 1 ]; then
+    resume_check
+    GATE_LINE="gate=RESUME"
+  else
+    local gout grc
+    gout=$("$PY" -I "$KIT/ul_reader.py" gate "$WORK_ROOT" "$BED" "$JOB"); grc=$?
+    echo "$gout"
+    [ "$grc" = 0 ] || die "관문 거부 — 위 이유 (제출하지 않는다)"
+    GATE_LINE="gate=ALLOW"; GATE_WHY=$gout
   fi
   local others; others=$(pgrep -a -x "$(basename "$LMP")" 2>/dev/null || true)
   if [ -n "$others" ] && [ "${ALLOW_CONCURRENT:-0}" != 1 ]; then echo "$others"; die "다른 LIGGGHTS 가 돌고 있다 (ALLOW_CONCURRENT=1 로 넘김)"; fi
@@ -116,8 +143,10 @@ fi
   echo "sums_sha256=$(sha256sum "$KIT/SHA256SUMS" | cut -d' ' -f1)"
   echo "lmp=$LMP"; echo "lmp_sha256=$LMP_SHA"; echo "np=$NP"; echo "mpirun=$MPIRUN $MPIRUN_FLAGS"; echo "bed=$BED"; echo "job=$JOB"
   echo "resume=${RESUME:-0}"; echo "slurm_job=${SLURM_JOB_ID:-none} slurm_ntasks=${SLURM_NTASKS:-none} slurm_nodes=${SLURM_JOB_NODELIST:-none}"
-  echo "allow_other_lmp=${ALLOW_OTHER_LMP:-0}"; echo "start=$(date -Iseconds)"
+  echo "allow_other_lmp=${ALLOW_OTHER_LMP:-0}"; echo "$GATE_LINE"; [ -n "$GATE_WHY" ] && echo "gate_why=$GATE_WHY"; echo "start=$(date -Iseconds)"
 } >> "$JD/run_manifest.txt"
+MAN="$JD/run_manifest.txt"
+note() { echo "$*" >> "$MAN"; }   # 단계 기록 (개정 3 §14-10 · ULKR-11) — 줄을 덧붙이기만 한다
 
 # ── 2. 한 덱 ─────────────────────────────────────────────────────────────────
 FAILS=0
@@ -126,7 +155,7 @@ run_deck() {   # $1 = 단계 폴더  $2 = 덱 종류  $3 = 읽을 restart  $4 = 
   local deck="$KIT/decks/$BED/in.$kind.liggghts"
   [ -f "$deck" ] || die "덱 없음: $deck"
   mkdir -p "$dir/dump" "$dir/restart" "$dir/obs" "$dir/g2" "$dir/post" || die "단계 폴더 실패: $dir"
-  [ -s "$ck" ] || { echo "missing_ckpt $ck" >> "$dir/run_check.txt"; say "✗ $kind — 읽을 restart 가 없다: $ck"; FAILS=$((FAILS + 1)); return 1; }
+  [ -s "$ck" ] || { echo "missing_ckpt $ck" >> "$dir/run_check.txt"; note "stage=$kind screen=$scr rc=missing_ckpt check=FAIL"; say "✗ $kind — 읽을 restart 가 없다: $ck"; FAILS=$((FAILS + 1)); return 1; }
   [ -f "$dir/deck.liggghts" ] || { cp -p "$deck" "$dir/deck.liggghts" && echo "in.$kind.liggghts" > "$dir/deck.txt"; }
   cmp -s "$deck" "$dir/deck.liggghts" || die "단계 폴더의 덱 사본 ≠ kit 덱 (이어 돌림은 같은 덱으로만): $dir"
   if [ "$st" = - ]; then st="$dir/state_fresh.in"; echo "# 처음 (빈 상태 파일 — 덱은 상태 파일을 늘 맨 바깥에서 include 한다)" > "$st"; fi
@@ -144,6 +173,7 @@ run_deck() {   # $1 = 단계 폴더  $2 = 덱 종류  $3 = 읽을 restart  $4 = 
   local procs; procs=$(grep -o 'Loop time of [0-9.eE+-]* on [0-9]* procs' "$dir/$scr" | awk '{print $6}' | sort -u | tr '\n' ' ')
   [ "$procs" = "$NP " ] || why="$why procs[$procs]≠$NP"
   [ "$rc" = 0 ] || why="$why rc=$rc"
+  note "stage=$kind screen=$scr rc=$rc check=${why:-PASS}"
   if [ -z "$why" ]; then echo "$kind $scr PASS rc=0 procs=$NP" >> "$dir/run_check.txt"; say "■ $kind PASS"
   else echo "$kind $scr FAIL$why" >> "$dir/run_check.txt"; say "✗ $kind FAIL$why"; FAILS=$((FAILS + 1)); return 1; fi
 }
@@ -157,24 +187,42 @@ bundle() {
 
 # ── 3. 잡 ────────────────────────────────────────────────────────────────────
 RRC=0
+reader() {   # 판독기 한 번 — rc 를 잡 기록에 (reader_<명령>_rc) · 0 이 아니면 RRC (정상 미식별은 JSON · rc 0 / 프로그램 오류 = rc ≠ 0 · ULKR-11)
+  local cmd=$1 r; shift
+  "$PY" -I "$KIT/ul_reader.py" "$cmd" "$@"; r=$?
+  note "reader_${cmd}_rc=$r"
+  [ "$r" = 0 ] || RRC=$r
+  return "$r"
+}
 case "$JOB" in
   RJ|RJ2)
     LAST_DECK="$IN/$(tbl "d['beds']['$BED']['last_deck']")"
-    "$PY" -I "$KIT/ul_gates.py" g0 "$LAST_DECK" "$KIT/decks/$BED/in.R.liggghts" > "$JD/g0.json"; echo "  G0 rc=$? (0 = PASS · $JD/g0.json)"
-    if [ "$BED" = ps_7_3_r45 ]; then run_deck "$JD/Ut0" Ut0 "$CKPT0" - 0; fi
-    run_deck "$JD/R" R "$CKPT0" - 0 && run_deck "$JD/UN" UNread "$JD/R/un_diag.bin" - 0
-    if [ "$BED" != ps_10_0_r45 ] || [ "$JOB" = RJ2 ]; then run_deck "$JD/UK" UK "$CKPT0" - 0; fi
+    PRE_OK=1
+    "$PY" -I "$KIT/ul_gates.py" g0 "$LAST_DECK" "$KIT/decks/$BED/in.R.liggghts" > "$JD/g0.json"; G0RC=$?
+    note "stage=G0 rc=$G0RC"; echo "  G0 rc=$G0RC (0 = PASS · $JD/g0.json)"
+    if [ "$G0RC" != 0 ]; then say "✗ G0 실패 (rc=$G0RC) — Ut0 · R · UN · UK 를 돌리지 않는다 (개정 3 §14-10 · ULKR-11)"; FAILS=$((FAILS + 1)); PRE_OK=0; fi
+    if [ "$PRE_OK" = 1 ] && [ "$BED" = ps_7_3_r45 ]; then
+      run_deck "$JD/Ut0" Ut0 "$CKPT0" - 0 || { say "✗ Ut0 (문법 런) 기술 실패 — R · UN · UK 를 돌리지 않는다 (ULKR-11)"; PRE_OK=0; }
+    fi
+    if [ "$PRE_OK" = 1 ]; then
+      { run_deck "$JD/R" R "$CKPT0" - 0 && run_deck "$JD/UN" UNread "$JD/R/un_diag.bin" - 0; } || PRE_OK=0
+    fi
+    NEED_UK=0; if [ "$BED" != ps_10_0_r45 ] || [ "$JOB" = RJ2 ]; then NEED_UK=1; fi
+    if [ "$PRE_OK" = 1 ] && [ "$NEED_UK" = 1 ]; then run_deck "$JD/UK" UK "$CKPT0" - 0 || PRE_OK=0; fi
     HV=(); [ -n "${HIST_VERDICT:-}" ] && HV=(--hist "$HIST_VERDICT")
-    "$PY" -I "$KIT/ul_reader.py" restore "$WORK_ROOT" "$BED" --job "$JOB" ${HV[@]+"${HV[@]}"}; RRC=$?
-    if [ "$BED" != ps_10_0_r45 ] || [ "$JOB" = RJ2 ]; then "$PY" -I "$KIT/ul_reader.py" kebase "$WORK_ROOT" "$BED" || RRC=2; fi
+    reader restore "$WORK_ROOT" "$BED" --job "$JOB" ${HV[@]+"${HV[@]}"}
+    if [ "$NEED_UK" = 1 ]; then
+      if [ "$PRE_OK" = 1 ]; then reader kebase "$WORK_ROOT" "$BED" || RRC=2; else note "reader_kebase_rc=skipped (선행 단계 실패)"; RRC=2; fi
+    fi
     ;;
   EXT)
     run_deck "$JD" EXT "$CKPT0" - 0
-    "$PY" -I "$KIT/ul_reader.py" s0p "$WORK_ROOT"; RRC=$?
+    reader s0p "$WORK_ROOT"
     if [ "$RRC" != 0 ] && [ -s "$JD/restart/restart_ext_$(tbl "d['ext_10_0']['end1']").bin" ]; then
       mkdir -p "$WORK_ROOT/$BED/EXT2"
+      RRC=0
       run_deck "$WORK_ROOT/$BED/EXT2" EXT2 "$JD/restart/restart_ext_$(tbl "d['ext_10_0']['end1']").bin" - 0
-      "$PY" -I "$KIT/ul_reader.py" s0p "$WORK_ROOT"; RRC=$?
+      reader s0p "$WORK_ROOT"
     fi
     ;;
   UB|UT|UC|UVa|UVb|UT3)
@@ -189,7 +237,7 @@ case "$JOB" in
     else
       run_deck "$JD" "$KIND" "$CKPT0" - 0
     fi
-    "$PY" -I "$KIT/ul_reader.py" arm "$WORK_ROOT" "$BED" "$JOB"
+    reader arm "$WORK_ROOT" "$BED" "$JOB"
     ;;
   UTc)
     SRC="$WORK_ROOT/$BED/UT"
@@ -199,7 +247,7 @@ case "$JOB" in
     for f in ul_windows.csv ul_steps.csv ul_events.csv; do cp -p "$SRC/$f" "$JD/$f" || die "UT 기록 복사 실패: $f"; done
     echo "continues=UT rm_step=$RS" >> "$JD/run_manifest.txt"
     run_deck "$JD" U_UT3 "$RM" "$SRC/restart/state_RM_$RS.in" 1
-    "$PY" -I "$KIT/ul_reader.py" arm "$WORK_ROOT" "$BED" "$JOB"
+    reader arm "$WORK_ROOT" "$BED" "$JOB"
     ;;
   G_*)
     ARM=${JOB#G_}; SRC="$WORK_ROOT/$BED/$ARM"
@@ -208,10 +256,10 @@ case "$JOB" in
     RS=${RM##*/restart_RM_}; RS=${RS%.bin}
     echo "source=$SRC rm_step=$RS" >> "$JD/run_manifest.txt"
     run_deck "$JD" "$JOB" "$RM" "$SRC/restart/state_RM_$RS.in" 0
-    "$PY" -I "$KIT/ul_reader.py" arm "$WORK_ROOT" "$BED" "$JOB"
+    reader arm "$WORK_ROOT" "$BED" "$JOB"
     ;;
 esac
-if [ "$BED" = ps_7_3_r45 ] && [ -d "$WORK_ROOT/ps_7_3_r45/UB" ]; then "$PY" -I "$KIT/ul_reader.py" select "$WORK_ROOT"; fi
+if [ "$BED" = ps_7_3_r45 ] && [ -d "$WORK_ROOT/ps_7_3_r45/UB" ]; then reader select "$WORK_ROOT"; fi
 echo "end=$(date -Iseconds) fails=$FAILS reader_rc=$RRC" >> "$JD/run_manifest.txt"
 bundle
 if [ "$FAILS" != 0 ]; then say "끝 — 기술 실패 $FAILS (run_check.txt) — TECH · 1저자"; exit 2; fi
