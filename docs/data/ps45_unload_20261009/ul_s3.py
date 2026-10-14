@@ -187,6 +187,11 @@ def selftest():
     chk('F11 판 위로 이탈한 입자 · S0 에 없던 id 는 집합 밖 (자유 낙하 −m g 가 잔차에 안 들어간다)',
         lambda: abs(s3_residual(esc, CB, ids | {99}, pz, atom_step=1, contact_step=1)['R'] - 1.0 / 106.0) < 1e-9
         and abs(s3_residual(esc[:-1] + [dict(esc[-1], z=0.004)], CB, ids, pz, atom_step=1, contact_step=1)['R'] - 1.0 / 106.0) < 1e-9)
+    chk('F12 ULKRR-04 소수 원자 ID (2 → 2.5 — 정수 2 로 자르지 않는다) = NOT_COMPUTED',
+        lambda: s3_residual([dict(a, id=2.5) if a['id'] == 2 else a for a in A], C, ids, pz, atom_step=1, contact_step=1)['status'] == 'NOT_COMPUTED')
+    chk('F12 ULKRR-04 소수 쌍 참조 (id2 2 → 2.5) = NOT_COMPUTED · 대조: 정수 그대로 = PASS',
+        lambda: s3_residual(A, [dict(c, id2=2.5) if c['id2'] == 2 else c for c in C], ids, pz, atom_step=1, contact_step=1)['status'] == 'NOT_COMPUTED'
+        and s3_residual(A, C, ids, pz, atom_step=1, contact_step=1)['status'] == 'PASS')
     print(f'selftest: {"PASS" if not fails else "FAIL"} ({len(fails)} 실패)')
     return 1 if fails else 0
 

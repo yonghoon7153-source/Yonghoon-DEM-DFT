@@ -478,6 +478,15 @@ def selftest():
             g2c_compare(os.path.join(td, 'd.c'), os.path.join(td, 'o.c'))))
         ul_lib.write_local(os.path.join(td, 'e.c'), 3200000, ccols, base + [crow(1, 2, -0.6, 0.01)])
         chk('C2 G2c 다른 값 중복 키 = FAIL', lambda: g2c_compare(os.path.join(td, 'e.c'), os.path.join(td, 'o.c'))['status'] == 'FAIL')
+        ul_lib.write_local(os.path.join(td, 'f.c'), 3200000, ccols, [crow(1, 2.5, -0.5, 0.01), base[1], base[2]])
+        chk('C3 ULKRR-04 G2c 쌍 참조 소수 ID (2 → 2.5 — 정수 2 로 잘려 같은 키가 되지 않는다) = FAIL',
+            lambda: g2c_compare(os.path.join(td, 'f.c'), os.path.join(td, 'o.c'))['status'] == 'FAIL')
+        fa = os.path.join(td, 'f.a')
+        ul_lib.write_custom(fa, 3200000, cols, rows, fmt=fmt)
+        fa_text = open(fa).read().replace('\n2 3 ', '\n2.5 3 ', 1)
+        open(fa, 'w').write(fa_text)
+        chk('C3 ULKRR-04 G2 원자 ID 소수 (2 → 2.5) = FAIL (글자 그대로 정수 변환 — 잘라서 같은 원자로 보지 않는다)',
+            lambda: '\n2.5 3 ' in open(fa).read() and g2_compare(fa, os.path.join(td, 'o.a'))['status'] == 'FAIL')
         stl = 'solid x\n  facet normal 0 0 -1\n    outer loop\n      vertex 0 0 {z}\n      vertex 0 0.05 {z}\n      vertex 0.05 0.05 {z}\n'
         for name, z in (('m1.stl', '0.111252'), ('m2.stl', '0.111254')):
             open(os.path.join(td, name), 'w').write(stl.format(z=z))

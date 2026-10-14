@@ -1249,13 +1249,20 @@ def selftest() -> int:
                  and b.get('gr_resume') == '1' and b.get('ckpt', '').endswith(f'/GA/restart/restart_g_{grammar_expect(P)["GA"]["ends"][-1]}.bin')
                  and b.get('gr_state', '').endswith(f'/GA/restart/state_g_{grammar_expect(P)["GA"]["ends"][-1]}.in'))(GM['args'].get('GA', {}), GM['args'].get('GB', {})))
     chk('S37 러너 모의 --grammar-only: GA 실패 = GB 없음 · rc 2', lambda: (lambda r: r['rc'] == 2 and r['order'] == ['P', 'GA'])(_runner_mock(grammar=True, fail_stage='GA')))
+    # Q4 (나) — 선행 단계 rc 0 **과** 파일 둘 다 있어야 다음 단계 (파일을 다 쓴 뒤 실패한 단계 = 다음 단계 없음 · Codex 판정문 §6-2)
+    chk('S38 러너 모의 --grammar-only: GA 가 restart · 상태 파일을 다 쓴 뒤 rc 1 = GB 없음 (파일이 있어도) · 판정 PASS 아님 · rc 2',
+        lambda: (lambda r: r['rc'] == 2 and r['order'] == ['P', 'GA'] and r['grammar_status'] != 'PASS')(_runner_mock(grammar=True, fail_after='GA')))
+    chk('S39 러너 모의 --grammar-only: 생산자 P 가 fixture.bin 을 쓴 뒤 rc 1 = GA · GB 없음 · rc 2',
+        lambda: (lambda r: r['rc'] == 2 and r['order'] == ['P'])(_runner_mock(grammar=True, fail_after='P')))
+    chk('S40 러너 모의 (H0–H5): 생산자 P 가 fixture.bin 을 쓴 뒤 rc 1 = 뒤 소비 단계 없음 (0 fixture PZ → CZ 만) · rc 2',
+        lambda: (lambda r: r['rc'] == 2 and r['order'] == ['P', 'PZ', 'CZ'])(_runner_mock(fail_after='P')))
     print(f'selftest: {"PASS" if not fails else "FAIL"} ({len(fails)} 실패)')
     return 1 if fails else 0
 
 
-def _runner_mock(allow_other=True, fail_stage='', np_alt=4, preflight=False, grammar=False):
+def _runner_mock(allow_other=True, fail_stage='', np_alt=4, preflight=False, grammar=False, fail_after=''):
     """가짜 mpirun (인자에서 -np 를 MOCK_NP 로) · 가짜 lmp (-var out 폴더 이름 = 단계 → --mock-stage) 로 run_history.sh 를 돌린다.
-    grammar = --grammar-only (P → GA → GB · 런 폴더 gram_* · grammar_verdict.json)."""
+    grammar = --grammar-only (P → GA → GB · 런 폴더 gram_* · grammar_verdict.json) · fail_stage = 파일 없이 실패 · fail_after = 파일을 다 쓴 뒤 실패."""
     import subprocess
     td = tempfile.mkdtemp(prefix='hist_runner_mock_')
     try:
@@ -1277,7 +1284,7 @@ def _runner_mock(allow_other=True, fail_stage='', np_alt=4, preflight=False, gra
         for b in ('mpirun', 'lmp'):
             os.chmod(os.path.join(binr, b), 0o755)
         env = dict(os.environ, WORK_ROOT=work, MPIRUN=os.path.join(binr, 'mpirun'), LMP=os.path.join(binr, 'lmp'), NP='6', NP_ALT=str(np_alt),
-                   HIST_STAMP='20261013_000000', PY=sys.executable, ALLOW_CONCURRENT='1', MOCK_FAIL_STAGE=fail_stage)
+                   HIST_STAMP='20261013_000000', PY=sys.executable, ALLOW_CONCURRENT='1', MOCK_FAIL_STAGE=fail_stage, MOCK_FAIL_AFTER_STAGE=fail_after)
         if allow_other:
             env['ALLOW_OTHER_LMP'] = '1'
         else:
@@ -1324,7 +1331,11 @@ def main(argv=None):
         if a.mock_stage[0] == fail:
             print('ERROR: mock failure (모의 — 이 단계는 실패한다)')
             return 1
-        return synth_stage(a.mock_stage[0], a.mock_stage[1], P, a.scenario, np_override=npo, write_meta=False)
+        rc = synth_stage(a.mock_stage[0], a.mock_stage[1], P, a.scenario, np_override=npo, write_meta=False)
+        if a.mock_stage[0] == os.environ.get('MOCK_FAIL_AFTER_STAGE', ''):   # 파일을 다 쓴 뒤 실패 (Q4 나 · 판정문 §6-2)
+            print('ERROR: mock failure after writing all files (모의 — 산출물은 남기고 rc 1)')
+            return 1
+        return rc
     if not a.run_dir:
         ap.error('런 폴더 (또는 --selftest)')
     if a.grammar:

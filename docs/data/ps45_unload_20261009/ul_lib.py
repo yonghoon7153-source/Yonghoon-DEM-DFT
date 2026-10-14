@@ -517,6 +517,12 @@ def selftest():
         write_local(q, 7, ['c_x[1]', 'c_x[2]'], [{'c_x[1]': 1.0, 'c_x[2]': -2.5}])
         chk('L11 덤프 local 왕복 · 열 이름 대조', lambda: read_dump(q, 'local', ['c_x[1]', 'c_x[2]'])['ok'] and not read_dump(q, 'local', ['c_y[1]', 'c_x[2]'])['ok'])
     chk('L12 fnum: NaN · inf · 빈 = None', lambda: fnum('nan') is None and fnum('inf') is None and fnum('') is None and fnum('1e-3') == 1e-3)
+    chk('L13 ULKRR-04 exact_id: 유한 · 양 · 정확한 정수만 (1.0 → 1 · 7 → 7) · 2.5 · 0 · −1 · nan · inf · True · "1" · 2^53 + 2 = None (자르지 않는다)',
+        lambda: exact_id(1.0) == 1 and exact_id(7) == 7 and all(exact_id(x) is None for x in (2.5, 0.0, -1.0, float('nan'), float('inf'), True, '1',
+                                                                                               2.0 ** 53 + 2)))
+    chk('L13 ULKRR-04 ids_of: 정상 = (정수 목록 · 문제 없음) · 소수 ID · 열 결손 = (None · 사유) — 예외 없음',
+        lambda: ids_of([{'id': 1.0}, {'id': 2.0}]) == ([1, 2], []) and ids_of([{'id': 1.0}, {'id': 1.5}])[0] is None and ids_of([{'id': 1.0}, {'id': 1.5}])[1]
+        and ids_of([{'not_id': 1.0}])[0] is None and ids_of([{'not_id': 1.0}])[1])
     print(f'selftest: {"PASS" if not fails else "FAIL"} ({len(fails)} 실패)')
     return 1 if fails else 0
 

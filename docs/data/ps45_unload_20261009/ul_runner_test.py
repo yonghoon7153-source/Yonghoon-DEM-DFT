@@ -49,26 +49,82 @@ def _kit_copy(dst, P_patch):
     return dst
 
 
-def _bins(td, log):
+def _bins(td):
+    """가짜 mpirun · lmp · pywrap — 글자가 늘 같다 (호출 기록 = 환경 MOCK_LOG) ⇒ 가짜 lmp 의 sha256 이 시험 폴더마다 같다
+    (Q5 — 문법 fixture 런과 본 키트 런이 같은 바이너리여야 사전 점검을 통과한다).  가짜 lmp 는 이력 시험 덱 (in.hist_*) 이면 그 읽는 쪽 모의 단계로 간다."""
     b = os.path.join(td, 'bin')
     os.makedirs(b, exist_ok=True)
     with open(os.path.join(b, 'mpirun'), 'w') as f:
         f.write('#!/bin/bash\nflags=""; np=""\nwhile [ $# -gt 0 ]; do case "$1" in\n'
                 '  --oversubscribe) flags="$flags o"; shift;; --bind-to) flags="$flags b:$2"; shift 2;; -np) np=$2; shift 2;;\n'
                 '  *) break;; esac; done\n'
-                f'echo "np=$np flags=$flags" >> {log}\nMOCK_NP=$np exec "$@"\n')
+                'echo "np=$np flags=$flags" >> "${MOCK_LOG:-/dev/null}"\nMOCK_NP=$np exec "$@"\n')
     with open(os.path.join(b, 'lmp'), 'w') as f:
-        f.write('#!/bin/bash\ndeck=""; args=""\nwhile [ $# -gt 0 ]; do case "$1" in -in) deck=$2; shift 2;; -log) shift 2;;\n'
-                '  -var) args="$args $2=$3"; shift 3;; *) shift;; esac; done\n'
-                f'echo "lmp deck=$deck $args np=$MOCK_NP" >> {log}\n'
+        f.write('#!/bin/bash\ndeck=""; args=""; out=""\nwhile [ $# -gt 0 ]; do case "$1" in -in) deck=$2; shift 2;; -log) shift 2;;\n'
+                '  -var) args="$args $2=$3"; [ "$2" = out ] && out=$3; shift 3;; *) shift;; esac; done\n'
+                'echo "lmp deck=$deck $args np=$MOCK_NP" >> "${MOCK_LOG:-/dev/null}"\n'
+                '# 이력 시험 덱 (문법 fixture 양성 대조) = 그 읽는 쪽의 모의 단계\n'
+                'case "$(basename "$deck")" in\n  in.hist_*)\n'
+                '    echo "LIGGGHTS (Version LIGGGHTS-PUBLIC 3.8.0, git commit 3d5c00f)"\n'
+                f'    exec {sys.executable} {os.path.join(HERE, "history_test", "read_history.py")} --mock-stage "$(basename "$out")" "$out";;\nesac\n'
                 f'exec {sys.executable} {os.path.join(HERE, "ul_runner_test.py")} --mock-lmp "$deck" $args\n')
-    with open(os.path.join(b, 'pywrap'), 'w') as f:   # 판독기 프로그램 오류 모의 (시험 쪽 감쌈 · 운영 코드에 우회 없음)
-        f.write('#!/bin/bash\nif [ -n "${MOCK_READER_FAIL:-}" ] && [ "${3:-}" = "$MOCK_READER_FAIL" ]; then\n'
-                '  echo "Traceback (most recent call last): [mock] 판독기 $MOCK_READER_FAIL 프로그램 오류" >&2; exit 1; fi\n'
-                f'exec {sys.executable} "$@"\n')
+    with open(os.path.join(b, 'pywrap'), 'w') as f:   # 판독기 모의 (시험 쪽 감쌈 · 운영 코드에 우회 없음) — $3 = ul_reader 명령
+        f.write('#!/bin/bash\ncmd="${3:-}"\n'
+                'if [ -n "${MOCK_READER_FAIL:-}" ] && [ "$cmd" = "$MOCK_READER_FAIL" ]; then\n'
+                '  echo "Traceback (most recent call last): [mock] 판독기 $cmd 프로그램 오류" >&2; exit 1; fi\n'
+                'if [ -n "${MOCK_READER_FAIL_ONCE:-}" ] && [ "$cmd" = "$MOCK_READER_FAIL_ONCE" ] && [ ! -e "${MOCK_ONCE_FLAG:?}" ]; then\n'
+                '  : > "$MOCK_ONCE_FLAG"; echo "Traceback (most recent call last): [mock] 판독기 $cmd 프로그램 오류 (첫 호출만)" >&2; exit 1; fi\n'
+                f'{sys.executable} "$@"; r=$?\n'
+                '# 모의 복원 판정 = RESTORED (모의 R · UN 은 관측 덤프를 다 흉내 내지 않는다 — 증서와 그 판독기 rc 0 을 러너가 그대로 기록하게)\n'
+                'if [ "${MOCK_RESTORE_AS:-}" = RESTORED ] && [ "$cmd" = restore ]; then\n'
+                f'  {sys.executable} -I -c \'import json,sys; p=sys.argv[1]; d=json.load(open(p)); d["status"]="RESTORED"; open(p,"w").write(json.dumps(d))\' '
+                '"$4/$5/$7/restore_verdict.json" && r=0; fi\n'
+                '# 결과 파일을 쓴 뒤 실패 (Codex actual_restore_cli_closed_stdout — 출력 flush 실패 rc 120)\n'
+                'if [ -n "${MOCK_READER_FAIL_AFTER:-}" ] && [ "$cmd" = "$MOCK_READER_FAIL_AFTER" ]; then\n'
+                '  echo "[mock] 판독기 $cmd — 결과 파일을 쓴 뒤 출력 실패 (rc 120)" >&2; exit 120; fi\n'
+                'exit $r\n')
     for x in ('mpirun', 'lmp', 'pywrap'):
         os.chmod(os.path.join(b, x), 0o755)
     return b
+
+
+_GV = {'path': None}   # Q5 — 이 시험 실행의 문법 fixture 양성 대조 판정 (selftest 처음에 한 번 만든다)
+
+
+def _grammar_run(gdir):
+    """Q5 양성 대조 — 지금 history_test 의 문법 fixture 러너 (run_history.sh --grammar-only) + 읽는 쪽 (read_history.py --grammar) 을
+    본 키트 모의 시험과 같은 가짜 바이너리 (같은 sha256) 로 → (그 런의 grammar_verdict.json | None, rc, 화면)."""
+    work = os.path.join(gdir, 'work')
+    os.makedirs(work)
+    b = _bins(gdir)
+    env = dict(os.environ, WORK_ROOT=work, MPIRUN=os.path.join(b, 'mpirun'), LMP=os.path.join(b, 'lmp'), NP='6', NP_ALT='4',
+               HIST_STAMP='20261014_000000', PY=sys.executable, ALLOW_CONCURRENT='1', ALLOW_OTHER_LMP='1', MOCK_LOG=os.path.join(gdir, 'calls.log'))
+    for k in ('MOCK_FAIL_STAGE', 'MOCK_FAIL_AFTER_STAGE', 'HIST_KIT', 'KIT'):
+        env.pop(k, None)
+    p = subprocess.run(['bash', os.path.join(HERE, 'history_test', 'run_history.sh'), '--grammar-only'], env=env, capture_output=True, text=True,
+                       timeout=900)
+    hits = glob.glob(os.path.join(work, 'gram_*', 'grammar_verdict.json'))
+    return (hits[0] if p.returncode == 0 and len(hits) == 1 else None), p.returncode, p.stdout + p.stderr
+
+
+def _gram_variant(gv, dst, kind):
+    """문법 fixture 판정 런 폴더 사본 + 반례 하나 (Q5 음성) — run_dir 은 새 자리로 (그 반례만 남게) · kit 은 원 자리 그대로 (run_manifest kit=)."""
+    src = os.path.dirname(gv)
+    nd = os.path.join(dst, os.path.basename(src))
+    shutil.copytree(src, nd)
+    vp = os.path.join(nd, 'grammar_verdict.json')
+    v = json.load(open(vp, encoding='utf-8'))
+    v['run_dir'] = nd
+    if kind == 'status_fail':
+        v.update(status='FAIL', exit_code=2)
+    if kind == 'deck':
+        open(os.path.join(nd, 'GA', 'in.hist_grammar.liggghts'), 'a').write('# 손으로 고침\n')
+    if kind == 'lmp':
+        mp = os.path.join(nd, 'run_manifest.txt')
+        mtext = re.sub(r'^lmp_sha256=.*$', 'lmp_sha256=' + 'f' * 64, open(mp).read(), flags=re.M)
+        open(mp, 'w').write(mtext)
+    open(vp, 'w', encoding='utf-8').write(json.dumps(v, ensure_ascii=False, indent=2))
+    return vp
 
 
 def mock_lmp(deck, kv):
@@ -113,6 +169,8 @@ def mock_lmp(deck, kv):
         mid = rho / 100.0 * h0um
         job = os.path.basename(out)
         W, dt = (10000, 5e-7) if kind in ('UT', 'U_UVb', 'U_UT3') else (5000, 1e-6)
+        if os.environ.get('MOCK_ROLLBACK_KIND') == kind:   # ULKRR-02 러너 수준 양성 대조 — 기계 실패 + 이어 돌림 (남긴 줄 · 덱 꼴 그대로)
+            return _mock_rollback(out, bed, job, kind, P, W, dt, mid, kv)
         if kv.get('ul_resume') == '1':
             st = open(kv['ul_state']).read() if os.path.exists(kv.get('ul_state', '')) else ''
             m, mk = re.search(r'variable ul_rstep equal (\d+)', st), re.search(r'variable ul_k equal (\d+)', st)
@@ -139,13 +197,93 @@ def mock_lmp(deck, kv):
     return 0
 
 
+def _mock_rollback(out, bed, job, kind, P, W, dt, mid, kv):
+    """ULKRR-02 러너 수준 양성 대조 — 기계 실패 + 이어 돌림을 덱 꼴 그대로 (같은 사다리를 임시 폴더에 _mk_arm 으로 만든 뒤 나눠 쓴다):
+    첫 시도 (ul_resume 0) = 단 1 끝 (s_r) 까지의 기록 · 덤프 + 단 2 의 창 둘 · 단 줄 하나 · 사건 하나 (P 9.999 — 끊긴 시도가 남긴 줄) ·
+      restart_unload_<s_r> + state_unload_<s_r> (ul_rstep s_r · ul_k 1) → 요약 없이 rc 1 (기계 실패).
+    두 번째 시도 (ul_resume 1 · 러너가 준 상태 파일) = RESUME (상태 파일의 k · step) + s_r 뒤 기록 · 덤프 · R_M · 요약 · 화면 → rc 0."""
+    import tempfile
+    import ul_reader as R
+    Rc = P['records']
+    with tempfile.TemporaryDirectory() as tmp:
+        ev = [('CROSS', 2, 'first'), ('RM', 4, 'ncross2')] + ([('RM_STOP', 4, 'UT')] if kind == 'UT' else [])
+        full = R._mk_arm(tmp, bed, job, {'W': W, 'dt': dt, 'steps': R._ladder([mid - 0.025, mid + 0.025, mid + 0.075, mid + 0.125], [1.2, 0.8, 0.6, 0.4]),
+                                         'events': ev, 'summary': 'RM_STOP' if kind == 'UT' else 'DONE'}, P)
+
+        def rows(name):
+            return [ln.split(',') for ln in open(os.path.join(full, name)).read().splitlines()[1:] if ln.strip()]
+        Wr, Sr, Er = rows('ul_windows.csv'), rows('ul_steps.csv'), rows('ul_events.csv')
+        wc, sc, ec = Rc['windows_cols'], Rc['steps_cols'], Rc['events_cols']
+        k1 = next(r for r in Sr if int(r[sc.index('k')]) == 1)
+        sr = int(k1[sc.index('step')])
+
+        def put(name, cols, rows_, append):
+            with open(os.path.join(out, name), 'a' if append else 'w') as f:
+                f.write(('' if append else ','.join(cols) + '\n') + ''.join(','.join(r) + '\n' for r in rows_))
+
+        def copy_dumps(keep):
+            os.makedirs(os.path.join(out, 'dump'), exist_ok=True)
+            for nm in os.listdir(os.path.join(full, 'dump')):
+                if keep(int(re.search(r'_(\d+)\.', nm).group(1))):
+                    shutil.copy(os.path.join(full, 'dump', nm), os.path.join(out, 'dump', nm))
+        blocks, cur = [], []
+        for ln in open(os.path.join(full, 'screen.txt')).read().splitlines()[1:]:
+            if ln.strip().startswith('Step') and cur:
+                blocks.append(cur)
+                cur = []
+            cur.append(ln)
+        blocks.append(cur)
+        blocks = [(int(b[1].split()[0]), b) for b in blocks if len(b) > 1 and b[0].strip().startswith('Step')]
+        if kv.get('ul_resume') != '1':
+            iP, iS = wc.index('Ps_avg'), sc.index('Pbar')
+            put('ul_windows.csv', wc, [r for r in Wr if int(r[wc.index('step')]) <= sr]
+                + [r[:iP] + ['9.999'] + r[iP + 1:] for r in Wr if int(r[wc.index('k')]) == 2][:2], False)
+            put('ul_steps.csv', sc, [r for r in Sr if int(r[sc.index('step')]) <= sr]
+                + [r[:iS] + ['9.999'] + r[iS + 1:] for r in Sr if int(r[sc.index('k')]) == 2][:1], False)
+            put('ul_events.csv', ec, [r for r in Er if int(r[ec.index('step')]) <= sr] + [r for r in Er if int(r[ec.index('step')]) > sr][:1], False)
+            copy_dumps(lambda s: s <= sr)
+            os.makedirs(os.path.join(out, 'restart'), exist_ok=True)
+            open(os.path.join(out, 'restart', f'restart_unload_{sr}.bin'), 'w').write('x')
+            open(os.path.join(out, 'restart', f'state_unload_{sr}.in'), 'w').write(
+                f'variable ul_rstep equal {sr}\nvariable ul_k equal 1\nvariable ul_phase equal 0\nvariable ul_modeB equal 1\n')
+            for s0, b in blocks:
+                if s0 < sr:
+                    print('\n'.join(b))
+            print('[mock] 기계 실패 — 단 2 창 둘 · 단 줄 하나를 남기고 요약 · Loop time 없이 끝')
+            return 1
+        st = open(kv['ul_state']).read()
+        rs, kr = (int(re.search(rf'variable {n} equal (\d+)', st).group(1)) for n in ('ul_rstep', 'ul_k'))
+        put('ul_events.csv', ec, [['RESUME', str(kr), str(rs), k1[sc.index('plate_z')], k1[sc.index('lift')], 'state']]
+            + [r for r in Er if int(r[ec.index('step')]) > rs], True)
+        put('ul_windows.csv', wc, [r for r in Wr if int(r[wc.index('step')]) > rs], True)
+        put('ul_steps.csv', sc, [r for r in Sr if int(r[sc.index('step')]) > rs], True)
+        copy_dumps(lambda s: s > rs)
+        for nm in os.listdir(os.path.join(full, 'restart')):
+            shutil.copy(os.path.join(full, 'restart', nm), os.path.join(out, 'restart', nm))
+        shutil.copy(os.path.join(full, 'ul_summary.txt'), os.path.join(out, 'ul_summary.txt'))
+        print(f'UL_RESUME arm={job} bed={bed} step={rs} k={kr}')
+        for s0, b in blocks:
+            if s0 >= rs:
+                print('\n'.join(b))
+        print(f'UL_SUMMARY arm={job} bed={bed} result={"RM_STOP" if kind == "UT" else "DONE"}')
+    return 0
+
+
 def _env(td, kit, extra=None):
+    """러너 환경 — 가짜 바이너리 · 호출 기록 (MOCK_LOG) · 문법 fixture 양성 판정 (GRAMMAR_VERDICT · Q5) · extra 의 값 None = 그 변수 없음."""
     env = dict(os.environ, WORK_ROOT=os.path.join(td, 'work'), MPIRUN=os.path.join(td, 'bin', 'mpirun'), LMP=os.path.join(td, 'bin', 'lmp'), NP='6',
-               PY=sys.executable, ALLOW_CONCURRENT='1', ALLOW_OTHER_LMP='1', UL_STAMP='20261013_000000')
+               PY=sys.executable, ALLOW_CONCURRENT='1', ALLOW_OTHER_LMP='1', UL_STAMP='20261013_000000', MOCK_LOG=os.path.join(td, 'calls.log'))
     for k in ('MOCK_PROCS', 'MOCK_FAIL_KIND', 'RESUME', 'SLURM_JOB_ID', 'SLURM_NTASKS', 'MOCK_TIMEOUT_KIND', 'MOCK_CRASH_KIND', 'MOCK_READER_FAIL',
-              'MOCK_UK_ONEROW'):
+              'MOCK_UK_ONEROW', 'MOCK_READER_FAIL_ONCE', 'MOCK_ONCE_FLAG', 'MOCK_READER_FAIL_AFTER', 'MOCK_RESTORE_AS', 'MOCK_ROLLBACK_KIND',
+              'GRAMMAR_VERDICT', 'HIST_VERDICT'):
         env.pop(k, None)
-    env.update(extra or {})
+    if _GV['path']:
+        env['GRAMMAR_VERDICT'] = _GV['path']
+    for k, v in (extra or {}).items():
+        if v is None:
+            env.pop(k, None)
+        else:
+            env[k] = v
     return env
 
 
@@ -203,8 +341,8 @@ def _setup(td, beds=(B73, 'ps_3_7_r45')):
         for (bed, key), sh in fake.items():
             Pj['beds'][bed]['in_files'][key]['sha256'] = sh
     kit = _kit_copy(os.path.join(td, 'kit'), patch)
-    log = os.path.join(td, 'calls.log')
-    _bins(td, log)
+    log = os.path.join(td, 'calls.log')   # = _env 의 MOCK_LOG
+    _bins(td)
     return kit, work, log
 
 
@@ -228,6 +366,10 @@ def selftest() -> int:
         return 1
     td = tempfile.mkdtemp(prefix='ul_runner_mock_')
     try:
+        gv, grc, gout = _grammar_run(os.path.join(td, 'gram'))
+        _GV['path'] = gv
+        chk('M22 (준비) Q5 문법 fixture 양성 대조 런 — 지금 history_test 러너 (--grammar-only) + 읽는 쪽 · 본 키트 모의와 같은 가짜 바이너리 → grammar_verdict PASS · rc 0',
+            lambda: grc == 0 and gv is not None and json.load(open(gv, encoding='utf-8')).get('status') == 'PASS', gout[-400:])
         kit, work, log = _setup(td)
         rc, out = subprocess.run(['bash', os.path.join(kit, 'run_unload_ibb.sbatch'), kit, B73, 'RJ'], env=_env(td, kit), capture_output=True,
                                  text=True, timeout=300).returncode, ''
@@ -240,7 +382,8 @@ def selftest() -> int:
         chk('M3 키트 덱을 손으로 고치면 SHA256SUMS 대조에서 멈춘다 (런 없음)', lambda: rc != 0 and 'SHA256SUMS' in out and not _calls(log))
         shutil.rmtree(kit)
         kit, work2, log = _setup(os.path.join(td, 'b'))
-        rc, out = _run(os.path.join(td, 'b'), kit, B73, 'RJ')
+        restored = {'PY': os.path.join(td, 'b', 'bin', 'pywrap'), 'MOCK_RESTORE_AS': 'RESTORED'}   # 모의 복원 판정 = RESTORED (판독기 rc 0 그대로 기록)
+        rc, out = _run(os.path.join(td, 'b'), kit, B73, 'RJ', restored)
         lmp = [c for c in _calls(log) if c.startswith('lmp ')]
         kinds = [re.search(r'out=\S+/RJ/(\w+)', c).group(1) for c in lmp]
         chk('M4 RJ (7:3) = Ut0 → R → UN → UK 차례 · 모두 -np 6 · --oversubscribe --bind-to none · G0 (원 마지막 조각 덱) 기록 · 복원 판정 JSON · 보고 묶음 + sha256',
@@ -359,7 +502,7 @@ def selftest() -> int:
         chk('M16 ULKR-11 7:3 Ut0 기술 실패 = R · UN · UK 를 돌리지 않는다 (lmp 호출 = Ut0 하나) · 잡 기록 stage=Ut0 rc≠0 · rc ≠ 0',
             lambda: rc != 0 and kinds_d == ['Ut0'] and re.search(r'^stage=Ut0 .*rc=[1-9]', _read(os.path.join(work_d, B73, 'RJ', 'run_manifest.txt')), re.M))
         kit_e, work_e, log_e = _setup(os.path.join(td, 'e'))
-        rc0, _o = _run(os.path.join(td, 'e'), kit_e, B73, 'RJ')
+        rc0, _o = _run(os.path.join(td, 'e'), kit_e, B73, 'RJ', {'PY': os.path.join(td, 'e', 'bin', 'pywrap'), 'MOCK_RESTORE_AS': 'RESTORED'})
         open(os.path.join(work_e, B73, 'RJ', 'restore_verdict.json'), 'w').write(json.dumps({'status': 'RESTORED'}))
         rc, out = _run(os.path.join(td, 'e'), kit_e, B73, 'UB', {'PY': os.path.join(td, 'e', 'bin', 'pywrap'), 'MOCK_READER_FAIL': 'arm'})
         man_e = _read(os.path.join(work_e, B73, 'UB', 'run_manifest.txt'))
@@ -386,10 +529,11 @@ def selftest() -> int:
         def members(bed, job):
             p = os.path.join(work_g, bed, f'{job}.report.tgz')
             return set(tarfile.open(p).getnames()) if os.path.exists(p) else set()
-        rc_rj, out_rj = _run(tg, kit_g, B73, 'RJ')
+        rc_rj, out_rj = _run(tg, kit_g, B73, 'RJ', {'PY': os.path.join(tg, 'bin', 'pywrap'), 'MOCK_RESTORE_AS': 'RESTORED'})
         open(os.path.join(work_g, B73, 'RJ', 'restore_verdict.json'), 'w').write(json.dumps({'status': 'RESTORED'}))
         rc_ub, out_ub = _run(tg, kit_g, B73, 'UB')
-        for f, t in (('restore_verdict.json', json.dumps({'status': 'RESTORED'})), ('run_manifest.txt', 'bed=ps_10_0_r45\njob=RJ\nresume=0\nend=x fails=0 reader_rc=0\n')):
+        for f, t in (('restore_verdict.json', json.dumps({'status': 'RESTORED'})),
+                     ('run_manifest.txt', 'bed=ps_10_0_r45\njob=RJ\nresume=0\ngrammar_prereq=PASS\nend=x fails=0 reader_rc=0\n')):
             os.makedirs(os.path.join(work_g, 'ps_10_0_r45', 'RJ'), exist_ok=True)
             open(os.path.join(work_g, 'ps_10_0_r45', 'RJ', f), 'w').write(t)
         rc_ext, out_ext = _run(tg, kit_g, 'ps_10_0_r45', 'EXT')
@@ -399,6 +543,92 @@ def selftest() -> int:
             lambda: 'ul_base.in' in m_rj and any(n.startswith('RJ/') for n in m_rj) and 'selection.json' in m_ub
             and any(n.startswith('EXT2/') for n in m_ext) and 's0_decision.json' in m_ext and any(n.startswith('EXT/') for n in m_ext)
             and '다시 검증하는 원천 아님' in out_ub and not [n for n in m_ext if n.endswith('.bin')])
+        # ── ULKRR-03 판독기가 결과 파일을 쓴 뒤 실패 (rc 120) = 다음 팔 관문 거부 (fails=0 이어도) · 판독 오류를 rc 0 으로 삼키지 않는다 ──
+        res3 = {}
+        for name in ('restore', 'kebase'):
+            tx = os.path.join(td, f'e_{name}')
+            kx, wx, lx = _setup(tx)
+            rcx, _o = _run(tx, kx, B73, 'RJ', {'PY': os.path.join(tx, 'bin', 'pywrap'), 'MOCK_RESTORE_AS': 'RESTORED', 'MOCK_READER_FAIL_AFTER': name})
+            vp = os.path.join(wx, B73, 'RJ', 'restore_verdict.json')
+            stx = json.load(open(vp)).get('status') if os.path.exists(vp) else None
+            rcu, outu = _run(tx, kx, B73, 'UB')
+            res3[name] = (rcx, stx, _read(os.path.join(wx, B73, 'RJ', 'run_manifest.txt')), os.path.exists(os.path.join(wx, B73, 'ul_base.in')), rcu, outu,
+                          _lmp(lx, 'UB'))
+        chk('M20 ULKRR-03 restore 가 RESTORED 증서를 쓴 뒤 rc 120 → 잡 기록 reader_restore_rc=120 · 끝 줄 fails=0 reader_rc=120 · 러너 rc ≠ 0 → UB 관문 거부 (lmp 호출 없음)',
+            lambda: (lambda r: r[0] != 0 and r[1] == 'RESTORED' and re.search(r'^reader_restore_rc=120$', r[2], re.M)
+                     and re.search(r'^end=.* fails=0 reader_rc=120$', r[2], re.M) and r[4] != 0 and 'REFUSE' in r[5] and not r[6])(res3['restore']))
+        chk('M20 ULKRR-03 kebase 가 기준 파일 ul_base.in 을 쓴 뒤 rc 120 → 잡 기록 reader_kebase_rc=120 · 끝 줄 fails=0 reader_rc=2 → UB 관문 거부 (lmp 호출 없음)',
+            lambda: (lambda r: r[0] != 0 and r[1] == 'RESTORED' and r[3] and re.search(r'^reader_kebase_rc=120$', r[2], re.M)
+                     and re.search(r'^end=.* fails=0 reader_rc=2$', r[2], re.M) and r[4] != 0 and 'REFUSE' in r[5] and not r[6])(res3['kebase']))
+        # ── Q4 (다) EXT — 등록된 연장 요청 (s0p rc 2) 만 EXT2 · 그 밖 비영 rc (판독기 프로그램 오류) = 멈춤 · RRC 보존 ──
+        tk = os.path.join(td, 'k')
+        kit_k, work_k, log_k = _setup(tk, beds=(B73, 'ps_10_0_r45'))
+        for f, t in (('restore_verdict.json', json.dumps({'status': 'RESTORED'})),
+                     ('run_manifest.txt', 'bed=ps_10_0_r45\njob=RJ\nresume=0\ngrammar_prereq=PASS\nend=x fails=0 reader_rc=0\n')):
+            os.makedirs(os.path.join(work_k, 'ps_10_0_r45', 'RJ'), exist_ok=True)
+            open(os.path.join(work_k, 'ps_10_0_r45', 'RJ', f), 'w').write(t)
+        rc_k, out_k = _run(tk, kit_k, 'ps_10_0_r45', 'EXT', {'PY': os.path.join(tk, 'bin', 'pywrap'), 'MOCK_READER_FAIL_ONCE': 's0p',
+                                                              'MOCK_ONCE_FLAG': os.path.join(tk, 'once.flag')})
+        man_k = _read(os.path.join(work_k, 'ps_10_0_r45', 'EXT', 'run_manifest.txt'))
+        chk('M21 Q4 (다) EXT 첫 s0p 가 판독기 프로그램 오류 (rc 1 — 등록된 연장 요청 rc 2 아님) → EXT2 를 돌리지 않는다 · reader_s0p_rc=1 한 번 · 끝 줄 reader_rc=1 '
+            '(0 으로 되돌리지 않는다) · 러너 rc ≠ 0',
+            lambda: rc_k != 0 and _lmp(log_k, 'EXT') and not _lmp(log_k, 'EXT2') and man_k.count('reader_s0p_rc=') == 1
+            and re.search(r'^reader_s0p_rc=1$', man_k, re.M) and re.search(r'^end=.* reader_rc=1$', man_k, re.M), man_k[-300:])
+        chk('M21 대조: 정상 EXT (s0p rc 2 = S0′ 미달 · 등록된 연장 요청) → EXT2 를 돌린다 (M19 의 같은 러너 · EXT2 lmp 호출)',
+            lambda: bool(_lmp(log_g, 'EXT2')) and re.search(r'^reader_s0p_rc=2$', _read(os.path.join(work_g, 'ps_10_0_r45', 'EXT', 'run_manifest.txt')), re.M))
+        # ── Q5 문법 fixture PASS = R · EXT 전 사전 점검 (LIGGGHTS 전 거부 · 1저자 10-14 강제) ──
+        th = os.path.join(td, 'h')
+        kit_h, work_h, log_h = _setup(th, beds=(B73, 'ps_10_0_r45'))
+        res5 = {}
+        for name in ('none', 'status_fail', 'deck', 'lmp'):
+            gx = None if name == 'none' else (_gram_variant(gv, os.path.join(td, f'gv_{name}'), name) if gv else os.path.join(td, 'nope.json'))
+            n0 = len(_calls(log_h))
+            rcx, outx = _run(th, kit_h, B73, 'RJ', {'GRAMMAR_VERDICT': gx})
+            res5[name] = (rcx, '문법 fixture' in outx, len(_calls(log_h)) - n0, os.path.isdir(os.path.join(work_h, B73, 'RJ')))
+            shutil.rmtree(os.path.join(work_h, B73, 'RJ'), ignore_errors=True)
+        chk('M22 Q5 RJ (본 R) — 문법 fixture 판정 없음 · FAIL · 덱 사본 sha256 다름 · LMP sha256 다름 = 사전 점검 거부 (LIGGGHTS · mpirun 호출 0 · RJ 폴더 없음)',
+            lambda: all(r[0] != 0 and r[1] and r[2] == 0 and not r[3] for r in res5.values()), str(res5))
+        n0 = len(_calls(log_h))
+        rc_e5, out_e5 = _run(th, kit_h, 'ps_10_0_r45', 'EXT', {'GRAMMAR_VERDICT': None})
+        chk('M22 Q5 EXT (10:0 이완 연장) — 문법 fixture 판정 없음 = 사전 점검 거부 (관문보다 먼저 · LIGGGHTS 호출 0 · EXT 폴더 없음)',
+            lambda: rc_e5 != 0 and '문법 fixture' in out_e5 and len(_calls(log_h)) == n0 and not os.path.isdir(os.path.join(work_h, 'ps_10_0_r45', 'EXT')))
+        rc_p5, out_p5 = _run(th, kit_h, B73, 'RJ', {'GRAMMAR_VERDICT': None}, args=('--preflight-only',))
+        chk('M22 Q5 --preflight-only 도 같은 검사 (제출 전 사전 점검에서 먼저 보인다)', lambda: rc_p5 != 0 and '문법 fixture' in out_p5)
+        rc_o5, out_o5 = _run(th, kit_h, B73, 'RJ')
+        man_h = _read(os.path.join(work_h, B73, 'RJ', 'run_manifest.txt'))
+        chk('M22 Q5 양성: 지금 history_test 러너 · 읽는 쪽이 낸 PASS 판정 (같은 가짜 바이너리) → 사전 점검 통과 → RJ 진행 (LIGGGHTS 호출) · '
+            '잡 기록 grammar_prereq=PASS · 판정 경로 · sha256',
+            lambda: bool(_lmp(log_h, 'Ut0')) and re.search(r'^grammar_prereq=PASS$', man_h, re.M) and re.search(r'^grammar_verdict_sha256=[0-9a-f]{64}$', man_h, re.M)
+            and re.search(r'^grammar_verdict=\S+grammar_verdict\.json$', man_h, re.M), man_h[:600])
+        # ── ULKRR-02 러너 수준 양성 대조 — 기계 실패 뒤 RESUME=1 (러너 resume_from · 덱 RESUME = 상태 파일 k) → 남긴 줄을 버리고 주 값 OK · 다음 관문 ──
+        ti = os.path.join(td, 'i')
+        kit_i, work_i, log_i = _setup(ti)
+        _run(ti, kit_i, B73, 'RJ', {'PY': os.path.join(ti, 'bin', 'pywrap'), 'MOCK_RESTORE_AS': 'RESTORED'})
+        rc_b, _o = _run(ti, kit_i, B73, 'UB')
+        rc_1, _o = _run(ti, kit_i, B73, 'UT', {'MOCK_ROLLBACK_KIND': 'UT'})
+        rc_2, out_2 = _run(ti, kit_i, B73, 'UT', {'MOCK_ROLLBACK_KIND': 'UT', 'RESUME': '1'})
+        avp = os.path.join(work_i, B73, 'UT', 'arm_verdict.json')
+        av = json.load(open(avp)) if os.path.exists(avp) else {}
+        man_i = _read(os.path.join(work_i, B73, 'UT', 'run_manifest.txt'))
+        g5 = subprocess.run([sys.executable, '-I', os.path.join(kit_i, 'ul_reader.py'), 'gate', work_i, B73, 'UVb'], capture_output=True, text=True, timeout=300)
+        chk('M23 ULKRR-02 러너 수준 양성 대조 — UT 기계 실패 (단 1 끝 restart 뒤 단 2 창 둘 · 단 줄 · 사건을 남기고 rc 1) → RESUME=1 (러너 resume_from = 그 restart step · '
+            '덱 RESUME = 상태 파일 k 1) → 판독기가 남긴 줄 3 을 버림 · UT 주 값 OK · δ_dt 0.2 → UVb 관문 ALLOW',
+            lambda: rc_b == 0 and rc_1 != 0 and rc_2 == 0 and av.get('primary_status') == 'OK' and av.get('n_superseded_rows') == 3
+            and re.search(r'^resume_from=\d+$', man_i, re.M) and g5.returncode == 0 and 'ALLOW' in g5.stdout,
+            f'{rc_b} {rc_1} {rc_2} {av.get("primary_status")} {av.get("n_superseded_rows")} {av.get("why")} {g5.stdout.strip()}')
+        # ── Q6 UC = fresh-attempt-only · 새 폴더 = 새 시도 (앞 시도 보존 · 잡 기록에 남긴다 — 재시도 한도 · 결과 선택을 초기화하지 않는다) ──
+        rc_uc, _o = _run(ti, kit_i, B73, 'UC')
+        uc = os.path.join(work_i, B73, 'UC')
+        snap_uc = {n: _sha_or_none(os.path.join(uc, n)) for n in ('run_manifest.txt', 'screen.txt')}
+        n_uc = len(_lmp(log_i, 'UC'))
+        rc_ur, out_ur = _run(ti, kit_i, B73, 'UC', {'RESUME': '1'})
+        chk('M24 Q6 RESUME UC = 거부 ("fresh-attempt-only" · 새 시도 안내) · lmp 호출 없음 · UC 기록 · 화면 그대로 (앞에서 거부)',
+            lambda: rc_uc == 0 and rc_ur != 0 and 'fresh-attempt-only' in out_ur and len(_lmp(log_i, 'UC')) == n_uc
+            and all(h and _sha_or_none(os.path.join(uc, n)) == h for n, h in snap_uc.items()))
+        os.rename(uc, uc + '.try1')
+        rc_uf, out_uf = _run(ti, kit_i, B73, 'UC')
+        chk('M24 Q6 새 폴더 = 새 시도 — 앞 시도 폴더 UC.try1 보존 · 새 잡 기록에 prior_attempts=UC.try1 (러너가 남긴다 · 한도 판단 = 1저자)',
+            lambda: rc_uf == 0 and os.path.isdir(uc + '.try1') and re.search(r'^prior_attempts=UC\.try1$', _read(os.path.join(uc, 'run_manifest.txt')), re.M))
     finally:
         shutil.rmtree(td, ignore_errors=True)
     print(f'selftest: {"PASS" if not fails else "FAIL"} ({len(fails)} 실패)')
