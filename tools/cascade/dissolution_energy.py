@@ -701,8 +701,9 @@ def main():
         return 0 if all(f not in man['missing'] for f in RESERVOIR_FORMULAS) else 6
     if a.cmd == 'collect':
         res = collect(a.roots, a.out)
-        print(f"runs {res['n_runs']} · records {res['n_records']} · baselines {res['distinct_baseline_e_per_atom']} · "
-              f"md5 {res['distinct_baseline_md5']}")
+        bl = res['distinct_baseline_e_per_atom']
+        print(f"runs {res['n_runs']} · records {res['n_records']} · baselines {len(bl)} distinct "
+              f"({min(bl, default=None)} … {max(bl, default=None)}) · md5 {res['distinct_baseline_md5']}")
         return 0 if res['n_records'] else 7
     if a.cmd == 'combine':
         try:

@@ -23,7 +23,14 @@ fi
 if [ ! -f "$R" ]; then echo "run.log 없음 — 아직 시작 전 ($R)"; exit 0; fi
 STEP=$(grep -a -o -E '\] (①|②|③|④) .*' "$R" | tail -n 1 | cut -c3-)   # 다중 바이트는 [..] 가 아니라 (..|..) — 로캘이 C 여도 잡힌다
 echo "단계: ${STEP:-—}"
-grep -a -E '^MP .* · formulas|^runs .* · records' "$R" | tail -n 2 | sed 's/^/  /'   # cut -c 는 바이트로 잘라 한글을 깬다 — 안 자른다
+# 1단계 baseline 은 컴파운드 런마다 따로 이완돼 값이 수백 개다 (GPU 잡음 ~1e-7 eV/atom) — 개수 · 최소 · 최대로 줄인다
+grep -a -E '^MP .* · formulas|^runs .* · records' "$R" | tail -n 2 | awk '{
+    if (match($0, /baselines \[[^]]*\]/)) {
+        s = substr($0, RSTART + 11, RLENGTH - 12); n = split(s, a, ", "); mn = a[1]; mx = a[1]
+        for (i = 1; i <= n; i++) { if (a[i] + 0 < mn + 0) mn = a[i]; if (a[i] + 0 > mx + 0) mx = a[i] }
+        $0 = substr($0, 1, RSTART - 1) "baselines " n "개 (" mn " … " mx ")" substr($0, RSTART + RLENGTH)
+    }
+    print "  " $0 }'   # cut -c 는 바이트로 잘라 한글을 깬다 — 안 자른다
 if [ -f "$L" ]; then
     TOT=$(grep -a -o '^\[[0-9]*/[0-9]*\]' "$L" | tail -n 1 | sed 's/.*\///; s/\]//')
     CUR=$(grep -a '^\[[0-9]*/[0-9]*\]' "$L" | tail -n 1)
