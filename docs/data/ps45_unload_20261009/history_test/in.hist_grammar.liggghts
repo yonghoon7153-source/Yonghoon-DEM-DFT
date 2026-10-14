@@ -74,7 +74,10 @@ variable gr_dz equal ${gr_v}*${dt}*${gr_n}
 # >>> block gr_obs — 관측 (본 키트 ul_obs 꼴 · 원자 · 판 local 덤프 = 변수 주기 · 판 mesh/stl = 고정 주기)
 compute gr_wh all wall/gran/local id force_normal
 variable Ps equal f_top_mesh[3]/0.0025/1000000
-fix gr_av all ave/time 10 10 ${gr_W} v_Ps
+# ⑰ 본 키트 ul_av 와 같은 꼴 — 입력 셋 = 전역 벡터 → f_gr_av[1] (입력 하나면 전역 스칼라라 f_gr_av[1] = Mismatched fix · ibb job 285220)
+compute gr_ke all ke
+compute gr_erot all erotate/sphere
+fix gr_av all ave/time 10 10 ${gr_W} v_Ps c_gr_ke c_gr_erot
 group gr_t1 type 1
 group gr_t2 type 2
 group gr_t3 type 3

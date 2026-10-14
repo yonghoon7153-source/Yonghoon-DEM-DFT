@@ -33,6 +33,7 @@ LIGGGHTS 근거 (3d5c00f · Codex 판정문 §5 · 노트 §1–§3):
 from __future__ import annotations
 
 import argparse
+import glob
 import hashlib
 import json
 import math
@@ -320,6 +321,98 @@ def unfrozen_lazy(text):
 
 
 # ── 모델 머리 (r8 원 덱 글자) ─────────────────────────────────────────────────
+
+#: ⑰ fix 전역 출력 꼴 — 변수 공식 · thermo · ave/time 입력이 읽는 f_ID 의 꼴 (LAMMPS · LIGGGHTS 의 fix 전역 출력 규칙).
+#:   ave/time (mode scalar 기본): 입력 1 개 = 전역 스칼라 (f_ID 로만 읽는다) · 2 개 이상 = 전역 벡터 (f_ID[i], i = 1 … 입력 수).
+#:   mode vector: 입력 1 개 = 전역 벡터 · 2 개 이상 = 전역 배열 (f_ID[i][j]).
+#:   ★ 실측 근거 = ibb job 285220 (10-14 · 문법 fixture GA): 입력 1 개 ave/time 을 f_gr_av[1] 로 읽자
+#:     'ERROR: Mismatched fix in variable formula (../variable.cpp:1315)' 로 멈췄다 (모의기 grammar_sim 은 f_* = 0 이라 못 잡았다).
+#:   mesh/surface/stress = 전역 벡터 (덱은 [3] = 판 z 힘만 읽는다 · ibb 이력 시험 H0–H5 에서 읽혔다 · 크기 상한은 이 표가 정하지 않는다).
+#:   그 밖 스타일을 공식이 읽으면 = 꼴 모름 → 문제 (fail-closed — 새 스타일은 근거와 함께 이 표에 올린다).
+#:   범위: equal · vector 변수 공식 · thermo_style · ave/time 입력.  atom 변수 (원자별 출력) 는 이 검사 밖.
+AVE_TIME_KEYWORDS = frozenset({'mode', 'ave', 'start', 'off', 'overwrite', 'title1', 'title2', 'title3', 'file'})
+FIX_GLOBAL_KIND = {'mesh/surface/stress': ('vector', None)}
+_FREF = re.compile(r'(?<![A-Za-z0-9_])f_([A-Za-z0-9_]+)((?:\[[^\]]*\])*)')
+
+
+def fix_output_kinds(text):
+    """덱 글자 → {fix ID: [(스타일, 꼴 또는 None, 벡터 크기 또는 None)]} (같은 ID 를 여러 번 정의하면 전부 — 어느 정의든 맞아야 한다)."""
+    out = {}
+    for line in logical_lines(text):
+        try:
+            w = words(line)
+        except ValueError:
+            continue
+        if len(w) < 4 or w[0] != 'fix':
+            continue
+        fid, style = w[1], w[3]
+        if style == 'ave/time':
+            args, vals, mode, i = w[7:], [], 'scalar', 0
+            while i < len(args) and args[i] not in AVE_TIME_KEYWORDS:
+                vals.append(args[i])
+                i += 1
+            while i < len(args):
+                if args[i] == 'mode' and i + 1 < len(args):
+                    mode = args[i + 1]
+                    i += 2
+                else:
+                    i += 1
+            n = len(vals)
+            if mode == 'scalar':
+                kind, size = ('scalar', None) if n == 1 else ('vector', n)
+            else:
+                kind, size = ('vector', None) if n == 1 else ('array', None)
+            out.setdefault(fid, []).append(('ave/time', kind, size))
+        else:
+            kind, size = FIX_GLOBAL_KIND.get(style, (None, None))
+            out.setdefault(fid, []).append((style, kind, size))
+    return out
+
+
+def fix_output_problems(text):
+    """f_ID 를 읽는 꼴 (괄호 0 = 스칼라 · 1 = 벡터 · 2 = 배열) ↔ 그 fix 가 내는 전역 꼴 · 벡터 첨자 범위.  문제 목록 (빈 목록 = 통과)."""
+    kinds = fix_output_kinds(text)
+    probs = []
+    for line in logical_lines(text):
+        try:
+            w = words(line)
+        except ValueError:
+            continue
+        if not w:
+            continue
+        if w[0] == 'variable' and len(w) >= 4 and w[2] in ('equal', 'vector'):
+            targets = [' '.join(w[3:])]
+        elif w[0] == 'thermo_style':
+            targets = w[2:]
+        elif w[0] == 'fix' and len(w) >= 4 and w[3] == 'ave/time':
+            targets = w[7:]
+        else:
+            continue
+        for t in targets:
+            for m in _FREF.finditer(t):
+                fid, br = m.group(1), m.group(2)
+                idx = re.findall(r'\[([^\]]*)\]', br)
+                need = {0: 'scalar', 1: 'vector', 2: 'array'}.get(len(idx), '?')
+                defs = kinds.get(fid)
+                if not defs:
+                    probs.append(f'f_{fid}{br}: 이 덱에 그 fix 정의가 없다 · {line[:90]}')
+                    continue
+                for style, kind, size in defs:
+                    if kind is None:
+                        probs.append(f'f_{fid}{br}: 스타일 {style} 의 전역 출력 꼴을 이 표가 모른다 (fail-closed) · {line[:90]}')
+                    elif kind != need:
+                        probs.append(f'f_{fid}{br}: {style} 출력 = 전역 {kind} 인데 {need} 로 읽는다 '
+                                     f'(LIGGGHTS: Mismatched fix in variable formula) · {line[:90]}')
+                    elif need == 'vector' and size is not None:
+                        try:
+                            k = int(idx[0])
+                        except ValueError:
+                            probs.append(f'f_{fid}{br}: 벡터 첨자가 정수가 아니다 · {line[:90]}')
+                            continue
+                        if not 1 <= k <= size:
+                            probs.append(f'f_{fid}[{k}]: {style} 벡터 크기 {size} 밖 · {line[:90]}')
+    return probs
+
 
 def _member_text(P):
     tgz = os.path.join(REPO, P['head_source']['tgz'])
@@ -729,7 +822,9 @@ def _grammar(P, H):
           '# >>> block gr_obs — 관측 (본 키트 ul_obs 꼴 · 원자 · 판 local 덤프 = 변수 주기 · 판 mesh/stl = 고정 주기)',
           'compute gr_wh all wall/gran/local id force_normal',
           'variable Ps equal f_top_mesh[3]/0.0025/1000000',
-          f'fix gr_av all ave/time {ne} {nr} ${{gr_W}} v_Ps',
+          '# ⑰ 본 키트 ul_av 와 같은 꼴 — 입력 셋 = 전역 벡터 → f_gr_av[1] (입력 하나면 전역 스칼라라 f_gr_av[1] = Mismatched fix · ibb job 285220)',
+          'compute gr_ke all ke', 'compute gr_erot all erotate/sphere',
+          f'fix gr_av all ave/time {ne} {nr} ${{gr_W}} v_Ps c_gr_ke c_gr_erot',
           'group gr_t1 type 1', 'group gr_t2 type 2', 'group gr_t3 type 3']
     L += _gr_regions('${gr_h0}')
     L += ['variable gr_nc equal count(gr_t1,gr_c1)+count(gr_t2,gr_c2)+count(gr_t3,gr_c3)',
@@ -1042,6 +1137,8 @@ def check():
         p = os.path.join(HERE, name)
         if not os.path.exists(p) or open(p, encoding='utf-8').read() != text:
             bad.append(f'{name}: 커밋본 ≠ 생성 결과 (make_history_decks.py 로 다시 만들 것)')
+        if name.endswith('.liggghts'):
+            bad += [f'{name}: ⑰ {q}' for q in fix_output_problems(text)]
     sp = os.path.join(HERE, SUMS)
     if not os.path.exists(sp) or open(sp, encoding='utf-8').read() != sums_text():
         bad.append(f'{SUMS}: 현재 파일 해시와 다르다')
@@ -1113,6 +1210,8 @@ def selftest() -> int:
         chk(f'④ {k}: run 사이 위험한 읽기 없음 (⑭a — write_restart 뒤 ke · run 0 뒤 메시 힘 · 없는 fix)', lambda text=text: text and scan_between_runs(text) == [])
         chk(f'④ {k}: 살아 있는 equal 정의 다음 줄 = 얼림 (⑭b)', lambda text=text: text and unfrozen_lazy(text) == [])
         chk(f'④ {k}: if 조건 = 숫자 · 비교 · 논리만', lambda text=text: text and _bad_if(text) == [])
+        chk(f'④ {k}: f_ID 를 읽는 꼴 = 그 fix 의 전역 출력 꼴 (⑰ · ibb job 285220 Mismatched fix)',
+            lambda text=text: text and fix_output_problems(text) == [], detail='; '.join(fix_output_problems(text))[:300] if text else '')
         chk(f'④ {k}: 함께 사는 pair/gran/local ≤ 1 · wall/gran/local ≤ 1 · 내리는 compute 를 쓰는 덤프 없음 (⑮ — 첫 ibb 실행 TECH)',
             lambda text=text: text and _local_compute_problems(text) == [], '; '.join(_local_compute_problems(text)))
         chk(f'④ {k}: r8 머리 cpl 글자 그대로 (내리기만 하고 고치지 않는다)', lambda text=text: head['cmd']['cpl'] in _cmds(text))
@@ -1266,6 +1365,28 @@ def selftest() -> int:
     chk('⑯ 모의기 자신 (판별력): 이동 전 gr_dnext = step + big 을 빼면 이동 중 덤프 · dump_modify 에 first yes 를 더하면 setup 덤프 를 잡는다',
         lambda: GS['E']['GA']['ends'] != _mut('variable gr_dnext equal step+${gr_big}\nfix gr_mv', 'fix gr_mv')['dumps'].get('gr_da')
         and _mut('dump_modify gr_da every v_gr_dnext', 'dump_modify gr_da first yes every v_gr_dnext')['dumps'].get('gr_da', [None])[0] == GS['E']['GA']['start'])
+    # ⑰ fix 전역 출력 꼴 검사기 자신 (판별력) · 본 키트 덱 전수 (ibb job 285220 — 모의기는 f_* = 0 이라 못 잡았다)
+    _base = ('fix top_mesh all mesh/surface/stress file p.stl type 1\n'
+             'variable Ps equal f_top_mesh[3]/0.0025/1000000\n'
+             'compute k1 all ke\ncompute k2 all erotate/sphere\n')
+    chk('⑰ 검사기: 입력 셋 ave/time 을 f_av[1] 로 읽기 = 통과 (본 키트 ul_av 꼴)',
+        lambda: fix_output_problems(_base + 'fix av all ave/time 10 10 100 v_Ps c_k1 c_k2\nvariable P equal f_av[1]\n') == [])
+    chk('⑰ 검사기: 입력 하나 ave/time 을 f_av[1] 로 읽기 = 문제 (285220 의 꼴)',
+        lambda: len(fix_output_problems(_base + 'fix av all ave/time 10 10 100 v_Ps\nvariable P equal f_av[1]\n')) == 1)
+    chk('⑰ 검사기: 입력 하나 ave/time 을 f_av 로 읽기 = 통과 (전역 스칼라)',
+        lambda: fix_output_problems(_base + 'fix av all ave/time 10 10 100 v_Ps\nvariable P equal f_av\n') == [])
+    chk('⑰ 검사기: 입력 셋 ave/time 을 f_av (괄호 없음) · f_av[4] 로 읽기 = 문제 둘',
+        lambda: len(fix_output_problems(_base + 'fix av all ave/time 10 10 100 v_Ps c_k1 c_k2\nvariable P equal f_av+f_av[4]\n')) == 2)
+    chk('⑰ 검사기: 표에 없는 스타일 · 정의 없는 fix 를 공식이 읽기 = 문제 (fail-closed)',
+        lambda: len(fix_output_problems(_base + 'fix mv all move/mesh mesh top_mesh linear 0 0 1\nvariable a equal f_mv[1]+f_nope\n')) == 2)
+    chk('⑰ 검사기: mesh/surface/stress 를 f_top_mesh[3] 로 읽기 = 통과 · thermo_style 도 본다',
+        lambda: fix_output_problems(_base + 'thermo_style custom step v_Ps f_top_mesh[3]\n') == []
+        and len(fix_output_problems(_base + 'thermo_style custom step f_top_mesh\n')) == 1)
+    _kit = sorted(glob.glob(os.path.join(HERE, '..', 'decks', '*', '*.liggghts')))
+    chk(f'⑰ 본 키트 덱 {len(_kit)} 개 전수 = f_ID 읽는 꼴 문제 없음 (본 키트는 ave/time 입력 셋 · f_ul_av[1–3])',
+        lambda: len(_kit) > 0 and all(fix_output_problems(open(p, encoding='utf-8').read()) == [] for p in _kit),
+        detail='; '.join(f'{os.path.basename(os.path.dirname(p))}/{os.path.basename(p)}: {fix_output_problems(open(p, encoding="utf-8").read())[:1]}'
+                         for p in _kit if fix_output_problems(open(p, encoding='utf-8').read()))[:400])
     print(f'selftest: {"PASS" if not fails else "FAIL"} ({len(fails)} 실패)')
     return 1 if fails else 0
 
