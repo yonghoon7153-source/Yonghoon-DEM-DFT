@@ -204,3 +204,5 @@ reviews/review_reil_c4_0b2_result_20261014/** -text
 evidence/reil_c4_0b2_fix_20261014/** -text
 # 2026-10-14: REIL C4-0b2 한정 보완 결과 재검토 회신 (N1–N3 닫힘 · C4-0b2 한정 종결 · 비차단 M1 · source/ · basis/ = 검토자가 본 저장소 · 이전 회신 사본) — bytes 그대로
 reviews/review_reil_c4_0b2_fix_result_20261014/** -text
+# 2026-10-14: REIL C4-E 실행 승인 요청 사전 검토 회신 (E0 승인 전 정정 · C4E-N1–N4 · M1 · source/ = 검토자가 본 저장소 · REIL 원본 util 사본) — bytes 그대로
+reviews/review_reil_c4e_prereview_20261014/** -text
