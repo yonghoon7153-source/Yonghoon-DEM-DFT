@@ -2,7 +2,9 @@
 
 - 등록 (정본): `docs/reviews/dem_unloading_ps45_prereg_20261009.md` (이하 REG — §12 개정 1 · §13 개정 2) · 반영 계획 `docs/reviews/dem_unloading_ulr1_fix_plan_20261012.md` (✅ 1저자 10-12 Q1–Q4 권고대로) ·
   Codex 판정문 `docs/reviews/codex_review_dem_unloading_prereg_20261011.md` (CX1) · `docs/reviews/codex_review_dem_unloading_prereg_rereview_20261012.md` (CX2).
-- ⛔ **10-14 Codex 키트 재검토 (핀 `2783061ea`) = HOLD** — 이력 시험은 수용 · 본 키트 판독 · 복원 · 후속 · 러너에 P1 여섯 (`ULKR-01`~`06`) · P2 여섯 · 판정문 `docs/reviews/codex_review_dem_unloading_kit_20261014.md` · 수정 계획 `docs/reviews/dem_unloading_kit_fix_plan_20261014.md` (✅ 1저자 10-14 Q1–Q9 권고대로 = 전부 (가)) — §2–§6 은 수정 전 판이다.
+- ⛔ **10-14 Codex 키트 재검토 (핀 `2783061ea`) = HOLD** — 이력 시험은 수용 · 본 키트 판독 · 복원 · 후속 · 러너에 P1 여섯 (`ULKR-01`~`06`) · P2 여섯 · 판정문 `docs/reviews/codex_review_dem_unloading_kit_20261014.md` · 수정 계획 `docs/reviews/dem_unloading_kit_fix_plan_20261014.md` (✅ 1저자 10-14 Q1–Q9 권고대로 = 전부 (가)).
+  → ✅ **수정 10-14 (시험 먼저 · 등록 개정 3 = REG §14 · 실행 기록 = 계획 §5)** — §2–§5 = 수정 뒤 판 · ⬜ 문법 fixture ibb 한 번 (§1-6 · 1저자) · ⬜ Codex 짧은 재확인
+  (`docs/reviews/codex_dem_unloading_kit_fix_recheck_request_20261014.md` · 발송 = 1저자) · ⛔ 본 R · 10:0 연장 · U = 재확인 GO 뒤.
 - 이 README 가 **이름의 정본**이다 (REG §8-2 "이름은 가칭 · 키트 README 가 정본").
 - 지금 할 수 있는 것 = **§1 작은 침대 이력 시험 (H0–H5) 만** — 본 키트 봉인과 따로 봉인 (`history_test/SHA256SUMS`) 해서 먼저 돌릴 수 있다.
   ⛔ 이 시험이 PASS 여도 본 R · 10:0 연장 · U 의 GO 가 아니다 (CX2 §0 · REG §13-6 — 키트 증거 → Codex 재검토 → 본 실행).
@@ -22,11 +24,11 @@
 | 덱 생성기 · 덱 | `make_unload_decks.py` (`--check` · `--selftest`) · `decks/<침대>/in.<종류>.liggghts` 64 (손으로 고치지 않는다) |
 | 공용 · 판정 모듈 | `ul_lib.py` (덱 언어 · 덤프 · thermo) · `ul_s3.py` (K5 S3 총힘) · `ul_observers.py` (K6 σ_P · 표면 · S4 · ε · W_proxy · KE 기준) · `ul_gates.py` (K7 G0 · G1 · G2 · G2c · G3 · S0′) · `ul_reader.py` (K4 판독 · 선택 · 관문 · 복원 판정) |
 | 러너 · 래퍼 · 모의 시험 | `run_unload.sh` · `run_unload_ibb.sbatch` · `ul_runner_test.py` (가짜 mpirun · lmp) |
-| 봉인 · 활성 규칙 | `seal_kit.py` · `SHA256SUMS` (76 파일) · `active_rules.json` (규칙 12 · 폐기 규칙 0 건) |
+| 봉인 · 활성 규칙 | `seal_kit.py` · `SHA256SUMS` (76 파일) · `active_rules.json` (규칙 22 · 폐기 규칙 0 건) |
 | ibb 작업 폴더 (본 키트) | `~/ps45_unload_20261009/` — `<침대>/in/` (원 파일 여섯) · `<침대>/<잡>/` (런 폴더) · `kit_<시각>_<침대>_<잡>_XXXX/` (러너 kit 사본) · `logs/` (SLURM 출력) |
 | 잡 (`run_unload.sh <침대> <잡>`) | `RJ` (복원 시험 — 7:3 은 Ut0 먼저) · `EXT` · `RJ2` (10:0) · `UB` · `UT` · `UC` · `UVa` · `UVb` · `UT3` · `UTc` · `G_UB` · `G_UVa` · `G_UVb` · `G_UT3` |
 | 덱 종류 | `R` · `UNread` · `UK` · `UC` · `U_UB` · `U_UVa` · `U_UVb` · `U_UT3` · `G_<팔>` · (7:3) `UT` · `Ut0` · (10:0) `EXT` · `EXT2` |
-| 판정 JSON · 파일 | `<침대>/RJ/g0.json` · `restore_verdict.json` · `<침대>/ul_base.in` (KE 기준 · S2) · `<침대>/<팔>/arm_verdict.json` · `<루트>/ps_7_3_r45/selection.json` · `<루트>/ps_10_0_r45/s0_decision.json` · `report.json` |
+| 판정 JSON · 파일 | `<침대>/RJ/g0.json` · `restore_verdict.json` · `<침대>/ul_base.in` (KE 기준 · S2) · `<침대>/<팔>/arm_verdict.json` (주 값 · 보조 — 분리 · 표면 · ε · W_proxy) · `<루트>/ps_7_3_r45/selection.json` · `<루트>/ps_10_0_r45/s0_decision.json` · `report.json` · `ps_7_3_r45/UTc/parent_UT.sha256` (UT 부모 관측 목록 · §14-3) |
 | 런 폴더 기록 (덱이 쓴다) | `ul_windows.csv` · `ul_steps.csv` · `ul_events.csv` (머리 = 표 records) · `ul_summary.txt` · `dump/` (창 끝 atom · wall · contact · mesh) · `restart/` (단 끝 `restart_unload_<step>.bin` + `state_unload_<step>.in` · `restart_RM_*` · `state_RM_*`) |
 | 런 폴더 기록 (러너가 쓴다) | `screen.txt` (이어 돌림 `screen_a2.txt`) · `log_*.liggghts` · `deck.liggghts` · `deck.txt` · `run_manifest.txt` · `run_check.txt` · `<잡>.report.tgz` |
 
@@ -195,8 +197,9 @@ WSL 로 가져오는 꼴 (접속 정보는 자리표시): `scp -P <port> <user>@
   | UT · UT3 | 5e-7 | 0.01 | 10,000 | 40,000 · 10,000 | 3–12 | 4–12 | 200 × 50 | 1,000 |
   | UC | 1e-6 | 0 | 5,000 | — | 50,000 step = 10 창 | | 100 × 50 | 500 |
 
-  창 물리 시간 = 0.005 덱 s (모든 팔) · 분리 선언 2 창 · 분리 뒤 4 창 · 중력 팔 유지 4–12 창 (UV × 2 적용 범위 = choice C10).
-- **상태 기계** (단계 `ul_phase`: 4 HOLD0 · 0 SEARCH · 1 CONFIRM · 2 SEPARATE · 3 POST): 창 (`run W`) 마다 Ps · KE (ave/time 창 평균) · 기하 판 접촉 수 · 원자 · 새어 나감 → S1 (|ΔP̄| ≤ max(0.5 % · |P̄|, 0.05 P_meas)) ∧ S2 (KE ≤ 10 · KE_base) → 두 창 연속 + 최소 창 = 정상 · 최대 = UNSTEADY (k = 0 이면 TECH) → 단 끝 = P̄ (마지막 두 창 평균) · 교차 (P̄ ≤ P_meas) · B 전환 (P̄ ≤ 3 P_meas 다음 단부터) · 확인 두 단 → R_M (`restart_RM_*` + `state_RM_*`) → 분리 (기하 접촉 0 두 창 · 둘째 창 끝 선언) → 분리 뒤 4 창 (재접촉 = SEPARATE 로 되돌림) → 끝.  들어 올림 상한 16 µm (choice C11) · 가드 (원자 잃음 > 50 · 새어 나감 > 100 · 병진 KE > 1.7e-3 J) = restart + 요약 · 멈춤.
+  창 물리 시간 = 0.005 덱 s (모든 팔) · 분리 선언 2 창 · 분리 뒤 4 창 · 중력 팔 = **중력 교체 뒤 첫 재평형 유지만** 4–12 창 (× 2 없음) · 그 뒤 B 단 = 부모 팔 튜플 그대로
+  (G_UVa · G_UVb 8–24 창 · 개정 3 §14-5 · Q4 · 생성기 GD16 이 덱별 표로 확인).
+- **상태 기계** (단계 `ul_phase`: 4 HOLD0 · 0 SEARCH · 1 CONFIRM · 2 SEPARATE · 3 POST): 창 (`run W`) 마다 Ps · KE (ave/time 창 평균) · 기하 판 접촉 수 · 원자 · 새어 나감 → S1 (|ΔP̄| ≤ max(0.5 % · |P̄|, 0.05 P_meas)) ∧ S2 (KE ≤ 10 · KE_base) → 두 창 연속 + 최소 창 = 정상 · 최대 = UNSTEADY (k = 0 이면 TECH) → 단 끝 = P̄ (마지막 두 창 평균) · 교차 (P̄ ≤ P_meas) · B 전환 (P̄ ≤ 3 P_meas 다음 단부터) · 확인 두 단 → R_M (`restart_RM_*` + `state_RM_*`) → 분리 (기하 접촉 0 두 창 · 둘째 창 끝 선언 · **선언은 유지 예산 안**) → 분리 뒤 4 창 (**예산 밖 별도 관측** · 재접촉 = SEPARATE 로 되돌림 · **같은 높이 · 남은 예산에서 다시 — k + 1 로 옮기지 않는다** · 예산 끝 = `SEP_INCOMPLETE`) → 끝 (개정 3 §14-7 · Q6 · 생성기 모의기 GD15).  들어 올림 상한 16 µm (choice C11) · 가드 (원자 잃음 > 50 · 새어 나감 > 100 · 병진 KE > 1.7e-3 J) = restart + 요약 · 멈춤.
 - **덱 언어 규칙** (selftest 가 지킨다): 상태 파일은 늘 **맨 바깥** `include ${ul_state}` (3d5c00f input.cpp 845 — if 안 include = ERROR · 처음이면 러너가 빈 파일) · run 뒤 읽는 값은 다음 줄에서 즉시 치환으로 얼린다 (⑭b) · `write_restart` 뒤 `ke` · compute 를 run 전에 읽지 않는다 · `run 0` 뒤 판 힘을 읽지 않는다 (⑭a) · if 조건은 숫자 · 비교뿐 · local compute 는 read_restart 뒤 첫 run 전에 정의 (compute_pair_gran_local.cpp 126) · 창 끝 덤프 = `dump_modify … every v_ul_dnext` (이동 중 없음 · setup 덤프 없음).
 - **기록 머리** = 표 `records` (창 19 열 · 단 15 열 · 사건 6 열) · thermo 머리 = `Step Atoms KinEng ul_erot ul_Ps pressMPa CPU` (GD13 · LIGGGHTS c_ · v_ 열 이름 = ID 앞 8 글자).
 - **벽 local 열** = id (mesh · 삼각형 · 입자) → force_normal (입자가 받는 법선력 3) → (R 만) history 4 (compute_pair_gran_local.cpp add_wall_2 순서 — 키워드 순서와 무관).  법선력 = (f·n̂) n̂ = n̂ 부호와 무관한 입자에 걸린 힘의 법선 성분 → 판이 누르면 fn_z < 0 (표 `plate_fn_compressive_sign` −1 · 이력 시험 SYN ⓓ 가 잰다).
@@ -207,7 +210,15 @@ WSL 로 가져오는 꼴 (접속 정보는 자리표시): `scp -P <port> <user>@
   `"$MPIRUN" $MPIRUN_FLAGS -np "$NP" "$LMP"` (기본 `--oversubscribe --bind-to none` · NP 6) · 화면의 `Loop time … on N procs` 의 N = NP · `ERROR` · `UL_ABORT` 없음 · 런 뒤 읽는 쪽 · 보고 묶음 + sha256.
 - 순서 (REG §13-5 ② · §13-6): 침대마다 원 파일 → `RJ` (복원 판정 RESTORED 여야 다음) → **7:3** `UB` · `UT` · `UC` (따로따로 제출 · 서로 독립) → 선택 판독 → 관문이 허락하는 **UV 하나** (`UVa` 또는 `UVb`) → 선택 (튜플) → (t3 면) `UTc` → `G_<최종 팔>` →
   **나머지 넷** = `RJ` → 최종 튜플의 팔 하나 → `G_<그 팔>` · **10:0** = `RJ` (3,600,000) → `EXT` (→ S0′) → `RJ2` (S0′) → 최종 팔 → `G_`.
-- 이어 돌림 (기계 실패 · 한 번): `RESUME=1` — 마지막 `restart_unload_<step>.bin` + 짝 `state_unload_<step>.in` 에서 같은 덱 (화면 `screen_a2.txt`) · 두 번째 = 거부.
+- 이어 돌림 (기계 실패 · 한 번 · 개정 3 §14-4): `RESUME=1` — **일반 팔 (UB · UT · UC · UVa · UVb · UT3) 만** · 같은 승인 팔 (첫 시도 기록 `gate=ALLOW` · `resume=0` · 덱 요약 없음) ·
+  마지막 `restart_unload_<step>.bin` + 짝 `state_unload_<step>.in` 에서 같은 덱 (화면 `screen_a2.txt` · 첫 시도 화면 · 기록 그대로) · 두 번째 = 거부 ·
+  **UTc · G_* · RJ · RJ2 · EXT = RESUME 거부** (다시 = 지금 폴더를 이름 바꿔 보존 (예 `UTc.try1`) → RESUME 없이 새 제출 · 관문 다시).
+- 잡 기록 (`run_manifest.txt` · 덧붙이기만 · 개정 3 §14-10): `gate=ALLOW` (+ `gate_why=`) · 단계마다 `stage=<덱 종류> screen=… rc=… check=PASS|…` · `stage=G0 rc=…` ·
+  판독기 `reader_<명령>_rc=` (0 = 정상 판독 · 미식별도 JSON 으로 0 · ≠ 0 = 프로그램 오류 → 러너 rc ≠ 0) · 끝 줄 `end=… fails=… reader_rc=…`.
+  **G0 · Ut0 기술 실패 = R · UN · UK 를 돌리지 않는다** (복원 판정 RESTORED 아님 · kebase 건너뜀 기록).
+- UTc (개정 3 §14-3): UT 의 기록 · 덤프 · thermo 를 **복사하지 않는다** — `parent_UT.sha256` (UT 판독 대상 sha256 목록) + `run_manifest` 의 `continues=UT` · `parent_dir` · `rm_step` ·
+  `parent_sums_sha256` · 판독기가 UT 폴더에서 읽으며 대조 (불일치 · 경계 step 중복 · 누락 = 이어 돌림 무효 → UTc 주 값 미식별 · 최종 t3 = UT 주 값 그대로 + 보조 `SEP_INCOMPLETE`).
+- §1-6 문법 fixture 는 본 R (생산 침대) 전 PASS 여야 한다 (개정 3 §14-9 — 절차 · 러너 관문은 아님 · 1저자 확인).
 
 ```bash
 # ① 이 커밋의 새 작업 트리 · 봉인 확인 (커밋마다 새 폴더)
@@ -217,7 +228,7 @@ conda activate myenv && python3 -I $K/make_unload_decks.py --check && python3 -I
 # ② 원 파일 여섯 (침대마다 한 번 · 표에서 만든 명령을 보고 붙여 넣는다 · cp -n = 있으면 덮지 않는다) → 대조
 python3 -I $K/ul_reader.py copycmd ps_7_3_r45
 U=$HOME/ps45_unload_20261009 && mkdir -p $U/logs && python3 -I $K/ul_reader.py inputs $U ps_7_3_r45
-# ③ 7:3 복원 시험 (Ut0 → G0 → R → UN → UK) — 이력 시험 판정 JSON 을 넘긴다 (없으면 복원 판정 UNCONFIRMED)
+# ③ 7:3 복원 시험 (G0 → Ut0 → R → UN → UK · G0 · Ut0 실패 = 멈춤) — 이력 시험 판정 JSON 을 넘긴다 (없으면 복원 판정 UNCONFIRMED) · §1-6 문법 fixture PASS 뒤
 HV=$HOME/ps45_unload_hist_20261013/hist_20261014_094731/history_verdict.json        # 10-14 재실행 PASS 런 (§1-5) — 이름으로 고정 (ls -dt 로 고르지 않는다 · 10-13 TECH 런이 같은 폴더에 있다)
 cd $U && bash $K/run_unload_ibb.sbatch $K ps_7_3_r45 RJ                                    # 사전 점검만 (끝 줄 "통과")
 cd $U && sbatch --export=ALL,HIST_VERDICT=$HV $K/run_unload_ibb.sbatch $K ps_7_3_r45 RJ
@@ -253,21 +264,28 @@ scp -P <port> <user>@<ibb-host>:~/ps45_unload_20261009/<침대>/<잡>.report.tgz
 
 | 판정 | 규칙 |
 |---|---|
-| 창 접촉 상태 | 창 끝 벽 local 덤프: 접촉 ≥ 1 · 창 평균 P > 0 = CONTACT · ≥ 1 · P ≤ 0 = TENSION · 0 = ZERO · 덤프 없음 · 깨짐 = OBS_MISSING (0 으로 세지 않는다) |
-| 분리 | 연속 두 ZERO 창의 둘째 창 끝 · 그 창부터 분리 뒤 창 · 재접촉 = 계수 · 분리 뒤 창 · 표면 관측 초기화 · OBS_MISSING = 연속을 끊는다 |
+| 창 접촉 상태 | 창 끝 벽 local 덤프: 접촉 ≥ 1 · 창 평균 P > 0 = CONTACT · ≥ 1 · P ≤ 0 = TENSION · 0 = ZERO · 덤프 없음 · 깨짐 · 머리 step ≠ 창 끝 = OBS_MISSING (0 으로 세지 않는다) |
+| 분리 | 같은 단 (k) 안 연속 두 ZERO 창 (SEPARATE 단계 창) 의 둘째 창 끝 · 판 이동 (k 바뀜) = 연속 초기화 (덱과 같은 규칙) · 그 창부터 분리 뒤 창 · 재접촉 = 계수 · 분리 뒤 창 · 표면 관측 초기화 · OBS_MISSING = 연속을 끊는다 (§14-7) |
 | 끝점 유효 | 덱 정상 (S1 ∧ S2 두 창) ∧ S3 PASS (단 끝 원자 + 쌍 덤프 · K5) ∧ P̄ · 높이 유한 ∧ 판 접촉 (CONTACT · TENSION) ∧ (k*) NOISE_FLOOR 아님 (σ_P = k* 마지막 두 창 thermo 정규 줄 `ul_Ps` · ddof 1 · 최소 10) |
-| 교차 · 괄호 | P̄ − P_meas 부호 바뀜 (> ↔ ≤) · 첫 교차 = P 두 점 선형 보간 (점 추정) + 실제 괄호 [h_lo, h_hi] · A 단 교차 = A 괄호 그대로 · 비단조 = 모든 교차 괄호의 합집합 + 표지 (b 판정 없음) |
-| 상태 두 축 | `primary_status` OK · NOISE_FLOOR · LOWER_BOUND (교차 전 끝 + 정상 · 접촉 · 단조) · UNIDENTIFIED (사유) · NO_CROSSING · TECH · NO_BRACKET (중력 팔만) ↔ `trajectory_status` DONE · TIMEOUT (요약 없음) · LIFT_CAP · GUARD · TECH · RM_STOP |
+| 확인 두 단 | 실제로 이어지는 k* + 1 · k* + 2 (B · CONFIRM) 의 등록 정상 완료 = 덱 정상 · S3 PASS · 유한 · 순서 · 누락 없음 — **판 접촉 요구 없음** (분리 = 확인) · 아니면 주 값 UNIDENTIFIED · 선택 UNRESOLVED (§14-1 · Q1) |
+| 교차 · 괄호 | P̄ − P_meas 부호 바뀜 (> ↔ ≤) · 첫 교차 = P 두 점 선형 보간 (점 추정) + 실제 괄호 [h_lo, h_hi] · A 단 교차 = A 괄호 그대로 · 비단조 = **k = 0 부터** 모든 교차 괄호의 외곽 구간 [최소, 최대] ⊇ 첫 교차 괄호 + 표지 (b 판정 없음 · 기록 단 비유한 = 미계산 · §14-2) |
+| 관측 파싱 | 모든 경로에서 덤프 전부 읽힘 (머리 · 열 · 행 수 · 유한) · 머리 step = 요청 step · ID 고유 · S0 밖 ID 없음 · CSV 결손 · 단 k 불연속 = 주 값 미식별 · 버린 행을 정상 부분 관측으로 쓰지 않는다 (§14-10) |
+| S3 무게 항 | 분모의 m g 의 g = 그 팔의 실제 중력 (중력 팔 G_* = g_aux 9.81e-6 · 그 밖 9.81 · §14-6 · Q5) |
+| 상태 두 축 | `primary_status` OK · NOISE_FLOOR · LOWER_BOUND (교차 전 끝 + 정상 · 접촉 · 단조) · UNIDENTIFIED (사유) · NO_CROSSING · TECH · NO_BRACKET (중력 팔만) ↔ `trajectory_status` DONE · TIMEOUT (요약 없음) · LIFT_CAP · GUARD · TECH · RM_STOP · **SEP_INCOMPLETE** (재접촉 뒤 예산 끝 · 덱 DONE 인데 판독기 최종 분리 · 분리 뒤 4 창 · 선언 창 ≤ 예산 · SEPARATED · POST_DONE 사건이 맞지 않음 = 보조 미완료 · 주 ρ 무영향 · §14-7) |
+| 보조 ε · W_proxy | ε_sphere,all = 1 − C_all / h (C_all = 검증한 S0 에서 봉인 · 프레임마다 다시 계산 없음) · 자리 S0 · 교차 끝점 둘 (S0 ID 전부 · 같은 반경 아니면 그 자리 NOT_COMPUTED) · M (ε_all 만) · ε_sphere,inside 따로 · W_proxy = k 0 → M 정착 단 사다리꼴 (끝 조각 P_meas) × 1e-6 J (비정상 · 비유한 = 미계산 · 판이 받은 일 아님) — 팔 판정 · 최종 보고 (§14-8 · Q7) |
+| 7:3 t3 | 최종 = UT 주 값 (UT 폴더 판독) + UTc 보조 (분리 · 표면 · 합집합 — 이어 돌림 OK · UTc 가 다시 읽은 주 값 = UT 일 때만 · 아니면 보조 SEP_INCOMPLETE) (§14-3) |
+| KE 기준 | UK = 정확히 S0 무이동 완전 세 창 (단계 기술 성공 · 요약 DONE · START = S0 · arm UK · k 0 · 단계 4 · w 1–3 · step = S0 + w · W0 · 판 h0 · 들어 올림 0 · 결손 줄 없음) 일 때만 `ul_base.in` · 아니면 미발행 (rc 2 → S2 쓰는 팔 관문 거부 · 계수 10 그대로 · §14-10) |
 | 상쇄 | 교차 끝점 마지막 창 인장 합 ≥ 0.5 · P_meas · A (= 1.25 N 덱) → 표지 · 처분 = 진단값 (`rank_eligible` 거짓 · 10 쌍 표 미식별) — 접촉 상태 · 자격과 따로 |
 | 선택 | 유효 ρ 둘 (UB · UT) → δ_dt → dt* → 그 dt* 의 UV 하나 → δ_v → 튜플 t1–t4 · 끝점 무효 · NaN · 결손 · 무교차 = SELECTION_UNRESOLVED (다음 팔 · 본 런 없음) · 경계 = ≤ (부동소수 1e-9 %p · choice C13) |
 | 관문 | 복원 RESTORED · KE 기준 파일 있어야 · 7:3 UB · UT · UC → UV (선택이 정한 하나) → 최종 팔 · t3 = UTc (S0 에서 새 UT3 없음) · G_ = 최종 팔의 R_M · 나머지 넷 = 최종 튜플 팔만 · 10:0 = S0′ 뒤 |
-| 복원 판정 | reset 로그 다섯 (history_zwall_bot · top_mesh · n_neighs_mesh_top_mesh · tracker_top_mesh · contacthistory) · G0 · G1 · G2 · G2c · mesh md5 · G3 · 바닥 이력 PRE = POST · UN 소거 보임 · 이력 시험 rc 0 (+ SYN 부호 = 표) → RESTORED · UNCONFIRMED · SYNTAX_FAIL · VALUE_MISMATCH · 중력 팔 = R_M 의 run 0 setup 에서 G1 · G2 · G2c (출처 팔 R_M 창 끝 · G3 해당 없음 · C12 · 실패 = TECH) |
+| 복원 판정 | reset 로그 다섯 (history_zwall_bot · top_mesh · n_neighs_mesh_top_mesh · tracker_top_mesh · contacthistory) · G0 · G1 · G2 · G2c · mesh md5 · G3 · 바닥 이력 PRE = POST · UN 소거 보임 · PRE · POST · R_END · UN 전부 읽힘 · 머리 step (S0 · S0 + 2,000) · 고유 ID · ID 집합 = S0 · R_END ↔ UN 같은 대상 · Ut0 (7:3) · R · UN 기술 성공 · 이력 시험 H0–H5 PASS · rc 0 · **SYN PASS + 측정 부호 = 표** · 총힘 시점 PASS (SYN 없음 = 자격 없음) → RESTORED · UNCONFIRMED (관측 결손) · SYNTAX_FAIL (기술 실패) · VALUE_MISMATCH (수치) · 다음 제출 관문 = RESTORED + 그 RJ 잡 기록 기술 실패 0 · 중력 팔 = R_M 의 run 0 setup 에서 G1 · G2 · G2c (출처 팔 R_M 창 끝 · G3 해당 없음 · C12 · 실패 = TECH) (§14-10) |
 | 10 쌍 표 | 둘 다 OK · 순위 자격일 때만 합집합 괄호 비교 — 겹침 = 미구분 (동률 아님) · 분리 = 구분 · 아니면 미식별 |
 
 ## 5. 봉인 (K8 · `seal_kit.py`) — 활성 규칙 목록 · 폐기 규칙 부재
 
 - `SHA256SUMS` = 러너가 ibb 로 복사하는 묶음 76 파일 (표 · 모듈 · 생성기 · 러너 · 래퍼 · 시험 · `active_rules.json` · 덱 64 · README · 이력 시험 폴더 제외).
-- `active_rules.json` = 활성 규칙 12 (선택 · 제출 순서 · UT R_M 멈춤 · UTc · 비단조 합집합 · 분리 · TIMEOUT · 상쇄 · 물리 창 · S3 · σ_P · 이어 돌림 한 번) — 규칙마다 코드 자리 (실재 확인) · 증인 시험.
+- `active_rules.json` = 활성 규칙 22 (선택 · 제출 순서 · UT R_M 멈춤 · UTc · 비단조 합집합 · 확인 두 단 · 관측 파싱 · 분리 · 재접촉 · 예산 · 중력 팔 유지 · S3 팔 g · TIMEOUT · 상쇄 · 물리 창 · S3 · σ_P ·
+  이어 돌림 한 번 · 단계 rc · 복원 완전성 · ε · W_proxy · 경량 묶음 범위 · KE 기준 UK 세 창) — 규칙마다 코드 자리 (실재 확인) · 증인 시험.
 - 폐기 규칙 검사 (ULR1-05): 옛 띠 b (덱 · 러너 글자 · 파이썬 AST — selftest 안 부재 단언은 제외) · 동시 UV 제출 (러너 · 래퍼 · 이 README 의 `UB … UV` 를 도는 고리 · 한 줄 sbatch 둘) = **0 건** 이어야 `--check` rc 0.
 
 ## 6. 권고 기본값 (1저자 비준 대기) — 정본 = 부록 초안
@@ -294,5 +312,12 @@ scp -P <port> <user>@<ibb-host>:~/ps45_unload_20261009/<침대>/<잡>.report.tgz
 | `ul_runner_test.py --selftest` (K3 러너 모의 · 가짜 mpirun · lmp · 임시 키트 다시 봉인) | 12 중 12 실패 (러너 · 봉인 없음) | 12 / 12 |
 | `seal_kit.py --selftest` (K8 봉인 · 활성 규칙 · 폐기 규칙 판별력) | 10 중 10 실패 | 10 / 10 |
 | `history_test/make_history_decks.py --selftest` ⑮ (함께 사는 pair/gran/local ≤ 1 · wall/gran/local ≤ 1 · 첫 ibb 실행 TECH — §1-5 · `ULK-02`) | 131 중 7 실패 (덱 일곱 · SYN 만 통과) | 139 / 139 |
+| **10-14 Codex 키트 재검토 반영 (개정 3 · 계획 §5)** — `ul_reader.py --selftest` R14 · R17–R19 + `ul_gates.py` F2 (`ULKR-05` · `08` — 복원 완전성 · 이력 자격 SYN) | 57 중 15 실패 · 35 중 1 실패 | 57 / 57 · 35 / 35 |
+| `ul_runner_test.py --selftest` 러너 모의 (`ULKR-06` · `11` — RESUME 정책 · 같은 승인 팔 · 단계 rc · 판독기 rc · G0 · Ut0 실패 = R 없음) | 21 중 11 실패 | 21 / 21 |
+| `ul_reader.py --selftest` R20–R22 (`ULKR-01` · `02` · `04` — 확인 두 단 · k = 0 합집합 · 관측 파싱) | 74 중 13 실패 | 74 / 74 |
+| `ul_reader.py` R23 + `ul_runner_test.py` M9 (`ULKR-03` — UTc 부모 해시 · t3 보고) | 83 중 8 실패 · 23 중 2 실패 | 83 / 83 · 23 / 23 |
+| `make_unload_decks.py --selftest` GD15 · GD16 (`ULKR-07` 덱 · `ULKR-10` A — 덱 제어문 모의기) | 291 중 3 실패 | 291 / 291 |
+| `ul_reader.py` R24 · R25 · R26 + `ul_runner_test.py` M18 (`ULKR-07` 판독기 · `ULKR-09` UK · `ULKR-10` B 팔 g) | 106 중 21 실패 · 24 중 1 실패 | 106 / 106 · 24 / 24 |
+| `ul_observers.py` O11–O12 · `ul_reader.py` R27 · `ul_runner_test.py` M19 (`ULKR-12` — ε 봉인 · W_proxy 보고 · 묶음) | 21 중 5 실패 · 111 중 5 실패 · 25 중 1 실패 | 21 / 21 · 111 / 111 · 25 / 25 |
 | `history_test/make_history_decks.py --selftest` ⑯ 문법 fixture (Q8 · §1-6 — 덱 꼴 · 모의기 GA → GB · 모의기 판별력) | 149 중 10 실패 (⑯ 전부 · 덱 없음) | 156 / 156 (+ 아홉째 덱 일반 검사 7) |
 | `history_test/read_history.py --selftest` S33–S37 (문법 판정 · 반례 아홉 · GB 없음 · GA 없음 · 러너 모의 `--grammar-only` 셋) | 53 중 15 실패 (새 시험 전부) | 53 / 53 |

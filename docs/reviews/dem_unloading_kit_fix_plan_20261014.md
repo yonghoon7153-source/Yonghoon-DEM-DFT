@@ -1,7 +1,7 @@
 # DEM 언로딩 키트 수정 계획 — Codex 키트 재검토 (HOLD) 반영 (2026-10-14 · ✅ 1저자 10-14 Q1–Q9 권고대로 · 결과 0 건)
 
 > ✅ **비준 (1저자 10-14 *"q1~q9는 권고대로야"*)** = §3 Q1–Q9 전부 **(가)** · 순서 = §4 그대로 · 바꾸지 않는 것 = §4 마지막 줄 그대로.
-> 실행 기록 = 맨 끝 §5 (수정 뒤 채움 · 시험 먼저 — 고치기 전 실패 수 → 고친 뒤).
+> 실행 기록 = 맨 끝 §5 (✅ 10-14 수정 완료 · 시험 먼저 — 고치기 전 실패 수 → 고친 뒤 · ⬜ 문법 fixture ibb · ⬜ Codex 짧은 재확인 `docs/reviews/codex_dem_unloading_kit_fix_recheck_request_20261014.md`).
 
 > 근거 = Codex 키트 재검토 `docs/reviews/codex_review_dem_unloading_kit_20261014.md` (고정 핀 `2783061ea` · 판정 **HOLD**) · 증거 반입 `docs/reviews/codex_dem_unloading_kit_review_evidence_20261014/` (`_README_import.md`).
 > 판정 요지: 실제 20 입자 이력 시험 (H0–H5 · SYN · 총힘 시점) = **수용** (독립 재판독 같음) · 본 키트의 복원 → 주 측정 → 설정 선택 → 다음 제출 → 최종 보고 = **아직 종결 안 됨** · 새 P1 여섯 (`ULKR-01`~`06`) · P2 여섯 (`07`~`12`) ·
@@ -54,3 +54,29 @@
 2. **7:3 개발 U 전**: `ULKR-01`~`04` (파일 → 주 측정 → 선택 → 다음 제출 → 최종 report · t3 정상값 보존 시험 필수) → `ULKR-07` · `10` (Q4 · Q5 · Q6 대로 · 덱 분기 재검증) · `ULKR-09` (S2 쓰는 개발 U 전) → `ULKR-12` (Q7).
 3. 전부 **시험 먼저** (각 반례를 우리 시험으로 다시 만들어 고치기 전 실패 확인 · Codex 합성 입력 = `evidence/_cases_20261014.tgz` 를 자료로 참고) → Codex 짧은 재확인 → GO → 등록 §13-6 순서 그대로 (R · 10:0 연장 → 7:3 개발 팔 → 본 U).
 - 바꾸지 않는 것: 사전등록 물리 목표 · P_meas 1 MPa · 결정표 0.10 %p · S1 · S2 · S4 문턱 · 계수 10 · C1 총힘 정의 · 부호 −1 · 명시 restart · 다섯 침대 · S0 (Codex 가 바꿀 근거 없다고 한 것).
+
+## 5. 실행 기록 (10-14 · 시험 먼저 — 고치기 전 실패 → 고친 뒤 · 결과 0 건 · LIGGGHTS 없음)
+
+- 고치기 전 측정 = 새 시험 + 그 커밋 직전 판의 구현 함수 (같은 파일에서 해당 함수만 옛 판으로 되돌린 혼합 파일 · 잰 뒤 원복 · 바이트 대조) · 러너 = 직전 판 `run_unload.sh` 를 넣고 잰 뒤 원복 ·
+  시험 쪽 fixture 를 고친 경우 다시 쟀다.  Codex 증거의 탐침 스크립트는 실행하지 않았다 (자료로만 읽고 반례를 우리 시험으로 다시 만들었다).
+
+| 커밋 | 무엇 | 시험 (고치기 전 → 고친 뒤) |
+|---|---|---|
+| `122abaad8` | 비준 기록 (이 계획 머리 · §3 · 키트 README) | — |
+| `f5c899453` | 등록 개정 3 = REG §14 (Q1 · Q3–Q8 규칙 · §13 표지 · 결과 0 건) | — |
+| `2b6500869` | `ULKR-05` · `08` — 복원 판정 완전성 (PRE · POST · R_END · UN 전부 읽힘 · 머리 step · 고유 ID · S0 집합 · R_END ↔ UN · Ut0 · R · UN 기술 성공) · 이력 자격 (SYN PASS · 부호 = 표 · 총힘 시점) · 관문 = RESTORED + RJ 잡 기술 실패 0 | `ul_reader` 57 중 15 실패 → 57 / 57 · `ul_gates` 35 중 1 → 35 / 35 |
+| `a03cff857` | `ULKR-06` · `11` — RESUME = 일반 팔만 · 같은 승인 팔 (`gate=ALLOW` · 요약 없음) · 한 번 · 나머지 JOB 거부 (새 시도 안내) · 단계 rc · 판독기 rc 잡 기록 · G0 · Ut0 실패 = R 없음 | `ul_runner_test` 21 중 11 → 21 / 21 |
+| `fbf59cc78` | `ULKR-01` · `02` · `04` — 확인 두 단 등록 정상 완료 (판 접촉 요구 없음) · k = 0 부터 합집합 외곽 · 관측 파싱 (전부 읽힘 · 머리 step · 고유 ID · S0 밖 없음 · CSV 결손 · k 불연속) | `ul_reader` 74 중 13 → 74 / 74 |
+| `e90f903f1` | `ULKR-03` — UTc = UT 부모 관측 경로 + sha256 (`parent_UT.sha256` · 복사 없음) · 경계 중복 · 누락 · t3 = UT 주 값 + UTc 보조 | `ul_reader` 83 중 8 → 83 / 83 · `ul_runner_test` 23 중 2 → 23 / 23 |
+| `f67f242bb` | `ULKR-07` (덱 + 판독기) · `09` · `10` — 재접촉 = 같은 높이 남은 예산 · 예산 끝 `SEP_INCOMPLETE` · 판독기 분리 = 덱 규칙 (이동 = 초기화 · SEPARATE 창) · DONE ↔ 사건 대조 · S3 g = 팔 g · KE 기준 = UK 완전 세 창 · 덱 42 재생성 (U · G · UT · Ut0 — UK · UC · R · UNread · EXT · EXT2 = 바이트 그대로) | `ul_reader` 106 중 21 → 106 / 106 · `ul_runner_test` 24 중 1 → 24 / 24 · `make_unload_decks` 291 중 3 → 291 / 291 |
+| `d9e51323d` | `ULKR-12` (Q7) — ε (S0 봉인 C_all · 비교 프레임 완전) · W_proxy (k 0 → M) 를 팔 판정 · report 에 · 묶음에 결정 파일 · 경량 묶음 = 재검증 원천 아님 | `ul_observers` 21 중 5 → 21 / 21 · `ul_reader` 111 중 5 → 111 / 111 · `ul_runner_test` 25 중 1 → 25 / 25 |
+| `e6c9049dc` | Q8 — 이력 시험 키트 문법 fixture (`in.hist_grammar.liggghts` · `run_history.sh --grammar-only` · `read_history.py --grammar` · 생성기 모의기 ⑯ · H0–H5 덱 여덟 바이트 그대로) | `make_history_decks` 149 중 10 → 156 / 156 · `read_history` 53 중 15 → 53 / 53 |
+| (이 문서 커밋) | 키트 README (§0 · §2–§5 · §9) · REG §14 문안 정리 (14-3 · 14-7 · 14-9 · 14-10) · 이 §5 · Codex 재확인 요청서 · 러너 머리 주석 RJ 순서 (G0 → Ut0 · 동작 무변경) + 재봉인 | — |
+
+- 끝 상태 (전부 이 작업 트리 · Linux): `ul_lib` 19 / 19 · `ul_s3` 14 / 14 · `ul_observers` 21 / 21 · `ul_gates` 35 / 35 · `ul_reader` 111 / 111 · `make_unload_decks` 291 / 291 · `--check` (덱 64 = 생성 결과) ·
+  `seal_kit` selftest 10 / 10 · `--check` (76 파일 · 활성 규칙 22 · 폐기 규칙 0) · `ul_runner_test` 25 / 25 · `history_test/make_history_decks` 156 / 156 · `--check` (덱 9 · 15 파일) · `history_test/read_history` 53 / 53 ·
+  `scripts/check_doc_refs.py` · `scripts/check_review_findings.py --ban-sweep` = 이 문서 커밋에서 통과 확인.
+- 봉인: 키트 `SHA256SUMS` sha256 `213695a0be89c7b6f8d59aea0b3132bf0cd080079a6de198a8e8c9964671aa86` (76 파일 · 이 문서 커밋 — 러너 머리 주석의 RJ 순서 정정 한 줄 포함) · `active_rules.json` `056a0379…` (규칙 22) ·
+  이력 시험 `history_test/SHA256SUMS` `debe83877657978cdaf87b18e08edda501e520979dd40876f5e100c24e902163` (15 파일).
+- 원장 (`docs/reviews/findings.json`) 은 이 작업 트리에서 고치지 않았다 — `ULKR-01`~`12` 의 claimed_fixed 표시 = 메인 세션 · 1저자.
+- 남은 것 · 1저자: ① 문법 fixture ibb 한 번 (키트 README §1-6 명령 · 본 R 전 PASS) ② Codex 짧은 재확인 발송 (요청서 · 핀 = 병합 뒤) ③ 문법 PASS 를 코드 관문으로 강제할지 (지금 = 절차 · 권고 = RJ 복원 판정이 문법 판정 JSON 도 요구 — `ULKR-08` 꼴) ④ UC 는 단 끝 restart 를 쓰지 않아 RESUME 가 서지 않는다 (정책상 허용 팔 · 실제 = 새 시도 — REG §14-4 괄호 그대로).
