@@ -113,6 +113,9 @@ more carriers). AIMD sees the vacancies; BVSE does not. The two are complementar
   `db/properties/li_transport.json`). 4fu trajectory was transient on gabia (cleaned) →
   **re-running on V100** (`~/mlmd_4fu_comp1_rerun`, `aimd_mlip.py`, same protocol). When
   done: run `msd_origin.py` + `aimd_jump_stats.py` + `li_density_cube.py` → comp1 side.
+  ⚠ **2026-10-14 정정 (gabia find 실측)**: "cleaned" 는 프레임 파일에는 안 맞는다 —
+  `gabia:/data/work/runs/mlmd_4fu_comp1/T{600,800,1000}/md_T{T}.traj` (ASE 바이너리 · 각 5.0 MB) 가
+  남아 있다. 읽으려면 ASE 로 extxyz 로 바꾼다 (`kb/open_items.md` 🔔 우리 DFT ③ 줄).
 
 ## Caveats
 - UMA-s-1p1 overestimates absolute D ~3–5× for LPSCl family → quote **Ea + ratio**, not
