@@ -10826,6 +10826,16 @@
       "opened_in": "docs/reviews/codex_lhs_run214_failures_request_20261014.md",
       "title": "LHS214 실패 요청서 §1 · §2 의 네 서술이 증거보다 강하거나 틀렸다 — \"망 솔버 rc 1\" (실제 망 솔버 rc 0 · ok=false → 병합 rc 1 → 워커 rc 1) · \"최대 RSS 0.88–1.94 GB (메모리 아님)\" (실제 527.8–1937.9 MiB · ru_maxrss 는 트리 합 아님 · RSS 하나로 배제 확정 불가) · \"Physics σ_ratio 1.04–1.48 (τ MODEL_BELOW_CONTINUUM_BOUND)\" (그 상태는 τ² < 1 판정 · q < 1 사례 있음) · \"≈ 40 분\" (계획 추정 · 실측 30 분 33 초 + 5 분 23 초)",
       "note": "판정문 §1-2 (실패 단계 = Network Solver rc 0 ok=false → Network Merge / Stage E rc 1 → 외부 worker rc 1 · worker.json:112 · :117) · §3 Q5-3 (RSS 최소 lhss_011 · run_network_194_parallel.py:2211 ru_maxrss/1024) · Q5-4 (progress 시각 30 분 33 초 + 5 분 23 초 · 첫 시작 → 마지막 끝 36 분 19 초 · printed elapsed 합 33 분 36 초) · Q5-5 (MODEL_BELOW_CONTINUUM_BOUND = 보정 f · φ 로 만든 τ² < 1 · tau_flux.py:1133–1136).  내가 화면 판독 · 계획 추정을 사실처럼 적었다.  정정 = 요청서 끝 상태 줄 (보낸 원문 보존) · 반입 README · 수정 계획 §0."
+    },
+    {
+      "id": "MIX-12",
+      "severity": "P3",
+      "status": "open",
+      "owner": "claude",
+      "found_by": "claude 10-14 D2 결합 규칙 구현 중 (옛 min 규칙 ↔ 새 기하평균 규칙의 짝별 F₀ 비교 · CGF 151.4 · 10 만 원자 · soft 영률)",
+      "opened_in": "docs/mixer_d2_wall_gamma_derivation_20261014.md",
+      "title": "옛 벽 점착 규약 (벽 CED = 대각 ÷ 6.25^(1/3)) 은 Hare 2026 의 입자–벽 / 입자–입자 접착 에너지 비 1/6.25 를 당김힘 비로 읽고 (벽 짝 R* 두 배를 빠뜨림) 벽 짝 E* 변화도 빠뜨렸다 — Hare 글자 그대로의 당김힘 비는 0.32 인데 옛 덱은 SE–벽 / SE–SE 0.162 (0.51 배) · AM–벽 / AM–AM 0.4516 (1.41 배)",
+      "note": "자리: scripts/make_mixer_deck.py 벽 상수 주석 (WALL_CED_DIV · \"같은 힘비를 내려면 CED ÷ 6.25^(1/3)\") · `_ced_matrix_min` 끝 (M[i][w] = M[i][i] / WALL_CED_DIV).  Hare et al. Powder Technol. 469 (2026) 121804 Table 3 (litdb 정본 hare2026_dem_pept_dry_mixing_nmc622_eirich): γ_pp 0.25 · γ_pw 0.04 J/m² · EDEM JKR δ_n = a²/R* − √(4πγa/E*) ⇒ 짝마다 준 접착 에너지 (w = 2γ) · 당김힘 ∝ w·R* ⇒ 같은 크기 구–벽 / 구–구 = 0.16 × 2 = 0.32.  옛 유도 F₀ ∝ R*²·CED³/E*² 에서 CED³ 만 1/6.25 로 맞췄다 — SE 는 R* ×4 와 E* ×1.987² 가 거의 상쇄돼 0.162 · AM 은 E* 비 1.190 이라 0.4516.  경화 덱 (hold_bo_pairwise) 은 soft F₀ 를 쌍별로 보존하므로 같은 비.  영향: 옛 층상 본 캠페인 · 고-Bo · dev-rot · dev-bo · dev-u 덱의 벽 점착은 Hare 보정과 달랐다 (SE–벽 약함 · AM–벽 강함) — 판정 (층상 = 등록된 무분리 범주 · 등록 한정어) · 개발 자료 문장 (AM–벽 공동 개입 B 로 이미 기록) 은 그대로 · 원고 · 보고에 벽 규약을 \"hare2026 재현\" 으로 쓰지 않는다.  처방: D2 결합 규칙 팔은 Hare 비를 기하평균으로 옮긴 γ_W/γ = 0.0256 (1저자 10-14 (가)) 과 쌍별 R* · E* — GM⑥ 이 SE–벽 / SE–SE 0.32 를 강제 · 유도 = docs/mixer_d2_wall_gamma_derivation_20261014.md.  옛 덱 · 골든 해시는 바꾸지 않는다 (재현성).  정정 = 생성기 주석 정정 표지 (원문 보존) · /mixer 개발 이력 v1.6."
     }
   ]
 }
