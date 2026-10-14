@@ -1,0 +1,238 @@
+diff --git a/bms-balancing/scripts/reil_c4_hb.py b/bms-balancing/scripts/reil_c4_hb.py
+index 4d74c74b..320b4b61 100644
+--- a/bms-balancing/scripts/reil_c4_hb.py
++++ b/bms-balancing/scripts/reil_c4_hb.py
+@@ -40,6 +40,14 @@ class RayNotImplemented(HStop):
+     """ray (부속 A §4-6) 는 유보 — 미구현 (범위 확인 §9-2). 연결부가 ray 단계에 닿으면 그 (셀 · 영역) 을 갱신하지 않고 멈춘다."""
+ 
+ 
++class WaveStop(HStop):
++    """단계 A 의 ρ 파가 전역 중지로 끝났다 (C4B2-N1) — 중지 원문 (reason) 을 들고 올라가, 남은 ρ 를 실행 없이 분류한 뒤 멈춘다."""
++
++    def __init__(self, message, reason):
++        super().__init__(message)
++        self.reason = reason
++
++
+ #: 부속 A §4-4 — 사전 고정 후보 (이 순서) · x = (m_P, m_N, d_P, d_N) 십진 문자열
+ R_CANDIDATES = (("R1", ("1.0", "1.0", "0.10", "0.05")), ("R2", ("0.9", "0.9", "0.20", "0.10")), ("R3", ("0.8", "0.8", "0.15", "0.05")))
+ C_SCALES = ("0.9", "1.1")
+@@ -486,9 +494,10 @@ def _grid_of(unit, k, ctx, grids=None) -> tuple:
+ 
+ def run_profile_k(unit, k, ctx, runner, store, *, arrays_dir, seal_dir, ranked, J0=None, grids=None) -> dict:
+     """좌표 k 의 프로파일 — 중심 = x̂⁽⁰⁾ 의 h_k 에 가장 가까운 격자점 · (거리, t) 순 · 각 점은 안쪽 이웃이 끝난 뒤 (s2 가 그 결과에 기댄다).
+-    미평가 (영역 밖 · 중복) 점은 돌리지 않고 그대로 기록한다."""
++    미평가 (영역 밖 · 중복) 점은 돌리지 않고 그대로 기록한다. 중심 · 순서는 실행에 쓰는 저장 float 격자 (g["t"]) 의 정확 값으로 정한다 —
++    반올림 전 분수 (t_fraction) 가 아니다 (C4B2-N2)."""
+     g, idx = _grid_of(unit, k, ctx, grids)
+-    vals = [F(g["t_fraction"][i]) for i in idx]
++    vals = [F(g["t"][i]) for i in idx]
+     hk = h_exact(ranked[0]["x"], ctx["max_q"])[h.COORDS.index(k)]
+     order = profile_order(vals, hk)
+     center = order[0]
+@@ -827,26 +836,53 @@ def compat_nominal(ws, T, *, row, region, max_q) -> dict:
+     return _compat_box(ws, "0", T, row=row, region=region, max_q=max_q)
+ 
+ 
+-def width(points, k, tau, T, *, max_q) -> dict:
++def _support(e) -> dict:
++    v, g, p = e
++    return {"grid_index": p.get("grid_index"), "grid_t": p.get("grid_t"), "slot": p.get("slot"), "task_id": p.get("task_id"),
++            "run_id": p.get("run_id"), "x": [float(z) for z in p["x"]], "h_k": h.frac_str(v), "grade": g, "value": p.get("value")}
++
++
++def width(points, k, tau, T, *, max_q, row=None) -> dict:
+     """발견 폭 (v2 §4-5 · A §3-7 · B §1-3) — 충족 증인의 실제 h_k (정확) 차 > 2τ 且 둘 다 exact_feasible → WIDE · 수치 수용 증인에 기대면
+-    WIDE (수치 경계 의존) + UNRESOLVED · 아니면 NARROW_FOUND (UNRESOLVED — 좁음 확정이 아니다)."""
++    WIDE (수치 경계 의존) + UNRESOLVED · 아니면 NARROW_FOUND (UNRESOLVED — 좁음 확정이 아니다).
++    폭 주장마다 근거를 직접 결속한다 (C4B2-N3): support = 그 주장이 서는 증인 (WIDE 둘 = 최소 · 최대 h_k · NARROW_FOUND = 고려한 증인의 양 끝) ·
++    grades = 고려한 충족 증인의 등급별 수 (B §1-3 끝) · extra = 근거 증인의 부가 라벨 (WIDE 는 그 둘 · NARROW_FOUND 는 고려한 증인 전부 — 수치 수용
++    증인이면 선형 제약 경계) · 경계 행 (#0 · #4 · #5) 의 LII 폭에는 언제나 제약 절단 (v2 §1-3 · §4-5)."""
+     i, two = h.COORDS.index(k), 2 * F(tau)
+-    ex, every = [], []
++    every = []
+     for p in points:
+         if p is None or not _satisfied(p, T):
+             continue
+         g = _region_grade(p)
+         if g is None:
+             continue
+-        v = h_exact(p["x"], max_q)[i]
+-        every.append(v)
+-        if g == "exact_feasible":
+-            ex.append(v)
+-    if len(ex) >= 2 and max(ex) - min(ex) > two:
+-        return {"value": "WIDE", "unresolved": False, "observed": [h.frac_str(min(ex)), h.frac_str(max(ex))]}
+-    if len(every) >= 2 and max(every) - min(every) > two:
+-        return {"value": "WIDE (수치 경계 의존)", "unresolved": True, "observed": [h.frac_str(min(every)), h.frac_str(max(every))]}
+-    return {"value": "NARROW_FOUND", "unresolved": True, "observed": [h.frac_str(min(every)), h.frac_str(max(every))] if every else None}
++        every.append((h_exact(p["x"], max_q)[i], g, p))
++    ex = [e for e in every if e[1] == "exact_feasible"]
++
++    def ends(es):
++        return min(es, key=lambda e: e[0]), max(es, key=lambda e: e[0])
++    lo = hi = None
++    basis = every
++    if len(ex) >= 2 and ends(ex)[1][0] - ends(ex)[0][0] > two:
++        out = {"value": "WIDE", "unresolved": False}
++        lo, hi = ends(ex)
++        basis = [lo, hi]
++    elif len(every) >= 2 and ends(every)[1][0] - ends(every)[0][0] > two:
++        out = {"value": "WIDE (수치 경계 의존)", "unresolved": True}
++        lo, hi = ends(every)
++        basis = [lo, hi]
++    else:
++        out = {"value": "NARROW_FOUND", "unresolved": True}
++        if every:
++            lo, hi = ends(every)
++    extra = set(extra_labels([e[2] for e in basis], T, row=row, k=k))
++    if k == "LII" and row in ROWS_CUT:
++        extra.add("제약 절단")
++    out["observed"] = None if lo is None else [h.frac_str(lo[0]), h.frac_str(hi[0])]
++    out["grades"] = {"exact_feasible": len(ex), "numerically_accepted": len(every) - len(ex)}
++    out["support"] = [] if lo is None else ([_support(lo)] if lo is hi else [_support(lo), _support(hi)])
++    out["extra"] = sorted(extra)
++    return out
+ 
+ 
+ def _judgments(u, J_hat, sig, J_V=None, J_D=None) -> dict:
+@@ -879,7 +915,7 @@ def _read_unit(store, u, T, vfun, *, ctx, grids) -> dict:
+         pts += [{"grid_index": None, "t": s["t"], "status": "미평가", "reason": s["reason"]} for s in g["skipped"]]
+         grid_out[k] = pts
+         comp_ind[k] = {tau: compat_individual(wits, k, tau, T, row=row, max_q=q) for tau in TAUS_ALL}
+-        wid[k] = {tau: width(wits, k, tau, T, max_q=q) for tau in h.SIM_TAUS}
++        wid[k] = {tau: width(wits, k, tau, T, max_q=q, row=row) for tau in h.SIM_TAUS}
+     comp_sim = {}
+     for tau in h.SIM_TAUS:
+         rec = store["phase_b"].get(_key(name, "simultaneous", tau)) or {}
+@@ -1045,7 +1081,9 @@ def supervise_runner(*, limits, n_workers, **kw):
+ 
+ def stage_a(unit_names, ctx, runner, store, arrays, n_workers=1) -> dict:
+     """단계 A (C4-A 의 연결부) — 1 파: ρ 밖 단위의 Phase A (끝점 게이트 · J_D 빈 마스크는 미실행 기록) → 저장된 기록으로 완료 대조 →
+-    2 파: ρ (두 단일 목적 Phase A 완료 · 분모 유한 양수일 때만 · A §3-2 2)."""
++    2 파: ρ (두 단일 목적 Phase A 완료 · 분모 유한 양수일 때만 · A §3-2 2).
++    전역 중지 (C4B2-N1): 그 파의 행과 완료 대조를 기록하고, 아직 돌지 않은 ρ 는 실행 없이 NOT_RUN:RHO_PRECONDITION (사유에 중지 원문) 으로
++    분류한 뒤 멈춘다 — ρ 의 선행 조건 = 앞 파가 전역 중지 없이 끝남 · 두 단일 목적 Phase A 완료 · 분모 유한 양수."""
+     want = list(dict.fromkeys(unit_names))
+     us = [_unit_of(n) for n in want]
+     for u in us:
+@@ -1061,25 +1099,37 @@ def stage_a(unit_names, ctx, runner, store, arrays, n_workers=1) -> dict:
+             _set_not_run(store, u["unit"], *nr)
+             continue
+         wave1.append(u)
++    stop = None
+     if wave1:
+         tasks = h.phase_a_tasks(wave1, arrays, n_workers, start_id=_tids(store, len(wave1) * 2 * h.PHASE_A_N))
+         out = runner(tasks, ctx, h.run_phase_a)
+         by = _group(tasks, out["states"])
+         for u in wave1:
+             store["phase_a"][u["unit"]] = by.get(u["unit"], [])
+-        if out.get("global_stop"):
+-            _event(store, "global_stop", "phase_a wave 1", reason=out["global_stop"])
+-            raise HStop(f"단계 A 1 파 전역 중지 — {out['global_stop']}")
++        stop = out.get("global_stop") or None
++        if stop:
++            _event(store, "global_stop", "phase_a wave 1", reason=stop)
+         for u in wave1:
+             chk = phase_a_complete(store["phase_a"][u["unit"]], u["unit"], arrays)
+             _event(store, "phase_a_complete" if chk["complete"] else "phase_a_incomplete", u["unit"], reasons=chk["reasons"])
+-    rho = [rho_wave(u["row"], ctx, runner, store, arrays, n_workers) for u in us if u["objective"] == "rho"]
++    rho = []
++    for u in us:
++        if u["objective"] != "rho":
++            continue
++        try:
++            rho.append(rho_wave(u["row"], ctx, runner, store, arrays, n_workers, stopped=stop))
++        except WaveStop as e:
++            stop = e.reason
++            rho.append({"status": "STOPPED", "unit": u["unit"], "reason": stop})
++    if stop:
++        raise HStop(f"단계 A 전역 중지 — {stop} (계획 단위는 모두 기록 · 분류했다)")
+     return {"planned": want, "wave1": [u["unit"] for u in wave1], "rho": rho}
+ 
+ 
+-def rho_wave(row, ctx, runner, store, arrays, n_workers=1) -> dict:
++def rho_wave(row, ctx, runner, store, arrays, n_workers=1, stopped=None) -> dict:
+     """결합 Phase A (A §3-2 2 · §1-3) — 같은 셀의 J_V A0 · J_D A0 Phase A 가 저장된 기록으로 둘 다 완료일 때만 · 분모 Ĵ⁽⁰⁾ 가 유한한 양수일 때만.
+-    중단 · 선행 미완은 완료가 아니다 → NOT_RUN:RHO_PRECONDITION (회신 §5-3)."""
++    중단 · 선행 미완은 완료가 아니다 → NOT_RUN:RHO_PRECONDITION (회신 §5-3). stopped (앞 파의 전역 중지 원문) 가 있으면 실행 없이 같은 분류 ·
++    사유에 원문 (C4B2-N1). 이 ρ 파 자체가 전역 중지되면 행 · 완료 대조를 기록하고 WaveStop."""
+     unit = f"rho|A0|{row}"
+     if unit in store["phase_a"] or unit in store["not_run"]:
+         raise HStop(f"{unit}: 이미 기록된 결합 단위 — 다시 돌리지 않는다")
+@@ -1090,7 +1140,7 @@ def rho_wave(row, ctx, runner, store, arrays, n_workers=1) -> dict:
+     if nr:
+         _set_not_run(store, unit, *nr)
+         return {"status": "NOT_RUN", "category": nr[0], "reason": nr[1]}
+-    problems = []
++    problems = [] if not stopped else [f"앞 파 전역 중지 ({stopped}) — ρ 를 시작하지 않는다"]
+     for d in deps:
+         if d in store["not_run"]:
+             problems.append(f"{d} 미실행 ({store['not_run'][d]['category']})")
+@@ -1115,11 +1165,13 @@ def rho_wave(row, ctx, runner, store, arrays, n_workers=1) -> dict:
+     out = runner(tasks, ctx2, h.run_phase_a)
+     store["phase_a"][unit] = out["states"]
+     store["rho_denominators"][unit] = list(den)
+-    if out.get("global_stop"):
+-        _event(store, "global_stop", unit, reason=out["global_stop"])
+-        raise HStop(f"{unit}: 결합 Phase A 전역 중지 — {out['global_stop']}")
++    stop = out.get("global_stop") or None
++    if stop:
++        _event(store, "global_stop", unit, reason=stop)
+     chk = phase_a_complete(out["states"], unit, arrays)
+     _event(store, "phase_a_complete" if chk["complete"] else "phase_a_incomplete", unit, reasons=chk["reasons"])
++    if stop:
++        raise WaveStop(f"{unit}: 결합 Phase A 전역 중지 — {stop}", stop)
+     return {"status": "DONE", "denominators": list(den), "complete": chk["complete"]}
+ 
+ 
+@@ -1299,17 +1351,41 @@ def pool_records(store, cell, region) -> list:
+ 
+ 
+ def plan_counts(store) -> dict:
+-    """계획 · 실행 · 미실행 · 미해결을 따로 센다 (회신 §5-5) — 계획 = 실행 + 미실행 (단위 · 등록 탐색 각각)."""
++    """계획 · 실행 · 미실행 · 미해결을 따로 센다 (회신 §5-5 · C4B2-N1) — 단위와 지역 실행 모두 겹치지 않는 칸으로:
++    단위: 계획 = 작업을 만든 단위 (run_units = 완료 · 착수 뒤 중단 · 미착수 · 미완 기타) + 미실행 (범주별) + 미분류 (0 이어야 한다).
++    지역 실행: 계획 (단위마다 128) = 상태별 행 (COMPLETED · STARTED_INTERRUPTED · NOT_STARTED · 그 밖) + 행 수 차 (128 − 행 수) + 미실행 단위의 128 +
++    미분류 단위의 128. 완료 = 단계 A 가 저장된 행 · 봉인 배열로 기록한 완료 대조 (phase_a_complete 사건) · UNFIT = 완료 단위 중 유효 증인 0 만."""
+     planned = list(store["planned_units"])
+-    nr = Counter(store["not_run"][u]["category"] for u in planned if u in store["not_run"])
+-    run_units = [u for u in planned if u in store["phase_a"]]
+-    unfit = [u for u in run_units if not any(r.get("witness") == "valid" for r in store["phase_a"][u])]
+     n = 2 * h.PHASE_A_N
+-    pa = {"planned_units": len(planned), "run_units": len(run_units), "not_run": dict(sorted(nr.items())), "unfit_units": len(unfit),
+-          "planned_runs": n * len(planned), "executed_runs": sum(1 for u in run_units for r in store["phase_a"][u] if r.get("state") == "COMPLETED"),
+-          "not_run_runs": n * sum(nr.values()),
++    nr = Counter(store["not_run"][u]["category"] for u in planned if u in store["not_run"])
++    run_units = [u for u in planned if u in store["phase_a"] and u not in store["not_run"]]
++    unaccounted = [u for u in planned if u not in store["phase_a"] and u not in store["not_run"]]
++    checked = {e["key"]: e["kind"] == "phase_a_complete" for e in store["events"] if e["kind"] in ("phase_a_complete", "phase_a_incomplete")}
++    classes = dict.fromkeys(("완료", "착수 뒤 중단", "미착수", "미완 (기타)"), 0)
++    states, mismatch, unfit = Counter(), 0, 0
++    for u in run_units:
++        rows = store["phase_a"][u]
++        st = [r.get("state") for r in rows]
++        states.update(str(s) for s in st)
++        mismatch += n - len(rows)
++        if checked.get(u):
++            classes["완료"] += 1
++            unfit += int(h.phase_a_summary(rows)["unfit"])
++        elif rows and all(s == "NOT_STARTED" for s in st):
++            classes["미착수"] += 1
++        elif any(s in ("COMPLETED", "STARTED_INTERRUPTED") for s in st) and any(s in ("STARTED_INTERRUPTED", "NOT_STARTED") for s in st):
++            classes["착수 뒤 중단"] += 1
++        else:
++            classes["미완 (기타)"] += 1
++    pa = {"planned_units": len(planned), "run_units": len(run_units), "unit_classes": classes, "not_run": dict(sorted(nr.items())),
++          "unaccounted_units": unaccounted, "unfit_units": unfit,
++          "planned_runs": n * len(planned), "executed_runs": states.get("COMPLETED", 0), "run_states": dict(sorted(states.items())),
++          "row_count_mismatch": mismatch, "not_run_runs": n * sum(nr.values()), "unaccounted_runs": n * len(unaccounted),
++          "global_stops": [e.get("reason") for e in store["events"] if e["kind"] == "global_stop"],
++          "identity": {"units": "planned_units = run_units + Σ not_run + |unaccounted_units| · run_units = Σ unit_classes",
++                       "runs": "planned_runs = Σ run_states + row_count_mismatch + not_run_runs + unaccounted_runs"},
+           "note": "이 기록이 본 단위의 계획 · 실행 · 미실행이다. 건조의 끝점 게이트만 반영한 계획 수 (7,040) 는 실행 가능 수 · 완료 수가 아니며, "
+-                  "J_D 마스크 · ρ 선행 · UNFIT 은 여기서 따로 센다"}
++                  "J_D 마스크 · ρ 선행 · UNFIT 은 여기서 따로 센다. run_units 는 작업을 만든 단위다 (완료와 같은 뜻이 아니다 — unit_classes 로 나눈다)"}
+     pb = {}
+     for key, reg in store["registry"].items():
+         keys = [k for k, kind in reg.items() if kind != "phase_a"]
