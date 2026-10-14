@@ -10986,7 +10986,7 @@
       "found_by": "codex 10-14 DEM 언로딩 키트 재확인 (고정 핀 a30fe150e · 203 파일 blob 대조 · 실제 판독 함수 · 합성 입력 · DEM · LIGGGHTS · Bash 러너 실행 없음)",
       "opened_in": "docs/reviews/codex_review_dem_unloading_kit_reverify_20261014.md",
       "title": "새 문법 fixture 가 단일값 ave/time (전역 스칼라) 를 벡터 f_gr_av[1] 로 읽는다 — 고정 소스 (fix_ave_time.cpp:350–368 · variable.cpp:1182 · 1198 · 1315) 상 GA 첫 창 뒤 Mismatched fix 로 멈춰 반복 이동 · 상태 복귀 · GB 재개를 시험할 수 없다 · 모의기는 f_* 를 0 으로 둬 판별 못 함",
-      "note": "같은 결함을 우리 ibb 첫 실행 (job 285220 · 같은 핀 · 10-14 19:26) 이 실제 바이너리에서 먼저 보였다 = SELF-115 (같은 고침).  고침 039abb141 = 본 키트 꼴 (입력 셋 · f_gr_av[1] 유효) + 타입 음성 검사 ⑰ (--selftest · --check) · 재생성 · 재봉인.  판정문의 해결 증거 중 남은 것 = 수정 키트의 실제 바이너리 문법 PASS (실행 2).",
+      "note": "같은 결함을 우리 ibb 첫 실행 (job 285220 · 같은 핀 · 10-14 19:26) 이 실제 바이너리에서 먼저 보였다 = SELF-115 (같은 고침).  고침 039abb141 = 본 키트 꼴 (입력 셋 · f_gr_av[1] 유효) + 타입 음성 검사 ⑰ (--selftest · --check) · 재생성 · 재봉인.  판정문의 해결 증거 중 남은 것 = 수정 키트의 실제 바이너리 문법 PASS (실행 2).  10-14 밤: 수정 묶음 (e271bdd48) 에 R/EXT 실행 전 문법 PASS 사전 점검 (GRAMMAR_VERDICT · 같은 LIGGGHTS 바이너리 · 덱 봉인값) 이 들어감 — 실행 2 의 grammar_verdict.json 이 그 증거가 된다 (러너 스크립트 해시는 대조하지 않아 이번 수정이 실행 2 를 무효로 만들지 않음).",
       "claimed_fixed_sha": "039abb141",
       "evidence_tests": [
         "docs/data/ps45_unload_20261009/history_test/make_history_decks.py --selftest ⑰ (고치기 전 grammar 1 실패 · 고친 뒤 0) · --check"
@@ -10995,32 +10995,50 @@
     {
       "id": "ULKRR-02",
       "severity": "P1",
-      "status": "open",
+      "status": "claimed_fixed",
       "owner": "claude",
       "found_by": "codex 10-14 DEM 언로딩 키트 재확인 (고정 핀 a30fe150e · 203 파일 blob 대조 · 실제 판독 함수 · 합성 입력 · DEM · LIGGGHTS · Bash 러너 실행 없음)",
       "opened_in": "docs/reviews/codex_review_dem_unloading_kit_reverify_20261014.md",
       "title": "RESUME 사건이 없어도 _supersede 가 같은 step 중복 행을 지운다 — 정상 UT k=3 확인 단 앞에 steady=0 행 하나를 더하면 n_superseded_rows 1 · primary OK (ρ 0.2026077873428664 %) · UVa ALLOW (합성 입력 · 실제 파일 → 판독 → 선택 → 관문)",
-      "note": "최소 해결 = 정식 재개 경계 (RESUME 사건 · 시도 기록) 에서만 행 교체 · 그 밖 중복 · 역행 step/k = 미식별 · no-RESUME 반례와 진짜 RESUME 양성 대조를 선택 · 관문까지.  수정 계획 docs/reviews/dem_unloading_kit_reverify_fix_plan_20261014.md Q1."
+      "note": "최소 해결 = 정식 재개 경계 (RESUME 사건 · 시도 기록) 에서만 행 교체 · 그 밖 중복 · 역행 step/k = 미식별 · no-RESUME 반례와 진짜 RESUME 양성 대조를 선택 · 관문까지.  수정 계획 docs/reviews/dem_unloading_kit_reverify_fix_plan_20261014.md Q1.  ✅ 고침 e271bdd48 (시험 먼저 b1121b6b6 · 수정 계획 Q1–Q3 = 1저자 10-14 \"권고대로 해요\") · Codex 짧은 재확인 요청서 docs/reviews/codex_dem_unloading_kit_reverify_fix_recheck_request_20261014.md.",
+      "claimed_fixed_sha": "e271bdd48",
+      "evidence_tests": [
+        "docs/data/ps45_unload_20261009/ul_reader.py --selftest R28 · R10 (고치기 전 반례 6 실패 → 0 · 정상 재개 양성 유지)",
+        "docs/data/ps45_unload_20261009/ul_runner_test.py M23 (러너 수준 정상 재개)",
+        "docs/reviews/dem_unloading_kit_reverify_fix_evidence_20261014/ (Linux 전체 로그 · rc 0)"
+      ]
     },
     {
       "id": "ULKRR-03",
       "severity": "P1",
-      "status": "open",
+      "status": "claimed_fixed",
       "owner": "claude",
       "found_by": "codex 10-14 DEM 언로딩 키트 재확인 (고정 핀 a30fe150e · 203 파일 blob 대조 · 실제 판독 함수 · 합성 입력 · DEM · LIGGGHTS · Bash 러너 실행 없음)",
       "opened_in": "docs/reviews/codex_review_dem_unloading_kit_reverify_20261014.md",
       "title": "러너가 기록한 판독기 실패 reader_rc ≠ 0 을 다음 관문 (_job_restored) 이 안 읽는다 — 수정 안 한 실제 Python CLI 가 RESTORED · 기준 파일을 발행한 뒤 출력 flush 에서 rc 120 으로 끝나도 UB ALLOW (러너 합산 기록은 소스대로 재구성 · 전체 Bash 러너 실행은 아님)",
-      "note": "최소 해결 = 완료 영수증의 fails=0 과 reader_rc=0 둘 다 필수 · 누락 · 비정수 · 비영 = 거부 · 파일 발행 뒤 실패 음성 · 정상 UNIDENTIFIED/rc 0 양성 대조 (판독 오류를 삼켜 rc 0 으로 바꾸지 않는다).  수정 계획 Q2."
+      "note": "최소 해결 = 완료 영수증의 fails=0 과 reader_rc=0 둘 다 필수 · 누락 · 비정수 · 비영 = 거부 · 파일 발행 뒤 실패 음성 · 정상 UNIDENTIFIED/rc 0 양성 대조 (판독 오류를 삼켜 rc 0 으로 바꾸지 않는다).  수정 계획 Q2.  ✅ 고침 e271bdd48 (시험 먼저 b1121b6b6 · 수정 계획 Q1–Q3 = 1저자 10-14 \"권고대로 해요\") · Codex 짧은 재확인 요청서 docs/reviews/codex_dem_unloading_kit_reverify_fix_recheck_request_20261014.md.",
+      "claimed_fixed_sha": "e271bdd48",
+      "evidence_tests": [
+        "docs/data/ps45_unload_20261009/ul_reader.py --selftest R29 (6 → 0 · 실제 CLI stdout 닫힘 rc 120 재현 뒤 거부)",
+        "docs/data/ps45_unload_20261009/ul_runner_test.py M20 (2 → 0) · 양성 M6 · M17",
+        "docs/reviews/dem_unloading_kit_reverify_fix_evidence_20261014/"
+      ]
     },
     {
       "id": "ULKRR-04",
       "severity": "P2",
-      "status": "open",
+      "status": "claimed_fixed",
       "owner": "claude",
       "found_by": "codex 10-14 DEM 언로딩 키트 재확인 (고정 핀 a30fe150e · 203 파일 blob 대조 · 실제 판독 함수 · 합성 입력 · DEM · LIGGGHTS · Bash 러너 실행 없음)",
       "opened_in": "docs/reviews/codex_review_dem_unloading_kit_reverify_20261014.md",
       "title": "소수 ID 가 int() 로 잘려 정상 입자로 쓰인다 (UN 첫 ID 1→1.5 = RESTORED · UB 허용 · 끝점 ID 2→2.5 = primary OK) · 필수 id 열 결손은 관측 결손 대신 KeyError",
-      "note": "정상 LIGGGHTS 출력이 소수 ID 를 만든다는 주장 아님 — 손상 입력 방어 계약의 결함.  최소 해결 = 필수 열 · 파서 오류 먼저 반환 · ID = 유한 · 양 · 정확한 정수 검사 뒤 변환 (S0 · 현재 원자 · 복원 관측 · 쌍 참조) · 회귀 둘.  수정 계획 Q3."
+      "note": "정상 LIGGGHTS 출력이 소수 ID 를 만든다는 주장 아님 — 손상 입력 방어 계약의 결함.  최소 해결 = 필수 열 · 파서 오류 먼저 반환 · ID = 유한 · 양 · 정확한 정수 검사 뒤 변환 (S0 · 현재 원자 · 복원 관측 · 쌍 참조) · 회귀 둘.  수정 계획 Q3.  ✅ 고침 e271bdd48 (시험 먼저 b1121b6b6 · 수정 계획 Q1–Q3 = 1저자 10-14 \"권고대로 해요\") · Codex 짧은 재확인 요청서 docs/reviews/codex_dem_unloading_kit_reverify_fix_recheck_request_20261014.md.",
+      "claimed_fixed_sha": "e271bdd48",
+      "evidence_tests": [
+        "docs/data/ps45_unload_20261009/ul_reader.py --selftest R30 (7 → 0 · KeyError → 사유 있는 미식별)",
+        "docs/data/ps45_unload_20261009/ul_lib.py --selftest L13 · F12 · C3",
+        "docs/reviews/dem_unloading_kit_reverify_fix_evidence_20261014/"
+      ]
     }
   ]
 }
