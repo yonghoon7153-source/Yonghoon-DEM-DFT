@@ -1,0 +1,38 @@
+FFFFFF                                                                   [100%]
+=================================== FAILURES ===================================
+_ test_n1_a_a_trusted_list_binds_the_five_modules_to_start_end_and_acceptance __
+tests/test_reil_c4e_fix.py:173: in test_n1_a_a_trusted_list_binds_the_five_modules_to_start_end_and_acceptance
+    assert run.load_sources(src, src_sha) == entries
+           ^^^^^^^^^^^^^^^^
+E   AttributeError: module 'scripts.reil_c4e_run' has no attribute 'load_sources'
+_ test_n1_b_missing_extra_or_malformed_entries_and_list_sha_mismatch_stop_before_util_import _
+tests/test_reil_c4e_fix.py:223: in test_n1_b_missing_extra_or_malformed_entries_and_list_sha_mismatch_stop_before_util_import
+    run.prepare(out=out, sources=p, sources_sha256=sha, **base)
+E   TypeError: prepare() got an unexpected keyword argument 'sources'
+_ test_n1_c_unapproved_bytes_that_stay_unchanged_from_start_to_end_are_refused _
+tests/test_reil_c4e_fix.py:251: in test_n1_c_unapproved_bytes_that_stay_unchanged_from_start_to_end_are_refused
+    run.prepare(out=tmp_path / "out", sources=p, sources_sha256=sha, **base)
+E   TypeError: prepare() got an unexpected keyword argument 'sources'
+_ test_n1_d_a_module_changed_during_the_run_fails_acceptance_through_the_real_finalize _
+tests/test_reil_c4e_fix.py:281: in test_n1_d_a_module_changed_during_the_run_fails_acceptance_through_the_real_finalize
+    assert run.identity_problems(start, MODS) == []
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   TypeError: identity_problems() takes 1 positional argument but 2 were given
+_________ test_n1_e_the_run_cli_requires_the_trusted_list_and_its_sha __________
+tests/test_reil_c4e_fix.py:309: in test_n1_e_the_run_cli_requires_the_trusted_list_and_its_sha
+    ap = run.build_parser()
+         ^^^^^^^^^^^^^^^^
+E   AttributeError: module 'scripts.reil_c4e_run' has no attribute 'build_parser'
+_____ test_n1_f_seal_sources_writes_exactly_the_five_paths_and_round_trips _____
+tests/test_reil_c4e_fix.py:325: in test_n1_f_seal_sources_writes_exactly_the_five_paths_and_round_trips
+    r = run.seal_sources(out)
+        ^^^^^^^^^^^^^^^^
+E   AttributeError: module 'scripts.reil_c4e_run' has no attribute 'seal_sources'
+=========================== short test summary info ============================
+FAILED tests/test_reil_c4e_fix.py::test_n1_a_a_trusted_list_binds_the_five_modules_to_start_end_and_acceptance
+FAILED tests/test_reil_c4e_fix.py::test_n1_b_missing_extra_or_malformed_entries_and_list_sha_mismatch_stop_before_util_import
+FAILED tests/test_reil_c4e_fix.py::test_n1_c_unapproved_bytes_that_stay_unchanged_from_start_to_end_are_refused
+FAILED tests/test_reil_c4e_fix.py::test_n1_d_a_module_changed_during_the_run_fails_acceptance_through_the_real_finalize
+FAILED tests/test_reil_c4e_fix.py::test_n1_e_the_run_cli_requires_the_trusted_list_and_its_sha
+FAILED tests/test_reil_c4e_fix.py::test_n1_f_seal_sources_writes_exactly_the_five_paths_and_round_trips
+6 failed in 0.24s
