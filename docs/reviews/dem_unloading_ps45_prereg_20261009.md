@@ -828,3 +828,11 @@ S1 · S2 · S4 문턱 · P_meas 1 MPa · 사다리 · Δz_A · Δz_B · v₀ · 
   ⓓ 판 법선력 부호 −1 = 표 (`plate_fn_compressive_sign` 바꿀 것 없음) — 결과 전 기대 (키트 README §1-3) 와 전부 같다.  컨테이너 재판독 = 같은 판정 JSON ·
   본 키트 복원 판정의 이력 시험 칸 식 = 통과.  증거 = `docs/reviews/dem_unloading_history_test_20261014/` (보고 묶음 바이트 그대로 · sha256 `be0acbd7…`) · 원장 `ULK-02` claimed_fixed.
   ⛔ 본 R · 10:0 연장 · U 의 GO 아님 — 다음 = §13-6 ④ Codex 키트 재검토 (`docs/reviews/codex_dem_unloading_kit_request_20261013.md` · 이 결과 동봉).
+
+#### 13-7-5. Codex 키트 재검토 (10-14 · 고정 핀 `2783061ea`) = **HOLD** (기록 · 규칙 · 값 변경 없음)
+
+- 판정문 `docs/reviews/codex_review_dem_unloading_kit_20261014.md` · 증거 `docs/reviews/codex_dem_unloading_kit_review_evidence_20261014/` (묶음 source 197 = 핀과 바이트 같음 · 탐침은 실행하지 않음).
+- 수용: 실제 이력 시험 H0–H5 · SYN · 총힘 시점 (독립 재판독 같음) · 사전등록 물리 목표 · 0.10 %p 를 바꿀 근거 없음.
+- 새 P1 여섯 `ULKR-01`~`06` (확인 두 단 유효성 · 첫 교차 합집합 누락 · UTc 가 UT 주 값을 잃음 · NaN 행 버린 뒤 S3 PASS · 불완전 관측으로 RESTORED · 일부 JOB RESUME 반복) · P2 여섯 `07`~`12` (재접촉 예산 · SYN 필수 · UK 세 창 · 중력 팔 유지 · S3 g · 판독 rc · ε / W_proxy 보고).
+- 닫힘 (원장 verified · 범위 한정): `ULK-01` · `ULK-02` · `ULR1-02` (해당 반례) · `ULR1-04` (물리 창) — 나머지 UL · ULR1 = 부분 (원장 note).
+- ⬜ 수정 계획 `docs/reviews/dem_unloading_kit_fix_plan_20261014.md` (Q1–Q9 · 1저자 비준 대기) → 시험 먼저 → Codex 짧은 재확인 → GO → §13-6 순서 그대로.  ⛔ 본 R · 10:0 연장 · U = 그 뒤.

@@ -1,0 +1,41 @@
+  ✓ S1 정상 = H0–H5 전부 PASS · rc 0
+  ✓ S1 정상: H5 안에서 잘못된 ID = TECH · 0 뿐 = INCONCLUSIVE 로 분류됐다
+  ✓ S1 정상: sentinel 종류마다 있다 (primitive 4 · mesh 4 · pair 5)
+  ✓ S1 정상: 정보 — 자동 run 끝 restart 없음 (1500 만) · 총힘 출력 시점 OK · SYN 문법 OK
+  ✓ S2 H1 deltaMax 하나 다름 (C6 PRE) = H1 FAIL
+  ✓ S3 H2 pair 방향 바뀜 + shear 부호 바뀜 = 정규화로 PASS
+  ✓ S4 H2 pair 방향 바뀜 · shear 부호 그대로 = FAIL (부호 정규화가 실제로 대조한다)
+  ✓ S5 H2 같은 값 중복 키 = PASS (중복 수 기록)
+  ✓ S6 H2 다른 값 중복 키 = TECH
+  ✓ S7 열 하나 빠짐 (C6 PRE) = H1 TECH (H0 도 TECH)
+  ✓ S8 비유한 값 (nan) = H1 TECH
+  ✓ S9 reset 로그 하나 빠짐 (C6 tracker) = H0 TECH
+  ✓ S10 Loop time NP ≠ 단계 NP (C6 on 1 procs) = H0 TECH
+  ✓ S11 바닥 소거가 안 보임 (Cbot = 생산자) = H3 FAIL
+  ✓ S12 바닥 소거 뒤 POST deltaMax = 현재 겹침 (다시 참) = H3 PASS — "setup 뒤 4 열 0" 을 기대하지 않는다
+  ✓ S13 바닥 소거 뒤 POST deltaMax 가 접촉 중인데 0 = H3 FAIL (현재 겹침 재평가와 모순)
+  ✓ S14 판 소거가 안 보임 (Ctop = 생산자) = H4 FAIL
+  ✓ S15 판 소거가 바닥 이력도 지움 = H4 FAIL (손대지 않은 벽 유지)
+  ✓ S16 잘못된 ID 가 통과 (BAD rc 0) = H5 FAIL
+  ✓ S17 생산자 write_dump 묶음 ≠ in-run 덤프 = H0 TECH
+  ✓ S18 총힘에 중력 없음 (접촉 없는 입자 fz = 0) = 정보 force_timing FAIL (H0–H5 와 따로)
+  ✓ S19 C4 단계 폴더 없음 = H2 TECH (나머지는 판정)
+  ✓ S20 행 순서 섞임 = PASS
+  ✓ S21 0 뿐 fixture 를 주 소비자 자리 (C6) 에 넣으면 H1 = INCONCLUSIVE (PASS 아님)
+  ✓ S22 run 끝 자동 restart (auto_2000) = 정보 auto_end_of_run_restart True
+  ✓ S23 SYN 판 접촉 개수 (영역) ≠ 벽 local 덤프 = 정보 SYN FAIL (판정 밖)
+  ✓ S30 SYN 판 접촉 법선력 (입자가 받는 힘) 이 모두 −z = 정보 plate_fn_sign −1 (압축 = 음수 약속)
+  ✓ S31 SYN 판 접촉 법선력이 모두 +z = 정보 plate_fn_sign +1 (약속을 거꾸로 — 본 키트 표를 고칠 근거 · SYN 은 PASS)
+  ✓ S32 SYN 판 접촉 법선력 부호가 섞임 = 정보 MIXED · SYN FAIL
+  ✓ S24 생산자 폴더 없음 = H0–H5 TECH · rc ≠ 0
+  ✗ S25 러너 모의: 전 단계 → 읽는 쪽 rc 0 · H0–H5 PASS · 보고 묶음 + sha256  — 
+  ✗ S25 러너 모의: 단계 순서 = P · C6 · C4 · Ebot · Cbot · Etop · Ctop · Enone · Cnone · BAD · SYN · PZ · CZ  — 
+  ✗ S25 러너 모의: 단계 NP = 6 (C4 만 4) · mpirun 인자 --oversubscribe --bind-to none  — 
+  ✗ S25 러너 모의: run_manifest 에 이탈 (allow_other_lmp=1) 기록 · kit 사본  — 
+  ✗ S26 러너 모의: 등록 빌드가 아닌 LMP (ALLOW_OTHER_LMP 없음) = 사전 점검에서 멈춤 · 런 폴더 없음  — 
+  ✗ S27 러너 모의: 생산자 실패 = 뒤 소비 단계 없음 · 0 fixture 는 돈다 · 읽는 쪽 rc 2  — 
+  ✗ S28 러너 모의: NP_ALT = NP 거부 (H2 가 시험되지 않는다)  — 
+  ✗ S29 러너 모의: --preflight-only = 런 · kit 사본 없음  — 
+selftest: FAIL (8 실패)
+
+STDERR

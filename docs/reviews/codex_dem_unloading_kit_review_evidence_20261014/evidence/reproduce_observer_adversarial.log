@@ -1,0 +1,51 @@
+{
+  "malformed_input": {
+    "before": "OK",
+    "bad_force": "UNIDENTIFIED",
+    "nan": "OK",
+    "parser_ok": false,
+    "rho": 0.2026077873428664
+  },
+  "wrong_wall_step_accepted": true,
+  "one_uk_s2": 0.01000204,
+  "gravity_floor": {
+    "g_default": {
+      "status": "PASS",
+      "R": 1e-06,
+      "numerator": 9.81e-12,
+      "denominator": 9.81e-06,
+      "n_valid": 1,
+      "global_norm_diag": 1e-06,
+      "why": []
+    },
+    "g_actual": {
+      "status": "FAIL",
+      "R": 1.0,
+      "numerator": 9.81e-12,
+      "denominator": 9.81e-12,
+      "n_valid": 1,
+      "global_norm_diag": 1.0,
+      "why": []
+    }
+  },
+  "calls": {
+    "eps_sphere": [
+      {
+        "file": "ul_observers.py",
+        "line": 189
+      },
+      {
+        "file": "ul_observers.py",
+        "line": 189
+      }
+    ],
+    "w_proxy": [
+      {
+        "file": "ul_observers.py",
+        "line": 196
+      }
+    ]
+  }
+}
+
+STDERR

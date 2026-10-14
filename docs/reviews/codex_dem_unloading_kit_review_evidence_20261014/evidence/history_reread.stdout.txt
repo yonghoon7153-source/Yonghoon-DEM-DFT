@@ -1,0 +1,16 @@
+HISTORY_VERDICT H0=PASS H1=PASS H2=PASS H3=PASS H4=PASS H5=PASS
+  H0 PASS          문법 · 기술 (rc · 배너 · NP · 덤프 · reset 로그)
+  H1 PASS          같은 NP round-trip
+      primitive PASS · mesh PASS · pair PASS · sentinel {'primitive': 4, 'mesh': 4, 'pair': 5} · 같은 값 중복 0
+  H2 PASS          NP 바꿈 round-trip
+      primitive PASS · mesh PASS · pair PASS · sentinel {'primitive': 4, 'mesh': 4, 'pair': 5} · 같은 값 중복 0
+  H3 PASS          바닥 (primitive) 만 소거
+      pre_erase_observation=PASS · pre_all_zero=True · post_regen_ok=True · sentinel_erased=4 / 4 · control=PASS
+  H4 PASS          판 (mesh) 만 소거
+      pre_erase_observation=PASS · post_regen_ok=True · sentinel_erased=4 / 4 · control=PASS
+  H5 PASS          결손 · 0 뿐 분류
+      잘못된 ID → TECH (기대 TECH) · 0 뿐 → INCONCLUSIVE (기대 INCONCLUSIVE)
+  정보: 자동 restart step [1500] — run 끝 자동 restart 없음 — 주기 배수만 (10:0 연장 끝 3,660,000 은 명시 write_restart 가 필요)
+  정보: 총힘 출력 시점 (Z 입자 fz = −m g) = PASS
+  정보: SYN 문법 미리 지나가기 = PASS {'rc0_no_error': True, 'markers': True, 'dt_after_read_restart': True, 'Ps_signed_positive': True, 'count_W0': True, 'n_W0': 4, 'fn_sign_uniform': True, 'count_W1': True, 'n_W1': 3, 'lift_mesh_z': True, 'plate_z_formula': True, 'restart_end_written': True}
+  rc = 0 (0 = H0–H5 전부 기대대로)

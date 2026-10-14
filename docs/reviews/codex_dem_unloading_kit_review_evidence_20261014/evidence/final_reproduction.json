@@ -1,0 +1,76 @@
+{
+  "source_checks_before": [
+    {
+      "manifest": "source_manifest.json",
+      "pin": "2783061ead9f192ab742a2f0b14b0182a98a4966",
+      "count": 197,
+      "failures": []
+    },
+    {
+      "manifest": "upstream_manifest.json",
+      "pin": "3d5c00f20519e6bb6eb6756f51f1ad36564e649d",
+      "count": 47,
+      "failures": []
+    }
+  ],
+  "runs": [
+    {
+      "probe": "history_actual",
+      "rc": 0,
+      "seconds": 0.328,
+      "log": "evidence/reproduce_history_actual.log"
+    },
+    {
+      "probe": "history_restore",
+      "rc": 0,
+      "seconds": 0.312,
+      "log": "evidence/reproduce_history_restore.log"
+    },
+    {
+      "probe": "reader_adversarial",
+      "rc": 0,
+      "seconds": 0.688,
+      "log": "evidence/reproduce_reader_adversarial.log"
+    },
+    {
+      "probe": "reader_continuation",
+      "rc": 0,
+      "seconds": 0.359,
+      "log": "evidence/reproduce_reader_continuation.log"
+    },
+    {
+      "probe": "observer_adversarial",
+      "rc": 0,
+      "seconds": 0.235,
+      "log": "evidence/reproduce_observer_adversarial.log"
+    },
+    {
+      "probe": "deck_control",
+      "rc": 0,
+      "seconds": 0.203,
+      "log": "evidence/reproduce_deck_control.log"
+    },
+    {
+      "probe": "kit_byte_checks",
+      "rc": 0,
+      "seconds": 0.5,
+      "log": "evidence/reproduce_kit_byte_checks.log"
+    }
+  ],
+  "source_checks_after": [
+    {
+      "manifest": "source_manifest.json",
+      "pin": "2783061ead9f192ab742a2f0b14b0182a98a4966",
+      "count": 197,
+      "failures": []
+    },
+    {
+      "manifest": "upstream_manifest.json",
+      "pin": "3d5c00f20519e6bb6eb6756f51f1ad36564e649d",
+      "count": 47,
+      "failures": []
+    }
+  ],
+  "native_simulation_executed": false,
+  "shell_runner_executed_by_this_script": false
+}

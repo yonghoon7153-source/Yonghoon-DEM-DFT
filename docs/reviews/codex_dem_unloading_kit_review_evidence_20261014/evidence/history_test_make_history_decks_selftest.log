@@ -1,0 +1,142 @@
+  ✓ ① 표: 입자 이름 겹침 없음 · 집합 B · T · P · Z
+  ✓ ① 표: 마지막 step = load + shear + hold = 2000
+  ✓ ① 표: 자동 restart 주기는 run 끝 step (10 · 1010 · 2000) 의 약수가 아니다 (끝 자동 쓰기를 가려낸다)
+  ✓ ② 머리: r8 원 덱 (리포 tgz) 에서 뽑는다 · 멤버 sha256 = 표
+  ✓ ② 머리: m1 가 r8 에서 정확히 하나
+  ✓ ② 머리: m2 가 r8 에서 정확히 하나
+  ✓ ② 머리: m3 가 r8 에서 정확히 하나
+  ✓ ② 머리: m4 가 r8 에서 정확히 하나
+  ✓ ② 머리: m5 가 r8 에서 정확히 하나
+  ✓ ② 머리: m6 가 r8 에서 정확히 하나
+  ✓ ② 머리: m7 가 r8 에서 정확히 하나
+  ✓ ② 머리: m8 가 r8 에서 정확히 하나
+  ✓ ② 머리: m9 가 r8 에서 정확히 하나
+  ✓ ② 머리: pair_style 가 r8 에서 정확히 하나
+  ✓ ② 머리: pair_coeff 가 r8 에서 정확히 하나
+  ✓ ② 머리: zwall_bot 가 r8 에서 정확히 하나
+  ✓ ② 머리: gravi 가 r8 에서 정확히 하나
+  ✓ ② 머리: integr 가 r8 에서 정확히 하나
+  ✓ ② 머리: top_mesh 가 r8 에서 정확히 하나
+  ✓ ② 머리: zwall_top 가 r8 에서 정확히 하나
+  ✓ ② 머리: damp_relax 가 r8 에서 정확히 하나
+  ✓ ② 머리: energy 가 r8 에서 정확히 하나
+  ✓ ② 머리: pressMPa 가 r8 에서 정확히 하나
+  ✓ ② 머리: strs 가 r8 에서 정확히 하나
+  ✓ ② 머리: ke 가 r8 에서 정확히 하나
+  ✓ ② 머리: cpl 가 r8 에서 정확히 하나
+  ✓ ② 머리: dt 가 r8 에서 정확히 하나
+  ✓ ② 머리: r_AM_P 가 r8 에서 정확히 하나
+  ✓ ② 머리: r_AM_S 가 r8 에서 정확히 하나
+  ✓ ② 머리: r_SE 가 r8 에서 정확히 하나
+  ✓ ② 머리: 이완 감쇠 = viscous 1.0e-5 (r8 145 행 · 압축 0.5 아님)
+  ✓ ② 머리: 중력 9.81 (정착 98.1 아님)
+  ✓ ② 머리: 반경 r_AM_P 4.5e-3 · r_AM_S 2.0e-3 · r_SE 0.5e-3 · 밀도 4800 · 4800 · 2000 (원 덱 글자)
+  ✓ ③ 설계: 계산된다
+  ✓ ③ 설계: 의도한 접촉만 겹친다 (B–바닥 4 · T–판 4 · 쌍 5 · 주기 영상 포함 · 그 밖 0)
+  ✓ ③ 설계: 의도 밖 이웃 (r_i + r_j + skin 안) 없음 — setup 의 분리 소거 경로 (surfacesClose) 를 피한다
+  ✓ ③ 설계: 판 접촉점이 대각 이음매 (x = y) 에서 접촉 반경 × 2 밖
+  ✓ ③ 설계: 상자 안 · 주기 경계 x · y 에서 반경 밖
+  ✓ ③ 설계: 모든 sentinel 이 압축 가지 (f_hys > 0 · 점착 가지 아님) — 덱 m6 · m8 · 이력 식
+  ✓ ③ 설계: 접선 이력 ≤ Coulomb 한도의 50 % (미끄럼 clip 경계 밖)
+  ✓ ③ 설계: 접선 속도 ⊥ 법선 (법선 감쇠 · 투영 없음)
+  ✓ ③ 설계: 포화 · 비포화 둘 다 있다 (벽 · 쌍)
+  ✓ ③ 설계: 쌍 하나 이상이 NP 4 분할면 (x 또는 y = 0.025) 을 걸친다
+  ✓ ③ 설계: 0 fixture = 접촉 0 (모든 겹침 음수)
+  ✓ ④ 덱: 여덟 개가 만들어진다
+  ✓ ④ producer: 채우지 않은 @…@ · 탭 · `$` 꼴 · 주소 / 사용자 이름 없음
+  ✓ ④ producer: 쓰인 ${…} 가 다 정의됨 (덱 안 · CLI out · plate_stl · ckpt)
+  ✓ ④ producer: run 사이 위험한 읽기 없음 (⑭a — write_restart 뒤 ke · run 0 뒤 메시 힘 · 없는 fix)
+  ✓ ④ producer: 살아 있는 equal 정의 다음 줄 = 얼림 (⑭b)
+  ✓ ④ producer: if 조건 = 숫자 · 비교 · 논리만
+  ✓ ④ producer: 함께 사는 pair/gran/local ≤ 1 · wall/gran/local ≤ 1 · 내리는 compute 를 쓰는 덤프 없음 (⑮ — 첫 ibb 실행 TECH)
+  ✓ ④ producer: r8 머리 cpl 글자 그대로 (내리기만 하고 고치지 않는다)
+  ✓ ④ producer_zero: 채우지 않은 @…@ · 탭 · `$` 꼴 · 주소 / 사용자 이름 없음
+  ✓ ④ producer_zero: 쓰인 ${…} 가 다 정의됨 (덱 안 · CLI out · plate_stl · ckpt)
+  ✓ ④ producer_zero: run 사이 위험한 읽기 없음 (⑭a — write_restart 뒤 ke · run 0 뒤 메시 힘 · 없는 fix)
+  ✓ ④ producer_zero: 살아 있는 equal 정의 다음 줄 = 얼림 (⑭b)
+  ✓ ④ producer_zero: if 조건 = 숫자 · 비교 · 논리만
+  ✓ ④ producer_zero: 함께 사는 pair/gran/local ≤ 1 · wall/gran/local ≤ 1 · 내리는 compute 를 쓰는 덤프 없음 (⑮ — 첫 ibb 실행 TECH)
+  ✓ ④ producer_zero: r8 머리 cpl 글자 그대로 (내리기만 하고 고치지 않는다)
+  ✓ ④ consumer: 채우지 않은 @…@ · 탭 · `$` 꼴 · 주소 / 사용자 이름 없음
+  ✓ ④ consumer: 쓰인 ${…} 가 다 정의됨 (덱 안 · CLI out · plate_stl · ckpt)
+  ✓ ④ consumer: run 사이 위험한 읽기 없음 (⑭a — write_restart 뒤 ke · run 0 뒤 메시 힘 · 없는 fix)
+  ✓ ④ consumer: 살아 있는 equal 정의 다음 줄 = 얼림 (⑭b)
+  ✓ ④ consumer: if 조건 = 숫자 · 비교 · 논리만
+  ✓ ④ consumer: 함께 사는 pair/gran/local ≤ 1 · wall/gran/local ≤ 1 · 내리는 compute 를 쓰는 덤프 없음 (⑮ — 첫 ibb 실행 TECH)
+  ✓ ④ consumer: r8 머리 cpl 글자 그대로 (내리기만 하고 고치지 않는다)
+  ✓ ④ erase_bot: 채우지 않은 @…@ · 탭 · `$` 꼴 · 주소 / 사용자 이름 없음
+  ✓ ④ erase_bot: 쓰인 ${…} 가 다 정의됨 (덱 안 · CLI out · plate_stl · ckpt)
+  ✓ ④ erase_bot: run 사이 위험한 읽기 없음 (⑭a — write_restart 뒤 ke · run 0 뒤 메시 힘 · 없는 fix)
+  ✓ ④ erase_bot: 살아 있는 equal 정의 다음 줄 = 얼림 (⑭b)
+  ✓ ④ erase_bot: if 조건 = 숫자 · 비교 · 논리만
+  ✓ ④ erase_bot: 함께 사는 pair/gran/local ≤ 1 · wall/gran/local ≤ 1 · 내리는 compute 를 쓰는 덤프 없음 (⑮ — 첫 ibb 실행 TECH)
+  ✓ ④ erase_bot: r8 머리 cpl 글자 그대로 (내리기만 하고 고치지 않는다)
+  ✓ ④ erase_top: 채우지 않은 @…@ · 탭 · `$` 꼴 · 주소 / 사용자 이름 없음
+  ✓ ④ erase_top: 쓰인 ${…} 가 다 정의됨 (덱 안 · CLI out · plate_stl · ckpt)
+  ✓ ④ erase_top: run 사이 위험한 읽기 없음 (⑭a — write_restart 뒤 ke · run 0 뒤 메시 힘 · 없는 fix)
+  ✓ ④ erase_top: 살아 있는 equal 정의 다음 줄 = 얼림 (⑭b)
+  ✓ ④ erase_top: if 조건 = 숫자 · 비교 · 논리만
+  ✓ ④ erase_top: 함께 사는 pair/gran/local ≤ 1 · wall/gran/local ≤ 1 · 내리는 compute 를 쓰는 덤프 없음 (⑮ — 첫 ibb 실행 TECH)
+  ✓ ④ erase_top: r8 머리 cpl 글자 그대로 (내리기만 하고 고치지 않는다)
+  ✓ ④ erase_none: 채우지 않은 @…@ · 탭 · `$` 꼴 · 주소 / 사용자 이름 없음
+  ✓ ④ erase_none: 쓰인 ${…} 가 다 정의됨 (덱 안 · CLI out · plate_stl · ckpt)
+  ✓ ④ erase_none: run 사이 위험한 읽기 없음 (⑭a — write_restart 뒤 ke · run 0 뒤 메시 힘 · 없는 fix)
+  ✓ ④ erase_none: 살아 있는 equal 정의 다음 줄 = 얼림 (⑭b)
+  ✓ ④ erase_none: if 조건 = 숫자 · 비교 · 논리만
+  ✓ ④ erase_none: 함께 사는 pair/gran/local ≤ 1 · wall/gran/local ≤ 1 · 내리는 compute 를 쓰는 덤프 없음 (⑮ — 첫 ibb 실행 TECH)
+  ✓ ④ erase_none: r8 머리 cpl 글자 그대로 (내리기만 하고 고치지 않는다)
+  ✓ ④ badid: 채우지 않은 @…@ · 탭 · `$` 꼴 · 주소 / 사용자 이름 없음
+  ✓ ④ badid: 쓰인 ${…} 가 다 정의됨 (덱 안 · CLI out · plate_stl · ckpt)
+  ✓ ④ badid: run 사이 위험한 읽기 없음 (⑭a — write_restart 뒤 ke · run 0 뒤 메시 힘 · 없는 fix)
+  ✓ ④ badid: 살아 있는 equal 정의 다음 줄 = 얼림 (⑭b)
+  ✓ ④ badid: if 조건 = 숫자 · 비교 · 논리만
+  ✓ ④ badid: 함께 사는 pair/gran/local ≤ 1 · wall/gran/local ≤ 1 · 내리는 compute 를 쓰는 덤프 없음 (⑮ — 첫 ibb 실행 TECH)
+  ✓ ④ badid: r8 머리 cpl 글자 그대로 (내리기만 하고 고치지 않는다)
+  ✓ ④ syntax_probe: 채우지 않은 @…@ · 탭 · `$` 꼴 · 주소 / 사용자 이름 없음
+  ✓ ④ syntax_probe: 쓰인 ${…} 가 다 정의됨 (덱 안 · CLI out · plate_stl · ckpt)
+  ✓ ④ syntax_probe: run 사이 위험한 읽기 없음 (⑭a — write_restart 뒤 ke · run 0 뒤 메시 힘 · 없는 fix)
+  ✓ ④ syntax_probe: 살아 있는 equal 정의 다음 줄 = 얼림 (⑭b)
+  ✓ ④ syntax_probe: if 조건 = 숫자 · 비교 · 논리만
+  ✓ ④ syntax_probe: 함께 사는 pair/gran/local ≤ 1 · wall/gran/local ≤ 1 · 내리는 compute 를 쓰는 덤프 없음 (⑮ — 첫 ibb 실행 TECH)
+  ✓ ④ syntax_probe: r8 머리 cpl 글자 그대로 (내리기만 하고 고치지 않는다)
+  ✓ ⑮ 규칙 자체: 반례 넷 (둘 함께 · 덤프 살아 있는 uncompute · wall 둘 · 내린 compute 덤프) 을 잡고 · 사이에 uncompute 한 꼴은 통과
+  ✓ ⑤ 소비자: read_restart ${ckpt} 가 하나 · 첫 명령 묶음 뒤
+  ✓ ⑤ 소비자: PRE_SETUP write_dump (atoms_pre 열 그대로) 가 fix zwall_bot 뒤 · 첫 run 앞
+  ✓ ⑤ 소비자: run 은 run 0 하나뿐
+  ✓ ⑤ 소비자: wall · pair local compute 가 run 0 앞 · 덤프 셋 first yes · run 0 뒤 undump
+  ✓ ⑤ 소비자: 머리 fix 순서 = 원 PHASE 4 (zwall_bot → integr → gravi → top_mesh → zwall_top → damp 1e-5)
+  ✓ ⑤ 소비자: 머리 정의 글자 = r8 (재료 · pair · 벽 · 중력 · 감쇠 · 에너지)
+  ✓ ⑤ 소비자: 판 STL = ${plate_stl} (메시 자료는 restart 에서)
+  ✓ ⑥ erase_bot: run 0 → undump 셋 → uncompute 둘 → unfix ['unfix zwall_bot'] → write_restart (순서)
+  ✓ ⑥ erase_bot: top_mesh 는 지우지 않는다 · run 은 run 0 하나
+  ✓ ⑥ erase_top: run 0 → undump 셋 → uncompute 둘 → unfix ['unfix zwall_top'] → write_restart (순서)
+  ✓ ⑥ erase_top: top_mesh 는 지우지 않는다 · run 은 run 0 하나
+  ✓ ⑥ erase_none: run 0 → undump 셋 → uncompute 둘 → unfix 없음 → write_restart (순서)
+  ✓ ⑥ erase_none: top_mesh 는 지우지 않는다 · run 은 run 0 하나
+  ✓ ⑦ 생산자: create_box · 적분 fix 없음 (운동학 fixture)
+  ✓ ⑦ 생산자: run 10 → run 1000 → run 990 (표)
+  ✓ ⑦ 생산자: 입자 20 개 create_atoms single … units box
+  ✓ ⑦ 생산자: 속도 0 이 마지막 run 앞 · 덤프 셋 주기 2000 이 마지막 run 앞
+  ✓ ⑦ 생산자: 끝 write_dump 묶음 → write_restart fixture.bin (마지막 run 뒤)
+  ✓ ⑦ 생산자: 자동 restart 1500 이 첫 run 앞 (H0b)
+  ✓ ⑦ 0 생산자: 생산자와 create_atoms · set 위치 줄만 다르다
+  ✓ ⑧ 잘못된 ID: 소비자와 history 열 이름만 다르다 (history_zwallbot — 없는 fix)
+  ✓ ⑨ SYN: timestep 이 read_restart 뒤에도 있다 (dt 5e-7 · restart 가 dt 를 되살리는 규약)
+  ✓ ⑨ SYN: erotate/sphere · ave/time · 부호 있는 Ps · 판 이동 +z · unfix · 명시 write_restart
+  ✓ ⑨ SYN: 적분 fix 없음 (운동학 · 판 이동 기하만)
+  ✓ ⑨ SYN: 판 접촉 local = id force_normal (6 열 — 본 키트 TENSION 판별의 부호 약속을 먼저 잰다)
+  ✓ ⑩ 판 STL: 삼각형 둘 · 높이 하나 = z_plate
+  ✓ ⑩ 래퍼: #SBATCH -n = np_main (6) · 하나뿐
+  ✓ ⑩ 래퍼: SLURM_NTASKS = NP 대조 · 밖이면 사전 점검만
+  ✓ ⑩ 러너: mpirun 줄 = "$MPIRUN" $MPIRUN_FLAGS -np "$np" · 기본 --oversubscribe --bind-to none
+  ✓ ⑩ 러너: 단계마다 Loop time … on N procs 의 N = 그 단계 NP 를 본다 (읽는 쪽 H0)
+  ✓ ⑩ 러너: kit 사본 목록 = SHA256SUMS 대상 + SHA256SUMS
+  ✓ ⑩ 래퍼 · 러너: 주소 · 포트 · 사용자 이름 없음
+  ✗ ⑩ bash -n run_history_ibb.sbatch  — 
+  ✗ ⑩ bash -n run_history.sh  — 
+  ✓ ⑪ 검사기: write_restart 뒤 살아 있는 ke 를 잡는다
+  ✓ ⑪ 검사기: run 0 뒤 메시 힘을 잡는다
+  ✓ ⑪ 검사기: 얼린 정의는 놓아 준다
+selftest: FAIL (2 실패)
+
+STDERR

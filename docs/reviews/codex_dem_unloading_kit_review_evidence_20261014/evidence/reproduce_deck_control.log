@@ -1,0 +1,147 @@
+{
+  "normal": {
+    "events": [
+      {
+        "ul_k": 0,
+        "ul_phase": 4,
+        "ul_modeB": 0,
+        "ul_postw": 0,
+        "what": "event",
+        "step": 3200000,
+        "text": "START,0,3200000,0.111052,0,s0"
+      },
+      {
+        "ul_k": 0,
+        "ul_w": 3,
+        "ul_phase": 0,
+        "ul_modeB": 0,
+        "ul_postw": 0,
+        "ul_sepn": 0,
+        "ul_okn": 2,
+        "what": "event",
+        "step": 3215000,
+        "text": "HOLD0_DONE,0,3215000,0.111052,0,Pbar0"
+      },
+      {
+        "ul_k": 1,
+        "ul_w": 4,
+        "ul_phase": 0,
+        "ul_modeB": 1,
+        "ul_postw": 0,
+        "ul_sepn": 0,
+        "ul_okn": 3,
+        "what": "event",
+        "step": 3255000,
+        "text": "MODE_B,1,3255000,0.111252,0.000200000000000006,next"
+      },
+      {
+        "ul_k": 2,
+        "ul_w": 4,
+        "ul_phase": 1,
+        "ul_modeB": 1,
+        "ul_postw": 0,
+        "ul_sepn": 0,
+        "ul_okn": 3,
+        "what": "event",
+        "step": 3280000,
+        "text": "CROSS,2,3280000,0.111302,0.00025,first"
+      },
+      {
+        "ul_k": 4,
+        "ul_w": 4,
+        "ul_phase": 2,
+        "ul_modeB": 1,
+        "ul_postw": 0,
+        "ul_sepn": 0,
+        "ul_okn": 3,
+        "what": "event",
+        "step": 3330000,
+        "text": "RM,4,3330000,0.111402,0.000350000000000003,ncross2"
+      },
+      {
+        "ul_k": 5,
+        "ul_w": 2,
+        "ul_phase": 3,
+        "ul_modeB": 1,
+        "ul_postw": 1,
+        "ul_sepn": 2,
+        "ul_okn": 1,
+        "what": "event",
+        "step": 3345000,
+        "text": "SEPARATED,5,3345000,0.111452,0.000399999999999998,w2"
+      },
+      {
+        "ul_k": 5,
+        "ul_w": 5,
+        "ul_phase": 3,
+        "ul_modeB": 1,
+        "ul_postw": 4,
+        "ul_sepn": 5,
+        "ul_okn": 4,
+        "what": "event",
+        "step": 3360000,
+        "text": "POST_DONE,5,3360000,0.111452,0.000399999999999998,w5"
+      }
+    ],
+    "final": "DONE",
+    "nonmesh_move_dumps": [],
+    "nonmesh_setup_dumps": []
+  },
+  "recontact_steady_moves_at_w": 4,
+  "post_budget_windows": 15,
+  "post_budget_result": "DONE",
+  "gravity_budgets": [
+    {
+      "arm": "UB",
+      "initial_hold_min": 4,
+      "initial_hold_max": 12,
+      "later_hold_min": 4,
+      "later_hold_max": 12,
+      "first_later_steady_hold_windows": 4
+    },
+    {
+      "arm": "UVa",
+      "initial_hold_min": 4,
+      "initial_hold_max": 12,
+      "later_hold_min": 8,
+      "later_hold_max": 24,
+      "first_later_steady_hold_windows": 8
+    },
+    {
+      "arm": "UVb",
+      "initial_hold_min": 4,
+      "initial_hold_max": 12,
+      "later_hold_min": 8,
+      "later_hold_max": 24,
+      "first_later_steady_hold_windows": 8
+    },
+    {
+      "arm": "UT3",
+      "initial_hold_min": 4,
+      "initial_hold_max": 12,
+      "later_hold_min": 4,
+      "later_hold_max": 12,
+      "first_later_steady_hold_windows": 4
+    }
+  ],
+  "last_two_mean_k0": {
+    "Pbar": 0.00245,
+    "expected": 0.00245,
+    "modeB": 0,
+    "expected_modeB": 0
+  },
+  "lift_cap": [
+    {
+      "lift": 0.01595,
+      "result": "RUNNING",
+      "movement": true
+    },
+    {
+      "lift": 0.016,
+      "result": "LIFT_CAP",
+      "movement": false
+    }
+  ]
+}
+
+STDERR

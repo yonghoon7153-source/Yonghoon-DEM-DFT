@@ -1,0 +1,44 @@
+# Q6 / Q9 and runner audit — pinned 2783061ead9f192ab742a2f0b14b0182a98a4966
+
+## Actual archived history evidence is reproducible
+
+`probes/history_actual.py` safely audits and extracts the supplied archive, then calls the unchanged pinned `history_test/read_history.py`. It checks absolute paths, traversal, backslashes, drive/ADS colons, links, special nodes, and case-insensitive duplicate member names before writing any archive file. Python's built-in data-filter realpath failed under the Windows sandbox, so the script uses equivalent explicit checks and manual regular-file extraction without preserving permissions or links.
+
+Archive sha256 = `be0acbd7841d0922604eee8aa31524fcddbe179a8240f937b317432dbebb0ca0`; SLURM output sha256 = `5d3115fe7ed3e7c9999415480cf873c2833bd472ea0158f1ff87d9be17816e7f`. There are 259 total members, 206 regular files, 509561 uncompressed file bytes, no unsafe members. Sealed history manifest hash is `241277b20aaccb8d1ab73c79fb9e0758138a3bed64751add98f7849b44697bf6`, byte-identical to the pinned source. Every stage's deck and plate STL are also byte-identical to pinned source.
+
+Pinned reader invocation with `python -X utf8 -I ...read_history.py ... --params ...history_params.json --out ...history_reread.json` returns 0. Recomputed verdict exactly equals archived verdict after removing only `run_dir`. Plain `-I` initially encountered Windows cp949 console encoding after successfully writing the correct JSON; `-X utf8` avoids that host issue without modifying source.
+
+Manifest: repo head `f9edcc41674bfef2c72bcb803511050845008d09`, dirty_here=0 (history directory only), SLURM job 283122/node01/ntasks6, LMP hash `ee2d77261bac9e7fa4e9311c8709e74bf7583a13225a5bc35a791bef9be60a3f`, allow_other_lmp=0. These are archived receipts, not independent access to the remote binary. Stage screens independently support version/commit banner, all expected reset messages, and NP6 versus C4 NP4. BAD returns1 with intended wrong-fix-ID error; other stage return codes are0. The complete raw audit is `evidence/history_actual_audit.json`.
+
+H0–H5 are all PASS. H1/H2 retain primitive4/mesh4/pair5 discriminating sentinels. H3/H4 erase4/4 with positive controls. H5 classifies wrong ID TECH and all-zero fixture INCONCLUSIVE. SYN passes, plate contact count4→3, uniform compressed fn_z sign -1. Force timing passes on contactless particles. Automatic periodic restart has only step1500, not off-period run ends. Therefore Q9's proposed no change to sign, explicit end-restart policy, and observed force timing is supported for this fixture. This does not execute or validate production decks, repeated move definitions, variable dump scheduling, or resume include/jump paths.
+
+## Finding H-1 (P1): restoration certifies invalid primitive observations and failed UN
+
+Location: `ul_reader.py:706–713`, `_hist_equal` at758–769, `_erasure_seen` at773–782. The callers discard `read_dump()['ok']`, frame step, count/column problems, and parse diagnostics. `_hist_equal` only compares surviving row maps; `_erasure_seen` does not require equal atom-ID sets or count. UN screen/return-code/`run_check.txt` are never considered by restore. Production eligibility subsequently trusts the cached `RESTORED` at `ul_reader.py:562–565,590–595`.
+
+Executed independent probe `probes/history_restore.py` constructs a passing R/G0/G1/G2/G2c/G3/reset/mesh fixture and uses the actual archived H0–H5/SYN verdict. Baseline is RESTORED. Each of these independent corruptions still yields RESTORED and a subsequent actual `gate(...,'UB')` returns true:
+
+- PRE and POST headers each declare20 atoms but contain only2 matching rows. `ul_lib.read_dump` returns `ok=False` for both, yet PRE/POST check is true.
+- UN contains only one all-zero row for ID999; R_END has IDs1 and2 including nonzero history. `un_erasure.seen=True` despite nonmatching sets.
+- UN has `ERROR: synthetic failure after a partial dump` and `run_check.txt` records `FAIL rc=1`, while its partial zero dump remains. Restoration remains RESTORED. The outer runner may return2 through FAILS on that same execution, but it writes the RESTORED receipt first; next submission only checks that receipt.
+
+Outputs: `evidence/history_restore_counterexamples.json`; full verdicts and synthetic files under `evidence/history_restore_probe/`. Scope: disproves fail-closed implementation of preregistration §12-1(ii),(iv),(v); it does not impeach the successful archived small-bed test. Repair boundary: require valid complete typed dumps, expected unique ID set/count and expected observation step, equal R_END/UN identities, and clean successful UN execution; any technical failure must prevent a reusable RESTORED receipt. Keep history observation incompleteness separate from numerical mismatch.
+
+## Finding H-2 (P2): missing SYN is accepted as history qualification
+
+Location: `ul_reader.py:714–720`, specifically `sign is None or sign == table`. `read_history.py:589–591` computes exit_code solely from H0–H5, intentionally excluding info/SYN. The main restore gate does not require SYN status PASS or force_timing PASS.
+
+Probe copies actual evidence while omitting only `SYN/` to `evidence/history_no_syn/`, then invokes the unchanged actual `read_history.evaluate`. H0–H5 remain PASS, exit_code0, SYN is NOT_RUN, sign null. Passing this genuinely recomputed verdict to `restore_verdict` still yields RESTORED and UB allowed, with note 'SYN sign unmeasured (keep table assumption)'. It contradicts request Q6 and README line214's explicit qualification '+ SYN sign = table'. Current submitted evidence itself has PASS/-1, so this is a dormant fail-open guard, not a finding that the supplied sign is wrong. Fix requires explicit measured matching sign and successful SYN. Consider making verified total-force timing explicit as well if used as an S3 prerequisite.
+
+## Runner source findings and unexecuted shell probes
+
+Shell mock execution could not be completed in this Windows sandbox. `probes/history_runner_adapter.py` prepares a sealed disposable copy, uses only fake mpirun/LMP, normalizes generated fake executable paths, selects Git Bash explicitly (never WSL), and adds UTF8 Python output. Its Bash child aborts before reading any runner source with `NtCreateDirectoryObject(...msys...):0xC0000022`, return3221225794. Evidence: `evidence/history_runner_adapter_results.json`. Do not report a shell pass/fail as a kit behavioral test.
+
+Source-confirmed gaps:
+
+- `run_unload.sh:107–109` permits RESUME for every JOB, checking only directory existence and absence of top-level `screen_a2.txt`; `85–87` skips submission gates for every RESUME. Only normal UB/UT/UC/UVa/UVb/UT3 branch (`180–188`) consumes its own latest restart and writes screen_a2. UTc (`194–201`) re-copies UT CSVs and starts from UT R_M again; G_* (`204–210`) starts from original source R_M with resume0 again; RJ/EXT similarly replay initial paths. No screen_a2 is created by these branches, so repeated RESUME invocations evade the registered one-retry limit and overwrite first-attempt screen/records. For UTc/G arms this contradicts README162 and prereg§13-1's one technical restart. A safe implementation must support real per-job restart or reject unsupported resume jobs, retain previous attempt evidence, and persist one retry across every supported branch. Treat as P1 implementation issue by source proof; no shell runtime claim.
+- Normal arm `run_deck` failures are counted by FAILS, but `arm` invocations (`192,202,211`) and `select` (`214`) have no rc capture; RRC remains0 from159. An unexpected reader exception or report-write failure can therefore be advertised as reader_rc0 and runner exit0 when LMP succeeded. Normal scientific invalidity is deliberately represented in arm JSON with CLI rc0 and is not this bug. Treat receipt failure handling as P2, source-only.
+- `bundle` (`151–155`) archives only `$JOB`. EXT2 is a sibling created at175–176; its screen/log/receipt and root `s0_decision.json` are absent from EXT.report.tgz. Selection and KE root receipts likewise absent. This impedes independent receipt review; a supplemental-file manifest or inclusion should make intended handoff explicit. This is lower-priority reporting completeness, not evidence that actual history TGZ is incomplete.
+- G0 and Ut0 failures do not stop R immediately (`163–166`). G0 later blocks restore, whereas Ut0 technical outcome is not read by restore. This is another reason to bind the complete job execution receipt into restoration; the actual technical-probe purpose must not be bypassed by only R succeeding.
+
+AGENTS.md identity checks were attempted; source is an extracted pinned snapshot with no .git, so git status/worktree/branch/head all return not-a-repository. No source files, original user repository, remote jobs, DEM, SLURM, or WSL were modified/executed. All new work is under probes/, evidence/, notes/ in the review folder.

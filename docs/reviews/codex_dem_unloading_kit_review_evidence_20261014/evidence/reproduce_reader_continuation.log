@@ -1,0 +1,18 @@
+{
+  "fixture_root": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\dem_unloading_kit_review_20261014\\evidence\\reader_continuation\\run_20261014T014749_224547Z",
+  "selection_tuple": "t3",
+  "UT_status": "OK",
+  "UT_rho": 0.3827035983143033,
+  "UTc_status": "UNIDENTIFIED",
+  "UTc_rho": null,
+  "UTc_why": [
+    "단 2 S3 NOT_COMPUTED",
+    "단 2 판 접촉 OBS_MISSING",
+    "단 3 S3 NOT_COMPUTED",
+    "단 3 판 접촉 OBS_MISSING"
+  ],
+  "report_7_3_status": "UNIDENTIFIED",
+  "report_7_3_rho": null
+}
+
+STDERR
