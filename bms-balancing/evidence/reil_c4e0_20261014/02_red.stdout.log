@@ -1,0 +1,165 @@
+FFFFFFFFFFFFFFFFFFFFF                                                    [100%]
+=================================== FAILURES ===================================
+__________ test_m_1_a_rule_reason_is_a_global_stop_with_three_states ___________
+tests/test_reil_c4e.py:334: in test_m_1_a_rule_reason_is_a_global_stop_with_three_states
+    out = mon.supervise(tasks, {}, _sleep_task, n_workers=2, limits=dict(LIM), t0=time.monotonic(), rss_fn=lambda p: 1000,
+E   TypeError: supervise() got an unexpected keyword argument 'stop_rule'
+______ test_m_2_snapshot_coordinates_and_rule_exception_without_a_process ______
+tests/test_reil_c4e.py:367: in test_m_2_snapshot_coordinates_and_rule_exception_without_a_process
+    out = mon.supervise(tasks, {}, None, stop_rule=capture, **kw)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   TypeError: supervise() got an unexpected keyword argument 'stop_rule'
+________ test_r_1_call_cap_active_late_between_samples_equal_and_reason ________
+tests/test_reil_c4e.py:398: in test_r_1_call_cap_active_late_between_samples_equal_and_reason
+    assert run.call_cap(s1, 1800.0)["reason"] is None
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+scripts/reil_c4e_run.py:59: in _todo
+    raise NotImplementedError("C4-E E0 골격 — 구현 전 (v3 §6-1 3)")
+E   NotImplementedError: C4-E E0 골격 — 구현 전 (v3 §6-1 3)
+_ test_r_2_cost_projection_upper_median_returned_only_minimum_eight_and_boundary _
+tests/test_reil_c4e.py:418: in test_r_2_cost_projection_upper_median_returned_only_minimum_eight_and_boundary
+    rec = run.cost_projection(_cost_snap(plan, 5000.0), plan, min_samples=8, measure=9000.0)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+scripts/reil_c4e_run.py:59: in _todo
+    raise NotImplementedError("C4-E E0 골격 — 구현 전 (v3 §6-1 3)")
+E   NotImplementedError: C4-E E0 골격 — 구현 전 (v3 §6-1 3)
+_________________ test_r_3_the_rule_never_reads_result_values __________________
+tests/test_reil_c4e.py:459: in test_r_3_the_rule_never_reads_result_values
+    plain, trap = run.StopRule(plan), run.StopRule(plan)
+                  ^^^^^^^^^^^^^^^^^^
+scripts/reil_c4e_run.py:73: in __init__
+    raise NotImplementedError("C4-E E0 골격 — 구현 전 (v3 §6-1 3)")
+E   NotImplementedError: C4-E E0 골격 — 구현 전 (v3 §6-1 3)
+__ test_r_4_rule_input_validation_raises_instead_of_dropping_or_zero_filling ___
+tests/test_reil_c4e.py:471: in test_r_4_rule_input_validation_raises_instead_of_dropping_or_zero_filling
+    assert run.StopRule(plan)(copy.deepcopy(base)) is None
+           ^^^^^^^^^^^^^^^^^^
+scripts/reil_c4e_run.py:73: in __init__
+    raise NotImplementedError("C4-E E0 골격 — 구현 전 (v3 §6-1 3)")
+E   NotImplementedError: C4-E E0 골격 — 구현 전 (v3 §6-1 3)
+________ test_r_5_judgment_raw_basis_has_every_key_and_no_result_values ________
+tests/test_reil_c4e.py:495: in test_r_5_judgment_raw_basis_has_every_key_and_no_result_values
+    go = run.StopRule(plan)
+         ^^^^^^^^^^^^^^^^^^
+scripts/reil_c4e_run.py:73: in __init__
+    raise NotImplementedError("C4-E E0 골격 — 구현 전 (v3 §6-1 3)")
+E   NotImplementedError: C4-E E0 골격 — 구현 전 (v3 §6-1 3)
+_________ test_r_6_call_cap_three_paths_fork_fork_and_pure_final_drain _________
+tests/test_reil_c4e.py:518: in test_r_6_call_cap_three_paths_fork_fork_and_pure_final_drain
+    rule_a = run.StopRule(plan_a, cap=0.4)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+scripts/reil_c4e_run.py:73: in __init__
+    raise NotImplementedError("C4-E E0 골격 — 구현 전 (v3 §6-1 3)")
+E   NotImplementedError: C4-E E0 골격 — 구현 전 (v3 §6-1 3)
+_ test_t_1_nonzero_origin_prep_boundary_relative_deadline_and_no_start_after_stop _
+tests/test_reil_c4e.py:574: in test_t_1_nonzero_origin_prep_boundary_relative_deadline_and_no_start_after_stop
+    run.execute(prep, t0=5000.0, clock=lambda: 5000.0 + 900.5, supervise=spy)
+scripts/reil_c4e_run.py:59: in _todo
+    raise NotImplementedError("C4-E E0 골격 — 구현 전 (v3 §6-1 3)")
+E   NotImplementedError: C4-E E0 골격 — 구현 전 (v3 §6-1 3)
+_______________ test_d_1_prepare_order_stops_before_later_steps ________________
+tests/test_reil_c4e.py:595: in test_d_1_prepare_order_stops_before_later_steps
+    loaded = run.load_inputs(mod, xlsx)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^
+scripts/reil_c4e_run.py:59: in _todo
+    raise NotImplementedError("C4-E E0 골격 — 구현 전 (v3 §6-1 3)")
+E   NotImplementedError: C4-E E0 골격 — 구현 전 (v3 §6-1 3)
+____________ test_d_2_exact_p0_binding_or_stop_before_any_optimizer ____________
+tests/test_reil_c4e.py:649: in test_d_2_exact_p0_binding_or_stop_before_any_optimizer
+    loaded = run.load_inputs(mod, xlsx)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^
+scripts/reil_c4e_run.py:59: in _todo
+    raise NotImplementedError("C4-E E0 골격 — 구현 전 (v3 §6-1 3)")
+E   NotImplementedError: C4-E E0 골격 — 구현 전 (v3 §6-1 3)
+______ test_d_3_halfcell_is_exactly_q_pe_v_pe_q_ne_v_ne_and_a_swap_fails _______
+tests/test_reil_c4e.py:703: in test_d_3_halfcell_is_exactly_q_pe_v_pe_q_ne_v_ne_and_a_swap_fails
+    loaded = run.load_inputs(mod, tmp_path / "LFP_Data.xlsx")
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+scripts/reil_c4e_run.py:59: in _todo
+    raise NotImplementedError("C4-E E0 골격 — 구현 전 (v3 §6-1 3)")
+E   NotImplementedError: C4-E E0 골격 — 구현 전 (v3 §6-1 3)
+_ test_d_4_paths_inside_the_repo_pickles_notebooks_existing_outputs_and_fetch_targets_are_refused _
+tests/test_reil_c4e.py:727: in test_d_4_paths_inside_the_repo_pickles_notebooks_existing_outputs_and_fetch_targets_are_refused
+    run.check_paths(xlsx=ok_x, util=ok_u, out=tmp_path / "new_out")
+scripts/reil_c4e_run.py:59: in _todo
+    raise NotImplementedError("C4-E E0 골격 — 구현 전 (v3 §6-1 3)")
+E   NotImplementedError: C4-E E0 골격 — 구현 전 (v3 §6-1 3)
+__ test_d_5_fetch_takes_only_two_paths_from_the_fixed_commit_of_a_local_repo ___
+tests/test_reil_c4e.py:756: in test_d_5_fetch_takes_only_two_paths_from_the_fixed_commit_of_a_local_repo
+    steps = run.fetch_steps(gd, "/up", "a" * 40)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+scripts/reil_c4e_run.py:59: in _todo
+    raise NotImplementedError("C4-E E0 골격 — 구현 전 (v3 §6-1 3)")
+E   NotImplementedError: C4-E E0 골격 — 구현 전 (v3 §6-1 3)
+____________ test_d_6_identity_start_end_table_and_consumed_digests ____________
+tests/test_reil_c4e.py:802: in test_d_6_identity_start_end_table_and_consumed_digests
+    start = run.identity_table({"a": a, "b": b}, exp)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+scripts/reil_c4e_run.py:59: in _todo
+    raise NotImplementedError("C4-E E0 골격 — 구현 전 (v3 §6-1 3)")
+E   NotImplementedError: C4-E E0 골격 — 구현 전 (v3 §6-1 3)
+_____________________ test_s_1_the_plan_is_the_c4_0a_plan ______________________
+tests/test_reil_c4e.py:831: in test_s_1_the_plan_is_the_c4_0a_plan
+    calls = run.plan()
+            ^^^^^^^^^^
+scripts/reil_c4e_run.py:59: in _todo
+    raise NotImplementedError("C4-E E0 골격 — 구현 전 (v3 §6-1 3)")
+E   NotImplementedError: C4-E E0 골격 — 구현 전 (v3 §6-1 3)
+_ test_s_2_complete_needs_66_returned_fields_operation_record_identity_and_the_stage_and _
+tests/test_reil_c4e.py:841: in test_s_2_complete_needs_66_returned_fields_operation_record_identity_and_the_stage_and
+    plan = run.plan()
+           ^^^^^^^^^^
+scripts/reil_c4e_run.py:59: in _todo
+    raise NotImplementedError("C4-E E0 골격 — 구현 전 (v3 §6-1 3)")
+E   NotImplementedError: C4-E E0 골격 — 구현 전 (v3 §6-1 3)
+___ test_s_3_operation_and_real_finalization_failures_each_leave_incomplete ____
+tests/test_reil_c4e.py:879: in test_s_3_operation_and_real_finalization_failures_each_leave_incomplete
+    plan = run.plan()
+           ^^^^^^^^^^
+scripts/reil_c4e_run.py:59: in _todo
+    raise NotImplementedError("C4-E E0 골격 — 구현 전 (v3 §6-1 3)")
+E   NotImplementedError: C4-E E0 골격 — 구현 전 (v3 §6-1 3)
+__ test_s_4_end_to_end_synthetic_run_complete_and_one_local_error_incomplete ___
+tests/test_reil_c4e.py:965: in test_s_4_end_to_end_synthetic_run_complete_and_one_local_error_incomplete
+    loaded = run.load_inputs(mod, xlsx)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^
+scripts/reil_c4e_run.py:59: in _todo
+    raise NotImplementedError("C4-E E0 골격 — 구현 전 (v3 §6-1 3)")
+E   NotImplementedError: C4-E E0 골격 — 구현 전 (v3 §6-1 3)
+____ test_s_5_plan_e_writes_one_plan_without_util_data_optimizer_or_network ____
+tests/test_reil_c4e.py:998: in test_s_5_plan_e_writes_one_plan_without_util_data_optimizer_or_network
+    summary = run.plan_e(out, venv="/v", seal=NEW_SEAL, manifest_sha256=NEW_SEAL_MANIFEST, env_identity=_fake_ident)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+scripts/reil_c4e_run.py:59: in _todo
+    raise NotImplementedError("C4-E E0 골격 — 구현 전 (v3 §6-1 3)")
+E   NotImplementedError: C4-E E0 골격 — 구현 전 (v3 §6-1 3)
+_____________ test_s_6_the_observed_tally_partitions_the_66_calls ______________
+tests/test_reil_c4e.py:1019: in test_s_6_the_observed_tally_partitions_the_66_calls
+    plan = run.plan()
+           ^^^^^^^^^^
+scripts/reil_c4e_run.py:59: in _todo
+    raise NotImplementedError("C4-E E0 골격 — 구현 전 (v3 §6-1 3)")
+E   NotImplementedError: C4-E E0 골격 — 구현 전 (v3 §6-1 3)
+=========================== short test summary info ============================
+FAILED tests/test_reil_c4e.py::test_m_1_a_rule_reason_is_a_global_stop_with_three_states
+FAILED tests/test_reil_c4e.py::test_m_2_snapshot_coordinates_and_rule_exception_without_a_process
+FAILED tests/test_reil_c4e.py::test_r_1_call_cap_active_late_between_samples_equal_and_reason
+FAILED tests/test_reil_c4e.py::test_r_2_cost_projection_upper_median_returned_only_minimum_eight_and_boundary
+FAILED tests/test_reil_c4e.py::test_r_3_the_rule_never_reads_result_values - ...
+FAILED tests/test_reil_c4e.py::test_r_4_rule_input_validation_raises_instead_of_dropping_or_zero_filling
+FAILED tests/test_reil_c4e.py::test_r_5_judgment_raw_basis_has_every_key_and_no_result_values
+FAILED tests/test_reil_c4e.py::test_r_6_call_cap_three_paths_fork_fork_and_pure_final_drain
+FAILED tests/test_reil_c4e.py::test_t_1_nonzero_origin_prep_boundary_relative_deadline_and_no_start_after_stop
+FAILED tests/test_reil_c4e.py::test_d_1_prepare_order_stops_before_later_steps
+FAILED tests/test_reil_c4e.py::test_d_2_exact_p0_binding_or_stop_before_any_optimizer
+FAILED tests/test_reil_c4e.py::test_d_3_halfcell_is_exactly_q_pe_v_pe_q_ne_v_ne_and_a_swap_fails
+FAILED tests/test_reil_c4e.py::test_d_4_paths_inside_the_repo_pickles_notebooks_existing_outputs_and_fetch_targets_are_refused
+FAILED tests/test_reil_c4e.py::test_d_5_fetch_takes_only_two_paths_from_the_fixed_commit_of_a_local_repo
+FAILED tests/test_reil_c4e.py::test_d_6_identity_start_end_table_and_consumed_digests
+FAILED tests/test_reil_c4e.py::test_s_1_the_plan_is_the_c4_0a_plan - NotImple...
+FAILED tests/test_reil_c4e.py::test_s_2_complete_needs_66_returned_fields_operation_record_identity_and_the_stage_and
+FAILED tests/test_reil_c4e.py::test_s_3_operation_and_real_finalization_failures_each_leave_incomplete
+FAILED tests/test_reil_c4e.py::test_s_4_end_to_end_synthetic_run_complete_and_one_local_error_incomplete
+FAILED tests/test_reil_c4e.py::test_s_5_plan_e_writes_one_plan_without_util_data_optimizer_or_network
+FAILED tests/test_reil_c4e.py::test_s_6_the_observed_tally_partitions_the_66_calls
+21 failed in 0.93s
