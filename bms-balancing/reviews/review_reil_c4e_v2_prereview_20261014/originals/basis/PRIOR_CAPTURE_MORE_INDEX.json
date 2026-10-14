@@ -1,0 +1,74 @@
+[
+  {
+    "repo_path": "bms-balancing/tests/test_reil_c4_0a_fix.py",
+    "capture": "source/tests/test_reil_c4_0a_fix.py",
+    "git_blob": "626abed0d1df0065f208f562545fc18f4f248443",
+    "ref": "89d18f546cef0172ee53105ae04ba66d1e224370",
+    "bytes": 19183,
+    "sha256": "b2137e1119049f4f2b87c096fbb77a3de26304ea355adac98da85d796728004c"
+  },
+  {
+    "repo_path": "bms-balancing/tests/test_reil_c4_0b1_fix2.py",
+    "capture": "source/tests/test_reil_c4_0b1_fix2.py",
+    "git_blob": "24211bdbadd4b5a2914051bee13bce83ac80367d",
+    "ref": "89d18f546cef0172ee53105ae04ba66d1e224370",
+    "bytes": 8440,
+    "sha256": "b861f16b7fe651b5c68ad57ed77d9079f918bf4ec59d2028cc5b82101f847602"
+  },
+  {
+    "repo_path": "bms-balancing/scripts/reil_c6_profile.py",
+    "capture": "source/scripts/reil_c6_profile.py",
+    "git_blob": "c32ecdc3c4cdb456514e3abc14975103f412f32d",
+    "ref": "89d18f546cef0172ee53105ae04ba66d1e224370",
+    "bytes": 15915,
+    "sha256": "408afc4bb5eb1069583b955e0eb6215bf48dd9259ad474c230549d1b3642df5d"
+  },
+  {
+    "repo_path": "bms-balancing/tests/test_reil_c4_0a.py",
+    "capture": "source/tests/test_reil_c4_0a.py",
+    "git_blob": "c183015e58570b50b6d9bb98a429ddcbad0529cf",
+    "ref": "89d18f546cef0172ee53105ae04ba66d1e224370",
+    "bytes": 20404,
+    "sha256": "6b2635d4a97e296a4d2d8749209b66461d3bbfd9009465aaeac3d80a57197e17"
+  },
+  {
+    "repo_path": "bms-balancing/reviews/prereview_pybamm_reil_20261003/external/util_LFP.py.txt",
+    "capture": "source/reviews/prereview_pybamm_reil_20261003/external/util_LFP.py.txt",
+    "git_blob": "1d4afe9f5ef451b9cf479640fd5e361fdbd08bd0",
+    "ref": "89d18f546cef0172ee53105ae04ba66d1e224370",
+    "bytes": 32909,
+    "sha256": "bdf78273d50f40ce3154d01a3ef8d36f0f5ea5ec1b04539584809d7b19b46f9c"
+  },
+  {
+    "repo_path": "bms-balancing/tests/test_reil_c4_0b1_fix.py",
+    "capture": "source/tests/test_reil_c4_0b1_fix.py",
+    "git_blob": "d2e534d326e7cb7bf1989d16cbf88229ef026890",
+    "ref": "89d18f546cef0172ee53105ae04ba66d1e224370",
+    "bytes": 17404,
+    "sha256": "7133c550628c819c2eadca1d2e4e468ce9373d0907ccd9dc098a4c471f4e1297"
+  },
+  {
+    "repo_path": "bms-balancing/tests/test_reil_c4_0b2.py",
+    "capture": "source/tests/test_reil_c4_0b2.py",
+    "git_blob": "c42744599d5429859829eba7a08e92ac0df20359",
+    "ref": "89d18f546cef0172ee53105ae04ba66d1e224370",
+    "bytes": 54873,
+    "sha256": "01f58c6d1531054c3aa3745895d6335edd7d967fbd38751cfc7fadc781c57702"
+  },
+  {
+    "repo_path": "bms-balancing/tests/test_reil_c4_0b2_fix.py",
+    "capture": "source/tests/test_reil_c4_0b2_fix.py",
+    "git_blob": "e169b1676ca747d240836017f265f150071e7020",
+    "ref": "89d18f546cef0172ee53105ae04ba66d1e224370",
+    "bytes": 18087,
+    "sha256": "169c9ebb1621ee8ee3b05049daec33c6822ebf48b4fac79d883d5c18b99d10f6"
+  },
+  {
+    "repo_path": "bms-balancing/tests/test_reil_c4_0b1.py",
+    "capture": "source/tests/test_reil_c4_0b1.py",
+    "git_blob": "519f85f5b3115c3ccd82000ef8df58b3ac7796fe",
+    "ref": "89d18f546cef0172ee53105ae04ba66d1e224370",
+    "bytes": 32038,
+    "sha256": "1040e531aa4a6696bb1f37ac1075f23db361ff99d0d3f7b6008afb590c346b2c"
+  }
+]

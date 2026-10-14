@@ -1,0 +1,42 @@
+{
+  "kind": "INDEPENDENT_DOCUMENT_AND_SOURCE_PREREVIEW_V2",
+  "review_date": "2026-10-14",
+  "repository": "yonghoon7153-source/Yonghoon-DEM-DFT",
+  "branch": "claude/14-gate-code-review-9qkx05",
+  "reviewed_head": "dc6e5b7e043ff11b73095ddb9d60db7837e665c7",
+  "request_sha256": "a4fb202549e6f785080c0e0feab09f930a2f0afd288cb3a3e5005096dd6d8e28",
+  "send_sha256": "56644c3888f7345c26cf41a3a4177d55305d47591a2b5c0de123f3df39991f68",
+  "decision": "REQUEST_REVISION_BEFORE_E0_APPROVAL",
+  "finding_status": "DOCUMENT_CONTRACT_AND_STATIC_COUNT_CORRECTIONS_NOT_OBSERVED_RUNTIME_FAILURES",
+  "remaining_findings": [
+    {"id":"C4E-N1-REMAINING","priority":2,"request_lines":[289,290,293],"scope":"Finite authorization counts and counting units: real fork 10+5=15, COBYQA internal versus independent evaluations, preserved util bounded calls"},
+    {"id":"C4E-N2-FINAL-BOUNDARY","priority":2,"request_lines":[111,112,133,134,174,214,215,251],"scope":"Final identity and end-record writes occur after final_record; final size/time acceptance must cover them"},
+    {"id":"C4E-N3-FINAL-DRAIN","priority":2,"request_lines":[144,145,216,241],"scope":"Preserve completed rows arriving after active stop, retain stop reason, reconcile late rows in final drain","success_bypass_claimed":false}
+  ],
+  "document_closures": {
+    "N1_E0_environment_and_separate_E1_GO":"CLOSED_DOCUMENT_SCOPE",
+    "N2_observation_vs_E3a_success":"CLOSED_DOCUMENT_SCOPE",
+    "N3_clock_cost_input_and_snapshot_contract":"CLOSED_EXCEPT_FINAL_DRAIN_BOUNDARY",
+    "N4_NE_reference_and_consumed_input_binding":"CLOSED_DOCUMENT_SCOPE",
+    "M1_util_byte_relationship_and_protocol_citation":"CLOSED"
+  },
+  "questions": {
+    "Q1":"THREE_NARROW_DOCUMENT_CORRECTIONS_BEFORE_USER_E0_APPROVAL",
+    "Q2":"EXCEPTIONS_DECLARED_BUT_COUNT_UNITS_AND_BOUNDS_NEED_CORRECTION",
+    "Q3":"TWO_DEFINED_INTERVALS_ACCEPTABLE_FINAL_DRAIN_RACE_REMAINS",
+    "Q4":"SEMANTIC_AND_OPERATIONAL_AND_MATCHES_LAST_RECORD_ACCEPTANCE_BOUNDARY_REMAINS"
+  },
+  "counts": {"existing_tests":159,"new_test_ids":21,"GREEN_tests":180,"old_real_fork":10,"new_proposed_fork":5,"GREEN_real_fork":15,"GREEN_fork_cap":17,"COBYQA_calls":14,"fake_minimize_upper_bound":995,"Sobol_related_tests_not_generator_calls":15},
+  "prior_C4_0a_0b1_0b2_limited_closure_maintained":true,
+  "historical_failures_missing_records_and_authorization_deviations_preserved":true,
+  "H_array_authentication_deferred_not_discharged":true,
+  "H4_recording_deferred_not_discharged":true,
+  "reviewer_actions": {
+    "received_program_import_or_execution":0,"tests":0,"Python":0,"optimizer":0,"Sobol":0,
+    "REIL_xlsx_pkl_notebook_download_or_opening":0,"COMSOL_JVM_compile_solve":0,
+    "environment_rebuild_or_install":0,"repository_source_changes":0,"external_message_delivery":0,
+    "own_PowerShell_read_hash_JSON_constant_arithmetic_and_review_packaging":true
+  },
+  "new_execution_approval":false,"E0_approved":false,"E1_approved":false,"C4_A_B_approved":false,
+  "next":"Document-only revision and prereview; explicit user E0 approval afterward; E0 result acceptance then separate user E1 GO"
+}

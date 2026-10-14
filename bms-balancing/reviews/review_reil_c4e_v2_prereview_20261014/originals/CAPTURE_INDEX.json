@@ -1,0 +1,44 @@
+{
+  "reviewed_head": "dc6e5b7e043ff11b73095ddb9d60db7837e665c7",
+  "sources": [
+    {
+      "bytes": 4272,
+      "ref": "dc6e5b7e043ff11b73095ddb9d60db7837e665c7",
+      "capture": "source/docs/REIL_C4E_PREREVIEW_SEND_v2_20261014.md",
+      "git_blob": "36b7b801c78e5d3d890244a0cbc10dcc54c60b63",
+      "sha256": "56644c3888f7345c26cf41a3a4177d55305d47591a2b5c0de123f3df39991f68",
+      "repo_path": "bms-balancing/docs/REIL_C4E_PREREVIEW_SEND_v2_20261014.md"
+    },
+    {
+      "bytes": 35172,
+      "ref": "dc6e5b7e043ff11b73095ddb9d60db7837e665c7",
+      "capture": "source/docs/REIL_C4E_APPROVAL_REQUEST_v2_20261014.md",
+      "git_blob": "49c9e36141ca0c19a9e6bdf945f4e0e4bfbe5f1b",
+      "sha256": "a4fb202549e6f785080c0e0feab09f930a2f0afd288cb3a3e5005096dd6d8e28",
+      "repo_path": "bms-balancing/docs/REIL_C4E_APPROVAL_REQUEST_v2_20261014.md"
+    },
+    {
+      "bytes": 190800,
+      "ref": "dc6e5b7e043ff11b73095ddb9d60db7837e665c7",
+      "capture": "source/docs/REIL_PREREQUISITES_STATUS_20261004.md",
+      "git_blob": "4ed716394d4001fe99a9a701bc960f27eacf85ca",
+      "sha256": "1793108a618519eb81572adfb5b7f1f183edc22d67afc0b6223faad25a7ba2ef",
+      "repo_path": "bms-balancing/docs/REIL_PREREQUISITES_STATUS_20261004.md"
+    }
+  ],
+  "attachments": [
+    {
+      "matches_commit": true,
+      "sha256": "a4fb202549e6f785080c0e0feab09f930a2f0afd288cb3a3e5005096dd6d8e28",
+      "attachment": "REIL_C4E_APPROVAL_REQUEST_v2_20261014.md",
+      "bytes": 35172
+    },
+    {
+      "matches_commit": true,
+      "sha256": "56644c3888f7345c26cf41a3a4177d55305d47591a2b5c0de123f3df39991f68",
+      "attachment": "REIL_C4E_PREREVIEW_SEND_v2_20261014.md",
+      "bytes": 4272
+    }
+  ],
+  "received_code_execution": 0
+}

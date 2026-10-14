@@ -1,0 +1,398 @@
+{
+  "kind": "STATIC_PREREVIEW_V2_AUDIT",
+  "utc": "2026-10-14T06:54:37.5921356Z",
+  "reviewed_head": "dc6e5b7e043ff11b73095ddb9d60db7837e665c7",
+  "attachments": [
+    {
+      "matches_commit": true,
+      "sha256": "a4fb202549e6f785080c0e0feab09f930a2f0afd288cb3a3e5005096dd6d8e28",
+      "attachment": "REIL_C4E_APPROVAL_REQUEST_v2_20261014.md",
+      "bytes": 35172
+    },
+    {
+      "matches_commit": true,
+      "sha256": "56644c3888f7345c26cf41a3a4177d55305d47591a2b5c0de123f3df39991f68",
+      "attachment": "REIL_C4E_PREREVIEW_SEND_v2_20261014.md",
+      "bytes": 4272
+    }
+  ],
+  "source_index": [
+    {
+      "sha256": "56644c3888f7345c26cf41a3a4177d55305d47591a2b5c0de123f3df39991f68",
+      "capture": "source/docs/REIL_C4E_PREREVIEW_SEND_v2_20261014.md",
+      "repo_path": "bms-balancing/docs/REIL_C4E_PREREVIEW_SEND_v2_20261014.md",
+      "ref": "dc6e5b7e043ff11b73095ddb9d60db7837e665c7",
+      "git_blob": "36b7b801c78e5d3d890244a0cbc10dcc54c60b63",
+      "bytes": 4272,
+      "binding": "Direct fixed-commit retrieval"
+    },
+    {
+      "sha256": "a4fb202549e6f785080c0e0feab09f930a2f0afd288cb3a3e5005096dd6d8e28",
+      "capture": "source/docs/REIL_C4E_APPROVAL_REQUEST_v2_20261014.md",
+      "repo_path": "bms-balancing/docs/REIL_C4E_APPROVAL_REQUEST_v2_20261014.md",
+      "ref": "dc6e5b7e043ff11b73095ddb9d60db7837e665c7",
+      "git_blob": "49c9e36141ca0c19a9e6bdf945f4e0e4bfbe5f1b",
+      "bytes": 35172,
+      "binding": "Direct fixed-commit retrieval"
+    },
+    {
+      "sha256": "1793108a618519eb81572adfb5b7f1f183edc22d67afc0b6223faad25a7ba2ef",
+      "capture": "source/docs/REIL_PREREQUISITES_STATUS_20261004.md",
+      "repo_path": "bms-balancing/docs/REIL_PREREQUISITES_STATUS_20261004.md",
+      "ref": "dc6e5b7e043ff11b73095ddb9d60db7837e665c7",
+      "git_blob": "4ed716394d4001fe99a9a701bc960f27eacf85ca",
+      "bytes": 190800,
+      "binding": "Direct fixed-commit retrieval"
+    },
+    {
+      "sha256": "4efb197d2bb799edf1f712a889d826b15207d0e45ff1a7b7958884559bfac150",
+      "capture": "source/scripts/reil_c4_h.py",
+      "repo_path": "bms-balancing/scripts/reil_c4_h.py",
+      "ref": "dc6e5b7e043ff11b73095ddb9d60db7837e665c7",
+      "git_blob": "6cea82b864bba7270d5c6c7c0296b0738a6e9e9e",
+      "bytes": 63723,
+      "binding": "Direct fixed-commit retrieval; same bytes as prior 0b2-fix reference"
+    },
+    {
+      "sha256": "8b8477238290cb35491c060b231031b79b277098bae1c0e7e48621d720a5aa9d",
+      "capture": "source/scripts/reil_c4_hb.py",
+      "repo_path": "bms-balancing/scripts/reil_c4_hb.py",
+      "ref": "dc6e5b7e043ff11b73095ddb9d60db7837e665c7",
+      "git_blob": "320b4b61944dc57978ff5e5d398ba71d81929d95",
+      "bytes": 85307,
+      "binding": "Direct fixed-commit retrieval; same bytes as prior 0b2-fix reference"
+    },
+    {
+      "sha256": "b1d8953a346f034a4eecbbc695198f58e1deefcb0a1ba9b00fab631b1d41aa75",
+      "capture": "source/docs/REIL_C4E_APPROVAL_REQUEST_20261014.md",
+      "repo_path": "bms-balancing/docs/REIL_C4E_APPROVAL_REQUEST_20261014.md",
+      "ref": "89d18f546cef0172ee53105ae04ba66d1e224370",
+      "git_blob": "ef8586be299277793916d86c591c3f52152d8d0d",
+      "bytes": 22066,
+      "binding": "Prior fixed-commit capture; path unchanged in complete base-to-head comparison"
+    },
+    {
+      "sha256": "b648bf9d570c6abb964e08c2ad35b1fc4d8b39e7aadabf40e7c1f19b146c026f",
+      "capture": "source/docs/REIL_C4E_PREREVIEW_SEND_20261014.md",
+      "repo_path": "bms-balancing/docs/REIL_C4E_PREREVIEW_SEND_20261014.md",
+      "ref": "89d18f546cef0172ee53105ae04ba66d1e224370",
+      "git_blob": "26684422d4ddf2e7afda6bfc4b3a768faa4e9f00",
+      "bytes": 3515,
+      "binding": "Prior fixed-commit capture; path unchanged in complete base-to-head comparison"
+    },
+    {
+      "sha256": "94b0892a4e7fc7a4dc916fa785d1029f269d61dec3c8826d08f83aa9ffeedcca",
+      "capture": "source/docs/REIL_EXTERNAL_VALIDATION_PROTOCOL_v2_ANNEX_A.md",
+      "repo_path": "bms-balancing/docs/REIL_EXTERNAL_VALIDATION_PROTOCOL_v2_ANNEX_A.md",
+      "ref": "89d18f546cef0172ee53105ae04ba66d1e224370",
+      "git_blob": "9f49d6061cf3c9e69ed35e3b00e5e0addafd8fd3",
+      "bytes": 37308,
+      "binding": "Prior fixed-commit capture; path unchanged in complete base-to-head comparison"
+    },
+    {
+      "sha256": "793b326ebf86a6db3b855d828aff4d6b6dddc824bed8d00f4161537b1cc06e3a",
+      "capture": "source/scripts/reil_p0.py",
+      "repo_path": "bms-balancing/scripts/reil_p0.py",
+      "ref": "89d18f546cef0172ee53105ae04ba66d1e224370",
+      "git_blob": "b7ef272f412e1b10f35ae841d961377ff4854d64",
+      "bytes": 23941,
+      "binding": "Prior fixed-commit capture; path unchanged in complete base-to-head comparison"
+    },
+    {
+      "sha256": "22dcc8e5ef6430253f55834743e10808b0c3547c8fb560d0ad415dce77da8f87",
+      "capture": "source/docs/REIL_C4_APPROVAL_REQUEST_v2_20261013.md",
+      "repo_path": "bms-balancing/docs/REIL_C4_APPROVAL_REQUEST_v2_20261013.md",
+      "ref": "89d18f546cef0172ee53105ae04ba66d1e224370",
+      "git_blob": "5abd201780c9db4685a289053d6eb79d8b0ef8e5",
+      "bytes": 22921,
+      "binding": "Prior fixed-commit capture; path unchanged in complete base-to-head comparison"
+    },
+    {
+      "sha256": "0644510032e986aad2f67c824ebab70d8da699bb5a60680330377353200a60a9",
+      "capture": "source/scripts/reil_c4_monitor.py",
+      "repo_path": "bms-balancing/scripts/reil_c4_monitor.py",
+      "ref": "89d18f546cef0172ee53105ae04ba66d1e224370",
+      "git_blob": "0daf23bfac51f77a15a8586a55f898031011d3bf",
+      "bytes": 19115,
+      "binding": "Prior fixed-commit capture; path unchanged in complete base-to-head comparison"
+    },
+    {
+      "sha256": "33b855378fb76634eb314f8cfb0428151ce1ec8b9045bc8447d8e17354a41ac3",
+      "capture": "source/scripts/reil_c4_e3a.py",
+      "repo_path": "bms-balancing/scripts/reil_c4_e3a.py",
+      "ref": "89d18f546cef0172ee53105ae04ba66d1e224370",
+      "git_blob": "2c5e614eb5b565e9c9bab410ae741ffec1d2fca5",
+      "bytes": 32311,
+      "binding": "Prior fixed-commit capture; path unchanged in complete base-to-head comparison"
+    },
+    {
+      "sha256": "3875e65092b38c9b08c907926bd8d1f4ee25674c97c28b5ada935e9027d12a90",
+      "capture": "source/evidence/reil_p0_20261006/P0_RESULT.json",
+      "repo_path": "bms-balancing/evidence/reil_p0_20261006/P0_RESULT.json",
+      "ref": "89d18f546cef0172ee53105ae04ba66d1e224370",
+      "git_blob": "2aa50f0bcb6e3bf3ff9fdfc15729458e6df6c024",
+      "bytes": 127971,
+      "binding": "Prior fixed-commit capture; path unchanged in complete base-to-head comparison"
+    },
+    {
+      "sha256": "74ccb30ff3667efb4f3842a63c6ebf21296a1137bb1165682631f6b5c005fd60",
+      "capture": "source/docs/REIL_EXTERNAL_VALIDATION_PROTOCOL_v2.md",
+      "repo_path": "bms-balancing/docs/REIL_EXTERNAL_VALIDATION_PROTOCOL_v2.md",
+      "ref": "89d18f546cef0172ee53105ae04ba66d1e224370",
+      "git_blob": "872ca88b3b5c57aebf295bd0109e95a830b3ae13",
+      "bytes": 27795,
+      "binding": "Prior fixed-commit capture; path unchanged in complete base-to-head comparison"
+    },
+    {
+      "sha256": "4f12094897b53463097e78dafc0bfe5f37c1d76bb1a6266c0a907d755fb2ebdc",
+      "capture": "source/reil_c6_rebuild_20261013/MANIFEST.json",
+      "repo_path": "bms-balancing/reil_c6_rebuild_20261013/MANIFEST.json",
+      "ref": "89d18f546cef0172ee53105ae04ba66d1e224370",
+      "git_blob": "cd54ebec8949abbcf05c7cf7147178289a32196d",
+      "bytes": 954,
+      "binding": "Prior fixed-commit capture; path unchanged in complete base-to-head comparison"
+    },
+    {
+      "sha256": "64e377e790b2d194f919b5630bc890feda38c88b9b8f9502248013e8a8b56011",
+      "capture": "source/docs/REIL_P0_APPROVAL_REQUEST_20261006.md",
+      "repo_path": "bms-balancing/docs/REIL_P0_APPROVAL_REQUEST_20261006.md",
+      "ref": "89d18f546cef0172ee53105ae04ba66d1e224370",
+      "git_blob": "790734fefa1a8d432bcce8e225d1a229e797accf",
+      "bytes": 12957,
+      "binding": "Prior fixed-commit capture; path unchanged in complete base-to-head comparison"
+    },
+    {
+      "sha256": "73bee8dc412b39863afb64b70bc128cbecee2075a3a17914fc7288f353ef11a6",
+      "capture": "source/scripts/reil_c5_pilot.py",
+      "repo_path": "bms-balancing/scripts/reil_c5_pilot.py",
+      "ref": "89d18f546cef0172ee53105ae04ba66d1e224370",
+      "git_blob": "0e5a9f3a83ca419d311f27e0a63d9f0f7ade0d6b",
+      "bytes": 47164,
+      "binding": "Prior fixed-commit capture; path unchanged in complete base-to-head comparison"
+    },
+    {
+      "sha256": "b2137e1119049f4f2b87c096fbb77a3de26304ea355adac98da85d796728004c",
+      "capture": "source/tests/test_reil_c4_0a_fix.py",
+      "repo_path": "bms-balancing/tests/test_reil_c4_0a_fix.py",
+      "ref": "89d18f546cef0172ee53105ae04ba66d1e224370",
+      "git_blob": "626abed0d1df0065f208f562545fc18f4f248443",
+      "bytes": 19183,
+      "binding": "Prior fixed-commit capture; path unchanged in complete base-to-head comparison"
+    },
+    {
+      "sha256": "b861f16b7fe651b5c68ad57ed77d9079f918bf4ec59d2028cc5b82101f847602",
+      "capture": "source/tests/test_reil_c4_0b1_fix2.py",
+      "repo_path": "bms-balancing/tests/test_reil_c4_0b1_fix2.py",
+      "ref": "89d18f546cef0172ee53105ae04ba66d1e224370",
+      "git_blob": "24211bdbadd4b5a2914051bee13bce83ac80367d",
+      "bytes": 8440,
+      "binding": "Prior fixed-commit capture; path unchanged in complete base-to-head comparison"
+    },
+    {
+      "sha256": "408afc4bb5eb1069583b955e0eb6215bf48dd9259ad474c230549d1b3642df5d",
+      "capture": "source/scripts/reil_c6_profile.py",
+      "repo_path": "bms-balancing/scripts/reil_c6_profile.py",
+      "ref": "89d18f546cef0172ee53105ae04ba66d1e224370",
+      "git_blob": "c32ecdc3c4cdb456514e3abc14975103f412f32d",
+      "bytes": 15915,
+      "binding": "Prior fixed-commit capture; path unchanged in complete base-to-head comparison"
+    },
+    {
+      "sha256": "6b2635d4a97e296a4d2d8749209b66461d3bbfd9009465aaeac3d80a57197e17",
+      "capture": "source/tests/test_reil_c4_0a.py",
+      "repo_path": "bms-balancing/tests/test_reil_c4_0a.py",
+      "ref": "89d18f546cef0172ee53105ae04ba66d1e224370",
+      "git_blob": "c183015e58570b50b6d9bb98a429ddcbad0529cf",
+      "bytes": 20404,
+      "binding": "Prior fixed-commit capture; path unchanged in complete base-to-head comparison"
+    },
+    {
+      "sha256": "bdf78273d50f40ce3154d01a3ef8d36f0f5ea5ec1b04539584809d7b19b46f9c",
+      "capture": "source/reviews/prereview_pybamm_reil_20261003/external/util_LFP.py.txt",
+      "repo_path": "bms-balancing/reviews/prereview_pybamm_reil_20261003/external/util_LFP.py.txt",
+      "ref": "89d18f546cef0172ee53105ae04ba66d1e224370",
+      "git_blob": "1d4afe9f5ef451b9cf479640fd5e361fdbd08bd0",
+      "bytes": 32909,
+      "binding": "Prior fixed-commit capture; path unchanged in complete base-to-head comparison"
+    },
+    {
+      "sha256": "7133c550628c819c2eadca1d2e4e468ce9373d0907ccd9dc098a4c471f4e1297",
+      "capture": "source/tests/test_reil_c4_0b1_fix.py",
+      "repo_path": "bms-balancing/tests/test_reil_c4_0b1_fix.py",
+      "ref": "89d18f546cef0172ee53105ae04ba66d1e224370",
+      "git_blob": "d2e534d326e7cb7bf1989d16cbf88229ef026890",
+      "bytes": 17404,
+      "binding": "Prior fixed-commit capture; path unchanged in complete base-to-head comparison"
+    },
+    {
+      "sha256": "01f58c6d1531054c3aa3745895d6335edd7d967fbd38751cfc7fadc781c57702",
+      "capture": "source/tests/test_reil_c4_0b2.py",
+      "repo_path": "bms-balancing/tests/test_reil_c4_0b2.py",
+      "ref": "89d18f546cef0172ee53105ae04ba66d1e224370",
+      "git_blob": "c42744599d5429859829eba7a08e92ac0df20359",
+      "bytes": 54873,
+      "binding": "Prior fixed-commit capture; path unchanged in complete base-to-head comparison"
+    },
+    {
+      "sha256": "169c9ebb1621ee8ee3b05049daec33c6822ebf48b4fac79d883d5c18b99d10f6",
+      "capture": "source/tests/test_reil_c4_0b2_fix.py",
+      "repo_path": "bms-balancing/tests/test_reil_c4_0b2_fix.py",
+      "ref": "89d18f546cef0172ee53105ae04ba66d1e224370",
+      "git_blob": "e169b1676ca747d240836017f265f150071e7020",
+      "bytes": 18087,
+      "binding": "Prior fixed-commit capture; path unchanged in complete base-to-head comparison"
+    },
+    {
+      "sha256": "1040e531aa4a6696bb1f37ac1075f23db361ff99d0d3f7b6008afb590c346b2c",
+      "capture": "source/tests/test_reil_c4_0b1.py",
+      "repo_path": "bms-balancing/tests/test_reil_c4_0b1.py",
+      "ref": "89d18f546cef0172ee53105ae04ba66d1e224370",
+      "git_blob": "519f85f5b3115c3ccd82000ef8df58b3ac7796fe",
+      "bytes": 32038,
+      "binding": "Prior fixed-commit capture; path unchanged in complete base-to-head comparison"
+    },
+    {
+      "sha256": "3c19e45ef8a64ce67cda1f623551e758d4c0f67086bbae02b978428d78de1c76",
+      "capture": "source/original_util/util_LFP.py.txt",
+      "repo_path": "REIL original util_LFP.py",
+      "ref": "1188c371e5836df4a7e5f5acf336a34ffd4027e6",
+      "git_blob": "33a2f3768f5a046ba6e028c19760ad68f28dde84",
+      "bytes": 33754,
+      "binding": "Prior independently pinned public original source; text-only copy, no data workbook"
+    },
+    {
+      "sha256": "fe2b39b222c84b61a39a14c05047ca7ca86cbb2872925c58eca400c7de673f95",
+      "capture": "source/docs/REIL_EXTERNAL_VALIDATION_PROTOCOL_v2_ANNEX_B.md",
+      "repo_path": "bms-balancing/docs/REIL_EXTERNAL_VALIDATION_PROTOCOL_v2_ANNEX_B.md",
+      "ref": "89d18f546cef0172ee53105ae04ba66d1e224370",
+      "git_blob": "b25f9c4eb56d0cfe609b47c5d8463e9f17fac53b",
+      "bytes": 17210,
+      "binding": "Prior fixed-commit capture; path unchanged in complete base-to-head comparison"
+    },
+    {
+      "sha256": "c208822160597fa58df42d5c393be93417957fe17e9a6d2f93cbfff6f567ad8b",
+      "capture": "source/docs/REIL_EXTERNAL_VALIDATION_PROTOCOL_v2_ANNEX_C.md",
+      "repo_path": "bms-balancing/docs/REIL_EXTERNAL_VALIDATION_PROTOCOL_v2_ANNEX_C.md",
+      "ref": "89d18f546cef0172ee53105ae04ba66d1e224370",
+      "git_blob": "f47c1fc2cad5b8e8c2e692f6ee5b93a12d8ae547",
+      "bytes": 12624,
+      "binding": "Prior fixed-commit capture; path unchanged in complete base-to-head comparison"
+    },
+    {
+      "sha256": "bed03220cde48b33e55db4887ff3a1fe572e3386c3c00d57aa528dfb34c316ec",
+      "capture": "source/docs/REIL_EXTERNAL_VALIDATION_PROTOCOL_v2_ANNEX_D.md",
+      "repo_path": "bms-balancing/docs/REIL_EXTERNAL_VALIDATION_PROTOCOL_v2_ANNEX_D.md",
+      "ref": "89d18f546cef0172ee53105ae04ba66d1e224370",
+      "git_blob": "68bd7fd8c140b5b08d0536a91d461c8c5e2aa8c6",
+      "bytes": 16108,
+      "binding": "Prior fixed-commit capture; path unchanged in complete base-to-head comparison"
+    }
+  ],
+  "captured_source_count": 30,
+  "captured_git_blob_matches": 30,
+  "comparison": {
+    "ahead": 5,
+    "base": "89d18f546cef0172ee53105ae04ba66d1e224370",
+    "total_commits": 5,
+    "status": "ahead",
+    "head": "dc6e5b7e043ff11b73095ddb9d60db7837e665c7",
+    "production_and_seven_tests_changed": false,
+    "behind": 0,
+    "too_large": null
+  },
+  "new_test_ids": [
+    "m_1",
+    "m_2",
+    "r_1",
+    "r_2",
+    "r_3",
+    "r_4",
+    "r_5",
+    "r_6",
+    "t_1",
+    "d_1",
+    "d_2",
+    "d_3",
+    "d_4",
+    "d_5",
+    "d_6",
+    "s_1",
+    "s_2",
+    "s_3",
+    "s_4",
+    "s_5",
+    "s_6"
+  ],
+  "new_tests": 21,
+  "existing_tests": 159,
+  "GREEN_tests": 180,
+  "regression_static_counts": {
+    "GREEN_fork_cap": 17,
+    "COBYQA_calls": 14,
+    "per_call_internal_maxfev": 50,
+    "per_return_independent_reevaluation_max": 1,
+    "old_real_fork": 10,
+    "Sobol_related_tests": 15,
+    "GREEN_real_fork": 15,
+    "Sobol_related_tests_are_not_generator_call_count": true,
+    "fake_minimize_max": 995,
+    "new_proposed_fork": 5,
+    "preserved_util_without_optimizer": {
+      "test06": {
+        "extract_battery_data_max": 5,
+        "objective_fun_max": 3,
+        "dVdQ_hc_max": 9
+      },
+      "b2_h1_h4": {
+        "extract_battery_data_max": 4,
+        "objective_fun_max": 0,
+        "dVdQ_hc_max": 48
+      },
+      "scope": "Separate named API entry counts; nested calls not independent optimizer evaluations; static conservative bounds, not observed execution counts"
+    },
+    "old_real_fork_by_family": {
+      "fix_0b1": 3,
+      "fix_0a": 1,
+      "original_0b2": 2,
+      "original_0a": 3,
+      "fix2_0b1": 1
+    }
+  },
+  "budget_arithmetic": {
+    "E1_reserve": 1800,
+    "E0_steps": 1560,
+    "E1_measure": 9000,
+    "E1_record": 9900,
+    "E1_stage": 10800
+  },
+  "counterexamples": {
+    "active_stop_done_race": {
+      "final_observation_state": "COMPLETED",
+      "global_stop_preserved": true,
+      "done_arrives_only_in_final_drain": true,
+      "detected_active_s": 1800.01,
+      "E3a": "INCOMPLETE",
+      "type": "Static control-flow possibility, not an observed process race",
+      "limit_s": 1800
+    },
+    "after_final_record_growth": {
+      "at_first_check_bytes": 1073741724,
+      "after_end_record_bytes": 1073742748,
+      "later_end_record_bytes": 1024,
+      "excess_bytes": 924,
+      "type": "Constant arithmetic only; no file growth experiment",
+      "limit_bytes": 1073741824
+    }
+  },
+  "received_code_import_calls_or_execution": 0,
+  "tests": 0,
+  "optimizer": 0,
+  "Python": 0,
+  "Sobol": 0,
+  "COMSOL_JVM_compile_solve": 0,
+  "REIL_xlsx_pkl_notebook_download_or_opening": 0,
+  "repository_source_changes": 0,
+  "external_delivery": 0,
+  "own_PowerShell_data_tools_only": true,
+  "execution_authorization": false
+}
