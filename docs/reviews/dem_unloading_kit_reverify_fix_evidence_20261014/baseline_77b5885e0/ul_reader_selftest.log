@@ -1,0 +1,117 @@
+$ python3 -I ul_reader.py --selftest
+# cwd = kit folder · rc = 0 · 4.2 s
+# ── stdout ──
+  ✓ R1 ULR1-02 측정 뒤 TIMEOUT — 사다리 0.2 · 0.25 · 0.3 · 0.35 µm / 1.2 · 0.8 · 0.6 · 0.4 MPa · +2 확인 끝 · 분리 전 시간 끝 → primary OK · ρ = 0.2026077873428664 % · 실제 괄호 [0.2, 0.25] µm · trajectory TIMEOUT (옛 "ρ > 0.315 %" 하한 아님)
+  ✓ R1 ULR1-02 교차 전 TIMEOUT · 마지막 정상 단까지 정상 · 접촉 · 단조 → LOWER_BOUND (ρ > ρ(0.3 µm)) · 점 추정 없음
+  ✓ R1 ULR1-02 교차 전 TIMEOUT 인데 비단조 (1.9 → 2.1) → 하한 자동 발행 안 함 = UNIDENTIFIED (사유 기록)
+  ✓ R2 ULR1-01 결정표 t1: ρ_UB 1.0 · ρ_UT 1.04 → δ_dt 0.04 → 다음 = UVa (UB · UT 끝 뒤에만) · ρ_UV 1.03 (기준 1.0) → 튜플 t1 · 7:3 최종 팔 UB
+  ✓ R2 ULR1-01 결정표 t2: ρ_UB 1.0 · ρ_UT 1.04 → δ_dt 0.04 → 다음 = UVa (UB · UT 끝 뒤에만) · ρ_UV 1.2 (기준 1.0) → 튜플 t2 · 7:3 최종 팔 UVa
+  ✓ R2 ULR1-01 결정표 t3: ρ_UB 1.0 · ρ_UT 1.2 → δ_dt 0.20 → 다음 = UVb (UB · UT 끝 뒤에만) · ρ_UV 1.22 (기준 1.2) → 튜플 t3 · 7:3 최종 팔 UT3
+  ✓ R2 ULR1-01 결정표 t4: ρ_UB 1.0 · ρ_UT 1.2 → δ_dt 0.20 → 다음 = UVb (UB · UT 끝 뒤에만) · ρ_UV 1.4 (기준 1.2) → 튜플 t4 · 7:3 최종 팔 UVb
+  ✓ R2 ULR1-01 경계 δ = 0.10 정확히 (ρ 1.0 ↔ 1.1 · 부동소수 0.10000000000000009) = ≤ 쪽 → dt* = dt₀ · δ_v 0.10 → t1 (UB)
+  ✓ R3 ULR1-01 UT 끝점 UNSTEADY → δ_dt 없음 → SELECTION_UNRESOLVED · 다음 제출 없음 (UV 안 냄)
+  ✓ R3 ULR1-01 UT 끝점 P̄ = NaN (CSV "nan") → else 로 흘리지 않는다 → SELECTION_UNRESOLVED
+  ✓ R3 ULR1-01 UV 무교차 (상한) → δ_v 없음 → SELECTION_UNRESOLVED (최종 튜플 없음 · 나머지 네 침대 U 없음)
+  ✓ R3 NO_BRACKET 이름은 개발 팔 판정에 쓰지 않는다 (§13-1 — 중력 팔 전용)
+  ✓ R4 교차 끝점 S3 FAIL (총힘 잔차 > 1e-3) → 끝점 무효 → primary UNIDENTIFIED (S3 사유) · 선택 UNRESOLVED
+  ✓ R4 k* 의 마지막 두 창 thermo σ_P 0.5 MPa (> P_meas / 3) → NOISE_FLOOR (주 값 아님 · 선택 UNRESOLVED)
+  ✓ R5 관문: UB · UT 판독 전 UVa · UVb 거부 (동시 UV 제출 없음 · §13-5 ②)
+  ✓ R5 관문: δ_dt 0.2 → dt* = dt₀/2 → UVb 만 허용 · UVa 거부
+  ✓ R5 ULR1-05 결정표 3 행 (UT 채택) → UTc (UT 의 R_M 에서 이어 돌림) 허용 · UT3 를 S0 에서 새로 (7:3) 거부 · G_UT3 허용 (R_M = UT)
+  ✓ R5 다른 침대: 복원 전 거부 · 복원 뒤에는 최종 튜플의 팔 (UT3) 만 허용 · UB · UVa 거부
+  ✓ R5 10:0: 이완 연장 결정 (S0′) 전 RJ2 · U 거부
+  ✓ R20 대조: UB · UT 정상 (교차 k 2 · 확인 k 3 · 4 정상) → UT OK · δ_dt 0 → UVa 허용
+  ✓ R20 ULKR-01 확인 두 단 UNSTEADY (12 창 소진 · steady 0) · S3 FAIL (Codex confirmation_invalid) → UT UNIDENTIFIED · SELECTION_UNRESOLVED · UVa · UVb 거부
+  ✓ R20 ULKR-01 확인 두 단 P̄ = NaN 만 (교차 양 끝은 유효 · Codex confirmation_nan) → UNIDENTIFIED · 제출 거부
+  ✓ R20 ULKR-01 둘째 확인 단만 UNSTEADY → UNIDENTIFIED · 제출 거부
+  ✓ R20 ULKR-01 첫 확인 단 S3 FAIL 만 (정상 · 유한) → UNIDENTIFIED · 제출 거부
+  ✓ R20 ULKR-01 확인 단이 B 단이 아님 (A) → UNIDENTIFIED (등록 확인 = B 두 단)
+  ✓ R20 ULKR-01 첫 확인 단 기록 (k 3) 누락 — 남은 단이 k 2 → 4 로 건너뜀 → UNIDENTIFIED (누락 · 순서) · 제출 거부
+  ✓ R20 Q1 확인 두 단에서 판이 떨어짐 (벽 접촉 0 · 정상 · S3 PASS · 유한) → 주 값 OK 그대로 (판 접촉은 확인 단 조건이 아니다)
+  ✓ R21 ULKR-02 첫 A 단 (k 0 → 1) 교차 · 반등 없음 → ρ 0.1798695599526285 · 괄호 [0, 0.2] µm · 합집합 = 그 괄호 (옛 코드 = null)
+  ✓ R21 ULKR-02 첫 A 단 교차 + 뒤 반등 (1.2 → 0.7) → 합집합 외곽 [0, 0.4] µm (옛 [0.3, 0.4]) · 0:10 괄호 [0.2, 0.25] µm 와 10 쌍 = OVERLAP (옛 SEPARATED)
+  ✓ R21 ULKR-02 확인 뒤 단 하나 P̄ 비유한 → 주 값 OK 그대로 · 합집합 미계산 (null · 사유 — 10 쌍 표 미식별)
+  ✓ R21 ULKR-02 불변식: 보고 합집합 ⊇ 첫 교차 괄호 (B 단 교차 · 반등 없음 = 같음)
+  ✓ R22 ULKR-04 교차 끝점 원자 덤프 한 행 fz = nan (파서가 그 행을 버림 — 옛 코드는 남은 4 원자로 S3 PASS) → UB UNIDENTIFIED (사유) · 선택 UNRESOLVED
+  ✓ R22 ULKR-04 교차 끝점 마지막 창 벽 덤프 머리 step = 요청 − 100,000 → UB UNIDENTIFIED (사유) · 선택 UNRESOLVED
+  ✓ R22 ULKR-04 교차 끝점 원자 · 쌍 덤프 머리 둘 다 100,000 과거 (서로는 같음) → UB UNIDENTIFIED (사유) · 선택 UNRESOLVED
+  ✓ R22 ULKR-04 k 1 단 기록 줄 열 수 틀림 (CSV 가 그 줄을 버림 — 옛 코드는 k 0 → 2 를 교차로 씀) → UB UNIDENTIFIED (사유) · 선택 UNRESOLVED
+  ✓ R22 대조: 같은 원자 fz = 1e-3 N (유한 · 불평형) → S3 FAIL → UNIDENTIFIED (nan 행을 버리면 이 실패가 PASS 로 바뀌던 것)
+  ✓ R23 대조: UB ρ 0.2026 · UT ρ 0.3827 (R_M 에서 멈춤 · RM_STOP) · UVb = UT → 선택 t3 (UT3 = UT + UTc)
+  ✓ R23 ULKR-03 UTc = 해시로 묶인 UT 부모 관측 (복사 없음) + 이어 돌림 → UTc 판독 주 값 = UT 주 값 (OK · ρ 0.3827035983143033) · 이어 돌림 OK
+  ✓ R23 ULKR-03 최종 report (t3) = UT 주 값 (OK · ρ 0.3827) + UTc 보조 관측 (분리 · 분리 뒤 4 창 · trajectory DONE · 출처 UTc)
+  ✓ R23 ULKR-03 UTc 시작 뒤 UT 부모 파일 (screen.txt) 이 바뀜 (sha256 ≠ 목록) → UTc 이어 돌림 무효 · UTc 주 값 UNIDENTIFIED · report = UT 주 값 그대로 · 보조 SEP_INCOMPLETE
+  ✓ R23 ULKR-03 옛 러너 꼴 (UT 기록 CSV 를 UTc 에 복사) → 경계 중복 (R_M step 이하 UTc 기록) → 이어 돌림 무효 · report = UT 주 값 + 보조 SEP_INCOMPLETE
+  ✓ R23 ULKR-03 경계 누락 (UTc 첫 단 k = k_RM + 2) → 이어 돌림 무효 · report = UT 주 값 + 보조 SEP_INCOMPLETE
+  ✓ R23 ULKR-03 run_manifest 의 rm_step ≠ 부모 RM 사건 step → 이어 돌림 무효 (부모 기록 끝 ≠ R_M)
+  ✓ R23 ULKR-03 UTc 아직 없음 → report = UT 주 값 (OK) · 보조 SEP_INCOMPLETE (UTc 없음)
+  ✓ R23 ULKR-03 parentsums = 부모 UT 의 판독 대상 파일 sha256 (기록 · 화면 · 덤프 · 상태 · R_M restart) — 단 끝 restart_unload · arm_verdict.json 은 뺀다
+  ✓ R24 대조: 분리 단 벽 접촉 [0, 0, 0, 0, 0] · 덱 DONE (SEPARATED w2 · POST_DONE w5) → 판독기 분리 (w 2) · 분리 뒤 4 창 → trajectory DONE · 주 값 OK
+  ✓ R24 ULKR-07 덱 DONE 인데 판독기 벽 덤프 [0, 0, 0, 0, 1] (마지막 창 재접촉 · Codex done_recontact) → trajectory SEP_INCOMPLETE (DONE 아님) · 주 값 OK 그대로
+  ✓ R24 ULKR-07 덱 DONE 인데 마지막 창 벽 덤프 결손 (Codex done_missing) → SEP_INCOMPLETE · 주 값 OK
+  ✓ R24 ULKR-07 판독기 분리 선언 창이 유지 예산 밖 (w 13 > 12 — 11 창 접촉 뒤 0 다섯) · 덱 DONE → SEP_INCOMPLETE · 주 값 OK
+  ✓ R24 Q6 덱 요약 SEP_INCOMPLETE (재접촉 뒤 예산 끝) → trajectory SEP_INCOMPLETE · 주 값 OK
+  ✓ R24 ULKR-07 덱 SEPARATED 사건 (w 3) ≠ 판독기 선언 창 (w 2) → SEP_INCOMPLETE (덱 ↔ 판독기 불일치 = 보조 미완료) · 주 값 OK
+  ✓ R24 ULKR-07 덱 DONE 인데 SEPARATED · POST_DONE 사건 없음 → SEP_INCOMPLETE · 주 값 OK
+  ✓ R24 ULKR-07 이동 = 연속 초기화 (덱 ul_sepn 0): k 4 마지막 창 0 + k 5 첫 창 0 → 선언은 k 5 w 2 (덱과 같다 · 옛 판독 k 5 w 1) · DONE · 분리 뒤 창 = w 2–5
+  ✓ R24 ULKR-07 separation(): CONFIRM (단계 1) 창의 연속 0 은 선언 아님 (덱 = SEPARATE 단계 2 에서만) · 단계 2 로 넘어가면 그때 선언
+  ✓ R26 대조: 일반 팔 (UB · g 9.81) 교차 끝점 무접촉 원자 총힘 = −m g_aux (무게의 1e-6) → S3 PASS · 주 값 OK (ρ 0.2026…)
+  ✓ R26 ULKR-10 B 중력 팔 (G_UB · g_aux 9.81e-6) 같은 끝점 = 자유 낙하 → S3 FAIL (R = 1 · 기본 g 9.81 이면 R 1e-6 PASS)
+  ✓ R26 ULKR-10 B _arm_g: 일반 팔 · UTc = 표 S3 g 9.81 · 중력 팔 G_UB · G_UVa · G_UVb · G_UT3 = g_aux 9.81e-6
+  ✓ R27 ULKR-12 팔 판정 ε: C_all = S0 봉인 (Σ V ÷ A) · S0 · 교차 끝점 둘 (k 1 · 2 · 완전 프레임) · M (보간 높이 · ε_all 만) = 1 − C_all / h
+  ✓ R27 ULKR-12 팔 판정 W_proxy = k 0 → M 정착 단 사다리꼴 (끝 조각 k* − 1 → M 은 P_meas) × 1e-6 = 4.036875e-8 J 보고 (판이 받은 일 아님)
+  ✓ R27 ULKR-12 최종 보고 (t1 = UB) 에 같은 ε · W_proxy (파일 → 팔 판정 → report)
+  ✓ R27 ULKR-12 Codex fixed_volume (판독기) — 교차 끝점 k 2 프레임에서 S0 원자 한 행이 빠짐 → 그 끝점 ε NOT_COMPUTED (C_all 다시 계산해 줄이지 않는다) · S0 · k 1 · M 그대로 · 주 값 OK
+  ✓ R27 ULKR-12 W_proxy 구간 (k 0 → M) 에 비정상 (UNSTEADY) 단 하나 = 미계산 (None · 0 J 아님) · 주 값 OK 그대로 (끝점 · 확인 단 정상)
+  ✓ R6 ULR1-03 [2, 0, 0] (P 0.4 · 0 · 0) → CONTACT → (첫 0 창 = 대기) → 둘째 0 창 끝에 SEPARATED · TENSION 을 거치지 않는다
+  ✓ R6 ULR1-03 [0, 0, 1, 1] (P 0 · 0 · 0.2 · 0.2) → 둘째 창에 분리 → 셋째 창 재접촉 → 분리 계수 · 분리 뒤 창 · 표면 관측 초기화 (분리 미완료)
+  ✓ R6 ULR1-03 [0, 결손, 0] → OBS_MISSING 은 0 이 아니다 → 분리 선언 없음
+  ✓ R6 ULR1-03 P ≤ 0 만으로 분리 아님 — 접촉 2 (+0.25 · −0.25 순힘 0) · P 0 → TENSION (분리 아님)
+  ✓ R7 ULR1-03 상쇄: 교차 끝점 압축 1.6 · 인장 0.6 MPa (순 1.0) → 접촉 상태 CONTACT · 상쇄 표지 참 (0.6 ≥ 0.5 · P_meas) · 처분 = 진단값 (순위 밖) · 주 측정 자격은 따로 (세 칸)
+  ✓ R8 ULR1-05 ① 비단조 1.2 · 0.8 · 1.3 · 0.7 MPa → 첫 교차 ρ 0.9229910312286136 % · 비단조 표지 · 보고 괄호 = 교차 괄호 합집합 [1.0, 1.15] µm · b 판정 없음
+  ✓ R8 A 단 교차 → 실제 괄호 = A 괄호 [0.2, 0.4] µm 그대로 (예정 Δz_B 아님 · §12-3)
+  ✓ R9 ULR1-04 생성된 덱에서 창 물리 시간 다시 계산: UB 5,000 × 1e-6 · UT · U_UT3 · U_UVb 10,000 × 5e-7 = 0.005 덱 s (모두 같다)
+  ✓ R9 ULR1-04 S4 반례 — 생성된 U_UT3 덱 (창 10,000 step = 0.005 s) 에서 표면 0.6 µm/s = 0.003 µm/창 → S4 FAIL
+  ✓ R9 ULR1-04 판별력 — 옛 규약 (dt₀/2 에서도 5,000 step = 0.0025 s) 덱이면 0.0015 µm/창 → PASS 로 바뀐다 (그래서 덱에서 다시 계산한다)
+  ✓ R10 이어 돌림: 실패한 시도가 남긴 이어 돌림 step 뒤 창 줄 (P 9.999) 은 버리고 새 시도 줄만 쓴다 — 판독 같음 (ρ 0.2026…)
+  ✓ R11 10 쌍 표: 괄호 겹침 = 미구분 (0:10 ↔ 3:7) · 분리 = 구분 (3:7 ↔ 5:5) · 상쇄 진단값 · 무효 침대 = 미식별 · 10 쌍 전부
+  ✓ R12 KE 기준: 병진 = 표 (7:3 2.04e-07) · 회전 = UK 창 평균 셋의 중앙값 (2e-08) · S2 문턱 = 10 × 합 = 2.24e-06 · 기준 파일
+  ✓ R25 ULKR-09 UK Codex one_uk_row (step 1 · w 1 · 회전 0.001 J 한 줄 — 옛 판독 S2max 0.01000204 J) → KE 기준 미발행 (s2_limit 없음 · ul_base.in 안 씀)
+  ✓ R25 ULKR-09 UK 같은 창 두 번 (w 1 · 2 · 2) → KE 기준 미발행 (s2_limit 없음 · ul_base.in 안 씀)
+  ✓ R25 ULKR-09 UK 창 간격 ≠ T_W (셋째 창 +1,000 step) → KE 기준 미발행 (s2_limit 없음 · ul_base.in 안 씀)
+  ✓ R25 ULKR-09 UK 판 이동 (둘째 창 plate_z ≠ h0 · lift ≠ 0) → KE 기준 미발행 (s2_limit 없음 · ul_base.in 안 씀)
+  ✓ R25 ULKR-09 UK k = 1 (S0 k = 0 아님) → KE 기준 미발행 (s2_limit 없음 · ul_base.in 안 씀)
+  ✓ R25 ULKR-09 UK 단계 0 (HOLD0 4 아님) → KE 기준 미발행 (s2_limit 없음 · ul_base.in 안 씀)
+  ✓ R25 ULKR-09 UK 창 넷 (정확히 셋 아님) → KE 기준 미발행 (s2_limit 없음 · ul_base.in 안 씀)
+  ✓ R25 ULKR-09 UK 다른 팔 (UB) 의 창 기록 → KE 기준 미발행 (s2_limit 없음 · ul_base.in 안 씀)
+  ✓ R25 ULKR-09 UK 열 수 다른 줄 (파서가 버린 줄) → KE 기준 미발행 (s2_limit 없음 · ul_base.in 안 씀)
+  ✓ R25 ULKR-09 UK 덱 요약 GUARD (DONE 아님) → KE 기준 미발행 (s2_limit 없음 · ul_base.in 안 씀)
+  ✓ R25 ULKR-09 UK 단계 기술 실패 (run_check FAIL · 화면 ERROR) → KE 기준 미발행 (s2_limit 없음 · ul_base.in 안 씀)
+  ✓ R13 10:0 S0′: EXT 로그 ± 5,000 · 마지막 25 줄 1 % 안 → S0′ = 3,650,000 · KE 병진 기준 = 5 줄 창 평균 다섯의 중앙값 · 체크포인트 실재
+  ✓ R14 복원 판정 조립: reset 로그 다섯 · G0 · G1 · G2 · G2c · mesh md5 · G3 · PRE = POST · UN 소거 보임 · 이력 시험 rc 0 (H0–H5 PASS) → RESTORED
+  ✓ R14 이력 시험 없음 · rc 2 → UNCONFIRMED (표지만 달아 U 로 넘기지 않는다)
+  ✓ R14 이력 시험 SYN 의 판 접촉 법선력 부호 (+1) ≠ 표 plate_fn_compressive_sign (−1) → UNCONFIRMED (표를 결과 0 건에서 고친 뒤)
+  ✓ R14 바닥 primitive per-atom reset 로그 빠짐 → VALUE_MISMATCH
+  ✓ R14 정상 RJ 폴더 + 증서 → 다음 제출 (UB) 허용 (반례의 대조)
+  ✓ R17 ULKR-05 PRE · POST 가 3 원자를 선언하고 1 행만 (둘 다 파서 ok=false) → UNCONFIRMED · 다음 제출 (UB) 거부
+  ✓ R17 ULKR-05 POST 에 같은 ID 둘 (선언 = 행 수) → UNCONFIRMED · 다음 제출 (UB) 거부
+  ✓ R17 ULKR-05 PRE 한 행 NaN (파서가 버림 — 관측 결손 · 수치 불일치가 아니다) → UNCONFIRMED · 다음 제출 (UB) 거부
+  ✓ R17 ULKR-05 R_END 머리 step = S0 + 1,000 (기대 S0 + 2,000) → UNCONFIRMED · 다음 제출 (UB) 거부
+  ✓ R17 ULKR-05 UN = ID 999 하나의 0 (R_END = ID 1 · 2 · 3 · ID 1 이력 비영) → UNCONFIRMED · 다음 제출 (UB) 거부
+  ✓ R17 ULKR-05 UN 화면 ERROR · 단계 기록 FAIL rc=1 (부분 덤프는 남음) → SYNTAX_FAIL · 다음 제출 (UB) 거부
+  ✓ R17 ULKR-05 R 단계 기록 (run_check.txt) 없음 → SYNTAX_FAIL · 다음 제출 (UB) 거부
+  ✓ R17 ULKR-05 7:3 Ut0 단계 기록 FAIL rc=1 (R 의 선행 단계) → SYNTAX_FAIL · 다음 제출 (UB) 거부
+  ✓ R17 ULKR-05 RESTORED 증서인데 RJ 잡 기록 끝 줄 fails=1 (러너가 같은 실행 끝에 기술 실패) → 다음 제출 (UB) 거부
+  ✓ R17 ULKR-05 RESTORED 증서인데 RJ 잡 기록에 끝 줄 없음 (러너가 끝내지 못함) → 다음 제출 거부
+  ✓ R18 ULKR-08 이력 시험 H0–H5 PASS · rc 0 인데 SYN 없음 (NOT_RUN · 부호 null — Codex actual_bundle_without_SYN) → UNCONFIRMED · 다음 제출 거부
+  ✓ R18 ULKR-08 이력 시험 H0–H5 PASS · rc 0 인데 SYN FAIL (부호는 표와 같음) → UNCONFIRMED · 다음 제출 거부
+  ✓ R18 ULKR-08 이력 시험 H0–H5 PASS · rc 0 인데 총힘 출력 시점 FAIL (C1 선행조건) → UNCONFIRMED · 다음 제출 거부
+  ✓ R18 ULKR-08 이력 시험 H0–H5 PASS · rc 0 인데 판정 schema 다름 (다른 판정 파일) → UNCONFIRMED · 다음 제출 거부
+  ✓ R19 판독기의 바닥 이력 관측 열 = 생성기가 R · UNread 덱에 쓰는 열 (PRE write_dump · POST 덤프 — 따로 적은 사본이 어긋나면 관측 전부 결손)
+  ✓ R18 ULKR-08 실제 반입 이력 판정 (10-14 job 283122 · SYN PASS −1 · 총힘 PASS) → RESTORED · 같은 판정에서 SYN 만 뺌 → UNCONFIRMED
+  ✓ R16 중력 팔 복원: R_M setup 줄 (KE · 원자) = 출처 팔 R_M 정규 줄 · G2 원자 · G2c 쌍 = 출처 팔 R_M 창 끝 덤프 → PASS · 판정 NO_BRACKET
+  ✓ R16 중력 팔 R_M 원자 하나 다름 → G2 FAIL → 복원 실패 = TECH (그 팔 값 없음)
+  ✓ R15 원 파일 복사 명령 (침대마다 · 표에서): 체크포인트 · atom · contact · mesh · 원 로그 · 원 마지막 조각 덱 = cp -n 여섯 줄 · 10:0 = restart_settling_3600000 · 주소 · 사용자 이름 없음
+selftest: PASS (0 실패)
+# ── stderr ──
+# ── rc = 0 ──

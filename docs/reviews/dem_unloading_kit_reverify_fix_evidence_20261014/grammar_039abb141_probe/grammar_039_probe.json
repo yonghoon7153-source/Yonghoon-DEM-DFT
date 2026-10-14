@@ -1,0 +1,54 @@
+{
+ "pin": "039abb141",
+ "steps": [
+  {
+   "cmd": "bash <039abb141>/docs/data/ps45_unload_20261009/history_test/run_history.sh --grammar-only (mock binary)",
+   "rc": 0,
+   "stdout_tail": "[11:45:29] kit = /tmp/gram039_m8jjvgmw/work/kit_20261014_000000\n[11:45:29] 사전 점검\n  ✓ 묶음 SHA256SUMS\n  ⚠ LMP sha256 ed19b4e9a51a5ae2e9cedb2e1a23b40e0c685eee540cea3da8e185e1557ffac0 ≠ 등록 빌드 — ALLOW_OTHER_LMP=1 (이탈 · run_manifest 에 남는다)\n  ✓ /tmp/gram039_m8jjvgmw/bin/mpirun --oversubscribe --bind-to none -np 6 (H2 = -np 4) · /usr/local/bin/python3\n[11:45:29] 런 폴더 = /tmp/gram039_m8jjvgmw/work/gram_20261014_000000\n[11:45:29] ▶ P (in.hist_producer.liggghts · -np 6)\n[11:45:29] ■ P rc=0\n[11:45:29] ▶ GA (in.hist_grammar.liggghts · -np 6)\n[11:45:30] ■ GA rc=0\n[11:45:30] ▶ GB (in.hist_grammar.liggghts · -np 6)\n[11:45:30] ■ GB rc=0\nGRAMMAR_VERDICT status=PASS (0 = 맨 바깥 include 이어 돌림 · 변수 주기 덤프 · move/mesh 여러 번 · 상태 파일 복귀 전부 기대대로)\n  ✓ P_tech\n  ✓ GA_exists\n  ✓ GA_tech\n  ✓ GA_markers\n  ✓ GA_atom_dump_steps\n  ✓ GA_wall_dump_steps\n  ✓ GA_mesh_z\n  ✓ GA_restart_state\n  ✓ GA_contact_geo\n  ✓ GB_exists\n  ✓ GB_tech\n  ✓ GB_markers\n  ✓ GB_atom_dump_steps\n  ✓ GB_wall_dump_steps\n  ✓ GB_mesh_z\n  ✓ GB_restart_state\n  ✓ GB_contact_geo\n  ✓ GA_args\n  ✓ GB_args\n  rc = 0 · 짧은 문법 런 = 물리 검증 아님 (C19)\n[11:45:30] 보낼 것: /tmp/gram039_m8jjvgmw/work/gram_20261014_000000.report.tgz  sha256 66dc03eeb4e383e2544501ed926925e6852364fd0e37aa7e11486b54195e6c20\n[11:45:30] 끝 — 문법 fixture 읽는 쪽 rc=0 (0 = 기대대로 · 짧은 문법 런 = 물리 검증 아님)\n",
+   "stderr_tail": ""
+  },
+  {
+   "cmd": "python3 -I ul_reader.py grammar <gram>/grammar_verdict.json --lmp-sha <same_binary>",
+   "rc": 0,
+   "stdout": "GRAMMAR_PREREQ status=PASS verdict=/tmp/gram039_m8jjvgmw/work/gram_20261014_000000/grammar_verdict.json verdict_sha256=19450b9b4fa8e0a1bb9547020b0aa7b1338683205430d5e41cf37d43a3bcba00 run_dir=/tmp/gram039_m8jjvgmw/work/gram_20261014_000000 lmp_sha256=ed19b4e9a51a5ae2e9cedb2e1a23b40e0c685eee540cea3da8e185e1557ffac0 grammar_deck_sha256=a1f0ee432b977d12a415b876ab3aa47225fec8f83c21cdd92948ff3abce8e6ed producer_deck_sha256=bc42a3ad71d5e02f6f21181bed09109dccfa60ad67a5d4a6b3d47f9c472fd70d\n",
+   "stderr": ""
+  },
+  {
+   "cmd": "python3 -I ul_reader.py grammar <gram>/grammar_verdict.json --lmp-sha <other_binary>",
+   "rc": 2,
+   "stdout": "GRAMMAR_PREREQ status=REFUSE verdict=/tmp/gram039_m8jjvgmw/work/gram_20261014_000000/grammar_verdict.json verdict_sha256=19450b9b4fa8e0a1bb9547020b0aa7b1338683205430d5e41cf37d43a3bcba00 run_dir=/tmp/gram039_m8jjvgmw/work/gram_20261014_000000 lmp_sha256=ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff grammar_deck_sha256=a1f0ee432b977d12a415b876ab3aa47225fec8f83c21cdd92948ff3abce8e6ed producer_deck_sha256=bc42a3ad71d5e02f6f21181bed09109dccfa60ad67a5d4a6b3d47f9c472fd70d why=문법 런 LMP sha256 ed19b4e9a51a5ae2e9cedb2e1a23b40e0c685eee540cea3da8e185e1557ffac0 ≠ 지금 돌릴 바이너리 ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff (같은 바이너리의 문법 PASS 만)\n",
+   "stderr": ""
+  }
+ ],
+ "pin_files_sha256": {
+  "SHA256SUMS": "dba635721503dd614d92cd6b9b184c028030335163e360b9991b340b25fde027",
+  "history_params.json": "7a5279f0119cbbc37a9c212593e256a03e417dc9a6af4f18a4f01bdc72404ff4",
+  "in.hist_badid.liggghts": "0fcab6806741e4fc2754bc3350379e1fb897721625ebeb6a5f515137397bcb37",
+  "in.hist_consumer.liggghts": "477b49f95954db210f4e706d3a8cd2f174ef93eb08eea18ed19a9947083680ba",
+  "in.hist_erase_bot.liggghts": "ee1a41a8767e2943cb3d53bdb1205608a62904a21cf0cd30dee3b9e393aa3da9",
+  "in.hist_erase_none.liggghts": "f5bf03bf597f637d2d4df651786ce45daa4f073b299e12c692333bb394d139fb",
+  "in.hist_erase_top.liggghts": "7789c9b21f6851cb9668c97cac9f6504d6f6b6b1bdf4e91ead18facb06807235",
+  "in.hist_grammar.liggghts": "a1f0ee432b977d12a415b876ab3aa47225fec8f83c21cdd92948ff3abce8e6ed",
+  "in.hist_producer.liggghts": "bc42a3ad71d5e02f6f21181bed09109dccfa60ad67a5d4a6b3d47f9c472fd70d",
+  "in.hist_producer_zero.liggghts": "7eba1ffdc13ff5b2cf3842f3d13a7cb24455bf14c96047fda7b0b0b42018f5fd",
+  "in.hist_syntax_probe.liggghts": "4b0940b74b64dc3c9519c4786a0d37cd22897ac35f98693109dd30dc51dfa83f",
+  "make_history_decks.py": "5d0ee4546e8a28473cc2bd969bf7a4e902e48aed5055870a3c53d120726f65e3",
+  "plate_hist.stl": "5bc74ec7726723ec8e2bbc3dc10fafd639e6175f83a0e0047ca35a44ee7aa65d",
+  "read_history.py": "18521ae73283da7ec6227698e8baf58a483503d85f88a0afcf53284bd5bacbf8",
+  "run_history.sh": "f72dfd0f79d96d7552df47799cd1aca383543303f5f28ab99f7a78372eb9c2df",
+  "run_history_ibb.sbatch": "ef49a15656e800033ade0463fd8bb7bfe480fd999a089a11d3268020967e65dc"
+ },
+ "screen_P_tail": "LIGGGHTS (Version LIGGGHTS-PUBLIC 3.8.0, compiled 2026-03-26-14:37:06 by user, git commit 3d5c00f20519e6bb6eb6756f51f1ad36564e649d)\nHIST_PRODUCER_DONE step=2000 atoms=20\nLoop time of 0.001 on 6 procs for 0 steps with 20 atoms\nLoop time of 0.001 on 6 procs for 0 steps with 20 atoms\nLoop time of 0.001 on 6 procs for 0 steps with 20 atoms\n",
+ "screen_GA_tail": "LIGGGHTS (Version LIGGGHTS-PUBLIC 3.8.0, compiled 2026-03-26-14:37:06 by user, git commit 3d5c00f20519e6bb6eb6756f51f1ad36564e649d)\nGRAM_START step=2000 k=0 plate_z=0.03\nGRAM_STEP k=0 step=2100 plate_z=0.03 Ps_avg=0.001 n_contact_geo=4\nGRAM_STATE_WRITTEN step=2100 k=0\nGRAM_STEP k=1 step=3200 plate_z=0.03001 Ps_avg=0.001 n_contact_geo=3\nGRAM_STATE_WRITTEN step=3200 k=1\nGRAM_STEP k=2 step=4300 plate_z=0.03002 Ps_avg=0.001 n_contact_geo=3\nGRAM_STATE_WRITTEN step=4300 k=2\nGRAM_DONE step=4300 k=2 plate_z=0.03002\nLoop time of 0.001 on 6 procs for 0 steps with 20 atoms\nLoop time of 0.001 on 6 procs for 0 steps with 20 atoms\nLoop time of 0.001 on 6 procs for 0 steps with 20 atoms\nLoop time of 0.001 on 6 procs for 0 steps with 20 atoms\nLoop time of 0.001 on 6 procs for 0 steps with 20 atoms\n",
+ "screen_GB_tail": "LIGGGHTS (Version LIGGGHTS-PUBLIC 3.8.0, compiled 2026-03-26-14:37:06 by user, git commit 3d5c00f20519e6bb6eb6756f51f1ad36564e649d)\nGRAM_RESUMED step=4300 k=2 plate_z=0.03002\nGRAM_STEP k=3 step=5400 plate_z=0.03003 Ps_avg=0.001 n_contact_geo=2\nGRAM_STATE_WRITTEN step=5400 k=3\nGRAM_DONE step=5400 k=3 plate_z=0.03003\nLoop time of 0.001 on 6 procs for 0 steps with 20 atoms\nLoop time of 0.001 on 6 procs for 0 steps with 20 atoms\n",
+ "verdict_status": "PASS",
+ "verdict_exit_code": 0,
+ "grammar_run_kit_SHA256SUMS_sha256": "dba635721503dd614d92cd6b9b184c028030335163e360b9991b340b25fde027",
+ "grammar_run_kit_lines": [
+  "bc42a3ad71d5e02f6f21181bed09109dccfa60ad67a5d4a6b3d47f9c472fd70d  in.hist_producer.liggghts",
+  "a1f0ee432b977d12a415b876ab3aa47225fec8f83c21cdd92948ff3abce8e6ed  in.hist_grammar.liggghts",
+  "5bc74ec7726723ec8e2bbc3dc10fafd639e6175f83a0e0047ca35a44ee7aa65d  plate_hist.stl"
+ ],
+ "lmp_sha256_mock": "ed19b4e9a51a5ae2e9cedb2e1a23b40e0c685eee540cea3da8e185e1557ffac0",
+ "ok": true
+}
