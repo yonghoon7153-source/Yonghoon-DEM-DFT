@@ -65,6 +65,7 @@ $PY scripts/run_network_194_parallel.py run --root "$R" --cohorts lhss --observe
   보존 + 영수증 도구 대조 (`scripts/supp20_input_receipt.py --preflight-receipt` · 로그 `INPUT_DIGEST_JSON` = 등록 §2 = 반입 재계산 · 승인 SHA `--approved-sha` = 1저자 Q3).
   grep · tee 텍스트 로그 단독은 사전 점검 증거로 받지 않는다 (영수증 도구 E0).  194 배치의 사전 점검 줄 = 194 등록 §4 의 10-14 정정 블록 (`preflight-verify --expect-set production194`).
   대상 · 지문 (§2) · 코드 신원 (§3) · 판정 · 관문 (§5) · 순서 · 본 실행 줄은 그대로.
+- ✅ **10-14 Codex 재확인 (핀 `df647d4e3` · `docs/reviews/codex_review_supr_fix_reverify_20261014.md` §2) = SUPR-01 · 02 닫힘** — 최종 핀 실행기의 완료 영수증 + 전체 로그에 P0–P10 · E1/E2 를 적용하면 보충 20 의 전체 입력 지문 = 등록값 · 반입 재계산 · 관측 ON · 필수 검사 성공 · 정상 dry-run 완료가 확인된다 (실제 생산 완료 · 수치 타당성 · 저자 발사 승인 · v1.3 배포 승인을 대신하지 않는다) · 실제 발사 = `--approved-sha` · `runner.sha256` = 기록 전용.
 - 194 배치 = 194 등록 §4 제안 블록 그대로 (`--observe-imports` · `--cohorts` 기본 lhs,lhsx · 같은 발사 커밋 · 다른 ROOT) — **194 먼저**, 끝난 뒤 보충 20.
 - 원 dump 위치가 수확 때와 다르면 `--root-from` · `--root-to` (194 등록과 같은 규칙).  `--cohorts lhs,lhsx,lhss` 한 배치 (214) 는 등록 집합이 아니다 — 배포 관문이 받지 않는다.
 

@@ -1,0 +1,10 @@
+# 우리 트리 재현 요약 (10-14 · HEAD 1087a9b2f · scripts/ · webapp/ = df647d4e3 와 diff 0 · Linux)
+receipt --selftest: supp20_input_receipt selftest: 88/88 PASS
+receipt (기본 컨테이너): rc 0 — 대조 11 칸 · 다름 0 (⚠ 발사 승인 아님 — 수동 칸 · 저자 승인은 따로)
+test_lhs_release_v13.py: 256 PASS · 0 FAIL
+run_network_194_parallel.py --selftest: ✓ 전부 통과 (139/139)
+옛 로그 wrong_tsv_full_log.log → rc 1 — 대조 12 칸 · 다름 1
+옛 로그 wrong_tsv_registered_grep.log → rc 1 — 대조 12 칸 · 다름 1
+옛 로그 observation_off_full_log.log → rc 1 — 대조 12 칸 · 다름 1
+옛 로그 observation_off_truncated_before_stop.log → rc 1 — 대조 12 칸 · 다름 1
+옛 로그 missing_three_prerequisite_lines.log → rc 1 — 대조 12 칸 · 다름 1

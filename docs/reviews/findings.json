@@ -9649,7 +9649,7 @@
     {
       "id": "SUPR-01",
       "severity": "P2",
-      "status": "claimed_fixed",
+      "status": "verified",
       "owner": "claude",
       "found_by": "codex 10-14 보충 20 수정 재검증 (Codex 표기 SUP20R-01 · 리뷰 핀 a9422d2e7 · 실제 plan_for/build_plan · plan_input_digest · print_preflight 로 만든 로그 · Windows 스냅샷 — 생산 194 · 보충 20 · WSL fast16 + real4 미실행)",
       "opened_in": "docs/reviews/codex_review_sup20_fix_reverify_20261014.md",
@@ -9659,13 +9659,20 @@
       "evidence_tests": [
         "scripts/supp20_input_receipt.py (--selftest — 반례 (a)–(i) · 등록 명령 밖 인자 · 승인 SHA · Codex 로그 다섯 상주 · 고치기 전 32/88 (56 실패) → 88/88 at 8af6cbae3)",
         "scripts/run_network_194_parallel.py (--selftest ㊲a–㊲i · 130/139 → 139/139 at 8af6cbae3)",
-        "docs/reviews/supr_fix_plan_20261014.md (§4 실행 기록 · Codex 로그 다섯 = 고친 뒤 전부 rc 1)"
-      ]
+        "docs/reviews/supr_fix_plan_20261014.md (§4 실행 기록 · Codex 로그 다섯 = 고친 뒤 전부 rc 1)",
+        "docs/reviews/codex_supr_fix_reverify_evidence_20261014/evidence/digest_probe/results.json (Codex 10-14 · 핀 df647d4e3 · 지문 · 등록값 · 승인 SHA · 옛 CLI 42 건)",
+        "docs/reviews/codex_supr_fix_reverify_evidence_20261014/evidence/completion_probe/results.json (Codex 10-14 · 완료 영수증 40 건)",
+        "docs/reviews/codex_supr_fix_reverify_evidence_20261014/_repro_ours_20261014/summary.txt (우리 트리 10-14 · 영수증 88/88 · 실행기 139/139 · 배포 256/256 · 옛 로그 다섯 rc 1)"
+      ],
+      "verified_by": "codex",
+      "verified_sha": "df647d4e3",
+      "verified_in": "docs/reviews/codex_review_supr_fix_reverify_20261014.md",
+      "verified_scope": "새 형식 영수증 (실행기 run --dry-run --preflight-receipt) 에서 같은 20 ID · raw 표 · 다른 코호트 TSV (8d5dcbd2…) = E1 · P9 정확히 둘로 거부 (경로 덮어쓰기 인자 없이) · 다섯 지문 키 결손 · 모르는 키 추가 · 코호트 키 바꿈 = 거부 · 반대 등록 집합 = P6 · P9 · 승인 SHA 전체 · 7 자 접두 · 대문자 = 통과 / 다른 값 · 비 hex · 6 자 = 거부 (P10 · F7 · G7) · 옛 로그 다섯 실제 CLI = 고친 뒤 rc 1 (E0) · 독립 탐침 42/42 · 보충 20 = 등록값 결합 (E1 · E2) · 194 = 지금 입력과의 일치까지 (P0–P10) — 등록 §2 일치는 손 대조 기록 (판정문 §3 · P0–P10 rc 0 만으로 주장 금지 · 반례 = lhs TSV 끝 개행 하나)"
     },
     {
       "id": "SUPR-02",
       "severity": "P2",
-      "status": "claimed_fixed",
+      "status": "verified",
       "owner": "claude",
       "found_by": "codex 10-14 보충 20 수정 재검증 (Codex 표기 SUP20R-02 · 실제 production_observation_problem 관측 OFF 사유를 사전 점검 fixture 에 넣어 실제 print_preflight 로 출력 · 시스템 · 원자료 상태 = 합성 fixture)",
       "opened_in": "docs/reviews/codex_review_sup20_fix_reverify_20261014.md",
@@ -9675,8 +9682,15 @@
       "evidence_tests": [
         "scripts/supp20_input_receipt.py (--selftest — 반례 (a)–(i) · 등록 명령 밖 인자 · 승인 SHA · Codex 로그 다섯 상주 · 고치기 전 32/88 (56 실패) → 88/88 at 8af6cbae3)",
         "scripts/run_network_194_parallel.py (--selftest ㊲a–㊲i · 130/139 → 139/139 at 8af6cbae3)",
-        "docs/reviews/supr_fix_plan_20261014.md (§4 실행 기록 · Codex 로그 다섯 = 고친 뒤 전부 rc 1)"
-      ]
+        "docs/reviews/supr_fix_plan_20261014.md (§4 실행 기록 · Codex 로그 다섯 = 고친 뒤 전부 rc 1)",
+        "docs/reviews/codex_supr_fix_reverify_evidence_20261014/evidence/digest_probe/results.json (Codex 10-14 · 핀 df647d4e3 · 지문 · 등록값 · 승인 SHA · 옛 CLI 42 건)",
+        "docs/reviews/codex_supr_fix_reverify_evidence_20261014/evidence/completion_probe/results.json (Codex 10-14 · 완료 영수증 40 건)",
+        "docs/reviews/codex_supr_fix_reverify_evidence_20261014/_repro_ours_20261014/summary.txt (우리 트리 10-14 · 영수증 88/88 · 실행기 139/139 · 배포 256/256 · 옛 로그 다섯 rc 1)"
+      ],
+      "verified_by": "codex",
+      "verified_sha": "df647d4e3",
+      "verified_in": "docs/reviews/codex_review_supr_fix_reverify_20261014.md",
+      "verified_scope": "정상 dry-run rc 0 · 완료 영수증 · P0–P10 통과 · 표지 앞 잘림 (로그 sha 다시 맞춘 포장 포함) · 필수 검사 줄 셋 결손 · 관측 OFF (실제 경로 rc 2 · completed false) · exit_code 정수 0 만 · completed 불리언 참만 · exception · stop · aborted · 표지 중복 · 표지 뒤 내용 · 표지 뒤 예외 주입 (RuntimeError · KeyboardInterrupt · SystemExit) = 거부 · 다른 자리로 옮긴 정상 짝 = 통과 · 독립 탐침 40/40 · 영수증 자체시험 88/88 (Codex = 의존성 경로 연결 뒤 · 처음 79/88 = SciPy 없는 환경) · 한정: runner.sha256 = 기록 전용 (P0–P10 비교 안 함) · 영수증 + 로그 전체 일관 위조 = 범위 밖 · 두 파일 원자성 = 파일별"
     },
     {
       "id": "SELF-107",

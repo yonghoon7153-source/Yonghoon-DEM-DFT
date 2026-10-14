@@ -1,0 +1,484 @@
+{
+  "pin": "df647d4e31224e1a270dae01dd41f91af3048361",
+  "environment": "Windows exported source; synthetic preflight environment; real plan/digest/print/receipt/verifier",
+  "cases": [
+    {
+      "tag": "normal",
+      "bad": [],
+      "passed": true,
+      "expected_bad": [],
+      "expected": true,
+      "integration_rc": 0,
+      "integration_bad": [],
+      "producer_rc": 0,
+      "raised": null,
+      "root_created": false
+    },
+    {
+      "tag": "completed_false",
+      "bad": [
+        "P3"
+      ],
+      "passed": false,
+      "expected_bad": [
+        "P3"
+      ],
+      "expected": true
+    },
+    {
+      "tag": "completed_missing",
+      "bad": [
+        "P3"
+      ],
+      "passed": false,
+      "expected_bad": [
+        "P3"
+      ],
+      "expected": true
+    },
+    {
+      "tag": "completed_integer",
+      "bad": [
+        "P3"
+      ],
+      "passed": false,
+      "expected_bad": [
+        "P3"
+      ],
+      "expected": true
+    },
+    {
+      "tag": "exit_false",
+      "bad": [
+        "P3"
+      ],
+      "passed": false,
+      "expected_bad": [
+        "P3"
+      ],
+      "expected": true
+    },
+    {
+      "tag": "exit_string",
+      "bad": [
+        "P3"
+      ],
+      "passed": false,
+      "expected_bad": [
+        "P3"
+      ],
+      "expected": true
+    },
+    {
+      "tag": "exit_float",
+      "bad": [
+        "P3"
+      ],
+      "passed": false,
+      "expected_bad": [
+        "P3"
+      ],
+      "expected": true
+    },
+    {
+      "tag": "exit_nonzero",
+      "bad": [
+        "P3"
+      ],
+      "passed": false,
+      "expected_bad": [
+        "P3"
+      ],
+      "expected": true
+    },
+    {
+      "tag": "exit_missing",
+      "bad": [
+        "P3"
+      ],
+      "passed": false,
+      "expected_bad": [
+        "P3"
+      ],
+      "expected": true
+    },
+    {
+      "tag": "exception",
+      "bad": [
+        "P3"
+      ],
+      "passed": false,
+      "expected_bad": [
+        "P3"
+      ],
+      "expected": true
+    },
+    {
+      "tag": "stop",
+      "bad": [
+        "P3"
+      ],
+      "passed": false,
+      "expected_bad": [
+        "P3"
+      ],
+      "expected": true
+    },
+    {
+      "tag": "stop_missing",
+      "bad": [
+        "P3"
+      ],
+      "passed": false,
+      "expected_bad": [
+        "P3"
+      ],
+      "expected": true
+    },
+    {
+      "tag": "aborted",
+      "bad": [
+        "P3"
+      ],
+      "passed": false,
+      "expected_bad": [
+        "P3"
+      ],
+      "expected": true
+    },
+    {
+      "tag": "observe_record_false",
+      "bad": [
+        "P4"
+      ],
+      "passed": false,
+      "expected_bad": [
+        "P4"
+      ],
+      "expected": true
+    },
+    {
+      "tag": "observe_args_false",
+      "bad": [
+        "P4",
+        "P6"
+      ],
+      "passed": false,
+      "expected_bad": [
+        "P4",
+        "P6"
+      ],
+      "expected": true
+    },
+    {
+      "tag": "argv_remove_observe",
+      "bad": [
+        "P4",
+        "P6"
+      ],
+      "passed": false,
+      "expected_bad": [
+        "P4",
+        "P6"
+      ],
+      "expected": true
+    },
+    {
+      "tag": "check_ok_integer",
+      "bad": [
+        "P5"
+      ],
+      "passed": false,
+      "expected_bad": [
+        "P5"
+      ],
+      "expected": true
+    },
+    {
+      "tag": "check_missing",
+      "bad": [
+        "P5"
+      ],
+      "passed": false,
+      "expected_bad": [
+        "P5"
+      ],
+      "expected": true
+    },
+    {
+      "tag": "runner_metadata_missing",
+      "bad": [],
+      "passed": true,
+      "expected_bad": [],
+      "expected": true
+    },
+    {
+      "tag": "runner_hash_changed",
+      "bad": [],
+      "passed": true,
+      "expected_bad": [],
+      "expected": true
+    },
+    {
+      "tag": "truncated_marker_unbound",
+      "bad": [
+        "P1",
+        "P3"
+      ],
+      "passed": false,
+      "expected_bad": [
+        "P1",
+        "P3"
+      ],
+      "expected": true
+    },
+    {
+      "tag": "truncated_marker_rebound",
+      "bad": [
+        "P3"
+      ],
+      "passed": false,
+      "expected_bad": [
+        "P3"
+      ],
+      "expected": true,
+      "integration_rc": 1,
+      "integration_bad": [
+        "P3"
+      ]
+    },
+    {
+      "tag": "missing_prereq_unbound",
+      "bad": [
+        "P1",
+        "P5"
+      ],
+      "passed": false,
+      "expected_bad": [
+        "P1",
+        "P5"
+      ],
+      "expected": true
+    },
+    {
+      "tag": "missing_prereq_rebound",
+      "bad": [
+        "P5"
+      ],
+      "passed": false,
+      "expected_bad": [
+        "P5"
+      ],
+      "expected": true,
+      "integration_rc": 1,
+      "integration_bad": [
+        "P5"
+      ]
+    },
+    {
+      "tag": "duplicate_marker",
+      "bad": [
+        "P3"
+      ],
+      "passed": false,
+      "expected_bad": [
+        "P3"
+      ],
+      "expected": true
+    },
+    {
+      "tag": "after_marker",
+      "bad": [
+        "P3"
+      ],
+      "passed": false,
+      "expected_bad": [
+        "P3"
+      ],
+      "expected": true
+    },
+    {
+      "tag": "missing_digest",
+      "bad": [
+        "P2"
+      ],
+      "passed": false,
+      "expected_bad": [
+        "P2"
+      ],
+      "expected": true
+    },
+    {
+      "tag": "log_stop",
+      "bad": [
+        "P3"
+      ],
+      "passed": false,
+      "expected_bad": [
+        "P3"
+      ],
+      "expected": true
+    },
+    {
+      "tag": "log_append_unbound",
+      "bad": [
+        "P1"
+      ],
+      "passed": false,
+      "expected_bad": [
+        "P1"
+      ],
+      "expected": true
+    },
+    {
+      "tag": "observation_off",
+      "bad": [
+        "P3",
+        "P4"
+      ],
+      "passed": false,
+      "expected_bad": [
+        "P3",
+        "P4"
+      ],
+      "expected": true,
+      "integration_rc": 1,
+      "integration_bad": [
+        "P3",
+        "P4"
+      ],
+      "producer_rc": 2,
+      "raised": null,
+      "root_created": false
+    },
+    {
+      "tag": "off_truncated_prefix",
+      "bad": [
+        "P3",
+        "P4"
+      ],
+      "passed": false,
+      "expected_bad": [
+        "P3",
+        "P4"
+      ],
+      "expected": true
+    },
+    {
+      "tag": "producer_missing_dependency_closure",
+      "bad": [
+        "P5"
+      ],
+      "passed": false,
+      "expected_bad": [
+        "P5"
+      ],
+      "expected": true,
+      "producer_rc": 0,
+      "raised": null,
+      "root_created": false
+    },
+    {
+      "tag": "producer_missing_lazy_census",
+      "bad": [
+        "P5"
+      ],
+      "passed": false,
+      "expected_bad": [
+        "P5"
+      ],
+      "expected": true,
+      "producer_rc": 0,
+      "raised": null,
+      "root_created": false
+    },
+    {
+      "tag": "producer_missing_fork_census",
+      "bad": [
+        "P5"
+      ],
+      "passed": false,
+      "expected_bad": [
+        "P5"
+      ],
+      "expected": true,
+      "producer_rc": 0,
+      "raised": null,
+      "root_created": false
+    },
+    {
+      "tag": "exception_after_marker_RuntimeError",
+      "bad": [
+        "P3"
+      ],
+      "passed": false,
+      "expected_bad": [
+        "P3"
+      ],
+      "expected": true,
+      "producer_rc": null,
+      "raised": "RuntimeError",
+      "root_created": false
+    },
+    {
+      "tag": "exception_after_marker_KeyboardInterrupt",
+      "bad": [
+        "P3"
+      ],
+      "passed": false,
+      "expected_bad": [
+        "P3"
+      ],
+      "expected": true,
+      "producer_rc": null,
+      "raised": "KeyboardInterrupt",
+      "root_created": false
+    },
+    {
+      "tag": "exception_after_marker_SystemExit",
+      "bad": [
+        "P3"
+      ],
+      "passed": false,
+      "expected_bad": [
+        "P3"
+      ],
+      "expected": true,
+      "producer_rc": null,
+      "raised": "SystemExit",
+      "root_created": false
+    },
+    {
+      "tag": "launch_error",
+      "bad": [
+        "P10",
+        "P2",
+        "P3",
+        "P5",
+        "P6",
+        "P7",
+        "P8",
+        "P9"
+      ],
+      "passed": false,
+      "expected_bad": null,
+      "expected": true,
+      "producer_rc": 2,
+      "raised": null,
+      "root_created": false
+    },
+    {
+      "tag": "relocated_pair",
+      "bad": [],
+      "passed": true,
+      "expected_bad": [],
+      "expected": true
+    },
+    {
+      "tag": "producer_required_fields",
+      "expected": true,
+      "runner_sha256": "f4048aca55b912628278dbdd7b184ac449723736cd3f4f5cdc7eeca31294921a",
+      "captured_end": "PREFLIGHT_DRY_RUN_COMPLETE rc 0"
+    }
+  ]
+}

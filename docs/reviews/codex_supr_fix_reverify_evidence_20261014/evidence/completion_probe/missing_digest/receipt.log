@@ -1,0 +1,28 @@
+══ 사전 점검 — ROOT C:\Users\Administrator\Documents\Codex\2026-08-24\claude-stoic-knuth-nobvq-x20\supr_reverify_20261014\evidence\completion_probe\normal\unused_root
+  CPU 20 (쓸 수 있는 20) · 레인 20 · 스레드/레인 1 (OMP_NUM_THREADS=1, MKL_NUM_THREADS=1, OPENBLAS_NUM_THREADS=1, NUMEXPR_NUM_THREADS=1, VECLIB_MAXIMUM_THREADS=1)
+  메모리 MemTotal 128 GB · MemAvailable 120 GB · Swap 0/0 GB
+  메모리 예산 120.0 GB · 실측 바닥 --min-free-gb 1.0 · 큐 앞 20 건 추정 합 1 GB · 가장 큰 침대 추정 1.00 GB  (⚠ 케이스 최대 메모리는 아직 모른다 — real_14 549 MB @ 106,563 접촉에서 잡은 추정 · 시범 · 본 실행의 worker.json 실측으로 고칠 것)
+  디스크 여유 1000 GB · 결과 추정 1 GB
+  시간 추정 (컨테이너 real_14 기준 · 거칠다): 직렬 1 h · 이 레인 수 0.1 h — 케이스별 실측 초는 progress.tsv
+  코드 df647d4e3 (HEAD) dirty=False · 봉인 지문 code_fp e8b2496b9c2ecf6edad8c6b52d32a2514c96dd54c9a20823c300639249ecae71 (CODE_FILES 32)
+  network lock = per-case  (per-case = 케이스마다 TMPDIR — 망 단계도 동시에 · shared = 웹앱처럼 하나씩)
+  코호트 lhss: 수확 20 건 (선택 20) · C:\Users\Administrator\Documents\Codex\2026-08-24\claude-stoic-knuth-nobvq-x20\supr_reverify_20261014\source\docs\data\lhss_descriptors_cov_1e09f661d · 코호트 C:\Users\Administrator\Documents\Codex\2026-08-24\claude-stoic-knuth-nobvq-x20\supr_reverify_20261014\source\docs\data\lhss_descriptors_cov_1e09f661d\_cohort.tsv
+  원자료 · 메시 문제 0 건
+  기대 망 세대 (expected_network_generation — 이 체크아웃의 봉인 코드에서 유도): 'g2' · 세대 계약 문제 0 · 모드 {}
+  전이 의존 닫힘 32 모듈 ⊆ 봉인 CODE_FILES 32 — ✓
+  지연 import 분류 — 봉인 파일의 함수 안 리포 import 0 · 분류 밖 0 — ✓
+  fork · 프로세스 풀 API (봉인 경로 — 관측 영수증 밖 · G2RR4-02) 0 줄 — ✓
+  입력 지문 (ID · 코호트 · 원자료 sha256 = 수확 JSON raw) — 케이스 20 · ids_sha256 991cf1150b183f64bc69926a8b3e7c05453ec47e13b89ba3a6ad2fd2c981c694 · raw_sha256_table_sha256 a7aaa3c8c7683f1835a096acb83ecdb055eaf5f129221f7067c5f34462807d0e · 원자료 sha 결손 0
+  ⚠ Codex 세대 2 재검증 2 (10-07) = HOLD — 새 194 생산 · v1.3 인계는 Codex GO · 1저자 발사 승인 뒤 (등록 docs/reviews/lhs_network_batch_registration_20261007_g2.md).  이 실행기는 그 판정을 대신하지 않는다 — 어느 코드 · 세대로 돌았는지는 manifest.json 이 증명한다.
+══ 계획 — 20 건 · 순서 cost (접촉 수 큰 순 · 같으면 이름) · 레인 20
+    lhss_002 (lhss) 접촉  625837 · 추정 2966 MB · 438 s
+    lhss_004 (lhss) 접촉  616291 · 추정 2923 MB · 431 s
+    lhss_010 (lhss) 접촉  562568 · 추정 2682 MB · 394 s
+    lhss_020 (lhss) 접촉  474851 · 추정 2287 MB · 332 s
+    lhss_014 (lhss) 접촉  406231 · 추정 1978 MB · 284 s
+    lhss_018 (lhss) 접촉   33007 · 추정 298 MB · 23 s
+    lhss_015 (lhss) 접촉   15027 · 추정 218 MB · 10 s
+  케이스 명령 예: 'C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\python.exe' 'C:\Users\Administrator\Documents\Codex\2026-08-24\claude-stoic-knuth-nobvq-x20\supr_reverify_20261014\source\scripts\lhs_webapp_batch.py' --stop-after network --case lhss_002 --harvest-dir 'C:\Users\Administrator\Documents\Codex\2026-08-24\claude-stoic-knuth-nobvq-x20\supr_reverify_20261014\source\docs\data\lhss_descriptors_cov_1e09f661d' --cohort 'C:\Users\Administrator\Documents\Codex\2026-08-24\claude-stoic-knuth-nobvq-x20\supr_reverify_20261014\source\docs\data\lhss_descriptors_cov_1e09f661d\_cohort.tsv' --work 'C:\Users\Administrator\Documents\Codex\2026-08-24\claude-stoic-knuth-nobvq-x20\supr_reverify_20261014\evidence\completion_probe\normal\unused_root\cases\lhss_002\work' --out-dir 'C:\Users\Administrator\Documents\Codex\2026-08-24\claude-stoic-knuth-nobvq-x20\supr_reverify_20261014\evidence\completion_probe\normal\unused_root\cases\lhss_002\out'
+  cwd = 케이스 폴더 · env + {'OMP_NUM_THREADS': '1', 'MKL_NUM_THREADS': '1', 'OPENBLAS_NUM_THREADS': '1', 'NUMEXPR_NUM_THREADS': '1', 'VECLIB_MAXIMUM_THREADS': '1'} · PYTHONDONTWRITEBYTECODE=1 · TMPDIR = <케이스>/tmp
+══ --dry-run — ROOT 에는 아무것도 쓰지 않았다 (사전 점검 완료 영수증 · 전체 로그만 --preflight-receipt 자리에 · scripts/__pycache__ pyc 0 개는 본 실행 때 지운다)
+PREFLIGHT_DRY_RUN_COMPLETE rc 0

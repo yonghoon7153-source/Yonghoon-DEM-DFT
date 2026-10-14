@@ -1,0 +1,30 @@
+[
+  {
+    "label": "receipt_selftest",
+    "argv": [
+      "scripts/supp20_input_receipt.py",
+      "--selftest"
+    ],
+    "rc": 1,
+    "seconds": 26.281,
+    "output_sha256": "ae353ee5e594061f0b8c7afd7f33ee915330689fab7363f1e8315e2f6b8ae787"
+  },
+  {
+    "label": "receipt_container",
+    "argv": [
+      "scripts/supp20_input_receipt.py"
+    ],
+    "rc": 0,
+    "seconds": 0.656,
+    "output_sha256": "5e5c38f04ce8ea7774609492ff8658ea60e7f5d365eb1aae049988a1011c8178"
+  },
+  {
+    "label": "release_v13",
+    "argv": [
+      "scripts/test_lhs_release_v13.py"
+    ],
+    "rc": 1,
+    "seconds": 32.734,
+    "output_sha256": "9693b3c8fa23edfa637cdab604bc52da01b93998a194643eee20142241076036"
+  }
+]

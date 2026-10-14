@@ -1,0 +1,131 @@
+{
+  "schema": "np194_preflight_receipt/v1",
+  "runner": {
+    "path": "scripts/run_network_194_parallel.py",
+    "sha256": "f4048aca55b912628278dbdd7b184ac449723736cd3f4f5cdc7eeca31294921a",
+    "launcher_schema": "network_parallel_launcher/v1",
+    "launch_format": "network_parallel_launch/v3"
+  },
+  "argv": [
+    "run",
+    "--root",
+    "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\supr_reverify_20261014\\evidence\\digest_probe\\root_production194_same_ids_raw_other_tsv",
+    "--cohorts",
+    "lhs,lhsx",
+    "--dry-run",
+    "--observe-imports",
+    "--preflight-receipt",
+    "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\supr_reverify_20261014\\evidence\\digest_probe\\production194_same_ids_raw_other_tsv.json"
+  ],
+  "process_argv": [
+    "probes/digest_probe.py"
+  ],
+  "cwd": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\supr_reverify_20261014",
+  "repo_root": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\supr_reverify_20261014\\source",
+  "args": {
+    "cmd": "run",
+    "root": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\supr_reverify_20261014\\evidence\\digest_probe\\root_production194_same_ids_raw_other_tsv",
+    "cohorts": "lhs,lhsx",
+    "case": [],
+    "order": "cost",
+    "dry_run": true,
+    "observe_imports": true,
+    "allow_dirty": false,
+    "allow_missing_raw": false,
+    "skip_batch_selftest": false,
+    "worker_script": "",
+    "root_from": "",
+    "root_to": "",
+    "python": "C:\\Users\\Administrator\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\python.exe",
+    "lanes": 20,
+    "mem_budget_gb": null,
+    "mem_reserve_gb": 2.0,
+    "min_free_gb": 1.0,
+    "network_lock": "per-case",
+    "no_merge": false,
+    "preflight_receipt": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\supr_reverify_20261014\\evidence\\digest_probe\\production194_same_ids_raw_other_tsv.json",
+    "lhs_harvest": "",
+    "lhs_cohort": "",
+    "lhsx_harvest": "",
+    "lhsx_cohort": "",
+    "lhss_harvest": "",
+    "lhss_cohort": ""
+  },
+  "dry_run": true,
+  "root": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\supr_reverify_20261014\\evidence\\digest_probe\\root_production194_same_ids_raw_other_tsv",
+  "receipt_path": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\supr_reverify_20261014\\evidence\\digest_probe\\production194_same_ids_raw_other_tsv.json",
+  "stage": "complete",
+  "started": "SYNTHETIC_START",
+  "ended": "SYNTHETIC_END",
+  "tz": "+0900",
+  "git": {
+    "sha": "df647d4e31224e1a270dae01dd41f91af3048361",
+    "short": "df647d4e3",
+    "branch": "SYNTHETIC_OFFLINE",
+    "dirty": false,
+    "porcelain": []
+  },
+  "code_fp": "e8b2496b9c2ecf6edad8c6b52d32a2514c96dd54c9a20823c300639249ecae71",
+  "code_files": 32,
+  "plan": {
+    "cohorts": [
+      "lhs",
+      "lhsx"
+    ],
+    "n": 194,
+    "registered_production_set": "production194"
+  },
+  "input_digest": {
+    "n": 194,
+    "ids_sha256": "a04282d7275bd8f92b0afb4ac8b045f72f3867ccebbb7813b530b3901fd7b3bf",
+    "raw_sha256_table_sha256": "da7c93f9a0887145ff171e381c8608cb79779d96aea5a595a25677dc361ef784",
+    "missing_raw_sha": [],
+    "cohort_tsv_sha256": {
+      "lhs": "47112b9091ea04822c9b6e701ba823a25b8fddc3b3fcb10eb54f25dd8c2ad703",
+      "lhsx": "0b85e8589917c9a3936ce29e9f36326993985ddd113ef32353a4ff96d981cb45"
+    }
+  },
+  "observe_imports": true,
+  "checks": {
+    "dependency_closure": {
+      "ok": true,
+      "n_files": 32,
+      "outside": [],
+      "errors": []
+    },
+    "lazy_import_census": {
+      "ok": true,
+      "n_lazy": 90,
+      "unclassified": []
+    },
+    "fork_census": {
+      "ok": true,
+      "n": 0,
+      "lines": []
+    }
+  },
+  "generation": {
+    "generation": "g2",
+    "n_problems": 0,
+    "modes": [
+      "hertz",
+      "physics",
+      "hertz_h12"
+    ],
+    "error": ""
+  },
+  "n_raw_problems": 0,
+  "warn": [],
+  "stop": [],
+  "aborted": null,
+  "completed": true,
+  "completion_marker": "PREFLIGHT_DRY_RUN_COMPLETE rc 0",
+  "exit_code": 0,
+  "exception": null,
+  "log": {
+    "path": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\supr_reverify_20261014\\evidence\\digest_probe\\production194_same_ids_raw_other_tsv.log",
+    "sha256": "18bb430c0e043053911aad80b9264ce297bf6e5a5673548f6f3eae763b217c6e",
+    "bytes": 3449,
+    "encoding": "utf-8"
+  }
+}

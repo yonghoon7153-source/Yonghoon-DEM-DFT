@@ -1,0 +1,36 @@
+--- a9422d2e772f28417a6e0a5167aaab8d987bf27a/docs/reviews/lhs_network_batch_registration_20261007_g2.md
++++ df647d4e31224e1a270dae01dd41f91af3048361/docs/reviews/lhs_network_batch_registration_20261007_g2.md
+@@ -59,6 +59,8 @@
+ 
+ # ── 2. 봉인 대조 (194 전체 · --dry-run = 아무것도 안 쓴다) — §3 · §2 표와 같아야 ──
+ $PY scripts/run_network_194_parallel.py run --root ~/net194_g2_drycheck_$T --dry-run 2>&1 | grep -E "코드 |기대 망 세대|전이 의존|지연 import|입력 지문|원자료 · 메시 문제|⛔"
++# ⚠ 10-14 정정 (SUPR-02 · 1저자 Q2 (가) · 결과 0 건) — 위 줄 = 원문.  grep 화면은 사전 점검 증거가 아니다 · 관측 플래그 없는 생산 194 dry-run 은 §3b (10-09 비준) 뒤 사전 점검 ⛔ (rc 2).
++#   사전 점검 증거 = §4 의 10-14 정정 블록 (--observe-imports --preflight-receipt → preflight-verify --expect-set production194) 과 같은 꼴로 받는다.
+ 
+ # ── 3. 실덤프 — 생산 → 후보 검사 → 게시 (real14 · case15 · LHS 셋 · 망 정지 · 격리 ROOT) ──
+ SM=~/g2pre_smoke_${S}_$T
+@@ -220,6 +222,24 @@
+ > $PY scripts/run_network_194_parallel.py audit --root "$R" --tsv "$R/seal_audit.tsv" --json "$R/seal_audit.json" 2>&1 | grep -v '^  lhs' | tail -12; echo "audit rc=${PIPESTATUS[0]}"
+ > $PY -c "import json,sys; a=json.load(open(sys.argv[1])); o=a['import_observation']; print(o['n_started'], o['n_finalized'], len(o['completed_attempts']), o['stage_binding']['schema'], len(o['stage_binding']['attempts']), a['import_observation_problems'])" "$R/seal_audit.json"
+ > ```
++>
++> ✅ **10-14 정정 — 사전 점검 dry-run 줄 (SUPR-02 · 1저자 Q2 (가) · 결과 0 건 · Codex 보충 20 수정 재검증 `docs/reviews/codex_review_sup20_fix_reverify_20261014.md` §5 · 수정 계획
++> `docs/reviews/supr_fix_plan_20261014.md` · 위 두 블록의 dry-run 줄은 원문으로 둔다)**.  grep 은 완료 줄 · 문맥을 버리고 셸 종료코드는 실행기 것이 아니다 → 사전 점검 증거 =
++> 실행기 완료 영수증 (`--preflight-receipt` — JSON + 실행기가 직접 잡은 전체 로그 · 멈춰도 실제 종료코드 · 멈춘 사유와 함께).  위 제안 블록 첫 줄 대신 쓴다
++> (본 실행 줄 · 관측 확인 · 완료 뒤 확인 · 기대 — §2 · §3 값 · ⛔ 없음 · fork 0 줄 — 는 그대로):
++>
++> ```bash
++> PF="${R}_preflight_$(date +%m%d_%H%M%S).json"     # ROOT 밖 · 새 이름 — 같은 이름 .log = 실행기가 직접 잡은 화면 전체
++> $PY scripts/run_network_194_parallel.py run --root "$R" --dry-run --observe-imports --preflight-receipt "$PF"; echo "dry-run rc=$?"
++> $PY scripts/run_network_194_parallel.py preflight-verify --receipt "$PF" --expect-set production194 --approved-sha <발사 커밋> --json "${PF%.json}_verify.json"; echo "verify rc=$?"   # rc 0 = 칸 전부 같음 (발사 승인 아님)
++> grep -E 'INPUT_DIGEST_JSON|코드 ' "${PF%.json}.log"     # 입력 지문 전부 (코호트별 TSV sha 포함) · 봉인 지문 — §2 · §3 표와 손으로 대조
++> ```
++>
++> `preflight-verify` (읽기 전용 · P0–P10 · 실행기 `preflight_receipt_checks`) = 로그 sha256 · `INPUT_DIGEST_JSON` 한 줄 = 영수증 = 이 체크아웃 재계산 · 완료 · 실제 종료코드 0 · 관측 ON ·
++> 필수 세 검사 명시 성공 · argv = 등록 명령 · 깨끗한 트리 · code_fp = 이 체크아웃 · 세대 g2 · 원자료 0 · 승인 SHA (`--approved-sha` · 1저자 Q3).  ⚠ 194 쪽에는 §2 표의 값
++> (raw 표 `da7c93f9…` · 코호트 TSV lhs `32f00daa…` · lhsx `0b85e858…`) 을 문서에서 읽어 대조하는 칸이 없다 (보충 20 은 `scripts/supp20_input_receipt.py` E1 이 한다) —
++> 위 셋째 줄의 로그 값을 §2 와 손으로 대조한다 (옛 grep 줄과 같은 수준 · ID 지문 `a04282d7…` 은 등록 집합 production194 로 기계 대조).  grep · tee 텍스트 로그 단독은 사전 점검
++> 증거로 받지 않는다.
+ >
+ > ✅ **덧붙임 — 완료 뒤 기대의 재시도 예외 (10-09 1저자 비준 · `G2RR5-04` · Codex 재검증 5 §4 · 위 주석 · 명령은 원문으로 둔다)**.
+ > 위 주석의 *"시작 = 끝맺음 · 완료 시도 194 · stage_binding 194"* 는 **재시도 없는 1 회 실행**의 기대다.  합격선 = 판정문 §4 권고 문안 그대로:

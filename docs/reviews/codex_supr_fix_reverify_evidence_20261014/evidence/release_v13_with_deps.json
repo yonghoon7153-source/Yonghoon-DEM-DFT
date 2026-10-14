@@ -1,0 +1,13 @@
+{
+  "rc": 1,
+  "seconds": 88.57799999997951,
+  "dependency_dirs": [
+    "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\lhs_coverage_review_20260930\\deps",
+    "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\gen2_network_reverify3_20261007\\deps"
+  ],
+  "failures": [
+    "  FAIL  V10a 생성기 CLI — --tau-batch-manifest R/manifest.json · --tau-results R/merged/<ds>/results · --webapp R/merged/<ds> · 묶음 + se_isolation · 압력 기록  (['C:\\\\Users\\\\Administrator\\\\.cache\\\\codex-runtimes\\\\codex-primary-runtime\\\\dependencies\\\\python\\\\python.exe', 'C:\\\\Users\\\\Administrator\\\\Documents\\\\Codex\\\\2026-08-24\\\\claude-stoic-knuth-nobvq-x20\\\\supr_reverify_20261014\\\\source\\\\scripts\\\\lhs_design_dataset.py', '--export-handover', '/H/lhsx_handover)",
+    "  FAIL  V16a 발사 기록 = 지금 파일 → 봉인 다름 0 · 인계 도구 다름 0 · 봉인 파일 수 · git HEAD (40 자리)  ({'sealed': 4, 'sealed_changed': [], 'handover': 2, 'handover_changed': [], 'git_head': None, 'git_dirty_tracked': None})",
+    "254 PASS · 2 FAIL"
+  ]
+}

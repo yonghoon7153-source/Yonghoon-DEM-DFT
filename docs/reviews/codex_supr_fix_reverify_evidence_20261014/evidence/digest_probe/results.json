@@ -1,0 +1,518 @@
+{
+  "pin": "df647d4e31224e1a270dae01dd41f91af3048361",
+  "method": "Offline synthetic preflight status; real input planning, hashing, log producer, receipt record and validators. No actual dry-run or numerical/WSL execution.",
+  "source_digest20": {
+    "n": 20,
+    "ids_sha256": "991cf1150b183f64bc69926a8b3e7c05453ec47e13b89ba3a6ad2fd2c981c694",
+    "raw_sha256_table_sha256": "a7aaa3c8c7683f1835a096acb83ecdb055eaf5f129221f7067c5f34462807d0e",
+    "missing_raw_sha": [],
+    "cohort_tsv_sha256": {
+      "lhss": "69d3f913072288b1d6b8ca8a14e43b0bc8f80e8836a8f79a9b26b2d8ed6dcaf7"
+    }
+  },
+  "source_digest194": {
+    "n": 194,
+    "ids_sha256": "a04282d7275bd8f92b0afb4ac8b045f72f3867ccebbb7813b530b3901fd7b3bf",
+    "raw_sha256_table_sha256": "da7c93f9a0887145ff171e381c8608cb79779d96aea5a595a25677dc361ef784",
+    "missing_raw_sha": [],
+    "cohort_tsv_sha256": {
+      "lhs": "32f00daa8394188d1e72531fd7fda1a8b47a9c279be76311ae7f2afa024b2809",
+      "lhsx": "0b85e8589917c9a3936ce29e9f36326993985ddd113ef32353a4ff96d981cb45"
+    }
+  },
+  "registered194": {
+    "n": 194,
+    "ids_sha256": "a04282d7275bd8f92b0afb4ac8b045f72f3867ccebbb7813b530b3901fd7b3bf",
+    "raw_sha256_table_sha256": "da7c93f9a0887145ff171e381c8608cb79779d96aea5a595a25677dc361ef784",
+    "missing_raw_sha": [],
+    "cohort_tsv_sha256": {
+      "lhs": "32f00daa8394188d1e72531fd7fda1a8b47a9c279be76311ae7f2afa024b2809",
+      "lhsx": "0b85e8589917c9a3936ce29e9f36326993985ddd113ef32353a4ff96d981cb45"
+    }
+  },
+  "altered_digest194": {
+    "n": 194,
+    "ids_sha256": "a04282d7275bd8f92b0afb4ac8b045f72f3867ccebbb7813b530b3901fd7b3bf",
+    "raw_sha256_table_sha256": "b57dc8f185bf953d0e286f2f77e83a85e5236c717b9536255ebc71b1b5b430ca",
+    "missing_raw_sha": [],
+    "cohort_tsv_sha256": {
+      "lhs": "47112b9091ea04822c9b6e701ba823a25b8fddc3b3fcb10eb54f25dd8c2ad703",
+      "lhsx": "0b85e8589917c9a3936ce29e9f36326993985ddd113ef32353a4ff96d981cb45"
+    }
+  },
+  "raw_log_cli": [
+    {
+      "name": "wrong_tsv_full_log",
+      "baseline": 0,
+      "fixed": 1
+    },
+    {
+      "name": "wrong_tsv_registered_grep",
+      "baseline": 0,
+      "fixed": 1
+    },
+    {
+      "name": "observation_off_full_log",
+      "baseline": 1,
+      "fixed": 1
+    },
+    {
+      "name": "observation_off_truncated_before_stop",
+      "baseline": 0,
+      "fixed": 1
+    },
+    {
+      "name": "missing_three_prerequisite_lines",
+      "baseline": 0,
+      "fixed": 1
+    }
+  ],
+  "results": [
+    {
+      "name": "normal P0-P10",
+      "actual": [],
+      "expected": [],
+      "pass_": true
+    },
+    {
+      "name": "normal E1-E2",
+      "actual": [],
+      "expected": [],
+      "pass_": true
+    },
+    {
+      "name": "normal receipt vs different registration n",
+      "actual": [
+        "E1"
+      ],
+      "expected": [
+        "E1"
+      ],
+      "pass_": true
+    },
+    {
+      "name": "normal receipt vs different registration ids_sha256",
+      "actual": [
+        "E1"
+      ],
+      "expected": [
+        "E1"
+      ],
+      "pass_": true
+    },
+    {
+      "name": "normal receipt vs different registration raw_sha256_table_sha256",
+      "actual": [
+        "E1"
+      ],
+      "expected": [
+        "E1"
+      ],
+      "pass_": true
+    },
+    {
+      "name": "normal receipt vs different registration cohort_tsv_sha256",
+      "actual": [
+        "E1"
+      ],
+      "expected": [
+        "E1"
+      ],
+      "pass_": true
+    },
+    {
+      "name": "normal receipt vs different registration code_fp",
+      "actual": [
+        "E2"
+      ],
+      "expected": [
+        "E2"
+      ],
+      "pass_": true
+    },
+    {
+      "name": "old alternate TSV content hash",
+      "actual": "8d5dcbd28061327f7c4f8c1a0b8915647c368236a78ced0c5ed7c3693100f1d4",
+      "expected": "8d5dcbd28061327f7c4f8c1a0b8915647c368236a78ced0c5ed7c3693100f1d4",
+      "pass_": true
+    },
+    {
+      "name": "old alternate same ids/raw",
+      "actual": [
+        20,
+        "991cf1150b183f64bc69926a8b3e7c05453ec47e13b89ba3a6ad2fd2c981c694",
+        "a7aaa3c8c7683f1835a096acb83ecdb055eaf5f129221f7067c5f34462807d0e"
+      ],
+      "expected": [
+        20,
+        "991cf1150b183f64bc69926a8b3e7c05453ec47e13b89ba3a6ad2fd2c981c694",
+        "a7aaa3c8c7683f1835a096acb83ecdb055eaf5f129221f7067c5f34462807d0e"
+      ],
+      "pass_": true
+    },
+    {
+      "name": "old alternate rejected by values",
+      "actual": [
+        "E1",
+        "P9"
+      ],
+      "expected": [
+        "E1",
+        "P9"
+      ],
+      "pass_": true
+    },
+    {
+      "name": "missing digest key n",
+      "actual": [
+        "E1",
+        "P2",
+        "P9"
+      ],
+      "expected": [
+        "E1",
+        "P2",
+        "P9"
+      ],
+      "pass_": true
+    },
+    {
+      "name": "missing digest key ids_sha256",
+      "actual": [
+        "E1",
+        "P2",
+        "P9"
+      ],
+      "expected": [
+        "E1",
+        "P2",
+        "P9"
+      ],
+      "pass_": true
+    },
+    {
+      "name": "missing digest key raw_sha256_table_sha256",
+      "actual": [
+        "E1",
+        "P2",
+        "P9"
+      ],
+      "expected": [
+        "E1",
+        "P2",
+        "P9"
+      ],
+      "pass_": true
+    },
+    {
+      "name": "missing digest key missing_raw_sha",
+      "actual": [
+        "E1",
+        "P2",
+        "P9"
+      ],
+      "expected": [
+        "E1",
+        "P2",
+        "P9"
+      ],
+      "pass_": true
+    },
+    {
+      "name": "missing digest key cohort_tsv_sha256",
+      "actual": [
+        "E1",
+        "P2",
+        "P9"
+      ],
+      "expected": [
+        "E1",
+        "P2",
+        "P9"
+      ],
+      "pass_": true
+    },
+    {
+      "name": "unknown digest key",
+      "actual": [
+        "E1",
+        "P2",
+        "P9"
+      ],
+      "expected": [
+        "E1",
+        "P2",
+        "P9"
+      ],
+      "pass_": true
+    },
+    {
+      "name": "cohort SHA key crossed",
+      "actual": [
+        "E1",
+        "P9"
+      ],
+      "expected": [
+        "E1",
+        "P9"
+      ],
+      "pass_": true
+    },
+    {
+      "name": "supp20 receipt as production194",
+      "actual": [
+        "P6",
+        "P9"
+      ],
+      "expected": [
+        "P6",
+        "P9"
+      ],
+      "pass_": true
+    },
+    {
+      "name": "approved SHA df647d4e31224e1a270dae01dd41f91af3048361",
+      "actual": [],
+      "expected": [],
+      "pass_": true
+    },
+    {
+      "name": "approved SHA df647d4",
+      "actual": [],
+      "expected": [],
+      "pass_": true
+    },
+    {
+      "name": "approved SHA DF647D4E31224E1A270DAE01DD41F91AF3048361",
+      "actual": [],
+      "expected": [],
+      "pass_": true
+    },
+    {
+      "name": "approved SHA 0000000000000000000000000000000000000000",
+      "actual": [
+        "P10"
+      ],
+      "expected": [
+        "P10"
+      ],
+      "pass_": true
+    },
+    {
+      "name": "approved SHA xyz1234",
+      "actual": [
+        "P10"
+      ],
+      "expected": [
+        "P10"
+      ],
+      "pass_": true
+    },
+    {
+      "name": "approved SHA df647d",
+      "actual": [
+        "P10"
+      ],
+      "expected": [
+        "P10"
+      ],
+      "pass_": true
+    },
+    {
+      "name": "approved SHA absent warning",
+      "actual": [
+        [],
+        1
+      ],
+      "expected": [
+        [],
+        1
+      ],
+      "pass_": true
+    },
+    {
+      "name": "production194 normal P0-P10",
+      "actual": [],
+      "expected": [],
+      "pass_": true
+    },
+    {
+      "name": "production194 receipt as supp20",
+      "actual": [
+        "P6",
+        "P9"
+      ],
+      "expected": [
+        "P6",
+        "P9"
+      ],
+      "pass_": true
+    },
+    {
+      "name": "production194 actual committed digest = approved registration section 2",
+      "actual": {
+        "n": 194,
+        "ids_sha256": "a04282d7275bd8f92b0afb4ac8b045f72f3867ccebbb7813b530b3901fd7b3bf",
+        "raw_sha256_table_sha256": "da7c93f9a0887145ff171e381c8608cb79779d96aea5a595a25677dc361ef784",
+        "missing_raw_sha": [],
+        "cohort_tsv_sha256": {
+          "lhs": "32f00daa8394188d1e72531fd7fda1a8b47a9c279be76311ae7f2afa024b2809",
+          "lhsx": "0b85e8589917c9a3936ce29e9f36326993985ddd113ef32353a4ff96d981cb45"
+        }
+      },
+      "expected": {
+        "n": 194,
+        "ids_sha256": "a04282d7275bd8f92b0afb4ac8b045f72f3867ccebbb7813b530b3901fd7b3bf",
+        "raw_sha256_table_sha256": "da7c93f9a0887145ff171e381c8608cb79779d96aea5a595a25677dc361ef784",
+        "missing_raw_sha": [],
+        "cohort_tsv_sha256": {
+          "lhs": "32f00daa8394188d1e72531fd7fda1a8b47a9c279be76311ae7f2afa024b2809",
+          "lhsx": "0b85e8589917c9a3936ce29e9f36326993985ddd113ef32353a4ff96d981cb45"
+        }
+      },
+      "pass_": true
+    },
+    {
+      "name": "194 same IDs/raw but different TSV passes internal P0-P10 with changed default input",
+      "actual": [],
+      "expected": [],
+      "pass_": true
+    },
+    {
+      "name": "194 manual preregistered-value comparison catches TSV-only change",
+      "actual": [
+        "cohort_tsv_sha256"
+      ],
+      "expected": [
+        "cohort_tsv_sha256"
+      ],
+      "pass_": true
+    },
+    {
+      "name": "194 documented selfconsistent-current-input boundary P0-P10",
+      "actual": [],
+      "expected": [],
+      "pass_": true
+    },
+    {
+      "name": "194 manual preregistered-value comparison catches changed inputs",
+      "actual": [
+        "cohort_tsv_sha256",
+        "raw_sha256_table_sha256"
+      ],
+      "expected": [
+        "cohort_tsv_sha256",
+        "raw_sha256_table_sha256"
+      ],
+      "pass_": true
+    },
+    {
+      "name": "194 same altered receipt on real pinned inputs fails P9",
+      "actual": [
+        "P9"
+      ],
+      "expected": [
+        "P9"
+      ],
+      "pass_": true
+    },
+    {
+      "name": "manifest F7/G7 approval df647d4e31224e1a270dae01dd41f91af3048361",
+      "actual": [],
+      "expected": [],
+      "pass_": true
+    },
+    {
+      "name": "manifest F7/G7 approval df647d4",
+      "actual": [],
+      "expected": [],
+      "pass_": true
+    },
+    {
+      "name": "manifest F7/G7 approval 0000000000000000000000000000000000000000",
+      "actual": [
+        "F7",
+        "G7"
+      ],
+      "expected": [
+        "F7",
+        "G7"
+      ],
+      "pass_": true
+    },
+    {
+      "name": "manifest F7/G7 approval xyz1234",
+      "actual": [
+        "F7",
+        "G7"
+      ],
+      "expected": [
+        "F7",
+        "G7"
+      ],
+      "pass_": true
+    },
+    {
+      "name": "old raw-log CLI baseline->fixed wrong_tsv_full_log",
+      "actual": [
+        0,
+        1
+      ],
+      "expected": [
+        0,
+        1
+      ],
+      "pass_": true
+    },
+    {
+      "name": "old raw-log CLI baseline->fixed wrong_tsv_registered_grep",
+      "actual": [
+        0,
+        1
+      ],
+      "expected": [
+        0,
+        1
+      ],
+      "pass_": true
+    },
+    {
+      "name": "old raw-log CLI baseline->fixed observation_off_full_log",
+      "actual": [
+        1,
+        1
+      ],
+      "expected": [
+        1,
+        1
+      ],
+      "pass_": true
+    },
+    {
+      "name": "old raw-log CLI baseline->fixed observation_off_truncated_before_stop",
+      "actual": [
+        0,
+        1
+      ],
+      "expected": [
+        0,
+        1
+      ],
+      "pass_": true
+    },
+    {
+      "name": "old raw-log CLI baseline->fixed missing_three_prerequisite_lines",
+      "actual": [
+        0,
+        1
+      ],
+      "expected": [
+        0,
+        1
+      ],
+      "pass_": true
+    }
+  ],
+  "passed": 42,
+  "total": 42
+}

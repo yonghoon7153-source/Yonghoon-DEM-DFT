@@ -1,5 +1,7 @@
 # Codex 짧은 재확인 요청 — SUPR-01 · SUPR-02 수정 (사전 점검 기계 판독 줄 · 완료 영수증) (2026-10-14 · 초안 · 결과 0 건 · 발송 = 1저자)
 
+> **지위: 발송됨 (1저자 · 리뷰 핀 `df647d4e3`) → Codex 판정 10-14 = SUPR-01 · 02 닫힘 (verified) · 새 결함 없음 · 사전 점검 착수 GO · 실제 발사 · v1.3 HOLD** (`docs/reviews/codex_review_supr_fix_reverify_20261014.md` · 증거 `docs/reviews/codex_supr_fix_reverify_evidence_20261014/`) — 아래는 보낸 판 그대로.
+
 > **한 줄**: 보충 20 수정 재검증 (`docs/reviews/codex_review_sup20_fix_reverify_20261014.md` · 리뷰 핀 `a9422d2e7`) 의 새 P2 둘 (Codex 표기 SUP20R-01 · SUP20R-02 → 원장 `SUPR-01` · `SUPR-02`) 을
 > 판정문 §4 · §5 의 최소 해결대로 고쳤다 — 두 결함이 닫히는지 · 이 영수증 경로가 발사 전 사전 점검 증거로 충분한지 판정해 달라.
 > ✅ **1저자 10-14** — 수정 계획 `docs/reviews/supr_fix_plan_20261014.md` Q1–Q4 = 권고대로 (구현 기록 = 그 문서 §4).

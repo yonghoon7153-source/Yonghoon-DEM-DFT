@@ -92,7 +92,7 @@
 
 - NCM 표면 = SE ⇒ γ_A,유효 = γ_S ⇒ 면적당 **ΔW = 0** — 같은 상끼리 붙으려는 에너지상 선호가 사라진다.
 - 남은 기하 (§2-3 의 2) 때문에 **SE 조각은 SE 끼리보다 코팅된 AM 에 붙는 쪽이 1.8 배 (AM_S 1.6 배) 유리** ⇒ 혼합이 깬 SE 덩어리 조각이 AM 표면으로 흩어진다 = 분산.
-  (작은 입자가 큰 운반 입자 표면에 붙으며 섞이는 혼합을 제약 분체에서 정렬 (ordered) 혼합이라 부른다 — 원전 = Hersey 1975 (정본 카드 `hersey1975_ordered_mixing_concept` · 1저자 10-13 표지 걷음) · '상호작용 (interactive) 혼합' 은 Orr 의 이름으로, Pfeffer 2001 리뷰 (`pfeffer2001_dry_particle_coating_engineered_particulates`) 를 거친 2차 귀속이다 (Orr 원문 미확인).)
+  (작은 입자가 운반 입자 표면에 붙는 혼합을 Hersey 1975 는 정렬 (ordered) 혼합이라 불렀고 (정본 카드 `hersey1975_ordered_mixing_concept` · 1저자 10-13 표지 걷음), Egermann & Orr 1983 은 이 유형을 상호작용 (interactive) 혼합으로 부르자고 제안했다.  'ordered' 는 무작위보다 고른 정도 (σ < σ_R) 에만 쓴다 (원문 확인 · 정본 카드 `egermann1983_ordered_vs_interactive_mixture_nomenclature` · 같은 단신 p.117 — 이 제안의 처음은 Egermann 1980 · 원문 미확인).  1저자 10-14 비준 — 옛 표기 *"'상호작용 혼합' 은 Orr 의 이름 (Pfeffer 2001 을 거친 2차 귀속)"* 을 바꾼다: Pfeffer 2001 (`pfeffer2001_dry_particle_coating_engineered_particulates`) 이 'interactive mix' 출처로 든 Orr 문헌 [22] 가 이 단신이고, Orr 의 앞선 문헌 [20–21] 은 원문 미확인.)
 - 압축하면 SE 로 덮인 AM 들이 맞닿으며 SE–SE 접촉이 침대 전체로 이어진다 ⇒ 같은 SE 양으로 3D 이온 경로 (09-18 #29 *"3D 이온 네트워크를 먼저 깐다"*).
 - ⚠ 비코팅이라도 γ_A/γ_S > 0.31 이면 SE 는 이미 AM 쪽으로 간다 — 코팅이 더하는 몫이 작아진다 ⇒ **논지가 말하는 효과의 크기는 비코팅 NCM 의 표면 에너지에 달려 있다** (§2-8).
 
@@ -154,7 +154,7 @@
 - JKR · DMT 접착 접촉 · 접착 입자의 부착 · 이탈 임계 속도 (Thornton–Ning 등) · 작은 입자–큰 입자 부착의 곡률 (R\*) 효과
 - 건식 LPSCl 분말의 2차 응집 (브리핑 초안 §2 가 적은 정본 카드 reisacher2023 · lee2026 — 원문 대조 대상)
 - 응집성 분말의 Bond 수 · 입자 크기 효과 · 거친 입자 (coarse-grained) DEM 의 점착 스케일링 · SJKR (LIGGGHTS) 점착 모형
-- 제약 분체의 점착–응집 균형 (cohesive–adhesive balance) · 상호작용 (ordered/interactive) 혼합 · 건식 코팅
+- 제약 분체의 점착–응집 균형 (cohesive–adhesive balance) · 정렬 (ordered) 혼합 · 상호작용 (interactive) 혼합 (둘은 다른 말 — Egermann & Orr 1983 · §2-5) · 건식 코팅
 - 건식 분말 혼합의 마찰 대전
 - 역기체크로마토그래피 (IGC) 분말 표면 에너지 · AFM 콜로이드 탐침 접착력
 - NCM · 황화물 SE (LPSCl) 표면 에너지 (DFT · 실험) · 설파이드 SE 코팅 NCM (건식) · 코팅 → 혼합 분산 (10-02 #59 · #62 의 KETI 논문 단서 — 서지 미확인)
