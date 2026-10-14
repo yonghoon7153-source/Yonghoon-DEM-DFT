@@ -1,0 +1,507 @@
+{
+ "label": "seminar_20261013_v31.pptx",
+ "total": 202,
+ "failed": 125,
+ "failures": [
+  {
+   "check": "A1 slide count = 18",
+   "detail": "17"
+  },
+  {
+   "check": "A2 slide 3 section \"Model\"",
+   "detail": "DEM"
+  },
+  {
+   "check": "A2 slide 3 title",
+   "detail": "Composition-dependent porosity in five simulated beds"
+  },
+  {
+   "check": "A2 slide 4 section \"DEM → MPM\"",
+   "detail": "DEM"
+  },
+  {
+   "check": "A2 slide 4 title",
+   "detail": "From the contact network to Li⁺ transport"
+  },
+  {
+   "check": "A2 slide 5 section \"MPM\"",
+   "detail": "DEM → MPM"
+  },
+  {
+   "check": "A2 slide 5 title",
+   "detail": "Fixed-shape DEM limits and the material point method (MPM)"
+  },
+  {
+   "check": "A2 slide 6 section \"Transport\"",
+   "detail": "MPM"
+  },
+  {
+   "check": "A2 slide 6 title",
+   "detail": "Effective material inputs and their status"
+  },
+  {
+   "check": "A2 slide 7 section \"DEM\"",
+   "detail": "Transport"
+  },
+  {
+   "check": "A2 slide 7 title",
+   "detail": "Voxelizing the compacted microstructure into a transport mesh"
+  },
+  {
+   "check": "A2 slide 8 section \"DEM\"",
+   "detail": "Limits"
+  },
+  {
+   "check": "A2 slide 8 title",
+   "detail": "Problems 1 and 2: grid dependence and absolute σ(e⁻)"
+  },
+  {
+   "check": "A2 slide 9 title",
+   "detail": "Problem 3: Load sharing during compaction"
+  },
+  {
+   "check": "A2 slide 10 section \"Limits\"",
+   "detail": "Progress"
+  },
+  {
+   "check": "A2 slide 10 title",
+   "detail": "Registered studies and a 194-bed dataset for machine learning"
+  },
+  {
+   "check": "A2 slide 11 section \"Limits\"",
+   "detail": "Mixing"
+  },
+  {
+   "check": "A2 slide 11 title",
+   "detail": "Layered-bed mixing: unresolved mixing-index contrast"
+  },
+  {
+   "check": "A2 slide 12 title",
+   "detail": "Exploratory cohesion settings produce different mixing indices"
+  },
+  {
+   "check": "A2 slide 13 title",
+   "detail": "Surface energy and coating: SE–SE adhesion is the open term"
+  },
+  {
+   "check": "A2 slide 14 section \"Mixing\"",
+   "detail": "Plan"
+  },
+  {
+   "check": "A2 slide 14 title",
+   "detail": "Tests for unresolved model limits"
+  },
+  {
+   "check": "A2 slide 15 section \"Plan\"",
+   "detail": "Summary"
+  },
+  {
+   "check": "A2 slide 15 title",
+   "detail": "Current findings and limitations"
+  },
+  {
+   "check": "A2 slide 16 section \"Summary\"",
+   "detail": "References"
+  },
+  {
+   "check": "A2 slide 16 title",
+   "detail": "—"
+  },
+  {
+   "check": "A2 slide 17 = References",
+   "detail": ""
+  },
+  {
+   "check": "A2 slide 18 exists",
+   "detail": "missing"
+  },
+  {
+   "check": "A3 no dataset content (slide 10: 194(?!×))",
+   "detail": "Registered studies and a 194-bed dataset for machine "
+  },
+  {
+   "check": "A3 no dataset content (slide 10: 194(?!×))",
+   "detail": "ude agreement); Q = 0.84 194-bed dataset v1.2 Release"
+  },
+  {
+   "check": "A3 no dataset content (notes 10: 194(?!×))",
+   "detail": "s completed; the updated 194-bed production run, v1.3"
+  },
+  {
+   "check": "A3 no dataset content (slide 10: (?i)latin)",
+   "detail": "gistered study. 130 + 64 Latin-hypercube beds (composit"
+  },
+  {
+   "check": "A3 no dataset content (slide 10: (?i)latin)",
+   "detail": " 64 beds; ×: 24 non-percolating beds in the 130-bed set"
+  },
+  {
+   "check": "A3 no dataset content (notes 10: (?i)latin)",
+   "detail": "tortuosity 1.3–4.2 (percolating beds; not transport tor"
+  },
+  {
+   "check": "A3 no dataset content (slide 10: (?i)hypercube)",
+   "detail": "ed study. 130 + 64 Latin-hypercube beds (composition, parti"
+  },
+  {
+   "check": "A3 no dataset content (slide 10: (?i)machine[\\s-]*learning)",
+   "detail": "nd a 194-bed dataset for machine learning The table summarizes the"
+  },
+  {
+   "check": "A3 no dataset content (slide 10: (?i)data\\s*set)",
+   "detail": "ed studies and a 194-bed dataset for machine learning The"
+  },
+  {
+   "check": "A3 no dataset content (slide 10: (?i)data\\s*set)",
+   "detail": "istered studies (left) · dataset v1.2 (right) Registered "
+  },
+  {
+   "check": "A3 no dataset content (slide 10: (?i)data\\s*set)",
+   "detail": "ement); Q = 0.84 194-bed dataset v1.2 Released for condit"
+  },
+  {
+   "check": "A3 no dataset content (notes 10: (?i)data\\s*set)",
+   "detail": "ysical targets; figure F_dataset drawn from the released "
+  },
+  {
+   "check": "A3 no dataset content (notes 10: (?i)20-bed)",
+   "detail": "uction run, v1.3 and the 20-bed extension are not yet la"
+  },
+  {
+   "check": "A3 no dataset content (slide 10: (?i)\\bv1\\.[23]\\b)",
+   "detail": "descriptors, released as v1.2 ( conditional use as mod"
+  },
+  {
+   "check": "A3 no dataset content (slide 10: (?i)\\bv1\\.[23]\\b)",
+   "detail": "studies (left) · dataset v1.2 (right) Registered study"
+  },
+  {
+   "check": "A3 no dataset content (slide 10: (?i)\\bv1\\.[23]\\b)",
+   "detail": "Q = 0.84 194-bed dataset v1.2 Released for conditional"
+  },
+  {
+   "check": "A3 no dataset content (notes 10: (?i)\\bv1\\.[23]\\b)",
+   "detail": " 194-bed production run, v1.3 and the 20-bed extension"
+  },
+  {
+   "check": "A3 no dataset content (notes 10: (?i)\\bOOF\\b)",
+   "detail": "aborator porosity model (OOF R² 0.99) and our five-kn"
+  },
+  {
+   "check": "A3 no dataset content (slide 14: 194(?!×))",
+   "detail": "pprovals for the updated 194-bed run and the 20-bed e"
+  },
+  {
+   "check": "A3 no dataset content (notes 14: 194(?!×))",
+   "detail": "omised here. The updated 194-bed production run and t"
+  },
+  {
+   "check": "A3 no dataset content (slide 14: (?i)20-bed)",
+   "detail": "ated 194-bed run and the 20-bed extension."
+  },
+  {
+   "check": "A3 no dataset content (notes 14: (?i)20-bed)",
+   "detail": "d production run and the 20-bed extension have separate "
+  },
+  {
+   "check": "A3 no dataset content (slide 14: (?i)launch approval)",
+   "detail": "tacts Pending:  separate launch approvals for the updated 194-bed"
+  },
+  {
+   "check": "A3 no dataset content (notes 14: (?i)launch approval)",
+   "detail": " extension have separate launch approvals pending (software revie"
+  },
+  {
+   "check": "A3b only remaining \"194\" = adhesion ratio \"about 194×\" (slide 14 notes)",
+   "detail": "[(10, 'slide'), (10, 'slide'), (10, 'notes'), (13, 'notes'), (14, 'slide'), (14, 'notes')]"
+  },
+  {
+   "check": "A4 bridge on slide 2",
+   "detail": "0 bridge shapes"
+  },
+  {
+   "check": "A4 bridge on slide 3",
+   "detail": "0 bridge shapes"
+  },
+  {
+   "check": "A4 bridge on slide 4",
+   "detail": "0 bridge shapes"
+  },
+  {
+   "check": "A4 bridge on slide 5",
+   "detail": "0 bridge shapes"
+  },
+  {
+   "check": "A4 bridge on slide 6",
+   "detail": "0 bridge shapes"
+  },
+  {
+   "check": "A4 bridge on slide 7",
+   "detail": "0 bridge shapes"
+  },
+  {
+   "check": "A4 bridge on slide 8",
+   "detail": "0 bridge shapes"
+  },
+  {
+   "check": "A4 bridge on slide 9",
+   "detail": "0 bridge shapes"
+  },
+  {
+   "check": "A4 bridge on slide 10",
+   "detail": "0 bridge shapes"
+  },
+  {
+   "check": "A4 bridge on slide 11",
+   "detail": "0 bridge shapes"
+  },
+  {
+   "check": "A4 bridge on slide 12",
+   "detail": "0 bridge shapes"
+  },
+  {
+   "check": "A4 bridge on slide 13",
+   "detail": "0 bridge shapes"
+  },
+  {
+   "check": "A4 bridge on slide 14",
+   "detail": "0 bridge shapes"
+  },
+  {
+   "check": "A4 bridge on slide 15",
+   "detail": "0 bridge shapes"
+  },
+  {
+   "check": "A4 bridge on slide 16",
+   "detail": "0 bridge shapes"
+  },
+  {
+   "check": "A4 bridge placement identical on all content slides",
+   "detail": "set()"
+  },
+  {
+   "check": "A5 untouched slide 4 (= v3.1 p05) texts",
+   "detail": "differs"
+  },
+  {
+   "check": "A5 untouched slide 4 (= v3.1 p05) pics",
+   "detail": "differs"
+  },
+  {
+   "check": "A5 untouched slide 4 (= v3.1 p05) notes",
+   "detail": "differs"
+  },
+  {
+   "check": "A5 untouched slide 6 (= v3.1 p07) texts",
+   "detail": "differs"
+  },
+  {
+   "check": "A5 untouched slide 6 (= v3.1 p07) tables",
+   "detail": "differs"
+  },
+  {
+   "check": "A5 untouched slide 6 (= v3.1 p07) pics",
+   "detail": "differs"
+  },
+  {
+   "check": "A5 untouched slide 6 (= v3.1 p07) notes",
+   "detail": "differs"
+  },
+  {
+   "check": "A5 untouched slide 8 (= v3.1 p04) texts",
+   "detail": "differs"
+  },
+  {
+   "check": "A5 untouched slide 8 (= v3.1 p04) pics",
+   "detail": "differs"
+  },
+  {
+   "check": "A5 untouched slide 8 (= v3.1 p04) notes",
+   "detail": "differs"
+  },
+  {
+   "check": "A5 untouched slide 18 (= v3.1 p17)",
+   "detail": "missing"
+  },
+  {
+   "check": "A6 reference numbers 1..13 contiguous",
+   "detail": "[]"
+  },
+  {
+   "check": "A6 reference lines = registered list",
+   "detail": "['[10] D.J. Lee et al., Nat. Commun. 16, 4200 (2025)', '[11] S. Wang, M. Yan, Y. Li, C. Vinado, J. Yang, J. Power Sources 393, 75–82 (2018)', '[12] O. Thompson et al., Adv. Funct. Mater. 36, e75195 (2"
+  },
+  {
+   "check": "A6 every reference cited (slides or notes, refs slide excluded)",
+   "detail": "uncited []"
+  },
+  {
+   "check": "A6 every citation has a reference",
+   "detail": "dangling [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16]"
+  },
+  {
+   "check": "A7 required wording slide 5",
+   "detail": "['j. electrochem. soc. 168, 030538']"
+  },
+  {
+   "check": "A7 required wording slide 6",
+   "detail": "['vgcf e = 10 gpa']"
+  },
+  {
+   "check": "A7 required wording slide 10",
+   "detail": "['experimental porosity']"
+  },
+  {
+   "check": "A7 required wording slide 9",
+   "detail": "['order-of-magnitude agreement', 'σ_vgcf* = 3.41', 'effective value', 'r = 2.07', 'q = 0.84', 'registered model-sensitivity prediction', 'not within the registered band']"
+  },
+  {
+   "check": "A7 required wording slide 12",
+   "detail": "['unresolved', 'overlap condition was not met']"
+  },
+  {
+   "check": "A7 required wording slide 13",
+   "detail": "['bond number', 'cohesion-energy densit', 'no verdict']"
+  },
+  {
+   "check": "A7 required wording slide 14",
+   "detail": "['assumed geometric-mean', 'per unit area', 'literature:']"
+  },
+  {
+   "check": "A7 required wording slide 16",
+   "detail": "['unresolved diagnostic mixing-index contrast']"
+  },
+  {
+   "check": "A7 required wording slide 17",
+   "detail": "['[9] m. so et al., j. electrochem. soc. 168, 030538 (2021)']"
+  },
+  {
+   "check": "A7 required wording slide 3",
+   "detail": "['translation and rotation', 'global damping']"
+  },
+  {
+   "check": "A7 required wording slide 7",
+   "detail": "['literature', '[13]', 'not composite beds']"
+  },
+  {
+   "check": "A7 required wording slide 11",
+   "detail": "['global viscous damping', '57.9 %', '165 mpa', 'model-internal', '750 n']"
+  },
+  {
+   "check": "A7 required wording slide 15",
+   "detail": "['unloading', 'generation 2', 'insertion', 'platen removal', '1.64 g cm⁻³', 'ε_union', 'heckel', 'history test passed']"
+  },
+  {
+   "check": "A7 required table wording slide 5",
+   "detail": "['lab anchor (planned)', 'eis + dc polarization', '0.1 / 0.2 / 0.3 g', 'polycrystalline', 'single-crystal', 'small and large particles']"
+  },
+  {
+   "check": "A7 required notes slide 6",
+   "detail": "['100 gpa']"
+  },
+  {
+   "check": "A7 required notes slide 12",
+   "detail": "['does not establish compliance', 'hersey 1975 [4]', 'egermann & orr 1983 [5]']"
+  },
+  {
+   "check": "A7 required notes slide 14",
+   "detail": "['0.309', 'not a necessary or sufficient condition', 'ordered mixing', 'interactive', 'σ < σ_r', 'kim 2012 [7]']"
+  },
+  {
+   "check": "A7 required notes slide 3",
+   "detail": "['docs/dem_governing_equations_report_20261009.md', 'docs/dem_governing_equations_background_20261011.md', 'demp-01', '[2]', '[1]', 'non-saturated branch']"
+  },
+  {
+   "check": "A7 required notes slide 5",
+   "detail": "['planned lab anchor', 'no results']"
+  },
+  {
+   "check": "A7 required notes slide 7",
+   "detail": "['faka 2026 [13]', 'thompson 2026 [12]', 'neither is a validation']"
+  },
+  {
+   "check": "A7 required notes slide 9",
+   "detail": "['not \"within band\"', 'not an experimental hit', 'eight-origin', 'not a fibre property', 'docs/reviews/lee_abs_sigma_e_prereg_20260923.md', '3.41']"
+  },
+  {
+   "check": "A7 required notes slide 10",
+   "detail": "['thompson 2026 [12]', 'faka 2026 [13]']"
+  },
+  {
+   "check": "A7 required notes slide 11",
+   "detail": "['demp-01', 'mv-01', 'mv-02', 'mv-08', 'only after', 'docs/data/ps73_damping_branch_20261007/readme.md']"
+  },
+  {
+   "check": "A7 required notes slide 13",
+   "detail": "['kissel 2026 [6]']"
+  },
+  {
+   "check": "A7 required notes slide 15",
+   "detail": "['ulkr-01', 'dem_unloading_kit_fix_plan_20261014', 'h0–h5', 'mv-03', 'plan only']"
+  },
+  {
+   "check": "A8 slide 3 has the 8 equation objects",
+   "detail": "[]"
+  },
+  {
+   "check": "A8 equation Choice keeps Requires=\"a14\" with the a14 namespace in scope",
+   "detail": ""
+  },
+  {
+   "check": "A8 slide 3 English labels present",
+   "detail": "['① Translation', '② Rotation', '③ Normal contact force', '④ Tangential friction · rolling resistance', '⑤ Contact stiffness', 'Load', 'Forces on particle i', 'DEM model', 'Governing equations · calculation steps', 'Contact detection', 'Contact forces ③–⑤', 'Time integration ①–②']"
+  },
+  {
+   "check": "A8 picture \"Force diagram picture\" identical to the 10-09 slide (\"Picture 21\")",
+   "detail": ""
+  },
+  {
+   "check": "A8 picture \"Panel frame picture\" identical to the 10-09 slide (\"그림 26\")",
+   "detail": ""
+  },
+  {
+   "check": "A9 F_p4 files exist (png · svg · csv)",
+   "detail": ""
+  },
+  {
+   "check": "A9 slide 11 carries F_p4.png byte-identical",
+   "detail": ""
+  },
+  {
+   "check": "A10 blank-figure slide 4 source line says \"figure: presenter\"",
+   "detail": "['This work (left) · Bazzoun et al., J. Power Sources 661, 238682 (2026), Fig. 2 (right) [8]']"
+  },
+  {
+   "check": "A10 blank-figure slide 6 source line says \"figure: presenter\"",
+   "detail": "['This work (left) · So et al., J. Electrochem. Soc. 168, 030538 (2021), Fig. 4a (right) [9]']"
+  },
+  {
+   "check": "A10 blank-figure slide 13 source line says \"figure: presenter\"",
+   "detail": "['This work: exploratory contact statistics (left), conditional adhesion model (right)']"
+  },
+  {
+   "check": "A10 words ≤ 100 / 120 (small print, tables, groups excluded)",
+   "detail": "[(8, 105), (16, 184)]"
+  },
+  {
+   "check": "A10 mixing slide 14 keeps \"cohesi\"",
+   "detail": ""
+  },
+  {
+   "check": "A12 shape ids unique per slide",
+   "detail": "[(4, ['287']), (5, ['287']), (6, ['287']), (10, ['287'])]"
+  },
+  {
+   "check": "A11 slide 15 notes cite repo sources that exist",
+   "detail": "paths 0 missing []"
+  },
+  {
+   "check": "A11 slide 16 notes cite repo sources that exist",
+   "detail": "paths 0 missing []"
+  },
+  {
+   "check": "A11 slide 17 notes cite repo sources that exist",
+   "detail": "paths 0 missing []"
+  }
+ ]
+}

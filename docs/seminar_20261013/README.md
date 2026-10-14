@@ -1,5 +1,41 @@
 # 연구세미나 덱 (2026-10 · 1저자 비준 개요 v1) — 생성기 · 그림 · 출처
 
+## v3.2 (2026-10-14 · 1저자 10-14 결정 1–9 · 18 장 · 세미나 10-16) — `build_seminar_v32.py` · `figs_v3/make_seminar_figs_v32.py` (F_p4) · `slide_text_v32.md` · `slide_sources_v32.json`
+
+- **방식** = v3.1 덱 위의 차분이다.  `build_seminar_v32.py` 가 `build_seminar_v3.py` 를 **그대로** 불러 v3.1 (Codex 종결본) 을 만든 뒤 바뀐 장만 고치고 순서를 바꾼다 — 손대지 않은 장은 같은 코드 경로라 글이 같다.  덱 · PDF · PNG = 리포 밖 (사용자 덱 미반입 규약).
+- **순서 (1저자 결정 1)** = question → model → what works → what does not → in progress → plan.  v3.1 p10 (진행 · 194-bed / 데이터셋) 은 **삭제** — 그 안의 Lee 2025 R / Q 는 9 장으로, 8 원점 연구 "보류" 는 9 장 notes 로 옮겼다 (결정 2).
+
+| v3.2 | v3.1 | 바뀜 |
+|---:|---:|---|
+| 1 표지 · 2 Introduction | p01 · p02 | 없음 (다리 줄만) |
+| 3 Model — DEM 지배방정식 | — | **새 장** (결정 8) |
+| 4 DEM → MPM | p05 | 인용 번호만 (본문 [1, 7] → [1, 2] · notes [15] → [3]) · 다리 줄 |
+| 5 MPM 입력 | p06 | 표 마지막 행 `Validation … pending` → `Lab anchor (planned)` (결정 5) · notes 덧붙임 |
+| 6 Transport | p07 | 없음 (다리 줄만) |
+| 7 DEM porosity | p03 | 문헌 꼬리표 (Faka 2026 [13]) · notes (Faka · Thompson) (결정 7) |
+| 8 DEM 접촉망 | p04 | 없음 (다리 줄만) |
+| 9 Problems 1–2 | p08 | 본문 2 = σ_VGCF* 3.41 문장 (결정 4) · Lee R / Q 두 줄 표 (결정 2) · 옛 본문 마지막 문장 → notes · notes 덧붙임 |
+| 10 Problem 3 | p09 | notes 문헌 (Thompson · Faka) |
+| 11 Problem 4 | — | **새 장** (결정 3) · 그림 F_p4 |
+| 12–14 Mixing | p11–p13 | notes 문헌 (Hersey · Egermann & Orr · Kissel · Kim) · 14 장 꼬리표 (결정 7) |
+| 15 Plan | p14 | 194-bed 결론 줄 삭제 · 언로딩 항목 · DEM 프로토콜 세대 2 (계획) (결정 6) |
+| 16 Summary | p15 | "DEM loading" 한 줄 덧붙임 (**지시 목록 밖** · `SUMMARY_P4_LINE` · 끄려면 False) |
+| 17 References | p16 | 인용된 것만 13 · 번호 다시 · 새 문헌 6 |
+| 18 Thank you | p17 | 없음 |
+| — | p10 | 삭제 |
+
+- **인용 번호 (v3.1 → v3.2)** = [7] → [2] (LIGGGHTS) · [15] → [3] (Sakuda) · [12] → [10] (Lee) · [16] → [11] (Wang) · [1] · [8] · [9] 그대로 · v3.1 [2]–[6] · [10] · [11] · [13] · [14] = v3.1 어디에도 인용 없음 → 뺌.  새 [4] Hersey 1975 · [5] Egermann & Orr 1983 · [6] Kissel 2026 · [7] Kim 2012 · [12] Thompson 2026 · [13] Faka 2026 = litdb 정본 카드 (서지 낱말을 카드에서 대조 · [2] = 소프트웨어 고정 커밋 `docs/data/liggghts_add_pair_pin.json`).
+- **3 장 지배방정식 (결정 8)** = 1저자 10-09 슬라이드 (리포 밖 업로드 · 생성기 인자 `--eq-deck`) 의 식 OMML 여덟 (`mc:AlternateContent` · Choice `Requires="a14"` · Fallback 그림) 과 그림 (힘 그림 · 판 틀) 을 관계 (`r:embed` → 새 image part) 와 함께 그대로 복사 — **다시 타이핑하지 않았다**.  검사 A8 = 식 XML C14N 바이트 같음 · 대체 그림 바이트 같음 · 그림 둘 바이트 같음 · `a14` 이름공간 유지.  바꾼 것 = 한글 라벨 → 영어 (`TRANS` 표) · 프로젝트 머리 (한글) 삭제 · 배치 (`xfrm`) · 대체 그림의 `fillRect`.  원 슬라이드는 식 무리를 가로 0.717 배로 눌러 넣었고 대체 그림도 눌린 크기에서 그려졌다 → 식 상자 폭은 원래 3.461 in 그대로 · 높이만 필요한 만큼 늘리고 `fillRect` 를 다시 계산 (전부 ≤ 0 — LibreOffice 는 양수 inset 이 섞이면 `fillRect` 를 무시한다).  출처 · 한정어 = notes (`docs/dem_governing_equations_report_20261009.md` §1 · §3 · `docs/dem_governing_equations_background_20261011.md` §2.3 · §3.1 · §5.2 · §5.3 · §6 · §7 · §8.2 · §9 · §11 · DEMP-01 open · [2] · [1]).
+  ⚠ LibreOffice 는 OMML 이 아니라 **대체 그림**을 그린다 → PDF · PNG 의 식 = 대체 그림이다.  PowerPoint 는 OMML 을 그린다 — **우리 PowerPoint 렌더 없음** (발표 PC 에서 3 장 확인 필요).  LO 렌더에서 ④ 첫 식 끝 "|" 가 그림 가장자리에 붙어 보인다 (LO 만).
+- **11 장 Problem 4 (결정 3)** = `docs/reviews/findings.json` DEMP-01 · MV-01 · MV-02 · MV-08 (open) · `docs/data/ps73_damping_branch_20261007/README.md` §1 · §4 · §12-4 · `docs/reviews/codex_review_model_validation_20261008.md` Q11 문안.  그림 F_p4 = README 기록 문자열만 (`figs_v3/make_seminar_figs_v32.py --selftest` = README · DEMP-01 대조 · 금지어 · 글 상자 겹침 0 · "static" 없음).  "static 300 MPa" 는 notes 의 조건문 (Codex Q11 문안) 안에만.
+- **다리 줄** = 내용 장 2–16 · 바닥글 띠 같은 자리 (3.70, 7.02 in · 5.60 × 0.28) · 12 pt 기울임 · 한 줄 · 숫자 없음 · 장 밖 주장 없음 (`BRIDGES`).
+- **검사 (시험 먼저)** — 구현 전 v3.1 덱에 v3.2 검사를 돌려 실패를 먼저 봤다: 202 건 중 125 실패 (`docs/reviews/codex_seminar_deck_review_evidence_20261013/v3_2_fix/testfirst_v32.json`).  최종 검사기 = v3.1 덱 204 건 중 124 실패 (`finalchecks_on_v31.json`) · **v3.2 덱 245 건 0 실패** (`checks_v32.json`).  항목 = 장 수 · 절 / 제목 · 194 / LHS / ML / 데이터셋 / Latin 없음 (14 장 notes 의 접착 산술 "about 194×" 하나만 예외) · 다리 줄 · 손대지 않은 장 동일 · 참고문헌 ↔ 정본 카드 · 필수 / 금지 문구 · 식 복사 · F_p4 값 · 철회값 · 단어 ≤ 100 / 120 · 글꼴 · 겹침 · 바닥 · 도형 id 유일 · notes 의 리포 경로 실재.
+- **v3.1 과의 동일성** (Codex 종결 §6 승계 조건 1) — 같은 폴더 `cmp_codex_v31.py` · `cmp_codex_v31.json`: 다시 만든 v3.1 덱 = Codex 종결 v3.1 PPTX (sha256 `73fa2dc3…`) 와 17 / 17 장 글 run · notes · 그림 바이트가 같다 (Codex 증거 `docs/reviews/codex_seminar_deck_review_evidence_20261013/v3_1_closure/evidence/pptx.json` 대조) · v3.2 의 손대지 않은 6 장 (1 · 2 · 4 · 6 · 8 · 18) 도 같다 (인용 번호 바꿈 적용 · 다리 줄 제외).  ⚠ PPTX 는 python-pptx 저장이라 해시가 빌드마다 다르다 — 동일성은 내용 대조로만 말한다.
+- **렌더** = LibreOffice + Carlito → PDF 18 쪽 · 150 dpi PNG 18 장 · 육안 확인 (3 · 5 · 9 · 11 · 14 · 15 · 17 장 포함) · 덱 · PDF · 원 슬라이드 해시 = 재확인 요청서 §0.
+- **장 순서에서 생기는 논리 문제 (순서는 1저자 결정대로 두었다)**: ① 6 장 (Transport) 의 발표자 그림 (i) = 7:3 침대의 접촉망 전류 경로인데, 접촉망 (8 장) 과 7:3 침대 (7 장) 는 그 뒤에 나온다 · ② 4 장의 Luding 크롭 (이력 법칙) 은 3 장 식 ③ 과 겹치고, 4 장 notes 의 "감쇠 58 %" 는 11 장과 겹친다 (손대지 않은 장이라 그대로) · ③ porosity (7 장) · 하중 분담 (10 장) 은 "300 MPa" 를 쓰고 그 명목 압력의 속은 11 장에서 나온다 (11 장 notes 에 "세대 1" 표지) · ④ 5 장 표의 보정 표적 "10 % at 300 MPa" (CL-94 · 우리 보정 표적) 과 15 장 세대 2 계획의 "ε_union 10–13 %" 는 다른 목표다 (계획 = 1저자 10-14 지시).
+- **리포 기록에 아직 없는 것 (1저자 지시에서 옴)**: 15 장 "ε_sphere kept internally" · "Heckel analysis redone" · 5 장 큰 입자 LPSCl 펠릿 (진행 기록 10-14 저녁 = 권고 · "답 대기") — 커밋 때 진행 기록에 한 줄.  언로딩 수정 계획 파일 머리는 아직 "1저자 비준 전" (진행 기록 10-14 오후 2 = 비준).
+- 실행: `python3 build_seminar_v32.py --template <10-13 덱.pptx> --eq-deck <10-09 지배방정식.pptx> --repo <리포> --figs figs_v3 --lit <크롭 폴더> --out <out.pptx> --v31 <v3.1 덱 사본 경로> --json <검사 기록> --sources-out slide_sources_v32.json` · `--selftest-only <덱> --repo . --figs figs_v3 --v31 <v3.1 덱> --eq-deck <…>` · `--dump <덱> --out slide_text_v32.md`.  재확인 요청서 = `docs/reviews/codex_seminar_deck_v3_2_recheck_request_20261014.md`.
+
 ## v3.1 (2026-10-13 · Codex v3 재확인 = 조건부 GO 반영) — 같은 파일 (`build_seminar_v3.py` · `figs_v3/` · `slide_text_v3.md` = v3.1 글 전문 · `slide_sources_v3.json`)
 
 - 판정 = `docs/reviews/codex_review_seminar_deck_v3_recheck_20261013.md` (증거 `docs/reviews/codex_seminar_deck_review_evidence_20261013/v3_recheck/`) · 원장 `SEMV3-01`~`10` · `SELF-111`.  새 시뮬레이션 · 값 변경 없음 — 출처 · 비교군 이름 · 배율 정의 · 결론 강도 · 반올림 · 조판만.

@@ -1,0 +1,12 @@
+panel,state,value (as recorded),unit,source
+a,"stop (damping 0.5, plate moving)",300.906,MPa,README §12-4
+a,"relaxed at fixed platen (original run, damping 1e-5)",165.34,MPa,README §1
+a,"servo hold end (branch B, damping 1e-5)",299.274,MPa,README §12-4
+a,damping drag at stop (share of 750 N target),57.89,%,README §12-4
+b,stop eps_sphere,14.953,%,README §12-4
+b,servo hold end eps_sphere,10.769,%,README §12-4
+b,stop thickness,111.052,um,README §12-4
+b,servo hold end thickness,105.842,um,README §12-4
+b,registered band low (before the run),8.3,%,README §4 B2
+b,registered band high (before the run),11.7,%,README §4 B2
+b,registered point (before the run),10.0,%,README §4 B2
