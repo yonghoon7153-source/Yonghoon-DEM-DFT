@@ -123,6 +123,7 @@ evidenceScope: multi-source-primary
 | CU | 2026-10-07 | `codex_CU_prompt_wad_agc_graphite_k9_closure_2026_10_07.md` | `codex_CU_reply_wad_agc_graphite_k9_closure_2026_10_08.md` | 발송 2026-10-08 · ✅ 회신 수령 2026-10-08 → `codex_CU_reply_wad_agc_graphite_k9_closure_2026_10_08.md` (조건부 GO · 값 유지 · P1 '기판만' 정정 · P2 라벨) | 같은 라벨 · 주제 토큰 일치 ['agc', 'closure', 'graphite', 'k9', 'wad'] |
 | CV | 2026-10-07 | `codex_CV_prompt_cei_easy_story_2026_10_07.md` | `codex_CV_reply_cei_easy_story_2026_10_08.md` | 발송 2026-10-08 · ✅ 회신 수령 2026-10-08 → `codex_CV_reply_cei_easy_story_2026_10_08.md` (조건부 GO · 스토리 그림 NO-GO · P0 2 · P1 5) | 같은 라벨 · 주제 토큰 일치 ['cei', 'easy', 'story'] |
 | CW | 2026-10-12 | `codex_CW_prompt_seminar_lean_deck_aesthetics_2026_10_12.md` | `codex_CW_reply_seminar_lean_deck_aesthetics_2026_10_13.md` | 발송 2026-10-13 · ✅ 회신 수령 2026-10-13 → `codex_CW_reply_seminar_lean_deck_aesthetics_2026_10_13.md` (조건부 GO · P0 3 · P1 5) | 같은 라벨 · 주제 토큰 일치 ['aesthetics', 'deck', 'lean', 'seminar'] |
+| CX | 2026-10-14 | `li2s1a_CX_prompt_li2s_glass_control_readout_2026_10_14.md` | — | 초안 (2026-10-14) — 사용자 검토 · 발송 대기 (발송판 `kb/projects/li2s_glass_control_readout_letter_CX_send_2026_10_14.md` = 보내는 글 그대로) | li2s · 대조 계 B 600 K 판독 · 규칙 적용 갈래 c2 · 트랙 끝 제안 |
 
 ## 🔴 모순 (status 는 대기인데 증거는 회신 수령)
 
