@@ -1425,3 +1425,58 @@ rc 0 → **옛 봉인 대조 (§2-4) 에서 허용 밖 차이** → 정지. 원�
 - **미정 (회신 뒤 사용자 결정):** 요청서 §11 의 1–5 — E0 승인 · 비용 중단 규칙 · util 원본 / 사본 · COMPLETE 정의 · 코드 위치.
 - 이 결정은 E0 · E1 · 구현 · 자료 반입 · 자료 개봉 · 실행 · C4-A / B 승인이 아니다. 회신이 오면 바이트 보존 → 원장 → (정정이 요구되면 요청서 정정판) →
   사용자 결정 순서로 간다.
+
+## §62 C4-E 실행 승인 요청 사전 검토 회신 접수 — E0 승인 전 정정 · C4E-N1–N4 · M1 (2026-10-14 KST · 덧붙임 — 위 §0–§61 은 그대로)
+
+- **보존:** `reviews/review_reil_c4e_prereview_20261014/`
+  - zip 314,385 B · sha256 `47fed0f257f045471c08c5ff641421249eaddada56c84d06410fb1efb7d9652b` (사용자 업로드 원파일과 바이트 동일).
+  - `originals/` 41 · PACKAGE_MANIFEST (`members`) 40 / 40 일치 · 목록 밖 파일 0 (manifest 자신은 `self_excluded`) · 비밀 0.
+    동봉 `capture_data.ps1` · `package_review.ps1` · `static_audit.ps1` 은 실행하지 않았다.
+  - `source/` 25 는 검토 고정 HEAD `89d18f54` 의 저장소 파일과 바이트 동일하다. `basis/` 2 는 이전 회신 (C4-0b2 보완 판정 · 검토서) 과 같다.
+  - `source/original_util/util_LFP.py.txt` 는 REIL 고정 커밋의 원본 util 텍스트다 (33,754 B · `3c19e45e…` = P0 기록 sha). MIT 코드이고 저장소에는 이미 LICENSE ·
+    정규화 사본이 있다. `-text` 로 CRLF 를 그대로 보존했다.
+  - 규칙 커밋 `21813d11` → 보존 커밋 `8b0a9556` (blob 42 / 42 일치).
+- **판정 (`DECISION.json`):** `REQUEST_REVISION_BEFORE_E0_APPROVAL` — 실행 중 관측한 실패가 아니라 문서 계약의 빈칸이다
+  (`DOCUMENT_CONTRACT_GAPS_NOT_OBSERVED_RUNTIME_FAILURES`). 새 승인 없음 (E0 · E1 · C4-A / B · 자료 반입 · 개봉 모두 false). C4-0a · 0b1 · 0b2 한정 종결 유지 ·
+  H 배열 인증 · H4 기록은 이관 (해소 아님). 검토자 실행 (수신 코드 · 시험 · Python · 최적화 · Sobol · 자료 반입 / 개봉 · COMSOL · 설치) 0.
+  - 수용된 것: E0 → 결과 검토 → E1 별도 GO 의 분리 · 단일 원점 · reserve · 최소 8 · 위쪽 중앙 순서통계 · 누적 투영의 큰 틀 · 같은 고정 출처 재반입 · 원본 util 선호 ·
+    H 배열 / H4 의무의 A / B 이관 · 66 / 275 / 1,501,500 / 작업자별 기대 평가 · 1,560 s · 1,800 s 의 산술 (실제 횟수나 상한이라는 뜻은 아님 · 현 E3a 는 내부 optimizer
+    호출 수를 따로 세지 않는다). 7-1 · 7-3 전체 종결로 표시하지 않는다.
+- **정정 요구 (좌표는 정적으로 다시 읽어 모두 확인했다):**
+  1. **C4E-N1 (P1) — E0 의 계산 금지와 기존 159 회귀시험의 충돌.** 요청 v1 은 "실제 optimizer 0 · Sobol 재생성 금지" 라고 하면서 GREEN 에 기존 159 를 다시 돌린다.
+     기존 시험에는 다음 계산 경로가 있다:
+     - 보존 util 사본 + 실제 pymoo NSGA2 합성 2 호출 — `tests/test_reil_c4_0a.py:349–364` · `tests/test_reil_c4_0a_fix.py:387–405`.
+     - 실제 SciPy COBYQA — `tests/test_reil_c4_0b1.py` test_08 · `test_reil_c4_0b1_fix.py` n1_a · n1_b · n1_d · `test_reil_c4_0b1_fix2.py:133–144` · `test_reil_c4_0b2.py`
+       p_2 · s_3 · n_2.
+     - Sobol 생성 · 재생성 · 임시 봉인 — `test_reil_c4_0a.py:189–224` · `test_reil_c4_0a_fix.py:57–87` · `test_reil_c4_0b1.py:161–205` 등.
+     - `test_reil_c4_0a_fix.py:390–404` 는 `REIL_C4_FIX_EVIDENCE` · `REIL_C4_FIX_STEP` 가 없으면 실패하고, `<step>.nsga2_synthetic_outcome.json` 이 이미 있으면 거부한다.
+       0b1 · 0b2 GREEN 은 0a 시험을 돌리지 않았으므로 이번이 0a 보완 뒤 처음이다.
+
+     정정: 새 대조 · `plan-e` 의 0 은 유지하고, 기존 159 의 계산을 고정 예외표 (이전 승인 문서 · 판본 · 범위 · 이번 GREEN 1 회의 총 상한 · 실패 중지) 로 분리한다.
+     env 둘 · outcome 경로 · 보존을 실행기 명세에 넣는다. 보완 뒤 대조 수 · fork · 가짜 평가를 다시 봉인한다. "E0 GREEN 이면 바로 E1" 선택지는 지운다.
+  2. **C4E-N2 (P1) — 관측 행 종결과 E3a 성공의 혼합.** `scripts/reil_c4_e3a.py:286–305` 는 util 지역 오류를 `termination=error` · X/F/G None · `state=COMPLETED` 행으로
+     만든다.
+     - 반례 (제어 흐름 읽기): 각 호출의 첫 평가에서 지역 ValueError 가 나도, v1 §4-7 의 세 조건은 66 오류 행으로 성립한다. 그러나 GA 의 뒤 seed 들은 수행되지 않는다.
+     - 정정: **E3a COMPLETE = 66 모두 `returned` + 기록 · 식별 · 운영 · 최종 기록 조건.** 지역 오류가 하나라도 있으면 INCOMPLETE 이고 C4-A 관문은 false 다.
+       관측 집계 (returned / error 분리) 는 유지하고, 오류 뒤 나머지 호출을 계속 관측하는 것은 허용된다. 수렴 · feasible · `success=True` 를 새 조건으로 넣지 않는다.
+     - 운영 조건도 넣는다: 전역 중지 · 구조 오류 없음 · 작업자 정상 종료 · 소유 자식 잔존 0 (`monitor.py:332–336`) · drain 수용 · `final_record` 의
+       `record_state=COMPLETE` (`:344–379` — RECORD_INCOMPLETE / OUTPUT_LIMIT_EXCEEDED 가능) · 한도 위반 없음 · 재읽기 · 끝 식별.
+  3. **C4E-N3 (P2) — 1,800 s 상한의 늦은 완료와 시간 좌표.**
+     - 표본 사이에 상한을 넘겨 반환한 경우의 처리가 비어 있다 (반환 행 보존 · 단계 INCOMPLETE 결속).
+     - `monitor.worker_loop:167` 의 start.t 는 절대 monotonic 인데 snapshot 의 now_rel 은 상대다 — 원점 · 단위를 고정해야 한다.
+     - 통계 입력 검증 (임의 탈락 · 0 보충 금지) · 활성 / 미시작 집합 정의 · progress 는 평가 진입 계수라 proxy 다 (`e3a.py:247–249`).
+     - 비용 판정 원시 근거를 기록하고, "고정 비용 투영 모형에서 측정 마감 초과로 추정" 으로 표현을 좁힌다. grace 뒤 kill / join 도 reserve 안에 든다 (`:318–325`).
+  4. **C4E-N4 (P2) — 적재 대조의 NE 누락.** v1 은 11 행 + PE max_q · 길이만 대조해서 `[q_PE, v_PE, q_PE, v_PE]` 같은 결함이 통과할 수 있다. P0 결과에는 reference 둘의
+     시트 · step · cell · 길이 · Q/V 양 끝 (`P0_RESULT.json` 1087–1110 행) 과 `q_NE_hc_max_record_only` (3.6685628130367562) 가 있다.
+     - 정정: 서로 다른 PE / NE 합성 곡선으로 네 배열 · 순서 · slice · 질량 배율을 보는 E0 대조를 둔다.
+     - E1 은 reference 둘의 요약과 NE 최대값까지 대조하고, 소비한 Model / halfcell digest · 선택 인자 · P0 · 발췌의 시작 / 끝 식별을 기록한다.
+       P0 에 없던 전체 배열 digest 를 소급 주장하지 않는다.
+- **비차단 M1 (사실 정정 · 원문 확인):** 원본 util 33,754 B (CRLF 846 · 끝 줄바꿈 없음) · 보존 사본 32,909 B. 원본의 CRLF 를 LF 로 정규화하고 끝 LF 하나를 더하면
+  사본과 전체 바이트가 같다 (이 저장소에서도 메모리 변환으로 같은 결과를 확인했다 · 파일 변경 0).
+  - 요청 v1 §1 · §9-3 의 "끝 줄바꿈 1 바이트 차이" 는 틀렸다. 위 §20 표의 "util 은 보존 사본과 끝 줄바꿈 1 바이트 차이뿐" 도 같은 부정확한 설명이다
+    (정규화 뒤에만 맞는 말) → **"원바이트는 줄바꿈 정규화와 끝 LF 차이 · 정규화 뒤에는 끝 LF 1 바이트 차이"** 로 읽는다.
+  - 오류 분류는 실제 로드 경로 (`ctx.util_file`) 와 비교하므로 사본을 써도 불이익이 없다. 원본 선호의 이유는 P0 · C5 와 같은 바이트라는 것으로 좁힌다.
+  - v1 머리의 "부속 A §6-3" 은 **v2 §6-3** 이다.
+- **상태:** C4-E 요청 v1 (`b1d8953a…`) 은 그대로 둔다. 정정판 (새 문서) → 사전 재검토 → 사용자 E0 별도 승인 → E0 결과 검토 → E1 별도 GO.
+  지금 구현 · 시험 · 자료 반입 · 개봉 0.
+- **다음:** 요청 정정판 `docs/REIL_C4E_APPROVAL_REQUEST_v2_20261014.md` · 재검토 발송문.
