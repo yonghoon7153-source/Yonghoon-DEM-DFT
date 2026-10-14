@@ -1,0 +1,12 @@
+{
+  "pin": "1087a9b2f4a93aa6a3b0debc698a14fffa13488d",
+  "branch": "claude/stoic-knuth-NObVQ",
+  "pin_authorization": "User approved fetching and pinning the latest commit on 2026-10-14",
+  "verified_utc": "2026-10-14T05:34:44.439412+00:00",
+  "source_files": 769,
+  "source_mismatches": [],
+  "git_mutations": false,
+  "production_simulations": false,
+  "offline_small_fv_fixtures": true,
+  "windows_resource_shim": "RSS telemetry only, ru_maxrss=NaN; source unmodified"
+}

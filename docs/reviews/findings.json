@@ -8569,7 +8569,7 @@
     {
       "id": "RINTV-01",
       "severity": "P2",
-      "status": "claimed_fixed",
+      "status": "verified",
       "owner": "claude",
       "found_by": "codex 10-07 (Rint G2 v3 재검토 · 핀 c3ff4408c · 근거 9 Git blob 바이트 검증 · 합성 청구자 산술 · Windows Python 3.12.14 NumPy 2.3.5 SciPy 1.16.3 · 우리 트리 Linux 재현 비트 동일)",
       "opened_in": "docs/reviews/codex_review_rint_g2_v3_20261007.md",
@@ -8577,14 +8577,19 @@
       "note": "자리: v3:L78 (I8) · L44 (§0-3 tie 행) · L85 (T0-1′) · L88 (N8) · L243 (§6-1 tie · 중복 = I8).  아직 구현되지 않은 코드의 결함이라 부르지 않는다 — 무너지는 것은 현재 문구만으로 owner 순열 불변이 보장된다는 R3 주장.  반례 (합성 청구자 집합 · 실 DEM 에서 이런 배치가 얼마나 나오는지 주장 안 함 · 판정문 §2 · 증거 키 evidence_v3.json:epsilon_tie): ε_p 1e−6 µm² · 관측점 (0,0,0) µm · 중심 (0,0,0) · (1,0,0) · (2,0,0) µm · 반경 0.9999992499997188 · 1.4142132972080272 · 2.2360679774997900 µm → power −0.9999985000000001 · −0.9999992499999999 · −1.0000000000000009 µm² · 순차 reduction 승자 012→2 · 021→1 · 102→2 · 120→0 · 201→1 · 210→0 · 현 문서에 이 입력을 제외하는 중첩 제한 없음.  동일 중심 · 반경 1 · 1.0000002499999687 µm 의 power 차 4.9999999985e−7 µm² (ε 안) — 중심 사전순은 승자를 못 정하고 N8 은 중심 · 반경이 모두 같은 경우만 막는다.  최소 수정: 청구자 집합 전체의 p_min · T = {i : p_i ≤ p_min + ε_p} · T 에서 완전한 canonical 기하 키의 최솟값 (이 예 T = {1, 2} · 6 순열 모두 1) · 동심 비동일 = 별도 거부 또는 완전 순서 명시 · 완전 중복 = N8 거부 · 행 번호는 키가 아님 · ε 의 단위 · 수치 · power 평가 규약 고정 · 승자의 power 를 다음 비교 기준으로 쓰는 단일 쌍별 fold 는 이 수정안이 아니다 (canonical 정렬 뒤 fold 는 별도 규칙 · 섞지 않음).  해결 증거: 3 청구자 6 순열 · 동심 비동일 · 정확 중복 시험 — 옛 쌍별 fold 는 이 반례에서 실패 · 선택한 집합 규칙은 동일 owner.  우리 트리 재현 (HEAD 2802c649e = 9 근거 파일 핀과 같음 · 탐침 바이트 그대로 · docs/reviews/codex_rint_g2_v3_review_evidence_20261007/_reproduction_ours/README.md): 판정값 차이 0 (숫자 키 192/194 · 92/97 비트 동일 · 나머지 = lstsq · CG 끝자리) — epsilon_tie 전 값 비트 동일 + 판정문 인쇄 리터럴 독립 대조 (중심만 키로 쓰면 동심 쌍의 승자를 입력 순서가 정한다 01 → 0 · 10 → 1).  등재 2026-10-07 = Codex Rint G2 v3 재검토 반입 (1저자 전달 · 판정문 바이트 그대로 · 원장 ID: Codex RINTV3-NN 은 ID 형식 (하이픈 앞 5 자) 을 넘어 RINTV-NN).  ⛔ 판정 = 반례 개발 GO · RINTV3-01 · 02 계약 정정 뒤 AM–AM ①′ 구현 GO · 정량 채택 · 생산 HOLD (새 생산 P1 없음).  ✅ 1저자 Q1 10-07 (권고대로 · \"다 권고야\"): Codex 최소 수정 그대로 + 동심 비동일 = 정량 모드 거부 → 계약 정정 = docs/reviews/contact_resistance_pipeline_draft_v3_1_20261007.md §1 (I8′ · N8b) · 시험 §4 (owner_eps_set · reject_concentric · reject_dup) 를 먼저 쓴 뒤 ①′ 구현 (1저자 Q4) — 상태 open (닫힘 = 시험 + 구현 + Codex 재확인).\n★ 10-07 ①′ AM–AM 구현 (eb45fc331 · 시험 먼저 daf2a45a9 · 1저자 Q4 \"다 권고야\") → claimed_fixed (Codex 재확인 전): I8′ 집합 규칙 = step3_sigma._iface_owner_select (셀마다 청구자 C(x) 전체의 p_min · 띠 T = {p ≤ p_min + ε_p} · T 안 중심 사전순 canonical 키 최솟값 · 쌍별 fold 아님 · 모든 연산 = 집합 함수 · 띠 안 같은 canonical 키 둘 = 오류 (fail-closed)) · 봉인 ε_p = 1e−9 µm² (절대값 하나 · IFACE_EPS_P_UM2) · power 평가 = `_ball` 과 같은 격자 단위 식 × h² (float64 · IFACE_POWER_EVAL) · N8 정확 중복 · N8b 동심 비동일 = 입력 단계 거부 (ε 무관 · 종류 무관) · 행 번호 · 스탬프 순서는 키가 아니다.  시험 (scripts/test_rint_g2_am_iface.py · 125/125): T0-1e (판정문 세 청구자 · ε_p 1e−6 인자 · 6 순열 → 주인 1 · 띠 {1, 2} · 옛 쌍별 fold 승자 {0, 1, 2} = 실패 확인) · N8b (띠 안 반경 1 · 1.0000002499999687 · 띠 밖 1 · 1.3 · 종류 같음 · 다름 · 두 순서 → 거부 · 정량 솔브 거부 · 중심만 키 + 입력 순서 변이 = 01 → 0 · 10 → 1) · N8 (종류 같음 · 다름) · T0-1′ ⓓ (ε 세 청구자 raster · 6 순열 관측 셀 주인 = canonical 1 · 원장 비트 같음 · fold 변이 = 순열마다 바뀜).  고치기 전 코드 = 사례 FAIL (API 없음).  ⚠ 이 닫힘은 계약 · 구현의 증거 — ①′ 정량 채택 · 생산 HOLD 그대로 (D12-V · T2/T3 · CNC 적용 범위 · 물성 조건) · 실침대 빈도 (동심 · 띠 > 1 셀 수) = T4-1 census (미실행).\n★ 10-13 (작업 브랜치 · Codex 재확인 전 · 상태 그대로 claimed_fixed): 시험 수 정정 — 위 \"125/125\" 는 10-07 eb45fc331 시점이다 · 같은 날 c47e37c6e (1저자 브리지 청구 합집합 확인 기록 · 표지 시험 1 추가) 뒤 scripts/test_rint_g2_am_iface.py **126/126** · 10-13 묶음 (RRM · N9 · 조인 관문 · T4-1 · T4-3 · T2 개발) 뒤에도 126/126 그대로 (새 시험은 따로: test_rint_g2_rrm.py 39 · test_rint_g2_join.py 40 · test_rint_t4_census.py 8 · test_rint_t43_order.py 6 · test_rint_t2_dev.py 10).  실침대 빈도 (v3.1 §1 \"N8b 수를 census 에\" · T4-1 docs/data/rint_t41_census_20261013/README.md): real_14 · case15 · kit_ps_5_5 × vox 0.4 · 0.15 = 6 작업 모두 ε 띠 > 1 셀 0 · N8 0 · N8b 0 — 보고 (합성 반례의 비추이 상황이 이 침대들에서 생기지 않았다는 관찰이지 집합 규칙을 대신하는 근거가 아니다).  재확인 요청서 docs/reviews/codex_rint_g2_impl_recheck_request_20261013.md (초안 · 발송 = 1저자).",
       "evidence_tests": [
         "scripts/test_rint_g2_am_iface.py",
-        "docs/data/rint_t41_census_20261013/README.md"
+        "docs/data/rint_t41_census_20261013/README.md",
+        "docs/reviews/codex_rint_g2_impl_review_evidence_20261014/evidence/owner_independent.json (Codex 10-14 · 핀 1087a9b2f · 판정문 §8-1)"
       ],
-      "claimed_fixed_sha": "eb45fc331"
+      "claimed_fixed_sha": "eb45fc331",
+      "verified_by": "codex",
+      "verified_sha": "1087a9b2f",
+      "verified_in": "docs/reviews/codex_review_rint_g2_impl_20261014.md",
+      "verified_scope": "고정 입력의 ε 전역 집합 소유권 규칙 — 6 순열 canonical owner 1 · 띠 2 · 독립 집합 최소 규칙 550 사례 불일치 0 · 중첩 네 구 6 기하 × 24 순열 owner · contact · face · canonical particle 같음 (청구자 셋 이상 셀 46–112) · T3 정확도 · 생산 대표성 · RIMP-05 (vox 봉인) 는 범위 밖"
     },
     {
       "id": "RINTV-02",
       "severity": "P2",
-      "status": "claimed_fixed",
+      "status": "verified",
       "owner": "claude",
       "found_by": "codex 10-07 (Rint G2 v3 재검토 · 핀 c3ff4408c · 근거 9 Git blob 바이트 검증 · 실 rasterize · 합성 입력 · Windows Python 3.12.14 NumPy 2.3.5 SciPy 1.16.3 · 우리 트리 Linux 재현 비트 동일)",
       "opened_in": "docs/reviews/codex_review_rint_g2_v3_20261007.md",
@@ -8592,9 +8597,14 @@
       "note": "자리: v3:L76 (I1″ — raw 순열에서도 owner/support 같음) · L85 (T0-1′ 팔 B) · L127 (첨가제 단계 → I1″ 유지); 실행 소스 scripts/step3_sigma.py:579 (브리지 중심 — (i, j) 순서) · :545–550 (_ball 포함 판정).  반례 (실제 고정 rasterize · 합성 · 판정문 §3 · 증거 키 evidence_v3.json:fixed_bridge_AM_mask_permutation): 첨가제 없음 · vox 0.1 µm · bridge 0.24 µm · 상자 [0, 3.2]³ µm³ · 종류 [2, 1] · c0 (1.9748831001799223, 1.8791293045780670, 1.7896943576126298) · c1 (1.0611990064053260, 0.8549090548944595, 1.7364778658264648) µm · r (0.5348361452776790, 0.8437277367739292) µm → 브리지 중심 y 1.4821841993984390 ↔ 1.4821841993984393 · 셀 (15,15,15) (중심 (1.55, 1.55, 1.55) µm) 무차원 거리² 5.760000000000001 ↔ 5.759999999999995 (비교 반경²/h² 5.76) → sid 0 ↔ 2 — AM_S/AM_P 라벨이 아니라 한 셀의 AM 포함 여부가 바뀐다 → 이 마스크 위에만 owner 를 정의하면 raw owner 배열의 완전 동일 보장은 이미 깨진다 (S_c 변화량은 owner 구현이 없어 미측정).  한정: 의도적으로 격자 경계에 놓은 부동소수점 반례 · 실침대에서 한 셀 이상 자주 바뀐다거나 σ 오차가 크다는 주장 아님 · 이전 4.740683 % 는 다른 합성 사례의 bulk 라벨 효과 (옮겨 쓰지 않음) · 탐색 이력 = legacy_AM_mask_permutation (시도 315 · bridge 0.2399999999999998).  최소 수정: 선택 (1) 유지 · I1″ · T0-1′ B 를 좁힘 — owner/support 의 정확한 순열 불변은 동결 AM 마스크 · 동결 청구자 기하에서 보장 · raw raster 순열 = 별도 진단 (마스크와 청구자 집합이 같음을 먼저 확인한 경우에만 같은 owner/support 요구 · 다르면 차이 기록 · owner 규칙의 실패나 성공으로 대신 판정하지 않음) · legacy raster 를 조용히 canonical 화하는 것은 선택 (1) 의 해법이 아님 (= D21 · OFF 세대 변경) · 동결 sid 만으로 부족하면 bridge 청구자 계산도 canonical 쌍/기하로 고정 (bulk sid 를 다시 칠하라는 뜻 아님).  해결 증거: raw 반례는 마스크 차이를 검출 · 같은 마스크 · 청구자를 고정한 순열 시험은 owner/S_c/N_c/원장 동일성 검사 · 실침대 영향은 RINTG-11 로 계속 열림.  우리 트리 재현 (HEAD 2802c649e = 9 근거 파일 핀과 같음 · 탐침 바이트 그대로 · docs/reviews/codex_rint_g2_v3_review_evidence_20261007/_reproduction_ours/README.md): 판정값 차이 0 (숫자 키 192/194 · 92/97 비트 동일 · 나머지 = lstsq · CG 끝자리) — 위 값 전부 비트 동일 + 판정문 인쇄 리터럴로 우리 rasterize 를 직접 부른 독립 대조도 같음 (sid1 618 · 618 · sid2 2552 ↔ 2553 = 혼합 쌍 브리지 AM_P sid).  등재 2026-10-07 = Codex Rint G2 v3 재검토 반입 (1저자 전달 · 원장 ID: Codex RINTV3-NN → RINTV-NN).  ✅ 1저자 Q1 10-07 (권고대로) → 계약 정정 = docs/reviews/contact_resistance_pipeline_draft_v3_1_20261007.md §2 (I1‴ = 동결 M + 동결 G · 브리지 청구자 = 쌍 canonical · 불변식 M ⊆ claimed(G) · raw 순열 = 진단) · 시험 §4 (own_perm_frozen · raw_perm_mask_diag · mask_claimed) 먼저 → ①′ 구현 (1저자 Q4) — 상태 open (닫힘 = 시험 + 구현 + Codex 재확인).\n★ 10-07 ①′ AM–AM 구현 (eb45fc331 · 시험 먼저 daf2a45a9 · 1저자 Q4) → claimed_fixed (Codex 재확인 전): I1‴ = 원장 step3_sigma.am_iface_ledger 가 동결 AM 마스크 M (최종 sid ∈ {1, 2} · 1 ↔ 2 라벨 안 읽음) · M0 (첨가제 전 raster) + 청구자 기하 G (구 = `_ball_cells` — rasterize 와 같은 한 함수 · 쌍 집합 = am_bridge_pairs — rasterize 와 공용 · 브리지 청구 = 두 계산 순서 브리지 공의 합집합 `union_both_orders_v1` · v3.1 §2 권고 · 1저자 확인 전 표지) 만 읽는다 · canonical id = 중심 사전순 순위 · 접점 키 = canonical 쌍 · 면 키 = (축, 아래쪽 셀) · 불변식 M ⊆ claimed(G) · M ⊆ M0 · S_surv ⊆ S_0 위반 = 정량 거부 + 기록 (mask_unclaimed · 수 · 자리) · raw 순열 = 진단 am_iface_raw_perm_diag (마스크 · 청구자 먼저 비교 · 다르면 셀 · sid 전후 · 청구자 기록 · owner 판정 안 함) · legacy sid 를 다시 칠하지 않는다 (D21 아님 · OFF 비트 같음: 고치기 전 모듈 대조 64/64).  시험: T0-1d (판정문 리터럴 · 실제 rasterize 3170 ↔ 3171 · (15,15,15) sid 0 ↔ 2 · 진단 masks_equal False · 청구자 canonical [0, 1] · owner_judged False · 옛 팔 B (raw owner 동일) = 실패 확인 · 양성 대조 혼합 두 구 = 판정 · 같음) · T0-1′ ⓐ 혼합 두 구 ⓑ 세 구 (|C| ≥ 3) ⓒ 3171 마스크 동결 ⓓ ε raster — 원장 · 계획 행 · σ(r > 0) 비트 같음 · ⓒ 판별력 (행 순서 한 쪽 브리지 청구 → [0,1] 목록 mask_unclaimed) · T0-1g (두 legacy 마스크 모두 청구됨 · 청구자 없는 셀 변이 = 거부 + 기록) · T0-5′ (순서마다 legacy OFF = 막 0 + 예외 융합 비트 같음 · cut 팔 요구 없음).  ⚠ 비트 같음 범위 = 같은 수치 환경 · 조립 순서 · solver 경로 · 실침대 영향 = RINTG-11 (미측정 그대로) · 정량 채택 HOLD 그대로.\n★ 10-13 정정 (작업 브랜치 · 상태 그대로 claimed_fixed): 위 note 의 \"브리지 청구 = 두 계산 순서 브리지 공의 합집합 … 1저자 확인 전 표지\" 는 낡았다 — **1저자 10-07 확인 (\"권고대로 진행\")** · 기록 커밋 c47e37c6e (step3_sigma IFACE_BRIDGE_CLAIM = union_both_orders_v1 · 기록 iface_bridge_claim_status = \"1저자 10-07 확인 (권고대로) · Codex 재확인 대기 (v3.1 §2)\" · 시험 \"확인 전 표지가 남지 않는다\" 1 추가 → 126/126).  남은 것 = Codex 재확인.  실침대 (T4-1 census · 6 작업): 원장 거부 사유 0 (mask_unclaimed · mask_pre_unclaimed · surv_not_subset 0 — M ⊆ claimed(G) 성립) · T4-3 (등록 4f4d8dc92 · docs/data/rint_t43_order_20261013/README.md): 등록 순서 일곱 모두 AM 마스크 변화 0 (RINTV-02 꼴 격자 경계 뒤집힘은 관측되지 않았다 — 합성 반례는 일부러 경계에 놓은 셀) · 보고 · 실침대 영향은 RINTG-11 이 맡는다.",
       "evidence_tests": [
         "scripts/test_rint_g2_am_iface.py",
-        "docs/data/rint_t43_order_20261013/README.md"
+        "docs/data/rint_t43_order_20261013/README.md",
+        "docs/reviews/codex_rint_g2_impl_review_evidence_20261014/evidence/owner_independent.json (Codex 10-14 · 핀 1087a9b2f · 판정문 §8-1)"
       ],
-      "claimed_fixed_sha": "eb45fc331"
+      "claimed_fixed_sha": "eb45fc331",
+      "verified_by": "codex",
+      "verified_sha": "1087a9b2f",
+      "verified_in": "docs/reviews/codex_review_rint_g2_impl_20261014.md",
+      "verified_scope": "raw 진단 ↔ 고정 마스크 불변성 판정의 분리 — 옛 raw 반례 AM 마스크 3,170/3,171 · 셀 (15,15,15) · sid 0/2 재현 · 진단 owner_judged=False · 3,171 셀 마스크 고정 시 두 순서 owner · face · contact 같음 · 미청구 0 · 실침대 0 건 관측 · 126/126 만을 근거로 쓰지 않음 · 정량 정확도 · 생산 GO 미포함"
     },
     {
       "id": "RINTV-03",
@@ -10716,6 +10726,66 @@
       "opened_in": "docs/reviews/codex_review_dem_unloading_kit_20261014.md",
       "title": "ε · W_proxy 는 함수만 있고 보고 사슬에 없다 · 고정 S0 부피 C_all 을 현재 프레임 ID 교집합으로 다시 계산 (한 행 잃으면 −20 %) · 경량 보고 TGZ 로 모든 관측 재검증 불가 (EXT2 · 루트 결정 파일 빠질 수 있음)",
       "note": "판정문 §4.  자리: ul_observers.py:104–118 (호출 = selftest 뿐) · run_unload.sh bundle().  해제 = 함수 구현 ↔ 등록 보고 산출 분리 · C_all = 검증한 S0 에서 봉인 · 현재 프레임 완전성 · ε_all / ε_inside / W_proxy 를 파일 → 최종 report 시험에 넣거나 미보고 명시 · 전달 묶음에 필요한 원자료 또는 봉인 부속.  유효한 주 ρ 폐기 사유 아님.  수정 계획 Q7."
+    },
+    {
+      "id": "RIMP-01",
+      "severity": "P2",
+      "status": "open",
+      "owner": "claude",
+      "found_by": "codex 10-14 Rint G2 ①′ 구현 · 10-13 묶음 재검토 (검토 핀 1087a9b2f · 독립 소규모 계산 · Windows Python 3.12 — 생산 덱 · 실침대 σ 캠페인 · WSL 미실행)",
+      "opened_in": "docs/reviews/codex_review_rint_g2_impl_20261014.md",
+      "title": "기울어진 MMS (rint_t2_dev) 의 경계 반 셀이 계면 저항을 건너뛴다 — 경계를 g_b = 2σh 로 바로 이어 상 · 막 교차의 전위 점프를 bulk 로 잇는다 · tie 0 인 15° n64 · 30° n16 에서도 최대 전위 오차 0.538 · 0.504 (경계 교차 대조 연결로 0.0065 · 0.0163)",
+      "note": "판정문 §2.  자리 (핀): scripts/rint_t2_dev.py:185–192 · 해석 docs/data/rint_t2_dev_20261013/README.md:53–55.  무너지는 결론: \"0.44 plateau = 계면 위 셀의 점 판정 (tie) 한계\" 의 충분한 원인 진단 · 기울기 사다리를 D11 선택 · D12-V 수치 근거로 승격 (45° n128 에서 tie 셀을 빼도 최대 오차 0.117).  무너지지 않는 것: θ=0 정확 이산 시험 (최대 8.9e-16) · 개발 실행 허용 · 기울기 법칙 비교 설계.  최소 해결 = 경계 상/막 교차 계약 → tie 없는 15° · 30° · 이동 45° 회귀 → 사다리 재측정 · 정식 T2 = flux · 에너지 · 원점 · 3D · tie 규약.  수정 계획 = docs/reviews/rint_g2_impl_fix_plan_20261014.md (Q1)."
+    },
+    {
+      "id": "RIMP-02",
+      "severity": "P2",
+      "status": "open",
+      "owner": "claude",
+      "found_by": "codex 10-14 Rint G2 ①′ 구현 · 10-13 묶음 재검토 (검토 핀 1087a9b2f · 독립 소규모 계산 · Windows Python 3.12 — 생산 덱 · 실침대 σ 캠페인 · WSL 미실행)",
+      "opened_in": "docs/reviews/codex_review_rint_g2_impl_20261014.md",
+      "title": "Rint 조인 관문 (rint_iface_join) 이 손상 · 미인증 입력을 PASS 로 승격한다 — real14 접촉 덤프 한 칸 (pos1.x · δ · A = NaN · A 음수) · 미인증 면적 100 sim² (tested 0 · uncertified 1 · beyond 0) · 기울어진 상자 (tilt 를 버린 비교) 모두 PASS · 조인 → 원장 → 계획 → 정량 관문까지 통과",
+      "note": "판정문 §3.  자리 (핀): scripts/rint_iface_join.py:142–143 · 176–180 · 200–206 · 316–318 · 337–338 · 350–358 · 432–441 · 가져오는 진단 scripts/lhs_descriptor_harvest.py:637–657 (봉인 32).  무너지는 결론: G-geo/G-frame PASS = 유효 수치 · 지원 상자 · 전 행 면적 인증.  무너지지 않는 것: 정상 real14 · case15 자료 · 면적 원천 = scaffold (이 반례만으로 실제 σ 가 틀렸다 할 수 없다).  최소 해결 = 입구 검사 (필수 · 유한 · 양수 · 정확 정수 · 지원 상자 — 기울어진 상자 = 명시 거부) · 음수 · 비유한 · 미인증 = 거부 또는 미인증 상태 (PASS 와 분리) · 변이별 회귀 · step 2060000.9 → 정확 정수.  수정 계획 Q2."
+    },
+    {
+      "id": "RIMP-03",
+      "severity": "P2",
+      "status": "open",
+      "owner": "claude",
+      "found_by": "codex 10-14 Rint G2 ①′ 구현 · 10-13 묶음 재검토 (검토 핀 1087a9b2f · 독립 소규모 계산 · Windows Python 3.12 — 생산 덱 · 실침대 σ 캠페인 · WSL 미실행)",
+      "opened_in": "docs/reviews/codex_review_rint_g2_impl_20261014.md",
+      "title": "조인의 면적 포괄 검사에 기록 유효숫자 S 가 전달되지 않는다 (helper 고정 6 자리) — 전 행 16 자리 균일 출력에서 +1 ppm 면적 변이가 PASS (tested 1 · beyond 0) · 계획 · 정량 관문도 통과",
+      "note": "판정문 §4.  자리 (핀): scripts/rint_iface_join.py:106 · 206 · 437 · scripts/lhs_descriptor_harvest.py:164 · 450 · 545 · 637–651 (봉인 32 · AREA_CHECK_SIGFIG=6).  한정: \"관측 최대 자리수\" 는 균일 %g 의 증명이 아니다 (한 토큰 0.0250327 → 0.02503270000000000 만으로 위치 불일치 7 · 21 행 · δ 일관성 99,113/106,563 행).  무너지지 않는 것: 지금 정상 6 자리 자료.  최소 해결 = S 전달 또는 6 자리 생산 포맷만 지원 · 다른 정밀도 · 혼합 포맷 거부.  수정 계획 Q2 (권고 = 봉인 helper 무변경 · 새 소비자에서)."
+    },
+    {
+      "id": "RIMP-04",
+      "severity": "P2",
+      "status": "open",
+      "owner": "claude",
+      "found_by": "codex 10-14 Rint G2 ①′ 구현 · 10-13 묶음 재검토 (검토 핀 1087a9b2f · 독립 소규모 계산 · Windows Python 3.12 — 생산 덱 · 실침대 σ 캠페인 · WSL 미실행)",
+      "opened_in": "docs/reviews/codex_review_rint_g2_impl_20261014.md",
+      "title": "RRM N9 의미 검사기 (rint_rrm_reference) 가 메타데이터 변경 · NaN 을 놓친다 — cut 85 행 삭제 + resolve_k 4→5 또는 r table 비움 = 위반 없음 (σ 0.003334 → 0.004084 S/cm) · film 67 면 rface NaN = 위반 없음 (σ 0.003730 · 잔차 6.2e-15)",
+      "note": "판정문 §5.  자리 (핀): scripts/rint_rrm_reference.py:293–302 · 318–321 · wrapper 328–340 · NaN 후속 scripts/step3_sigma.py:354–356.  한정: 정상 rrm_plan 이 NaN 을 만든다는 주장 아님 · 공격자 인증으로 확대하지 않음 · 일반 생산 관문이 RRM 을 모르는 구조는 시험 전용 격리와 정합.  최소 해결 = 유한 · 비음수 rface (등록된 r=0 경로 허용) · 기대 접점 · 적격성 재계산 · 메타데이터로 검사 집합을 비울 수 없게 · 복합 변이 wrapper 거부 · 모든 RRM 실행 = 고친 wrapper.  수정 계획 Q3."
+    },
+    {
+      "id": "RIMP-05",
+      "severity": "P2",
+      "status": "open",
+      "owner": "claude",
+      "found_by": "codex 10-14 Rint G2 ①′ 구현 · 10-13 묶음 재검토 (검토 핀 1087a9b2f · 독립 소규모 계산 · Windows Python 3.12 — 생산 덱 · 실침대 σ 캠페인 · WSL 미실행)",
+      "opened_in": "docs/reviews/codex_review_rint_g2_impl_20261014.md",
+      "title": "계획의 물리 격자 간격이 솔버 인자에 봉인되지 않는다 — h 0.2 µm 로 만든 계획을 같은 sid 로 h 0.4 솔버에 주면 거부 없이 풀이 · 실제 순수 막 G 2.50e-6 S = 기록 (6.25e-7 S) 의 4 배 · 결과에는 옛 vox 0.2 · 옛 A 가 실린다",
+      "note": "판정문 §6.  자리 (핀): scripts/step3_sigma.py:1841–1842 (guard 호출) · 1597 · 1616–1617 · 1486 (계획 vox 보관) · 2009 (조립 = 솔버 vox).  계획 사전 무수정 반례 (R 1 µm AM_S 둘 · z 1 · 2.98 µm · sid 10×10×20 · r 1e-3 Ω·cm² · film 16 · dof 1,072 · 잔차 2.7e-15) · 정상 재생성 계획은 σ 같고 A · G 를 4 배로 기록.  무너지지 않는 것: RINTV-01 · 02 소유권 규칙 닫힘.  최소 해결 = 솔버의 유한 양수 vox 를 plan guard 에 · 조립 전 일치 · 음성 · 양성 대조 상주.  step3_sigma 는 봉인 32 밖.  수정 계획 Q4."
+    },
+    {
+      "id": "RIMP-06",
+      "severity": "P3",
+      "status": "open",
+      "owner": "claude",
+      "found_by": "codex 10-14 Rint G2 ①′ 구현 · 10-13 묶음 재검토 (검토 핀 1087a9b2f · 독립 소규모 계산 · Windows Python 3.12 — 생산 덱 · 실침대 σ 캠페인 · WSL 미실행)",
+      "opened_in": "docs/reviews/codex_review_rint_g2_impl_20261014.md",
+      "title": "RRM 반환 기록의 표준 iface_contact_ledger · iface_carbon_cover · 균일 rface_c 가 CNC 값으로 남는다 — 정상 A 실제 film 67 · cut 85 ↔ 표준 원장 active 152 · cut 0 · 반쪽 탄소 변형 RRM G 2.754e-6 ↔ 상속 G 2.613e-6 (remove_area) / 5.027e-6 S (renormalize)",
+      "note": "판정문 §7.  자리 (핀): scripts/rint_rrm_reference.py:235–244.  무너지는 것: 일반 기록 소비자가 표준 원장을 실제 풀이 요약으로 읽는 것.  무너지지 않는 것: 정상 RRM 행 조립 · σ (iface_rrm.contacts[0] 은 맞다).  최소 해결 = 표준 진단을 실제 RRM 행으로 재계산 또는 CNC 비교값 별도 이름공간 · 행 수 · 순수 막 G ↔ 공개 기록 대조 회귀.  수정 계획 Q3."
     }
   ]
 }

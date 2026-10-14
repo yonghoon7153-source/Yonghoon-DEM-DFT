@@ -1,0 +1,167 @@
+{
+  "atom": {
+    "before": "0.0250327",
+    "after": "0.02503270000000000",
+    "equal_numeric_values": true,
+    "status": "REJECT",
+    "rejections": [
+      {
+        "code": "pos_mismatch",
+        "gate": "G-frame",
+        "n": 7,
+        "detail": [
+          9909,
+          61623,
+          61624,
+          61625,
+          61626,
+          74345,
+          75415
+        ],
+        "why": "접촉 pos1/pos2 ≠ 원자 위치 (주기 영상 · 토큰 반폭 밖) — 같은 프레임의 행 단위 증거가 깨졌다"
+      }
+    ],
+    "g_geo": {
+      "n_scaffold": 457,
+      "n_dump_am": 457,
+      "n_matched": 457,
+      "n_unmatched": 0,
+      "n_ambiguous": 0,
+      "max_pos_ratio": 0.9999999982174175,
+      "max_radius_ratio": 0.0,
+      "scaffold_half_box": 5e-07,
+      "scaffold_dec_exp": [
+        -6
+      ],
+      "dump_sigfig": 16,
+      "delta_bound_um": 0.0027320508075871974,
+      "delta_bound_rule": "µm · √Σ(2·(h_s + max h_d))² + 2·(h_s + max h_r) — scaffold δ 의 참값 대비 상한 (원장 delta_bound_um 후보)",
+      "n_dem_am_am": 660,
+      "n_dem_am_am_seam": 70,
+      "n_delta_scaffold_mismatch": 0,
+      "max_delta_scaffold_ratio": 0.4164412375766743,
+      "n_area_tested": 660,
+      "n_area_beyond": 0,
+      "n_area_uncertified": 0,
+      "n_scaffold_certain_pairs": 567,
+      "n_dem_contact_missing": 0,
+      "rule": "g1 1:1 (축마다 |Δ| ≤ h_s + h_d · 주기 축 최소 영상 · 형 · 반경) · g2 δ_dump ↔ δ_scaffold · g3 c_cpl[22] ↔ lens_geometry 포괄 (lhs_descriptor_harvest._contact_area_rows) · g4 scaffold 확실한 접촉 ⊆ 덤프"
+    },
+    "g_frame": {
+      "atom_step": 2060000,
+      "contact_step": 2060000,
+      "atom_frames": 1,
+      "contact_frames": 1,
+      "box_equal": true,
+      "box_flags": [
+        "pp",
+        "pp",
+        "ff"
+      ],
+      "n_atoms": 33289,
+      "n_contact_rows": 106563,
+      "n_orphan_rows": 0,
+      "n_pos_mismatch": 7,
+      "max_pos_ratio": 9535.821067495228,
+      "n_rows_image_shift": 28,
+      "n_rows_image_shift_flag0": 15,
+      "n_delta_pos_mismatch": 0,
+      "max_delta_pos_ratio": 0.9629581042924683,
+      "n_delta_nonpositive": 0,
+      "atom_sigfig": 16,
+      "contact_sigfig": 6,
+      "rule": "f1 프레임 각 1 · f2 TIMESTEP 같음 (선언된 재사용만 예외) · f3 상자 같음 · f4 id 유일 · 머리 수 = 행 수 · 고아 0 · f5 pos = 원자 위치 (주기 축 정수 영상 · 토큰 반폭 `_half_ulp` 합) · f6 δ = r1 + r2 − |최소 영상 거리| (반폭 전파) · δ > 0"
+    }
+  },
+  "contact": {
+    "before": "0.0250327",
+    "after": "0.02503270000000000",
+    "equal_numeric_values": true,
+    "status": "REJECT",
+    "rejections": [
+      {
+        "code": "pos_mismatch",
+        "gate": "G-frame",
+        "n": 21,
+        "detail": [
+          4932,
+          8156,
+          12616,
+          41234,
+          59656,
+          61518,
+          80465,
+          80466
+        ],
+        "why": "접촉 pos1/pos2 ≠ 원자 위치 (주기 영상 · 토큰 반폭 밖) — 같은 프레임의 행 단위 증거가 깨졌다"
+      },
+      {
+        "code": "delta_pos_mismatch",
+        "gate": "G-frame",
+        "n": 99113,
+        "detail": [
+          1,
+          2,
+          4,
+          5,
+          7,
+          8,
+          9,
+          10
+        ],
+        "why": "δ_dump ≠ r1 + r2 − |pos1 − pos2| (토큰 반폭 전파 밖)"
+      }
+    ],
+    "g_geo": {
+      "n_scaffold": 457,
+      "n_dump_am": 457,
+      "n_matched": 457,
+      "n_unmatched": 0,
+      "n_ambiguous": 0,
+      "max_pos_ratio": 0.9900990081545088,
+      "max_radius_ratio": 0.0,
+      "scaffold_half_box": 5e-07,
+      "scaffold_dec_exp": [
+        -6
+      ],
+      "dump_sigfig": 6,
+      "delta_bound_um": 0.002915255888325765,
+      "delta_bound_rule": "µm · √Σ(2·(h_s + max h_d))² + 2·(h_s + max h_r) — scaffold δ 의 참값 대비 상한 (원장 delta_bound_um 후보)",
+      "n_dem_am_am": 660,
+      "n_dem_am_am_seam": 70,
+      "n_delta_scaffold_mismatch": 0,
+      "max_delta_scaffold_ratio": 0.3938030672980748,
+      "n_area_tested": 660,
+      "n_area_beyond": 0,
+      "n_area_uncertified": 0,
+      "n_scaffold_certain_pairs": 563,
+      "n_dem_contact_missing": 0,
+      "rule": "g1 1:1 (축마다 |Δ| ≤ h_s + h_d · 주기 축 최소 영상 · 형 · 반경) · g2 δ_dump ↔ δ_scaffold · g3 c_cpl[22] ↔ lens_geometry 포괄 (lhs_descriptor_harvest._contact_area_rows) · g4 scaffold 확실한 접촉 ⊆ 덤프"
+    },
+    "g_frame": {
+      "atom_step": 2060000,
+      "contact_step": 2060000,
+      "atom_frames": 1,
+      "contact_frames": 1,
+      "box_equal": true,
+      "box_flags": [
+        "pp",
+        "pp",
+        "ff"
+      ],
+      "n_atoms": 33289,
+      "n_contact_rows": 106563,
+      "n_orphan_rows": 0,
+      "n_pos_mismatch": 21,
+      "max_pos_ratio": 10741.984415537825,
+      "n_rows_image_shift": 28,
+      "n_rows_image_shift_flag0": 15,
+      "n_delta_pos_mismatch": 99113,
+      "max_delta_pos_ratio": 134.6101572264431,
+      "n_delta_nonpositive": 0,
+      "atom_sigfig": 6,
+      "contact_sigfig": 16,
+      "rule": "f1 프레임 각 1 · f2 TIMESTEP 같음 (선언된 재사용만 예외) · f3 상자 같음 · f4 id 유일 · 머리 수 = 행 수 · 고아 0 · f5 pos = 원자 위치 (주기 축 정수 영상 · 토큰 반폭 `_half_ulp` 합) · f6 δ = r1 + r2 − |최소 영상 거리| (반폭 전파) · δ > 0"
+    }
+  }
+}

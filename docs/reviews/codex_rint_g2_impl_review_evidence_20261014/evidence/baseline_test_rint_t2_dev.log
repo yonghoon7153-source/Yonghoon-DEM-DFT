@@ -1,0 +1,27 @@
+
+── d1_sign
+D1 — mms_sign_check (Codex 증거 evidence.json 값)
+  PASS  D1 J_n −6.4 · J_n(영역 2) −6.400000000000001 · φ1 − φ2 = −0.64 = r·J_n (Codex 값 그대로)
+
+── d2_fields
+D2 — 제조해 (θ 30° · σ1 2 · σ2 5 · r_face 1e−5 Ω·cm² → r′ = 0.1 µm·cm/S): 조화 · flux 연속 · jump = r′·σ1 ∂φ1/∂u
+  PASS  D2 계면 u = 0 에서 σ1 ∂φ1/∂u = σ2 ∂φ2/∂u (1e−12)
+  PASS  D2 φ1 − φ2 = r′·J_n (J_n = −σ1 ∂φ1/∂u · r′ = 1e4·r_face — 단위 cm → µm)
+  PASS  D2 두 영역 모두 조화 (쌍선형 — ∂²/∂u² + ∂²/∂v² = 0 · 해석)
+
+── d3_exact
+D3 — 정확 이산 층: θ 0 · 계면 = 면 평면 · β 0 · σ1 ≠ σ2 · 막 r → FV 해 = 제조해 (반올림 안)
+  PASS  D3 FV 해 = 제조해 (최대 오차 ≤ 1e−12 × 최대 |φ|) · 막 면 > 0
+  PASS  D3 판별력: 변이 셋 (막 삭제 · ×1e4 누락 · jump 부호 반전) 은 반올림이 아닌 차 (> 1e6 × 정답 오차 · > 1e−6 × 최대 |φ|)
+  PASS  D3 축별 법칙도 θ 0 에서 같은 해 (두 법칙이 축 정렬 면에서 같다)
+
+── d4_shared
+D4 — harness 가 생산 면 함수 interface_face_g 를 공유한다
+  PASS  D4 mms_solve 가 step3_sigma.interface_face_g 를 부른다 (호출 > 0)
+
+── d5_trace
+D5 — T2-4a 연속 극한 (Codex support_smearing_continuum) · 개발 표지
+  PASS  D5 RRM 연속 = 1 + β²a²/4 = 1.0796000000000001 · CNC (b 0.24) = 1.2304 (Codex 값 그대로)
+  PASS  D5 사다리 산출에 개발 표지 (D12-V 봉인 전 · 검증 PASS 아님) · RRM · CNC 값
+
+10 PASS · 0 FAIL

@@ -1,5 +1,7 @@
 # Codex 재확인 요청 (초안) — Rint G2 ①′ AM–AM 구현 + 2026-10-13 묶음 (RRM · N9 · 조인 관문 · T4-1 · T4-3 · T2 개발)
 
+> **지위: 발송됨 (1저자) → Codex 판정 10-14 (검토 핀 `1087a9b2f` — 브랜치 끝 고정) = RINTV-01 · 02 범위 한정 닫힘 · 새 P2 다섯 (`RIMP-01`–`05`) · P3 하나 (`RIMP-06`) · ①′ 정량 · 생산 HOLD** (`docs/reviews/codex_review_rint_g2_impl_20261014.md` · 증거 `docs/reviews/codex_rint_g2_impl_review_evidence_20261014/` · 수정 계획 `docs/reviews/rint_g2_impl_fix_plan_20261014.md`) — 아래는 보낸 판 그대로.
+
 > **지위** — 초안 · **발송 = 1저자 (아직 보내지 않음)**.  1저자 10-07 *"다 권고야"* 로 비준된 계획 (v2 + v3 + v3.1) 의 컨테이너 안 구현 항목.
 > 커밋 sha 는 작업 브랜치 (worktree) 의 것 — 본 브랜치에 fast-forward · merge 로 들어가면 그대로 · rebase 로 들어가면 바뀐다 (발송 때 1저자가 핀을 적는다).
 > 직전 판정: Codex v3 재검토 (10-07 · `docs/reviews/codex_review_rint_g2_v3_20261007.md`) = 반례 개발 GO · `RINTV3-01` · `02` 계약 정정 뒤 AM–AM ①′ 구현 GO ·
