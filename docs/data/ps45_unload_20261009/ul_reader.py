@@ -261,16 +261,28 @@ def window_states(windows, wall_by_step, P=None):
 
 def separation(states, sepreq=2):
     """§13-3: 연속 sepreq 개 ZERO 창의 마지막 창 끝 = 분리 선언 · 그 창부터 분리 뒤 창 · 재접촉 (CONTACT · TENSION) 이면 계수 · 분리 뒤 창 초기화 ·
-    OBS_MISSING 은 0 이 아니다 (연속을 끊는다 · 분리 뒤면 그 분리의 표면 관측도 끊긴다)."""
-    out = {'declared_index': None, 'declared_step': None, 'recontact_index': [], 'missing_index': [], 'separated_final': False, 'post_windows': []}
-    run, sep = 0, False
+    OBS_MISSING 은 0 이 아니다 (연속을 끊는다 · 분리 뒤면 그 분리의 표면 관측도 끊긴다).
+    덱과 같은 규칙 (개정 3 §14-7 · ULKR-07) — 창에 k · 단계가 있으면: 판 이동 (k 바뀜) = 연속 계수 초기화 (덱 ul_hold_start 의 ul_sepn 0 ·
+    표 separation.reset_on_move) · 분리 뒤 이동이면 그 분리는 끝 · 선언은 SEPARATE 단계 (2) 창에서만 (덱 ul_win_sep)."""
+    out = {'declared_index': None, 'declared_step': None, 'recontact_index': [], 'missing_index': [], 'moved_index': [], 'separated_final': False,
+           'post_windows': []}
+    run, sep, prev_k = 0, False, None
     for i, s in enumerate(states):
         st = s['state']
+        k = s.get('k')
+        if k is not None:
+            if prev_k is not None and k != prev_k:
+                run = 0
+                if sep:
+                    out['moved_index'].append(i)
+                    sep = False
+                    out['post_windows'] = []
+            prev_k = k
         if st == 'ZERO':
             run += 1
             if sep:
                 out['post_windows'].append(i)
-            elif run >= sepreq:
+            elif run >= sepreq and s.get('phase') in (None, 2):
                 sep = True
                 out['declared_index'], out['declared_step'] = i, s['step']
                 out['post_windows'] = [i]
@@ -371,8 +383,14 @@ def _readjson(p):
 
 
 def _arm_g(job, P):
-    """S3 무게 항의 g — 표의 S3 기준 중력 (모든 팔 같음)."""
-    return P['s3']['g']
+    """S3 무게 항의 g = 그 팔의 실제 중력 (개정 3 §14-6 · Q5 · ULKR-10 B) — 중력 팔 G_* = 표 g_aux (덱이 R_M 뒤 바꾼 중력) · 그 밖 = 표 S3 g."""
+    return P['g_aux'] if job.startswith('G_') else P['s3']['g']
+
+
+def _hold_wmax(job, P):
+    """B 단 유지 예산 (창 수 상한) = 표 budget_max × 그 팔의 hold_factor (중력 팔 = 부모 팔 · UTc = UT 덱) — 분리 선언은 이 안이어야 한다 (개정 3 §14-7)."""
+    arm = job[2:] if job.startswith('G_') else ('UT' if job == 'UTc' else job)
+    return P['windows']['budget_max'] * P['arms'][arm]['hold_factor']
 
 
 def _s3_at(d, step, plate_z, s0_ids, g=ul_s3.G, ap=None, cp=None):
@@ -455,12 +473,13 @@ def arm_verdict(d, bed, job, P=None, root=None):
         return reg
     summ = run['summary']
     res = (summ or {}).get('result')
-    v['trajectory_status'] = {'DONE': 'DONE', 'LIFT_CAP': 'LIFT_CAP', 'GUARD': 'GUARD', 'TECH': 'TECH', 'RM_STOP': 'RM_STOP'}.get(res, 'TIMEOUT')
+    v['trajectory_status'] = {'DONE': 'DONE', 'LIFT_CAP': 'LIFT_CAP', 'GUARD': 'GUARD', 'TECH': 'TECH', 'RM_STOP': 'RM_STOP',
+                              'SEP_INCOMPLETE': 'SEP_INCOMPLETE'}.get(res, 'TIMEOUT')
     wins = run['windows']
     walls = {w['step']: _wall_rows(fp(f'dump/wall_{w["step"]}.dump', w['step']), w['step']) for w in wins if w.get('step') is not None}
     states = window_states(wins, walls, P)
     for st, w in zip(states, wins):
-        st['k'] = w.get('k')
+        st['k'], st['w'], st['phase'] = w.get('k'), w.get('w'), w.get('phase')
     steps = []
     for s in run['steps']:
         Pb = s.get('Pbar')
@@ -589,7 +608,7 @@ def arm_verdict(d, bed, job, P=None, root=None):
         v['cancellation_detail'] = {'tension_N': tens, 'threshold_N': thr}
     elif v['primary_status'] is None:
         # 교차 없음 — §13-2 ② · ③
-        if v['trajectory_status'] in ('DONE',):
+        if v['trajectory_status'] in ('DONE', 'SEP_INCOMPLETE'):
             v['primary_status'] = 'NO_CROSSING'
             v['why'].append('끝났는데 교차 없음')
         else:
@@ -617,8 +636,9 @@ def arm_verdict(d, bed, job, P=None, root=None):
     v['rank_eligible'] = v['primary_status'] == 'OK' and not v['cancellation']
     # 분리 · 분리 뒤 표면 (§13-3) · S4 (창 = 덱 물리 창 — 창 끝 프레임 사이)
     sep = separation(states, P['windows']['sep_declare'])
-    v['separation'] = {k: sep[k] for k in ('declared_step', 'separated_final', 'recontact_index', 'missing_index')}
+    v['separation'] = {k: sep[k] for k in ('declared_step', 'separated_final', 'recontact_index', 'missing_index', 'moved_index')}
     v['separation']['n_post'] = len(sep['post_windows'])
+    v['separation']['declared_w'] = states[sep['declared_index']]['w'] if sep['declared_index'] is not None else None
     if sep['separated_final'] and sep['post_windows']:
         excl = ul_observers.s0_exclusion(s0_atoms, P['beds'][bed]['h0']) if s0_atoms else set()
         hs = []
@@ -632,8 +652,31 @@ def arm_verdict(d, bed, job, P=None, root=None):
         v['surface_um'] = hs
         s4 = [ul_observers.s4_check(a, b, P['steady']['S4_um_per_window']) for a, b in zip(hs, hs[1:])]
         v['s4_status'] = 'FAIL' if 'FAIL' in s4 else ('PASS' if s4 and all(x == 'PASS' for x in s4) else 'NOT_COMPUTED')
-    if v['trajectory_status'] == 'DONE' and not (sep['separated_final'] and len(sep['post_windows']) >= P['windows']['post_sep']):
-        v['why'].append('끝 = DONE 인데 판독기 분리 · 분리 뒤 창이 모자란다 (덱 기하 개수 ↔ 벽 덤프)')
+    # 분리 완료 (개정 3 §14-7 · Q6 · ULKR-07) — 덱 DONE 은 판독기가 같은 분리를 볼 때만 DONE: 판독기 최종 분리 + 분리 뒤 4 창 · 선언 창 ≤ 유지 예산 ·
+    # 덱 마지막 SEPARATED 사건 step = 판독기 선언 창 · POST_DONE = 판독기 넷째 분리 뒤 창.  아니면 보조 미완료 SEP_INCOMPLETE — 주 ρ 무영향.
+    if res in ('DONE', 'SEP_INCOMPLETE'):
+        sw = []
+        postn = P['windows']['post_sep']
+        if res == 'SEP_INCOMPLETE':
+            sw.append('덱 SEP_INCOMPLETE (재접촉 뒤 같은 높이 유지 예산 끝 — 분리 뒤 4 창 미완료)')
+        elif not (sep['separated_final'] and len(sep['post_windows']) >= postn):
+            sw.append(f'덱 DONE 인데 판독기 최종 분리 · 분리 뒤 창 {len(sep["post_windows"])} < {postn} (재접촉 창 {sep["recontact_index"][:3]} · '
+                      f'벽 덤프 결손 창 {sep["missing_index"][:3]} · 이동 {sep["moved_index"][:3]})')
+        else:
+            wmax = _hold_wmax(job, P)
+            dw = v['separation']['declared_w']
+            if dw is None or dw > wmax:
+                sw.append(f'판독기 분리 선언 창 w {dw} > 유지 예산 {wmax} (선언은 예산 안 · 분리 뒤 4 창만 예산 밖)')
+            ev_sep = [e['step'] for e in run['events'] if e['event'] == 'SEPARATED']
+            ev_post = [e['step'] for e in run['events'] if e['event'] == 'POST_DONE']
+            if not ev_sep or ev_sep[-1] != sep['declared_step']:
+                sw.append(f'덱 마지막 SEPARATED 사건 step {ev_sep[-1] if ev_sep else None} ≠ 판독기 선언 창 step {sep["declared_step"]}')
+            pw = states[sep['post_windows'][postn - 1]]['step']
+            if not ev_post or ev_post[-1] != pw:
+                sw.append(f'덱 POST_DONE 사건 step {ev_post[-1] if ev_post else None} ≠ 판독기 분리 뒤 {postn} 째 창 step {pw}')
+        if sw:
+            v['trajectory_status'] = 'SEP_INCOMPLETE'
+            v['why'] += ['보조 미완료 (분리 · 표면 — 주 ρ 무영향): ' + w for w in sw]
     if cont is not None:
         v['continuation'] = {'status': cont['status'], 'parent_dir': cont['dir'], 'rm_step': cont['rm_step'], 'problems': cont['problems'][:8],
                              'n_parent_listed': len(cont['sums']), 'n_parent_checked': len(cont['checked'])}
@@ -1079,8 +1122,55 @@ def _erasure_seen(end_rows, un_rows):
     return bool(nz_end and zero_un)
 
 
+def _uk_check(root, bed, job, P):
+    """UK 회전 KE 출처 (choice C4 · 개정 3 §14-10 · ULKR-09) — 정확히 S0 무이동 완전 세 창만 기준이 된다:
+    단계 기술 성공 (run_check UK PASS rc=0 · 배너 · ERROR 없음 · Loop procs = NP · UL_SUMMARY) · 덱 요약 result = DONE · 사건 START = S0 ·
+    창 기록 = 머리 = 표 · 버린 줄 없음 · 정확히 uk_windows 줄 · arm UK · bed · k 0 · 단계 4 · w = 1 … n (연속 · 고유) · step = S0 + w · W0 (T_W 간격) ·
+    판 높이 = h0 · 들어 올림 0 · 회전 KE 유한 ≥ 0 → (창 평균 목록 | None, 문제)."""
+    d = os.path.join(root, bed, job, 'UK')
+    B, Wn = P['beds'][bed], P['windows']
+    n, W0 = Wn['uk_windows'], Wn['W0']
+    s0 = _bed_s0(root, bed, P)
+    pr = []
+    tech = _stage_tech(d, 'UK', 'UL_SUMMARY')
+    pr += [f'UK 단계 {x}' for x in tech['problems']]
+    summ = ul_lib.read_kv(os.path.join(d, 'ul_summary.txt')) if os.path.exists(os.path.join(d, 'ul_summary.txt')) else {}
+    if summ.get('result') != 'DONE':
+        pr.append(f'UK 덱 요약 result {summ.get("result")} ≠ DONE')
+    ev, epr = _csv(os.path.join(d, 'ul_events.csv'), P['records']['events_cols'])
+    pr += epr
+    st = [e for e in ev or [] if e['event'] == 'START']
+    if s0 is None or len(st) != 1 or _i(st[0]['step']) != s0 or _i(st[0]['k']) != 0:
+        pr.append(f'UK 사건 START ≠ S0 {s0} (k 0) — {[(e["k"], e["step"]) for e in st]}')
+    rows, wpr = _csv(os.path.join(d, 'ul_windows.csv'), P['records']['windows_cols'])
+    pr += wpr
+    rows = rows or []
+    if len(rows) != n:
+        pr.append(f'UK 창 기록 {len(rows)} 줄 ≠ {n}')
+    rot = []
+    for idx, r in enumerate(rows, 1):
+        w, k, ph, stp, rk = _i(r['w']), _i(r['k']), _i(r['phase']), _i(r['step']), _f(r['ke_rot_avg'])
+        pz, lift = _f(r['plate_z']), _f(r['lift'])
+        bad = []
+        if r['arm'] != 'UK' or r['bed'] != bed:
+            bad.append(f'arm · bed {r["arm"]} · {r["bed"]}')
+        if w != idx or k != 0 or ph != 4:
+            bad.append(f'w {w} (기대 {idx}) · k {k} · 단계 {ph} (기대 4)')
+        if s0 is None or stp != s0 + idx * W0:
+            bad.append(f'step {stp} ≠ S0 + {idx} · W0')
+        if pz is None or abs(pz - B['h0']) > 1e-12 or lift != 0.0:
+            bad.append(f'판 {pz} · 들어 올림 {lift} (무이동 아님)')
+        if rk is None or rk < 0.0:
+            bad.append(f'회전 KE {r["ke_rot_avg"]}')
+        if bad:
+            pr.append(f'UK 창 {idx}: {" · ".join(bad)}')
+        rot.append(rk)
+    return (rot if not pr else None), pr
+
+
 def kebase(root, bed, P=None, write=True):
-    """KE 기준 (choice C4): 병진 = 표 (원 로그 이완 끝 · 10:0 = EXT 로그 S0′) · 회전 = UK 창 평균의 중앙값 → S2 문턱 = 10 × 합 · 기준 파일."""
+    """KE 기준 (choice C4): 병진 = 표 (원 로그 이완 끝 · 10:0 = EXT 로그 S0′) · 회전 = UK 창 평균의 중앙값 → S2 문턱 = 10 × 합 · 기준 파일.
+    UK 가 정확히 S0 무이동 완전 세 창이 아니면 (_uk_check) 기준 파일을 쓰지 않는다 (ULKR-09 · 문턱 계수 10 은 그대로)."""
     P = P or ul_lib.load_params()
     B = P['beds'][bed]
     job = 'RJ2' if bed == B100 else 'RJ'
@@ -1088,9 +1178,8 @@ def kebase(root, bed, P=None, write=True):
     if bed == B100:
         dec = _readjson(os.path.join(root, B100, 's0_decision.json'))
         trans = dec.get('ke_trans') if dec else None
-    rows, pr = _csv(os.path.join(root, bed, job, 'UK', 'ul_windows.csv'), P['records']['windows_cols'])
-    rot = [_f(r['ke_rot_avg']) for r in rows or []]
-    k = ul_observers.ke_base(trans, [x for x in rot] if rot and all(x is not None for x in rot) else [], P['steady']['S2_factor'])
+    rot, pr = _uk_check(root, bed, job, P)
+    k = ul_observers.ke_base(trans, rot or [], P['steady']['S2_factor'])
     k['problems'] = pr
     if k['s2_limit'] is None:
         k['text'] = None
@@ -1278,8 +1367,10 @@ def _mk_arm(root, bed, job, spec, P):
         if n_move:
             run_block(step, n_move, Pd, 0.0)
         step += n_move
+        wsteps = []
         for w in range(1, st['nw'] + 1):
             step0, step = step, step + W
+            wsteps.append(step)
             run_block(step0, W, Pd, sig)
             okw = 1 if (st['steady'] and w >= st['nw'] - 1) else 0
             walls = st.get('wall')
@@ -1319,6 +1410,9 @@ def _mk_arm(root, bed, job, spec, P):
             L = open(ap).read().splitlines()
             L[-1] = L[-1].rsplit(' ', 1)[0] + ' 0.001'
             open(ap, 'w').write('\n'.join(L) + '\n')
+        if mut == 'free_fall_aux':     # 무접촉 저압 끝점 — 쌍 접촉 0 · 원자마다 총힘 = −m g_aux (중력 팔에서 자유 낙하 = 평형 아님 · ULKR-10 B)
+            ul_lib.write_custom(ap, step, ATOM_COLS, [dict(a, fz=-a['mass'] * P['g_aux']) for a in _chain_atoms(ids, pz)])
+            ul_lib.write_local(cp, step, CPL_COLS, [])
         if mut == 'dumps_past':        # 원자 · 쌍 덤프 머리 step 둘 다 100,000 과거 (서로는 같다 — 요청 끝점 시점이 아니다)
             for p in (ap, cp):
                 _restep(p, step - 100000)
@@ -1326,7 +1420,9 @@ def _mk_arm(root, bed, job, spec, P):
             _restep(os.path.join(d, 'dump', f'wall_{step}.dump'), step - 100000)
         for name, kk, det in spec.get('events', []):
             if kk == k:
-                el.append(f'{name},{k},{step},{pz},{lift},{det}')
+                mw = re.fullmatch(r'w(\d+)', det) if name in ('SEPARATED', 'POST_DONE', 'SEP_INCOMPLETE') else None
+                est = wsteps[int(mw.group(1)) - 1] if mw and 0 < int(mw.group(1)) <= len(wsteps) else step   # 덱 꼴 — 창 사건은 그 창 끝 step
+                el.append(f'{name},{k},{est},{pz},{lift},{det}')
                 if name == 'RM':   # 덱 ul_rm 꼴 — R_M restart + 이어 돌릴 상태 파일 (단계 2 · 그 단)
                     _w(os.path.join(d, 'restart', f'restart_RM_{step}.bin'), 'x')
                     _w(os.path.join(d, 'restart', f'state_RM_{step}.in'), f'variable ul_rstep equal {step}\nvariable ul_k equal {k}\nvariable ul_phase equal 2\n'
@@ -1800,6 +1896,62 @@ def selftest() -> int:
         chk('R23 ULKR-03 parentsums = 부모 UT 의 판독 대상 파일 sha256 (기록 · 화면 · 덤프 · 상태 · R_M restart) — 단 끝 restart_unload · arm_verdict.json 은 뺀다',
             lambda: (lambda t: 'ul_windows.csv' in t and 'screen.txt' in t and 'dump/' in t and 'arm_verdict.json' not in t)(parent_sums(os.path.join(root, B73, 'UT'))))
     with tempfile.TemporaryDirectory() as root:
+        # ── ULKR-07 (Q6 · 개정 3 §14-7) — 판독기가 덱의 분리 · 분리 뒤 창 · 예산과 맞지 않으면 DONE 이 아니다 (주 ρ 무영향 · Codex done_recontact · done_missing) ──
+        def sep_arm(walls, nw, summary='DONE', sev=(('SEPARATED', 'w2'), ('POST_DONE', 'w5')), last4=None):
+            """분리 단 (k 5 · 단계 2) — walls = 창마다 벽 접촉 · sev = 덱이 쓴 창 사건 (그 창 끝 step) · last4 = k 4 (CONFIRM) 창마다 벽."""
+            st = _ladder([0.2, 0.25, 0.3, 0.35], [1.2, 0.8, 0.6, 0.4])
+            if last4 is not None:
+                st[4]['wall'] = last4
+            st.append({'lift_um': 0.4, 'P': 0.0, 'steady': True, 'nw': nw, 'kind': 'B', 'phase': 2, 'modeB': 1, 'n_move': 0, 'wall': walls})
+            shutil.rmtree(os.path.join(root, B73, 'UB'), ignore_errors=True)
+            _mk_arm(root, B73, 'UB', {'W': 5000, 'dt': 1e-6, 'steps': st, 'summary': summary,
+                                      'events': [('CROSS', 2, 'first'), ('RM', 4, 'ncross2')] + [(n, 5, w) for n, w in sev]}, P)
+            return arm_verdict(os.path.join(root, B73, 'UB'), B73, 'UB', P, root=root)
+
+        def ok_primary(u):
+            return u['primary_status'] == 'OK' and abs(u['rho_pct'] - 0.2026077873428664) < 1e-12
+
+        def k5_step(w):
+            return [int(ln.split(',')[5]) for ln in open(os.path.join(root, B73, 'UB', 'ul_windows.csv')).read().splitlines()[1:]
+                    if ln.split(',')[2] == '5' and ln.split(',')[3] == str(w)][0]
+        chk('R24 대조: 분리 단 벽 접촉 [0, 0, 0, 0, 0] · 덱 DONE (SEPARATED w2 · POST_DONE w5) → 판독기 분리 (w 2) · 분리 뒤 4 창 → trajectory DONE · 주 값 OK',
+            lambda: (lambda u: ok_primary(u) and u['trajectory_status'] == 'DONE' and u['separation']['n_post'] == 4)(sep_arm([[]] * 5, 5)))
+        chk('R24 ULKR-07 덱 DONE 인데 판독기 벽 덤프 [0, 0, 0, 0, 1] (마지막 창 재접촉 · Codex done_recontact) → trajectory SEP_INCOMPLETE (DONE 아님) · 주 값 OK 그대로',
+            lambda: (lambda u: ok_primary(u) and u['trajectory_status'] == 'SEP_INCOMPLETE')(sep_arm([[], [], [], [], [-1.0]], 5)))
+        chk('R24 ULKR-07 덱 DONE 인데 마지막 창 벽 덤프 결손 (Codex done_missing) → SEP_INCOMPLETE · 주 값 OK',
+            lambda: (lambda u: ok_primary(u) and u['trajectory_status'] == 'SEP_INCOMPLETE')(sep_arm([[], [], [], [], 'missing'], 5)))
+        chk('R24 ULKR-07 판독기 분리 선언 창이 유지 예산 밖 (w 13 > 12 — 11 창 접촉 뒤 0 다섯) · 덱 DONE → SEP_INCOMPLETE · 주 값 OK',
+            lambda: (lambda u: ok_primary(u) and u['trajectory_status'] == 'SEP_INCOMPLETE')(
+                sep_arm([[-1.0]] * 11 + [[]] * 5, 16, sev=(('SEPARATED', 'w13'), ('POST_DONE', 'w16')))))
+        chk('R24 Q6 덱 요약 SEP_INCOMPLETE (재접촉 뒤 예산 끝) → trajectory SEP_INCOMPLETE · 주 값 OK',
+            lambda: (lambda u: ok_primary(u) and u['trajectory_status'] == 'SEP_INCOMPLETE')(
+                sep_arm([[], [], [-1.0]] + [[-1.0]] * 9, 12, summary='SEP_INCOMPLETE', sev=(('SEPARATED', 'w2'), ('SEP_INCOMPLETE', 'w12')))))
+        chk('R24 ULKR-07 덱 SEPARATED 사건 (w 3) ≠ 판독기 선언 창 (w 2) → SEP_INCOMPLETE (덱 ↔ 판독기 불일치 = 보조 미완료) · 주 값 OK',
+            lambda: (lambda u: ok_primary(u) and u['trajectory_status'] == 'SEP_INCOMPLETE')(sep_arm([[]] * 5, 5, sev=(('SEPARATED', 'w3'), ('POST_DONE', 'w5')))))
+        chk('R24 ULKR-07 덱 DONE 인데 SEPARATED · POST_DONE 사건 없음 → SEP_INCOMPLETE · 주 값 OK',
+            lambda: (lambda u: ok_primary(u) and u['trajectory_status'] == 'SEP_INCOMPLETE')(sep_arm([[]] * 5, 5, sev=())))
+        chk('R24 ULKR-07 이동 = 연속 초기화 (덱 ul_sepn 0): k 4 마지막 창 0 + k 5 첫 창 0 → 선언은 k 5 w 2 (덱과 같다 · 옛 판독 k 5 w 1) · DONE · 분리 뒤 창 = w 2–5',
+            lambda: (lambda u: ok_primary(u) and u['trajectory_status'] == 'DONE' and u['separation']['declared_step'] == k5_step(2)
+                     and u['separation']['n_post'] == 4)(sep_arm([[]] * 5, 5, last4=['default', 'default', 'default', []])))
+        chk('R24 ULKR-07 separation(): CONFIRM (단계 1) 창의 연속 0 은 선언 아님 (덱 = SEPARATE 단계 2 에서만) · 단계 2 로 넘어가면 그때 선언',
+            lambda: separation([{'state': 'ZERO', 'step': s, 'k': 3, 'phase': 1} for s in (1, 2, 3)])['declared_index'] is None
+            and separation([{'state': 'ZERO', 'step': s, 'k': 3, 'phase': 1} for s in (1, 2)]
+                           + [{'state': 'ZERO', 'step': s, 'k': 4, 'phase': 2} for s in (3, 4)])['declared_step'] == 4)
+    with tempfile.TemporaryDirectory() as root:
+        # ── ULKR-10 B (Q5 · 개정 3 §14-6) — S3 무게 항 g = 그 팔의 실제 중력 (Codex gravity_floor: m 1e-6 kg · 총힘 9.81e-12 N) ──
+        def ff_arm(job):
+            st = _ladder([0.2, 0.25, 0.3, 0.35], [1.2, 0.8, 0.6, 0.4])
+            st[2]['mut'] = 'free_fall_aux'
+            shutil.rmtree(os.path.join(root, B73, job), ignore_errors=True)
+            _mk_arm(root, B73, job, {'W': 5000, 'dt': 1e-6, 'steps': st, 'events': [('CROSS', 2, 'first'), ('RM', 4, 'ncross2')], 'summary': 'DONE'}, P)
+            return arm_verdict(os.path.join(root, B73, job), B73, job, P, root=root)
+        chk('R26 대조: 일반 팔 (UB · g 9.81) 교차 끝점 무접촉 원자 총힘 = −m g_aux (무게의 1e-6) → S3 PASS · 주 값 OK (ρ 0.2026…)',
+            lambda: (lambda u: u['primary_status'] == 'OK' and abs(u['rho_pct'] - 0.2026077873428664) < 1e-12)(ff_arm('UB')))
+        chk('R26 ULKR-10 B 중력 팔 (G_UB · g_aux 9.81e-6) 같은 끝점 = 자유 낙하 → S3 FAIL (R = 1 · 기본 g 9.81 이면 R 1e-6 PASS)',
+            lambda: any('단 2 S3 FAIL' in w for w in ff_arm('G_UB')['why']))
+        chk('R26 ULKR-10 B _arm_g: 일반 팔 · UTc = 표 S3 g 9.81 · 중력 팔 G_UB · G_UVa · G_UVb · G_UT3 = g_aux 9.81e-6',
+            lambda: _arm_g('UB', P) == 9.81 and _arm_g('UTc', P) == 9.81 and all(_arm_g(j, P) == P['g_aux'] for j in ('G_UB', 'G_UVa', 'G_UVb', 'G_UT3')))
+    with tempfile.TemporaryDirectory() as root:
         # ── ULR1-03 접촉 상태 · 상쇄 · 분리 · 창 결손 ──
         def wins(counts, pressures):
             return [{'step': 100 + i, 'Ps_avg': p / 1000.0, 'n_contact_geo': c} for i, (c, p) in enumerate(zip(counts, pressures))]
@@ -1900,11 +2052,62 @@ def selftest() -> int:
                      and {(r['a'], r['b']): r['relation'] for r in t}[('ps_3_7_r45', 'ps_5_5_r45')] == 'SEPARATED'
                      and {(r['a'], r['b']): r['relation'] for r in t}[('ps_3_7_r45', 'ps_7_3_r45')] == 'UNIDENTIFIED'
                      and {(r['a'], r['b']): r['relation'] for r in t}[('ps_0_10_r45', 'ps_10_0_r45')] == 'UNIDENTIFIED')(pair_table(vs)))
-        uk = os.path.join(root, B73, 'RJ', 'UK')
-        _w(os.path.join(uk, 'ul_windows.csv'), ','.join(P['records']['windows_cols']) + '\n' + '\n'.join(
-            f'UK,{B73},0,{w},4,{3200000 + 5000 * w},0.111052,0,0.16,2e-07,{r},0,-1,-1,-1,400,160417,11,2e-07' for w, r in ((1, 3e-8), (2, 1e-8), (3, 2e-8))) + '\n')
+        def mk_uk(mut=None):
+            """합성 UK 단계 (덱 in.UK 꼴 그대로 — 창 기록 · 사건 · 요약 · 화면 · 단계 기록) · mut = 반례 하나 (ULKR-09 · Codex one_uk_row 꼴)."""
+            uk = os.path.join(root, B73, 'RJ', 'UK')
+            shutil.rmtree(uk, ignore_errors=True)
+            B = P['beds'][B73]
+            s0, h0, W0 = B['s0'], B['h0'], P['windows']['W0']
+            rows = [{'arm': 'UK', 'k': 0, 'w': w, 'ph': 4, 'step': s0 + W0 * w, 'pz': h0, 'lift': 0, 'rot': r} for w, r in ((1, 3e-8), (2, 1e-8), (3, 2e-8))]
+            if mut == 'one_row':        # Codex one_uk_row — step 1 · w 1 · 회전 0.001 J 한 줄
+                rows = [dict(rows[0], step=1, rot=0.001)]
+            elif mut == 'dup_w':        # 같은 창 두 번 (w 1 · 2 · 2)
+                rows[2] = dict(rows[1])
+            elif mut == 'spacing':      # 셋째 창 끝 step 이 T_W 간격 밖
+                rows[2]['step'] += 1000
+            elif mut == 'motion':       # 둘째 창에서 판이 움직임 (무이동 아님)
+                rows[1].update(pz=h0 + 1e-5, lift=1e-5)
+            elif mut == 'k1':           # k = 1 (S0 k = 0 아님)
+                for r in rows:
+                    r['k'] = 1
+            elif mut == 'phase0':       # 단계 0 (HOLD0 4 아님)
+                rows[0]['ph'] = 0
+            elif mut == 'four':         # 넷째 창 (정확히 셋 아님)
+                rows.append(dict(rows[2], w=4, step=s0 + 4 * W0))
+            elif mut == 'other_arm':    # 다른 팔의 창 기록
+                for r in rows:
+                    r['arm'] = 'UB'
+            body = [f'{r["arm"]},{B73},{r["k"]},{r["w"]},{r["ph"]},{r["step"]},{r["pz"]},{r["lift"]},0.16,2e-07,{r["rot"]},0,-1,-1,-1,400,160417,11,2e-07'
+                    for r in rows]
+            if mut == 'csv_bad':        # 열 수 다른 줄 (파서가 버린다 — 남은 두 줄로 기준을 만들면 안 된다)
+                body[1] += ',x'
+            _w(os.path.join(uk, 'ul_windows.csv'), ','.join(P['records']['windows_cols']) + '\n' + '\n'.join(body) + '\n')
+            _w(os.path.join(uk, 'ul_events.csv'), ','.join(P['records']['events_cols']) + f'\nSTART,0,{s0},{h0},0,s0\nNOMOVE_DONE,0,{s0 + 3 * W0},{h0},0,w3\n')
+            _w(os.path.join(uk, 'ul_summary.txt'), f'result={"GUARD" if mut == "guard" else "DONE"}\narm=UK\nbed={B73}\n')
+            _w(os.path.join(uk, 'screen.txt'), 'LIGGGHTS (Version LIGGGHTS-PUBLIC 3.8.0, git commit 3d5c00f)\n'
+               'Loop time of 1 on 6 procs for 15000 steps with 160417 atoms\n'
+               f'UL_SUMMARY arm=UK bed={B73} result={"GUARD" if mut == "guard" else "DONE"} step={s0 + 3 * W0} k=0\n'
+               + ('ERROR: synthetic UK failure\n' if mut == 'tech' else ''))
+            _w(os.path.join(uk, 'run_check.txt'), 'UK screen.txt ' + ('FAIL ERROR rc=1\n' if mut == 'tech' else 'PASS rc=0 procs=6\n'))
+            return uk
+        mk_uk()
         chk('R12 KE 기준: 병진 = 표 (7:3 2.04e-07) · 회전 = UK 창 평균 셋의 중앙값 (2e-08) · S2 문턱 = 10 × 합 = 2.24e-06 · 기준 파일',
             lambda: (lambda k: abs(k['rot'] - 2e-8) < 1e-20 and abs(k['s2_limit'] - 2.24e-6) < 1e-18 and 'ul_S2max' in k['text'])(kebase(root, B73, P, write=False)))
+
+        def no_base(mut):
+            base = os.path.join(root, B73, 'ul_base.in')
+            if os.path.exists(base):
+                os.remove(base)
+            mk_uk(mut)
+            k = kebase(root, B73, P)
+            return k['s2_limit'] is None and k['text'] is None and not os.path.exists(base)
+        for mut, what in (('one_row', 'Codex one_uk_row (step 1 · w 1 · 회전 0.001 J 한 줄 — 옛 판독 S2max 0.01000204 J)'),
+                          ('dup_w', '같은 창 두 번 (w 1 · 2 · 2)'), ('spacing', '창 간격 ≠ T_W (셋째 창 +1,000 step)'),
+                          ('motion', '판 이동 (둘째 창 plate_z ≠ h0 · lift ≠ 0)'), ('k1', 'k = 1 (S0 k = 0 아님)'), ('phase0', '단계 0 (HOLD0 4 아님)'),
+                          ('four', '창 넷 (정확히 셋 아님)'), ('other_arm', '다른 팔 (UB) 의 창 기록'), ('csv_bad', '열 수 다른 줄 (파서가 버린 줄)'),
+                          ('guard', '덱 요약 GUARD (DONE 아님)'), ('tech', '단계 기술 실패 (run_check FAIL · 화면 ERROR)')):
+            chk(f'R25 ULKR-09 UK {what} → KE 기준 미발행 (s2_limit 없음 · ul_base.in 안 씀)', lambda m=mut: no_base(m))
+        mk_uk()
         ext = os.path.join(root, B100, 'EXT')
         lines = ['    Step    Atoms         KinEng        ul_erot          ul_Ps       pressMPa            CPU ', ' 3600000 159152 3.5e-06 1e-07 0.3 0.3 0']
         lines += [f' {3600000 + 1000 * k} 159152 {1e-7 * (1 + (k % 5))} 1e-08 0.174 0.174 {k}' for k in range(1, 61)]
@@ -2067,7 +2270,8 @@ def main(argv=None):
         return 0 if r['status'] == 'RESTORED' else 2
     if a.cmd == 'kebase':
         k = kebase(root, a.args[1], P)
-        print(f'KE_BASE bed={a.args[1]} trans={k["trans"]} rot={k["rot"]} s2_limit={k["s2_limit"]}')
+        print(f'KE_BASE bed={a.args[1]} trans={k["trans"]} rot={k["rot"]} s2_limit={k["s2_limit"]}'
+              + ('' if k['s2_limit'] is not None else f' — 기준 파일 미발행: {" · ".join(k["problems"][:4]) or "병진 · 회전 기준 없음"}'))
         return 0 if k['s2_limit'] is not None else 2
     if a.cmd == 's0p':
         r = s0p_decision(root, P)

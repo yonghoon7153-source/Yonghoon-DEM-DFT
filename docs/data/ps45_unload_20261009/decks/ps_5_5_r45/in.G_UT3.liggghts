@@ -179,6 +179,7 @@ variable ul_okn equal 0
 variable ul_sepn equal 0
 variable ul_Pprev equal 0
 variable ul_Pbar2 equal 0
+variable ul_rc equal 0
 if "${ul_phase} == 4" then "variable ul_wmin equal ${ul_k0min}" "variable ul_wmax equal ${ul_k0max}" else "variable ul_wmin equal ${ul_wmin0}" "variable ul_wmax equal ${ul_wmax0}"
 variable ul_dnext equal (floor(step/${ul_W})+1)*${ul_W}
 label ul_win
@@ -220,8 +221,10 @@ label ul_win_gen
 if "(${ul_w} >= ${ul_wmin}) && (${ul_okn} >= 2)" then "variable ul_steady equal 1" "jump SELF ul_hold_end"
 if "${ul_w} >= ${ul_wmax}" then "variable ul_steady equal 0" "jump SELF ul_hold_end"
 jump SELF ul_win
+# 분리 (개정 3 §14-7 · Q6): 선언 = 유지 예산 안 · 분리 뒤 4 창 = 예산과 따로 · 재접촉 = 같은 높이 · 남은 예산 (k + 1 로 옮기지 않는다) · 예산 끝 = SEP_INCOMPLETE
 label ul_win_sep
 if "${ul_sepn} >= ${ul_sepreq}" then "jump SELF ul_declare_sep"
+if "${ul_rc} == 1" then "jump SELF ul_win_rc"
 jump SELF ul_win_gen
 label ul_declare_sep
 variable ul_phase equal 3
@@ -237,8 +240,11 @@ jump SELF ul_win
 label ul_recontact
 variable ul_phase equal 2
 variable ul_postw equal 0
+variable ul_rc equal 1
 print "RECONTACT,${ul_k},${ul_step},${ul_pz},${ul_lift},n${ul_nc}" append ${out}/ul_events.csv screen no
-jump SELF ul_win_gen
+label ul_win_rc
+if "${ul_w} >= ${ul_wmax}" then "jump SELF ul_sep_incomplete"
+jump SELF ul_win
 # 단 끝 — P̄_k = 마지막 두 창 평균 · 단 줄 기록 뒤 단계 전이
 label ul_hold_end
 variable ul_Pbar equal ${ul_Pbar2}
@@ -329,6 +335,10 @@ jump SELF ul_hold_start
 label ul_cap_stop
 print "LIFT_CAP,${ul_k},${ul_step},${ul_pz},${ul_lift},cap" append ${out}/ul_events.csv screen no
 variable ul_result string LIFT_CAP
+jump SELF ul_summary
+label ul_sep_incomplete
+print "SEP_INCOMPLETE,${ul_k},${ul_step},${ul_pz},${ul_lift},w${ul_w}" append ${out}/ul_events.csv screen no
+variable ul_result string SEP_INCOMPLETE
 jump SELF ul_summary
 label ul_finish_ok
 print "POST_DONE,${ul_k},${ul_step},${ul_pz},${ul_lift},w${ul_w}" append ${out}/ul_events.csv screen no

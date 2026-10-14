@@ -91,10 +91,17 @@ def mock_lmp(deck, kv):
     elif kind == 'UNread':
         print('UL_UN_START\nUL_UN_DONE')
     elif kind in ('UK', 'UC', 'Ut0', 'EXT', 'EXT2') or kind.startswith('G_'):
-        if kind == 'UK':
+        if kind == 'UK':   # 덱 in.UK 꼴 그대로 — S0 무이동 세 창 (step = S0 + w · W0 · 판 = h0) · 사건 START · NOMOVE_DONE · 요약 DONE (ULKR-09)
+            B, W0 = P['beds'][bed], P['windows']['W0']
+            s0 = int(kv.get('ul_s0') or B['s0'])
+            rows = [(w, s0 + W0 * w, r) for w, r in ((1, 3e-8), (2, 1e-8), (3, 2e-8))]
+            if os.environ.get('MOCK_UK_ONEROW'):   # Codex one_uk_row — step 1 · w 1 · 회전 0.001 J 한 줄 (불완전 UK)
+                rows = [(1, 1, 0.001)]
             open(os.path.join(out, 'ul_windows.csv'), 'w').write(','.join(P['records']['windows_cols']) + '\n' + '\n'.join(
-                f'UK,{bed},0,{w},4,{3200000 + 5000 * w},0.111052,0,0.16,2e-07,{r},0,-1,-1,-1,400,160417,11,2e-07'
-                for w, r in ((1, 3e-8), (2, 1e-8), (3, 2e-8))) + '\n')
+                f'UK,{bed},0,{w},4,{s},{B["h0"]},0,0.16,2e-07,{r},0,-1,-1,-1,400,160417,11,2e-07' for w, s, r in rows) + '\n')
+            open(os.path.join(out, 'ul_events.csv'), 'w').write(','.join(P['records']['events_cols']) + f'\nSTART,0,{s0},{B["h0"]},0,s0\n'
+                                                                 f'NOMOVE_DONE,0,{s0 + 3 * W0},{B["h0"]},0,w3\n')
+            open(os.path.join(out, 'ul_summary.txt'), 'w').write(f'result=DONE\narm=UK\nbed={bed}\n')
         if kind in ('EXT', 'EXT2'):
             os.makedirs(os.path.join(out, 'restart'), exist_ok=True)
             for s in (3650000, 3660000) if kind == 'EXT' else (3700000, 3710000):
@@ -135,7 +142,8 @@ def mock_lmp(deck, kv):
 def _env(td, kit, extra=None):
     env = dict(os.environ, WORK_ROOT=os.path.join(td, 'work'), MPIRUN=os.path.join(td, 'bin', 'mpirun'), LMP=os.path.join(td, 'bin', 'lmp'), NP='6',
                PY=sys.executable, ALLOW_CONCURRENT='1', ALLOW_OTHER_LMP='1', UL_STAMP='20261013_000000')
-    for k in ('MOCK_PROCS', 'MOCK_FAIL_KIND', 'RESUME', 'SLURM_JOB_ID', 'SLURM_NTASKS', 'MOCK_TIMEOUT_KIND', 'MOCK_CRASH_KIND', 'MOCK_READER_FAIL'):
+    for k in ('MOCK_PROCS', 'MOCK_FAIL_KIND', 'RESUME', 'SLURM_JOB_ID', 'SLURM_NTASKS', 'MOCK_TIMEOUT_KIND', 'MOCK_CRASH_KIND', 'MOCK_READER_FAIL',
+              'MOCK_UK_ONEROW'):
         env.pop(k, None)
     env.update(extra or {})
     return env
@@ -214,7 +222,7 @@ def selftest() -> int:
 
     if not (os.path.exists(os.path.join(HERE, 'run_unload.sh')) and os.path.exists(os.path.join(HERE, 'SHA256SUMS'))):
         for n in ('M1', 'M2', 'M3', 'M4a', 'M4b', 'M4c', 'M5', 'M6', 'M7a', 'M7b', 'M7c', 'M8', 'M9', 'M10', 'M11', 'M12', 'M13', 'M14', 'M15',
-                  'M16', 'M17'):
+                  'M16', 'M17', 'M18'):
             chk(f'{n} (러너 · 봉인 SHA256SUMS 없음 — 시험 먼저)', False)
         print(f'selftest: FAIL ({len(fails)} 실패)')
         return 1
@@ -361,6 +369,15 @@ def selftest() -> int:
             lambda: rc != 0 and re.search(r'^reader_arm_rc=1$', man_e, re.M) and re.search(r'^stage=U_UB .*rc=0 check=PASS', man_e, re.M)
             and rcu == 0 and re.search(r'^reader_arm_rc=0$', man_u, re.M)
             and json.load(open(os.path.join(work_e, B73, 'UC', 'arm_verdict.json'))).get('primary_status') != 'OK')
+        # ── ULKR-09 불완전 UK (Codex one_uk_row) = KE 기준 파일 미발행 → S2 를 쓰는 다음 팔 관문 거부 ──
+        kit_f, work_f, log_f = _setup(os.path.join(td, 'f'))
+        rc, out = _run(os.path.join(td, 'f'), kit_f, B73, 'RJ', {'MOCK_UK_ONEROW': '1'})
+        man_f = _read(os.path.join(work_f, B73, 'RJ', 'run_manifest.txt'))
+        open(os.path.join(work_f, B73, 'RJ', 'restore_verdict.json'), 'w').write(json.dumps({'status': 'RESTORED'}))
+        rc2, out2 = _run(os.path.join(td, 'f'), kit_f, B73, 'UB')
+        chk('M18 ULKR-09 UK 한 줄 (step 1 · w 1 · 회전 0.001 J) = kebase rc 2 · ul_base.in 없음 · 잡 기록 reader_kebase_rc=2 · 러너 rc ≠ 0 → UB 관문 거부 (lmp 호출 없음)',
+            lambda: rc != 0 and re.search(r'^stage=UK .*rc=0 check=PASS', man_f, re.M) and re.search(r'^reader_kebase_rc=2$', man_f, re.M)
+            and not os.path.exists(os.path.join(work_f, B73, 'ul_base.in')) and rc2 != 0 and 'REFUSE' in out2 and not _lmp(log_f, 'UB'))
     finally:
         shutil.rmtree(td, ignore_errors=True)
     print(f'selftest: {"PASS" if not fails else "FAIL"} ({len(fails)} 실패)')

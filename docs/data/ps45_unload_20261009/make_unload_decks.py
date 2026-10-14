@@ -359,7 +359,7 @@ def _machine(kind, gravity=False, stop_rm=False):
     """언로딩 상태 기계 (§4-2 · §5 · §12 · §13): 창 고리 · 유지 끝 (S1 ∧ S2 두 창 · 최소 · 최대) · 단 끝 (교차 · 확인 · R_M · 분리) · 다음 이동."""
     L = ['# >>> block machine — 상태 기계 (단계 ul_phase: 4 HOLD0 · 0 SEARCH · 1 CONFIRM · 2 SEPARATE · 3 POST)',
          'label ul_hold_start', 'variable ul_w equal 0', 'variable ul_okn equal 0', 'variable ul_sepn equal 0', 'variable ul_Pprev equal 0',
-         'variable ul_Pbar2 equal 0',
+         'variable ul_Pbar2 equal 0', 'variable ul_rc equal 0',
          'if "${ul_phase} == 4" then "variable ul_wmin equal ${ul_k0min}" "variable ul_wmax equal ${ul_k0max}" '
          'else "variable ul_wmin equal ${ul_wmin0}" "variable ul_wmax equal ${ul_wmax0}"',
          'variable ul_dnext equal (floor(step/${ul_W})+1)*${ul_W}',
@@ -369,12 +369,15 @@ def _machine(kind, gravity=False, stop_rm=False):
           'label ul_win_gen',
           'if "(${ul_w} >= ${ul_wmin}) && (${ul_okn} >= 2)" then "variable ul_steady equal 1" "jump SELF ul_hold_end"',
           'if "${ul_w} >= ${ul_wmax}" then "variable ul_steady equal 0" "jump SELF ul_hold_end"', 'jump SELF ul_win',
-          'label ul_win_sep', 'if "${ul_sepn} >= ${ul_sepreq}" then "jump SELF ul_declare_sep"', 'jump SELF ul_win_gen',
+          '# 분리 (개정 3 §14-7 · Q6): 선언 = 유지 예산 안 · 분리 뒤 4 창 = 예산과 따로 · 재접촉 = 같은 높이 · 남은 예산 (k + 1 로 옮기지 않는다) · 예산 끝 = SEP_INCOMPLETE',
+          'label ul_win_sep', 'if "${ul_sepn} >= ${ul_sepreq}" then "jump SELF ul_declare_sep"', 'if "${ul_rc} == 1" then "jump SELF ul_win_rc"',
+          'jump SELF ul_win_gen',
           'label ul_declare_sep', 'variable ul_phase equal 3', 'variable ul_postw equal 1', _ev('SEPARATED', 'w${ul_w}'),
           'if "${ul_postw} >= ${ul_postn}" then "jump SELF ul_finish_ok"', 'jump SELF ul_win',
           'label ul_win_post', 'if "${ul_nc} > ${ul_sepnmax}" then "jump SELF ul_recontact"', 'variable ul_postw equal ${ul_postw}+1',
           'if "${ul_postw} >= ${ul_postn}" then "jump SELF ul_finish_ok"', 'jump SELF ul_win',
-          'label ul_recontact', 'variable ul_phase equal 2', 'variable ul_postw equal 0', _ev('RECONTACT', 'n${ul_nc}'), 'jump SELF ul_win_gen',
+          'label ul_recontact', 'variable ul_phase equal 2', 'variable ul_postw equal 0', 'variable ul_rc equal 1', _ev('RECONTACT', 'n${ul_nc}'),
+          'label ul_win_rc', 'if "${ul_w} >= ${ul_wmax}" then "jump SELF ul_sep_incomplete"', 'jump SELF ul_win',
           '# 단 끝 — P̄_k = 마지막 두 창 평균 · 단 줄 기록 뒤 단계 전이',
           'label ul_hold_end', 'variable ul_Pbar equal ${ul_Pbar2}',
           'print "${ul_arm},${ul_bed},${ul_k},${ul_kind},${ul_dz},${ul_n},${ul_step},${ul_pz},${ul_lift},${ul_Pbar},${ul_w},${ul_steady},'
@@ -420,6 +423,7 @@ def _machine(kind, gravity=False, stop_rm=False):
           'variable ul_pz equal ${ul_pz}+${ul_dz}', 'variable ul_lift equal ${ul_pz}-${ul_h0}']
     L += _regions('${ul_pz}') + ['jump SELF ul_hold_start']
     L += ['label ul_cap_stop', _ev('LIFT_CAP', 'cap'), 'variable ul_result string LIFT_CAP', 'jump SELF ul_summary',
+          'label ul_sep_incomplete', _ev('SEP_INCOMPLETE', 'w${ul_w}'), 'variable ul_result string SEP_INCOMPLETE', 'jump SELF ul_summary',
           'label ul_finish_ok', _ev('POST_DONE', 'w${ul_w}'), 'variable ul_result string DONE',
           'write_restart ${out}/restart/restart_final_${ul_step}.bin', 'jump SELF ul_summary',
           'label ul_guard', _ev('GUARD', '${ul_why}'), 'variable ul_result string GUARD',
@@ -667,6 +671,122 @@ def physical(text):
     return out
 
 
+def deck_sim(text, obs_fn, start_step, state=None, S2max=1e-5, cli=None, max_cmds=400000):
+    """덱 제어문만 해석하는 작은 모의기 (입자 계산 없음 · 시험 전용 · ULKR-07 · 10 — 실제 생성 덱의 분기를 다시 검증한다).
+    variable (equal = 공식 · ${} 는 정의 때 치환 · 꺼낼 때 %.15g) · string · index (먼저 정의되면 그대로) · if/then/elif/else · jump SELF · label · run · quit ·
+    include (${ul_state} = state 줄 · ${ul_base} = S2 문턱) · fix ul_mv move/mesh (이동 중) · print (사건 · 단 · 창 기록 줄 수집) · write_restart (수집).
+    창 run (이동 아님 · n > 0) 마다 obs_fn(k, w, phase, step) = {'P' (덱 MPa), 'Kt', 'Kr', 'Kti', 'nc', 'na', 'lk'} 를 꺼낸다.
+    → {'events': [[...]], 'steps': [[...]], 'windows': [[...]], 'restarts': [step], 'moves': [(k, step)], 'result', 'aborted', 'n_cmds'}."""
+    import math as _m
+    L = ul_lib.logical_lines(text)
+    Wd = [ul_lib.words(x) for x in L]
+    labels = {w[1]: i for i, w in enumerate(Wd) if w[:1] == ['label']}
+    var = {k: ('index', str(v)) for k, v in (cli or {}).items()}
+    sim = {'step': start_step, 'moving': False, 'obs': obs_fn(None, 0, None, start_step), 'events': [], 'steps': [], 'windows': [], 'restarts': [],
+           'moves': [], 'result': None, 'aborted': None, 'n_cmds': 0}
+
+    def num(x):
+        return '%.15g' % x
+
+    def ev(expr):
+        o = sim['obs']
+        e = expr.replace('&&', ' and ').replace('||', ' or ')
+        e = re.sub(r'f_ul_av\[(\d)\]', lambda mm: repr(float(o[('P', 'Kt', 'Kr')[int(mm.group(1)) - 1]])), e)
+        e = e.replace('count(ul_t1,ul_c1)+count(ul_t2,ul_c2)+count(ul_t3,ul_c3)', repr(float(o['nc'])))
+        e = e.replace('count(all,ul_bel)+count(all,ul_abv)', repr(float(o['lk'])))
+        e = re.sub(r'\bstep\b', str(sim['step']), e)
+        e = re.sub(r'\bke\b', repr(float(o['Kti'])), e)
+        e = re.sub(r'\batoms\b', str(int(o['na'])), e)
+        return float(eval(e, {'__builtins__': {}}, {'abs': abs, 'floor': _m.floor}))   # noqa: S307 — 생성 덱의 숫자 식 (시험 전용)
+
+    def get(name):
+        st, v = var[name]
+        return num(ev(v)) if st == 'equal' else v
+
+    def sub(s):
+        return re.sub(r'\$\{(\w+)\}', lambda mm: get(mm.group(1)), s)
+
+    def do(w):
+        """명령 하나 → None (다음 줄) · ('jump', 줄) · ('quit',)."""
+        c = w[0]
+        if c == 'variable' and len(w) >= 4:
+            if w[2] == 'equal':
+                var[w[1]] = ('equal', sub(' '.join(w[3:])))
+            elif w[2] == 'string':
+                var[w[1]] = ('string', sub(' '.join(w[3:])))
+            elif w[2] == 'index' and w[1] not in var:
+                var[w[1]] = ('index', sub(w[3]))
+        elif c == 'include':
+            if w[1] == '${ul_state}':
+                for k2, v2 in (state or {}).items():
+                    var[k2] = ('string', str(v2)) if isinstance(v2, str) else ('equal', num(float(v2)))
+            elif w[1] == '${ul_base}':
+                var['ul_S2max'] = ('equal', num(S2max))
+        elif c == 'if':
+            branches, cur, conds, k = [], [], [w[1]], 3
+            while k < len(w):
+                if w[k] == 'elif':
+                    branches.append(cur)
+                    cur = []
+                    conds.append(w[k + 1])
+                    k += 2
+                    continue
+                if w[k] == 'else':
+                    branches.append(cur)
+                    cur = []
+                    conds.append('1')
+                else:
+                    cur.append(w[k])
+                k += 1
+            branches.append(cur)
+            for cond, br in zip(conds, branches):
+                if ev(sub(cond)):
+                    for cmd in br:
+                        r = do(ul_lib.words(cmd))
+                        if r is not None:
+                            return r
+                    break
+        elif c == 'jump' and len(w) >= 3 and w[1] == 'SELF':
+            return ('jump', labels[w[2]])
+        elif c == 'quit':
+            return ('quit',)
+        elif c == 'fix' and len(w) >= 4 and w[3] == 'move/mesh':
+            sim['moving'] = True
+        elif c == 'unfix' and w[1] == 'ul_mv':
+            sim['moving'] = False
+        elif c == 'run':
+            n = int(float(sub(w[1])))
+            if n > 0:
+                sim['step'] += n
+                if sim['moving']:
+                    sim['moves'].append((int(float(get('ul_k'))), sim['step']))
+                else:
+                    sim['obs'] = obs_fn(int(float(get('ul_k'))), int(float(get('ul_w'))) + 1, int(float(get('ul_phase'))), sim['step'])
+        elif c == 'write_restart':
+            sim['restarts'].append(sim['step'])
+        elif c == 'print' and len(w) >= 4 and w[2] == 'append':
+            row = sub(w[1]).split(',')
+            for key, nm in (('events', 'ul_events.csv'), ('steps', 'ul_steps.csv'), ('windows', 'ul_windows.csv')):
+                if w[3].endswith(nm):
+                    sim[key].append(row)
+        elif c == 'print' and 'UL_ABORT' in w[1]:
+            sim['aborted'] = sub(w[1])
+        return None
+
+    pc = 0
+    while pc < len(Wd) and sim['n_cmds'] < max_cmds:
+        sim['n_cmds'] += 1
+        r = do(Wd[pc])
+        if r is None:
+            pc += 1
+        elif r[0] == 'jump':
+            pc = r[1] + 1
+        else:
+            break
+    sim['result'] = var.get('ul_result', ('string', None))[1]
+    return sim
+
+
 def selftest() -> int:
     fails = []
 
@@ -734,6 +854,61 @@ def selftest() -> int:
     chk('GD7 중력 팔: 첫 run 은 run 0 (같은 머리 · G1) · 그 뒤 fix gravi 제자리 교체 g_aux 9.81e-6 · NO_BRACKET 사건',
         lambda: _runs(g)[0] == 'run 0' and _idx(g, 'fix gravi all gravity 9.81e-06 vector 0.0 0.0 -1.0') > _idx(g, 'run 0')
         and any('NO_BRACKET' in x for x in g))
+    # ── ULKR-07 (Q6 · 개정 3 §14-7) — 실제 생성 덱의 분리 · 재접촉 분기를 모의기로 실행 (Codex deck_control 반례 · 입자 계산 없음) ──
+    def sim_u(deck, contacts5, ke5=(1e-8, 1e-8)):
+        Pk = {0: 0.16, 1: 0.0025, 2: 0.0008, 3: 0.0006, 4: 0.0004}
+
+        def obs(k, w, phase, step):
+            if k is None:
+                return {'P': 0.16, 'Kt': 1e-8, 'Kr': 1e-8, 'Kti': 1e-8, 'nc': 1, 'na': P['beds'][b73]['atoms'], 'lk': 11}
+            nc = 1 if k <= 4 else (contacts5[w - 1] if (k == 5 and w <= len(contacts5)) else 0)
+            kt, kr = ke5 if k == 5 else (1e-8, 1e-8)
+            return {'P': Pk.get(k, 1e-8 if nc else 0.0), 'Kt': kt, 'Kr': kr, 'Kti': kt, 'nc': nc, 'na': P['beds'][b73]['atoms'], 'lk': 11}
+        return deck_sim(deck, obs, P['beds'][b73]['s0'], S2max=1e-5)
+
+    def evs(s, name):
+        return [(int(e[1]), e[5]) for e in s['events'] if e[0] == name]
+    ub_deck = D[(b73, 'U_UB')]
+    s_norm = sim_u(ub_deck, [])
+    chk('GD15 모의기 대조: 정상 경로 — 교차 k 2 · 확인 k 3 · 4 → R_M · k 5 에서 둘째 0 창에 분리 선언 · 분리 뒤 4 창 (선언 창부터) → DONE · 이동 k 1–5',
+        lambda: s_norm['result'] == 'DONE' and evs(s_norm, 'CROSS') == [(2, 'first')] and evs(s_norm, 'RM') == [(4, 'ncross2')]
+        and evs(s_norm, 'SEPARATED') == [(5, 'w2')] and evs(s_norm, 'POST_DONE') == [(5, 'w5')] and [k for k, _ in s_norm['moves']] == [1, 2, 3, 4, 5])
+    s_rc = sim_u(ub_deck, [0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0])
+    chk('GD15 ULKR-07 재접촉 (정상 유지 · Codex recontact_steady): w 2 분리 → w 4 재접촉 → 같은 높이 (k 5) 남은 예산에서 w 6 재분리 → 분리 뒤 4 창 → DONE (w 9) · k 6 으로 옮기지 않는다',
+        lambda: s_rc['result'] == 'DONE' and evs(s_rc, 'SEPARATED') == [(5, 'w2'), (5, 'w6')] and evs(s_rc, 'RECONTACT') == [(5, 'n1')]
+        and evs(s_rc, 'POST_DONE') == [(5, 'w9')] and max(k for k, _ in s_rc['moves']) == 5)
+    s_ex = sim_u(ub_deck, [0, 0] + [1] * 20, ke5=(2e-5, 1e-8))
+    chk('GD15 ULKR-07 재접촉 뒤 예산 (12 창) 안에 다시 못 섬 → 같은 높이에서 끝 SEP_INCOMPLETE (분리 미완료) · k 6 으로 옮기지 않는다 (옛 덱 = 다음 단 이동)',
+        lambda: s_ex['result'] == 'SEP_INCOMPLETE' and max(k for k, _ in s_ex['moves']) == 5 and evs(s_ex, 'SEP_INCOMPLETE') == [(5, 'w12')])
+    s_post = sim_u(ub_deck, [1] * 10 + [0, 0, 1, 0, 0, 0, 0, 0], ke5=(2e-5, 1e-8))
+    chk('GD15 ULKR-07 예산 끝 (w 12) 선언 뒤 분리 뒤 창에서 재접촉 (w 13 · 예산 밖) → SEP_INCOMPLETE · 이동 없음',
+        lambda: s_post['result'] == 'SEP_INCOMPLETE' and evs(s_post, 'SEPARATED') == [(5, 'w12')] and evs(s_post, 'RECONTACT') == [(5, 'n1')]
+        and max(k for k, _ in s_post['moves']) == 5)
+    s_q6 = sim_u(ub_deck, [0, 0, 0, 1, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0], ke5=(2e-5, 1e-8))
+    chk('GD15 Q6 (가) 선언은 예산 안 (w 2 · 6 · 12 ≤ 12) · 분리 뒤 4 창은 예산 밖 별도 관측 (Codex post_budget — w 15 DONE 은 개정 3 에서 정상) · 이동 없음',
+        lambda: s_q6['result'] == 'DONE' and evs(s_q6, 'SEPARATED') == [(5, 'w2'), (5, 'w6'), (5, 'w12')] and evs(s_q6, 'POST_DONE') == [(5, 'w15')]
+        and len(evs(s_q6, 'RECONTACT')) == 2 and max(k for k, _ in s_q6['moves']) == 5)
+    # ── ULKR-10 A (Q4 · 개정 3 §14-5) — 중력 팔: 첫 재평형 유지만 4–12 · 그 뒤 B 단 = 출처 팔 튜플 (덱별 표 · 모의기 실행) ──
+    gtab = []
+    for b in BEDS:
+        for a in PROD_ARMS:
+            hf = P['arms'][a]['hold_factor']
+            deck = D[(b, f'G_{a}')]
+            Bd = P['beds'][b]
+            rstep = (Bd['s0'] or Bd['s0_candidates'][0]) + 300000
+            st = {'ul_rstep': rstep, 'ul_k': 4, 'ul_phase': 2, 'ul_modeB': 1, 'ul_pz': Bd['h0'] + 0.00035, 'ul_lift': 0.00035, 'ul_ncross': 2,
+                  'ul_xk': 2, 'ul_lk0': 11, 'ul_Pbar': 0.0004, 'ul_kind': 'B'}
+            Pg = {0: 0.0015, 1: 0.0012, 2: 0.0008, 3: 0.0006, 4: 0.0004}
+
+            def obs(k, w, phase, step, b=b):
+                nc = 1 if (k is None or k <= 4) else 0
+                return {'P': Pg.get(k, 0.0) if k is not None else 0.0015, 'Kt': 1e-8, 'Kr': 1e-8, 'Kti': 1e-8, 'nc': nc, 'na': P['beds'][b]['atoms'], 'lk': 11}
+            s = deck_sim(deck, obs, rstep, state=st, cli={'ul_s0': rstep - 300000})
+            nw = {int(r[2]): int(r[10]) for r in s['steps']}
+            gtab.append((b, a, hf, nw.get(0), nw.get(1), 'fix gravi all gravity 9.81e-06 vector 0.0 0.0 -1.0' in _lines(deck), s['result']))
+    chk('GD16 ULKR-10 A 중력 팔 덱별 표 (다섯 침대 × G_UB · G_UVa · G_UVb · G_UT3 = 20 덱 · 모의기): 중력 교체 뒤 첫 유지 (k 0) = 4 창 (4–12 · × 2 없음) · '
+        '그 뒤 B 단 (k 1) = 출처 팔 튜플 (G_UB · G_UT3 = 4 · G_UVa · G_UVb = 8) · 중력 = g_aux 9.81e-6',
+        lambda: len(gtab) == 20 and all(n0 == 4 and n1 == 4 * hf and gok and res == 'DONE' for _, _, hf, n0, n1, gok, res in gtab), detail=str(gtab[:4]))
     e1, e2 = _lines(D[('ps_10_0_r45', 'EXT')]), _lines(D[('ps_10_0_r45', 'EXT2')])
     chk('GD8 10:0 EXT: run 60000 · restart 50000 (3,650,000) · 끝 명시 write_restart (3,660,000 — 자동 쓰기에 기대지 않는다) · 시작 step 검사 3,600,000',
         lambda: 'run 60000' in e1 and any(x.startswith('restart 50000 ') for x in e1) and _idx(e1, 'write_restart ${out}/restart/restart_ext_') > _idx(e1, 'run 60000')

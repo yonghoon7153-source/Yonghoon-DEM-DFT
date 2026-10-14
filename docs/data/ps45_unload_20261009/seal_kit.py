@@ -50,8 +50,22 @@ RULES = (
     ('parse_complete', '모든 관측 덤프 = 전부 읽힘 · 머리 step = 요청 step · 고유 ID · S0 에 없는 ID 없음 · CSV 결손 · 단 k 불연속 = 주 값 미식별 · 버린 행 재사용 없음 '
      '(개정 3 §14-10 · ULKR-04)',
      'ul_reader.py', '_atom_frame', ('ul_reader R22',)),
-    ('separation', '창 접촉 상태 CONTACT · TENSION · ZERO · OBS_MISSING (≠ 0) · 분리 = 연속 두 0 창의 둘째 창 끝 · 재접촉 = 계수 · 분리 뒤 창 초기화 (§13-3)',
-     'ul_reader.py', 'separation', ('ul_reader R6',)),
+    ('separation', '창 접촉 상태 CONTACT · TENSION · ZERO · OBS_MISSING (≠ 0) · 분리 = 같은 단 (k) 안 연속 두 0 창의 둘째 창 끝 (SEPARATE 단계 창 · 이동 = 연속 '
+     '초기화 · 덱과 같은 규칙) · 재접촉 = 계수 · 분리 뒤 창 초기화 (§13-3 · 개정 3 §14-7)',
+     'ul_reader.py', 'separation', ('ul_reader R6', 'ul_reader R24')),
+    ('recontact_budget', '분리 선언 = 유지 예산 (wmax) 안 · 분리 뒤 4 창 = 예산 밖 별도 관측 · 재접촉 = 같은 높이 · 남은 예산 (k + 1 로 옮기지 않음) · 예산 끝 = '
+     'SEP_INCOMPLETE · 덱 DONE ↔ 판독기 (최종 분리 · 분리 뒤 4 창 · 선언 창 ≤ 예산 · SEPARATED · POST_DONE 사건) 불일치 = 보조 미완료 SEP_INCOMPLETE — '
+     '주 ρ 무영향 (개정 3 §14-7 · Q6 · ULKR-07)',
+     'make_unload_decks.py', '_machine', ('make_unload_decks GD15', 'ul_reader R24')),
+    ('gravity_hold', '중력 팔: 중력 바꾼 뒤 첫 재평형 유지만 × 2 없이 4–12 창 · 그 뒤 B 단 = 부모 팔 튜플 그대로 (UVa · UVb 8–24 창) (개정 3 §14-5 · Q4 · '
+     'ULKR-10 A)',
+     'make_unload_decks.py', '_render_U', ('make_unload_decks GD16',)),
+    ('s3_arm_g', 'S3 무게 항 g = 그 팔의 실제 중력 (중력 팔 G_* = g_aux 9.81e-6 · 그 밖 = 9.81) — 표에서 판독기로 (개정 3 §14-6 · Q5 · ULKR-10 B)',
+     'ul_reader.py', '_arm_g', ('ul_reader R26',)),
+    ('kebase_uk3', 'KE 기준 파일 = UK 가 정확히 S0 무이동 완전 세 창일 때만 (단계 기술 성공 · 요약 DONE · START = S0 · arm UK · k 0 · 단계 4 · w 1–3 연속 · '
+     'step = S0 + w · W0 · 판 = h0 · 들어 올림 0 · 결손 줄 없음) · 아니면 미발행 (rc 2) → S2 쓰는 팔 관문 거부 · 문턱 계수 10 그대로 '
+     '(개정 3 §14-10 · ULKR-09)',
+     'ul_reader.py', '_uk_check', ('ul_reader R25', 'ul_runner_test M18')),
     ('timeout', '측정 뒤 TIMEOUT = 유효 ρ + 실제 괄호 · 교차 전 = 정상 · 접촉 · 단조일 때만 하한 · 아니면 미식별 (§13-2)',
      'ul_reader.py', 'arm_verdict', ('ul_reader R1',)),
     ('cancellation', '교차 끝점 인장 합 ≥ 0.5 · P_meas · A → 상쇄 표지 · 처분 = 진단값 (순위 · 10 쌍 표 밖) · 접촉 상태 · 자격과 세 칸 (§13-3 Q2 (가))',
