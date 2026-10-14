@@ -22,7 +22,8 @@
   "2026-08-28-doped-closure-reratify": "회신 P 반영판 재승인 → active (1저자 위임, agent 권장)",
   "2026-08-31": "D-2026-08-31-sdcp-polaron-S0-four-layer 신설 (proposed). 회신 T 의 S0 격하를 결정으로 등록 — 4층 실현 판정과 그 문턱. estimand 정의(D-2026-08-31-sdcp-polaron-Fbb)는 그대로 두고 게이트만 별개 slot 으로 붙인다 (_rules: 경험적 문턱은 별개 gate 결정).",
   "2026-09-01": "sdcp-c12-path 소급 등록 (proposed). 08-30 커밋 390450ea 가 ddE-obs·closure-criteria-first 를 superseded 로 내리며 강등 사유를 자유 문자열로 적어 _rules('등록된 ID 여야 한다') 위반 + dangling 이었다. 두 superseded_by 를 새 노드로 연결. 명칭 충돌·범위 문제는 노드의 open_conflicts 에 기록 (결정 아님).",
-  "2026-09-28-wad-cc-graphite": "D-2026-09-28-wad-cc-graphite 신설 (active · 실행 전) — 흑연 C|C W_sep 사전등록 (카드 db/properties/wad_cc_graphite_prereg_2026_09_28.json · 코드 tools/wad/cc_graphite.py). litdb Wang 2015 인입이 09-23 계획의 봉인 조건."
+  "2026-09-28-wad-cc-graphite": "D-2026-09-28-wad-cc-graphite 신설 (active · 실행 전) — 흑연 C|C W_sep 사전등록 (카드 db/properties/wad_cc_graphite_prereg_2026_09_28.json · 코드 tools/wad/cc_graphite.py). litdb Wang 2015 인입이 09-23 계획의 봉인 조건.",
+  "2026-10-14-elastic-60bfgs-gate": "D-2026-10-14-elastic-60bfgs-gate-continue 신설 (active · 1저자 발화 · 결과 본 뒤의 개정) — 60-BFGS 게이트를 넘은 탄성 strain 점을 수렴까지 계속. 기록 db/properties/shear_b2o3_vs_lpscl16_2x_amendment_2026_10_14_bfgs_gate.json."
  },
  "decisions": [
   {
@@ -8045,6 +8046,76 @@
     "⚠_digest_의_뜻": "`ratification` 을 뺀 결정 내용의 sha256 이다.",
     "근거_발화": "AskUserQuestion 답 (2026-10-13 · 이 세션): 'gabia 공존 예외 (6)를 비준할까요?' → '비준 (Recommended)' — 앞선 발화 '저번처럼 gabia, kgy에서 나눠 돌리자 ㅇㅇ'",
     "decision_digest": "sha256:c0b976daa7d40d70689d0c2ee689627a9765cfde379d1b540a919dcd5d1e1008"
+   }
+  },
+  {
+   "id": "D-2026-10-14-elastic-60bfgs-gate-continue",
+   "schema_version": 2,
+   "kind": "amendment",
+   "scope": "dft.elastic.relaxed_ion.bfgs_step_gate.amendment_2026_10_14",
+   "slot": "elastic_relaxedion_bfgs_step_gate",
+   "applies_to": {
+    "systems": [
+     "modelc_2x_elastic",
+     "b2o3_elastic"
+    ],
+    "tasks": [
+     "relaxed_ion_cij_strain_points"
+    ],
+    "methods": [
+     "qe_gpu_relax"
+    ],
+    "use_cases": [
+     "internal"
+    ]
+   },
+   "title": "탄성 relaxed-ion Cij — 60-BFGS 게이트를 넘은 strain 점을 '측정 불가' 로 닫지 않고 수렴할 때까지 계속 돌린다 (결과 본 뒤 · 1저자 결정)",
+   "statement": "60 을 넘은 점도 같은 문턱 (forc_conv_thr 1e-3 Ry/Bohr · etot_conv_thr 1e-5 Ry) 으로 수렴할 때까지 계속 돌린다. 스텝 상한은 두지 않는다. 모든 점이 수렴하면 12점 fit 을 한다. 두 계 (b2o3 · modelc_2x) 에 같은 규칙. 그대로인 것: 두 계 같은 문턱 · OOM·비정상 종료면 그 계를 처음부터 (부분 fit 금지) · EXIT 통제 정지 + BFGS 이력 승계는 중단이 아니다 (1저자 09-29).",
+   "rationale": "사용자 10-14 *'bgfs는 계속 끝날떄까지 보자'* (트랙 우리 DFT 기준선 · 탄성 · 1저자 = 사용자). 60 스텝 게이트는 '이 설정에서 수렴하지 않는다' 를 가르는 실행 가능성 문턱이었다 — 1저자는 측정 불가로 닫는 대신 수렴까지 보기로 했다. ⚠ 결과 본 뒤의 개정이다 — 60 을 넘은 것을 본 뒤에 정했다 (원 규칙은 결과 전에 박았다). 60 을 넘은 점이 들어간 Cij 는 '60-BFGS 게이트 사후 개정 (2026-10-14) 아래의 값' 으로 표기한다.",
+   "decision_state": "active",
+   "record_kind": "amendment",
+   "results_seen": true,
+   "card": "db/properties/shear_b2o3_vs_lpscl16_2x_prereg_2026_09_10.json",
+   "record": "db/properties/shear_b2o3_vs_lpscl16_2x_amendment_2026_10_14_bfgs_gate.json",
+   "amends": [
+    "D-2026-09-11-elastic-conv-threshold"
+   ],
+   "depends_on": [
+    "D-2026-09-11-elastic-conv-threshold"
+   ],
+   "supersedes": [],
+   "evidence": [
+    "db/properties/shear_b2o3_vs_lpscl16_2x_amendment_2026_10_14_bfgs_gate.json",
+    "kb/seminars/cascade_db_reading_2026_10_12.md",
+    "db/properties/shear_b2o3_vs_lpscl16_2x_amendment_2026_09_11.json"
+   ],
+   "method_ref": "tools/elastic/run_elastic_relaxedion_gabia.sh — 러너는 스텝 상한을 따로 걸지 않는다 (재개 때 pw.x 입력의 nstep 이 충분한지 확인)",
+   "reopen_criteria": "어느 점이든 BFGS 가 실패로 끝나면 (bfgs failed · 이력 리셋 반복 · SCF 불수렴) 그 점은 측정 불가로 닫고 원 규칙으로 돌아간다 — 그 계의 12점 fit 은 안 한다.",
+   "enforcement": "보고: 60 을 넘은 점이 들어간 Cij 는 '60-BFGS 게이트 사후 개정 (2026-10-14) 아래의 값' 으로 표기한다. 재개 순서는 D-2026-10-11-gabia-elastic-pause-li3nd-r2 그대로 (Li₃Nd r2 가 끝난 뒤).",
+   "proposed_by": "claude-session-2026-10-14 (friendly)",
+   "status": "active",
+   "status_history": [
+    {
+     "at": "2026-10-14",
+     "state": "proposed",
+     "by": "agent",
+     "note": "용훈 포메이션의 결정 항목 (권고: 12_± 뒤 한 번에)"
+    },
+    {
+     "at": "2026-10-14",
+     "state": "active",
+     "note": "1저자 결정 — 사용자 발화 'bgfs는 계속 끝날떄까지 보자' (게이트 개정 쪽) · 결과 본 뒤의 개정임을 기록"
+    }
+   ],
+   "ratification": {
+    "state": "ratified",
+    "role": "scientific_owner",
+    "actor_id": "yonghoon7153@gmail.com",
+    "timestamp": "2026-10-14T00:51:05Z",
+    "commit": "53084713fa3f45b30498af131ff3a5a54952e6be",
+    "⚠_digest_의_뜻": "`ratification` 을 뺀 결정 내용의 sha256 이다.",
+    "근거_발화": "용훈 포메이션 답 (2026-10-14 · 이 세션): '[우리 DFT 기준선] 탄성 60-BFGS 게이트 (13_m · 23_p 초과) …' → 'bgfs는 계속 끝날떄까지 보자'",
+    "decision_digest": "sha256:f51a92b30b2d6973c90466d02c34d7fedd22c48610fdec4ee4946bd0a0e2f52e"
    }
   }
  ]
