@@ -62,5 +62,5 @@
     "선례": ["db/properties/site_preference_raw_78.csv (cascade 교환 · 부호만)", "db/properties/y_site_preference_dft_2026_09_07.json (조성 균형 · 회신 BG 조건부)", "db/properties/ndo_lpscl16_site_stability_estimand_2026_10_14.json (같은 실행기 · 같은 어닐)"],
     "실행": "kgy · db/inputs/ndo_site_2026_10_14/run_uma_kgy.sh (CAND = B · Nd modelc10 · N_EXPECT 25 · SESSION site10_uma · WAIT_FOR ndsite_uma) · 기준상은 같은 실행기 --refs (전경 · 출력 uma_ref_relax · Nd 와 공용)"
   },
-  "8_아직_안_된_것": ["UMA 어닐 (kgy · Nd Rietveld 런 뒤 줄 섬)", "✅ Li₃PS₄ 구조 (2026-10-14 · db/structures/li3ps4_mp-985583.cif)", "기준상 UMA 이완 (kgy · run_uma_kgy.sh --refs · 사용자 실행 대기)"]
+  "8_아직_안_된_것": ["UMA 어닐 (kgy · Nd Rietveld 런 뒤 줄 섬)", "✅ Li₃PS₄ 구조 (2026-10-14 · db/structures/li3ps4_mp-985583.cif)", "✅ 기준상 UMA 이완 (2026-10-14 14:01 kgy · --refs · 둘 다 수렴 · 기록 db/properties/site_refs_uma_li2s_li3ps4_2026_10_14.json)"]
 }

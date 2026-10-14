@@ -219,7 +219,7 @@
     "✅ §6 계산 설정 기입 (2026-10-14 · kgy 출력) — 6 개 균일성은 고친 실행기 ① 출력으로 확정",
     "Q2 분해상 기저 (UMA/MP hull 로 고르기)",
     "UMA 어닐 23 개 (kgy · 실행기 run_uma_kgy.sh · 첫 시도는 실행기 버그로 발사 안 됨 → 고침)",
-    "✅ 기준상 구조 (2026-10-14 · Li₃PS₄ mp-985583 · Li₂S mp-1153) — UMA 이완은 run_uma_kgy.sh --refs (kgy · 사용자 실행 대기) · DFT 는 §6 설정으로",
+    "✅ 기준상 구조 (2026-10-14 · Li₃PS₄ mp-985583 · Li₂S mp-1153) — UMA 이완 ✅ 14:01 kgy (run_uma_kgy.sh --refs · 둘 다 수렴 · 기록 db/properties/site_refs_uma_li2s_li3ps4_2026_10_14.json) · DFT 는 §6 설정으로",
     "1저자 통지 · 동의"
   ]
 }
