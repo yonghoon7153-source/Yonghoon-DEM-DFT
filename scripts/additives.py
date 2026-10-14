@@ -14,9 +14,12 @@ small blob), evenly distributed through the box (optionally avoiding the fixed A
 Recipe → count chain (densities g/cm³, literature):
   AM(NMC811) 4.80 · SE(Li6PS5Cl) 2.00 · VGCF 2.00 · SuperP 1.90 · PTFE 2.20
   wt%  --(/ρ)-->  vol%  --(× solid_vol)-->  phase volume  --(/ vol-per-object)-->  N
+  ⚠ 2026-10-14 밤 — 위 값은 **gen1 세대** (기본값 · 옛 결과 전부) 다.  1저자 랩 표준 세대 `lab20261014` (AM 4.85 · SE 1.64) 와
+    세대 표는 `DENS_GENERATIONS` · `dens()` · 도구의 `--dens-gen` (docs/density_generations_20261014.md).
 VGCF Ø≈0.15 µm, L≈10 µm (aspect ≈67);  SuperP aggregate ≈0.2 µm.
 
   python3 scripts/additives.py            # demo: the two production recipes
+  python3 scripts/additives.py --dens-gen lab20261014   # 같은 데모를 랩 표준 밀도로 (세대 줄을 찍는다)
 """
 from __future__ import annotations
 import argparse
