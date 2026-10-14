@@ -1,0 +1,559 @@
+{
+ "slug": "wang2024_hot_pressed_lpscl_pressure_invariant_conductivity",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-10-14",
+ "sources": [
+  "3._Chemical_and_Electrochemical_Characterization_of_Hot-Pressed_Li6PS5Cl_Solid_State_Electrolyte_Operating_Pressure-Invariant_High_Ionic_Conductivity.pdf",
+  "3._Sup_Chemical_and_Electrochemical_Characterization_of_Hot-Pressed_Li6PS5Cl_Solid_State_Electrolyte_Operating_Pressure-Invariant_High_Ionic_Conductivity.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 2,
+   "file": "fig_1.png",
+   "caption": "Figure 1. a) Electrochemical impedance spectroscopy (EIS) spectra of Li/LPSCl/Li cells with 3 different masses of LPSCl pellets pressed at 150 °C and 300 MPa. b) The plot of apparent ionic conductivity of LPSCl pellets as a function of apparent density of the pellets.",
+   "rotated_deg": 0,
+   "bbox": [
+    67.9,
+    497.0,
+    527.4,
+    720.6
+   ],
+   "w": 1916,
+   "h": 933,
+   "dpi": 300,
+   "src": "3._Chemical_and_Electrochemical_Characterization_of_Hot-Pressed_Li6PS5Cl_Solid_State_Electrolyte_Operating_Pressure-Invariant_High_Ionic_Conductivity.pdf",
+   "blank": 0.942
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 3,
+   "file": "fig_2.png",
+   "caption": "Figure 2. a) Electrochemical impedance spectroscopy (EIS) spectra of Cu/LPSCl/Cu cells with LPSCl pellets pressed at 150 MPa, 300 MPa, 450 MPa respectively (pressing temperature is 150 °C and the pellet mass is 0.18 g). b) Zoomed in view of bulk impedance region of the cells.",
+   "rotated_deg": 0,
+   "bbox": [
+    84.4,
+    500.3,
+    510.9,
+    720.6
+   ],
+   "w": 1778,
+   "h": 919,
+   "dpi": 300,
+   "src": "3._Chemical_and_Electrochemical_Characterization_of_Hot-Pressed_Li6PS5Cl_Solid_State_Electrolyte_Operating_Pressure-Invariant_High_Ionic_Conductivity.pdf",
+   "blank": 0.905
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 4,
+   "file": "fig_3.png",
+   "caption": "Figure 3. a) Electrochemical impedance spectroscopy (EIS) spectra of Cu/LPSCl/Cu cells with LPSCl pellets pressed at 20 °C, 100 °C, 150 °C, 175 °C, and 200 °C respectively (Pressing pressure is 450 MPa and the pellet mass is 0.18 g). b) Zoomed in view of bulk impedance region of the cells. c) The plot of apparent ionic conductivity of LPSCl pellets as a function of pressing temperature.",
+   "rotated_deg": 0,
+   "bbox": [
+    80.3,
+    66.6,
+    514.9,
+    223.7
+   ],
+   "w": 1812,
+   "h": 656,
+   "dpi": 300,
+   "src": "3._Chemical_and_Electrochemical_Characterization_of_Hot-Pressed_Li6PS5Cl_Solid_State_Electrolyte_Operating_Pressure-Invariant_High_Ionic_Conductivity.pdf",
+   "blank": 0.91
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 5,
+   "file": "fig_4.png",
+   "caption": "Figure 4. a) Stacked, and b) overlaid normalized XRD spectra of LPSCl pellets pressed at 20 °C and 200 °C.",
+   "rotated_deg": 0,
+   "bbox": [
+    94.7,
+    66.6,
+    500.5,
+    258.1
+   ],
+   "w": 1692,
+   "h": 799,
+   "dpi": 300,
+   "src": "3._Chemical_and_Electrochemical_Characterization_of_Hot-Pressed_Li6PS5Cl_Solid_State_Electrolyte_Operating_Pressure-Invariant_High_Ionic_Conductivity.pdf",
+   "blank": 0.895
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 5,
+   "file": "fig_5.png",
+   "caption": "Figure 5. SEM surface images of LPSCl pellets pressed at a) 20 °C, b) 150 °C, and c) 200 °C. SEM cross-sectional images of pellets pressed at d) 20 °C, e) 150 °C, and f) 200 °C. Photos of pellets pressed at 20 °C, 150 °C, and 200 °C are aligned with their SEM images in the same column.",
+   "rotated_deg": 0,
+   "bbox": [
+    79.0,
+    537.3,
+    516.2,
+    720.6
+   ],
+   "w": 1822,
+   "h": 765,
+   "dpi": 300,
+   "src": "3._Chemical_and_Electrochemical_Characterization_of_Hot-Pressed_Li6PS5Cl_Solid_State_Electrolyte_Operating_Pressure-Invariant_High_Ionic_Conductivity.pdf",
+   "blank": 0.162
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 6,
+   "file": "fig_6.png",
+   "caption": "Figure 6. High resolution X-ray photoelectron spectroscopy (XPS) spectra of a) S 2p, b) P 2p, and c) Cl 2p of LPSCl pellet pressed at 20 °C and high resolution XPS spectra of d) S 2p, e) P 2p, and f) Cl 2p of LPSCl pellet pressed at 200 °C.",
+   "rotated_deg": 0,
+   "bbox": [
+    73.6,
+    66.6,
+    521.7,
+    310.5
+   ],
+   "w": 1868,
+   "h": 1017,
+   "dpi": 300,
+   "src": "3._Chemical_and_Electrochemical_Characterization_of_Hot-Pressed_Li6PS5Cl_Solid_State_Electrolyte_Operating_Pressure-Invariant_High_Ionic_Conductivity.pdf",
+   "blank": 0.89
+  },
+  {
+   "key": "f7",
+   "kind": "figure",
+   "label": "7",
+   "page": 7,
+   "file": "fig_7.png",
+   "caption": "Figure 7. a) Galvanostatic charging and discharging profiles of LPSCl pellets pressed at 20 °C and 200 °C after 100 cycles at 0.02 mAh cm−2 current density. Charge capacity per cycle is 0.02 mAh cm−2. b) Absolute impedance vs. cycle number profiles of Li/LPSCl/Li cells with pellets pressed at 20 °C and 200 °C during 100 cycles at 0.02 mAh cm−2 current density. Pressing pressure of the pellets is 450 MPa and the pellet mass is 0.18 g. Operational pressure is ~10 MPa.",
+   "rotated_deg": 0,
+   "bbox": [
+    84.2,
+    66.6,
+    511.0,
+    281.0
+   ],
+   "w": 1780,
+   "h": 894,
+   "dpi": 300,
+   "src": "3._Chemical_and_Electrochemical_Characterization_of_Hot-Pressed_Li6PS5Cl_Solid_State_Electrolyte_Operating_Pressure-Invariant_High_Ionic_Conductivity.pdf",
+   "blank": 0.873
+  },
+  {
+   "key": "f8",
+   "kind": "figure",
+   "label": "8",
+   "page": 7,
+   "file": "fig_8.png",
+   "caption": "Figure 8. a) Absolute impedance vs. aging time profiles of Li/LPSCl/Li cells with pellets pressed at 20 °C and 200 °C. b) Increase in impedance vs. aging time profiles of Li/LPSCl/Li cells with pellets pressed at 20 °C and 200 °C. Pressing pressure of the pellets is 450 MPa and the pellet mass is 0.18 g. Operational pressure is ~10 MPa.",
+   "rotated_deg": 0,
+   "bbox": [
+    72.5,
+    499.8,
+    522.8,
+    711.6
+   ],
+   "w": 1877,
+   "h": 883,
+   "dpi": 300,
+   "src": "3._Chemical_and_Electrochemical_Characterization_of_Hot-Pressed_Li6PS5Cl_Solid_State_Electrolyte_Operating_Pressure-Invariant_High_Ionic_Conductivity.pdf",
+   "blank": 0.918
+  },
+  {
+   "key": "f9",
+   "kind": "figure",
+   "label": "9",
+   "page": 8,
+   "file": "fig_9.png",
+   "caption": "Figure 9. Pressure dependence of ionic conductivity of LPSCl pellets pressed at a) 20 °C and b) 200 °C (pressing pressure 450 MPa, pellet mass 0.18 g), with the measuring pressure increasing from 0 to 8 MPa, followed by decreasing from 8 to 0 MPa. Cell configuration is Cu/LPSCl/Cu.",
+   "rotated_deg": 0,
+   "bbox": [
+    92.1,
+    513.7,
+    503.2,
+    720.5
+   ],
+   "w": 1714,
+   "h": 863,
+   "dpi": 300,
+   "src": "3._Chemical_and_Electrochemical_Characterization_of_Hot-Pressed_Li6PS5Cl_Solid_State_Electrolyte_Operating_Pressure-Invariant_High_Ionic_Conductivity.pdf",
+   "blank": 0.905
+  },
+  {
+   "key": "f10",
+   "kind": "figure",
+   "label": "10",
+   "page": 9,
+   "file": "fig_10.png",
+   "caption": "Figure 10. High resolution X-ray photoelectron spectroscopy (XPS) spectra of a) S 2p, b) P 2p, and c) Cl 2p of LPSCl pellet pressed at 20 °C and high resolution XPS spectra of d) S 2p, e) P 2p, and f) Cl 2p of LPSCl pellet pressed at 200 °C after both pellets were galvanostatic cycled in respective Li/LPSCl/Li cells for 100 cycles at 0.02 mAh cm−2 charge capacity per cycle.",
+   "rotated_deg": 0,
+   "bbox": [
+    77.7,
+    463.8,
+    517.6,
+    711.6
+   ],
+   "w": 1834,
+   "h": 1033,
+   "dpi": 300,
+   "src": "3._Chemical_and_Electrochemical_Characterization_of_Hot-Pressed_Li6PS5Cl_Solid_State_Electrolyte_Operating_Pressure-Invariant_High_Ionic_Conductivity.pdf",
+   "blank": 0.877
+  },
+  {
+   "key": "t1",
+   "kind": "table",
+   "label": "1",
+   "page": 3,
+   "file": "tab_1.png",
+   "caption": "Table 1. Results of measured pellet thicknesses, apparent densities, and apparent ionic conductivities of LPSCl pellets of different masses. [Mass 0.12/0.18/0.24 g · thickness 0.62/0.87/1.16 mm · density 1.53/1.64/1.64 g cm−3 · ionic conductivity 1.92/2.07/2.05 ×10−3 S cm−1; 150 °C, 300 MPa, Li/LPSCl/Li]",
+   "rotated_deg": 0,
+   "bbox": [
+    46.3,
+    66.2,
+    291.0,
+    144.3
+   ],
+   "w": 1021,
+   "h": 327,
+   "dpi": 300,
+   "src": "3._Chemical_and_Electrochemical_Characterization_of_Hot-Pressed_Li6PS5Cl_Solid_State_Electrolyte_Operating_Pressure-Invariant_High_Ionic_Conductivity.pdf",
+   "blank": 0.529
+  },
+  {
+   "key": "t2",
+   "kind": "table",
+   "label": "2",
+   "page": 3,
+   "file": "tab_2.png",
+   "caption": "Table 2. Results of measured pellet apparent densities and apparent ionic conductivities of 0.180 g of LPSCl pellets pressed at different pressures. [150/300/450 MPa · density 1.42/1.64/1.66 g cm−3 · ionic conductivity 1.92/2.62/2.93 ×10−3 S cm−1; 150 °C, Cu/LPSCl/Cu]",
+   "rotated_deg": 0,
+   "bbox": [
+    304.3,
+    66.2,
+    548.9,
+    131.0
+   ],
+   "w": 1021,
+   "h": 271,
+   "dpi": 300,
+   "src": "3._Chemical_and_Electrochemical_Characterization_of_Hot-Pressed_Li6PS5Cl_Solid_State_Electrolyte_Operating_Pressure-Invariant_High_Ionic_Conductivity.pdf",
+   "blank": 0.49
+  },
+  {
+   "key": "t3",
+   "kind": "table",
+   "label": "3",
+   "page": 4,
+   "file": "tab_3.png",
+   "caption": "Table 3. Results of measured pellet apparent densities and apparent ionic conductivities of 0.180 g of LPSCl pellets pressed at different temperatures. [20/100/150/175/200 °C · density 1.50/1.56/1.60/1.66/1.69 g cm−3 · ionic conductivity 0.66/1.61/2.67/2.98/3.56 ×10−3 S cm−1; 450 MPa, Cu/LPSCl/Cu]",
+   "rotated_deg": 0,
+   "bbox": [
+    46.3,
+    278.7,
+    548.9,
+    334.6
+   ],
+   "w": 2096,
+   "h": 234,
+   "dpi": 300,
+   "src": "3._Chemical_and_Electrochemical_Characterization_of_Hot-Pressed_Li6PS5Cl_Solid_State_Electrolyte_Operating_Pressure-Invariant_High_Ionic_Conductivity.pdf",
+   "blank": 0.601
+  },
+  {
+   "key": "t4",
+   "kind": "table",
+   "label": "4",
+   "page": 9,
+   "file": "tab_4.png",
+   "caption": "Table 4. Results of slopes and coefficients of determination (R2) of linear fitting curves pressure dependence test of ionic conductivity of LPSCl pellets pressed at 20 °C and 200 °C. [20 °C slope 57.62 / 58.44, R2 0.99 / 0.98; 200 °C slope 1.53 / 12.16, R2 0.05 / 0.26 (ascending / descending); printed unit \"S cm−1 P−1\" — magnitudes match µS cm−1 MPa−1 when checked against Fig. 9 (our check)]",
+   "rotated_deg": 0,
+   "bbox": [
+    46.3,
+    66.2,
+    548.9,
+    151.4
+   ],
+   "w": 2096,
+   "h": 356,
+   "dpi": 300,
+   "src": "3._Chemical_and_Electrochemical_Characterization_of_Hot-Pressed_Li6PS5Cl_Solid_State_Electrolyte_Operating_Pressure-Invariant_High_Ionic_Conductivity.pdf",
+   "blank": 0.67
+  },
+  {
+   "key": "fS1",
+   "kind": "figure",
+   "label": "S1",
+   "page": 3,
+   "file": "fig_S1.png",
+   "caption": "Figure S1 EIS spectra of Li/LPSCl/Li aging cells after 0 h, 600 h, and 1200 h of calendar aging, with LPSCl pellets pressed at a) 20 °C and b) 200 °C. The equivalent circuit used for deconvolution of these data is shown in Figure S2.",
+   "rotated_deg": 0,
+   "bbox": [
+    64.8,
+    110.7,
+    532.8,
+    350.0
+   ],
+   "w": 1950,
+   "h": 998,
+   "dpi": 300,
+   "src": "3._Sup_Chemical_and_Electrochemical_Characterization_of_Hot-Pressed_Li6PS5Cl_Solid_State_Electrolyte_Operating_Pressure-Invariant_High_Ionic_Conductivity.pdf",
+   "blank": 0.917
+  },
+  {
+   "key": "fS2",
+   "kind": "figure",
+   "label": "S2",
+   "page": 3,
+   "file": "fig_S2.png",
+   "caption": "Figure S2 Equivalent circuit of Li/LPSCl/Li symmetric cell in the measurement of ionic conductance of LPSCl pellet in thickness control study in Figure 1a, Figure S5, and Figure S6. [R1 contact impedance – R2/Q2 LPSCl bulk – R3/Q3 Li/LPSCl]",
+   "rotated_deg": 0,
+   "bbox": [
+    129.1,
+    512.2,
+    473.1,
+    613.2
+   ],
+   "w": 1435,
+   "h": 421,
+   "dpi": 300,
+   "src": "3._Sup_Chemical_and_Electrochemical_Characterization_of_Hot-Pressed_Li6PS5Cl_Solid_State_Electrolyte_Operating_Pressure-Invariant_High_Ionic_Conductivity.pdf",
+   "blank": 0.916
+  },
+  {
+   "key": "fS3",
+   "kind": "figure",
+   "label": "S3",
+   "page": 4,
+   "file": "fig_S3.png",
+   "caption": "Figure S3 Equivalent circuit of Cu/LPSCl/Cu symmetric cell in the measurement of ionic conductance of LPSCl pellet in pressing pressure control and temperature control studies in Figure 3 in the main text. [R1 contact resistance – R2/Q2 LPSCl bulk – R3/Q3 Cu/LPSCl – Q4 diffusion]",
+   "rotated_deg": 0,
+   "bbox": [
+    117.7,
+    105.0,
+    493.8,
+    205.5
+   ],
+   "w": 1568,
+   "h": 420,
+   "dpi": 300,
+   "src": "3._Sup_Chemical_and_Electrochemical_Characterization_of_Hot-Pressed_Li6PS5Cl_Solid_State_Electrolyte_Operating_Pressure-Invariant_High_Ionic_Conductivity.pdf",
+   "blank": 0.911
+  },
+  {
+   "key": "fS4",
+   "kind": "figure",
+   "label": "S4",
+   "page": 4,
+   "file": "fig_S4.png",
+   "caption": "Figure S4 Dual influence of pressing temperature and pressing pressure on a) apparent ionic conductivities of LPSCl pellets and b) density of LPSCl pellets. [Cu/LPSCl/Cu; 20 / 150 / 200 °C × 150 / 300 / 450 MPa; error bars shown, n and definition not stated]",
+   "rotated_deg": 0,
+   "bbox": [
+    74.1,
+    445.8,
+    542.0,
+    638.2
+   ],
+   "w": 1951,
+   "h": 803,
+   "dpi": 300,
+   "src": "3._Sup_Chemical_and_Electrochemical_Characterization_of_Hot-Pressed_Li6PS5Cl_Solid_State_Electrolyte_Operating_Pressure-Invariant_High_Ionic_Conductivity.pdf",
+   "blank": 0.94
+  },
+  {
+   "key": "fS5",
+   "kind": "figure",
+   "label": "S5",
+   "page": 5,
+   "file": "fig_S5.png",
+   "caption": "Figure S5 Survey spectra of LPSCl pellets pressed at a) 20 °C and b) 200 °C. Both pellets were made of 0.18 g LPSCl powder and pressed at 450 MPa.",
+   "rotated_deg": 0,
+   "bbox": [
+    72.0,
+    182.4,
+    540.0,
+    375.3
+   ],
+   "w": 1950,
+   "h": 804,
+   "dpi": 300,
+   "src": "3._Sup_Chemical_and_Electrochemical_Characterization_of_Hot-Pressed_Li6PS5Cl_Solid_State_Electrolyte_Operating_Pressure-Invariant_High_Ionic_Conductivity.pdf",
+   "blank": 0.927
+  },
+  {
+   "key": "fS6",
+   "kind": "figure",
+   "label": "S6",
+   "page": 6,
+   "file": "fig_S6.png",
+   "caption": "Figure S6 Survey spectra of LPSCl pellets pressed at a) 20 °C and b) 200 °C after being cycled in Li/LPSCl/Li symmetric cells for 100 cycles at 0.02 mAh cm-2 charge capacity per cycle. Both pellets were made of 0.18 g LPSCl powder and pressed at 450 MPa.",
+   "rotated_deg": 0,
+   "bbox": [
+    72.1,
+    213.0,
+    539.9,
+    405.8
+   ],
+   "w": 1950,
+   "h": 804,
+   "dpi": 300,
+   "src": "3._Sup_Chemical_and_Electrochemical_Characterization_of_Hot-Pressed_Li6PS5Cl_Solid_State_Electrolyte_Operating_Pressure-Invariant_High_Ionic_Conductivity.pdf",
+   "blank": 0.925
+  },
+  {
+   "key": "x0",
+   "kind": "text",
+   "label": "p1-abstract",
+   "page": 1,
+   "file": "txt_p1_abstract.png",
+   "caption": "PDF p.1 abstract: \"near-theoretical ionic conductivity\" · \"no chemical changes … after hot pressing up to 250 °C\" · \"near-theoretical conductivities at external pressures below 14 MPa\" (data shown: pressing ≤ 200 °C, measuring pressure 0–7.9 MPa in Fig. 9).",
+   "rotated_deg": 0,
+   "bbox": [
+    44.0,
+    222.0,
+    551.0,
+    372.0
+   ],
+   "w": 2113,
+   "h": 625,
+   "dpi": 300,
+   "src": "3._Chemical_and_Electrochemical_Characterization_of_Hot-Pressed_Li6PS5Cl_Solid_State_Electrolyte_Operating_Pressure-Invariant_High_Ionic_Conductivity.pdf",
+   "blank": 0.013,
+   "manual_crop": "text-region crop at 300 dpi (evidence for card quotes) (2026-10-14)"
+  },
+  {
+   "key": "x1",
+   "kind": "text",
+   "label": "p2-thickness-density-1.64",
+   "page": 2,
+   "file": "txt_p2_density_164.png",
+   "caption": "PDF p.2 right column: thickness by micrometer after removal from the press → apparent density; \"Compared to the theoretical density of LPSCl (1.64 g cm−3), the 0.180 g pellet shows nearly 100 % densification and the 0.120 g and 0.240 g pellet show 93.2 % and 99.8 %\" — no citation attached to 1.64.",
+   "rotated_deg": 0,
+   "bbox": [
+    303.0,
+    375.0,
+    550.0,
+    473.0
+   ],
+   "w": 1030,
+   "h": 409,
+   "dpi": 300,
+   "src": "3._Chemical_and_Electrochemical_Characterization_of_Hot-Pressed_Li6PS5Cl_Solid_State_Electrolyte_Operating_Pressure-Invariant_High_Ionic_Conductivity.pdf",
+   "blank": 0.836,
+   "manual_crop": "text-region crop at 300 dpi (evidence for card quotes) (2026-10-14)"
+  },
+  {
+   "key": "x2",
+   "kind": "text",
+   "label": "p3-densification-ref35",
+   "page": 3,
+   "file": "txt_p3_densification_ref35.png",
+   "caption": "PDF p.3 top (both columns): \"densification respectively\" (continuation of the 1.64 sentence) · σ linear in density (R2 0.982) · \"pressing pressure has the most direct impact on the densification … grain boundary reduction.[35]\" ([35] = Doux et al. AEM 2020, cited for this sentence, not for 1.64) · \"calculated densities are near ~100 % of the theoretical density\" · press limit 450 MPa.",
+   "rotated_deg": 0,
+   "bbox": [
+    46.0,
+    158.0,
+    550.0,
+    302.0
+   ],
+   "w": 2101,
+   "h": 601,
+   "dpi": 300,
+   "src": "3._Chemical_and_Electrochemical_Characterization_of_Hot-Pressed_Li6PS5Cl_Solid_State_Electrolyte_Operating_Pressure-Invariant_High_Ionic_Conductivity.pdf",
+   "blank": 0.849,
+   "manual_crop": "text-region crop at 300 dpi (evidence for card quotes) (2026-10-14)"
+  },
+  {
+   "key": "x3",
+   "kind": "text",
+   "label": "p8-pressure-dependence",
+   "page": 8,
+   "file": "txt_p8_pressure_dependence.png",
+   "caption": "PDF p.8 right column: industry operating pressure < 10 MPa (ideally < 1 MPa); custom load frame + load cell; 0–1000 N ≈ 0–8 MPa; cold-pressed pellet strongly pressure dependent (Table 4); hot-pressed \"nearly constant ionic conductivity of approximately 2.74×10−3 S cm−1\"; cold-pressed descending > ascending = \"additional densification … during the testing\".",
+   "rotated_deg": 0,
+   "bbox": [
+    303.0,
+    63.0,
+    550.0,
+    462.0
+   ],
+   "w": 1030,
+   "h": 1663,
+   "dpi": 300,
+   "src": "3._Chemical_and_Electrochemical_Characterization_of_Hot-Pressed_Li6PS5Cl_Solid_State_Electrolyte_Operating_Pressure-Invariant_High_Ionic_Conductivity.pdf",
+   "blank": 0.833,
+   "manual_crop": "text-region crop at 300 dpi (evidence for card quotes) (2026-10-14)"
+  },
+  {
+   "key": "x4",
+   "kind": "text",
+   "label": "p10-methods-pellet",
+   "page": 10,
+   "file": "txt_p10_methods_pellet.png",
+   "caption": "PDF p.10 right column (Experimental Methods): MSE Supplies LPSCl powder; MTI hydraulic press; temperature-controlled die set (25–250 °C), 12.7 mm; heated then heater off, pressure maintained until die < 60 °C; masses 0.120/0.180/0.240 g; 150/300/450 MPa; 20/100/150/175/200 °C; digital micrometer thickness; Cu foil discs co-pressed as blocking electrodes; area 1.27 cm2.",
+   "rotated_deg": 0,
+   "bbox": [
+    303.0,
+    126.0,
+    550.0,
+    346.0
+   ],
+   "w": 1030,
+   "h": 917,
+   "dpi": 300,
+   "src": "3._Chemical_and_Electrochemical_Characterization_of_Hot-Pressed_Li6PS5Cl_Solid_State_Electrolyte_Operating_Pressure-Invariant_High_Ionic_Conductivity.pdf",
+   "blank": 0.818,
+   "manual_crop": "text-region crop at 300 dpi (evidence for card quotes) (2026-10-14)"
+  },
+  {
+   "key": "x5",
+   "kind": "text",
+   "label": "p11-methods-cells-eis-pressure",
+   "page": 11,
+   "file": "txt_p11_methods_cells.png",
+   "caption": "PDF p.11 left column (Experimental Methods): Li cells held by manual press at ~10 MPa; EIS Bio-Logic VSP 1 MHz–100 mHz, 10 mV, \"two R/CPE … LPE and bulk LGPS\" (text remnant); galvanostatic 0.02 mA cm−2, 1 h; aging protocol on \"Li/LGPS/Li\" (text remnant); pressure test: MTI split coin cell PSC20P + load cell HBM U93 in load frame, springs, spirit levels, Biologic SP-300 PEIS 7 MHz–100 mHz, 10 mV, 6 pts/decade, 50 N steps 0→1000→0 N, VINCA micrometer, σ from local minimum before the blocking tail.",
+   "rotated_deg": 0,
+   "bbox": [
+    46.0,
+    62.0,
+    291.0,
+    622.0
+   ],
+   "w": 1022,
+   "h": 2334,
+   "dpi": 300,
+   "src": "3._Chemical_and_Electrochemical_Characterization_of_Hot-Pressed_Li6PS5Cl_Solid_State_Electrolyte_Operating_Pressure-Invariant_High_Ionic_Conductivity.pdf",
+   "blank": 0.827,
+   "manual_crop": "text-region crop at 300 dpi (evidence for card quotes) (2026-10-14)"
+  },
+  {
+   "key": "x6",
+   "kind": "text",
+   "label": "p12-ref35",
+   "page": 12,
+   "file": "txt_p12_ref35.png",
+   "caption": "PDF p.12 reference [35]: J.-M. Doux, H. Nguyen, D. H. S. Tan, A. Banerjee, X. Wang, E. A. Wu, C. Jo, H. Yang, Y. S. Meng, Adv. Energy Mater. 2020, 10, 1903253.",
+   "rotated_deg": 0,
+   "bbox": [
+    46.0,
+    402.5,
+    291.0,
+    421.5
+   ],
+   "w": 1022,
+   "h": 80,
+   "dpi": 300,
+   "src": "3._Chemical_and_Electrochemical_Characterization_of_Hot-Pressed_Li6PS5Cl_Solid_State_Electrolyte_Operating_Pressure-Invariant_High_Ionic_Conductivity.pdf",
+   "blank": 0.838,
+   "manual_crop": "text-region crop at 300 dpi (evidence for card quotes) (2026-10-14)"
+  }
+ ]
+}
