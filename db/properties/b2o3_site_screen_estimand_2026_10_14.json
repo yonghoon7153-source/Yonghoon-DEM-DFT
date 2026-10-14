@@ -1,0 +1,65 @@
+{
+  "schema": "estimand_card/v1",
+  "kind": "estimand",
+  "id": "b2o3_site_screen_2026_10_14",
+  "제목": "B₂O₃-LPSCl1.6 — B 자리 (P 4b 대 Li) UMA 빠른 탐색 · 정본 LPSCl1.6 10 f.u. · 보상까지 맞춘 조성 균형",
+  "status": "proposed",
+  "written_on": "2026-10-14",
+  "트랙": {
+    "이름": "우리 DFT 기준선 (B₂O₃)",
+    "1저자": "사용자 — 결정이 그 자리에서 난다 · 통지할 제3자 없음",
+    "사용자_발화_2026_10_14": [
+      "b2o3에서 b가 li 보다 p 를 더 선호한다는 내용은 repo에 남아있나? 결국에는 mlip로 구한거긴 한데",
+      "Cascade에서 말고",
+      "만약에 없으면 빠르게 uma로 screening 해봐도 돼 nd 때처럼",
+      "lpscl1.6 구조에서 해야되는거 아닌지? · 5fu 기존에 있는거에 · 그래서 10fu에서 했던거 같은데 · nd2o3가 들어가야되니까 2개 3개씩"
+    ]
+  },
+  "왜": "cascade 밖에서 B 자리를 계산으로 비교한 기록이 없다 (kb/results/site_preference_findings_2026_06_19.md 2026-10-14 줄 — repo · gabia b2o3md · KISTI 백업 A/B 를 봤다). 있는 것은 cascade UMA 같은 조성 교환 (x 0.02 Li · 0.05/0.10 P — 밀려난 P 의 antisite 벌점 포함) 과 반경 필터가 정한 P_4b 챔피언뿐이다.",
+  "⚠_결과_보기_전에_썼다": "UMA 어닐 결과 0 건. cascade 교환의 부호 (농도 따라 뒤집힘) 는 이미 봤다 — 그래서 '경계선' 으로 나와도 받아들이는 문장을 지금 박는다.",
+  "1_무엇을_원하는가": "정본 LPSCl1.6 에 B₂O₃ 1 단위 (B 2 · O 3) 가 들어갈 때, B 가 P 자리 (Li 를 더해 보상) 와 Li 자리 (공공으로 보상) 중 어느 쪽에서 UMA 에너지가 낮은가.",
+  "1b_설계_선언": {
+    "substitution_mode": "lattice",
+    "host": "db/structures/modelc_V0_k663.xyz (정본 LPSCl1.6 5 f.u.) × (1,1,2) = 10 f.u. · Li54P10S44Cl16 · **Cl 배열 고정** (Ewald 로 다시 뽑지 않는다)",
+    "모델": {
+      "B@P": "Li58P8B2S41O3Cl16 (128 원자) — B 가 4b · B 하나당 Li 2 추가 (B₂O₃ 캠페인 조성과 같다)",
+      "B@Li": "Li48P10B2S41O3Cl16 (120 원자) — B 가 Li 자리 · B 하나당 Li 3 제거 (치환 1 + 공공 2)",
+      "차이": "B@P − B@Li = (+10 Li, −2 P) = B 하나당 (+5 Li, −1 P) = 4 Li₂S − Li₃PS₄"
+    },
+    "O": "S_16e · 세 O 가 서로 다른 PS₄ (생성 뒤 거름)",
+    "농도": "B/(B+P) 0.2 (10 f.u. 에 B 2)",
+    "생성": "db/inputs/ndo_site_2026_10_14/make_candidates.py --host modelc10 --compound B2O3 --n_each 6 --n_seeds 100 → db/inputs/b2o3_site_2026_10_14/candidates_modelc10/ (두 모델 같은 도구 substitute_compound · 공공 random/near_cation × 시드 100 → 형식전하 Ewald 서로 다른 상위 6)",
+    "같은_자리_배치": "같은 시드라 Nd₂O₃ modelc10 후보와 도펀트 자리가 같다 — Nd 와 B 를 같은 배치로 비교할 수 있다"
+  },
+  "1c_답하지_않는_것": ["DFT 자리선호 (UMA 내부 값이다)", "x 0.02 · 0.05 의 크기", "고용 한계 · 보레이트 분리 (b2o3_mechanism_correction_2026_09_12 의 '분리' 는 다른 질문)", "저장소 무관 자리선호 — Li₃PS₄/Li₂S 교환에 조건부"],
+  "2_재는_양": {
+    "식": "ΔG_site(UMA) = { [E(B@P) − E(B@Li)] − n_B·[4·E(Li₂S) − E(Li₃PS₄)] } / n_B",
+    "E": "각 모델 = UMA 어닐 (500 K × 20 ps) + 이완 (셀 포함) 뒤 에너지의 **모델별 최저** (후보 6 개 중)",
+    "기준상": "Li₂S (db/structures/sei_li2s_mp-1153) · Li₃PS₄ (MP 바닥 다형 · gabia MP 키로 받는다) — UMA 이완",
+    "부호": "> 0 ⇒ P 자리 불리 (Li 자리 유리)"
+  },
+  "3_잘_정의되는가": "배치가 여럿 → 두 모델 같은 예산 (6 개 · 같은 어닐) · 모델별 최저. 보상 방식은 모델 조건으로 선언했다. UMA 가 B–S/B–O 화학을 얼마나 맞히는지는 이 카드가 검증하지 않는다.",
+  "4_게이트_결과_보기_전에": {
+    "G1": "두 모델 6 + 6 개 · host 1 · 기준상 2 가 다 있어야 계산한다",
+    "G2_여유": "|ΔG_site| < 0.20 eV/B 면 'UMA 로 가를 수 없다 (경계선)' 로 쓴다",
+    "G3_모델_안_산포": "모델별 최저와 둘째의 차를 같이 적는다 — 최저가 한 배치에만 기대면 그 사실을 적는다"
+  },
+  "5_허용_서술_금지_서술": {
+    "허용": [
+      "'UMA 내부 비교로 (정본 LPSCl1.6 10 f.u. · Li₃PS₄/Li₂S 교환 기준), B@P 가 B@Li 보다 X eV/B 낮다(높다).'",
+      "'cascade 같은 조성 교환과 달리 보상까지 맞춘 비교다.'",
+      "|ΔG| < 0.20: 'UMA 로는 경계선이다.'"
+    ],
+    "금지": [
+      "⛔ DFT 자리선호라고 부르지 않는다 · 'B 는 P 를 선호한다' 를 UMA 표지 없이 쓰지 않는다",
+      "⛔ ΔG_site 를 E_above_hull 이라 부르지 않는다",
+      "⛔ x 0.2 의 크기를 다른 농도로 옮기지 않는다",
+      "⛔ 이 결과로 B₂O₃ MD 축 (닫힘 · HZ-b2o3-md-ea) 을 다시 열지 않는다"
+    ]
+  },
+  "6_규약_대조": {
+    "선례": ["db/properties/site_preference_raw_78.csv (cascade 교환 · 부호만)", "db/properties/y_site_preference_dft_2026_09_07.json (조성 균형 · 회신 BG 조건부)", "db/properties/ndo_lpscl16_site_stability_estimand_2026_10_14.json (같은 실행기 · 같은 어닐)"],
+    "실행": "kgy · db/inputs/ndo_site_2026_10_14/run_uma_kgy.sh (CAND = B · Nd modelc10 · N_EXPECT 25 · SESSION site10_uma · WAIT_FOR ndsite_uma)"
+  },
+  "8_아직_안_된_것": ["UMA 어닐 (kgy · Nd Rietveld 런 뒤 줄 섬)", "Li₃PS₄ 구조 받기 (gabia MP)", "기준상 UMA 이완"]
+}

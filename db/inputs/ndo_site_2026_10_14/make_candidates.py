@@ -24,7 +24,9 @@ M_Li 도 host 할로겐 배열 H 개에서 출발시켜 같은 자유도를 준�
 
 사용:
   python3 db/inputs/ndo_site_2026_10_14/make_candidates.py --selftest
-  python3 db/inputs/ndo_site_2026_10_14/make_candidates.py --out db/inputs/ndo_site_2026_10_14/candidates
+  python3 db/inputs/ndo_site_2026_10_14/make_candidates.py --out db/inputs/ndo_site_2026_10_14/candidates            # Rietveld 5 f.u.
+  python3 db/inputs/ndo_site_2026_10_14/make_candidates.py --host modelc10 --compound B2O3 --n_each 6 --n_seeds 100 \\
+      --out db/inputs/b2o3_site_2026_10_14/candidates_modelc10                                                     # 정본 LPSCl1.6 10 f.u.
 """
 from __future__ import annotations
 
@@ -42,7 +44,8 @@ from b2o3_enumerate import ewald_matrix, ewald_energy          # noqa: E402  (�
 RIETVELD = REPO / "db/structures/ndo_lpscl16_rietveld_2026_09_07/00_SOURCE_Rietveld_NdO_LPSCl1.6.cif"
 ENUM = REPO / "tools/doping/b2o3_enumerate.py"
 SUBST = REPO / "tools/doping/substitute_compound.py"
-Q = {"Li": 1, "P": 5, "Nd": 3, "S": -2, "O": -2, "Cl": -1}
+Q = {"Li": 1, "P": 5, "Nd": 3, "B": 3, "S": -2, "O": -2, "Cl": -1}
+MODELC_V0 = REPO / "db/structures/modelc_V0_k663.xyz"   # 정본 LPSCl1.6 5 f.u. (Cl 배열 고정)
 WANT = {"MP": {"Cl": 8, "Li": 31, "Nd": 2, "O": 3, "P": 3, "S": 19},
         "MLi": {"Cl": 8, "Li": 21, "Nd": 2, "O": 3, "P": 5, "S": 19},
         "host": {"Cl": 8, "Li": 27, "P": 5, "S": 22}}
@@ -53,13 +56,70 @@ def comp(atoms):
     return dict(Counter(atoms.get_chemical_symbols()))
 
 
-def check(atoms, kind):
+def check(atoms, kind, want=None, cell=None):
+    want = want or WANT; cell = cell or CELL
     c = comp(atoms)
-    if c != WANT[kind]:
-        raise ValueError(f"{kind}: 조성 {c} ≠ 카드 {WANT[kind]}")
+    if c != want[kind]:
+        raise ValueError(f"{kind}: 조성 {c} ≠ 카드 {want[kind]}")
     cp = [round(float(x), 4) for x in atoms.cell.cellpar()]
-    if any(abs(a - b) > 2e-3 for a, b in zip(cp, CELL)):
-        raise ValueError(f"{kind}: 셀 {cp} ≠ Rietveld 5 f.u. 셀 {CELL}")
+    if any(abs(a - b) > 2e-3 for a, b in zip(cp, cell)):
+        raise ValueError(f"{kind}: 셀 {cp} ≠ 기대 셀 {cell}")
+
+
+def want_modelc10(compound):
+    """정본 modelc 1×1×2 (10 f.u. · Li54P10S44Cl16) 에 M2O3 1 단위 — M@P 는 Li +4 · M@Li 는 Li −6 (치환 2 + 공공 4)."""
+    M = {"Nd2O3": "Nd", "B2O3": "B"}.get(compound)
+    if M is None:
+        raise ValueError(f"modelc10 은 Nd2O3 · B2O3 만 (받은 것 {compound})")
+    return M, {"MP": {"Cl": 16, "Li": 58, M: 2, "O": 3, "P": 8, "S": 41},
+               "MLi": {"Cl": 16, "Li": 48, M: 2, "O": 3, "P": 10, "S": 41},
+               "host": {"Cl": 16, "Li": 54, "P": 10, "S": 44}}
+
+
+def build_modelc10(out, compound, n_each, n_seeds):
+    """정본 LPSCl1.6 (modelc V0 · Cl 배열 고정) 1×1×2 에서 M@P · M@Li 를 같은 도구 (substitute_compound) 로 같은 예산.
+    사용자 2026-10-14: 'lpscl1.6 구조에서 · 5fu 기존에 있는거에 · 10fu · nd2o3 가 들어가야되니까 2개 3개씩'."""
+    out = Path(out); tmp = Path(tempfile.mkdtemp(prefix="site10_"))
+    M, want = want_modelc10(compound)
+    host = read(MODELC_V0) * (1, 1, 2)
+    hpath = tmp / "modelc_1x1x2.xyz"; write(hpath, host, format="extxyz")
+    cell = [round(float(x), 4) for x in host.cell.cellpar()]
+    check(host, "host", want, cell)
+    cmds, sel, stats = [], {}, {}
+    for kind, site, seed0 in (("MP", "P_4b", 2000), ("MLi", "Li_24g", 4000)):
+        items, n_gen, n_rej = [], 0, 0
+        for k, meth in enumerate(("random", "near_cation")):
+            d = tmp / f"{kind}_{meth}"
+            c = [sys.executable, SUBST, "--base", hpath, "--compound", compound, "--x_compound", 0.25,
+                 "--cation_site", site, "--anion_site", "S_16e", "--method", "random", "--vacancy_method", meth,
+                 "--seed", seed0 + 500 * k, "--n_seeds", n_seeds, "--out", d]
+            run(c); cmds.append(" ".join(map(str, c)))
+            for f in sorted(d.glob("*.xyz")):
+                a = read(f); n_gen += 1
+                check(a, kind, want, cell)
+                if not o_on_distinct_ps4(a):
+                    n_rej += 1; continue
+                items.append((ewald(a), f))
+        sel[kind] = distinct_top(items, n_each)
+        stats[kind] = {"generated": n_gen, "rejected_O_same_PS4": n_rej, "pool": len(items), "kept": len(sel[kind])}
+    sel["host"] = [(ewald(host), hpath)]
+    man = {"card": "db/properties/ndo_lpscl16_site_stability_estimand_2026_10_14.json (Nd) · db/properties/b2o3_site_screen_estimand_2026_10_14.json (B)",
+           "host": "modelc_V0_k663 × (1,1,2) — 정본 Cl 배열 고정 (Ewald 로 다시 뽑지 않는다)", "compound": compound,
+           "git_head": run(["git", "-C", REPO, "rev-parse", "HEAD"]).strip(), "commands": cmds,
+           "budget": {"n_each": n_each, "seeds_per_vacancy_method": n_seeds, "vacancy_methods": ["random", "near_cation"]},
+           "stats": stats, "files": {}}
+    for kind, chosen in sel.items():
+        (out / kind).mkdir(parents=True, exist_ok=True)
+        for i, (e, src) in enumerate(chosen):
+            a = read(src); check(a, kind, want, cell)
+            if kind != "host" and not o_on_distinct_ps4(a):
+                raise ValueError(f"{kind}: 거르기 뒤에 O 가 같은 PS4 에 있다")
+            dst = out / kind / f"{M}{kind}_{i:02d}.xyz"
+            write(dst, a, format="extxyz")
+            man["files"][str(dst.relative_to(out))] = {"source": f"{Path(src).parent.name}/{Path(src).name}",
+                                                       "ewald_eV": round(e, 4), "sha256": sha(dst)}
+    (out / "manifest.json").write_text(json.dumps(man, ensure_ascii=False, indent=1) + "\n")
+    return man
 
 
 def ewald(atoms):
@@ -189,6 +249,14 @@ def _selftest():
         return Atoms("P2O2", positions=[[0, 0, 0], [5, 0, 0], [1.55, 0, 0], o2], cell=[12, 12, 12], pbc=True)
     chk(o_on_distinct_ps4(mk([6.55, 0, 0])), "O 둘이 서로 다른 P 에 붙으면 통과")
     chk(not o_on_distinct_ps4(mk([0, 1.55, 0])), "[negative] O 둘이 같은 P 에 붙으면 거른다")
+    M, w = want_modelc10("B2O3")
+    chk(M == "B" and w["MP"]["Li"] - w["MLi"]["Li"] == 10 and w["MLi"]["P"] - w["MP"]["P"] == 2,
+        "modelc10: M@P − M@Li = (+10 Li, −2 P) — 카드의 4 Li₂S − Li₃PS₄ 교환과 닫힌다")
+    chk(all(sum(Q[e] * n for e, n in w[k].items()) == 0 for k in w), "modelc10 세 조성 모두 전하 중성")
+    try:
+        want_modelc10("Al2O3"); chk(False, "[negative] 카드에 없는 화합물은 멈춰야 한다")
+    except ValueError:
+        ok += 1
     print(f"selftest PASS ({ok})")
 
 
@@ -200,10 +268,17 @@ if __name__ == "__main__":
     ap.add_argument("--n_host_seed", type=int, default=5)
     ap.add_argument("--n_seeds", type=int, default=40)
     ap.add_argument("--n_near", type=int, default=10)
+    ap.add_argument("--host", choices=["rietveld5", "modelc10"], default="rietveld5",
+                    help="rietveld5 = 1저자 Rietveld 5 f.u. (Nd 카드 기본) · modelc10 = 정본 LPSCl1.6 1×1×2 (Cl 배열 고정)")
+    ap.add_argument("--compound", choices=["Nd2O3", "B2O3"], default="Nd2O3", help="modelc10 에서만")
     A = ap.parse_args()
     if A.selftest:
         _selftest()
     else:
-        m = build(A.out, A.n_each, A.n_host_seed, A.n_seeds, A.n_near)
-        print(json.dumps({k: m[k] for k in ("M_P_pool", "M_Li_generated", "M_Li_rejected_O_same_PS4", "M_Li_pool_after_filter")}, ensure_ascii=False))
+        if A.host == "modelc10":
+            m = build_modelc10(A.out, A.compound, A.n_each, A.n_seeds)
+            print(json.dumps(m["stats"], ensure_ascii=False))
+        else:
+            m = build(A.out, A.n_each, A.n_host_seed, A.n_seeds, A.n_near)
+            print(json.dumps({k: m[k] for k in ("M_P_pool", "M_Li_generated", "M_Li_rejected_O_same_PS4", "M_Li_pool_after_filter")}, ensure_ascii=False))
         print(f"files {len(m['files'])} → {A.out}/manifest.json")

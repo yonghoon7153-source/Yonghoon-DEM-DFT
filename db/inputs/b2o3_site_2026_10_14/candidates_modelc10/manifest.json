@@ -1,0 +1,101 @@
+{
+ "card": "db/properties/ndo_lpscl16_site_stability_estimand_2026_10_14.json (Nd) · db/properties/b2o3_site_screen_estimand_2026_10_14.json (B)",
+ "host": "modelc_V0_k663 × (1,1,2) — 정본 Cl 배열 고정 (Ewald 로 다시 뽑지 않는다)",
+ "compound": "B2O3",
+ "git_head": "4be682d644edecdc371c454f2e2868cef1285b36",
+ "commands": [
+  "/usr/bin/python3 /home/user/Yonghoon-DEM-DFT/tools/doping/substitute_compound.py --base /tmp/site10_b1exj197/modelc_1x1x2.xyz --compound B2O3 --x_compound 0.25 --cation_site P_4b --anion_site S_16e --method random --vacancy_method random --seed 2000 --n_seeds 100 --out /tmp/site10_b1exj197/MP_random",
+  "/usr/bin/python3 /home/user/Yonghoon-DEM-DFT/tools/doping/substitute_compound.py --base /tmp/site10_b1exj197/modelc_1x1x2.xyz --compound B2O3 --x_compound 0.25 --cation_site P_4b --anion_site S_16e --method random --vacancy_method near_cation --seed 2500 --n_seeds 100 --out /tmp/site10_b1exj197/MP_near_cation",
+  "/usr/bin/python3 /home/user/Yonghoon-DEM-DFT/tools/doping/substitute_compound.py --base /tmp/site10_b1exj197/modelc_1x1x2.xyz --compound B2O3 --x_compound 0.25 --cation_site Li_24g --anion_site S_16e --method random --vacancy_method random --seed 4000 --n_seeds 100 --out /tmp/site10_b1exj197/MLi_random",
+  "/usr/bin/python3 /home/user/Yonghoon-DEM-DFT/tools/doping/substitute_compound.py --base /tmp/site10_b1exj197/modelc_1x1x2.xyz --compound B2O3 --x_compound 0.25 --cation_site Li_24g --anion_site S_16e --method random --vacancy_method near_cation --seed 4500 --n_seeds 100 --out /tmp/site10_b1exj197/MLi_near_cation"
+ ],
+ "budget": {
+  "n_each": 6,
+  "seeds_per_vacancy_method": 100,
+  "vacancy_methods": [
+   "random",
+   "near_cation"
+  ]
+ },
+ "stats": {
+  "MP": {
+   "generated": 200,
+   "rejected_O_same_PS4": 128,
+   "pool": 72,
+   "kept": 6
+  },
+  "MLi": {
+   "generated": 200,
+   "rejected_O_same_PS4": 48,
+   "pool": 152,
+   "kept": 6
+  }
+ },
+ "files": {
+  "MP/BMP_00.xyz": {
+   "source": "MP_near_cation/B2O3_x250_s84.xyz",
+   "ewald_eV": -2246.0156,
+   "sha256": "72197b5baf692efc532dbe8e25c61529b080d9d089a50fb67b88deef7e5e3b29"
+  },
+  "MP/BMP_01.xyz": {
+   "source": "MP_random/B2O3_x250_s63.xyz",
+   "ewald_eV": -2245.9932,
+   "sha256": "106425246211b0b68331786de87e13087db6640da345abe8569239711c5f7ee0"
+  },
+  "MP/BMP_02.xyz": {
+   "source": "MP_near_cation/B2O3_x250_s26.xyz",
+   "ewald_eV": -2241.8888,
+   "sha256": "4276571450838421408ed7aa1edf3891572dc9461cdaf76318ab2f36142e236b"
+  },
+  "MP/BMP_03.xyz": {
+   "source": "MP_random/B2O3_x250_s79.xyz",
+   "ewald_eV": -2241.8355,
+   "sha256": "5e075d67091b6ada118fc5f3075ae510a8a8a5a02fddd7c36cc26da27b5ac242"
+  },
+  "MP/BMP_04.xyz": {
+   "source": "MP_near_cation/B2O3_x250_s68.xyz",
+   "ewald_eV": -2241.1463,
+   "sha256": "caea51c505cc34b63fd2b65ba61217301156df2e59820a56073103c3bc614cef"
+  },
+  "MP/BMP_05.xyz": {
+   "source": "MP_random/B2O3_x250_s17.xyz",
+   "ewald_eV": -2230.8276,
+   "sha256": "a6a54c5f1a5d0f2f6aa5870b1186c8508e1589159dbeb05fb3291677117073ad"
+  },
+  "MLi/BMLi_00.xyz": {
+   "source": "MLi_near_cation/B2O3_x250_s27.xyz",
+   "ewald_eV": -2420.2334,
+   "sha256": "599c9ff608df78ea559fe913ab5ea5986e58dd01257a41c8e7d05213cbfff2da"
+  },
+  "MLi/BMLi_01.xyz": {
+   "source": "MLi_near_cation/B2O3_x250_s31.xyz",
+   "ewald_eV": -2418.5975,
+   "sha256": "b1cfc88b1ffe55ef58855c4b625b1a87560c4da4e9d3d7041ab52e6c6fc208a2"
+  },
+  "MLi/BMLi_02.xyz": {
+   "source": "MLi_near_cation/B2O3_x250_s90.xyz",
+   "ewald_eV": -2418.3314,
+   "sha256": "a36dfa4bd66aab2603569adb20706cde39c48fe1cccb8c6aa86a2a556f2c2a3f"
+  },
+  "MLi/BMLi_03.xyz": {
+   "source": "MLi_near_cation/B2O3_x250_s40.xyz",
+   "ewald_eV": -2418.0366,
+   "sha256": "918701ad87c971c1e8f066ea1368cabb813d4e672d38eb489a01e3d0495ffbce"
+  },
+  "MLi/BMLi_04.xyz": {
+   "source": "MLi_near_cation/B2O3_x250_s53.xyz",
+   "ewald_eV": -2415.5126,
+   "sha256": "dbe3329bba14a986e42fb4d73569adcedc4e53660c149845f3abbfd79a9c911f"
+  },
+  "MLi/BMLi_05.xyz": {
+   "source": "MLi_near_cation/B2O3_x250_s92.xyz",
+   "ewald_eV": -2415.1651,
+   "sha256": "9641a02f65f661c10c3509bdb8e80f49366ad6c2797e4700e3401e2bff72771d"
+  },
+  "host/Bhost_00.xyz": {
+   "source": "site10_b1exj197/modelc_1x1x2.xyz",
+   "ewald_eV": -2389.4513,
+   "sha256": "6f55983da879498f40107ddd5dbd9acec3daa12adffead6bac8e1b2826b7f720"
+  }
+ }
+}

@@ -65,6 +65,14 @@
       "M_P": "4b",
       "M_Li": "48h",
       "O": "16e"
+    },
+    "보조_host_modelc10_2026_10_14": {
+      "사용자_발화": "lpscl1.6 구조에서 해야되는거 아닌지? · 5fu 기존에 있는거에 · nd는 안그랬었나? · 그래서 10fu에서 했던거 같은데 · nd2o3가 들어가야되니까 2개 3개씩",
+      "무엇": "정본 LPSCl1.6 (modelc_V0_k663 × (1,1,2) · 10 f.u. · Cl 배열 고정) 에 Nd₂O₃ 1 단위 — Nd@P Li58P8Nd2S41O3Cl16 (128) · Nd@Li Li48P10Nd2S41O3Cl16 (120 · 6 월 Track 1 조성) · Nd/(Nd+P) 0.2",
+      "왜": "Rietveld 5 f.u. 셀 (주 host) 은 1저자 모델 그 자체지만 격자 · Cl 배열 · 농도 (0.40) 가 우리 정본과 다르다. 10 f.u. 는 6 월 Track 1 · B₂O₃ 캠페인과 같은 셀이고 B 탐색 (b2o3_site_screen_estimand_2026_10_14) 과 같은 배치라 도펀트끼리 비교된다.",
+      "생성": "make_candidates.py --host modelc10 --compound Nd2O3 --n_each 6 --n_seeds 100 → db/inputs/ndo_site_2026_10_14/candidates_modelc10/ (두 모델 같은 도구 · 같은 예산)",
+      "지위": "**UMA 만** — DFT 단일점은 주 host (Rietveld 5 f.u.) 에서. 결과 보기 전에 덧붙였다 (UMA 어닐 0 건).",
+      "읽기": "두 host 에서 ΔG_site(UMA) 부호가 같으면 '셀 · 농도 선택에 안 묶인다' 고 쓸 수 있다. 다르면 둘 다 적고 host 의존을 보고한다 — 한쪽을 골라 덮지 않는다."
     }
   },
   "1c_답하지_않는_것": [
