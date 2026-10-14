@@ -1,0 +1,11 @@
+{
+  "e_total": -191.86862019973185,
+  "e_per_atom": -3.689781157687151,
+  "volume": 1428.87029818089,
+  "volume_per_atom": 27.478274965017114,
+  "n_atoms": 52,
+  "converged": true,
+  "n_steps": 58,
+  "source_base_file": "db/structures/lpscl_F43m_24G_canonical.cif",
+  "source_base_md5": "57e24e164d1b0fec4cc397a9903c689b"
+}
