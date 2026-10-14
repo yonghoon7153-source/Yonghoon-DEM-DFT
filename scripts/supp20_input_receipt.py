@@ -409,7 +409,14 @@ def _selftest() -> int:
     def expect(name, rec, ids):
         """rc 1 + 겨눈 칸 (ids) 이 전부 실패 칸 안 — 엉뚱한 칸의 실패로 통과시키지 않는다."""
         b = bad_ids(rec)
-        chk(f'{name} → rc 1 · 실패 칸 ⊇ {sorted(ids)}', rec.get('rc') == 1 and set(ids) <= b, sorted(b))
+        chk(f'{name} → rc 1 · 실패 칸 ⊇ {sorted(ids)}', rec.get('rc') == 1 and set(ids) <= b, sorted(b) or rec.get('error'))
+
+    def rsafe(**kw):
+        """receipt() — 옛 판에 없는 인자 (preflight_receipt · approved_sha) 는 TypeError → rc None 으로 남긴다 (반례 먼저 · selftest 가 서지 않게)."""
+        try:
+            return receipt(**kw)
+        except TypeError as e:
+            return dict(rc=None, checks=[], error=f'TypeError: {e}')
 
     spec = NP.COHORT_SPECS[COHORT]
     base = receipt()
@@ -501,44 +508,269 @@ def _selftest() -> int:
         r2u, r2ur = repack(R2_TGZ, td / 'r2u.tgz', R2_TOP, lambda f: f.__setitem__(R2_TOP + 'lhss20_union_r2.tsv',
                                                                                     f[R2_TOP + 'lhss20_union_r2.tsv'].replace(b'lhss_001', b'lhss_999', 1)))
         expect('S6d r2 묶음 union 칸 하나 다름 (README sha 맞춘 사본)', receipt(r2_tgz=r2u, readme=r2ur), {'C4'})
-        #  ⑦ 발사 dry-run 화면 — 진짜 print_preflight 로 만든 화면 (생산자 줄 꼴과 맞댄다)
+        #  ⑦ ★ 10-14 SUPR-01 · SUPR-02 (Codex 보충 20 수정 재검증 §4 · §5 · 1저자 Q1 · Q2 · Q3 (가)) — 발사 사전 점검 증거 = 실행기 완료 영수증 JSON + 그 실행기가 잡은 전체 로그.
+        #    반례 먼저 (판정문 §4 최소 해결 ③ · §5 ④ · 계획 §3 ①): 진짜 실행기 dry-run (NP.main — build_plan · plan_input_digest · print_preflight · 완료 영수증) 을 이 체크아웃에서
+        #    돌린다.  대역 = git_info (깨끗한 트리 · 이 체크아웃 HEAD) · raw_problems (원 dump 는 WSL 에만) · _guard_posix (윈도 검토 환경) 셋 + 한 번 잰 진짜 값의 재사용
+        #    (derive_generation · code_dependency_closure · lazy_import_census — 시간만 줄인다).  봉인 32 · 계획 · 입력 지문 · 화면 · 영수증 · 종료코드는 진짜다.
+        #    옛 판 = 텍스트 로그 (tee · grep) 를 읽어 다른 TSV 로 돈 로그 · 중단 사유 앞에서 잘린 로그 · 필수 줄 셋이 빠진 로그가 rc 0 (Codex 반례 로그 다섯 = ⑩).
         plan = plan_for()
-        fp = NP.code_fp(NP.code_hashes())
+        IDL = getattr(NP, 'INPUT_DIGEST_LINE', 'INPUT_DIGEST_JSON')
+        MARK = getattr(NP, 'PREFLIGHT_COMPLETE_MARK', 'PREFLIGHT_DRY_RUN_COMPLETE rc 0')
+        TICKS = ('전이 의존 닫힘', '지연 import 분류', 'fork · 프로세스 풀 API')            # 화면의 필수 세 검사 줄 (실행기 print_preflight)
+        GREP = ('코드 ', '기대 망 세대', '전이 의존', '지연 import', 'fork', '입력 지문', '원자료 · 메시 문제', '⛔')   # 등록 §4 의 옛 grep -E 그대로
+        g_now = NP.git_info()
+        sha_now = g_now['sha'] if re.fullmatch(r'[0-9a-f]{40}', str(g_now.get('sha') or '')) else 'ab' * 20
 
-        def dry(dg=None, dirty=False, stop=(), raw_n=0, gen='g2', fp_to=None, drop=None):
-            pf = dict(cpu=dict(cpu_count=20, cpu_affinity=20), mem=dict(MemTotal_GB=64, MemAvailable_GB=60, SwapFree_GB=0, SwapTotal_GB=0),
-                      mem_budget_mb=50 * 1024.0, lanes=20, first_lanes_est_mem_GB=1.0, est_mem_largest_mb=600.0, disk_free_GB=100, disk_need_GB=1,
-                      est_serial_h=0.5, est_makespan_h=0.1, git=dict(short='0123456789', branch='HEAD', dirty=dirty, porcelain=[' M x.py'] if dirty else []),
-                      n_raw_problems=raw_n, generation=dict(generation=gen, problems=[], modes=['hertz', 'physics', 'hertz_h12']),
-                      dependency_closure=dict(files=list(NP.CODE_FILES[:5]), errors=[]), lazy_census=dict(n_lazy=3, unclassified=[]), fork_census=[],
-                      input_digest=dg or dg0, warn=[], stop=list(stop))
+        def git_clean(*_a, **_k):
+            return dict(sha=sha_now, short=sha_now[:9], branch='HEAD', dirty=False, porcelain=[])
+
+        def git_dirty(*_a, **_k):
+            return dict(sha=sha_now, short=sha_now[:9], branch='HEAD', dirty=True, porcelain=[' M scripts/se_material.py'])
+        cache = dict(gen=NP.derive_generation(NP.ROOT), clo=NP.code_dependency_closure(), lazy=NP.lazy_import_census())
+
+        @contextlib.contextmanager
+        def np_patch(**kw):
+            old = {k: getattr(NP, k) for k in kw}
+            for k, v in kw.items():
+                setattr(NP, k, v)
+            try:
+                yield
+            finally:
+                for k, v in old.items():
+                    setattr(NP, k, v)
+        (td / 'pf').mkdir()
+        (td / 'screens').mkdir()
+
+        def npdry(tag, *extra, observe=True, receipt_on=True, cohort_path=None, harvest_path=None, git=None, raw=None):
+            """진짜 실행기 `run --root R --cohorts lhss --dry-run (--observe-imports) (--preflight-receipt P)` → (rc, P, 화면 파일).  화면 = 사용자가 tee 로 받는 것."""
+            R_, P_ = td / f'root_{tag}', td / 'pf' / f'{tag}_preflight.json'
+            argv = ['run', '--root', str(R_), '--cohorts', COHORT, '--dry-run', *(['--observe-imports'] if observe else []),
+                    *(['--preflight-receipt', str(P_)] if receipt_on else []), *extra]
+            sp_ = dict(spec, **({'cohort': str(cohort_path)} if cohort_path else {}), **({'harvest': str(harvest_path)} if harvest_path else {}))
             buf = io.StringIO()
-            with contextlib.redirect_stdout(buf):
-                NP.print_preflight(pf, plan, types.SimpleNamespace(min_free_gb=1.0, network_lock='per-case'), Path('/x/netsupp20_selftest'))
-            text = buf.getvalue().replace(fp, fp_to) if fp_to else buf.getvalue()
-            if drop:
-                text = '\n'.join(ln for ln in text.splitlines() if drop not in ln)
-            p = td / f'dry_{len(list(td.glob("dry_*")))}.log'
-            p.write_text(text, encoding='utf-8')
-            return str(p)
+            with np_patch(git_info=git or git_clean, raw_problems=raw or (lambda *a, **k: []), _guard_posix=lambda: None,
+                          derive_generation=lambda *a, **k: dict(cache['gen']), code_dependency_closure=lambda *a, **k: dict(cache['clo']),
+                          lazy_import_census=lambda *a, **k: dict(cache['lazy']), COHORT_SPECS=dict(NP.COHORT_SPECS, **{COHORT: sp_})):
+                with contextlib.redirect_stdout(buf), contextlib.redirect_stderr(buf):
+                    try:
+                        rc_ = NP.main(argv)
+                    except SystemExit as e:
+                        rc_ = e.code if isinstance(e.code, int) else 2
+            scr = td / 'screens' / f'{tag}.log'
+            scr.write_bytes(buf.getvalue().encode('utf-8'))
+            return rc_, str(P_), str(scr)
 
-        rd = receipt(dry_run_log=dry())
-        chk('S7 dry-run 화면 (print_preflight 그대로 · 관측 ON 계획 · 깨끗한 트리) → rc 0 · 범위 dry_run · E1–E6 같음',
-            rd['rc'] == 0 and rd['scope'] == 'dry_run' and {'E1', 'E2', 'E3', 'E4', 'E5', 'E6'} <= {c['id'] for c in rd['checks']}, sorted(bad_ids(rd)))
-        grep = td / 'dry_grep.log'                           # 등록 §4 의 grep (코드 · 기대 망 세대 · 전이 의존 · 지연 import · fork · 입력 지문 · 원자료 · ⛔)
-        keep = ('코드 ', '기대 망 세대', '전이 의존', '지연 import', 'fork', '입력 지문', '원자료 · 메시 문제', '⛔')
-        grep.write_text('\n'.join(ln for ln in Path(dry()).read_text(encoding='utf-8').splitlines() if any(k in ln for k in keep)), encoding='utf-8')
-        rg = receipt(dry_run_log=str(grep))
-        chk('S7b 등록 §4 grep 으로 거른 화면 → rc 0 (코호트 줄 없음 = E6 생략)', rg['rc'] == 0 and 'E6' not in {c['id'] for c in rg['checks']}, sorted(bad_ids(rg)))
-        expect('S7c dry-run 입력 지문 raw sha 표 다름', receipt(dry_run_log=dry(dg=dict(dg0, raw_sha256_table_sha256='0' * 64))), {'E1'})
-        expect('S7d dry-run 이 일반 계획 (케이스 21 · ids 다름)', receipt(dry_run_log=dry(dg=dict(dg0, n=21, ids_sha256='1' * 64))), {'E1'})
-        expect('S7e dry-run 사전 점검 중단 ⛔ (관측 끈 보충 계획)',
-               receipt(dry_run_log=dry(stop=[NP.production_observation_problem(dict(plan=plan, observe_imports=False))])), {'E5'})
-        expect('S7f dry-run dirty=True (--allow-dirty 로 돈 화면)', receipt(dry_run_log=dry(dirty=True)), {'E2'})
-        expect('S7g dry-run 봉인 지문 다름', receipt(dry_run_log=dry(fp_to='e' * 64)), {'E2'})
-        expect('S7h dry-run 입력 지문 줄 없음', receipt(dry_run_log=dry(drop='입력 지문')), {'E1'})
-        expect('S7i dry-run 원자료 · 메시 문제 1 건', receipt(dry_run_log=dry(raw_n=1)), {'E4'})
-        expect('S7j dry-run 기대 망 세대 None (유도 실패)', receipt(dry_run_log=dry(gen=None)), {'E3'})
+        def rlog(p):
+            """영수증 JSON · 그 로그 글 (없거나 못 읽으면 {} · '')."""
+            try:
+                r_ = json.loads(Path(p).read_text(encoding='utf-8'))
+                return r_, Path(r_['log']['path']).read_bytes().decode('utf-8')
+            except (OSError, ValueError, KeyError, TypeError):
+                return {}, ''
+        n_forge = [0]
+
+        def forge(src, tag, edit_log=None, edit_rec=None, resha=True, log_text=None):
+            """영수증 사본 — 로그 고침 (edit_log · 또는 log_text 통째) · JSON 고침 (edit_rec) · resha = 로그 sha256 · 바이트를 고친 로그에 맞춰 다시 적는다
+            (영수증까지 함께 위조해도 내용 대조가 따로 잡는가).  원본이 없으면 (옛 판) 없는 경로를 돌려준다."""
+            n_forge[0] += 1
+            r_, t_ = rlog(src)
+            d_ = td / 'forge' / f'{n_forge[0]:02d}_{tag}'
+            if not r_:
+                return str(d_ / 'missing_preflight.json')
+            t_ = log_text if log_text is not None else (edit_log(t_) if edit_log else t_)
+            d_.mkdir(parents=True)
+            lp_ = d_ / Path(r_['log']['path']).name
+            lp_.write_bytes(t_.encode('utf-8'))
+            r_['log']['path'] = str(lp_)
+            if resha:
+                r_['log'].update(sha256=hashlib.sha256(t_.encode('utf-8')).hexdigest(), bytes=len(t_.encode('utf-8')))
+            if edit_rec:
+                edit_rec(r_)
+            rp_ = d_ / Path(src).name
+            rp_.write_text(json.dumps(r_, ensure_ascii=False), encoding='utf-8')
+            return str(rp_)
+
+        def drop_ticks(t):
+            return '\n'.join(ln for ln in t.split('\n') if not ln.strip().startswith(TICKS))
+
+        def cut_before(t, pred):
+            ls = t.split('\n')
+            i_ = next((k for k, ln in enumerate(ls) if pred(ln)), len(ls))
+            return '\n'.join(ls[:i_]) + ('\n' if i_ else '')
+
+        def grep_reg(t):
+            return '\n'.join(ln for ln in t.split('\n') if any(k in ln for k in GREP))
+
+        def text_file(name, text):
+            p_ = td / 'screens' / name
+            p_.write_bytes(text.encode('utf-8'))
+            return str(p_)
+
+        def is_mark(ln):
+            return ln.strip() == MARK
+
+        #  (i) 정상 — 등록 명령 그대로
+        rc_p, P_pos, S_pos = npdry('pos')
+        r_pos = rsafe(preflight_receipt=P_pos)
+        chk('S7 ★ (i) 정상 — 진짜 실행기 dry-run (등록 명령 run --cohorts lhss --dry-run --observe-imports --preflight-receipt) rc 0 → 영수증 JSON + 전체 로그 → rc 0 · '
+            '범위 preflight · P0–P9 (실행기 대조) · E1 (로그 INPUT_DIGEST_JSON = 등록 §2 = 반입 재계산) · E2 (봉인 지문 = 등록 §3) 같음 · 승인 SHA 없음 = 경고 기록 (실패 아님)',
+            rc_p == 0 and r_pos.get('rc') == 0 and r_pos.get('scope') == 'preflight'
+            and {f'P{i}' for i in range(10)} | {'E1', 'E2'} <= {c['id'] for c in r_pos.get('checks', [])} and 'approved_sha' in (r_pos.get('notes') or {}),
+            (rc_p, sorted(bad_ids(r_pos)), r_pos.get('error')))
+        rp_pos, lt_pos = rlog(P_pos)
+        chk('S7u 영수증 종료코드 = 실행기 CLI 종료코드 (정상 0 — 셸 tee · grep 종료코드가 아니다) · 영수증 로그 = 실행기 화면 (영수증 안내 줄 앞까지 같은 바이트)',
+            rp_pos.get('exit_code') == rc_p == 0 and bool(lt_pos) and Path(S_pos).read_bytes().decode('utf-8').startswith(lt_pos), (rp_pos.get('exit_code'), rc_p))
+        #  (a) SUPR-01 — 같은 20 ID · raw 표 · 코호트 TSV 첫 행 deck_sha256 한 글자만 다름 (실제 build_plan · plan_input_digest · print_preflight)
+        tsv_a = td / 'cohort_deck1.tsv'
+        ls_a = _rp(spec['cohort']).read_bytes().decode('utf-8').split('\n')
+        h_a = next(k for k, ln in enumerate(ls_a) if ln.startswith('case\t'))
+        cells_a = ls_a[h_a + 1].split('\t')
+        col_a = ls_a[h_a].split('\t').index('deck_sha256')
+        cells_a[col_a] = ('0' if cells_a[col_a][0] != '0' else '1') + cells_a[col_a][1:]
+        ls_a[h_a + 1] = '\t'.join(cells_a)
+        tsv_a.write_bytes('\n'.join(ls_a).encode('utf-8'))
+        rc_a, P_a, _s = npdry('tsv1', cohort_path=tsv_a)
+        r_a = rsafe(preflight_receipt=P_a)
+        _ra, lt_a = rlog(P_a)
+        dl_a = [ln.strip() for ln in lt_a.split('\n') if ln.strip().startswith(IDL + ' ')]
+        try:
+            lg_a = json.loads(dl_a[0][len(IDL):]) if len(dl_a) == 1 else {}
+        except ValueError:
+            lg_a = {}
+        chk('S7a ★ (a) SUPR-01 — 같은 20 ID · raw 표 · 코호트 TSV 첫 행 deck_sha256 한 글자만 바꾼 파일로 돈 진짜 dry-run (실행기 rc 0 · 새 꼴 로그가 그 TSV sha 를 싣는다) → '
+            '값으로 거부: 실패 칸 = E1 (로그 = 등록 §2 = 반입 재계산) · P9 (영수증 지문 = 이 체크아웃 재계산) 둘뿐 · 부재가 아니라 값',
+            rc_a == 0 and r_a.get('rc') == 1 and bad_ids(r_a) == {'E1', 'P9'}
+            and (lg_a.get('cohort_tsv_sha256') or {}).get(COHORT) == _sha(tsv_a) != reg.get('cohort_tsv_sha256')
+            and lg_a.get('raw_sha256_table_sha256') == reg.get('raw_sha256_table_sha256') and lg_a.get('ids_sha256') == reg.get('ids_sha256'),
+            (rc_a, sorted(bad_ids(r_a)), lg_a.get('cohort_tsv_sha256'), r_a.get('error')))
+        rc_at, _p, S_at = npdry('tsv1_txt', cohort_path=tsv_a, receipt_on=False)
+        r_at = rsafe(dry_run_log=S_at)
+        chk('S7a-t (a) 같은 반례의 텍스트 화면 (tee) 을 --dry-run-log 로 → rc 1 (옛 판 = rc 0 오수용 · 판정문 §4 검산)', rc_at == 0 and r_at.get('rc') == 1,
+            (rc_at, r_at.get('rc'), sorted(bad_ids(r_at))))
+        ALT = REPO / 'docs/reviews/codex_sup20_fix_reverify_evidence_20261014/evidence/receipt_extra/alternate_cohort.tsv'
+        rc_a2, P_a2, _s = npdry('tsv2', cohort_path=ALT)
+        r_a2 = rsafe(preflight_receipt=P_a2)
+        chk('S7a2 (a) Codex 반례 TSV 그대로 (evidence/receipt_extra/alternate_cohort.tsv · sha256 8d5dcbd2… = 판정문 §4 변이값) → 값으로 거부 (실패 칸 = E1 · P9 둘뿐)',
+            ALT.is_file() and str(_sha(ALT)).startswith('8d5dcbd2') and rc_a2 == 0 and bad_ids(r_a2) == {'E1', 'P9'}, (rc_a2, sorted(bad_ids(r_a2)), r_a2.get('error')))
+        #  (b) SUPR-02 — 관측 OFF (등록 생산 계획 · --observe-imports 없이) = 실행기 사전 점검 ⛔ · 멈춰도 영수증
+        rc_b, P_b, _s = npdry('off', observe=False)
+        r_b = rsafe(preflight_receipt=P_b)
+        rb_, lt_b = rlog(P_b)
+        chk('S7b ★ (b) SUPR-02 관측 OFF — 실행기 ⛔ rc 2 · 멈춰도 영수증 (completed false · 실제 종료코드 2 · 멈춘 사유) → 거부 (P3 완료 · P4 관측 ⊆ 실패 칸)',
+            rc_b == 2 and rb_.get('exit_code') == 2 and rb_.get('completed') is False and bool(rb_.get('stop')) and '⛔' in lt_b
+            and r_b.get('rc') == 1 and {'P3', 'P4'} <= bad_ids(r_b), (rc_b, rb_.get('exit_code'), sorted(bad_ids(r_b)), r_b.get('error')))
+        rc_bt, _p, S_bt = npdry('off_txt', observe=False, receipt_on=False)
+        chk('S7b-t (b) 관측 OFF 전체 화면을 --dry-run-log 로 → rc 1 (옛 판도 rc 1 — 판정문 §5 대조)', rc_bt == 2 and rsafe(dry_run_log=S_bt).get('rc') == 1, rc_bt)
+        #  (c) 같은 OFF 로그를 첫 ⛔ 앞에서 자름
+        def is_stop(ln):
+            return '⛔' in ln
+        expect('S7c1 (c) 관측 OFF 로그를 첫 ⛔ 앞에서 자름 (영수증 그대로 — sha · 바이트 다름)',
+               rsafe(preflight_receipt=forge(P_b, 'c1', edit_log=lambda t: cut_before(t, is_stop), resha=False)), {'P1'})
+
+        def flip_ok(r_):
+            r_.update(completed=True, exit_code=0, stop=[], completion_marker=MARK, observe_imports=True)
+        expect('S7c2 (c) 같은 잘린 로그 + 영수증 위조 (sha · 바이트 맞춤 · 완료 · 종료 0 · 관측 true 로 바꿈) → 내용으로 거부 (완료 표지 없음 P3 · argv 에 관측 없음 P4)',
+               rsafe(preflight_receipt=forge(P_b, 'c2', edit_log=lambda t: cut_before(t, is_stop), edit_rec=flip_ok)), {'P3', 'P4'})
+        r_ct = rsafe(dry_run_log=text_file('off_cut.log', cut_before(Path(S_bt).read_bytes().decode('utf-8'), is_stop)))
+        chk('S7c-t (c) 관측 OFF 화면을 ⛔ 앞에서 자른 텍스트 → rc 1 (옛 판 = rc 0 오수용 · 판정문 §5 표 셋째 줄)', r_ct.get('rc') == 1, sorted(bad_ids(r_ct)))
+        #  (d) 정상 로그에서 필수 세 줄 삭제
+        expect('S7d1 (d) 정상 로그에서 전이 의존 · 지연 import · fork 줄 셋 삭제 (영수증 그대로)',
+               rsafe(preflight_receipt=forge(P_pos, 'd1', edit_log=drop_ticks, resha=False)), {'P1'})
+        expect('S7d2 (d) 같은 삭제 + 영수증 sha · 바이트 맞춤 → 내용으로 거부 (필수 세 줄 없음 P5)', rsafe(preflight_receipt=forge(P_pos, 'd2', edit_log=drop_ticks)), {'P5'})
+        rc_pt, _p, S_pt = npdry('pos_txt', receipt_on=False)
+        txt_pt = Path(S_pt).read_bytes().decode('utf-8')
+        r_dt = rsafe(dry_run_log=text_file('pos_drop.log', drop_ticks(txt_pt)))
+        chk('S7d-t (d) 정상 화면에서 세 줄 삭제한 텍스트 → rc 1 (옛 판 = rc 0 오수용 · 판정문 §5 표 넷째 줄)', rc_pt == 0 and r_dt.get('rc') == 1, (rc_pt, sorted(bad_ids(r_dt))))
+        #  (e) 등록 §4 옛 grep 으로 거른 로그
+        expect('S7e1 (e) 등록 §4 옛 grep 으로 거른 로그를 전체 로그 자리에 (영수증 그대로)', rsafe(preflight_receipt=forge(P_pos, 'e1', edit_log=grep_reg, resha=False)), {'P1'})
+        expect('S7e2 (e) 같은 grep 로그 + 영수증 sha 맞춤 → 내용으로 거부 (INPUT_DIGEST_JSON 없음 P2 · 완료 표지 없음 P3)',
+               rsafe(preflight_receipt=forge(P_pos, 'e2', edit_log=grep_reg)), {'P2', 'P3'})
+        r_et = rsafe(dry_run_log=text_file('pos_grep.log', grep_reg(txt_pt)))
+        chk('S7e-t (e) grep 로그 단독 (--dry-run-log) → rc 1 · 사유 E0 (텍스트 로그 단독은 증거 아님 — 옛 판 = rc 0 · 옛 S7b 가 통과로 적었던 꼴)',
+            r_et.get('rc') == 1 and 'E0' in bad_ids(r_et), sorted(bad_ids(r_et)))
+        #  (f) 정상 로그를 완료 표지 앞에서 자름
+        expect('S7f1 (f) 정상 로그를 완료 표지 앞에서 자름 (영수증 그대로)', rsafe(preflight_receipt=forge(P_pos, 'f1', edit_log=lambda t: cut_before(t, is_mark), resha=False)),
+               {'P1'})
+        expect('S7f2 (f) 같은 자름 + 영수증 sha 맞춤 → 내용으로 거부 (완료 표지 없음 P3)', rsafe(preflight_receipt=forge(P_pos, 'f2', edit_log=lambda t: cut_before(t, is_mark))),
+               {'P3'})
+        r_ft = rsafe(dry_run_log=text_file('pos_cut.log', cut_before(txt_pt, lambda ln: ln.strip().startswith('══ --dry-run') or is_mark(ln))))
+        chk('S7f-t (f) 정상 화면을 dry-run 끝 줄 앞에서 자른 텍스트 → rc 1 (옛 판 = rc 0 — 완료를 보지 않았다)', r_ft.get('rc') == 1, sorted(bad_ids(r_ft)))
+        #  (g) 영수증 JSON 값 — 종료코드 · 완료 · 관측 · 필수 검사 · schema
+        for nm, ed, ids in (('exit_code 2', lambda r_: r_.update(exit_code=2), {'P3'}), ('exit_code true (bool)', lambda r_: r_.update(exit_code=True), {'P3'}),
+                            ('completed false', lambda r_: r_.update(completed=False), {'P3'}),
+                            ('observe_imports false', lambda r_: r_.update(observe_imports=False), {'P4'}),
+                            ('observe_imports 키 없음', lambda r_: r_.pop('observe_imports', None), {'P4'}),
+                            ('필수 검사 fork_census 없음', lambda r_: (r_.get('checks') or {}).pop('fork_census', None), {'P5'}),
+                            ('필수 검사 지연 import ok = "true" (문자열)', lambda r_: ((r_.get('checks') or {}).get('lazy_import_census') or {}).update(ok='true'), {'P5'}),
+                            ('schema 다름', lambda r_: r_.update(schema='np194_preflight_receipt/v0'), {'P0'})):
+            expect(f'S7g (g) 영수증 JSON {nm} (로그 그대로)', rsafe(preflight_receipt=forge(P_pos, 'g', edit_rec=ed)), ids)
+        #  (h) 로그 sha 불일치 · 영수증 없음
+        expect('S7h (h) 로그 끝에 한 바이트 (영수증 그대로 — sha · 바이트 다름)', rsafe(preflight_receipt=forge(P_pos, 'h', edit_log=lambda t: t + ' ', resha=False)), {'P1'})
+        expect('S7h2 영수증 JSON 자체가 없다', rsafe(preflight_receipt=str(td / 'pf' / 'nope_preflight.json')), {'P0'})
+        #  Q3 — 승인 SHA (접두 7–40 · 부재 = 경고)
+        r_j1 = rsafe(preflight_receipt=P_pos, approved_sha=sha_now[:7])
+        chk('S7j ★ Q3 승인 SHA (접두 7) = 사전 점검 git 기록 · 로그 코드 줄 짧은 sha → rc 0 · P10 같음 · 경고 없음',
+            r_j1.get('rc') == 0 and 'P10' in {c['id'] for c in r_j1.get('checks', [])} and 'approved_sha' not in (r_j1.get('notes') or {}),
+            (sorted(bad_ids(r_j1)), r_j1.get('error')))
+        expect('S7j2 Q3 다른 승인 SHA', rsafe(preflight_receipt=P_pos, approved_sha=('0' if sha_now[0] != '0' else '1') + sha_now[1:7]), {'P10'})
+        expect('S7j3 Q3 승인 SHA 꼴 (16 진 아님)', rsafe(preflight_receipt=P_pos, approved_sha='xyz1234'), {'P10'})
+        #  등록 명령 밖 인자 (argv = 등록 명령)
+        rc_k1, P_k1, _s = npdry('k_raw', '--allow-missing-raw')
+        r_k1 = rsafe(preflight_receipt=P_k1)
+        chk('S7k1 등록 명령 밖 인자 --allow-missing-raw (dry-run 은 끝까지 rc 0) → 실패 칸 = P6 (argv) 하나', rc_k1 == 0 and r_k1.get('rc') == 1 and bad_ids(r_k1) == {'P6'},
+            (rc_k1, sorted(bad_ids(r_k1)), r_k1.get('error')))
+        rc_k2, P_k2, _s = npdry('k_cohort', f'--{COHORT}-cohort', str(_rp(spec['cohort'])))
+        r_k2 = rsafe(preflight_receipt=P_k2)
+        chk('S7k2 --lhss-cohort 로 같은 경로를 덮어씀 (지문 같음) → 실패 칸 = P6 하나 (경로 덮어쓰기는 등록 명령이 아니다 — 지문 대조와 따로)',
+            rc_k2 == 0 and r_k2.get('rc') == 1 and bad_ids(r_k2) == {'P6'}, (rc_k2, sorted(bad_ids(r_k2)), r_k2.get('error')))
+        rc_k3, P_k3, _s = npdry('k_case', '--case', 'lhss_001')
+        expect('S7k3 --case lhss_001 (한 케이스 · 일반 계획)', rsafe(preflight_receipt=P_k3), {'P6', 'P9', 'E1'})
+        #  코드 신원 · 트리 · 입력 · 세대 · 원자료
+        fp_real = NP.code_fp(NP.code_hashes())
+        expect('S7l 봉인 지문 다른 로그 + 영수증 (sha 맞춤)', rsafe(preflight_receipt=forge(P_pos, 'l', edit_log=lambda t: t.replace(fp_real, 'e' * 64),
+                                                                                      edit_rec=lambda r_: r_.update(code_fp='e' * 64))), {'P7', 'E2'})
+        rc_m, P_m, _s = npdry('dirty', git=git_dirty)
+        expect('S7m 추적 파일이 바뀐 트리 (--allow-dirty 없음 · 실행기 ⛔ rc 2)', rsafe(preflight_receipt=P_m), {'P3', 'P7'})
+        rc_m2, P_m2, _s = npdry('dirty_ok', '--allow-dirty', git=git_dirty)
+        expect('S7m2 같은 트리 + --allow-dirty (dry-run 은 끝까지)', rsafe(preflight_receipt=P_m2), {'P6', 'P7'})
+
+        def _raw7(d):
+            j = json.loads((d / 'lhss_007.json').read_text(encoding='utf-8'))
+            j['raw']['atom']['sha256'] = 'f' * 64
+            (d / 'lhss_007.json').write_text(json.dumps(j), encoding='utf-8')
+        rc_n, P_n, _s = npdry('rawtab', harvest_path=hcopy('h_raw_pf', _raw7))
+        expect('S7n 수확 JSON raw sha 하나 다른 수확 폴더로 돈 dry-run (같은 20 ID · 실행기 rc 0)', rsafe(preflight_receipt=P_n), {'E1', 'P9'})
+        rc_o, P_o, _s = npdry('gen21', harvest_path=hcopy('h21_pf', lambda d: shutil.copy2(d / 'lhss_020.json', d / 'lhst_045_6m.json')))
+        expect('S7o 수확 폴더에 후막 하나 더 (21 · 일반 계획 · 실행기 rc 0)', rsafe(preflight_receipt=P_o), {'E1', 'P9'})
+        expect('S7p 기대 망 세대 None (로그 · 영수증 함께 · sha 맞춤)',
+               rsafe(preflight_receipt=forge(P_pos, 'p', edit_log=lambda t: t.replace("): 'g2' · 세대 계약 문제", "): None · 세대 계약 문제"),
+                                             edit_rec=lambda r_: (r_.get('generation') or {}).update(generation=None))), {'P8'})
+        rc_q, P_q, _s = npdry('rawprob', raw=lambda *a, **k: [('lhss_001', 'atom 파일 없음: /x/atom.liggghts')])
+        expect('S7q 원자료 · 메시 문제 1 건 (실행기 ⛔ rc 2)', rsafe(preflight_receipt=P_q), {'P3', 'P8'})
+
+        def dup_digest(t):
+            out_ = []
+            for ln in t.split('\n'):
+                out_.append(ln)
+                if ln.strip().startswith(IDL + ' '):
+                    out_.append(ln)
+            return '\n'.join(out_)
+        expect('S7r INPUT_DIGEST_JSON 줄이 둘 (같은 값 · sha 맞춤)', rsafe(preflight_receipt=forge(P_pos, 'r', edit_log=dup_digest)), {'P2', 'E1'})
+        expect('S7s INPUT_DIGEST_JSON 값이 JSON 아님 (sha 맞춤)',
+               rsafe(preflight_receipt=forge(P_pos, 's', edit_log=lambda t: re.sub(r'(?m)^(\s*' + re.escape(IDL) + r' ).*$', r'\1{broken', t))), {'P2', 'E1'})
+
+        def drop_tsv_key(t):
+            out_ = []
+            for ln in t.split('\n'):
+                if ln.strip().startswith(IDL + ' '):
+                    d_ = json.loads(ln.strip()[len(IDL):])
+                    d_.pop('cohort_tsv_sha256', None)
+                    ln = ln[:ln.index(IDL)] + IDL + ' ' + json.dumps(d_, ensure_ascii=False, sort_keys=True, separators=(',', ':'))
+                out_.append(ln)
+            return '\n'.join(out_)
+        expect('S7s2 INPUT_DIGEST_JSON 에 코호트 TSV 키 없음 (로그 · 영수증 함께 · sha 맞춤)',
+               rsafe(preflight_receipt=forge(P_pos, 's2', edit_log=drop_tsv_key, edit_rec=lambda r_: (r_.get('input_digest') or {}).pop('cohort_tsv_sha256', None))),
+               {'P2', 'E1', 'P9'})
         #  ⑧ 실제 발사 manifest — 실행기 cmd_run 이 쓰는 키 (launch_eligibility 가 current 로 읽는 꼴)
         def man(plan_, dg_, root, fname='manifest.json', **over):
             hashes = NP.code_hashes()
@@ -581,11 +813,29 @@ def _selftest() -> int:
         expect('S8i 보충 manifest 인계 도구 지문 ≠ 이 체크아웃 (다른 체크아웃에서 만든 영수증)',
                receipt(manifest=man(plan, dg0, 'rS_ho', handover_code_hashes=lambda m: {k: '9' * 64 for k in m['handover_code_hashes']})), {'F6'})
         expect('S8j 보충 manifest 없음 · 깨진 JSON', receipt(manifest=str(td / 'nope.json')), {'F0'})
+        #  ★ 10-14 Q3 (판정문 §6 "추가 범위 주의" — H1 은 두 manifest 의 상호 일치일 뿐 승인 핀과의 일치가 아니다) — 승인 SHA 를 주면 manifest git.sha 도 대조
+        rmk = rsafe(manifest=man(plan, dg0, 'rS_ap'), primary_manifest=mp194, approved_sha='abababa')
+        chk('S8k Q3 승인 SHA (접두 7) = 두 manifest git.sha → rc 0 · F7 · G7 같음', rmk.get('rc') == 0 and {'F7', 'G7'} <= {c['id'] for c in rmk.get('checks', [])},
+            (sorted(bad_ids(rmk)), rmk.get('error')))
+        expect('S8k2 Q3 다른 승인 SHA (manifest 둘)', rsafe(manifest=man(plan, dg0, 'rS_ap2'), primary_manifest=mp194, approved_sha='1234567'), {'F7', 'G7'})
         #  ⑨ 읽기 전용 — 정상 영수증을 만든 뒤 리포 입력 파일 sha 가 그대로
         snap = {rel: _sha(_rp(rel)) for rel in (REG_DOC, RUNS_README, R3_TGZ, R2_TGZ, SUPP_DESIGN, spec['design'], spec['cohort'], spec['union'])}
-        receipt(dry_run_log=dry())
+        rsafe(preflight_receipt=P_pos)
         chk('S9 읽기 전용 — 영수증을 만들어도 등록 문서 · README · 묶음 둘 · 설계 · 어댑터 · 코호트 TSV · union 바이트 그대로',
             snap == {rel: _sha(_rp(rel)) for rel in snap}, snap)
+        #  ⑩ ★ 10-14 Codex 반례 로그 다섯 (판정문 §7 · 증거 evidence/receipt_extra · 바이트 그대로 읽기만) — 텍스트 로그 단독 · 정상 영수증에 넣은 위조 포장 둘 다 거부
+        EVD = REPO / 'docs/reviews/codex_sup20_fix_reverify_evidence_20261014/evidence/receipt_extra'
+        for k, nm in enumerate(('wrong_tsv_full_log.log', 'wrong_tsv_registered_grep.log', 'observation_off_full_log.log',
+                                'observation_off_truncated_before_stop.log', 'missing_three_prerequisite_lines.log')):
+            p_ = EVD / nm
+            rt_ = rsafe(dry_run_log=str(p_)) if p_.is_file() else {}
+            chk(f'S10 Codex 반례 로그 {nm} → --dry-run-log 로 rc 1 (옛 판: observation_off_full_log 만 rc 1)', p_.is_file() and rt_.get('rc') == 1,
+                (p_.is_file(), rt_.get('rc'), sorted(bad_ids(rt_))))
+            rw_ = rsafe(preflight_receipt=forge(P_pos, f'codex{k}', log_text=p_.read_bytes().decode('utf-8') if p_.is_file() else ''))
+            expect(f'S10b Codex 반례 로그 {nm} 를 정상 영수증의 로그 자리에 (sha 맞춘 위조 포장) → 내용으로 거부 (INPUT_DIGEST_JSON 없음 P2 · 완료 표지 없음 P3)',
+                   rw_, {'P2', 'P3'})
+        r_e0 = rsafe(dry_run_log=str(EVD / 'wrong_tsv_full_log.log'))
+        chk('S10c 텍스트 로그 단독의 사유 = E0 (실행기 완료 영수증을 --preflight-receipt 로 주라는 안내)', 'E0' in bad_ids(r_e0), sorted(bad_ids(r_e0)))
     print(f'\nsupp20_input_receipt selftest: {ok}/{ok + len(fail)} PASS' + (f'   FAILED: {fail}' if fail else ''))
     return 1 if fail else 0
 

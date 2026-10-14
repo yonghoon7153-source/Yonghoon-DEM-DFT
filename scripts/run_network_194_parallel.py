@@ -4530,6 +4530,192 @@ def _selftest() -> int:
                 len(rr_) == 1 and '--expect-set supp20' in rr_[0] and '--expect-case' not in rr_[0], repr(rr_))
 
         _scenario('㊱ 보충 20 지원 시나리오', _s36)
+
+        # ═══ ㊲ ★ 10-14 SUPR-01 · SUPR-02 (Codex 보충 20 수정 재검증 §4 · §5 · 1저자 Q1 · Q2 (가)) — 사전 점검 기계 판독 줄 · 완료 영수증 (반례 먼저) ══════════
+        #   옛 판: 화면의 입력 지문 줄에 코호트 TSV sha 가 없고 (사람이 읽는 꼴뿐) · dry-run 은 아무 기록도 남기지 않아 영수증 도구가 셸 tee · grep 로그를 읽었다 —
+        #   다른 TSV 로 돈 로그 · 중단 사유 앞에서 잘린 로그 · 필수 검사 줄 셋이 빠진 로그가 rc 0 · 필수 세 검사 값이 없어도 화면은 ✓.
+        def _s37():
+            IDL = _G.get('INPUT_DIGEST_LINE') or 'INPUT_DIGEST_JSON'
+            MARK = _G.get('PREFLIGHT_COMPLETE_MARK') or 'PREFLIGHT_DRY_RUN_COMPLETE rc 0'
+            prc = _G.get('preflight_receipt_checks')
+            pcv = _G.get('preflight_check_values')
+            CHK3 = ('dependency_closure', 'lazy_import_census', 'fork_census')
+            sha_ = 'c0ffee12' * 5
+            gf_ = _git_fake(sha=sha_)
+            spx = dict(COHORT_SPECS, lhsx=dict(specs['lhsx']))   # 합성 lhsx 를 CLI 덮어쓰기 없이 (영수증 대조는 경로 덮어쓰기를 등록 명령 밖으로 거부한다)
+            pfd = tmp / 's37_pf'
+            pfd.mkdir()
+
+            def dig_lines(text_):
+                out_ = []
+                for ln_ in text_.splitlines():
+                    s_ = ln_.strip()
+                    if s_.startswith(IDL + ' '):
+                        try:
+                            out_.append(json.loads(s_[len(IDL):]))
+                        except ValueError:
+                            out_.append(None)
+                return out_
+
+            def rlog_(p_):
+                r_ = read_json(p_) or {}
+                lp_ = Path(str((r_.get('log') or {}).get('path') or (tmp / 's37_nope')))
+                return r_, (lp_.read_bytes() if lp_.is_file() else b'')
+
+            # ㊲a 화면의 기계 판독 줄 (영수증 없이도)
+            with _patch(git_info=gf_, COHORT_SPECS=spx):
+                rc_a, o_a = _main_rc(['run', '--root', str(tmp / 's37_dry'), '--cohorts', 'lhsx', '--dry-run'])
+                pl_a = build_plan(['lhsx'], cohort_specs(_parse(['run', '--root', str(tmp / 's37_dry')])))
+            dl_ = dig_lines(o_a)
+            ne_ = [l_.strip() for l_ in o_a.splitlines() if l_.strip()]
+            chk('㊲a ★ SUPR-01 dry-run 화면 — INPUT_DIGEST_JSON 한 줄 = 사전 점검이 쓴 입력 지문 전부 (INPUT_DIGEST_KEYS · 코호트별 TSV sha256) · 끝 줄 = 완료 표지 · rc 0 · '
+                'ROOT 안 만듦',
+                rc_a == 0 and len(dl_) == 1 and dl_[0] == plan_input_digest(pl_a) and sorted(dl_[0] or {}) == sorted(INPUT_DIGEST_KEYS)
+                and (dl_[0] or {}).get('cohort_tsv_sha256') == {'lhsx': sha256_file(Path(specs['lhsx']['cohort']))} and ne_[-1:] == [MARK]
+                and not (tmp / 's37_dry').exists(), repr((rc_a, dl_, ne_[-2:])))
+
+            # ㊲b 완료 영수증 (정상)
+            Rb, Pb = tmp / 's37_root_b', pfd / 'b_preflight.json'
+            argv_b = ['run', '--root', str(Rb), '--cohorts', 'lhsx', '--dry-run', '--observe-imports', '--preflight-receipt', str(Pb)]
+            with _patch(git_info=gf_, COHORT_SPECS=spx):
+                rc_b, o_b = _main_rc(argv_b)
+            rb_, lbb_ = rlog_(Pb)
+            ck_ = rb_.get('checks') or {}
+            chk('㊲b ★ SUPR-02 --dry-run --preflight-receipt — 실행기가 영수증 JSON + 자기 화면 전체 로그를 원자적으로 쓴다 (tmp 없음 · 같은 폴더) · ROOT 안 만듦 · '
+                'schema · 로그 sha256 · 바이트 · completed true · 실제 종료코드 0 · observe_imports true · 필수 세 검사 ok true · 끝 줄 = 완료 표지 · '
+                'input_digest = 로그 INPUT_DIGEST_JSON · argv 그대로',
+                rc_b == 0 and Pb.is_file() and bool(lbb_) and Path(str((rb_.get('log') or {}).get('path'))).parent == pfd and not Rb.exists()
+                and not [p_ for p_ in pfd.iterdir() if p_.name.endswith('.tmp')] and rb_.get('schema') == 'np194_preflight_receipt/v1'
+                and (rb_.get('log') or {}).get('sha256') == hashlib.sha256(lbb_).hexdigest() and (rb_.get('log') or {}).get('bytes') == len(lbb_)
+                and rb_.get('completed') is True and rb_.get('exit_code') == 0 and rb_.get('observe_imports') is True
+                and all((ck_.get(k_) or {}).get('ok') is True for k_ in CHK3)
+                and [l_.strip() for l_ in lbb_.decode('utf-8').splitlines() if l_.strip()][-1:] == [MARK]
+                and dig_lines(lbb_.decode('utf-8')) == [rb_.get('input_digest')] and rb_.get('argv') == argv_b,
+                repr((rc_b, sorted(rb_)[:40], o_b[-300:])))
+
+            # ㊲c 사전 점검 중단도 영수증 (봉인 밖 의존 — ㉚ 과 같은 대역)
+            Rc_, Pc = tmp / 's37_root_c', pfd / 'c_preflight.json'
+            with _patch(git_info=gf_, COHORT_SPECS=spx,
+                        code_dependency_closure=lambda *a, **k: dict(files=sorted(set(CODE_FILES) | {'scripts/step3_sigma.py'}), errors=[])):
+                rc_c, o_c = _main_rc(['run', '--root', str(Rc_), '--cohorts', 'lhsx', '--dry-run', '--observe-imports', '--preflight-receipt', str(Pc)])
+            rc2_, lc_ = rlog_(Pc)
+            ltx_ = lc_.decode('utf-8')
+            chk('㊲c ★ SUPR-02 사전 점검 중단도 영수증 — 실제 종료코드 2 · completed false · 멈춘 사유 (봉인 밖 의존) · 전이 의존 ok false · 로그에 ⛔ · 완료 표지 없음 · '
+                'ROOT 안 만듦',
+                rc_c == 2 and rc2_.get('exit_code') == 2 and rc2_.get('completed') is False and any('step3_sigma' in str(s_) for s_ in rc2_.get('stop') or [])
+                and ((rc2_.get('checks') or {}).get('dependency_closure') or {}).get('ok') is False and '⛔' in ltx_ and MARK not in ltx_ and not Rc_.exists(),
+                repr((rc_c, rc2_.get('exit_code'), rc2_.get('completed'), (rc2_.get('stop') or [])[:2])))
+
+            # ㊲d --dry-run 없이 = 거부 (본 실행에 영수증을 붙이지 않는다 · 아무것도 띄우지 않는다)
+            Rd, Pd = tmp / 's37_root_d', pfd / 'd_preflight.json'
+            with _patch(git_info=gf_, COHORT_SPECS=spx):
+                rc_d, o_d = _main_rc(['run', '--root', str(Rd), '--cohorts', 'lhsx', '--observe-imports', '--preflight-receipt', str(Pd)])
+            chk('㊲d --preflight-receipt 를 --dry-run 없이 = rc 2 · 아무것도 띄우지 않는다 (ROOT 안 만듦 · 영수증 없음) · 사유 = --dry-run 과 함께만',
+                rc_d == 2 and not Rd.exists() and not Pd.exists() and 'dry-run 과 함께' in o_d, repr((rc_d, o_d[-200:])))
+
+            # ㊲e 영수증 자리 — ROOT 안 · 이미 있는 영수증
+            Re = tmp / 's37_root_e'
+            with _patch(git_info=gf_, COHORT_SPECS=spx):
+                rc_e1, o_e1 = _main_rc(['run', '--root', str(Re), '--cohorts', 'lhsx', '--dry-run', '--preflight-receipt', str(Re / 'pf.json')])
+            Pe = pfd / 'e_preflight.json'
+            Pe.write_text('{"old": 1}\n', encoding='utf-8')
+            with _patch(git_info=gf_, COHORT_SPECS=spx):
+                rc_e2, o_e2 = _main_rc(['run', '--root', str(tmp / 's37_root_e2'), '--cohorts', 'lhsx', '--dry-run', '--preflight-receipt', str(Pe)])
+            chk('㊲e 영수증 자리 — ROOT 안 = rc 2 (본 실행이 빈 ROOT 를 요구한다 · ROOT 안 만듦) · 이미 있는 영수증 = rc 2 (옛 영수증을 덮지 않는다 · 바이트 그대로)',
+                rc_e1 == 2 and not Re.exists() and 'ROOT 밖에 둘 것' in o_e1 and rc_e2 == 2 and Pe.read_text(encoding='utf-8') == '{"old": 1}\n'
+                and '이미 있다' in o_e2 and not (tmp / 's37_root_e2').exists(), repr((rc_e1, rc_e2, o_e1[-160:], o_e2[-160:])))
+
+            # ㊲f 대조 함수 (읽기 전용) — ㊲b 정상 · 위조 사본
+            def _bad(p_, **kw):
+                if not prc:
+                    return {'NO_API'}
+                with _patch(COHORT_SPECS=spx):
+                    return {c_['id'] for c_ in prc(str(p_), **kw).get('checks') or [] if not c_['ok']}
+
+            def _forge(tag_, edit_log=None, edit_rec=None, resha=True):
+                r_, t_ = rlog_(Pb)
+                d_ = tmp / f's37_forge_{tag_}'
+                if not r_:
+                    return d_ / 'missing_preflight.json'
+                t_ = t_.decode('utf-8')
+                t_ = edit_log(t_) if edit_log else t_
+                d_.mkdir()
+                lp_ = d_ / Path(r_['log']['path']).name
+                lp_.write_bytes(t_.encode('utf-8'))
+                r_['log']['path'] = str(lp_)
+                if resha:
+                    r_['log'].update(sha256=hashlib.sha256(t_.encode('utf-8')).hexdigest(), bytes=len(t_.encode('utf-8')))
+                if edit_rec:
+                    edit_rec(r_)
+                rp_ = d_ / Pb.name
+                rp_.write_text(json.dumps(r_, ensure_ascii=False), encoding='utf-8')
+                return rp_
+            ticks_ = ('전이 의존 닫힘', '지연 import 분류', 'fork · 프로세스 풀 API')
+            got_ = {
+                '정상': (_bad(Pb), set()),
+                '로그 끝 한 바이트 (영수증 그대로)': (_bad(_forge('t1', edit_log=lambda t: t + ' ', resha=False)), {'P1'}),
+                '필수 세 줄 삭제 (sha 맞춤)': (_bad(_forge('t2', edit_log=lambda t: '\n'.join(l_ for l_ in t.split('\n') if not l_.strip().startswith(ticks_)))),
+                                        {'P5'}),
+                '완료 표지 앞에서 자름 (sha 맞춤)': (_bad(_forge('t3', edit_log=lambda t: t.split(MARK)[0])), {'P3'}),
+                '종료코드 2': (_bad(_forge('t4', edit_rec=lambda r: r.update(exit_code=2))), {'P3'}),
+                'observe_imports false': (_bad(_forge('t5', edit_rec=lambda r: r.update(observe_imports=False))), {'P4'}),
+                'fork_census 칸 없음': (_bad(_forge('t6', edit_rec=lambda r: (r.get('checks') or {}).pop('fork_census', None))), {'P5'}),
+            }
+            chk('㊲f ★ 대조 (preflight_receipt_checks · 읽기 전용) — ㊲b 영수증 = 칸 전부 같음 · 로그 한 바이트 = P1 · 필수 세 줄 = P5 · 완료 표지 = P3 · 종료코드 = P3 · '
+                '관측 = P4 · 필수 칸 = P5 (실패 칸이 정확히 그것)',
+                all(g_ == w_ for g_, w_ in got_.values()), repr({k_: sorted(g_) for k_, (g_, w_) in got_.items() if g_ != w_}))
+
+            # ㊲g CLI preflight-verify — 보충 20 합성 등록 계획 (등록 지문 = lhss_001 … 020 · 원자료 sha 합성)
+            ids_ = [f'lhss_{i:03d}' for i in range(1, 21)]
+            h20 = tmp / 's37_h20'
+            h20.mkdir()
+            for c_ in ids_:
+                raw_ = {k_: dict(sha256=hashlib.sha256(f'{c_}:{k_}'.encode()).hexdigest()) for k_ in ('atom', 'contact', 'mesh', 'deck')}
+                (h20 / f'{c_}.json').write_text(json.dumps(dict(contact_scan=dict(n_rows_last=1000), raw=raw_)), encoding='utf-8')
+            (h20 / '_cohort.tsv').write_text('case_id\tblock\n', encoding='utf-8')
+            sps = dict(COHORT_SPECS, lhss=dict(COHORT_SPECS['lhss'], harvest=str(h20), cohort=str(h20 / '_cohort.tsv')))
+            Rg, Pg = tmp / 's37_root_g', pfd / 'g_preflight.json'
+            vjs = pfd / 'g_verify.json'
+            with _patch(git_info=gf_, COHORT_SPECS=sps, raw_problems=lambda *a, **k: []):
+                rc_g, o_g = _main_rc(['run', '--root', str(Rg), '--cohorts', 'lhss', '--dry-run', '--observe-imports', '--preflight-receipt', str(Pg)])
+                rc_v, o_v = _main_rc(['preflight-verify', '--receipt', str(Pg), '--expect-set', 'supp20', '--json', str(vjs)])
+                rc_va, o_va = _main_rc(['preflight-verify', '--receipt', str(Pg), '--expect-set', 'supp20', '--approved-sha', sha_[:7]])
+                rc_vw, o_vw = _main_rc(['preflight-verify', '--receipt', str(Pg), '--expect-set', 'supp20', '--approved-sha', '0123456'])
+                rc_vp, o_vp = _main_rc(['preflight-verify', '--receipt', str(Pg), '--expect-set', 'production194'])
+            vj_ = read_json(vjs) or {}
+            chk('㊲g ★ preflight-verify (194 등록 명령도 쓴다 · 읽기 전용) — 보충 20 합성 등록 계획 정상 = rc 0 (JSON 기록 rc 0) · 승인 SHA 접두 = rc 0 · '
+                '다른 승인 SHA = rc 1 (✗ P10) · 다른 등록 집합 production194 = rc 1 (✗ P6 · ✗ P9)',
+                rc_g == 0 and rc_v == 0 and vj_.get('rc') == 0 and rc_va == 0 and '✓ P10' in o_va and rc_vw == 1 and '✗ P10' in o_vw
+                and rc_vp == 1 and '✗ P6' in o_vp and '✗ P9' in o_vp, repr((rc_g, rc_v, rc_va, rc_vw, rc_vp, o_v[-400:])))
+
+            # ㊲h 필수 세 검사 — 값이 없거나 꼴이 다르면 ✗ (빈 것을 ✓ 로 읽지 않는다 · 화면 = 영수증 같은 함수)
+            pf0 = dict(cpu=dict(cpu_count=1, cpu_affinity=1), mem=dict(MemTotal_GB=1, MemAvailable_GB=1, SwapFree_GB=0, SwapTotal_GB=0), mem_budget_mb=None,
+                       lanes=1, first_lanes_est_mem_GB=0.1, est_mem_largest_mb=100.0, disk_free_GB=1, disk_need_GB=0, est_serial_h=0, est_makespan_h=0,
+                       git=dict(short='x', branch='b', dirty=False, porcelain=[]), n_raw_problems=0, generation=dict(generation='g2', problems=[], modes=[]),
+                       dependency_closure={}, lazy_census={}, fork_census=None, input_digest={}, warn=[], stop=[])
+            buf_ = io.StringIO()
+            try:
+                with contextlib.redirect_stdout(buf_):
+                    print_preflight(pf0, pl_a, _parse(['run', '--root', str(tmp / 's37_h')]), tmp / 's37_h')
+                why_ = ''
+            except Exception as e:                            # noqa: BLE001
+                why_ = f'{type(e).__name__}: {e}'
+            tl_ = [l_.strip() for l_ in buf_.getvalue().splitlines() if l_.strip().startswith(ticks_)]
+            v_ = pcv(pf0) if pcv else {}
+            chk('㊲h 필수 세 검사 값이 비었거나 꼴이 다르면 화면 ✗ · preflight_check_values ok false (옛 판: 빈 닫힘 · 빈 분류 · None fork = ✓)',
+                not why_ and len(tl_) == 3 and all('— ✗' in l_ and '— ✓' not in l_ for l_ in tl_) and bool(v_)
+                and all((v_.get(k_) or {}).get('ok') is False for k_ in CHK3), repr((why_, tl_, v_)))
+
+            # ㊲i 계획 단계 LaunchError 도 영수증 (main 과 같은 종료코드 · 같은 ⛔ 줄)
+            Ri, Pi = tmp / 's37_root_i', pfd / 'i_preflight.json'
+            with _patch(git_info=gf_):
+                rc_i, o_i = _main_rc(['run', '--root', str(Ri), '--cohorts', 'nope', '--dry-run', '--observe-imports', '--preflight-receipt', str(Pi)])
+            ri_, li_ = rlog_(Pi)
+            chk('㊲i 계획 단계 LaunchError (모르는 코호트) 도 영수증 — 실제 종료코드 2 (main 과 같은 값) · completed false · 멈춘 사유 · 로그에 같은 ⛔ 줄',
+                rc_i == 2 and ri_.get('exit_code') == 2 and ri_.get('completed') is False and '모르는 코호트' in str(ri_.get('aborted'))
+                and '⛔ 모르는 코호트' in li_.decode('utf-8') and not Ri.exists(), repr((rc_i, ri_.get('exit_code'), ri_.get('aborted'))))
+
+        _scenario('㊲ SUPR-01 · 02 사전 점검 기계 판독 줄 · 완료 영수증 시나리오', _s37)
     finally:
         for k, v in env_keep.items():
             if v is None:
