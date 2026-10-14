@@ -31,6 +31,61 @@ DENS = {'AM': 4.80, 'SE': 2.00, 'VGCF': 2.00, 'SuperP': 1.90, 'PTFE': 2.20, 'SDC
 #   Aligned 2026-06-30 (was 1.64, an out-of-band low value) so the zip additive counts use the
 #   SAME SE density as the closed porosity model. grade_engine.py 도 SE=2.0 로 통일됨
 #   (composite-density calc; 감사 F4, 2026-07-23) — 더 이상 불일치 없음.
+#   ⚠ 2026-10-14 밤 — 위 세 줄은 **gen1 세대**의 서술이다.  아래 DENS_GENERATIONS 를 볼 것.
+#
+# ★★ 밀도 세대 (2026-10-14 밤 · 1저자 결정 — docs/density_generations_20261014.md) ─────────────────────────
+#   랩 표준 진밀도 = SE (LPSCl) 1.64 · NCM (PC · SC 같음) 4.85 g/cm³.  범위 (가) **앞으로만**: 새 런 · 새 분석이 랩 표준을
+#   쓰고, 이미 만든 결과는 만든 때의 밀도 (gen1 = AM 4.80 · SE 2.00) 그대로 둔다 (바이트 그대로 · 재실행 없음).
+#   ⛔ 전역 상수를 조용히 바꾸지 않는다 — `DENS` 는 gen1 **그 객체 그대로** 남고, 새 세대는 도구마다 **명시** (`--dens-gen` ·
+#     `dens_gen=`) 로만 고른다.  고른 도구는 매니페스트 · 산출물에 `dens_record(세대)` (세대 · 실제 값 · 옮긴 상) 를 남긴다.
+#   ⚠ 1.64 가 물리적 골격 (진) 밀도인지는 1저자와 논의 중이다 (결정학 Li6PS5Cl ≈ 1.86) — 이 표는 "랩 표준값" 이라는 지위만 적는다.
+#   ★ 세 번째 세대 (예: He 피크노미터 실측) = 아래 두 표에 **한 항목**씩 (DENS_GENERATIONS 값 · DENS_CARRIED_FROM_GEN1 옮긴 상).
+#     scripts/make_mixer_deck.py 의 사본 (단독 실행용) 은 그 셀프테스트 DG① 가 이 표와 같아질 때까지 실패한다.
+DENS_GENERATIONS = {
+    'gen1': DENS,                     # ← 같은 객체 (옛 import · 옛 결과 그대로)
+    'lab20261014': {'AM': 4.85, 'SE': 1.64, 'VGCF': 2.00, 'SuperP': 1.90, 'PTFE': 2.20, 'SDCP': 1.30,
+                    'SWCNT': 1.35},
+}
+#: 세대마다 **랩 값이 없어 gen1 값을 그대로 옮긴 상** (no lab value — gen1 value carried).
+#  1저자 랩 표준은 SE · NCM 두 값뿐이다 — 첨가제 다섯 상은 gen1 값을 옮겼다는 사실을 기록에 같이 남긴다.
+DENS_CARRIED_FROM_GEN1 = {
+    'gen1': (),
+    'lab20261014': ('VGCF', 'SuperP', 'PTFE', 'SDCP', 'SWCNT'),   # no lab value — gen1 value carried
+}
+DENS_DEFAULT_GEN = 'gen1'
+#: 매니페스트 · 산출물의 세대 기록 키 (순서 그대로) — `dens_record` 가 만들고 payload 가 그대로 싣는다.
+DENS_RECORD_KEYS = ('dens_gen', 'dens_g_cm3', 'dens_carried_from_gen1')
+
+
+def dens(gen):
+    """밀도 세대 이름 → 그 세대 밀도표의 **사본** (상 → g/cm³).
+
+    ★ 이름은 표의 키와 **정확히** 같아야 한다 — 모르는 이름 · 빈 문자열 · 문자열 아닌 값 (None 포함) 은 거부한다
+      (SystemExit · 이 파일의 fail-closed 규약 = `additive_wt`).  "지정 안 함 → gen1" 은 **호출자**가 정한다 (None 을 넘기지 않는다)."""
+    if not isinstance(gen, str):
+        raise SystemExit(f'⛔ 밀도 세대 {gen!r} — 문자열이 아니다.  등록된 세대: {sorted(DENS_GENERATIONS)}')
+    if not gen.strip():
+        raise SystemExit(f'⛔ 밀도 세대가 비었다.  등록된 세대: {sorted(DENS_GENERATIONS)}')
+    if gen not in DENS_GENERATIONS:
+        raise SystemExit(f'⛔ 모르는 밀도 세대 {gen!r} — 등록된 세대: {sorted(DENS_GENERATIONS)} '
+                         f'(새 세대는 additives.DENS_GENERATIONS · DENS_CARRIED_FROM_GEN1 에 한 항목씩 · '
+                         f'docs/density_generations_20261014.md)')
+    return dict(DENS_GENERATIONS[gen])
+
+
+def dens_record(gen):
+    """매니페스트 · 산출물에 남기는 밀도 세대 기록 — {dens_gen · dens_g_cm3 (실제 값) · dens_carried_from_gen1}.  `dens` 와 같은 거부."""
+    t = dens(gen)
+    if gen not in DENS_CARRIED_FROM_GEN1:
+        raise SystemExit(f'⛔ 밀도 세대 {gen!r} 의 옮긴 상 기록 (DENS_CARRIED_FROM_GEN1) 이 없다 — 표에 한 항목을 더할 것')
+    return {'dens_gen': gen, 'dens_g_cm3': t, 'dens_carried_from_gen1': list(DENS_CARRIED_FROM_GEN1[gen])}
+
+
+def _dens_for(dens_gen):
+    """None (지정 안 함) → gen1 `DENS` **그 객체** (옛 계산 비트 그대로) · 이름 → 그 세대 사본 (모르는 이름 거부)."""
+    return DENS if dens_gen is None else dens(dens_gen)
+
+
 PHASE = {'SE': 1, 'AM': 0, 'VGCF': 2, 'SuperP': 3, 'PTFE': 4, 'SDCP': 5, 'SWCNT': 6}   # save-phase codes
 # default geometry (µm)
 VGCF_D, VGCF_L = 0.15, 10.0      # VGCF fibre Ø, length (Showa Denko VGCF-H; aspect ~67)
@@ -90,17 +145,20 @@ SWCNT_SHELL = 0.08               # seeded sheath skin thickness (µm).  Real few
                                  # same 1-voxel-overstatement class as seed_coat, volume-pinned → honest.
 
 
-def vol_fracs(wt: dict) -> dict:
-    """wt% (any subset of AM/SE/VGCF/SuperP/PTFE) → volume fractions (sum 1)."""
-    v = {k: wt[k] / DENS[k] for k in wt if wt.get(k, 0) > 0}
+def vol_fracs(wt: dict, dens_gen=None) -> dict:
+    """wt% (any subset of AM/SE/VGCF/SuperP/PTFE) → volume fractions (sum 1).
+    `dens_gen` — 밀도 세대 (None = gen1 `DENS` 그대로 · 옛 값 비트 동일).  분율만 돌려준다 (기록 키는 부르는 쪽이 단다)."""
+    rho = _dens_for(dens_gen)
+    v = {k: wt[k] / rho[k] for k in wt if wt.get(k, 0) > 0}
     tot = sum(v.values())
     return {k: vv / tot for k, vv in v.items()}
 
 
 def recipe_counts(wt: dict, solid_vol_um3: float, vgcf_d=VGCF_D, vgcf_l=VGCF_L,
-                  sp_d=SP_D, ptfe_d=PTFE_D, ptfe_l=PTFE_L) -> dict:
-    """Number of VGCF fibres / SuperP spheres / PTFE fibrils for a recipe + solid volume."""
-    vf = vol_fracs(wt)
+                  sp_d=SP_D, ptfe_d=PTFE_D, ptfe_l=PTFE_L, dens_gen=None) -> dict:
+    """Number of VGCF fibres / SuperP spheres / PTFE fibrils for a recipe + solid volume.
+    `dens_gen` 를 주면 그 세대 밀도로 계산하고 결과에 `dens_record` 키를 더한다 (안 주면 옛 출력 그대로)."""
+    vf = vol_fracs(wt, dens_gen=dens_gen)
     out = {'vol_fracs': vf}
     v_fib = np.pi * (vgcf_d / 2) ** 2 * vgcf_l                      # µm³ per VGCF fibre
     v_sp = np.pi / 6 * sp_d ** 3                                    # Super P sphere
@@ -110,6 +168,8 @@ def recipe_counts(wt: dict, solid_vol_um3: float, vgcf_d=VGCF_D, vgcf_l=VGCF_L,
             out[ph] = {'vol_um3': vf[ph] * solid_vol_um3,
                        'n': int(round(vf[ph] * solid_vol_um3 / vobj)),
                        'vol_per_obj_um3': vobj}
+    if dens_gen is not None:                                        # 요청했을 때만 기록 (안 주면 키 집합 그대로)
+        out.update(dens_record(dens_gen))
     return out
 
 
@@ -159,16 +219,20 @@ def _pos(v) -> bool:
 
 
 def recipe_counts_real(add_wt: dict, am_vol_um3: float, se_vol_um3: float, vgcf_d=VGCF_D,
-                       vgcf_l=VGCF_L, sp_d=SP_D, ptfe_d=PTFE_D, ptfe_l=PTFE_L) -> dict:
+                       vgcf_l=VGCF_L, sp_d=SP_D, ptfe_d=PTFE_D, ptfe_l=PTFE_L, dens_gen=None) -> dict:
     """Additive counts where each additive is `wt%` of the REAL electrode — AM/SE masses come
     from the actual scaffold (am_vol·ρ_AM + se_vol·ρ_SE), NOT a hardcoded recipe ratio.
 
     Each additive a is wt_a% of the TOTAL (AM+SE+additives):
         M_tot = M_solid / (1 − Σwt/100),   M_a = wt_a/100 · M_tot,   V_a = M_a / ρ_a.
     (ρ cancels into consistent units, so masses ∝ vol·ρ are fine to mix with µm³ volumes.)
-    Returns the realised electrode wt%/vol% so the run can report the true composition."""
-    M_AM = am_vol_um3 * DENS['AM']
-    M_SE = se_vol_um3 * DENS['SE']
+    Returns the realised electrode wt%/vol% so the run can report the true composition.
+
+    `dens_gen` (2026-10-14 밤) — 밀도 세대.  None = gen1 `DENS` 그대로 (옛 출력 비트 동일 · 기록 키 없음) ·
+    이름을 주면 그 세대 밀도로 계산하고 `dens_record` 키 (세대 · 실제 값 · 옮긴 상) 를 끝에 더한다."""
+    rho = _dens_for(dens_gen)
+    M_AM = am_vol_um3 * rho['AM']
+    M_SE = se_vol_um3 * rho['SE']
     M_solid = M_AM + M_SE
     sw = sum(add_wt.values())
     M_tot = M_solid / max(1.0 - sw / 100.0, 1e-6)
@@ -181,9 +245,11 @@ def recipe_counts_real(add_wt: dict, am_vol_um3: float, se_vol_um3: float, vgcf_
              'SWCNT': np.pi / 4 * SWCNT_BUND_D ** 2 * SWCNT_SEG_L}  # A14: 1µm vein-bundle segment (representation
     #   budget — real single tubes at Ø2nm would give billions of objects; volume add_pvs-pinned either way)
     for a, w in add_wt.items():
-        V_a = (w / 100.0) * M_tot / DENS[a]                            # µm³ of additive a
+        V_a = (w / 100.0) * M_tot / rho[a]                             # µm³ of additive a
         out[a] = {'wt_pct': w, 'vol_um3': V_a, 'n': int(round(V_a / v_obj[a])),
                   'vol_per_obj_um3': v_obj[a], 'vol_pct_of_solid': round(100.0 * V_a / solid_vol, 3)}
+    if dens_gen is not None:                                           # 요청했을 때만 기록 (안 주면 키 집합 그대로)
+        out.update(dens_record(dens_gen))
     return out
 
 
@@ -1371,6 +1437,10 @@ def main():
                     help='A14 seed_sheath + sheath_ion_tradeoff checks (skin/contiguity/coverage/trade-off)')
     ap.add_argument('--selftest-dens', action='store_true',
                     help='밀도 세대 검사 (gen1 = 옛 DENS 그 객체 · 랩 세대 값 · 거부 · 기본 비트 동일 · 기록 키 유무)')
+    ap.add_argument('--dens-gen', default=None,
+                    help='밀도 세대 (DENS_GENERATIONS 의 키 — gen1 · lab20261014 …).  생략 = gen1 (옛 출력 그대로 · 세대 줄 없음).  '
+                         '주면 그 세대 밀도로 개수를 내고 세대 줄 (세대 · 실제 값 · 옮긴 상) 을 찍는다.  '
+                         'docs/density_generations_20261014.md')
     a = ap.parse_args()
     if a.selftest_dispersion:
         import sys
@@ -1381,13 +1451,18 @@ def main():
     if a.selftest_dens:
         import sys
         sys.exit(_selftest_dens())
+    if a.dens_gen is not None:                       # 지정했을 때만 (생략 = 옛 출력 바이트 그대로) — 모르는 이름은 dens 가 거부
+        _r = dens_record(a.dens_gen)
+        print(f"밀도 세대 dens_gen = {_r['dens_gen']}  ("
+              + ' · '.join(f'{k} {v:g}' for k, v in _r['dens_g_cm3'].items()) + ' g/cm³ · gen1 값을 옮긴 상: '
+              + (' · '.join(_r['dens_carried_from_gen1']) or '없음') + ')')
     Lx, Ly, Lz = (float(v) for v in a.rve_um.split(','))
     solid = Lx * Ly * Lz * (1 - a.porosity)
     recipes = [a.recipe] if a.recipe else ['AM:SE:VGCF=72:27:1', 'AM:SE:VGCF:PTFE=80:18:1:1']
     rng = np.random.default_rng(0)
     for r in recipes:
         wt = parse_recipe(r)
-        c = recipe_counts(wt, solid)
+        c = recipe_counts(wt, solid, dens_gen=a.dens_gen)
         print(f'\n=== {r}   (RVE {Lx:g}×{Ly:g}×{Lz:g}µm, solid {solid:,.0f}µm³) ===')
         print('  vol%: ' + '  '.join(f'{k} {100*v:.1f}' for k, v in c['vol_fracs'].items()))
         for ph in ('VGCF', 'SuperP', 'PTFE'):

@@ -50,6 +50,10 @@ BED = {
 }
 DH_GATE = 3.5                                  # CLAUDE.md 실용 규칙 (MPM SE 응력)
 TOL_PFRAC, TOL_CLOSE = 0.02, 0.02              # 교차검증 허용오차
+#: ★ 옛 캠페인 대조 (④ · validate_against_campaign) 의 밀도 세대 — 그 캠페인 침대가 만들어진 세대 (gen1 = AM 4.80 · SE 2.00).
+#  `--dens-gen` 으로 새 세대를 골라도 이 대조는 **gen1 에 고정**한다: 대조 대상이 gen1 에서 센 개수이기 때문이다
+#  (docs/density_generations_20261014.md · 범위 (가) 앞으로만 — 옛 결과는 만든 때의 밀도 그대로).
+CAMPAIGN_DENS_GEN = 'gen1'
 
 
 def bed_totals_measured(am_csv, se_csv, thickness_um, lateral_um):
@@ -114,13 +118,14 @@ def dh_gate(tot, lateral_um=BED['lateral_um'], n_grids=(192, 256, 288, 320, 384,
                       '통과가 STEP3 안전을 뜻하지 **않는다** (STEP3 쪽은 SE neck — CL-72).')}
 
 
-def additive_counts(tot, vgcf_wts=(1.0, 2.0, 3.0, 4.0), ptfe_wt=1.0):
-    """② 프로덕션 경로를 그대로 부른다 (손계산 금지 — 옛 손계산은 3.7 % 틀렸다)."""
+def additive_counts(tot, vgcf_wts=(1.0, 2.0, 3.0, 4.0), ptfe_wt=1.0, dens_gen=None):
+    """② 프로덕션 경로를 그대로 부른다 (손계산 금지 — 옛 손계산은 3.7 % 틀렸다).
+    `dens_gen` (2026-10-14 밤) — 밀도 세대 (None = gen1 · 옛 수 그대로).  행에는 세대 키를 넣지 않는다 (기록은 출력 JSON 최상위)."""
     from additives import recipe_counts_real
     out = []
     for v in vgcf_wts:
         r = recipe_counts_real({'VGCF': float(v), 'PTFE': float(ptfe_wt)},
-                               tot['V_AM_um3'], tot['V_SE_um3'])
+                               tot['V_AM_um3'], tot['V_SE_um3'], dens_gen=dens_gen)
         out.append({'vgcf_wt_pct': float(v), 'ptfe_wt_pct': float(ptfe_wt),
                     'n_vgcf': r['VGCF']['n'], 'n_ptfe': r['PTFE']['n'],
                     'vgcf_vol_pct_of_solid': r['VGCF']['vol_pct_of_solid'],
@@ -130,11 +135,13 @@ def additive_counts(tot, vgcf_wts=(1.0, 2.0, 3.0, 4.0), ptfe_wt=1.0):
 
 
 def validate_against_campaign(tot, measured=((0.5, 13281), (1.0, 26696), (2.0, 53529), (4.0, 110120))):
-    """옛 캠페인 실측 n_objects 와 대조 — 이 경로가 그 침대를 재현하는지 (VGCF 만, PTFE 없음)."""
+    """옛 캠페인 실측 n_objects 와 대조 — 이 경로가 그 침대를 재현하는지 (VGCF 만, PTFE 없음).
+    ★ 밀도 세대는 그 캠페인의 세대 (`CAMPAIGN_DENS_GEN` = gen1) 에 고정 — `--dens-gen` 과 무관하다."""
     from additives import recipe_counts_real
     rows = []
     for wt, meas in measured:
-        n = recipe_counts_real({'VGCF': float(wt)}, tot['V_AM_um3'], tot['V_SE_um3'])['VGCF']['n']
+        n = recipe_counts_real({'VGCF': float(wt)}, tot['V_AM_um3'], tot['V_SE_um3'],
+                               dens_gen=CAMPAIGN_DENS_GEN)['VGCF']['n']
         rows.append({'vgcf_wt_pct': wt, 'n_computed': int(n), 'n_measured': int(meas),
                      'rel_pct': 100.0 * (n / meas - 1.0)})
     return {'rows': rows, 'max_abs_rel_pct': max(abs(r['rel_pct']) for r in rows)}
@@ -234,10 +241,21 @@ if __name__ == '__main__':
     ap.add_argument('--thickness-um', type=float, default=BED['thickness_um'])
     ap.add_argument('--lateral-um', type=float, default=BED['lateral_um'])
     ap.add_argument('--out', default='')
+    ap.add_argument('--dens-gen', default=None,
+                    help='밀도 세대 (additives.DENS_GENERATIONS 의 키 — gen1 · lab20261014 …).  생략 = gen1 (옛 출력 그대로 · 기록 없음).  '
+                         '주면 ② 첨가제 개수를 그 세대 밀도로 내고 화면 · JSON 에 dens_gen · 실제 값 · 옮긴 상을 기록한다.  '
+                         '③ 옛 캠페인 대조는 gen1 고정 (그 캠페인의 세대 · campaign_validation_dens_gen).  '
+                         'docs/density_generations_20261014.md')
     ap.add_argument('--selftest', action='store_true')
     a = ap.parse_args()
     if a.selftest:
         raise SystemExit(_selftest())
+    _dens_rec = None
+    if a.dens_gen is not None:                       # 지정했을 때만 — 모르는 이름은 additives.dens_record 가 거부 (계산 전)
+        from additives import dens_record
+        _dens_rec = dens_record(a.dens_gen)
+        print(f"밀도 세대 dens_gen = {a.dens_gen}  (AM {_dens_rec['dens_g_cm3']['AM']:g} · SE {_dens_rec['dens_g_cm3']['SE']:g} g/cm³ "
+              f"· gen1 값을 옮긴 상: {' · '.join(_dens_rec['dens_carried_from_gen1']) or '없음'} · 옛 캠페인 대조 = {CAMPAIGN_DENS_GEN} 고정)")
 
     if a.am and a.se:
         tot = bed_totals_measured(a.am, a.se, a.thickness_um, a.lateral_um)
@@ -247,7 +265,7 @@ if __name__ == '__main__':
         tot = bed_totals()
         print('⚠ 대비 경로 — 옛 캠페인 요약치 + 반경 가설 (스캐폴드를 주면 실측한다)')
     g = dh_gate(tot, lateral_um=a.lateral_um)
-    cts = additive_counts(tot)
+    cts = additive_counts(tot, dens_gen=a.dens_gen)
     val = validate_against_campaign(tot)
 
     if 'check_p_frac' in tot:
@@ -286,6 +304,7 @@ if __name__ == '__main__':
         d = {'bed': BED, 'totals': tot, 'dh_gate': g, 'additive_counts': cts,
              'campaign_validation': val,
              'angular_screen': 'scripts/step4_angular_risk.py (별도 산출물)',
+             **({} if _dens_rec is None else {**_dens_rec, 'campaign_validation_dens_gen': CAMPAIGN_DENS_GEN}),
              **provenance()}
         json.dump(d, open(a.out, 'w'), ensure_ascii=False, indent=1, default=float)
         print(f'\n  → {a.out}')

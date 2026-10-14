@@ -35,6 +35,32 @@ import sys
 #: 밀도 (g/cm³) — `scripts/additives.py` 정본과 같은 값.  여기서 다시 적는 이유는
 #  이 생성기가 리포 밖(1저자 WSL)에서도 단독으로 돌 수 있어야 하기 때문이다.
 DENS = {'AM': 4.80, 'SE': 2.00, 'VGCF': 2.00, 'PTFE': 2.20}
+#: ★ 밀도 세대 (2026-10-14 밤 · 1저자 결정 — 랩 표준 진밀도 SE 1.64 · NCM (PC · SC) 4.85 · 범위 (가) 앞으로만 ·
+#  docs/density_generations_20261014.md) — `scripts/additives.py` DENS_GENERATIONS · DENS_CARRIED_FROM_GEN1 의 **사본** (이 생성기의 네 상만).
+#  사본을 두는 이유는 위 DENS 와 같다 (리포 밖 단독 실행).  ⛔ 정본과 어긋나면 셀프테스트 DG① 가 실패한다 (additives.py 를 AST 로 읽어 대조).
+#  ⛔ 전역 DENS 를 바꾸지 않는다 — 세대 미지정 덱 = gen1 (옛 덱 · 판정 기록 바이트 그대로) · 새 세대는 `plan(…, dens_gen=)` · CLI `--dens-gen` 으로만.
+DENS_GENERATIONS = {
+    'gen1': DENS,                                         # 같은 객체
+    'lab20261014': {'AM': 4.85, 'SE': 1.64, 'VGCF': 2.00, 'PTFE': 2.20},
+}
+DENS_CARRIED_FROM_GEN1 = {'gen1': (), 'lab20261014': ('VGCF', 'PTFE')}   # 랩 값 없음 — gen1 값을 옮김 (이 생성기의 상만)
+
+
+def dens_table(gen=None):
+    """밀도 세대 → 이 생성기의 밀도표.  None (지정 안 함) = gen1 `DENS` **그 객체** (옛 덱 비트 그대로) · 이름 = 그 세대 사본.
+    ⛔ 모르는 이름 · 빈 문자열 · 문자열 아닌 값 = 거부 (SystemExit — 이 생성기의 fail-closed 규약)."""
+    if gen is None:
+        return DENS
+    if not isinstance(gen, str) or gen not in DENS_GENERATIONS:
+        raise SystemExit(f'⛔ 밀도 세대 {gen!r} — 등록된 세대 {sorted(DENS_GENERATIONS)} 중 하나여야 한다 '
+                         f'(docs/density_generations_20261014.md)')
+    return dict(DENS_GENERATIONS[gen])
+
+
+def _dens_of(p):
+    """계획 `p` 의 밀도표 — `plan()` 이 넣은 것 · 없으면 (옛 형식 계획) gen1 `DENS`."""
+    t = p.get('dens')
+    return DENS if t is None else t
 #: 1저자 지시 조성 (2026-09-19) — 에너지밀도 최대 조합
 WT = {'AM': 80.0, 'SE': 18.0, 'VGCF': 1.0, 'PTFE': 1.0}
 PS = (7.0, 3.0)                       # P:S (wt%)
@@ -375,7 +401,7 @@ def worst_overlap(d):
     return max(out)
 
 
-def _ced_matrix_min(arm, d):
+def _ced_matrix_min(arm, d, dens=None):
     """[옛 규칙 · min] 팔 + 상별 지름 → (n+1)×(n+1) `cohesionEnergyDensity` 행렬.  **마지막 행/열 = 벽.**
 
     ★ 모든 팔이 **절대 Bo** — `abs_base`(전 쌍) + `abs_mult`(쌍별 덮어쓰기).  BOND0 없음.
@@ -392,10 +418,13 @@ def _ced_matrix_min(arm, d):
       ⚠ 이것은 규약 변경이다 (2026-09-21) — 리뷰 대상 1순위.
     ★ 벽: `M[w][i] = M[i][i] / WALL_CED_DIV` — JKR 힘비 1/6.25 를 SJKR 로 재현.  벽–벽 0.
     ★ 끝에 겹침 천장을 **단언**한다 (fail-closed).
+    `dens` (2026-10-14 밤) — 그 덱의 밀도표 (`plan()['dens']`).  None = gen1 `DENS` (옛 행렬 비트 그대로).  같은 Bo_code 를 그 세대의
+      무게로 CED 역산한다 (Bo = F_coh / W · W ∝ ρ).
     """
     a = ARMS[arm]
     n = len(TYPES)
     w = n
+    dn = DENS if dens is None else dens
     M = [[0.0] * (n + 1) for _ in range(n + 1)]
     if a['bond'] > 0:
         if 'abs_base' not in a:                        # fail-closed (SystemExit = 프로젝트 규약)
@@ -409,7 +438,7 @@ def _ced_matrix_min(arm, d):
                 src = coat[t]
                 bo_src = am.get((src, src), a['abs_base'])
                 r_s, r_t = d[src] / 2.0, d[t] / 2.0
-                rho_s, rho_t = DENS[PHASE_MECH[src][1]], DENS[PHASE_MECH[t][1]]
+                rho_s, rho_t = dn[PHASE_MECH[src][1]], dn[PHASE_MECH[t][1]]
                 return bo_src * (r_s ** 2 * rho_s) / (r_t ** 2 * rho_t)
             return pair_bo
         for i, ti in enumerate(TYPES):
@@ -419,7 +448,7 @@ def _ced_matrix_min(arm, d):
                 for t in (ti, tj):
                     nu, mat = PHASE_MECH[t]
                     cand.append(ced_for_bond(_bo_phase(t, pair_bo) * a['bond'],
-                                             d[t] / 2.0, nu, DENS[mat], E=E_PHASE[t]))
+                                             d[t] / 2.0, nu, dn[mat], E=E_PHASE[t]))
                 M[i][j] = min(cand)
         for i in range(n):
             M[i][w] = M[w][i] = M[i][i] / WALL_CED_DIV
@@ -430,13 +459,14 @@ def _ced_matrix_min(arm, d):
     return M
 
 
-def ced_matrix(arm, d):
+def ced_matrix(arm, d, dens=None):
     """팔 + 상별 지름 → (n+1)×(n+1) `cohesionEnergyDensity` 행렬 (마지막 = 벽).
-    ★ 2026-10-14 — 팔의 `rule` 로 고른다: `geomean` = D2 결합 규칙 (`ced_matrix_geomean`) · 그 밖 = 옛 min 규칙 (`_ced_matrix_min`, 비트 그대로)."""
+    ★ 2026-10-14 — 팔의 `rule` 로 고른다: `geomean` = D2 결합 규칙 (`ced_matrix_geomean`) · 그 밖 = 옛 min 규칙 (`_ced_matrix_min`, 비트 그대로).
+    `dens` (2026-10-14 밤) = 그 덱의 밀도표 (None = gen1 `DENS` · 옛 행렬 그대로)."""
     a = ARMS[arm]
     if a.get('rule') == 'geomean':
-        return ced_matrix_geomean(a, d)
-    return _ced_matrix_min(arm, d)
+        return ced_matrix_geomean(a, d, dens=dens)
+    return _ced_matrix_min(arm, d, dens=dens)
 
 
 # ══ D2 결합 규칙 — 쌍 접착일 기하평균 (2026-10-14 · 1저자 비준 10-14 D2 (가) · docs/mixer_paper_pipeline_draft_20261013.md §4) ══════════
@@ -538,9 +568,11 @@ def _assert_ceiling_pairwise(arm, M, d, E):
                 raise SystemExit(f'⛔ 팔 {arm}: {ti}–{tj} 겹침 {ov*100:.3f} % > 천장 {OVL_CEILING*100:.1f} % (D2 쌍별) — Bo_SE 를 낮추거나 천장을 논의할 것')
 
 
-def ced_matrix_geomean(a, d, E=None):
+def ced_matrix_geomean(a, d, E=None, dens=None):
     """D2 결합 규칙 — 팔 사전 `a` (`gm_arm`) + 상별 지름 → (n+1)×(n+1) CED 행렬 (마지막 = 벽).  위 절 주석이 정의다.
-    `E` = 이 덱의 상별 영률 (기본 `E_PHASE`).  F₀ 목표는 E 와 무관하고 CED 만 E 를 따른다."""
+    `E` = 이 덱의 상별 영률 (기본 `E_PHASE`).  F₀ 목표는 E 와 무관하고 CED 만 E 를 따른다.
+    `dens` (2026-10-14 밤) = 그 덱의 밀도표 — 절대 수준 F₀_SS = Bo_SE × SE 무게 (∝ ρ_SE) 에 들어간다 (None = gen1 `DENS`).
+      ⚠ D2 **덱**은 세대를 명시해야 만들어진다 (`deck` · `deck_meta` 가 거부) — 이 함수 자체는 행렬 산술이라 기본값을 둔다."""
     if not (isinstance(a, dict) and a.get('rule') == 'geomean' and a.get('_gm_valid')):
         raise SystemExit('⛔ D2 결합 규칙: gm_arm 으로 만든 팔 사전이 아니다 (검증 우회 거부)')
     a = dict(a, **gm_arm(a['gamma'], gamma_wall=a['gamma_wall'], bo_se=a['bo_se'], layered=a['layered'], desc=a['desc'],
@@ -550,7 +582,7 @@ def ced_matrix_geomean(a, d, E=None):
     g = dict(a['gamma'])
     g[WALL] = a['gamma_wall']
     nu_se, mat_se = PHASE_MECH['SE']
-    ced_ss = ced_for_bond(a['bo_se'], d['SE'] / 2.0, nu_se, DENS[mat_se], E=E['SE'])
+    ced_ss = ced_for_bond(a['bo_se'], d['SE'] / 2.0, nu_se, (DENS if dens is None else dens)[mat_se], E=E['SE'])
     rss = rstar_pair('SE', 'SE', d)
     f_ss = f0_pair(ced_ss, rss, estar_pair('SE', 'SE', E))
     n = len(names)
@@ -665,18 +697,21 @@ def _dt_k(dt_factor):
     return k
 
 
-def volume_fractions():
+def volume_fractions(dens=None):
     """활성 상(`TYPES`)만의 부피분율·wt%.  **빠진 상의 질량은 재정규화한다.**
 
     ⚠ 그래서 VGCF·PTFE 를 빼면 AM:SE 가 80:18 → 81.63:18.37 이 된다 — 두 상 **사이의**
       비는 실물 그대로이고(1.6 g : 0.36 g), 바뀌는 것은 "전체 중 몇 %" 라는 라벨뿐이다.
+    `dens` (2026-10-14 밤) = 밀도표 (None = gen1 `DENS` · 옛 값 그대로).  wt% 는 세대와 무관하고 부피분율만 바뀐다
+      (1저자 레시피 80:18 · P:S 7:3 의 SE 부피 몫 gen1 0.3506 → lab20261014 0.3995 — 셀프테스트 DG③).
     """
+    dn = DENS if dens is None else dens
     raw = {'AM_P': WT['AM'] * PS[0] / sum(PS), 'AM_S': WT['AM'] * PS[1] / sum(PS),
            'SE': WT['SE'], 'VGCF': WT['VGCF'], 'PTFE': WT['PTFE']}
     tot_w = sum(raw[k] for k in TYPES)
     wt = {k: raw[k] * 100.0 / tot_w for k in TYPES}
     rho = {k: PHASE_MECH[k][1] for k in TYPES}
-    v = {k: wt[k] / DENS[rho[k]] for k in TYPES}
+    v = {k: wt[k] / dn[rho[k]] for k in TYPES}
     tot = sum(v.values())
     return {k: v[k] / tot for k in v}, wt
 
@@ -704,8 +739,12 @@ def stiffened_e(stiffen_se=1.0):
     return E
 
 
-def plan(n_total, cgf=200.0, fill=0.30, pack=0.60, drum_r_over_l=2.5, stiffen_se=1.0):
+def plan(n_total, cgf=200.0, fill=0.30, pack=0.60, drum_r_over_l=2.5, stiffen_se=1.0, dens_gen=None):
     """조성 → 개수 · 드럼 치수 · 시간스텝.  **순수 함수**라 시험 가능하다.
+
+    ★ `dens_gen` (2026-10-14 밤 · docs/density_generations_20261014.md) — 밀도 세대.  None = gen1 `DENS` **그 객체** (옛 계획 · 덱 비트
+      그대로 · 기록 없음) · 이름 = 그 세대 밀도로 부피분율 → 템플릿 수 · 드럼 · Rayleigh dt (그리고 `deck` 의 Bo ↔ CED 환산 · density constant)
+      를 다시 낸다.  반환에 `dens` (그 표) · `dens_gen` (None 또는 이름) 을 더한다 — 덱 머리 · deck_meta 의 기록은 이름이 있을 때만.
 
     ★ 지름은 전부 `D_REAL_UM` 에서 나온다 (비율 노브 없음).  옛 `d_se_over_am` ·
       `d_fib_over_am` 인자는 **삭제**했다 — 아무도 넘기지 않으면서 표를 무력화하고
@@ -715,8 +754,9 @@ def plan(n_total, cgf=200.0, fill=0.30, pack=0.60, drum_r_over_l=2.5, stiffen_se
       ⚠ soft (F = 1) 에서 dt 를 정하는 상은 SE 가 아니라 **AM_S** 다 (캠페인 계획: AM_S 0.7055 µs < SE 1.1719 µs) —
         그래서 ×14 의 step 배수는 √14 = 3.74 가 아니라 **2.2525** 다 (Codex 7 차 §5-1 산술과 같다).
     """
+    dn = dens_table(dens_gen)                                 # 모르는 세대 = 거부 (덱을 쓰기 전)
     E = stiffened_e(stiffen_se)
-    phi, wt = volume_fractions()
+    phi, wt = volume_fractions(dn)
     d = {k: D_REAL_UM[k] * 1e-6 * cgf for k in TYPES}        # m
     #  ⚠⚠ LIGGGHTS `particledistribution/discrete` 는 분율을 **mass%** 로 읽는다
     #    (실행으로 확인: 로그가 "distribution based on mass%" 를 먼저 찍고 number% 를 유도한다).
@@ -727,7 +767,7 @@ def plan(n_total, cgf=200.0, fill=0.30, pack=0.60, drum_r_over_l=2.5, stiffen_se
     fibres = tuple(t for t in FIBRE_TYPES if t in TYPES)
     nsph = max(2, int(round(L_fib / d[fibres[0]]))) if fibres else 1
     NSPH = {k: (nsph if k in fibres else 1) for k in TYPES}
-    rho_i = {k: DENS[PHASE_MECH[k][1]] for k in TYPES}
+    rho_i = {k: dn[PHASE_MECH[k][1]] for k in TYPES}
     #  템플릿 1개의 질량 (섬유는 구 nsph 개)
     #  ★ 섬유는 구가 겹쳐 있어 nsph 개 합보다 가볍다 — 기하로 보정한다 (실측 +3.8 % 편향 제거)
     fac = {k: (chain_volume_factor(NSPH[k]) if NSPH[k] > 1 else 1.0) for k in d}
@@ -754,7 +794,7 @@ def plan(n_total, cgf=200.0, fill=0.30, pack=0.60, drum_r_over_l=2.5, stiffen_se
     for t in TYPES:
         nu_t, mat = PHASE_MECH[t]
         G = E[t] / (2.0 * (1.0 + nu_t))
-        dts.append(0.2 * math.pi * (d[t] / 2) * math.sqrt(DENS[mat] * 1000.0 / G)
+        dts.append(0.2 * math.pi * (d[t] / 2) * math.sqrt(dn[mat] * 1000.0 / G)
                    / (0.1631 * nu_t + 0.8766))
     dt = min(dts)
     rpm_crit = 60 / (2 * math.pi) * math.sqrt(9.81 / R)
@@ -762,7 +802,8 @@ def plan(n_total, cgf=200.0, fill=0.30, pack=0.60, drum_r_over_l=2.5, stiffen_se
                 massfrac=massfrac, n_fib=n_fib, nsph=nsph, L_fib=L_fib,
                 v_solid=v_solid, v_drum=v_drum, R=R, L=L, dt=dt,
                 rpm_crit=rpm_crit, cgf=cgf, stl_scale=R / 0.5, n_total=sum(n.values()),
-                E=E, stiffen_se=float(stiffen_se), dt_by=TYPES[dts.index(dt)])
+                E=E, stiffen_se=float(stiffen_se), dt_by=TYPES[dts.index(dt)],
+                dens=dn, dens_gen=dens_gen)
 
 
 def chain_volume_factor(nsph, spacing_over_d=0.8):
@@ -901,8 +942,9 @@ def ced_for_deck(p, arm, hold_bo_pairwise=False):
     soft = 현 생성기 `ced_matrix` (기준 영률 `E_PHASE`).  `p` 가 경화 계획 (`stiffen_se` ≠ 1) 이고 점착이 있으면
     `hold_bo_pairwise=True` 일 때만 쌍별 F₀ 보존 행렬을 쓴다 — **없으면 거부** (옛 동일상 규칙으로 조용히 가지 않게).
     점착이 전부 0 인 팔 (E0 · L0) 은 F₀ 대상이 없으니 허용한다 (행렬 그대로 0).
+    밀도는 계획의 표 (`plan()['dens']` · 세대 미지정 = gen1 그대로) 로 Bo ↔ CED 를 환산한다.
     """
-    M_soft = ced_matrix(arm, p['d'])
+    M_soft = ced_matrix(arm, p['d'], dens=_dens_of(p))
     F = float(p.get('stiffen_se', 1.0))
     nonzero = any(v != 0.0 for row in M_soft for v in row)
     if F == 1.0 or not nonzero:
@@ -991,13 +1033,35 @@ def _gm_header(arm, p, M_ced):
 
 
 def plan_dt_soft(p):
-    """soft (기준 E) 에서의 dt 와 그것을 정한 상 — 머리 주석 · 메타용 (같은 Rayleigh 식)."""
+    """soft (기준 E) 에서의 dt 와 그것을 정한 상 — 머리 주석 · 메타용 (같은 Rayleigh 식 · 그 계획의 밀도표)."""
+    dn = _dens_of(p)
     dts = []
     for t in TYPES:
         nu_t, mat = PHASE_MECH[t]
         G = E_PHASE[t] / (2.0 * (1.0 + nu_t))
-        dts.append(0.2 * math.pi * (p['d'][t] / 2) * math.sqrt(DENS[mat] * 1000.0 / G) / (0.1631 * nu_t + 0.8766))
+        dts.append(0.2 * math.pi * (p['d'][t] / 2) * math.sqrt(dn[mat] * 1000.0 / G) / (0.1631 * nu_t + 0.8766))
     return min(dts), TYPES[dts.index(min(dts))]
+
+
+def _require_dens_gen(arm, p):
+    """★ D2 결합 규칙 팔 (rule="geomean") 덱 = **새 세대 덱** — 계획에 밀도 세대가 명시돼 있어야 한다 (1저자 10-14 밤 · fail-closed).
+    옛 팔은 그대로 (세대 미지정 = gen1 · 옛 덱 바이트 그대로)."""
+    if ARMS[arm].get('rule') == 'geomean' and p.get('dens_gen') is None:
+        raise SystemExit(f'⛔ 팔 {arm}: D2 결합 규칙 덱은 새 세대 덱이다 — 밀도 세대를 명시해야 한다 '
+                         f'(CLI --dens-gen {"|".join(sorted(DENS_GENERATIONS))} · plan(…, dens_gen=…) · docs/density_generations_20261014.md)')
+
+
+def _dens_header(p):
+    """밀도 세대 머리 주석 — 세대를 **명시한** 덱에만 (미지정 = 빈 문자열 → 덱 바이트 그대로).  ⚠ 줄 끝 `&` 금지 (LIGGGHTS 줄 잇기)."""
+    g = p.get('dens_gen')
+    if g is None:
+        return ''
+    t = _dens_of(p)
+    carried = DENS_CARRIED_FROM_GEN1.get(g, ())
+    return ('\n# ★ 밀도 세대 dens_gen = ' + g + ' (docs/density_generations_20261014.md · 1저자 10-14 밤 랩 표준 · 앞으로만) — '
+            + ' · '.join(f'{k} {t[k]:g}' for k in t) + ' g/cm³ · gen1 값을 그대로 옮긴 상: ' + (' · '.join(carried) or '없음')
+            + '\n#   밀도가 들어간 곳 = 부피분율 → 템플릿 수 · 드럼 크기 · Rayleigh dt · Bo ↔ CED 환산 · 템플릿 density constant '
+              '(세대 미지정 덱 = gen1 · 옛 덱 · 판정 기록 그대로)')
 
 
 def deck_meta(p, rpm, revolutions, seed, arm, text, argv=None, settle_s=None, restitution=0.3,
@@ -1007,8 +1071,10 @@ def deck_meta(p, rpm, revolutions, seed, arm, text, argv=None, settle_s=None, re
     전 정밀도 덤프 (--dump-full-precision) 덱에만 `dump_modify_format` 키를 더한다 (끄면 키 집합 그대로).
 
     ⚠ 이 표는 **생성기 산술**이다 — 실행 덱의 독립 검산은 `scripts/mixer_deck_readback.py` (덱 텍스트만 읽는다) 가 맡는다.
+    밀도 세대를 명시한 계획 (`plan(…, dens_gen=)`) 이면 `dens_gen` · `dens_g_cm3` · `dens_carried_from_gen1` 키를 더한다 (미지정 = 키 집합 그대로).
     """
     import hashlib
+    _require_dens_gen(arm, p)
     st = run_steps(p, rpm, revolutions, settle_s=settle_s, restitution=restitution, dt_factor=dt_factor)
     M_soft, M_ced, nonzero = ced_for_deck(p, arm, hold_bo_pairwise)
     E_new = p.get('E', E_PHASE)
@@ -1049,6 +1115,9 @@ def deck_meta(p, rpm, revolutions, seed, arm, text, argv=None, settle_s=None, re
                                      ceiling=f'모든 쌍 δ0/min(r) ≤ {OVL_CEILING:g}', status='개발 · 등록 전 (결과 0)')
         if a_.get('wall_rule'):
             meta['adhesion_rule'].update(wall_rule=a_['wall_rule'], rho_uncoated_ncm=a_['rho_uncoated_ncm'])
+    if p.get('dens_gen') is not None:               # 세대를 명시한 덱에만 (미지정 = 키 집합 그대로)
+        meta.update(dens_gen=p['dens_gen'], dens_g_cm3=dict(_dens_of(p)),
+                    dens_carried_from_gen1=list(DENS_CARRIED_FROM_GEN1[p['dens_gen']]))
     return meta
 
 
@@ -1063,12 +1132,15 @@ def deck(p, rpm, revolutions, seed=32452843, arm='E1', settle_s=None, layered=No
         raise SystemExit(
             f'⛔ 삽입 시드 {seed} 는 소수가 아니다 — LIGGGHTS 가 거부한다.\n'
             f'   예: 15485863 · 32452843 · 32452867 · 49979687 · 91648301')
+    _require_dens_gen(arm, p)                          # ★ D2 덱 = 새 세대 덱 (세대 미지정이면 거부 · 옛 팔은 그대로)
     n, d = p['n'], p['d']
     #  ★ 강성 축 (2026-09-30) — 시간 계획 · CED 행렬 · 머리 블록.  옵션이 중립이면 셋 다 옛 식 그대로 (셀프테스트 ST① 가 바이트 동일 강제).
     st = run_steps(p, rpm, revolutions, settle_s=settle_s, restitution=restitution, dt_factor=dt_factor)
     M_soft, M_ced, _nonzero = ced_for_deck(p, arm, hold_bo_pairwise)
     _stiff_hdr, _stiff_note = _stiff_header(arm, p, M_soft, M_ced, _nonzero, hold_bo_pairwise, dt_factor, st)
     _gm_hdr = _gm_header(arm, p, M_ced)                # D2 팔만 (옛 팔 = '' → 바이트 그대로)
+    _dens_hdr = _dens_header(p)                        # 밀도 세대를 명시한 덱만 (미지정 = '' → 바이트 그대로)
+    _dn = _dens_of(p)
     E_now = p.get('E', E_PHASE)
     period = st['period']
     #  ★ 배플 — `D10(b)` 전단 축.  **원본 Drum.stl 은 안 건드린다** (별도 메시).
@@ -1161,7 +1233,7 @@ fix insB all insert/pack seed {seedB} distributiontemplate pddB &
     _fib = tuple(t for t in TYPES if t in FIBRE_TYPES)
     _tpl = []
     for _i, _t in enumerate(TYPES):
-        _rho = DENS[PHASE_MECH[_t][1]] * 1000.0
+        _rho = _dn[PHASE_MECH[_t][1]] * 1000.0
         if _t in _fib:
             _tpl.append(
                 f'fix pt{_i+1} all particletemplate/multisphere {TPL_SEED[_t]} '
@@ -1213,7 +1285,7 @@ fix insB all insert/pack seed {seedB} distributiontemplate pddB &
 # CGF = {p['cgf']:.0f}  (소재 AM_P {D_REAL_UM['AM_P']:.0f} µm → 모델 {d['AM_P']*1e3:.2f} mm · SE {D_REAL_UM['SE']:.0f} µm → {d['SE']*1e3:.3f} mm)
 #   ★ 크기 비는 소재 그대로다: d_SE/d_AM_P = {d['SE']/d['AM_P']:.3f}
 # ⛔ 생산 scale=1000 규약을 쓰지 않는다 — 드럼은 중력 구동이라 중력/접촉 비가 깨진다.
-# ⚠ 전단탄성률을 계산비용 때문에 낮췄다 (lischka 와 같은 조작) — 물성으로 인용 금지.{_stiff_hdr}{_gm_hdr}
+# ⚠ 전단탄성률을 계산비용 때문에 낮췄다 (lischka 와 같은 조작) — 물성으로 인용 금지.{_stiff_hdr}{_gm_hdr}{_dens_hdr}
 
 atom_style      granular
 atom_modify     map array sort 0 0
@@ -2733,12 +2805,21 @@ if __name__ == '__main__':
                     help='★ (다) dump dmp 바로 뒤에 dump_modify format 한 줄 — id · type (· mol) = %%d · 나머지 %%.17g (double 왕복 · 기본 %%g 는 '
                          '6 유효숫자).  기본 끔 = 덱 바이트 그대로.  켜면 deck_meta.json 에 dump_modify_format.  ⚠ LIGGGHTS-PUBLIC 3.x 옛 문법 '
                          '(공개 소스 판독) · ibb 바이너리 실측 전 · 덤프 크기 약 2 배 (강성 축 사전등록 §12-4 (다) · 확인 블록 덱용)')
+    ap.add_argument('--dens-gen', default=None, choices=sorted(DENS_GENERATIONS),
+                    help='★ 밀도 세대 (2026-10-14 밤 · 1저자 랩 표준 · docs/density_generations_20261014.md) — 생략 = gen1 (AM 4.80 · '
+                         'SE 2.00 · 옛 덱 · 메타 바이트 그대로 · 기록 없음).  주면 그 세대 밀도로 부피분율 → 개수 · 드럼 · dt · Bo ↔ CED · '
+                         'density constant 를 다시 내고 덱 머리 · deck_meta.json 에 dens_gen · 실제 값 · 옮긴 상을 기록한다.  '
+                         '--gm-* (D2) 덱은 이것이 **필수** (새 세대 덱)')
     ap.add_argument('--selftest', action='store_true')
     a = ap.parse_args()
     if a.selftest:
         raise SystemExit(_selftest())
     _gm = any(v is not None for v in (a.gm_gamma, a.gm_gamma_wall, a.gm_bo_se, a.gm_wall_ncm))
     if _gm:
+        if a.dens_gen is None:
+            raise SystemExit('⛔ --gm-* (D2 결합 규칙 덱) 는 새 세대 덱이다 — --dens-gen 을 명시해야 한다 '
+                             f'({" · ".join(sorted(DENS_GENERATIONS))} · 1저자 10-14 밤 랩 표준 = lab20261014 · '
+                             'docs/density_generations_20261014.md)')
         if a.arm is not None or a.all_arms:
             raise SystemExit('⛔ --gm-* (D2 결합 규칙 팔 GM) 는 --arm · --all-arms 와 함께 쓰지 않는다')
         if a.gm_gamma_wall is not None and a.gm_wall_ncm is not None:
@@ -2763,9 +2844,13 @@ if __name__ == '__main__':
         a.arm = 'GM'
     if a.arm is None:
         a.arm = 'E1'
-    p = plan(a.n_total, cgf=a.cgf, stiffen_se=a.stiffen_se)
+    p = plan(a.n_total, cgf=a.cgf, stiffen_se=a.stiffen_se, dens_gen=a.dens_gen)
     _stiff = (a.stiffen_se != 1.0 or a.dt_factor != 1.0)
     rpm = resolve_rpm(p['R'], a.fr, a.rpm, a.allow_off_band)
+    if a.dens_gen is not None:                         # 지정했을 때만 (생략 = 화면도 옛것 그대로)
+        print(f'밀도 세대 dens_gen = {a.dens_gen}  ('
+              + ' · '.join(f'{k} {v:g}' for k, v in p['dens'].items()) + ' g/cm³ · gen1 값을 옮긴 상: '
+              + (' · '.join(DENS_CARRIED_FROM_GEN1[a.dens_gen]) or '없음') + ')')
     print(f'조성 → 개수 (N={p["n_total"]:,})')
     for k in TYPES:
         print(f'   {k:5s} φ {p["phi"][k]:.4f} · d {p["d"][k]*1e3:6.3f} mm · n {p["n"][k]:8,d}'
@@ -2800,8 +2885,8 @@ if __name__ == '__main__':
             _write_fibres(os.path.join(d, 'data'), p)
             with open(os.path.join(d, 'in.mixer'), 'w') as f:
                 f.write(_texts[arm])
-            if _stiff or _gm:
-                #  ★ 봉인 가능한 메타 (경화 · dt 인자 덱 · D2 결합 규칙 덱만 — 기본 덱은 파일 목록도 옛것 그대로)
+            if _stiff or _gm or a.dens_gen is not None:
+                #  ★ 봉인 가능한 메타 (경화 · dt 인자 덱 · D2 결합 규칙 덱 · 밀도 세대를 명시한 덱만 — 기본 덱은 파일 목록도 옛것 그대로)
                 import json as _json
                 with open(os.path.join(d, 'deck_meta.json'), 'w', encoding='utf-8') as f:
                     _json.dump(deck_meta(p, rpm, a.revolutions, a.seed, arm, _texts[arm], argv=sys.argv[1:],

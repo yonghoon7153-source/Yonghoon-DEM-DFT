@@ -328,7 +328,23 @@ def main():
                          '--save-state → ② --load-state + --cycle-deform 을 이 구동압에서 재평형. '
                          '지그 강성을 모르므로 servo(정응력=부드러운 스프링) 와 hold(정적변위=강체 지그) '
                          '두 팔을 모두 방출 → 실제 셀은 그 브래킷 안에 있다.  예: --op-pressure-mpa 90')
+    ap.add_argument('--dens-gen', default=None,
+                    help='★ 밀도 세대 (2026-10-14 밤 · 1저자 랩 표준 · docs/density_generations_20261014.md) — additives.DENS_GENERATIONS '
+                         '의 키 (gen1 · lab20261014 …).  생략 = gen1 (킷 바이트 그대로 · 기록 없음).  주면 ① VGCF dilate-z 의 φ_VGCF 를 '
+                         '그 세대 밀도로 ② run_mpm.sh 의 mpm3d_compaction 호출과 run_a1_anchors.sh 의 COMMON 에 --dens-gen 을 굽고 '
+                         '(payload 는 밀도로 계산하지 않아 안 굽는다) ③ mpm_input.json 에 dens_gen · 실제 값 · 옮긴 상을 기록한다.  '
+                         '모르는 이름은 킷을 쓰기 전에 거부 (정본 표 = scripts/additives.py · numpy 필요)')
     a = ap.parse_args()
+    #  ★ 밀도 세대 (10-14 밤) — 파일을 하나도 쓰기 전에 검증한다.  생략 = 아무것도 안 바뀐다 (additives import 도 안 한다).
+    _dens_rec = None
+    if a.dens_gen is not None:
+        sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+        try:
+            import additives as _adg
+        except ImportError as _e:
+            raise SystemExit(f'--dens-gen {a.dens_gen!r} 은 정본 밀도 표 (scripts/additives.py) 를 읽어야 한다 — import 실패 ({_e}).  '
+                             f'numpy 가 있는 환경에서 돌릴 것 (폴백 사본은 gen1 만 안다)')
+        _dens_rec = _adg.dens_record(a.dens_gen)            # 모르는 · 빈 이름 = SystemExit (킷 파일 0 개)
     if a.op_pressure_mpa is not None and not (a.op_pressure_mpa > 0):
         ap.error('--op-pressure-mpa 는 양수여야 한다 (MPa; 예 90)')
     if a.step4_sc_poly_preset:
@@ -714,6 +730,8 @@ def main():
             'T_C': None, 'T_dependence': 'NOT_MODELLED'}
     # ★ F-13: 이 킷이 어느 seed 로 돌도록 구워졌는지 provenance 에 남긴다.
     prov['mpm_seed'] = int(a.seed)
+    if _dens_rec is not None:                                    # ★ 밀도 세대 (10-14 밤) — 지정했을 때만 (생략 = 스키마 그대로)
+        prov.update(_dens_rec)
     json.dump(prov, open(os.path.join(a.out, 'mpm_input.json'), 'w'), indent=2)
 
     # Stage-1 carbon: append the additive flags to the compaction step if a recipe was given,
@@ -758,7 +776,9 @@ def main():
         _sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
         try:
             import additives as _adds                                   # canonical recipe parser + DENS
-            _parse, _awt, _DENS = _adds.parse_recipe, _adds.additive_wt, _adds.DENS
+            _parse, _awt = _adds.parse_recipe, _adds.additive_wt
+            #  ★ 밀도 세대 (10-14 밤) — 생략 = gen1 DENS 그대로 (λ 비트 동일) · 지정 = 그 세대 (위에서 이미 검증)
+            _DENS = _adds.DENS if a.dens_gen is None else _adds.dens(a.dens_gen)
         except ImportError as _e:                                       # numpy-less env → verbatim inline
             print(f'⚠ additives import failed ({_e}) → inline parse/DENS copies (keep in sync w/ additives.py)')
             def _parse(s):                                              # = additives.parse_recipe verbatim
@@ -786,7 +806,9 @@ def main():
                     raise SystemExit(f'ABORT — 모르는 첨가제 이름: {_bad}.  등록된 것: {list(_KNOWN)} '
                                      f'(additives.py 폴백 경로)')
                 return {k: float(wt[k]) for k in _KNOWN if _p(wt.get(k, 0))}
-            _DENS = {'AM': 4.80, 'SE': 2.00, 'VGCF': 2.00}              # = additives.DENS subset
+            _DENS = {'AM': 4.80, 'SE': 2.00, 'VGCF': 2.00}              # = additives.DENS subset (gen1 만)
+            if a.dens_gen is not None:                                  # 위 검증이 이미 막지만 — 폴백은 gen1 밖을 모른다
+                raise SystemExit(f'--dens-gen {a.dens_gen!r}: 폴백 사본은 gen1 만 안다 — additives 를 import 할 수 있는 환경에서')
         try:
             _wts = _awt(_parse(a.add_recipe))                           # {'VGCF':1.0,...} — AM/SE ignored
         except Exception as _e:
@@ -845,6 +867,9 @@ def main():
     #    VGCF 와 PTFE 가 한 스트림을 ADD 순서로 소비해 **VGCF 개수가 PTFE 형상을 바꾼다**
     #    ⇒ 조성 비교가 morphology 교란과 교락된다.  킷에 구워야 런에서 빠지지 않는다.
     _rngpp = ' --add-rng-per-phase' if a.add_rng_per_phase else ''
+    #  ★ 밀도 세대 (10-14 밤) — mpm3d 호출 (압밀 · A-1 앵커) 에만 굽는다 (그곳이 bulk_density · 첨가제 개수에 밀도를 쓴다).
+    #    payload 는 밀도로 계산하지 않고 mpm3d metrics 의 기록을 그대로 싣는다.  생략 = 빈 문자열 → 킷 바이트 그대로.
+    _densf = f' --dens-gen {a.dens_gen}' if a.dens_gen is not None else ''
     gpu_mem = f'{a.gpu_mem:g}'
     #  ★ Codex R9 — Mach 를 낮추면 frames 를 같은 배수로 늘려야 한다.  안 늘리면 런이
     #    not_converged_frame_budget 으로 죽고 **숫자가 하나도 안 나온다**.  fail-closed 로 막는다.
@@ -1191,7 +1216,7 @@ python3 "$SCR/mpm3d_compaction.py" \\
   --am-scaffold "$KIT/am_scaffold.csv" --se-dump "$KIT/se_scaffold.csv" --periodic \\
   --lateral-box {box_x} --n-grid {n_grid_mpm} --arch cuda --gpu-mem {gpu_mem} --protocol hold --frames {a.frames} \\
   "${{QS[@]}}" \\
-  --e-se {e_se_mpm} --nu-se {nu_se_mpm} --target-gpa {press_gpa} --seed {mpm_seed} \\
+  --e-se {e_se_mpm} --nu-se {nu_se_mpm} --target-gpa {press_gpa} --seed {mpm_seed}{_densf} \\
   --save-se se_dump.npy --save-dg se_dump_dg.npy --save-eps se_dump_eps.npy --save-metrics mpm_metrics.json{add_flags} "${{FRAC[@]}}" \\
   || {{ echo "[run_mpm] STEP 1 (compaction) FAILED — see the trace above.  NOT running the payload: it would"; \\
         echo "          rebuild mpm_payload.json from the STALE se_dump.npy of a PREVIOUS run and report a"; \\
@@ -1318,7 +1343,7 @@ echo "          (오래된 run_* 폴더는 디스크 차면 지워도 됨 — �
                #   앵커는 N0 대비 상대 비교라 공통모드 상쇄, 위반은 각 m_*.json 에 기록된다).
                'COMMON=(--am-scaffold "$KIT/am_scaffold.csv" --se-dump "$KIT/se_scaffold.csv" --periodic\n'
                '        --lateral-box __BOX__ --n-grid __NG__ --arch cuda --gpu-mem __GM__ --protocol hold --frames __FR__\n'
-               '        --allow-fast-platen\n'
+               '        --allow-fast-platen__DENSF__\n'
                '        --e-se __ESE__ --nu-se __NUSE__ --target-gpa __PRESS__ --seed __SEED__)\n'
                'run_one() { local lab="$1"; shift; echo "=== A-1 앵커: $lab ==="; '
                'python3 "$SCR/mpm3d_compaction.py" "${COMMON[@]}" "$@" --save-metrics "$OUT/m_${lab}.json" '
@@ -1368,7 +1393,7 @@ echo "          (오래된 run_* 폴더는 디스크 차면 지워도 됨 — �
                  #   재하율이라 공통모드 상쇄; 위반은 m_fab/m_*.json 에 기록된다).
                  'COMMON=(--am-scaffold "$KIT/am_scaffold.csv" --se-dump "$KIT/se_scaffold.csv" --periodic\n'
                  '        --lateral-box __BOX__ --n-grid __NG__ --arch cuda --gpu-mem __GM__ --frames __FR__\n'
-                 '        --allow-fast-platen\n'
+                 '        --allow-fast-platen__DENSF__\n'
                  '        --e-se __ESE__ --nu-se __NUSE__ --seed __SEED__)\n'
                  'STATE="$OUT/fab_state.npz"\n'
                  '# ── ① 제작 (fabrication) — 제작압 __PRESS__ GPa, LIGGGHTS 변위-정지 규약(hold) ──\n'
@@ -1419,7 +1444,8 @@ echo "          (오래된 run_* 폴더는 디스크 차면 지워도 됨 — �
         a1 = (a1_tmpl.replace('__BOX__', f'{box_x}').replace('__NG__', f'{n_grid_mpm}').replace('__GM__', gpu_mem).replace('__FR__', str(a.frames))
               .replace('__ESE__', f'{e_se_mpm}').replace('__NUSE__', f'{nu_se_mpm}')
               .replace('__PRESS__', f'{press_gpa}')
-              .replace('__SEED__', f'{mpm_seed}'))      # ★ PD-03: A-1 도 같은 seed
+              .replace('__SEED__', f'{mpm_seed}')       # ★ PD-03: A-1 도 같은 seed
+              .replace('__DENSF__', _densf))            # ★ 밀도 세대 — 생략 = '' (바이트 그대로)
     else:
         _op_gpa = round(float(a.op_pressure_mpa) / 1000.0, 5)
         if _op_gpa >= press_gpa:
@@ -1429,7 +1455,8 @@ echo "          (오래된 run_* 폴더는 디스크 차면 지워도 됨 — �
               .replace('__ESE__', f'{e_se_mpm}').replace('__NUSE__', f'{nu_se_mpm}')
               .replace('__PRESSMPA__', f'{press_gpa * 1000:g}').replace('__PRESS__', f'{press_gpa}')
               .replace('__SEED__', f'{mpm_seed}')      # ★ PD-03: A-1 도 같은 seed
-              .replace('__OPMPA__', f'{a.op_pressure_mpa:g}').replace('__OPGPA__', f'{_op_gpa}'))
+              .replace('__OPMPA__', f'{a.op_pressure_mpa:g}').replace('__OPGPA__', f'{_op_gpa}')
+              .replace('__DENSF__', _densf))           # ★ 밀도 세대 — ① 제작 · ② 구동 같은 세대 (state 세대 대조 통과)
     ap1 = os.path.join(a.out, 'run_a1_anchors.sh')
     open(ap1, 'w').write(a1); os.chmod(ap1, 0o755)
     print(f'MPM input for case "{case}" → {a.out}/')

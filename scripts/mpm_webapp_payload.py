@@ -407,7 +407,8 @@ def _selftest_provenance():
         d0, d1 = {'x': 1}, {'x': 1}
         _cf(d0, dict(base))                                   # 세대 기록 없는 sim (= 옛 산출물 · 미지정 런)
         _cf(d1, dict(base, dens_gen='lab20261014', dens_g_cm3={'AM': 4.85, 'SE': 1.64}, dens_carried_from_gen1=['VGCF']))
-        return (d0 == {'x': 1, 'n_grid': 384, 'bulk_density_g_cm3': 3.2} and list(d0) == ['x', 'n_grid', 'bulk_density_g_cm3']
+        #  순서 = 통과 목록 순서 (옛 인라인 루프와 같다 — sim dict 의 순서가 아니다)
+        return (d0 == {'x': 1, 'n_grid': 384, 'bulk_density_g_cm3': 3.2} and list(d0) == ['x', 'bulk_density_g_cm3', 'n_grid']
                 and d1['dens_gen'] == 'lab20261014' and d1['dens_g_cm3'] == {'AM': 4.85, 'SE': 1.64}
                 and d1['dens_carried_from_gen1'] == ['VGCF'])
     chk('⑦ carry_sim_fields: 세대 기록 없는 sim = 옛 키 · 순서 그대로 (세대 키 안 생김) · 있으면 그대로 싣는다', _safe(_p7))
@@ -798,6 +799,23 @@ PROTOCOL_FIELDS = _RC.PROTOCOL_FIELDS
 #   ⚠ 여기에 축을 더할 때는 **모든 러너의 조립 줄이 무조건인지** 먼저 확인할 것 —
 #     조건부로 남아 있으면 그 러너의 정상 런이 전부 죽는다.
 CONTRACT_SEALED_AXES = ('vox_um', 'bridge_um', 'fibre_stamp', 'ptfe_stamp')
+
+#: sim metrics (mpm3d_compaction --save-metrics) 에서 payload metrics 로 **그대로** 싣는 키 (순서 그대로 — 옛 main 의 인라인 목록을 옮긴 것).
+#  ★ 끝 셋 = 밀도 세대 기록 (2026-10-14 밤 · docs/density_generations_20261014.md · = additives.DENS_RECORD_KEYS · --selftest-provenance ⑥).
+#    payload 자신은 밀도로 계산하지 않는다 — 그러나 mpm3d 가 --dens-gen 으로 만든 침대의 bulk_density_g_cm3 를 실으므로 그 세대도
+#    같이 실어야 웹앱이 값의 세대를 안다.  sim 에 없으면 (옛 산출물 · 미지정 런) 키가 안 생긴다 = 옛 payload 바이트 그대로.
+SIM_CARRY_KEYS = ('E_SE_GPa', 'nu_SE', 'sigma_y_GPa', 'K_SE_GPa', 'final_stress_GPa', 'target_GPa',
+                  'bulk_density_g_cm3', 'seed_AM_frac_pct', 'seed_SE_frac_pct', 'n_grid', 'protocol',
+                  'additives', 'fibre_rod',                 # per-additive recipe+physics + Tier-2 rod flag → 요약
+                  'dens_gen', 'dens_g_cm3', 'dens_carried_from_gen1')
+
+
+def carry_sim_fields(mpm_metrics, sim_m):
+    """`SIM_CARRY_KEYS` 중 sim 에 **있는** 키만 그대로 싣는다 (없는 키는 만들지 않는다)."""
+    for k in SIM_CARRY_KEYS:
+        if k in sim_m:
+            mpm_metrics[k] = sim_m[k]                       # carry through raw sim fields
+    return mpm_metrics
 
 
 def assert_contract_seal(expect_physics, physics_expect, ptfe_legacy, ptfe_applied):
@@ -3334,11 +3352,7 @@ def main():
             sim_seed = 100.0 - sim_m['seed_AM_frac_pct'] - sim_m['seed_SE_frac_pct']
         mpm_metrics['seed_porosity_pct'] = round(sim_seed if sim_seed is not None else seed_por, 2)
         mpm_metrics['compacted_porosity_pct'] = mpm_metrics['porosity_mpm_pct']
-    for k in ('E_SE_GPa', 'nu_SE', 'sigma_y_GPa', 'K_SE_GPa', 'final_stress_GPa', 'target_GPa',
-              'bulk_density_g_cm3', 'seed_AM_frac_pct', 'seed_SE_frac_pct', 'n_grid', 'protocol',
-              'additives', 'fibre_rod'):                    # per-additive recipe+physics + Tier-2 rod flag → 요약
-        if k in sim_m:
-            mpm_metrics[k] = sim_m[k]                       # carry through raw sim fields
+    carry_sim_fields(mpm_metrics, sim_m)                   # SIM_CARRY_KEYS (+ 밀도 세대 기록 · 있을 때만) — 옛 인라인 목록 그대로 옮김
     mpm_metrics.update(strain_stats)                       # Σdg mean/max/vmax98/n_strain_pts (if --dg)
     if additive_counts:
         mpm_metrics['additive_counts'] = additive_counts   # {VGCF:n, SuperP:n, PTFE:n} total seeded

@@ -971,9 +971,73 @@ def parse_args(argv):
                     help='제하가 밴드 안에 수렴하지 못했을 때도 계속 진행 (기본=중단).  ★ 실험/디버그 전용 — '
                          '수렴하지 않은 제하의 porosity·두께·coverage 는 프로덕션 숫자가 아니며, 산출물은 '
                          'state_provenance.unload_status 와 P_this_stage_role 에 그 사실이 박힌다.')
+    ap.add_argument('--dens-gen', default=None,
+                    help='★ 밀도 세대 (2026-10-14 밤 · 1저자 랩 표준 · docs/density_generations_20261014.md) — additives.DENS_GENERATIONS '
+                         '의 키 (gen1 · lab20261014 …).  생략 = gen1 (AM 4.80 · SE 2.00 · 옛 산출물 비트 그대로 · 기록 없음).  주면 '
+                         '① 스캐폴드 bulk_density_g_cm3 ② --add-recipe 첨가제 개수 · 부피 (recipe_counts_real — 첨가제 부피는 add_pvs '
+                         '로 고정돼 공극률에 들어간다) 를 그 세대 밀도로 내고 metrics · --save-state 에 dens_gen · 실제 값 · 옮긴 상을 '
+                         '기록한다.  --am-scaffold 없는 런은 밀도가 안 쓰이므로 거부 · --load-state 는 state 와 같은 세대여야 한다')
     ap.add_argument('--selftest', action='store_true',
                     help='restart-state 계층 자체검증 (numpy 전용, taichi/GPU 불필요) 후 종료')
     return ap.parse_args(argv)
+
+
+# ── ★ 밀도 세대 (2026-10-14 밤 · 1저자 결정 · docs/density_generations_20261014.md) ─────────────────────────────────
+#    정본 = scripts/additives.py DENS_GENERATIONS (이 파일은 그 표를 **읽기만** 한다 — 사본 없음).
+#    세대 미지정 = gen1 (옛 식 4800 · 2000 kg/m³ 와 비트 동일 — selftest DG1) · 지정 = 그 세대 + 기록.
+def _additives_mod():
+    import sys as _sys_d, os as _os_d
+    _here = _os_d.path.dirname(_os_d.path.abspath(__file__))
+    if _here not in _sys_d.path:
+        _sys_d.path.insert(0, _here)
+    import additives as _adm
+    return _adm
+
+
+def dens_table(dens_gen=None):
+    """None → additives.DENS (gen1 **그 객체**) · 이름 → 그 세대 사본 (모르는 · 빈 · 문자열 아닌 이름 = SystemExit)."""
+    _adm = _additives_mod()
+    return _adm.DENS if dens_gen is None else _adm.dens(dens_gen)
+
+
+def dens_record(dens_gen):
+    """metrics · state 에 남기는 기록 = additives.dens_record (세대 · 실제 값 · 옮긴 상)."""
+    return _additives_mod().dens_record(dens_gen)
+
+
+def bulk_density_g_cm3(am_solid, se_solid, bed_vol, dens_gen=None):
+    """스캐폴드 침대 밀도 (g/cm³) = (V_AM·ρ_AM + V_SE·ρ_SE)/V_bed.  옛 main 의 인라인 식 (4800 · 2000 kg/m³) 을 옮긴 것 —
+    gen1 에서 ρ·1000 = 4800.0 · 2000.0 이 **정확히** 같아 비트 동일하다 (selftest DG1 이 무작위 200 개로 단언)."""
+    t = dens_table(dens_gen)
+    return (am_solid * (t['AM'] * 1000.0) + se_solid * (t['SE'] * 1000.0)) / bed_vol / 1000.0
+
+
+def dens_gen_guard_errors(args):
+    """→ 오류 목록 (빈 목록 = 통과).  taichi 를 잡기 **전에** 부른다 (main).
+    ⓐ 모르는 · 빈 세대 ⓑ --am-scaffold 없는 런에 세대 지정 (밀도가 안 쓰인다 — 선언 ≠ 사용 · 기록이 거짓이 된다)."""
+    g = getattr(args, 'dens_gen', None)
+    if g is None:
+        return []
+    errs = []
+    try:
+        dens_table(g)
+    except SystemExit as e:
+        errs.append(str(e))
+    if not args.am_scaffold:
+        errs.append(f'--dens-gen {g!r} 은 --am-scaffold 런에서만 쓰인다 (밀도가 들어가는 곳 = 스캐폴드 bulk_density_g_cm3 · '
+                    f'--add-recipe 첨가제 개수 · 부피) — 쓰이지 않는 세대를 기록하지 않는다')
+    return errs
+
+
+def dens_gen_state_mismatch(state_meta, dens_gen):
+    """--load-state 세대 대조 → 오류 문자열 또는 None.  기록 없는 (옛) state = gen1 · 미지정 요청 = gen1.
+    다른 세대 state 를 이어받으면 거부한다 — 한 침대에 두 세대 밀도가 섞인다 (첨가제 부피는 ① 의 세대로 이미 고정돼 있다)."""
+    sg = (state_meta or {}).get('dens_gen') or 'gen1'
+    rg = dens_gen or 'gen1'
+    if sg != rg:
+        return (f'state 의 밀도 세대 {sg!r} ≠ 이 런의 세대 {rg!r} (--dens-gen) — 같은 세대로 이어 돌릴 것 '
+                f'(기록 없는 옛 state = gen1 · 생략 = gen1 · docs/density_generations_20261014.md)')
+    return None
 
 
 def _fin(v):
@@ -1750,6 +1814,13 @@ def main(argv):
     _amg = am_load_guard_errors(args)                          # ★ FAMV2-01 B — GPU 를 잡기 전에 거부
     if _amg:
         raise SystemExit('[am-load-frac] ' + '\n[am-load-frac] '.join(_amg))
+    _dge = dens_gen_guard_errors(args)                         # ★ 밀도 세대 (10-14 밤) — GPU 를 잡기 전에 거부
+    if _dge:
+        raise SystemExit('[dens-gen] ' + '\n[dens-gen] '.join(_dge))
+    if args.dens_gen is not None:                              # 지정했을 때만 (생략 = 화면도 옛것 그대로)
+        _dr0 = dens_record(args.dens_gen)
+        print(f"[dens-gen] 밀도 세대 dens_gen = {args.dens_gen}  (AM {_dr0['dens_g_cm3']['AM']:g} · SE {_dr0['dens_g_cm3']['SE']:g} g/cm³ "
+              f"· gen1 값을 옮긴 상: {' · '.join(_dr0['dens_carried_from_gen1']) or '없음'})")
     if args.load_state and args.restart_settle < 3:
         # Hard refusal, not a clamp: with no settle window the unload/compact decision is taken on frame 0,
         # where v and C have just been zeroed and the platen reaction still reads ≈0 — so an UNLOAD request
@@ -2122,6 +2193,9 @@ def main(argv):
         #    applied to am_r / pin_np — that is exactly the intent: SE keeps its 300-MPa memory while
         #    the AM breathes.  The guard therefore compares centres/count/PRISTINE radii only. ────────
         _sa, _sm = read_state_npz(args.load_state)
+        _dgm = dens_gen_state_mismatch(_sm, args.dens_gen)  # ★ 밀도 세대 (10-14 밤) — 세대 섞기 거부
+        if _dgm:
+            raise SystemExit(f"[load-state] '{args.load_state}': {_dgm}")
         _cur_meta = {'n_grid': int(n_grid), 'nz': int(nz),
                      'lateral_box': float(args.lateral_box), 'periodic': bool(PERIODIC)}
         _cur_pos = am_c if am_c is not None else np.zeros((0, 3))
@@ -2166,7 +2240,7 @@ def main(argv):
             am_solid = float((pin_np > 0).sum()) * dx ** 3
             bed_vol = WIDTH * WIDTH * (am_top - FLOOR)
             f_am = 100.0 * am_solid / bed_vol; f_se = 100.0 * se_solid / bed_vol
-            bulk_rho = (am_solid * 4800.0 + se_solid * 2000.0) / bed_vol / 1000.0
+            bulk_rho = bulk_density_g_cm3(am_solid, se_solid, bed_vol, args.dens_gen)
         print(f"  [load-state] restored {n:,} material points from {args.load_state}  "
               f"(fab target={_sm.get('target_gpa')} GPa protocol={_sm.get('protocol')} "
               f"wall_z={_sm.get('wall_z')} · plastic history F/Σdg/ε KEPT · v,C zeroed = quasi-static restart)")
@@ -2293,11 +2367,12 @@ def main(argv):
         mus = np.full(n, MU_SE, np.float32); las = np.full(n, LA_SE, np.float32)
         ylds = np.full(n, YIELD_SE, np.float32); pvs = np.full(n, spc ** 3, np.float32)
         # ── density / volume-fraction watch (real ρ: AM 4800, SE 2000 kg/m³ from the LIGGGHTS deck) ──
+        #    ★ 2026-10-14 밤 — 그 값은 gen1 세대다.  --dens-gen 을 주면 그 세대 밀도 (bulk_density_g_cm3 · 생략 = gen1 비트 그대로)
         se_solid = len(sel) * dx ** 3
         am_solid = float((pin_np > 0).sum()) * dx ** 3
         bed_vol = WIDTH * WIDTH * (am_top - FLOOR)
         f_am = 100.0 * am_solid / bed_vol; f_se = 100.0 * se_solid / bed_vol
-        bulk_rho = (am_solid * 4800.0 + se_solid * 2000.0) / bed_vol / 1000.0
+        bulk_rho = bulk_density_g_cm3(am_solid, se_solid, bed_vol, args.dens_gen)
         print(f"  scaffold: {len(am_r)} fixed AM + {seed_str} ({n:,} pts)")
         print(f"  seed density: AM {f_am:.1f}% / SE {f_se:.1f}% / void {max(0.0,100-f_am-f_se):.1f}%  "
               f"(SE/solid {100*se_solid/max(am_solid+se_solid,1e-12):.1f}%)  "
@@ -2378,7 +2453,8 @@ def main(argv):
             #   hardcoded ratio).  AM/SE masses from the actual fixed-AM + seeded-SE volumes.
             se_um3 = float(pvs.sum()) * um_box ** 3                     # real SE volume (Σ per-point)
             am_um3 = AM_vol * um_box ** 3                               # real fixed-AM volume
-            cnt = _ad.recipe_counts_real(add_wt, am_um3, se_um3)
+            #  ★ 밀도 세대 (10-14 밤) — 생략 = gen1 (옛 개수 · 부피 그대로) · 지정 = 그 세대 (첨가제 부피 → add_pvs → 공극률)
+            cnt = _ad.recipe_counts_real(add_wt, am_um3, se_um3, dens_gen=args.dens_gen)
             print(f"  [additives] realised electrode (from scaffold): AM {cnt['am_wt_pct']} / "
                   f"SE {cnt['se_wt_pct']} wt% + " + " ".join(f"{k} {add_wt[k]}wt%" for k in add_wt))
             bx = (WIDTH, WIDTH, max(am_top - FLOOR, 4 * dx))            # seed region (box units)
@@ -3832,6 +3908,8 @@ def main(argv):
                 'SE_of_solid_pct': round(100.0 * se_solid / max(am_solid + se_solid, 1e-12), 2),
                 'bulk_density_g_cm3': round(float(bulk_rho), 3), 'n_AM': int(len(am_r)),
             })
+        if args.dens_gen is not None:
+            m.update(dens_record(args.dens_gen))             # ★ 밀도 세대 — 지정했을 때만 (생략 = 키 집합 그대로)
         if args.load_state or args.save_state:
             # ── PRESSURE / PLASTIC-HISTORY PROVENANCE (docs/temp_pressure_capability.md §P1-a, §P1.5).
             #    Downstream (payload → STEP3 σ → STEP5 ledger) must be able to tell a 300-MPa press-peak
@@ -4091,6 +4169,8 @@ def main(argv):
             'rate_dependence': 'NOT_MODELLED_rate_independent_J2',
             'T_C': None, 'T_dependence': 'NOT_MODELLED',
         }
+        if args.dens_gen is not None:
+            _meta.update(dens_record(args.dens_gen))         # ★ 밀도 세대 — 다음 단 (--load-state) 이 같은 세대인지 대조한다
         _, _nb, _cz = write_state_npz(args.save_state, _arr, _meta)
         _dgv = _arr['dg_acc']
         print(f"  saved restart state → {args.save_state}  ({n:,} pts, {len(_arr)} arrays, "
