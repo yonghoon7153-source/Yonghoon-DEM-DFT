@@ -1,0 +1,128 @@
+fig,series,x_name,x,y_name,y,note
+S4a,20C,pressing_P_MPa,150,sigma_mScm,0.45,SI PDF p.4 (S3); marker centroid at 5x render; frame-calibrated; +-0.02; error bar ~+-0.08 (n/definition not stated)
+S4a,20C,pressing_P_MPa,300,sigma_mScm,0.60,same; error bar ~+-0.08
+S4a,20C,pressing_P_MPa,450,sigma_mScm,0.66,same; equals Table 3 (20 C) 0.66 stated
+S4a,150C,pressing_P_MPa,150,sigma_mScm,1.92,equals Table 2 (150 MPa) 1.92 stated
+S4a,150C,pressing_P_MPa,300,sigma_mScm,2.50,read 2.50 vs Table 2 stated 2.62 (mismatch larger than read error)
+S4a,150C,pressing_P_MPa,450,sigma_mScm,2.93,equals Table 2 (450 MPa) 2.93; Table 3 (150 C / 450 MPa) prints 2.67 for the same nominal recipe
+S4a,200C,pressing_P_MPa,150,sigma_mScm,2.27,triangle marker; error bar ~+-0.12
+S4a,200C,pressing_P_MPa,300,sigma_mScm,2.95,triangle marker
+S4a,200C,pressing_P_MPa,450,sigma_mScm,3.56,equals Table 3 (200 C) 3.56 stated
+S4b,20C,pressing_P_MPa,150,density_gcm3,1.325,SI PDF p.4; +-0.005 read; error bar ~+-0.02
+S4b,20C,pressing_P_MPa,300,density_gcm3,1.418,read
+S4b,20C,pressing_P_MPa,450,density_gcm3,1.505,Table 3 prints 1.50
+S4b,150C,pressing_P_MPa,150,density_gcm3,1.422,Table 2 prints 1.42
+S4b,150C,pressing_P_MPa,300,density_gcm3,1.650,Table 2 prints 1.64
+S4b,150C,pressing_P_MPa,450,density_gcm3,1.664,Table 2 prints 1.66; Table 3 (150 C / 450 MPa) prints 1.60
+S4b,200C,pressing_P_MPa,150,density_gcm3,1.569,read
+S4b,200C,pressing_P_MPa,300,density_gcm3,1.625,read
+S4b,200C,pressing_P_MPa,450,density_gcm3,1.692,Table 3 prints 1.69
+F1b,150C_300MPa_Li-cell,density_gcm3,1.527,sigma_mScm,1.915,0.12 g pellet; Table 1 prints 1.53 / 1.92
+F1b,150C_300MPa_Li-cell,density_gcm3,1.636,sigma_mScm,2.045,0.24 g pellet; Table 1 prints 1.64 / 2.05
+F1b,150C_300MPa_Li-cell,density_gcm3,1.641,sigma_mScm,2.067,0.18 g pellet; Table 1 prints 1.64 / 2.07
+F3c,450MPa,pressing_T_C,20,sigma_mScm,0.655,Table 3 prints 0.66
+F3c,450MPa,pressing_T_C,100,sigma_mScm,1.602,Table 3 prints 1.61
+F3c,450MPa,pressing_T_C,150,sigma_mScm,2.670,Table 3 prints 2.67
+F3c,450MPa,pressing_T_C,175,sigma_mScm,2.964,Table 3 prints 2.98
+F3c,450MPa,pressing_T_C,200,sigma_mScm,3.547,Table 3 prints 3.56
+F9a,20C_ascending,measuring_P_MPa,0.00,sigma_mScm,0.021,cold-pressed (20 C / 450 MPa / 0.18 g) Cu/LPSCl/Cu; half marker at frame edge +-0.005
+F9a,20C_ascending,measuring_P_MPa,0.79,sigma_mScm,0.071,x = 50 N steps / 1.27 cm2 (0.394 MPa each)
+F9a,20C_ascending,measuring_P_MPa,1.18,sigma_mScm,0.092,partly overlapped
+F9a,20C_ascending,measuring_P_MPa,1.58,sigma_mScm,0.099,
+F9a,20C_ascending,measuring_P_MPa,1.97,sigma_mScm,0.102,
+F9a,20C_ascending,measuring_P_MPa,2.37,sigma_mScm,0.127,
+F9a,20C_ascending,measuring_P_MPa,2.76,sigma_mScm,0.156,
+F9a,20C_ascending,measuring_P_MPa,3.16,sigma_mScm,0.154,
+F9a,20C_ascending,measuring_P_MPa,3.55,sigma_mScm,0.197,
+F9a,20C_ascending,measuring_P_MPa,3.95,sigma_mScm,0.214,
+F9a,20C_ascending,measuring_P_MPa,4.34,sigma_mScm,0.231,
+F9a,20C_ascending,measuring_P_MPa,4.74,sigma_mScm,0.242,
+F9a,20C_ascending,measuring_P_MPa,5.13,sigma_mScm,0.260,
+F9a,20C_ascending,measuring_P_MPa,5.52,sigma_mScm,0.311,
+F9a,20C_ascending,measuring_P_MPa,5.92,sigma_mScm,0.346,
+F9a,20C_ascending,measuring_P_MPa,6.32,sigma_mScm,0.438,partly overlapped
+F9a,20C_ascending,measuring_P_MPa,7.11,sigma_mScm,0.422,partly overlapped
+F9a,20C_ascending,measuring_P_MPa,7.50,sigma_mScm,0.445,
+F9a,20C_ascending,measuring_P_MPa,7.90,sigma_mScm,0.465,top of the cycle (1000 N)
+F9a,20C_descending,measuring_P_MPa,7.50,sigma_mScm,0.455,
+F9a,20C_descending,measuring_P_MPa,7.10,sigma_mScm,0.432,
+F9a,20C_descending,measuring_P_MPa,6.72,sigma_mScm,0.426,
+F9a,20C_descending,measuring_P_MPa,6.31,sigma_mScm,0.428,
+F9a,20C_descending,measuring_P_MPa,5.92,sigma_mScm,0.390,
+F9a,20C_descending,measuring_P_MPa,5.52,sigma_mScm,0.335,
+F9a,20C_descending,measuring_P_MPa,5.13,sigma_mScm,0.287,
+F9a,20C_descending,measuring_P_MPa,4.73,sigma_mScm,0.284,
+F9a,20C_descending,measuring_P_MPa,4.34,sigma_mScm,0.270,
+F9a,20C_descending,measuring_P_MPa,3.94,sigma_mScm,0.257,
+F9a,20C_descending,measuring_P_MPa,3.56,sigma_mScm,0.244,
+F9a,20C_descending,measuring_P_MPa,3.16,sigma_mScm,0.214,
+F9a,20C_descending,measuring_P_MPa,2.76,sigma_mScm,0.210,
+F9a,20C_descending,measuring_P_MPa,2.37,sigma_mScm,0.202,
+F9a,20C_descending,measuring_P_MPa,1.97,sigma_mScm,0.195,
+F9a,20C_descending,measuring_P_MPa,1.58,sigma_mScm,0.132,
+F9a,20C_descending,measuring_P_MPa,1.19,sigma_mScm,0.083,
+F9a,20C_descending,measuring_P_MPa,0.79,sigma_mScm,0.059,
+F9a,20C_descending,measuring_P_MPa,0.40,sigma_mScm,0.040,
+F9a,20C_descending,measuring_P_MPa,0.00,sigma_mScm,0.014,half marker at frame edge +-0.005
+F9b,200C_ascending,measuring_P_MPa,0.00,sigma_mScm,2.74,hot-pressed (200 C / 450 MPa / 0.18 g); half marker at frame edge
+F9b,200C_ascending,measuring_P_MPa,0.40,sigma_mScm,2.708,
+F9b,200C_ascending,measuring_P_MPa,0.79,sigma_mScm,2.683,
+F9b,200C_ascending,measuring_P_MPa,1.19,sigma_mScm,2.713,
+F9b,200C_ascending,measuring_P_MPa,1.58,sigma_mScm,2.739,
+F9b,200C_ascending,measuring_P_MPa,1.97,sigma_mScm,2.717,
+F9b,200C_ascending,measuring_P_MPa,2.37,sigma_mScm,2.781,
+F9b,200C_ascending,measuring_P_MPa,2.76,sigma_mScm,2.828,
+F9b,200C_ascending,measuring_P_MPa,3.16,sigma_mScm,2.816,
+F9b,200C_ascending,measuring_P_MPa,3.55,sigma_mScm,2.814,
+F9b,200C_ascending,measuring_P_MPa,3.95,sigma_mScm,2.804,
+F9b,200C_ascending,measuring_P_MPa,4.34,sigma_mScm,2.759,
+F9b,200C_ascending,measuring_P_MPa,5.13,sigma_mScm,2.725,partly overlapped
+F9b,200C_ascending,measuring_P_MPa,5.53,sigma_mScm,2.721,partly overlapped
+F9b,200C_ascending,measuring_P_MPa,5.92,sigma_mScm,2.725,
+F9b,200C_ascending,measuring_P_MPa,6.31,sigma_mScm,2.726,
+F9b,200C_ascending,measuring_P_MPa,6.71,sigma_mScm,2.718,
+F9b,200C_ascending,measuring_P_MPa,7.10,sigma_mScm,2.692,
+F9b,200C_ascending,measuring_P_MPa,7.50,sigma_mScm,2.735,
+F9b,200C_ascending,measuring_P_MPa,7.90,sigma_mScm,2.836,top of the cycle (1000 N)
+F9b,200C_descending,measuring_P_MPa,7.50,sigma_mScm,2.710,
+F9b,200C_descending,measuring_P_MPa,7.11,sigma_mScm,2.679,
+F9b,200C_descending,measuring_P_MPa,6.71,sigma_mScm,2.702,
+F9b,200C_descending,measuring_P_MPa,6.32,sigma_mScm,2.710,
+F9b,200C_descending,measuring_P_MPa,5.52,sigma_mScm,2.757,
+F9b,200C_descending,measuring_P_MPa,5.13,sigma_mScm,2.732,
+F9b,200C_descending,measuring_P_MPa,4.74,sigma_mScm,2.717,
+F9b,200C_descending,measuring_P_MPa,4.34,sigma_mScm,2.795,
+F9b,200C_descending,measuring_P_MPa,3.95,sigma_mScm,2.794,
+F9b,200C_descending,measuring_P_MPa,3.55,sigma_mScm,2.793,
+F9b,200C_descending,measuring_P_MPa,3.16,sigma_mScm,2.701,
+F9b,200C_descending,measuring_P_MPa,2.76,sigma_mScm,2.663,
+F9b,200C_descending,measuring_P_MPa,2.37,sigma_mScm,2.667,
+F9b,200C_descending,measuring_P_MPa,1.98,sigma_mScm,2.675,
+F9b,200C_descending,measuring_P_MPa,1.58,sigma_mScm,2.664,
+F9b,200C_descending,measuring_P_MPa,1.19,sigma_mScm,2.654,
+F9b,200C_descending,measuring_P_MPa,0.79,sigma_mScm,2.648,
+F9b,200C_descending,measuring_P_MPa,0.40,sigma_mScm,2.642,
+F7b,20C_cold,cycle,0,impedance_ohm,136,Li/LPSCl/Li ~10 MPa; marker centroid; +-5 ohm
+F7b,20C_cold,cycle,11,impedance_ohm,383,
+F7b,20C_cold,cycle,22,impedance_ohm,428,
+F7b,20C_cold,cycle,33,impedance_ohm,439,
+F7b,20C_cold,cycle,44,impedance_ohm,466,
+F7b,20C_cold,cycle,55,impedance_ohm,180,after overpotential drop (text: drop ~53rd cycle; short at 66th)
+F7b,20C_cold,cycle,66,impedance_ohm,147,
+F7b,20C_cold,cycle,77,impedance_ohm,42,
+F7b,20C_cold,cycle,88,impedance_ohm,36,
+F7b,200C_hot,cycle,0,impedance_ohm,39,
+F7b,200C_hot,cycle,11,impedance_ohm,172,
+F7b,200C_hot,cycle,22,impedance_ohm,190,
+F7b,200C_hot,cycle,33,impedance_ohm,210,
+F7b,200C_hot,cycle,44,impedance_ohm,223,
+F7b,200C_hot,cycle,55,impedance_ohm,233,
+F7b,200C_hot,cycle,66,impedance_ohm,243,
+F7b,200C_hot,cycle,77,impedance_ohm,251,
+F7b,200C_hot,cycle,88,impedance_ohm,260,
+F7b,200C_hot,cycle,99,impedance_ohm,268,text says ~213 Ohm cm-2 after 100 cycles; 268 / 1.267 cm2 = 211.6 (our arithmetic)
+F3a,20C_first_point,ReZ_kohm,0.79,minusImZ_kohm,0.26,first (highest-frequency) point read by eye at 6x render; +-0.03
+F3a,100C_first_point,ReZ_kohm,1.06,minusImZ_kohm,0.36,first point read by eye; small arc to ~1.4 kOhm
+F3b,150C_first_point,ReZ_ohm,46,minusImZ_ohm,14,first point read by eye at 18x zoom; +-3
+F3b,175C_first_point,ReZ_ohm,33,minusImZ_ohm,6,read by eye
+F3b,200C_first_point,ReZ_ohm,25,minusImZ_ohm,1,read by eye

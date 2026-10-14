@@ -191,6 +191,15 @@ Status 범례: ✅ digest 완료 · ⬜ PDF만(미digest) · 📄 Excel만
 | `papers/heck2026_densification_sulfide_se_binder_scalable.md` **(본문 17 pp + SI 10 pp · 크롭 34장 (손 크롭 6) · 판독 CSV 303행 · 2026-10-13)** | **[외부·exp·바인더 분리막 in-die/out-of-die 밀도 · springback · σ 하중 이력]** **Carina Amata Heck\*** · D. H. Nguyen · L. Bröcker · M. A. Lange · V. Faka · A. Diener · J. B. Wongso Wijaya · L. Blume · W. G. Zeier · B. V. Lotsch · A. Kwade · P. Michalowski (TU Braunschweig · MPI FKF · FZ Jülich · Münster), "**Evaluating densification effects on sulfide-based electrolytes to examine an application in scalable solid-state battery manufacturing**" (***J. Energy Storage* 152, 120084 (2026)**, DOI `10.1016/j.est.2025.120084`, CC BY). β-Li₃PS₄ + HNBR 0/3/4.3 wt%: springback 6.7–10.4 % (≈640 MPa Ø1 mm 펀치, 바인더 · 속도 ↑ → ↑) · in-die 분말 1.5 → 0.01 GPa 감압 끝 D ≈1.00 (회복 ≈7 % ≈ 고체 탄성, 우리 산술) · 3 wt% 시트 D 0.91 → 0.80 · σ 최대 0.26 → 감압 10 MPa 0.135 mS/cm · LPSCl 분말 1.18 mS/cm | **A 압밀 · 언로딩 · 바인더** (exp, 외부 — LPS ≠ LPSCl) |
 | `papers/diener2022_roll_gap_springback_calendering.md` **(본문 11 pp · SI 없음 · 크롭 11장 (손 크롭 3) · 판독 CSV 166행 · 2026-10-13)** | **[외부·exp·LIB 양극 캘린더 springback 정의 · 간극 직접 측정 — 고하중 절댓값 과대 (우리 산술)]** **Alexander Diener\*** · S. Ivanov · W. Haselrieder · A. Kwade (TU Braunschweig), "**Evaluation of Deformation Behavior and Fast Elastic Recovery of Lithium-Ion Battery Cathodes via Direct Roll-Gap Detection During Calendering**" (***Energy Technol.* 10, 2101033 (2022)**, DOI `10.1002/ente.202101033`, CC BY). NMC622/C65/PVDF, 200–350 g/m² · PVDF 1.5–4 wt%: SB 0.04–0.57 선하중 비례 · 두께 · 바인더 ↑ → ↓ · SB = q_L(k_M·M_C·w_CB + C_SB) · 롤 이동 0.061 µm per N/mm · ⚠ 최고 하중 SB 는 간극 안 밀도 > 진밀도 → 상한 ≈20–24 % | **A 언로딩 정의 · 측정 순응** (exp, 외부 — 액체 LIB) |
 
+### 🧮 LPSCl 펠릿 밀도 · "진밀도 1.64" 출처 묶음 (2026-10-14 · 정본 카드 넷)
+
+| slug | 한 줄 |
+|---|---|
+| `tron2023_lpscl_ccd_ambient_pressure` | 상압 CCD · 100 mg · ⌀10 mm · 360 MPa 펠릿 1.55–1.60 g/cm³ · *"crystallographic 1.64"* 에 Doux 2020 인용 (Doux 는 1.860 사용) |
+| `beutl2024_round_robin_coin_cell_sulfide_assb` | 4 기관 코인셀 round robin · NEI ≈1 µm · ≥1.49 g/cm³ · 같은 1.64 에 Zhou 2019 · Tron 2023 인용 · σ 흩어짐 · 접촉 규약 효과 |
+| `wang2024_hot_pressed_lpscl_pressure_invariant_conductivity` | 열간 가압 LPSCl · 1.64 무인용 · 자기 펠릿 1.66–1.69 (> 1.64) · 냉간 300 MPa 1.42 · 같은 밀도에서 σ 3.2 배 |
+| `larson2025_hot_pressing_argyrodite_low_stack_pressure_conductivity` | 같은 그룹 · 진밀도 1.83 (XRD 계산 주장 · 자기 XRD 판독 1.86) · 1.64 면 공극 음수 · 작동압 0.12–8 MPa σ |
+
 ## 🎤 학회 발표자료 (`talks/` — 논문 아님, 별도 등급)
 
 > ⚠ 발표 덱은 peer-review 미통과 + 방법 명세가 슬라이드 수준이라 **`papers/` 보다 한 단계 낮은

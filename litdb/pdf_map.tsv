@@ -310,3 +310,11 @@ eizenhammer2026_lfp_psd_halfcell_many_particle_fullcell	particle size distributi
 #   카드 제목이 한국어라 토큰도 안 겹친다. 밑줄·공백 두 형태에 모두 드는 고유 조각이 없어 두 줄 (qin2026 과 같은 사정).
 #   손작업 15장: f1–f11 recrop (워터마크 문자열만 비운 사본에서 렌더 · 잉크 경계) · t1–t3 · tB1 manual_crop (괘선뿐인 표를 도구가 버림 · 'Table B.1:' 라벨 미인식).
 #   [!] '--clean' · '--inbox --run' · '--refresh --apply' 는 손작업 가드에 걸린다. '--force_clean' 을 주면 워터마크 낀 도구 크롭으로 돌아간다.
+tron2023_lpscl_ccd_ambient_pressure	critical_current_density_measurements_of_argyrodite
+tron2023_lpscl_ccd_ambient_pressure	critical current density measurements of argyrodite
+beutl2024_round_robin_coin_cell_sulfide_assb	round-robin_test_of_all-solid-state_battery
+beutl2024_round_robin_coin_cell_sulfide_assb	round-robin test of all-solid-state battery
+wang2024_hot_pressed_lpscl_pressure_invariant_conductivity	characterization_of_hot-pressed_li6ps5cl
+wang2024_hot_pressed_lpscl_pressure_invariant_conductivity	characterization of hot-pressed li6ps5cl
+larson2025_hot_pressing_argyrodite_low_stack_pressure_conductivity	hot_pressing_argyrodite_solid_electrolyte_powders
+larson2025_hot_pressing_argyrodite_low_stack_pressure_conductivity	hot pressing argyrodite solid electrolyte powders
