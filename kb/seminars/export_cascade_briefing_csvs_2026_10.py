@@ -2,7 +2,8 @@
 """Per-page Origin CSVs for the 2026-10-13 cascade progress briefing (one file per data graphic).
 
 Writes db/properties/seminar_2026_10_13_cascade/pNN_*.csv + README.md. Page numbers follow
-Research_Seminar_2026_10_13_cascade_progress.pptx (19 slides — the September-audit slide is page 11).
+Research_Seminar_2026_10_13_cascade_progress.pptx as it was on 10-13 (19 slides — the audit was page 11). Since 10-14 the
+audit is slide 8 and the three slides after it moved down one: p08 = slide 9 · p09 = slide 10 · p10 = slide 11 (file names kept).
 Coverage counts (p06, p07) are counted from the ledgers themselves, not typed in.
 
 What it does NOT do: it does not digitize literature figures (Kang 2026, Sundar 2025, Jung 2026 —
@@ -160,6 +161,133 @@ def p07():
                   'Counted from the ledger files by this script. Stage 1 is exploratory data since 2026-09-19 (cascade_v23_demoted_2026_09_19.json).',
                   'Configurations are structures, not designs; all main-set configurations share one dopant level (labels x002/x005/x010 are not concentrations).'],
                  ['workflow_row', 'step_or_ledger', 'n_precursors', 'n_rows', 'row_unit', 'As2S3_included', 'AlI3_included', 'source'], rows)
+
+
+# ---- p07c: the Stage-1 composite score re-run once with all 91 precursors (user 10-14: "틀린거라도 랭킹 한번 추가해서" ·
+#      "점수표 관련해서는 틀린 내용이라는걸 나중에 얘기할거니까 인용해도 될듯"). The August table (cascade_v23_ranked_v2.csv)
+#      holds 89: As2S3 and AlI3 came in the August re-run, after the score was made. Method unchanged — the same tool is
+#      re-run, and it must first reproduce the August table byte for byte from the August inputs (else the method drifted).
+SCORE_TOOL = os.path.join(ROOT, 'tools', 'figures', 'plot_cascade_insights.py')
+SCORE_ADDED = ('As2S3', 'AlI3')
+
+
+def _score_rows(path):
+    r = rows_of(path)
+    return [dict(zip(r[0], x)) for x in r[1:]]
+
+
+def _run_score_tool(champ, esw, ranked, figdir):
+    import subprocess
+    env = dict(os.environ, CASCADE_CHAMP=champ, CASCADE_ESW=esw, CASCADE_RANKED=ranked, CASCADE_FIGDIR=figdir, MPLBACKEND='Agg')
+    subprocess.run([sys.executable, SCORE_TOOL], cwd=ROOT, env=env, check=True, capture_output=True)
+    return _score_rows(ranked)
+
+
+def as2s3_legacy_esw(path=None):
+    """As2S3 row in the OLD window definition of the v2 table: from the 10-14 addendum's legacy fields
+    (first_reduction_plateau_V = old lower limit · legacy_window_V = ox − that), picked by the v2 rule
+    (rebuild_pool_inputs.build_esw_csv: highest oxidation onset among plain rows, first row on a tie)."""
+    res = json.load(open(path or os.path.join(P, ESW_ADDENDUM)))['results']
+    best = None
+    for k, v in res.items():
+        if v.get('dopant') != 'As2S3' or v.get('composition_family') != 'plain' or v.get('oxidation_limit_V') is None:
+            continue
+        if best is None or v['oxidation_limit_V'] > best[1]['oxidation_limit_V']:
+            best = (k, v)
+    if best is None:
+        raise ValueError('As2S3: no plain row with an oxidation limit in ' + ESW_ADDENDUM)
+    k, v = best
+    ox, red, win = v['oxidation_limit_V'], v['first_reduction_plateau_V'], v['legacy_window_V_2026_09_22']
+    if abs((ox - red) - win) > 1e-3:
+        raise ValueError(f'As2S3 {k}: legacy window {win} != ox − first plateau {ox - red:.3f}')
+    return k, ox, red, v.get('ocv_self_decomposition_V'), win
+
+
+def spearman(x, y):
+    def rk(v):
+        order = sorted(range(len(v)), key=lambda i: v[i])
+        out = [0] * len(v)
+        for r_, i in enumerate(order):
+            out[i] = r_ + 1
+        return out
+    a, b, n = rk(x), rk(y), len(x)
+    return 1 - 6 * sum((p - q) ** 2 for p, q in zip(a, b)) / (n * (n * n - 1))
+
+
+def p07c():
+    import tempfile
+    tmp = tempfile.mkdtemp(prefix='score91_')
+    v2c, v2e = os.path.join(P, 'cascade_v23_champions_v2.csv'), os.path.join(P, 'oxidation_stability_cascade_v2.csv')
+    aug_path = os.path.join(P, 'cascade_v23_ranked_v2.csv')
+    body = lambda p: [l for l in open(p, encoding='utf-8') if not l.lstrip('"').startswith('#')]
+    _run_score_tool(v2c, v2e, os.path.join(tmp, 'repro89.csv'), tmp)
+    if body(os.path.join(tmp, 'repro89.csv')) != body(aug_path):
+        raise AssertionError('the score tool no longer reproduces cascade_v23_ranked_v2.csv from its inputs — method drifted')
+    with open(v2c, encoding='utf-8') as f:
+        champ = list(csv.DictReader(f))
+    cols = list(champ[0].keys())
+    master1 = [r for r in stage1_rows() if r['family'] in MAIN_FAMILIES and str(r.get('rank_combined', '')).strip() == '1']
+    # how far the August champion rows are from today's master rank-1 rows (reported, not refreshed — refreshing them
+    # would make a different ranking, not "the August ranking with the two missing ones added")
+    def num(s, nd):
+        try:
+            return round(float(s), nd)
+        except (TypeError, ValueError):
+            return None
+    # rounded numbers, not string prefixes: the two files print the same value with different digits ('40.831' · '40.83098')
+    key = lambda r: (num(r.get('elastic_E_young_GPa'), 2), num(r.get('rerank_de_post_anneal'), 3))
+    ca, ma = {}, {}
+    for r in champ:
+        ca.setdefault(base(r['dopant']), set()).add(key(r))
+    for r in master1:
+        ma.setdefault(base(r['dopant']), set()).add(key(r))
+    n_diff = sum(1 for d in ca if d not in SCORE_ADDED and ca[d] != ma.get(d))
+    n_cmp = sum(1 for d in ca if d not in SCORE_ADDED)
+    keep = [r for r in champ if base(r['dopant']) not in SCORE_ADDED]
+    add = []
+    for r in master1:
+        if base(r['dopant']) in SCORE_ADDED:
+            o = {c: r.get(c, '') for c in cols}
+            o['_dir'] = r['name']
+            add.append(o)
+    cc = os.path.join(tmp, 'champ91.csv')
+    with open(cc, 'w', encoding='utf-8', newline='') as f:
+        w = csv.DictWriter(f, fieldnames=cols)
+        w.writeheader()
+        w.writerows(keep + add)
+    k, ox, red, ocv, win = as2s3_legacy_esw()
+    ce = os.path.join(tmp, 'esw91.csv')
+    with open(ce, 'w', encoding='utf-8') as f:
+        f.write(open(v2e, encoding='utf-8').read().rstrip('\n') + '\n')
+        f.write(f'As2S3,S,3,TM,{ox},{red},{"" if ocv is None else ocv},{win},,added 2026-10-14 from {ESW_ADDENDUM} legacy fields ({k})\n')
+    rows = _run_score_tool(cc, ce, os.path.join(tmp, 'ranked91.csv'), tmp)
+    got = {r['dopant'] for r in rows}
+    if len(rows) != 91 or not set(SCORE_ADDED) <= got:
+        raise AssertionError(f'expected 91 precursors incl. {SCORE_ADDED}, got {len(rows)}')
+    aug = {r['dopant']: int(r['rank']) for r in _score_rows(aug_path)}
+    common = [r['dopant'] for r in rows if r['dopant'] in aug]
+    new = {r['dopant']: int(r['rank']) for r in rows}
+    rho = spearman([aug[d] for d in common], [new[d] for d in common])
+    top15 = [r['dopant'] for r in rows[:15]] == sorted(aug, key=aug.get)[:15]
+    n_add = {sp: sum(1 for r in add if base(r['dopant']) == sp) for sp in SCORE_ADDED}
+    out = [[r['rank'], r['dopant'], anion_family(r['dopant']), r['score'], r['de'], r['ox_V'], r['red_V'], r['E_GPa'], r['pugh'],
+            r['pareto'], aug.get(r['dopant'], ''), 'yes' if r['dopant'] in SCORE_ADDED else ''] for r in rows]
+    return write('p07_stage1_composite_score_91.csv',
+                 ['Page 7 — Stage-1 composite score, the August method re-run on 2026-10-14 with all 91 precursors. Exploratory and flawed:',
+                  'the September audit (slide 8 since 10-14) found it unusable as a ranking. Never cite a rank as a result.',
+                  'Method unchanged: tools/figures/plot_cascade_insights.py, score = 0.30 ox + 0.25 stable (de) + 0.20 soft (E) + 0.15 ductile (pugh)',
+                  '+ 0.10 window, min-max over the pool. This script first re-runs it on the August inputs and checks that it reproduces',
+                  'cascade_v23_ranked_v2.csv (89) byte for byte.',
+                  f'Added: As2S3 and AlI3 (August re-run) with their rank_combined == 1 rows from cascade_all_302 (As2S3 {n_add["As2S3"]}, AlI3 {n_add["AlI3"]};',
+                  f'AlI3 had empty rows in the August champion table). As2S3 window from {ESW_ADDENDUM} legacy fields ({k}, old definition,',
+                  'MP 2026.04.13); AlI3 was already in the August window table.',
+                  f'The other 89 keep their August inputs: Spearman {rho:.4f} against the August ranks; top 15 {"unchanged" if top15 else "CHANGED"}.',
+                  f'Not refreshed: the master rank-1 rows differ from the August champion rows for {n_diff} of {n_cmp} precursors.',
+                  'Known flaws: de is a per-atom energy against the host with no reference for the added elements (composition-dependent);',
+                  'elastic and bond-valence descriptors spread as much within a precursor as between precursors; hand-set weights;',
+                  'min-max scaling shifts with the pool; the window is the old definition. anion_family is from the formula.'],
+                 ['rank_91', 'precursor', 'anion_family', 'score', 'de_eV_per_atom', 'ox_V', 'red_V_old_definition', 'E_GPa', 'pugh',
+                  'pareto', 'rank_aug89', 'added_2026_10_14'], out)
 
 
 def p08():
@@ -437,6 +565,27 @@ def figures():
     ax.tick_params(axis='y', length=0)
     save(fig, 'fig_p07_stage1_coverage.png')
 
+    # p07c: Stage-1 composite score (August method, all 91) — top 10, drawn at its slide size (3.4 × 3.7 in, the height of
+    # the pipeline box beside it) so a 12 pt label here is 12 pt on the slide. Plain grey bars: nothing is highlighted —
+    # the next slides say why this score cannot rank precursors (user 10-14: shown, then called wrong).
+    sc = rows_of(os.path.join(OUT, 'p07_stage1_composite_score_91.csv'))
+    ix = {k: sc[0].index(k) for k in sc[0]}
+    top = sc[1:11]
+    sub = str.maketrans('0123456789', '₀₁₂₃₄₅₆₇₈₉')
+    fig, ax = plt.subplots(figsize=(3.4, 3.7))
+    ys = list(range(len(top)))[::-1]
+    vals = [float(r[ix['score']]) for r in top]
+    ax.barh(ys, vals, 0.62, color=GREY, edgecolor='black', linewidth=0.8)
+    for y, v in zip(ys, vals):
+        ax.text(v + 0.015, y, f'{v:.2f}', va='center', fontsize=11)
+    ax.set_yticks(ys, [f"{r[ix['rank_91']]}. {r[ix['precursor']].translate(sub)}" for r in top], fontsize=12)
+    ax.set_xlim(0, 1.0)
+    ax.set_xticks([0, 0.5, 1.0])
+    ax.set_xlabel('composite score (August method)', fontsize=11)
+    plain_axes(ax, 11)
+    ax.tick_params(axis='y', length=0)
+    save(fig, 'fig_p07_stage1_score_top10.png')
+
     # p10: host stability window on a voltage axis
     seg = rows_of(os.path.join(OUT, 'p10_stability_window_host_segments.csv'))[1:]
     lo, hi = float(seg[1][1]), float(seg[1][2])
@@ -489,6 +638,8 @@ README = """# Origin CSVs — Research Seminar 2026-10-13 (cascade progress brie
 
 Decks: `kb/seminars/Research_Seminar_2026_10_13_cascade_progress.pptx` (19 slides) and the lean variant
 `…_progress_lean.pptx` (same 19 slides, same order, same page numbers — every CSV below fits both).
+**Since 2026-10-14 the audit is slide 8** (right after the Stage-1 pipeline and its score) and the three slides that were
+8–10 moved down one: `p08_*` = slide 9 · `p09_*` = slide 10 · `p10_*` = slide 11 (file names kept — they are paths).
 Made by `kb/seminars/export_cascade_briefing_csvs_2026_10.py` — rerun it after the source files change.
 Every CSV starts with `#` comment lines (source, units, cautions); Origin: Import → skip comment lines.
 2026-10-12 update: the September-audit slide became page 11, so the MD-status CSV is now p13 and the
@@ -498,13 +649,14 @@ site-preference backup p18 (old p12 / p17 files are removed by the script). p06 
 |---|---|---|---|
 | 6 | Candidate set | `p06_candidate_set_by_anion_family.csv` | bars: n_planned vs n_relaxed vs n_gate_evaluation per anion family |
 | 7 | Stage-1 coverage | `p07_stage1_coverage_by_ledger.csv` · `p07_structures_by_anion_family.csv` | not drawn on the slim deck since 2026-10-14 (the slide shows the five-step pipeline box; the full deck keeps the step table) — kept for questions and Origin (As2S3 / AlI3 flags) |
+| 7 | Stage-1 composite score | `p07_stage1_composite_score_91.csv` | horizontal bars, top 10 of 91 (slim deck, beside the pipeline box) — the August method re-run on 10-14 with As2S3 and AlI3 added; exploratory and flawed (the audit, slide 8, says why); never cite a rank as a result |
 | 8 | Configuration sampling | `p08_configurations_per_site_pair_long.csv` · `_matrix.csv` | heat map: cation site × anion site → configurations (main batch 3,615) |
 | 9 | DFT EOS | `p09_eos_bm3_fit_curves.csv` | lines: E − E0 vs V per f.u. (fit curves; raw points not in repo) |
 | 10 | Stability window | `p10_stability_window_host.csv` · `p10_stability_window_host_segments.csv` | bar segments on a voltage axis (host Li6PS5Cl) |
 | 13 | MD status | `p13_md_campaign_progress.csv` · `p13_md_campaign_runs.csv` | progress bars; run roster (status, wall-clock GPU-h) |
 | 18 | Backup: site preference | `p18_site_preference_vs_ionic_radius.csv` | ΔE vs Shannon radius, three loadings per element (June batch, not Stage 1) |
 
-Slim-deck figures (`--figures`) in `kb/seminars/assets_2026_10_13/`: plain previews drawn from the CSVs here (`fig_p07_stage1_coverage.png` · `fig_p10_host_window.png` · `fig_p13_run_roster.png`; p07 is drawn at the size it takes on the slide, so its font sizes are the slide's — since 10-13 p06 shows the 08-18 family table (four columns, the third now 'anion vs host') instead, and `fig_p06_candidates_by_family.png` stays only as an Origin option) — replace them with the Origin versions — and literature figures cropped from the litdb crops as the reason for a method choice (`lit_schwietert2021_fig1.png` p10 · `lit_he2018_fig3.png` p12 · `lit_phuthi2026_fig1a.png` p14; never redrawn, never on the same plot as our numbers; `lit_jung2026_sio2_fig3d.png` left p06 on 10-13 and stays only as a crop).
+Slim-deck figures (`--figures`) in `kb/seminars/assets_2026_10_13/`: plain previews drawn from the CSVs here (`fig_p07_stage1_score_top10.png` — on the slim deck since 10-14 · `fig_p07_stage1_coverage.png` · `fig_p10_host_window.png` · `fig_p13_run_roster.png`; p07 is drawn at the size it takes on the slide, so its font sizes are the slide's — since 10-13 p06 shows the 08-18 family table (four columns, the third now 'anion vs host') instead, and `fig_p06_candidates_by_family.png` stays only as an Origin option) — replace them with the Origin versions — and literature figures cropped from the litdb crops as the reason for a method choice (`lit_schwietert2021_fig1.png` p10 · `lit_he2018_fig3.png` p12 · `lit_phuthi2026_fig1a.png` p14; never redrawn, never on the same plot as our numbers; `lit_jung2026_sio2_fig3d.png` left p06 on 10-13 and stays only as a crop).
 
 Pages without a CSV:
 - 2 (previous DFT work): figure boxes left empty on purpose — fill per tile on request.
@@ -521,7 +673,7 @@ def main():
     for old in ('p12_md_campaign_runs.csv', 'p12_md_campaign_progress.csv', 'p17_site_preference_vs_ionic_radius.csv'):
         if os.path.exists(os.path.join(OUT, old)):      # renamed when the audit slide became page 11
             os.remove(os.path.join(OUT, old))
-    made = [p06(), p07(), p07b(), p08(), p09(), p10(), p13(), p18()]
+    made = [p06(), p07(), p07b(), p07c(), p08(), p09(), p10(), p13(), p18()]
     with open(os.path.join(OUT, 'README.md'), 'w', encoding='utf-8') as f:
         f.write(README)
     print('wrote', len(os.listdir(OUT)), 'files to', os.path.relpath(OUT, ROOT))
@@ -557,6 +709,24 @@ def selftest():
             ok += 1
         else:
             raise AssertionError(f'anion_family accepted {bad}')
+    # Spearman: identical order 1, reversed −1
+    assert spearman([1, 2, 3, 4], [10, 20, 30, 40]) == 1 and spearman([1, 2, 3, 4], [4, 3, 2, 1]) == -1; ok += 1
+    # As2S3 legacy window: the real addendum passes; a copy whose legacy window != ox − first plateau must be refused
+    k_, ox_, red_, _, win_ = as2s3_legacy_esw()
+    assert abs((ox_ - red_) - win_) < 1e-3; ok += 1
+    bad = json.load(open(os.path.join(P, ESW_ADDENDUM)))
+    for v in bad['results'].values():
+        if v.get('dopant') == 'As2S3' and v.get('legacy_window_V_2026_09_22') is not None:
+            v['legacy_window_V_2026_09_22'] += 0.1
+    with tempfile.NamedTemporaryFile('w', suffix='.json', delete=False) as t2:
+        json.dump(bad, t2)
+    try:
+        as2s3_legacy_esw(t2.name)
+    except ValueError:
+        ok += 1
+    else:
+        raise AssertionError('as2s3_legacy_esw accepted an inconsistent legacy window')
+    os.unlink(t2.name)
     # negative: a ledger species outside the 91 (e.g. a renamed 'As2S3_recov') must be refused
     try:
         assert_subset('test', {'As2S3_recov', 'Al2O3'}, {'Al2O3', 'As2S3'})

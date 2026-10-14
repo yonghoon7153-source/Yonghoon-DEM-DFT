@@ -58,6 +58,8 @@ evidenceScope: multi-source-primary
 |---|---|---|
 | Stage 1 구성 (구조 · 지표) | `cascade_all_302_2026_08_25.csv` (통합 · 정본 셈) · `cascade_v23_all.csv` (본 배치만) | 탐색 자료 (09-19 강등) |
 | Stage 1 파생 (순위 · 챔피언 · 테마) | `cascade_v23_ranked_v2.csv` · `_champions_v2.csv` · `_litransport_v2.csv` · `cascade_v23_themes.json` · `cascade_screening_funnel_v2.json` | 탐색 · 깔때기는 *미검증 진단물* (머리말이 게이트 통과 수 인용 금지) |
+
+> 2026-10-14: 순위 표는 같은 도구로 8월 입력에서 바이트까지 재현된다. 재실행 둘 (As₂S₃ · AlI₃) 을 더한 91 판 = `seminar_2026_10_13_cascade/p07_stage1_composite_score_91.csv` (탐색 · 진단 전용 · 머리말에 결함 목록). 8월 챔피언 행은 지금 원장 순위 1 행과 89 개 중 43 개에서 다르다 (안 바꿨다). 에너지 항 `de` 는 원자당 에너지를 호스트와 바로 뺀 값이라 조성이 다른 전구체끼리는 넣은 원소의 결합 세기가 섞인다.
 | 안정창 | `oxidation_stability_cascade_v3_pinned.json` | 정정 정의 (ox − OCV · 빈칸 = 창 없음) |
 | 계면 (도핑 조성) | `cascade_interface_90.jsonl` · `_li.jsonl` · `_carbon.jsonl` | 반응에너지 · 계산 끝 |
 | 별도 상 (전구체 자체) | `cascade_stability_axes.csv` · 산물 갭 `cascade_product_gaps.json` | 코팅·이차상 후보 목록 · 산물 갭 **HOLD** |

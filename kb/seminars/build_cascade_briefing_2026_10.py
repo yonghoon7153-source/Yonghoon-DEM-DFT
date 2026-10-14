@@ -4,6 +4,10 @@
 Keeps the lab template (layout 2 header line, Hanyang logo, footer, slide numbers) by
 duplicating slide 3 for new slides (pptx skill add_slide.py) and editing slide XML.
 
+Order since 2026-10-14 (user): … 7 Stage-1 pipeline + composite score → 8 September audit → 9–11 its evidence
+(configuration sampling · DFT reference · stability window) → 12–13 Stage-2 pilot … (the pNN CSV names keep the old
+numbers: p08 = slide 9 · p09 = slide 10 · p10 = slide 11).
+
 Usage: python3 build_deck.py <src.pptx> <out.pptx> <skill_dir> <extra_media_dir> [--lean]
   --lean: same 19 slides, order and page numbers, but one message + at most two short bullets + one visual per
           slide (the density of the 08-18 deck); the detail lives in the script and defense notes.
@@ -537,7 +541,8 @@ def pack(order):
 # warnings in red), one figure or table, a '< caption >' and one coloured line under it, and the
 # dashed red numbered box + down arrow image of its slide 4 (the user's standard arrow). No cards, badges,
 # icons or chevrons. Literature crops carry a role tag above them and a credit below (CW, 10-13).
-LEAN_FIGS = ['fig_p10_host_window.png',   # fig_p07_stage1_coverage.png left the slides 10-14 (pipeline box instead)
+LEAN_FIGS = ['fig_p07_stage1_score_top10.png',   # 10-14: the Stage-1 score (August method, 91) beside the pipeline box
+             'fig_p10_host_window.png',   # fig_p07_stage1_coverage.png left the slides 10-14 (pipeline box instead)
              'fig_p13_run_roster.png', 'lit_schwietert2021_fig1.png', 'lit_he2018_fig3.png',
              'lit_phuthi2026_fig1a.png']
 DASH_RED, NOTE_GREY = 'FF5050', '6B7280'
@@ -817,21 +822,28 @@ def build_lean():
     #      every bar was 89–91 of 91 and showed no difference; the old bullet 'EOS/elastic (DFT)' also read as if the
     #      91 precursors had DFT elastic constants (DFT EOS/elastic is the host reference on slide 9; the per-precursor
     #      elastic moduli are UMA values). Numbers from the ledger: cascade_all_302 (91 precursors · 3,675 structures ·
-    #      693 annealed · descriptors on the rank-1 rows of all 91) · the score table holds 89 (built before the August
-    #      re-run). As₂S₃ joined the window and interface tables on 2026-10-14
-    #      (oxidation_stability_cascade_as2s3_addendum_2026_10_13.json), so the red As₂S₃ line is gone. The step names
-    #      match the audit slide (volume filter · elastic · combined score) so that slide can point back here.
+    #      693 annealed · descriptors on the rank-1 rows of all 91). As₂S₃ joined the window and interface tables on
+    #      2026-10-14 (oxidation_stability_cascade_as2s3_addendum_2026_10_13.json). The step names match the audit slide
+    #      (volume filter · elastic · combined score) so that slide can point back here.
+    #      10-14 later (user: 'add the ranking once even if it is wrong · plot it beside · we say it was wrong next'):
+    #      the August score table held 89 (made before the August re-run); the exporter re-runs the same tool with As₂S₃
+    #      and AlI₃ added (p07_stage1_composite_score_91.csv · reproduces the 89 table first) → step 5 = 91 and the top 10
+    #      are drawn beside the box. Plain grey bars, no highlight; the audit says why the score cannot rank —
+    #      since 10-14 the audit is slide 8, right after this one (user: 'the next page explains why this direction was
+    #      wrong'), and sampling · DFT reference · window (9–11) follow it as its evidence.
     name, t = fresh('workflow', 'Results & Discussion')
     lean_body(t, 'Stage 1: screening pipeline (June–August)', h=0.5)
     dashed_list(t, name, 'Pipeline',
                 [('Site enumeration', '91 precursors'),
                  ('UMA relaxation and volume filter', '3,675 structures'),
-                 ('Short anneal (500 K, 50 ps) and re-relaxation', '693 selected structures'),
+                 ('Short anneal (500 K, 50 ps) and re-relaxation', '693 selected'),
                  ('Descriptors (Li-site landscape, elastic moduli, stability window, and interface reactivity)',
                   '91 precursors'),
-                 ('Combined score and ranking', '89 precursors')],
-                0.45, 1.95, 9.1, 3.75, note_x=0.68, sz=1500)
-    add(t, caption(ids(), '< Stage-1 pipeline, run from June to August >', 5.9))
+                 ('Combined score and ranking', '91 precursors')],
+                0.45, 1.95, 5.6, 3.75, note_x=0.66, sz=1300)
+    add(t, caption(ids(), '< Stage-1 pipeline, run from June to August >', 5.88, x=0.45, w=5.6))
+    figure(t, name, 'fig_p07_stage1_score_top10.png', 6.25, 1.98, 3.3, 'Stage-1 composite score, top 10 of 91')
+    add(t, caption(ids(), '< Stage-1 composite score, top 10 of 91 >', 5.88, x=6.1, w=3.6))
     save(t, name)
 
     # ---- 8 configuration sampling (orig slide 11): heat map larger (CW P1); the descriptor-spread line is said — p11
@@ -846,7 +858,7 @@ def build_lean():
     name, t = fresh('stability', 'Results & Discussion')
     lean_body(t, 'Decomposition stability window',
               ['The Li chemical potential is scanned as a voltage on a [[b:grand-potential phase diagram]] (MP phases, 0 K).',
-               'Recomputed for 90 precursors with this definition.'], h=1.5)
+               'Recomputed for 91 precursors with this definition.'], h=1.5)
     sw, sy = 3.7, 2.97
     pw_, ph_ = png_size(os.path.join(EXTRA, 'lit_schwietert2021_fig1.png'))
     sh_ = sw * ph_ / pw_
@@ -943,7 +955,7 @@ def build_lean():
     slide_refs()
     slide_backups()
     return ['slide1.xml', new['prev'], new['overview'], 'slide3.xml', 'slide7.xml', 'slide8.xml', new['workflow'],
-            'slide11.xml', 'slide16.xml', new['stability'], new['audit'], new['md_setup'], new['md_status'], new['next'],
+            new['audit'], 'slide11.xml', 'slide16.xml', new['stability'], new['md_setup'], new['md_status'], new['next'],
             new['summary'], 'slide19.xml', new['refs'], 'slide10.xml', 'slide15.xml']
 
 
@@ -1100,7 +1112,7 @@ add(t, heading(ids(), 'Electrochemical stability window and interfacial reactivi
 add(t, tb(ids(), 'Window bullets', 0.55, 1.5, 4.55, 2.55,
           P('Grand-potential phase diagram: the Li chemical potential is scanned as a voltage (0 K, bulk thermodynamics).', 'cb', 1250, 110, spcaft=500)
           + P('Stable window = voltage range where the composition decomposes [[b:without Li exchange]]; if no such range exists, no stable window.', 'cb', 1250, 110, spcaft=500)
-          + P('Recomputed for the 90 precursors in the stability table with this definition (Oct); the earlier definition overestimated window widths.', 'cb', 1250, 110)))
+          + P('Recomputed for the 91 precursors in the stability table with this definition (Oct); the earlier definition overestimated window widths.', 'cb', 1250, 110)))
 x0, x1, v0, v1 = 0.75, 4.85, 1.4, 2.5
 X = lambda v: x0 + (v - v0) * (x1 - x0) / (v1 - v0)
 add(t,
@@ -1124,7 +1136,7 @@ add(t, pic(ids(), 'Sundar 2025 Fig 2', rid31, 5.3, 1.55, 4.15, 4.15 * 805 / 2118
     tb(ids(), 'Credit right', 5.3, 3.43, 4.15, 0.28, P('Reproduced from Sundar et al., Adv. Sci. 12, e13191 (2025)', 'p', 950, 100, 'ctr', MUTED, italic=True)),
     tb(ids(), 'Interface bullets', 5.3, 3.85, 4.15, 2.2,
        P('Same phase data: reaction energy of each doped composition against LiCoO₂, LiNiO₂, LiMn₂O₄, Li metal and carbon.', 'cb', 1250, 110, spcaft=500)
-       + P('A separate table treats the precursor itself as a second phase (coating view, as in the figure); its product band gaps are being [[b:re-derived with ground-state phases]] (E[[_:hull]] = 0).', 'cb', 1250, 110)),
+       + P('A separate table treats the precursor itself as a second phase (coating view, as in the figure); its product band gaps were [[b:re-derived with ground-state phases]] (E[[_:hull]] = 0) on October 14 and are not used yet, because the metal or insulator call depends on MP band-gap values.', 'cb', 1250, 110)),
     refs_line(ids(), 'Zhu, ACS Appl. Mater. Interfaces 7, 23685 (2015) · Richards, Chem. Mater. 28, 266 (2016) · '
                      'Xiao, Nat. Rev. Mater. 5, 105 (2020) · Schwietert, Nat. Mater. 19, 428 (2020)', y=6.4))
 save(t, name)
@@ -1267,6 +1279,6 @@ slide_backups()
 
 # ---- order, prune, pack
 order = ['slide1.xml', new['prev'], new['overview'], 'slide3.xml', 'slide7.xml', 'slide8.xml', new['workflow'],
-         'slide11.xml', 'slide16.xml', new['stability'], new['audit'], new['md_setup'], new['md_status'], new['next'],
+         new['audit'], 'slide11.xml', 'slide16.xml', new['stability'], new['md_setup'], new['md_status'], new['next'],
          new['summary'], 'slide19.xml', new['refs'], 'slide10.xml', 'slide15.xml']
 pack(order)
