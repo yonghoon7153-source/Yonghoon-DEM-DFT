@@ -2,7 +2,9 @@
 
     <venv>/bin/python -I bms-balancing/scripts/reil_c4e_run.py plan-e --venv V --seal S --seal-manifest-sha256 H --out <새 폴더>
     <venv>/bin/python -I bms-balancing/scripts/reil_c4e_run.py fetch  --dest <저장소 밖 새 폴더>
+    <venv>/bin/python -I bms-balancing/scripts/reil_c4e_run.py seal-sources --out <새 폴더>
     <venv>/bin/python -I bms-balancing/scripts/reil_c4e_run.py run    --venv V --seal S --seal-manifest-sha256 H --xlsx X --util U
+                                                                      --sources <SOURCES.json> --sources-sha256 <목록 sha256>
                                                                       --out <새 폴더> --approval <상태 문서 절>
 
 승인 · 범위: `docs/REIL_C4E_APPROVAL_REQUEST_v3_20261014.md` (§3 · §4 · §5 · §6 · 수용 §65) · 상태 문서 §66. **E0 은 대조와 `plan-e` 만
@@ -18,6 +20,12 @@
   마지막 쓰기) → 최종 판정 stdout (snapshot 뒤 외부 반환 · 산출 루트 밖 · 루트 안에는 더 쓰지 않는다).
 - 판정 (v3 §4-7): 관측 집계와 E3a COMPLETE 를 나눈다. 사전 판정 = 조건 1–4 · 6 · 최종 판정 = 사전 AND `final_record` COMPLETE AND 위반 0 ·
   단계 판정 = 최종 AND 단계 실행기 rc 0 · timeout 없음 (`stage_verdict` — run 밖의 meta 로).
+- **신뢰 소스 목록** (C4E-E0-N1 · 상태 문서 §69): `seal-sources` 가 다섯 모듈 (`MODULE_RELPATHS`) 의 바이트 sha256 · 크기를 새 폴더의
+  `SOURCES.json` 으로 쓴다. 목록의 신뢰는 그 파일이 아니라 결과 기록 · 검토 회신 · 사용자 E1 승인 기록에 고정한 목록 sha256 에서 온다 —
+  `run` CLI 는 `--sources` · `--sources-sha256` 를 기본값 없이 요구한다. 목록 sha · 경로 집합 (정확히 다섯) · 항목 형식이 어긋나거나 모듈
+  바이트가 목록과 다르면 util import · 자료 적재 · 작업자 시작 전에 멈춘다. 같은 기대값이 시작 · 끝 식별 표에 들어가고, 수용 판정은 필수 행
+  (입력 다섯 + 모듈 다섯) 의 행 없음 · 기대 누락 · 시작 / 끝 불일치 · 실행 중 변화를 INCOMPLETE 로 본다. 목록 없이 부르는 라이브러리 경로
+  (E0 시험) 는 예전 그대로이며 기록에 legacy 로 남는다.
 """
 from __future__ import annotations
 
@@ -55,6 +63,12 @@ FETCH_TIMEOUT_S = 240.0
 P0_RESULT = BMS / "evidence" / "reil_p0_20261006" / "P0_RESULT.json"
 P0_RESULT_SHA = "3875e65092b38c9b08c907926bd8d1f4ee25674c97c28b5ada935e9027d12a90"
 MODULES = (HERE, Path(e3a.__file__).resolve(), Path(mon.__file__).resolve(), Path(c5.__file__).resolve(), Path(p0.__file__).resolve())
+#: C4E-E0-N1 — 신뢰 소스 목록의 경로 집합 (bms-balancing 기준 · 정확히 다섯 · `_module_files` 와 같은 순서) · 목록 형식 · run 의 필수 식별 행
+MODULE_RELPATHS = ("scripts/reil_c4e_run.py", "scripts/reil_c4_e3a.py", "scripts/reil_c4_monitor.py", "scripts/reil_c5_pilot.py",
+                   "scripts/reil_p0.py")
+SOURCES_SCHEMA = "reil-c4e-sources-v1"
+INPUT_NAMES = ("LFP_Data.xlsx", "util_LFP.py", "P0_RESULT.json", "NOTEBOOK_SOURCE_EXCERPTS.json", "MANIFEST.json")
+REQUIRED_IDENTITY = INPUT_NAMES + MODULE_RELPATHS
 
 N_WORKERS = 4
 TICK_S = 1.0
@@ -305,8 +319,15 @@ def identity_table(files: dict, expected: dict) -> dict:
     return out
 
 
-def identity_problems(table: dict) -> list:
+def identity_problems(table: dict, required=()) -> list:
+    """기대값과 다른 행 · 필수 행 (`required`) 의 행 없음 · 기대 누락 (C4E-E0-N1). required 를 주지 않으면 기대 None 행은 건너뛴다 (예전 그대로)."""
     probs = []
+    for name in required:
+        row = table.get(name)
+        if row is None:
+            probs.append(f"{name}: 식별 행이 없다 (필수)")
+        elif row.get("expected") is None:
+            probs.append(f"{name}: 기대 항목 누락 (필수 · 신뢰 기대값 없이 통과시키지 않는다)")
     for name, row in table.items():
         exp = row.get("expected")
         if exp is None:
@@ -321,8 +342,9 @@ def identity_changed(start: dict, end: dict) -> list:
                   if (start.get(n) or {}).get("sha256") != (end.get(n) or {}).get("sha256") or (start.get(n) or {}).get("sha256") is None)
 
 
-def pre_verdict(plan, agg, sup, ident_start, ident_end, *, n_workers=N_WORKERS) -> dict:
-    """사전 판정 (v3 §4-7 조건 1–4 · 6) — `final_record` 전의 판정이다. 최종 판정은 끝 기록까지 쓴 final_record 뒤에만 (`final_verdict`)."""
+def pre_verdict(plan, agg, sup, ident_start, ident_end, *, n_workers=N_WORKERS, required=()) -> dict:
+    """사전 판정 (v3 §4-7 조건 1–4 · 6) — `final_record` 전의 판정이다. 최종 판정은 끝 기록까지 쓴 final_record 뒤에만 (`final_verdict`).
+    조건 6 은 시작 · 끝 두 표를 같은 기대값과 대조한다 — 필수 행 (`required`) 의 행 없음 · 기대 누락도 문제다 (C4E-E0-N1)."""
     states, reasons = sup["states"], []
     ret = [s for s in states if s.get("state") == "COMPLETED" and s.get("termination") == "returned"]
     c1 = len(ret) == len(plan) and not agg["problems"]
@@ -344,14 +366,15 @@ def pre_verdict(plan, agg, sup, ident_start, ident_end, *, n_workers=N_WORKERS) 
     if not c4:
         reasons.append(f"조건 4: worker_end {sorted(ends)} · worker_deadline {sup.get('worker_deadline')} · exitcodes {codes} · "
                        f"owned_alive_after {sup.get('owned_alive_after')} · drain_ok {sup.get('drain_ok')}")
-    changed, probs = identity_changed(ident_start, ident_end), identity_problems(ident_start)
-    c6 = not changed and not probs and not agg["late_completions"] and not agg["over_cap_active"]
+    changed = identity_changed(ident_start, ident_end)
+    probs, end_probs = identity_problems(ident_start, required), identity_problems(ident_end, required)
+    c6 = not changed and not probs and not end_probs and not agg["late_completions"] and not agg["over_cap_active"]
     if not c6:
-        reasons.append(f"조건 6: 시작 / 끝 식별 변화 {changed} · 시작 식별 문제 {probs} · 늦은 완료 "
+        reasons.append(f"조건 6: 시작 / 끝 식별 변화 {changed} · 시작 식별 문제 {probs} · 끝 식별 문제 {end_probs} · 늦은 완료 "
                        f"{[x['task_id'] for x in agg['late_completions']]} · 진행 중 초과 {[x['task_id'] for x in agg['over_cap_active']]}")
     complete = c1 and c2 and c3 and c4 and c6
     return {"kind": "사전 판정 (v3 §4-7 조건 1–4 · 6) — 최종 판정이 아니다", "complete": complete,
-            "conditions": {"1": c1, "2": c2, "3": c3, "4": c4, "6": c6}, "reasons": reasons}
+            "conditions": {"1": c1, "2": c2, "3": c3, "4": c4, "6": c6}, "reasons": reasons, "required_identity": list(required)}
 
 
 def final_verdict(pre, fr) -> dict:
@@ -474,20 +497,89 @@ def _module_files() -> dict:
     return {f"scripts/{m.name}": m for m in MODULES}
 
 
+def _is_sha256(v) -> bool:
+    return isinstance(v, str) and len(v) == 64 and all(c in "0123456789abcdef" for c in v)
+
+
+def load_sources(path, sha256) -> dict:
+    """신뢰 소스 목록 읽기 (C4E-E0-N1) — 목록 바이트의 sha256 = 승인 기록에 고정한 값 · 형식 (`SOURCES_SCHEMA`) · 경로 집합 = 정확히
+    `MODULE_RELPATHS` (누락 · 목록 밖 모두 거부) · 항목마다 sha256 (소문자 16 진 64) · bytes (정수 ≥ 0). 하나라도 어긋나면 `E3aStop`."""
+    if tuple(_module_files()) != MODULE_RELPATHS:
+        raise E3aStop(f"실행 모듈 경로 집합이 목록 정의와 다르다: {tuple(_module_files())}")
+    if not _is_sha256(sha256):
+        raise E3aStop(f"소스 목록 sha256 인자가 소문자 16 진 64 자가 아니다: {sha256!r}")
+    b = e3a._read(path)
+    if _sha(b) != sha256:
+        raise E3aStop(f"소스 목록 sha256 {_sha(b)} ≠ 승인 고정값 {sha256}")
+    try:
+        doc = json.loads(b)
+    except ValueError as e:
+        raise E3aStop(f"소스 목록이 JSON 이 아니다: {e}") from None
+    files = doc.get("files") if isinstance(doc, dict) else None
+    if not isinstance(files, dict) or doc.get("schema") != SOURCES_SCHEMA:
+        raise E3aStop(f"소스 목록 형식이 다르다 (schema {SOURCES_SCHEMA} · files)")
+    missing = [p for p in MODULE_RELPATHS if p not in files]
+    extra = sorted(set(files) - set(MODULE_RELPATHS))
+    if missing or extra:
+        raise E3aStop(f"소스 목록 경로 집합이 다르다 — 기대 항목 누락 {missing} · 목록 밖 {extra}")
+    out = {}
+    for p in MODULE_RELPATHS:
+        e = files[p]
+        sha, n = (e.get("sha256"), e.get("bytes")) if isinstance(e, dict) else (None, None)
+        if not _is_sha256(sha) or not _is_int(n) or n < 0:
+            raise E3aStop(f"소스 목록 항목 {p} 이 sha256 (소문자 16 진 64) · bytes (정수 ≥ 0) 가 아니다: {e!r}")
+        out[p] = {"sha256": sha, "bytes": n}
+    return out
+
+
+def seal_sources(out) -> dict:
+    """신뢰 소스 목록 쓰기 (C4E-E0-N1) — 다섯 모듈의 지금 바이트 sha256 · 크기 → 새 폴더의 `SOURCES.json` 하나. 목록의 신뢰는 이 파일이
+    아니라 결과 기록 · 검토 회신 · 사용자 E1 승인 기록에 고정하는 목록 sha256 에서 온다 (run 은 그 값을 명시 인자로만 받는다)."""
+    out = Path(out)
+    e3a._guard([out])
+    if out.exists():
+        raise E3aStop(f"{out} 가 이미 있다 — 덮어쓰지 않는다")
+    mods = _module_files()
+    if tuple(mods) != MODULE_RELPATHS:
+        raise E3aStop(f"실행 모듈 경로 집합이 목록 정의와 다르다: {tuple(mods)}")
+    files = {}
+    for rel, p in mods.items():
+        b = e3a._read(p)
+        files[rel] = {"sha256": _sha(b), "bytes": len(b)}
+    doc = {"schema": SOURCES_SCHEMA, "base": "bms-balancing/", "files": files,
+           "scope": "C4-E E1 실행 모듈 다섯의 승인 대상 바이트 (C4E-E0-N1 · 상태 문서 §69)",
+           "trust": "이 파일 자체는 신뢰의 근거가 아니다 — 목록 바이트의 sha256 을 결과 기록 · 검토 회신 · 사용자 E1 승인 기록에 고정하고 "
+                    "run 은 그 값을 명시 인자 (--sources-sha256) 로만 받는다"}
+    data = mon._dump(doc)
+    out.mkdir(parents=True)
+    (out / "SOURCES.json").write_bytes(data)
+    if (out / "SOURCES.json").read_bytes() != data:
+        raise E3aStop("SOURCES.json 을 다시 읽은 바이트가 쓴 것과 다르다")
+    return {"ok": True, "out": str(out), "sources_sha256": _sha(data), "files": files}
+
+
 # ---------------------------------------------------------------- run (v3 §3 2 의 1–13)
 def prepare(*, venv, seal, manifest_sha256, xlsx, util_path, out, p0_result=P0_RESULT, excerpts=e3a.EXCERPTS, expected=None,
-            env_identity=None, load_util=None, header=None) -> dict:
-    """run 의 2–7: identity → 원천 · 입력 시작 sha → 경로 (출력 폴더 새로) → util import → 적재 → P0 정확 대조 → 소비 digest → 계획.
-    앞에서 어긋나면 `E3aStop` — 뒤 단계 (util import · 그들 적재 함수 · optimizer) 는 부르지 않는다."""
+            env_identity=None, load_util=None, header=None, sources=None, sources_sha256=None) -> dict:
+    """run 의 2–7: identity → (신뢰 소스 목록) → 원천 · 입력 시작 sha → 경로 (출력 폴더 새로) → util import → 적재 → P0 정확 대조 →
+    소비 digest → 계획. 앞에서 어긋나면 `E3aStop` — 뒤 단계 (util import · 그들 적재 함수 · optimizer) 는 부르지 않는다.
+    `sources` · `sources_sha256` (C4E-E0-N1) 를 주면 다섯 모듈의 기대값을 목록에서 채우고 필수 행 (`REQUIRED_IDENTITY`) 을 강제한다 ·
+    하나만 주면 멈춘다 · 둘 다 없으면 legacy (E0 시험 경로 — 기록에 남긴다 · E1 CLI 는 목록을 요구한다)."""
     seal, out = Path(seal), Path(out)
+    if (sources is None) != (sources_sha256 is None):
+        raise E3aStop("신뢰 소스 목록 (sources) 과 그 sha256 은 함께 준다 — 하나만 주면 멈춘다 (C4E-E0-N1)")
     ident = e3a.identity(venv=venv, seal=seal, manifest_sha256=manifest_sha256, env_identity=env_identity)
     if not ident["ok"]:
         raise E3aStop(f"identity 실패: {ident['problems']}")
     files = {"LFP_Data.xlsx": Path(xlsx), "util_LFP.py": Path(util_path), "P0_RESULT.json": Path(p0_result),
              "NOTEBOOK_SOURCE_EXCERPTS.json": Path(excerpts), "MANIFEST.json": seal / "MANIFEST.json", **_module_files()}
     exp = expected_identity(manifest_sha256, expected)
+    required = ()
+    if sources is not None:
+        exp.update(load_sources(sources, sources_sha256))
+        required = REQUIRED_IDENTITY
     id_start = identity_table(files, exp)
-    probs = identity_problems(id_start)
+    probs = identity_problems(id_start, required)
     if probs:
         raise E3aStop("시작 식별 불일치 — " + "; ".join(probs))
     nb = e3a.notebook_case_table(excerpts)
@@ -508,8 +600,12 @@ def prepare(*, venv, seal, manifest_sha256, xlsx, util_path, out, p0_result=P0_R
            "binding": {"equal": True, "rows": loaded["rows"], "references": loaded["references"], "PE": loaded["PE"],
                        "NE": loaded["NE"], "p0_result": str(p0_result)},
            "util_file": uf, "xlsx": str(xlsx), "out": str(out), "blas_env_set": {k: os.environ.get(k) for k in c5.BLAS_VARS},
+           "sources": ({"path": str(sources), "sha256": sources_sha256, "files": {p: exp[p] for p in MODULE_RELPATHS},
+                        "required_identity": list(required)} if sources is not None else
+                       {"mode": "legacy — 신뢰 소스 목록 없음 (E0 시험 경로 · 모듈 기대값 없음 · E1 CLI 는 목록을 요구한다)"}),
            **(header or {})}
-    return {"out": out, "plan": calls, "ctx": ctx, "files": files, "expected": exp, "id_start": id_start, "header": hdr}
+    return {"out": out, "plan": calls, "ctx": ctx, "files": files, "expected": exp, "id_start": id_start, "header": hdr,
+            "required": required}
 
 
 def record_parts(*, header, sup, agg, rule, ident_start, ident_end, pre) -> dict:
@@ -522,12 +618,12 @@ def record_parts(*, header, sup, agg, rule, ident_start, ident_end, pre) -> dict
 
 
 def finalize(out, *, plan, sup, rule, ident_start, rehash, header, limits, roots, clock=time.monotonic, t0=0.0,
-             n_workers=N_WORKERS) -> dict:
+             n_workers=N_WORKERS, required=()) -> dict:
     """run 의 9–13: 사후 집계 → 끝 식별 재해시 → 사전 판정 → `final_record` 한 번 (끝 기록 포함 · 단계 안 마지막 쓰기 · 재읽기 · 해시 →
     같은 산출 루트 크기 · 최종 snapshot) → 최종 판정. 그 뒤 산출 루트 안에는 쓰지 않는다 (반환값은 호출자가 stdout 으로)."""
     agg = aggregate(sup, plan, rule)
     ident_end = rehash()
-    pre = pre_verdict(plan, agg, sup, ident_start, ident_end, n_workers=n_workers)
+    pre = pre_verdict(plan, agg, sup, ident_start, ident_end, n_workers=n_workers, required=required)
     parts = record_parts(header=header, sup=sup, agg=agg, rule=rule, ident_start=ident_start, ident_end=ident_end, pre=pre)
     fr = mon.final_record(out, parts, roots=roots, limit_bytes=limits["disk_new"], clock=clock, t0=t0, limit_s=limits["record"])
     return {"final": final_verdict(pre, fr), "pre": pre, "final_record": fr, "observed": agg["observed"],
@@ -548,19 +644,20 @@ def execute(prep, *, t0, clock=time.monotonic, limits=None, n_workers=N_WORKERS,
     header = {**prep["header"], "limits": limits, "rule": rule.params(), "n_workers": n_workers, "tick_s": tick, "t0_monotonic": t0}
     return finalize(out, plan=prep["plan"], sup=sup, rule=rule, ident_start=prep["id_start"],
                     rehash=rehash or (lambda: identity_table(prep["files"], prep["expected"])), header=header, limits=limits,
-                    roots=[out], clock=clock, t0=t0, n_workers=n_workers)
+                    roots=[out], clock=clock, t0=t0, n_workers=n_workers, required=prep.get("required", ()))
 
 
 def run(out, *, venv, seal, manifest_sha256, xlsx, util_path, approval, p0_result=P0_RESULT, excerpts=e3a.EXCERPTS, expected=None,
         env_identity=None, load_util=None, n_workers=N_WORKERS, tick=TICK_S, limits=None, clock=time.monotonic, rss_fn=None,
-        disk_fn=None) -> dict:
+        disk_fn=None, sources=None, sources_sha256=None) -> dict:
     """E1 의 run 1 회 (v3 §3 2 의 1–13). 반환값 = 최종 판정 (호출자가 stdout 으로 · 산출 루트 밖)."""
     t0 = clock()
     if not approval:
         raise E3aStop("run 은 별도 GO 의 승인 기록 (--approval) 없이 시작하지 않는다")
     prep = prepare(venv=venv, seal=seal, manifest_sha256=manifest_sha256, xlsx=xlsx, util_path=util_path, out=out,
                    p0_result=p0_result, excerpts=excerpts, expected=expected, env_identity=env_identity, load_util=load_util,
-                   header={"approval": approval, "start_utc": _utc(), "source": {"url": SOURCE_URL, "commit": SOURCE_COMMIT}})
+                   header={"approval": approval, "start_utc": _utc(), "source": {"url": SOURCE_URL, "commit": SOURCE_COMMIT}},
+                   sources=sources, sources_sha256=sources_sha256)
     return execute(prep, t0=t0, clock=clock, limits=limits, n_workers=n_workers, tick=tick, rss_fn=rss_fn, disk_fn=disk_fn)
 
 
@@ -696,7 +793,7 @@ def plan_e(out, *, venv, seal, manifest_sha256, p0_result=P0_RESULT, excerpts=e3
 
 
 # ---------------------------------------------------------------- CLI
-def main(argv=None) -> int:
+def build_parser() -> argparse.ArgumentParser:
     ap = argparse.ArgumentParser(prog="reil_c4e_run", description=(__doc__ or "").splitlines()[0])
     sub = ap.add_subparsers(dest="cmd", required=True)
     for name in ("plan-e", "run"):
@@ -709,19 +806,29 @@ def main(argv=None) -> int:
             s.add_argument("--xlsx", required=True, type=Path)
             s.add_argument("--util", required=True, type=Path)
             s.add_argument("--approval", required=True)
+            s.add_argument("--sources", required=True, type=Path)            # C4E-E0-N1 — 기본값 없음
+            s.add_argument("--sources-sha256", required=True)
     f = sub.add_parser("fetch")
     f.add_argument("--dest", required=True, type=Path)
-    a = ap.parse_args(argv)
+    g = sub.add_parser("seal-sources")
+    g.add_argument("--out", required=True, type=Path)
+    return ap
+
+
+def main(argv=None) -> int:
+    a = build_parser().parse_args(argv)
     try:
         if a.cmd == "plan-e":
             summary = plan_e(a.out, venv=a.venv, seal=a.seal, manifest_sha256=a.seal_manifest_sha256)
         elif a.cmd == "fetch":
             summary = fetch(a.dest)
+        elif a.cmd == "seal-sources":
+            summary = seal_sources(a.out)
         else:
             for k in c5.BLAS_VARS:
                 os.environ[k] = "1"
             res = run(a.out, venv=a.venv, seal=a.seal, manifest_sha256=a.seal_manifest_sha256, xlsx=a.xlsx, util_path=a.util,
-                      approval=a.approval)
+                      approval=a.approval, sources=a.sources, sources_sha256=a.sources_sha256)
             summary = {"ok": res["final"]["complete"], **res}
     except E3aStop as e:
         print(json.dumps(c5._jsonable({"ok": False, "stop": str(e), "record": getattr(e, "record", None)}), ensure_ascii=False,
