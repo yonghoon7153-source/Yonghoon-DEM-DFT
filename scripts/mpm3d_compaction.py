@@ -1672,6 +1672,66 @@ def _selftest():
         and "'dt_cfl_cap': float(_dt_cfl_cap)" in _msrc and "'dt_requested': float(args.dt)" in _msrc
         and "'dt_cfl_limited': bool(float(dt) < float(args.dt))" in _msrc)
 
+    # ── ★ 밀도 세대 (2026-10-14 밤 · 1저자 결정 · docs/density_generations_20261014.md) — 시험 먼저 ──────────────────────────
+    #    옛 코드: bulk_rho = main 안 인라인 식 (4800 · 2000 kg/m³ 하드코딩, 두 곳) · 첨가제 개수 = recipe_counts_real 기본 (gen1) ·
+    #    --dens-gen 없음 → 아래 DG 가 FAIL.  계약: 세대 미지정 = 옛 식과 비트 동일 · 기록 없음 / 지정 = 그 세대 값 + metrics · state 기록 /
+    #    --am-scaffold 없는 런 (밀도가 안 쓰인다) 에 지정 = 거부 / 다른 세대로 만든 state 를 이어받기 = 거부 (세대 섞기 금지).
+    def _safe(fn):
+        """옛 코드의 NameError · TypeError · argparse SystemExit 도 FAIL 로 센다 (selftest 가 죽지 않게)."""
+        try:
+            return bool(fn())
+        except (Exception, SystemExit):                                   # noqa: BLE001
+            return False
+
+    def _sx(fn):
+        try:
+            fn()
+            return 'PASSED'
+        except SystemExit:
+            return 'SYSEXIT'
+        except Exception as e:                                            # noqa: BLE001
+            return type(e).__name__
+    _bd = globals().get('bulk_density_g_cm3')
+    _rd = np.random.default_rng(5)
+    _trip = [tuple(float(v) for v in t) for t in _rd.uniform(1e-6, 1.0, (200, 3))]
+    _bd_old = lambda a, s, v: (a * 4800.0 + s * 2000.0) / v / 1000.0      # 옛 main 의 인라인 식 그대로 (두 곳)
+    chk('DG1 bulk_density_g_cm3 세대 미지정 = 옛 인라인 식 (4800 · 2000) 과 비트 동일 (무작위 200) · gen1 명시도 같은 값',
+        _safe(lambda: all(_bd(a, s, v) == _bd_old(a, s, v) and _bd(a, s, v, 'gen1') == _bd_old(a, s, v)
+                          for a, s, v in _trip)))
+    chk('DG2 lab20261014 = AM 4.85 · SE 1.64 (1:1 부피 · 침대 2 → 3.245 g/cm³) · 모르는 세대 거부',
+        _safe(lambda: abs(_bd(1.0, 1.0, 2.0, 'lab20261014') - 3.245) < 1e-12
+              and _sx(lambda: _bd(1.0, 1.0, 2.0, 'nope')) == 'SYSEXIT'))
+    _dgg = globals().get('dens_gen_guard_errors')
+
+    def _gd(*argv):
+        return _dgg(parse_args(list(argv)))
+    chk('DG3 --dens-gen 기본 None · 스캐폴드 런 + 아는 세대 = 통과 · 스캐폴드 없음 (밀도 안 쓰임) · 모르는 · 빈 세대 = 거부',
+        _safe(lambda: parse_args([]).dens_gen is None and _gd() == []
+              and _gd('--am-scaffold', 'x.csv', '--dens-gen', 'lab20261014') == []
+              and _gd('--am-scaffold', 'x.csv', '--dens-gen', 'gen1') == []
+              and any('--am-scaffold' in e for e in _gd('--dens-gen', 'lab20261014'))
+              and _gd('--am-scaffold', 'x.csv', '--dens-gen', 'nope') != []
+              and _gd('--am-scaffold', 'x.csv', '--dens-gen', '') != []))
+    _dsm = globals().get('dens_gen_state_mismatch')
+    chk('DG4 state 세대 대조 — 옛 state (기록 없음 = gen1) 와 미지정 · gen1 = 통과 · lab state 와 미지정 · gen1 = 거부 · lab 끼리 = 통과',
+        _safe(lambda: _dsm({}, None) is None and _dsm({}, 'gen1') is None
+              and isinstance(_dsm({}, 'lab20261014'), str) and isinstance(_dsm({'dens_gen': 'lab20261014'}, None), str)
+              and isinstance(_dsm({'dens_gen': 'lab20261014'}, 'gen1'), str)
+              and _dsm({'dens_gen': 'lab20261014'}, 'lab20261014') is None))
+    _drc = globals().get('dens_record')
+    chk('DG5 dens_record = additives.dens_record (세대 · 실제 값 · 옮긴 상)',
+        _safe(lambda: _drc('lab20261014')['dens_g_cm3']['SE'] == 1.64
+              and tuple(_drc('gen1')) == ('dens_gen', 'dens_g_cm3', 'dens_carried_from_gen1')))
+    chk('DG6 배선 (main 소스): bulk_rho 두 곳 = bulk_density_g_cm3(…, args.dens_gen) · 옛 인라인 식 0 곳 · 첨가제 개수에 dens_gen · '
+        '가드가 taichi 초기화 전 · state 세대 대조 · metrics · state 에 기록 (지정했을 때만)',
+        _msrc.count('bulk_density_g_cm3(am_solid, se_solid, bed_vol, args.dens_gen)') == 2
+        and 'am_solid * 4800.0' not in _msrc
+        and 'recipe_counts_real(add_wt, am_um3, se_um3, dens_gen=args.dens_gen)' in _msrc
+        and 0 <= _msrc.find('dens_gen_guard_errors(args)') < _msrc.find('ti.init(')
+        and 'dens_gen_state_mismatch(_sm, args.dens_gen)' in _msrc
+        and bool(_re2.search(r'if args\.dens_gen is not None:\s*\n\s*m\.update\(dens_record\(args\.dens_gen\)\)', _msrc))
+        and bool(_re2.search(r'if args\.dens_gen is not None:\s*\n\s*_meta\.update\(dens_record\(args\.dens_gen\)\)', _msrc)))
+
     print(f"selftest: {ok}/{ok + len(fail)} PASS" + (f"   FAILED: {fail}" if fail else ""))
     return 1 if fail else 0
 

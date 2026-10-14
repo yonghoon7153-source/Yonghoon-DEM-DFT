@@ -169,6 +169,59 @@ def _selftest():
     chk('⑤ VGCF 개수가 wt% 에 단조 증가', all(a['n_vgcf'] < b['n_vgcf'] for a, b in zip(c, c[1:])))
     chk('⑤ PTFE 는 1 wt% 고정인데 개수가 조금 는다 (총질량이 늘기 때문 — 규약 확인)',
         c[0]['n_ptfe'] < c[-1]['n_ptfe'] and (c[-1]['n_ptfe'] / c[0]['n_ptfe'] - 1) < 0.10)
+    #  ── ★ 밀도 세대 (2026-10-14 밤 · 1저자 결정 · docs/density_generations_20261014.md) — 시험 먼저 ──────────────────
+    #     옛 코드: additive_counts 에 dens_gen 이 없고 (gen1 고정) · --dens-gen 없음 → ⑥–⑨ FAIL.
+    #     계약: 미지정 = 옛 수 그대로 · 기록 없음 / 지정 = 그 세대 밀도로 개수 + 출력 JSON 에 기록 / 옛 캠페인 대조 (④) 는
+    #     그 캠페인이 만들어진 세대 (gen1) 에 **고정** — 랩 세대를 고르면 대조가 깨지는 것이 아니라 대조 대상이 gen1 임을 적는다.
+    def _ok(fn):
+        try:
+            return bool(fn())
+        except (Exception, SystemExit):                                   # noqa: BLE001 — 옛 코드의 TypeError 도 FAIL
+            return False
+
+    def _rej(fn):
+        try:
+            fn()
+            return False
+        except SystemExit:
+            return True
+    LAB = 'lab20261014'
+    chk('⑥ additive_counts 미지정 = gen1 명시 (같은 수) · 기록 키 없음',
+        _ok(lambda: additive_counts(tot) == additive_counts(tot, dens_gen=None) == c
+            and additive_counts(tot, dens_gen='gen1') == c
+            and not any('dens_gen' in r for r in c)))
+
+    def _six():
+        cl = additive_counts(tot, dens_gen=LAB)
+        m_g = tot['V_AM_um3'] * 4.80 + tot['V_SE_um3'] * 2.00          # 독립 산술 — 고체 질량 (gen1 · lab)
+        m_l = tot['V_AM_um3'] * 4.85 + tot['V_SE_um3'] * 1.64
+        return (all(abs(l_['n_vgcf'] / g_['n_vgcf'] - m_l / m_g) < 2.0 / g_['n_vgcf'] + 1e-12
+                    and l_['am_wt_pct'] > g_['am_wt_pct'] and l_['se_wt_pct'] < g_['se_wt_pct'] for l_, g_ in zip(cl, c))
+                and m_l < m_g)
+    chk('⑦ lab = 랩 밀도 (AM 4.85 · SE 1.64) 로 개수 — VGCF 개수 비 = 고체 질량 비 (±반올림) · AM wt% ↑ · SE wt% ↓', _ok(_six))
+    chk('⑧ 옛 캠페인 대조는 gen1 고정 (CAMPAIGN_DENS_GEN) — 같은 1 % 안 · 모르는 세대 = 거부',
+        _ok(lambda: CAMPAIGN_DENS_GEN == 'gen1' and validate_against_campaign(tot)['max_abs_rel_pct'] < 1.0
+            and _rej(lambda: additive_counts(tot, dens_gen='nope'))))
+
+    def _cli():
+        import subprocess as _sp
+        import tempfile as _tf
+        me = os.path.abspath(__file__)
+        with _tf.TemporaryDirectory() as td:
+            o0, ol = os.path.join(td, 'a.json'), os.path.join(td, 'b.json')
+            r0 = _sp.run([sys.executable, me, '--out', o0], capture_output=True, text=True)
+            rl = _sp.run([sys.executable, me, '--out', ol, '--dens-gen', LAB], capture_output=True, text=True)
+            rb = _sp.run([sys.executable, me, '--dens-gen', 'nope'], capture_output=True, text=True)
+            if r0.returncode or rl.returncode:
+                return False
+            j0, jl = json.load(open(o0)), json.load(open(ol))
+        keys = ('dens_gen', 'dens_g_cm3', 'dens_carried_from_gen1')
+        return (not any(k in j0 for k in keys) and 'dens_gen' not in r0.stdout and jl.get('dens_gen') == LAB
+                and jl.get('dens_g_cm3', {}).get('SE') == 1.64 and jl.get('campaign_validation_dens_gen') == 'gen1'
+                and 'campaign_validation_dens_gen' not in j0 and f'dens_gen = {LAB}' in rl.stdout and rb.returncode != 0
+                and jl['campaign_validation'] == j0['campaign_validation'] and jl['additive_counts'] != j0['additive_counts'])
+    chk('⑨ CLI --dens-gen: 미지정 JSON · 화면에 세대 키 없음 · 지정 = 세대 · 실제 값 · 캠페인 대조 세대 (gen1) 기록 · 개수만 바뀜 · 모르는 이름 rc ≠ 0',
+        _ok(_cli))
     print(f'\nphase_a_precompute selftest: {ok}/{ok + len(fail)} PASS'
           + (f'   FAILED: {fail}' if fail else ''))
     return 1 if fail else 0

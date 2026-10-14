@@ -2474,8 +2474,9 @@ def _selftest():
     def _gm12():
         with _tf.TemporaryDirectory() as td:
             me = os.path.abspath(__file__)
+            #  ★ 10-14 밤 — D2 덱 = 새 세대 덱 → --dens-gen 필수 (DG⑥).  같은 세대로 메모리 덱도 만든다.
             base = ['--n-total', '100000', '--cgf', '151.4', '--seed', '32452843', '--revolutions', '2',
-                    '--stiffen-se', '20', '--hold-bo-pairwise']
+                    '--stiffen-se', '20', '--hold-bo-pairwise', '--dens-gen', 'lab20261014']
             gmo = ['--gm-gamma', 'AM_P=0.3,AM_S=0.5', '--gm-gamma-wall', '0.0256', '--gm-bo-se', '0.21244']
             a = _sp.run([sys.executable, me, '--out', os.path.join(td, 'a')] + base + gmo, capture_output=True, text=True)
             b = _sp.run([sys.executable, me, '--out', os.path.join(td, 'b')] + base + gmo[:4], capture_output=True, text=True)
@@ -2487,7 +2488,7 @@ def _selftest():
             meta = _js.load(open(os.path.join(td, 'a', 'deck_meta.json'), encoding='utf-8'))
             nm = register_arm('GM', gm_arm({'AM_P': 0.3, 'AM_S': 0.5, 'SE': 1.0}, gamma_wall=0.0256, bo_se=0.21244))
             try:
-                p20 = plan(100000, cgf=151.4, stiffen_se=20.0)
+                p20 = plan(100000, cgf=151.4, stiffen_se=20.0, dens_gen='lab20261014')
                 want = deck(p20, resolve_rpm(p20['R'], FR_ANCHOR, None, False), 2, arm=nm, seed=32452843, hold_bo_pairwise=True)
             finally:
                 ARMS.pop(nm, None)
@@ -2510,7 +2511,8 @@ def _selftest():
         same_wall = Mu[iS][iW] == Mc[iS][iW] and Mu[iS][iS] == Mc[iS][iS]
         with _tf.TemporaryDirectory() as td:
             me = os.path.abspath(__file__)
-            base = ['--n-total', '100000', '--cgf', '151.4', '--seed', '32452843', '--revolutions', '2']
+            base = ['--n-total', '100000', '--cgf', '151.4', '--seed', '32452843', '--revolutions', '2',
+                    '--dens-gen', 'lab20261014']                 # ★ 10-14 밤 — D2 덱 = 새 세대 덱 (DG⑥)
             ok_ = _sp.run([sys.executable, me, '--out', os.path.join(td, 'a'), '--gm-gamma', 'AM_P=1,AM_S=1', '--gm-wall-ncm', '0.3',
                            '--gm-bo-se', '0.21244'] + base, capture_output=True, text=True)
             both = _sp.run([sys.executable, me, '--out', os.path.join(td, 'b'), '--gm-gamma', 'AM_P=0.3,AM_S=0.3', '--gm-wall-ncm', '0.3',
@@ -2524,6 +2526,159 @@ def _selftest():
                 and ar.get('rho_uncoated_ncm') == 0.3 and '벽 = 비코팅 NCM 에 묶음' in dk and both.returncode != 0)
     chk('GM⑬ 벽 = 비코팅 NCM 에 묶기 — gm_wall_from_ncm(ρ) = 0.0256·ρ (입력 거부 7) · 같은 ρ 세계의 비코팅 · 코팅 팔이 같은 SE–벽 · SE–SE CED · '
         'CLI --gm-wall-ncm → deck_meta wall_rule · rho_uncoated_ncm · 덱 머리 표기 · --gm-gamma-wall 과 함께면 거부', _ok(_gm13))
+    #  ══ DG — 밀도 세대 (2026-10-14 밤 · 1저자 결정 — 랩 표준 진밀도 SE 1.64 · NCM (PC · SC) 4.85 · 범위 (가) 앞으로만 ·
+    #     docs/density_generations_20261014.md) ════════════════════════════════════════════════════════════════════════════════
+    #  ★ 시험 먼저 — 옛 생성기에는 DENS_GENERATIONS · dens_table · plan(dens_gen=) · --dens-gen 이 없다 (NameError · TypeError · rc 2 → DG FAIL).
+    #    계약: 세대 미지정 = gen1 그 표 그대로 → 덱 · 메타 바이트 그대로 (㉟ · DP① · ST① 골든 + DG②) · 지정하면 덱 머리 · deck_meta 에 기록 ·
+    #    D2 결합 규칙 (--gm-*) 덱 = 새 세대 덱 → --dens-gen 필수 (fail-closed · DG⑥).  이 표는 scripts/additives.py 정본의 사본 (DG①).
+    import ast as _ast
+    _LAB = 'lab20261014'
+
+    def _add_tables():
+        """같은 폴더 additives.py 의 DENS · DENS_GENERATIONS · DENS_CARRIED_FROM_GEN1 을 **AST 로** 읽는다 (import 안 함 · numpy 불요).
+        값이 이름 (`'gen1': DENS`) 이면 이미 읽은 같은 모듈의 리터럴로 푼다.  못 읽으면 예외 (= FAIL — 조용한 초록 금지)."""
+        src = open(os.path.join(os.path.dirname(os.path.abspath(__file__)), 'additives.py'), encoding='utf-8').read()
+        lit = {}
+        for node in _ast.parse(src).body:
+            if not (isinstance(node, _ast.Assign) and len(node.targets) == 1 and isinstance(node.targets[0], _ast.Name)
+                    and node.targets[0].id in ('DENS', 'DENS_GENERATIONS', 'DENS_CARRIED_FROM_GEN1')):
+                continue
+            v = node.value
+            lit[node.targets[0].id] = {_ast.literal_eval(k): (lit[vv.id] if isinstance(vv, _ast.Name) else _ast.literal_eval(vv))
+                                       for k, vv in zip(v.keys, v.values)}
+        return lit['DENS_GENERATIONS'], lit['DENS_CARRIED_FROM_GEN1']
+
+    def _dg1():
+        A, AC = _add_tables()
+        if not (set(A) == set(DENS_GENERATIONS) == set(AC) == set(DENS_CARRIED_FROM_GEN1)):
+            return False
+        for g_ in A:
+            if DENS_GENERATIONS[g_] != {k: A[g_][k] for k in DENS}:            # 이 생성기의 네 상만
+                return False
+            if tuple(DENS_CARRIED_FROM_GEN1[g_]) != tuple(k for k in AC[g_] if k in DENS):
+                return False
+        return DENS_GENERATIONS['gen1'] is DENS and DENS == {'AM': 4.80, 'SE': 2.00, 'VGCF': 2.00, 'PTFE': 2.20}
+    chk('DG① 세대 표 사본 = scripts/additives.py 정본 (DENS_GENERATIONS · DENS_CARRIED_FROM_GEN1 — 이 생성기의 네 상 · AST 대조) · '
+        'gen1 = DENS 그 객체 · DENS 값 옛것 그대로', _ok(_dg1))
+
+    def _hdr_only(a_txt, b_txt):
+        """b = a 에 **연속한 주석 줄 묶음 하나**를 끼운 것인가 → (예/아니오, 끼운 줄).  끼운 줄을 빼면 a 와 글자 그대로 같아야 한다."""
+        al, bl = a_txt.split('\n'), b_txt.split('\n')
+        k = len(bl) - len(al)
+        i = next((j for j, (x, y) in enumerate(zip(al, bl)) if x != y), len(al))
+        ins = bl[i:i + k]
+        return (k > 0 and all(l.startswith('#') for l in ins) and bl[:i] + bl[i + k:] == al), ins
+
+    def _dg2():
+        p0 = plan(100000, cgf=151.4)
+        pg = plan(100000, cgf=151.4, dens_gen='gen1')
+        if not (p0['dens'] is DENS and p0['dens_gen'] is None and pg['dens_gen'] == 'gen1' and pg['dens'] == DENS):
+            return False
+        strip = lambda q: {k: v for k, v in q.items() if k not in ('dens', 'dens_gen')}
+        rpm_ = resolve_rpm(p0['R'])
+        a_, b_ = deck(p0, rpm_, 2, arm='LC'), deck(pg, rpm_, 2, arm='LC')
+        only, ins = _hdr_only(a_, b_)
+        return (strip(p0) == strip(pg) and 'dens_gen' not in a_ and only and any('dens_gen = gen1' in l for l in ins)
+                and ced_matrix('LC', p0['d']) == ced_matrix('LC', p0['d'], dens=DENS_GENERATIONS['gen1']))
+    chk('DG② 세대 미지정 = gen1 그 객체 (plan · CED 같은 수) · gen1 명시 덱 = 미지정 덱 + 머리 주석 묶음 하나 (끼운 줄을 빼면 글자 그대로)', _ok(_dg2))
+
+    def _dg3():
+        f0, _w0 = volume_fractions()
+        fg, _wg = volume_fractions(dens_table('gen1'))
+        fl, _wl = volume_fractions(dens_table(_LAB))
+        se_g = (18 / 2.00) / (80 / 4.80 + 18 / 2.00)                    # 독립 산술 — NCM (PC · SC) 한 밀도라 P:S 7:3 이 몫에 안 들어간다
+        se_l = (18 / 1.64) / (80 / 4.85 + 18 / 1.64)
+        return (f0 == fg and _w0 == _wl == _wg and abs(f0['SE'] - se_g) < 1e-15 and abs(fl['SE'] - se_l) < 1e-15
+                and abs(f0['SE'] - 0.35064935064935066) < 1e-15 and abs(fl['SE'] - 0.39954233409610984) < 1e-15
+                and abs(fl['AM_P'] / fl['AM_S'] - 7.0 / 3.0) < 1e-12
+                and plan(8000, dens_gen=_LAB)['phi'] == fl and plan(8000)['phi'] == f0)
+    chk('DG③ 1저자 레시피 AM:SE 80:18 wt% · P:S 7:3 (활성 3 상) 의 SE 부피 몫 — gen1 0.3506493506 → lab 0.3995423341 (+4.89 %p · 독립 산술 대조) · '
+        'wt% 는 세대와 무관 · plan 의 phi = 그 세대 부피분율', _ok(_dg3))
+
+    def _dg4():
+        pg = plan(100000, cgf=151.4)
+        pl = plan(100000, cgf=151.4, dens_gen=_LAB)
+        dl = deck(pl, resolve_rpm(pl['R']), 2, arm='LC')
+        dg_ = deck(pg, resolve_rpm(pg['R']), 2, arm='LC')
+        import re as _re4
+        c1 = (_re4.findall(r'atom_type (\d) density constant (\d+) ', dl) == [('1', '4850'), ('2', '4850'), ('3', '1640')]
+              and _re4.findall(r'atom_type (\d) density constant (\d+) ', dg_) == [('1', '4800'), ('2', '4800'), ('3', '2000')])
+        c2 = (pg['dt_by'] == pl['dt_by'] == 'AM_S' and abs(pl['dt'] / pg['dt'] - math.sqrt(4.85 / 4.80)) < 1e-12)
+        c3 = pl['n']['SE'] > pg['n']['SE'] and pl['n']['AM_P'] < pg['n']['AM_P'] and pl['d'] == pg['d']
+        iS = TYPES.index('SE')
+        Ml = ced_matrix('LC', pl['d'], dens=pl['dens'])
+        Mg = ced_matrix('LC', pg['d'])
+        bo_l = bond_for_ced(Ml[iS][iS], pl['d']['SE'] / 2.0, PHASE_MECH['SE'][0], 1.64, E=E_PHASE['SE'])
+        c4 = abs(bo_l / BO_BASE - 1.0) < 1e-9 and Ml[iS][iS] != Mg[iS][iS]
+        return c1 and c2 and c3 and c4
+    chk('DG④ lab 덱: 템플릿 density constant 4850 · 4850 · 1640 (gen1 4800 · 4800 · 2000) · Rayleigh dt (AM_S 가 정함) ×√(4.85/4.80) · '
+        'SE 개수 ↑ · AM_P ↓ · 지름 불변 · 같은 Bo_code 를 그 세대 밀도로 CED 역산 (SE–SE Bo 0.21244 유지 · CED 는 바뀜)', _ok(_dg4))
+
+    def _dg5():
+        bad = ('nope', '', ' gen1', 'GEN1', 1, b'gen1')
+        lib = all(_raises(lambda b=b: plan(8000, dens_gen=b)) for b in bad) and all(_raises(lambda b=b: dens_table(b)) for b in bad)
+        with _tf.TemporaryDirectory() as td:
+            me = os.path.abspath(__file__)
+            r1 = _sp.run([sys.executable, me, '--out', os.path.join(td, 'a'), '--n-total', '8000', '--dens-gen', 'nope'],
+                         capture_output=True, text=True)
+            r2 = _sp.run([sys.executable, me, '--out', os.path.join(td, 'b'), '--n-total', '8000', '--dens-gen', ''],
+                         capture_output=True, text=True)
+            made = os.path.exists(os.path.join(td, 'a', 'in.mixer')) or os.path.exists(os.path.join(td, 'b', 'in.mixer'))
+        return lib and r1.returncode != 0 and r2.returncode != 0 and not made
+    chk('DG⑤ 모르는 · 빈 · 공백 · 대소문자 · 수 · bytes 세대 = 거부 (plan · dens_table · CLI rc ≠ 0 · 덱 안 씀)', _ok(_dg5))
+
+    def _dg6():
+        with _tf.TemporaryDirectory() as td:
+            me = os.path.abspath(__file__)
+            base = ['--n-total', '100000', '--cgf', '151.4', '--seed', '32452843', '--revolutions', '2']
+            gmo = ['--gm-gamma', 'AM_P=0.3,AM_S=0.5', '--gm-wall-ncm', '0.3', '--gm-bo-se', '0.21244']
+            no = _sp.run([sys.executable, me, '--out', os.path.join(td, 'a')] + base + gmo, capture_output=True, text=True)
+            yes = _sp.run([sys.executable, me, '--out', os.path.join(td, 'b')] + base + gmo + ['--dens-gen', _LAB],
+                          capture_output=True, text=True)
+            if yes.returncode != 0:
+                return False
+            no_made = os.path.exists(os.path.join(td, 'a', 'in.mixer'))
+            meta = _js.load(open(os.path.join(td, 'b', 'deck_meta.json'), encoding='utf-8'))
+            dk = open(os.path.join(td, 'b', 'in.mixer'), encoding='utf-8').read()
+        nm = register_arm('GMDGTEST', gm_arm({'AM_P': 0.3, 'AM_S': 0.5, 'SE': 1.0}, gamma_wall=gm_wall_from_ncm(0.3), bo_se=BO_BASE,
+                                             rho_uncoated_ncm=0.3))
+        try:
+            p0 = plan(100000, cgf=151.4)
+            lib_refuse = _raises(lambda: deck(p0, resolve_rpm(p0['R']), 2, arm=nm))
+            lib_meta_refuse = _raises(lambda: deck_meta(p0, resolve_rpm(p0['R']), 2, 32452843, nm, ''))
+        finally:
+            ARMS.pop(nm, None)
+        return (no.returncode != 0 and '--dens-gen' in (no.stdout + no.stderr) and not no_made
+                and meta.get('dens_gen') == _LAB and meta.get('dens_g_cm3') == DENS_GENERATIONS[_LAB]
+                and meta.get('dens_carried_from_gen1') == ['VGCF', 'PTFE'] and f'dens_gen = {_LAB}' in dk
+                and 'density constant 1640' in dk and lib_refuse and lib_meta_refuse)
+    chk('DG⑥ ★ D2 결합 규칙 (--gm-*) 덱 = 새 세대 덱 — --dens-gen 없으면 거부 (CLI rc ≠ 0 · 덱 안 씀 · deck() · deck_meta() 도 거부) · '
+        '주면 덱 머리 · deck_meta 에 dens_gen · 실제 값 · 옮긴 상 (VGCF · PTFE) 기록', _ok(_dg6))
+
+    def _dg7():
+        with _tf.TemporaryDirectory() as td:
+            me = os.path.abspath(__file__)
+            st = ['--n-total', '100000', '--cgf', '151.4', '--arm', 'LC', '--seed', '32452843', '--revolutions', '2',
+                  '--stiffen-se', '20', '--hold-bo-pairwise']
+            pl_ = ['--n-total', '8000', '--arm', 'E1', '--revolutions', '1']
+            rs = {k: _sp.run([sys.executable, me, '--out', os.path.join(td, k)] + args_, capture_output=True, text=True)
+                  for k, args_ in (('a', st), ('b', st + ['--dens-gen', 'gen1']), ('c', pl_), ('d', pl_ + ['--dens-gen', 'gen1']))}
+            if any(r_.returncode != 0 for r_ in rs.values()):
+                return False
+            rd = lambda k, f: open(os.path.join(td, k, f), encoding='utf-8').read()
+            has = lambda k: os.path.exists(os.path.join(td, k, 'deck_meta.json'))
+            ma, mb, md = _js.loads(rd('a', 'deck_meta.json')), _js.loads(rd('b', 'deck_meta.json')), _js.loads(rd('d', 'deck_meta.json'))
+            same_ab = _hdr_only(rd('a', 'in.mixer'), rd('b', 'in.mixer'))[0]
+            same_cd = _hdr_only(rd('c', 'in.mixer'), rd('d', 'in.mixer'))[0]
+            no_c = not has('c') and 'dens_gen' not in rd('c', 'in.mixer')
+        keys = ('dens_gen', 'dens_g_cm3', 'dens_carried_from_gen1')
+        vol = ('argv', 'deck_sha256', 'deck_bytes')
+        return (not any(k in ma for k in keys) and all(mb.get(k) is not None for k in keys) and mb['dens_gen'] == 'gen1'
+                and mb['dens_g_cm3'] == DENS and mb['dens_carried_from_gen1'] == []
+                and {k: v for k, v in ma.items() if k not in vol} == {k: v for k, v in mb.items() if k not in vol + keys}
+                and same_ab and same_cd and no_c and md.get('dens_gen') == 'gen1')
+    chk('DG⑦ 기록은 **요청했을 때만** — 강성 덱 (--dens-gen 없음) deck_meta 에 세대 키 없음 · gen1 명시 = 같은 메타 + 세대 키 · 덱 = 머리 주석만 더함 · '
+        '기본 덱 (강성 아님) 은 deck_meta 를 안 쓰고 (파일 목록 그대로) gen1 명시면 deck_meta 를 쓴다', _ok(_dg7))
     print(f'\nmake_mixer_deck selftest: {ok}/{ok+len(fail)} PASS'
           + (f'   FAILED: {fail}' if fail else ''))
     return 1 if fail else 0

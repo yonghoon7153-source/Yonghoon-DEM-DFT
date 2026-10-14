@@ -20,6 +20,7 @@ import math
 import math
 import os
 import re
+import sys
 
 import press_units                      # 압력 단위 규약 (F-11)
 
@@ -69,7 +70,135 @@ def _find_atom_dump(results_dir):
     return max(cands)[1] if cands else None      # highest timestep = the compacted 300-MPa state
 
 
+def _selftest_dens():
+    """`--selftest-dens` — 밀도 세대 (2026-10-14 밤 · 1저자 결정 · docs/density_generations_20261014.md) 킷 검사.
+
+    합성 케이스 (AM · SE 부피가 비슷하게 — 밀도 세대가 φ_VGCF 를 눈에 띄게 바꾸도록) 로 생성기를 **subprocess 로** 돌린다 (GPU 불요).
+    ★ 시험 먼저 — 옛 생성기에는 --dens-gen 이 없다 (rc 2 → K2–K6 FAIL).
+    계약: ① 미지정 킷 = 옛 킷 그대로 — 세대 토큰 · 기록 없음 ② gen1 명시 = 미지정 킷 + 세대 토큰 · 기록뿐 (run_mpm.sh · run_a1_anchors.sh 에서
+      ' --dens-gen gen1' 을 빼면 글자 그대로 · mpm_input.json = 같은 키 + 세대 키 · 나머지 파일 바이트 그대로) ③ lab = mpm3d 호출 (압밀 ·
+      A-1 앵커 COMMON) 에만 --dens-gen 이 구워지고 payload 호출에는 없다 (payload 는 밀도로 계산하지 않는다) · VGCF dilate-z λ 가 그 세대의
+      φ_VGCF 를 따른다 ④ 모르는 · 빈 세대 = 거부 (킷 파일을 하나도 쓰기 전)."""
+    import random
+    import subprocess
+    import tempfile
+    ok = fail = 0
+
+    def chk(name, fn):
+        nonlocal ok, fail
+        try:
+            c = bool(fn())
+        except (Exception, SystemExit) as e:                    # noqa: BLE001 — 옛 생성기의 KeyError 등도 FAIL 로 센다
+            c = False
+            name += f'  [{type(e).__name__}: {str(e)[:80]}]'
+        ok += int(c)
+        fail += int(not c)
+        print(f"  {'PASS' if c else 'FAIL'}  {name}")
+
+    me = os.path.abspath(__file__)
+    LAB = 'lab20261014'
+    KEYS = ('dens_gen', 'dens_g_cm3', 'dens_carried_from_gen1')
+    RECIPE = 'AM:SE:VGCF=80:18:2'                                # VGCF 2 wt% → Cho 곡선 +1.0 %p · λ > 1 (dilate-z 가 구워진다)
+    with tempfile.TemporaryDirectory() as td:
+        case = os.path.join(td, 'case')
+        os.makedirs(case)
+        random.seed(11)
+        rows = [('id', 'type', 'x', 'y', 'z', 'radius')]
+        i = 0
+        for t, r, n in ((1, 0.003, 4), (2, 0.001, 20), (3, 0.0005, 1000)):     # Σr³: AM 128 · SE 125 (×1e-9) — 비슷하게
+            for _ in range(n):
+                i += 1
+                rows.append((i, t, round(random.uniform(0.002, 0.048), 6), round(random.uniform(0.002, 0.048), 6),
+                             round(random.uniform(0.002, 0.030), 6), r))
+        with open(os.path.join(case, 'atoms.csv'), 'w', newline='') as f:
+            csv.writer(f).writerows(rows)
+        json.dump({'porosity': 15.6, 'thickness_um': 30.2}, open(os.path.join(case, 'full_metrics.json'), 'w'))
+        json.dump({'target_pressure_MPa': 300.0, 'box_x': 0.05}, open(os.path.join(case, 'input_params.json'), 'w'))
+
+        def gen(tag, *extra):
+            out = os.path.join(td, tag)
+            r_ = subprocess.run([sys.executable, me, '--results', case, '--case', 'tcase', '--out', out,
+                                 '--add-recipe', RECIPE] + list(extra), capture_output=True, text=True)
+            fl = ({f: open(os.path.join(out, f), encoding='utf-8').read() for f in sorted(os.listdir(out))}
+                  if os.path.isdir(out) else {})
+            return r_, fl
+        rA, A = gen('A')
+        rA2, A2 = gen('A2')
+        rB, B = gen('B', '--dens-gen', 'gen1')
+        rC, C = gen('C', '--dens-gen', LAB)
+        rD, D = gen('D', '--dens-gen', LAB, '--op-pressure-mpa', '90')
+        rE, E = gen('E', '--op-pressure-mpa', '90')
+        rF, F = gen('F', '--dens-gen', 'nope')
+        rG, G = gen('G', '--dens-gen', '')
+        cur = [ln.rstrip('\n').split(',') for ln in open(os.path.join(os.path.dirname(os.path.dirname(me)), 'docs', 'data',
+                                                                       'vgcf_dilate_cho_calibrated.csv'))]
+    jl = lambda X: json.loads(X['mpm_input.json'])
+    chk('K0 전제 — 같은 입력 두 번 (다른 폴더) = 킷 파일 전부 글자 그대로 (비교가 뜻이 있다)',
+        lambda: rA.returncode == 0 and rA2.returncode == 0 and A == A2 and len(A) >= 5)
+    chk('K1 미지정 킷 = 세대 없음 — run_mpm.sh · run_a1_anchors.sh (1 단 · 2 단) 에 --dens-gen 없음 · mpm_input.json 에 세대 키 없음',
+        lambda: (rE.returncode == 0 and all('--dens-gen' not in X[f] for X in (A, E) for f in ('run_mpm.sh', 'run_a1_anchors.sh'))
+                 and not any(k in jl(A) for k in KEYS) and not any(k in jl(E) for k in KEYS)))
+
+    def _k2():
+        if rB.returncode != 0 or set(B) != set(A):
+            return False
+        for f in A:
+            if f in ('run_mpm.sh', 'run_a1_anchors.sh'):
+                if B[f].count(' --dens-gen gen1') != 1 or B[f].replace(' --dens-gen gen1', '') != A[f]:
+                    return False
+            elif f == 'mpm_input.json':
+                jb = jl(B)
+                if {k: v for k, v in jb.items() if k not in KEYS} != jl(A) or jb['dens_gen'] != 'gen1':
+                    return False
+                if jb['dens_g_cm3']['AM'] != 4.80 or jb['dens_g_cm3']['SE'] != 2.00 or jb['dens_carried_from_gen1'] != []:
+                    return False
+            elif B[f] != A[f]:
+                return False
+        return True
+    chk('K2 gen1 명시 = 미지정 킷 + 세대 토큰 · 기록뿐 (두 러너에서 " --dens-gen gen1" 한 번씩 빼면 글자 그대로 · mpm_input.json = 같은 키 + '
+        '세대 키 (AM 4.80 · SE 2.00) · 나머지 파일 바이트 그대로)', _k2)
+
+    def _k3():
+        s = C['run_mpm.sh']
+        i3, ip_ = s.index('mpm3d_compaction.py'), s.index('mpm_webapp_payload.py')
+        j = s.index(f' --dens-gen {LAB}')
+        jc = jl(C)
+        return (rC.returncode == 0 and s.count('--dens-gen') == 1 and i3 < j < ip_
+                and f'--allow-fast-platen --dens-gen {LAB}' in C['run_a1_anchors.sh']
+                and C['run_a1_anchors.sh'].count('--dens-gen') == 1
+                and jc['dens_gen'] == LAB and jc['dens_g_cm3']['AM'] == 4.85 and jc['dens_g_cm3']['SE'] == 1.64
+                and jc['dens_carried_from_gen1'] == ['VGCF', 'SuperP', 'PTFE', 'SDCP', 'SWCNT'])
+    chk('K3 lab 킷 — 압밀 (mpm3d) 호출에만 --dens-gen (payload 호출 앞 · 한 번) · A-1 앵커 COMMON 에 한 번 · mpm_input.json 에 세대 · '
+        '실제 값 (AM 4.85 · SE 1.64) · 옮긴 상', _k3)
+
+    def _k4():
+        lam = lambda X: float(re.search(r'--dilate-z (\S+)', X['run_mpm.sh']).group(1))
+        r3 = lambda t: sum(r_[5] ** 3 for r_ in rows[1:] if r_[1] == t)
+        v_am, v_se = r3(1) + r3(2), r3(3)
+        dpp = next(float(c_[3]) for c_ in cur if c_ and c_[0] == '2.0')        # Cho 곡선 2 wt% 행 (생성기와 같은 파일)
+        eps_dem, eps_real = 0.156, 0.156 + dpp / 100.0
+
+        def want(rho):
+            m = v_am * rho['AM'] + v_se * rho['SE']
+            phi = (m * 0.02 / 0.98) / rho['VGCF'] / (v_am + v_se)
+            return (1.0 + phi) * (1.0 - eps_dem) / (1.0 - eps_real)
+        lg, ll = want({'AM': 4.80, 'SE': 2.00, 'VGCF': 2.00}), want({'AM': 4.85, 'SE': 1.64, 'VGCF': 2.00})
+        return (abs(lam(A) - lg) <= 6e-5 and abs(lam(C) - ll) <= 6e-5 and abs(lam(C) - lam(A)) > 5e-4
+                and lam(B) == lam(A))
+    chk('K4 VGCF dilate-z λ = (1+φ_VGCF)(1−ε_DEM)/(1−ε_real) 를 그 세대 밀도로 (독립 산술 · 반올림 4 자리 안) · gen1 명시 = 미지정 · lab 은 다르다', _k4)
+    chk('K5 lab + 구동압 (2 단 A-1) — COMMON 에 --dens-gen 한 번 (① 제작 · ② 구동 모두 같은 세대 → state 세대 대조 통과) · 미지정 2 단은 없음',
+        lambda: (rD.returncode == 0 and f'--allow-fast-platen --dens-gen {LAB}' in D['run_a1_anchors.sh']
+                 and D['run_a1_anchors.sh'].count('--dens-gen') == 1 and '--load-state' in D['run_a1_anchors.sh']
+                 and '--dens-gen' not in E['run_a1_anchors.sh']))
+    chk('K6 모르는 · 빈 세대 = 거부 (rc ≠ 0 · 킷 파일 0 개)',
+        lambda: rF.returncode != 0 and rG.returncode != 0 and not F and not G)
+    print(f'\nmpm_input_from_case dens selftest: {ok}/{ok + fail} PASS' + ('' if not fail else f'   ({fail} FAIL)'))
+    return 1 if fail else 0
+
+
 def main():
+    if '--selftest-dens' in sys.argv:
+        raise SystemExit(_selftest_dens())
     ap = argparse.ArgumentParser()
     ap.add_argument('--results', required=True, help='case results dir (has atoms.csv, full_metrics.json)')
     ap.add_argument('--case', default='', help='case id (provenance)')

@@ -25,6 +25,7 @@
 #
 # 2026-09-01 실측: fast 98 (합계 292 s) · slow 3 · broken 0
 #
+scripts/additives.py	--selftest-dens	fast	none	claude	시험 먼저 (2026-10-14 밤 · 밀도 세대 · docs/density_generations_20261014.md) — 구현 전 1/11 (D⑧ 기본 = 옛 식 만 통과) · 구현 커밋에서 초록으로 갱신
 scripts/additives.py	--selftest-dispersion	fast	none	claude	초록 1.5s (실측)
 scripts/additives.py	--selftest-sheath	fast	none	claude	초록 0.9s (실측)
 scripts/am_load_balance_jam.py	--selftest	fast	none	claude	초록 0.4s (실측)
@@ -105,6 +106,7 @@ scripts/measure_mixing_index.py	--selftest	fast	none	claude	초록 4s (실측 ·
 scripts/check_contact_validity.py	--selftest	fast	none	claude	초록 1.5s (실측 · 09-30 88/88 — 강성 축 코드 2 단계 piece 3 ㉜~㉟ (옛 판: check_window 에 bins · soft_range_pct 없음 TypeError · contract_status 없음 · CLI --soft-range/--bins 없음 → ㉜b ㉝ ㉞ ㉟ FAIL 84/88 먼저 확인): bins=(0,) 판독기 bin 0 창 · bin 결손 TECH · 상태 표 14 행 (ref 계약 팔 · soft 진단 팔 5.8 % · 경계 1e-9 · 보존 실패 = TECH_FAIL · 벽 위상 불확실 처리 · 등록 밖 범위 거부) · check_window 에 status · CLI --soft-range 5.8 만; 09-28 오후 83/83 — ㉛ SLURM 봉인은 러너의 시작 대조 기록 job_start.json 까지 잇는다 (없거나 어긋나면 영수증 거부 · 옛 코드에서 8 건 실패 재현) · 09-28 낮 73 — ㉖~㉚ HBR4-01 목록 완전성 · 02 발사 봉인 · 운동 시계 · 재개 런 거부 · 03 위치 경계 · 04 mesh-dump 판정 근거 제외 · 07 정지 벽 계약 — 옛 코드에서 11 건 실패 재현 뒤 수정 · HBR3-02 영수증 v1 엄격 · 03 구간 극값 · 04 mesh 덤프 완결 · 05 계획 t₀ · 06 프레임 스키마) — 순수 함수(임시 덤프 생성), 외부 데이터 불요.  점착을 올리면 접촉모델이 먼저 죽는다는 것을 통과(δ/r>50 %)·원자손실로 기각하고, 겹침을 **작은 쪽 반경**으로 재는 것을 변이 대조로 지킨다.  ★ 2026-09-27 `--contract` (Codex HB-05): 옛 모드가 2 % 겹침을 통과시키는 반례 재현 → 분석 창 전 프레임 · 벽(12 각형 합성 드럼, 회전각 반영 · 데이터로 되읽기) · 끝판 · 상별 보존 · 회전각 불일치/미확인 = TECH · 타입쌍별 격자검색 = 전수 검색
 scripts/ml_design_structure.py	--selftest	fast	none	claude	초록 7.8s (실측)
 scripts/mpm3d_compaction.py	--selftest	fast	none	claude	초록 140/140 · 0.4 s (실측, 2026-09-23) — 직접 단계는 없고 **fast 드라이버(`--run-fast`)가 두 레인에서 돌린다**.  ⚠ 직접 CI 단계로 올리지 말 것: 진입점은 전체 AST 로 스캔돼 selftest 가 닿지 않는 main 안의 지연 `import taichi` 가 CI 의존으로 잡힌다 (09-23 실측). ★ Codex R3-v2 `FAMV2-01` (2026-09-23): 하강은 `(1−f)·target` 에서 멈추는데 기본 S-1 서보가 `target` 전체로 평형을 잡아 f 를 **조용히 되돌렸다** (매니페스트는 am_load_frac·se_target_GPa 를 찍어 도장만 적용).  재현 시험을 먼저 넣어 빨간불 7건(f=0.675 → SE 0.0975 에서 0.2943 으로 다시 눌림)을 확인한 뒤 고쳤다.  서보 네 곳이 `servo_verdict(…, am_skel, …)` 를 쓰는지 **소스 배선**까지 단언하고, f 가 적용 안 되는 조합(servo-legacy · servo+floor · load-state)의 런 전 거부는 가드를 빼면 정확히 세 건만 빨간불이 되는 음성 대조로 확인.  f=0 은 판정·설정점·옛 인라인 식 모두 비트 동일.  외부 의존: numpy.
+scripts/mpm_input_from_case.py	--selftest-dens	fast	none	claude	시험 먼저 (2026-10-14 밤 · 밀도 세대 · docs/density_generations_20261014.md) — 합성 케이스 · 생성기 subprocess 8 회 · 구현 전 3/7 (K0 · K1 · K6) · 구현 커밋에서 초록으로 갱신
 scripts/mpm_webapp_payload.py	--selftest-contract	fast	both	claude	초록 <1s — 순수 함수, 외부 데이터 불요 (PASL-04 계약 봉인 게이트)
 scripts/mpm_webapp_payload.py	--selftest-provenance	fast	both	claude	초록 <1s — git 을 가로채 재현, 외부 데이터 불요 (PASL-05)
 scripts/mpm_webapp_payload.py	--selftest-temperature	fast	both	claude	초록 0.9s (실측)

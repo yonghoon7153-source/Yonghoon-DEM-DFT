@@ -385,6 +385,39 @@ def _selftest_provenance():
         (_code_sha(_here) or '').split('+')[0] != '')
     chk('⑤ dirty 타임아웃 값이 실측(23.1s)보다 넉넉하다', GIT_DIRTY_TIMEOUT_S >= 120)
 
+    #  ★ ⑥–⑧ 밀도 세대 기록의 통과 (2026-10-14 밤 · 1저자 결정 · docs/density_generations_20261014.md) — 시험 먼저.
+    #    payload 자신은 밀도로 계산하지 않는다 (CLI 옵션 없음 · 규칙 M 회계 그대로).  그러나 mpm3d 가 --dens-gen 으로 만든 침대의
+    #    bulk_density_g_cm3 를 그대로 싣으므로 **그 세대 기록도 같이 실어야** 한다 — 안 실으면 payload 만 보는 쪽 (웹앱) 이 값의 세대를 모른다.
+    #    옛 코드: 통과 목록이 main 안 리터럴이라 세대 키가 빠진다 → FAIL.
+    def _safe(fn):
+        try:
+            return bool(fn())
+        except (Exception, SystemExit):                       # noqa: BLE001
+            return False
+    _ck = globals().get('SIM_CARRY_KEYS')
+    _cf = globals().get('carry_sim_fields')
+
+    def _p6():
+        import additives as _adk
+        return tuple(_ck[-3:]) == tuple(_adk.DENS_RECORD_KEYS) and len(set(_ck)) == len(_ck)
+    chk('⑥ 통과 목록 SIM_CARRY_KEYS 끝 = additives.DENS_RECORD_KEYS (세대 · 실제 값 · 옮긴 상) · 중복 없음', _safe(_p6))
+
+    def _p7():
+        base = {'n_grid': 384, 'bulk_density_g_cm3': 3.2}
+        d0, d1 = {'x': 1}, {'x': 1}
+        _cf(d0, dict(base))                                   # 세대 기록 없는 sim (= 옛 산출물 · 미지정 런)
+        _cf(d1, dict(base, dens_gen='lab20261014', dens_g_cm3={'AM': 4.85, 'SE': 1.64}, dens_carried_from_gen1=['VGCF']))
+        return (d0 == {'x': 1, 'n_grid': 384, 'bulk_density_g_cm3': 3.2} and list(d0) == ['x', 'n_grid', 'bulk_density_g_cm3']
+                and d1['dens_gen'] == 'lab20261014' and d1['dens_g_cm3'] == {'AM': 4.85, 'SE': 1.64}
+                and d1['dens_carried_from_gen1'] == ['VGCF'])
+    chk('⑦ carry_sim_fields: 세대 기록 없는 sim = 옛 키 · 순서 그대로 (세대 키 안 생김) · 있으면 그대로 싣는다', _safe(_p7))
+
+    def _p8():
+        import inspect as _insp
+        src = _insp.getsource(main)
+        return 'carry_sim_fields(mpm_metrics, sim_m)' in src and "'bulk_density_g_cm3', 'seed_AM_frac_pct'" not in src
+    chk('⑧ 배선: main 이 carry_sim_fields(mpm_metrics, sim_m) 로 싣는다 (옛 인라인 목록 없음 — 목록이 두 벌로 갈리지 않게)', _safe(_p8))
+
     print(f"\nmpm_webapp_payload provenance selftest: {ok[0]}/{ok[1]} "
           f"{'PASS' if ok[0] == ok[1] else 'FAIL'}")
     return 0 if ok[0] == ok[1] else 1

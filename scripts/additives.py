@@ -1236,6 +1236,129 @@ def _selftest_sheath():
     return 0 if ok else 1
 
 
+def _selftest_dens():
+    """밀도 세대 (2026-10-14 밤 · 1저자 결정 — docs/density_generations_20261014.md) 검사.
+
+    ★ 시험 먼저 — 옛 코드에는 `DENS_GENERATIONS` · `dens` · `dens_record` · `dens_gen=` 인자 · `--dens-gen` 이 없다
+      (NameError · TypeError · rc 2 → FAIL 로 센다).
+    계약: ① gen1 = 옛 DENS **그 객체 그대로** (옛 import · 옛 결과 바이트 그대로) ② 랩 세대 = AM 4.85 · SE 1.64 · 나머지 상은 gen1 값을
+      그대로 옮기고 그 사실을 표에 적는다 ③ 세대 이름은 정확히 표의 키 — 모르는 · 빈 · 문자열 아닌 이름은 거부 ④ 세대를 **안 주면**
+      산출물에 기록 키가 없고 값은 옛 식과 비트 동일 · **주면** 기록 키 (세대 · 실제 값 · 옮긴 상) 가 붙는다.
+    """
+    import os as _os
+    import subprocess as _sp
+    import sys as _sys
+    ok = fail = 0
+
+    def chk(name, fn):
+        nonlocal ok, fail
+        try:
+            c = bool(fn())
+        except (Exception, SystemExit) as e:                    # noqa: BLE001 — 옛 코드의 NameError 등도 FAIL 로 센다
+            c = False
+            name += f'  [{type(e).__name__}: {str(e)[:80]}]'
+        ok += int(c)
+        fail += int(not c)
+        print(f"  {'OK  ' if c else 'FAIL'}  {name}")
+
+    def rej(fn):
+        """fn() 이 SystemExit 로 **거부**하면 True (다른 예외 · 통과 = False)."""
+        try:
+            fn()
+            return False
+        except SystemExit:
+            return True
+
+    g = globals()
+    GEN1_LIT = {'AM': 4.80, 'SE': 2.00, 'VGCF': 2.00, 'SuperP': 1.90, 'PTFE': 2.20, 'SDCP': 1.30, 'SWCNT': 1.35}
+    LAB = 'lab20261014'
+    chk('D① gen1 = 옛 DENS 값 그대로 (리터럴 대조) · DENS_GENERATIONS["gen1"] 은 DENS **그 객체** · 기본 세대 = gen1',
+        lambda: DENS == GEN1_LIT and g['DENS_GENERATIONS']['gen1'] is DENS and g['DENS_DEFAULT_GEN'] == 'gen1')
+    chk('D② lab20261014 = AM 4.85 · SE 1.64 (1저자 10-14 랩 표준) · 나머지 상 = gen1 값 · 상 집합 같음',
+        lambda: (g['DENS_GENERATIONS'][LAB]['AM'] == 4.85 and g['DENS_GENERATIONS'][LAB]['SE'] == 1.64
+                 and set(g['DENS_GENERATIONS'][LAB]) == set(DENS)
+                 and all(g['DENS_GENERATIONS'][LAB][k] == DENS[k] for k in DENS if k not in ('AM', 'SE'))))
+    chk('D③ 옮긴 상 표 (no lab value — gen1 value carried): 세대 키 = 표 키 · lab = VGCF · SuperP · PTFE · SDCP · SWCNT · gen1 = 없음 · '
+        '옮긴 상의 값 = gen1 값 · 모든 세대가 gen1 과 같은 상 집합',
+        lambda: (set(g['DENS_CARRIED_FROM_GEN1']) == set(g['DENS_GENERATIONS'])
+                 and tuple(g['DENS_CARRIED_FROM_GEN1'][LAB]) == ('VGCF', 'SuperP', 'PTFE', 'SDCP', 'SWCNT')
+                 and tuple(g['DENS_CARRIED_FROM_GEN1']['gen1']) == ()
+                 and all(g['DENS_GENERATIONS'][gn][k] == DENS[k]
+                         for gn, cs in g['DENS_CARRIED_FROM_GEN1'].items() for k in cs)
+                 and all(set(t) == set(DENS) for t in g['DENS_GENERATIONS'].values())))
+
+    def _d4():
+        t = g['dens'](LAB)
+        t['SE'] = 99.0                                          # 사본을 바꿔도 표는 그대로여야 한다
+        return g['DENS_GENERATIONS'][LAB]['SE'] == 1.64 and g['dens']('gen1') == DENS and g['dens']('gen1') is not DENS
+    chk('D④ dens(세대) = 그 세대 표의 **사본** (돌려받은 dict 를 바꿔도 표 불변)', _d4)
+    _bad = ('gen2', '', '   ', None, 1, 1.0, b'gen1', 'GEN1', ' gen1', 'gen1 ', ['gen1'])
+    chk(f'D⑤ 거부 (fail-closed · SystemExit) {len(_bad)} 가지 — 모르는 이름 · 빈 · 공백 · None · 수 · bytes · 대소문자 · 앞뒤 공백 · 목록',
+        lambda: all(rej(lambda b=b: g['dens'](b)) for b in _bad))
+    chk('D⑥ dens_record = {dens_gen · dens_g_cm3 (실제 값) · dens_carried_from_gen1} · 키 순서 = DENS_RECORD_KEYS · 같은 거부',
+        lambda: (g['dens_record'](LAB) == {'dens_gen': LAB, 'dens_g_cm3': g['DENS_GENERATIONS'][LAB],
+                                          'dens_carried_from_gen1': ['VGCF', 'SuperP', 'PTFE', 'SDCP', 'SWCNT']}
+                 and tuple(g['dens_record']('gen1')) == g['DENS_RECORD_KEYS']
+                 == ('dens_gen', 'dens_g_cm3', 'dens_carried_from_gen1')
+                 and g['dens_record']('gen1')['dens_carried_from_gen1'] == []
+                 and rej(lambda: g['dens_record']('nope'))))
+    #  ⑦ 부피분율 — 1저자 예시 레시피 AM:SE = 80:18 wt% (NCM 은 PC · SC 같은 4.85 라 P:S 는 이 몫에 안 들어간다)
+    _sh = lambda f: f['SE']
+    chk('D⑦ vol_fracs 기본 = 옛 식 (wt/ρ, gen1) 비트 동일 · AM:SE 80:18 의 SE 부피 몫 gen1 0.3506493506 → lab 0.3995423341 (+4.89 %p)',
+        lambda: (vol_fracs({'AM': 80.0, 'SE': 18.0}) == {'AM': (80 / 4.80) / (80 / 4.80 + 18 / 2.00),
+                                                         'SE': (18 / 2.00) / (80 / 4.80 + 18 / 2.00)}
+                 and vol_fracs({'AM': 80.0, 'SE': 18.0}, dens_gen='gen1') == vol_fracs({'AM': 80.0, 'SE': 18.0})
+                 and abs(_sh(vol_fracs({'AM': 80.0, 'SE': 18.0})) - 0.35064935064935066) < 1e-15
+                 and abs(_sh(vol_fracs({'AM': 80.0, 'SE': 18.0}, dens_gen=LAB)) - 0.39954233409610984) < 1e-15))
+
+    def _ref_real(add_wt, am, se, rho):
+        """옛 recipe_counts_real 의 식을 **시험 안에서 다시** 적는다 (독립 산술 · 연산 순서까지 같게)."""
+        M_AM, M_SE = am * rho['AM'], se * rho['SE']
+        M_tot = (M_AM + M_SE) / max(1.0 - sum(add_wt.values()) / 100.0, 1e-6)
+        out = {'mode': 'real_scaffold_wt', 'am_wt_pct': round(100.0 * M_AM / M_tot, 2),
+               'se_wt_pct': round(100.0 * M_SE / M_tot, 2)}
+        v_obj = {'VGCF': np.pi * (VGCF_D / 2) ** 2 * VGCF_L, 'PTFE': np.pi * (PTFE_D / 2) ** 2 * PTFE_L}
+        for a_, w in add_wt.items():
+            V_a = (w / 100.0) * M_tot / rho[a_]
+            out[a_] = {'wt_pct': w, 'vol_um3': V_a, 'n': int(round(V_a / v_obj[a_])),
+                       'vol_per_obj_um3': v_obj[a_], 'vol_pct_of_solid': round(100.0 * V_a / (am + se), 3)}
+        return out
+    _aw, _am, _se = {'VGCF': 1.0, 'PTFE': 1.0}, 1.234e5, 5.67e4
+    chk('D⑧ recipe_counts_real 기본 = 옛 식 독립 산술과 **완전 동일** (gen1 리터럴) · 기록 키 없음',
+        lambda: (recipe_counts_real(_aw, _am, _se) == _ref_real(_aw, _am, _se, GEN1_LIT)
+                 and not any(k in recipe_counts_real(_aw, _am, _se) for k in ('dens_gen', 'dens_g_cm3'))))
+    chk('D⑨ recipe_counts_real gen1 명시 = 같은 수 + 기록 키 · lab = 랩 밀도의 독립 산술 + 기록 키 (AM wt% ↑ · VGCF 부피 ↓)',
+        lambda: ({k: v for k, v in recipe_counts_real(_aw, _am, _se, dens_gen='gen1').items()
+                  if k not in g['DENS_RECORD_KEYS']} == recipe_counts_real(_aw, _am, _se)
+                 and recipe_counts_real(_aw, _am, _se, dens_gen='gen1')['dens_gen'] == 'gen1'
+                 and {k: v for k, v in recipe_counts_real(_aw, _am, _se, dens_gen=LAB).items()
+                      if k not in g['DENS_RECORD_KEYS']} == _ref_real(_aw, _am, _se, g['DENS_GENERATIONS'][LAB])
+                 and recipe_counts_real(_aw, _am, _se, dens_gen=LAB)['dens_g_cm3'] == g['DENS_GENERATIONS'][LAB]
+                 and recipe_counts_real(_aw, _am, _se, dens_gen=LAB)['am_wt_pct']
+                 > recipe_counts_real(_aw, _am, _se)['am_wt_pct']
+                 and recipe_counts_real(_aw, _am, _se, dens_gen=LAB)['VGCF']['vol_um3']
+                 < recipe_counts_real(_aw, _am, _se)['VGCF']['vol_um3']
+                 and rej(lambda: recipe_counts_real(_aw, _am, _se, dens_gen='nope'))))
+    chk('D⑩ recipe_counts (상자 레시피) 기본 = 기록 키 없음 · 세대를 주면 그 세대 부피분율 + 기록 키',
+        lambda: ('dens_gen' not in recipe_counts({'AM': 80, 'SE': 18, 'VGCF': 1}, 1e5)
+                 and recipe_counts({'AM': 80, 'SE': 18, 'VGCF': 1}, 1e5, dens_gen=LAB)['dens_gen'] == LAB
+                 and recipe_counts({'AM': 80, 'SE': 18, 'VGCF': 1}, 1e5, dens_gen=LAB)['vol_fracs']
+                 == vol_fracs({'AM': 80, 'SE': 18, 'VGCF': 1}, dens_gen=LAB)))
+
+    def _d11():
+        me = _os.path.abspath(__file__)
+        r0 = _sp.run([_sys.executable, me, '--recipe', 'AM:SE:VGCF=72:27:1'], capture_output=True, text=True)
+        rl = _sp.run([_sys.executable, me, '--recipe', 'AM:SE:VGCF=72:27:1', '--dens-gen', LAB],
+                     capture_output=True, text=True)
+        rb = _sp.run([_sys.executable, me, '--recipe', 'AM:SE:VGCF=72:27:1', '--dens-gen', 'nope'],
+                     capture_output=True, text=True)
+        return (r0.returncode == 0 and 'dens_gen' not in r0.stdout and rl.returncode == 0
+                and f'dens_gen = {LAB}' in rl.stdout and rl.stdout != r0.stdout and rb.returncode != 0)
+    chk('D⑪ 데모 CLI --dens-gen: 안 주면 출력에 세대 줄 없음 · 주면 세대 줄 + 그 세대 수 · 모르는 이름 rc ≠ 0', _d11)
+    print(f'\nadditives dens selftest: {ok}/{ok + fail} PASS' + ('' if not fail else f'   ({fail} FAIL)'))
+    return 1 if fail else 0
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument('--recipe', default='', help="e.g. AM:SE:VGCF:PTFE=80:18:1:1")
@@ -1246,6 +1369,8 @@ def main():
                     help='A5/E2 dispersion-metric checks (CSR calibration / clustered / chain caveat)')
     ap.add_argument('--selftest-sheath', action='store_true',
                     help='A14 seed_sheath + sheath_ion_tradeoff checks (skin/contiguity/coverage/trade-off)')
+    ap.add_argument('--selftest-dens', action='store_true',
+                    help='밀도 세대 검사 (gen1 = 옛 DENS 그 객체 · 랩 세대 값 · 거부 · 기본 비트 동일 · 기록 키 유무)')
     a = ap.parse_args()
     if a.selftest_dispersion:
         import sys
@@ -1253,6 +1378,9 @@ def main():
     if a.selftest_sheath:
         import sys
         sys.exit(_selftest_sheath())
+    if a.selftest_dens:
+        import sys
+        sys.exit(_selftest_dens())
     Lx, Ly, Lz = (float(v) for v in a.rve_um.split(','))
     solid = Lx * Ly * Lz * (1 - a.porosity)
     recipes = [a.recipe] if a.recipe else ['AM:SE:VGCF=72:27:1', 'AM:SE:VGCF:PTFE=80:18:1:1']
