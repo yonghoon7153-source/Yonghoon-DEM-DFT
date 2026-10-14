@@ -1,0 +1,11 @@
+{
+ "error": null,
+ "expected_evals": 5000,
+ "n_eval": 5000,
+ "n_nonfinite": 0,
+ "n_out_eval_any": 4987,
+ "n_solutions": 50,
+ "termination": "returned",
+ "wall_s": 6.251928899999712,
+ "warnings_count": {}
+}

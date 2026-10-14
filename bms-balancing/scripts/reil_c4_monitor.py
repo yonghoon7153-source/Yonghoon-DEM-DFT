@@ -17,6 +17,12 @@ C4-0a 결과 검토 (2026-10-13) 의 한정 보완 셋:
   마지막 유효 시각을 바꾸지 않는다.
 - **N4** — 구조 오류의 `partial` (이미 모은 계수) 을 작업자 경계 너머 부모까지 보낸다. 그 작업은 여전히 중단 (`STARTED_INTERRUPTED`) 이다.
 
+C4-E (v3 §3 · 상태 문서 §66) 의 선택 인자 하나:
+
+- **`stop_rule`** — 기본값 None 이면 지금과 같은 동작이다. 주면 매 tick (RSS 표본 · freshness 확인 뒤) 에 `rule_snapshot` 으로 부른다
+  (원점 t0 의 상대 시각 · 작업자 start 사건 · 완료 행의 wall / n_eval / termination · progress · 계획 — X · F · G 없음). 문자열이면 전역
+  중지 사유 · 예외 · 형식 오류는 우리 구조 오류 (사유 원문 · `apply_rule`). 규칙은 상태를 바꾸지 않는다 (done 우선 분류 그대로).
+
 OS 조회가 영구히 막히는 경우의 강제 종료나 OS 하드 한도를 증명하지 않는다 (C4 v2 §4-4).
 """
 from __future__ import annotations
@@ -206,9 +212,32 @@ def _states(tasks, ev, prog, reason, t_stop, t0) -> list:
     return out
 
 
+def rule_snapshot(tasks, ev, prog, now_rel: float, t0: float) -> dict:
+    """규칙 입력 (C4-E v3 §3 의 좌표 계약) — 원점 t0 의 상대 시각 · 작업자 start 사건 t − t0 · 완료 행의 wall / n_eval / termination 만."""
+    return {"now_rel": now_rel,
+            "started": {tid: s["t"] - t0 for tid, s in ev["started"].items()},
+            "done": {tid: {k: d.get(k) for k in ("wall", "n_eval", "termination")} for tid, d in ev["done"].items()},
+            "progress": {t["task_id"]: int(prog[t["task_id"]]) for t in tasks},
+            "planned": [t["task_id"] for t in tasks]}
+
+
+def apply_rule(stop_rule, snap, ev, clock=time.monotonic):
+    """규칙 한 번 — 문자열이면 전역 중지 사유 · None 이면 계속. 예외 · 형식 오류는 우리 구조 오류로 기록하고 그 사유를 돌려준다."""
+    try:
+        r = stop_rule(snap)
+        if r is not None and not isinstance(r, str):
+            raise TypeError(f"stop_rule 반환 {type(r).__name__} — 문자열 또는 None 이어야 한다")
+        return r
+    except Exception as e:  # noqa: BLE001 — 규칙의 예외 = 우리 코드 = 구조 오류
+        ev["structural"].append({"task_id": None, "kind": "structural", "origin": "ours", "stage": "stop_rule",
+                                 "type": type(e).__name__, "message": str(e)[:300], "t": clock()})
+        return f"구조 오류: {type(e).__name__} (ours · stop_rule) {e}"[:400]
+
+
 def supervise(tasks, ctx, task_fn, *, n_workers, limits, t0, clock=time.monotonic, rss_fn=None, disk_fn=None,
-              out_roots=(), free_path=".", tick=1.0, disk_every=5.0) -> dict:
-    """작업 → 작업자 배정은 `task["worker"]` 로 고정. 표본 감시 (Watch) · 마감 · 전역 중단 → 소유 작업자만 종료."""
+              out_roots=(), free_path=".", tick=1.0, disk_every=5.0, stop_rule=None) -> dict:
+    """작업 → 작업자 배정은 `task["worker"]` 로 고정. 표본 감시 (Watch) · 마감 · 전역 중단 → 소유 작업자만 종료.
+    `stop_rule` (C4-E) 은 매 tick RSS 표본 · freshness 확인 뒤에 부른다 — 기본값 None 이면 부르지 않는다."""
     import multiprocessing as mp
     mpc = mp.get_context("fork")
     q, stop = mpc.Queue(), mpc.Event()
@@ -283,6 +312,8 @@ def supervise(tasks, ctx, task_fn, *, n_workers, limits, t0, clock=time.monotoni
             reason = f"단계 경계 — 측정 마감 {limits['measure']} s (표본 수집 뒤 재검사) · 신규 시작 중지"
         if reason is None:
             reason = fresh(clock() - t0)                              # 느린 RSS 조회 뒤 — 디스크 감시기 freshness (C4-0A-N3)
+        if reason is None and stop_rule is not None:                  # C4-E: 규칙 (호출당 상한 · 비용) — 사유면 전역 중지
+            reason = apply_rule(stop_rule, rule_snapshot(tasks, ev, shared_prog, clock() - t0, t0), ev, clock)
         if reason is not None:
             break
         if ta - last_disk_try >= disk_every:
