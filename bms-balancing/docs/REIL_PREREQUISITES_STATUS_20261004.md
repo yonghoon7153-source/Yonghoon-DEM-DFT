@@ -1603,3 +1603,61 @@ rc 0 → **옛 봉인 대조 (§2-4) 에서 허용 밖 차이** → 정지. 원�
 - **폴더:** 증거 `evidence/reil_c4e0_20261014/` — 착수 때 있으면 중지한다 (이 기록 시점 확인: 없음). `scripts/reil_c4e_run.py` · `tests/test_reil_c4e.py` 도 아직 없다.
 - **번호:** 결과 기록은 §67 이다.
 - 이 승인은 E1 (원자료 반입 · 66 호출) · 자료 개봉 · C4-A / B · 설치 · 환경 재구축 · 정식 배열 재봉인 · COMSOL 승인이 아니다. E1 은 E0 결과 검토 수용 뒤 별도 GO 다.
+
+## §67 C4-E · E0 결과 — RED 선언대로 21 / 0 · GREEN 180 통과 · plan-e 1 회 (2026-10-14 KST · 검토 대기 · 덧붙임 — 위 §0–§66 은 그대로)
+
+- **대상 커밋:** `6b2d419e` (plan-e · 끝 기록). 구현 + GREEN `57dfe290` · RED 증거 `d2708ab7` · 대조 원문 + 골격 + 착수 기록 + identity `8bfe8d73` ·
+  착수 HEAD `cac26575` (§66 승인 기록 · 보존 규칙). 승인 대상 요청 v3 `29cd92a4…` (커밋 `05614f07`).
+- **시간:** t0 2026-10-14T10:26:46Z · 끝 기록 2,364.4 s / 14,400 s — 커밋 · push · 결과 기록 · 발송문 작성 **전** snapshot 이다 (`06_end.json`).
+  계산 합 71.329 s / 1,560 s. 자동 수정 · 재시험 0.
+- **단계 (`evidence/reil_c4e0_20261014/` · 실행기 `00_step_runner.py` = 0b2 보완 실행기에서 증거 경로 · scratch · env 두 이름
+  (`REIL_C4_FIX_EVIDENCE` · `REIL_C4_FIX_STEP`) 만 바꿈):**
+
+  | 단계 | 배정 | 실측 | rc | 결과 |
+  |---|---|---|---|---|
+  | 01 identity | 60 s | 23.074 s | 0 | ok · problems 0 |
+  | 02 RED (새 21 만) | 600 s | 1.924 s | 1 | 21 실패 = NotImplementedError 19 + TypeError 2 (m_1 · m_2 — supervise 에 stop_rule 없음) · 선언대로 |
+  | 03 GREEN (기존 159 + 새 21) | 600 s | 43.901 s | 0 | 180 passed (pytest 43.03 s) · stderr 0 B |
+  | 04 plan-e | 300 s | 2.43 s | 0 | `04_plan_e_out/PLAN_E.json` 하나 (27,355 B · `15384075…`) |
+
+- **바뀐 파일 (sha256):**
+  - `scripts/reil_c4e_run.py` 새 — 골격 `171ea962…` (RED) → 구현 `0a9ddb83…`.
+  - `scripts/reil_c4_monitor.py` `06445100…` → `e6ef8ff6…` — `supervise(…, stop_rule=None)` 와 도우미 둘 (`rule_snapshot` · `apply_rule`). 기본값 None 이면
+    규칙을 부르지 않는다. 호출 위치는 RSS 표본 · freshness 확인 뒤 · 디스크 표본 앞 (`:315`).
+  - `tests/test_reil_c4e.py` 새 `687de63c…` — RED 전 커밋 뒤 바꾸지 않았다.
+  - 기존 시험 일곱 · e3a · h · hb · c5 · p0 · c6 · 배열 · 봉인은 바꾸지 않았다 (`05_source_sha256_end.txt` = GREEN 때 표).
+- **plan-e (`PLAN_E.json`):** 실제 환경 식별 통과 · P0 `3875e650…` · 발췌 `95cca5f3…` · MANIFEST `4f120948…` 가 기대와 일치 · 모듈 sha = `57dfe290` 의 파일 ·
+  66 호출 · 작업자별 기대 평가 404,500 / 404,500 / 388,000 / 304,500 (합 1,501,500 · optimizer 실행 275) · 기대 자료 (xlsx 10,841,377 B · util 원본 33,754 B) ·
+  규칙 매개변수 · fetch argv 틀 · util import · 자료 · optimizer · 네트워크 0.
+- **자원 (사후 관측):** 최대 단일 자식 RSS 285,672 KiB (≤ 4 GiB) · 증거 63,527 B (≤ 64 MiB) · 착수 디스크 여유 26.25 GB.
+- **§6-2 예외의 실제:** GREEN 의 0a 보완 test_out 기록 `03_green.nsga2_synthetic_outcome.json` — returned · 평가 5,000 (상한 5,000) · 6.25 s.
+  그 밖은 시험 구조의 정적 집계다 (이전과 같음 · 실행별 계수 로그 아님): 실제 fork 기존 10 + 새 5 = 15 (≤ 17) · COBYQA 14 · Sobol 관련 15 시험 · 가짜 minimize ≤ 995.
+- **새 대조의 계산:** 실제 optimizer · 보존 util · Sobol · 자료 · 네트워크 0.
+  - 가짜 util 평가 393 = s_4 두 변형 198 + 195 (지역 오류 호출은 평가 전에 예외).
+  - d_5 의 로컬 git 직접 호출 16 (가짜 저장소 준비 6 · fetch 두 번 5 + 5 · 두 경로 밖 요청은 git 0) + git 자신의 하위 프로세스 (upload-pack · 지연 blob 읽기) —
+    GIT_ALLOW_PROTOCOL=file · 네트워크 0.
+- **§65 의 구현 확인 넷 ↔ 근거 (확인은 검토자 몫 · 여기서 닫혔다고 쓰지 않는다):**
+  1. s_3 (d)(e)(g) 는 실제 종결 함수 `run.finalize` (`reil_c4e_run.py:524–534` → `mon.final_record`) 를 지난다 — 가짜 시계 `_Clk` · 작은 `disk_new` · 끝 기록
+     자리에 미리 만든 폴더 (쓰기 실패) · `Path.read_bytes` 변조 (재읽기 불일치). `record_state` 를 직접 넣지 않는다 (`test_reil_c4e.py:874–953`).
+  2. snapshot 뒤 산출 루트 안 쓰기 0 — `finalize` 는 `final_record` 다음에 순수 판정만 하고 돌려준다 · `run` → `main` 은 stdout 만. 시험: s_3 기준 사례에서
+     끝난 뒤 `output_bytes` = 기록의 `output_bytes_after` · 파일 집합 = `RECORD_FILES` · 해시 일치 (`:896–906`) · s_4 의 산출 루트 = `RECORD_FILES` 만.
+  3. 단계 성공 = run 최종 판정 AND 단계 실행기 rc 0 · timeout 없음 — `stage_verdict` (`reil_c4e_run.py:369–376`) · s_2 (`test_reil_c4e.py:851–854` · `:865`).
+  4. r_6 (c) 는 실제 규칙 호출 (진행 중 초과 감지) 뒤 실제 사후 집계 `run.aggregate` (`reil_c4e_run.py:254–292`) 를 지난다 — 행 불변 · 원래 COMPLETED ·
+     termination 보존 · global_stop 유지 · 늦은 완료 목록 (`test_reil_c4e.py:539–557`).
+- **밝힐 것 (검토 대상):**
+  1. **fetch argv** — v3 §3 의 틀 `git fetch --depth 1 --filter=blob:none <공개 URL> <커밋>` 을 이름 있는 remote 로 구현했다: `git init` → `git remote add origin
+     <같은 공개 URL>` → `git fetch --depth 1 --filter=blob:none origin <커밋>` → `git show <커밋>:<경로>` (두 경로). 부분 clone 의 지연 blob 읽기는 등록된 promisor
+     remote 를 쓰기 때문이다. URL · 커밋 · filter · 경로 · checkout 없음은 같다. E1 은 이 argv 그대로 (`PLAN_E.json` 의 `fetch_steps_template`).
+  2. fetch 는 `GIT_ALLOW_PROTOCOL` (E1 = https · 시험 = file) 과 `GIT_TERMINAL_PROMPT=0` 을 준다 — v3 에 없던 추가 제한이다.
+  3. 규칙 입력 검증을 v3 §4-3 보다 넓혔다 — 모든 완료 행 (error 포함) 의 wall 유한 · ≥ 0 · termination ∈ {returned · error} · now_rel · 시작 시각 유한 ·
+     progress 의 task 집합 = 계획 (상한 대조가 모든 완료 행의 wall 을 쓰기 때문 · fail-closed 쪽).
+  4. 모듈 (실행 · e3a · monitor · c5 · p0) 의 식별 표 "기대" 칸은 비워 둔다 — 기대는 실행 커밋이고 단계 실행기 meta 의 head · porcelain 이 결속한다. 시작 / 끝 비교는 한다.
+  5. 출력 폴더는 경로 단계에서 만든다 (v3 §3 의 3) — 그 뒤 P0 대조 등으로 멈추면 빈 폴더가 남는다.
+  6. 감시 전에 멈추면 (prep 초과 · 대조 불일치 등) 산출 루트에 기록 파일을 쓰지 않는다 — 사유 원문은 stdout (단계 실행기 `<단계>.stdout.log`).
+  7. 기록 마감이 첫 쓰기 전에 이미 지났으면 `final_record` 는 아무것도 쓰지 않는다 (C4-0a 의 기존 동작 · 이번에 바꾸지 않음). s_3 (d) 는 쓰기 뒤에 마감을
+     넘는 경우 (파일 보존) 를 본다.
+  8. 시험 머리말과 RED 커밋 메시지의 가짜 평가 수 ("198 + 198" · "396") 는 틀렸다 — 실제 393. GREEN 뒤 시험 파일은 고치지 않았다 (sha 보존).
+  9. 감시 모듈에는 선택 인자와 함께 도우미 함수 둘이 늘었다 (같은 변경의 구현 부분).
+  10. E1 의 GitHub 읽기 경로 (네트워크 · 프록시) 는 시험하지 않았다 — 가짜 로컬 저장소만. v3 §7 의 2 대로 E1 에서 안 되면 멈춘다.
+- **열린 채로:** E1 (실제 66 호출) · H 입력 인증 · H4 기록 · C4 전체 7-1 / 7-2 · 과학적 수렴 · 출판 재현.
+- **다음:** E0 결과 검토 발송 (사용자 결정) → 검토 수용 → 사용자 E1 별도 GO. 이 결과는 E1 · 자료 개봉 · C4-A / B 승인이 아니다.
