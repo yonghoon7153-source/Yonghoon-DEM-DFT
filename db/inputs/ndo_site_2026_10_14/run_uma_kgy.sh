@@ -61,15 +61,36 @@ write_watch() {   # $1 = 감시 스크립트 경로 · 임시 파일에 쓰고 m
     cat <<'W'
 date "+%F %T"
 tmux has-session -t "$S" 2>/dev/null && echo "tmux $S 살아 있음" || echo "tmux $S 없음 (끝났거나 죽음 — 로그 꼬리를 본다)"
-grep -q -a "시작" "$LOG" 2>/dev/null || echo "아직 시작 전 (앞 세션 · VRAM 을 기다리는 중)"
+# 시작 판정 = 구조 폴더가 하나라도 있거나 로그에 '시작' 줄 — 줄 서기 없이 띄운 런 (10-14 ndsite_uma) 은 '시작' 줄이 없어서
+#   옛 판이 돌고 있는 런을 '아직 시작 전' 으로 찍었다 (kgy 14:36 실측)
+ls -d "$OUT"/*/ >/dev/null 2>&1 || grep -q -a "시작" "$LOG" 2>/dev/null || echo "아직 시작 전 (앞 세션 · VRAM 을 기다리는 중)"
 # 결과 json 은 구조 2 개마다 저장되고 로그 stdout 은 버퍼에 쌓인다 — 진행은 구조 폴더로 본다
-echo "이완까지 끝난 구조 $(ls "$OUT"/*/post_relax.xyz 2>/dev/null | wc -l) / $N"
-C=$(ls -td "$OUT"/*/ 2>/dev/null | head -1)
+D=$(ls "$OUT"/*/post_relax.xyz 2>/dev/null | wc -l)
+echo "이완까지 끝난 구조 $D / $N"
+# 구조당 시간 = md.log 생성 (MD 시작) → post_relax.xyz 수정 (이완 끝). 생성 시각을 못 읽으면 (stat %W 가 숫자 아님 · 0) 건너뛴다
+born() { local b; b=$(stat -c %W "$1" 2>/dev/null); [[ "$b" =~ ^[0-9]+$ ]] && [ "$b" -gt 0 ] && echo "$b"; }
+now=$(date +%s); k=0; tot=0
+for d in "$OUT"/*/; do
+  [ -f "$d/post_relax.xyz" ] || continue
+  b=$(born "$d/md.log") || continue
+  k=$((k + 1)); tot=$((tot + $(stat -c %Y "$d/post_relax.xyz") - b))
+done
+C=$(ls -td "$OUT"/*/ 2>/dev/null | head -1); cur=0
 if [ -n "$C" ] && [ ! -f "$C/post_relax.xyz" ]; then
-  n=$(basename "$C")
-  if [ -f "$C/relax.log" ]; then echo "진행 중 $n · 이완 $(tail -1 "$C/relax.log")"
-  elif [ -f "$C/md.log" ]; then awk -v n="$n" 'NF==5 && $1+0==$1 {t=$1; T=$5} END {if (t!="") printf "진행 중 %s · MD %s ps (20 ps 까지) · T %s K\n", n, t, T; else printf "진행 중 %s · MD 시작\n", n}' "$C/md.log"
+  nm=$(basename "$C")
+  if [ -f "$C/relax.log" ]; then echo "진행 중 $nm · 이완 $(tail -1 "$C/relax.log")"
+  elif [ -f "$C/md.log" ]; then
+    b=$(born "$C/md.log") && el=$(( $(stat -c %Y "$C/md.log") - b )) || el=0
+    awk -v n="$nm" -v el="$el" 'NF==5 && $1+0==$1 {t=$1; T=$5} END {if (t=="") {printf "진행 중 %s · MD 시작\n", n; exit}
+      s=""; if (t>0 && el>0) s=sprintf(" · MD 속도 %.1f ps/h (20 ps 에 %d 분)", t*3600/el, 20*el/t/60)
+      printf "진행 중 %s · MD %s ps (20 ps 까지) · T %s K%s\n", n, t, T, s}' "$C/md.log"
   fi
+  b=$(born "$C/md.log") && cur=$((now - b))
+fi
+if [ "$k" -gt 0 ]; then
+  avg=$((tot / k)); rest=$((avg * (N - D) - cur)); [ "$rest" -lt 0 ] && rest=0
+  if [ "$D" -ge "$N" ]; then echo "구조당 평균 $((avg / 60)) 분 (끝난 $k 개 기준) · 다 끝남"
+  else echo "구조당 평균 $((avg / 60)) 분 (끝난 $k 개 기준) · 남은 $((N - D)) 개 → 어림 끝 $(date -d "@$((now + rest))" '+%m-%d %H:%M')"; fi
 fi
 grep -a -E "시작|끝 rc|대기" "$LOG" 2>/dev/null | tail -2
 nvidia-smi --query-gpu=memory.used,memory.total,utilization.gpu --format=csv,noheader
