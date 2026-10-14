@@ -10610,122 +10610,194 @@
     {
       "id": "ULKR-01",
       "severity": "P1",
-      "status": "open",
+      "status": "claimed_fixed",
       "owner": "claude",
       "found_by": "codex 10-14 DEM 언로딩 키트 재검토 (고정 핀 2783061ea · 실제 판독 함수에 저장 파일 · 실제 덱 분기 해석 — DEM · MPI · 셸 러너 실행 없음 · Windows 셸 제한으로 러너 모의는 소스 증명)",
       "opened_in": "docs/reviews/codex_review_dem_unloading_kit_20261014.md",
       "title": "확인 두 단의 존재만 세고 유효성은 안 본다 — 확인 두 단이 UNSTEADY · S3 FAIL · 압력 NaN 이어도 primary OK · ρ 0.2026077873428664 % · 다음 UVa 관문 허용",
-      "note": "판정문 §3.  자리 (핀): ul_reader.py:378–395 (교차 양 끝만 endpoint · 뒤는 len(steps)-1-j >= 2) · make_unload_decks.py:401 (유지가 UNSTEADY 로 끝난 단도 확인 계수).  무너지는 결론: ULR1-01 종결 · C14 정상 완료 보증 · 유효 주 값만 쓰는 선택 · 다음 제출.  최소 해결 = 이어지는 두 B 확인 단의 순서 · 완료 · 등록 정상성 · UNSTEADY / NaN / 누락 = 주 값 · 선택 · 제출 함께 거부 (파일 → 판독 → 관문 시험) · 접촉 사라진 확인 단 처리 명시 (새 물리 문턱 금지).  수정 계획 = docs/reviews/dem_unloading_kit_fix_plan_20261014.md (Q1)."
+      "note": "판정문 §3.  자리 (핀): ul_reader.py:378–395 (교차 양 끝만 endpoint · 뒤는 len(steps)-1-j >= 2) · make_unload_decks.py:401 (유지가 UNSTEADY 로 끝난 단도 확인 계수).  무너지는 결론: ULR1-01 종결 · C14 정상 완료 보증 · 유효 주 값만 쓰는 선택 · 다음 제출.  최소 해결 = 이어지는 두 B 확인 단의 순서 · 완료 · 등록 정상성 · UNSTEADY / NaN / 누락 = 주 값 · 선택 · 제출 함께 거부 (파일 → 판독 → 관문 시험) · 접촉 사라진 확인 단 처리 명시 (새 물리 문턱 금지).  수정 계획 = docs/reviews/dem_unloading_kit_fix_plan_20261014.md (Q1).\n★ 10-14 수정 (1저자 Q1–Q9 (가) · 반례 먼저 · 수정 가지 = 에이전트 작업 트리 · 메인 반입 cherry-pick) → claimed_fixed (1b77fe8e9) · LIGGGHTS 없는 모의 · 합성 시험까지 — 실제 바이너리 = ibb 문법 fixture (Q8 · 키트 README §1-6) · Codex 짧은 재확인 요청서 docs/reviews/codex_dem_unloading_kit_fix_recheck_request_20261014.md (리뷰 핀 = 반입 뒤 SHA · 발송 = 1저자).",
+      "claimed_fixed_sha": "1b77fe8e9",
+      "evidence_tests": [
+        "docs/data/ps45_unload_20261009/ (ul_reader R20 — 시험 먼저 · 고치기 전 실패 확인)",
+        "docs/reviews/dem_unloading_kit_fix_plan_20261014.md §5 (실행 기록)",
+        "docs/reviews/dem_unloading_ps45_prereg_20261009.md §14 (등록 개정 3 · 결과 0 건)"
+      ]
     },
     {
       "id": "ULKR-02",
       "severity": "P1",
-      "status": "open",
+      "status": "claimed_fixed",
       "owner": "claude",
       "found_by": "codex 10-14 DEM 언로딩 키트 재검토 (고정 핀 2783061ea · 실제 판독 함수에 저장 파일 · 실제 덱 분기 해석 — DEM · MPI · 셸 러너 실행 없음 · Windows 셸 제한으로 러너 모의는 소스 증명)",
       "opened_in": "docs/reviews/codex_review_dem_unloading_kit_20261014.md",
       "title": "k=0→1 첫 교차를 합집합에서 뺀다 (crossings(steps[1:])) — 겹치는 두 침대를 SEPARATED 로 발표 · 반등 없는 첫 A 단 교차 = 합집합 null (정상 값도 미식별)",
-      "note": "판정문 §3.  자리: ul_reader.py:339–346 (첫 교차 수용) ↔ :397–403 (합집합) · 소비자 :634–639 (10 쌍 표).  예: k=0 160 MPa · 높이 [0.20 … 0.40] µm · 압력 [0.8, 0.6, 0.4, 1.2, 0.7] MPa → 현행 외곽 [0.30, 0.40] µm (SEPARATED) ↔ 모든 교차 [0, 0.40] (OVERLAP).  무너지는 결론: §13-5 보수성 · ULR1-05 종결.  최소 해결 = k=0 부터 모든 유효 교차 · 보고 구간 ⊇ 선택된 첫 교차 괄호 불변식 · 첫 A · 첫 B · 반등 · 여러 교차 · 비유한 중간 단 시험 · 외곽 구간임을 문서에."
+      "note": "판정문 §3.  자리: ul_reader.py:339–346 (첫 교차 수용) ↔ :397–403 (합집합) · 소비자 :634–639 (10 쌍 표).  예: k=0 160 MPa · 높이 [0.20 … 0.40] µm · 압력 [0.8, 0.6, 0.4, 1.2, 0.7] MPa → 현행 외곽 [0.30, 0.40] µm (SEPARATED) ↔ 모든 교차 [0, 0.40] (OVERLAP).  무너지는 결론: §13-5 보수성 · ULR1-05 종결.  최소 해결 = k=0 부터 모든 유효 교차 · 보고 구간 ⊇ 선택된 첫 교차 괄호 불변식 · 첫 A · 첫 B · 반등 · 여러 교차 · 비유한 중간 단 시험 · 외곽 구간임을 문서에.\n★ 10-14 수정 (1저자 Q1–Q9 (가) · 반례 먼저 · 수정 가지 = 에이전트 작업 트리 · 메인 반입 cherry-pick) → claimed_fixed (1b77fe8e9) · LIGGGHTS 없는 모의 · 합성 시험까지 — 실제 바이너리 = ibb 문법 fixture (Q8 · 키트 README §1-6) · Codex 짧은 재확인 요청서 docs/reviews/codex_dem_unloading_kit_fix_recheck_request_20261014.md (리뷰 핀 = 반입 뒤 SHA · 발송 = 1저자).",
+      "claimed_fixed_sha": "1b77fe8e9",
+      "evidence_tests": [
+        "docs/data/ps45_unload_20261009/ (ul_reader R21 — 시험 먼저 · 고치기 전 실패 확인)",
+        "docs/reviews/dem_unloading_kit_fix_plan_20261014.md §5 (실행 기록)",
+        "docs/reviews/dem_unloading_ps45_prereg_20261009.md §14 (등록 개정 3 · 결과 0 건)"
+      ]
     },
     {
       "id": "ULKR-03",
       "severity": "P1",
-      "status": "open",
+      "status": "claimed_fixed",
       "owner": "claude",
       "found_by": "codex 10-14 DEM 언로딩 키트 재검토 (고정 핀 2783061ea · 실제 판독 함수에 저장 파일 · 실제 덱 분기 해석 — DEM · MPI · 셸 러너 실행 없음 · Windows 셸 제한으로 러너 모의는 소스 증명)",
       "opened_in": "docs/reviews/codex_review_dem_unloading_kit_20261014.md",
       "title": "UT → UTc 이어 돌림에서 UTc 가 UT 의 과거 덤프 · thermo 를 못 찾아 최종 t3 보고의 7:3 주 값이 null (UT 는 OK ρ 0.3827035983143033 %)",
-      "note": "판정문 §3.  자리: run_unload.sh:194–202 (UT 의 CSV 셋만 복사) · ul_reader.py:306 · 327 · 367–371 (과거 덤프 · thermo 를 UTc 폴더에서 찾음) · :872–875 (t3 최종 보고에 UTc).  무너지는 결론: UT · UTc 가 같은 궤적의 주 측정 · 보조 관측으로 최종 보고 · ULR1-05 결정표 3 행 후속 산출물.  최소 해결 = 해시로 묶인 UT 부모 관측 해석 (또는 출처 있는 원자료 전달) · 경계 step 중복 · 누락 검사 · 최종 report() 까지 UT 주 값 보존 + UTc 보조 관측 시험 (JSON OK 복사 불충분).  수정 계획 Q2."
+      "note": "판정문 §3.  자리: run_unload.sh:194–202 (UT 의 CSV 셋만 복사) · ul_reader.py:306 · 327 · 367–371 (과거 덤프 · thermo 를 UTc 폴더에서 찾음) · :872–875 (t3 최종 보고에 UTc).  무너지는 결론: UT · UTc 가 같은 궤적의 주 측정 · 보조 관측으로 최종 보고 · ULR1-05 결정표 3 행 후속 산출물.  최소 해결 = 해시로 묶인 UT 부모 관측 해석 (또는 출처 있는 원자료 전달) · 경계 step 중복 · 누락 검사 · 최종 report() 까지 UT 주 값 보존 + UTc 보조 관측 시험 (JSON OK 복사 불충분).  수정 계획 Q2.\n★ 10-14 수정 (1저자 Q1–Q9 (가) · 반례 먼저 · 수정 가지 = 에이전트 작업 트리 · 메인 반입 cherry-pick) → claimed_fixed (b7ef99f1c) · LIGGGHTS 없는 모의 · 합성 시험까지 — 실제 바이너리 = ibb 문법 fixture (Q8 · 키트 README §1-6) · Codex 짧은 재확인 요청서 docs/reviews/codex_dem_unloading_kit_fix_recheck_request_20261014.md (리뷰 핀 = 반입 뒤 SHA · 발송 = 1저자).",
+      "claimed_fixed_sha": "b7ef99f1c",
+      "evidence_tests": [
+        "docs/data/ps45_unload_20261009/ (ul_reader R23 · ul_runner_test M9 — 시험 먼저 · 고치기 전 실패 확인)",
+        "docs/reviews/dem_unloading_kit_fix_plan_20261014.md §5 (실행 기록)",
+        "docs/reviews/dem_unloading_ps45_prereg_20261009.md §14 (등록 개정 3 · 결과 0 건)"
+      ]
     },
     {
       "id": "ULKR-04",
       "severity": "P1",
-      "status": "open",
+      "status": "claimed_fixed",
       "owner": "claude",
       "found_by": "codex 10-14 DEM 언로딩 키트 재검토 (고정 핀 2783061ea · 실제 판독 함수에 저장 파일 · 실제 덱 분기 해석 — DEM · MPI · 셸 러너 실행 없음 · Windows 셸 제한으로 러너 모의는 소스 증명)",
       "opened_in": "docs/reviews/codex_review_dem_unloading_kit_20261014.md",
       "title": "파싱 실패 (NaN) 원자 행을 파서가 버린 뒤 남은 행으로 S3 PASS (R 0.0 · n_valid 4) · primary OK — 벽 · 원자 · 쌍 헤더 step 이 요청 끝점과 달라도 통과",
-      "note": "판정문 §3.  자리: ul_reader.py:254–263 (S3 경로가 A['ok'] 를 안 봄) · S0 :233–235 · 표면 :446–449 같은 부류 · 벽 :214–221 (파싱 상태는 보나 기대 step ↔ 헤더 미대조).  무너지는 결론: C1 · C6 의 \"깨짐 · 비유한 · 결손 = 미계산\" · C15 S3 증거 · 실패 닫힘.  최소 해결 = 모든 경로에서 파싱 성공 · 열 · 유한 · 프레임 시점 · ID 중복 / 관측 집합 확인 · 버린 행 재사용 금지 · 합법적 공간 제외 ↔ 깨진 프레임 구분 · 단일 변이 셋 종단 시험."
+      "note": "판정문 §3.  자리: ul_reader.py:254–263 (S3 경로가 A['ok'] 를 안 봄) · S0 :233–235 · 표면 :446–449 같은 부류 · 벽 :214–221 (파싱 상태는 보나 기대 step ↔ 헤더 미대조).  무너지는 결론: C1 · C6 의 \"깨짐 · 비유한 · 결손 = 미계산\" · C15 S3 증거 · 실패 닫힘.  최소 해결 = 모든 경로에서 파싱 성공 · 열 · 유한 · 프레임 시점 · ID 중복 / 관측 집합 확인 · 버린 행 재사용 금지 · 합법적 공간 제외 ↔ 깨진 프레임 구분 · 단일 변이 셋 종단 시험.\n★ 10-14 수정 (1저자 Q1–Q9 (가) · 반례 먼저 · 수정 가지 = 에이전트 작업 트리 · 메인 반입 cherry-pick) → claimed_fixed (1b77fe8e9) · LIGGGHTS 없는 모의 · 합성 시험까지 — 실제 바이너리 = ibb 문법 fixture (Q8 · 키트 README §1-6) · Codex 짧은 재확인 요청서 docs/reviews/codex_dem_unloading_kit_fix_recheck_request_20261014.md (리뷰 핀 = 반입 뒤 SHA · 발송 = 1저자).",
+      "claimed_fixed_sha": "1b77fe8e9",
+      "evidence_tests": [
+        "docs/data/ps45_unload_20261009/ (ul_reader R22 — 시험 먼저 · 고치기 전 실패 확인)",
+        "docs/reviews/dem_unloading_kit_fix_plan_20261014.md §5 (실행 기록)",
+        "docs/reviews/dem_unloading_ps45_prereg_20261009.md §14 (등록 개정 3 · 결과 0 건)"
+      ]
     },
     {
       "id": "ULKR-05",
       "severity": "P1",
-      "status": "open",
+      "status": "claimed_fixed",
       "owner": "claude",
       "found_by": "codex 10-14 DEM 언로딩 키트 재검토 (고정 핀 2783061ea · 실제 판독 함수에 저장 파일 · 실제 덱 분기 해석 — DEM · MPI · 셸 러너 실행 없음 · Windows 셸 제한으로 러너 모의는 소스 증명)",
       "opened_in": "docs/reviews/codex_review_dem_unloading_kit_20261014.md",
       "title": "불완전하거나 실패한 소거 관측으로 RESTORED 를 발행해 UB 관문을 연다 — PRE · POST 선언 20 원자 · 실제 2 행 (ok=false) · UN 이 다른 ID (999) 하나 · UN ERROR · rc 1",
-      "note": "판정문 §3.  자리: ul_reader.py:706–713 · 758–779 (primitive PRE/POST · R_END/UN 경로가 파싱 상태 · 실행 성공을 버림 · _erasure_seen 이 ID 집합 미비교).  이번 실물 H0–H5 실패를 뜻하지 않는다.  최소 해결 = 관측 전체 parse · 유한 · 고유 ID 집합 · 원자 수 · 기대 시점 · R_END ↔ UN 같은 대상 · UN · 필수 선행 단계 기술 실패면 재사용 가능한 RESTORED 없음 · 각 변이에서 복원 + 다음 제출 함께 거부."
+      "note": "판정문 §3.  자리: ul_reader.py:706–713 · 758–779 (primitive PRE/POST · R_END/UN 경로가 파싱 상태 · 실행 성공을 버림 · _erasure_seen 이 ID 집합 미비교).  이번 실물 H0–H5 실패를 뜻하지 않는다.  최소 해결 = 관측 전체 parse · 유한 · 고유 ID 집합 · 원자 수 · 기대 시점 · R_END ↔ UN 같은 대상 · UN · 필수 선행 단계 기술 실패면 재사용 가능한 RESTORED 없음 · 각 변이에서 복원 + 다음 제출 함께 거부.\n★ 10-14 수정 (1저자 Q1–Q9 (가) · 반례 먼저 · 수정 가지 = 에이전트 작업 트리 · 메인 반입 cherry-pick) → claimed_fixed (eeb99b082) · LIGGGHTS 없는 모의 · 합성 시험까지 — 실제 바이너리 = ibb 문법 fixture (Q8 · 키트 README §1-6) · Codex 짧은 재확인 요청서 docs/reviews/codex_dem_unloading_kit_fix_recheck_request_20261014.md (리뷰 핀 = 반입 뒤 SHA · 발송 = 1저자).",
+      "claimed_fixed_sha": "eeb99b082",
+      "evidence_tests": [
+        "docs/data/ps45_unload_20261009/ (ul_reader R17 · R18 · ul_gates F2 — 시험 먼저 · 고치기 전 실패 확인)",
+        "docs/reviews/dem_unloading_kit_fix_plan_20261014.md §5 (실행 기록)",
+        "docs/reviews/dem_unloading_ps45_prereg_20261009.md §14 (등록 개정 3 · 결과 0 건)"
+      ]
     },
     {
       "id": "ULKR-06",
       "severity": "P1",
-      "status": "open",
+      "status": "claimed_fixed",
       "owner": "claude",
       "found_by": "codex 10-14 DEM 언로딩 키트 재검토 (고정 핀 2783061ea · 실제 판독 함수에 저장 파일 · 실제 덱 분기 해석 — DEM · MPI · 셸 러너 실행 없음 · Windows 셸 제한으로 러너 모의는 소스 증명)",
       "opened_in": "docs/reviews/codex_review_dem_unloading_kit_20261014.md",
       "title": "RESUME 가 UTc · G_* · RJ · EXT 에서 횟수 제한 · 기록 보존 없이 반복 재실행 (screen.txt 덮어씀 · screen_a2 없음 · 제출 관문 건너뜀) — 소스 증명",
-      "note": "판정문 §3 (셸 실행 재현 아님 · Windows 셸 제한).  자리: run_unload.sh:85–87 · 107–109 · 180–211 (자기 restart 재개는 일반 UB/UT/UC/UVa/UVb/UT3 분기뿐 · UTc 는 매번 UT R_M 에서 · G_* 는 원 팔 R_M 에서 resume=0).  최소 해결 = 미지원 JOB RESUME 명시 거부 또는 JOB 별 진짜 재개 · UTc/G/RJ/EXT/일반 팔 각각 첫 시도 → 1 회 재개 → 2 회 거부 · 이전 로그 비덮어쓰기 (Linux 모의) · 같은 승인 팔의 기술 재개 검증.  수정 계획 Q3."
+      "note": "판정문 §3 (셸 실행 재현 아님 · Windows 셸 제한).  자리: run_unload.sh:85–87 · 107–109 · 180–211 (자기 restart 재개는 일반 UB/UT/UC/UVa/UVb/UT3 분기뿐 · UTc 는 매번 UT R_M 에서 · G_* 는 원 팔 R_M 에서 resume=0).  최소 해결 = 미지원 JOB RESUME 명시 거부 또는 JOB 별 진짜 재개 · UTc/G/RJ/EXT/일반 팔 각각 첫 시도 → 1 회 재개 → 2 회 거부 · 이전 로그 비덮어쓰기 (Linux 모의) · 같은 승인 팔의 기술 재개 검증.  수정 계획 Q3.\n★ 10-14 수정 (1저자 Q1–Q9 (가) · 반례 먼저 · 수정 가지 = 에이전트 작업 트리 · 메인 반입 cherry-pick) → claimed_fixed (efa935bd7) · LIGGGHTS 없는 모의 · 합성 시험까지 — 실제 바이너리 = ibb 문법 fixture (Q8 · 키트 README §1-6) · Codex 짧은 재확인 요청서 docs/reviews/codex_dem_unloading_kit_fix_recheck_request_20261014.md (리뷰 핀 = 반입 뒤 SHA · 발송 = 1저자).",
+      "claimed_fixed_sha": "efa935bd7",
+      "evidence_tests": [
+        "docs/data/ps45_unload_20261009/ (ul_runner_test M7 · M7a · M11–M14 — 시험 먼저 · 고치기 전 실패 확인)",
+        "docs/reviews/dem_unloading_kit_fix_plan_20261014.md §5 (실행 기록)",
+        "docs/reviews/dem_unloading_ps45_prereg_20261009.md §14 (등록 개정 3 · 결과 0 건)"
+      ]
     },
     {
       "id": "ULKR-07",
       "severity": "P2",
-      "status": "open",
+      "status": "claimed_fixed",
       "owner": "claude",
       "found_by": "codex 10-14 DEM 언로딩 키트 재검토 (고정 핀 2783061ea · 실제 판독 함수에 저장 파일 · 실제 덱 분기 해석 — DEM · MPI · 셸 러너 실행 없음 · Windows 셸 제한으로 러너 모의는 소스 증명)",
       "opened_in": "docs/reviews/codex_review_dem_unloading_kit_20261014.md",
       "title": "재접촉 뒤 같은 높이 남은 유지 예산 대신 다음 단 (k+1) 으로 판을 움직이고 · 재분리 뒤 wmax 를 넘겨 DONE · 판독기가 분리 · 표면을 취소해도 trajectory_status DONE 유지",
-      "note": "판정문 §4.  자리: make_unload_decks.py:368–377 · 실제 decks/ps_7_3_r45/in.U_UB.liggghts:228–252 · ul_reader.py:454–455.  영향 = 보조 표면 관측의 위치 · 시간 · 완료 지위 (정상 완료한 주 ρ 무효 사유 아님).  해제 = 재접촉 뒤 같은 높이 · 남은 예산 · 예산 끝과 분리 뒤 4 창의 관계 · 판독기 불일치 시 보조 미완료 상태.  수정 계획 Q6."
+      "note": "판정문 §4.  자리: make_unload_decks.py:368–377 · 실제 decks/ps_7_3_r45/in.U_UB.liggghts:228–252 · ul_reader.py:454–455.  영향 = 보조 표면 관측의 위치 · 시간 · 완료 지위 (정상 완료한 주 ρ 무효 사유 아님).  해제 = 재접촉 뒤 같은 높이 · 남은 예산 · 예산 끝과 분리 뒤 4 창의 관계 · 판독기 불일치 시 보조 미완료 상태.  수정 계획 Q6.\n★ 10-14 수정 (1저자 Q1–Q9 (가) · 반례 먼저 · 수정 가지 = 에이전트 작업 트리 · 메인 반입 cherry-pick) → claimed_fixed (cee186e55) · LIGGGHTS 없는 모의 · 합성 시험까지 — 실제 바이너리 = ibb 문법 fixture (Q8 · 키트 README §1-6) · Codex 짧은 재확인 요청서 docs/reviews/codex_dem_unloading_kit_fix_recheck_request_20261014.md (리뷰 핀 = 반입 뒤 SHA · 발송 = 1저자).",
+      "claimed_fixed_sha": "cee186e55",
+      "evidence_tests": [
+        "docs/data/ps45_unload_20261009/ (make_unload_decks GD15 · ul_reader R24 — 시험 먼저 · 고치기 전 실패 확인)",
+        "docs/reviews/dem_unloading_kit_fix_plan_20261014.md §5 (실행 기록)",
+        "docs/reviews/dem_unloading_ps45_prereg_20261009.md §14 (등록 개정 3 · 결과 0 건)"
+      ]
     },
     {
       "id": "ULKR-08",
       "severity": "P2",
-      "status": "open",
+      "status": "claimed_fixed",
       "owner": "claude",
       "found_by": "codex 10-14 DEM 언로딩 키트 재검토 (고정 핀 2783061ea · 실제 판독 함수에 저장 파일 · 실제 덱 분기 해석 — DEM · MPI · 셸 러너 실행 없음 · Windows 셸 제한으로 러너 모의는 소스 증명)",
       "opened_in": "docs/reviews/codex_review_dem_unloading_kit_20261014.md",
       "title": "SYN 없이도 이력 시험 자격 통과 — 동봉 증거에서 SYN 폴더만 빼면 H0–H5 PASS · exit 0 · sign null → RESTORED · UB 허용 (sign is None or …)",
-      "note": "판정문 §4.  자리: ul_reader.py:714–720 · history_test/read_history.py:589–591 (exit code = H0–H5 기반).  해제 = SYN PASS + 측정된 일치 부호 필수 · 총힘 시점을 C1 선행조건으로 쓰면 그 관측 상태도 필수 · 지금 동봉 SYN 은 실제 PASS (다시 돌릴 필요 없음)."
+      "note": "판정문 §4.  자리: ul_reader.py:714–720 · history_test/read_history.py:589–591 (exit code = H0–H5 기반).  해제 = SYN PASS + 측정된 일치 부호 필수 · 총힘 시점을 C1 선행조건으로 쓰면 그 관측 상태도 필수 · 지금 동봉 SYN 은 실제 PASS (다시 돌릴 필요 없음).\n★ 10-14 수정 (1저자 Q1–Q9 (가) · 반례 먼저 · 수정 가지 = 에이전트 작업 트리 · 메인 반입 cherry-pick) → claimed_fixed (eeb99b082) · LIGGGHTS 없는 모의 · 합성 시험까지 — 실제 바이너리 = ibb 문법 fixture (Q8 · 키트 README §1-6) · Codex 짧은 재확인 요청서 docs/reviews/codex_dem_unloading_kit_fix_recheck_request_20261014.md (리뷰 핀 = 반입 뒤 SHA · 발송 = 1저자).",
+      "claimed_fixed_sha": "eeb99b082",
+      "evidence_tests": [
+        "docs/data/ps45_unload_20261009/ (ul_reader R18 — 시험 먼저 · 고치기 전 실패 확인)",
+        "docs/reviews/dem_unloading_kit_fix_plan_20261014.md §5 (실행 기록)",
+        "docs/reviews/dem_unloading_ps45_prereg_20261009.md §14 (등록 개정 3 · 결과 0 건)"
+      ]
     },
     {
       "id": "ULKR-09",
       "severity": "P2",
-      "status": "open",
+      "status": "claimed_fixed",
       "owner": "claude",
       "found_by": "codex 10-14 DEM 언로딩 키트 재검토 (고정 핀 2783061ea · 실제 판독 함수에 저장 파일 · 실제 덱 분기 해석 — DEM · MPI · 셸 러너 실행 없음 · Windows 셸 제한으로 러너 모의는 소스 증명)",
       "opened_in": "docs/reviews/codex_review_dem_unloading_kit_20261014.md",
       "title": "UK 완전 세 창이 아니라 임의의 한 줄로 S2 문턱을 만든다 (step=1 · w=1 · ke_rot_avg 0.001 J → S2max 0.01000204 J — 축척 덱 값 · 반례)",
-      "note": "판정문 §4.  자리: ul_reader.py:782–803 · ul_observers.py:121–129 (C4 = S0 무이동 완전 세 창 회전 KE 중앙값).  해제 = 정확한 S0 · 무이동 출처 · T_W 간격 · 완전 · 연속 · 고유 세 창 · 파싱 / 실행 성공 확인 · 미달 = 기준 파일 미발행 (계수 10 은 그대로) · S2 를 쓰는 개발 U 전."
+      "note": "판정문 §4.  자리: ul_reader.py:782–803 · ul_observers.py:121–129 (C4 = S0 무이동 완전 세 창 회전 KE 중앙값).  해제 = 정확한 S0 · 무이동 출처 · T_W 간격 · 완전 · 연속 · 고유 세 창 · 파싱 / 실행 성공 확인 · 미달 = 기준 파일 미발행 (계수 10 은 그대로) · S2 를 쓰는 개발 U 전.\n★ 10-14 수정 (1저자 Q1–Q9 (가) · 반례 먼저 · 수정 가지 = 에이전트 작업 트리 · 메인 반입 cherry-pick) → claimed_fixed (cee186e55) · LIGGGHTS 없는 모의 · 합성 시험까지 — 실제 바이너리 = ibb 문법 fixture (Q8 · 키트 README §1-6) · Codex 짧은 재확인 요청서 docs/reviews/codex_dem_unloading_kit_fix_recheck_request_20261014.md (리뷰 핀 = 반입 뒤 SHA · 발송 = 1저자).",
+      "claimed_fixed_sha": "cee186e55",
+      "evidence_tests": [
+        "docs/data/ps45_unload_20261009/ (ul_reader R25 · ul_runner_test M18 — 시험 먼저 · 고치기 전 실패 확인)",
+        "docs/reviews/dem_unloading_kit_fix_plan_20261014.md §5 (실행 기록)",
+        "docs/reviews/dem_unloading_ps45_prereg_20261009.md §14 (등록 개정 3 · 결과 0 건)"
+      ]
     },
     {
       "id": "ULKR-10",
       "severity": "P2",
-      "status": "open",
+      "status": "claimed_fixed",
       "owner": "claude",
       "found_by": "codex 10-14 DEM 언로딩 키트 재검토 (고정 핀 2783061ea · 실제 판독 함수에 저장 파일 · 실제 덱 분기 해석 — DEM · MPI · 셸 러너 실행 없음 · Windows 셸 제한으로 러너 모의는 소스 증명)",
       "opened_in": "docs/reviews/codex_review_dem_unloading_kit_20261014.md",
       "title": "중력 팔 유지 시간 (G_UVa · G_UVb 뒤 B 단 8–24 창 ↔ C10 · C12 \"중력 팔 4–12\") 과 S3 무게 항 g (9.81 고정 ↔ 중력 팔 9.81e-6) 이 명시 규약과 갈린다",
-      "note": "판정문 §4.  자리 A: make_unload_decks.py:103–107 · 437–440.  자리 B: ul_reader.py:263 (g 미전달) · ul_s3.py:29 · 36 · 75.  반례 B (함수): 무접촉 m 1e-6 kg · 총힘 9.81e-12 N → 기본 g R=1e-6 PASS · 실제 g R=1 FAIL (고압 접촉망에서 실제로 났다는 주장 아님).  해제 = 유지 × 2 범위 명시 · 덱별 표 검증 · S3 g 규약 등록 · 배선.  수정 계획 Q4 · Q5."
+      "note": "판정문 §4.  자리 A: make_unload_decks.py:103–107 · 437–440.  자리 B: ul_reader.py:263 (g 미전달) · ul_s3.py:29 · 36 · 75.  반례 B (함수): 무접촉 m 1e-6 kg · 총힘 9.81e-12 N → 기본 g R=1e-6 PASS · 실제 g R=1 FAIL (고압 접촉망에서 실제로 났다는 주장 아님).  해제 = 유지 × 2 범위 명시 · 덱별 표 검증 · S3 g 규약 등록 · 배선.  수정 계획 Q4 · Q5.\n★ 10-14 수정 (1저자 Q1–Q9 (가) · 반례 먼저 · 수정 가지 = 에이전트 작업 트리 · 메인 반입 cherry-pick) → claimed_fixed (cee186e55) · LIGGGHTS 없는 모의 · 합성 시험까지 — 실제 바이너리 = ibb 문법 fixture (Q8 · 키트 README §1-6) · Codex 짧은 재확인 요청서 docs/reviews/codex_dem_unloading_kit_fix_recheck_request_20261014.md (리뷰 핀 = 반입 뒤 SHA · 발송 = 1저자).",
+      "claimed_fixed_sha": "cee186e55",
+      "evidence_tests": [
+        "docs/data/ps45_unload_20261009/ (make_unload_decks GD16 · ul_reader R26 — 시험 먼저 · 고치기 전 실패 확인)",
+        "docs/reviews/dem_unloading_kit_fix_plan_20261014.md §5 (실행 기록)",
+        "docs/reviews/dem_unloading_ps45_prereg_20261009.md §14 (등록 개정 3 · 결과 0 건)"
+      ]
     },
     {
       "id": "ULKR-11",
       "severity": "P2",
-      "status": "open",
+      "status": "claimed_fixed",
       "owner": "claude",
       "found_by": "codex 10-14 DEM 언로딩 키트 재검토 (고정 핀 2783061ea · 실제 판독 함수에 저장 파일 · 실제 덱 분기 해석 — DEM · MPI · 셸 러너 실행 없음 · Windows 셸 제한으로 러너 모의는 소스 증명)",
       "opened_in": "docs/reviews/codex_review_dem_unloading_kit_20261014.md",
       "title": "판독기 기술 실패가 영수증 reader_rc=0 으로 남는다 · G0 결과를 출력만 · 7:3 Ut0 실패 뒤에도 R 시도 — 소스 증명",
-      "note": "판정문 §4.  자리: run_unload.sh:159 · 192 · 202 · 211 · 214–219 (arm · 마지막 select 반환값 미저장) · :163–166 (G0 출력만).  정상 UNIDENTIFIED 를 오류 코드로 바꾸라는 뜻 아님.  해제 = 단계별 기술 rc 포착 · 보존 · 필수 선행 실패에서 중단 · 정상 미식별 ↔ 프로그램 오류 따로 시험."
+      "note": "판정문 §4.  자리: run_unload.sh:159 · 192 · 202 · 211 · 214–219 (arm · 마지막 select 반환값 미저장) · :163–166 (G0 출력만).  정상 UNIDENTIFIED 를 오류 코드로 바꾸라는 뜻 아님.  해제 = 단계별 기술 rc 포착 · 보존 · 필수 선행 실패에서 중단 · 정상 미식별 ↔ 프로그램 오류 따로 시험.\n★ 10-14 수정 (1저자 Q1–Q9 (가) · 반례 먼저 · 수정 가지 = 에이전트 작업 트리 · 메인 반입 cherry-pick) → claimed_fixed (efa935bd7) · LIGGGHTS 없는 모의 · 합성 시험까지 — 실제 바이너리 = ibb 문법 fixture (Q8 · 키트 README §1-6) · Codex 짧은 재확인 요청서 docs/reviews/codex_dem_unloading_kit_fix_recheck_request_20261014.md (리뷰 핀 = 반입 뒤 SHA · 발송 = 1저자).",
+      "claimed_fixed_sha": "efa935bd7",
+      "evidence_tests": [
+        "docs/data/ps45_unload_20261009/ (ul_runner_test M4 · M15–M17 — 시험 먼저 · 고치기 전 실패 확인)",
+        "docs/reviews/dem_unloading_kit_fix_plan_20261014.md §5 (실행 기록)",
+        "docs/reviews/dem_unloading_ps45_prereg_20261009.md §14 (등록 개정 3 · 결과 0 건)"
+      ]
     },
     {
       "id": "ULKR-12",
       "severity": "P2",
-      "status": "open",
+      "status": "claimed_fixed",
       "owner": "claude",
       "found_by": "codex 10-14 DEM 언로딩 키트 재검토 (고정 핀 2783061ea · 실제 판독 함수에 저장 파일 · 실제 덱 분기 해석 — DEM · MPI · 셸 러너 실행 없음 · Windows 셸 제한으로 러너 모의는 소스 증명)",
       "opened_in": "docs/reviews/codex_review_dem_unloading_kit_20261014.md",
       "title": "ε · W_proxy 는 함수만 있고 보고 사슬에 없다 · 고정 S0 부피 C_all 을 현재 프레임 ID 교집합으로 다시 계산 (한 행 잃으면 −20 %) · 경량 보고 TGZ 로 모든 관측 재검증 불가 (EXT2 · 루트 결정 파일 빠질 수 있음)",
-      "note": "판정문 §4.  자리: ul_observers.py:104–118 (호출 = selftest 뿐) · run_unload.sh bundle().  해제 = 함수 구현 ↔ 등록 보고 산출 분리 · C_all = 검증한 S0 에서 봉인 · 현재 프레임 완전성 · ε_all / ε_inside / W_proxy 를 파일 → 최종 report 시험에 넣거나 미보고 명시 · 전달 묶음에 필요한 원자료 또는 봉인 부속.  유효한 주 ρ 폐기 사유 아님.  수정 계획 Q7."
+      "note": "판정문 §4.  자리: ul_observers.py:104–118 (호출 = selftest 뿐) · run_unload.sh bundle().  해제 = 함수 구현 ↔ 등록 보고 산출 분리 · C_all = 검증한 S0 에서 봉인 · 현재 프레임 완전성 · ε_all / ε_inside / W_proxy 를 파일 → 최종 report 시험에 넣거나 미보고 명시 · 전달 묶음에 필요한 원자료 또는 봉인 부속.  유효한 주 ρ 폐기 사유 아님.  수정 계획 Q7.\n★ 10-14 수정 (1저자 Q1–Q9 (가) · 반례 먼저 · 수정 가지 = 에이전트 작업 트리 · 메인 반입 cherry-pick) → claimed_fixed (c82cbfdde) · LIGGGHTS 없는 모의 · 합성 시험까지 — 실제 바이너리 = ibb 문법 fixture (Q8 · 키트 README §1-6) · Codex 짧은 재확인 요청서 docs/reviews/codex_dem_unloading_kit_fix_recheck_request_20261014.md (리뷰 핀 = 반입 뒤 SHA · 발송 = 1저자).",
+      "claimed_fixed_sha": "c82cbfdde",
+      "evidence_tests": [
+        "docs/data/ps45_unload_20261009/ (ul_observers O11–O12 · ul_reader R27 · ul_runner_test M19 — 시험 먼저 · 고치기 전 실패 확인)",
+        "docs/reviews/dem_unloading_kit_fix_plan_20261014.md §5 (실행 기록)",
+        "docs/reviews/dem_unloading_ps45_prereg_20261009.md §14 (등록 개정 3 · 결과 0 건)"
+      ]
     },
     {
       "id": "RIMP-01",
