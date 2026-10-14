@@ -1,0 +1,3522 @@
+{
+ "what": "li2s 대조 계 판독 (카드 §4 · 결과 전 커밋 도구)",
+ "tool_sha16": {
+  "glass_v2_readout.py": "097c8a8092e011e7",
+  "msd_diffusive_check.py": "a2c06ce2bde2e733",
+  "quench_ss_event.py": "02d61d82e9b64cc0",
+  "aimd_jump_stats.py": "46eff8d348cb5641",
+  "melt_quench_uma.py": "47c7e0aab5d14fbd",
+  "../modelc_v3/disorder_ensemble_diffusion.py": "c3e2d358ee53cefa"
+ },
+ "aggregate": {
+  "T_K": 600,
+  "systems": {
+   "A": {
+    "N": 5,
+    "of": 5,
+    "D_relative_spread_R_set": {
+     "n": 5,
+     "D_over_median": [
+      0.9552,
+      0.9698,
+      1.0,
+      1.0042,
+      1.2039
+     ],
+     "IQR_over_median": 0.0345,
+     "max_over_min": 1.2604,
+     "sd_ln": 0.0934
+    },
+    "D_relative_spread_N_set_record": {
+     "n": 5,
+     "D_over_median": [
+      0.9552,
+      0.9698,
+      1.0,
+      1.0042,
+      1.2039
+     ],
+     "IQR_over_median": 0.0345,
+     "max_over_min": 1.2604,
+     "sd_ln": 0.0934
+    },
+    "R_set_seeds": [
+     1,
+     2,
+     3,
+     4,
+     5
+    ],
+    "skeleton_moved_seeds": [],
+    "rows": [
+     {
+      "seed": 1,
+      "machine": "kgy",
+      "C1_pass": true,
+      "C1_msd_at_50_mto_A2": 48.4386894731901,
+      "beta_MTO": 0.8906356149695708,
+      "C2_final": "통과",
+      "n_sigma_end": 3.947,
+      "n_sigma_prev": 3.336,
+      "b_end": 256,
+      "b_prev": 192,
+      "counts_in_N": true,
+      "skeleton": {
+       "pass": true,
+       "criteria": {
+        "①": true,
+        "②": true,
+        "③": true,
+        "④": true
+       },
+       "values": {
+        "①_P_frac": 0.0,
+        "②_S_moved": 0,
+        "③_SS_new": 0,
+        "④_S_transient": 0
+       }
+      },
+      "in_R_set": true,
+      "record": {
+       "beta_STO": 1.0267668387939488,
+       "STO_minus_MTO": 0.13613122382437803,
+       "aux_50_200": {
+        "beta_MTO": 1.0163802346613824,
+        "sigma_end": 0.030249472908555782,
+        "b_end": 256,
+        "n_sigma_signed_vs_C2_band": 6.07,
+        "in_C2_band": true,
+        "⚠": "기록 전용 — 판정 아님 (회신 CO 보조 창) · σ 하한"
+       },
+       "C2_common_b": {
+        "b": 256,
+        "sigma": 0.0229646293355123,
+        "verdict": "통과",
+        "n_sigma_signed": 3.947
+       },
+       "N_eff_he2018": 1868.2401982732938,
+       "T_prod": {
+        "mean_K": 601.65,
+        "sd_K": 46.39,
+        "n_rows": 200001,
+        "from_ps": 5.0
+       },
+       "p90sq_5ps_lag": {
+        "window_ps": 50.0,
+        "lag_ps": 5.0,
+        "min_dist_A": 2.0,
+        "n_windows": 8,
+        "p90sq_A2": [
+         75.22,
+         50.66,
+         58.9,
+         43.55,
+         73.13,
+         60.76,
+         48.75,
+         54.19
+        ],
+        "n_windows_from": "prod_ps",
+        "n_frames": 4000,
+        "box_L_A": [
+         13.9826,
+         13.9826,
+         13.9826
+        ],
+        "half_box_sq_A2": 48.88,
+        "cell_cubic": true,
+        "excess_A2": [
+         26.34,
+         1.78,
+         10.02,
+         -5.33,
+         24.25,
+         11.88,
+         -0.13,
+         5.31
+        ],
+        "n_windows_over": 6,
+        "median_A2": 56.55,
+        "max_A2": 75.22,
+        "⚠": "기록 전용 — 판정과 무관 · (d/2)² 는 상자 짧은 변 기준"
+       },
+       "skeleton_literal": {
+        "①_frac_frames_any_P_not4": 0.0,
+        "③_n_SS_pairs_lt_cut_any_frame_incl_first": 0
+       },
+       "skeleton_literal_moved": false,
+       "SS_at_first_frame": 0
+      }
+     },
+     {
+      "seed": 2,
+      "machine": "gabia",
+      "C1_pass": true,
+      "C1_msd_at_50_mto_A2": 57.32747633722016,
+      "beta_MTO": 0.9310053614104246,
+      "C2_final": "통과",
+      "n_sigma_end": 5.194,
+      "n_sigma_prev": 4.433,
+      "b_end": 256,
+      "b_prev": 192,
+      "counts_in_N": true,
+      "skeleton": {
+       "pass": true,
+       "criteria": {
+        "①": true,
+        "②": true,
+        "③": true,
+        "④": true
+       },
+       "values": {
+        "①_P_frac": 0.0,
+        "②_S_moved": 0,
+        "③_SS_new": 0,
+        "④_S_transient": 0
+       }
+      },
+      "in_R_set": true,
+      "record": {
+       "beta_STO": 1.0094073079467776,
+       "STO_minus_MTO": 0.07840194653635302,
+       "aux_50_200": {
+        "beta_MTO": 0.9089624958706706,
+        "sigma_end": 0.028909809540274008,
+        "b_end": 256,
+        "n_sigma_signed_vs_C2_band": 3.769,
+        "in_C2_band": true,
+        "⚠": "기록 전용 — 판정 아님 (회신 CO 보조 창) · σ 하한"
+       },
+       "C2_common_b": {
+        "b": 256,
+        "sigma": 0.02522201094386149,
+        "verdict": "통과",
+        "n_sigma_signed": 5.194
+       },
+       "N_eff_he2018": 2188.422463151876,
+       "T_prod": {
+        "mean_K": 605.25,
+        "sd_K": 45.97,
+        "n_rows": 200001,
+        "from_ps": 5.0
+       },
+       "p90sq_5ps_lag": {
+        "window_ps": 50.0,
+        "lag_ps": 5.0,
+        "min_dist_A": 2.0,
+        "n_windows": 8,
+        "p90sq_A2": [
+         71.62,
+         61.99,
+         63.61,
+         70.16,
+         58.83,
+         60.38,
+         59.26,
+         58.13
+        ],
+        "n_windows_from": "prod_ps",
+        "n_frames": 4000,
+        "box_L_A": [
+         14.1085,
+         14.1085,
+         14.1085
+        ],
+        "half_box_sq_A2": 49.76,
+        "cell_cubic": true,
+        "excess_A2": [
+         21.86,
+         12.23,
+         13.85,
+         20.4,
+         9.07,
+         10.62,
+         9.5,
+         8.37
+        ],
+        "n_windows_over": 8,
+        "median_A2": 61.19,
+        "max_A2": 71.62,
+        "⚠": "기록 전용 — 판정과 무관 · (d/2)² 는 상자 짧은 변 기준"
+       },
+       "skeleton_literal": {
+        "①_frac_frames_any_P_not4": 0.0,
+        "③_n_SS_pairs_lt_cut_any_frame_incl_first": 0
+       },
+       "skeleton_literal_moved": false,
+       "SS_at_first_frame": 0
+      }
+     },
+     {
+      "seed": 3,
+      "machine": "kgy",
+      "C1_pass": true,
+      "C1_msd_at_50_mto_A2": 46.32954414443634,
+      "beta_MTO": 0.8809868909737146,
+      "C2_final": "통과",
+      "n_sigma_end": 2.578,
+      "n_sigma_prev": 2.155,
+      "b_end": 256,
+      "b_prev": 192,
+      "counts_in_N": true,
+      "skeleton": {
+       "pass": true,
+       "criteria": {
+        "①": true,
+        "②": true,
+        "③": true,
+        "④": true
+       },
+       "values": {
+        "①_P_frac": 0.006,
+        "②_S_moved": 0,
+        "③_SS_new": 0,
+        "④_S_transient": 1
+       }
+      },
+      "in_R_set": true,
+      "record": {
+       "beta_STO": 0.7103363643634628,
+       "STO_minus_MTO": -0.17065052661025182,
+       "aux_50_200": {
+        "beta_MTO": 1.0289573455429641,
+        "sigma_end": 0.02497065121921164,
+        "b_end": 256,
+        "n_sigma_signed_vs_C2_band": 6.85,
+        "in_C2_band": true,
+        "⚠": "기록 전용 — 판정 아님 (회신 CO 보조 창) · σ 하한"
+       },
+       "C2_common_b": {
+        "b": 256,
+        "sigma": 0.03141129860845011,
+        "verdict": "통과",
+        "n_sigma_signed": 2.578
+       },
+       "N_eff_he2018": 2186.2074116165695,
+       "T_prod": {
+        "mean_K": 600.31,
+        "sd_K": 45.48,
+        "n_rows": 200001,
+        "from_ps": 5.0
+       },
+       "p90sq_5ps_lag": {
+        "window_ps": 50.0,
+        "lag_ps": 5.0,
+        "min_dist_A": 2.0,
+        "n_windows": 8,
+        "p90sq_A2": [
+         45.84,
+         56.57,
+         54.08,
+         46.73,
+         75.96,
+         58.56,
+         49.84,
+         56.42
+        ],
+        "n_windows_from": "prod_ps",
+        "n_frames": 4000,
+        "box_L_A": [
+         14.0639,
+         14.0639,
+         14.0639
+        ],
+        "half_box_sq_A2": 49.45,
+        "cell_cubic": true,
+        "excess_A2": [
+         -3.61,
+         7.12,
+         4.63,
+         -2.72,
+         26.51,
+         9.11,
+         0.39,
+         6.97
+        ],
+        "n_windows_over": 6,
+        "median_A2": 55.25,
+        "max_A2": 75.96,
+        "⚠": "기록 전용 — 판정과 무관 · (d/2)² 는 상자 짧은 변 기준"
+       },
+       "skeleton_literal": {
+        "①_frac_frames_any_P_not4": 0.006,
+        "③_n_SS_pairs_lt_cut_any_frame_incl_first": 0
+       },
+       "skeleton_literal_moved": false,
+       "SS_at_first_frame": 0
+      }
+     },
+     {
+      "seed": 4,
+      "machine": "gabia",
+      "C1_pass": true,
+      "C1_msd_at_50_mto_A2": 46.87173384193572,
+      "beta_MTO": 0.8817713343548054,
+      "C2_final": "통과",
+      "n_sigma_end": 3.003,
+      "n_sigma_prev": 2.894,
+      "b_end": 256,
+      "b_prev": 192,
+      "counts_in_N": true,
+      "skeleton": {
+       "pass": true,
+       "criteria": {
+        "①": true,
+        "②": true,
+        "③": true,
+        "④": true
+       },
+       "values": {
+        "①_P_frac": 0.0,
+        "②_S_moved": 0,
+        "③_SS_new": 0,
+        "④_S_transient": 0
+       }
+      },
+      "in_R_set": true,
+      "record": {
+       "beta_STO": 0.8044282229270817,
+       "STO_minus_MTO": -0.07734311142772365,
+       "aux_50_200": {
+        "beta_MTO": 1.0152547524647542,
+        "sigma_end": 0.025185324068131766,
+        "b_end": 256,
+        "n_sigma_signed_vs_C2_band": 7.335,
+        "in_C2_band": true,
+        "⚠": "기록 전용 — 판정 아님 (회신 CO 보조 창) · σ 하한"
+       },
+       "C2_common_b": {
+        "b": 256,
+        "sigma": 0.027232439718266305,
+        "verdict": "통과",
+        "n_sigma_signed": 3.003
+       },
+       "N_eff_he2018": 2299.5801905724934,
+       "T_prod": {
+        "mean_K": 602.62,
+        "sd_K": 44.95,
+        "n_rows": 200001,
+        "from_ps": 5.0
+       },
+       "p90sq_5ps_lag": {
+        "window_ps": 50.0,
+        "lag_ps": 5.0,
+        "min_dist_A": 2.0,
+        "n_windows": 8,
+        "p90sq_A2": [
+         72.67,
+         60.16,
+         67.32,
+         49.1,
+         65.47,
+         54.32,
+         56.31,
+         59.48
+        ],
+        "n_windows_from": "prod_ps",
+        "n_frames": 4000,
+        "box_L_A": [
+         14.0706,
+         14.0706,
+         14.0706
+        ],
+        "half_box_sq_A2": 49.5,
+        "cell_cubic": true,
+        "excess_A2": [
+         23.17,
+         10.66,
+         17.82,
+         -0.4,
+         15.97,
+         4.82,
+         6.81,
+         9.98
+        ],
+        "n_windows_over": 7,
+        "median_A2": 59.82,
+        "max_A2": 72.67,
+        "⚠": "기록 전용 — 판정과 무관 · (d/2)² 는 상자 짧은 변 기준"
+       },
+       "skeleton_literal": {
+        "①_frac_frames_any_P_not4": 0.0,
+        "③_n_SS_pairs_lt_cut_any_frame_incl_first": 0
+       },
+       "skeleton_literal_moved": false,
+       "SS_at_first_frame": 0
+      }
+     },
+     {
+      "seed": 5,
+      "machine": "gabia",
+      "C1_pass": true,
+      "C1_msd_at_50_mto_A2": 48.15932954932604,
+      "beta_MTO": 0.8951976229110061,
+      "C2_final": "통과",
+      "n_sigma_end": 7.504,
+      "n_sigma_prev": 5.692,
+      "b_end": 256,
+      "b_prev": 192,
+      "counts_in_N": true,
+      "skeleton": {
+       "pass": true,
+       "criteria": {
+        "①": true,
+        "②": true,
+        "③": true,
+        "④": true
+       },
+       "values": {
+        "①_P_frac": 0.00425,
+        "②_S_moved": 0,
+        "③_SS_new": 0,
+        "④_S_transient": 2
+       }
+      },
+      "in_R_set": true,
+      "record": {
+       "beta_STO": 0.9521671267957813,
+       "STO_minus_MTO": 0.056969503884775174,
+       "aux_50_200": {
+        "beta_MTO": 1.0181095821359647,
+        "sigma_end": 0.03296458025825367,
+        "b_end": 256,
+        "n_sigma_signed_vs_C2_band": 5.518,
+        "in_C2_band": true,
+        "⚠": "기록 전용 — 판정 아님 (회신 CO 보조 창) · σ 하한"
+       },
+       "C2_common_b": {
+        "b": 256,
+        "sigma": 0.012686492301641566,
+        "verdict": "통과",
+        "n_sigma_signed": 7.504
+       },
+       "N_eff_he2018": 2197.3154633310173,
+       "T_prod": {
+        "mean_K": 601.21,
+        "sd_K": 44.81,
+        "n_rows": 200001,
+        "from_ps": 5.0
+       },
+       "p90sq_5ps_lag": {
+        "window_ps": 50.0,
+        "lag_ps": 5.0,
+        "min_dist_A": 2.0,
+        "n_windows": 8,
+        "p90sq_A2": [
+         67.13,
+         59.94,
+         58.42,
+         58.84,
+         50.67,
+         71.61,
+         70.07,
+         48.18
+        ],
+        "n_windows_from": "prod_ps",
+        "n_frames": 4000,
+        "box_L_A": [
+         13.9916,
+         13.9916,
+         13.9916
+        ],
+        "half_box_sq_A2": 48.94,
+        "cell_cubic": true,
+        "excess_A2": [
+         18.19,
+         11.0,
+         9.48,
+         9.9,
+         1.73,
+         22.67,
+         21.13,
+         -0.76
+        ],
+        "n_windows_over": 7,
+        "median_A2": 59.39,
+        "max_A2": 71.61,
+        "⚠": "기록 전용 — 판정과 무관 · (d/2)² 는 상자 짧은 변 기준"
+       },
+       "skeleton_literal": {
+        "①_frac_frames_any_P_not4": 0.99975,
+        "③_n_SS_pairs_lt_cut_any_frame_incl_first": 1
+       },
+       "skeleton_literal_moved": true,
+       "SS_at_first_frame": 1
+      }
+     }
+    ]
+   },
+   "B": {
+    "N": 1,
+    "of": 5,
+    "D_relative_spread_R_set": {
+     "n": 1,
+     "status": "시드가 둘 미만 (1) — 산포를 못 낸다"
+    },
+    "D_relative_spread_N_set_record": {
+     "n": 1,
+     "status": "시드가 둘 미만 (1) — 산포를 못 낸다"
+    },
+    "R_set_seeds": [
+     2
+    ],
+    "skeleton_moved_seeds": [],
+    "rows": [
+     {
+      "seed": 1,
+      "machine": "kgy",
+      "C1_pass": true,
+      "C1_msd_at_50_mto_A2": 34.00655976239969,
+      "beta_MTO": 0.8458864481119948,
+      "C2_final": "경계 · 구분 불가",
+      "n_sigma_end": 1.706,
+      "n_sigma_prev": 1.872,
+      "b_end": 256,
+      "b_prev": 192,
+      "counts_in_N": false,
+      "skeleton": {
+       "pass": true,
+       "criteria": {
+        "①": true,
+        "②": true,
+        "③": true,
+        "④": true
+       },
+       "values": {
+        "①_P_frac": 0.0025,
+        "②_S_moved": 0,
+        "③_SS_new": 0,
+        "④_S_transient": 1
+       }
+      },
+      "in_R_set": false,
+      "record": {
+       "beta_STO": 0.9006443007035979,
+       "STO_minus_MTO": 0.05475785259160315,
+       "aux_50_200": {
+        "beta_MTO": 0.9054469151019049,
+        "sigma_end": 0.039995069579617126,
+        "b_end": 256,
+        "n_sigma_signed_vs_C2_band": 2.636,
+        "in_C2_band": true,
+        "⚠": "기록 전용 — 판정 아님 (회신 CO 보조 창) · σ 하한"
+       },
+       "C2_common_b": {
+        "b": 256,
+        "sigma": 0.02690297300426361,
+        "verdict": "경계 · 구분 불가",
+        "n_sigma_signed": 1.706
+       },
+       "N_eff_he2018": 1288.4419036294958,
+       "T_prod": {
+        "mean_K": 603.68,
+        "sd_K": 46.26,
+        "n_rows": 200001,
+        "from_ps": 5.0
+       },
+       "p90sq_5ps_lag": {
+        "window_ps": 50.0,
+        "lag_ps": 5.0,
+        "min_dist_A": 2.0,
+        "n_windows": 8,
+        "p90sq_A2": [
+         54.0,
+         54.91,
+         48.66,
+         52.91,
+         50.09,
+         47.32,
+         52.0,
+         49.56
+        ],
+        "n_windows_from": "prod_ps",
+        "n_frames": 4000,
+        "box_L_A": [
+         14.0344,
+         14.0344,
+         14.0344
+        ],
+        "half_box_sq_A2": 49.24,
+        "cell_cubic": true,
+        "excess_A2": [
+         4.76,
+         5.67,
+         -0.58,
+         3.67,
+         0.85,
+         -1.92,
+         2.76,
+         0.32
+        ],
+        "n_windows_over": 6,
+        "median_A2": 51.05,
+        "max_A2": 54.91,
+        "⚠": "기록 전용 — 판정과 무관 · (d/2)² 는 상자 짧은 변 기준"
+       },
+       "skeleton_literal": {
+        "①_frac_frames_any_P_not4": 0.0025,
+        "③_n_SS_pairs_lt_cut_any_frame_incl_first": 0
+       },
+       "skeleton_literal_moved": false,
+       "SS_at_first_frame": 0
+      }
+     },
+     {
+      "seed": 2,
+      "machine": "gabia",
+      "C1_pass": true,
+      "C1_msd_at_50_mto_A2": 35.884717716978884,
+      "beta_MTO": 0.8529327039389965,
+      "C2_final": "통과",
+      "n_sigma_end": 2.034,
+      "n_sigma_prev": 2.018,
+      "b_end": 256,
+      "b_prev": 192,
+      "counts_in_N": true,
+      "skeleton": {
+       "pass": true,
+       "criteria": {
+        "①": true,
+        "②": true,
+        "③": true,
+        "④": true
+       },
+       "values": {
+        "①_P_frac": 0.0,
+        "②_S_moved": 0,
+        "③_SS_new": 0,
+        "④_S_transient": 0
+       }
+      },
+      "in_R_set": true,
+      "record": {
+       "beta_STO": 0.7607611926914329,
+       "STO_minus_MTO": -0.09217151124756351,
+       "aux_50_200": {
+        "beta_MTO": 0.9402029341974408,
+        "sigma_end": 0.036190867178335806,
+        "b_end": 256,
+        "n_sigma_signed_vs_C2_band": 3.874,
+        "in_C2_band": true,
+        "⚠": "기록 전용 — 판정 아님 (회신 CO 보조 창) · σ 하한"
+       },
+       "C2_common_b": {
+        "b": 256,
+        "sigma": 0.026029499243244842,
+        "verdict": "통과",
+        "n_sigma_signed": 2.034
+       },
+       "N_eff_he2018": 1479.7797276055253,
+       "T_prod": {
+        "mean_K": 601.51,
+        "sd_K": 44.21,
+        "n_rows": 200001,
+        "from_ps": 5.0
+       },
+       "p90sq_5ps_lag": {
+        "window_ps": 50.0,
+        "lag_ps": 5.0,
+        "min_dist_A": 2.0,
+        "n_windows": 8,
+        "p90sq_A2": [
+         63.08,
+         57.1,
+         68.1,
+         62.58,
+         57.61,
+         55.98,
+         56.99,
+         65.3
+        ],
+        "n_windows_from": "prod_ps",
+        "n_frames": 4000,
+        "box_L_A": [
+         14.0612,
+         14.0612,
+         14.0612
+        ],
+        "half_box_sq_A2": 49.43,
+        "cell_cubic": true,
+        "excess_A2": [
+         13.65,
+         7.67,
+         18.67,
+         13.15,
+         8.18,
+         6.55,
+         7.56,
+         15.87
+        ],
+        "n_windows_over": 8,
+        "median_A2": 60.09,
+        "max_A2": 68.1,
+        "⚠": "기록 전용 — 판정과 무관 · (d/2)² 는 상자 짧은 변 기준"
+       },
+       "skeleton_literal": {
+        "①_frac_frames_any_P_not4": 0.0,
+        "③_n_SS_pairs_lt_cut_any_frame_incl_first": 0
+       },
+       "skeleton_literal_moved": false,
+       "SS_at_first_frame": 0
+      }
+     },
+     {
+      "seed": 3,
+      "machine": "kgy",
+      "C1_pass": true,
+      "C1_msd_at_50_mto_A2": 36.30883439628514,
+      "beta_MTO": 0.8724795503553716,
+      "C2_final": "경계 · 구분 불가",
+      "n_sigma_end": 1.838,
+      "n_sigma_prev": 1.868,
+      "b_end": 256,
+      "b_prev": 192,
+      "counts_in_N": false,
+      "skeleton": {
+       "pass": true,
+       "criteria": {
+        "①": true,
+        "②": true,
+        "③": true,
+        "④": true
+       },
+       "values": {
+        "①_P_frac": 0.003,
+        "②_S_moved": 0,
+        "③_SS_new": 0,
+        "④_S_transient": 1
+       }
+      },
+      "in_R_set": false,
+      "record": {
+       "beta_STO": 0.7359608798153351,
+       "STO_minus_MTO": -0.13651867054003652,
+       "aux_50_200": {
+        "beta_MTO": 0.9687851962013269,
+        "sigma_end": 0.06087622272309926,
+        "b_end": 256,
+        "n_sigma_signed_vs_C2_band": 2.773,
+        "in_C2_band": true,
+        "⚠": "기록 전용 — 판정 아님 (회신 CO 보조 창) · σ 하한"
+       },
+       "C2_common_b": {
+        "b": 256,
+        "sigma": 0.039432533539632,
+        "verdict": "경계 · 구분 불가",
+        "n_sigma_signed": 1.838
+       },
+       "N_eff_he2018": 1228.42301220277,
+       "T_prod": {
+        "mean_K": 603.96,
+        "sd_K": 45.97,
+        "n_rows": 200001,
+        "from_ps": 5.0
+       },
+       "p90sq_5ps_lag": {
+        "window_ps": 50.0,
+        "lag_ps": 5.0,
+        "min_dist_A": 2.0,
+        "n_windows": 8,
+        "p90sq_A2": [
+         39.46,
+         56.71,
+         50.34,
+         66.45,
+         59.45,
+         61.82,
+         50.9,
+         50.25
+        ],
+        "n_windows_from": "prod_ps",
+        "n_frames": 4000,
+        "box_L_A": [
+         14.3602,
+         14.3602,
+         14.3602
+        ],
+        "half_box_sq_A2": 51.55,
+        "cell_cubic": true,
+        "excess_A2": [
+         -12.09,
+         5.16,
+         -1.21,
+         14.9,
+         7.9,
+         10.27,
+         -0.65,
+         -1.3
+        ],
+        "n_windows_over": 4,
+        "median_A2": 53.8,
+        "max_A2": 66.45,
+        "⚠": "기록 전용 — 판정과 무관 · (d/2)² 는 상자 짧은 변 기준"
+       },
+       "skeleton_literal": {
+        "①_frac_frames_any_P_not4": 0.003,
+        "③_n_SS_pairs_lt_cut_any_frame_incl_first": 0
+       },
+       "skeleton_literal_moved": false,
+       "SS_at_first_frame": 0
+      }
+     },
+     {
+      "seed": 4,
+      "machine": "gabia",
+      "C1_pass": true,
+      "C1_msd_at_50_mto_A2": 31.083175672717832,
+      "beta_MTO": 0.8370535777594109,
+      "C2_final": "경계 · 구분 불가",
+      "n_sigma_end": 1.504,
+      "n_sigma_prev": 1.222,
+      "b_end": 256,
+      "b_prev": 192,
+      "counts_in_N": false,
+      "skeleton": {
+       "pass": true,
+       "criteria": {
+        "①": true,
+        "②": true,
+        "③": true,
+        "④": true
+       },
+       "values": {
+        "①_P_frac": 0.0,
+        "②_S_moved": 0,
+        "③_SS_new": 0,
+        "④_S_transient": 0
+       }
+      },
+      "in_R_set": false,
+      "record": {
+       "beta_STO": 1.4815321669997272,
+       "STO_minus_MTO": 0.6444785892403163,
+       "aux_50_200": {
+        "beta_MTO": 0.9725647011537449,
+        "sigma_end": 0.03280674854560743,
+        "b_end": 256,
+        "n_sigma_signed_vs_C2_band": 5.26,
+        "in_C2_band": true,
+        "⚠": "기록 전용 — 판정 아님 (회신 CO 보조 창) · σ 하한"
+       },
+       "C2_common_b": {
+        "b": 256,
+        "sigma": 0.024641716540648298,
+        "verdict": "경계 · 구분 불가",
+        "n_sigma_signed": 1.504
+       },
+       "N_eff_he2018": 1263.746352793126,
+       "T_prod": {
+        "mean_K": 604.93,
+        "sd_K": 44.52,
+        "n_rows": 200001,
+        "from_ps": 5.0
+       },
+       "p90sq_5ps_lag": {
+        "window_ps": 50.0,
+        "lag_ps": 5.0,
+        "min_dist_A": 2.0,
+        "n_windows": 8,
+        "p90sq_A2": [
+         51.44,
+         42.99,
+         40.01,
+         53.2,
+         50.5,
+         50.3,
+         55.23,
+         59.16
+        ],
+        "n_windows_from": "prod_ps",
+        "n_frames": 4000,
+        "box_L_A": [
+         14.2559,
+         14.2559,
+         14.2559
+        ],
+        "half_box_sq_A2": 50.81,
+        "cell_cubic": true,
+        "excess_A2": [
+         0.63,
+         -7.82,
+         -10.8,
+         2.39,
+         -0.31,
+         -0.51,
+         4.42,
+         8.35
+        ],
+        "n_windows_over": 4,
+        "median_A2": 50.97,
+        "max_A2": 59.16,
+        "⚠": "기록 전용 — 판정과 무관 · (d/2)² 는 상자 짧은 변 기준"
+       },
+       "skeleton_literal": {
+        "①_frac_frames_any_P_not4": 0.0,
+        "③_n_SS_pairs_lt_cut_any_frame_incl_first": 0
+       },
+       "skeleton_literal_moved": false,
+       "SS_at_first_frame": 0
+      }
+     },
+     {
+      "seed": 5,
+      "machine": "gabia",
+      "C1_pass": true,
+      "C1_msd_at_50_mto_A2": 26.340376906742257,
+      "beta_MTO": 0.8202212897475115,
+      "C2_final": "경계 · 구분 불가",
+      "n_sigma_end": 0.534,
+      "n_sigma_prev": 0.666,
+      "b_end": 256,
+      "b_prev": 192,
+      "counts_in_N": false,
+      "skeleton": {
+       "pass": true,
+       "criteria": {
+        "①": true,
+        "②": true,
+        "③": true,
+        "④": true
+       },
+       "values": {
+        "①_P_frac": 0.0,
+        "②_S_moved": 0,
+        "③_SS_new": 0,
+        "④_S_transient": 0
+       }
+      },
+      "in_R_set": false,
+      "record": {
+       "beta_STO": 0.8724525412625306,
+       "STO_minus_MTO": 0.05223125151501906,
+       "aux_50_200": {
+        "beta_MTO": 1.035382835204467,
+        "sigma_end": 0.0822583518233861,
+        "b_end": 256,
+        "n_sigma_signed_vs_C2_band": 2.001,
+        "in_C2_band": true,
+        "⚠": "기록 전용 — 판정 아님 (회신 CO 보조 창) · σ 하한"
+       },
+       "C2_common_b": {
+        "b": 256,
+        "sigma": 0.03789299546017236,
+        "verdict": "경계 · 구분 불가",
+        "n_sigma_signed": 0.534
+       },
+       "N_eff_he2018": 933.1217514404998,
+       "T_prod": {
+        "mean_K": 600.86,
+        "sd_K": 44.7,
+        "n_rows": 200001,
+        "from_ps": 5.0
+       },
+       "p90sq_5ps_lag": {
+        "window_ps": 50.0,
+        "lag_ps": 5.0,
+        "min_dist_A": 2.0,
+        "n_windows": 8,
+        "p90sq_A2": [
+         35.07,
+         41.83,
+         38.18,
+         52.95,
+         57.13,
+         45.13,
+         53.44,
+         41.91
+        ],
+        "n_windows_from": "prod_ps",
+        "n_frames": 4000,
+        "box_L_A": [
+         14.3493,
+         14.3493,
+         14.3493
+        ],
+        "half_box_sq_A2": 51.48,
+        "cell_cubic": true,
+        "excess_A2": [
+         -16.41,
+         -9.65,
+         -13.3,
+         1.47,
+         5.65,
+         -6.35,
+         1.96,
+         -9.57
+        ],
+        "n_windows_over": 3,
+        "median_A2": 43.52,
+        "max_A2": 57.13,
+        "⚠": "기록 전용 — 판정과 무관 · (d/2)² 는 상자 짧은 변 기준"
+       },
+       "skeleton_literal": {
+        "①_frac_frames_any_P_not4": 0.0,
+        "③_n_SS_pairs_lt_cut_any_frame_incl_first": 0
+       },
+       "skeleton_literal_moved": false,
+       "SS_at_first_frame": 0
+      }
+     }
+    ]
+   }
+  },
+  "branch": "c2 (N_B = 1 ≤ 2) — R 을 내지 않는다 · '같은 게이트 · 같은 온도에서 B 가 통과하지 못했다' 를 1차 관측으로 적는다 · 다음 = B 측정 가능 온도 (새 카드)",
+  "R": null,
+  "errors": [],
+  "A_reproduces_v2_closure": {
+   "D_over_median_tool": [
+    0.9552,
+    0.9698,
+    1.0,
+    1.0042,
+    1.2039
+   ],
+   "D_over_median_v2": [
+    0.9552,
+    0.9698,
+    1.0,
+    1.0042,
+    1.2039
+   ],
+   "D_max_abs_diff": 0.0,
+   "D_same": true,
+   "p90": {
+    "1": {
+     "n_windows_tool": 8,
+     "n_windows_v2": 8,
+     "max_abs_diff_A2": 0.05,
+     "same": true
+    },
+    "2": {
+     "n_windows_tool": 8,
+     "n_windows_v2": 8,
+     "max_abs_diff_A2": 0.04,
+     "same": true
+    },
+    "3": {
+     "n_windows_tool": 8,
+     "n_windows_v2": 8,
+     "max_abs_diff_A2": 0.04,
+     "same": true
+    },
+    "4": {
+     "n_windows_tool": 8,
+     "n_windows_v2": 8,
+     "max_abs_diff_A2": 0.04,
+     "same": true
+    },
+    "5": {
+     "n_windows_tool": 8,
+     "n_windows_v2": 8,
+     "max_abs_diff_A2": 0.04,
+     "same": true
+    }
+   },
+   "p90_same": true,
+   "tol": {
+    "D_over_median": 0.00015,
+    "p90sq_A2": 0.051
+   },
+   "⚠": "대조 잡 — A 의 파일·판독 경로가 10-04/05 와 같은지 본다 (결과 전 박음 · 판정 규칙이 아니다)"
+  },
+  "detect_limit_pre_results": {
+   "정의": "참 비 R 일 때 이 설계 (시드 5/5 · R 구간 절차 그대로) 가 '구간이 1 밖' 을 낼 확률 — R₅₀ (50 % 검출 · 편지 BU 의 검출한계 형식) · R₈₀ (80 %) · R = 1 의 오검출률",
+   "모형": "ln D 정규 (로그정규 D) · 시드 독립 · σ_ln 은 A 600 K 다섯 시드에서 (D/중앙값 0.9552 · 0.9698 · 1.0 · 1.0042 · 1.2039): 표본 SD **0.094** (기준) · IQR 기반 0.026 (낙관) · max/min 기반 0.100 · B 는 A 와 같다고 가정 (두 배 흩어질 때도 냄)",
+   "결과": {
+    "σ_IQR기반_0.026": {
+     "σ_ln_A": 0.0256,
+     "σ_ln_B": 0.0256,
+     "n_A/n_B": "5/5",
+     "R50": 1.05,
+     "R80": 1.1,
+     "R=1_오검출": 0.026,
+     "검출확률_격자": [
+      [
+       1.0,
+       0.026
+      ],
+      [
+       1.05,
+       0.619
+      ],
+      [
+       1.1,
+       0.991
+      ],
+      [
+       1.15,
+       1.0
+      ],
+      [
+       1.2,
+       1.0
+      ],
+      [
+       1.25,
+       1.0
+      ],
+      [
+       1.3,
+       1.0
+      ],
+      [
+       1.4,
+       1.0
+      ],
+      [
+       1.5,
+       1.0
+      ],
+      [
+       1.75,
+       1.0
+      ],
+      [
+       2.0,
+       1.0
+      ]
+     ]
+    },
+    "σ_표본SD_0.094": {
+     "σ_ln_A": 0.0935,
+     "σ_ln_B": 0.0935,
+     "n_A/n_B": "5/5",
+     "R50": 1.2,
+     "R80": 1.25,
+     "R=1_오검출": 0.026,
+     "검출확률_격자": [
+      [
+       1.0,
+       0.026
+      ],
+      [
+       1.05,
+       0.072
+      ],
+      [
+       1.1,
+       0.219
+      ],
+      [
+       1.15,
+       0.436
+      ],
+      [
+       1.2,
+       0.632
+      ],
+      [
+       1.25,
+       0.821
+      ],
+      [
+       1.3,
+       0.924
+      ],
+      [
+       1.4,
+       0.994
+      ],
+      [
+       1.5,
+       0.999
+      ],
+      [
+       1.75,
+       1.0
+      ],
+      [
+       2.0,
+       1.0
+      ]
+     ]
+    },
+    "σ_범위기반_0.100": {
+     "σ_ln_A": 0.0995,
+     "σ_ln_B": 0.0995,
+     "n_A/n_B": "5/5",
+     "R50": 1.2,
+     "R80": 1.3,
+     "R=1_오검출": 0.026,
+     "검출확률_격자": [
+      [
+       1.0,
+       0.026
+      ],
+      [
+       1.05,
+       0.069
+      ],
+      [
+       1.1,
+       0.203
+      ],
+      [
+       1.15,
+       0.392
+      ],
+      [
+       1.2,
+       0.581
+      ],
+      [
+       1.25,
+       0.775
+      ],
+      [
+       1.3,
+       0.89
+      ],
+      [
+       1.4,
+       0.987
+      ],
+      [
+       1.5,
+       0.998
+      ],
+      [
+       1.75,
+       1.0
+      ],
+      [
+       2.0,
+       1.0
+      ]
+     ]
+    },
+    "B_산포_2배": {
+     "σ_ln_A": 0.0935,
+     "σ_ln_B": 0.187,
+     "n_A/n_B": "5/5",
+     "R50": 1.3,
+     "R80": 1.5,
+     "R=1_오검출": 0.03,
+     "검출확률_격자": [
+      [
+       1.0,
+       0.03
+      ],
+      [
+       1.05,
+       0.054
+      ],
+      [
+       1.1,
+       0.108
+      ],
+      [
+       1.15,
+       0.206
+      ],
+      [
+       1.2,
+       0.317
+      ],
+      [
+       1.25,
+       0.445
+      ],
+      [
+       1.3,
+       0.578
+      ],
+      [
+       1.4,
+       0.789
+      ],
+      [
+       1.5,
+       0.898
+      ],
+      [
+       1.75,
+       0.993
+      ],
+      [
+       2.0,
+       0.999
+      ]
+     ]
+    },
+    "n_5_4": {
+     "σ_ln_A": 0.0935,
+     "σ_ln_B": 0.0935,
+     "n_A/n_B": "5/4",
+     "R50": 1.2,
+     "R80": 1.25,
+     "R=1_오검출": 0.051,
+     "검출확률_격자": [
+      [
+       1.0,
+       0.051
+      ],
+      [
+       1.05,
+       0.092
+      ],
+      [
+       1.1,
+       0.24
+      ],
+      [
+       1.15,
+       0.473
+      ],
+      [
+       1.2,
+       0.674
+      ],
+      [
+       1.25,
+       0.825
+      ],
+      [
+       1.3,
+       0.93
+      ],
+      [
+       1.4,
+       0.99
+      ],
+      [
+       1.5,
+       0.999
+      ],
+      [
+       1.75,
+       1.0
+      ],
+      [
+       2.0,
+       1.0
+      ]
+     ]
+    }
+   },
+   "읽기": "**기준 (σ_A = σ_B = 0.094 · 5/5): R₅₀ 1.20 · R₈₀ 1.25 · 오검출 0.026.** B 가 두 배 흩어지면 R₅₀ 1.30 · R₈₀ 1.50. 낙관 눈금(IQR)이면 1.05 · 1.10. ⇒ c1b 문장의 검출한계는 기준 행 + B 두 배 행을 같이 적는다. 외부 1저자 짐작 '1.3~1.5 보다 작으면 못 가린다' 는 B 가 더 흩어질 때와 맞고, 같은 산포면 조금 낮다 (1.2–1.3) — 다음 편지에서 알린다.",
+   "도구": "`tools/ionic/glass_v2_readout.py --detect_limit --sigma_ln 0.0256 0.0935 0.0995` (+ `--sigma_ln_b 0.187` · `--n_b 4`) · `ratio_detect_limit` 는 판독용 `ratio_boot` 와 **같은 부트스트랩 함수** (`_boot_ratio_interval`) · n_sim 2000 · n_boot 2000 · 고정 난수 7 · 도구 sha16 330b9ed7880c049e (selftest PASS · R 시험 11 · 일부러 깨서 빨간불 2/2 확인)",
+   "⛔": "모형 가정 (로그정규 · B 산포) 밖은 모른다 · 격자 간격 0.05–0.25 라 R₅₀ · R₈₀ 은 격자값이다"
+  },
+  "rules": {
+   "N_B_min": 3,
+   "min_R_set": 4,
+   "skeleton_gate": {
+    "①_P_frac_frames_changed_max": 0.05,
+    "②_S_moved_max": 0,
+    "③_SS_new_pairs_max": 0,
+    "④_S_transient_max": 5
+   },
+   "C1_min_A2": 3.0,
+   "C2": "β_MTO 2–50 ps ∈ [0.8, 1.2] · 2σ · 끝 두 b (400 ps → b 256 · 192)",
+   "R": "median D_A / median D_B · R 집합만 · 계 안 시드 부트스트랩 95 % 백분위"
+  },
+  "⛔": "갈래는 카드 §4 의 기계적 적용이다 — 확정 · 해석은 외부 1저자 · D 절대값은 싣지 않는다 (R 은 비)"
+ },
+ "runs_A": {
+  "1": {
+   "msd_json": "/data/work/runs/lpscl_glass_md_v2_2026_09_30/seed1/T600/d0.00_cfg0/T600/msd.json",
+   "T_K": 600.0,
+   "save_fs": 100.0,
+   "save_fs_assumed": false,
+   "C1_msd_at_50_mto_A2": 48.4386894731901,
+   "C1_pass": true,
+   "beta_MTO": 0.8906356149695708,
+   "beta_STO": 1.0267668387939488,
+   "beta_MTO_50_200": 1.0163802346613824,
+   "n_origin": 2000,
+   "ladder": [
+    1,
+    2,
+    3,
+    4,
+    6,
+    8,
+    12,
+    16,
+    24,
+    32,
+    48,
+    64,
+    96,
+    128,
+    192,
+    256
+   ],
+   "sigma_curve": [
+    [
+     1,
+     0.0026711398011624787
+    ],
+    [
+     2,
+     0.0036095343514870176
+    ],
+    [
+     3,
+     0.004485787462348518
+    ],
+    [
+     4,
+     0.004914460403935952
+    ],
+    [
+     6,
+     0.006094108679210151
+    ],
+    [
+     8,
+     0.006938994084535507
+    ],
+    [
+     12,
+     0.008489627903268529
+    ],
+    [
+     16,
+     0.009592344664433183
+    ],
+    [
+     24,
+     0.01239282789632573
+    ],
+    [
+     32,
+     0.013480058559515723
+    ],
+    [
+     48,
+     0.016066293830696285
+    ],
+    [
+     64,
+     0.017265912995477316
+    ],
+    [
+     96,
+     0.02050964073030009
+    ],
+    [
+     128,
+     0.022004420303951482
+    ],
+    [
+     192,
+     0.02717301854610177
+    ],
+    [
+     256,
+     0.0229646293355123
+    ]
+   ],
+   "C2": {
+    "sigma_end": 0.0229646293355123,
+    "b_end": 256,
+    "verdict_end": "통과",
+    "n_sigma_end_signed": 3.947,
+    "b_prev": 192,
+    "verdict_prev": "통과",
+    "n_sigma_prev_signed": 3.336,
+    "final_verdict": "통과",
+    "split_on_pass": false,
+    "sto_listed_verdict": "통과"
+   },
+   "C2_common_b": {
+    "b": 256,
+    "sigma": 0.0229646293355123,
+    "verdict": "통과",
+    "n_sigma_signed": 3.947
+   },
+   "C2_old_ladder_ref": {
+    "b_end": 32,
+    "verdict": "통과",
+    "⚠": "카드 참고 열 — 옛 판독과 나란히 보는 기록이지 판정이 아니다"
+   },
+   "aux_50_200": {
+    "beta_MTO": 1.0163802346613824,
+    "sigma_end": 0.030249472908555782,
+    "b_end": 256,
+    "n_sigma_signed_vs_C2_band": 6.07,
+    "in_C2_band": true,
+    "⚠": "기록 전용 — 판정 아님 (회신 CO 보조 창) · σ 하한"
+   },
+   "framework": {
+    "framework_moved": false,
+    "literal_framework_moved": false,
+    "criteria": {
+     "①_P": true,
+     "②_S": true,
+     "③_SS": true
+    },
+    "literal_criteria": {
+     "①_P": true,
+     "②_S": true,
+     "③_SS": true
+    },
+    "P": {
+     "n_P": 12,
+     "n_not4_at_first_frame": 0,
+     "frac_frames_any_P_changed_vs_first": 0.0,
+     "max_P_changed_in_a_frame": 0,
+     "P_changed_ever": []
+    },
+    "S_moved": 0,
+    "S_transient": 0,
+    "SS_new": 0,
+    "SS_at_first_frame": 0,
+    "literal": {
+     "①_frac_frames_any_P_not4": 0.0,
+     "③_n_SS_pairs_lt_cut_any_frame_incl_first": 0
+    }
+   },
+   "N_eff_he2018": 1868.2401982732938,
+   "N_eff_inputs": {
+    "n_Li": 48,
+    "site_distance_A": 3.0,
+    "msd_max_from": "msd_max_A2",
+    "⚠": "He 2018 식 (8) · max(MSD) 는 궤적 전체 · 귀무모형 — 판정 아님"
+   },
+   "T_prod": {
+    "mean_K": 601.65,
+    "sd_K": 46.39,
+    "n_rows": 200001,
+    "from_ps": 5.0
+   },
+   "T_prod_equilib_assumed_5ps": false,
+   "p90sq_5ps_lag": {
+    "window_ps": 50.0,
+    "lag_ps": 5.0,
+    "min_dist_A": 2.0,
+    "n_windows": 8,
+    "p90sq_A2": [
+     75.22,
+     50.66,
+     58.9,
+     43.55,
+     73.13,
+     60.76,
+     48.75,
+     54.19
+    ],
+    "n_windows_from": "prod_ps",
+    "n_frames": 4000,
+    "box_L_A": [
+     13.9826,
+     13.9826,
+     13.9826
+    ],
+    "half_box_sq_A2": 48.88,
+    "cell_cubic": true,
+    "excess_A2": [
+     26.34,
+     1.78,
+     10.02,
+     -5.33,
+     24.25,
+     11.88,
+     -0.13,
+     5.31
+    ],
+    "n_windows_over": 6,
+    "median_A2": 56.55,
+    "max_A2": 75.22,
+    "⚠": "기록 전용 — 판정과 무관 · (d/2)² 는 상자 짧은 변 기준"
+   }
+  },
+  "2": {
+   "msd_json": "/data/work/runs/lpscl_glass_md_v2_2026_09_30/seed2/T600/d0.00_cfg0/T600/msd.json",
+   "T_K": 600.0,
+   "save_fs": 100.0,
+   "save_fs_assumed": false,
+   "C1_msd_at_50_mto_A2": 57.32747633722016,
+   "C1_pass": true,
+   "beta_MTO": 0.9310053614104246,
+   "beta_STO": 1.0094073079467776,
+   "beta_MTO_50_200": 0.9089624958706706,
+   "n_origin": 2000,
+   "ladder": [
+    1,
+    2,
+    3,
+    4,
+    6,
+    8,
+    12,
+    16,
+    24,
+    32,
+    48,
+    64,
+    96,
+    128,
+    192,
+    256
+   ],
+   "sigma_curve": [
+    [
+     1,
+     0.002709211771254786
+    ],
+    [
+     2,
+     0.003845630966951941
+    ],
+    [
+     3,
+     0.004716924480167122
+    ],
+    [
+     4,
+     0.005277768336113425
+    ],
+    [
+     6,
+     0.006842609706622071
+    ],
+    [
+     8,
+     0.007785843825959904
+    ],
+    [
+     12,
+     0.009262940512964783
+    ],
+    [
+     16,
+     0.010754888434478894
+    ],
+    [
+     24,
+     0.01236126313137809
+    ],
+    [
+     32,
+     0.013883575351783198
+    ],
+    [
+     48,
+     0.01733678537486852
+    ],
+    [
+     64,
+     0.018951429500419847
+    ],
+    [
+     96,
+     0.02100629365229161
+    ],
+    [
+     128,
+     0.023241102118066195
+    ],
+    [
+     192,
+     0.029552302572223493
+    ],
+    [
+     256,
+     0.02522201094386149
+    ]
+   ],
+   "C2": {
+    "sigma_end": 0.02522201094386149,
+    "b_end": 256,
+    "verdict_end": "통과",
+    "n_sigma_end_signed": 5.194,
+    "b_prev": 192,
+    "verdict_prev": "통과",
+    "n_sigma_prev_signed": 4.433,
+    "final_verdict": "통과",
+    "split_on_pass": false,
+    "sto_listed_verdict": "통과"
+   },
+   "C2_common_b": {
+    "b": 256,
+    "sigma": 0.02522201094386149,
+    "verdict": "통과",
+    "n_sigma_signed": 5.194
+   },
+   "C2_old_ladder_ref": {
+    "b_end": 32,
+    "verdict": "통과",
+    "⚠": "카드 참고 열 — 옛 판독과 나란히 보는 기록이지 판정이 아니다"
+   },
+   "aux_50_200": {
+    "beta_MTO": 0.9089624958706706,
+    "sigma_end": 0.028909809540274008,
+    "b_end": 256,
+    "n_sigma_signed_vs_C2_band": 3.769,
+    "in_C2_band": true,
+    "⚠": "기록 전용 — 판정 아님 (회신 CO 보조 창) · σ 하한"
+   },
+   "framework": {
+    "framework_moved": false,
+    "literal_framework_moved": false,
+    "criteria": {
+     "①_P": true,
+     "②_S": true,
+     "③_SS": true
+    },
+    "literal_criteria": {
+     "①_P": true,
+     "②_S": true,
+     "③_SS": true
+    },
+    "P": {
+     "n_P": 12,
+     "n_not4_at_first_frame": 0,
+     "frac_frames_any_P_changed_vs_first": 0.0,
+     "max_P_changed_in_a_frame": 0,
+     "P_changed_ever": []
+    },
+    "S_moved": 0,
+    "S_transient": 0,
+    "SS_new": 0,
+    "SS_at_first_frame": 0,
+    "literal": {
+     "①_frac_frames_any_P_not4": 0.0,
+     "③_n_SS_pairs_lt_cut_any_frame_incl_first": 0
+    }
+   },
+   "N_eff_he2018": 2188.422463151876,
+   "N_eff_inputs": {
+    "n_Li": 48,
+    "site_distance_A": 3.0,
+    "msd_max_from": "msd_max_A2",
+    "⚠": "He 2018 식 (8) · max(MSD) 는 궤적 전체 · 귀무모형 — 판정 아님"
+   },
+   "T_prod": {
+    "mean_K": 605.25,
+    "sd_K": 45.97,
+    "n_rows": 200001,
+    "from_ps": 5.0
+   },
+   "T_prod_equilib_assumed_5ps": false,
+   "p90sq_5ps_lag": {
+    "window_ps": 50.0,
+    "lag_ps": 5.0,
+    "min_dist_A": 2.0,
+    "n_windows": 8,
+    "p90sq_A2": [
+     71.62,
+     61.99,
+     63.61,
+     70.16,
+     58.83,
+     60.38,
+     59.26,
+     58.13
+    ],
+    "n_windows_from": "prod_ps",
+    "n_frames": 4000,
+    "box_L_A": [
+     14.1085,
+     14.1085,
+     14.1085
+    ],
+    "half_box_sq_A2": 49.76,
+    "cell_cubic": true,
+    "excess_A2": [
+     21.86,
+     12.23,
+     13.85,
+     20.4,
+     9.07,
+     10.62,
+     9.5,
+     8.37
+    ],
+    "n_windows_over": 8,
+    "median_A2": 61.19,
+    "max_A2": 71.62,
+    "⚠": "기록 전용 — 판정과 무관 · (d/2)² 는 상자 짧은 변 기준"
+   }
+  },
+  "3": {
+   "msd_json": "/data/work/runs/lpscl_glass_md_v2_2026_09_30/seed3/T600/d0.00_cfg0/T600/msd.json",
+   "T_K": 600.0,
+   "save_fs": 100.0,
+   "save_fs_assumed": false,
+   "C1_msd_at_50_mto_A2": 46.32954414443634,
+   "C1_pass": true,
+   "beta_MTO": 0.8809868909737146,
+   "beta_STO": 0.7103363643634628,
+   "beta_MTO_50_200": 1.0289573455429641,
+   "n_origin": 2000,
+   "ladder": [
+    1,
+    2,
+    3,
+    4,
+    6,
+    8,
+    12,
+    16,
+    24,
+    32,
+    48,
+    64,
+    96,
+    128,
+    192,
+    256
+   ],
+   "sigma_curve": [
+    [
+     1,
+     0.003399812927595671
+    ],
+    [
+     2,
+     0.004398334445706935
+    ],
+    [
+     3,
+     0.00540429173735376
+    ],
+    [
+     4,
+     0.00628533849079921
+    ],
+    [
+     6,
+     0.007506049755958756
+    ],
+    [
+     8,
+     0.008838273185643165
+    ],
+    [
+     12,
+     0.010731795036630565
+    ],
+    [
+     16,
+     0.012954211061171539
+    ],
+    [
+     24,
+     0.01457003607941146
+    ],
+    [
+     32,
+     0.01717327223888506
+    ],
+    [
+     48,
+     0.020473012767307314
+    ],
+    [
+     64,
+     0.02359352594266645
+    ],
+    [
+     96,
+     0.02787734267693359
+    ],
+    [
+     128,
+     0.03172914042464078
+    ],
+    [
+     192,
+     0.037577315961049275
+    ],
+    [
+     256,
+     0.03141129860845011
+    ]
+   ],
+   "C2": {
+    "sigma_end": 0.03141129860845011,
+    "b_end": 256,
+    "verdict_end": "통과",
+    "n_sigma_end_signed": 2.578,
+    "b_prev": 192,
+    "verdict_prev": "통과",
+    "n_sigma_prev_signed": 2.155,
+    "final_verdict": "통과",
+    "split_on_pass": false,
+    "sto_listed_verdict": "미통과"
+   },
+   "C2_common_b": {
+    "b": 256,
+    "sigma": 0.03141129860845011,
+    "verdict": "통과",
+    "n_sigma_signed": 2.578
+   },
+   "C2_old_ladder_ref": {
+    "b_end": 32,
+    "verdict": "통과",
+    "⚠": "카드 참고 열 — 옛 판독과 나란히 보는 기록이지 판정이 아니다"
+   },
+   "aux_50_200": {
+    "beta_MTO": 1.0289573455429641,
+    "sigma_end": 0.02497065121921164,
+    "b_end": 256,
+    "n_sigma_signed_vs_C2_band": 6.85,
+    "in_C2_band": true,
+    "⚠": "기록 전용 — 판정 아님 (회신 CO 보조 창) · σ 하한"
+   },
+   "framework": {
+    "framework_moved": false,
+    "literal_framework_moved": false,
+    "criteria": {
+     "①_P": true,
+     "②_S": true,
+     "③_SS": true
+    },
+    "literal_criteria": {
+     "①_P": true,
+     "②_S": true,
+     "③_SS": true
+    },
+    "P": {
+     "n_P": 12,
+     "n_not4_at_first_frame": 0,
+     "frac_frames_any_P_changed_vs_first": 0.006,
+     "max_P_changed_in_a_frame": 1,
+     "P_changed_ever": [
+      35,
+      50
+     ]
+    },
+    "S_moved": 0,
+    "S_transient": 1,
+    "SS_new": 0,
+    "SS_at_first_frame": 0,
+    "literal": {
+     "①_frac_frames_any_P_not4": 0.006,
+     "③_n_SS_pairs_lt_cut_any_frame_incl_first": 0
+    }
+   },
+   "N_eff_he2018": 2186.2074116165695,
+   "N_eff_inputs": {
+    "n_Li": 48,
+    "site_distance_A": 3.0,
+    "msd_max_from": "msd_max_A2",
+    "⚠": "He 2018 식 (8) · max(MSD) 는 궤적 전체 · 귀무모형 — 판정 아님"
+   },
+   "T_prod": {
+    "mean_K": 600.31,
+    "sd_K": 45.48,
+    "n_rows": 200001,
+    "from_ps": 5.0
+   },
+   "T_prod_equilib_assumed_5ps": false,
+   "p90sq_5ps_lag": {
+    "window_ps": 50.0,
+    "lag_ps": 5.0,
+    "min_dist_A": 2.0,
+    "n_windows": 8,
+    "p90sq_A2": [
+     45.84,
+     56.57,
+     54.08,
+     46.73,
+     75.96,
+     58.56,
+     49.84,
+     56.42
+    ],
+    "n_windows_from": "prod_ps",
+    "n_frames": 4000,
+    "box_L_A": [
+     14.0639,
+     14.0639,
+     14.0639
+    ],
+    "half_box_sq_A2": 49.45,
+    "cell_cubic": true,
+    "excess_A2": [
+     -3.61,
+     7.12,
+     4.63,
+     -2.72,
+     26.51,
+     9.11,
+     0.39,
+     6.97
+    ],
+    "n_windows_over": 6,
+    "median_A2": 55.25,
+    "max_A2": 75.96,
+    "⚠": "기록 전용 — 판정과 무관 · (d/2)² 는 상자 짧은 변 기준"
+   }
+  },
+  "4": {
+   "msd_json": "/data/work/runs/lpscl_glass_md_v2_2026_09_30/seed4/T600/d0.00_cfg0/T600/msd.json",
+   "T_K": 600.0,
+   "save_fs": 100.0,
+   "save_fs_assumed": false,
+   "C1_msd_at_50_mto_A2": 46.87173384193572,
+   "C1_pass": true,
+   "beta_MTO": 0.8817713343548054,
+   "beta_STO": 0.8044282229270817,
+   "beta_MTO_50_200": 1.0152547524647542,
+   "n_origin": 2000,
+   "ladder": [
+    1,
+    2,
+    3,
+    4,
+    6,
+    8,
+    12,
+    16,
+    24,
+    32,
+    48,
+    64,
+    96,
+    128,
+    192,
+    256
+   ],
+   "sigma_curve": [
+    [
+     1,
+     0.003140856108925351
+    ],
+    [
+     2,
+     0.004492275462390148
+    ],
+    [
+     3,
+     0.0052823060245616935
+    ],
+    [
+     4,
+     0.006104590476461964
+    ],
+    [
+     6,
+     0.007349711534360094
+    ],
+    [
+     8,
+     0.008629504260423073
+    ],
+    [
+     12,
+     0.010868261099503077
+    ],
+    [
+     16,
+     0.011812125336089977
+    ],
+    [
+     24,
+     0.013999383904906678
+    ],
+    [
+     32,
+     0.015819574045240026
+    ],
+    [
+     48,
+     0.018980646360674477
+    ],
+    [
+     64,
+     0.019871605005655796
+    ],
+    [
+     96,
+     0.023497865552309823
+    ],
+    [
+     128,
+     0.02658047822522555
+    ],
+    [
+     192,
+     0.028257261236485455
+    ],
+    [
+     256,
+     0.027232439718266305
+    ]
+   ],
+   "C2": {
+    "sigma_end": 0.027232439718266305,
+    "b_end": 256,
+    "verdict_end": "통과",
+    "n_sigma_end_signed": 3.003,
+    "b_prev": 192,
+    "verdict_prev": "통과",
+    "n_sigma_prev_signed": 2.894,
+    "final_verdict": "통과",
+    "split_on_pass": false,
+    "sto_listed_verdict": "경계 · 구분 불가"
+   },
+   "C2_common_b": {
+    "b": 256,
+    "sigma": 0.027232439718266305,
+    "verdict": "통과",
+    "n_sigma_signed": 3.003
+   },
+   "C2_old_ladder_ref": {
+    "b_end": 32,
+    "verdict": "통과",
+    "⚠": "카드 참고 열 — 옛 판독과 나란히 보는 기록이지 판정이 아니다"
+   },
+   "aux_50_200": {
+    "beta_MTO": 1.0152547524647542,
+    "sigma_end": 0.025185324068131766,
+    "b_end": 256,
+    "n_sigma_signed_vs_C2_band": 7.335,
+    "in_C2_band": true,
+    "⚠": "기록 전용 — 판정 아님 (회신 CO 보조 창) · σ 하한"
+   },
+   "framework": {
+    "framework_moved": false,
+    "literal_framework_moved": false,
+    "criteria": {
+     "①_P": true,
+     "②_S": true,
+     "③_SS": true
+    },
+    "literal_criteria": {
+     "①_P": true,
+     "②_S": true,
+     "③_SS": true
+    },
+    "P": {
+     "n_P": 12,
+     "n_not4_at_first_frame": 0,
+     "frac_frames_any_P_changed_vs_first": 0.0,
+     "max_P_changed_in_a_frame": 0,
+     "P_changed_ever": []
+    },
+    "S_moved": 0,
+    "S_transient": 0,
+    "SS_new": 0,
+    "SS_at_first_frame": 0,
+    "literal": {
+     "①_frac_frames_any_P_not4": 0.0,
+     "③_n_SS_pairs_lt_cut_any_frame_incl_first": 0
+    }
+   },
+   "N_eff_he2018": 2299.5801905724934,
+   "N_eff_inputs": {
+    "n_Li": 48,
+    "site_distance_A": 3.0,
+    "msd_max_from": "msd_max_A2",
+    "⚠": "He 2018 식 (8) · max(MSD) 는 궤적 전체 · 귀무모형 — 판정 아님"
+   },
+   "T_prod": {
+    "mean_K": 602.62,
+    "sd_K": 44.95,
+    "n_rows": 200001,
+    "from_ps": 5.0
+   },
+   "T_prod_equilib_assumed_5ps": false,
+   "p90sq_5ps_lag": {
+    "window_ps": 50.0,
+    "lag_ps": 5.0,
+    "min_dist_A": 2.0,
+    "n_windows": 8,
+    "p90sq_A2": [
+     72.67,
+     60.16,
+     67.32,
+     49.1,
+     65.47,
+     54.32,
+     56.31,
+     59.48
+    ],
+    "n_windows_from": "prod_ps",
+    "n_frames": 4000,
+    "box_L_A": [
+     14.0706,
+     14.0706,
+     14.0706
+    ],
+    "half_box_sq_A2": 49.5,
+    "cell_cubic": true,
+    "excess_A2": [
+     23.17,
+     10.66,
+     17.82,
+     -0.4,
+     15.97,
+     4.82,
+     6.81,
+     9.98
+    ],
+    "n_windows_over": 7,
+    "median_A2": 59.82,
+    "max_A2": 72.67,
+    "⚠": "기록 전용 — 판정과 무관 · (d/2)² 는 상자 짧은 변 기준"
+   }
+  },
+  "5": {
+   "msd_json": "/data/work/runs/lpscl_glass_md_v2_2026_09_30/seed5/T600/d0.00_cfg0/T600/msd.json",
+   "T_K": 600.0,
+   "save_fs": 100.0,
+   "save_fs_assumed": false,
+   "C1_msd_at_50_mto_A2": 48.15932954932604,
+   "C1_pass": true,
+   "beta_MTO": 0.8951976229110061,
+   "beta_STO": 0.9521671267957813,
+   "beta_MTO_50_200": 1.0181095821359647,
+   "n_origin": 2000,
+   "ladder": [
+    1,
+    2,
+    3,
+    4,
+    6,
+    8,
+    12,
+    16,
+    24,
+    32,
+    48,
+    64,
+    96,
+    128,
+    192,
+    256
+   ],
+   "sigma_curve": [
+    [
+     1,
+     0.0022711328740548918
+    ],
+    [
+     2,
+     0.0030324478088613284
+    ],
+    [
+     3,
+     0.0035949152486270887
+    ],
+    [
+     4,
+     0.004034054155167175
+    ],
+    [
+     6,
+     0.005014992739458697
+    ],
+    [
+     8,
+     0.0057578166882443675
+    ],
+    [
+     12,
+     0.007082578568275282
+    ],
+    [
+     16,
+     0.008218559567278207
+    ],
+    [
+     24,
+     0.010059194989770618
+    ],
+    [
+     32,
+     0.011717594187336559
+    ],
+    [
+     48,
+     0.013516948896224713
+    ],
+    [
+     64,
+     0.015417444347253294
+    ],
+    [
+     96,
+     0.015520789498202903
+    ],
+    [
+     128,
+     0.016116674686268914
+    ],
+    [
+     192,
+     0.01672455026434442
+    ],
+    [
+     256,
+     0.012686492301641566
+    ]
+   ],
+   "C2": {
+    "sigma_end": 0.012686492301641566,
+    "b_end": 256,
+    "verdict_end": "통과",
+    "n_sigma_end_signed": 7.504,
+    "b_prev": 192,
+    "verdict_prev": "통과",
+    "n_sigma_prev_signed": 5.692,
+    "final_verdict": "통과",
+    "split_on_pass": false,
+    "sto_listed_verdict": "통과"
+   },
+   "C2_common_b": {
+    "b": 256,
+    "sigma": 0.012686492301641566,
+    "verdict": "통과",
+    "n_sigma_signed": 7.504
+   },
+   "C2_old_ladder_ref": {
+    "b_end": 32,
+    "verdict": "통과",
+    "⚠": "카드 참고 열 — 옛 판독과 나란히 보는 기록이지 판정이 아니다"
+   },
+   "aux_50_200": {
+    "beta_MTO": 1.0181095821359647,
+    "sigma_end": 0.03296458025825367,
+    "b_end": 256,
+    "n_sigma_signed_vs_C2_band": 5.518,
+    "in_C2_band": true,
+    "⚠": "기록 전용 — 판정 아님 (회신 CO 보조 창) · σ 하한"
+   },
+   "framework": {
+    "framework_moved": false,
+    "literal_framework_moved": true,
+    "criteria": {
+     "①_P": true,
+     "②_S": true,
+     "③_SS": true
+    },
+    "literal_criteria": {
+     "①_P": false,
+     "②_S": true,
+     "③_SS": false
+    },
+    "P": {
+     "n_P": 12,
+     "n_not4_at_first_frame": 1,
+     "frac_frames_any_P_changed_vs_first": 0.00425,
+     "max_P_changed_in_a_frame": 1,
+     "P_changed_ever": [
+      30
+     ]
+    },
+    "S_moved": 0,
+    "S_transient": 2,
+    "SS_new": 0,
+    "SS_at_first_frame": 1,
+    "literal": {
+     "①_frac_frames_any_P_not4": 0.99975,
+     "③_n_SS_pairs_lt_cut_any_frame_incl_first": 1
+    }
+   },
+   "N_eff_he2018": 2197.3154633310173,
+   "N_eff_inputs": {
+    "n_Li": 48,
+    "site_distance_A": 3.0,
+    "msd_max_from": "msd_max_A2",
+    "⚠": "He 2018 식 (8) · max(MSD) 는 궤적 전체 · 귀무모형 — 판정 아님"
+   },
+   "T_prod": {
+    "mean_K": 601.21,
+    "sd_K": 44.81,
+    "n_rows": 200001,
+    "from_ps": 5.0
+   },
+   "T_prod_equilib_assumed_5ps": false,
+   "p90sq_5ps_lag": {
+    "window_ps": 50.0,
+    "lag_ps": 5.0,
+    "min_dist_A": 2.0,
+    "n_windows": 8,
+    "p90sq_A2": [
+     67.13,
+     59.94,
+     58.42,
+     58.84,
+     50.67,
+     71.61,
+     70.07,
+     48.18
+    ],
+    "n_windows_from": "prod_ps",
+    "n_frames": 4000,
+    "box_L_A": [
+     13.9916,
+     13.9916,
+     13.9916
+    ],
+    "half_box_sq_A2": 48.94,
+    "cell_cubic": true,
+    "excess_A2": [
+     18.19,
+     11.0,
+     9.48,
+     9.9,
+     1.73,
+     22.67,
+     21.13,
+     -0.76
+    ],
+    "n_windows_over": 7,
+    "median_A2": 59.39,
+    "max_A2": 71.61,
+    "⚠": "기록 전용 — 판정과 무관 · (d/2)² 는 상자 짧은 변 기준"
+   }
+  }
+ },
+ "runs_B": {
+  "1": {
+   "msd_json": "/data/work/runs/lpscl_glass_control_li3ps4_600K_2026_10_13/seed1/T600/d0.00_cfg0/T600/msd.json",
+   "T_K": 600.0,
+   "save_fs": 100.0,
+   "save_fs_assumed": false,
+   "C1_msd_at_50_mto_A2": 34.00655976239969,
+   "C1_pass": true,
+   "beta_MTO": 0.8458864481119948,
+   "beta_STO": 0.9006443007035979,
+   "beta_MTO_50_200": 0.9054469151019049,
+   "n_origin": 2000,
+   "ladder": [
+    1,
+    2,
+    3,
+    4,
+    6,
+    8,
+    12,
+    16,
+    24,
+    32,
+    48,
+    64,
+    96,
+    128,
+    192,
+    256
+   ],
+   "sigma_curve": [
+    [
+     1,
+     0.003075978101678732
+    ],
+    [
+     2,
+     0.004251288054764156
+    ],
+    [
+     3,
+     0.005425467819394915
+    ],
+    [
+     4,
+     0.005929904301184052
+    ],
+    [
+     6,
+     0.007295305526004319
+    ],
+    [
+     8,
+     0.008649802154360396
+    ],
+    [
+     12,
+     0.009884536369407494
+    ],
+    [
+     16,
+     0.011739345092338326
+    ],
+    [
+     24,
+     0.014491458638080951
+    ],
+    [
+     32,
+     0.01619054945130916
+    ],
+    [
+     48,
+     0.01790296764983349
+    ],
+    [
+     64,
+     0.020972521424118047
+    ],
+    [
+     96,
+     0.020686511146739004
+    ],
+    [
+     128,
+     0.022586472278732603
+    ],
+    [
+     192,
+     0.02450991544400864
+    ],
+    [
+     256,
+     0.02690297300426361
+    ]
+   ],
+   "C2": {
+    "sigma_end": 0.02690297300426361,
+    "b_end": 256,
+    "verdict_end": "경계 · 구분 불가",
+    "n_sigma_end_signed": 1.706,
+    "b_prev": 192,
+    "verdict_prev": "경계 · 구분 불가",
+    "n_sigma_prev_signed": 1.872,
+    "final_verdict": "경계 · 구분 불가",
+    "split_on_pass": false,
+    "sto_listed_verdict": "통과"
+   },
+   "C2_common_b": {
+    "b": 256,
+    "sigma": 0.02690297300426361,
+    "verdict": "경계 · 구분 불가",
+    "n_sigma_signed": 1.706
+   },
+   "C2_old_ladder_ref": {
+    "b_end": 32,
+    "verdict": "통과",
+    "⚠": "카드 참고 열 — 옛 판독과 나란히 보는 기록이지 판정이 아니다"
+   },
+   "aux_50_200": {
+    "beta_MTO": 0.9054469151019049,
+    "sigma_end": 0.039995069579617126,
+    "b_end": 256,
+    "n_sigma_signed_vs_C2_band": 2.636,
+    "in_C2_band": true,
+    "⚠": "기록 전용 — 판정 아님 (회신 CO 보조 창) · σ 하한"
+   },
+   "framework": {
+    "framework_moved": false,
+    "literal_framework_moved": false,
+    "criteria": {
+     "①_P": true,
+     "②_S": true,
+     "③_SS": true
+    },
+    "literal_criteria": {
+     "①_P": true,
+     "②_S": true,
+     "③_SS": true
+    },
+    "P": {
+     "n_P": 15,
+     "n_not4_at_first_frame": 0,
+     "frac_frames_any_P_changed_vs_first": 0.0025,
+     "max_P_changed_in_a_frame": 1,
+     "P_changed_ever": [
+      25,
+      70
+     ]
+    },
+    "S_moved": 0,
+    "S_transient": 1,
+    "SS_new": 0,
+    "SS_at_first_frame": 0,
+    "literal": {
+     "①_frac_frames_any_P_not4": 0.0025,
+     "③_n_SS_pairs_lt_cut_any_frame_incl_first": 0
+    }
+   },
+   "N_eff_he2018": 1288.4419036294958,
+   "N_eff_inputs": {
+    "n_Li": 45,
+    "site_distance_A": 3.0,
+    "msd_max_from": "msd_max_A2",
+    "⚠": "He 2018 식 (8) · max(MSD) 는 궤적 전체 · 귀무모형 — 판정 아님"
+   },
+   "T_prod": {
+    "mean_K": 603.68,
+    "sd_K": 46.26,
+    "n_rows": 200001,
+    "from_ps": 5.0
+   },
+   "T_prod_equilib_assumed_5ps": false,
+   "p90sq_5ps_lag": {
+    "window_ps": 50.0,
+    "lag_ps": 5.0,
+    "min_dist_A": 2.0,
+    "n_windows": 8,
+    "p90sq_A2": [
+     54.0,
+     54.91,
+     48.66,
+     52.91,
+     50.09,
+     47.32,
+     52.0,
+     49.56
+    ],
+    "n_windows_from": "prod_ps",
+    "n_frames": 4000,
+    "box_L_A": [
+     14.0344,
+     14.0344,
+     14.0344
+    ],
+    "half_box_sq_A2": 49.24,
+    "cell_cubic": true,
+    "excess_A2": [
+     4.76,
+     5.67,
+     -0.58,
+     3.67,
+     0.85,
+     -1.92,
+     2.76,
+     0.32
+    ],
+    "n_windows_over": 6,
+    "median_A2": 51.05,
+    "max_A2": 54.91,
+    "⚠": "기록 전용 — 판정과 무관 · (d/2)² 는 상자 짧은 변 기준"
+   }
+  },
+  "2": {
+   "msd_json": "/data/work/runs/lpscl_glass_control_li3ps4_600K_2026_10_13/seed2/T600/d0.00_cfg0/T600/msd.json",
+   "T_K": 600.0,
+   "save_fs": 100.0,
+   "save_fs_assumed": false,
+   "C1_msd_at_50_mto_A2": 35.884717716978884,
+   "C1_pass": true,
+   "beta_MTO": 0.8529327039389965,
+   "beta_STO": 0.7607611926914329,
+   "beta_MTO_50_200": 0.9402029341974408,
+   "n_origin": 2000,
+   "ladder": [
+    1,
+    2,
+    3,
+    4,
+    6,
+    8,
+    12,
+    16,
+    24,
+    32,
+    48,
+    64,
+    96,
+    128,
+    192,
+    256
+   ],
+   "sigma_curve": [
+    [
+     1,
+     0.0030244073400687477
+    ],
+    [
+     2,
+     0.004247231349723722
+    ],
+    [
+     3,
+     0.005359947602573748
+    ],
+    [
+     4,
+     0.005871163564794328
+    ],
+    [
+     6,
+     0.007397825859117129
+    ],
+    [
+     8,
+     0.008249020320700165
+    ],
+    [
+     12,
+     0.010016296892409906
+    ],
+    [
+     16,
+     0.011971758179474757
+    ],
+    [
+     24,
+     0.014427780039769883
+    ],
+    [
+     32,
+     0.01621770142545477
+    ],
+    [
+     48,
+     0.018817593342990546
+    ],
+    [
+     64,
+     0.020587267304613525
+    ],
+    [
+     96,
+     0.025539980518224446
+    ],
+    [
+     128,
+     0.025800652090784363
+    ],
+    [
+     192,
+     0.026232119589440394
+    ],
+    [
+     256,
+     0.026029499243244842
+    ]
+   ],
+   "C2": {
+    "sigma_end": 0.026029499243244842,
+    "b_end": 256,
+    "verdict_end": "통과",
+    "n_sigma_end_signed": 2.034,
+    "b_prev": 192,
+    "verdict_prev": "통과",
+    "n_sigma_prev_signed": 2.018,
+    "final_verdict": "통과",
+    "split_on_pass": false,
+    "sto_listed_verdict": "경계 · 구분 불가"
+   },
+   "C2_common_b": {
+    "b": 256,
+    "sigma": 0.026029499243244842,
+    "verdict": "통과",
+    "n_sigma_signed": 2.034
+   },
+   "C2_old_ladder_ref": {
+    "b_end": 32,
+    "verdict": "통과",
+    "⚠": "카드 참고 열 — 옛 판독과 나란히 보는 기록이지 판정이 아니다"
+   },
+   "aux_50_200": {
+    "beta_MTO": 0.9402029341974408,
+    "sigma_end": 0.036190867178335806,
+    "b_end": 256,
+    "n_sigma_signed_vs_C2_band": 3.874,
+    "in_C2_band": true,
+    "⚠": "기록 전용 — 판정 아님 (회신 CO 보조 창) · σ 하한"
+   },
+   "framework": {
+    "framework_moved": false,
+    "literal_framework_moved": false,
+    "criteria": {
+     "①_P": true,
+     "②_S": true,
+     "③_SS": true
+    },
+    "literal_criteria": {
+     "①_P": true,
+     "②_S": true,
+     "③_SS": true
+    },
+    "P": {
+     "n_P": 15,
+     "n_not4_at_first_frame": 0,
+     "frac_frames_any_P_changed_vs_first": 0.0,
+     "max_P_changed_in_a_frame": 0,
+     "P_changed_ever": []
+    },
+    "S_moved": 0,
+    "S_transient": 0,
+    "SS_new": 0,
+    "SS_at_first_frame": 0,
+    "literal": {
+     "①_frac_frames_any_P_not4": 0.0,
+     "③_n_SS_pairs_lt_cut_any_frame_incl_first": 0
+    }
+   },
+   "N_eff_he2018": 1479.7797276055253,
+   "N_eff_inputs": {
+    "n_Li": 45,
+    "site_distance_A": 3.0,
+    "msd_max_from": "msd_max_A2",
+    "⚠": "He 2018 식 (8) · max(MSD) 는 궤적 전체 · 귀무모형 — 판정 아님"
+   },
+   "T_prod": {
+    "mean_K": 601.51,
+    "sd_K": 44.21,
+    "n_rows": 200001,
+    "from_ps": 5.0
+   },
+   "T_prod_equilib_assumed_5ps": false,
+   "p90sq_5ps_lag": {
+    "window_ps": 50.0,
+    "lag_ps": 5.0,
+    "min_dist_A": 2.0,
+    "n_windows": 8,
+    "p90sq_A2": [
+     63.08,
+     57.1,
+     68.1,
+     62.58,
+     57.61,
+     55.98,
+     56.99,
+     65.3
+    ],
+    "n_windows_from": "prod_ps",
+    "n_frames": 4000,
+    "box_L_A": [
+     14.0612,
+     14.0612,
+     14.0612
+    ],
+    "half_box_sq_A2": 49.43,
+    "cell_cubic": true,
+    "excess_A2": [
+     13.65,
+     7.67,
+     18.67,
+     13.15,
+     8.18,
+     6.55,
+     7.56,
+     15.87
+    ],
+    "n_windows_over": 8,
+    "median_A2": 60.09,
+    "max_A2": 68.1,
+    "⚠": "기록 전용 — 판정과 무관 · (d/2)² 는 상자 짧은 변 기준"
+   }
+  },
+  "3": {
+   "msd_json": "/data/work/runs/lpscl_glass_control_li3ps4_600K_2026_10_13/seed3/T600/d0.00_cfg0/T600/msd.json",
+   "T_K": 600.0,
+   "save_fs": 100.0,
+   "save_fs_assumed": false,
+   "C1_msd_at_50_mto_A2": 36.30883439628514,
+   "C1_pass": true,
+   "beta_MTO": 0.8724795503553716,
+   "beta_STO": 0.7359608798153351,
+   "beta_MTO_50_200": 0.9687851962013269,
+   "n_origin": 2000,
+   "ladder": [
+    1,
+    2,
+    3,
+    4,
+    6,
+    8,
+    12,
+    16,
+    24,
+    32,
+    48,
+    64,
+    96,
+    128,
+    192,
+    256
+   ],
+   "sigma_curve": [
+    [
+     1,
+     0.004094145197307988
+    ],
+    [
+     2,
+     0.005302655228446608
+    ],
+    [
+     3,
+     0.006309698442004365
+    ],
+    [
+     4,
+     0.0073416663721326296
+    ],
+    [
+     6,
+     0.009214596016263697
+    ],
+    [
+     8,
+     0.01014176979107463
+    ],
+    [
+     12,
+     0.013077044654217194
+    ],
+    [
+     16,
+     0.014752964471810083
+    ],
+    [
+     24,
+     0.018900326992466392
+    ],
+    [
+     32,
+     0.021509708378621675
+    ],
+    [
+     48,
+     0.026640122359040272
+    ],
+    [
+     64,
+     0.028306375061996077
+    ],
+    [
+     96,
+     0.035961658882961066
+    ],
+    [
+     128,
+     0.036241901779631165
+    ],
+    [
+     192,
+     0.03879409276536177
+    ],
+    [
+     256,
+     0.039432533539632
+    ]
+   ],
+   "C2": {
+    "sigma_end": 0.039432533539632,
+    "b_end": 256,
+    "verdict_end": "경계 · 구분 불가",
+    "n_sigma_end_signed": 1.838,
+    "b_prev": 192,
+    "verdict_prev": "경계 · 구분 불가",
+    "n_sigma_prev_signed": 1.868,
+    "final_verdict": "경계 · 구분 불가",
+    "split_on_pass": false,
+    "sto_listed_verdict": "경계 · 구분 불가"
+   },
+   "C2_common_b": {
+    "b": 256,
+    "sigma": 0.039432533539632,
+    "verdict": "경계 · 구분 불가",
+    "n_sigma_signed": 1.838
+   },
+   "C2_old_ladder_ref": {
+    "b_end": 32,
+    "verdict": "통과",
+    "⚠": "카드 참고 열 — 옛 판독과 나란히 보는 기록이지 판정이 아니다"
+   },
+   "aux_50_200": {
+    "beta_MTO": 0.9687851962013269,
+    "sigma_end": 0.06087622272309926,
+    "b_end": 256,
+    "n_sigma_signed_vs_C2_band": 2.773,
+    "in_C2_band": true,
+    "⚠": "기록 전용 — 판정 아님 (회신 CO 보조 창) · σ 하한"
+   },
+   "framework": {
+    "framework_moved": false,
+    "literal_framework_moved": false,
+    "criteria": {
+     "①_P": true,
+     "②_S": true,
+     "③_SS": true
+    },
+    "literal_criteria": {
+     "①_P": true,
+     "②_S": true,
+     "③_SS": true
+    },
+    "P": {
+     "n_P": 15,
+     "n_not4_at_first_frame": 0,
+     "frac_frames_any_P_changed_vs_first": 0.003,
+     "max_P_changed_in_a_frame": 1,
+     "P_changed_ever": [
+      65,
+      70
+     ]
+    },
+    "S_moved": 0,
+    "S_transient": 1,
+    "SS_new": 0,
+    "SS_at_first_frame": 0,
+    "literal": {
+     "①_frac_frames_any_P_not4": 0.003,
+     "③_n_SS_pairs_lt_cut_any_frame_incl_first": 0
+    }
+   },
+   "N_eff_he2018": 1228.42301220277,
+   "N_eff_inputs": {
+    "n_Li": 45,
+    "site_distance_A": 3.0,
+    "msd_max_from": "msd_max_A2",
+    "⚠": "He 2018 식 (8) · max(MSD) 는 궤적 전체 · 귀무모형 — 판정 아님"
+   },
+   "T_prod": {
+    "mean_K": 603.96,
+    "sd_K": 45.97,
+    "n_rows": 200001,
+    "from_ps": 5.0
+   },
+   "T_prod_equilib_assumed_5ps": false,
+   "p90sq_5ps_lag": {
+    "window_ps": 50.0,
+    "lag_ps": 5.0,
+    "min_dist_A": 2.0,
+    "n_windows": 8,
+    "p90sq_A2": [
+     39.46,
+     56.71,
+     50.34,
+     66.45,
+     59.45,
+     61.82,
+     50.9,
+     50.25
+    ],
+    "n_windows_from": "prod_ps",
+    "n_frames": 4000,
+    "box_L_A": [
+     14.3602,
+     14.3602,
+     14.3602
+    ],
+    "half_box_sq_A2": 51.55,
+    "cell_cubic": true,
+    "excess_A2": [
+     -12.09,
+     5.16,
+     -1.21,
+     14.9,
+     7.9,
+     10.27,
+     -0.65,
+     -1.3
+    ],
+    "n_windows_over": 4,
+    "median_A2": 53.8,
+    "max_A2": 66.45,
+    "⚠": "기록 전용 — 판정과 무관 · (d/2)² 는 상자 짧은 변 기준"
+   }
+  },
+  "4": {
+   "msd_json": "/data/work/runs/lpscl_glass_control_li3ps4_600K_2026_10_13/seed4/T600/d0.00_cfg0/T600/msd.json",
+   "T_K": 600.0,
+   "save_fs": 100.0,
+   "save_fs_assumed": false,
+   "C1_msd_at_50_mto_A2": 31.083175672717832,
+   "C1_pass": true,
+   "beta_MTO": 0.8370535777594109,
+   "beta_STO": 1.4815321669997272,
+   "beta_MTO_50_200": 0.9725647011537449,
+   "n_origin": 2000,
+   "ladder": [
+    1,
+    2,
+    3,
+    4,
+    6,
+    8,
+    12,
+    16,
+    24,
+    32,
+    48,
+    64,
+    96,
+    128,
+    192,
+    256
+   ],
+   "sigma_curve": [
+    [
+     1,
+     0.0030812659892968234
+    ],
+    [
+     2,
+     0.004725564648122858
+    ],
+    [
+     3,
+     0.0054914858563394385
+    ],
+    [
+     4,
+     0.006211237926018583
+    ],
+    [
+     6,
+     0.007547795878268117
+    ],
+    [
+     8,
+     0.008307390173292527
+    ],
+    [
+     12,
+     0.010336289868151027
+    ],
+    [
+     16,
+     0.01193830243099174
+    ],
+    [
+     24,
+     0.014133907156862968
+    ],
+    [
+     32,
+     0.016263680619212545
+    ],
+    [
+     48,
+     0.01932241428197993
+    ],
+    [
+     64,
+     0.021416320581310936
+    ],
+    [
+     96,
+     0.02602202468981274
+    ],
+    [
+     128,
+     0.026792878109423116
+    ],
+    [
+     192,
+     0.030331695328374406
+    ],
+    [
+     256,
+     0.024641716540648298
+    ]
+   ],
+   "C2": {
+    "sigma_end": 0.024641716540648298,
+    "b_end": 256,
+    "verdict_end": "경계 · 구분 불가",
+    "n_sigma_end_signed": 1.504,
+    "b_prev": 192,
+    "verdict_prev": "경계 · 구분 불가",
+    "n_sigma_prev_signed": 1.222,
+    "final_verdict": "경계 · 구분 불가",
+    "split_on_pass": false,
+    "sto_listed_verdict": "미통과"
+   },
+   "C2_common_b": {
+    "b": 256,
+    "sigma": 0.024641716540648298,
+    "verdict": "경계 · 구분 불가",
+    "n_sigma_signed": 1.504
+   },
+   "C2_old_ladder_ref": {
+    "b_end": 32,
+    "verdict": "통과",
+    "⚠": "카드 참고 열 — 옛 판독과 나란히 보는 기록이지 판정이 아니다"
+   },
+   "aux_50_200": {
+    "beta_MTO": 0.9725647011537449,
+    "sigma_end": 0.03280674854560743,
+    "b_end": 256,
+    "n_sigma_signed_vs_C2_band": 5.26,
+    "in_C2_band": true,
+    "⚠": "기록 전용 — 판정 아님 (회신 CO 보조 창) · σ 하한"
+   },
+   "framework": {
+    "framework_moved": false,
+    "literal_framework_moved": false,
+    "criteria": {
+     "①_P": true,
+     "②_S": true,
+     "③_SS": true
+    },
+    "literal_criteria": {
+     "①_P": true,
+     "②_S": true,
+     "③_SS": true
+    },
+    "P": {
+     "n_P": 15,
+     "n_not4_at_first_frame": 0,
+     "frac_frames_any_P_changed_vs_first": 0.0,
+     "max_P_changed_in_a_frame": 0,
+     "P_changed_ever": []
+    },
+    "S_moved": 0,
+    "S_transient": 0,
+    "SS_new": 0,
+    "SS_at_first_frame": 0,
+    "literal": {
+     "①_frac_frames_any_P_not4": 0.0,
+     "③_n_SS_pairs_lt_cut_any_frame_incl_first": 0
+    }
+   },
+   "N_eff_he2018": 1263.746352793126,
+   "N_eff_inputs": {
+    "n_Li": 45,
+    "site_distance_A": 3.0,
+    "msd_max_from": "msd_max_A2",
+    "⚠": "He 2018 식 (8) · max(MSD) 는 궤적 전체 · 귀무모형 — 판정 아님"
+   },
+   "T_prod": {
+    "mean_K": 604.93,
+    "sd_K": 44.52,
+    "n_rows": 200001,
+    "from_ps": 5.0
+   },
+   "T_prod_equilib_assumed_5ps": false,
+   "p90sq_5ps_lag": {
+    "window_ps": 50.0,
+    "lag_ps": 5.0,
+    "min_dist_A": 2.0,
+    "n_windows": 8,
+    "p90sq_A2": [
+     51.44,
+     42.99,
+     40.01,
+     53.2,
+     50.5,
+     50.3,
+     55.23,
+     59.16
+    ],
+    "n_windows_from": "prod_ps",
+    "n_frames": 4000,
+    "box_L_A": [
+     14.2559,
+     14.2559,
+     14.2559
+    ],
+    "half_box_sq_A2": 50.81,
+    "cell_cubic": true,
+    "excess_A2": [
+     0.63,
+     -7.82,
+     -10.8,
+     2.39,
+     -0.31,
+     -0.51,
+     4.42,
+     8.35
+    ],
+    "n_windows_over": 4,
+    "median_A2": 50.97,
+    "max_A2": 59.16,
+    "⚠": "기록 전용 — 판정과 무관 · (d/2)² 는 상자 짧은 변 기준"
+   }
+  },
+  "5": {
+   "msd_json": "/data/work/runs/lpscl_glass_control_li3ps4_600K_2026_10_13/seed5/T600/d0.00_cfg0/T600/msd.json",
+   "T_K": 600.0,
+   "save_fs": 100.0,
+   "save_fs_assumed": false,
+   "C1_msd_at_50_mto_A2": 26.340376906742257,
+   "C1_pass": true,
+   "beta_MTO": 0.8202212897475115,
+   "beta_STO": 0.8724525412625306,
+   "beta_MTO_50_200": 1.035382835204467,
+   "n_origin": 2000,
+   "ladder": [
+    1,
+    2,
+    3,
+    4,
+    6,
+    8,
+    12,
+    16,
+    24,
+    32,
+    48,
+    64,
+    96,
+    128,
+    192,
+    256
+   ],
+   "sigma_curve": [
+    [
+     1,
+     0.0036012694263104035
+    ],
+    [
+     2,
+     0.004997945486718067
+    ],
+    [
+     3,
+     0.006015776826978352
+    ],
+    [
+     4,
+     0.0071193621010666825
+    ],
+    [
+     6,
+     0.009035413551930436
+    ],
+    [
+     8,
+     0.01074859032859001
+    ],
+    [
+     12,
+     0.013200802559199466
+    ],
+    [
+     16,
+     0.015065919409404374
+    ],
+    [
+     24,
+     0.018050294028578478
+    ],
+    [
+     32,
+     0.02189529476319279
+    ],
+    [
+     48,
+     0.023652664969319056
+    ],
+    [
+     64,
+     0.026079361288852135
+    ],
+    [
+     96,
+     0.02982665748391672
+    ],
+    [
+     128,
+     0.03470628571779779
+    ],
+    [
+     192,
+     0.03036398908570731
+    ],
+    [
+     256,
+     0.03789299546017236
+    ]
+   ],
+   "C2": {
+    "sigma_end": 0.03789299546017236,
+    "b_end": 256,
+    "verdict_end": "경계 · 구분 불가",
+    "n_sigma_end_signed": 0.534,
+    "b_prev": 192,
+    "verdict_prev": "경계 · 구분 불가",
+    "n_sigma_prev_signed": 0.666,
+    "final_verdict": "경계 · 구분 불가",
+    "split_on_pass": false,
+    "sto_listed_verdict": "경계 · 구분 불가"
+   },
+   "C2_common_b": {
+    "b": 256,
+    "sigma": 0.03789299546017236,
+    "verdict": "경계 · 구분 불가",
+    "n_sigma_signed": 0.534
+   },
+   "C2_old_ladder_ref": {
+    "b_end": 32,
+    "verdict": "경계 · 구분 불가",
+    "⚠": "카드 참고 열 — 옛 판독과 나란히 보는 기록이지 판정이 아니다"
+   },
+   "aux_50_200": {
+    "beta_MTO": 1.035382835204467,
+    "sigma_end": 0.0822583518233861,
+    "b_end": 256,
+    "n_sigma_signed_vs_C2_band": 2.001,
+    "in_C2_band": true,
+    "⚠": "기록 전용 — 판정 아님 (회신 CO 보조 창) · σ 하한"
+   },
+   "framework": {
+    "framework_moved": false,
+    "literal_framework_moved": false,
+    "criteria": {
+     "①_P": true,
+     "②_S": true,
+     "③_SS": true
+    },
+    "literal_criteria": {
+     "①_P": true,
+     "②_S": true,
+     "③_SS": true
+    },
+    "P": {
+     "n_P": 15,
+     "n_not4_at_first_frame": 0,
+     "frac_frames_any_P_changed_vs_first": 0.0,
+     "max_P_changed_in_a_frame": 0,
+     "P_changed_ever": []
+    },
+    "S_moved": 0,
+    "S_transient": 0,
+    "SS_new": 0,
+    "SS_at_first_frame": 0,
+    "literal": {
+     "①_frac_frames_any_P_not4": 0.0,
+     "③_n_SS_pairs_lt_cut_any_frame_incl_first": 0
+    }
+   },
+   "N_eff_he2018": 933.1217514404998,
+   "N_eff_inputs": {
+    "n_Li": 45,
+    "site_distance_A": 3.0,
+    "msd_max_from": "msd_max_A2",
+    "⚠": "He 2018 식 (8) · max(MSD) 는 궤적 전체 · 귀무모형 — 판정 아님"
+   },
+   "T_prod": {
+    "mean_K": 600.86,
+    "sd_K": 44.7,
+    "n_rows": 200001,
+    "from_ps": 5.0
+   },
+   "T_prod_equilib_assumed_5ps": false,
+   "p90sq_5ps_lag": {
+    "window_ps": 50.0,
+    "lag_ps": 5.0,
+    "min_dist_A": 2.0,
+    "n_windows": 8,
+    "p90sq_A2": [
+     35.07,
+     41.83,
+     38.18,
+     52.95,
+     57.13,
+     45.13,
+     53.44,
+     41.91
+    ],
+    "n_windows_from": "prod_ps",
+    "n_frames": 4000,
+    "box_L_A": [
+     14.3493,
+     14.3493,
+     14.3493
+    ],
+    "half_box_sq_A2": 51.48,
+    "cell_cubic": true,
+    "excess_A2": [
+     -16.41,
+     -9.65,
+     -13.3,
+     1.47,
+     5.65,
+     -6.35,
+     1.96,
+     -9.57
+    ],
+    "n_windows_over": 3,
+    "median_A2": 43.52,
+    "max_A2": 57.13,
+    "⚠": "기록 전용 — 판정과 무관 · (d/2)² 는 상자 짧은 변 기준"
+   }
+  }
+ },
+ "n_boot": 400
+}
