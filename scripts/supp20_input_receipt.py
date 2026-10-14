@@ -11,14 +11,19 @@
   ③ 수확기 판 (r3 묶음 sha · harvest_head) · 반입 파일 = r3 묶음 바이트 (기술자 20 · 요약 · 코호트 TSV · union) · 설계 CSV · 어댑터 CSV sha · r2 ↔ r3 키별 대조
   ④ 도구 핀 (봉인 32 code_fp = 등록 §3 · 실행기 · 인계 도구 · 배포 생성기 · 이 도구 지문 · git) · 관측 ON · 새 ROOT 둘 (manifest 둘을 주면) —
      사전 점검 (fast16 + real4) 결과 · 저자 발사 승인 = 수동 칸 (이 도구가 인증하지 않는다)
+  ⑤ ★ 10-14 SUPR-01 · SUPR-02 (Codex 보충 20 수정 재검증 §4 · §5 · 수정 계획 `docs/reviews/supr_fix_plan_20261014.md` · 1저자 Q1–Q3 (가)) — 발사 사전 점검 증거 =
+     실행기 완료 영수증 (`run … --dry-run --observe-imports --preflight-receipt P.json` 이 쓴 JSON + 실행기가 직접 잡은 전체 로그 P.log).  P0–P10 = 실행기
+     `preflight_receipt_checks` (로그 sha256 · INPUT_DIGEST_JSON 한 줄 · 완료 · 실제 종료코드 · 관측 · 필수 세 검사 · argv = 등록 명령 · 코드 · 세대 · 원자료 ·
+     이 체크아웃 재계산 · 승인 SHA) + E1 (로그 지문 = 등록 §2 = 반입 재계산 — 코호트 TSV sha 포함) · E2 (봉인 지문 = 등록 §3).  텍스트 · grep 로그 단독
+     (`--dry-run-log`) = E0 실패 (옛 판: 다른 TSV 로 돈 로그 · 잘린 로그 · 필수 줄이 빠진 로그가 rc 0).  승인 SHA (`--approved-sha`) 를 주면 사전 점검 · manifest 의
+     git 기록과 접두 대조 (P10 · F7 · G7) · 주지 않으면 notes 에 경고 (실패 아님).
 값의 정본은 실행기 함수 (`run_network_194_parallel` — registered_id_set · build_plan · cohort_specs · plan_input_digest · registered_production_set ·
-print_followups · print_preflight 줄 꼴 · launch_eligibility · production_observation_problem) 와 등록 문서 · 수확 묶음 README 다 — 값을 이 파일에
-베껴 두지 않는다 (r2 대조의 허용 차이 두 칸만 README 끝 문장을 옮긴 상수 · 묶음 폴더 이름 둘).
+print_followups · preflight_receipt_checks · parse_preflight_log · launch_eligibility · production_observation_problem) 와 등록 문서 · 수확 묶음 README 다 —
+값을 이 파일에 베껴 두지 않는다 (r2 대조의 허용 차이 두 칸만 README 끝 문장을 옮긴 상수 · 묶음 폴더 이름 둘).
 
   python3 scripts/supp20_input_receipt.py                                       # 컨테이너 범위 (발사 전 칸)
-  python3 scripts/supp20_input_receipt.py --dry-run-log dry.log                  # + 발사 dry-run 화면 (run --cohorts lhss --dry-run --observe-imports 출력을
-                                                                                 #   tee 로 받은 파일 · 등록 §4 의 grep 으로 걸러도 된다)
-  python3 scripts/supp20_input_receipt.py --manifest R/manifest.json --primary-manifest R194/manifest.json   # + 실제 발사 manifest (보충 · 194)
+  python3 scripts/supp20_input_receipt.py --preflight-receipt P.json --approved-sha <발사 커밋>   # + 발사 사전 점검 완료 영수증 (+ 같은 이름 .log)
+  python3 scripts/supp20_input_receipt.py --manifest R/manifest.json --primary-manifest R194/manifest.json --approved-sha <발사 커밋>   # + 실제 발사 manifest
   python3 scripts/supp20_input_receipt.py --json receipt.json                    # 영수증 JSON
   python3 scripts/supp20_input_receipt.py --selftest
 
@@ -172,16 +177,6 @@ def _tsv_cells(b):
     return (r[0] if r else []), {x[0]: x for x in r[1:] if x}
 
 
-#: 발사 dry-run 화면 (실행기 print_preflight) 의 줄 꼴 — 생산자 문구와 같아야 한다 (selftest 가 진짜 print_preflight 로 만든 화면을 읽어 맞댄다)
-_DRY_INPUT = re.compile(r'입력 지문 \(ID · 코호트 · 원자료 sha256 = 수확 JSON raw\) — 케이스 (\S+) · ids_sha256 (\S+) · '
-                        r'raw_sha256_table_sha256 (\S+) · 원자료 sha 결손 (\d+)')
-_DRY_CODE = re.compile(r'코드 (\S*) \((.*?)\) dirty=(True|False)(.*?) · 봉인 지문 code_fp (\S+) \(CODE_FILES (\d+)\)')
-_DRY_GEN = re.compile(r'기대 망 세대 \(' + re.escape(NP.GEN_KEY) + r" — [^)]*\): '?([^' ·]+)'? · 세대 계약 문제 (\d+)")
-_DRY_RAW = re.compile(r'원자료 · 메시 문제 (\d+) 건')
-_DRY_COHORT = re.compile(r'코호트 (\S+): 수확 (\d+) 건 \(선택 (\d+)\)')
-_DRY_TICKS = ('전이 의존 닫힘', '지연 import 분류', 'fork · 프로세스 풀 API')
-
-
 class _Receipt:
     def __init__(self):
         self.checks = []
@@ -191,30 +186,30 @@ class _Receipt:
         return bool(ok)
 
 
-def _dry_checks(R, text, dg, reg):
-    """발사 dry-run 화면 대조 (E) — 입력 지문 줄 · 코드 줄 · 기대 세대 · 원자료 문제 · ⛔ · ✗."""
-    lines = text.splitlines()
-    m_in = {m.groups() for m in _DRY_INPUT.finditer(text)}
-    want = (str(dg.get('n')), dg.get('ids_sha256'), dg.get('raw_sha256_table_sha256'), str(len(dg.get('missing_raw_sha') or [])))
-    reg_t = (str(reg.get('n')), reg.get('ids_sha256'), reg.get('raw_sha256_table_sha256'), '0')
-    R.add('E1', 'dry-run 입력 지문 줄 (하나) = 반입 파일 재계산 = 등록 §2 (케이스 · ids · raw sha 표 · 원자료 결손 0)',
-          len(m_in) == 1 and next(iter(m_in)) == want == reg_t, dict(dry_run=sorted(m_in), recomputed=want, registered=reg_t))
-    m_c = {m.groups() for m in _DRY_CODE.finditer(text)}
-    c = next(iter(m_c)) if len(m_c) == 1 else None
-    R.add('E2', 'dry-run 코드 줄 (하나) — 깨끗한 트리 (dirty=False) · 봉인 지문 code_fp = 등록 §3 · CODE_FILES 수 = 실행기',
-          c is not None and c[2] == 'False' and c[4] == reg.get('code_fp') and c[5] == str(len(NP.CODE_FILES)), sorted(m_c))
-    m_g = {m.groups() for m in _DRY_GEN.finditer(text)}
-    R.add('E3', f'dry-run 기대 망 세대 = {NP.CURRENT_GENERATION!r} · 세대 계약 문제 0', m_g == {(NP.CURRENT_GENERATION, '0')}, sorted(m_g))
-    m_r = set(_DRY_RAW.findall(text))
-    R.add('E4', 'dry-run 원자료 · 메시 문제 0 건', m_r == {'0'}, sorted(m_r))
-    stop = [ln.strip() for ln in lines if '⛔' in ln]
-    tick = [ln.strip() for ln in lines if any(t in ln for t in _DRY_TICKS) and '✗' in ln]
-    R.add('E5', 'dry-run 사전 점검 중단 (⛔) 0 · 전이 의존 · 지연 import · fork 줄에 ✗ 없음 (관측 없는 보충 계획 = ⛔ — 등록 §3)', not stop and not tick,
-          (stop + tick)[:5])
-    m_k = {(a, b, d) for a, b, d in _DRY_COHORT.findall(text)}
-    if m_k:                                                  # 등록 §4 grep 은 이 줄을 거른다 — 있을 때만
-        R.add('E6', f'dry-run 코호트 줄 = {COHORT} 하나 · 수확 {reg.get("n")} · 선택 {reg.get("n")}', m_k == {(COHORT, str(reg.get('n')), str(reg.get('n')))},
-              sorted(m_k))
+_HEX_SHA = re.compile(r'^[0-9a-f]{7,40}$')
+
+
+def _preflight_registration_checks(R, pv, dg, reg):
+    """★ 10-14 SUPR-01 — 사전 점검 완료 영수증 (실행기 대조 P0–P10 은 따로) 의 등록 값 대조 (E) — 실행기는 등록 문서 §2 · §3 값을 모른다.
+      E1 로그 INPUT_DIGEST_JSON (한 줄) = 등록 §2 = 반입 파일 재계산 (실행기 plan_input_digest · INPUT_DIGEST_KEYS 전부 · 코호트 TSV sha 포함)
+      E2 봉인 지문 code_fp (로그 코드 줄 · 영수증) = 등록 §3 · CODE_FILES 수"""
+    pl = pv.get('parsed') or {}
+    dls = pl.get('input_digest') or []
+    logged = dls[0][1] if len(dls) == 1 else None
+    want = dict(n=reg.get('n'), ids_sha256=reg.get('ids_sha256'), raw_sha256_table_sha256=reg.get('raw_sha256_table_sha256'), missing_raw_sha=[],
+                cohort_tsv_sha256={COHORT: reg.get('cohort_tsv_sha256')})
+    keys = NP.INPUT_DIGEST_KEYS
+    differ = {k: dict(logged=(logged or {}).get(k), registered=want.get(k), recomputed=dg.get(k)) for k in keys
+              if not (isinstance(logged, dict) and logged.get(k) == want.get(k) == dg.get(k))}
+    R.add('E1', f'사전 점검 로그 {NP.INPUT_DIGEST_LINE} (한 줄) = 등록 §2 = 반입 파일 재계산 — {" · ".join(keys)} 전부 (코호트 TSV sha 포함 · SUPR-01)',
+          isinstance(logged, dict) and sorted(logged) == sorted(keys) and all(reg.get(k) for k in ('n', 'ids_sha256', 'raw_sha256_table_sha256', 'cohort_tsv_sha256'))
+          and not differ, dict(n_lines=len(dls), parsed=isinstance(logged, dict), differ=differ))
+    codes = pl.get('code') or []
+    c = codes[0] if len(codes) == 1 else None
+    rec = pv.get('receipt') if isinstance(pv.get('receipt'), dict) else {}
+    R.add('E2', '사전 점검 봉인 지문 code_fp (로그 코드 줄 하나 · 영수증) = 등록 §3 · CODE_FILES 수 = 실행기',
+          c is not None and bool(reg.get('code_fp')) and c[4] == reg.get('code_fp') == rec.get('code_fp') and c[5] == str(len(NP.CODE_FILES)),
+          dict(log=codes[:2], receipt=rec.get('code_fp'), registered=reg.get('code_fp')))
 
 
 def _load_json(path):
@@ -224,8 +219,9 @@ def _load_json(path):
         return None, f'{type(e).__name__}: {e}'
 
 
-def _manifest_checks(R, label, path, want_set, reg, dg=None):
-    """실제 발사 manifest 대조 (F = 보충 · G = 194) — 실행 형식 자격 · 등록 생산 집합 · (보충) 입력 지문 · 관측 ON · 봉인 지문 · 깨끗한 트리 · (보충) 인계 도구 지문."""
+def _manifest_checks(R, label, path, want_set, reg, dg=None, approved_sha=None):
+    """실제 발사 manifest 대조 (F = 보충 · G = 194) — 실행 형식 자격 · 등록 생산 집합 · (보충) 입력 지문 · 관측 ON · 봉인 지문 · 깨끗한 트리 · (보충) 인계 도구 지문 ·
+    (★ 10-14 Q3 — 승인 SHA 를 주면) git.sha = 승인 SHA."""
     man, why = _load_json(path)
     if not R.add(f'{label}0', f'{want_set} 발사 manifest 읽기 ({path})', isinstance(man, dict), why or type(man).__name__):
         return None
@@ -248,13 +244,21 @@ def _manifest_checks(R, label, path, want_set, reg, dg=None):
         now = {rel: NP.sha256_file(NP.ROOT / rel) for rel in NP.HANDOVER_FILES}
         R.add(f'{label}6', f'{want_set} manifest 인계 도구 지문 (handover_code_hashes) = 이 체크아웃 — 영수증은 발사 체크아웃에서 만든다',
               man.get('handover_code_hashes') == now, dict(manifest=man.get('handover_code_hashes'), now=now))
+    if approved_sha:
+        a = str(approved_sha).strip().lower()
+        R.add(f'{label}7', f'{want_set} manifest git.sha = 승인 SHA (7–40 hex · 접두 · 1저자 Q3 — H1 은 두 manifest 의 상호 일치일 뿐)',
+              bool(_HEX_SHA.match(a)) and isinstance(g.get('sha'), str) and bool(re.fullmatch(r'[0-9a-f]{40}', g['sha'])) and g['sha'].startswith(a),
+              dict(manifest=g.get('sha'), approved=a))
     return man
 
 
-def receipt(*, reg_doc=REG_DOC, readme=RUNS_README, harvest=None, cohort=None, dry_run_log=None, manifest=None, primary_manifest=None,
-            r3_tgz=R3_TGZ, r2_tgz=R2_TGZ, notes=None) -> dict:
-    """영수증 dict (schema · scope · checks · recorded · manual · rc).  rc = 0 이면 기계로 대조한 칸이 전부 같다 (발사 승인 아님)."""
+def receipt(*, reg_doc=REG_DOC, readme=RUNS_README, harvest=None, cohort=None, dry_run_log=None, preflight_receipt=None, approved_sha=None, manifest=None,
+            primary_manifest=None, r3_tgz=R3_TGZ, r2_tgz=R2_TGZ, notes=None) -> dict:
+    """영수증 dict (schema · scope · checks · recorded · manual · notes · rc).  rc = 0 이면 기계로 대조한 칸이 전부 같다 (발사 승인 아님).
+    ★ 10-14 — preflight_receipt = 실행기 `run --dry-run --preflight-receipt` 의 완료 영수증 JSON (+ 같은 이름 .log) · dry_run_log (텍스트 로그) = 받지 않는다 (E0) ·
+    approved_sha = 저자 발사 승인 커밋 (주면 사전 점검 · manifest git 기록과 대조 · 주지 않으면 notes 에 경고)."""
     R = _Receipt()
+    notes = dict(notes or {})
     reg, rp = registration_values(reg_doc, readme)
     R.add('R0', '등록 문서 §2 · §3 · 수확 묶음 README 값을 읽었다 (자리 하나 · 값 하나)', not rp, rp)
     #  ── ① 등록 집합 ──
@@ -340,23 +344,32 @@ def receipt(*, reg_doc=REG_DOC, readme=RUNS_README, harvest=None, cohort=None, d
     #  ── ④ 도구 핀 ──
     fp_now = NP.code_fp(NP.code_hashes())
     R.add('D1', '이 체크아웃의 봉인 32 code_fp = 등록 §3 (수치 봉인 무변경)', fp_now is not None and fp_now == reg.get('code_fp'), dict(now=fp_now, registered=reg.get('code_fp')))
-    #  ── 발사 dry-run · manifest (주면) ──
+    #  ── 발사 사전 점검 (주면) — ★ 10-14 SUPR-02 · 1저자 Q2 (가): 실행기 완료 영수증 + 그 실행기가 잡은 전체 로그만 받는다 ──
     scope = 'container'
+    pv = None
+    if dry_run_log or preflight_receipt:
+        scope = 'preflight'
     if dry_run_log:
-        scope = 'dry_run'
-        try:
-            text = Path(dry_run_log).read_text(encoding='utf-8')
-        except OSError as e:
-            R.add('E0', f'dry-run 화면 파일 읽기 ({dry_run_log})', False, f'{type(e).__name__}: {e}')
-        else:
-            _dry_checks(R, text, dg, reg)
+        R.add('E0', '텍스트 · grep 로그 (--dry-run-log) 단독은 사전 점검 증거가 아니다 (SUPR-02 · 1저자 Q2 (가) · 판정문 §5 — 잘린 · 거른 · 필수 줄이 빠진 로그를 가를 수 없다)',
+              False, f'{dry_run_log} — 실행기 `run --root <R> --cohorts {COHORT} --dry-run --observe-imports --preflight-receipt <P>.json` 이 쓴 완료 영수증 JSON '
+                     '(+ 같은 이름 .log = 실행기 자신이 잡은 전체 로그) 을 --preflight-receipt 로 주라 · 셸 tee · grep 로그와 그 종료코드는 실행기 증거가 아니다')
+    if preflight_receipt:
+        pv = NP.preflight_receipt_checks(preflight_receipt, expect_set=SET, approved_sha=approved_sha)
+        for c in pv['checks']:
+            R.add(c['id'], c['name'], c['ok'], c['detail'])
+        _preflight_registration_checks(R, pv, dg, reg)
     sman = pman = None
     if manifest:
         scope = 'launch'
-        sman = _manifest_checks(R, 'F', manifest, SET, reg, dg)
+        sman = _manifest_checks(R, 'F', manifest, SET, reg, dg, approved_sha=approved_sha)
     if primary_manifest:
         scope = 'launch'
-        pman = _manifest_checks(R, 'G', primary_manifest, 'production194', reg)
+        pman = _manifest_checks(R, 'G', primary_manifest, 'production194', reg, approved_sha=approved_sha)
+    if not approved_sha:
+        notes['approved_sha'] = ('⚠ --approved-sha 없음 — 사전 점검 · manifest 의 git 기록을 저자 발사 승인 핀과 기계로 대조하지 않았다 (경고 · 실패 아님 · 1저자 Q3) · '
+                                 '발사 핀 확인 = 손으로')
+    elif not (preflight_receipt or manifest or primary_manifest):
+        notes['approved_sha'] = f'⚠ --approved-sha {approved_sha} — 대조할 발사 기록 (--preflight-receipt · --manifest · --primary-manifest) 이 없어 대조하지 않았다'
     if isinstance(sman, dict) and isinstance(pman, dict):
         r_s, r_p = os.path.realpath(os.path.dirname(os.path.abspath(manifest))), os.path.realpath(os.path.dirname(os.path.abspath(primary_manifest)))
         gs, gp = (sman.get('git') or {}).get('sha'), (pman.get('git') or {}).get('sha')
@@ -368,17 +381,21 @@ def receipt(*, reg_doc=REG_DOC, readme=RUNS_README, harvest=None, cohort=None, d
     return dict(schema=SCHEMA, scope=scope, generated=datetime.datetime.now().isoformat(timespec='seconds'), registered_set=SET,
                 registration=dict(document=reg_doc, values=reg), recomputed=dict(input_digest=dg, registered_ids=reg_ids),
                 inputs=dict(harvest=str(hdir), cohort_tsv=str(ctsv), union=str(utsv), design=SUPP_DESIGN, adapter=spec['design'], r3_bundle=str(r3_tgz),
-                            r2_bundle=str(r2_tgz), dry_run_log=dry_run_log, manifest=manifest, primary_manifest=primary_manifest),
+                            r2_bundle=str(r2_tgz), dry_run_log=dry_run_log, preflight_receipt=preflight_receipt,
+                            preflight_receipt_sha256=_sha(preflight_receipt) if preflight_receipt else None, preflight_log=(pv or {}).get('log'),
+                            approved_sha=approved_sha, manifest=manifest, primary_manifest=primary_manifest),
                 recorded=dict(git=dict(sha=git.get('sha'), dirty=git.get('dirty'), porcelain=git.get('porcelain', [])[:10]), code_fp=fp_now,
                               tool_sha256={rel: NP.sha256_file(NP.ROOT / rel) for rel in TOOL_PINS}),
-                checks=R.checks, manual=[dict(item=m, verified_by_tool=False) for m in MANUAL], notes=dict(notes or {}), rc=rc)
+                checks=R.checks, warnings=list((pv or {}).get('warnings') or []), manual=[dict(item=m, verified_by_tool=False) for m in MANUAL], notes=notes, rc=rc)
 
 
 def print_receipt(rec, out=print):
     out(f'══ 보충 20 입력 지문 영수증 ({rec["schema"]} · 범위 {rec["scope"]} · git {str(rec["recorded"]["git"]["sha"])[:12]}'
         f'{" dirty" if rec["recorded"]["git"]["dirty"] else ""})')
     for c in rec['checks']:
-        out(f'  {"✓" if c["ok"] else "✗"} {c["id"]:3s} {c["name"]}' + ('' if c['ok'] else f'  — {json.dumps(c["detail"], ensure_ascii=False)[:400]}'))
+        out(f'  {"✓" if c["ok"] else "✗"} {c["id"]:3s} {c["name"]}' + ('' if c['ok'] else f'  — {json.dumps(c["detail"], ensure_ascii=False, default=str)[:400]}'))
+    for w in rec.get('warnings') or []:
+        out(f'  ⚠ 경고 — {w}')
     dg = rec['recomputed']['input_digest'] or {}
     out(f'  다시 계산: 케이스 {dg.get("n")} · ids_sha256 {dg.get("ids_sha256")} · raw_sha256_table_sha256 {dg.get("raw_sha256_table_sha256")} · '
         f'코호트 TSV {dg.get("cohort_tsv_sha256")}')
@@ -842,8 +859,13 @@ def _selftest() -> int:
 
 def main(argv=None) -> int:
     ap = argparse.ArgumentParser(description='보충 20 (supp20) 입력 지문 영수증 — 읽기 전용 (Codex 보충 20 지원 검토 Q6 · 수정 계획 sup20_fix_plan_20261012 §3)')
-    ap.add_argument('--selftest', action='store_true', help='반례 시험 (raw sha 표 · TSV 한 바이트 · ID · 등록 값 오타 · 일반 계획 강등 · 묶음 · dry-run · manifest)')
-    ap.add_argument('--dry-run-log', default='', help='발사 dry-run 화면 파일 (run --cohorts lhss --dry-run --observe-imports 출력 · 등록 4 절의 grep 결과도 된다)')
+    ap.add_argument('--selftest', action='store_true', help='반례 시험 (raw sha 표 · TSV 한 바이트 · ID · 등록 값 오타 · 일반 계획 강등 · 묶음 · 사전 점검 영수증 · manifest)')
+    ap.add_argument('--preflight-receipt', default='',
+                    help='★ 10-14 발사 사전 점검 완료 영수증 JSON (실행기 run --root R --cohorts lhss --dry-run --observe-imports --preflight-receipt P.json 이 쓴 것 · '
+                         '같은 이름 .log 를 함께 읽는다)')
+    ap.add_argument('--approved-sha', default='', help='★ 10-14 저자 발사 승인 커밋 (7–40 hex · 사전 점검 · manifest git 기록과 접두 대조 · 주지 않으면 경고)')
+    ap.add_argument('--dry-run-log', default='',
+                    help='(10-14 부터 받지 않는다 — 텍스트 · grep 로그 단독은 증거가 아니다 · 주면 E0 실패 · 대신 --preflight-receipt)')
     ap.add_argument('--manifest', default='', help='실제 보충 발사 ROOT 의 manifest.json')
     ap.add_argument('--primary-manifest', default='', help='같은 날 194 발사 ROOT 의 manifest.json (새 ROOT 둘 · 같은 발사 커밋 대조)')
     ap.add_argument('--lhss-harvest', default='', help='수확 폴더 (실행기 --lhss-harvest 와 같은 뜻 · 기본 = 실행기 COHORT_SPECS)')
@@ -857,6 +879,7 @@ def main(argv=None) -> int:
         return _selftest()
     notes = {k: v for k, v in (('precheck', a.precheck_note), ('approval', a.approval_note)) if v}
     rec = receipt(reg_doc=a.registration, harvest=a.lhss_harvest or None, cohort=a.lhss_cohort or None, dry_run_log=a.dry_run_log or None,
+                  preflight_receipt=a.preflight_receipt or None, approved_sha=a.approved_sha or None,
                   manifest=a.manifest or None, primary_manifest=a.primary_manifest or None, notes=notes)
     print_receipt(rec)
     if a.json:
