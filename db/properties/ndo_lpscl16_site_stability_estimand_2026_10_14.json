@@ -1,0 +1,168 @@
+{
+  "schema": "estimand_card/v1",
+  "kind": "estimand",
+  "id": "ndo_lpscl16_site_stability_2026_10_14",
+  "제목": "Nd/O 공도핑 LPSCl1.6 — Nd 자리 (Rietveld 4b 대 Li 자리) · 닫힌계 분해 구동력 · 전자 배치 묘사",
+  "status": "proposed",
+  "written_on": "2026-10-14",
+  "트랙": {
+    "이름": "CEI/Nd",
+    "1저자": "실험 쪽 (박재현) — 사용자가 1저자가 아니다 (CLAUDE.md §소통)",
+    "사용자_발화_2026_10_14": [
+      "잠시 Nd로 와야 될거 같에 … 1저자가 이 물질이 안정한지를 보고 싶어하는거 같거든",
+      "약간 elf로 뭔갈 보고 싶어 하는거 같은데 볼 수 있나 이런걸 · 그리고 nd가 과연 실제로 계산값도 안정하게 나올지",
+      "1,2,3,4를 해보자"
+    ],
+    "지위": "사용자 실행 승인 (10-14 · 제안 4 단계 = 카드 · UMA 훑기 + DFT 확인 · ELF·Bader·Δρ · GPU 자리). 1저자의 '안정' 정의와 §5 허용 서술 동의 전까지 **잠정** — 결과를 원고 문장으로 옮기기 전에 그분 동의를 받는다."
+  },
+  "1저자_카톡_요지_2026_10_14": [
+    "Nd/O 치환에 의해 전해질 격자 구조 내에서 전자 배치가 바뀐다",
+    "1. P–S 결합보다 Nd–S 와 P–O 결합에서 모두 전자가 음이온에 더 많이 배치된다 (Pauling Nd 1.14 · P 2.19 · S 2.58 · O 3.44)",
+    "2. 전자 구름의 부피가 아닌 전자 구름의 밀도가 중요",
+    "3. 전해질 자체만 놓고 생각하기에 전기화학적 개념이 아님",
+    "4. 이온 결합보다 전자의 배치가 중요"
+  ],
+  "⚠_결과_보기_전에_썼다": {
+    "아직_없는_것": "Nd@Li 짝의 새 PP DFT 에너지 · 조성 균형 자리 비교 (Nd) · 도핑 셀 분해 구동력 · 같은 설정의 Bader/ELF/Δρ — 전부 0 건",
+    "이미_본_것": [
+      "Rietveld Nd@4b 셀 6 점 DFT 단일점 — O 배치 차만 (db/properties/ndo_lpscl16_o_motif_estimand_2026_09_09.json · O-distributed 최저)",
+      "UMA 같은 조성 교환 부호 — Li 자리 우세 · 밀려난 P 의 antisite 벌점 포함 (db/properties/site_preference_raw_78.csv)",
+      "Y 의 조성 균형 QE — Li 자리 +1.878 eV/Y · Li₃PS₄/Li₂S 교환에 조건부 (db/properties/y_site_preference_dft_2026_09_07.json)"
+    ],
+    "⇒": "Nd 자리의 **방향**에 사전 기대가 있다 (Li 자리). 그래서 문턱 · 허용 서술 · 반대로 나올 때의 문장을 지금 박는다."
+  },
+  "1_무엇을_원하는가": {
+    "Q1_자리": "1저자 Rietveld 처럼 Nd 가 **P 자리 (4b)** 에 든 모델과 **Li 자리** 에 든 모델 중 어느 쪽 에너지가 낮은가 — 같은 Nd·O 양 · 조성 균형.",
+    "Q2_닫힌계_분해_구동력": "Nd/O 도핑 셀이 도핑 전 셀보다 분해 구동력이 큰가 작은가 — 같은 분해상 기저 · Li 를 열지 않는다 (1저자 3 번: 전기화학 아님).",
+    "Q3_전자_배치_묘사": "1저자 1 · 2 · 4 번을 같은 설정의 DFT 로 정량한다 — Bader 전하 · Bader 전하/부피 · ELF 선 프로파일 · 변형 전하밀도 Δρ. ⛔ **묘사량이다 — 안정성 판정이 아니다.**"
+  },
+  "1b_설계_선언": {
+    "substitution_mode": "lattice",
+    "host": {
+      "무엇": "1저자 Rietveld CIF 를 정수화한 5 f.u. 셀 (60° 셀 6.928 × 6.928 × 34.640 Å · b2o3_enumerate --rietveld_cif)",
+      "경로": "db/structures/ndo_lpscl16_rietveld_2026_09_07/ (n5 · integerization.json)",
+      "원본_CIF": "db/structures/ndo_lpscl16_rietveld_2026_09_07/00_SOURCE_Rietveld_NdO_LPSCl1.6.cif (Nd 4b 0.0200 · P 0.9800 · O 16e 0.0075 · 불확도 없음 · Nd 가 P 열변위 공유)"
+    },
+    "모델": {
+      "M_P_Rietveld_방식": {
+        "화학식": "Cl8Li31Nd2O3P3S19 (66 원자)",
+        "Nd": "4b (부모 P)",
+        "보상": "Nd 하나당 Li 2 추가 (빈 48h 채움) — 모델 조건으로 선언",
+        "O": "16e · O-distributed (O 배치 카드 G2 선택)",
+        "출처": "기존 — db/structures/ndo_lpscl16_rietveld_2026_09_07/anneal_2026_09_07/ndo_lpscl16_n5fu_O-distributed_post_relax.xyz (+ 같은 계열 상위 배치)"
+      },
+      "M_Li": {
+        "화학식": "Cl8Li21Nd2O3P5S19 (58 원자)",
+        "Nd": "Li 자리 (Rietveld host 의 Li 자리는 48h 뿐)",
+        "보상": "Nd 하나당 Li 3 제거 (치환 1 + 공공 2) — 모델 조건으로 선언",
+        "O": "16e (PS₄ 모서리)",
+        "출처": "새로 — tools/doping/substitute_compound.py Type A (--cation_site Li 자리 · --anion_site S_16e) 를 같은 정수화 host 에"
+      },
+      "차이": "M_P − M_Li = (+10 Li, −2 P) = Nd 하나당 (+5 Li, −1 P)"
+    },
+    "실제_조성_농도": "Nd/(Nd+P) = 2/5 = 0.40 — 1저자 목표 0.02 의 **20 배**. DFT 는 이 한 점. UMA 로 x 0.02–0.40 추세를 따로 낸다 (큰 셀).",
+    "부모_치환_자리": {"M_P": "4b", "M_Li": "48h", "O": "16e"}
+  },
+  "1c_답하지_않는_것": [
+    "고용 한계 · 실제 합성 시료의 상태 (2차상 포함)",
+    "x = 0.02 에서의 크기 (농도 20 배)",
+    "저장소(μ) 에 무관한 자리선호 — Q1 은 Li₃PS₄/Li₂S 교환에 조건부 (회신 BG)",
+    "전기화학 창 · 계면 (1저자 3 번대로 제외 — CEI 화면의 다른 축)",
+    "속도론 · 이온전도",
+    "Nd 4f 물리 (frozen-4f 로 피했다)"
+  ],
+  "2_재는_양": {
+    "Q1": {
+      "식": "ΔG_site = { [E(M_P) − E(M_Li)] − n_Nd·[4·E(Li₂S) − E(Li₃PS₄)] } / n_Nd",
+      "단위": "eV / Nd",
+      "부호": "> 0 ⇒ 4b 모델이 불리 (Li 자리 유리) — Y 카드와 같은 방향",
+      "검산": "n_Nd·(+5 Li, −1 P) = n_Nd·(4 Li₂S − Li₃PS₄): Li +8 −3 = +5 · P −1 · S +4 −4 = 0",
+      "참조_상태": "Li₂S · Li₃PS₄ — 같은 QE 설정으로 이완 (Y 선례와 같은 상)"
+    },
+    "Q2": {
+      "식": "ΔE_decomp(X) = [Σ nᵢ·E(상ᵢ) − E(X)] / N_atoms(X) — tools/doping/dft_decomp_check.py (클수록 안정)",
+      "X": ["host (n5 정수화 · 무도핑)", "M_Li 최저", "M_P 최저"],
+      "기저": "UMA/MP hull 이 고른 분해상 — 세 X 가 모두 음 아닌 계수로 닫혀야 한다 (G5)",
+      "보고": "ΔE_decomp(도핑) − ΔE_decomp(host) · meV/atom · 같은 x 에서만"
+    },
+    "Q3": {
+      "양": [
+        "Bader 전하 (e) — S(PS₄ · Nd 이웃) · S(PS₄ · Li 만 이웃) · S(자유) · O(P–O) · Nd · Li · P",
+        "Bader 전하 / Bader 부피 (e/Å³) — 1저자 2 번 '밀도'",
+        "ELF 선 프로파일 — P–S · P–O · Nd–S · Li–S (결합선 위 최대 · 최소 위치)",
+        "Δρ = ρ − Σρ_atom (pp.x plot_num 9) 평면 — Nd · O 주변"
+      ],
+      "비교": "도핑 셀 대 host — 같은 PP · ecutwfc/ecutrho · FFT 격자 · k (G6)"
+    }
+  },
+  "3_이_계에서_잘_정의되는가": {
+    "판정_기준": "admissible state 가 여럿인데 선택·집계 규칙이 없으면 스칼라 보고량은 정의되지 않는다 (회신 N).",
+    "위험요인": [
+      {"물음": "배치가 여럿인가", "답": "그렇다 — Nd · Li (공공/채움) · O 자리 조합", "규칙": "모델별로 같은 예산 (UMA 후보 수 · 어닐 500 K × 20 ps + 이완) → 모델별 UMA 상위 3 → DFT 단일점 → **모델별 최저**. 한쪽만 더 찾으면 그쪽이 유리해진다."},
+      {"물음": "Nd 4f 가 열린 껍질인가", "답": "frozen-4f PAW (Nd.pbe-spdn-kjpaw_psl.1.0.0.UPF · 4f 핵심부 · 3 가) 로 피한다 — O 배치 카드 · ICOHP 마감과 같은 PP", "⛔": "Nd 4f 에 관한 주장은 하지 않는다"},
+      {"물음": "저장소에 따라 부호가 바뀌나", "답": "Q1 은 Li₃PS₄/Li₂S 교환에 조건부 (회신 BG). 다른 μ 꼭짓점은 보지 않는다 — 한계로 적는다"},
+      {"물음": "기하가 UMA 인가", "답": "UMA 이완 → DFT 단일점 (O 배치 카드와 같다). G3 로 막는다"},
+      {"물음": "농도", "답": "DFT 는 x = 0.40 한 점 — 크기를 x = 0.02 로 옮기지 않는다. UMA 추세는 G2 를 통과할 때만"}
+    ]
+  },
+  "4_검증_게이트_결과_보기_전에": {
+    "G1_후보": "모델별 UMA 상위 3 의 DFT 단일점 (총 6) + 참조 2 (Li₂S · Li₃PS₄) — 다 있어야 Q1 을 계산한다",
+    "G2_UMA_DFT_부호": "같은 셀에서 UMA ΔG_site 와 DFT ΔG_site 의 부호가 같아야 UMA x-추세를 쓴다. 다르면 '두 방법이 갈림' 으로 보고하고 추세를 쓰지 않는다",
+    "G3_여유": "|ΔG_site(DFT 단일점)| < 0.30 eV/Nd 면 두 모델 최저 셀을 DFT vc-relax 한 뒤에만 부호를 쓴다. 그 뒤에도 < 0.10 eV/Nd 면 '구별 불가'",
+    "G4_k_탐침": "두 최저 셀을 k 한 단계 올려 SCF 1 번씩 — ΔG_site 가 0.05 eV/Nd 넘게 움직이면 전 점을 그 k 로 다시 (재개 규칙 · 안 할 거면 사용자 명시 결정으로 닫는다)",
+    "G5_기저_닫힘": "Q2 의 세 X 가 같은 상 기저에서 음 아닌 계수 · 잔차 < 1e-8 로 닫혀야 한다 — 안 닫히면 기저를 넓힌다 (결과 보고 고르지 않는다)",
+    "G6_같은_설정": "Q3 의 도핑 셀과 host 는 PP · ecutwfc/ecutrho · FFT 격자 · k 가 같아야 한다 — 다르면 ELF · Bader 절대값을 나란히 놓지 않는다 (6 월 ELF 가 이 실패였다)"
+  },
+  "5_허용_서술_금지_서술": {
+    "Q1_허용_결과에_따라_하나": [
+      "ΔG_site ≥ +0.30 (또는 vc-relax 뒤 ≥ +0.10): 'Li₃PS₄/Li₂S 교환 기준 · Nd/(Nd+P) 0.40 셀 · frozen-4f PBE 에서 Nd@4b 모델이 Nd@Li 모델보다 X eV/Nd 높다. 다른 저장소와 x = 0.02 에서의 크기는 확인하지 않았다.'",
+      "ΔG_site ≤ −0.30 (또는 vc-relax 뒤 ≤ −0.10): '… Nd@4b 모델이 X eV/Nd 낮다 (Rietveld 자리와 같은 방향) …'",
+      "|ΔG_site| < 0.10 (vc-relax 뒤): '이 계산으로 두 자리를 가를 수 없다.'"
+    ],
+    "Q2_허용": "'같은 상 기저 · 닫힌계 · 0 K · x = 0.40 에서 도핑 셀의 분해 구동력이 도핑 전보다 Y meV/atom 크다(작다)'",
+    "Q3_허용": "'같은 설정에서 Nd 이웃 S 의 Bader 전하가 PS₄ 만 이웃한 S 보다 Z e 더 음이다' 같은 **비교 문장** — 묘사로만",
+    "금지": [
+      "⛔ ΔG_site 를 E_above_hull 이라 부르지 않는다 (교환 반응이다)",
+      "⛔ 두 모델의 원자당 에너지를 나란히 놓지 않는다 (조성이 다르다)",
+      "⛔ 'Nd 는 무조건 Li(P) 자리' — 저장소 · 농도 조건부",
+      "⛔ x = 0.40 의 크기를 실험 x = 0.02 로 옮기지 않는다",
+      "⛔ '전자 배치가 바뀌어서 안정하다' — Q3 는 묘사량, Q1 · Q2 가 에너지다. 둘을 인과로 잇는 문장은 쓰지 않는다",
+      "⛔ 6 월 Nd–S ICOHP · 6 월 ELF 의 Nd 주변 값 (HZ-nd-icohp-june-nds-pp)",
+      "⛔ 'cfg23 = Nd@P' (HZ-nd-site-cfg23-mislabeled)",
+      "⛔ ELF 를 다른 계산의 ELF 와 절대값으로 비교",
+      "⛔ Nd 4f 에 관한 주장 (frozen-4f)",
+      "⛔ 이 결과로 이온전도 변화를 설명"
+    ]
+  },
+  "6_규약_대조": {
+    "계산_설정": "O 배치 카드의 kgy 런 `~/work/runs/nd_scf_2026_09_08/*/scf.in` 과 같은 키. ⚠ 그 카드도 §6 '미기입' 이다 — 실행 전에 그 scf.in 에서 ecutwfc · ecutrho · K_POINTS · occupations · conv_thr · nspin · Nd PP 파일을 읽어 이 칸을 채우고, 새 입력이 같은 키인지 러너의 설정 균일성 검사로 확인한다.",
+    "Nd_PP": "Nd.pbe-spdn-kjpaw_psl.1.0.0.UPF (4f-in-core) — db/properties/nd_icohp_frozen4f_result_2026_09_23.json",
+    "도구": {
+      "M_Li_생성": "tools/doping/substitute_compound.py Type A (selftest 있음)",
+      "M_P": "기존 셀 (tools/doping/b2o3_enumerate.py --rietveld_cif)",
+      "UMA_열거_어닐_이완": "두 모델 같은 조건 — anneal_2026_09_07/anneal_results.json 의 조건 (500 K × 20 ps + 이완)",
+      "Q1_Q2_산술": "tools/doping/dft_decomp_check.py (--prepare / --collect · Y 선례)",
+      "Q3": "pp.x plot_num 8 (ELF) · 0 (ρ) · 9 (Δρ) · 17 (PAW 전전자 → Bader) · tools/figures/elf_bond_quant_nd.py · tools/figures/plot_elf_profile.py"
+    },
+    "실행_기계": "QE run 은 GPU 만 (CLAUDE.md §계산 자원 · 사용자 10-11). O 배치 카드의 66 원자 SCF 는 kgy 3090 에서 끝났다 (n4fu 는 힘 계산에서 CUDA OOM — 에너지만 유효).",
+    "선례": [
+      "db/properties/y_site_preference_dft_2026_09_07.json — 조성 균형 · 회신 BG 조건부",
+      "db/properties/ndo_lpscl16_o_motif_estimand_2026_09_09.json — 같은 셀 · 같은 PP · 게이트 G1–G5",
+      "db/properties/b2o3_ehull_result.json — 도핑 전후 hull 위 에너지 형식 (참고)",
+      "db/properties/nd_icohp_frozen4f_result_2026_09_23.json — 같은 PP 의 Nd@Li 120 원자 vc-relax 기하 (gabia · x 0.20) — 나중에 x 0.20 점을 더할 때의 출발점"
+    ],
+    "기존_판정_검색_2026_10_14": "Nd 자리 DFT 판정 0 건 · UMA 같은 조성 교환 부호만 · 6 월 'Nd→P 기각' 은 근거 없음 (HZ-nd-site-cfg23-mislabeled) · 결정 원장에 자리선호 · 안정성 결정 없음"
+  },
+  "7_실행_순서_사용자_1_4": [
+    "1. 이 카드 → 결정 원장 proposed → 사용자 비준 · 1저자에게 '안정' 의 뜻과 §5 허용 서술 통지 (사용자 통해)",
+    "2. UMA: M_Li 열거 (substitute_compound · 같은 host) · 두 모델 같은 예산으로 어닐 · 이완 → 모델별 상위 3 · UMA x-추세 (0.02–0.40 · 큰 셀) → DFT 단일점 6 + 참조 2 (+ Q2 기저 상) — GPU",
+    "3. Q3: 두 모델 최저 셀 + host 를 같은 설정으로 SCF → pp.x → ELF · Bader · Δρ",
+    "4. GPU 자리 — DFT 는 kgy (66 원자 SCF 실측) 가 자연스럽다. 지금 kgy 는 cascade v7 + li2s 런 중, gabia 는 Li₃Nd r2 → 탄성 — 사용자가 고른다"
+  ],
+  "8_아직_안_된_것": [
+    "§6 계산 설정 기입 (kgy scf.in 에서 읽기) — 이것 없이는 비준하지 않는다",
+    "Q2 분해상 기저 (UMA/MP hull 로 고르기)",
+    "M_Li 셀 생성 · UMA 열거",
+    "1저자 통지 · 동의"
+  ]
+}

@@ -23,7 +23,8 @@
   "2026-08-31": "D-2026-08-31-sdcp-polaron-S0-four-layer 신설 (proposed). 회신 T 의 S0 격하를 결정으로 등록 — 4층 실현 판정과 그 문턱. estimand 정의(D-2026-08-31-sdcp-polaron-Fbb)는 그대로 두고 게이트만 별개 slot 으로 붙인다 (_rules: 경험적 문턱은 별개 gate 결정).",
   "2026-09-01": "sdcp-c12-path 소급 등록 (proposed). 08-30 커밋 390450ea 가 ddE-obs·closure-criteria-first 를 superseded 로 내리며 강등 사유를 자유 문자열로 적어 _rules('등록된 ID 여야 한다') 위반 + dangling 이었다. 두 superseded_by 를 새 노드로 연결. 명칭 충돌·범위 문제는 노드의 open_conflicts 에 기록 (결정 아님).",
   "2026-09-28-wad-cc-graphite": "D-2026-09-28-wad-cc-graphite 신설 (active · 실행 전) — 흑연 C|C W_sep 사전등록 (카드 db/properties/wad_cc_graphite_prereg_2026_09_28.json · 코드 tools/wad/cc_graphite.py). litdb Wang 2015 인입이 09-23 계획의 봉인 조건.",
-  "2026-10-14-elastic-60bfgs-gate": "D-2026-10-14-elastic-60bfgs-gate-continue 신설 (active · 1저자 발화 · 결과 본 뒤의 개정) — 60-BFGS 게이트를 넘은 탄성 strain 점을 수렴까지 계속. 기록 db/properties/shear_b2o3_vs_lpscl16_2x_amendment_2026_10_14_bfgs_gate.json."
+  "2026-10-14-elastic-60bfgs-gate": "D-2026-10-14-elastic-60bfgs-gate-continue 신설 (active · 1저자 발화 · 결과 본 뒤의 개정) — 60-BFGS 게이트를 넘은 탄성 strain 점을 수렴까지 계속. 기록 db/properties/shear_b2o3_vs_lpscl16_2x_amendment_2026_10_14_bfgs_gate.json.",
+  "2026-10-14-ndo-site-stability-estimand": "D-2026-10-14-ndo-site-stability-estimand 신설 (proposed · 트랙 CEI/Nd · 1저자 = 실험) — Nd 자리 조성 균형 · 닫힌계 분해 구동력 · 전자 배치 묘사 보고량 카드. 기록 db/properties/ndo_lpscl16_site_stability_estimand_2026_10_14.json."
  },
  "decisions": [
   {
@@ -8117,6 +8118,68 @@
     "근거_발화": "용훈 포메이션 답 (2026-10-14 · 이 세션): '[우리 DFT 기준선] 탄성 60-BFGS 게이트 (13_m · 23_p 초과) …' → 'bgfs는 계속 끝날떄까지 보자'",
     "decision_digest": "sha256:f51a92b30b2d6973c90466d02c34d7fedd22c48610fdec4ee4946bd0a0e2f52e"
    }
+  },
+  {
+   "id": "D-2026-10-14-ndo-site-stability-estimand",
+   "schema_version": 2,
+   "kind": "estimand",
+   "scope": "cei.ndo_lpscl16.site_and_closed_stability",
+   "slot": "ndo_nd_site_and_closed_stability",
+   "applies_to": {
+    "systems": [
+     "ndo_lpscl16_n5fu",
+     "lpscl16_rietveld_host"
+    ],
+    "tasks": [
+     "site_preference_balanced",
+     "closed_system_decomposition",
+     "electron_distribution_descriptive"
+    ],
+    "methods": [
+     "qe-7.4.1-gpu-pbe-paw-frozen4f-Nd",
+     "uma-s-1p1-omat"
+    ],
+    "use_cases": [
+     "diagnostic",
+     "first_author_question"
+    ]
+   },
+   "title": "Nd/O-LPSCl1.6 — Nd 자리 (Rietveld 4b 대 Li 자리) 조성 균형 비교 · 닫힌계 분해 구동력 · 전자 배치 묘사 (트랙 CEI/Nd · 1저자 = 실험)",
+   "statement": "보고량 카드 db/properties/ndo_lpscl16_site_stability_estimand_2026_10_14.json. Q1 ΔG_site = {[E(M_P) − E(M_Li)] − n_Nd·[4E(Li₂S) − E(Li₃PS₄)]}/n_Nd (eV/Nd · > 0 이면 4b 불리) — Rietveld 정수화 5 f.u. host · Nd/(Nd+P) 0.40 · frozen-4f PBE · Li₃PS₄/Li₂S 교환에 조건부. Q2 같은 상 기저 분해 구동력 (도핑 대 host · 닫힌계). Q3 Bader · ELF · Δρ 는 묘사량 (안정성 판정 아님). 게이트 G1–G6 · 허용/금지 서술은 결과 전에 카드 §4 · §5 에 고정.",
+   "rationale": "CEI 트랙 1저자 (실험) 가 '이 물질이 안정한가' 와 전자 배치 설명 (카톡 4 줄 · 전기화학 아님) 을 원한다. 기록 대조 결과 Rietveld 는 Nd 를 4b 에 두는데 Nd 자리의 DFT 판정은 0 건이고, 6 월 'Nd→P 기각' 은 근거가 없었다 (HZ-nd-site-cfg23-mislabeled). Y 는 같은 질문을 조성 균형 QE 로 풀었다 (+1.878 eV/Y · 조건부).",
+   "decision_state": "proposed",
+   "record_kind": "estimand",
+   "results_seen": false,
+   "results_seen_note": "Nd 자리 · 분해 구동력 · 같은 설정의 Bader/ELF 는 0 건. 이미 본 것은 카드 ⚠_결과_보기_전에_썼다.이미_본_것 (O 배치 DFT 단일점 · UMA 교환 부호 · Y 선례) — 방향 기대가 있어 문턱을 지금 박는다.",
+   "card": "db/properties/ndo_lpscl16_site_stability_estimand_2026_10_14.json",
+   "depends_on": [
+    "D-2026-09-24-nd-icohp-close"
+   ],
+   "evidence": [
+    "db/structures/ndo_lpscl16_rietveld_2026_09_07/00_SOURCE_Rietveld_NdO_LPSCl1.6.cif (Nd 4b 0.0200)",
+    "db/properties/ndo_lpscl16_o_motif_estimand_2026_09_09.json (같은 셀 · 같은 PP · O-distributed)",
+    "db/properties/site_preference_raw_78.csv (UMA 같은 조성 교환 · 부호만)",
+    "db/properties/y_site_preference_dft_2026_09_07.json (조성 균형 선례 · 회신 BG)"
+   ],
+   "reopen_criteria": [
+    "규약 칸 (PP · ecut · k · 기준상) 이 바뀌는 경우",
+    "1저자가 '안정' 의 뜻을 다르게 정하는 경우 (예: 공기·수분 안정성) — 그때는 새 카드",
+    "'배치를 하나 더 봤다' 는 재개 사유가 아니다"
+   ],
+   "enforcement": "① §6 계산 설정 기입 전 비준 안 함 ② 두 모델 같은 탐색 예산 ③ G3 여유 0.30 eV/Nd 미만이면 vc-relax 뒤에만 부호 ④ Q3 를 안정성 근거로 쓰지 않는다 ⑤ 원고 문장은 1저자 동의 뒤",
+   "track": {
+    "name": "CEI/Nd",
+    "first_author": "실험 쪽 (박재현) — 사용자 아님",
+    "user_execution_approval": "2026-10-14 '1,2,3,4를 해보자'"
+   },
+   "proposed_by": [
+    {
+     "actor_type": "agent",
+     "actor_id": "claude",
+     "date": "2026-10-14"
+    }
+   ],
+   "_note": "proposed — 사용자 비준 (§6 기입 뒤) + 1저자 통지. 사용자의 '해보자' 는 실행 승인이지 1저자 동의를 대신하지 않는다."
   }
  ]
 }

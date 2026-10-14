@@ -1,0 +1,146 @@
+{
+ "card": "db/properties/ndo_lpscl16_site_stability_estimand_2026_10_14.json",
+ "decision": "D-2026-10-14-ndo-site-stability-estimand",
+ "git_head": "99490d3d0517dac0baff7fcbc908fc0f9ca6fa8c",
+ "commands": [
+  "/usr/bin/python3 /home/user/Yonghoon-DEM-DFT/tools/doping/b2o3_enumerate.py --rietveld_cif /home/user/Yonghoon-DEM-DFT/db/structures/ndo_lpscl16_rietveld_2026_09_07/00_SOURCE_Rietveld_NdO_LPSCl1.6.cif --primitive --supercell 1 1 5 --dopant Nd --n_B 2 --n_O 3 --top 60 --o_motif_top 60 --seed 0 --out /tmp/ndsite_h2ppyui5/mp",
+  "/usr/bin/python3 /home/user/Yonghoon-DEM-DFT/tools/doping/b2o3_enumerate.py --rietveld_cif /home/user/Yonghoon-DEM-DFT/db/structures/ndo_lpscl16_rietveld_2026_09_07/00_SOURCE_Rietveld_NdO_LPSCl1.6.cif --primitive --supercell 1 1 5 --dopant Nd --n_B 0 --n_O 0 --top 45 --o_motif_top 0 --seed 0 --out /tmp/ndsite_h2ppyui5/host",
+  "/usr/bin/python3 /home/user/Yonghoon-DEM-DFT/tools/doping/substitute_compound.py --base /tmp/ndsite_h2ppyui5/host/cif/cfg0000_E-1170.357.cif --compound Nd2O3 --x_compound 0.25 --cation_site Li_48h --anion_site S_16e --method random --vacancy_method random --seed 1000 --n_seeds 40 --out /tmp/ndsite_h2ppyui5/mli_h0_random_1000",
+  "/usr/bin/python3 /home/user/Yonghoon-DEM-DFT/tools/doping/substitute_compound.py --base /tmp/ndsite_h2ppyui5/host/cif/cfg0000_E-1170.357.cif --compound Nd2O3 --x_compound 0.25 --cation_site Li_48h --anion_site S_16e --method random --vacancy_method near_cation --seed 1500 --n_seeds 10 --out /tmp/ndsite_h2ppyui5/mli_h0_near_cation_1500",
+  "/usr/bin/python3 /home/user/Yonghoon-DEM-DFT/tools/doping/substitute_compound.py --base /tmp/ndsite_h2ppyui5/host/cif/cfg0005_E-1170.080.cif --compound Nd2O3 --x_compound 0.25 --cation_site Li_48h --anion_site S_16e --method random --vacancy_method random --seed 2000 --n_seeds 40 --out /tmp/ndsite_h2ppyui5/mli_h1_random_2000",
+  "/usr/bin/python3 /home/user/Yonghoon-DEM-DFT/tools/doping/substitute_compound.py --base /tmp/ndsite_h2ppyui5/host/cif/cfg0005_E-1170.080.cif --compound Nd2O3 --x_compound 0.25 --cation_site Li_48h --anion_site S_16e --method random --vacancy_method near_cation --seed 2500 --n_seeds 10 --out /tmp/ndsite_h2ppyui5/mli_h1_near_cation_2500",
+  "/usr/bin/python3 /home/user/Yonghoon-DEM-DFT/tools/doping/substitute_compound.py --base /tmp/ndsite_h2ppyui5/host/cif/cfg0010_E-1168.680.cif --compound Nd2O3 --x_compound 0.25 --cation_site Li_48h --anion_site S_16e --method random --vacancy_method random --seed 3000 --n_seeds 40 --out /tmp/ndsite_h2ppyui5/mli_h2_random_3000",
+  "/usr/bin/python3 /home/user/Yonghoon-DEM-DFT/tools/doping/substitute_compound.py --base /tmp/ndsite_h2ppyui5/host/cif/cfg0010_E-1168.680.cif --compound Nd2O3 --x_compound 0.25 --cation_site Li_48h --anion_site S_16e --method random --vacancy_method near_cation --seed 3500 --n_seeds 10 --out /tmp/ndsite_h2ppyui5/mli_h2_near_cation_3500",
+  "/usr/bin/python3 /home/user/Yonghoon-DEM-DFT/tools/doping/substitute_compound.py --base /tmp/ndsite_h2ppyui5/host/cif/cfg0015_E-1168.347.cif --compound Nd2O3 --x_compound 0.25 --cation_site Li_48h --anion_site S_16e --method random --vacancy_method random --seed 4000 --n_seeds 40 --out /tmp/ndsite_h2ppyui5/mli_h3_random_4000",
+  "/usr/bin/python3 /home/user/Yonghoon-DEM-DFT/tools/doping/substitute_compound.py --base /tmp/ndsite_h2ppyui5/host/cif/cfg0015_E-1168.347.cif --compound Nd2O3 --x_compound 0.25 --cation_site Li_48h --anion_site S_16e --method random --vacancy_method near_cation --seed 4500 --n_seeds 10 --out /tmp/ndsite_h2ppyui5/mli_h3_near_cation_4500",
+  "/usr/bin/python3 /home/user/Yonghoon-DEM-DFT/tools/doping/substitute_compound.py --base /tmp/ndsite_h2ppyui5/host/cif/cfg0020_E-1167.605.cif --compound Nd2O3 --x_compound 0.25 --cation_site Li_48h --anion_site S_16e --method random --vacancy_method random --seed 5000 --n_seeds 40 --out /tmp/ndsite_h2ppyui5/mli_h4_random_5000",
+  "/usr/bin/python3 /home/user/Yonghoon-DEM-DFT/tools/doping/substitute_compound.py --base /tmp/ndsite_h2ppyui5/host/cif/cfg0020_E-1167.605.cif --compound Nd2O3 --x_compound 0.25 --cation_site Li_48h --anion_site S_16e --method random --vacancy_method near_cation --seed 5500 --n_seeds 10 --out /tmp/ndsite_h2ppyui5/mli_h4_near_cation_5500"
+ ],
+ "budget": {
+  "n_each": 10,
+  "M_Li_hosts": 5,
+  "random_seeds_per_host": 40,
+  "near_cation_per_host": 10
+ },
+ "M_Li_generated": 250,
+ "M_Li_rejected_O_same_PS4": 109,
+ "M_Li_pool_after_filter": 141,
+ "M_P_pool": 60,
+ "files": {
+  "MP/MP_00.xyz": {
+   "source": "cif/cfg0000_E-1044.823_O-distributed.cif",
+   "ewald_eV": -1044.8233,
+   "sha256": "b9cf8a95980e24a93a8b3d8b6c01d58c99415aa9f015dddadc3d6412a0c704b5"
+  },
+  "MP/MP_01.xyz": {
+   "source": "cif/cfg0005_E-1043.828_O-distributed.cif",
+   "ewald_eV": -1043.8282,
+   "sha256": "b2be21e2679303a875f52787ef7d608be51b6fad2d127e1c445b9e4aa1261083"
+  },
+  "MP/MP_02.xyz": {
+   "source": "cif/cfg0010_E-1043.782_O-distributed.cif",
+   "ewald_eV": -1043.7818,
+   "sha256": "2a10b5f54931834ab707fa9510f9a2fc4352cb5bfec224ef05d3b925761e7aa6"
+  },
+  "MP/MP_03.xyz": {
+   "source": "cif/cfg0015_E-1043.564_O-distributed.cif",
+   "ewald_eV": -1043.5636,
+   "sha256": "6231a7f36ca7e6d68421d2e362dd13e7c5e1f998ce1e5efa2018a68aa252d72f"
+  },
+  "MP/MP_04.xyz": {
+   "source": "cif/cfg0020_E-1043.441_O-distributed.cif",
+   "ewald_eV": -1043.4409,
+   "sha256": "6cf0a0fa1aa3aa6bc721305b6cbd9fcb04310d4d04c3663ca642c4fab4e60a57"
+  },
+  "MP/MP_05.xyz": {
+   "source": "cif/cfg0025_E-1043.361_O-distributed.cif",
+   "ewald_eV": -1043.3613,
+   "sha256": "f80e5ad0667ac40905b9ab7b7d63f4f65743cfefcb9c9d38d0add3528ee9a14a"
+  },
+  "MP/MP_06.xyz": {
+   "source": "cif/cfg0030_E-1043.166_O-distributed.cif",
+   "ewald_eV": -1043.1663,
+   "sha256": "bb6872ebf677da574ab3d7716a7284b89a63a56f7e331f11a0395ad572037fd4"
+  },
+  "MP/MP_07.xyz": {
+   "source": "cif/cfg0035_E-1042.951_O-distributed.cif",
+   "ewald_eV": -1042.9508,
+   "sha256": "beffa0d38909cf5a6d18abcf64c03dec949a99ca4cc4b5a783f8e02af18ad6b0"
+  },
+  "MP/MP_08.xyz": {
+   "source": "cif/cfg0040_E-1042.884_O-distributed.cif",
+   "ewald_eV": -1042.8842,
+   "sha256": "a1ee2723507265be1d03b06855b964bcd6576e066afd9b0d87c4ce95ea41ddce"
+  },
+  "MP/MP_09.xyz": {
+   "source": "cif/cfg0045_E-1042.879_O-distributed.cif",
+   "ewald_eV": -1042.8788,
+   "sha256": "518b4db98782757f07e16b273e9803328c0b0054e0b9a50ce81f175ecb949559"
+  },
+  "MLi/MLi_00.xyz": {
+   "source": "mli_h0_near_cation_1500/Nd2O3_x250_s01.xyz",
+   "ewald_eV": -1207.1693,
+   "sha256": "fe4859feb51e4f24960506cb67a906e5502a6837d0fffecff81e8518ddd88fab"
+  },
+  "MLi/MLi_01.xyz": {
+   "source": "mli_h3_near_cation_4500/Nd2O3_x250_s01.xyz",
+   "ewald_eV": -1206.4544,
+   "sha256": "c87b7874948b4b2fa53612ead8f46923ec5962853ccc12b5c1d03632f491519b"
+  },
+  "MLi/MLi_02.xyz": {
+   "source": "mli_h2_near_cation_3500/Nd2O3_x250_s04.xyz",
+   "ewald_eV": -1203.1499,
+   "sha256": "2d97f11adc44feb0572c02414855cc50a54683539e5a0754740c685e827eee1a"
+  },
+  "MLi/MLi_03.xyz": {
+   "source": "mli_h4_near_cation_5500/Nd2O3_x250_s08.xyz",
+   "ewald_eV": -1201.6812,
+   "sha256": "8255a6366475ad9e35bfd76cfa22c0ee5d66eb694c8a5847988d0dfae6eec8f3"
+  },
+  "MLi/MLi_04.xyz": {
+   "source": "mli_h0_random_1000/Nd2O3_x250_s19.xyz",
+   "ewald_eV": -1201.6054,
+   "sha256": "498dd13cda6b47041026760a36be4d2f40e00a009e8971427e21f911178d3b59"
+  },
+  "MLi/MLi_05.xyz": {
+   "source": "mli_h0_random_1000/Nd2O3_x250_s34.xyz",
+   "ewald_eV": -1201.33,
+   "sha256": "ce58c5f29125b740683e3020a54c072581efe0bfc47e9811e8b228641fd4c746"
+  },
+  "MLi/MLi_06.xyz": {
+   "source": "mli_h4_random_5000/Nd2O3_x250_s22.xyz",
+   "ewald_eV": -1200.6404,
+   "sha256": "17744928854dad3095caec358516421fa7680a6e5d6e8df94df4f43b777faf6e"
+  },
+  "MLi/MLi_07.xyz": {
+   "source": "mli_h0_random_1000/Nd2O3_x250_s39.xyz",
+   "ewald_eV": -1200.1529,
+   "sha256": "501244b36383ef47b3a7562de7654fc0efd00c9284dae87bb6fc1b5f818f2f15"
+  },
+  "MLi/MLi_08.xyz": {
+   "source": "mli_h4_near_cation_5500/Nd2O3_x250_s05.xyz",
+   "ewald_eV": -1200.0904,
+   "sha256": "4a518d1fb4c240c145435a6e930a59cfdd0c533242e8c1eab8e698fa122faf72"
+  },
+  "MLi/MLi_09.xyz": {
+   "source": "mli_h2_near_cation_3500/Nd2O3_x250_s00.xyz",
+   "ewald_eV": -1199.8107,
+   "sha256": "9d84d84bfb5e518b4b671efd50769de5d8bf5ebe44e36dce4d62f360aaaf69e5"
+  },
+  "host/host_00.xyz": {
+   "source": "cif/cfg0000_E-1170.357.cif",
+   "ewald_eV": -1170.3572,
+   "sha256": "e090114ee5b16caab61614a4f10baa27f4b8c80842c0c8bb484d62e2edc417b0"
+  },
+  "host/host_01.xyz": {
+   "source": "cif/cfg0005_E-1170.080.cif",
+   "ewald_eV": -1170.0799,
+   "sha256": "8dd3a72ac277b63a3fe931deade2580ca3e3717e9c9c88ba65bd42d6b3526092"
+  },
+  "host/host_02.xyz": {
+   "source": "cif/cfg0010_E-1168.680.cif",
+   "ewald_eV": -1168.6804,
+   "sha256": "47d85aa3ccfd82764f5dee9b23563f70063e22690e5fdafc468b971f2d2a858c"
+  }
+ }
+}
