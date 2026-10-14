@@ -1,0 +1,384 @@
+{
+  "kind": "STATIC_DOCUMENT_PREREVIEW_V3_AUDIT",
+  "utc": "2026-10-14T07:43:58.7969267Z",
+  "reviewed_head": "05614f07abc559a12254db41ce7301574ddc6f50",
+  "attachments": [
+    {
+      "file": "REIL_C4E_APPROVAL_REQUEST_v3_20261014.md",
+      "bytes": 43444,
+      "sha256": "29cd92a44db97fc29893adc6bc5dda75d610486cdd5d169eafd6df537bd9029a",
+      "matches_fixed_commit": true
+    },
+    {
+      "file": "REIL_C4E_PREREVIEW_SEND_v3_20261014.md",
+      "bytes": 3773,
+      "sha256": "392f10045292d585476271f7cb20b2665643eedfa45032544d9612197f83c84d",
+      "matches_fixed_commit": true
+    }
+  ],
+  "source_index": [
+    {
+      "git_blob": "518505c17299308946a0149e35c8da79e841b3a4",
+      "capture": "source/docs/REIL_C4E_APPROVAL_REQUEST_v3_20261014.md",
+      "binding": "Direct fixed-commit read",
+      "ref": "05614f07abc559a12254db41ce7301574ddc6f50",
+      "bytes": 43444,
+      "repo_path": "bms-balancing/docs/REIL_C4E_APPROVAL_REQUEST_v3_20261014.md",
+      "sha256": "29cd92a44db97fc29893adc6bc5dda75d610486cdd5d169eafd6df537bd9029a"
+    },
+    {
+      "git_blob": "52685a81b8907d596e82f8c2d87f3b37a32b6b6d",
+      "capture": "source/docs/REIL_C4E_PREREVIEW_SEND_v3_20261014.md",
+      "binding": "Direct fixed-commit read",
+      "ref": "05614f07abc559a12254db41ce7301574ddc6f50",
+      "bytes": 3773,
+      "repo_path": "bms-balancing/docs/REIL_C4E_PREREVIEW_SEND_v3_20261014.md",
+      "sha256": "392f10045292d585476271f7cb20b2665643eedfa45032544d9612197f83c84d"
+    },
+    {
+      "git_blob": "f0847308f444e82d9d49ace2159b7c2807c6d37c",
+      "capture": "source/docs/REIL_PREREQUISITES_STATUS_20261004.md",
+      "binding": "Direct fixed-commit read",
+      "ref": "05614f07abc559a12254db41ce7301574ddc6f50",
+      "bytes": 196315,
+      "repo_path": "bms-balancing/docs/REIL_PREREQUISITES_STATUS_20261004.md",
+      "sha256": "0cb2fcfceca87ab09654252329e7eb582327721b66260aa49c8d8c15cc2b67ab"
+    },
+    {
+      "git_blob": "0daf23bfac51f77a15a8586a55f898031011d3bf",
+      "capture": "source/scripts/reil_c4_monitor.py",
+      "binding": "Direct fixed-commit read",
+      "ref": "05614f07abc559a12254db41ce7301574ddc6f50",
+      "bytes": 19115,
+      "repo_path": "bms-balancing/scripts/reil_c4_monitor.py",
+      "sha256": "0644510032e986aad2f67c824ebab70d8da699bb5a60680330377353200a60a9"
+    },
+    {
+      "git_blob": "36b7b801c78e5d3d890244a0cbc10dcc54c60b63",
+      "capture": "source/docs/REIL_C4E_PREREVIEW_SEND_v2_20261014.md",
+      "binding": "Previously captured bytes; repository path unchanged in base-to-head comparison, except pinned external original util",
+      "ref": "dc6e5b7e043ff11b73095ddb9d60db7837e665c7",
+      "bytes": 4272,
+      "repo_path": "bms-balancing/docs/REIL_C4E_PREREVIEW_SEND_v2_20261014.md",
+      "sha256": "56644c3888f7345c26cf41a3a4177d55305d47591a2b5c0de123f3df39991f68"
+    },
+    {
+      "git_blob": "49c9e36141ca0c19a9e6bdf945f4e0e4bfbe5f1b",
+      "capture": "source/docs/REIL_C4E_APPROVAL_REQUEST_v2_20261014.md",
+      "binding": "Previously captured bytes; repository path unchanged in base-to-head comparison, except pinned external original util",
+      "ref": "dc6e5b7e043ff11b73095ddb9d60db7837e665c7",
+      "bytes": 35172,
+      "repo_path": "bms-balancing/docs/REIL_C4E_APPROVAL_REQUEST_v2_20261014.md",
+      "sha256": "a4fb202549e6f785080c0e0feab09f930a2f0afd288cb3a3e5005096dd6d8e28"
+    },
+    {
+      "git_blob": "6cea82b864bba7270d5c6c7c0296b0738a6e9e9e",
+      "capture": "source/scripts/reil_c4_h.py",
+      "binding": "Previously captured bytes; repository path unchanged in base-to-head comparison, except pinned external original util",
+      "ref": "dc6e5b7e043ff11b73095ddb9d60db7837e665c7",
+      "bytes": 63723,
+      "repo_path": "bms-balancing/scripts/reil_c4_h.py",
+      "sha256": "4efb197d2bb799edf1f712a889d826b15207d0e45ff1a7b7958884559bfac150"
+    },
+    {
+      "git_blob": "320b4b61944dc57978ff5e5d398ba71d81929d95",
+      "capture": "source/scripts/reil_c4_hb.py",
+      "binding": "Previously captured bytes; repository path unchanged in base-to-head comparison, except pinned external original util",
+      "ref": "dc6e5b7e043ff11b73095ddb9d60db7837e665c7",
+      "bytes": 85307,
+      "repo_path": "bms-balancing/scripts/reil_c4_hb.py",
+      "sha256": "8b8477238290cb35491c060b231031b79b277098bae1c0e7e48621d720a5aa9d"
+    },
+    {
+      "git_blob": "ef8586be299277793916d86c591c3f52152d8d0d",
+      "capture": "source/docs/REIL_C4E_APPROVAL_REQUEST_20261014.md",
+      "binding": "Previously captured bytes; repository path unchanged in base-to-head comparison, except pinned external original util",
+      "ref": "89d18f546cef0172ee53105ae04ba66d1e224370",
+      "bytes": 22066,
+      "repo_path": "bms-balancing/docs/REIL_C4E_APPROVAL_REQUEST_20261014.md",
+      "sha256": "b1d8953a346f034a4eecbbc695198f58e1deefcb0a1ba9b00fab631b1d41aa75"
+    },
+    {
+      "git_blob": "26684422d4ddf2e7afda6bfc4b3a768faa4e9f00",
+      "capture": "source/docs/REIL_C4E_PREREVIEW_SEND_20261014.md",
+      "binding": "Previously captured bytes; repository path unchanged in base-to-head comparison, except pinned external original util",
+      "ref": "89d18f546cef0172ee53105ae04ba66d1e224370",
+      "bytes": 3515,
+      "repo_path": "bms-balancing/docs/REIL_C4E_PREREVIEW_SEND_20261014.md",
+      "sha256": "b648bf9d570c6abb964e08c2ad35b1fc4d8b39e7aadabf40e7c1f19b146c026f"
+    },
+    {
+      "git_blob": "9f49d6061cf3c9e69ed35e3b00e5e0addafd8fd3",
+      "capture": "source/docs/REIL_EXTERNAL_VALIDATION_PROTOCOL_v2_ANNEX_A.md",
+      "binding": "Previously captured bytes; repository path unchanged in base-to-head comparison, except pinned external original util",
+      "ref": "89d18f546cef0172ee53105ae04ba66d1e224370",
+      "bytes": 37308,
+      "repo_path": "bms-balancing/docs/REIL_EXTERNAL_VALIDATION_PROTOCOL_v2_ANNEX_A.md",
+      "sha256": "94b0892a4e7fc7a4dc916fa785d1029f269d61dec3c8826d08f83aa9ffeedcca"
+    },
+    {
+      "git_blob": "b7ef272f412e1b10f35ae841d961377ff4854d64",
+      "capture": "source/scripts/reil_p0.py",
+      "binding": "Previously captured bytes; repository path unchanged in base-to-head comparison, except pinned external original util",
+      "ref": "89d18f546cef0172ee53105ae04ba66d1e224370",
+      "bytes": 23941,
+      "repo_path": "bms-balancing/scripts/reil_p0.py",
+      "sha256": "793b326ebf86a6db3b855d828aff4d6b6dddc824bed8d00f4161537b1cc06e3a"
+    },
+    {
+      "git_blob": "5abd201780c9db4685a289053d6eb79d8b0ef8e5",
+      "capture": "source/docs/REIL_C4_APPROVAL_REQUEST_v2_20261013.md",
+      "binding": "Previously captured bytes; repository path unchanged in base-to-head comparison, except pinned external original util",
+      "ref": "89d18f546cef0172ee53105ae04ba66d1e224370",
+      "bytes": 22921,
+      "repo_path": "bms-balancing/docs/REIL_C4_APPROVAL_REQUEST_v2_20261013.md",
+      "sha256": "22dcc8e5ef6430253f55834743e10808b0c3547c8fb560d0ad415dce77da8f87"
+    },
+    {
+      "git_blob": "2c5e614eb5b565e9c9bab410ae741ffec1d2fca5",
+      "capture": "source/scripts/reil_c4_e3a.py",
+      "binding": "Previously captured bytes; repository path unchanged in base-to-head comparison, except pinned external original util",
+      "ref": "89d18f546cef0172ee53105ae04ba66d1e224370",
+      "bytes": 32311,
+      "repo_path": "bms-balancing/scripts/reil_c4_e3a.py",
+      "sha256": "33b855378fb76634eb314f8cfb0428151ce1ec8b9045bc8447d8e17354a41ac3"
+    },
+    {
+      "git_blob": "2aa50f0bcb6e3bf3ff9fdfc15729458e6df6c024",
+      "capture": "source/evidence/reil_p0_20261006/P0_RESULT.json",
+      "binding": "Previously captured bytes; repository path unchanged in base-to-head comparison, except pinned external original util",
+      "ref": "89d18f546cef0172ee53105ae04ba66d1e224370",
+      "bytes": 127971,
+      "repo_path": "bms-balancing/evidence/reil_p0_20261006/P0_RESULT.json",
+      "sha256": "3875e65092b38c9b08c907926bd8d1f4ee25674c97c28b5ada935e9027d12a90"
+    },
+    {
+      "git_blob": "872ca88b3b5c57aebf295bd0109e95a830b3ae13",
+      "capture": "source/docs/REIL_EXTERNAL_VALIDATION_PROTOCOL_v2.md",
+      "binding": "Previously captured bytes; repository path unchanged in base-to-head comparison, except pinned external original util",
+      "ref": "89d18f546cef0172ee53105ae04ba66d1e224370",
+      "bytes": 27795,
+      "repo_path": "bms-balancing/docs/REIL_EXTERNAL_VALIDATION_PROTOCOL_v2.md",
+      "sha256": "74ccb30ff3667efb4f3842a63c6ebf21296a1137bb1165682631f6b5c005fd60"
+    },
+    {
+      "git_blob": "cd54ebec8949abbcf05c7cf7147178289a32196d",
+      "capture": "source/reil_c6_rebuild_20261013/MANIFEST.json",
+      "binding": "Previously captured bytes; repository path unchanged in base-to-head comparison, except pinned external original util",
+      "ref": "89d18f546cef0172ee53105ae04ba66d1e224370",
+      "bytes": 954,
+      "repo_path": "bms-balancing/reil_c6_rebuild_20261013/MANIFEST.json",
+      "sha256": "4f12094897b53463097e78dafc0bfe5f37c1d76bb1a6266c0a907d755fb2ebdc"
+    },
+    {
+      "git_blob": "790734fefa1a8d432bcce8e225d1a229e797accf",
+      "capture": "source/docs/REIL_P0_APPROVAL_REQUEST_20261006.md",
+      "binding": "Previously captured bytes; repository path unchanged in base-to-head comparison, except pinned external original util",
+      "ref": "89d18f546cef0172ee53105ae04ba66d1e224370",
+      "bytes": 12957,
+      "repo_path": "bms-balancing/docs/REIL_P0_APPROVAL_REQUEST_20261006.md",
+      "sha256": "64e377e790b2d194f919b5630bc890feda38c88b9b8f9502248013e8a8b56011"
+    },
+    {
+      "git_blob": "0e5a9f3a83ca419d311f27e0a63d9f0f7ade0d6b",
+      "capture": "source/scripts/reil_c5_pilot.py",
+      "binding": "Previously captured bytes; repository path unchanged in base-to-head comparison, except pinned external original util",
+      "ref": "89d18f546cef0172ee53105ae04ba66d1e224370",
+      "bytes": 47164,
+      "repo_path": "bms-balancing/scripts/reil_c5_pilot.py",
+      "sha256": "73bee8dc412b39863afb64b70bc128cbecee2075a3a17914fc7288f353ef11a6"
+    },
+    {
+      "git_blob": "626abed0d1df0065f208f562545fc18f4f248443",
+      "capture": "source/tests/test_reil_c4_0a_fix.py",
+      "binding": "Previously captured bytes; repository path unchanged in base-to-head comparison, except pinned external original util",
+      "ref": "89d18f546cef0172ee53105ae04ba66d1e224370",
+      "bytes": 19183,
+      "repo_path": "bms-balancing/tests/test_reil_c4_0a_fix.py",
+      "sha256": "b2137e1119049f4f2b87c096fbb77a3de26304ea355adac98da85d796728004c"
+    },
+    {
+      "git_blob": "24211bdbadd4b5a2914051bee13bce83ac80367d",
+      "capture": "source/tests/test_reil_c4_0b1_fix2.py",
+      "binding": "Previously captured bytes; repository path unchanged in base-to-head comparison, except pinned external original util",
+      "ref": "89d18f546cef0172ee53105ae04ba66d1e224370",
+      "bytes": 8440,
+      "repo_path": "bms-balancing/tests/test_reil_c4_0b1_fix2.py",
+      "sha256": "b861f16b7fe651b5c68ad57ed77d9079f918bf4ec59d2028cc5b82101f847602"
+    },
+    {
+      "git_blob": "c32ecdc3c4cdb456514e3abc14975103f412f32d",
+      "capture": "source/scripts/reil_c6_profile.py",
+      "binding": "Previously captured bytes; repository path unchanged in base-to-head comparison, except pinned external original util",
+      "ref": "89d18f546cef0172ee53105ae04ba66d1e224370",
+      "bytes": 15915,
+      "repo_path": "bms-balancing/scripts/reil_c6_profile.py",
+      "sha256": "408afc4bb5eb1069583b955e0eb6215bf48dd9259ad474c230549d1b3642df5d"
+    },
+    {
+      "git_blob": "c183015e58570b50b6d9bb98a429ddcbad0529cf",
+      "capture": "source/tests/test_reil_c4_0a.py",
+      "binding": "Previously captured bytes; repository path unchanged in base-to-head comparison, except pinned external original util",
+      "ref": "89d18f546cef0172ee53105ae04ba66d1e224370",
+      "bytes": 20404,
+      "repo_path": "bms-balancing/tests/test_reil_c4_0a.py",
+      "sha256": "6b2635d4a97e296a4d2d8749209b66461d3bbfd9009465aaeac3d80a57197e17"
+    },
+    {
+      "git_blob": "1d4afe9f5ef451b9cf479640fd5e361fdbd08bd0",
+      "capture": "source/reviews/prereview_pybamm_reil_20261003/external/util_LFP.py.txt",
+      "binding": "Previously captured bytes; repository path unchanged in base-to-head comparison, except pinned external original util",
+      "ref": "89d18f546cef0172ee53105ae04ba66d1e224370",
+      "bytes": 32909,
+      "repo_path": "bms-balancing/reviews/prereview_pybamm_reil_20261003/external/util_LFP.py.txt",
+      "sha256": "bdf78273d50f40ce3154d01a3ef8d36f0f5ea5ec1b04539584809d7b19b46f9c"
+    },
+    {
+      "git_blob": "d2e534d326e7cb7bf1989d16cbf88229ef026890",
+      "capture": "source/tests/test_reil_c4_0b1_fix.py",
+      "binding": "Previously captured bytes; repository path unchanged in base-to-head comparison, except pinned external original util",
+      "ref": "89d18f546cef0172ee53105ae04ba66d1e224370",
+      "bytes": 17404,
+      "repo_path": "bms-balancing/tests/test_reil_c4_0b1_fix.py",
+      "sha256": "7133c550628c819c2eadca1d2e4e468ce9373d0907ccd9dc098a4c471f4e1297"
+    },
+    {
+      "git_blob": "c42744599d5429859829eba7a08e92ac0df20359",
+      "capture": "source/tests/test_reil_c4_0b2.py",
+      "binding": "Previously captured bytes; repository path unchanged in base-to-head comparison, except pinned external original util",
+      "ref": "89d18f546cef0172ee53105ae04ba66d1e224370",
+      "bytes": 54873,
+      "repo_path": "bms-balancing/tests/test_reil_c4_0b2.py",
+      "sha256": "01f58c6d1531054c3aa3745895d6335edd7d967fbd38751cfc7fadc781c57702"
+    },
+    {
+      "git_blob": "e169b1676ca747d240836017f265f150071e7020",
+      "capture": "source/tests/test_reil_c4_0b2_fix.py",
+      "binding": "Previously captured bytes; repository path unchanged in base-to-head comparison, except pinned external original util",
+      "ref": "89d18f546cef0172ee53105ae04ba66d1e224370",
+      "bytes": 18087,
+      "repo_path": "bms-balancing/tests/test_reil_c4_0b2_fix.py",
+      "sha256": "169c9ebb1621ee8ee3b05049daec33c6822ebf48b4fac79d883d5c18b99d10f6"
+    },
+    {
+      "git_blob": "519f85f5b3115c3ccd82000ef8df58b3ac7796fe",
+      "capture": "source/tests/test_reil_c4_0b1.py",
+      "binding": "Previously captured bytes; repository path unchanged in base-to-head comparison, except pinned external original util",
+      "ref": "89d18f546cef0172ee53105ae04ba66d1e224370",
+      "bytes": 32038,
+      "repo_path": "bms-balancing/tests/test_reil_c4_0b1.py",
+      "sha256": "1040e531aa4a6696bb1f37ac1075f23db361ff99d0d3f7b6008afb590c346b2c"
+    },
+    {
+      "git_blob": "33a2f3768f5a046ba6e028c19760ad68f28dde84",
+      "capture": "source/original_util/util_LFP.py.txt",
+      "binding": "Previously captured bytes; repository path unchanged in base-to-head comparison, except pinned external original util",
+      "ref": "1188c371e5836df4a7e5f5acf336a34ffd4027e6",
+      "bytes": 33754,
+      "repo_path": "REIL original util_LFP.py",
+      "sha256": "3c19e45ef8a64ce67cda1f623551e758d4c0f67086bbae02b978428d78de1c76"
+    },
+    {
+      "git_blob": "b25f9c4eb56d0cfe609b47c5d8463e9f17fac53b",
+      "capture": "source/docs/REIL_EXTERNAL_VALIDATION_PROTOCOL_v2_ANNEX_B.md",
+      "binding": "Previously captured bytes; repository path unchanged in base-to-head comparison, except pinned external original util",
+      "ref": "89d18f546cef0172ee53105ae04ba66d1e224370",
+      "bytes": 17210,
+      "repo_path": "bms-balancing/docs/REIL_EXTERNAL_VALIDATION_PROTOCOL_v2_ANNEX_B.md",
+      "sha256": "fe2b39b222c84b61a39a14c05047ca7ca86cbb2872925c58eca400c7de673f95"
+    },
+    {
+      "git_blob": "f47c1fc2cad5b8e8c2e692f6ee5b93a12d8ae547",
+      "capture": "source/docs/REIL_EXTERNAL_VALIDATION_PROTOCOL_v2_ANNEX_C.md",
+      "binding": "Previously captured bytes; repository path unchanged in base-to-head comparison, except pinned external original util",
+      "ref": "89d18f546cef0172ee53105ae04ba66d1e224370",
+      "bytes": 12624,
+      "repo_path": "bms-balancing/docs/REIL_EXTERNAL_VALIDATION_PROTOCOL_v2_ANNEX_C.md",
+      "sha256": "c208822160597fa58df42d5c393be93417957fe17e9a6d2f93cbfff6f567ad8b"
+    },
+    {
+      "git_blob": "68bd7fd8c140b5b08d0536a91d461c8c5e2aa8c6",
+      "capture": "source/docs/REIL_EXTERNAL_VALIDATION_PROTOCOL_v2_ANNEX_D.md",
+      "binding": "Previously captured bytes; repository path unchanged in base-to-head comparison, except pinned external original util",
+      "ref": "89d18f546cef0172ee53105ae04ba66d1e224370",
+      "bytes": 16108,
+      "repo_path": "bms-balancing/docs/REIL_EXTERNAL_VALIDATION_PROTOCOL_v2_ANNEX_D.md",
+      "sha256": "bed03220cde48b33e55db4887ff3a1fe572e3386c3c00d57aa528dfb34c316ec"
+    }
+  ],
+  "source_count": 32,
+  "direct_fixed_commit_sources": 4,
+  "comparison": {
+    "ahead": 4,
+    "head": "05614f07abc559a12254db41ce7301574ddc6f50",
+    "complete_comparison": true,
+    "base": "dc6e5b7e043ff11b73095ddb9d60db7837e665c7",
+    "behind": 0,
+    "changed_files": 54,
+    "production_and_seven_tests_changed": false
+  },
+  "new_test_ids": [
+    "m_1",
+    "m_2",
+    "r_1",
+    "r_2",
+    "r_3",
+    "r_4",
+    "r_5",
+    "r_6",
+    "t_1",
+    "d_1",
+    "d_2",
+    "d_3",
+    "d_4",
+    "d_5",
+    "d_6",
+    "s_1",
+    "s_2",
+    "s_3",
+    "s_4",
+    "s_5",
+    "s_6"
+  ],
+  "new_test_ids_count": 21,
+  "existing_tests": 159,
+  "GREEN_tests": 180,
+  "counts": {
+    "kind": "Static counting units; not runtime observations",
+    "independent_reevaluation_per_normal_return": 1,
+    "internal_maxfev": 50,
+    "fake_minimize_max": 995,
+    "GREEN_fork_cap": 17,
+    "Sobol_related_tests": 15,
+    "COBYQA_calls": 14,
+    "GREEN_real_fork": 15,
+    "preserved_util_test06": {
+      "extract_max": 5,
+      "objective_max": 3,
+      "dVdQ_max": 9
+    },
+    "real_new_fork": 5,
+    "preserved_util_h1_h4": {
+      "extract_max": 4,
+      "objective_max": 0,
+      "dVdQ_max": 48
+    },
+    "real_old_fork": 10
+  },
+  "budgets": {
+    "runner_process_timeout_s": 10800,
+    "time_origins_distinct": true,
+    "run_record_deadline_s": 9900,
+    "E0_step_sum_s": 1560
+  },
+  "monitor_current_matches_prior": true,
+  "received_code_execution": 0,
+  "tests": 0,
+  "Python": 0,
+  "optimizer": 0,
+  "Sobol": 0,
+  "raw_data_fetch_open": 0,
+  "COMSOL": 0,
+  "E0_approved": false,
+  "E1_approved": false
+}

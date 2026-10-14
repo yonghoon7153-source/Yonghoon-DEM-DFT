@@ -1,0 +1,273 @@
+{
+  "kind": "E0_RESULT_STATIC_EVIDENCE_AUDIT",
+  "reviewed_head": "5cb6ab95c8c461cf940dcf94b90c30e8a3e3659c",
+  "historical": [
+    {
+      "bytes": 57482,
+      "repo_path": "bms-balancing/tests/test_reil_c4e.py",
+      "sha256": "687de63c3a7614834fa9063d26f29122b9876c381de9f3d43f759ec5e204d38e",
+      "ref": "8bfe8d73a3adeb0d388cd32842ee7225ac891bf0",
+      "capture": "historical/RED_test_reil_c4e.py",
+      "git_blob": "0326b4df9217962c79195332df3b7b8adb9ca5a6"
+    },
+    {
+      "bytes": 4131,
+      "repo_path": "bms-balancing/scripts/reil_c4e_run.py",
+      "sha256": "171ea96297a639275b1bafa79218fb0df7eb6780030be7f78a9729f2a66d0387",
+      "ref": "8bfe8d73a3adeb0d388cd32842ee7225ac891bf0",
+      "capture": "historical/RED_reil_c4e_run.py",
+      "git_blob": "bfb6c15a685ba9f159cf9b94d15f608350e7018a"
+    },
+    {
+      "bytes": 205883,
+      "repo_path": "bms-balancing/docs/REIL_PREREQUISITES_STATUS_20261004.md",
+      "sha256": "1e886c423bbf292cb2a28ee12e08fd8e67431fb8d5227afef78b1a323d440d82",
+      "ref": "cac26575a9d928a22364c3d92d150d623f14856c",
+      "capture": "historical/APPROVAL_STATUS.md",
+      "git_blob": "fd1a6f853dc073d8f8f596ccea1ac923ac448e2c"
+    },
+    {
+      "bytes": 4158,
+      "repo_path": "bms-balancing/evidence/reil_c4_0b2_fix_20261014/00_step_runner.py",
+      "sha256": "aad329ec7fff6a574a7dab859653405191d22567c4eb68e031c004674d4b7c00",
+      "ref": "5cb6ab95c8c461cf940dcf94b90c30e8a3e3659c",
+      "capture": "historical/PREV_STEP_RUNNER.py",
+      "git_blob": "2dcf00d3db840607677f87c1ea3e2ecfdbc08b34"
+    }
+  ],
+  "steps": [
+    {
+      "stderr_bytes": 0,
+      "step": "01_identity",
+      "rc": 0,
+      "timeout_s": 60.0,
+      "head_start": "cac26575a9d928a22364c3d92d150d623f14856c",
+      "elapsed_s": 23.074,
+      "timed_out": false,
+      "head_end": "cac26575a9d928a22364c3d92d150d623f14856c"
+    },
+    {
+      "stderr_bytes": 0,
+      "step": "02_red",
+      "rc": 1,
+      "timeout_s": 600.0,
+      "head_start": "8bfe8d73a3adeb0d388cd32842ee7225ac891bf0",
+      "elapsed_s": 1.924,
+      "timed_out": false,
+      "head_end": "8bfe8d73a3adeb0d388cd32842ee7225ac891bf0"
+    },
+    {
+      "stderr_bytes": 0,
+      "step": "03_green",
+      "rc": 0,
+      "timeout_s": 600.0,
+      "head_start": "d2708ab77b310727c4a42730c45322dfebb04ef4",
+      "elapsed_s": 43.901,
+      "timed_out": false,
+      "head_end": "d2708ab77b310727c4a42730c45322dfebb04ef4"
+    },
+    {
+      "stderr_bytes": 0,
+      "step": "04_plan_e",
+      "rc": 0,
+      "timeout_s": 300.0,
+      "head_start": "57dfe2903e94cb699151b9a9eca5bfdc46d375d7",
+      "elapsed_s": 2.43,
+      "timed_out": false,
+      "head_end": "57dfe2903e94cb699151b9a9eca5bfdc46d375d7"
+    }
+  ],
+  "step_sum_s": 71.329,
+  "step_sum_limit_s": 1560,
+  "red": {
+    "tests": 21,
+    "ids": [
+      "test_m_1_a_rule_reason_is_a_global_stop_with_three_states",
+      "test_m_2_snapshot_coordinates_and_rule_exception_without_a_process",
+      "test_r_1_call_cap_active_late_between_samples_equal_and_reason",
+      "test_r_2_cost_projection_upper_median_returned_only_minimum_eight_and_boundary",
+      "test_r_3_the_rule_never_reads_result_values",
+      "test_r_4_rule_input_validation_raises_instead_of_dropping_or_zero_filling",
+      "test_r_5_judgment_raw_basis_has_every_key_and_no_result_values",
+      "test_r_6_call_cap_three_paths_fork_fork_and_pure_final_drain",
+      "test_t_1_nonzero_origin_prep_boundary_relative_deadline_and_no_start_after_stop",
+      "test_d_1_prepare_order_stops_before_later_steps",
+      "test_d_2_exact_p0_binding_or_stop_before_any_optimizer",
+      "test_d_3_halfcell_is_exactly_q_pe_v_pe_q_ne_v_ne_and_a_swap_fails",
+      "test_d_4_paths_inside_the_repo_pickles_notebooks_existing_outputs_and_fetch_targets_are_refused",
+      "test_d_5_fetch_takes_only_two_paths_from_the_fixed_commit_of_a_local_repo",
+      "test_d_6_identity_start_end_table_and_consumed_digests",
+      "test_s_1_the_plan_is_the_c4_0a_plan",
+      "test_s_2_complete_needs_66_returned_fields_operation_record_identity_and_the_stage_and",
+      "test_s_3_operation_and_real_finalization_failures_each_leave_incomplete",
+      "test_s_4_end_to_end_synthetic_run_complete_and_one_local_error_incomplete",
+      "test_s_5_plan_e_writes_one_plan_without_util_data_optimizer_or_network",
+      "test_s_6_the_observed_tally_partitions_the_66_calls"
+    ],
+    "TypeError": 2,
+    "NotImplementedError": 19
+  },
+  "green": {
+    "pytest_s": 43.03,
+    "new": 21,
+    "existing": 159,
+    "reported_passed": 180
+  },
+  "source_seals": [
+    {
+      "sha256": "687de63c3a7614834fa9063d26f29122b9876c381de9f3d43f759ec5e204d38e",
+      "match": true,
+      "path": "tests/test_reil_c4e.py"
+    },
+    {
+      "sha256": "0a9ddb83531a1816e3c9505487fd7f2d1a211d2753be9fdc1c8f5c94866aff1b",
+      "match": true,
+      "path": "scripts/reil_c4e_run.py"
+    },
+    {
+      "sha256": "e6ef8ff617342393a9d3a45c98751b563a3f1e9871c6fa3b540b47f4bfbc071b",
+      "match": true,
+      "path": "scripts/reil_c4_monitor.py"
+    },
+    {
+      "sha256": "33b855378fb76634eb314f8cfb0428151ce1ec8b9045bc8447d8e17354a41ac3",
+      "match": true,
+      "path": "scripts/reil_c4_e3a.py"
+    },
+    {
+      "sha256": "73bee8dc412b39863afb64b70bc128cbecee2075a3a17914fc7288f353ef11a6",
+      "match": true,
+      "path": "scripts/reil_c5_pilot.py"
+    },
+    {
+      "sha256": "793b326ebf86a6db3b855d828aff4d6b6dddc824bed8d00f4161537b1cc06e3a",
+      "match": true,
+      "path": "scripts/reil_p0.py"
+    },
+    {
+      "sha256": "408afc4bb5eb1069583b955e0eb6215bf48dd9259ad474c230549d1b3642df5d",
+      "match": true,
+      "path": "scripts/reil_c6_profile.py"
+    },
+    {
+      "sha256": "4efb197d2bb799edf1f712a889d826b15207d0e45ff1a7b7958884559bfac150",
+      "match": true,
+      "path": "scripts/reil_c4_h.py"
+    },
+    {
+      "sha256": "8b8477238290cb35491c060b231031b79b277098bae1c0e7e48621d720a5aa9d",
+      "match": true,
+      "path": "scripts/reil_c4_hb.py"
+    },
+    {
+      "sha256": "6b2635d4a97e296a4d2d8749209b66461d3bbfd9009465aaeac3d80a57197e17",
+      "match": true,
+      "path": "tests/test_reil_c4_0a.py"
+    },
+    {
+      "sha256": "b2137e1119049f4f2b87c096fbb77a3de26304ea355adac98da85d796728004c",
+      "match": true,
+      "path": "tests/test_reil_c4_0a_fix.py"
+    },
+    {
+      "sha256": "1040e531aa4a6696bb1f37ac1075f23db361ff99d0d3f7b6008afb590c346b2c",
+      "match": true,
+      "path": "tests/test_reil_c4_0b1.py"
+    },
+    {
+      "sha256": "7133c550628c819c2eadca1d2e4e468ce9373d0907ccd9dc098a4c471f4e1297",
+      "match": true,
+      "path": "tests/test_reil_c4_0b1_fix.py"
+    },
+    {
+      "sha256": "b861f16b7fe651b5c68ad57ed77d9079f918bf4ec59d2028cc5b82101f847602",
+      "match": true,
+      "path": "tests/test_reil_c4_0b1_fix2.py"
+    },
+    {
+      "sha256": "01f58c6d1531054c3aa3745895d6335edd7d967fbd38751cfc7fadc781c57702",
+      "match": true,
+      "path": "tests/test_reil_c4_0b2.py"
+    },
+    {
+      "sha256": "169c9ebb1621ee8ee3b05049daec33c6822ebf48b4fac79d883d5c18b99d10f6",
+      "match": true,
+      "path": "tests/test_reil_c4_0b2_fix.py"
+    }
+  ],
+  "source_seal_count": 16,
+  "green_end_seal_raw_equal": true,
+  "red_green_test_bytes_equal": true,
+  "plan": {
+    "sha256": "1538407567bf1950ff744efe80e39cf3423c0a19f213d9e18db0dd1d91f8fa3a",
+    "bytes": 27355,
+    "identity_ok": true,
+    "calls": 66,
+    "null_expected_modules": [
+      "scripts/reil_c4_e3a.py",
+      "scripts/reil_c4_monitor.py",
+      "scripts/reil_c4e_run.py",
+      "scripts/reil_c5_pilot.py",
+      "scripts/reil_p0.py"
+    ]
+  },
+  "runner_line_differences": [
+    {
+      "InputObject": "\"\"\"REIL C4-E · E0 (상태 §66) 단계 실행기 — 명령 하나를 timeout 안에서 부르고 meta · stdout · stderr · porcelain 시작/끝을 증거 폴더에 쓴다 (stdlib).",
+      "SideIndicator": "=>"
+    },
+    {
+      "InputObject": "E = BMS / \"evidence\" / \"reil_c4e0_20261014\"",
+      "SideIndicator": "=>"
+    },
+    {
+      "InputObject": "EXTRA = {\"PYTHONDONTWRITEBYTECODE\": \"1\", \"MPLBACKEND\": \"Agg\", \"MPLCONFIGDIR\": str(SP / \"c4e0\" / \"mpl\"),",
+      "SideIndicator": "=>"
+    },
+    {
+      "InputObject": "         \"TMPDIR\": str(SP / \"c4e0\" / \"tmp\"), \"OMP_NUM_THREADS\": \"1\", \"OPENBLAS_NUM_THREADS\": \"1\", \"MKL_NUM_THREADS\": \"1\"}",
+      "SideIndicator": "=>"
+    },
+    {
+      "InputObject": "    env.update({\"REIL_C4_FIX_EVIDENCE\": str(E), \"REIL_C4_FIX_STEP\": name})   # 기록용 시험 (out) 이 outcome 을 쓸 위치",
+      "SideIndicator": "=>"
+    },
+    {
+      "InputObject": "    meta = {\"step\": name, \"argv\": argv, \"cwd\": str(BMS), \"env_set\": {**EXTRA, \"REIL_C4_FIX_EVIDENCE\": str(E), \"REIL_C4_FIX_STEP\": name}, \"env_removed_names\": sorted(k for k in os.environ if SECRET.search(k)),",
+      "SideIndicator": "=>"
+    },
+    {
+      "InputObject": "\"\"\"REIL C4-0b2 한정 보완 (상태 §58) 단계 실행기 — 명령 하나를 timeout 안에서 부르고 meta · stdout · stderr · porcelain 시작/끝을 증거 폴더에 쓴다 (stdlib).",
+      "SideIndicator": "<="
+    },
+    {
+      "InputObject": "E = BMS / \"evidence\" / \"reil_c4_0b2_fix_20261014\"",
+      "SideIndicator": "<="
+    },
+    {
+      "InputObject": "EXTRA = {\"PYTHONDONTWRITEBYTECODE\": \"1\", \"MPLBACKEND\": \"Agg\", \"MPLCONFIGDIR\": str(SP / \"c4_0b2_fix\" / \"mpl\"),",
+      "SideIndicator": "<="
+    },
+    {
+      "InputObject": "         \"TMPDIR\": str(SP / \"c4_0b2_fix\" / \"tmp\"), \"OMP_NUM_THREADS\": \"1\", \"OPENBLAS_NUM_THREADS\": \"1\", \"MKL_NUM_THREADS\": \"1\"}",
+      "SideIndicator": "<="
+    },
+    {
+      "InputObject": "    env.update({\"REIL_C4_0B2_FIX_EVIDENCE\": str(E), \"REIL_C4_0B2_FIX_STEP\": name})   # 기록용 시험 (out) 이 outcome 을 쓸 위치",
+      "SideIndicator": "<="
+    },
+    {
+      "InputObject": "    meta = {\"step\": name, \"argv\": argv, \"cwd\": str(BMS), \"env_set\": {**EXTRA, \"REIL_C4_0B2_FIX_EVIDENCE\": str(E), \"REIL_C4_0B2_FIX_STEP\": name}, \"env_removed_names\": sorted(k for k in os.environ if SECRET.search(k)),",
+      "SideIndicator": "<="
+    }
+  ],
+  "review_execution": {
+    "tests": 0,
+    "raw_data_fetch_open": 0,
+    "received_code": 0,
+    "COMSOL": 0,
+    "optimizer": 0
+  },
+  "time_scope": "2364.4 seconds is submitted pre-commit/push/docs snapshot, not final delivery elapsed",
+  "approval_scope": "User approval quotation recorded at pre-execution repository commit; not independent original chat capture"
+}

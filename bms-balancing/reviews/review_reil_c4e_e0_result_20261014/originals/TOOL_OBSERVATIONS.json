@@ -1,0 +1,31 @@
+{
+  "kind": "REVIEWER_DATA_ONLY_TOOL_OBSERVATIONS",
+  "received_code_execution": 0,
+  "observations": [
+    {
+      "kind": "Local git diagnostic",
+      "outcome": "cwd is not a git repository; no state changed",
+      "alternative": "Read-only GitHub connector with fixed commit"
+    },
+    {
+      "kind": "Branch lookup",
+      "outcome": "Encoded slash URL rejected INVALID_ARGUMENT; raw branch path succeeded",
+      "target_failure": false
+    },
+    {
+      "kind": "Evidence reviewer lookup",
+      "outcome": "A MANIFEST.sha256 lookup was absent; correct MANIFEST.json read and hash checked",
+      "target_failure": false
+    },
+    {
+      "kind": "Own capture and metadata audits",
+      "outcome": "Captured bytes checked against Git blob IDs and SHA256; parsed JSON/logs without executing received code"
+    }
+  ],
+  "not_claimed": [
+    "Independent original chat approval observation",
+    "Independent OS/process audit",
+    "Current remote environment revalidation",
+    "E1 execution or scientific results"
+  ]
+}

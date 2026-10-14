@@ -1,0 +1,1830 @@
+{
+ "cost_reason": "비용 중단 — 고정 비용 투영 모형에서 측정 마감 초과로 추정",
+ "data_opened": false,
+ "elapsed_s": 2.2651789339997777,
+ "expected_data": {
+  "LFP_Data.xlsx": {
+   "bytes": 10841377,
+   "sha256": "fd50e09542be7adb2270963d65a6e7b5ccae1473a512f68462c2dd419d620ee1"
+  },
+  "util_LFP.py": {
+   "bytes": 33754,
+   "sha256": "3c19e45ef8a64ce67cda1f623551e758d4c0f67086bbae02b978428d78de1c76"
+  }
+ },
+ "expected_evals_by_worker": {
+  "0": 404500,
+  "1": 404500,
+  "2": 388000,
+  "3": 304500
+ },
+ "expected_evals_total": 1501500,
+ "fetch_steps_template": [
+  [
+   "git",
+   "init",
+   "-q",
+   "<dest>/git"
+  ],
+  [
+   "git",
+   "-C",
+   "<dest>/git",
+   "remote",
+   "add",
+   "origin",
+   "https://github.com/REIL-UConn/Multi-Objective-Optimization-for-Lithium-Ion-Battery-Degradation-Diagnostics.git"
+  ],
+  [
+   "git",
+   "-C",
+   "<dest>/git",
+   "fetch",
+   "--depth",
+   "1",
+   "--filter=blob:none",
+   "origin",
+   "1188c371e5836df4a7e5f5acf336a34ffd4027e6"
+  ],
+  [
+   "git",
+   "-C",
+   "<dest>/git",
+   "show",
+   "1188c371e5836df4a7e5f5acf336a34ffd4027e6:LFP_Data.xlsx"
+  ],
+  [
+   "git",
+   "-C",
+   "<dest>/git",
+   "show",
+   "1188c371e5836df4a7e5f5acf336a34ffd4027e6:util_LFP.py"
+  ]
+ ],
+ "identity": {
+  "full_c6_check": "CREDITED — C4-ENV 의 C6 check 1 회 (상태 문서 §38) · 여기서는 부르지 않음",
+  "manifest_sha256_actual": "4f12094897b53463097e78dafc0bfe5f37c1d76bb1a6266c0a907d755fb2ebdc",
+  "manifest_sha256_expected": "4f12094897b53463097e78dafc0bfe5f37c1d76bb1a6266c0a907d755fb2ebdc",
+  "note": "계산 없는 식별 — 'C6 전체 기능 PASS' 가 아니다 (부록 A1)",
+  "ok": true,
+  "problems": [],
+  "record": {
+   "executable": "/usr/bin/python3.11",
+   "lock_sha256_now": "ea91156cac99fac17830818f17fd4a260a93722269f720171e0ab9b2a75c1faa",
+   "prefix": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/b881d255-9513-5adc-9b14-3c0be18d7ad6/scratchpad/reil_c4env/venv",
+   "profile_sha256_now": "50f2c7fb176910da2df252cfd7f17a8f05a56b8696e1be3040d6ff5cf034a641",
+   "seal_manifest_sha256": "4f12094897b53463097e78dafc0bfe5f37c1d76bb1a6266c0a907d755fb2ebdc",
+   "venv": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/b881d255-9513-5adc-9b14-3c0be18d7ad6/scratchpad/reil_c4env/venv",
+   "version": "3.11.17 (main, Oct  1 2026, 15:41:07) [GCC 13.3.0]"
+  },
+  "seal_path": "/home/user/Yonghoon-DEM-DFT/bms-balancing/reil_c6_rebuild_20261013"
+ },
+ "identity_table": {
+  "MANIFEST.json": {
+   "bytes": 954,
+   "expected": {
+    "sha256": "4f12094897b53463097e78dafc0bfe5f37c1d76bb1a6266c0a907d755fb2ebdc"
+   },
+   "path": "/home/user/Yonghoon-DEM-DFT/bms-balancing/reil_c6_rebuild_20261013/MANIFEST.json",
+   "sha256": "4f12094897b53463097e78dafc0bfe5f37c1d76bb1a6266c0a907d755fb2ebdc"
+  },
+  "NOTEBOOK_SOURCE_EXCERPTS.json": {
+   "bytes": 7543,
+   "expected": {
+    "sha256": "95cca5f35aaaf72757812068251d72064b464cff6ef3f523c756f33d27d243a9"
+   },
+   "path": "/home/user/Yonghoon-DEM-DFT/bms-balancing/reviews/prereview_pybamm_reil_20261003/external/NOTEBOOK_SOURCE_EXCERPTS.json",
+   "sha256": "95cca5f35aaaf72757812068251d72064b464cff6ef3f523c756f33d27d243a9"
+  },
+  "P0_RESULT.json": {
+   "bytes": 127971,
+   "expected": {
+    "sha256": "3875e65092b38c9b08c907926bd8d1f4ee25674c97c28b5ada935e9027d12a90"
+   },
+   "path": "/home/user/Yonghoon-DEM-DFT/bms-balancing/evidence/reil_p0_20261006/P0_RESULT.json",
+   "sha256": "3875e65092b38c9b08c907926bd8d1f4ee25674c97c28b5ada935e9027d12a90"
+  },
+  "scripts/reil_c4_e3a.py": {
+   "bytes": 32311,
+   "expected": null,
+   "path": "/home/user/Yonghoon-DEM-DFT/bms-balancing/scripts/reil_c4_e3a.py",
+   "sha256": "33b855378fb76634eb314f8cfb0428151ce1ec8b9045bc8447d8e17354a41ac3"
+  },
+  "scripts/reil_c4_monitor.py": {
+   "bytes": 21546,
+   "expected": null,
+   "path": "/home/user/Yonghoon-DEM-DFT/bms-balancing/scripts/reil_c4_monitor.py",
+   "sha256": "e6ef8ff617342393a9d3a45c98751b563a3f1e9871c6fa3b540b47f4bfbc071b"
+  },
+  "scripts/reil_c4e_run.py": {
+   "bytes": 45923,
+   "expected": null,
+   "path": "/home/user/Yonghoon-DEM-DFT/bms-balancing/scripts/reil_c4e_run.py",
+   "sha256": "0a9ddb83531a1816e3c9505487fd7f2d1a211d2753be9fdc1c8f5c94866aff1b"
+  },
+  "scripts/reil_c5_pilot.py": {
+   "bytes": 47164,
+   "expected": null,
+   "path": "/home/user/Yonghoon-DEM-DFT/bms-balancing/scripts/reil_c5_pilot.py",
+   "sha256": "73bee8dc412b39863afb64b70bc128cbecee2075a3a17914fc7288f353ef11a6"
+  },
+  "scripts/reil_p0.py": {
+   "bytes": 23941,
+   "expected": null,
+   "path": "/home/user/Yonghoon-DEM-DFT/bms-balancing/scripts/reil_p0.py",
+   "sha256": "793b326ebf86a6db3b855d828aff4d6b6dddc824bed8d00f4161537b1cc06e3a"
+  }
+ },
+ "limits": {
+  "disk_free": 5368709120,
+  "disk_gap": 15.0,
+  "disk_new": 1073741824,
+  "grace": 60.0,
+  "measure": 9000.0,
+  "prep": 900.0,
+  "record": 9900.0,
+  "rss": 4294967296,
+  "rss_gap": 5.0,
+  "stage": 10800.0
+ },
+ "n_calls": 66,
+ "n_workers": 4,
+ "network": 0,
+ "not_this_step": "E1 (fetch · run 66 호출) — E0 결과 검토 수용 뒤 별도 GO",
+ "notebook": {
+  "call_text_present": true,
+  "case_selection_equal": true,
+  "cell8_one_model_shared_by_cases": true,
+  "excerpts": "/home/user/Yonghoon-DEM-DFT/bms-balancing/reviews/prereview_pybamm_reil_20261003/external/NOTEBOOK_SOURCE_EXCERPTS.json",
+  "excerpts_sha256": "95cca5f35aaaf72757812068251d72064b464cff6ef3f523c756f33d27d243a9"
+ },
+ "objective_calls": 0,
+ "optimizer_calls": 0,
+ "optimizer_runs_total": 275,
+ "p0": {
+  "analysis_rows": 11,
+  "max_q": 3.149013767655145,
+  "n_q_PE_hc": 1313,
+  "path": "/home/user/Yonghoon-DEM-DFT/bms-balancing/evidence/reil_p0_20261006/P0_RESULT.json",
+  "q_NE_hc_max_record_only": 3.6685628130367562,
+  "references": [
+   {
+    "Q_first": 0.0,
+    "Q_last": 2.3867,
+    "V_first": 2.7573,
+    "V_last": 3.9538,
+    "cell_idx": 1,
+    "n_points": 1314,
+    "sheet": "12-LFP C_20 Updated",
+    "step_idx": 6
+   },
+   {
+    "Q_first": 0.0,
+    "Q_last": 2.11,
+    "V_first": 1.0711,
+    "V_last": 0.0146,
+    "cell_idx": 1,
+    "n_points": 212,
+    "sheet": "12-Graphite Half-cell @ C_20",
+    "step_idx": 6
+   }
+  ],
+  "sha256": "3875e65092b38c9b08c907926bd8d1f4ee25674c97c28b5ada935e9027d12a90"
+ },
+ "plan": [
+  {
+   "algorithm": {
+    "expected_evals": 100000,
+    "gen": 100,
+    "name": "GA",
+    "pop": 50,
+    "seeds": [
+     0,
+     1,
+     2,
+     3,
+     4,
+     5,
+     6,
+     7,
+     8,
+     9,
+     10,
+     11,
+     12,
+     13,
+     14,
+     15,
+     16,
+     17,
+     18,
+     19
+    ]
+   },
+   "call_id": 0,
+   "case": 0,
+   "obj_selection": [
+    1
+   ],
+   "row": 0,
+   "task_id": 0,
+   "worker": 0
+  },
+  {
+   "algorithm": {
+    "expected_evals": 100000,
+    "gen": 100,
+    "name": "GA",
+    "pop": 50,
+    "seeds": [
+     0,
+     1,
+     2,
+     3,
+     4,
+     5,
+     6,
+     7,
+     8,
+     9,
+     10,
+     11,
+     12,
+     13,
+     14,
+     15,
+     16,
+     17,
+     18,
+     19
+    ]
+   },
+   "call_id": 1,
+   "case": 0,
+   "obj_selection": [
+    1
+   ],
+   "row": 1,
+   "task_id": 1,
+   "worker": 1
+  },
+  {
+   "algorithm": {
+    "expected_evals": 100000,
+    "gen": 100,
+    "name": "GA",
+    "pop": 50,
+    "seeds": [
+     0,
+     1,
+     2,
+     3,
+     4,
+     5,
+     6,
+     7,
+     8,
+     9,
+     10,
+     11,
+     12,
+     13,
+     14,
+     15,
+     16,
+     17,
+     18,
+     19
+    ]
+   },
+   "call_id": 2,
+   "case": 0,
+   "obj_selection": [
+    1
+   ],
+   "row": 2,
+   "task_id": 2,
+   "worker": 2
+  },
+  {
+   "algorithm": {
+    "expected_evals": 100000,
+    "gen": 100,
+    "name": "GA",
+    "pop": 50,
+    "seeds": [
+     0,
+     1,
+     2,
+     3,
+     4,
+     5,
+     6,
+     7,
+     8,
+     9,
+     10,
+     11,
+     12,
+     13,
+     14,
+     15,
+     16,
+     17,
+     18,
+     19
+    ]
+   },
+   "call_id": 3,
+   "case": 0,
+   "obj_selection": [
+    1
+   ],
+   "row": 3,
+   "task_id": 3,
+   "worker": 3
+  },
+  {
+   "algorithm": {
+    "expected_evals": 100000,
+    "gen": 100,
+    "name": "GA",
+    "pop": 50,
+    "seeds": [
+     0,
+     1,
+     2,
+     3,
+     4,
+     5,
+     6,
+     7,
+     8,
+     9,
+     10,
+     11,
+     12,
+     13,
+     14,
+     15,
+     16,
+     17,
+     18,
+     19
+    ]
+   },
+   "call_id": 4,
+   "case": 0,
+   "obj_selection": [
+    1
+   ],
+   "row": 4,
+   "task_id": 4,
+   "worker": 0
+  },
+  {
+   "algorithm": {
+    "expected_evals": 100000,
+    "gen": 100,
+    "name": "GA",
+    "pop": 50,
+    "seeds": [
+     0,
+     1,
+     2,
+     3,
+     4,
+     5,
+     6,
+     7,
+     8,
+     9,
+     10,
+     11,
+     12,
+     13,
+     14,
+     15,
+     16,
+     17,
+     18,
+     19
+    ]
+   },
+   "call_id": 5,
+   "case": 0,
+   "obj_selection": [
+    1
+   ],
+   "row": 5,
+   "task_id": 5,
+   "worker": 1
+  },
+  {
+   "algorithm": {
+    "expected_evals": 100000,
+    "gen": 100,
+    "name": "GA",
+    "pop": 50,
+    "seeds": [
+     0,
+     1,
+     2,
+     3,
+     4,
+     5,
+     6,
+     7,
+     8,
+     9,
+     10,
+     11,
+     12,
+     13,
+     14,
+     15,
+     16,
+     17,
+     18,
+     19
+    ]
+   },
+   "call_id": 6,
+   "case": 0,
+   "obj_selection": [
+    1
+   ],
+   "row": 6,
+   "task_id": 6,
+   "worker": 2
+  },
+  {
+   "algorithm": {
+    "expected_evals": 100000,
+    "gen": 100,
+    "name": "GA",
+    "pop": 50,
+    "seeds": [
+     0,
+     1,
+     2,
+     3,
+     4,
+     5,
+     6,
+     7,
+     8,
+     9,
+     10,
+     11,
+     12,
+     13,
+     14,
+     15,
+     16,
+     17,
+     18,
+     19
+    ]
+   },
+   "call_id": 7,
+   "case": 0,
+   "obj_selection": [
+    1
+   ],
+   "row": 7,
+   "task_id": 7,
+   "worker": 3
+  },
+  {
+   "algorithm": {
+    "expected_evals": 100000,
+    "gen": 100,
+    "name": "GA",
+    "pop": 50,
+    "seeds": [
+     0,
+     1,
+     2,
+     3,
+     4,
+     5,
+     6,
+     7,
+     8,
+     9,
+     10,
+     11,
+     12,
+     13,
+     14,
+     15,
+     16,
+     17,
+     18,
+     19
+    ]
+   },
+   "call_id": 8,
+   "case": 0,
+   "obj_selection": [
+    1
+   ],
+   "row": 8,
+   "task_id": 8,
+   "worker": 0
+  },
+  {
+   "algorithm": {
+    "expected_evals": 100000,
+    "gen": 100,
+    "name": "GA",
+    "pop": 50,
+    "seeds": [
+     0,
+     1,
+     2,
+     3,
+     4,
+     5,
+     6,
+     7,
+     8,
+     9,
+     10,
+     11,
+     12,
+     13,
+     14,
+     15,
+     16,
+     17,
+     18,
+     19
+    ]
+   },
+   "call_id": 9,
+   "case": 0,
+   "obj_selection": [
+    1
+   ],
+   "row": 9,
+   "task_id": 9,
+   "worker": 1
+  },
+  {
+   "algorithm": {
+    "expected_evals": 100000,
+    "gen": 100,
+    "name": "GA",
+    "pop": 50,
+    "seeds": [
+     0,
+     1,
+     2,
+     3,
+     4,
+     5,
+     6,
+     7,
+     8,
+     9,
+     10,
+     11,
+     12,
+     13,
+     14,
+     15,
+     16,
+     17,
+     18,
+     19
+    ]
+   },
+   "call_id": 10,
+   "case": 0,
+   "obj_selection": [
+    1
+   ],
+   "row": 10,
+   "task_id": 10,
+   "worker": 2
+  },
+  {
+   "algorithm": {
+    "expected_evals": 5000,
+    "gen": 100,
+    "name": "NSGA2",
+    "pop": 50,
+    "seeds": [
+     1
+    ]
+   },
+   "call_id": 11,
+   "case": 1,
+   "obj_selection": [
+    0,
+    1
+   ],
+   "row": 0,
+   "task_id": 11,
+   "worker": 3
+  },
+  {
+   "algorithm": {
+    "expected_evals": 5000,
+    "gen": 100,
+    "name": "NSGA2",
+    "pop": 50,
+    "seeds": [
+     1
+    ]
+   },
+   "call_id": 12,
+   "case": 1,
+   "obj_selection": [
+    0,
+    1
+   ],
+   "row": 1,
+   "task_id": 12,
+   "worker": 0
+  },
+  {
+   "algorithm": {
+    "expected_evals": 5000,
+    "gen": 100,
+    "name": "NSGA2",
+    "pop": 50,
+    "seeds": [
+     1
+    ]
+   },
+   "call_id": 13,
+   "case": 1,
+   "obj_selection": [
+    0,
+    1
+   ],
+   "row": 2,
+   "task_id": 13,
+   "worker": 1
+  },
+  {
+   "algorithm": {
+    "expected_evals": 5000,
+    "gen": 100,
+    "name": "NSGA2",
+    "pop": 50,
+    "seeds": [
+     1
+    ]
+   },
+   "call_id": 14,
+   "case": 1,
+   "obj_selection": [
+    0,
+    1
+   ],
+   "row": 3,
+   "task_id": 14,
+   "worker": 2
+  },
+  {
+   "algorithm": {
+    "expected_evals": 5000,
+    "gen": 100,
+    "name": "NSGA2",
+    "pop": 50,
+    "seeds": [
+     1
+    ]
+   },
+   "call_id": 15,
+   "case": 1,
+   "obj_selection": [
+    0,
+    1
+   ],
+   "row": 4,
+   "task_id": 15,
+   "worker": 3
+  },
+  {
+   "algorithm": {
+    "expected_evals": 5000,
+    "gen": 100,
+    "name": "NSGA2",
+    "pop": 50,
+    "seeds": [
+     1
+    ]
+   },
+   "call_id": 16,
+   "case": 1,
+   "obj_selection": [
+    0,
+    1
+   ],
+   "row": 5,
+   "task_id": 16,
+   "worker": 0
+  },
+  {
+   "algorithm": {
+    "expected_evals": 5000,
+    "gen": 100,
+    "name": "NSGA2",
+    "pop": 50,
+    "seeds": [
+     1
+    ]
+   },
+   "call_id": 17,
+   "case": 1,
+   "obj_selection": [
+    0,
+    1
+   ],
+   "row": 6,
+   "task_id": 17,
+   "worker": 1
+  },
+  {
+   "algorithm": {
+    "expected_evals": 5000,
+    "gen": 100,
+    "name": "NSGA2",
+    "pop": 50,
+    "seeds": [
+     1
+    ]
+   },
+   "call_id": 18,
+   "case": 1,
+   "obj_selection": [
+    0,
+    1
+   ],
+   "row": 7,
+   "task_id": 18,
+   "worker": 2
+  },
+  {
+   "algorithm": {
+    "expected_evals": 5000,
+    "gen": 100,
+    "name": "NSGA2",
+    "pop": 50,
+    "seeds": [
+     1
+    ]
+   },
+   "call_id": 19,
+   "case": 1,
+   "obj_selection": [
+    0,
+    1
+   ],
+   "row": 8,
+   "task_id": 19,
+   "worker": 3
+  },
+  {
+   "algorithm": {
+    "expected_evals": 5000,
+    "gen": 100,
+    "name": "NSGA2",
+    "pop": 50,
+    "seeds": [
+     1
+    ]
+   },
+   "call_id": 20,
+   "case": 1,
+   "obj_selection": [
+    0,
+    1
+   ],
+   "row": 9,
+   "task_id": 20,
+   "worker": 0
+  },
+  {
+   "algorithm": {
+    "expected_evals": 5000,
+    "gen": 100,
+    "name": "NSGA2",
+    "pop": 50,
+    "seeds": [
+     1
+    ]
+   },
+   "call_id": 21,
+   "case": 1,
+   "obj_selection": [
+    0,
+    1
+   ],
+   "row": 10,
+   "task_id": 21,
+   "worker": 1
+  },
+  {
+   "algorithm": {
+    "expected_evals": 5000,
+    "gen": 100,
+    "name": "NSGA2",
+    "pop": 50,
+    "seeds": [
+     1
+    ]
+   },
+   "call_id": 22,
+   "case": 2,
+   "obj_selection": [
+    2,
+    3
+   ],
+   "row": 0,
+   "task_id": 22,
+   "worker": 2
+  },
+  {
+   "algorithm": {
+    "expected_evals": 5000,
+    "gen": 100,
+    "name": "NSGA2",
+    "pop": 50,
+    "seeds": [
+     1
+    ]
+   },
+   "call_id": 23,
+   "case": 2,
+   "obj_selection": [
+    2,
+    3
+   ],
+   "row": 1,
+   "task_id": 23,
+   "worker": 3
+  },
+  {
+   "algorithm": {
+    "expected_evals": 5000,
+    "gen": 100,
+    "name": "NSGA2",
+    "pop": 50,
+    "seeds": [
+     1
+    ]
+   },
+   "call_id": 24,
+   "case": 2,
+   "obj_selection": [
+    2,
+    3
+   ],
+   "row": 2,
+   "task_id": 24,
+   "worker": 0
+  },
+  {
+   "algorithm": {
+    "expected_evals": 5000,
+    "gen": 100,
+    "name": "NSGA2",
+    "pop": 50,
+    "seeds": [
+     1
+    ]
+   },
+   "call_id": 25,
+   "case": 2,
+   "obj_selection": [
+    2,
+    3
+   ],
+   "row": 3,
+   "task_id": 25,
+   "worker": 1
+  },
+  {
+   "algorithm": {
+    "expected_evals": 5000,
+    "gen": 100,
+    "name": "NSGA2",
+    "pop": 50,
+    "seeds": [
+     1
+    ]
+   },
+   "call_id": 26,
+   "case": 2,
+   "obj_selection": [
+    2,
+    3
+   ],
+   "row": 4,
+   "task_id": 26,
+   "worker": 2
+  },
+  {
+   "algorithm": {
+    "expected_evals": 5000,
+    "gen": 100,
+    "name": "NSGA2",
+    "pop": 50,
+    "seeds": [
+     1
+    ]
+   },
+   "call_id": 27,
+   "case": 2,
+   "obj_selection": [
+    2,
+    3
+   ],
+   "row": 5,
+   "task_id": 27,
+   "worker": 3
+  },
+  {
+   "algorithm": {
+    "expected_evals": 5000,
+    "gen": 100,
+    "name": "NSGA2",
+    "pop": 50,
+    "seeds": [
+     1
+    ]
+   },
+   "call_id": 28,
+   "case": 2,
+   "obj_selection": [
+    2,
+    3
+   ],
+   "row": 6,
+   "task_id": 28,
+   "worker": 0
+  },
+  {
+   "algorithm": {
+    "expected_evals": 5000,
+    "gen": 100,
+    "name": "NSGA2",
+    "pop": 50,
+    "seeds": [
+     1
+    ]
+   },
+   "call_id": 29,
+   "case": 2,
+   "obj_selection": [
+    2,
+    3
+   ],
+   "row": 7,
+   "task_id": 29,
+   "worker": 1
+  },
+  {
+   "algorithm": {
+    "expected_evals": 5000,
+    "gen": 100,
+    "name": "NSGA2",
+    "pop": 50,
+    "seeds": [
+     1
+    ]
+   },
+   "call_id": 30,
+   "case": 2,
+   "obj_selection": [
+    2,
+    3
+   ],
+   "row": 8,
+   "task_id": 30,
+   "worker": 2
+  },
+  {
+   "algorithm": {
+    "expected_evals": 5000,
+    "gen": 100,
+    "name": "NSGA2",
+    "pop": 50,
+    "seeds": [
+     1
+    ]
+   },
+   "call_id": 31,
+   "case": 2,
+   "obj_selection": [
+    2,
+    3
+   ],
+   "row": 9,
+   "task_id": 31,
+   "worker": 3
+  },
+  {
+   "algorithm": {
+    "expected_evals": 5000,
+    "gen": 100,
+    "name": "NSGA2",
+    "pop": 50,
+    "seeds": [
+     1
+    ]
+   },
+   "call_id": 32,
+   "case": 2,
+   "obj_selection": [
+    2,
+    3
+   ],
+   "row": 10,
+   "task_id": 32,
+   "worker": 0
+  },
+  {
+   "algorithm": {
+    "expected_evals": 5000,
+    "gen": 100,
+    "name": "NSGA2",
+    "pop": 50,
+    "seeds": [
+     1
+    ]
+   },
+   "call_id": 33,
+   "case": 3,
+   "obj_selection": [
+    0,
+    1,
+    2
+   ],
+   "row": 0,
+   "task_id": 33,
+   "worker": 1
+  },
+  {
+   "algorithm": {
+    "expected_evals": 5000,
+    "gen": 100,
+    "name": "NSGA2",
+    "pop": 50,
+    "seeds": [
+     1
+    ]
+   },
+   "call_id": 34,
+   "case": 3,
+   "obj_selection": [
+    0,
+    1,
+    2
+   ],
+   "row": 1,
+   "task_id": 34,
+   "worker": 2
+  },
+  {
+   "algorithm": {
+    "expected_evals": 5000,
+    "gen": 100,
+    "name": "NSGA2",
+    "pop": 50,
+    "seeds": [
+     1
+    ]
+   },
+   "call_id": 35,
+   "case": 3,
+   "obj_selection": [
+    0,
+    1,
+    2
+   ],
+   "row": 2,
+   "task_id": 35,
+   "worker": 3
+  },
+  {
+   "algorithm": {
+    "expected_evals": 5000,
+    "gen": 100,
+    "name": "NSGA2",
+    "pop": 50,
+    "seeds": [
+     1
+    ]
+   },
+   "call_id": 36,
+   "case": 3,
+   "obj_selection": [
+    0,
+    1,
+    2
+   ],
+   "row": 3,
+   "task_id": 36,
+   "worker": 0
+  },
+  {
+   "algorithm": {
+    "expected_evals": 5000,
+    "gen": 100,
+    "name": "NSGA2",
+    "pop": 50,
+    "seeds": [
+     1
+    ]
+   },
+   "call_id": 37,
+   "case": 3,
+   "obj_selection": [
+    0,
+    1,
+    2
+   ],
+   "row": 4,
+   "task_id": 37,
+   "worker": 1
+  },
+  {
+   "algorithm": {
+    "expected_evals": 5000,
+    "gen": 100,
+    "name": "NSGA2",
+    "pop": 50,
+    "seeds": [
+     1
+    ]
+   },
+   "call_id": 38,
+   "case": 3,
+   "obj_selection": [
+    0,
+    1,
+    2
+   ],
+   "row": 5,
+   "task_id": 38,
+   "worker": 2
+  },
+  {
+   "algorithm": {
+    "expected_evals": 5000,
+    "gen": 100,
+    "name": "NSGA2",
+    "pop": 50,
+    "seeds": [
+     1
+    ]
+   },
+   "call_id": 39,
+   "case": 3,
+   "obj_selection": [
+    0,
+    1,
+    2
+   ],
+   "row": 6,
+   "task_id": 39,
+   "worker": 3
+  },
+  {
+   "algorithm": {
+    "expected_evals": 5000,
+    "gen": 100,
+    "name": "NSGA2",
+    "pop": 50,
+    "seeds": [
+     1
+    ]
+   },
+   "call_id": 40,
+   "case": 3,
+   "obj_selection": [
+    0,
+    1,
+    2
+   ],
+   "row": 7,
+   "task_id": 40,
+   "worker": 0
+  },
+  {
+   "algorithm": {
+    "expected_evals": 5000,
+    "gen": 100,
+    "name": "NSGA2",
+    "pop": 50,
+    "seeds": [
+     1
+    ]
+   },
+   "call_id": 41,
+   "case": 3,
+   "obj_selection": [
+    0,
+    1,
+    2
+   ],
+   "row": 8,
+   "task_id": 41,
+   "worker": 1
+  },
+  {
+   "algorithm": {
+    "expected_evals": 5000,
+    "gen": 100,
+    "name": "NSGA2",
+    "pop": 50,
+    "seeds": [
+     1
+    ]
+   },
+   "call_id": 42,
+   "case": 3,
+   "obj_selection": [
+    0,
+    1,
+    2
+   ],
+   "row": 9,
+   "task_id": 42,
+   "worker": 2
+  },
+  {
+   "algorithm": {
+    "expected_evals": 5000,
+    "gen": 100,
+    "name": "NSGA2",
+    "pop": 50,
+    "seeds": [
+     1
+    ]
+   },
+   "call_id": 43,
+   "case": 3,
+   "obj_selection": [
+    0,
+    1,
+    2
+   ],
+   "row": 10,
+   "task_id": 43,
+   "worker": 3
+  },
+  {
+   "algorithm": {
+    "expected_evals": 5000,
+    "gen": 100,
+    "name": "NSGA2",
+    "pop": 50,
+    "seeds": [
+     1
+    ]
+   },
+   "call_id": 44,
+   "case": 4,
+   "obj_selection": [
+    0,
+    1,
+    3
+   ],
+   "row": 0,
+   "task_id": 44,
+   "worker": 0
+  },
+  {
+   "algorithm": {
+    "expected_evals": 5000,
+    "gen": 100,
+    "name": "NSGA2",
+    "pop": 50,
+    "seeds": [
+     1
+    ]
+   },
+   "call_id": 45,
+   "case": 4,
+   "obj_selection": [
+    0,
+    1,
+    3
+   ],
+   "row": 1,
+   "task_id": 45,
+   "worker": 1
+  },
+  {
+   "algorithm": {
+    "expected_evals": 5000,
+    "gen": 100,
+    "name": "NSGA2",
+    "pop": 50,
+    "seeds": [
+     1
+    ]
+   },
+   "call_id": 46,
+   "case": 4,
+   "obj_selection": [
+    0,
+    1,
+    3
+   ],
+   "row": 2,
+   "task_id": 46,
+   "worker": 2
+  },
+  {
+   "algorithm": {
+    "expected_evals": 5000,
+    "gen": 100,
+    "name": "NSGA2",
+    "pop": 50,
+    "seeds": [
+     1
+    ]
+   },
+   "call_id": 47,
+   "case": 4,
+   "obj_selection": [
+    0,
+    1,
+    3
+   ],
+   "row": 3,
+   "task_id": 47,
+   "worker": 3
+  },
+  {
+   "algorithm": {
+    "expected_evals": 5000,
+    "gen": 100,
+    "name": "NSGA2",
+    "pop": 50,
+    "seeds": [
+     1
+    ]
+   },
+   "call_id": 48,
+   "case": 4,
+   "obj_selection": [
+    0,
+    1,
+    3
+   ],
+   "row": 4,
+   "task_id": 48,
+   "worker": 0
+  },
+  {
+   "algorithm": {
+    "expected_evals": 5000,
+    "gen": 100,
+    "name": "NSGA2",
+    "pop": 50,
+    "seeds": [
+     1
+    ]
+   },
+   "call_id": 49,
+   "case": 4,
+   "obj_selection": [
+    0,
+    1,
+    3
+   ],
+   "row": 5,
+   "task_id": 49,
+   "worker": 1
+  },
+  {
+   "algorithm": {
+    "expected_evals": 5000,
+    "gen": 100,
+    "name": "NSGA2",
+    "pop": 50,
+    "seeds": [
+     1
+    ]
+   },
+   "call_id": 50,
+   "case": 4,
+   "obj_selection": [
+    0,
+    1,
+    3
+   ],
+   "row": 6,
+   "task_id": 50,
+   "worker": 2
+  },
+  {
+   "algorithm": {
+    "expected_evals": 5000,
+    "gen": 100,
+    "name": "NSGA2",
+    "pop": 50,
+    "seeds": [
+     1
+    ]
+   },
+   "call_id": 51,
+   "case": 4,
+   "obj_selection": [
+    0,
+    1,
+    3
+   ],
+   "row": 7,
+   "task_id": 51,
+   "worker": 3
+  },
+  {
+   "algorithm": {
+    "expected_evals": 5000,
+    "gen": 100,
+    "name": "NSGA2",
+    "pop": 50,
+    "seeds": [
+     1
+    ]
+   },
+   "call_id": 52,
+   "case": 4,
+   "obj_selection": [
+    0,
+    1,
+    3
+   ],
+   "row": 8,
+   "task_id": 52,
+   "worker": 0
+  },
+  {
+   "algorithm": {
+    "expected_evals": 5000,
+    "gen": 100,
+    "name": "NSGA2",
+    "pop": 50,
+    "seeds": [
+     1
+    ]
+   },
+   "call_id": 53,
+   "case": 4,
+   "obj_selection": [
+    0,
+    1,
+    3
+   ],
+   "row": 9,
+   "task_id": 53,
+   "worker": 1
+  },
+  {
+   "algorithm": {
+    "expected_evals": 5000,
+    "gen": 100,
+    "name": "NSGA2",
+    "pop": 50,
+    "seeds": [
+     1
+    ]
+   },
+   "call_id": 54,
+   "case": 4,
+   "obj_selection": [
+    0,
+    1,
+    3
+   ],
+   "row": 10,
+   "task_id": 54,
+   "worker": 2
+  },
+  {
+   "algorithm": {
+    "expected_evals": 16500,
+    "gen": 100,
+    "name": "NSGA3",
+    "pop": 165,
+    "seeds": [
+     1
+    ]
+   },
+   "call_id": 55,
+   "case": 5,
+   "obj_selection": [
+    0,
+    1,
+    2,
+    3
+   ],
+   "row": 0,
+   "task_id": 55,
+   "worker": 3
+  },
+  {
+   "algorithm": {
+    "expected_evals": 16500,
+    "gen": 100,
+    "name": "NSGA3",
+    "pop": 165,
+    "seeds": [
+     1
+    ]
+   },
+   "call_id": 56,
+   "case": 5,
+   "obj_selection": [
+    0,
+    1,
+    2,
+    3
+   ],
+   "row": 1,
+   "task_id": 56,
+   "worker": 0
+  },
+  {
+   "algorithm": {
+    "expected_evals": 16500,
+    "gen": 100,
+    "name": "NSGA3",
+    "pop": 165,
+    "seeds": [
+     1
+    ]
+   },
+   "call_id": 57,
+   "case": 5,
+   "obj_selection": [
+    0,
+    1,
+    2,
+    3
+   ],
+   "row": 2,
+   "task_id": 57,
+   "worker": 1
+  },
+  {
+   "algorithm": {
+    "expected_evals": 16500,
+    "gen": 100,
+    "name": "NSGA3",
+    "pop": 165,
+    "seeds": [
+     1
+    ]
+   },
+   "call_id": 58,
+   "case": 5,
+   "obj_selection": [
+    0,
+    1,
+    2,
+    3
+   ],
+   "row": 3,
+   "task_id": 58,
+   "worker": 2
+  },
+  {
+   "algorithm": {
+    "expected_evals": 16500,
+    "gen": 100,
+    "name": "NSGA3",
+    "pop": 165,
+    "seeds": [
+     1
+    ]
+   },
+   "call_id": 59,
+   "case": 5,
+   "obj_selection": [
+    0,
+    1,
+    2,
+    3
+   ],
+   "row": 4,
+   "task_id": 59,
+   "worker": 3
+  },
+  {
+   "algorithm": {
+    "expected_evals": 16500,
+    "gen": 100,
+    "name": "NSGA3",
+    "pop": 165,
+    "seeds": [
+     1
+    ]
+   },
+   "call_id": 60,
+   "case": 5,
+   "obj_selection": [
+    0,
+    1,
+    2,
+    3
+   ],
+   "row": 5,
+   "task_id": 60,
+   "worker": 0
+  },
+  {
+   "algorithm": {
+    "expected_evals": 16500,
+    "gen": 100,
+    "name": "NSGA3",
+    "pop": 165,
+    "seeds": [
+     1
+    ]
+   },
+   "call_id": 61,
+   "case": 5,
+   "obj_selection": [
+    0,
+    1,
+    2,
+    3
+   ],
+   "row": 6,
+   "task_id": 61,
+   "worker": 1
+  },
+  {
+   "algorithm": {
+    "expected_evals": 16500,
+    "gen": 100,
+    "name": "NSGA3",
+    "pop": 165,
+    "seeds": [
+     1
+    ]
+   },
+   "call_id": 62,
+   "case": 5,
+   "obj_selection": [
+    0,
+    1,
+    2,
+    3
+   ],
+   "row": 7,
+   "task_id": 62,
+   "worker": 2
+  },
+  {
+   "algorithm": {
+    "expected_evals": 16500,
+    "gen": 100,
+    "name": "NSGA3",
+    "pop": 165,
+    "seeds": [
+     1
+    ]
+   },
+   "call_id": 63,
+   "case": 5,
+   "obj_selection": [
+    0,
+    1,
+    2,
+    3
+   ],
+   "row": 8,
+   "task_id": 63,
+   "worker": 3
+  },
+  {
+   "algorithm": {
+    "expected_evals": 16500,
+    "gen": 100,
+    "name": "NSGA3",
+    "pop": 165,
+    "seeds": [
+     1
+    ]
+   },
+   "call_id": 64,
+   "case": 5,
+   "obj_selection": [
+    0,
+    1,
+    2,
+    3
+   ],
+   "row": 9,
+   "task_id": 64,
+   "worker": 0
+  },
+  {
+   "algorithm": {
+    "expected_evals": 16500,
+    "gen": 100,
+    "name": "NSGA3",
+    "pop": 165,
+    "seeds": [
+     1
+    ]
+   },
+   "call_id": 65,
+   "case": 5,
+   "obj_selection": [
+    0,
+    1,
+    2,
+    3
+   ],
+   "row": 10,
+   "task_id": 65,
+   "worker": 1
+  }
+ ],
+ "record_files": [
+  "ROWS.json",
+  "AGGREGATE.json",
+  "OPERATION.json",
+  "RESOURCES.json",
+  "RULE.json",
+  "IDENTITY.json",
+  "HEADER.json",
+  "END_RECORD.json"
+ ],
+ "required_fields": [
+  "task_id",
+  "call_id",
+  "case",
+  "row",
+  "obj_selection",
+  "algorithm",
+  "worker",
+  "n_eval",
+  "n_nonfinite",
+  "n_nonfinite_any_of_4",
+  "n_out_eval_PE",
+  "n_out_eval_NE",
+  "n_out_eval_any",
+  "n_out_unknown_eval",
+  "n_dvdq_observed",
+  "n_eval_x_out_of_box",
+  "n_eval_G_violated",
+  "extraction",
+  "model_digest",
+  "halfcell_digest",
+  "warnings_count",
+  "warnings_distinct_overflow",
+  "success_is_evidence",
+  "n_eval_minus_expected",
+  "termination",
+  "error",
+  "X",
+  "F",
+  "G",
+  "G_status",
+  "n_solutions",
+  "F_nonfinite_count",
+  "G_violation_recomputed",
+  "G_violation_exact",
+  "box_violation_exact",
+  "success_reported",
+  "wall",
+  "cpu",
+  "state",
+  "t_start_rel"
+ ],
+ "rule": {
+  "boundary": "now_rel + max_w R_w > measure 이면 중지",
+  "cap_s": 1800.0,
+  "compare": "엄격한 > (같으면 넘지 않음)",
+  "inputs": "snapshot 의 wall · n_eval · termination · progress 만",
+  "measure_s": 9000.0,
+  "min_samples": 8,
+  "projection": "R_w = (미착수 배정 호출의 기대 평가 합 + 진행 중 호출의 max(기대 평가 − progress, 0)) × m",
+  "statistic": "위쪽 중앙 순서통계 — returned 의 c = wall / n_eval 오름차순 0-기반 index ⌊n/2⌋",
+  "window": "누적 (완료된 returned 전부) · tick 마다 다시 계산"
+ },
+ "schema": "reil-c4e-plan-e-v1",
+ "scope": "C4-E · E0 건조 (v3 §3 · 상태 문서 §66) — 계획 · 규칙 매개변수 · 기대 자료 식별만. util import · 자료 · optimizer · 네트워크 0",
+ "source": {
+  "commit": "1188c371e5836df4a7e5f5acf336a34ffd4027e6",
+  "url": "https://github.com/REIL-UConn/Multi-Objective-Optimization-for-Lithium-Ion-Battery-Degradation-Diagnostics.git"
+ },
+ "tick_s": 1.0,
+ "util_choice": "고정 커밋 원본 (v3 §11-3 · 상태 문서 §66)",
+ "util_imported": false
+}

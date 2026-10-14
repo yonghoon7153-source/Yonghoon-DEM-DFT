@@ -1,0 +1,9 @@
+t0_utc 2026-10-14T10:26:46Z
+uptime_s 229.23
+head_start cac26575a9d928a22364c3d92d150d623f14856c
+disk_free_bytes 26250764288
+approval 상태 문서 §66 (사용자 "권고대로 E0 승인" — v3 §11 의 1–4 권장안 · §6-2 계산 예외 포함)
+request docs/REIL_C4E_APPROVAL_REQUEST_v3_20261014.md 29cd92a44db97fc29893adc6bc5dda75d610486cdd5d169eafd6df537bd9029a (커밋 05614f07 · 수용 §65)
+limits identity 60 · red 600 · green 600 · plan_e 300 · compute 1560 · work 14400 · auto_retest 0
+resources (사후 관측) child_maxrss ≤ 4 GiB · evidence ≤ 64 MiB · disk_free_at_start ≥ 5 GiB
+expect RED 21 실패 (골격 NotImplementedError / stop_rule TypeError 만) · GREEN 180 (기존 159 + 새 21)
