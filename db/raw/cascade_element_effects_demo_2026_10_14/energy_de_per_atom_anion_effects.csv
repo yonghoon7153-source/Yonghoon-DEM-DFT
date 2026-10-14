@@ -1,0 +1,10 @@
+# DEMO on Stage-1 labels (2026-10-14): the labels are flawed (configuration noise, composition-referenced energy, one dopant level, n = 91) — this tests the code, not the chemistry. Not citable.
+# label energy_de_per_atom · additive model · effects centred
+anion,effect,band5,band95
+O,-0.14446,-0.16246,-0.12471
+N,-0.099169,-0.11195,-0.084817
+F,-0.037021,-0.04901,-0.026961
+I,0.0073312,-0.0077133,0.02645
+S,0.035863,0.026863,0.045
+Br,0.09768,0.052192,0.13538
+Cl,0.13978,0.12869,0.15189

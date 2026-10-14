@@ -1,0 +1,219 @@
+{
+ "label": "interface_vs_Li_metal_minus_host",
+ "better": "high",
+ "demo_note": "DEMO on Stage-1 labels (2026-10-14): the labels are flawed (configuration noise, composition-referenced energy, one dopant level, n = 91) — this tests the code, not the chemistry. Not citable. MP-phase reaction energy per atom of the mixture, doped minus host Li6PS5Cl.",
+ "gate": {
+  "n_precursors": 91,
+  "anion_family_R2": 0.027688887905536474,
+  "family_means": {
+   "Br": 0.01631400000000003,
+   "Cl": 0.008015263157894774,
+   "F": -0.004024999999999973,
+   "I": -0.010964999999999975,
+   "N": -0.0009199999999999653,
+   "O": 0.014765945945945972,
+   "S": -0.0028272727272726935
+  }
+ },
+ "additive_rmse": 0.02083381246858204,
+ "prediction": {
+  "n": 91,
+  "n_features": 12,
+  "features": [
+   "z_cat",
+   "r_cat",
+   "z_over_r",
+   "en_cat",
+   "period_cat",
+   "z_an",
+   "r_an",
+   "en_an",
+   "d_en",
+   "cat_per_an",
+   "atoms_per_fu",
+   "host_anion"
+  ],
+  "leave_one_cation_out": {
+   "Q2": -0.1763632235911008,
+   "spearman": 0.06050275788334026,
+   "enrichment_top10": 2.4,
+   "perm_p": 0.985,
+   "perm_null_Q2_mean": -0.03935952899473504
+  },
+  "leave_one_anion_family_out": {
+   "Q2": -0.15444221381667345,
+   "spearman": 0.323955788392735
+  },
+  "random_5fold": {
+   "Q2": -0.1510283597265658,
+   "spearman": -0.02250135479468618
+  },
+  "ridge_lambda_full": 1.0,
+  "standardized_coef": {
+   "z_cat": 0.06174066857275741,
+   "r_cat": 0.01292790756293784,
+   "z_over_r": -0.017172258327266394,
+   "en_cat": -0.00338032171281676,
+   "period_cat": -0.01789530402864389,
+   "z_an": -0.010203469585360335,
+   "r_an": -0.0007372616094445542,
+   "en_an": -0.004034008830133152,
+   "d_en": -0.0005579310153174967,
+   "cat_per_an": 0.020242658918609314,
+   "atoms_per_fu": 0.00567359670800386,
+   "host_anion": -0.00470992003165928
+  }
+ },
+ "anion_effects": {
+  "Br": {
+   "effect": 0.013922289997817586,
+   "band_5_95": null
+  },
+  "Cl": {
+   "effect": 0.0030425289989910007,
+   "band_5_95": null
+  },
+  "F": {
+   "effect": -0.006561276590951129,
+   "band_5_95": null
+  },
+  "I": {
+   "effect": -0.004985202103679445,
+   "band_5_95": null
+  },
+  "N": {
+   "effect": 0.012760311409725097,
+   "band_5_95": null
+  },
+  "O": {
+   "effect": 0.011080218052801048,
+   "band_5_95": null
+  },
+  "S": {
+   "effect": -0.029258869764704157,
+   "band_5_95": null
+  }
+ },
+ "cation_effects_multi_family": {
+  "Al": {
+   "effect": -0.04479146408463903,
+   "n_families": 7,
+   "band_5_95": null
+  },
+  "Ba": {
+   "effect": -0.01066498046767787,
+   "n_families": 2,
+   "band_5_95": null
+  },
+  "Ca": {
+   "effect": -0.0071494739590619175,
+   "n_families": 6,
+   "band_5_95": null
+  },
+  "Cr": {
+   "effect": -0.04838626197664623,
+   "n_families": 2,
+   "band_5_95": null
+  },
+  "Fe": {
+   "effect": -0.0675849804676778,
+   "n_families": 2,
+   "band_5_95": null
+  },
+  "Ga": {
+   "effect": -0.03880215411598498,
+   "n_families": 4,
+   "band_5_95": null
+  },
+  "Ge": {
+   "effect": 0.05900071891416967,
+   "n_families": 2,
+   "band_5_95": null
+  },
+  "Hf": {
+   "effect": -0.05228998046767801,
+   "n_families": 2,
+   "band_5_95": null
+  },
+  "La": {
+   "effect": -0.011842430428728902,
+   "n_families": 3,
+   "band_5_95": null
+  },
+  "Li": {
+   "effect": 0.00016710734393239225,
+   "n_families": 7,
+   "band_5_95": null
+  },
+  "Mg": {
+   "effect": -0.015368606941781937,
+   "n_families": 7,
+   "band_5_95": null
+  },
+  "Na": {
+   "effect": 0.006039344330079008,
+   "n_families": 3,
+   "band_5_95": null
+  },
+  "Nb": {
+   "effect": 0.12307001953232213,
+   "n_families": 2,
+   "band_5_95": null
+  },
+  "Nd": {
+   "effect": -0.030609097095395565,
+   "n_families": 3,
+   "band_5_95": null
+  },
+  "Sb": {
+   "effect": 0.051990718914169606,
+   "n_families": 2,
+   "band_5_95": null
+  },
+  "Sc": {
+   "effect": -0.033245763762061877,
+   "n_families": 3,
+   "band_5_95": null
+  },
+  "Si": {
+   "effect": 0.04743571891416969,
+   "n_families": 2,
+   "band_5_95": null
+  },
+  "Sm": {
+   "effect": -0.03298498046767791,
+   "n_families": 2,
+   "band_5_95": null
+  },
+  "Sn": {
+   "effect": 0.05657071891416965,
+   "n_families": 2,
+   "band_5_95": null
+  },
+  "Sr": {
+   "effect": 0.003410019532322093,
+   "n_families": 2,
+   "band_5_95": null
+  },
+  "Ta": {
+   "effect": 0.12577501953232217,
+   "n_families": 2,
+   "band_5_95": null
+  },
+  "Ti": {
+   "effect": 0.08055090290460416,
+   "n_families": 3,
+   "band_5_95": null
+  },
+  "Y": {
+   "effect": -0.02899243042872874,
+   "n_families": 3,
+   "band_5_95": null
+  },
+  "Zr": {
+   "effect": 0.04155795294355343,
+   "n_families": 4,
+   "band_5_95": null
+  }
+ }
+}
