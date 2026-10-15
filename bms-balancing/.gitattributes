@@ -216,3 +216,5 @@ evidence/reil_c4e0_20261014/** -text
 reviews/review_reil_c4e_e0_result_20261014/** -text
 # 2026-10-14: REIL C4-E · E0 한정 정정 (C4E-E0-N1) 증거 — 단계 기록 · stdout / stderr · porcelain · SOURCES.json · 끝 기록 (상태 문서 §70 · §71) — bytes 그대로
 evidence/reil_c4e0_fix_20261014/** -text
+# 2026-10-15: REIL C4-E · E0 한정 정정 결과 검토 회신 (N1 한정 해소 · 정정 결과 한정 수용 · E1 승인 요청서 작성 허용 · 실행 승인 아님 · source/ · green_commit/ · red_commit/ · approval_commit/ = 검토자가 본 저장소 사본 · basis/ = E0 회신 · §70 발췌) — bytes 그대로
+reviews/review_reil_c4e_e0_fix_20261015/** -text
