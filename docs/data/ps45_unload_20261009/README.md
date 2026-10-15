@@ -12,6 +12,12 @@
   창 연속 (w · 간격) · 문법 fixture PASS = RJ · RJ2 · EXT 사전 점검 (Q5 강제) · UC = fresh-attempt-only · Linux 전체 로그
   (`docs/reviews/dem_unloading_kit_reverify_fix_evidence_20261014/`) → ⬜ ibb 문법 fixture 실행 2 (실제 바이너리) · ⬜ Codex 짧은 재확인
   (`docs/reviews/codex_dem_unloading_kit_reverify_fix_recheck_request_20261014.md` · 발송 = 1저자).
+  → ⛔ **Codex 수정 재확인 (10-15 · 코드 핀 `eaecfba2a`) = HOLD** — 앞 반례 대부분 닫힘 (ULKRR-03 원반례 닫힘) · 새 P2 셋 (`ULKRF-01` 같은 RESUME 사건 두 줄이 승인
+  하나를 둘로 · `ULKRF-02` 승인된 재개의 유지 창이 늘면 새 단 기록 거부 · `ULKRF-03` G2c 열 결손 = KeyError) · Q2 영수증 범위 · Q4 문법 사전 점검 = 판정 JSON 만 (캐시 신뢰 경계) ·
+  판정문 docs/reviews/codex_review_dem_unloading_kit_fix_recheck_20261015.md · 수정 계획 docs/reviews/dem_unloading_kit_fix_recheck_fix_plan_20261015.md (✅ 1저자 10-15 Q1–Q4 권고대로).
+  → ✅ **수정 10-15 (시험 먼저 · 이 README §1-6 · §3 · §4 · §5 · §9 = 수정 뒤 판 · 등록 §14-11)** — 경계 하나에 승인 한 번 · k 되돌아옴 = 새 시도 시작 · G2c 파서 문제 먼저 ·
+  문법 사전 점검이 그 런 원자료를 승인된 판독기로 다시 읽음 (Q3) · ID 정수 토큰 정확 (Q4) · Linux 전체 로그 (`docs/reviews/dem_unloading_kit_fix_recheck_fix_evidence_20261015/`)
+  → ⬜ Codex 짧은 재확인 (`docs/reviews/codex_dem_unloading_kit_fix_recheck2_request_20261015.md` · 발송 = 1저자) · ⬜ ibb 문법 fixture 실행 2.
 - 이 README 가 **이름의 정본**이다 (REG §8-2 "이름은 가칭 · 키트 README 가 정본").
 - 지금 할 수 있는 것 = **§1 작은 침대 이력 시험 (H0–H5) 만** — 본 키트 봉인과 따로 봉인 (`history_test/SHA256SUMS`) 해서 먼저 돌릴 수 있다.
   ⛔ 이 시험이 PASS 여도 본 R · 10:0 연장 · U 의 GO 가 아니다 (CX2 §0 · REG §13-6 — 키트 증거 → Codex 재검토 → 본 실행).
@@ -162,8 +168,15 @@ WSL 로 가져오는 꼴 (접속 정보는 자리표시): `scp -P <port> <user>@
 - **PASS 판정 = 본 R · 10:0 연장의 사전 점검 입력 (Q5 · 1저자 10-14 강제)**: §3 러너는 `RJ` · `RJ2` · `EXT` 의 LIGGGHTS 전에 `GRAMMAR_VERDICT` (이 런의
   `grammar_verdict.json`) 를 `ul_reader.py grammar` 로 대조한다 — 판정 schema · status PASS · exit_code 정수 0 · 검사 19 전부 참 · run_dir = 그 판정 파일 폴더 ·
   run_manifest `mode=gram` · `end` · **LMP sha256 = 지금 돌릴 바이너리** · 단계 P · GA · GB 의 rc 0 · 덱 사본 (`in.hist_producer` · `in.hist_grammar`) + 판 STL sha256 =
-  봉인 값 (`039abb141` 판 · 그 런의 kit `SHA256SUMS` 도 같은 값) — 아니면 런 없이 멈춘다.  러너 · 읽는 쪽 스크립트 sha256 은 대조하지 않는다 (덱이 아니다 —
-  `039abb141` 로 낸 실행 2 판정이 이 판의 러너 수정으로 무효가 되지 않는다 · 같은 덱 · 같은 바이너리면 통과).  런 폴더 · `kit_<시각>/` 은 지우지 않는다.
+  봉인 값 (`039abb141` 판 · 그 런의 kit `SHA256SUMS` 도 같은 값) — 아니면 런 없이 멈춘다.  ~~러너 · 읽는 쪽 스크립트 sha256 은 대조하지 않는다~~ (10-14 판 — 아래 10-15 로 바뀜).
+- ✅ **Q3 (1저자 10-15 · Codex 수정 재확인 Q4) — 원자료 재판독**: 사전 점검은 판정 JSON 대조에 더해 **그 런 폴더 원자료를 승인된 판독기로 다시 읽는다** —
+  승인된 판독기 = 그 런 `kit_<시각>/` 사본의 `read_history.py` · `history_params.json` 이 봉인 값 (`ul_reader.GRAMMAR_READER` = 이 `history_test/SHA256SUMS` 의 그 두 줄 ·
+  selftest R36 이 실제 파일과 대조) 이고 그 런 kit `SHA256SUMS` 에도 같은 값일 때만 `python3 -I <kit>/read_history.py <런> --grammar --params … --out <임시>` 로 다시 읽고
+  (런 폴더에 쓰지 않는다) 검사 19 = 판정 JSON (둘 다 참) · status PASS · rc 0 이어야 통과.  판독기가 봉인 값이 아니면 실행하지 않고 거부한다 · 러너 (`run_history.sh`) sha256 은
+  여전히 대조하지 않는다.  ⇒ 판정 JSON 만 반입해서 실제 실행 PASS 를 인증하지 않는다 (GA 화면 ERROR · GB mesh · GB 화면 · GB 상태 파일을 판정 뒤에 고친 런 = 거부 ·
+  R36 · M25).  ⚠ 실행 2 는 판독기 · 표 sha256 이 이 봉인 값인 판으로 돌린다 — `b1121b6b6` 이후 판 (그 뒤 `read_history.py` · `history_params.json` 바이트 그대로) ·
+  그 앞 판 (`039abb141` 등) 의 판독기로 낸 런은 승인된 판독기 재판독이 서지 않아 거부된다 (덱은 같다 — 다시 돌리면 된다) · 다시 읽기는 런 폴더 원래 자리에서
+  (GA · GB 입력 기록 `ckpt.txt` · `vars.txt` 가 절대 경로 — 옮긴 사본은 입력 대조가 거짓).  런 폴더 · `kit_<시각>/` 은 지우지 않는다.
 - 봉인 `history_test/SHA256SUMS` sha256 `debe83877657978cdaf87b18e08edda501e520979dd40876f5e100c24e902163` (H0–H5 덱 여덟 · 판 STL = 바이트 그대로 ·
   더해진 것 = 문법 덱 · 표 `grammar_probe` · 생성기 ⑯ · 읽는 쪽 `--grammar` · 러너 `--grammar-only` · 래퍼 둘째 인자 `grammar`).
   → `039abb141` (문법 덱 입력 셋 · 검사 ⑰) sha256 `dba635721503dd614d92cd6b9b184c028030335163e360b9991b340b25fde027` →
@@ -239,13 +252,22 @@ WSL 로 가져오는 꼴 (접속 정보는 자리표시): `scp -P <port> <user>@
   러너가 보존된 앞 시도 폴더 (`<잡>.<꼬리>`) 를 새 잡 기록 `prior_attempts=` 에 남긴다 (판단 = 1저자 · 기술 실패 · 승인 이력 유지).
 - 판독기 행 교체 (ULKRR-02): 끊긴 시도가 남긴 기록 줄은 **승인된 이어 돌림 경계** (RESUME 사건 + 위 `resume_from` + 그 상태 파일의 `ul_k`) 에서만 버린다 —
   그 밖 중복 · 역행 (step · k · w) = 버리지 않고 주 값 미식별 (사유).
+  **경계 하나에 승인 한 번** (ULKRF-01 · 10-15): `resume_from` 의 step 마다 RESUME 사건 정확히 한 줄 — 같은 경계의 RESUME 둘 이상 (같은 k = 중복 · 다른 k = 상충) ·
+  사건 k ↔ 상태 파일 불일치 · `resume_from` 밖 step 의 RESUME = 승인 없음 + 사유 (주 값 미식별 · 다음 관문 거부) · 사건 되감기도 같은 규칙.
+  **새 시도 시작** (ULKRF-02 · 10-15) = 승인 경계 뒤 먼저 오는 쪽 — step 역행 (창 · 단 CSV) 또는 단 CSV 에서 k 가 k_r + 1 로 되돌아옴 (새 시도의 유지 창이 늘어
+  옛 단 끝보다 늦게 끝나도 · 덱은 단 줄 → 사건 → restart · 상태 파일 순서로 쓴다) · 승인 없는 되돌아옴 · 중복 = 그대로 미식별.
 - 잡 기록 (`run_manifest.txt` · 덧붙이기만 · 개정 3 §14-10): `gate=ALLOW` (+ `gate_why=`) · (RJ · RJ2 · EXT) `grammar_prereq=PASS` · `grammar_verdict=` · `grammar_verdict_sha256=` ·
   단계마다 `stage=<덱 종류> screen=… rc=… check=PASS|…` · `stage=G0 rc=…` · 판독기 `reader_<명령>_rc=` (0 = 정상 판독 · 미식별도 JSON 으로 0 · ≠ 0 = 프로그램 오류 → 러너 rc ≠ 0) ·
   끝 줄 `end=… fails=… reader_rc=…`.  **G0 · Ut0 기술 실패 = R · UN · UK 를 돌리지 않는다** (복원 판정 RESTORED 아님 · kebase 건너뜀 기록).
 - 다음 제출 관문이 읽는 **잡 완료 영수증** (ULKRR-03): 끝 줄의 `fails=0` **과** `reader_rc=0` — 둘 다 한 번씩 있고 · 정수 · 0 (누락 · 비정수 · 비영 = 거부) ·
-  판독기가 증서 · 기준 파일을 쓴 뒤 실패한 잡 (예: 출력 실패 rc 120) 의 산출물은 다음 제출 승인으로 쓰지 않는다 (새 시도) · RESTORED 는 그 잡 기록의 `grammar_prereq=PASS` 도 ·
+  판독기가 증서 · 기준 파일을 쓴 뒤 실패한 RJ · RJ2 · EXT 잡 (예: 출력 실패 rc 120) 의 증서는 다음 제출 승인으로 쓰지 않는다 (새 시도) · RESTORED 는 그 잡 기록의 `grammar_prereq=PASS` 도 ·
   `RJ2` = S0′ 결정 PASS + 그 `EXT` 잡 영수증.
-- `EXT` (Q4 다): 첫 `s0p` 판독 rc **2** (등록된 연장 요청 — S0′ 조건 미달) + 끝 체크포인트일 때만 `EXT2` · 그 밖 비영 rc (판독기 프로그램 오류) = EXT2 없이 멈춤 · 판독기 rc 보존.
+  **범위 (Q2 (가) · 1저자 10-15 · Codex 수정 재확인 Q2 권고 문구 그대로)**: *복원 / EXT 증서는 성공 완료 영수증이 필수이며, 일반 팔의 주 관측은 원 폴더에서 재판독한다.
+  재판독 가능성이 잡의 기술 성공을 뜻하지는 않는다.*  (지금 동작 그대로 — 일반 팔 (UB · UT · UC · UV · UT3 · UTc · G_) 관문은 영수증 대신 런 폴더를 다시 판독한다 ·
+  유효 주 값은 보존 (등록 허용) · "기술 실패 잡의 산출물은 어떤 승인에도 다시 쓰이지 않는다" 는 전칭 보증이 아니다 · 등록 §14-11.)
+- `EXT` (Q4 다): 첫 `s0p` 판독 rc **2** (등록된 연장 요청) + 끝 체크포인트일 때만 `EXT2` · 그 밖 비영 rc (판독기 프로그램 오류) = EXT2 없이 멈춤 · 판독기 rc 보존.
+  ⚠ rc 2 = **PASS 아닌 모든 s0p 판정** (조건 미달 FAIL · 조건 미계산 (로그 · 창 밖) · S0′ 체크포인트 없음 포함) — 물리 조건을 유효하게 재서 실패한 경우만이 아니다
+  (예상 못 한 rc 1 과 rc 2 를 구분해 멈추는 것까지가 이 규칙이다 · Codex 수정 재확인 10-15 §6 · 등록 §14-11).
 - UTc (개정 3 §14-3): UT 의 기록 · 덤프 · thermo 를 **복사하지 않는다** — `parent_UT.sha256` (UT 판독 대상 sha256 목록) + `run_manifest` 의 `continues=UT` · `parent_dir` · `rm_step` ·
   `parent_sums_sha256` · 판독기가 UT 폴더에서 읽으며 대조 (불일치 · 경계 step 중복 · 누락 = 이어 돌림 무효 → UTc 주 값 미식별 · 최종 t3 = UT 주 값 그대로 + 보조 `SEP_INCOMPLETE`).
 - §1-6 문법 fixture 는 본 R (생산 침대) 전 PASS 여야 한다 (개정 3 §14-9) — ✅ **1저자 10-14 Q5 = 러너 사전 점검으로 강제** (`RJ` · `RJ2` · `EXT` · 위 첫 줄 ·
@@ -301,11 +323,11 @@ scp -P <port> <user>@<ibb-host>:~/ps45_unload_20261009/<침대>/<잡>.report.tgz
 |---|---|
 | 창 접촉 상태 | 창 끝 벽 local 덤프: 접촉 ≥ 1 · 창 평균 P > 0 = CONTACT · ≥ 1 · P ≤ 0 = TENSION · 0 = ZERO · 덤프 없음 · 깨짐 · 머리 step ≠ 창 끝 = OBS_MISSING (0 으로 세지 않는다) |
 | 분리 | 같은 단 (k) 안 연속 두 ZERO 창 (SEPARATE 단계 창) 의 둘째 창 끝 · 판 이동 (k 바뀜) = 연속 초기화 (덱과 같은 규칙) · 그 창부터 분리 뒤 창 · 재접촉 = 계수 · 분리 뒤 창 · 표면 관측 초기화 · OBS_MISSING = 연속을 끊는다 (§14-7) · 창 기록 = 같은 k 안 고유 · 연속 w (앞 + 1) + 창 끝 step 간격 = 그 팔 W (덱 사본 · 없으면 표) — 빈 구간 = 연속 끊김 (CSV 줄 인접 ≠ 물리 창 연속 · 예산 끝 선언 w 12 → 분리 뒤 w 15 는 그대로 DONE · Q4 가) |
-| 이어 돌림 경계 | 기록 줄 교체 (끊긴 시도가 남긴 줄 버림) = 승인된 경계에서만 — RESUME 사건 (k_r · s_r) + 러너 `resume_from=s_r` + 상태 파일 `state_unload_<s_r>.in` 의 `ul_rstep` · `ul_k` 가 맞고 · 버릴 줄 = s_r 뒤 (k > k_r) · 버린 뒤 앞 줄 = (k_r, s_r) · 새 시도 첫 줄 = k_r + 1 · 그 밖 중복 · 역행 (step · k · w) = 버리지 않고 주 값 미식별 (ULKRR-02) |
+| 이어 돌림 경계 | 기록 줄 교체 (끊긴 시도가 남긴 줄 버림) = 승인된 경계에서만 — RESUME 사건 (k_r · s_r) + 러너 `resume_from=s_r` + 상태 파일 `state_unload_<s_r>.in` 의 `ul_rstep` · `ul_k` 가 맞고 · 버릴 줄 = s_r 뒤 (k > k_r) · 버린 뒤 앞 줄 = (k_r, s_r) · 새 시도 첫 줄 = k_r + 1 · 그 밖 중복 · 역행 (step · k · w) = 버리지 않고 주 값 미식별 (ULKRR-02) · **경계 하나에 승인 한 번** — 같은 경계 RESUME 사건 중복 · 상충 (같은 step 다른 k) · 사건 ↔ 상태 파일 불일치 · `resume_from` 밖 RESUME = 승인 없음 + 사유 · 사건 되감기 같은 규칙 (ULKRF-01) · **새 시도 시작** = step 역행 또는 (단 CSV) k 가 k_r + 1 로 되돌아옴 — 먼저 오는 쪽 (새 시도가 옛 시도보다 늦게 끝나도 · ULKRF-02) |
 | 끝점 유효 | 덱 정상 (S1 ∧ S2 두 창) ∧ S3 PASS (단 끝 원자 + 쌍 덤프 · K5) ∧ P̄ · 높이 유한 ∧ 판 접촉 (CONTACT · TENSION) ∧ (k*) NOISE_FLOOR 아님 (σ_P = k* 마지막 두 창 thermo 정규 줄 `ul_Ps` · ddof 1 · 최소 10) |
 | 확인 두 단 | 실제로 이어지는 k* + 1 · k* + 2 (B · CONFIRM) 의 등록 정상 완료 = 덱 정상 · S3 PASS · 유한 · 순서 · 누락 없음 — **판 접촉 요구 없음** (분리 = 확인) · 아니면 주 값 UNIDENTIFIED · 선택 UNRESOLVED (§14-1 · Q1) |
 | 교차 · 괄호 | P̄ − P_meas 부호 바뀜 (> ↔ ≤) · 첫 교차 = P 두 점 선형 보간 (점 추정) + 실제 괄호 [h_lo, h_hi] · A 단 교차 = A 괄호 그대로 · 비단조 = **k = 0 부터** 모든 교차 괄호의 외곽 구간 [최소, 최대] ⊇ 첫 교차 괄호 + 표지 (b 판정 없음 · 기록 단 비유한 = 미계산 · §14-2) |
-| 관측 파싱 | 모든 경로에서 덤프 전부 읽힘 (머리 · 열 · 행 수 · 유한) · 머리 step = 요청 step · ID 고유 · S0 밖 ID 없음 · CSV 결손 · 단 k 불연속 = 주 값 미식별 · 버린 행을 정상 부분 관측으로 쓰지 않는다 (§14-10) · 필수 열 · 파서 문제를 먼저 (열 결손 = 사유 있는 미식별 · 미계산 — 예외 없음) · ID = 유한 · 양의 정확한 정수 (S0 · 원자 · 복원 관측 · 쌍 참조 — 소수를 정수로 자르지 않는다 · ULKRR-04) |
+| 관측 파싱 | 모든 경로에서 덤프 전부 읽힘 (머리 · 열 · 행 수 · 유한) · 머리 step = 요청 step · ID 고유 · S0 밖 ID 없음 · CSV 결손 · 단 k 불연속 = 주 값 미식별 · 버린 행을 정상 부분 관측으로 쓰지 않는다 (§14-10) · 필수 열 · 파서 문제를 먼저 (열 결손 = 사유 있는 미식별 · 미계산 — 예외 없음 · G2c 쌍 덤프 `c_cpl[7]` · `c_cpl[8]` 결손 = FAIL + 사유 · ULKRF-03) · ID = 유한 · 양의 정확한 정수 (S0 · 원자 · 복원 관측 · 쌍 참조 — 소수를 정수로 자르지 않는다 · ULKRR-04 · ID 열 정수 토큰은 float 를 거치지 않는다 — `9007199254740993` 거부 · Q4) |
 | S3 무게 항 | 분모의 m g 의 g = 그 팔의 실제 중력 (중력 팔 G_* = g_aux 9.81e-6 · 그 밖 9.81 · §14-6 · Q5) |
 | 상태 두 축 | `primary_status` OK · NOISE_FLOOR · LOWER_BOUND (교차 전 끝 + 정상 · 접촉 · 단조) · UNIDENTIFIED (사유) · NO_CROSSING · TECH · NO_BRACKET (중력 팔만) ↔ `trajectory_status` DONE · TIMEOUT (요약 없음) · LIFT_CAP · GUARD · TECH · RM_STOP · **SEP_INCOMPLETE** (재접촉 뒤 예산 끝 · 덱 DONE 인데 판독기 최종 분리 · 분리 뒤 4 창 · 선언 창 ≤ 예산 · SEPARATED · POST_DONE 사건이 맞지 않음 = 보조 미완료 · 주 ρ 무영향 · §14-7) |
 | 보조 ε · W_proxy | ε_sphere,all = 1 − C_all / h (C_all = 검증한 S0 에서 봉인 · 프레임마다 다시 계산 없음) · 자리 S0 · 교차 끝점 둘 (S0 ID 전부 · 같은 반경 아니면 그 자리 NOT_COMPUTED) · M (ε_all 만) · ε_sphere,inside 따로 · W_proxy = k 0 → M 정착 단 사다리꼴 (끝 조각 P_meas) × 1e-6 J (비정상 · 비유한 = 미계산 · 판이 받은 일 아님) — 팔 판정 · 최종 보고 (§14-8 · Q7) |
@@ -313,8 +335,8 @@ scp -P <port> <user>@<ibb-host>:~/ps45_unload_20261009/<침대>/<잡>.report.tgz
 | KE 기준 | UK = 정확히 S0 무이동 완전 세 창 (단계 기술 성공 · 요약 DONE · START = S0 · arm UK · k 0 · 단계 4 · w 1–3 · step = S0 + w · W0 · 판 h0 · 들어 올림 0 · 결손 줄 없음) 일 때만 `ul_base.in` · 아니면 미발행 (rc 2 → S2 쓰는 팔 관문 거부 · 계수 10 그대로 · §14-10) |
 | 상쇄 | 교차 끝점 마지막 창 인장 합 ≥ 0.5 · P_meas · A (= 1.25 N 덱) → 표지 · 처분 = 진단값 (`rank_eligible` 거짓 · 10 쌍 표 미식별) — 접촉 상태 · 자격과 따로 |
 | 선택 | 유효 ρ 둘 (UB · UT) → δ_dt → dt* → 그 dt* 의 UV 하나 → δ_v → 튜플 t1–t4 · 끝점 무효 · NaN · 결손 · 무교차 = SELECTION_UNRESOLVED (다음 팔 · 본 런 없음) · 경계 = ≤ (부동소수 1e-9 %p · choice C13) |
-| 관문 | 복원 RESTORED + 그 RJ · RJ2 잡 완료 영수증 (끝 줄 `fails=0` · `reader_rc=0` 둘 다 · 정수 · ULKRR-03) + 그 잡 기록 `grammar_prereq=PASS` (Q5) · KE 기준 파일 있어야 · 7:3 UB · UT · UC → UV (선택이 정한 하나) → 최종 팔 · t3 = UTc (S0 에서 새 UT3 없음) · G_ = 최종 팔의 R_M · 나머지 넷 = 최종 튜플 팔만 · 10:0 = S0′ 결정 PASS + 그 EXT 잡 완료 영수증 뒤 |
-| 문법 fixture 사전 점검 (Q5) | `ul_reader.py grammar <판정> --lmp-sha <지금 바이너리>` — 판정 schema · status PASS · exit_code 정수 0 · 검사 19 전부 참 · run_dir = 판정 파일 폴더 · run_manifest `mode=gram` · `end` · LMP sha256 같음 · 단계 P · GA · GB rc 0 · deck.txt · 덱 둘 + 판 STL 사본 = 봉인 값 (`GRAMMAR_INPUTS` = `039abb141` 판) · 그 런의 kit `SHA256SUMS` (sha256 = run_manifest `sums_sha256`) 도 같은 값 → rc 0 · 아니면 rc 2 (러너가 RJ · RJ2 · EXT 의 LIGGGHTS 전에 멈춘다) |
+| 관문 | 복원 RESTORED + 그 RJ · RJ2 잡 완료 영수증 (끝 줄 `fails=0` · `reader_rc=0` 둘 다 · 정수 · ULKRR-03) + 그 잡 기록 `grammar_prereq=PASS` (Q5) · KE 기준 파일 있어야 · 7:3 UB · UT · UC → UV (선택이 정한 하나) → 최종 팔 · t3 = UTc (S0 에서 새 UT3 없음) · G_ = 최종 팔의 R_M · 나머지 넷 = 최종 튜플 팔만 · 10:0 = S0′ 결정 PASS + 그 EXT 잡 완료 영수증 뒤 · 범위 (Q2 (가)): 복원 / EXT 증서는 성공 완료 영수증이 필수이며, 일반 팔의 주 관측은 원 폴더에서 재판독한다 — 재판독 가능성이 잡의 기술 성공을 뜻하지는 않는다 |
+| 문법 fixture 사전 점검 (Q5 · Q3) | `ul_reader.py grammar <판정> --lmp-sha <지금 바이너리>` — 판정 schema · status PASS · exit_code 정수 0 · 검사 19 전부 참 · run_dir = 판정 파일 폴더 · run_manifest `mode=gram` · `end` · LMP sha256 같음 · 단계 P · GA · GB rc 0 · deck.txt · 덱 둘 + 판 STL 사본 = 봉인 값 (`GRAMMAR_INPUTS` = `039abb141` 판) · 그 런의 kit `SHA256SUMS` (sha256 = run_manifest `sums_sha256`) 도 같은 값 · **원자료 재판독** (Q3 · 10-15) = 그 런 kit 사본 `read_history.py` · `history_params.json` = 봉인 값 (`GRAMMAR_READER`) 일 때만 그 판독기로 런 폴더를 다시 읽어 검사 19 = 판정 JSON · status PASS (판독기가 봉인 값 아니면 실행하지 않고 거부 · 화면 줄에 `reread=` · `reader_sha256=`) → rc 0 · 아니면 rc 2 (러너가 RJ · RJ2 · EXT 의 LIGGGHTS 전에 멈춘다) |
 | 복원 판정 | reset 로그 다섯 (history_zwall_bot · top_mesh · n_neighs_mesh_top_mesh · tracker_top_mesh · contacthistory) · G0 · G1 · G2 · G2c · mesh md5 · G3 · 바닥 이력 PRE = POST · UN 소거 보임 · PRE · POST · R_END · UN 전부 읽힘 · 머리 step (S0 · S0 + 2,000) · 고유 ID · ID 집합 = S0 · R_END ↔ UN 같은 대상 · Ut0 (7:3) · R · UN 기술 성공 · 이력 시험 H0–H5 PASS · rc 0 · **SYN PASS + 측정 부호 = 표** · 총힘 시점 PASS (SYN 없음 = 자격 없음) → RESTORED · UNCONFIRMED (관측 결손) · SYNTAX_FAIL (기술 실패) · VALUE_MISMATCH (수치) · 다음 제출 관문 = RESTORED + 그 RJ 잡 완료 영수증 (fails=0 · reader_rc=0 · ULKRR-03) + 문법 fixture 사전 점검 PASS 기록 · 중력 팔 = R_M 의 run 0 setup 에서 G1 · G2 · G2c (출처 팔 R_M 창 끝 · G3 해당 없음 · C12 · 실패 = TECH) (§14-10) |
 | 10 쌍 표 | 둘 다 OK · 순위 자격일 때만 합집합 괄호 비교 — 겹침 = 미구분 (동률 아님) · 분리 = 구분 · 아니면 미식별 |
 
@@ -324,6 +346,8 @@ scp -P <port> <user>@<ibb-host>:~/ps45_unload_20261009/<침대>/<잡>.report.tgz
 - `active_rules.json` = 활성 규칙 24 (선택 · 제출 순서 · UT R_M 멈춤 · UTc · 비단조 합집합 · 확인 두 단 · 관측 파싱 · 이어 돌림 경계 · 분리 · 재접촉 · 예산 · 중력 팔 유지 · S3 팔 g · TIMEOUT · 상쇄 · 물리 창 · S3 · σ_P ·
   이어 돌림 한 번 · 단계 rc · 복원 완전성 · ε · W_proxy · 경량 묶음 범위 · KE 기준 UK 세 창 · 문법 fixture 사전 점검) — 규칙마다 코드 자리 (실재 확인) · 증인 시험.
   10-14 밤 +2 = `resume_boundary` (ULKRR-02) · `grammar_prereq` (Q5) · 바뀐 글 = `parse_complete` · `separation` · `resume_once` · `stage_rc` · `restore_complete`.
+  10-15 (Codex 수정 재확인 반영 · 규칙 수 24 그대로) 바뀐 글 · 증인 = `resume_boundary` (ULKRF-01 · 02 · R33 · R34) · `parse_complete` (ULKRF-03 · Q4 · R35 · C4 · L14) ·
+  `grammar_prereq` (Q3 원자료 재판독 · R36 · M25) · `restore_complete` (Q2 범위) · `stage_rc` (EXT rc 2 범위).
 - 폐기 규칙 검사 (ULR1-05): 옛 띠 b (덱 · 러너 글자 · 파이썬 AST — selftest 안 부재 단언은 제외) · 동시 UV 제출 (러너 · 래퍼 · 이 README 의 `UB … UV` 를 도는 고리 · 한 줄 sbatch 둘) = **0 건** 이어야 `--check` rc 0.
 
 ## 6. 권고 기본값 (1저자 비준 대기) — 정본 = 부록 초안
@@ -363,3 +387,5 @@ scp -P <port> <user>@<ibb-host>:~/ps45_unload_20261009/<침대>/<잡>.report.tgz
 | 같은 묶음 `ul_lib.py` L13 · `ul_s3.py` F12 · `ul_gates.py` C3 (`ULKRR-04` 정확한 양의 정수 ID · 쌍 참조) | 21 중 2 · 16 중 2 · 37 중 1 실패 | 21 / 21 · 16 / 16 · 37 / 37 |
 | 같은 묶음 `history_test/read_history.py --selftest` S38–S40 (Q4 나 — 파일을 다 쓴 뒤 실패한 GA · P 에서 이어 가지 않는다) | 56 중 3 실패 | 56 / 56 |
 | 같은 묶음 `ul_runner_test.py --selftest` M20 (`ULKRR-03` 판독기가 증서 · 기준 파일을 쓴 뒤 rc 120) · M21 (Q4 다 EXT) · M22 (Q5 — 양성 = 지금 history_test 러너 · 읽는 쪽 판정 · 같은 가짜 바이너리) · M23 (`ULKRR-02` 러너 수준 RESUME) · M24 (Q6 UC) | 37 중 9 실패 | 37 / 37 |
+| **10-15 Codex 수정 재확인 반영 (계획 dem_unloading_kit_fix_recheck_fix_plan_20261015.md · 등록 §14-11 · 로그 = docs/reviews/dem_unloading_kit_fix_recheck_fix_evidence_20261015/)** — `ul_reader.py --selftest` R33 (`ULKRF-01` 같은 RESUME 두 줄 · 묶음 둘 · 되감기 한 번 중복 · 같은 step 다른 k · 양성 · 한 줄 대조) · R34 (`ULKRF-02` 생성 UT 덱 제어 흐름 4 · 5 창 · 4 → 5 · 4 → 4 · 5 → 4 · 무승인) · R35 (`ULKRF-03` 복원 G2c 열 결손 넷 · 실제 restore CLI) · R36 (Q3 원자료 재판독 양성 · 변조 넷 · 승인 밖 판독기 셋 · 봉인 값) | 182 중 18 실패 | 182 / 182 |
+| 같은 묶음 `ul_lib.py` L14 (Q4 정수 토큰 2^53 + 1 · 쌍 참조 · 긴 토큰) · `ul_gates.py` C4 (`ULKRF-03` G2c 열 결손 양쪽 · 두 열) · `ul_runner_test.py` M25 (Q3 판정 뒤 GA 화면 ERROR = 실제 러너가 LIGGGHTS 전 거부) | 24 중 2 · 41 중 4 · 38 중 1 실패 | 24 / 24 · 41 / 41 · 38 / 38 |

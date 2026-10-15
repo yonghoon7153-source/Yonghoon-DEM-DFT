@@ -1,0 +1,197 @@
+{
+ "python": "3.11.15",
+ "platform": "Linux-6.18.44-fc-v114-x86_64-with-glibc2.39",
+ "bash": "GNU bash, version 5.2.21(1)-release (x86_64-pc-linux-gnu)",
+ "kit": "docs/data/ps45_unload_20261009",
+ "code_state": "작업 트리 판 (원격에 없음 · 본 가지 대응은 메인 세션이 적는다) — 커밋 번호를 적지 않는다 (SELF-116)",
+ "kit_git_tree": "91f62b8c7cb5e0d45ec11a01bbeed0dd250bc777",
+ "history_git_tree": "bbd11d63fd0770311f715f0fb8c592ce6c8be704",
+ "git_dirty_paths": [],
+ "kit_SHA256SUMS_sha256": "441f66d71873faf2541f3d3945e82cb2b8045425eaa3b2c5bb63213327556c34",
+ "history_SHA256SUMS_sha256": "8ff722d24096c6bd929682842e3b93907951ad29943f180709c914404cdb928d",
+ "README_sha256": "82d8f75fd108d028f3cb228aa466e575bfe728e238fc455092e9fcef1329c592",
+ "results": [
+  {
+   "name": "ul_lib_selftest",
+   "cmd": [
+    "python3",
+    "-I",
+    "ul_lib.py",
+    "--selftest"
+   ],
+   "rc": 0,
+   "seconds": 0.1,
+   "n_check_lines_ok": 24,
+   "n_check_lines_fail": 0,
+   "last_line": "selftest: PASS (0 실패)"
+  },
+  {
+   "name": "ul_s3_selftest",
+   "cmd": [
+    "python3",
+    "-I",
+    "ul_s3.py",
+    "--selftest"
+   ],
+   "rc": 0,
+   "seconds": 0.2,
+   "n_check_lines_ok": 16,
+   "n_check_lines_fail": 0,
+   "last_line": "selftest: PASS (0 실패)"
+  },
+  {
+   "name": "ul_observers_selftest",
+   "cmd": [
+    "python3",
+    "-I",
+    "ul_observers.py",
+    "--selftest"
+   ],
+   "rc": 0,
+   "seconds": 0.0,
+   "n_check_lines_ok": 21,
+   "n_check_lines_fail": 0,
+   "last_line": "selftest: PASS (0 실패)"
+  },
+  {
+   "name": "ul_gates_selftest",
+   "cmd": [
+    "python3",
+    "-I",
+    "ul_gates.py",
+    "--selftest"
+   ],
+   "rc": 0,
+   "seconds": 0.1,
+   "n_check_lines_ok": 41,
+   "n_check_lines_fail": 0,
+   "last_line": "selftest: PASS (0 실패)"
+  },
+  {
+   "name": "ul_reader_selftest",
+   "cmd": [
+    "python3",
+    "-I",
+    "ul_reader.py",
+    "--selftest"
+   ],
+   "rc": 0,
+   "seconds": 8.2,
+   "n_check_lines_ok": 182,
+   "n_check_lines_fail": 0,
+   "last_line": "selftest: PASS (0 실패)"
+  },
+  {
+   "name": "seal_kit_selftest",
+   "cmd": [
+    "python3",
+    "-I",
+    "seal_kit.py",
+    "--selftest"
+   ],
+   "rc": 0,
+   "seconds": 11.5,
+   "n_check_lines_ok": 12,
+   "n_check_lines_fail": 0,
+   "last_line": "selftest: PASS (0 실패)"
+  },
+  {
+   "name": "seal_kit_check",
+   "cmd": [
+    "python3",
+    "-I",
+    "seal_kit.py",
+    "--check"
+   ],
+   "rc": 0,
+   "seconds": 1.6,
+   "n_check_lines_ok": 1,
+   "n_check_lines_fail": 0,
+   "last_line": "✓ seal — 파일 76 · SHA256SUMS 일치 · 폐기 규칙 0 건 · 활성 규칙 24 (증인 실재 True)"
+  },
+  {
+   "name": "make_unload_decks_selftest",
+   "cmd": [
+    "python3",
+    "-I",
+    "make_unload_decks.py",
+    "--selftest"
+   ],
+   "rc": 0,
+   "seconds": 6.6,
+   "n_check_lines_ok": 291,
+   "n_check_lines_fail": 0,
+   "last_line": "selftest: PASS (0 실패)"
+  },
+  {
+   "name": "make_unload_decks_check",
+   "cmd": [
+    "python3",
+    "-I",
+    "make_unload_decks.py",
+    "--check"
+   ],
+   "rc": 0,
+   "seconds": 2.2,
+   "n_check_lines_ok": 1,
+   "n_check_lines_fail": 0,
+   "last_line": "✓ check — 덱 64 개 = 생성 결과 · ✓ seal — 파일 76 · SHA256SUMS 일치 · 폐기 규칙 0 건 · 활성 규칙 24 (증인 실재 True)"
+  },
+  {
+   "name": "history_make_history_decks_selftest",
+   "cmd": [
+    "python3",
+    "-I",
+    "history_test/make_history_decks.py",
+    "--selftest"
+   ],
+   "rc": 0,
+   "seconds": 0.8,
+   "n_check_lines_ok": 172,
+   "n_check_lines_fail": 0,
+   "last_line": "selftest: PASS (0 실패)"
+  },
+  {
+   "name": "history_make_history_decks_check",
+   "cmd": [
+    "python3",
+    "-I",
+    "history_test/make_history_decks.py",
+    "--check"
+   ],
+   "rc": 0,
+   "seconds": 0.2,
+   "n_check_lines_ok": 1,
+   "n_check_lines_fail": 0,
+   "last_line": "✓ check: 덱 9 · 판 STL = 생성 결과 · SHA256SUMS 일치 (15 파일 · 러너 · 래퍼 · 읽는 쪽 포함)"
+  },
+  {
+   "name": "history_read_history_selftest",
+   "cmd": [
+    "python3",
+    "-I",
+    "history_test/read_history.py",
+    "--selftest"
+   ],
+   "rc": 0,
+   "seconds": 14.1,
+   "n_check_lines_ok": 56,
+   "n_check_lines_fail": 0,
+   "last_line": "selftest: PASS (0 실패)"
+  },
+  {
+   "name": "ul_runner_test_selftest",
+   "cmd": [
+    "python3",
+    "-I",
+    "ul_runner_test.py",
+    "--selftest"
+   ],
+   "rc": 0,
+   "seconds": 57.6,
+   "n_check_lines_ok": 38,
+   "n_check_lines_fail": 0,
+   "last_line": "selftest: PASS (0 실패)"
+  }
+ ]
+}
