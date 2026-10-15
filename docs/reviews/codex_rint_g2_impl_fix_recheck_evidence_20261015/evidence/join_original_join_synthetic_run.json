@@ -1,0 +1,85 @@
+{
+  "source": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint_g2_impl_review_20261014\\probes\\join_synthetic.py",
+  "source_sha256": "b3b46c30e8fd5d1b16189b6f9d0663313400693acc57f562d94a0e9c88b48afe",
+  "virtual_file": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint_g2_impl_reverify_20261015\\probes\\join_synthetic.py",
+  "adaptation": "none; source text unchanged",
+  "exit_code": 1,
+  "exception": "KeyError",
+  "message": "'delta_bound_um'",
+  "baseline": {
+    "status": "REJECT",
+    "rejections": [
+      {
+        "code": "numeric_format",
+        "gate": "entrance",
+        "n": 16,
+        "detail": [
+          "atom 8",
+          "contact 8",
+          "'1.000000000000000e-03'",
+          "'2.000000000000000e-03'",
+          "'3.500000000000000e-03'",
+          "'1.374446785945535e-06'",
+          "'2.000000000000000e-03'",
+          "'3.500000000000000e-03'"
+        ],
+        "why": "e5 — 실수 토큰이 6 유효숫자 %g 생산 포맷이 아니다 (다른 정밀도 · 끝 0 · 혼합 · 면적 포괄 helper 의 고정 6 자리 가정 밖 · RIMP-03)"
+      }
+    ],
+    "entrance": {
+      "status": "REJECT",
+      "rule": "e1 유한 · e2 양수 (반경 · 상자 길이) · e3 정확 정수 (step · 머리 수 · id · type) · e4 직교 상자만 (기울어진 머리 = 거부) · e5 6 유효숫자 %g 생산 포맷만 (다른 정밀도 · 혼합 = 거부) — 하나라도 걸리면 관문 계산 없이 REJECT (RIMP-02 · 03)",
+      "n_nonfinite": 0,
+      "nonfinite": {
+        "scaffold": 0,
+        "atom": 0,
+        "contact": 0,
+        "atom_box": 0,
+        "contact_box": 0
+      },
+      "n_nonpositive_radius": 0,
+      "n_int_token_bad": 0,
+      "int_token_bad": {
+        "atom_step": 0,
+        "contact_step": 0,
+        "atom_count": 0,
+        "contact_count": 0,
+        "atom_id": 0,
+        "atom_type": 0,
+        "contact_id1": 0,
+        "contact_id2": 0,
+        "scaffold_type": 0
+      },
+      "box": {
+        "atom": "orthogonal",
+        "contact": "orthogonal"
+      },
+      "format": {
+        "rule": "g6",
+        "atom_ok": false,
+        "contact_ok": false,
+        "n_not_g6": {
+          "atom": 8,
+          "contact": 8,
+          "atom_box": 0,
+          "contact_box": 0
+        },
+        "area_helper_sigfig": 6,
+        "meaning": "6 유효숫자 %g 생산 포맷만 지원 — 면적 포괄 helper (봉인 · 고정 6 자리) 의 가정과 같다 · 다른 정밀도 · 혼합 = 거부 (기록 S 를 helper 에 넘기지 않는다 · RIMP-03)"
+      }
+    },
+    "g_geo": {
+      "skipped": "입구 검사 실패 — 관문 계산 안 함 (RIMP-02 · 03)",
+      "n_scaffold": 2
+    },
+    "g_frame": {
+      "skipped": "입구 검사 실패 — 관문 계산 안 함 (RIMP-02 · 03)",
+      "atom_step": 100,
+      "contact_step": 100,
+      "atom_frames": 1,
+      "contact_frames": 1,
+      "atom_sigfig": 16,
+      "contact_sigfig": 16
+    }
+  }
+}

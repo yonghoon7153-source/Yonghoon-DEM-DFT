@@ -10846,7 +10846,7 @@
     {
       "id": "RIMP-01",
       "severity": "P2",
-      "status": "claimed_fixed",
+      "status": "verified",
       "owner": "claude",
       "found_by": "codex 10-14 Rint G2 ①′ 구현 · 10-13 묶음 재검토 (검토 핀 1087a9b2f · 독립 소규모 계산 · Windows Python 3.12 — 생산 덱 · 실침대 σ 캠페인 · WSL 미실행)",
       "opened_in": "docs/reviews/codex_review_rint_g2_impl_20261014.md",
@@ -10856,28 +10856,35 @@
       "evidence_tests": [
         "scripts/test_rint_t2_dev.py (10 실패 → 23/23)",
         "docs/data/rint_t2_dev_20261013/README.md · t2_dev_v2.json (개발)",
-        "docs/reviews/rint_g2_impl_fix_evidence_20261015/ (시험 먼저 · 최종 로그 · rc · HASHES = 본 가지 blob)"
-      ]
+        "docs/reviews/rint_g2_impl_fix_evidence_20261015/ (시험 먼저 · 최종 로그 · rc · HASHES = 본 가지 blob)",
+        "docs/reviews/codex_review_rint_g2_impl_fix_recheck_20261015.md"
+      ],
+      "verified_by": "codex",
+      "verified_in": "docs/reviews/codex_review_rint_g2_impl_fix_recheck_20261015.md",
+      "verified_sha": "dcb97f1ed",
+      "verified_scope": "경계 반 셀 막 (거리 가중 직렬 + 같은 법칙 r_face) — 기존 독립 교정값 재현 (15° n64 · 30° n16 · 45° +0.001 µm · 15° L1) + 새 해석 층 32 · 두 면 동시 교차 꼭짓점 24 (최대 전위 오차 5.33e−15 · 4.89e−15).  범위 = 이 결함 · 개발 회귀 — 정식 T2/T3 · tie 규약 등록 · D12-V 근거 아님.",
+      "verification_note": "2026-10-15 Codex Rint G2 ①′ 수정 재확인 (검토 핀 dcb97f1ed · 회귀 296/296 · OFF 16/16 · Windows Python 3.12 독립 재실행) — 범위 한정 닫힘 · 수정 전체 종결은 RIMP-02 (RIMPR-01 · 02) 때문에 HOLD · ①′ 정량 채택 · 생산 HOLD 그대로."
     },
     {
       "id": "RIMP-02",
       "severity": "P2",
-      "status": "claimed_fixed",
+      "status": "open",
       "owner": "claude",
       "found_by": "codex 10-14 Rint G2 ①′ 구현 · 10-13 묶음 재검토 (검토 핀 1087a9b2f · 독립 소규모 계산 · Windows Python 3.12 — 생산 덱 · 실침대 σ 캠페인 · WSL 미실행)",
       "opened_in": "docs/reviews/codex_review_rint_g2_impl_20261014.md",
       "title": "Rint 조인 관문 (rint_iface_join) 이 손상 · 미인증 입력을 PASS 로 승격한다 — real14 접촉 덤프 한 칸 (pos1.x · δ · A = NaN · A 음수) · 미인증 면적 100 sim² (tested 0 · uncertified 1 · beyond 0) · 기울어진 상자 (tilt 를 버린 비교) 모두 PASS · 조인 → 원장 → 계획 → 정량 관문까지 통과",
-      "note": "판정문 §3.  자리 (핀): scripts/rint_iface_join.py:142–143 · 176–180 · 200–206 · 316–318 · 337–338 · 350–358 · 432–441 · 가져오는 진단 scripts/lhs_descriptor_harvest.py:637–657 (봉인 32).  무너지는 결론: G-geo/G-frame PASS = 유효 수치 · 지원 상자 · 전 행 면적 인증.  무너지지 않는 것: 정상 real14 · case15 자료 · 면적 원천 = scaffold (이 반례만으로 실제 σ 가 틀렸다 할 수 없다).  최소 해결 = 입구 검사 (필수 · 유한 · 양수 · 정확 정수 · 지원 상자 — 기울어진 상자 = 명시 거부) · 음수 · 비유한 · 미인증 = 거부 또는 미인증 상태 (PASS 와 분리) · 변이별 회귀 · step 2060000.9 → 정확 정수.  수정 계획 Q2.  scripts/rint_iface_join.py 입구 검사 — 유한 · 반경 > 0 · 정확 정수 step (2060000.9 거부) · 직교 상자만 (기울어진 머리 = 명시 거부) · AM–AM 면적 음수 · 미인증 = 거부 (PASS = 전 행 인증) · real14 · case15 · D19 양성 유지.  ✅ 고침 25aecac22 (시험 먼저 e9d0cd87d · 문서 · 증거 · 요청서 dcb97f1ed · 수정 계획 Q1–Q4 (가) = 1저자 10-14 \"권고대로\") · 새 검사 67 · 수정 뒤 296/296 · iface 끔 16 사례 = 고치기 전 (44a034534) · ①′ 이전 (1d9af09d0) 과 비트 같음 · 봉인 32 무변경 · 생산 HOLD 그대로 · Codex 짧은 재확인 요청서 docs/reviews/codex_rint_g2_impl_fix_recheck_request_20261015.md (리뷰 핀 dcb97f1ed · 발송 = 1저자).",
+      "note": "판정문 §3.  자리 (핀): scripts/rint_iface_join.py:142–143 · 176–180 · 200–206 · 316–318 · 337–338 · 350–358 · 432–441 · 가져오는 진단 scripts/lhs_descriptor_harvest.py:637–657 (봉인 32).  무너지는 결론: G-geo/G-frame PASS = 유효 수치 · 지원 상자 · 전 행 면적 인증.  무너지지 않는 것: 정상 real14 · case15 자료 · 면적 원천 = scaffold (이 반례만으로 실제 σ 가 틀렸다 할 수 없다).  최소 해결 = 입구 검사 (필수 · 유한 · 양수 · 정확 정수 · 지원 상자 — 기울어진 상자 = 명시 거부) · 음수 · 비유한 · 미인증 = 거부 또는 미인증 상태 (PASS 와 분리) · 변이별 회귀 · step 2060000.9 → 정확 정수.  수정 계획 Q2.  scripts/rint_iface_join.py 입구 검사 — 유한 · 반경 > 0 · 정확 정수 step (2060000.9 거부) · 직교 상자만 (기울어진 머리 = 명시 거부) · AM–AM 면적 음수 · 미인증 = 거부 (PASS = 전 행 인증) · real14 · case15 · D19 양성 유지.  ✅ 고침 25aecac22 (시험 먼저 e9d0cd87d · 문서 · 증거 · 요청서 dcb97f1ed · 수정 계획 Q1–Q4 (가) = 1저자 10-14 \"권고대로\") · 새 검사 67 · 수정 뒤 296/296 · iface 끔 16 사례 = 고치기 전 (44a034534) · ①′ 이전 (1d9af09d0) 과 비트 같음 · 봉인 32 무변경 · 생산 HOLD 그대로 · Codex 짧은 재확인 요청서 docs/reviews/codex_rint_g2_impl_fix_recheck_request_20261015.md (리뷰 핀 dcb97f1ed · 발송 = 1저자).  ★ 10-15 Codex 재확인 = 부분 · 재개방 (판정문 §0 · §2–3): 기존 반례 (NaN 위치 · δ · A · 음수 A · 100 sim² · 기울어진 상자 · step 소수) 전부 차단 · 정상 real14 660/660 · case15 119/119 · D19 유지 — 그러나 파서가 열 수 다른 행 · 중복 필수 열 · step/count 줄의 뒤 토큰을 검사 전에 버려 조인 PASS (`RIMPR-01` P2) · Decimal 유한 ↔ float64 무한 반경 조인 PASS (`RIMPR-02` P3).  닫는 조건 = RIMPR-01 · 02 수정 + 짧은 재확인.",
       "claimed_fixed_sha": "25aecac22",
       "evidence_tests": [
         "scripts/test_rint_g2_join.py (30 실패 → 73/73)",
-        "docs/reviews/rint_g2_impl_fix_evidence_20261015/ (시험 먼저 · 최종 로그 · rc · HASHES = 본 가지 blob)"
+        "docs/reviews/rint_g2_impl_fix_evidence_20261015/ (시험 먼저 · 최종 로그 · rc · HASHES = 본 가지 blob)",
+        "docs/reviews/codex_review_rint_g2_impl_fix_recheck_20261015.md (§2 · §3 · 부분)"
       ]
     },
     {
       "id": "RIMP-03",
       "severity": "P2",
-      "status": "claimed_fixed",
+      "status": "verified",
       "owner": "claude",
       "found_by": "codex 10-14 Rint G2 ①′ 구현 · 10-13 묶음 재검토 (검토 핀 1087a9b2f · 독립 소규모 계산 · Windows Python 3.12 — 생산 덱 · 실침대 σ 캠페인 · WSL 미실행)",
       "opened_in": "docs/reviews/codex_review_rint_g2_impl_20261014.md",
@@ -10886,13 +10893,19 @@
       "claimed_fixed_sha": "25aecac22",
       "evidence_tests": [
         "scripts/test_rint_g2_join.py (16 자리 +1 ppm 반례)",
-        "docs/reviews/rint_g2_impl_fix_evidence_20261015/ (시험 먼저 · 최종 로그 · rc · HASHES = 본 가지 blob)"
-      ]
+        "docs/reviews/rint_g2_impl_fix_evidence_20261015/ (시험 먼저 · 최종 로그 · rc · HASHES = 본 가지 blob)",
+        "docs/reviews/codex_review_rint_g2_impl_fix_recheck_20261015.md"
+      ],
+      "verified_by": "codex",
+      "verified_in": "docs/reviews/codex_review_rint_g2_impl_fix_recheck_20261015.md",
+      "verified_sha": "dcb97f1ed",
+      "verified_scope": "지원 형식 한정 — 정상 %g 유지 · 16 자리 · 끝 0 · 혼합 표현 = numeric_format 입구 거부 · 누락된 행의 형식까지 인증하는 것은 아님 (RIMPR-01 따로).",
+      "verification_note": "2026-10-15 Codex Rint G2 ①′ 수정 재확인 (검토 핀 dcb97f1ed · 회귀 296/296 · OFF 16/16 · Windows Python 3.12 독립 재실행) — 범위 한정 닫힘 · 수정 전체 종결은 RIMP-02 (RIMPR-01 · 02) 때문에 HOLD · ①′ 정량 채택 · 생산 HOLD 그대로."
     },
     {
       "id": "RIMP-04",
       "severity": "P2",
-      "status": "claimed_fixed",
+      "status": "verified",
       "owner": "claude",
       "found_by": "codex 10-14 Rint G2 ①′ 구현 · 10-13 묶음 재검토 (검토 핀 1087a9b2f · 독립 소규모 계산 · Windows Python 3.12 — 생산 덱 · 실침대 σ 캠페인 · WSL 미실행)",
       "opened_in": "docs/reviews/codex_review_rint_g2_impl_20261014.md",
@@ -10901,13 +10914,19 @@
       "claimed_fixed_sha": "25aecac22",
       "evidence_tests": [
         "scripts/test_rint_g2_rrm.py (11 실패 → 54/54)",
-        "docs/reviews/rint_g2_impl_fix_evidence_20261015/ (시험 먼저 · 최종 로그 · rc · HASHES = 본 가지 blob)"
-      ]
+        "docs/reviews/rint_g2_impl_fix_evidence_20261015/ (시험 먼저 · 최종 로그 · rc · HASHES = 본 가지 blob)",
+        "docs/reviews/codex_review_rint_g2_impl_fix_recheck_20261015.md"
+      ],
+      "verified_by": "codex",
+      "verified_in": "docs/reviews/codex_review_rint_g2_impl_fix_recheck_20261015.md",
+      "verified_sha": "dcb97f1ed",
+      "verified_scope": "wrapper · 신뢰된 원장 범위 — 재생성 비교를 무력화해도 확장 변이 25/25 가 독립 검사에서 거부 · 정상 (film 67 · cut 85) · r=0 · 유효 거부 계획 구분 유지 · 원장 자체의 물리 오류나 일관된 전체 교체 편집의 검출은 아님.",
+      "verification_note": "2026-10-15 Codex Rint G2 ①′ 수정 재확인 (검토 핀 dcb97f1ed · 회귀 296/296 · OFF 16/16 · Windows Python 3.12 독립 재실행) — 범위 한정 닫힘 · 수정 전체 종결은 RIMP-02 (RIMPR-01 · 02) 때문에 HOLD · ①′ 정량 채택 · 생산 HOLD 그대로."
     },
     {
       "id": "RIMP-05",
       "severity": "P2",
-      "status": "claimed_fixed",
+      "status": "verified",
       "owner": "claude",
       "found_by": "codex 10-14 Rint G2 ①′ 구현 · 10-13 묶음 재검토 (검토 핀 1087a9b2f · 독립 소규모 계산 · Windows Python 3.12 — 생산 덱 · 실침대 σ 캠페인 · WSL 미실행)",
       "opened_in": "docs/reviews/codex_review_rint_g2_impl_20261014.md",
@@ -10917,13 +10936,19 @@
       "evidence_tests": [
         "scripts/test_rint_g2_am_iface.py (2 실패 → 132/132)",
         "scripts/step3_sigma.py --selftest · --selftest-rint",
-        "docs/reviews/rint_g2_impl_fix_evidence_20261015/ (시험 먼저 · 최종 로그 · rc · HASHES = 본 가지 blob)"
-      ]
+        "docs/reviews/rint_g2_impl_fix_evidence_20261015/ (시험 먼저 · 최종 로그 · rc · HASHES = 본 가지 blob)",
+        "docs/reviews/codex_review_rint_g2_impl_fix_recheck_20261015.md"
+      ],
+      "verified_by": "codex",
+      "verified_in": "docs/reviews/codex_review_rint_g2_impl_fix_recheck_20261015.md",
+      "verified_sha": "dcb97f1ed",
+      "verified_scope": "h 0.2 µm 계획 ↔ 0.4 µm 솔버 = 조립 전 ValueError · CG 호출 0 · 정상 재생성 A · G ×4 · NaN/Inf/0/음수 · 불일치 · 결손 거부 · 같은 float64 만 수용 (vox=None 직접 호출은 부분 사전검사 — 물리 간격 인증으로 쓰지 않는다).",
+      "verification_note": "2026-10-15 Codex Rint G2 ①′ 수정 재확인 (검토 핀 dcb97f1ed · 회귀 296/296 · OFF 16/16 · Windows Python 3.12 독립 재실행) — 범위 한정 닫힘 · 수정 전체 종결은 RIMP-02 (RIMPR-01 · 02) 때문에 HOLD · ①′ 정량 채택 · 생산 HOLD 그대로."
     },
     {
       "id": "RIMP-06",
       "severity": "P3",
-      "status": "claimed_fixed",
+      "status": "verified",
       "owner": "claude",
       "found_by": "codex 10-14 Rint G2 ①′ 구현 · 10-13 묶음 재검토 (검토 핀 1087a9b2f · 독립 소규모 계산 · Windows Python 3.12 — 생산 덱 · 실침대 σ 캠페인 · WSL 미실행)",
       "opened_in": "docs/reviews/codex_review_rint_g2_impl_20261014.md",
@@ -10932,7 +10957,42 @@
       "claimed_fixed_sha": "25aecac22",
       "evidence_tests": [
         "scripts/test_rint_g2_rrm.py (film 67 · cut 85 ↔ 표준 원장 대조)",
-        "docs/reviews/rint_g2_impl_fix_evidence_20261015/ (시험 먼저 · 최종 로그 · rc · HASHES = 본 가지 blob)"
+        "docs/reviews/rint_g2_impl_fix_evidence_20261015/ (시험 먼저 · 최종 로그 · rc · HASHES = 본 가지 blob)",
+        "docs/reviews/codex_review_rint_g2_impl_fix_recheck_20261015.md"
+      ],
+      "verified_by": "codex",
+      "verified_in": "docs/reviews/codex_review_rint_g2_impl_fix_recheck_20261015.md",
+      "verified_sha": "dcb97f1ed",
+      "verified_scope": "조사한 소비자 범위 — 실제 RRM 행 · 소산 경로의 표준 요약 · CNC 비교 별도 이름공간 · scripts · webapp 57 파일에서 CNC 키를 고정 가정하는 생산 소비자 없음 · 외부 소비자 보증 아님.",
+      "verification_note": "2026-10-15 Codex Rint G2 ①′ 수정 재확인 (검토 핀 dcb97f1ed · 회귀 296/296 · OFF 16/16 · Windows Python 3.12 독립 재실행) — 범위 한정 닫힘 · 수정 전체 종결은 RIMP-02 (RIMPR-01 · 02) 때문에 HOLD · ①′ 정량 채택 · 생산 HOLD 그대로."
+    },
+    {
+      "id": "RIMPR-01",
+      "severity": "P2",
+      "status": "open",
+      "owner": "claude",
+      "found_by": "codex 10-15 Rint G2 ①′ 수정 재확인 (검토 핀 dcb97f1ed · 실제 함수 반례 · 정상 원장 → 변이 파일 조인 → am_iface_plan → iface_require_quantitative 실 호출)",
+      "opened_in": "docs/reviews/codex_review_rint_g2_impl_fix_recheck_20261015.md",
+      "title": "조인 파서가 입력 일부를 검증 전에 버린다 — 데이터 블록에서 열 수가 다른 행 (접촉 · 원자) 은 조용히 빠지고, 중복 필수 열은 첫 열만 읽고, step · count 줄의 뒤 토큰은 무시된다 → 틀린 파일이 정상 부분집합으로 조인 PASS · 후속 정량 관문 ACCEPT",
+      "note": "판정문 §2 · 자리 (핀 dcb97f1ed): scripts/rint_iface_join.py:222–306 (224 · 234 = 첫 토큰만 · 250–253 = 길이 다른 행 버림 · 280 · 306 = hdr.index 첫 열).  반례 = 합성 AM 두 구 (r 1 µm · 거리 1.5 · δ 0.5 · 교차 원판 면적 1.3744467859455347e−6 sim²) — 24 열 접촉 행 삽입 · 7 열 원자 행 삽입 · radius 중복 (뒤 열 nan · n_nonfinite 0) · step `100 0.9` · count `1 garbage` = 전부 PASS / ACCEPT · 폭 정상 중복 행 = REJECT (양성 차단 대조).  σ 값 변화 주장 아님 · 정상 real14 · case15 계산은 정상.  최소 해결 = 블록의 비어 있지 않은 모든 행 세기 + 열 수 불일치 명시 REJECT · 필수 열 이름 정확히 한 번 · step/count 줄 = 정확히 한 정수 토큰 · 정상 %g 두 침대 · D19 양성 유지 · 후속 계획이 REJECT 를 이어받음 (허용오차 변경 · 수치 재계산 불요).  권고 (Q7 · 승인된 wrapper 범위 밖이라 따로 표기): 일반 관문의 모든 막 행 유한 · 비음수 (r=0 보존).  ⬜ 수정 계획 = 세미나 뒤 (1저자 10-15 — 24 시간 세미나 집중).",
+      "evidence_tests": [
+        "docs/reviews/codex_review_rint_g2_impl_fix_recheck_20261015.md §2",
+        "docs/reviews/codex_rint_g2_impl_fix_recheck_evidence_20261015/evidence/join_independent.json · join_parent_replay.json",
+        "docs/reviews/codex_rint_g2_impl_fix_recheck_evidence_20261015/probes/join_independent.py · join_parent_replay.py (실행하지 않음)"
+      ]
+    },
+    {
+      "id": "RIMPR-02",
+      "severity": "P3",
+      "status": "open",
+      "owner": "claude",
+      "found_by": "codex 10-15 Rint G2 ①′ 수정 재확인 (검토 핀 dcb97f1ed)",
+      "opened_in": "docs/reviews/codex_review_rint_g2_impl_fix_recheck_20261015.md",
+      "title": "scaffold 반경 · 좌표의 유한성을 Decimal 로만 세고 실제로 쓰는 float64 로는 안 센다 — 1e309 (또는 같은 크기 고정소수) 반경은 float64 inf 인데 조인 PASS · n_nonfinite 0 (원장 생성기가 뒤에서 거부)",
+      "note": "판정문 §3 · 자리 (핀 dcb97f1ed): scripts/rint_iface_join.py:339–357 (Decimal.is_finite 로 셈 → float64 변환 → 양수 검사는 isfinite 값만).  음수 고정소수 변이 = −inf 도 같음.  한정: 생산 σ 오염 주장 아님 — 원장 생성 step3_sigma.py:1054 의 독립 유한성 검사가 ValueError · 정상 원장과 섞어도 입자 지문 불일치로 거부 ⇒ 조인 증서의 잘못된 PASS · 진단 완결성 문제 (P3).  최소 해결 = 실제 float64 좌표 · 반경 · 단위변환 결과의 유한성을 입구에서 검사 (±10^309 = structured REJECT · 정상 두 침대 PASS) · int64 넘는 정수 토큰의 OverflowError 도 같은 입구 오류 처리에 포함 가능.  ⬜ 세미나 뒤.",
+      "evidence_tests": [
+        "docs/reviews/codex_review_rint_g2_impl_fix_recheck_20261015.md §3",
+        "docs/reviews/codex_rint_g2_impl_fix_recheck_evidence_20261015/evidence/join_independent.json (scaffold_*overflow · overflow_matching_ledger)"
       ]
     },
     {

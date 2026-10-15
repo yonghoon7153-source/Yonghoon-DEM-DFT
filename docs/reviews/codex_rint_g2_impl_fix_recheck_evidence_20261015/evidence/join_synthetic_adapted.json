@@ -1,0 +1,460 @@
+{
+  "baseline": {
+    "status": "PASS",
+    "rejections": [],
+    "g_geo": {
+      "n_scaffold": 2,
+      "n_dump_am": 2,
+      "n_matched": 2,
+      "n_unmatched": 0,
+      "n_ambiguous": 0,
+      "max_pos_ratio": 0.0,
+      "max_radius_ratio": 0.0,
+      "scaffold_half_box": 5e-13,
+      "scaffold_dec_exp": [
+        -12
+      ],
+      "dump_sigfig": 6,
+      "delta_bound_um": 2.732324012649634e-05,
+      "delta_bound_rule": "µm · √Σ(2·(h_s + max h_d))² + 2·(h_s + max h_r) — scaffold δ 의 참값 대비 상한 (원장 delta_bound_um 후보)",
+      "n_dem_am_am": 1,
+      "n_dem_am_am_seam": 0,
+      "n_delta_scaffold_mismatch": 0,
+      "max_delta_scaffold_ratio": 0.0,
+      "n_area_tested": 1,
+      "n_area_beyond": 0,
+      "n_area_uncertified": 0,
+      "n_area_negative": 0,
+      "area_all_certified": true,
+      "n_area_negative_not_am_am": 0,
+      "area_sigfig_assumed": 6,
+      "area_scope": "조인이 인증하는 면적 = AM–AM 행 (두 원자 모두 scaffold 와 1:1) 뿐 — AM–SE · SE–SE 행의 c_cpl[22] 는 인증하지 않는다 (음수 수만 기록 · n_area_negative_not_am_am)",
+      "n_scaffold_certain_pairs": 1,
+      "n_dem_contact_missing": 0,
+      "rule": "g1 1:1 (축마다 |Δ| ≤ h_s + h_d · 주기 축 최소 영상 · 형 · 반경) · g2 δ_dump ↔ δ_scaffold · g3 c_cpl[22] ↔ lens_geometry 포괄 (lhs_descriptor_harvest._contact_area_rows) · 음수 · 미인증 = 거부 (전 행 인증) · g4 scaffold 확실한 접촉 ⊆ 덤프"
+    },
+    "g_frame": {
+      "atom_step": 100,
+      "contact_step": 100,
+      "atom_frames": 1,
+      "contact_frames": 1,
+      "box_equal": true,
+      "box_flags": [
+        "ff",
+        "ff",
+        "ff"
+      ],
+      "n_atoms": 2,
+      "n_contact_rows": 1,
+      "n_orphan_rows": 0,
+      "n_pos_mismatch": 0,
+      "max_pos_ratio": 0.0,
+      "n_rows_image_shift": 0,
+      "n_rows_image_shift_flag0": 0,
+      "n_delta_pos_mismatch": 0,
+      "max_delta_pos_ratio": 0.0,
+      "n_delta_nonpositive": 0,
+      "atom_sigfig": 6,
+      "contact_sigfig": 6,
+      "rule": "f1 프레임 각 1 · f2 TIMESTEP 같음 (선언된 재사용만 예외) · f3 상자 같음 (머리 · 경계 줄 전 토큰) · f4 id 유일 · 머리 수 = 행 수 · 고아 0 · f5 pos = 원자 위치 (주기 축 정수 영상 · 토큰 반폭 `_half_ulp` 합) · f6 δ = r1 + r2 − |최소 영상 거리| (반폭 전파) · δ > 0"
+    }
+  },
+  "exact_area_sim2": 1.3744467859455347e-06,
+  "negative_area": {
+    "status": "REJECT",
+    "rejections": [
+      {
+        "code": "area_negative",
+        "gate": "G-geo",
+        "n": 1,
+        "detail": [
+          0
+        ],
+        "why": "g3 — AM–AM 접촉의 c_cpl[22] 가 음수 (진단 helper 는 음수 행을 포괄 비교에서 뺀다 — 뺀 것을 인증으로 읽지 않는다 · RIMP-02)"
+      }
+    ],
+    "g_geo": {
+      "n_scaffold": 2,
+      "n_dump_am": 2,
+      "n_matched": 2,
+      "n_unmatched": 0,
+      "n_ambiguous": 0,
+      "max_pos_ratio": 0.0,
+      "max_radius_ratio": 0.0,
+      "scaffold_half_box": 5e-13,
+      "scaffold_dec_exp": [
+        -12
+      ],
+      "dump_sigfig": 6,
+      "delta_bound_um": 2.732324012649634e-05,
+      "delta_bound_rule": "µm · √Σ(2·(h_s + max h_d))² + 2·(h_s + max h_r) — scaffold δ 의 참값 대비 상한 (원장 delta_bound_um 후보)",
+      "n_dem_am_am": 1,
+      "n_dem_am_am_seam": 0,
+      "n_delta_scaffold_mismatch": 0,
+      "max_delta_scaffold_ratio": 0.0,
+      "n_area_tested": 0,
+      "n_area_beyond": 0,
+      "n_area_uncertified": 0,
+      "n_area_negative": 1,
+      "area_all_certified": false,
+      "n_area_negative_not_am_am": 0,
+      "area_sigfig_assumed": 6,
+      "area_scope": "조인이 인증하는 면적 = AM–AM 행 (두 원자 모두 scaffold 와 1:1) 뿐 — AM–SE · SE–SE 행의 c_cpl[22] 는 인증하지 않는다 (음수 수만 기록 · n_area_negative_not_am_am)",
+      "n_scaffold_certain_pairs": 1,
+      "n_dem_contact_missing": 0,
+      "rule": "g1 1:1 (축마다 |Δ| ≤ h_s + h_d · 주기 축 최소 영상 · 형 · 반경) · g2 δ_dump ↔ δ_scaffold · g3 c_cpl[22] ↔ lens_geometry 포괄 (lhs_descriptor_harvest._contact_area_rows) · 음수 · 미인증 = 거부 (전 행 인증) · g4 scaffold 확실한 접촉 ⊆ 덤프"
+    },
+    "g_frame": {
+      "atom_step": 100,
+      "contact_step": 100,
+      "atom_frames": 1,
+      "contact_frames": 1,
+      "box_equal": true,
+      "box_flags": [
+        "ff",
+        "ff",
+        "ff"
+      ],
+      "n_atoms": 2,
+      "n_contact_rows": 1,
+      "n_orphan_rows": 0,
+      "n_pos_mismatch": 0,
+      "max_pos_ratio": 0.0,
+      "n_rows_image_shift": 0,
+      "n_rows_image_shift_flag0": 0,
+      "n_delta_pos_mismatch": 0,
+      "max_delta_pos_ratio": 0.0,
+      "n_delta_nonpositive": 0,
+      "atom_sigfig": 6,
+      "contact_sigfig": 6,
+      "rule": "f1 프레임 각 1 · f2 TIMESTEP 같음 (선언된 재사용만 예외) · f3 상자 같음 (머리 · 경계 줄 전 토큰) · f4 id 유일 · 머리 수 = 행 수 · 고아 0 · f5 pos = 원자 위치 (주기 축 정수 영상 · 토큰 반폭 `_half_ulp` 합) · f6 δ = r1 + r2 − |최소 영상 거리| (반폭 전파) · δ > 0"
+    },
+    "plan_join_status": "REJECT",
+    "plan_rejections": [
+      {
+        "code": "join_gate_failed",
+        "test": "T4-2",
+        "n": 1,
+        "detail": [
+          "area_negative"
+        ],
+        "why": "G-geo · G-frame 조인 관문 실패 — 덤프 경로 출처를 주장할 수 없다 (N5′ · N1 포함)"
+      }
+    ],
+    "require_quantitative": "ValueError: ①′ 정량 모드 거부 — join_gate_failed(T4-2 n=1)",
+    "area_sim2": -1.37445e-06
+  },
+  "nan_area": {
+    "status": "REJECT",
+    "rejections": [
+      {
+        "code": "nonfinite_value",
+        "gate": "entrance",
+        "n": 1,
+        "detail": [
+          "contact 1",
+          "nan"
+        ],
+        "why": "e1 — 비유한 (nan · inf) 또는 못 읽는 수 토큰 (NaN 비교는 어떤 허용폭 검사도 실패시키지 않는다 — 입구에서 거부 · RIMP-02)"
+      }
+    ],
+    "g_geo": {
+      "skipped": "입구 검사 실패 — 관문 계산 안 함 (RIMP-02 · 03)",
+      "n_scaffold": 2
+    },
+    "g_frame": {
+      "skipped": "입구 검사 실패 — 관문 계산 안 함 (RIMP-02 · 03)",
+      "atom_step": 100,
+      "contact_step": 100,
+      "atom_frames": 1,
+      "contact_frames": 1,
+      "atom_sigfig": 6,
+      "contact_sigfig": 6
+    },
+    "plan_join_status": "REJECT",
+    "plan_rejections": [
+      {
+        "code": "join_gate_failed",
+        "test": "T4-2",
+        "n": 1,
+        "detail": [
+          "nonfinite_value"
+        ],
+        "why": "G-geo · G-frame 조인 관문 실패 — 덤프 경로 출처를 주장할 수 없다 (N5′ · N1 포함)"
+      }
+    ],
+    "require_quantitative": "ValueError: ①′ 정량 모드 거부 — join_gate_failed(T4-2 n=1)",
+    "area_sim2": null
+  },
+  "nan_position": {
+    "status": "REJECT",
+    "rejections": [
+      {
+        "code": "nonfinite_value",
+        "gate": "entrance",
+        "n": 1,
+        "detail": [
+          "contact 1",
+          "nan"
+        ],
+        "why": "e1 — 비유한 (nan · inf) 또는 못 읽는 수 토큰 (NaN 비교는 어떤 허용폭 검사도 실패시키지 않는다 — 입구에서 거부 · RIMP-02)"
+      }
+    ],
+    "g_geo": {
+      "skipped": "입구 검사 실패 — 관문 계산 안 함 (RIMP-02 · 03)",
+      "n_scaffold": 2
+    },
+    "g_frame": {
+      "skipped": "입구 검사 실패 — 관문 계산 안 함 (RIMP-02 · 03)",
+      "atom_step": 100,
+      "contact_step": 100,
+      "atom_frames": 1,
+      "contact_frames": 1,
+      "atom_sigfig": 6,
+      "contact_sigfig": 6
+    },
+    "plan_join_status": "REJECT",
+    "plan_rejections": [
+      {
+        "code": "join_gate_failed",
+        "test": "T4-2",
+        "n": 1,
+        "detail": [
+          "nonfinite_value"
+        ],
+        "why": "G-geo · G-frame 조인 관문 실패 — 덤프 경로 출처를 주장할 수 없다 (N5′ · N1 포함)"
+      }
+    ],
+    "require_quantitative": "ValueError: ①′ 정량 모드 거부 — join_gate_failed(T4-2 n=1)",
+    "area_sim2": null
+  },
+  "nan_delta": {
+    "status": "REJECT",
+    "rejections": [
+      {
+        "code": "nonfinite_value",
+        "gate": "entrance",
+        "n": 1,
+        "detail": [
+          "contact 1",
+          "nan"
+        ],
+        "why": "e1 — 비유한 (nan · inf) 또는 못 읽는 수 토큰 (NaN 비교는 어떤 허용폭 검사도 실패시키지 않는다 — 입구에서 거부 · RIMP-02)"
+      }
+    ],
+    "g_geo": {
+      "skipped": "입구 검사 실패 — 관문 계산 안 함 (RIMP-02 · 03)",
+      "n_scaffold": 2
+    },
+    "g_frame": {
+      "skipped": "입구 검사 실패 — 관문 계산 안 함 (RIMP-02 · 03)",
+      "atom_step": 100,
+      "contact_step": 100,
+      "atom_frames": 1,
+      "contact_frames": 1,
+      "atom_sigfig": 6,
+      "contact_sigfig": 6
+    },
+    "plan_join_status": "REJECT",
+    "plan_rejections": [
+      {
+        "code": "join_gate_failed",
+        "test": "T4-2",
+        "n": 1,
+        "detail": [
+          "nonfinite_value"
+        ],
+        "why": "G-geo · G-frame 조인 관문 실패 — 덤프 경로 출처를 주장할 수 없다 (N5′ · N1 포함)"
+      }
+    ],
+    "require_quantitative": "ValueError: ①′ 정량 모드 거부 — join_gate_failed(T4-2 n=1)",
+    "area_sim2": null
+  },
+  "16sig_area_plus_1ppm": {
+    "status": "REJECT",
+    "rejections": [
+      {
+        "code": "numeric_format",
+        "gate": "entrance",
+        "n": 16,
+        "detail": [
+          "atom 8",
+          "contact 8",
+          "'1.000000000000000e-03'",
+          "'2.000000000000000e-03'",
+          "'3.500000000000000e-03'",
+          "'1.374448160392321e-06'",
+          "'2.000000000000000e-03'",
+          "'3.500000000000000e-03'"
+        ],
+        "why": "e5 — 실수 토큰이 6 유효숫자 %g 생산 포맷이 아니다 (다른 정밀도 · 끝 0 · 혼합 · 면적 포괄 helper 의 고정 6 자리 가정 밖 · RIMP-03)"
+      }
+    ],
+    "g_geo": {
+      "skipped": "입구 검사 실패 — 관문 계산 안 함 (RIMP-02 · 03)",
+      "n_scaffold": 2
+    },
+    "g_frame": {
+      "skipped": "입구 검사 실패 — 관문 계산 안 함 (RIMP-02 · 03)",
+      "atom_step": 100,
+      "contact_step": 100,
+      "atom_frames": 1,
+      "contact_frames": 1,
+      "atom_sigfig": 16,
+      "contact_sigfig": 16
+    },
+    "plan_join_status": "REJECT",
+    "plan_rejections": [
+      {
+        "code": "join_gate_failed",
+        "test": "T4-2",
+        "n": 1,
+        "detail": [
+          "numeric_format"
+        ],
+        "why": "G-geo · G-frame 조인 관문 실패 — 덤프 경로 출처를 주장할 수 없다 (N5′ · N1 포함)"
+      }
+    ],
+    "require_quantitative": "ValueError: ①′ 정량 모드 거부 — join_gate_failed(T4-2 n=1)",
+    "area_sim2": null
+  },
+  "different_tilt_boxes": {
+    "status": "REJECT",
+    "rejections": [
+      {
+        "code": "box_tilted",
+        "gate": "entrance",
+        "n": 2,
+        "detail": [
+          "atom tilted",
+          "contact tilted"
+        ],
+        "why": "e4 — 기울어진 상자 머리 (xy xz yz) · 직교 상자만 지원 (tilt 를 버리고 비교하지 않는다 · RIMP-02)"
+      }
+    ],
+    "g_geo": {
+      "skipped": "입구 검사 실패 — 관문 계산 안 함 (RIMP-02 · 03)",
+      "n_scaffold": 2
+    },
+    "g_frame": {
+      "skipped": "입구 검사 실패 — 관문 계산 안 함 (RIMP-02 · 03)",
+      "atom_step": 100,
+      "contact_step": 100,
+      "atom_frames": 1,
+      "contact_frames": 1,
+      "atom_sigfig": 6,
+      "contact_sigfig": 6
+    },
+    "plan_join_status": "REJECT",
+    "plan_rejections": [
+      {
+        "code": "join_gate_failed",
+        "test": "T4-2",
+        "n": 1,
+        "detail": [
+          "box_tilted"
+        ],
+        "why": "G-geo · G-frame 조인 관문 실패 — 덤프 경로 출처를 주장할 수 없다 (N5′ · N1 포함)"
+      }
+    ],
+    "require_quantitative": "ValueError: ①′ 정량 모드 거부 — join_gate_failed(T4-2 n=1)",
+    "area_sim2": null
+  },
+  "16sig_enclosure": {
+    "lo": 1.3744467859455032e-06,
+    "hi": 1.3744467859455659e-06,
+    "producer_E_using_wider_6sig_box": 1.67859784936371e-20,
+    "mutated_area": 1.3744481603923206e-06,
+    "lower_mutated_token_end": 1.3744481603923202e-06,
+    "accepted_area_outside_16sig_even_with_6sig_E": true
+  },
+  "uncertified_near_concentric": {
+    "status": "REJECT",
+    "rejections": [
+      {
+        "code": "scaffold_row_ambiguous",
+        "gate": "G-geo",
+        "n": 2,
+        "detail": [
+          0,
+          1
+        ],
+        "why": "scaffold 행에 맞는 AM 원자가 둘 이상 (반올림 폭 안)"
+      },
+      {
+        "code": "dump_am_unmatched",
+        "gate": "G-geo",
+        "n": 2,
+        "detail": [
+          1,
+          2
+        ],
+        "why": "덤프 AM 원자가 어느 scaffold 행과도 짝이 아니다"
+      }
+    ],
+    "g_geo": {
+      "n_scaffold": 2,
+      "n_dump_am": 2,
+      "n_matched": 0,
+      "n_unmatched": 0,
+      "n_ambiguous": 2,
+      "max_pos_ratio": null,
+      "max_radius_ratio": null,
+      "scaffold_half_box": 5e-13,
+      "scaffold_dec_exp": [
+        -12
+      ],
+      "dump_sigfig": 6,
+      "delta_bound_um": 2.732324012649634e-05,
+      "delta_bound_rule": "µm · √Σ(2·(h_s + max h_d))² + 2·(h_s + max h_r) — scaffold δ 의 참값 대비 상한 (원장 delta_bound_um 후보)",
+      "n_dem_am_am": 0,
+      "n_dem_am_am_seam": 0,
+      "n_delta_scaffold_mismatch": 0,
+      "max_delta_scaffold_ratio": null,
+      "n_area_tested": 0,
+      "n_area_beyond": 0,
+      "n_area_uncertified": 0,
+      "n_area_negative": 0,
+      "area_all_certified": true,
+      "n_area_negative_not_am_am": 0,
+      "area_sigfig_assumed": 6,
+      "area_scope": "조인이 인증하는 면적 = AM–AM 행 (두 원자 모두 scaffold 와 1:1) 뿐 — AM–SE · SE–SE 행의 c_cpl[22] 는 인증하지 않는다 (음수 수만 기록 · n_area_negative_not_am_am)",
+      "n_scaffold_certain_pairs": 0,
+      "n_dem_contact_missing": 0,
+      "rule": "g1 1:1 (축마다 |Δ| ≤ h_s + h_d · 주기 축 최소 영상 · 형 · 반경) · g2 δ_dump ↔ δ_scaffold · g3 c_cpl[22] ↔ lens_geometry 포괄 (lhs_descriptor_harvest._contact_area_rows) · 음수 · 미인증 = 거부 (전 행 인증) · g4 scaffold 확실한 접촉 ⊆ 덤프"
+    },
+    "g_frame": {
+      "atom_step": 100,
+      "contact_step": 100,
+      "atom_frames": 1,
+      "contact_frames": 1,
+      "box_equal": true,
+      "box_flags": [
+        "ff",
+        "ff",
+        "ff"
+      ],
+      "n_atoms": 2,
+      "n_contact_rows": 1,
+      "n_orphan_rows": 0,
+      "n_pos_mismatch": 0,
+      "max_pos_ratio": 0.0,
+      "n_rows_image_shift": 0,
+      "n_rows_image_shift_flag0": 0,
+      "n_delta_pos_mismatch": 0,
+      "max_delta_pos_ratio": 0.0,
+      "n_delta_nonpositive": 0,
+      "atom_sigfig": 6,
+      "contact_sigfig": 6,
+      "rule": "f1 프레임 각 1 · f2 TIMESTEP 같음 (선언된 재사용만 예외) · f3 상자 같음 (머리 · 경계 줄 전 토큰) · f4 id 유일 · 머리 수 = 행 수 · 고아 0 · f5 pos = 원자 위치 (주기 축 정수 영상 · 토큰 반폭 `_half_ulp` 합) · f6 δ = r1 + r2 − |최소 영상 거리| (반폭 전파) · δ > 0"
+    },
+    "exact_area": 3.141592653589008e-06,
+    "supplied_area": 100
+  },
+  "rehashed_inconsistent_particles": {
+    "join_particles_fp_actual": "e600ea4f9b4776cf7a9bcd2f3c6c31a5",
+    "join_particles_fp_declared": "8c321f39b44ed35d5007e85172530181",
+    "plan_join_status": "PASS",
+    "plan_rejections": []
+  }
+}

@@ -1,0 +1,68 @@
+[
+  {
+    "case": "baseline",
+    "status": "PASS",
+    "codes": [],
+    "reported_nonfinite": 0,
+    "finite_particles": true,
+    "quantitative_guard": "ACCEPT"
+  },
+  {
+    "case": "malformed_numeric_contact_row_inside_block",
+    "status": "PASS",
+    "codes": [],
+    "reported_nonfinite": 0,
+    "finite_particles": true,
+    "quantitative_guard": "ACCEPT"
+  },
+  {
+    "case": "malformed_numeric_atom_row_inside_block",
+    "status": "PASS",
+    "codes": [],
+    "reported_nonfinite": 0,
+    "finite_particles": true,
+    "quantitative_guard": "ACCEPT"
+  },
+  {
+    "case": "duplicate_radius_column",
+    "status": "PASS",
+    "codes": [],
+    "reported_nonfinite": 0,
+    "finite_particles": true,
+    "quantitative_guard": "ACCEPT"
+  },
+  {
+    "case": "step_extra_token",
+    "status": "PASS",
+    "codes": [],
+    "reported_nonfinite": 0,
+    "finite_particles": true,
+    "quantitative_guard": "ACCEPT"
+  },
+  {
+    "case": "count_extra_token",
+    "status": "PASS",
+    "codes": [],
+    "reported_nonfinite": 0,
+    "finite_particles": true,
+    "quantitative_guard": "ACCEPT"
+  },
+  {
+    "case": "wellshaped_duplicate_contact_control",
+    "status": "REJECT",
+    "codes": [
+      "count_mismatch",
+      "dem_duplicate_pair"
+    ],
+    "reported_nonfinite": 0,
+    "finite_particles": true
+  },
+  {
+    "case": "scaffold_fixed_decimal_radius_overflow",
+    "status": "PASS",
+    "codes": [],
+    "reported_nonfinite": 0,
+    "finite_particles": false,
+    "quantitative_guard": "NOT_RUN; invalid geometry independently rejected by ledger in join_independent.json"
+  }
+]

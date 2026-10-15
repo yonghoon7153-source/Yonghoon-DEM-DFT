@@ -1,0 +1,479 @@
+{
+  "copies": [
+    {
+      "source": "rint_g2_impl_review_20261014\\probes\\owner_vox_mismatch.py",
+      "copy": "probes\\owner_vox_mismatch.py",
+      "sha256": "673847cc41a69bc8dd46f5b0f3bb2df72ae029ec321e3ade94e50eb9fd9125d9"
+    },
+    {
+      "source": "rint_g2_impl_review_20261014\\probes\\off_compatibility.py",
+      "copy": "probes\\off_compatibility.py",
+      "sha256": "bc1f9c0ffae505e179e5416dce2ae8c41c29903002b4f850de37db38d9af0829"
+    },
+    {
+      "source": "rint_g2_impl_review_20261014\\probes\\owner_independent.py",
+      "copy": "probes\\owner_independent.py",
+      "sha256": "d88f0587cd5e336da970f1f11a040ee03e717443c1954ffca90635eea244c954"
+    },
+    {
+      "source": "rint_g2_impl_review_20261014\\source_prior\\step3_sigma.py",
+      "copy": "source_prior\\step3_sigma.py",
+      "sha256": "23f1e22e7a83b444dbd3c44786cd3de98b679ca3abff5c327b27e58de9d0ee39"
+    },
+    {
+      "source": "rint_g2_impl_review_20261014\\source\\scripts\\step3_sigma.py",
+      "copy": "source_prior\\step3_sigma_before_fix.py",
+      "sha256": "81af3215e6cc1ac10053816e40ce75c175666c4bf67f6d5191d9129b7edf93f5"
+    }
+  ],
+  "fixed_source_changes": [
+    {
+      "path": "scripts/rint_t2_dev.py",
+      "old_blob": "0a936c627faa9d837de6b06c7a7eefbf1ed656ab",
+      "new_blob": "1c54e75e36aa02e17b64ddca151a3d072f280b18",
+      "same": false
+    },
+    {
+      "path": "scripts/rint_iface_join.py",
+      "old_blob": "08de177c772fbfad78ca08caf4aa52db123a3c73",
+      "new_blob": "fa47bd94d7c8d9061d1666235442deb6cc0d4198",
+      "same": false
+    },
+    {
+      "path": "scripts/rint_rrm_reference.py",
+      "old_blob": "56145863ecfbb236ccf567e0a121c377c86b7e52",
+      "new_blob": "f08a15379117c71029b66dd871459dec2cffb8c6",
+      "same": false
+    },
+    {
+      "path": "scripts/step3_sigma.py",
+      "old_blob": "ad202738e7003d2bc903556ec225764ffcbb5d51",
+      "new_blob": "9f1781b71f518a661e0381877476b8e4d5ba249a",
+      "same": false
+    }
+  ],
+  "sealed_32": [
+    {
+      "path": "scripts/network_conductivity.py",
+      "old_blob": "10039191ba798ec5e01ab1e3afc44456267daa4e",
+      "new_blob": "10039191ba798ec5e01ab1e3afc44456267daa4e",
+      "same": true
+    },
+    {
+      "path": "scripts/plastic_coverage.py",
+      "old_blob": "fd522fa8104ecc26397192a6cc3df4198d62a6f8",
+      "new_blob": "fd522fa8104ecc26397192a6cc3df4198d62a6f8",
+      "same": true
+    },
+    {
+      "path": "scripts/audit_constriction_deleted.py",
+      "old_blob": "f67dae2a2ff1bbc3334cc06ae855042cc2c246b2",
+      "new_blob": "f67dae2a2ff1bbc3334cc06ae855042cc2c246b2",
+      "same": true
+    },
+    {
+      "path": "scripts/extract_se_network_diagnostics.py",
+      "old_blob": "2a0bade80a3b6545edabbe83379c5c78616db790",
+      "new_blob": "2a0bade80a3b6545edabbe83379c5c78616db790",
+      "same": true
+    },
+    {
+      "path": "scripts/dem_analysis_core.py",
+      "old_blob": "629fb278118161e1ba1abcb00db0bcaa0f2cf1b6",
+      "new_blob": "629fb278118161e1ba1abcb00db0bcaa0f2cf1b6",
+      "same": true
+    },
+    {
+      "path": "scripts/analyze_contacts.py",
+      "old_blob": "e214dc377c61f3b625f186b20149bf9eb5314f94",
+      "new_blob": "e214dc377c61f3b625f186b20149bf9eb5314f94",
+      "same": true
+    },
+    {
+      "path": "scripts/analyze_contacts_bimodal.py",
+      "old_blob": "0ed6796c4458ba8066b98e73c50930c6433bfa74",
+      "new_blob": "0ed6796c4458ba8066b98e73c50930c6433bfa74",
+      "same": true
+    },
+    {
+      "path": "scripts/coverage_physics_vs_hertzian.py",
+      "old_blob": "d8325ff89facb008f15118074dda95cd4fef2541",
+      "new_blob": "d8325ff89facb008f15118074dda95cd4fef2541",
+      "same": true
+    },
+    {
+      "path": "scripts/parse_liggghts.py",
+      "old_blob": "c722145aeda89fd6c99fdf08c44b204e87a3dce4",
+      "new_blob": "c722145aeda89fd6c99fdf08c44b204e87a3dce4",
+      "same": true
+    },
+    {
+      "path": "scripts/se_material.py",
+      "old_blob": "506caca0f8744ee89836a026685f0730ef478f94",
+      "new_blob": "506caca0f8744ee89836a026685f0730ef478f94",
+      "same": true
+    },
+    {
+      "path": "scripts/metrics_json.py",
+      "old_blob": "a674863ae821cb5673b23ae09f2cfddf7eda405c",
+      "new_blob": "a674863ae821cb5673b23ae09f2cfddf7eda405c",
+      "same": true
+    },
+    {
+      "path": "scripts/tau_flux.py",
+      "old_blob": "5510af1efac1781b2724dcae1f4346d6f1a69200",
+      "new_blob": "5510af1efac1781b2724dcae1f4346d6f1a69200",
+      "same": true
+    },
+    {
+      "path": "scripts/lhs_webapp_batch.py",
+      "old_blob": "081693abed37e824bf71941eafeac680344314e0",
+      "new_blob": "081693abed37e824bf71941eafeac680344314e0",
+      "same": true
+    },
+    {
+      "path": "scripts/lhs_harvest_batch.py",
+      "old_blob": "77b028620779668aec1777b21a1a77be4bf1fbbd",
+      "new_blob": "77b028620779668aec1777b21a1a77be4bf1fbbd",
+      "same": true
+    },
+    {
+      "path": "scripts/lhs_descriptor_harvest.py",
+      "old_blob": "05686cf18da4b4da4f04d251bacd4c9f76a761c7",
+      "new_blob": "05686cf18da4b4da4f04d251bacd4c9f76a761c7",
+      "same": true
+    },
+    {
+      "path": "webapp/app.py",
+      "old_blob": "54115ea68c1681e91486543047e2aa25f1211406",
+      "new_blob": "54115ea68c1681e91486543047e2aa25f1211406",
+      "same": true
+    },
+    {
+      "path": "webapp/pipeline_service.py",
+      "old_blob": "ee5da455c5f6badf76e1440f560ac44f6496d926",
+      "new_blob": "ee5da455c5f6badf76e1440f560ac44f6496d926",
+      "same": true
+    },
+    {
+      "path": "scripts/export_master_csv.py",
+      "old_blob": "24aa87ff113813570647bb6490130047dedbc35e",
+      "new_blob": "24aa87ff113813570647bb6490130047dedbc35e",
+      "same": true
+    },
+    {
+      "path": "scripts/type_map_resolve.py",
+      "old_blob": "31092eb1afda0b1316c3f4f7c716c0dd537b9920",
+      "new_blob": "31092eb1afda0b1316c3f4f7c716c0dd537b9920",
+      "same": true
+    },
+    {
+      "path": "scripts/lens_geometry.py",
+      "old_blob": "53a20c31554740957c21a0fa52362df0b000cc97",
+      "new_blob": "53a20c31554740957c21a0fa52362df0b000cc97",
+      "same": true
+    },
+    {
+      "path": "scripts/lhs_perc_extract.py",
+      "old_blob": "99d060ffec7eb68c21a5ac898840b121c578d96f",
+      "new_blob": "99d060ffec7eb68c21a5ac898840b121c578d96f",
+      "same": true
+    },
+    {
+      "path": "scripts/press_units.py",
+      "old_blob": "a11fe7b082c11404493b727c4239ddc78106fbaf",
+      "new_blob": "a11fe7b082c11404493b727c4239ddc78106fbaf",
+      "same": true
+    },
+    {
+      "path": "scripts/grade_engine.py",
+      "old_blob": "dae17969ed4651226cbca7124f29850218660700",
+      "new_blob": "dae17969ed4651226cbca7124f29850218660700",
+      "same": true
+    },
+    {
+      "path": "webapp/ledger_view.py",
+      "old_blob": "23cbb564cfa7fec95182e5f12b6774840f1f31a1",
+      "new_blob": "23cbb564cfa7fec95182e5f12b6774840f1f31a1",
+      "same": true
+    },
+    {
+      "path": "webapp/mpm_lab_register.py",
+      "old_blob": "02e6ac183727d553178445cb28034b41da20864c",
+      "new_blob": "02e6ac183727d553178445cb28034b41da20864c",
+      "same": true
+    },
+    {
+      "path": "webapp/predictor_engine.py",
+      "old_blob": "808866f6c50841b7233cf13adae532b4accf9a41",
+      "new_blob": "808866f6c50841b7233cf13adae532b4accf9a41",
+      "same": true
+    },
+    {
+      "path": "webapp/security.py",
+      "old_blob": "debba1fcd449667e625528108d004475b4026cc5",
+      "new_blob": "debba1fcd449667e625528108d004475b4026cc5",
+      "same": true
+    },
+    {
+      "path": "webapp/storage_sync.py",
+      "old_blob": "dd51efeebd7d203e79b038cc3fb310485ca49ee3",
+      "new_blob": "dd51efeebd7d203e79b038cc3fb310485ca49ee3",
+      "same": true
+    },
+    {
+      "path": "webapp/structure_predictor.py",
+      "old_blob": "dc16a33e9442148260f3ef5fff3e8a54bc443bc8",
+      "new_blob": "dc16a33e9442148260f3ef5fff3e8a54bc443bc8",
+      "same": true
+    },
+    {
+      "path": "scripts/fracture_model.py",
+      "old_blob": "860a621575e013e9521430950a4eda9cc9559c54",
+      "new_blob": "860a621575e013e9521430950a4eda9cc9559c54",
+      "same": true
+    },
+    {
+      "path": "scripts/lhs_union_webapp.py",
+      "old_blob": "1926a05d6a4946d238751e3b6ca6cb3fc513fde6",
+      "new_blob": "1926a05d6a4946d238751e3b6ca6cb3fc513fde6",
+      "same": true
+    },
+    {
+      "path": "scripts/ml_design_structure.py",
+      "old_blob": "af2b465d5ab3c2e4a1850e50e9af0686ec84ffde",
+      "new_blob": "af2b465d5ab3c2e4a1850e50e9af0686ec84ffde",
+      "same": true
+    }
+  ],
+  "s3_numeric_6": [
+    {
+      "path": "scripts/network_conductivity.py",
+      "old_blob": "10039191ba798ec5e01ab1e3afc44456267daa4e",
+      "new_blob": "10039191ba798ec5e01ab1e3afc44456267daa4e",
+      "same": true
+    },
+    {
+      "path": "scripts/plastic_coverage.py",
+      "old_blob": "fd522fa8104ecc26397192a6cc3df4198d62a6f8",
+      "new_blob": "fd522fa8104ecc26397192a6cc3df4198d62a6f8",
+      "same": true
+    },
+    {
+      "path": "scripts/audit_constriction_deleted.py",
+      "old_blob": "f67dae2a2ff1bbc3334cc06ae855042cc2c246b2",
+      "new_blob": "f67dae2a2ff1bbc3334cc06ae855042cc2c246b2",
+      "same": true
+    },
+    {
+      "path": "scripts/extract_se_network_diagnostics.py",
+      "old_blob": "2a0bade80a3b6545edabbe83379c5c78616db790",
+      "new_blob": "2a0bade80a3b6545edabbe83379c5c78616db790",
+      "same": true
+    },
+    {
+      "path": "scripts/lens_geometry.py",
+      "old_blob": "53a20c31554740957c21a0fa52362df0b000cc97",
+      "new_blob": "53a20c31554740957c21a0fa52362df0b000cc97",
+      "same": true
+    },
+    {
+      "path": "scripts/se_material.py",
+      "old_blob": "506caca0f8744ee89836a026685f0730ef478f94",
+      "new_blob": "506caca0f8744ee89836a026685f0730ef478f94",
+      "same": true
+    }
+  ],
+  "submitted_hash_checks": [
+    {
+      "phase": "tests_first",
+      "path": "scripts/test_rint_t2_dev.py",
+      "declared_sha256": "8473df867c95cbdffeac5b6f8325e2011a186e43aedb19d5248bd501579d4f7f",
+      "matches_final_pin": true,
+      "matches_prior_pin": false
+    },
+    {
+      "phase": "tests_first",
+      "path": "scripts/test_rint_g2_join.py",
+      "declared_sha256": "197fdbef463dcb46b365cd5c8ebfd564127ceb071c4d2e07aa28697a4144bba3",
+      "matches_final_pin": true,
+      "matches_prior_pin": false
+    },
+    {
+      "phase": "tests_first",
+      "path": "scripts/test_rint_g2_rrm.py",
+      "declared_sha256": "fe7dd701b271428e767aa1d7ce4b5eed1991a735e2cfff3b8a9168b6b77284dc",
+      "matches_final_pin": true,
+      "matches_prior_pin": false
+    },
+    {
+      "phase": "tests_first",
+      "path": "scripts/test_rint_g2_am_iface.py",
+      "declared_sha256": "3884aa10adbcacc49b9eb1aeef90401107b3a225f55c4675cdbf99aecdd33234",
+      "matches_final_pin": true,
+      "matches_prior_pin": false
+    },
+    {
+      "phase": "tests_first",
+      "path": "scripts/rint_t2_dev.py",
+      "declared_sha256": "ff7a0165326f95389d7fc76bb565d1b5989815b473664a6cc2c0690c53cdbfee",
+      "matches_final_pin": false,
+      "matches_prior_pin": true
+    },
+    {
+      "phase": "tests_first",
+      "path": "scripts/rint_iface_join.py",
+      "declared_sha256": "790b03ea810ffd07538ccca1cfc06c320cf0da9e3bac16a3f52ea3949d96618e",
+      "matches_final_pin": false,
+      "matches_prior_pin": true
+    },
+    {
+      "phase": "tests_first",
+      "path": "scripts/rint_rrm_reference.py",
+      "declared_sha256": "dfc4f221f9dbf1fd396cfb3b5c83bd41d322b1f4c480f1810b9e81ac5f21d5b4",
+      "matches_final_pin": false,
+      "matches_prior_pin": true
+    },
+    {
+      "phase": "tests_first",
+      "path": "scripts/step3_sigma.py",
+      "declared_sha256": "81af3215e6cc1ac10053816e40ce75c175666c4bf67f6d5191d9129b7edf93f5",
+      "matches_final_pin": false,
+      "matches_prior_pin": true
+    },
+    {
+      "phase": "tests_first",
+      "path": "scripts/lhs_descriptor_harvest.py",
+      "declared_sha256": "96fa643e309aab46b2a5cbd59e2276ee16b99107a9a7514e5d9fdcaf5c2d8d9e",
+      "matches_final_pin": true,
+      "matches_prior_pin": true
+    },
+    {
+      "phase": "tests_first",
+      "path": "scripts/lhs_contact_audit.py",
+      "declared_sha256": "bcce52d689552bcdb5556596d0a50c4fd785f2aeb52d849a501be4770aec8635",
+      "matches_final_pin": true,
+      "matches_prior_pin": true
+    },
+    {
+      "phase": "tests_first",
+      "path": "scripts/lens_geometry.py",
+      "declared_sha256": "891ac67f8b6c1b4c7978b5e806800ae74f5c8791928d6ece19a29e5f3b212b77",
+      "matches_final_pin": true,
+      "matches_prior_pin": true
+    },
+    {
+      "phase": "final",
+      "path": "scripts/test_rint_t2_dev.py",
+      "declared_sha256": "8473df867c95cbdffeac5b6f8325e2011a186e43aedb19d5248bd501579d4f7f",
+      "matches_final_pin": true,
+      "matches_prior_pin": false
+    },
+    {
+      "phase": "final",
+      "path": "scripts/test_rint_g2_join.py",
+      "declared_sha256": "197fdbef463dcb46b365cd5c8ebfd564127ceb071c4d2e07aa28697a4144bba3",
+      "matches_final_pin": true,
+      "matches_prior_pin": false
+    },
+    {
+      "phase": "final",
+      "path": "scripts/test_rint_g2_rrm.py",
+      "declared_sha256": "fe7dd701b271428e767aa1d7ce4b5eed1991a735e2cfff3b8a9168b6b77284dc",
+      "matches_final_pin": true,
+      "matches_prior_pin": false
+    },
+    {
+      "phase": "final",
+      "path": "scripts/test_rint_g2_am_iface.py",
+      "declared_sha256": "3884aa10adbcacc49b9eb1aeef90401107b3a225f55c4675cdbf99aecdd33234",
+      "matches_final_pin": true,
+      "matches_prior_pin": false
+    },
+    {
+      "phase": "final",
+      "path": "scripts/test_rint_t4_census.py",
+      "declared_sha256": "9b64a5fbb55f54160196716c83554f0cc884f3c50e8cf881291d6af784a4448d",
+      "matches_final_pin": true,
+      "matches_prior_pin": true
+    },
+    {
+      "phase": "final",
+      "path": "scripts/test_rint_t43_order.py",
+      "declared_sha256": "ac653bb0b59431a15d8da8576a448383126aa645182bb14dc7fd58256b9555fe",
+      "matches_final_pin": true,
+      "matches_prior_pin": true
+    },
+    {
+      "phase": "final",
+      "path": "scripts/rint_t2_dev.py",
+      "declared_sha256": "7f7e909153260de319c3411bfbb2a0e171226f2bd2998d129028d553677199c2",
+      "matches_final_pin": true,
+      "matches_prior_pin": false
+    },
+    {
+      "phase": "final",
+      "path": "scripts/rint_iface_join.py",
+      "declared_sha256": "ee72b0d149b65522dc1ddc3698b149b687cccde87285167f9fe6c21c8b6b4f83",
+      "matches_final_pin": true,
+      "matches_prior_pin": false
+    },
+    {
+      "phase": "final",
+      "path": "scripts/rint_rrm_reference.py",
+      "declared_sha256": "6cb16e030c0a25ce737b6c7a35b2ebc59e451b88521dfac47b4304c8b27c30a0",
+      "matches_final_pin": true,
+      "matches_prior_pin": false
+    },
+    {
+      "phase": "final",
+      "path": "scripts/step3_sigma.py",
+      "declared_sha256": "22839a15c0faf3849180d50c200eaceff0b14c8876e483ce36f4009bebbf9803",
+      "matches_final_pin": true,
+      "matches_prior_pin": false
+    },
+    {
+      "phase": "final",
+      "path": "scripts/rint_t41_census.py",
+      "declared_sha256": "3d3af19196042669ed6409693dc1b90ced6375b038cb39d292ffdc0bb68265d4",
+      "matches_final_pin": true,
+      "matches_prior_pin": true
+    },
+    {
+      "phase": "final",
+      "path": "scripts/lhs_descriptor_harvest.py",
+      "declared_sha256": "96fa643e309aab46b2a5cbd59e2276ee16b99107a9a7514e5d9fdcaf5c2d8d9e",
+      "matches_final_pin": true,
+      "matches_prior_pin": true
+    },
+    {
+      "phase": "final",
+      "path": "scripts/lhs_contact_audit.py",
+      "declared_sha256": "bcce52d689552bcdb5556596d0a50c4fd785f2aeb52d849a501be4770aec8635",
+      "matches_final_pin": true,
+      "matches_prior_pin": true
+    },
+    {
+      "phase": "final",
+      "path": "scripts/lens_geometry.py",
+      "declared_sha256": "891ac67f8b6c1b4c7978b5e806800ae74f5c8791928d6ece19a29e5f3b212b77",
+      "matches_final_pin": true,
+      "matches_prior_pin": true
+    },
+    {
+      "phase": "final",
+      "path": "docs/reviews/rint_g2_impl_fix_evidence_20261015/off_compat_16.py",
+      "declared_sha256": "9ee47b4a1a61285f980ae3c10cbcccb3c0b22c4ec48058599a19586dfbd43285",
+      "matches_final_pin": true,
+      "matches_prior_pin": false
+    },
+    {
+      "phase": "final",
+      "path": "docs/data/rint_t2_dev_20261013/t2_dev_v2.json",
+      "declared_sha256": "4a0d493eb9985b0810f4b82adca138782b40391207649b0d486a9b2ab967abcf",
+      "matches_final_pin": true,
+      "matches_prior_pin": false
+    }
+  ],
+  "old_full_tree_available": true
+}

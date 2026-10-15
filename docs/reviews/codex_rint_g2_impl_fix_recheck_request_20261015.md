@@ -1,5 +1,7 @@
 # Codex 짧은 재확인 요청 (초안) — Rint G2 ①′ 구현 재검토 반영 RIMP-01–06 (수정 diff + 탐침 재실행)
 
+> ⛔ **Codex 재확인 (10-15) = 수정 전체 종결 HOLD** — RIMP-01 · 03 · 04 · 05 · 06 범위 한정 닫힘 · RIMP-02 부분 · 새 P2 `RIMPR-01` · P3 `RIMPR-02` · 판정문 `docs/reviews/codex_review_rint_g2_impl_fix_recheck_20261015.md` (증거 `docs/reviews/codex_rint_g2_impl_fix_recheck_evidence_20261015/`).
+
 > **지위** — 초안 · **발송 = 1저자 (아직 보내지 않음)**.  1저자 10-14 비준 (*"권고대로"* — 수정 계획 `docs/reviews/rint_g2_impl_fix_plan_20261014.md` Q1–Q6) 의 수정 묶음.
 > **리뷰 핀 = 이 요청서가 든 본 가지 커밋** (번호는 발송 때 1저자가 적는다 · 바로 다음 원장 커밋이 기록한다) — 본 가지 순서: 시험 먼저 `e9d0cd87d` → 수정 `25aecac22` → 문서 · 증거 · 이 요청서 (작업 트리 커밋 번호는 적지 않는다 · SELF-116).
 > 직전 판정: Codex 재검토 (10-14 · 검토 핀 `1087a9b2f` · `docs/reviews/codex_review_rint_g2_impl_20261014.md`) = RINTV-01 · 02 범위 한정 닫힘 · 새 P2 다섯 (`RIMP-01`–`05`) · P3 하나 (`RIMP-06`) ·

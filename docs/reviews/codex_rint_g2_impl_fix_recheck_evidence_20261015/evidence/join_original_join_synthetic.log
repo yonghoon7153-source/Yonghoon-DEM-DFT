@@ -1,0 +1,7 @@
+Traceback (most recent call last):
+  File "C:\Users\Administrator\Documents\Codex\2026-08-24\claude-stoic-knuth-nobvq-x20\rint_g2_impl_reverify_20261015\probes\join_original_runner.py", line 24, in <module>
+    exec(compile(raw, str(OLD / name), 'exec'), namespace)
+  File "C:\Users\Administrator\Documents\Codex\2026-08-24\claude-stoic-knuth-nobvq-x20\rint_g2_impl_review_20261014\probes\join_synthetic.py", line 60, in <module>
+    L = S3.am_iface_ledger(c, r, t, sid, sid, (0, 0, 0), 0.25, delta_bound_um=base['g_geo']['delta_bound_um'], bridge_um=0.24)
+                                                                              ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^
+KeyError: 'delta_bound_um'

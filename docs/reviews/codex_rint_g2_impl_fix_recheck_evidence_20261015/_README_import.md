@@ -1,0 +1,13 @@
+# 반입 기록 — Codex Rint G2 ①′ 수정 재확인 (RIMP-01–06 · 검토 핀 `dcb97f1ed` · 2026-10-15)
+
+- 판정문 (리포 사본) = `docs/reviews/codex_review_rint_g2_impl_fix_recheck_20261015.md` (묶음 `rint_g2_impl_reverify_20261015/` 의 같은 이름 파일 · 바이트 그대로 · sha256 `6eebedde931d6c50b1129285237d49e8e33c95cca792d3b07aa7cbfeda72a2cc`).
+- 판정 = **수정 전체 종결 HOLD** — RIMP-01 · 03 · 04 · 05 · 06 범위 한정 닫힘 · RIMP-02 부분 (재개방) · 새 P2 `RIMPR-01` (조인 파서가 버린 행 · 열 · 토큰은 입구 검사를 받지 않는다) · 새 P3 `RIMPR-02` (Decimal 유한 ↔ float64 무한) · 새 P1 없음 · 회귀 296/296 · ①′ 정량 채택 · 생산 HOLD 그대로.
+- 받은 것 = 1저자가 WSL 에서 만든 **미니 묶음** `codex_rint_g2_impl_fix_recheck_20261015_mini.zip` · sha256 `2fa8c176069f14dbcefdbb345f5c7011f92a64fc8e91e733aa345f3b88377a55` · 890,128 B · 항목 262.
+  원 Codex ZIP `codex_rint_g2_impl_fix_recheck_20261015.zip` (1,672 항목 · 46,539,177 B · sha256 `bcd5684785c805306611ed40158457333a64cce8380b8f8901eb99fec8b5c047` · 영수증 파일 없음) 에서 두 `source/` (우리 리포 사본) · 2 MB 넘는 파일 (`evidence/tree.json` 3,345,839 B) 을 뺀 것 — 원 ZIP 전 항목의 sha256 · 크기 · 넣음 여부 = `_members_original_zip.tsv` (미니를 만든 명령이 쓴 그대로 · keep 261 · drop 1,411).
+- 반입 처리: 새 빈 폴더에 복사 → sha256 → 멤버 목록 (절대 경로 · `..` · 링크 0) → 풀기 → **묶음 안 스크립트 (`run_review_tests.py` · `probes/*.py` · `reproduce.py` · `package_review.py` · `prepare_*.py` · `verify_package_portable.py` · `support/resource.py`) 는 실행하지 않았다** (글로만 보존).
+- 우리 쪽 대조 (원 ZIP 목록의 sha256 ↔ `git cat-file`): `rint_g2_impl_reverify_20261015/source/` 851 = 검토 핀 `dcb97f1ed` 의 blob 과 **851/851 같음** · `rint_g2_impl_review_20261014/source/` 559 = 이전 검토 핀 `1087a9b2f` 의 blob 과 **559/559 같음** ·
+  `source_prior/step3_sigma.py` = ①′ 구현 직전 `scripts/step3_sigma.py` (`daf2a45a9` 의 부모 · 시험 먼저 커밋 `daf2a45a9` 와 같은 blob) · `source_prior/step3_sigma_before_fix.py` = 수정 직전 (`1087a9b2f` · `e9d0cd87d`) 의 같은 파일 → 둘 다 git 에 있어 넣지 않았다 (`_members_mini.tsv` 의 `dup-git`) ·
+  이전 (10-14) 검토 폴더의 판정문 · `probes/` 8 = 리포 `docs/reviews/codex_review_rint_g2_impl_20261014.md` · `docs/reviews/codex_rint_g2_impl_review_evidence_20261014/probes/` 와 바이트 같음 (`dup-repo` · 넣지 않음) · 그 폴더의 `source_manifest.json` 만 새것 → `_prior_review_20261014/source_manifest.json`.
+- 폴더 꼴: 이 폴더 = 묶음의 `rint_g2_impl_reverify_20261015/` (판정문 · notes 의 상대 경로 `evidence/…` · `probes/…` · `notes/…` 의 루트) + 묶음 뿌리의 `PACKAGE_MANIFEST.json` + `_prior_review_20261014/`.  판정문의 `C:/Users/…/source/…` 링크 = Codex 작업 공간의 고정 핀 사본 (= 리포 `dcb97f1ed` 의 같은 경로).
+  참조 검사 예외 = `docs/reviews/doc_refs_allowlist.tsv` 열한 줄 (`evidence/…` · `probes/…` · `notes/boundary.md` · 이전 폴더 `rint_g2_impl_review_20261014/probes/rrm_probe.py`).
+- 원장: RIMP-01 · 03 · 04 · 05 · 06 → verified (verified_sha `dcb97f1ed` · 범위 = 판정문 §0 표 · §4) · RIMP-02 → open (부분 · 재개방) · `RIMPR-01` (P2) · `RIMPR-02` (P3) 신설 (open).  수정 계획 · 수정 = 세미나 뒤 (1저자 10-15 — 24 시간 세미나 집중).

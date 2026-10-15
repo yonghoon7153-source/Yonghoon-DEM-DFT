@@ -1,0 +1,6916 @@
+{
+  "pin": "dcb97f1ed942f622d9189eee1a1e9432dc05a655",
+  "environment": {
+    "python": "3.12.14 (main, Aug 25 2026, 14:01:42) [MSC v.1944 64 bit (AMD64)]",
+    "numpy": "2.5.3",
+    "scipy": "1.16.3",
+    "OMP_NUM_THREADS": "1",
+    "OPENBLAS_NUM_THREADS": "1"
+  },
+  "loaded_fixed_source": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint_g2_impl_reverify_20261015\\source\\scripts\\rint_t2_dev.py",
+  "author_test": {
+    "stdout": "\n── d1_sign\nD1 — mms_sign_check (Codex 증거 evidence.json 값)\n  PASS  D1 J_n −6.4 · J_n(영역 2) −6.400000000000001 · φ1 − φ2 = −0.64 = r·J_n (Codex 값 그대로)\n\n── d2_fields\nD2 — 제조해 (θ 30° · σ1 2 · σ2 5 · r_face 1e−5 Ω·cm² → r′ = 0.1 µm·cm/S): 조화 · flux 연속 · jump = r′·σ1 ∂φ1/∂u\n  PASS  D2 계면 u = 0 에서 σ1 ∂φ1/∂u = σ2 ∂φ2/∂u (1e−12)\n  PASS  D2 φ1 − φ2 = r′·J_n (J_n = −σ1 ∂φ1/∂u · r′ = 1e4·r_face — 단위 cm → µm)\n  PASS  D2 두 영역 모두 조화 (쌍선형 — ∂²/∂u² + ∂²/∂v² = 0 · 해석)\n\n── d3_exact\nD3 — 정확 이산 층: θ 0 · 계면 = 면 평면 · β 0 · σ1 ≠ σ2 · 막 r → FV 해 = 제조해 (반올림 안)\n  PASS  D3 FV 해 = 제조해 (최대 오차 ≤ 1e−12 × 최대 |φ|) · 막 면 > 0\n  PASS  D3 판별력: 변이 셋 (막 삭제 · ×1e4 누락 · jump 부호 반전) 은 반올림이 아닌 차 (> 1e6 × 정답 오차 · > 1e−6 × 최대 |φ|)\n  PASS  D3 축별 법칙도 θ 0 에서 같은 해 (두 법칙이 축 정렬 면에서 같다)\n\n── d4_shared\nD4 — harness 가 생산 면 함수 interface_face_g 를 공유한다\n  PASS  D4 mms_solve 가 step3_sigma.interface_face_g 를 부른다 (호출 > 0)\n\n── d5_trace\nD5 — T2-4a 연속 극한 (Codex support_smearing_continuum) · 개발 표지\n  PASS  D5 RRM 연속 = 1 + β²a²/4 = 1.0796000000000001 · CNC (b 0.24) = 1.2304 (Codex 값 그대로)\n  PASS  D5 사다리 산출에 개발 표지 (D12-V 봉인 전 · 검증 PASS 아님) · RRM · CNC 값\n\n── d6a_boundary_exact\nD6a — RIMP-01 정확 이산 층: θ 0 · β 0 · 계면이 경계 반 셀 안 (n 16 · L 1.6 · h 0.1 · 계면 x = −0.78 / +0.78) → FV 해 = 제조해\n  PASS  D6a 계면 x = -0.78 µm · L1: 경계 반 셀 교차 16 (> 0) · tie 0 · 내부 막 면 0 → FV 해 = 제조해 (최대 오차 ≤ 1e−12 × max|φ|) — 경계 반 셀의 막 · 두 상이 직렬로 들어가야 정확하다\n  PASS  D6a 계면 x = -0.78 µm · axis: 경계 반 셀 교차 16 (> 0) · tie 0 · 내부 막 면 0 → FV 해 = 제조해 (최대 오차 ≤ 1e−12 × max|φ|) — 경계 반 셀의 막 · 두 상이 직렬로 들어가야 정확하다\n  PASS  D6a 계면 x = +0.78 µm · L1: 경계 반 셀 교차 16 (> 0) · tie 0 · 내부 막 면 0 → FV 해 = 제조해 (최대 오차 ≤ 1e−12 × max|φ|) — 경계 반 셀의 막 · 두 상이 직렬로 들어가야 정확하다\n  PASS  D6a 계면 x = +0.78 µm · axis: 경계 반 셀 교차 16 (> 0) · tie 0 · 내부 막 면 0 → FV 해 = 제조해 (최대 오차 ≤ 1e−12 × max|φ|) — 경계 반 셀의 막 · 두 상이 직렬로 들어가야 정확하다\n\n── d6b_boundary_api\nD6b — RIMP-01 harness 인자: Mms(offset_um) = 위 subclass 와 같은 해 · 교차 수 기록 · 변이 셋이 경계 막에도 걸린다\n  PASS  D6b offset_um 인자 = subclass (u − off) — 오차 · 정답 φ 비트 같음 · 출력에 offset_um\n  PASS  D6b 출력: 경계 반 셀 교차 수 n_bc_cross = 16 (시험 쪽 독립 기하와 같음) · tie_count 0 · 경계 규칙 이름\n  PASS  D6b 판별력: 경계 막뿐인 배치에서도 변이 셋 (막 삭제 · ×1e4 누락 · jump 부호) 이 반올림 아닌 차 (> 1e6 × 정답 · > 1e−6 × max|φ|)\n  PASS  D6b offset 0 (기본) = 옛 배치 — 교차 0 · 정확 이산 (D3 와 같은 층)\n\n── d7_tilt_regression\nD7 — RIMP-01 회귀: tie 없는 15° n64 · 30° n16 · 이동 45° n128 (+ 15° n64 L1) — Codex 경계 대조 값 (판정문 §2 표) 재현\n  PASS  D7 θ 15° n 64 axis 이동 0 µm: tie 0 · 경계 교차 2 > 0 · L2 0.0004495112904 · 최대 0.006475555385 (Codex 대조 · 상대 1e−9) — 회귀 판별 (D11 · D12-V 근거 아님)\n  PASS  D7 θ 30° n 16 axis 이동 0 µm: tie 0 · 경계 교차 2 > 0 · L2 0.003087791839 · 최대 0.01633704071 (Codex 대조 · 상대 1e−9) — 회귀 판별 (D11 · D12-V 근거 아님)\n  PASS  D7 θ 45° n 128 axis 이동 0.001 µm: tie 0 · 경계 교차 2 > 0 · L2 0.0009823643239 · 최대 0.004030350534 (Codex 대조 · 상대 1e−9) — 회귀 판별 (D11 · D12-V 근거 아님)\n  PASS  D7 θ 15° n 64 L1 이동 0 µm: tie 0 · 경계 교차 2 > 0 · L2 0.001406042364 · 최대 0.02030409571 (Codex 대조 · 상대 1e−9) — 회귀 판별 (D11 · D12-V 근거 아님)\n\n── d8_tie_record\nD8 — tie · 경계 교차 수 기록 (45° n128 원점 대칭 = 셀 중심이 계면 위인 셀 n 개 — 배정은 부동소수 반올림에 걸린다 · 플랫폼 의존)\n  PASS  D8 45° n128: tie_count = 128 (시험 쪽 독립 셈과 같음) · n_bc_cross = 독립 셈\n\n23 PASS · 0 FAIL\n",
+    "pass_count": 23,
+    "failures": []
+  },
+  "old_counterexamples": [
+    {
+      "theta": 15,
+      "n": 64,
+      "law": "axis",
+      "offset_um": 0.0,
+      "old_before": {
+        "n": 64,
+        "h_um": 0.025,
+        "law": "axis",
+        "mutant": null,
+        "theta_deg": 15.0,
+        "n_film_faces": 80,
+        "err_max": 0.5376755856049966,
+        "err_l2": 0.013063188597265749
+      },
+      "old_after": {
+        "n": 64,
+        "h_um": 0.025,
+        "law": "axis",
+        "mutant": null,
+        "theta_deg": 15.0,
+        "n_film_faces": 80,
+        "err_max": 0.006475555384883536,
+        "err_l2": 0.00044951129044879114,
+        "max_ij": [
+          26,
+          53
+        ]
+      },
+      "fixed_unmodified": {
+        "n": 64,
+        "h_um": 0.025,
+        "law": "axis",
+        "mutant": null,
+        "theta_deg": 15.0,
+        "offset_um": 0.0,
+        "n_film_faces": 80,
+        "n_bc_cross": 2,
+        "tie_count": 0,
+        "boundary_rule": "crossing_half_cell_series_v1",
+        "err_max": 0.006475555384883536,
+        "err_l2": 0.0004495112904487911
+      },
+      "fixed_minus_old_after": {
+        "err_max": 0.0,
+        "err_l2": -5.421010862427522e-20
+      },
+      "old_boundary_adjustments": [
+        {
+          "ij": [
+            40,
+            0
+          ],
+          "axis": 1,
+          "u_cell": 0.0014392400681918216,
+          "u_boundary": -0.0017959979955896599,
+          "d_cell": 0.0055607966083861295,
+          "d_boundary": 0.006939203391613871,
+          "g_old": 0.25,
+          "g_new": 0.001598661354001392
+        },
+        {
+          "ij": [
+            23,
+            63
+          ],
+          "axis": 1,
+          "u_cell": -0.0014392400681919326,
+          "u_boundary": 0.0017959979955895489,
+          "d_cell": 0.005560796608386559,
+          "d_boundary": 0.006939203391613442,
+          "g_old": 0.1,
+          "g_new": 0.0016003540976839972
+        }
+      ]
+    },
+    {
+      "theta": 30,
+      "n": 16,
+      "law": "axis",
+      "offset_um": 0.0,
+      "old_before": {
+        "n": 16,
+        "h_um": 0.1,
+        "law": "axis",
+        "mutant": null,
+        "theta_deg": 30.0,
+        "n_film_faces": 24,
+        "err_max": 0.5038084526638738,
+        "err_l2": 0.04096008792692717
+      },
+      "old_after": {
+        "n": 16,
+        "h_um": 0.1,
+        "law": "axis",
+        "mutant": null,
+        "theta_deg": 30.0,
+        "n_film_faces": 24,
+        "err_max": 0.016337040710746598,
+        "err_l2": 0.003087791838662941,
+        "max_ij": [
+          6,
+          11
+        ]
+      },
+      "fixed_unmodified": {
+        "n": 16,
+        "h_um": 0.1,
+        "law": "axis",
+        "mutant": null,
+        "theta_deg": 30.0,
+        "offset_um": 0.0,
+        "n_film_faces": 24,
+        "n_bc_cross": 2,
+        "tie_count": 0,
+        "boundary_rule": "crossing_half_cell_series_v1",
+        "err_max": 0.016337040710746598,
+        "err_l2": 0.0030877918386629406
+      },
+      "fixed_minus_old_after": {
+        "err_max": 0.0,
+        "err_l2": -4.336808689942018e-19
+      },
+      "old_boundary_adjustments": [
+        {
+          "ij": [
+            12,
+            0
+          ],
+          "axis": 1,
+          "u_cell": 0.014711431702997435,
+          "u_boundary": -0.010288568297002587,
+          "d_cell": 0.029422863405994846,
+          "d_boundary": 0.020577136594005157,
+          "g_old": 1.0,
+          "g_new": 0.04625921589865033
+        },
+        {
+          "ij": [
+            3,
+            15
+          ],
+          "axis": 1,
+          "u_cell": -0.01471143170299749,
+          "u_boundary": 0.010288568297002532,
+          "d_cell": 0.029422863405994957,
+          "d_boundary": 0.020577136594005046,
+          "g_old": 0.4,
+          "g_new": 0.04569822938876003
+        }
+      ]
+    },
+    {
+      "theta": 45,
+      "n": 128,
+      "law": "axis",
+      "offset_um": 0.0,
+      "old_before": {
+        "n": 128,
+        "h_um": 0.0125,
+        "law": "axis",
+        "mutant": null,
+        "theta_deg": 45.0,
+        "n_film_faces": 254,
+        "err_max": 0.44429102168588724,
+        "err_l2": 0.003835149728083241
+      },
+      "old_after": {
+        "n": 128,
+        "h_um": 0.0125,
+        "law": "axis",
+        "mutant": null,
+        "theta_deg": 45.0,
+        "n_film_faces": 254,
+        "err_max": 0.005660516618674727,
+        "err_l2": 0.0009205293576660072,
+        "max_ij": [
+          46,
+          82
+        ]
+      },
+      "fixed_unmodified": {
+        "n": 128,
+        "h_um": 0.0125,
+        "law": "axis",
+        "mutant": null,
+        "theta_deg": 45.0,
+        "offset_um": 0.0,
+        "n_film_faces": 254,
+        "n_bc_cross": 2,
+        "tie_count": 128,
+        "boundary_rule": "crossing_half_cell_series_v1",
+        "err_max": 0.005660516618674727,
+        "err_l2": 0.0009205293576660072
+      },
+      "fixed_minus_old_after": {
+        "err_max": 0.0,
+        "err_l2": 0.0
+      },
+      "old_boundary_adjustments": [
+        {
+          "ij": [
+            127,
+            0
+          ],
+          "axis": 0,
+          "u_cell": -1.1102230246251565e-16,
+          "u_boundary": 0.004419417382415913,
+          "d_cell": 1.5700924586837387e-16,
+          "d_boundary": 0.006249999999999843,
+          "g_old": 0.05,
+          "g_new": 0.001095174281094691
+        },
+        {
+          "ij": [
+            0,
+            127
+          ],
+          "axis": 1,
+          "u_cell": -1.1102230246251565e-16,
+          "u_boundary": 0.004419417382415913,
+          "d_cell": 1.5700924586837387e-16,
+          "d_boundary": 0.006249999999999843,
+          "g_old": 0.05,
+          "g_new": 0.001095174281094691
+        }
+      ]
+    },
+    {
+      "theta": 45,
+      "n": 128,
+      "law": "axis",
+      "offset_um": 0.001,
+      "old_before": {
+        "n": 128,
+        "h_um": 0.0125,
+        "law": "axis",
+        "mutant": null,
+        "theta_deg": 45.0,
+        "n_film_faces": 254,
+        "err_max": 0.44392628784023586,
+        "err_l2": 0.00388309419971931
+      },
+      "old_after": {
+        "n": 128,
+        "h_um": 0.0125,
+        "law": "axis",
+        "mutant": null,
+        "theta_deg": 45.0,
+        "n_film_faces": 254,
+        "err_max": 0.004030350534206805,
+        "err_l2": 0.0009823643238694344,
+        "max_ij": [
+          23,
+          104
+        ]
+      },
+      "fixed_unmodified": {
+        "n": 128,
+        "h_um": 0.0125,
+        "law": "axis",
+        "mutant": null,
+        "theta_deg": 45.0,
+        "offset_um": 0.001,
+        "n_film_faces": 254,
+        "n_bc_cross": 2,
+        "tie_count": 0,
+        "boundary_rule": "crossing_half_cell_series_v1",
+        "err_max": 0.004030350534206805,
+        "err_l2": 0.0009823643238694344
+      },
+      "fixed_minus_old_after": {
+        "err_max": 0.0,
+        "err_l2": 0.0
+      },
+      "old_boundary_adjustments": [
+        {
+          "ij": [
+            127,
+            0
+          ],
+          "axis": 0,
+          "u_cell": -0.001000000000000111,
+          "u_boundary": 0.0034194173824159133,
+          "d_cell": 0.0014142135623732193,
+          "d_boundary": 0.004835786437626781,
+          "g_old": 0.05,
+          "g_new": 0.001091927199909032
+        },
+        {
+          "ij": [
+            0,
+            127
+          ],
+          "axis": 1,
+          "u_cell": -0.001000000000000111,
+          "u_boundary": 0.0034194173824159133,
+          "d_cell": 0.0014142135623732193,
+          "d_boundary": 0.004835786437626781,
+          "g_old": 0.05,
+          "g_new": 0.001091927199909032
+        }
+      ]
+    },
+    {
+      "theta": 15,
+      "n": 64,
+      "law": "L1",
+      "offset_um": 0.0,
+      "old_before": {
+        "n": 64,
+        "h_um": 0.025,
+        "law": "L1",
+        "mutant": null,
+        "theta_deg": 15.0,
+        "n_film_faces": 80,
+        "err_max": 0.5324747282970329,
+        "err_l2": 0.012828260625006931
+      },
+      "old_after": {
+        "n": 64,
+        "h_um": 0.025,
+        "law": "L1",
+        "mutant": null,
+        "theta_deg": 15.0,
+        "n_film_faces": 80,
+        "err_max": 0.020304095712675867,
+        "err_l2": 0.001406042364338704,
+        "max_ij": [
+          23,
+          63
+        ]
+      },
+      "fixed_unmodified": {
+        "n": 64,
+        "h_um": 0.025,
+        "law": "L1",
+        "mutant": null,
+        "theta_deg": 15.0,
+        "offset_um": 0.0,
+        "n_film_faces": 80,
+        "n_bc_cross": 2,
+        "tie_count": 0,
+        "boundary_rule": "crossing_half_cell_series_v1",
+        "err_max": 0.020304095712675913,
+        "err_l2": 0.0014060423643387043
+      },
+      "fixed_minus_old_after": {
+        "err_max": 4.5102810375396984e-17,
+        "err_l2": 2.168404344971009e-19
+      },
+      "old_boundary_adjustments": [
+        {
+          "ij": [
+            40,
+            0
+          ],
+          "axis": 1,
+          "u_cell": 0.0014392400681918216,
+          "u_boundary": -0.0017959979955896599,
+          "d_cell": 0.0055607966083861295,
+          "d_boundary": 0.006939203391613871,
+          "g_old": 0.25,
+          "g_new": 0.00491908118701459
+        },
+        {
+          "ij": [
+            23,
+            63
+          ],
+          "axis": 1,
+          "u_cell": -0.0014392400681919326,
+          "u_boundary": 0.0017959979955895489,
+          "d_cell": 0.005560796608386559,
+          "d_boundary": 0.006939203391613442,
+          "g_old": 0.1,
+          "g_new": 0.004935143289631314
+        }
+      ]
+    }
+  ],
+  "analytic_layers": [
+    {
+      "n": 16,
+      "h_um": 0.1,
+      "law": "axis",
+      "mutant": null,
+      "theta_deg": 0.0,
+      "offset_um": -0.78,
+      "n_film_faces": 0,
+      "n_bc_cross": 16,
+      "tie_count": 0,
+      "boundary_rule": "crossing_half_cell_series_v1",
+      "err_max": 1.1102230246251565e-15,
+      "err_l2": 4.470083905969491e-16,
+      "analytic_boundary_diag_max_abs": 6.661338147750939e-16,
+      "analytic_boundary_rhs_max_abs": 8.881784197001252e-16,
+      "exact_solution_residual_max": 3.3306690738754696e-16,
+      "boundary_crossing_by_cell": {
+        "(0, 0)": 1,
+        "(0, 1)": 1,
+        "(0, 2)": 1,
+        "(0, 3)": 1,
+        "(0, 4)": 1,
+        "(0, 5)": 1,
+        "(0, 6)": 1,
+        "(0, 7)": 1,
+        "(0, 8)": 1,
+        "(0, 9)": 1,
+        "(0, 10)": 1,
+        "(0, 11)": 1,
+        "(0, 12)": 1,
+        "(0, 13)": 1,
+        "(0, 14)": 1,
+        "(0, 15)": 1
+      },
+      "crossing_records": [
+        {
+          "cell": [
+            0,
+            0
+          ],
+          "axis": 0,
+          "outward_sign": -1,
+          "u_cell": 0.030000000000000027,
+          "u_face": -0.020000000000000018,
+          "analytic_g": 0.6249999999999996
+        },
+        {
+          "cell": [
+            0,
+            1
+          ],
+          "axis": 0,
+          "outward_sign": -1,
+          "u_cell": 0.030000000000000027,
+          "u_face": -0.020000000000000018,
+          "analytic_g": 0.6249999999999996
+        },
+        {
+          "cell": [
+            0,
+            2
+          ],
+          "axis": 0,
+          "outward_sign": -1,
+          "u_cell": 0.030000000000000027,
+          "u_face": -0.020000000000000018,
+          "analytic_g": 0.6249999999999996
+        },
+        {
+          "cell": [
+            0,
+            3
+          ],
+          "axis": 0,
+          "outward_sign": -1,
+          "u_cell": 0.030000000000000027,
+          "u_face": -0.020000000000000018,
+          "analytic_g": 0.6249999999999996
+        },
+        {
+          "cell": [
+            0,
+            4
+          ],
+          "axis": 0,
+          "outward_sign": -1,
+          "u_cell": 0.030000000000000027,
+          "u_face": -0.020000000000000018,
+          "analytic_g": 0.6249999999999996
+        },
+        {
+          "cell": [
+            0,
+            5
+          ],
+          "axis": 0,
+          "outward_sign": -1,
+          "u_cell": 0.030000000000000027,
+          "u_face": -0.020000000000000018,
+          "analytic_g": 0.6249999999999996
+        },
+        {
+          "cell": [
+            0,
+            6
+          ],
+          "axis": 0,
+          "outward_sign": -1,
+          "u_cell": 0.030000000000000027,
+          "u_face": -0.020000000000000018,
+          "analytic_g": 0.6249999999999996
+        },
+        {
+          "cell": [
+            0,
+            7
+          ],
+          "axis": 0,
+          "outward_sign": -1,
+          "u_cell": 0.030000000000000027,
+          "u_face": -0.020000000000000018,
+          "analytic_g": 0.6249999999999996
+        },
+        {
+          "cell": [
+            0,
+            8
+          ],
+          "axis": 0,
+          "outward_sign": -1,
+          "u_cell": 0.030000000000000027,
+          "u_face": -0.020000000000000018,
+          "analytic_g": 0.6249999999999996
+        },
+        {
+          "cell": [
+            0,
+            9
+          ],
+          "axis": 0,
+          "outward_sign": -1,
+          "u_cell": 0.030000000000000027,
+          "u_face": -0.020000000000000018,
+          "analytic_g": 0.6249999999999996
+        },
+        {
+          "cell": [
+            0,
+            10
+          ],
+          "axis": 0,
+          "outward_sign": -1,
+          "u_cell": 0.030000000000000027,
+          "u_face": -0.020000000000000018,
+          "analytic_g": 0.6249999999999996
+        },
+        {
+          "cell": [
+            0,
+            11
+          ],
+          "axis": 0,
+          "outward_sign": -1,
+          "u_cell": 0.030000000000000027,
+          "u_face": -0.020000000000000018,
+          "analytic_g": 0.6249999999999996
+        },
+        {
+          "cell": [
+            0,
+            12
+          ],
+          "axis": 0,
+          "outward_sign": -1,
+          "u_cell": 0.030000000000000027,
+          "u_face": -0.020000000000000018,
+          "analytic_g": 0.6249999999999996
+        },
+        {
+          "cell": [
+            0,
+            13
+          ],
+          "axis": 0,
+          "outward_sign": -1,
+          "u_cell": 0.030000000000000027,
+          "u_face": -0.020000000000000018,
+          "analytic_g": 0.6249999999999996
+        },
+        {
+          "cell": [
+            0,
+            14
+          ],
+          "axis": 0,
+          "outward_sign": -1,
+          "u_cell": 0.030000000000000027,
+          "u_face": -0.020000000000000018,
+          "analytic_g": 0.6249999999999996
+        },
+        {
+          "cell": [
+            0,
+            15
+          ],
+          "axis": 0,
+          "outward_sign": -1,
+          "u_cell": 0.030000000000000027,
+          "u_face": -0.020000000000000018,
+          "analytic_g": 0.6249999999999996
+        }
+      ],
+      "layer_kind": "boundary_only_or_endpoint"
+    },
+    {
+      "n": 16,
+      "h_um": 0.1,
+      "law": "axis",
+      "mutant": null,
+      "theta_deg": 0.0,
+      "offset_um": -0.78,
+      "n_film_faces": 0,
+      "n_bc_cross": 16,
+      "tie_count": 0,
+      "boundary_rule": "crossing_half_cell_series_v1",
+      "err_max": 1.5543122344752192e-15,
+      "err_l2": 7.495611469562482e-16,
+      "analytic_boundary_diag_max_abs": 6.661338147750939e-16,
+      "analytic_boundary_rhs_max_abs": 1.1102230246251565e-15,
+      "exact_solution_residual_max": 8.881784197001252e-16,
+      "boundary_crossing_by_cell": {
+        "(0, 0)": 1,
+        "(0, 1)": 1,
+        "(0, 2)": 1,
+        "(0, 3)": 1,
+        "(0, 4)": 1,
+        "(0, 5)": 1,
+        "(0, 6)": 1,
+        "(0, 7)": 1,
+        "(0, 8)": 1,
+        "(0, 9)": 1,
+        "(0, 10)": 1,
+        "(0, 11)": 1,
+        "(0, 12)": 1,
+        "(0, 13)": 1,
+        "(0, 14)": 1,
+        "(0, 15)": 1
+      },
+      "crossing_records": [
+        {
+          "cell": [
+            0,
+            0
+          ],
+          "axis": 0,
+          "outward_sign": -1,
+          "u_cell": 0.030000000000000027,
+          "u_face": -0.020000000000000018,
+          "analytic_g": 0.08620689655172414
+        },
+        {
+          "cell": [
+            0,
+            1
+          ],
+          "axis": 0,
+          "outward_sign": -1,
+          "u_cell": 0.030000000000000027,
+          "u_face": -0.020000000000000018,
+          "analytic_g": 0.08620689655172414
+        },
+        {
+          "cell": [
+            0,
+            2
+          ],
+          "axis": 0,
+          "outward_sign": -1,
+          "u_cell": 0.030000000000000027,
+          "u_face": -0.020000000000000018,
+          "analytic_g": 0.08620689655172414
+        },
+        {
+          "cell": [
+            0,
+            3
+          ],
+          "axis": 0,
+          "outward_sign": -1,
+          "u_cell": 0.030000000000000027,
+          "u_face": -0.020000000000000018,
+          "analytic_g": 0.08620689655172414
+        },
+        {
+          "cell": [
+            0,
+            4
+          ],
+          "axis": 0,
+          "outward_sign": -1,
+          "u_cell": 0.030000000000000027,
+          "u_face": -0.020000000000000018,
+          "analytic_g": 0.08620689655172414
+        },
+        {
+          "cell": [
+            0,
+            5
+          ],
+          "axis": 0,
+          "outward_sign": -1,
+          "u_cell": 0.030000000000000027,
+          "u_face": -0.020000000000000018,
+          "analytic_g": 0.08620689655172414
+        },
+        {
+          "cell": [
+            0,
+            6
+          ],
+          "axis": 0,
+          "outward_sign": -1,
+          "u_cell": 0.030000000000000027,
+          "u_face": -0.020000000000000018,
+          "analytic_g": 0.08620689655172414
+        },
+        {
+          "cell": [
+            0,
+            7
+          ],
+          "axis": 0,
+          "outward_sign": -1,
+          "u_cell": 0.030000000000000027,
+          "u_face": -0.020000000000000018,
+          "analytic_g": 0.08620689655172414
+        },
+        {
+          "cell": [
+            0,
+            8
+          ],
+          "axis": 0,
+          "outward_sign": -1,
+          "u_cell": 0.030000000000000027,
+          "u_face": -0.020000000000000018,
+          "analytic_g": 0.08620689655172414
+        },
+        {
+          "cell": [
+            0,
+            9
+          ],
+          "axis": 0,
+          "outward_sign": -1,
+          "u_cell": 0.030000000000000027,
+          "u_face": -0.020000000000000018,
+          "analytic_g": 0.08620689655172414
+        },
+        {
+          "cell": [
+            0,
+            10
+          ],
+          "axis": 0,
+          "outward_sign": -1,
+          "u_cell": 0.030000000000000027,
+          "u_face": -0.020000000000000018,
+          "analytic_g": 0.08620689655172414
+        },
+        {
+          "cell": [
+            0,
+            11
+          ],
+          "axis": 0,
+          "outward_sign": -1,
+          "u_cell": 0.030000000000000027,
+          "u_face": -0.020000000000000018,
+          "analytic_g": 0.08620689655172414
+        },
+        {
+          "cell": [
+            0,
+            12
+          ],
+          "axis": 0,
+          "outward_sign": -1,
+          "u_cell": 0.030000000000000027,
+          "u_face": -0.020000000000000018,
+          "analytic_g": 0.08620689655172414
+        },
+        {
+          "cell": [
+            0,
+            13
+          ],
+          "axis": 0,
+          "outward_sign": -1,
+          "u_cell": 0.030000000000000027,
+          "u_face": -0.020000000000000018,
+          "analytic_g": 0.08620689655172414
+        },
+        {
+          "cell": [
+            0,
+            14
+          ],
+          "axis": 0,
+          "outward_sign": -1,
+          "u_cell": 0.030000000000000027,
+          "u_face": -0.020000000000000018,
+          "analytic_g": 0.08620689655172414
+        },
+        {
+          "cell": [
+            0,
+            15
+          ],
+          "axis": 0,
+          "outward_sign": -1,
+          "u_cell": 0.030000000000000027,
+          "u_face": -0.020000000000000018,
+          "analytic_g": 0.08620689655172414
+        }
+      ],
+      "layer_kind": "boundary_only_or_endpoint"
+    },
+    {
+      "n": 16,
+      "h_um": 0.1,
+      "law": "axis",
+      "mutant": null,
+      "theta_deg": 0.0,
+      "offset_um": 0.78,
+      "n_film_faces": 0,
+      "n_bc_cross": 16,
+      "tie_count": 0,
+      "boundary_rule": "crossing_half_cell_series_v1",
+      "err_max": 3.774758283725532e-15,
+      "err_l2": 1.3434664068826037e-15,
+      "analytic_boundary_diag_max_abs": 5.551115123125783e-16,
+      "analytic_boundary_rhs_max_abs": 8.881784197001252e-16,
+      "exact_solution_residual_max": 4.440892098500626e-16,
+      "boundary_crossing_by_cell": {
+        "(15, 0)": 1,
+        "(15, 1)": 1,
+        "(15, 2)": 1,
+        "(15, 3)": 1,
+        "(15, 4)": 1,
+        "(15, 5)": 1,
+        "(15, 6)": 1,
+        "(15, 7)": 1,
+        "(15, 8)": 1,
+        "(15, 9)": 1,
+        "(15, 10)": 1,
+        "(15, 11)": 1,
+        "(15, 12)": 1,
+        "(15, 13)": 1,
+        "(15, 14)": 1,
+        "(15, 15)": 1
+      },
+      "crossing_records": [
+        {
+          "cell": [
+            15,
+            0
+          ],
+          "axis": 0,
+          "outward_sign": 1,
+          "u_cell": -0.030000000000000027,
+          "u_face": 0.020000000000000018,
+          "analytic_g": 0.5263157894736838
+        },
+        {
+          "cell": [
+            15,
+            1
+          ],
+          "axis": 0,
+          "outward_sign": 1,
+          "u_cell": -0.030000000000000027,
+          "u_face": 0.020000000000000018,
+          "analytic_g": 0.5263157894736838
+        },
+        {
+          "cell": [
+            15,
+            2
+          ],
+          "axis": 0,
+          "outward_sign": 1,
+          "u_cell": -0.030000000000000027,
+          "u_face": 0.020000000000000018,
+          "analytic_g": 0.5263157894736838
+        },
+        {
+          "cell": [
+            15,
+            3
+          ],
+          "axis": 0,
+          "outward_sign": 1,
+          "u_cell": -0.030000000000000027,
+          "u_face": 0.020000000000000018,
+          "analytic_g": 0.5263157894736838
+        },
+        {
+          "cell": [
+            15,
+            4
+          ],
+          "axis": 0,
+          "outward_sign": 1,
+          "u_cell": -0.030000000000000027,
+          "u_face": 0.020000000000000018,
+          "analytic_g": 0.5263157894736838
+        },
+        {
+          "cell": [
+            15,
+            5
+          ],
+          "axis": 0,
+          "outward_sign": 1,
+          "u_cell": -0.030000000000000027,
+          "u_face": 0.020000000000000018,
+          "analytic_g": 0.5263157894736838
+        },
+        {
+          "cell": [
+            15,
+            6
+          ],
+          "axis": 0,
+          "outward_sign": 1,
+          "u_cell": -0.030000000000000027,
+          "u_face": 0.020000000000000018,
+          "analytic_g": 0.5263157894736838
+        },
+        {
+          "cell": [
+            15,
+            7
+          ],
+          "axis": 0,
+          "outward_sign": 1,
+          "u_cell": -0.030000000000000027,
+          "u_face": 0.020000000000000018,
+          "analytic_g": 0.5263157894736838
+        },
+        {
+          "cell": [
+            15,
+            8
+          ],
+          "axis": 0,
+          "outward_sign": 1,
+          "u_cell": -0.030000000000000027,
+          "u_face": 0.020000000000000018,
+          "analytic_g": 0.5263157894736838
+        },
+        {
+          "cell": [
+            15,
+            9
+          ],
+          "axis": 0,
+          "outward_sign": 1,
+          "u_cell": -0.030000000000000027,
+          "u_face": 0.020000000000000018,
+          "analytic_g": 0.5263157894736838
+        },
+        {
+          "cell": [
+            15,
+            10
+          ],
+          "axis": 0,
+          "outward_sign": 1,
+          "u_cell": -0.030000000000000027,
+          "u_face": 0.020000000000000018,
+          "analytic_g": 0.5263157894736838
+        },
+        {
+          "cell": [
+            15,
+            11
+          ],
+          "axis": 0,
+          "outward_sign": 1,
+          "u_cell": -0.030000000000000027,
+          "u_face": 0.020000000000000018,
+          "analytic_g": 0.5263157894736838
+        },
+        {
+          "cell": [
+            15,
+            12
+          ],
+          "axis": 0,
+          "outward_sign": 1,
+          "u_cell": -0.030000000000000027,
+          "u_face": 0.020000000000000018,
+          "analytic_g": 0.5263157894736838
+        },
+        {
+          "cell": [
+            15,
+            13
+          ],
+          "axis": 0,
+          "outward_sign": 1,
+          "u_cell": -0.030000000000000027,
+          "u_face": 0.020000000000000018,
+          "analytic_g": 0.5263157894736838
+        },
+        {
+          "cell": [
+            15,
+            14
+          ],
+          "axis": 0,
+          "outward_sign": 1,
+          "u_cell": -0.030000000000000027,
+          "u_face": 0.020000000000000018,
+          "analytic_g": 0.5263157894736838
+        },
+        {
+          "cell": [
+            15,
+            15
+          ],
+          "axis": 0,
+          "outward_sign": 1,
+          "u_cell": -0.030000000000000027,
+          "u_face": 0.020000000000000018,
+          "analytic_g": 0.5263157894736838
+        }
+      ],
+      "layer_kind": "boundary_only_or_endpoint"
+    },
+    {
+      "n": 16,
+      "h_um": 0.1,
+      "law": "axis",
+      "mutant": null,
+      "theta_deg": 0.0,
+      "offset_um": 0.78,
+      "n_film_faces": 0,
+      "n_bc_cross": 16,
+      "tie_count": 0,
+      "boundary_rule": "crossing_half_cell_series_v1",
+      "err_max": 2.220446049250313e-15,
+      "err_l2": 8.837588289891568e-16,
+      "analytic_boundary_diag_max_abs": 4.440892098500626e-16,
+      "analytic_boundary_rhs_max_abs": 8.881784197001252e-16,
+      "exact_solution_residual_max": 4.440892098500626e-16,
+      "boundary_crossing_by_cell": {
+        "(15, 0)": 1,
+        "(15, 1)": 1,
+        "(15, 2)": 1,
+        "(15, 3)": 1,
+        "(15, 4)": 1,
+        "(15, 5)": 1,
+        "(15, 6)": 1,
+        "(15, 7)": 1,
+        "(15, 8)": 1,
+        "(15, 9)": 1,
+        "(15, 10)": 1,
+        "(15, 11)": 1,
+        "(15, 12)": 1,
+        "(15, 13)": 1,
+        "(15, 14)": 1,
+        "(15, 15)": 1
+      },
+      "crossing_records": [
+        {
+          "cell": [
+            15,
+            0
+          ],
+          "axis": 0,
+          "outward_sign": 1,
+          "u_cell": -0.030000000000000027,
+          "u_face": 0.020000000000000018,
+          "analytic_g": 0.08403361344537816
+        },
+        {
+          "cell": [
+            15,
+            1
+          ],
+          "axis": 0,
+          "outward_sign": 1,
+          "u_cell": -0.030000000000000027,
+          "u_face": 0.020000000000000018,
+          "analytic_g": 0.08403361344537816
+        },
+        {
+          "cell": [
+            15,
+            2
+          ],
+          "axis": 0,
+          "outward_sign": 1,
+          "u_cell": -0.030000000000000027,
+          "u_face": 0.020000000000000018,
+          "analytic_g": 0.08403361344537816
+        },
+        {
+          "cell": [
+            15,
+            3
+          ],
+          "axis": 0,
+          "outward_sign": 1,
+          "u_cell": -0.030000000000000027,
+          "u_face": 0.020000000000000018,
+          "analytic_g": 0.08403361344537816
+        },
+        {
+          "cell": [
+            15,
+            4
+          ],
+          "axis": 0,
+          "outward_sign": 1,
+          "u_cell": -0.030000000000000027,
+          "u_face": 0.020000000000000018,
+          "analytic_g": 0.08403361344537816
+        },
+        {
+          "cell": [
+            15,
+            5
+          ],
+          "axis": 0,
+          "outward_sign": 1,
+          "u_cell": -0.030000000000000027,
+          "u_face": 0.020000000000000018,
+          "analytic_g": 0.08403361344537816
+        },
+        {
+          "cell": [
+            15,
+            6
+          ],
+          "axis": 0,
+          "outward_sign": 1,
+          "u_cell": -0.030000000000000027,
+          "u_face": 0.020000000000000018,
+          "analytic_g": 0.08403361344537816
+        },
+        {
+          "cell": [
+            15,
+            7
+          ],
+          "axis": 0,
+          "outward_sign": 1,
+          "u_cell": -0.030000000000000027,
+          "u_face": 0.020000000000000018,
+          "analytic_g": 0.08403361344537816
+        },
+        {
+          "cell": [
+            15,
+            8
+          ],
+          "axis": 0,
+          "outward_sign": 1,
+          "u_cell": -0.030000000000000027,
+          "u_face": 0.020000000000000018,
+          "analytic_g": 0.08403361344537816
+        },
+        {
+          "cell": [
+            15,
+            9
+          ],
+          "axis": 0,
+          "outward_sign": 1,
+          "u_cell": -0.030000000000000027,
+          "u_face": 0.020000000000000018,
+          "analytic_g": 0.08403361344537816
+        },
+        {
+          "cell": [
+            15,
+            10
+          ],
+          "axis": 0,
+          "outward_sign": 1,
+          "u_cell": -0.030000000000000027,
+          "u_face": 0.020000000000000018,
+          "analytic_g": 0.08403361344537816
+        },
+        {
+          "cell": [
+            15,
+            11
+          ],
+          "axis": 0,
+          "outward_sign": 1,
+          "u_cell": -0.030000000000000027,
+          "u_face": 0.020000000000000018,
+          "analytic_g": 0.08403361344537816
+        },
+        {
+          "cell": [
+            15,
+            12
+          ],
+          "axis": 0,
+          "outward_sign": 1,
+          "u_cell": -0.030000000000000027,
+          "u_face": 0.020000000000000018,
+          "analytic_g": 0.08403361344537816
+        },
+        {
+          "cell": [
+            15,
+            13
+          ],
+          "axis": 0,
+          "outward_sign": 1,
+          "u_cell": -0.030000000000000027,
+          "u_face": 0.020000000000000018,
+          "analytic_g": 0.08403361344537816
+        },
+        {
+          "cell": [
+            15,
+            14
+          ],
+          "axis": 0,
+          "outward_sign": 1,
+          "u_cell": -0.030000000000000027,
+          "u_face": 0.020000000000000018,
+          "analytic_g": 0.08403361344537816
+        },
+        {
+          "cell": [
+            15,
+            15
+          ],
+          "axis": 0,
+          "outward_sign": 1,
+          "u_cell": -0.030000000000000027,
+          "u_face": 0.020000000000000018,
+          "analytic_g": 0.08403361344537816
+        }
+      ],
+      "layer_kind": "boundary_only_or_endpoint"
+    },
+    {
+      "n": 16,
+      "h_um": 0.1,
+      "law": "axis",
+      "mutant": null,
+      "theta_deg": 0.0,
+      "offset_um": -0.8,
+      "n_film_faces": 0,
+      "n_bc_cross": 0,
+      "tie_count": 0,
+      "boundary_rule": "crossing_half_cell_series_v1",
+      "err_max": 1.3322676295501878e-15,
+      "err_l2": 3.9383237617443674e-16,
+      "analytic_boundary_diag_max_abs": 6.661338147750939e-16,
+      "analytic_boundary_rhs_max_abs": 8.881784197001252e-16,
+      "exact_solution_residual_max": 3.3306690738754696e-16,
+      "boundary_crossing_by_cell": {},
+      "crossing_records": [],
+      "layer_kind": "boundary_only_or_endpoint"
+    },
+    {
+      "n": 16,
+      "h_um": 0.1,
+      "law": "axis",
+      "mutant": null,
+      "theta_deg": 0.0,
+      "offset_um": -0.8,
+      "n_film_faces": 0,
+      "n_bc_cross": 0,
+      "tie_count": 0,
+      "boundary_rule": "crossing_half_cell_series_v1",
+      "err_max": 1.7763568394002505e-15,
+      "err_l2": 5.524379366159265e-16,
+      "analytic_boundary_diag_max_abs": 6.661338147750939e-16,
+      "analytic_boundary_rhs_max_abs": 1.1102230246251565e-15,
+      "exact_solution_residual_max": 8.881784197001252e-16,
+      "boundary_crossing_by_cell": {},
+      "crossing_records": [],
+      "layer_kind": "boundary_only_or_endpoint"
+    },
+    {
+      "n": 16,
+      "h_um": 0.1,
+      "law": "axis",
+      "mutant": null,
+      "theta_deg": 0.0,
+      "offset_um": 0.8,
+      "n_film_faces": 0,
+      "n_bc_cross": 16,
+      "tie_count": 0,
+      "boundary_rule": "crossing_half_cell_series_v1",
+      "err_max": 3.552713678800501e-15,
+      "err_l2": 1.4489279780181763e-15,
+      "analytic_boundary_diag_max_abs": 4.440892098500626e-16,
+      "analytic_boundary_rhs_max_abs": 8.881784197001252e-16,
+      "exact_solution_residual_max": 4.440892098500626e-16,
+      "boundary_crossing_by_cell": {
+        "(15, 0)": 1,
+        "(15, 1)": 1,
+        "(15, 2)": 1,
+        "(15, 3)": 1,
+        "(15, 4)": 1,
+        "(15, 5)": 1,
+        "(15, 6)": 1,
+        "(15, 7)": 1,
+        "(15, 8)": 1,
+        "(15, 9)": 1,
+        "(15, 10)": 1,
+        "(15, 11)": 1,
+        "(15, 12)": 1,
+        "(15, 13)": 1,
+        "(15, 14)": 1,
+        "(15, 15)": 1
+      },
+      "crossing_records": [
+        {
+          "cell": [
+            15,
+            0
+          ],
+          "axis": 0,
+          "outward_sign": 1,
+          "u_cell": -0.050000000000000044,
+          "u_face": 0.0,
+          "analytic_g": 0.39999999999999974
+        },
+        {
+          "cell": [
+            15,
+            1
+          ],
+          "axis": 0,
+          "outward_sign": 1,
+          "u_cell": -0.050000000000000044,
+          "u_face": 0.0,
+          "analytic_g": 0.39999999999999974
+        },
+        {
+          "cell": [
+            15,
+            2
+          ],
+          "axis": 0,
+          "outward_sign": 1,
+          "u_cell": -0.050000000000000044,
+          "u_face": 0.0,
+          "analytic_g": 0.39999999999999974
+        },
+        {
+          "cell": [
+            15,
+            3
+          ],
+          "axis": 0,
+          "outward_sign": 1,
+          "u_cell": -0.050000000000000044,
+          "u_face": 0.0,
+          "analytic_g": 0.39999999999999974
+        },
+        {
+          "cell": [
+            15,
+            4
+          ],
+          "axis": 0,
+          "outward_sign": 1,
+          "u_cell": -0.050000000000000044,
+          "u_face": 0.0,
+          "analytic_g": 0.39999999999999974
+        },
+        {
+          "cell": [
+            15,
+            5
+          ],
+          "axis": 0,
+          "outward_sign": 1,
+          "u_cell": -0.050000000000000044,
+          "u_face": 0.0,
+          "analytic_g": 0.39999999999999974
+        },
+        {
+          "cell": [
+            15,
+            6
+          ],
+          "axis": 0,
+          "outward_sign": 1,
+          "u_cell": -0.050000000000000044,
+          "u_face": 0.0,
+          "analytic_g": 0.39999999999999974
+        },
+        {
+          "cell": [
+            15,
+            7
+          ],
+          "axis": 0,
+          "outward_sign": 1,
+          "u_cell": -0.050000000000000044,
+          "u_face": 0.0,
+          "analytic_g": 0.39999999999999974
+        },
+        {
+          "cell": [
+            15,
+            8
+          ],
+          "axis": 0,
+          "outward_sign": 1,
+          "u_cell": -0.050000000000000044,
+          "u_face": 0.0,
+          "analytic_g": 0.39999999999999974
+        },
+        {
+          "cell": [
+            15,
+            9
+          ],
+          "axis": 0,
+          "outward_sign": 1,
+          "u_cell": -0.050000000000000044,
+          "u_face": 0.0,
+          "analytic_g": 0.39999999999999974
+        },
+        {
+          "cell": [
+            15,
+            10
+          ],
+          "axis": 0,
+          "outward_sign": 1,
+          "u_cell": -0.050000000000000044,
+          "u_face": 0.0,
+          "analytic_g": 0.39999999999999974
+        },
+        {
+          "cell": [
+            15,
+            11
+          ],
+          "axis": 0,
+          "outward_sign": 1,
+          "u_cell": -0.050000000000000044,
+          "u_face": 0.0,
+          "analytic_g": 0.39999999999999974
+        },
+        {
+          "cell": [
+            15,
+            12
+          ],
+          "axis": 0,
+          "outward_sign": 1,
+          "u_cell": -0.050000000000000044,
+          "u_face": 0.0,
+          "analytic_g": 0.39999999999999974
+        },
+        {
+          "cell": [
+            15,
+            13
+          ],
+          "axis": 0,
+          "outward_sign": 1,
+          "u_cell": -0.050000000000000044,
+          "u_face": 0.0,
+          "analytic_g": 0.39999999999999974
+        },
+        {
+          "cell": [
+            15,
+            14
+          ],
+          "axis": 0,
+          "outward_sign": 1,
+          "u_cell": -0.050000000000000044,
+          "u_face": 0.0,
+          "analytic_g": 0.39999999999999974
+        },
+        {
+          "cell": [
+            15,
+            15
+          ],
+          "axis": 0,
+          "outward_sign": 1,
+          "u_cell": -0.050000000000000044,
+          "u_face": 0.0,
+          "analytic_g": 0.39999999999999974
+        }
+      ],
+      "layer_kind": "boundary_only_or_endpoint"
+    },
+    {
+      "n": 16,
+      "h_um": 0.1,
+      "law": "axis",
+      "mutant": null,
+      "theta_deg": 0.0,
+      "offset_um": 0.8,
+      "n_film_faces": 0,
+      "n_bc_cross": 16,
+      "tie_count": 0,
+      "boundary_rule": "crossing_half_cell_series_v1",
+      "err_max": 2.886579864025407e-15,
+      "err_l2": 1.0895479015158902e-15,
+      "analytic_boundary_diag_max_abs": 4.440892098500626e-16,
+      "analytic_boundary_rhs_max_abs": 8.881784197001252e-16,
+      "exact_solution_residual_max": 4.440892098500626e-16,
+      "boundary_crossing_by_cell": {
+        "(15, 0)": 1,
+        "(15, 1)": 1,
+        "(15, 2)": 1,
+        "(15, 3)": 1,
+        "(15, 4)": 1,
+        "(15, 5)": 1,
+        "(15, 6)": 1,
+        "(15, 7)": 1,
+        "(15, 8)": 1,
+        "(15, 9)": 1,
+        "(15, 10)": 1,
+        "(15, 11)": 1,
+        "(15, 12)": 1,
+        "(15, 13)": 1,
+        "(15, 14)": 1,
+        "(15, 15)": 1
+      },
+      "crossing_records": [
+        {
+          "cell": [
+            15,
+            0
+          ],
+          "axis": 0,
+          "outward_sign": 1,
+          "u_cell": -0.050000000000000044,
+          "u_face": 0.0,
+          "analytic_g": 0.08
+        },
+        {
+          "cell": [
+            15,
+            1
+          ],
+          "axis": 0,
+          "outward_sign": 1,
+          "u_cell": -0.050000000000000044,
+          "u_face": 0.0,
+          "analytic_g": 0.08
+        },
+        {
+          "cell": [
+            15,
+            2
+          ],
+          "axis": 0,
+          "outward_sign": 1,
+          "u_cell": -0.050000000000000044,
+          "u_face": 0.0,
+          "analytic_g": 0.08
+        },
+        {
+          "cell": [
+            15,
+            3
+          ],
+          "axis": 0,
+          "outward_sign": 1,
+          "u_cell": -0.050000000000000044,
+          "u_face": 0.0,
+          "analytic_g": 0.08
+        },
+        {
+          "cell": [
+            15,
+            4
+          ],
+          "axis": 0,
+          "outward_sign": 1,
+          "u_cell": -0.050000000000000044,
+          "u_face": 0.0,
+          "analytic_g": 0.08
+        },
+        {
+          "cell": [
+            15,
+            5
+          ],
+          "axis": 0,
+          "outward_sign": 1,
+          "u_cell": -0.050000000000000044,
+          "u_face": 0.0,
+          "analytic_g": 0.08
+        },
+        {
+          "cell": [
+            15,
+            6
+          ],
+          "axis": 0,
+          "outward_sign": 1,
+          "u_cell": -0.050000000000000044,
+          "u_face": 0.0,
+          "analytic_g": 0.08
+        },
+        {
+          "cell": [
+            15,
+            7
+          ],
+          "axis": 0,
+          "outward_sign": 1,
+          "u_cell": -0.050000000000000044,
+          "u_face": 0.0,
+          "analytic_g": 0.08
+        },
+        {
+          "cell": [
+            15,
+            8
+          ],
+          "axis": 0,
+          "outward_sign": 1,
+          "u_cell": -0.050000000000000044,
+          "u_face": 0.0,
+          "analytic_g": 0.08
+        },
+        {
+          "cell": [
+            15,
+            9
+          ],
+          "axis": 0,
+          "outward_sign": 1,
+          "u_cell": -0.050000000000000044,
+          "u_face": 0.0,
+          "analytic_g": 0.08
+        },
+        {
+          "cell": [
+            15,
+            10
+          ],
+          "axis": 0,
+          "outward_sign": 1,
+          "u_cell": -0.050000000000000044,
+          "u_face": 0.0,
+          "analytic_g": 0.08
+        },
+        {
+          "cell": [
+            15,
+            11
+          ],
+          "axis": 0,
+          "outward_sign": 1,
+          "u_cell": -0.050000000000000044,
+          "u_face": 0.0,
+          "analytic_g": 0.08
+        },
+        {
+          "cell": [
+            15,
+            12
+          ],
+          "axis": 0,
+          "outward_sign": 1,
+          "u_cell": -0.050000000000000044,
+          "u_face": 0.0,
+          "analytic_g": 0.08
+        },
+        {
+          "cell": [
+            15,
+            13
+          ],
+          "axis": 0,
+          "outward_sign": 1,
+          "u_cell": -0.050000000000000044,
+          "u_face": 0.0,
+          "analytic_g": 0.08
+        },
+        {
+          "cell": [
+            15,
+            14
+          ],
+          "axis": 0,
+          "outward_sign": 1,
+          "u_cell": -0.050000000000000044,
+          "u_face": 0.0,
+          "analytic_g": 0.08
+        },
+        {
+          "cell": [
+            15,
+            15
+          ],
+          "axis": 0,
+          "outward_sign": 1,
+          "u_cell": -0.050000000000000044,
+          "u_face": 0.0,
+          "analytic_g": 0.08
+        }
+      ],
+      "layer_kind": "boundary_only_or_endpoint"
+    },
+    {
+      "n": 16,
+      "h_um": 0.1,
+      "law": "axis",
+      "mutant": null,
+      "theta_deg": 90.0,
+      "offset_um": -0.78,
+      "n_film_faces": 0,
+      "n_bc_cross": 16,
+      "tie_count": 0,
+      "boundary_rule": "crossing_half_cell_series_v1",
+      "err_max": 8.881784197001252e-16,
+      "err_l2": 2.2575932348864103e-16,
+      "analytic_boundary_diag_max_abs": 6.661338147750939e-16,
+      "analytic_boundary_rhs_max_abs": 8.881784197001252e-16,
+      "exact_solution_residual_max": 3.3306690738754696e-16,
+      "boundary_crossing_by_cell": {
+        "(0, 0)": 1,
+        "(1, 0)": 1,
+        "(2, 0)": 1,
+        "(3, 0)": 1,
+        "(4, 0)": 1,
+        "(5, 0)": 1,
+        "(6, 0)": 1,
+        "(7, 0)": 1,
+        "(8, 0)": 1,
+        "(9, 0)": 1,
+        "(10, 0)": 1,
+        "(11, 0)": 1,
+        "(12, 0)": 1,
+        "(13, 0)": 1,
+        "(14, 0)": 1,
+        "(15, 0)": 1
+      },
+      "crossing_records": [
+        {
+          "cell": [
+            0,
+            0
+          ],
+          "axis": 1,
+          "outward_sign": -1,
+          "u_cell": 0.030000000000000027,
+          "u_face": -0.020000000000000018,
+          "analytic_g": 0.6249999999999996
+        },
+        {
+          "cell": [
+            1,
+            0
+          ],
+          "axis": 1,
+          "outward_sign": -1,
+          "u_cell": 0.030000000000000027,
+          "u_face": -0.020000000000000018,
+          "analytic_g": 0.6249999999999996
+        },
+        {
+          "cell": [
+            2,
+            0
+          ],
+          "axis": 1,
+          "outward_sign": -1,
+          "u_cell": 0.030000000000000027,
+          "u_face": -0.020000000000000018,
+          "analytic_g": 0.6249999999999996
+        },
+        {
+          "cell": [
+            3,
+            0
+          ],
+          "axis": 1,
+          "outward_sign": -1,
+          "u_cell": 0.030000000000000027,
+          "u_face": -0.020000000000000018,
+          "analytic_g": 0.6249999999999996
+        },
+        {
+          "cell": [
+            4,
+            0
+          ],
+          "axis": 1,
+          "outward_sign": -1,
+          "u_cell": 0.030000000000000027,
+          "u_face": -0.020000000000000018,
+          "analytic_g": 0.6249999999999996
+        },
+        {
+          "cell": [
+            5,
+            0
+          ],
+          "axis": 1,
+          "outward_sign": -1,
+          "u_cell": 0.030000000000000027,
+          "u_face": -0.020000000000000018,
+          "analytic_g": 0.6249999999999996
+        },
+        {
+          "cell": [
+            6,
+            0
+          ],
+          "axis": 1,
+          "outward_sign": -1,
+          "u_cell": 0.030000000000000027,
+          "u_face": -0.020000000000000018,
+          "analytic_g": 0.6249999999999996
+        },
+        {
+          "cell": [
+            7,
+            0
+          ],
+          "axis": 1,
+          "outward_sign": -1,
+          "u_cell": 0.030000000000000027,
+          "u_face": -0.020000000000000018,
+          "analytic_g": 0.6249999999999996
+        },
+        {
+          "cell": [
+            8,
+            0
+          ],
+          "axis": 1,
+          "outward_sign": -1,
+          "u_cell": 0.030000000000000027,
+          "u_face": -0.020000000000000018,
+          "analytic_g": 0.6249999999999996
+        },
+        {
+          "cell": [
+            9,
+            0
+          ],
+          "axis": 1,
+          "outward_sign": -1,
+          "u_cell": 0.030000000000000027,
+          "u_face": -0.020000000000000018,
+          "analytic_g": 0.6249999999999996
+        },
+        {
+          "cell": [
+            10,
+            0
+          ],
+          "axis": 1,
+          "outward_sign": -1,
+          "u_cell": 0.030000000000000027,
+          "u_face": -0.020000000000000018,
+          "analytic_g": 0.6249999999999996
+        },
+        {
+          "cell": [
+            11,
+            0
+          ],
+          "axis": 1,
+          "outward_sign": -1,
+          "u_cell": 0.030000000000000027,
+          "u_face": -0.020000000000000018,
+          "analytic_g": 0.6249999999999996
+        },
+        {
+          "cell": [
+            12,
+            0
+          ],
+          "axis": 1,
+          "outward_sign": -1,
+          "u_cell": 0.030000000000000027,
+          "u_face": -0.020000000000000018,
+          "analytic_g": 0.6249999999999996
+        },
+        {
+          "cell": [
+            13,
+            0
+          ],
+          "axis": 1,
+          "outward_sign": -1,
+          "u_cell": 0.030000000000000027,
+          "u_face": -0.020000000000000018,
+          "analytic_g": 0.6249999999999996
+        },
+        {
+          "cell": [
+            14,
+            0
+          ],
+          "axis": 1,
+          "outward_sign": -1,
+          "u_cell": 0.030000000000000027,
+          "u_face": -0.020000000000000018,
+          "analytic_g": 0.6249999999999996
+        },
+        {
+          "cell": [
+            15,
+            0
+          ],
+          "axis": 1,
+          "outward_sign": -1,
+          "u_cell": 0.030000000000000027,
+          "u_face": -0.020000000000000018,
+          "analytic_g": 0.6249999999999996
+        }
+      ],
+      "layer_kind": "boundary_only_or_endpoint"
+    },
+    {
+      "n": 16,
+      "h_um": 0.1,
+      "law": "axis",
+      "mutant": null,
+      "theta_deg": 90.0,
+      "offset_um": -0.78,
+      "n_film_faces": 0,
+      "n_bc_cross": 16,
+      "tie_count": 0,
+      "boundary_rule": "crossing_half_cell_series_v1",
+      "err_max": 9.992007221626409e-16,
+      "err_l2": 4.751749276372845e-16,
+      "analytic_boundary_diag_max_abs": 6.661338147750939e-16,
+      "analytic_boundary_rhs_max_abs": 1.1102230246251565e-15,
+      "exact_solution_residual_max": 8.881784197001252e-16,
+      "boundary_crossing_by_cell": {
+        "(0, 0)": 1,
+        "(1, 0)": 1,
+        "(2, 0)": 1,
+        "(3, 0)": 1,
+        "(4, 0)": 1,
+        "(5, 0)": 1,
+        "(6, 0)": 1,
+        "(7, 0)": 1,
+        "(8, 0)": 1,
+        "(9, 0)": 1,
+        "(10, 0)": 1,
+        "(11, 0)": 1,
+        "(12, 0)": 1,
+        "(13, 0)": 1,
+        "(14, 0)": 1,
+        "(15, 0)": 1
+      },
+      "crossing_records": [
+        {
+          "cell": [
+            0,
+            0
+          ],
+          "axis": 1,
+          "outward_sign": -1,
+          "u_cell": 0.030000000000000027,
+          "u_face": -0.020000000000000018,
+          "analytic_g": 0.08620689655172414
+        },
+        {
+          "cell": [
+            1,
+            0
+          ],
+          "axis": 1,
+          "outward_sign": -1,
+          "u_cell": 0.030000000000000027,
+          "u_face": -0.020000000000000018,
+          "analytic_g": 0.08620689655172414
+        },
+        {
+          "cell": [
+            2,
+            0
+          ],
+          "axis": 1,
+          "outward_sign": -1,
+          "u_cell": 0.030000000000000027,
+          "u_face": -0.020000000000000018,
+          "analytic_g": 0.08620689655172414
+        },
+        {
+          "cell": [
+            3,
+            0
+          ],
+          "axis": 1,
+          "outward_sign": -1,
+          "u_cell": 0.030000000000000027,
+          "u_face": -0.020000000000000018,
+          "analytic_g": 0.08620689655172414
+        },
+        {
+          "cell": [
+            4,
+            0
+          ],
+          "axis": 1,
+          "outward_sign": -1,
+          "u_cell": 0.030000000000000027,
+          "u_face": -0.020000000000000018,
+          "analytic_g": 0.08620689655172414
+        },
+        {
+          "cell": [
+            5,
+            0
+          ],
+          "axis": 1,
+          "outward_sign": -1,
+          "u_cell": 0.030000000000000027,
+          "u_face": -0.020000000000000018,
+          "analytic_g": 0.08620689655172414
+        },
+        {
+          "cell": [
+            6,
+            0
+          ],
+          "axis": 1,
+          "outward_sign": -1,
+          "u_cell": 0.030000000000000027,
+          "u_face": -0.020000000000000018,
+          "analytic_g": 0.08620689655172414
+        },
+        {
+          "cell": [
+            7,
+            0
+          ],
+          "axis": 1,
+          "outward_sign": -1,
+          "u_cell": 0.030000000000000027,
+          "u_face": -0.020000000000000018,
+          "analytic_g": 0.08620689655172414
+        },
+        {
+          "cell": [
+            8,
+            0
+          ],
+          "axis": 1,
+          "outward_sign": -1,
+          "u_cell": 0.030000000000000027,
+          "u_face": -0.020000000000000018,
+          "analytic_g": 0.08620689655172414
+        },
+        {
+          "cell": [
+            9,
+            0
+          ],
+          "axis": 1,
+          "outward_sign": -1,
+          "u_cell": 0.030000000000000027,
+          "u_face": -0.020000000000000018,
+          "analytic_g": 0.08620689655172414
+        },
+        {
+          "cell": [
+            10,
+            0
+          ],
+          "axis": 1,
+          "outward_sign": -1,
+          "u_cell": 0.030000000000000027,
+          "u_face": -0.020000000000000018,
+          "analytic_g": 0.08620689655172414
+        },
+        {
+          "cell": [
+            11,
+            0
+          ],
+          "axis": 1,
+          "outward_sign": -1,
+          "u_cell": 0.030000000000000027,
+          "u_face": -0.020000000000000018,
+          "analytic_g": 0.08620689655172414
+        },
+        {
+          "cell": [
+            12,
+            0
+          ],
+          "axis": 1,
+          "outward_sign": -1,
+          "u_cell": 0.030000000000000027,
+          "u_face": -0.020000000000000018,
+          "analytic_g": 0.08620689655172414
+        },
+        {
+          "cell": [
+            13,
+            0
+          ],
+          "axis": 1,
+          "outward_sign": -1,
+          "u_cell": 0.030000000000000027,
+          "u_face": -0.020000000000000018,
+          "analytic_g": 0.08620689655172414
+        },
+        {
+          "cell": [
+            14,
+            0
+          ],
+          "axis": 1,
+          "outward_sign": -1,
+          "u_cell": 0.030000000000000027,
+          "u_face": -0.020000000000000018,
+          "analytic_g": 0.08620689655172414
+        },
+        {
+          "cell": [
+            15,
+            0
+          ],
+          "axis": 1,
+          "outward_sign": -1,
+          "u_cell": 0.030000000000000027,
+          "u_face": -0.020000000000000018,
+          "analytic_g": 0.08620689655172414
+        }
+      ],
+      "layer_kind": "boundary_only_or_endpoint"
+    },
+    {
+      "n": 16,
+      "h_um": 0.1,
+      "law": "axis",
+      "mutant": null,
+      "theta_deg": 90.0,
+      "offset_um": 0.78,
+      "n_film_faces": 0,
+      "n_bc_cross": 16,
+      "tie_count": 0,
+      "boundary_rule": "crossing_half_cell_series_v1",
+      "err_max": 2.886579864025407e-15,
+      "err_l2": 9.357133845818834e-16,
+      "analytic_boundary_diag_max_abs": 5.551115123125783e-16,
+      "analytic_boundary_rhs_max_abs": 8.881784197001252e-16,
+      "exact_solution_residual_max": 4.440892098500626e-16,
+      "boundary_crossing_by_cell": {
+        "(0, 15)": 1,
+        "(1, 15)": 1,
+        "(2, 15)": 1,
+        "(3, 15)": 1,
+        "(4, 15)": 1,
+        "(5, 15)": 1,
+        "(6, 15)": 1,
+        "(7, 15)": 1,
+        "(8, 15)": 1,
+        "(9, 15)": 1,
+        "(10, 15)": 1,
+        "(11, 15)": 1,
+        "(12, 15)": 1,
+        "(13, 15)": 1,
+        "(14, 15)": 1,
+        "(15, 15)": 1
+      },
+      "crossing_records": [
+        {
+          "cell": [
+            0,
+            15
+          ],
+          "axis": 1,
+          "outward_sign": 1,
+          "u_cell": -0.030000000000000027,
+          "u_face": 0.020000000000000018,
+          "analytic_g": 0.5263157894736838
+        },
+        {
+          "cell": [
+            1,
+            15
+          ],
+          "axis": 1,
+          "outward_sign": 1,
+          "u_cell": -0.030000000000000027,
+          "u_face": 0.020000000000000018,
+          "analytic_g": 0.5263157894736838
+        },
+        {
+          "cell": [
+            2,
+            15
+          ],
+          "axis": 1,
+          "outward_sign": 1,
+          "u_cell": -0.030000000000000027,
+          "u_face": 0.020000000000000018,
+          "analytic_g": 0.5263157894736838
+        },
+        {
+          "cell": [
+            3,
+            15
+          ],
+          "axis": 1,
+          "outward_sign": 1,
+          "u_cell": -0.030000000000000027,
+          "u_face": 0.020000000000000018,
+          "analytic_g": 0.5263157894736838
+        },
+        {
+          "cell": [
+            4,
+            15
+          ],
+          "axis": 1,
+          "outward_sign": 1,
+          "u_cell": -0.030000000000000027,
+          "u_face": 0.020000000000000018,
+          "analytic_g": 0.5263157894736838
+        },
+        {
+          "cell": [
+            5,
+            15
+          ],
+          "axis": 1,
+          "outward_sign": 1,
+          "u_cell": -0.030000000000000027,
+          "u_face": 0.020000000000000018,
+          "analytic_g": 0.5263157894736838
+        },
+        {
+          "cell": [
+            6,
+            15
+          ],
+          "axis": 1,
+          "outward_sign": 1,
+          "u_cell": -0.030000000000000027,
+          "u_face": 0.020000000000000018,
+          "analytic_g": 0.5263157894736838
+        },
+        {
+          "cell": [
+            7,
+            15
+          ],
+          "axis": 1,
+          "outward_sign": 1,
+          "u_cell": -0.030000000000000027,
+          "u_face": 0.020000000000000018,
+          "analytic_g": 0.5263157894736838
+        },
+        {
+          "cell": [
+            8,
+            15
+          ],
+          "axis": 1,
+          "outward_sign": 1,
+          "u_cell": -0.030000000000000027,
+          "u_face": 0.020000000000000018,
+          "analytic_g": 0.5263157894736838
+        },
+        {
+          "cell": [
+            9,
+            15
+          ],
+          "axis": 1,
+          "outward_sign": 1,
+          "u_cell": -0.030000000000000027,
+          "u_face": 0.020000000000000018,
+          "analytic_g": 0.5263157894736838
+        },
+        {
+          "cell": [
+            10,
+            15
+          ],
+          "axis": 1,
+          "outward_sign": 1,
+          "u_cell": -0.030000000000000027,
+          "u_face": 0.020000000000000018,
+          "analytic_g": 0.5263157894736838
+        },
+        {
+          "cell": [
+            11,
+            15
+          ],
+          "axis": 1,
+          "outward_sign": 1,
+          "u_cell": -0.030000000000000027,
+          "u_face": 0.020000000000000018,
+          "analytic_g": 0.5263157894736838
+        },
+        {
+          "cell": [
+            12,
+            15
+          ],
+          "axis": 1,
+          "outward_sign": 1,
+          "u_cell": -0.030000000000000027,
+          "u_face": 0.020000000000000018,
+          "analytic_g": 0.5263157894736838
+        },
+        {
+          "cell": [
+            13,
+            15
+          ],
+          "axis": 1,
+          "outward_sign": 1,
+          "u_cell": -0.030000000000000027,
+          "u_face": 0.020000000000000018,
+          "analytic_g": 0.5263157894736838
+        },
+        {
+          "cell": [
+            14,
+            15
+          ],
+          "axis": 1,
+          "outward_sign": 1,
+          "u_cell": -0.030000000000000027,
+          "u_face": 0.020000000000000018,
+          "analytic_g": 0.5263157894736838
+        },
+        {
+          "cell": [
+            15,
+            15
+          ],
+          "axis": 1,
+          "outward_sign": 1,
+          "u_cell": -0.030000000000000027,
+          "u_face": 0.020000000000000018,
+          "analytic_g": 0.5263157894736838
+        }
+      ],
+      "layer_kind": "boundary_only_or_endpoint"
+    },
+    {
+      "n": 16,
+      "h_um": 0.1,
+      "law": "axis",
+      "mutant": null,
+      "theta_deg": 90.0,
+      "offset_um": 0.78,
+      "n_film_faces": 0,
+      "n_bc_cross": 16,
+      "tie_count": 0,
+      "boundary_rule": "crossing_half_cell_series_v1",
+      "err_max": 3.1086244689504383e-15,
+      "err_l2": 1.2264203601945558e-15,
+      "analytic_boundary_diag_max_abs": 4.440892098500626e-16,
+      "analytic_boundary_rhs_max_abs": 8.881784197001252e-16,
+      "exact_solution_residual_max": 4.440892098500626e-16,
+      "boundary_crossing_by_cell": {
+        "(0, 15)": 1,
+        "(1, 15)": 1,
+        "(2, 15)": 1,
+        "(3, 15)": 1,
+        "(4, 15)": 1,
+        "(5, 15)": 1,
+        "(6, 15)": 1,
+        "(7, 15)": 1,
+        "(8, 15)": 1,
+        "(9, 15)": 1,
+        "(10, 15)": 1,
+        "(11, 15)": 1,
+        "(12, 15)": 1,
+        "(13, 15)": 1,
+        "(14, 15)": 1,
+        "(15, 15)": 1
+      },
+      "crossing_records": [
+        {
+          "cell": [
+            0,
+            15
+          ],
+          "axis": 1,
+          "outward_sign": 1,
+          "u_cell": -0.030000000000000027,
+          "u_face": 0.020000000000000018,
+          "analytic_g": 0.08403361344537816
+        },
+        {
+          "cell": [
+            1,
+            15
+          ],
+          "axis": 1,
+          "outward_sign": 1,
+          "u_cell": -0.030000000000000027,
+          "u_face": 0.020000000000000018,
+          "analytic_g": 0.08403361344537816
+        },
+        {
+          "cell": [
+            2,
+            15
+          ],
+          "axis": 1,
+          "outward_sign": 1,
+          "u_cell": -0.030000000000000027,
+          "u_face": 0.020000000000000018,
+          "analytic_g": 0.08403361344537816
+        },
+        {
+          "cell": [
+            3,
+            15
+          ],
+          "axis": 1,
+          "outward_sign": 1,
+          "u_cell": -0.030000000000000027,
+          "u_face": 0.020000000000000018,
+          "analytic_g": 0.08403361344537816
+        },
+        {
+          "cell": [
+            4,
+            15
+          ],
+          "axis": 1,
+          "outward_sign": 1,
+          "u_cell": -0.030000000000000027,
+          "u_face": 0.020000000000000018,
+          "analytic_g": 0.08403361344537816
+        },
+        {
+          "cell": [
+            5,
+            15
+          ],
+          "axis": 1,
+          "outward_sign": 1,
+          "u_cell": -0.030000000000000027,
+          "u_face": 0.020000000000000018,
+          "analytic_g": 0.08403361344537816
+        },
+        {
+          "cell": [
+            6,
+            15
+          ],
+          "axis": 1,
+          "outward_sign": 1,
+          "u_cell": -0.030000000000000027,
+          "u_face": 0.020000000000000018,
+          "analytic_g": 0.08403361344537816
+        },
+        {
+          "cell": [
+            7,
+            15
+          ],
+          "axis": 1,
+          "outward_sign": 1,
+          "u_cell": -0.030000000000000027,
+          "u_face": 0.020000000000000018,
+          "analytic_g": 0.08403361344537816
+        },
+        {
+          "cell": [
+            8,
+            15
+          ],
+          "axis": 1,
+          "outward_sign": 1,
+          "u_cell": -0.030000000000000027,
+          "u_face": 0.020000000000000018,
+          "analytic_g": 0.08403361344537816
+        },
+        {
+          "cell": [
+            9,
+            15
+          ],
+          "axis": 1,
+          "outward_sign": 1,
+          "u_cell": -0.030000000000000027,
+          "u_face": 0.020000000000000018,
+          "analytic_g": 0.08403361344537816
+        },
+        {
+          "cell": [
+            10,
+            15
+          ],
+          "axis": 1,
+          "outward_sign": 1,
+          "u_cell": -0.030000000000000027,
+          "u_face": 0.020000000000000018,
+          "analytic_g": 0.08403361344537816
+        },
+        {
+          "cell": [
+            11,
+            15
+          ],
+          "axis": 1,
+          "outward_sign": 1,
+          "u_cell": -0.030000000000000027,
+          "u_face": 0.020000000000000018,
+          "analytic_g": 0.08403361344537816
+        },
+        {
+          "cell": [
+            12,
+            15
+          ],
+          "axis": 1,
+          "outward_sign": 1,
+          "u_cell": -0.030000000000000027,
+          "u_face": 0.020000000000000018,
+          "analytic_g": 0.08403361344537816
+        },
+        {
+          "cell": [
+            13,
+            15
+          ],
+          "axis": 1,
+          "outward_sign": 1,
+          "u_cell": -0.030000000000000027,
+          "u_face": 0.020000000000000018,
+          "analytic_g": 0.08403361344537816
+        },
+        {
+          "cell": [
+            14,
+            15
+          ],
+          "axis": 1,
+          "outward_sign": 1,
+          "u_cell": -0.030000000000000027,
+          "u_face": 0.020000000000000018,
+          "analytic_g": 0.08403361344537816
+        },
+        {
+          "cell": [
+            15,
+            15
+          ],
+          "axis": 1,
+          "outward_sign": 1,
+          "u_cell": -0.030000000000000027,
+          "u_face": 0.020000000000000018,
+          "analytic_g": 0.08403361344537816
+        }
+      ],
+      "layer_kind": "boundary_only_or_endpoint"
+    },
+    {
+      "n": 16,
+      "h_um": 0.1,
+      "law": "axis",
+      "mutant": null,
+      "theta_deg": 90.0,
+      "offset_um": -0.8,
+      "n_film_faces": 0,
+      "n_bc_cross": 0,
+      "tie_count": 0,
+      "boundary_rule": "crossing_half_cell_series_v1",
+      "err_max": 8.881784197001252e-16,
+      "err_l2": 2.694889569963016e-16,
+      "analytic_boundary_diag_max_abs": 6.661338147750939e-16,
+      "analytic_boundary_rhs_max_abs": 8.881784197001252e-16,
+      "exact_solution_residual_max": 3.3306690738754696e-16,
+      "boundary_crossing_by_cell": {},
+      "crossing_records": [],
+      "layer_kind": "boundary_only_or_endpoint"
+    },
+    {
+      "n": 16,
+      "h_um": 0.1,
+      "law": "axis",
+      "mutant": null,
+      "theta_deg": 90.0,
+      "offset_um": -0.8,
+      "n_film_faces": 0,
+      "n_bc_cross": 0,
+      "tie_count": 0,
+      "boundary_rule": "crossing_half_cell_series_v1",
+      "err_max": 9.992007221626409e-16,
+      "err_l2": 3.8587363064277687e-16,
+      "analytic_boundary_diag_max_abs": 6.661338147750939e-16,
+      "analytic_boundary_rhs_max_abs": 1.1102230246251565e-15,
+      "exact_solution_residual_max": 8.881784197001252e-16,
+      "boundary_crossing_by_cell": {},
+      "crossing_records": [],
+      "layer_kind": "boundary_only_or_endpoint"
+    },
+    {
+      "n": 16,
+      "h_um": 0.1,
+      "law": "axis",
+      "mutant": null,
+      "theta_deg": 90.0,
+      "offset_um": 0.8,
+      "n_film_faces": 0,
+      "n_bc_cross": 16,
+      "tie_count": 0,
+      "boundary_rule": "crossing_half_cell_series_v1",
+      "err_max": 3.552713678800501e-15,
+      "err_l2": 1.3787270727783272e-15,
+      "analytic_boundary_diag_max_abs": 4.440892098500626e-16,
+      "analytic_boundary_rhs_max_abs": 8.881784197001252e-16,
+      "exact_solution_residual_max": 4.440892098500626e-16,
+      "boundary_crossing_by_cell": {
+        "(0, 15)": 1,
+        "(1, 15)": 1,
+        "(2, 15)": 1,
+        "(3, 15)": 1,
+        "(4, 15)": 1,
+        "(5, 15)": 1,
+        "(6, 15)": 1,
+        "(7, 15)": 1,
+        "(8, 15)": 1,
+        "(9, 15)": 1,
+        "(10, 15)": 1,
+        "(11, 15)": 1,
+        "(12, 15)": 1,
+        "(13, 15)": 1,
+        "(14, 15)": 1,
+        "(15, 15)": 1
+      },
+      "crossing_records": [
+        {
+          "cell": [
+            0,
+            15
+          ],
+          "axis": 1,
+          "outward_sign": 1,
+          "u_cell": -0.050000000000000044,
+          "u_face": 0.0,
+          "analytic_g": 0.39999999999999974
+        },
+        {
+          "cell": [
+            1,
+            15
+          ],
+          "axis": 1,
+          "outward_sign": 1,
+          "u_cell": -0.050000000000000044,
+          "u_face": 0.0,
+          "analytic_g": 0.39999999999999974
+        },
+        {
+          "cell": [
+            2,
+            15
+          ],
+          "axis": 1,
+          "outward_sign": 1,
+          "u_cell": -0.050000000000000044,
+          "u_face": 0.0,
+          "analytic_g": 0.39999999999999974
+        },
+        {
+          "cell": [
+            3,
+            15
+          ],
+          "axis": 1,
+          "outward_sign": 1,
+          "u_cell": -0.050000000000000044,
+          "u_face": 0.0,
+          "analytic_g": 0.39999999999999974
+        },
+        {
+          "cell": [
+            4,
+            15
+          ],
+          "axis": 1,
+          "outward_sign": 1,
+          "u_cell": -0.050000000000000044,
+          "u_face": 0.0,
+          "analytic_g": 0.39999999999999974
+        },
+        {
+          "cell": [
+            5,
+            15
+          ],
+          "axis": 1,
+          "outward_sign": 1,
+          "u_cell": -0.050000000000000044,
+          "u_face": 0.0,
+          "analytic_g": 0.39999999999999974
+        },
+        {
+          "cell": [
+            6,
+            15
+          ],
+          "axis": 1,
+          "outward_sign": 1,
+          "u_cell": -0.050000000000000044,
+          "u_face": 0.0,
+          "analytic_g": 0.39999999999999974
+        },
+        {
+          "cell": [
+            7,
+            15
+          ],
+          "axis": 1,
+          "outward_sign": 1,
+          "u_cell": -0.050000000000000044,
+          "u_face": 0.0,
+          "analytic_g": 0.39999999999999974
+        },
+        {
+          "cell": [
+            8,
+            15
+          ],
+          "axis": 1,
+          "outward_sign": 1,
+          "u_cell": -0.050000000000000044,
+          "u_face": 0.0,
+          "analytic_g": 0.39999999999999974
+        },
+        {
+          "cell": [
+            9,
+            15
+          ],
+          "axis": 1,
+          "outward_sign": 1,
+          "u_cell": -0.050000000000000044,
+          "u_face": 0.0,
+          "analytic_g": 0.39999999999999974
+        },
+        {
+          "cell": [
+            10,
+            15
+          ],
+          "axis": 1,
+          "outward_sign": 1,
+          "u_cell": -0.050000000000000044,
+          "u_face": 0.0,
+          "analytic_g": 0.39999999999999974
+        },
+        {
+          "cell": [
+            11,
+            15
+          ],
+          "axis": 1,
+          "outward_sign": 1,
+          "u_cell": -0.050000000000000044,
+          "u_face": 0.0,
+          "analytic_g": 0.39999999999999974
+        },
+        {
+          "cell": [
+            12,
+            15
+          ],
+          "axis": 1,
+          "outward_sign": 1,
+          "u_cell": -0.050000000000000044,
+          "u_face": 0.0,
+          "analytic_g": 0.39999999999999974
+        },
+        {
+          "cell": [
+            13,
+            15
+          ],
+          "axis": 1,
+          "outward_sign": 1,
+          "u_cell": -0.050000000000000044,
+          "u_face": 0.0,
+          "analytic_g": 0.39999999999999974
+        },
+        {
+          "cell": [
+            14,
+            15
+          ],
+          "axis": 1,
+          "outward_sign": 1,
+          "u_cell": -0.050000000000000044,
+          "u_face": 0.0,
+          "analytic_g": 0.39999999999999974
+        },
+        {
+          "cell": [
+            15,
+            15
+          ],
+          "axis": 1,
+          "outward_sign": 1,
+          "u_cell": -0.050000000000000044,
+          "u_face": 0.0,
+          "analytic_g": 0.39999999999999974
+        }
+      ],
+      "layer_kind": "boundary_only_or_endpoint"
+    },
+    {
+      "n": 16,
+      "h_um": 0.1,
+      "law": "axis",
+      "mutant": null,
+      "theta_deg": 90.0,
+      "offset_um": 0.8,
+      "n_film_faces": 0,
+      "n_bc_cross": 16,
+      "tie_count": 0,
+      "boundary_rule": "crossing_half_cell_series_v1",
+      "err_max": 3.1086244689504383e-15,
+      "err_l2": 1.2360845133288675e-15,
+      "analytic_boundary_diag_max_abs": 4.440892098500626e-16,
+      "analytic_boundary_rhs_max_abs": 8.881784197001252e-16,
+      "exact_solution_residual_max": 4.440892098500626e-16,
+      "boundary_crossing_by_cell": {
+        "(0, 15)": 1,
+        "(1, 15)": 1,
+        "(2, 15)": 1,
+        "(3, 15)": 1,
+        "(4, 15)": 1,
+        "(5, 15)": 1,
+        "(6, 15)": 1,
+        "(7, 15)": 1,
+        "(8, 15)": 1,
+        "(9, 15)": 1,
+        "(10, 15)": 1,
+        "(11, 15)": 1,
+        "(12, 15)": 1,
+        "(13, 15)": 1,
+        "(14, 15)": 1,
+        "(15, 15)": 1
+      },
+      "crossing_records": [
+        {
+          "cell": [
+            0,
+            15
+          ],
+          "axis": 1,
+          "outward_sign": 1,
+          "u_cell": -0.050000000000000044,
+          "u_face": 0.0,
+          "analytic_g": 0.08
+        },
+        {
+          "cell": [
+            1,
+            15
+          ],
+          "axis": 1,
+          "outward_sign": 1,
+          "u_cell": -0.050000000000000044,
+          "u_face": 0.0,
+          "analytic_g": 0.08
+        },
+        {
+          "cell": [
+            2,
+            15
+          ],
+          "axis": 1,
+          "outward_sign": 1,
+          "u_cell": -0.050000000000000044,
+          "u_face": 0.0,
+          "analytic_g": 0.08
+        },
+        {
+          "cell": [
+            3,
+            15
+          ],
+          "axis": 1,
+          "outward_sign": 1,
+          "u_cell": -0.050000000000000044,
+          "u_face": 0.0,
+          "analytic_g": 0.08
+        },
+        {
+          "cell": [
+            4,
+            15
+          ],
+          "axis": 1,
+          "outward_sign": 1,
+          "u_cell": -0.050000000000000044,
+          "u_face": 0.0,
+          "analytic_g": 0.08
+        },
+        {
+          "cell": [
+            5,
+            15
+          ],
+          "axis": 1,
+          "outward_sign": 1,
+          "u_cell": -0.050000000000000044,
+          "u_face": 0.0,
+          "analytic_g": 0.08
+        },
+        {
+          "cell": [
+            6,
+            15
+          ],
+          "axis": 1,
+          "outward_sign": 1,
+          "u_cell": -0.050000000000000044,
+          "u_face": 0.0,
+          "analytic_g": 0.08
+        },
+        {
+          "cell": [
+            7,
+            15
+          ],
+          "axis": 1,
+          "outward_sign": 1,
+          "u_cell": -0.050000000000000044,
+          "u_face": 0.0,
+          "analytic_g": 0.08
+        },
+        {
+          "cell": [
+            8,
+            15
+          ],
+          "axis": 1,
+          "outward_sign": 1,
+          "u_cell": -0.050000000000000044,
+          "u_face": 0.0,
+          "analytic_g": 0.08
+        },
+        {
+          "cell": [
+            9,
+            15
+          ],
+          "axis": 1,
+          "outward_sign": 1,
+          "u_cell": -0.050000000000000044,
+          "u_face": 0.0,
+          "analytic_g": 0.08
+        },
+        {
+          "cell": [
+            10,
+            15
+          ],
+          "axis": 1,
+          "outward_sign": 1,
+          "u_cell": -0.050000000000000044,
+          "u_face": 0.0,
+          "analytic_g": 0.08
+        },
+        {
+          "cell": [
+            11,
+            15
+          ],
+          "axis": 1,
+          "outward_sign": 1,
+          "u_cell": -0.050000000000000044,
+          "u_face": 0.0,
+          "analytic_g": 0.08
+        },
+        {
+          "cell": [
+            12,
+            15
+          ],
+          "axis": 1,
+          "outward_sign": 1,
+          "u_cell": -0.050000000000000044,
+          "u_face": 0.0,
+          "analytic_g": 0.08
+        },
+        {
+          "cell": [
+            13,
+            15
+          ],
+          "axis": 1,
+          "outward_sign": 1,
+          "u_cell": -0.050000000000000044,
+          "u_face": 0.0,
+          "analytic_g": 0.08
+        },
+        {
+          "cell": [
+            14,
+            15
+          ],
+          "axis": 1,
+          "outward_sign": 1,
+          "u_cell": -0.050000000000000044,
+          "u_face": 0.0,
+          "analytic_g": 0.08
+        },
+        {
+          "cell": [
+            15,
+            15
+          ],
+          "axis": 1,
+          "outward_sign": 1,
+          "u_cell": -0.050000000000000044,
+          "u_face": 0.0,
+          "analytic_g": 0.08
+        }
+      ],
+      "layer_kind": "boundary_only_or_endpoint"
+    },
+    {
+      "n": 16,
+      "h_um": 0.1,
+      "law": "axis",
+      "mutant": null,
+      "theta_deg": 180.0,
+      "offset_um": -0.78,
+      "n_film_faces": 0,
+      "n_bc_cross": 16,
+      "tie_count": 0,
+      "boundary_rule": "crossing_half_cell_series_v1",
+      "err_max": 1.5543122344752192e-15,
+      "err_l2": 3.3320177008065496e-16,
+      "analytic_boundary_diag_max_abs": 6.661338147750939e-16,
+      "analytic_boundary_rhs_max_abs": 8.881784197001252e-16,
+      "exact_solution_residual_max": 2.220446049250313e-16,
+      "boundary_crossing_by_cell": {
+        "(15, 0)": 1,
+        "(15, 1)": 1,
+        "(15, 2)": 1,
+        "(15, 3)": 1,
+        "(15, 4)": 1,
+        "(15, 5)": 1,
+        "(15, 6)": 1,
+        "(15, 7)": 1,
+        "(15, 8)": 1,
+        "(15, 9)": 1,
+        "(15, 10)": 1,
+        "(15, 11)": 1,
+        "(15, 12)": 1,
+        "(15, 13)": 1,
+        "(15, 14)": 1,
+        "(15, 15)": 1
+      },
+      "crossing_records": [
+        {
+          "cell": [
+            15,
+            0
+          ],
+          "axis": 0,
+          "outward_sign": 1,
+          "u_cell": 0.030000000000000027,
+          "u_face": -0.020000000000000018,
+          "analytic_g": 0.6249999999999996
+        },
+        {
+          "cell": [
+            15,
+            1
+          ],
+          "axis": 0,
+          "outward_sign": 1,
+          "u_cell": 0.030000000000000027,
+          "u_face": -0.020000000000000018,
+          "analytic_g": 0.6249999999999996
+        },
+        {
+          "cell": [
+            15,
+            2
+          ],
+          "axis": 0,
+          "outward_sign": 1,
+          "u_cell": 0.030000000000000027,
+          "u_face": -0.020000000000000018,
+          "analytic_g": 0.6249999999999996
+        },
+        {
+          "cell": [
+            15,
+            3
+          ],
+          "axis": 0,
+          "outward_sign": 1,
+          "u_cell": 0.030000000000000027,
+          "u_face": -0.020000000000000018,
+          "analytic_g": 0.6249999999999996
+        },
+        {
+          "cell": [
+            15,
+            4
+          ],
+          "axis": 0,
+          "outward_sign": 1,
+          "u_cell": 0.030000000000000027,
+          "u_face": -0.020000000000000018,
+          "analytic_g": 0.6249999999999996
+        },
+        {
+          "cell": [
+            15,
+            5
+          ],
+          "axis": 0,
+          "outward_sign": 1,
+          "u_cell": 0.030000000000000027,
+          "u_face": -0.020000000000000018,
+          "analytic_g": 0.6249999999999996
+        },
+        {
+          "cell": [
+            15,
+            6
+          ],
+          "axis": 0,
+          "outward_sign": 1,
+          "u_cell": 0.030000000000000027,
+          "u_face": -0.020000000000000018,
+          "analytic_g": 0.6249999999999996
+        },
+        {
+          "cell": [
+            15,
+            7
+          ],
+          "axis": 0,
+          "outward_sign": 1,
+          "u_cell": 0.030000000000000027,
+          "u_face": -0.020000000000000018,
+          "analytic_g": 0.6249999999999996
+        },
+        {
+          "cell": [
+            15,
+            8
+          ],
+          "axis": 0,
+          "outward_sign": 1,
+          "u_cell": 0.030000000000000027,
+          "u_face": -0.020000000000000018,
+          "analytic_g": 0.6249999999999996
+        },
+        {
+          "cell": [
+            15,
+            9
+          ],
+          "axis": 0,
+          "outward_sign": 1,
+          "u_cell": 0.030000000000000027,
+          "u_face": -0.020000000000000018,
+          "analytic_g": 0.6249999999999996
+        },
+        {
+          "cell": [
+            15,
+            10
+          ],
+          "axis": 0,
+          "outward_sign": 1,
+          "u_cell": 0.030000000000000027,
+          "u_face": -0.020000000000000018,
+          "analytic_g": 0.6249999999999996
+        },
+        {
+          "cell": [
+            15,
+            11
+          ],
+          "axis": 0,
+          "outward_sign": 1,
+          "u_cell": 0.030000000000000027,
+          "u_face": -0.020000000000000018,
+          "analytic_g": 0.6249999999999996
+        },
+        {
+          "cell": [
+            15,
+            12
+          ],
+          "axis": 0,
+          "outward_sign": 1,
+          "u_cell": 0.030000000000000027,
+          "u_face": -0.020000000000000018,
+          "analytic_g": 0.6249999999999996
+        },
+        {
+          "cell": [
+            15,
+            13
+          ],
+          "axis": 0,
+          "outward_sign": 1,
+          "u_cell": 0.030000000000000027,
+          "u_face": -0.020000000000000018,
+          "analytic_g": 0.6249999999999996
+        },
+        {
+          "cell": [
+            15,
+            14
+          ],
+          "axis": 0,
+          "outward_sign": 1,
+          "u_cell": 0.030000000000000027,
+          "u_face": -0.020000000000000018,
+          "analytic_g": 0.6249999999999996
+        },
+        {
+          "cell": [
+            15,
+            15
+          ],
+          "axis": 0,
+          "outward_sign": 1,
+          "u_cell": 0.030000000000000027,
+          "u_face": -0.020000000000000018,
+          "analytic_g": 0.6249999999999996
+        }
+      ],
+      "layer_kind": "boundary_only_or_endpoint"
+    },
+    {
+      "n": 16,
+      "h_um": 0.1,
+      "law": "axis",
+      "mutant": null,
+      "theta_deg": 180.0,
+      "offset_um": -0.78,
+      "n_film_faces": 0,
+      "n_bc_cross": 16,
+      "tie_count": 0,
+      "boundary_rule": "crossing_half_cell_series_v1",
+      "err_max": 1.7763568394002505e-15,
+      "err_l2": 4.594758242729407e-16,
+      "analytic_boundary_diag_max_abs": 6.661338147750939e-16,
+      "analytic_boundary_rhs_max_abs": 1.1102230246251565e-15,
+      "exact_solution_residual_max": 8.881784197001252e-16,
+      "boundary_crossing_by_cell": {
+        "(15, 0)": 1,
+        "(15, 1)": 1,
+        "(15, 2)": 1,
+        "(15, 3)": 1,
+        "(15, 4)": 1,
+        "(15, 5)": 1,
+        "(15, 6)": 1,
+        "(15, 7)": 1,
+        "(15, 8)": 1,
+        "(15, 9)": 1,
+        "(15, 10)": 1,
+        "(15, 11)": 1,
+        "(15, 12)": 1,
+        "(15, 13)": 1,
+        "(15, 14)": 1,
+        "(15, 15)": 1
+      },
+      "crossing_records": [
+        {
+          "cell": [
+            15,
+            0
+          ],
+          "axis": 0,
+          "outward_sign": 1,
+          "u_cell": 0.030000000000000027,
+          "u_face": -0.020000000000000018,
+          "analytic_g": 0.08620689655172414
+        },
+        {
+          "cell": [
+            15,
+            1
+          ],
+          "axis": 0,
+          "outward_sign": 1,
+          "u_cell": 0.030000000000000027,
+          "u_face": -0.020000000000000018,
+          "analytic_g": 0.08620689655172414
+        },
+        {
+          "cell": [
+            15,
+            2
+          ],
+          "axis": 0,
+          "outward_sign": 1,
+          "u_cell": 0.030000000000000027,
+          "u_face": -0.020000000000000018,
+          "analytic_g": 0.08620689655172414
+        },
+        {
+          "cell": [
+            15,
+            3
+          ],
+          "axis": 0,
+          "outward_sign": 1,
+          "u_cell": 0.030000000000000027,
+          "u_face": -0.020000000000000018,
+          "analytic_g": 0.08620689655172414
+        },
+        {
+          "cell": [
+            15,
+            4
+          ],
+          "axis": 0,
+          "outward_sign": 1,
+          "u_cell": 0.030000000000000027,
+          "u_face": -0.020000000000000018,
+          "analytic_g": 0.08620689655172414
+        },
+        {
+          "cell": [
+            15,
+            5
+          ],
+          "axis": 0,
+          "outward_sign": 1,
+          "u_cell": 0.030000000000000027,
+          "u_face": -0.020000000000000018,
+          "analytic_g": 0.08620689655172414
+        },
+        {
+          "cell": [
+            15,
+            6
+          ],
+          "axis": 0,
+          "outward_sign": 1,
+          "u_cell": 0.030000000000000027,
+          "u_face": -0.020000000000000018,
+          "analytic_g": 0.08620689655172414
+        },
+        {
+          "cell": [
+            15,
+            7
+          ],
+          "axis": 0,
+          "outward_sign": 1,
+          "u_cell": 0.030000000000000027,
+          "u_face": -0.020000000000000018,
+          "analytic_g": 0.08620689655172414
+        },
+        {
+          "cell": [
+            15,
+            8
+          ],
+          "axis": 0,
+          "outward_sign": 1,
+          "u_cell": 0.030000000000000027,
+          "u_face": -0.020000000000000018,
+          "analytic_g": 0.08620689655172414
+        },
+        {
+          "cell": [
+            15,
+            9
+          ],
+          "axis": 0,
+          "outward_sign": 1,
+          "u_cell": 0.030000000000000027,
+          "u_face": -0.020000000000000018,
+          "analytic_g": 0.08620689655172414
+        },
+        {
+          "cell": [
+            15,
+            10
+          ],
+          "axis": 0,
+          "outward_sign": 1,
+          "u_cell": 0.030000000000000027,
+          "u_face": -0.020000000000000018,
+          "analytic_g": 0.08620689655172414
+        },
+        {
+          "cell": [
+            15,
+            11
+          ],
+          "axis": 0,
+          "outward_sign": 1,
+          "u_cell": 0.030000000000000027,
+          "u_face": -0.020000000000000018,
+          "analytic_g": 0.08620689655172414
+        },
+        {
+          "cell": [
+            15,
+            12
+          ],
+          "axis": 0,
+          "outward_sign": 1,
+          "u_cell": 0.030000000000000027,
+          "u_face": -0.020000000000000018,
+          "analytic_g": 0.08620689655172414
+        },
+        {
+          "cell": [
+            15,
+            13
+          ],
+          "axis": 0,
+          "outward_sign": 1,
+          "u_cell": 0.030000000000000027,
+          "u_face": -0.020000000000000018,
+          "analytic_g": 0.08620689655172414
+        },
+        {
+          "cell": [
+            15,
+            14
+          ],
+          "axis": 0,
+          "outward_sign": 1,
+          "u_cell": 0.030000000000000027,
+          "u_face": -0.020000000000000018,
+          "analytic_g": 0.08620689655172414
+        },
+        {
+          "cell": [
+            15,
+            15
+          ],
+          "axis": 0,
+          "outward_sign": 1,
+          "u_cell": 0.030000000000000027,
+          "u_face": -0.020000000000000018,
+          "analytic_g": 0.08620689655172414
+        }
+      ],
+      "layer_kind": "boundary_only_or_endpoint"
+    },
+    {
+      "n": 16,
+      "h_um": 0.1,
+      "law": "axis",
+      "mutant": null,
+      "theta_deg": 180.0,
+      "offset_um": 0.78,
+      "n_film_faces": 0,
+      "n_bc_cross": 16,
+      "tie_count": 0,
+      "boundary_rule": "crossing_half_cell_series_v1",
+      "err_max": 4.440892098500626e-15,
+      "err_l2": 1.7610980736253893e-15,
+      "analytic_boundary_diag_max_abs": 6.661338147750939e-16,
+      "analytic_boundary_rhs_max_abs": 8.881784197001252e-16,
+      "exact_solution_residual_max": 4.440892098500626e-16,
+      "boundary_crossing_by_cell": {
+        "(0, 0)": 1,
+        "(0, 1)": 1,
+        "(0, 2)": 1,
+        "(0, 3)": 1,
+        "(0, 4)": 1,
+        "(0, 5)": 1,
+        "(0, 6)": 1,
+        "(0, 7)": 1,
+        "(0, 8)": 1,
+        "(0, 9)": 1,
+        "(0, 10)": 1,
+        "(0, 11)": 1,
+        "(0, 12)": 1,
+        "(0, 13)": 1,
+        "(0, 14)": 1,
+        "(0, 15)": 1
+      },
+      "crossing_records": [
+        {
+          "cell": [
+            0,
+            0
+          ],
+          "axis": 0,
+          "outward_sign": -1,
+          "u_cell": -0.030000000000000027,
+          "u_face": 0.020000000000000018,
+          "analytic_g": 0.5263157894736838
+        },
+        {
+          "cell": [
+            0,
+            1
+          ],
+          "axis": 0,
+          "outward_sign": -1,
+          "u_cell": -0.030000000000000027,
+          "u_face": 0.020000000000000018,
+          "analytic_g": 0.5263157894736838
+        },
+        {
+          "cell": [
+            0,
+            2
+          ],
+          "axis": 0,
+          "outward_sign": -1,
+          "u_cell": -0.030000000000000027,
+          "u_face": 0.020000000000000018,
+          "analytic_g": 0.5263157894736838
+        },
+        {
+          "cell": [
+            0,
+            3
+          ],
+          "axis": 0,
+          "outward_sign": -1,
+          "u_cell": -0.030000000000000027,
+          "u_face": 0.020000000000000018,
+          "analytic_g": 0.5263157894736838
+        },
+        {
+          "cell": [
+            0,
+            4
+          ],
+          "axis": 0,
+          "outward_sign": -1,
+          "u_cell": -0.030000000000000027,
+          "u_face": 0.020000000000000018,
+          "analytic_g": 0.5263157894736838
+        },
+        {
+          "cell": [
+            0,
+            5
+          ],
+          "axis": 0,
+          "outward_sign": -1,
+          "u_cell": -0.030000000000000027,
+          "u_face": 0.020000000000000018,
+          "analytic_g": 0.5263157894736838
+        },
+        {
+          "cell": [
+            0,
+            6
+          ],
+          "axis": 0,
+          "outward_sign": -1,
+          "u_cell": -0.030000000000000027,
+          "u_face": 0.020000000000000018,
+          "analytic_g": 0.5263157894736838
+        },
+        {
+          "cell": [
+            0,
+            7
+          ],
+          "axis": 0,
+          "outward_sign": -1,
+          "u_cell": -0.030000000000000027,
+          "u_face": 0.020000000000000018,
+          "analytic_g": 0.5263157894736838
+        },
+        {
+          "cell": [
+            0,
+            8
+          ],
+          "axis": 0,
+          "outward_sign": -1,
+          "u_cell": -0.030000000000000027,
+          "u_face": 0.020000000000000018,
+          "analytic_g": 0.5263157894736838
+        },
+        {
+          "cell": [
+            0,
+            9
+          ],
+          "axis": 0,
+          "outward_sign": -1,
+          "u_cell": -0.030000000000000027,
+          "u_face": 0.020000000000000018,
+          "analytic_g": 0.5263157894736838
+        },
+        {
+          "cell": [
+            0,
+            10
+          ],
+          "axis": 0,
+          "outward_sign": -1,
+          "u_cell": -0.030000000000000027,
+          "u_face": 0.020000000000000018,
+          "analytic_g": 0.5263157894736838
+        },
+        {
+          "cell": [
+            0,
+            11
+          ],
+          "axis": 0,
+          "outward_sign": -1,
+          "u_cell": -0.030000000000000027,
+          "u_face": 0.020000000000000018,
+          "analytic_g": 0.5263157894736838
+        },
+        {
+          "cell": [
+            0,
+            12
+          ],
+          "axis": 0,
+          "outward_sign": -1,
+          "u_cell": -0.030000000000000027,
+          "u_face": 0.020000000000000018,
+          "analytic_g": 0.5263157894736838
+        },
+        {
+          "cell": [
+            0,
+            13
+          ],
+          "axis": 0,
+          "outward_sign": -1,
+          "u_cell": -0.030000000000000027,
+          "u_face": 0.020000000000000018,
+          "analytic_g": 0.5263157894736838
+        },
+        {
+          "cell": [
+            0,
+            14
+          ],
+          "axis": 0,
+          "outward_sign": -1,
+          "u_cell": -0.030000000000000027,
+          "u_face": 0.020000000000000018,
+          "analytic_g": 0.5263157894736838
+        },
+        {
+          "cell": [
+            0,
+            15
+          ],
+          "axis": 0,
+          "outward_sign": -1,
+          "u_cell": -0.030000000000000027,
+          "u_face": 0.020000000000000018,
+          "analytic_g": 0.5263157894736838
+        }
+      ],
+      "layer_kind": "boundary_only_or_endpoint"
+    },
+    {
+      "n": 16,
+      "h_um": 0.1,
+      "law": "axis",
+      "mutant": null,
+      "theta_deg": 180.0,
+      "offset_um": 0.78,
+      "n_film_faces": 0,
+      "n_bc_cross": 16,
+      "tie_count": 0,
+      "boundary_rule": "crossing_half_cell_series_v1",
+      "err_max": 3.3306690738754696e-15,
+      "err_l2": 1.4060262842024943e-15,
+      "analytic_boundary_diag_max_abs": 4.440892098500626e-16,
+      "analytic_boundary_rhs_max_abs": 8.881784197001252e-16,
+      "exact_solution_residual_max": 4.440892098500626e-16,
+      "boundary_crossing_by_cell": {
+        "(0, 0)": 1,
+        "(0, 1)": 1,
+        "(0, 2)": 1,
+        "(0, 3)": 1,
+        "(0, 4)": 1,
+        "(0, 5)": 1,
+        "(0, 6)": 1,
+        "(0, 7)": 1,
+        "(0, 8)": 1,
+        "(0, 9)": 1,
+        "(0, 10)": 1,
+        "(0, 11)": 1,
+        "(0, 12)": 1,
+        "(0, 13)": 1,
+        "(0, 14)": 1,
+        "(0, 15)": 1
+      },
+      "crossing_records": [
+        {
+          "cell": [
+            0,
+            0
+          ],
+          "axis": 0,
+          "outward_sign": -1,
+          "u_cell": -0.030000000000000027,
+          "u_face": 0.020000000000000018,
+          "analytic_g": 0.08403361344537816
+        },
+        {
+          "cell": [
+            0,
+            1
+          ],
+          "axis": 0,
+          "outward_sign": -1,
+          "u_cell": -0.030000000000000027,
+          "u_face": 0.020000000000000018,
+          "analytic_g": 0.08403361344537816
+        },
+        {
+          "cell": [
+            0,
+            2
+          ],
+          "axis": 0,
+          "outward_sign": -1,
+          "u_cell": -0.030000000000000027,
+          "u_face": 0.020000000000000018,
+          "analytic_g": 0.08403361344537816
+        },
+        {
+          "cell": [
+            0,
+            3
+          ],
+          "axis": 0,
+          "outward_sign": -1,
+          "u_cell": -0.030000000000000027,
+          "u_face": 0.020000000000000018,
+          "analytic_g": 0.08403361344537816
+        },
+        {
+          "cell": [
+            0,
+            4
+          ],
+          "axis": 0,
+          "outward_sign": -1,
+          "u_cell": -0.030000000000000027,
+          "u_face": 0.020000000000000018,
+          "analytic_g": 0.08403361344537816
+        },
+        {
+          "cell": [
+            0,
+            5
+          ],
+          "axis": 0,
+          "outward_sign": -1,
+          "u_cell": -0.030000000000000027,
+          "u_face": 0.020000000000000018,
+          "analytic_g": 0.08403361344537816
+        },
+        {
+          "cell": [
+            0,
+            6
+          ],
+          "axis": 0,
+          "outward_sign": -1,
+          "u_cell": -0.030000000000000027,
+          "u_face": 0.020000000000000018,
+          "analytic_g": 0.08403361344537816
+        },
+        {
+          "cell": [
+            0,
+            7
+          ],
+          "axis": 0,
+          "outward_sign": -1,
+          "u_cell": -0.030000000000000027,
+          "u_face": 0.020000000000000018,
+          "analytic_g": 0.08403361344537816
+        },
+        {
+          "cell": [
+            0,
+            8
+          ],
+          "axis": 0,
+          "outward_sign": -1,
+          "u_cell": -0.030000000000000027,
+          "u_face": 0.020000000000000018,
+          "analytic_g": 0.08403361344537816
+        },
+        {
+          "cell": [
+            0,
+            9
+          ],
+          "axis": 0,
+          "outward_sign": -1,
+          "u_cell": -0.030000000000000027,
+          "u_face": 0.020000000000000018,
+          "analytic_g": 0.08403361344537816
+        },
+        {
+          "cell": [
+            0,
+            10
+          ],
+          "axis": 0,
+          "outward_sign": -1,
+          "u_cell": -0.030000000000000027,
+          "u_face": 0.020000000000000018,
+          "analytic_g": 0.08403361344537816
+        },
+        {
+          "cell": [
+            0,
+            11
+          ],
+          "axis": 0,
+          "outward_sign": -1,
+          "u_cell": -0.030000000000000027,
+          "u_face": 0.020000000000000018,
+          "analytic_g": 0.08403361344537816
+        },
+        {
+          "cell": [
+            0,
+            12
+          ],
+          "axis": 0,
+          "outward_sign": -1,
+          "u_cell": -0.030000000000000027,
+          "u_face": 0.020000000000000018,
+          "analytic_g": 0.08403361344537816
+        },
+        {
+          "cell": [
+            0,
+            13
+          ],
+          "axis": 0,
+          "outward_sign": -1,
+          "u_cell": -0.030000000000000027,
+          "u_face": 0.020000000000000018,
+          "analytic_g": 0.08403361344537816
+        },
+        {
+          "cell": [
+            0,
+            14
+          ],
+          "axis": 0,
+          "outward_sign": -1,
+          "u_cell": -0.030000000000000027,
+          "u_face": 0.020000000000000018,
+          "analytic_g": 0.08403361344537816
+        },
+        {
+          "cell": [
+            0,
+            15
+          ],
+          "axis": 0,
+          "outward_sign": -1,
+          "u_cell": -0.030000000000000027,
+          "u_face": 0.020000000000000018,
+          "analytic_g": 0.08403361344537816
+        }
+      ],
+      "layer_kind": "boundary_only_or_endpoint"
+    },
+    {
+      "n": 16,
+      "h_um": 0.1,
+      "law": "axis",
+      "mutant": null,
+      "theta_deg": 180.0,
+      "offset_um": -0.8,
+      "n_film_faces": 0,
+      "n_bc_cross": 0,
+      "tie_count": 0,
+      "boundary_rule": "crossing_half_cell_series_v1",
+      "err_max": 1.3322676295501878e-15,
+      "err_l2": 2.6785367723036363e-16,
+      "analytic_boundary_diag_max_abs": 6.661338147750939e-16,
+      "analytic_boundary_rhs_max_abs": 8.881784197001252e-16,
+      "exact_solution_residual_max": 2.220446049250313e-16,
+      "boundary_crossing_by_cell": {},
+      "crossing_records": [],
+      "layer_kind": "boundary_only_or_endpoint"
+    },
+    {
+      "n": 16,
+      "h_um": 0.1,
+      "law": "axis",
+      "mutant": null,
+      "theta_deg": 180.0,
+      "offset_um": -0.8,
+      "n_film_faces": 0,
+      "n_bc_cross": 0,
+      "tie_count": 0,
+      "boundary_rule": "crossing_half_cell_series_v1",
+      "err_max": 1.3322676295501878e-15,
+      "err_l2": 3.5718457658961417e-16,
+      "analytic_boundary_diag_max_abs": 6.661338147750939e-16,
+      "analytic_boundary_rhs_max_abs": 1.1102230246251565e-15,
+      "exact_solution_residual_max": 8.881784197001252e-16,
+      "boundary_crossing_by_cell": {},
+      "crossing_records": [],
+      "layer_kind": "boundary_only_or_endpoint"
+    },
+    {
+      "n": 16,
+      "h_um": 0.1,
+      "law": "axis",
+      "mutant": null,
+      "theta_deg": 180.0,
+      "offset_um": 0.8,
+      "n_film_faces": 0,
+      "n_bc_cross": 16,
+      "tie_count": 0,
+      "boundary_rule": "crossing_half_cell_series_v1",
+      "err_max": 5.329070518200751e-15,
+      "err_l2": 2.052150927234296e-15,
+      "analytic_boundary_diag_max_abs": 5.551115123125783e-16,
+      "analytic_boundary_rhs_max_abs": 8.881784197001252e-16,
+      "exact_solution_residual_max": 4.440892098500626e-16,
+      "boundary_crossing_by_cell": {
+        "(0, 0)": 1,
+        "(0, 1)": 1,
+        "(0, 2)": 1,
+        "(0, 3)": 1,
+        "(0, 4)": 1,
+        "(0, 5)": 1,
+        "(0, 6)": 1,
+        "(0, 7)": 1,
+        "(0, 8)": 1,
+        "(0, 9)": 1,
+        "(0, 10)": 1,
+        "(0, 11)": 1,
+        "(0, 12)": 1,
+        "(0, 13)": 1,
+        "(0, 14)": 1,
+        "(0, 15)": 1
+      },
+      "crossing_records": [
+        {
+          "cell": [
+            0,
+            0
+          ],
+          "axis": 0,
+          "outward_sign": -1,
+          "u_cell": -0.050000000000000044,
+          "u_face": 0.0,
+          "analytic_g": 0.39999999999999974
+        },
+        {
+          "cell": [
+            0,
+            1
+          ],
+          "axis": 0,
+          "outward_sign": -1,
+          "u_cell": -0.050000000000000044,
+          "u_face": 0.0,
+          "analytic_g": 0.39999999999999974
+        },
+        {
+          "cell": [
+            0,
+            2
+          ],
+          "axis": 0,
+          "outward_sign": -1,
+          "u_cell": -0.050000000000000044,
+          "u_face": 0.0,
+          "analytic_g": 0.39999999999999974
+        },
+        {
+          "cell": [
+            0,
+            3
+          ],
+          "axis": 0,
+          "outward_sign": -1,
+          "u_cell": -0.050000000000000044,
+          "u_face": 0.0,
+          "analytic_g": 0.39999999999999974
+        },
+        {
+          "cell": [
+            0,
+            4
+          ],
+          "axis": 0,
+          "outward_sign": -1,
+          "u_cell": -0.050000000000000044,
+          "u_face": 0.0,
+          "analytic_g": 0.39999999999999974
+        },
+        {
+          "cell": [
+            0,
+            5
+          ],
+          "axis": 0,
+          "outward_sign": -1,
+          "u_cell": -0.050000000000000044,
+          "u_face": 0.0,
+          "analytic_g": 0.39999999999999974
+        },
+        {
+          "cell": [
+            0,
+            6
+          ],
+          "axis": 0,
+          "outward_sign": -1,
+          "u_cell": -0.050000000000000044,
+          "u_face": 0.0,
+          "analytic_g": 0.39999999999999974
+        },
+        {
+          "cell": [
+            0,
+            7
+          ],
+          "axis": 0,
+          "outward_sign": -1,
+          "u_cell": -0.050000000000000044,
+          "u_face": 0.0,
+          "analytic_g": 0.39999999999999974
+        },
+        {
+          "cell": [
+            0,
+            8
+          ],
+          "axis": 0,
+          "outward_sign": -1,
+          "u_cell": -0.050000000000000044,
+          "u_face": 0.0,
+          "analytic_g": 0.39999999999999974
+        },
+        {
+          "cell": [
+            0,
+            9
+          ],
+          "axis": 0,
+          "outward_sign": -1,
+          "u_cell": -0.050000000000000044,
+          "u_face": 0.0,
+          "analytic_g": 0.39999999999999974
+        },
+        {
+          "cell": [
+            0,
+            10
+          ],
+          "axis": 0,
+          "outward_sign": -1,
+          "u_cell": -0.050000000000000044,
+          "u_face": 0.0,
+          "analytic_g": 0.39999999999999974
+        },
+        {
+          "cell": [
+            0,
+            11
+          ],
+          "axis": 0,
+          "outward_sign": -1,
+          "u_cell": -0.050000000000000044,
+          "u_face": 0.0,
+          "analytic_g": 0.39999999999999974
+        },
+        {
+          "cell": [
+            0,
+            12
+          ],
+          "axis": 0,
+          "outward_sign": -1,
+          "u_cell": -0.050000000000000044,
+          "u_face": 0.0,
+          "analytic_g": 0.39999999999999974
+        },
+        {
+          "cell": [
+            0,
+            13
+          ],
+          "axis": 0,
+          "outward_sign": -1,
+          "u_cell": -0.050000000000000044,
+          "u_face": 0.0,
+          "analytic_g": 0.39999999999999974
+        },
+        {
+          "cell": [
+            0,
+            14
+          ],
+          "axis": 0,
+          "outward_sign": -1,
+          "u_cell": -0.050000000000000044,
+          "u_face": 0.0,
+          "analytic_g": 0.39999999999999974
+        },
+        {
+          "cell": [
+            0,
+            15
+          ],
+          "axis": 0,
+          "outward_sign": -1,
+          "u_cell": -0.050000000000000044,
+          "u_face": 0.0,
+          "analytic_g": 0.39999999999999974
+        }
+      ],
+      "layer_kind": "boundary_only_or_endpoint"
+    },
+    {
+      "n": 16,
+      "h_um": 0.1,
+      "law": "axis",
+      "mutant": null,
+      "theta_deg": 180.0,
+      "offset_um": 0.8,
+      "n_film_faces": 0,
+      "n_bc_cross": 16,
+      "tie_count": 0,
+      "boundary_rule": "crossing_half_cell_series_v1",
+      "err_max": 3.9968028886505635e-15,
+      "err_l2": 1.690573248266139e-15,
+      "analytic_boundary_diag_max_abs": 4.440892098500626e-16,
+      "analytic_boundary_rhs_max_abs": 8.881784197001252e-16,
+      "exact_solution_residual_max": 4.440892098500626e-16,
+      "boundary_crossing_by_cell": {
+        "(0, 0)": 1,
+        "(0, 1)": 1,
+        "(0, 2)": 1,
+        "(0, 3)": 1,
+        "(0, 4)": 1,
+        "(0, 5)": 1,
+        "(0, 6)": 1,
+        "(0, 7)": 1,
+        "(0, 8)": 1,
+        "(0, 9)": 1,
+        "(0, 10)": 1,
+        "(0, 11)": 1,
+        "(0, 12)": 1,
+        "(0, 13)": 1,
+        "(0, 14)": 1,
+        "(0, 15)": 1
+      },
+      "crossing_records": [
+        {
+          "cell": [
+            0,
+            0
+          ],
+          "axis": 0,
+          "outward_sign": -1,
+          "u_cell": -0.050000000000000044,
+          "u_face": 0.0,
+          "analytic_g": 0.08
+        },
+        {
+          "cell": [
+            0,
+            1
+          ],
+          "axis": 0,
+          "outward_sign": -1,
+          "u_cell": -0.050000000000000044,
+          "u_face": 0.0,
+          "analytic_g": 0.08
+        },
+        {
+          "cell": [
+            0,
+            2
+          ],
+          "axis": 0,
+          "outward_sign": -1,
+          "u_cell": -0.050000000000000044,
+          "u_face": 0.0,
+          "analytic_g": 0.08
+        },
+        {
+          "cell": [
+            0,
+            3
+          ],
+          "axis": 0,
+          "outward_sign": -1,
+          "u_cell": -0.050000000000000044,
+          "u_face": 0.0,
+          "analytic_g": 0.08
+        },
+        {
+          "cell": [
+            0,
+            4
+          ],
+          "axis": 0,
+          "outward_sign": -1,
+          "u_cell": -0.050000000000000044,
+          "u_face": 0.0,
+          "analytic_g": 0.08
+        },
+        {
+          "cell": [
+            0,
+            5
+          ],
+          "axis": 0,
+          "outward_sign": -1,
+          "u_cell": -0.050000000000000044,
+          "u_face": 0.0,
+          "analytic_g": 0.08
+        },
+        {
+          "cell": [
+            0,
+            6
+          ],
+          "axis": 0,
+          "outward_sign": -1,
+          "u_cell": -0.050000000000000044,
+          "u_face": 0.0,
+          "analytic_g": 0.08
+        },
+        {
+          "cell": [
+            0,
+            7
+          ],
+          "axis": 0,
+          "outward_sign": -1,
+          "u_cell": -0.050000000000000044,
+          "u_face": 0.0,
+          "analytic_g": 0.08
+        },
+        {
+          "cell": [
+            0,
+            8
+          ],
+          "axis": 0,
+          "outward_sign": -1,
+          "u_cell": -0.050000000000000044,
+          "u_face": 0.0,
+          "analytic_g": 0.08
+        },
+        {
+          "cell": [
+            0,
+            9
+          ],
+          "axis": 0,
+          "outward_sign": -1,
+          "u_cell": -0.050000000000000044,
+          "u_face": 0.0,
+          "analytic_g": 0.08
+        },
+        {
+          "cell": [
+            0,
+            10
+          ],
+          "axis": 0,
+          "outward_sign": -1,
+          "u_cell": -0.050000000000000044,
+          "u_face": 0.0,
+          "analytic_g": 0.08
+        },
+        {
+          "cell": [
+            0,
+            11
+          ],
+          "axis": 0,
+          "outward_sign": -1,
+          "u_cell": -0.050000000000000044,
+          "u_face": 0.0,
+          "analytic_g": 0.08
+        },
+        {
+          "cell": [
+            0,
+            12
+          ],
+          "axis": 0,
+          "outward_sign": -1,
+          "u_cell": -0.050000000000000044,
+          "u_face": 0.0,
+          "analytic_g": 0.08
+        },
+        {
+          "cell": [
+            0,
+            13
+          ],
+          "axis": 0,
+          "outward_sign": -1,
+          "u_cell": -0.050000000000000044,
+          "u_face": 0.0,
+          "analytic_g": 0.08
+        },
+        {
+          "cell": [
+            0,
+            14
+          ],
+          "axis": 0,
+          "outward_sign": -1,
+          "u_cell": -0.050000000000000044,
+          "u_face": 0.0,
+          "analytic_g": 0.08
+        },
+        {
+          "cell": [
+            0,
+            15
+          ],
+          "axis": 0,
+          "outward_sign": -1,
+          "u_cell": -0.050000000000000044,
+          "u_face": 0.0,
+          "analytic_g": 0.08
+        }
+      ],
+      "layer_kind": "boundary_only_or_endpoint"
+    },
+    {
+      "n": 16,
+      "h_um": 0.1,
+      "law": "axis",
+      "mutant": null,
+      "theta_deg": 270.0,
+      "offset_um": -0.78,
+      "n_film_faces": 0,
+      "n_bc_cross": 16,
+      "tie_count": 0,
+      "boundary_rule": "crossing_half_cell_series_v1",
+      "err_max": 1.5543122344752192e-15,
+      "err_l2": 4.056313751311794e-16,
+      "analytic_boundary_diag_max_abs": 6.661338147750939e-16,
+      "analytic_boundary_rhs_max_abs": 8.881784197001252e-16,
+      "exact_solution_residual_max": 2.220446049250313e-16,
+      "boundary_crossing_by_cell": {
+        "(0, 15)": 1,
+        "(1, 15)": 1,
+        "(2, 15)": 1,
+        "(3, 15)": 1,
+        "(4, 15)": 1,
+        "(5, 15)": 1,
+        "(6, 15)": 1,
+        "(7, 15)": 1,
+        "(8, 15)": 1,
+        "(9, 15)": 1,
+        "(10, 15)": 1,
+        "(11, 15)": 1,
+        "(12, 15)": 1,
+        "(13, 15)": 1,
+        "(14, 15)": 1,
+        "(15, 15)": 1
+      },
+      "crossing_records": [
+        {
+          "cell": [
+            0,
+            15
+          ],
+          "axis": 1,
+          "outward_sign": 1,
+          "u_cell": 0.030000000000000027,
+          "u_face": -0.020000000000000018,
+          "analytic_g": 0.6249999999999996
+        },
+        {
+          "cell": [
+            1,
+            15
+          ],
+          "axis": 1,
+          "outward_sign": 1,
+          "u_cell": 0.030000000000000027,
+          "u_face": -0.020000000000000018,
+          "analytic_g": 0.6249999999999996
+        },
+        {
+          "cell": [
+            2,
+            15
+          ],
+          "axis": 1,
+          "outward_sign": 1,
+          "u_cell": 0.030000000000000027,
+          "u_face": -0.020000000000000018,
+          "analytic_g": 0.6249999999999996
+        },
+        {
+          "cell": [
+            3,
+            15
+          ],
+          "axis": 1,
+          "outward_sign": 1,
+          "u_cell": 0.030000000000000027,
+          "u_face": -0.020000000000000018,
+          "analytic_g": 0.6249999999999996
+        },
+        {
+          "cell": [
+            4,
+            15
+          ],
+          "axis": 1,
+          "outward_sign": 1,
+          "u_cell": 0.030000000000000027,
+          "u_face": -0.020000000000000018,
+          "analytic_g": 0.6249999999999996
+        },
+        {
+          "cell": [
+            5,
+            15
+          ],
+          "axis": 1,
+          "outward_sign": 1,
+          "u_cell": 0.030000000000000027,
+          "u_face": -0.020000000000000018,
+          "analytic_g": 0.6249999999999996
+        },
+        {
+          "cell": [
+            6,
+            15
+          ],
+          "axis": 1,
+          "outward_sign": 1,
+          "u_cell": 0.030000000000000027,
+          "u_face": -0.020000000000000018,
+          "analytic_g": 0.6249999999999996
+        },
+        {
+          "cell": [
+            7,
+            15
+          ],
+          "axis": 1,
+          "outward_sign": 1,
+          "u_cell": 0.030000000000000027,
+          "u_face": -0.020000000000000018,
+          "analytic_g": 0.6249999999999996
+        },
+        {
+          "cell": [
+            8,
+            15
+          ],
+          "axis": 1,
+          "outward_sign": 1,
+          "u_cell": 0.030000000000000027,
+          "u_face": -0.020000000000000018,
+          "analytic_g": 0.6249999999999996
+        },
+        {
+          "cell": [
+            9,
+            15
+          ],
+          "axis": 1,
+          "outward_sign": 1,
+          "u_cell": 0.030000000000000027,
+          "u_face": -0.020000000000000018,
+          "analytic_g": 0.6249999999999996
+        },
+        {
+          "cell": [
+            10,
+            15
+          ],
+          "axis": 1,
+          "outward_sign": 1,
+          "u_cell": 0.030000000000000027,
+          "u_face": -0.020000000000000018,
+          "analytic_g": 0.6249999999999996
+        },
+        {
+          "cell": [
+            11,
+            15
+          ],
+          "axis": 1,
+          "outward_sign": 1,
+          "u_cell": 0.030000000000000027,
+          "u_face": -0.020000000000000018,
+          "analytic_g": 0.6249999999999996
+        },
+        {
+          "cell": [
+            12,
+            15
+          ],
+          "axis": 1,
+          "outward_sign": 1,
+          "u_cell": 0.030000000000000027,
+          "u_face": -0.020000000000000018,
+          "analytic_g": 0.6249999999999996
+        },
+        {
+          "cell": [
+            13,
+            15
+          ],
+          "axis": 1,
+          "outward_sign": 1,
+          "u_cell": 0.030000000000000027,
+          "u_face": -0.020000000000000018,
+          "analytic_g": 0.6249999999999996
+        },
+        {
+          "cell": [
+            14,
+            15
+          ],
+          "axis": 1,
+          "outward_sign": 1,
+          "u_cell": 0.030000000000000027,
+          "u_face": -0.020000000000000018,
+          "analytic_g": 0.6249999999999996
+        },
+        {
+          "cell": [
+            15,
+            15
+          ],
+          "axis": 1,
+          "outward_sign": 1,
+          "u_cell": 0.030000000000000027,
+          "u_face": -0.020000000000000018,
+          "analytic_g": 0.6249999999999996
+        }
+      ],
+      "layer_kind": "boundary_only_or_endpoint"
+    },
+    {
+      "n": 16,
+      "h_um": 0.1,
+      "law": "axis",
+      "mutant": null,
+      "theta_deg": 270.0,
+      "offset_um": -0.78,
+      "n_film_faces": 0,
+      "n_bc_cross": 16,
+      "tie_count": 0,
+      "boundary_rule": "crossing_half_cell_series_v1",
+      "err_max": 1.7763568394002505e-15,
+      "err_l2": 5.905198477236933e-16,
+      "analytic_boundary_diag_max_abs": 6.661338147750939e-16,
+      "analytic_boundary_rhs_max_abs": 1.1102230246251565e-15,
+      "exact_solution_residual_max": 8.881784197001252e-16,
+      "boundary_crossing_by_cell": {
+        "(0, 15)": 1,
+        "(1, 15)": 1,
+        "(2, 15)": 1,
+        "(3, 15)": 1,
+        "(4, 15)": 1,
+        "(5, 15)": 1,
+        "(6, 15)": 1,
+        "(7, 15)": 1,
+        "(8, 15)": 1,
+        "(9, 15)": 1,
+        "(10, 15)": 1,
+        "(11, 15)": 1,
+        "(12, 15)": 1,
+        "(13, 15)": 1,
+        "(14, 15)": 1,
+        "(15, 15)": 1
+      },
+      "crossing_records": [
+        {
+          "cell": [
+            0,
+            15
+          ],
+          "axis": 1,
+          "outward_sign": 1,
+          "u_cell": 0.030000000000000027,
+          "u_face": -0.020000000000000018,
+          "analytic_g": 0.08620689655172414
+        },
+        {
+          "cell": [
+            1,
+            15
+          ],
+          "axis": 1,
+          "outward_sign": 1,
+          "u_cell": 0.030000000000000027,
+          "u_face": -0.020000000000000018,
+          "analytic_g": 0.08620689655172414
+        },
+        {
+          "cell": [
+            2,
+            15
+          ],
+          "axis": 1,
+          "outward_sign": 1,
+          "u_cell": 0.030000000000000027,
+          "u_face": -0.020000000000000018,
+          "analytic_g": 0.08620689655172414
+        },
+        {
+          "cell": [
+            3,
+            15
+          ],
+          "axis": 1,
+          "outward_sign": 1,
+          "u_cell": 0.030000000000000027,
+          "u_face": -0.020000000000000018,
+          "analytic_g": 0.08620689655172414
+        },
+        {
+          "cell": [
+            4,
+            15
+          ],
+          "axis": 1,
+          "outward_sign": 1,
+          "u_cell": 0.030000000000000027,
+          "u_face": -0.020000000000000018,
+          "analytic_g": 0.08620689655172414
+        },
+        {
+          "cell": [
+            5,
+            15
+          ],
+          "axis": 1,
+          "outward_sign": 1,
+          "u_cell": 0.030000000000000027,
+          "u_face": -0.020000000000000018,
+          "analytic_g": 0.08620689655172414
+        },
+        {
+          "cell": [
+            6,
+            15
+          ],
+          "axis": 1,
+          "outward_sign": 1,
+          "u_cell": 0.030000000000000027,
+          "u_face": -0.020000000000000018,
+          "analytic_g": 0.08620689655172414
+        },
+        {
+          "cell": [
+            7,
+            15
+          ],
+          "axis": 1,
+          "outward_sign": 1,
+          "u_cell": 0.030000000000000027,
+          "u_face": -0.020000000000000018,
+          "analytic_g": 0.08620689655172414
+        },
+        {
+          "cell": [
+            8,
+            15
+          ],
+          "axis": 1,
+          "outward_sign": 1,
+          "u_cell": 0.030000000000000027,
+          "u_face": -0.020000000000000018,
+          "analytic_g": 0.08620689655172414
+        },
+        {
+          "cell": [
+            9,
+            15
+          ],
+          "axis": 1,
+          "outward_sign": 1,
+          "u_cell": 0.030000000000000027,
+          "u_face": -0.020000000000000018,
+          "analytic_g": 0.08620689655172414
+        },
+        {
+          "cell": [
+            10,
+            15
+          ],
+          "axis": 1,
+          "outward_sign": 1,
+          "u_cell": 0.030000000000000027,
+          "u_face": -0.020000000000000018,
+          "analytic_g": 0.08620689655172414
+        },
+        {
+          "cell": [
+            11,
+            15
+          ],
+          "axis": 1,
+          "outward_sign": 1,
+          "u_cell": 0.030000000000000027,
+          "u_face": -0.020000000000000018,
+          "analytic_g": 0.08620689655172414
+        },
+        {
+          "cell": [
+            12,
+            15
+          ],
+          "axis": 1,
+          "outward_sign": 1,
+          "u_cell": 0.030000000000000027,
+          "u_face": -0.020000000000000018,
+          "analytic_g": 0.08620689655172414
+        },
+        {
+          "cell": [
+            13,
+            15
+          ],
+          "axis": 1,
+          "outward_sign": 1,
+          "u_cell": 0.030000000000000027,
+          "u_face": -0.020000000000000018,
+          "analytic_g": 0.08620689655172414
+        },
+        {
+          "cell": [
+            14,
+            15
+          ],
+          "axis": 1,
+          "outward_sign": 1,
+          "u_cell": 0.030000000000000027,
+          "u_face": -0.020000000000000018,
+          "analytic_g": 0.08620689655172414
+        },
+        {
+          "cell": [
+            15,
+            15
+          ],
+          "axis": 1,
+          "outward_sign": 1,
+          "u_cell": 0.030000000000000027,
+          "u_face": -0.020000000000000018,
+          "analytic_g": 0.08620689655172414
+        }
+      ],
+      "layer_kind": "boundary_only_or_endpoint"
+    },
+    {
+      "n": 16,
+      "h_um": 0.1,
+      "law": "axis",
+      "mutant": null,
+      "theta_deg": 270.0,
+      "offset_um": 0.78,
+      "n_film_faces": 0,
+      "n_bc_cross": 16,
+      "tie_count": 0,
+      "boundary_rule": "crossing_half_cell_series_v1",
+      "err_max": 2.220446049250313e-15,
+      "err_l2": 9.52954181479331e-16,
+      "analytic_boundary_diag_max_abs": 6.661338147750939e-16,
+      "analytic_boundary_rhs_max_abs": 8.881784197001252e-16,
+      "exact_solution_residual_max": 4.440892098500626e-16,
+      "boundary_crossing_by_cell": {
+        "(0, 0)": 1,
+        "(1, 0)": 1,
+        "(2, 0)": 1,
+        "(3, 0)": 1,
+        "(4, 0)": 1,
+        "(5, 0)": 1,
+        "(6, 0)": 1,
+        "(7, 0)": 1,
+        "(8, 0)": 1,
+        "(9, 0)": 1,
+        "(10, 0)": 1,
+        "(11, 0)": 1,
+        "(12, 0)": 1,
+        "(13, 0)": 1,
+        "(14, 0)": 1,
+        "(15, 0)": 1
+      },
+      "crossing_records": [
+        {
+          "cell": [
+            0,
+            0
+          ],
+          "axis": 1,
+          "outward_sign": -1,
+          "u_cell": -0.030000000000000027,
+          "u_face": 0.020000000000000018,
+          "analytic_g": 0.5263157894736838
+        },
+        {
+          "cell": [
+            1,
+            0
+          ],
+          "axis": 1,
+          "outward_sign": -1,
+          "u_cell": -0.030000000000000027,
+          "u_face": 0.020000000000000018,
+          "analytic_g": 0.5263157894736838
+        },
+        {
+          "cell": [
+            2,
+            0
+          ],
+          "axis": 1,
+          "outward_sign": -1,
+          "u_cell": -0.030000000000000027,
+          "u_face": 0.020000000000000018,
+          "analytic_g": 0.5263157894736838
+        },
+        {
+          "cell": [
+            3,
+            0
+          ],
+          "axis": 1,
+          "outward_sign": -1,
+          "u_cell": -0.030000000000000027,
+          "u_face": 0.020000000000000018,
+          "analytic_g": 0.5263157894736838
+        },
+        {
+          "cell": [
+            4,
+            0
+          ],
+          "axis": 1,
+          "outward_sign": -1,
+          "u_cell": -0.030000000000000027,
+          "u_face": 0.020000000000000018,
+          "analytic_g": 0.5263157894736838
+        },
+        {
+          "cell": [
+            5,
+            0
+          ],
+          "axis": 1,
+          "outward_sign": -1,
+          "u_cell": -0.030000000000000027,
+          "u_face": 0.020000000000000018,
+          "analytic_g": 0.5263157894736838
+        },
+        {
+          "cell": [
+            6,
+            0
+          ],
+          "axis": 1,
+          "outward_sign": -1,
+          "u_cell": -0.030000000000000027,
+          "u_face": 0.020000000000000018,
+          "analytic_g": 0.5263157894736838
+        },
+        {
+          "cell": [
+            7,
+            0
+          ],
+          "axis": 1,
+          "outward_sign": -1,
+          "u_cell": -0.030000000000000027,
+          "u_face": 0.020000000000000018,
+          "analytic_g": 0.5263157894736838
+        },
+        {
+          "cell": [
+            8,
+            0
+          ],
+          "axis": 1,
+          "outward_sign": -1,
+          "u_cell": -0.030000000000000027,
+          "u_face": 0.020000000000000018,
+          "analytic_g": 0.5263157894736838
+        },
+        {
+          "cell": [
+            9,
+            0
+          ],
+          "axis": 1,
+          "outward_sign": -1,
+          "u_cell": -0.030000000000000027,
+          "u_face": 0.020000000000000018,
+          "analytic_g": 0.5263157894736838
+        },
+        {
+          "cell": [
+            10,
+            0
+          ],
+          "axis": 1,
+          "outward_sign": -1,
+          "u_cell": -0.030000000000000027,
+          "u_face": 0.020000000000000018,
+          "analytic_g": 0.5263157894736838
+        },
+        {
+          "cell": [
+            11,
+            0
+          ],
+          "axis": 1,
+          "outward_sign": -1,
+          "u_cell": -0.030000000000000027,
+          "u_face": 0.020000000000000018,
+          "analytic_g": 0.5263157894736838
+        },
+        {
+          "cell": [
+            12,
+            0
+          ],
+          "axis": 1,
+          "outward_sign": -1,
+          "u_cell": -0.030000000000000027,
+          "u_face": 0.020000000000000018,
+          "analytic_g": 0.5263157894736838
+        },
+        {
+          "cell": [
+            13,
+            0
+          ],
+          "axis": 1,
+          "outward_sign": -1,
+          "u_cell": -0.030000000000000027,
+          "u_face": 0.020000000000000018,
+          "analytic_g": 0.5263157894736838
+        },
+        {
+          "cell": [
+            14,
+            0
+          ],
+          "axis": 1,
+          "outward_sign": -1,
+          "u_cell": -0.030000000000000027,
+          "u_face": 0.020000000000000018,
+          "analytic_g": 0.5263157894736838
+        },
+        {
+          "cell": [
+            15,
+            0
+          ],
+          "axis": 1,
+          "outward_sign": -1,
+          "u_cell": -0.030000000000000027,
+          "u_face": 0.020000000000000018,
+          "analytic_g": 0.5263157894736838
+        }
+      ],
+      "layer_kind": "boundary_only_or_endpoint"
+    },
+    {
+      "n": 16,
+      "h_um": 0.1,
+      "law": "axis",
+      "mutant": null,
+      "theta_deg": 270.0,
+      "offset_um": 0.78,
+      "n_film_faces": 0,
+      "n_bc_cross": 16,
+      "tie_count": 0,
+      "boundary_rule": "crossing_half_cell_series_v1",
+      "err_max": 3.1086244689504383e-15,
+      "err_l2": 1.3898396741196793e-15,
+      "analytic_boundary_diag_max_abs": 4.440892098500626e-16,
+      "analytic_boundary_rhs_max_abs": 8.881784197001252e-16,
+      "exact_solution_residual_max": 4.440892098500626e-16,
+      "boundary_crossing_by_cell": {
+        "(0, 0)": 1,
+        "(1, 0)": 1,
+        "(2, 0)": 1,
+        "(3, 0)": 1,
+        "(4, 0)": 1,
+        "(5, 0)": 1,
+        "(6, 0)": 1,
+        "(7, 0)": 1,
+        "(8, 0)": 1,
+        "(9, 0)": 1,
+        "(10, 0)": 1,
+        "(11, 0)": 1,
+        "(12, 0)": 1,
+        "(13, 0)": 1,
+        "(14, 0)": 1,
+        "(15, 0)": 1
+      },
+      "crossing_records": [
+        {
+          "cell": [
+            0,
+            0
+          ],
+          "axis": 1,
+          "outward_sign": -1,
+          "u_cell": -0.030000000000000027,
+          "u_face": 0.020000000000000018,
+          "analytic_g": 0.08403361344537816
+        },
+        {
+          "cell": [
+            1,
+            0
+          ],
+          "axis": 1,
+          "outward_sign": -1,
+          "u_cell": -0.030000000000000027,
+          "u_face": 0.020000000000000018,
+          "analytic_g": 0.08403361344537816
+        },
+        {
+          "cell": [
+            2,
+            0
+          ],
+          "axis": 1,
+          "outward_sign": -1,
+          "u_cell": -0.030000000000000027,
+          "u_face": 0.020000000000000018,
+          "analytic_g": 0.08403361344537816
+        },
+        {
+          "cell": [
+            3,
+            0
+          ],
+          "axis": 1,
+          "outward_sign": -1,
+          "u_cell": -0.030000000000000027,
+          "u_face": 0.020000000000000018,
+          "analytic_g": 0.08403361344537816
+        },
+        {
+          "cell": [
+            4,
+            0
+          ],
+          "axis": 1,
+          "outward_sign": -1,
+          "u_cell": -0.030000000000000027,
+          "u_face": 0.020000000000000018,
+          "analytic_g": 0.08403361344537816
+        },
+        {
+          "cell": [
+            5,
+            0
+          ],
+          "axis": 1,
+          "outward_sign": -1,
+          "u_cell": -0.030000000000000027,
+          "u_face": 0.020000000000000018,
+          "analytic_g": 0.08403361344537816
+        },
+        {
+          "cell": [
+            6,
+            0
+          ],
+          "axis": 1,
+          "outward_sign": -1,
+          "u_cell": -0.030000000000000027,
+          "u_face": 0.020000000000000018,
+          "analytic_g": 0.08403361344537816
+        },
+        {
+          "cell": [
+            7,
+            0
+          ],
+          "axis": 1,
+          "outward_sign": -1,
+          "u_cell": -0.030000000000000027,
+          "u_face": 0.020000000000000018,
+          "analytic_g": 0.08403361344537816
+        },
+        {
+          "cell": [
+            8,
+            0
+          ],
+          "axis": 1,
+          "outward_sign": -1,
+          "u_cell": -0.030000000000000027,
+          "u_face": 0.020000000000000018,
+          "analytic_g": 0.08403361344537816
+        },
+        {
+          "cell": [
+            9,
+            0
+          ],
+          "axis": 1,
+          "outward_sign": -1,
+          "u_cell": -0.030000000000000027,
+          "u_face": 0.020000000000000018,
+          "analytic_g": 0.08403361344537816
+        },
+        {
+          "cell": [
+            10,
+            0
+          ],
+          "axis": 1,
+          "outward_sign": -1,
+          "u_cell": -0.030000000000000027,
+          "u_face": 0.020000000000000018,
+          "analytic_g": 0.08403361344537816
+        },
+        {
+          "cell": [
+            11,
+            0
+          ],
+          "axis": 1,
+          "outward_sign": -1,
+          "u_cell": -0.030000000000000027,
+          "u_face": 0.020000000000000018,
+          "analytic_g": 0.08403361344537816
+        },
+        {
+          "cell": [
+            12,
+            0
+          ],
+          "axis": 1,
+          "outward_sign": -1,
+          "u_cell": -0.030000000000000027,
+          "u_face": 0.020000000000000018,
+          "analytic_g": 0.08403361344537816
+        },
+        {
+          "cell": [
+            13,
+            0
+          ],
+          "axis": 1,
+          "outward_sign": -1,
+          "u_cell": -0.030000000000000027,
+          "u_face": 0.020000000000000018,
+          "analytic_g": 0.08403361344537816
+        },
+        {
+          "cell": [
+            14,
+            0
+          ],
+          "axis": 1,
+          "outward_sign": -1,
+          "u_cell": -0.030000000000000027,
+          "u_face": 0.020000000000000018,
+          "analytic_g": 0.08403361344537816
+        },
+        {
+          "cell": [
+            15,
+            0
+          ],
+          "axis": 1,
+          "outward_sign": -1,
+          "u_cell": -0.030000000000000027,
+          "u_face": 0.020000000000000018,
+          "analytic_g": 0.08403361344537816
+        }
+      ],
+      "layer_kind": "boundary_only_or_endpoint"
+    },
+    {
+      "n": 16,
+      "h_um": 0.1,
+      "law": "axis",
+      "mutant": null,
+      "theta_deg": 270.0,
+      "offset_um": -0.8,
+      "n_film_faces": 0,
+      "n_bc_cross": 0,
+      "tie_count": 0,
+      "boundary_rule": "crossing_half_cell_series_v1",
+      "err_max": 9.992007221626409e-16,
+      "err_l2": 3.452233196790286e-16,
+      "analytic_boundary_diag_max_abs": 6.661338147750939e-16,
+      "analytic_boundary_rhs_max_abs": 8.881784197001252e-16,
+      "exact_solution_residual_max": 2.220446049250313e-16,
+      "boundary_crossing_by_cell": {},
+      "crossing_records": [],
+      "layer_kind": "boundary_only_or_endpoint"
+    },
+    {
+      "n": 16,
+      "h_um": 0.1,
+      "law": "axis",
+      "mutant": null,
+      "theta_deg": 270.0,
+      "offset_um": -0.8,
+      "n_film_faces": 0,
+      "n_bc_cross": 0,
+      "tie_count": 0,
+      "boundary_rule": "crossing_half_cell_series_v1",
+      "err_max": 1.5543122344752192e-15,
+      "err_l2": 5.14836001651296e-16,
+      "analytic_boundary_diag_max_abs": 6.661338147750939e-16,
+      "analytic_boundary_rhs_max_abs": 1.1102230246251565e-15,
+      "exact_solution_residual_max": 8.881784197001252e-16,
+      "boundary_crossing_by_cell": {},
+      "crossing_records": [],
+      "layer_kind": "boundary_only_or_endpoint"
+    },
+    {
+      "n": 16,
+      "h_um": 0.1,
+      "law": "axis",
+      "mutant": null,
+      "theta_deg": 270.0,
+      "offset_um": 0.8,
+      "n_film_faces": 0,
+      "n_bc_cross": 16,
+      "tie_count": 0,
+      "boundary_rule": "crossing_half_cell_series_v1",
+      "err_max": 4.884981308350689e-15,
+      "err_l2": 2.128375808868147e-15,
+      "analytic_boundary_diag_max_abs": 5.551115123125783e-16,
+      "analytic_boundary_rhs_max_abs": 8.881784197001252e-16,
+      "exact_solution_residual_max": 4.440892098500626e-16,
+      "boundary_crossing_by_cell": {
+        "(0, 0)": 1,
+        "(1, 0)": 1,
+        "(2, 0)": 1,
+        "(3, 0)": 1,
+        "(4, 0)": 1,
+        "(5, 0)": 1,
+        "(6, 0)": 1,
+        "(7, 0)": 1,
+        "(8, 0)": 1,
+        "(9, 0)": 1,
+        "(10, 0)": 1,
+        "(11, 0)": 1,
+        "(12, 0)": 1,
+        "(13, 0)": 1,
+        "(14, 0)": 1,
+        "(15, 0)": 1
+      },
+      "crossing_records": [
+        {
+          "cell": [
+            0,
+            0
+          ],
+          "axis": 1,
+          "outward_sign": -1,
+          "u_cell": -0.050000000000000044,
+          "u_face": 0.0,
+          "analytic_g": 0.39999999999999974
+        },
+        {
+          "cell": [
+            1,
+            0
+          ],
+          "axis": 1,
+          "outward_sign": -1,
+          "u_cell": -0.050000000000000044,
+          "u_face": 0.0,
+          "analytic_g": 0.39999999999999974
+        },
+        {
+          "cell": [
+            2,
+            0
+          ],
+          "axis": 1,
+          "outward_sign": -1,
+          "u_cell": -0.050000000000000044,
+          "u_face": 0.0,
+          "analytic_g": 0.39999999999999974
+        },
+        {
+          "cell": [
+            3,
+            0
+          ],
+          "axis": 1,
+          "outward_sign": -1,
+          "u_cell": -0.050000000000000044,
+          "u_face": 0.0,
+          "analytic_g": 0.39999999999999974
+        },
+        {
+          "cell": [
+            4,
+            0
+          ],
+          "axis": 1,
+          "outward_sign": -1,
+          "u_cell": -0.050000000000000044,
+          "u_face": 0.0,
+          "analytic_g": 0.39999999999999974
+        },
+        {
+          "cell": [
+            5,
+            0
+          ],
+          "axis": 1,
+          "outward_sign": -1,
+          "u_cell": -0.050000000000000044,
+          "u_face": 0.0,
+          "analytic_g": 0.39999999999999974
+        },
+        {
+          "cell": [
+            6,
+            0
+          ],
+          "axis": 1,
+          "outward_sign": -1,
+          "u_cell": -0.050000000000000044,
+          "u_face": 0.0,
+          "analytic_g": 0.39999999999999974
+        },
+        {
+          "cell": [
+            7,
+            0
+          ],
+          "axis": 1,
+          "outward_sign": -1,
+          "u_cell": -0.050000000000000044,
+          "u_face": 0.0,
+          "analytic_g": 0.39999999999999974
+        },
+        {
+          "cell": [
+            8,
+            0
+          ],
+          "axis": 1,
+          "outward_sign": -1,
+          "u_cell": -0.050000000000000044,
+          "u_face": 0.0,
+          "analytic_g": 0.39999999999999974
+        },
+        {
+          "cell": [
+            9,
+            0
+          ],
+          "axis": 1,
+          "outward_sign": -1,
+          "u_cell": -0.050000000000000044,
+          "u_face": 0.0,
+          "analytic_g": 0.39999999999999974
+        },
+        {
+          "cell": [
+            10,
+            0
+          ],
+          "axis": 1,
+          "outward_sign": -1,
+          "u_cell": -0.050000000000000044,
+          "u_face": 0.0,
+          "analytic_g": 0.39999999999999974
+        },
+        {
+          "cell": [
+            11,
+            0
+          ],
+          "axis": 1,
+          "outward_sign": -1,
+          "u_cell": -0.050000000000000044,
+          "u_face": 0.0,
+          "analytic_g": 0.39999999999999974
+        },
+        {
+          "cell": [
+            12,
+            0
+          ],
+          "axis": 1,
+          "outward_sign": -1,
+          "u_cell": -0.050000000000000044,
+          "u_face": 0.0,
+          "analytic_g": 0.39999999999999974
+        },
+        {
+          "cell": [
+            13,
+            0
+          ],
+          "axis": 1,
+          "outward_sign": -1,
+          "u_cell": -0.050000000000000044,
+          "u_face": 0.0,
+          "analytic_g": 0.39999999999999974
+        },
+        {
+          "cell": [
+            14,
+            0
+          ],
+          "axis": 1,
+          "outward_sign": -1,
+          "u_cell": -0.050000000000000044,
+          "u_face": 0.0,
+          "analytic_g": 0.39999999999999974
+        },
+        {
+          "cell": [
+            15,
+            0
+          ],
+          "axis": 1,
+          "outward_sign": -1,
+          "u_cell": -0.050000000000000044,
+          "u_face": 0.0,
+          "analytic_g": 0.39999999999999974
+        }
+      ],
+      "layer_kind": "boundary_only_or_endpoint"
+    },
+    {
+      "n": 16,
+      "h_um": 0.1,
+      "law": "axis",
+      "mutant": null,
+      "theta_deg": 270.0,
+      "offset_um": 0.8,
+      "n_film_faces": 0,
+      "n_bc_cross": 16,
+      "tie_count": 0,
+      "boundary_rule": "crossing_half_cell_series_v1",
+      "err_max": 4.440892098500626e-15,
+      "err_l2": 1.905236219135689e-15,
+      "analytic_boundary_diag_max_abs": 4.440892098500626e-16,
+      "analytic_boundary_rhs_max_abs": 8.881784197001252e-16,
+      "exact_solution_residual_max": 4.440892098500626e-16,
+      "boundary_crossing_by_cell": {
+        "(0, 0)": 1,
+        "(1, 0)": 1,
+        "(2, 0)": 1,
+        "(3, 0)": 1,
+        "(4, 0)": 1,
+        "(5, 0)": 1,
+        "(6, 0)": 1,
+        "(7, 0)": 1,
+        "(8, 0)": 1,
+        "(9, 0)": 1,
+        "(10, 0)": 1,
+        "(11, 0)": 1,
+        "(12, 0)": 1,
+        "(13, 0)": 1,
+        "(14, 0)": 1,
+        "(15, 0)": 1
+      },
+      "crossing_records": [
+        {
+          "cell": [
+            0,
+            0
+          ],
+          "axis": 1,
+          "outward_sign": -1,
+          "u_cell": -0.050000000000000044,
+          "u_face": 0.0,
+          "analytic_g": 0.08
+        },
+        {
+          "cell": [
+            1,
+            0
+          ],
+          "axis": 1,
+          "outward_sign": -1,
+          "u_cell": -0.050000000000000044,
+          "u_face": 0.0,
+          "analytic_g": 0.08
+        },
+        {
+          "cell": [
+            2,
+            0
+          ],
+          "axis": 1,
+          "outward_sign": -1,
+          "u_cell": -0.050000000000000044,
+          "u_face": 0.0,
+          "analytic_g": 0.08
+        },
+        {
+          "cell": [
+            3,
+            0
+          ],
+          "axis": 1,
+          "outward_sign": -1,
+          "u_cell": -0.050000000000000044,
+          "u_face": 0.0,
+          "analytic_g": 0.08
+        },
+        {
+          "cell": [
+            4,
+            0
+          ],
+          "axis": 1,
+          "outward_sign": -1,
+          "u_cell": -0.050000000000000044,
+          "u_face": 0.0,
+          "analytic_g": 0.08
+        },
+        {
+          "cell": [
+            5,
+            0
+          ],
+          "axis": 1,
+          "outward_sign": -1,
+          "u_cell": -0.050000000000000044,
+          "u_face": 0.0,
+          "analytic_g": 0.08
+        },
+        {
+          "cell": [
+            6,
+            0
+          ],
+          "axis": 1,
+          "outward_sign": -1,
+          "u_cell": -0.050000000000000044,
+          "u_face": 0.0,
+          "analytic_g": 0.08
+        },
+        {
+          "cell": [
+            7,
+            0
+          ],
+          "axis": 1,
+          "outward_sign": -1,
+          "u_cell": -0.050000000000000044,
+          "u_face": 0.0,
+          "analytic_g": 0.08
+        },
+        {
+          "cell": [
+            8,
+            0
+          ],
+          "axis": 1,
+          "outward_sign": -1,
+          "u_cell": -0.050000000000000044,
+          "u_face": 0.0,
+          "analytic_g": 0.08
+        },
+        {
+          "cell": [
+            9,
+            0
+          ],
+          "axis": 1,
+          "outward_sign": -1,
+          "u_cell": -0.050000000000000044,
+          "u_face": 0.0,
+          "analytic_g": 0.08
+        },
+        {
+          "cell": [
+            10,
+            0
+          ],
+          "axis": 1,
+          "outward_sign": -1,
+          "u_cell": -0.050000000000000044,
+          "u_face": 0.0,
+          "analytic_g": 0.08
+        },
+        {
+          "cell": [
+            11,
+            0
+          ],
+          "axis": 1,
+          "outward_sign": -1,
+          "u_cell": -0.050000000000000044,
+          "u_face": 0.0,
+          "analytic_g": 0.08
+        },
+        {
+          "cell": [
+            12,
+            0
+          ],
+          "axis": 1,
+          "outward_sign": -1,
+          "u_cell": -0.050000000000000044,
+          "u_face": 0.0,
+          "analytic_g": 0.08
+        },
+        {
+          "cell": [
+            13,
+            0
+          ],
+          "axis": 1,
+          "outward_sign": -1,
+          "u_cell": -0.050000000000000044,
+          "u_face": 0.0,
+          "analytic_g": 0.08
+        },
+        {
+          "cell": [
+            14,
+            0
+          ],
+          "axis": 1,
+          "outward_sign": -1,
+          "u_cell": -0.050000000000000044,
+          "u_face": 0.0,
+          "analytic_g": 0.08
+        },
+        {
+          "cell": [
+            15,
+            0
+          ],
+          "axis": 1,
+          "outward_sign": -1,
+          "u_cell": -0.050000000000000044,
+          "u_face": 0.0,
+          "analytic_g": 0.08
+        }
+      ],
+      "layer_kind": "boundary_only_or_endpoint"
+    }
+  ],
+  "analytic_corners": [
+    {
+      "n": 16,
+      "h_um": 0.1,
+      "law": "axis",
+      "mutant": null,
+      "theta_deg": 30.0,
+      "offset_um": -1.037019052838329,
+      "n_film_faces": 0,
+      "n_bc_cross": 2,
+      "tie_count": 0,
+      "boundary_rule": "crossing_half_cell_series_v1",
+      "err_max": 2.4424906541753444e-15,
+      "err_l2": 1.1037586228467723e-15,
+      "analytic_boundary_diag_max_abs": 2.930988785010413e-14,
+      "analytic_boundary_rhs_max_abs": 6.039613253960852e-14,
+      "exact_solution_residual_max": 8.881784197001252e-16,
+      "boundary_crossing_by_cell": {
+        "(0, 0)": 2
+      },
+      "crossing_records": [
+        {
+          "cell": [
+            0,
+            0
+          ],
+          "axis": 0,
+          "outward_sign": -1,
+          "u_cell": 0.012499999999999956,
+          "u_face": -0.030801270189221963,
+          "analytic_g": 0.07345383704587213
+        },
+        {
+          "cell": [
+            0,
+            0
+          ],
+          "axis": 1,
+          "outward_sign": -1,
+          "u_cell": 0.012499999999999956,
+          "u_face": -0.012499999999999956,
+          "analytic_g": 0.04597701149425289
+        }
+      ]
+    },
+    {
+      "n": 16,
+      "h_um": 0.1,
+      "law": "axis",
+      "mutant": null,
+      "theta_deg": 30.0,
+      "offset_um": 1.037019052838329,
+      "n_film_faces": 0,
+      "n_bc_cross": 2,
+      "tie_count": 0,
+      "boundary_rule": "crossing_half_cell_series_v1",
+      "err_max": 4.440892098500626e-15,
+      "err_l2": 1.83239815653811e-15,
+      "analytic_boundary_diag_max_abs": 1.0436096431476471e-14,
+      "analytic_boundary_rhs_max_abs": 4.529709940470639e-14,
+      "exact_solution_residual_max": 8.881784197001252e-16,
+      "boundary_crossing_by_cell": {
+        "(15, 15)": 2
+      },
+      "crossing_records": [
+        {
+          "cell": [
+            15,
+            15
+          ],
+          "axis": 0,
+          "outward_sign": 1,
+          "u_cell": -0.012499999999999956,
+          "u_face": 0.030801270189221963,
+          "analytic_g": 0.07704149511955377
+        },
+        {
+          "cell": [
+            15,
+            15
+          ],
+          "axis": 1,
+          "outward_sign": 1,
+          "u_cell": -0.012499999999999956,
+          "u_face": 0.012499999999999956,
+          "analytic_g": 0.04597701149425289
+        }
+      ]
+    },
+    {
+      "n": 16,
+      "h_um": 0.1,
+      "law": "axis",
+      "mutant": null,
+      "theta_deg": 45.0,
+      "offset_um": -1.078337841309485,
+      "n_film_faces": 0,
+      "n_bc_cross": 2,
+      "tie_count": 0,
+      "boundary_rule": "crossing_half_cell_series_v1",
+      "err_max": 1.1102230246251565e-15,
+      "err_l2": 3.6758131435223555e-16,
+      "analytic_boundary_diag_max_abs": 1.1546319456101628e-14,
+      "analytic_boundary_rhs_max_abs": 2.2648549702353193e-14,
+      "exact_solution_residual_max": 8.881784197001252e-16,
+      "boundary_crossing_by_cell": {
+        "(0, 0)": 2
+      },
+      "crossing_records": [
+        {
+          "cell": [
+            0,
+            0
+          ],
+          "axis": 0,
+          "outward_sign": -1,
+          "u_cell": 0.017677669529663653,
+          "u_face": -0.017677669529663653,
+          "analytic_g": 0.0629242050078373
+        },
+        {
+          "cell": [
+            0,
+            0
+          ],
+          "axis": 1,
+          "outward_sign": -1,
+          "u_cell": 0.017677669529663653,
+          "u_face": -0.017677669529663653,
+          "analytic_g": 0.0629242050078373
+        }
+      ]
+    },
+    {
+      "n": 16,
+      "h_um": 0.1,
+      "law": "axis",
+      "mutant": null,
+      "theta_deg": 45.0,
+      "offset_um": 1.078337841309485,
+      "n_film_faces": 0,
+      "n_bc_cross": 2,
+      "tie_count": 0,
+      "boundary_rule": "crossing_half_cell_series_v1",
+      "err_max": 4.884981308350689e-15,
+      "err_l2": 1.7727957845457276e-15,
+      "analytic_boundary_diag_max_abs": 1.7208456881689926e-15,
+      "analytic_boundary_rhs_max_abs": 7.993605777301127e-15,
+      "exact_solution_residual_max": 8.881784197001252e-16,
+      "boundary_crossing_by_cell": {
+        "(15, 15)": 2
+      },
+      "crossing_records": [
+        {
+          "cell": [
+            15,
+            15
+          ],
+          "axis": 0,
+          "outward_sign": 1,
+          "u_cell": -0.017677669529663653,
+          "u_face": 0.017677669529663653,
+          "analytic_g": 0.0629242050078373
+        },
+        {
+          "cell": [
+            15,
+            15
+          ],
+          "axis": 1,
+          "outward_sign": 1,
+          "u_cell": -0.017677669529663653,
+          "u_face": 0.017677669529663653,
+          "analytic_g": 0.0629242050078373
+        }
+      ]
+    },
+    {
+      "n": 16,
+      "h_um": 0.1,
+      "law": "axis",
+      "mutant": null,
+      "theta_deg": 60.0,
+      "offset_um": -1.037019052838329,
+      "n_film_faces": 0,
+      "n_bc_cross": 2,
+      "tie_count": 0,
+      "boundary_rule": "crossing_half_cell_series_v1",
+      "err_max": 2.6645352591003757e-15,
+      "err_l2": 1.1140490865978896e-15,
+      "analytic_boundary_diag_max_abs": 2.275957200481571e-14,
+      "analytic_boundary_rhs_max_abs": 4.3520742565306136e-14,
+      "exact_solution_residual_max": 8.881784197001252e-16,
+      "boundary_crossing_by_cell": {
+        "(0, 0)": 2
+      },
+      "crossing_records": [
+        {
+          "cell": [
+            0,
+            0
+          ],
+          "axis": 0,
+          "outward_sign": -1,
+          "u_cell": 0.012499999999999956,
+          "u_face": -0.012500000000000178,
+          "analytic_g": 0.04597701149425285
+        },
+        {
+          "cell": [
+            0,
+            0
+          ],
+          "axis": 1,
+          "outward_sign": -1,
+          "u_cell": 0.012499999999999956,
+          "u_face": -0.030801270189222185,
+          "analytic_g": 0.07345383704587206
+        }
+      ]
+    },
+    {
+      "n": 16,
+      "h_um": 0.1,
+      "law": "axis",
+      "mutant": null,
+      "theta_deg": 60.0,
+      "offset_um": 1.037019052838329,
+      "n_film_faces": 0,
+      "n_bc_cross": 2,
+      "tie_count": 0,
+      "boundary_rule": "crossing_half_cell_series_v1",
+      "err_max": 3.9968028886505635e-15,
+      "err_l2": 1.7638788346085865e-15,
+      "analytic_boundary_diag_max_abs": 3.552713678800501e-15,
+      "analytic_boundary_rhs_max_abs": 1.554312234475219e-14,
+      "exact_solution_residual_max": 5.551115123125783e-16,
+      "boundary_crossing_by_cell": {
+        "(15, 15)": 2
+      },
+      "crossing_records": [
+        {
+          "cell": [
+            15,
+            15
+          ],
+          "axis": 0,
+          "outward_sign": 1,
+          "u_cell": -0.012499999999999956,
+          "u_face": 0.012500000000000178,
+          "analytic_g": 0.04597701149425289
+        },
+        {
+          "cell": [
+            15,
+            15
+          ],
+          "axis": 1,
+          "outward_sign": 1,
+          "u_cell": -0.012499999999999956,
+          "u_face": 0.030801270189222185,
+          "analytic_g": 0.07704149511955374
+        }
+      ]
+    },
+    {
+      "n": 16,
+      "h_um": 0.1,
+      "law": "axis",
+      "mutant": null,
+      "theta_deg": 120.0,
+      "offset_um": -1.0370190528383287,
+      "n_film_faces": 0,
+      "n_bc_cross": 2,
+      "tie_count": 0,
+      "boundary_rule": "crossing_half_cell_series_v1",
+      "err_max": 1.7763568394002505e-15,
+      "err_l2": 5.494556905200379e-16,
+      "analytic_boundary_diag_max_abs": 4.085620730620576e-14,
+      "analytic_boundary_rhs_max_abs": 8.526512829121202e-14,
+      "exact_solution_residual_max": 1.7763568394002505e-15,
+      "boundary_crossing_by_cell": {
+        "(15, 0)": 2
+      },
+      "crossing_records": [
+        {
+          "cell": [
+            15,
+            0
+          ],
+          "axis": 0,
+          "outward_sign": 1,
+          "u_cell": 0.012499999999999956,
+          "u_face": -0.012500000000000178,
+          "analytic_g": 0.045977011494252824
+        },
+        {
+          "cell": [
+            15,
+            0
+          ],
+          "axis": 1,
+          "outward_sign": -1,
+          "u_cell": 0.012499999999999956,
+          "u_face": -0.030801270189222185,
+          "analytic_g": 0.07345383704587206
+        }
+      ]
+    },
+    {
+      "n": 16,
+      "h_um": 0.1,
+      "law": "axis",
+      "mutant": null,
+      "theta_deg": 120.0,
+      "offset_um": 1.0370190528383287,
+      "n_film_faces": 0,
+      "n_bc_cross": 2,
+      "tie_count": 0,
+      "boundary_rule": "crossing_half_cell_series_v1",
+      "err_max": 3.9968028886505635e-15,
+      "err_l2": 1.4594387089615628e-15,
+      "analytic_boundary_diag_max_abs": 1.199040866595169e-14,
+      "analytic_boundary_rhs_max_abs": 4.884981308350689e-14,
+      "exact_solution_residual_max": 6.661338147750939e-16,
+      "boundary_crossing_by_cell": {
+        "(0, 15)": 2
+      },
+      "crossing_records": [
+        {
+          "cell": [
+            0,
+            15
+          ],
+          "axis": 0,
+          "outward_sign": -1,
+          "u_cell": -0.012499999999999956,
+          "u_face": 0.012500000000000178,
+          "analytic_g": 0.04597701149425285
+        },
+        {
+          "cell": [
+            0,
+            15
+          ],
+          "axis": 1,
+          "outward_sign": 1,
+          "u_cell": -0.012499999999999956,
+          "u_face": 0.030801270189222185,
+          "analytic_g": 0.07704149511955374
+        }
+      ]
+    },
+    {
+      "n": 16,
+      "h_um": 0.1,
+      "law": "axis",
+      "mutant": null,
+      "theta_deg": 135.0,
+      "offset_um": -1.0783378413094848,
+      "n_film_faces": 0,
+      "n_bc_cross": 2,
+      "tie_count": 0,
+      "boundary_rule": "crossing_half_cell_series_v1",
+      "err_max": 1.1102230246251565e-15,
+      "err_l2": 4.2679838513351387e-16,
+      "analytic_boundary_diag_max_abs": 1.9872992140790302e-14,
+      "analytic_boundary_rhs_max_abs": 4.1300296516055823e-14,
+      "exact_solution_residual_max": 1.3322676295501878e-15,
+      "boundary_crossing_by_cell": {
+        "(15, 0)": 2
+      },
+      "crossing_records": [
+        {
+          "cell": [
+            15,
+            0
+          ],
+          "axis": 0,
+          "outward_sign": 1,
+          "u_cell": 0.01767766952966343,
+          "u_face": -0.017677669529663875,
+          "analytic_g": 0.06292420500783724
+        },
+        {
+          "cell": [
+            15,
+            0
+          ],
+          "axis": 1,
+          "outward_sign": -1,
+          "u_cell": 0.01767766952966343,
+          "u_face": -0.017677669529663875,
+          "analytic_g": 0.06292420500783726
+        }
+      ]
+    },
+    {
+      "n": 16,
+      "h_um": 0.1,
+      "law": "axis",
+      "mutant": null,
+      "theta_deg": 135.0,
+      "offset_um": 1.0783378413094848,
+      "n_film_faces": 0,
+      "n_bc_cross": 2,
+      "tie_count": 0,
+      "boundary_rule": "crossing_half_cell_series_v1",
+      "err_max": 4.440892098500626e-15,
+      "err_l2": 1.7147542486852623e-15,
+      "analytic_boundary_diag_max_abs": 4.218847493575595e-15,
+      "analytic_boundary_rhs_max_abs": 1.7541523789077473e-14,
+      "exact_solution_residual_max": 1.3322676295501878e-15,
+      "boundary_crossing_by_cell": {
+        "(0, 15)": 2
+      },
+      "crossing_records": [
+        {
+          "cell": [
+            0,
+            15
+          ],
+          "axis": 0,
+          "outward_sign": -1,
+          "u_cell": -0.01767766952966343,
+          "u_face": 0.017677669529663875,
+          "analytic_g": 0.06292420500783731
+        },
+        {
+          "cell": [
+            0,
+            15
+          ],
+          "axis": 1,
+          "outward_sign": 1,
+          "u_cell": -0.01767766952966343,
+          "u_face": 0.017677669529663875,
+          "analytic_g": 0.06292420500783732
+        }
+      ]
+    },
+    {
+      "n": 16,
+      "h_um": 0.1,
+      "law": "axis",
+      "mutant": null,
+      "theta_deg": 150.0,
+      "offset_um": -1.037019052838329,
+      "n_film_faces": 0,
+      "n_bc_cross": 2,
+      "tie_count": 0,
+      "boundary_rule": "crossing_half_cell_series_v1",
+      "err_max": 1.3322676295501878e-15,
+      "err_l2": 4.4400788724113724e-16,
+      "analytic_boundary_diag_max_abs": 2.930988785010413e-14,
+      "analytic_boundary_rhs_max_abs": 6.039613253960852e-14,
+      "exact_solution_residual_max": 1.3322676295501878e-15,
+      "boundary_crossing_by_cell": {
+        "(15, 0)": 2
+      },
+      "crossing_records": [
+        {
+          "cell": [
+            15,
+            0
+          ],
+          "axis": 0,
+          "outward_sign": 1,
+          "u_cell": 0.012499999999999956,
+          "u_face": -0.030801270189221963,
+          "analytic_g": 0.07345383704587213
+        },
+        {
+          "cell": [
+            15,
+            0
+          ],
+          "axis": 1,
+          "outward_sign": -1,
+          "u_cell": 0.012499999999999956,
+          "u_face": -0.012499999999999956,
+          "analytic_g": 0.04597701149425289
+        }
+      ]
+    },
+    {
+      "n": 16,
+      "h_um": 0.1,
+      "law": "axis",
+      "mutant": null,
+      "theta_deg": 150.0,
+      "offset_um": 1.037019052838329,
+      "n_film_faces": 0,
+      "n_bc_cross": 2,
+      "tie_count": 0,
+      "boundary_rule": "crossing_half_cell_series_v1",
+      "err_max": 4.884981308350689e-15,
+      "err_l2": 1.8210642473736127e-15,
+      "analytic_boundary_diag_max_abs": 1.0436096431476471e-14,
+      "analytic_boundary_rhs_max_abs": 4.529709940470639e-14,
+      "exact_solution_residual_max": 8.881784197001252e-16,
+      "boundary_crossing_by_cell": {
+        "(0, 15)": 2
+      },
+      "crossing_records": [
+        {
+          "cell": [
+            0,
+            15
+          ],
+          "axis": 0,
+          "outward_sign": -1,
+          "u_cell": -0.012499999999999956,
+          "u_face": 0.030801270189221963,
+          "analytic_g": 0.07704149511955377
+        },
+        {
+          "cell": [
+            0,
+            15
+          ],
+          "axis": 1,
+          "outward_sign": 1,
+          "u_cell": -0.012499999999999956,
+          "u_face": 0.012499999999999956,
+          "analytic_g": 0.04597701149425289
+        }
+      ]
+    },
+    {
+      "n": 16,
+      "h_um": 0.1,
+      "law": "axis",
+      "mutant": null,
+      "theta_deg": 210.0,
+      "offset_um": -1.037019052838329,
+      "n_film_faces": 0,
+      "n_bc_cross": 2,
+      "tie_count": 0,
+      "boundary_rule": "crossing_half_cell_series_v1",
+      "err_max": 1.7763568394002505e-15,
+      "err_l2": 5.922296150963919e-16,
+      "analytic_boundary_diag_max_abs": 2.275957200481571e-14,
+      "analytic_boundary_rhs_max_abs": 3.441691376337985e-14,
+      "exact_solution_residual_max": 6.661338147750939e-16,
+      "boundary_crossing_by_cell": {
+        "(15, 15)": 2
+      },
+      "crossing_records": [
+        {
+          "cell": [
+            15,
+            15
+          ],
+          "axis": 0,
+          "outward_sign": 1,
+          "u_cell": 0.012499999999999956,
+          "u_face": -0.030801270189222185,
+          "analytic_g": 0.07345383704587206
+        },
+        {
+          "cell": [
+            15,
+            15
+          ],
+          "axis": 1,
+          "outward_sign": 1,
+          "u_cell": 0.012499999999999956,
+          "u_face": -0.012500000000000178,
+          "analytic_g": 0.04597701149425285
+        }
+      ]
+    },
+    {
+      "n": 16,
+      "h_um": 0.1,
+      "law": "axis",
+      "mutant": null,
+      "theta_deg": 210.0,
+      "offset_um": 1.037019052838329,
+      "n_film_faces": 0,
+      "n_bc_cross": 2,
+      "tie_count": 0,
+      "boundary_rule": "crossing_half_cell_series_v1",
+      "err_max": 3.1086244689504383e-15,
+      "err_l2": 1.2900503552894028e-15,
+      "analytic_boundary_diag_max_abs": 3.6637359812630166e-15,
+      "analytic_boundary_rhs_max_abs": 1.554312234475219e-14,
+      "exact_solution_residual_max": 6.661338147750939e-16,
+      "boundary_crossing_by_cell": {
+        "(0, 0)": 2
+      },
+      "crossing_records": [
+        {
+          "cell": [
+            0,
+            0
+          ],
+          "axis": 0,
+          "outward_sign": -1,
+          "u_cell": -0.012499999999999956,
+          "u_face": 0.030801270189222185,
+          "analytic_g": 0.07704149511955374
+        },
+        {
+          "cell": [
+            0,
+            0
+          ],
+          "axis": 1,
+          "outward_sign": -1,
+          "u_cell": -0.012499999999999956,
+          "u_face": 0.012500000000000178,
+          "analytic_g": 0.04597701149425289
+        }
+      ]
+    },
+    {
+      "n": 16,
+      "h_um": 0.1,
+      "law": "axis",
+      "mutant": null,
+      "theta_deg": 225.0,
+      "offset_um": -1.078337841309485,
+      "n_film_faces": 0,
+      "n_bc_cross": 2,
+      "tie_count": 0,
+      "boundary_rule": "crossing_half_cell_series_v1",
+      "err_max": 1.7763568394002505e-15,
+      "err_l2": 6.2702035375444505e-16,
+      "analytic_boundary_diag_max_abs": 1.199040866595169e-14,
+      "analytic_boundary_rhs_max_abs": 2.3092638912203256e-14,
+      "exact_solution_residual_max": 1.3322676295501878e-15,
+      "boundary_crossing_by_cell": {
+        "(15, 15)": 2
+      },
+      "crossing_records": [
+        {
+          "cell": [
+            15,
+            15
+          ],
+          "axis": 0,
+          "outward_sign": 1,
+          "u_cell": 0.017677669529663653,
+          "u_face": -0.017677669529663653,
+          "analytic_g": 0.0629242050078373
+        },
+        {
+          "cell": [
+            15,
+            15
+          ],
+          "axis": 1,
+          "outward_sign": 1,
+          "u_cell": 0.017677669529663653,
+          "u_face": -0.017677669529663653,
+          "analytic_g": 0.06292420500783728
+        }
+      ]
+    },
+    {
+      "n": 16,
+      "h_um": 0.1,
+      "law": "axis",
+      "mutant": null,
+      "theta_deg": 225.0,
+      "offset_um": 1.078337841309485,
+      "n_film_faces": 0,
+      "n_bc_cross": 2,
+      "tie_count": 0,
+      "boundary_rule": "crossing_half_cell_series_v1",
+      "err_max": 3.9968028886505635e-15,
+      "err_l2": 1.4367114115578052e-15,
+      "analytic_boundary_diag_max_abs": 4.163336342344337e-15,
+      "analytic_boundary_rhs_max_abs": 1.709743457922741e-14,
+      "exact_solution_residual_max": 6.661338147750939e-16,
+      "boundary_crossing_by_cell": {
+        "(0, 0)": 2
+      },
+      "crossing_records": [
+        {
+          "cell": [
+            0,
+            0
+          ],
+          "axis": 0,
+          "outward_sign": -1,
+          "u_cell": -0.017677669529663653,
+          "u_face": 0.017677669529663653,
+          "analytic_g": 0.0629242050078373
+        },
+        {
+          "cell": [
+            0,
+            0
+          ],
+          "axis": 1,
+          "outward_sign": -1,
+          "u_cell": -0.017677669529663653,
+          "u_face": 0.017677669529663653,
+          "analytic_g": 0.06292420500783728
+        }
+      ]
+    },
+    {
+      "n": 16,
+      "h_um": 0.1,
+      "law": "axis",
+      "mutant": null,
+      "theta_deg": 240.0,
+      "offset_um": -1.037019052838329,
+      "n_film_faces": 0,
+      "n_bc_cross": 2,
+      "tie_count": 0,
+      "boundary_rule": "crossing_half_cell_series_v1",
+      "err_max": 1.9984014443252818e-15,
+      "err_l2": 6.666215272124429e-16,
+      "analytic_boundary_diag_max_abs": 2.2426505097428162e-14,
+      "analytic_boundary_rhs_max_abs": 4.4853010194856324e-14,
+      "exact_solution_residual_max": 1.3322676295501878e-15,
+      "boundary_crossing_by_cell": {
+        "(15, 15)": 2
+      },
+      "crossing_records": [
+        {
+          "cell": [
+            15,
+            15
+          ],
+          "axis": 0,
+          "outward_sign": 1,
+          "u_cell": 0.012499999999999734,
+          "u_face": -0.0125000000000004,
+          "analytic_g": 0.04597701149425286
+        },
+        {
+          "cell": [
+            15,
+            15
+          ],
+          "axis": 1,
+          "outward_sign": 1,
+          "u_cell": 0.012499999999999734,
+          "u_face": -0.030801270189222185,
+          "analytic_g": 0.07345383704587208
+        }
+      ]
+    },
+    {
+      "n": 16,
+      "h_um": 0.1,
+      "law": "axis",
+      "mutant": null,
+      "theta_deg": 240.0,
+      "offset_um": 1.037019052838329,
+      "n_film_faces": 0,
+      "n_bc_cross": 2,
+      "tie_count": 0,
+      "boundary_rule": "crossing_half_cell_series_v1",
+      "err_max": 3.552713678800501e-15,
+      "err_l2": 1.491851741250556e-15,
+      "analytic_boundary_diag_max_abs": 3.219646771412954e-15,
+      "analytic_boundary_rhs_max_abs": 1.2878587085651816e-14,
+      "exact_solution_residual_max": 5.551115123125783e-16,
+      "boundary_crossing_by_cell": {
+        "(0, 0)": 2
+      },
+      "crossing_records": [
+        {
+          "cell": [
+            0,
+            0
+          ],
+          "axis": 0,
+          "outward_sign": -1,
+          "u_cell": -0.012499999999999734,
+          "u_face": 0.0125000000000004,
+          "analytic_g": 0.04597701149425294
+        },
+        {
+          "cell": [
+            0,
+            0
+          ],
+          "axis": 1,
+          "outward_sign": -1,
+          "u_cell": -0.012499999999999734,
+          "u_face": 0.030801270189222185,
+          "analytic_g": 0.07704149511955381
+        }
+      ]
+    },
+    {
+      "n": 16,
+      "h_um": 0.1,
+      "law": "axis",
+      "mutant": null,
+      "theta_deg": 300.0,
+      "offset_um": -1.037019052838329,
+      "n_film_faces": 0,
+      "n_bc_cross": 2,
+      "tie_count": 0,
+      "boundary_rule": "crossing_half_cell_series_v1",
+      "err_max": 2.6645352591003757e-15,
+      "err_l2": 9.923285461494299e-16,
+      "analytic_boundary_diag_max_abs": 2.275957200481571e-14,
+      "analytic_boundary_rhs_max_abs": 3.441691376337985e-14,
+      "exact_solution_residual_max": 8.881784197001252e-16,
+      "boundary_crossing_by_cell": {
+        "(0, 15)": 2
+      },
+      "crossing_records": [
+        {
+          "cell": [
+            0,
+            15
+          ],
+          "axis": 0,
+          "outward_sign": -1,
+          "u_cell": 0.012499999999999956,
+          "u_face": -0.012500000000000178,
+          "analytic_g": 0.04597701149425285
+        },
+        {
+          "cell": [
+            0,
+            15
+          ],
+          "axis": 1,
+          "outward_sign": 1,
+          "u_cell": 0.012499999999999956,
+          "u_face": -0.030801270189222185,
+          "analytic_g": 0.07345383704587206
+        }
+      ]
+    },
+    {
+      "n": 16,
+      "h_um": 0.1,
+      "law": "axis",
+      "mutant": null,
+      "theta_deg": 300.0,
+      "offset_um": 1.037019052838329,
+      "n_film_faces": 0,
+      "n_bc_cross": 2,
+      "tie_count": 0,
+      "boundary_rule": "crossing_half_cell_series_v1",
+      "err_max": 4.440892098500626e-15,
+      "err_l2": 1.8292879594681927e-15,
+      "analytic_boundary_diag_max_abs": 3.552713678800501e-15,
+      "analytic_boundary_rhs_max_abs": 1.554312234475219e-14,
+      "exact_solution_residual_max": 4.440892098500626e-16,
+      "boundary_crossing_by_cell": {
+        "(15, 0)": 2
+      },
+      "crossing_records": [
+        {
+          "cell": [
+            15,
+            0
+          ],
+          "axis": 0,
+          "outward_sign": 1,
+          "u_cell": -0.012499999999999956,
+          "u_face": 0.012500000000000178,
+          "analytic_g": 0.04597701149425289
+        },
+        {
+          "cell": [
+            15,
+            0
+          ],
+          "axis": 1,
+          "outward_sign": -1,
+          "u_cell": -0.012499999999999956,
+          "u_face": 0.030801270189222185,
+          "analytic_g": 0.07704149511955374
+        }
+      ]
+    },
+    {
+      "n": 16,
+      "h_um": 0.1,
+      "law": "axis",
+      "mutant": null,
+      "theta_deg": 315.0,
+      "offset_um": -1.0783378413094848,
+      "n_film_faces": 0,
+      "n_bc_cross": 2,
+      "tie_count": 0,
+      "boundary_rule": "crossing_half_cell_series_v1",
+      "err_max": 1.9984014443252818e-15,
+      "err_l2": 7.222618635658314e-16,
+      "analytic_boundary_diag_max_abs": 3.9745984281580604e-14,
+      "analytic_boundary_rhs_max_abs": 8.526512829121202e-14,
+      "exact_solution_residual_max": 1.7763568394002505e-15,
+      "boundary_crossing_by_cell": {
+        "(0, 15)": 2
+      },
+      "crossing_records": [
+        {
+          "cell": [
+            0,
+            15
+          ],
+          "axis": 0,
+          "outward_sign": -1,
+          "u_cell": 0.017677669529663653,
+          "u_face": -0.017677669529663875,
+          "analytic_g": 0.0629242050078372
+        },
+        {
+          "cell": [
+            0,
+            15
+          ],
+          "axis": 1,
+          "outward_sign": 1,
+          "u_cell": 0.017677669529663653,
+          "u_face": -0.017677669529663875,
+          "analytic_g": 0.06292420500783724
+        }
+      ]
+    },
+    {
+      "n": 16,
+      "h_um": 0.1,
+      "law": "axis",
+      "mutant": null,
+      "theta_deg": 315.0,
+      "offset_um": 1.0783378413094848,
+      "n_film_faces": 0,
+      "n_bc_cross": 2,
+      "tie_count": 0,
+      "boundary_rule": "crossing_half_cell_series_v1",
+      "err_max": 2.6645352591003757e-15,
+      "err_l2": 1.0720089319274574e-15,
+      "analytic_boundary_diag_max_abs": 8.659739592076221e-15,
+      "analytic_boundary_rhs_max_abs": 3.597122599785507e-14,
+      "exact_solution_residual_max": 7.771561172376096e-16,
+      "boundary_crossing_by_cell": {
+        "(15, 0)": 2
+      },
+      "crossing_records": [
+        {
+          "cell": [
+            15,
+            0
+          ],
+          "axis": 0,
+          "outward_sign": 1,
+          "u_cell": -0.017677669529663653,
+          "u_face": 0.017677669529663875,
+          "analytic_g": 0.06292420500783724
+        },
+        {
+          "cell": [
+            15,
+            0
+          ],
+          "axis": 1,
+          "outward_sign": -1,
+          "u_cell": -0.017677669529663653,
+          "u_face": 0.017677669529663875,
+          "analytic_g": 0.06292420500783727
+        }
+      ]
+    },
+    {
+      "n": 16,
+      "h_um": 0.1,
+      "law": "axis",
+      "mutant": null,
+      "theta_deg": 330.0,
+      "offset_um": -1.037019052838329,
+      "n_film_faces": 0,
+      "n_bc_cross": 2,
+      "tie_count": 0,
+      "boundary_rule": "crossing_half_cell_series_v1",
+      "err_max": 3.552713678800501e-15,
+      "err_l2": 1.2219794070254155e-15,
+      "analytic_boundary_diag_max_abs": 2.2426505097428162e-14,
+      "analytic_boundary_rhs_max_abs": 4.4853010194856324e-14,
+      "exact_solution_residual_max": 1.3322676295501878e-15,
+      "boundary_crossing_by_cell": {
+        "(0, 15)": 2
+      },
+      "crossing_records": [
+        {
+          "cell": [
+            0,
+            15
+          ],
+          "axis": 0,
+          "outward_sign": -1,
+          "u_cell": 0.012499999999999956,
+          "u_face": -0.030801270189222185,
+          "analytic_g": 0.07345383704587204
+        },
+        {
+          "cell": [
+            0,
+            15
+          ],
+          "axis": 1,
+          "outward_sign": 1,
+          "u_cell": 0.012499999999999956,
+          "u_face": -0.012500000000000178,
+          "analytic_g": 0.04597701149425289
+        }
+      ]
+    },
+    {
+      "n": 16,
+      "h_um": 0.1,
+      "law": "axis",
+      "mutant": null,
+      "theta_deg": 330.0,
+      "offset_um": 1.037019052838329,
+      "n_film_faces": 0,
+      "n_bc_cross": 2,
+      "tie_count": 0,
+      "boundary_rule": "crossing_half_cell_series_v1",
+      "err_max": 4.884981308350689e-15,
+      "err_l2": 1.905945084692385e-15,
+      "analytic_boundary_diag_max_abs": 3.6637359812630166e-15,
+      "analytic_boundary_rhs_max_abs": 1.5987211554602254e-14,
+      "exact_solution_residual_max": 5.551115123125783e-16,
+      "boundary_crossing_by_cell": {
+        "(15, 0)": 2
+      },
+      "crossing_records": [
+        {
+          "cell": [
+            15,
+            0
+          ],
+          "axis": 0,
+          "outward_sign": 1,
+          "u_cell": -0.012499999999999956,
+          "u_face": 0.030801270189222185,
+          "analytic_g": 0.07704149511955372
+        },
+        {
+          "cell": [
+            15,
+            0
+          ],
+          "axis": 1,
+          "outward_sign": -1,
+          "u_cell": -0.012499999999999956,
+          "u_face": 0.012500000000000178,
+          "analytic_g": 0.045977011494252915
+        }
+      ]
+    }
+  ],
+  "tie_diagnostic": [
+    {
+      "n": 128,
+      "h_um": 0.0125,
+      "law": "axis",
+      "mutant": null,
+      "theta_deg": 45.0,
+      "offset_um": 0.0,
+      "n_film_faces": 254,
+      "n_bc_cross": 2,
+      "tie_count": 128,
+      "boundary_rule": "crossing_half_cell_series_v1",
+      "err_max": 0.005660516618674727,
+      "err_l2": 0.0009205293576660072,
+      "phase_changes_from_unshifted": 0,
+      "solution_max_change_from_unshifted": 0.0,
+      "non_tie_solution_max_change_from_unshifted": 0.0,
+      "non_tie_err_max": 0.005660516618674727,
+      "exact_u_zero_count": 86,
+      "near_tie_reg2_count": 106
+    },
+    {
+      "n": 128,
+      "h_um": 0.0125,
+      "law": "axis",
+      "mutant": null,
+      "theta_deg": 45.0,
+      "offset_um": -1e-14,
+      "n_film_faces": 254,
+      "n_bc_cross": 2,
+      "tie_count": 128,
+      "boundary_rule": "crossing_half_cell_series_v1",
+      "err_max": 0.005174796290857327,
+      "err_l2": 0.0012688925252142844,
+      "phase_changes_from_unshifted": 22,
+      "solution_max_change_from_unshifted": 1.0735348392461577,
+      "non_tie_solution_max_change_from_unshifted": 0.005028381785644215,
+      "non_tie_err_max": 0.005174796290857327,
+      "exact_u_zero_count": 0,
+      "near_tie_reg2_count": 128
+    },
+    {
+      "n": 128,
+      "h_um": 0.0125,
+      "law": "axis",
+      "mutant": null,
+      "theta_deg": 45.0,
+      "offset_um": 1e-14,
+      "n_film_faces": 254,
+      "n_bc_cross": 2,
+      "tie_count": 128,
+      "boundary_rule": "crossing_half_cell_series_v1",
+      "err_max": 0.0052141568919841915,
+      "err_l2": 0.001271344242858347,
+      "phase_changes_from_unshifted": 106,
+      "solution_max_change_from_unshifted": 1.0627343133172824,
+      "non_tie_solution_max_change_from_unshifted": 0.009297070706681877,
+      "non_tie_err_max": 0.0050572754284330945,
+      "exact_u_zero_count": 0,
+      "near_tie_reg2_count": 0
+    },
+    {
+      "n": 128,
+      "h_um": 0.0125,
+      "law": "axis",
+      "mutant": null,
+      "theta_deg": 45.0,
+      "offset_um": -1e-13,
+      "n_film_faces": 254,
+      "n_bc_cross": 2,
+      "tie_count": 128,
+      "boundary_rule": "crossing_half_cell_series_v1",
+      "err_max": 0.005174796290752112,
+      "err_l2": 0.0012688925251885706,
+      "phase_changes_from_unshifted": 22,
+      "solution_max_change_from_unshifted": 1.073534839246354,
+      "non_tie_solution_max_change_from_unshifted": 0.005028381785593172,
+      "non_tie_err_max": 0.005174796290752112,
+      "exact_u_zero_count": 0,
+      "near_tie_reg2_count": 128
+    },
+    {
+      "n": 128,
+      "h_um": 0.0125,
+      "law": "axis",
+      "mutant": null,
+      "theta_deg": 45.0,
+      "offset_um": 1e-13,
+      "n_film_faces": 254,
+      "n_bc_cross": 2,
+      "tie_count": 128,
+      "boundary_rule": "crossing_half_cell_series_v1",
+      "err_max": 0.005214156891877631,
+      "err_l2": 0.0012713442428323727,
+      "phase_changes_from_unshifted": 106,
+      "solution_max_change_from_unshifted": 1.0627343133177332,
+      "non_tie_solution_max_change_from_unshifted": 0.009297070706959315,
+      "non_tie_err_max": 0.005057275428329754,
+      "exact_u_zero_count": 0,
+      "near_tie_reg2_count": 0
+    },
+    {
+      "n": 128,
+      "h_um": 0.0125,
+      "law": "axis",
+      "mutant": null,
+      "theta_deg": 45.0,
+      "offset_um": -1e-11,
+      "n_film_faces": 254,
+      "n_bc_cross": 2,
+      "tie_count": 0,
+      "boundary_rule": "crossing_half_cell_series_v1",
+      "err_max": 0.00517479627919995,
+      "err_l2": 0.0012688925223610383,
+      "phase_changes_from_unshifted": 22,
+      "solution_max_change_from_unshifted": 1.0735348392679067,
+      "non_tie_solution_max_change_from_unshifted": 0.005028381779976082,
+      "non_tie_err_max": 0.00517479627919995,
+      "exact_u_zero_count": 0,
+      "near_tie_reg2_count": 0
+    },
+    {
+      "n": 128,
+      "h_um": 0.0125,
+      "law": "axis",
+      "mutant": null,
+      "theta_deg": 45.0,
+      "offset_um": 1e-11,
+      "n_film_faces": 254,
+      "n_bc_cross": 2,
+      "tie_count": 0,
+      "boundary_rule": "crossing_half_cell_series_v1",
+      "err_max": 0.005214156880158157,
+      "err_l2": 0.0012713442399712557,
+      "phase_changes_from_unshifted": 106,
+      "solution_max_change_from_unshifted": 1.062734313367326,
+      "non_tie_solution_max_change_from_unshifted": 0.009297070737480422,
+      "non_tie_err_max": 0.005057275416961361,
+      "exact_u_zero_count": 0,
+      "near_tie_reg2_count": 0
+    },
+    {
+      "n": 128,
+      "h_um": 0.0125,
+      "law": "axis",
+      "mutant": null,
+      "theta_deg": 45.0,
+      "offset_um": 0.001,
+      "n_film_faces": 254,
+      "n_bc_cross": 2,
+      "tie_count": 0,
+      "boundary_rule": "crossing_half_cell_series_v1",
+      "err_max": 0.004030350534206805,
+      "err_l2": 0.0009823643238694344,
+      "phase_changes_from_unshifted": 106,
+      "solution_max_change_from_unshifted": 1.0677436746493814,
+      "non_tie_solution_max_change_from_unshifted": 0.01239727678794638,
+      "non_tie_err_max": 0.003908936555016847,
+      "exact_u_zero_count": 0,
+      "near_tie_reg2_count": 0
+    }
+  ]
+}

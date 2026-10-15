@@ -1,0 +1,113 @@
+[
+  {
+    "command": [
+      "C:\\Users\\Administrator\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\python.exe",
+      "-X",
+      "utf8",
+      "-B",
+      "scripts/test_rint_g2_am_iface.py"
+    ],
+    "rc": 0,
+    "seconds": 6.82652735710144,
+    "log_sha256": "8a315a77c841de41270226c7ff01cb72ad9d96639cb07e2740a1f1e4e6aa7974"
+  },
+  {
+    "command": [
+      "C:\\Users\\Administrator\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\python.exe",
+      "-X",
+      "utf8",
+      "-B",
+      "scripts/test_rint_g2_rrm.py"
+    ],
+    "rc": 0,
+    "seconds": 2.552360773086548,
+    "log_sha256": "89ea41a3141d065732699599eb656801599dad052bf45f3aca971142be30dcfd"
+  },
+  {
+    "command": [
+      "C:\\Users\\Administrator\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\python.exe",
+      "-X",
+      "utf8",
+      "-B",
+      "scripts/test_rint_g2_join.py"
+    ],
+    "rc": 0,
+    "seconds": 68.21391701698303,
+    "log_sha256": "9ddcfa3a4523be4a8b8758959164c0299af5903282f394b11e05ff8413c8bd5f"
+  },
+  {
+    "command": [
+      "C:\\Users\\Administrator\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\python.exe",
+      "-X",
+      "utf8",
+      "-B",
+      "scripts/test_rint_t4_census.py"
+    ],
+    "rc": 0,
+    "seconds": 1.1848831176757812,
+    "log_sha256": "4f26bba3c0c3af670a2fdbf82abbdfac4cbc98cb9d6e26dcd41d70e502137c8c"
+  },
+  {
+    "command": [
+      "C:\\Users\\Administrator\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\python.exe",
+      "-X",
+      "utf8",
+      "-B",
+      "scripts/test_rint_t43_order.py"
+    ],
+    "rc": 0,
+    "seconds": 1.1202874183654785,
+    "log_sha256": "4c41433a64bd0234ada568a346f7b5b5c4c9694039dc6aaabb6c4d04f0b4195a"
+  },
+  {
+    "command": [
+      "C:\\Users\\Administrator\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\python.exe",
+      "-X",
+      "utf8",
+      "-B",
+      "scripts/test_rint_t2_dev.py"
+    ],
+    "rc": 0,
+    "seconds": 1.1420176029205322,
+    "log_sha256": "1ae7c4b56369eaa7aac2d5d12c31e5ba964f31ef1221ad846c4993c1f7643809"
+  },
+  {
+    "command": [
+      "C:\\Users\\Administrator\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\python.exe",
+      "-X",
+      "utf8",
+      "-B",
+      "scripts/step3_sigma.py",
+      "--selftest"
+    ],
+    "rc": 0,
+    "seconds": 1.1114585399627686,
+    "log_sha256": "e9528e10949299103f47c6cc17ab768eb687cd933ea0d497777e70ff3b76255b"
+  },
+  {
+    "command": [
+      "C:\\Users\\Administrator\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\python.exe",
+      "-X",
+      "utf8",
+      "-B",
+      "scripts/step3_sigma.py",
+      "--selftest-rint"
+    ],
+    "rc": 0,
+    "seconds": 1.0076334476470947,
+    "log_sha256": "def2b7ca6f1e341d639e472299215fdc3cc64c469185b0fe1ef03490fea619f2"
+  },
+  {
+    "command": [
+      "C:\\Users\\Administrator\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\python.exe",
+      "-X",
+      "utf8",
+      "-B",
+      "scripts/rint_t41_census.py",
+      "--selftest"
+    ],
+    "rc": 0,
+    "seconds": 1.1742892265319824,
+    "log_sha256": "392477d22d8dd01b658701ed5191f4192bf5c2e93422c1464819afd3aba9b764"
+  }
+]
