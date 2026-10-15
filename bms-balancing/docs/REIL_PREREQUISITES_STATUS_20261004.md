@@ -1782,3 +1782,46 @@ rc 0 → **옛 봉인 대조 (§2-4) 에서 허용 밖 차이** → 정지. 원�
      `test_reil_c4e_fix.py` 둘뿐).
 - **다음:** 재검토 발송 (사용자 결정) → 수용 → E1 승인 요청 (`SOURCES.json` sha256 · fetch argv / env · 단계 실행기 독립 사전 대조) → 사용자 E1 GO.
   이 결과는 E1 · 자료 반입 · 개봉 · C4-A / B 승인이 아니다.
+
+## §72 C4-E · E0 한정 정정 결과 검토 회신 접수 — N1 한정 해소 · 정정 결과 한정 수용 · E1 승인 요청서 작성 허용 (E1 실행 승인 아님) (2026-10-15 KST · 덧붙임 — 위 §0–§71 은 그대로)
+
+- **보존:** `reviews/review_reil_c4e_e0_fix_20261015/REIL_C4E_E0_FIX_REVIEW_20261015.zip` (377,810 B · sha256
+  `a4282d566454d1d16d42a1b0703e855f4ec5e2b35205baac4c3eef7e9f59c8dd`) · `originals/` 72 멤버 안전 추출 (심볼릭 링크 · 경로 이탈 0). 보존 규칙 `2334c5c6` →
+  보존 `870e7693`.
+  - PACKAGE_MANIFEST 71/71 (목록 밖은 매니페스트 자신뿐).
+  - `source/` 46 = 검토 HEAD `322a0e53` 원문 · `green_commit/` 8 = `61b9037e` · `red_commit/` 시험 = `72844b29` · `approval_commit/` = `0d065e84` 의 승인 요청 ·
+    `basis/BEFORE_reil_c4e_run.py.txt` = 패치 전 runner (`0a9ddb83…`) · `basis/E0_*` 4 = E0 결과 검토 회신 원문 · `basis/PRE_EXECUTION_APPROVAL_SECTION70.txt` =
+    `f4efff51` 상태 문서의 정확한 부분 문자열.
+  - 회신 `source/.gitattributes` 사본 (bms-balancing 규칙의 사본 · `* text=auto` · `*.py text`) 이 하위 규칙으로 상위 `-text` 를 덮지만, `source/` 아래에 CR 이
+    있는 파일이 없어 바이트 변화가 없다 · blob 검사 73/73 (`git hash-object --no-filters`) · 비밀 검사 73 파일 0 건 · 실행 파일 (ps1 · sh · java 등) 0.
+- **판정 (`DECISION.json`):** `E0_N1_SCOPED_CLOSED_E1_APPROVAL_REQUEST_ALLOWED_NOT_EXECUTION` · 새 차단 결함 0 · N1 = `CLOSED_WITHIN_TRUSTED_LIST_CLI_SCOPE`.
+  검토자 실행: 대상 import · 시험 · E1 fetch / 원자료 개봉 · COMSOL · 저장소 쓰기 · 외부 메시지 0 (정적 데이터 대조 54 · GREEN 커밋 파일 직접 대조 8 — 기능 시험 수가 아니다).
+- **검토자가 확인한 것 (`REVIEW_KO.md` §1–§3):**
+  - N1 연결 — 신뢰 목록 · 정확한 다섯 경로 (`:67–71` · `:496–533`) · 누락 · 미승인 바이트 차단 (`:562–610` — check_paths · util import · load_inputs · 작업자 앞) ·
+    시작 = 끝 미승인 바이트 거부 (`:322–337` · `:345–377`) · 끝 표 · 수용 판정 연결 (`:620–630` · execute) · CLI 의 목록 필수 (`:796–`) · plan-e · E0 범위 보존.
+  - SOURCES.json 1,100 B · `2a7b2b49…3d52` 의 다섯 sha · 크기 = 구현 커밋 · 검토 HEAD. GREEN 8 해시 = `61b9037e` 파일 (각각 직접 읽음) · GREEN / 끝 목록 바이트 동일
+    (커밋 HEAD 가 같다는 이유로 GREEN 작업 트리를 같다고 보지 않음). controls `7a09d438…` = draft · RED 커밋 · 최종. 고정 diff 12 hunk 를 메모리에서 적용한 결과 =
+    새 runner 전체 바이트.
+  - 이전 검토 HEAD `5cb6ab95` → 검토 HEAD 의 `scripts/` 변경은 runner 하나 · E0 증거 경로 변경 0 · 기존 E0 시험 해시 보존.
+  - 단계 기록 (과거 실행 기록의 수용 · 재시험 아님): identity rc 0 21.699 / 60 s · RED rc 1 (선언된 6) 1.070 / 600 s · GREEN rc 0 · 27 · stderr 0 B 2.675 / 600 s ·
+    seal-sources rc 0 0.115 / 60 s · 모든 meta `timed_out` false · 단계 전후 HEAD 일치.
+- **한정 (그대로 받는다 · 넓히지 않는다):**
+  1. 목록 없는 라이브러리 legacy 경로는 E1 의 승인된 실행이 아니다.
+  2. 내부 소스 검사는 모듈 import **뒤**다 — runner `:43–54` 의 e3a · monitor · c5 (→ p0) import 가 prepare 보다 먼저다. 내부 검사가 util 적재 전이라는 사실만으로
+     실행 모듈 import 전 보호를 주장하지 않는다 → E1 에 독립 사전 대조가 따로 필요하다 (현 정정의 새 실패가 아니라 E1 경계의 이유).
+  3. 시작 불일치는 적재 전 차단 · 실행 중 변경은 끝 재해시 · 수용 단계에서 거부 — 연속 파일 감시 · 모든 TOCTOU 방지가 아니다.
+  4. sha 인자 형식 · 비JSON · 크기만 다름 · 모듈 경로 집합 자기 불일치는 정적 근거뿐 — 27 PASS 를 모든 분기 시험으로 넓히지 않는다. RED 는 인터페이스 수준이다.
+  5. 25.559 s 는 단계 합 (외부 경과 — pytest 자체 2.36 s 와 다른 경계) · 117.4 s 는 커밋 · push · 문서 전 snapshot (전체 완료시간 PASS 아님) · RSS 91,024 KiB 는
+     사후 단일 자식 최대 (동시 합 · 강제 상한 아님) · 재시험 · 자동 수정 0 은 기록과 모순 없음의 범위 (독립 OS 감사 아님) · 선택한 저장소 경로 · 커밋의 확인이지
+     제출자 PC 전체 불변 관측이 아니다.
+  6. 승인 출처는 실행 전 저장소 인용 기록 (§70 · `f4efff51`) 이고 사용자 대화의 직접 관측이 아니다.
+  7. §70 의 날짜 표기는 §71 의 정정과 함께 읽는다 (과거 기록 재작성 요구 없음).
+- **E1 승인 요청서에 고정할 것 (`REVIEW_KO.md` §4 · `CLAUDE_REPLY_KO.md`):**
+  1. SOURCES.json 전체 sha · 다섯 파일 식별 · 실행 경로 / cwd · 구현 커밋 `61b9037e` — 목록 · 모듈이 바뀌면 다시 봉인 · 검토 · 승인.
+  2. run 프로세스 시작 **전**, 실행 모듈 밖의 stdlib 사전 검사 — 목록 sha · 정확한 다섯 경로 / 크기 / sha. checker 자신 · 명령 · 입력 고정 · 실제 실행 / 적재 경로와
+     대조 경로의 연결. 불일치면 run 을 띄우지 않고 외부 meta 에 남긴다.
+  3. 단계 수용 = 독립 사전 대조 성공 AND run 최종 판정 성공 AND 실제 외부 rc 0 AND `timed_out` false. 지금의 `stage_verdict` 가 사전 대조를 이미 포함한다고 쓰지 않는다.
+  4. fetch 의 실제 argv / env — 고정 URL · 커밋 · 두 경로 · no-checkout · 크기 / sha 유지 · named origin · https 제한 · prompt 금지. 네트워크 성공은 미검증이고,
+     실패하면 대체 출처 · 자동 재시도 없이 멈춘다.
+  5. 자료 반입 · 개봉 · 66 호출의 범위 · 시간 / 자원 · 출력 폴더 · 첫 예상 밖 실패 중지 · 외부 기록 · 제출 경계를 별도 승인문에 — E0 정정 승인을 E1 로 전용하지 않는다.
+- **이 회신은 실행 승인이 아니다.** E1 fetch / run · 원자료 개봉 · C4-A / B · COMSOL 은 0 회. 다음: E1 승인 요청서 (정적 · 실행 0) → 사용자 결정 (사전 검토 발송 · E1 승인).
