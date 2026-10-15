@@ -40,5 +40,14 @@
  "⏭": [
   "Q1 판독 도구를 결과 전에 커밋 — G1 (8/8 완료 · 러너와 같은 완료 기준) · 모델별 DFT 최저 · ΔG_site(DFT) · G2 (UMA 부호 대조) · G3 문턱 · G7 다형 재확인 표시",
   "결과 → G3 · G4 (k 탐침) · G7 규칙대로 → §5 허용 서술 중 하나 → 1저자 동의 (사용자 통해)"
- ]
+ ],
+ "점검_대조_결과_2026_10_15": {
+  "출처": "사용자 붙여넣기 10-15 (kgy · 발사 블록 1 차)",
+  "받은_판": "09a88aba ($R/src/SOURCE_COMMIT)",
+  "러너_selftest": "11 통과 · 0 실패",
+  "대조_원본": "/home/kgy/work/runs/nd_scf_2026_09_08/ndo_lpscl16_n4fu_O-bo4/scf.in",
+  "설정_diff": "유일한 차이 '> mixing_ndim=8' — 새 입력은 명시 · 원본은 생략 = QE 기본값 8 ⇒ 같은 설정. 나머지 (ecutwfc · ecutrho · occupations · smearing · degauss · conv_thr · mixing_mode · mixing_beta · electron_maxstep · diagonalization · nosym · tprnfor · tstress · pseudo_dir) 는 숫자 표기 정규화 뒤 같다",
+  "처리": "사슬이 diff 에서 멈춰 tmux 를 안 띄웠다 (설계대로) → 이어하기 블록은 새 쪽의 'mixing_ndim=8' 한 줄만 빼고 대조 · 그다음 PP 대조 · DRY_RUN · tmux",
+  "GPU": "6332 / 24576 MiB · 99 % (site10_uma · cascade v7)"
+ }
 }
