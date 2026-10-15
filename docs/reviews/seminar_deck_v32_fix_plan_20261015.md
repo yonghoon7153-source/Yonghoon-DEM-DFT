@@ -1,4 +1,4 @@
-# 연구세미나 덱 v3.2 — Codex 재확인 (10-15 · HOLD) 반영 수정 계획 (결과 0 건 · ⬜ 1저자 비준 대기)
+# 연구세미나 덱 v3.2 — Codex 재확인 (10-15 · HOLD) 반영 수정 계획 (결과 0 건 · ✅ 1저자 10-15 비준 Q1 (가) · Q2 *"권고대로 해"* → 덱 v3.3 = 본 가지 `aac17e11f` (시험 먼저 `a2170a202`))
 
 > 근거 = `docs/reviews/codex_review_seminar_v32_recheck_20261015.md` (소스 핀 `90ca2c8cd` · **HOLD** · 새 P1 없음 · P2 셋 · P3 하나 · 수치 재계산 · 새 시뮬레이션 요구 없음) ·
 > 증거 `docs/reviews/codex_seminar_v32_recheck_evidence_20261015/` (미니 묶음 · 반입 기록 `_README_import.md`).
