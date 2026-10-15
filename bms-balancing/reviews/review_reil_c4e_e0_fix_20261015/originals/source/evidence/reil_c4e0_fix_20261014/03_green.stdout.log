@@ -1,0 +1,20 @@
+...........................                                              [100%]
+==================================== PASSES ====================================
+_________ test_n1_e_the_run_cli_requires_the_trusted_list_and_its_sha __________
+----------------------------- Captured stderr call -----------------------------
+usage: reil_c4e_run run [-h] --venv VENV --seal SEAL --seal-manifest-sha256
+                        SEAL_MANIFEST_SHA256 --out OUT --xlsx XLSX --util UTIL
+                        --approval APPROVAL --sources SOURCES --sources-sha256
+                        SOURCES_SHA256
+reil_c4e_run run: error: the following arguments are required: --sources, --sources-sha256
+usage: reil_c4e_run run [-h] --venv VENV --seal SEAL --seal-manifest-sha256
+                        SEAL_MANIFEST_SHA256 --out OUT --xlsx XLSX --util UTIL
+                        --approval APPROVAL --sources SOURCES --sources-sha256
+                        SOURCES_SHA256
+reil_c4e_run run: error: the following arguments are required: --sources-sha256
+usage: reil_c4e_run run [-h] --venv VENV --seal SEAL --seal-manifest-sha256
+                        SEAL_MANIFEST_SHA256 --out OUT --xlsx XLSX --util UTIL
+                        --approval APPROVAL --sources SOURCES --sources-sha256
+                        SOURCES_SHA256
+reil_c4e_run run: error: the following arguments are required: --sources
+27 passed in 2.36s

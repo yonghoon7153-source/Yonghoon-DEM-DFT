@@ -1,0 +1,107 @@
+{
+ "auto_fix": 0,
+ "compute_limit_s": 1320,
+ "compute_sum_s": 25.559,
+ "end_record_utc": "2026-10-14T17:05:46Z",
+ "green": {
+  "e0_tests_unchanged": true,
+  "files": [
+   "tests/test_reil_c4e.py",
+   "tests/test_reil_c4e_fix.py"
+  ],
+  "items": 27,
+  "passed": 27
+ },
+ "note": "끝 기록 시점 snapshot — 커밋 · push · 결과 기록 · 발송문 작성 전 (전체 작업시간 준수 PASS 로 넓히지 않는다). evidence_bytes_before_this_file 은 이 파일 (06_end.json) 을 쓰기 전 합이다.",
+ "patch": {
+  "after": "a94f535fd8ab5718b0ed47e0322a067300f808ef42c530cd95668aa77f0a53a9",
+  "before": "0a9ddb83531a1816e3c9505487fd7f2d1a211d2753be9fdc1c8f5c94866aff1b",
+  "file": "docs/REIL_C4E_E0_FIX_PATCH_DRAFT_20261014.diff",
+  "sha256": "ed14409a54613e8bc3c309cabebcd564559bc651fbaa38e258d64cdf3e38594f"
+ },
+ "red": {
+  "failed": 6,
+  "failure_kind": "AttributeError 3 (n1_a load_sources · n1_e build_parser · n1_f seal_sources) · TypeError 3 (n1_b · n1_c prepare 의 sources · n1_d identity_problems 의 required) — 승인 요청 §4 의 선언대로",
+  "file": "tests/test_reil_c4e_fix.py",
+  "items": 6,
+  "passed": 0
+ },
+ "resources_post_hoc": {
+  "definition": "RUSAGE_CHILDREN 의 최대 단일 자식 RSS (기다린 자식) · 사후 관측 — 실행 중 강제 상한이 아니다",
+  "disk_free_end_bytes": 26207506432,
+  "disk_free_floor_bytes": 5368709120,
+  "disk_free_start_bytes": 26211078144,
+  "evidence_bytes_before_this_file": 25354,
+  "evidence_limit_bytes": 67108864,
+  "max_child_rss_kib": 91024,
+  "rss_limit_kib": 4194304
+ },
+ "retest": 0,
+ "sources": {
+  "files": {
+   "scripts/reil_c4_e3a.py": {
+    "bytes": 32311,
+    "sha256": "33b855378fb76634eb314f8cfb0428151ce1ec8b9045bc8447d8e17354a41ac3"
+   },
+   "scripts/reil_c4_monitor.py": {
+    "bytes": 21546,
+    "sha256": "e6ef8ff617342393a9d3a45c98751b563a3f1e9871c6fa3b540b47f4bfbc071b"
+   },
+   "scripts/reil_c4e_run.py": {
+    "bytes": 53853,
+    "sha256": "a94f535fd8ab5718b0ed47e0322a067300f808ef42c530cd95668aa77f0a53a9"
+   },
+   "scripts/reil_c5_pilot.py": {
+    "bytes": 47164,
+    "sha256": "73bee8dc412b39863afb64b70bc128cbecee2075a3a17914fc7288f353ef11a6"
+   },
+   "scripts/reil_p0.py": {
+    "bytes": 23941,
+    "sha256": "793b326ebf86a6db3b855d828aff4d6b6dddc824bed8d00f4161537b1cc06e3a"
+   }
+  },
+  "out": "04_sources/SOURCES.json",
+  "sha256": "2a7b2b49b9809d1a9301398388894a1f7a73afb55acc1a5070e3f77ce0393d52"
+ },
+ "steps": {
+  "01_identity": {
+   "child_maxrss_kib": 91024,
+   "elapsed_s": 21.699,
+   "head_end": "f4efff51545a16c544bd49c0df1d2818d8277f00",
+   "head_start": "f4efff51545a16c544bd49c0df1d2818d8277f00",
+   "limit_s": 60,
+   "rc": 0,
+   "timed_out": false
+  },
+  "02_red": {
+   "child_maxrss_kib": 51816,
+   "elapsed_s": 1.07,
+   "head_end": "9ce78031b365c6abafea7ec7a6f9cd285412cabc",
+   "head_start": "9ce78031b365c6abafea7ec7a6f9cd285412cabc",
+   "limit_s": 600,
+   "rc": 1,
+   "timed_out": false
+  },
+  "03_green": {
+   "child_maxrss_kib": 58612,
+   "elapsed_s": 2.675,
+   "head_end": "72844b291177233cfea557ff151e58f2f00511f5",
+   "head_start": "72844b291177233cfea557ff151e58f2f00511f5",
+   "limit_s": 600,
+   "rc": 0,
+   "timed_out": false
+  },
+  "04_seal_sources": {
+   "child_maxrss_kib": 24236,
+   "elapsed_s": 0.115,
+   "head_end": "61b9037e5283419f9ee22129b9a851df06f20cb1",
+   "head_start": "61b9037e5283419f9ee22129b9a851df06f20cb1",
+   "limit_s": 60,
+   "rc": 0,
+   "timed_out": false
+  }
+ },
+ "t0_utc": "2026-10-14T17:03:49Z",
+ "work_elapsed_s_snapshot": 117.4,
+ "work_limit_s": 7200
+}

@@ -1,0 +1,442 @@
+{
+  "kind": "INDEPENDENT_READ_ONLY_STATIC_DATA_AUDIT",
+  "utc": "2026-10-15T01:33:39.6310801Z",
+  "head": "322a0e533ffc01c7c2fd582a632ac3a1e9be0421",
+  "green_commit": "61b9037e5283419f9ee22129b9a851df06f20cb1",
+  "checks": [
+    {
+      "id": "c6_git_blob",
+      "matched": true,
+      "detail": "https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT/blob/61b9037e5283419f9ee22129b9a851df06f20cb1/bms-balancing/scripts/reil_c6_profile.py"
+    },
+    {
+      "id": "source_list_identity",
+      "matched": true,
+      "detail": {
+        "bytes": 1100,
+        "sha256": "2a7b2b49b9809d1a9301398388894a1f7a73afb55acc1a5070e3f77ce0393d52"
+      }
+    },
+    {
+      "id": "source_list_exact_paths",
+      "matched": true,
+      "detail": [
+        "scripts/reil_c4_e3a.py",
+        "scripts/reil_c4_monitor.py",
+        "scripts/reil_c4e_run.py",
+        "scripts/reil_c5_pilot.py",
+        "scripts/reil_p0.py"
+      ]
+    },
+    {
+      "id": "sealed_green_commit/scripts/reil_c4_e3a.py",
+      "matched": true,
+      "detail": {
+        "bytes": 32311,
+        "sha256": "33b855378fb76634eb314f8cfb0428151ce1ec8b9045bc8447d8e17354a41ac3"
+      }
+    },
+    {
+      "id": "sealed_source/scripts/reil_c4_e3a.py",
+      "matched": true,
+      "detail": {
+        "bytes": 32311,
+        "sha256": "33b855378fb76634eb314f8cfb0428151ce1ec8b9045bc8447d8e17354a41ac3"
+      }
+    },
+    {
+      "id": "sealed_green_commit/scripts/reil_c4_monitor.py",
+      "matched": true,
+      "detail": {
+        "bytes": 21546,
+        "sha256": "e6ef8ff617342393a9d3a45c98751b563a3f1e9871c6fa3b540b47f4bfbc071b"
+      }
+    },
+    {
+      "id": "sealed_source/scripts/reil_c4_monitor.py",
+      "matched": true,
+      "detail": {
+        "bytes": 21546,
+        "sha256": "e6ef8ff617342393a9d3a45c98751b563a3f1e9871c6fa3b540b47f4bfbc071b"
+      }
+    },
+    {
+      "id": "sealed_green_commit/scripts/reil_c4e_run.py",
+      "matched": true,
+      "detail": {
+        "bytes": 53853,
+        "sha256": "a94f535fd8ab5718b0ed47e0322a067300f808ef42c530cd95668aa77f0a53a9"
+      }
+    },
+    {
+      "id": "sealed_source/scripts/reil_c4e_run.py",
+      "matched": true,
+      "detail": {
+        "bytes": 53853,
+        "sha256": "a94f535fd8ab5718b0ed47e0322a067300f808ef42c530cd95668aa77f0a53a9"
+      }
+    },
+    {
+      "id": "sealed_green_commit/scripts/reil_c5_pilot.py",
+      "matched": true,
+      "detail": {
+        "bytes": 47164,
+        "sha256": "73bee8dc412b39863afb64b70bc128cbecee2075a3a17914fc7288f353ef11a6"
+      }
+    },
+    {
+      "id": "sealed_source/scripts/reil_c5_pilot.py",
+      "matched": true,
+      "detail": {
+        "bytes": 47164,
+        "sha256": "73bee8dc412b39863afb64b70bc128cbecee2075a3a17914fc7288f353ef11a6"
+      }
+    },
+    {
+      "id": "sealed_green_commit/scripts/reil_p0.py",
+      "matched": true,
+      "detail": {
+        "bytes": 23941,
+        "sha256": "793b326ebf86a6db3b855d828aff4d6b6dddc824bed8d00f4161537b1cc06e3a"
+      }
+    },
+    {
+      "id": "sealed_source/scripts/reil_p0.py",
+      "matched": true,
+      "detail": {
+        "bytes": 23941,
+        "sha256": "793b326ebf86a6db3b855d828aff4d6b6dddc824bed8d00f4161537b1cc06e3a"
+      }
+    },
+    {
+      "id": "controls_source/tests/test_reil_c4e_fix.py",
+      "matched": true,
+      "detail": "7a09d4386a740e9eba9145372e59ed7e1385ce5523fd7ce38dc095d5e4053bd2"
+    },
+    {
+      "id": "controls_red_commit/test_reil_c4e_fix.py",
+      "matched": true,
+      "detail": "7a09d4386a740e9eba9145372e59ed7e1385ce5523fd7ce38dc095d5e4053bd2"
+    },
+    {
+      "id": "fixed_controls_sha",
+      "matched": true,
+      "detail": "7a09d4386a740e9eba9145372e59ed7e1385ce5523fd7ce38dc095d5e4053bd2"
+    },
+    {
+      "id": "green_and_end_lists_byte_equal",
+      "matched": true,
+      "detail": "Eight recorded hashes, exact raw-file equality"
+    },
+    {
+      "id": "green_actual_tests/test_reil_c4e_fix.py",
+      "matched": true,
+      "detail": {
+        "capture": "source/tests/test_reil_c4e_fix.py",
+        "sha256": "7a09d4386a740e9eba9145372e59ed7e1385ce5523fd7ce38dc095d5e4053bd2"
+      }
+    },
+    {
+      "id": "green_actual_tests/test_reil_c4e.py",
+      "matched": true,
+      "detail": {
+        "capture": "source/tests/test_reil_c4e.py",
+        "sha256": "687de63c3a7614834fa9063d26f29122b9876c381de9f3d43f759ec5e204d38e"
+      }
+    },
+    {
+      "id": "green_actual_scripts/reil_c4e_run.py",
+      "matched": true,
+      "detail": {
+        "capture": "source/scripts/reil_c4e_run.py",
+        "sha256": "a94f535fd8ab5718b0ed47e0322a067300f808ef42c530cd95668aa77f0a53a9"
+      }
+    },
+    {
+      "id": "green_actual_scripts/reil_c4_monitor.py",
+      "matched": true,
+      "detail": {
+        "capture": "source/scripts/reil_c4_monitor.py",
+        "sha256": "e6ef8ff617342393a9d3a45c98751b563a3f1e9871c6fa3b540b47f4bfbc071b"
+      }
+    },
+    {
+      "id": "green_actual_scripts/reil_c4_e3a.py",
+      "matched": true,
+      "detail": {
+        "capture": "source/scripts/reil_c4_e3a.py",
+        "sha256": "33b855378fb76634eb314f8cfb0428151ce1ec8b9045bc8447d8e17354a41ac3"
+      }
+    },
+    {
+      "id": "green_actual_scripts/reil_c5_pilot.py",
+      "matched": true,
+      "detail": {
+        "capture": "source/scripts/reil_c5_pilot.py",
+        "sha256": "73bee8dc412b39863afb64b70bc128cbecee2075a3a17914fc7288f353ef11a6"
+      }
+    },
+    {
+      "id": "green_actual_scripts/reil_p0.py",
+      "matched": true,
+      "detail": {
+        "capture": "source/scripts/reil_p0.py",
+        "sha256": "793b326ebf86a6db3b855d828aff4d6b6dddc824bed8d00f4161537b1cc06e3a"
+      }
+    },
+    {
+      "id": "green_actual_scripts/reil_c6_profile.py",
+      "matched": true,
+      "detail": {
+        "capture": "green_commit/scripts/reil_c6_profile.py",
+        "sha256": "408afc4bb5eb1069583b955e0eb6215bf48dd9259ad474c230549d1b3642df5d"
+      }
+    },
+    {
+      "id": "green_hash_count",
+      "matched": true,
+      "detail": 8
+    },
+    {
+      "id": "fixed_patch_identity",
+      "matched": true,
+      "detail": "Pinned patch; interpreted as text only"
+    },
+    {
+      "id": "patch_hunk_0",
+      "matched": true,
+      "detail": {
+        "new": 9,
+        "old": 7
+      }
+    },
+    {
+      "id": "patch_hunk_1",
+      "matched": true,
+      "detail": {
+        "new": 12,
+        "old": 6
+      }
+    },
+    {
+      "id": "patch_hunk_2",
+      "matched": true,
+      "detail": {
+        "new": 12,
+        "old": 6
+      }
+    },
+    {
+      "id": "patch_hunk_3",
+      "matched": true,
+      "detail": {
+        "new": 15,
+        "old": 8
+      }
+    },
+    {
+      "id": "patch_hunk_4",
+      "matched": true,
+      "detail": {
+        "new": 9,
+        "old": 8
+      }
+    },
+    {
+      "id": "patch_hunk_5",
+      "matched": true,
+      "detail": {
+        "new": 15,
+        "old": 14
+      }
+    },
+    {
+      "id": "patch_hunk_6",
+      "matched": true,
+      "detail": {
+        "new": 89,
+        "old": 20
+      }
+    },
+    {
+      "id": "patch_hunk_7",
+      "matched": true,
+      "detail": {
+        "new": 12,
+        "old": 8
+      }
+    },
+    {
+      "id": "patch_hunk_8",
+      "matched": true,
+      "detail": {
+        "new": 12,
+        "old": 12
+      }
+    },
+    {
+      "id": "patch_hunk_9",
+      "matched": true,
+      "detail": {
+        "new": 20,
+        "old": 19
+      }
+    },
+    {
+      "id": "patch_hunk_10",
+      "matched": true,
+      "detail": {
+        "new": 7,
+        "old": 7
+      }
+    },
+    {
+      "id": "patch_hunk_11",
+      "matched": true,
+      "detail": {
+        "new": 29,
+        "old": 19
+      }
+    },
+    {
+      "id": "patch_exact_bytes_match",
+      "matched": true,
+      "detail": {
+        "hunks": 12,
+        "method": "Own unified-text parser; in-memory reconstruction; no target code executed",
+        "sha256": "a94f535fd8ab5718b0ed47e0322a067300f808ef42c530cd95668aa77f0a53a9",
+        "bytes": 53853
+      }
+    },
+    {
+      "id": "meta_01_identity",
+      "matched": true,
+      "detail": {
+        "rc": 0,
+        "head": "f4efff51545a16c544bd49c0df1d2818d8277f00",
+        "elapsed_s": 21.699,
+        "timeout_s": 60.0
+      }
+    },
+    {
+      "id": "meta_02_red",
+      "matched": true,
+      "detail": {
+        "rc": 1,
+        "head": "9ce78031b365c6abafea7ec7a6f9cd285412cabc",
+        "elapsed_s": 1.07,
+        "timeout_s": 600.0
+      }
+    },
+    {
+      "id": "meta_03_green",
+      "matched": true,
+      "detail": {
+        "rc": 0,
+        "head": "72844b291177233cfea557ff151e58f2f00511f5",
+        "elapsed_s": 2.675,
+        "timeout_s": 600.0
+      }
+    },
+    {
+      "id": "meta_04_seal_sources",
+      "matched": true,
+      "detail": {
+        "rc": 0,
+        "head": "61b9037e5283419f9ee22129b9a851df06f20cb1",
+        "elapsed_s": 0.115,
+        "timeout_s": 60.0
+      }
+    },
+    {
+      "id": "compute_sum",
+      "matched": true,
+      "detail": 25.559
+    },
+    {
+      "id": "evidence_bytes_total",
+      "matched": true,
+      "detail": 28891.0
+    },
+    {
+      "id": "evidence_bytes_before_end",
+      "matched": true,
+      "detail": 25354.0
+    },
+    {
+      "id": "green_stdout_27_passed",
+      "matched": true,
+      "detail": "Recorded stdout only, not reviewer rerun"
+    },
+    {
+      "id": "green_stderr_empty",
+      "matched": true,
+      "detail": 0
+    },
+    {
+      "id": "red_declared_failures",
+      "matched": true,
+      "detail": "Six interface failures; detailed reasons manually inspected"
+    },
+    {
+      "id": "identity_helper_unchanged",
+      "matched": true,
+      "detail": "Same prior identity helper bytes"
+    },
+    {
+      "id": "production_diff_scope",
+      "matched": true,
+      "detail": [
+        "bms-balancing/scripts/reil_c4e_run.py"
+      ]
+    },
+    {
+      "id": "prior_e0_evidence_not_modified",
+      "matched": true,
+      "detail": "Repository compare, not whole-machine observation"
+    },
+    {
+      "id": "approval_section_preexists_execution",
+      "matched": true,
+      "detail": "Historical repository quote at identity-start HEAD; not direct observation of user chat"
+    }
+  ],
+  "check_count": 54,
+  "all_matched": true,
+  "stages": [
+    {
+      "rc": 0,
+      "timeout_s": 60.0,
+      "name": "01_identity",
+      "elapsed_s": 21.699
+    },
+    {
+      "rc": 1,
+      "timeout_s": 600.0,
+      "name": "02_red",
+      "elapsed_s": 1.07
+    },
+    {
+      "rc": 0,
+      "timeout_s": 600.0,
+      "name": "03_green",
+      "elapsed_s": 2.675
+    },
+    {
+      "rc": 0,
+      "timeout_s": 60.0,
+      "name": "04_seal_sources",
+      "elapsed_s": 0.115
+    }
+  ],
+  "reviewer_target_imports": 0,
+  "reviewer_tests": 0,
+  "reviewer_E1_fetch_or_raw_open": 0,
+  "reviewer_COMSOL": 0,
+  "limitations": [
+    "Historical execution represented by repository evidence, not independent OS audit",
+    "117.4 seconds is pre-commit/push/docs snapshot, not entire work-completion time",
+    "Resource statistics are post-hoc child maxima, not concurrent memory enforcement",
+    "Approval evidence is a pre-execution repository quotation, not directly observed human authorization"
+  ]
+}

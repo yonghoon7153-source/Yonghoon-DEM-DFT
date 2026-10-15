@@ -1,0 +1,73 @@
+{
+  "kind": "REIL_C4E_E0_REVIEW_DECISION",
+  "date": "2026-10-14",
+  "reviewed_head": "5cb6ab95c8c461cf940dcf94b90c30e8a3e3659c",
+  "status": "E0_EVIDENCE_LIMITED_ACCEPTANCE_E1_BLOCKED_SOURCE_IDENTITY",
+  "recorded_functional_results_accepted": true,
+  "full_e0_readiness_accepted": false,
+  "E1_ready": false,
+  "E1_approved": false,
+  "C4A_approved": false,
+  "C4B_approved": false,
+  "findings": [
+    {
+      "id": "C4E-E0-N1",
+      "priority": 1,
+      "blocking": true,
+      "scope": "Trusted expected source identities for five modules absent",
+      "action": "Propose separately trusted source manifest and fail-closed pre-execution binding; future correction and verification require separate approval"
+    },
+    {
+      "id": "C4E-E0-N2",
+      "priority": 3,
+      "blocking": false,
+      "scope": "Evidence bytes snapshot boundary",
+      "reported_pre_end_record_bytes": 63527,
+      "submitted_evidence_bytes": 66173,
+      "end_record_bytes": 2646,
+      "action": "Clarify in addendum; do not rewrite original evidence"
+    }
+  ],
+  "questions": {
+    "Q1": "Recorded results and four prior implementation checks accepted with N1 blocking E1",
+    "Q2": "Named origin and restrictive protocol environment acceptable as proposed E1 method, not execution approval",
+    "Q3": "Disclosure 4 requires correction; 3/5/6/7 accepted with stated evidence limitations"
+  },
+  "prior_implementation_checks": {
+    "real_finalization_s3": true,
+    "no_run_root_writes_after_snapshot": true,
+    "stage_verdict_and": true,
+    "real_final_drain_aggregate_r6c": true
+  },
+  "approval_basis": {
+    "kind": "Pre-execution repository record quoting human approval",
+    "commit": "cac26575a9d928a22364c3d92d150d623f14856c",
+    "section": 66,
+    "independent_original_user_chat_observed": false
+  },
+  "execution_evidence": {
+    "red_expected_failures": 21,
+    "green_passed": 180,
+    "existing": 159,
+    "new": 21,
+    "plan_e_recorded_sessions": 1,
+    "step_seconds_sum": 71.329,
+    "limit": 1560,
+    "retest_zero": "Submitter record, not independent OS audit"
+  },
+  "limits": {
+    "work_snapshot_s": 2364.4,
+    "work_limit_s": 14400,
+    "full_delivery_budget_independently_verified": false,
+    "rss_scope": "Post-hoc maximum single waited child, not concurrent aggregate/enforced limit"
+  },
+  "review_actions": {
+    "received_code_execution": 0,
+    "tests": 0,
+    "optimizer": 0,
+    "raw_data_fetch_open": 0,
+    "COMSOL": 0,
+    "remote_repository_mutations": 0
+  },
+  "next": "N1 correction scope, tests and budget proposal; no automatic execution"
+}

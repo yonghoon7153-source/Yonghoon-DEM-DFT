@@ -1,0 +1,53 @@
+{
+  "kind": "REIL_C4E_E0_FIX_REVIEW_DECISION",
+  "date_kst": "2026-10-15",
+  "repository": "yonghoon7153-source/Yonghoon-DEM-DFT",
+  "head": "322a0e533ffc01c7c2fd582a632ac3a1e9be0421",
+  "implementation_commit": "61b9037e5283419f9ee22129b9a851df06f20cb1",
+  "decision": "E0_N1_SCOPED_CLOSED_E1_APPROVAL_REQUEST_ALLOWED_NOT_EXECUTION",
+  "new_blocking_findings": [],
+  "N1": "CLOSED_WITHIN_TRUSTED_LIST_CLI_SCOPE",
+  "trusted_sources": {
+    "bytes": 1100,
+    "sha256": "2a7b2b49b9809d1a9301398388894a1f7a73afb55acc1a5070e3f77ce0393d52",
+    "module_count": 5,
+    "implementation_commit_match": true
+  },
+  "submitted_results": {
+    "red": 6,
+    "red_expected_failures": true,
+    "green_pass": 27,
+    "stage_sum_s": 25.559,
+    "stage_budget_s": 1320,
+    "completion_snapshot_s": 117.4,
+    "whole_work_completion_time_verified": false,
+    "evidence_bytes": 28891,
+    "resource_enforcement_proved": false
+  },
+  "approval_provenance": "Pre-execution repository quotation at f4efff51545a16c544bd49c0df1d2818d8277f00, not direct observation of human chat",
+  "E1": {
+    "approval_request_may_be_prepared": true,
+    "execution_authorized": false,
+    "independent_prelaunch_checker": "REQUIRED_IN_SEPARATE_E1_APPROVAL",
+    "external_stage_rule": "precheck_ok AND run_final_complete AND external_rc_0 AND timeout_false",
+    "source_change_requires_reseal_review_approval": true
+  },
+  "reviewer_actions": {
+    "static_data_checks": 54,
+    "direct_green_commit_files": 8,
+    "target_imports": 0,
+    "tests": 0,
+    "E1_fetch_or_raw_open": 0,
+    "COMSOL": 0,
+    "repository_writes": 0,
+    "external_messages": 0
+  },
+  "recipient_guidance": "REIL author Claude; no message sent",
+  "limitations": [
+    "Library legacy path not authorized for E1",
+    "Internal check follows module imports; separate external prelaunch check still required",
+    "Historical run evidence is not independent OS audit",
+    "No whole-machine preservation claim",
+    "27 passing cases do not imply all branches exercised"
+  ]
+}

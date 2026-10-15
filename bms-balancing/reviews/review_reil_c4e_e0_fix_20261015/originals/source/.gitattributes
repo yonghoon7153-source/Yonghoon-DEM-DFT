@@ -1,0 +1,218 @@
+# ⚠ 자체 리뷰 C10: 아래 확장자별 규칙은 `.md`·codex 밖 `.txt`·이 파일 자신을 안 덮었고, `core.autocrlf=true`
+#   (git for Windows 설치 기본값) 체크아웃에서 **121/415 파일**이 CRLF 로 풀렸다. R11 P1-10 B 의
+#   `verify_snapshot_bytes` 가 그것을 잡아 닫힘 재생기 **넷이 전부 rc 2** 였다 — `git status` 는 0 줄인데
+#   증거가 하나도 안 나온다. catch-all 로 전 파일의 줄끝을 고정한다 (아래 `-text` 예외는 뒤라서 그대로 이긴다).
+* text=auto eol=lf
+
+# shell 은 LF 로 고정 — 리뷰어의 Windows 작업사본(autocrlf)에서 CRLF 로 구문 오류가 났다 (R4)
+*.sh text eol=lf
+*.py text eol=lf
+# ⚠ U14-01 (2026-09-12): 산출 CSV/JSON 은 meta 의 sha256 이 서명한다. git 이 줄끝을 정규화하면 디스크 bytes 와
+#   커밋 bytes 가 갈려 fresh clone 에서 `--verify-unit` 이 깨지고, reader(R6 내부 F07)가 그 상태를 표에서 뺀다.
+#   writer 도 LF 로 쓴다 (`atomic_write_csv`) — 둘을 같게 두는 것이 서명이 사는 조건이다.
+*.csv text eol=lf
+*.json text eol=lf
+
+# ⚠ Codex R11: 보관한 리뷰 패키지(`reviews/*/codex/`)는 **원문 bytes 그대로**다 — 옆의 `HARNESS_*_SHA256SUMS.txt`
+#   가 정확히 그 bytes 를 서명하고 러너가 매번 대조한다. git 이 줄끝을 정규화하면 fresh clone 에서 digest 가
+#   깨진다 (실측: R11 패키지의 `r11_data_contract_results.json` 은 CRLF 로 왔다). 그래서 여기만 변환을 끈다.
+reviews/*/codex/** -text
+
+# ⚠ 2026-09-14: 6.3 재구축 handoff 원문(`reviews/r14_repros/codex63/mesh_axes/`)도 **bytes 그대로** — 옆의
+#   `package_manifest.json` 이 항목별 sha256 을 갖고 있어 그것과 대조한다. preflight 사본은 이 규칙이 없어 CRLF→LF 로
+#   저장됐다 (`reviews/r14_repros/codex63/preflight/README.md` 가 그 차이를 적는다).
+reviews/r14_repros/codex63/mesh_axes/** -text
+reviews/r14_repros/codex63/time_caps/** -text
+reviews/r14_repros/codex63/radial160/** -text
+reviews/r14_repros/codex63/r160_timecap/** -text
+reviews/r14_repros/codex63/radial320/** -text
+reviews/r14_repros/codex63/r320_timecap/** -text
+reviews/r14_repros/codex63/late_cap_a/** -text
+reviews/r14_repros/codex63/core16_control/** -text
+reviews/r14_repros/codex63/physical600_b/** -text
+reviews/r14_repros/codex63/desktop_postproc/** -text
+reviews/r14_repros/codex63/electrolyte_guard/** -text
+reviews/r14_repros/codex63/electrolyte_recovery/** -text
+reviews/r14_repros/codex63/physical600_b_review/** -text
+reviews/r14_repros/codex63/takeover_20260915/** -text
+reviews/r14_repros/codex63/b_a8r1_handoff/** -text
+reviews/r14_repros/codex63/b_a8r1_deployment/** -text
+reviews/r14_repros/codex63/b_a8r1_finalization/** -text
+reviews/r14_repros/codex63/b_a8r1_review_20260924/** -text
+reviews/r17_followup3_recheck/** -text
+reviews/r14_repros/codex63/b020_voltage_review_20260928/** -text
+reviews/r14_repros/codex63/guard1198_independent_review_20260928/** -text
+reviews/r14_repros/codex63/guard1198_validation_acceptance_20260928/** -text
+reviews/r14_repros/codex63/guard1198_native_acceptance_20260928/** -text
+reviews/r14_repros/codex63/normal30_offline_review_20260928/** -text
+# 2026-09-30: MSC 제1저자 인계 발송 전 검토 묶음 (수정 프롬프트 · 정정 메모 · 설치 안내 · 검토 보고 · 인계본 사본) — bytes 그대로
+reviews/msc_handover_review_20260930/** -text
+# 2026-09-30: 정상30초 변경부 한정 검증 독립 수신 검토 묶음 (N30-N1·N2 종결 수용 · 기능111+정적2 수용 · native30 별도 승인 대기) — bytes 그대로
+reviews/r14_repros/codex63/normal30_validation_recipient_review_20260930/** -text
+# 2026-09-30: 정상 fresh 0→30 s native 결과 독립 수신 검토 묶음 (NORMAL_30S_DIAGNOSTIC_ACCEPTED · 재실행 불필요 · 다음 60 s 준비 권고, 미승인) — bytes 그대로
+reviews/r14_repros/codex63/normal30_native_recipient_review_20260930/** -text
+# 2026-09-30: 정상 fresh 0→60 s 오프라인 준비본 독립 수신 검토 묶음 (준비본 수용 · 변경부 12군 46사례 검증 가능 범위 · 실행 미승인) — bytes 그대로
+reviews/r14_repros/codex63/normal60_preparation_recipient_review_20260930/** -text
+# 2026-09-30: Claude 정상30초·장기 해석 회신 v2 독립 검토 묶음 (방향 · 핵심 산술 수용 + 해석 정정 R1–R7 · 실행 승인 아님) — bytes 그대로
+reviews/r14_repros/codex63/claude_normal30_long_horizon_review_20260930/** -text
+# 2026-09-30: 정상 60 s 변경부 12군 46사례 한정 검증 + Claude 회신 v3 독립 수신 검토 묶음 (한정 검증 수용 · R1–R7 수용 · 보충 2 · native60 별도 승인 대기) — bytes 그대로
+reviews/r14_repros/codex63/normal60_validation_recipient_review_20260930/** -text
+# 2026-09-30: 정상 fresh 0→60 s native 결과 독립 수신 검토 묶음 (ACCEPT_NORMAL60_LIMITED_NATIVE_DIAGNOSTIC · 재실행 불필요 · 다음 120 s 준비 권고, 미승인) — bytes 그대로
+reviews/r14_repros/codex63/normal60_native_recipient_review_20260930/** -text
+# 2026-09-30: 정상 fresh 0→120 s native 결과 독립 수신 검토 묶음 (ACCEPTED_NORMAL120_LIMITED_DIAGNOSTIC · 재실행 불필요 · 다음 240 s 준비 제안, 미승인) — bytes 그대로
+reviews/r14_repros/codex63/normal120_native_recipient_review_20260930/** -text
+# 2026-09-30: 정상 fresh 0→240 s native 결과 독립 수신 검토 묶음 (ACCEPTED_NORMAL240_LIMITED_DIAGNOSTIC · 재실행 불필요 · 다음 480 s 오프라인 준비 제안, 미승인) — bytes 그대로
+reviews/r14_repros/codex63/normal240_native_recipient_review_20260930/** -text
+# 2026-10-01: 정상 fresh 0→480 s native 결과 독립 수신 검토 묶음 (ACCEPTED_NORMAL480_LIMITED_DIAGNOSTIC · 재실행 불필요 · 사용자 결정: 960 s 연장 없음 → 저장 결과 분석) — bytes 그대로
+reviews/r14_repros/codex63/normal480_native_recipient_review_20261001/** -text
+# 2026-10-03: 정상 0–480 s 저장 결과 분석 독립 수신 검토 묶음 (ACCEPTED_SAVED_ANALYSIS_0_480 · 차단 0 · 새 계산 · 960 s · rtol 시험 승인 없음 · 다음은 연구 목적 결정) — bytes 그대로
+reviews/r14_repros/codex63/normal480_saved_analysis_recipient_review_20261003/** -text
+# 2026-10-03: PyBaMM 환경 고정 · REIL 외부 검증 프로토콜 사전 검토 묶음 (게이트 차수 밖 · PyBaMM PINNING_RECOMMENDED_WITH_SEPARATE_PROFILES · REIL PROTOCOL_REVISION_REQUIRED_BEFORE_CONFIRMATORY_EXECUTION · 구현 · 실행 승인 아님) — bytes 그대로
+reviews/prereview_pybamm_reil_20261003/** -text
+# 2026-10-04: REIL 프로토콜 v2 재검토 묶음 (게이트 차수 밖 · DESIGN_DIRECTION_ACCEPTED_DOCUMENT_REVISION_REQUIRED · RV2-N1–N4 문서 보완 · 실행 · 구현 · P0 승인 아님) — bytes 그대로
+reviews/prereview_reil_v2_20261004/** -text
+# 2026-10-04: REIL 부속 A 재검토 묶음 (게이트 차수 밖 · DOCUMENT_CONDITIONALLY_ACCEPTABLE_THREE_LOCAL_CORRECTIONS_REQUIRED · RV2-N1 종결 · RV2A-N1–N3 국소 정정 · 실행 · 구현 · P0 승인 아님) — bytes 그대로
+reviews/prereview_reil_v2_annexA_20261004/** -text
+# 2026-10-04: 정상 fresh 0→30 s rtol 1e-6 → 1e-7 한정 민감도 native 결과 독립 수신 검토 묶음 (ACCEPTED_LIMITED_RTOL30_SENSITIVITY · 차단 0 · 같은 시험 반복 없음 · 새 계산 승인 없음 · 다음은 계획만) — bytes 그대로
+reviews/r14_repros/codex63/rtol30_native_recipient_review_20261004/** -text
+# 2026-10-04: Codex A0 · B-min 문서 묶음 (송신 측의 대응표 · 준비 범위 · 요청문 초안 · 기준 결속 · 계획 결정 — 후보 · 검증 · native · 발송 승인 없음) — bytes 그대로
+reviews/r14_repros/codex63/comsol_a0_bmin_documents_20261004/** -text
+# 2026-10-04: B-min 오프라인 후보 꾸러미 (받은 NORMAL480 candidate/ 원본 바이트 basis/source480 + 우리 후보 · CRLF 원문 유지 — §45 승인 · 컴파일 · 시험 · 실행 아님) — bytes 그대로
+comsol_candidates/bmin_particle640_20261004/** -text
+# 2026-10-04: REIL 부속 B 재검토 묶음 (게이트 차수 밖 · DOCUMENT_ACCEPTED_RV2A_N1_N2_N3_CLOSED_NO_EXECUTION_AUTHORIZATION · RV2A-N1–N3 · 문서 조건 C2 종결 · 실행 · 구현 · P0 승인 아님) — bytes 그대로
+reviews/prereview_reil_v2_annexB_20261004/** -text
+# 2026-10-05: B-min 오프라인 후보 준비 검토 회신 묶음 (국소 정정 필요 — P2 BMIN-N1 · BMIN-N2 · 비차단 C1 · 변경부 검증 · native 승인 아님) — bytes 그대로
+reviews/r14_repros/codex63/comsol_bmin_candidate_review_20261005/** -text
+# 2026-10-05: B-min 오프라인 후보 r1 꾸러미 (준비 검토 BMIN-N1 · N2 · C1 국소 보완 · v1 에서 판정 / 증거 소비부만 · CRLF 원문 유지 — 컴파일 · 시험 · 실행 아님) — bytes 그대로
+comsol_candidates/bmin_particle640_r1_20261005/** -text
+reviews/r14_repros/codex63/comsol_bmin_r1_review_20261005/** -text
+# 2026-10-05: B-min 오프라인 후보 r2 꾸러미 (r1 재검토 BMIN-R1-N1 · C1 문구 · 검증안 보강 국소 보완 · consumer 두 자리만 · 컴파일 · 시험 · 실행 아님) — bytes 그대로
+comsol_candidates/bmin_particle640_r2_20261005/** -text
+reviews/r14_repros/codex63/comsol_bmin_r2_review_20261005/** -text
+# 2026-10-05: REIL C6 — 판 · 환경 고정의 봉인 파일 (lock · 프로필 · COBYQA 옵션 · Sobol Phase A 배열 · MANIFEST) — check 가 바이트로 대조하므로 bytes 그대로
+reil_c6_20261005/** -text
+# 2026-10-05: REIL 부속 C 재검토 묶음 (게이트 차수 밖 · ANNEX_C_CONDITIONALLY_ACCEPTABLE_THREE_LOCAL_DOCUMENT_CORRECTIONS · C1-core 논문 쪽 수용 · RV2C-N1–N3 국소 문서 정정 · C2 종결 유지 · 실행 · 구현 · P0 · C6 수용 아님) — bytes 그대로
+reviews/prereview_reil_v2_annexC_20261005/** -text
+# 2026-10-05: REIL 부속 C 독립 교차검토 묶음 (게이트 차수 밖 · 다른 Codex 세션 · PRIOR_CONDITIONAL_DOCUMENT_VERDICT_SUPPORTED_CORRECTIONS_NOT_YET_VERIFIED · RV2C-N1–N3 타당 · 새 P1 없음 · 실행 · P0 · C6 수용 아님) — bytes 그대로
+reviews/prereview_reil_v2_annexC_crossreview_20261005/** -text
+# 2026-10-06: REIL 부속 D 재확인 + C6 결과 수용 검토 묶음 (게이트 차수 밖 · A = ANNEX_D_ACCEPTED_RV2C_N1_N2_N3_CLOSED · B = C6_SEALED_ARTIFACT_IDENTITY_ACCEPTED_FULL_CLOSEOUT_PENDING_TWO_LOCAL_SUPPLEMENTS · C6-N1 · C6-N2 P2 · 실행 · P0 · 구현 승인 아님) — bytes 그대로
+reviews/prereview_reil_v2_annexD_c6_20261006/** -text
+# 2026-10-06: REIL C6-N1 허용 목록 구현의 원문 로그 (RED · GREEN · bms 전체) — C6-N2 교훈 (*.log 무시로 C6_RUN.log 미보존) · bytes 그대로
+evidence/reil_c6_n1_20261006/** -text
+# 2026-10-06: B-min r2 한정 검증 retry3 수신 검토 회신 묶음 (게이트 차수 밖 · IMPLEMENTED_OUTCOMES_ACCEPTED_PLAN_CLOSEOUT_CONDITIONAL · BMIN-R3-C1 집계 정정 · PS01-16 범위 확인 · native 150 s 승인 아님) — bytes 그대로
+reviews/r14_repros/codex63/comsol_bmin_r2_retry3_review_20261006/** -text
+# 2026-10-06: B-min r2 한정 검증 retry3 결과 묶음 원본 (Codex 실행 · §57 승인의 결과 · 수신 검토 §59 가 본 바로 그 ZIP · 집계 정정표가 결속하는 원본) — bytes 그대로
+reviews/r14_repros/codex63/comsol_bmin_r2_retry3_result_20261005/** -text
+# 2026-10-06: REIL C6 보충 검토 회신 묶음 (게이트 차수 밖 · C6_PREREQUISITE_REVIEW_ACCEPTED_N1_N2_CLOSED_WITH_EVIDENCE_LIMITS · C6 사전 준비 종결 · P0 · 설치 · 실행 승인 아님) — bytes 그대로
+reviews/prereview_reil_v2_c6_supplement_20261006/** -text
+# 2026-10-06: REIL P0 — C6 같은 판 재구축 환경의 새 봉인 (현재 checker 로 emit · check 가 바이트로 대조) — bytes 그대로
+reil_c6_rebuild_20261006/** -text
+# 2026-10-06: REIL P0 실행 원문 (명령 · stdout / stderr · rc · 결과 JSON · 옛 봉인 대조 · 변이 증명) — *.log 는 git add -f (C6-N2 교훈) · bytes 그대로
+evidence/reil_p0_20261006/** -text
+# 2026-10-06: B-min r2 retry3 보충 검토 회신 묶음 (게이트 차수 밖 · LIMITED_VALIDATION_CLOSED_WITH_DOCUMENTED_SCOPE · BMIN-R3-C1 수용 · PS01-16 외부 결과 범위 · native 150 s 승인 아님) — bytes 그대로
+reviews/r14_repros/codex63/comsol_bmin_r2_retry3_supplement_review_20261006/** -text
+# 2026-10-06: REIL P0 결과 수신 검토 회신 묶음 (게이트 차수 밖 · C3 P0 출력 한정 수용 · 실행 기록 완결 미완 · §22 신고 · C5 실행 승인 아님) — bytes 그대로
+reviews/prereview_reil_v2_p0_result_20261006/** -text
+# 2026-10-06: B-min r2 native 150 s 1 단계 승인안 검토 회신 묶음 (게이트 차수 밖 · 문구 두 곳 정정 조건부 수용 · N150-N1 · N2 · 사전 관측 · native 실행 승인 아님) — bytes 그대로
+reviews/r14_repros/codex63/comsol_bmin_r2_native150_approval_review_20261006/** -text
+# 2026-10-06: B-min r2 native 150 s 1 단계 — 외부 (실행 기기) Codex 전달 묶음 (사용자 1 단계 승인 · 읽기 전용 사전 관측 지시 · native 실행 승인 아님) — bytes 그대로
+reviews/r14_repros/codex63/comsol_bmin_r2_native150_stage1_handoff_20261006/** -text
+# 2026-10-06: REIL C5 승인 요청문 사전 검토 회신 묶음 (게이트 차수 밖 · 설계 방향 수용 · 승인문 정정 필요 C5-N1–N5 · 구현 · 측정 승인 아님) — bytes 그대로
+reviews/prereview_reil_v2_c5_request_20261006/** -text
+# 2026-10-06: REIL C5 요청문 v2 사전 검토 회신 묶음 (게이트 차수 밖 · 주요 정정 수용 · C5V2-N1 환경 확인 호출 범위 · 구현 · 측정 승인 아님) — bytes 그대로
+reviews/prereview_reil_v2_c5_request_v2_20261006/** -text
+# 2026-10-06: B-min r2 native 150 s 배치 · 사전 관측 검토 회신 묶음 (게이트 차수 밖 · R2 배치 · 사전 관측 39 건 수용 · 새 차단 0 · 최종 승인 문구 초안 = 미채택 · native 실행 승인 아님) — bytes 그대로
+reviews/r14_repros/codex63/comsol_bmin150_deployment_preflight_review_20261006/** -text
+# 2026-10-06: REIL C5 구현 단계 증거 (RED · GREEN · 무자료 한정 시험 · 합성 건조 실행 · 환경 식별 기록) — bytes 그대로
+evidence/reil_c5_impl_20261006/** -text
+# 2026-10-06: B-min r2 native150 결과 검토 회신 (회신 표기 2026-10-07 · 150 s 정상 종료 · 120–150 s 입자 격자 비교 한정 수용 · 전달 보존 보류) — bytes 그대로
+reviews/r14_repros/codex63/comsol_bmin_r2_native150_result_review_20261007/** -text
+# 2026-10-06: B-min150 전달 보존 보충 — 실행 기기 원파일 3 (AFTER · 영수증 · 마지막 반환) + 검토자에게 넘긴 보충 묶음 — bytes 그대로
+reviews/r14_repros/codex63/comsol_bmin150_delivery_after_records_20261007/** -text
+# 2026-10-06: B-min150 통합 종결 회신 (LIMITED_NATIVE150_REVIEW_CLOSED_WITH_DOCUMENTED_SCOPE · 회신 표기 2026-10-07) — bytes 그대로
+reviews/r14_repros/codex63/comsol_bmin150_combined_closeout_review_20261007/** -text
+# 2026-10-07: 미세단락 S0 심층 검토 회신 (S1 조건부 권고 · COMSOL 실행 0) — bytes 그대로
+reviews/r14_repros/codex63/comsol_microshort_s0_deep_20261007/** -text
+# 2026-10-07: 미세단락 S1-O 발송문 사전 검토 회신 (적합 · 명확화 4) — bytes 그대로
+reviews/r14_repros/codex63/comsol_microshort_s1o_prereview_20261007/** -text
+# 2026-10-07: 미세단락 S1-O 발송문 v2 수용 회신 — bytes 그대로
+reviews/r14_repros/codex63/comsol_microshort_s1o_v2_review_20261007/** -text
+# 2026-10-07: 미세단락 S1-O 준비본 정적 검토 회신 (부분 수용 · 판정 코드 정정 N1–N4 · received/ = 준비본 펼친 사본) — bytes 그대로
+reviews/r14_repros/codex63/comsol_microshort_s1o_preparation_review_20261007/** -text
+# 2026-10-08: 미세단락 S1O-R1 발송문 범위 검토 회신 (수용 · 승인문 명확화 4) — bytes 그대로
+reviews/r14_repros/codex63/comsol_microshort_s1o_r1_scope_review_20261008/** -text
+# 2026-10-08: 미세단락 S1O-R1 오프라인 정정본 (N1–N4 · 검증안 130 사례) + 전달 보충 — bytes 그대로
+reviews/r14_repros/codex63/comsol_microshort_s1o_r1_corrections_20261008/** -text
+# 2026-10-08: 미세단락 S1O-R1 정정본 소스 검토 회신 (N1–N4 정적 수용 · 검증안 R1-V1–V3) — bytes 그대로
+reviews/r14_repros/codex63/comsol_microshort_s1o_r1_source_review_20261008/** -text
+# 2026-10-08: 미세단락 S1O-R1 기능 검증 R1_003 중지 검토 회신 (127 PASS · R113 하네스 전제 중지 · received/ = R1_003 결과 펼친 사본) — bytes 그대로
+reviews/r14_repros/codex63/comsol_microshort_s1o_r1_003_stop_review_20261008/** -text
+# 2026-10-09: 미세단락 S1O-R1_004 한정 보완 검증 결과 (새 7 PASS · 원 127 재사용 · main/ = 결과 zip 펼친 사본 · user_relayed/ = 사용자 전달 원파일 재구성 · 전사) — bytes 그대로
+reviews/r14_repros/codex63/comsol_microshort_s1o_r1_004_result_20261009/** -text
+# 2026-10-09: 미세단락 S1O-R1_004 보충 검토 회신 (614.480 s 원파일 SHA 일치 · 한정 검증 종결 수용 유지 · reference/ = 앞선 R1_004 검토 회신 · 다음 = S1 OPEN 연결부 준비 초안) — bytes 그대로
+reviews/r14_repros/codex63/comsol_microshort_s1o_r1_004_supplement_review_20261009/** -text
+# 2026-10-10: 미세단락 S1 OPEN 연결부 오프라인 준비본 정적 검토 회신 (준비 성과 확인 · 새 한정 검증 전 정정 OPEN-R1-N1–N3 · received/ = 준비본 펼친 사본) — bytes 그대로
+reviews/r14_repros/codex63/comsol_microshort_s1_open_connection_preparation_review_20261010/** -text
+# 2026-10-12: 미세단락 S1 OPEN-R1 정정본 정적 재검토 회신 (N1 · N2 코드 정정 수용 · 검증안 메타데이터 2 건 조건부 수용 · received/ = OPEN-R1 정정본 펼친 사본) — bytes 그대로
+reviews/r14_repros/codex63/comsol_microshort_s1_open_r1_review_20261011/** -text
+# 2026-10-13: REIL C4 요청문 사전 검토 + C5 비용 결과 검토 회신 (C5 비용 한정 수용 · C4 요청문 수정 조건부 적합 · 환경 준비 별도 승인 C4-ENV) — bytes 그대로
+reviews/prereview_reil_c4_20261013/** -text
+# 2026-10-13: REIL C4-ENV 대조 스크립트 (scripts/reil_c4_env_compare.py) 의 자체 확인 기록 (합성 자료 · 커밋된 봉인 두 개만 · 설치 0) — bytes 그대로
+evidence/reil_c4_env_compare_selftest_20261013/** -text
+# 2026-10-13: REIL C4-ENV 새 봉인 (현재 interpreter 3.11.17 의 새 환경 세대 · emit 산출 · 검토 수용 전에는 C4 환경 아님) — bytes 그대로
+reil_c6_rebuild_20261013/** -text
+# 2026-10-13: REIL C4-ENV 실행 기록 (S0–S10 meta · stdout · stderr · 내려받기 식별 · old→new 대조 · RECORD 원문 · 실행기 사본) — bytes 그대로
+evidence/reil_c4_env_20261013/** -text
+# 2026-10-13: REIL C4-ENV 결과 검토 회신 (새 봉인 reil_c6_rebuild_20261013 한정 수용 · P1 0 · 비차단 P2 ENV-P2-01–04 · C4-0 해제) — bytes 그대로
+reviews/review_reil_c4_env_result_20261013/** -text
+# 2026-10-13: REIL C4-ENV 실행 당시 바깥 반환 원문의 사후 첨부 (run.out · 하네스 캡처 · 검토 회신 ENV-P2-01 허용 · 재실행 0) — bytes 그대로
+evidence/reil_c4_env_20261013_outer_return/** -text
+# 2026-10-13: REIL C4-0a 실행 기록 (identity · RED · GREEN · 고정 배열 봉인 · 무자료 건조 · 시작/끝 HEAD · porcelain) — bytes 그대로
+evidence/reil_c4_0a_20261013/** -text
+# 2026-10-13: REIL C4 고정 배열 봉인 (A1/A2 Phase A · profile Sobol 2 · 동시 Sobol 16 · label-seed — C4-0a 에서 생성 · 봉인) — bytes 그대로
+reil_c4_arrays_20261013/** -text
+# 2026-10-13 정정 (C4-0a 결과): 위 폴더의 실제 봉인은 Phase A 넷 (A0 · A1/A2 상자 × seed 0 · 1) 뿐 — profile Sobol 2 · 동시 Sobol 16 · label-seed 는 C4-0b 에서 (상태 문서 §40). 규칙 (-text) 은 그대로
+# 2026-10-13: 미세단락 S1 OPEN-R1 _003 한정 검증 결과 검토 회신 (9 군 93 사례 한정 기능 검증 수용 · P1 0 · _001 보존 구간 부속 정정 · 재시험 0 · OPEN 4 유지) — bytes 그대로
+reviews/r14_repros/codex63/comsol_microshort_s1_open_r1_003_review_20261013/** -text
+# 2026-10-13: REIL C4-0a 결과 검토 회신 (26 시험 기록 · Phase A 배열 4 한정 수용 · C4-0a 종결 보류 · P2 C4-0A-N1–N4 한정 보완 필요 · source/ = 검토자가 본 저장소 사본) — bytes 그대로
+reviews/review_reil_c4_0a_result_20261013/** -text
+# 2026-10-13: REIL C4-0a 한정 보완 (N1–N4) 실행 기록 (identity · RED · 패치 적용 · GREEN · NSGA2 합성 outcome · 시작/끝 HEAD · porcelain) — bytes 그대로
+evidence/reil_c4_0a_fix_20261013/** -text
+# 2026-10-13: 미세단락 S1 OPEN ④ OS B 단계 범위 검토 회신 (수정 조건부 적합 · 정정 3 · 비활성 발송문 v2 · basis/ = 검토자가 본 근거 사본 · received/ = 검토한 제안 · 발송문 v1) — bytes 그대로
+reviews/r14_repros/codex63/comsol_microshort_s1_os_b_scope_review_20261013/** -text
+# 2026-10-13: REIL C4-0a 한정 보완 결과 재검토 회신 (N1–N4 종결 수용 · C4-0a 한정 구현 종결 수용 · 새 차단 0 · source/ = 검토자가 본 저장소 사본) — bytes 그대로
+reviews/review_reil_c4_0a_fix_result_20261013/** -text
+# 2026-10-13: REIL C4-0b1 실행 기록 (identity · RED · GREEN · 배열 봉인 · 건조 · 시작/끝 HEAD · porcelain) — bytes 그대로
+evidence/reil_c4_0b1_20261013/** -text
+# 2026-10-13: REIL C4-0b1 고정 배열 · 규칙 봉인 (profile Sobol 2 · 동시 Sobol 16 · label → seed 표 · 규칙 / label 형식) — bytes 그대로
+reil_c4_arrays_0b1_20261013/** -text
+# 2026-10-13: REIL C4-0b1 결과 검토 회신 (배열 봉인 수용 · 구현 종결 보류 · P2 N1–N3 · 승인 경계 A1) — bytes 그대로
+reviews/review_reil_c4_0b1_result_20261013/** -text
+# 2026-10-13: REIL C4-0b1 한정 보완 실행 기록 (identity · RED · 패치 · GREEN · 시작/끝 HEAD · porcelain) — bytes 그대로
+evidence/reil_c4_0b1_fix_20261013/** -text
+# 2026-10-14: REIL C4-0b1 한정 보완 결과 재검토 회신 (N2 · N3 · A1 수용 · N1 잔여 P2 1 건 · 전체 종결 보류) — bytes 그대로
+reviews/review_reil_c4_0b1_fix_result_20261014/** -text
+# 2026-10-14: REIL C4-0b1 한정 보완 2 실행 기록 (N1 잔여 · identity · RED · 패치 · GREEN · 시작/끝 HEAD · porcelain) — bytes 그대로
+evidence/reil_c4_0b1_fix2_20261014/** -text
+# 2026-10-14: REIL C4-0b1 한정 보완 2 결과 재검토 회신 (N1 잔여 수용 · N1 전체 종결 · C4-0b1 제한 오프라인 구현 종결 수용 · 새 차단 0 · source/ = 검토자가 본 저장소 사본) — bytes 그대로
+reviews/review_reil_c4_0b1_fix2_result_20261014/** -text
+# 2026-10-14: REIL C4-0b2 실행 기록 (identity · RED · GREEN · 읽기 전용 건조 · 시작/끝 HEAD · porcelain · 자원 관측) — bytes 그대로
+evidence/reil_c4_0b2_20261014/** -text
+# 2026-10-14: REIL C4-0b2 결과 검토 회신 (종결 보류 · P2 N1–N3 · 기록 수용 범위 · 문구 정정 · C4-E/A/B 조건 · source/ · red_fixed/ = 검토자가 본 저장소 사본) — bytes 그대로
+reviews/review_reil_c4_0b2_result_20261014/** -text
+# 2026-10-14: REIL C4-0b2 한정 보완 (C4B2-N1 · N2 · N3) 증거 — 단계 기록 · stdout / stderr · porcelain · 끝 기록 (상태 문서 §58 · §59) — bytes 그대로
+evidence/reil_c4_0b2_fix_20261014/** -text
+# 2026-10-14: REIL C4-0b2 한정 보완 결과 재검토 회신 (N1–N3 닫힘 · C4-0b2 한정 종결 · 비차단 M1 · source/ · basis/ = 검토자가 본 저장소 · 이전 회신 사본) — bytes 그대로
+reviews/review_reil_c4_0b2_fix_result_20261014/** -text
+# 2026-10-14: REIL C4-E 실행 승인 요청 사전 검토 회신 (E0 승인 전 정정 · C4E-N1–N4 · M1 · source/ = 검토자가 본 저장소 · REIL 원본 util 사본) — bytes 그대로
+reviews/review_reil_c4e_prereview_20261014/** -text
+# 2026-10-14: REIL C4-E 요청 정정판 (v2) 사전 재검토 회신 (E0 승인 전 보완 셋 · source/ = 검토자가 본 저장소 · REIL 원본 util 사본 · basis/ = 이전 회신) — bytes 그대로
+reviews/review_reil_c4e_v2_prereview_20261014/** -text
+# 2026-10-14: REIL C4-E 요청 정정판 (v3) 사전 재검토 회신 (수용 · E0 명시 승인 대기 · source/ = 검토자가 본 저장소 · basis/ = v2 회신) — bytes 그대로
+reviews/review_reil_c4e_v3_prereview_20261014/** -text
+# 2026-10-14: REIL C4-E · E0 증거 — 단계 기록 · stdout / stderr · porcelain · plan-e 산출 · 끝 기록 (상태 문서 §66 · §67) — bytes 그대로
+evidence/reil_c4e0_20261014/** -text
+# 2026-10-14: REIL C4-E · E0 결과 검토 회신 (시험 기록 한정 수용 · E1 보류 · N1 모듈 기대 sha 결속 · source/ · historical/ = 검토자가 본 저장소 사본 · basis/ = v3 회신) — bytes 그대로
+reviews/review_reil_c4e_e0_result_20261014/** -text
+# 2026-10-14: REIL C4-E · E0 한정 정정 (C4E-E0-N1) 증거 — 단계 기록 · stdout / stderr · porcelain · SOURCES.json · 끝 기록 (상태 문서 §70 · §71) — bytes 그대로
+evidence/reil_c4e0_fix_20261014/** -text
