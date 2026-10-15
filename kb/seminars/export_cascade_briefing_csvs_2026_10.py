@@ -450,12 +450,31 @@ def p09():
                  cols, rows)
 
 
+def host_window_edges(hosts):
+    """(lower, upper, width, earlier_lower, earlier_width) of the host window — the same in every phase set.
+    The earlier lower limit (ledger `first_reduction_plateau_V`, the edge until the 2026-09-22 correction) must lie
+    below the corrected edge, inside the Li-uptake range; if it does not, the ledger changed and so did page 12's story.
+    ⛔ Cannot: tell whether the earlier value was ever a window edge for any other composition — host only."""
+    vals = {(h['ocv_self_decomposition_V'], h['oxidation_limit_V'], h['window_V'],
+             h['first_reduction_plateau_V'], h['legacy_window_V_2026_09_22']) for h in hosts.values()}
+    if len(vals) != 1:
+        raise ValueError(f'host window differs across phase sets: {sorted(vals)[:4]}')
+    lo, ox, win, old, old_win = vals.pop()
+    if not old < lo < ox or abs(ox - lo - win) > 0.002 or abs(ox - old - old_win) > 0.002:
+        raise ValueError(f'host window edges inconsistent: {(lo, ox, win, old, old_win)}')
+    return lo, ox, win, old, old_win
+
+
 def p10():
     v = json.load(open(os.path.join(P, 'oxidation_stability_cascade_v3_pinned.json')))
     hs = v['hosts_by_phase_set']
-    vals = {(h['ocv_self_decomposition_V'], h['oxidation_limit_V'], h['window_V']) for h in hs.values()}
-    assert len(vals) == 1, f'host window differs across phase sets: {sorted(vals)[:4]}'
-    ocv, ox, win = vals.pop()
+    ocv, ox, win, old, old_win = host_window_edges(hs)
+    write('p10_stability_window_host_legacy.csv',
+          ['Page 12 (user deck) — the EARLIER lower limit of the host window, kept only to show what the 2026-09-22 correction changed.',
+           'It is the voltage of a Li-uptake step (ledger first_reduction_plateau_V), not a window edge; earlier width = upper − this.',
+           'Source: db/properties/oxidation_stability_cascade_v3_pinned.json hosts_by_phase_set (identical in all phase sets).'],
+          ['quantity', 'voltage_V_vs_Li'],
+          [['earlier lower limit (a Li-uptake step; the edge until 2026-09-22)', old], ['earlier window width', old_win]])
     h = next(iter(hs.values()))
     rows = [['lower bound (decomposition without Li exchange)', ocv, h.get('ocv_rxn', '')],
             ['upper bound (oxidation onset, Li release)', ox, h.get('oxidation_onset_rxn', '')],
@@ -699,6 +718,46 @@ def draw_site_pair_heatmap(out, w=4.6, h=3.3, src='p08_configurations_per_site_p
     return out
 
 
+def draw_host_window(out, w=4.4, h=1.9, earlier=False):
+    """Host Li6PS5Cl stability window on a voltage axis — corrected definition (no Li exchange between the
+    decomposition-without-Li-exchange voltage and the oxidation onset). earlier=True widens the axis to 1.1 V and
+    marks the earlier lower limit as a grey dotted line (user page 12, 10-15 'fit the story': the page says why the
+    91 windows were recomputed). ⛔ Cannot: draw the earlier window as a window — only its lower edge, which sits in
+    the Li-uptake range."""
+    plt = _plt()
+    seg = rows_of(os.path.join(OUT, 'p10_stability_window_host_segments.csv'))[1:]
+    lo, hi = float(seg[1][1]), float(seg[1][2])
+    x0 = 1.4
+    if earlier:
+        old = float(rows_of(os.path.join(OUT, 'p10_stability_window_host_legacy.csv'))[1][1])
+        if not old < lo:
+            raise ValueError(f'earlier lower limit {old} is not below the corrected edge {lo}')
+        x0 = 1.1
+    plt.rcParams.update({'font.size': 10, 'axes.labelsize': 10.5})
+    fig, ax = plt.subplots(figsize=(w, h))
+    ax.axvspan(lo, hi, color='#d9d9d9')
+    for v in (lo, hi):
+        ax.axvline(v, color='black', ls='--', lw=1)
+        ax.text(v, 1.03, f'{v:.3f} V', ha='center', va='bottom', fontsize=9)
+    if earlier:
+        ax.axvline(old, color='#6b7280', ls=':', lw=1.4)
+        ax.text(old, 1.03, f'{old:.3f} V', ha='center', va='bottom', fontsize=9, color='#6b7280')
+        ax.text(old + 0.02, 0.14, 'earlier lower limit', ha='left', va='center', fontsize=8, color='#6b7280')
+    ax.text(((old if earlier else x0) + lo) / 2, 0.5, 'Li uptake', ha='center', va='center', fontsize=9)
+    ax.text((lo + hi) / 2, 0.5, 'no Li\nexchange', ha='center', va='center', fontsize=9)
+    ax.text((hi + 2.5) / 2, 0.5, 'Li release', ha='center', va='center', fontsize=9)
+    ax.set_xlim(x0, 2.5)
+    ax.set_ylim(0, 1)
+    ax.set_yticks([])
+    ax.set_xlabel('voltage vs Li/Li$^+$ (V)')
+    origin_axes(ax)
+    ax.tick_params(left=False, right=False)
+    fig.tight_layout()
+    fig.savefig(out, dpi=300)
+    plt.close(fig)
+    return out
+
+
 def draw_anneal_hist(out, w=3.1, h=1.75, median=False, style='plain'):
     """The short anneal's energy change (693 structures), plain grey bars, 50 meV bins like the August Origin recipe.
     The cell is the 52-atom conventional cell (4 formula units) — the CSV column still says 'per supercell' (10-15: the
@@ -820,24 +879,9 @@ def figures():
     # p08c (10-15): the site-pair heat map redrawn with field labels (the decks still embed the August image17)
     made.append(draw_site_pair_heatmap(os.path.join(ASSETS, 'fig_p08_site_pair_heatmap.png')))
 
-    # p10: host stability window on a voltage axis
-    seg = rows_of(os.path.join(OUT, 'p10_stability_window_host_segments.csv'))[1:]
-    lo, hi = float(seg[1][1]), float(seg[1][2])
-    fig, ax = plt.subplots(figsize=(4.4, 1.9))
-    ax.axvspan(lo, hi, color='#d9d9d9')
-    for v in (lo, hi):
-        ax.axvline(v, color='black', ls='--', lw=1)
-        ax.text(v, 1.03, f'{v:.3f} V', ha='center', va='bottom', fontsize=9)
-    ax.text((1.4 + lo) / 2, 0.5, 'Li uptake', ha='center', va='center', fontsize=9)
-    ax.text((lo + hi) / 2, 0.5, 'no Li\nexchange', ha='center', va='center', fontsize=9)
-    ax.text((hi + 2.5) / 2, 0.5, 'Li release', ha='center', va='center', fontsize=9)
-    ax.set_xlim(1.4, 2.5)
-    ax.set_ylim(0, 1)
-    ax.set_yticks([])
-    ax.set_xlabel('voltage vs Li/Li$^+$ (V)')
-    origin_axes(ax)
-    ax.tick_params(left=False, right=False)
-    save(fig, 'fig_p10_host_window.png')
+    # p10: host stability window on a voltage axis (+ the user's page-12 version with the earlier lower limit)
+    made.append(draw_host_window(os.path.join(ASSETS, 'fig_p10_host_window.png')))
+    made.append(draw_host_window(os.path.join(ASSETS, 'fig_p10_host_window_earlier_limit.png'), earlier=True))
 
     # p13: 40-run roster status
     runs = rows_of(os.path.join(OUT, 'p13_md_campaign_runs.csv'))[1:]
@@ -890,7 +934,7 @@ site-preference backup p18 (old p12 / p17 files are removed by the script). p06 
 | 8 | Site pairs over all 3,675 (user page 10, 10-15) | `p08_structures_per_site_pair_3675_long.csv` · `…_3675_matrix.csv` | structures per (cation site, anion site), main batch + August re-run · counts runs like slide 7 (15 AlI₃ re-runs share names; 3,660 distinct) |
 | 8 | Short anneal, Origin layout (user page 10, 10-15) | `p08_anneal_energy_change_origin.csv` · `p08_anneal_energy_change_bins_origin.csv` | same 693 values in meV and eV per 52-atom cell, median in the header · 50 meV bins (sum = 693) for a column plot |
 | 9 | DFT EOS | `p09_eos_bm3_fit_curves.csv` | lines: E − E0 vs V per f.u. (fit curves; raw points not in repo) |
-| 10 | Stability window | `p10_stability_window_host.csv` · `p10_stability_window_host_segments.csv` | bar segments on a voltage axis (host Li6PS5Cl) |
+| 10 | Stability window | `p10_stability_window_host.csv` · `p10_stability_window_host_segments.csv` · `p10_stability_window_host_legacy.csv` | bar segments on a voltage axis (host Li6PS5Cl); the legacy file is the earlier lower limit (a Li-uptake step, edge until 2026-09-22) for the user's page 12 — not a window edge |
 | 13 | MD status | `p13_md_campaign_progress.csv` · `p13_md_campaign_runs.csv` | progress bars; run roster (status, wall-clock GPU-h) |
 | 18 | Backup: site preference | `p18_site_preference_vs_ionic_radius.csv` | ΔE vs Shannon radius, three loadings per element (June batch, not Stage 1) |
 
@@ -917,6 +961,11 @@ def main():
         print(draw_anneal_hist(os.path.join(d, 'fig_p08_anneal_energy_hist.png'), *P08_USER_SLOTS['hist'], median=True))
         print(draw_anneal_hist(os.path.join(d, 'fig_p08_anneal_energy_hist_origin.png'), *P08_USER_SLOTS['hist'],
                                median=True, style='origin'))
+        return
+    if '--fig-p10' in sys.argv:   # hand-edited deck (user's page 12): host window with the earlier lower limit
+        d = sys.argv[sys.argv.index('--fig-p10') + 1]
+        os.makedirs(d, exist_ok=True)
+        print(draw_host_window(os.path.join(d, 'fig_p10_host_window_earlier_limit.png'), earlier=True))
         return
     for old in ('p12_md_campaign_runs.csv', 'p12_md_campaign_progress.csv', 'p17_site_preference_vs_ionic_radius.csv'):
         if os.path.exists(os.path.join(OUT, old)):      # renamed when the audit slide became page 11
@@ -1066,6 +1115,24 @@ def selftest():
         ok += 1
     else:
         raise AssertionError('site_pair_matrix accepted the 3,675 table as the 3,615 main batch')
+    # host window (user page 12): the ledger's edges pass; hosts that differ, or an earlier limit that is not below
+    # the corrected edge (the page's whole story), are refused
+    hosts = json.load(open(os.path.join(P, 'oxidation_stability_cascade_v3_pinned.json')))['hosts_by_phase_set']
+    lo_, ox_, win_, old_, oldw_ = host_window_edges(hosts)
+    assert (lo_, ox_, old_) == (1.717, 2.14, 1.242) and abs(win_ - 0.423) < 1e-9 and abs(oldw_ - 0.898) < 1e-9; ok += 1
+    k0 = next(iter(hosts))
+    one = {k: dict(v) for k, v in hosts.items()}
+    one[k0]['window_V'] = 0.5
+    above = {k: dict(v, first_reduction_plateau_V=1.8, legacy_window_V_2026_09_22=0.34) for k, v in hosts.items()}
+    for bad in (one, above):
+        try:
+            host_window_edges(bad)
+        except ValueError:
+            ok += 1
+        else:
+            raise AssertionError('host_window_edges accepted a broken host set')
+    leg = rows_of(os.path.join(OUT, 'p10_stability_window_host_legacy.csv'))
+    assert float(leg[1][1]) == old_ and float(leg[2][1]) == oldw_; ok += 1
     real_a = rows_of(os.path.join(OUT, 'p08_anneal_energy_change.csv'))
     med_, data_, bins_ = anneal_origin_tables(real_a)
     assert len(data_) == 693 and sum(b[3] for b in bins_) == 693 and -820 < med_ < -800; ok += 1
