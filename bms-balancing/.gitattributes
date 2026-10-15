@@ -218,3 +218,5 @@ reviews/review_reil_c4e_e0_result_20261014/** -text
 evidence/reil_c4e0_fix_20261014/** -text
 # 2026-10-15: REIL C4-E · E0 한정 정정 결과 검토 회신 (N1 한정 해소 · 정정 결과 한정 수용 · E1 승인 요청서 작성 허용 · 실행 승인 아님 · source/ · green_commit/ · red_commit/ · approval_commit/ = 검토자가 본 저장소 사본 · basis/ = E0 회신 · §70 발췌) — bytes 그대로
 reviews/review_reil_c4e_e0_fix_20261015/** -text
+# 2026-10-15: REIL C4-E · E1 실행 승인 요청 사전 검토 회신 (정정 필요 6 · E0 수용 유지 · 실행 승인 아님 · source/ = 검토자가 본 저장소 사본 · basis/ = E0 정정 결과 회신) — bytes 그대로
+reviews/review_reil_c4e_e1_prereview_20261015/** -text
