@@ -1,0 +1,6 @@
+{
+  "sha": "9869cf5edb3f2e11defbdd9b1ce8da7fe31b91a4",
+  "message": "REIL C4-E · E1 실행 승인 요청 · launcher 초안 (독립 사전 대조) · 골격 · 대조 14 · 사전 검토 발송문 (정적 검사만 · 실행 0)\n\n§72 (E0 한정 정정 결과 검토 — E1 승인 요청서 작성 허용 · 실행 승인 아님) 의 조건 1–5 를\n고정한 E1 승인 요청이다.\n\n- docs/REIL_C4E_E1_APPROVAL_REQUEST_20261015.md — 식별 (SOURCES 2a7b2b49… · 다섯 모듈 ·\n  구현 커밋 61b9037e · 실행 경로 / cwd) · 독립 사전 대조 (세 자식 앞 · 목록 · 모듈 · 실행\n  스크립트 · 해석기 플래그 · 섀도 탐침 · -B -X pycache_prefix · IDENTITY 결속) · 단계 수용\n  (사전 AND 자식 결과 AND rc 0 AND timeout 없음 AND 사후) · fetch argv / env · 순서 · 예산\n  (계산 ≤ 12,060 s · 전체 6 h) · 첫 예상 밖 실패에서 멈춤 · 제출 경계 · 밝힐 것 12.\n- launcher 초안 c5bc40a4… (stdlib · 실행 모듈 import 0) · RED 골격 d202a716… (초안에서 정적\n  변환 · 상수 동일) · 대조 14 0b06905a… — AST 파싱 · 이름 검사 · 비밀 검사만.\n- 사전 검토 발송문 docs/REIL_C4E_E1_PREREVIEW_SEND_20261015.md (질문 6).\n\nlauncher 복사 · 시험 · 읽기 경로 확보 · fetch · 자료 개봉 · run · C4-A / B · COMSOL 0 회.\n\nCo-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>\nClaude-Session: https://claude.ai/code/session_0157zrP6GFu6cJF5x8CwZaEm",
+  "url": "https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT/commit/9869cf5edb3f2e11defbdd9b1ce8da7fe31b91a4",
+  "branch": "claude/14-gate-code-review-9qkx05"
+}

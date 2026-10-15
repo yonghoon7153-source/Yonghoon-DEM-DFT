@@ -1,0 +1,162 @@
+{
+  "kind": "REIL_C4E_E1_PREREVIEW_PACKAGE_MANIFEST",
+  "reviewed_head": "9869cf5edb3f2e11defbdd9b1ce8da7fe31b91a4",
+  "decision": "CHANGES_REQUIRED_NO_EXECUTION",
+  "payload_count": 29,
+  "files": [
+    {
+      "path": "basis/E0_FIX_CLAUDE_REPLY_KO.md",
+      "bytes": 2577,
+      "sha256": "86484bec309b3100127312c4647d6c97ac11958af812e862396668a70c4aed25"
+    },
+    {
+      "path": "basis/E0_FIX_DECISION.json",
+      "bytes": 2023,
+      "sha256": "5f5d5996a0492b950bc1230393b0d7c0f2e4adccbbc83e8a6ac263e1e61f1ba6"
+    },
+    {
+      "path": "basis/E0_FIX_REVIEW_KO.md",
+      "bytes": 9528,
+      "sha256": "3551a2c5cb9bce48d853f141de95e5869978a6196fec7e1005117b3f94839b18"
+    },
+    {
+      "path": "basis/E0_FIX_SOURCE_AUDIT.json",
+      "bytes": 26237,
+      "sha256": "da2a7a4b9eecc62f97082665a8f960b245451f90cda0a8196342ad4881cb1923"
+    },
+    {
+      "path": "CAPTURE_PRESERVATION_CHECK.json",
+      "bytes": 4244,
+      "sha256": "6d4f9e071cdc0e9e1d5223698dab9f9f075f23fd02733b130cb795443b1a7dcf"
+    },
+    {
+      "path": "CLAUDE_REPLY_KO.md",
+      "bytes": 3186,
+      "sha256": "596a1003c9902245891874d92720e95a9e9a324075a845d16caaba34c962cd17"
+    },
+    {
+      "path": "COMPARE.json",
+      "bytes": 21919,
+      "sha256": "b02de322b1b6cddda5958377c4f9dc22a759d38b57027f6a2188a93f6fbb6d5f"
+    },
+    {
+      "path": "DECISION.json",
+      "bytes": 3945,
+      "sha256": "1f72b6cd994805d20c11e4229ae4d8e4ec1ea6931ae2a1f3899cbc7ea8e33e62"
+    },
+    {
+      "path": "HEAD.json",
+      "bytes": 1666,
+      "sha256": "680b3b3c2401cdb9a8ce838c7b810d259ab2d148ae85615dbdf03cd5533b0f00"
+    },
+    {
+      "path": "REVIEW_KO.md",
+      "bytes": 15207,
+      "sha256": "e1d9aa0e12b98e82d4dc96d0f87304152773858ec25e97b8efea785d0a7b1c41"
+    },
+    {
+      "path": "SOURCE_AUDIT.json",
+      "bytes": 8337,
+      "sha256": "aa5012a96a494f6c728fd967608f87cc9e3ee73c9cab96e9f243eefcbf105aea"
+    },
+    {
+      "path": "source/docs/REIL_C4E_APPROVAL_REQUEST_v3_20261014.md",
+      "bytes": 43444,
+      "sha256": "29cd92a44db97fc29893adc6bc5dda75d610486cdd5d169eafd6df537bd9029a"
+    },
+    {
+      "path": "source/docs/REIL_C4E_E1_APPROVAL_REQUEST_20261015.md",
+      "bytes": 27977,
+      "sha256": "702608405c4dd0ea4b77ad1c22431dbd97881a81c1669e781e10d2239f6652f4"
+    },
+    {
+      "path": "source/docs/REIL_C4E_E1_PREREVIEW_SEND_20261015.md",
+      "bytes": 5941,
+      "sha256": "fe11cb57abd071a89f2c6931d87dc7e33602875586db0093c3a2c574a5d2c3a4"
+    },
+    {
+      "path": "source/docs/REIL_C4E1_LAUNCHER_CONTROLS_DRAFT_20261015.py.txt",
+      "bytes": 24637,
+      "sha256": "0b06905a289b78ba788faa859acb433448465b0eba073dee22c87e7bf4b2fca4"
+    },
+    {
+      "path": "source/docs/REIL_C4E1_LAUNCHER_DRAFT_20261015.py.txt",
+      "bytes": 27507,
+      "sha256": "c5bc40a474372e282706ad9069405fbb8bd9238ca26908478056bca2c20f30ff"
+    },
+    {
+      "path": "source/docs/REIL_C4E1_LAUNCHER_SKELETON_DRAFT_20261015.py.txt",
+      "bytes": 7989,
+      "sha256": "d202a716b652ffcbcd12250474ee80b67000b7355542882d53cd431593a4b458"
+    },
+    {
+      "path": "source/docs/REIL_PREREQUISITES_STATUS_20261004.md",
+      "bytes": 236177,
+      "sha256": "440f545e909bcb1c19b61a34825983712c1b451f0c3b55c8ffe7eba595384b09"
+    },
+    {
+      "path": "source/evidence/reil_c4e0_fix_20261014/00_identity_c4.py",
+      "bytes": 1506,
+      "sha256": "92bb3bca2dcd56982bd4d4ddc02bb8ed84615d5b1b6af6385d69b66c8f5df900"
+    },
+    {
+      "path": "source/evidence/reil_c4e0_fix_20261014/00_step_runner.py",
+      "bytes": 4143,
+      "sha256": "45a055b1a417d8b8b0b1a4073e145b3bdf0734195a27fdd1a716e281a3dc6ccf"
+    },
+    {
+      "path": "source/evidence/reil_c4e0_fix_20261014/04_sources/SOURCES.json",
+      "bytes": 1100,
+      "sha256": "2a7b2b49b9809d1a9301398388894a1f7a73afb55acc1a5070e3f77ce0393d52"
+    },
+    {
+      "path": "source/scripts/reil_c4_e3a.py",
+      "bytes": 32311,
+      "sha256": "33b855378fb76634eb314f8cfb0428151ce1ec8b9045bc8447d8e17354a41ac3"
+    },
+    {
+      "path": "source/scripts/reil_c4_monitor.py",
+      "bytes": 21546,
+      "sha256": "e6ef8ff617342393a9d3a45c98751b563a3f1e9871c6fa3b540b47f4bfbc071b"
+    },
+    {
+      "path": "source/scripts/reil_c4e_run.py",
+      "bytes": 53853,
+      "sha256": "a94f535fd8ab5718b0ed47e0322a067300f808ef42c530cd95668aa77f0a53a9"
+    },
+    {
+      "path": "source/scripts/reil_c5_pilot.py",
+      "bytes": 47164,
+      "sha256": "73bee8dc412b39863afb64b70bc128cbecee2075a3a17914fc7288f353ef11a6"
+    },
+    {
+      "path": "source/scripts/reil_p0.py",
+      "bytes": 23941,
+      "sha256": "793b326ebf86a6db3b855d828aff4d6b6dddc824bed8d00f4161537b1cc06e3a"
+    },
+    {
+      "path": "source/tests/test_reil_c4e_fix.py",
+      "bytes": 19506,
+      "sha256": "7a09d4386a740e9eba9145372e59ed7e1385ce5523fd7ce38dc095d5e4053bd2"
+    },
+    {
+      "path": "source/tests/test_reil_c4e.py",
+      "bytes": 57482,
+      "sha256": "687de63c3a7614834fa9063d26f29122b9876c381de9f3d43f759ec5e204d38e"
+    },
+    {
+      "path": "STATIC_DATA_AUDIT.json",
+      "bytes": 8201,
+      "sha256": "24e220a8a1509fe3ad470828e87be59d48bf5d3c42f0a742a630826a36c1b4d1"
+    }
+  ],
+  "exclusions": [
+    "CAPTURE_PAYLOADS.json",
+    "capture_data.ps1",
+    "audit_data.ps1",
+    "package_review.ps1",
+    "DELIVERY_RECEIPT.json",
+    "REIL_C4E_E1_PREREVIEW_20261015.zip"
+  ],
+  "note": "Source captures are data only. No included program was imported or executed by this review."
+}

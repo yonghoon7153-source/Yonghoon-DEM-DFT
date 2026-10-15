@@ -1,0 +1,490 @@
+{
+  "kind": "READ_ONLY_E0_FIX_CAPTURE",
+  "utc": "2026-10-15T01:29:21.3205237+00:00",
+  "head": "322a0e533ffc01c7c2fd582a632ac3a1e9be0421",
+  "attachment_matches_fixed_head": true,
+  "source_count": 53,
+  "source_index": [
+    {
+      "binding": "Direct fixed-ref GitHub file response; raw Git blob identity checked",
+      "repo_path": "bms-balancing/scripts/reil_c4e_run.py",
+      "sha256": "a94f535fd8ab5718b0ed47e0322a067300f808ef42c530cd95668aa77f0a53a9",
+      "git_blob": "cbc3b56ac5567459a8b5ac24bcacc6a3b3c2c202",
+      "bytes": 53853,
+      "capture": "source/scripts/reil_c4e_run.py",
+      "ref": "322a0e533ffc01c7c2fd582a632ac3a1e9be0421"
+    },
+    {
+      "binding": "Direct fixed-ref GitHub file response; raw Git blob identity checked",
+      "repo_path": "bms-balancing/evidence/reil_c4e0_fix_20261014/00_identity_c4.py",
+      "sha256": "92bb3bca2dcd56982bd4d4ddc02bb8ed84615d5b1b6af6385d69b66c8f5df900",
+      "git_blob": "d29186ee0914992c67a23e9915a68c2d81077f8b",
+      "bytes": 1506,
+      "capture": "source/evidence/reil_c4e0_fix_20261014/00_identity_c4.py",
+      "ref": "322a0e533ffc01c7c2fd582a632ac3a1e9be0421"
+    },
+    {
+      "binding": "Direct fixed-ref GitHub file response; raw Git blob identity checked",
+      "repo_path": "bms-balancing/evidence/reil_c4e0_fix_20261014/00_step_runner.py",
+      "sha256": "45a055b1a417d8b8b0b1a4073e145b3bdf0734195a27fdd1a716e281a3dc6ccf",
+      "git_blob": "1021a79705e4799b618ca9d4fd96da9a755256fc",
+      "bytes": 4143,
+      "capture": "source/evidence/reil_c4e0_fix_20261014/00_step_runner.py",
+      "ref": "322a0e533ffc01c7c2fd582a632ac3a1e9be0421"
+    },
+    {
+      "binding": "Direct fixed-ref GitHub file response; raw Git blob identity checked",
+      "repo_path": "bms-balancing/evidence/reil_c4e0_fix_20261014/01_identity.porcelain_start.txt",
+      "sha256": "47fcbdc39dad28f791c444100904e7fdbb4e945d5be656caf2112c15e8dead99",
+      "git_blob": "ecd9f612993901cdb206e29b39df4caded01f7fc",
+      "bytes": 268,
+      "capture": "source/evidence/reil_c4e0_fix_20261014/01_identity.porcelain_start.txt",
+      "ref": "322a0e533ffc01c7c2fd582a632ac3a1e9be0421"
+    },
+    {
+      "binding": "Direct fixed-ref GitHub file response; raw Git blob identity checked",
+      "repo_path": "bms-balancing/.gitattributes",
+      "sha256": "fa07f7224a6ae6fbe2caa981285f7f774cda09fe9c89ab9e76789468eb5f3585",
+      "git_blob": "fc8b5e3052e2f72061e1fe7ad1cc24007b91244e",
+      "bytes": 25415,
+      "capture": "source/.gitattributes",
+      "ref": "322a0e533ffc01c7c2fd582a632ac3a1e9be0421"
+    },
+    {
+      "binding": "Direct fixed-ref GitHub file response; raw Git blob identity checked",
+      "repo_path": "bms-balancing/evidence/reil_c4e0_fix_20261014/00_porcelain_start.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "git_blob": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+      "bytes": 0,
+      "capture": "source/evidence/reil_c4e0_fix_20261014/00_porcelain_start.txt",
+      "ref": "322a0e533ffc01c7c2fd582a632ac3a1e9be0421"
+    },
+    {
+      "binding": "Direct fixed-ref GitHub file response; raw Git blob identity checked",
+      "repo_path": "bms-balancing/evidence/reil_c4e0_fix_20261014/01_identity.meta.json",
+      "sha256": "e2156c9a1e592c251baf43f62bd174578b07c35fd197a44cadfa3a44bc37964a",
+      "git_blob": "0eaf9552036c8e3097ed3335ac3128fec22a602c",
+      "bytes": 2019,
+      "capture": "source/evidence/reil_c4e0_fix_20261014/01_identity.meta.json",
+      "ref": "322a0e533ffc01c7c2fd582a632ac3a1e9be0421"
+    },
+    {
+      "binding": "Direct fixed-ref GitHub file response; raw Git blob identity checked",
+      "repo_path": "bms-balancing/docs/REIL_C4E_E0_FIX_RESULT_REVIEW_SEND_20261014.md",
+      "sha256": "934a6c124bfe364e69c96d1d38b876cf6fcd836c798c5827ace2a467c771c41a",
+      "git_blob": "251c2c4a6855660b2be7b13747e5f9d23249cee4",
+      "bytes": 7346,
+      "capture": "source/docs/REIL_C4E_E0_FIX_RESULT_REVIEW_SEND_20261014.md",
+      "ref": "322a0e533ffc01c7c2fd582a632ac3a1e9be0421"
+    },
+    {
+      "binding": "Direct fixed-ref GitHub file response; raw Git blob identity checked",
+      "repo_path": "bms-balancing/evidence/reil_c4e0_fix_20261014/01_identity.json",
+      "sha256": "483dfda676c5dc030c3ded1951ac210dd6fde11ebd171e98c6f7ab41484ec224",
+      "git_blob": "3df21137b342dfac889cd5ed04e3e03ec6c9067d",
+      "bytes": 1116,
+      "capture": "source/evidence/reil_c4e0_fix_20261014/01_identity.json",
+      "ref": "322a0e533ffc01c7c2fd582a632ac3a1e9be0421"
+    },
+    {
+      "binding": "Direct fixed-ref GitHub file response; raw Git blob identity checked",
+      "repo_path": "bms-balancing/evidence/reil_c4e0_fix_20261014/01_identity.porcelain_end.txt",
+      "sha256": "28b3313cb47a4a937cfe74dec38b50cbb86a25d504beebe04ea4040db696daad",
+      "git_blob": "fce27d4ced8c9960c4bcc051c39872681a947a83",
+      "bytes": 415,
+      "capture": "source/evidence/reil_c4e0_fix_20261014/01_identity.porcelain_end.txt",
+      "ref": "322a0e533ffc01c7c2fd582a632ac3a1e9be0421"
+    },
+    {
+      "binding": "Direct fixed-ref GitHub file response; raw Git blob identity checked",
+      "repo_path": "bms-balancing/evidence/reil_c4e0_fix_20261014/01_identity.stdout.log",
+      "sha256": "4781be4bc0d8289b1b2acdd74186539ec14eabf86683c4b0ed65fea3a405ba53",
+      "git_blob": "f937346f0986d1fbf954437c0afc2aa1908415f6",
+      "bytes": 29,
+      "capture": "source/evidence/reil_c4e0_fix_20261014/01_identity.stdout.log",
+      "ref": "322a0e533ffc01c7c2fd582a632ac3a1e9be0421"
+    },
+    {
+      "binding": "Direct fixed-ref GitHub file response; raw Git blob identity checked",
+      "repo_path": "bms-balancing/evidence/reil_c4e0_fix_20261014/00_start.txt",
+      "sha256": "20527fabd9a0ba972fbb5ed280a8808adbb3c47ad144b2c8a8b7d8d2369d9367",
+      "git_blob": "bb6ed8dd1c4ab4484fc5f4a5aeaf8cd1be7fa08c",
+      "bytes": 864,
+      "capture": "source/evidence/reil_c4e0_fix_20261014/00_start.txt",
+      "ref": "322a0e533ffc01c7c2fd582a632ac3a1e9be0421"
+    },
+    {
+      "binding": "Direct fixed-ref GitHub file response; raw Git blob identity checked",
+      "repo_path": "bms-balancing/docs/REIL_C4E_E0_FIX_APPROVAL_REQUEST_20261014.md",
+      "sha256": "e28be013453e6c6dc091c8d4fe5b6946b48537ab944cfd86f9d7c0eb96856fc2",
+      "git_blob": "fbd7fc68b16eedd9b059527bb134c7ff371c6d9b",
+      "bytes": 13848,
+      "capture": "source/docs/REIL_C4E_E0_FIX_APPROVAL_REQUEST_20261014.md",
+      "ref": "322a0e533ffc01c7c2fd582a632ac3a1e9be0421"
+    },
+    {
+      "binding": "Direct fixed-ref GitHub file response; raw Git blob identity checked",
+      "repo_path": "bms-balancing/evidence/reil_c4e0_fix_20261014/01_identity.stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "git_blob": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+      "bytes": 0,
+      "capture": "source/evidence/reil_c4e0_fix_20261014/01_identity.stderr.log",
+      "ref": "322a0e533ffc01c7c2fd582a632ac3a1e9be0421"
+    },
+    {
+      "binding": "Direct fixed-ref GitHub file response; raw Git blob identity checked",
+      "repo_path": "bms-balancing/docs/REIL_C4E_E0_FIX_PATCH_DRAFT_20261014.diff",
+      "sha256": "ed14409a54613e8bc3c309cabebcd564559bc651fbaa38e258d64cdf3e38594f",
+      "git_blob": "3ff35aa1bd7be0e5220ab49f93d3245cbecd736e",
+      "bytes": 19144,
+      "capture": "source/docs/REIL_C4E_E0_FIX_PATCH_DRAFT_20261014.diff",
+      "ref": "322a0e533ffc01c7c2fd582a632ac3a1e9be0421"
+    },
+    {
+      "binding": "Direct fixed-ref GitHub file response; raw Git blob identity checked",
+      "repo_path": "bms-balancing/evidence/reil_c4e0_fix_20261014/02_red.stdout.log",
+      "sha256": "29025a5b1b323cc6bb27923c005edda8469d78414123580089dbe86daa1b93da",
+      "git_blob": "768450a2194b47a29a1687399b9852a19ce6acda",
+      "bytes": 2999,
+      "capture": "source/evidence/reil_c4e0_fix_20261014/02_red.stdout.log",
+      "ref": "322a0e533ffc01c7c2fd582a632ac3a1e9be0421"
+    },
+    {
+      "binding": "Direct fixed-ref GitHub file response; raw Git blob identity checked",
+      "repo_path": "bms-balancing/evidence/reil_c4e0_fix_20261014/02_red.porcelain_end.txt",
+      "sha256": "88246c751e8250a3cffc74dd2ad4fb6c04f4c81ca62d5fd36d72efd0dd4b43ae",
+      "git_blob": "626ed30765a1aa4eb1a26cadf01a148e1bd4bdb7",
+      "bytes": 150,
+      "capture": "source/evidence/reil_c4e0_fix_20261014/02_red.porcelain_end.txt",
+      "ref": "322a0e533ffc01c7c2fd582a632ac3a1e9be0421"
+    },
+    {
+      "binding": "Direct fixed-ref GitHub file response; raw Git blob identity checked",
+      "repo_path": "bms-balancing/evidence/reil_c4e0_fix_20261014/02_red.meta.json",
+      "sha256": "ad3092c693250dcab358095935eae0dc0fa333fef7012a3e95d0bf2417c1f8b6",
+      "git_blob": "116523458db0ad48773de2be01664dc914f7695a",
+      "bytes": 1805,
+      "capture": "source/evidence/reil_c4e0_fix_20261014/02_red.meta.json",
+      "ref": "322a0e533ffc01c7c2fd582a632ac3a1e9be0421"
+    },
+    {
+      "binding": "Direct fixed-ref GitHub file response; raw Git blob identity checked",
+      "repo_path": "bms-balancing/evidence/reil_c4e0_fix_20261014/02_red.porcelain_start.txt",
+      "sha256": "8ea7fe1a369f9dad4c432523f45c55d69a7ca1eb56ebb4246f6ecf73a3937218",
+      "git_blob": "3a3ba642897bec17c1b1a29c6f65508712da05e5",
+      "bytes": 74,
+      "capture": "source/evidence/reil_c4e0_fix_20261014/02_red.porcelain_start.txt",
+      "ref": "322a0e533ffc01c7c2fd582a632ac3a1e9be0421"
+    },
+    {
+      "binding": "Direct fixed-ref GitHub file response; raw Git blob identity checked",
+      "repo_path": "bms-balancing/evidence/reil_c4e0_fix_20261014/03_green.porcelain_end.txt",
+      "sha256": "32389e994548422be11391d8b961f8f6499ca8b0943e90129763f778b4ad2761",
+      "git_blob": "8ca1570b771dd1d26ed3284a5c97f41e29e89fa1",
+      "bytes": 195,
+      "capture": "source/evidence/reil_c4e0_fix_20261014/03_green.porcelain_end.txt",
+      "ref": "322a0e533ffc01c7c2fd582a632ac3a1e9be0421"
+    },
+    {
+      "binding": "Direct fixed-ref GitHub file response; raw Git blob identity checked",
+      "repo_path": "bms-balancing/evidence/reil_c4e0_fix_20261014/02_red.stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "git_blob": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+      "bytes": 0,
+      "capture": "source/evidence/reil_c4e0_fix_20261014/02_red.stderr.log",
+      "ref": "322a0e533ffc01c7c2fd582a632ac3a1e9be0421"
+    },
+    {
+      "binding": "Direct fixed-ref GitHub file response; raw Git blob identity checked",
+      "repo_path": "bms-balancing/evidence/reil_c4e0_fix_20261014/02_red.source_sha256.txt",
+      "sha256": "809bb0601c2b48862226bace1699ede0e91e70ccc82761aafe852f889e269c65",
+      "git_blob": "47a08476c85d0a483408a126bfc1399079c5dbac",
+      "bytes": 723,
+      "capture": "source/evidence/reil_c4e0_fix_20261014/02_red.source_sha256.txt",
+      "ref": "322a0e533ffc01c7c2fd582a632ac3a1e9be0421"
+    },
+    {
+      "binding": "Direct fixed-ref GitHub file response; raw Git blob identity checked",
+      "repo_path": "bms-balancing/evidence/reil_c4e0_fix_20261014/03_green.stdout.log",
+      "sha256": "798fce1b20536999eb45d778cd0f12761fc4a9390bef28e394fe36072168b0e7",
+      "git_blob": "37cbb995b38bed404f32f7981aafefbada650698",
+      "bytes": 1405,
+      "capture": "source/evidence/reil_c4e0_fix_20261014/03_green.stdout.log",
+      "ref": "322a0e533ffc01c7c2fd582a632ac3a1e9be0421"
+    },
+    {
+      "binding": "Direct fixed-ref GitHub file response; raw Git blob identity checked",
+      "repo_path": "bms-balancing/evidence/reil_c4e0_fix_20261014/04_seal_sources.porcelain_end.txt",
+      "sha256": "bb25f55f5ccd17ec65fa532a691cad8a8c2e8c00224fa6081e1043950e79e6be",
+      "git_blob": "c9f86d0a7d903a0db890b97a7f454e4fbbea3ff7",
+      "bytes": 158,
+      "capture": "source/evidence/reil_c4e0_fix_20261014/04_seal_sources.porcelain_end.txt",
+      "ref": "322a0e533ffc01c7c2fd582a632ac3a1e9be0421"
+    },
+    {
+      "binding": "Direct fixed-ref GitHub file response; raw Git blob identity checked",
+      "repo_path": "bms-balancing/evidence/reil_c4e0_fix_20261014/03_green.source_sha256.txt",
+      "sha256": "8cfe1e48c09a665adb8ed6e43afe0ab353e8e4f6a0f8315b5ebc99070f61e3b5",
+      "git_blob": "4372cf1d4cf1b346d12176a1a237aaa3cdd86025",
+      "bytes": 723,
+      "capture": "source/evidence/reil_c4e0_fix_20261014/03_green.source_sha256.txt",
+      "ref": "322a0e533ffc01c7c2fd582a632ac3a1e9be0421"
+    },
+    {
+      "binding": "Direct fixed-ref GitHub file response; raw Git blob identity checked",
+      "repo_path": "bms-balancing/docs/REIL_PREREQUISITES_STATUS_20261004.md",
+      "sha256": "00e6e7ac2d3791f86d43115ca103eb075a39ddbd9bff46b5c00ebeea2653388b",
+      "git_blob": "1b8af7d9cbfdb468395e9e2ef0485ebbe49bd108",
+      "bytes": 229869,
+      "capture": "source/docs/REIL_PREREQUISITES_STATUS_20261004.md",
+      "ref": "322a0e533ffc01c7c2fd582a632ac3a1e9be0421"
+    },
+    {
+      "binding": "Direct fixed-ref GitHub file response; raw Git blob identity checked",
+      "repo_path": "bms-balancing/evidence/reil_c4e0_fix_20261014/03_green.stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "git_blob": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+      "bytes": 0,
+      "capture": "source/evidence/reil_c4e0_fix_20261014/03_green.stderr.log",
+      "ref": "322a0e533ffc01c7c2fd582a632ac3a1e9be0421"
+    },
+    {
+      "binding": "Direct fixed-ref GitHub file response; raw Git blob identity checked",
+      "repo_path": "bms-balancing/evidence/reil_c4e0_fix_20261014/04_seal_sources.porcelain_start.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "git_blob": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+      "bytes": 0,
+      "capture": "source/evidence/reil_c4e0_fix_20261014/04_seal_sources.porcelain_start.txt",
+      "ref": "322a0e533ffc01c7c2fd582a632ac3a1e9be0421"
+    },
+    {
+      "binding": "Direct fixed-ref GitHub file response; raw Git blob identity checked",
+      "repo_path": "bms-balancing/evidence/reil_c4e0_fix_20261014/06_end.json",
+      "sha256": "0bc5e1da697ea9b8fbfe7ed92ccbcf9ce4ba22b26aa27c7883972c499c35a19b",
+      "git_blob": "6c3d2908085065f7ca1e21b5397861b501630cff",
+      "bytes": 3537,
+      "capture": "source/evidence/reil_c4e0_fix_20261014/06_end.json",
+      "ref": "322a0e533ffc01c7c2fd582a632ac3a1e9be0421"
+    },
+    {
+      "binding": "Direct fixed-ref GitHub file response; raw Git blob identity checked",
+      "repo_path": "bms-balancing/evidence/reil_c4e0_fix_20261014/04_seal_sources.meta.json",
+      "sha256": "42507b3f8ac7550a4ee67e460765b281aa4637b01477eb3493eef21ce8f29720",
+      "git_blob": "6504c874d587c45c4b9e41fe2ffe7088f3f6e73b",
+      "bytes": 1771,
+      "capture": "source/evidence/reil_c4e0_fix_20261014/04_seal_sources.meta.json",
+      "ref": "322a0e533ffc01c7c2fd582a632ac3a1e9be0421"
+    },
+    {
+      "binding": "Direct fixed-ref GitHub file response; raw Git blob identity checked",
+      "repo_path": "bms-balancing/docs/REIL_C4E_E0_FIX_CONTROLS_DRAFT_20261014.py.txt",
+      "sha256": "7a09d4386a740e9eba9145372e59ed7e1385ce5523fd7ce38dc095d5e4053bd2",
+      "git_blob": "770a8c106f473c9e429776897b4acf6956258319",
+      "bytes": 19506,
+      "capture": "source/docs/REIL_C4E_E0_FIX_CONTROLS_DRAFT_20261014.py.txt",
+      "ref": "322a0e533ffc01c7c2fd582a632ac3a1e9be0421"
+    },
+    {
+      "binding": "Direct fixed-ref GitHub file response; raw Git blob identity checked",
+      "repo_path": "bms-balancing/evidence/reil_c4e0_fix_20261014/03_green.porcelain_start.txt",
+      "sha256": "5796f6e06dd85ac25603104cee8ef04464dd7b138745a45fd515bf9e0c6a2059",
+      "git_blob": "70a5aab3fed3a5b6251415aaa7f6ed90efc9d8bb",
+      "bytes": 117,
+      "capture": "source/evidence/reil_c4e0_fix_20261014/03_green.porcelain_start.txt",
+      "ref": "322a0e533ffc01c7c2fd582a632ac3a1e9be0421"
+    },
+    {
+      "binding": "Direct fixed-ref GitHub file response; raw Git blob identity checked",
+      "repo_path": "bms-balancing/evidence/reil_c4e0_fix_20261014/04_seal_sources.stdout.log",
+      "sha256": "3dcaff5dd4ae7f3186753986ffcdc463ddbfbc6b232d9b50690d120062fede0f",
+      "git_blob": "cca20e753a0494f4643f0c2462da454eac5a6ba0",
+      "bytes": 818,
+      "capture": "source/evidence/reil_c4e0_fix_20261014/04_seal_sources.stdout.log",
+      "ref": "322a0e533ffc01c7c2fd582a632ac3a1e9be0421"
+    },
+    {
+      "binding": "Direct fixed-ref GitHub file response; raw Git blob identity checked",
+      "repo_path": "bms-balancing/tests/test_reil_c4e_fix.py",
+      "sha256": "7a09d4386a740e9eba9145372e59ed7e1385ce5523fd7ce38dc095d5e4053bd2",
+      "git_blob": "770a8c106f473c9e429776897b4acf6956258319",
+      "bytes": 19506,
+      "capture": "source/tests/test_reil_c4e_fix.py",
+      "ref": "322a0e533ffc01c7c2fd582a632ac3a1e9be0421"
+    },
+    {
+      "binding": "Direct fixed-ref GitHub file response; raw Git blob identity checked",
+      "repo_path": "bms-balancing/evidence/reil_c4e0_fix_20261014/03_green.meta.json",
+      "sha256": "56f055e32301eb41309fbaab6f8e119c67ab9662a9e1af6138dd80544229b3f6",
+      "git_blob": "75dfd0d134add8596d3ca55f79d04326f4aa7dca",
+      "bytes": 1847,
+      "capture": "source/evidence/reil_c4e0_fix_20261014/03_green.meta.json",
+      "ref": "322a0e533ffc01c7c2fd582a632ac3a1e9be0421"
+    },
+    {
+      "binding": "Direct fixed-ref GitHub file response; raw Git blob identity checked",
+      "repo_path": "bms-balancing/evidence/reil_c4e0_fix_20261014/05_porcelain_end.txt",
+      "sha256": "d04ef04e6ec0dd1d00b4926b1c62c3bd132a42a7b7108ec09798e0a2964755be",
+      "git_blob": "f44aab281f2abe27a7737561601492cf141efaf6",
+      "bytes": 386,
+      "capture": "source/evidence/reil_c4e0_fix_20261014/05_porcelain_end.txt",
+      "ref": "322a0e533ffc01c7c2fd582a632ac3a1e9be0421"
+    },
+    {
+      "binding": "Direct fixed-ref GitHub file response; raw Git blob identity checked",
+      "repo_path": "bms-balancing/evidence/reil_c4e0_fix_20261014/04_seal_sources.stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "git_blob": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+      "bytes": 0,
+      "capture": "source/evidence/reil_c4e0_fix_20261014/04_seal_sources.stderr.log",
+      "ref": "322a0e533ffc01c7c2fd582a632ac3a1e9be0421"
+    },
+    {
+      "binding": "Direct fixed-ref GitHub file response; raw Git blob identity checked",
+      "repo_path": "bms-balancing/evidence/reil_c4e0_fix_20261014/05_source_sha256_end.txt",
+      "sha256": "8cfe1e48c09a665adb8ed6e43afe0ab353e8e4f6a0f8315b5ebc99070f61e3b5",
+      "git_blob": "4372cf1d4cf1b346d12176a1a237aaa3cdd86025",
+      "bytes": 723,
+      "capture": "source/evidence/reil_c4e0_fix_20261014/05_source_sha256_end.txt",
+      "ref": "322a0e533ffc01c7c2fd582a632ac3a1e9be0421"
+    },
+    {
+      "binding": "Direct fixed-ref GitHub file response; raw Git blob identity checked",
+      "repo_path": "bms-balancing/evidence/reil_c4e0_fix_20261014/04_sources/SOURCES.json",
+      "sha256": "2a7b2b49b9809d1a9301398388894a1f7a73afb55acc1a5070e3f77ce0393d52",
+      "git_blob": "37a868862d8f74a3e72a332424dfa8b94e82cc3b",
+      "bytes": 1100,
+      "capture": "source/evidence/reil_c4e0_fix_20261014/04_sources/SOURCES.json",
+      "ref": "322a0e533ffc01c7c2fd582a632ac3a1e9be0421"
+    },
+    {
+      "binding": "Direct fixed-ref GitHub file response; raw Git blob identity checked",
+      "repo_path": "bms-balancing/tests/test_reil_c4e_fix.py",
+      "sha256": "7a09d4386a740e9eba9145372e59ed7e1385ce5523fd7ce38dc095d5e4053bd2",
+      "git_blob": "770a8c106f473c9e429776897b4acf6956258319",
+      "bytes": 19506,
+      "capture": "red_commit/test_reil_c4e_fix.py",
+      "ref": "72844b29"
+    },
+    {
+      "binding": "Direct fixed-ref GitHub file response; raw Git blob identity checked",
+      "repo_path": "bms-balancing/docs/REIL_C4E_E0_FIX_APPROVAL_REQUEST_20261014.md",
+      "sha256": "e28be013453e6c6dc091c8d4fe5b6946b48537ab944cfd86f9d7c0eb96856fc2",
+      "git_blob": "fbd7fc68b16eedd9b059527bb134c7ff371c6d9b",
+      "bytes": 13848,
+      "capture": "approval_commit/APPROVAL_REQUEST.md",
+      "ref": "0d065e84"
+    },
+    {
+      "binding": "Direct fixed-ref GitHub file response; raw Git blob identity checked",
+      "repo_path": "bms-balancing/scripts/reil_c5_pilot.py",
+      "sha256": "73bee8dc412b39863afb64b70bc128cbecee2075a3a17914fc7288f353ef11a6",
+      "git_blob": "0e5a9f3a83ca419d311f27e0a63d9f0f7ade0d6b",
+      "bytes": 47164,
+      "capture": "green_commit/scripts/reil_c5_pilot.py",
+      "ref": "61b9037e5283419f9ee22129b9a851df06f20cb1"
+    },
+    {
+      "binding": "Direct fixed-ref GitHub file response; raw Git blob identity checked",
+      "repo_path": "bms-balancing/scripts/reil_c4e_run.py",
+      "sha256": "a94f535fd8ab5718b0ed47e0322a067300f808ef42c530cd95668aa77f0a53a9",
+      "git_blob": "cbc3b56ac5567459a8b5ac24bcacc6a3b3c2c202",
+      "bytes": 53853,
+      "capture": "green_commit/scripts/reil_c4e_run.py",
+      "ref": "61b9037e5283419f9ee22129b9a851df06f20cb1"
+    },
+    {
+      "binding": "Direct fixed-ref GitHub file response; raw Git blob identity checked",
+      "repo_path": "bms-balancing/scripts/reil_p0.py",
+      "sha256": "793b326ebf86a6db3b855d828aff4d6b6dddc824bed8d00f4161537b1cc06e3a",
+      "git_blob": "b7ef272f412e1b10f35ae841d961377ff4854d64",
+      "bytes": 23941,
+      "capture": "green_commit/scripts/reil_p0.py",
+      "ref": "61b9037e5283419f9ee22129b9a851df06f20cb1"
+    },
+    {
+      "binding": "Direct fixed-ref GitHub file response; raw Git blob identity checked",
+      "repo_path": "bms-balancing/scripts/reil_c4_monitor.py",
+      "sha256": "e6ef8ff617342393a9d3a45c98751b563a3f1e9871c6fa3b540b47f4bfbc071b",
+      "git_blob": "d25a1a7a0d582af8f3e4c0a2ff1745daf7646052",
+      "bytes": 21546,
+      "capture": "green_commit/scripts/reil_c4_monitor.py",
+      "ref": "61b9037e5283419f9ee22129b9a851df06f20cb1"
+    },
+    {
+      "binding": "Direct fixed-ref GitHub file response; raw Git blob identity checked",
+      "repo_path": "bms-balancing/scripts/reil_c4_e3a.py",
+      "sha256": "33b855378fb76634eb314f8cfb0428151ce1ec8b9045bc8447d8e17354a41ac3",
+      "git_blob": "2c5e614eb5b565e9c9bab410ae741ffec1d2fca5",
+      "bytes": 32311,
+      "capture": "green_commit/scripts/reil_c4_e3a.py",
+      "ref": "61b9037e5283419f9ee22129b9a851df06f20cb1"
+    },
+    {
+      "binding": "Prior reviewed bytes; repository path unchanged in full base-to-head comparison",
+      "repo_path": "bms-balancing/tests/test_reil_c4e.py",
+      "sha256": "687de63c3a7614834fa9063d26f29122b9876c381de9f3d43f759ec5e204d38e",
+      "git_blob": "0326b4df9217962c79195332df3b7b8adb9ca5a6",
+      "bytes": 57482,
+      "capture": "source/tests/test_reil_c4e.py",
+      "ref": "5cb6ab95c8c461cf940dcf94b90c30e8a3e3659c"
+    },
+    {
+      "binding": "Prior reviewed bytes; repository path unchanged in full base-to-head comparison",
+      "repo_path": "bms-balancing/scripts/reil_c4_e3a.py",
+      "sha256": "33b855378fb76634eb314f8cfb0428151ce1ec8b9045bc8447d8e17354a41ac3",
+      "git_blob": "2c5e614eb5b565e9c9bab410ae741ffec1d2fca5",
+      "bytes": 32311,
+      "capture": "source/scripts/reil_c4_e3a.py",
+      "ref": "89d18f546cef0172ee53105ae04ba66d1e224370"
+    },
+    {
+      "binding": "Prior reviewed bytes; repository path unchanged in full base-to-head comparison",
+      "repo_path": "bms-balancing/scripts/reil_c4_monitor.py",
+      "sha256": "e6ef8ff617342393a9d3a45c98751b563a3f1e9871c6fa3b540b47f4bfbc071b",
+      "git_blob": "d25a1a7a0d582af8f3e4c0a2ff1745daf7646052",
+      "bytes": 21546,
+      "capture": "source/scripts/reil_c4_monitor.py",
+      "ref": "5cb6ab95c8c461cf940dcf94b90c30e8a3e3659c"
+    },
+    {
+      "binding": "Prior reviewed bytes; repository path unchanged in full base-to-head comparison",
+      "repo_path": "bms-balancing/scripts/reil_c5_pilot.py",
+      "sha256": "73bee8dc412b39863afb64b70bc128cbecee2075a3a17914fc7288f353ef11a6",
+      "git_blob": "0e5a9f3a83ca419d311f27e0a63d9f0f7ade0d6b",
+      "bytes": 47164,
+      "capture": "source/scripts/reil_c5_pilot.py",
+      "ref": "89d18f546cef0172ee53105ae04ba66d1e224370"
+    },
+    {
+      "binding": "Prior reviewed bytes; repository path unchanged in full base-to-head comparison",
+      "repo_path": "bms-balancing/scripts/reil_p0.py",
+      "sha256": "793b326ebf86a6db3b855d828aff4d6b6dddc824bed8d00f4161537b1cc06e3a",
+      "git_blob": "b7ef272f412e1b10f35ae841d961377ff4854d64",
+      "bytes": 23941,
+      "capture": "source/scripts/reil_p0.py",
+      "ref": "89d18f546cef0172ee53105ae04ba66d1e224370"
+    },
+    {
+      "binding": "Prior reviewed bytes; repository path unchanged in full base-to-head comparison",
+      "repo_path": "bms-balancing/evidence/reil_c4e0_20261014/00_step_runner.py",
+      "sha256": "a96985108682e100fb11432ff2a404d2eed08e491a150f345ad3e411a84d020d",
+      "git_blob": "da34a764aa742a0d623b732cec96b821a501f8db",
+      "bytes": 4114,
+      "capture": "source/evidence/reil_c4e0_20261014/00_step_runner.py",
+      "ref": "5cb6ab95c8c461cf940dcf94b90c30e8a3e3659c"
+    },
+    {
+      "binding": "Prior reviewed bytes; repository path unchanged in full base-to-head comparison",
+      "repo_path": "bms-balancing/evidence/reil_c4e0_20261014/00_identity_c4.py",
+      "sha256": "92bb3bca2dcd56982bd4d4ddc02bb8ed84615d5b1b6af6385d69b66c8f5df900",
+      "git_blob": "d29186ee0914992c67a23e9915a68c2d81077f8b",
+      "bytes": 1506,
+      "capture": "source/evidence/reil_c4e0_20261014/00_identity_c4.py",
+      "ref": "5cb6ab95c8c461cf940dcf94b90c30e8a3e3659c"
+    }
+  ],
+  "received_code_execution": 0,
+  "tests": 0,
+  "raw_data_fetch_or_open": 0,
+  "COMSOL": 0
+}

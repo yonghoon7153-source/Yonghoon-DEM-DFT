@@ -1,0 +1,209 @@
+{
+  "kind": "E1_PREREVIEW_STATIC_DATA_AUDIT",
+  "head": "9869cf5edb3f2e11defbdd9b1ce8da7fe31b91a4",
+  "checks": [
+    {
+      "matched": true,
+      "id": "REIL_C4E1_LAUNCHER_DRAFT_20261015.py.txt",
+      "detail": {
+        "file": "REIL_C4E1_LAUNCHER_DRAFT_20261015.py.txt",
+        "bytes": 27507,
+        "sha": "c5bc40a474372e282706ad9069405fbb8bd9238ca26908478056bca2c20f30ff"
+      }
+    },
+    {
+      "matched": true,
+      "id": "REIL_C4E1_LAUNCHER_SKELETON_DRAFT_20261015.py.txt",
+      "detail": {
+        "file": "REIL_C4E1_LAUNCHER_SKELETON_DRAFT_20261015.py.txt",
+        "bytes": 7989,
+        "sha": "d202a716b652ffcbcd12250474ee80b67000b7355542882d53cd431593a4b458"
+      }
+    },
+    {
+      "matched": true,
+      "id": "REIL_C4E1_LAUNCHER_CONTROLS_DRAFT_20261015.py.txt",
+      "detail": {
+        "file": "REIL_C4E1_LAUNCHER_CONTROLS_DRAFT_20261015.py.txt",
+        "bytes": 24637,
+        "sha": "0b06905a289b78ba788faa859acb433448465b0eba073dee22c87e7bf4b2fca4"
+      }
+    },
+    {
+      "matched": true,
+      "id": "26_matching_top_level_function_names",
+      "detail": [
+        "utc",
+        "sha256",
+        "is_sha256",
+        "dump",
+        "write_new",
+        "read_regular",
+        "load_sources",
+        "check_files",
+        "shadow_problems",
+        "interp",
+        "flag_problems",
+        "probe",
+        "build_argv",
+        "child_env",
+        "precheck",
+        "identity_link",
+        "postcheck",
+        "child_result",
+        "stage_verdict",
+        "group_members",
+        "alive_after",
+        "killpg",
+        "run_child",
+        "git_out",
+        "launch",
+        "main"
+      ]
+    },
+    {
+      "matched": true,
+      "id": "skeleton_26_NotImplementedError_bodies",
+      "detail": 26
+    },
+    {
+      "matched": true,
+      "id": "same_import_and_constant_block",
+      "detail": {
+        "sha256": "ba9f20bda7c624ddc61e56f20ee43025650bfde7908da44e23e4a1c56c86de5f"
+      }
+    },
+    {
+      "matched": true,
+      "id": "planned_top_level_test_counts",
+      "detail": [
+        {
+          "names": [
+            "test_m_1_a_rule_reason_is_a_global_stop_with_three_states",
+            "test_m_2_snapshot_coordinates_and_rule_exception_without_a_process",
+            "test_r_1_call_cap_active_late_between_samples_equal_and_reason",
+            "test_r_2_cost_projection_upper_median_returned_only_minimum_eight_and_boundary",
+            "test_r_3_the_rule_never_reads_result_values",
+            "test_r_4_rule_input_validation_raises_instead_of_dropping_or_zero_filling",
+            "test_r_5_judgment_raw_basis_has_every_key_and_no_result_values",
+            "test_r_6_call_cap_three_paths_fork_fork_and_pure_final_drain",
+            "test_t_1_nonzero_origin_prep_boundary_relative_deadline_and_no_start_after_stop",
+            "test_d_1_prepare_order_stops_before_later_steps",
+            "test_d_2_exact_p0_binding_or_stop_before_any_optimizer",
+            "test_d_3_halfcell_is_exactly_q_pe_v_pe_q_ne_v_ne_and_a_swap_fails",
+            "test_d_4_paths_inside_the_repo_pickles_notebooks_existing_outputs_and_fetch_targets_are_refused",
+            "test_d_5_fetch_takes_only_two_paths_from_the_fixed_commit_of_a_local_repo",
+            "test_d_6_identity_start_end_table_and_consumed_digests",
+            "test_s_1_the_plan_is_the_c4_0a_plan",
+            "test_s_2_complete_needs_66_returned_fields_operation_record_identity_and_the_stage_and",
+            "test_s_3_operation_and_real_finalization_failures_each_leave_incomplete",
+            "test_s_4_end_to_end_synthetic_run_complete_and_one_local_error_incomplete",
+            "test_s_5_plan_e_writes_one_plan_without_util_data_optimizer_or_network",
+            "test_s_6_the_observed_tally_partitions_the_66_calls"
+          ],
+          "path": "source/tests/test_reil_c4e.py",
+          "count": 21
+        },
+        {
+          "names": [
+            "test_n1_a_a_trusted_list_binds_the_five_modules_to_start_end_and_acceptance",
+            "test_n1_b_missing_extra_or_malformed_entries_and_list_sha_mismatch_stop_before_util_import",
+            "test_n1_c_unapproved_bytes_that_stay_unchanged_from_start_to_end_are_refused",
+            "test_n1_d_a_module_changed_during_the_run_fails_acceptance_through_the_real_finalize",
+            "test_n1_e_the_run_cli_requires_the_trusted_list_and_its_sha",
+            "test_n1_f_seal_sources_writes_exactly_the_five_paths_and_round_trips"
+          ],
+          "path": "source/tests/test_reil_c4e_fix.py",
+          "count": 6
+        },
+        {
+          "names": [
+            "test_l1_precheck_passes_only_with_the_fixed_list_exact_module_bytes_and_a_clean_interpreter",
+            "test_l2_list_sha_schema_path_set_entry_format_and_non_json_each_block",
+            "test_l3_changed_same_size_missing_symlinked_module_or_linked_parent_each_block",
+            "test_l4_a_shadowing_scripts_package_module_zip_entry_or_our_init_blocks",
+            "test_l5_interpreter_flags_fixed_argv_head_and_run_script_path_are_checked",
+            "test_l6_stage_verdict_is_the_and_of_precheck_child_rc_timeout_and_postcheck",
+            "test_l7_child_result_reads_the_last_stdout_line_and_needs_final_complete_for_run",
+            "test_l8_identity_link_binds_the_run_import_paths_to_the_checked_paths",
+            "test_l9_a_failed_precheck_never_starts_the_child_and_records_launched_false",
+            "test_l10_a_passing_precheck_runs_the_fixed_child_and_completes_only_when_every_term_holds",
+            "test_l11_timeout_kills_the_whole_process_group_including_grandchildren",
+            "test_l12_refuses_to_overwrite_records_or_reuse_a_pycache_folder",
+            "test_l13_postcheck_catches_a_module_changed_during_the_child_and_wrong_fetched_bytes",
+            "test_l14_independence_fixed_commands_constants_and_env_hygiene"
+          ],
+          "path": "source/docs/REIL_C4E1_LAUNCHER_CONTROLS_DRAFT_20261015.py.txt",
+          "count": 14
+        }
+      ]
+    },
+    {
+      "matched": true,
+      "id": "approved_source_list_same",
+      "detail": 1100
+    },
+    {
+      "matched": true,
+      "id": "approved_scripts/reil_c4_e3a.py",
+      "detail": {
+        "bytes": 32311,
+        "sha256": "33b855378fb76634eb314f8cfb0428151ce1ec8b9045bc8447d8e17354a41ac3"
+      }
+    },
+    {
+      "matched": true,
+      "id": "approved_scripts/reil_c4_monitor.py",
+      "detail": {
+        "bytes": 21546,
+        "sha256": "e6ef8ff617342393a9d3a45c98751b563a3f1e9871c6fa3b540b47f4bfbc071b"
+      }
+    },
+    {
+      "matched": true,
+      "id": "approved_scripts/reil_c4e_run.py",
+      "detail": {
+        "bytes": 53853,
+        "sha256": "a94f535fd8ab5718b0ed47e0322a067300f808ef42c530cd95668aa77f0a53a9"
+      }
+    },
+    {
+      "matched": true,
+      "id": "approved_scripts/reil_c5_pilot.py",
+      "detail": {
+        "bytes": 47164,
+        "sha256": "73bee8dc412b39863afb64b70bc128cbecee2075a3a17914fc7288f353ef11a6"
+      }
+    },
+    {
+      "matched": true,
+      "id": "approved_scripts/reil_p0.py",
+      "detail": {
+        "bytes": 23941,
+        "sha256": "793b326ebf86a6db3b855d828aff4d6b6dddc824bed8d00f4161537b1cc06e3a"
+      }
+    },
+    {
+      "matched": true,
+      "id": "no_live_scripts_or_tests_or_evidence_changed",
+      "detail": "Commit comparison; review archives under reviews/ not production paths"
+    },
+    {
+      "matched": true,
+      "id": "budget_arithmetic",
+      "detail": {
+        "sum": 12060,
+        "scope": "Named trial/child/probe timeout allowances only; excludes metadata, cleanup and packaging"
+      }
+    }
+  ],
+  "check_count": 15,
+  "all_data_checks_matched": true,
+  "functional_verdict": "NOT_RUN",
+  "reviewer_target_imports": 0,
+  "reviewer_tests": 0,
+  "reviewer_probe_processes": 0,
+  "reviewer_fetch_or_raw_open": 0,
+  "reviewer_COMSOL": 0,
+  "note": "File bytes and regex/text inspection only, not target function calls or test execution. Matching counts do not imply candidate correctness."
+}
