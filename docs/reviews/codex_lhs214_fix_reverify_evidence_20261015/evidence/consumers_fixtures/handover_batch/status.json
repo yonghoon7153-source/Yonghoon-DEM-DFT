@@ -1,0 +1,235 @@
+{
+ "schema": "lhs_webapp_batch/v1",
+ "cases": {
+  "lhs00_000": {
+   "case": "lhs00_000",
+   "when": "2026-10-01T10:45:22",
+   "stop_after": "network",
+   "status": "done",
+   "failed_stages": [],
+   "stages": [
+    {
+     "step": "Parse",
+     "rc": 0,
+     "ok": true
+    },
+    {
+     "step": "Bimodal Contact Analysis",
+     "rc": 0,
+     "ok": true
+    }
+   ],
+   "mode": "bimodal",
+   "type_map": "1:AM_P,2:AM_S,3:SE",
+   "sha": {
+    "atom": "7aa05fa862a8a4ea63db15669a7d4df744e5eb05e786441e807e28403759c32f",
+    "contact": "5e7685bff0b8019bcb91e0c1f9de8dc120b318171e266549bea4e11377e1819a",
+    "mesh": "c47d75d488a2a63b54be32e58b97f3aa63c16801a79e23a623383a8ba3be64b3",
+    "deck": "f4a29f22973bed061fc4c6cb0fee4809f21b1176be49e4e442a6e96462b14e8f"
+   },
+   "mesh_pick": "exact",
+   "contact_scan": {
+    "n_frames": 1,
+    "n_rows_last": 177615,
+    "n_unique_pairs": 177615,
+    "n_dup_pairs": 0,
+    "n_dup_rows": 0,
+    "n_self_pairs": 0,
+    "n_delta_nonpos": 0,
+    "delta_min": 2.18729e-14,
+    "n_periodic_flag": 6228,
+    "has_delta_col": true,
+    "has_periodic_col": true
+   },
+   "atom_frames": 1,
+   "elapsed_s": 17.7,
+   "network_run_id": "20261015T193129-cb0d0651"
+  },
+  "lhs00_002": {
+   "case": "lhs00_002",
+   "when": "2026-10-01T10:45:57",
+   "stop_after": "network",
+   "status": "done",
+   "failed_stages": [],
+   "stages": [
+    {
+     "step": "Parse",
+     "rc": 0,
+     "ok": true
+    },
+    {
+     "step": "Bimodal Contact Analysis",
+     "rc": 0,
+     "ok": true
+    }
+   ],
+   "mode": "bimodal",
+   "type_map": "1:AM_P,2:AM_S,3:SE",
+   "sha": {
+    "atom": "15bbecc4f3ac6d442e781d32f812aceb93e12b6d2bc9f8e54439cb1e30238b49",
+    "contact": "5c459baf9ad12c218bd210532bcccd4e03bf475dc2fd33d404088817d12eab5d",
+    "mesh": "3839478d44584daa126ce4c93cc6930e12a76e16a7106e737667b5b79e0de15e",
+    "deck": "c607df896bee5debeb46817de30b75d540e1adf1f992345da3452ef31ff11410"
+   },
+   "mesh_pick": "exact",
+   "contact_scan": {
+    "n_frames": 1,
+    "n_rows_last": 69786,
+    "n_unique_pairs": 69786,
+    "n_dup_pairs": 0,
+    "n_dup_rows": 0,
+    "n_self_pairs": 0,
+    "n_delta_nonpos": 0,
+    "delta_min": 8.00623e-08,
+    "n_periodic_flag": 3944,
+    "has_delta_col": true,
+    "has_periodic_col": true
+   },
+   "atom_frames": 1,
+   "elapsed_s": 13.8,
+   "network_run_id": "20261015T193130-04a7fd48"
+  },
+  "lhs00_003": {
+   "case": "lhs00_003",
+   "when": "2026-10-01T10:46:11",
+   "stop_after": "network",
+   "status": "done",
+   "failed_stages": [],
+   "stages": [
+    {
+     "step": "Parse",
+     "rc": 0,
+     "ok": true
+    },
+    {
+     "step": "Bimodal Contact Analysis",
+     "rc": 0,
+     "ok": true
+    }
+   ],
+   "mode": "bimodal",
+   "type_map": "1:AM_P,2:AM_S,3:SE",
+   "sha": {
+    "atom": "6ae04542ddaae7e91197110b9f7b229fd8b4a22dcbc11981704a76f987898097",
+    "contact": "30f37874ddb177770c18fade225b64e1c7c2e15b31d7ca53a5e173a8daa5dad3",
+    "mesh": "75355ca5218d6f7ba3749ba148fafef52f2d9084799f82ebe24069b7509c3920",
+    "deck": "a77232c809f4ab3680002a0fe4bc545e4816db147ecb6150757f5bbcb2d94c2f"
+   },
+   "mesh_pick": "exact",
+   "contact_scan": {
+    "n_frames": 1,
+    "n_rows_last": 84481,
+    "n_unique_pairs": 84481,
+    "n_dup_pairs": 0,
+    "n_dup_rows": 0,
+    "n_self_pairs": 0,
+    "n_delta_nonpos": 0,
+    "delta_min": 1.13426e-08,
+    "n_periodic_flag": 4370,
+    "has_delta_col": true,
+    "has_periodic_col": true
+   },
+   "atom_frames": 1,
+   "elapsed_s": 12.9,
+   "network_run_id": "20261015T193130-673b7f3d"
+  },
+  "lhs00_004": {
+   "case": "lhs00_004",
+   "when": "2026-10-01T10:46:23",
+   "stop_after": "network",
+   "status": "done",
+   "failed_stages": [],
+   "stages": [
+    {
+     "step": "Parse",
+     "rc": 0,
+     "ok": true
+    },
+    {
+     "step": "Bimodal Contact Analysis",
+     "rc": 0,
+     "ok": true
+    }
+   ],
+   "mode": "bimodal",
+   "type_map": "1:AM_P,2:AM_S,3:SE",
+   "sha": {
+    "atom": "6249009ae26e96dae736f5a7337ef5c5cc82f66aab6de048b66e7b2b5403d063",
+    "contact": "708c8fb41dc6637257ac6b3b47acffdcd0d81eb7baf19aba513b480c26764503",
+    "mesh": "5bce538a9a0a07b3aee69eba66ec42fab989bdfb5351502fd492c2198effc085",
+    "deck": "028b31def2f2bdd34d4b3b6693a3bd2a5e03442b2c2c528bad247c274c43de00"
+   },
+   "mesh_pick": "exact",
+   "contact_scan": {
+    "n_frames": 1,
+    "n_rows_last": 292701,
+    "n_unique_pairs": 292701,
+    "n_dup_pairs": 0,
+    "n_dup_rows": 0,
+    "n_self_pairs": 0,
+    "n_delta_nonpos": 0,
+    "delta_min": 3.8802e-09,
+    "n_periodic_flag": 9205,
+    "has_delta_col": true,
+    "has_periodic_col": true
+   },
+   "atom_frames": 1,
+   "elapsed_s": 56.0,
+   "network_run_id": "20261015T193130-e4bb9bcc"
+  },
+  "lhs00_005": {
+   "case": "lhs00_005",
+   "when": "2026-10-01T10:47:19",
+   "stop_after": "network",
+   "status": "done",
+   "failed_stages": [],
+   "stages": [
+    {
+     "step": "Parse",
+     "rc": 0,
+     "ok": true
+    },
+    {
+     "step": "Bimodal Contact Analysis",
+     "rc": 0,
+     "ok": true
+    }
+   ],
+   "mode": "bimodal",
+   "type_map": "1:AM_P,2:AM_S,3:SE",
+   "sha": {
+    "atom": "fcb4ea4e5be66fdb3b82511dbcff2a79d0c6a859a0f083523268f67f43d8f768",
+    "contact": "6a656e5fe885f9103d83d4820d27cd6644b2afa16dc6b1faa5b5ccace03f13e2",
+    "mesh": "025955ac885c196a360f8ba8817d78d70d69929afadaf4cdc22a12bcb193c484",
+    "deck": "cb0f3c2918627b6f9a4649e54544db5f5ba4ab9b2087c8f1461375c6cb47e358"
+   },
+   "mesh_pick": "exact",
+   "contact_scan": {
+    "n_frames": 1,
+    "n_rows_last": 167016,
+    "n_unique_pairs": 167016,
+    "n_dup_pairs": 0,
+    "n_dup_rows": 0,
+    "n_self_pairs": 0,
+    "n_delta_nonpos": 0,
+    "delta_min": 2.91787e-09,
+    "n_periodic_flag": 7284,
+    "has_delta_col": true,
+    "has_periodic_col": true
+   },
+   "atom_frames": 1,
+   "elapsed_s": 28.7,
+   "network_run_id": "20261015T193131-5b5fcdd3"
+  }
+ },
+ "stop_after": "network",
+ "harvest_dir": "docs/data/lhs_descriptors_cov_1e09f661d",
+ "cohort": "/home/yonghoon71/dem-audit/docs/data/area_s2_cohort.tsv",
+ "runs": [
+  {
+   "started": "2026-10-01T10:45:22",
+   "git_sha": "d1ec42fbad2a5995059577c77031d8573a3ce3cd",
+   "dirty": true
+  }
+ ]
+}

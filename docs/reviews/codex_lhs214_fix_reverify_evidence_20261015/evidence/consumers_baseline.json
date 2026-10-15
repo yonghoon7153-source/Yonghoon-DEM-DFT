@@ -1,0 +1,41 @@
+[
+  {
+    "test": "scripts/test_tau_flux.py",
+    "rc": 0,
+    "seconds": 1.6410000000032596,
+    "last_lines": [
+      "  PASS  M1 양성 대조 — 세대 일치 · 접촉 분석만 · 도장 이전 · 되돌림 성공한 재계산 실패 · 다른 단계 stash → τ 인계 그대로 (OK · 같은 tau2) · 세대 문제 없음 ",
+      "  PASS  M2 ★ RGLR2-02 세대가 확정되지 않은 폴더 7 종 → 두 모드 NOT_COMPUTED (generation_invalid: 세부) · f · tau2 · tau 빈칸 (옛: OK — dual 만 읽어 옛 세대 τ 를 실었다) ",
+      "  PASS  M3 세대 문제 사유 = 무엇이 어긋났는지 (두 id) — \"full_metrics 의 망 세대 'R2' ≠ 도장 'R1' — 파일들이 서로 다른 세대를 가리킨다 (되돌림 실패 · 중단된 게시)\"",
+      "  PASS  M4 ★ 등급 τ getter (tau2_from_metrics) — 읽는 쪽이 세대 무효 표지를 단 metrics → tau2 None (hertz · bulk) · 표지 없으면 값 그대로",
+      "",
+      "test_tau_flux: 55/55 PASS"
+    ]
+  },
+  {
+    "test": "scripts/test_gen2_role_contract.py",
+    "rc": 0,
+    "seconds": 6.343000000000757,
+    "last_lines": [
+      "  PASS  Z3 ★ 양성 — 정직한 CF 실패 (값 없음 · not_computed · 사유 solve_failed / current_conservation_failed · 해를 주장하지 않는 증서) = g2 · 문제 없음 · 세 모드 OK (FULL 유지) · 다시 읽기 K7 이 쓰는 공용 가지 표도 [] · 전자 증서 σ_bulk (채널 기준 0.05) ≠ 이온 σ₀ 인 정상 레코드 = 문제 없음",
+      "  PASS  Z4 양성 — 정상 온도 적용 (생산자 temp_c 60) = g2 · 문제 없음 · 부모 σ₀ = 증서 σ₀ = 60 °C 규약값 0.014355301874382767 · 온도 규약 대조 없음",
+      "  PASS  W1 ★ 열 사전 H12 판정 = 쌍대응 시나리오 · 구간 아님 (괄호로 읽는다 문구 없음) · 부록 전용 유지",
+      "  PASS  W2 ★ 설계 기록 ±5 % = 시험한 기하 한정 + 구 사슬 반례 (G2R-04)",
+      "",
+      "test_gen2_role_contract: 44/44 PASS"
+    ]
+  },
+  {
+    "test": "webapp/test_network_handover_chain.py",
+    "rc": 0,
+    "seconds": 6.2189999999973224,
+    "last_lines": [
+      "  PASS ⑤i2 전자 — Physics σ_e 가 없으면 Physics · Δ = — (+ 사유) · Hertz 값 그대로 (기존 CSV 표 · Pass D 기준 행) ('38.33', '— (모형 한계 · full_over_conduction — FULL q > 1.5 출력 상한 · 수치 인증 통과 · 값 미제공)', '—')",
+      "  PASS ⑤i3 상태 행 — 망 상태 Physics = 미계산 · FULL 모형 한계 (기술 실패 아님) · τ 인계 상태 Physics = NOT_COMPUTED (full_over_conduction) — 모형 한계 (기술적 실패 문구 아님)",
+      "  PASS ⑤j ★ 원 결과 (Codex 합성 metrics — Hertz 0.6 · Physics None · full_over_conduction · 전자 2.0 / None) — transform 의 새 표 · 기존 표 어디에도 Physics = Hertz 복사 · Δ 0 % 가 없다 (옛: 0.6 · 2.0× · 2.0 · 0 %) {}",
+      "  PASS ⑤k 실제 화면 경로 — 케이스 (single) · 보고서 (serve_report) · 보관함 (archive_view) 라우트가 같은 _load_case_tables 를 부른다 ['archive_view', 'serve_report', 'single']",
+      "",
+      "test_network_handover_chain: 34/34 PASS"
+    ]
+  }
+]

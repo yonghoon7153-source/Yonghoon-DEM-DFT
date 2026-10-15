@@ -1,0 +1,40 @@
+[
+  {
+    "name": "receipt",
+    "command": [
+      "scripts/supp20_input_receipt.py",
+      "--selftest"
+    ],
+    "rc": 1,
+    "seconds": 21.82800000000134,
+    "log": "evidence/baseline_receipt_complete.log"
+  },
+  {
+    "name": "release",
+    "command": [
+      "scripts/test_lhs_release_v13.py"
+    ],
+    "rc": 1,
+    "seconds": 53.53199999999924,
+    "log": "evidence/baseline_release_complete.log"
+  },
+  {
+    "name": "reread",
+    "command": [
+      "scripts/g2_network_reread.py",
+      "--selftest"
+    ],
+    "rc": 1,
+    "seconds": 28.32800000000134,
+    "log": "evidence/baseline_reread_complete.log"
+  },
+  {
+    "name": "reread_v12",
+    "command": [
+      "scripts/test_reread_v12.py"
+    ],
+    "rc": 0,
+    "seconds": 4.046999999998661,
+    "log": "evidence/baseline_reread_v12_complete.log"
+  }
+]

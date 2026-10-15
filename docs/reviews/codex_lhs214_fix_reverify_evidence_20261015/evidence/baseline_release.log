@@ -1,0 +1,7 @@
+Traceback (most recent call last):
+  File "C:\Users\Administrator\Documents\Codex\2026-08-24\claude-stoic-knuth-nobvq-x20\lhs214_fix_reverify_20261015\source\scripts\test_lhs_release_v13.py", line 279, in <module>
+    PROD194 = sorted(NP194.registered_id_set('production194')['pairs'], key=lambda x: (x[1], x[0]))
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Administrator\Documents\Codex\2026-08-24\claude-stoic-knuth-nobvq-x20\lhs214_fix_reverify_20261015\source\scripts\run_network_194_parallel.py", line 1030, in registered_id_set
+    raise LaunchError(f'등록 집합 {name} — 수확 폴더에서 열거한 집합 (n {len(pairs)} · {dict(cn)} · {ids_digest(pairs)[:12]}) ≠ 등록 '
+run_network_194_parallel.LaunchError: 등록 집합 production194 — 수확 폴더에서 열거한 집합 (n 0 · {} · 01ba4719c80b) ≠ 등록 (n 194 · {'lhs': 130, 'lhsx': 64} · a04282d7275b)

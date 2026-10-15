@@ -10998,49 +10998,120 @@
     {
       "id": "L214-01",
       "severity": "P2",
-      "status": "claimed_fixed",
+      "status": "open",
       "owner": "claude",
       "found_by": "codex 10-14 LHS214 실패 14 건 · 분류 수정 (가) 구현 전 설계 검토 (검토 핀 1087a9b2f = 발사 핀 · 3 노드 회로 실제 함수 탐침 · 소비 경로 함수 탐침 · 생산 실행 · 실침대 재계산 없음)",
       "opened_in": "docs/reviews/codex_review_lhs214_failures_20261014.md",
       "title": "FULL q > 1.5 가드의 사유 이름 (over_conduction_guard → 상위 solve_failed) 만으로는 유효한 모형 한계를 식별하지 못한다 — 같은 0–1–2 직렬 회로에 plate_z = +∞ 를 주면 전류 · 잔차는 통과하고 q = ∞ 로 같은 사유가 난다 · 사유 허용목록만 더하면 비유한 기하도 \"모형 한계\" 로 게시될 수 있다",
-      "note": "판정문 §2 L214-01 · 자리 (핀): scripts/network_conductivity.py:1182–1209 (수치 인증) · :1218–1222 (기하 환산) · :1249–1267 (가드) · :225–246 (상위 상태) · :1898–1910 (채널 실패).  탐침 (실제 solve_network · 두 간선 R_total 0.25 · 정확해 V=(1, 0.5, 0) · G=2 · 전류 ±2 · Σg=8): 유효 회로 q=2 → 수치 pass → over_conduction_guard → 상위 solve_failed · q=1.5 computed · 1.49999998 유지 · 1.50000002 거부 · plate_z=+∞ → 같은 over_conduction_guard · plate_z=NaN → non_finite · 잘못된 해 주입 → current_conservation_failed · 열 FULL q=2 computed (이 단상 가드 대상 아님) — 증거 docs/reviews/codex_lhs214_failures_review_evidence_20261014/evidence/solver_probe_results.json.  무너지는 결론: \"over_conduction_guard · full_over_conduction 이면 수치 실패가 아니므로 허용해도 된다\".  무너지지 않는 것: 현행 관문이 실패 14 건을 차단 (잘못 게시 없음) · lhsx_054 단독 진단 = 수치 인증 통과 뒤 q 1.5370331988867802 (단 입력 digest · provenance 없음 · 나머지 13 건 원인 미확정).  1.5 는 기존 출력 거부 문턱이지 물리 경계 · 오차막대가 아니다.  최소 처방: ① 입력 · 경계 · 수치 검사 먼저 (기하 · 배율 · 전류 · 변환계수 · 재구성 q 유한 · 필요한 양 양수 · NaN/∞/잘못된 타입 묵인 금지) ② 단상 이온 · 전자 FULL · q 유한 · 원 정밀도 엄격 > 1.5 만 (열 제외) ③ 사다리 · 허용치 1e−6 · G > 0 · 병렬 상한 그대로 · 앞 단계 실패는 높은 q 로 구제 안 함 ④ accepted FULL σ · 차원 σ null · 진단 q 별도 키 · 수치 증서 보존 · FULL 유도값 (f · τ · 소산 몫 · 비) 없음 · CF · 협착 진단 기존 정책 ⑤ 생산자 → 소비자 같은 판정 시험.  10-14 실행 (194 실패 8 · 보충 20 실패 6) 의 증상이 이 결함이다 — 수정 계획 docs/reviews/lhs214_fix_plan_20261014.md (Q1–Q3 · A1–A2).  풀이 전 기하 검사 (비유한 · 0 이하 · 타입 = invalid_geometry · q 넘침 = non_finite · 비관통 판정보다 앞) · 이온 · 전자 FULL 에서 증서 통과 + q > 1.5 (원 정밀도 엄격) = not_computed + full_over_conduction · σ null · 거부된 q 따로 (q_withheld · q_guard_max · guard_policy · sum_g) · 채널 상태 model_limit · plate_z = +∞ 는 모형 한계 아님.  ✅ 고침 6d0bec3c3 (시험 먼저 d0aa231d4 · 문서 · 증거 · 등록 개정 초안 · 요청서 73f291a1e · 수정 계획 Q1–Q5 = 1저자 10-14 권고대로) · 문턱 1.5 · 허용치 1e−6 · 사다리 · 열 채널 그대로 · A4 무영향 32/32 (정상 사례 수치 비트 같음 · v1.2 τ 원천 9,894 칸 · 인계표 48,822 칸 같음) · 봉인 32 code_fp e8b2496b… → acc7bfa3… (network_conductivity · tau_flux · app · pipeline_service) = 두 등록 개정 초안 (194 §9-8 · 보충 20 §9-3) 에 대기 지문 `code_fp_pending` 으로 선언 (1저자 10-15 Q1 (나′) · 시험 먼저 545d7d4fe → 수정 9e3ef54ca · 발사 대조 D1 · E2 = 등록 값만 · `SELF-118`) · ⬜ 1저자 비준 · 재봉인 · 새 214 = Codex 짧은 확인 뒤 · Codex 요청서 docs/reviews/codex_lhs214_fix_review_request_20261015.md (§9 · Q6 · 리뷰 핀 9e3ef54ca · 발송 = 1저자).",
+      "note": "판정문 §2 L214-01 · 자리 (핀): scripts/network_conductivity.py:1182–1209 (수치 인증) · :1218–1222 (기하 환산) · :1249–1267 (가드) · :225–246 (상위 상태) · :1898–1910 (채널 실패).  탐침 (실제 solve_network · 두 간선 R_total 0.25 · 정확해 V=(1, 0.5, 0) · G=2 · 전류 ±2 · Σg=8): 유효 회로 q=2 → 수치 pass → over_conduction_guard → 상위 solve_failed · q=1.5 computed · 1.49999998 유지 · 1.50000002 거부 · plate_z=+∞ → 같은 over_conduction_guard · plate_z=NaN → non_finite · 잘못된 해 주입 → current_conservation_failed · 열 FULL q=2 computed (이 단상 가드 대상 아님) — 증거 docs/reviews/codex_lhs214_failures_review_evidence_20261014/evidence/solver_probe_results.json.  무너지는 결론: \"over_conduction_guard · full_over_conduction 이면 수치 실패가 아니므로 허용해도 된다\".  무너지지 않는 것: 현행 관문이 실패 14 건을 차단 (잘못 게시 없음) · lhsx_054 단독 진단 = 수치 인증 통과 뒤 q 1.5370331988867802 (단 입력 digest · provenance 없음 · 나머지 13 건 원인 미확정).  1.5 는 기존 출력 거부 문턱이지 물리 경계 · 오차막대가 아니다.  최소 처방: ① 입력 · 경계 · 수치 검사 먼저 (기하 · 배율 · 전류 · 변환계수 · 재구성 q 유한 · 필요한 양 양수 · NaN/∞/잘못된 타입 묵인 금지) ② 단상 이온 · 전자 FULL · q 유한 · 원 정밀도 엄격 > 1.5 만 (열 제외) ③ 사다리 · 허용치 1e−6 · G > 0 · 병렬 상한 그대로 · 앞 단계 실패는 높은 q 로 구제 안 함 ④ accepted FULL σ · 차원 σ null · 진단 q 별도 키 · 수치 증서 보존 · FULL 유도값 (f · τ · 소산 몫 · 비) 없음 · CF · 협착 진단 기존 정책 ⑤ 생산자 → 소비자 같은 판정 시험.  10-14 실행 (194 실패 8 · 보충 20 실패 6) 의 증상이 이 결함이다 — 수정 계획 docs/reviews/lhs214_fix_plan_20261014.md (Q1–Q3 · A1–A2).  풀이 전 기하 검사 (비유한 · 0 이하 · 타입 = invalid_geometry · q 넘침 = non_finite · 비관통 판정보다 앞) · 이온 · 전자 FULL 에서 증서 통과 + q > 1.5 (원 정밀도 엄격) = not_computed + full_over_conduction · σ null · 거부된 q 따로 (q_withheld · q_guard_max · guard_policy · sum_g) · 채널 상태 model_limit · plate_z = +∞ 는 모형 한계 아님.  ✅ 고침 6d0bec3c3 (시험 먼저 d0aa231d4 · 문서 · 증거 · 등록 개정 초안 · 요청서 73f291a1e · 수정 계획 Q1–Q5 = 1저자 10-14 권고대로) · 문턱 1.5 · 허용치 1e−6 · 사다리 · 열 채널 그대로 · A4 무영향 32/32 (정상 사례 수치 비트 같음 · v1.2 τ 원천 9,894 칸 · 인계표 48,822 칸 같음) · 봉인 32 code_fp e8b2496b… → acc7bfa3… (network_conductivity · tau_flux · app · pipeline_service) = 두 등록 개정 초안 (194 §9-8 · 보충 20 §9-3) 에 대기 지문 `code_fp_pending` 으로 선언 (1저자 10-15 Q1 (나′) · 시험 먼저 545d7d4fe → 수정 9e3ef54ca · 발사 대조 D1 · E2 = 등록 값만 · `SELF-118`) · ⬜ 1저자 비준 · 재봉인 · 새 214 = Codex 짧은 확인 뒤 · Codex 요청서 docs/reviews/codex_lhs214_fix_review_request_20261015.md (§9 · Q6 · 리뷰 핀 9e3ef54ca · 발송 = 1저자).  ★ 10-15 Codex 재검증 (핀 9e3ef54ca) = 부분 · 재개방 (판정문 docs/reviews/codex_review_lhs214_fix_reverify_20261015.md §1): 닫힌 부분 = 무효 기하 우선 · 원 정밀도 1.5 경계 · 적용 채널 · 가지 제한 · accepted 값 null · 진단 q 보존 · 기존 수치 사다리 불변 (정상 사례 수치 대조 A4 32/32 = 같은 환경 전후 동일성 · §7) · 남은 반례 = L214R-01 (재구성 q 의 무한대 · 마지막 채택 시도와 최종 요약의 모순을 공용 증서 검사가 허용) · 닫는 조건 = L214R-01 수정 + 재확인.  옛 13 건 원인 = unknown 그대로 (이번 반례는 그 원인 판정 · 과거 214 결과 오염 증거가 아니다 · §1).",
       "claimed_fixed_sha": "6d0bec3c3",
       "evidence_tests": [
         "scripts/test_lhs214_model_limit.py --selftest (신설 · 13/54 → 55/55)",
         "scripts/test_network_solve_certificate.py (27/28 → 28/28)",
-        "docs/reviews/lhs214_fix_evidence_20261015/ (시험 먼저 · 최종 로그 · A4 · code_fp 보고)"
+        "docs/reviews/lhs214_fix_evidence_20261015/ (시험 먼저 · 최종 로그 · A4 · code_fp 보고)",
+        "docs/reviews/codex_review_lhs214_fix_reverify_20261015.md (§1 · §2 · 부분)"
       ]
     },
     {
       "id": "L214-02",
       "severity": "P2",
-      "status": "claimed_fixed",
+      "status": "open",
       "owner": "claude",
       "found_by": "codex 10-14 LHS214 실패 14 건 · 분류 수정 (가) 구현 전 설계 검토 (검토 핀 1087a9b2f = 발사 핀 · 3 노드 회로 실제 함수 탐침 · 소비 경로 함수 탐침 · 생산 실행 · 실침대 재계산 없음)",
       "opened_in": "docs/reviews/codex_review_lhs214_failures_20261014.md",
       "title": "새 \"모형 한계\" 범주가 게시되지 않는 실패 레코드의 검사 면제를 상속하면 증서 · 세대 보장이 사라진다 — 진단 복사본에 새 사유를 넣자 CF 증서 residual_rel 1.0 훼손 → certificate_binding_problems == [] · Physics bulk_model 삭제 → _g2_mode_problems == [] · 실제 FULL 수치 증서는 _cert_unpublished_problem 이 \"숫자 없는 가지인데 증서가 해를 주장\" 으로 거부",
-      "note": "판정문 §2 L214-02 · 자리 (핀): scripts/tau_flux.py:616–632 · :747–769 · :793–810.  지금 배포 우회가 재현된 것은 아니다 (다른 관문이 전체를 차단) — 사유 허용목록만 더하면 그 방어의 전제가 사라진다는 설계 반례.  같은 의미로 고칠 경로 (판정문 §2 표): 일반 게시 webapp/app.py:3518–3559 · pipeline_service.py:767–842 · :1119–1165 / 정지 계약 pipeline_service.py:854 · :868 · :989–1041 · :1088–1107 / τ tau_flux.py:1101–1139 / 다시 읽기 g2_network_reread.py:510–520 (K2 · K7 유지) / 인계 · 배포 lhs_design_dataset.py:1935–1978 · :2039–2072 · lhs_release_build.py:652 · :833–930.  전자 · 열 증서는 전파되지만 FULL 상태 · 사유 열은 자동 전파되지 않는다 (network_conductivity.py:1771–1797 · :1821–1857) — \"모드 · 채널 공통\" 은 출력까지 시험.  최소 처방: \"수치 인증 성공 / 출력 채택 거부\" 명시 분리 · 그 범주엔 정상 세대 필드 · 역할 · 채널 · 가지 · 기하 · σ₀ 결합 전부 요구 · 진단 q 를 증서 전류 · 변환계수로 재구성해 대조 · 수치 증서를 버리거나 status 만 computed 로 바꾸지 않음 · 다른 채널 · 진단 가지의 진짜 실패가 우선 · 공용 판정 함수 하나.  증거 evidence/consumer_contracts.json · notes/consumer_review.md.  수정 계획 A1 · A3.  공용 판정 한 쌍 — 증서 model_limit_certificate_problem · 레코드 tau_flux.full_model_limit_problem — 0b · 증서 결합 · 세대 표기 · 일반 게시 · 정지 계약 · τ · 다시 읽기 K6 · 인계 P4 · 배포가 같이 씀 · 전자 · 열 FULL 상태 · 사유 출력까지 전파 · 배포 Physics 칸 = 빈칸 코드 NA_MODEL_LIMIT · Hertz 주 타깃 모형 한계 = v1.3 배포 관문 HOLD · 옛 solve_failed 레코드 계속 차단.  ✅ 고침 6d0bec3c3 (시험 먼저 d0aa231d4 · 문서 · 증거 · 등록 개정 초안 · 요청서 73f291a1e · 수정 계획 Q1–Q5 = 1저자 10-14 권고대로) · 문턱 1.5 · 허용치 1e−6 · 사다리 · 열 채널 그대로 · A4 무영향 32/32 (정상 사례 수치 비트 같음 · v1.2 τ 원천 9,894 칸 · 인계표 48,822 칸 같음) · 봉인 32 code_fp e8b2496b… → acc7bfa3… (network_conductivity · tau_flux · app · pipeline_service) = 두 등록 개정 초안 (194 §9-8 · 보충 20 §9-3) 에 대기 지문 `code_fp_pending` 으로 선언 (1저자 10-15 Q1 (나′) · 시험 먼저 545d7d4fe → 수정 9e3ef54ca · 발사 대조 D1 · E2 = 등록 값만 · `SELF-118`) · ⬜ 1저자 비준 · 재봉인 · 새 214 = Codex 짧은 확인 뒤 · Codex 요청서 docs/reviews/codex_lhs214_fix_review_request_20261015.md (§9 · Q6 · 리뷰 핀 9e3ef54ca · 발송 = 1저자).",
+      "note": "판정문 §2 L214-02 · 자리 (핀): scripts/tau_flux.py:616–632 · :747–769 · :793–810.  지금 배포 우회가 재현된 것은 아니다 (다른 관문이 전체를 차단) — 사유 허용목록만 더하면 그 방어의 전제가 사라진다는 설계 반례.  같은 의미로 고칠 경로 (판정문 §2 표): 일반 게시 webapp/app.py:3518–3559 · pipeline_service.py:767–842 · :1119–1165 / 정지 계약 pipeline_service.py:854 · :868 · :989–1041 · :1088–1107 / τ tau_flux.py:1101–1139 / 다시 읽기 g2_network_reread.py:510–520 (K2 · K7 유지) / 인계 · 배포 lhs_design_dataset.py:1935–1978 · :2039–2072 · lhs_release_build.py:652 · :833–930.  전자 · 열 증서는 전파되지만 FULL 상태 · 사유 열은 자동 전파되지 않는다 (network_conductivity.py:1771–1797 · :1821–1857) — \"모드 · 채널 공통\" 은 출력까지 시험.  최소 처방: \"수치 인증 성공 / 출력 채택 거부\" 명시 분리 · 그 범주엔 정상 세대 필드 · 역할 · 채널 · 가지 · 기하 · σ₀ 결합 전부 요구 · 진단 q 를 증서 전류 · 변환계수로 재구성해 대조 · 수치 증서를 버리거나 status 만 computed 로 바꾸지 않음 · 다른 채널 · 진단 가지의 진짜 실패가 우선 · 공용 판정 함수 하나.  증거 evidence/consumer_contracts.json · notes/consumer_review.md.  수정 계획 A1 · A3.  공용 판정 한 쌍 — 증서 model_limit_certificate_problem · 레코드 tau_flux.full_model_limit_problem — 0b · 증서 결합 · 세대 표기 · 일반 게시 · 정지 계약 · τ · 다시 읽기 K6 · 인계 P4 · 배포가 같이 씀 · 전자 · 열 FULL 상태 · 사유 출력까지 전파 · 배포 Physics 칸 = 빈칸 코드 NA_MODEL_LIMIT · Hertz 주 타깃 모형 한계 = v1.3 배포 관문 HOLD · 옛 solve_failed 레코드 계속 차단.  ✅ 고침 6d0bec3c3 (시험 먼저 d0aa231d4 · 문서 · 증거 · 등록 개정 초안 · 요청서 73f291a1e · 수정 계획 Q1–Q5 = 1저자 10-14 권고대로) · 문턱 1.5 · 허용치 1e−6 · 사다리 · 열 채널 그대로 · A4 무영향 32/32 (정상 사례 수치 비트 같음 · v1.2 τ 원천 9,894 칸 · 인계표 48,822 칸 같음) · 봉인 32 code_fp e8b2496b… → acc7bfa3… (network_conductivity · tau_flux · app · pipeline_service) = 두 등록 개정 초안 (194 §9-8 · 보충 20 §9-3) 에 대기 지문 `code_fp_pending` 으로 선언 (1저자 10-15 Q1 (나′) · 시험 먼저 545d7d4fe → 수정 9e3ef54ca · 발사 대조 D1 · E2 = 등록 값만 · `SELF-118`) · ⬜ 1저자 비준 · 재봉인 · 새 214 = Codex 짧은 확인 뒤 · Codex 요청서 docs/reviews/codex_lhs214_fix_review_request_20261015.md (§9 · Q6 · 리뷰 핀 9e3ef54ca · 발송 = 1저자).  ★ 10-15 Codex 재검증 (핀 9e3ef54ca) = 부분 · 재개방 (판정문 docs/reviews/codex_review_lhs214_fix_reverify_20261015.md §1): 닫힌 부분 = 세대 결손 · CF 증서 · 다른 채널 실패 차단 · 전자 / 열 상태 전파 · L0 H0 배포 HOLD (과거 검사 면제 반례 셋 — CF 증서 · 세대 필드 · 미채택 FULL 실제 증서 보존 — 닫힘 · CF 잔차 1.0 · bulk_model 결손 · q×1.01 · 전자 / 열 실패 · 사유 꼬리 추가 · Physics 에 H12 증서의 7 변이 = 실제 게시 / 정지 / 다시 읽기 / 인계 조합에서 모두 거부 · §6) · 남은 반례 = L214R-02 (띠 폴백과 함께 생긴 H0 모형 한계가 배포 HOLD 에서 사라짐) · 닫는 조건 = L214R-02 수정 + 재확인.",
       "claimed_fixed_sha": "6d0bec3c3",
       "evidence_tests": [
         "webapp/test_network_handover_chain.py (21/34 → 34/34)",
         "scripts/test_lhs_release_v13.py (255/256 → 256/256)",
         "webapp/test_pipeline_provenance.py (284/284)",
-        "docs/reviews/lhs214_fix_evidence_20261015/ (시험 먼저 · 최종 로그 · A4 · code_fp 보고)"
+        "docs/reviews/lhs214_fix_evidence_20261015/ (시험 먼저 · 최종 로그 · A4 · code_fp 보고)",
+        "docs/reviews/codex_review_lhs214_fix_reverify_20261015.md (§1 · §3 · 부분)"
       ]
     },
     {
       "id": "L214-03",
       "severity": "P2",
-      "status": "claimed_fixed",
+      "status": "open",
       "owner": "claude",
       "found_by": "codex 10-14 LHS214 실패 14 건 · 분류 수정 (가) 구현 전 설계 검토 (검토 핀 1087a9b2f = 발사 핀 · 3 노드 회로 실제 함수 탐침 · 소비 경로 함수 탐침 · 생산 실행 · 실침대 재계산 없음)",
       "opened_in": "docs/reviews/codex_review_lhs214_failures_20261014.md",
       "title": "웹앱 케이스 표 _dual_row 가 Physics σ 가 없으면 Hertz σ 를 Physics 칸에 복사하고 차이를 0 % 로 표시한다 — Hertz 0.6 · Physics null · 사유 full_over_conduction 합성 입력에서 σ_ionic 0.6 / 0.6 (0 %) · σ_brug/σ_ionic 2.0× / 2.0× (0 %) · 전자 2.0 / 2.0 · 기존 Network Solver 표 경로의 파생비 fallback 도 같음",
-      "note": "판정문 §2 L214-03 · 자리 (핀): webapp/app.py:649–655 (_dual_row) · 호출 :3058–3062 · :3114–3129 · 파생비 fallback :3089–3091 · :3207–3209.  탐침 = 핀 파일에서 함수 본문을 AST 추출해 표 생성 함수 실행 (전체 웹서버 · 브라우저 시험 아님) · τ² · 망 상태 줄은 정직하게 공란 · 사유를 낸다 (_dual_row_strict 경로).  현재 14 건은 게시 차단 — 사용자가 이미 틀린 값을 봤다고 주장하지 않는다.  최소 처방: 모드별 값 · 비 · 차이 strict missing (Physics 없으면 칸 · Δ = — + 사유 · 0 · Hertz · H12 대체 금지) · 새 표 / 기존 표 · 이온 / 전자 · 원 결과 / 병합 결과 회귀.  증거 evidence/consumer_contracts.json.  수정 계획 A3 (웹앱 같은 묶음 — 1저자 09-30 코드 → 웹앱 규칙).  웹앱 strict missing — Physics 없으면 Hertz 복사 대신 — + 사유 (가짜 Δ 0 % 제거) · 새 표 · 기존 CSV 표 · 파생비 · Pass D/E · 상태 행 (그룹 비교 · 예측기 · COMSOL 내보내기 화면은 미확인).  ✅ 고침 6d0bec3c3 (시험 먼저 d0aa231d4 · 문서 · 증거 · 등록 개정 초안 · 요청서 73f291a1e · 수정 계획 Q1–Q5 = 1저자 10-14 권고대로) · 문턱 1.5 · 허용치 1e−6 · 사다리 · 열 채널 그대로 · A4 무영향 32/32 (정상 사례 수치 비트 같음 · v1.2 τ 원천 9,894 칸 · 인계표 48,822 칸 같음) · 봉인 32 code_fp e8b2496b… → acc7bfa3… (network_conductivity · tau_flux · app · pipeline_service) = 두 등록 개정 초안 (194 §9-8 · 보충 20 §9-3) 에 대기 지문 `code_fp_pending` 으로 선언 (1저자 10-15 Q1 (나′) · 시험 먼저 545d7d4fe → 수정 9e3ef54ca · 발사 대조 D1 · E2 = 등록 값만 · `SELF-118`) · ⬜ 1저자 비준 · 재봉인 · 새 214 = Codex 짧은 확인 뒤 · Codex 요청서 docs/reviews/codex_lhs214_fix_review_request_20261015.md (§9 · Q6 · 리뷰 핀 9e3ef54ca · 발송 = 1저자).",
+      "note": "판정문 §2 L214-03 · 자리 (핀): webapp/app.py:649–655 (_dual_row) · 호출 :3058–3062 · :3114–3129 · 파생비 fallback :3089–3091 · :3207–3209.  탐침 = 핀 파일에서 함수 본문을 AST 추출해 표 생성 함수 실행 (전체 웹서버 · 브라우저 시험 아님) · τ² · 망 상태 줄은 정직하게 공란 · 사유를 낸다 (_dual_row_strict 경로).  현재 14 건은 게시 차단 — 사용자가 이미 틀린 값을 봤다고 주장하지 않는다.  최소 처방: 모드별 값 · 비 · 차이 strict missing (Physics 없으면 칸 · Δ = — + 사유 · 0 · Hertz · H12 대체 금지) · 새 표 / 기존 표 · 이온 / 전자 · 원 결과 / 병합 결과 회귀.  증거 evidence/consumer_contracts.json.  수정 계획 A3 (웹앱 같은 묶음 — 1저자 09-30 코드 → 웹앱 규칙).  웹앱 strict missing — Physics 없으면 Hertz 복사 대신 — + 사유 (가짜 Δ 0 % 제거) · 새 표 · 기존 CSV 표 · 파생비 · Pass D/E · 상태 행 (그룹 비교 · 예측기 · COMSOL 내보내기 화면은 미확인).  ✅ 고침 6d0bec3c3 (시험 먼저 d0aa231d4 · 문서 · 증거 · 등록 개정 초안 · 요청서 73f291a1e · 수정 계획 Q1–Q5 = 1저자 10-14 권고대로) · 문턱 1.5 · 허용치 1e−6 · 사다리 · 열 채널 그대로 · A4 무영향 32/32 (정상 사례 수치 비트 같음 · v1.2 τ 원천 9,894 칸 · 인계표 48,822 칸 같음) · 봉인 32 code_fp e8b2496b… → acc7bfa3… (network_conductivity · tau_flux · app · pipeline_service) = 두 등록 개정 초안 (194 §9-8 · 보충 20 §9-3) 에 대기 지문 `code_fp_pending` 으로 선언 (1저자 10-15 Q1 (나′) · 시험 먼저 545d7d4fe → 수정 9e3ef54ca · 발사 대조 D1 · E2 = 등록 값만 · `SELF-118`) · ⬜ 1저자 비준 · 재봉인 · 새 214 = Codex 짧은 확인 뒤 · Codex 요청서 docs/reviews/codex_lhs214_fix_review_request_20261015.md (§9 · Q6 · 리뷰 핀 9e3ef54ca · 발송 = 1저자).  ★ 10-15 Codex 재검증 (핀 9e3ef54ca) = 부분 · 재개방 (판정문 docs/reviews/codex_review_lhs214_fix_reverify_20261015.md §1): 닫힌 부분 = 기본 새 표 · 두 열 표의 Physics 결측 · 전자 최종 표시 개선 · 남은 반례 = L214R-03 (남아 있는 CSV 숫자가 최종 병합에서 복원 — split · 네 열 · H0 결측) · 닫는 조건 = L214R-03 수정 + 재확인.  §7: A4 의 \"정상 새 표 동일\" 은 변환 함수 (transform_network_summary_4col) 범위로 좁힌다 — 최종 표시의 의도 변경 (R_brug Physics 2.0× → 1.4× · Δ 0 % → −30 %) 은 따로 등록할 것.",
       "claimed_fixed_sha": "6d0bec3c3",
       "evidence_tests": [
         "webapp/test_network_handover_chain.py (L214-03 화면 회귀)",
-        "docs/reviews/lhs214_fix_evidence_20261015/ (시험 먼저 · 최종 로그 · A4 · code_fp 보고)"
+        "docs/reviews/lhs214_fix_evidence_20261015/ (시험 먼저 · 최종 로그 · A4 · code_fp 보고)",
+        "docs/reviews/codex_review_lhs214_fix_reverify_20261015.md (§1 · §4 · 부분)"
+      ]
+    },
+    {
+      "id": "L214R-01",
+      "severity": "P2",
+      "status": "open",
+      "owner": "claude",
+      "found_by": "codex 10-15 LHS214 수정 재검증 (검토 핀 9e3ef54ca · 기준 0c557e72a · 실제 함수 · 합성 생산자 사슬 · 새 214 · WSL 발사 없음)",
+      "opened_in": "docs/reviews/codex_review_lhs214_fix_reverify_20261015.md",
+      "title": "공용 수치 증서 검사가 비유한 재구성 q 와 마지막 채택 시도의 실패 기록을 수용한다 — 증서 전류 ±1e308 · sum_g 1e308 이면 q_rec = +inf 인데 상대 비교가 `inf <= inf` 로 참이 되고, 마지막 시도 residual_rel 1.0 · conservation_rel 1.0 · krylov_info 1 도 각각 통과해 full_model_limit_problem · ion_record_problem = None · certificate_binding_problems = [] · channel_verdict ok · 모드 파일 network_content_verdict = True",
+      "note": "판정문 §2 · 자리 (핀 9e3ef54ca): scripts/network_conductivity.py:993–998 · :1005–1015 (재구성 검사).  반례 A = 실제 21 노드 합성 생산자의 Physics 모형 한계 레코드 (원 진단 q 2.593468501694396) 에서 기하 · 출력 null 유지 · 증서 전류 I_bottom = 1e308 · I_top = −1e308 · sum_g = 1e308 (마지막 pass 시도의 전류도 맞춤 · T 20 · A 1 · ΔV 1) → q_rec = ((I_bottom/ΔV)·T)/A = +inf · 저장 q 는 유한 그대로 · `abs(q − inf) <= 16ε·abs(inf)` = `inf <= inf` 참 → 재구성 q · 저장 q 의 > 1.5 검사도 참 → 위 함수 전부 통과 · T = A = 1e308 증서도 같음 · 실제 solve_network 는 환산 중 q 가 무한대면 non_finite 로 거부 ⇒ 생산자와 소비자가 같은 유한성 계약을 보증한다는 결론이 무너진다.  반례 B = 같은 레코드의 마지막 시도 residual_rel 만 1.0 · conservation_rel 1.0 · krylov_info 1 = 각각 통과 (대조군 outcome 변경 · 마지막 전류 변경은 거부).  한정: 실제 침대에서 1e308 전류가 났다는 주장 아님 (모든 입력 필드를 유한하게 둔 공격) · 정상 생산자가 실패한 해를 채택한다는 증거 아님 (증서 내부 모순을 소비 검사가 거부하지 않는 문제) · 앞선 실패 시도는 사다리의 정상 기록일 수 있어 전부 금지할 일 아님 · scale = 1e200 의 scale**2 예외는 지금 상위 검사에서 실패 (별도 false-green 아님).  최소 해제 = T/A · q_rec 를 비교 전에 유한 양수로 확인 · 넘침 · 밑넘침 = 기술 실패로 정리 (scale**2 예외도 사유화) · 마지막 채택 시도의 잔차 · 보존 · 방법별 수렴 상태 · 예외 여부 ↔ 최종 요약 결합 · 두 반례가 증서 → 모드 파일 소비에서 거부되고 정상 fallback 성공 · 경계 대조는 유지.  설계 선택 Q2 2 (q 재구성 · 16ε = 유한 영역에서 동의 · 유한성 검사를 먼저) · 9 (non_finite = 생산자뿐 아니라 재구성 소비자에도 같은 기준) (§6).  ⬜ 수정 계획 = 세미나 뒤 (1저자 10-15 — 24 시간 세미나 집중).",
+      "evidence_tests": [
+        "docs/reviews/codex_review_lhs214_fix_reverify_20261015.md §2",
+        "docs/reviews/codex_lhs214_fix_reverify_evidence_20261015/evidence/numeric_probes.json (records.overflow_q_reconstruction_currents · contradictory_attempt_residual_rel · certificate_mutations · 직접 풀이 탐침 38 · 증서 변이 14 · 레코드 탐침 5)",
+        "docs/reviews/codex_lhs214_fix_reverify_evidence_20261015/notes/numeric.md",
+        "docs/reviews/codex_lhs214_fix_reverify_evidence_20261015/probes/l214_numeric.py (실행하지 않음)"
+      ]
+    },
+    {
+      "id": "L214R-02",
+      "severity": "P2",
+      "status": "open",
+      "owner": "claude",
+      "found_by": "codex 10-15 LHS214 수정 재검증 (검토 핀 9e3ef54ca · 기준 0c557e72a · 실제 함수 · 합성 생산자 사슬 · 새 214 · WSL 발사 없음)",
+      "opened_in": "docs/reviews/codex_review_lhs214_fix_reverify_20261015.md",
+      "title": "L1/L2 띠 폴백이 있으면 τ 가 BAND_FALLBACK · 공란 사유로 먼저 반환되고 배포는 NOT_COMPUTED + full_over_conduction 만 모형 한계로 인식해, H0 (Hertz 주 타깃) 모형 한계 레코드의 v1.3 배포 HOLD 가 사라진다 — 실제 생산자 합성 L1 · L2 사슬이 게시 done · 다시 읽기 K1–K7 PASS · 빌드 27 파일 · 경고 [] · check []",
+      "note": "판정문 §3 · 자리 (핀 9e3ef54ca): scripts/tau_flux.py:1234–1236 (상태 우선순위) · scripts/lhs_release_build.py:666–680 (배포 식별자) · :2231–2235 · :2438–2440.  반례 = 기존 band_l1 / band_l2 합성 사슬의 상자 변만 10 → 0.1 로 줄여 실제 생산자 CLI → 게시 → load_tau_results P0–P4 → 인계 → build_v13(dry_run=False, diagnostic=False) · check_v13: L0 대조 (H0 진단 q 1.6231747351909995) = NOT_COMPUTED / full_over_conduction → ReleaseError 정상 HOLD · L1 + H0 모형 한계 (q 8.927503013108073) · L2 + H0 모형 한계 (q 35.710012052432674) = 게시 done · K1–K7 PASS · 인계 τ BAND_FALLBACK / 공란 · 27 파일 생성 · 경고 [] · check [] ⇒ 표시 우선순위가 배포 자격 사실까지 지운다 · 요청서 §5-4 \"H0 모형 한계는 진단 게시하되 실제 v1.3 주 타깃 배포에서는 항상 HOLD\" 가 무너진다.  한정: 상태 문자열을 만들어 넣은 시험 아님 · 작은 상자의 구 부피 분율은 물리 침대 범위 밖 = 허용된 소비 계약의 조합 반례 (실제 침대 발생률 · 물리 타당성 검증 아님) · 빌드의 나머지 213 행 · 감사 · 배치 기록 = 기존 selftest 합성 fixture (선택행만 실제 생산 · 인계 칸 · τ 다시 읽기 비교 함수 유지 · 원천 공급만 어댑터) · 실제 214 생산 배포 통과 아님 · 수치 null 유지 (잘못된 σ 가 학습 값으로 채워졌다는 반례와 구별).  최소 해제 = τ 앞 게이트 우선순위는 유지 가능 · canonical FULL 모형 한계 사실을 독립 보존해 빌드 · check 가 읽음 · L0/L1/L2 × H0/Physics/H12 교차 시험 · 모든 BAND_FALLBACK 행 금지는 요구하지 않음.  설계 선택 Q2 4 (H0 진단 게시 · 주 배포 HOLD = 조건부 동의) · 7 (띠 폴백 우선 = 표시 순서 수용 · 독립 모형 한계 원인 보존 필요) · 10 (앞 상태가 덮어도 모형 한계 원인 집계에서 빠지면 안 됨) (§6) · Q4 등록 초안에 이 독립 분류 반영 필요 (§8).  생성 배포 묶음 evidence/consumers_release_verified/ (시험 전용 · 92 파일) = 반입하지 않고 해시만 (docs/reviews/codex_lhs214_fix_reverify_evidence_20261015/_members_mini.tsv).  ⬜ 수정 계획 = 세미나 뒤 (1저자 10-15 — 24 시간 세미나 집중).",
+      "evidence_tests": [
+        "docs/reviews/codex_review_lhs214_fix_reverify_20261015.md §3",
+        "docs/reviews/codex_lhs214_fix_reverify_evidence_20261015/evidence/consumers_probe.json",
+        "docs/reviews/codex_lhs214_fix_reverify_evidence_20261015/evidence/consumers_handover_rows.json",
+        "docs/reviews/codex_lhs214_fix_reverify_evidence_20261015/evidence/consumers_release_probe.json",
+        "docs/reviews/codex_lhs214_fix_reverify_evidence_20261015/notes/consumers.md",
+        "docs/reviews/codex_lhs214_fix_reverify_evidence_20261015/probes/l214_consumers.py (실행하지 않음)"
+      ]
+    },
+    {
+      "id": "L214R-03",
+      "severity": "P2",
+      "status": "open",
+      "owner": "claude",
+      "found_by": "codex 10-15 LHS214 수정 재검증 (검토 핀 9e3ef54ca · 기준 0c557e72a · 실제 함수 · 합성 생산자 사슬 · 새 214 · WSL 발사 없음)",
+      "opened_in": "docs/reviews/codex_review_lhs214_fix_reverify_20261015.md",
+      "title": "최종 케이스 화면 (single.html) 이 미채택 값을 옛 CSV 에서 복원한다 — accepted Physics σ 가 없는 Physics 모형 한계 (full_over_conduction) 생산 결과에 split CSV 가 있으면 이온 σ 0.6 / 0.9 / +50.0 % · Plastic amplification 1.50× / 1.50× / 0 %, H0 도 모형 한계인 결과 + 두 열 CSV 면 Hertz σ 0.6 · R_brug 2.0× 가 남고, 네 열 CSV 는 0.6 / 0.6 / 0 % 그대로 — 같은 화면의 상태 행 (FULL 모형 한계) · τ 행 (NOT_COMPUTED(full_over_conduction)) 과 숫자가 모순",
+      "note": "판정문 §4 · 자리 (핀 9e3ef54ca): webapp/app.py:687–700 · :2020–2038 (최종 split 병합) · :2956–2957 · CSV 생산 scripts/analyze_contacts.py:363–389 · 게시 목록 webapp/pipeline_service.py:61–67.  _csv_mode_row 에서 한 번 가린 Physics 값도 뒤의 split 병합이 다시 채운다.  옛 CSV 값 (0.6 / 0.9 등) = 독립 탐침이 주입한 합성 변이 · 단 CSV 를 실제 게시 전에 두고 네 작은 생산자 실행을 거쳤고 게시 뒤 해시는 네 건 모두 그대로 (network 게시 목록은 contact 단계 CSV 를 갱신하지 않음 ⇒ 원자적 게시가 이 상황을 막아 주지 않는다).  렌더 = 실제 앱 import · loader · 전체 템플릿으로 소스 68 건 · 기준 52 건 (실행 오류 0 · 합성 metrics 52 건씩 Flask GET · 나머지 소스 16 건 = 실제 생산자 결과) — 렌더 실행 수이지 68 건 결함 검사 통과가 아니다.  한정: 과거 214 화면의 실제 오염을 입증한 것 아님.  최소 해제 = 최종 병합 뒤에도 현재 모드별 수치 · 상태를 우선해 이온 σ 와 FULL 유도비를 가림 · H0 결측 · split · 네 열 CSV 포함 · \"Hertz 칸은 무조건 CSV 그대로\" 기대는 이 경우 적용 안 함 · 비 미제공인 Plastic amplification 의 — / — / 0 % 도 Δ — 로 함께 정리.  §7: W (A4) 는 transform_network_summary_4col 까지만 — loader → normalize → 템플릿을 넣으면 정상 새 표도 R_brug Physics 2.0× → 1.4× · Δ 0 % → −30 % (의도한 표시 교정 · 솔버 표류 아님) ⇒ \"정상 새 표 동일\" 은 변환 함수 범위로 좁히고 최종 표시 의도 변경은 따로 등록 · 이 항목의 레이아웃 · H0 결측 조합도 추가.  설계 선택 Q2 8 (옛 화면도 strict missing = 동의 · 수치 변화가 아니라 화면 수정으로 보고 · 최종 경로 시험) (§6).  웹앱 = 같은 묶음 (1저자 09-30 코드 → 웹앱 규칙).  ⬜ 수정 계획 = 세미나 뒤 (1저자 10-15 — 24 시간 세미나 집중).",
+      "evidence_tests": [
+        "docs/reviews/codex_review_lhs214_fix_reverify_20261015.md §4",
+        "docs/reviews/codex_lhs214_fix_reverify_evidence_20261015/evidence/display_source.json (producer_ml_physics_split · producer_ml_hertz_csv · producer_ml_physics_fourcol)",
+        "docs/reviews/codex_lhs214_fix_reverify_evidence_20261015/evidence/display_source_producer_ml_physics_split.html",
+        "docs/reviews/codex_lhs214_fix_reverify_evidence_20261015/evidence/display_source_producer_ml_hertz_csv.html",
+        "docs/reviews/codex_lhs214_fix_reverify_evidence_20261015/evidence/display_source_producer_ml_physics_fourcol.html",
+        "docs/reviews/codex_lhs214_fix_reverify_evidence_20261015/notes/display.md",
+        "docs/reviews/codex_lhs214_fix_reverify_evidence_20261015/probes/l214_display.py (실행하지 않음)"
+      ]
+    },
+    {
+      "id": "L214R-04",
+      "severity": "P3",
+      "status": "open",
+      "owner": "claude",
+      "found_by": "codex 10-15 LHS214 수정 재검증 (검토 핀 9e3ef54ca · 기준 0c557e72a · 실제 함수 · 합성 생산자 사슬 · 새 214 · WSL 발사 없음)",
+      "opened_in": "docs/reviews/codex_review_lhs214_fix_reverify_20261015.md",
+      "title": "등록 문서가 안내한 비준 전환 절차 (§3 만 새 지문으로 바꾸고 pending 선언 삭제) 를 그대로 하면 영수증 도구가 R0 · D1 로 실패한다 — scripts/supp20_input_receipt.py:118 이 활성 §3 이 아니라 문서 전체의 `code_fp <64hex>` 를 읽어 역사 표의 옛 값과 충돌 (rc 1 · {R0,D1} · registered=None)",
+      "note": "판정문 §5 · 자리 (핀 9e3ef54ca): scripts/supp20_input_receipt.py:118 (파서) · 활성 값 = 보충 20 등록 docs/reviews/lhs_network_batch_registration_20261012_supp20.md :42 · 역사 표 :104 (옛 값이 같은 기계 구문).  실제 함수 결과 (문서 사본에서만): 현재 문서 = rc 1 · 실패 {D1} (의도한 대기 상태) · §3 갱신 + pending 삭제 + 옛 표 보존 = rc 1 · {R0,D1} · registered=None · 대조용 사본에서 옛 기계 토큰까지 새 값으로 치환 = rc 0 (원인 분리용 · 역사 기록을 새 값으로 덮으라는 처방 아님).  현재 selftest 의 비준 쌍둥이는 전역 치환이라 이 구멍을 놓친다.  한정: 현재 pending 때문에 발사가 통과하는 우회는 못 찾음 · false-green 이 아니라 향후 불필요한 차단 (P3).  최소 해제 = 활성 §3 만 읽기 또는 역사 SHA 는 그대로 두되 활성 토큰과 다른 구문으로 구별 · 비준 전환 시험은 역사 표를 보존한 문서로 · pending 을 발사 허용값으로 완화 금지 (§8).  관련 = SELF-118 (대기 지문 설계 = 이 판정에서 verified).  ⬜ 수정 계획 = 세미나 뒤 (1저자 10-15 — 24 시간 세미나 집중).",
+      "evidence_tests": [
+        "docs/reviews/codex_review_lhs214_fix_reverify_20261015.md §5",
+        "docs/reviews/codex_lhs214_fix_reverify_evidence_20261015/evidence/receipt_identity/results.json (variants.minimal_activate_section3)",
+        "docs/reviews/codex_lhs214_fix_reverify_evidence_20261015/probes/receipt_identity.py (실행하지 않음)"
       ]
     },
     {
@@ -11289,7 +11360,7 @@
     {
       "id": "SELF-118",
       "severity": "P3",
-      "status": "claimed_fixed",
+      "status": "verified",
       "owner": "claude",
       "found_by": "메인 세션 10-15 통합 게이트 (fast lane · scripts/supp20_input_receipt.py --selftest S0 · S0b) — push 전에 막힘 · 원격 오염 없음 · 기록 = 진행 기록 10-15 12 줄",
       "opened_in": "docs/session_20260923_progress.md",
@@ -11298,9 +11369,16 @@
       "evidence_tests": [
         "scripts/supp20_input_receipt.py --selftest (81/99 → 99/99)",
         "docs/reviews/lhs214_fix_evidence_20261015/ (before_napr · final · README (나′) 절)",
-        "docs/reviews/codex_lhs214_fix_review_request_20261015.md §9 · Q6"
+        "docs/reviews/codex_lhs214_fix_review_request_20261015.md §9 · Q6",
+        "docs/reviews/codex_review_lhs214_fix_reverify_20261015.md §8 (Q6)",
+        "docs/reviews/codex_lhs214_fix_reverify_evidence_20261015/evidence/receipt_identity/selftest_dependency_only.log (99/99)"
       ],
-      "claimed_fixed_sha": "9e3ef54ca"
+      "claimed_fixed_sha": "9e3ef54ca",
+      "verified_by": "codex",
+      "verified_in": "docs/reviews/codex_review_lhs214_fix_reverify_20261015.md",
+      "verified_sha": "9e3ef54ca",
+      "verified_scope": "판정문 §8 Q6 = pending 설계 수용 · selftest PASS 와 발사 PASS 분리 — 대기 지문 선언 (`code_fp_pending` · 두 등록 개정 초안) · 영수증 selftest 의 정확한 실패 집합 (pending 에서 컨테이너 {D1} · 사전 점검 {D1,E2} · 발사 기록 {D1,F5,G5} · 승인 쌍둥이에서 음성 대조 재실행) · 발사 대조 엄격 (D1 · E2 = 등록 값만 · pending 을 다른 값으로 바꾸거나 지워도 실제 D1 통과 안 함 · 상충 pending = R0 실패) · 의존성 경로만 공급한 같은 도구로 99/99 독립 재현 · CODE_FILES 32 직접 재해시 (바뀐 넷 = network_conductivity · tau_flux · app · pipeline_service · 활성 e8b2496b… ↔ pending acc7bfa3…).  범위 밖 = 비준 전환 문서 (역사 code_fp 충돌 = L214R-04 따로) · 입력 영수증 통과 · 발사 승인 아님 (§8).",
+      "verification_note": "2026-10-15 Codex LHS214 수정 재검증 (판정 HOLD · L214-01–03 부분) 의 Q6 답 = 대기 지문 설계 수용 → 원장 상태를 옮겼다 · verified_sha = 검토 핀 9e3ef54ca (= claimed_fixed_sha · Codex 는 GitHub 의 고정 커밋 사본을 대조했다) · 비준 전환 절차의 남은 구멍은 L214R-04 (P3 · open) 로 따로 추적."
     },
     {
       "id": "ULKRF-01",
