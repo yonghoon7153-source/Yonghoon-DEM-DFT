@@ -350,6 +350,49 @@ def p08b():
     return 'p08_anneal_energy_change.csv'
 
 
+def anneal_origin_tables(rows):
+    """p08_anneal_energy_change.csv rows (header first) → (median meV, Origin rows, 50 meV bin rows).
+    Refuses a different header, a count other than the deck's 693, a value ≥ 0 (the deck says all 693 went lower) and a
+    value outside −1250 … 0 (it would fall out of the bins). ⛔ Says nothing about why one structure dropped more."""
+    head, body = rows[0], rows[1:]
+    if head != ['precursor', 'configuration', 'anneal_delta_E_meV_per_supercell']:
+        raise ValueError(f'unexpected header {head}')
+    dE = [float(r[2]) for r in body]
+    if len(dE) != 693 or max(dE) >= 0 or min(dE) < -1250:
+        raise ValueError(f'n {len(dE)} · max {max(dE)} · min {min(dE)} — not the 693 lowered structures in −1250 … 0')
+    s = sorted(dE)
+    med = (s[(len(s) - 1) // 2] + s[len(s) // 2]) / 2
+    edges = [-1250 + 50 * k for k in range(26)]
+    counts = [sum(edges[k] <= x < edges[k + 1] for x in dE) for k in range(25)]
+    if sum(counts) != len(dE):
+        raise ValueError('a value fell between the bins')
+    data = [[f'{x:.3f}', f'{x / 1000:.6f}', r[0], r[1]] for r, x in zip(body, dE)]
+    bins = [[edges[k], edges[k + 1], edges[k] + 25, counts[k]] for k in range(25)]
+    return med, data, bins
+
+
+def p08b_origin():
+    """User 10-15 ('csv 를 새롭게 · median 값이랑'): the 693 rows of p08_anneal_energy_change.csv for an Origin
+    histogram like the August one, in meV and eV per 52-atom cell (the source column says 'supercell' = the
+    4-formula-unit conventional cell), with the median in the header; plus the 50 meV bins for a column plot."""
+    med, data, bins = anneal_origin_tables(rows_of(os.path.join(OUT, 'p08_anneal_energy_change.csv')))
+    n = len(data)
+    common = [f'n = {n} structures (main batch, short anneal 500 K / 50 ps, then relaxed again) · all {n} went lower.',
+              f'Median ΔE = {med:.1f} meV = {med / 1000:.2f} eV per 52-atom cell (4 formula units) — NOT per atom.',
+              f'Range {min(float(r[0]) for r in data):.1f} … {max(float(r[0]) for r in data):.1f} meV. Exploratory (Stage 1).',
+              'Cell = the 52-atom conventional cell; the source CSV calls it "supercell". Same rows as p08_anneal_energy_change.csv.']
+    write('p08_anneal_energy_change_origin.csv',
+          ['Page 10 (user deck) — short-anneal energy change, one row per structure, for an Origin histogram.'] + common +
+          ['Origin: select column A > Plot > Statistical > Histogram · Bin Size 50 · Begin -1250 · End 0 (do not pre-bin).',
+           f'X axis -1250 … 0, title "energy change (meV per 52-atom cell)" · Y title "structures" · median line at X = {med:.1f}.'],
+          ['dE_meV_per_52atom_cell', 'dE_eV_per_52atom_cell', 'precursor', 'configuration'], data)
+    write('p08_anneal_energy_change_bins_origin.csv',
+          ['Page 10 (user deck) — the same 693 values counted in 50 meV bins [left, right) — for a column plot.'] + common +
+          ['Origin: X = bin_center_meV, Y = n_structures, Plot > Column/Bar, gap 0. The counts sum to n.'],
+          ['bin_left_meV', 'bin_right_meV', 'bin_center_meV', 'n_structures'], bins)
+    return 'p08_anneal_energy_change_origin.csv'
+
+
 def p09():
     e = {r['id']: r for r in json.load(open(os.path.join(P, 'eos.json')))['results']}
     sysd = [('Li6PS5Cl', e['comp1_v3'], 4, 960.0, 1085.0), ('Li5.4PS4.4Cl1.6', e['modelc_v3'], 5, 1140.0, 1285.0)]
@@ -812,6 +855,7 @@ site-preference backup p18 (old p12 / p17 files are removed by the script). p06 
 | 7 | Stage-1 composite score, Origin copy (10-15) | `p07_stage1_composite_score_top10_origin.csv` | the slide's ten bars only, copied from the 91 file · rows in Origin plotting order (rank 10 → 1, so rank 1 is on top) · tick labels plain and Origin rich text (`\\-(2)` subscripts) · value labels at 2 decimals as on the slide · same caution |
 | 8 | Configuration sampling | `p08_configurations_per_site_pair_long.csv` · `_matrix.csv` | heat map: cation site × anion site → configurations (main batch 3,615) |
 | 8 | Short anneal (slim slide 9, 10-15) | `p08_anneal_energy_change.csv` | histogram: ΔE per structure (meV per supercell · 693 · bin 50 · −1250 … 0) — replaces the August Step-5 histogram (681) |
+| 8 | Short anneal, Origin layout (user page 10, 10-15) | `p08_anneal_energy_change_origin.csv` · `p08_anneal_energy_change_bins_origin.csv` | same 693 values in meV and eV per 52-atom cell, median in the header · 50 meV bins (sum = 693) for a column plot |
 | 9 | DFT EOS | `p09_eos_bm3_fit_curves.csv` | lines: E − E0 vs V per f.u. (fit curves; raw points not in repo) |
 | 10 | Stability window | `p10_stability_window_host.csv` · `p10_stability_window_host_segments.csv` | bar segments on a voltage axis (host Li6PS5Cl) |
 | 13 | MD status | `p13_md_campaign_progress.csv` · `p13_md_campaign_runs.csv` | progress bars; run roster (status, wall-clock GPU-h) |
@@ -842,7 +886,7 @@ def main():
     for old in ('p12_md_campaign_runs.csv', 'p12_md_campaign_progress.csv', 'p17_site_preference_vs_ionic_radius.csv'):
         if os.path.exists(os.path.join(OUT, old)):      # renamed when the audit slide became page 11
             os.remove(os.path.join(OUT, old))
-    made = [p06(), p07(), p07b(), p07c(), p07d(), p08(), p08b(), p09(), p10(), p13(), p18()]
+    made = [p06(), p07(), p07b(), p07c(), p07d(), p08(), p08b(), p08b_origin(), p09(), p10(), p13(), p18()]
     with open(os.path.join(OUT, 'README.md'), 'w', encoding='utf-8') as f:
         f.write(README)
     print('wrote', len(os.listdir(OUT)), 'files to', os.path.relpath(OUT, ROOT))
@@ -979,6 +1023,17 @@ def selftest():
             ok += 1
         else:
             raise AssertionError('site_pair_matrix accepted a broken table')
+    real_a = rows_of(os.path.join(OUT, 'p08_anneal_energy_change.csv'))
+    med_, data_, bins_ = anneal_origin_tables(real_a)
+    assert len(data_) == 693 and sum(b[3] for b in bins_) == 693 and -820 < med_ < -800; ok += 1
+    for bad in ([real_a[0]] + [real_a[1][:2] + ['12.0']] + real_a[2:],
+                [['precursor', 'configuration', 'dE']] + real_a[1:]):
+        try:
+            anneal_origin_tables(bad)
+        except ValueError:
+            ok += 1
+        else:
+            raise AssertionError('anneal_origin_tables accepted a broken table')
     print(f'selftest PASS ({ok})')
 
 
