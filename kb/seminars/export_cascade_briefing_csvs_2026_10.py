@@ -569,7 +569,7 @@ def p07d(n=10):
 
 SITE_PAIR_ROWS = {'Li 24g': 'Li 24g', 'P 4b (framework)': 'P 4b', 'Li 48h': 'Li 48h'}
 SITE_PAIR_COLS = {'free sulfide': 'S 4a\n(free S$^{2{-}}$)', 'sulfur in the PS₄ corner': 'S 16e\n(in PS₄)', 'halide site': 'Cl 4d'}
-P08_USER_SLOTS = {'heatmap': (4.6, 3.3), 'hist': (3.2, 1.45)}   # user's slim page 10 (10-15) — the hand-edited deck
+P08_USER_SLOTS = {'heatmap': (4.6, 3.3), 'hist': (3.3, 1.7)}   # user's slim page 10 (10-15) — the hand-edited deck
 
 
 def site_pair_matrix(rows):
@@ -624,14 +624,18 @@ def draw_site_pair_heatmap(out, w=4.6, h=3.3):
     return out
 
 
-def draw_anneal_hist(out, w=3.1, h=1.75, median=False):
+def draw_anneal_hist(out, w=3.1, h=1.75, median=False, style='plain'):
     """The short anneal's energy change (693 structures), plain grey bars, 50 meV bins like the August Origin recipe.
     The cell is the 52-atom conventional cell (4 formula units) — the CSV column still says 'per supercell' (10-15: the
-    axis says '52-atom cell'; the CSV is not rewritten here). `median` draws a dashed line at the median."""
+    axis says '52-atom cell'; the CSV is not rewritten here). `median` draws a dashed line at the median.
+    style='origin' copies the look of the user's August Origin histogram (purple bars, framed axes) — same 693 rows;
+    the August image itself is n 681 (before the August re-run) and must not stand in for this one."""
     plt = _plt()
     dE = [float(r[2]) for r in rows_of(os.path.join(OUT, 'p08_anneal_energy_change.csv'))[1:]]
     fig, ax = plt.subplots(figsize=(w, h))
-    ax.hist(dE, bins=[-1250 + 50 * k for k in range(26)], color='#bdbdbd', edgecolor='black', linewidth=0.8)
+    origin = style == 'origin'
+    ax.hist(dE, bins=[-1250 + 50 * k for k in range(26)], color='#c084fc' if origin else '#bdbdbd',
+            edgecolor='#6b21a8' if origin else 'black', linewidth=0.6 if origin else 0.8)
     if median:
         s = sorted(dE)
         med = (s[(len(s) - 1) // 2] + s[len(s) // 2]) / 2
@@ -641,7 +645,12 @@ def draw_anneal_hist(out, w=3.1, h=1.75, median=False):
     ax.set_xticks([-1200, -900, -600, -300, 0])
     ax.set_xlabel('energy change (meV per 52-atom cell)', fontsize=9.5)
     ax.set_ylabel('structures', fontsize=9.5)
-    plain_axes(ax, 9)
+    if origin:
+        ax.set_yticks([0, 50, 100, 150])
+        origin_axes(ax)
+        ax.tick_params(labelsize=9)
+    else:
+        plain_axes(ax, 9)
     fig.tight_layout()
     fig.savefig(out, dpi=300)
     plt.close(fig)
@@ -827,6 +836,8 @@ def main():
         os.makedirs(d, exist_ok=True)
         print(draw_site_pair_heatmap(os.path.join(d, 'fig_p08_site_pair_heatmap.png'), *P08_USER_SLOTS['heatmap']))
         print(draw_anneal_hist(os.path.join(d, 'fig_p08_anneal_energy_hist.png'), *P08_USER_SLOTS['hist'], median=True))
+        print(draw_anneal_hist(os.path.join(d, 'fig_p08_anneal_energy_hist_origin.png'), *P08_USER_SLOTS['hist'],
+                               median=True, style='origin'))
         return
     for old in ('p12_md_campaign_runs.csv', 'p12_md_campaign_progress.csv', 'p17_site_preference_vs_ionic_radius.csv'):
         if os.path.exists(os.path.join(OUT, old)):      # renamed when the audit slide became page 11
