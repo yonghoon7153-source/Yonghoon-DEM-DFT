@@ -251,7 +251,8 @@ case "$JOB" in
     END1=$(tbl "d['ext_10_0']['end1']")
     S0PRC=0; reader s0p "$WORK_ROOT" || S0PRC=$?
     if [ "$S0PRC" = 2 ] && [ -s "$JD/restart/restart_ext_$END1.bin" ]; then
-      # Q4 (다): s0p rc 2 = 등록된 연장 요청 (S0′ 조건 미달 — 판정이지 오류가 아니다) → EXT2 · 최종 판독 rc = EXT2 뒤 s0p
+      # Q4 (다): s0p rc 2 = 등록된 연장 요청 = PASS 아닌 모든 s0p 판정 (조건 미달 · 조건 미계산 · S0′ 체크포인트 없음 포함 — 물리 조건을 재서 실패한 경우만이
+      #   아니다 · 판정이지 프로그램 오류가 아니다 · Codex 수정 재확인 10-15 §6) → EXT2 · 최종 판독 rc = EXT2 뒤 s0p
       mkdir -p "$WORK_ROOT/$BED/EXT2"
       RRC=0
       run_deck "$WORK_ROOT/$BED/EXT2" EXT2 "$JD/restart/restart_ext_$END1.bin" - 0

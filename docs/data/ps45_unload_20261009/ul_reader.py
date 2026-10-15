@@ -55,7 +55,8 @@ CPL_COLS = [f'c_cpl[{c}]' for c in range(1, 27)]                                
 
 #: Q5 (1저자 10-14 — 강제) · 개정 3 §14-9: 본 R (RJ · RJ2) · 10:0 연장 (EXT) 의 LIGGGHTS 전 문법 fixture PASS — read_history.py --grammar 판정의 꼴 ·
 #: 단계 폴더 (run_history.sh --grammar-only 가 덱 사본을 둔다) · 그 입력 (덱 둘 + 판 STL) 의 봉인 sha256 = 039abb141 판 (실행 2 대상 — 덱은 그 판 뒤
-#: 바뀌지 않았다 · selftest R32 가 history_test 의 실제 파일과 대조 · 덱이 바뀌면 같은 묶음에서 고친다).  러너 · 판독기 파일 sha256 은 대조하지 않는다 (덱 아님).
+#: 바뀌지 않았다 · selftest R32 가 history_test 의 실제 파일과 대조 · 덱이 바뀌면 같은 묶음에서 고친다).  러너 파일 sha256 은 대조하지 않는다 (덱 아님) ·
+#: 판독기 (read_history.py · history_params.json) = 아래 GRAMMAR_READER 봉인 값일 때만 그 런 원자료를 다시 읽는다 (Q3 · 1저자 10-15).
 GRAMMAR_SCHEMA = 'ps45_unload_grammar_verdict_v1'
 GRAMMAR_CHECKS = ('P_tech', 'GA_exists', 'GB_exists', 'GA_args', 'GB_args') + tuple(
     f'{s}_{c}' for s in ('GA', 'GB') for c in ('tech', 'markers', 'atom_dump_steps', 'wall_dump_steps', 'mesh_z', 'restart_state', 'contact_geo'))
@@ -63,6 +64,11 @@ GRAMMAR_STAGES = (('P', 'in.hist_producer.liggghts'), ('GA', 'in.hist_grammar.li
 GRAMMAR_INPUTS = {'in.hist_producer.liggghts': 'bc42a3ad71d5e02f6f21181bed09109dccfa60ad67a5d4a6b3d47f9c472fd70d',
                   'in.hist_grammar.liggghts': 'a1f0ee432b977d12a415b876ab3aa47225fec8f83c21cdd92948ff3abce8e6ed',
                   'plate_hist.stl': '5bc74ec7726723ec8e2bbc3dc10fafd639e6175f83a0e0047ca35a44ee7aa65d'}
+#: Q3 (1저자 10-15 · Codex 수정 재확인 Q4) — 승인된 문법 판독기 = history_test 봉인 (history_test/SHA256SUMS) 의 read_history.py · history_params.json
+#: (selftest R36 이 실제 파일 · 그 봉인 줄과 대조 · 판독기 · 표가 바뀌면 같은 묶음에서 고친다).  사전 점검은 그 런 kit 사본 (run_history.sh 가 복사) 의 두 파일이
+#: 이 값일 때만 그 판독기로 원자료를 다시 읽는다 (`read_history.py --grammar` — 검사 19 = 판정 JSON 이어야 통과 · 아니면 실행하지 않고 거부).
+GRAMMAR_READER = {'read_history.py': '70f741a9b8308fe33683de0f22872e2c44ce674dd6223cfce8c00e1a725b696c',
+                  'history_params.json': '7a5279f0119cbbc37a9c212593e256a03e417dc9a6af4f18a4f01bdc72404ff4'}
 
 
 # ── 구현 (아래 selftest 를 먼저 썼다) ─────────────────────────────────────────
@@ -108,8 +114,11 @@ def _state_vars(path):
 
 
 def _resume_auth(d, events):
-    """승인된 이어 돌림 경계 (ULKRR-02 · 개정 3 §14-4) → [(k, step)] — RESUME 사건 가운데 러너 시도 기록 (run_manifest.txt 의 `resume_from=step` ·
-    러너가 이어 돌린 restart_unload_<step> 의 step) 과 덱 상태 파일 (restart/state_unload_<step>.in 의 ul_rstep = step · ul_k = 사건 k) 이 맞는 것만."""
+    """승인된 이어 돌림 경계 (ULKRR-02 · ULKRF-01 · 개정 3 §14-4 · 등록 §14-11) → ([(k, step)] 고유 경계 — 경계 하나에 승인 한 번, 문제 목록).
+    승인 = 러너 시도 기록 (run_manifest.txt 의 `resume_from=step` · 러너가 이어 돌린 restart_unload_<step> 의 step) 의 step 마다 RESUME 사건이 **정확히 한 줄** ·
+    덱 상태 파일 (restart/state_unload_<step>.in 의 ul_rstep = step · ul_k = 사건 k) 과 맞음.  같은 경계 (step) 의 RESUME 둘 이상 (같은 k = 중복 · 다른 k = 상충) ·
+    사건 k ↔ 상태 파일 불일치 · 러너 resume_from 밖 step 의 RESUME · k · step 숫자 아님 = 승인 없음 + 사유 (ULKRF-01 — 중복 사건이 승인 하나를 둘로 늘리지 않는다).
+    러너 resume_from 이 없는 폴더 (예 UTc = 부모 R_M 경계 · 다른 규칙 · _read_run_cont) 는 승인 · 문제 모두 없음."""
     man = os.path.join(d, 'run_manifest.txt')
     rf = set()
     if os.path.isfile(man):
@@ -117,28 +126,49 @@ def _resume_auth(d, events):
             m = re.fullmatch(r'resume_from=(\d+)', ln.strip())
             if m:
                 rf.add(int(m.group(1)))
-    out = []
+    out, pr = [], []
+    if not rf:
+        return out, pr
+    by = {}
     for e in events:
-        if e['event'] != 'RESUME' or e['k'] is None or e['step'] is None or e['step'] not in rf:
+        if e['event'] != 'RESUME':
             continue
-        st = _state_vars(os.path.join(d, 'restart', f'state_unload_{e["step"]}.in'))
-        if st.get('ul_rstep') == e['step'] and st.get('ul_k') == e['k']:
-            out.append((e['k'], e['step']))
-    return out
+        if e['k'] is None or e['step'] is None:
+            pr.append(f'ul_events.csv: RESUME 사건 k · step 숫자 아님 ({e["k"]} · {e["step"]}) — 승인 없음 (ULKRF-01)')
+        elif e['step'] not in rf:
+            pr.append(f'ul_events.csv: RESUME (k {e["k"]} · step {e["step"]}) 의 step ∉ 러너 resume_from {sorted(rf)} — 상충 · 승인 없음 (ULKRF-01)')
+        else:
+            by.setdefault(e['step'], []).append(e['k'])
+    for s in sorted(by):
+        ks = by[s]
+        if len(ks) > 1:
+            pr.append(f'ul_events.csv: 같은 경계 step {s} 의 RESUME 사건 {len(ks)} 줄 (k {ks}) — {"중복" if len(set(ks)) == 1 else "상충"} · '
+                      '경계 하나에 승인 한 번 (중복 사건으로 늘리지 않는다) · 승인 없음 (ULKRF-01)')
+            continue
+        st = _state_vars(os.path.join(d, 'restart', f'state_unload_{s}.in'))
+        if st.get('ul_rstep') == s and st.get('ul_k') == ks[0]:
+            out.append((ks[0], s))
+        else:
+            pr.append(f'RESUME (k {ks[0]} · step {s}) ≠ 상태 파일 state_unload_{s}.in (ul_k {st.get("ul_k")} · ul_rstep {st.get("ul_rstep")}) — '
+                      '상충 · 승인 없음 (ULKRF-01)')
+    return out, pr
 
 
-def _supersede(rows, auth, name):
-    """이어 돌림 경계 (ULKRR-02): 실패한 시도가 남긴 줄을 버리는 것 = 승인된 경계 (k_r, s_r) (_resume_auth) 에서만 —
-    역행 줄 (step ≤ 앞 줄) 이 그 경계 새 시도의 첫 줄 (k = k_r + 1 · step > s_r) 이고 · 버릴 줄 = 끝의 step > s_r 줄 전부 (k > k_r) ·
-    버린 뒤 앞 줄 = 정확히 (k_r, s_r) 일 때만 (경계마다 한 번).  그 밖 중복 · 역행 = 버리지 않고 문제 (→ 주 값 미식별) → (줄 · 버린 수 · 문제)."""
+def _supersede(rows, auth, name, steps_csv=False):
+    """이어 돌림 경계 (ULKRR-02 · ULKRF-01 · 02): 실패한 시도가 남긴 줄을 버리는 것 = 승인된 경계 (k_r, s_r) (_resume_auth · 고유) 에서만, 경계마다 한 번 —
+    새 시도 시작 = 승인 경계 뒤 **먼저 오는 쪽**: step 역행 (step ≤ 앞 줄 · 창 CSV · 단 CSV) 또는 (단 CSV · steps_csv) k 가 되돌아옴 (k ≤ 앞 줄 k — 한 단 한 줄이라
+    새 시도가 옛 시도보다 늦게 끝나도 (유지 창 수가 늘어도) 보인다 · ULKRF-02) · 그 줄 = 그 경계 새 시도의 첫 줄 (k = k_r + 1 · step > s_r) · 버릴 줄 = 끝의 step > s_r
+    줄 전부 (k > k_r) · 버린 뒤 앞 줄 = 정확히 (k_r, s_r).  그 밖 중복 · 역행 · 되돌아옴 = 버리지 않고 문제 (→ 주 값 미식별) → (줄 · 버린 수 · 문제)."""
     kept, dropped, pr, used = [], 0, [], set()
     for n, r in enumerate(rows, 1):
         s, k = r.get('step'), r.get('k')
         prev = kept[-1] if kept else None
-        if prev is not None and s is not None and prev.get('step') is not None and prev['step'] >= s:
+        back = prev is not None and s is not None and prev.get('step') is not None and prev['step'] >= s
+        kback = steps_csv and prev is not None and k is not None and prev.get('k') is not None and prev['k'] >= k
+        if back or kback:
             ok = False
-            for i, (kr, sr) in enumerate(auth):
-                if i in used or k != kr + 1 or not s > sr:
+            for kr, sr in auth:
+                if (kr, sr) in used or k != kr + 1 or s is None or not s > sr:
                     continue
                 j = len(kept)
                 while j > 0 and kept[j - 1].get('step') is not None and kept[j - 1]['step'] > sr:
@@ -148,12 +178,14 @@ def _supersede(rows, auth, name):
                         and (kept[j - 1].get('k'), kept[j - 1].get('step')) == (kr, sr):
                     del kept[j:]
                     dropped += len(stale)
-                    used.add(i)
+                    used.add((kr, sr))
                     ok = True
                     break
             if not ok:
-                pr.append(f'{name} {n} 째 줄 (k {k} · step {s}) ≤ 앞 줄 (k {prev.get("k")} · step {prev.get("step")}) — 승인된 이어 돌림 경계 '
-                          '(RESUME 사건 + 러너 resume_from + 상태 파일 k) 가 아닌 중복 · 역행 (ULKRR-02)')
+                what = (f'≤ 앞 줄 (k {prev.get("k")} · step {prev.get("step")})' if back else
+                        f'k 가 앞 줄 k {prev.get("k")} 에서 되돌아옴 (step {prev.get("step")} → {s})')
+                pr.append(f'{name} {n} 째 줄 (k {k} · step {s}) {what} — 승인된 이어 돌림 경계 (RESUME 사건 + 러너 resume_from + 상태 파일 k · 경계마다 한 번) '
+                          '가 아닌 중복 · 역행 (ULKRR-02 · ULKRF-02)')
         kept.append(r)
     return kept, dropped, pr
 
@@ -186,16 +218,20 @@ def read_run(d, P=None):
     events = [{'event': r['event'], 'k': _i(r['k']), 'step': _i(r['step']), 'plate_z': _f(r['plate_z']), 'lift': _f(r['lift']),
                'detail': r['detail']} for r in (ev or [])]
     out['resume_steps'] = [e['step'] for e in events if e['event'] == 'RESUME']
-    auth = out['resume_auth'] = _resume_auth(d, events)
-    kept = []
-    for e in events:   # 승인된 RESUME 앞에 실패한 시도가 남긴 그 step 뒤 사건만 버린다 (ULKRR-02 — 아니면 버리지 않고 문제)
+    auth, apr = _resume_auth(d, events)
+    out['resume_auth'] = auth
+    out['problems'] += apr
+    kept, used = [], set()
+    for e in events:   # 승인된 RESUME 앞에 실패한 시도가 남긴 그 step 뒤 사건 (k > k_r) 만 버린다 · 경계마다 한 번 (ULKRR-02 · ULKRF-01 — 아니면 버리지 않고 문제)
         if e['event'] == 'RESUME' and e['step'] is not None:
             stale = [x for x in kept if x['step'] is not None and x['step'] > e['step']]
-            if stale and (e['k'], e['step']) in auth:
+            b = (e['k'], e['step'])
+            if stale and b in auth and b not in used and all(x['k'] is not None and x['k'] > e['k'] for x in stale):
                 kept = [x for x in kept if x['step'] is None or x['step'] <= e['step']]
+                used.add(b)
             elif stale:
                 out['problems'].append(f'ul_events.csv: RESUME (k {e["k"]} · step {e["step"]}) 앞 사건 {len(stale)} 개가 그 step 뒤 — 승인된 이어 돌림 경계 '
-                                       '(러너 resume_from + 상태 파일 k) 가 아니어서 버리지 않는다 (ULKRR-02)')
+                                       '(러너 resume_from + 상태 파일 k · 경계마다 한 번 · 버릴 사건 k > k_r) 가 아니어서 버리지 않는다 (ULKRR-02 · ULKRF-01)')
         kept.append(e)
     out['events'] = kept
     for name, key, cols in (('ul_windows.csv', 'windows', R['windows_cols']), ('ul_steps.csv', 'steps', R['steps_cols'])):
@@ -210,7 +246,7 @@ def read_run(d, P=None):
                 if k in c and c[k] is not None:
                     c[k] = int(round(c[k]))
             conv.append(c)
-        conv, dropped, spr = _supersede(conv, auth, name)
+        conv, dropped, spr = _supersede(conv, auth, name, steps_csv=(key == 'steps'))
         out['problems'] += spr + ([] if spr else _order_problems(conv, name, key == 'windows'))
         out[key] = conv
         out['n_superseded_rows'] += dropped
@@ -992,7 +1028,9 @@ def selection_state(root, P=None):
 def _job_receipt(root, bed, job):
     """잡 완료 영수증 (ULKRR-03 · 개정 3 §14-10): 러너 run_manifest.txt 의 끝 줄 `end=… fails=N reader_rc=M` — fails · reader_rc 가 둘 다 한 번씩 있고 ·
     정수 · 0 일 때만 참.  판독기가 결과 파일 (증서 · 기준 파일) 을 쓴 뒤 실패한 잡 = reader_rc ≠ 0 — 그 산출물을 다음 제출 승인으로 다시 쓰지 않는다
-    (판독 오류를 rc 0 으로 삼키지 않는다 · 정상 미식별은 판독기 rc 0 · JSON) → (참?, 이유, 기록 글자)."""
+    (판독 오류를 rc 0 으로 삼키지 않는다 · 정상 미식별은 판독기 rc 0 · JSON) → (참?, 이유, 기록 글자).
+    범위 (Q2 (가) · 1저자 10-15 · Codex 수정 재확인 Q2): 복원 / EXT 증서는 성공 완료 영수증이 필수이며, 일반 팔의 주 관측은 원 폴더에서 재판독한다
+    (이 영수증을 읽지 않는다 — arm_verdict).  재판독 가능성이 잡의 기술 성공을 뜻하지는 않는다."""
     man = os.path.join(root, bed, job, 'run_manifest.txt')
     text = open(man, encoding='utf-8', errors='replace').read() if os.path.isfile(man) else ''
     ends = [ln for ln in text.splitlines() if ln.startswith('end=')]
@@ -1221,15 +1259,65 @@ def _readtext(path):
         return None
 
 
+def _grammar_reread(rd, kit, listed, json_checks, readers=None):
+    """Q3 (1저자 10-15 · Codex 수정 재확인 Q4 — 캐시 신뢰 경계): 문법 런 폴더 rd 의 원자료를 **승인된 판독기** 로 다시 읽어 판정 JSON 과 대조 → (문제 목록, 기록).
+    승인된 판독기 = 그 런 kit 사본 (run_manifest kit=) 의 read_history.py · history_params.json — 두 파일 sha256 = readers (GRAMMAR_READER · history_test 봉인) 이고
+    그 런 kit SHA256SUMS (listed — sha256 = run_manifest sums_sha256 로 확인된 것) 에도 같은 값일 때만 실행한다 (`python3 -I read_history.py <rd> --grammar --params …
+    --out <임시>` · 런 폴더에 쓰지 않는다).  통과 = 재판독 status PASS · exit_code 정수 0 · rc 0 · 검사 19 (GRAMMAR_CHECKS) = 판정 JSON 의 값 (둘 다 참)."""
+    import subprocess
+    import tempfile
+    readers = GRAMMAR_READER if readers is None else readers
+    rec = {'reader': None, 'reader_sha256': None, 'status': None, 'exit_code': None, 'rc': None, 'diff': None, 'problems': None}
+    if not kit or not os.path.isdir(kit):
+        return [f'원자료 재판독: 그 런 kit 사본 폴더 없음 ({kit}) — 승인된 판독기를 찾을 수 없다 (Q3)'], rec
+    pr = []
+    for n, h in sorted(readers.items()):
+        p = os.path.join(kit, n)
+        got = ul_lib.sha256_file(p) if os.path.isfile(p) else None
+        if got != h:
+            pr.append(f'원자료 재판독: kit 사본 {n} sha256 {got} ≠ 승인된 판독기 봉인 값 {h} — 승인 밖 판독기 · 실행하지 않는다 (Q3)')
+        elif listed is None or listed.get(n) != h:
+            pr.append(f'원자료 재판독: 그 런 kit SHA256SUMS 의 {n} ({None if listed is None else listed.get(n)}) ≠ 승인된 판독기 봉인 값 {h} (Q3)')
+    if pr:
+        return pr, rec
+    reader = os.path.join(kit, 'read_history.py')
+    rec.update(reader=reader, reader_sha256=readers['read_history.py'])
+    with tempfile.TemporaryDirectory(prefix='ul_gram_reread_') as td:
+        op = os.path.join(td, 'reread.json')
+        try:
+            p = subprocess.run([sys.executable, '-I', reader, rd, '--grammar', '--params', os.path.join(kit, 'history_params.json'), '--out', op],
+                               capture_output=True, text=True, timeout=600)
+        except (OSError, subprocess.SubprocessError) as ex:
+            return [f'원자료 재판독 실행 실패: {type(ex).__name__}: {ex} (Q3)'], rec
+        rec['rc'] = p.returncode
+        rv = _readjson(op)
+    if not isinstance(rv, dict):
+        return [f'원자료 재판독: 판독기 결과 JSON 없음 · 깨짐 (rc {p.returncode} · {p.stderr.strip()[-160:]}) (Q3)'], rec
+    rch = rv.get('checks') if isinstance(rv.get('checks'), dict) else {}
+    diff = {k: [json_checks.get(k), rch.get(k)] for k in GRAMMAR_CHECKS if not (json_checks.get(k) is True and rch.get(k) is True)}
+    rec.update(status=rv.get('status'), exit_code=rv.get('exit_code'), diff=diff or None, problems=(rv.get('problems') or [])[:4])
+    if rv.get('schema') != GRAMMAR_SCHEMA:
+        pr.append(f'원자료 재판독 schema {rv.get("schema")!r} ≠ {GRAMMAR_SCHEMA} (Q3)')
+    ec = rv.get('exit_code')
+    if rv.get('status') != 'PASS' or type(ec) is not int or ec != 0 or p.returncode != 0:
+        pr.append(f'원자료 재판독 = status {rv.get("status")!r} · exit_code {ec!r} · rc {p.returncode} ≠ PASS · 0 — 그 런 폴더 원자료가 판정 JSON 과 다르다 '
+                  f'({" · ".join((rv.get("problems") or [])[:2])}) (Q3)')
+    if diff:
+        pr.append(f'원자료 재판독 검사 ≠ 판정 JSON (JSON · 재판독) {dict(list(diff.items())[:4])} (Q3)')
+    return pr, rec
+
+
 def grammar_prereq(verdict_path, lmp_sha, inputs=None):
     """문법 fixture PASS 사전 조건 (Q5 — 1저자 10-14 강제 · 개정 3 §14-9) — 러너가 본 R (RJ · RJ2) · 10:0 연장 (EXT) 의 LIGGGHTS **전에** 부른다 →
     (허용?, 문제 목록, 기록).  ① 판정 JSON: schema · status PASS · exit_code 정수 0 · 검사 열아홉 (GRAMMAR_CHECKS) 전부 참 ② 그 판정의 런 폴더 = 판정 파일이
     놓인 폴더 (run_dir 대조) · run_manifest mode=gram · end 있음 · lmp_sha256 = 지금 돌릴 바이너리 (lmp_sha) ③ 덱 출처 — 단계 P · GA · GB 의 rc 0 · deck.txt ·
-    덱 사본 · 판 STL 사본 sha256 = 봉인 값 (inputs = GRAMMAR_INPUTS) · 그 런의 kit SHA256SUMS (sha256 = run_manifest sums_sha256) 가 같은 값을 적었다.
-    러너 · 판독기 스크립트 sha256 은 대조하지 않는다 (덱이 아니다 — 러너 수정이 그 판정을 무효로 만들지 않는다)."""
+    덱 사본 · 판 STL 사본 sha256 = 봉인 값 (inputs = GRAMMAR_INPUTS) · 그 런의 kit SHA256SUMS (sha256 = run_manifest sums_sha256) 가 같은 값을 적었다
+    ④ (Q3 · 1저자 10-15) 그 런 폴더 원자료를 승인된 판독기 (그 런 kit 사본의 read_history.py · history_params.json = GRAMMAR_READER 봉인 값) 로 다시 읽어
+    검사 19 = 판정 JSON (_grammar_reread — JSON 만으로 원자료 PASS 를 인증하지 않는다 · 기록 rec['reread']).
+    러너 스크립트 (run_history.sh) sha256 은 대조하지 않는다 (덱 · 판독기가 아니다 — 러너 수정이 그 판정을 무효로 만들지 않는다)."""
     inputs = GRAMMAR_INPUTS if inputs is None else inputs
     rec = {'verdict': verdict_path, 'verdict_sha256': None, 'run_dir': None, 'lmp_sha256': lmp_sha,
-           'grammar_deck_sha256': inputs.get('in.hist_grammar.liggghts'), 'producer_deck_sha256': inputs.get('in.hist_producer.liggghts')}
+           'grammar_deck_sha256': inputs.get('in.hist_grammar.liggghts'), 'producer_deck_sha256': inputs.get('in.hist_producer.liggghts'), 'reread': None}
     if not verdict_path or not os.path.isfile(verdict_path):
         return False, [f'문법 fixture 판정 파일 없음 ({verdict_path or "GRAMMAR_VERDICT 비어 있음"})'], rec
     rec['verdict_sha256'] = ul_lib.sha256_file(verdict_path)
@@ -1268,6 +1356,7 @@ def grammar_prereq(verdict_path, lmp_sha, inputs=None):
         pr.append(f'문법 런 LMP sha256 {kv.get("lmp_sha256")} ≠ 지금 돌릴 바이너리 {lmp_sha} (같은 바이너리의 문법 PASS 만)')
     kit = kv.get('kit')
     sp = os.path.join(kit, 'SHA256SUMS') if kit else None
+    listed = None
     if not (sp and os.path.isfile(sp)):
         pr.append(f'문법 런 kit SHA256SUMS 없음 ({sp})')
     elif ul_lib.sha256_file(sp) != kv.get('sums_sha256'):
@@ -1294,6 +1383,8 @@ def grammar_prereq(verdict_path, lmp_sha, inputs=None):
             h = ul_lib.sha256_file(p) if os.path.isfile(p) else None
             if h != inputs.get(n):
                 pr.append(f'문법 런 {st}/{n} sha256 {h} ≠ 봉인 값 {inputs.get(n)}')
+    rpr, rec['reread'] = _grammar_reread(rd, kit, listed, ch if isinstance(ch, dict) else {})
+    pr += rpr
     return (not pr), pr, rec
 
 
@@ -3185,8 +3276,10 @@ def main(argv=None):
         if len(a.args) != 1 or not a.lmp_sha:
             ap.error('grammar <…/gram_<시각>/grammar_verdict.json> --lmp-sha <지금 바이너리 sha256>')
         ok, pr, rec = grammar_prereq(a.args[0], a.lmp_sha)
+        rr = rec.get('reread') or {}
         print(f'GRAMMAR_PREREQ status={"PASS" if ok else "REFUSE"} verdict={rec["verdict"]} verdict_sha256={rec["verdict_sha256"]} run_dir={rec["run_dir"]} '
-              f'lmp_sha256={rec["lmp_sha256"]} grammar_deck_sha256={rec["grammar_deck_sha256"]} producer_deck_sha256={rec["producer_deck_sha256"]}'
+              f'lmp_sha256={rec["lmp_sha256"]} grammar_deck_sha256={rec["grammar_deck_sha256"]} producer_deck_sha256={rec["producer_deck_sha256"]} '
+              f'reread={rr.get("status")} reader_sha256={rr.get("reader_sha256")}'
               + ('' if ok else ' why=' + ' · '.join(pr[:6])))
         return 0 if ok else 2
     P = ul_lib.load_params()

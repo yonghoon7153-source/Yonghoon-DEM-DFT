@@ -252,6 +252,8 @@ _SYM = (21, 22, 23, 24, 25)
 def _contacts(path, box):
     d = ul_lib.read_dump(path, 'local', [f'c_cpl[{i}]' for i in range(1, 27)])
     rows, dup, conflicts = {}, 0, []
+    if not d['ok']:   # ULKRF-03 — 파서 · 필수 열 문제 (예: 머리 c_cpl[7] 결손) 를 먼저 돌려준다 → g2c_compare 의 FAIL + 사유 (열을 읽지 않는다 · 채우지 · 지우지 않는다)
+        return d, rows, dup, conflicts
     for r in d['rows']:
         v = [r[f'c_cpl[{i}]'] for i in range(1, 27)]
         i, j = ul_lib.exact_id(v[6]), ul_lib.exact_id(v[7])

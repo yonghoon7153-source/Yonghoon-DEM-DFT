@@ -318,8 +318,31 @@ def bad_if_conditions(text):
 
 # ── 덤프 · thermo · CSV ────────────────────────────────────────────────────────
 
+#: ID 열 (custom 원자 덤프 id · pair/gran/local 쌍 참조 c_cpl[7] · c_cpl[8]) — Q4 (Codex 수정 재확인 10-15 Q3 · 1저자 10-15): 정수 토큰은 float 를 거치지 않고
+#: 정확한 int 로 둔다 (exact_id 가 그 int 를 그대로 검사 — '9007199254740993' 이 2^53 으로 둔갑해 통과하지 않는다) · 소수 꼴 토큰 (예 '2.0') 은 float 그대로 ·
+#: 그 float 가 정수인데 토큰의 정확한 값은 정수가 아니면 (예 '2.0000000000000001') 파서 문제 (그 행을 쓰지 않는다 · ok 거짓).
+ID_COLS = ('id', 'c_cpl[7]', 'c_cpl[8]')
+_INT_TOK = re.compile(r'[+-]?[0-9]+')
+
+
+def _id_value(tok):
+    """ID 열 토큰 → (값, 문제 | None) — 정수 토큰 = int (float 없음) · 그 밖 = float (+ 정수로 가려진 비정수 토큰이면 문제)."""
+    if _INT_TOK.fullmatch(tok):
+        return int(tok), None
+    v = float(tok)
+    if math.isfinite(v) and v.is_integer():
+        import decimal
+        try:
+            exact = decimal.Decimal(tok)
+        except decimal.InvalidOperation:
+            return v, None
+        if exact != decimal.Decimal(int(v)):
+            return v, f'ID 토큰 {tok!r} 의 정확한 값이 정수 {int(v)} 가 아니다 (float 변환이 정수로 가린다 · Q4)'
+    return v, None
+
+
 def read_dump(path, kind, cols_expected=None):
-    """LIGGGHTS 덤프 한 장 → {'ok','step','cols','rows','box','problems'} (kind = custom | local)."""
+    """LIGGGHTS 덤프 한 장 → {'ok','step','cols','rows','box','problems'} (kind = custom | local) · ID 열 (ID_COLS) 정수 토큰 = 정확한 int (Q4)."""
     out = {'ok': False, 'path': path, 'step': None, 'cols': None, 'rows': [], 'box': None, 'problems': []}
     if not path or not os.path.exists(path):
         out['problems'].append(f'파일 없음: {path}')
@@ -361,15 +384,24 @@ def read_dump(path, kind, cols_expected=None):
             pr.append(f'열 수 {len(vals)} ≠ {len(cols)}')
             continue
         try:
-            row = {c: float(v) for c, v in zip(cols, vals)}
+            row, idp = {}, None
+            for c, v in zip(cols, vals):
+                if c in ID_COLS:
+                    row[c], p_ = _id_value(v)
+                    idp = idp or p_
+                else:
+                    row[c] = float(v)
         except ValueError:
             pr.append(f'숫자가 아닌 값: {ln[:60]}')
             continue
-        if not all(math.isfinite(v) for v in row.values()):
+        if not all(isinstance(v, int) or math.isfinite(v) for v in row.values()):
             pr.append(f'비유한 값: {ln[:60]}')
             continue
+        if idp:
+            pr.append(f'ID 정확한 정수 아님: {idp} — {ln[:60]}')
+            continue
         out['rows'].append(row)
-    if n_decl is not None and n_decl != len(out['rows']) and not any(p.startswith(('비유한', '숫자가', '열 수')) for p in pr):
+    if n_decl is not None and n_decl != len(out['rows']) and not any(p.startswith(('비유한', '숫자가', '열 수', 'ID 정확한')) for p in pr):
         pr.append(f'행 수 {len(out["rows"])} ≠ 머리 {n_decl}')
     out['ok'] = not pr
     return out
@@ -466,8 +498,10 @@ ID_MAX = 2 ** 53   # float 로 읽은 정수가 정확한 범위
 
 
 def exact_id(x):
-    """원자 ID (덤프를 float 로 읽은 값) → int — 유한 · 양 · 정확한 정수 (2^53 이하) 일 때만 · 아니면 None.
-    ULKRR-04: 소수 ID 를 정수로 자르지 않는다 (int(2.5) = 2 가 다른 원자로 둔갑) · bool · 글자는 받지 않는다."""
+    """원자 ID (read_dump 의 ID 열 값) → int — 유한 · 양 · 정확한 정수 (2^53 이하) 일 때만 · 아니면 None.
+    ULKRR-04: 소수 ID 를 정수로 자르지 않는다 (int(2.5) = 2 가 다른 원자로 둔갑) · bool · 글자는 받지 않는다.
+    Q4 (Codex 수정 재확인 10-15 Q3): 덤프의 정수 토큰은 read_dump 가 float 를 거치지 않은 int 로 넘기고 여기서 그 int 를 그대로 대조한다 (float 변환 없음 —
+    '9007199254740993' = 2^53 + 1 은 거부 · 정상 ID 그대로) · float 는 소수 꼴 토큰 (예 '2.0') 일 때만 온다."""
     if isinstance(x, bool) or not isinstance(x, (int, float)):
         return None
     if isinstance(x, float) and not (math.isfinite(x) and x.is_integer()):
