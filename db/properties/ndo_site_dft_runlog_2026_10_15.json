@@ -35,11 +35,21 @@
   }
  },
  "점검_대조": "kgy 블록이 새 MP_07 입력의 설정 줄 (숫자 표기 정규화) · PP 를 O 배치 카드 nd_scf 원본과 대조하고, 러너 selftest · DRY_RUN 을 거친 뒤에만 tmux 를 띄운다 (&& 사슬)",
- "발사": null,
+ "발사": {
+  "at": "2026-10-15 10:08:47 KST (kgy · 사용자 붙여넣기 · 이어하기 블록)",
+  "tmux": "ndsite_dft — site10_uma 끝을 5 분마다 보고 시작 (그 시각 site10_uma 살아 있음 · 10-14 13:37:29 생성)",
+  "점검": "설정 줄 nd_scf 와 같다 (mixing_ndim 8 = QE 기본값) · PP 같다",
+  "DRY_RUN": "pw.x /home/kgy/apps/qe-7.4.1-gpu/bin/pw.x · MPI /home/kgy/apps/openmpi-4.1.6 (ldd) · libnvomp + libgomp → OMP_NUM_THREADS 1 · 랭크 1 · 설정 균일성 ✓ (8 점 · key bc3759b0) · pseudo /home/kgy/work/pseudo · 8 점 대기",
+  "실행_인자": "MIN_FREE_MIB 8000 · LOCK /tmp/ndsite_dft.lock · 로그 ~/work/runs/ndo_site_dft_2026_10_15/run.log",
+  "GPU_그때": "6333 / 24576 MiB · 99 % (site10_uma · cascade v7)",
+  "감시": "watch -n 60 — ~/w_site10_uma.sh + ndsite_dft tmux · run.log 끝 3 줄 + ~/watch_qe_relax.sh <R>"
+ },
  "결과": null,
  "⏭": [
-  "Q1 판독 도구를 결과 전에 커밋 — G1 (8/8 완료 · 러너와 같은 완료 기준) · 모델별 DFT 최저 · ΔG_site(DFT) · G2 (UMA 부호 대조) · G3 문턱 · G7 다형 재확인 표시",
-  "결과 → G3 · G4 (k 탐침) · G7 규칙대로 → §5 허용 서술 중 하나 → 1저자 동의 (사용자 통해)"
+  "site10_uma 끝 → ndsite_dft 자동 시작 (8 점 · 한 번에 하나) — 감시로 본다",
+  "8 점 끝 → kgy 에서 site_dg.py --qe 판독 (위 명령) → 묶음 회수 (scf.in · scf.out · SHA256SUMS)",
+  "G4 탐침 (두 최저 셀 · k 3 3 1) → --kprobe 로 다시 판독 · G3 발동이면 고정셀 + EOS · G7 발동이면 Li₃PS₄ 다형 둘",
+  "→ §5 허용 서술 중 하나 → 1저자 동의 (사용자 통해)"
  ],
  "점검_대조_결과_2026_10_15": {
   "출처": "사용자 붙여넣기 10-15 (kgy · 발사 블록 1 차)",
@@ -49,5 +59,12 @@
   "설정_diff": "유일한 차이 '> mixing_ndim=8' — 새 입력은 명시 · 원본은 생략 = QE 기본값 8 ⇒ 같은 설정. 나머지 (ecutwfc · ecutrho · occupations · smearing · degauss · conv_thr · mixing_mode · mixing_beta · electron_maxstep · diagonalization · nosym · tprnfor · tstress · pseudo_dir) 는 숫자 표기 정규화 뒤 같다",
   "처리": "사슬이 diff 에서 멈춰 tmux 를 안 띄웠다 (설계대로) → 이어하기 블록은 새 쪽의 'mixing_ndim=8' 한 줄만 빼고 대조 · 그다음 PP 대조 · DRY_RUN · tmux",
   "GPU": "6332 / 24576 MiB · 99 % (site10_uma · cascade v7)"
+ },
+ "판독_도구_결과_전": {
+  "도구": "db/inputs/ndo_site_2026_10_14/site_dg.py --qe (DFT 모드 · UMA 판독과 같은 계산부 analyze())",
+  "시험": "selftest 32/32 (UMA 17 + DFT 15 · 완료 판정은 러너 _fc_ok 와 9 fixture 대조) · 변이 6/6 빨강 (bfgs 검사 · 최종 scf 순서 · G2 부호 · G3 비교 · G4 같은 k 거부 · G4 문턱) · 진짜 입력 8 + 가짜 출력으로 명령 끝까지 (rc 0 · 묶음 해시)",
+  "명령": "python3 site_dg.py --qe $R --expect 3 --top 3 --thresholds Nd=0.30 --compare_uma db/raw/ndo_site_2026_10_14/uma_rietveld_2026_10_15/site_dg_rietveld.json --out $R/site_dg_dft.json --bundle $R/bundle_dft",
+  "G4_k_정의_결과_전": "'k 한 단계' = 3 3 1 — 카드 §6 의 2 2 1 에서 a · b 축 +1 (kxL 13.8 → 20.7 Å) · c 축은 kxL 36 Å 라 그대로. 두 모델 최저 셀만 SCF · 기준상은 그대로 (저장소 항 불변) · 탐침 입력은 단일점 뒤 make_inputs.py 설정 그대로 k 만 바꿔 만든다",
+  "G7_문턱": "단일점 판정 문턱 0.30 (--thresholds Nd=0.30) · G3 EOS 뒤 판정이면 0.10"
  }
 }
