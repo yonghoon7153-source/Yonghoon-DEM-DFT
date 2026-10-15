@@ -1,0 +1,459 @@
+{
+  "independently_checked_pdf_pages": 18,
+  "submitted_png_byte_identical_pages": [
+    1,
+    2,
+    4,
+    5,
+    6,
+    8,
+    9,
+    10,
+    12,
+    13,
+    14,
+    16,
+    17,
+    18
+  ],
+  "independent_pdf_pixel_identical_pages": [
+    1,
+    2,
+    4,
+    5,
+    6,
+    8,
+    9,
+    10,
+    12,
+    13,
+    14,
+    16,
+    17,
+    18
+  ],
+  "changed_render_bounding_boxes_at_144dpi": {
+    "3": [
+      568,
+      138,
+      1375,
+      181
+    ],
+    "7": [
+      193,
+      244,
+      1306,
+      316
+    ],
+    "11": [
+      87,
+      345,
+      1361,
+      973
+    ],
+    "15": [
+      300,
+      787,
+      1327,
+      928
+    ]
+  },
+  "source_line_bottom_pdf_points": 91.632608,
+  "title_top_pdf_points": 96.89300000000003,
+  "source_title_clearance_pdf_points": 5.260392000000024,
+  "source_line_pdf_font_point_sizes": [
+    10.006
+  ],
+  "word_counts_by_declared_rule": [
+    {
+      "page": 1,
+      "words": 32,
+      "counted_shapes": [
+        {
+          "name": "직사각형 10",
+          "words": 13,
+          "text": "Yonghoon An\nDivision of Materials Science & Engineering, Hanyang University\n(E-mail : yonghoon71@hanyang.ac.kr)"
+        },
+        {
+          "name": "직사각형 12",
+          "words": 5,
+          "text": "[date — to be set]"
+        },
+        {
+          "name": "Rectangle 4",
+          "words": 14,
+          "text": "Research Seminar\nParticle-resolved multiscale simulation of sulfide all-solid-state composite cathodes:from powder packing to transport"
+        }
+      ]
+    },
+    {
+      "page": 2,
+      "words": 87,
+      "counted_shapes": [
+        {
+          "name": "Rectangle 4",
+          "words": 26,
+          "text": "A coupled DEM–MPM–transport workflow\nEach stage has specific calibration targets and unresolved validation tasks.\nAgreement between models sharing inputs is a consistency check, not independent validation."
+        },
+        {
+          "name": "Flow box 1",
+          "words": 6,
+          "text": "DEM packing\nsoft-sphere DEM\n(contact law)"
+        },
+        {
+          "name": "Flow box 2",
+          "words": 7,
+          "text": "Plastic compaction\nMPM: J2 plasticity\nDEM scaffold"
+        },
+        {
+          "name": "Flow box 3",
+          "words": 9,
+          "text": "Voxel transport\nfinite-volume solver\nionic · electronic · thermal"
+        },
+        {
+          "name": "Flow box 4",
+          "words": 6,
+          "text": "Electrode response\nreaction distribution\n(in development)"
+        },
+        {
+          "name": "Flow target 1",
+          "words": 4,
+          "text": "calibration target:\ncompaction data"
+        },
+        {
+          "name": "Flow target 2",
+          "words": 4,
+          "text": "calibration target:\npure-SE compaction"
+        },
+        {
+          "name": "Flow target 3",
+          "words": 4,
+          "text": "comparison target:\nconductivity data"
+        },
+        {
+          "name": "Caption",
+          "words": 21,
+          "text": "DEM packing → plastic compaction → voxel transport → electrode response; targets are what each stage is calibrated or compared against"
+        }
+      ]
+    },
+    {
+      "page": 3,
+      "words": 47,
+      "counted_shapes": [
+        {
+          "name": "Rectangle 4",
+          "words": 8,
+          "text": "DEM governing equations: particle motion and contact forces"
+        },
+        {
+          "name": "Callout",
+          "words": 16,
+          "text": "Per particle: translational and rotational equations of motion; per contact pair: contact force and rolling-resistance torque."
+        },
+        {
+          "name": "Callout damping",
+          "words": 23,
+          "text": "Global damping −γv_i in ①: γ = 0.5 during stabilization and compression, 1e-5 during settling and relaxation (input-deck units) — see Problem 4."
+        }
+      ]
+    },
+    {
+      "page": 4,
+      "words": 91,
+      "counted_shapes": [
+        {
+          "name": "Rectangle 4",
+          "words": 72,
+          "text": "Fixed-shape DEM limits and the material point method (MPM)\nOur fixed-shape implementation has no shape change and no yield cap: overlap is the only plasticity proxy; the softened SE modulus (1.35 vs ≈ 22 GPa) is an effective parameter, not a property [1, 2].\nJ2 plasticity on a background grid: shape change and void filling that a fixed-shape sphere cannot represent; active material is kept rigid (DEM skeleton), only the electrolyte flows."
+        },
+        {
+          "name": "Caption",
+          "words": 19,
+          "text": "δ = overlap; piece-wise linear loading / unloading branches;\nthe implementation used here is the LIGGGHTS hysteretic law [2]"
+        }
+      ]
+    },
+    {
+      "page": 5,
+      "words": 52,
+      "counted_shapes": [
+        {
+          "name": "Rectangle 4",
+          "words": 38,
+          "text": "Effective material inputs and their status\nBulk modulus from DFT; shear softening and yield stress from a pure-electrolyte calibration sweep.\nHistorical and current scaffold calculations use different electrolyte initializations and run configurations; they are not one validation series."
+        },
+        {
+          "name": "Caption",
+          "words": 14,
+          "text": "Tested alternatives (volumetric cap, real E) did not remove the need for effective parameters."
+        }
+      ]
+    },
+    {
+      "page": 6,
+      "words": 84,
+      "counted_shapes": [
+        {
+          "name": "Rectangle 4",
+          "words": 64,
+          "text": "Voxelizing the compacted microstructure into a transport mesh\nFaces are joined by a harmonic mean with no interface-resistance term: an ideal-interface voxel model — an upper bound only within the same geometry, properties and boundaries.\nVGCF as diameter-preserving segments, PTFE as a centre-line insulator, polymer as spheres; a registered 104-arm study keeps the σ(e⁻) order across 1–4 wt% VGCF on all tested grids (72/72)."
+        },
+        {
+          "name": "Caption",
+          "words": 20,
+          "text": "Original Phase A campaign (VGCF E = 10 GPa): means of 96 primary arms,\nthree voxel sizes; no contact resistance"
+        }
+      ]
+    },
+    {
+      "page": 7,
+      "words": 104,
+      "counted_shapes": [
+        {
+          "name": "Rectangle 4",
+          "words": 61,
+          "text": "Composition-dependent porosity in five simulated beds\nSoft-sphere DEM with a linear hysteretic contact law, pressed to 300 MPa (nominal stopping pressure; see Problem 4); one bed per composition, no seed replicates.\nOne 7:3 bed: porosity 31.8 → 25.1 → 16.7 → 16.5 % (final state relaxed at fixed platen); 7:3 (large : small NCM) is the lowest of the five beds."
+        },
+        {
+          "name": "Caption",
+          "words": 43,
+          "text": "Left: four stages of one 7:3 bed, 0 · 47 · 296 · 165 MPa (last = relaxed at fixed platen); porosity = exact union of spheres.\nRight: final porosity of the five beds (one bed each; the red bar is the minimum)."
+        }
+      ]
+    },
+    {
+      "page": 8,
+      "words": 86,
+      "counted_shapes": [
+        {
+          "name": "Rectangle 4",
+          "words": 54,
+          "text": "From the contact network to Li⁺ transport\nContact-network approach [8]: bulk resistance + Holm/Maxwell constriction using Hertz contact radii; chosen σ₀ = 1.5 mS cm⁻¹ (pellet-literature range).\nTransport tortuosity T = φ_SE σ₀ / σ_eff: 7.2 → 5.0 (0:10 → 7:3). Contact constriction accounts for 73–75 % of Joule dissipation in this network model."
+        },
+        {
+          "name": "Caption",
+          "words": 32,
+          "text": "(a) transport tortuosity (Hertz), (b) σ(Li⁺) at σ₀ = 1.5 mS cm⁻¹; one bed per composition;\nT is the literature \"tortuosity factor\" (not its square root); red = extreme of the five"
+        }
+      ]
+    },
+    {
+      "page": 9,
+      "words": 115,
+      "counted_shapes": [
+        {
+          "name": "Rectangle 4",
+          "words": 68,
+          "text": "Problems 1 and 2: grid dependence and absolute σ(e⁻)\nThe electronic ratio decreases across the three tested voxel spacings (0.4, 0.3, 0.25 µm); the ionic ratio crosses 1. Grid convergence has not been established.\nVoxel predictions exceed the available DC-polarization estimates; measurement conditions remain unverified. A registered re-run calibrates carbon on SBE alone (σ_VGCF* = 3.41 S cm⁻¹, an effective value); the DBE prediction (order only) is pending."
+        },
+        {
+          "name": "Caption",
+          "words": 47,
+          "text": "(a) Grid dependence: same bed pair and convention; no converged conductivity ratio is reported.\n(b) Voxel model vs DC polarization, log scale; conditions not yet matched.\n(c) NCM–SE beds: no carbon/binder; Hertz H0; common NCM reference 4.1 mS cm⁻¹ [11]; size factor off; one bed per composition."
+        }
+      ]
+    },
+    {
+      "page": 10,
+      "words": 80,
+      "counted_shapes": [
+        {
+          "name": "Rectangle 4",
+          "words": 42,
+          "text": "Problem 3: Load sharing during compaction\nNCM–NCM contacts contribute 48–60 % of vertical stress after relaxation at fixed platen position; 7:3 is the minimum.\nThe NCM–NCM stress-share ranking matches the experimental porosity summaries for the selected five compositions (exploratory, n = 5)."
+        },
+        {
+          "name": "Caption",
+          "words": 38,
+          "text": "Left: contribution to σ_zz by contact type, 21 planes, load-weighted; relaxed at fixed platen.\nRight: SE von Mises stress in one 7:3 bed, four stages (0 · 47 · 296 · 165 MPa), 0–150 MPa; wall SE excluded."
+        }
+      ]
+    },
+    {
+      "page": 11,
+      "words": 121,
+      "counted_shapes": [
+        {
+          "name": "Rectangle 4",
+          "words": 80,
+          "text": "Problem 4: what the 300 MPa plate reaction contains\nThe 300 MPa stop criterion reads the plate reaction during compression, which includes global viscous damping: in one 7:3 bed the drag is 57.9 % of the target force (750 N, deck units).\nAt fixed platen, the original run relaxes to 165 MPa. A combined follow-up protocol—plate-contact history reset, lower damping and force hold—reduces thickness from 111.05 to 105.84 µm. This remains a model-internal diagnostic; static-equilibrium and conservation checks are pending."
+        },
+        {
+          "name": "Caption",
+          "words": 41,
+          "text": "(a) one 7:3 bed: stop step (damping 0.5), relaxed at fixed platen (original run), servo hold at the target force (damping 1e-5)\n(b) ε_sphere = sphere-volume porosity, not the exact union; shaded = registered prediction band; hatched = checks still open"
+        }
+      ]
+    },
+    {
+      "page": 12,
+      "words": 86,
+      "counted_shapes": [
+        {
+          "name": "Rectangle 4",
+          "words": 61,
+          "text": "Layered-bed mixing: unresolved mixing-index contrast\nRotating-drum DEM, cohesive soft contacts: ten runs from a layered start, eight revolutions; Lacey index M on 16×16×4 bins vs a random reference.\nLow NCM–NCM cohesion versus the reference setting gives an unresolved paired contrast at 16×16×4 bins (ΔM = 0.0012, seed SE = 0.0073). Subsequent diagnostic classification; the original 1% overlap condition was not met."
+        },
+        {
+          "name": "Caption",
+          "words": 25,
+          "text": "M = 1: random-reference variance; error bars = within-run SD; all ten runs reach M ≈ 0.96–1.00,\nso this bin grid cannot separate the settings"
+        }
+      ]
+    },
+    {
+      "page": 13,
+      "words": 81,
+      "counted_shapes": [
+        {
+          "name": "Rectangle 4",
+          "words": 56,
+          "text": "Exploratory cohesion settings produce different mixing indices\nOne seed, two revolutions: large-NCM self-pair model Bond number 38.4, 384, 1152, or all nonzero cohesion-energy densities ×10 and ×14.42 (vs the low-cohesion comparator).\nWithin each series ΔM rises with the imposed level; levels were chosen post hoc, and wall adhesion and start states also differ — no verdict."
+        },
+        {
+          "name": "Caption",
+          "words": 25,
+          "text": "ΔM = M(low-cohesion comparator) − M(setting); hatched: bin grid failed the volume-coverage check;\nΔM includes start-state differences; M < 0 lies outside the Lacey range"
+        }
+      ]
+    },
+    {
+      "page": 14,
+      "words": 103,
+      "counted_shapes": [
+        {
+          "name": "Rectangle 4",
+          "words": 67,
+          "text": "Surface energy and coating: SE–SE adhesion is the open term\nWith equal contact areas and an assumed geometric-mean adhesion rule, ΔW = 2(√γ_A − √γ_S)² ≥ 0 is an adhesive-work difference per unit area; SE–SE cluster survival also depends on relative surface energies and contact dynamics.\nExploratory all-pair CED scaling retains a larger SE–SE cluster fraction than the low-cohesion comparator; the confirmatory 18-run block remains on hold."
+        },
+        {
+          "name": "Caption",
+          "words": 36,
+          "text": "Left: one seed, mean over the second revolution; whiskers = dump-resolution range, not a confidence interval.\nRight: γ = surface energy, W = work of adhesion; the uncoated NCM / SE surface-energy ratio is not known."
+        }
+      ]
+    },
+    {
+      "page": 15,
+      "words": 121,
+      "counted_shapes": [
+        {
+          "name": "Rectangle 4",
+          "words": 18,
+          "text": "Tests for unresolved model limits\nGrid sensitivity remains unresolved. Diagnostic results exist, while final hypothesis verdicts remain pending."
+        },
+        {
+          "name": "Audit findings",
+          "words": 2,
+          "text": "Electronic transport"
+        },
+        {
+          "name": "Audit findings items",
+          "words": 19,
+          "text": "Interface resistance: film model implemented, production on hold\nCarbon conductivity: comparison with DC polarization\nNCM conductivity: literature-based input review"
+        },
+        {
+          "name": "Decisions recorded on Sep 12",
+          "words": 3,
+          "text": "Compaction and mixing"
+        },
+        {
+          "name": "Decisions recorded on Sep 12 items",
+          "words": 27,
+          "text": "AM load sharing: final hypothesis verdict pending\nUnloading (springback vs. measured thickness): history test passed; kit re-review HOLD, fixes ratified\nMixing: an adhesion parameter for SE–SE contacts"
+        },
+        {
+          "name": "Gen2 head",
+          "words": 9,
+          "text": "DEM protocol generation 2 — plan, no runs yet"
+        },
+        {
+          "name": "Gen2 box 1",
+          "words": 1,
+          "text": "insertion"
+        },
+        {
+          "name": "Gen2 box 2",
+          "words": 1,
+          "text": "stabilization"
+        },
+        {
+          "name": "Gen2 box 3",
+          "words": 1,
+          "text": "compression"
+        },
+        {
+          "name": "Gen2 box 4",
+          "words": 1,
+          "text": "servo"
+        },
+        {
+          "name": "Gen2 box 5",
+          "words": 1,
+          "text": "relaxation"
+        },
+        {
+          "name": "Gen2 box 6",
+          "words": 1,
+          "text": "unloading"
+        },
+        {
+          "name": "Gen2 box 7",
+          "words": 2,
+          "text": "platen removal"
+        },
+        {
+          "name": "Gen2 note",
+          "words": 35,
+          "text": "SE true density 1.64 g cm⁻³ (lab standard, unverified) · E_SE set so that pure-SE beds reach ε_union = 10–13 % after 300 MPa and relaxation (ε_sphere kept internally) · Heckel analysis to be redone"
+        }
+      ]
+    },
+    {
+      "page": 16,
+      "words": 74,
+      "counted_shapes": [
+        {
+          "name": "Rectangle 4",
+          "words": 74,
+          "text": "Current findings and limitations\nDEM and contact networks: composition trends from one bed per composition\nDEM loading: the nominal 300 MPa plate reaction includes damping; a revised protocol is planned\nMPM: plastic deformation, with compaction agreement dependent on initialization and loading protocol\nVoxel transport: ideal-interface calculations with grid dependence and unresolved absolute conductivity\nMixing: unresolved diagnostic mixing-index contrast under an unmet overlap condition; exploratory cohesion results without a verdict\nFinal model-validation verdicts remain pending"
+        }
+      ]
+    },
+    {
+      "page": 17,
+      "words": 153,
+      "counted_shapes": [
+        {
+          "name": "Refs left",
+          "words": 77,
+          "text": "Contact mechanics and DEM\n[1] S. Luding, Granul. Matter 10, 235–246 (2008)\n[2] LIGGGHTS-PUBLIC 3.8.0 (commit 3d5c00f, 2024), github.com/CFDEMproject/LIGGGHTS-PUBLIC\n[3] A. Sakuda, A. Hayashi, M. Tatsumisago, Sci. Rep. 3, 2261 (2013)\nPowder mixing and surface energy\n[4] J.A. Hersey, Powder Technol. 11, 41–44 (1975)\n[5] H. Egermann, N.A. Orr, Powder Technol. 36, 117–118 (1983)\n[6] M. Kissel et al., Nat. Commun. 17, 3215 (2026)\n[7] Y. Kim, H. Lee, S. Kang, J. Mater. Chem. 22, 12874–12881 (2012)"
+        },
+        {
+          "name": "Refs right",
+          "words": 76,
+          "text": "Solid-state battery electrodes and electrolytes\n[8] A.M. Bazzoun et al., J. Power Sources 661, 238682 (2026)\n[9] M. So et al., J. Electrochem. Soc. 168, 030538 (2021)\n[10] D.J. Lee et al., Nat. Commun. 16, 4200 (2025)\n[11] S. Wang, M. Yan, Y. Li, C. Vinado, J. Yang, J. Power Sources 393, 75–82 (2018)\n[12] O. Thompson et al., Adv. Funct. Mater. 36, e75195 (2026)\n[13] V. Faka et al., Adv. Energy Mater. 16, e05186 (2026)"
+        }
+      ]
+    },
+    {
+      "page": 18,
+      "words": 12,
+      "counted_shapes": [
+        {
+          "name": "TextBox 1",
+          "words": 2,
+          "text": "Thank you"
+        },
+        {
+          "name": "직사각형 2",
+          "words": 10,
+          "text": "For more information or any questions, please e-mail at yonghoon71@hanyang.ac.kr"
+        }
+      ]
+    }
+  ],
+  "outside_page_words": 0,
+  "powerpoint_app_checked": false
+}

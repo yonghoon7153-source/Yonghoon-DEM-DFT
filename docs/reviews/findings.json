@@ -11118,7 +11118,7 @@
     {
       "id": "SEM32-01",
       "severity": "P2",
-      "status": "claimed_fixed",
+      "status": "verified",
       "owner": "claude",
       "found_by": "codex 10-15 연구세미나 v3.2 재확인 (HOLD · 소스 핀 90ca2c8cd · PPTX sha256 1b6988f3… · PDF 0e8f9a74… · 제출 ZIP 9d219c57… · 실제 PPTX 관계표 · 본문 · notes · OMML · 원로그 · STL · 저장 분석 산술 · 문헌 정본 ebfed0ff5 대조 — 생산자 코드 · 시뮬레이션 미실행)",
       "opened_in": "docs/reviews/codex_review_seminar_v32_recheck_20261015.md",
@@ -11127,14 +11127,20 @@
       "evidence_tests": [
         "docs/reviews/codex_review_seminar_v32_recheck_20261015.md (§3 SEMV32-01)",
         "docs/seminar_20261013/build_seminar_v33.py --selftest-only (시험 먼저 v3.2 덱 33/349 실패 → v3.3 덱 0/350 · 메인 세션 재실행 0/350)",
-        "docs/reviews/codex_seminar_deck_review_evidence_20261013/v3_3_fix/ (testfirst_v33.json · finalchecks_on_v32.json · checks_v33.json · render_check_v33.json · cmp_codex_v32.json)"
+        "docs/reviews/codex_seminar_deck_review_evidence_20261013/v3_3_fix/ (testfirst_v33.json · finalchecks_on_v32.json · checks_v33.json · render_check_v33.json · cmp_codex_v32.json)",
+        "docs/reviews/codex_review_seminar_v33_closure_20261015.md"
       ],
-      "claimed_fixed_sha": "aac17e11f"
+      "claimed_fixed_sha": "aac17e11f",
+      "verified_by": "codex",
+      "verified_in": "docs/reviews/codex_review_seminar_v33_closure_20261015.md",
+      "verified_sha": "aac17e11f",
+      "verified_scope": "v3.3 덱 (aac17e11f · ZIP v9 sha256 2a95d16468b6…) 에서 Codex 종결 판정 = 내용 GO (새 P1 · P2 없음 · 원 수식 8 보존 · 그림 수치 유지).  범위 = 연구세미나 발표물 (18 장 v3.3) 의 내용 — 발표 PC PowerPoint 에서 3 장 식 여덟 · 출처 아래첨자 · 슬라이드 쇼 표시 확인은 1저자 직접 (10-15 추적 닫음) · 모델 물리 검증 · 보류 실험 (18 런 · 194/보충 20 · v1.3) 승인 아님.",
+      "verification_note": "2026-10-15 Codex v3.3 종결 판정 (내용 GO) 반입으로 v3.2 재확인 사슬 (SEM32-01~04 · SELF-117) 을 옮겼다 · verified_sha = Codex 가 받은 파일 (ZIP v9 · repo/ 사본 = aac17e11f blob) 을 만든 커밋 (Codex 는 리포 HEAD 가 아니라 받은 파일을 대조했다)."
     },
     {
       "id": "SEM32-02",
       "severity": "P2",
-      "status": "claimed_fixed",
+      "status": "verified",
       "owner": "claude",
       "found_by": "codex 10-15 연구세미나 v3.2 재확인 (HOLD · 소스 핀 90ca2c8cd · PPTX sha256 1b6988f3… · PDF 0e8f9a74… · 제출 ZIP 9d219c57… · 실제 PPTX 관계표 · 본문 · notes · OMML · 원로그 · STL · 저장 분석 산술 · 문헌 정본 ebfed0ff5 대조 — 생산자 코드 · 시뮬레이션 미실행)",
       "opened_in": "docs/reviews/codex_review_seminar_v32_recheck_20261015.md",
@@ -11144,14 +11150,20 @@
         "docs/reviews/codex_review_seminar_v32_recheck_20261015.md (§3 SEMV32-02)",
         "docs/seminar_20261013/build_seminar_v33.py --selftest-only (시험 먼저 v3.2 덱 33/349 실패 → v3.3 덱 0/350 · 메인 세션 재실행 0/350)",
         "docs/reviews/codex_seminar_deck_review_evidence_20261013/v3_3_fix/ (testfirst_v33.json · finalchecks_on_v32.json · checks_v33.json · render_check_v33.json · cmp_codex_v32.json)",
-        "docs/seminar_20261013/figs_v3/make_seminar_figs_v33.py --selftest (F_p4_v33 = F_p4 값 · 빗금 · 막대)"
+        "docs/seminar_20261013/figs_v3/make_seminar_figs_v33.py --selftest (F_p4_v33 = F_p4 값 · 빗금 · 막대)",
+        "docs/reviews/codex_review_seminar_v33_closure_20261015.md"
       ],
-      "claimed_fixed_sha": "aac17e11f"
+      "claimed_fixed_sha": "aac17e11f",
+      "verified_by": "codex",
+      "verified_in": "docs/reviews/codex_review_seminar_v33_closure_20261015.md",
+      "verified_sha": "aac17e11f",
+      "verified_scope": "v3.3 덱 (aac17e11f · ZIP v9 sha256 2a95d16468b6…) 에서 Codex 종결 판정 = 내용 GO (새 P1 · P2 없음 · 원 수식 8 보존 · 그림 수치 유지).  범위 = 연구세미나 발표물 (18 장 v3.3) 의 내용 — 발표 PC PowerPoint 에서 3 장 식 여덟 · 출처 아래첨자 · 슬라이드 쇼 표시 확인은 1저자 직접 (10-15 추적 닫음) · 모델 물리 검증 · 보류 실험 (18 런 · 194/보충 20 · v1.3) 승인 아님.",
+      "verification_note": "2026-10-15 Codex v3.3 종결 판정 (내용 GO) 반입으로 v3.2 재확인 사슬 (SEM32-01~04 · SELF-117) 을 옮겼다 · verified_sha = Codex 가 받은 파일 (ZIP v9 · repo/ 사본 = aac17e11f blob) 을 만든 커밋 (Codex 는 리포 HEAD 가 아니라 받은 파일을 대조했다)."
     },
     {
       "id": "SEM32-03",
       "severity": "P2",
-      "status": "claimed_fixed",
+      "status": "verified",
       "owner": "claude",
       "found_by": "codex 10-15 연구세미나 v3.2 재확인 (HOLD · 소스 핀 90ca2c8cd · PPTX sha256 1b6988f3… · PDF 0e8f9a74… · 제출 ZIP 9d219c57… · 실제 PPTX 관계표 · 본문 · notes · OMML · 원로그 · STL · 저장 분석 산술 · 문헌 정본 ebfed0ff5 대조 — 생산자 코드 · 시뮬레이션 미실행)",
       "opened_in": "docs/reviews/codex_review_seminar_v32_recheck_20261015.md",
@@ -11160,14 +11172,20 @@
       "evidence_tests": [
         "docs/reviews/codex_review_seminar_v32_recheck_20261015.md (§3 SEMV32-03)",
         "docs/seminar_20261013/build_seminar_v33.py --selftest-only (시험 먼저 v3.2 덱 33/349 실패 → v3.3 덱 0/350 · 메인 세션 재실행 0/350)",
-        "docs/reviews/codex_seminar_deck_review_evidence_20261013/v3_3_fix/ (testfirst_v33.json · finalchecks_on_v32.json · checks_v33.json · render_check_v33.json · cmp_codex_v32.json)"
+        "docs/reviews/codex_seminar_deck_review_evidence_20261013/v3_3_fix/ (testfirst_v33.json · finalchecks_on_v32.json · checks_v33.json · render_check_v33.json · cmp_codex_v32.json)",
+        "docs/reviews/codex_review_seminar_v33_closure_20261015.md"
       ],
-      "claimed_fixed_sha": "aac17e11f"
+      "claimed_fixed_sha": "aac17e11f",
+      "verified_by": "codex",
+      "verified_in": "docs/reviews/codex_review_seminar_v33_closure_20261015.md",
+      "verified_sha": "aac17e11f",
+      "verified_scope": "v3.3 덱 (aac17e11f · ZIP v9 sha256 2a95d16468b6…) 에서 Codex 종결 판정 = 내용 GO (새 P1 · P2 없음 · 원 수식 8 보존 · 그림 수치 유지).  범위 = 연구세미나 발표물 (18 장 v3.3) 의 내용 — 발표 PC PowerPoint 에서 3 장 식 여덟 · 출처 아래첨자 · 슬라이드 쇼 표시 확인은 1저자 직접 (10-15 추적 닫음) · 모델 물리 검증 · 보류 실험 (18 런 · 194/보충 20 · v1.3) 승인 아님.",
+      "verification_note": "2026-10-15 Codex v3.3 종결 판정 (내용 GO) 반입으로 v3.2 재확인 사슬 (SEM32-01~04 · SELF-117) 을 옮겼다 · verified_sha = Codex 가 받은 파일 (ZIP v9 · repo/ 사본 = aac17e11f blob) 을 만든 커밋 (Codex 는 리포 HEAD 가 아니라 받은 파일을 대조했다)."
     },
     {
       "id": "SEM32-04",
       "severity": "P3",
-      "status": "claimed_fixed",
+      "status": "verified",
       "owner": "claude",
       "found_by": "codex 10-15 연구세미나 v3.2 재확인 (HOLD · 소스 핀 90ca2c8cd · PPTX sha256 1b6988f3… · PDF 0e8f9a74… · 제출 ZIP 9d219c57… · 실제 PPTX 관계표 · 본문 · notes · OMML · 원로그 · STL · 저장 분석 산술 · 문헌 정본 ebfed0ff5 대조 — 생산자 코드 · 시뮬레이션 미실행)",
       "opened_in": "docs/reviews/codex_review_seminar_v32_recheck_20261015.md",
@@ -11176,14 +11194,20 @@
       "evidence_tests": [
         "docs/reviews/codex_review_seminar_v32_recheck_20261015.md (§3 SEMV32-04)",
         "docs/seminar_20261013/build_seminar_v33.py --selftest-only (시험 먼저 v3.2 덱 33/349 실패 → v3.3 덱 0/350 · 메인 세션 재실행 0/350)",
-        "docs/reviews/codex_seminar_deck_review_evidence_20261013/v3_3_fix/ (testfirst_v33.json · finalchecks_on_v32.json · checks_v33.json · render_check_v33.json · cmp_codex_v32.json)"
+        "docs/reviews/codex_seminar_deck_review_evidence_20261013/v3_3_fix/ (testfirst_v33.json · finalchecks_on_v32.json · checks_v33.json · render_check_v33.json · cmp_codex_v32.json)",
+        "docs/reviews/codex_review_seminar_v33_closure_20261015.md"
       ],
-      "claimed_fixed_sha": "aac17e11f"
+      "claimed_fixed_sha": "aac17e11f",
+      "verified_by": "codex",
+      "verified_in": "docs/reviews/codex_review_seminar_v33_closure_20261015.md",
+      "verified_sha": "aac17e11f",
+      "verified_scope": "v3.3 덱 (aac17e11f · ZIP v9 sha256 2a95d16468b6…) 에서 Codex 종결 판정 = 내용 GO (새 P1 · P2 없음 · 원 수식 8 보존 · 그림 수치 유지).  범위 = 연구세미나 발표물 (18 장 v3.3) 의 내용 — 발표 PC PowerPoint 에서 3 장 식 여덟 · 출처 아래첨자 · 슬라이드 쇼 표시 확인은 1저자 직접 (10-15 추적 닫음) · 모델 물리 검증 · 보류 실험 (18 런 · 194/보충 20 · v1.3) 승인 아님.",
+      "verification_note": "2026-10-15 Codex v3.3 종결 판정 (내용 GO) 반입으로 v3.2 재확인 사슬 (SEM32-01~04 · SELF-117) 을 옮겼다 · verified_sha = Codex 가 받은 파일 (ZIP v9 · repo/ 사본 = aac17e11f blob) 을 만든 커밋 (Codex 는 리포 HEAD 가 아니라 받은 파일을 대조했다)."
     },
     {
       "id": "SELF-117",
       "severity": "P3",
-      "status": "claimed_fixed",
+      "status": "verified",
       "owner": "claude",
       "found_by": "codex 10-15 연구세미나 v3.2 재확인 판정문 §2 (제출 ZIP v8 · 매니페스트 84 건 대조)",
       "opened_in": "docs/reviews/codex_review_seminar_v32_recheck_20261015.md",
@@ -11192,9 +11216,15 @@
       "evidence_tests": [
         "docs/reviews/codex_review_seminar_v32_recheck_20261015.md (§2 · §8)",
         "docs/reviews/codex_seminar_deck_review_evidence_20261013/v3_3_fix/package_v9.py (목록 생성 · 다시 열어 대조)",
-        "docs/reviews/codex_seminar_deck_v3_3_closure_request_20261015.md §6 (ZIP-LIST 블록)"
+        "docs/reviews/codex_seminar_deck_v3_3_closure_request_20261015.md §6 (ZIP-LIST 블록)",
+        "docs/reviews/codex_review_seminar_v33_closure_20261015.md"
       ],
-      "claimed_fixed_sha": "aac17e11f"
+      "claimed_fixed_sha": "aac17e11f",
+      "verified_by": "codex",
+      "verified_in": "docs/reviews/codex_review_seminar_v33_closure_20261015.md",
+      "verified_sha": "aac17e11f",
+      "verified_scope": "v3.3 덱 (aac17e11f · ZIP v9 sha256 2a95d16468b6…) 에서 Codex 종결 판정 = 내용 GO (새 P1 · P2 없음 · 원 수식 8 보존 · 그림 수치 유지).  범위 = 연구세미나 발표물 (18 장 v3.3) 의 내용 — 발표 PC PowerPoint 에서 3 장 식 여덟 · 출처 아래첨자 · 슬라이드 쇼 표시 확인은 1저자 직접 (10-15 추적 닫음) · 모델 물리 검증 · 보류 실험 (18 런 · 194/보충 20 · v1.3) 승인 아님.",
+      "verification_note": "2026-10-15 Codex v3.3 종결 판정 (내용 GO) 반입으로 v3.2 재확인 사슬 (SEM32-01~04 · SELF-117) 을 옮겼다 · verified_sha = Codex 가 받은 파일 (ZIP v9 · repo/ 사본 = aac17e11f blob) 을 만든 커밋 (Codex 는 리포 HEAD 가 아니라 받은 파일을 대조했다)."
     },
     {
       "id": "SELF-118",

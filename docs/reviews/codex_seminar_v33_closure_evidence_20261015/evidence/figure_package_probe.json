@@ -1,0 +1,543 @@
+{
+  "chart": {
+    "old": {
+      "panel_1": {
+        "ticks": [
+          [
+            158.264418,
+            0.0
+          ],
+          [
+            121.552195,
+            100.0
+          ],
+          [
+            84.839971,
+            200.0
+          ],
+          [
+            48.127748,
+            300.0
+          ]
+        ],
+        "bars": [
+          {
+            "path_id": "patch_3",
+            "value_from_geometry": 300.90600069894975,
+            "baseline": 0.0,
+            "style": "fill: #1f3a68; stroke: #1f3a68; stroke-width: 0.6; stroke-linejoin: miter"
+          },
+          {
+            "path_id": "patch_4",
+            "value_from_geometry": 165.3399998383826,
+            "baseline": 0.0,
+            "style": "fill: #6b7280; stroke: #6b7280; stroke-width: 0.6; stroke-linejoin: miter"
+          },
+          {
+            "path_id": "patch_5",
+            "value_from_geometry": 299.27400201949087,
+            "baseline": 0.0,
+            "style": "fill: url(#h4b571e4e1d); stroke: #ffffff; stroke-width: 0.6; stroke-linejoin: miter"
+          }
+        ],
+        "ylim_from_frame": [
+          0.0,
+          380.0000009079628
+        ]
+      },
+      "panel_2": {
+        "ticks": [
+          [
+            158.264418,
+            0.0
+          ],
+          [
+            119.512627,
+            5.0
+          ],
+          [
+            80.760835,
+            10.0
+          ],
+          [
+            42.009044,
+            15.0
+          ]
+        ],
+        "bars": [
+          {
+            "path_id": "patch_9",
+            "value_from_geometry": 14.952999979166556,
+            "baseline": 0.0,
+            "style": "fill: #1f3a68; stroke: #1f3a68; stroke-width: 0.6; stroke-linejoin: miter"
+          },
+          {
+            "path_id": "patch_10",
+            "value_from_geometry": 10.768999977583832,
+            "baseline": 0.0,
+            "style": "fill: url(#h4b571e4e1d); stroke: #ffffff; stroke-width: 0.6; stroke-linejoin: miter"
+          }
+        ],
+        "ylim_from_frame": [
+          0.0,
+          18.00000002580526
+        ]
+      },
+      "band": [
+        8.300000049890166,
+        11.700000036127362
+      ],
+      "band_point": 10.000000043008766,
+      "hatches": [
+        {
+          "body": "<pattern xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\" height=\"72\" id=\"PATTERN\" patternUnits=\"userSpaceOnUse\" width=\"72\" x=\"0\" y=\"0\">\n   <rect fill=\"#1f3a68\" height=\"73\" width=\"73\" x=\"0\" y=\"0\"></rect>\n   <path d=\"M -36 36  L 36 -36  M -33 39  L 39 -33  M -30 42  L 42 -30  M -27 45  L 45 -27  M -24 48  L 48 -24  M -21 51  L 51 -21  M -18 54  L 54 -18  M -15 57  L 57 -15  M -12 60  L 60 -12  M -9 63  L 63 -9  M -6 66  L 66 -6  M -3 69  L 69 -3  M 0 72  L 72 0  M 3 75  L 75 3  M 6 78  L 78 6  M 9 81  L 81 9  M 12 84  L 84 12  M 15 87  L 87 15  M 18 90  L 90 18  M 21 93  L 93 21  M 24 96  L 96 24  M 27 99  L 99 27  M 30 102  L 102 30  M 33 105  L 105 33  M 36 108  L 108 36  \" style=\"fill: #ffffff; stroke: #ffffff; stroke-width: 1.0; stroke-linecap: butt; stroke-linejoin: miter\"></path>\n  </pattern>",
+          "uses": 2
+        }
+      ],
+      "labels": [
+        "stop",
+        "γ 0.5",
+        "relaxed",
+        "γ 1e-5",
+        "servo end",
+        "γ 1e-5",
+        "0",
+        "100",
+        "200",
+        "300",
+        "Plate pressure (MPa)",
+        "300.9",
+        "165.3",
+        "299.3",
+        "drag",
+        "57.9 %",
+        "(a)",
+        "stop",
+        "111.05 µm",
+        "servo end",
+        "105.84 µm",
+        "0",
+        "5",
+        "10",
+        "15",
+        "\n       ε\n        \n       (\n       %\n       )\n       s\n       p\n       h\n       e\n       r\n       e\n      ",
+        "14.95",
+        "10.77",
+        "(b)"
+      ]
+    },
+    "new": {
+      "panel_1": {
+        "ticks": [
+          [
+            158.264418,
+            0.0
+          ],
+          [
+            121.552195,
+            100.0
+          ],
+          [
+            84.839971,
+            200.0
+          ],
+          [
+            48.127748,
+            300.0
+          ]
+        ],
+        "bars": [
+          {
+            "path_id": "patch_3",
+            "value_from_geometry": 300.90600069894975,
+            "baseline": 0.0,
+            "style": "fill: #1f3a68; stroke: #1f3a68; stroke-width: 0.6; stroke-linejoin: miter"
+          },
+          {
+            "path_id": "patch_4",
+            "value_from_geometry": 165.3399998383826,
+            "baseline": 0.0,
+            "style": "fill: #6b7280; stroke: #6b7280; stroke-width: 0.6; stroke-linejoin: miter"
+          },
+          {
+            "path_id": "patch_5",
+            "value_from_geometry": 299.27400201949087,
+            "baseline": 0.0,
+            "style": "fill: url(#h7cfea5b74e); stroke: #ffffff; stroke-width: 0.6; stroke-linejoin: miter"
+          }
+        ],
+        "ylim_from_frame": [
+          0.0,
+          380.0000009079628
+        ]
+      },
+      "panel_2": {
+        "ticks": [
+          [
+            158.264418,
+            0.0
+          ],
+          [
+            123.387806,
+            5.0
+          ],
+          [
+            88.511194,
+            10.0
+          ],
+          [
+            53.634581,
+            15.0
+          ],
+          [
+            18.757969,
+            20.0
+          ]
+        ],
+        "bars": [
+          {
+            "path_id": "patch_9",
+            "value_from_geometry": 14.953000058083337,
+            "baseline": 0.0,
+            "style": "fill: #1f3a68; stroke: #1f3a68; stroke-width: 0.6; stroke-linejoin: miter"
+          },
+          {
+            "path_id": "patch_10",
+            "value_from_geometry": 10.76899993347261,
+            "baseline": 0.0,
+            "style": "fill: url(#h7cfea5b74e); stroke: #ffffff; stroke-width: 0.6; stroke-linejoin: miter"
+          }
+        ],
+        "ylim_from_frame": [
+          0.0,
+          20.0
+        ]
+      },
+      "band": [
+        8.299999951973545,
+        11.700000048026453
+      ],
+      "band_point": 9.999999928318726,
+      "hatches": [
+        {
+          "body": "<pattern xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\" height=\"72\" id=\"PATTERN\" patternUnits=\"userSpaceOnUse\" width=\"72\" x=\"0\" y=\"0\">\n   <rect fill=\"#1f3a68\" height=\"73\" width=\"73\" x=\"0\" y=\"0\"></rect>\n   <path d=\"M -36 36  L 36 -36  M -33 39  L 39 -33  M -30 42  L 42 -30  M -27 45  L 45 -27  M -24 48  L 48 -24  M -21 51  L 51 -21  M -18 54  L 54 -18  M -15 57  L 57 -15  M -12 60  L 60 -12  M -9 63  L 63 -9  M -6 66  L 66 -6  M -3 69  L 69 -3  M 0 72  L 72 0  M 3 75  L 75 3  M 6 78  L 78 6  M 9 81  L 81 9  M 12 84  L 84 12  M 15 87  L 87 15  M 18 90  L 90 18  M 21 93  L 93 21  M 24 96  L 96 24  M 27 99  L 99 27  M 30 102  L 102 30  M 33 105  L 105 33  M 36 108  L 108 36  \" style=\"fill: #ffffff; stroke: #ffffff; stroke-width: 1.0; stroke-linecap: butt; stroke-linejoin: miter\"></path>\n  </pattern>",
+          "uses": 2
+        }
+      ],
+      "labels": [
+        "stop",
+        "γ 0.5",
+        "relaxed",
+        "γ 1e-5",
+        "servo end",
+        "γ 1e-5",
+        "0",
+        "100",
+        "200",
+        "300",
+        "Plate pressure (MPa)",
+        "300.9",
+        "165.3",
+        "299.3",
+        "drag",
+        "57.9 %",
+        "(a)",
+        "stop",
+        "111.05 µm",
+        "servo end",
+        "105.84 µm",
+        "0",
+        "5",
+        "10",
+        "15",
+        "20",
+        "\n       ε\n        \n       (\n       %\n       )\n       s\n       p\n       h\n       e\n       r\n       e\n      ",
+        "14.95",
+        "10.77",
+        "registered",
+        "prediction",
+        "band",
+        "(b)"
+      ]
+    },
+    "csv_count_equal": true,
+    "csv": [
+      {
+        "old_state": "stop (damping 0.5, plate moving)",
+        "new_state": "stop (damping 0.5, plate moving)",
+        "data_unchanged": true
+      },
+      {
+        "old_state": "relaxed at fixed platen (original run, damping 1e-5)",
+        "new_state": "relaxed at fixed platen (original run, damping 1e-5)",
+        "data_unchanged": true
+      },
+      {
+        "old_state": "servo hold end (branch B, damping 1e-5)",
+        "new_state": "servo hold end (branch B, damping 1e-5)",
+        "data_unchanged": true
+      },
+      {
+        "old_state": "damping drag at stop (share of 750 N target)",
+        "new_state": "damping drag at stop (share of 750 N target)",
+        "data_unchanged": true
+      },
+      {
+        "old_state": "stop eps_sphere",
+        "new_state": "stop eps_sphere",
+        "data_unchanged": true
+      },
+      {
+        "old_state": "servo hold end eps_sphere",
+        "new_state": "servo hold end eps_sphere",
+        "data_unchanged": true
+      },
+      {
+        "old_state": "stop thickness",
+        "new_state": "stop thickness",
+        "data_unchanged": true
+      },
+      {
+        "old_state": "servo hold end thickness",
+        "new_state": "servo hold end thickness",
+        "data_unchanged": true
+      },
+      {
+        "old_state": "registered band low (before the run)",
+        "new_state": "registered prediction band low (before the run)",
+        "data_unchanged": true
+      },
+      {
+        "old_state": "registered band high (before the run)",
+        "new_state": "registered prediction band high (before the run)",
+        "data_unchanged": true
+      },
+      {
+        "old_state": "registered point (before the run)",
+        "new_state": "registered prediction point (before the run)",
+        "data_unchanged": true
+      }
+    ],
+    "panel_a_identical_normalized": true,
+    "hatches_same": true,
+    "png_dimensions_old": [
+      1622,
+      805
+    ],
+    "png_dimensions_new": [
+      1622,
+      805
+    ]
+  },
+  "package": {
+    "request_entries": [
+      {
+        "path": "PIN.txt",
+        "bytes_match": true,
+        "sha_match": true
+      },
+      {
+        "path": "deck/seminar_20261013_v33.pdf",
+        "bytes_match": true,
+        "sha_match": true
+      },
+      {
+        "path": "deck/seminar_20261013_v33.pptx",
+        "bytes_match": true,
+        "sha_match": true
+      },
+      {
+        "path": "png/slide-01.png",
+        "bytes_match": true,
+        "sha_match": true
+      },
+      {
+        "path": "png/slide-02.png",
+        "bytes_match": true,
+        "sha_match": true
+      },
+      {
+        "path": "png/slide-03.png",
+        "bytes_match": true,
+        "sha_match": true
+      },
+      {
+        "path": "png/slide-04.png",
+        "bytes_match": true,
+        "sha_match": true
+      },
+      {
+        "path": "png/slide-05.png",
+        "bytes_match": true,
+        "sha_match": true
+      },
+      {
+        "path": "png/slide-06.png",
+        "bytes_match": true,
+        "sha_match": true
+      },
+      {
+        "path": "png/slide-07.png",
+        "bytes_match": true,
+        "sha_match": true
+      },
+      {
+        "path": "png/slide-08.png",
+        "bytes_match": true,
+        "sha_match": true
+      },
+      {
+        "path": "png/slide-09.png",
+        "bytes_match": true,
+        "sha_match": true
+      },
+      {
+        "path": "png/slide-10.png",
+        "bytes_match": true,
+        "sha_match": true
+      },
+      {
+        "path": "png/slide-11.png",
+        "bytes_match": true,
+        "sha_match": true
+      },
+      {
+        "path": "png/slide-12.png",
+        "bytes_match": true,
+        "sha_match": true
+      },
+      {
+        "path": "png/slide-13.png",
+        "bytes_match": true,
+        "sha_match": true
+      },
+      {
+        "path": "png/slide-14.png",
+        "bytes_match": true,
+        "sha_match": true
+      },
+      {
+        "path": "png/slide-15.png",
+        "bytes_match": true,
+        "sha_match": true
+      },
+      {
+        "path": "png/slide-16.png",
+        "bytes_match": true,
+        "sha_match": true
+      },
+      {
+        "path": "png/slide-17.png",
+        "bytes_match": true,
+        "sha_match": true
+      },
+      {
+        "path": "png/slide-18.png",
+        "bytes_match": true,
+        "sha_match": true
+      },
+      {
+        "path": "repo/docs/reviews/codex_seminar_deck_review_evidence_20261013/v3_3_fix/checks_v33.json",
+        "bytes_match": true,
+        "sha_match": true
+      },
+      {
+        "path": "repo/docs/reviews/codex_seminar_deck_review_evidence_20261013/v3_3_fix/cmp_codex_v32.json",
+        "bytes_match": true,
+        "sha_match": true
+      },
+      {
+        "path": "repo/docs/reviews/codex_seminar_deck_review_evidence_20261013/v3_3_fix/cmp_codex_v32.py",
+        "bytes_match": true,
+        "sha_match": true
+      },
+      {
+        "path": "repo/docs/reviews/codex_seminar_deck_review_evidence_20261013/v3_3_fix/finalchecks_on_v32.json",
+        "bytes_match": true,
+        "sha_match": true
+      },
+      {
+        "path": "repo/docs/reviews/codex_seminar_deck_review_evidence_20261013/v3_3_fix/package_v9.py",
+        "bytes_match": true,
+        "sha_match": true
+      },
+      {
+        "path": "repo/docs/reviews/codex_seminar_deck_review_evidence_20261013/v3_3_fix/render_check_v33.json",
+        "bytes_match": true,
+        "sha_match": true
+      },
+      {
+        "path": "repo/docs/reviews/codex_seminar_deck_review_evidence_20261013/v3_3_fix/render_check_v33.py",
+        "bytes_match": true,
+        "sha_match": true
+      },
+      {
+        "path": "repo/docs/reviews/codex_seminar_deck_review_evidence_20261013/v3_3_fix/testfirst_render_on_v32.json",
+        "bytes_match": true,
+        "sha_match": true
+      },
+      {
+        "path": "repo/docs/reviews/codex_seminar_deck_review_evidence_20261013/v3_3_fix/testfirst_v33.json",
+        "bytes_match": true,
+        "sha_match": true
+      },
+      {
+        "path": "repo/docs/reviews/codex_seminar_deck_review_evidence_20261013/v3_3_fix/testfirst_v33.py",
+        "bytes_match": true,
+        "sha_match": true
+      },
+      {
+        "path": "repo/docs/seminar_20261013/README.md",
+        "bytes_match": true,
+        "sha_match": true
+      },
+      {
+        "path": "repo/docs/seminar_20261013/build_seminar_v33.py",
+        "bytes_match": true,
+        "sha_match": true
+      },
+      {
+        "path": "repo/docs/seminar_20261013/figs_v3/F_p4_v33.csv",
+        "bytes_match": true,
+        "sha_match": true
+      },
+      {
+        "path": "repo/docs/seminar_20261013/figs_v3/F_p4_v33.png",
+        "bytes_match": true,
+        "sha_match": true
+      },
+      {
+        "path": "repo/docs/seminar_20261013/figs_v3/F_p4_v33.svg",
+        "bytes_match": true,
+        "sha_match": true
+      },
+      {
+        "path": "repo/docs/seminar_20261013/figs_v3/make_seminar_figs_v33.py",
+        "bytes_match": true,
+        "sha_match": true
+      },
+      {
+        "path": "repo/docs/seminar_20261013/slide_sources_v33.json",
+        "bytes_match": true,
+        "sha_match": true
+      },
+      {
+        "path": "repo/docs/seminar_20261013/slide_text_v33.md",
+        "bytes_match": true,
+        "sha_match": true
+      },
+      {
+        "path": "source_eq/eq.pptx",
+        "bytes_match": true,
+        "sha_match": true
+      },
+      {
+        "path": "v32/seminar_20261013_v32.pptx",
+        "bytes_match": true,
+        "sha_match": true
+      }
+    ],
+    "request_exact_member_set": true
+  },
+  "scope": "Delivered SVG coordinates/CSV/ZIP; no solver or producer execution."
+}

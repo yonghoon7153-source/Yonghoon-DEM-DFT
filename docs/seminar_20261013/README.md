@@ -23,6 +23,7 @@
 - **렌더** = LibreOffice + Carlito → PDF 18 쪽 · 150 dpi PNG · `render_check_v33.py` (pdftotext 낱말 상자: 겹침 > 2 pt 0 · 쪽 밖 0 · 3 장 출처 줄이 제목 위에서 끝남 · 15 장 상자 순서 · 새 문구 렌더 · 옛 문구 없음) · 육안 3 · 5 · 7 · 11 · 13 · 15 장.  ⚠ Carlito 에 `ⱼ` (U+2C7C) 가 없어 LibreOffice 는 3 장 출처 줄 둘째 줄의 그 글자를 대체 글꼴로 그린다 (빈 네모 없음 · 10 pt 아래첨자라 작다) — PowerPoint 표시는 발표 PC 에서 3 장 식 여덟과 함께 확인.
 - **양식** = 1저자 10-13 덱 (sha256 `7746e163…` · v3.2 와 같은 파일) · 원 수식 덱 = 1저자 10-09 (sha256 `8e76819a…`).
 - 실행: `python3 build_seminar_v33.py --template <10-13 덱.pptx> --eq-deck <10-09 지배방정식.pptx> --repo <리포> --figs figs_v3 --lit <크롭 폴더> --out <out.pptx> --v32 <비교 v3.2 덱> --json <검사 기록> --sources-out slide_sources_v33.json` · `--selftest-only <덱> --repo <리포> --figs figs_v3 --v32 <v3.2 덱> --v31 <v3.1 덱> --eq-deck <…> [--json …]` · `--dump <덱> --out slide_text_v33.md` · 그림 = `python3 figs_v3/make_seminar_figs_v33.py figs_v3` · `--selftest <리포>`.  종결 확인 요청서 = `docs/reviews/codex_seminar_deck_v3_3_closure_request_20261015.md` (ZIP v9 · 발송 = 1저자).
+- ✅ **Codex 종결 10-15 = 내용 GO** (`docs/reviews/codex_review_seminar_v33_closure_20261015.md` · 증거 `docs/reviews/codex_seminar_v33_closure_evidence_20261015/`) — SEMV32-01–04 (원장 SEM32-01–04) · SELF-117 닫힘 · verified (리뷰 핀 `aac17e11f`) · 새 P1/P2 없음 · 발표 최종 GO = 발표 PC 의 3 장 PowerPoint 표시 확인 (1저자 직접).
 
 ## v3.2 (2026-10-14 · 1저자 10-14 결정 1–9 · 18 장 · 세미나 10-16) — `build_seminar_v32.py` · `figs_v3/make_seminar_figs_v32.py` (F_p4) · `slide_text_v32.md` · `slide_sources_v32.json`
 

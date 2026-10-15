@@ -1,0 +1,447 @@
+{
+  "zip": "C:\\Users\\Administrator\\Downloads\\codex_seminar_deck_v3_3_closure_20261015.zip",
+  "sha256": "2a95d16468b6ec6bb43f6b98d0c9ea21fcb025a4a22102953680e7473f278ba0",
+  "bytes": 32195956,
+  "members": [
+    {
+      "path": "MANIFEST.sha256",
+      "bytes": 4622,
+      "sha256": "ad8340a83ba91c5652d177853a3ce3fa0b1910abd45a69efcad742d6fb954c07"
+    },
+    {
+      "path": "PIN.txt",
+      "bytes": 403,
+      "sha256": "5986899767e57a982b2841227e5aceeeffc9b27c8960217fbd74e0e6dbc30449"
+    },
+    {
+      "path": "codex_seminar_deck_v3_3_closure_request_20261015.md",
+      "bytes": 19535,
+      "sha256": "41f0c4519e2bbcf0db6e3e64b95b8d2d18d60c2569262f10c764fc073d298c5b"
+    },
+    {
+      "path": "deck/seminar_20261013_v33.pdf",
+      "bytes": 2886567,
+      "sha256": "706d6a1d062936c16aff15af4500cb7cff9ef8e5c19866d4c48ccaaeea64999e"
+    },
+    {
+      "path": "deck/seminar_20261013_v33.pptx",
+      "bytes": 9094504,
+      "sha256": "e787298ef657d516f43c8255e80cf1a61bbc52ffe94c6fbfbea57faca14dbb8c"
+    },
+    {
+      "path": "png/slide-01.png",
+      "bytes": 824623,
+      "sha256": "14787d043cc45da35d9048288058d4e9ba2240f711e8169bf35ed410aee74bca"
+    },
+    {
+      "path": "png/slide-02.png",
+      "bytes": 159039,
+      "sha256": "4e3fe37b418189f5a0cea0be2a71ad52180d43322ef37062003fc31620fd625c"
+    },
+    {
+      "path": "png/slide-03.png",
+      "bytes": 359938,
+      "sha256": "5b972aaf87ace5a07b18d79a970826d1e4569ccbad5b83e89fe1b2c990e8b2ef"
+    },
+    {
+      "path": "png/slide-04.png",
+      "bytes": 211405,
+      "sha256": "ff6004048a9b4719ffbf7bf3eb608522955aaf974cd11c0621a3f688a6c14ee2"
+    },
+    {
+      "path": "png/slide-05.png",
+      "bytes": 278481,
+      "sha256": "461cb8011c503f8009c358832c9ffe52a6a0718a40389f22b5838af34a3480e8"
+    },
+    {
+      "path": "png/slide-06.png",
+      "bytes": 233623,
+      "sha256": "981b1e8efb80e581b7b0da7df86f8ff5be3506f392dcc70ff0892dac208ec9db"
+    },
+    {
+      "path": "png/slide-07.png",
+      "bytes": 715208,
+      "sha256": "b74b00a4d8f55515a08e70eda2f9feb4c1ac420e3c54c26c2a3808ab2e9bc9e6"
+    },
+    {
+      "path": "png/slide-08.png",
+      "bytes": 319293,
+      "sha256": "006ac93458d28041ce216aa001c891f8406bbbbad0457f8baa020eeed463eaa8"
+    },
+    {
+      "path": "png/slide-09.png",
+      "bytes": 321066,
+      "sha256": "f23ab92529d56a1eb282b362e4ba89febc72ac1d0d9f68fcad8c2746e5c98fbe"
+    },
+    {
+      "path": "png/slide-10.png",
+      "bytes": 604266,
+      "sha256": "3d3db11e7a1681b9e515032818d7732c090c3a71718e7b9da504ef0443516799"
+    },
+    {
+      "path": "png/slide-11.png",
+      "bytes": 350050,
+      "sha256": "27bd7e2a26a7f5fcc96f5e649f5525de9a63c573d1854f3cfc3cbf64c6c7cae2"
+    },
+    {
+      "path": "png/slide-12.png",
+      "bytes": 182655,
+      "sha256": "956b70e1bee797d2560a3a6bfa9b2b09bda2ff6c0ef478babe559b509e323797"
+    },
+    {
+      "path": "png/slide-13.png",
+      "bytes": 185054,
+      "sha256": "48e8ac8ded0458f8373e316cf7d7881fde86d34f0c07e907a5df6935778ad803"
+    },
+    {
+      "path": "png/slide-14.png",
+      "bytes": 317338,
+      "sha256": "90d7dd468f1ef8c6664369bc348be43af87c0d1b10f75c1e4dc6f09356a0f2e5"
+    },
+    {
+      "path": "png/slide-15.png",
+      "bytes": 209021,
+      "sha256": "b50aaf7cb88780a6a6c9d34c08805f73346c4b2377fc2fc96ad88449ebc334ba"
+    },
+    {
+      "path": "png/slide-16.png",
+      "bytes": 146812,
+      "sha256": "1b0571ad3cc39f90f1b7074c03a98904a2ca66ac99ee990e918f5df7dd135881"
+    },
+    {
+      "path": "png/slide-17.png",
+      "bytes": 185072,
+      "sha256": "5dcf7ff87ca991a38e28796a0d3c9ab31d65451e735361b9c5fdea50d4880e29"
+    },
+    {
+      "path": "png/slide-18.png",
+      "bytes": 1322417,
+      "sha256": "ca03421b135a9fe7e4c729c1b281524fcc2299016609a590cd199cbdc9ac7556"
+    },
+    {
+      "path": "repo/docs/reviews/codex_seminar_deck_review_evidence_20261013/v3_3_fix/checks_v33.json",
+      "bytes": 87,
+      "sha256": "54718d5b229224c2ffa25542baf5cdc08fbd192a1f6ccb3f69e633dd7fa51e22"
+    },
+    {
+      "path": "repo/docs/reviews/codex_seminar_deck_review_evidence_20261013/v3_3_fix/cmp_codex_v32.json",
+      "bytes": 6393,
+      "sha256": "22efb6d52b3947507532bb52838c3c47afb1499a41aca7e2cebeeaf375e65891"
+    },
+    {
+      "path": "repo/docs/reviews/codex_seminar_deck_review_evidence_20261013/v3_3_fix/cmp_codex_v32.py",
+      "bytes": 5605,
+      "sha256": "94275c74ef630f3819db3461c8b96a5941230051aa8c1c1a8458b63773d8646e"
+    },
+    {
+      "path": "repo/docs/reviews/codex_seminar_deck_review_evidence_20261013/v3_3_fix/finalchecks_on_v32.json",
+      "bytes": 6097,
+      "sha256": "423ff13ce4bfb3f73a0392534504a1e09fb02e2a45ef2f3b8a0ce4d4bda32a6e"
+    },
+    {
+      "path": "repo/docs/reviews/codex_seminar_deck_review_evidence_20261013/v3_3_fix/package_v9.py",
+      "bytes": 7238,
+      "sha256": "d1b317d4e7027f0783878f89f507624e95836d1b26b285960c789ab5353e255d"
+    },
+    {
+      "path": "repo/docs/reviews/codex_seminar_deck_review_evidence_20261013/v3_3_fix/render_check_v33.json",
+      "bytes": 11485,
+      "sha256": "e58d9f9e5fc264df77d73e849c4a86d340abcf657a5897ebc7e40d7228fca96a"
+    },
+    {
+      "path": "repo/docs/reviews/codex_seminar_deck_review_evidence_20261013/v3_3_fix/render_check_v33.py",
+      "bytes": 5326,
+      "sha256": "234213b446f527286e08b692d25b59bfd05d6fe45a5f13b93629d1b590a74f92"
+    },
+    {
+      "path": "repo/docs/reviews/codex_seminar_deck_review_evidence_20261013/v3_3_fix/testfirst_render_on_v32.json",
+      "bytes": 10521,
+      "sha256": "369a91d5418db60171c716dd2df05dd4edaf3a4724db57f83a6e512b5a7a5a6a"
+    },
+    {
+      "path": "repo/docs/reviews/codex_seminar_deck_review_evidence_20261013/v3_3_fix/testfirst_v33.json",
+      "bytes": 7629,
+      "sha256": "2486c81c2d4db7203d8cd06095d36dcec420c156c6f0ad366bd18112434bec69"
+    },
+    {
+      "path": "repo/docs/reviews/codex_seminar_deck_review_evidence_20261013/v3_3_fix/testfirst_v33.py",
+      "bytes": 2651,
+      "sha256": "d75fa50f44dcbd9bd7e7e78f2b1aeeb4e27b394db2ec01976a6204be3f83b348"
+    },
+    {
+      "path": "repo/docs/seminar_20261013/README.md",
+      "bytes": 30541,
+      "sha256": "83556aeaa23f53d97d85d03c0643d7f2f91a4f7e3321172a0260401e01fe7722"
+    },
+    {
+      "path": "repo/docs/seminar_20261013/build_seminar_v33.py",
+      "bytes": 38061,
+      "sha256": "425bbc53dfe56d3a142f0268e3efd35e555eebfb070188f47eb8be72e5e7ebcc"
+    },
+    {
+      "path": "repo/docs/seminar_20261013/figs_v3/F_p4_v33.csv",
+      "bytes": 721,
+      "sha256": "b3e5b1a5ccdb632c3ec351c9504c5981481ff709d67198ad7647c84513c0bad3"
+    },
+    {
+      "path": "repo/docs/seminar_20261013/figs_v3/F_p4_v33.png",
+      "bytes": 128070,
+      "sha256": "0c95a945734ad3893ecf04d91ed384134d1cbfde083931d623940c1752c36863"
+    },
+    {
+      "path": "repo/docs/seminar_20261013/figs_v3/F_p4_v33.svg",
+      "bytes": 15649,
+      "sha256": "e2cbaad07a9eccb5446f4c4147885c2dcc24c0b9baf409b68e3dc0cdf89a76eb"
+    },
+    {
+      "path": "repo/docs/seminar_20261013/figs_v3/make_seminar_figs_v33.py",
+      "bytes": 6490,
+      "sha256": "f380b6f438b94bba04fd57052140ebbaa2de75e82e9fa95840a868805580717c"
+    },
+    {
+      "path": "repo/docs/seminar_20261013/slide_sources_v33.json",
+      "bytes": 7802,
+      "sha256": "f96ba6bec1eb6bf976274e150f88e8c9f4d1a28f192ee258d2385ff788942f63"
+    },
+    {
+      "path": "repo/docs/seminar_20261013/slide_text_v33.md",
+      "bytes": 49239,
+      "sha256": "a7294c7d3d38c02f67aab560e4a0fe4661a9f892b078e1c4f387ad0b98d9131e"
+    },
+    {
+      "path": "source_eq/eq.pptx",
+      "bytes": 4683702,
+      "sha256": "8e76819a9f89516d75c7bd40c529cd65ce055e31a2c8b777d1b8e8edfc669223"
+    },
+    {
+      "path": "v32/seminar_20261013_v32.pptx",
+      "bytes": 9077509,
+      "sha256": "1b6988f3e55dc6bcf7e81d0ba4ec35b11ed2a0790a1357ba6e6185d22b08f28d"
+    }
+  ],
+  "standalone_matches": {
+    "seminar_20261013_v33.pdf": {
+      "sha256": "706d6a1d062936c16aff15af4500cb7cff9ef8e5c19866d4c48ccaaeea64999e",
+      "same_as_package": true
+    },
+    "seminar_20261013_v33.pptx": {
+      "sha256": "e787298ef657d516f43c8255e80cf1a61bbc52ffe94c6fbfbea57faca14dbb8c",
+      "same_as_package": true
+    }
+  },
+  "manifest_checks": [
+    {
+      "path": "PIN.txt",
+      "exists": true,
+      "match": true
+    },
+    {
+      "path": "codex_seminar_deck_v3_3_closure_request_20261015.md",
+      "exists": true,
+      "match": true
+    },
+    {
+      "path": "deck/seminar_20261013_v33.pdf",
+      "exists": true,
+      "match": true
+    },
+    {
+      "path": "deck/seminar_20261013_v33.pptx",
+      "exists": true,
+      "match": true
+    },
+    {
+      "path": "png/slide-01.png",
+      "exists": true,
+      "match": true
+    },
+    {
+      "path": "png/slide-02.png",
+      "exists": true,
+      "match": true
+    },
+    {
+      "path": "png/slide-03.png",
+      "exists": true,
+      "match": true
+    },
+    {
+      "path": "png/slide-04.png",
+      "exists": true,
+      "match": true
+    },
+    {
+      "path": "png/slide-05.png",
+      "exists": true,
+      "match": true
+    },
+    {
+      "path": "png/slide-06.png",
+      "exists": true,
+      "match": true
+    },
+    {
+      "path": "png/slide-07.png",
+      "exists": true,
+      "match": true
+    },
+    {
+      "path": "png/slide-08.png",
+      "exists": true,
+      "match": true
+    },
+    {
+      "path": "png/slide-09.png",
+      "exists": true,
+      "match": true
+    },
+    {
+      "path": "png/slide-10.png",
+      "exists": true,
+      "match": true
+    },
+    {
+      "path": "png/slide-11.png",
+      "exists": true,
+      "match": true
+    },
+    {
+      "path": "png/slide-12.png",
+      "exists": true,
+      "match": true
+    },
+    {
+      "path": "png/slide-13.png",
+      "exists": true,
+      "match": true
+    },
+    {
+      "path": "png/slide-14.png",
+      "exists": true,
+      "match": true
+    },
+    {
+      "path": "png/slide-15.png",
+      "exists": true,
+      "match": true
+    },
+    {
+      "path": "png/slide-16.png",
+      "exists": true,
+      "match": true
+    },
+    {
+      "path": "png/slide-17.png",
+      "exists": true,
+      "match": true
+    },
+    {
+      "path": "png/slide-18.png",
+      "exists": true,
+      "match": true
+    },
+    {
+      "path": "repo/docs/reviews/codex_seminar_deck_review_evidence_20261013/v3_3_fix/checks_v33.json",
+      "exists": true,
+      "match": true
+    },
+    {
+      "path": "repo/docs/reviews/codex_seminar_deck_review_evidence_20261013/v3_3_fix/cmp_codex_v32.json",
+      "exists": true,
+      "match": true
+    },
+    {
+      "path": "repo/docs/reviews/codex_seminar_deck_review_evidence_20261013/v3_3_fix/cmp_codex_v32.py",
+      "exists": true,
+      "match": true
+    },
+    {
+      "path": "repo/docs/reviews/codex_seminar_deck_review_evidence_20261013/v3_3_fix/finalchecks_on_v32.json",
+      "exists": true,
+      "match": true
+    },
+    {
+      "path": "repo/docs/reviews/codex_seminar_deck_review_evidence_20261013/v3_3_fix/package_v9.py",
+      "exists": true,
+      "match": true
+    },
+    {
+      "path": "repo/docs/reviews/codex_seminar_deck_review_evidence_20261013/v3_3_fix/render_check_v33.json",
+      "exists": true,
+      "match": true
+    },
+    {
+      "path": "repo/docs/reviews/codex_seminar_deck_review_evidence_20261013/v3_3_fix/render_check_v33.py",
+      "exists": true,
+      "match": true
+    },
+    {
+      "path": "repo/docs/reviews/codex_seminar_deck_review_evidence_20261013/v3_3_fix/testfirst_render_on_v32.json",
+      "exists": true,
+      "match": true
+    },
+    {
+      "path": "repo/docs/reviews/codex_seminar_deck_review_evidence_20261013/v3_3_fix/testfirst_v33.json",
+      "exists": true,
+      "match": true
+    },
+    {
+      "path": "repo/docs/reviews/codex_seminar_deck_review_evidence_20261013/v3_3_fix/testfirst_v33.py",
+      "exists": true,
+      "match": true
+    },
+    {
+      "path": "repo/docs/seminar_20261013/README.md",
+      "exists": true,
+      "match": true
+    },
+    {
+      "path": "repo/docs/seminar_20261013/build_seminar_v33.py",
+      "exists": true,
+      "match": true
+    },
+    {
+      "path": "repo/docs/seminar_20261013/figs_v3/F_p4_v33.csv",
+      "exists": true,
+      "match": true
+    },
+    {
+      "path": "repo/docs/seminar_20261013/figs_v3/F_p4_v33.png",
+      "exists": true,
+      "match": true
+    },
+    {
+      "path": "repo/docs/seminar_20261013/figs_v3/F_p4_v33.svg",
+      "exists": true,
+      "match": true
+    },
+    {
+      "path": "repo/docs/seminar_20261013/figs_v3/make_seminar_figs_v33.py",
+      "exists": true,
+      "match": true
+    },
+    {
+      "path": "repo/docs/seminar_20261013/slide_sources_v33.json",
+      "exists": true,
+      "match": true
+    },
+    {
+      "path": "repo/docs/seminar_20261013/slide_text_v33.md",
+      "exists": true,
+      "match": true
+    },
+    {
+      "path": "source_eq/eq.pptx",
+      "exists": true,
+      "match": true
+    },
+    {
+      "path": "v32/seminar_20261013_v32.pptx",
+      "exists": true,
+      "match": true
+    }
+  ],
+  "all_manifest_matches": true,
+  "manifest_exact_members": true,
+  "pin_text": "review pin = the main-branch commit that carries docs/reviews/codex_seminar_deck_v3_3_closure_request_20261015.md\n             (recorded by the main session after cherry-pick; agent-worktree commits are not cited — SELF-116)\nbase       = db04a2a7a (origin/claude/stoic-knuth-NObVQ when v3.3 was built; contains the v3.2 re-check import and fix plan 5393ae855)\nprevious   = 90ca2c8cd (v3.2 review pin)\n"
+}
