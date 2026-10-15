@@ -15,6 +15,7 @@ site-preference backup p18 (old p12 / p17 files are removed by the script). p06 
 | 7 | Stage-1 coverage | `p07_stage1_coverage_by_ledger.csv` · `p07_structures_by_anion_family.csv` | not drawn on the slim deck since 2026-10-14 (the slide shows the five-step pipeline box; the full deck keeps the step table) — kept for questions and Origin (As2S3 / AlI3 flags) |
 | 7 | Stage-1 composite score | `p07_stage1_composite_score_91.csv` | horizontal bars, top 10 of 91 (slim deck, beside the pipeline box) — the August method re-run on 10-14 with As2S3 and AlI3 added; exploratory and flawed (the audit, slide 8, says why); never cite a rank as a result |
 | 8 | Configuration sampling | `p08_configurations_per_site_pair_long.csv` · `_matrix.csv` | heat map: cation site × anion site → configurations (main batch 3,615) |
+| 8 | Short anneal (slim slide 9, 10-15) | `p08_anneal_energy_change.csv` | histogram: ΔE per structure (meV per supercell · 693 · bin 50 · −1250 … 0) — replaces the August Step-5 histogram (681) |
 | 9 | DFT EOS | `p09_eos_bm3_fit_curves.csv` | lines: E − E0 vs V per f.u. (fit curves; raw points not in repo) |
 | 10 | Stability window | `p10_stability_window_host.csv` · `p10_stability_window_host_segments.csv` | bar segments on a voltage axis (host Li6PS5Cl) |
 | 13 | MD status | `p13_md_campaign_progress.csv` · `p13_md_campaign_runs.csv` | progress bars; run roster (status, wall-clock GPU-h) |

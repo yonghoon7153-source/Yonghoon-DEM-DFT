@@ -317,6 +317,39 @@ def p08():
                  ['cation_site'] + anions, matrix)
 
 
+def anneal_rows(rows):
+    """Main-batch structures that finished the short anneal → [(precursor, configuration, ΔE meV per supercell)].
+    The dual-concentration set is a different experiment and stays out; a finished row without ΔE is an error, not a
+    zero (an empty cell drawn as 0 would read as 'the anneal changed nothing')."""
+    out = []
+    for r in rows:
+        if r['family'] not in MAIN_FAMILIES or r['anneal_converged'] != 'True':
+            continue
+        if not str(r.get('anneal_delta_E_meV', '')).strip():
+            raise ValueError(f"{r['name']}: anneal_converged but no anneal_delta_E_meV")
+        out.append((base(r['dopant']), r['name'], float(r['anneal_delta_E_meV'])))
+    return out
+
+
+def p08b():
+    """Slide 9 (slim deck, user 10-15 'recommendation'): the short anneal's energy change, one row per annealed
+    structure. Replaces the August Step-5 histogram (n 681, before the August re-run) — 693 is the count on slide 7."""
+    a = anneal_rows(stage1_rows())
+    dE = sorted(x for *_, x in a)
+    n, neg = len(dE), sum(x < 0 for x in dE)
+    med = (dE[(n - 1) // 2] + dE[n // 2]) / 2
+    write('p08_anneal_energy_change.csv',
+          ['Page 9 (slim deck) — energy change from the short anneal (500 K, 50 ps, then relaxed again); one row per structure.',
+           f'Source: cascade_all_302_2026_08_25.csv · main batch ({" + ".join(MAIN_FAMILIES)}) · anneal_converged True → '
+           f'n = {n} structures, {len({p for p, *_ in a})} precursors.',
+           f'Lower after the anneal: {neg} of {n} · median {med:.1f} meV per supercell (4 formula units) — NOT per atom.',
+           'UMA (MLIP) energies of the same structure before and after the anneal: no reference term enters.',
+           "Exploratory (Stage 1). The August deck showed n 681 (before the August re-run) and 'the top ten did not change' — withdrawn.",
+           'Origin: Plot > Statistical > Histogram, Bin Size 50, Begin -1250, End 0 (do not pre-bin).'],
+          ['precursor', 'configuration', 'anneal_delta_E_meV_per_supercell'], [[p, c, f'{x:.3f}'] for p, c, x in a])
+    return 'p08_anneal_energy_change.csv'
+
+
 def p09():
     e = {r['id']: r for r in json.load(open(os.path.join(P, 'eos.json')))['results']}
     sysd = [('Li6PS5Cl', e['comp1_v3'], 4, 960.0, 1085.0), ('Li5.4PS4.4Cl1.6', e['modelc_v3'], 5, 1140.0, 1285.0)]
@@ -586,6 +619,19 @@ def figures():
     ax.tick_params(axis='y', length=0)
     save(fig, 'fig_p07_stage1_score_top10.png')
 
+    # p08b: the short anneal's energy change (slide 9, under the anneal schematic) — drawn at its slot size (3.1 in) so a
+    # 9 pt label is 9 pt on the slide; plain grey bars, 50 meV bins like the August Origin recipe
+    an = rows_of(os.path.join(OUT, 'p08_anneal_energy_change.csv'))[1:]
+    dE = [float(r[2]) for r in an]
+    fig, ax = plt.subplots(figsize=(3.1, 1.75))
+    ax.hist(dE, bins=[-1250 + 50 * k for k in range(26)], color=GREY, edgecolor='black', linewidth=0.8)
+    ax.set_xlim(-1250, 0)
+    ax.set_xticks([-1200, -900, -600, -300, 0])
+    ax.set_xlabel('energy change (meV per supercell)', fontsize=9.5)
+    ax.set_ylabel('structures', fontsize=9.5)
+    plain_axes(ax, 9)
+    save(fig, 'fig_p08_anneal_energy_hist.png')
+
     # p10: host stability window on a voltage axis
     seg = rows_of(os.path.join(OUT, 'p10_stability_window_host_segments.csv'))[1:]
     lo, hi = float(seg[1][1]), float(seg[1][2])
@@ -651,6 +697,7 @@ site-preference backup p18 (old p12 / p17 files are removed by the script). p06 
 | 7 | Stage-1 coverage | `p07_stage1_coverage_by_ledger.csv` · `p07_structures_by_anion_family.csv` | not drawn on the slim deck since 2026-10-14 (the slide shows the five-step pipeline box; the full deck keeps the step table) — kept for questions and Origin (As2S3 / AlI3 flags) |
 | 7 | Stage-1 composite score | `p07_stage1_composite_score_91.csv` | horizontal bars, top 10 of 91 (slim deck, beside the pipeline box) — the August method re-run on 10-14 with As2S3 and AlI3 added; exploratory and flawed (the audit, slide 8, says why); never cite a rank as a result |
 | 8 | Configuration sampling | `p08_configurations_per_site_pair_long.csv` · `_matrix.csv` | heat map: cation site × anion site → configurations (main batch 3,615) |
+| 8 | Short anneal (slim slide 9, 10-15) | `p08_anneal_energy_change.csv` | histogram: ΔE per structure (meV per supercell · 693 · bin 50 · −1250 … 0) — replaces the August Step-5 histogram (681) |
 | 9 | DFT EOS | `p09_eos_bm3_fit_curves.csv` | lines: E − E0 vs V per f.u. (fit curves; raw points not in repo) |
 | 10 | Stability window | `p10_stability_window_host.csv` · `p10_stability_window_host_segments.csv` | bar segments on a voltage axis (host Li6PS5Cl) |
 | 13 | MD status | `p13_md_campaign_progress.csv` · `p13_md_campaign_runs.csv` | progress bars; run roster (status, wall-clock GPU-h) |
@@ -673,7 +720,7 @@ def main():
     for old in ('p12_md_campaign_runs.csv', 'p12_md_campaign_progress.csv', 'p17_site_preference_vs_ionic_radius.csv'):
         if os.path.exists(os.path.join(OUT, old)):      # renamed when the audit slide became page 11
             os.remove(os.path.join(OUT, old))
-    made = [p06(), p07(), p07b(), p07c(), p08(), p09(), p10(), p13(), p18()]
+    made = [p06(), p07(), p07b(), p07c(), p08(), p08b(), p09(), p10(), p13(), p18()]
     with open(os.path.join(OUT, 'README.md'), 'w', encoding='utf-8') as f:
         f.write(README)
     print('wrote', len(os.listdir(OUT)), 'files to', os.path.relpath(OUT, ROOT))
@@ -735,6 +782,19 @@ def selftest():
     else:
         raise AssertionError('assert_subset accepted an unknown species')
     assert_subset('test', {'Al2O3'}, {'Al2O3', 'As2S3'}); ok += 1
+    # anneal rows: main batch only, finished only; a finished row without ΔE is refused (not drawn as 0)
+    fam = MAIN_FAMILIES[0]
+    rr = [{'family': fam, 'anneal_converged': 'True', 'anneal_delta_E_meV': '-800.5', 'dopant': 'Al2O3', 'name': 'a'},
+          {'family': 'dualx_v23', 'anneal_converged': 'True', 'anneal_delta_E_meV': '-700', 'dopant': 'Al2O3', 'name': 'b'},
+          {'family': fam, 'anneal_converged': '', 'anneal_delta_E_meV': '', 'dopant': 'Al2O3', 'name': 'c'}]
+    assert anneal_rows(rr) == [('Al2O3', 'a', -800.5)]; ok += 1
+    try:
+        anneal_rows(rr + [{'family': fam, 'anneal_converged': 'True', 'anneal_delta_E_meV': ' ', 'dopant': 'X', 'name': 'd'}])
+    except ValueError:
+        ok += 1
+    else:
+        raise AssertionError('anneal_rows drew a finished row without ΔE')
+    assert len(anneal_rows(stage1_rows())) == 693; ok += 1        # the count on slide 7 (pipeline box)
     # roster grid: positive, then an unknown status and a duplicate cell must be refused
     good = [['Al2O3-derived', 'A', '1', 'done', '5.9'], ['Al2S3-derived', 'A', '1', 'running (restarted)', '']]
     assert roster_matrix(good) == {('Al₂O₃ · seed 1', 'A'): 'done', ('Al₂S₃ · seed 1', 'A'): 'running'}; ok += 1

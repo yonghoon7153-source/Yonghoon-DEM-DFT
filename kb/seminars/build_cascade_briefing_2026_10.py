@@ -21,6 +21,7 @@ from lxml import etree
 
 SRC, OUT, SKILL, EXTRA = sys.argv[1:5]
 LEAN = '--lean' in sys.argv[5:]   # minimal-text variant (same slides, same page numbers)
+ALT8 = '--alt8' in sys.argv[5:]   # review copy: the previous slim slide 8 (two lists + 'Found on Oct 14') right after the red-block one
 WORK = os.path.join(os.path.dirname(os.path.abspath(OUT)), 'un_build_lean' if LEAN else 'un_build')
 NS = {'a': 'http://schemas.openxmlformats.org/drawingml/2006/main',
       'r': 'http://schemas.openxmlformats.org/officeDocument/2006/relationships',
@@ -368,7 +369,7 @@ def heading(i, text, y=0.98, h=0.48):
 shutil.rmtree(WORK, ignore_errors=True)
 zipfile.ZipFile(SRC).extractall(WORK)
 
-NEW_KEYS = ['prev', 'overview', 'workflow', 'stability', 'audit', 'md_setup', 'md_status', 'next', 'summary', 'refs']
+NEW_KEYS = ['prev', 'overview', 'workflow', 'stability', 'audit', 'audit_alt', 'md_setup', 'md_status', 'next', 'summary', 'refs']
 new = {}
 for k in NEW_KEYS:
     out = sh('python3', os.path.join(SKILL, 'scripts', 'add_slide.py'), WORK, 'slide3.xml')
@@ -399,7 +400,8 @@ def slide_title():
     save(t, 'slide1.xml')
 
 
-def slide_sampling(note, color=BLUE, hx=0.5, hy=2.6, hw=4.6, ax=5.55, ay=2.6, aw=3.6, cap_h=0.32):
+def slide_sampling(note, color=BLUE, hx=0.5, hy=2.6, hw=4.6, ax=5.55, ay=2.6, aw=3.6, cap_h=0.32, hist=None,
+                   note_y=6.2, note_h=0.6, note_center=False):
     """Orig slide 11: site-pair heat map + anneal schematic; `note` is the blue line at the bottom (None: no line).
     The geometry arguments let the lean deck enlarge the heat map (CW P1); the defaults are the full deck's layout.
     The anneal ran on selected structures only (693 of 3,675 — `anneal_converged` in cascade_all_302), not on each."""
@@ -423,12 +425,17 @@ def slide_sampling(note, color=BLUE, hx=0.5, hy=2.6, hw=4.6, ax=5.55, ay=2.6, aw
     ah = aw * 1197 / 1623
     add(t, pic(ids(), 'Site-pair heatmap', emf_rid, hx, hy, hw, hh, 'Configurations per cation-anion site pair'),
         tb(ids(), 'Caption left', hx, hy + 0.02 + hh, hw, cap_h,
-           P('< configurations per cation–anion site pair: main batch 3,615 (+60 in the August re-run) >', 'p', 1100, 100, 'ctr')),
+           P('< configurations per cation–anion site pair (main batch 3,615; +60 in the August re-run) >', 'p', 1100, 100, 'ctr')),
         pic(ids(), 'Anneal schematic', rid23, ax, ay, aw, ah, 'What a short anneal does'),
         tb(ids(), 'Caption right', ax - 0.1, ay + 0.02 + ah, aw + 0.3, 0.32,
            P('< what the short anneal does >', 'p', 1150, 100, 'ctr')))
+    if hist:   # (png, x, y, w, caption) — the anneal's energy change from the ledger (693 = slide 7's count, not August's 681)
+        fname, fx, fy, fw, fcap = hist
+        fh = figure(t, 'slide11.xml', fname, fx, fy, fw, 'Energy change from the short anneal')
+        add(t, tb(ids(), 'Caption hist', fx - 0.15, fy + 0.02 + fh, fw + 0.3, 0.32, P(fcap, 'p', 1100, 100, 'ctr')))
     if note:
-        add(t, tb(ids(), 'Bottom note', 0.55, 6.2, 8.9, 0.6, P(note, 'p', 1250, 105, color=color)))
+        add(t, line_under(ids(), note, note_y, h=note_h, sz=1350) if note_center else
+            tb(ids(), 'Bottom note', 0.55, note_y, 8.9, note_h, P(note, 'p', 1250, 105, color=color)))
     save(t, 'slide11.xml')
 
 
@@ -503,6 +510,27 @@ def slide_backups():
     save(t, 'slide15.xml')
 
 
+AUG_BACKUPS = [   # 2026-10-15 (user: 'can't figures like these show how much we did?' → recommendation: keep them as backup)
+    ('slide12.xml', 'The volume reference was not the DFT equilibrium (slide 8).'),
+    ('slide13.xml', 'Not a top three; the energy axis lacks element references (slide 8).'),
+    ('slide14.xml', "'The top ten did not change' is withdrawn; current counts are on slide 9."),
+    ('slide17.xml', 'The window definition changed; current windows are on slide 11.'),
+]
+
+
+def slide_august_backups():
+    """The 08-18 deck's Step 3 · 4 · 5 · 8 exactly as they were shown, at the very end as backup (both decks, so the
+    page numbers stay the same). Nothing on them is corrected in place — a red banner says 'superseded' and what replaced
+    it (defense §1). Native slides, not pictures, so the numbers stay inspectable if a question comes."""
+    for name, why in AUG_BACKUPS:
+        t = load(name)
+        header(t, 'Backup')
+        add(t, tb(ids(), 'Superseded banner', 4.9, 0.28, 4.65, 0.66,
+                  P('[[B:August 18 version, superseded]]', 'p', 1250, 100, 'r', BUL) + P(why, 'p', 1050, 100, 'r', BUL)))
+        save(t, name)
+    return [n for n, _ in AUG_BACKUPS]
+
+
 def pack(order):
     """Reorder <p:sldIdLst>, prune image rels, clean orphans, zip."""
     pres_p = os.path.join(WORK, 'ppt', 'presentation.xml')
@@ -542,6 +570,7 @@ def pack(order):
 # dashed red numbered box + down arrow image of its slide 4 (the user's standard arrow). No cards, badges,
 # icons or chevrons. Literature crops carry a role tag above them and a credit below (CW, 10-13).
 LEAN_FIGS = ['fig_p07_stage1_score_top10.png',   # 10-14: the Stage-1 score (August method, 91) beside the pipeline box
+             'fig_p08_anneal_energy_hist.png',   # 10-15: the anneal's energy change (693) under the anneal schematic
              'fig_p10_host_window.png',   # fig_p07_stage1_coverage.png left the slides 10-14 (pipeline box instead)
              'fig_p13_run_roster.png', 'lit_schwietert2021_fig1.png', 'lit_he2018_fig3.png',
              'lit_phuthi2026_fig1a.png']
@@ -848,7 +877,11 @@ def build_lean():
 
     # ---- 8 configuration sampling (orig slide 11): heat map larger (CW P1); the descriptor-spread line is said — p11
     #      comes back to it
-    slide_sampling(None, hx=0.55, hy=2.7, hw=5.0, ax=6.0, ay=2.95, aw=3.1, cap_h=0.5)
+    #      2026-10-15 (user: 'recommendation' — the August Step-5 histogram, redrawn from the ledger): the schematic shrinks and
+    #      the anneal's energy change sits under it; the August clause 'the top ten did not change' is not carried over.
+    slide_sampling('All 693 annealed structures found a lower arrangement (median [[b:0.81 eV]] per supercell).',
+                   hx=0.55, hy=2.5, hw=4.6, ax=6.3, ay=2.28, aw=2.2, cap_h=0.5, note_y=6.36, note_h=0.4, note_center=True,
+                   hist=('fig_p08_anneal_energy_hist.png', 5.7, 4.26, 3.1, '< energy change from the short anneal >'))
 
     # ---- 9 DFT reference (orig slide 16)
     slide_dft_reference()
@@ -877,32 +910,50 @@ def build_lean():
 
     # ---- 11 September audit: two independent lists (CW P0-1 — one table with shared row numbers read as
     #      finding → fix pairs, and they are not pairs: e.g. finding 4 is answered by decision 1)
-    name, t = fresh('audit', 'Results & Discussion')
-    lean_body(t, 'September audit of Stage 1', ['Stage 1 was re-checked against the ledger.'], h=0.95)
-    #      2026-10-14 (user 'yes' to putting the energy-reference issue on screen): it was found on Oct 14 while
-    #      rescoring, not by the September audit, so it gets its own block under the decisions — not a fifth finding.
-    #      Same day the slide's 'label: content' colons were rewritten (house rule 10-13): findings are sentences,
-    #      decisions are noun phrases. No demo numbers here (the energy-reference evidence is DEMO · not citable).
-    found = ['Concentration labels did not change the dopant level.',
-             'The volume filter used a host volume ~40 % above the DFT value.',
-             'Elastic moduli varied as much within a precursor as between precursors.',
-             'Several descriptors were merged without a primary objective.']
-    fixed = ['One primary readout, D[[_:rel]] = D*(design) / D*(host)',
-             'A roster of 237 designs, one composition each',
-             'Fixed parent sites and full charge balance',
-             'One median-energy configuration per design']
-    for x, w, title, items, h in ((0.55, 4.25, 'Audit findings', found, 2.75), (5.05, 4.4, 'Decisions recorded on Sep 12', fixed, 1.7)):
-        add(t, tb(ids(), title, x, 2.2, w, 0.36, P(title, 'p', 1400, 100, color=INK, bold=True)),
-            box(ids(), f'{title} rule', x + 0.05, 2.58, w - 0.1, 0.014, fill='9CA3AF', geom='rect'),
-            tb(ids(), f'{title} items', x, 2.66, w, h, ''.join(P(s, 'cb', 1400, 110, spcbef=700) for s in items)))
-    oct14 = ['The energy term lacked element references.',
-             'Oxides ranked high partly on bond strength.']
-    add(t, tb(ids(), 'Oct 14 title', 5.05, 4.22, 4.4, 0.36, P('Found on Oct 14 while rescoring', 'p', 1400, 100, color=INK, bold=True)),
-        box(ids(), 'Oct 14 rule', 5.1, 4.6, 4.3, 0.014, fill='9CA3AF', geom='rect'),
-        tb(ids(), 'Oct 14 items', 5.05, 4.68, 4.4, 0.85, ''.join(P(s, 'cb', 1400, 110, spcbef=700) for s in oct14)))
-    add(t, line_under(ids(), '[[r:Ranking margin δ proposed, not yet set]]', 5.55, h=0.38, sz=1400),
-        line_under(ids(), 'The run scope is set after the pilot.', 6.03, h=0.4, sz=1350))
-    save(t, name)
+    #      2026-10-15 (user: 'the simple red block' — the slim slide had lost the message the full deck carries in its red
+    #      verdict box): the default is now the red-block version — same two lists, δ moves into the decisions (red), one
+    #      red verdict box 'exploratory · no ranking', and the 'Found on Oct 14' block goes to the script (said, not shown).
+    #      --alt8 also builds the previous version (with the Oct 14 block) right after it, for the user to choose.
+    def audit_slide(key, variant):
+        name, t = fresh(key, 'Results & Discussion')
+        lean_body(t, 'September audit of Stage 1', ['Stage 1 was re-checked against the ledger.'], h=0.95)
+        #  2026-10-14 (user 'yes' to putting the energy-reference issue on screen): it was found on Oct 14 while
+        #  rescoring, not by the September audit, so it gets its own block under the decisions — not a fifth finding.
+        #  Same day the slide's 'label: content' colons were rewritten (house rule 10-13): findings are sentences,
+        #  decisions are noun phrases. No demo numbers here (the energy-reference evidence is DEMO · not citable).
+        found = ['Concentration labels did not change the dopant level.',
+                 'The volume filter used a host volume ~40 % above the DFT value.',
+                 'Elastic moduli varied as much within a precursor as between precursors.',
+                 'Several descriptors were merged without a primary objective.']
+        fixed = ['One primary readout, D[[_:rel]] = D*(design) / D*(host)',
+                 'A roster of 237 designs, one composition each',
+                 'Fixed parent sites and full charge balance',
+                 'One median-energy configuration per design']
+        if variant == 'red':
+            fixed = fixed + ['[[r:A ranking margin δ, proposed but not yet set]]']
+        for x, w, title, items, h in ((0.55, 4.25, 'Audit findings', found, 2.75),
+                                      (5.05, 4.4, 'Decisions recorded on Sep 12', fixed, 2.75 if variant == 'red' else 1.7)):
+            add(t, tb(ids(), title, x, 2.2, w, 0.36, P(title, 'p', 1400, 100, color=INK, bold=True)),
+                box(ids(), f'{title} rule', x + 0.05, 2.58, w - 0.1, 0.014, fill='9CA3AF', geom='rect'),
+                tb(ids(), f'{title} items', x, 2.66, w, h, ''.join(P(s_, 'cb', 1400, 110, spcbef=700) for s_ in items)))
+        if variant == 'red':
+            add(t, box(ids(), 'Audit verdict', 0.55, 5.5, 8.9, 0.52, fill='FDF1F1', anchor='ctr',
+                       paras=P('Stage-1 outputs are kept as [[B:exploratory data]]; no dopant ranking has been approved.',
+                               'p', 1450, 105, 'ctr', BUL)),
+                line_under(ids(), 'The run scope is set after the pilot.', 6.1, h=0.4, sz=1350))
+        else:
+            oct14 = ['The energy term lacked element references.',
+                     'Oxides ranked high partly on bond strength.']
+            add(t, tb(ids(), 'Oct 14 title', 5.05, 4.22, 4.4, 0.36, P('Found on Oct 14 while rescoring', 'p', 1400, 100, color=INK, bold=True)),
+                box(ids(), 'Oct 14 rule', 5.1, 4.6, 4.3, 0.014, fill='9CA3AF', geom='rect'),
+                tb(ids(), 'Oct 14 items', 5.05, 4.68, 4.4, 0.85, ''.join(P(s_, 'cb', 1400, 110, spcbef=700) for s_ in oct14)))
+            add(t, line_under(ids(), '[[r:Ranking margin δ proposed, not yet set]]', 5.55, h=0.38, sz=1400),
+                line_under(ids(), 'The run scope is set after the pilot.', 6.03, h=0.4, sz=1350))
+        save(t, name)
+
+    audit_slide('audit', 'red')
+    if ALT8:
+        audit_slide('audit_alt', 'current')
 
     # ---- 12 Stage 2 pilot design: the paper's figure says why repeats and a fixed window matter; our numbers are
     #      on a separate line (CW P0-2 — 'Hence …' read as if 10 × 2 and 2–50 ps came from that figure)
@@ -963,9 +1014,10 @@ def build_lean():
 
     slide_refs()
     slide_backups()
-    return ['slide1.xml', new['prev'], new['overview'], 'slide3.xml', 'slide7.xml', 'slide8.xml', new['workflow'],
-            new['audit'], 'slide11.xml', 'slide16.xml', new['stability'], new['md_setup'], new['md_status'], new['next'],
-            new['summary'], 'slide19.xml', new['refs'], 'slide10.xml', 'slide15.xml']
+    return (['slide1.xml', new['prev'], new['overview'], 'slide3.xml', 'slide7.xml', 'slide8.xml', new['workflow'],
+             new['audit']] + ([new['audit_alt']] if ALT8 else []) +
+            ['slide11.xml', 'slide16.xml', new['stability'], new['md_setup'], new['md_status'], new['next'],
+             new['summary'], 'slide19.xml', new['refs'], 'slide10.xml', 'slide15.xml'] + slide_august_backups())
 
 
 if LEAN:
@@ -1290,5 +1342,5 @@ slide_backups()
 # ---- order, prune, pack
 order = ['slide1.xml', new['prev'], new['overview'], 'slide3.xml', 'slide7.xml', 'slide8.xml', new['workflow'],
          new['audit'], 'slide11.xml', 'slide16.xml', new['stability'], new['md_setup'], new['md_status'], new['next'],
-         new['summary'], 'slide19.xml', new['refs'], 'slide10.xml', 'slide15.xml']
+         new['summary'], 'slide19.xml', new['refs'], 'slide10.xml', 'slide15.xml'] + slide_august_backups()
 pack(order)
