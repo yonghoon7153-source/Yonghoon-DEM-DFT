@@ -45,7 +45,12 @@
 ⚠ `git cat-file -e` 나 `rev-parse --verify` 로 바꾸지 말 것 — 그것들은 **객체 존재**만
   보므로 리베이스로 버려진 커밋이 로컬에 남아 있으면 통과한다 (원장 실사고:
   `findings.json` 의 `_commit_exists` 항목이 정확히 그 구멍으로 `c0ac0ad8` 8건을
-  초록으로 만들었다).  기준은 `rev-list --all` **도달 가능성**이다.
+  초록으로 만들었다).  기준은 **원격 추적 ref (`refs/remotes/*`) + HEAD 의 도달 가능성**
+  (`rev-list --remotes HEAD`) 이다.
+⚠ `rev-list --all` 로 되돌리지 말 것 (2026-10-15 · 원장 `SELF-116`) — 그것은 **로컬 가지**도
+  센다.  에이전트 작업 트리 가지가 붙잡은 커밋 (cherry-pick 뒤 본 가지 · 원격 어디에도 없는
+  번호) 을 인용한 문서가 그 구멍으로 통과했다.  HEAD 의 조상은 센다 (아직 push 안 한 이 가지의
+  커밋) · CI (`fetch-depth: 0`) 는 원격 가지가 전부 `refs/remotes/origin/*` 로 들어온다.
 
 ═══ 부재 면제는 **명시 등재**로만 ═══
 
@@ -156,14 +161,16 @@ def _repo_root(start: str | None = None) -> str:
 
 
 def known_shas(root: str) -> set:
-    """`rev-list --all` 전체.  ⚠ 얕은 클론이면 비어 보이므로 그것도 보고한다."""
-    r = subprocess.run(['git', '-C', root, 'rev-list', '--all'],
+    """도달 가능한 커밋 = 원격 추적 ref (`refs/remotes/*`) 전부 + HEAD 의 조상 (`rev-list --remotes HEAD`).
+    ⚠ 로컬 가지는 넣지 않는다 (2026-10-15 · 원장 `SELF-116`) — 에이전트 작업 트리 가지가 붙잡은 커밋 (cherry-pick 뒤 원격에 없는 번호) 을
+      인용한 문서가 `rev-list --all` 로 거짓 통과했다.  ⚠ 얕은 클론이면 비어 보이므로 그것도 보고한다 (`is_shallow`)."""
+    r = subprocess.run(['git', '-C', root, 'rev-list', '--remotes', 'HEAD'],
                        capture_output=True, text=True)
     return set(r.stdout.split())
 
 
 def is_shallow(root: str) -> bool:
-    """얕은 클론인가.  ⚠ `rev-list --all` 은 얕아도 **뭔가**를 돌려주므로 그것만으로는
+    """얕은 클론인가.  ⚠ `rev-list` (지금 `--remotes HEAD`) 는 얕아도 **뭔가**를 돌려주므로 그것만으로는
     못 잡는다 (R19 P1-03).  얕으면 도달 가능성 판정 자체가 무의미하다."""
     r = subprocess.run(['git', '-C', root, 'rev-parse', '--is-shallow-repository'],
                        capture_output=True, text=True)
@@ -289,7 +296,7 @@ def run(root: str, verbose: bool = True):
         print('⛔ git 히스토리를 못 읽었다 — 얕은 클론이면 SHA 검사가 무의미하다 '
               '(`git fetch --unshallow`)')
         return 1, {}
-    #  ★ 얕은 클론은 `rev-list --all` 이 **비어 보이지 않는다** — 잘린 조상이 전부
+    #  ★ 얕은 클론은 `rev-list` 가 **비어 보이지 않는다** — 잘린 조상이 전부
     #    "없는 커밋" 으로 둔갑해 거짓 경보를 낸다.  숫자가 있다고 안심하면 안 된다.
     if is_shallow(root):
         print('⛔ 얕은 클론이다 — 도달 가능성 판정이 성립하지 않는다 '
@@ -575,6 +582,45 @@ def _selftest():
     chk('★⑦ 문서 폴더에도 없으면 여전히 잡는다', g['missing'] == ['baseline/zzz.md'], str(g))
     g = scan_text('- `sib.md` 참조', root, shas, shorts, rel='docs/ev/SOURCES.md')
     chk('⑦ 맨 파일명도 문서 옆에 있으면 통과 (보류 아님)', g['missing'] == [] and g['unsure'] == [], str(g))
+
+    #  ══ 2026-10-15 SELF-116 — 도달 기준 = 원격 추적 ref (`refs/remotes/*`) + HEAD (로컬 가지 제외) ══════════
+    #  실사고: 에이전트 작업 트리 가지 (로컬) 가 커밋을 붙잡고 있어 원격에 없는 커밋을 인용한 문서가 `rev-list --all` 로 통과했다
+    #  (cherry-pick 뒤 그 번호는 본 가지 · 원격 어디에도 없다).  진짜 git 저장소 픽스처로 확인한다 (이 리포를 건드리지 않는다).
+    rp = tempfile.mkdtemp(prefix='refs_reach_')
+
+    def _gr(*a):
+        return subprocess.run(['git', '-C', rp, *a], capture_output=True, text=True, env=_env)
+
+    def _commit(name):
+        open(os.path.join(rp, name), 'w').write(name + '\n')
+        _gr('add', '-A')
+        _gr('commit', '-qm', name)
+        return _gr('rev-parse', 'HEAD').stdout.strip()
+    _gr('init', '-q')
+    reach = {}
+    if _gr('rev-parse', '--git-dir').returncode == 0:
+        trunk = _gr('symbolic-ref', '--short', 'HEAD').stdout.strip() or 'master'
+        reach['base'] = _commit('base.txt')
+        _gr('checkout', '-q', '-b', 'agent-worktree')
+        reach['local'] = _commit('local.txt')              # 로컬 가지에만 (원격 · HEAD 아님)
+        _gr('checkout', '-q', '--detach', reach['base'])
+        reach['remote'] = _commit('remote.txt')            # 원격 추적 ref 에만 (HEAD 조상 아님)
+        _gr('update-ref', 'refs/remotes/origin/feature', reach['remote'])
+        _gr('checkout', '-q', trunk)
+        reach['head'] = _commit('head.txt')                # HEAD
+    if len(reach) == 4 and all(reach.values()):
+        ks = known_shas(rp)
+        chk('★★ SELF-116 로컬 가지에만 있는 커밋 = 도달 불가 (rev-list --all 이면 통과해 버렸다)', reach['local'] not in ks, f'{len(ks)} 개')
+        chk('SELF-116 HEAD 의 조상 (HEAD · 그 앞) = 도달 가능', reach['head'] in ks and reach['base'] in ks)
+        chk('SELF-116 원격 추적 가지 (refs/remotes/*) 의 커밋 = 도달 가능 (HEAD 조상이 아니어도)', reach['remote'] in ks)
+        rs = Resolver(ks)
+        g = scan_text(f'커밋 `{reach["local"][:9]}` 를 참조한다', rp, ks, set(), rs)
+        chk('★★ SELF-116 문서가 로컬 가지에만 있는 커밋을 인용 = 없는 커밋', g['bad_sha'] == [reach['local'][:9]], str(g))
+        g = scan_text(f'커밋 `{reach["remote"][:9]}` · `{reach["head"][:9]}` · `{reach["base"][:9]}` 참조', rp, ks, set(), rs)
+        chk('SELF-116 원격 가지 · HEAD · HEAD 조상 커밋 인용 = 통과', g['bad_sha'] == [], str(g))
+        chk('SELF-116 얕은 클론 판정은 그대로 (보통 저장소 = 얕지 않음)', is_shallow(rp) is False)
+    else:
+        chk('SELF-116 도달 기준 (git 픽스처를 만들 수 없음 — 실패로 센다)', False, str(reach))
 
     print(f'check_doc_refs selftest: {ok}/{ok + len(bad)} PASS')
     for b in bad:
