@@ -24,8 +24,32 @@ ROW_RENAME = {"registered band low (before the run)": "registered prediction ban
 SVG_VALUES = ("300.9", "165.3", "299.3", "14.95", "10.77", "111.05", "105.84", "57.9")
 
 
+def _label_band(fig):
+    """(b) 패널: y 상한 18 → 20 · 오른쪽 위 세 줄 이름표 (회색) · 띠 오른쪽 위 모서리로 가는 지시선 (글자 아님 · 겹침 검사 밖)."""
+    _a, b = fig.axes
+    b.set_ylim(0, B_YMAX)
+    t = b.text(2.33, B_YMAX - 0.2, "registered\nprediction\nband", ha="right", va="top", fontsize=10, color=m.GRAY, linespacing=1.05)
+    fig.canvas.draw()
+    bb = t.get_window_extent(fig.canvas.get_renderer()).transformed(b.transData.inverted())
+    hi = float(v32.P4["band_hi"])
+    b.plot([2.20, 2.06], [bb.y0 - 0.25, hi - 0.15], color=m.GRAY, lw=0.8, solid_capstyle="butt")
+
+
 def fig_p4_v33(out):
-    raise NotImplementedError("F_p4_v33 — implementation commit (tests first: check_fig_files was run on the v3.2 F_p4 files)")
+    """make_seminar_figs_v32.fig_p4 를 그대로 부르고, 저장 (m._save) 직전에만 이름표 · y 상한 · CSV 이름을 바꾼다."""
+    orig = m._save
+
+    def _save(fig, out_dir, name, rows=None, header=None):
+        assert name == "F_p4", name
+        _label_band(fig)
+        rows = [(r[0], ROW_RENAME.get(r[1], r[1])) + tuple(r[2:]) for r in rows]
+        return orig(fig, out_dir, NAME, rows=rows, header=header)
+
+    m._save = _save
+    try:
+        v32.fig_p4(out)
+    finally:
+        m._save = orig
 
 
 def _read(p):
@@ -45,8 +69,12 @@ def svg_text(svg):
 
 
 def _hatch(svg):
-    ids = sorted(set(re.findall(r'<pattern[^>]*id="([^"]+)"', svg)))
-    return ids, {i: len(re.findall(r"url\(#%s\)" % re.escape(i), svg)) for i in ids}
+    """빗금 = <pattern> 본문 (id 뺌 — matplotlib 는 그릴 때마다 id 에 무작위 salt 를 섞는다) · 쓰인 횟수."""
+    out = []
+    for pm in re.finditer(r'<pattern[^>]*id="([^"]+)"[^>]*>(.*?)</pattern>', svg, flags=re.S):
+        body = re.sub(r"\s+", " ", pm.group(0).replace(pm.group(1), "ID"))
+        out.append((body, len(re.findall(r"url\(#%s\)" % re.escape(pm.group(1)), svg))))
+    return sorted(out)
 
 
 def check_fig_files(svg_path, csv_path, base_svg_path, base_csv_path):

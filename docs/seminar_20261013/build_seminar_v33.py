@@ -56,10 +56,15 @@ P7_QUAL = ' (nominal stopping pressure; see Problem 4)'
 #: SEM32-02 (Codex SEMV32-02) — 11 장 본문 2 (v3.2 문장 → Codex 교체문) · 빨강 = 두 낱말 묶음 (v3.2 와 같은 다섯 run 꼴)
 B11_OLD = ('At fixed platen the same bed relaxes to 165 MPa; a servo branch holding the target force (damping 1e-5) instead compacts it '
            'further (111.05 → 105.84 µm) — model-internal until the open checks pass.')
+B11_CODEX = ('At fixed platen, the original run relaxes to 165 MPa. A combined follow-up protocol—plate-contact history reset, lower damping '
+             'and force hold—reduces thickness from 111.05 to 105.84 µm. This remains a model-internal diagnostic; static-equilibrium and '
+             'conservation checks are pending.')
+#: 덱 글 = Codex 문안 + 숫자–단위 사이 줄바꿈 금지 공백 하나 (U+00A0 · v3.2 렌더에서 "105.84 / µm" 이 줄에서 갈렸다) — 글자는 그대로
 B11_RUNS = ('At fixed platen, the original run relaxes to 165 MPa. A ', 'combined follow-up protocol',
-            '—plate-contact history reset, lower damping and force hold—reduces thickness from 111.05 to 105.84 µm. This remains a ',
+            '—plate-contact history reset, lower damping and force hold—reduces thickness from 111.05 to 105.84 µm. This remains a ',
             'model-internal diagnostic', '; static-equilibrium and conservation checks are pending.')
 B11 = ''.join(B11_RUNS)
+assert B11.replace(' ', ' ') == B11_CODEX
 #: §5 — 그림 · 해석 줄의 띠 이름
 BAND = 'registered prediction band'
 CAP11_EDIT = ('shaded = band registered before the run', 'shaded = registered prediction band')
@@ -330,7 +335,8 @@ def selftest_v33(deck, repo, figs=None, v32_ref=None, v31=None, eq_deck=None):
     C.add('B2 slide 7: first "300 MPa" carries "(nominal stopping pressure; see Problem 4)"', first_ok and not others, f'{b7[:140]} · {others}')
     body11 = [sh for sh in slides[10].shapes if sh.name == 'Rectangle 4']
     paras11 = [p.text for p in body11[0].text_frame.paragraphs if p.text.strip()] if body11 else []
-    C.add('B2 slide 11 body 2 = Codex SEMV32-02 wording (exact)', len(paras11) == 3 and paras11[2] == B11, str(paras11[2:])[:200])
+    C.add('B2 slide 11 body 2 = Codex SEMV32-02 wording (exact; one no-break space between 105.84 and µm)',
+          len(paras11) == 3 and paras11[2] == B11 and paras11[2].replace(' ', ' ') == B11_CODEX, str(paras11[2:])[:200])
     red11 = []
     if body11 and len(body11[0].text_frame.paragraphs) > 2:
         for r in body11[0].text_frame.paragraphs[2].runs:
@@ -441,8 +447,120 @@ def selftest_v33(deck, repo, figs=None, v32_ref=None, v31=None, eq_deck=None):
 
 # ───────────────────────────── 생성 (v3.2 덱 위 차분) ─────────────────────────────
 
+def _replace_in_run(shape, old, new):
+    """old → new 를 run 하나 안에서 (run 서식 그대로) — old 는 그 도형에 정확히 한 번 · 한 run 안에 있어야 한다."""
+    hits = [r for p in shape.text_frame.paragraphs for r in p.runs if old in r.text]
+    assert len(hits) == 1 and hits[0].text.count(old) == 1, (shape.name, old, len(hits))
+    hits[0].text = hits[0].text.replace(old, new)
+
+
+def _source_two_lines(sp, top=0.93):
+    """3 장 출처 줄: 한 문단 → 두 문단 (같은 run 서식 · 오른쪽 맞춤) · 위아래 여백 0 · 높이 = 두 줄.  각 줄 ≤ 110 자 (검사 A10′)."""
+    body = sp.text_frame._txBody
+    p0 = body.find('{%s}p' % A)
+    pars = []
+    for line in SRC3_LINES:
+        p = etree.fromstring(etree.tostring(p0))
+        for e in p.findall('{%s}endParaRPr' % A):
+            p.remove(e)
+        runs = p.findall('{%s}r' % A)
+        assert len(runs) == 1, len(runs)
+        runs[0].find('{%s}t' % A).text = line
+        pars.append(p)
+    idx = list(body).index(p0)
+    body.remove(p0)
+    for k, p in enumerate(pars):
+        body.insert(idx + k, p)
+    bp = body.find('{%s}bodyPr' % A)
+    bp.set('tIns', '0')
+    bp.set('bIns', '0')
+    h = round(len(SRC3_LINES) * SRC_PT * 1.2 / 72 + 0.01, 3)
+    v3.place(sp, (sp.left / EMU, top, sp.width / EMU, h))
+
+
+def _edit_notes(slide, i):
+    v3.notes(slide, apply_edits(slide.notes_slide.notes_text_frame.text, NOTE_EDITS[i], f'{i} notes'))
+
+
 def build_v33(template, repo, figs, lit, eq_deck, out, v32_out=None, v31_out=None):
-    raise NotImplementedError('v3.3 build — implementation commit (tests first: checks above were run on the v3.2 deck before this existed)')
+    """v3.2 를 그대로 만든 뒤 (build_seminar_v32.build_v32) 3 · 5 · 7 · 11 · 13 · 15 장만 고친다.  → (출처 dict, v3.2 기반 덱, v3.1 기반 덱)."""
+    repo, figs, out = Path(repo), Path(figs), Path(out)
+    v32_path = Path(v32_out) if v32_out else out.with_name(out.stem + '_base_v32.pptx')
+    S32, v31 = v32.build_v32(template, repo, figs, lit, eq_deck, str(v32_path), v31_out)
+    prs = Presentation(str(v32_path))
+    sl = list(prs.slides)
+    assert len(sl) == N_SLIDES, len(sl)
+
+    # ── 3 — 출처 줄 (SEM32-01 · Codex 문안 · 두 줄) · notes.  식 · 그림 · 판 = 손대지 않음 ──
+    _source_two_lines(v3.shape(sl[2], 'TextBox 69'))
+    _edit_notes(sl[2], 3)
+    # ── 5 — notes (큰 입자 LPSCl 펠릿 = 1저자 10-14 승인) ──
+    _edit_notes(sl[4], 5)
+    # ── 7 — 본문 첫 "300 MPa" (순서 질문 3) ──
+    _replace_in_run(v3.shape(sl[6], 'Rectangle 4'), 'pressed to 300 MPa; ', 'pressed to 300 MPa' + P7_QUAL + '; ')
+    # ── 11 — 본문 2 (SEM32-02 · 같은 다섯 run 꼴: 보통 · 빨강 · 보통 · 빨강 · 보통) · 그림 F_p4_v33 · 해석 줄 (b) · notes ──
+    s = sl[10]
+    bx = v3.shape(s, 'Rectangle 4')
+    paras = bx.text_frame.paragraphs
+    assert paras[2].text == B11_OLD and len(paras[2].runs) == len(B11_RUNS), paras[2].text
+    for r, t in zip(paras[2].runs, B11_RUNS):
+        r.text = t
+    head, b1 = paras[0].text, paras[1].text
+    pic = v3.shape(s, 'Fig plate reaction')
+    ft_old = round(pic.top / EMU, 2)
+    fh = round(v3.FZ_BOTTOM - ft_old - 0.50, 2)                    # v3.2 그림 띠 높이 그대로 (그림 크기 · 글씨 크기 같음)
+    ft = max(v3.FT_MIN, round(v3.est_body_bottom(head, [b1, B11]) + v3.FT_MARGIN, 2))
+    tree = pic._element.getparent()
+    z = list(tree).index(pic._element)                            # v3.2 그림의 쌓임 순서 자리 (새 그림을 같은 자리에)
+    tree.remove(pic._element)
+    new_pic = v3.place_pic(s, figs / f'{P4_FIG}.png', (0.45, ft, 5.45, fh), name='Fig plate reaction')
+    tree.remove(new_pic._element)
+    tree.insert(z, new_pic._element)
+    tbl = v3.shape(s, 'Table checks')
+    v3.place(tbl, (tbl.left / EMU, round(ft + 0.15, 2), tbl.width / EMU, tbl.height / EMU))
+    cap = v3.shape(s, 'Caption')
+    v3.place(cap, (cap.left / EMU, round(ft + fh + 0.04, 2), cap.width / EMU, cap.height / EMU))
+    _replace_in_run(cap, *CAP11_EDIT)
+    v3.place(bx, (0.61, v3.BODY_TOP, 8.84, round(ft - v3.BODY_TOP - 0.05, 2)))
+    v32._prune_image_rels(s)
+    v32._unique_ids(s)
+    _edit_notes(s, 11)
+    print(f'slide 11 layout: figure band top {ft_old} → {ft} in (height {fh} in kept) · caption bottom {round(ft + fh + 0.04 + cap.height / EMU, 2)} in')
+    # ── 13 — notes 의 Kissel 2026 문장 (SEM32-04) ──
+    _edit_notes(sl[12], 13)
+    # ── 15 — 흐름도 순서 (SEM32-03 · 두 상자 글만 바꿈 · 둘 다 남색 굵게 = 서식 같음) · 작은 글 · notes ──
+    s = sl[14]
+    _replace_in_run(v3.shape(s, 'Gen2 box 6'), 'platen removal', 'unloading')
+    _replace_in_run(v3.shape(s, 'Gen2 box 7'), 'unloading', 'platen removal')
+    _replace_in_run(v3.shape(s, 'Gen2 note'), HECKEL_OLD, HECKEL_NEW)
+    _edit_notes(s, 15)
+
+    prs.save(str(out))
+    S = dict(S32)
+    S['3'] += ('; v3.3 (Codex v3.2 re-check SEMV32-01 = ledger SEM32-01): source line = Codex wording (representative equations; equation ② '
+               'small-overlap approximation ℓᵢⱼ ≈ Rᵢnᵢⱼ); notes = implemented lever arm Rᵢ − δᵢⱼ/2 (LIGGGHTS-PUBLIC 3d5c00f '
+               'surface_model_default.h 173–188 · tangential_model_history.h 254–261 · docs/dem_governing_equations_background_20261011.md §3.1) '
+               'and CDT torque zero at ω_r = 0 (rolling_model_cdt.h 94 · 138); equation objects, fallback images and pictures unchanged (A8)')
+    S['5'] += ('; v3.3: large-particle LPSCl pellet approved by the author on 10-14 (docs/session_20260923_progress.md, 10-14 night 9 entry; '
+               'Codex v3.2 re-check Q5)')
+    S['7'] += '; v3.3: first "300 MPa" = nominal stopping pressure, see Problem 4 (Codex v3.2 re-check, order question 3)'
+    S['11'] += ('; v3.3 (SEMV32-02 = SEM32-02): body 2 = Codex wording (combined follow-up protocol; model-internal diagnostic; '
+                'static-equilibrium and conservation checks pending); figure F_p4_v33 = F_p4 values with the band named "registered prediction '
+                'band" (Codex §5; figs_v3/make_seminar_figs_v33.py)')
+    S['13'] += '; v3.3 (SEMV32-04 = SEM32-04): Kissel 2026 sentence = Codex wording (stress intensity as well as stress number)'
+    S['15'] += ('; v3.3 (SEMV32-03 = SEM32-03): flow relaxation → unloading → platen removal = author 10-14 Q1 '
+                '(docs/reviews/dem_protocol_gen2_plan_draft_20261014.md · progress log 10-14 night 7 entry); "Heckel analysis to be redone"; '
+                'notes = provisional geometric calibration target (Codex v3.2 re-check, order question 4)')
+    Path(str(out) + '.sources.json').write_text(json.dumps(S, ensure_ascii=False, indent=1), encoding='utf-8')
+    return S, v32_path, v31
+
+
+def dump_text_v33(deck, out):
+    v32.dump_text_v32(deck, out)
+    lines = Path(out).read_text(encoding='utf-8').split('\n')
+    lines[0] = ('# 연구세미나 덱 v3.3 (18 장 · Codex v3.2 재확인 반영 · 1저자 10-15 비준) — 장별 글 전문 (생성기 출력에서 추출 · 표 · 출처 줄 · '
+                '무리 안 라벨 · 식 이름 · 다리 줄 · notes 포함)')
+    Path(out).write_text('\n'.join(lines), encoding='utf-8')
 
 
 def main():
@@ -458,12 +576,21 @@ def main():
     ap.add_argument('--json', help='검사 결과 기록 (JSON)')
     ap.add_argument('--sources-out', help='장별 출처 JSON 사본 (리포의 slide_sources_v33.json)')
     ap.add_argument('--selftest-only', help='기존 덱 검사만')
+    ap.add_argument('--dump', help='덱의 장별 글 전문을 --out (md) 로')
     a = ap.parse_args()
+    if a.dump:
+        dump_text_v33(a.dump, a.out)
+        return 0
     if a.selftest_only:
         C = selftest_v33(a.selftest_only, a.repo, a.figs, a.v32, a.v31, a.eq_deck)
         return 1 if v32.report_checks(C, a.json, label=Path(a.selftest_only).name) else 0
-    build_v33(a.template, a.repo, a.figs, a.lit, a.eq_deck, a.out)
-    return 0
+    S, v32_base, v31 = build_v33(a.template, a.repo, a.figs, a.lit, a.eq_deck, a.out)
+    if a.sources_out:
+        Path(a.sources_out).write_text(json.dumps(S, ensure_ascii=False, indent=1) + '\n', encoding='utf-8')
+    C = selftest_v33(a.out, a.repo, a.figs, a.v32 or v32_base, a.v31 or v31, a.eq_deck)
+    nf = v32.report_checks(C, a.json, label=Path(a.out).name)
+    print('written', a.out)
+    return 1 if nf else 0
 
 
 if __name__ == '__main__':
