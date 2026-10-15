@@ -134,6 +134,8 @@ G5_SAMPLES = {"①": ("V5_s_outer_A_bound", "V5_s_outer_A_far"), "②": ("V5_s_o
               "⑤": ("V5_s_outer_A_p05_bound", "V5_s_outer_A_far")}
 G5_GROUPS = {"s_outer": ("①", "②", "⑤"), "li_outer": ("③", "④")}
 G3_JOBS = ("V5_s_outer_A_G3_c2_bound", "V5_s_outer_A_G3_c2_far_i", "V5_s_outer_A_G3_c2_far_ii")
+P1_PAIR = {"①": "P1_s_outer_A", "②": "P1_s_outer_B", "③": "P1_li_outer_A", "④": "P1_li_outer_B"}   # SE 쌍 카드 §1b ② 짝 (같은 종결·registry)
+SIZE_LABEL_DW = 0.10                                                # §1b ② — 정보 · |Δ| > 0.10 J/m² 면 '크기 민감' 라벨 (판정 문턱 아님)
 UMA_REQ = {"model": "uma-s-1p1", "task": "omat", "inference_settings": "default",
            "checkpoint_sha256": "07068e9c76702ca173d13155095f2117c1b327ec228557e64cd2709c777b824a",
            "fairchem_allowed": ("2.19.0", "2.21.0")}                # 2.21.0 = wad_aprime_s4_uma_env_xcheck_2026_09_26 (|Δ| ≤ 0.005 meV 등가)
@@ -1115,7 +1117,35 @@ def load_uma(uma, meta, names):
 
 
 # ───────────────────────── 집계 ─────────────────────────
-def collect(out, ret, manifest_sha256, uma=None, pp_registry=None, pp_registry_sha256=None):
+def size_effect_vs_p1(smp, p1, w10_first=None):
+    """SE 쌍 카드 (`wad_se_pairs_uma_prediction_card_2026_10_01` §1b ②) — W^UMA+D3 (V5 작은 모델 · SE 2층 · Ag 3층) − W^UMA+D3 (P1 전체 계면 ·
+    SE 4층 · Ag 4층), 같은 종결·registry. **정보** (G5 와 무관 · 문턱 없음 · |Δ| > 0.10 면 '크기 민감' 라벨). D3 는 양쪽 다 외부 2체 참조 (P1 과 같은 방법).
+    ⚠ 끝점이 다르다 — V5 표본 = 직접 8 Å (A′ 기준 셀) · P1 헤드라인 = 10 Å. ① 만 G3 (ii) 셀 (직접 10 Å) 로 끝점을 맞춘 줄을 따로 준다 (w10_first).
+    ⑤ 는 섭동 표본이라 P1 짝이 없다. 없는 값은 0 이 아니라 None · P1 표가 없으면 계산하지 않는다 (조용히 0 을 넣지 않는다).
+    못 하는 것: P1 값은 결과 기록 표의 4 자리 반올림이다 · 크기 효과와 끝점 효과를 8 Å 줄에서 가르지 않는다."""
+    tab = p1.get("표_8_표본") if isinstance(p1, dict) else None
+    if not isinstance(tab, dict):
+        return {"status": "P1 표 (표_8_표본) 없음 — 계산 안 함", "rows": {}, "size_sensitive_samples": []}
+    w1of = lambda key: fin((tab.get(key) or {}).get("W2_10")) if isinstance(tab.get(key), dict) else None
+    rows = {}
+    for k, key in P1_PAIR.items():
+        w5, w1 = (smp.get(k) or {}).get("W_UMA_D3ref_J_m2"), w1of(key)
+        dd = fin(w5 - w1) if None not in (w5, w1) else None
+        rows[k] = {"V5_small_W_UMA_D3_8A_J_m2": w5, "P1_full": key, "P1_full_W2_10A_J_m2": w1, "delta_small_minus_full_J_m2": dd,
+                   "size_sensitive": (abs(dd) > SIZE_LABEL_DW) if dd is not None else None}
+    w1 = w1of(P1_PAIR["①"])
+    dd = fin(w10_first - w1) if None not in (w10_first, w1) else None
+    rows["①_10A"] = {"V5_small_W_UMA_D3_10A_J_m2": w10_first, "P1_full": P1_PAIR["①"], "P1_full_W2_10A_J_m2": w1, "delta_small_minus_full_J_m2": dd,
+                     "size_sensitive": (abs(dd) > SIZE_LABEL_DW) if dd is not None else None,
+                     "how": "G3 (ii) 셀 (c+2 · 흡착층 +2 Å → 직접 10 / 영상 8) 의 결합·분리 — 끝점을 P1 과 맞춘 줄"}
+    rows["⑤"] = {"note": "P1 짝 없음 — 섭동 표본 (registry 가 아니다)"}
+    done = all(rows[k]["delta_small_minus_full_J_m2"] is not None for k in P1_PAIR)
+    return {"status": "계산됨" if done else "일부 없음 (None 인 줄은 값이 없다 — 0 이 아니다)", "rows": rows,
+            "size_sensitive_samples": [k for k, r in rows.items() if r.get("size_sensitive")], "label_threshold_J_m2": SIZE_LABEL_DW,
+            "⚠": "정보 — ① G5 (방법 오차) 와 합쳐 오차막대로 만들지 않는다 (카드 §1b ③) · 끝점 다름 (V5 8 Å · P1 10 Å · ① 만 10 Å 줄) · P1 값은 기록 표 4 자리"}
+
+
+def collect(out, ret, manifest_sha256, uma=None, pp_registry=None, pp_registry_sha256=None, p1=None):
     """최종 사용 판정은 봉인 PP 등록부가 있어야만 열린다 (없으면 파일럿 단계 집계 — G5 BLOCKED · total W 인용 불가)."""
     meta, res = check(out, ret, manifest_sha256, pp_registry)
     reg_ok = pp_registry is not None
@@ -1199,6 +1229,8 @@ def collect(out, ret, manifest_sha256, uma=None, pp_registry=None, pp_registry_s
         for k, s in smp.items():
             wu = dA(s["bound"], s["far"], E) if not errs else None
             d[k] = fin(s["W_J_m2"] - (wu + s["dD3_J_m2"])) if None not in (s["W_J_m2"], wu, s["dD3_J_m2"]) else None
+            dr = dA(s["bound"], s["far"], REF)                      # 외부 2체 D3 (VASP 상태와 무관 — UMA 쪽만의 W)
+            s["W_UMA_D3ref_J_m2"] = fin(wu + dr) if None not in (wu, dr) else None   # 카드 §1b ② 용 (정보 · G5 에 안 쓴다)
         gm = {g: (sum(d[x] for x in m) / len(m) if all(d[x] is not None for x in m) else None) for g, m in G5_GROUPS.items()}
         complete = all(v is not None for v in d.values())
         raw_ok = complete and all(abs(v) <= G5_PER for v in d.values()) and all(abs(m) <= G5_MEAN for m in gm.values())
@@ -1226,6 +1258,12 @@ def collect(out, ret, manifest_sha256, uma=None, pp_registry=None, pp_registry_s
                 dg[tag] = fin((Wx - (Ux + Dx)) - d["①"]) if None not in (Wx, Ux, Dx) else None
             g5["residual_endpoint_diag_3b_prime"] = {"dDelta_J_m2": dg, "⚠": "진단 기록 (3b′ · 비준 전 · 판정 아님) — δΔ = δW_PBE − δW_UMA"}
         rec["G5"] = g5
+        if p1 is not None:
+            w10 = None
+            if EG3 and not errs3:
+                wu10, dr10 = dA(G3_JOBS[0], G3_JOBS[2], EG3), dA(G3_JOBS[0], G3_JOBS[2], REF)
+                w10 = fin(wu10 + dr10) if None not in (wu10, dr10) else None
+            rec["size_effect_vs_P1"] = size_effect_vs_p1(smp, p1, w10)
     return rec
 
 
@@ -1730,6 +1768,25 @@ def _selftest():
         r16 = C(u4)
         dg = r16["G5"].get("residual_endpoint_diag_3b_prime", {}).get("dDelta_J_m2", {})
         ck(dg.get("ii") is not None and abs(dg["ii"] - 0.03) < 1e-6 and r16["G5"]["status"] == "PASS", f"3b′: δΔ(ii) = +0.03 기록 · 판정 불변 — {dg} {r16['G5']['status']}")
+        # ⑯b SE 쌍 카드 §1b ② 크기 효과 (정보 · 2026-10-15 · UMA 단일점 전) — G5 판정 그대로 · P1 짝 없으면 None (0 아님) · P1 표 없으면 계산 안 함
+        p1t = {"표_8_표본": {"P1_s_outer_A": {"W2_10": 0.45}, "P1_s_outer_B": {"W2_10": 0.60}, "P1_li_outer_A": {"W2_10": 0.58}}}
+        r16b = collect(out, ret, msha, u4, reg_ok, "f" * 64, p1t)
+        se = r16b["size_effect_vs_P1"]; rw = se["rows"]
+        ck(abs(rw["①"]["delta_small_minus_full_J_m2"] - 0.04) < 1e-6 and rw["①"]["size_sensitive"] is False
+           and abs(rw["②"]["delta_small_minus_full_J_m2"] + 0.11) < 1e-6 and rw["②"]["size_sensitive"] is True
+           and abs(rw["③"]["delta_small_minus_full_J_m2"]) < 1e-6 and abs(rw["①_10A"]["delta_small_minus_full_J_m2"] - 0.019) < 1e-6
+           and rw["④"]["delta_small_minus_full_J_m2"] is None and rw["④"]["size_sensitive"] is None and se["status"].startswith("일부 없음")
+           and se["size_sensitive_samples"] == ["②"] and r16b["G5"]["status"] == r16["G5"]["status"] and r16b["G5"]["Delta_J_m2"] == r16["G5"]["Delta_J_m2"]
+           and "size_effect_vs_P1" not in r16,
+           f"카드 §1b ②: Δ ① +0.04 · ② −0.11 ('크기 민감') · ③ 0 · ① 10 Å 줄 +0.019 · ④ P1 짝 없음 → None · G5 불변 · p1 없으면 블록 없음 — {se['status']} {se['size_sensitive_samples']}")
+        ck(collect(out, ret, msha, u4, reg_ok, "f" * 64, {"다른": 1})["size_effect_vs_P1"]["status"].startswith("P1 표"),
+           "⛔음성 카드 §1b ②: P1 기록에 표가 없으면 계산하지 않는다 (0 으로 채우지 않는다)")
+        up4, p1p, j4 = os.path.join(T, "uma4.json"), os.path.join(T, "p1.json"), os.path.join(T, "c4.json")
+        _write(up4, json.dumps(u4)); _write(p1p, json.dumps(p1t, ensure_ascii=False))
+        r = subprocess.run([sys.executable, os.path.abspath(__file__), "--collect", "--out", out, "--ret", ret, "--manifest_sha256", msha, "--uma", up4,
+                            "--pp_registry", rgp, "--pp_registry_sha256", _sha(rgp), "--p1_result", p1p, "--json", j4], capture_output=True, text=True, timeout=300)
+        ck(r.returncode == 0 and json.load(open(j4))["size_effect_vs_P1"]["size_sensitive_samples"] == ["②"] and "크기 효과" in r.stdout,
+           f"카드 §1b ② CLI: --p1_result 가 집계까지 간다 (배선) — rc {r.returncode} {r.stdout[-160:]}")
         # ⑰ seal_pp 음성
         mk(F_, rc=1)
         ck(raises(lambda: seal_pp(out, ret, msha)), "⛔음성 파일럿이 OK 가 아닌데 등록부를 만들었다")
@@ -1971,6 +2028,7 @@ def main():
         ap.add_argument(f, action="store_true")
     ap.add_argument("--pkg", default="db/inputs/wad_aprime_s3v2_2026_09_26"); ap.add_argument("--out"); ap.add_argument("--ret"); ap.add_argument("--uma")
     ap.add_argument("--json"); ap.add_argument("--manifest_sha256"); ap.add_argument("--pp_registry"); ap.add_argument("--pp_registry_sha256")
+    ap.add_argument("--p1_result", help="--collect 와 함께 (UMA 있을 때): SE 쌍 결과 기록 → 카드 §1b ② 크기 효과 (정보 · 판정 아님)")
     a = ap.parse_args()
     if a.selftest:
         return _selftest()
@@ -1992,11 +2050,18 @@ def main():
             if reg is None and not a.pilot:
                 raise PkgError("최종 집계(--collect)는 봉인 PP 등록부가 필수다 — --pp_registry R --pp_registry_sha256 H (파일럿 단계 집계면 --pilot 을 명시)")
             uma = json.load(open(a.uma, encoding="utf-8")) if a.uma else None
-            rec = collect(a.out, a.ret, a.manifest_sha256, uma, reg, a.pp_registry_sha256 if reg is not None else None)
+            p1 = json.load(open(a.p1_result, encoding="utf-8")) if a.p1_result else None
+            rec = collect(a.out, a.ret, a.manifest_sha256, uma, reg, a.pp_registry_sha256 if reg is not None else None, p1)
             for k, s in rec["samples"].items():
                 print(f"  {k} W {s['W_J_m2']} · W_PBE {s['W_PBE_J_m2']} · ΔD3 {s['dD3_J_m2']} · D3 쌍 오차 {s['d3_pair_err_J_m2']} · 총 W 인용 {s['total_w_citable']}"
                       f"{' · ' + ' / '.join(s['total_w_labels']) if s['total_w_labels'] else ''}")
             print(f"  G3 {rec['G3']['status']} · G4 {rec['G4']['status']}{' · G5 ' + rec['G5']['status'] if 'G5' in rec else ''} · 미완 {rec['jobs_not_ok']} · 등록부 {rec['pp_registry']['state']}")
+            if "size_effect_vs_P1" in rec:
+                se = rec["size_effect_vs_P1"]
+                print(f"  §1b ② 크기 효과 (정보 · V5 작은 − P1 전체 · UMA+D3) {se['status']} · '크기 민감' {se['size_sensitive_samples'] or '없음'} · "
+                      + " · ".join(f"{k} {r.get('delta_small_minus_full_J_m2')}" for k, r in se["rows"].items() if "delta_small_minus_full_J_m2" in r))
+            elif p1 is not None:
+                print("  §1b ② 크기 효과: UMA 에너지가 없어 계산 안 함")
             if rec["return_bundle"]["forbidden_files"]:
                 print(f"  ⚠ 반송 폴더에 금지 파일이 있다 (POTCAR 본문 등 — 저장하지 말고 지운다): {rec['return_bundle']['forbidden_files']}")
             if a.json:

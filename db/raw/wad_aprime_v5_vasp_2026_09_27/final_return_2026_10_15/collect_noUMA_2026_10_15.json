@@ -1,0 +1,1300 @@
+{
+ "schema": "aprime_v5_vasp_collect/v3",
+ "manifest_sha256": "8118bbc023d6699cd7cd1b6e6afd32872e0699af70b412e15b89365e556ee2f1",
+ "return_bundle": {
+  "present": true,
+  "matches_pinned": true,
+  "forbidden_files": []
+ },
+ "pp_registry": {
+  "state": "검증됨",
+  "sha256": "a279d529d9be6e75274b3ca772f32e92df526cd01f4e62ef1afecb5a38e1d4d1",
+  "vasp_version": "vasp.5.4.4.18Apr17-6-g9f103f2a35 (build Aug 19 2022 11:57:46) complex"
+ },
+ "energy_convention": "W = MP1 σ 0.136 eV 에서의 TOTEN(자유에너지) 차 / A — 0 K 점착에너지·실제 전자온도 자유에너지라 부르지 않는다 (CE Q2) · E(σ→0)·−TS 항 차 병기",
+ "samples": {
+  "①": {
+   "bound": "V5_s_outer_A_bound",
+   "far": "V5_s_outer_A_far",
+   "W_J_m2": 0.8592386810904927,
+   "W_sigma0_J_m2": 0.8591208769539663,
+   "dD3_J_m2": 0.5410718318812923,
+   "W_PBE_J_m2": 0.31816684920920046,
+   "mTS_term_J_m2": 0.00035341240956998643,
+   "dD3_ref_J_m2": 0.5410669998606842,
+   "d3_pair_err_J_m2": 4.832020608080967e-06,
+   "d3_pair_over_budget": false,
+   "W_label": null,
+   "total_w_labels": [
+    "G4 INCOMPLETE"
+   ],
+   "total_w_citable": false
+  },
+  "②": {
+   "bound": "V5_s_outer_B_bound",
+   "far": "V5_s_outer_B_far",
+   "W_J_m2": 0.8735929289272296,
+   "W_sigma0_J_m2": 0.8732628935236201,
+   "dD3_J_m2": 0.5467877253495709,
+   "W_PBE_J_m2": 0.32680520357765874,
+   "mTS_term_J_m2": 0.0009901054185125213,
+   "dD3_ref_J_m2": 0.5467825105965431,
+   "d3_pair_err_J_m2": 5.214753027726893e-06,
+   "d3_pair_over_budget": false,
+   "W_label": null,
+   "total_w_labels": [
+    "G4 INCOMPLETE"
+   ],
+   "total_w_citable": false
+  },
+  "③": {
+   "bound": "V5_li_outer_A_bound",
+   "far": "V5_li_outer_A_far",
+   "W_J_m2": 0.8937530761422131,
+   "W_sigma0_J_m2": 0.8922348535436241,
+   "dD3_J_m2": 0.5907796628524449,
+   "W_PBE_J_m2": 0.30297341328976823,
+   "mTS_term_J_m2": 0.004554667795758305,
+   "dD3_ref_J_m2": 0.5907733696043778,
+   "d3_pair_err_J_m2": 6.293248067112955e-06,
+   "d3_pair_over_budget": false,
+   "W_label": null,
+   "total_w_labels": [
+    "G4 INCOMPLETE"
+   ],
+   "total_w_citable": false
+  },
+  "④": {
+   "bound": "V5_li_outer_B_bound",
+   "far": "V5_li_outer_B_far",
+   "W_J_m2": 0.8965027346645027,
+   "W_sigma0_J_m2": 0.8948248291451796,
+   "dD3_J_m2": 0.591342219598006,
+   "W_PBE_J_m2": 0.30516051506649666,
+   "mTS_term_J_m2": 0.005033715765616953,
+   "dD3_ref_J_m2": 0.5913363381199432,
+   "d3_pair_err_J_m2": 5.88147806279693e-06,
+   "d3_pair_over_budget": false,
+   "W_label": null,
+   "total_w_labels": [
+    "G4 INCOMPLETE"
+   ],
+   "total_w_citable": false
+  },
+  "⑤": {
+   "bound": "V5_s_outer_A_p05_bound",
+   "far": "V5_s_outer_A_far",
+   "W_J_m2": 0.7003618098915265,
+   "W_sigma0_J_m2": 0.700327816409762,
+   "dD3_J_m2": 0.40691234839975754,
+   "W_PBE_J_m2": 0.293449461491769,
+   "mTS_term_J_m2": 0.00010197965296832034,
+   "dD3_ref_J_m2": 0.4069087240290114,
+   "d3_pair_err_J_m2": 3.624370746135863e-06,
+   "d3_pair_over_budget": false,
+   "W_label": null,
+   "total_w_labels": [
+    "G4 INCOMPLETE"
+   ],
+   "total_w_citable": false
+  }
+ },
+ "G3": {
+  "threshold": 0.01,
+  "d3_g3_budget": 0.001,
+  "dW_i": 0.005589026621812376,
+  "d3_diffdiff_i": 7.67208706453637e-07,
+  "dW_ii": 0.00922933924567293,
+  "d3_diffdiff_ii": 9.513693517426702e-07,
+  "status": "PASS"
+ },
+ "G4": {
+  "e70": {
+   "variant": "ENCUT 650",
+   "W": null,
+   "dW": null,
+   "d3_same_geom_diff_eV": {
+    "bound": 0.0,
+    "far": null
+   },
+   "status": "INCOMPLETE"
+  },
+  "k1": {
+   "variant": "k 4×3×1",
+   "W": 0.8495217818367709,
+   "dW": -0.009716899253721878,
+   "d3_same_geom_diff_eV": {
+    "bound": 0.0,
+    "far": 0.0
+   },
+   "status": "PASS"
+  },
+  "s05": {
+   "variant": "SIGMA ½",
+   "W": 0.8588217267080211,
+   "dW": -0.00041695438247157934,
+   "d3_same_geom_diff_eV": {
+    "bound": 0.0,
+    "far": 0.0
+   },
+   "status": "PASS"
+  },
+  "status": "INCOMPLETE"
+ },
+ "jobs": {
+  "V5_li_outer_A_bound": {
+   "dir": "V5_li_outer_A_bound",
+   "attempt": "0",
+   "run_id": "20261005T123216-41361-29759",
+   "rc": 0,
+   "attempt_json_sha256": "f33dccce9fda6475a42918c05b2b701fcbd5b6a0fea1fe083b5522014c930964",
+   "outcar_sha256": "0b358ee40372e0798e2e93268e1164acc6b93fca82d14eb93e78a5e7c66fd76e",
+   "n_runs": 1,
+   "version": "vasp.5.4.4.18Apr17-6-g9f103f2a35 (build Aug 19 2022 11:57:46) complex",
+   "terminated": true,
+   "converged": true,
+   "incar_echo_lines_excluded": 0,
+   "TOTEN_eV": -644.01519524,
+   "E_sigma0_eV": -644.01113172,
+   "E_noentropy_eV": -644.0030047,
+   "Edisp_eV": -58.42561,
+   "outcar_titel": [
+    "PAW_PBE Li_sv 10Sep2004",
+    "PAW_PBE P 06Sep2000",
+    "PAW_PBE S 06Sep2000",
+    "PAW_PBE Cl 06Sep2000",
+    "PAW_PBE Ag 02Apr2005"
+   ],
+   "NGZF": 448,
+   "dipole_min_pos": 388,
+   "settings": {
+    "NIONS": 176,
+    "NELECT": 1356.0,
+    "ENCUT": 520.0,
+    "ISMEAR": 1,
+    "SIGMA": 0.14,
+    "ISPIN": 1,
+    "IVDW": 12,
+    "LDIPOL": "T",
+    "IDIPOL": 3,
+    "DIPOL_z": null,
+    "EFIELD": null,
+    "VDW_S6": 1.0,
+    "VDW_S8": 0.7875,
+    "VDW_A1": 0.4289,
+    "VDW_A2": 4.4407,
+    "VDW_RADIUS": 50.2,
+    "VDW_CNRADIUS": 21.17
+   },
+   "potcar_species_sha256": {
+    "Li_sv": "7e51fe1804c037e1dccc81a9c376d94d693a7559600c847f4b41960edb8ab895",
+    "P": "df60c54a93efe35c9e85ae94c010c75e9f6960a95d5595d7cdba4096d109af88",
+    "S": "0fc7481fb0695f01bdc6462160264c5c84044ae9ec85a907d398b887a2bc3132",
+    "Cl": "9f1b6e6ed4247ac726a768b330d26d7667cc3c95a39ff49c1d064c2d9dcce931",
+    "Ag": "6550cfa3543261e132c169e1b98a529204624d72be14e2da2e0242bcb74a174d"
+   },
+   "potcar_sha256": "abbd2ba9196a363a7f32419402e3bd8ff3a6a7690f39a8daac6e403d3dd65fa5",
+   "oszicar_last": {
+    "n_elec_steps": 118,
+    "dE": -7.9618e-07,
+    "d_eps": -5.2175e-08
+   },
+   "settings_sources": {
+    "DIPOL": [
+     "min pos cut 388/448"
+    ]
+   },
+   "status": "OK"
+  },
+  "V5_li_outer_A_far": {
+   "dir": "V5_li_outer_A_far",
+   "attempt": "0",
+   "run_id": "20261005T191941-41361-29415",
+   "rc": 0,
+   "attempt_json_sha256": "d554b88d53f61066d7b76818ce0709c603aaac8b7e418794f6edb697405ce3f4",
+   "outcar_sha256": "1b5ed0b08ed3c01b7d3f4b60b47a2af6b6a7f38b5c4e5855cb1e74b5f21ff07c",
+   "n_runs": 1,
+   "version": "vasp.5.4.4.18Apr17-6-g9f103f2a35 (build Aug 19 2022 11:57:46) complex",
+   "terminated": true,
+   "converged": true,
+   "incar_echo_lines_excluded": 0,
+   "TOTEN_eV": -632.73518324,
+   "E_sigma0_eV": -632.75028113,
+   "E_noentropy_eV": -632.78047693,
+   "Edisp_eV": -50.96941,
+   "outcar_titel": [
+    "PAW_PBE Li_sv 10Sep2004",
+    "PAW_PBE P 06Sep2000",
+    "PAW_PBE S 06Sep2000",
+    "PAW_PBE Cl 06Sep2000",
+    "PAW_PBE Ag 02Apr2005"
+   ],
+   "NGZF": 448,
+   "dipole_min_pos": 388,
+   "settings": {
+    "NIONS": 176,
+    "NELECT": 1356.0,
+    "ENCUT": 520.0,
+    "ISMEAR": 1,
+    "SIGMA": 0.14,
+    "ISPIN": 1,
+    "IVDW": 12,
+    "LDIPOL": "T",
+    "IDIPOL": 3,
+    "DIPOL_z": null,
+    "EFIELD": null,
+    "VDW_S6": 1.0,
+    "VDW_S8": 0.7875,
+    "VDW_A1": 0.4289,
+    "VDW_A2": 4.4407,
+    "VDW_RADIUS": 50.2,
+    "VDW_CNRADIUS": 21.17
+   },
+   "potcar_species_sha256": {
+    "Li_sv": "7e51fe1804c037e1dccc81a9c376d94d693a7559600c847f4b41960edb8ab895",
+    "P": "df60c54a93efe35c9e85ae94c010c75e9f6960a95d5595d7cdba4096d109af88",
+    "S": "0fc7481fb0695f01bdc6462160264c5c84044ae9ec85a907d398b887a2bc3132",
+    "Cl": "9f1b6e6ed4247ac726a768b330d26d7667cc3c95a39ff49c1d064c2d9dcce931",
+    "Ag": "6550cfa3543261e132c169e1b98a529204624d72be14e2da2e0242bcb74a174d"
+   },
+   "potcar_sha256": "abbd2ba9196a363a7f32419402e3bd8ff3a6a7690f39a8daac6e403d3dd65fa5",
+   "oszicar_last": {
+    "n_elec_steps": 87,
+    "dE": -1.9631e-07,
+    "d_eps": -2.7964e-07
+   },
+   "settings_sources": {
+    "DIPOL": [
+     "min pos cut 388/448"
+    ]
+   },
+   "status": "OK"
+  },
+  "V5_li_outer_B_bound": {
+   "dir": "V5_li_outer_B_bound",
+   "attempt": "0",
+   "run_id": "20261006T000828-41361-23512",
+   "rc": 0,
+   "attempt_json_sha256": "9cf19c64132d9b35eaf31c6eb0ec35868aa0b8dc6523f3c33d38f6ae7c8fdf03",
+   "outcar_sha256": "36d93ffa89eddf76dddc29fbbc522da4c9c243e7b3ffa0fa5357c74e91d9e2ae",
+   "n_runs": 1,
+   "version": "vasp.5.4.4.18Apr17-6-g9f103f2a35 (build Aug 19 2022 11:57:46) complex",
+   "terminated": true,
+   "converged": true,
+   "incar_echo_lines_excluded": 0,
+   "TOTEN_eV": -643.93657413,
+   "E_sigma0_eV": -643.93373007,
+   "E_noentropy_eV": -643.92804195,
+   "Edisp_eV": -58.44688,
+   "outcar_titel": [
+    "PAW_PBE Li_sv 10Sep2004",
+    "PAW_PBE P 06Sep2000",
+    "PAW_PBE S 06Sep2000",
+    "PAW_PBE Cl 06Sep2000",
+    "PAW_PBE Ag 02Apr2005"
+   ],
+   "NGZF": 448,
+   "dipole_min_pos": 388,
+   "settings": {
+    "NIONS": 176,
+    "NELECT": 1356.0,
+    "ENCUT": 520.0,
+    "ISMEAR": 1,
+    "SIGMA": 0.14,
+    "ISPIN": 1,
+    "IVDW": 12,
+    "LDIPOL": "T",
+    "IDIPOL": 3,
+    "DIPOL_z": null,
+    "EFIELD": null,
+    "VDW_S6": 1.0,
+    "VDW_S8": 0.7875,
+    "VDW_A1": 0.4289,
+    "VDW_A2": 4.4407,
+    "VDW_RADIUS": 50.2,
+    "VDW_CNRADIUS": 21.17
+   },
+   "potcar_species_sha256": {
+    "Li_sv": "7e51fe1804c037e1dccc81a9c376d94d693a7559600c847f4b41960edb8ab895",
+    "P": "df60c54a93efe35c9e85ae94c010c75e9f6960a95d5595d7cdba4096d109af88",
+    "S": "0fc7481fb0695f01bdc6462160264c5c84044ae9ec85a907d398b887a2bc3132",
+    "Cl": "9f1b6e6ed4247ac726a768b330d26d7667cc3c95a39ff49c1d064c2d9dcce931",
+    "Ag": "6550cfa3543261e132c169e1b98a529204624d72be14e2da2e0242bcb74a174d"
+   },
+   "potcar_sha256": "abbd2ba9196a363a7f32419402e3bd8ff3a6a7690f39a8daac6e403d3dd65fa5",
+   "oszicar_last": {
+    "n_elec_steps": 87,
+    "dE": 1.9792e-07,
+    "d_eps": -7.2482e-08
+   },
+   "settings_sources": {
+    "DIPOL": [
+     "min pos cut 388/448"
+    ]
+   },
+   "status": "OK"
+  },
+  "V5_li_outer_B_far": {
+   "dir": "V5_li_outer_B_far",
+   "attempt": "0",
+   "run_id": "20261006T051535-41361-17904",
+   "rc": 0,
+   "attempt_json_sha256": "0409ef9d8ff529379d1954ad19331b914e49172b7da90f63d45f7f5ec79f8446",
+   "outcar_sha256": "af308238b0abf656791bc688464227865e1b388d8563fa1d6017eb48cd9bf171",
+   "n_runs": 1,
+   "version": "vasp.5.4.4.18Apr17-6-g9f103f2a35 (build Aug 19 2022 11:57:46) complex",
+   "terminated": true,
+   "converged": true,
+   "incar_echo_lines_excluded": 0,
+   "TOTEN_eV": -632.62185883,
+   "E_sigma0_eV": -632.64019153,
+   "E_noentropy_eV": -632.67685692,
+   "Edisp_eV": -50.98358,
+   "outcar_titel": [
+    "PAW_PBE Li_sv 10Sep2004",
+    "PAW_PBE P 06Sep2000",
+    "PAW_PBE S 06Sep2000",
+    "PAW_PBE Cl 06Sep2000",
+    "PAW_PBE Ag 02Apr2005"
+   ],
+   "NGZF": 448,
+   "dipole_min_pos": 388,
+   "settings": {
+    "NIONS": 176,
+    "NELECT": 1356.0,
+    "ENCUT": 520.0,
+    "ISMEAR": 1,
+    "SIGMA": 0.14,
+    "ISPIN": 1,
+    "IVDW": 12,
+    "LDIPOL": "T",
+    "IDIPOL": 3,
+    "DIPOL_z": null,
+    "EFIELD": null,
+    "VDW_S6": 1.0,
+    "VDW_S8": 0.7875,
+    "VDW_A1": 0.4289,
+    "VDW_A2": 4.4407,
+    "VDW_RADIUS": 50.2,
+    "VDW_CNRADIUS": 21.17
+   },
+   "potcar_species_sha256": {
+    "Li_sv": "7e51fe1804c037e1dccc81a9c376d94d693a7559600c847f4b41960edb8ab895",
+    "P": "df60c54a93efe35c9e85ae94c010c75e9f6960a95d5595d7cdba4096d109af88",
+    "S": "0fc7481fb0695f01bdc6462160264c5c84044ae9ec85a907d398b887a2bc3132",
+    "Cl": "9f1b6e6ed4247ac726a768b330d26d7667cc3c95a39ff49c1d064c2d9dcce931",
+    "Ag": "6550cfa3543261e132c169e1b98a529204624d72be14e2da2e0242bcb74a174d"
+   },
+   "potcar_sha256": "abbd2ba9196a363a7f32419402e3bd8ff3a6a7690f39a8daac6e403d3dd65fa5",
+   "oszicar_last": {
+    "n_elec_steps": 92,
+    "dE": -5.4228e-07,
+    "d_eps": -1.1304e-07
+   },
+   "settings_sources": {
+    "DIPOL": [
+     "min pos cut 388/448"
+    ]
+   },
+   "status": "OK"
+  },
+  "V5_s_outer_A_bound": {
+   "dir": "V5_s_outer_A_bound",
+   "attempt": "0",
+   "run_id": "20261004T110427-23876-7545",
+   "rc": 0,
+   "attempt_json_sha256": "e7a7cea8a265ffa86ff9001150da94c342b2b0efdc6531b4e593d8685aff2465",
+   "outcar_sha256": "04329578e7b7cfdb7aa52e17629d518d8794accf4267de96fc277eb78adf6bf0",
+   "n_runs": 1,
+   "version": "vasp.5.4.4.18Apr17-6-g9f103f2a35 (build Aug 19 2022 11:57:46) complex",
+   "terminated": true,
+   "converged": true,
+   "incar_echo_lines_excluded": 0,
+   "TOTEN_eV": -742.09595416,
+   "E_sigma0_eV": -742.10239466,
+   "E_noentropy_eV": -742.11527565,
+   "Edisp_eV": -63.32312,
+   "outcar_titel": [
+    "PAW_PBE Li_sv 10Sep2004",
+    "PAW_PBE P 06Sep2000",
+    "PAW_PBE S 06Sep2000",
+    "PAW_PBE Cl 06Sep2000",
+    "PAW_PBE Ag 02Apr2005"
+   ],
+   "NGZF": 480,
+   "dipole_min_pos": 421,
+   "settings": {
+    "NIONS": 200,
+    "NELECT": 1452.0,
+    "ENCUT": 520.0,
+    "ISMEAR": 1,
+    "SIGMA": 0.14,
+    "ISPIN": 1,
+    "IVDW": 12,
+    "LDIPOL": "T",
+    "IDIPOL": 3,
+    "DIPOL_z": null,
+    "EFIELD": null,
+    "VDW_S6": 1.0,
+    "VDW_S8": 0.7875,
+    "VDW_A1": 0.4289,
+    "VDW_A2": 4.4407,
+    "VDW_RADIUS": 50.2,
+    "VDW_CNRADIUS": 21.17
+   },
+   "potcar_species_sha256": {
+    "Li_sv": "7e51fe1804c037e1dccc81a9c376d94d693a7559600c847f4b41960edb8ab895",
+    "P": "df60c54a93efe35c9e85ae94c010c75e9f6960a95d5595d7cdba4096d109af88",
+    "S": "0fc7481fb0695f01bdc6462160264c5c84044ae9ec85a907d398b887a2bc3132",
+    "Cl": "9f1b6e6ed4247ac726a768b330d26d7667cc3c95a39ff49c1d064c2d9dcce931",
+    "Ag": "6550cfa3543261e132c169e1b98a529204624d72be14e2da2e0242bcb74a174d"
+   },
+   "potcar_sha256": "abbd2ba9196a363a7f32419402e3bd8ff3a6a7690f39a8daac6e403d3dd65fa5",
+   "oszicar_last": {
+    "n_elec_steps": 118,
+    "dE": -6.7736e-07,
+    "d_eps": -7.7372e-09
+   },
+   "settings_sources": {
+    "DIPOL": [
+     "min pos cut 421/480"
+    ]
+   },
+   "status": "OK"
+  },
+  "V5_s_outer_A_far": {
+   "dir": "V5_s_outer_A_far",
+   "attempt": "0",
+   "run_id": "20261004T212734-23876-6151",
+   "rc": 0,
+   "attempt_json_sha256": "72b6a10c4a971450a578a4418465ebcfdaa86f5401f7d122871337fcccdc46a3",
+   "outcar_sha256": "bdb9f7aae2a233430af5568c9bac2bd55d1d87d0d9172f67670362d0140912fb",
+   "n_runs": 1,
+   "version": "vasp.5.4.4.18Apr17-6-g9f103f2a35 (build Aug 19 2022 11:57:46) complex",
+   "terminated": true,
+   "converged": true,
+   "incar_echo_lines_excluded": 0,
+   "TOTEN_eV": -731.25154658,
+   "E_sigma0_eV": -731.25947388,
+   "E_noentropy_eV": -731.27532847,
+   "Edisp_eV": -56.49428,
+   "outcar_titel": [
+    "PAW_PBE Li_sv 10Sep2004",
+    "PAW_PBE P 06Sep2000",
+    "PAW_PBE S 06Sep2000",
+    "PAW_PBE Cl 06Sep2000",
+    "PAW_PBE Ag 02Apr2005"
+   ],
+   "NGZF": 480,
+   "dipole_min_pos": 421,
+   "settings": {
+    "NIONS": 200,
+    "NELECT": 1452.0,
+    "ENCUT": 520.0,
+    "ISMEAR": 1,
+    "SIGMA": 0.14,
+    "ISPIN": 1,
+    "IVDW": 12,
+    "LDIPOL": "T",
+    "IDIPOL": 3,
+    "DIPOL_z": null,
+    "EFIELD": null,
+    "VDW_S6": 1.0,
+    "VDW_S8": 0.7875,
+    "VDW_A1": 0.4289,
+    "VDW_A2": 4.4407,
+    "VDW_RADIUS": 50.2,
+    "VDW_CNRADIUS": 21.17
+   },
+   "potcar_species_sha256": {
+    "Li_sv": "7e51fe1804c037e1dccc81a9c376d94d693a7559600c847f4b41960edb8ab895",
+    "P": "df60c54a93efe35c9e85ae94c010c75e9f6960a95d5595d7cdba4096d109af88",
+    "S": "0fc7481fb0695f01bdc6462160264c5c84044ae9ec85a907d398b887a2bc3132",
+    "Cl": "9f1b6e6ed4247ac726a768b330d26d7667cc3c95a39ff49c1d064c2d9dcce931",
+    "Ag": "6550cfa3543261e132c169e1b98a529204624d72be14e2da2e0242bcb74a174d"
+   },
+   "potcar_sha256": "abbd2ba9196a363a7f32419402e3bd8ff3a6a7690f39a8daac6e403d3dd65fa5",
+   "oszicar_last": {
+    "n_elec_steps": 64,
+    "dE": -8.2451e-08,
+    "d_eps": -2.0818e-07
+   },
+   "settings_sources": {
+    "DIPOL": [
+     "min pos cut 421/480"
+    ]
+   },
+   "status": "OK"
+  },
+  "V5_s_outer_A_G3_c2_bound": {
+   "dir": "V5_s_outer_A_G3_c2_bound",
+   "attempt": "0",
+   "run_id": "20261006T101435-41361-10929",
+   "rc": 0,
+   "attempt_json_sha256": "e8b1cc2d9e6c49c2efac947e96aa1148e6d093211b36526c8f2993133939b28e",
+   "outcar_sha256": "e0a19c6652c2cb82df3921ab8b9af91109e95aef9fa0e110f86763b574a7b5b9",
+   "n_runs": 1,
+   "version": "vasp.5.4.4.18Apr17-6-g9f103f2a35 (build Aug 19 2022 11:57:46) complex",
+   "terminated": true,
+   "converged": true,
+   "incar_echo_lines_excluded": 0,
+   "TOTEN_eV": -742.08268546,
+   "E_sigma0_eV": -742.08910643,
+   "E_noentropy_eV": -742.10194838,
+   "Edisp_eV": -63.30681,
+   "outcar_titel": [
+    "PAW_PBE Li_sv 10Sep2004",
+    "PAW_PBE P 06Sep2000",
+    "PAW_PBE S 06Sep2000",
+    "PAW_PBE Cl 06Sep2000",
+    "PAW_PBE Ag 02Apr2005"
+   ],
+   "NGZF": 512,
+   "dipole_min_pos": 452,
+   "settings": {
+    "NIONS": 200,
+    "NELECT": 1452.0,
+    "ENCUT": 520.0,
+    "ISMEAR": 1,
+    "SIGMA": 0.14,
+    "ISPIN": 1,
+    "IVDW": 12,
+    "LDIPOL": "T",
+    "IDIPOL": 3,
+    "DIPOL_z": null,
+    "EFIELD": null,
+    "VDW_S6": 1.0,
+    "VDW_S8": 0.7875,
+    "VDW_A1": 0.4289,
+    "VDW_A2": 4.4407,
+    "VDW_RADIUS": 50.2,
+    "VDW_CNRADIUS": 21.17
+   },
+   "potcar_species_sha256": {
+    "Li_sv": "7e51fe1804c037e1dccc81a9c376d94d693a7559600c847f4b41960edb8ab895",
+    "P": "df60c54a93efe35c9e85ae94c010c75e9f6960a95d5595d7cdba4096d109af88",
+    "S": "0fc7481fb0695f01bdc6462160264c5c84044ae9ec85a907d398b887a2bc3132",
+    "Cl": "9f1b6e6ed4247ac726a768b330d26d7667cc3c95a39ff49c1d064c2d9dcce931",
+    "Ag": "6550cfa3543261e132c169e1b98a529204624d72be14e2da2e0242bcb74a174d"
+   },
+   "potcar_sha256": "abbd2ba9196a363a7f32419402e3bd8ff3a6a7690f39a8daac6e403d3dd65fa5",
+   "oszicar_last": {
+    "n_elec_steps": 110,
+    "dE": 3.1045e-07,
+    "d_eps": -2.708e-08
+   },
+   "settings_sources": {
+    "DIPOL": [
+     "min pos cut 452/512"
+    ]
+   },
+   "status": "OK"
+  },
+  "V5_s_outer_A_G3_c2_far_i": {
+   "dir": "V5_s_outer_A_G3_c2_far_i_r1",
+   "attempt": "r1",
+   "run_id": "20261008T051049-44420-12492",
+   "rc": 0,
+   "attempt_json_sha256": "149319955d4c9c56ceaa6209624df84304feb77d817cf629f387351d9158c9d8",
+   "outcar_sha256": "c5a90fdf875451b176e32b1ee48d99656912d1e0ac2df479c7a8d6cdb0baac00",
+   "n_runs": 1,
+   "version": "vasp.5.4.4.18Apr17-6-g9f103f2a35 (build Aug 19 2022 11:57:46) complex",
+   "terminated": true,
+   "converged": true,
+   "incar_echo_lines_excluded": 0,
+   "TOTEN_eV": -731.16773906,
+   "E_sigma0_eV": -731.17429986,
+   "E_noentropy_eV": -731.18742145,
+   "Edisp_eV": -56.40781,
+   "outcar_titel": [
+    "PAW_PBE Li_sv 10Sep2004",
+    "PAW_PBE P 06Sep2000",
+    "PAW_PBE S 06Sep2000",
+    "PAW_PBE Cl 06Sep2000",
+    "PAW_PBE Ag 02Apr2005"
+   ],
+   "NGZF": 512,
+   "dipole_min_pos": 452,
+   "settings": {
+    "NIONS": 200,
+    "NELECT": 1452.0,
+    "ENCUT": 520.0,
+    "ISMEAR": 1,
+    "SIGMA": 0.14,
+    "ISPIN": 1,
+    "IVDW": 12,
+    "LDIPOL": "T",
+    "IDIPOL": 3,
+    "DIPOL_z": null,
+    "EFIELD": null,
+    "VDW_S6": 1.0,
+    "VDW_S8": 0.7875,
+    "VDW_A1": 0.4289,
+    "VDW_A2": 4.4407,
+    "VDW_RADIUS": 50.2,
+    "VDW_CNRADIUS": 21.17
+   },
+   "potcar_species_sha256": {
+    "Li_sv": "7e51fe1804c037e1dccc81a9c376d94d693a7559600c847f4b41960edb8ab895",
+    "P": "df60c54a93efe35c9e85ae94c010c75e9f6960a95d5595d7cdba4096d109af88",
+    "S": "0fc7481fb0695f01bdc6462160264c5c84044ae9ec85a907d398b887a2bc3132",
+    "Cl": "9f1b6e6ed4247ac726a768b330d26d7667cc3c95a39ff49c1d064c2d9dcce931",
+    "Ag": "6550cfa3543261e132c169e1b98a529204624d72be14e2da2e0242bcb74a174d"
+   },
+   "potcar_sha256": "abbd2ba9196a363a7f32419402e3bd8ff3a6a7690f39a8daac6e403d3dd65fa5",
+   "oszicar_last": {
+    "n_elec_steps": 215,
+    "dE": -2.5654e-07,
+    "d_eps": -3.096e-08
+   },
+   "settings_sources": {
+    "DIPOL": [
+     "min pos cut 452/512"
+    ]
+   },
+   "status": "OK",
+   "first_attempt": "SCF_NOT_CONVERGED"
+  },
+  "V5_s_outer_A_G3_c2_far_ii": {
+   "dir": "V5_s_outer_A_G3_c2_far_ii",
+   "attempt": "0",
+   "run_id": "20261007T100632-41361-25628",
+   "rc": 0,
+   "attempt_json_sha256": "321f05e70e12b96fc3e9c30273724457f963319ca10455e4b46b7cdd2d7d947b",
+   "outcar_sha256": "31510af0afc0b5333dbd301265a59f0a3a3b701ce894b3cd8426570e66b07c4e",
+   "n_runs": 1,
+   "version": "vasp.5.4.4.18Apr17-6-g9f103f2a35 (build Aug 19 2022 11:57:46) complex",
+   "terminated": true,
+   "converged": true,
+   "incar_echo_lines_excluded": 0,
+   "TOTEN_eV": -731.12179486,
+   "E_sigma0_eV": -731.1262118,
+   "E_noentropy_eV": -731.13504567,
+   "Edisp_eV": -56.35761,
+   "outcar_titel": [
+    "PAW_PBE Li_sv 10Sep2004",
+    "PAW_PBE P 06Sep2000",
+    "PAW_PBE S 06Sep2000",
+    "PAW_PBE Cl 06Sep2000",
+    "PAW_PBE Ag 02Apr2005"
+   ],
+   "NGZF": 512,
+   "dipole_min_pos": 452,
+   "settings": {
+    "NIONS": 200,
+    "NELECT": 1452.0,
+    "ENCUT": 520.0,
+    "ISMEAR": 1,
+    "SIGMA": 0.14,
+    "ISPIN": 1,
+    "IVDW": 12,
+    "LDIPOL": "T",
+    "IDIPOL": 3,
+    "DIPOL_z": null,
+    "EFIELD": null,
+    "VDW_S6": 1.0,
+    "VDW_S8": 0.7875,
+    "VDW_A1": 0.4289,
+    "VDW_A2": 4.4407,
+    "VDW_RADIUS": 50.2,
+    "VDW_CNRADIUS": 21.17
+   },
+   "potcar_species_sha256": {
+    "Li_sv": "7e51fe1804c037e1dccc81a9c376d94d693a7559600c847f4b41960edb8ab895",
+    "P": "df60c54a93efe35c9e85ae94c010c75e9f6960a95d5595d7cdba4096d109af88",
+    "S": "0fc7481fb0695f01bdc6462160264c5c84044ae9ec85a907d398b887a2bc3132",
+    "Cl": "9f1b6e6ed4247ac726a768b330d26d7667cc3c95a39ff49c1d064c2d9dcce931",
+    "Ag": "6550cfa3543261e132c169e1b98a529204624d72be14e2da2e0242bcb74a174d"
+   },
+   "potcar_sha256": "abbd2ba9196a363a7f32419402e3bd8ff3a6a7690f39a8daac6e403d3dd65fa5",
+   "oszicar_last": {
+    "n_elec_steps": 153,
+    "dE": -1.8382e-07,
+    "d_eps": -3.5115e-08
+   },
+   "settings_sources": {
+    "DIPOL": [
+     "min pos cut 452/512"
+    ]
+   },
+   "status": "OK"
+  },
+  "V5_s_outer_A_G4_e70_bound": {
+   "dir": "V5_s_outer_A_G4_e70_bound",
+   "attempt": "0",
+   "run_id": "20261007T213615-41361-28236",
+   "rc": 0,
+   "attempt_json_sha256": "22b18cd0e38dfb83730ea4a02e9f188af9db2b1877a1c1815b8610386b3518a9",
+   "outcar_sha256": "3c0499ba32428981d887ee0b99322d3123ca24d924a818ab035fcd0a8fa8a99d",
+   "n_runs": 1,
+   "version": "vasp.5.4.4.18Apr17-6-g9f103f2a35 (build Aug 19 2022 11:57:46) complex",
+   "terminated": true,
+   "converged": true,
+   "incar_echo_lines_excluded": 0,
+   "TOTEN_eV": -742.0769952,
+   "E_sigma0_eV": -742.08344031,
+   "E_noentropy_eV": -742.09633052,
+   "Edisp_eV": -63.32312,
+   "outcar_titel": [
+    "PAW_PBE Li_sv 10Sep2004",
+    "PAW_PBE P 06Sep2000",
+    "PAW_PBE S 06Sep2000",
+    "PAW_PBE Cl 06Sep2000",
+    "PAW_PBE Ag 02Apr2005"
+   ],
+   "NGZF": 540,
+   "dipole_min_pos": 473,
+   "settings": {
+    "NIONS": 200,
+    "NELECT": 1452.0,
+    "ENCUT": 650.0,
+    "ISMEAR": 1,
+    "SIGMA": 0.14,
+    "ISPIN": 1,
+    "IVDW": 12,
+    "LDIPOL": "T",
+    "IDIPOL": 3,
+    "DIPOL_z": null,
+    "EFIELD": null,
+    "VDW_S6": 1.0,
+    "VDW_S8": 0.7875,
+    "VDW_A1": 0.4289,
+    "VDW_A2": 4.4407,
+    "VDW_RADIUS": 50.2,
+    "VDW_CNRADIUS": 21.17
+   },
+   "potcar_species_sha256": {
+    "Li_sv": "7e51fe1804c037e1dccc81a9c376d94d693a7559600c847f4b41960edb8ab895",
+    "P": "df60c54a93efe35c9e85ae94c010c75e9f6960a95d5595d7cdba4096d109af88",
+    "S": "0fc7481fb0695f01bdc6462160264c5c84044ae9ec85a907d398b887a2bc3132",
+    "Cl": "9f1b6e6ed4247ac726a768b330d26d7667cc3c95a39ff49c1d064c2d9dcce931",
+    "Ag": "6550cfa3543261e132c169e1b98a529204624d72be14e2da2e0242bcb74a174d"
+   },
+   "potcar_sha256": "abbd2ba9196a363a7f32419402e3bd8ff3a6a7690f39a8daac6e403d3dd65fa5",
+   "oszicar_last": {
+    "n_elec_steps": 124,
+    "dE": -9.0344e-07,
+    "d_eps": -2.0638e-08
+   },
+   "settings_sources": {
+    "DIPOL": [
+     "min pos cut 473/540"
+    ]
+   },
+   "status": "OK"
+  },
+  "V5_s_outer_A_G4_e70_far": {
+   "dir": "V5_s_outer_A_G4_e70_far",
+   "attempt": "0",
+   "run_id": "20261008T113044-41361-27810",
+   "rc": 0,
+   "attempt_json_sha256": "26299309cbf0f589057fd61ac6e06ba3444b0c83bfe268e6cc79167e514dfca9",
+   "outcar_sha256": "9990cb80fe9111efbe800d7ec5e981913704f29b45c25b6af76f189fc3394347",
+   "n_runs": 1,
+   "version": "vasp.5.4.4.18Apr17-6-g9f103f2a35 (build Aug 19 2022 11:57:46) complex",
+   "terminated": true,
+   "converged": true,
+   "incar_echo_lines_excluded": 0,
+   "TOTEN_eV": -731.24234784,
+   "E_sigma0_eV": -731.24677808,
+   "E_noentropy_eV": -731.25563857,
+   "Edisp_eV": -56.49428,
+   "outcar_titel": [
+    "PAW_PBE Li_sv 10Sep2004",
+    "PAW_PBE P 06Sep2000",
+    "PAW_PBE S 06Sep2000",
+    "PAW_PBE Cl 06Sep2000",
+    "PAW_PBE Ag 02Apr2005"
+   ],
+   "NGZF": 540,
+   "dipole_min_pos": 473,
+   "settings": {
+    "NIONS": 200,
+    "NELECT": 1452.0,
+    "ENCUT": 650.0,
+    "ISMEAR": 1,
+    "SIGMA": 0.14,
+    "ISPIN": 1,
+    "IVDW": 12,
+    "LDIPOL": "T",
+    "IDIPOL": 3,
+    "DIPOL_z": null,
+    "EFIELD": null,
+    "VDW_S6": 1.0,
+    "VDW_S8": 0.7875,
+    "VDW_A1": 0.4289,
+    "VDW_A2": 4.4407,
+    "VDW_RADIUS": 50.2,
+    "VDW_CNRADIUS": 21.17
+   },
+   "potcar_species_sha256": {
+    "Li_sv": "7e51fe1804c037e1dccc81a9c376d94d693a7559600c847f4b41960edb8ab895",
+    "P": "df60c54a93efe35c9e85ae94c010c75e9f6960a95d5595d7cdba4096d109af88",
+    "S": "0fc7481fb0695f01bdc6462160264c5c84044ae9ec85a907d398b887a2bc3132",
+    "Cl": "9f1b6e6ed4247ac726a768b330d26d7667cc3c95a39ff49c1d064c2d9dcce931",
+    "Ag": "6550cfa3543261e132c169e1b98a529204624d72be14e2da2e0242bcb74a174d"
+   },
+   "potcar_sha256": "abbd2ba9196a363a7f32419402e3bd8ff3a6a7690f39a8daac6e403d3dd65fa5",
+   "oszicar_last": {
+    "n_elec_steps": 200,
+    "dE": 0.0012098,
+    "d_eps": -4.4442e-06
+   },
+   "status": "SCF_NOT_CONVERGED",
+   "why": "OSZICAR 마지막 스텝 |dE| 1.21e-03 · |d eps| 4.44e-06 > EDIFF 1e-06 (스텝 200 = NELM 소진) — OUTCAR 의 'EDIFF is reached' 는 VASP 5.x 에서 NELM 소진에도 찍힌다",
+   "r1": "SCF_NOT_CONVERGED"
+  },
+  "V5_s_outer_A_G4_k1_bound": {
+   "dir": "V5_s_outer_A_G4_k1_bound",
+   "attempt": "0",
+   "run_id": "20261009T085822-41361-32756",
+   "rc": 0,
+   "attempt_json_sha256": "3a555a0eab1314c39e94d7b0f77f8547c6fade484d9271d59fa2fac28e5144fc",
+   "outcar_sha256": "3ba5b4332ff0ed2a26edabca16a782a108d1b302bef2b560db7114e400856c95",
+   "n_runs": 1,
+   "version": "vasp.5.4.4.18Apr17-6-g9f103f2a35 (build Aug 19 2022 11:57:46) complex",
+   "terminated": true,
+   "converged": true,
+   "incar_echo_lines_excluded": 0,
+   "TOTEN_eV": -742.37740638,
+   "E_sigma0_eV": -742.36728136,
+   "E_noentropy_eV": -742.34703132,
+   "Edisp_eV": -63.32312,
+   "outcar_titel": [
+    "PAW_PBE Li_sv 10Sep2004",
+    "PAW_PBE P 06Sep2000",
+    "PAW_PBE S 06Sep2000",
+    "PAW_PBE Cl 06Sep2000",
+    "PAW_PBE Ag 02Apr2005"
+   ],
+   "NGZF": 480,
+   "dipole_min_pos": 421,
+   "settings": {
+    "NIONS": 200,
+    "NELECT": 1452.0,
+    "ENCUT": 520.0,
+    "ISMEAR": 1,
+    "SIGMA": 0.14,
+    "ISPIN": 1,
+    "IVDW": 12,
+    "LDIPOL": "T",
+    "IDIPOL": 3,
+    "DIPOL_z": null,
+    "EFIELD": null,
+    "VDW_S6": 1.0,
+    "VDW_S8": 0.7875,
+    "VDW_A1": 0.4289,
+    "VDW_A2": 4.4407,
+    "VDW_RADIUS": 50.2,
+    "VDW_CNRADIUS": 21.17
+   },
+   "potcar_species_sha256": {
+    "Li_sv": "7e51fe1804c037e1dccc81a9c376d94d693a7559600c847f4b41960edb8ab895",
+    "P": "df60c54a93efe35c9e85ae94c010c75e9f6960a95d5595d7cdba4096d109af88",
+    "S": "0fc7481fb0695f01bdc6462160264c5c84044ae9ec85a907d398b887a2bc3132",
+    "Cl": "9f1b6e6ed4247ac726a768b330d26d7667cc3c95a39ff49c1d064c2d9dcce931",
+    "Ag": "6550cfa3543261e132c169e1b98a529204624d72be14e2da2e0242bcb74a174d"
+   },
+   "potcar_sha256": "abbd2ba9196a363a7f32419402e3bd8ff3a6a7690f39a8daac6e403d3dd65fa5",
+   "oszicar_last": {
+    "n_elec_steps": 129,
+    "dE": -4.9177e-07,
+    "d_eps": -2.3271e-07
+   },
+   "settings_sources": {
+    "DIPOL": [
+     "min pos cut 421/480"
+    ]
+   },
+   "status": "OK"
+  },
+  "V5_s_outer_A_G4_k1_far": {
+   "dir": "V5_s_outer_A_G4_k1_far",
+   "attempt": "0",
+   "run_id": "20261010T025658-41361-11715",
+   "rc": 0,
+   "attempt_json_sha256": "fbc85e17f735fa698ea3830963487739b9c07ffabb1afc87a9bd5bc13653e85e",
+   "outcar_sha256": "55c4402d955fb5ba92307d075a425e2fc1ad22a494d7701568577505627da611",
+   "n_runs": 1,
+   "version": "vasp.5.4.4.18Apr17-6-g9f103f2a35 (build Aug 19 2022 11:57:46) complex",
+   "terminated": true,
+   "converged": true,
+   "incar_echo_lines_excluded": 0,
+   "TOTEN_eV": -731.65563529,
+   "E_sigma0_eV": -731.6949717,
+   "E_noentropy_eV": -731.77364451,
+   "Edisp_eV": -56.49428,
+   "outcar_titel": [
+    "PAW_PBE Li_sv 10Sep2004",
+    "PAW_PBE P 06Sep2000",
+    "PAW_PBE S 06Sep2000",
+    "PAW_PBE Cl 06Sep2000",
+    "PAW_PBE Ag 02Apr2005"
+   ],
+   "NGZF": 480,
+   "dipole_min_pos": 421,
+   "settings": {
+    "NIONS": 200,
+    "NELECT": 1452.0,
+    "ENCUT": 520.0,
+    "ISMEAR": 1,
+    "SIGMA": 0.14,
+    "ISPIN": 1,
+    "IVDW": 12,
+    "LDIPOL": "T",
+    "IDIPOL": 3,
+    "DIPOL_z": null,
+    "EFIELD": null,
+    "VDW_S6": 1.0,
+    "VDW_S8": 0.7875,
+    "VDW_A1": 0.4289,
+    "VDW_A2": 4.4407,
+    "VDW_RADIUS": 50.2,
+    "VDW_CNRADIUS": 21.17
+   },
+   "potcar_species_sha256": {
+    "Li_sv": "7e51fe1804c037e1dccc81a9c376d94d693a7559600c847f4b41960edb8ab895",
+    "P": "df60c54a93efe35c9e85ae94c010c75e9f6960a95d5595d7cdba4096d109af88",
+    "S": "0fc7481fb0695f01bdc6462160264c5c84044ae9ec85a907d398b887a2bc3132",
+    "Cl": "9f1b6e6ed4247ac726a768b330d26d7667cc3c95a39ff49c1d064c2d9dcce931",
+    "Ag": "6550cfa3543261e132c169e1b98a529204624d72be14e2da2e0242bcb74a174d"
+   },
+   "potcar_sha256": "abbd2ba9196a363a7f32419402e3bd8ff3a6a7690f39a8daac6e403d3dd65fa5",
+   "oszicar_last": {
+    "n_elec_steps": 134,
+    "dE": 2.2816e-07,
+    "d_eps": -8.4082e-08
+   },
+   "settings_sources": {
+    "DIPOL": [
+     "min pos cut 421/480"
+    ]
+   },
+   "status": "OK"
+  },
+  "V5_s_outer_A_G4_s05_bound": {
+   "dir": "V5_s_outer_A_G4_s05_bound",
+   "attempt": "0",
+   "run_id": "20261010T205923-41361-1389",
+   "rc": 0,
+   "attempt_json_sha256": "e8ab4d93176457483a8de1c3d2b7a0690a99d78313d858885ad78ba1faed0946",
+   "outcar_sha256": "c5b49cacf1d3d064159a23723a0cdff7eece8687db78bb3195607aeb95e26e5e",
+   "n_runs": 1,
+   "version": "vasp.5.4.4.18Apr17-6-g9f103f2a35 (build Aug 19 2022 11:57:46) complex",
+   "terminated": true,
+   "converged": true,
+   "incar_echo_lines_excluded": 0,
+   "TOTEN_eV": -742.10325563,
+   "E_sigma0_eV": -742.1044819,
+   "E_noentropy_eV": -742.10693443,
+   "Edisp_eV": -63.32312,
+   "outcar_titel": [
+    "PAW_PBE Li_sv 10Sep2004",
+    "PAW_PBE P 06Sep2000",
+    "PAW_PBE S 06Sep2000",
+    "PAW_PBE Cl 06Sep2000",
+    "PAW_PBE Ag 02Apr2005"
+   ],
+   "NGZF": 480,
+   "dipole_min_pos": 421,
+   "settings": {
+    "NIONS": 200,
+    "NELECT": 1452.0,
+    "ENCUT": 520.0,
+    "ISMEAR": 1,
+    "SIGMA": 0.07,
+    "ISPIN": 1,
+    "IVDW": 12,
+    "LDIPOL": "T",
+    "IDIPOL": 3,
+    "DIPOL_z": null,
+    "EFIELD": null,
+    "VDW_S6": 1.0,
+    "VDW_S8": 0.7875,
+    "VDW_A1": 0.4289,
+    "VDW_A2": 4.4407,
+    "VDW_RADIUS": 50.2,
+    "VDW_CNRADIUS": 21.17
+   },
+   "potcar_species_sha256": {
+    "Li_sv": "7e51fe1804c037e1dccc81a9c376d94d693a7559600c847f4b41960edb8ab895",
+    "P": "df60c54a93efe35c9e85ae94c010c75e9f6960a95d5595d7cdba4096d109af88",
+    "S": "0fc7481fb0695f01bdc6462160264c5c84044ae9ec85a907d398b887a2bc3132",
+    "Cl": "9f1b6e6ed4247ac726a768b330d26d7667cc3c95a39ff49c1d064c2d9dcce931",
+    "Ag": "6550cfa3543261e132c169e1b98a529204624d72be14e2da2e0242bcb74a174d"
+   },
+   "potcar_sha256": "abbd2ba9196a363a7f32419402e3bd8ff3a6a7690f39a8daac6e403d3dd65fa5",
+   "oszicar_last": {
+    "n_elec_steps": 85,
+    "dE": 9.7591e-07,
+    "d_eps": -1.6198e-07
+   },
+   "settings_sources": {
+    "DIPOL": [
+     "min pos cut 421/480"
+    ]
+   },
+   "status": "OK"
+  },
+  "V5_s_outer_A_G4_s05_far": {
+   "dir": "V5_s_outer_A_G4_s05_far",
+   "attempt": "0",
+   "run_id": "20261011T032347-41361-26520",
+   "rc": 0,
+   "attempt_json_sha256": "61739f3ce1fb50707117afc4945d0a78a34c910c086a81a9ccf59480830f1cda",
+   "outcar_sha256": "dc8e80724d8ea01d755b4419c17fe34c3bf2e0a0c29cd07546c9d209a2984b78",
+   "n_runs": 1,
+   "version": "vasp.5.4.4.18Apr17-6-g9f103f2a35 (build Aug 19 2022 11:57:46) complex",
+   "terminated": true,
+   "converged": true,
+   "incar_echo_lines_excluded": 0,
+   "TOTEN_eV": -731.26411041,
+   "E_sigma0_eV": -731.26819215,
+   "E_noentropy_eV": -731.27635562,
+   "Edisp_eV": -56.49428,
+   "outcar_titel": [
+    "PAW_PBE Li_sv 10Sep2004",
+    "PAW_PBE P 06Sep2000",
+    "PAW_PBE S 06Sep2000",
+    "PAW_PBE Cl 06Sep2000",
+    "PAW_PBE Ag 02Apr2005"
+   ],
+   "NGZF": 480,
+   "dipole_min_pos": 421,
+   "settings": {
+    "NIONS": 200,
+    "NELECT": 1452.0,
+    "ENCUT": 520.0,
+    "ISMEAR": 1,
+    "SIGMA": 0.07,
+    "ISPIN": 1,
+    "IVDW": 12,
+    "LDIPOL": "T",
+    "IDIPOL": 3,
+    "DIPOL_z": null,
+    "EFIELD": null,
+    "VDW_S6": 1.0,
+    "VDW_S8": 0.7875,
+    "VDW_A1": 0.4289,
+    "VDW_A2": 4.4407,
+    "VDW_RADIUS": 50.2,
+    "VDW_CNRADIUS": 21.17
+   },
+   "potcar_species_sha256": {
+    "Li_sv": "7e51fe1804c037e1dccc81a9c376d94d693a7559600c847f4b41960edb8ab895",
+    "P": "df60c54a93efe35c9e85ae94c010c75e9f6960a95d5595d7cdba4096d109af88",
+    "S": "0fc7481fb0695f01bdc6462160264c5c84044ae9ec85a907d398b887a2bc3132",
+    "Cl": "9f1b6e6ed4247ac726a768b330d26d7667cc3c95a39ff49c1d064c2d9dcce931",
+    "Ag": "6550cfa3543261e132c169e1b98a529204624d72be14e2da2e0242bcb74a174d"
+   },
+   "potcar_sha256": "abbd2ba9196a363a7f32419402e3bd8ff3a6a7690f39a8daac6e403d3dd65fa5",
+   "oszicar_last": {
+    "n_elec_steps": 155,
+    "dE": -2.468e-07,
+    "d_eps": -2.619e-09
+   },
+   "settings_sources": {
+    "DIPOL": [
+     "min pos cut 421/480"
+    ]
+   },
+   "status": "OK"
+  },
+  "V5_s_outer_A_p05_bound": {
+   "dir": "V5_s_outer_A_p05_bound",
+   "attempt": "0",
+   "run_id": "20261011T134659-41864-14508",
+   "rc": 0,
+   "attempt_json_sha256": "cf39459e55185d5f5559e30649087fe3037723de9a23b9f0775711d8b877b8ae",
+   "outcar_sha256": "d91079001b8cd58124494325785ca68c85f5d4495b307dfaedfc67997dbb2c86",
+   "n_runs": 1,
+   "version": "vasp.5.4.4.18Apr17-6-g9f103f2a35 (build Aug 19 2022 11:57:46) complex",
+   "terminated": true,
+   "converged": true,
+   "incar_echo_lines_excluded": 0,
+   "TOTEN_eV": -740.09077727,
+   "E_sigma0_eV": -740.09827554,
+   "E_noentropy_eV": -740.11327208,
+   "Edisp_eV": -61.6299,
+   "outcar_titel": [
+    "PAW_PBE Li_sv 10Sep2004",
+    "PAW_PBE P 06Sep2000",
+    "PAW_PBE S 06Sep2000",
+    "PAW_PBE Cl 06Sep2000",
+    "PAW_PBE Ag 02Apr2005"
+   ],
+   "NGZF": 480,
+   "dipole_min_pos": 421,
+   "settings": {
+    "NIONS": 200,
+    "NELECT": 1452.0,
+    "ENCUT": 520.0,
+    "ISMEAR": 1,
+    "SIGMA": 0.14,
+    "ISPIN": 1,
+    "IVDW": 12,
+    "LDIPOL": "T",
+    "IDIPOL": 3,
+    "DIPOL_z": null,
+    "EFIELD": null,
+    "VDW_S6": 1.0,
+    "VDW_S8": 0.7875,
+    "VDW_A1": 0.4289,
+    "VDW_A2": 4.4407,
+    "VDW_RADIUS": 50.2,
+    "VDW_CNRADIUS": 21.17
+   },
+   "potcar_species_sha256": {
+    "Li_sv": "7e51fe1804c037e1dccc81a9c376d94d693a7559600c847f4b41960edb8ab895",
+    "P": "df60c54a93efe35c9e85ae94c010c75e9f6960a95d5595d7cdba4096d109af88",
+    "S": "0fc7481fb0695f01bdc6462160264c5c84044ae9ec85a907d398b887a2bc3132",
+    "Cl": "9f1b6e6ed4247ac726a768b330d26d7667cc3c95a39ff49c1d064c2d9dcce931",
+    "Ag": "6550cfa3543261e132c169e1b98a529204624d72be14e2da2e0242bcb74a174d"
+   },
+   "potcar_sha256": "abbd2ba9196a363a7f32419402e3bd8ff3a6a7690f39a8daac6e403d3dd65fa5",
+   "oszicar_last": {
+    "n_elec_steps": 79,
+    "dE": 9.2725e-07,
+    "d_eps": -1.76e-07
+   },
+   "settings_sources": {
+    "DIPOL": [
+     "min pos cut 421/480"
+    ]
+   },
+   "status": "OK"
+  },
+  "V5_s_outer_B_bound": {
+   "dir": "V5_s_outer_B_bound",
+   "attempt": "0",
+   "run_id": "20261011T194024-41864-20663",
+   "rc": 0,
+   "attempt_json_sha256": "5ada6a9adea82e3201d0efc4f586f17d0919876d42039679d88fb7f1c6643ba9",
+   "outcar_sha256": "35d44465c699e23005fae92db1a051a7247f4aafa24e632a246efaad7f2b7de4",
+   "n_runs": 1,
+   "version": "vasp.5.4.4.18Apr17-6-g9f103f2a35 (build Aug 19 2022 11:57:46) complex",
+   "terminated": true,
+   "converged": true,
+   "incar_echo_lines_excluded": 0,
+   "TOTEN_eV": -742.02890244,
+   "E_sigma0_eV": -742.03349516,
+   "E_noentropy_eV": -742.04268061,
+   "Edisp_eV": -63.36229,
+   "outcar_titel": [
+    "PAW_PBE Li_sv 10Sep2004",
+    "PAW_PBE P 06Sep2000",
+    "PAW_PBE S 06Sep2000",
+    "PAW_PBE Cl 06Sep2000",
+    "PAW_PBE Ag 02Apr2005"
+   ],
+   "NGZF": 480,
+   "dipole_min_pos": 421,
+   "settings": {
+    "NIONS": 200,
+    "NELECT": 1452.0,
+    "ENCUT": 520.0,
+    "ISMEAR": 1,
+    "SIGMA": 0.14,
+    "ISPIN": 1,
+    "IVDW": 12,
+    "LDIPOL": "T",
+    "IDIPOL": 3,
+    "DIPOL_z": null,
+    "EFIELD": null,
+    "VDW_S6": 1.0,
+    "VDW_S8": 0.7875,
+    "VDW_A1": 0.4289,
+    "VDW_A2": 4.4407,
+    "VDW_RADIUS": 50.2,
+    "VDW_CNRADIUS": 21.17
+   },
+   "potcar_species_sha256": {
+    "Li_sv": "7e51fe1804c037e1dccc81a9c376d94d693a7559600c847f4b41960edb8ab895",
+    "P": "df60c54a93efe35c9e85ae94c010c75e9f6960a95d5595d7cdba4096d109af88",
+    "S": "0fc7481fb0695f01bdc6462160264c5c84044ae9ec85a907d398b887a2bc3132",
+    "Cl": "9f1b6e6ed4247ac726a768b330d26d7667cc3c95a39ff49c1d064c2d9dcce931",
+    "Ag": "6550cfa3543261e132c169e1b98a529204624d72be14e2da2e0242bcb74a174d"
+   },
+   "potcar_sha256": "abbd2ba9196a363a7f32419402e3bd8ff3a6a7690f39a8daac6e403d3dd65fa5",
+   "oszicar_last": {
+    "n_elec_steps": 90,
+    "dE": -4.4977e-07,
+    "d_eps": -3.0623e-07
+   },
+   "settings_sources": {
+    "DIPOL": [
+     "min pos cut 421/480"
+    ]
+   },
+   "status": "OK"
+  },
+  "V5_s_outer_B_far": {
+   "dir": "V5_s_outer_B_far",
+   "attempt": "0",
+   "run_id": "20261012T015806-41864-10380",
+   "rc": 0,
+   "attempt_json_sha256": "ccc38d1262bdc1c89aa690b4c776400132b4684cdfdbc837928e77eb22d17e5f",
+   "outcar_sha256": "7dfdc1caac9402fc1b66d043367f25dfd7b9c67983bc50bedef8674332b9ed65",
+   "n_runs": 1,
+   "version": "vasp.5.4.4.18Apr17-6-g9f103f2a35 (build Aug 19 2022 11:57:46) complex",
+   "terminated": true,
+   "converged": true,
+   "incar_echo_lines_excluded": 0,
+   "TOTEN_eV": -731.00333063,
+   "E_sigma0_eV": -731.01208871,
+   "E_noentropy_eV": -731.02960487,
+   "Edisp_eV": -56.46131,
+   "outcar_titel": [
+    "PAW_PBE Li_sv 10Sep2004",
+    "PAW_PBE P 06Sep2000",
+    "PAW_PBE S 06Sep2000",
+    "PAW_PBE Cl 06Sep2000",
+    "PAW_PBE Ag 02Apr2005"
+   ],
+   "NGZF": 480,
+   "dipole_min_pos": 421,
+   "settings": {
+    "NIONS": 200,
+    "NELECT": 1452.0,
+    "ENCUT": 520.0,
+    "ISMEAR": 1,
+    "SIGMA": 0.14,
+    "ISPIN": 1,
+    "IVDW": 12,
+    "LDIPOL": "T",
+    "IDIPOL": 3,
+    "DIPOL_z": null,
+    "EFIELD": null,
+    "VDW_S6": 1.0,
+    "VDW_S8": 0.7875,
+    "VDW_A1": 0.4289,
+    "VDW_A2": 4.4407,
+    "VDW_RADIUS": 50.2,
+    "VDW_CNRADIUS": 21.17
+   },
+   "potcar_species_sha256": {
+    "Li_sv": "7e51fe1804c037e1dccc81a9c376d94d693a7559600c847f4b41960edb8ab895",
+    "P": "df60c54a93efe35c9e85ae94c010c75e9f6960a95d5595d7cdba4096d109af88",
+    "S": "0fc7481fb0695f01bdc6462160264c5c84044ae9ec85a907d398b887a2bc3132",
+    "Cl": "9f1b6e6ed4247ac726a768b330d26d7667cc3c95a39ff49c1d064c2d9dcce931",
+    "Ag": "6550cfa3543261e132c169e1b98a529204624d72be14e2da2e0242bcb74a174d"
+   },
+   "potcar_sha256": "abbd2ba9196a363a7f32419402e3bd8ff3a6a7690f39a8daac6e403d3dd65fa5",
+   "oszicar_last": {
+    "n_elec_steps": 193,
+    "dE": 8.5513e-07,
+    "d_eps": -1.1847e-07
+   },
+   "settings_sources": {
+    "DIPOL": [
+     "min pos cut 421/480"
+    ]
+   },
+   "status": "OK"
+  }
+ },
+ "jobs_not_ok": [
+  "V5_s_outer_A_G4_e70_far"
+ ],
+ "⛔": "VASP 비교군 — QE V2·V4 값과 빼거나 섞지 않는다 · D3 예산은 운영 예산이지 신뢰구간이 아니다"
+}

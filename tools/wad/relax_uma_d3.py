@@ -363,6 +363,43 @@ def w_endpoints(model_dir, relax_dir, gaps=(10.0, 12.0), calc_kind="uma", device
 G3_REPS = {"P1": ("s_outer", "A"), "P2": ("s_outer", "A")}      # SE 쌍 카드 §4 G3 판정 대상 (나머지는 정보)
 
 
+def energies(paths, out=None, calc_kind="uma", device="cuda", vram_cap_mib=None, gpu_kill_total_mib=None, gpu_start_max_mib=None, gpu_wait_s=3600):
+    """--energies 본체 → (rec, rc): 구조들의 UMA 단일점 에너지 (D3 없음 · default 모드 · 3축 pbc) · schema uma_energies/v1.
+    GPU 공유 안전장치는 이완과 같은 것을 쓴다 (2026-10-15 · V5 G5 단일점을 kgy 에서 Nd DFT·cascade 옆에 돌리려고):
+    시작 문턱을 못 열면 **계산 0 · 파일 0 · 종료 4** · 감시는 합계 초과면 이 프로세스만 종료 3 · torch 상한.
+    안전장치를 하나도 안 주면 기록은 예전과 같다 (gpu_guard 키 없음)."""
+    from ase.io import read
+    # ⛔ 키는 고유해야 한다 — 2026-09-26 실측: S2 의 relaxed.extxyz 4 개(폴더만 다름)를 파일명으로 키를 잡아 셋을 덮어썼다.
+    #   파일명이 겹치면 "<상위폴더>/<파일명>" 으로, 그래도 겹치면 실행을 거부한다 (조용히 덮어쓰지 않는다).
+    bases = [os.path.splitext(os.path.basename(p))[0] for p in paths]
+    keys = [b if bases.count(b) == 1 else f"{os.path.basename(os.path.dirname(os.path.abspath(p)))}/{b}" for p, b in zip(paths, bases)]
+    if len(set(keys)) != len(keys):
+        raise SystemExit(f"⛔ --energies 구조 이름이 겹친다 (상위폴더까지 같음): {keys}")
+    guarded = any(x is not None for x in (vram_cap_mib, gpu_kill_total_mib, gpu_start_max_mib))
+    guard = {"vram_cap_MiB": vram_cap_mib, "gpu_kill_total_MiB": gpu_kill_total_mib, "gpu_start_max_MiB": gpu_start_max_mib}
+    if gpu_start_max_mib is not None:
+        g = gpu_start_gate(gpu_start_max_mib, gpu_wait_s)
+        guard["start_gate"] = g
+        if not g["ok"]:
+            print(f"⛔ 시작 문턱: {g['reason']} — 계산하지 않는다 (종료 4 · 파일 안 씀)", flush=True)
+            return {"gpu_guard": guard}, 4
+    if gpu_kill_total_mib is not None:
+        start_gpu_watchdog(gpu_kill_total_mib, os.path.dirname(os.path.abspath(out)) if out else os.getcwd())
+        guard["watchdog"] = f"on (합계 > {gpu_kill_total_mib} MiB 면 이 프로세스만 종료 3)"
+    calc, info = make_calc(calc_kind, device, "none", vram_cap_mib)
+    base = calc.mixer.calcs[0] if hasattr(calc, "mixer") else (calc.calcs[0] if hasattr(calc, "calcs") else calc)
+    rows = {}
+    for p, key in zip(paths, keys):
+        at = read(p); at.set_pbc((True, True, True)); at.calc = base
+        rows[key] = {"struct": os.path.abspath(p), "sha256": _sha(p), "n_atoms": len(at), "formula": at.get_chemical_formula(),
+                     "E_UMA_eV": float(at.get_potential_energy()), "pbc": [True, True, True]}
+    rec = {"schema": "uma_energies/v1", "what": "UMA 단일점 에너지 (D3 없음) — W_UMA 용 · D3 항은 QE 출력에서 (개정 1)", "calculator": {k: v for k, v in info.items() if k != "d3"},
+           "energies": rows}
+    if guarded:
+        rec["gpu_guard"] = {**guard, "peak": _peak_mem(), "gpu_total_after_MiB": _gpu_total_mib()}
+    return rec, 0
+
+
 def collect(run_dir, fmax_target=0.02, max_steps=3000):
     """SE 쌍 카드 §4·§5 집계 — run_dir/models/<계_종결>/<A|B>/ · relax/<계_종결>/<A|B>/ · w/<계_종결>_<A|B>.json 에서
     무결성 (sha 사슬: bound · meta · relax_meta · W / relaxed · relax_meta · W) · G1 (fmax ≤ 0.02 · 스텝 ≤ 3000) · G2 (깃발 0) ·
@@ -561,6 +598,36 @@ def _selftest():
             rec, rc = relax(md, os.path.join(md, "g7"), calc_kind="emt", d3_kind="none", mem_probe=True, vram_cap_mib=1800)
             ck("mem_probe: 힘 한 번 · mem_probe.json · 이완 산출물 없음 · EMT 는 상한 '해당 없음'", rc == 0 and os.path.isfile(os.path.join(md, "g7", "mem_probe.json"))
                and not os.path.exists(os.path.join(md, "g7", "relaxed.extxyz")) and rec["calculator"].get("vram_cap") == "해당 없음 (EMT)", rec.get("calculator"))
+            # ── --energies 에도 같은 안전장치 (2026-10-15 · V5 G5 단일점을 kgy 에서 Nd DFT·cascade 옆에) ──
+            from ase.build import bulk
+            from ase.io import write as _w
+            e1, e2 = os.path.join(T, "en_a.extxyz"), os.path.join(T, "en_b.extxyz")
+            cu = bulk("Cu", "fcc", a=3.6, cubic=True); _w(e1, cu); cu2 = cu.copy(); cu2.positions[0] += 0.05; _w(e2, cu2)
+            open(gv, "w").write("3000\n")
+            rec, rc = energies([e1, e2], os.path.join(T, "en1.json"), calc_kind="emt", device="cpu", gpu_start_max_mib=12000, gpu_wait_s=2)
+            ck("energies 시작 문턱: 합계 3000 ≤ 12000 → 두 구조 에너지 · sha · gpu_guard 기록", rc == 0 and set(rec["energies"]) == {"en_a", "en_b"}
+               and all(np.isfinite(v["E_UMA_eV"]) and v["sha256"] == _sha(pp) for v, pp in zip(rec["energies"].values(), (e1, e2))) and rec["gpu_guard"]["start_gate"]["ok"], rec.get("gpu_guard"))
+            rec0, rc0 = energies([e1], calc_kind="emt", device="cpu")
+            ck("energies 안전장치 없음 → 기록은 예전 그대로 (gpu_guard 키 없음)", rc0 == 0 and "gpu_guard" not in rec0 and rec0["schema"] == "uma_energies/v1")
+            open(gv, "w").write("43000\n")
+            rec, rc = energies([e1, e2], os.path.join(T, "en2.json"), calc_kind="emt", device="cpu", gpu_start_max_mib=12000, gpu_wait_s=1)
+            ck("⛔음성 energies 시작 문턱: 합계 43000 > 12000 가 대기 상한 넘게 → 종료 4 · 에너지 0", rc == 4 and "energies" not in rec, rec.get("gpu_guard"))
+            out3 = os.path.join(T, "en3.json")
+            r = subprocess.run([sys.executable, __file__, "--energies", e1, e2, "--calc", "emt", "--device", "cpu", "--out", out3,
+                                "--gpu_start_max_mib", "12000", "--gpu_wait_s", "1"], capture_output=True, text=True, env=dict(os.environ), timeout=120)
+            ck("⛔음성 energies CLI: 문턱 못 열면 종료 4 · --out 파일을 안 쓴다", r.returncode == 4 and not os.path.exists(out3), (r.returncode, r.stdout[-200:]))
+            os.environ["WAD_NVSMI"] = os.path.join(T, "없는-nvidia-smi")
+            rec, rc = energies([e1], calc_kind="emt", device="cpu", gpu_start_max_mib=12000, gpu_wait_s=1)
+            ck("⛔음성 energies: nvidia-smi 를 못 읽으면 시작하지 않는다 (fail-closed · 종료 4)", rc == 4 and "못 읽었다" in rec["gpu_guard"]["start_gate"]["reason"])
+            os.environ["WAD_NVSMI"] = fake
+            d1, d2 = os.path.join(T, "q1", "a"), os.path.join(T, "q2", "a")
+            os.makedirs(d1, exist_ok=True); os.makedirs(d2, exist_ok=True)
+            _w(os.path.join(d1, "x.extxyz"), cu); _w(os.path.join(d2, "x.extxyz"), cu2)
+            try:
+                energies([os.path.join(d1, "x.extxyz"), os.path.join(d2, "x.extxyz")], calc_kind="emt", device="cpu"); bad = False
+            except SystemExit as e:
+                bad = "겹친다" in str(e)
+            ck("⛔음성 energies: 상위폴더까지 같은 이름 둘 → 거부 (조용히 덮어쓰지 않는다)", bad)
         finally:
             for k, v in env0.items():
                 if v is None:
@@ -686,9 +753,9 @@ def main():
     ap.add_argument("--steps", type=int, default=3000)
     ap.add_argument("--optimizer", choices=["fire", "bfgs"], default="fire")
     ap.add_argument("--preflight_only", action="store_true")
-    ap.add_argument("--vram_cap_mib", type=float, default=None, help="이 프로세스 GPU 메모리 상한 (torch · 컨텍스트 제외)")
-    ap.add_argument("--gpu_kill_total_mib", type=int, default=None, help="GPU 합계가 이 값을 넘으면 이 프로세스만 종료 3")
-    ap.add_argument("--gpu_start_max_mib", type=int, default=None, help="GPU 합계가 이 값 이하일 때만 시작 (못 읽으면 시작 안 함)")
+    ap.add_argument("--vram_cap_mib", type=float, default=None, help="이 프로세스 GPU 메모리 상한 (torch · 컨텍스트 제외) — 이완·--energies")
+    ap.add_argument("--gpu_kill_total_mib", type=int, default=None, help="GPU 합계가 이 값을 넘으면 이 프로세스만 종료 3 — 이완·--energies")
+    ap.add_argument("--gpu_start_max_mib", type=int, default=None, help="GPU 합계가 이 값 이하일 때만 시작 (못 읽으면 시작 안 함) — 이완·--energies (못 열면 계산 0 · 파일 0 · 종료 4)")
     ap.add_argument("--gpu_wait_s", type=int, default=3600, help="시작 문턱 대기 상한 (넘으면 종료 4)")
     ap.add_argument("--mem_probe", action="store_true", help="힘 한 번 계산하고 최대 메모리만 기록 (이완 없음)")
     ap.add_argument("--w_from", metavar="MODEL_DIR", help="W 단계 (SE 쌍 카드 §2): 이 모델의 이완본(--relax_dir)에서 끝점을 만들어 W_UMA+D3 · ATM · G3 → --out")
@@ -728,22 +795,10 @@ def main():
                           "⛔": "QE 의 'DFT-D3 Dispersion' 줄과 대조하는 용도 — 총 에너지·W 에 쓰지 않는다"}, ensure_ascii=False, indent=1, default=float))
         return 0
     if a.energies:
-        from ase.io import read
-        calc, info = make_calc(a.calc, a.device, "none")
-        base = calc.mixer.calcs[0] if hasattr(calc, "mixer") else (calc.calcs[0] if hasattr(calc, "calcs") else calc)
-        rows = {}
-        # ⛔ 키는 고유해야 한다 — 2026-09-26 실측: S2 의 relaxed.extxyz 4 개(폴더만 다름)를 파일명으로 키를 잡아 셋을 덮어썼다.
-        #   파일명이 겹치면 "<상위폴더>/<파일명>" 으로, 그래도 겹치면 실행을 거부한다 (조용히 덮어쓰지 않는다).
-        bases = [os.path.splitext(os.path.basename(p))[0] for p in a.energies]
-        keys = [b if bases.count(b) == 1 else f"{os.path.basename(os.path.dirname(os.path.abspath(p)))}/{b}" for p, b in zip(a.energies, bases)]
-        if len(set(keys)) != len(keys):
-            raise SystemExit(f"⛔ --energies 구조 이름이 겹친다 (상위폴더까지 같음): {keys}")
-        for p, key in zip(a.energies, keys):
-            at = read(p); at.set_pbc((True, True, True)); at.calc = base
-            rows[key] = {"struct": os.path.abspath(p), "sha256": _sha(p), "n_atoms": len(at), "formula": at.get_chemical_formula(),
-                         "E_UMA_eV": float(at.get_potential_energy()), "pbc": [True, True, True]}
-        rec = {"schema": "uma_energies/v1", "what": "UMA 단일점 에너지 (D3 없음) — W_UMA 용 · D3 항은 QE 출력에서 (개정 1)", "calculator": {k: v for k, v in info.items() if k != "d3"},
-               "energies": rows}
+        rec, rc = energies(a.energies, a.out, a.calc, a.device, a.vram_cap_mib, a.gpu_kill_total_mib, a.gpu_start_max_mib, a.gpu_wait_s)
+        if rc:
+            return rc
+        rows = rec["energies"]
         txt = json.dumps(rec, ensure_ascii=False, indent=1, default=float)
         if a.out:
             open(a.out, "w", encoding="utf-8").write(txt + "\n"); print(f"-> {a.out}")

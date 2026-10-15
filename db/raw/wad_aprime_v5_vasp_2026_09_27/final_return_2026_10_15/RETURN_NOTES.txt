@@ -1,0 +1,58 @@
+$ cat run/status.tsv
+job	attempt	rc	terminated	converged	n_runs	n_elec_steps	TOTEN_eV	wall_s
+V5_s_outer_A_bound	0	0	1	1	1	118	-742.09595416	37387
+V5_s_outer_A_far	0	0	1	1	1	64	-731.25154658	17709
+V5_li_outer_A_bound	0	0	1	1	1	118	-644.01519524	24445
+V5_li_outer_A_far	0	0	1	1	1	87	-632.73518324	17327
+V5_li_outer_B_bound	0	0	1	1	1	87	-643.93657413	18426
+V5_li_outer_B_far	0	0	1	1	1	92	-632.62185883	17940
+V5_s_outer_A_G3_c2_bound	0	0	1	1	1	110	-742.08268546	31618
+V5_s_outer_A_G3_c2_far_i	0	0	1	1	1	200	-731.15781595	54298
+V5_s_outer_A_G3_c2_far_ii	0	0	1	1	1	153	-731.12179486	41382
+V5_s_outer_A_G4_e70_bound	0	0	1	1	1	124	-742.07699520	50068
+V5_s_outer_A_G3_c2_far_i	r1	0	1	1	1	215	-731.16773906	54557
+V5_s_outer_A_G4_e70_far	0	0	1	1	1	200	-731.24234784	77257
+V5_s_outer_A_G4_k1_bound	0	0	1	1	1	129	-742.37740638	64715
+V5_s_outer_A_G4_k1_far	0	0	1	1	1	134	-731.65563529	64944
+V5_s_outer_A_G4_s05_bound	0	0	1	1	1	85	-742.10325563	23064
+V5_s_outer_A_G4_s05_far	0	0	1	1	1	155	-731.26411041	37364
+V5_s_outer_A_p05_bound	0	0	1	1	1	79	-740.09077727	21205
+V5_s_outer_B_bound	0	0	1	1	1	90	-742.02890244	22661
+V5_s_outer_B_far	0	0	1	1	1	193	-731.00333063	45428
+V5_s_outer_A_G4_e70_far	r1	0	1	1	1	300	-731.23593147	111989
+
+$ §3 확인 (마지막 시점)
+run/V5_li_outer_A_bound/ DAV: 118 -0.79618E-06 -0.52175E-07
+run/V5_li_outer_A_far/ DAV: 87 -0.19631E-06 -0.27964E-06
+run/V5_li_outer_B_bound/ DAV: 87 0.19792E-06 -0.72482E-07
+run/V5_li_outer_B_far/ DAV: 92 -0.54228E-06 -0.11304E-06
+run/V5_s_outer_A_G3_c2_bound/ DAV: 110 0.31045E-06 -0.27080E-07
+run/V5_s_outer_A_G3_c2_far_i/ DAV: 200 0.22678E-02 -0.32575E-04
+run/V5_s_outer_A_G3_c2_far_i_r1/ DAV: 215 -0.25654E-06 -0.30960E-07
+run/V5_s_outer_A_G3_c2_far_ii/ DAV: 153 -0.18382E-06 -0.35115E-07
+run/V5_s_outer_A_G4_e70_bound/ DAV: 124 -0.90344E-06 -0.20638E-07
+run/V5_s_outer_A_G4_e70_far/ DAV: 200 0.12098E-02 -0.44442E-05
+run/V5_s_outer_A_G4_e70_far_r1/ DAV: 300 -0.39581E-03 -0.23406E-05
+run/V5_s_outer_A_G4_k1_bound/ DAV: 129 -0.49177E-06 -0.23271E-06
+run/V5_s_outer_A_G4_k1_far/ DAV: 134 0.22816E-06 -0.84082E-07
+run/V5_s_outer_A_G4_s05_bound/ DAV: 85 0.97591E-06 -0.16198E-06
+run/V5_s_outer_A_G4_s05_far/ DAV: 155 -0.24680E-06 -0.26190E-08
+run/V5_s_outer_A_bound/ DAV: 118 -0.67736E-06 -0.77372E-08
+run/V5_s_outer_A_far/ DAV: 64 -0.82451E-07 -0.20818E-06
+run/V5_s_outer_A_p05_bound/ DAV: 79 0.92725E-06 -0.17600E-06
+run/V5_s_outer_B_bound/ DAV: 90 -0.44977E-06 -0.30623E-06
+run/V5_s_outer_B_far/ DAV: 193 0.85513E-06 -0.11847E-06
+
+$ v5_rerun_r1.sh 마지막 줄
+r1_far_i.log:✓ V5_s_outer_A_G3_c2_far_i (r1) 수렴 — 마지막 스텝: DAV: 215    -0.674759932642E+03   -0.25654E-06   -0.30960E-07  5056   0.954E-04 · 이제 PACK_ONLY=1 bash run_all.sh
+r1_sweep.log:⛔ V5_s_outer_A_G4_e70_far r1 도 실패·미수렴 (러너 판정 0 · 마지막 스텝: DAV: 300    -0.674741655021E+03   -0.39581E-03   -0.23406E-05  7920   0.479E-03) — 값 없음으로 반송 (더 돌리지 않는다) · PACK_ONLY=1 bash run_all.sh
+
+$ grep manual_r1 run/env.txt
+manual_r1 V5_s_outer_A_G3_c2_far_i 2026-10-08T05:10:49Z — VASP 5.x NELM 소진을 러너가 수렴으로 읽음 · 사전등록 재시도 수동 실행 (1저자 승인)
+manual_r1 V5_s_outer_A_G4_e70_far 2026-10-12T14:35:22Z — VASP 5.x NELM 소진을 러너가 수렴으로 읽음 · 사전등록 재시도 수동 실행 (1저자 승인)
+
+$ sha256sum -c V5_vasp_return.tgz.sha256
+V5_vasp_return.tgz: OK
+
+참고: run_aborted/V5_s_outer_A_p05_bound_20261011T224655 — 10-11 22:46 노드 교체(qdel) 순간 러너가 띄운 0스텝 시작분. 전자스텝 0·attempt.json 없음 → 반송 묶음 밖(run_aborted/)에 보관, p05_bound 는 새 잡에서 정상 1회 실행(79스텝 수렴).
+참고: tar 구성원에 POTCAR 본문 0: 0

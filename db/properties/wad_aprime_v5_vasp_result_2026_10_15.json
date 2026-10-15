@@ -1,0 +1,77 @@
+{
+  "id": "wad_aprime_v5_vasp_result_2026_10_15",
+  "schema": "wad_aprime_v5_vasp_result/v1",
+  "record_kind": "result",
+  "date": "2026-10-15",
+  "track": "W_ad A′ V5 (DEM 협업) — 트랙 = 우리 DFT · 1저자 = 사용자 (통지할 제3자 없음 · DEM 은 편지 상대)",
+  "citable": false,
+  "status": "1단계 — VASP 반송 검사 + G3·G4 끝 · G5 (UMA 단일점) 와 카드 §1b ② (크기 효과) 는 UMA 단일점 회수 뒤. 은 쪽 라벨은 G5 와 무관하게 지금 정해진다 (아래 ★)",
+  "results_seen": "VASP 18 잡 에너지 · G3 · G4 를 봤다. UMA 단일점은 0 건 — G5 Δ 와 §1b ② 는 아직 아무도 안 봤다 (아래 재개 규칙은 그 전에 적었다)",
+  "card": {
+    "A′_카드": "db/properties/wad_aprime_pilot_prereg_v5_2026_09_25.json (G3·G4·G5 · 갈래1/2 · 1a 허용 문구)",
+    "개정_3_v6.1": "db/properties/wad_aprime_pilot_prereg_v5_amendment_3_vasp_v5_2026_09_27.json (ratified · VASP 경로 · 3c · G5 상태 순서 · 재시도 1 회 규칙)",
+    "결정": "D-2026-09-27-wad-aprime-v5-vasp-route (active)",
+    "SE_쌍_카드": "db/properties/wad_se_pairs_uma_prediction_card_2026_10_01.json §1b (V5 비교 ① G5 · ② 모델 크기 효과 · ③ 합치지 않음)",
+    "재시도_승인": "kb/projects/wad_v5_vasp_r1_request_2026_10_08.md (사용자 10-08 — far_i r1 한 번 + 남은 잡 상시 승인 · OSZICAR 마지막 스텝 기준 · 그 밖 재실행·설정 변경 금지)"
+  },
+  "raw": {
+    "dir": "db/raw/wad_aprime_v5_vasp_2026_09_27/final_return_2026_10_15",
+    "묶음": "V5_vasp_return.tgz (sha256 bfd365e6206ff2b27b771842d8fe4b51c27e8bda13548fae5686347a86e6cf86 · 업체 .sha256 와 일치 · tar 구성원 223 · POTCAR 본문 0)",
+    "업체_메모": "RETURN_NOTES.txt (status.tsv · OSZICAR 마지막 줄 · r1 기록 · run_aborted 메모 — 원문 그대로)",
+    "검사": "check_2026_10_15.json (`build_v5_vasp_package.py --check` · 고정 MANIFEST 8118bbc0… · 봉인 등록부 a279d529…)",
+    "집계_UMA_없이": "collect_noUMA_2026_10_15.json (`--collect` · 종료 3 = OK 아닌 잡 있음 · G5 블록 없음) — 레포 묶음을 다시 풀어 낸 집계가 처음 집계와 바이트까지 같다 (cmp)",
+    "SHA256SUMS": "4 파일"
+  },
+  "반송": {
+    "받은_날": "2026-10-15 (사용자 업로드 · zip 안 V5_vasp_return.tgz + RETURN_NOTES.txt)",
+    "업체_환경": "VASP 5.4.4.18Apr17-6-g9f103f2a35 (등록부와 같은 판) · intel-oneapi 2022.2 · 한 노드 64 랭크 (Xeon Gold 6530 ×2 · 503 GB) · NCORE 4 · KPAR 2 · SGE",
+    "MANIFEST": "반송 묶음 안 MANIFEST 가 고정값과 같다 · 금지 파일 0",
+    "잡": "18 잡 · 시도 20 (r1 두 번)",
+    "run_aborted": "업체 메모: 10-11 22:46 노드 교체 (qdel) 순간 러너가 띄운 p05_bound 0 스텝 시작분 — 전자 스텝 0 · attempt.json 없음 → 반송 묶음 밖 run_aborted/ 에 보관 · p05_bound 는 새 잡에서 정상 1 회 (79 스텝 수렴). 우리 읽기: 계산이 시작되기 전의 기반 중단이라 시도로 치지 않는다 (사전등록 '증거가 없는 것은 모순이 아니다' 와 같은 결) — 다만 러너의 원자적 mkdir 가드를 업체가 손으로 푼 것이라 여기에 남긴다. 반송된 p05_bound 는 봉인 입력 그대로 (검사 OK)."
+  },
+  "검사_결과": {
+    "OK": "17/18",
+    "V5_s_outer_A_G3_c2_far_i": "첫 시도 SCF_NOT_CONVERGED (200 = NELM · OSZICAR 마지막 |dE| 2.27e-3) → 사전등록 재시도 r1 (AMIX 0.1 · BMIX 0.01 · NELM 300) 215 스텝 수렴 → **r1 채택** (검사기 `first_attempt` 기록)",
+    "V5_s_outer_A_G4_e70_far": "첫 시도 SCF_NOT_CONVERGED (200 · |dE| 1.21e-3 · |d eps| 4.44e-6) · r1 SCF_NOT_CONVERGED (300 · |dE| 3.96e-4 · |d eps| 2.34e-6) → **값 없음** (개정 3 SCF 줄: '그래도 실패면 그 잡 값 없음 (다른 설정으로 더 돌리지 않는다)')",
+    "업체_status_tsv": "converged 열은 두 잡 모두 1 — VASP 5.4.4 가 NELM 소진에도 'EDIFF is reached' 를 찍는 버그 (10-08 에 찾음 · 검사기는 OSZICAR 마지막 스텝으로 본다)",
+    "SCF_진단_판정_아님": "far 끝점 셋 (G3 far_i 첫 시도 · e70 두 시도) 이 수백 스텝 동안 |dE| 1e-4–1e-3 eV 에서 맴돌았다 (금속 슬랩 + LDIPOL 의 전형). far_i r1 은 그렇게 맴돌다 215 스텝에서 기준을 맞췄다 — 마지막 30 스텝 에너지 폭 5.0 meV = W 로 4.0e-4 J/m² 로, G3 (i) 여유 (0.01 − 0.0056 = 0.0044) 의 1/10 아래라 판정에 영향 없다. 기준 (OSZICAR 마지막 스텝 |dE|·|d eps| ≤ 1e-6) 은 결과 전에 정한 그대로 쓴다."
+  },
+  "G3_끝점": {
+    "상태": "PASS",
+    "검사_i_영상_c+2": "|ΔW| 0.0056 ≤ 0.01",
+    "검사_ii_직접_8→10": "|ΔW| 0.0092 ≤ 0.01",
+    "D3_차이의_차이": "i 7.7e-7 · ii 9.5e-7 J/m² ≤ 예산 0.001",
+    "주의": "far_i 는 r1 값이다 (위 검사_결과)"
+  },
+  "G4_수치": {
+    "상태": "INCOMPLETE",
+    "k1_4×3×1": "PASS (|ΔW| 0.0097 ≤ 0.02 · 같은 기하 Edisp 차 0)",
+    "s05_SIGMA_½": "PASS (|ΔW| 0.0004 ≤ 0.02 · 같은 기하 Edisp 차 0)",
+    "e70_ENCUT_650": "INCOMPLETE — far 값 없음 (r1 까지 미수렴) · bound 는 OK",
+    "읽기": "G4 는 변형 셋이 다 PASS 여야 PASS 다 (개정 3). 셋 중 하나가 값이 없으니 INCOMPLETE — '컷오프 수렴 확인' 이라고 쓰지 않는다"
+  },
+  "표본_총W": {
+    "인용": "다섯 표본 모두 total_w_citable = false · 라벨 'G4 INCOMPLETE' (값은 집계 JSON 에만 — 여기와 화면·편지에 옮기지 않는다)",
+    "D3_쌍_오차": "최대 6.3e-6 J/m² ≤ 예산 0.005 (D3 라벨 없음)",
+    "−TS_항_차": "최대 0.005 J/m² (li_outer 표본) — W 는 'MP1 σ 0.136 eV 에서의 TOTEN 차 / A' (개정 3 에너지 규약)"
+  },
+  "★_은_쪽_라벨_지금_정해짐": {
+    "G5_예정_상태": "UMA 가 무엇이 나오든 'INCOMPLETE (G3 PASS · G4 INCOMPLETE — 오차표만 · 원시 기준 …)' — 개정 3 G5 상태 순서 (G3/G4 비통과면 INCOMPLETE) · usage_eligible false",
+    "갈래": "A′ 카드 갈래2 (G5 FAIL·INCOMPLETE): 상태와 표본별 Δ 는 내부 기록 · UMA 예측에 '해당 표본에서 미재현/미완료' 라벨 · G5 통과 문장 (1a) 은 안 쓴다",
+    "DEM_라벨": "「작은 모델 지정 표본에서 미완료 — 사전등록 수치 점검 셋 중 하나 (ENCUT 650 짝) 가 값 없음」 (회신 9 §4 가 미리 알린 두 라벨 중 '미재현/미완료' 쪽)",
+    "DEM_에_안_가는_것": "표본별 Δ 숫자 · '원시 기준 충족/미충족' 을 검증처럼 읽히게 쓰는 문장 · VASP 총 W (인용 불가)"
+  },
+  "재개_규칙_결과_전_제안": {
+    "언제_썼나": "2026-10-15 · UMA 단일점 (G5 Δ · §1b ②) 을 아무도 보기 전",
+    "기본": "사전등록대로 닫는다 — e70 far 는 값 없음 · 더 돌리지 않는다 · 은 쪽 라벨 '미완료'",
+    "다시_여는_조건": "DEM 이 다음 편지 ② (LPSCl|Ag 를 시나리오 계산에 넣을지) 에 '넣겠다' 고 답할 때만 — 그때 G4_e70_far 한 잡만 새 개정으로 (개정 3 이 '별도 개정 후보' 로 적어 둔 LDIPOL 수렴 대책 · 예: 쌍극 보정 없이 먼저 수렴 → 그 파동함수에서 LDIPOL 을 켜 다시 · 또는 AMIN) · 설정과 실패 규칙은 실행 전에 박는다 · 1저자 비준",
+    "다시_열지_않는_이유": "G5 원시 결과가 좋아 보인다는 것 · '한 번 더 돌리면 될 것 같다' 는 것 — 재개 사유가 아니다 (마감 규율)",
+    "지위": "proposed — 1저자 (사용자) 비준 대상 · 비준되면 결정 원장에 올린다"
+  },
+  "다음": [
+    "kgy UMA 단일점 12 구조 (G5 표본 9 + G3 셋 · `relax_uma_d3.py --energies` · GPU 문턱 13,000 MiB · 감시 23,500 · 상한 3,000) → 업로드",
+    "`build_v5_vasp_package.py --collect … --uma <그 JSON> --p1_result db/properties/wad_se_pairs_uma_result_2026_10_01.json` → G5 오차표 (내부) · 3b′ 진단 · §1b ② 크기 효과 (정보 · |Δ| > 0.10 이면 '크기 민감')",
+    "이 기록 2단계 (G5 · ②) → DEM 편지 한 통 (open_items 🔔 W_ad 항목 ①②③ + Codex CU 덧붙임 셋)"
+  ],
+  "⛔": "VASP 비교군 — QE 값 (V2 · V4 · SE|SE · P1b) 과 빼거나 한 표에 섞지 않는다 · VASP V5 W 는 'P1′ 지정 표본의 작은 모델 값 (SE 2층)' 이지 두꺼운 계면 대표값이 아니다 · W 값은 용훈 포메이션 표에 싣지 않는다 (위치만)"
+}
