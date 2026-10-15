@@ -567,6 +567,87 @@ def p07d(n=10):
                   'composite_score', 'value_label_2dp'], out)
 
 
+SITE_PAIR_ROWS = {'Li 24g': 'Li 24g', 'P 4b (framework)': 'P 4b', 'Li 48h': 'Li 48h'}
+SITE_PAIR_COLS = {'free sulfide': 'S 4a\n(free S$^{2{-}}$)', 'sulfur in the PS₄ corner': 'S 16e\n(in PS₄)', 'halide site': 'Cl 4d'}
+P08_USER_SLOTS = {'heatmap': (4.6, 3.3), 'hist': (3.2, 1.45)}   # user's slim page 10 (10-15) — the hand-edited deck
+
+
+def site_pair_matrix(rows):
+    """p08 matrix CSV rows (header first) → (row labels, column labels, counts) in field terms (Wyckoff site names).
+    Refuses anything but the 3 × 3 main-batch table (total 3,615, every pair populated) — a partial or relabelled
+    table must not be drawn as if it were the whole batch."""
+    head, body = rows[0], rows[1:]
+    if head[0] != 'cation_site' or head[1:4] != list(SITE_PAIR_COLS) or [r[0] for r in body] != list(SITE_PAIR_ROWS):
+        raise ValueError(f'unexpected site-pair table: {head} / {[r[0] for r in body]}')
+    counts = [[int(x) for x in r[1:4]] for r in body]
+    if sum(map(sum, counts)) != 3615 or min(map(min, counts)) <= 0:
+        raise ValueError(f'site-pair total {sum(map(sum, counts))} != 3615 or an empty pair')
+    return [SITE_PAIR_ROWS[r[0]] for r in body], [SITE_PAIR_COLS[c] for c in head[1:4]], counts
+
+
+def _plt():
+    import matplotlib
+    matplotlib.use('Agg')
+    import matplotlib.pyplot as plt
+    plt.rcParams.update({'font.family': 'Liberation Sans', 'font.size': 10, 'axes.labelsize': 10.5,
+                         'mathtext.default': 'regular'})   # S$^{2-}$: Liberation Sans has no U+207B
+    return plt
+
+
+def draw_site_pair_heatmap(out, w=4.6, h=3.3):
+    """Configurations per (cation, anion) substitution-site pair with field labels (user 10-15: 'field terms'; the
+    August image17 said 'where the dopant metal went'). Drawn at the slot size, counts on the cells, no colour bar.
+    ⛔ Does not show the 60 structures of the August re-run — they are not in the main-batch table."""
+    plt = _plt()
+    rl, cl, m = site_pair_matrix(rows_of(os.path.join(OUT, 'p08_configurations_per_site_pair_matrix.csv')))
+    tot, vmax = sum(map(sum, m)), max(map(max, m))
+    fig, ax = plt.subplots(figsize=(w, h))
+    ax.imshow(m, cmap='Blues', vmin=0, vmax=vmax * 1.05, aspect='auto')
+    for i, row in enumerate(m):
+        for j, n in enumerate(row):
+            c = 'white' if n > 0.55 * vmax else '#1f2937'
+            ax.text(j, i - 0.13, f'{n:,}', ha='center', va='center', fontsize=12, fontweight='bold', color=c)
+            ax.text(j, i + 0.22, f'{100 * n / tot:.0f} %', ha='center', va='center', fontsize=9, color=c)
+    ax.set_xticks(range(len(cl)), cl, fontsize=10)
+    ax.set_yticks(range(len(rl)), rl, fontsize=10)
+    ax.set_xticks([k + 0.5 for k in range(len(cl) - 1)], minor=True)
+    ax.set_yticks([k + 0.5 for k in range(len(rl) - 1)], minor=True)
+    ax.grid(which='minor', color='white', linewidth=2.5)
+    ax.tick_params(which='both', length=0)
+    for sp_ in ax.spines.values():
+        sp_.set_visible(False)
+    ax.set_xlabel('Anion substitution site')
+    ax.set_ylabel('Cation substitution site')
+    fig.tight_layout()
+    fig.savefig(out, dpi=300)
+    plt.close(fig)
+    return out
+
+
+def draw_anneal_hist(out, w=3.1, h=1.75, median=False):
+    """The short anneal's energy change (693 structures), plain grey bars, 50 meV bins like the August Origin recipe.
+    The cell is the 52-atom conventional cell (4 formula units) — the CSV column still says 'per supercell' (10-15: the
+    axis says '52-atom cell'; the CSV is not rewritten here). `median` draws a dashed line at the median."""
+    plt = _plt()
+    dE = [float(r[2]) for r in rows_of(os.path.join(OUT, 'p08_anneal_energy_change.csv'))[1:]]
+    fig, ax = plt.subplots(figsize=(w, h))
+    ax.hist(dE, bins=[-1250 + 50 * k for k in range(26)], color='#bdbdbd', edgecolor='black', linewidth=0.8)
+    if median:
+        s = sorted(dE)
+        med = (s[(len(s) - 1) // 2] + s[len(s) // 2]) / 2
+        ax.axvline(med, color='#2563eb', linestyle='--', linewidth=1.0)
+        ax.text(med - 20, ax.get_ylim()[1] * 0.97, 'median', color='#2563eb', fontsize=8.5, va='top', ha='right')
+    ax.set_xlim(-1250, 0)
+    ax.set_xticks([-1200, -900, -600, -300, 0])
+    ax.set_xlabel('energy change (meV per 52-atom cell)', fontsize=9.5)
+    ax.set_ylabel('structures', fontsize=9.5)
+    plain_axes(ax, 9)
+    fig.tight_layout()
+    fig.savefig(out, dpi=300)
+    plt.close(fig)
+    return out
+
+
 def figures():
     import matplotlib
     matplotlib.use('Agg')
@@ -650,18 +731,10 @@ def figures():
     ax.tick_params(axis='y', length=0)
     save(fig, 'fig_p07_stage1_score_top10.png')
 
-    # p08b: the short anneal's energy change (slide 9, under the anneal schematic) — drawn at its slot size (3.1 in) so a
-    # 9 pt label is 9 pt on the slide; plain grey bars, 50 meV bins like the August Origin recipe
-    an = rows_of(os.path.join(OUT, 'p08_anneal_energy_change.csv'))[1:]
-    dE = [float(r[2]) for r in an]
-    fig, ax = plt.subplots(figsize=(3.1, 1.75))
-    ax.hist(dE, bins=[-1250 + 50 * k for k in range(26)], color=GREY, edgecolor='black', linewidth=0.8)
-    ax.set_xlim(-1250, 0)
-    ax.set_xticks([-1200, -900, -600, -300, 0])
-    ax.set_xlabel('energy change (meV per supercell)', fontsize=9.5)
-    ax.set_ylabel('structures', fontsize=9.5)
-    plain_axes(ax, 9)
-    save(fig, 'fig_p08_anneal_energy_hist.png')
+    # p08b: the short anneal's energy change (slide 9, under the anneal schematic) — drawn at its slot size (3.1 in)
+    made.append(draw_anneal_hist(os.path.join(ASSETS, 'fig_p08_anneal_energy_hist.png')))
+    # p08c (10-15): the site-pair heat map redrawn with field labels (the decks still embed the August image17)
+    made.append(draw_site_pair_heatmap(os.path.join(ASSETS, 'fig_p08_site_pair_heatmap.png')))
 
     # p10: host stability window on a voltage axis
     seg = rows_of(os.path.join(OUT, 'p10_stability_window_host_segments.csv'))[1:]
@@ -749,6 +822,12 @@ B0 values are canonical DFT (compare per f.u. only); Stage-1 counts are explorat
 
 
 def main():
+    if '--fig-p08' in sys.argv:   # hand-edited deck (user's page 10): the two figures at its slot sizes, nothing else
+        d = sys.argv[sys.argv.index('--fig-p08') + 1]
+        os.makedirs(d, exist_ok=True)
+        print(draw_site_pair_heatmap(os.path.join(d, 'fig_p08_site_pair_heatmap.png'), *P08_USER_SLOTS['heatmap']))
+        print(draw_anneal_hist(os.path.join(d, 'fig_p08_anneal_energy_hist.png'), *P08_USER_SLOTS['hist'], median=True))
+        return
     for old in ('p12_md_campaign_runs.csv', 'p12_md_campaign_progress.csv', 'p17_site_preference_vs_ionic_radius.csv'):
         if os.path.exists(os.path.join(OUT, old)):      # renamed when the audit slide became page 11
             os.remove(os.path.join(OUT, old))
@@ -877,6 +956,18 @@ def selftest():
             raise AssertionError('p07d accepted a 91 file out of rank order')
     finally:
         OUT = saved_out
+    # site-pair table: the real matrix passes (3 × 3, 3,615); a changed count or a relabelled column is refused
+    real = rows_of(os.path.join(OUT, 'p08_configurations_per_site_pair_matrix.csv'))
+    rl, cl, m = site_pair_matrix(real)
+    assert len(rl) == len(cl) == 3 and sum(map(sum, m)) == 3615; ok += 1
+    for bad in ([real[0]] + [real[1][:1] + ['1049'] + real[1][2:]] + real[2:],
+                [real[0][:1] + ['free S'] + real[0][2:]] + real[1:]):
+        try:
+            site_pair_matrix(bad)
+        except ValueError:
+            ok += 1
+        else:
+            raise AssertionError('site_pair_matrix accepted a broken table')
     print(f'selftest PASS ({ok})')
 
 

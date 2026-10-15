@@ -202,7 +202,8 @@ evidenceScope: multi-source-mixed
 > 10-14 보강 (사용자 *"이거를 대본에 잘 녹아내면 좋을듯"*): 점수 만든 방법 두 문장 · 에너지 기준 문제와 ML 이야기는 8장 · 숫자는 디펜스 S7 · S8.
 
 1단계 첫 시도로, 6월부터 8월까지 돌린 파이프라인입니다. **[가리킴: 박스를 위에서 아래로]**
-먼저 전하 균형이 맞는 치환 배치를 전부 열거했습니다. 91 개 전구체 전부입니다.
+먼저 치환 배치를 전부 열거했습니다. 91 개 전구체 전부입니다.
+> ✎ 10-15 밤: '전하 균형이 맞는' 을 뺐다 — 옛 생성기는 음이온 자리 전하를 안 셌고, 1단계 237 후보 중 48 (20 %) 이 형식전하 ≠ 0 이다 (9쪽 감사 · 디펜스 S8).
 범용 MLIP 인 UMA 로 3,675 개 구조를 완화하고, 부피가 크게 바뀐 구조는 걸렀습니다.
 그중 선별한 693 개 구조는 500 K 에서 50 ps 짧게 데운 뒤 다시 완화했습니다.
 그 구조로 지표 네 가지를 냈습니다. Li 자리 지형, 탄성률, 안정창, 계면 반응성입니다. Li 자리 지형은 구조 지표이지 확산계수가 아닙니다.
@@ -277,17 +278,18 @@ evidenceScope: multi-source-mixed
 **[클릭]**
 
 ## 9. 배치 표본과 MLIP 완화 ⏱ 14:00
-> ⏳ 10-15 화면: 오른쪽 위 담금질 도식 (작게) + **오른쪽 아래 담금질 에너지 변화 히스토그램** (원장에서 다시 그림 · 693 = 7장 파이프라인 숫자 · 8월 덱 Step 5 의 681 은 8월 재실행 전) + 맨 아래 줄 'All 693 annealed structures found a lower arrangement (median 0.81 eV per supercell).'
+> ⏳ 10-15 화면: 오른쪽 위 담금질 도식 (작게) + **오른쪽 아래 담금질 에너지 변화 히스토그램** (원장에서 다시 그림 · 693 = 7장 파이프라인 숫자 · 8월 덱 Step 5 의 681 은 8월 재실행 전) + 맨 아래 줄 'All 693 annealed structures found a lower-energy configuration (median ΔE = −0.81 eV per 52-atom cell).'
+> ✎ 10-15 밤 사용자 10쪽 pptx (*'배치 신경 써주고 필드 언어로'*) → 교체본: 첫 불렛 *'Substitution sites were enumerated, not assumed, and every configuration was relaxed.'* (옛 'every charge-balanced placement' 는 사실과 다름 — 20 % 가 형식전하 ≠ 0) · 둘째 *'A short MD anneal (500 K, 50 ps) let selected structures escape their local minima.'* · 열지도는 필드 말로 다시 그림 (양이온/음이온 치환 자리 · S 4a (free S²⁻) · S 16e (in PS₄) · Cl 4d · `export_cascade_briefing_csvs_2026_10.py --fig-p08`) · 히스토그램 축 'per 52-atom cell' (옛 'supercell' = 4 화학식 단위 기본 셀) + 중앙값 점선 · 캡션 셋 · 배치 (왼쪽 열지도를 키워 두 열 바닥을 맞춤).
 > 8월 덱의 *'the top ten of the ranking did not change'* 는 **말하지 않는다** (디펜스 §1 철회). CSV `p08_anneal_energy_change.csv`.
 
 1–3 단계를 조금 자세히 보겠습니다. **[가리킴: 왼쪽 열지도]**
-- 치환 자리를 미리 가정하지 않고, 전하 균형이 맞는 배치를 **전부** 만들었습니다.
+- 치환 자리를 미리 가정하지 않고 자리 조합을 하나씩 다 늘어놓았고, 만든 배치는 **전부** 완화했습니다.
 - 양이온 자리 셋과 음이온 자리 셋, 아홉 쌍이 모두 쓰였습니다. 본 배치가 3,615 개이고, 8월 재실행이 60 개를 더했습니다.
 - 지표에 따라서는 **같은 전구체의 배치끼리 차이가 서로 다른 전구체 사이 차이만큼 큽니다.** 그러면 그 지표로는 순위를 매길 수 없어서, 지금 지표는 탐색용으로만 씁니다. 이것이 감사의 셋째 항목입니다.
 
 **[가리킴: 오른쪽 위 도식]** 완화만 하면 가장 가까운 국소 최소에 멈춥니다. 그래서 선별한 구조는 500 K 에서 50 ps 짧게 데워 그 골짜기에서 빼낸 뒤 다시 완화했습니다.
 
-**[가리킴: 오른쪽 아래 히스토그램 → 맨 아래 줄]** 담금질한 693 개 구조가 모두 더 낮은 배치를 찾았습니다. 중앙값은 슈퍼셀당 0.81 eV 입니다. 완화만으로는 국소 최소에 머문다는 뜻이고, 이 단계가 하는 일이 그것입니다.
+**[가리킴: 오른쪽 아래 히스토그램 → 맨 아래 줄]** 담금질한 693 개 구조가 모두 에너지가 더 낮은 배치를 찾았습니다. 중앙값으로 52 원자 셀 하나당 0.81 eV 낮아졌습니다. 완화만으로는 국소 최소에 머문다는 뜻이고, 이 단계가 하는 일이 그것입니다.
 
 **[클릭]**
 
@@ -428,7 +430,7 @@ MLIP 지표의 기준이 되는 DFT 계산입니다. **[가리킴: 두 곡선]**
 | 6 | 08-18 덱의 족별 표 (family · n · examples — 'role in the design' 열은 뺐다 · 사용자 10-13) + **[문헌] 'Literature example: SiO₂ co-doping'** Jung 2026 Fig. 3d | 족별 역할은 말로: 산화물 = 강한 M–O 결합 · 염화물 = 호스트에 이미 Cl · 황화물 = 호스트와 같은 음이온 (대조) · 플루오르화물 = 가장 강한 결합 · 이동성 위험 · 브로민화물 · 요오드화물 = 더 큰 할라이드 (대조) · 질화물 = 더 높은 음이온 전하 (대조) · 공치환 실험 선례 CuCl · MgF₂ · ZnO · La₂O₃ · Nd₂O₃ · SiO₂ (17장) · 문헌 그림은 '선례' 이지 우리 후보의 검증이 아니다 · As₂S₃ 재실행은 7장 |
 | 7 | ■ 'Stage 1: screening pipeline (first attempt)' + 작은 불렛 둘 (항 다섯 · 0–1 · 손 가중치 / 에너지·탄성률·안정창에서만) + 왼쪽 점선 박스 'Pipeline' 다섯 단계 (오른쪽 회색 = 91 · 3,675 · 693 selected · 91 · 91) + 오른쪽 **8월 방법 점수 상위 10 막대** (91 개 · 강조 없음) + 캡션 둘 — 10-14 사용자 *'예전 파이프라인'* → *'틀린거라도 랭킹 한번 추가 · 옆에 plot'* | 단계마다 한 줄 · 점수는 8월 방법 그대로 + 재실행 둘 (91) · 끝 질문 '이 순위를 그대로 써도 될까요?' → 8장 감사 · 점수식 · As₂S₃ 53 위 · AlI₃ 38 위 · 남은 것 셋은 물으면 · ⛔ 막대에서 전구체를 짚지 않는다 |
 | 8 | (10-15 **빨간 블록판 기본**) 두 목록 (Audit findings 4 · Decisions recorded on Sep 12 4 + 빨강 다섯째 'A ranking margin δ, proposed but not yet set') + 분홍 상자 'Stage-1 outputs are kept as exploratory data; no dopant ranking has been approved.' + 'The run scope is set after the pilot.' · 옛 판 (Oct 14 블록) 은 검토본 | 'Found on Oct 14' 두 줄 + 녹는 에너지 시연 한 줄은 말로 (숫자 없이) · 두 목록은 행끼리 짝이 아니다 · 머신러닝은 한 줄 |
-| 9 · 10 | 9 (10-15): 열지도 + 담금질 도식 (작게) + **담금질 에너지 변화 히스토그램 (693)** + 맨 아래 줄 (모두 더 낮아짐 · 중앙 0.81 eV / 슈퍼셀) · 10: 그대로 | 9: '지표에 따라 같은 전구체 안 흩어짐 ≈ 전구체 사이' 는 말로 (8장 감사 셋째 항목의 근거) · 8월의 'top ten unchanged' 는 말하지 않는다 |
+| 9 · 10 | 9 (10-15): 열지도 + 담금질 도식 (작게) + **담금질 에너지 변화 히스토그램 (693)** + 맨 아래 줄 (모두 더 낮아짐 · 중앙 −0.81 eV / 52 원자 셀) · 10: 그대로 | 9: '지표에 따라 같은 전구체 안 흩어짐 ≈ 전구체 사이' 는 말로 (8장 감사 셋째 항목의 근거) · 8월의 'top ten unchanged' 는 말하지 않는다 |
 | 11 | (10-14 감사 뒤) ■ Decomposition stability window · 호스트 창 그림 + **[문헌] 'Literature: decomposition and intrinsic windows'** Schwietert 2021 Fig. 1 (크게) | 우리 정의 = 그 논문의 decomposition window · 옛 정의가 넓었던 이유 · 계면 산물은 10-14 에 바닥상태 상으로 다시 냈고 아직 안 쓴다 (둘 다 화면 줄은 뺐다) · 화면 bullet 은 91 전구체 · '창 없음' |
 | 12 | **[문헌] 'Literature: run-to-run spread and fit-window sensitivity'** He 2018 Fig. 3 + 'Our pilot: 10 start configurations × 2 seeds per precursor; 2–50 ps fit window.' | 그림은 '왜 반복과 고정 창이 필요한가' 의 근거이고, **10 × 2 · 2–50 ps 는 우리가 정한 값**이다 (그림에서 나온 숫자가 아니다) · 설정 UMA · NVT 1000 K · 400 ps · 204 원자 · 40 런 (화면 줄은 뺐다) · 점검 넷 · 동등성 검정 (±ln 1.5) |
 | 13 | ■ Stage 2 pilot at 1000 K · 명단 (끝 12 · 진행 1 · 대기 27) + **[문헌] 'Literature: temperature-dependent ordering'** Jung 2026 Fig. 5b | 600 K 판을 닫은 이유 · 한계 둘 · 끝나는 날 10월 21일 무렵 (화면에서 뺐다) · 오른쪽은 **문헌 물질** (Li₉P₃OS₁₁ 등) 이다 — 우리 Al₂O₃ / Al₂S₃ 순서를 말하는 그림이 아니다 |
