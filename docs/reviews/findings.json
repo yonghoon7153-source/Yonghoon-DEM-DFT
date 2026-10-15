@@ -10846,62 +10846,94 @@
     {
       "id": "RIMP-01",
       "severity": "P2",
-      "status": "open",
+      "status": "claimed_fixed",
       "owner": "claude",
       "found_by": "codex 10-14 Rint G2 ①′ 구현 · 10-13 묶음 재검토 (검토 핀 1087a9b2f · 독립 소규모 계산 · Windows Python 3.12 — 생산 덱 · 실침대 σ 캠페인 · WSL 미실행)",
       "opened_in": "docs/reviews/codex_review_rint_g2_impl_20261014.md",
       "title": "기울어진 MMS (rint_t2_dev) 의 경계 반 셀이 계면 저항을 건너뛴다 — 경계를 g_b = 2σh 로 바로 이어 상 · 막 교차의 전위 점프를 bulk 로 잇는다 · tie 0 인 15° n64 · 30° n16 에서도 최대 전위 오차 0.538 · 0.504 (경계 교차 대조 연결로 0.0065 · 0.0163)",
-      "note": "판정문 §2.  자리 (핀): scripts/rint_t2_dev.py:185–192 · 해석 docs/data/rint_t2_dev_20261013/README.md:53–55.  무너지는 결론: \"0.44 plateau = 계면 위 셀의 점 판정 (tie) 한계\" 의 충분한 원인 진단 · 기울기 사다리를 D11 선택 · D12-V 수치 근거로 승격 (45° n128 에서 tie 셀을 빼도 최대 오차 0.117).  무너지지 않는 것: θ=0 정확 이산 시험 (최대 8.9e-16) · 개발 실행 허용 · 기울기 법칙 비교 설계.  최소 해결 = 경계 상/막 교차 계약 → tie 없는 15° · 30° · 이동 45° 회귀 → 사다리 재측정 · 정식 T2 = flux · 에너지 · 원점 · 3D · tie 규약.  수정 계획 = docs/reviews/rint_g2_impl_fix_plan_20261014.md (Q1)."
+      "note": "판정문 §2.  자리 (핀): scripts/rint_t2_dev.py:185–192 · 해석 docs/data/rint_t2_dev_20261013/README.md:53–55.  무너지는 결론: \"0.44 plateau = 계면 위 셀의 점 판정 (tie) 한계\" 의 충분한 원인 진단 · 기울기 사다리를 D11 선택 · D12-V 수치 근거로 승격 (45° n128 에서 tie 셀을 빼도 최대 오차 0.117).  무너지지 않는 것: θ=0 정확 이산 시험 (최대 8.9e-16) · 개발 실행 허용 · 기울기 법칙 비교 설계.  최소 해결 = 경계 상/막 교차 계약 → tie 없는 15° · 30° · 이동 45° 회귀 → 사다리 재측정 · 정식 T2 = flux · 에너지 · 원점 · 3D · tie 규약.  수정 계획 = docs/reviews/rint_g2_impl_fix_plan_20261014.md (Q1).  scripts/rint_t2_dev.py — 셀 중심과 경계면 중심이 계면 반대편인 경계 반 셀에 판정문 §2 꼴 (거리 가중 직렬 + 같은 법칙 r_face) · 교차 아닌 반 셀 그대로 · 교차 수 · tie 수 기록 · 개발 사다리 v2 (15° n64 최대 0.538 → 6.5e−3 · 30° n16 0.504 → 1.6e−2 · 이동 45° tie 0 = 4.0e−3 · 모든 기울기 L2 단조 감소 · 개발 표지 · D11 · D12-V 근거 아님 · v1 해석 둘 철회).  ✅ 고침 25aecac22 (시험 먼저 e9d0cd87d · 문서 · 증거 · 요청서 dcb97f1ed · 수정 계획 Q1–Q4 (가) = 1저자 10-14 \"권고대로\") · 새 검사 67 · 수정 뒤 296/296 · iface 끔 16 사례 = 고치기 전 (44a034534) · ①′ 이전 (1d9af09d0) 과 비트 같음 · 봉인 32 무변경 · 생산 HOLD 그대로 · Codex 짧은 재확인 요청서 docs/reviews/codex_rint_g2_impl_fix_recheck_request_20261015.md (리뷰 핀 dcb97f1ed · 발송 = 1저자).",
+      "claimed_fixed_sha": "25aecac22",
+      "evidence_tests": [
+        "scripts/test_rint_t2_dev.py (10 실패 → 23/23)",
+        "docs/data/rint_t2_dev_20261013/README.md · t2_dev_v2.json (개발)",
+        "docs/reviews/rint_g2_impl_fix_evidence_20261015/ (시험 먼저 · 최종 로그 · rc · HASHES = 본 가지 blob)"
+      ]
     },
     {
       "id": "RIMP-02",
       "severity": "P2",
-      "status": "open",
+      "status": "claimed_fixed",
       "owner": "claude",
       "found_by": "codex 10-14 Rint G2 ①′ 구현 · 10-13 묶음 재검토 (검토 핀 1087a9b2f · 독립 소규모 계산 · Windows Python 3.12 — 생산 덱 · 실침대 σ 캠페인 · WSL 미실행)",
       "opened_in": "docs/reviews/codex_review_rint_g2_impl_20261014.md",
       "title": "Rint 조인 관문 (rint_iface_join) 이 손상 · 미인증 입력을 PASS 로 승격한다 — real14 접촉 덤프 한 칸 (pos1.x · δ · A = NaN · A 음수) · 미인증 면적 100 sim² (tested 0 · uncertified 1 · beyond 0) · 기울어진 상자 (tilt 를 버린 비교) 모두 PASS · 조인 → 원장 → 계획 → 정량 관문까지 통과",
-      "note": "판정문 §3.  자리 (핀): scripts/rint_iface_join.py:142–143 · 176–180 · 200–206 · 316–318 · 337–338 · 350–358 · 432–441 · 가져오는 진단 scripts/lhs_descriptor_harvest.py:637–657 (봉인 32).  무너지는 결론: G-geo/G-frame PASS = 유효 수치 · 지원 상자 · 전 행 면적 인증.  무너지지 않는 것: 정상 real14 · case15 자료 · 면적 원천 = scaffold (이 반례만으로 실제 σ 가 틀렸다 할 수 없다).  최소 해결 = 입구 검사 (필수 · 유한 · 양수 · 정확 정수 · 지원 상자 — 기울어진 상자 = 명시 거부) · 음수 · 비유한 · 미인증 = 거부 또는 미인증 상태 (PASS 와 분리) · 변이별 회귀 · step 2060000.9 → 정확 정수.  수정 계획 Q2."
+      "note": "판정문 §3.  자리 (핀): scripts/rint_iface_join.py:142–143 · 176–180 · 200–206 · 316–318 · 337–338 · 350–358 · 432–441 · 가져오는 진단 scripts/lhs_descriptor_harvest.py:637–657 (봉인 32).  무너지는 결론: G-geo/G-frame PASS = 유효 수치 · 지원 상자 · 전 행 면적 인증.  무너지지 않는 것: 정상 real14 · case15 자료 · 면적 원천 = scaffold (이 반례만으로 실제 σ 가 틀렸다 할 수 없다).  최소 해결 = 입구 검사 (필수 · 유한 · 양수 · 정확 정수 · 지원 상자 — 기울어진 상자 = 명시 거부) · 음수 · 비유한 · 미인증 = 거부 또는 미인증 상태 (PASS 와 분리) · 변이별 회귀 · step 2060000.9 → 정확 정수.  수정 계획 Q2.  scripts/rint_iface_join.py 입구 검사 — 유한 · 반경 > 0 · 정확 정수 step (2060000.9 거부) · 직교 상자만 (기울어진 머리 = 명시 거부) · AM–AM 면적 음수 · 미인증 = 거부 (PASS = 전 행 인증) · real14 · case15 · D19 양성 유지.  ✅ 고침 25aecac22 (시험 먼저 e9d0cd87d · 문서 · 증거 · 요청서 dcb97f1ed · 수정 계획 Q1–Q4 (가) = 1저자 10-14 \"권고대로\") · 새 검사 67 · 수정 뒤 296/296 · iface 끔 16 사례 = 고치기 전 (44a034534) · ①′ 이전 (1d9af09d0) 과 비트 같음 · 봉인 32 무변경 · 생산 HOLD 그대로 · Codex 짧은 재확인 요청서 docs/reviews/codex_rint_g2_impl_fix_recheck_request_20261015.md (리뷰 핀 dcb97f1ed · 발송 = 1저자).",
+      "claimed_fixed_sha": "25aecac22",
+      "evidence_tests": [
+        "scripts/test_rint_g2_join.py (30 실패 → 73/73)",
+        "docs/reviews/rint_g2_impl_fix_evidence_20261015/ (시험 먼저 · 최종 로그 · rc · HASHES = 본 가지 blob)"
+      ]
     },
     {
       "id": "RIMP-03",
       "severity": "P2",
-      "status": "open",
+      "status": "claimed_fixed",
       "owner": "claude",
       "found_by": "codex 10-14 Rint G2 ①′ 구현 · 10-13 묶음 재검토 (검토 핀 1087a9b2f · 독립 소규모 계산 · Windows Python 3.12 — 생산 덱 · 실침대 σ 캠페인 · WSL 미실행)",
       "opened_in": "docs/reviews/codex_review_rint_g2_impl_20261014.md",
       "title": "조인의 면적 포괄 검사에 기록 유효숫자 S 가 전달되지 않는다 (helper 고정 6 자리) — 전 행 16 자리 균일 출력에서 +1 ppm 면적 변이가 PASS (tested 1 · beyond 0) · 계획 · 정량 관문도 통과",
-      "note": "판정문 §4.  자리 (핀): scripts/rint_iface_join.py:106 · 206 · 437 · scripts/lhs_descriptor_harvest.py:164 · 450 · 545 · 637–651 (봉인 32 · AREA_CHECK_SIGFIG=6).  한정: \"관측 최대 자리수\" 는 균일 %g 의 증명이 아니다 (한 토큰 0.0250327 → 0.02503270000000000 만으로 위치 불일치 7 · 21 행 · δ 일관성 99,113/106,563 행).  무너지지 않는 것: 지금 정상 6 자리 자료.  최소 해결 = S 전달 또는 6 자리 생산 포맷만 지원 · 다른 정밀도 · 혼합 포맷 거부.  수정 계획 Q2 (권고 = 봉인 helper 무변경 · 새 소비자에서)."
+      "note": "판정문 §4.  자리 (핀): scripts/rint_iface_join.py:106 · 206 · 437 · scripts/lhs_descriptor_harvest.py:164 · 450 · 545 · 637–651 (봉인 32 · AREA_CHECK_SIGFIG=6).  한정: \"관측 최대 자리수\" 는 균일 %g 의 증명이 아니다 (한 토큰 0.0250327 → 0.02503270000000000 만으로 위치 불일치 7 · 21 행 · δ 일관성 99,113/106,563 행).  무너지지 않는 것: 지금 정상 6 자리 자료.  최소 해결 = S 전달 또는 6 자리 생산 포맷만 지원 · 다른 정밀도 · 혼합 포맷 거부.  수정 계획 Q2 (권고 = 봉인 helper 무변경 · 새 소비자에서).  같은 소비자 — 6 유효숫자 %g 토큰만 지원 (16 자리 · 끝 0 · 혼합 = numeric_format 거부) · 봉인 helper (scripts/lhs_descriptor_harvest.py) 무변경.  ✅ 고침 25aecac22 (시험 먼저 e9d0cd87d · 문서 · 증거 · 요청서 dcb97f1ed · 수정 계획 Q1–Q4 (가) = 1저자 10-14 \"권고대로\") · 새 검사 67 · 수정 뒤 296/296 · iface 끔 16 사례 = 고치기 전 (44a034534) · ①′ 이전 (1d9af09d0) 과 비트 같음 · 봉인 32 무변경 · 생산 HOLD 그대로 · Codex 짧은 재확인 요청서 docs/reviews/codex_rint_g2_impl_fix_recheck_request_20261015.md (리뷰 핀 dcb97f1ed · 발송 = 1저자).",
+      "claimed_fixed_sha": "25aecac22",
+      "evidence_tests": [
+        "scripts/test_rint_g2_join.py (16 자리 +1 ppm 반례)",
+        "docs/reviews/rint_g2_impl_fix_evidence_20261015/ (시험 먼저 · 최종 로그 · rc · HASHES = 본 가지 blob)"
+      ]
     },
     {
       "id": "RIMP-04",
       "severity": "P2",
-      "status": "open",
+      "status": "claimed_fixed",
       "owner": "claude",
       "found_by": "codex 10-14 Rint G2 ①′ 구현 · 10-13 묶음 재검토 (검토 핀 1087a9b2f · 독립 소규모 계산 · Windows Python 3.12 — 생산 덱 · 실침대 σ 캠페인 · WSL 미실행)",
       "opened_in": "docs/reviews/codex_review_rint_g2_impl_20261014.md",
       "title": "RRM N9 의미 검사기 (rint_rrm_reference) 가 메타데이터 변경 · NaN 을 놓친다 — cut 85 행 삭제 + resolve_k 4→5 또는 r table 비움 = 위반 없음 (σ 0.003334 → 0.004084 S/cm) · film 67 면 rface NaN = 위반 없음 (σ 0.003730 · 잔차 6.2e-15)",
-      "note": "판정문 §5.  자리 (핀): scripts/rint_rrm_reference.py:293–302 · 318–321 · wrapper 328–340 · NaN 후속 scripts/step3_sigma.py:354–356.  한정: 정상 rrm_plan 이 NaN 을 만든다는 주장 아님 · 공격자 인증으로 확대하지 않음 · 일반 생산 관문이 RRM 을 모르는 구조는 시험 전용 격리와 정합.  최소 해결 = 유한 · 비음수 rface (등록된 r=0 경로 허용) · 기대 접점 · 적격성 재계산 · 메타데이터로 검사 집합을 비울 수 없게 · 복합 변이 wrapper 거부 · 모든 RRM 실행 = 고친 wrapper.  수정 계획 Q3."
+      "note": "판정문 §5.  자리 (핀): scripts/rint_rrm_reference.py:293–302 · 318–321 · wrapper 328–340 · NaN 후속 scripts/step3_sigma.py:354–356.  한정: 정상 rrm_plan 이 NaN 을 만든다는 주장 아님 · 공격자 인증으로 확대하지 않음 · 일반 생산 관문이 RRM 을 모르는 구조는 시험 전용 격리와 정합.  최소 해결 = 유한 · 비음수 rface (등록된 r=0 경로 허용) · 기대 접점 · 적격성 재계산 · 메타데이터로 검사 집합을 비울 수 없게 · 복합 변이 wrapper 거부 · 모든 RRM 실행 = 고친 wrapper.  수정 계획 Q3.  scripts/rint_rrm_reference.py rrm_check — rface 유한 · ≥ 0 (등록 r = 0 경로 허용) · 기대 접점 · 적격성을 r 표 없이 다시 계산 · 기록대로 계획을 다시 만들어 비트 대조 · 복합 변이 (cut 삭제 + resolve_k 4→5 · r 표 비움 · film rface NaN) 거부.  ✅ 고침 25aecac22 (시험 먼저 e9d0cd87d · 문서 · 증거 · 요청서 dcb97f1ed · 수정 계획 Q1–Q4 (가) = 1저자 10-14 \"권고대로\") · 새 검사 67 · 수정 뒤 296/296 · iface 끔 16 사례 = 고치기 전 (44a034534) · ①′ 이전 (1d9af09d0) 과 비트 같음 · 봉인 32 무변경 · 생산 HOLD 그대로 · Codex 짧은 재확인 요청서 docs/reviews/codex_rint_g2_impl_fix_recheck_request_20261015.md (리뷰 핀 dcb97f1ed · 발송 = 1저자).",
+      "claimed_fixed_sha": "25aecac22",
+      "evidence_tests": [
+        "scripts/test_rint_g2_rrm.py (11 실패 → 54/54)",
+        "docs/reviews/rint_g2_impl_fix_evidence_20261015/ (시험 먼저 · 최종 로그 · rc · HASHES = 본 가지 blob)"
+      ]
     },
     {
       "id": "RIMP-05",
       "severity": "P2",
-      "status": "open",
+      "status": "claimed_fixed",
       "owner": "claude",
       "found_by": "codex 10-14 Rint G2 ①′ 구현 · 10-13 묶음 재검토 (검토 핀 1087a9b2f · 독립 소규모 계산 · Windows Python 3.12 — 생산 덱 · 실침대 σ 캠페인 · WSL 미실행)",
       "opened_in": "docs/reviews/codex_review_rint_g2_impl_20261014.md",
       "title": "계획의 물리 격자 간격이 솔버 인자에 봉인되지 않는다 — h 0.2 µm 로 만든 계획을 같은 sid 로 h 0.4 솔버에 주면 거부 없이 풀이 · 실제 순수 막 G 2.50e-6 S = 기록 (6.25e-7 S) 의 4 배 · 결과에는 옛 vox 0.2 · 옛 A 가 실린다",
-      "note": "판정문 §6.  자리 (핀): scripts/step3_sigma.py:1841–1842 (guard 호출) · 1597 · 1616–1617 · 1486 (계획 vox 보관) · 2009 (조립 = 솔버 vox).  계획 사전 무수정 반례 (R 1 µm AM_S 둘 · z 1 · 2.98 µm · sid 10×10×20 · r 1e-3 Ω·cm² · film 16 · dof 1,072 · 잔차 2.7e-15) · 정상 재생성 계획은 σ 같고 A · G 를 4 배로 기록.  무너지지 않는 것: RINTV-01 · 02 소유권 규칙 닫힘.  최소 해결 = 솔버의 유한 양수 vox 를 plan guard 에 · 조립 전 일치 · 음성 · 양성 대조 상주.  step3_sigma 는 봉인 32 밖.  수정 계획 Q4."
+      "note": "판정문 §6.  자리 (핀): scripts/step3_sigma.py:1841–1842 (guard 호출) · 1597 · 1616–1617 · 1486 (계획 vox 보관) · 2009 (조립 = 솔버 vox).  계획 사전 무수정 반례 (R 1 µm AM_S 둘 · z 1 · 2.98 µm · sid 10×10×20 · r 1e-3 Ω·cm² · film 16 · dof 1,072 · 잔차 2.7e-15) · 정상 재생성 계획은 σ 같고 A · G 를 4 배로 기록.  무너지지 않는 것: RINTV-01 · 02 소유권 규칙 닫힘.  최소 해결 = 솔버의 유한 양수 vox 를 plan guard 에 · 조립 전 일치 · 음성 · 양성 대조 상주.  step3_sigma 는 봉인 32 밖.  수정 계획 Q4.  scripts/step3_sigma.py — iface 관문에 솔버 vox 를 넘겨 계획 vox 와 다르면 조립 전 거부 (h 0.2 계획 ↔ h 0.4 솔버 = 거부 · 정상 재생성 계획 = 통과) · iface 끔 = 비트 같음 (vox=None = 검사 생략 — Codex Q8).  ✅ 고침 25aecac22 (시험 먼저 e9d0cd87d · 문서 · 증거 · 요청서 dcb97f1ed · 수정 계획 Q1–Q4 (가) = 1저자 10-14 \"권고대로\") · 새 검사 67 · 수정 뒤 296/296 · iface 끔 16 사례 = 고치기 전 (44a034534) · ①′ 이전 (1d9af09d0) 과 비트 같음 · 봉인 32 무변경 · 생산 HOLD 그대로 · Codex 짧은 재확인 요청서 docs/reviews/codex_rint_g2_impl_fix_recheck_request_20261015.md (리뷰 핀 dcb97f1ed · 발송 = 1저자).",
+      "claimed_fixed_sha": "25aecac22",
+      "evidence_tests": [
+        "scripts/test_rint_g2_am_iface.py (2 실패 → 132/132)",
+        "scripts/step3_sigma.py --selftest · --selftest-rint",
+        "docs/reviews/rint_g2_impl_fix_evidence_20261015/ (시험 먼저 · 최종 로그 · rc · HASHES = 본 가지 blob)"
+      ]
     },
     {
       "id": "RIMP-06",
       "severity": "P3",
-      "status": "open",
+      "status": "claimed_fixed",
       "owner": "claude",
       "found_by": "codex 10-14 Rint G2 ①′ 구현 · 10-13 묶음 재검토 (검토 핀 1087a9b2f · 독립 소규모 계산 · Windows Python 3.12 — 생산 덱 · 실침대 σ 캠페인 · WSL 미실행)",
       "opened_in": "docs/reviews/codex_review_rint_g2_impl_20261014.md",
       "title": "RRM 반환 기록의 표준 iface_contact_ledger · iface_carbon_cover · 균일 rface_c 가 CNC 값으로 남는다 — 정상 A 실제 film 67 · cut 85 ↔ 표준 원장 active 152 · cut 0 · 반쪽 탄소 변형 RRM G 2.754e-6 ↔ 상속 G 2.613e-6 (remove_area) / 5.027e-6 S (renormalize)",
-      "note": "판정문 §7.  자리 (핀): scripts/rint_rrm_reference.py:235–244.  무너지는 것: 일반 기록 소비자가 표준 원장을 실제 풀이 요약으로 읽는 것.  무너지지 않는 것: 정상 RRM 행 조립 · σ (iface_rrm.contacts[0] 은 맞다).  최소 해결 = 표준 진단을 실제 RRM 행으로 재계산 또는 CNC 비교값 별도 이름공간 · 행 수 · 순수 막 G ↔ 공개 기록 대조 회귀.  수정 계획 Q3."
+      "note": "판정문 §7.  자리 (핀): scripts/rint_rrm_reference.py:235–244.  무너지는 것: 일반 기록 소비자가 표준 원장을 실제 풀이 요약으로 읽는 것.  무너지지 않는 것: 정상 RRM 행 조립 · σ (iface_rrm.contacts[0] 은 맞다).  최소 해결 = 표준 진단을 실제 RRM 행으로 재계산 또는 CNC 비교값 별도 이름공간 · 행 수 · 순수 막 G ↔ 공개 기록 대조 회귀.  수정 계획 Q3.  RRM 표준 요약 = 실제 RRM 행으로 다시 셈 · CNC 값 = 별도 이름공간 iface_cnc_comparison · iface_carbon_cover = None (요약 키 remove_area · renormalize → rrm = Codex Q9 소비자 호환).  ✅ 고침 25aecac22 (시험 먼저 e9d0cd87d · 문서 · 증거 · 요청서 dcb97f1ed · 수정 계획 Q1–Q4 (가) = 1저자 10-14 \"권고대로\") · 새 검사 67 · 수정 뒤 296/296 · iface 끔 16 사례 = 고치기 전 (44a034534) · ①′ 이전 (1d9af09d0) 과 비트 같음 · 봉인 32 무변경 · 생산 HOLD 그대로 · Codex 짧은 재확인 요청서 docs/reviews/codex_rint_g2_impl_fix_recheck_request_20261015.md (리뷰 핀 dcb97f1ed · 발송 = 1저자).",
+      "claimed_fixed_sha": "25aecac22",
+      "evidence_tests": [
+        "scripts/test_rint_g2_rrm.py (film 67 · cut 85 ↔ 표준 원장 대조)",
+        "docs/reviews/rint_g2_impl_fix_evidence_20261015/ (시험 먼저 · 최종 로그 · rc · HASHES = 본 가지 blob)"
+      ]
     },
     {
       "id": "L214-01",
