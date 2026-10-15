@@ -1,0 +1,24 @@
+[W] 웹앱 — 경로 기준 고립 = 100 − 활성 · 분해 (단절 · 무접촉) · 고립 위험과 다른 양
+[Storage] NOT configured - SUPABASE_URL=False SUPABASE_KEY=False
+[Security] WARNING: auth OFF - local/private only. For public deploy set WEBAPP_REQUIRE_AUTH=1 + WEBAPP_AUTH_TOKEN.
+  PASS  W1 영문 라벨 — 경로 기준 · 100 − active (접촉 개수 기준의 vulnerable 과 다른 말) · coverage 없음
+  PASS  W2 영문 라벨 — 분해 두 줄 (SE 는 닿았지만 분리막 쪽으로 안 이어짐 · SE 접촉 0) · 트리 기호 유지
+  PASS  W3 single.html 역방향 라벨 맵 — 세 영문 라벨을 내부 이름으로 되돌린다
+  PASS  W4 케이스 툴팁 (부모) — 경로 기준 · = 100 − Ionic Active = 단절 + 무접촉 · 고립 위험 (AM Vulnerable · 접촉 0–1 개) 과 다르다
+  PASS  W5 케이스 툴팁 (분해) — 단절 = SE 는 닿았지만 위 띠 (분리막 쪽) 로 안 이어짐 · 무접촉 = SE 접촉 0
+  PASS  W6 표 순서 — 활성 → 경로 기준 고립 → 단절 → 무접촉 → 고립 위험 (AM Vulnerable)
+  PASS  W7 옛 세대 케이스 — 부모 줄 = 100 − 활성 (2.5) 을 활성 바로 뒤에 · 분해 두 줄은 — (0 으로 안 채움)
+  PASS  W8 분해 키가 있는 케이스 (표에 줄이 없던 옛 CSV) — 부모 40.0 · 단절 30.0 · 무접촉 10.0
+  PASS  W9 그룹 비교 — 경로 기준 고립 · 단절 · 무접촉 열 (활성 바로 뒤) · 셋 다 낮을수록 좋음 (같은 철자)
+  PASS  W10 그룹 비교의 옛 세대 보정 — am_ionic_isolated_pct 가 없으면 100 − ionic_active_pct 로 채운다 (분해 두 열은 비워 둔다)
+  PASS  W11 MD 보고서 — 경로 기준 고립 줄 (= 100 − active) · 고립 위험과 구분
+  PASS  W12 쉬운 설명 (ionic_active_pct) — 이온이 못 가는 활물질 = 100 − 이 값 · 닿은 개수로 보는 "고립 위험" 과 다르다
+[L] LREL-05 — 이온 활성 · 경로 고립 = 상단 2r 경계 띠 · SE 접촉 그래프 지표 (인계 열 사전과 같은 한정어)
+  PASS  L1 케이스 툴팁 넷 (활성 · 경로 고립 · 단절 · 무접촉) — 상단 2r 경계 띠 · SE 접촉 그래프 지표 · 실제 분리막 접촉 · 계면 저항 · 이온 전류는 계산하지 않는다 · 실제 도달 단정 없음
+  PASS  L2 배지 (Ionic Active) title — 그래프 지표 한정어 · "전기화학적으로 dead" 단정 없음
+  PASS  L3 쉬운 설명 (ionic_active_pct) — "실제로 도달할 수 있는" 대신 그래프 연결 지표 · 이온 전류는 계산하지 않는다 · 100 − 이 값 · 고립 위험과 다른 양 (W12 유지)
+  PASS  L4 인계 열 사전 쪽 한정어 (IONIC_GRAPH_NOTE) 가 있고 같은 말 (상단 2r 경계 띠 · SE 접촉 그래프 · 이온 전류 계산 안 함) — 웹앱과 생성기가 같은 정의
+[B] 표 재구성기 — 같은 줄 · 같은 키
+  PASS  B1 _NET — 활성 뒤에 (부모 · am_ionic_isolated_pct) · (단절 · ionic_dead_pct) · (무접촉 · ionic_no_se_pct)
+
+17 PASS · 0 FAIL

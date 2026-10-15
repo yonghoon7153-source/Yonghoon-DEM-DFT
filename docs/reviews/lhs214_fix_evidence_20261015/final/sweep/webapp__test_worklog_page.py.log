@@ -1,0 +1,23 @@
+[Storage] NOT configured - SUPABASE_URL=False SUPABASE_KEY=False
+[Security] WARNING: auth OFF - local/private only. For public deploy set WEBAPP_REQUIRE_AUTH=1 + WEBAPP_AUTH_TOKEN.
+  PASS  ① /worklog 200
+  PASS  ② weekly 슬라이드텍스트가 하나 이상 잡힌다
+  PASS  ③ 최신순 정렬 (키 내림차순)
+  PASS  ④ 인덱스에 /worklog/<key> 링크가 렌더된다
+  PASS  ⑤ /worklog/<key> 200
+  PASS  ⑥ 제목·종류 배지가 머리말에 뜬다
+  PASS  ⑦ 예상 질문 섹션이 본문에 있다
+  PASS  ⑦b (markdown 있음) 표가 <table> 로 렌더된다
+  PASS  ⑦c 리치 리포트에 <figure> 인라인 SVG 그림이 렌더된다
+  PASS  ⑦d 요약 박스(blockquote)가 렌더된다
+  PASS  ⑧ 날짜 메타가 YYYY-MM-DD 로 뜬다
+    (겹치는 주차: ['20260914'])
+  PASS  ⑧b 같은 주차에 둘 다 있으면 "주간 리포트" 가 선택된다
+  PASS  ⑨ 거부(형식): 'abcd' → 404
+  PASS  ⑨ 거부(형식): '2026-09-14' → 404
+  PASS  ⑨ 거부(형식): '2026091' → 404
+  PASS  ⑨ 거부(형식): '202609144' → 404
+  PASS  ⑨ 거부(형식): 'app' → 404
+  PASS  ⑨ 거부(형식): '__init__' → 404
+  PASS  ⑩ 유효 형식이나 파일 없음 → 404
+worklog page SELFTEST PASS

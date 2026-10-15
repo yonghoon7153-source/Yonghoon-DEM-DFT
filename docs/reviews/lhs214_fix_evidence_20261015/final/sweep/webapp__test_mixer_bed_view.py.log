@@ -1,0 +1,60 @@
+[Storage] NOT configured - SUPABASE_URL=False SUPABASE_KEY=False
+[Security] WARNING: auth OFF - local/private only. For public deploy set WEBAPP_REQUIRE_AUTH=1 + WEBAPP_AUTH_TOKEN.
+  PASS  ① /mixer 200 · 탭 둘 (개발 이력 · 침대 보기)
+  PASS  ①b 표지 "보기 전용 — 판정은 3D 칸 M 으로만" 이 화면에 있다
+  PASS  ①c 개발 이력 카드는 그대로 뜬다 (회귀)
+  PASS  ② 목록 ok · 루트 셋 (없는 루트는 exists False)
+  PASS  ②b 층상 캠페인 L0 는 열림 · 프레임은 **숫자순** [1, 201, 1001] (사전순이면 1001 이 201 앞)
+  PASS  ②c 이름 규약 밖 파일 (notes.txt · mix_abc · mix_7.dump) · 탈출 링크 (mix_5) 는 프레임이 아니다
+  PASS  ②d 두 번째 루트의 런도 잡힌다
+  PASS  ③ 고-Bo · 강성 축 · NP 프로브 · 패턴 밖 이름은 잠긴다 (프레임 목록도 안 준다)
+  PASS  ③b 잠긴 런에는 사유 문자열이 있다 (맹검)
+  PASS  ③c 잠긴 런의 프레임 요청은 403
+  PASS  ③d DEV seed 1 의 2 바퀴 런 (M 열람 기록 있음) 은 열린다 · 근거 = 그 열람 기록 폴더 + "판정 미사용" 표지
+  PASS  ③e 열린 DEV 런 (점착 ×30) 의 프레임 요청은 200 (GIF · PNG 재료)
+  PASS  ④ 규약 밖 디렉터리 (공백 · 점 · 하이픈) 는 목록에 없다
+  PASS  ⑤ 경로 탈출 · 형식 밖 입력 16 종 전부 거부 (4xx · ok False)
+  PASS  ⑤b 목록에 없는 step 은 404
+  PASS  ⑥ 루트 밖을 가리키는 런 링크 (LB3_s14) 는 목록에 없다
+  PASS  ⑥b 링크로 루트 밖 파일을 읽지 않는다 (런 링크 · 프레임 링크 둘 다 4xx)
+  PASS  ⑦ 3D: 행 수 · 좌표 · 반경 · 타입이 덤프와 같다 (float32 반올림 안)
+  PASS  ⑦b 상 이름은 덱의 템플릿 시드에서 (AM_P · AM_S · SE) · 색은 viz_mixer_bed 팔레트 그대로 · 개수
+  PASS  ⑧ 머리 원자 수 ≠ 행 수 → 422 + 검사기 문장
+  PASS  ⑧b 비유한 좌표 → 422
+  PASS  ⑧c 머리 step ≠ 파일명 step → 422
+  PASS  ⑨ 단면 = 중심이 x₀ ± t/2 **닫힌 구간** 안 (경계 ±0.001 포함 · 0.0010000001 제외 · 0.0009999999 포함)
+  PASS  ⑨b x₀ 를 옮기면 조각이 옮겨 간다 (0.0005 ≤ x ≤ 0.0025 → 4 개)
+  PASS  ⑨c 상별 n_shown 합 = n_shown · n_total 은 프레임 전체
+  PASS  ⑨d 단면 인자 반례 9 종 (0 · 음수 · nan · inf · 수 아님 · 빠짐 · 넘침) 전부 400
+  PASS  ⑨e 모르는 view 는 400
+  PASS  ⑩ 투영은 전 입자 (n_shown = n_total)
+  PASS  ⑫ 드럼 = Drum.stl 꼭짓점 × scale (R = 0.5·S · x ∈ ±0.1·S)
+  PASS  ⑫b dt · 주기 · 회전 시작 step (run 합) 을 덱 문자열에서
+  PASS  ⑫c 바퀴 = (step − 회전 시작)·dt/주기 — 1001 → 1.6 · 회전 전 (step 1) 은 None + 정착 구간
+  PASS  ⑫d Drum.stl 없음 → 드럼 None + 사유 (짐작하지 않는다) · 프레임은 그대로 뜬다
+  PASS  ⑫e 런 옆 r_container (생성기 기록) 는 드럼 반경과 대조만 한다 — 같으면 사유 없음
+  PASS  ⑫f r_container 가 Drum.stl 반경과 0.1 % 넘게 다르면 사유를 적는다 (그림은 STL 기준 그대로)
+  PASS  ⑬ 덱 없음 → 상 이름은 "type N" + types_named False (짐작하지 않는다)
+  PASS  ⑭ 선적 정책: 항목마다 basis · since · 패턴 컴파일
+  PASS  ⑭b 선적 정책: 층상 캠페인 · M 열람된 DEV seed 1 런만 열림 · 나머지는 잠김 (fullmatch — 앞뒤 덧붙임도 잠김)
+  PASS  ⑭d 선적 정책: 항목마다 근거 basis 가 리포 안의 기록 경로를 하나 이상 적고, 그 경로가 실제로 있다
+  PASS  ⑭c 정책 파일이 깨지면 (JSON · 빈 basis · 정규식 · schema) 전부 잠긴다 (fail-closed)
+  PASS  ⑭e ★ dev-u (LU212 · LU637) 런은 M 열람 기록 없이 열리지 않는다 — 선적 정책 (10-06) 은 seed 1 의 ref_r2 둘만 dev-u 열람 기록 근거로 열고 (분류 · ③d) 다른 dev-u 이름은 잠금 · 열린 항목 basis 는 리포 안의 dev-u 열람 기록 폴더를 적는다 / 반례 둘 (dev-rot 항목에 LU 를 끼움 · L* 일반 패턴 — 근거 = dev-rot 기록) 은 "기록 없는 열림" 으로 잡힌다
+  PASS  ⑮ 크기 상한을 넘는 프레임은 읽지 않는다 (413)
+  PASS  ⑮b 같은 프레임은 한 번만 읽는다 · 파일이 바뀌면 (mtime) 다시 읽는다
+  PASS  ⑪ 보기 전용: 런 폴더에 아무것도 쓰지 않는다 (파일 · 크기 · mtime 불변)
+  PASS  ⑯ 침대 보기 스크립트에 innerHTML 보간이 없다 (런 이름은 textContent)
+  PASS  ⑯b 화면이 겹침 · 혼합 지표를 계산한다는 문구가 없다 (보기 전용 표지와 함께 "계산하지 않는다")
+  PASS  ⑯c 런 선택은 스크롤 목록 상자 (size ≥ 8) · 고른 런으로 목록을 스크롤한다 (scrollTop)
+  PASS  ⑰ 자동 재생 · 고화질 PNG · GIF 버튼이 있다
+  PASS  ⑰b GIF 인코더는 페이지 안에 있다 (외부 GIF 라이브러리 · 워커 없음) · 내보낸 그림에 보기 전용 표지를 붙인다
+  PASS  ⑰c 3D: 메시를 프레임 사이에 재사용하고 (InstancedMesh.dispose 로 GPU 버퍼를 푼다) · WebGL 컨텍스트가 끊기면 복구 / 재생성한다
+  PASS  ⑰d GIF: 첫 프레임에 없던 상 색 (층상 런의 SE) 도 뒤 프레임에서 그 색으로 나온다 — 팔레트를 첫 프레임에서만 뽑지 않는다 (1저자 09-30 밤 "gif 하면 흑백") · 프레임 2 · SE 맨 아래 줄 최대 편차 0 (≤ 8) · SE 평균 R−B 47.3 (> 40) · 회색 둘 보존 True · SE 픽셀 예 (201, 184, 138)
+  PASS  ⑰e 투명 배경 GIF: 배경 = 투명 색 · 덩어리 불투명 그대로 · 앞 프레임 잔상 없음 (처분 2) · 프레임 2 · 투명 색 0 · 덩어리 불투명 · 베이지 True · 배경 알파 최대 0 / 둘째 프레임 첫 자리 0 (둘 다 0)
+  PASS  ⑰f GIF 캡션에는 런 (샘플) 이름이 없고 PNG 캡션에는 그대로 있다 · PNG 캡션 'LC_s32452843 · step 317,331 · t 0.224 s …' · GIF 캡션 'step 317,331 · t 0.224 s · 정착 구간 · 3D…'
+  PASS  ⑰h ☑ 드럼 면 채우기 (#bedDrumFill · 기본 켜짐) — 3D 드럼을 실물처럼 (원통 벽 · 뒤 뚜껑 · 앞 테) 그리고 끄면 옛 선 그림 · 토글은 메시를 다시 만들고 (선 · 면 메시 모두 GPU 에서 푼다) 카메라는 그대로
+  PASS  ⑰g ☑ 투명 배경 GIF (#bedGifClear) 가 있고 GIF 내보내기가 그 값을 프레임 · 인코더에 넘긴다
+  PASS  ⑰i 내보내기 여백 (exportPad): 드럼 윤곽이 틀 가장자리 3 % 안 · 밖이면 그만큼 틀을 넓히고 · 틀 안 · 크게 당긴 시점 · 카메라 뒤 점은 화면 그대로 · 틀 안 = 그대로 True · 위 5 px · 아래 40 px 넘침 → 여백 위 25 아래 70 (기대 25 · 70) · 크게 당김 = zoom · 카메라 뒤 = behind
+  PASS  ⑰i-b 3D 내보내기: PNG 는 drumPad3 (드럼 두 테 투영 → exportPad) 로 틀을 정하고 render3Tiles 로 그린다 — 카메라 setViewOffset 타일 · 끝나면 clearViewOffset · 화면 캔버스 (drawing buffer) 를 키우지 않는다 (setPixelRatio 없음) · GIF 는 여백을 한 번만 정해 모든 프레임에 같은 틀
+
+test_mixer_bed_view: 56/56 PASS

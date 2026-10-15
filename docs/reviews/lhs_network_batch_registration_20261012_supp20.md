@@ -93,3 +93,17 @@ $PY scripts/run_network_194_parallel.py run --root "$R" --cohorts lhss --observe
 
 - 9-1 **사전 점검 (발사 핀 `1087a9b2f` · WSL 10-14 14:19 KST · 1저자)**: dry-run (`--cohorts lhss --dry-run --observe-imports --preflight-receipt`) rc 0 · 영수증 도구 (`--preflight-receipt … --approved-sha 1087a9b2f4a93aa6a3b0debc698a14fffa13488d`) rc 0 · 24 칸 · 다름 0 (R0 · A1–A2 · B1–B3 · C1–C4 · D1 · P0–P10 · E1 · E2) · 입력 지문 n 20 · `ids_sha256` `991cf1150b183f64bc69926a8b3e7c05453ec47e13b89ba3a6ad2fd2c981c694` · `raw_sha256_table_sha256` `a7aaa3c8c7683f1835a096acb83ecdb055eaf5f129221f7067c5f34462807d0e` · 코호트 lhss `69d3f913072288b1d6b8ca8a14e43b0bc8f80e8836a8f79a9b26b2d8ed6dcaf7` = §2 (E1 기계 대조) · code_fp `e8b2496b…` = §3 (E2) · 로그 sha256 `a8dba071bc00aadd…` (4,375 B) · 영수증 `~/netsupp20_1087a9b2f_preflight_1014_141953` (.json · .log) · 수동 칸 셋 (발사 핀 fast16 + real4 · 저자 승인 · 새 ROOT 둘) = 194 등록 §9-7 과 아래 9-2.
 - 9-2 ✅ **1저자 발사 승인 10-14** (194 등록 §9-7 과 같은 승인 · 같은 핀) — 194 끝난 뒤 보충 20 · 결과 = 완료 뒤 (⬜).
+- 9-3 **개정 초안 — FULL 모형 한계 범주 (10-15 · L214 · ⬜ 1저자 비준 대기 · 결과 열람 뒤 정책 개정)** — 194 등록 `docs/reviews/lhs_network_batch_registration_20261007_g2.md` §9-8 과 **같은 개정** (①–⑦ 그대로) ·
+  근거 = Codex LHS214 실패 검토 `docs/reviews/codex_review_lhs214_failures_20261014.md` §4 B6 · 수정 계획 `docs/reviews/lhs214_fix_plan_20261014.md` · 수정 재확인 요청서 `docs/reviews/codex_lhs214_fix_review_request_20261015.md`.
+  ⚠ **이력 (결과 열람 뒤)** — 10-14 보충 20 실행 결과 (done 14 · 실패 6 = `lhss_001` · `lhss_003` · `lhss_008` · `lhss_009` · `lhss_011` · `lhss_014` · 상위 사유 모두 `physics.ionic=fail / solve_failed` · 원인 미확정 = unknown) 를 본 뒤의 허용 정책 변경 ·
+  10-14 ROOT (`~/netsupp20_1087a9b2f`) · 실패 기록 보존 · 사후 "성공" 전환 없음 · 기대 실패 수 고정 없음.
+  **바꾸지 않는 것**: 문턱 1.5 · 수치 허용치 1e−6 · 사다리 · G > 0 · 병렬 상한 · 등록 집합 supp20 (`ids_sha256` `991cf115…` · 원자료 표 `a7aaa3c8…` · 코호트 TSV `69d3f913…` — §2 그대로) · 실행 형식 · 관측 필수 · §5 기존 관문.
+
+  | 자리 | 원문 (보존) | 개정 초안 (⬜ 비준 대기) |
+  |---|---|---|
+  | §3 코드 신원 | 봉인 32 · `code_fp e8b2496b9c2ecf6edad8c6b52d32a2514c96dd54c9a20823c300639249ecae71` = 194 와 같음 | 봉인 32 · **`code_fp acc7bfa335ec8fa8a7b76eb981135f16994b084ce0746476c5d05f61488af2ed`** = 194 개정과 같음 (한 code_fp 로 두 새 ROOT · 바뀐 봉인 파일 4 · 인계 도구 지문 = 194 등록 §9-8 표) |
+  | §5-1 케이스 판정 | 194 등록 §5-1 | 194 등록 §9-8 의 §5-1 개정 그대로 (모형 한계 = 레코드 게시 가능 · 다른 채널 진짜 실패 = failed) |
+  | §5 결과 자격 · 공란 의미 · Hertz 주 타깃 (신설) | — | 194 등록 §9-8 ①–⑥ 을 **배치마다** — 보충 lhss 행도 같은 범주 · 같은 공용 판정 · lhss 의 주 타깃 (H0) 모형 한계 = v1.3 주 타깃 배포 HOLD (보충 행이라 면제되지 않는다 · `v13_primary_model_limit_problems` 가 데이터셋 lhs · lhsx · lhss 마다) · Physics · H12 만 = 부록 공란 (`NA_MODEL_LIMIT`) |
+  | §5-5 배포 관문 | 두 배치 각각 ⓪ · ⓪b + 교차 + 결합 | 그대로 + 결합 뒤 주 타깃 모형 한계 관문 (빌드 · 대조 같은 함수) · 한 배치의 PASS 가 다른 배치를 면제하지 않는다 (그대로) |
+
+  ⚠ 이 초안은 등록 기대의 개정안이다 — 비준 · 발사 승인 (B7 — 새 핀 사전 점검 · 영수증 · 손 대조) 을 대신하지 않는다.

@@ -1,0 +1,32 @@
+[Storage] NOT configured - SUPABASE_URL=False SUPABASE_KEY=False
+[Security] auth ON (session cookie SameSite=Strict + Bearer, Origin check on writes).
+  PASS  1) ★ archive 탈출 시도 8종이 전부 차단
+  PASS  2) 정상 상대경로는 루트 안으로 해석
+  PASS  3) 조회가 유령 디렉터리를 만들지 않는다 (F-16)
+  PASS  4) ★ 케이스 이름의 경로 문자가 slug 에서 제거된다
+  PASS  5) 정상 이름(한글 포함)은 보존
+  PASS  6) 읽기(GET /)는 통과
+  PASS  7) ★ 미인증 쓰기는 401
+  PASS  8) ★ 고비용 GET(/predictor/train)도 보호
+  PASS  9) 정적/로그인은 면제
+  PASS  10) 헬스체크는 면제
+  PASS  11) 틀린 토큰 거부
+  PASS  12) 맞는 토큰 → 세션 발급
+  PASS  13) 로그인 후 쓰기 통과
+  PASS  14) ★ 교차 출처 쓰기는 403 (CSRF)
+  PASS  15) 같은 출처 쓰기는 통과
+  PASS  16) Bearer 토큰 경로 동작
+  PASS  17) 틀린 Bearer 는 401
+  PASS  18) ★ REQUIRE_AUTH=1 + 토큰없음 → 게이트는 켜진 채 토큰만 없음(=fail-closed 조건)
+  PASS  T9) ★ subprocess 를 도는 GET-only 라우트가 전부 보호 목록에 있다
+  PASS  T9b) 미인증 /scaling-report 차단
+  PASS  T9b) 미인증 /results/nope/mpm-input 차단
+  PASS  19) escHtml 헬퍼가 정의돼 있다
+  PASS  20) ★ 보간이 들어간 인라인 이벤트 핸들러가 없다
+  PASS  21) c.name 가 escaping 없이 남아있지 않다
+  PASS  21) w.msg 가 escaping 없이 남아있지 않다
+  PASS  21) w.name 가 escaping 없이 남아있지 않다
+  PASS  21) p.title 가 escaping 없이 남아있지 않다
+  PASS  21) p.origin_tip 가 escaping 없이 남아있지 않다
+
+test_security_phase_a: 28/28 PASS

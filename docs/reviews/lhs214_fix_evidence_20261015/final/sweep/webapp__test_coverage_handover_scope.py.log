@@ -1,0 +1,24 @@
+[C] 웹앱 표지 — 포화 · 인계 제외 (J20-m · LHS-25)
+  PASS  C1 Coverage AM_P(%) 툴팁 = Physics 계열 포화 · 인계 제외 한정어 (포화 · LHS-25 · J20-m)
+  PASS  C1 Coverage AM_S(%) 툴팁 = Physics 계열 포화 · 인계 제외 한정어 (포화 · LHS-25 · J20-m)
+  PASS  C1 Coverage AM(%) 툴팁 = Physics 계열 포화 · 인계 제외 한정어 (포화 · LHS-25 · J20-m)
+  PASS  C2 ③ 이후 낡은 문장 ("v2 … 아직 표시하지 않는다") 없음
+[Storage] NOT configured - SUPABASE_URL=False SUPABASE_KEY=False
+[Security] WARNING: auth OFF - local/private only. For public deploy set WEBAPP_REQUIRE_AUTH=1 + WEBAPP_AUTH_TOKEN.
+  PASS  C3 v2 절 머리 = 후보 · 미검증 + 포화 · 인계 제외 (LHS-25)
+  PASS  C4a v2 행 셋 (AM · AM_P · AM_S)
+  PASS  C4 v2 행 툴팁 있음 · 분모 무효 · 포화 · LHS-25 — Coverage AM physics v2 — 후보 · 미검증 (%)
+  PASS  C4 v2 행 툴팁 있음 · 분모 무효 · 포화 · LHS-25 — Coverage AM_P physics v2 — 후보 · 미검증 (%)
+  PASS  C4 v2 행 툴팁 있음 · 분모 무효 · 포화 · LHS-25 — Coverage AM_S physics v2 — 후보 · 미검증 (%)
+  PASS  C5 쉬운 설명 coverage_AM_P_mean_physics — SE 가 많으면 100 % 에 붙는다 (포화)
+  PASS  C5 쉬운 설명 coverage_AM_S_mean_physics — SE 가 많으면 100 % 에 붙는다 (포화)
+  PASS  C6 쉬운 설명 B3 — "가장 믿을 만한" 철회 (인용 뿌리 감사 E7 · MI-5 와 같은 계열)
+[K] 코드 · 데이터 — 주석 정정 (SELF-74) · 인계표에 physics 없음
+  PASS  K1 v2 분모 무효를 "이웃 AM 과 깊이 겹친 입자" 로 설명하지 않는다 (SELF-74)
+  PASS  K2 대신 원인 = 접촉별 추정 면적 합에 표면 한도가 없다 (LHS-25) 를 적는다
+  PASS  K4 lhs_handover_20260930.csv — physics 열 없음 · 기하면적 피복 셋 있음
+  PASS  K4 lhsx_handover_20260930.csv — physics 열 없음 · 기하면적 피복 셋 있음
+  PASS  K4 lhs_handover_20261001.csv — physics 열 없음 · 기하면적 피복 셋 있음
+  PASS  K4 lhsx_handover_20261001.csv — physics 열 없음 · 기하면적 피복 셋 있음
+
+18 PASS · 0 FAIL

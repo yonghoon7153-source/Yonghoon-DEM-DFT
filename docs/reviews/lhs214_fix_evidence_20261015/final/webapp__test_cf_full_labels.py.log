@@ -1,0 +1,18 @@
+[A] calc_effective_conductivity docstring
+  PASS  A1 "3-10× 과대" 주장이 없다
+  PASS  A2 비는 케이스마다 (σ_brug / σ_ionic) · CF/FULL (L2-07) 을 적는다
+[B] 그룹 그림 plot_r_brug_comparison
+  PASS  B0 그림이 그려진다
+  PASS  B1 범례 = CF/FULL (R_brug 아님)
+  PASS  B2 y = 1 문구가 "Bruggeman = exact" 가 아니다
+  PASS  B3 제목 · y 축에 Bruggeman 과대추정 문구가 없다
+  PASS  B4 y 축 = CF/FULL
+  PASS  B5 제목에 Bruggeman 이 아니라는 표지 (L2-07)
+[C] PLOT_REGISTRY
+  PASS  C1 제목 = CF/FULL
+  PASS  C2 설명이 Bruggeman 과대추정이 아니다 · L2-07 · 진짜 비 안내
+[D] group.html 체크박스
+  PASS  D1 체크박스 이름 = 접촉 배수 (CF/FULL)
+
+11 PASS · 0 FAIL
+findfont: Failed to find font weight normal for WenQuanYi Zen Hei, now using 500.

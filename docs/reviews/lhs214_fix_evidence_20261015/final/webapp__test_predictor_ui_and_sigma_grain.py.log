@@ -1,0 +1,82 @@
+σ_grain 단일출처 + 예측기 온도-UI 회귀시험
+  PASS  [C-1] app.py 에 bare σ_grain 리터럴 0개 (전부 _sigma_grain_mS_cm 경유)
+  PASS  [C-1] app.py 가 σ_grain 정본 헬퍼를 정의하고 쓴다 — 경유 호출 11회 (_mS_cm 5 + _context 6)
+  PASS  [C-1] predictor_engine 도 se_material 경유 유지
+[Storage] NOT configured - SUPABASE_URL=False SUPABASE_KEY=False
+[Security] WARNING: auth OFF - local/private only. For public deploy set WEBAPP_REQUIRE_AUTH=1 + WEBAPP_AUTH_TOKEN.
+  PASS  [C-1] metrics 없음 → bitwise 3.0 — 0x1.8000000000000p+1
+  PASS  [C-1] legacy metrics(온도 키 없음) → bitwise 3.0
+  PASS  [C-1] dict 아닌 입력에도 안전
+  PASS  [C-1] T 미적용 provenance(factor 1.0) → bitwise 3.0
+  PASS  [C-1] sigma_grain_S_cm=3.0e-3 폴백도 bitwise 3.0
+  PASS  [C-1] T=30 °C provenance → σ_grain = 3.0 × 1.28 — 3.8389 mS/cm
+  PASS  [C-1] T=45 °C provenance → σ_grain = 3.0 × 2.56 — 7.6665 mS/cm
+  PASS  [C-1] T=60 °C provenance → σ_grain = 3.0 × 4.79 — 14.3553 mS/cm
+  PASS  [C-1] Stage-E-only provenance → 25 °C 베이스라인과 짝맞춰 bitwise 3.0 (배수 적용 안 함)
+  PASS  [C-1] Stage-E-only 런은 혼합-온도 경고를 노출한다 — '⚠ 혼합 온도: 이 런은 Stage-E σ_ion 만 60.0 °C 로 스케일(×4.79)했고 베이스라인 σ_full 은 25 °C 입니다.  σ_brug·τ_Laplace 는 그 25 °C 베이스라인과 짝을 맞추려고 σ_grain = 3 mS/cm(25 °C)를 씁니다 — Stage-E 값과 직접 비교하지 마세요.'
+  PASS  [C-1] Stage-E factor 1.0(=T 미적용)은 경고 없음
+  PASS  [C-1] 짝이 맞는 temperature_provenance 는 그대로 배수 적용 + 경고 없음
+  PASS  [C-1] 두 키 공존 시 σ_full 과 짝이 맞는 temperature_provenance 우선
+  PASS  [C-1] ★실제 산출형 (paired factor 1.0 + Stage-E 60 °C) 에서 혼합-온도 경고가 나온다 — '⚠ 혼합 온도: 이 런은 Stage-E σ_ion 만 60.0 °C 로 스케일(×4.79)했고 베이스라인 σ_full 은 25 °C 입니다.  σ_brug·τ_Laplace 는 그 25 °C 베이스라인과 짝을 맞추려고 σ_grain = 3 mS/cm(25 °C)를 씁니다 — Stage-E 값과 직접 비교하지 마세요.'
+  PASS  [C-1] 둘 다 1.0(=완전 T-미적용) 이면 경고 없음 + bitwise 3.0
+  PASS  [C-1] 이상한 provenance({'sigma_ion_T_factor': None}) → 기본 3.0 로 폴백
+  PASS  [C-1] 이상한 provenance({'sigma_ion_T_factor': 0}) → 기본 3.0 로 폴백
+  PASS  [C-1] 이상한 provenance({'sigma_ion_T_factor': True}) → 기본 3.0 로 폴백
+  PASS  [C-1t] 템플릿에 σ_grain 산술 하드코딩 0개
+  PASS  [C-1t] single.html 이 sigma_grain() 전역을 쓴다 — 10
+  PASS  [C-1t] sigma_grain/sigma_grain_note 가 전역 주입됨
+  PASS  [C-1t] legacy 렌더 문자열이 옛 "3.0" 과 동일 — 3.0
+  PASS  [C-1t] 짝맞는 T 런은 스케일된 값을 렌더 — 14.4
+  PASS  [C-1t] Stage-E-only 런은 25 °C 값을 렌더(베이스라인과 짝) — 3.0
+  PASS  [C-1t] single/group 템플릿 파싱 OK
+  PASS  [C-1] σ_Bruggeman = σ_grain×ratio 가 옛 3.0 수식과 bitwise 동일
+  PASS  [C-1] τ_Lap_eff / τ_Lap_geom 이 옛 3.0 수식과 bitwise 동일
+  PASS  [C-1] MD 리포트 포맷 f"{sg:.1f}" 이 옛 "3.0" 문자열과 동일
+  PASS  [C-1] T 런에서 τ_Lap 이 √배수만큼 정합 이동 (25 °C 고정이면 이만큼 틀렸다) — τ 2.921 → 6.390 (×2.187)
+  PASS  [C-1] 표의 σ_brug/σ_ionic 이 옛 3.0 수식 결과와 동일 — ['σ_brug / σ_ionic', '66.1×', '54.3×', '-17.8%']
+  PASS  [C-1] 표의 τ_Lap,eff (= √tau2) 가 옛 3.0 수식 결과와 동일 — ['τ_Lap,eff = √tau2 (Laplace · 협착 포함)', 2.92, 2.65, '-9.3%'] vs 2.92
+  PASS  [C-1] 표의 tau2 가 옛 3.0 수식 (φ·3.0/σ_full) 결과와 동일 — ['tau2 = φ·σ₀/σ_full (tortuosity factor · 협착 포함)', 8.533, 7.015, '-17.8%'] vs 8.533
+  PASS  [C-3] 슬라이더 옆에 스코프 고지 블록이 있다
+  PASS  [C-3] 고지에 σ_ion 이 스케일된다는 서술 포함 — sigma_ionic
+  PASS  [C-3] 고지에 규약 출처 포함 — Kraft 2017
+  PASS  [C-3] 고지에 기본 Eₐ 포함 — 0.41 eV
+  PASS  [C-3] 고지에 무엇이 안 되는지 포함 — 스케일 안 됨
+  PASS  [C-3] 고지에 스윕이 온도를 무시한다는 고지 포함 — Find Optimal Design
+  PASS  [C-3] 고지에 Eₐ 밴드 규약 포함 — 단일값 보고 금지
+  PASS  [C-3] 고지에 앵커 없음 표기 포함 — &sect;F1
+  PASS  [C-3] legacy σ_e Arrhenius 선택지가 UI 에 노출된다
+  PASS  [C-3] σ_e 기본 선택지가 T-무관(none) — 첫 option 이 none
+  PASS  [C-3] Eₐ 밴드 3값이 셀렉터에 있다
+  PASS  [C-3] Eₐ 기본 선택지는 빈 값 = 엔진 기본(0.41) → 요청이 기본과 동일
+  PASS  [C-3] getParams 가 두 키를 실어 보낸다
+  PASS  [C-3] 결과에 온도 provenance 박스를 렌더한다
+  PASS  [C-3] 온도 스윕(no-op 팔)을 명시적으로 차단한다
+  PASS  [C-3] 스윕 결과 화면에 "298 K 고정" 배너를 붙인다
+  PASS  [C-3] predictor.html 에 script 블록이 있다
+  PASS  [C-3] 인라인 JS 가 문법적으로 파싱된다 (node --check)
+  [ML Data] Loaded: 0 → Dedup: 0 (removed 0)
+  PASS  [C-3] /predictor 가 200 이고 고지가 실제 렌더된다 — status 200
+  PASS  [C-3] predict 라우트 기본이 sigma_e_t_model=none (σ_e T-무관)
+  PASS  [C-3] ea_ion_ev 미지정/빈값 → None (엔진 기본 0.41)
+  PASS  [C-4] 구현/미구현 상태표가 있다
+  PASS  [C-4] σ_e 기본이 T-무관으로 바뀐 사실이 적혀 있다
+  PASS  [C-4] Stage-E --temp-c 배선이 적혀 있다
+  PASS  [C-4] σ_grain 잔존 하드코딩 인벤토리가 적혀 있다
+  PASS  [C-4] 이번 검증의 잔존 한계(다른 담당분 포함)가 적혀 있다
+  PASS  [C-4] "predictor 가 σ_e 에 Ea_AM=0.50 을 곱한다"가 현재형으로 남아있지 않음
+  PASS  [AUD-02] 예측기가 grade_engine 의 앵커 객체를 그대로 쓴다 (사본 아님)
+  PASS  [AUD-02] 앵커가 커밋된 CSV 와 일치한다 (불일치 [])
+  PASS  [AUD-02] p_c 도 같은 논문에서 온다 (4 wt%)
+  PASS  [AUD-02] 4 wt% 가 5 wt% 보다 두 자릿수 낮다 (무릎을 넘겨 적지 않는다)
+  PASS  [AUD-02] 옛 미확인 값(70)이 앵커에 없다
+  PASS  [AUD-02] c65_4wt 분기가 앵커에서 읽는다
+  PASS  [AUD-02] c65_4wt 분기에 옛 상수 70 이 없다
+  PASS  [AUD-02] Bielefeld 2023 이 표지 없이 출처로 서 있지 않다 (줄 [])
+  PASS  [AUD-02] Ref: 줄에서 사라졌다
+  PASS  [AUD-02] AM 퍼콜레이션 인용이 실재 논문(2019)으로 정정됐다
+  PASS  [v3-label] 철회된 v29 지수가 표지 없이 플롯 라벨에 없다 ([])
+  PASS  [v3-label] thermal_decomposition 제목이 R²=0.90 을 주장하지 않는다
+  PASS  [v3-label] 그 블록이 멱법칙의 실측 천장 0.59 를 함께 적는다
+  PASS  [v3-label] 그 블록이 프로덕션 폼(Ridge)을 가리킨다
+  PASS  [v3-label] T1 표기(φ_eff · cov_Hertz)가 라벨에 실제로 있다
+ALL PASS

@@ -1,0 +1,190 @@
+== scripts/test_constriction_power_share.py  rc=0  0.7s
+     PASS  C6b physics 꼬리 키는 이름 그대로 복사 (옛 _physics 덧붙이기 미러가 아니다 — 두 번 붙지 않게)
+   17/17 PASS
+== scripts/test_network_boundary_rule.py  rc=0  0.7s
+     PASS  ⑨ 원시 값 — 옛 모듈 (eedada5d3 · 기본 legacy) 간선 = 지금 모듈의 명시 세대 1 간선 (area_rule physics_g1 · PSI_DIVIDE) float.hex 동일 (11 필드) · 같은 경계 집합 (6/6 망) · 지금 해 = 정확 Dirichlet 독립 기준해 (상대 1e-12 · 18/18 풀이) · 옛 가상 전원 해 대비 G 이동 +1.16e-04 … +5.69e-04 (전극 변경 · 기록만)
+   test_network_boundary_rule: 11/11 PASS
+== scripts/test_network_dirichlet.py  rc=0  11.0s
+     PASS  D7c 직접해 ↔ CG 문턱 줄 = 상수 DIRICHLET_DIRECT_MAX_FREE (30000) · 소스에 한 번 (measure_rho 치환 앵커)   count=1
+   test_network_dirichlet: 14/14 PASS
+== scripts/test_physics_area_g2.py  rc=0  7.2s
+     PASS  T9e hertzian 모드는 type_map 이 없어도 돈다 (physics 면적은 진단 칸 — None) · R_c 는 Maxwell 그대로
+   test_physics_area_g2: 27/27 PASS
+== scripts/test_psi_default_switch.py  rc=0  0.6s
+     PASS  ⑥c Hertz 결과도 같은 표기를 싣는다 (Hertz 는 ψ 를 안 쓴다 — 값 무관 · 표기만)   (('multiply', 'multiply', 'multiply', 'computed', 'computed'), ('legacy_divide', 'legacy_divide', 'legacy_divide', 'computed', 'computed'))
+   test_psi_default_switch: 21/21 PASS
+== scripts/measure_rho.py --selftest  rc=0  0.6s
+     ✓ ⑬d ★ 그때 두 값이 같다 — 직접해는 0 이고 delta 는 음수가 아니므로 max 가 같다
+   ρ 측정 SELFTEST PASS
+== scripts/audit_constriction_deleted.py --selftest  rc=0  0.4s
+     ✓ ⑫e 기본은 각각 마지막(atom 105 · contact 100), --match-steps 는 같은 step(atom 100)   기본 atom 105 / match atom 100
+   협착 삭제 census SELFTEST PASS
+== scripts/audit_transport_cap_equivalence.py --selftest  rc=0  1.5s
+     ✓ ⑥c 판별력: 솔버의 Rc=0 분기를 R_Maxwell 로 바꾸면 cap 전환이 **실제로** 값을 움직인다 (Codex: Rc 0.7071 → 1.0)   변이판 Rc np.float64(0.41542523394709663) → np.float64(0.5875)
+   수송 cap 동치 SELFTEST PASS
+== scripts/constriction_reference.py --selftest  rc=0  12.0s
+     ✓ ⑦ 판별력: 2π 를 빼면 ⓪ 이 빨간불 (v1 결함 재현)   변이 rel = 5.2832 (≈ 2π−1 = 5.2832)
+   협착 기준해 SELFTEST PASS
+== scripts/audit_validation_flags.py --selftest  rc=0  0.1s
+     ✓ 요약이 "all assessable gates True" 라고 말하지 않는다
+   AUDIT SELFTEST PASS
+== scripts/extract_se_network_diagnostics.py --selftest  rc=0  0.1s
+     ✓ ②e 대조: meta 하나뿐인 배치도 그대로 읽힌다   {2: 'SE'} scale=500.0
+   SE 진단 코퍼스 SELFTEST PASS
+== scripts/test_parse_case_paste_union.py  rc=0  0.1s
+     ✓ P5 옛 열 순서 그대로 + dem_cov_amp_physics_union 은 맨 끝
+   5/5 통과
+== scripts/test_lhs_pressure_record.py  rc=0  1.1s
+     PASS  C4 둘 다 주면 거부 (모순된 지시)
+   25 PASS · 0 FAIL
+== webapp/test_am_isolation_labels.py  rc=0  0.5s
+     PASS  R1 v_AM 설명 — "coverage 낮아" 아님 · SE 접촉 0–1 개 (LHS-23)
+   7 PASS · 0 FAIL
+== webapp/test_closed_param_exact_union.py  rc=0  4.4s
+     PASS  V7 등급 축에 physics v2 없음
+   36 PASS · 0 FAIL
+== webapp/test_closed_param_groupview.py  rc=0  1.2s
+     PASS  H5 그룹 표 라우트가 이 도우미를 부른다 (배선)
+   44 PASS · 0 FAIL
+== webapp/test_closed_param_values.py  rc=0  15.3s
+     PASS  W4 τ 없는 침대의 케이스 페이지 네트워크 표에 φ_SE 행 (① 라벨 그대로)
+   28/28  ✓ 전부 통과
+== webapp/test_coverage_handover_scope.py  rc=0  0.5s
+     PASS  K4 lhsx_handover_20261001.csv — physics 열 없음 · 기하면적 피복 셋 있음
+   18 PASS · 0 FAIL
+== webapp/test_coverage_union_display.py  rc=0  1.4s
+   28 PASS · 0 FAIL
+   ALL PASS
+== webapp/test_ionic_isolation_labels.py  rc=0  0.7s
+     PASS  B1 _NET — 활성 뒤에 (부모 · am_ionic_isolated_pct) · (단절 · ionic_dead_pct) · (무접촉 · ionic_no_se_pct)
+   17 PASS · 0 FAIL
+== webapp/test_percolation_labels.py  rc=0  0.4s
+     PASS  W7 Ionic Active AM 툴팁 — 접촉 유무만 · coverage 무관 (LHS-20) · 위 밴드 외톨이 SE 도 센다
+   7 PASS · 0 FAIL
+== webapp/test_stress_lw_labels.py  rc=0  0.9s
+   72/72 PASS
+   findfont: Failed to find font weight normal for WenQuanYi Zen Hei, now using 500.
+== webapp/test_tau_grade_unify.py  rc=0  2.0s
+     PASS  R1 regime DB — tau2 도우미 경유 (tau2_from_metrics · 짝 σ₀) · 25 °C τ_Lap,eff = √(φ·3.0/σ_full,H) 그대로
+   20 PASS · 0 FAIL
+== webapp/test_atoms_only_porosity.py  rc=0  15.6s
+   41 PASS · 0 FAIL
+   ALL PASS
+== webapp/test_atoms_only_viewer.py  rc=0  3.8s
+     PASS  ⑦c 모르는 이름의 입자는 회색으로 그린다 (createInstancedSpheres(groups.OTHER … COL.ATOMS_ONLY))
+   17/17 PASS
+== webapp/test_hetero_transcript_page.py  rc=0  0.9s
+     PASS  ⑬ 표지 없음 · 날짜 없음 · 둘 · 빈 블록 · 파일 없음 → "논지 정본을 읽지 못했다" (옛 문장 안 보임) 
+   test_hetero_transcript_page: 13/13 PASS
+== webapp/test_ledger_view.py  rc=0  1.3s
+     PASS  46e) ★★ 비포/애프터 본문에 표지 없는 금지값이 없다
+   ledger_view: 52/52 PASS
+== webapp/test_meta_json_robust.py  rc=0  0.6s
+     PASS  ④b 임시 파일이 남지 않는다
+   test_meta_json_robust: 8 PASS / 0 FAIL
+== webapp/test_mixer_bed_view.py  rc=0  1.0s
+     PASS  ⑰i-b 3D 내보내기: PNG 는 drumPad3 (드럼 두 테 투영 → exportPad) 로 틀을 정하고 render3Tiles 로 그린다 — 카메라 setViewOffset 타일 · 끝나면 clearViewOffset · 화면 캔버스 (drawing buffer) 를 키우지 않는다 (setPixelRatio 없음) · GIF 는 여백을 한 번만 정해 모든 프레임에 같은 틀
+   test_mixer_bed_view: 56/56 PASS
+== webapp/test_mixer_devlog_page.py  rc=0  0.7s
+     PASS  ⑨ 파일명 정규식 밖은 무시된다 (vNN_YYYYMMDD.md 만)
+   test_mixer_devlog_page: 9/9 PASS
+== webapp/test_net_current_density.py  rc=0  4.4s
+   58 PASS · 0 FAIL
+   ALL PASS
+== webapp/test_network_current_view.py  rc=0  7.7s
+   167 PASS · 0 FAIL
+   ALL PASS
+== webapp/test_png_transparent_export.py  rc=0  0.7s
+   45 PASS · 0 FAIL
+   ALL PASS
+== webapp/test_security_phase_a.py  rc=0  0.9s
+     PASS  21) p.origin_tip 가 escaping 없이 남아있지 않다
+   test_security_phase_a: 28/28 PASS
+== webapp/test_seminar_page.py  rc=0  0.5s
+     PASS  36) ★★ 두 창구가 같은 근거를 가리킨다 (슬라이드 ↔ pptx)
+   test_seminar_page: 51/51 PASS
+== webapp/test_tau_paths_view.py  rc=0  2.5s
+   174 PASS · 0 FAIL
+   ALL PASS
+== webapp/test_temp_pressure_wiring.py  rc=0  3.8s
+     PASS  인라인 JS 파싱 (node --check) — 0 block(s) failed
+   ALL PASS
+== webapp/test_tortuosity_all.py  rc=0  9.5s
+     PASS  E 8203 행 다음 줄 = tortuosity_all_mean
+   31 PASS · 0 FAIL
+== webapp/test_viewer_am_contacts.py  rc=0  4.4s
+   50 PASS · 0 FAIL
+   ALL PASS
+== webapp/test_viewer_coordination.py  rc=0  7.3s
+   39 PASS · 0 FAIL
+   ALL PASS
+== webapp/test_viewer_load_view.py  rc=0  21.3s
+   141 PASS · 0 FAIL
+   ALL PASS
+== webapp/test_worklog_page.py  rc=0  0.6s
+     PASS  ⑩ 유효 형식이나 파일 없음 → 404
+   worklog page SELFTEST PASS
+== webapp/test_s567_labels.py  rc=0  0.0s
+     PASS  D2 그룹 AM-AM Mean Area — A_dem_geometric · c_cpl[22] 교차원 · ≈ 2 배
+   13/13 PASS
+== webapp/test_je_definition_label.py  rc=0  0.6s
+     PASS  D5 대시보드 약어표 je 줄이 평문 표지 (jeDefNote(s3, true))
+   22 PASS · 0 FAIL
+== webapp/test_rint_scope_labels.py  rc=0  0.2s
+     PASS  F15 mpm_lab 요약 · 케이스 카드 — R_geom 이 없으면 collector_geom 상태 (unconverged = 보조 솔브 미수렴 · RGL-01) 를 적는다
+   31 PASS · 0 FAIL
+== webapp/test_dem_pore_path_view.py  rc=0  3.2s
+   70 PASS · 0 FAIL
+   ALL PASS
+== webapp/test_force_chain_view.py  rc=0  1.0s
+   71 PASS · 0 FAIL
+   ALL PASS
+
+SUMMARY
+   0      0.7s  scripts/test_constriction_power_share.py  | 17/17 PASS
+   0      0.7s  scripts/test_network_boundary_rule.py  | test_network_boundary_rule: 11/11 PASS
+   0     11.0s  scripts/test_network_dirichlet.py  | test_network_dirichlet: 14/14 PASS
+   0      7.2s  scripts/test_physics_area_g2.py  | test_physics_area_g2: 27/27 PASS
+   0      0.6s  scripts/test_psi_default_switch.py  | test_psi_default_switch: 21/21 PASS
+   0      0.6s  scripts/measure_rho.py --selftest  | ρ 측정 SELFTEST PASS
+   0      0.4s  scripts/audit_constriction_deleted.py --selftest  | 협착 삭제 census SELFTEST PASS
+   0      1.5s  scripts/audit_transport_cap_equivalence.py --selftest  | 수송 cap 동치 SELFTEST PASS
+   0     12.0s  scripts/constriction_reference.py --selftest  | 협착 기준해 SELFTEST PASS
+   0      0.1s  scripts/audit_validation_flags.py --selftest  | AUDIT SELFTEST PASS
+   0      0.1s  scripts/extract_se_network_diagnostics.py --selftest  | SE 진단 코퍼스 SELFTEST PASS
+   0      0.1s  scripts/test_parse_case_paste_union.py  | 5/5 통과
+   0      1.1s  scripts/test_lhs_pressure_record.py  | 25 PASS · 0 FAIL
+   0      0.5s  webapp/test_am_isolation_labels.py  | 7 PASS · 0 FAIL
+   0      4.4s  webapp/test_closed_param_exact_union.py  | 36 PASS · 0 FAIL
+   0      1.2s  webapp/test_closed_param_groupview.py  | 44 PASS · 0 FAIL
+   0     15.3s  webapp/test_closed_param_values.py  | 28/28  ✓ 전부 통과
+   0      0.5s  webapp/test_coverage_handover_scope.py  | 18 PASS · 0 FAIL
+   0      1.4s  webapp/test_coverage_union_display.py  | ALL PASS
+   0      0.7s  webapp/test_ionic_isolation_labels.py  | 17 PASS · 0 FAIL
+   0      0.4s  webapp/test_percolation_labels.py  | 7 PASS · 0 FAIL
+   0      0.9s  webapp/test_stress_lw_labels.py  | findfont: Failed to find font weight normal for WenQuanYi Zen Hei, now using 500.
+   0      2.0s  webapp/test_tau_grade_unify.py  | 20 PASS · 0 FAIL
+   0     15.6s  webapp/test_atoms_only_porosity.py  | ALL PASS
+   0      3.8s  webapp/test_atoms_only_viewer.py  | 17/17 PASS
+   0      0.9s  webapp/test_hetero_transcript_page.py  | test_hetero_transcript_page: 13/13 PASS
+   0      1.3s  webapp/test_ledger_view.py  | ledger_view: 52/52 PASS
+   0      0.6s  webapp/test_meta_json_robust.py  | test_meta_json_robust: 8 PASS / 0 FAIL
+   0      1.0s  webapp/test_mixer_bed_view.py  | test_mixer_bed_view: 56/56 PASS
+   0      0.7s  webapp/test_mixer_devlog_page.py  | test_mixer_devlog_page: 9/9 PASS
+   0      4.4s  webapp/test_net_current_density.py  | ALL PASS
+   0      7.7s  webapp/test_network_current_view.py  | ALL PASS
+   0      0.7s  webapp/test_png_transparent_export.py  | ALL PASS
+   0      0.9s  webapp/test_security_phase_a.py  | test_security_phase_a: 28/28 PASS
+   0      0.5s  webapp/test_seminar_page.py  | test_seminar_page: 51/51 PASS
+   0      2.5s  webapp/test_tau_paths_view.py  | ALL PASS
+   0      3.8s  webapp/test_temp_pressure_wiring.py  | ALL PASS
+   0      9.5s  webapp/test_tortuosity_all.py  | 31 PASS · 0 FAIL
+   0      4.4s  webapp/test_viewer_am_contacts.py  | ALL PASS
+   0      7.3s  webapp/test_viewer_coordination.py  | ALL PASS
+   0     21.3s  webapp/test_viewer_load_view.py  | ALL PASS
+   0      0.6s  webapp/test_worklog_page.py  | worklog page SELFTEST PASS
+   0      0.0s  webapp/test_s567_labels.py  | 13/13 PASS
+   0      0.6s  webapp/test_je_definition_label.py  | 22 PASS · 0 FAIL
+   0      0.2s  webapp/test_rint_scope_labels.py  | 31 PASS · 0 FAIL
+   0      3.2s  webapp/test_dem_pore_path_view.py  | ALL PASS
+   0      1.0s  webapp/test_force_chain_view.py  | ALL PASS

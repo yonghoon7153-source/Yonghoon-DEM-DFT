@@ -1,0 +1,55 @@
+[Storage] NOT configured - SUPABASE_URL=False SUPABASE_KEY=False
+[Security] WARNING: auth OFF - local/private only. For public deploy set WEBAPP_REQUIRE_AUTH=1 + WEBAPP_AUTH_TOKEN.
+  PASS  1) ★ 철회된 덱을 슬라이드로 내보내지 않는다 (ok=False)
+  PASS  2) ★ 철회 표지를 명시한다 (retracted)
+  PASS  3) ★ 사유가 비어 있지 않다 — 왜 막혔는지 화면이 말할 수 있어야 한다
+  PASS  4) ★ 사유가 철회 사실을 말한다
+  PASS  5) ★ 슬라이드를 딸려 보내지 않는다 (부분 노출 금지)
+  PASS  6) 사유가 힌트를 함께 준다 (다음 행동)
+  PASS  6b) ★★ 거부가 근거 파일을 지목한다 (evidence_ref)
+  PASS  6c) ★★ 근거 항목 번호도 준다 (evidence_claim)
+  PASS  18) ★ historical=1 은 덱을 준다 (ok=True)
+  PASS  19) ★ 이력으로 줄 때도 철회 표지를 단다
+  PASS  20) ★ 슬라이드가 실제로 온다 (10장 이상)
+  PASS  21) ★ n_slides 가 실제 장수와 맞는다
+  PASS  22) ★ 모든 슬라이드가 스키마를 지킨다 (n·title·notes 자리)
+  PASS  23) ★ 장 번호가 1..N 로 이어진다 (발표 순서 = 화면 순서)
+  PASS  23b) ★ 대본이 실제로 실려 있다 (빈 껍데기 금지)
+  PASS  23c) ★ 표나 차트가 하나 이상 살아 있다
+  PASS  17) ★★ JSON 의 장 수 = pptx 의 장 수 (표지 하나가 통째로 어긋나 있었다)
+  PASS  17b) ★★ 철회 표지가 JSON 에도 살아 있다 (추출기를 다시 돌려도 안 사라진다)
+  PASS  24) ★ platen 결함 공개가 덱 안에 실재한다 (배지의 근거)
+  PASS  25) ★ 독립성 철회 문구가 덱 안에 실재한다
+  PASS  7) 화이트리스트 안 파일은 열린다
+  PASS  8) 화이트리스트 밖 거부: CLAUDE.md
+  PASS  8) 화이트리스트 밖 거부: README.md
+  PASS  8) 화이트리스트 밖 거부: docs/x.exe
+  PASS  8) 화이트리스트 밖 거부: /etc/passwd
+  PASS  8) 화이트리스트 밖 거부: venv/pyvenv.cfg
+  PASS  9) ★ 탈출 거부(확장자 통과해도): docs/../../etc/passwd.md
+  PASS  9) ★ 탈출 거부(확장자 통과해도): scripts/../../CLAUDE.md
+  PASS  9) ★ 탈출 거부(확장자 통과해도): docs/%2e%2e/%2e%2e/etc/x.md
+  PASS  9) ★ 탈출 거부(확장자 통과해도): docs/../CLAUDE.md
+  PASS  10) ★ 없는 파일은 404 (400 거부와 구분된다)
+  PASS  11) 빈 파라미터도 안전
+  PASS  12) /seminar 200
+  PASS  13) 배선: /api/seminar/slides (덱 API 를 실제로 부른다)
+  PASS  13) 배선: /api/seminar/file (출처 칩이 파일 창구를 쓴다)
+  PASS  13) 배선: sm-notes (대본 영역이 있다)
+  PASS  13) 배선: ArrowRight (←/→ 슬라이드 이동)
+  PASS  13) 배선: sm-flag (한계/철회 배지)
+  PASS  14) ★ 덱 파일은 남아 있다 — 철회는 배포 차단이지 삭제가 아니다
+  PASS  15) ★ 다운로드 창구도 같은 덱을 가리킨다
+  PASS  26) ★★ 기본 경로는 pptx 를 주지 않는다 (fail-closed)
+  PASS  27) ★★ 거부가 기계가 읽을 형태다 (평문 403 이면 화면이 그 주소로 이동해 버린다)
+  PASS  28) ★★ 거부가 철회임을 말한다
+  PASS  29) ★★ 거부가 근거와 다음 행동을 준다
+  PASS  30) ★★ 거부 본문에 pptx 바이트가 섞여 나가지 않는다
+  PASS  31) ★★ historical=1 은 실제로 내려받게 해 준다 (200)
+  PASS  32) ★★ 그것이 진짜 pptx 다 (zip 매직)
+  PASS  33) ★★ 첨부로 내려간다 (브라우저가 렌더하지 않게)
+  PASS  34) ★★ 응답이 지목한 근거 파일이 실재한다
+  PASS  35) ★★ 그 등록부에 이 항목이 실제로 등재돼 있다
+  PASS  36) ★★ 두 창구가 같은 근거를 가리킨다 (슬라이드 ↔ pptx)
+
+test_seminar_page: 51/51 PASS

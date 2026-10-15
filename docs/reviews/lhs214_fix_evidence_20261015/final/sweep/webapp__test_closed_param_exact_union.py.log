@@ -1,0 +1,44 @@
+[X] calc_porosity_union_exact — 해석해 대조
+  PASS  X0 dem_analysis_core.calc_porosity_union_exact 가 있다
+  PASS  X1 겹친 두 구 (상자 안) — union = 두 구 − 렌즈
+  PASS  X2 상태 OK · 점 수 · 시드 기록
+  PASS  X3 바닥을 뚫은 구 — 바닥 아래 부피는 고체가 아니다 (벽 밖 제외)
+  PASS  X4 x 경계를 넘는 구 — 주기라 온전한 구
+  PASS  X5 같은 자리 세 구 — union = 한 구 (쌍 렌즈 합은 여기서 틀린다)
+  PASS  X6 같은 시드 → 같은 값 (재현)
+  PASS  X7 비정사각 상자 (x 0.010 · y 0.008) — V_box = x · y · 판
+  PASS  X8 mc_n 0 → 계산 안 함 · 값 없음 · 상태 off
+  PASS  X9 반경 종류가 너무 많으면 예외 없이 건너뜀 (값 없음 · 사유)
+[A] 분석기 CLI → full_metrics.json
+  PASS  A0 analyze_contacts_bimodal rc 0
+  PASS  A1 porosity_union_exact_pct · _se_pct · 상태 OK · 점 수
+  PASS  A2 질량 보존 두께 = 판 간격 × (1 − ε_sphere)/(1 − ε_exact)
+  PASS  A3 φ 질량 보존 = (1 − ε_exact) × 부피 몫 · 닫힘 φ_SE + φ_AM + ε_exact = 1
+  PASS  A4 SE/고체 부피 몫 = 손계산
+  PASS  A5 쌍 렌즈 union ≠ 정확 union 을 구분해 둘 다 싣는다
+  PASS  A6 숫자는 숫자 (문자열 아님)
+[W] 웹앱 표시 — 같은 이름 · 한정어
+[Storage] NOT configured - SUPABASE_URL=False SUPABASE_KEY=False
+[Security] WARNING: auth OFF - local/private only. For public deploy set WEBAPP_REQUIRE_AUTH=1 + WEBAPP_AUTH_TOKEN.
+  PASS  W1 그룹 표 열 porosity_union_exact_pct
+  PASS  W1 그룹 표 열 thickness_mass_conserving_um
+  PASS  W1 그룹 표 열 phi_se_mass_conserving
+  PASS  W1 그룹 표 열 phi_am_mass_conserving
+  PASS  W2 정확 union · 질량 보존 두께 = 낮을수록 좋음
+  PASS  W3 망 요약에 정확 union 행 (몬테카를로 · 인계 규약)
+  PASS  W4 망 요약에 질량 보존 두께 · φ 행
+  PASS  W5 케이스 화면 배지가 정확 union 값을 그린다
+  PASS  W6 그룹 그림 체크박스 porosity_union_exact_pct
+  PASS  W7 그룹 표 툴팁 (정확 union · 질량 보존)
+  PASS  W8 그림 목록 porosity_union_exact_pct
+  PASS  W9 MD 보고서 · 쉬운 설명에 porosity_union_exact_pct
+[V] physics v2 = 후보 · 미검증 — 표지 · ML · 등급 제외
+  PASS  V1 inject_physics_v2_rows 가 있다
+  PASS  V2 v2 행에 "후보 · 미검증" 표지
+  PASS  V3 v2 값이 없으면 행을 만들지 않는다
+  PASS  V4 예측기 자동 타깃 판정 함수가 있다
+  PASS  V5 *_physics_v2 는 자동 타깃이 아니다
+  PASS  V6 legacy physics · 정확 union 은 그대로 후보
+  PASS  V7 등급 축에 physics v2 없음
+
+36 PASS · 0 FAIL

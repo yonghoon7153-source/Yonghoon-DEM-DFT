@@ -1,0 +1,39 @@
+[Storage] NOT configured - SUPABASE_URL=False SUPABASE_KEY=False
+[Security] WARNING: auth OFF - local/private only. For public deploy set WEBAPP_REQUIRE_AUTH=1 + WEBAPP_AUTH_TOKEN.
+[N] 케이스 망 요약 — Coverage 행
+  PASS  N0 Coverage AM_P · AM_S 행이 하나씩 (paper 라벨)
+  PASS  N1 ★ Physics 열 = 합집합 값 (39.7 · 43.5) · legacy 합-클립 (48.3 · 51.8) 이 아니다
+  PASS  N1b 행 이름 = 합집합 · 겹침 한 번 · AM–AM 가림 제외 · 세대 2 면적 (Physics 열의 정의)
+  PASS  N1c Hertz 열 그대로 (18.4) · Δ = Hertz ↔ 합집합
+  PASS  N2 ★ 바로 아래 legacy 합-클립 줄 — Physics 열 = 옛 값 (48.3 · 51.8) · Hertz 열 — · 이름에 legacy · 합-클립 · 포화
+  PASS  N3 옛 케이스에도 Coverage AM_P 행이 있다
+  PASS  N3b ★ 옛 케이스 (합집합 키 없음) → Physics 열 "—" (0 · legacy 48.3 · Hertz 복사 18.4 아님) · legacy 줄 = 48.3
+  PASS  N4 ★ 빈칸 침대 → Physics 열 "—" + 사유 줄 (ligg_area < 0 · 첫 사례) · 0 이 아니다
+  PASS  N4b 정상 침대에는 상태 줄이 없다
+  PASS  N5 mono (Coverage AM) — Physics 열 = 합집합 16.0 · legacy 줄 18.3
+[T] 툴팁 (렌더된 JS 를 node 로)
+  PASS  T0 node 실행
+  PASS  T1 ★ Coverage 행 툴팁 = 합집합 cap 정의 (Fibonacci N 6000 · 표면 소비자 film_area_g2 · AM–AM 가림 · 겹침 한 번) + Hertz 열 식 그대로
+  PASS  T2 legacy 줄 툴팁 = 접촉 면적 합 · 100 % 포화 · LHS-25 · 등급 축이 아직 이 값
+  PASS  T3 상태 줄 툴팁 (빈칸 사유를 읽는 법)
+  PASS  T4 _PAPER_LABEL_MAP 의 Coverage 세 라벨이 PAPER_TO_ORIG 에 같은 철자로 있다 (역맵)
+[G] 그룹 비교
+  PASS  G1 그룹 표 열 = 합집합 P · S (높을수록 좋음 — 낮을수록 집합 밖)
+  PASS  G2 그룹 열 툴팁 (COL_TIPS) — 합집합 · legacy 와 다른 양
+  PASS  G3 그룹 칸 도우미 _group_union_coverage_cells 가 있다 · group() 이 부른다
+  PASS  G4 mono → P (10:0) · S (0:10) 열로 · 빈칸 → "— (빈칸)" (None 이 "None" 으로 보이지 않게) · 옛 케이스 = 키 없음 ("-")
+  PASS  G5 "— (빈칸)" 칸은 최고값 후보가 아니다 (40.1 강조)
+[R] MD 보고서 · 그룹 보고서 · AI 프롬프트
+  PASS  R1 케이스 MD 보고서 = 같은 Coverage 행 (합집합 라벨 · 39.7) + legacy 줄
+  PASS  R2 그룹 보고서 · AI 프롬프트 표에 합집합 열 (같은 키 · 같은 한정어) 둘씩
+[F] 그룹 그림
+  PASS  F1 그림 목록 coverage_AM_mean_physics_union · 체크박스
+  PASS  F2 값 없는 · None 케이스는 점을 안 찍는다 (0 으로 채우지 않는다)
+  PASS  F3 그림 설명 = 합집합 · 세대 2 · legacy 와 다른 양
+  PASS  V1 3D 뷰어 피복 범례 (입자별 legacy 값) = 합-클립이라 적고 케이스 표 Physics 열 (합집합) 과 다른 값임을 알린다
+[P] 등급 쉬운 설명
+  PASS  P1 coverage_AM_P_mean_physics — 등급 축은 아직 옛 합-클립 · 케이스 표 Physics 열은 합집합 (LHS-25)
+  PASS  P1 coverage_AM_S_mean_physics — 등급 축은 아직 옛 합-클립 · 케이스 표 Physics 열은 합집합 (LHS-25)
+
+28 PASS · 0 FAIL
+ALL PASS

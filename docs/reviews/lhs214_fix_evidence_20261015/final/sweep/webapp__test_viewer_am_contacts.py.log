@@ -1,0 +1,60 @@
+[Storage] NOT configured - SUPABASE_URL=False SUPABASE_KEY=False
+[Security] WARNING: auth OFF - local/private only. For public deploy set WEBAPP_REQUIRE_AUTH=1 + WEBAPP_AUTH_TOKEN.
+[R] /am-contacts — 합성 침대
+  PASS  R1 live 200 (받은 값 200)
+  PASS  R1b 그 AM 의 행만 — SE 6 (10–15) + AM 1 (3) · 다른 AM 의 접촉 · SE–SE 행은 없다
+  PASS  R1c AM = id 1 · AM_P · R 6 µm · 위치 µm (덤프 × scale)
+  PASS  R2 행마다 상대 id · 상 · 반경 · 위치 · 영상 표지 · 면적 (c_cpl[22] · 세대 2) · δ · 접촉점 · 방향 검사
+  PASS  R2b 면적 µm² = c_cpl[22] × scale² · δ µm = δ × scale
+  PASS  R2c 상 · 쌍 — SE 는 AM_SE · AM_S 3 은 AM_AM · 반경 µm (SE 1.5 · AM_S 2)
+  PASS  R3 x 경계 너머 SE 10 = AM 옆 영상 자리 (x -4.200000000000005 µm · |d| 7.200000 = 7.200 µm) · wrapped
+  PASS  R3b 나머지 상대는 감싸지 않았다 · 영상 수 1 · 방향 검사 실패 0
+  PASS  R3c 접촉점도 AM 옆으로 되돌린다 (감싼 47 µm → −3 µm 근처)
+  PASS  R4 보고 규칙 합집합 (세대 2 · 이 AM) = 생산 union_coverage_bed 의 입자 값 (7.865731462925852 = 7.865731462925852)
+  PASS  R4b 그림 합집합 (c_cpl[22] cap) = union_cap_coverage 로 다시 잰 값 (2.7221108884435536 = 2.7221108884435536)
+  PASS  R4c 경로가 준 세대 2 면적 · 방향으로 다시 재면 = 보고 규칙 합집합 (그린 cap = 보고 cap)
+  PASS  R4d cap 단순 합 = ΣA_SE / (4πR²) × 100 (2.7894556712921528 = 2.789456)
+  PASS  R4f 겹친 cap (SE 11 · 12 — 10° 떨어짐) — 그림 합집합 2.7221108884435536 < cap 단순 합 2.7894556712921528 (합은 겹침을 두 번 센다)
+  PASS  R4e 보고값 (침대 평균 · 케이스 표) — full_metrics 의 AM_P 합집합 41.5 · 상태 ok · Hertz 계열 합-클립 17.0
+  PASS  R5 archive 경로 200 · live 와 같은 답 (받은 값 200)
+  PASS  R6 오류 — am_id 없음 400 · 숫자 아님 400 · 없는 id 404 · SE id 400 · 없는 archive 폴더 404 (받은 값 [400, 400, 404, 400, 404])
+  PASS  R6b 접촉 덤프 없는 케이스 (atoms-only) = 404 · contacts.csv 가 없다고 말한다 (받은 값 404)
+  PASS  R7 상자 (input_params.json) 없음 — 그리기는 뷰어와 같은 0.05 기본 (영상 자리 그대로) · box_source 표지 · 보고 규칙 합집합은 빈칸 + 사유 (생산과 같은 계약 · 0.05 로 떨어지지 않는다)
+[Q] real_14 기준 상태 — /am-contacts
+  PASS  Q0 real_14 덤프 → parse_liggghts (웹앱 파서) → 케이스 폴더
+      AM_P (경계) id 5: SE 390 · AM 10 · 영상 36 · 그림 합집합 24.853801169590643 · 보고 규칙 53.26797385620915 · cap 합 {'g2': 66.88217993140954, 'hertz': 24.51499374212367}
+  PASS  Q1 AM_P (경계) — SE 수 = 그 AM 의 AM–SE CN (독립 행 셈 390)
+  PASS  Q1b AM_P (경계) — 방향 검사 실패 0 (|d 최소영상| = r1 + r2 − δ)
+  PASS  Q2 AM_P (경계) — 보고 규칙 합집합 = 침대 전체 union_coverage_bed 의 입자 값 (53.26797385620915 = 53.26797385620915)
+  PASS  Q2b AM_P (경계) — 경로의 방향 · 세대 2 면적으로 다시 재도 같다 (그린 cap = 보고 cap · 53.26797385620915)
+  PASS  Q3 AM_P (경계) — 경계 걸친 AM 의 상대 일부는 영상 자리 (n_wrapped 36 > 0)
+      AM_S id 37: SE 40 · AM 3 · 영상 0 · 그림 합집합 13.66742596810934 · 보고 규칙 32.95952339232522 · cap 합 {'g2': 39.22276124354187, 'hertz': 14.561923415731734}
+  PASS  Q1 AM_S — SE 수 = 그 AM 의 AM–SE CN (독립 행 셈 40)
+  PASS  Q1b AM_S — 방향 검사 실패 0 (|d 최소영상| = r1 + r2 − δ)
+  PASS  Q2 AM_S — 보고 규칙 합집합 = 침대 전체 union_coverage_bed 의 입자 값 (32.95952339232522 = 32.95952339232522)
+  PASS  Q2b AM_S — 경로의 방향 · 세대 2 면적으로 다시 재도 같다 (그린 cap = 보고 cap · 32.95952339232522)
+[V] viewer3d.js — AM 접촉 확대
+  PASS  V1 DEM 조작판에만 버튼 (data-action="amContactCloseup") — MPM 조작판에는 없다 (접촉 덤프 없음)
+  PASS  V1b 조작판 단추 → showAMContactCloseup(state)
+  PASS  V2 모달 — 경로 = 3D 데이터 경로의 /3d-data → /am-contacts · am_id 질의
+  PASS  V2b 모달 — PNG = 4× · 투명 배경 (지우기 알파 0 · scene.background 없음) — 옛 AM Close-up 과 같은 내보내기
+  PASS  V2c 모달 — 상대 입자 보기 토글 (#amcc-partners) · cap 규칙 (#amcc-rule: hertz · g2) · PC/SC 고르기 (#amcc-phase)
+  PASS  V2f ★ 기본 cap 넓이 = Physics 세대 2 (#amcc-rule 의 g2 option 이 selected · hertz 는 선택지로 남음 · 1저자 10-07)
+  PASS  V2d 모달 — SE 접촉 = 노란 cap · AM–AM 접촉 = 회색 cap (쌍 이름으로 가른다) · cap 각 = capHalfAngle
+  PASS  V2e 모달 — 이전 · 다음 · id 로 가기
+  PASS  V3 viewer3d.js 에서 함수 다섯 (cap 각 · 이름표 · 숫자 · 범례 · 후보 순서) 을 잘라 냈다
+  PASS  V3b node 실행
+  PASS  V4 cap 각 — A 0 → 0 · A = 2πR² → 90° (90.000000000°) · 단조 (101 점)
+  PASS  V4b cap 각 — A = πR² (반구의 반) → cos θ = ½ → 60° · cos θ = 1 − A/(2πR²)
+  PASS  V4c cap 각 — A > 2πR² 는 반구로 자른다 (생산 union_cap_coverage 와 같다) · 음수 · NaN · R 0 = cap 없음 (0)
+  PASS  V5 범례 — AM_P (PC) · SE 접촉 351 개 = 이 AM 의 AM–SE CN · AM–AM 4 개
+  PASS  V5b 범례 — 그림 노란 면적 = cap 합집합 14.2 % (겹침 한 번) · cap 단순 합 15.5 % 는 겹친 cap 을 두 번 셀 수 있다 (그림 설명용)
+  PASS  V5c 범례 — cap 넓이 출처 = c_cpl[22] (Hertz 계열 기하면적) · cap 각 식
+  PASS  V5d 범례 — 보고 coverage = 케이스 표 합집합 · 이 AM (세대 2) 40.1 % · 침대 평균 AM_P 39.7 %
+  PASS  V5e 범례 — 주기 영상 자리에 그린 상대 3 개
+  PASS  V5f g2 규칙 — 그림 합집합 = 보고 규칙 (같은 cap) 이라 적는다 · 40.1 · cap 합 41.9
+  PASS  V5g 값이 없으면 — 0 으로 채우지 않고 — 와 사유 (blank)
+  PASS  V6 후보 순서 — center = 상자 중심에 가까운 순 · typical = AM–SE CN 이 평균 (20.33) 에 가까운 순
+
+50 PASS · 0 FAIL
+ALL PASS

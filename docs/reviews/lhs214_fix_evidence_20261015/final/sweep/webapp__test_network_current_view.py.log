@@ -1,0 +1,188 @@
+[①] --dump-raw-dir 가 망 결과를 바꾸지 않는다 (네 JSON 바이트 동일)
+  PASS  ①a CLI 두 번 다 rc 0 (덤프 없이 0 · 덤프 0)
+  PASS  ①b network_conductivity.json 바이트 동일 (덤프 없음 ↔ 있음)
+  PASS  ①b network_conductivity_hertzian.json 바이트 동일 (덤프 없음 ↔ 있음)
+  PASS  ①b network_conductivity_physics.json 바이트 동일 (덤프 없음 ↔ 있음)
+  PASS  ①b network_conductivity_dual.json 바이트 동일 (덤프 없음 ↔ 있음)
+  PASS  ①c 덤프 = 모드 2 × 채널 3 × (edges · nodes · solution) 18 파일 (18)
+  PASS  ①d 덤프 없는 실행은 덤프 파일을 만들지 않는다 (bit_A 에 edges_* 없음)
+  PASS  ①e 덤프 해의 σ/σ₀ 를 8 자리로 반올림하면 게시 sigma_full 과 같다 (0.17366801)
+  —  real14 판 (NETCUR_REAL14=1 일 때만 · 약 2 분) 건너뜀 — 10-06 실측: 네 JSON 동일 · 62 s · 원 덤프 96 MB
+[②] 한 번 실행 도구 — scripts/network_current.py dump <결과 폴더>
+  PASS  ②a 도구 rc 0
+  PASS  ②b 덤프 폴더 + manifest.json
+  PASS  ②c 게시 파일 무변경 (덤프 폴더 밖 전 파일 해시 같음 · 새 파일 없음)
+  PASS  ②d 덤프 폴더 이름이 망 산출물 glob 에 든다 (다음 망 재계산이 옛 세대와 함께 치운다) — ('network_conductivity.json', 'network_conductivity_dual.json', 'network_conductivity_hertzian.json', 'network_conductivity_physics.json', 'network_raw_*', 'network_provenance.json')
+  PASS  ②e manifest argv = 도장 argv · 출처 = 도장 ({'type_map': '1:AM_P,3:SE', 'scale': '1000', 'contact_mode': 'both'} · network_provenance.json)
+  PASS  ②f manifest 망 세대 = 도장 run id (20261007T000000-netcur01)
+  PASS  ②g 게시 JSON 대조 = identical (같은 코드 · 같은 입력 · 같은 argv) — identical
+  PASS  ②h 덤프 = 이온 · 전자 × Hertz · Physics (edges · nodes = .csv.gz · solution .json) · 열 채널 없음 (12)
+  PASS  ②i manifest 의 명령 = 웹앱 망 단계 argv + --dump-raw-dir (옆 폴더 -o · --contact-mode both)
+  PASS  ②j 도구 출력에 실제로 돌린 명령 (network_conductivity.py … --dump-raw-dir) 이 찍힌다
+  PASS  ②k 망 재계산 stash 가 덤프 폴더를 옛 세대와 함께 옮긴다 (재계산 성공 = 버림 · 실패 = 되돌림)
+  PASS  ②l 입력 (contacts.csv) 해시 ≠ 도장 → 거부 (rc ≠ 0 · 덤프 없음 · 사유 = 입력)
+  PASS  ②m 게시 JSON ≠ 다시 푼 해 → 기록 (status differs · 파일 이름) · 덤프는 만든다 (rc 0)
+  PASS  ②n 도장 없음 + argv 인자 없음 → 거부 (웹앱이 쓴 type_map · scale 을 짐작하지 않는다)
+  PASS  ②o 도장 없음 + --type-map · --scale → 만든다 · argv 출처 = cli (rc 0 · cli)
+  PASS  ②p 도장 없는 케이스의 덤프 → 세대 대조 = 미확인 (match None · 사유) — 참이라고 하지 않는다 (200 · {'active_network_run_id': None, 'problem': '', 'dump_network_run_id': None, 'match': None, 'note': '도장 없는 케이스로 만든 덤프 (argv = 명시 인자) — 덤프 세대 미확인 · 게시 σ 대조로만 확인'})
+[③] /results/<id>/network-current · /archive/results/<folder>/network-current
+[Storage] NOT configured - SUPABASE_URL=False SUPABASE_KEY=False
+[Security] WARNING: auth OFF - local/private only. For public deploy set WEBAPP_REQUIRE_AUTH=1 + WEBAPP_AUTH_TOKEN.
+  PASS  ③a 덤프 없음 → 404 · error no_dump (404 · no_dump)
+  PASS  ③b 404 본문에 만드는 명령 (scripts/network_current.py dump <이 케이스 결과 폴더>)
+  PASS  ③b2 그 명령 = 웹앱 프로세스의 파이썬 + 이 리포 도구의 절대 경로 (어디서 붙여 넣어도 같은 환경)
+  PASS  ③c 이온 · Hertz · top 5 → 200 · 간선 5 (200 · 5)
+  PASS  ③d |I|/I_전체 내림차순 · 첫 간선 = 해의 최대 |I|
+  PASS  ③e I_전체 = 덤프 해의 G (ΔV = 1) (0.33952317626718675 · 0.33952317626718675)
+  PASS  ③f 채널 · 모드 · 관통 간선 수 (echo · ionic · hertzian · 378 = 378)
+  PASS  ③g z-단면 전류 보존 (전 간선 Σ 위로 흐르는 전류 = I_전체 · 최대 편차 1.3322676295501878e-15)
+  PASS  ③h Tellegen Σ I²R = I_전체 (상대 2.942952917524319e-15)
+  PASS  ③i 방향 — a = 위쪽 전위 (V_a ≥ V_b · 전류는 a → b)
+  PASS  ③j 위치 · 반경 = 덤프 노드 × scale (µm · 뷰어 좌표)
+  [3d-data aux] contacts.csv: 399 rows, read in 0.0s
+  [3d-data aux] streaming aggregate in 0.0s (total 0.0s)
+  [3d-data aux] SE diag: 128 percolating, 0 cut-pts, 10 narrow edges, 0 dead-ends
+  [3d-data aux] cache WROTE → viewer_aux.json
+  [3d-data] response: 0.05 MB
+  PASS  ③k 위치가 3d-data 의 그 입자와 같다 (반올림 0.01 µm 안)
+  PASS  ③l top 상한 → 0 전류가 아닌 간선 전부 (314 = 314) · 0 전류 간선 (띠 안) 64 개 제외
+  PASS  ③m 전부면 단면 몫 = 1 · 소산 몫 = 1 (평균 0.9999999999999999 · 0.9999999999999997)
+  PASS  ③n 주기 경계를 넘는 간선 표지 (w) 58 = n_wrap_returned 58 · 대각 wrap 이 있어 그린 몫 < 1 (0.9521929143667626)
+  PASS  ③o 상자 = input_params × scale ({'x': 3.92, 'y': 3.92})
+  PASS  ③p 전자 (AM–AM) · 기본 top · Hertz → 200 · AM 반경 0.6 µm (200 · 21)
+  PASS  ③q Physics (민감도) 모드도 같은 덤프에서 (200 · physics)
+  PASS  ③r channel=thermal → 400 (열 채널은 이 보기 범위 밖 · 400 · bad_channel)
+  PASS  ③r mode=bogus → 400 (모드 · 400 · bad_mode)
+  PASS  ③r top=abc → 400 (top 정수 아님 · 400 · bad_top)
+  PASS  ③s 게시 σ 대조 — 같은 해 (match · 0.17366801 · 0.17366801)
+  PASS  ③t 세대 대조 — 덤프 run id = 활성 도장 run id (20261007T000000-netcur01 · 20261007T000000-netcur01)
+  PASS  ③u 게시 σ 가 덤프 해와 다르면 match False (그림 = 다른 해)
+  PASS  ③v 활성 망 세대가 덤프 세대와 다르면 generation.match False
+  PASS  ③w 보관 경로도 같은 자료 (200 · 간선 314)
+  PASS  ③x 보관 경로 탈출 거부 (404)
+[④] 뷰어 — DEM 드롭다운 · 함수 (node)
+  PASS  ④a 조작판 두 개 (MPM · DEM) 의 View Mode
+  PASS  ④b DEM 드롭다운에 net_current ("전류 흐름") · MPM 드롭다운엔 없음 (⚡ 전류 흐름 (접촉 전류 밀도 A cm⁻² · 상위 접촉))
+  PASS  ④c 모드를 바꿀 때마다 전류 그림을 치운다 (applyViewMode 머리에서 netCurrentTeardown(state))
+  PASS  ④d applyViewMode 가 'net_current' 를 applyNetCurrentMode 로 보낸다
+  PASS  ④e 늦은 응답 무시 — 토큰 · 지금 모드를 보고 그린다 (옛 옵션 · 다른 모드 위에 그리지 않는다)
+  PASS  ④f 그리기 = 주기 경계 간선 생략 (netCurrentWrap) · 단면 뷰 다시 적용 (applyClip) · 범례 갱신
+  PASS  ④g 범례의 컬러바 ⬇ = 논문용 컬러바 PNG (exportColorbarPNG · netCurrentColorbarSpec)
+  PASS  ④g2 뷰어 기본 top = 서버 VIEWER_DEFAULT (전류 50 %) (share50 · share50)
+  PASS  ④h viewer3d.js 에서 함수 · 상수를 잘라 냈다 (없음 [])
+  PASS  ④i node 실행
+  PASS  ④j URL — 실 · 보관 경로 /3d-data → /network-current · 질의문은 버리고 채널 · 모드 · top
+  PASS  ④k 주기 경계 함수 = 서버 표지 (간선 314 개 전부 같은 답 · wrap 58)
+  PASS  ④l 주기 경계 고정 예 (x 반폭 초과 · 대각 안 · y 반폭 초과 · z 는 무관) [True, False, True, False]
+  PASS  ④m log 범위 = 그 간선들의 log10 j — 접촉 전류 밀도 (최소 · 최대) (-1.5327895076517577 · 1.8224624849150852)
+  PASS  ④n log 범위는 j = 0 을 버린다 · 0 만 있으면 null ([-2, -1] · None)
+  PASS  ④o 색 · 굵기 축 t = log 정규화 · [0, 1] 로 자른다 [0, 1, 0.5, 0, 1]
+  PASS  ④p 백분율 표기 (0 꼬리 없음) ['19.6 %', '1 %', '0.31 %', '100 %', '0.047 %']
+  PASS  ④q 눈금 배치 — 10 배 간격 · 끝 포함 · 0..1 · 라벨 함수를 넘긴다 (여기 % = netCurrentPct) (['0.01 %', '0.1 %', '1 %', '10 %'])
+  PASS  ④r 좁은 범위 (한 자릿수 안) 도 끝 두 개 + 안쪽 1 · 2 · 5 눈금 (['0.31 %', '0.5 %', '1 %', '1.4 %'])
+  PASS  ④r2 끝 라벨과 겹치는 안쪽 눈금은 뺀다 (real14 상위 10000 범위 0.16–1.4 % — 옛 판은 0.2 % 가 0.16 % 에 붙었다) (['0.16 %', '0.5 %', '1 %', '1.4 %'])
+  PASS  ④s 컬러바 스펙 = jet · 감마 없음 (튜브 색과 같은 사상) · 영문 제목 (접촉 전류 밀도 A cm⁻² · 채널 · Hertz FULL · @1V probe) · 눈금
+  PASS  ④t 범례 — 채널 (이온 · SE–SE) · Hertz FULL · 접촉 전류 밀도 (A cm⁻² · @1V · @1C) · 상위 5 접촉 · 옛 몫 문구 없음 · 모델 접촉망 풀이 표지
+  PASS  ④u 범례 — 주기 경계 생략 수 · 소산 몫 · 검산 · 게시 σ 같은 해 · 컬러바 둘 (@1V · @1C) · 화살표 · 조작 (채널 · top · 모드)
+  PASS  ④v 게시 σ 다름 · 세대 다름 → ⚠ 두 줄 · 서버 문자열은 이스케이프
+  PASS  ④v2 세대 id 는 같고 활성 세대가 무효 → "활성 망 세대 무효 — 사유" (≠ 줄을 지어내지 않는다)
+  PASS  ④v3 세대 미확인 (도장 없는 케이스) → ⚠ 미확인 줄 (같은 해라고 말하지 않는다)
+  PASS  ④w Physics 모드 = 민감도 표지 · 전자 = AM–AM
+  PASS  ④x 덤프 없음 범례 = 만드는 명령 (code) · 서버 문자열 이스케이프 · 다시 불러오기 버튼 (같은 모드를 다시 골라도 change 가 안 난다)
+  PASS  ④x2 다시 불러오기 = applyNetCurrentMode (오류는 캐시하지 않는다 — 다시 fetch)
+  PASS  ④y top 고르기 [500, 1000, 2000, 5000, 10000, 20000]
+[④z] 뷰어 — 관 굵기 고르기 (node)
+  PASS  ④z1 viewer3d.js 에 netCurrentRadius · NETCUR_WIDTHS (없음 [] · 상수 True)
+  PASS  ④z2 node 실행
+  PASS  ④z3 굵기 고르기 = ×1 · ×0.5 · ×0.25 · ×0.1 ([1, 0.5, 0.25, 0.1])
+  PASS  ④z4 배율 1 = 옛 그림 그대로 (t 0 → 0.10 r_ref · t 1 → 0.50 r_ref · t 0.5 → 0.30 r_ref) [0.2, 1, 0.6000000000000001]
+  PASS  ④z5 배율 0.25 = 반경 4 분의 1 [0.05, 0.25]
+  PASS  ④z6 잘못된 배율 (0 · 음수 · NaN · 없음 · 문자) = 1 [1, 1, 1, 1, 1]
+  PASS  ④z7 조작판에 굵기 고르기 (id netcur-width) · 고른 값 표시 (×0.25 selected) · 기본 = ×1
+  PASS  ④z8 그리기 = netCurrentRadius(t, rRef, opt.width) (관 · 화살표 같은 반경)
+  PASS  ④z9 굵기를 바꾸면 다시 받지 않고 다시 그린다 (renderNetCurrent · 같은 자료)
+  PASS  ④z10 기본 옵션에 width: 1 (top = 숫자 또는 전류 몫 이름 · 10-08 위쪽 cap: 'max' 더함)
+[④s] 뷰어 — 선형 눈금 · 이등분 범례 (node)
+  PASS  ④s1 viewer3d.js 에 netCurrentRange · netCurrentTv (없음 [])
+  PASS  ④s2 node 실행
+  PASS  ④s3 범위 — 선형 = j [최소, 최대] (0 은 버림) [1, 5] · log = netCurrentLogRange 그대로
+  PASS  ④s4 선형 t = (j − 최소) / (최대 − 최소) · 자름 · 0 → 0 · 한 점 → 1 [0.5, 0, 1, 0, 1] · log 는 netCurrentT 그대로
+  PASS  ④s5 컬러바 선형 = 눈금 셋 (최소 · 가운데 · 최대) [(0, '1'), (0.5, '3'), (1, '5')] · @1C × 10 ['10', '30', '50']
+  PASS  ④s6 컬러바 글 — 선형 = "Linear colour scale" · log 는 "Log colour scale" 그대로
+  PASS  ④s7 범례 — 선형 = "선형" · 1 … 5 A cm⁻² · 가운데 3 · log 는 "(log₁₀)" 그대로
+  PASS  ④s8 조작판에 눈금 고르기 (id netcur-scale) · 선형 고르면 selected · 기본 = log
+  PASS  ④s9 그리기 = netCurrentRange(edges, sc) · netCurrentTv(e.j, lo, hi, sc) · st.scale 기록
+  PASS  ④s10 눈금을 바꾸면 다시 받지 않고 다시 그린다
+[⑥] 고르기 — 전류 몫 · 전부 · 압축 꼴 (상위 20000 상한 대신 모델이 정한 숫자 · 1저자 10-08)
+  PASS  ⑥a 독립 재계산 — 단면이 있고 0 아닌 전류 간선이 있다 (314)
+  PASS  ⑥b 상수 — 전류 몫 고르기 (50, 80, 95) · 뷰어 기본 share50 (1저자 Q2 = 전류 50 %) · 경로 기본 (top 없음) 은 그대로 5000
+  PASS  ⑥c share50 → 200 · 고르기 = 전류 몫 50 % · 개수 50 = 독립 재계산 [50, 50] · 돌려준 수 · top = 그 개수
+  PASS  ⑥d share50 = 가장 적은 개수 — 단면 몫 평균 0.501581464876498 ≥ 0.5 · 하나 덜면 (상위 49) 0.4918029610346067 < 0.5
+  PASS  ⑥c share80 → 200 · 고르기 = 전류 몫 80 % · 개수 88 = 독립 재계산 [88, 88] · 돌려준 수 · top = 그 개수
+  PASS  ⑥d share80 = 가장 적은 개수 — 단면 몫 평균 0.8030949791568651 ≥ 0.8 · 하나 덜면 (상위 87) 0.7953213660769524 < 0.8
+  PASS  ⑥c share95 → 200 · 고르기 = 전류 몫 95 % · 개수 112 = 독립 재계산 [112, 112] · 돌려준 수 · top = 그 개수
+  PASS  ⑥d share95 = 가장 적은 개수 — 단면 몫 평균 0.9526804133160889 ≥ 0.95 · 하나 덜면 (상위 111) 0.9465151557432414 < 0.95
+  PASS  ⑥e 50 ≤ 80 ≤ 95 % ≤ 전부 ([50, 88, 112] · 0 아닌 전류 314)
+  PASS  ⑥f 고르기 정보 — 세 몫의 개수 (share_n) · 0 아닌 전류 접촉 수 (n_nonzero) ({'50': 50, '80': 88, '95': 112} · 314)
+  PASS  ⑥g all → 0 아닌 전류 접촉 전부 (314 = 314) · 단면 몫 = 1 · 소산 몫 = 1
+  PASS  ⑥h 이름 고르기 = 압축 꼴 (packing nodes_v1 · 입자 표 nodes · 접촉 edges_c · edges 없음)
+  PASS  ⑥i 정수 고르기 = 옛 꼴 그대로 (edges 목록 · 키 = 옛 키 + selection 하나 · 고르기 = 개수 · 꼴 edges) — 더한 키 ['selection'] · 빠진 키 []
+  PASS  ⑥j 정수 고르기에도 세 몫의 개수 · 0 아닌 수 (뷰어가 고르기 칸에 개수를 적는다) ({'50': 50, '80': 88, '95': 112})
+  PASS  ⑥k 압축 꼴을 풀면 같은 개수 정수 고르기의 간선과 값 · 순서 그대로 (위치 · 반경 · 번호 · j 정확히 같음 · 88 개)
+  PASS  ⑥l 요약 값도 같다 (단면 몫 · 소산 몫 · 몫 최대 · 최소 · 주기 경계 수 · 전류 밀도 묶음 · I_전체)
+  PASS  ⑥m 압축 꼴이 가볍다 — 접촉당 34 B ↔ 옛 꼴 203 B (절반 이하 · 같은 간선 수)
+  PASS  ⑥n top=share0 → 400 (잘못된 고르기 · 400 · bad_top)
+  PASS  ⑥n top=share100 → 400 (잘못된 고르기 · 400 · bad_top)
+  PASS  ⑥n top=share → 400 (잘못된 고르기 · 400 · bad_top)
+  PASS  ⑥n top=shareabc → 400 (잘못된 고르기 · 400 · bad_top)
+  PASS  ⑥n top=share5.5 → 400 (잘못된 고르기 · 400 · bad_top)
+  PASS  ⑥n top=al → 400 (잘못된 고르기 · 400 · bad_top)
+  PASS  ⑥n top=ALL → 400 (잘못된 고르기 · 400 · bad_top)
+  PASS  ⑥o 단면을 못 정하는 해 → share50 은 경로 기본 (상위 5000) 으로 · 사유 (fallback) · 세 몫 개수 없음 (200 · count · 전류 몫 잣대 (높이 단면) 를 정할 수 없는 해 — 전류가 흐르는 전극 띠 노드가 없거나 두 띠가 겹친다 · 경로 기본 (상위 5000) 으로 그림)
+  PASS  ⑥p 경로 ?top=share50 → 200 · 고르기 전류 50 % · 같은 개수 (200 · 50 = 50)
+  PASS  ⑥q webapp/app.py 무변경 꼴 — top 문자열을 그대로 넘긴다 (top=request.args.get('top'))
+  PASS  ⑥r CLI show --top share80 → rc 0 · 고르기 줄 (전류 80 % · 개수 88)
+[④c] 뷰어 — 고르기 · 압축 꼴 · 색 위쪽 · 가볍게 그리기 (node)
+  PASS  ④c0 서버 고르기 자료 (⑥) 가 있다
+  PASS  ④c1 viewer3d.js 에서 함수 · 상수를 잘라 냈다 (없음 [])
+  PASS  ④c2 node 실행
+  PASS  ④c3 상수 — 전류 몫 [50, 80, 95] · 위쪽 ['max', 'p99', 'p95', 'p75', 'p50'] · 기억 4 · 가볍게 그리기 문턱 20000 · 상위 N 목록 그대로
+  PASS  ④c4 압축 꼴 풀기 = 같은 개수 정수 고르기의 간선 (위치 · 반경 · 번호 · j · 순서 정확히 같음 · 88 개) · 푼 뒤 압축 칸은 지운다
+  PASS  ④c5 옛 꼴 (edges) 은 풀기가 손대지 않는다 (같은 객체 그대로)
+  PASS  ④c6 URL — 이름 고르기는 그대로 (share50 · share80 · share95 · all) · 정수는 옛 그대로 · 잘못된 것 = 5000 ['/results/abc/network-current?channel=ionic&mode=hertzian&top=share50', '/results/abc/network-current?channel=ionic&mode=hertzian&top=share80', '/results/abc/network-current?channel=ionic&mode=hertzian&top=share95', '/results/abc/network-current?channel=ionic&mode=hertzian&top=all', '/results/abc/network-current?channel=ionic&mode=hertzian&top=2000', '/results/abc/network-current?channel=ionic&mode=hertzian&top=5000', '/results/abc/network-current?channel=ionic&mode=hertzian&top=5000']
+  PASS  ④c7 고르기 칸 (자료 있음) = 전류 50 · 80 · 95 % (개수) · 그 케이스 접촉 수보다 작은 상위 N 만 · 전부 (개수) [['share50', '전류 50 % (50 개)'], ['share80', '전류 80 % (88 개)'], ['share95', '전류 95 % (112 개)'], ['all', '전부 (314 개)']]
+  PASS  ④c8 자료 없을 때 (오류 범례) = 개수 없이 · 상위 N 전부 · 전부 [['share50', '전류 50 %'], ['share80', '전류 80 %'], ['share95', '전류 95 %'], [500, '상위 500'], [1000, '상위 1000'], [2000, '상위 2000'], [5000, '상위 5000'], [10000, '상위 10000'], [20000, '상위 20000'], ['all', '전부']]
+  PASS  ④c9 접촉 645 침대 — 상위 500 만 남고 전부 (645 개) · 지금 고른 상위 20000 은 지워지지 않고 보인다 [['share50', '전류 50 % (40 개)'], ['share80', '전류 80 % (200 개)'], ['share95', '전류 95 % (400 개)'], [500, '상위 500'], ['all', '전부 (645 개)'], [20000, '상위 20000']]
+  PASS  ④c10 조작판 — 고르기 (id netcur-top) 기본 = 전류 50 % selected · 개수 표시 · 위쪽 고르기 (id netcur-cap) 기본 = 최대
+  PASS  ④c11 범례 고르기 줄 — 전류 80 % 를 나르는 상위 88 접촉 · 전부 314 개 · 정수 = 옛 문구 (상위 N 접촉 · |I| 큰 순) [<b>색 · 굵기 = 접촉 전류 밀도 j = |I| / A_c (log₁₀) · 전류 80 % 를 나르는 상위 88 접촉 (|I| 큰 순)</b> / <b>색 · 굵기 = 접촉 전류 밀도 j = |I| / A_c (log₁₀) · 전류가 흐르는 접촉 전부 (314 개)</b> / <b>색 · 굵기 = 접촉 전류 밀도 j = |I| / A_c (log₁₀) · 상위 88 접촉 (|I| 큰 순)</b>]
+  PASS  ④c12 단면을 못 정한 해 → 범례 ⚠ 사유 (서버 문자열 이스케이프) · 상위 N 문구
+  PASS  ④c13 색 위쪽 — 최대 = 그대로 · p99 · p95 = 고른 접촉 j (0 · 없음 제외) 의 백분위 (선형 보간 · numpy 기본과 같은 정의) · log = log₁₀ · 잘못된 값 · 없음 = 그대로 [[1, 100], [1, 96.16], [1, 80.79999999999998], [0, 1.9829944546586642], [1, 100], None, [1, 100], [1, 4], [1, 3]]
+  PASS  ④c13b 1저자 10-08 "p50, p75 를 추가" — p75 = 4 (정렬 [1, 2, 3, 4, 100] 의 4 번째) · p50 = 3 (중앙값) · 범례 회색 메모 50 % 값 · 컬러바 아래 글 75th percentile [[1, 4], [1, 3]]
+  PASS  ④c14 백분위 함수 [96.16, 5, 2]
+  PASS  ④c15 컬러바 파일 이름 꼬리 — p99 → _p99 · p95 → _p95 · p75 → _p75 · p50 → _p50 · 최대 · 없음 → 꼬리 없음 ['_p99', '_p95', '', '', '', '_p75', '_p50']
+  PASS  ④c16 범례 숫자 = 평범한 숫자 셋 (1 … 96 · 가운데 49) · "≥" · ▲ 없음 · 위쪽 고른 것은 회색 방법 메모 (99 % 값)
+  PASS  ④c17 컬러바 PNG 눈금 = 숫자 셋 그대로 (['1', '49', '96']) · "≥" · ▲ 없음 · 위쪽 고르기는 아래 작은 글 (방법) 에만 (99th · 95th percentile) · 최대면 그 글 없음
+  PASS  ④c18 컬러바 제목 — 전류 몫 = "top N contacts (80 % of the current)" · 전부 = "all N current-carrying contacts"
+  PASS  ④c19 받은 자료 기억 = 최근 4 개 (전부 자료가 쌓여 메모리를 잡지 않게) · 다시 쓴 것은 맨 뒤로 (지우지 않는다) ['u2', 'u3', 'u4', 'u5'] · ['u3', 'u4', 'u5', 'u2']
+  PASS  ④c19b 큰 자료 (접촉 > 20000 — 전부 · ps45 이온 ≈ 40 만 접촉 = 풀린 자료 하나 ≈ 119 MB) 는 지금 보는 것 하나만 기억 · 보기를 나가면 비운다 · 작은 자료는 남긴다 (1저자 10-08 "나갈 때 휘발") ['s1', 's2'] · ['s1', 's2', 'b2'] · ['s1', 's2'] · [False, True, False, False, False]
+  PASS  ④c19c 다른 보기로 나가면 (applyViewMode · mode ≠ net_current) 큰 자료를 비운다 — netCurrentTeardown 바로 뒤
+  PASS  ④c20 그리기 = 위쪽을 고른 범위 (netCurrentCap(netCurrentRange(edges, sc), edges, sc, opt.cap)) · 접촉이 많으면 (> NETCUR_LOD_N) 6 각 · 뚜껑 없는 관 (삼각형 4 배 적게) · 아니면 옛 12 각 그대로
+  PASS  ④c21 받기 = 압축 꼴을 풀고 (netCurrentDecode) 기억 (cache[url]) 뒤 4 개로 자른다 (netCurrentCacheTrim) — 오류 범례가 먼저
+  PASS  ④c22 고르기 바꾸기 — 숫자는 숫자로 · 이름 (share · all) 은 그대로 · 위쪽을 바꾸면 다시 받지 않고 다시 그린다
+  PASS  ④c23 컬러바 단추 둘의 파일 이름 = … + netCurrentCapTag(opt) … '.png' (위쪽을 고른 그림이 최대 그림을 덮어쓰지 않게 · @1C 는 10-08 비용량 꼬리까지)
+  PASS  ④c24 기본 옵션 = 전류 50 % (1저자 Q2) · 위쪽 최대 — { channel: 'ionic', mode: 'hertzian', top: 'share50', arrows: false, width: 1, scale: 'log', cap: 'max' }
+[④k] 뷰어 — 비용량 고르기 (175 · 200 mAh/g · node)
+  PASS  ④k1 viewer3d.js 에서 함수 · 상수를 잘라 냈다 (없음 [] · 비용량 상수 True)
+  PASS  ④k2 node 실행
+  PASS  ④k3 @1C 배율 = 서버 배율 × 고른 비용량 / 서버 기준 (175) · 안 고르거나 같으면 그대로 · @1V 는 무관 · 서버 기준이 없거나 잘못된 값 = 그대로 [0.026, 0.02971428571428571, 0.026, 1, 0.026, 0.026, 0.026]
+  PASS  ④k4 범례 — 비용량 200 mAh/g → Q_areal 5.94 mAh/cm² → 전극 평균 전류 밀도 5.94 mA cm⁻² · 케이스 표 (175 기준 5.2) 와 다르다는 표지 · 175 면 케이스 표 등급 값
+  PASS  ④k5 컬러바 @1C — 눈금 = @1V 값 × 배율 × 200/175 (['0.03', '0.089', '0.15'] = ['0.03', '0.089', '0.15']) · 아래 글 = 전극 평균 전류 밀도 이름 · 비용량 (C_AM 200 mAh/g) · 175 면 175
+  PASS  ④k6 @1V 컬러바는 비용량과 무관 (눈금 · 글 같음)
+  PASS  ④k7 조작판 비용량 고르기 (id netcur-capacity) — 175 mAh/g (모델) · 200 mAh/g (랩 표준) · 기본 = 175 (케이스 표와 같은 기준) [175, 200]
+  PASS  ④k8 컬러바 @1C 파일 이름 꼬리 — 200 → _C200 · 175 · 없음 → 꼬리 없음 ['_C200', '', '', '']
+  PASS  ④k9 비용량을 바꾸면 다시 받지 않고 다시 그린다 · @1C 컬러바 파일 이름에 비용량 꼬리 (@1V 는 없음)
+[⑤] check_all 배선
+  PASS  ⑤a scripts/check_all.sh 가 이 시험을 돈다
+
+167 PASS · 0 FAIL
+ALL PASS

@@ -1,0 +1,31 @@
+phase	command	rc	seconds	result	log
+before	python3 scripts/test_lhs214_model_limit.py --selftest	1	1.0	13/54 PASS	before/scripts__test_lhs214_model_limit.py_selftest.log
+before	python3 scripts/test_network_solve_certificate.py	1	64.9	27/28 PASS (G4b)	before/scripts__test_network_solve_certificate.py.log
+before	python3 webapp/test_network_handover_chain.py	1	3.4	21/34 PASS (⑤ 13 FAIL)	before/webapp__test_network_handover_chain.py.log
+before	python3 scripts/test_lhs_release_v13.py	1	133.6	255 PASS · 1 FAIL (V2b)	before/scripts__test_lhs_release_v13.py.log
+before	python3 webapp/test_pipeline_provenance.py	0	13.7	284/284 PASS (침대 셋 더함 · 검사 무변경)	before/webapp__test_pipeline_provenance.py.log
+final	python3 scripts/test_lhs214_model_limit.py --selftest	0	1.0	55/55 PASS	final/scripts__test_lhs214_model_limit.py_selftest.log
+final	python3 webapp/test_network_handover_chain.py	0	4.3	34/34 PASS	final/webapp__test_network_handover_chain.py.log
+final	python3 scripts/test_network_solve_certificate.py	0	68.1	28/28 PASS	final/scripts__test_network_solve_certificate.py.log
+final	python3 scripts/test_lhs_release_v13.py	0	130.4	256 PASS · 0 FAIL	final/scripts__test_lhs_release_v13.py.log
+final	python3 webapp/test_pipeline_provenance.py	0	16.2	284/284 PASS	final/webapp__test_pipeline_provenance.py.log
+final	python3 scripts/test_tau_flux.py	0	1.4	55/55 PASS	final/scripts__test_tau_flux.py.log
+final	python3 scripts/test_gen2_role_contract.py	0	2.5	44/44 PASS	final/scripts__test_gen2_role_contract.py.log
+final	python3 scripts/test_network_generation2.py	0	1.5	18/18 PASS	final/scripts__test_network_generation2.py.log
+final	python3 scripts/test_reread_v12.py	0	3.2	22 PASS · 0 FAIL	final/scripts__test_reread_v12.py.log
+final	python3 scripts/g2_network_reread.py --selftest	0	9.8	29 ✓ · 전부 통과	final/scripts__g2_network_reread.py_selftest.log
+final	python3 scripts/lhs_design_dataset.py --selftest	0	8.2	391/391 PASS	final/scripts__lhs_design_dataset.py_selftest.log
+final	python3 scripts/lhs_release_build.py --selftest	0	0.4	31/31 전부 통과	final/scripts__lhs_release_build.py_selftest.log
+final	python3 scripts/network_conductivity.py --selftest	0	0.7	31/31 PASS	final/scripts__network_conductivity.py_selftest.log
+final	python3 scripts/network_conductivity.py --selftest-status	0	0.7	31/31 PASS	final/scripts__network_conductivity.py_selftest-status.log
+final	python3 scripts/network_conductivity.py --selftest-temp	0	0.5	PASS	final/scripts__network_conductivity.py_selftest-temp.log
+final	python3 scripts/seal_s3_prerun.py --selftest	0	5.0	69 PASS ALL GREEN	final/scripts__seal_s3_prerun.py_selftest.log
+final	python3 scripts/run_s3_psi.py --selftest	0	5.5	PASS	final/scripts__run_s3_psi.py_selftest.log
+final	python3 scripts/run_network_194_parallel.py --selftest	0	133.8	139/139 전부 통과	final/scripts__run_network_194_parallel.py_selftest.log
+final	python3 scripts/wsl_network_smoke.py --selftest	0	16.4	16/16 전부 통과	final/scripts__wsl_network_smoke.py_selftest.log
+final	python3 scripts/wsl_network_smoke.py --selftest-real	0	155.2	4/4 전부 통과 (case15 음성 대조 계속 거부)	final/scripts__wsl_network_smoke.py_selftest-real.log
+final	python3 scripts/check_method_discipline.py	0	28.4	0 오류 (15 경고 · 기존)	final/scripts__check_method_discipline.py.log
+final	python3 scripts/check_selftest_inventory.py --quiet	0	11.4	전부 분류	final/scripts__check_selftest_inventory.py_quiet.log
+final	(웹앱 핵심 10 · 회귀 묶음 47)	0	—	전부 rc 0	final/final_core_summary.log · final/sweep_summary.log · final/sweep/
+a4	python3 docs/reviews/lhs214_fix_evidence_20261015/a4_no_impact.py --json …/a4_no_impact.json	0	216.9	A4 PASS 32/32	a4_no_impact.log
+code	python3 docs/reviews/lhs214_fix_evidence_20261015/code_fp_report.py	0	—	code_fp acc7bfa3… · 바뀐 봉인 파일 4	code_fp_report.log

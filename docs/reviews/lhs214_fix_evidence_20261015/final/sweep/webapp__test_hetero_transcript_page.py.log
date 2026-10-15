@@ -1,0 +1,17 @@
+[Storage] NOT configured - SUPABASE_URL=False SUPABASE_KEY=False
+[Security] WARNING: auth OFF - local/private only. For public deploy set WEBAPP_REQUIRE_AUTH=1 + WEBAPP_AUTH_TOKEN.
+  PASS  ① 회의 등록부 HETERO_TRANSCRIPTS 에 09-18 · 10-02 둘
+  PASS  ② ?m=20261002 → 200 · 음성 336 · 발화 90 · 계약 통과 문구
+  PASS  ③ 10-02 회의 종합이 화면에 보인다 (논문 둘로 분리 · 정합도 지시 · 논지 물음)
+  PASS  ④ ?m=20260918 → 200 · 발화 61 (옛 회의 그대로)
+  PASS  ⑤ 키 없음 → 최신 회의 (10-02)
+  PASS  ⑥ 회의 고르기 링크 둘 (?m=20260918 · ?m=20261002)
+  PASS  ⑦ 등록부 밖 키는 404 (조용히 다른 회의를 보이지 않는다) 
+  PASS  ⑧ /hetero 에 두 회의 링크
+  PASS  ⑨ /hetero 에 비준 블록의 고정 문장 그대로 (정본 파일에서 뽑아 대조)
+  PASS  ⑩ 하지 않는 말 · 예측 P1 · P2 · P3 이 함께 (비준 셋)
+  PASS  ⑪ 정본 경로 docs/hetero_thesis.md · 비준 날짜 = 정본 표지의 날짜 (2026-10-05)
+  PASS  ⑫ 고정 문장을 템플릿 · 코드에 베끼지 않는다 (정본 한 곳)
+  PASS  ⑬ 표지 없음 · 날짜 없음 · 둘 · 빈 블록 · 파일 없음 → "논지 정본을 읽지 못했다" (옛 문장 안 보임) 
+
+test_hetero_transcript_page: 13/13 PASS

@@ -1,0 +1,83 @@
+A4 무영향 대조 — 기준 0c557e72a ↔ 지금 트리 · 바뀐 파일 ['scripts/g2_network_reread.py', 'scripts/lhs_design_dataset.py', 'scripts/lhs_release_build.py', 'scripts/network_conductivity.py', 'scripts/tau_flux.py', 'scripts/test_lhs214_model_limit.py', 'scripts/test_lhs_release_v13.py', 'scripts/test_network_solve_certificate.py', 'webapp/app.py', 'webapp/pipeline_service.py', 'webapp/templates/single.html', 'webapp/test_network_handover_chain.py', 'webapp/test_pipeline_provenance.py']
+  (= 비트 같음 · ~ 의도 변경 = Physics · Δ 칸만 다르고 행 · 이름 · Hertz 칸 같음 · ≠ 실패)
+  = [N] 합성 SE + AM (이온 · 전자 · 열 · H12) · hertzian · 수 333 · 문자 165 · null 66 (더한 기록 키 넷 뺀 뒤)
+  = [N] 합성 SE + AM (이온 · 전자 · 열 · H12) · physics · 수 239 · 문자 116 · null 48 (더한 기록 키 넷 뺀 뒤)
+  = [N] 합성 GEN2-01 사슬 (협착-only R_c = 0) · hertzian · 수 249 · 문자 131 · null 56 (더한 기록 키 넷 뺀 뒤)
+  = [N] 합성 GEN2-01 사슬 (협착-only R_c = 0) · physics · 수 144 · 문자 80 · null 41 (더한 기록 키 넷 뺀 뒤)
+  = [N] 합성 진짜 비관통 · hertzian · 수 143 · 문자 121 · null 96 (더한 기록 키 넷 뺀 뒤)
+  = [N] 합성 진짜 비관통 · physics · 수 89 · 문자 75 · null 63 (더한 기록 키 넷 뺀 뒤)
+  = [N] 합성 CF 모형 과전도 (상자 1 × 1) · hertzian · 수 258 · 문자 136 · null 48 (더한 기록 키 넷 뺀 뒤)
+  = [N] 합성 CF 모형 과전도 (상자 1 × 1) · physics · 수 164 · 문자 85 · null 32 (더한 기록 키 넷 뺀 뒤)
+  = [N] real_14 (세 채널 · 커밋된 기준 덤프) · hertzian · 수 339 · 문자 165 · null 66 (더한 기록 키 넷 뺀 뒤)
+  = [N] real_14 (세 채널 · 커밋된 기준 덤프) · physics · 수 221 · 문자 113 · null 55 (더한 기록 키 넷 뺀 뒤)
+  = [N] case15 음성 대조 (실패 침대 · 띠 겹침 · 음수 면적) · hertzian · 수 276 · 문자 155 · null 88 (더한 기록 키 넷 뺀 뒤)
+  = [N] case15 음성 대조 (실패 침대 · 띠 겹침 · 음수 면적) · physics · 수 125 · 문자 77 · null 50 (더한 기록 키 넷 뺀 뒤)
+  = [N] real_14 이온 run_decomposition · hertzian · 수 90 · 문자 42 · null 17
+  = [N] real_14 이온 run_decomposition · physics · 수 78 · 문자 40 · null 22
+  = [N] 격자 34×34×30 (자유 노드 > 30,000 · cg) · solve_network full · G · q · solve_info (증서 수치 · 단 기록)
+  = [N] 격자 3×3×6 (spsolve) · solve_network full · G · q · solve_info (증서 수치 · 단 기록)
+  = [T] v1.2 τ 원천 194 케이스 (case_row · 50 칸) · 세대 1 (inferred_legacy) · 칸 9894
+  = [T] 합성 SE + AM (이온 · 전자 · 열 · H12) — 새 생산자 레코드 · ion_columns · 세대 계약 · 0b · 증서 결합 · 칸 50 + 판정 셋
+  = [T] real_14 (세 채널 · 커밋된 기준 덤프) — 새 생산자 레코드 · ion_columns · 세대 계약 · 0b · 증서 결합 · 칸 50 + 판정 셋
+  = [T] 합성 진짜 비관통 — 새 생산자 레코드 · ion_columns · 세대 계약 · 0b · 증서 결합 · 칸 50 + 판정 셋
+  = [T] 합성 CF 모형 과전도 (상자 1 × 1) — 새 생산자 레코드 · ion_columns · 세대 계약 · 0b · 증서 결합 · 칸 50 + 판정 셋
+  = [T] lhsx_054 진단 레코드 (옛 생산자 1087a9b2f · Codex 묶음) · ion_columns · 세대 계약 · 0b · 칸 50 + 판정 둘
+  = [R] v1.2 인계표 lhs (130 행 × 251 열) · 빈칸 뜻 · 관통 분류 · 상태 집계 · 주 타깃 관문 · 칸 32630 · 행 130 · 상태 열 2
+  = [R] v1.2 인계표 lhsx (64 행 × 253 열) · 빈칸 뜻 · 관통 분류 · 상태 집계 · 주 타깃 관문 · 칸 16192 · 행 64 · 상태 열 2
+  = [W] 정상 (두 모드 · 세 채널 값) | 새 표 · 같아야 · 행 14 · Hertz 칸 · 이름 · 순서 불변 True
+  ~ [W] 정상 (두 모드 · 세 채널 값) | 기존 CSV 표 · L214-03 의도 변경 (Physics · Δ 칸만) · 행 16 · Hertz 칸 · 이름 · 순서 불변 True   ⟵ 5 행의 Physics · Δ 칸 다름
+  = [W] 비관통 (두 모드 valid_zero) | 새 표 · 같아야 · 행 3 · Hertz 칸 · 이름 · 순서 불변 True
+  ~ [W] 비관통 (두 모드 valid_zero) | 기존 CSV 표 · L214-03 의도 변경 (Physics · Δ 칸만) · 행 8 · Hertz 칸 · 이름 · 순서 불변 True   ⟵ 5 행의 Physics · Δ 칸 다름
+  ~ [W] Hertz 만 있는 옛 케이스 (physics 키 없음) | 새 표 · L214-03 의도 변경 (Physics · Δ 칸만) · 행 12 · Hertz 칸 · 이름 · 순서 불변 True   ⟵ 6 행의 Physics · Δ 칸 다름
+  ~ [W] Hertz 만 있는 옛 케이스 (physics 키 없음) | 기존 CSV 표 · L214-03 의도 변경 (Physics · Δ 칸만) · 행 14 · Hertz 칸 · 이름 · 순서 불변 True   ⟵ 7 행의 Physics · Δ 칸 다름
+  ~ [W] 모형 한계 (Codex 합성 — physics None · full_over_conduction) | 새 표 · L214-03 의도 변경 (Physics · Δ 칸만) · 행 9 · Hertz 칸 · 이름 · 순서 불변 True   ⟵ 4 행의 Physics · Δ 칸 다름
+  ~ [W] 모형 한계 (Codex 합성 — physics None · full_over_conduction) | 기존 CSV 표 · L214-03 의도 변경 (Physics · Δ 칸만) · 행 13 · Hertz 칸 · 이름 · 순서 불변 True   ⟵ 7 행의 Physics · Δ 칸 다름
+  더한 기록 키 (N · L214_ADDED — BASE 결과에는 없음):
+    합성 SE + AM (이온 · 전자 · 열 · H12) · hertzian: {'electronic_sigma_full_status': 'computed', 'electronic_sigma_full_reason': None, 'thermal_sigma_full_status': 'computed', 'thermal_sigma_full_reason': None}
+    합성 SE + AM (이온 · 전자 · 열 · H12) · physics: {'electronic_sigma_full_status': 'computed', 'electronic_sigma_full_reason': None, 'thermal_sigma_full_status': 'computed', 'thermal_sigma_full_reason': None}
+    합성 GEN2-01 사슬 (협착-only R_c = 0) · hertzian: {'electronic_sigma_full_status': '(키 없음)', 'electronic_sigma_full_reason': '(키 없음)', 'thermal_sigma_full_status': 'computed', 'thermal_sigma_full_reason': None}
+    합성 GEN2-01 사슬 (협착-only R_c = 0) · physics: {'electronic_sigma_full_status': '(키 없음)', 'electronic_sigma_full_reason': '(키 없음)', 'thermal_sigma_full_status': 'computed', 'thermal_sigma_full_reason': None}
+    합성 진짜 비관통 · hertzian: {'electronic_sigma_full_status': '(키 없음)', 'electronic_sigma_full_reason': '(키 없음)', 'thermal_sigma_full_status': 'valid_zero', 'thermal_sigma_full_reason': 'no_through_path'}
+    합성 진짜 비관통 · physics: {'electronic_sigma_full_status': '(키 없음)', 'electronic_sigma_full_reason': '(키 없음)', 'thermal_sigma_full_status': 'valid_zero', 'thermal_sigma_full_reason': 'no_through_path'}
+    합성 CF 모형 과전도 (상자 1 × 1) · hertzian: {'electronic_sigma_full_status': '(키 없음)', 'electronic_sigma_full_reason': '(키 없음)', 'thermal_sigma_full_status': 'computed', 'thermal_sigma_full_reason': None}
+    합성 CF 모형 과전도 (상자 1 × 1) · physics: {'electronic_sigma_full_status': '(키 없음)', 'electronic_sigma_full_reason': '(키 없음)', 'thermal_sigma_full_status': 'computed', 'thermal_sigma_full_reason': None}
+    real_14 (세 채널 · 커밋된 기준 덤프) · hertzian: {'electronic_sigma_full_status': 'computed', 'electronic_sigma_full_reason': None, 'thermal_sigma_full_status': 'computed', 'thermal_sigma_full_reason': None}
+    real_14 (세 채널 · 커밋된 기준 덤프) · physics: {'electronic_sigma_full_status': 'computed', 'electronic_sigma_full_reason': None, 'thermal_sigma_full_status': 'computed', 'thermal_sigma_full_reason': None}
+    case15 음성 대조 (실패 침대 · 띠 겹침 · 음수 면적) · hertzian: {'electronic_sigma_full_status': 'not_computed', 'electronic_sigma_full_reason': 'boundary_overlap', 'thermal_sigma_full_status': 'not_computed', 'thermal_sigma_full_reason': 'boundary_overlap'}
+    case15 음성 대조 (실패 침대 · 띠 겹침 · 음수 면적) · physics: {'electronic_sigma_full_status': 'not_computed', 'electronic_sigma_full_reason': 'boundary_overlap', 'thermal_sigma_full_status': '(키 없음)', 'thermal_sigma_full_reason': '(키 없음)'}
+  W 의도 변경 (34 행 — L214-03 strict missing):
+    정상 (두 모드 · 세 채널 값) | 기존 CSV 표 · σ_ionic (mS/cm): BASE ['σ_ionic (mS/cm)', 0.6, 0.6, '0%'] → 지금 ['σ_ionic (mS/cm)', 0.6, 0.9, '+50.0%']
+    정상 (두 모드 · 세 채널 값) | 기존 CSV 표 · R_brug (과대추정 배수): BASE ['R_brug (과대추정 배수)', '2.0×', '2.0×', '0%'] → 지금 ['R_brug (과대추정 배수)', '2.0×', '1.4×', '-30.0%']
+    정상 (두 모드 · 세 채널 값) | 기존 CSV 표 · Constriction 비율(%): BASE ['Constriction 비율(%)', 40.0, 40.0, '0%'] → 지금 ['Constriction 비율(%)', 40.0, 20.0, '-50.0%']
+    정상 (두 모드 · 세 채널 값) | 기존 CSV 표 · σ_electronic (mS/cm): BASE ['σ_electronic (mS/cm)', 2.0, 2.0, '0%'] → 지금 ['σ_electronic (mS/cm)', 2.0, 3.0, '+50.0%']
+    정상 (두 모드 · 세 채널 값) | 기존 CSV 표 · σ_thermal (mS/cm equiv): BASE ['σ_thermal (mS/cm equiv)', 0.3, 0.3, '0%'] → 지금 ['σ_thermal (mS/cm equiv)', 0.3, 0.45, '+50.0%']
+    비관통 (두 모드 valid_zero) | 기존 CSV 표 · σ_ionic (mS/cm): BASE ['σ_ionic (mS/cm)', 0.6, 0.6, '0%'] → 지금 ['σ_ionic (mS/cm)', 0.6, '—', '—']
+    비관통 (두 모드 valid_zero) | 기존 CSV 표 · R_brug (과대추정 배수): BASE ['R_brug (과대추정 배수)', '2.0×', '2.0×', '0%'] → 지금 ['R_brug (과대추정 배수)', '2.0×', '—', '—']
+    비관통 (두 모드 valid_zero) | 기존 CSV 표 · Constriction 비율(%): BASE ['Constriction 비율(%)', 40.0, 40.0, '0%'] → 지금 ['Constriction 비율(%)', 40.0, '—', '—']
+    비관통 (두 모드 valid_zero) | 기존 CSV 표 · σ_electronic (mS/cm): BASE ['σ_electronic (mS/cm)', '—', '—', '0%'] → 지금 ['σ_electronic (mS/cm)', '—', '—', '—']
+    비관통 (두 모드 valid_zero) | 기존 CSV 표 · σ_thermal (mS/cm equiv): BASE ['σ_thermal (mS/cm equiv)', '—', '—', '0%'] → 지금 ['σ_thermal (mS/cm equiv)', '—', '—', '—']
+    Hertz 만 있는 옛 케이스 (physics 키 없음) | 새 표 · σ_ionic (mS/cm): BASE ['σ_ionic (mS/cm)', 0.6, 0.6, '0%'] → 지금 ['σ_ionic (mS/cm)', 0.6, '—', '—']
+    Hertz 만 있는 옛 케이스 (physics 키 없음) | 새 표 · Contact-free / Full: BASE ['Contact-free / Full', '2.0×', '2.0×', '0%'] → 지금 ['Contact-free / Full', '2.0×', '—', '—']
+    Hertz 만 있는 옛 케이스 (physics 키 없음) | 새 표 · Constriction 비율(%): BASE ['Constriction 비율(%)', 40.0, 40.0, '0%'] → 지금 ['Constriction 비율(%)', 40.0, '—', '—']
+    Hertz 만 있는 옛 케이스 (physics 키 없음) | 새 표 · σ_brug / σ_ionic: BASE ['σ_brug / σ_ionic', '2.0×', '2.0×', '0%'] → 지금 ['σ_brug / σ_ionic', '2.0×', '—', '—']
+    Hertz 만 있는 옛 케이스 (physics 키 없음) | 새 표 · σ_electronic (mS/cm): BASE ['σ_electronic (mS/cm)', 2.0, 2.0, '0%'] → 지금 ['σ_electronic (mS/cm)', 2.0, '—', '—']
+    Hertz 만 있는 옛 케이스 (physics 키 없음) | 새 표 · σ_thermal (mS/cm equiv): BASE ['σ_thermal (mS/cm equiv)', 0.3, 0.3, '0%'] → 지금 ['σ_thermal (mS/cm equiv)', 0.3, '—', '—']
+    Hertz 만 있는 옛 케이스 (physics 키 없음) | 기존 CSV 표 · σ_ionic (mS/cm): BASE ['σ_ionic (mS/cm)', 0.6, 0.6, '0%'] → 지금 ['σ_ionic (mS/cm)', 0.6, '—', '—']
+    Hertz 만 있는 옛 케이스 (physics 키 없음) | 기존 CSV 표 · R_brug (과대추정 배수): BASE ['R_brug (과대추정 배수)', '2.0×', '2.0×', '0%'] → 지금 ['R_brug (과대추정 배수)', '2.0×', '—', '—']
+    Hertz 만 있는 옛 케이스 (physics 키 없음) | 기존 CSV 표 · Constriction 비율(%): BASE ['Constriction 비율(%)', 40.0, 40.0, '0%'] → 지금 ['Constriction 비율(%)', 40.0, '—', '—']
+    Hertz 만 있는 옛 케이스 (physics 키 없음) | 기존 CSV 표 · σ_electronic (mS/cm): BASE ['σ_electronic (mS/cm)', 2.0, 2.0, '0%'] → 지금 ['σ_electronic (mS/cm)', 2.0, '—', '—']
+    Hertz 만 있는 옛 케이스 (physics 키 없음) | 기존 CSV 표 · σ_thermal (mS/cm equiv): BASE ['σ_thermal (mS/cm equiv)', 0.3, 0.3, '0%'] → 지금 ['σ_thermal (mS/cm equiv)', 0.3, '—', '—']
+    Hertz 만 있는 옛 케이스 (physics 키 없음) | 기존 CSV 표 · Contact-free / Full: BASE ['Contact-free / Full', '2.0×', '2.0×', '0%'] → 지금 ['Contact-free / Full', '2.0×', '—', '—']
+    Hertz 만 있는 옛 케이스 (physics 키 없음) | 기존 CSV 표 · σ_brug / σ_ionic: BASE ['σ_brug / σ_ionic', '2.0×', '2.0×', '0%'] → 지금 ['σ_brug / σ_ionic', '2.0×', '—', '—']
+    모형 한계 (Codex 합성 — physics None · full_over_conduction) | 새 표 · σ_ionic (mS/cm): BASE ['σ_ionic (mS/cm)', 0.6, 0.6, '0%'] → 지금 ['σ_ionic (mS/cm)', 0.6, '— (모형 한계 · full_over_conduction — FULL q > 1.5 출력 상한 · 수치 인증 통과 · 값 미제공)', '—']
+    모형 한계 (Codex 합성 — physics None · full_over_conduction) | 새 표 · σ_brug / σ_ionic: BASE ['σ_brug / σ_ionic', '2.0×', '2.0×', '0%'] → 지금 ['σ_brug / σ_ionic', '2.0×', '— (모형 한계 · full_over_conduction — FULL q > 1.5 출력 상한 · 수치 인증 통과 · 값 미제공)', '—']
+    모형 한계 (Codex 합성 — physics None · full_over_conduction) | 새 표 · σ_ionic 망 상태 (생산자 sigma_full_status): BASE ['σ_ionic 망 상태 (생산자 sigma_full_status)', '계산됨', '미계산 (not_computed · full_over_conduction)', ''] → 지금 ['σ_ionic 망 상태 (생산자 sigma_full_status)', '계산됨', '미계산 — FULL 모형 한계 (full_over_conduction · 수치 인증 통과 · q > 1.5 출력 상한 · 값 미제공 · 기술 실패 아님 — 거부된 q 와 증서 = 레코드 증서)', '']
+    모형 한계 (Codex 합성 — physics None · full_over_conduction) | 새 표 · σ_electronic (mS/cm): BASE ['σ_electronic (mS/cm)', 2.0, 2.0, '0%'] → 지금 ['σ_electronic (mS/cm)', 2.0, '—', '—']
+    모형 한계 (Codex 합성 — physics None · full_over_conduction) | 기존 CSV 표 · σ_ionic (mS/cm): BASE ['σ_ionic (mS/cm)', 0.6, 0.6, '0%'] → 지금 ['σ_ionic (mS/cm)', 0.6, '— (모형 한계 · full_over_conduction — FULL q > 1.5 출력 상한 · 수치 인증 통과 · 값 미제공)', '—']
+    모형 한계 (Codex 합성 — physics None · full_over_conduction) | 기존 CSV 표 · R_brug (과대추정 배수): BASE ['R_brug (과대추정 배수)', '2.0×', '2.0×', '0%'] → 지금 ['R_brug (과대추정 배수)', '2.0×', '— (모형 한계 · full_over_conduction — FULL q > 1.5 출력 상한 · 수치 인증 통과 · 값 미제공)', '—']
+    모형 한계 (Codex 합성 — physics None · full_over_conduction) | 기존 CSV 표 · Constriction 비율(%): BASE ['Constriction 비율(%)', 40.0, 40.0, '0%'] → 지금 ['Constriction 비율(%)', 40.0, '— (모형 한계 · full_over_conduction — FULL q > 1.5 출력 상한 · 수치 인증 통과 · 값 미제공)', '—']
+    모형 한계 (Codex 합성 — physics None · full_over_conduction) | 기존 CSV 표 · σ_electronic (mS/cm): BASE ['σ_electronic (mS/cm)', 2.0, 2.0, '0%'] → 지금 ['σ_electronic (mS/cm)', 2.0, '—', '—']
+    모형 한계 (Codex 합성 — physics None · full_over_conduction) | 기존 CSV 표 · σ_thermal (mS/cm equiv): BASE ['σ_thermal (mS/cm equiv)', '—', '—', '0%'] → 지금 ['σ_thermal (mS/cm equiv)', '—', '—', '—']
+    모형 한계 (Codex 합성 — physics None · full_over_conduction) | 기존 CSV 표 · σ_brug / σ_ionic: BASE ['σ_brug / σ_ionic', '2.0×', '2.0×', '0%'] → 지금 ['σ_brug / σ_ionic', '2.0×', '— (모형 한계 · full_over_conduction — FULL q > 1.5 출력 상한 · 수치 인증 통과 · 값 미제공)', '—']
+    모형 한계 (Codex 합성 — physics None · full_over_conduction) | 기존 CSV 표 · σ_ionic 망 상태 (생산자 sigma_full_status): BASE ['σ_ionic 망 상태 (생산자 sigma_full_status)', '계산됨', '미계산 (not_computed · full_over_conduction)', ''] → 지금 ['σ_ionic 망 상태 (생산자 sigma_full_status)', '계산됨', '미계산 — FULL 모형 한계 (full_over_conduction · 수치 인증 통과 · q > 1.5 출력 상한 · 값 미제공 · 기술 실패 아님 — 거부된 q 와 증서 = 레코드 증서)', '']
+A4 PASS — 대조 32/32 통과 (N · T · R · W 같아야 = 비트 같음 · W 의도 변경 = 행 · 이름 · Hertz 칸 불변) · 증서 진단 키 (q_withheld …) 0 · BASE 결과에 더한 키 없음 · 216.9 s

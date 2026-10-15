@@ -1,0 +1,23 @@
+[Storage] NOT configured - SUPABASE_URL=False SUPABASE_KEY=False
+[Security] WARNING: auth OFF - local/private only. For public deploy set WEBAPP_REQUIRE_AUTH=1 + WEBAPP_AUTH_TOKEN.
+  PASS  ① run_pipeline atoms-only 성공
+  PASS  ①b atoms.csv 가 생기고 full_metrics.has_contacts 는 False
+  PASS  ② 결과 페이지 200 (받은 값 200)
+  PASS  ③ 3D 데이터 경로가 페이지에 붙는다 ('dem': base + '/3d-data')
+  PASS  ③b _DEM_POR = null (받은 값 'null')
+  [3d-data] response: 0.00 MB
+  PASS  ④ /3d-data 200 · 입자 36 = 덤프 36 · atoms_only
+  PASS  ④b 상 이름 = meta type_map (2 → AM_S · 3 → SE)
+  PASS  ⑥ atom + mesh → atoms-only 성공 · mesh_info.json 생성
+  PASS  ⑥b 결과 페이지 200 (받은 값 200)
+  [3d-data] response: 0.00 MB
+  PASS  ⑥c /3d-data 에 판 삼각형 2 개 · z = 30.2845 µm (STL 0.0302845 × scale 1000) · 입자 36 = 36
+  PASS  ⑥d 3D 뷰어가 mesh_triangles 를 판 메시로 그린다 (viewer3d.js · buildPlateMesh)
+  PASS  ⑤a ['porosity', 'porosity_spheresum'] → _DEM_POR 15.63 (받은 값 200 · '15.63')
+  PASS  ⑤b ['porosity'] → _DEM_POR 17.1 (받은 값 200 · '17.1')
+  PASS  ⑤c ['porosity', 'porosity_spheresum'] → _DEM_POR 17.1 (받은 값 200 · '17.1')
+  PASS  ⑦ 맵에 없는 타입 이름의 입자를 버리지 않는다 (OTHER 묶음으로)
+  PASS  ⑦b atoms-only 회색은 모르는 이름이 있을 때만 (phaseKnown = OTHER 비었음)
+  PASS  ⑦c 모르는 이름의 입자는 회색으로 그린다 (createInstancedSpheres(groups.OTHER … COL.ATOMS_ONLY))
+
+17/17 PASS

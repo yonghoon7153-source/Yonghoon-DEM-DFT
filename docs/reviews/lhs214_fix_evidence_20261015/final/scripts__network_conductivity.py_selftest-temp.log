@@ -1,0 +1,11 @@
+  PASS  SIGMA_BULK_DEFAULT is bitwise 3.0e-3 (= the pre-2026-07-28 literal) — 0x1.89374bc6a7efap-9
+  PASS  … and it IS the shared se_material constant
+  PASS  σ_e prefactor untouched (Reisacher: ohmic regime T-independent)
+  PASS  thermal prefactor untouched (no κ(T) anchor, §F1)
+  PASS  σ_grain_S_cm(None) is bitwise the default
+  PASS  --temp-c 30 → σ_grain x1.28 — x1.2796
+  PASS  --temp-c 45 → σ_grain x2.56 — x2.5555
+  PASS  --temp-c 60 → σ_grain x4.79 — x4.7851
+  PASS  mS/cm readout is exactly linear in σ_grain (same-T ratios cancel T)
+  PASS  provenance OFF/ON contract
+NETWORK TEMP SELFTEST PASS

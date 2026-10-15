@@ -362,3 +362,34 @@ $PY scripts/run_network_194_parallel.py run --root "$R" 2>&1 | tee ~/net194_run_
   **등록 §2 · §3 손 대조** (Codex 재확인 `docs/reviews/codex_review_supr_fix_reverify_20261014.md` §3 최소 기록 · 1저자 화면의 로그 `INPUT_DIGEST_JSON` 줄 · 코드 줄 ↔ 이 문서 §2 표 · §3 · 확인 = 조정자) — 여섯 칸 전부 등록 = 실측 (글자 그대로):
   n 194 · `missing_raw_sha` [] ✓ · `ids_sha256` `a04282d7275bd8f92b0afb4ac8b045f72f3867ccebbb7813b530b3901fd7b3bf` ✓ · `raw_sha256_table_sha256` `da7c93f9a0887145ff171e381c8608cb79779d96aea5a595a25677dc361ef784` ✓ · 코호트 TSV lhs `32f00daa8394188d1e72531fd7fda1a8b47a9c279be76311ae7f2afa024b2809` ✓ · lhsx `0b85e8589917c9a3936ce29e9f36326993985ddd113ef32353a4ff96d981cb45` ✓ · code_fp `e8b2496b9c2ecf6edad8c6b52d32a2514c96dd54c9a20823c300639249ecae71` (CODE_FILES 32) ✓.
   ✅ **1저자 발사 승인 10-14** (*"나머지는 다 권고대로"* · *"이거했어"* = 실행) — 핀 `1087a9b2f4a93aa6a3b0debc698a14fffa13488d` · 194 먼저 → 보충 20 · 결과 = 9-3 칸 (완료 뒤 · ⬜).
+- 9-8 **개정 초안 — FULL 모형 한계 범주 (10-15 · L214 · ⬜ 1저자 비준 대기 · 결과 열람 뒤 정책 개정)** — 근거 = Codex LHS214 실패 검토 `docs/reviews/codex_review_lhs214_failures_20261014.md` §3 Q1–Q3 · §4 B6 ·
+  수정 계획 `docs/reviews/lhs214_fix_plan_20261014.md` (✅ 1저자 10-14 Q1–Q5 권고대로) · 수정 재확인 요청서 `docs/reviews/codex_lhs214_fix_review_request_20261015.md` · 증거 `docs/reviews/lhs214_fix_evidence_20261015/README.md`.
+  ⚠ **이력 (결과 열람 뒤)** — 이 개정은 10-14 실행 결과 (194 = done 186 · 실패 8 `lhsx_051` · `053` · `054` · `060`–`064` · 보충 20 = done 14 · 실패 6 · 14 건 모두 상위 사유 `physics.ionic=fail / solve_failed` ·
+  `lhsx_054` 단독 진단 q 1.5370331988867802 > 1.5 — 나머지 13 건 원인 미확정) 를 **본 뒤** 쓴 허용 정책 변경이다 (Codex §3 Q1 — 이름만 바꾸는 수정이 아니다 · 과거에 막혔던 레코드의 게시 · 인계가 가능해진다).
+  10-14 ROOT · 실패 기록 = 보존 (역사) · 옛 14 건 = 사후 "성공" 전환 없음 (옛 레코드 = 사유 solve_failed · 증서에 거부된 q 기록 없음 → 고친 코드에서도 차단 · Q3 (가) unknown ·
+  case ID 허용목록 · 기대 실패 수 고정 없음 — 새 214 실행이 사례마다 다시 판정).
+  **바꾸지 않는 것** (결과에 맞춰 바꾸지 않는다 · Q5 (가)): 문턱 1.5 (원 정밀도 엄격 > · q = 1.5 는 computed) · 수치 허용치 1e−6 (전류 보존 · 내부 잔차) · 풀이 사다리 · G > 0 · 병렬 상한 0 < G ≤ 1.1·Σg ·
+  ID 집합 (§2 production194 `ids_sha256` `a04282d7…` · 보충 supp20 `991cf115…`) · 원 입력 (§2 원자료 표 · 코호트 TSV) · 실행 형식 v3 · 관측 필수 · §5-1–6 의 기존 차단 정책 (진짜 수치 실패 · 기하 · 세대 무효 · 잘못된 증서).
+
+  | 자리 | 원문 (보존) | 개정 초안 (⬜ 비준 대기) |
+  |---|---|---|
+  | §3 코드 신원 | 봉인 32 · `code_fp e8b2496b9c2ecf6edad8c6b52d32a2514c96dd54c9a20823c300639249ecae71` | 봉인 32 (목록 그대로) · 바뀐 봉인 파일 4 = `scripts/network_conductivity.py` (sha256 `5bb703dbd8242938…`) · `scripts/tau_flux.py` (`679967215b10fd20…`) · `webapp/app.py` (`1664590ea55e3ebf…`) · `webapp/pipeline_service.py` (`9fe9d01794a2ecd8…`) ⇒ **`code_fp acc7bfa335ec8fa8a7b76eb981135f16994b084ce0746476c5d05f61488af2ed`** (실행기 `code_fp(code_hashes())` · 증거 `code_fp_report.log`) · 인계 도구 (HANDOVER_FILES · 봉인 판정 밖) `scripts/lhs_design_dataset.py` sha256 `ff6af63cc11f3270…` · `scripts/g2_network_reread.py` `0e2ec7ef37571268…` · 배포 빌더 `scripts/lhs_release_build.py` `087b4c67b60352cd…` (빌드 manifest `code` 칸) · 발사 커밋 = 이 개정과 수정을 담은 본 가지 커밋 (메인 세션이 적는다) — 그 체크아웃의 194 dry-run 이 같은 code_fp 를 찍어야 |
+  | §5-1 케이스 판정 | done / failed (+ failure_kind) | 그대로 + 아래 ① 범주의 모형 한계는 진짜 실패가 아니므로 레코드 게시 (done) 가능 — 같은 실행의 다른 채널 · 가지에 진짜 실패가 있으면 failed 그대로 |
+  | §5 결과 자격 (신설 ①–③) | — | 범주 · 공용 판정 · 예외 범위 · 우선순위 |
+  | §5 공란 의미 (신설 ④) | — | τ NOT_COMPUTED + 사유 정확히 `full_over_conduction` · 배포 빈칸 코드 `NA_MODEL_LIMIT` |
+  | §5 Hertz 주 타깃 (신설 ⑤) | — | 주 타깃 (H0) 모형 한계 = 진단 레코드 · 인계표 행 유지 · v1.3 주 타깃 배포 HOLD |
+  | §5-7 회귀 허용 다름 | 선언된 변경 목록 | + 모형 한계 범주의 상태 · 사유 · 증서 진단 키 넷 (모형 한계 증서에만) · 전자 · 열 FULL 상태 · 사유 기록 키 넷 (값 칸 아님) · 웹앱 Physics 칸 strict missing — 정상 사례 타깃 수치 = 비트 같음 (A4 · 증거 `a4_no_impact.log`) |
+
+  ① **범주 = 수치 인증 성공 / 출력 채택 거부** — 단상 이온 · 전자 FULL (H0 · H12 · Physics 공통 · 열 제외 — 열 병렬 상한 가드는 실패 그대로) · 수치 증서 통과 (전류 보존 · 내부 잔차 ≤ 1e−6 · 채택 단 = 마지막 시도 pass ·
+     0 < G ≤ 1.1·Σg) · 풀이 기하 (판 · 상자 · 척도) 유한 양수 · q = (I_bottom/ΔV)·T/A 유한 · 원 정밀도 엄격 > 1.5 → 가지 상태 not_computed · 사유 `full_over_conduction` · accepted σ · 차원 σ = null ·
+     FULL 유도값 (f · τ · 협착 전력 몫 · CF/FULL · Bruggeman/FULL 비) 없음 · 진단 q = FULL 증서의 별도 키 (`q_withheld` 원 값 · `q_guard_max` 1.5 · `guard_policy` `full_single_phase_q_gt_1p5/v1` · `sum_g`) · 채널 상태 `model_limit`.
+  ② **공용 판정** = 증서 수준 `network_conductivity.model_limit_certificate_problem` + 레코드 수준 `tau_flux.full_model_limit_problem` (상태 · 사유 정확히 · 값 · 유도값 null · 관통 · 채널 상태 · 증서 · 채널 · 역할 · contact_mode · 전극 · σ₀ 결합 · 자리 모드) —
+     생산자 · 일반 게시 · 정지 계약 · τ 0b · 세대 계약 증서 결합 · 다시 읽기 K6 · 인계 P4 (정지 계약 다시) · 배포가 같은 함수.  사유 · 채널 상태 이름만으로는 통과하지 않는다 · 모형 한계 레코드는 세대 표기 결손 면제를 받지 않는다.
+  ③ **예외 범위 · 우선순위** — 입력 · 경계 검사 먼저 (`invalid_geometry` · `non_finite` = 기술 실패 · 비관통 판정보다 앞) · 앞 단계 실패 (첫 단 예외 · 미수렴 · 증서 실패 · 병렬 상한 밖) 는 높은 q 로 구제하지 않는다 ·
+     같은 실행의 다른 채널 진짜 실패 = failed 우선 · CF · 협착-only 의 q > 1.5 = 기존 `model_over_conduction` (값 유지) · τ 앞 게이트 (띠 폴백 · 관통 불일치 · 온도 짝) 우선 · 옛 레코드 (solve_failed · 거부된 q 기록 없음) = 계속 차단.
+  ④ **공란 의미** — τ 인계 = NOT_COMPUTED + 사유 정확히 `full_over_conduction` (기술 실패 사유 목록 밖 · 세부 꼬리 없음) · f · tau2 · tau · f_gap 빈칸 = **미제공** (0 · ∞ · 기술 실패 아님) · 미퍼콜 0 과 구분 (관통 분류 = 1) ·
+     배포 빈칸 코드 `NA_MODEL_LIMIT` · 높은 q 로 빠진 값은 무작위 결측이 아니다 (남은 행만으로 코호트 전체를 대표한다고 쓰지 않는다 · 비교는 쌍대응 수 · 제외 사유를 밝힌다) · README 의 Codex Q3 권장 문구는 이 검사가 실제 통과한 뒤에만.
+  ⑤ **Hertz 주 타깃** — H0 모형 한계 행 = 진단 레코드 (게시 · 인계표 행 유지) · **v1.3 주 타깃 배포 HOLD** (`lhs_release_build.v13_primary_model_limit_problems` — 실제 빌드 거부 · `check_v13` 문제 · 진단 · dry-run 묶음은 경고로만) ·
+     Physics · H12 · 0 · 1.5 대체 금지 · 행 삭제 금지 · 주 타깃 결측을 허용하는 마스크 부분 배포 = 별도 등록 · 1저자 결정 · 집계 · 학습 규약.  Physics · H12 만 모형 한계 = 레코드 게시 · 부록 공란.
+  ⑥ **결과 보고 (C9)** — Hertz 주 타깃 가용 수와 Physics 모형 한계 수를 따로 (배포 README 상태 집계 = 모형 한계 별도 줄 · 재적합 제외 사유 `NOT_COMPUTED:full_over_conduction`) · 입력 영수증 ≠ 결과 완료 증서.
+  ⑦ **발사 (B7)** — 새 code_fp 하나로 두 새 ROOT (194 · 보충 20) · fast16 · real4 · 전체 사전 점검 로그 + 완료 영수증 · §2 손 대조 · 1저자 발사 승인 · 10-14 ROOT 는 지우지 않는다.  ⚠ 이 초안은 등록 기대의 개정안이다 — 비준 · 발사 승인을 대신하지 않는다 · S3 = 별개 (봉인 수치 모듈 둘이 바뀜 → S3 재봉인 의무 · S3 HOLD 그대로).

@@ -1,0 +1,16 @@
+[Storage] NOT configured - SUPABASE_URL=False SUPABASE_KEY=False
+[Security] WARNING: auth OFF - local/private only. For public deploy set WEBAPP_REQUIRE_AUTH=1 + WEBAPP_AUTH_TOKEN.
+[list_cases] ⚠ 깨진 meta.json — 기본값으로 표시: /tmp/tmpn9vwumo_/uploads/260925_000003_trunc/meta.json (JSONDecodeError: Unterminated string starting at: line 3 column 11 (char 27))
+[list_cases] ⚠ 깨진 meta.json — 기본값으로 표시: /tmp/tmpn9vwumo_/uploads/260925_000002_empty/meta.json (JSONDecodeError: Expecting value: line 1 column 1 (char 0))
+  PASS  ① list_cases 가 깨진 meta.json 에서 죽지 않는다
+  PASS  ①b 세 케이스가 모두 목록에 있다 (깨진 것도 사라지지 않는다)
+  PASS  ①c 깨진 둘은 status meta_broken · 이름 = 폴더 id
+  PASS  ①d 멀쩡한 케이스는 그대로 읽힌다
+[list_cases] ⚠ 깨진 meta.json — 기본값으로 표시: /tmp/tmpn9vwumo_/uploads/260925_000003_trunc/meta.json (JSONDecodeError: Unterminated string starting at: line 3 column 11 (char 27))
+[list_cases] ⚠ 깨진 meta.json — 기본값으로 표시: /tmp/tmpn9vwumo_/uploads/260925_000002_empty/meta.json (JSONDecodeError: Expecting value: line 1 column 1 (char 0))
+  PASS  ② / 가 200 (옛 판 500) — 200
+  PASS  ③ meta.json 을 제자리 open(…, 'w') 로 쓰는 줄이 없다 
+  PASS  ④ 원자적 쓰기가 중간에 실패하면 예외가 올라오고 옛 파일은 그대로
+  PASS  ④b 임시 파일이 남지 않는다
+
+test_meta_json_robust: 8 PASS / 0 FAIL

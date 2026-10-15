@@ -1,0 +1,27 @@
+[Storage] NOT configured - SUPABASE_URL=False SUPABASE_KEY=False
+[Security] WARNING: auth OFF - local/private only. For public deploy set WEBAPP_REQUIRE_AUTH=1 + WEBAPP_AUTH_TOKEN.
+① 실 생산자 → 망 정지 계약 → 게시
+  PASS ①a done — 망 정지 계약 통과 (⑥b 망 소유 키 = 이번 세대 투영 · 새 표기 키 포함) (done)
+  PASS ①b ★ full_metrics psi_placement_physics = multiply = 생산자 기본 = dual physics 기록 ('multiply')
+  PASS ①c physics_resistance_model = mikic (옛 도장 그대로 · 세대 표기는 그 옆 키) ('mikic')
+  PASS ①d ★ 활성 도장 (network_provenance.json) psi_placement_physics = multiply · run id = 이번 실행 ('multiply')
+  PASS ①e 도장은 솔버 출력에서 읽는다 — 세대 1 dual → legacy_divide · dual 없음 → None ('legacy_divide' · None)
+② 망 소유 키
+  PASS ② psi_placement_physics ∈ NET_MERGE_KEYS (세대마다 걷어내고 다시 채운다) · 원천 = physics 미러 psi_placement
+④ τ 인계 메타 (같은 폴더)
+  PASS ④ case_row — 협착 'mikic_psi_multiply' · ψ 'multiply' · 상태 'OK' (세대 2 = mikic_psi_multiply · multiply · OK)
+③ 옛 세대 산출물을 다시 투영 (메모리 · 쓰지 않는다)
+  PASS ③a 세대 1 dual (legacy_divide) → 투영 psi_placement_physics = legacy_divide ('legacy_divide')
+  PASS ③b ψ 기록 없는 옛 dual (09-15 전) → 투영에 psi_placement_physics 키 없음 (지금 full_metrics 의 multiply 가 남지 않는다 · 디스크 full_metrics = 'multiply')
+⑤ ★ 세대 2 표기 · H12 민감도 레코드 (10-06 저녁)
+  PASS ⑤a full_metrics 표기 = dual Hertz 기록 (전극 · bulk · physics 면적 규칙) · 망 소유 키 ({'electrode_model': 'dirichlet_exact', 'bulk_model': 'cylinder_half_d', 'area_rule_physics': 'physics_g2'})
+  PASS ⑤b 활성 도장 — electrode_model · area_rule_physics · hertz_h12 ({'electrode_model': 'dirichlet_exact', 'area_rule_physics': 'physics_g2', 'hertz_h12': True})
+  PASS ⑤c H12 레코드 = Hertz 레코드 안 (dual · legacy · hertzian 모드 파일 같은 사본) · 짝 메타 · τ 상태 'OK' · σ ≠ H0
+  PASS ⑤d 양성 대조 — 바꾸지 않은 복사본은 망 정지 계약 통과 (ok)
+  PASS ⑤e H12 없음 (세대 2 Hertz 레코드) → 망 정지 계약 거부 · 사유 = ⑨/⑦ τ 인계 뿐 (⑦ τ 인계 hertz: NOT_COMPUTED (invalid_input: 세대 계약 (G2R-01 · 02): hertz_h12: 세대 2 Hertz 레코드에)
+  PASS ⑤f H12 σ_full_mScm ×4 (σ_ratio 그대로 — 두 표현 항등식 깨짐) → 망 정지 계약 거부 · 사유 = ⑨ 뿐 (⑨ H12: 기술적 입력 무효 — invalid_input: 두 σ 표현 불일치 (RGLR-02): σ_dim 0.06162 mS/cm ≠ 1000·σ₀·σ_ra)
+  PASS ⑤g H12 bulk = 원기둥 (짝 메타 어긋남 — ψ 단독 H1 은 기각) → 망 정지 계약 거부 · 사유 = ⑨/⑦ τ 인계 뿐 (⑦ τ 인계 hertz: NOT_COMPUTED (invalid_input: 세대 계약 (G2R-01 · 02): hertz_h12: H12 (ψ 곱 협착 + 구)
+  PASS ⑤h 모드끼리 전극 섞임 (physics = virtual_source_legacy) → 망 정지 계약 거부 · 사유 = ⑨/⑦ τ 인계 뿐 (⑦ τ 인계 hertz: NOT_COMPUTED (invalid_input: 세대 계약 (G2R-01 · 02): physics: 세대 2 physics (ψ 곱)
+  PASS ⑤i 표기 없는 옛 legacy → 투영에 electrode_model · bulk_model · area_rule_physics 키 없음 ({'electrode_model': '키 없음', 'bulk_model': '키 없음', 'area_rule_physics': '키 없음'})
+
+test_psi_generation_stamp: 18/18 PASS

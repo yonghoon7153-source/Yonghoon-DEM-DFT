@@ -1,0 +1,190 @@
+[U] 조작판 배선
+  PASS  U1 DEM View Mode 에 "Tortuosity 후보 경로 (여럿 …)" (value tau_paths) · MPM 엔 없음 (Tortuosity 후보 경로 (여럿 · τ 색))
+  PASS  U2 모드를 바꾸면 후보 경로 관을 걷는다 (applyViewMode 앞머리 · default 분기보다 먼저 _teardownTauPaths)
+  PASS  U2b applyViewMode 의 tau_paths 분기가 renderTauPaths 를 부른다
+  PASS  U3 DEM 조작판에 "All Paths View" 단추 (data-action tauPathsView · Path Only View 옆)
+  PASS  U3b wireControls — action 'tauPathsView' → showTauPathsView(state)
+  PASS  U4 Percolating Path 조작 (path-controls · Force Chain 앞) 안에 "모든 후보 경로" 단추 (id path-all)
+  PASS  U4b 그 단추 = tauPathsShowCluster(state, state.currentClusterIdx) (화면에서 고른 클러스터)
+[F] 순수 함수 (node)
+  PASS  F0 viewer3d.js 에서 tauPathsCollect · tauPathT · tauPathColor · tauPathPieces · tauPathsTicks · tauPathsColorbarSpec · tauPathsLegendHtml · tauPathsPngName · TAUP_RAMP · TAUP_TOPS · TAUP_DEF_TXT · TAUP_SAMPLE_TXT 를 잘라 냈다
+  PASS  F0b node 실행
+  PASS  F1 범위 "모든 관통 클러스터" = 관통 클러스터 두 개 (0 · 2) 의 저장 경로 전부 6 개 · τ 오름차순 · 비관통 (1) 은 없다
+  PASS  F1b τ 범위 = 고른 경로의 최소 · 최대 (1.01 – 1.09) · 금색 = 가장 작은 τ (클러스터 0 · 경로 0 · τ 1.01)
+  PASS  F1c 범위 목록 = 관통 클러스터마다 (번호 · SE 수 · 저장 경로 수) — 고르기 단추에 쓴다
+  PASS  F1d 옵션 없음 = 모든 관통 클러스터 · 경로 전부 (기본)
+  PASS  F2 범위 "클러스터 #2" = 그 클러스터 경로 2 개 · 금색 = 그 안의 가장 작은 τ
+  PASS  F3 τ 작은 3 개 = 전체에서 τ 가장 작은 셋 ([1.01, 1.02, 1.03] = [1.01, 1.02, 1.03])
+  PASS  F3b 비관통 클러스터를 고르면 0 개 · 범위 없음 (null) · 고를 수 있는 관통 클러스터 목록은 그대로
+  PASS  F3c 클러스터가 없으면 0 개
+  PASS  F3d 쓸 수 없는 경로 (id 하나 · τ 숫자 아님 · ids 없음) 는 빼고 센다 (nSkipped 3)
+  PASS  F3e 옛 형식 (paths 없이 path 하나) 도 그 경로 하나로
+  PASS  F3f τ 동률이면 먼저 나온 경로가 금색 (안정 정렬)
+  PASS  F4 색 축 t = (τ − 최소)/(최대 − 최소) · [0, 1] 로 자른다 · 범위가 한 점이면 0.5 [0, 1, 0.5, 0, 1, 0.5]
+  PASS  F5 색 램프 = 한 색상 (파랑) 순차 · 끝 = 램프 끝 (밝음 #86b6ef → 어두움 #0d366b) · 기준 팔레트 단계 250…700
+  PASS  F5b 휘도가 τ 를 따라 엄격히 줄어든다 (큰 τ = 더 어둡게 — 21 점)
+  PASS  F5c 파랑 계열 — 모든 점에서 B > G > R (금색 강조와 섞이지 않는다)
+  PASS  F5d 범위 밖 · NaN 은 끝 색 (밝은 끝 · 어두운 끝 · 밝은 끝)
+  PASS  F6 straight: 조각 좌표 = 파이썬 기준 구현 (1 조각 · 주기 넘음 0 · 모르는 id 0)
+  PASS  F6 straight_u: 조각 좌표 = 파이썬 기준 구현 (1 조각 · 주기 넘음 0 · 모르는 id 0)
+  PASS  F6 xwrap: 조각 좌표 = 파이썬 기준 구현 (2 조각 · 주기 넘음 1 · 모르는 id 0)
+  PASS  F6 xwrap_u: 조각 좌표 = 파이썬 기준 구현 (1 조각 · 주기 넘음 1 · 모르는 id 0)
+  PASS  F6 corner: 조각 좌표 = 파이썬 기준 구현 (2 조각 · 주기 넘음 1 · 모르는 id 0)
+  PASS  F6 corner_u: 조각 좌표 = 파이썬 기준 구현 (1 조각 · 주기 넘음 1 · 모르는 id 0)
+  PASS  F6 missing: 조각 좌표 = 파이썬 기준 구현 (2 조각 · 주기 넘음 0 · 모르는 id 1)
+  PASS  F6 missing_u: 조각 좌표 = 파이썬 기준 구현 (2 조각 · 주기 넘음 0 · 모르는 id 1)
+  PASS  F6 missEnd: 조각 좌표 = 파이썬 기준 구현 (1 조각 · 주기 넘음 0 · 모르는 id 1)
+  PASS  F6 missEnd_u: 조각 좌표 = 파이썬 기준 구현 (1 조각 · 주기 넘음 0 · 모르는 id 1)
+  PASS  F6 single: 조각 좌표 = 파이썬 기준 구현 (0 조각 · 주기 넘음 0 · 모르는 id 0)
+  PASS  F6 single_u: 조각 좌표 = 파이썬 기준 구현 (0 조각 · 주기 넘음 0 · 모르는 id 0)
+  PASS  F6b 주기 경계를 넘는 홉 = 반 토막 둘 — 첫 조각은 x = 20 (상자 면) 에서 끝나고 다음 조각은 x = 0 에서 시작 (상자를 가로지르는 긴 관 없음)
+  PASS  F6c 펼침 (unwrap) = 한 조각 · 홉이 이어진다 (x 19.7 → 20.3 · y 19.6 → 20.5)
+  PASS  F6d 모르는 id 에서 관을 끊는다 (이어 그리지 않는다) · 점 하나만 남은 조각은 버린다
+  PASS  F7 경로 길이 (최소상 홉 합) ÷ 양 끝 z 거리 = 저장된 τ (analyze_contacts.py 의 식) — 범례 · 컬러바가 말하는 정의가 참
+  PASS  F7b 펼침 · 반 토막 어느 쪽이든 길이 · 홉 수는 같다 (그림만 다르다)
+  PASS  F8 컬러바 눈금 — 끝 = 실제 최소 · 최대 (소수 둘째) · 모두 5 개 이하 (7–8 개는 많다) · 서로 0.15 이상 · 안쪽은 1·2·5 간격 · 꼬리 0 없음
+  PASS  F8b real_14 범위 (1.35 – 2.08) 눈금 = ['1.35', '1.5', '2.08']
+  PASS  F9 컬러바 스펙 — 색 함수 = 관 색 (tauPathColor) · 영문 제목 (Geometric tortuosity · path length / Δz) · 눈금
+  PASS  F9b 컬러바 부제 — τ_Dij 와 같은 정의 · 수송 tortuosity 아님 · 경로 수 · 금색 = 가장 작은 τ (그림 캡션 오기 방지)
+  PASS  F10 범례 — τ 정의 한 줄 (SE 중심 길이 ÷ 양 끝 z 거리 · 표의 τ_Dij 와 같은 정의 · 수송 tortuosity 아님 · tortuosity_SE_wall 과 다름)
+  PASS  F10b 범례 — 표본이라는 것 (클러스터마다 최대 30 · 낮은 τ 10 · 평균 근처 10 · 높은 τ 10 · τ 분포의 대표 표본 아님)
+  PASS  F10c 범례 — 경로 수 · 클러스터 수 · τ 범위 (1.01 – 1.09) · 금색 = 가장 작은 τ
+  PASS  F10d 범례 컬러바 = 같은 램프의 CSS 그라디언트 (밝음 → 어두움)
+  PASS  F10e 범례 — 주기 경계를 넘는 홉 수 (반 토막) · 모르는 id 경고 (있을 때만)
+  PASS  F10f 범례 조작 — 범위 · τ 작은 N · SE 불투명도 · AM 불투명도 · 관 굵기 · 끝점 · 컬러바 ⬇ · 그림 창
+  PASS  F10g 범위 고르기 = 모든 관통 클러스터 + 클러스터마다 (번호 · SE 수 · 경로 수)
+  PASS  F10h N 고르기 = 경로 전부 · τ 작은 5 · 10 · 20
+  PASS  F10i 범례 — Screenshot 에는 범례 · 컬러바가 안 들어간다 · 컬러바는 따로 · 그림 창 PNG
+  PASS  F10j 경로가 없으면 그렇다고 말한다 (관통 클러스터 · se_clusters.json 경로 없음)
+  PASS  F11 PNG 파일 이름 = tau_paths_n<경로 수>_tau<최소>-<최대>.png (['tau_paths_n6_tau1.01-1.09.png', 'tau_paths_n2_tau1.02-1.09.png'])
+  PASS  F12 exportColorbarPNG · fitTextLines · jetColor · coolwarmColor 를 잘라 냈다
+  PASS  F12b node 실행 (exportColorbarPNG)
+  PASS  F12c 컬러바 PNG — spec.colorFn 이 있으면 그 색으로 막대를 칠한다 (첫 칸 #86b6ef · 끝 칸 #0d366b = ['#86b6ef', '#0d366b']) · 파일 이름
+  PASS  F12d 대조 — colorFn 없는 옛 스펙 (jet) 은 그대로 jet 색
+[R] 그리기 (THREE 껍데기)
+  PASS  R0 그리기 함수 (buildTauPathsGroup · renderTauPaths · _teardownTauPaths · _tauPathsFade · _tauPathsWire · tauPathsShowCluster) · TAUP_DEFAULT_OPT 를 잘라 냈다
+  PASS  R0b node 실행 (renderTauPaths)
+  PASS  R1 모든 후보 경로 6 개를 한 번에 — 원기둥 = 그릴 홉 수 (보통 16 + 금색 2 · 주기 넘음은 반 토막 둘)
+  PASS  R1b 관 이음매 (구) = 조각 점마다 — 굽은 자리가 끊겨 보이지 않는다
+  PASS  R2 경로마다 한 색 (경로 안의 원기둥은 같은 색)
+  PASS  R2b 색 순서가 τ 를 따른다 — τ [1.02, 1.03, 1.05, 1.09, 1.09] 순으로 휘도 감소 (큰 τ = 어둡게 · 같은 τ = 같은 색)
+  PASS  R2c 경로 색 = tauPathColor((τ − 최소)/(최대 − 최소)) — 끝 경로 (가장 큰 τ) = 램프의 어두운 끝 #0d366b
+  PASS  R3 가장 작은 τ (1.01 · 클러스터 #0) = 금색 (COL.PATH) · 빛남 · 보통 관보다 굵게 (1.8 배)
+  PASS  R3b 보통 관 굵기 = 상자 폭 × 0.0045 (20 µm 상자 → 0.09 µm) · 경로마다 같다
+  PASS  R4 상자를 가로지르는 긴 관이 없다 — 가장 긴 원기둥 < 상자 반폭 (주기 넘음 = 양쪽 면 반 토막)
+  PASS  R4b 원기둥 위치 = data (x, y, z) → three (x, z, y) · 중점 · 길이 = 홉 길이
+  PASS  R5 SE 흐리게 (불투명도 0.08 · 깊이 쓰기 끔 · 본래 색으로 다시 칠함) · AM 흐리게 (0.12) · 판 메시 숨김 · 한 경로 관 숨김
+  PASS  R5b 단면 뷰 다시 적용 (applyClip) · PNG 에서 빠지는 장식이 아님 · 시야 밖 잘림 끔 · 장면에 붙음
+  PASS  R5c 기본 옵션 = 모든 관통 클러스터 · 경로 전부 · SE 0.08 · AM 0.12 · 굵기 1 · 끝점 끔
+  PASS  R5d 범례가 붙는다 (정의 문구 포함)
+  PASS  R6 다시 그려도 관 묶음은 하나 · 옛 묶음 GPU 자원 해제
+  PASS  R7 범위 → 클러스터 #2 = 그 경로 둘만
+  PASS  R7b τ 작은 3 개 = 전체 τ 가장 작은 셋만
+  PASS  R8 SE · AM 불투명도 막대 = 재질만 바꾼다 (관 묶음 그대로) · AM 0 = 숨김 · 값 표시
+  PASS  R9 관 굵기 막대 (2 배) = 다시 짓는다 · 보통 관 0.18 µm · 값 표시 2.0×
+  PASS  R9b 굵기 막대 · 끝점은 관만 다시 짓는다 — 범례를 다시 쓰지 않아 끄는 막대가 손에서 빠지지 않는다
+  PASS  R10 끝점 켬 = 경로마다 바닥 (청록) · 위 (빨강) 구 둘 (12 = 2 × 6)
+  PASS  R11 컬러바 ⬇ = exportColorbarPNG(tauPathsColorbarSpec(…), "colorbar_tau_paths.png") · 그림 창 단추 = showTauPathsView
+  PASS  R11b 조작 듣개는 범례마다 한 번 (다시 그려도 쌓이지 않는다)
+  PASS  R12 걷기 = 관 묶음 제거 · SE · AM 재질 되돌림 (처음 값 · AM 을 숨긴 채 떠나도 다시 보임) · 한 경로 관 다시 보임
+  PASS  R13 "모든 후보 경로" 단추 = 화면의 클러스터로 범위를 정하고 View Mode 를 tau_paths 로 바꾼다 (change 사건)
+  PASS  R13b 고른 클러스터가 없으면 모든 관통 클러스터
+  PASS  R13c 없는 클러스터 번호가 남아 있으면 모든 관통 클러스터로 그린다 (빈 그림 대신)
+  PASS  R14 저장 경로가 없는 케이스 — 관 없음 · 범례가 그렇다고 말한다
+[M] 그림 창 (All Paths View)
+  PASS  M0 showTauPathsView 를 잘라 냈다
+  PASS  M0b node 실행 (showTauPathsView)
+  PASS  M1 창이 열린다 — 정보 줄 = 경로 6 개 · 관통 클러스터 2 개 · τ 1.01 – 1.09 · 금색 = 가장 작은 τ
+  PASS  M1b 창에도 τ 정의 · 표본 문구 (표의 τ_Dij 와 같은 정의 · 수송 tortuosity 아님 · tortuosity_SE_wall · 최대 30)
+  PASS  M1c 창의 장면 (기본 주기 경계 = 셀 옮김) = 경로마다 이어 그린 관 (보통 + 금색 원기둥 16 = 홉 수 · 금색 2 · 반 토막 없음) · 이음매 · SE 맥락 (불투명도 0.08 · 메인 막대 값) · AM 맥락 · 상자 테두리
+  PASS  M1d 창 조작 — PNG 다운로드 · 컬러바 PNG · SE 맥락 (켬 · 불투명도) · AM · 주기 경계 (고르기 — 옛 "주기 펼침" 체크박스는 없다) · 끝점 · 컬러바 넣기
+  PASS  M1e "컬러바 넣기" 는 기본 꺼짐 (랩 원칙: 범례 · 주석은 그림 밖 · 편집 가능하게 — docs/report_making_principles.md §2)
+  PASS  M2 PNG 다운로드 = 투명 배경 (지우기 알파 0 · 배경 없음) · 4× · 축 글자 숨김 · 이름 tau_paths_n6_tau1.01-1.09.png
+  PASS  M2b 컬러바 넣기 켬 = 찍은 그림 + 컬러바 합성본을 저장 (tauPathsCompositePNG)
+  PASS  M3 컬러바 PNG 단추 = 따로 받는 컬러바 (exportColorbarPNG · colorbar_tau_paths.png)
+  PASS  M4 주기 경계 = 이어 그림 (옛 "주기 펼침") = 관을 다시 짓는다 — 넘는 홉도 하나로 (원기둥 16 · 반 토막 없음) · 상자 밖으로 나간다 (허용 · x 또는 y > 20)
+  PASS  M5 저장 경로가 없으면 창을 열지 않고 안내만
+[C] 컬러바 넣은 PNG 합성
+  PASS  C0 tauPathsCompositePNG 를 잘라 냈다
+  PASS  C0b node 실행
+  PASS  C1 합성본 = 찍은 그림 (2800×2000) 을 (0, 0) 에 그대로 + 오른쪽에 컬러바 칸 (폭 3408 > 2800 · 높이 같음)
+  PASS  C2 세로 막대 — 위 = 큰 τ (어두운 끝 #0d366b) · 아래 = 작은 τ (밝은 끝 #86b6ef) · 그림 칸에는 칠하지 않는다
+  PASS  C3 눈금 라벨 = 컬러바 스펙 눈금 (['1.01', '1.05', '1.09']) · 제목 = 짧은 영문 (Geometric τ · path length / Δz)
+[P] 2판 순수 함수 — 고르기 · 갱신 · 접기 · 셀 맞춤 · 입자 접기 · PNG 맞춤 · 정보 줄 (node)
+  PASS  P0 viewer3d.js 에서 tauPathsRng · tauPathsPick · tauPathsRefreshSeed · tauPathsViewCol · tauPathsCellFit · tauPathsFoldPieces · tauPathsWrapParticles · tauPathsFrustumFit · tauPathsViewInfoHtml · figFrameGroup · figContextMeshes · figCapturePNG · figPngNote · TAUP_VIEW_DEF 를 잘라 냈다
+  PASS  P0b node 실행
+  PASS  P0c 그림 창 기본 TAUP_VIEW_DEF — 경로 수 [5 · 10 · 15 · 20 · 30 · 0 = 전부] · 주기 경계 셋 (cell · fold · unwrap · 이름) · 격자 360 · 여유 0.05 L · NDC 여백 0.04 (파이썬 기준 구현과 같은 값)
+  PASS  P1 τ 작은 순 3 개 = τ 가장 작은 셋 ([1.01, 1.02, 1.03]) · 경로 전부 아님 · seed 없음 (지금 판 그대로)
+  PASS  P2 무작위 3 개 — 같은 seed = 같은 집합 (['2:0', '0:2', '2:1']) · τ 오름차순 · 저장 경로에서만 · seed 를 돌려준다
+  PASS  P2b seed 를 바꾸면 집합이 바뀐다 — seed 1…200 에서 서로 다른 집합 20 개 (C(6,3) = 20 중 ≥ 10) · 경로 6 개가 다 한 번은 뽑힌다
+  PASS  P2c 경로 수 0 (= 전부) · 고를 수 있는 수 이상 (30 · 6) = 경로 전부 (무작위를 골라도 τ 순 같은 집합 · seed 없음 · 다른 조합 없음)
+  PASS  P2d 난수 (mulberry32) — 같은 seed = 같은 수열 · [0, 1) · 고르게 흩어짐 (50 개 중 서로 다른 값 ≥ 45)
+  PASS  P3 ↻ 갱신 = 지금 보이는 집합과 다른 집합이 나오는 다음 seed (4 → 5) · 경로 전부면 다른 조합 없음 (seed + 1 · changed 거짓) · τ 작은 순에서 눌러도 다른 집합 (2)
+  PASS  P4 창 고르기 (τ 작은 순 3) — 경로 3 개 · τ 1.01 – 1.03 · 금색 = 범위의 가장 작은 τ (1.01) · 범위 6 개 · 경로 전부 아님
+  PASS  P4b 무작위 (seed 1 — 범위의 가장 작은 τ 가 빠진 집합) — 금색 = 이 그림 안에서 가장 작은 τ ([2, 0, 1.02]) · 범위 최소 (1.01) 와 다르다고 표시
+  PASS  P4c 무작위 정보 줄 — "금색 = 이 그림 안에서 가장 작은 τ" · 범위 전체의 가장 작은 τ 는 이 그림에 없다 (값과 함께) · 무작위 · seed
+  PASS  P4d 무작위 집합에 범위 최소가 들면 (seed 5) "범위 전체의 가장 작은 τ 와 같다"
+  PASS  P4e 경로 수 = 전부 + 무작위 = 경로 전부 (다른 조합 없음) — 실제 고르기 = τ 순 · 원한 고르기 = 무작위 · seed 없음 · PNG 이름에 _rand 없음
+  PASS  P4f 없는 범위 (클러스터 #7) = 모든 관통 클러스터 (창 안에서만) · 범위 #2 = 그 경로 둘 (경로 수 5 ≥ 2 = 전부) · 범위 목록은 그대로
+  PASS  P5 컬러바 부제 = 고른 집합 — 무작위 "3 of 6 stored candidate paths (random subset, seed 1) · gold = lowest τ in this figure" · τ 작은 순 "3 lowest-τ of 6" · 전부 "6 stored candidate paths" · 셋 다 수송 tortuosity 아님
+  PASS  P5b PNG 이름 — 무작위 = …_rand1.png (이어 받아도 덮어쓰지 않게) · τ 작은 순 · 전부 = 옛 이름 그대로
+  PASS  P6 이어 그린 조각 (tauPathPieces unwrap) = 파이썬 기준 (접기의 입력)
+  PASS  P6b 접기 = 파이썬 기준 구현 (조각 좌표 1e-12 · 자른 곳 수) — 경로 6 + 넓은 경로 × 셀 셋 (원래 · 옮긴 −1.44 · +2)
+  PASS  P6c 접기 성질 — 모든 점이 닫힌 셀 안 · 길이 합 그대로 (자르기만) · 이웃 조각 = 같은 점의 다른 상 (격자 벡터) 이고 그 점은 면 위 (반 토막 · 긴 관 없음)
+  PASS  P6d 원래 셀 — x 면을 넘는 홉 = 두 조각 (x = 20 에서 끝 · x = 0 에서 시작) · 모서리 홉 = 세 조각 (x · y 면 차례로 · 자른 곳 2) · y > 20 인 점 없음
+  PASS  P6e 셀보다 넓은 경로 (x 폭 36) 를 셀 [2, 22) 에 = 두 조각 (x = 22 에서 잘라 x = 2 에서 잇는다) · 길이 그대로
+  PASS  P6f 접기 가장자리 — 면에 닿고 돌아감 = 자르지 않음 · 정확한 모서리 (x · y 같은 t) = 한 번만 자름 · 면 위 꼭짓점에서 넘어감 = 그 점에서 · 왼쪽으로 넘음 · 비주기 축 (L 0) 은 접지 않음
+  PASS  P7 셀 맞춤 (경로 6) = 파이썬 기준 구현 — 옮김 (-1.4444, -1.4444) = (-1.4444, -1.4444) · 그 자리 밖 길이 0 · 옮기지 않으면 밖 길이 > 0 (x 2.315 · y 0.933 µm) · 면 여유 ≥ 0.05 L
+  PASS  P7b 맞춘 셀에서는 접어도 자를 곳이 없다 (경로 6 개 모두 한 조각 — 셀 옮김이 목적을 이룬다 · 원래 셀은 3 곳)
+  PASS  P7c 원래 셀에 여유 있게 다 들어가면 옮기지 않는다 (범위 #2 → 0 · 0)
+  PASS  P7d 셀보다 넓은 경로 — 기준 구현과 같은 자리 (x +2.00 · y 0.00) · 밖 길이가 남는다 (접어야 한다) · 넓은 경로 1 개로 센다
+  PASS  P7e 경로가 없으면 옮기지 않는다
+  PASS  P7f 무작위 대조 6 묶음 (걸음 폭 1–9 µm · 셀보다 넓은 경로 21 · 좌표가 그대로인 홉 = 점 무게 · 끊긴 조각) — 뷰어 (누적 길이 표 · 이분 탐색) = 파이썬 기준 (홉마다 자르기) : 자리 · 밖 길이 · 옮기지 않을 때 밖 길이 (옮긴 축 10)
+  PASS  P8 맥락 입자를 맞춘 셀 안으로 — x · y 가 반열린 셀 [x0, x0 + L) 안 · 원래 자리와 격자 벡터만큼 차이 · z 그대로 · 셀 안이던 입자는 같은 객체
+  PASS  P8b 원래 셀 · 모두 안 = 같은 배열 (다시 짓지 않는다) · 셀 밖 중심 (20.3, −0.2) → (0.3, 19.8) · 원본 입자는 고치지 않는다
+  PASS  P9 PNG 맞춤 — 상자 안 가까운 시점 (꼭짓점이 뒤 · 화면 밖 = NDC inf) → 시선 방향으로만 뒤로 (0.87 → 36.02) · 파이썬 투영으로 모든 꼭짓점 |NDC| ≤ 1 − 0.04 (가장 바깥 = 0.960000 · 딱 맞게)
+  PASS  P9b 이미 다 보이면 움직이지 않는다 (당기지도 않는다) · 카메라 뒤의 점 → 앞으로 들도록 뒤로 · 위에서 똑바로 내려다봐도 (up ∥ 시선) 유한한 답
+  PASS  P10 정보 줄 (셀 옮김) — 경로 6 개 (범위의 경로 전부 · 다른 조합 없음) · "x·y 주기 단위 셀을 −1.44 µm · −1.44 µm 옮겨 그림 (같은 침대 · 같은 크기 — 주기 경계라 동등)"
+  PASS  P10b 옮김 0 이면 셀 옮김 문구 없음 · 넓은 경로 = "셀에 다 담기지 않는 경로 1 개 = 면에서 잘라 반대 면으로" · +2.00 µm · 0 µm
+  PASS  P10d 정보 줄 — 출발 (바닥) SE · 도착 (위) SE 의 서로 다른 수 (경로가 바닥 몇 점으로 모여 보이는 까닭 = 저장 표본 · 갱신이 바꾸지 못한다) — 전부 4 → 4 · τ 작은 셋 3 → 3
+  PASS  P10c 원래 셀 (fold) = "주기 경계를 넘는 경로 2 개 = 면에서 잘라 반대 면으로 이음 (3 곳 · 상자 안)" · 이어 그림 = 상자 밖 안내 · τ 작은 순 = 금색 = 가장 작은 τ
+[W] 2판 그림 창 — 고르기 · 갱신 · 주기 경계 · PNG 맞춤 (조작을 실제로 누른다)
+  PASS  W0 node 실행 (showTauPathsView · 조작 사건 · PNG 셋 · 창 셋)
+  PASS  W1 창 조작 — 범위 (모든 관통 클러스터 + 클러스터마다 · 메인 범례와 같은 이름) · 경로 수 [5 · 10 · 15 · 20 · 30 · 전부] (처음 = 메인 값 · 전부) · 고르기 [τ 작은 순 · 무작위] · ↻ 갱신 (다른 경로) · 주기 경계 셋 (셀 옮김 기본) · PNG 잘림 없게 맞춤 (기본 켬)
+  PASS  W2 기본 (셀 옮김) — 상자 · 격자 · 축 글자 = 맞춘 셀 (x −1.44 µm · y −1.44 µm · 파이썬 기준과 같다) · 그린 점 (이음매 · 끝점 · 원기둥 양 끝) 전부 그 상자 안 · 면에서 자른 곳 없음 (원기둥 16 · 이음매 22 · 끝점 12)
+  PASS  W2b 정보 줄이 셀 옮김을 말한다 — "x·y 주기 단위 셀을 … µm · … µm 옮겨 그림 (같은 침대 · 같은 크기 — 주기 경계라 동등)" (값 = 그린 셀)
+  PASS  W2c 맥락 SE = 그 셀 안으로 접힌 자리 (반열린 셀) · 경로 이음매 = 접힌 SE 중심 그대로 (관이 입자를 꿴다) · 그려진 경로 = 저장 경로 6 개
+  PASS  W2d 시점 = 그린 셀 기준 (주시점 = 상자 가운데 — 셀을 옮긴 만큼 시점도 옮겨 상자가 창에서 제자리)
+  PASS  W3a PNG (기본 시점) — 상자 꼭짓점 · 경로 · 끝점이 모두 화면 안 (|NDC| ≤ 1 − 0.04 · 파이썬 투영)
+  PASS  W3b PNG 맞춤 — 상자 안 가까운 시점 (내용이 화면 밖) 에서 눌러도 시선 방향으로만 뒤로 물러나 찍는다 → 모두 화면 안 (|NDC| ≤ 1 − 0.04) · 찍은 뒤 시점 그대로 · 안내 ("배 멀리서")
+  PASS  W3c "PNG 잘림 없게 맞춤" 끔 = 화면 시점 그대로 찍는다 (같은 가까운 시점 → 잘린다 · 안내가 그렇다고 말한다)
+  PASS  W4 경로 수 3 (창 안에서 · 다시 열지 않고) — 그려진 경로 = τ 작은 셋 · 머리 "3 개" · 정보 줄 "경로 3 개 (범위의 6 개 중 τ 작은 순)" · τ 1.01 – 1.03 · PNG 이름 n3 (무작위 표지 없음)
+  PASS  W5 ↻ 갱신 1 (τ 작은 순에서) = 고르기가 무작위로 · 다른 세 경로 (그 자리에서) · 머리 "3 개" · 정보 줄 seed · 금색 = 이 그림 안에서 가장 작은 τ · PNG 이름 _rand<seed> · 컬러바 넣은 합성본 = 그 집합의 스펙
+  PASS  W5b ↻ 갱신 2 = 또 다른 집합 · 다른 seed · 다른 PNG 이름 (덮어쓰지 않는다) · 컬러바 PNG 단추도 그때의 집합 스펙
+  PASS  W5c 고르기 = τ 작은 순 으로 되돌리면 τ 작은 세 경로 · 정보 줄 "τ 작은 순"
+  PASS  W6 범위 = 클러스터 #2 → 그 경로 둘 (경로 수 3 ≥ 2 = 경로 전부 · 다른 조합 없음) · 머리 "2 개" · 그 둘은 원래 셀에 여유 있게 들어가 셀을 옮기지 않는다 (상자 = 원래 자리)
+  PASS  W7 주기 경계 = 원래 셀 (fold) — 점 전부 원래 상자 [0, 20]² 안 (반 토막이 밖으로 나오지 않는다) · 넘는 홉 = 면에서 정확히 잘라 반대 면 (자른 곳 3 → 원기둥 19 · 이음매 28) · 면 위 점 (x 0 · 20 · y 0 · 20) · 상자 · 시점 = 원래 자리 · 정보 줄 "면에서 잘라 반대 면"
+  PASS  W8 주기 경계 = 이어 그림 (옛 펼침) — 원기둥 16 · 상자 밖으로 나간다 (허용) · 정보 줄이 그렇다고 말한다 · 상자 = 원래 자리
+  PASS  W9 그림만 다르다 — 그린 관 길이 합 (셀 옮김 · 원래 셀 · 이어 그림) = 저장 경로 길이 합 (55.8986 µm) · τ 범위 문구 같다
+  PASS  W9b 다시 셀 옮김 = 처음과 같은 셀 · 같은 관 · 같은 시점
+  PASS  W9c 상자 · 바닥 격자 끔 = 상자 안 보임 (PNG 맞춤도 상자 꼭짓점을 빼고 셈)
+  PASS  W10 창은 메인 옵션 객체를 고치지 않는다 (조작 전부 뒤 그대로) · 없는 범위 (#7) 로 열어도 창 안에서만 모든 관통 클러스터 (메인 옵션 #7 그대로)
+  PASS  W11 셀보다 넓은 경로 (x 폭 36 > 20) — 셀 (x +2.00 µm · y 0 µm) 을 맞춰도 다 못 담아 면에서 잘라 반대 면 (자른 곳 1 → 원기둥 7 · 이음매 9) · 점 전부 그 상자 안 · 길이 그대로 · 정보 줄 "셀에 다 담기지 않는 경로 1 개"
+[X] 변이 — 시험의 판별력 (변이한 뷰어에서 해당 W 시험이 FAIL 해야 한다)
+  PASS  X0 2판 그림 창 도우미가 있다 (변이 대상)
+  PASS  X1 셀 옮김 끔 (셀 맞춤이 늘 0 을 돌려줌) → W2 · W2b 가 FAIL 한다 ({'W2': False, 'W2b': False} · 다른 W 시험 FAIL 8)
+  PASS  X2 접기 = 옛 반 토막 (면에서 자르지 않고 최소상 변위의 절반) → W7 가 FAIL 한다 ({'W7': False} · 다른 W 시험 FAIL 8)
+  PASS  X3 무작위가 seed 를 무시 (늘 같은 수열) → W5b 가 FAIL 한다 ({'W5b': False} · 다른 W 시험 FAIL 0)
+  PASS  X4 PNG 맞춤 끔 (화면 시점 그대로 찍음 — 공용 figCapturePNG) → W3b 가 FAIL 한다 ({'W3b': False} · 다른 W 시험 FAIL 0)
+  PASS  X5 셀 맞춤 뒤 접기 생략 (이어 그린 조각 그대로) → W11 · W2 가 FAIL 한다 ({'W2': False, 'W11': False} · 다른 W 시험 FAIL 7)
+[D] /3d-data — 저장된 후보 경로가 뷰어 입력에 있다 (대조)
+[Storage] NOT configured - SUPABASE_URL=False SUPABASE_KEY=False
+[Security] WARNING: auth OFF - local/private only. For public deploy set WEBAPP_REQUIRE_AUTH=1 + WEBAPP_AUTH_TOKEN.
+  [3d-data] response: 0.00 MB
+  PASS  D1 /3d-data 200 · 클러스터 3 개 · 관통 클러스터 저장 경로 6 개 (ids · τ 그대로) · 상자 20 µm
+  PASS  D2 경로의 SE id 가 전부 입자 목록에 있다 (뷰어 idIndex 로 찾는다)
+[REG] check_all 배선
+  PASS  REG scripts/check_all.sh 가 이 시험을 돈다
+
+174 PASS · 0 FAIL
+ALL PASS

@@ -1,0 +1,52 @@
+[E] 그룹 표 최고값 강조 — 낮을수록 좋음 집합 ↔ 표 열 이름
+[Storage] NOT configured - SUPABASE_URL=False SUPABASE_KEY=False
+[Security] WARNING: auth OFF - local/private only. For public deploy set WEBAPP_REQUIRE_AUTH=1 + WEBAPP_AUTH_TOKEN.
+  PASS  E0 GROUP_DISPLAY_KEYS · GROUP_LOWER_BETTER · _group_best_marks 가 모듈 수준에 있다
+  PASS  E1 porosity 열이 표에 있고 낮을수록 좋음으로 판정
+  PASS  E1 porosity_union 열이 표에 있고 낮을수록 좋음으로 판정
+  PASS  E1 overlap_fraction_pct 열이 표에 있고 낮을수록 좋음으로 판정
+  PASS  E1 thickness_um 열이 표에 있고 낮을수록 좋음으로 판정
+  PASS  E1 se_se_cn_std 열이 표에 있고 낮을수록 좋음으로 판정
+  PASS  E1 am_am_cn_std 열이 표에 있고 낮을수록 좋음으로 판정
+  PASS  E1 am_vulnerable_pct 열이 표에 있고 낮을수록 좋음으로 판정
+  PASS  E1 tortuosity_mean 열이 표에 있고 낮을수록 좋음으로 판정
+  PASS  E1 stress_cv 열이 표에 있고 낮을수록 좋음으로 판정
+  PASS  E2 낮을수록 좋음 집합에 표에 없는 이름이 없다 (철자가 어긋나면 조용히 반대로 강조된다)
+  PASS  E3 se_se_cn 는 높을수록 좋음 (집합 밖)
+  PASS  E3 percolation_pct 는 높을수록 좋음 (집합 밖)
+  PASS  E3 coverage_AM_P_mean 는 높을수록 좋음 (집합 밖)
+  PASS  E4 ε_union 가장 낮은 행 (10.2) 이 강조 · 값 없는 행은 후보 아님
+  PASS  E5 SE–SE CN 가장 높은 행 (4.0) 이 강조
+  PASS  E6 모든 값이 같으면 강조 없음
+[F] physics → Hertz 대체 표지 — 등급 엔진 · 3D 뷰어
+  PASS  F0 등급 축 coverage_AM_P_mean_physics (대체 coverage_AM_P_mean) 가 있다
+  PASS  F1 physics 없음 → Hertz 값으로 채울 때 fallback_note 에 "Hertz" 표지
+  PASS  F2 같은 표지가 basis (툴팁 · 보고서) 에도 들어간다
+  PASS  F3 source_key = 실제로 읽은 키 (coverage_AM_P_mean)
+  PASS  F4 값은 그대로 (대체값 20.0 — 계산 불변)
+  PASS  F5 physics 가 있으면 표지 없음 · source_key = physics 키
+  PASS  F6 physics → physics 대체 (B3 없음) 는 표지를 달되 "Hertz" 라 부르지 않는다
+  PASS  F7 viewer3d_data.coverage_map_column 이 있다 (뷰어가 읽은 열을 알린다)
+  PASS  F8 physics 열 없음 → coverage_hertzian_pct
+  PASS  F9 둘 다 있으면 coverage_physics_pct
+  PASS  F10 파일 없음 → None
+  PASS  F11 build_coverage_map 값은 그대로 (physics 우선 · 없으면 hertz)
+  PASS  F12 app.py 가 aux['coverage_per_am_source'] 를 싣는다
+  PASS  F13 3D 뷰어 피복 범례가 coverage_per_am_source 로 Hertz 대체를 표시한다
+  PASS  F14 등급 표 라벨 칸이 fallback_note 를 표시한다
+[G] 그룹 그림 체크박스 ↔ 그림 목록
+  PASS  G0 그림 체크박스를 찾았다
+  PASS  G1 모든 체크박스 값이 그림 목록에 있다 ([SKIP] Unknown 없음)
+  PASS  G2 porosity_union 그림 등록
+  PASS  G3 porosity_union: 값 없는 케이스는 점을 찍지 않는다 (0 으로 그리지 않음)
+  PASS  G2 overlap_fraction_pct 그림 등록
+  PASS  G3 overlap_fraction_pct: 값 없는 케이스는 점을 찍지 않는다 (0 으로 그리지 않음)
+[H] 그룹 표 AM–AM 평균 면적 — 접촉 0 = 빈칸 (인계표와 같은 규칙)
+  PASS  H0 _group_am_am_mean_na 가 모듈 수준에 있다
+  PASS  H1 접촉 0 (숫자) → 평균 None · 총합 0 · 개수 0 그대로
+  PASS  H2 옛 케이스의 문자열 "0" 도 같은 규칙 (am_am_n_contacts 가 문자열이던 세대)
+  PASS  H3 접촉 있음 → 평균 그대로
+  PASS  H4 개수 키가 없으면 판단하지 않는다 (값 그대로 — 모르는 것을 지어내지 않는다)
+  PASS  H5 그룹 표 라우트가 이 도우미를 부른다 (배선)
+
+44 PASS · 0 FAIL

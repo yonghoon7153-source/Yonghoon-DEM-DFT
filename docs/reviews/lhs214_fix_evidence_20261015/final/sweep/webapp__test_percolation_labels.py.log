@@ -1,0 +1,12 @@
+[W] 웹앱 — 퍼콜레이션 표지 (F3 · LHS-19 · LHS-20)
+[Storage] NOT configured - SUPABASE_URL=False SUPABASE_KEY=False
+[Security] WARNING: auth OFF - local/private only. For public deploy set WEBAPP_REQUIRE_AUTH=1 + WEBAPP_AUTH_TOKEN.
+  PASS  W1 영문 라벨 SE Cluster 수 — "percolating" 이 아니다 (전체 성분 · 외톨이 포함)
+  PASS  W2 영문 라벨 Ionic Active AM — top-reachable SE 와의 접촉 (SE 에 닿기만 한 것이 아니다)
+  PASS  W3 역방향 라벨 맵이 새 영문 라벨 둘을 되돌린다 · 옛 키 없음
+  PASS  W4 SE Cluster 수 툴팁 — 외톨이 SE 포함 · 문턱 10 은 출처 없는 상수 (LHS-19)
+  PASS  W5 SE Percolation 툴팁 — 밴드 규칙의 그래프 관통 · 솔버 (전류) 관통과 다름 · 0 % = 관통 성분 없음 (LHS-19 · J20-b)
+  PASS  W6 Top Reachable 툴팁 — 외톨이도 센다 (LHS-19) · 관통률의 상위집합 (dead-end = 차이) · 옛 거꾸로 된 문장 없음
+  PASS  W7 Ionic Active AM 툴팁 — 접촉 유무만 · coverage 무관 (LHS-20) · 위 밴드 외톨이 SE 도 센다
+
+7 PASS · 0 FAIL
