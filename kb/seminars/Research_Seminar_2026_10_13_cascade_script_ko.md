@@ -242,6 +242,7 @@ evidenceScope: multi-source-mixed
 > ✎ 10-15 밤 사용자 *'너무 우리만 알고 있는 단어들은 교체해서 필드에 있는 단어로'* → 사용자 9쪽 pptx 교체본 전달 (줄 수 · 상자 크기 그대로 · Calibri 와 폭이 같은 Carlito 로 확인). 권고 셋은 교체본에서 같이 풀렸다 — 오른쪽 제목 *'Stage-2 protocol set in September'* · 빨간 줄 *'A threshold δ for claiming a D_rel difference, proposed but not yet set'* · 맨 아래 *'… will be set after the pilot study.'*
 > 바꾼 말: ledger → results and inputs · concentration labels → nominal concentrations · volume filter → volume-change filter · within a precursor → across configurations · merged → combined into a single score · decisions recorded → Stage-2 protocol · readout → observable · roster of designs → candidate compositions · parent sites → host-lattice site assignment · ranking margin → threshold δ for claiming a difference · approved → established · run scope → scope of the Stage-2 simulations. 'Wyckoff' 는 안 썼다 — 부모 자리 지도가 Li 24g/48h 를 못 가른다 (`cascade_s1_contract_amendment_2026_09_12.json` §3).
 > ✎ 10-15 밤 사용자 *'audit of stage 1 괜찮아?'* → 권고 (화면은 사용자가 직접 고친다 · 결정 대기): ■ 날짜 없이 *'Re-examination of Stage 1'* (또는 *'Re-examining Stage 1'* · 사용자 *'september를 왜 넣냐고'* — 날짜는 말로 한다) · 왼쪽 제목 *'Findings'* · 첫 불렛 *'All results and inputs were re-checked.'* — 'audit' 은 틀린 말은 아니지만 영어에서 회계 · 규제처럼 제3자가 하는 공식 검사로 들리고, 'September audit' 은 우리 내부 행사 이름처럼 읽힌다. 말에서는 '감사' 를 '점검' 으로 바꿨다 (화면 결정과 무관) — '1단계를 감사했습니다' 는 '고마웠습니다' 로도 들리고, 발표 끝말이 '감사합니다' 다.
+> ⚠ **10-15 밤 정정 — 237 은 조성 수가 아니다** (사용자 *'237 candidate compositions 설명해줘'* 에서 원표를 다시 셈): 1단계 본 배치 3,615 행 (90 전구체) 을 조성 44 열 + cation_site + anion_site + charge_compensation 으로 묶은 수다 (묶음마다 15–30 행 · `cascade_design_contract_2026_08_28.json` 그룹키). **조성만으로는 147** · Li 24g/48h 를 합치면 (S1 계약의 'Li 전체') **215**. 비준 기록 `cascade_design_roster_amendment_2026_09_12.json` 의 '237 = 조성으로 세기' 는 키를 줄여 적은 것이다 (봉인 · 안 고침 · 정정 기록은 세미나 뒤 사용자 결정). 화면 권고 *'237 candidate composition–site combinations'* · 대표 줄 *'One median-energy configuration per candidate'*. 10-15 교체본의 'candidate compositions' 는 내가 틀림을 키운 말이다.
 > ⏳ 같은 옛 말이 사용자 15·16쪽 (슬림 14·15 · ranking margin · readout · 237-design roster · run scope) 과 아래 §14 · §15 · '꼭 지킬 것' 에 남아 있다 — 그 쪽에 갈 때 같은 말로 맞춘다.
 
 9월에 1단계의 결과와 입력을 하나씩 다시 점검했습니다.
@@ -258,7 +259,7 @@ evidenceScope: multi-source-mixed
 
 **[가리킴: 오른쪽 목록]** 그리고 새 결과를 보기 **전에** 규칙을 먼저 박았습니다.
 - 2단계의 주 보고량은 하나입니다. 호스트 대비 Li 추적자 확산계수 비, D_rel 을 후보 조성끼리 비교합니다. 앞에서 따로 봐야 한다고 한 세 가지 가운데 Li 이동이고, 후보를 고르는 규칙은 결과를 보기 전에 따로 정합니다.
-- 후보는 조성 단위로 237 개입니다.
+- 후보는 237 개입니다. 같은 조성이라도 도펀트가 들어가는 자리가 다르면 따로 셌고, 파일 이름이 아니라 실제 조성과 자리로 셌습니다.
 - 자리 배정은 치환 전에 호스트 격자에서 정해 두고, 음이온과 Li 공공 · 침입까지 모두 넣어 전하 수지를 맞춥니다.
 > ✎ 10-15: 옛 '공공까지 포함해' 는 결함의 핵심이 빠졌다 — 옛 생성기는 **음이온 치환의 전하를 안 셌다** (NdCl₃ 1 단위: 양이온만 −2 · 음이온까지 +1 → 보상 3 어긋남 · `cascade_s1_contract_amendment_2026_09_12.json` b_보상_수지).
 - 대표 구조는 치환에너지가 중앙값인 구성입니다.
