@@ -1,0 +1,55 @@
+{
+  "synthetic_only": true,
+  "ran_real_binary": false,
+  "cases": {
+    "current_three_value_vector": {
+      "problems": [],
+      "expected_problem": false,
+      "expectation_satisfied": true
+    },
+    "original_single_value_vector_error": {
+      "problems": [
+        "f_gr_av[1]: ave/time 출력 = 전역 scalar 인데 vector 로 읽는다 (LIGGGHTS: Mismatched fix in variable formula) · variable gr_P equal f_gr_av[1]"
+      ],
+      "expected_problem": true,
+      "expectation_satisfied": true
+    },
+    "single_value_scalar_valid": {
+      "problems": [],
+      "expected_problem": false,
+      "expectation_satisfied": true
+    },
+    "three_value_scalar_error": {
+      "problems": [
+        "f_gr_av: ave/time 출력 = 전역 vector 인데 scalar 로 읽는다 (LIGGGHTS: Mismatched fix in variable formula) · variable gr_P equal f_gr_av"
+      ],
+      "expected_problem": true,
+      "expectation_satisfied": true
+    },
+    "three_value_index_four_error": {
+      "problems": [
+        "f_gr_av[4]: ave/time 벡터 크기 3 밖 · variable gr_P equal f_gr_av[4]"
+      ],
+      "expected_problem": true,
+      "expectation_satisfied": true
+    },
+    "three_value_index_999_error": {
+      "problems": [
+        "f_gr_av[999]: ave/time 벡터 크기 3 밖 · variable gr_P equal f_gr_av[999]"
+      ],
+      "expected_problem": true,
+      "expectation_satisfied": true
+    }
+  },
+  "grammar_input_hashes_match": {
+    "in.hist_producer.liggghts": true,
+    "in.hist_grammar.liggghts": true,
+    "plate_hist.stl": true
+  },
+  "git_bash_smoke": {
+    "rc": 3221225794,
+    "stdout": "",
+    "stderr": "      0 [main] bash (9924) C:\\Program Files\\Git\\bin\\..\\usr\\bin\\bash.exe: *** fatal error - NtCreateDirectoryObject(\\BaseNamedObjects\\msys-2.0S5-1888ae32e00d56aa): 0xC0000022\n"
+  },
+  "all_expectations_satisfied": true
+}

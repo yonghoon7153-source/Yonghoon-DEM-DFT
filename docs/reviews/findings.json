@@ -10990,7 +10990,8 @@
       "claimed_fixed_sha": "039abb141",
       "evidence_tests": [
         "docs/data/ps45_unload_20261009/history_test/make_history_decks.py --selftest ⑰ (고치기 전 grammar 1 실패 · 고친 뒤 0) · --check"
-      ]
+      ],
+      "partial_note": "코드 닫힘 / 실행 열림 (Codex 수정 재확인 10-15) — 타입 수정 타당 (in.hist_grammar.liggghts:80 · 135 · 음성 대조 거부) · 실제 ibb 문법 PASS = 원 보고 묶음 (같은 바이너리 · 승인된 덱 · 판독기 출처 · 원자료 재판독) 확인 전 열림"
     },
     {
       "id": "ULKRR-02",
@@ -11006,12 +11007,13 @@
         "docs/data/ps45_unload_20261009/ul_reader.py --selftest R28 · R10 (고치기 전 반례 6 실패 → 0 · 정상 재개 양성 유지)",
         "docs/data/ps45_unload_20261009/ul_runner_test.py M23 (러너 수준 정상 재개)",
         "docs/reviews/dem_unloading_kit_reverify_fix_evidence_20261014/ (Linux 전체 로그 · rc 0)"
-      ]
+      ],
+      "partial_note": "부분 (Codex 수정 재확인 10-15 · 핀 eaecfba2a) — no-RESUME 중복 · 경계 자료 결손 = 주 값 / UVa 차단 · 정상 fresh · 부분 창 재개 · 같은 길이 재개 · UTc 유지 · 남은 것 = ULKRF-01 (중복 RESUME 승인 복제) · ULKRF-02 (긴 재시도 거부)"
     },
     {
       "id": "ULKRR-03",
       "severity": "P1",
-      "status": "claimed_fixed",
+      "status": "verified",
       "owner": "claude",
       "found_by": "codex 10-14 DEM 언로딩 키트 재확인 (고정 핀 a30fe150e · 203 파일 blob 대조 · 실제 판독 함수 · 합성 입력 · DEM · LIGGGHTS · Bash 러너 실행 없음)",
       "opened_in": "docs/reviews/codex_review_dem_unloading_kit_reverify_20261014.md",
@@ -11022,7 +11024,12 @@
         "docs/data/ps45_unload_20261009/ul_reader.py --selftest R29 (6 → 0 · 실제 CLI stdout 닫힘 rc 120 재현 뒤 거부)",
         "docs/data/ps45_unload_20261009/ul_runner_test.py M20 (2 → 0) · 양성 M6 · M17",
         "docs/reviews/dem_unloading_kit_reverify_fix_evidence_20261014/"
-      ]
+      ],
+      "verified_by": "codex",
+      "verified_sha": "eaecfba2a",
+      "verified_in": "docs/reviews/codex_review_dem_unloading_kit_fix_recheck_20261015.md",
+      "verified_scope": "원반례 — 실제 restore · kebase 가 파일 발행 뒤 rc 120 이면 UB 거부 · 마지막 end 의 fails · reader_rc 각각 정확히 한 번 정수 0 · 누락 · 비영 · 중복 거부 · RJ2 실패 EXT 영수증 거부.  \"모든 기술 실패 잡의 산출물 승인 재사용 0\" 전칭 보증은 아님 (판정문 Q2 — 일반 팔은 원 폴더 재판독 · 재판독 가능성 ≠ 기술 성공)",
+      "verification_note": "2026-10-15 Codex 언로딩 키트 수정 재확인 (코드 핀 eaecfba2a · HOLD) §3 의 원반례 닫힘."
     },
     {
       "id": "ULKRR-04",
@@ -11038,7 +11045,8 @@
         "docs/data/ps45_unload_20261009/ul_reader.py --selftest R30 (7 → 0 · KeyError → 사유 있는 미식별)",
         "docs/data/ps45_unload_20261009/ul_lib.py --selftest L13 · F12 · C3",
         "docs/reviews/dem_unloading_kit_reverify_fix_evidence_20261014/"
-      ]
+      ],
+      "partial_note": "부분 (Codex 수정 재확인 10-15) — PRE · POST · R_END · UN · S0 · 끝점 · S3 의 소수 · 0 · 음수 · NaN · ID 결손 = 사유 있는 비통과 · 남은 것 = ULKRF-03 (G2c 열 결손 KeyError) · 비차단 한계 = float 변환 뒤 exact_id (9007199254740993 → …992 허용 · 실제 ID 규모 문제 아님)"
     },
     {
       "id": "SELF-116",
@@ -11113,6 +11121,45 @@
       "note": "포장 누락만으로 수식 오류 판정은 아님 (판정문 §2 · 배포 수식 의미 · OMML 8 개 존재는 별도 확인).  원인 = 요청서 표를 손으로 적고 실제 ZIP 목록과 대조하지 않음.  고침 = ZIP v9 에 원 수식 PPTX + sha256 · 요청서의 동봉 목록을 실제 ZIP 목록에서 생성 (수정 계획 docs/reviews/seminar_deck_v32_fix_plan_20261015.md §1).",
       "evidence_tests": [
         "docs/reviews/codex_review_seminar_v32_recheck_20261015.md (§2 · §8)"
+      ]
+    },
+    {
+      "id": "ULKRF-01",
+      "severity": "P2",
+      "status": "open",
+      "owner": "claude",
+      "found_by": "codex 10-15 DEM 언로딩 키트 수정 재확인 (코드 핀 eaecfba2a · 252 파일 blob 대조 · 실제 판독 함수 · 합성 기록 · 생성 덱 제어 흐름 · 기존 실제 이력 206 파일 재판독 H0–H5 PASS · LIGGGHTS · MPI · Bash 러너 실행 없음)",
+      "opened_in": "docs/reviews/codex_review_dem_unloading_kit_fix_recheck_20261015.md",
+      "title": "같은 재개 사건이 승인을 복제 — _resume_auth 가 같은 (k, step) 을 사건마다 더하고 _supersede 가 경계가 아니라 목록 인덱스를 소비 → resume_from 한 줄 · 상태 파일 하나 + 같은 RESUME 두 줄이 롤백 두 번을 허가 (n_superseded_rows 10 · primary OK ρ 0.2026 % · UVa ALLOW · 한 줄이면 UNIDENTIFIED · 거부)",
+      "note": "정상 러너 (run_unload.sh:88) 는 두 번째 재개를 막는다 = 실제 두 번째 재개 증거 아님 · 무너지는 것 = 판독기의 \"경계마다 한 번\" 보증.  최소 해결 = 승인 · 소비를 고유 경계 / 시도에 결합 · 중복 · 상충 RESUME = 사유 있는 거부 · 사건 정리도 같은 규칙 · 정상 재개 양성 유지.  탐침 probes/resume_recheck.py one_auth_two_rollbacks · one_event_two_rollbacks.  수정 계획 docs/reviews/dem_unloading_kit_fix_recheck_fix_plan_20261015.md.",
+      "evidence_tests": [
+        "docs/reviews/codex_review_dem_unloading_kit_fix_recheck_20261015.md (§4 ULKRF-01)"
+      ]
+    },
+    {
+      "id": "ULKRF-02",
+      "severity": "P2",
+      "status": "open",
+      "owner": "claude",
+      "found_by": "codex 10-15 DEM 언로딩 키트 수정 재확인 (코드 핀 eaecfba2a · 252 파일 blob 대조 · 실제 판독 함수 · 합성 기록 · 생성 덱 제어 흐름 · 기존 실제 이력 206 파일 재판독 H0–H5 PASS · LIGGGHTS · MPI · Bash 러너 실행 없음)",
+      "opened_in": "docs/reviews/codex_review_dem_unloading_kit_fix_recheck_20261015.md",
+      "title": "승인된 재시도의 단 끝 시간이 이전 시도보다 길면 옛 단 끝 행이 남아 정상 새 기록을 거부 — 롤백 판별이 step 역행에서만 시작 (ul_reader.py:138 · 692–695) · 생산 덱은 단 CSV 를 restart · 상태보다 먼저 쓴다 (in.UT.liggghts:267 · 319–330) → 옛 k2 (4 창 · 3360000) 뒤 새 k2 (5 창 · 3370000) = k [0,1,2,2,3,4] · primary UNIDENTIFIED · UVa 거부",
+      "note": "새 5 창 단독 = OK · 새 4 창 재시도 = 통과 · 5 창 종료 자체는 생성 UT 덱 제어 흐름으로 확인 (원자 · 접촉 · thermo 합성 · 실제 LIGGGHTS 재개에서 창 수 변화를 잰 것 아님).  최소 해결 = 승인 경계로 새 시도 구간 식별 · 단순 중복 k 삭제 금지 (ULKRR-02 원결함 복귀) · 짧음 · 같음 · 김 + 무승인 중복 시험.  탐침 fresh_completed_hold_5_windows · resume_completed_hold_4/5_windows.  수정 계획 docs/reviews/dem_unloading_kit_fix_recheck_fix_plan_20261015.md.",
+      "evidence_tests": [
+        "docs/reviews/codex_review_dem_unloading_kit_fix_recheck_20261015.md (§4 ULKRF-02)"
+      ]
+    },
+    {
+      "id": "ULKRF-03",
+      "severity": "P2",
+      "status": "open",
+      "owner": "claude",
+      "found_by": "codex 10-15 DEM 언로딩 키트 수정 재확인 (코드 핀 eaecfba2a · 252 파일 blob 대조 · 실제 판독 함수 · 합성 기록 · 생성 덱 제어 흐름 · 기존 실제 이력 206 파일 재판독 H0–H5 PASS · LIGGGHTS · MPI · Bash 러너 실행 없음)",
+      "opened_in": "docs/reviews/codex_review_dem_unloading_kit_fix_recheck_20261015.md",
+      "title": "G2c 접촉 덤프 필수 열 결손 (c_cpl[7] · [8]) 이 구조화된 실패 대신 KeyError — read_dump 는 ok=False 를 냈는데 _contacts 가 그 전에 열을 조회 (ul_gates.py:252–256 · g2c_compare 285–291 · ul_reader.py:1335) → restore CLI rc 1 · 증서 미발행 · 다음 UB 거부",
+      "note": "거짓 PASS 아님 — ULKRR-04 의 남은 경로 (\"모든 경로에서 사유 있는 미확인 / 미계산\").  최소 해결 = _contacts 가 파서 ok=False 를 먼저 반환 → g2c_compare FAIL + why · 양쪽 비교 파일 열 결손을 실제 restore CLI 까지 시험 · 임의 채우기 · 행 삭제 금지.  탐침 probes/receipt_ids_recheck.py g2c_c_cpl7/8_missing · g2c_missing_column_actual_cli.  수정 계획 docs/reviews/dem_unloading_kit_fix_recheck_fix_plan_20261015.md.",
+      "evidence_tests": [
+        "docs/reviews/codex_review_dem_unloading_kit_fix_recheck_20261015.md (§4 ULKRF-03)"
       ]
     }
   ]

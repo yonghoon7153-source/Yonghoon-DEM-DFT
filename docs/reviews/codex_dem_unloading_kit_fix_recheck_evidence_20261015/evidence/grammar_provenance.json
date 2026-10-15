@@ -1,0 +1,242 @@
+{
+  "pin": "eaecfba2a2dfbff6f13222f6afeb01d8ebeb5a84",
+  "synthetic_only": true,
+  "lmp_sha_is_synthetic": true,
+  "target_calls": [
+    "read_history.grammar_info",
+    "ul_reader.grammar_prereq"
+  ],
+  "results": {
+    "positive_actual_reader": {
+      "expected_gate": true,
+      "gate": true,
+      "problems": [],
+      "raw_status": "PASS",
+      "raw_problems": [],
+      "expected_raw": "PASS",
+      "expectation_satisfied": true,
+      "verdict_sha256": "f770eab78d904ae06633d850225126fc3416abb92077b25385f5e07d6050f72a",
+      "case_dir": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\dem_unloading_kit_fix_recheck_20261015\\evidence\\grammar_cases\\positive_actual_reader"
+    },
+    "other_binary": {
+      "expected_gate": false,
+      "gate": false,
+      "problems": [
+        "문법 런 LMP sha256 4f1bb8ea0f292a527d87b953e162b8dfea9fa1f2dde83853915de1a125c9c031 ≠ 지금 돌릴 바이너리 0000000000000000000000000000000000000000000000000000000000000000 (같은 바이너리의 문법 PASS 만)"
+      ],
+      "raw_status": "PASS",
+      "raw_problems": [],
+      "expected_raw": "PASS",
+      "expectation_satisfied": true,
+      "verdict_sha256": "a54b2ff18380acfc7d8dc50b30e14d22d22020cb831b768afd56043e8b7f3a8e",
+      "case_dir": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\dem_unloading_kit_fix_recheck_20261015\\evidence\\grammar_cases\\other_binary"
+    },
+    "missing_check": {
+      "expected_gate": false,
+      "gate": false,
+      "problems": [
+        "판정 검사 없음 ['GB_restart_state']"
+      ],
+      "raw_status": "PASS",
+      "raw_problems": [],
+      "expected_raw": null,
+      "expectation_satisfied": true,
+      "verdict_sha256": "71a5800beb47c4bdb92a17af4db95017a1482216ad9e23de07bd5299d6cb8717",
+      "case_dir": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\dem_unloading_kit_fix_recheck_20261015\\evidence\\grammar_cases\\missing_check"
+    },
+    "boolean_exit_code": {
+      "expected_gate": false,
+      "gate": false,
+      "problems": [
+        "판정 exit_code False ≠ 정수 0"
+      ],
+      "raw_status": "PASS",
+      "raw_problems": [],
+      "expected_raw": null,
+      "expectation_satisfied": true,
+      "verdict_sha256": "daff2e07038791a41fe746be00a47770905a20aafefcf76b50f47f4de408082e",
+      "case_dir": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\dem_unloading_kit_fix_recheck_20261015\\evidence\\grammar_cases\\boolean_exit_code"
+    },
+    "check_integer_one": {
+      "expected_gate": false,
+      "gate": false,
+      "problems": [
+        "판정 검사 참 아님 ['GA_tech']"
+      ],
+      "raw_status": "PASS",
+      "raw_problems": [],
+      "expected_raw": null,
+      "expectation_satisfied": true,
+      "verdict_sha256": "309afcc9adb493a52aca16127ad05278120fd77872dfcddf433fba6c3d150f66",
+      "case_dir": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\dem_unloading_kit_fix_recheck_20261015\\evidence\\grammar_cases\\check_integer_one"
+    },
+    "check_false": {
+      "expected_gate": false,
+      "gate": false,
+      "problems": [
+        "판정 검사 참 아님 ['GA_tech']"
+      ],
+      "raw_status": "PASS",
+      "raw_problems": [],
+      "expected_raw": null,
+      "expectation_satisfied": true,
+      "verdict_sha256": "d16cc052000f431f5dce3f65dc3c1f5267eb656586d0253296817a263565bac0",
+      "case_dir": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\dem_unloading_kit_fix_recheck_20261015\\evidence\\grammar_cases\\check_false"
+    },
+    "wrong_run_dir": {
+      "expected_gate": false,
+      "gate": false,
+      "problems": [
+        "판정 run_dir 'C:\\\\Users\\\\Administrator\\\\Documents\\\\Codex\\\\2026-08-24\\\\claude-stoic-knuth-nobvq-x20\\\\dem_unloading_kit_fix_recheck_20261015\\\\evidence\\\\grammar_cases' ≠ 판정 파일 폴더 C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\dem_unloading_kit_fix_recheck_20261015\\evidence\\grammar_cases\\wrong_run_dir (다른 런의 판정)"
+      ],
+      "raw_status": "PASS",
+      "raw_problems": [],
+      "expected_raw": null,
+      "expectation_satisfied": true,
+      "verdict_sha256": "e36d6f90278838d267f88bba923d684d547c38eeee5d76f0a3836907c4bc86c5",
+      "case_dir": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\dem_unloading_kit_fix_recheck_20261015\\evidence\\grammar_cases\\wrong_run_dir"
+    },
+    "bad_ga_rc": {
+      "expected_gate": false,
+      "gate": false,
+      "problems": [
+        "문법 런 GA rc '1' ≠ 0"
+      ],
+      "raw_status": "FAIL",
+      "raw_problems": [
+        "GA 기술: rc 1 · 배너 True · ERROR [] · Loop procs [6, 6, 6, 6, 6] (기대 run 5 · NP 6)"
+      ],
+      "expected_raw": "FAIL",
+      "expectation_satisfied": true,
+      "verdict_sha256": "b0350b64e69100893e629ae42723bd69c090edbd115f91698c6d32298f7811d7",
+      "case_dir": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\dem_unloading_kit_fix_recheck_20261015\\evidence\\grammar_cases\\bad_ga_rc"
+    },
+    "missing_manifest_end": {
+      "expected_gate": false,
+      "gate": false,
+      "problems": [
+        "문법 런 run_manifest end 없음 (끝나지 않은 런)"
+      ],
+      "raw_status": "PASS",
+      "raw_problems": [],
+      "expected_raw": null,
+      "expectation_satisfied": true,
+      "verdict_sha256": "b247ea9b5077c3ceb38932a1e381a2cc8439814cbfcddb15e389090c0763ba9a",
+      "case_dir": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\dem_unloading_kit_fix_recheck_20261015\\evidence\\grammar_cases\\missing_manifest_end"
+    },
+    "wrong_grammar_deck": {
+      "expected_gate": false,
+      "gate": false,
+      "problems": [
+        "문법 런 GA/in.hist_grammar.liggghts sha256 547442e79e80c5267ea92a85cfbd2757d356ab467d7395a10f2bb92e54f14fac ≠ 봉인 값 a1f0ee432b977d12a415b876ab3aa47225fec8f83c21cdd92948ff3abce8e6ed"
+      ],
+      "raw_status": "PASS",
+      "raw_problems": [],
+      "expected_raw": null,
+      "expectation_satisfied": true,
+      "verdict_sha256": "f03d1767b953f1d753bd5617cf5ecd70a8bde7876c72034326a27dc32e848294",
+      "case_dir": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\dem_unloading_kit_fix_recheck_20261015\\evidence\\grammar_cases\\wrong_grammar_deck"
+    },
+    "wrong_plate": {
+      "expected_gate": false,
+      "gate": false,
+      "problems": [
+        "문법 런 GB/plate_hist.stl sha256 c5723b8c96742b7341c807240f116253d70b0b0c74c44269569dd72e397415e4 ≠ 봉인 값 5bc74ec7726723ec8e2bbc3dc10fafd639e6175f83a0e0047ca35a44ee7aa65d"
+      ],
+      "raw_status": "PASS",
+      "raw_problems": [],
+      "expected_raw": null,
+      "expectation_satisfied": true,
+      "verdict_sha256": "af99a3d28e2976a27091edcc4a5ed9319613c19b2072f9646988d8e883ab0613",
+      "case_dir": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\dem_unloading_kit_fix_recheck_20261015\\evidence\\grammar_cases\\wrong_plate"
+    },
+    "wrong_deck_name": {
+      "expected_gate": false,
+      "gate": false,
+      "problems": [
+        "문법 런 GB deck.txt 'in.hist_syntax_probe.liggghts' ≠ in.hist_grammar.liggghts"
+      ],
+      "raw_status": "PASS",
+      "raw_problems": [],
+      "expected_raw": null,
+      "expectation_satisfied": true,
+      "verdict_sha256": "bcebe89a881e14f392288146f12817c81c0546f016257b967c81c6f7bc2ea1a9",
+      "case_dir": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\dem_unloading_kit_fix_recheck_20261015\\evidence\\grammar_cases\\wrong_deck_name"
+    },
+    "raw_ga_error_cached_pass": {
+      "expected_gate": true,
+      "gate": true,
+      "problems": [],
+      "raw_status": "FAIL",
+      "raw_problems": [
+        "GA 기술: rc 0 · 배너 True · ERROR ['ERROR: independent injected raw error'] · Loop procs [6, 6, 6, 6, 6] (기대 run 5 · NP 6)"
+      ],
+      "expected_raw": "FAIL",
+      "expectation_satisfied": true,
+      "verdict_sha256": "afebd3c2f6867bee18c318f9de9a7ace58136844d72d97625f814c7dc1e3e3b7",
+      "case_dir": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\dem_unloading_kit_fix_recheck_20261015\\evidence\\grammar_cases\\raw_ga_error_cached_pass"
+    },
+    "raw_gb_mesh_wrong_cached_pass": {
+      "expected_gate": true,
+      "gate": true,
+      "problems": [],
+      "raw_status": "FAIL",
+      "raw_problems": [
+        "GB 판 z (step · 기대 · 실제) [(4300, 0.030019999999999998, 99.0)]"
+      ],
+      "expected_raw": "FAIL",
+      "expectation_satisfied": true,
+      "verdict_sha256": "1be0dd7e4b05d6fee8e204c0fb6e6303ae4839e4334662ca9bce2d5e9419eae1",
+      "case_dir": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\dem_unloading_kit_fix_recheck_20261015\\evidence\\grammar_cases\\raw_gb_mesh_wrong_cached_pass"
+    },
+    "raw_gb_screen_missing_cached_pass": {
+      "expected_gate": true,
+      "gate": true,
+      "problems": [],
+      "raw_status": "FAIL",
+      "raw_problems": [
+        "GB 기술: rc 0 · 배너 False · ERROR [] · Loop procs [] (기대 run 2 · NP 6)",
+        "GB 표지: GRAM_RESUMED 0 개 (기대 1)",
+        "GB 표지: GRAM_STEP (k · step) [] ≠ [(3, 5400)]",
+        "GB 표지: GRAM_STATE_WRITTEN []",
+        "GB 표지: GRAM_DONE [] ≠ step 5400 · k 3"
+      ],
+      "expected_raw": "FAIL",
+      "expectation_satisfied": true,
+      "verdict_sha256": "5459fe958d93bf47988fc09155f9092237988e4852af9e1f1fcc51b41dcdeb8d",
+      "case_dir": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\dem_unloading_kit_fix_recheck_20261015\\evidence\\grammar_cases\\raw_gb_screen_missing_cached_pass"
+    },
+    "raw_gb_state_wrong_cached_pass": {
+      "expected_gate": true,
+      "gate": true,
+      "problems": [],
+      "raw_status": "FAIL",
+      "raw_problems": [
+        "GB 상태 파일 state_g_5400.in = 'variable gr_rstep equal 0\\nvariable gr_k equal 0\\nvariable gr_pz equal 0' ≠ [('gr_rstep', 5400), ('gr_k', 3), ('gr_pz', 0.030029999999999998)]"
+      ],
+      "expected_raw": "FAIL",
+      "expectation_satisfied": true,
+      "verdict_sha256": "f13368206a631daea883737f1678aa8201abd44795df82dd300a3cd5e8ac19d4",
+      "case_dir": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\dem_unloading_kit_fix_recheck_20261015\\evidence\\grammar_cases\\raw_gb_state_wrong_cached_pass"
+    },
+    "different_reader_runner_seal": {
+      "expected_gate": true,
+      "gate": true,
+      "problems": [],
+      "raw_status": "PASS",
+      "raw_problems": [],
+      "expected_raw": "PASS",
+      "expectation_satisfied": true,
+      "verdict_sha256": "37f093e1e71120a74d50d4e94e62f5d1257494ed77ce45dc43faf9702c7a72e9",
+      "case_dir": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\dem_unloading_kit_fix_recheck_20261015\\evidence\\grammar_cases\\different_reader_runner_seal"
+    }
+  },
+  "shell_smoke": {
+    "path": "C:\\Users\\Administrator\\AppData\\Local\\Microsoft\\WindowsApps\\bash.EXE",
+    "ran_simulator": false,
+    "exception": "OSError(22, '시스템에서 파일에 액세스할 수 없습니다', None, 1920, None)"
+  },
+  "all_expectations_satisfied": true,
+  "case_count": 17,
+  "interpretation": "Cached PASS is trusted; raw-log drift and runner/reader hash changes are intentionally outside grammar_prereq validation. These cases do not establish an actual simulator PASS."
+}

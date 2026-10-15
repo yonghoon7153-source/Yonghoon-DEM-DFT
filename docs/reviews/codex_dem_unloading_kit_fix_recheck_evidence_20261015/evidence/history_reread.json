@@ -1,0 +1,160 @@
+{
+  "schema": "ps45_unload_history_verdict_v1",
+  "run_dir": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\dem_unloading_kit_fix_recheck_20261015\\evidence\\history_actual\\hist_20261014_094731",
+  "rows": {
+    "H0": {
+      "status": "PASS",
+      "problems": [],
+      "producer_pack_equals_inrun": true
+    },
+    "H1": {
+      "status": "PASS",
+      "stage": "C6",
+      "np": 6,
+      "classes": {
+        "primitive": {
+          "status": "PASS",
+          "pre_mismatch": [],
+          "post_mismatch": []
+        },
+        "mesh": {
+          "status": "PASS",
+          "problems": [],
+          "mismatch": [],
+          "n_keys": 4
+        },
+        "pair": {
+          "status": "PASS",
+          "problems": [],
+          "mismatch": [],
+          "n_keys": 5
+        }
+      },
+      "sentinels": {
+        "primitive": 4,
+        "mesh": 4,
+        "pair": 5
+      },
+      "dup_consistent": 0,
+      "problems": []
+    },
+    "H2": {
+      "status": "PASS",
+      "stage": "C4",
+      "np": 4,
+      "classes": {
+        "primitive": {
+          "status": "PASS",
+          "pre_mismatch": [],
+          "post_mismatch": []
+        },
+        "mesh": {
+          "status": "PASS",
+          "problems": [],
+          "mismatch": [],
+          "n_keys": 4
+        },
+        "pair": {
+          "status": "PASS",
+          "problems": [],
+          "mismatch": [],
+          "n_keys": 5
+        }
+      },
+      "sentinels": {
+        "primitive": 4,
+        "mesh": 4,
+        "pair": 5
+      },
+      "dup_consistent": 0,
+      "problems": []
+    },
+    "H3": {
+      "status": "PASS",
+      "wall": "primitive",
+      "checks": {
+        "pre_erase_observation": "PASS",
+        "pre_all_zero": true,
+        "post_regen_ok": true,
+        "sentinel_erased": "4 / 4",
+        "control": "PASS"
+      },
+      "fails": [],
+      "problems": [],
+      "sentinels": {
+        "primitive": 4,
+        "mesh": 4,
+        "pair": 5
+      }
+    },
+    "H4": {
+      "status": "PASS",
+      "wall": "mesh",
+      "checks": {
+        "pre_erase_observation": "PASS",
+        "post_regen_ok": true,
+        "sentinel_erased": "4 / 4",
+        "control": "PASS"
+      },
+      "fails": [],
+      "problems": [],
+      "sentinels": {
+        "primitive": 4,
+        "mesh": 4,
+        "pair": 5
+      }
+    },
+    "H5": {
+      "status": "PASS",
+      "bad_id_class": "TECH",
+      "zero_class": "INCONCLUSIVE",
+      "bad_id_error": [
+        "ERROR: Could not find dump custom fix ID (../dump_custom.cpp:1384)"
+      ]
+    }
+  },
+  "info": {
+    "auto_restart_steps": [
+      1500
+    ],
+    "auto_end_of_run_restart": false,
+    "auto_note": "run 끝 자동 restart 없음 — 주기 배수만 (10:0 연장 끝 3,660,000 은 명시 write_restart 가 필요)",
+    "force_timing": "PASS",
+    "force_timing_note": "접촉 없는 입자 (Z) 의 덤프 fz = −m g · fx = fy = 0 → 덤프 f 는 중력까지 더한 총힘 (출력 = post_force 뒤 · S3 함수 입력)",
+    "syn": {
+      "status": "PASS",
+      "checks": {
+        "rc0_no_error": true,
+        "markers": true,
+        "dt_after_read_restart": true,
+        "Ps_signed_positive": true,
+        "count_W0": true,
+        "n_W0": 4,
+        "fn_sign_uniform": true,
+        "count_W1": true,
+        "n_W1": 3,
+        "lift_mesh_z": true,
+        "plate_z_formula": true,
+        "restart_end_written": true
+      },
+      "plate_fn_sign": -1,
+      "plate_fn_note": "판 접촉에서 입자가 받는 법선력 fn_z 의 부호 (압축 상태) — 본 키트 unload_params.json 의 plate_fn_compressive_sign 과 대조한다 (다르면 표를 고친다 · 결과 0 건에서)"
+    },
+    "stage_np": {
+      "P": 6,
+      "C6": 6,
+      "C4": 4,
+      "Ebot": 6,
+      "Cbot": 6,
+      "Etop": 6,
+      "Ctop": 6,
+      "Enone": 6,
+      "Cnone": 6,
+      "BAD": 6,
+      "SYN": 6,
+      "PZ": 6,
+      "CZ": 6
+    }
+  },
+  "exit_code": 0
+}

@@ -1,0 +1,4849 @@
+{
+  "source_pin": "eaecfba2a2dfbff6f13222f6afeb01d8ebeb5a84",
+  "fixture_root": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\dem_unloading_kit_fix_recheck_20261015\\evidence\\resume_cases_20261015T001638_720540Z",
+  "source_sha256": {
+    "ul_reader.py": "7cd19d836e9033a16442c9f331b09ca6a0c82545d506562b8650f96a35b3d557",
+    "run_unload.sh": "679d7439f4b092add872619b9abf53321d633af7630d9192310f88b1b169be26",
+    "make_unload_decks.py": "9e64f0673e12c81cf195410eaf23032e3974ab10508944d106b8d990bb347c4a"
+  },
+  "cases": {
+    "positive_fresh": {
+      "expected": "Normal file layout keeps primary and permits UVa",
+      "pass": true,
+      "actual": {
+        "verdict": {
+          "job": "UT",
+          "bed": "ps_7_3_r45",
+          "dir": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\dem_unloading_kit_fix_recheck_20261015\\evidence\\resume_cases_20261015T001638_720540Z\\positive_fresh\\ps_7_3_r45\\UT",
+          "problems": [],
+          "n_superseded_rows": 0,
+          "primary_status": "OK",
+          "rho_pct": 0.2026077873428664,
+          "bracket_um": [
+            0.2,
+            0.25
+          ],
+          "bracket_pct": [
+            0.18009581097143681,
+            0.225119763714296
+          ],
+          "union_bracket_um": [
+            0.2,
+            0.25
+          ],
+          "union_bracket_pct": [
+            0.18009581097143681,
+            0.225119763714296
+          ],
+          "lower_bound_pct": null,
+          "nonmonotone": false,
+          "cancellation": false,
+          "disposition": "VALUE",
+          "rank_eligible": true,
+          "endpoint_states": [
+            "CONTACT",
+            "CONTACT"
+          ],
+          "sigma_P": 0.0010259783520850981,
+          "trajectory_status": "RM_STOP",
+          "separation": {
+            "declared_step": null,
+            "separated_final": false,
+            "recontact_index": [],
+            "missing_index": [],
+            "moved_index": [],
+            "gap_index": [],
+            "n_post": 0,
+            "declared_w": null
+          },
+          "s4_status": "NOT_COMPUTED",
+          "why": [],
+          "cancellation_detail": {
+            "tension_N": [
+              0,
+              0
+            ],
+            "threshold_N": 1.25
+          },
+          "eps": {
+            "status": "OK",
+            "C_all_m": 2.1991148575128546e-05,
+            "area_m2": 0.0025000000000000005,
+            "n_s0": 105,
+            "S0": {
+              "status": "OK",
+              "eps_all": 0.9998019743131584,
+              "eps_inside": 0.9998019743131584,
+              "n_inside": 105,
+              "h_m": 0.111052
+            },
+            "endpoints": [
+              {
+                "k": 1,
+                "step": 3310000,
+                "h_m": 0.111252,
+                "status": "OK",
+                "eps_all": 0.9998023303079933,
+                "eps_inside": 0.9998023303079933,
+                "n_inside": 105,
+                "why": []
+              },
+              {
+                "k": 2,
+                "step": 3360000,
+                "h_m": 0.111302,
+                "status": "OK",
+                "eps_all": 0.9998024191067983,
+                "eps_inside": 0.9998024191067983,
+                "n_inside": 105,
+                "why": []
+              }
+            ],
+            "M": {
+              "h_m": 0.111277,
+              "status": "OK",
+              "eps_all": 0.9998023747173708,
+              "eps_inside": null
+            },
+            "why": []
+          },
+          "w_proxy_J": 4.036875000000115e-08,
+          "w_proxy": {
+            "status": "OK",
+            "n_points": 3,
+            "why": []
+          }
+        },
+        "read_run": {
+          "problems": [],
+          "n_superseded_rows": 0,
+          "resume_steps": [],
+          "resume_auth": []
+        },
+        "selection": {
+          "stage": "need_UV",
+          "delta_dt": 0.0,
+          "delta_v": null,
+          "dt_star": "dt0",
+          "tuple": null,
+          "arm": null,
+          "next": [
+            "UVa"
+          ],
+          "why": []
+        },
+        "UVa_gate": [
+          true,
+          "δ_dt 0.0 → dt* dt0 → UVa"
+        ]
+      }
+    },
+    "positive_clean": {
+      "expected": "Normal file layout keeps primary and permits UVa",
+      "pass": true,
+      "actual": {
+        "verdict": {
+          "job": "UT",
+          "bed": "ps_7_3_r45",
+          "dir": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\dem_unloading_kit_fix_recheck_20261015\\evidence\\resume_cases_20261015T001638_720540Z\\positive_clean\\ps_7_3_r45\\UT",
+          "problems": [],
+          "n_superseded_rows": 0,
+          "primary_status": "OK",
+          "rho_pct": 0.2026077873428664,
+          "bracket_um": [
+            0.2,
+            0.25
+          ],
+          "bracket_pct": [
+            0.18009581097143681,
+            0.225119763714296
+          ],
+          "union_bracket_um": [
+            0.2,
+            0.25
+          ],
+          "union_bracket_pct": [
+            0.18009581097143681,
+            0.225119763714296
+          ],
+          "lower_bound_pct": null,
+          "nonmonotone": false,
+          "cancellation": false,
+          "disposition": "VALUE",
+          "rank_eligible": true,
+          "endpoint_states": [
+            "CONTACT",
+            "CONTACT"
+          ],
+          "sigma_P": 0.0010259783520850981,
+          "trajectory_status": "RM_STOP",
+          "separation": {
+            "declared_step": null,
+            "separated_final": false,
+            "recontact_index": [],
+            "missing_index": [],
+            "moved_index": [],
+            "gap_index": [],
+            "n_post": 0,
+            "declared_w": null
+          },
+          "s4_status": "NOT_COMPUTED",
+          "why": [],
+          "cancellation_detail": {
+            "tension_N": [
+              0,
+              0
+            ],
+            "threshold_N": 1.25
+          },
+          "eps": {
+            "status": "OK",
+            "C_all_m": 2.1991148575128546e-05,
+            "area_m2": 0.0025000000000000005,
+            "n_s0": 105,
+            "S0": {
+              "status": "OK",
+              "eps_all": 0.9998019743131584,
+              "eps_inside": 0.9998019743131584,
+              "n_inside": 105,
+              "h_m": 0.111052
+            },
+            "endpoints": [
+              {
+                "k": 1,
+                "step": 3310000,
+                "h_m": 0.111252,
+                "status": "OK",
+                "eps_all": 0.9998023303079933,
+                "eps_inside": 0.9998023303079933,
+                "n_inside": 105,
+                "why": []
+              },
+              {
+                "k": 2,
+                "step": 3360000,
+                "h_m": 0.111302,
+                "status": "OK",
+                "eps_all": 0.9998024191067983,
+                "eps_inside": 0.9998024191067983,
+                "n_inside": 105,
+                "why": []
+              }
+            ],
+            "M": {
+              "h_m": 0.111277,
+              "status": "OK",
+              "eps_all": 0.9998023747173708,
+              "eps_inside": null
+            },
+            "why": []
+          },
+          "w_proxy_J": 4.036875000000115e-08,
+          "w_proxy": {
+            "status": "OK",
+            "n_points": 3,
+            "why": []
+          }
+        },
+        "read_run": {
+          "problems": [],
+          "n_superseded_rows": 0,
+          "resume_steps": [
+            3310000
+          ],
+          "resume_auth": [
+            [
+              1,
+              3310000
+            ]
+          ]
+        },
+        "selection": {
+          "stage": "need_UV",
+          "delta_dt": 0.0,
+          "delta_v": null,
+          "dt_star": "dt0",
+          "tuple": null,
+          "arm": null,
+          "next": [
+            "UVa"
+          ],
+          "why": []
+        },
+        "UVa_gate": [
+          true,
+          "δ_dt 0.0 → dt* dt0 → UVa"
+        ]
+      }
+    },
+    "positive_windows_only": {
+      "expected": "Normal file layout keeps primary and permits UVa",
+      "pass": true,
+      "actual": {
+        "verdict": {
+          "job": "UT",
+          "bed": "ps_7_3_r45",
+          "dir": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\dem_unloading_kit_fix_recheck_20261015\\evidence\\resume_cases_20261015T001638_720540Z\\positive_windows_only\\ps_7_3_r45\\UT",
+          "problems": [],
+          "n_superseded_rows": 2,
+          "primary_status": "OK",
+          "rho_pct": 0.2026077873428664,
+          "bracket_um": [
+            0.2,
+            0.25
+          ],
+          "bracket_pct": [
+            0.18009581097143681,
+            0.225119763714296
+          ],
+          "union_bracket_um": [
+            0.2,
+            0.25
+          ],
+          "union_bracket_pct": [
+            0.18009581097143681,
+            0.225119763714296
+          ],
+          "lower_bound_pct": null,
+          "nonmonotone": false,
+          "cancellation": false,
+          "disposition": "VALUE",
+          "rank_eligible": true,
+          "endpoint_states": [
+            "CONTACT",
+            "CONTACT"
+          ],
+          "sigma_P": 0.0010259783520850981,
+          "trajectory_status": "RM_STOP",
+          "separation": {
+            "declared_step": null,
+            "separated_final": false,
+            "recontact_index": [],
+            "missing_index": [],
+            "moved_index": [],
+            "gap_index": [],
+            "n_post": 0,
+            "declared_w": null
+          },
+          "s4_status": "NOT_COMPUTED",
+          "why": [],
+          "cancellation_detail": {
+            "tension_N": [
+              0,
+              0
+            ],
+            "threshold_N": 1.25
+          },
+          "eps": {
+            "status": "OK",
+            "C_all_m": 2.1991148575128546e-05,
+            "area_m2": 0.0025000000000000005,
+            "n_s0": 105,
+            "S0": {
+              "status": "OK",
+              "eps_all": 0.9998019743131584,
+              "eps_inside": 0.9998019743131584,
+              "n_inside": 105,
+              "h_m": 0.111052
+            },
+            "endpoints": [
+              {
+                "k": 1,
+                "step": 3310000,
+                "h_m": 0.111252,
+                "status": "OK",
+                "eps_all": 0.9998023303079933,
+                "eps_inside": 0.9998023303079933,
+                "n_inside": 105,
+                "why": []
+              },
+              {
+                "k": 2,
+                "step": 3360000,
+                "h_m": 0.111302,
+                "status": "OK",
+                "eps_all": 0.9998024191067983,
+                "eps_inside": 0.9998024191067983,
+                "n_inside": 105,
+                "why": []
+              }
+            ],
+            "M": {
+              "h_m": 0.111277,
+              "status": "OK",
+              "eps_all": 0.9998023747173708,
+              "eps_inside": null
+            },
+            "why": []
+          },
+          "w_proxy_J": 4.036875000000115e-08,
+          "w_proxy": {
+            "status": "OK",
+            "n_points": 3,
+            "why": []
+          }
+        },
+        "read_run": {
+          "problems": [],
+          "n_superseded_rows": 2,
+          "resume_steps": [
+            3310000
+          ],
+          "resume_auth": [
+            [
+              1,
+              3310000
+            ]
+          ]
+        },
+        "selection": {
+          "stage": "need_UV",
+          "delta_dt": 0.0,
+          "delta_v": null,
+          "dt_star": "dt0",
+          "tuple": null,
+          "arm": null,
+          "next": [
+            "UVa"
+          ],
+          "why": []
+        },
+        "UVa_gate": [
+          true,
+          "δ_dt 0.0 → dt* dt0 → UVa"
+        ]
+      }
+    },
+    "positive_both": {
+      "expected": "Normal file layout keeps primary and permits UVa",
+      "pass": true,
+      "actual": {
+        "verdict": {
+          "job": "UT",
+          "bed": "ps_7_3_r45",
+          "dir": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\dem_unloading_kit_fix_recheck_20261015\\evidence\\resume_cases_20261015T001638_720540Z\\positive_both\\ps_7_3_r45\\UT",
+          "problems": [],
+          "n_superseded_rows": 5,
+          "primary_status": "OK",
+          "rho_pct": 0.2026077873428664,
+          "bracket_um": [
+            0.2,
+            0.25
+          ],
+          "bracket_pct": [
+            0.18009581097143681,
+            0.225119763714296
+          ],
+          "union_bracket_um": [
+            0.2,
+            0.25
+          ],
+          "union_bracket_pct": [
+            0.18009581097143681,
+            0.225119763714296
+          ],
+          "lower_bound_pct": null,
+          "nonmonotone": false,
+          "cancellation": false,
+          "disposition": "VALUE",
+          "rank_eligible": true,
+          "endpoint_states": [
+            "CONTACT",
+            "CONTACT"
+          ],
+          "sigma_P": 0.0010259783520850981,
+          "trajectory_status": "RM_STOP",
+          "separation": {
+            "declared_step": null,
+            "separated_final": false,
+            "recontact_index": [],
+            "missing_index": [],
+            "moved_index": [],
+            "gap_index": [],
+            "n_post": 0,
+            "declared_w": null
+          },
+          "s4_status": "NOT_COMPUTED",
+          "why": [],
+          "cancellation_detail": {
+            "tension_N": [
+              0,
+              0
+            ],
+            "threshold_N": 1.25
+          },
+          "eps": {
+            "status": "OK",
+            "C_all_m": 2.1991148575128546e-05,
+            "area_m2": 0.0025000000000000005,
+            "n_s0": 105,
+            "S0": {
+              "status": "OK",
+              "eps_all": 0.9998019743131584,
+              "eps_inside": 0.9998019743131584,
+              "n_inside": 105,
+              "h_m": 0.111052
+            },
+            "endpoints": [
+              {
+                "k": 1,
+                "step": 3310000,
+                "h_m": 0.111252,
+                "status": "OK",
+                "eps_all": 0.9998023303079933,
+                "eps_inside": 0.9998023303079933,
+                "n_inside": 105,
+                "why": []
+              },
+              {
+                "k": 2,
+                "step": 3360000,
+                "h_m": 0.111302,
+                "status": "OK",
+                "eps_all": 0.9998024191067983,
+                "eps_inside": 0.9998024191067983,
+                "n_inside": 105,
+                "why": []
+              }
+            ],
+            "M": {
+              "h_m": 0.111277,
+              "status": "OK",
+              "eps_all": 0.9998023747173708,
+              "eps_inside": null
+            },
+            "why": []
+          },
+          "w_proxy_J": 4.036875000000115e-08,
+          "w_proxy": {
+            "status": "OK",
+            "n_points": 3,
+            "why": []
+          }
+        },
+        "read_run": {
+          "problems": [],
+          "n_superseded_rows": 5,
+          "resume_steps": [
+            3310000
+          ],
+          "resume_auth": [
+            [
+              1,
+              3310000
+            ]
+          ]
+        },
+        "selection": {
+          "stage": "need_UV",
+          "delta_dt": 0.0,
+          "delta_v": null,
+          "dt_star": "dt0",
+          "tuple": null,
+          "arm": null,
+          "next": [
+            "UVa"
+          ],
+          "why": []
+        },
+        "UVa_gate": [
+          true,
+          "δ_dt 0.0 → dt* dt0 → UVa"
+        ]
+      }
+    },
+    "no_resume_duplicate_step": {
+      "expected": "Invalid record cannot authorize primary/UVa",
+      "pass": true,
+      "actual": {
+        "verdict": {
+          "job": "UT",
+          "bed": "ps_7_3_r45",
+          "dir": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\dem_unloading_kit_fix_recheck_20261015\\evidence\\resume_cases_20261015T001638_720540Z\\no_resume_duplicate_step\\ps_7_3_r45\\UT",
+          "problems": [
+            "ul_steps.csv 5 째 줄 (k 3 · step 3410000) ≤ 앞 줄 (k 3 · step 3410000) — 승인된 이어 돌림 경계 (RESUME 사건 + 러너 resume_from + 상태 파일 k) 가 아닌 중복 · 역행 (ULKRR-02)"
+          ],
+          "n_superseded_rows": 0,
+          "primary_status": "UNIDENTIFIED",
+          "rho_pct": null,
+          "bracket_um": [
+            0.2,
+            0.25
+          ],
+          "bracket_pct": [
+            0.18009581097143681,
+            0.225119763714296
+          ],
+          "union_bracket_um": [
+            0.2,
+            0.25
+          ],
+          "union_bracket_pct": [
+            0.18009581097143681,
+            0.225119763714296
+          ],
+          "lower_bound_pct": null,
+          "nonmonotone": false,
+          "cancellation": false,
+          "disposition": "NONE",
+          "rank_eligible": false,
+          "endpoint_states": [
+            "CONTACT",
+            "CONTACT"
+          ],
+          "sigma_P": 0.0010259783520850981,
+          "trajectory_status": "RM_STOP",
+          "separation": {
+            "declared_step": null,
+            "separated_final": false,
+            "recontact_index": [],
+            "missing_index": [],
+            "moved_index": [],
+            "gap_index": [],
+            "n_post": 0,
+            "declared_w": null
+          },
+          "s4_status": "NOT_COMPUTED",
+          "why": [
+            "CSV 기록 결손 · 무결성 (ul_steps.csv 5 째 줄 (k 3 · step 3410000) ≤ 앞 줄 (k 3 · step 3410000) — 승인된 이어 돌림 경계 (RESUME 사건 + 러너 resume_from + 상태 파일 k) 가 아닌 중복 · 역행 (ULKRR-02)) — 버린 줄 · 승인 안 된 중복 · 역행 줄을 정상 기록으로 쓰지 않는다",
+            "단 기록 k 불연속 ([0, 1, 2, 3, 3, 4]) — 누락 · 중복 · 순서",
+            "확인 단 1: 단 3 UNSTEADY (S1 ∧ S2 두 창 없음)",
+            "확인 단 2 k 3 ≠ 4 (단 기록 불연속 — 누락 · 순서)"
+          ],
+          "cancellation_detail": {
+            "tension_N": [
+              0,
+              0
+            ],
+            "threshold_N": 1.25
+          },
+          "eps": {
+            "status": "OK",
+            "C_all_m": 2.1991148575128546e-05,
+            "area_m2": 0.0025000000000000005,
+            "n_s0": 105,
+            "S0": {
+              "status": "OK",
+              "eps_all": 0.9998019743131584,
+              "eps_inside": 0.9998019743131584,
+              "n_inside": 105,
+              "h_m": 0.111052
+            },
+            "endpoints": [
+              {
+                "k": 1,
+                "step": 3310000,
+                "h_m": 0.111252,
+                "status": "OK",
+                "eps_all": 0.9998023303079933,
+                "eps_inside": 0.9998023303079933,
+                "n_inside": 105,
+                "why": []
+              },
+              {
+                "k": 2,
+                "step": 3360000,
+                "h_m": 0.111302,
+                "status": "OK",
+                "eps_all": 0.9998024191067983,
+                "eps_inside": 0.9998024191067983,
+                "n_inside": 105,
+                "why": []
+              }
+            ],
+            "M": null,
+            "why": []
+          },
+          "w_proxy_J": null,
+          "w_proxy": {
+            "status": "NOT_COMPUTED",
+            "n_points": 0,
+            "why": [
+              "주 값 OK 아님 — M (보간 높이) 없음"
+            ]
+          }
+        },
+        "read_run": {
+          "problems": [
+            "ul_steps.csv 5 째 줄 (k 3 · step 3410000) ≤ 앞 줄 (k 3 · step 3410000) — 승인된 이어 돌림 경계 (RESUME 사건 + 러너 resume_from + 상태 파일 k) 가 아닌 중복 · 역행 (ULKRR-02)"
+          ],
+          "n_superseded_rows": 0,
+          "resume_steps": [],
+          "resume_auth": []
+        },
+        "selection": {
+          "stage": "SELECTION_UNRESOLVED",
+          "delta_dt": null,
+          "delta_v": null,
+          "dt_star": null,
+          "tuple": null,
+          "arm": null,
+          "next": [],
+          "why": [
+            "끝점 무효 — UB OK · UT UNIDENTIFIED (δ_dt 없음)"
+          ]
+        },
+        "UVa_gate": [
+          false,
+          "선택 단계 SELECTION_UNRESOLVED · 다음 [] (끝점 무효 — UB OK · UT UNIDENTIFIED (δ_dt 없음)) — UV 는 UB · UT 끝점 판독 뒤 dt* 의 팔 하나만"
+        ]
+      }
+    },
+    "no_resume_duplicate_window": {
+      "expected": "Invalid record cannot authorize primary/UVa",
+      "pass": true,
+      "actual": {
+        "verdict": {
+          "job": "UT",
+          "bed": "ps_7_3_r45",
+          "dir": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\dem_unloading_kit_fix_recheck_20261015\\evidence\\resume_cases_20261015T001638_720540Z\\no_resume_duplicate_window\\ps_7_3_r45\\UT",
+          "problems": [
+            "ul_windows.csv 5 째 줄 (k 1 · step 3280000) ≤ 앞 줄 (k 1 · step 3280000) — 승인된 이어 돌림 경계 (RESUME 사건 + 러너 resume_from + 상태 파일 k) 가 아닌 중복 · 역행 (ULKRR-02)"
+          ],
+          "n_superseded_rows": 0,
+          "primary_status": "UNIDENTIFIED",
+          "rho_pct": null,
+          "bracket_um": [
+            0.2,
+            0.25
+          ],
+          "bracket_pct": [
+            0.18009581097143681,
+            0.225119763714296
+          ],
+          "union_bracket_um": [
+            0.2,
+            0.25
+          ],
+          "union_bracket_pct": [
+            0.18009581097143681,
+            0.225119763714296
+          ],
+          "lower_bound_pct": null,
+          "nonmonotone": false,
+          "cancellation": false,
+          "disposition": "NONE",
+          "rank_eligible": false,
+          "endpoint_states": [
+            "CONTACT",
+            "CONTACT"
+          ],
+          "sigma_P": 0.0010259783520850981,
+          "trajectory_status": "RM_STOP",
+          "separation": {
+            "declared_step": null,
+            "separated_final": false,
+            "recontact_index": [],
+            "missing_index": [],
+            "moved_index": [],
+            "gap_index": [
+              4
+            ],
+            "n_post": 0,
+            "declared_w": null
+          },
+          "s4_status": "NOT_COMPUTED",
+          "why": [
+            "CSV 기록 결손 · 무결성 (ul_windows.csv 5 째 줄 (k 1 · step 3280000) ≤ 앞 줄 (k 1 · step 3280000) — 승인된 이어 돌림 경계 (RESUME 사건 + 러너 resume_from + 상태 파일 k) 가 아닌 중복 · 역행 (ULKRR-02)) — 버린 줄 · 승인 안 된 중복 · 역행 줄을 정상 기록으로 쓰지 않는다"
+          ],
+          "cancellation_detail": {
+            "tension_N": [
+              0,
+              0
+            ],
+            "threshold_N": 1.25
+          },
+          "eps": {
+            "status": "OK",
+            "C_all_m": 2.1991148575128546e-05,
+            "area_m2": 0.0025000000000000005,
+            "n_s0": 105,
+            "S0": {
+              "status": "OK",
+              "eps_all": 0.9998019743131584,
+              "eps_inside": 0.9998019743131584,
+              "n_inside": 105,
+              "h_m": 0.111052
+            },
+            "endpoints": [
+              {
+                "k": 1,
+                "step": 3310000,
+                "h_m": 0.111252,
+                "status": "OK",
+                "eps_all": 0.9998023303079933,
+                "eps_inside": 0.9998023303079933,
+                "n_inside": 105,
+                "why": []
+              },
+              {
+                "k": 2,
+                "step": 3360000,
+                "h_m": 0.111302,
+                "status": "OK",
+                "eps_all": 0.9998024191067983,
+                "eps_inside": 0.9998024191067983,
+                "n_inside": 105,
+                "why": []
+              }
+            ],
+            "M": null,
+            "why": []
+          },
+          "w_proxy_J": null,
+          "w_proxy": {
+            "status": "NOT_COMPUTED",
+            "n_points": 0,
+            "why": [
+              "주 값 OK 아님 — M (보간 높이) 없음"
+            ]
+          }
+        },
+        "read_run": {
+          "problems": [
+            "ul_windows.csv 5 째 줄 (k 1 · step 3280000) ≤ 앞 줄 (k 1 · step 3280000) — 승인된 이어 돌림 경계 (RESUME 사건 + 러너 resume_from + 상태 파일 k) 가 아닌 중복 · 역행 (ULKRR-02)"
+          ],
+          "n_superseded_rows": 0,
+          "resume_steps": [],
+          "resume_auth": []
+        },
+        "selection": {
+          "stage": "SELECTION_UNRESOLVED",
+          "delta_dt": null,
+          "delta_v": null,
+          "dt_star": null,
+          "tuple": null,
+          "arm": null,
+          "next": [],
+          "why": [
+            "끝점 무효 — UB OK · UT UNIDENTIFIED (δ_dt 없음)"
+          ]
+        },
+        "UVa_gate": [
+          false,
+          "선택 단계 SELECTION_UNRESOLVED · 다음 [] (끝점 무효 — UB OK · UT UNIDENTIFIED (δ_dt 없음)) — UV 는 UB · UT 끝점 판독 뒤 dt* 의 팔 하나만"
+        ]
+      }
+    },
+    "missing_manifest": {
+      "expected": "Invalid record cannot authorize primary/UVa",
+      "pass": true,
+      "actual": {
+        "verdict": {
+          "job": "UT",
+          "bed": "ps_7_3_r45",
+          "dir": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\dem_unloading_kit_fix_recheck_20261015\\evidence\\resume_cases_20261015T001638_720540Z\\missing_manifest\\ps_7_3_r45\\UT",
+          "problems": [
+            "ul_events.csv: RESUME (k 1 · step 3310000) 앞 사건 1 개가 그 step 뒤 — 승인된 이어 돌림 경계 (러너 resume_from + 상태 파일 k) 가 아니어서 버리지 않는다 (ULKRR-02)",
+            "ul_windows.csv 12 째 줄 (k 2 · step 3330000) ≤ 앞 줄 (k 2 · step 3360000) — 승인된 이어 돌림 경계 (RESUME 사건 + 러너 resume_from + 상태 파일 k) 가 아닌 중복 · 역행 (ULKRR-02)",
+            "ul_steps.csv 4 째 줄 (k 2 · step 3360000) ≤ 앞 줄 (k 2 · step 3360000) — 승인된 이어 돌림 경계 (RESUME 사건 + 러너 resume_from + 상태 파일 k) 가 아닌 중복 · 역행 (ULKRR-02)"
+          ],
+          "n_superseded_rows": 0,
+          "primary_status": "UNIDENTIFIED",
+          "rho_pct": null,
+          "bracket_um": [
+            0.25,
+            0.25
+          ],
+          "bracket_pct": [
+            0.225119763714296,
+            0.225119763714296
+          ],
+          "union_bracket_um": [
+            0.25,
+            0.25
+          ],
+          "union_bracket_pct": [
+            0.225119763714296,
+            0.225119763714296
+          ],
+          "lower_bound_pct": null,
+          "nonmonotone": false,
+          "cancellation": false,
+          "disposition": "NONE",
+          "rank_eligible": false,
+          "endpoint_states": [
+            "CONTACT",
+            "CONTACT"
+          ],
+          "sigma_P": null,
+          "trajectory_status": "RM_STOP",
+          "separation": {
+            "declared_step": null,
+            "separated_final": false,
+            "recontact_index": [],
+            "missing_index": [],
+            "moved_index": [],
+            "gap_index": [
+              11
+            ],
+            "n_post": 0,
+            "declared_w": null
+          },
+          "s4_status": "NOT_COMPUTED",
+          "why": [
+            "CSV 기록 결손 · 무결성 (ul_events.csv: RESUME (k 1 · step 3310000) 앞 사건 1 개가 그 step 뒤 — 승인된 이어 돌림 경계 (러너 resume_from + 상태 파일 k) 가 아니어서 버리지 않는다 (ULKRR-02) · ul_windows.csv 12 째 줄 (k 2 · step 3330000) ≤ 앞 줄 (k 2 · step 3360000) — 승인된 이어 돌림 경계 (RESUME 사건 + 러너 resume_from + 상태 파일 k) 가 아닌 중복 · 역행 (ULKRR-02) · ul_steps.csv 4 째 줄 (k 2 · step 3360000) ≤ 앞 줄 (k 2 · step 3360000) — 승인된 이어 돌림 경계 (RESUME 사건 + 러너 resume_from + 상태 파일 k) 가 아닌 중복 · 역행 (ULKRR-02)) — 버린 줄 · 승인 안 된 중복 · 역행 줄을 정상 기록으로 쓰지 않는다",
+            "단 기록 k 불연속 ([0, 1, 2, 2, 3, 4]) — 누락 · 중복 · 순서"
+          ],
+          "cancellation_detail": {
+            "tension_N": [
+              0,
+              0
+            ],
+            "threshold_N": 1.25
+          },
+          "eps": {
+            "status": "OK",
+            "C_all_m": 2.1991148575128546e-05,
+            "area_m2": 0.0025000000000000005,
+            "n_s0": 105,
+            "S0": {
+              "status": "OK",
+              "eps_all": 0.9998019743131584,
+              "eps_inside": 0.9998019743131584,
+              "n_inside": 105,
+              "h_m": 0.111052
+            },
+            "endpoints": [
+              {
+                "k": 2,
+                "step": 3360000,
+                "h_m": 0.111302,
+                "status": "OK",
+                "eps_all": 0.9998024191067983,
+                "eps_inside": 0.9998024191067983,
+                "n_inside": 105,
+                "why": []
+              },
+              {
+                "k": 2,
+                "step": 3360000,
+                "h_m": 0.111302,
+                "status": "OK",
+                "eps_all": 0.9998024191067983,
+                "eps_inside": 0.9998024191067983,
+                "n_inside": 105,
+                "why": []
+              }
+            ],
+            "M": null,
+            "why": []
+          },
+          "w_proxy_J": null,
+          "w_proxy": {
+            "status": "NOT_COMPUTED",
+            "n_points": 0,
+            "why": [
+              "주 값 OK 아님 — M (보간 높이) 없음"
+            ]
+          }
+        },
+        "read_run": {
+          "problems": [
+            "ul_events.csv: RESUME (k 1 · step 3310000) 앞 사건 1 개가 그 step 뒤 — 승인된 이어 돌림 경계 (러너 resume_from + 상태 파일 k) 가 아니어서 버리지 않는다 (ULKRR-02)",
+            "ul_windows.csv 12 째 줄 (k 2 · step 3330000) ≤ 앞 줄 (k 2 · step 3360000) — 승인된 이어 돌림 경계 (RESUME 사건 + 러너 resume_from + 상태 파일 k) 가 아닌 중복 · 역행 (ULKRR-02)",
+            "ul_steps.csv 4 째 줄 (k 2 · step 3360000) ≤ 앞 줄 (k 2 · step 3360000) — 승인된 이어 돌림 경계 (RESUME 사건 + 러너 resume_from + 상태 파일 k) 가 아닌 중복 · 역행 (ULKRR-02)"
+          ],
+          "n_superseded_rows": 0,
+          "resume_steps": [
+            3310000
+          ],
+          "resume_auth": []
+        },
+        "selection": {
+          "stage": "SELECTION_UNRESOLVED",
+          "delta_dt": null,
+          "delta_v": null,
+          "dt_star": null,
+          "tuple": null,
+          "arm": null,
+          "next": [],
+          "why": [
+            "끝점 무효 — UB OK · UT UNIDENTIFIED (δ_dt 없음)"
+          ]
+        },
+        "UVa_gate": [
+          false,
+          "선택 단계 SELECTION_UNRESOLVED · 다음 [] (끝점 무효 — UB OK · UT UNIDENTIFIED (δ_dt 없음)) — UV 는 UB · UT 끝점 판독 뒤 dt* 의 팔 하나만"
+        ]
+      }
+    },
+    "missing_event": {
+      "expected": "Invalid record cannot authorize primary/UVa",
+      "pass": true,
+      "actual": {
+        "verdict": {
+          "job": "UT",
+          "bed": "ps_7_3_r45",
+          "dir": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\dem_unloading_kit_fix_recheck_20261015\\evidence\\resume_cases_20261015T001638_720540Z\\missing_event\\ps_7_3_r45\\UT",
+          "problems": [
+            "ul_windows.csv 12 째 줄 (k 2 · step 3330000) ≤ 앞 줄 (k 2 · step 3360000) — 승인된 이어 돌림 경계 (RESUME 사건 + 러너 resume_from + 상태 파일 k) 가 아닌 중복 · 역행 (ULKRR-02)",
+            "ul_steps.csv 4 째 줄 (k 2 · step 3360000) ≤ 앞 줄 (k 2 · step 3360000) — 승인된 이어 돌림 경계 (RESUME 사건 + 러너 resume_from + 상태 파일 k) 가 아닌 중복 · 역행 (ULKRR-02)"
+          ],
+          "n_superseded_rows": 0,
+          "primary_status": "UNIDENTIFIED",
+          "rho_pct": null,
+          "bracket_um": [
+            0.25,
+            0.25
+          ],
+          "bracket_pct": [
+            0.225119763714296,
+            0.225119763714296
+          ],
+          "union_bracket_um": [
+            0.25,
+            0.25
+          ],
+          "union_bracket_pct": [
+            0.225119763714296,
+            0.225119763714296
+          ],
+          "lower_bound_pct": null,
+          "nonmonotone": false,
+          "cancellation": false,
+          "disposition": "NONE",
+          "rank_eligible": false,
+          "endpoint_states": [
+            "CONTACT",
+            "CONTACT"
+          ],
+          "sigma_P": null,
+          "trajectory_status": "RM_STOP",
+          "separation": {
+            "declared_step": null,
+            "separated_final": false,
+            "recontact_index": [],
+            "missing_index": [],
+            "moved_index": [],
+            "gap_index": [
+              11
+            ],
+            "n_post": 0,
+            "declared_w": null
+          },
+          "s4_status": "NOT_COMPUTED",
+          "why": [
+            "CSV 기록 결손 · 무결성 (ul_windows.csv 12 째 줄 (k 2 · step 3330000) ≤ 앞 줄 (k 2 · step 3360000) — 승인된 이어 돌림 경계 (RESUME 사건 + 러너 resume_from + 상태 파일 k) 가 아닌 중복 · 역행 (ULKRR-02) · ul_steps.csv 4 째 줄 (k 2 · step 3360000) ≤ 앞 줄 (k 2 · step 3360000) — 승인된 이어 돌림 경계 (RESUME 사건 + 러너 resume_from + 상태 파일 k) 가 아닌 중복 · 역행 (ULKRR-02)) — 버린 줄 · 승인 안 된 중복 · 역행 줄을 정상 기록으로 쓰지 않는다",
+            "단 기록 k 불연속 ([0, 1, 2, 2, 3, 4]) — 누락 · 중복 · 순서"
+          ],
+          "cancellation_detail": {
+            "tension_N": [
+              0,
+              0
+            ],
+            "threshold_N": 1.25
+          },
+          "eps": {
+            "status": "OK",
+            "C_all_m": 2.1991148575128546e-05,
+            "area_m2": 0.0025000000000000005,
+            "n_s0": 105,
+            "S0": {
+              "status": "OK",
+              "eps_all": 0.9998019743131584,
+              "eps_inside": 0.9998019743131584,
+              "n_inside": 105,
+              "h_m": 0.111052
+            },
+            "endpoints": [
+              {
+                "k": 2,
+                "step": 3360000,
+                "h_m": 0.111302,
+                "status": "OK",
+                "eps_all": 0.9998024191067983,
+                "eps_inside": 0.9998024191067983,
+                "n_inside": 105,
+                "why": []
+              },
+              {
+                "k": 2,
+                "step": 3360000,
+                "h_m": 0.111302,
+                "status": "OK",
+                "eps_all": 0.9998024191067983,
+                "eps_inside": 0.9998024191067983,
+                "n_inside": 105,
+                "why": []
+              }
+            ],
+            "M": null,
+            "why": []
+          },
+          "w_proxy_J": null,
+          "w_proxy": {
+            "status": "NOT_COMPUTED",
+            "n_points": 0,
+            "why": [
+              "주 값 OK 아님 — M (보간 높이) 없음"
+            ]
+          }
+        },
+        "read_run": {
+          "problems": [
+            "ul_windows.csv 12 째 줄 (k 2 · step 3330000) ≤ 앞 줄 (k 2 · step 3360000) — 승인된 이어 돌림 경계 (RESUME 사건 + 러너 resume_from + 상태 파일 k) 가 아닌 중복 · 역행 (ULKRR-02)",
+            "ul_steps.csv 4 째 줄 (k 2 · step 3360000) ≤ 앞 줄 (k 2 · step 3360000) — 승인된 이어 돌림 경계 (RESUME 사건 + 러너 resume_from + 상태 파일 k) 가 아닌 중복 · 역행 (ULKRR-02)"
+          ],
+          "n_superseded_rows": 0,
+          "resume_steps": [],
+          "resume_auth": []
+        },
+        "selection": {
+          "stage": "SELECTION_UNRESOLVED",
+          "delta_dt": null,
+          "delta_v": null,
+          "dt_star": null,
+          "tuple": null,
+          "arm": null,
+          "next": [],
+          "why": [
+            "끝점 무효 — UB OK · UT UNIDENTIFIED (δ_dt 없음)"
+          ]
+        },
+        "UVa_gate": [
+          false,
+          "선택 단계 SELECTION_UNRESOLVED · 다음 [] (끝점 무효 — UB OK · UT UNIDENTIFIED (δ_dt 없음)) — UV 는 UB · UT 끝점 판독 뒤 dt* 의 팔 하나만"
+        ]
+      }
+    },
+    "wrong_event_k": {
+      "expected": "Invalid record cannot authorize primary/UVa",
+      "pass": true,
+      "actual": {
+        "verdict": {
+          "job": "UT",
+          "bed": "ps_7_3_r45",
+          "dir": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\dem_unloading_kit_fix_recheck_20261015\\evidence\\resume_cases_20261015T001638_720540Z\\wrong_event_k\\ps_7_3_r45\\UT",
+          "problems": [
+            "ul_events.csv: RESUME (k 0 · step 3310000) 앞 사건 1 개가 그 step 뒤 — 승인된 이어 돌림 경계 (러너 resume_from + 상태 파일 k) 가 아니어서 버리지 않는다 (ULKRR-02)",
+            "ul_windows.csv 12 째 줄 (k 2 · step 3330000) ≤ 앞 줄 (k 2 · step 3360000) — 승인된 이어 돌림 경계 (RESUME 사건 + 러너 resume_from + 상태 파일 k) 가 아닌 중복 · 역행 (ULKRR-02)",
+            "ul_steps.csv 4 째 줄 (k 2 · step 3360000) ≤ 앞 줄 (k 2 · step 3360000) — 승인된 이어 돌림 경계 (RESUME 사건 + 러너 resume_from + 상태 파일 k) 가 아닌 중복 · 역행 (ULKRR-02)"
+          ],
+          "n_superseded_rows": 0,
+          "primary_status": "UNIDENTIFIED",
+          "rho_pct": null,
+          "bracket_um": [
+            0.25,
+            0.25
+          ],
+          "bracket_pct": [
+            0.225119763714296,
+            0.225119763714296
+          ],
+          "union_bracket_um": [
+            0.25,
+            0.25
+          ],
+          "union_bracket_pct": [
+            0.225119763714296,
+            0.225119763714296
+          ],
+          "lower_bound_pct": null,
+          "nonmonotone": false,
+          "cancellation": false,
+          "disposition": "NONE",
+          "rank_eligible": false,
+          "endpoint_states": [
+            "CONTACT",
+            "CONTACT"
+          ],
+          "sigma_P": null,
+          "trajectory_status": "RM_STOP",
+          "separation": {
+            "declared_step": null,
+            "separated_final": false,
+            "recontact_index": [],
+            "missing_index": [],
+            "moved_index": [],
+            "gap_index": [
+              11
+            ],
+            "n_post": 0,
+            "declared_w": null
+          },
+          "s4_status": "NOT_COMPUTED",
+          "why": [
+            "CSV 기록 결손 · 무결성 (ul_events.csv: RESUME (k 0 · step 3310000) 앞 사건 1 개가 그 step 뒤 — 승인된 이어 돌림 경계 (러너 resume_from + 상태 파일 k) 가 아니어서 버리지 않는다 (ULKRR-02) · ul_windows.csv 12 째 줄 (k 2 · step 3330000) ≤ 앞 줄 (k 2 · step 3360000) — 승인된 이어 돌림 경계 (RESUME 사건 + 러너 resume_from + 상태 파일 k) 가 아닌 중복 · 역행 (ULKRR-02) · ul_steps.csv 4 째 줄 (k 2 · step 3360000) ≤ 앞 줄 (k 2 · step 3360000) — 승인된 이어 돌림 경계 (RESUME 사건 + 러너 resume_from + 상태 파일 k) 가 아닌 중복 · 역행 (ULKRR-02)) — 버린 줄 · 승인 안 된 중복 · 역행 줄을 정상 기록으로 쓰지 않는다",
+            "단 기록 k 불연속 ([0, 1, 2, 2, 3, 4]) — 누락 · 중복 · 순서"
+          ],
+          "cancellation_detail": {
+            "tension_N": [
+              0,
+              0
+            ],
+            "threshold_N": 1.25
+          },
+          "eps": {
+            "status": "OK",
+            "C_all_m": 2.1991148575128546e-05,
+            "area_m2": 0.0025000000000000005,
+            "n_s0": 105,
+            "S0": {
+              "status": "OK",
+              "eps_all": 0.9998019743131584,
+              "eps_inside": 0.9998019743131584,
+              "n_inside": 105,
+              "h_m": 0.111052
+            },
+            "endpoints": [
+              {
+                "k": 2,
+                "step": 3360000,
+                "h_m": 0.111302,
+                "status": "OK",
+                "eps_all": 0.9998024191067983,
+                "eps_inside": 0.9998024191067983,
+                "n_inside": 105,
+                "why": []
+              },
+              {
+                "k": 2,
+                "step": 3360000,
+                "h_m": 0.111302,
+                "status": "OK",
+                "eps_all": 0.9998024191067983,
+                "eps_inside": 0.9998024191067983,
+                "n_inside": 105,
+                "why": []
+              }
+            ],
+            "M": null,
+            "why": []
+          },
+          "w_proxy_J": null,
+          "w_proxy": {
+            "status": "NOT_COMPUTED",
+            "n_points": 0,
+            "why": [
+              "주 값 OK 아님 — M (보간 높이) 없음"
+            ]
+          }
+        },
+        "read_run": {
+          "problems": [
+            "ul_events.csv: RESUME (k 0 · step 3310000) 앞 사건 1 개가 그 step 뒤 — 승인된 이어 돌림 경계 (러너 resume_from + 상태 파일 k) 가 아니어서 버리지 않는다 (ULKRR-02)",
+            "ul_windows.csv 12 째 줄 (k 2 · step 3330000) ≤ 앞 줄 (k 2 · step 3360000) — 승인된 이어 돌림 경계 (RESUME 사건 + 러너 resume_from + 상태 파일 k) 가 아닌 중복 · 역행 (ULKRR-02)",
+            "ul_steps.csv 4 째 줄 (k 2 · step 3360000) ≤ 앞 줄 (k 2 · step 3360000) — 승인된 이어 돌림 경계 (RESUME 사건 + 러너 resume_from + 상태 파일 k) 가 아닌 중복 · 역행 (ULKRR-02)"
+          ],
+          "n_superseded_rows": 0,
+          "resume_steps": [
+            3310000
+          ],
+          "resume_auth": []
+        },
+        "selection": {
+          "stage": "SELECTION_UNRESOLVED",
+          "delta_dt": null,
+          "delta_v": null,
+          "dt_star": null,
+          "tuple": null,
+          "arm": null,
+          "next": [],
+          "why": [
+            "끝점 무효 — UB OK · UT UNIDENTIFIED (δ_dt 없음)"
+          ]
+        },
+        "UVa_gate": [
+          false,
+          "선택 단계 SELECTION_UNRESOLVED · 다음 [] (끝점 무효 — UB OK · UT UNIDENTIFIED (δ_dt 없음)) — UV 는 UB · UT 끝점 판독 뒤 dt* 의 팔 하나만"
+        ]
+      }
+    },
+    "wrong_state_k": {
+      "expected": "Invalid record cannot authorize primary/UVa",
+      "pass": true,
+      "actual": {
+        "verdict": {
+          "job": "UT",
+          "bed": "ps_7_3_r45",
+          "dir": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\dem_unloading_kit_fix_recheck_20261015\\evidence\\resume_cases_20261015T001638_720540Z\\wrong_state_k\\ps_7_3_r45\\UT",
+          "problems": [
+            "ul_events.csv: RESUME (k 1 · step 3310000) 앞 사건 1 개가 그 step 뒤 — 승인된 이어 돌림 경계 (러너 resume_from + 상태 파일 k) 가 아니어서 버리지 않는다 (ULKRR-02)",
+            "ul_windows.csv 12 째 줄 (k 2 · step 3330000) ≤ 앞 줄 (k 2 · step 3360000) — 승인된 이어 돌림 경계 (RESUME 사건 + 러너 resume_from + 상태 파일 k) 가 아닌 중복 · 역행 (ULKRR-02)",
+            "ul_steps.csv 4 째 줄 (k 2 · step 3360000) ≤ 앞 줄 (k 2 · step 3360000) — 승인된 이어 돌림 경계 (RESUME 사건 + 러너 resume_from + 상태 파일 k) 가 아닌 중복 · 역행 (ULKRR-02)"
+          ],
+          "n_superseded_rows": 0,
+          "primary_status": "UNIDENTIFIED",
+          "rho_pct": null,
+          "bracket_um": [
+            0.25,
+            0.25
+          ],
+          "bracket_pct": [
+            0.225119763714296,
+            0.225119763714296
+          ],
+          "union_bracket_um": [
+            0.25,
+            0.25
+          ],
+          "union_bracket_pct": [
+            0.225119763714296,
+            0.225119763714296
+          ],
+          "lower_bound_pct": null,
+          "nonmonotone": false,
+          "cancellation": false,
+          "disposition": "NONE",
+          "rank_eligible": false,
+          "endpoint_states": [
+            "CONTACT",
+            "CONTACT"
+          ],
+          "sigma_P": null,
+          "trajectory_status": "RM_STOP",
+          "separation": {
+            "declared_step": null,
+            "separated_final": false,
+            "recontact_index": [],
+            "missing_index": [],
+            "moved_index": [],
+            "gap_index": [
+              11
+            ],
+            "n_post": 0,
+            "declared_w": null
+          },
+          "s4_status": "NOT_COMPUTED",
+          "why": [
+            "CSV 기록 결손 · 무결성 (ul_events.csv: RESUME (k 1 · step 3310000) 앞 사건 1 개가 그 step 뒤 — 승인된 이어 돌림 경계 (러너 resume_from + 상태 파일 k) 가 아니어서 버리지 않는다 (ULKRR-02) · ul_windows.csv 12 째 줄 (k 2 · step 3330000) ≤ 앞 줄 (k 2 · step 3360000) — 승인된 이어 돌림 경계 (RESUME 사건 + 러너 resume_from + 상태 파일 k) 가 아닌 중복 · 역행 (ULKRR-02) · ul_steps.csv 4 째 줄 (k 2 · step 3360000) ≤ 앞 줄 (k 2 · step 3360000) — 승인된 이어 돌림 경계 (RESUME 사건 + 러너 resume_from + 상태 파일 k) 가 아닌 중복 · 역행 (ULKRR-02)) — 버린 줄 · 승인 안 된 중복 · 역행 줄을 정상 기록으로 쓰지 않는다",
+            "단 기록 k 불연속 ([0, 1, 2, 2, 3, 4]) — 누락 · 중복 · 순서"
+          ],
+          "cancellation_detail": {
+            "tension_N": [
+              0,
+              0
+            ],
+            "threshold_N": 1.25
+          },
+          "eps": {
+            "status": "OK",
+            "C_all_m": 2.1991148575128546e-05,
+            "area_m2": 0.0025000000000000005,
+            "n_s0": 105,
+            "S0": {
+              "status": "OK",
+              "eps_all": 0.9998019743131584,
+              "eps_inside": 0.9998019743131584,
+              "n_inside": 105,
+              "h_m": 0.111052
+            },
+            "endpoints": [
+              {
+                "k": 2,
+                "step": 3360000,
+                "h_m": 0.111302,
+                "status": "OK",
+                "eps_all": 0.9998024191067983,
+                "eps_inside": 0.9998024191067983,
+                "n_inside": 105,
+                "why": []
+              },
+              {
+                "k": 2,
+                "step": 3360000,
+                "h_m": 0.111302,
+                "status": "OK",
+                "eps_all": 0.9998024191067983,
+                "eps_inside": 0.9998024191067983,
+                "n_inside": 105,
+                "why": []
+              }
+            ],
+            "M": null,
+            "why": []
+          },
+          "w_proxy_J": null,
+          "w_proxy": {
+            "status": "NOT_COMPUTED",
+            "n_points": 0,
+            "why": [
+              "주 값 OK 아님 — M (보간 높이) 없음"
+            ]
+          }
+        },
+        "read_run": {
+          "problems": [
+            "ul_events.csv: RESUME (k 1 · step 3310000) 앞 사건 1 개가 그 step 뒤 — 승인된 이어 돌림 경계 (러너 resume_from + 상태 파일 k) 가 아니어서 버리지 않는다 (ULKRR-02)",
+            "ul_windows.csv 12 째 줄 (k 2 · step 3330000) ≤ 앞 줄 (k 2 · step 3360000) — 승인된 이어 돌림 경계 (RESUME 사건 + 러너 resume_from + 상태 파일 k) 가 아닌 중복 · 역행 (ULKRR-02)",
+            "ul_steps.csv 4 째 줄 (k 2 · step 3360000) ≤ 앞 줄 (k 2 · step 3360000) — 승인된 이어 돌림 경계 (RESUME 사건 + 러너 resume_from + 상태 파일 k) 가 아닌 중복 · 역행 (ULKRR-02)"
+          ],
+          "n_superseded_rows": 0,
+          "resume_steps": [
+            3310000
+          ],
+          "resume_auth": []
+        },
+        "selection": {
+          "stage": "SELECTION_UNRESOLVED",
+          "delta_dt": null,
+          "delta_v": null,
+          "dt_star": null,
+          "tuple": null,
+          "arm": null,
+          "next": [],
+          "why": [
+            "끝점 무효 — UB OK · UT UNIDENTIFIED (δ_dt 없음)"
+          ]
+        },
+        "UVa_gate": [
+          false,
+          "선택 단계 SELECTION_UNRESOLVED · 다음 [] (끝점 무효 — UB OK · UT UNIDENTIFIED (δ_dt 없음)) — UV 는 UB · UT 끝점 판독 뒤 dt* 의 팔 하나만"
+        ]
+      }
+    },
+    "wrong_state_step": {
+      "expected": "Invalid record cannot authorize primary/UVa",
+      "pass": true,
+      "actual": {
+        "verdict": {
+          "job": "UT",
+          "bed": "ps_7_3_r45",
+          "dir": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\dem_unloading_kit_fix_recheck_20261015\\evidence\\resume_cases_20261015T001638_720540Z\\wrong_state_step\\ps_7_3_r45\\UT",
+          "problems": [
+            "ul_events.csv: RESUME (k 1 · step 3310000) 앞 사건 1 개가 그 step 뒤 — 승인된 이어 돌림 경계 (러너 resume_from + 상태 파일 k) 가 아니어서 버리지 않는다 (ULKRR-02)",
+            "ul_windows.csv 12 째 줄 (k 2 · step 3330000) ≤ 앞 줄 (k 2 · step 3360000) — 승인된 이어 돌림 경계 (RESUME 사건 + 러너 resume_from + 상태 파일 k) 가 아닌 중복 · 역행 (ULKRR-02)",
+            "ul_steps.csv 4 째 줄 (k 2 · step 3360000) ≤ 앞 줄 (k 2 · step 3360000) — 승인된 이어 돌림 경계 (RESUME 사건 + 러너 resume_from + 상태 파일 k) 가 아닌 중복 · 역행 (ULKRR-02)"
+          ],
+          "n_superseded_rows": 0,
+          "primary_status": "UNIDENTIFIED",
+          "rho_pct": null,
+          "bracket_um": [
+            0.25,
+            0.25
+          ],
+          "bracket_pct": [
+            0.225119763714296,
+            0.225119763714296
+          ],
+          "union_bracket_um": [
+            0.25,
+            0.25
+          ],
+          "union_bracket_pct": [
+            0.225119763714296,
+            0.225119763714296
+          ],
+          "lower_bound_pct": null,
+          "nonmonotone": false,
+          "cancellation": false,
+          "disposition": "NONE",
+          "rank_eligible": false,
+          "endpoint_states": [
+            "CONTACT",
+            "CONTACT"
+          ],
+          "sigma_P": null,
+          "trajectory_status": "RM_STOP",
+          "separation": {
+            "declared_step": null,
+            "separated_final": false,
+            "recontact_index": [],
+            "missing_index": [],
+            "moved_index": [],
+            "gap_index": [
+              11
+            ],
+            "n_post": 0,
+            "declared_w": null
+          },
+          "s4_status": "NOT_COMPUTED",
+          "why": [
+            "CSV 기록 결손 · 무결성 (ul_events.csv: RESUME (k 1 · step 3310000) 앞 사건 1 개가 그 step 뒤 — 승인된 이어 돌림 경계 (러너 resume_from + 상태 파일 k) 가 아니어서 버리지 않는다 (ULKRR-02) · ul_windows.csv 12 째 줄 (k 2 · step 3330000) ≤ 앞 줄 (k 2 · step 3360000) — 승인된 이어 돌림 경계 (RESUME 사건 + 러너 resume_from + 상태 파일 k) 가 아닌 중복 · 역행 (ULKRR-02) · ul_steps.csv 4 째 줄 (k 2 · step 3360000) ≤ 앞 줄 (k 2 · step 3360000) — 승인된 이어 돌림 경계 (RESUME 사건 + 러너 resume_from + 상태 파일 k) 가 아닌 중복 · 역행 (ULKRR-02)) — 버린 줄 · 승인 안 된 중복 · 역행 줄을 정상 기록으로 쓰지 않는다",
+            "단 기록 k 불연속 ([0, 1, 2, 2, 3, 4]) — 누락 · 중복 · 순서"
+          ],
+          "cancellation_detail": {
+            "tension_N": [
+              0,
+              0
+            ],
+            "threshold_N": 1.25
+          },
+          "eps": {
+            "status": "OK",
+            "C_all_m": 2.1991148575128546e-05,
+            "area_m2": 0.0025000000000000005,
+            "n_s0": 105,
+            "S0": {
+              "status": "OK",
+              "eps_all": 0.9998019743131584,
+              "eps_inside": 0.9998019743131584,
+              "n_inside": 105,
+              "h_m": 0.111052
+            },
+            "endpoints": [
+              {
+                "k": 2,
+                "step": 3360000,
+                "h_m": 0.111302,
+                "status": "OK",
+                "eps_all": 0.9998024191067983,
+                "eps_inside": 0.9998024191067983,
+                "n_inside": 105,
+                "why": []
+              },
+              {
+                "k": 2,
+                "step": 3360000,
+                "h_m": 0.111302,
+                "status": "OK",
+                "eps_all": 0.9998024191067983,
+                "eps_inside": 0.9998024191067983,
+                "n_inside": 105,
+                "why": []
+              }
+            ],
+            "M": null,
+            "why": []
+          },
+          "w_proxy_J": null,
+          "w_proxy": {
+            "status": "NOT_COMPUTED",
+            "n_points": 0,
+            "why": [
+              "주 값 OK 아님 — M (보간 높이) 없음"
+            ]
+          }
+        },
+        "read_run": {
+          "problems": [
+            "ul_events.csv: RESUME (k 1 · step 3310000) 앞 사건 1 개가 그 step 뒤 — 승인된 이어 돌림 경계 (러너 resume_from + 상태 파일 k) 가 아니어서 버리지 않는다 (ULKRR-02)",
+            "ul_windows.csv 12 째 줄 (k 2 · step 3330000) ≤ 앞 줄 (k 2 · step 3360000) — 승인된 이어 돌림 경계 (RESUME 사건 + 러너 resume_from + 상태 파일 k) 가 아닌 중복 · 역행 (ULKRR-02)",
+            "ul_steps.csv 4 째 줄 (k 2 · step 3360000) ≤ 앞 줄 (k 2 · step 3360000) — 승인된 이어 돌림 경계 (RESUME 사건 + 러너 resume_from + 상태 파일 k) 가 아닌 중복 · 역행 (ULKRR-02)"
+          ],
+          "n_superseded_rows": 0,
+          "resume_steps": [
+            3310000
+          ],
+          "resume_auth": []
+        },
+        "selection": {
+          "stage": "SELECTION_UNRESOLVED",
+          "delta_dt": null,
+          "delta_v": null,
+          "dt_star": null,
+          "tuple": null,
+          "arm": null,
+          "next": [],
+          "why": [
+            "끝점 무효 — UB OK · UT UNIDENTIFIED (δ_dt 없음)"
+          ]
+        },
+        "UVa_gate": [
+          false,
+          "선택 단계 SELECTION_UNRESOLVED · 다음 [] (끝점 무효 — UB OK · UT UNIDENTIFIED (δ_dt 없음)) — UV 는 UB · UT 끝점 판독 뒤 dt* 의 팔 하나만"
+        ]
+      }
+    },
+    "missing_state": {
+      "expected": "Invalid record cannot authorize primary/UVa",
+      "pass": true,
+      "actual": {
+        "verdict": {
+          "job": "UT",
+          "bed": "ps_7_3_r45",
+          "dir": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\dem_unloading_kit_fix_recheck_20261015\\evidence\\resume_cases_20261015T001638_720540Z\\missing_state\\ps_7_3_r45\\UT",
+          "problems": [
+            "ul_events.csv: RESUME (k 1 · step 3310000) 앞 사건 1 개가 그 step 뒤 — 승인된 이어 돌림 경계 (러너 resume_from + 상태 파일 k) 가 아니어서 버리지 않는다 (ULKRR-02)",
+            "ul_windows.csv 12 째 줄 (k 2 · step 3330000) ≤ 앞 줄 (k 2 · step 3360000) — 승인된 이어 돌림 경계 (RESUME 사건 + 러너 resume_from + 상태 파일 k) 가 아닌 중복 · 역행 (ULKRR-02)",
+            "ul_steps.csv 4 째 줄 (k 2 · step 3360000) ≤ 앞 줄 (k 2 · step 3360000) — 승인된 이어 돌림 경계 (RESUME 사건 + 러너 resume_from + 상태 파일 k) 가 아닌 중복 · 역행 (ULKRR-02)"
+          ],
+          "n_superseded_rows": 0,
+          "primary_status": "UNIDENTIFIED",
+          "rho_pct": null,
+          "bracket_um": [
+            0.25,
+            0.25
+          ],
+          "bracket_pct": [
+            0.225119763714296,
+            0.225119763714296
+          ],
+          "union_bracket_um": [
+            0.25,
+            0.25
+          ],
+          "union_bracket_pct": [
+            0.225119763714296,
+            0.225119763714296
+          ],
+          "lower_bound_pct": null,
+          "nonmonotone": false,
+          "cancellation": false,
+          "disposition": "NONE",
+          "rank_eligible": false,
+          "endpoint_states": [
+            "CONTACT",
+            "CONTACT"
+          ],
+          "sigma_P": null,
+          "trajectory_status": "RM_STOP",
+          "separation": {
+            "declared_step": null,
+            "separated_final": false,
+            "recontact_index": [],
+            "missing_index": [],
+            "moved_index": [],
+            "gap_index": [
+              11
+            ],
+            "n_post": 0,
+            "declared_w": null
+          },
+          "s4_status": "NOT_COMPUTED",
+          "why": [
+            "CSV 기록 결손 · 무결성 (ul_events.csv: RESUME (k 1 · step 3310000) 앞 사건 1 개가 그 step 뒤 — 승인된 이어 돌림 경계 (러너 resume_from + 상태 파일 k) 가 아니어서 버리지 않는다 (ULKRR-02) · ul_windows.csv 12 째 줄 (k 2 · step 3330000) ≤ 앞 줄 (k 2 · step 3360000) — 승인된 이어 돌림 경계 (RESUME 사건 + 러너 resume_from + 상태 파일 k) 가 아닌 중복 · 역행 (ULKRR-02) · ul_steps.csv 4 째 줄 (k 2 · step 3360000) ≤ 앞 줄 (k 2 · step 3360000) — 승인된 이어 돌림 경계 (RESUME 사건 + 러너 resume_from + 상태 파일 k) 가 아닌 중복 · 역행 (ULKRR-02)) — 버린 줄 · 승인 안 된 중복 · 역행 줄을 정상 기록으로 쓰지 않는다",
+            "단 기록 k 불연속 ([0, 1, 2, 2, 3, 4]) — 누락 · 중복 · 순서"
+          ],
+          "cancellation_detail": {
+            "tension_N": [
+              0,
+              0
+            ],
+            "threshold_N": 1.25
+          },
+          "eps": {
+            "status": "OK",
+            "C_all_m": 2.1991148575128546e-05,
+            "area_m2": 0.0025000000000000005,
+            "n_s0": 105,
+            "S0": {
+              "status": "OK",
+              "eps_all": 0.9998019743131584,
+              "eps_inside": 0.9998019743131584,
+              "n_inside": 105,
+              "h_m": 0.111052
+            },
+            "endpoints": [
+              {
+                "k": 2,
+                "step": 3360000,
+                "h_m": 0.111302,
+                "status": "OK",
+                "eps_all": 0.9998024191067983,
+                "eps_inside": 0.9998024191067983,
+                "n_inside": 105,
+                "why": []
+              },
+              {
+                "k": 2,
+                "step": 3360000,
+                "h_m": 0.111302,
+                "status": "OK",
+                "eps_all": 0.9998024191067983,
+                "eps_inside": 0.9998024191067983,
+                "n_inside": 105,
+                "why": []
+              }
+            ],
+            "M": null,
+            "why": []
+          },
+          "w_proxy_J": null,
+          "w_proxy": {
+            "status": "NOT_COMPUTED",
+            "n_points": 0,
+            "why": [
+              "주 값 OK 아님 — M (보간 높이) 없음"
+            ]
+          }
+        },
+        "read_run": {
+          "problems": [
+            "ul_events.csv: RESUME (k 1 · step 3310000) 앞 사건 1 개가 그 step 뒤 — 승인된 이어 돌림 경계 (러너 resume_from + 상태 파일 k) 가 아니어서 버리지 않는다 (ULKRR-02)",
+            "ul_windows.csv 12 째 줄 (k 2 · step 3330000) ≤ 앞 줄 (k 2 · step 3360000) — 승인된 이어 돌림 경계 (RESUME 사건 + 러너 resume_from + 상태 파일 k) 가 아닌 중복 · 역행 (ULKRR-02)",
+            "ul_steps.csv 4 째 줄 (k 2 · step 3360000) ≤ 앞 줄 (k 2 · step 3360000) — 승인된 이어 돌림 경계 (RESUME 사건 + 러너 resume_from + 상태 파일 k) 가 아닌 중복 · 역행 (ULKRR-02)"
+          ],
+          "n_superseded_rows": 0,
+          "resume_steps": [
+            3310000
+          ],
+          "resume_auth": []
+        },
+        "selection": {
+          "stage": "SELECTION_UNRESOLVED",
+          "delta_dt": null,
+          "delta_v": null,
+          "dt_star": null,
+          "tuple": null,
+          "arm": null,
+          "next": [],
+          "why": [
+            "끝점 무효 — UB OK · UT UNIDENTIFIED (δ_dt 없음)"
+          ]
+        },
+        "UVa_gate": [
+          false,
+          "선택 단계 SELECTION_UNRESOLVED · 다음 [] (끝점 무효 — UB OK · UT UNIDENTIFIED (δ_dt 없음)) — UV 는 UB · UT 끝점 판독 뒤 dt* 의 팔 하나만"
+        ]
+      }
+    },
+    "missing_retained_checkpoint": {
+      "expected": "Invalid record cannot authorize primary/UVa",
+      "pass": true,
+      "actual": {
+        "verdict": {
+          "job": "UT",
+          "bed": "ps_7_3_r45",
+          "dir": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\dem_unloading_kit_fix_recheck_20261015\\evidence\\resume_cases_20261015T001638_720540Z\\missing_retained_checkpoint\\ps_7_3_r45\\UT",
+          "problems": [
+            "ul_steps.csv 3 째 줄 (k 2 · step 3360000) ≤ 앞 줄 (k 2 · step 3360000) — 승인된 이어 돌림 경계 (RESUME 사건 + 러너 resume_from + 상태 파일 k) 가 아닌 중복 · 역행 (ULKRR-02)"
+          ],
+          "n_superseded_rows": 4,
+          "primary_status": "UNIDENTIFIED",
+          "rho_pct": null,
+          "bracket_um": [
+            0.25,
+            0.25
+          ],
+          "bracket_pct": [
+            0.225119763714296,
+            0.225119763714296
+          ],
+          "union_bracket_um": [
+            0.25,
+            0.25
+          ],
+          "union_bracket_pct": [
+            0.225119763714296,
+            0.225119763714296
+          ],
+          "lower_bound_pct": null,
+          "nonmonotone": false,
+          "cancellation": false,
+          "disposition": "NONE",
+          "rank_eligible": false,
+          "endpoint_states": [
+            "CONTACT",
+            "CONTACT"
+          ],
+          "sigma_P": 0.0010259783520850981,
+          "trajectory_status": "RM_STOP",
+          "separation": {
+            "declared_step": null,
+            "separated_final": false,
+            "recontact_index": [],
+            "missing_index": [],
+            "moved_index": [],
+            "gap_index": [],
+            "n_post": 0,
+            "declared_w": null
+          },
+          "s4_status": "NOT_COMPUTED",
+          "why": [
+            "CSV 기록 결손 · 무결성 (ul_steps.csv 3 째 줄 (k 2 · step 3360000) ≤ 앞 줄 (k 2 · step 3360000) — 승인된 이어 돌림 경계 (RESUME 사건 + 러너 resume_from + 상태 파일 k) 가 아닌 중복 · 역행 (ULKRR-02)) — 버린 줄 · 승인 안 된 중복 · 역행 줄을 정상 기록으로 쓰지 않는다",
+            "단 기록 k 불연속 ([0, 2, 2, 3, 4]) — 누락 · 중복 · 순서"
+          ],
+          "cancellation_detail": {
+            "tension_N": [
+              0,
+              0
+            ],
+            "threshold_N": 1.25
+          },
+          "eps": {
+            "status": "OK",
+            "C_all_m": 2.1991148575128546e-05,
+            "area_m2": 0.0025000000000000005,
+            "n_s0": 105,
+            "S0": {
+              "status": "OK",
+              "eps_all": 0.9998019743131584,
+              "eps_inside": 0.9998019743131584,
+              "n_inside": 105,
+              "h_m": 0.111052
+            },
+            "endpoints": [
+              {
+                "k": 2,
+                "step": 3360000,
+                "h_m": 0.111302,
+                "status": "OK",
+                "eps_all": 0.9998024191067983,
+                "eps_inside": 0.9998024191067983,
+                "n_inside": 105,
+                "why": []
+              },
+              {
+                "k": 2,
+                "step": 3360000,
+                "h_m": 0.111302,
+                "status": "OK",
+                "eps_all": 0.9998024191067983,
+                "eps_inside": 0.9998024191067983,
+                "n_inside": 105,
+                "why": []
+              }
+            ],
+            "M": null,
+            "why": []
+          },
+          "w_proxy_J": null,
+          "w_proxy": {
+            "status": "NOT_COMPUTED",
+            "n_points": 0,
+            "why": [
+              "주 값 OK 아님 — M (보간 높이) 없음"
+            ]
+          }
+        },
+        "read_run": {
+          "problems": [
+            "ul_steps.csv 3 째 줄 (k 2 · step 3360000) ≤ 앞 줄 (k 2 · step 3360000) — 승인된 이어 돌림 경계 (RESUME 사건 + 러너 resume_from + 상태 파일 k) 가 아닌 중복 · 역행 (ULKRR-02)"
+          ],
+          "n_superseded_rows": 4,
+          "resume_steps": [
+            3310000
+          ],
+          "resume_auth": [
+            [
+              1,
+              3310000
+            ]
+          ]
+        },
+        "selection": {
+          "stage": "SELECTION_UNRESOLVED",
+          "delta_dt": null,
+          "delta_v": null,
+          "dt_star": null,
+          "tuple": null,
+          "arm": null,
+          "next": [],
+          "why": [
+            "끝점 무효 — UB OK · UT UNIDENTIFIED (δ_dt 없음)"
+          ]
+        },
+        "UVa_gate": [
+          false,
+          "선택 단계 SELECTION_UNRESOLVED · 다음 [] (끝점 무효 — UB OK · UT UNIDENTIFIED (δ_dt 없음)) — UV 는 UB · UT 끝점 판독 뒤 dt* 의 팔 하나만"
+        ]
+      }
+    },
+    "wrong_first_new_k": {
+      "expected": "Invalid record cannot authorize primary/UVa",
+      "pass": true,
+      "actual": {
+        "verdict": {
+          "job": "UT",
+          "bed": "ps_7_3_r45",
+          "dir": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\dem_unloading_kit_fix_recheck_20261015\\evidence\\resume_cases_20261015T001638_720540Z\\wrong_first_new_k\\ps_7_3_r45\\UT",
+          "problems": [
+            "ul_steps.csv 4 째 줄 (k 3 · step 3360000) ≤ 앞 줄 (k 2 · step 3360000) — 승인된 이어 돌림 경계 (RESUME 사건 + 러너 resume_from + 상태 파일 k) 가 아닌 중복 · 역행 (ULKRR-02)"
+          ],
+          "n_superseded_rows": 4,
+          "primary_status": "UNIDENTIFIED",
+          "rho_pct": null,
+          "bracket_um": [
+            0.25,
+            0.25
+          ],
+          "bracket_pct": [
+            0.225119763714296,
+            0.225119763714296
+          ],
+          "union_bracket_um": [
+            0.25,
+            0.25
+          ],
+          "union_bracket_pct": [
+            0.225119763714296,
+            0.225119763714296
+          ],
+          "lower_bound_pct": null,
+          "nonmonotone": false,
+          "cancellation": false,
+          "disposition": "NONE",
+          "rank_eligible": false,
+          "endpoint_states": [
+            "CONTACT",
+            "CONTACT"
+          ],
+          "sigma_P": 0.001025978352085155,
+          "trajectory_status": "RM_STOP",
+          "separation": {
+            "declared_step": null,
+            "separated_final": false,
+            "recontact_index": [],
+            "missing_index": [],
+            "moved_index": [],
+            "gap_index": [],
+            "n_post": 0,
+            "declared_w": null
+          },
+          "s4_status": "NOT_COMPUTED",
+          "why": [
+            "CSV 기록 결손 · 무결성 (ul_steps.csv 4 째 줄 (k 3 · step 3360000) ≤ 앞 줄 (k 2 · step 3360000) — 승인된 이어 돌림 경계 (RESUME 사건 + 러너 resume_from + 상태 파일 k) 가 아닌 중복 · 역행 (ULKRR-02)) — 버린 줄 · 승인 안 된 중복 · 역행 줄을 정상 기록으로 쓰지 않는다",
+            "단 기록 k 불연속 ([0, 1, 2, 3, 3, 4]) — 누락 · 중복 · 순서",
+            "확인 단 1 k 3 ≠ 4 (단 기록 불연속 — 누락 · 순서)",
+            "확인 단 2 k 4 ≠ 5 (단 기록 불연속 — 누락 · 순서)"
+          ],
+          "cancellation_detail": {
+            "tension_N": [
+              0,
+              0
+            ],
+            "threshold_N": 1.25
+          },
+          "eps": {
+            "status": "OK",
+            "C_all_m": 2.1991148575128546e-05,
+            "area_m2": 0.0025000000000000005,
+            "n_s0": 105,
+            "S0": {
+              "status": "OK",
+              "eps_all": 0.9998019743131584,
+              "eps_inside": 0.9998019743131584,
+              "n_inside": 105,
+              "h_m": 0.111052
+            },
+            "endpoints": [
+              {
+                "k": 2,
+                "step": 3360000,
+                "h_m": 0.111302,
+                "status": "OK",
+                "eps_all": 0.9998024191067983,
+                "eps_inside": 0.9998024191067983,
+                "n_inside": 105,
+                "why": []
+              },
+              {
+                "k": 3,
+                "step": 3360000,
+                "h_m": 0.111302,
+                "status": "OK",
+                "eps_all": 0.9998024191067983,
+                "eps_inside": 0.9998024191067983,
+                "n_inside": 105,
+                "why": []
+              }
+            ],
+            "M": null,
+            "why": []
+          },
+          "w_proxy_J": null,
+          "w_proxy": {
+            "status": "NOT_COMPUTED",
+            "n_points": 0,
+            "why": [
+              "주 값 OK 아님 — M (보간 높이) 없음"
+            ]
+          }
+        },
+        "read_run": {
+          "problems": [
+            "ul_steps.csv 4 째 줄 (k 3 · step 3360000) ≤ 앞 줄 (k 2 · step 3360000) — 승인된 이어 돌림 경계 (RESUME 사건 + 러너 resume_from + 상태 파일 k) 가 아닌 중복 · 역행 (ULKRR-02)"
+          ],
+          "n_superseded_rows": 4,
+          "resume_steps": [
+            3310000
+          ],
+          "resume_auth": [
+            [
+              1,
+              3310000
+            ]
+          ]
+        },
+        "selection": {
+          "stage": "SELECTION_UNRESOLVED",
+          "delta_dt": null,
+          "delta_v": null,
+          "dt_star": null,
+          "tuple": null,
+          "arm": null,
+          "next": [],
+          "why": [
+            "끝점 무효 — UB OK · UT UNIDENTIFIED (δ_dt 없음)"
+          ]
+        },
+        "UVa_gate": [
+          false,
+          "선택 단계 SELECTION_UNRESOLVED · 다음 [] (끝점 무효 — UB OK · UT UNIDENTIFIED (δ_dt 없음)) — UV 는 UB · UT 끝점 판독 뒤 dt* 의 팔 하나만"
+        ]
+      }
+    },
+    "stale_k_at_boundary": {
+      "expected": "Invalid record cannot authorize primary/UVa",
+      "pass": true,
+      "actual": {
+        "verdict": {
+          "job": "UT",
+          "bed": "ps_7_3_r45",
+          "dir": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\dem_unloading_kit_fix_recheck_20261015\\evidence\\resume_cases_20261015T001638_720540Z\\stale_k_at_boundary\\ps_7_3_r45\\UT",
+          "problems": [
+            "ul_steps.csv 4 째 줄 (k 2 · step 3360000) ≤ 앞 줄 (k 1 · step 3360000) — 승인된 이어 돌림 경계 (RESUME 사건 + 러너 resume_from + 상태 파일 k) 가 아닌 중복 · 역행 (ULKRR-02)"
+          ],
+          "n_superseded_rows": 4,
+          "primary_status": "UNIDENTIFIED",
+          "rho_pct": null,
+          "bracket_um": [
+            0.25,
+            0.25
+          ],
+          "bracket_pct": [
+            0.225119763714296,
+            0.225119763714296
+          ],
+          "union_bracket_um": [
+            0.25,
+            0.25
+          ],
+          "union_bracket_pct": [
+            0.225119763714296,
+            0.225119763714296
+          ],
+          "lower_bound_pct": null,
+          "nonmonotone": false,
+          "cancellation": false,
+          "disposition": "NONE",
+          "rank_eligible": false,
+          "endpoint_states": [
+            "CONTACT",
+            "CONTACT"
+          ],
+          "sigma_P": 0.0010259783520850981,
+          "trajectory_status": "RM_STOP",
+          "separation": {
+            "declared_step": null,
+            "separated_final": false,
+            "recontact_index": [],
+            "missing_index": [],
+            "moved_index": [],
+            "gap_index": [],
+            "n_post": 0,
+            "declared_w": null
+          },
+          "s4_status": "NOT_COMPUTED",
+          "why": [
+            "CSV 기록 결손 · 무결성 (ul_steps.csv 4 째 줄 (k 2 · step 3360000) ≤ 앞 줄 (k 1 · step 3360000) — 승인된 이어 돌림 경계 (RESUME 사건 + 러너 resume_from + 상태 파일 k) 가 아닌 중복 · 역행 (ULKRR-02)) — 버린 줄 · 승인 안 된 중복 · 역행 줄을 정상 기록으로 쓰지 않는다",
+            "단 기록 k 불연속 ([0, 1, 1, 2, 3, 4]) — 누락 · 중복 · 순서"
+          ],
+          "cancellation_detail": {
+            "tension_N": [
+              0,
+              0
+            ],
+            "threshold_N": 1.25
+          },
+          "eps": {
+            "status": "OK",
+            "C_all_m": 2.1991148575128546e-05,
+            "area_m2": 0.0025000000000000005,
+            "n_s0": 105,
+            "S0": {
+              "status": "OK",
+              "eps_all": 0.9998019743131584,
+              "eps_inside": 0.9998019743131584,
+              "n_inside": 105,
+              "h_m": 0.111052
+            },
+            "endpoints": [
+              {
+                "k": 1,
+                "step": 3360000,
+                "h_m": 0.111302,
+                "status": "OK",
+                "eps_all": 0.9998024191067983,
+                "eps_inside": 0.9998024191067983,
+                "n_inside": 105,
+                "why": []
+              },
+              {
+                "k": 2,
+                "step": 3360000,
+                "h_m": 0.111302,
+                "status": "OK",
+                "eps_all": 0.9998024191067983,
+                "eps_inside": 0.9998024191067983,
+                "n_inside": 105,
+                "why": []
+              }
+            ],
+            "M": null,
+            "why": []
+          },
+          "w_proxy_J": null,
+          "w_proxy": {
+            "status": "NOT_COMPUTED",
+            "n_points": 0,
+            "why": [
+              "주 값 OK 아님 — M (보간 높이) 없음"
+            ]
+          }
+        },
+        "read_run": {
+          "problems": [
+            "ul_steps.csv 4 째 줄 (k 2 · step 3360000) ≤ 앞 줄 (k 1 · step 3360000) — 승인된 이어 돌림 경계 (RESUME 사건 + 러너 resume_from + 상태 파일 k) 가 아닌 중복 · 역행 (ULKRR-02)"
+          ],
+          "n_superseded_rows": 4,
+          "resume_steps": [
+            3310000
+          ],
+          "resume_auth": [
+            [
+              1,
+              3310000
+            ]
+          ]
+        },
+        "selection": {
+          "stage": "SELECTION_UNRESOLVED",
+          "delta_dt": null,
+          "delta_v": null,
+          "dt_star": null,
+          "tuple": null,
+          "arm": null,
+          "next": [],
+          "why": [
+            "끝점 무효 — UB OK · UT UNIDENTIFIED (δ_dt 없음)"
+          ]
+        },
+        "UVa_gate": [
+          false,
+          "선택 단계 SELECTION_UNRESOLVED · 다음 [] (끝점 무효 — UB OK · UT UNIDENTIFIED (δ_dt 없음)) — UV 는 UB · UT 끝점 판독 뒤 dt* 의 팔 하나만"
+        ]
+      }
+    },
+    "one_event_two_rollbacks": {
+      "expected": "Malformed/extra resume boundary must not silently normalize records",
+      "pass": true,
+      "actual": {
+        "verdict": {
+          "job": "UT",
+          "bed": "ps_7_3_r45",
+          "dir": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\dem_unloading_kit_fix_recheck_20261015\\evidence\\resume_cases_20261015T001638_720540Z\\one_event_two_rollbacks\\ps_7_3_r45\\UT",
+          "problems": [
+            "ul_windows.csv 16 째 줄 (k 2 · step 3330000) ≤ 앞 줄 (k 2 · step 3360000) — 승인된 이어 돌림 경계 (RESUME 사건 + 러너 resume_from + 상태 파일 k) 가 아닌 중복 · 역행 (ULKRR-02)",
+            "ul_steps.csv 5 째 줄 (k 2 · step 3360000) ≤ 앞 줄 (k 2 · step 3360000) — 승인된 이어 돌림 경계 (RESUME 사건 + 러너 resume_from + 상태 파일 k) 가 아닌 중복 · 역행 (ULKRR-02)"
+          ],
+          "n_superseded_rows": 5,
+          "primary_status": "UNIDENTIFIED",
+          "rho_pct": null,
+          "bracket_um": [
+            0.25,
+            0.25
+          ],
+          "bracket_pct": [
+            0.225119763714296,
+            0.225119763714296
+          ],
+          "union_bracket_um": [
+            0.25,
+            0.25
+          ],
+          "union_bracket_pct": [
+            0.225119763714296,
+            0.225119763714296
+          ],
+          "lower_bound_pct": null,
+          "nonmonotone": false,
+          "cancellation": false,
+          "disposition": "NONE",
+          "rank_eligible": false,
+          "endpoint_states": [
+            "CONTACT",
+            "CONTACT"
+          ],
+          "sigma_P": null,
+          "trajectory_status": "RM_STOP",
+          "separation": {
+            "declared_step": null,
+            "separated_final": false,
+            "recontact_index": [],
+            "missing_index": [],
+            "moved_index": [],
+            "gap_index": [
+              11
+            ],
+            "n_post": 0,
+            "declared_w": null
+          },
+          "s4_status": "NOT_COMPUTED",
+          "why": [
+            "CSV 기록 결손 · 무결성 (ul_windows.csv 16 째 줄 (k 2 · step 3330000) ≤ 앞 줄 (k 2 · step 3360000) — 승인된 이어 돌림 경계 (RESUME 사건 + 러너 resume_from + 상태 파일 k) 가 아닌 중복 · 역행 (ULKRR-02) · ul_steps.csv 5 째 줄 (k 2 · step 3360000) ≤ 앞 줄 (k 2 · step 3360000) — 승인된 이어 돌림 경계 (RESUME 사건 + 러너 resume_from + 상태 파일 k) 가 아닌 중복 · 역행 (ULKRR-02)) — 버린 줄 · 승인 안 된 중복 · 역행 줄을 정상 기록으로 쓰지 않는다",
+            "단 기록 k 불연속 ([0, 1, 2, 2, 3, 4]) — 누락 · 중복 · 순서"
+          ],
+          "cancellation_detail": {
+            "tension_N": [
+              0,
+              0
+            ],
+            "threshold_N": 1.25
+          },
+          "eps": {
+            "status": "OK",
+            "C_all_m": 2.1991148575128546e-05,
+            "area_m2": 0.0025000000000000005,
+            "n_s0": 105,
+            "S0": {
+              "status": "OK",
+              "eps_all": 0.9998019743131584,
+              "eps_inside": 0.9998019743131584,
+              "n_inside": 105,
+              "h_m": 0.111052
+            },
+            "endpoints": [
+              {
+                "k": 2,
+                "step": 3360000,
+                "h_m": 0.111302,
+                "status": "OK",
+                "eps_all": 0.9998024191067983,
+                "eps_inside": 0.9998024191067983,
+                "n_inside": 105,
+                "why": []
+              },
+              {
+                "k": 2,
+                "step": 3360000,
+                "h_m": 0.111302,
+                "status": "OK",
+                "eps_all": 0.9998024191067983,
+                "eps_inside": 0.9998024191067983,
+                "n_inside": 105,
+                "why": []
+              }
+            ],
+            "M": null,
+            "why": []
+          },
+          "w_proxy_J": null,
+          "w_proxy": {
+            "status": "NOT_COMPUTED",
+            "n_points": 0,
+            "why": [
+              "주 값 OK 아님 — M (보간 높이) 없음"
+            ]
+          }
+        },
+        "read_run": {
+          "problems": [
+            "ul_windows.csv 16 째 줄 (k 2 · step 3330000) ≤ 앞 줄 (k 2 · step 3360000) — 승인된 이어 돌림 경계 (RESUME 사건 + 러너 resume_from + 상태 파일 k) 가 아닌 중복 · 역행 (ULKRR-02)",
+            "ul_steps.csv 5 째 줄 (k 2 · step 3360000) ≤ 앞 줄 (k 2 · step 3360000) — 승인된 이어 돌림 경계 (RESUME 사건 + 러너 resume_from + 상태 파일 k) 가 아닌 중복 · 역행 (ULKRR-02)"
+          ],
+          "n_superseded_rows": 5,
+          "resume_steps": [
+            3310000
+          ],
+          "resume_auth": [
+            [
+              1,
+              3310000
+            ]
+          ]
+        },
+        "selection": {
+          "stage": "SELECTION_UNRESOLVED",
+          "delta_dt": null,
+          "delta_v": null,
+          "dt_star": null,
+          "tuple": null,
+          "arm": null,
+          "next": [],
+          "why": [
+            "끝점 무효 — UB OK · UT UNIDENTIFIED (δ_dt 없음)"
+          ]
+        },
+        "UVa_gate": [
+          false,
+          "선택 단계 SELECTION_UNRESOLVED · 다음 [] (끝점 무효 — UB OK · UT UNIDENTIFIED (δ_dt 없음)) — UV 는 UB · UT 끝점 판독 뒤 dt* 의 팔 하나만"
+        ]
+      }
+    },
+    "one_auth_two_rollbacks": {
+      "expected": "Malformed/extra resume boundary must not silently normalize records",
+      "pass": false,
+      "actual": {
+        "verdict": {
+          "job": "UT",
+          "bed": "ps_7_3_r45",
+          "dir": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\dem_unloading_kit_fix_recheck_20261015\\evidence\\resume_cases_20261015T001638_720540Z\\one_auth_two_rollbacks\\ps_7_3_r45\\UT",
+          "problems": [],
+          "n_superseded_rows": 10,
+          "primary_status": "OK",
+          "rho_pct": 0.2026077873428664,
+          "bracket_um": [
+            0.2,
+            0.25
+          ],
+          "bracket_pct": [
+            0.18009581097143681,
+            0.225119763714296
+          ],
+          "union_bracket_um": [
+            0.2,
+            0.25
+          ],
+          "union_bracket_pct": [
+            0.18009581097143681,
+            0.225119763714296
+          ],
+          "lower_bound_pct": null,
+          "nonmonotone": false,
+          "cancellation": false,
+          "disposition": "VALUE",
+          "rank_eligible": true,
+          "endpoint_states": [
+            "CONTACT",
+            "CONTACT"
+          ],
+          "sigma_P": 0.0010259783520850981,
+          "trajectory_status": "RM_STOP",
+          "separation": {
+            "declared_step": null,
+            "separated_final": false,
+            "recontact_index": [],
+            "missing_index": [],
+            "moved_index": [],
+            "gap_index": [],
+            "n_post": 0,
+            "declared_w": null
+          },
+          "s4_status": "NOT_COMPUTED",
+          "why": [],
+          "cancellation_detail": {
+            "tension_N": [
+              0,
+              0
+            ],
+            "threshold_N": 1.25
+          },
+          "eps": {
+            "status": "OK",
+            "C_all_m": 2.1991148575128546e-05,
+            "area_m2": 0.0025000000000000005,
+            "n_s0": 105,
+            "S0": {
+              "status": "OK",
+              "eps_all": 0.9998019743131584,
+              "eps_inside": 0.9998019743131584,
+              "n_inside": 105,
+              "h_m": 0.111052
+            },
+            "endpoints": [
+              {
+                "k": 1,
+                "step": 3310000,
+                "h_m": 0.111252,
+                "status": "OK",
+                "eps_all": 0.9998023303079933,
+                "eps_inside": 0.9998023303079933,
+                "n_inside": 105,
+                "why": []
+              },
+              {
+                "k": 2,
+                "step": 3360000,
+                "h_m": 0.111302,
+                "status": "OK",
+                "eps_all": 0.9998024191067983,
+                "eps_inside": 0.9998024191067983,
+                "n_inside": 105,
+                "why": []
+              }
+            ],
+            "M": {
+              "h_m": 0.111277,
+              "status": "OK",
+              "eps_all": 0.9998023747173708,
+              "eps_inside": null
+            },
+            "why": []
+          },
+          "w_proxy_J": 4.036875000000115e-08,
+          "w_proxy": {
+            "status": "OK",
+            "n_points": 3,
+            "why": []
+          }
+        },
+        "read_run": {
+          "problems": [],
+          "n_superseded_rows": 10,
+          "resume_steps": [
+            3310000,
+            3310000
+          ],
+          "resume_auth": [
+            [
+              1,
+              3310000
+            ],
+            [
+              1,
+              3310000
+            ]
+          ]
+        },
+        "selection": {
+          "stage": "need_UV",
+          "delta_dt": 0.0,
+          "delta_v": null,
+          "dt_star": "dt0",
+          "tuple": null,
+          "arm": null,
+          "next": [
+            "UVa"
+          ],
+          "why": []
+        },
+        "UVa_gate": [
+          true,
+          "δ_dt 0.0 → dt* dt0 → UVa"
+        ]
+      }
+    },
+    "duplicate_event_only": {
+      "expected": "Malformed/extra resume boundary must not silently normalize records",
+      "pass": false,
+      "actual": {
+        "verdict": {
+          "job": "UT",
+          "bed": "ps_7_3_r45",
+          "dir": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\dem_unloading_kit_fix_recheck_20261015\\evidence\\resume_cases_20261015T001638_720540Z\\duplicate_event_only\\ps_7_3_r45\\UT",
+          "problems": [],
+          "n_superseded_rows": 5,
+          "primary_status": "OK",
+          "rho_pct": 0.2026077873428664,
+          "bracket_um": [
+            0.2,
+            0.25
+          ],
+          "bracket_pct": [
+            0.18009581097143681,
+            0.225119763714296
+          ],
+          "union_bracket_um": [
+            0.2,
+            0.25
+          ],
+          "union_bracket_pct": [
+            0.18009581097143681,
+            0.225119763714296
+          ],
+          "lower_bound_pct": null,
+          "nonmonotone": false,
+          "cancellation": false,
+          "disposition": "VALUE",
+          "rank_eligible": true,
+          "endpoint_states": [
+            "CONTACT",
+            "CONTACT"
+          ],
+          "sigma_P": 0.0010259783520850981,
+          "trajectory_status": "RM_STOP",
+          "separation": {
+            "declared_step": null,
+            "separated_final": false,
+            "recontact_index": [],
+            "missing_index": [],
+            "moved_index": [],
+            "gap_index": [],
+            "n_post": 0,
+            "declared_w": null
+          },
+          "s4_status": "NOT_COMPUTED",
+          "why": [],
+          "cancellation_detail": {
+            "tension_N": [
+              0,
+              0
+            ],
+            "threshold_N": 1.25
+          },
+          "eps": {
+            "status": "OK",
+            "C_all_m": 2.1991148575128546e-05,
+            "area_m2": 0.0025000000000000005,
+            "n_s0": 105,
+            "S0": {
+              "status": "OK",
+              "eps_all": 0.9998019743131584,
+              "eps_inside": 0.9998019743131584,
+              "n_inside": 105,
+              "h_m": 0.111052
+            },
+            "endpoints": [
+              {
+                "k": 1,
+                "step": 3310000,
+                "h_m": 0.111252,
+                "status": "OK",
+                "eps_all": 0.9998023303079933,
+                "eps_inside": 0.9998023303079933,
+                "n_inside": 105,
+                "why": []
+              },
+              {
+                "k": 2,
+                "step": 3360000,
+                "h_m": 0.111302,
+                "status": "OK",
+                "eps_all": 0.9998024191067983,
+                "eps_inside": 0.9998024191067983,
+                "n_inside": 105,
+                "why": []
+              }
+            ],
+            "M": {
+              "h_m": 0.111277,
+              "status": "OK",
+              "eps_all": 0.9998023747173708,
+              "eps_inside": null
+            },
+            "why": []
+          },
+          "w_proxy_J": 4.036875000000115e-08,
+          "w_proxy": {
+            "status": "OK",
+            "n_points": 3,
+            "why": []
+          }
+        },
+        "read_run": {
+          "problems": [],
+          "n_superseded_rows": 5,
+          "resume_steps": [
+            3310000,
+            3310000
+          ],
+          "resume_auth": [
+            [
+              1,
+              3310000
+            ],
+            [
+              1,
+              3310000
+            ]
+          ]
+        },
+        "selection": {
+          "stage": "need_UV",
+          "delta_dt": 0.0,
+          "delta_v": null,
+          "dt_star": "dt0",
+          "tuple": null,
+          "arm": null,
+          "next": [
+            "UVa"
+          ],
+          "why": []
+        },
+        "UVa_gate": [
+          true,
+          "δ_dt 0.0 → dt* dt0 → UVa"
+        ]
+      }
+    },
+    "fractional_resume_event_k": {
+      "expected": "Malformed/extra resume boundary must not silently normalize records",
+      "pass": false,
+      "actual": {
+        "verdict": {
+          "job": "UT",
+          "bed": "ps_7_3_r45",
+          "dir": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\dem_unloading_kit_fix_recheck_20261015\\evidence\\resume_cases_20261015T001638_720540Z\\fractional_resume_event_k\\ps_7_3_r45\\UT",
+          "problems": [],
+          "n_superseded_rows": 5,
+          "primary_status": "OK",
+          "rho_pct": 0.2026077873428664,
+          "bracket_um": [
+            0.2,
+            0.25
+          ],
+          "bracket_pct": [
+            0.18009581097143681,
+            0.225119763714296
+          ],
+          "union_bracket_um": [
+            0.2,
+            0.25
+          ],
+          "union_bracket_pct": [
+            0.18009581097143681,
+            0.225119763714296
+          ],
+          "lower_bound_pct": null,
+          "nonmonotone": false,
+          "cancellation": false,
+          "disposition": "VALUE",
+          "rank_eligible": true,
+          "endpoint_states": [
+            "CONTACT",
+            "CONTACT"
+          ],
+          "sigma_P": 0.0010259783520850981,
+          "trajectory_status": "RM_STOP",
+          "separation": {
+            "declared_step": null,
+            "separated_final": false,
+            "recontact_index": [],
+            "missing_index": [],
+            "moved_index": [],
+            "gap_index": [],
+            "n_post": 0,
+            "declared_w": null
+          },
+          "s4_status": "NOT_COMPUTED",
+          "why": [],
+          "cancellation_detail": {
+            "tension_N": [
+              0,
+              0
+            ],
+            "threshold_N": 1.25
+          },
+          "eps": {
+            "status": "OK",
+            "C_all_m": 2.1991148575128546e-05,
+            "area_m2": 0.0025000000000000005,
+            "n_s0": 105,
+            "S0": {
+              "status": "OK",
+              "eps_all": 0.9998019743131584,
+              "eps_inside": 0.9998019743131584,
+              "n_inside": 105,
+              "h_m": 0.111052
+            },
+            "endpoints": [
+              {
+                "k": 1,
+                "step": 3310000,
+                "h_m": 0.111252,
+                "status": "OK",
+                "eps_all": 0.9998023303079933,
+                "eps_inside": 0.9998023303079933,
+                "n_inside": 105,
+                "why": []
+              },
+              {
+                "k": 2,
+                "step": 3360000,
+                "h_m": 0.111302,
+                "status": "OK",
+                "eps_all": 0.9998024191067983,
+                "eps_inside": 0.9998024191067983,
+                "n_inside": 105,
+                "why": []
+              }
+            ],
+            "M": {
+              "h_m": 0.111277,
+              "status": "OK",
+              "eps_all": 0.9998023747173708,
+              "eps_inside": null
+            },
+            "why": []
+          },
+          "w_proxy_J": 4.036875000000115e-08,
+          "w_proxy": {
+            "status": "OK",
+            "n_points": 3,
+            "why": []
+          }
+        },
+        "read_run": {
+          "problems": [],
+          "n_superseded_rows": 5,
+          "resume_steps": [
+            3310000
+          ],
+          "resume_auth": [
+            [
+              1,
+              3310000
+            ]
+          ]
+        },
+        "selection": {
+          "stage": "need_UV",
+          "delta_dt": 0.0,
+          "delta_v": null,
+          "dt_star": "dt0",
+          "tuple": null,
+          "arm": null,
+          "next": [
+            "UVa"
+          ],
+          "why": []
+        },
+        "UVa_gate": [
+          true,
+          "δ_dt 0.0 → dt* dt0 → UVa"
+        ]
+      }
+    },
+    "fractional_confirmation_k": {
+      "expected": "Malformed/extra resume boundary must not silently normalize records",
+      "pass": false,
+      "actual": {
+        "verdict": {
+          "job": "UT",
+          "bed": "ps_7_3_r45",
+          "dir": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\dem_unloading_kit_fix_recheck_20261015\\evidence\\resume_cases_20261015T001638_720540Z\\fractional_confirmation_k\\ps_7_3_r45\\UT",
+          "problems": [],
+          "n_superseded_rows": 0,
+          "primary_status": "OK",
+          "rho_pct": 0.2026077873428664,
+          "bracket_um": [
+            0.2,
+            0.25
+          ],
+          "bracket_pct": [
+            0.18009581097143681,
+            0.225119763714296
+          ],
+          "union_bracket_um": [
+            0.2,
+            0.25
+          ],
+          "union_bracket_pct": [
+            0.18009581097143681,
+            0.225119763714296
+          ],
+          "lower_bound_pct": null,
+          "nonmonotone": false,
+          "cancellation": false,
+          "disposition": "VALUE",
+          "rank_eligible": true,
+          "endpoint_states": [
+            "CONTACT",
+            "CONTACT"
+          ],
+          "sigma_P": 0.0010259783520850981,
+          "trajectory_status": "RM_STOP",
+          "separation": {
+            "declared_step": null,
+            "separated_final": false,
+            "recontact_index": [],
+            "missing_index": [],
+            "moved_index": [],
+            "gap_index": [],
+            "n_post": 0,
+            "declared_w": null
+          },
+          "s4_status": "NOT_COMPUTED",
+          "why": [],
+          "cancellation_detail": {
+            "tension_N": [
+              0,
+              0
+            ],
+            "threshold_N": 1.25
+          },
+          "eps": {
+            "status": "OK",
+            "C_all_m": 2.1991148575128546e-05,
+            "area_m2": 0.0025000000000000005,
+            "n_s0": 105,
+            "S0": {
+              "status": "OK",
+              "eps_all": 0.9998019743131584,
+              "eps_inside": 0.9998019743131584,
+              "n_inside": 105,
+              "h_m": 0.111052
+            },
+            "endpoints": [
+              {
+                "k": 1,
+                "step": 3310000,
+                "h_m": 0.111252,
+                "status": "OK",
+                "eps_all": 0.9998023303079933,
+                "eps_inside": 0.9998023303079933,
+                "n_inside": 105,
+                "why": []
+              },
+              {
+                "k": 2,
+                "step": 3360000,
+                "h_m": 0.111302,
+                "status": "OK",
+                "eps_all": 0.9998024191067983,
+                "eps_inside": 0.9998024191067983,
+                "n_inside": 105,
+                "why": []
+              }
+            ],
+            "M": {
+              "h_m": 0.111277,
+              "status": "OK",
+              "eps_all": 0.9998023747173708,
+              "eps_inside": null
+            },
+            "why": []
+          },
+          "w_proxy_J": 4.036875000000115e-08,
+          "w_proxy": {
+            "status": "OK",
+            "n_points": 3,
+            "why": []
+          }
+        },
+        "read_run": {
+          "problems": [],
+          "n_superseded_rows": 0,
+          "resume_steps": [],
+          "resume_auth": []
+        },
+        "selection": {
+          "stage": "need_UV",
+          "delta_dt": 0.0,
+          "delta_v": null,
+          "dt_star": "dt0",
+          "tuple": null,
+          "arm": null,
+          "next": [
+            "UVa"
+          ],
+          "why": []
+        },
+        "UVa_gate": [
+          true,
+          "δ_dt 0.0 → dt* dt0 → UVa"
+        ]
+      }
+    },
+    "producer_completed_hold_4_windows": {
+      "expected": "Actual generated deck control flow emits this completed hold from concrete window observations",
+      "pass": true,
+      "actual": {
+        "k2_windows": [
+          {
+            "arm": "UT",
+            "bed": "ps_7_3_r45",
+            "k": "2",
+            "w": "1",
+            "phase": "0",
+            "step": "3330000",
+            "plate_z": "0.111302",
+            "lift": "0.00025",
+            "Ps_avg": "0.0009",
+            "ke_tr_avg": "1e-07",
+            "ke_rot_avg": "1e-08",
+            "ke_tot_avg": "1.1e-07",
+            "S1": "0",
+            "S2": "1",
+            "ok": "0",
+            "n_contact_geo": "1",
+            "atoms": "160417",
+            "leak": "11",
+            "ke_inst": "1e-07"
+          },
+          {
+            "arm": "UT",
+            "bed": "ps_7_3_r45",
+            "k": "2",
+            "w": "2",
+            "phase": "0",
+            "step": "3340000",
+            "plate_z": "0.111302",
+            "lift": "0.00025",
+            "Ps_avg": "0.0008",
+            "ke_tr_avg": "1e-07",
+            "ke_rot_avg": "1e-08",
+            "ke_tot_avg": "1.1e-07",
+            "S1": "0",
+            "S2": "1",
+            "ok": "0",
+            "n_contact_geo": "1",
+            "atoms": "160417",
+            "leak": "11",
+            "ke_inst": "1e-07"
+          },
+          {
+            "arm": "UT",
+            "bed": "ps_7_3_r45",
+            "k": "2",
+            "w": "3",
+            "phase": "0",
+            "step": "3350000",
+            "plate_z": "0.111302",
+            "lift": "0.00025",
+            "Ps_avg": "0.0008",
+            "ke_tr_avg": "1e-07",
+            "ke_rot_avg": "1e-08",
+            "ke_tot_avg": "1.1e-07",
+            "S1": "1",
+            "S2": "1",
+            "ok": "1",
+            "n_contact_geo": "1",
+            "atoms": "160417",
+            "leak": "11",
+            "ke_inst": "1e-07"
+          },
+          {
+            "arm": "UT",
+            "bed": "ps_7_3_r45",
+            "k": "2",
+            "w": "4",
+            "phase": "0",
+            "step": "3360000",
+            "plate_z": "0.111302",
+            "lift": "0.00025",
+            "Ps_avg": "0.0008",
+            "ke_tr_avg": "1e-07",
+            "ke_rot_avg": "1e-08",
+            "ke_tot_avg": "1.1e-07",
+            "S1": "1",
+            "S2": "1",
+            "ok": "1",
+            "n_contact_geo": "1",
+            "atoms": "160417",
+            "leak": "11",
+            "ke_inst": "1e-07"
+          }
+        ],
+        "k2_step": {
+          "arm": "UT",
+          "bed": "ps_7_3_r45",
+          "k": "2",
+          "kind": "B",
+          "dz": "5e-05",
+          "n_move": "10000",
+          "step": "3360000",
+          "plate_z": "0.111302",
+          "lift": "0.00025",
+          "Pbar": "0.0008",
+          "n_windows": "4",
+          "steady": "1",
+          "phase": "0",
+          "modeB": "1",
+          "n_contact_last": "1"
+        },
+        "result": "RM_STOP"
+      }
+    },
+    "fresh_completed_hold_4_windows": {
+      "expected": "Fresh successful control before resume-layout mutation",
+      "pass": true,
+      "actual": {
+        "verdict": {
+          "job": "UT",
+          "bed": "ps_7_3_r45",
+          "dir": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\dem_unloading_kit_fix_recheck_20261015\\evidence\\resume_cases_20261015T001638_720540Z\\resume_completed_hold_4_windows\\ps_7_3_r45\\UT",
+          "problems": [],
+          "n_superseded_rows": 0,
+          "primary_status": "OK",
+          "rho_pct": 0.20260778734286913,
+          "bracket_um": [
+            0.200000000000006,
+            0.25
+          ],
+          "bracket_pct": [
+            0.18009581097144223,
+            0.225119763714296
+          ],
+          "union_bracket_um": [
+            0.200000000000006,
+            0.25
+          ],
+          "union_bracket_pct": [
+            0.18009581097144223,
+            0.225119763714296
+          ],
+          "lower_bound_pct": null,
+          "nonmonotone": false,
+          "cancellation": false,
+          "disposition": "VALUE",
+          "rank_eligible": true,
+          "endpoint_states": [
+            "CONTACT",
+            "CONTACT"
+          ],
+          "sigma_P": 0.0010259783520850981,
+          "trajectory_status": "RM_STOP",
+          "separation": {
+            "declared_step": null,
+            "separated_final": false,
+            "recontact_index": [],
+            "missing_index": [],
+            "moved_index": [],
+            "gap_index": [],
+            "n_post": 0,
+            "declared_w": null
+          },
+          "s4_status": "NOT_COMPUTED",
+          "why": [],
+          "cancellation_detail": {
+            "tension_N": [
+              0,
+              0
+            ],
+            "threshold_N": 1.25
+          },
+          "eps": {
+            "status": "OK",
+            "C_all_m": 2.1991148575128546e-05,
+            "area_m2": 0.0025000000000000005,
+            "n_s0": 105,
+            "S0": {
+              "status": "OK",
+              "eps_all": 0.9998019743131584,
+              "eps_inside": 0.9998019743131584,
+              "n_inside": 105,
+              "h_m": 0.111052
+            },
+            "endpoints": [
+              {
+                "k": 1,
+                "step": 3310000,
+                "h_m": 0.111252,
+                "status": "OK",
+                "eps_all": 0.9998023303079933,
+                "eps_inside": 0.9998023303079933,
+                "n_inside": 105,
+                "why": []
+              },
+              {
+                "k": 2,
+                "step": 3360000,
+                "h_m": 0.111302,
+                "status": "OK",
+                "eps_all": 0.9998024191067983,
+                "eps_inside": 0.9998024191067983,
+                "n_inside": 105,
+                "why": []
+              }
+            ],
+            "M": {
+              "h_m": 0.111277,
+              "status": "OK",
+              "eps_all": 0.9998023747173708,
+              "eps_inside": null
+            },
+            "why": []
+          },
+          "w_proxy_J": 4.036875000000115e-08,
+          "w_proxy": {
+            "status": "OK",
+            "n_points": 3,
+            "why": []
+          }
+        },
+        "read_run": {
+          "problems": [],
+          "n_superseded_rows": 0,
+          "resume_steps": [],
+          "resume_auth": []
+        },
+        "selection": {
+          "stage": "need_UV",
+          "delta_dt": 2.7200464103316335e-15,
+          "delta_v": null,
+          "dt_star": "dt0",
+          "tuple": null,
+          "arm": null,
+          "next": [
+            "UVa"
+          ],
+          "why": []
+        },
+        "UVa_gate": [
+          true,
+          "δ_dt 2.7200464103316335e-15 → dt* dt0 → UVa"
+        ]
+      }
+    },
+    "resume_completed_hold_4_windows": {
+      "expected": "Authorized restart with coherent completed hold records; changed hold duration is exploratory",
+      "pass": true,
+      "actual": {
+        "verdict": {
+          "job": "UT",
+          "bed": "ps_7_3_r45",
+          "dir": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\dem_unloading_kit_fix_recheck_20261015\\evidence\\resume_cases_20261015T001638_720540Z\\resume_completed_hold_4_windows\\ps_7_3_r45\\UT",
+          "problems": [],
+          "n_superseded_rows": 5,
+          "primary_status": "OK",
+          "rho_pct": 0.20260778734286913,
+          "bracket_um": [
+            0.200000000000006,
+            0.25
+          ],
+          "bracket_pct": [
+            0.18009581097144223,
+            0.225119763714296
+          ],
+          "union_bracket_um": [
+            0.200000000000006,
+            0.25
+          ],
+          "union_bracket_pct": [
+            0.18009581097144223,
+            0.225119763714296
+          ],
+          "lower_bound_pct": null,
+          "nonmonotone": false,
+          "cancellation": false,
+          "disposition": "VALUE",
+          "rank_eligible": true,
+          "endpoint_states": [
+            "CONTACT",
+            "CONTACT"
+          ],
+          "sigma_P": 0.0010259783520850981,
+          "trajectory_status": "RM_STOP",
+          "separation": {
+            "declared_step": null,
+            "separated_final": false,
+            "recontact_index": [],
+            "missing_index": [],
+            "moved_index": [],
+            "gap_index": [],
+            "n_post": 0,
+            "declared_w": null
+          },
+          "s4_status": "NOT_COMPUTED",
+          "why": [],
+          "cancellation_detail": {
+            "tension_N": [
+              0,
+              0
+            ],
+            "threshold_N": 1.25
+          },
+          "eps": {
+            "status": "OK",
+            "C_all_m": 2.1991148575128546e-05,
+            "area_m2": 0.0025000000000000005,
+            "n_s0": 105,
+            "S0": {
+              "status": "OK",
+              "eps_all": 0.9998019743131584,
+              "eps_inside": 0.9998019743131584,
+              "n_inside": 105,
+              "h_m": 0.111052
+            },
+            "endpoints": [
+              {
+                "k": 1,
+                "step": 3310000,
+                "h_m": 0.111252,
+                "status": "OK",
+                "eps_all": 0.9998023303079933,
+                "eps_inside": 0.9998023303079933,
+                "n_inside": 105,
+                "why": []
+              },
+              {
+                "k": 2,
+                "step": 3360000,
+                "h_m": 0.111302,
+                "status": "OK",
+                "eps_all": 0.9998024191067983,
+                "eps_inside": 0.9998024191067983,
+                "n_inside": 105,
+                "why": []
+              }
+            ],
+            "M": {
+              "h_m": 0.111277,
+              "status": "OK",
+              "eps_all": 0.9998023747173708,
+              "eps_inside": null
+            },
+            "why": []
+          },
+          "w_proxy_J": 4.036875000000115e-08,
+          "w_proxy": {
+            "status": "OK",
+            "n_points": 3,
+            "why": []
+          }
+        },
+        "read_run": {
+          "problems": [],
+          "n_superseded_rows": 5,
+          "resume_steps": [
+            3310000
+          ],
+          "resume_auth": [
+            [
+              1,
+              3310000
+            ]
+          ]
+        },
+        "selection": {
+          "stage": "need_UV",
+          "delta_dt": 2.7200464103316335e-15,
+          "delta_v": null,
+          "dt_star": "dt0",
+          "tuple": null,
+          "arm": null,
+          "next": [
+            "UVa"
+          ],
+          "why": []
+        },
+        "UVa_gate": [
+          true,
+          "δ_dt 2.7200464103316335e-15 → dt* dt0 → UVa"
+        ]
+      }
+    },
+    "producer_completed_hold_5_windows": {
+      "expected": "Actual generated deck control flow emits this completed hold from concrete window observations",
+      "pass": true,
+      "actual": {
+        "k2_windows": [
+          {
+            "arm": "UT",
+            "bed": "ps_7_3_r45",
+            "k": "2",
+            "w": "1",
+            "phase": "0",
+            "step": "3330000",
+            "plate_z": "0.111302",
+            "lift": "0.00025",
+            "Ps_avg": "0.001",
+            "ke_tr_avg": "1e-07",
+            "ke_rot_avg": "1e-08",
+            "ke_tot_avg": "1.1e-07",
+            "S1": "0",
+            "S2": "1",
+            "ok": "0",
+            "n_contact_geo": "1",
+            "atoms": "160417",
+            "leak": "11",
+            "ke_inst": "1e-07"
+          },
+          {
+            "arm": "UT",
+            "bed": "ps_7_3_r45",
+            "k": "2",
+            "w": "2",
+            "phase": "0",
+            "step": "3340000",
+            "plate_z": "0.111302",
+            "lift": "0.00025",
+            "Ps_avg": "0.0009",
+            "ke_tr_avg": "1e-07",
+            "ke_rot_avg": "1e-08",
+            "ke_tot_avg": "1.1e-07",
+            "S1": "0",
+            "S2": "1",
+            "ok": "0",
+            "n_contact_geo": "1",
+            "atoms": "160417",
+            "leak": "11",
+            "ke_inst": "1e-07"
+          },
+          {
+            "arm": "UT",
+            "bed": "ps_7_3_r45",
+            "k": "2",
+            "w": "3",
+            "phase": "0",
+            "step": "3350000",
+            "plate_z": "0.111302",
+            "lift": "0.00025",
+            "Ps_avg": "0.0008",
+            "ke_tr_avg": "1e-07",
+            "ke_rot_avg": "1e-08",
+            "ke_tot_avg": "1.1e-07",
+            "S1": "0",
+            "S2": "1",
+            "ok": "0",
+            "n_contact_geo": "1",
+            "atoms": "160417",
+            "leak": "11",
+            "ke_inst": "1e-07"
+          },
+          {
+            "arm": "UT",
+            "bed": "ps_7_3_r45",
+            "k": "2",
+            "w": "4",
+            "phase": "0",
+            "step": "3360000",
+            "plate_z": "0.111302",
+            "lift": "0.00025",
+            "Ps_avg": "0.0008",
+            "ke_tr_avg": "1e-07",
+            "ke_rot_avg": "1e-08",
+            "ke_tot_avg": "1.1e-07",
+            "S1": "1",
+            "S2": "1",
+            "ok": "1",
+            "n_contact_geo": "1",
+            "atoms": "160417",
+            "leak": "11",
+            "ke_inst": "1e-07"
+          },
+          {
+            "arm": "UT",
+            "bed": "ps_7_3_r45",
+            "k": "2",
+            "w": "5",
+            "phase": "0",
+            "step": "3370000",
+            "plate_z": "0.111302",
+            "lift": "0.00025",
+            "Ps_avg": "0.0008",
+            "ke_tr_avg": "1e-07",
+            "ke_rot_avg": "1e-08",
+            "ke_tot_avg": "1.1e-07",
+            "S1": "1",
+            "S2": "1",
+            "ok": "1",
+            "n_contact_geo": "1",
+            "atoms": "160417",
+            "leak": "11",
+            "ke_inst": "1e-07"
+          }
+        ],
+        "k2_step": {
+          "arm": "UT",
+          "bed": "ps_7_3_r45",
+          "k": "2",
+          "kind": "B",
+          "dz": "5e-05",
+          "n_move": "10000",
+          "step": "3370000",
+          "plate_z": "0.111302",
+          "lift": "0.00025",
+          "Pbar": "0.0008",
+          "n_windows": "5",
+          "steady": "1",
+          "phase": "0",
+          "modeB": "1",
+          "n_contact_last": "1"
+        },
+        "result": "RM_STOP"
+      }
+    },
+    "fresh_completed_hold_5_windows": {
+      "expected": "Fresh successful control before resume-layout mutation",
+      "pass": true,
+      "actual": {
+        "verdict": {
+          "job": "UT",
+          "bed": "ps_7_3_r45",
+          "dir": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\dem_unloading_kit_fix_recheck_20261015\\evidence\\resume_cases_20261015T001638_720540Z\\resume_completed_hold_5_windows\\ps_7_3_r45\\UT",
+          "problems": [],
+          "n_superseded_rows": 0,
+          "primary_status": "OK",
+          "rho_pct": 0.20260778734286913,
+          "bracket_um": [
+            0.200000000000006,
+            0.25
+          ],
+          "bracket_pct": [
+            0.18009581097144223,
+            0.225119763714296
+          ],
+          "union_bracket_um": [
+            0.200000000000006,
+            0.25
+          ],
+          "union_bracket_pct": [
+            0.18009581097144223,
+            0.225119763714296
+          ],
+          "lower_bound_pct": null,
+          "nonmonotone": false,
+          "cancellation": false,
+          "disposition": "VALUE",
+          "rank_eligible": true,
+          "endpoint_states": [
+            "CONTACT",
+            "CONTACT"
+          ],
+          "sigma_P": 0.0010259783520850981,
+          "trajectory_status": "RM_STOP",
+          "separation": {
+            "declared_step": null,
+            "separated_final": false,
+            "recontact_index": [],
+            "missing_index": [],
+            "moved_index": [],
+            "gap_index": [],
+            "n_post": 0,
+            "declared_w": null
+          },
+          "s4_status": "NOT_COMPUTED",
+          "why": [],
+          "cancellation_detail": {
+            "tension_N": [
+              0,
+              0
+            ],
+            "threshold_N": 1.25
+          },
+          "eps": {
+            "status": "OK",
+            "C_all_m": 2.1991148575128546e-05,
+            "area_m2": 0.0025000000000000005,
+            "n_s0": 105,
+            "S0": {
+              "status": "OK",
+              "eps_all": 0.9998019743131584,
+              "eps_inside": 0.9998019743131584,
+              "n_inside": 105,
+              "h_m": 0.111052
+            },
+            "endpoints": [
+              {
+                "k": 1,
+                "step": 3310000,
+                "h_m": 0.111252,
+                "status": "OK",
+                "eps_all": 0.9998023303079933,
+                "eps_inside": 0.9998023303079933,
+                "n_inside": 105,
+                "why": []
+              },
+              {
+                "k": 2,
+                "step": 3370000,
+                "h_m": 0.111302,
+                "status": "OK",
+                "eps_all": 0.9998024191067983,
+                "eps_inside": 0.9998024191067983,
+                "n_inside": 105,
+                "why": []
+              }
+            ],
+            "M": {
+              "h_m": 0.111277,
+              "status": "OK",
+              "eps_all": 0.9998023747173708,
+              "eps_inside": null
+            },
+            "why": []
+          },
+          "w_proxy_J": 4.036875000000115e-08,
+          "w_proxy": {
+            "status": "OK",
+            "n_points": 3,
+            "why": []
+          }
+        },
+        "read_run": {
+          "problems": [],
+          "n_superseded_rows": 0,
+          "resume_steps": [],
+          "resume_auth": []
+        },
+        "selection": {
+          "stage": "need_UV",
+          "delta_dt": 2.7200464103316335e-15,
+          "delta_v": null,
+          "dt_star": "dt0",
+          "tuple": null,
+          "arm": null,
+          "next": [
+            "UVa"
+          ],
+          "why": []
+        },
+        "UVa_gate": [
+          true,
+          "δ_dt 2.7200464103316335e-15 → dt* dt0 → UVa"
+        ]
+      }
+    },
+    "resume_completed_hold_5_windows": {
+      "expected": "Authorized restart with coherent completed hold records; changed hold duration is exploratory",
+      "pass": false,
+      "actual": {
+        "verdict": {
+          "job": "UT",
+          "bed": "ps_7_3_r45",
+          "dir": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\dem_unloading_kit_fix_recheck_20261015\\evidence\\resume_cases_20261015T001638_720540Z\\resume_completed_hold_5_windows\\ps_7_3_r45\\UT",
+          "problems": [],
+          "n_superseded_rows": 4,
+          "primary_status": "UNIDENTIFIED",
+          "rho_pct": null,
+          "bracket_um": [
+            0.200000000000006,
+            0.25
+          ],
+          "bracket_pct": [
+            0.18009581097144223,
+            0.225119763714296
+          ],
+          "union_bracket_um": [
+            0.200000000000006,
+            0.25
+          ],
+          "union_bracket_pct": [
+            0.18009581097144223,
+            0.225119763714296
+          ],
+          "lower_bound_pct": null,
+          "nonmonotone": false,
+          "cancellation": false,
+          "disposition": "NONE",
+          "rank_eligible": false,
+          "endpoint_states": [
+            "CONTACT",
+            "CONTACT"
+          ],
+          "sigma_P": 0.0010259783520850981,
+          "trajectory_status": "RM_STOP",
+          "separation": {
+            "declared_step": null,
+            "separated_final": false,
+            "recontact_index": [],
+            "missing_index": [],
+            "moved_index": [],
+            "gap_index": [],
+            "n_post": 0,
+            "declared_w": null
+          },
+          "s4_status": "NOT_COMPUTED",
+          "why": [
+            "단 기록 k 불연속 ([0, 1, 2, 2, 3, 4]) — 누락 · 중복 · 순서",
+            "확인 단 1 k 2 ≠ 3 (단 기록 불연속 — 누락 · 순서)",
+            "확인 단 2 k 3 ≠ 4 (단 기록 불연속 — 누락 · 순서)"
+          ],
+          "cancellation_detail": {
+            "tension_N": [
+              0,
+              0
+            ],
+            "threshold_N": 1.25
+          },
+          "eps": {
+            "status": "OK",
+            "C_all_m": 2.1991148575128546e-05,
+            "area_m2": 0.0025000000000000005,
+            "n_s0": 105,
+            "S0": {
+              "status": "OK",
+              "eps_all": 0.9998019743131584,
+              "eps_inside": 0.9998019743131584,
+              "n_inside": 105,
+              "h_m": 0.111052
+            },
+            "endpoints": [
+              {
+                "k": 1,
+                "step": 3310000,
+                "h_m": 0.111252,
+                "status": "OK",
+                "eps_all": 0.9998023303079933,
+                "eps_inside": 0.9998023303079933,
+                "n_inside": 105,
+                "why": []
+              },
+              {
+                "k": 2,
+                "step": 3360000,
+                "h_m": 0.111302,
+                "status": "OK",
+                "eps_all": 0.9998024191067983,
+                "eps_inside": 0.9998024191067983,
+                "n_inside": 105,
+                "why": []
+              }
+            ],
+            "M": null,
+            "why": []
+          },
+          "w_proxy_J": null,
+          "w_proxy": {
+            "status": "NOT_COMPUTED",
+            "n_points": 0,
+            "why": [
+              "주 값 OK 아님 — M (보간 높이) 없음"
+            ]
+          }
+        },
+        "read_run": {
+          "problems": [],
+          "n_superseded_rows": 4,
+          "resume_steps": [
+            3310000
+          ],
+          "resume_auth": [
+            [
+              1,
+              3310000
+            ]
+          ]
+        },
+        "selection": {
+          "stage": "SELECTION_UNRESOLVED",
+          "delta_dt": null,
+          "delta_v": null,
+          "dt_star": null,
+          "tuple": null,
+          "arm": null,
+          "next": [],
+          "why": [
+            "끝점 무효 — UB OK · UT UNIDENTIFIED (δ_dt 없음)"
+          ]
+        },
+        "UVa_gate": [
+          false,
+          "선택 단계 SELECTION_UNRESOLVED · 다음 [] (끝점 무효 — UB OK · UT UNIDENTIFIED (δ_dt 없음)) — UV 는 UB · UT 끝점 판독 뒤 dt* 의 팔 하나만"
+        ]
+      }
+    },
+    "positive_utc": {
+      "expected": "UTc valid parent resumes without local auth; missing/mismatched parent boundary rejected",
+      "pass": true,
+      "actual": {
+        "job": "UTc",
+        "bed": "ps_7_3_r45",
+        "dir": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\dem_unloading_kit_fix_recheck_20261015\\evidence\\resume_cases_20261015T001638_720540Z\\positive_utc\\ps_7_3_r45\\UTc",
+        "problems": [],
+        "n_superseded_rows": 0,
+        "primary_status": "OK",
+        "rho_pct": 0.2026077873428664,
+        "bracket_um": [
+          0.2,
+          0.25
+        ],
+        "bracket_pct": [
+          0.18009581097143681,
+          0.225119763714296
+        ],
+        "union_bracket_um": [
+          0.2,
+          0.25
+        ],
+        "union_bracket_pct": [
+          0.18009581097143681,
+          0.225119763714296
+        ],
+        "lower_bound_pct": null,
+        "nonmonotone": false,
+        "cancellation": false,
+        "disposition": "VALUE",
+        "rank_eligible": true,
+        "endpoint_states": [
+          "CONTACT",
+          "CONTACT"
+        ],
+        "sigma_P": 0.0010259783520850981,
+        "trajectory_status": "DONE",
+        "separation": {
+          "declared_step": 3480000,
+          "separated_final": true,
+          "recontact_index": [],
+          "missing_index": [],
+          "moved_index": [],
+          "gap_index": [],
+          "n_post": 4,
+          "declared_w": 2
+        },
+        "s4_status": "NOT_COMPUTED",
+        "why": [],
+        "cancellation_detail": {
+          "tension_N": [
+            0,
+            0
+          ],
+          "threshold_N": 1.25
+        },
+        "surface_um": [
+          null,
+          null,
+          null,
+          null
+        ],
+        "continuation": {
+          "status": "OK",
+          "parent_dir": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\dem_unloading_kit_fix_recheck_20261015\\evidence\\resume_cases_20261015T001638_720540Z\\positive_utc\\ps_7_3_r45\\UT",
+          "rm_step": 3460000,
+          "problems": [],
+          "n_parent_listed": 37,
+          "n_parent_checked": 32
+        },
+        "eps": {
+          "status": "OK",
+          "C_all_m": 2.1991148575128546e-05,
+          "area_m2": 0.0025000000000000005,
+          "n_s0": 105,
+          "S0": {
+            "status": "OK",
+            "eps_all": 0.9998019743131584,
+            "eps_inside": 0.9998019743131584,
+            "n_inside": 105,
+            "h_m": 0.111052
+          },
+          "endpoints": [
+            {
+              "k": 1,
+              "step": 3310000,
+              "h_m": 0.111252,
+              "status": "OK",
+              "eps_all": 0.9998023303079933,
+              "eps_inside": 0.9998023303079933,
+              "n_inside": 105,
+              "why": []
+            },
+            {
+              "k": 2,
+              "step": 3360000,
+              "h_m": 0.111302,
+              "status": "OK",
+              "eps_all": 0.9998024191067983,
+              "eps_inside": 0.9998024191067983,
+              "n_inside": 105,
+              "why": []
+            }
+          ],
+          "M": {
+            "h_m": 0.111277,
+            "status": "OK",
+            "eps_all": 0.9998023747173708,
+            "eps_inside": null
+          },
+          "why": []
+        },
+        "w_proxy_J": 4.036875000000115e-08,
+        "w_proxy": {
+          "status": "OK",
+          "n_points": 3,
+          "why": []
+        }
+      }
+    },
+    "utc_missing_resume": {
+      "expected": "UTc valid parent resumes without local auth; missing/mismatched parent boundary rejected",
+      "pass": true,
+      "actual": {
+        "job": "UTc",
+        "bed": "ps_7_3_r45",
+        "dir": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\dem_unloading_kit_fix_recheck_20261015\\evidence\\resume_cases_20261015T001638_720540Z\\utc_missing_resume\\ps_7_3_r45\\UTc",
+        "problems": [],
+        "n_superseded_rows": 0,
+        "primary_status": "UNIDENTIFIED",
+        "rho_pct": null,
+        "bracket_um": [
+          0.2,
+          0.25
+        ],
+        "bracket_pct": [
+          0.18009581097143681,
+          0.225119763714296
+        ],
+        "union_bracket_um": [
+          0.2,
+          0.25
+        ],
+        "union_bracket_pct": [
+          0.18009581097143681,
+          0.225119763714296
+        ],
+        "lower_bound_pct": null,
+        "nonmonotone": false,
+        "cancellation": false,
+        "disposition": "NONE",
+        "rank_eligible": false,
+        "endpoint_states": [
+          "CONTACT",
+          "CONTACT"
+        ],
+        "sigma_P": 0.0010259783520850981,
+        "trajectory_status": "DONE",
+        "separation": {
+          "declared_step": 3480000,
+          "separated_final": true,
+          "recontact_index": [],
+          "missing_index": [],
+          "moved_index": [],
+          "gap_index": [],
+          "n_post": 4,
+          "declared_w": 2
+        },
+        "s4_status": "NOT_COMPUTED",
+        "why": [
+          "UTc 이어 돌림 (UT 부모 관측) 무효 — UTc 의 RESUME 사건 ≠ (k_RM · R_M step) (개정 3 §14-3)"
+        ],
+        "cancellation_detail": {
+          "tension_N": [
+            0,
+            0
+          ],
+          "threshold_N": 1.25
+        },
+        "surface_um": [
+          null,
+          null,
+          null,
+          null
+        ],
+        "continuation": {
+          "status": "FAIL",
+          "parent_dir": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\dem_unloading_kit_fix_recheck_20261015\\evidence\\resume_cases_20261015T001638_720540Z\\utc_missing_resume\\ps_7_3_r45\\UT",
+          "rm_step": 3460000,
+          "problems": [
+            "UTc 의 RESUME 사건 ≠ (k_RM · R_M step)"
+          ],
+          "n_parent_listed": 37,
+          "n_parent_checked": 32
+        },
+        "eps": {
+          "status": "OK",
+          "C_all_m": 2.1991148575128546e-05,
+          "area_m2": 0.0025000000000000005,
+          "n_s0": 105,
+          "S0": {
+            "status": "OK",
+            "eps_all": 0.9998019743131584,
+            "eps_inside": 0.9998019743131584,
+            "n_inside": 105,
+            "h_m": 0.111052
+          },
+          "endpoints": [
+            {
+              "k": 1,
+              "step": 3310000,
+              "h_m": 0.111252,
+              "status": "OK",
+              "eps_all": 0.9998023303079933,
+              "eps_inside": 0.9998023303079933,
+              "n_inside": 105,
+              "why": []
+            },
+            {
+              "k": 2,
+              "step": 3360000,
+              "h_m": 0.111302,
+              "status": "OK",
+              "eps_all": 0.9998024191067983,
+              "eps_inside": 0.9998024191067983,
+              "n_inside": 105,
+              "why": []
+            }
+          ],
+          "M": null,
+          "why": []
+        },
+        "w_proxy_J": null,
+        "w_proxy": {
+          "status": "NOT_COMPUTED",
+          "n_points": 0,
+          "why": [
+            "주 값 OK 아님 — M (보간 높이) 없음"
+          ]
+        }
+      }
+    },
+    "utc_wrong_resume_k": {
+      "expected": "UTc valid parent resumes without local auth; missing/mismatched parent boundary rejected",
+      "pass": true,
+      "actual": {
+        "job": "UTc",
+        "bed": "ps_7_3_r45",
+        "dir": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\dem_unloading_kit_fix_recheck_20261015\\evidence\\resume_cases_20261015T001638_720540Z\\utc_wrong_resume_k\\ps_7_3_r45\\UTc",
+        "problems": [],
+        "n_superseded_rows": 0,
+        "primary_status": "UNIDENTIFIED",
+        "rho_pct": null,
+        "bracket_um": [
+          0.2,
+          0.25
+        ],
+        "bracket_pct": [
+          0.18009581097143681,
+          0.225119763714296
+        ],
+        "union_bracket_um": [
+          0.2,
+          0.25
+        ],
+        "union_bracket_pct": [
+          0.18009581097143681,
+          0.225119763714296
+        ],
+        "lower_bound_pct": null,
+        "nonmonotone": false,
+        "cancellation": false,
+        "disposition": "NONE",
+        "rank_eligible": false,
+        "endpoint_states": [
+          "CONTACT",
+          "CONTACT"
+        ],
+        "sigma_P": 0.0010259783520850981,
+        "trajectory_status": "DONE",
+        "separation": {
+          "declared_step": 3480000,
+          "separated_final": true,
+          "recontact_index": [],
+          "missing_index": [],
+          "moved_index": [],
+          "gap_index": [],
+          "n_post": 4,
+          "declared_w": 2
+        },
+        "s4_status": "NOT_COMPUTED",
+        "why": [
+          "UTc 이어 돌림 (UT 부모 관측) 무효 — UTc 의 RESUME 사건 ≠ (k_RM · R_M step) (개정 3 §14-3)"
+        ],
+        "cancellation_detail": {
+          "tension_N": [
+            0,
+            0
+          ],
+          "threshold_N": 1.25
+        },
+        "surface_um": [
+          null,
+          null,
+          null,
+          null
+        ],
+        "continuation": {
+          "status": "FAIL",
+          "parent_dir": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\dem_unloading_kit_fix_recheck_20261015\\evidence\\resume_cases_20261015T001638_720540Z\\utc_wrong_resume_k\\ps_7_3_r45\\UT",
+          "rm_step": 3460000,
+          "problems": [
+            "UTc 의 RESUME 사건 ≠ (k_RM · R_M step)"
+          ],
+          "n_parent_listed": 37,
+          "n_parent_checked": 32
+        },
+        "eps": {
+          "status": "OK",
+          "C_all_m": 2.1991148575128546e-05,
+          "area_m2": 0.0025000000000000005,
+          "n_s0": 105,
+          "S0": {
+            "status": "OK",
+            "eps_all": 0.9998019743131584,
+            "eps_inside": 0.9998019743131584,
+            "n_inside": 105,
+            "h_m": 0.111052
+          },
+          "endpoints": [
+            {
+              "k": 1,
+              "step": 3310000,
+              "h_m": 0.111252,
+              "status": "OK",
+              "eps_all": 0.9998023303079933,
+              "eps_inside": 0.9998023303079933,
+              "n_inside": 105,
+              "why": []
+            },
+            {
+              "k": 2,
+              "step": 3360000,
+              "h_m": 0.111302,
+              "status": "OK",
+              "eps_all": 0.9998024191067983,
+              "eps_inside": 0.9998024191067983,
+              "n_inside": 105,
+              "why": []
+            }
+          ],
+          "M": null,
+          "why": []
+        },
+        "w_proxy_J": null,
+        "w_proxy": {
+          "status": "NOT_COMPUTED",
+          "n_points": 0,
+          "why": [
+            "주 값 OK 아님 — M (보간 높이) 없음"
+          ]
+        }
+      }
+    },
+    "sep_positive": {
+      "expected": "Primary preserved; final separation matches contiguous windows and events",
+      "pass": true,
+      "actual": {
+        "verdict": {
+          "job": "UB",
+          "bed": "ps_7_3_r45",
+          "dir": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\dem_unloading_kit_fix_recheck_20261015\\evidence\\resume_cases_20261015T001638_720540Z\\sep_positive\\ps_7_3_r45\\UB",
+          "problems": [],
+          "n_superseded_rows": 0,
+          "primary_status": "OK",
+          "rho_pct": 0.2026077873428664,
+          "bracket_um": [
+            0.2,
+            0.25
+          ],
+          "bracket_pct": [
+            0.18009581097143681,
+            0.225119763714296
+          ],
+          "union_bracket_um": [
+            0.2,
+            0.25
+          ],
+          "union_bracket_pct": [
+            0.18009581097143681,
+            0.225119763714296
+          ],
+          "lower_bound_pct": null,
+          "nonmonotone": false,
+          "cancellation": false,
+          "disposition": "VALUE",
+          "rank_eligible": true,
+          "endpoint_states": [
+            "CONTACT",
+            "CONTACT"
+          ],
+          "sigma_P": 0.0010259783520850981,
+          "trajectory_status": "DONE",
+          "separation": {
+            "declared_step": 3340000,
+            "separated_final": true,
+            "recontact_index": [],
+            "missing_index": [],
+            "moved_index": [],
+            "gap_index": [],
+            "n_post": 5,
+            "declared_w": 2
+          },
+          "s4_status": "NOT_COMPUTED",
+          "why": [],
+          "cancellation_detail": {
+            "tension_N": [
+              0,
+              0
+            ],
+            "threshold_N": 1.25
+          },
+          "surface_um": [
+            null,
+            null,
+            null,
+            null
+          ],
+          "eps": {
+            "status": "OK",
+            "C_all_m": 2.1991148575128546e-05,
+            "area_m2": 0.0025000000000000005,
+            "n_s0": 105,
+            "S0": {
+              "status": "OK",
+              "eps_all": 0.9998019743131584,
+              "eps_inside": 0.9998019743131584,
+              "n_inside": 105,
+              "h_m": 0.111052
+            },
+            "endpoints": [
+              {
+                "k": 1,
+                "step": 3255000,
+                "h_m": 0.111252,
+                "status": "OK",
+                "eps_all": 0.9998023303079933,
+                "eps_inside": 0.9998023303079933,
+                "n_inside": 105,
+                "why": []
+              },
+              {
+                "k": 2,
+                "step": 3280000,
+                "h_m": 0.111302,
+                "status": "OK",
+                "eps_all": 0.9998024191067983,
+                "eps_inside": 0.9998024191067983,
+                "n_inside": 105,
+                "why": []
+              }
+            ],
+            "M": {
+              "h_m": 0.111277,
+              "status": "OK",
+              "eps_all": 0.9998023747173708,
+              "eps_inside": null
+            },
+            "why": []
+          },
+          "w_proxy_J": 4.036875000000115e-08,
+          "w_proxy": {
+            "status": "OK",
+            "n_points": 3,
+            "why": []
+          }
+        },
+        "W": 5000
+      }
+    },
+    "sep_no_deck": {
+      "expected": "Primary preserved; final separation matches contiguous windows and events",
+      "pass": true,
+      "actual": {
+        "verdict": {
+          "job": "UB",
+          "bed": "ps_7_3_r45",
+          "dir": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\dem_unloading_kit_fix_recheck_20261015\\evidence\\resume_cases_20261015T001638_720540Z\\sep_no_deck\\ps_7_3_r45\\UB",
+          "problems": [],
+          "n_superseded_rows": 0,
+          "primary_status": "OK",
+          "rho_pct": 0.2026077873428664,
+          "bracket_um": [
+            0.2,
+            0.25
+          ],
+          "bracket_pct": [
+            0.18009581097143681,
+            0.225119763714296
+          ],
+          "union_bracket_um": [
+            0.2,
+            0.25
+          ],
+          "union_bracket_pct": [
+            0.18009581097143681,
+            0.225119763714296
+          ],
+          "lower_bound_pct": null,
+          "nonmonotone": false,
+          "cancellation": false,
+          "disposition": "VALUE",
+          "rank_eligible": true,
+          "endpoint_states": [
+            "CONTACT",
+            "CONTACT"
+          ],
+          "sigma_P": 0.0010259783520850981,
+          "trajectory_status": "DONE",
+          "separation": {
+            "declared_step": 3340000,
+            "separated_final": true,
+            "recontact_index": [],
+            "missing_index": [],
+            "moved_index": [],
+            "gap_index": [],
+            "n_post": 5,
+            "declared_w": 2
+          },
+          "s4_status": "NOT_COMPUTED",
+          "why": [],
+          "cancellation_detail": {
+            "tension_N": [
+              0,
+              0
+            ],
+            "threshold_N": 1.25
+          },
+          "surface_um": [
+            null,
+            null,
+            null,
+            null
+          ],
+          "eps": {
+            "status": "OK",
+            "C_all_m": 2.1991148575128546e-05,
+            "area_m2": 0.0025000000000000005,
+            "n_s0": 105,
+            "S0": {
+              "status": "OK",
+              "eps_all": 0.9998019743131584,
+              "eps_inside": 0.9998019743131584,
+              "n_inside": 105,
+              "h_m": 0.111052
+            },
+            "endpoints": [
+              {
+                "k": 1,
+                "step": 3255000,
+                "h_m": 0.111252,
+                "status": "OK",
+                "eps_all": 0.9998023303079933,
+                "eps_inside": 0.9998023303079933,
+                "n_inside": 105,
+                "why": []
+              },
+              {
+                "k": 2,
+                "step": 3280000,
+                "h_m": 0.111302,
+                "status": "OK",
+                "eps_all": 0.9998024191067983,
+                "eps_inside": 0.9998024191067983,
+                "n_inside": 105,
+                "why": []
+              }
+            ],
+            "M": {
+              "h_m": 0.111277,
+              "status": "OK",
+              "eps_all": 0.9998023747173708,
+              "eps_inside": null
+            },
+            "why": []
+          },
+          "w_proxy_J": 4.036875000000115e-08,
+          "w_proxy": {
+            "status": "OK",
+            "n_points": 3,
+            "why": []
+          }
+        },
+        "W": 5000
+      }
+    },
+    "sep_missing_w3": {
+      "expected": "Primary preserved; final separation matches contiguous windows and events",
+      "pass": true,
+      "actual": {
+        "verdict": {
+          "job": "UB",
+          "bed": "ps_7_3_r45",
+          "dir": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\dem_unloading_kit_fix_recheck_20261015\\evidence\\resume_cases_20261015T001638_720540Z\\sep_missing_w3\\ps_7_3_r45\\UB",
+          "problems": [],
+          "n_superseded_rows": 0,
+          "primary_status": "OK",
+          "rho_pct": 0.2026077873428664,
+          "bracket_um": [
+            0.2,
+            0.25
+          ],
+          "bracket_pct": [
+            0.18009581097143681,
+            0.225119763714296
+          ],
+          "union_bracket_um": [
+            0.2,
+            0.25
+          ],
+          "union_bracket_pct": [
+            0.18009581097143681,
+            0.225119763714296
+          ],
+          "lower_bound_pct": null,
+          "nonmonotone": false,
+          "cancellation": false,
+          "disposition": "VALUE",
+          "rank_eligible": true,
+          "endpoint_states": [
+            "CONTACT",
+            "CONTACT"
+          ],
+          "sigma_P": 0.0010259783520850981,
+          "trajectory_status": "SEP_INCOMPLETE",
+          "separation": {
+            "declared_step": 3355000,
+            "separated_final": true,
+            "recontact_index": [],
+            "missing_index": [],
+            "moved_index": [],
+            "gap_index": [
+              21
+            ],
+            "n_post": 2,
+            "declared_w": 5
+          },
+          "s4_status": "NOT_COMPUTED",
+          "why": [
+            "보조 미완료 (분리 · 표면 — 주 ρ 무영향): 덱 DONE 인데 판독기 최종 분리 · 분리 뒤 창 2 < 4 (재접촉 창 [] · 벽 덤프 결손 창 [] · 이동 [] · 창 기록 끊김 (w · 간격) [21])"
+          ],
+          "cancellation_detail": {
+            "tension_N": [
+              0,
+              0
+            ],
+            "threshold_N": 1.25
+          },
+          "surface_um": [
+            null,
+            null
+          ],
+          "eps": {
+            "status": "OK",
+            "C_all_m": 2.1991148575128546e-05,
+            "area_m2": 0.0025000000000000005,
+            "n_s0": 105,
+            "S0": {
+              "status": "OK",
+              "eps_all": 0.9998019743131584,
+              "eps_inside": 0.9998019743131584,
+              "n_inside": 105,
+              "h_m": 0.111052
+            },
+            "endpoints": [
+              {
+                "k": 1,
+                "step": 3255000,
+                "h_m": 0.111252,
+                "status": "OK",
+                "eps_all": 0.9998023303079933,
+                "eps_inside": 0.9998023303079933,
+                "n_inside": 105,
+                "why": []
+              },
+              {
+                "k": 2,
+                "step": 3280000,
+                "h_m": 0.111302,
+                "status": "OK",
+                "eps_all": 0.9998024191067983,
+                "eps_inside": 0.9998024191067983,
+                "n_inside": 105,
+                "why": []
+              }
+            ],
+            "M": {
+              "h_m": 0.111277,
+              "status": "OK",
+              "eps_all": 0.9998023747173708,
+              "eps_inside": null
+            },
+            "why": []
+          },
+          "w_proxy_J": 4.036875000000115e-08,
+          "w_proxy": {
+            "status": "OK",
+            "n_points": 3,
+            "why": []
+          }
+        },
+        "W": 5000
+      }
+    },
+    "sep_shifted_w3": {
+      "expected": "Primary preserved; final separation matches contiguous windows and events",
+      "pass": true,
+      "actual": {
+        "verdict": {
+          "job": "UB",
+          "bed": "ps_7_3_r45",
+          "dir": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\dem_unloading_kit_fix_recheck_20261015\\evidence\\resume_cases_20261015T001638_720540Z\\sep_shifted_w3\\ps_7_3_r45\\UB",
+          "problems": [],
+          "n_superseded_rows": 0,
+          "primary_status": "OK",
+          "rho_pct": 0.2026077873428664,
+          "bracket_um": [
+            0.2,
+            0.25
+          ],
+          "bracket_pct": [
+            0.18009581097143681,
+            0.225119763714296
+          ],
+          "union_bracket_um": [
+            0.2,
+            0.25
+          ],
+          "union_bracket_pct": [
+            0.18009581097143681,
+            0.225119763714296
+          ],
+          "lower_bound_pct": null,
+          "nonmonotone": false,
+          "cancellation": false,
+          "disposition": "VALUE",
+          "rank_eligible": true,
+          "endpoint_states": [
+            "CONTACT",
+            "CONTACT"
+          ],
+          "sigma_P": 0.0010259783520850981,
+          "trajectory_status": "SEP_INCOMPLETE",
+          "separation": {
+            "declared_step": 3355000,
+            "separated_final": true,
+            "recontact_index": [],
+            "missing_index": [],
+            "moved_index": [],
+            "gap_index": [
+              21,
+              22
+            ],
+            "n_post": 2,
+            "declared_w": 5
+          },
+          "s4_status": "NOT_COMPUTED",
+          "why": [
+            "보조 미완료 (분리 · 표면 — 주 ρ 무영향): 덱 DONE 인데 판독기 최종 분리 · 분리 뒤 창 2 < 4 (재접촉 창 [] · 벽 덤프 결손 창 [] · 이동 [] · 창 기록 끊김 (w · 간격) [21, 22])"
+          ],
+          "cancellation_detail": {
+            "tension_N": [
+              0,
+              0
+            ],
+            "threshold_N": 1.25
+          },
+          "surface_um": [
+            null,
+            null
+          ],
+          "eps": {
+            "status": "OK",
+            "C_all_m": 2.1991148575128546e-05,
+            "area_m2": 0.0025000000000000005,
+            "n_s0": 105,
+            "S0": {
+              "status": "OK",
+              "eps_all": 0.9998019743131584,
+              "eps_inside": 0.9998019743131584,
+              "n_inside": 105,
+              "h_m": 0.111052
+            },
+            "endpoints": [
+              {
+                "k": 1,
+                "step": 3255000,
+                "h_m": 0.111252,
+                "status": "OK",
+                "eps_all": 0.9998023303079933,
+                "eps_inside": 0.9998023303079933,
+                "n_inside": 105,
+                "why": []
+              },
+              {
+                "k": 2,
+                "step": 3280000,
+                "h_m": 0.111302,
+                "status": "OK",
+                "eps_all": 0.9998024191067983,
+                "eps_inside": 0.9998024191067983,
+                "n_inside": 105,
+                "why": []
+              }
+            ],
+            "M": {
+              "h_m": 0.111277,
+              "status": "OK",
+              "eps_all": 0.9998023747173708,
+              "eps_inside": null
+            },
+            "why": []
+          },
+          "w_proxy_J": 4.036875000000115e-08,
+          "w_proxy": {
+            "status": "OK",
+            "n_points": 3,
+            "why": []
+          }
+        },
+        "W": 5000
+      }
+    },
+    "sep_gap_new_declaration": {
+      "expected": "Primary preserved; final separation matches contiguous windows and events",
+      "pass": true,
+      "actual": {
+        "verdict": {
+          "job": "UB",
+          "bed": "ps_7_3_r45",
+          "dir": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\dem_unloading_kit_fix_recheck_20261015\\evidence\\resume_cases_20261015T001638_720540Z\\sep_gap_new_declaration\\ps_7_3_r45\\UB",
+          "problems": [],
+          "n_superseded_rows": 0,
+          "primary_status": "OK",
+          "rho_pct": 0.2026077873428664,
+          "bracket_um": [
+            0.2,
+            0.25
+          ],
+          "bracket_pct": [
+            0.18009581097143681,
+            0.225119763714296
+          ],
+          "union_bracket_um": [
+            0.2,
+            0.25
+          ],
+          "union_bracket_pct": [
+            0.18009581097143681,
+            0.225119763714296
+          ],
+          "lower_bound_pct": null,
+          "nonmonotone": false,
+          "cancellation": false,
+          "disposition": "VALUE",
+          "rank_eligible": true,
+          "endpoint_states": [
+            "CONTACT",
+            "CONTACT"
+          ],
+          "sigma_P": 0.0010259783520850981,
+          "trajectory_status": "DONE",
+          "separation": {
+            "declared_step": 3355000,
+            "separated_final": true,
+            "recontact_index": [],
+            "missing_index": [],
+            "moved_index": [],
+            "gap_index": [
+              21
+            ],
+            "n_post": 4,
+            "declared_w": 5
+          },
+          "s4_status": "NOT_COMPUTED",
+          "why": [],
+          "cancellation_detail": {
+            "tension_N": [
+              0,
+              0
+            ],
+            "threshold_N": 1.25
+          },
+          "surface_um": [
+            null,
+            null,
+            null,
+            null
+          ],
+          "eps": {
+            "status": "OK",
+            "C_all_m": 2.1991148575128546e-05,
+            "area_m2": 0.0025000000000000005,
+            "n_s0": 105,
+            "S0": {
+              "status": "OK",
+              "eps_all": 0.9998019743131584,
+              "eps_inside": 0.9998019743131584,
+              "n_inside": 105,
+              "h_m": 0.111052
+            },
+            "endpoints": [
+              {
+                "k": 1,
+                "step": 3255000,
+                "h_m": 0.111252,
+                "status": "OK",
+                "eps_all": 0.9998023303079933,
+                "eps_inside": 0.9998023303079933,
+                "n_inside": 105,
+                "why": []
+              },
+              {
+                "k": 2,
+                "step": 3280000,
+                "h_m": 0.111302,
+                "status": "OK",
+                "eps_all": 0.9998024191067983,
+                "eps_inside": 0.9998024191067983,
+                "n_inside": 105,
+                "why": []
+              }
+            ],
+            "M": {
+              "h_m": 0.111277,
+              "status": "OK",
+              "eps_all": 0.9998023747173708,
+              "eps_inside": null
+            },
+            "why": []
+          },
+          "w_proxy_J": 4.036875000000115e-08,
+          "w_proxy": {
+            "status": "OK",
+            "n_points": 3,
+            "why": []
+          }
+        },
+        "W": 5000
+      }
+    },
+    "sep_declare_w12": {
+      "expected": "Primary preserved; final separation matches contiguous windows and events",
+      "pass": true,
+      "actual": {
+        "verdict": {
+          "job": "UB",
+          "bed": "ps_7_3_r45",
+          "dir": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\dem_unloading_kit_fix_recheck_20261015\\evidence\\resume_cases_20261015T001638_720540Z\\sep_declare_w12\\ps_7_3_r45\\UB",
+          "problems": [],
+          "n_superseded_rows": 0,
+          "primary_status": "OK",
+          "rho_pct": 0.2026077873428664,
+          "bracket_um": [
+            0.2,
+            0.25
+          ],
+          "bracket_pct": [
+            0.18009581097143681,
+            0.225119763714296
+          ],
+          "union_bracket_um": [
+            0.2,
+            0.25
+          ],
+          "union_bracket_pct": [
+            0.18009581097143681,
+            0.225119763714296
+          ],
+          "lower_bound_pct": null,
+          "nonmonotone": false,
+          "cancellation": false,
+          "disposition": "VALUE",
+          "rank_eligible": true,
+          "endpoint_states": [
+            "CONTACT",
+            "CONTACT"
+          ],
+          "sigma_P": 0.0010259783520850981,
+          "trajectory_status": "DONE",
+          "separation": {
+            "declared_step": 3390000,
+            "separated_final": true,
+            "recontact_index": [],
+            "missing_index": [],
+            "moved_index": [],
+            "gap_index": [],
+            "n_post": 4,
+            "declared_w": 12
+          },
+          "s4_status": "NOT_COMPUTED",
+          "why": [],
+          "cancellation_detail": {
+            "tension_N": [
+              0,
+              0
+            ],
+            "threshold_N": 1.25
+          },
+          "surface_um": [
+            null,
+            null,
+            null,
+            null
+          ],
+          "eps": {
+            "status": "OK",
+            "C_all_m": 2.1991148575128546e-05,
+            "area_m2": 0.0025000000000000005,
+            "n_s0": 105,
+            "S0": {
+              "status": "OK",
+              "eps_all": 0.9998019743131584,
+              "eps_inside": 0.9998019743131584,
+              "n_inside": 105,
+              "h_m": 0.111052
+            },
+            "endpoints": [
+              {
+                "k": 1,
+                "step": 3255000,
+                "h_m": 0.111252,
+                "status": "OK",
+                "eps_all": 0.9998023303079933,
+                "eps_inside": 0.9998023303079933,
+                "n_inside": 105,
+                "why": []
+              },
+              {
+                "k": 2,
+                "step": 3280000,
+                "h_m": 0.111302,
+                "status": "OK",
+                "eps_all": 0.9998024191067983,
+                "eps_inside": 0.9998024191067983,
+                "n_inside": 105,
+                "why": []
+              }
+            ],
+            "M": {
+              "h_m": 0.111277,
+              "status": "OK",
+              "eps_all": 0.9998023747173708,
+              "eps_inside": null
+            },
+            "why": []
+          },
+          "w_proxy_J": 4.036875000000115e-08,
+          "w_proxy": {
+            "status": "OK",
+            "n_points": 3,
+            "why": []
+          }
+        },
+        "W": 5000
+      }
+    },
+    "sep_wrong_deck_W": {
+      "expected": "Primary preserved; final separation matches contiguous windows and events",
+      "pass": true,
+      "actual": {
+        "verdict": {
+          "job": "UB",
+          "bed": "ps_7_3_r45",
+          "dir": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\dem_unloading_kit_fix_recheck_20261015\\evidence\\resume_cases_20261015T001638_720540Z\\sep_wrong_deck_W\\ps_7_3_r45\\UB",
+          "problems": [],
+          "n_superseded_rows": 0,
+          "primary_status": "OK",
+          "rho_pct": 0.2026077873428664,
+          "bracket_um": [
+            0.2,
+            0.25
+          ],
+          "bracket_pct": [
+            0.18009581097143681,
+            0.225119763714296
+          ],
+          "union_bracket_um": [
+            0.2,
+            0.25
+          ],
+          "union_bracket_pct": [
+            0.18009581097143681,
+            0.225119763714296
+          ],
+          "lower_bound_pct": null,
+          "nonmonotone": false,
+          "cancellation": false,
+          "disposition": "VALUE",
+          "rank_eligible": true,
+          "endpoint_states": [
+            "CONTACT",
+            "CONTACT"
+          ],
+          "sigma_P": 0.0010259783520850981,
+          "trajectory_status": "SEP_INCOMPLETE",
+          "separation": {
+            "declared_step": null,
+            "separated_final": false,
+            "recontact_index": [],
+            "missing_index": [],
+            "moved_index": [],
+            "gap_index": [
+              1,
+              2,
+              4,
+              5,
+              6,
+              8,
+              9,
+              10,
+              12,
+              13,
+              14,
+              16,
+              17,
+              18,
+              20,
+              21,
+              22,
+              23,
+              24
+            ],
+            "n_post": 0,
+            "declared_w": null
+          },
+          "s4_status": "NOT_COMPUTED",
+          "why": [
+            "보조 미완료 (분리 · 표면 — 주 ρ 무영향): 덱 DONE 인데 판독기 최종 분리 · 분리 뒤 창 0 < 4 (재접촉 창 [] · 벽 덤프 결손 창 [] · 이동 [] · 창 기록 끊김 (w · 간격) [1, 2, 4])"
+          ],
+          "cancellation_detail": {
+            "tension_N": [
+              0,
+              0
+            ],
+            "threshold_N": 1.25
+          },
+          "eps": {
+            "status": "OK",
+            "C_all_m": 2.1991148575128546e-05,
+            "area_m2": 0.0025000000000000005,
+            "n_s0": 105,
+            "S0": {
+              "status": "OK",
+              "eps_all": 0.9998019743131584,
+              "eps_inside": 0.9998019743131584,
+              "n_inside": 105,
+              "h_m": 0.111052
+            },
+            "endpoints": [
+              {
+                "k": 1,
+                "step": 3255000,
+                "h_m": 0.111252,
+                "status": "OK",
+                "eps_all": 0.9998023303079933,
+                "eps_inside": 0.9998023303079933,
+                "n_inside": 105,
+                "why": []
+              },
+              {
+                "k": 2,
+                "step": 3280000,
+                "h_m": 0.111302,
+                "status": "OK",
+                "eps_all": 0.9998024191067983,
+                "eps_inside": 0.9998024191067983,
+                "n_inside": 105,
+                "why": []
+              }
+            ],
+            "M": {
+              "h_m": 0.111277,
+              "status": "OK",
+              "eps_all": 0.9998023747173708,
+              "eps_inside": null
+            },
+            "why": []
+          },
+          "w_proxy_J": 4.036875000000115e-08,
+          "w_proxy": {
+            "status": "OK",
+            "n_points": 3,
+            "why": []
+          }
+        },
+        "W": 4000
+      }
+    },
+    "registered_W_fallbacks": {
+      "expected": "Registered arm W for UTc and gravity mapping",
+      "pass": true,
+      "actual": {
+        "UB": {
+          "fallback": 5000,
+          "expected": 5000
+        },
+        "UT": {
+          "fallback": 10000,
+          "expected": 10000
+        },
+        "UVa": {
+          "fallback": 5000,
+          "expected": 5000
+        },
+        "UVb": {
+          "fallback": 10000,
+          "expected": 10000
+        },
+        "UT3": {
+          "fallback": 10000,
+          "expected": 10000
+        },
+        "UTc": {
+          "fallback": 10000,
+          "expected": 10000
+        },
+        "G_UB": {
+          "fallback": 5000,
+          "expected": 5000
+        },
+        "G_UVa": {
+          "fallback": 5000,
+          "expected": 5000
+        },
+        "G_UVb": {
+          "fallback": 10000,
+          "expected": 10000
+        },
+        "G_UT3": {
+          "fallback": 10000,
+          "expected": 10000
+        }
+      }
+    }
+  },
+  "summary": {
+    "cases": 37,
+    "passed": 32,
+    "failed_expectations": [
+      "one_auth_two_rollbacks",
+      "duplicate_event_only",
+      "fractional_resume_event_k",
+      "fractional_confirmation_k",
+      "resume_completed_hold_5_windows"
+    ]
+  }
+}
