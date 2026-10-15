@@ -514,9 +514,9 @@ bad2 = [(n, got, want) for n, got, want in cases2 if got != want]
 chk(f'V2 빈칸 뜻 {len(cases2)} 경우 (닫힌 어휘 · 값이어야 할 칸 = None)', not bad2, bad2[:4])
 codes = safe(lambda: set(LRB.V13_BLANK_CODES), set())
 chk('V2b 어휘 = NA_PHASE_ABSENT · NA_ZERO_CONTACTS · NA_NOT_PERCOLATING · INF_NOT_PERCOLATING · NOT_COMPUTED · HOLD_BAND_FALLBACK · EMPTY_NO_REASON · '
-    '★ 10-12 NA_NOT_DESIGN_INPUT (부피분율 규칙 행의 하중 — Q6 (가))',
+    '★ 10-12 NA_NOT_DESIGN_INPUT (부피분율 규칙 행의 하중 — Q6 (가)) · ★ 10-15 NA_MODEL_LIMIT (FULL 모형 한계 — L214 · Codex LHS214 판정 §3 Q3)',
     codes == {'NA_PHASE_ABSENT', 'NA_ZERO_CONTACTS', 'NA_NOT_PERCOLATING', 'INF_NOT_PERCOLATING', 'NOT_COMPUTED', 'HOLD_BAND_FALLBACK',
-              'EMPTY_NO_REASON', 'NA_NOT_DESIGN_INPUT'}, codes)
+              'EMPTY_NO_REASON', 'NA_NOT_DESIGN_INPUT', 'NA_MODEL_LIMIT'}, codes)
 
 # ═══ V3 빈칸 일관성 (양방향) ══════════════════════════════════════════════════════════════════════════════════════════════════════
 print('V3  빈칸 일관성')

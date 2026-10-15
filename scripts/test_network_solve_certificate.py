@@ -645,11 +645,17 @@ def main():
             skip('G4', f'git 객체 없음 ({PRE_BIND_REF})')
             return
 
+        #  ★ 10-15 L214 (Codex LHS214 판정 §2 끝 문단 · 수정 계획 §3 A4 "메타 · 사유 변경은 따로 비교") — 전자 · 열 채널의 FULL 상태 · 사유 키
+        #    (`electronic_sigma_full_status` · `_reason` · `thermal_…`) 는 L214 가 **더한** 기록 키다 (값 · 상태 칸 아님) — 여기서 빼고 아래 G4b 가 따로 본다.
+        L214_ADDED = ('electronic_sigma_full_status', 'electronic_sigma_full_reason', 'thermal_sigma_full_status', 'thermal_sigma_full_reason')
+
         def strip_bind(obj):
             o = json.loads(json.dumps(obj))
 
             def walk(x):
                 if isinstance(x, dict):
+                    for k in L214_ADDED:
+                        x.pop(k, None)
                     for k, v in list(x.items()):
                         if isinstance(v, dict) and k.endswith(('solve_certificate_full', 'solve_certificate_bulk_net', 'solve_certificate_constr_net')):
                             for b in BIND:
@@ -665,7 +671,7 @@ def main():
                  'GEN2-01 사슬 (협착-only R_c = 0)': (Acl, Ccl, [1], [], {1: 'SE'}, 10.0),
                  '진짜 비관통': (Ant, Cnt, [1], [], {1: 'SE'}, 10.0),
                  'CF 모형 과전도 (상자 1 × 1)': (Abx, Cbx, [1], [], {1: 'SE'}, 1.0)}
-        diff, nb = [], 0
+        diff, nb, added = [], 0, []
         for lab, (A_, C_, se_, am_, tm_, box_) in cases.items():
             for cm in ('hertzian', 'physics'):
                 new_ = quiet(nc._run_all_networks, A_, C_, se_, am_, tm_, 1.0, 20.0, box_, box_, None, contact_mode=cm)
@@ -673,6 +679,7 @@ def main():
                 nb += 1
                 if strip_bind(new_) != strip_bind(old_):
                     diff.append((lab, cm))
+                added.append((lab, cm, new_))
         Ar, Cr, tmr, pzr, boxr = load_real14()
         for cm in ('hertzian', 'physics'):
             new_ = quiet(nc.run_decomposition, Ar, Cr, [3], 1000.0, pzr, boxr, boxr, type_map=tmr, contact_mode=cm, mode='ionic')
@@ -690,6 +697,20 @@ def main():
         chk(f'G4 ★ σ 비트 동일 — 결합 전 모듈 ({PRE_BIND_REF}) 과 결과 전체 (σ · σ_dim · 상태 · 사유 · 비율 · 전력 몫 · 증서 수치 · 단 기록) 가 결합 키만 빼면 같다: '
             f'실 생산자 {nb} 실행 (SE + AM · GEN2-01 · 비관통 · CF 과전도 · real_14 이온 두 모드) + 큰 격자 cg · 작은 격자 spsolve 의 G · q · solve_info',
             not diff and nb == 10 and all(gl) and len(gl) == 2, repr((diff, gl)))
+        #  ★ 10-15 L214 — 더한 기록 키 (위에서 뺀 넷) 를 따로: 전자 · 열 채널 레코드가 있는 실행마다 FULL 상태 · 사유가 실리고 값과 맞는다
+        #    (값 있음 = computed · 사유 없음 / 값 없음 = 그 채널의 생산자 상태 — 비관통 valid_zero no_through_path).  옛 모듈 (결합 전) 에는 없다 → 고치기 전 FAIL.
+        badA = []
+        for lab, cm, r_ in added:
+            for pre in ('electronic_', 'thermal_'):
+                if pre + 'sigma_full_mScm' not in r_:
+                    continue                                        # 그 채널 결과가 없는 실행 (AM 없음 — not_applicable)
+                st_, rs_ = r_.get(pre + 'sigma_full_status'), r_.get(pre + 'sigma_full_reason')
+                ok_ = ((r_.get(pre + 'sigma_full') is not None and st_ == 'computed' and rs_ is None)
+                       or (r_.get(pre + 'sigma_full') is None and st_ == 'valid_zero' and rs_ == 'no_through_path'))
+                if not ok_:
+                    badA.append((lab, cm, pre, st_, rs_))
+        chk('G4b ★ L214 — 전자 · 열 FULL 상태 · 사유가 출력까지 전파 (값 있음 = computed · 비관통 = valid_zero no_through_path · 결합 전 모듈에는 없는 기록 키 — 값 칸 아님)',
+            not badA and any(pre_ for _l, _c, r_ in added for pre_ in ('electronic_',) if pre_ + 'sigma_full_mScm' in r_), repr(badA[:3]))
     _guard('G', sG)
 
     print(f'\ntest_network_solve_certificate: {_ok}/{_ok + len(_fail)} PASS' + (f' · SKIP {len(_skip)}' if _skip else '')

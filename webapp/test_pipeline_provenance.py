@@ -246,7 +246,24 @@ def _bed(name):
       band_l2      — 반경 0.4 · z 0..10 간격 0.5 · 판 40 (L1 의 위 띠 85 % 가 비어 → 관측 z 범위 띠 L2 = BAND_FALLBACK)
       through_weak — through 와 같은 사슬 · 접촉 면적 1e-5 (Hertz σ_dim ~1e-4 mS/cm — 6 자리 반올림이 상대 0.4 % 인 작은 σ)
       se_am        — SE 사슬 (type 1 · x 0) + AM 사슬 (type 2 · x 5) 둘 다 관통 → 이온 · 전자 · 열 세 채널이 다 요청된다 ('1:SE,2:AM_P')
-      se_am_broken — se_am 에서 AM 사슬 한 접촉을 끊음 (전자망 비관통 = 유효 null)"""
+      se_am_broken — se_am 에서 AM 사슬 한 접촉을 끊음 (전자망 비관통 = 유효 null)
+      ── 10-15 L214 (Codex LHS214 판정 §2 · 수정 계획 §3 A2 · A3) — FULL 모형 한계 (수치 인증 통과 · q > 1.5 출력 거부) 를 실 생산자로 낸다 ──
+         21 구 사슬 (반경 1 · z 0..20 · 접촉 면적 0.5 · δ 0.2) 의 상자만 줄였다 — φ_SE (구 부피 합 / 판 간격 상자) > 1 인 합성 기하 = 분류 · 게시 계약
+         시험용이지 물리 침대가 아니다 (Codex 3 노드 탐침과 같은 부류 · q 값 = 10-15 이 리포 생산자 실측)
+      ml_physics — 상자 1 × 1: Hertz H0 q 0.795 · H12 1.342 (computed) · physics q 2.593 (> 1.5 → physics FULL 모형 한계) · 열 q 2.59 (computed — 단상 가드 밖)
+      ml_hertz   — 상자 0.7 × 0.7: H0 q 1.623 · H12 2.739 · physics 5.293 — 세 모드 모두 모형 한계 (주 타깃 Hertz 모형 한계)
+      ml_el      — SE 사슬 (면적 0.1 · δ 0.05) + AM 사슬 (면적 1.0 · δ 0.3 · x 5) · 상자 1 × 1 · '1:SE,2:AM_P': 이온 두 모드 computed ·
+                   전자 H0 q 0.767 (computed) · 전자 physics q 1.611 (전자 FULL 모형 한계)"""
+    if name in ('ml_physics', 'ml_hertz'):
+        A = {i: dict(type=1, x=0., y=0., z=float(z), radius=1.) for i, z in enumerate(range(21), 1)}
+        C = [dict(id1=i, id2=i + 1, contact_area=0.5, delta=0.2) for i in range(1, 21)]
+        return A, C, 20.0, (1.0 if name == 'ml_physics' else 0.7)
+    if name == 'ml_el':
+        A = {i: dict(type=1, x=0., y=0., z=float(z), radius=1.) for i, z in enumerate(range(21), 1)}
+        A.update({100 + k: dict(type=2, x=5., y=0., z=float(z), radius=1.) for k, z in enumerate(range(21))})
+        C = [dict(id1=i, id2=i + 1, contact_area=0.1, delta=0.05) for i in range(1, 21)]
+        C += [dict(id1=100 + k, id2=101 + k, contact_area=1.0, delta=0.3) for k in range(20)]
+        return A, C, 20.0, 1.0
     if name in ('through', 'through_weak'):
         A = {i: dict(type=1, x=0., y=0., z=float(z), radius=1.) for i, z in enumerate(range(21), 1)}
         C = [dict(id1=i, id2=i + 1, contact_area=(0.1 if name == 'through' else 1e-5), delta=0.05) for i in range(1, 21)]
