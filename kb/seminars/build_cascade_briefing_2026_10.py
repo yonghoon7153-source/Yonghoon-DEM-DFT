@@ -860,8 +860,15 @@ def build_lean():
     #      are drawn beside the box. Plain grey bars, no highlight; the audit says why the score cannot rank —
     #      since 10-14 the audit is slide 8, right after this one (user: 'the next page explains why this direction was
     #      wrong'), and sampling · DFT reference · window (9–11) follow it as its evidence.
+    #      10-15 (user: 'June–August → first try' · '작은 불렛'): the heading says 'first attempt' (the audit and Stage 2
+    #      follow), and two small bullets say what the score was made of — five terms ≠ the four descriptors of step 4
+    #      (energy 1 · elastic moduli 2 · stability window 2; Li-site landscape and interface reactivity were not scored ·
+    #      tools/figures/plot_cascade_insights.py). The box, chart and captions move down 0.35 in to make room.
     name, t = fresh('workflow', 'Results & Discussion')
-    lean_body(t, 'Stage 1: screening pipeline (June–August)', h=0.5)
+    lean_body(t, 'Stage 1: screening pipeline (first attempt)',
+              ['Five terms were scaled from 0 to 1 and added with hand-set weights.',
+               'The terms came from the energy, elastic moduli, and stability window only.'], h=1.1, bsz=1300, bln=110)
+    dy = 0.35
     dashed_list(t, name, 'Pipeline',
                 [('Site enumeration', '91 precursors'),
                  ('UMA relaxation and volume filter', '3,675 structures'),
@@ -869,10 +876,10 @@ def build_lean():
                  ('Descriptors (Li-site landscape, elastic moduli, stability window, and interface reactivity)',
                   '91 precursors'),
                  ('Combined score and ranking', '91 precursors')],
-                0.45, 1.95, 5.6, 3.75, note_x=0.66, sz=1300)
-    add(t, caption(ids(), '< Stage-1 pipeline, run from June to August >', 5.88, x=0.45, w=5.6))
-    figure(t, name, 'fig_p07_stage1_score_top10.png', 6.25, 1.98, 3.3, 'Stage-1 composite score, top 10 of 91')
-    add(t, caption(ids(), '< Stage-1 composite score, top 10 of 91 >', 5.88, x=6.1, w=3.6))
+                0.45, 1.95 + dy, 5.6, 3.75, note_x=0.66, sz=1300)
+    add(t, caption(ids(), '< Stage-1 pipeline, first attempt >', 5.88 + dy, x=0.45, w=5.6))
+    figure(t, name, 'fig_p07_stage1_score_top10.png', 6.25, 1.98 + dy, 3.3, 'Stage-1 composite score, top 10 of 91')
+    add(t, caption(ids(), '< Stage-1 composite score, top 10 of 91 >', 5.88 + dy, x=6.1, w=3.6))
     save(t, name)
 
     # ---- 8 configuration sampling (orig slide 11): heat map larger (CW P1); the descriptor-spread line is said — p11

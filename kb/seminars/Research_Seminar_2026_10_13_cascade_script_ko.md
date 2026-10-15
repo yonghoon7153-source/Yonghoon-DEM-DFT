@@ -195,7 +195,7 @@ evidenceScope: multi-source-mixed
 ## 7. 1단계 — 파이프라인과 그때의 점수 ⏱ 10:30
 > ✅ **확정 10-14** — 사용자 *"ㅇㅇ 진행해"* · *"틀린거라도 랭킹 한번 추가해서 진행해보던가"* · *"옆에 관련 plot해서 넣어주면 좋을듯 틀렸지만 ranking이 어땠었는지"* ·
 > *"점수표 관련해서는 틀린 내용이라는걸 나중에 얘기할거니까 인용해도 될듯"* · 다음 장 = 감사 (*"그 다음페이지가 이런 방향성이 왜 잘못됐어서 방향성을 바꿨는지 설명"*).
-> 화면 (슬림판 7장 · 사용자 8쪽): 왼쪽 점선 박스 'Pipeline' 다섯 단계 (오른쪽 회색 = 91 · 3,675 · 693 selected · 91 · 91) + `< Stage-1 pipeline, run from June to August >` ·
+> 화면 (슬림판 7장 · 사용자 8쪽): 왼쪽 점선 박스 'Pipeline' 다섯 단계 (오른쪽 회색 = 91 · 3,675 · 693 selected · 91 · 91) + `< Stage-1 pipeline, first attempt >` (10-15 · 옛 'run from June to August') ·
 > 오른쪽 회색 막대 = 8월 방법 점수 상위 10 (91 개 중) + `< Stage-1 composite score, top 10 of 91 >` (`p07_stage1_composite_score_91.csv` · 강조 없음).
 > 앞 장 끝: *'그러면 이 91 개를 1단계에서 어떻게 계산했는지 보겠습니다.'*
 > 10-14 보강 (사용자 *"이거를 대본에 잘 녹아내면 좋을듯"*): 점수 만든 방법 두 문장 · 에너지 기준 문제와 ML 이야기는 8장 · 숫자는 디펜스 S7 · S8.
@@ -210,8 +210,8 @@ evidenceScope: multi-source-mixed
 > 10-15 정정 (사용자 *"descriptor 가 4 개 뿐인데 하나 더 추가해야 되는 거 아닌지"*): 옛 줄 *'점수는 지표 다섯을 …'* 은 위 *'지표 네 가지'* 와 어긋났다.
 > 점수 항 다섯 ≠ 지표 넷이다 — 항은 에너지 1 (2–3 단계에서 나온 값) + 탄성률 2 (영률 · Pugh 비) + 안정창 2 (산화 시작 전압 · 창 폭) 이고, Li 자리 지형과 계면 반응성은 점수에 안 들어갔다 (`tools/figures/plot_cascade_insights.py`).
 > 그래서 상자에 지표를 하나 더 넣지 않고, 제목 아래 작은 불렛 두 줄로 밝힌다 —
-> *'Five terms from the energy, elastic moduli, and stability window were scaled from 0 to 1 and added with hand-set weights.'* ·
-> *'The Li-site landscape and interface reactivity were not part of the score.'*
+> *'Five terms were scaled from 0 to 1 and added with hand-set weights.'* · *'The terms came from the energy, elastic moduli, and stability window only.'*
+> (첫 안은 둘째 줄이 'Pipeline' 표지와 겹치고 첫 줄이 'hand-/set' 에서 갈려서, 사용자 원문 첫 줄을 살리고 둘째 줄을 한 줄로 줄였다 · 제목 'June–August' → 'first attempt' · x 축 'composite score (first attempt)')
 
 **[가리킴: 제목 아래 첫 줄]** 이 점수는 항 다섯 개로 만들었습니다. 에너지에서 하나, 탄성률에서 둘, 안정창에서 둘입니다.
 에너지는 모체와 견준 원자당 에너지이고, 탄성률에서는 영률과 Pugh 비를, 안정창에서는 산화가 시작되는 전압과 창의 폭을 썼습니다.
@@ -410,7 +410,7 @@ MLIP 지표의 기준이 되는 DFT 계산입니다. **[가리킴: 두 곡선]**
 | 4 | ■ 'Failure modes in sulfide-based all-solid-state batteries' · bullet 둘 (reinforce each other · A dopant that suppresses one mode can worsen the other, and the trade-off goes undetected unless each mode is evaluated separately.) + Kang 2026 Fig. 16 + 출처 'Kang et al., …' | 앞 장 '왜 따로' 에 답 · 두 열화 → 서로 키우는 고리 → 가운데 SE doping → 따로 재는 이유 (대본 4장) · 그림 오타는 원 논문 그대로 |
 | 5 | ■ 'Prior dopant screens and what this study adds' · bullet 둘 + 표 6 행 (Miara 2015 · Xiao 2019 · Lee 2024 · Muy 2025 · Jung 2026 · this work · 출처는 오른쪽 위 다섯 줄) | what is varied 열이 핵심 → this work 행 → 기계 축은 새로움이 아님 (대본 5장 · 논문별 브리핑 = 디펜스 S5) |
 | 6 | 08-18 덱의 족별 표 (family · n · examples — 'role in the design' 열은 뺐다 · 사용자 10-13) + **[문헌] 'Literature example: SiO₂ co-doping'** Jung 2026 Fig. 3d | 족별 역할은 말로: 산화물 = 강한 M–O 결합 · 염화물 = 호스트에 이미 Cl · 황화물 = 호스트와 같은 음이온 (대조) · 플루오르화물 = 가장 강한 결합 · 이동성 위험 · 브로민화물 · 요오드화물 = 더 큰 할라이드 (대조) · 질화물 = 더 높은 음이온 전하 (대조) · 공치환 실험 선례 CuCl · MgF₂ · ZnO · La₂O₃ · Nd₂O₃ · SiO₂ (17장) · 문헌 그림은 '선례' 이지 우리 후보의 검증이 아니다 · As₂S₃ 재실행은 7장 |
-| 7 | ■ 'Stage 1: screening pipeline (June–August)' + 왼쪽 점선 박스 'Pipeline' 다섯 단계 (오른쪽 회색 = 91 · 3,675 · 693 selected · 91 · 91) + 오른쪽 **8월 방법 점수 상위 10 막대** (91 개 · 강조 없음) + 캡션 둘 — 10-14 사용자 *'예전 파이프라인'* → *'틀린거라도 랭킹 한번 추가 · 옆에 plot'* | 단계마다 한 줄 · 점수는 8월 방법 그대로 + 재실행 둘 (91) · 끝 질문 '이 순위를 그대로 써도 될까요?' → 8장 감사 · 점수식 · As₂S₃ 53 위 · AlI₃ 38 위 · 남은 것 셋은 물으면 · ⛔ 막대에서 전구체를 짚지 않는다 |
+| 7 | ■ 'Stage 1: screening pipeline (first attempt)' + 작은 불렛 둘 (항 다섯 · 0–1 · 손 가중치 / 에너지·탄성률·안정창에서만) + 왼쪽 점선 박스 'Pipeline' 다섯 단계 (오른쪽 회색 = 91 · 3,675 · 693 selected · 91 · 91) + 오른쪽 **8월 방법 점수 상위 10 막대** (91 개 · 강조 없음) + 캡션 둘 — 10-14 사용자 *'예전 파이프라인'* → *'틀린거라도 랭킹 한번 추가 · 옆에 plot'* | 단계마다 한 줄 · 점수는 8월 방법 그대로 + 재실행 둘 (91) · 끝 질문 '이 순위를 그대로 써도 될까요?' → 8장 감사 · 점수식 · As₂S₃ 53 위 · AlI₃ 38 위 · 남은 것 셋은 물으면 · ⛔ 막대에서 전구체를 짚지 않는다 |
 | 8 | (10-15 **빨간 블록판 기본**) 두 목록 (Audit findings 4 · Decisions recorded on Sep 12 4 + 빨강 다섯째 'A ranking margin δ, proposed but not yet set') + 분홍 상자 'Stage-1 outputs are kept as exploratory data; no dopant ranking has been approved.' + 'The run scope is set after the pilot.' · 옛 판 (Oct 14 블록) 은 검토본 | 'Found on Oct 14' 두 줄 + 녹는 에너지 시연 한 줄은 말로 (숫자 없이) · 두 목록은 행끼리 짝이 아니다 · 머신러닝은 한 줄 |
 | 9 · 10 | 9 (10-15): 열지도 + 담금질 도식 (작게) + **담금질 에너지 변화 히스토그램 (693)** + 맨 아래 줄 (모두 더 낮아짐 · 중앙 0.81 eV / 슈퍼셀) · 10: 그대로 | 9: '지표에 따라 같은 전구체 안 흩어짐 ≈ 전구체 사이' 는 말로 (8장 감사 셋째 항목의 근거) · 8월의 'top ten unchanged' 는 말하지 않는다 |
 | 11 | (10-14 감사 뒤) ■ Decomposition stability window · 호스트 창 그림 + **[문헌] 'Literature: decomposition and intrinsic windows'** Schwietert 2021 Fig. 1 (크게) | 우리 정의 = 그 논문의 decomposition window · 옛 정의가 넓었던 이유 · 계면 산물은 10-14 에 바닥상태 상으로 다시 냈고 아직 안 쓴다 (둘 다 화면 줄은 뺐다) · 화면 bullet 은 91 전구체 · '창 없음' |

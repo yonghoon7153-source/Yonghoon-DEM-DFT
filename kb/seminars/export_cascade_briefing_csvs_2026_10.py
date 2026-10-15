@@ -560,7 +560,7 @@ def p07d(n=10):
                   'Exploratory and flawed: the September audit (slide 8) found this score unusable as a ranking. Never cite a rank as a result.',
                   f'Rows run from rank {n} to rank 1: Origin draws row 1 of a horizontal bar plot at the bottom, so rank 1 ends up on top.',
                   'Plot: Bar (horizontal), X = tick_label_origin_richtext (or tick_label_plain), Y = composite_score.',
-                  'Axis as on the slide: 0 to 1.0, ticks 0 / 0.5 / 1.0, title "composite score (August method)".',
+                  'Axis as on the slide: 0 to 1.0, ticks 0 / 0.5 / 1.0, title "composite score (first attempt)".',
                   'Bars: fill #bdbdbd, black edge 0.8 pt. Value labels: value_label_2dp (2 decimals, as on the slide; score keeps 3).',
                   'tick_label_origin_richtext uses Origin escapes (\\-(2) = subscript); if the axis shows the backslashes, use tick_label_plain.'],
                  ['bar_position_bottom_to_top', 'rank_91', 'precursor', 'tick_label_plain', 'tick_label_origin_richtext',
@@ -645,7 +645,7 @@ def figures():
     ax.set_yticks(ys, [f"{r[ix['rank_91']]}. {r[ix['precursor']].translate(sub)}" for r in top], fontsize=12)
     ax.set_xlim(0, 1.0)
     ax.set_xticks([0, 0.5, 1.0])
-    ax.set_xlabel('composite score (August method)', fontsize=11)
+    ax.set_xlabel('composite score (first attempt)', fontsize=11)   # 10-15: slide heading says 'first attempt'
     plain_axes(ax, 11)
     ax.tick_params(axis='y', length=0)
     save(fig, 'fig_p07_stage1_score_top10.png')
