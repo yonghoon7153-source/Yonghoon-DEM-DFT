@@ -4,16 +4,18 @@
 > P2 셋 (`L214-01` · `02` · `03`) 을 판정문 §2 · §4 A1–A4 의 최소 처방대로 고쳤다 — "수치 인증 성공 / 출력 채택 거부" 를 명시 범주로 만들고, 생산자와 소비 경로 전부
 > (일반 게시 · 정지 계약 · τ · 다시 읽기 · 인계 · 배포 · 웹앱 화면) 가 **공용 판정 한 쌍**을 쓰게 했다.  세 결함이 닫히는지 · 새 결함이 있는지 짧게 판정해 달라.
 > ✅ **1저자 10-14** — 수정 계획 `docs/reviews/lhs214_fix_plan_20261014.md` Q1–Q5 권고대로 (Q1 (가) 한 묶음 · Q2 (가) 분류 공통 · 배포 자격 역할별 · Q3 (가) 옛 13 건 unknown · Q4 등록 개정 문안 = 초안 · Q5 (가) 문턱 1.5 유지).
-> **리뷰 핀** = 이 요청서가 든 본 가지 커밋 (번호는 발송 때 1저자가 적는다 · 바로 다음 원장 커밋이 기록한다) · **기준** = `0c557e72a` (수정 직전 본 가지 — 검토 핀 `1087a9b2f` 와 봉인 32 · 인계 도구 바이트 같음 ·
+> **리뷰 핀** = 이 요청서 §9 가 든 본 가지 커밋 (번호는 발송 때 메인 세션이 적는다) · **기준** = `0c557e72a` (수정 직전 본 가지 — 검토 핀 `1087a9b2f` 와 봉인 32 · 인계 도구 바이트 같음 ·
 > 그 사이 다른 변경 7 파일은 봉인 · 인계 밖: additives · check_selftest_inventory · make_mixer_deck · mpm3d_compaction · mpm_input_from_case · mpm_webapp_payload · phase_a_precompute).
-> 수정 = 본 가지 커밋 셋 (시험 먼저 `d0aa231d4` → 수정 `6d0bec3c3` → 문서 · 증거 · 이 요청서 = 리뷰 핀).  증거 = `docs/reviews/lhs214_fix_evidence_20261015/README.md`.
+> 수정 = 본 가지 커밋 (시험 먼저 `d0aa231d4` → 수정 `6d0bec3c3` → 문서 · 증거 → ★ (나′) 시험 먼저 `545d7d4fe` → 수정 · 이 요청서 §9 = 리뷰 핀).  증거 = `docs/reviews/lhs214_fix_evidence_20261015/README.md`.
 
 ## 0. 대상 · 지위
 
-- 코드 diff = `git diff 0c557e72a <리뷰 핀> -- scripts/network_conductivity.py scripts/tau_flux.py webapp/pipeline_service.py webapp/app.py webapp/templates/single.html scripts/g2_network_reread.py scripts/lhs_design_dataset.py scripts/lhs_release_build.py`
-  + 시험 다섯 (`scripts/test_lhs214_model_limit.py` 신설 · `webapp/test_network_handover_chain.py` ⑤ · `scripts/test_network_solve_certificate.py` G4 · G4b · `scripts/test_lhs_release_v13.py` V2b · `webapp/test_pipeline_provenance.py` 침대 셋) + 등재 한 줄 (`docs/reviews/selftest_inventory.tsv`).
+- 코드 diff = `git diff 0c557e72a <리뷰 핀> -- scripts/network_conductivity.py scripts/tau_flux.py webapp/pipeline_service.py webapp/app.py webapp/templates/single.html scripts/g2_network_reread.py scripts/lhs_design_dataset.py scripts/lhs_release_build.py scripts/supp20_input_receipt.py`
+  + 시험 다섯 (`scripts/test_lhs214_model_limit.py` 신설 · `webapp/test_network_handover_chain.py` ⑤ · `scripts/test_network_solve_certificate.py` G4 · G4b · `scripts/test_lhs_release_v13.py` V2b · `webapp/test_pipeline_provenance.py` 침대 셋) + 등재 두 줄 (`docs/reviews/selftest_inventory.tsv` — 신설 시험 줄 · ★ (나′) 영수증 도구 줄 메모).
+  ★ (나′) `scripts/supp20_input_receipt.py` = 봉인 32 · HANDOVER 밖 검사 도구 (code_fp 무관) — 대기 지문 선언 읽기 + selftest (§9).
 - ⚠ **봉인 32 가 바뀐다** — 바뀐 봉인 파일 4 (`scripts/network_conductivity.py` · `scripts/tau_flux.py` · `webapp/app.py` · `webapp/pipeline_service.py`) ⇒
-  `code_fp e8b2496b9c2ecf6edad8c6b52d32a2514c96dd54c9a20823c300639249ecae71` → **`code_fp acc7bfa335ec8fa8a7b76eb981135f16994b084ce0746476c5d05f61488af2ed`** (재봉인 아님 · 보고만 — §4).
+  `code_fp e8b2496b9c2ecf6edad8c6b52d32a2514c96dd54c9a20823c300639249ecae71` → **`code_fp acc7bfa335ec8fa8a7b76eb981135f16994b084ce0746476c5d05f61488af2ed`** (재봉인 아님 · 보고만 — §4 ·
+  두 등록 초안에는 대기 지문 `code_fp_pending` 으로 선언 · 등록 §3 은 그대로 — §9).
 - 문서 = 두 등록의 개정 **초안** (⬜ 1저자 비준 대기 · 결과 열람 뒤 정책 개정 이력 명시): `docs/reviews/lhs_network_batch_registration_20261007_g2.md` §9-8 · `docs/reviews/lhs_network_batch_registration_20261012_supp20.md` §9-3.
 - 새 214 실행 · WSL · 수치 재계산 없음 · 원장 `docs/reviews/findings.json` 의 `L214-01`–`03` 갱신 = 병합 뒤 본 세션 (이 요청서는 원장을 고치지 않는다) · S3 = 별개 (봉인 수치 모듈 둘이 바뀜 → 재봉인 의무 · S3 HOLD 그대로).
 
@@ -107,6 +109,7 @@
 - **Q3.** A4 (§3) 가 판정문 §4 A4 "같은 환경 정상 사례 타깃 수치 비트 동일 · 메타 · 사유 변경 따로" 의 증거로 충분한가 — 빠진 대조가 있나.
 - **Q4.** 두 등록 개정 초안 (§9-8 · §9-3) 이 판정문 §4 B6 (코드 해시 · 결과 자격 · 공란 의미 · 예외 범위 · Hertz 주 타깃 · 결과 열람 뒤 이력 · 바꾸지 않는 것) 을 다 담나.
 - **Q5.** 새 결함이 있나 — 있으면 등급 · 반례.
+- **Q6.** ★ (나′) 대기 지문 선언 (도구는 발사 대조를 등록 값만으로 · 시험만 선언된 대기 상태를 정확한 실패 집합으로 받는다) 이 맞나 · 빠진 반례가 있나 (§9).
 
 ## 8. 재현 (리뷰 핀 · 컨테이너 Linux · Python 3.11)
 
@@ -122,5 +125,38 @@ OMP_NUM_THREADS=1 python3 scripts/run_network_194_parallel.py --selftest     # 1
 OMP_NUM_THREADS=1 python3 scripts/wsl_network_smoke.py --selftest-real       # 4/4 (case15 · ~2.5 분)
 OMP_NUM_THREADS=1 python3 docs/reviews/lhs214_fix_evidence_20261015/a4_no_impact.py --base 0c557e72a   # A4 PASS 32/32 (~4 분)
 python3 docs/reviews/lhs214_fix_evidence_20261015/code_fp_report.py --base 0c557e72a                    # code_fp acc7bfa3… · 바뀐 봉인 파일 4
+OMP_NUM_THREADS=1 python3 scripts/supp20_input_receipt.py --selftest         # ★ (나′) 99/99 · 상태 pending (~17 s · §9)
 # 시험 먼저 확인 (고치기 전 코드 + 새 시험): 시험 먼저 커밋을 체크아웃해 위 다섯 시험 → §2 표의 "고치기 전" (13/54 · 21/34 · 27/28 · 255/256 · 284/284)
+# ★ (나′) 시험 먼저 커밋 545d7d4fe 를 체크아웃해 영수증 selftest → 81/99 (상태 undeclared · 고치기 전 도구 + 옛 초안 꼴 등록 문서)
 ```
+
+## 9. 봉인 지문 대기 선언 (1저자 10-15 Q1 (나′))
+
+- **무엇이 실패했나** — 본 가지에 합친 게이트에서 `scripts/supp20_input_receipt.py --selftest` 가 실패했다.  수정이 봉인 32 의 네 파일을 바꿔 체크아웃 지문 = `acc7bfa3…` (§4) 인데,
+  보충 20 등록 초안 §9-3 표가 새 지문을 등록 값과 **같은 꼴** (`` `code_fp <hex>` ``) 로 적었다 → 도구 `registration_values()` 가 값 둘을 보고 등록 §3 = None → R0 · D1 실패 ·
+  시험 S0 (커밋된 실물 = rc 0 기대) 실패 · S0b 는 None 에서 AttributeError (시험 코드 결함).
+- **결정 (나′)** — 새 지문은 등록 초안에 **대기 지문** 으로 따로 선언한다 (`` `code_fp_pending <64 hex>` `` · 194 §9-8 · 보충 20 §9-3 표 · "비준 · 재등록 때 §3 이 이 값으로 바뀌고
+  이 선언은 지운다 · 그 전 발사 대조 D1 · E2 = 등록 값 그대로").  발사 대조 (컨테이너 D1 · 사전 점검 E2 · 발사 manifest F5 · G5) = **등록 §3 값만** — 대기 선언이 통과시키지 않는다
+  (비준 · 재등록 전 발사 불가 유지).  시험만 선언된 대기 상태를 **정확한 실패 집합** 으로 받는다.
+- **도구** (봉인 32 · HANDOVER 밖 검사 도구 — code_fp 무관): `registration_values()` 에 선택 항목 `code_fp_pending` (정규식 `` `code_fp_pending ([0-9a-f]{64})` `` · 0 개 = None · 문제 아님 ·
+  서로 다른 값 둘 이상 = R0 문제 · 등록 §3 과 같음 = 모순 = R0 문제 · 문제면 값 None) · D1 판정식 그대로 (체크아웃 = 등록 §3) · D1 상세에 `pending` 만 더함 · E2 · F5 · G5 · 그 밖 동작 무변경.
+  등록 문서의 `code_fp` 를 읽는 코드 = 이 도구뿐 (리포 grep · 194 쪽 §3 대조 = 손 대조).
+- **시험** (selftest 만 · 시험 먼저 `545d7d4fe`):
+  - 상태 판정 (selftest 안 · 작은 함수): registered (체크아웃 = 등록 §3) · pending (대기 선언 하나 · 체크아웃 = 대기 ≠ 등록) · undeclared (그 밖 = 시험 실패 · 사유 출력).
+  - 양성 대조의 pending 기대 실패 집합 (정확히 같음 · ⊆ 아님) — 기록이 싣는 지문으로 정했다:
+    컨테이너 S0 = {D1} (D1 상세 now = 대기 · registered = 등록 · pending = 대기) ·
+    진짜 실행기 사전 점검 영수증 S7 · S7j = {D1 · E2} (영수증 = 체크아웃 지문 · E2 상세 receipt = 체크아웃 · registered = 등록 · P7 = 영수증 = 체크아웃이라 같음 · S7j 의 P10 같음) ·
+    합성 발사 manifest 둘 S8 · S8k = {D1 · F5 · G5} (code_hashes = 이 체크아웃 → 봉인 = 체크아웃 지문 · F5 · G5 상세 = 봉인 · dirty false · H1 = 두 봉인이 같아 같음 · S8k 의 F7 · G7 같음).
+    정확한 집합을 쓰는 음성 대조 (S7a · S7a2 · S7k1 · S7k2 · S8g2) = 원래 집합 ∪ 같은 pending 집합.
+  - 음성 대조 판별력 (두 상태 모두 · 이미 실패 중인 칸으로 통과시키지 않는다): code_fp 오타 S4 = D1 상세 registered = 문서에서 읽은 오타 값 · now = 체크아웃 ·
+    E2 · F5 를 겨눈 S7l · S8e · S8f = 상태가 registered 가 아니면 **비준 쌍둥이** (등록 문서 사본 — 등록 §3 := 체크아웃 지문 · 대기 선언 없음) 에서 판별 (쌍둥이의 정상 기록 = rc 0 · S11f · f2 · f3).
+  - 새 반례 (등록 문서 사본 · 지문 토큰만 바꿈 · 모의 등록 값 = 체크아웃과 다름):
+    ⓐ 옛 초안 꼴 (`` `code_fp <새 hex>` `` 둘째 값) = 정확히 {R0 · D1} · 상태 undeclared · 시험 충돌 없음 (S11a) ·
+    ⓑ 대기 선언 값 둘 (서로 다름) = {R0} (S11b) · ⓒ 대기 = 등록 (모순) = {R0} (S11c) ·
+    ⓓ 대기 선언 + 체크아웃 = 대기 = 상태 pending · 도구 D1 = 거짓 {D1} · 사전 점검 {D1 · E2} · 발사 {D1 · F5 · G5} (S11d · d2 · d3 — 발사 대조 엄격) ·
+    ⓔ 대기 선언 없음 + 체크아웃 ≠ 등록 = undeclared {D1} · ⓔ′ 다른 코드의 대기 선언 = undeclared (S11e · e2) ·
+    ⓕ 정상 비준 상태 (합성 — 대기 없음 · 체크아웃 = 등록) = rc 0 (컨테이너 · 사전 점검 · 발사 — S11f · f2 · f3).
+  - S0b = None 안전 · 등록 §3 = `e8b2496b…` 그대로 · 대기 선언이 있으면 = `acc7bfa3…` (`code_fp_report.log` 의 고친 트리 값).
+- **수** — 시험 먼저 (고치기 전 도구 + 옛 초안 꼴 등록 문서 · 상태 undeclared) **81/99** (FAIL 18 · 증거 `docs/reviews/lhs214_fix_evidence_20261015/before_napr/`) →
+  고친 뒤 (상태 pending) **99/99** (`docs/reviews/lhs214_fix_evidence_20261015/final/scripts__supp20_input_receipt.py_selftest.log`).
+- **바꾸지 않은 것** — 봉인 32 · HANDOVER 파일 (`6d0bec3c3` 그대로) · 등록 §2 · §3 값 (`code_fp e8b2496b…` 그대로 — 비준 · 재등록은 1저자) · 194 실행기 · 웹앱 (이 도구에 해당 화면 없음).

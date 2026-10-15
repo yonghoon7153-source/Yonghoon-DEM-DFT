@@ -17,6 +17,9 @@
      이 체크아웃 재계산 · 승인 SHA) + E1 (로그 지문 = 등록 §2 = 반입 재계산 — 코호트 TSV sha 포함) · E2 (봉인 지문 = 등록 §3).  텍스트 · grep 로그 단독
      (`--dry-run-log`) = E0 실패 (옛 판: 다른 TSV 로 돈 로그 · 잘린 로그 · 필수 줄이 빠진 로그가 rc 0).  승인 SHA (`--approved-sha`) 를 주면 사전 점검 · manifest 의
      git 기록과 접두 대조 (P10 · F7 · G7) · 주지 않으면 notes 에 경고 (실패 아님).
+  ⑥ ★ 10-15 (나′) 대기 지문 (1저자 10-15 Q1 (나′)) — 등록 문서의 선택 선언 `code_fp_pending <64 hex>` (비준 · 재등록 전의 새 봉인 지문) 를 읽어 D1 상세에만 싣는다
+     (값 둘 이상 · 등록 §3 과 같음 = R0 문제).  발사 대조 D1 · E2 · F5 · G5 = 등록 §3 값만 (대기 선언은 통과시키지 않는다 — 비준 · 재등록 전 발사 불가) ·
+     selftest 만 선언된 대기 상태를 기록 종류별 정확한 실패 집합으로 받는다 (컨테이너 {D1} · 사전 점검 {D1 · E2} · 발사 manifest 둘 {D1 · F5 · G5}).
 값의 정본은 실행기 함수 (`run_network_194_parallel` — registered_id_set · build_plan · cohort_specs · plan_input_digest · registered_production_set ·
 print_followups · preflight_receipt_checks · parse_preflight_log · launch_eligibility · production_observation_problem) 와 등록 문서 · 수확 묶음 README 다 —
 값을 이 파일에 베껴 두지 않는다 (r2 대조의 허용 차이 두 칸만 README 끝 문장을 옮긴 상수 · 묶음 폴더 이름 둘).
@@ -100,7 +103,8 @@ def _sha_after(text, anchor):
 
 
 def registration_values(reg_doc=REG_DOC, readme=RUNS_README):
-    """등록 문서 §2 · §3 + 수확 묶음 README 의 값 → (dict, 문제 목록).  손으로 옮겨 적지 않고 문서에서 읽는다 (문서 오타 = 재계산과 다름 = rc 1)."""
+    """등록 문서 §2 · §3 + 수확 묶음 README 의 값 → (dict, 문제 목록).  손으로 옮겨 적지 않고 문서에서 읽는다 (문서 오타 = 재계산과 다름 = rc 1).
+    ★ 10-15 (나′) + 선택 항목 code_fp_pending (대기 지문 선언 — 없으면 None · 문제 아님 · 값 둘 이상 · 등록 §3 과 같음 = 문제 · 값 None)."""
     out, probs = {}, []
     try:
         t = _rp(reg_doc).read_text(encoding='utf-8')
@@ -119,6 +123,15 @@ def registration_values(reg_doc=REG_DOC, readme=RUNS_README):
         if why:
             probs.append(f'등록 문서 {k} — {why}')
         out[k] = int(v) if (k == 'n' and v is not None) else v
+    #  ★ 10-15 (나′) 대기 지문 (1저자 10-15 Q1 (나′)) — 선택 항목 `code_fp_pending <64 hex>` (비준 · 재등록 전의 새 봉인 지문 선언).  0 개 = None (문제 아님) ·
+    #    서로 다른 값 둘 이상 = 문제 · 등록 §3 code_fp 와 같음 = 모순 (문제) — 문제면 값 None.  읽어서 D1 상세에만 싣는다: 발사 대조 (D1 · E2 · F5 · G5) 는 등록 값만 본다.
+    v, why = _one(r'`code_fp_pending ([0-9a-f]{64})`', t)
+    if why and why != '자리 없음':
+        probs.append(f'등록 문서 code_fp_pending — {why}')
+    elif v is not None and v == out.get('code_fp'):
+        probs.append('등록 문서 code_fp_pending — 등록 §3 code_fp 와 같다 (모순 선언 · 대기 지문은 등록 값과 달라야 한다)')
+        v = None
+    out['code_fp_pending'] = v
     try:
         rt = _rp(readme).read_text(encoding='utf-8')
     except OSError as e:
@@ -343,7 +356,8 @@ def receipt(*, reg_doc=REG_DOC, readme=RUNS_README, harvest=None, cohort=None, d
                r2_only_other=sorted(k for k in only2 if not k.startswith(R2_ONLY_OK))[:5], r3_only=sorted(only3)[:5], union_equal=(u2 == u3)))
     #  ── ④ 도구 핀 ──
     fp_now = NP.code_fp(NP.code_hashes())
-    R.add('D1', '이 체크아웃의 봉인 32 code_fp = 등록 §3 (수치 봉인 무변경)', fp_now is not None and fp_now == reg.get('code_fp'), dict(now=fp_now, registered=reg.get('code_fp')))
+    R.add('D1', '이 체크아웃의 봉인 32 code_fp = 등록 §3 (수치 봉인 무변경)', fp_now is not None and fp_now == reg.get('code_fp'),
+          dict(now=fp_now, registered=reg.get('code_fp'), pending=reg.get('code_fp_pending')))       # ★ 10-15 (나′) 판정식 그대로 (등록 값만) · 상세에 대기 지문
     #  ── 발사 사전 점검 (주면) — ★ 10-14 SUPR-02 · 1저자 Q2 (가): 실행기 완료 영수증 + 그 실행기가 잡은 전체 로그만 받는다 ──
     scope = 'container'
     pv = None
