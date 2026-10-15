@@ -29,3 +29,4 @@ final	python3 scripts/check_selftest_inventory.py --quiet	0	11.4	전부 분류	f
 final	(웹앱 핵심 10 · 회귀 묶음 47)	0	—	전부 rc 0	final/final_core_summary.log · final/sweep_summary.log · final/sweep/
 a4	python3 docs/reviews/lhs214_fix_evidence_20261015/a4_no_impact.py --json …/a4_no_impact.json	0	216.9	A4 PASS 32/32	a4_no_impact.log
 code	python3 docs/reviews/lhs214_fix_evidence_20261015/code_fp_report.py	0	—	code_fp acc7bfa3… · 바뀐 봉인 파일 4	code_fp_report.log
+before_napr	python3 scripts/supp20_input_receipt.py --selftest	1	14.9	81/99 PASS · 18 FAIL (시험 먼저 — 고치기 전 도구 + 옛 초안 꼴 등록 문서 · 상태 undeclared)	before_napr/scripts__supp20_input_receipt.py_selftest.log

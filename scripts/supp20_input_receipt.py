@@ -435,18 +435,104 @@ def _selftest() -> int:
         except TypeError as e:
             return dict(rc=None, checks=[], error=f'TypeError: {e}')
 
+    def cdet(rec, cid):
+        """칸 cid 의 상세 dict — 통과 칸 · 없는 칸 · dict 가 아닌 상세 = {}."""
+        for c in rec.get('checks', []):
+            if c['id'] == cid:
+                return c['detail'] if isinstance(c.get('detail'), dict) else {}
+        return {}
+
+    def cdet_raw(rec, cid):
+        return next((c.get('detail') for c in rec.get('checks', []) if c['id'] == cid), None)
+
+    def e2_fp(rec):
+        """E2 상세의 지문 두 값만 (로그 코드 줄 = git 짧은 sha 를 싣는다 — 실패 사유 출력에 커밋 번호를 남기지 않는다)."""
+        return {k: cdet(rec, 'E2').get(k) for k in ('registered', 'receipt')}
+
+    #  ★ 10-15 (나′) 봉인 지문 상태 (1저자 10-15 Q1 (나′)) — 시험은 상태를 먼저 정하고 기대 실패 집합을 그 상태로 정확히 적는다.  도구의 발사 대조 (D1 · E2 · F5 · G5) 는
+    #    상태와 무관하게 등록 §3 값만 본다 (대기 선언은 통과시키지 않는다 — 비준 · 재등록 전 발사 불가) · 아래 집합은 시험의 기대일 뿐 도구 동작이 아니다.
+    def fp_state(reg_, now):
+        """(상태, 사유) — registered = 체크아웃 지문 = 등록 §3 · pending = 대기 선언 하나 · 체크아웃 = 대기 ≠ 등록 · undeclared = 그 밖 (시험 실패 · 사유)."""
+        r_, p_ = reg_.get('code_fp'), reg_.get('code_fp_pending')
+        if not r_:
+            return 'undeclared', ('등록 §3 code_fp 를 못 읽었다 (None — 값이 둘이면 이렇게 된다 · 새 지문을 `code_fp <hex>` 둘째 값으로 적은 옛 초안 꼴 = '
+                                  '대기 선언 `code_fp_pending <hex>` 이 아니다)')
+        if now is not None and now == r_:
+            return 'registered', ''
+        if p_ and p_ != r_ and now == p_:
+            return 'pending', ''
+        return 'undeclared', (f'체크아웃 지문 {str(now)[:12]}… ≠ 등록 §3 {r_[:12]}… · 대기 선언 '
+                              + (f'{p_[:12]}… ≠ 체크아웃 (다른 코드)' if p_ else '없음 (읽은 값 None)'))
+    #: pending 상태에서 실패해도 되는 칸 = "등록 §3 지문 = 체크아웃 (또는 그 체크아웃이 만든 기록) 지문" 계열만 — 기록 종류별 정확한 집합.
+    #:   container = D1 · preflight (진짜 실행기 dry-run 영수증 = 체크아웃 지문을 싣는다) = D1 · E2 · launch (합성 manifest 둘 = code_hashes 가 이 체크아웃 → 봉인 = 체크아웃 지문) =
+    #:   D1 · F5 · G5 (H1 = 두 봉인이 같아 같음 · P7 = 영수증 = 체크아웃이라 같음)
+    PEND = dict(container={'D1'}, preflight={'D1', 'E2'}, launch={'D1', 'F5', 'G5'})
     spec = NP.COHORT_SPECS[COHORT]
+    fp_now = NP.code_fp(NP.code_hashes())
     base = receipt()
-    chk('S0 정상 (커밋된 실물 · 컨테이너 범위) → rc 0 · 대조 칸 R0 · A1 · A2 · B1–B3 · C1–C4 · D1 전부 같음 · 범위 container · 수동 칸 셋',
-        base['rc'] == 0 and base['scope'] == 'container' and {c['id'] for c in base['checks']} == {'R0', 'A1', 'A2', 'B1', 'B2', 'B3', 'C1', 'C2', 'C3', 'C4', 'D1'}
-        and len(base['manual']) == 3 and not any(m['verified_by_tool'] for m in base['manual']), sorted(bad_ids(base)))
     reg = base['registration']['values']
+    R_reg, P_reg = reg.get('code_fp'), reg.get('code_fp_pending')
+    state, why_state = fp_state(reg, fp_now)
+
+    def pend(kind):
+        return set(PEND[kind]) if state == 'pending' else set()
+
+    def fp_why_ok(rec, ids_, r_, p_):
+        """지문 계열 실패 칸이 '등록 값 ≠ 체크아웃 지문' 그 이유로 실패했나 — 상세 값 (D1 now · registered · pending / E2 receipt · registered / F5 · G5 봉인 · dirty)."""
+        ok_ = True
+        if 'D1' in ids_:
+            d_ = cdet(rec, 'D1')
+            ok_ = ok_ and d_.get('now') == fp_now and d_.get('registered') == r_ and d_.get('pending', 'ABSENT') == p_
+        if 'E2' in ids_:
+            d_ = cdet(rec, 'E2')
+            ok_ = ok_ and d_.get('registered') == r_ and d_.get('receipt') == fp_now
+        for g_ in ('F5', 'G5'):
+            if g_ in ids_:
+                ok_ = ok_ and cdet(rec, g_) == dict(code_fp=fp_now, dirty=False)
+        return ok_
+    print(f'  (나′) 봉인 지문 상태 = {state} — 체크아웃 {str(fp_now)[:12]}… · 등록 §3 {str(R_reg)[:12]}… · 대기 선언 '
+          + (f'{P_reg[:12]}…' if P_reg else '없음') + (f' — {why_state}' if why_state else ''))
+    ids0 = {c['id'] for c in base['checks']}
+    common0 = (base['scope'] == 'container' and ids0 == {'R0', 'A1', 'A2', 'B1', 'B2', 'B3', 'C1', 'C2', 'C3', 'C4', 'D1'} and len(base['manual']) == 3
+               and not any(m['verified_by_tool'] for m in base['manual']))
+    if state == 'registered':
+        ok0 = common0 and base['rc'] == 0
+    elif state == 'pending':
+        ok0 = common0 and base['rc'] == 1 and bad_ids(base) == PEND['container'] and fp_why_ok(base, PEND['container'], R_reg, P_reg)
+    else:
+        ok0 = False
+    chk(f'S0 ★ 10-15 (나′) 정상 (커밋된 실물 · 컨테이너 범위) [상태 {state}] — registered (체크아웃 = 등록 §3) = rc 0 · 대조 칸 R0 · A1 · A2 · B1–B3 · C1–C4 · D1 전부 같음 / '
+        'pending (대기 선언 하나 · 체크아웃 = 대기 ≠ 등록) = rc 1 · 실패 칸 정확히 {D1} · D1 상세 now = 대기 · registered = 등록 · pending = 대기 / undeclared = FAIL · '
+        '범위 container · 수동 칸 셋', ok0, dict(state=state, why=why_state, bad=sorted(bad_ids(base)), D1=cdet(base, 'D1')))
     dg0 = base['recomputed']['input_digest']
-    chk('S0b 다시 계산 = 등록 §2 (케이스 20 · ids 991cf115… · raw a7aaa3c8… · 코호트 TSV 69d3f913…) — 값은 문서 · 반입 파일에서 (도구에 사본 없음)',
+    chk('S0b 다시 계산 = 등록 §2 (케이스 20 · ids 991cf115… · raw a7aaa3c8… · 코호트 TSV 69d3f913…) · 등록 §3 code_fp e8b2496b… · ★ 10-15 (나′) 대기 선언이 있으면 = acc7bfa3… '
+        '(lhs214_fix_evidence_20261015/code_fp_report.log 의 고친 트리 값) — 값은 문서 · 반입 파일에서 (도구에 사본 없음 · 값 None 안전)',
         dg0.get('n') == 20 and str(dg0.get('ids_sha256')).startswith('991cf115') and str(dg0.get('raw_sha256_table_sha256')).startswith('a7aaa3c8')
-        and str((dg0.get('cohort_tsv_sha256') or {}).get(COHORT)).startswith('69d3f913') and reg.get('code_fp', '').startswith('e8b2496b'), (dg0, reg.get('code_fp')))
+        and str((dg0.get('cohort_tsv_sha256') or {}).get(COHORT)).startswith('69d3f913') and str(R_reg or '').startswith('e8b2496b')
+        and (P_reg is None or str(P_reg).startswith('acc7bfa3')), (dg0, R_reg, P_reg))
     with tempfile.TemporaryDirectory(prefix='supp20_receipt_') as td:
         td = Path(td)
+        rtxt = _rp(REG_DOC).read_text(encoding='utf-8')
+
+        def reg_variant(name, registered, pending=(), old_second=None):
+            """★ 10-15 (나′) 등록 문서 사본 — 지문 토큰만 바꾼다 (다른 칸은 실물 그대로 · 실물이 옛 초안 꼴이든 대기 선언 꼴이든 같은 결과):
+            모든 `code_fp <hex>` → `code_fp <registered>` · 있던 대기 선언 `code_fp_pending <hex>` → 맨 hex (선언 아님) · pending 값마다 대기 선언 한 줄 ·
+            old_second = 옛 초안 꼴 둘째 값 (`code_fp <hex>`) 한 줄."""
+            t_ = re.sub(r'`code_fp ([0-9a-f]{64})`', f'`code_fp {registered}`', rtxt)
+            t_ = re.sub(r'`code_fp_pending ([0-9a-f]{64})`', r'`\1`', t_)
+            for v_ in pending:
+                t_ += f'\n| 대기 지문 (selftest 사본) | `code_fp_pending {v_}` |\n'
+            if old_second:
+                t_ += f'\n| 개정 초안 (옛 꼴 · selftest 사본) | `code_fp {old_second}` |\n'
+            p_ = td / f'reg_fp_{name}.md'
+            p_.write_text(t_, encoding='utf-8')
+            return str(p_)
+        #  ⓕ 비준 쌍둥이 — 등록 §3 := 체크아웃 지문 · 대기 선언 없음 (비준 · 재등록 뒤의 꼴).  판별 문서 DISC = 상태 registered 면 실물 · 아니면 이 쌍둥이 —
+        #  pending 에서는 D1 · E2 · F5 · G5 가 이미 실패라, 그 칸을 겨눈 음성 대조 (S7l · S8e · S8f) 를 이미 실패 중인 칸으로 통과시키지 않으려고 쌍둥이에서 판별한다
+        #  (쌍둥이의 정상 기록 = rc 0 · S11f · S11f2 · S11f3).
+        TWIN = reg_variant('twin', registered=fp_now)
+        DISC = REG_DOC if state == 'registered' else TWIN
+        disc_lbl = '실물' if DISC == REG_DOC else '비준 쌍둥이 ⓕ'
 
         def hcopy(name, edit=None):
             d = td / name
@@ -475,13 +561,22 @@ def _selftest() -> int:
         expect('S3 ID 하나 바꿈 (lhss_005 → lhss_105)', receipt(harvest=hcopy('h_id', lambda d: (d / 'lhss_005.json').rename(d / 'lhss_105.json'))),
                {'B1', 'B2', 'B3', 'C2'})
         #  ④ 등록 문서 값 오타 — raw · ids · 코호트 TSV · code_fp 한 글자
-        rtxt = _rp(REG_DOC).read_text(encoding='utf-8')
         for k, ids in (('raw_sha256_table_sha256', {'B3'}), ('ids_sha256', {'A1', 'B3'}), ('cohort_tsv_sha256', {'B3'}), ('code_fp', {'D1'})):
-            v = reg[k]
+            v = reg.get(k)
+            if not v:
+                chk(f'S4 등록 문서 {k} 오타 (끝 한 글자)', False, f'등록 문서 {k} 값을 못 읽어 (None · 상태 {state}) 오타 반례를 만들 수 없다')
+                continue
             bad_v = v[:-1] + ('0' if v[-1] != '0' else '1')
             p = td / f'reg_{k}.md'
             p.write_text(rtxt.replace(v, bad_v), encoding='utf-8')
-            expect(f'S4 등록 문서 {k} 오타 (끝 한 글자)', receipt(reg_doc=str(p)), ids)
+            r4 = receipt(reg_doc=str(p))
+            if k != 'code_fp':
+                expect(f'S4 등록 문서 {k} 오타 (끝 한 글자)', r4, ids)
+                continue
+            d4 = cdet(r4, 'D1')
+            chk(f"S4 등록 문서 code_fp 오타 (끝 한 글자) → rc 1 · 실패 칸 ⊇ ['D1'] · ★ 10-15 (나′) D1 상세 registered = 문서에서 읽은 오타 값 · now = 체크아웃 [상태 {state}] "
+                '(pending 에서는 D1 이 이미 실패라 값까지 본다 — 이미 실패 중인 칸으로 통과시키지 않는다)',
+                r4.get('rc') == 1 and 'D1' in bad_ids(r4) and d4.get('registered') == bad_v and d4.get('now') == fp_now, (sorted(bad_ids(r4)), d4))
         p = td / 'reg_dup.md'
         p.write_text(rtxt + f'\n| `raw_sha256_table_sha256` | `{"0" * 64}` |\n', encoding='utf-8')
         expect('S4b 등록 문서에 같은 칸이 값 둘 (raw sha 표 두 행)', receipt(reg_doc=str(p)), {'R0', 'B3'})
@@ -629,11 +724,13 @@ def _selftest() -> int:
         #  (i) 정상 — 등록 명령 그대로
         rc_p, P_pos, S_pos = npdry('pos')
         r_pos = rsafe(preflight_receipt=P_pos)
+        w_pf = pend('preflight')
         chk('S7 ★ (i) 정상 — 진짜 실행기 dry-run (등록 명령 run --cohorts lhss --dry-run --observe-imports --preflight-receipt) rc 0 → 영수증 JSON + 전체 로그 → rc 0 · '
-            '범위 preflight · P0–P9 (실행기 대조) · E1 (로그 INPUT_DIGEST_JSON = 등록 §2 = 반입 재계산) · E2 (봉인 지문 = 등록 §3) 같음 · 승인 SHA 없음 = 경고 기록 (실패 아님)',
-            rc_p == 0 and r_pos.get('rc') == 0 and r_pos.get('scope') == 'preflight'
+            '범위 preflight · P0–P9 (실행기 대조) · E1 (로그 INPUT_DIGEST_JSON = 등록 §2 = 반입 재계산) · E2 (봉인 지문 = 등록 §3) 같음 · 승인 SHA 없음 = 경고 기록 (실패 아님) · '
+            f'★ 10-15 (나′) [상태 {state}] pending = rc 1 · 실패 칸 정확히 {{D1 · E2}} (영수증 = 체크아웃 지문 · 상세 = 등록 §3 ≠ 체크아웃)',
+            rc_p == 0 and r_pos.get('rc') == (1 if w_pf else 0) and bad_ids(r_pos) == w_pf and fp_why_ok(r_pos, w_pf, R_reg, P_reg) and r_pos.get('scope') == 'preflight'
             and {f'P{i}' for i in range(10)} | {'E1', 'E2'} <= {c['id'] for c in r_pos.get('checks', [])} and 'approved_sha' in (r_pos.get('notes') or {}),
-            (rc_p, sorted(bad_ids(r_pos)), r_pos.get('error')))
+            (rc_p, sorted(bad_ids(r_pos)), r_pos.get('error'), e2_fp(r_pos)))
         rp_pos, lt_pos = rlog(P_pos)
         chk('S7u 영수증 종료코드 = 실행기 CLI 종료코드 (정상 0 — 셸 tee · grep 종료코드가 아니다) · 영수증 로그 = 실행기 화면 (영수증 안내 줄 앞까지 같은 바이트)',
             rp_pos.get('exit_code') == rc_p == 0 and bool(lt_pos) and Path(S_pos).read_bytes().decode('utf-8').startswith(lt_pos), (rp_pos.get('exit_code'), rc_p))
@@ -655,8 +752,9 @@ def _selftest() -> int:
         except ValueError:
             lg_a = {}
         chk('S7a ★ (a) SUPR-01 — 같은 20 ID · raw 표 · 코호트 TSV 첫 행 deck_sha256 한 글자만 바꾼 파일로 돈 진짜 dry-run (실행기 rc 0 · 새 꼴 로그가 그 TSV sha 를 싣는다) → '
-            '값으로 거부: 실패 칸 = E1 (로그 = 등록 §2 = 반입 재계산) · P9 (영수증 지문 = 이 체크아웃 재계산) 둘뿐 · 부재가 아니라 값',
-            rc_a == 0 and r_a.get('rc') == 1 and bad_ids(r_a) == {'E1', 'P9'}
+            '값으로 거부: 실패 칸 = E1 (로그 = 등록 §2 = 반입 재계산) · P9 (영수증 지문 = 이 체크아웃 재계산) 둘뿐 · 부재가 아니라 값 · '
+            f'★ (나′) [상태 {state}] pending 이면 + D1 · E2 (정확히)',
+            rc_a == 0 and r_a.get('rc') == 1 and bad_ids(r_a) == {'E1', 'P9'} | w_pf and fp_why_ok(r_a, w_pf, R_reg, P_reg)
             and (lg_a.get('cohort_tsv_sha256') or {}).get(COHORT) == _sha(tsv_a) != reg.get('cohort_tsv_sha256')
             and lg_a.get('raw_sha256_table_sha256') == reg.get('raw_sha256_table_sha256') and lg_a.get('ids_sha256') == reg.get('ids_sha256'),
             (rc_a, sorted(bad_ids(r_a)), lg_a.get('cohort_tsv_sha256'), r_a.get('error')))
@@ -667,8 +765,10 @@ def _selftest() -> int:
         ALT = REPO / 'docs/reviews/codex_sup20_fix_reverify_evidence_20261014/evidence/receipt_extra/alternate_cohort.tsv'
         rc_a2, P_a2, _s = npdry('tsv2', cohort_path=ALT)
         r_a2 = rsafe(preflight_receipt=P_a2)
-        chk('S7a2 (a) Codex 반례 TSV 그대로 (evidence/receipt_extra/alternate_cohort.tsv · sha256 8d5dcbd2… = 판정문 §4 변이값) → 값으로 거부 (실패 칸 = E1 · P9 둘뿐)',
-            ALT.is_file() and str(_sha(ALT)).startswith('8d5dcbd2') and rc_a2 == 0 and bad_ids(r_a2) == {'E1', 'P9'}, (rc_a2, sorted(bad_ids(r_a2)), r_a2.get('error')))
+        chk('S7a2 (a) Codex 반례 TSV 그대로 (evidence/receipt_extra/alternate_cohort.tsv · sha256 8d5dcbd2… = 판정문 §4 변이값) → 값으로 거부 (실패 칸 = E1 · P9 둘뿐 · '
+            f'★ (나′) [상태 {state}] pending 이면 + D1 · E2 · 정확히)',
+            ALT.is_file() and str(_sha(ALT)).startswith('8d5dcbd2') and rc_a2 == 0 and bad_ids(r_a2) == {'E1', 'P9'} | w_pf and fp_why_ok(r_a2, w_pf, R_reg, P_reg),
+            (rc_a2, sorted(bad_ids(r_a2)), r_a2.get('error')))
         #  (b) SUPR-02 — 관측 OFF (등록 생산 계획 · --observe-imports 없이) = 실행기 사전 점검 ⛔ · 멈춰도 영수증
         rc_b, P_b, _s = npdry('off', observe=False)
         r_b = rsafe(preflight_receipt=P_b)
@@ -726,26 +826,31 @@ def _selftest() -> int:
         expect('S7h2 영수증 JSON 자체가 없다', rsafe(preflight_receipt=str(td / 'pf' / 'nope_preflight.json')), {'P0'})
         #  Q3 — 승인 SHA (접두 7–40 · 부재 = 경고)
         r_j1 = rsafe(preflight_receipt=P_pos, approved_sha=sha_now[:7])
-        chk('S7j ★ Q3 승인 SHA (접두 7) = 사전 점검 git 기록 · 로그 코드 줄 짧은 sha → rc 0 · P10 같음 · 경고 없음',
-            r_j1.get('rc') == 0 and 'P10' in {c['id'] for c in r_j1.get('checks', [])} and 'approved_sha' not in (r_j1.get('notes') or {}),
+        chk('S7j ★ Q3 승인 SHA (접두 7) = 사전 점검 git 기록 · 로그 코드 줄 짧은 sha → rc 0 · P10 같음 · 경고 없음 · '
+            f'★ (나′) [상태 {state}] pending = rc 1 · 실패 칸 정확히 {{D1 · E2}} (P10 은 같음)',
+            r_j1.get('rc') == (1 if w_pf else 0) and bad_ids(r_j1) == w_pf and fp_why_ok(r_j1, w_pf, R_reg, P_reg)
+            and 'P10' in {c['id'] for c in r_j1.get('checks', [])} and 'approved_sha' not in (r_j1.get('notes') or {}),
             (sorted(bad_ids(r_j1)), r_j1.get('error')))
         expect('S7j2 Q3 다른 승인 SHA', rsafe(preflight_receipt=P_pos, approved_sha=('0' if sha_now[0] != '0' else '1') + sha_now[1:7]), {'P10'})
         expect('S7j3 Q3 승인 SHA 꼴 (16 진 아님)', rsafe(preflight_receipt=P_pos, approved_sha='xyz1234'), {'P10'})
         #  등록 명령 밖 인자 (argv = 등록 명령)
         rc_k1, P_k1, _s = npdry('k_raw', '--allow-missing-raw')
         r_k1 = rsafe(preflight_receipt=P_k1)
-        chk('S7k1 등록 명령 밖 인자 --allow-missing-raw (dry-run 은 끝까지 rc 0) → 실패 칸 = P6 (argv) 하나', rc_k1 == 0 and r_k1.get('rc') == 1 and bad_ids(r_k1) == {'P6'},
+        chk(f'S7k1 등록 명령 밖 인자 --allow-missing-raw (dry-run 은 끝까지 rc 0) → 실패 칸 = P6 (argv) 하나 (★ (나′) [상태 {state}] pending 이면 + D1 · E2 · 정확히)',
+            rc_k1 == 0 and r_k1.get('rc') == 1 and bad_ids(r_k1) == {'P6'} | w_pf and fp_why_ok(r_k1, w_pf, R_reg, P_reg),
             (rc_k1, sorted(bad_ids(r_k1)), r_k1.get('error')))
         rc_k2, P_k2, _s = npdry('k_cohort', f'--{COHORT}-cohort', str(_rp(spec['cohort'])))
         r_k2 = rsafe(preflight_receipt=P_k2)
-        chk('S7k2 --lhss-cohort 로 같은 경로를 덮어씀 (지문 같음) → 실패 칸 = P6 하나 (경로 덮어쓰기는 등록 명령이 아니다 — 지문 대조와 따로)',
-            rc_k2 == 0 and r_k2.get('rc') == 1 and bad_ids(r_k2) == {'P6'}, (rc_k2, sorted(bad_ids(r_k2)), r_k2.get('error')))
+        chk('S7k2 --lhss-cohort 로 같은 경로를 덮어씀 (지문 같음) → 실패 칸 = P6 하나 (경로 덮어쓰기는 등록 명령이 아니다 — 지문 대조와 따로 · '
+            f'★ (나′) [상태 {state}] pending 이면 + D1 · E2 · 정확히)',
+            rc_k2 == 0 and r_k2.get('rc') == 1 and bad_ids(r_k2) == {'P6'} | w_pf and fp_why_ok(r_k2, w_pf, R_reg, P_reg), (rc_k2, sorted(bad_ids(r_k2)), r_k2.get('error')))
         rc_k3, P_k3, _s = npdry('k_case', '--case', 'lhss_001')
         expect('S7k3 --case lhss_001 (한 케이스 · 일반 계획)', rsafe(preflight_receipt=P_k3), {'P6', 'P9', 'E1'})
         #  코드 신원 · 트리 · 입력 · 세대 · 원자료
         fp_real = NP.code_fp(NP.code_hashes())
-        expect('S7l 봉인 지문 다른 로그 + 영수증 (sha 맞춤)', rsafe(preflight_receipt=forge(P_pos, 'l', edit_log=lambda t: t.replace(fp_real, 'e' * 64),
-                                                                                      edit_rec=lambda r_: r_.update(code_fp='e' * 64))), {'P7', 'E2'})
+        expect(f'S7l 봉인 지문 다른 로그 + 영수증 (sha 맞춤) — ★ (나′) 판별 문서 = {disc_lbl} (상태 {state} · pending 에서는 E2 가 이미 실패라 쌍둥이에서 판별)',
+               rsafe(preflight_receipt=forge(P_pos, 'l', edit_log=lambda t: t.replace(fp_real, 'e' * 64), edit_rec=lambda r_: r_.update(code_fp='e' * 64)),
+                     reg_doc=DISC), {'P7', 'E2'})
         rc_m, P_m, _s = npdry('dirty', git=git_dirty)
         expect('S7m 추적 파일이 바뀐 트리 (--allow-dirty 없음 · 실행기 ⛔ rc 2)', rsafe(preflight_receipt=P_m), {'P3', 'P7'})
         rc_m2, P_m2, _s = npdry('dirty_ok', '--allow-dirty', git=git_dirty)
@@ -805,14 +910,19 @@ def _selftest() -> int:
             return str(d / fname)
         p194 = NP.build_plan(['lhs', 'lhsx'], NP.cohort_specs(types.SimpleNamespace()), (), 'cost')
         mp194 = man(p194, NP.plan_input_digest(p194), 'root194')
-        rm = receipt(manifest=man(plan, dg0, 'rootS'), primary_manifest=mp194)
-        chk('S8 실제 발사 manifest 둘 (보충 · 194 · 다른 ROOT · 같은 발사 커밋 · 관측 ON) → rc 0 · 범위 launch · F0–F6 · G0–G2 · G4 · G5 · H1 같음',
-            rm['rc'] == 0 and rm['scope'] == 'launch' and {'F1', 'F3', 'F4', 'F6', 'G1', 'G2', 'H1'} <= {c['id'] for c in rm['checks']}, sorted(bad_ids(rm)))
+        ms0 = man(plan, dg0, 'rootS')
+        rm = receipt(manifest=ms0, primary_manifest=mp194)
+        w_l = pend('launch')
+        chk('S8 실제 발사 manifest 둘 (보충 · 194 · 다른 ROOT · 같은 발사 커밋 · 관측 ON) → rc 0 · 범위 launch · F0–F6 · G0–G2 · G4 · G5 · H1 같음 · '
+            f'★ (나′) [상태 {state}] pending = rc 1 · 실패 칸 정확히 {{D1 · F5 · G5}} (합성 manifest 둘의 봉인 = 이 체크아웃 지문 · H1 = 두 봉인이 같아 같음)',
+            rm['rc'] == (1 if w_l else 0) and bad_ids(rm) == w_l and fp_why_ok(rm, w_l, R_reg, P_reg) and rm['scope'] == 'launch'
+            and {'F1', 'F3', 'F4', 'F6', 'G1', 'G2', 'H1'} <= {c['id'] for c in rm['checks']}, sorted(bad_ids(rm)))
         expect('S8b 보충 manifest 관측 끔 (observe_imports false)', receipt(manifest=man(plan, dg0, 'rS_obs', observe_imports=False)), {'F4'})
         expect('S8c 보충 manifest input_digest raw sha 표 다름', receipt(manifest=man(plan, dict(dg0, raw_sha256_table_sha256='2' * 64), 'rS_dg')), {'F3'})
         p21 = plan_for(harvest=hcopy('h_thick2', lambda d: shutil.copy2(d / 'lhss_020.json', d / 'lhst_045_6m.json')))
         expect('S8d 보충 manifest 계획 = 일반 계획 (후막 하나 더 · 21)', receipt(manifest=man(p21, NP.plan_input_digest(p21), 'rS_gen')), {'F2', 'F3'})
-        expect('S8e 보충 manifest git.dirty true', receipt(manifest=man(plan, dg0, 'rS_dirty', git=dict(sha='ab' * 20, short='abababab', dirty=True))), {'F5'})
+        expect(f'S8e 보충 manifest git.dirty true — ★ (나′) 판별 문서 = {disc_lbl} (pending 에서는 F5 가 이미 실패라 쌍둥이에서 판별)',
+               receipt(manifest=man(plan, dg0, 'rS_dirty', git=dict(sha='ab' * 20, short='abababab', dirty=True)), reg_doc=DISC), {'F5'})
 
         def _other_fp(m):
             h = dict(m['code_hashes'], **{NP.CODE_FILES[0]: '0' * 64})
@@ -821,10 +931,12 @@ def _selftest() -> int:
         mj = json.loads(Path(mo).read_text(encoding='utf-8'))
         mj['seal']['code_fp'] = NP.code_fp(mj['code_hashes'])                       # 봉인이 자기 해시 지도와는 맞다 (자격 current) · 등록 §3 과 다르다
         Path(mo).write_text(json.dumps(mj), encoding='utf-8')
-        expect('S8f 보충 manifest 발사 봉인 지문 ≠ 등록 §3 (자기 해시 지도와는 일관)', receipt(manifest=mo), {'F5'})
+        expect(f'S8f 보충 manifest 발사 봉인 지문 ≠ 등록 §3 (자기 해시 지도와는 일관) — ★ (나′) 판별 문서 = {disc_lbl} (pending 에서는 F5 가 이미 실패라 쌍둥이에서 판별)',
+               receipt(manifest=mo, reg_doc=DISC), {'F5'})
         rsame = receipt(manifest=man(plan, dg0, 'root194', fname='manifest_supp.json'), primary_manifest=mp194)
         expect('S8g 보충 · 194 manifest 가 같은 ROOT 폴더 (나머지 칸은 정상)', rsame, {'H1'})
-        chk('S8g2 같은 반례 — 실패 칸은 H1 하나 (보충 · 194 manifest 각자는 정상)', bad_ids(rsame) == {'H1'}, sorted(bad_ids(rsame)))
+        chk(f'S8g2 같은 반례 — 실패 칸은 H1 하나 (보충 · 194 manifest 각자는 정상 · ★ (나′) [상태 {state}] pending 이면 + D1 · F5 · G5 · 정확히)',
+            bad_ids(rsame) == {'H1'} | w_l and fp_why_ok(rsame, w_l, R_reg, P_reg), sorted(bad_ids(rsame)))
         expect('S8h 194 자리에 보충 manifest (등록 집합 production194 아님)', receipt(manifest=man(plan, dg0, 'rS2'), primary_manifest=man(plan, dg0, 'rP2')),
                {'G2'})
         expect('S8i 보충 manifest 인계 도구 지문 ≠ 이 체크아웃 (다른 체크아웃에서 만든 영수증)',
@@ -832,8 +944,9 @@ def _selftest() -> int:
         expect('S8j 보충 manifest 없음 · 깨진 JSON', receipt(manifest=str(td / 'nope.json')), {'F0'})
         #  ★ 10-14 Q3 (판정문 §6 "추가 범위 주의" — H1 은 두 manifest 의 상호 일치일 뿐 승인 핀과의 일치가 아니다) — 승인 SHA 를 주면 manifest git.sha 도 대조
         rmk = rsafe(manifest=man(plan, dg0, 'rS_ap'), primary_manifest=mp194, approved_sha='abababa')
-        chk('S8k Q3 승인 SHA (접두 7) = 두 manifest git.sha → rc 0 · F7 · G7 같음', rmk.get('rc') == 0 and {'F7', 'G7'} <= {c['id'] for c in rmk.get('checks', [])},
-            (sorted(bad_ids(rmk)), rmk.get('error')))
+        chk(f'S8k Q3 승인 SHA (접두 7) = 두 manifest git.sha → rc 0 · F7 · G7 같음 · ★ (나′) [상태 {state}] pending = rc 1 · 실패 칸 정확히 {{D1 · F5 · G5}} (F7 · G7 은 같음)',
+            rmk.get('rc') == (1 if w_l else 0) and bad_ids(rmk) == w_l and fp_why_ok(rmk, w_l, R_reg, P_reg)
+            and {'F7', 'G7'} <= {c['id'] for c in rmk.get('checks', [])}, (sorted(bad_ids(rmk)), rmk.get('error')))
         expect('S8k2 Q3 다른 승인 SHA (manifest 둘)', rsafe(manifest=man(plan, dg0, 'rS_ap2'), primary_manifest=mp194, approved_sha='1234567'), {'F7', 'G7'})
         #  ⑨ 읽기 전용 — 정상 영수증을 만든 뒤 리포 입력 파일 sha 가 그대로
         snap = {rel: _sha(_rp(rel)) for rel in (REG_DOC, RUNS_README, R3_TGZ, R2_TGZ, SUPP_DESIGN, spec['design'], spec['cohort'], spec['union'])}
@@ -853,6 +966,65 @@ def _selftest() -> int:
                    rw_, {'P2', 'P3'})
         r_e0 = rsafe(dry_run_log=str(EVD / 'wrong_tsv_full_log.log'))
         chk('S10c 텍스트 로그 단독의 사유 = E0 (실행기 완료 영수증을 --preflight-receipt 로 주라는 안내)', 'E0' in bad_ids(r_e0), sorted(bad_ids(r_e0)))
+        #  ⑪ ★ 10-15 (나′) 봉인 지문 대기 선언 (1저자 10-15 Q1 (나′)) — 등록 문서 사본 (지문 토큰만 바꿈 · reg_variant) 으로 도구 · 상태 판정을 본다.  실물 상태와 무관하게
+        #    같은 답이 나오도록 모의 등록 값 (R_SIM · 체크아웃 지문과 다름) · 모의 대기 값 (P_SIM · P_SIM2) 을 쓴다.  발사 대조 (D1 · E2 · F5 · G5) 는 대기 선언과 무관하게 등록 값만.
+        R_SIM = hashlib.sha256(b'supp20_input_receipt selftest: registered (simulated)').hexdigest()
+        P_SIM = hashlib.sha256(b'supp20_input_receipt selftest: pending (simulated) 1').hexdigest()
+        P_SIM2 = hashlib.sha256(b'supp20_input_receipt selftest: pending (simulated) 2').hexdigest()
+
+        def r0_says(rec, word):
+            return any(word in str(x) for x in (cdet_raw(rec, 'R0') or []))
+        #  ⓐ 옛 초안 꼴 — 새 지문을 `code_fp <hex>` 둘째 값으로 (10-15 게이트 실패의 꼴)
+        ra = receipt(reg_doc=reg_variant('a_old', registered=R_SIM, old_second=fp_now))
+        va = ra['registration']['values']
+        chk('S11a ★ (나′) ⓐ 옛 초안 꼴 (새 지문을 `code_fp <hex>` 둘째 값으로 적은 등록 문서) → rc 1 · 실패 칸 정확히 {R0 · D1} (값이 둘 = 등록 §3 을 못 읽음 · code_fp None) · '
+            '상태 판정 = undeclared (시험 충돌 없음)',
+            ra['rc'] == 1 and bad_ids(ra) == {'R0', 'D1'} and va.get('code_fp') is None and r0_says(ra, '값이 둘 이상') and fp_state(va, fp_now)[0] == 'undeclared',
+            (sorted(bad_ids(ra)), cdet_raw(ra, 'R0'), fp_state(va, fp_now)))
+        #  ⓑ 대기 선언 값 둘 (서로 다름) — 등록 = 체크아웃 (D1 은 같음 → R0 만 겨눈다)
+        rb = receipt(reg_doc=reg_variant('b_two', registered=fp_now, pending=(P_SIM, P_SIM2)))
+        chk('S11b ★ (나′) ⓑ 대기 선언 값 둘 (서로 다름 · 등록 §3 = 체크아웃) → rc 1 · 실패 칸 정확히 {R0} (code_fp_pending 값이 둘 이상) · 읽은 대기 값 None',
+            rb['rc'] == 1 and bad_ids(rb) == {'R0'} and r0_says(rb, 'code_fp_pending') and 'code_fp_pending' in rb['registration']['values']
+            and rb['registration']['values'].get('code_fp_pending') is None, (sorted(bad_ids(rb)), cdet_raw(rb, 'R0')))
+        #  ⓒ 대기 = 등록 (모순 선언) — 등록 = 체크아웃
+        rcm = receipt(reg_doc=reg_variant('c_same', registered=fp_now, pending=(fp_now,)))
+        chk('S11c ★ (나′) ⓒ 대기 선언 = 등록 §3 (모순 선언 · 등록 = 체크아웃) → rc 1 · 실패 칸 정확히 {R0} (대기 = 등록) · 읽은 대기 값 None',
+            rcm['rc'] == 1 and bad_ids(rcm) == {'R0'} and r0_says(rcm, 'code_fp_pending') and 'code_fp_pending' in rcm['registration']['values']
+            and rcm['registration']['values'].get('code_fp_pending') is None, (sorted(bad_ids(rcm)), cdet_raw(rcm, 'R0')))
+        #  ⓓ 대기 선언 + 체크아웃 = 대기 → 상태 pending · 도구 발사 대조 = 거짓 (컨테이너 D1 · 사전 점검 E2 · 발사 F5 · G5)
+        pdoc = reg_variant('d_pend', registered=R_SIM, pending=(fp_now,))
+        rd = receipt(reg_doc=pdoc)
+        vd = rd['registration']['values']
+        chk('S11d ★ (나′) ⓓ 대기 선언 + 체크아웃 = 대기 (등록 §3 = 모의 값) → 상태 pending · 도구 D1 = 거짓 (발사 대조 = 등록 값만 — 대기 선언이 통과시키지 않는다) · '
+            'rc 1 · 실패 칸 정확히 {D1} · D1 상세 now = 대기 · registered = 등록 · pending = 대기',
+            fp_state(vd, fp_now)[0] == 'pending' and vd.get('code_fp_pending') == fp_now and rd['rc'] == 1 and bad_ids(rd) == {'D1'}
+            and fp_why_ok(rd, {'D1'}, R_SIM, fp_now), (fp_state(vd, fp_now), sorted(bad_ids(rd)), cdet(rd, 'D1')))
+        rd2 = rsafe(preflight_receipt=P_pos, reg_doc=pdoc)
+        chk('S11d2 ★ (나′) ⓓ 같은 문서 · 정상 사전 점검 영수증 (S7) → rc 1 · 실패 칸 정확히 {D1 · E2} (E2 = 등록 값만 · 상세 registered = 등록 · receipt = 체크아웃)',
+            rd2.get('rc') == 1 and bad_ids(rd2) == {'D1', 'E2'} and fp_why_ok(rd2, {'D1', 'E2'}, R_SIM, fp_now), (sorted(bad_ids(rd2)), e2_fp(rd2), rd2.get('error')))
+        rd3 = receipt(manifest=ms0, primary_manifest=mp194, reg_doc=pdoc)
+        chk('S11d3 ★ (나′) ⓓ 같은 문서 · 정상 발사 manifest 둘 (S8) → rc 1 · 실패 칸 정확히 {D1 · F5 · G5} (발사 봉인 = 등록 값만)',
+            rd3['rc'] == 1 and bad_ids(rd3) == {'D1', 'F5', 'G5'} and fp_why_ok(rd3, {'D1', 'F5', 'G5'}, R_SIM, fp_now), (sorted(bad_ids(rd3)), cdet(rd3, 'F5')))
+        #  ⓔ 대기 선언 없음 + 체크아웃 ≠ 등록 = undeclared (시험이 실패해야 하는 상태) · ⓔ′ 대기 선언 있음 · 체크아웃 ≠ 대기 (다른 코드) = undeclared
+        re1 = receipt(reg_doc=reg_variant('e_none', registered=R_SIM))
+        s_e1 = fp_state(re1['registration']['values'], fp_now)
+        chk('S11e ★ (나′) ⓔ 대기 선언 없음 + 체크아웃 ≠ 등록 §3 → 상태 undeclared (사유 있음 · 시험이 실패해야 하는 상태) · 도구 = rc 1 · 실패 칸 정확히 {D1}',
+            s_e1[0] == 'undeclared' and bool(s_e1[1]) and re1['rc'] == 1 and bad_ids(re1) == {'D1'}, (s_e1, sorted(bad_ids(re1))))
+        re2 = receipt(reg_doc=reg_variant('e_other', registered=R_SIM, pending=(P_SIM,)))
+        s_e2 = fp_state(re2['registration']['values'], fp_now)
+        chk('S11e2 ★ (나′) ⓔ′ 대기 선언 있음 (도구가 읽음 = 모의 대기 값) · 체크아웃 ≠ 대기 (다른 코드) → 상태 undeclared · 도구 = rc 1 · 실패 칸 정확히 {D1}',
+            re2['registration']['values'].get('code_fp_pending') == P_SIM and s_e2[0] == 'undeclared' and bool(s_e2[1]) and re2['rc'] == 1 and bad_ids(re2) == {'D1'},
+            (s_e2, re2['registration']['values'].get('code_fp_pending'), sorted(bad_ids(re2))))
+        #  ⓕ 정상 비준 상태 (합성 — 등록 §3 := 체크아웃 지문 · 대기 선언 없음) = rc 0 — 쌍둥이 TWIN · S7l · S8e · S8f 판별의 기준
+        rf = receipt(reg_doc=TWIN)
+        chk('S11f ★ (나′) ⓕ 정상 비준 상태 (합성 — 등록 §3 := 체크아웃 지문 · 대기 선언 없음 · 다른 칸은 실물) → 상태 registered · rc 0 (대조 칸 전부 같음)',
+            fp_state(rf['registration']['values'], fp_now)[0] == 'registered' and rf['rc'] == 0, (fp_state(rf['registration']['values'], fp_now), sorted(bad_ids(rf))))
+        rf2 = rsafe(preflight_receipt=P_pos, reg_doc=TWIN)
+        chk('S11f2 ★ (나′) ⓕ 같은 쌍둥이 · 정상 사전 점검 영수증 (S7) → rc 0 (pending 의 E2 실패 = 지문 하나뿐 · S7l 판별의 기준)', rf2.get('rc') == 0,
+            (sorted(bad_ids(rf2)), rf2.get('error')))
+        rf3 = receipt(manifest=ms0, primary_manifest=mp194, reg_doc=TWIN)
+        chk('S11f3 ★ (나′) ⓕ 같은 쌍둥이 · 정상 발사 manifest 둘 (S8) → rc 0 (pending 의 F5 · G5 실패 = 지문 하나뿐 · S8e · S8f 판별의 기준)', rf3['rc'] == 0,
+            sorted(bad_ids(rf3)))
     print(f'\nsupp20_input_receipt selftest: {ok}/{ok + len(fail)} PASS' + (f'   FAILED: {fail}' if fail else ''))
     return 1 if fail else 0
 
