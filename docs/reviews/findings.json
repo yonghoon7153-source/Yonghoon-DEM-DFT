@@ -10971,7 +10971,7 @@
       "found_by": "ibb job 285220 (10-14 19:26 · 1저자 실행 · 작업 트리 a30fe150e · 문법 fixture 첫 실제 LIGGGHTS 실행 · 판정 rc 2)",
       "opened_in": "docs/data/ps45_unload_20261009/README.md",
       "title": "언로딩 문법 fixture (ULKR 수정 묶음 Q8) 의 관측 블록이 본 키트와 다른 꼴 — ave/time 입력 하나 (= 전역 스칼라) 인데 f_gr_av[1] (벡터) 로 읽어 GA 첫 창 뒤 'ERROR: Mismatched fix in variable formula (../variable.cpp:1315)' · LIGGGHTS 없는 모의기 (grammar_sim) 는 f_* 를 0 으로 둬 못 잡았다",
-      "note": "본 키트 덱 (ul_av = 입력 셋 · f_ul_av[1–3]) 은 해당 없음 — 새 검사 ⑰ 로 본 키트 덱 64 개 전수 문제 0.  fixture 결함이라 본 키트 결과 · 판정 규칙 변경 없음.  고침 = 본 키트 ul_obs 꼴 그대로 (compute gr_ke · gr_erot + 입력 셋 gr_av) + 검사 ⑰ (f_ID 를 읽는 꼴 ↔ fix 전역 출력 꼴 · 첨자 범위 · 표에 없는 스타일 fail-closed) 를 --selftest 와 sbatch 앞 --check 에 넣음.  시험 먼저 = 고치기 전 덱에서 ⑰ 이 grammar 하나만 실패 (정확히 285220 의 줄).  남은 위험 = GA 가 첫 창에서 멈춰 뒤 문법 (상태 파일 · write_restart · move/mesh 여러 번 · GB 이어 돌림) 은 아직 실제 바이너리 미통과 → 다시 실행.  보고 묶음 gram_20261014_192604.report.tgz sha256 015bd82ba266a3438db003a0e6cf025d4ad38ac51133ab75307be402c60ca7ee (ibb · 반입 대기).  ★ Codex 재확인 (10-14 · 핀 a30fe150e) 이 같은 결함을 고정 C++ 소스로 독립 증명 = ULKRR-01.",
+      "note": "본 키트 덱 (ul_av = 입력 셋 · f_ul_av[1–3]) 은 해당 없음 — 새 검사 ⑰ 로 본 키트 덱 64 개 전수 문제 0.  fixture 결함이라 본 키트 결과 · 판정 규칙 변경 없음.  고침 = 본 키트 ul_obs 꼴 그대로 (compute gr_ke · gr_erot + 입력 셋 gr_av) + 검사 ⑰ (f_ID 를 읽는 꼴 ↔ fix 전역 출력 꼴 · 첨자 범위 · 표에 없는 스타일 fail-closed) 를 --selftest 와 sbatch 앞 --check 에 넣음.  시험 먼저 = 고치기 전 덱에서 ⑰ 이 grammar 하나만 실패 (정확히 285220 의 줄).  남은 위험 = GA 가 첫 창에서 멈춰 뒤 문법 (상태 파일 · write_restart · move/mesh 여러 번 · GB 이어 돌림) 은 아직 실제 바이너리 미통과 → 다시 실행.  보고 묶음 gram_20261014_192604.report.tgz sha256 015bd82ba266a3438db003a0e6cf025d4ad38ac51133ab75307be402c60ca7ee (ibb · 반입 대기).  ★ Codex 재확인 (10-14 · 핀 a30fe150e) 이 같은 결함을 고정 C++ 소스로 독립 증명 = ULKRR-01.  10-15 반입: 실행 1 묶음 015bd82b… = docs/reviews/dem_unloading_grammar_fixture_runs_20261015/raw/ · 같은 판 (a30fe150e) 반복 실행 1b (job 285228 · 8e1ddb7d…) = 같은 결함 (이 반입으로 처음 기록) · 우리 판독기 재판독도 GA Mismatched fix 재현 · 고친 판 실행 2 (job 285533) = PASS 19/19.",
       "claimed_fixed_sha": "039abb141",
       "evidence_tests": [
         "docs/data/ps45_unload_20261009/history_test/make_history_decks.py --selftest ⑰ (고치기 전 1 실패 = grammar · 고친 뒤 0) · --check (⑰ 포함)",
@@ -10989,9 +10989,11 @@
       "note": "같은 결함을 우리 ibb 첫 실행 (job 285220 · 같은 핀 · 10-14 19:26) 이 실제 바이너리에서 먼저 보였다 = SELF-115 (같은 고침).  고침 039abb141 = 본 키트 꼴 (입력 셋 · f_gr_av[1] 유효) + 타입 음성 검사 ⑰ (--selftest · --check) · 재생성 · 재봉인.  판정문의 해결 증거 중 남은 것 = 수정 키트의 실제 바이너리 문법 PASS (실행 2).  10-14 밤: 수정 묶음 (e271bdd48) 에 R/EXT 실행 전 문법 PASS 사전 점검 (GRAMMAR_VERDICT · 같은 LIGGGHTS 바이너리 · 덱 봉인값) 이 들어감 — 실행 2 의 grammar_verdict.json 이 그 증거가 된다 (러너 스크립트 해시는 대조하지 않아 이번 수정이 실행 2 를 무효로 만들지 않음).",
       "claimed_fixed_sha": "039abb141",
       "evidence_tests": [
-        "docs/data/ps45_unload_20261009/history_test/make_history_decks.py --selftest ⑰ (고치기 전 grammar 1 실패 · 고친 뒤 0) · --check"
+        "docs/data/ps45_unload_20261009/history_test/make_history_decks.py --selftest ⑰ (고치기 전 grammar 1 실패 · 고친 뒤 0) · --check",
+        "docs/reviews/dem_unloading_grammar_fixture_runs_20261015/README.md (런 넷 · 원래 자리 재판독)",
+        "docs/reviews/dem_unloading_grammar_fixture_runs_20261015/runs_summary.json"
       ],
-      "partial_note": "코드 닫힘 / 실행 열림 (Codex 수정 재확인 10-15) — 타입 수정 타당 (in.hist_grammar.liggghts:80 · 135 · 음성 대조 거부) · 실제 ibb 문법 PASS = 원 보고 묶음 (같은 바이너리 · 승인된 덱 · 판독기 출처 · 원자료 재판독) 확인 전 열림"
+      "partial_note": "코드 닫힘 / 실행 열림 (Codex 수정 재확인 10-15) — 타입 수정 타당 (in.hist_grammar.liggghts:80 · 135 · 음성 대조 거부) · 실제 ibb 문법 PASS = 원 보고 묶음 (같은 바이너리 · 승인된 덱 · 판독기 출처 · 원자료 재판독) 확인 전 열림  → 10-15 실행 2 반입 (docs/reviews/dem_unloading_grammar_fixture_runs_20261015/) — job 285533 · 판 799459c85 · PASS 19/19 · 반복 job 286802 · 판 44a034534 · PASS 19/19 · 같은 LIGGGHTS sha256 ee2d7726… · 덱 사본 · 판 STL · 판독기 70f741a9… · 표 = 봉인 값 · 우리 트리 판독기 원래 자리 재판독 = 검사 19 런 JSON 과 같음 (옮긴 사본 = GA_args · GB_args 만 거짓 · 설계대로) → Codex 확인 (짧은 재확인 2 §7 Q7) 대기."
     },
     {
       "id": "ULKRR-02",

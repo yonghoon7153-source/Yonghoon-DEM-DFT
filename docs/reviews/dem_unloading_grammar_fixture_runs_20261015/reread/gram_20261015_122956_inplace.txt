@@ -1,0 +1,21 @@
+GRAMMAR_VERDICT status=PASS (0 = 맨 바깥 include 이어 돌림 · 변수 주기 덤프 · move/mesh 여러 번 · 상태 파일 복귀 전부 기대대로)
+  ✓ P_tech
+  ✓ GA_exists
+  ✓ GA_tech
+  ✓ GA_markers
+  ✓ GA_atom_dump_steps
+  ✓ GA_wall_dump_steps
+  ✓ GA_mesh_z
+  ✓ GA_restart_state
+  ✓ GA_contact_geo
+  ✓ GB_exists
+  ✓ GB_tech
+  ✓ GB_markers
+  ✓ GB_atom_dump_steps
+  ✓ GB_wall_dump_steps
+  ✓ GB_mesh_z
+  ✓ GB_restart_state
+  ✓ GB_contact_geo
+  ✓ GA_args
+  ✓ GB_args
+  rc = 0 · 짧은 문법 런 = 물리 검증 아님 (C19)

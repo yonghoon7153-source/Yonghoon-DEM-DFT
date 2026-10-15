@@ -1,0 +1,140 @@
+[
+ {
+  "run": "gram_20261014_192604",
+  "repo_head": "a30fe150e21f66aea2f1c360593e1cd781689b14",
+  "dirty": "0",
+  "slurm": "slurm_job=285220 slurm_ntasks=6 slurm_nodes=node04",
+  "sums_sha256_manifest": "debe83877657978cdaf87b18e08edda501e520979dd40876f5e100c24e902163",
+  "sums_file_sha": "debe83877657978cdaf87b18e08edda501e520979dd40876f5e100c24e902163",
+  "lmp_sha": "ee2d77261bac",
+  "start": "2026-10-14T19:26:05+09:00",
+  "end": "2026-10-14T19:26:12+09:00",
+  "reader_listed": "18521ae73283",
+  "reader_ok": false,
+  "params_ok": true,
+  "inputs_listed_ok": {
+   "in.hist_producer.liggghts": true,
+   "in.hist_grammar.liggghts": false,
+   "plate_hist.stl": true
+  },
+  "stage_rc": {
+   "P": "0",
+   "GA": "1"
+  },
+  "deck_copies_ok": {
+   "P/in.hist_producer.liggghts": true,
+   "P/plate_hist.stl": true,
+   "GA/in.hist_grammar.liggghts": false,
+   "GA/plate_hist.stl": true
+  },
+  "verdict": "FAIL",
+  "exit_code": 2,
+  "n_true": 4,
+  "n_checks": 11
+ },
+ {
+  "run": "gram_20261014_194645",
+  "repo_head": "a30fe150e21f66aea2f1c360593e1cd781689b14",
+  "dirty": "0",
+  "slurm": "slurm_job=285228 slurm_ntasks=6 slurm_nodes=node04",
+  "sums_sha256_manifest": "debe83877657978cdaf87b18e08edda501e520979dd40876f5e100c24e902163",
+  "sums_file_sha": "debe83877657978cdaf87b18e08edda501e520979dd40876f5e100c24e902163",
+  "lmp_sha": "ee2d77261bac",
+  "start": "2026-10-14T19:46:45+09:00",
+  "end": "2026-10-14T19:46:50+09:00",
+  "reader_listed": "18521ae73283",
+  "reader_ok": false,
+  "params_ok": true,
+  "inputs_listed_ok": {
+   "in.hist_producer.liggghts": true,
+   "in.hist_grammar.liggghts": false,
+   "plate_hist.stl": true
+  },
+  "stage_rc": {
+   "P": "0",
+   "GA": "1"
+  },
+  "deck_copies_ok": {
+   "P/in.hist_producer.liggghts": true,
+   "P/plate_hist.stl": true,
+   "GA/in.hist_grammar.liggghts": false,
+   "GA/plate_hist.stl": true
+  },
+  "verdict": "FAIL",
+  "exit_code": 2,
+  "n_true": 4,
+  "n_checks": 11
+ },
+ {
+  "run": "gram_20261015_030225",
+  "repo_head": "799459c85878d8c44754afdae973194db7099436",
+  "dirty": "0",
+  "slurm": "slurm_job=285533 slurm_ntasks=6 slurm_nodes=node02",
+  "sums_sha256_manifest": "8ff722d24096c6bd929682842e3b93907951ad29943f180709c914404cdb928d",
+  "sums_file_sha": "8ff722d24096c6bd929682842e3b93907951ad29943f180709c914404cdb928d",
+  "lmp_sha": "ee2d77261bac",
+  "start": "2026-10-15T03:02:26+09:00",
+  "end": "2026-10-15T03:02:35+09:00",
+  "reader_listed": "70f741a9b830",
+  "reader_ok": true,
+  "params_ok": true,
+  "inputs_listed_ok": {
+   "in.hist_producer.liggghts": true,
+   "in.hist_grammar.liggghts": true,
+   "plate_hist.stl": true
+  },
+  "stage_rc": {
+   "P": "0",
+   "GA": "0",
+   "GB": "0"
+  },
+  "deck_copies_ok": {
+   "P/in.hist_producer.liggghts": true,
+   "P/plate_hist.stl": true,
+   "GA/in.hist_grammar.liggghts": true,
+   "GA/plate_hist.stl": true,
+   "GB/in.hist_grammar.liggghts": true,
+   "GB/plate_hist.stl": true
+  },
+  "verdict": "PASS",
+  "exit_code": 0,
+  "n_true": 19,
+  "n_checks": 19
+ },
+ {
+  "run": "gram_20261015_122956",
+  "repo_head": "44a034534155fa5ca7f92f6fd7de513c88e0d1fb",
+  "dirty": "0",
+  "slurm": "slurm_job=286802 slurm_ntasks=6 slurm_nodes=node04",
+  "sums_sha256_manifest": "8ff722d24096c6bd929682842e3b93907951ad29943f180709c914404cdb928d",
+  "sums_file_sha": "8ff722d24096c6bd929682842e3b93907951ad29943f180709c914404cdb928d",
+  "lmp_sha": "ee2d77261bac",
+  "start": "2026-10-15T12:29:56+09:00",
+  "end": "2026-10-15T12:30:06+09:00",
+  "reader_listed": "70f741a9b830",
+  "reader_ok": true,
+  "params_ok": true,
+  "inputs_listed_ok": {
+   "in.hist_producer.liggghts": true,
+   "in.hist_grammar.liggghts": true,
+   "plate_hist.stl": true
+  },
+  "stage_rc": {
+   "P": "0",
+   "GA": "0",
+   "GB": "0"
+  },
+  "deck_copies_ok": {
+   "P/in.hist_producer.liggghts": true,
+   "P/plate_hist.stl": true,
+   "GA/in.hist_grammar.liggghts": true,
+   "GA/plate_hist.stl": true,
+   "GB/in.hist_grammar.liggghts": true,
+   "GB/plate_hist.stl": true
+  },
+  "verdict": "PASS",
+  "exit_code": 0,
+  "n_true": 19,
+  "n_checks": 19
+ }
+]

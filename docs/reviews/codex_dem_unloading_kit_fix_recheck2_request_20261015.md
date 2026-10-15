@@ -4,13 +4,13 @@
 > 문법 사전 점검이 그 런 폴더 원자료를 **승인된 판독기로 다시 읽게** 했다 (Q3) · 비차단 셋 (Q4) 도 같이 — 시험 먼저 · LIGGGHTS 없음.  각 반례가 고친 트리에서 거부되고
 > 양성 대조가 그대로인지, Linux 전체 로그가 지원 환경 실행 기록을 채우는지 짧게 판정해 달라.  남은 실행 = ibb 문법 fixture 실행 2 (실제 바이너리 · 원 보고 묶음).
 > ✅ **1저자 10-15** — 수정 계획 dem_unloading_kit_fix_recheck_fix_plan_20261015.md Q1–Q4 = 권고대로 (*"권고대로 부탁해"*).
-> **리뷰 핀** = 이 요청서가 든 본 가지 커밋 (번호는 발송 때 1저자가 적는다 · 바로 다음 원장 커밋이 기록한다) · **기준** = `eaecfba2a` (판정문 코드 핀).  이 요청서 · 증거 README 는 작업 트리 커밋 번호를 적지 않는다 (`SELF-116`).
+> **리뷰 핀** = 이 요청서가 든 본 가지 커밋 — **실행 2 반입판** (§7 · 번호는 발송 때 1저자가 적는다 · 키트 폴더 = `fcc0d6a75` 와 바이트 같음) · **기준** = `eaecfba2a` (판정문 코드 핀).  이 요청서 · 증거 README 는 작업 트리 커밋 번호를 적지 않는다 (`SELF-116`).
 
 ## 0. 대상 · 지위
 
 - 판정문 codex_review_dem_unloading_kit_fix_recheck_20261015.md · 증거 codex_dem_unloading_kit_fix_recheck_evidence_20261015 (탐침 스크립트는 **실행하지 않았다** — `notes/` ·
   `evidence/*.json` · 탐침 글로 반례를 읽고 우리 시험으로 다시 만들었다 · 판정문 §7 탐침을 고친 트리에서 다시 돌려 주면 좋다).
-- 커밋 (본 가지 · 순서): 시험 먼저 `1c0b9fd65` → 수정 `22a347722` → 문서 · 증거 · 이 요청서 (= 리뷰 핀) (+ 그 다음 별도 커밋 = 참조 검사기 도달 기준 · 키트 밖).
+- 커밋 (본 가지 · 순서): 시험 먼저 `1c0b9fd65` → 수정 `22a347722` → 문서 · 증거 · 이 요청서 첫 판 `fcc0d6a75` → 참조 검사기 도달 기준 `4803b959c` (키트 밖) → 원장 `44a034534` → 실행 2 반입 + §7 (= 리뷰 핀 · 키트 무변경).
 - 바뀐 곳 = 키트 `docs/data/ps45_unload_20261009/` — `ul_lib.py` · `ul_gates.py` · `ul_reader.py` · `run_unload.sh` (주석 한 줄 — EXT rc 2 범위) · `seal_kit.py` (규칙 글 · 증인 ·
   규칙 수 24 그대로) · `ul_runner_test.py` · README · `SHA256SUMS` · `active_rules.json` / 등록 `docs/reviews/dem_unloading_ps45_prereg_20261009.md` §14-9 정정 줄 · §14-11 (결과 0 건).
 - 바꾸지 않은 것: `unload_params.json` · 생산 덱 64 (`make_unload_decks.py --check`) · 이력 시험 폴더 전부 (`history_test/SHA256SUMS` sha256 `8ff722d24096c6bd929682842e3b93907951ad29943f180709c914404cdb928d`
@@ -80,7 +80,24 @@ python3 docs/reviews/dem_unloading_kit_fix_recheck_fix_evidence_20261015/tools/r
 
 ## 6. 남은 것
 
-- ⬜ ibb 문법 fixture **실행 2** (실제 LIGGGHTS · 1저자 · 키트 README §1-6 · 판독기 봉인 값인 판) → 원 보고 묶음 반입 때 승인된 판독기로 원자료 재판독 기록 → 그 `grammar_verdict.json` 이
+- ✅ ibb 문법 fixture **실행 2 = PASS** (§7 · 10-15) — 원 보고 묶음 반입 · 승인된 판독기로 원자료 재판독 기록 → 그 `grammar_verdict.json` 이
   RJ · RJ2 · EXT 의 `GRAMMAR_VERDICT` (사전 점검이 그 런 폴더를 원래 자리에서 다시 읽는다).
-- 원장 `ULKRF-01` · `02` · `03` → claimed_fixed (수정 `22a347722` · 기록 = 이 핀 바로 다음 원장 커밋).
+- 원장 `ULKRF-01` · `02` · `03` → claimed_fixed (수정 `22a347722` · 원장 커밋 `44a034534`).
 - ⛔ 본 R · 10:0 연장 · U = 이 재확인 GO + 실행 2 PASS 뒤.
+
+## 7. 실행 2 결과 (10-15 · 1저자 ibb · 반입 = `docs/reviews/dem_unloading_grammar_fixture_runs_20261015/`)
+
+| 런 | job · 시각 (KST) | 판 | history_test 봉인 | 판독기 | 단계 rc | 판정 |
+|---|---|---|---|---|---|---|
+| **실행 2** `gram_20261015_030225` | 285533 · 10-15 03:02 | `799459c85` | `8ff722d2…` | `70f741a9…` (= `GRAMMAR_READER`) | P 0 · GA 0 · GB 0 | **PASS · 19/19** |
+| 반복 `gram_20261015_122956` | 286802 · 10-15 12:29 | `44a034534` | `8ff722d2…` | `70f741a9…` | P 0 · GA 0 · GB 0 | **PASS · 19/19** |
+| 실행 1 · 1b (`192604` · `194645`) | 285220 · 285228 · 10-14 | `a30fe150e` | `debe8387…` | `18521ae7…` | P 0 · GA 1 | FAIL — `SELF-115` 결함 (1b = 같은 판 반복 · 이 반입으로 처음 기록) |
+
+- LIGGGHTS sha256 = 넷 모두 `ee2d77261bac…` (등록 §11-1 ⓖ) · 덱 사본 (P · GA · GB) · 판 STL = `GRAMMAR_INPUTS` 봉인 값 · 표 `history_params.json` = 봉인 값 · 묶음 sha256 = 각 SLURM 화면의 "보낼 것" 값 (반입 README §1).
+- **우리 트리 판독기 재판독** (리포 `read_history.py` · sha256 `70f741a9…`): 런의 절대 경로를 컨테이너에 새로 만들어 원래 자리에서 읽음 = 실행 2 · 반복 모두 **PASS · rc 0 · 검사 19 = 런 JSON 과 같음** · 옮긴 사본 = `GA_args` · `GB_args` 만 거짓 (입력 기록 절대 경로 — §2 의 "원래 자리 한정" 그대로) · 실행 1 · 1b = `Mismatched fix` 재현.  본 R 사전 점검의 kit 사본 판독기 재판독은 ibb 에서 (묶음에 kit 스크립트 없음).
+- `GRAMMAR_VERDICT` 권고 = 실행 2 런 (`~/ps45_unload_hist_20261013/gram_20261015_030225/grammar_verdict.json` · 첫 PASS) · 반복도 같은 판정 · ⬜ 1저자 확인 (발사 때).
+
+| Q | 질문 |
+|---|---|
+| Q7 | 이 반입 (같은 바이너리 · 승인된 덱 · 판독기 출처 · 원래 자리 원자료 재판독 PASS) 으로 `ULKRR-01` 의 실행 부분 (판정문 10-15 "코드 닫힘 / 실행 열림") 이 닫히는가 · 실행 2 를 `GRAMMAR_VERDICT` 로 고정하는 데 이의 없는가 |
+
