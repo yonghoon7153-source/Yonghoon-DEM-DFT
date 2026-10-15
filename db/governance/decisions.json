@@ -1753,7 +1753,7 @@
   {
    "id": "D-2026-09-12-cascade-primary-objective",
    "kind": "estimand",
-   "decision_state": "active",
+   "decision_state": "superseded",
    "slot": "cascade_primary_objective",
    "statement": "cascade 의 **주목적은 `D_rel` 의 설계 간 내부 비교 하나**다(주축 B3, 600 K · 창 2–50 ps · cell-conditioned). **B1 은 주축에서 뺀다** — 분해 후 다른 상의 수송이라 집계식을 골라도 같은 질문이 되지 않는다; 자료는 `{E_a(p)}` 를 상·결함·홉이 표시된 **장벽 목록**으로 보존하되 확률분포라 부르지 않고 스칼라로 집계하지 않는다. **σ 와 3축 가중합 스칼라도 주목적에서 뺀다.** *'예측 점수가 D_rel 을 맞히나'* 는 **별도 축**이며, 점수·힘 검사의 통과를 **물리 순위로 승격하지 않는다**. 정정 셋을 함께 박는다 — 0 K 는 조건부 평형 분해 계수를 준다(못 주는 것은 실제 생성량·속도·미세구조) · 같은 UMA 라서 미정의가 아니라 외부 물리 타당성이 미검증이다 · **같은 조성 안에서만 정의된다는 문장은 삭제**한다(같은 규약의 D* 는 조성이 달라도 비교 가능).",
    "record": "db/properties/cascade_primary_objective_amendment_2026_09_12.json",
@@ -1771,18 +1771,25 @@
      "at": "2026-09-12",
      "state": "active",
      "note": "1저자 비준 (scientific_owner). 사전등록 재봉인과 함께."
+    },
+    {
+     "at": "2026-10-15",
+     "state": "superseded",
+     "by": "사용자 (cascade 1저자)",
+     "note": "D-2026-10-15-cascade-objective-scope 가 명시적으로 대체한다 — 2단계 규칙 (내용) 은 그대로 새 결정에 옮겼고, 'cascade 의 주목적' 문구만 '2단계 주 보고량' 으로 좁혔다 (사용자 10-15 'ㅇㅇ 올려 우린 수송에 한한 cascade를 하려 했던게 아니고 D_rel 등은 하나의 축인거지'). 승인 내용 그대로 · 지문만 다시 냄 · 결속 커밋은 그대로 (예외 (5)·(6) 선례)."
     }
    ],
-   "status": "active",
+   "status": "superseded",
    "ratification": {
     "state": "ratified",
     "role": "scientific_owner",
     "actor_id": "yonghoon7153@gmail.com",
     "timestamp": "2026-09-12T02:36:25Z",
     "commit": "82fe848a3574cfbbc69825f1db125097ea582f78",
-    "decision_digest": "sha256:715275c4efcc4236e047ef68f00c775593871e47366cdc76db04ededeb458754",
+    "decision_digest": "sha256:96af1e2fc26d5ff136dcb4821e18cb5feda517d5835ca8c51360d8966bdc2ebc",
     "⚠_digest_의_뜻": "`ratification` 을 뺀 결정 내용의 sha256 이다."
-   }
+   },
+   "superseded_by": "D-2026-10-15-cascade-objective-scope"
   },
   {
    "id": "D-2026-09-12-cascade-s1-contract",
@@ -8437,6 +8444,82 @@
    "supersedes": [
     "D-2026-10-13-gabia-uma-coexist-pwx-li2s-control-600k"
    ]
+  },
+  {
+   "id": "D-2026-10-15-cascade-objective-scope",
+   "schema_version": 2,
+   "kind": "estimand",
+   "scope": "cascade.dopant_screening.objective",
+   "slot": "cascade_primary_objective",
+   "applies_to": {
+    "systems": [
+     "lpscl_dopant_designs"
+    ],
+    "tasks": [
+     "cascade_campaign_scope",
+     "mlip_md_tracer_d",
+     "predictor_ranking"
+    ],
+    "methods": [
+     "uma-s-1p1-omat"
+    ],
+    "use_cases": [
+     "internal",
+     "manuscript",
+     "seminar"
+    ]
+   },
+   "title": "cascade 목적 범위 정정 — 수송 한정 캠페인이 아니다 · D_rel 은 한 축 (2단계 주 보고량) · 09-12 결정을 범위만 좁혀 다시 낸다",
+   "statement": "cascade 는 **수송 한정 캠페인이 아니다** — 목적은 다축이다: Li₆PS₅Cl 도펀트 전구체 중 **전기화학 · 기계 안정성을 올리면서 Li 수송을 늦추지 않는 것**을 고른다 (덱 3장 Purpose · `docs/cascade_pipeline_guide.md` §0). **`D_rel` 은 그 축 중 하나 (수송)** 이고 **2단계 (D_rel 파일럿 · 본 라운드) 의 주 보고량**이다 — 2단계 안에서는 `D_rel` 의 설계 간 내부 비교 하나 (주축 B3 · 프로토콜은 그 단계의 비준 카드·개정). 2단계 규칙은 09-12 결정 그대로다: B1 은 주축에서 빼고 상 · 결함 · 홉이 표시된 장벽 목록으로 보존 (확률분포라 부르지 않고 스칼라로 집계하지 않는다) · σ 와 3축 가중합 스칼라는 2단계 주 보고량이 아니다 · '예측 점수가 D_rel 을 맞히나' 는 별도 축이며 점수 · 힘 검사 통과를 물리 순위로 승격하지 않는다 · 정정 셋 (0 K 는 조건부 평형 분해 계수를 준다 · 같은 UMA 라서 미정의가 아니라 외부 물리 타당성 미검증 · 같은 규약의 D* 는 조성이 달라도 비교 가능). **설계 선택은 D_rel 하나로 정하지 않는다** — 축을 합치는 규칙 (가중 · 우선순위 · Pareto 등) 은 아직 없고, 결과를 보기 전에 따로 결정한다.",
+   "rationale": "사용자 10-15 (cascade 1저자): '언제 우리 목적이 수송이 되었지는 모르겠다? 나는 양극재 코팅용 sulfide 전고체 스크리닝을 한거긴 한데' → 'ㅇㅇ 올려 우린 수송에 한한 cascade를 하려 했던게 아니고 D_rel 등은 하나의 축인거지'. 09-12 결정은 회신 BJ2 Q1 에 따라 수송 쪽 축 셋 (B1 · B3 · σ) 과 '순위 · 개선 여부 · 예측 점수 검증' 중 무엇을 주로 볼지 고른 것인데, 문구가 'cascade 의 주목적' 이라 캠페인 목적이 수송으로 바뀐 것처럼 읽혔다 — 실제로 10-15 디펜스 메모에 '도핑의 목적은 수송' 이 들어갔다 (1f7386c 에서 고침). '수송이 목적' 이라는 서술은 08-28 에이전트 문서 (cascade_design_contract_2026_08_28 §3) 에서 처음 나오고 사용자 발언 기록은 없다. 2단계 규칙은 바꾸지 않고 범위만 좁혀 다시 낸다.",
+   "decision_state": "active",
+   "record_kind": "amendment",
+   "results_seen": false,
+   "record": "db/properties/cascade_objective_scope_amendment_2026_10_15.json",
+   "card": "db/properties/cascade_d_rel_estimand_2026_09_08.json",
+   "evidence": [
+    "kb/seminars/build_cascade_briefing_2026_10.py — 3장 Overview 'Purpose' 카드",
+    "docs/cascade_pipeline_guide.md §0 — 문제 정의 (산화 안정성 · 계면 반응성 → 미량 도핑/코팅)",
+    "tools/figures/plot_cascade_insights.py — '(C) composite cathode-coating score'",
+    "tools/doping/combine_rankings.py — rank_combined_paper (stability + modulus + mobility)",
+    "db/properties/cascade_primary_objective_amendment_2026_09_12.json · kb/reviews/codex_BJ2_reply_2026_09_09.md (Q1)",
+    "kb/methodology/cascade_design_contract_2026_08_28.md §3 — '우리 문제의 목적 그 자체' (에이전트 서술)"
+   ],
+   "method_ref": "— (범위 정정 · 2단계 계산 규약은 09-08 카드와 v7 결정들)",
+   "supersedes": [
+    "D-2026-09-12-cascade-primary-objective"
+   ],
+   "depends_on": [
+    "D-2026-09-08-cascade-d-rel-estimand"
+   ],
+   "reopen_criteria": "축을 합치는 선택 규칙을 정할 때 새 결정으로 (이 결정은 목적의 범위와 D_rel 의 자리만 정한다) · 2단계 규칙을 바꾸려면 개정문을 따로 쓰고 재비준한다.",
+   "enforcement": "문서 · 화면 · 원고 · 발표에서 'cascade 의 목적은 수송' · 'cascade = 수송 스크리닝' 으로 쓰지 않는다 · D_rel 결과만으로 설계를 채택 · 탈락시키지 않는다 (선택 규칙이 결정되기 전까지 D_rel 은 수송 축의 보고다) · 2단계 금지 (힘 · 점수 통과의 물리 순위 승격 · B1 스칼라 집계 · E_a 집합을 확률분포라 부르기) 는 09-12 그대로. 기계 판독 키는 기록 파일 '1_바꾸는_것.기계_판독' 에 둔다 — 지금 그 키를 읽는 코드는 없다 (10-15 확인).",
+   "proposed_by": "claude-session-2026-10-15 (friendly)",
+   "status": "active",
+   "status_history": [
+    {
+     "at": "2026-10-15",
+     "state": "proposed",
+     "by": "agent",
+     "note": "사용자 '언제 우리 목적이 수송이 되었지는 모르겠다? 나는 양극재 코팅용 sulfide 전고체 스크리닝을 한거긴 한데' 뒤 기록 대조 (덱 3장 Purpose · 안내서 §0 · 도구 이름 · 08-28 에이전트 문서 · 09-12 결정) → 정정 결정 제안 '09-12 결정의 문구를 2단계 주 보고량으로 좁힌다 · 권고: 올린다'."
+    },
+    {
+     "at": "2026-10-15",
+     "state": "active",
+     "by": "사용자 (cascade 1저자)",
+     "note": "비준 — 'ㅇㅇ 올려 우린 수송에 한한 cascade를 하려 했던게 아니고 D_rel 등은 하나의 축인거지'. 범위·D_rel 의 자리는 사용자 발화 그대로 · 2단계 규칙은 09-12 결정에서 그대로 옮김."
+    }
+   ],
+   "ratification": {
+    "state": "ratified",
+    "role": "scientific_owner",
+    "actor_id": "yonghoon7153@gmail.com",
+    "timestamp": "2026-10-15T10:45:04Z",
+    "commit": "1f7386c29a353d3c954096a6111010a780c0f0ef",
+    "⚠_digest_의_뜻": "`ratification` 을 뺀 결정 내용의 sha256 이다.",
+    "근거_발화": "사용자 10-15 (이 세션) — 물음 '09-12 결정의 문구를 2단계 주 보고량으로 좁히는 정정 결정을 올릴지요 · 권고: 올린다' → 'ㅇㅇ 올려 우린 수송에 한한 cascade를 하려 했던게 아니고 D_rel 등은 하나의 축인거지'",
+    "decision_digest": "sha256:a92f42a9ad97e5c0468bfaba3c3fd76e8307efda3abcd76217ac36250a5b464a"
+   }
   }
  ]
 }

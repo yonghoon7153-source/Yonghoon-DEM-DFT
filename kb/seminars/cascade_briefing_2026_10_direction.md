@@ -39,7 +39,7 @@ evidenceScope: multi-source-mixed
 3. 계면 산물 갭이 **HOLD** 다 (09-23 · `HZ-cascade-product-gaps-nonground-polymorph`).
 4. 수송 축은 600 K 파일럿 (v6) 이 **방법상 무효로 마감**됐고 (10-01 · 자격 0/40), 1000 K 본 라운드 (v7) 가 **도는 중**이다 (10-12 · 12/40).
 5. 덱의 "47" 은 8월 용어 규약에서도 틀린 읽기다 (47 = 06-25 O/F 스냅샷 · 완주 수가 아니다).
-6. (10-12 추가) **9월 재건**: 주목적을 `D_rel(설계, 호스트)` 내부 비교 하나로 고정하고 (09-12) · 설계 목록 237 (조성 단위) · S1 생성 계약 · 대표 = ΔE 중앙값을 비준했다. 순위 불확실성 규약(S3)은 제안 상태로 δ 가 비어 있고, 실행 범위(#7)는 파일럿 뒤다.
+6. (10-12 추가) **9월 재건**: 2단계 주 보고량을 `D_rel(설계, 호스트)` 내부 비교 하나로 고정하고 (09-12 · ⚠ 10-15 정정: 원장 이름은 '주목적' 이었지만 cascade 는 수송 한정이 아니다 — D_rel 은 한 축 · `D-2026-10-15-cascade-objective-scope`) · 설계 목록 237 (조성 단위) · S1 생성 계약 · 대표 = ΔE 중앙값을 비준했다. 순위 불확실성 규약(S3)은 제안 상태로 δ 가 비어 있고, 실행 범위(#7)는 파일럿 뒤다.
 
 ⇒ 발표의 축을 **"파이프라인 기술 보고"** 에서 **"스크린이 무엇을 말할 수 있나 → 지금 무엇을 시험하나 → 어떻게 결정으로 바꾸나"** 로 옮긴다.
 한 줄 메시지 (영문 슬라이드용): ***"No dopant ranking yet — the screen proposes, the pre-registered tests decide."***
@@ -104,7 +104,7 @@ evidenceScope: multi-source-mixed
 | 08-19 | 계면 축 90종 추가 (MP 자료) | `kb/results/interface_axes_90_2026_08_19.md` |
 | 08-20~25 | (10-12 추가) As₂S₃ · AlI₃ 재실행 — 원자가 표에 As(+3) 추가 · 60 구성 → **91 전부 완화 · 3,675** · 정본 표 자동 갱신 안 함 | `tools/doping/run_as2s3_recover.sh` · `P/cascade_all_302_2026_08_25.csv` |
 | 09-08 | (10-12 추가) D_rel 보고량 카드 비준 | `D-2026-09-08-cascade-d-rel-estimand` |
-| 09-12 | (10-12 추가) 재건 개정 넷 비준 — 주목적 D_rel · 설계 목록 237 · S1 생성 계약 · 대표 = ΔE 중앙값 | `P/cascade_primary_objective_amendment_2026_09_12.json` 외 셋 |
+| 09-12 | (10-12 추가) 재건 개정 넷 비준 — 주목적 D_rel (10-15 정정: 2단계 주 보고량 · `D-2026-10-15-cascade-objective-scope`) · 설계 목록 237 · S1 생성 계약 · 대표 = ΔE 중앙값 | `P/cascade_primary_objective_amendment_2026_09_12.json` 외 셋 |
 | 09-12/13 | 축 감사 · 재앵커 비준 | `P/cascade_axis_global_audit_2026_09_12.json` · `P/cascade_reanchor_comp1k444_2026_09_12.json` |
 | 09-19 | v23 탐색 자료로 강등 · v6 카드 · S3 순위 규약 **제안** (δ 빈칸) | `P/cascade_v23_demoted_2026_09_19.json` · `P/cascade_s3_protocol_amendment_2026_09_19.json` |
 | 09-22 | ESW 정정 A (356 행 재유도) | `HZ-esw-reduction-limit-label` (CONDITIONAL) |

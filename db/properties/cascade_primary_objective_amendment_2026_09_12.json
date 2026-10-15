@@ -3,6 +3,8 @@
  "record_kind": "amendment",
  "date": "2026-09-12",
  "status": "ratified",
+ "superseded_by": "D-2026-10-15-cascade-objective-scope",
+ "⚠_superseded_2026_10_15": "이 기록의 '주목적' 은 **2단계 주 보고량**으로 좁혀졌다 — cascade 는 수송 한정 캠페인이 아니다 (사용자 10-15 'ㅇㅇ 올려 우린 수송에 한한 cascade를 하려 했던게 아니고 D_rel 등은 하나의 축인거지'). 2단계 규칙은 그대로 새 기록 db/properties/cascade_objective_scope_amendment_2026_10_15.json 로 옮겼다.",
  "results_seen": false,
  "제목": "cascade 주목적 고정 — **B1 은 주축에서 뺀다**, 주목적은 `D_rel` 내부 비교 하나. 예측 점수 검증은 **별도 축** (BJ2 재심 조건 #1)",
  "개정_대상": "db/properties/cascade_d_rel_estimand_2026_09_08.json (ratified 2026-09-08) — 카드가 '무엇을 재는가' 를 정했고, 이 개정은 **무엇이 주목적인가** 를 정한다",

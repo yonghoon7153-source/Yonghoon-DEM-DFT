@@ -1311,7 +1311,7 @@ plan = [('Now → late Oct', BLUE, 1.55, 0.95,
          + P('Do Stage-1 descriptors predict the measured transport? (rank correlation with a confidence interval)', 'cb', 1200, 105)
          + P('Stability windows and interface products with ground-state phases (As₂S₃ added) · DFT elastic constants', 'cb', 1200, 105)),
         ('Then', BUL, 4.14, 0.8,
-         P('Rank designs on the primary readout with its uncertainty → shortlist → DFT validation → synthesis and testing with the experimental team.', 'p', 1250, 110)),
+         P('Combine the axes with a selection rule fixed in advance → shortlist → DFT validation → synthesis and testing with the experimental team.', 'p', 1250, 110)),   # 10-15 user: D_rel is one axis, not the campaign goal
         ('Method upgrades', MUTED, 5.06, 0.95,
          P('Larger cells (≥ 2 nm) and longer runs (≥ 0.3 ns) · fine-tuned MLIP · ensemble uncertainty · '
            'dopant concentration from charge-neutral defect thermodynamics', 'p', 1250, 110))]

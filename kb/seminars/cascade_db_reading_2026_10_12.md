@@ -44,7 +44,7 @@ evidenceScope: multi-source-primary
 | 08-25 | 302 캐스케이드 통합 표 — v23 3,615 + dualx 450 + 재실행 60 = 4,125 | `cascade_all_302_2026_08_25.csv` · `.json` |
 | 09-08 | D_rel 보고량 카드 비준 | `cascade_d_rel_estimand_2026_09_08.json` · `D-2026-09-08-cascade-d-rel-estimand` |
 | 09-09 | 별도 상 표 이름 변경 (`separate_phase` · 회신 BJ NO-GO · BK) — 도핑 자료가 아니다 | `cascade_stability_axes.csv` 머리말 |
-| 09-12 | **재건 개정 넷 비준** (주목적 · 237 · S1 · 대표) + 축 전역 감사 + 재앵커 | `cascade_primary_objective_amendment_2026_09_12.json` · `cascade_design_roster_amendment_2026_09_12.json` · `cascade_s1_contract_amendment_2026_09_12.json` · `cascade_d_rel_amendment_2026_09_12.json` · `cascade_axis_global_audit_2026_09_12.json` · `cascade_reanchor_comp1k444_2026_09_12.json` |
+| 09-12 | **재건 개정 넷 비준** (주목적 — 10-15 정정: 2단계 주 보고량 · 237 · S1 · 대표) + 축 전역 감사 + 재앵커 | `cascade_primary_objective_amendment_2026_09_12.json` · `cascade_design_roster_amendment_2026_09_12.json` · `cascade_s1_contract_amendment_2026_09_12.json` · `cascade_d_rel_amendment_2026_09_12.json` · `cascade_axis_global_audit_2026_09_12.json` · `cascade_reanchor_comp1k444_2026_09_12.json` |
 | 09-13 | 파일럿 v4 (→ v5 로 대체) · §4b 셀 정책 '준비 미확보' 마감 · v5 E′ 카드 | `cascade_rebuild_estimand_card_v4/v5_*.json` · `cascade_pilot_4b_closed_2026_09_13.json` |
 | 09-19 | **v23 강등 원장화** · v6 카드 (10 부모 · 600 K) · S3 순위 규약 **제안** · v5 라운드 1 (자격 0/30 · 궤적 미저장) | `cascade_v23_demoted_2026_09_19.json` · `cascade_estimand_card_v6_10parents_2026_09_19.json` · `cascade_s3_protocol_amendment_2026_09_19.json` |
 | 09-22 / 09-23 | ESW 정정 A (356 행 재유도) · 산물 갭 HOLD | `oxidation_stability_cascade_v3_pinned.json` `⛔_window_V_정정_2026_09_22` · `HZ-cascade-product-gaps-nonground-polymorph` |
@@ -95,7 +95,7 @@ evidenceScope: multi-source-primary
 
 ## 5. 9월 재건 — 지금의 틀 (요지만 · 원문은 각 개정)
 
-1. **주목적** = `D_rel(design, host) = D*(design)/D*(host)` 의 설계 간 내부 비교 하나. B1(분해 산물 이동장벽)은 주축에서 빼고 목록으로 보존. 예측 점수 검증(ρ̂ + Fisher CI + 유효 표본수)은 별도 축.
+1. **주목적** (⚠ 10-15 정정 `D-2026-10-15-cascade-objective-scope`: **2단계 주 보고량** — cascade 는 수송 한정이 아니고 D_rel 은 한 축) = `D_rel(design, host) = D*(design)/D*(host)` 의 설계 간 내부 비교 하나. B1(분해 산물 이동장벽)은 주축에서 빼고 목록으로 보존. 예측 점수 검증(ρ̂ + Fisher CI + 유효 표본수)은 별도 축.
 2. **설계 목록 237** — 세는 단위 = 조성. 이름 문자열 단위 229 는 기각 (chain_Cl x 라벨 넷이 Cl 5·6·6·7 의 서로 다른 조성을 담고 있었다). ⛔ 237 ≠ 실행 — 실행 범위는 #7.
 3. **S1 생성 계약** — 부모 자리 동결 승계 · 전체 보상 수지 (아니면 거부) · 농도 분자·분모 · 거부는 `is_physics_elimination: false` 로 따로 셈. 실측 결함 셋을 회귀시험으로 박았다. 구현 `tools/cascade/s1_contract.py` (`select_representative` 포함).
 4. **대표 구조** = ΔE 중앙값을 낸 실제 행 (짝수 → 좌표 sha256 순) · 호스트도 같은 규칙. 최저는 탐색 예산의 함수 · 점수 중앙값은 검증 축과 순환.
