@@ -1,0 +1,243 @@
+{
+ "refs_eV_per_fu": {
+  "Li2S": -12.000673282163255,
+  "Li3PS4": -35.18094606778447
+ },
+ "reservoir_4Li2S_minus_Li3PS4_eV": -12.821747060868553,
+ "error_records": [],
+ "dopants": {
+  "Nd": {
+   "models": {
+    "MP": {
+     "formula": "Cl8Li31Nd2O3P3S19",
+     "n": 10,
+     "n_converged": 10,
+     "excluded_unconverged": [],
+     "gap_min_second_eV": 0.33237348454321136,
+     "top": [
+      "MP_07",
+      "MP_09",
+      "MP_00"
+     ],
+     "ranked": [
+      {
+       "name": "MP_07",
+       "E_eV": -288.6091447608979,
+       "dE_from_min_eV": 0.0,
+       "converged": true,
+       "n_relax_steps": 278,
+       "post_relax_xyz": "/home/kgy/work/runs/ndo_site_2026_10_14/uma_anneal/MP_07/post_relax.xyz"
+      },
+      {
+       "name": "MP_09",
+       "E_eV": -288.2767712763547,
+       "dE_from_min_eV": 0.33237348454321136,
+       "converged": true,
+       "n_relax_steps": 314,
+       "post_relax_xyz": "/home/kgy/work/runs/ndo_site_2026_10_14/uma_anneal/MP_09/post_relax.xyz"
+      },
+      {
+       "name": "MP_00",
+       "E_eV": -288.2445009984949,
+       "dE_from_min_eV": 0.36464376240297725,
+       "converged": true,
+       "n_relax_steps": 348,
+       "post_relax_xyz": "/home/kgy/work/runs/ndo_site_2026_10_14/uma_anneal/MP_00/post_relax.xyz"
+      },
+      {
+       "name": "MP_04",
+       "E_eV": -287.7228151250948,
+       "dE_from_min_eV": 0.8863296358030652,
+       "converged": true,
+       "n_relax_steps": 125,
+       "post_relax_xyz": "/home/kgy/work/runs/ndo_site_2026_10_14/uma_anneal/MP_04/post_relax.xyz"
+      },
+      {
+       "name": "MP_06",
+       "E_eV": -287.6144611379109,
+       "dE_from_min_eV": 0.9946836229869973,
+       "converged": true,
+       "n_relax_steps": 206,
+       "post_relax_xyz": "/home/kgy/work/runs/ndo_site_2026_10_14/uma_anneal/MP_06/post_relax.xyz"
+      },
+      {
+       "name": "MP_02",
+       "E_eV": -287.54466263178244,
+       "dE_from_min_eV": 1.0644821291154472,
+       "converged": true,
+       "n_relax_steps": 182,
+       "post_relax_xyz": "/home/kgy/work/runs/ndo_site_2026_10_14/uma_anneal/MP_02/post_relax.xyz"
+      },
+      {
+       "name": "MP_03",
+       "E_eV": -287.33663484711553,
+       "dE_from_min_eV": 1.2725099137823577,
+       "converged": true,
+       "n_relax_steps": 208,
+       "post_relax_xyz": "/home/kgy/work/runs/ndo_site_2026_10_14/uma_anneal/MP_03/post_relax.xyz"
+      },
+      {
+       "name": "MP_05",
+       "E_eV": -287.32455134035627,
+       "dE_from_min_eV": 1.2845934205416256,
+       "converged": true,
+       "n_relax_steps": 319,
+       "post_relax_xyz": "/home/kgy/work/runs/ndo_site_2026_10_14/uma_anneal/MP_05/post_relax.xyz"
+      },
+      {
+       "name": "MP_08",
+       "E_eV": -286.7762920298353,
+       "dE_from_min_eV": 1.8328527310625873,
+       "converged": true,
+       "n_relax_steps": 173,
+       "post_relax_xyz": "/home/kgy/work/runs/ndo_site_2026_10_14/uma_anneal/MP_08/post_relax.xyz"
+      },
+      {
+       "name": "MP_01",
+       "E_eV": -285.5846732442682,
+       "dE_from_min_eV": 3.024471516629717,
+       "converged": true,
+       "n_relax_steps": 71,
+       "post_relax_xyz": "/home/kgy/work/runs/ndo_site_2026_10_14/uma_anneal/MP_01/post_relax.xyz"
+      }
+     ]
+    },
+    "MLi": {
+     "formula": "Cl8Li21Nd2O3P5S19",
+     "n": 10,
+     "n_converged": 10,
+     "excluded_unconverged": [],
+     "gap_min_second_eV": 0.03762051491003149,
+     "top": [
+      "MLi_03",
+      "MLi_04",
+      "MLi_05"
+     ],
+     "ranked": [
+      {
+       "name": "MLi_03",
+       "E_eV": -263.6027057051692,
+       "dE_from_min_eV": 0.0,
+       "converged": true,
+       "n_relax_steps": 116,
+       "post_relax_xyz": "/home/kgy/work/runs/ndo_site_2026_10_14/uma_anneal/MLi_03/post_relax.xyz"
+      },
+      {
+       "name": "MLi_04",
+       "E_eV": -263.5650851902592,
+       "dE_from_min_eV": 0.03762051491003149,
+       "converged": true,
+       "n_relax_steps": 131,
+       "post_relax_xyz": "/home/kgy/work/runs/ndo_site_2026_10_14/uma_anneal/MLi_04/post_relax.xyz"
+      },
+      {
+       "name": "MLi_05",
+       "E_eV": -263.5180573725129,
+       "dE_from_min_eV": 0.08464833265634297,
+       "converged": true,
+       "n_relax_steps": 130,
+       "post_relax_xyz": "/home/kgy/work/runs/ndo_site_2026_10_14/uma_anneal/MLi_05/post_relax.xyz"
+      },
+      {
+       "name": "MLi_06",
+       "E_eV": -263.4100765103603,
+       "dE_from_min_eV": 0.19262919480894425,
+       "converged": true,
+       "n_relax_steps": 126,
+       "post_relax_xyz": "/home/kgy/work/runs/ndo_site_2026_10_14/uma_anneal/MLi_06/post_relax.xyz"
+      },
+      {
+       "name": "MLi_02",
+       "E_eV": -263.308879932937,
+       "dE_from_min_eV": 0.29382577223225326,
+       "converged": true,
+       "n_relax_steps": 68,
+       "post_relax_xyz": "/home/kgy/work/runs/ndo_site_2026_10_14/uma_anneal/MLi_02/post_relax.xyz"
+      },
+      {
+       "name": "MLi_07",
+       "E_eV": -263.3032957482702,
+       "dE_from_min_eV": 0.2994099568990123,
+       "converged": true,
+       "n_relax_steps": 200,
+       "post_relax_xyz": "/home/kgy/work/runs/ndo_site_2026_10_14/uma_anneal/MLi_07/post_relax.xyz"
+      },
+      {
+       "name": "MLi_00",
+       "E_eV": -262.92357607853774,
+       "dE_from_min_eV": 0.679129626631493,
+       "converged": true,
+       "n_relax_steps": 98,
+       "post_relax_xyz": "/home/kgy/work/runs/ndo_site_2026_10_14/uma_anneal/MLi_00/post_relax.xyz"
+      },
+      {
+       "name": "MLi_08",
+       "E_eV": -262.69154036865405,
+       "dE_from_min_eV": 0.9111653365151824,
+       "converged": true,
+       "n_relax_steps": 70,
+       "post_relax_xyz": "/home/kgy/work/runs/ndo_site_2026_10_14/uma_anneal/MLi_08/post_relax.xyz"
+      },
+      {
+       "name": "MLi_09",
+       "E_eV": -262.2097607359441,
+       "dE_from_min_eV": 1.392944969225141,
+       "converged": true,
+       "n_relax_steps": 72,
+       "post_relax_xyz": "/home/kgy/work/runs/ndo_site_2026_10_14/uma_anneal/MLi_09/post_relax.xyz"
+      },
+      {
+       "name": "MLi_01",
+       "E_eV": -262.05384361124294,
+       "dE_from_min_eV": 1.5488620939262887,
+       "converged": true,
+       "n_relax_steps": 108,
+       "post_relax_xyz": "/home/kgy/work/runs/ndo_site_2026_10_14/uma_anneal/MLi_01/post_relax.xyz"
+      }
+     ]
+    }
+   },
+   "refusals": [],
+   "closure": {
+    "a_Li2S": 8,
+    "b_Li3PS4": -2,
+    "n_dopant": 2
+   },
+   "dG_site_eV_per_dopant": 0.31852753300422165,
+   "polymorph_recheck": []
+  }
+ },
+ "hosts": [
+  {
+   "name": "host_02",
+   "E_eV": -258.2229627485659,
+   "converged": true,
+   "formula": "Cl8Li27P5S22",
+   "post_relax_xyz": "/home/kgy/work/runs/ndo_site_2026_10_14/uma_anneal/host_02/post_relax.xyz"
+  },
+  {
+   "name": "host_00",
+   "E_eV": -258.0346281506943,
+   "converged": true,
+   "formula": "Cl8Li27P5S22",
+   "post_relax_xyz": "/home/kgy/work/runs/ndo_site_2026_10_14/uma_anneal/host_00/post_relax.xyz"
+  },
+  {
+   "name": "host_01",
+   "E_eV": -257.8636539269239,
+   "converged": true,
+   "formula": "Cl8Li27P5S22",
+   "post_relax_xyz": "/home/kgy/work/runs/ndo_site_2026_10_14/uma_anneal/host_01/post_relax.xyz"
+  }
+ ],
+ "inputs": {
+  "/home/kgy/work/runs/ndo_site_2026_10_14/uma_anneal/anneal_results.json": "a5c124effa6d76de58dcc159295d7ae658420306f881f4e205b6b9bc36e55d88",
+  "/home/kgy/work/runs/ndo_site_2026_10_14/uma_ref_relax/anneal_results.json": "df4f5c11338efe725b6a650c07d4b34b0034c1fda21f956e05ee71cfbc735b64"
+ },
+ "args": {
+  "expect": 10,
+  "allow_incomplete": false,
+  "top": 3,
+  "thresholds": []
+ }
+}
