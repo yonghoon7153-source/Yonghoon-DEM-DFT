@@ -8520,6 +8520,79 @@
     "근거_발화": "사용자 10-15 (이 세션) — 물음 '09-12 결정의 문구를 2단계 주 보고량으로 좁히는 정정 결정을 올릴지요 · 권고: 올린다' → 'ㅇㅇ 올려 우린 수송에 한한 cascade를 하려 했던게 아니고 D_rel 등은 하나의 축인거지'",
     "decision_digest": "sha256:a92f42a9ad97e5c0468bfaba3c3fd76e8307efda3abcd76217ac36250a5b464a"
    }
+  },
+  {
+   "id": "D-2026-10-15-cascade-screening-axes-plan",
+   "schema_version": 2,
+   "kind": "policy",
+   "scope": "cascade.dopant_screening.axes_plan",
+   "slot": "cascade_screening_axes_plan",
+   "applies_to": {
+    "systems": [
+     "lpscl_dopant_designs"
+    ],
+    "tasks": [
+     "cascade_axes_plan",
+     "interface_decomposition_screening",
+     "hydrolysis_driving_force"
+    ],
+    "methods": [
+     "mp_grand_potential",
+     "mp_interfacial_reactivity",
+     "uma-s-1p1-omat"
+    ],
+    "use_cases": [
+     "internal"
+    ]
+   },
+   "title": "cascade 스크리닝 축 확장 계획 — D_rel 축 (v7 판독) 뒤, 첫 묶음 = NCM 계면 분해 산물 (전압별 + 부동태화) · 가수분해 구동력, 스크리닝 규모로 할 수 있는 계산은 다른 축에도",
+   "statement": "cascade D_rel v7 본 라운드 판독이 끝나면 스크리닝 규모 (MP 자료 · UMA) 로 할 수 있는 계산을 축마다 더한다. **첫 묶음** = ① NCM 과 닿은 채 충전될 때 전압별 분해 산물 · 구동력 · 산물의 전자 부동태화 (Nd CEI 카드의 세 질문을 91 개에) ② 가수분해 구동력 (H₂S · 열역학만). 다른 축 (음극 쪽 환원 · 열역학 녹는 에너지와 별도 상 E_hull · 기계 탄성 규약 · SE|양극 접착 · 전자 누설 · 반응 MD) 도 같은 원칙으로 후보를 둔다 (기록 파일 표). 원칙: 축마다 계산 전에 보고량 카드를 비준받고 첫 줄에 관점 (도핑 격자 / 별도 상) 을 선언한다 · 91 개에서 축 사이 상관을 보고 겹치면 하나만 · 축을 합치는 규칙은 결과 전에 새 결정 · MP · 문헌 · 우리 DFT 값을 한 표에 섞지 않는다 · CEI 트랙 도구는 재사용하되 그쪽 결과 · 판정은 가져오지 않는다. **이 결정은 계산을 승인하지 않는다** — 시작 시점과 D_rel 237 확장과의 순서는 판독 뒤 사용자와 정한다.",
+   "rationale": "사용자 10-15 (cascade 1저자) 발화 다섯 (기록 파일 '사용자_발화_2026_10_15') — 산화 시작 말고도 산화 안정성 수치 · 대기 안정성 · Nd 처럼 NCM 계면 분해 산물 스크리닝 · '원장에 기록해놨다가 D_rel 축 끝나고 같이 진행' · '스크리닝으로 할 수 있는 계산들이면 다른 축에서도'. 같은 날 cascade 를 다축으로 정했고 (D-2026-10-15-cascade-objective-scope), 1단계 점수에는 수송 · 전자전도 · 대기 안정성 항이 없었다 (09-09 문헌 비교 리뷰). 첫 묶음 둘은 MP 자료 계산이라 싸고 도구가 이미 있다.",
+   "decision_state": "active",
+   "record_kind": "prospective",
+   "results_seen": false,
+   "record": "db/properties/cascade_screening_axes_plan_2026_10_15.json",
+   "card": null,
+   "evidence": [
+    "db/properties/cathode_cei_decomposition_estimand_2026_09_16.json (틀)",
+    "tools/oxidation/interface_reactivity_v2.py",
+    "tools/cascade/stability_axes.py (T9 · T10 · T11)",
+    "db/properties/cascade_air_axis_lit_vs_tier_v2.csv (문헌 대조)",
+    "kb/reviews/litdb_dopant_sota_2026_09_09.md (빠진 항)"
+   ],
+   "method_ref": "— (계획 · 계산 규약은 축마다 카드에서)",
+   "supersedes": [],
+   "depends_on": [
+    "D-2026-10-15-cascade-objective-scope"
+   ],
+   "reopen_criteria": "축 목록 · 첫 묶음을 바꾸려면 새 결정 · 각 축의 계산 규약 · 게이트는 그 축의 카드에서 정한다.",
+   "enforcement": "새 축 계산은 그 축의 보고량 카드가 active 가 되기 전에 돌리지 않는다 · 관점 (도핑 격자 / 별도 상) 선언이 없는 카드는 비준하지 않는다 · 축을 합치는 규칙이 active 가 되기 전에는 새 축으로 순위를 내지 않는다.",
+   "proposed_by": "claude-session-2026-10-15 (friendly)",
+   "status": "active",
+   "status_history": [
+    {
+     "at": "2026-10-15",
+     "state": "proposed",
+     "by": "agent",
+     "note": "사용자 질문 셋 (산화 안정성 수치 · 대기 안정성 · NCM 계면 분해 산물) 에 답하며 후보 · 첫 묶음 (NCM 분해 산물 + 가수분해 구동력) · 원칙을 권고."
+    },
+    {
+     "at": "2026-10-15",
+     "state": "active",
+     "by": "사용자 (cascade 1저자)",
+     "note": "비준 — 'ㅇㅇ 관련해서 원장에 기록해놨다가 나중에 cascade D_rel 축 끝나고 나면 같이 진행해보자' · 범위 확장 '이런식으로 우리가 screening으로 할 수 있는 계산들이면 다른 축에서도 추가를 하자'. 시작 = v7 판독 뒤 사용자와 · 계산 승인 아님."
+    }
+   ],
+   "ratification": {
+    "state": "ratified",
+    "role": "scientific_owner",
+    "actor_id": "yonghoon7153@gmail.com",
+    "timestamp": "2026-10-15T11:38:40Z",
+    "commit": "f5594f803aac37a10f03ffc28e02cebffda6f6fc",
+    "⚠_digest_의_뜻": "`ratification` 을 뺀 결정 내용의 sha256 이다.",
+    "근거_발화": "사용자 10-15 (이 세션): 권고 '첫 묶음 = A (NCM 분해 산물) + C 의 가수분해 구동력' 에 'ㅇㅇ 관련해서 원장에 기록해놨다가 나중에 cascade D_rel 축 끝나고 나면 같이 진행해보자' → 이어서 '이런식으로 우리가 screening으로 할 수 있는 계산들이면 다른 축에서도 추가를 하자'",
+    "decision_digest": "sha256:5d8ffae621dd261ef822aa7b1550e91dde0aa955977d014dbaa56a6b2bbd20af"
+   }
   }
  ]
 }

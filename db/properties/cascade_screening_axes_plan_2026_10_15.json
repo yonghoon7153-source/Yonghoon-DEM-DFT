@@ -1,0 +1,101 @@
+{
+  "schema": "campaign_plan/v1",
+  "record_kind": "prospective",
+  "date": "2026-10-15",
+  "status": "ratified — 사용자 (cascade 1저자) 2026-10-15 · 계산 승인 아님 (축마다 보고량 카드 비준 뒤 시작)",
+  "results_seen": false,
+  "results_seen_note": "새 축의 결과는 없다. 1단계에 닫힌계 계면 반응 표 (산물 통계 보류) · 10-14 바닥상태 상 산물 표 · 8월 가수분해 구동력 47 종이 있지만 이 계획의 판정에 쓰이지 않았다.",
+  "제목": "cascade 스크리닝 축 확장 계획 — D_rel 축 뒤에 산화 · 대기 안정성부터, 스크리닝 규모로 할 수 있는 계산은 다른 축에도",
+  "사용자_발화_2026_10_15": [
+    "oxidation onset potential 말고도 이런 산화안정성의 term 이 되는 수치 같은 것도 나중에 cascasde에 추가 가능한가?",
+    "대기 안정성 요런 느낌도",
+    "아님 우리 Nd 했던것처럼 NCM과 같이 있을때 분해산물들을 스크리닝할 수 도 있겠지?",
+    "ㅇㅇ 관련해서 원장에 기록해놨다가 나중에 cascade D_rel 축 끝나고 나면 같이 진행해보자",
+    "이런식으로 우리가 screening으로 할 수 있는 계산들이면 다른 축에서도 추가를 하자"
+  ],
+  "근거_결정": "D-2026-10-15-cascade-objective-scope — cascade 는 다축 (전기화학 · 기계 안정성을 올리면서 Li 수송을 늦추지 않기) · D_rel 은 한 축 · 축을 합치는 규칙은 결과 전에 따로",
+  "시작_조건": {
+    "언제": "cascade D_rel v7 본 라운드 판독 (40 런 · 미리 정한 판정으로 한 번 분석 · 10월 말 예정) 이 끝난 뒤 — 그때 에이전트가 이 계획을 꺼내 사용자와 시작한다",
+    "그때_정할_것": "D_rel 을 237 설계로 넓히는 일과 병행할지 · 그 뒤로 미룰지 · 첫 묶음 두 카드의 순서"
+  },
+  "첫_묶음": {
+    "①_NCM_계면_분해_산물": {
+      "무엇": "도핑한 전해질이 NCM 과 닿은 채 충전될 때 전압마다 (ⓐ) 어떤 상으로 분해되나 (ⓑ) 구동력 (meV/원자) (ⓒ) 그 산물이 전자를 막나 (밴드갭 → 전자 부동태화)",
+      "틀": "Nd CEI 카드 db/properties/cathode_cei_decomposition_estimand_2026_09_16.json 의 세 질문 그대로 — CEI 트랙 (1저자 = 실험 쪽) 이라 도구 · 카드 틀만 빌리고 그쪽 결과 · 판정은 가져오지 않는다",
+      "도구": "tools/oxidation/interface_reactivity_v2.py --voltages (열린계 · Richards/Ong 2016) · Nd 때 쓴 산물 분석 도구",
+      "1단계와의_관계": "1단계 91 × (LCO · LNO · LMO · NCM811 · Li · 탄소) 반응 에너지 표는 닫힌계였고 점수에 안 들어갔고 산물 통계는 판정 기준 전이라 보류 — 이 축이 그 표의 상위판",
+      "영어": "voltage-resolved interfacial decomposition products with NCM · electronic passivation by the products"
+    },
+    "②_가수분해_구동력": {
+      "무엇": "전해질 + 물 → H₂S 가 나오는 반응 에너지 (열역학 구동력 · 속도 아님 — 'H₂S 가 나올 수 있나' 까지만)",
+      "도구": "tools/cascade/stability_axes.py T11 (Lee 2024 식 · 계면 반응과 같은 계산 틀) — 8월 47 종 → 91 로 넓힌다",
+      "있는_자료": "HSAB 정성 등급 · Zhu 2020 (Angew. Chem.) 문헌 가수분해 자유에너지 대조표 db/properties/cascade_air_axis_lit_vs_tier_v2.csv (문헌값 · 우리 계산 아님)",
+      "영어": "air (moisture) stability · hydrolysis reaction energy (H₂S release)"
+    }
+  },
+  "다른_축_후보(스크리닝_규모)": [
+    {
+      "축": "전기화학 · 양극 쪽",
+      "후보": "작동 전압 (4.0–4.3 V) 에서의 분해 구동력 · 기계적으로 묶인 안정창",
+      "도구": "tools/oxidation/esw_grand_potential.py (고정 전압 읽기 플래그를 더해야 한다) · tools/oxidation/constrained_esw.py (comp1/modelc 판 → 도펀트로 확장 필요)",
+      "엔진": "MP (PBE/PBE+U)"
+    },
+    {
+      "축": "전기화학 · 음극 쪽",
+      "후보": "환원 한계 (12쪽에서 고친 정의) · Li 금속과의 계면 분해 산물 + 부동태화",
+      "도구": "tools/oxidation/esw_cascade_batch.py · tools/cascade/stability_axes.py T9 (상대 = 양극 만충·반충 · LPSCl · Li 음극 · LiNbO₃)",
+      "엔진": "MP"
+    },
+    {
+      "축": "열역학",
+      "후보": "녹는 에너지 (원소 기준을 맞춘 도핑 에너지 — 1단계 에너지 항의 기준 문제를 고친 것) · 별도 상의 E_hull (합성 가능성 · Lee 2024 의 50 meV/원자)",
+      "도구": "tools/cascade/dissolution_energy.py (카드 D-2026-10-14-cascade-dissolution-energy · proposed) · tools/cascade/stability_axes.py T10",
+      "엔진": "UMA + MP"
+    },
+    {
+      "축": "기계",
+      "후보": "탄성 — 배치 여러 개 평균으로 잡음을 줄이는 규약 (9쪽 감사의 1.1) · DFT 는 짧은 목록",
+      "도구": "1단계 탄성 단계 · DFT 탄성 (호스트 진행 중)",
+      "엔진": "UMA → DFT"
+    },
+    {
+      "축": "계면 접착",
+      "후보": "SE | 양극 접착일 (UMA+D3 스크리닝 → DFT 확인)",
+      "도구": "tools/wad/ (W_ad 트랙 기법 재사용 · 도펀트마다 계면을 새로 만들어 GPU 시간이 든다)",
+      "엔진": "UMA+D3 → DFT"
+    },
+    {
+      "축": "수송",
+      "후보": "D_rel (지금 축) · BVSE Li 자리 지형 (구조 지표 · 확산계수 아님)",
+      "도구": "기존 cascade 단계",
+      "엔진": "UMA"
+    },
+    {
+      "축": "전자 누설",
+      "후보": "도핑 격자의 밴드갭 · 전자 전도 대리",
+      "도구": "DFT 고정 점유 nscf (밴드갭 규약 그대로)",
+      "엔진": "DFT — 짧은 목록만"
+    },
+    {
+      "축": "대기 · 반응 동역학",
+      "후보": "가수분해 반응 MD (H₂S 실제 생성)",
+      "도구": "tools/oxidation/hydrolysis_speciation.py",
+      "엔진": "MLIP MD — 비싸고 MLIP 의 물 반응 검증이 따로 필요"
+    }
+  ],
+  "넣는_원칙": [
+    "축마다 계산 전에 보고량 카드를 쓰고 비준받는다 (Nd CEI 카드 틀: 무엇 · 어떻게 · 잘 정의되나 · 결과 전 게이트 · 말할 것/안 할 것)",
+    "카드 첫 줄에 관점을 선언한다 — 도핑 격자 (LPSCl 에 넣은 조성) 인지 별도 상 (전구체 · 코팅 화합물 자체) 인지. 09-09 회신 BJ 에서 별도 상 표를 도핑 데이터로 읽어 NO-GO 를 받았다 (stability_axes.py T10 경고)",
+    "1단계 셀은 네 화학식 단위 중 하나를 치환한 x = 0.25 조성이다 — 상평형도로 내는 값은 그 조성의 값이고 낮은 도핑에서 산물이 다를 수 있다 (카드에 선언)",
+    "91 개에서 축 사이 상관을 보고 겹치는 축은 하나만 남긴다 (산화 시작 · 창 폭 · 분해 구동력은 얽혀 있다)",
+    "축을 합치는 규칙 (가중 · 우선순위 · Pareto) 은 결과 전에 새 결정 (D-2026-10-15-cascade-objective-scope)",
+    "MP 값 · 문헌값 · 우리 DFT 값을 한 표에 섞지 않는다 · MP 밴드갭 (PBE) 은 작게 나온다 — 부동태화 문턱에 감안",
+    "스크리닝 규모 = MP 자료 (CPU) 또는 UMA (GPU 시간) · DFT 는 짧은 목록의 확인 단계"
+  ],
+  "⛔_이_기록이_하지_않는_것": [
+    "계산을 승인하지 않는다 — 축마다 카드 비준 뒤에 시작한다",
+    "지금 GPU · CPU 예산을 쓰지 않는다 (v7 본 라운드 · li2s · 탄성이 돌고 있다)",
+    "1단계 점수나 순위를 되살리지 않는다 — 새 축도 축을 합치는 규칙이 정해지기 전에는 순위를 내지 않는다"
+  ],
+  "결정": "D-2026-10-15-cascade-screening-axes-plan"
+}
