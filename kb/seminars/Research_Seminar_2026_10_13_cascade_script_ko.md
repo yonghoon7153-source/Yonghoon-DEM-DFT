@@ -243,6 +243,7 @@ evidenceScope: multi-source-mixed
 > 바꾼 말: ledger → results and inputs · concentration labels → nominal concentrations · volume filter → volume-change filter · within a precursor → across configurations · merged → combined into a single score · decisions recorded → Stage-2 protocol · readout → observable · roster of designs → candidate compositions · parent sites → host-lattice site assignment · ranking margin → threshold δ for claiming a difference · approved → established · run scope → scope of the Stage-2 simulations. 'Wyckoff' 는 안 썼다 — 부모 자리 지도가 Li 24g/48h 를 못 가른다 (`cascade_s1_contract_amendment_2026_09_12.json` §3).
 > ✎ 10-15 밤 사용자 *'audit of stage 1 괜찮아?'* → 권고 (화면은 사용자가 직접 고친다 · 결정 대기): ■ 날짜 없이 *'Re-examination of Stage 1'* (또는 *'Re-examining Stage 1'* · 사용자 *'september를 왜 넣냐고'* — 날짜는 말로 한다) · 왼쪽 제목 *'Findings'* · 첫 불렛 *'All results and inputs were re-checked.'* — 'audit' 은 틀린 말은 아니지만 영어에서 회계 · 규제처럼 제3자가 하는 공식 검사로 들리고, 'September audit' 은 우리 내부 행사 이름처럼 읽힌다. 말에서는 '감사' 를 '점검' 으로 바꿨다 (화면 결정과 무관) — '1단계를 감사했습니다' 는 '고마웠습니다' 로도 들리고, 발표 끝말이 '감사합니다' 다.
 > ⚠ **10-15 밤 정정 — 237 은 조성 수가 아니다** (사용자 *'237 candidate compositions 설명해줘'* 에서 원표를 다시 셈): 1단계 본 배치 3,615 행 (90 전구체) 을 조성 44 열 + cation_site + anion_site + charge_compensation 으로 묶은 수다 (묶음마다 15–30 행 · `cascade_design_contract_2026_08_28.json` 그룹키). **조성만으로는 147** · Li 24g/48h 를 합치면 (S1 계약의 'Li 전체') **215**. 비준 기록 `cascade_design_roster_amendment_2026_09_12.json` 의 '237 = 조성으로 세기' 는 키를 줄여 적은 것이다 (봉인 · 안 고침 · 정정 기록은 세미나 뒤 사용자 결정). 화면 권고 *'237 candidate composition–site combinations'* · 대표 줄 *'One median-energy configuration per candidate'*. 10-15 교체본의 'candidate compositions' 는 내가 틀림을 키운 말이다.
+> ✎ 10-15 밤 사용자 *'median 으로 해도 물질 전체를 대표하나?'* · δ 설명에 *'도저히 무슨 말인지 모르겠다 · 문장도 쉽게'* → 빨간 줄 권고 *'Minimum D_rel difference to call two candidates different, not yet set'* (δ 를 남기려면 'difference (δ) to call …') · 대표 줄 말에 '구조 하나가 물질 전체를 대표하지 않는다 · 차이는 배치 여러 개의 흔들림으로' 를 붙임 (`cascade_d_rel_amendment_2026_09_12.json` §2 물리 · S3 개정 §2-3 · §2-6).
 > ⏳ 같은 옛 말이 사용자 15·16쪽 (슬림 14·15 · ranking margin · readout · 237-design roster · run scope) 과 아래 §14 · §15 · '꼭 지킬 것' 에 남아 있다 — 그 쪽에 갈 때 같은 말로 맞춘다.
 
 9월에 1단계의 결과와 입력을 하나씩 다시 점검했습니다.
@@ -262,9 +263,9 @@ evidenceScope: multi-source-mixed
 - 후보는 237 개입니다. 같은 조성이라도 도펀트가 들어가는 자리가 다르면 따로 셌고, 파일 이름이 아니라 실제 조성과 자리로 셌습니다.
 - 자리 배정은 치환 전에 호스트 격자에서 정해 두고, 음이온과 Li 공공 · 침입까지 모두 넣어 전하 수지를 맞춥니다.
 > ✎ 10-15: 옛 '공공까지 포함해' 는 결함의 핵심이 빠졌다 — 옛 생성기는 **음이온 치환의 전하를 안 셌다** (NdCl₃ 1 단위: 양이온만 −2 · 음이온까지 +1 → 보상 3 어긋남 · `cascade_s1_contract_amendment_2026_09_12.json` b_보상_수지).
-- 대표 구조는 치환에너지가 중앙값인 구성입니다.
+- 대표 구조는 치환에너지가 중앙값인 구성입니다. 다만 이 구조 하나가 물질 전체를 대표한다고 보지는 않습니다. 차이를 말할 때는 배치 여러 개를 돌려서 흔들림까지 봅니다.
 
-**[가리킴: 빨간 줄]** 이 넷은 9월 12일에 확정했습니다. 빨간 줄의 문턱 δ, 즉 D_rel 이 얼마나 차이 나야 두 조성이 다르다고 할지는 9월 19일에 제안만 했고, 아직 정하지 않았습니다.
+**[가리킴: 빨간 줄]** 이 넷은 9월 12일에 확정했습니다. 빨간 줄은 두 후보의 D_rel 이 얼마나 달라야 '다르다' 고 할지, 그 기준선입니다. 9월 19일에 제안만 했고, 아직 정하지 않았습니다. 결과를 보기 전에 정합니다.
 > ✎ 10-15: ① 옛 '주 보고량은 하나입니다' 는 캠페인 전체가 D_rel 하나를 보는 것처럼 들렸다 — `D-2026-10-15-cascade-objective-scope` (D_rel = 2단계 주 보고량 · 수송 축 · 설계 선택은 D_rel 하나로 정하지 않는다).
 > ② 옛 '이 넷은 비준을 마쳤고, 마지막 순위 여유 … 더 낫다고' — δ 는 9-12 결정이 아니라 9-19 S3 개정의 제안 (`cascade_s3_protocol_amendment_2026_09_19.json` · 비준 전 · δ 자리 비어 있음) · δ 는 두 설계의 **D_rel 차이를 주장하는 조건**이지 설계 선택 규칙이 아니라서 '더 낫다' → '다르다'.
 
