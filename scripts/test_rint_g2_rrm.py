@@ -21,6 +21,12 @@
   RRM-4  r → 0 = OFF 아님 (원판 밖 절단이 남는다)
   RRM-5  생산 격리 (step3_sigma 가 이 모듈을 모른다 · 함수 객체 그대로)
   RRM-6  혼합 종류 (AM_S|AM_P · 반경 다름)
+  ── RIMP-04 · 06 (Codex 10-14 · 판정문 §5 · §7 · 수정 계획 Q3 (가)) ──
+  N9b    복합 변이 — 원판 밖 cut 행 삭제 + 기록 resolve_k 4→5 · + r 표 비움 · film rface NaN (cut 유지) · 음수 rface · k 만 바꿈 ·
+         RRM 기록 없음 → rrm_check 위반 · rrm_require · rrm_solve 거부 (메타데이터로 검사 집합을 비울 수 없다) · 우회 σ 기록 (Codex 값) ·
+         양성: 정상 계획 · 등록된 r = 0 계획 = 위반 없음
+  RRM-7  표준 요약 = 실제 RRM 행 — film 67 · cut 85 · 순수 막 G (행 합 = 접점 기록) · CNC 값 = 별도 이름공간 (`iface_cnc_comparison`) ·
+         반쪽 탄소 변형 (Codex: 행 37 · 42 · G 2.7535056597827278e−6 S ↔ CNC 2.612935414333538e−6 / 5.027420037705035e−6)
 """
 import argparse
 import ast
@@ -396,6 +402,114 @@ def t_mixed():
     chk('RRM-6 거부 없음 · 종류 키 AM_S|AM_P 의 r · 행 = 면 가중 규칙 · 원장 검사 통과',
         P['rejections'] == [] and ok and set(R_) == set(wmap) and RRM.rrm_check(P, L) == []
         and str(L['contacts']['type_key'][0]) == 'AM_S|AM_P', repr(codes(P)))
+
+
+# ═════════════════════════ N9b (RIMP-04) ═════════════════════════
+def _deep(P):
+    """계획 깊은 사본 — 원장 (P['ledger']) 은 공유 (읽기만 · 변이는 행 · 기록에만)."""
+    import copy
+    Q = {k: (v if k == 'ledger' else copy.deepcopy(v)) for k, v in P.items()}
+    return Q
+
+
+@case('N9b 복합 변이 — 메타데이터 · NaN (RIMP-04 · Codex 10-14 판정문 §5)')
+def t_n9b():
+    print('N9b — 원판 밖 cut 85 행 삭제 + 기록 변조 · film rface NaN — 의미 검사가 메타데이터를 믿지 않는다 (판정문 §5 표)')
+    sid, pid, L = bed(A_C, A_R, A_T, A_LO, A_HI, A_VOX, A_BR)
+    P = RRM.rrm_plan(L, RT, resolve_k=K_FIX)
+    kw = dict(z_bot_um=0.0, z_top_um=A_HI[2], return_field=True)
+    chk('N9b 픽스처 = Codex: film 67 · cut 85 · 정상 계획 위반 없음', P['n_film_rows'] == 67 and P['n_cut_rows'] == 85
+        and RRM.rrm_check(P, L) == [], f"{P['n_film_rows']} {P['n_cut_rows']}")
+    M = with_rows(P, lambda ax, lin, cut: not cut)                                   # Codex: cut 85 행만 삭제 (지문 다시 만듦)
+    muts = {}
+    q = _deep(M); q['record']['iface_rrm']['resolve_k'] = 5.0
+    muts['cut 삭제 + 기록 resolve_k 4→5'] = q
+    q = _deep(M); q['record']['iface_r_type_ohm_cm2'] = {}
+    muts['cut 삭제 + 기록 r 표 비움'] = q
+    q = _deep(P)
+    for ax in q['axes']:
+        ax['rface'][~ax['cut']] = np.nan
+    q['fp_rows'] = S3._iface_rows_fp(q['axes'])
+    muts['cut 유지 + film 67 행 rface NaN'] = q
+    q = _deep(P)
+    for ax in q['axes']:
+        ax['rface'][~ax['cut']] = -ax['rface'][~ax['cut']]
+    q['fp_rows'] = S3._iface_rows_fp(q['axes'])
+    muts['film rface 음수'] = q
+    q = _deep(P); q['record']['iface_rrm']['resolve_k'] = 5.0
+    muts['행 그대로 + 기록 resolve_k 만 4→5 (재계산하면 미해상 거부)'] = q
+    q = _deep(P); q['record'].pop('iface_rrm')
+    muts['RRM 기록 (iface_rrm) 삭제'] = q
+    for tag, Q in muts.items():
+        V = RRM.rrm_check(Q, L)
+        with direct_solver():
+            refused = raises(lambda Q=Q: quiet(RRM.rrm_solve, sid, te(), A_VOX, Q, L, **kw))
+        chk(f'N9b {tag} → rrm_check 위반 > 0 · rrm_require 거부 · rrm_solve 거부 (고치기 전 = 위반 없음 · 풀이)',
+            len(V) > 0 and raises(lambda Q=Q: RRM.rrm_require(Q, L)) and refused, repr([x['code'] for x in V]))
+    #  우회 크기 (기록) — 일반 솔버는 RRM 을 모른다 (설계 · 공개된 범위) · Codex 값 재현
+    with direct_solver():
+        s_k = quiet(S3.solve_sigma_z, sid, te(), A_VOX, iface=muts['cut 삭제 + 기록 resolve_k 4→5'], **kw)['sigma_eff']
+        s_n = quiet(S3.solve_sigma_z, sid, te(), A_VOX, iface=muts['cut 유지 + film 67 행 rface NaN'], **kw)
+        s_0 = quiet(RRM.rrm_solve, sid, te(), A_VOX, P, L, **kw)['sigma_eff']
+    print(f'    기록 (픽스처 · 재료값 아님): σ_RRM {s_0!r} · 우회 (cut 삭제) {s_k!r} · NaN rface {s_n["sigma_eff"]!r} S/cm · '
+          f'NaN 해 unconverged {s_n["unconverged"]} · 잔차 {s_n["resid"]:.3e}')
+    chk('N9b 기록: 막아야 할 우회 크기 = Codex 값 (σ_RRM 0.003334457143882423 · 우회 0.0040840140889134725 · NaN 0.0037299595666211234 · 상대 1e−9) '
+        '— 작은 잔차가 틀린 조립을 구제하지 않는다 (NaN 해 unconverged False)',
+        abs(s_0 / 0.003334457143882423 - 1) < 1e-9 and abs(s_k / 0.0040840140889134725 - 1) < 1e-9
+        and abs(s_n['sigma_eff'] / 0.0037299595666211234 - 1) < 1e-9 and s_n['unconverged'] is False, f'{s_0} {s_k} {s_n["sigma_eff"]}')
+    #  양성 — 등록된 r = 0 경로 (막 행 rface 0 · 절단 남음) 는 허용
+    P0 = RRM.rrm_plan(L, {'AM_S|AM_S': 0.0}, resolve_k=K_FIX)
+    chk('N9b 양성: 등록된 r = 0 계획 (막 행 rface 0) = 위반 없음 · 정상 계획 = 위반 없음',
+        RRM.rrm_check(P0, L) == [] and RRM.rrm_check(P, L) == [], repr([x['code'] for x in RRM.rrm_check(P0, L)]))
+
+
+# ═════════════════════════ RRM-7 (RIMP-06) ═════════════════════════
+@case('RRM-7 표준 요약 = 실제 RRM 행 (RIMP-06 · Codex 10-14 판정문 §7)')
+def t_rrm_summary():
+    print('RRM-7 — RRM 계획 · 풀이 기록의 표준 원장 · 탄소 법칙 · 균일 r_face 가 CNC 값으로 남지 않는다 (CNC = 별도 이름공간)')
+    sid, pid, L = bed(A_C, A_R, A_T, A_LO, A_HI, A_VOX, A_BR)
+    P = RRM.rrm_plan(L, RT, resolve_k=K_FIX)
+    rec = P['record']
+    cl = rec.get('iface_contact_ledger') or {}
+    G = float(S3.iface_plan_film_G_S(P).sum())
+    c0 = (rec.get('iface_rrm') or {}).get('contacts', [{}])[0]
+    chk('RRM-7 표준 원장 행 수 = 실제 RRM 행: film_faces.active 67 = n_film_rows · cut_faces 85 = n_cut_rows (고치기 전 = 152 · 0)',
+        (cl.get('film_faces') or {}).get('active') == P['n_film_rows'] == 67 and cl.get('cut_faces') == P['n_cut_rows'] == 85,
+        repr({k: cl.get(k) for k in ('film_faces', 'cut_faces')}))
+    gt = cl.get('film_G_S_total') or {}
+    chk('RRM-7 표준 순수 막 G = 행 합 ΣG (iface_plan_film_G_S) = iface_rrm.contacts[0].film_G_S (상대 1e−12) · 키 = rrm (CNC 판 이름 아님)',
+        set(gt) == {'rrm'} and abs(gt['rrm'] / G - 1) < 1e-12 and abs(c0.get('film_G_S', 0) / G - 1) < 1e-12, repr(gt))
+    cnc = rec.get('iface_cnc_comparison') or {}
+    chk('RRM-7 탄소 법칙 표지: iface_carbon_cover ≠ CNC 이름 (RRM 은 탄소 가림 법칙 미사용) · CNC 값 = iface_cnc_comparison (active 152 · cut 0 · 표지)',
+        rec.get('iface_carbon_cover') not in ('remove_area', 'renormalize')
+        and ((cnc.get('iface_contact_ledger') or {}).get('film_faces') or {}).get('active') == 152
+        and (cnc.get('iface_contact_ledger') or {}).get('cut_faces') == 0 and 'CNC' in str(cnc.get('meaning', '')),
+        repr(rec.get('iface_carbon_cover')) + repr(list(cnc)))
+    chk('RRM-7 계획 최상위 균일 rface_c (CNC) 가 RRM 계획의 값으로 남지 않는다 — CNC 비교값 안으로',
+        P.get('rface_c') is None and 'rface_c' in (P.get('cnc_comparison') or {}), repr(type(P.get('rface_c'))))
+    #  반쪽 탄소 변형 (Codex `geometry()` carbon_half — AM 셀의 왼쪽 절반을 탄소 sid 3 으로)
+    sid0, _, _L0 = bed(A_C, A_R, A_T, A_LO, A_HI, 0.1, 0.7)
+    csid = sid0.copy()
+    csid[:10, :, :][np.isin(csid[:10, :, :], (1, 2))] = 3
+    Lc = S3.am_iface_ledger(A_C, A_R, A_T, csid, sid0, A_LO, 0.1, delta_bound_um=0.0, bridge_um=0.7)
+    Pc = RRM.rrm_plan(Lc, RT, resolve_k=K_FIX)
+    Gc = float(S3.iface_plan_film_G_S(Pc).sum())
+    clc = Pc['record'].get('iface_contact_ledger') or {}
+    cncc = (Pc['record'].get('iface_cnc_comparison') or {}).get('iface_contact_ledger') or {}
+    chk('RRM-7 반쪽 탄소: 행 37 · 42 · RRM ΣG 2.7535056597827278e−6 S (Codex · 1e−12) = 표준 film_G_S_total.rrm · '
+        'CNC 비교값 remove_area 2.612935414333538e−6 · renormalize 5.027420037705035e−6 (비교 이름공간에만)',
+        Pc['n_film_rows'] == 37 and Pc['n_cut_rows'] == 42 and abs(Gc / 2.7535056597827278e-6 - 1) < 1e-12
+        and abs((clc.get('film_G_S_total') or {}).get('rrm', 0) / Gc - 1) < 1e-12
+        and abs((cncc.get('film_G_S_total') or {}).get('remove_area', 0) / 2.612935414333538e-6 - 1) < 1e-12
+        and abs((cncc.get('film_G_S_total') or {}).get('renormalize', 0) / 5.027420037705035e-6 - 1) < 1e-12
+        and RRM.rrm_check(Pc, Lc) == [], f"{Pc['n_film_rows']} {Pc['n_cut_rows']} {Gc!r} {clc.get('film_G_S_total')}")
+    with direct_solver():
+        res = quiet(RRM.rrm_solve, sid, te(), A_VOX, P, L, z_bot_um=0.0, z_top_um=A_HI[2], return_field=True)
+    rcl = res['iface'].get('iface_contact_ledger') or {}
+    chk('RRM-7 풀이 기록: 표준 원장 = RRM 행 (summary_source 표지 · film_faces.active 67) · 쓴 막 행 ≤ 67 · CNC 비교값 = 따로 실림',
+        'rrm' in str(rcl.get('summary_source', '')) and (rcl.get('film_faces') or {}).get('active') == 67
+        and 0 < rcl.get('n_film_rows_used', -1) <= 67 and 'iface_cnc_comparison' in res['iface'],
+        repr({k: rcl.get(k) for k in ('summary_source', 'n_film_rows_used')}))
 
 
 def main():

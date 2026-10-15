@@ -19,6 +19,8 @@
   E4′       T0-3′ class_sensitivity (에너지 · 중심 로그 FD · h 둘 · 혼합 σ · 판) · T0-3m e4_printed_mutant · T0-3i multiclass_integral
   거부      N2 · N3 · N4 · N6 · N7 · 채널 · 거부 계획 → 솔브 거부
   원장      T0-6b ledger_integrity (변조 · 끼워 넣기 거부) · E2 진단이 원장을 읽는다 (AST) · 기록 필드 · PROTOCOL_FIELDS 밖
+  RIMP-05   T0-7 plan_vox_binding (Codex 10-14 판정문 §6 · 수정 계획 Q4 (가)) — 같은 sid · 같은 계획 · 다른 솔버 vox = 조립 전 거부 ·
+            정상 재생성 계획 (중심 · 반경 · h × 2) = 통과 · σ · A · G (Codex 값) · 관문 vox 인자 (iface 끔 = 비트 같음은 T0-5′)
   보류      T2 · T3 검증 · D12-V · 직접 R_j 간선 (②) — 이 묶음 밖 (PENDING 줄로 표시) · N9 · RRM = test_rint_g2_rrm.py ·
             N1 · N5′ · T4-2 = test_rint_g2_join.py · T4-1 · T4-3 = test_rint_t4_census.py · test_rint_t43_order.py ·
             T2 개발 = test_rint_t2_dev.py (10-13)
@@ -842,6 +844,58 @@ def t_record_fields():
     chk('a_lt_h: h 0.4 > a → 수 2 · 막 전류 몫 1.0 · h 0.2 → 몫 0.0',
         a4['n'] == 2 and abs(a4['film_current_share'] - 1.0) < 1e-12
         and cl['a_lt_h']['film_current_share'] == 0.0, f"{a4} {cl['a_lt_h']}")
+
+
+@case('T0-7 plan_vox_binding (RIMP-05 · Codex 10-14 판정문 §6)')
+def t_plan_vox_binding():
+    print('T0-7 plan_vox_binding — R 1 µm AM_S 둘 (z 1 · 2.98) · sid 10×10×20 · h 0.2 계획 · r 1e−3 (Codex owner_vox_mismatch 픽스처)')
+    from scipy.sparse.linalg import spsolve
+    h = 0.2
+    c = np.array([[1., 1., 1.], [1., 1., 2.98]]); r = np.ones(2); t = np.array([2, 2])
+    sid, _ = quiet(S3.rasterize, c, r, t, None, None, (0., 0., 0.), (2., 2., 4.), h, bridge_um=1.2 * h)
+
+    def plan_for(cc, rr, hh):
+        L_ = S3.am_iface_ledger(cc, rr, t, sid, sid, (0., 0., 0.), hh, delta_bound_um=0., bridge_um=1.2 * hh)
+        return S3.am_iface_plan(L_, {'AM_S|AM_S': 1e-3})
+    P = plan_for(c, r, h)
+    Ps = plan_for(2.0 * c, 2.0 * r, 2.0 * h)
+    cl, cls_ = P['record']['iface_contact_ledger'], Ps['record']['iface_contact_ledger']
+    chk('T0-7 픽스처 = Codex: sid 10×10×20 · 막 행 16 · A 0.06251769380643697 µm² · G 6.251769380643698e−7 S (상대 1e−12)',
+        sid.shape == (10, 10, 20) and P['n_film_rows'] == 16 and abs(cl['A_film_sum_um2'] / 0.06251769380643697 - 1) < 1e-12
+        and abs(cl['film_G_S_total']['remove_area'] / 6.251769380643698e-7 - 1) < 1e-12, f"{sid.shape} {P['n_film_rows']} {cl['A_film_sum_um2']!r}")
+    calls = [0]
+    old = S3._solve_cg
+
+    def spy(L_, b_):
+        calls[0] += 1
+        return spsolve(L_.tocsc(), b_), 0
+    S3._solve_cg = spy
+    try:
+        kw = lambda hh: dict(return_field=True, z_bot_um=0.0, z_top_um=20 * hh)      # noqa: E731
+        bad = raises(lambda: quiet(S3.solve_sigma_z, sid, te(), 2.0 * h, iface=P, **kw(2.0 * h)))
+        n_bad = calls[0]
+        chk('T0-7 음성: 같은 sid · 같은 계획 (h 0.2) 을 솔버 vox 0.4 로 → 조립 전 거부 (CG 호출 0 · 고치기 전 = 풀고 옛 A 를 증서로 붙임)',
+            bad and n_bad == 0, f'raised {bad} · CG 호출 {n_bad}')
+        ok = quiet(S3.solve_sigma_z, sid, te(), h, iface=P, **kw(h))
+        res = quiet(S3.solve_sigma_z, sid, te(), 2.0 * h, iface=Ps, **kw(2.0 * h))
+    finally:
+        S3._solve_cg = old
+    rc = res['iface']['iface_contact_ledger']
+    chk('T0-7 양성: 정상 재생성 계획 (중심 · 반경 · h × 2) · 솔버 vox 0.4 → 통과 · σ 0.0021331551689598217 S/cm (Codex · 상대 1e−9) · '
+        '기록 vox 0.4 · A · G = 원 계획의 4 배 (상대 1e−12)',
+        abs(res['sigma_eff'] / 0.0021331551689598217 - 1) < 1e-9 and rc['vox_um'] == 0.4
+        and abs(cls_['A_film_sum_um2'] / (4 * cl['A_film_sum_um2']) - 1) < 1e-12
+        and abs(cls_['film_G_S_total']['remove_area'] / (4 * cl['film_G_S_total']['remove_area']) - 1) < 1e-12,
+        f"σ {res['sigma_eff']!r} · vox {rc['vox_um']}")
+    chk('T0-7 양성: 같은 vox (계획 0.2 = 솔버 0.2) → 통과 · 막 행 사용 > 0', ok['sigma_eff'] > 0
+        and ok['iface']['iface_contact_ledger']['n_film_rows_used'] > 0, repr(ok['sigma_eff']))
+    chk('T0-7 관문 함수 vox 인자: 같음 → 통과 · 다름 · 0 · 음수 · NaN · inf → 거부 · None = 검사 안 함 (직접 호출 호환)',
+        S3.iface_require_quantitative(P, sid, vox=h) is P and S3.iface_require_quantitative(P, sid) is P
+        and all(raises(lambda v=v: S3.iface_require_quantitative(P, sid, vox=v))
+                for v in (2.0 * h, 0.0, -h, float('nan'), float('inf'))))
+    Pt = dict(P); Pt['vox'] = 2.0 * h
+    chk('T0-7 계획 vox ≠ 계획 원장 vox (계획 사전 vox 만 바꿈) → 거부 (계획 내부 일관)',
+        raises(lambda: S3.iface_require_quantitative(Pt, sid, vox=2.0 * h)))
 
 
 @case('PENDING (이 묶음 밖)')

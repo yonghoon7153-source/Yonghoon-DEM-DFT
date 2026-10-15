@@ -23,6 +23,13 @@ docs/data/case15_corner_20261001/ (atom · contact 1,710,000 + case15_am_scaffol
   N1  dilate_z ≠ 1 → 거부 · 형 지도 없음 → TypeError
   J4  계획 기록 — iface_join · iface_join_status · iface_geom_reuse (요청할 때만) · 실패 · 다른 입자 · 변조된 조인 → 정량 거부 ·
       join=None 은 σ · 행 · 다른 기록 비트 같음 · 원장 ↔ DEM 접촉 대조 (보고만)
+  ── RIMP-02 · 03 (Codex 10-14 · 판정문 §3 · §4 · 수정 계획 Q2 (가) — 새 소비자에서 엄격 · 봉인 helper 무변경) ──
+  J5  입구 검사 — real_14 한 칸씩 (Codex 행 = 첫 AM–AM 행 · id 1 · 201): pos1.x · δ · A = NaN · A 음수 · A inf · 반경 ≤ 0 ·
+      기울어진 상자 (xy xz yz · 다른 tilt · 같은 tilt) · 상자 lo ≥ hi · step 2060000.9 · id · type · 머리 수 비정수 → 사유별 거부
+  J6  형식 — 6 자리 `%g` 생산 포맷만 (16 자리 균일 · +1 ppm · 끝 0 덧붙인 토큰 한 개 = 거부) · 정상 real_14 · case15 = g6
+  J7  미인증 면적 — `%g` 합성 근동심 쌍 (d 하한 ≤ 0) 의 면적 100 sim² · 참 면적 둘 다 PASS 아님 (area_uncertified) · 양성 합성 PASS
+  J8  소비 경로 — 합성 조인 → 원장 → 계획 (join=…) → 정량 관문: 변이마다 거부 · 양성 통과
+  J9  양성 유지 기록 — real_14 · case15 전 AM–AM 행 인증 (tested = 행 수) · 음수 면적 = AM–AM 밖 행만 (case15 AM_P–SE 2 행 · 인증 대상 밖)
 """
 import argparse
 import contextlib
@@ -398,6 +405,208 @@ def t_plan():
     Pt = S3.am_iface_plan(L, RT3, join=tm, **LAWS)
     chk('J4 만든 뒤 바뀐 조인 (지문 그대로) → join_record_tampered 거부', 'join_record_tampered' in codes(Pt), repr(codes(Pt)))
     chk('J4 조인이 아닌 것 → TypeError', raises(lambda: S3.am_iface_plan(L, RT3, join={'kind': 'x'}, **LAWS), (TypeError,)))
+
+
+# ═════════════════════════ RIMP-02 · 03 (Codex 10-14) ═════════════════════════
+def codex_am_am_row(cl, al, tmap):
+    """Codex `join_adversarial.py` 의 행 — 접촉 덤프에서 두 id 가 모두 AM 인 **첫** 행 (주기 영상 여부 무관 · real_14 = 22 째 줄 · id 1 · 201)."""
+    ia = item_index(al, 'ITEM: ATOMS')
+    kind = {}
+    k = ia + 1
+    while k < len(al) and al[k].strip() and not al[k].startswith('ITEM:'):
+        v = al[k].split()
+        kind[int(v[0])] = tmap.get(int(v[1]))
+        k += 1
+    ic = item_index(cl, 'ITEM: ENTRIES')
+    for k in range(ic + 1, len(cl)):
+        v = cl[k].split()
+        if len(v) >= 23 and kind.get(int(v[6])) in ('AM_P', 'AM_S') and kind.get(int(v[7])) in ('AM_P', 'AM_S'):
+            return k
+    raise AssertionError('AM–AM 행이 없다')
+
+
+def put(lines, k, col, tok):
+    v = lines[k].split(); v[col] = tok; lines[k] = ' '.join(v)
+    return lines
+
+
+def tilt_box(lines, tilts):
+    """BOX BOUNDS 머리를 삼사정계 꼴 (`xy xz yz` + 플래그) 로 · 경계 줄마다 tilt 토큰 하나 (Codex 꼴)."""
+    i = item_index(lines, 'ITEM: BOX BOUNDS')
+    flags = lines[i].split()[-3:]
+    lines[i] = 'ITEM: BOX BOUNDS xy xz yz ' + ' '.join(flags)
+    for k in range(3):
+        lines[i + 1 + k] = lines[i + 1 + k] + ' ' + tilts[k]
+    return lines
+
+
+def synth(tag, *, fmt='g6', distance=0.0015, area=None, badpos=None, baddelta=None, radius=0.001, tilts=None):
+    """두 AM_P 구 합성 (Codex `join_synthetic.py` 꼴 · 상자 단위) — fmt 'g6' = `%g` (생산 포맷) · '16' = `%.15e` (16 유효숫자 균일).
+    → (scaffold, atom, contact) 경로 · 참 면적 (lens_geometry)."""
+    from lens_geometry import intersection_disc_area
+    c = np.array([[0.002, 0.002, 0.002], [0.002 + distance, 0.002, 0.002]])
+    delta = 2.0 * radius - distance
+    exact = intersection_disc_area(radius, radius, delta)
+    area = exact if area is None else area
+    f = (lambda x: '%g' % float(x)) if fmt == 'g6' else (lambda x: f'{float(x):.15e}')
+    box = ['ITEM: BOX BOUNDS ff ff ff', '0 0.01', '0 0.01', '0 0.01']
+    at = ['ITEM: TIMESTEP', '100', 'ITEM: NUMBER OF ATOMS', '2'] + box + ['ITEM: ATOMS id type x y z radius']
+    at += [f'{i + 1} 1 ' + ' '.join(f(v) for v in [*c[i], radius]) for i in range(2)]
+    tok = [*map(f, c[0]), *map(f, c[1]), '1', '2', '0'] + ['0'] * 12 + [f(area) if not isinstance(area, str) else area, f(delta)]
+    if badpos is not None:
+        tok[0] = badpos
+    if baddelta is not None:
+        tok[22] = baddelta
+    ct = (['ITEM: TIMESTEP', '100', 'ITEM: NUMBER OF ENTRIES', '1'] + box
+          + ['ITEM: ENTRIES ' + ' '.join(f'c_cpl[{i}]' for i in range(1, 24)), ' '.join(tok)])
+    if tilts is not None:
+        at, ct = tilt_box(at, (tilts[0], '0', '0')), tilt_box(ct, (tilts[1], '0', '0'))
+    sc = [','.join(['1', *(f'{x:.12f}' for x in [*c[i], radius])]) for i in range(2)]
+    paths = []
+    for suffix, lines in (('sc.csv', sc), ('atom.dump', at), ('contact.dump', ct)):
+        paths.append(write_copy(lines, f'syn_{tag}_{suffix}'))
+    return tuple(paths), exact
+
+
+TM1 = {1: 'AM_P'}
+
+
+@case('J5 입구 검사 — 비유한 · 음수 · 비정수 · 기울어진 상자 (RIMP-02)')
+def t_entrance():
+    print('J5 — real_14 임시 사본 한 칸씩 (Codex 행 = 첫 AM–AM 행) · 사유별 거부 (고치기 전 = PASS)')
+    al, cl = text_lines(R14_ATOM), text_lines(R14_CONT)
+    k = codex_am_am_row(cl, al, R14_TMAP)
+    v = cl[k].split()
+    chk('J5 Codex 행 = id 1 · 201 · pos1.x 0.0250327 · A 1.8247e−06 · δ 0.000199496 (판정문 §3-1)',
+        (v[6], v[7], v[0], v[21], v[22]) == ('1', '201', '0.0250327', '1.8247e-06', '0.000199496'), repr(v[:8] + v[21:23]))
+    for tag, col, tok, want in (('pos1.x NaN', 0, 'nan', 'nonfinite_value'), ('δ NaN', 22, 'nan', 'nonfinite_value'),
+                                ('A NaN', 21, 'nan', 'nonfinite_value'), ('A inf', 21, 'inf', 'nonfinite_value'),
+                                ('A 음수 (−1.8247e−06)', 21, '-1.8247e-06', 'area_negative'),
+                                ('id2 비정수 (201.0)', 7, '201.0', 'int_token')):
+        c2 = put(list(cl), k, col, tok)
+        jn = J.am_iface_join(R14_SCAF, R14_ATOM, write_copy(c2, 'j5.liggghts'), type_map=R14_TMAP)
+        chk(f'J5 접촉 {tag} → REJECT ({want})', jn['status'] == 'REJECT' and want in codes(jn), repr(codes(jn)))
+    #  상자 — 다른 tilt (앞 두 경계 열 같음 · Codex) · 같은 tilt (지원 밖 = 명시 거부) · lo ≥ hi
+    for tag, ta, tc in (('다른 tilt (원자 0.001 · 접촉 0.002)', '0.001', '0.002'), ('같은 tilt (둘 다 0.001)', '0.001', '0.001')):
+        jn = J.am_iface_join(R14_SCAF, write_copy(tilt_box(list(al), (ta, '0', '0')), 'j5_ta.liggghts'),
+                             write_copy(tilt_box(list(cl), (tc, '0', '0')), 'j5_tc.liggghts'), type_map=R14_TMAP)
+        chk(f'J5 기울어진 상자 머리 (xy xz yz) {tag} → REJECT (box_tilted · 직교 상자만 지원)',
+            jn['status'] == 'REJECT' and 'box_tilted' in codes(jn), repr(codes(jn)))
+    a3, c3 = list(al), list(cl)
+    for L_ in (a3, c3):
+        L_[item_index(L_, 'ITEM: BOX BOUNDS') + 1] = '0.05 0'
+    jn = J.am_iface_join(R14_SCAF, write_copy(a3, 'j5_ab.liggghts'), write_copy(c3, 'j5_cb.liggghts'), type_map=R14_TMAP)
+    chk('J5 상자 x 경계 lo ≥ hi (두 덤프 같게) → REJECT (box_format)', jn['status'] == 'REJECT' and 'box_format' in codes(jn), repr(codes(jn)))
+    #  정수 — step · 원자 type · 머리 수
+    c4 = list(cl); c4[item_index(c4, 'ITEM: TIMESTEP') + 1] = '2060000.9'
+    jn = J.am_iface_join(R14_SCAF, R14_ATOM, write_copy(c4, 'j5_step.liggghts'), type_map=R14_TMAP)
+    chk('J5 접촉 step 2060000.9 → REJECT (int_token) · step 을 2060000 으로 줄이지 않는다',
+        jn['status'] == 'REJECT' and 'int_token' in codes(jn) and jn['steps']['contact'] != 2060000, repr(codes(jn)) + repr(jn['steps']))
+    a5 = list(al); am = am_ids(al, R14_TMAP); _id, ka = am[0]
+    a5 = put(a5, ka, 1, a5[ka].split()[1] + '.0')
+    jn = J.am_iface_join(R14_SCAF, write_copy(a5, 'j5_type.liggghts'), R14_CONT, type_map=R14_TMAP)
+    chk('J5 원자 type 비정수 (1.0) → REJECT (int_token)', jn['status'] == 'REJECT' and 'int_token' in codes(jn), repr(codes(jn)))
+    a6 = list(al); a6[item_index(a6, 'ITEM: NUMBER OF ATOMS') + 1] = '33289.0'
+    jn = J.am_iface_join(R14_SCAF, write_copy(a6, 'j5_cnt.liggghts'), R14_CONT, type_map=R14_TMAP)
+    chk('J5 원자 머리 수 비정수 (33289.0) → REJECT (int_token)', jn['status'] == 'REJECT' and 'int_token' in codes(jn), repr(codes(jn)))
+    #  반경 ≤ 0 (AM 원자 · %g 토큰)
+    a7 = put(list(al), ka, 5, '-0.006')
+    jn = J.am_iface_join(R14_SCAF, write_copy(a7, 'j5_rad.liggghts'), R14_CONT, type_map=R14_TMAP)
+    chk('J5 원자 반경 −0.006 → REJECT (nonpositive_radius)', jn['status'] == 'REJECT' and 'nonpositive_radius' in codes(jn), repr(codes(jn)))
+    #  scaffold 비유한
+    s8 = list(text_lines(R14_SCAF)); ks = next(i for i, ln in enumerate(s8) if ln and not ln.startswith('#'))
+    vs = s8[ks].split(','); vs[1] = 'nan'; s8[ks] = ','.join(vs)
+    jn = J.am_iface_join(write_copy(s8, 'j5_scaf.csv'), R14_ATOM, R14_CONT, type_map=R14_TMAP)
+    chk('J5 scaffold 한 행 x = nan → REJECT (nonfinite_value · 예외 아님)', jn['status'] == 'REJECT' and 'nonfinite_value' in codes(jn),
+        repr(codes(jn)))
+
+
+@case('J6 형식 — 6 자리 %g 생산 포맷만 (RIMP-03)')
+def t_format():
+    print('J6 — 16 자리 균일 합성 (Codex) · 끝 0 덧붙인 토큰 하나 (값 같음 · Codex join_global_precision) → 거부 · 정상 = g6')
+    (sc, at, ct), exact = synth('f16', fmt='16')
+    jn = J.am_iface_join(sc, at, ct, type_map=TM1)
+    chk('J6 16 자리 균일 (참 면적) → REJECT (numeric_format — 6 자리 %g 생산 포맷만 지원)',
+        jn['status'] == 'REJECT' and 'numeric_format' in codes(jn), repr(codes(jn)))
+    (sc, at, ct), _ = synth('f16p', fmt='16', area=exact * (1.0 + 1e-6))
+    jn = J.am_iface_join(sc, at, ct, type_map=TM1)
+    chk('J6 16 자리 균일 + 면적 +1 ppm (판정문 §4 · A 1.374448160392321e−06) → REJECT (PASS 아님)',
+        jn['status'] == 'REJECT' and 'numeric_format' in codes(jn), repr(codes(jn)))
+    al, cl = text_lines(R14_ATOM), text_lines(R14_CONT)
+    i = item_index(al, 'ITEM: ATOMS') + 1
+    a2 = put(list(al), i, 2, al[i].split()[2] + '0000000000')
+    jn = J.am_iface_join(R14_SCAF, write_copy(a2, 'j6_a.liggghts'), R14_CONT, type_map=R14_TMAP)
+    chk('J6 원자 첫 행 x 끝 0 덧붙임 (0.0250327 → 0.02503270000000000 · 값 같음) → REJECT (numeric_format)',
+        jn['status'] == 'REJECT' and 'numeric_format' in codes(jn), repr(codes(jn)))
+    i = item_index(cl, 'ITEM: ENTRIES') + 1
+    c2 = put(list(cl), i, 0, cl[i].split()[0] + '0000000000')
+    jn = J.am_iface_join(R14_SCAF, R14_ATOM, write_copy(c2, 'j6_c.liggghts'), type_map=R14_TMAP)
+    chk('J6 접촉 첫 행 pos1.x 끝 0 덧붙임 → REJECT (numeric_format · 전역 S 를 올려 다른 토큰의 폭을 줄이지 않는다)',
+        jn['status'] == 'REJECT' and 'numeric_format' in codes(jn), repr(codes(jn)))
+    jr = join_r14()
+    fm = (jr.get('entrance') or {}).get('format') or {}
+    chk('J6 정상 real_14: 형식 = g6 (원자 · 접촉) · 면적 helper 의 고정 6 자리 = 파일 유효숫자 6 (같은 가정)',
+        fm.get('rule') == 'g6' and fm.get('atom_ok') is True and fm.get('contact_ok') is True
+        and jr['g_frame']['atom_sigfig'] == jr['g_frame']['contact_sigfig'] == 6 == jr['g_geo'].get('area_sigfig_assumed'),
+        repr(fm) + repr(jr['g_geo'].get('area_sigfig_assumed')))
+
+
+@case('J7 미인증 면적 — PASS 와 분리 (RIMP-02)')
+def t_uncertified():
+    print('J7 — `%g` 합성 근동심 쌍 (중심 거리 1e−8 sim · δ 0.00199999) — 면적 포괄 미인증 (d 하한 ≤ 0) 행')
+    (sc, at, ct), exact = synth('g6ok', fmt='g6')
+    jn = J.am_iface_join(sc, at, ct, type_map=TM1)
+    chk('J7 양성: `%g` 합성 (중심 거리 0.0015 · δ 0.0005) → PASS · AM–AM 1 행 인증 (tested 1)',
+        jn['status'] == 'PASS' and jn['g_geo']['n_area_tested'] == 1 and jn['g_geo']['n_dem_am_am'] == 1, repr(codes(jn)))
+    for tag, area in (('면적 100 sim² (Codex)', 100.0), ('참 면적', None)):
+        (sc, at, ct), ex = synth('unc' + ('100' if area else 'ok'), fmt='g6', distance=1e-8, area=area)
+        jn = J.am_iface_join(sc, at, ct, type_map=TM1)
+        chk(f'J7 근동심 {tag} → REJECT (area_uncertified · 포괄 밖 0 ≠ 전 행 인증)',
+            jn['status'] == 'REJECT' and 'area_uncertified' in codes(jn) and jn['g_geo'].get('n_area_uncertified') == 1, repr(codes(jn)))
+
+
+@case('J8 소비 경로 — 조인 → 원장 → 계획 → 정량 관문 (RIMP-02 · 03)')
+def t_consumer_reach():
+    print('J8 — 합성 0.25 µm raster (Codex join_synthetic 꼴) · 변이 조인마다 계획 · 정량 관문')
+    (sc, at, ct), exact = synth('base', fmt='g6')
+    base = J.am_iface_join(sc, at, ct, type_map=TM1)
+    c, r, t = (base['particles'][k] for k in ('c_um', 'r_um', 't'))
+    sid, _pid = quiet(S3.rasterize, c, r, t, None, None, (0, 0, 0), (6, 4, 4), 0.25, bridge_um=0.24)
+    L = S3.am_iface_ledger(c, r, t, sid, sid, (0, 0, 0), 0.25, delta_bound_um=base['g_geo']['delta_bound_um'], bridge_um=0.24)
+    law = dict(gap_law='cut', unreg_law='cut', ambiguous_arm='cut')
+    P = S3.am_iface_plan(L, {'AM_P|AM_P': 1e-3}, join=base, **law)
+    chk('J8 양성: 합성 조인 PASS → 계획 거부 없음 · 정량 관문 통과', base['status'] == 'PASS' and P['rejections'] == []
+        and S3.iface_require_quantitative(P, sid=sid) is P, repr(codes(P)))
+    for tag, kw in (('면적 음수', dict(area=-exact)), ('면적 NaN', dict(area='nan')), ('pos1.x NaN', dict(badpos='nan')),
+                    ('δ NaN', dict(baddelta='nan')), ('16 자리 + 1 ppm', dict(fmt='16', area=exact * (1.0 + 1e-6))),
+                    ('다른 tilt 상자', dict(tilts=('0.001', '0.002')))):
+        (sc2, at2, ct2), _ = synth('m', **kw)
+        jm = J.am_iface_join(sc2, at2, ct2, type_map=TM1)
+        Pm = S3.am_iface_plan(L, {'AM_P|AM_P': 1e-3}, join=jm, **law)
+        chk(f'J8 {tag}: 조인 REJECT → 계획 join_gate_failed → 정량 관문 거부 (고치기 전 = 셋 다 통과)',
+            jm['status'] == 'REJECT' and 'join_gate_failed' in codes(Pm)
+            and raises(lambda: S3.iface_require_quantitative(Pm, sid=sid)), f"{jm['status']} {codes(jm)} {codes(Pm)}")
+
+
+@case('J9 양성 유지 — 전 AM–AM 행 인증 · 음수 면적 = 인증 대상 밖 행만 (RIMP-02)')
+def t_positive_scope():
+    print('J9 — real_14 · case15 의 AM–AM 행 전부 tested · 음수 · 미인증 0 · case15 의 음수 면적 2 행 = AM_P–SE (조인 면적 인증 밖)')
+    jr = join_r14()
+    g = jr['g_geo']
+    chk('J9 real_14: AM–AM 660 행 전부 인증 (tested 660 · 음수 0 · 미인증 0 · area_all_certified) · 음수 면적 (AM–AM 밖) 0',
+        g['n_area_tested'] == g['n_dem_am_am'] == 660 and g.get('n_area_negative') == 0 and g['n_area_uncertified'] == 0
+        and g.get('area_all_certified') is True and g.get('n_area_negative_not_am_am') == 0, repr({k: g.get(k) for k in (
+            'n_area_tested', 'n_dem_am_am', 'n_area_negative', 'n_area_uncertified', 'area_all_certified', 'n_area_negative_not_am_am')}))
+    j15 = J.am_iface_join(C15_SCAF, C15_ATOM, C15_CONT, type_map=C15_TMAP)
+    g = j15['g_geo']
+    chk('J9 case15: PASS · AM–AM 119 행 전부 인증 · 음수 면적 2 행 = AM–AM 밖 (AM_P–SE · 조인이 인증하지 않는 행 — 기록만)',
+        j15['status'] == 'PASS' and g['n_area_tested'] == g['n_dem_am_am'] == 119 and g.get('n_area_negative') == 0
+        and g.get('area_all_certified') is True and g.get('n_area_negative_not_am_am') == 2, repr(codes(j15)) + repr({k: g.get(k) for k in (
+            'n_area_tested', 'n_dem_am_am', 'n_area_negative', 'area_all_certified', 'n_area_negative_not_am_am')}))
+    e = jr.get('entrance') or {}
+    chk('J9 기록 entrance: 규칙 문구 · 비유한 0 · 비정수 0 · 지원 상자 (직교 · pp pp ff) · 형식 g6',
+        e.get('status') == 'PASS' and e.get('n_nonfinite') == 0 and e.get('n_int_token_bad') == 0
+        and e.get('box') == {'atom': 'orthogonal', 'contact': 'orthogonal'} and (e.get('format') or {}).get('rule') == 'g6', repr(e)[:400])
 
 
 def main():
