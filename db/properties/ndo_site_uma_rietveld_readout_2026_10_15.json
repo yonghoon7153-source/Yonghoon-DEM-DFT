@@ -1,0 +1,89 @@
+{
+ "id": "ndo_site_uma_rietveld_readout_2026_10_15",
+ "제목": "Nd 자리 비교 UMA 단계 — Rietveld 5 f.u. 어닐 23 개 판독 (M@P 10 · M@Li 10 · host 3) · 모델별 상위 3 · ΔG_site(UMA)",
+ "written_on": "2026-10-15",
+ "트랙": "CEI/Nd — 1저자 = 실험 쪽 (박재현) · 사용자가 1저자가 아니다. 사용자 실행 승인 (10-14 '1,2,3,4를 해보자') · 1저자의 '안정' 정의 · §5 허용 서술 동의 전까지 잠정",
+ "카드": "db/properties/ndo_lpscl16_site_stability_estimand_2026_10_14.json (§3 규칙 '모델별 같은 예산 → 모델별 UMA 상위 3 → DFT 단일점 → 모델별 최저' · §7 단계 2)",
+ "결정": "D-2026-10-14-ndo-site-stability-estimand (proposed) — 원장의 results_seen 은 DFT (Q1·Q2·Q3) 기준이라 손대지 않았다. UMA 단계를 본 증거는 이 기록이다",
+ "실행": {
+  "기계": "kgy (RTX 3090 · 공유 — cascade v7 · li2s 와 GPU 를 나눠 씀)",
+  "어닐": "tmux ndsite_uma (대기열 없이 바로 띄움 — 그래서 로그에 '시작' · '끝 rc' 줄이 없다) · run_anneal.py 500 K × 20 ps + 이완 · 로그 끝 'Total: 66923.2s' (18.6 h) · Results ~/work/runs/ndo_site_2026_10_14/uma_anneal/anneal_results.json",
+  "끝_확인": "2026-10-15 09:23:26 KST 사용자 watch 붙여넣기 — tmux ndsite_uma 없음 · 이완까지 끝난 구조 23 / 23 · GPU 6332 / 24576 MiB · 99 %",
+  "판독_명령": "site_dg.py --anneal $R/uma_anneal/anneal_results.json --refs $R/uma_ref_relax/anneal_results.json --expect 10 --top 3 --out $R/site_dg_rietveld.json --bundle $R/bundle_rietveld (R = ~/work/runs/ndo_site_2026_10_14 · python = uma env)",
+  "판독_도구": "db/inputs/ndo_site_2026_10_14/site_dg.py — 9dc348e 뒤로 바뀌지 않음 (git archive origin 헤드로 받음) · selftest 17/17 (kgy · 이 저장소에서도 17/17)",
+  "판독_문턱": "--thresholds 안 줌 — 어닐 전에 준 블록 그대로 (G7 의 대상은 Q1 DFT 와 보조 host UMA · Rietveld host UMA 는 상위 3 고르기와 G2 부호 대조용)"
+ },
+ "게이트_기계_확인": {
+  "개수": "M@P 10 / 10 · M@Li 10 / 10 (--expect 10) · host 3",
+  "오류_미수렴": "0 — 23 개 전부 수렴 (화면 '수렴 10' × 2 · host 셋 수렴 True)",
+  "조성": "M@P Cl8Li31Nd2O3P3S19 · M@Li Cl8Li21Nd2O3P5S19 — 모델 안에서 같다 · host Cl8Li27P5S22",
+  "조성차_닫힘": "n_Nd 2 · 조성차 = 8 Li₂S − 2 Li₃PS₄ ✓ (카드 §2 검산 n·(4 Li₂S − Li₃PS₄) 와 같다)"
+ },
+ "값_UMA_내부": {
+  "⛔": "UMA 내부 값 — 인용 · 원고 문장 금지. DFT 에너지와 섞지 않는다. 쓰임은 (a) 모델별 상위 3 고르기 (b) G2 UMA–DFT 부호 대조 둘뿐",
+  "기준상": "e(Li₂S) −12.00067 · e(Li₃PS₄) −35.18095 eV/f.u. · 저장소 항 4·e(Li₂S) − e(Li₃PS₄) = −12.82175 eV (site_refs_uma_li2s_li3ps4_2026_10_14.json 과 같다)",
+  "M_P": {
+   "최저": "MP_07",
+   "둘째와_차_eV": 0.3324,
+   "모델_안_상대_eV_화면_소수3자리": {
+    "MP_07": 0.0,
+    "MP_09": 0.332,
+    "MP_00": 0.365,
+    "MP_04": 0.886,
+    "MP_06": 0.995,
+    "MP_02": 1.064,
+    "MP_03": 1.273,
+    "MP_05": 1.285,
+    "MP_08": 1.833,
+    "MP_01": 3.024
+   }
+  },
+  "M_Li": {
+   "최저": "MLi_03",
+   "둘째와_차_eV": 0.0376,
+   "모델_안_상대_eV_화면_소수3자리": {
+    "MLi_03": 0.0,
+    "MLi_04": 0.038,
+    "MLi_05": 0.085,
+    "MLi_06": 0.193,
+    "MLi_02": 0.294,
+    "MLi_07": 0.299,
+    "MLi_00": 0.679,
+    "MLi_08": 0.911,
+    "MLi_09": 1.393,
+    "MLi_01": 1.549
+   }
+  },
+  "ΔG_site_UMA_eV_per_Nd": 0.319,
+  "부호_뜻": "> 0 ⇒ 4b (P 자리) 모델이 불리 · Li 자리 쪽이 낮다 — Li₃PS₄/Li₂S 교환 기준 · Nd/(Nd+P) 0.40 셀 · UMA"
+ },
+ "DFT_단일점_후보_G1": {
+  "M_P": [
+   "MP_07",
+   "MP_09",
+   "MP_00"
+  ],
+  "M_Li": [
+   "MLi_03",
+   "MLi_04",
+   "MLi_05"
+  ],
+  "기준상": [
+   "Li₂S (mp-1153)",
+   "Li₃PS₄ (mp-985583 Pnma)"
+  ],
+  "규칙": "모델별 UMA 상위 3 (총 6) + 기준상 2 — 다 있어야 Q1 을 계산한다 (G1). 모델별 최저는 DFT 단일점으로 고른다 — UMA 순위로 고르지 않는다"
+ },
+ "결과_전_규칙과의_관계_해석_아님": [
+  "M@Li 최저와 둘째의 UMA 차가 0.038 eV 로 작다 — 카드 규칙대로 셋을 다 DFT 로 본다 (규칙 변경 없음)",
+  "UMA 부호 (+) 는 카드 ⚠_결과_보기_전에_썼다 의 사전 기대 (Li 자리) 와 같은 방향이다 — 판정 아님. 판정은 DFT 단일점 · G3 문턱 (0.30 · vc-relax 뒤 0.10) 으로만 한다",
+  "G7 (기준상 다형 재확인) 은 Q1 DFT 값이 0.30 · 0.10 문턱에서 0.11 eV/Nd 안일 때 발동한다 — 이 UMA 값은 대상이 아니다"
+ ],
+ "회수": "kgy $R/bundle_rietveld (anneal_results.json 둘 · post_relax.xyz 25 · site_dg_summary.json) + $R/site_dg_rietveld.json → db/raw/ndo_site_2026_10_14/uma_rietveld_2026_10_15/ (SHA256SUMS 같이) — 사용자 붙여넣기 블록 (2026-10-15)",
+ "⏭": [
+  "회수 커밋 확인 (해시 대조)",
+  "DFT 입력: 후보 6 (UMA 이완 셀·좌표 그대로 · scf) + 기준상 2 (vc-relax · kxL ≥ 13.9 Å) — §6 설정 (ecut 52/520 · mv 0.01 · conv_thr 1e-8 · beta 0.2 · 같은 PP) · 기존 도구 tools/doping/dft_decomp_check.py --prepare 를 먼저 본다",
+  "GPU 자리 — 카드 §7.4 사용자 결정 (kgy 는 cascade v7 · site10_uma · li2s B 650 K 와 공유 · gabia 는 Li₃Nd r2 → 탄성 · li2s B 650 K)",
+  "결과 → G2 (UMA 부호 대조) · G3 · G4 · G7 → §5 허용 서술 중 하나 → 1저자 동의 (사용자 통해)"
+ ]
+}
