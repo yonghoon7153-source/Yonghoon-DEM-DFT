@@ -61,6 +61,13 @@ v6 (Codex CJ NO-GO 반영 · 2026-09-27)
        README/러너: 보내는 것 = 일반 실행 종료 **0 또는 1** + `sha256sum -c` 통과 쌍 · 종료 4 → PACK_ONLY 0 + sha 확인 · **지원 환경 = Linux · bash ≥ 4 · GNU coreutils/tar**
        (bsdtar 는 CRLF 로 구성원 대조가 거짓 실패 → 계산 전 PACK_ONLY smoke).
 
+CY Q-CY-9 (Codex CY · 2026-10-15 — 격리 입력 재현: 마지막 dE·d eps 가 NaN · 스텝 0 · 정상 OSZICAR 뒤에 스텝 1 로 다시 시작한 블록 → 전부 OK 였고,
+           전자 반복행이 없으면 '미확인' 이 아니라 SCF_NOT_CONVERGED 로 합쳐졌다)
+  SCF 판정 계약: ① OSZICAR 마지막 전자 반복행의 dE·d eps 가 파싱되고 유한 ② 스텝 번호 1, 2, …, N 연속 (≥ 1 · 실행 구간 하나 · N ≤ NELM)
+       ③ |dE|·|d eps| ≤ EDIFF ④ OUTCAR 정상 종료 + 'EDIFF is reached' · 설정 검사는 따로 그대로 필수. step < NELM 은 요구하지 않는다 ·
+       'N F= … E0= … d E =' 요약 줄은 전자 반복행이 아니다 (dE 로 안 쓴다). ⑤ 새 상태 **SCF_UNVERIFIED** = 미확인 (OK 아님 · r1 자격 아님) —
+       SCF_NOT_CONVERGED (확인된 미수렴 · r1 자격) 는 **유한값 > EDIFF** 일 때만.
+
 종료코드 (CLI)
   --check   : 0 전 잡 OK · 3 OK 아닌 잡 있음 · 2 승인본(MANIFEST)·등록부·사용법 오류
   --collect : 2 승인본·등록부 없음/오류·사용법 · 3 OK 아닌 잡 있음(무결성) · 0 G5 PASS · 10 G5 FAIL · 11 G5 INCOMPLETE/BLOCKED · 12 UMA 없음(G5 미평가)
@@ -81,6 +88,8 @@ v6 (Codex CJ NO-GO 반영 · 2026-09-27)
   · 업체 기계의 시간·peak 메모리를 보장하지 않는다 — README 추정은 평면파·밴드 수에서 낸 대략값이다.
   · 반송 묶음 허용 목록은 **파일 이름** 기준이다 — 허용 이름으로 바꿔 넣은 파일(예: POTCAR 본문을 stdout.log 로)은 못 거른다.
   · 봉인 파일럿 결속(run_id · attempt.json·OUTCAR sha)은 실수(다른 폴더 재실행 · 파일 교체)를 잡는 것이지 위조 방어가 아니다.
+  · OSZICAR 와 OUTCAR 를 수치로 맞대 보지 않는다 (요약 줄 F= ↔ 최종 TOTEN · 전자 반복 수 ↔ OUTCAR Iteration 수) — '같은 실행' 은 attempt.json sha ·
+    OUTCAR 실행 머리줄 1 개 · OSZICAR 구간 하나 (스텝 1…N ≤ NELM · 요약 줄 뒤 전자 행 없음) · 종료·수렴 줄로만 본다.
 
 사용
   python3 tools/wad/build_v5_vasp_package.py --build --pkg db/inputs/wad_aprime_s3v2_2026_09_26 --out <패키지>
@@ -118,7 +127,7 @@ PERF_INT = ("NCORE", "NPAR", "KPAR", "NSIM")
 PERF_BOOL = ("LPLANE", "LSCALU", "LSCALAPACK")
 PERF_TAGS = PERF_INT + PERF_BOOL
 RESCUE = {"AMIX": "0.1", "BMIX": "0.01", "NELM": "300"}
-R1_ELIGIBLE = ("EXECUTION_FAILED", "NOT_TERMINATED", "SCF_NOT_CONVERGED")
+R1_ELIGIBLE = ("EXECUTION_FAILED", "NOT_TERMINATED", "SCF_NOT_CONVERGED")   # SCF_UNVERIFIED (수렴 미확인) 는 일부러 뺀다 — 미확인 ≠ 확인된 미수렴 (CY Q-CY-9)
 #: INCAR 의 EDIFF (incar_text) — 수렴은 OSZICAR 마지막 전자 스텝의 |dE|·|d eps| 가 이 값 이하일 때만 (아래 oszicar_last)
 EDIFF_V5 = 1e-6
 DIP_MIN_CLEAR_A = 4.0
@@ -688,20 +697,45 @@ def _strip_incar_echo(text):
     return "".join(out), n
 
 
+_OSZ_ROW = re.compile(r"\s*(DAV|RMM|CG|SDA):")      # 전자 반복행
+_OSZ_ION = re.compile(r"\s*\d+\s+F=")               # 이온 스텝 요약 줄 '   1 F= … E0= … d E =…' — 전자 반복행이 아니다 (구간 경계로만 쓴다)
+
+
 def oszicar_last(text):
-    """OSZICAR 전자 스텝 줄 (DAV/RMM/CG/SDA) → (스텝 수, 마지막 dE, 마지막 d eps). 못 읽으면 값 자리는 None.
+    """OSZICAR 전자 반복행 (DAV/RMM/CG/SDA) → (행 수, 마지막 dE, 마지막 d eps, 미확인 사유). 값은 유한수만 (NaN·Inf·별표·잘림·없음 → None) ·
+    미확인 사유가 None 이 아니면 수렴을 판정하지 않는다 (check_job → SCF_UNVERIFIED · 재시도 자격 아님).
 
     ⚠ 2026-10-08 외주 감사 — VASP 5.4.4 는 **NELM 을 다 써서 끝나도** OUTCAR 에 'aborting loop because EDIFF is reached'
       를 찍는다 ('EDIFF was not reached' 경고는 VASP 6 부터). OUTCAR 문구만으로는 5.x 의 NELM 소진을 못 거른다 →
       V5_s_outer_A_G3_c2_far_i (200 스텝 = NELM · 마지막 |dE| 2.3e-3) 를 수렴으로 읽었다. 그래서 OSZICAR 값으로 다시 본다.
+    ⚠ 2026-10-15 Codex CY Q-CY-9 — 옛 판독은 마지막 dE·d eps 가 NaN 이어도 (NaN 은 `abs(x) > EDIFF` 가 거짓) · 스텝 번호가 0 이어도 ·
+      정상 OSZICAR 뒤에 스텝 1 부터 다시 시작한 블록이 붙어도 통과시켰다. 계약: ① 마지막 전자 반복행의 dE·d eps 가 파싱되고 유한
+      ② 스텝 번호 = 1, 2, …, N 연속 (≥ 1 · 실행 구간 하나 — 이온 요약 줄 뒤에 전자 행이 오면 둘째 구간) · N ≤ NELM 은 check_job 이 본다
+      ③ |dE|·|d eps| ≤ EDIFF 도 check_job. `step < NELM` 은 요구하지 않는다 (마지막 허용 스텝에서 수렴할 수 있다).
+      마지막 'N F= … E0= … d E =' 요약 줄의 d E 는 이온 스텝 사이 에너지 차라 전자 dE 가 아니다 — 행으로 세지도 dE 로 쓰지도 않는다.
     """
-    rows = [ln.split() for ln in text.splitlines() if re.match(r"\s*(DAV|RMM|CG|SDA):", ln)]
+    rows, ion, bad = [], False, None
+    for ln in text.splitlines():
+        if _OSZ_ION.match(ln):
+            ion = True
+            continue
+        if not _OSZ_ROW.match(ln):
+            continue
+        t = ln.split()
+        rows.append(t)
+        if bad is None:
+            k = t[1] if len(t) > 1 else ""
+            if ion:
+                bad = f"이온 요약 줄(F=) 뒤에 전자 반복행 (행 {len(rows)} · 스텝 {k!r}) — 실행 구간이 하나가 아니다"
+            elif not (k.isascii() and k.isdigit() and int(k) == len(rows)):
+                bad = f"전자 스텝 번호 {k!r} (행 {len(rows)}) — 1 부터 1 씩 늘어야 한다 (≥ 1 · 실행 구간 하나)"
     if not rows:
-        return 0, None, None
-    try:
-        return len(rows), float(rows[-1][3]), float(rows[-1][4])
-    except (IndexError, ValueError):
-        return len(rows), None, None
+        return 0, None, None, "전자 반복행(DAV/RMM/CG/SDA)이 없다"
+    t = rows[-1]
+    d_e, d_eps = (_tok_float(t[3]), _tok_float(t[4])) if len(t) > 4 else (None, None)
+    if bad is None and (d_e is None or d_eps is None):
+        bad = f"마지막 전자 반복행의 dE·d eps {t[3:5]} 가 유한수가 아니거나 없다"
+    return len(rows), d_e, d_eps, bad
 
 
 def parse_outcar(text):
@@ -808,7 +842,7 @@ def _spec_key(job):
 def check_job(job, pkgdir, attdir, attempt="0", pp_registry=None):
     """한 시도 폴더 → 상태 dict. OK 가 아니면 값은 판정에 안 쓴다.
     순서 (CF P0-1): 실행 기록 결박 → 입력 무결성 → 복수 실행 → **있는 증거의 모순** (POTCAR · TITEL · 버전 · 설정 · D3 — 재시도 자격 없음)
-      → 실행 상태 (rc · 미종료 · 미수렴 — 재시도 자격) → 완결성 (성공한 실행만: 결측 = 미검증)."""
+      → 실행 상태 (rc · 미종료 · 확인된 미수렴 — 재시도 자격 · SCF 미확인 SCF_UNVERIFIED 는 자격 아님) → 완결성 (성공한 실행만: 결측 = 미검증)."""
     r = {"dir": os.path.basename(attdir), "attempt": attempt}
     def done(status, why=None, **kw):
         r["status"] = status
@@ -903,19 +937,24 @@ def check_job(job, pkgdir, attdir, attempt="0", pp_registry=None):
         return done("OUTCAR_UNPARSEABLE", "OUTCAR 에 실행 머리줄이 없다")
     if not o["terminated"]:
         return done("NOT_TERMINATED")
-    if not o["converged"]:
-        return done("SCF_NOT_CONVERGED")
+    # SCF (CY Q-CY-9): 확인된 미수렴 (SCF_NOT_CONVERGED · r1 자격) = OSZICAR 한 구간의 마지막 전자 반복행이 **유한값 > EDIFF** 일 때만.
+    # 못 읽음 · 비유한 · 스텝 번호·구간 이상 · NELM 초과 · OUTCAR 수렴 줄과 어긋남 = 미확인 (SCF_UNVERIFIED · OK 아님 · r1 자격 아님).
+    nelm = int(RESCUE["NELM"]) if attempt == "r1" else 200
     try:
-        n_el, d_e, d_eps = oszicar_last(open(os.path.join(attdir, "OSZICAR"), encoding="utf-8", errors="replace").read())
-    except OSError:
-        n_el, d_e, d_eps = 0, None, None
+        n_el, d_e, d_eps, unv = oszicar_last(open(os.path.join(attdir, "OSZICAR"), encoding="utf-8", errors="replace").read())
+    except OSError as e:
+        n_el, d_e, d_eps, unv = 0, None, None, f"읽기 실패 ({e.__class__.__name__})"
+    if unv is None and n_el > nelm:
+        unv = f"전자 스텝 {n_el} 개 > NELM {nelm} — 이 INCAR 로 돈 한 실행의 기록이 아니다"
     r["oszicar_last"] = {"n_elec_steps": n_el, "dE": d_e, "d_eps": d_eps}
-    if d_e is None or d_eps is None:
-        return done("SCF_NOT_CONVERGED", "OSZICAR 마지막 전자 스텝의 dE·d eps 를 못 읽는다 — 수렴을 확인할 수 없다 (VASP 5.x 는 OUTCAR 문구로 못 가른다)")
+    if unv:
+        return done("SCF_UNVERIFIED", f"OSZICAR {unv} — 수렴을 확인할 수 없다 (미확인 ≠ 확인된 미수렴 · 재시도 자격 아님)")
     if abs(d_e) > EDIFF_V5 or abs(d_eps) > EDIFF_V5:
-        nelm = int(RESCUE["NELM"]) if attempt == "r1" else 200
         return done("SCF_NOT_CONVERGED", f"OSZICAR 마지막 스텝 |dE| {abs(d_e):.2e} · |d eps| {abs(d_eps):.2e} > EDIFF {EDIFF_V5:g} "
                     f"(스텝 {n_el}{' = NELM 소진' if n_el >= nelm else ''}) — OUTCAR 의 'EDIFF is reached' 는 VASP 5.x 에서 NELM 소진에도 찍힌다")
+    if not o["converged"]:
+        return done("SCF_UNVERIFIED", "OSZICAR 마지막 스텝은 EDIFF 이하인데 OUTCAR 에 'EDIFF is reached' 가 없거나 'EDIFF was not reached' 가 있다 — "
+                    "두 기록이 어긋나 수렴을 확인할 수 없다 (재시도 자격 아님)")
     # ── ③ 완결성 — 성공한 실행만 · 결측 = 미검증 ──
     r["settings_sources"] = src
     if not o["outcar_titel"]:
@@ -1495,8 +1534,8 @@ def _selftest():
             for f in ("POSCAR", "KPOINTS"):
                 shutil.copy(os.path.join(src, f), d)
             _write(os.path.join(d, "INCAR"), incar if incar is not None else open(os.path.join(src, "INCAR.r1" if att == "r1" else "INCAR")).read() + incar_extra)
-            if not no_out:
-                _write(os.path.join(d, "OSZICAR"), osz if osz is not None else _fake_oszicar(20))
+            if not no_out:   # 미수렴 OUTCAR (conv=False) 의 기본 OSZICAR 는 NELM 소진 — 두 기록이 같은 실행 (가짜 VASP 와 같다 · CY Q-CY-9 부터 어긋나면 미확인)
+                _write(os.path.join(d, "OSZICAR"), osz if osz is not None else (_fake_oszicar(20) if kw.get("conv", True) else _fake_oszicar(200, 2.2678e-3, -3.2575e-5)))
                 _write(os.path.join(d, "OUTCAR"), outcar if outcar is not None else _fake_outcar(j, E[n], ED[n], **kw))
             sp_ = spsha or SPSHA
             _write(os.path.join(d, "POTCAR.titel"), "".join(f"   TITEL  = {t}\n   POMASS = 1; ZVAL   = {z:8.3f}    mass and valenz\n   LEXCH  = PE\n"
@@ -1573,13 +1612,76 @@ def _selftest():
         mk(F_, osz=_fake_oszicar(37, 4.0e-7, -2.1e-6))
         ck(st(F_) == "SCF_NOT_CONVERGED", "⛔음성 |dE| 는 작아도 |d eps| 2.1e-6 > EDIFF → SCF_NOT_CONVERGED")
         mk(F_, osz="DAV: 1\n")
-        ck(st(F_) == "SCF_NOT_CONVERGED", "⛔음성 OSZICAR 마지막 스텝 dE 를 못 읽음 → SCF_NOT_CONVERGED (못 읽음 ≠ 수렴)")
+        ck(st(F_) == "SCF_UNVERIFIED", "⛔음성 OSZICAR 마지막 스텝 dE 를 못 읽음 → SCF_UNVERIFIED (못 읽음 ≠ 수렴 · ≠ 확인된 미수렴 — CY Q-CY-9 전에는 SCF_NOT_CONVERGED 로 합쳤다)")
         mk(F_, osz=_fake_oszicar(200, 2.2678e-3, -3.2575e-5)); mk(F_, "r1", osz=_fake_oszicar(240))
         rr = check(out, ret, msha, None)[1][F_]
         ck(rr["status"] == "OK" and rr["attempt"] == "r1" and rr.get("first_attempt") == "SCF_NOT_CONVERGED",
            "NELM 소진 첫 시도 + 정상 r1 → r1 채택 · first_attempt SCF_NOT_CONVERGED (사전등록 재시도 경로)")
         shutil.rmtree(os.path.join(run, F_ + "_r1")); mk(F_)
         ck(st(F_) == "OK" and check(out, ret, msha, None)[1][F_]["oszicar_last"]["n_elec_steps"] == 20, "[양성] 수렴 OSZICAR (|dE|·|d eps| < EDIFF) → OK · 스텝 수 기록")
+        # ── CY Q-CY-9 (2026-10-15) — 리뷰어 격리 입력: 옛 판독은 NaN · 스텝 0 · 다시 시작한 블록이 OK, 전자 행 없음이 SCF_NOT_CONVERGED 였다 ──
+        #    전부 SCF_UNVERIFIED (OK 아님 · r1 자격 아님 · JSON 저장 가능) · 확인된 미수렴은 유한값 > EDIFF 뿐 · 마지막 허용 스텝의 수렴은 정당 · 요약 줄 F= 는 dE 가 아니다
+        def json_ok(x):
+            try:
+                json.dumps(x, allow_nan=False)
+                return True
+            except ValueError:
+                return False
+        HDR = "       N       E                     dE             d eps       ncg     rms          rms(c)\n"
+        F_LINE = "   1 F= -.73125155E+03 E0= -.73125947E+03  d E =0.237819E-01\n"   # 실물 반송 (V5_s_outer_A_far) 의 요약 줄 그대로 — d E 0.024 ≫ EDIFF
+        renum = lambda txt, f: "".join((f"DAV: {f(int(l.split()[1])):4d}" + l[9:] if l.startswith("DAV:") else l) + "\n" for l in txt.splitlines())
+        nan = float("nan")
+        probes = (("마지막 dE NaN", _fake_oszicar(64, nan, -2.0818e-7) + F_LINE),
+                  ("마지막 d eps NaN", _fake_oszicar(64, -8.2451e-8, nan) + F_LINE),
+                  ("마지막 dE +Inf", _fake_oszicar(64, float("inf"), -2.0818e-7) + F_LINE),
+                  ("마지막 d eps 별표 (넘침)", _fake_oszicar(64, -8.2451e-8, -2.0818e-7).replace("-2.08180E-07", "************") + F_LINE),
+                  ("마지막 행 스텝 0", renum(_fake_oszicar(20), lambda i: 0 if i == 20 else i) + F_LINE),
+                  ("스텝 0 부터 시작", renum(_fake_oszicar(20), lambda i: i - 1) + F_LINE),
+                  ("정상 OSZICAR 뒤에 스텝 1 부터 다시 시작한 블록 (리뷰어 재현)", HDR + _fake_oszicar(20) + F_LINE + HDR + _fake_oszicar(8) + F_LINE),
+                  ("요약 줄 없이 스텝 1 로 다시 시작", _fake_oszicar(20) + _fake_oszicar(8)),
+                  ("요약 줄 뒤에 번호를 이어 붙인 전자 행 (21)", _fake_oszicar(20) + F_LINE + renum(_fake_oszicar(1), lambda i: 21)),
+                  ("전자 반복행 없음 (빈 파일)", ""),
+                  ("전자 반복행 없음 (머리줄 + 요약 줄만)", HDR + F_LINE),
+                  ("스텝 수 NELM + 1 (201 > 200)", _fake_oszicar(201) + F_LINE))
+        for why, osz in probes:
+            mk(F_, osz=osz); mk(F_, "r1")
+            rq = check(out, ret, msha, None)[1][F_]
+            ck(rq["status"] == "SCF_UNVERIFIED" and rq["attempt"] == "0" and "r1_ignored" in rq and rq.get("r1_status") == "OK" and bool(rq.get("why"))
+               and check_exit({F_: rq}) == 3 and json_ok(rq),
+               f"⛔음성 CY Q-CY-9 {why} + 정상 r1 → SCF_UNVERIFIED (OK 아님 · r1 승격 안 함 · JSON 저장 가능) — {rq['status']} {str(rq.get('why'))[:90]}")
+        shutil.rmtree(os.path.join(run, F_ + "_r1"))
+        mk(F_, osz=probes[0][1])
+        rcq = C()
+        ck(rcq["jobs"][F_]["status"] == "SCF_UNVERIFIED" and F_ in rcq["jobs_not_ok"] and collect_exit(rcq) == 3 and rcq["samples"]["①"]["W_J_m2"] is None
+           and rcq["G3"]["status"] == "INCOMPLETE" and rcq["G4"]["status"] == "INCOMPLETE" and rcq["G5"]["status"].startswith("INCOMPLETE (분모")
+           and rcq["G5"]["usage_eligible"] is False and not rcq["samples"]["①"]["total_w_citable"] and json_ok(rcq),
+           f"⛔음성 CY Q-CY-9 NaN OSZICAR 로 집계 → jobs_not_ok · 종료 3 · ① W 없음 · G3·G4·G5 안 열림 · JSON 저장 가능 — {rcq['G3']['status']} {rcq['G4']['status']} {rcq['G5']['status']}")
+        for why, osz in (("스텝 200 = NELM · |dE| 8.2e-7 · |d eps| 3.1e-7", _fake_oszicar(200, -8.2e-7, 3.1e-7) + F_LINE),
+                         ("스텝 200 = NELM · |dE| = |d eps| = EDIFF (≤ 경계)", _fake_oszicar(200, 1.0e-6, -1.0e-6) + F_LINE)):
+            mk(F_, osz=osz)
+            rq = check(out, ret, msha, None)[1][F_]
+            ck(rq["status"] == "OK" and rq["oszicar_last"]["n_elec_steps"] == 200,
+               f"[양성] CY Q-CY-9 마지막 허용 스텝에서의 수렴 ({why}) → OK (step < NELM 을 요구하지 않는다) — {rq['status']} {rq.get('why')}")
+        mk(F_, osz=_fake_oszicar(200, 2.2678e-3, -3.2575e-5) + F_LINE); mk(F_, "r1", osz=_fake_oszicar(300, 5.1e-7, -2.3e-7) + F_LINE)
+        rq = check(out, ret, msha, None)[1][F_]
+        ck(rq["status"] == "OK" and rq["attempt"] == "r1" and rq.get("first_attempt") == "SCF_NOT_CONVERGED" and rq["oszicar_last"]["n_elec_steps"] == 300,
+           f"[양성] CY Q-CY-9 첫 시도 확인된 미수렴 (유한값 > EDIFF) + r1 이 마지막 허용 스텝 300 (= r1 NELM) 에서 수렴 → r1 채택 — {rq['status']} {rq.get('why')}")
+        shutil.rmtree(os.path.join(run, F_ + "_r1"))
+        mk(F_, osz=_fake_oszicar(200, 2.2678e-3, -3.2575e-5) + F_LINE.replace("d E =0.237819E-01", "d E =0.000000E+00"))
+        rq = check(out, ret, msha, None)[1][F_]
+        ck(rq["status"] == "SCF_NOT_CONVERGED" and rq["oszicar_last"]["dE"] == 2.2678e-3 and rq["oszicar_last"]["n_elec_steps"] == 200,
+           f"⛔음성 CY Q-CY-9 마지막 전자 행 |dE| 2.3e-3 뒤 요약 줄 'd E =0.0' → SCF_NOT_CONVERGED (요약 줄을 dE 로 안 씀 · 확인된 미수렴) — {rq['status']}")
+        mk(F_, osz=HDR + _fake_oszicar(64, -8.2451e-8, -2.0818e-7) + F_LINE)
+        rq = check(out, ret, msha, None)[1][F_]
+        ck(rq["status"] == "OK" and rq["oszicar_last"]["dE"] == -8.2451e-8 and rq["oszicar_last"]["n_elec_steps"] == 64,
+           f"[양성] CY Q-CY-9 실물 형식 (머리줄 + 64 행 + 요약 줄 'd E =0.237819E-01' > EDIFF) → OK (요약 줄의 d E 는 전자 dE 가 아니다) — {rq['status']} {rq.get('why')}")
+        for why, kw in (("OUTCAR 'EDIFF was not reached'", {"conv": False}),
+                        ("OUTCAR 에 수렴 줄 없음", {"outcar": _fake_outcar(J[F_], E[F_], ED[F_]).replace("aborting loop because EDIFF is reached", "aborting loop")})):
+            mk(F_, osz=_fake_oszicar(20), **kw); mk(F_, "r1")
+            rq = check(out, ret, msha, None)[1][F_]
+            ck(rq["status"] == "SCF_UNVERIFIED" and "r1_ignored" in rq and "어긋" in str(rq.get("why")),
+               f"⛔음성 CY Q-CY-9 {why} 인데 OSZICAR 마지막 행은 EDIFF 이하 → SCF_UNVERIFIED (두 기록이 어긋남 · r1 승격 안 함 · 옛 판독은 SCF_NOT_CONVERGED) — {rq['status']}")
+        shutil.rmtree(os.path.join(run, F_ + "_r1")); mk(F_)
         mk(F_, extra_run=True)
         ck(st(F_) == "MULTIPLE_RUNS", "⛔음성 CE P0-2 두 번째 미완결 실행 붙임 → MULTIPLE_RUNS")
         mk(F_, encut=400.0)
