@@ -547,6 +547,36 @@ def selftest():
     chk('L13 ULKRR-04 ids_of: 정상 = (정수 목록 · 문제 없음) · 소수 ID · 열 결손 = (None · 사유) — 예외 없음',
         lambda: ids_of([{'id': 1.0}, {'id': 2.0}]) == ([1, 2], []) and ids_of([{'id': 1.0}, {'id': 1.5}])[0] is None and ids_of([{'id': 1.0}, {'id': 1.5}])[1]
         and ids_of([{'not_id': 1.0}])[0] is None and ids_of([{'not_id': 1.0}])[1])
+    # ── Q4 (Codex 수정 재확인 10-15 Q3 비차단 · 1저자 10-15 권고대로) — 덤프의 ID 열 정수 토큰은 float 를 거치지 않고 검사한다 ──
+    #    (옛 판: read_dump 가 '9007199254740993' 을 float 9007199254740992.0 (= 2^53) 으로 읽어 exact_id 가 받았다 · '1.0000000000000001' 도 1.0 으로 받았다)
+    with tempfile.TemporaryDirectory() as td:
+        def dump_with(tok, kind='custom'):
+            p = os.path.join(td, f'{kind}_{len(os.listdir(td))}.dump')
+            if kind == 'custom':
+                write_custom(p, 5, ['id', 'type', 'z'], [{'id': 1, 'type': 3, 'z': 0.1}, {'id': 2, 'type': 1, 'z': 0.2}])
+                txt = open(p).read().replace('\n2 1 ', f'\n{tok} 1 ', 1)
+            else:
+                write_local(p, 5, ['c_cpl[7]', 'c_cpl[8]', 'c_x[1]'], [{'c_cpl[7]': 1.0, 'c_cpl[8]': 2.0, 'c_x[1]': 0.5}])
+                txt = open(p).read().replace('\n1.0 2.0 ', f'\n1.0 {tok} ', 1)
+            with open(p, 'w', newline='\n') as f:
+                f.write(txt)
+            return read_dump(p, kind, ['id', 'type', 'z'] if kind == 'custom' else ['c_cpl[7]', 'c_cpl[8]', 'c_x[1]'])
+        big = dump_with('9007199254740993')
+        norm = dump_with('2')
+        chk('L14 Q4 원자 덤프 ID 정수 토큰 9007199254740993 (2^53 + 1) — float 를 거치지 않는다 → exact_id · ids_of 거부 (2^53 으로 둔갑해 받지 않는다) · '
+            '정상 토큰 1 · 2 = 그대로 (1 · 2)',
+            lambda: big['ok'] and big['rows'][1]['id'] == 9007199254740993 and exact_id(big['rows'][1]['id']) is None and ids_of(big['rows'])[0] is None
+            and bool(ids_of(big['rows'])[1]) and norm['ok'] and [exact_id(r['id']) for r in norm['rows']] == [1, 2] and ids_of(norm['rows']) == ([1, 2], []),
+            f'{big["rows"][1:]} {norm["rows"]}')
+        lbig, l1, lmask = dump_with('9007199254740993', 'local'), dump_with('2.0', 'local'), dump_with('2.0000000000000001', 'local')
+        chk('L14 Q4 쌍 덤프 참조 열 (c_cpl[7] · c_cpl[8]) 같은 규칙 — 정수 토큰 2^53 + 1 거부 · 소수 꼴 정확한 정수 2.0 그대로 (2) · '
+            '2.0000000000000001 (float 가 정수 2.0 으로 가린다) = 파서 문제 (ok 거짓 · 사유)',
+            lambda: lbig['ok'] and exact_id(lbig['rows'][0]['c_cpl[8]']) is None and l1['ok'] and exact_id(l1['rows'][0]['c_cpl[8]']) == 2
+            and not lmask['ok'] and any('정수' in x for x in lmask['problems']),
+            f'{lbig["rows"]} {l1["rows"]} {lmask["ok"]} {lmask["problems"]}')
+        huge = dump_with('1' + '0' * 400)
+        chk('L14 Q4 아주 긴 정수 토큰 (401 자리) — 예외 없이 ID 로 받지 않는다 (파서 문제 또는 exact_id 거부)',
+            lambda: (not huge['ok']) or exact_id(huge['rows'][1]['id']) is None, f'{huge["ok"]} {huge["problems"]}')
     print(f'selftest: {"PASS" if not fails else "FAIL"} ({len(fails)} 실패)')
     return 1 if fails else 0
 

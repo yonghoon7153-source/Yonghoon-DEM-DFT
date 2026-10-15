@@ -629,6 +629,20 @@ def selftest() -> int:
         rc_uf, out_uf = _run(ti, kit_i, B73, 'UC')
         chk('M24 Q6 새 폴더 = 새 시도 — 앞 시도 폴더 UC.try1 보존 · 새 잡 기록에 prior_attempts=UC.try1 (러너가 남긴다 · 한도 판단 = 1저자)',
             lambda: rc_uf == 0 and os.path.isdir(uc + '.try1') and re.search(r'^prior_attempts=UC\.try1$', _read(os.path.join(uc, 'run_manifest.txt')), re.M))
+        # ── Q3 (1저자 10-15 · Codex 수정 재확인 Q4) — M22 양성과 같은 PASS 판정 JSON 그대로 · 그 런 GA 화면에 ERROR 를 덧붙이면 (원자료 ≠ 판정) 사전 점검이
+        #    승인된 판독기로 다시 읽어 RJ 의 LIGGGHTS 전에 멈춘다 (마지막 시험 — 같은 문법 런을 쓰는 앞 시험 뒤에 고친다) ──
+        tk = os.path.join(td, 'q3')
+        kit_k, work_k, log_k = _setup(tk)
+        ga_scr = os.path.join(os.path.dirname(gv), 'GA', 'screen.out') if gv else os.path.join(td, 'nope', 'screen.out')
+        if os.path.exists(ga_scr):
+            with open(ga_scr, 'a', encoding='utf-8') as f:
+                f.write('ERROR: injected raw error after the PASS verdict (Q3 시험)\n')
+        n0 = len(_calls(log_k))
+        rc_q3, out_q3 = _run(tk, kit_k, B73, 'RJ')
+        chk('M25 Q3 문법 판정 JSON (PASS) 그대로 · 그 런 GA 화면 끝에 ERROR 덧붙임 (Codex raw_ga_error_cached_pass) → 사전 점검이 원자료 재판독에서 거부 · '
+            'LIGGGHTS · mpirun 호출 0 · RJ 폴더 없음 (옛 판 = RJ 진행)',
+            lambda: os.path.exists(ga_scr) and rc_q3 != 0 and '문법 fixture' in out_q3 and '재판독' in out_q3 and len(_calls(log_k)) == n0
+            and not os.path.isdir(os.path.join(work_k, B73, 'RJ')), out_q3[-600:])
     finally:
         shutil.rmtree(td, ignore_errors=True)
     print(f'selftest: {"PASS" if not fails else "FAIL"} ({len(fails)} 실패)')

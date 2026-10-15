@@ -491,6 +491,19 @@ def selftest():
         open(fa, 'w').write(fa_text)
         chk('C3 ULKRR-04 G2 원자 ID 소수 (2 → 2.5) = FAIL (글자 그대로 정수 변환 — 잘라서 같은 원자로 보지 않는다)',
             lambda: '\n2.5 3 ' in open(fa).read() and g2_compare(fa, os.path.join(td, 'o.a'))['status'] == 'FAIL')
+        # ── ULKRF-03 (Codex 수정 재확인 10-15 · g2c_c_cpl7_missing · g2c_c_cpl8_missing) — 필수 열 결손 = 파서 ok 거짓을 먼저 → FAIL + 사유 (KeyError 아님) ──
+        for col in ('c_cpl[7]', 'c_cpl[8]'):
+            for side in ('test', 'orig'):
+                nc = os.path.join(td, f'nc_{side}_{col[6]}.c')
+                ul_lib.write_local(nc, 3200000, ccols, base)
+                txt = open(nc).read().replace(f' {col} ', f' not_{col} ', 1)   # 머리의 열 이름 하나만 · 숫자 행은 그대로
+                with open(nc, 'w', newline='\n') as f:
+                    f.write(txt)
+                pair = (nc, os.path.join(td, 'o.c')) if side == 'test' else (os.path.join(td, 's.c'), nc)
+                chk(f'C4 ULKRF-03 G2c {"시험" if side == "test" else "원"} 쪽 쌍 덤프 머리 {col} → not_{col} (필수 열 결손) = 예외 없이 FAIL + 사유 '
+                    '(파서 ok 거짓을 먼저 · 숫자를 채우거나 행을 지우지 않는다)',
+                    lambda pair=pair, nc=nc, col=col: (lambda g: g['status'] == 'FAIL' and any('열 이름' in w for w in g['why'])
+                                                       and f'not_{col}' in open(nc).read())(g2c_compare(*pair)))
         stl = 'solid x\n  facet normal 0 0 -1\n    outer loop\n      vertex 0 0 {z}\n      vertex 0 0.05 {z}\n      vertex 0.05 0.05 {z}\n'
         for name, z in (('m1.stl', '0.111252'), ('m2.stl', '0.111254')):
             open(os.path.join(td, name), 'w').write(stl.format(z=z))
