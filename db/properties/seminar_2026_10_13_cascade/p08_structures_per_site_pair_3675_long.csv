@@ -1,0 +1,13 @@
+# Page 10 (user deck) — structures per (cation site, anion site) over all 3,675 relaxed structures of slide 7.
+# Source: cascade_all_302_2026_08_25.csv families multi_category_2026_05_26_v23 (3,615) + as2s3_recover (60).
+# Counts STRUCTURES (relaxation runs), as slide 7 does: 15 AlI3 re-runs share names with main-batch rows (distinct configurations 3660).
+cation_site,anion_site,n_structures,percent_of_all
+Li 24g,free sulfide,1050,28.6
+Li 24g,sulfur in the PS₄ corner,810,22.0
+Li 24g,halide site,615,16.7
+P 4b (framework),free sulfide,390,10.6
+P 4b (framework),sulfur in the PS₄ corner,285,7.8
+P 4b (framework),halide site,195,5.3
+Li 48h,free sulfide,120,3.3
+Li 48h,sulfur in the PS₄ corner,105,2.9
+Li 48h,halide site,105,2.9

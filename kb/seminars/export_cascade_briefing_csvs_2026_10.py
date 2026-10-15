@@ -393,6 +393,38 @@ def p08b_origin():
     return 'p08_anneal_energy_change_origin.csv'
 
 
+SITE_CODE_ROWS = {'Li_24g': 'Li 24g', 'P_4b': 'P 4b (framework)', 'Li_48h': 'Li 48h'}
+SITE_CODE_COLS = {'S_4a': 'free sulfide', 'S_16e': 'sulfur in the PS₄ corner', 'Cl_4d': 'halide site'}
+
+
+def p08_3675():
+    """User 10-15 ('추가해서 만드는건 안되는거야?'): the site-pair table over all 3,675 relaxed structures of slide 7 —
+    the main batch (3,615) plus the August re-run (60 = As₂S₃ 45 new + AlI₃ 15 re-runs of configurations already in the
+    main batch, same names). Counts STRUCTURES (runs), like slide 7 — not distinct configurations (3,660)."""
+    rows = [r for r in stage1_rows() if r['family'] in MAIN_FAMILIES]
+    grid = {(c, a): 0 for c in SITE_CODE_ROWS for a in SITE_CODE_COLS}
+    for r in rows:
+        k = (r['cation_site'], r['anion_site'])
+        if k not in grid:
+            raise ValueError(f"{r['name']}: site pair {k} outside the 3 × 3 table")
+        grid[k] += 1
+    total = sum(grid.values())
+    if total != 3675:
+        raise ValueError(f'{total} structures, not the 3,675 of slide 7')
+    names = [r['name'] for r in rows]
+    dup = len(names) - len(set(names))
+    head = ['Page 10 (user deck) — structures per (cation site, anion site) over all 3,675 relaxed structures of slide 7.',
+            'Source: cascade_all_302_2026_08_25.csv families multi_category_2026_05_26_v23 (3,615) + as2s3_recover (60).',
+            f'Counts STRUCTURES (relaxation runs), as slide 7 does: {dup} AlI3 re-runs share names with main-batch rows '
+            f'(distinct configurations {total - dup}).']
+    write('p08_structures_per_site_pair_3675_long.csv', head,
+          ['cation_site', 'anion_site', 'n_structures', 'percent_of_all'],
+          [[SITE_CODE_ROWS[c], SITE_CODE_COLS[a], grid[(c, a)], round(100 * grid[(c, a)] / total, 1)] for c in SITE_CODE_ROWS for a in SITE_CODE_COLS])
+    return write('p08_structures_per_site_pair_3675_matrix.csv', head + ['Same counts as a 3x3 matrix (rows = cation site, columns = anion site).'],
+                 ['cation_site'] + list(SITE_CODE_COLS.values()),
+                 [[SITE_CODE_ROWS[c]] + [grid[(c, a)] for a in SITE_CODE_COLS] for c in SITE_CODE_ROWS])
+
+
 def p09():
     e = {r['id']: r for r in json.load(open(os.path.join(P, 'eos.json')))['results']}
     sysd = [('Li6PS5Cl', e['comp1_v3'], 4, 960.0, 1085.0), ('Li5.4PS4.4Cl1.6', e['modelc_v3'], 5, 1140.0, 1285.0)]
@@ -615,16 +647,16 @@ SITE_PAIR_COLS = {'free sulfide': 'S 4a\n(free S$^{2{-}}$)', 'sulfur in the PS�
 P08_USER_SLOTS = {'heatmap': (4.6, 3.3), 'hist': (3.3, 1.7)}   # user's slim page 10 (10-15) — the hand-edited deck
 
 
-def site_pair_matrix(rows):
+def site_pair_matrix(rows, total=3615):
     """p08 matrix CSV rows (header first) → (row labels, column labels, counts) in field terms (Wyckoff site names).
-    Refuses anything but the 3 × 3 main-batch table (total 3,615, every pair populated) — a partial or relabelled
-    table must not be drawn as if it were the whole batch."""
+    Refuses anything but the 3 × 3 table with the declared total (3,615 main batch, or 3,675 with the August re-run)
+    and every pair populated — a partial or relabelled table must not be drawn as if it were the whole batch."""
     head, body = rows[0], rows[1:]
     if head[0] != 'cation_site' or head[1:4] != list(SITE_PAIR_COLS) or [r[0] for r in body] != list(SITE_PAIR_ROWS):
         raise ValueError(f'unexpected site-pair table: {head} / {[r[0] for r in body]}')
     counts = [[int(x) for x in r[1:4]] for r in body]
-    if sum(map(sum, counts)) != 3615 or min(map(min, counts)) <= 0:
-        raise ValueError(f'site-pair total {sum(map(sum, counts))} != 3615 or an empty pair')
+    if sum(map(sum, counts)) != total or min(map(min, counts)) <= 0:
+        raise ValueError(f'site-pair total {sum(map(sum, counts))} != {total} or an empty pair')
     return [SITE_PAIR_ROWS[r[0]] for r in body], [SITE_PAIR_COLS[c] for c in head[1:4]], counts
 
 
@@ -637,12 +669,12 @@ def _plt():
     return plt
 
 
-def draw_site_pair_heatmap(out, w=4.6, h=3.3):
+def draw_site_pair_heatmap(out, w=4.6, h=3.3, src='p08_configurations_per_site_pair_matrix.csv', total=3615):
     """Configurations per (cation, anion) substitution-site pair with field labels (user 10-15: 'field terms'; the
     August image17 said 'where the dopant metal went'). Drawn at the slot size, counts on the cells, no colour bar.
     ⛔ Does not show the 60 structures of the August re-run — they are not in the main-batch table."""
     plt = _plt()
-    rl, cl, m = site_pair_matrix(rows_of(os.path.join(OUT, 'p08_configurations_per_site_pair_matrix.csv')))
+    rl, cl, m = site_pair_matrix(rows_of(os.path.join(OUT, src)), total)
     tot, vmax = sum(map(sum, m)), max(map(max, m))
     fig, ax = plt.subplots(figsize=(w, h))
     ax.imshow(m, cmap='Blues', vmin=0, vmax=vmax * 1.05, aspect='auto')
@@ -855,6 +887,7 @@ site-preference backup p18 (old p12 / p17 files are removed by the script). p06 
 | 7 | Stage-1 composite score, Origin copy (10-15) | `p07_stage1_composite_score_top10_origin.csv` | the slide's ten bars only, copied from the 91 file · rows in Origin plotting order (rank 10 → 1, so rank 1 is on top) · tick labels plain and Origin rich text (`\\-(2)` subscripts) · value labels at 2 decimals as on the slide · same caution |
 | 8 | Configuration sampling | `p08_configurations_per_site_pair_long.csv` · `_matrix.csv` | heat map: cation site × anion site → configurations (main batch 3,615) |
 | 8 | Short anneal (slim slide 9, 10-15) | `p08_anneal_energy_change.csv` | histogram: ΔE per structure (meV per supercell · 693 · bin 50 · −1250 … 0) — replaces the August Step-5 histogram (681) |
+| 8 | Site pairs over all 3,675 (user page 10, 10-15) | `p08_structures_per_site_pair_3675_long.csv` · `…_3675_matrix.csv` | structures per (cation site, anion site), main batch + August re-run · counts runs like slide 7 (15 AlI₃ re-runs share names; 3,660 distinct) |
 | 8 | Short anneal, Origin layout (user page 10, 10-15) | `p08_anneal_energy_change_origin.csv` · `p08_anneal_energy_change_bins_origin.csv` | same 693 values in meV and eV per 52-atom cell, median in the header · 50 meV bins (sum = 693) for a column plot |
 | 9 | DFT EOS | `p09_eos_bm3_fit_curves.csv` | lines: E − E0 vs V per f.u. (fit curves; raw points not in repo) |
 | 10 | Stability window | `p10_stability_window_host.csv` · `p10_stability_window_host_segments.csv` | bar segments on a voltage axis (host Li6PS5Cl) |
@@ -879,6 +912,8 @@ def main():
         d = sys.argv[sys.argv.index('--fig-p08') + 1]
         os.makedirs(d, exist_ok=True)
         print(draw_site_pair_heatmap(os.path.join(d, 'fig_p08_site_pair_heatmap.png'), *P08_USER_SLOTS['heatmap']))
+        print(draw_site_pair_heatmap(os.path.join(d, 'fig_p08_site_pair_heatmap_3675.png'), *P08_USER_SLOTS['heatmap'],
+                                     src='p08_structures_per_site_pair_3675_matrix.csv', total=3675))
         print(draw_anneal_hist(os.path.join(d, 'fig_p08_anneal_energy_hist.png'), *P08_USER_SLOTS['hist'], median=True))
         print(draw_anneal_hist(os.path.join(d, 'fig_p08_anneal_energy_hist_origin.png'), *P08_USER_SLOTS['hist'],
                                median=True, style='origin'))
@@ -886,7 +921,7 @@ def main():
     for old in ('p12_md_campaign_runs.csv', 'p12_md_campaign_progress.csv', 'p17_site_preference_vs_ionic_radius.csv'):
         if os.path.exists(os.path.join(OUT, old)):      # renamed when the audit slide became page 11
             os.remove(os.path.join(OUT, old))
-    made = [p06(), p07(), p07b(), p07c(), p07d(), p08(), p08b(), p08b_origin(), p09(), p10(), p13(), p18()]
+    made = [p06(), p07(), p07b(), p07c(), p07d(), p08(), p08_3675(), p08b(), p08b_origin(), p09(), p10(), p13(), p18()]
     with open(os.path.join(OUT, 'README.md'), 'w', encoding='utf-8') as f:
         f.write(README)
     print('wrote', len(os.listdir(OUT)), 'files to', os.path.relpath(OUT, ROOT))
@@ -1023,6 +1058,14 @@ def selftest():
             ok += 1
         else:
             raise AssertionError('site_pair_matrix accepted a broken table')
+    m3675 = rows_of(os.path.join(OUT, 'p08_structures_per_site_pair_3675_matrix.csv'))
+    assert sum(map(sum, site_pair_matrix(m3675, 3675)[2])) == 3675; ok += 1
+    try:
+        site_pair_matrix(m3675)          # the 3,675 table must not pass as the 3,615 main batch
+    except ValueError:
+        ok += 1
+    else:
+        raise AssertionError('site_pair_matrix accepted the 3,675 table as the 3,615 main batch')
     real_a = rows_of(os.path.join(OUT, 'p08_anneal_energy_change.csv'))
     med_, data_, bins_ = anneal_origin_tables(real_a)
     assert len(data_) == 693 and sum(b[3] for b in bins_) == 693 and -820 < med_ < -800; ok += 1
