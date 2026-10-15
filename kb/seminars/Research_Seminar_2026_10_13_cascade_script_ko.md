@@ -306,7 +306,8 @@ evidenceScope: multi-source-mixed
   - B₀ 는 Li₆PS₅Cl 이 26.2 GPa, Cl 이 많은 Li₅.₄PS₄.₄Cl₁.₆ 가 21.7 GPa 입니다.
   - 두 조성은 셀에 든 화학식 단위 수가 달라서, 부피는 화학식 단위당으로 비교합니다.
   - **[가리킴: 왼쪽 파란 숫자]** Li₆PS₅Cl 의 평형부피는 원자당 19.55 Å³ 입니다.
-- 탄성상수는 유한 변형으로 구했고, 더 큰 슈퍼셀로 수렴을 확인하는 계산이 진행 중입니다.
+- 탄성상수는 셀을 조금씩 변형시키고, 변형마다 원자 위치를 다시 완화해서 구했습니다 (relaxed-ion). 더 큰 슈퍼셀로 수렴을 확인하는 계산이 진행 중이라 값은 오늘 말씀드리지 않습니다.
+  > ✎ 10-15 밤 사용자: 탄성 불렛의 상태 구절을 뺐다 (*'Elastic constants (C_ij) come from finite strains.'*) · *'relaxed ion 으로부터 온다는 거 표현하는 게 낫지 않아?'* → 제안 *'Relaxed-ion elastic constants (C_ij) come from finite strains.'* · 사용자 가설 *'초기 cascade 는 UMA 인데 clamped 로 해서'* 는 코드와 다르다 — 1단계 UMA 탄성도 변형마다 이온을 완화했다 (`tools/doping/run_mlip_postproc.py` `elastic_finite_strain` · FIRE fmax 0.05 eV/Å · 300 스텝 · ε ±0.005) · `tier_cascade.sh:238` 의 'clamped-ion' 은 틀린 주석 (08-19 정독 기록 `cascade_pipeline_anatomy_2026_08_13.md` §A).
 
 **[가리킴: 맨 아래 줄]** 1단계의 부피 변화 필터는 원자당 27.48 Å³ 를 호스트 부피로 썼습니다. 이 DFT 평형부피의 1.41 배이고, 점검에서 말씀드린 '약 40 %' 가 이것입니다. 그래서 2단계는 DFT 평형 호스트에서 구조를 만듭니다.
 
