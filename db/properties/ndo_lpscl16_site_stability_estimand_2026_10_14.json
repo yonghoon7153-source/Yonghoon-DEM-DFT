@@ -142,17 +142,24 @@
   "4_검증_게이트_결과_보기_전에": {
     "G1_후보": "모델별 UMA 상위 3 의 DFT 단일점 (총 6) + 참조 2 (Li₂S · Li₃PS₄) — 다 있어야 Q1 을 계산한다",
     "G2_UMA_DFT_부호": "같은 셀에서 UMA ΔG_site 와 DFT ΔG_site 의 부호가 같아야 UMA x-추세를 쓴다. 다르면 '두 방법이 갈림' 으로 보고하고 추세를 쓰지 않는다",
-    "G3_여유": "|ΔG_site(DFT 단일점)| < 0.30 eV/Nd 면 두 모델 최저 셀을 DFT vc-relax 한 뒤에만 부호를 쓴다. 그 뒤에도 < 0.10 eV/Nd 면 '구별 불가'",
+    "G3_여유": "|ΔG_site(DFT 단일점)| < 0.30 eV/Nd 면 두 모델 최저 셀을 DFT **고정셀 + EOS** 로 이완한 뒤에만 부호를 쓴다 (Rietveld host 셀 모양 (a = b · 60°) 을 등방 스케일한 부피 격자 · 점마다 이온만 relax · BM3 맞춤 → V₀ 에서 이온만 relax · vc-relax 안 씀). 그 뒤에도 < 0.10 eV/Nd 면 '구별 불가'",
     "G4_k_탐침": "두 최저 셀을 k 한 단계 올려 SCF 1 번씩 — ΔG_site 가 0.05 eV/Nd 넘게 움직이면 전 점을 그 k 로 다시 (재개 규칙 · 안 할 거면 사용자 명시 결정으로 닫는다)",
     "G5_기저_닫힘": "Q2 의 세 X 가 같은 상 기저에서 음 아닌 계수 · 잔차 < 1e-8 로 닫혀야 한다 — 안 닫히면 기저를 넓힌다 (결과 보고 고르지 않는다)",
     "G6_같은_설정": "Q3 의 도핑 셀과 host 는 PP · ecutwfc/ecutrho · FFT 격자 · k 가 같아야 한다 — 다르면 ELF · Bader 절대값을 나란히 놓지 않는다 (6 월 ELF 가 이 실패였다)",
-    "G7_기준상_다형_2026_10_14_결과_전": "기준상 Li₃PS₄ 는 MP (PBE) 바닥 다형 하나다. ΔG_site (Q1 DFT · 보조 host UMA 둘 다) 가 그 판정 문턱 (G3 의 0.30 · 0.10 · 보조 host 의 부호 0) 에서 0.11 eV/Nd 안이면 다른 다형 둘 (mp-2646995 I-42m · mp-1097036 Pnma) 도 같은 방식 · 같은 설정으로 계산해 Li₃PS₄ 최저를 쓴다 — 0.11 = MP 다형 차 최대 0.0138 eV/atom × 8 원자 (규모 어림 — UMA · 우리 QE 설정의 다형 차는 아직 모른다) · Li₃PS₄ 가 더 낮은 다형으로 바뀌면 ΔG_site 는 그만큼 내려간다. 안 할 거면 사용자 명시 결정으로 닫는다 (재개 규칙)."
+    "G7_기준상_다형_2026_10_14_결과_전": "기준상 Li₃PS₄ 는 MP (PBE) 바닥 다형 하나다. ΔG_site (Q1 DFT · 보조 host UMA 둘 다) 가 그 판정 문턱 (G3 의 0.30 · 0.10 · 보조 host 의 부호 0) 에서 0.11 eV/Nd 안이면 다른 다형 둘 (mp-2646995 I-42m · mp-1097036 Pnma) 도 같은 방식 · 같은 설정으로 계산해 Li₃PS₄ 최저를 쓴다 — 0.11 = MP 다형 차 최대 0.0138 eV/atom × 8 원자 (규모 어림 — UMA · 우리 QE 설정의 다형 차는 아직 모른다) · Li₃PS₄ 가 더 낮은 다형으로 바뀌면 ΔG_site 는 그만큼 내려간다. 안 할 거면 사용자 명시 결정으로 닫는다 (재개 규칙).",
+    "G3_개정_2026_10_15_결과_전": {
+      "무엇": "G3 의 'DFT vc-relax' → '고정셀 + EOS (등방 스케일 · BM3 · V₀ 에서 이온만 relax)'",
+      "왜": "이 캠페인의 정본 이완 규약 — kb/methodology/computational_methods_canonical.md §3-1 '이 캠페인은 vc-relax 를 쓰지 않는다' (정적 스냅숏 셀은 cubic 이 아니라 vc-relax 셀 뒤틀림은 배치 선택의 인공물 · 유한 기저 Pulay 함정) · db/compositions/modelc_nd_doped.json 'vc-relax NOT used (distorts argyrodite)'. 10-14 카드 작성 때 이 규약을 안 보고 vc-relax 로 적었다",
+      "사용자": "2026-10-15 AskUserQuestion 'EOS → V0 로 고친다' · '우린 원래 argyrodite 유지하려고 relax해서 EOS 해서 최적 V0를 찾았잖아 · 저번 새로운 PP할때 bond strength 정도만 보려고 한번 vc-relax 허락해준거고' · '이 사항은 기본인데'",
+      "결과_전": "DFT Q1 결과 0 건인 상태 (UMA 판독만 봤다 — ndo_site_uma_rietveld_readout_2026_10_15.json) · 문턱 0.30 · 0.10 은 그대로",
+      "범위": "argyrodite 셀 (후보 · 최저 셀) 만. 기준상 Li₂S · Li₃PS₄ (비-argyrodite 정렬 결정) 는 사용자가 vc-relax 2 잡을 따로 승인 (2026-10-15 · ndo_site_dft_runlog_2026_10_15.json)"
+    }
   },
   "5_허용_서술_금지_서술": {
     "Q1_허용_결과에_따라_하나": [
-      "ΔG_site ≥ +0.30 (또는 vc-relax 뒤 ≥ +0.10): 'Li₃PS₄/Li₂S 교환 기준 · Nd/(Nd+P) 0.40 셀 · frozen-4f PBE 에서 Nd@4b 모델이 Nd@Li 모델보다 X eV/Nd 높다. 다른 저장소와 x = 0.02 에서의 크기는 확인하지 않았다.'",
-      "ΔG_site ≤ −0.30 (또는 vc-relax 뒤 ≤ −0.10): '… Nd@4b 모델이 X eV/Nd 낮다 (Rietveld 자리와 같은 방향) …'",
-      "|ΔG_site| < 0.10 (vc-relax 뒤): '이 계산으로 두 자리를 가를 수 없다.'"
+      "ΔG_site ≥ +0.30 (또는 EOS 이완 뒤 ≥ +0.10): 'Li₃PS₄/Li₂S 교환 기준 · Nd/(Nd+P) 0.40 셀 · frozen-4f PBE 에서 Nd@4b 모델이 Nd@Li 모델보다 X eV/Nd 높다. 다른 저장소와 x = 0.02 에서의 크기는 확인하지 않았다.'",
+      "ΔG_site ≤ −0.30 (또는 EOS 이완 뒤 ≤ −0.10): '… Nd@4b 모델이 X eV/Nd 낮다 (Rietveld 자리와 같은 방향) …'",
+      "|ΔG_site| < 0.10 (EOS 이완 뒤): '이 계산으로 두 자리를 가를 수 없다.'"
     ],
     "Q2_허용": "'같은 상 기저 · 닫힌계 · 0 K · x = 0.40 에서 도핑 셀의 분해 구동력이 도핑 전보다 Y meV/atom 크다(작다)'",
     "Q3_허용": "'같은 설정에서 Nd 이웃 S 의 Bader 전하가 PS₄ 만 이웃한 S 보다 Z e 더 음이다' 같은 **비교 문장** — 묘사로만",

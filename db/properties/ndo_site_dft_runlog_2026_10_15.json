@@ -25,7 +25,14 @@
   "답": "카드 §2 Q1 은 기준상을 '같은 QE 설정으로 이완' 이라고만 적었다 — 셀까지 그 설정의 바닥에 둔다 (MP 격자는 VASP PBE 값이라 우리 PP 의 바닥과 조금 다르다). 셀 바닥을 찾는 길은 둘이다: EOS (부피 여러 점 고정셀 relax → 맞춤 · 체적탄성률 B0 까지 나온다 · b2o3 / modelC B0 때 쓴 길) 와 vc-relax (응력으로 셀과 원자를 함께 옮긴다). 여기는 바닥 에너지만 필요해서 vc-relax 한 번이 싸다",
   "Pulay": "컷오프를 고정한 vc-relax 는 응력에 기저 오차 (Pulay) 가 섞여 부피가 조금 빗나갈 수 있다 — QE 가 끝에 새 셀의 G-벡터로 SCF 를 다시 풀어 에너지를 다시 낸다 (러너 완료 판정이 그 최종 scf 를 요구한다)",
   "크기_어림": "격자 1 % (부피 3 %) 빗나감이면 기준상 에너지는 ½·B·V·(ΔV/V)² 만큼 높아진다 — Li₂S (B ≈ 45 GPa · 45.6 Å³/f.u.) ≈ 6 meV/f.u. · Li₃PS₄ (B ≈ 25 GPa · 161 Å³/f.u.) ≈ 11 meV/f.u. ⇒ 저장소 항 4e(Li₂S) − e(Li₃PS₄) 에 ≈ 0.01–0.02 eV/Nd (B 는 어림값). 문턱 0.30 · 0.10 eV/Nd 보다 한 자리 이상 작다 — 그래도 공짜로 없앨 수 있는 치우침이라 vc-relax",
-  "후보": "후보 6 개는 DFT 로 이완하지 않는다 — 카드 §3 'UMA 이완 → DFT 단일점'. G3 (|ΔG_site| < 0.30 eV/Nd) 가 걸리면 그때 두 모델 최저 셀을 DFT vc-relax 한 뒤에만 부호를 쓴다"
+  "후보": "후보 6 개는 DFT 로 이완하지 않는다 — 카드 §3 'UMA 이완 → DFT 단일점'. G3 (|ΔG_site| < 0.30 eV/Nd) 가 걸리면 두 모델 최저 셀을 **고정셀 + EOS** (Rietveld host 셀 모양 등방 스케일 · BM3 · V₀ 에서 이온만 relax) 로 이완한 뒤에만 부호를 쓴다 (10-15 결과 전 개정 · vc-relax 안 씀)",
+  "사용자_결정_2026_10_15": {
+   "기준상": "AskUserQuestion 'vc-relax 2잡 (Recommended)' — 비-argyrodite 정렬 결정 둘만의 예외 (이 캠페인 정본은 vc-relax 를 안 쓴다 · kb/methodology/computational_methods_canonical.md §3-1)",
+   "G3": "AskUserQuestion 'EOS → V0로 고친다 (Recommended)' + '이 사항은 기본인데' — 카드 G3 · §5 · 결정 enforcement ③ 개정 (결과 전)",
+   "사용자_관례_원문": "'우린 원래 argyrodite 유지하려고 relax해서 EOS 해서 최적 V0를 찾았잖아 · 근데 저번 새로운 PP할때 bond strength 정도만 보려고 한번 vc-relax 허락해준거고'",
+   "⚠_내_실수": "10-14 카드 작성 때 정본 규약 (§3-1) 을 안 보고 G3 에 vc-relax 를 적었다 · CLAUDE.md 에 이 규약이 없었다 → 10-15 CLAUDE.md §데이터 규율에 한 줄 추가",
+   "UMA_셀": "후보의 UMA 이완은 셀도 움직였다 (FrechetCellFilter · O 배치 카드와 같은 조건 · UMA 경로 셀 정책 차이 = cell_policy_gap_2026_09_13.json GAP-1·2). Rietveld 정수화 셀 (ndo_lpscl16_n5fu · 1175.7 Å³ · a = b 6.928 · 60°) 대비 부피 — M@P 상위 3 +2.9 – +4.5 % · M@Li 상위 3 +0.1 – +1.3 % · UMA host 셋 +1.5 – +3.2 % (도핑 없는 host 도 늘었다 = UMA 격자 쪽 치우침 후보 · 판정 아님) · 각 58.95 – 62.35°. 단일점은 그 셀에서 푼다 (카드 §3) · G3 EOS 는 Rietveld 셀 모양으로 돌아간다"
+  }
  },
  "점검_대조": "kgy 블록이 새 MP_07 입력의 설정 줄 (숫자 표기 정규화) · PP 를 O 배치 카드 nd_scf 원본과 대조하고, 러너 selftest · DRY_RUN 을 거친 뒤에만 tmux 를 띄운다 (&& 사슬)",
  "발사": null,
