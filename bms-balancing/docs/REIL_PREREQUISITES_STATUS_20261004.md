@@ -1837,3 +1837,38 @@ rc 0 → **옛 봉인 대조 (§2-4) 에서 허용 밖 차이** → 정지. 원�
   그 뒤 사용자의 E1 별도 승인.
 - 이 결정은 E1 · launcher 복사 · 시험 · 읽기 경로 확보 · fetch · 자료 개봉 · run · C4-A / B 승인이 아니다. 회신이 오면 바이트 보존 → 원장 → (정정이
   요구되면 정정판 · 재검토) → 사용자 결정 순서로 간다.
+
+## §74 C4-E · E1 실행 승인 요청 사전 검토 회신 접수 — 정정 필요 6 · E0 수용 유지 · 실행 승인 없음 · 자체 발견 S1 (2026-10-15 KST · 덧붙임 — 위 §0–§73 은 그대로)
+
+- **보존:** `reviews/review_reil_c4e_e1_prereview_20261015/REIL_C4E_E1_PREREVIEW_20261015.zip` (261,827 B · sha256
+  `890a1c743700ea178ea8845111eb372068c90ec8b38941b157ffcd16ba7976b7`) · `originals/` 30 멤버 안전 추출 (심볼릭 링크 · 경로 이탈 0). 보존 규칙 `4783a35e` →
+  보존 `5c89407e`. PACKAGE_MANIFEST 29/29 · `source/` 17 = 검토 HEAD `9869cf5e` 원문 · `basis/` 4 = E0 한정 정정 결과 회신 원문 · 하위 `.gitattributes` 없음 ·
+  blob 검사 31/31 · 비밀 검사 31 파일 0 건 · 실행 파일 0.
+- **판정 (`DECISION.json`):** `CHANGES_REQUIRED_NO_EXECUTION` · `execution_approved` false · 이전 E0 · N1 한정 수용 유지 · 새 문제를 과거 E0 실패로 소급하지
+  않음. 검토자 실행 (대상 import · 시험 · 탐침 · fetch · 개봉 · COMSOL) 0. 반례는 정적 제어 흐름 분석이지 이 환경에서 관측한 실패가 아니다.
+- **정정 사항 (`REVIEW_KO.md`):**
+
+  | ID | 우선 | 무엇 | 위치 (초안 행) |
+  |---|---|---|---|
+  | N1 | P1 | 개별 모듈 가림 — `scripts` 최상위만 검사한다. 승인 `.py` 를 그대로 두고 `scripts/reil_c4_e3a/__init__.py` (패키지는 FileFinder 가 모듈 파일보다 먼저 고른다) 나 같은 이름 확장 모듈을 더하면 사전 대조를 통과하고, run `:48–50` 의 import 가 내부 검사보다 먼저 그것을 실행할 수 있다. identity · fetch 에는 IDENTITY 사후 결속도 없다 | launcher `:168–188` · precheck `:249` · `:269` |
+  | N2 | P1 | `/proc/<pid>/stat` 읽기의 모든 OSError 를 버려 관측 불능이 "잔존 없음" 이 된다 · 대조 l11 의 판정기도 같다 — PID 소멸과 권한 / I/O / 파싱 오류를 나누고 후자는 계속 incomplete | launcher `:352–374` · 대조 `:303–310` |
+  | N3 | P1 | killpg 의 PermissionError 를 버린 뒤 시간 제한 없는 `p.wait()` — 종료 요청 · 제한된 종료 확인 · 미종료 / 관측 불능을 나누고 기한을 예산에 넣는다. 사전 · 사후 읽기 · 자식 시작 예외도 기록 경로에 남기고, Git 기록 실패를 빈 정상 출력으로 보지 않는다 | launcher `:378–395` · `:118` · `:432` · `:449` · `:451–452` · `:459` |
+  | N4 | P2 | `GIT_OBJECT_DIRECTORY` 등 Git 경로 변수가 child_env 를 통과해 `data/git` 밖에 쓸 수 있다 · `GIT_ALLOW_PROTOCOL=https` 는 호스트 제한이 아니고 `url.*.insteadOf` 가 URL 을 바꿀 수 있다 — 경로 변수 제거 / 결속 · 실제 유효 출처 확인 | launcher `:234–240` · run `:690` · `:698` |
+  | N5 | P2 | E1-0 외곽 실행기 (`00_step_runner.py` `:58–60`) 는 직접 자식 pytest 만 끝낸다 — 새 대조가 별도 세션으로 띄운 자식 · 손주의 소유 · 정리 · 종료 확인과 실행기 수정본의 사전 고정 | 기존 실행기 |
+  | N6 | P2 | "run · 우리 모듈 import 0" 은 새 14 에만 맞다 — GREEN 41 에는 실제 모듈 import · 합성 run 2 · fork · 로컬 Git fetch · plan_e 가 있다. 새 대조 / 전체 GREEN / 실제 E1-1–3 을 나누고 RED · GREEN 의 정확한 argv · cwd · env · helper · 첫 실패 중지 · 첫 시험 전 봉인 · 새 총수 | 요청서 `:269–290` |
+
+- **유지되는 것:** 다섯 모듈 · SOURCES.json 바이트 일치 · 함수 26 · 대조 14 · 21 + 6 + 14 = 41 의 수 (시험 결과 아님) · 다섯 항 AND 판정식 · 사후 대조 추가 ·
+  identity 를 fetch 앞으로 · 새 pycache_prefix 와 `-B` (단 `-B` 만으로 모든 바이트코드 읽기가 막힌다고 넓히지 않음) · 기존 증거 · 캐시 비삭제 · 재시도 / 대체
+  출처 금지 · 12,060 s 산술 (timeout 합이지 전체 소요 보증 아님 · 전체 21,600 s 와 정리 기한의 관계는 따로).
+- **권고 순서:** 정정된 비활성 초안 · 승인 범위 → 사전 검토 → 사용자의 E1-0 한정 승인 → E1-0 → 결과 검토 → 실제 identity · fetch · run 의 별도 승인.
+  **"정정 작성도 사용자의 범위 채택을 따른다"** — 이 회신만으로 정정 구현 · RED / GREEN · 새 환경 탐침 · 읽기 경로 추가 · fetch · run 을 시작하지 않는다.
+- **자체 발견 S1 (회신 밖 · 이번 접수 중 정적 확인):** E1 자식이 실제로 실행하는 저장소 파일은 신뢰 목록 다섯보다 둘 많다.
+  - `scripts/reil_c6_profile.py` — `reil_c5_pilot.py` 가 import 될 때 `_sibling` 으로 경로 실행한다 (`:42–51` · `reil_p0.py` 도 같은 방식). sha256
+    `408afc4bb5eb1069583b955e0eb6215bf48dd9259ad474c230549d1b3642df5d` · 15,915 B (`61b9037e` · `322a0e53` · `9869cf5e` · 지금 모두 같음).
+  - `degradation-degeneracy/tools/env_profile.py` — `c5.env_identity` (`:675` `prof.lock_text()`) 가 경로 실행한다 → identity helper 와 run 의 prepare
+    (e3a.identity) 에서 실행된다. sha256 `83b0d8365d039d75050d087fe980ad7b64818686b699e5d06da1c0ad63148563` · 22,333 B — C6 봉인
+    `reil_c6_rebuild_20261013/REIL_C6.lock.txt` (MANIFEST `4f120948…` 가 덮는 `ea91156c…`) 머리줄의 기록값과 같다.
+  - env_profile 은 봉인 lock 대조로 간접 결속돼 있지만 그 대조도 실행 **뒤**다. reil_c6_profile 은 신뢰 목록 · run 식별 표에 없다 (N1 정정의 GREEN 소스 sha
+    기록에는 있다 — `03_green.source_sha256.txt`). E0 · N1 의 판정에는 영향이 없다 (시험만 했다). E1 의 독립 사전 대조 범위에 넣어야 한다.
+- **다음:** 정정 범위안 `docs/REIL_C4E_E1_REVISION_SCOPE_20261015.md` (N1–N6 + S1 · 파일 · 대조 · 명령 · E1-0 한정 승인 구조) → **사용자 범위 채택** → 비활성
+  초안 · 수정 승인안 · 사전 검토 발송문. 그 전에는 초안 작성 · 실행 0.
