@@ -1,0 +1,107 @@
+{
+ "카드": "db/properties/ndo_lpscl16_site_stability_estimand_2026_10_14.json",
+ "카드_sha256": "074b14c3115c7cf621b54ac79a908c24a94a5e89481740616fdc2eac6d9d469b",
+ "설정_카드_6": {
+  "ecutwfc": 52.0,
+  "ecutrho": 520.0,
+  "smearing": "mv",
+  "degauss": 0.01,
+  "conv_thr": "1.0d-8",
+  "mixing_beta": 0.2,
+  "kpoints": "2 2 1",
+  "pseudo_dir": "/home/kgy/work/pseudo",
+  "pp": {
+   "Cl": "cl_pbe_v1.4.uspp.F.UPF",
+   "Li": "li_pbe_v1.4.uspp.F.UPF",
+   "S": "s_pbe_v1.4.uspp.F.UPF",
+   "P": "P.pbe-n-rrkjus_psl.1.0.0.UPF",
+   "O": "O.pbe-n-kjpaw_psl.0.1.UPF",
+   "Nd": "Nd.pbe-spdn-kjpaw_psl.1.0.0.UPF"
+  }
+ },
+ "pseudo_dir_실제": "/home/kgy/work/pseudo",
+ "생성_함수": "tools/doping/generate_dft_inputs.py::generate_pwin",
+ "생성_함수_sha256": "a2a9e55d06f58a8078ae76064e117f3fc43a355b9a98b9dc0b94205b376cfa6e",
+ "점": {
+  "MP_07": {
+   "종류": "MP",
+   "calculation": "scf",
+   "K_POINTS": "2 2 1",
+   "원자": 66,
+   "조성": "Cl8Li31Nd2O3P3S19",
+   "출처": "db/raw/ndo_site_2026_10_14/uma_rietveld_2026_10_15/structures/MP_07.xyz",
+   "출처_sha256": "baeeb5a0172cc50f44dd168ed3d672d0d979ae644b6fc6315f9718ff0ad50a93",
+   "scf_in_sha256": "fdc3048da18ff2d2c89dd558fa663e71ca2ba98c1cb5a645950f226fa4304af8"
+  },
+  "MP_09": {
+   "종류": "MP",
+   "calculation": "scf",
+   "K_POINTS": "2 2 1",
+   "원자": 66,
+   "조성": "Cl8Li31Nd2O3P3S19",
+   "출처": "db/raw/ndo_site_2026_10_14/uma_rietveld_2026_10_15/structures/MP_09.xyz",
+   "출처_sha256": "259ca9e4ab1b62105d80899ba26bf8d2028c8f16f4aae225cbe5dca6ff427d42",
+   "scf_in_sha256": "a39ee1b41118344b85551165c2f62a8baf9453845f9839f979782272d4900e81"
+  },
+  "MP_00": {
+   "종류": "MP",
+   "calculation": "scf",
+   "K_POINTS": "2 2 1",
+   "원자": 66,
+   "조성": "Cl8Li31Nd2O3P3S19",
+   "출처": "db/raw/ndo_site_2026_10_14/uma_rietveld_2026_10_15/structures/MP_00.xyz",
+   "출처_sha256": "2e779ab66a262a80764ec504f9b30824c263fc36083ff46b76819bcb4d047830",
+   "scf_in_sha256": "6cddaf21ce4d6b56b1f4ab09f85fe8ae9ed19e14babc28326ddb74a3911b7bcd"
+  },
+  "MLi_03": {
+   "종류": "MLi",
+   "calculation": "scf",
+   "K_POINTS": "2 2 1",
+   "원자": 58,
+   "조성": "Cl8Li21Nd2O3P5S19",
+   "출처": "db/raw/ndo_site_2026_10_14/uma_rietveld_2026_10_15/structures/MLi_03.xyz",
+   "출처_sha256": "428150934df4bb15b8520b1c22263ff468d678eef6ece9776eba65892287f1e6",
+   "scf_in_sha256": "c1186f0fd4956d79b3b0692b805aca5332d2694be26537f22b6e0fc0f3752bc8"
+  },
+  "MLi_04": {
+   "종류": "MLi",
+   "calculation": "scf",
+   "K_POINTS": "2 2 1",
+   "원자": 58,
+   "조성": "Cl8Li21Nd2O3P5S19",
+   "출처": "db/raw/ndo_site_2026_10_14/uma_rietveld_2026_10_15/structures/MLi_04.xyz",
+   "출처_sha256": "85384e5115323527899779aad507cefbb81d5201a2410913ce75286ed456da1f",
+   "scf_in_sha256": "8214c746fe5106630ecbb4e5d3a416ab29117ab09c0464e99741d3b6f7227007"
+  },
+  "MLi_05": {
+   "종류": "MLi",
+   "calculation": "scf",
+   "K_POINTS": "2 2 1",
+   "원자": 58,
+   "조성": "Cl8Li21Nd2O3P5S19",
+   "출처": "db/raw/ndo_site_2026_10_14/uma_rietveld_2026_10_15/structures/MLi_05.xyz",
+   "출처_sha256": "c01dc80f93a3060c9a57278b82e0a8402e057b0e7eb0d27f92b9c9984ccf3b9a",
+   "scf_in_sha256": "4fb7d2f261730a009a1e7c035c5bea8591bba22bf6408c5da78fc773a0edf80d"
+  },
+  "Li2S": {
+   "종류": "ref",
+   "calculation": "vc-relax",
+   "K_POINTS": "4 4 4",
+   "원자": 3,
+   "조성": "Li2S",
+   "출처": "db/structures/sei_li2s_mp-1153.cif",
+   "출처_sha256": "911e1f31f162d978ea1efbb70db849ea6fe794a3ee5c0dba3e7214bab670ca69",
+   "scf_in_sha256": "991583979641fc9b0912113525acfcf6b4066b1e280a109ec16f035097e02ca1"
+  },
+  "Li3PS4": {
+   "종류": "ref",
+   "calculation": "vc-relax",
+   "K_POINTS": "3 2 2",
+   "원자": 32,
+   "조성": "Li12P4S16",
+   "출처": "db/structures/li3ps4_mp-985583.cif",
+   "출처_sha256": "baa60836570fbe409c6a1edec960f15dad5a0271f2417762c74126a53fd369b9",
+   "scf_in_sha256": "7cde1de461874133268f0da65f2ea3a04df19cd1367d67cfb2dbf25483459f0e"
+  }
+ }
+}

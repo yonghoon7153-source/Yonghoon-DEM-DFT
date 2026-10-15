@@ -4,6 +4,8 @@
 #
 #   카드: db/properties/b2o3_uma_vs_dft_force_prereg_2026_09_08.json (ratified 2판)
 #   입력: generate_dft_inputs.py --from_traj 가 만든 <OUT>/<label>_<seed>_t<NN>ps/scf.in
+#   다른 쓰임: O 배치 카드 6 점 (2026-09-09 · kgy) · Nd 자리 비교 Q1 (2026-10-15 · db/inputs/ndo_site_dft_2026_10_15 ·
+#             기준상 vc-relax 포함 — relax · vc-relax 의 완료는 'bfgs converged' + (vc-relax) 최종 scf 에너지까지 본다)
 #
 # 실행 (kgy):
 #   bash tools/doping/run_force_check_scf.sh $HOME/work/runs/force_check_700K
@@ -36,6 +38,22 @@ _fc_ok() {
   if [ -f "$_in" ] && grep -aqiE "tstress *= *\.true\." "$_in"; then
     grep -aqE "total +stress" "$1" || return 1
   fi
+  # ⭐ 2026-10-15 (Nd 자리 비교 기준상 vc-relax): relax · vc-relax 입력이면 **BFGS 수렴 선언**까지 있어야 완료다.
+  #   위 세 줄 (JOB DONE · SCF 수렴 · 힘) 은 nstep 을 다 써서 끝난 relax 에도 다 찍힌다 — 그걸 완료로 읽으면
+  #   미수렴 기하의 에너지가 기준상으로 들어간다 (탄성 23_p 의 '✓ 완료' 거짓 표시와 같은 부류).
+  #   vc-relax 는 **최종 scf** (새 셀의 G-벡터로 다시 푼 것) 의 에너지 줄이 'End final coordinates' 뒤에 있어야 한다 —
+  #   그 전에 죽으면 마지막 에너지는 옛 기저의 값이다.
+  if [ -f "$_in" ] && grep -aqiE "calculation *= *'(vc-)?relax'" "$_in"; then
+    # 판정은 **'bfgs converged in' 선언 하나**로 한다 (watch_elastic.sh 와 같다) — nstep 소진이면 이 줄이 안 찍힌다.
+    #   (따로 'maximum number of steps' 를 보는 줄은 변이 시험에서 빨간불이 안 났다 = 이 줄이 이미 잡는다 → 뺐다)
+    grep -aq "bfgs converged in" "$1" || return 1
+    if grep -aqiE "calculation *= *'vc-relax'" "$_in"; then
+      local _e _f
+      _e=$(grep -an "End final coordinates" "$1" | tail -1 | cut -d: -f1)
+      _f=$(grep -an "^!" "$1" | tail -1 | cut -d: -f1)
+      [ -n "$_e" ] && [ -n "$_f" ] && [ "$_f" -gt "$_e" ] || return 1
+    fi
+  fi
   return 0
 }
 
@@ -56,6 +74,21 @@ if [ "${ROOT}" = "--selftest" ]; then
   printf "TSTRESS=.TRUE.\n" > "$_T/s/scf.in"; cp "$_T/n/scf.out" "$_T/s/"
   _chk "대소문자 tstress + 응력 없음 → 미완료" "! _fc_ok $_T/s/scf.out"
   _chk "scf.out 부재 → 미완료"             "! _fc_ok $_T/없음/scf.out"
+  # ── 2026-10-15: relax · vc-relax 완료 판정 (기준상 vc-relax · 양성 2 · 음성 3) ──
+  mkdir -p "$_T/vr" "$_T/vx" "$_T/vk" "$_T/rr" "$_T/rx"
+  printf "calculation = 'vc-relax'\ntstress = .true.\n" > "$_T/vr/scf.in"
+  _B="!    total energy = -1.0 Ry\nconvergence has been achieved\nForces acting on atoms\n     total   stress  (Ry/bohr**3)   (kbar)  P= 0.1\n"
+  printf "${_B}bfgs converged in 12 scf cycles and 5 bfgs steps\nBegin final coordinates\nEnd final coordinates\n     A final scf calculation at the relaxed structure.\n${_B}JOB DONE\n" > "$_T/vr/scf.out"
+  _chk "vc-relax 수렴 + 최종 scf → 완료"     "_fc_ok $_T/vr/scf.out"
+  cp "$_T/vr/scf.in" "$_T/vx/"; printf "${_B}     The maximum number of steps has been reached.\nEnd final coordinates\n${_B}JOB DONE\n" > "$_T/vx/scf.out"
+  _chk "vc-relax nstep 소진 → **미완료**"   "! _fc_ok $_T/vx/scf.out"
+  cp "$_T/vr/scf.in" "$_T/vk/"; printf "${_B}bfgs converged in 12 scf cycles and 5 bfgs steps\nBegin final coordinates\nEnd final coordinates\n     A final scf calculation at the relaxed structure.\nJOB DONE\n" > "$_T/vk/scf.out"
+  _chk "vc-relax 최종 scf 에너지 없음 → **미완료**" "! _fc_ok $_T/vk/scf.out"
+  printf "calculation = 'relax'\ntstress = .true.\n" > "$_T/rr/scf.in"
+  printf "${_B}bfgs converged in 9 scf cycles and 4 bfgs steps\nEnd final coordinates\nJOB DONE\n" > "$_T/rr/scf.out"
+  _chk "relax 수렴 → 완료"                   "_fc_ok $_T/rr/scf.out"
+  cp "$_T/rr/scf.in" "$_T/rx/"; printf "${_B}JOB DONE\n" > "$_T/rx/scf.out"
+  _chk "relax 수렴 선언 없음 → **미완료**"    "! _fc_ok $_T/rx/scf.out"
   rm -rf "$_T"; echo "selftest: $_n 통과 · $_f 실패"; [ "$_f" = 0 ]; exit $?
 fi
 [ -n "$ROOT" ] || { echo "usage: $0 <스냅샷 디렉터리> [NP=16]"; exit 2; }
