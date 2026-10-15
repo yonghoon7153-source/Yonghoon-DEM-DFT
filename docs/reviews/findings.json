@@ -11051,12 +11051,17 @@
     {
       "id": "SELF-116",
       "severity": "P3",
-      "status": "open",
+      "status": "claimed_fixed",
       "owner": "claude",
       "found_by": "10-14 밤 내 점검 (Codex 짧은 재확인 요청서 발송 전 · 문서가 인용한 커밋을 원격 도달 가능성으로 전수 대조)",
       "opened_in": "docs/reviews/codex_dem_unloading_kit_reverify_fix_recheck_request_20261014.md",
       "title": "에이전트 작업 트리에서 쓴 언로딩 문서가 그 작업 트리의 커밋 번호를 cherry-pick 뒤에도 그대로 인용 — 원격 어디에도 없는 커밋 12 개 (문서 다섯) · 로컬 검사 check_doc_refs (도달 기준 = rev-list --all) 는 로컬 에이전트 가지가 그 커밋을 붙잡고 있어 초록 · GitHub CI 는 시간 제한으로 늘 cancelled 라 못 봄",
-      "note": "본 가지 대응 = cherry-pick (git patch-id 12/12 같음 · 키트 트리 바이트 같음): 시험 먼저 c696dbf0f→b1121b6b6 · 수정 ca59641ca→e271bdd48 · README 82d532c60→70b3fefed · 첫 수정 묶음 122abaad8→f823bad21 · f5c899453→5cba214da · 2b6500869→eeb99b082 · a03cff857→efa935bd7 · fbf59cc78→1b77fe8e9 · e90f903f1→b7ef99f1c · f67f242bb→cee186e55 · d9e51323d→c82cbfdde · e6c9049dc→18b798ecc.  고침 (이 커밋): 살아 있는 문서 넷 (재확인 요청서 = 정정판 · 그 증거 README · 키트 README · 첫 수정 계획 §5) = 본 가지 번호 · 이미 보낸 첫 재확인 요청서 = 본문 그대로 + 머리 정정 표지 + doc_refs_sha_exceptions.tsv 6 줄 · 쓸모 다한 로컬 에이전트 가지 둘 (작업 트리 깨끗 · git cherry 전부 같은 패치 있음 · tip de089fd94 · 411398d8c) 지움 → 로컬 검사가 원격과 같은 23 자리를 잡는 것을 확인한 뒤 고침.  다른 로컬 에이전트 가지들 = 문서가 인용한 로컬 전용 커밋 0 (전수 대조).  남은 뿌리 = 검사기의 도달 기준이 로컬 가지까지 센다 (원격 추적 ref + HEAD 로 좁히는 안 = 1저자 결정 대기) → 그때까지 open."
+      "note": "본 가지 대응 = cherry-pick (git patch-id 12/12 같음 · 키트 트리 바이트 같음): 시험 먼저 c696dbf0f→b1121b6b6 · 수정 ca59641ca→e271bdd48 · README 82d532c60→70b3fefed · 첫 수정 묶음 122abaad8→f823bad21 · f5c899453→5cba214da · 2b6500869→eeb99b082 · a03cff857→efa935bd7 · fbf59cc78→1b77fe8e9 · e90f903f1→b7ef99f1c · f67f242bb→cee186e55 · d9e51323d→c82cbfdde · e6c9049dc→18b798ecc.  고침 (이 커밋): 살아 있는 문서 넷 (재확인 요청서 = 정정판 · 그 증거 README · 키트 README · 첫 수정 계획 §5) = 본 가지 번호 · 이미 보낸 첫 재확인 요청서 = 본문 그대로 + 머리 정정 표지 + doc_refs_sha_exceptions.tsv 6 줄 · 쓸모 다한 로컬 에이전트 가지 둘 (작업 트리 깨끗 · git cherry 전부 같은 패치 있음 · tip de089fd94 · 411398d8c) 지움 → 로컬 검사가 원격과 같은 23 자리를 잡는 것을 확인한 뒤 고침.  다른 로컬 에이전트 가지들 = 문서가 인용한 로컬 전용 커밋 0 (전수 대조).  남은 뿌리 = 검사기의 도달 기준이 로컬 가지까지 센다 (원격 추적 ref + HEAD 로 좁히는 안 = 1저자 결정 대기) → 그때까지 open.  ✅ 뿌리 고침 4803b959c (1저자 10-15 Q3 \"권고대로 해\") — scripts/check_doc_refs.py 도달 기준 = rev-list --remotes HEAD (원격 추적 ref + HEAD 조상 · 로컬 가지 제외) · selftest 47/49 → 49/49 (진짜 git 픽스처: 로컬 가지에만 있는 커밋 인용 = 없는 커밋 · HEAD · 조상 · 원격 가지 = 통과 · 얕은 클론 판정 그대로) · 본 가지에서 리포 전체 = 없는 커밋 0 (메인 세션 확인).  ULKRF 묶음 (1c0b9fd65 · 22a347722 · fcc0d6a75) 의 자리 채우기 = 본 가지 번호만.",
+      "claimed_fixed_sha": "4803b959c",
+      "evidence_tests": [
+        "scripts/check_doc_refs.py --selftest (SELF-116 블록 · 47/49 → 49/49)",
+        "scripts/check_doc_refs.py (리포 전체 · 없는 커밋 0)"
+      ]
     },
     {
       "id": "SEM32-01",
@@ -11142,41 +11147,54 @@
     {
       "id": "ULKRF-01",
       "severity": "P2",
-      "status": "open",
+      "status": "claimed_fixed",
       "owner": "claude",
       "found_by": "codex 10-15 DEM 언로딩 키트 수정 재확인 (코드 핀 eaecfba2a · 252 파일 blob 대조 · 실제 판독 함수 · 합성 기록 · 생성 덱 제어 흐름 · 기존 실제 이력 206 파일 재판독 H0–H5 PASS · LIGGGHTS · MPI · Bash 러너 실행 없음)",
       "opened_in": "docs/reviews/codex_review_dem_unloading_kit_fix_recheck_20261015.md",
       "title": "같은 재개 사건이 승인을 복제 — _resume_auth 가 같은 (k, step) 을 사건마다 더하고 _supersede 가 경계가 아니라 목록 인덱스를 소비 → resume_from 한 줄 · 상태 파일 하나 + 같은 RESUME 두 줄이 롤백 두 번을 허가 (n_superseded_rows 10 · primary OK ρ 0.2026 % · UVa ALLOW · 한 줄이면 UNIDENTIFIED · 거부)",
-      "note": "정상 러너 (run_unload.sh:88) 는 두 번째 재개를 막는다 = 실제 두 번째 재개 증거 아님 · 무너지는 것 = 판독기의 \"경계마다 한 번\" 보증.  최소 해결 = 승인 · 소비를 고유 경계 / 시도에 결합 · 중복 · 상충 RESUME = 사유 있는 거부 · 사건 정리도 같은 규칙 · 정상 재개 양성 유지.  탐침 probes/resume_recheck.py one_auth_two_rollbacks · one_event_two_rollbacks.  수정 계획 docs/reviews/dem_unloading_kit_fix_recheck_fix_plan_20261015.md.",
+      "note": "정상 러너 (run_unload.sh:88) 는 두 번째 재개를 막는다 = 실제 두 번째 재개 증거 아님 · 무너지는 것 = 판독기의 \"경계마다 한 번\" 보증.  최소 해결 = 승인 · 소비를 고유 경계 / 시도에 결합 · 중복 · 상충 RESUME = 사유 있는 거부 · 사건 정리도 같은 규칙 · 정상 재개 양성 유지.  탐침 probes/resume_recheck.py one_auth_two_rollbacks · one_event_two_rollbacks.  수정 계획 docs/reviews/dem_unloading_kit_fix_recheck_fix_plan_20261015.md.  _resume_auth → (승인, 문제): 러너 resume_from step 마다 RESUME 정확히 한 줄일 때만 승인 · 같은 경계 RESUME 둘 이상 (같은 k 중복 · 다른 k 상충) · 사건 ↔ 상태 파일 불일치 · resume_from 밖 RESUME = 승인 없음 + 사유 · 사건 되감기 = 경계마다 한 번 · 버릴 사건 k > k_r · _supersede 소비 = 경계 값 · 정상 fresh · 부분 창 · 같은 길이 재개 · UTc 양성 그대로 (Codex Q1 = 중복을 하나로 줄이지 않고 승인을 거둔 선택).  ✅ 고침 22a347722 (시험 먼저 1c0b9fd65 · 문서 · 증거 · 요청서 fcc0d6a75 · 수정 계획 Q1–Q4 = 1저자 10-15 \"권고대로 부탁해\") · 봉인 76 파일 · 규칙 24 · 생산 덱 64 · unload_params.json · history_test 바이트 그대로 · Codex 짧은 재확인 2 요청서 docs/reviews/codex_dem_unloading_kit_fix_recheck2_request_20261015.md (리뷰 핀 fcc0d6a75 · 발송 = 1저자).",
       "evidence_tests": [
-        "docs/reviews/codex_review_dem_unloading_kit_fix_recheck_20261015.md (§4 ULKRF-01)"
-      ]
+        "docs/reviews/codex_review_dem_unloading_kit_fix_recheck_20261015.md (§4 ULKRF-01)",
+        "docs/data/ps45_unload_20261009/ul_reader.py --selftest R33 (one_auth_two_rollbacks · duplicate_event_only · 같은 step 다른 k = 3 실패 → 거부 + 사유)",
+        "docs/data/ps45_unload_20261009/ul_reader.py --selftest (시험 먼저 164/182 → 182/182) · ul_gates 37/41 → 41/41 · ul_lib 22/24 → 24/24 · ul_runner_test 37/38 → 38/38",
+        "docs/reviews/dem_unloading_kit_fix_recheck_fix_evidence_20261015/ (Linux 13 명령 · 시험 먼저 = 넷 rc 1 · 최종 = 전부 rc 0 · summary.json kit_git_tree = 본 가지 1c0b9fd65 · fcc0d6a75 의 키트 폴더 tree)"
+      ],
+      "claimed_fixed_sha": "22a347722"
     },
     {
       "id": "ULKRF-02",
       "severity": "P2",
-      "status": "open",
+      "status": "claimed_fixed",
       "owner": "claude",
       "found_by": "codex 10-15 DEM 언로딩 키트 수정 재확인 (코드 핀 eaecfba2a · 252 파일 blob 대조 · 실제 판독 함수 · 합성 기록 · 생성 덱 제어 흐름 · 기존 실제 이력 206 파일 재판독 H0–H5 PASS · LIGGGHTS · MPI · Bash 러너 실행 없음)",
       "opened_in": "docs/reviews/codex_review_dem_unloading_kit_fix_recheck_20261015.md",
       "title": "승인된 재시도의 단 끝 시간이 이전 시도보다 길면 옛 단 끝 행이 남아 정상 새 기록을 거부 — 롤백 판별이 step 역행에서만 시작 (ul_reader.py:138 · 692–695) · 생산 덱은 단 CSV 를 restart · 상태보다 먼저 쓴다 (in.UT.liggghts:267 · 319–330) → 옛 k2 (4 창 · 3360000) 뒤 새 k2 (5 창 · 3370000) = k [0,1,2,2,3,4] · primary UNIDENTIFIED · UVa 거부",
-      "note": "새 5 창 단독 = OK · 새 4 창 재시도 = 통과 · 5 창 종료 자체는 생성 UT 덱 제어 흐름으로 확인 (원자 · 접촉 · thermo 합성 · 실제 LIGGGHTS 재개에서 창 수 변화를 잰 것 아님).  최소 해결 = 승인 경계로 새 시도 구간 식별 · 단순 중복 k 삭제 금지 (ULKRR-02 원결함 복귀) · 짧음 · 같음 · 김 + 무승인 중복 시험.  탐침 fresh_completed_hold_5_windows · resume_completed_hold_4/5_windows.  수정 계획 docs/reviews/dem_unloading_kit_fix_recheck_fix_plan_20261015.md.",
+      "note": "새 5 창 단독 = OK · 새 4 창 재시도 = 통과 · 5 창 종료 자체는 생성 UT 덱 제어 흐름으로 확인 (원자 · 접촉 · thermo 합성 · 실제 LIGGGHTS 재개에서 창 수 변화를 잰 것 아님).  최소 해결 = 승인 경계로 새 시도 구간 식별 · 단순 중복 k 삭제 금지 (ULKRR-02 원결함 복귀) · 짧음 · 같음 · 김 + 무승인 중복 시험.  탐침 fresh_completed_hold_5_windows · resume_completed_hold_4/5_windows.  수정 계획 docs/reviews/dem_unloading_kit_fix_recheck_fix_plan_20261015.md.  _supersede(…, steps_csv): 새 시도 시작 = 승인 경계 뒤 먼저 오는 쪽 — step 역행 또는 단 CSV 에서 k 가 k_r + 1 로 되돌아옴 · 새 시도 짧음 · 같음 · 김 (4 → 5 창 · 생성 UT 덱 제어 흐름) 정리 · 무승인 되돌아옴 · 중복 = 그대로 미식별 (ULKRR-02 원결함 금지).  ✅ 고침 22a347722 (시험 먼저 1c0b9fd65 · 문서 · 증거 · 요청서 fcc0d6a75 · 수정 계획 Q1–Q4 = 1저자 10-15 \"권고대로 부탁해\") · 봉인 76 파일 · 규칙 24 · 생산 덱 64 · unload_params.json · history_test 바이트 그대로 · Codex 짧은 재확인 2 요청서 docs/reviews/codex_dem_unloading_kit_fix_recheck2_request_20261015.md (리뷰 핀 fcc0d6a75 · 발송 = 1저자).",
       "evidence_tests": [
-        "docs/reviews/codex_review_dem_unloading_kit_fix_recheck_20261015.md (§4 ULKRF-02)"
-      ]
+        "docs/reviews/codex_review_dem_unloading_kit_fix_recheck_20261015.md (§4 ULKRF-02)",
+        "docs/data/ps45_unload_20261009/ul_reader.py --selftest R34 (4 → 5 창 1 실패 → 통과 · 4 → 4 · 5 → 4 · 단독 · 무승인 그대로 거부)",
+        "docs/data/ps45_unload_20261009/ul_reader.py --selftest (시험 먼저 164/182 → 182/182) · ul_gates 37/41 → 41/41 · ul_lib 22/24 → 24/24 · ul_runner_test 37/38 → 38/38",
+        "docs/reviews/dem_unloading_kit_fix_recheck_fix_evidence_20261015/ (Linux 13 명령 · 시험 먼저 = 넷 rc 1 · 최종 = 전부 rc 0 · summary.json kit_git_tree = 본 가지 1c0b9fd65 · fcc0d6a75 의 키트 폴더 tree)"
+      ],
+      "claimed_fixed_sha": "22a347722"
     },
     {
       "id": "ULKRF-03",
       "severity": "P2",
-      "status": "open",
+      "status": "claimed_fixed",
       "owner": "claude",
       "found_by": "codex 10-15 DEM 언로딩 키트 수정 재확인 (코드 핀 eaecfba2a · 252 파일 blob 대조 · 실제 판독 함수 · 합성 기록 · 생성 덱 제어 흐름 · 기존 실제 이력 206 파일 재판독 H0–H5 PASS · LIGGGHTS · MPI · Bash 러너 실행 없음)",
       "opened_in": "docs/reviews/codex_review_dem_unloading_kit_fix_recheck_20261015.md",
       "title": "G2c 접촉 덤프 필수 열 결손 (c_cpl[7] · [8]) 이 구조화된 실패 대신 KeyError — read_dump 는 ok=False 를 냈는데 _contacts 가 그 전에 열을 조회 (ul_gates.py:252–256 · g2c_compare 285–291 · ul_reader.py:1335) → restore CLI rc 1 · 증서 미발행 · 다음 UB 거부",
-      "note": "거짓 PASS 아님 — ULKRR-04 의 남은 경로 (\"모든 경로에서 사유 있는 미확인 / 미계산\").  최소 해결 = _contacts 가 파서 ok=False 를 먼저 반환 → g2c_compare FAIL + why · 양쪽 비교 파일 열 결손을 실제 restore CLI 까지 시험 · 임의 채우기 · 행 삭제 금지.  탐침 probes/receipt_ids_recheck.py g2c_c_cpl7/8_missing · g2c_missing_column_actual_cli.  수정 계획 docs/reviews/dem_unloading_kit_fix_recheck_fix_plan_20261015.md.",
+      "note": "거짓 PASS 아님 — ULKRR-04 의 남은 경로 (\"모든 경로에서 사유 있는 미확인 / 미계산\").  최소 해결 = _contacts 가 파서 ok=False 를 먼저 반환 → g2c_compare FAIL + why · 양쪽 비교 파일 열 결손을 실제 restore CLI 까지 시험 · 임의 채우기 · 행 삭제 금지.  탐침 probes/receipt_ids_recheck.py g2c_c_cpl7/8_missing · g2c_missing_column_actual_cli.  수정 계획 docs/reviews/dem_unloading_kit_fix_recheck_fix_plan_20261015.md.  ul_gates._contacts 가 파서 ok=False 를 열을 읽기 전에 돌려줌 → g2c_compare FAIL + 사유 · 복원 = VALUE_MISMATCH (기존 FAIL 경로) · 실제 restore CLI rc 1 Traceback → rc 2 · RESTORED 증서 없음 · 덤프 바이트 그대로 · 채우기 · 삭제 없음 (Codex Q3 = UNCONFIRMED 로 나눌지).  ✅ 고침 22a347722 (시험 먼저 1c0b9fd65 · 문서 · 증거 · 요청서 fcc0d6a75 · 수정 계획 Q1–Q4 = 1저자 10-15 \"권고대로 부탁해\") · 봉인 76 파일 · 규칙 24 · 생산 덱 64 · unload_params.json · history_test 바이트 그대로 · Codex 짧은 재확인 2 요청서 docs/reviews/codex_dem_unloading_kit_fix_recheck2_request_20261015.md (리뷰 핀 fcc0d6a75 · 발송 = 1저자).",
       "evidence_tests": [
-        "docs/reviews/codex_review_dem_unloading_kit_fix_recheck_20261015.md (§4 ULKRF-03)"
-      ]
+        "docs/reviews/codex_review_dem_unloading_kit_fix_recheck_20261015.md (§4 ULKRF-03)",
+        "docs/data/ps45_unload_20261009/ul_gates.py --selftest C4 (c_cpl[7] · [8] × 시험 · 원 = 4 KeyError → FAIL + 사유)",
+        "docs/data/ps45_unload_20261009/ul_reader.py --selftest R35 (복원 판정 · 다음 제출 UB 거부 · 실제 restore CLI = 9 실패 → 통과)",
+        "docs/data/ps45_unload_20261009/ul_reader.py --selftest (시험 먼저 164/182 → 182/182) · ul_gates 37/41 → 41/41 · ul_lib 22/24 → 24/24 · ul_runner_test 37/38 → 38/38",
+        "docs/reviews/dem_unloading_kit_fix_recheck_fix_evidence_20261015/ (Linux 13 명령 · 시험 먼저 = 넷 rc 1 · 최종 = 전부 rc 0 · summary.json kit_git_tree = 본 가지 1c0b9fd65 · fcc0d6a75 의 키트 폴더 tree)"
+      ],
+      "claimed_fixed_sha": "22a347722"
     }
   ]
 }
