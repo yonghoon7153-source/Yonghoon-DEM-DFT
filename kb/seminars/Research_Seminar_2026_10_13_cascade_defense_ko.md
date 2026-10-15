@@ -326,6 +326,7 @@ evidenceScope: multi-source-mixed
   1. 부모 자리: P 를 먼저 바꾼 뒤 남은 P 기준으로 음이온 자리를 갈라서, P 4 개 중 2 개를 Nd 로 바꾼 52 원자 셀에서 S 16e 가 16 → 8 로 잘못 분류됐습니다.
   2. 전하 수지: 양이온 쪽만 셌습니다. NdCl₃ 한 단위(Nd → P 4b · Cl → S 4a)가 양이온만 보면 −2(Li 침입 2), 음이온까지 보면 +1(Li 공공 1) — 보상이 3 만큼 어긋났습니다.
      - (10-14 셈 · 받쳐 둠) 크기: 1단계 1,220 칸 중 **245 칸 (20 %)** 이 형식전하가 0 이 아닙니다 (조성만으로 셈 · Li +1 · P +5 · S −2 · Cl −1 · 도펀트는 전구체 화학량). 대부분 전하가 다른 음이온 자리에 들어간 변형 (S 4a · Cl 4d) 이고, 질화물 다섯 · NbCl₅ · TaCl₅ 는 칸 전부입니다 (`tools/cascade/dissolution_energy.py` formal_charge).
+     - (10-15 · 237 후보 단위로 다시 셈 · `cascade_v23_all.csv`) **237 중 48 (20 %)** 이 형식전하 ≠ 0 (Li +1 · P +5 · S −2 · Cl −1 · O −2 · F/Br/I −1 · N −3 · 도펀트 양이온은 전구체 화학식에서). 음이온 자리 S 4a 30 · Cl 4d 12 · S 16e 6 · 전부 compound_set (Cl 사슬 보상 0) · 후보 전부가 어긋난 전구체 = 질화물 다섯 (AlN · Ca₃N₂ · GaN · Li₃N · Mg₃N₂) · NbCl₅ · TaCl₅ — 위 10-14 칸 단위 셈과 같은 그림이다.
   3. 농도: 위 라벨 문제와 같은 뿌리입니다 (못 만들면 1 단위).
   - 그리고 못 만든 경우를 '물리적 탈락' 과 따로 셉니다. 구현은 음성시험 포함 selftest 를 단 모듈 하나(`tools/cascade/s1_contract.py`)입니다.
   - (10-15 · 화면 *'Host-lattice site assignment and full charge balance'*) **"Wyckoff 자리로 고정했나?"** → P · S · Cl 은 자리 이름 (P 4b · S 16e · S 4a · Cl 4d) 으로 굳히지만, Li 는 입력 구조에 Wyckoff 정보가 없어 24g 와 48h 를 가르지 못하고 'Li 전체' 로 묶었습니다 (`cascade_s1_contract_amendment_2026_09_12.json` §3). 그래서 화면에 'Wyckoff' 를 쓰지 않았습니다 — 24g/48h 를 가르는 주장은 이 생성 규칙 위에서 하지 않는다.
