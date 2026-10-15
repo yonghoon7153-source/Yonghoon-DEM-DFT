@@ -158,7 +158,7 @@ evidenceScope: multi-source-mixed
 
 **[가리킴: mechanical axis 열]** 앞의 네 편에는 기계 축이 없었고, Jung 등은 ML 로 예측한 탄성 값으로 후보를 걸렀습니다.
 저희는 기준 조성은 DFT 로 계산하고, 전구체마다 MLIP 지표를 기록합니다. 다만 같은 전구체 안에서도 원자 배치에 따라 이 값이 전구체끼리의 차이만큼 흔들려서,
-아직 후보를 거르는 데는 쓰지 않습니다. 이건 뒤의 9월 감사에서 다시 말씀드리겠습니다.
+아직 후보를 거르는 데는 쓰지 않습니다. 이건 뒤의 9월 점검에서 다시 말씀드리겠습니다.
   (화면 칸 — Jung *ML-predicted G and G/K (used for screening)* · this work *DFT reference + MLIP descriptor (not used for screening)* · 괄호는 둘째 줄.
   사용자 10-13: 'gate' 같은 말은 안 쓴다. '흔들린다' 의 근거 = 9월 감사 잡음비 — 영률 1.104 · 치환에너지 0.205 (디펜스 S8 · S11) · 11장 'spread within a precursor ≈ between precursors'.
   DFT 탄성상수는 기준 조성에만 — 한 조성에 GPU 로 몇 주 (9장 · 12 변형점 중 9). 3,675 구조 전부에 쓸 수 있는 건 MLIP 뿐.)
@@ -241,10 +241,11 @@ evidenceScope: multi-source-mixed
 > 화면 권고 셋 (사용자 결정 · 빌더는 안 바꿈): 오른쪽 첫 줄 *'One primary Stage-2 readout, …'* · δ 줄 위치 (제목 *'Decisions recorded in September'* 또는 목록 밖 빨간 줄) · 맨 아래 *'The run scope will be set after the pilot.'*
 > ✎ 10-15 밤 사용자 *'너무 우리만 알고 있는 단어들은 교체해서 필드에 있는 단어로'* → 사용자 9쪽 pptx 교체본 전달 (줄 수 · 상자 크기 그대로 · Calibri 와 폭이 같은 Carlito 로 확인). 권고 셋은 교체본에서 같이 풀렸다 — 오른쪽 제목 *'Stage-2 protocol set in September'* · 빨간 줄 *'A threshold δ for claiming a D_rel difference, proposed but not yet set'* · 맨 아래 *'… will be set after the pilot study.'*
 > 바꾼 말: ledger → results and inputs · concentration labels → nominal concentrations · volume filter → volume-change filter · within a precursor → across configurations · merged → combined into a single score · decisions recorded → Stage-2 protocol · readout → observable · roster of designs → candidate compositions · parent sites → host-lattice site assignment · ranking margin → threshold δ for claiming a difference · approved → established · run scope → scope of the Stage-2 simulations. 'Wyckoff' 는 안 썼다 — 부모 자리 지도가 Li 24g/48h 를 못 가른다 (`cascade_s1_contract_amendment_2026_09_12.json` §3).
+> ✎ 10-15 밤 사용자 *'audit of stage 1 괜찮아?'* → 권고 (화면은 사용자가 직접 고친다 · 결정 대기): ■ *'Stage 1: re-examination in September'* (8쪽 *'Stage 1: screening pipeline (first attempt)'* 와 같은 꼴) · 왼쪽 제목 *'Findings'* · 첫 불렛 *'All results and inputs were re-checked.'* — 'audit' 은 틀린 말은 아니지만 영어에서 회계 · 규제처럼 제3자가 하는 공식 검사로 들리고, 'September audit' 은 우리 내부 행사 이름처럼 읽힌다. 말에서는 '감사' 를 '점검' 으로 바꿨다 (화면 결정과 무관) — '1단계를 감사했습니다' 는 '고마웠습니다' 로도 들리고, 발표 끝말이 '감사합니다' 다.
 > ⏳ 같은 옛 말이 사용자 15·16쪽 (슬림 14·15 · ranking margin · readout · 237-design roster · run scope) 과 아래 §14 · §15 · '꼭 지킬 것' 에 남아 있다 — 그 쪽에 갈 때 같은 말로 맞춘다.
 
-9월에 1단계를 감사했습니다. 결과와 입력을 하나씩 다시 점검했습니다.
-**[가리킴: 왼쪽 목록]** 감사에서 네 가지를 찾았습니다.
+9월에 1단계의 결과와 입력을 하나씩 다시 점검했습니다.
+**[가리킴: 왼쪽 목록]** 점검에서 네 가지를 찾았습니다.
 - 첫째, 명목 농도가 달라도 시뮬레이션 셀 하나에 든 도펀트 양은 같았습니다. 모든 구조가 같은 도핑 수준이었습니다.
 - 둘째, 부피 변화 필터가 기준으로 쓴 호스트 부피가 DFT 평형 부피보다 40 % 정도 컸습니다. 그래서 2단계는 DFT 평형 호스트에서 구조를 만듭니다.
 - 셋째, 영률은 같은 전구체의 구조끼리 흩어짐이 전구체 사이 차이만큼 컸습니다.
@@ -294,7 +295,7 @@ MLIP 지표의 기준이 되는 DFT 계산입니다. **[가리킴: 두 곡선]**
   - Li₆PS₅Cl 은 26.2 GPa, Cl 이 많은 Li₅.₄PS₄.₄Cl₁.₆ 는 21.7 GPa 입니다.
   - 부피는 화학식 단위당으로 비교합니다.
 - 변형을 주는 방식의 탄성상수 계산은 지금 GPU 에서 돌고 있습니다.
-- 감사 둘째 항목, 부피 필터의 기준 부피가 40 % 정도 컸다는 것은 이 DFT 평형 부피와 비교한 것입니다.
+- 9월 점검의 둘째 항목, 부피 변화 필터의 기준 부피가 40 % 정도 컸다는 것은 이 DFT 평형 부피와 비교한 것입니다.
 
 **[클릭]**
 
@@ -315,7 +316,7 @@ MLIP 지표의 기준이 되는 DFT 계산입니다. **[가리킴: 두 곡선]**
 - 따로, 전구체 자체를 두 번째 상으로 보는 표도 있습니다. 위 그림, Sundar 등 2025년 논문의 코팅 관점입니다. 이건 도핑 자료가 아니라 코팅·이차상 후보 목록입니다.
 - 그 표의 반응 산물 밴드갭은 10월 14일에 **바닥상태 기준 상으로 다시 냈지만**, 금속·절연 판정이 MP 밴드갭 값에 민감해서 아직 쓰지 않습니다.
 
-**[클릭 전에]** 여기까지가 감사에서 고친 것들입니다. 이렇게 먼저 박은 규칙으로 지금 도는 것이 2단계 파일럿입니다.
+**[클릭 전에]** 여기까지가 9월 점검에서 고친 것들입니다. 이렇게 먼저 박은 규칙으로 지금 도는 것이 2단계 파일럿입니다.
 
 **[클릭]**
 
@@ -378,7 +379,7 @@ MLIP 지표의 기준이 되는 DFT 계산입니다. **[가리킴: 두 곡선]**
 
 ## 15. 요약 ⏱ 21:45
 정리하겠습니다.
-- 끝난 것: 1단계에서 91 개 전구체 전부 열거·완화, DFT 상태방정식과 안정창 재계산, 그리고 9월 감사로 2단계 규칙을 결과 전에 고정
+- 끝난 것: 1단계에서 91 개 전구체 전부 열거·완화, DFT 상태방정식과 안정창 재계산, 그리고 9월 점검으로 2단계 규칙을 결과 전에 고정
 - 진행 중: 2단계 파일럿, Al₂O₃ 대 Al₂S₃ 의 Li 확산 비 계산 · DFT 탄성상수
 - 다음: 실행 범위와 순위 여유를 미리 정하고, 1단계 지표를 실제 수송에 대 보고, 짧은 목록 · DFT · 실험
 
