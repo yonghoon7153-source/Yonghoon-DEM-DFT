@@ -588,14 +588,29 @@ def _selftest():
     #  (cherry-pick 뒤 그 번호는 본 가지 · 원격 어디에도 없다).  진짜 git 저장소 픽스처로 확인한다 (이 리포를 건드리지 않는다).
     rp = tempfile.mkdtemp(prefix='refs_reach_')
 
+    #  2026-10-15 게이트 실패 (1ff1364ff) — 픽스처 커밋 번호가 시각에 따라 바뀌어, 9 자리 접두가 숫자뿐이면 scan_text 가 날짜로 보고
+    #  건너뛰어 이 시험이 가끔 떨어졌다 (검사기 동작은 맞다).  ⇒ 시각을 고정해 번호를 매번 같게 하고, 인용은 글자가 섞인 접두로 한다.
+    _env_r = dict(_env, GIT_AUTHOR_DATE='2026-10-15T00:00:00+0000', GIT_COMMITTER_DATE='2026-10-15T00:00:00+0000')
+
     def _gr(*a):
-        return subprocess.run(['git', '-C', rp, *a], capture_output=True, text=True, env=_env)
+        return subprocess.run(['git', '-C', rp, *a], capture_output=True, text=True, env=_env_r)
 
     def _commit(name):
         open(os.path.join(rp, name), 'w').write(name + '\n')
         _gr('add', '-A')
         _gr('commit', '-qm', name)
         return _gr('rev-parse', 'HEAD').stdout.strip()
+
+    def _cite(sha):
+        for k in range(9, len(sha) + 1):
+            if not sha[:k].isdigit():
+                return sha[:k]
+        return sha
+
+    #  고정 반례 (git 없이 · 매번 같은 답): 앞 9 자리가 숫자뿐인 도달 불가 커밋도 인용이 없는 커밋으로 잡혀야 한다
+    _x = '123456789' + 'b' * 31
+    g = scan_text(f'커밋 `{_cite(_x)}` 를 참조한다', '.', {'a' * 40}, set(), Resolver({'a' * 40}))
+    chk('SELF-116 고정 반례: 앞 9 자리가 숫자뿐인 커밋의 인용도 없는 커밋 (픽스처 인용 규칙)', g['bad_sha'] == ['123456789b'], str(g))
     _gr('init', '-q')
     reach = {}
     if _gr('rev-parse', '--git-dir').returncode == 0:
@@ -614,9 +629,9 @@ def _selftest():
         chk('SELF-116 HEAD 의 조상 (HEAD · 그 앞) = 도달 가능', reach['head'] in ks and reach['base'] in ks)
         chk('SELF-116 원격 추적 가지 (refs/remotes/*) 의 커밋 = 도달 가능 (HEAD 조상이 아니어도)', reach['remote'] in ks)
         rs = Resolver(ks)
-        g = scan_text(f'커밋 `{reach["local"][:9]}` 를 참조한다', rp, ks, set(), rs)
-        chk('★★ SELF-116 문서가 로컬 가지에만 있는 커밋을 인용 = 없는 커밋', g['bad_sha'] == [reach['local'][:9]], str(g))
-        g = scan_text(f'커밋 `{reach["remote"][:9]}` · `{reach["head"][:9]}` · `{reach["base"][:9]}` 참조', rp, ks, set(), rs)
+        g = scan_text(f'커밋 `{_cite(reach["local"])}` 를 참조한다', rp, ks, set(), rs)
+        chk('★★ SELF-116 문서가 로컬 가지에만 있는 커밋을 인용 = 없는 커밋', g['bad_sha'] == [_cite(reach['local'])], f'{reach} {g}')
+        g = scan_text(f'커밋 `{_cite(reach["remote"])}` · `{_cite(reach["head"])}` · `{_cite(reach["base"])}` 참조', rp, ks, set(), rs)
         chk('SELF-116 원격 가지 · HEAD · HEAD 조상 커밋 인용 = 통과', g['bad_sha'] == [], str(g))
         chk('SELF-116 얕은 클론 판정은 그대로 (보통 저장소 = 얕지 않음)', is_shallow(rp) is False)
     else:
