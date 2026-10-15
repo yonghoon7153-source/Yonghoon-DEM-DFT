@@ -44,6 +44,6 @@
 
 ## 4. 다음
 
-- **본 R · RJ2 · EXT 의 `GRAMMAR_VERDICT` 권고 = 실행 2** `~/ps45_unload_hist_20261013/gram_20261015_030225/grammar_verdict.json` (첫 PASS · 이름으로 고정) — 반복 (`gram_20261015_122956`) 도 같은 판정 · ⬜ 1저자 확인 (발사 때).  두 런 폴더 · `kit_<시각>/` 은 ibb 에서 옮기거나 지우지 않는다.
+- **본 R · RJ2 · EXT 의 `GRAMMAR_VERDICT` = 실행 2** (✅ 1저자 10-15) `~/ps45_unload_hist_20261013/gram_20261015_030225/grammar_verdict.json` (첫 PASS · 이름으로 고정) — 반복 (`gram_20261015_122956`) 도 같은 판정.  두 런 폴더 · `kit_<시각>/` 은 ibb 에서 옮기거나 지우지 않는다.
 - Codex 짧은 재확인 2 — 요청서 §7 에 이 반입을 붙였다 (리뷰 핀 = 그 요청서가 든 본 가지 커밋).
 - ⛔ 본 R · 10:0 연장 · U = 재확인 GO 뒤 (이 PASS 만으로 GO 아님).
