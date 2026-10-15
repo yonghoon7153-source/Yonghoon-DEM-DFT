@@ -1,13 +1,13 @@
 ---
 title: "리뷰 사슬 색인 — 프롬프트↔회신 (자동 생성)"
-date: 2026-10-12
-updated: 2026-10-12
+date: 2026-10-15
+updated: 2026-10-15
 tags: [index, review, codex]
 status: 자동생성
 kind: index
 confidence: high
 verificationStatus: verified
-verifiedAt: 2026-10-12
+verifiedAt: 2026-10-15
 verifiedBy: tools/kb_wiki.py reviews --write (산출물에서 재구성)
 explored: false
 authoredBy: agent
@@ -102,7 +102,7 @@ evidenceScope: multi-source-primary
 | BZ | 2026-09-25 | `codex_BZ_prompt_wad_aprime_pilot_prereg_v2_2026_09_25.md` | `codex_BZ_reply_wad_aprime_pilot_prereg_v2_2026_09_25.md` | 발송 완료 · 회신 수령 2026-09-25 밤 **NO-GO** (`codex_BZ_reply_…`) → 카드 v3 + G2 재작성 → CA 재심 대기 | 같은 라벨 · 주제 토큰 일치 ['aprime', 'pilot', 'prereg', 'v2', 'wad'] |
 | CA | 2026-09-25 | `codex_CA_prompt_wad_aprime_pilot_prereg_v3_2026_09_25.md` | `codex_CA_reply_wad_aprime_pilot_prereg_v3_2026_09_25.md` | 발송 완료 · 회신 수령 2026-09-25 밤 **NO-GO** (`codex_CA_reply_…` · V2 측방 마스크 P0 등 5) → 카드 v4 → CB 재심 대기 | 같은 라벨 · 주제 토큰 일치 ['aprime', 'pilot', 'prereg', 'v3', 'wad'] |
 | CB | 2026-09-25 | `codex_CB_prompt_wad_aprime_pilot_prereg_v4_2026_09_25.md` | `codex_CB_reply_wad_aprime_pilot_prereg_v4_2026_09_25.md` | 발송 완료 · 회신 수령 2026-09-25 밤 **조건부 GO** (`codex_CB_reply_…`) → 조건 4 이행 → 카드 v5 봉인 후보 (1저자 비준 대기) | 같은 라벨 · 주제 토큰 일치 ['aprime', 'pilot', 'prereg', 'v4', 'wad'] |
-| CC | 2026-09-26 | `li2s1a_CC_prompt_li2s_pilot_gateA_ledger_2026_09_26.md` | `li2s1a_CC_reply_li2s_pilot_gateA_ledger_2026_09_26.md` | 발송됨 (사용자 · 2026-09-26) · 회신 CC 수령 → `li2s1a_CC_reply_li2s_pilot_gateA_ledger_2026_09_26.md` | 같은 라벨 · 주제 토큰 일치 ['gateA', 'ledger', 'li2s', 'pilot']; 판정 인용 10회 |
+| CC | 2026-09-26 | `li2s1a_CC_prompt_li2s_pilot_gateA_ledger_2026_09_26.md` | `li2s1a_CC_reply_li2s_pilot_gateA_ledger_2026_09_26.md` | 발송됨 (사용자 · 2026-09-26) · 회신 CC 수령 → `li2s1a_CC_reply_li2s_pilot_gateA_ledger_2026_09_26.md` | 같은 라벨 · 주제 토큰 일치 ['gateA', 'ledger', 'li2s', 'pilot']; 판정 인용 12회 |
 | CD | 2026-09-26 | `li2s1a_CD_prompt_li2s_cc_report_2026_09_26.md` | `li2s1a_CD_reply_li2s_cc_report_2026_09_27.md` | 발송됨 (사용자) · 회신 CD 수령 2026-09-27 → `li2s1a_CD_reply_li2s_cc_report_2026_09_27.md` | 같은 라벨 · 주제 토큰 일치 ['cc', 'li2s', 'report']; 판정 인용 3회 |
 | CE | 2026-09-27 | `codex_CE_prompt_wad_aprime_v5_vasp_outsourcing_2026_09_27.md` | `codex_CE_reply_wad_aprime_v5_vasp_outsourcing_2026_09_27.md` | 발송 완료 · 회신 수령 2026-09-27 **NO-GO** (`codex_CE_reply_…` · P0 4 · P1 5 · 3b 원안 반대 · 3c 찬성) → v2 (커밋 e025c0db7) → 재리뷰 CF 발송 대기 | 같은 라벨 · 주제 토큰 일치 ['aprime', 'outsourcing', 'v5', 'vasp', 'wad'] |
 | CF | 2026-09-27 | `codex_CF_prompt_wad_aprime_v5_vasp_outsourcing_v2_2026_09_27.md` | `codex_CF_reply_wad_aprime_v5_vasp_outsourcing_v2_2026_09_27.md` | 발송 완료 · 회신 수령 2026-09-27 **NO-GO** (`codex_CF_reply_…` · P0 3 · P1 3) → v3 (커밋 c8d77dfd5) → 재리뷰 CG 발송 대기 | 같은 라벨 · 주제 토큰 일치 ['aprime', 'outsourcing', 'v2', 'v5', 'vasp', 'wad'] |
@@ -123,7 +123,8 @@ evidenceScope: multi-source-primary
 | CU | 2026-10-07 | `codex_CU_prompt_wad_agc_graphite_k9_closure_2026_10_07.md` | `codex_CU_reply_wad_agc_graphite_k9_closure_2026_10_08.md` | 발송 2026-10-08 · ✅ 회신 수령 2026-10-08 → `codex_CU_reply_wad_agc_graphite_k9_closure_2026_10_08.md` (조건부 GO · 값 유지 · P1 '기판만' 정정 · P2 라벨) | 같은 라벨 · 주제 토큰 일치 ['agc', 'closure', 'graphite', 'k9', 'wad'] |
 | CV | 2026-10-07 | `codex_CV_prompt_cei_easy_story_2026_10_07.md` | `codex_CV_reply_cei_easy_story_2026_10_08.md` | 발송 2026-10-08 · ✅ 회신 수령 2026-10-08 → `codex_CV_reply_cei_easy_story_2026_10_08.md` (조건부 GO · 스토리 그림 NO-GO · P0 2 · P1 5) | 같은 라벨 · 주제 토큰 일치 ['cei', 'easy', 'story'] |
 | CW | 2026-10-12 | `codex_CW_prompt_seminar_lean_deck_aesthetics_2026_10_12.md` | `codex_CW_reply_seminar_lean_deck_aesthetics_2026_10_13.md` | 발송 2026-10-13 · ✅ 회신 수령 2026-10-13 → `codex_CW_reply_seminar_lean_deck_aesthetics_2026_10_13.md` (조건부 GO · P0 3 · P1 5) | 같은 라벨 · 주제 토큰 일치 ['aesthetics', 'deck', 'lean', 'seminar'] |
-| CX | 2026-10-14 | `li2s1a_CX_prompt_li2s_glass_control_readout_2026_10_14.md` | — | 초안 (2026-10-14) — 사용자 검토 · 발송 대기 (발송판 `kb/projects/li2s_glass_control_readout_letter_CX_send_2026_10_14.md` = 보내는 글 그대로) | li2s · 대조 계 B 600 K 판독 · 규칙 적용 갈래 c2 · 트랙 끝 제안 |
+| CX | 2026-10-14 | `li2s1a_CX_prompt_li2s_glass_control_readout_2026_10_14.md` | — | 초안 (2026-10-14) — 사용자 검토 · 발송 대기 (발송판 `kb/projects/li2s_glass_control_readout_letter_CX_send_2026_10_14.md` = 보내는 글 그대로) | — |
+| CY | 2026-10-15 | `codex_CY_prompt_wad_outsourcing_round2_design_2026_10_15.md` | — | 초안 (2026-10-15) — 사용자 발송 대기 | — |
 
 ## 🔴 모순 (status 는 대기인데 증거는 회신 수령)
 
