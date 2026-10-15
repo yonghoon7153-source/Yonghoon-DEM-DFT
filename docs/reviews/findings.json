@@ -368,8 +368,14 @@
       "owner": "claude",
       "opened_in": "docs/reviews/deep_review_20260818_voxsweep.md",
       "title": "VGCF 는 1-셀 굵기 관이라 기하가 격자 불변이 아니다 — 표현부피 13.83× → 1.91×",
-      "evidence_tests": [],
-      "note": "`fibre_segment_raster.segment_cells` 는 직경과 무관하게 1 복셀 관을 굽는다.  `diameter_preserving_sigma` 는 **단면 보정만** 하고(그 docstring 자신이 명시) 부피·표면적·SDCP 와의 래스터 접촉면은 안 고친다.  ⇒ SDCP 의 이득 기전이 \"탄소 백본 조각을 잇는다\" 인데 스윕 안에서 **백본의 굵기와 접촉면이 같이 변한다**.  σ 를 고정해도 이 축은 남는다.  ⇒ 정직한 라벨: 이 스윕은 \"격자 수렴\" 이 아니라 **\"격자 규약 민감도\"** 다."
+      "evidence_tests": [
+        "docs/report_20261021/summary.json (G6 mean · max_origin_spread_pct)",
+        "docs/data/phase_a_104arms_20260921/arms_primary_v015_20260921/arms/arm_w1_v0.15_o0.json (sigma_vgcf_S_cm 78.5398)",
+        "docs/data/phase_a_104arms_20260921/arms_primary_v020_20260921/arms/arm_w1_v0.2_o0.json (sigma_vgcf_S_cm 44.1786)",
+        "docs/data/phase_a_104arms_20260921/arms_primary_v025_20260921/arms/arm_w1_v0.25_o0.json (sigma_vgcf_S_cm 28.2743)",
+        "docs/reviews/sr01_raster_review_verdict_20260812.md (선분 접촉 ×2.67 기하 추정 · vox 0.4)"
+      ],
+      "note": "`fibre_segment_raster.segment_cells` 는 직경과 무관하게 1 복셀 관을 굽는다.  `diameter_preserving_sigma` 는 **단면 보정만** 하고(그 docstring 자신이 명시) 부피·표면적·SDCP 와의 래스터 접촉면은 안 고친다.  ⇒ SDCP 의 이득 기전이 \"탄소 백본 조각을 잇는다\" 인데 스윕 안에서 **백본의 굵기와 접촉면이 같이 변한다**.  σ 를 고정해도 이 축은 남는다.  ⇒ 정직한 라벨: 이 스윕은 \"격자 수렴\" 이 아니라 **\"격자 규약 민감도\"** 다.  ★ 10-15 덧붙임 (1저자 연구세미나 준비 · Transport 장 질문 *\"애초에 그 부분까지 반영해서 diameter-preserving 해야되는거 아닌가\"* → *\"이 부분도 원장에 추가해용\"* · 새 계산 없음 = 기존 산출물 · 코드 판독): 같은 뿌리가 **VGCF 만 든 Phase A 104 팔**에도 걸린다.  지름 보존 재척도가 맞추는 것 = 섬유 한 가닥의 축 방향 컨덕턴스 (팔 JSON `sigma_vgcf_S_cm` = 78.5398 · 44.1786 · 28.2743 S/cm @ vox 0.15 · 0.2 · 0.25 = 100 × π·0.15²/(4·vox²)).  못 맞추는 것 = 섬유가 **어디에 닿느냐** (섬유–섬유 · 섬유–NCM) — 칸을 채우는 자리는 재척도와 무관해, 칸이 클수록 굵게 그려진 섬유가 실제 Ø 0.15 µm 라면 안 닿을 이웃과 닿는다 (08-12 기하 추정: vox 0.4 선분 = 유효직경 0.15→0.4 ⇒ 접촉 ×2.67 · docs/reviews/sr01_raster_review_verdict_20260812.md).  관찰: 96 primary 평균 σ_e 의 0.25/0.15 µm 배 = 2.24 · 2.65 · 2.15 · 2.00 (1–4 wt%) ↔ 같은 칸 크기 안 origin 산포 최대 3.42 % (docs/report_20261021/summary.json G6) ⇒ 칸 크기 효과가 origin 효과보다 훨씬 크다.  원인 분해 안 함 — '굵게 그려진 섬유의 추가 접촉' 은 추정 (계단 경로 · 표현부피 변화와 섞여 있다).  등록 주장 (순서 72/72) 은 영향 없음 (docs/data/phase_a_104arms_20260921/README.md 한정어 i) · 절대 σ_e · 격자 간 비교 · 문헌 대조에 걸린다.  고치는 길 (후보 · 비준 전): ① 실제 지름 스탬프 = 구 스탬프와 같은 d/vox ≥ 2 를 적용하면 vox ≤ 0.075 µm — 메모리로 침대 전체 불가 (CLAUDE.md CL-41 절 · 0.115 µm 에서 peak 35.6 GB) · ② 접촉을 실제 섬유 기하 (Ø 0.15 µm 원기둥) 로 잡아 실제 접촉만 잇기 = 섬유 선 저항망 + 복셀 결합 — 결합 코드 없음 · 보류 (claims CL-23) · 격자 의존을 없앤다는 근거 없음 · ③ Rint 와 같은 묶음 — 실제 접촉이 잡히면 접촉마다 계면 저항 · Rint 계획의 ② VGCF 번호 격자 단계 (docs/voxel_contact_free_gap.md §8) 뒤 (지금 같은 상 계면 = AM 만 · RINT-01) · ④ 시험 = Phase A 일부를 Rint 켬으로 다시 돌려 격자 의존이 줄어드는지 — 사전 등록 뒤.  ⬜ 수정 = 세미나 뒤 · Rint 계획에 묶을지 = 1저자.  발표 질문 대응 문장: '지름 보존은 섬유 한 가닥의 축 방향 전도만 맞춘 규칙이라 접촉 수는 격자에 따라 달라진다 → 절대값이 아니라 순서만 주장'."
     },
     {
       "id": "DR3-07",
