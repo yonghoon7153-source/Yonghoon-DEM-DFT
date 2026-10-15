@@ -6,7 +6,7 @@ date: 2026-10-15
 track: wad
 channel: codex
 kind: prompt
-status: 초안 (2026-10-15) — 사용자 발송 대기
+status: 발송 2026-10-15 · ✅ 회신 수령 2026-10-15 → `codex_CY_reply_wad_outsourcing_round2_design_2026_10_15.md` (조건부 GO · 탄소 추가·은 a4 찬성 · 최소 수정 여섯 묶음 뒤 빌드 · 발송 승인은 CZ)
 confidence: medium
 verificationStatus: unverified
 explored: false
