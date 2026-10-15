@@ -21,6 +21,7 @@ site-preference backup p18 (old p12 / p17 files are removed by the script). p06 
 | 8 | Short anneal, Origin layout (user page 10, 10-15) | `p08_anneal_energy_change_origin.csv` · `p08_anneal_energy_change_bins_origin.csv` | same 693 values in meV and eV per 52-atom cell, median in the header · 50 meV bins (sum = 693) for a column plot |
 | 9 | DFT EOS | `p09_eos_bm3_fit_curves.csv` | lines: E − E0 vs V per f.u. (fit curves; raw points not in repo) |
 | 10 | Stability window | `p10_stability_window_host.csv` · `p10_stability_window_host_segments.csv` · `p10_stability_window_host_legacy.csv` | bar segments on a voltage axis (host Li6PS5Cl); the legacy file is the earlier lower limit (a Li-uptake step, edge until 2026-09-22) for the user's page 12 — not a window edge |
+| A (appendix) | Stage-1 volume filter vs two reference volumes | `pA_volume_filter_two_references.csv` · `pA_volume_filter_two_references_bins.csv` | per-structure dV against 27.478 (Stage 1) and 19.562 Å³/atom (DFT host, same MLIP) · 5 % bins coloured by the Stage-1 decision (100 removed; 1,284 beyond 25 % against the DFT host) |
 | 13 | MD status | `p13_md_campaign_progress.csv` · `p13_md_campaign_runs.csv` | progress bars; run roster (status, wall-clock GPU-h) |
 | 18 | Backup: site preference | `p18_site_preference_vs_ionic_radius.csv` | ΔE vs Shannon radius, three loadings per element (June batch, not Stage 1) |
 

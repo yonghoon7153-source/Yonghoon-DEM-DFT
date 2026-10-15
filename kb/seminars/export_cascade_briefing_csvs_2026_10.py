@@ -425,6 +425,59 @@ def p08_3675():
                  [[SITE_CODE_ROWS[c]] + [grid[(c, a)] for a in SITE_CODE_COLS] for c in SITE_CODE_ROWS])
 
 
+VOL_ANCHORS = (27.478, 19.562)   # Å³/atom: the Stage-1 screen anchor (UMA-relaxed ordered template, md5-checked) ·
+                                 # the DFT host comp1_V0_k444 relaxed with the same UMA (cascade_reanchor_comp1k444_2026_09_12)
+VOL_BINS = [-40 + 5 * k for k in range(22)]   # % edges, −40 … +65
+
+
+def volume_two_references(rows, a_stage1=VOL_ANCHORS[0], a_dft=VOL_ANCHORS[1], thr=0.25):
+    """Stage-1 relaxed volumes against two reference volumes (appendix slide, user 10-15 'put this in the appendix,
+    modified'). The screen stored dV = V/atom ÷ 27.478 − 1 (`screen_dV_over_V0`); V/atom is recovered from it — a
+    linear map, no new calculation — and re-expressed against the DFT host relaxed with the same MLIP.
+    Returns [(name, dopant, dV_stage1, V_per_atom, dV_dft, removed_in_stage1)].
+    ⛔ Cannot: say which structures sit in the right basin — a similar volume is not the same state (reply BO), and a
+    V/atom ratio is not a pure volumetric strain when the atom count changes (reply BN Q5②)."""
+    if not 0 < a_dft < a_stage1:
+        raise ValueError(f'anchors out of order: Stage 1 {a_stage1}, DFT host {a_dft}')
+    out = []
+    for r in rows:
+        try:
+            d = float(r['screen_dV_over_V0'])
+        except (KeyError, ValueError):
+            raise ValueError(f"screen_dV_over_V0 missing or not a number: {r.get('name')}") from None
+        v = a_stage1 * (1 + d)
+        if not v > 0:
+            raise ValueError(f"non-physical volume {v} for {r.get('name')}")
+        out.append((r['name'], r['dopant'], d, v, v / a_dft - 1, abs(d) > thr))
+    return out
+
+
+def pA():
+    with open(os.path.join(P, 'cascade_v23_all.csv'), encoding='utf-8') as f:
+        t = volume_two_references(list(csv.DictReader(f)))
+    a0, a1 = VOL_ANCHORS
+    n_rm, n_new = sum(r[5] for r in t), sum(abs(r[4]) > 0.25 for r in t)
+    write('pA_volume_filter_two_references.csv',
+          [f'Appendix (user deck) — Stage-1 main batch {len(t)} structures: relaxed volume against two references.',
+           f'dV_stage1 = V/atom ÷ {a0} − 1 (the screen value; {a0} = ordered template relaxed with UMA) · '
+           f'dV_dft_host = V/atom ÷ {a1} − 1 ({a1} = DFT host comp1_V0_k444 relaxed with the same UMA; DFT V0 19.55).',
+           f'removed_in_stage1 = |dV_stage1| > 0.25 ({n_rm}); against the DFT host the same threshold flags {n_new}.',
+           'Source: db/properties/cascade_v23_all.csv · cascade_reanchor_comp1k444_2026_09_12.json (same arithmetic). '
+           'Not a basin assignment: similar volume is not the same state.'],
+          ['name', 'dopant', 'dV_stage1_pct', 'V_per_atom_A3', 'dV_dft_host_pct', 'removed_in_stage1'],
+          [[n, d, round(100 * a, 3), round(v, 4), round(100 * b, 3), int(rm)] for n, d, a, v, b, rm in t])
+    cnt = lambda col, rm: [sum(1 for r in t if r[5] == rm and lo <= 100 * r[col] < hi)
+                           for lo, hi in zip(VOL_BINS, VOL_BINS[1:])]
+    k0, r0, k1, r1 = cnt(2, False), cnt(2, True), cnt(4, False), cnt(4, True)
+    if sum(k0) + sum(r0) != len(t) or sum(k1) + sum(r1) != len(t):
+        raise ValueError('volume bins do not cover every structure — widen VOL_BINS')
+    return write('pA_volume_filter_two_references_bins.csv',
+                 ['Appendix — counts per 5 % bin (left edge inclusive) for the two-panel histogram; same structures in both panels.',
+                  'kept / removed = Stage-1 decision (|dV_stage1| > 25 %), kept in colour across both panels.'],
+                 ['bin_left_pct', 'bin_right_pct', 'stage1_ref_kept', 'stage1_ref_removed', 'dft_ref_kept', 'dft_ref_removed'],
+                 [[lo, hi, a, b, c, d] for lo, hi, a, b, c, d in zip(VOL_BINS, VOL_BINS[1:], k0, r0, k1, r1)])
+
+
 def p09():
     e = {r['id']: r for r in json.load(open(os.path.join(P, 'eos.json')))['results']}
     sysd = [('Li6PS5Cl', e['comp1_v3'], 4, 960.0, 1085.0), ('Li5.4PS4.4Cl1.6', e['modelc_v3'], 5, 1140.0, 1285.0)]
@@ -758,6 +811,52 @@ def draw_host_window(out, w=4.4, h=1.9, earlier=False):
     return out
 
 
+def draw_volume_two_references(out_left, out_right, w=4.2, h=2.75):
+    """Appendix: the same 3,615 Stage-1 structures binned against the Stage-1 reference (left) and the DFT host
+    relaxed with the same MLIP (right); colour = the Stage-1 decision, so the 100 removed structures can be followed
+    from one panel to the other. Same axes in both panels; the band beyond ±25 % is shaded.
+    ⛔ Cannot: show which structures are 'right' — only where their volumes sit against each reference."""
+    plt = _plt()
+    b = rows_of(os.path.join(OUT, 'pA_volume_filter_two_references_bins.csv'))[1:]
+    lo = [float(r[0]) for r in b]
+    width = float(b[0][1]) - float(b[0][0])
+    cols = {'left': (2, 3), 'right': (4, 5)}
+    ymax = max(max(int(r[2]) + int(r[3]), int(r[4]) + int(r[5])) for r in b)
+    titles = {'left': f'against {VOL_ANCHORS[0]:.2f} Å$^3$ per atom (Stage 1)',
+              'right': f'against {VOL_ANCHORS[1]:.2f} Å$^3$ per atom (DFT host)'}
+    for side, out in (('left', out_left), ('right', out_right)):
+        kc, rc = cols[side]
+        kept = [int(r[kc]) for r in b]
+        rem = [int(r[rc]) for r in b]
+        beyond = sum(k + q for x, k, q in zip(lo, kept, rem) if x < -25 or x >= 25)
+        fig, ax = plt.subplots(figsize=(w, h))
+        for a_, b_ in ((VOL_BINS[0], -25), (25, VOL_BINS[-1])):
+            ax.axvspan(a_, b_, color='#f1f5f9', zorder=0)
+        ax.bar(lo, kept, width=width, align='edge', color='#3b6fd8', edgecolor='white', lw=0.4,
+               label=f'kept in Stage 1 ({sum(kept):,})', zorder=2)
+        ax.bar(lo, rem, width=width, align='edge', bottom=kept, color='#dc2626', edgecolor='white', lw=0.4,
+               label=f'removed in Stage 1 ({sum(rem):,})', zorder=2)
+        for v in (-25, 25):
+            ax.axvline(v, color='#6b7280', ls='--', lw=0.9, zorder=3)
+        ax.text(0.98 if side == 'right' else 0.03, 0.95, f'{beyond:,} beyond 25 %',
+                transform=ax.transAxes, ha='right' if side == 'right' else 'left', va='top', fontsize=9.5,
+                color='#dc2626' if side == 'left' else '#1f2937', zorder=4,
+                bbox=dict(facecolor='white', edgecolor='none', pad=1.5))   # hides the ±25 % line behind the label
+        ax.set_xlim(VOL_BINS[0], VOL_BINS[-1])
+        ax.set_ylim(0, ymax * 1.18)
+        ax.set_title(titles[side], fontsize=10, pad=4)
+        ax.set_xlabel('volume change against the reference (%)')
+        ax.set_ylabel('structures')
+        plain_axes(ax, 9.5)
+        if side == 'left':
+            leg = ax.legend(frameon=True, fontsize=8.5, loc='upper right', framealpha=1, borderpad=0.3)
+            leg.get_frame().set_edgecolor('none')   # white box hides the +25 % line behind the labels
+        fig.tight_layout()
+        fig.savefig(out, dpi=300)
+        plt.close(fig)
+    return out_left, out_right
+
+
 def draw_anneal_hist(out, w=3.1, h=1.75, median=False, style='plain'):
     """The short anneal's energy change (693 structures), plain grey bars, 50 meV bins like the August Origin recipe.
     The cell is the 52-atom conventional cell (4 formula units) — the CSV column still says 'per supercell' (10-15: the
@@ -882,6 +981,9 @@ def figures():
     # p10: host stability window on a voltage axis (+ the user's page-12 version with the earlier lower limit)
     made.append(draw_host_window(os.path.join(ASSETS, 'fig_p10_host_window.png')))
     made.append(draw_host_window(os.path.join(ASSETS, 'fig_p10_host_window_earlier_limit.png'), earlier=True))
+    # appendix (user 10-15): the Stage-1 volume filter against two reference volumes — two equal panels
+    made.extend(draw_volume_two_references(os.path.join(ASSETS, 'fig_appx_volume_stage1_ref.png'),
+                                           os.path.join(ASSETS, 'fig_appx_volume_dft_ref.png')))
 
     # p13: 40-run roster status
     runs = rows_of(os.path.join(OUT, 'p13_md_campaign_runs.csv'))[1:]
@@ -935,6 +1037,7 @@ site-preference backup p18 (old p12 / p17 files are removed by the script). p06 
 | 8 | Short anneal, Origin layout (user page 10, 10-15) | `p08_anneal_energy_change_origin.csv` · `p08_anneal_energy_change_bins_origin.csv` | same 693 values in meV and eV per 52-atom cell, median in the header · 50 meV bins (sum = 693) for a column plot |
 | 9 | DFT EOS | `p09_eos_bm3_fit_curves.csv` | lines: E − E0 vs V per f.u. (fit curves; raw points not in repo) |
 | 10 | Stability window | `p10_stability_window_host.csv` · `p10_stability_window_host_segments.csv` · `p10_stability_window_host_legacy.csv` | bar segments on a voltage axis (host Li6PS5Cl); the legacy file is the earlier lower limit (a Li-uptake step, edge until 2026-09-22) for the user's page 12 — not a window edge |
+| A (appendix) | Stage-1 volume filter vs two reference volumes | `pA_volume_filter_two_references.csv` · `pA_volume_filter_two_references_bins.csv` | per-structure dV against 27.478 (Stage 1) and 19.562 Å³/atom (DFT host, same MLIP) · 5 % bins coloured by the Stage-1 decision (100 removed; 1,284 beyond 25 % against the DFT host) |
 | 13 | MD status | `p13_md_campaign_progress.csv` · `p13_md_campaign_runs.csv` | progress bars; run roster (status, wall-clock GPU-h) |
 | 18 | Backup: site preference | `p18_site_preference_vs_ionic_radius.csv` | ΔE vs Shannon radius, three loadings per element (June batch, not Stage 1) |
 
@@ -962,6 +1065,12 @@ def main():
         print(draw_anneal_hist(os.path.join(d, 'fig_p08_anneal_energy_hist_origin.png'), *P08_USER_SLOTS['hist'],
                                median=True, style='origin'))
         return
+    if '--fig-appx' in sys.argv:   # appendix (user 10-15): the volume filter against two reference volumes
+        d = sys.argv[sys.argv.index('--fig-appx') + 1]
+        os.makedirs(d, exist_ok=True)
+        print(*draw_volume_two_references(os.path.join(d, 'fig_appx_volume_stage1_ref.png'),
+                                          os.path.join(d, 'fig_appx_volume_dft_ref.png')), sep='\n')
+        return
     if '--fig-p10' in sys.argv:   # hand-edited deck (user's page 12): host window with the earlier lower limit
         d = sys.argv[sys.argv.index('--fig-p10') + 1]
         os.makedirs(d, exist_ok=True)
@@ -970,7 +1079,7 @@ def main():
     for old in ('p12_md_campaign_runs.csv', 'p12_md_campaign_progress.csv', 'p17_site_preference_vs_ionic_radius.csv'):
         if os.path.exists(os.path.join(OUT, old)):      # renamed when the audit slide became page 11
             os.remove(os.path.join(OUT, old))
-    made = [p06(), p07(), p07b(), p07c(), p07d(), p08(), p08_3675(), p08b(), p08b_origin(), p09(), p10(), p13(), p18()]
+    made = [p06(), p07(), p07b(), p07c(), p07d(), p08(), p08_3675(), p08b(), p08b_origin(), p09(), p10(), p13(), p18(), pA()]
     with open(os.path.join(OUT, 'README.md'), 'w', encoding='utf-8') as f:
         f.write(README)
     print('wrote', len(os.listdir(OUT)), 'files to', os.path.relpath(OUT, ROOT))
@@ -1133,6 +1242,22 @@ def selftest():
             raise AssertionError('host_window_edges accepted a broken host set')
     leg = rows_of(os.path.join(OUT, 'p10_stability_window_host_legacy.csv'))
     assert float(leg[1][1]) == old_ and float(leg[2][1]) == oldw_; ok += 1
+    # appendix volume filter: the re-anchor ledger's counts (100 → 1,284) come back from the table; the 100 removed
+    # sit within ±6.1 % of the DFT host; a missing value or swapped anchors are refused
+    with open(os.path.join(P, 'cascade_v23_all.csv'), encoding='utf-8') as f:
+        v23 = list(csv.DictReader(f))
+    tv = volume_two_references(v23)
+    assert len(tv) == 3615 and sum(r[5] for r in tv) == 100 and sum(abs(r[4]) > 0.25 for r in tv) == 1284; ok += 1
+    assert all(abs(r[4]) < 0.061 for r in tv if r[5]); ok += 1
+    for bad_rows, kw in ([dict(v23[0], screen_dV_over_V0='')], {}), (v23[:3], {'a_stage1': 19.562, 'a_dft': 27.478}):
+        try:
+            volume_two_references(bad_rows, **kw)
+        except ValueError:
+            ok += 1
+        else:
+            raise AssertionError(f'volume_two_references accepted {kw or "a blank dV"}')
+    bins = rows_of(os.path.join(OUT, 'pA_volume_filter_two_references_bins.csv'))[1:]
+    assert sum(int(r[3]) for r in bins) == 100 and sum(int(r[2]) + int(r[3]) for r in bins) == 3615; ok += 1
     real_a = rows_of(os.path.join(OUT, 'p08_anneal_energy_change.csv'))
     med_, data_, bins_ = anneal_origin_tables(real_a)
     assert len(data_) == 693 and sum(b[3] for b in bins_) == 693 and -820 < med_ < -800; ok += 1
