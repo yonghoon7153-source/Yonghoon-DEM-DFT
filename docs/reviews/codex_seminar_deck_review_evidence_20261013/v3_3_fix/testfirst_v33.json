@@ -1,0 +1,170 @@
+{
+ "purpose": "v3.3 checks run BEFORE the v3.3 build / figure existed: on the Codex-reviewed v3.2 deck and the v3.2 F_p4 figure",
+ "inputs": {
+  "v3.2 deck": "1b6988f3e55dc6bcf7e81d0ba4ec35b11ed2a0790a1357ba6e6185d22b08f28d",
+  "v3.1 deck (A5 base)": "27805a7c74749c81b0a661ca6e6e1b6a90e201758e62eef5bab13e2ebee6cb89",
+  "equation deck (A8)": "8e76819a9f89516d75c7bd40c529cd65ce055e31a2c8b777d1b8e8edfc669223",
+  "F_p4.svg (v3.2)": "61523b5c1df12f7aabaff79da29ea821e89a70c930b7eb95e0ec3af99e4524a1",
+  "F_p4.csv (v3.2)": "d7975e6cd2ea5b7e18667819ec493e81f4b093cdeb9456ae9a5eb15304257b6b"
+ },
+ "deck": {
+  "label": "seminar_20261013_v32.pptx",
+  "total": 349,
+  "failed": 33,
+  "failed_by_group": {
+   "A10": 1,
+   "A9": 1,
+   "B1": 7,
+   "B2": 13,
+   "B3": 1,
+   "B4": 9,
+   "B6": 1
+  },
+  "failures": [
+   {
+    "check": "A9 slide 11 carries F_p4_v33.png byte-identical (v3.3: band renamed — figure file F_p4 → F_p4_v33)",
+    "detail": "F_p4_v33.png exists=False"
+   },
+   {
+    "check": "A10 source lines ≤ 110 characters per line; one line, slide 3 two lines (v3.3: SEM32-01 sentence = 162 characters)",
+    "detail": "[(3, 'lines', 1)]"
+   },
+   {
+    "check": "B1 forbidden \"implemented equations\" absent (slides + notes)",
+    "detail": "[(3, 'slide'), (3, 'notes')]"
+   },
+   {
+    "check": "B1 forbidden \"until the open checks pass\" absent (slides + notes)",
+    "detail": "[(11, 'slide')]"
+   },
+   {
+    "check": "B1 forbidden \"coating coverage followed the stress intensity r\" absent (slides + notes)",
+    "detail": "[(13, 'notes')]"
+   },
+   {
+    "check": "B1 forbidden pattern (?i)heckel analysis redone absent (slides + notes)",
+    "detail": "[(15, 'slide'), (15, 'notes')]"
+   },
+   {
+    "check": "B1 forbidden notes wording slide 5",
+    "detail": "['awaiting an answer', 'still records it as a recommendation']"
+   },
+   {
+    "check": "B1 forbidden notes wording slide 15",
+    "detail": "['relaxation → platen removal']"
+   },
+   {
+    "check": "B1 slide 15 flow: relaxation is not followed directly by platen removal",
+    "detail": "['insertion', 'stabilization', 'compression', 'servo', 'relaxation', 'platen removal', 'unloading']"
+   },
+   {
+    "check": "B2 slide 3 source line = Codex SEMV32-01 wording with the \"This work —\" head (two lines)",
+    "detail": "['This work — implemented equations of LIGGGHTS-PUBLIC 3.8.0 [2]; linear hysteretic law [1]']"
+   },
+   {
+    "check": "B2 required notes slide 3",
+    "detail": "['representative equations based on the liggghts-public 3.8.0', 'small-overlap approximation ℓᵢⱼ ≈ rᵢnᵢⱼ', 'rᵢ − δᵢⱼ/2', 'surface_model_default.h lines 173–188', 'tangential_model_history.h lines 254–261', 'docs/dem_governing_equations_background_20261011.md §3.1', 'zero when the relative angular velocity is zero']"
+   },
+   {
+    "check": "B2 required notes slide 5",
+    "detail": "['large-particle lpscl pellet added to the eis plan, approved by the author on 10-14', '10-14 night 9 entry']"
+   },
+   {
+    "check": "B2 required notes slide 11",
+    "detail": "['registered prediction band', 'not an experimental range or a statistical confidence interval', 'would not validate the model against experiment', 'make_seminar_figs_v33.py']"
+   },
+   {
+    "check": "B2 required notes slide 13",
+    "detail": "['coating coverage depended on stress intensity as well as stress number; increasing stress number alone did not collapse results across rotor speeds.']"
+   },
+   {
+    "check": "B2 required notes slide 15",
+    "detail": "['relaxation → unloading → platen removal', 'heckel analysis to be redone', 'provisional geometric calibration target; experimental definition and load state still to be matched.', 'dem_protocol_gen2_plan_draft_20261014.md q1']"
+   },
+   {
+    "check": "B2 slide 13 notes: Kissel sentence = Codex SEMV32-04 wording (exact)",
+    "detail": ""
+   },
+   {
+    "check": "B2 slide 7: first \"300 MPa\" carries \"(nominal stopping pressure; see Problem 4)\"",
+    "detail": "Composition-dependent porosity in five simulated beds\nSoft-sphere DEM with a linear hysteretic contact law, pressed to 300 MPa; one bed per  · []"
+   },
+   {
+    "check": "B2 slide 11 body 2 = Codex SEMV32-02 wording (exact)",
+    "detail": "['At fixed platen the same bed relaxes to 165 MPa; a servo branch holding the target force (damping 1e-5) instead compacts it further (111.05 → 105.84 µm) — model-internal until the open checks pass.'"
+   },
+   {
+    "check": "B2 slide 11 body 2 highlights = \"combined follow-up protocol\" · \"model-internal diagnostic\"",
+    "detail": "['servo branch holding the target force', 'model-internal']"
+   },
+   {
+    "check": "B2 slide 11 caption names the registered prediction band",
+    "detail": "the target force (damping 1e-5)\n(b) ε_sphere = sphere-volume porosity, not the exact union; shaded = band registered before the run; hatched = checks still open"
+   },
+   {
+    "check": "B2 slide 15 flow boxes = insertion → … → relaxation → unloading → platen removal",
+    "detail": "['insertion', 'stabilization', 'compression', 'servo', 'relaxation', 'platen removal', 'unloading']"
+   },
+   {
+    "check": "B2 slide 15 note line: \"Heckel analysis to be redone\"",
+    "detail": "after 300 MPa and relaxation (ε_sphere kept internally) · Heckel analysis redone"
+   },
+   {
+    "check": "B3 slide 11 pictures = v3.2 with F_p4.png replaced by F_p4_v33.png",
+    "detail": "['a2916c94b39e608c63d73af30b76dae3bc18ee34ab1bbe77a1bc93a798af6541']"
+   },
+   {
+    "check": "B4 slide 3: shape texts = v3.2 + registered edits only",
+    "detail": "[('TextBox 69', 'This work — implemented equations of LIGGGHTS-PUBLIC 3.8.0 [')]"
+   },
+   {
+    "check": "B4 slide 3: notes = v3.2 + registered edits only",
+    "detail": "differs"
+   },
+   {
+    "check": "B4 slide 5: notes = v3.2 + registered edits only",
+    "detail": "differs"
+   },
+   {
+    "check": "B4 slide 7: shape texts = v3.2 + registered edits only",
+    "detail": "[('Rectangle 4', 'Composition-dependent porosity in five simulated beds\\nSoft-s')]"
+   },
+   {
+    "check": "B4 slide 11: shape texts = v3.2 + registered edits only",
+    "detail": "[('Rectangle 4', 'Problem 4: what the 300 MPa plate reaction contains\\nThe 300 '), ('Caption', '(a) one 7:3 bed: stop step (damping 0.5), relaxed at fixed p')]"
+   },
+   {
+    "check": "B4 slide 11: notes = v3.2 + registered edits only",
+    "detail": "differs"
+   },
+   {
+    "check": "B4 slide 13: notes = v3.2 + registered edits only",
+    "detail": "differs"
+   },
+   {
+    "check": "B4 slide 15: shape texts = v3.2 + registered edits only",
+    "detail": "[('Gen2 box 6', 'platen removal'), ('Gen2 box 7', 'unloading'), ('Gen2 note', 'SE true density 1.64 g cm⁻³ (lab standard, unverified) · E_S')]"
+   },
+   {
+    "check": "B4 slide 15: notes = v3.2 + registered edits only",
+    "detail": "differs"
+   },
+   {
+    "check": "B6 F_p4_v33 files exist (png · svg · csv)",
+    "detail": ""
+   }
+  ]
+ },
+ "figure": {
+  "candidate": "F_p4 (v3.2) checked as if it were F_p4_v33",
+  "failed": 6,
+  "failures": [
+   "in-figure label 'registered prediction band' missing",
+   "CSV state name: want 'registered prediction band low (before the run)', got 'registered band low (before the run)'",
+   "CSV state name: want 'registered prediction band high (before the run)', got 'registered band high (before the run)'",
+   "CSV state name: want 'registered prediction point (before the run)', got 'registered point (before the run)'",
+   "no CSV row names the registered prediction band",
+   "old CSV name 'registered band' still present"
+  ]
+ }
+}
