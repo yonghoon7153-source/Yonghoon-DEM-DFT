@@ -118,6 +118,12 @@ NET_MERGE_KEYS = (
     #    legacy (= dual Hertz 사본) 에서 이름 그대로 채운다 (생산자 run_decomposition 이 채널 결과마다 싣는 키 — Hertz 실행도 그 망의 physics 면적 규칙을
     #    싣는다) · σ 와 한 소유 단위로 지우고 채운다 (옛 세대 표기가 새 σ 밑에 남지 않게 — RC5-03).
     'electrode_model', 'bulk_model', 'area_rule_physics',
+    #  ★ 10-15 L214 (Codex LHS214 판정 §2 끝 문단 — 전자 · 열 FULL 상태 · 사유 전파) — 생산자가 이온 중심 결과로 올린 전자 · 열 FULL 가지 상태 · 사유
+    #    (legacy = Hertz 에서 이름 그대로 · physics = dual 미러 `<key>_physics`).  σ 와 한 소유 단위로 지우고 채운다 (옛 세대 사유가 새 σ 밑에 남지 않게 —
+    #    RC5-03) · 화면 (L214-03 Physics 칸의 사유) · 게시 · 인계가 같은 이름으로 읽는다.  옛 세대 산출물에는 키가 없다 (투영 · 대조 모두 없음 = 같음).
+    'electronic_sigma_full_status', 'electronic_sigma_full_reason', 'thermal_sigma_full_status', 'thermal_sigma_full_reason',
+    'electronic_sigma_full_status_physics', 'electronic_sigma_full_reason_physics',
+    'thermal_sigma_full_status_physics', 'thermal_sigma_full_reason_physics',
 )
 
 #: ★ 10-05 RGL-07 — 망 σ 와 짝인 σ₀ · 온도 기록 (모드마다 같은 값이어야 한다 — full_metrics 에는 한 벌만 싣는다).
@@ -138,7 +144,10 @@ NET_PHYSICS_MIRROR_KEYS = ('sigma_full', 'sigma_full_mScm',
                            'electronic_sigma_full_mScm', 'thermal_sigma_full_mScm',
                            'R_brug_over_full', 'bulk_resistance_fraction',
                            'sigma_full_status', 'sigma_full_reason',     # ★ 10-05 RGL-02 — 상태 · 사유도 physics 꼬리로
-                           'psi_placement')                              # ★ 10-06 L2-01 — ψ 배치 세대 표기 → psi_placement_physics
+                           'psi_placement',                              # ★ 10-06 L2-01 — ψ 배치 세대 표기 → psi_placement_physics
+                           #  ★ 10-15 L214 — 전자 · 열 FULL 상태 · 사유 (physics 꼬리) — 화면의 Physics 칸 사유 (모형 한계) 를 이 이름으로 읽는다
+                           'electronic_sigma_full_status', 'electronic_sigma_full_reason',
+                           'thermal_sigma_full_status', 'thermal_sigma_full_reason')
 
 
 def _canon(v):
@@ -773,12 +782,20 @@ _CHANNEL_OK_STATES = {
 _CHANNEL_FAIL_STATES = frozenset({'failed'})
 
 
-def channel_verdict(net_data, channel='thermal'):
+#: ★ 10-15 L214 — 생산자 채널 상태 "FULL 모형 한계" (`network_conductivity.CHANNEL_MODEL_LIMIT` 와 같은 값 · 무거운 생산자를 임포트하지 않으려고 둔다 ·
+#:   network_conductivity --selftest-status 10 · test_lhs214_model_limit T6 이 대조).  OK 집합에 **넣지 않는다** — 이름만으로는 받지 않고 공용 판정
+#:   (`tau_flux.full_model_limit_problem` — 증서 · 결합 · 값 null · 유도값 · 관통) 이 통과할 때만 ok (열 채널 = 늘 fail · 이 예외 밖).
+CHANNEL_MODEL_LIMIT = 'model_limit'
+
+
+def channel_verdict(net_data, channel='thermal', mode=None):
     """→ ('ok'|'fail'|'unknown', reason).  network JSON 의 한 채널 판정.
 
     'unknown' = 옛 산출물(상태 필드가 없는 세대).  **실패로 취급하지 않는다** — 옛
     데이터를 소급해서 실패로 만들면 재분석 없이는 못 고치는 케이스가 무더기로 생긴다.
     대신 그 사실을 그대로 돌려주어 호출부가 라벨을 붙일 수 있게 한다.
+    ★ 10-15 L214-01 · 02 — 상태 model_limit (FULL 모형 한계) = 공용 판정 `tau_flux.full_model_limit_problem(net_data, channel, mode)` 이 None 일 때만 ok ·
+    그 밖 (판정 실패 · 열 채널 · 도우미를 못 부름) = fail (fail-closed).  mode = 그 레코드의 자리 (hertz · physics) — 주면 레코드 역할과 대조한다.
     """
     if channel not in _CHANNEL_OK_STATES:
         raise ValueError(f'알 수 없는 채널: {channel}')
@@ -789,6 +806,15 @@ def channel_verdict(net_data, channel='thermal'):
         return 'unknown', f'옛 세대 산출물 ({channel}_status 이전)'
     if st in _CHANNEL_FAIL_STATES:
         return 'fail', net_data.get(f'{channel}_status_reason') or st
+    if st == CHANNEL_MODEL_LIMIT:
+        try:
+            tf = _scripts_import('tau_flux')
+            mp = tf.full_model_limit_problem(net_data, channel, mode)
+        except Exception as e:                                 # noqa: BLE001 — 판정을 못 하면 통과로 치지 않는다 (fail-closed)
+            return 'fail', f'model_limit — 공용 판정 (tau_flux.full_model_limit_problem) 을 부르지 못했다 ({type(e).__name__}: {e})'
+        if mp is None:
+            return 'ok', f'model_limit — {net_data.get(f"{channel}_status_reason") or "FULL 모형 한계"} (공용 판정 통과 · L214)'
+        return 'fail', f'model_limit 주장이 공용 판정을 못 넘는다 (L214-01 · 02): {mp}'
     if st in _CHANNEL_OK_STATES[channel]:
         return 'ok', net_data.get(f'{channel}_status_reason') or st
     return 'unknown', f'알 수 없는 상태: {st}'
@@ -836,7 +862,7 @@ def network_content_verdict(results_dir, modes=('hertzian', 'physics'), strict=T
             continue
         seen.append(mode)
         for ch in NETWORK_CHANNELS:
-            v, why = channel_verdict(data, ch)
+            v, why = channel_verdict(data, ch, mode={'hertzian': 'hertz', 'physics': 'physics'}.get(mode))   # ★ L214 — 자리 = 모드 파일
             if v == 'fail' or (strict and v == 'unknown'):
                 bad.append(f'{mode}.{ch}={v} ({why})')
     if not seen:
@@ -863,6 +889,9 @@ NETWORK_NO_THROUGH_REASON = 'no_through_path'
 #:     관통 σ > 0 인 FULL 해에서 Σ I²R_total = 0 은 나올 수 없으며 비관통이면 생산자는 위 비관통 문자열을 낸다 (두 받는 상태 어디에도 맞지 않는다).
 #:     관통인데 FULL 풀이 실패 = `network_conductivity.CPS_SOLVE_FAILED_STATUS` (실패 · 거부).
 NETWORK_POWER_NULL_REASONS = {'not_computed (no percolating FULL solution)': 'valid_zero'}
+#: ★ 10-15 L214 — FULL 모형 한계 (수치 인증 통과 · q > 1.5 출력 거부) 일 때의 협착 전력 몫 사유 (`network_conductivity.CPS_MODEL_LIMIT_STATUS` 와 같은 값) —
+#:   ④ 는 그 모드의 FULL 가지가 공용 판정을 통과한 모형 한계일 때만 이 사유를 받는다 (값 None · 0 아님 · 위 등록 비관통 사유와 다른 자리).
+NETWORK_POWER_MODEL_LIMIT_REASON = 'not_computed (FULL output withheld — model limit q > 1.5)'
 #: ★ 10-05 RGL-08 — 정지 계약이 받는 τ 인계 상태 (`tau_flux.STATUSES` 중 OK + 등록된 과학적 HOLD).  NOT_COMPUTED (입력 결손 · 솔버 관문 ·
 #:   온도 짝 · 관통 불일치) 는 **기술적 결손**이라 거부한다 — network 완료 = τ 인계 입력이 다 있고 서로 맞다는 증서.
 NETWORK_STOP_TAU_OK = ('OK', 'MODEL_BELOW_CONTINUUM_BOUND', 'BAND_FALLBACK', 'NOT_PERCOLATING')
@@ -910,6 +939,9 @@ def network_stop_verdict(results_dir, run_id, fm=None, legacy_ok=False):
          무관 · 과학적 HOLD 앞): computed = σ 두 표현 유한 양수 · 관통 분율 (0, 1] · 두 표현 항등식 (저장 정밀도 경계) · valid_zero = RGL-02 의
          증명된 비관통 조합 · not_computed · 그 밖 = 거부.  그 위에 이 계약만의 대조: full_metrics 상태 · 사유 = dual · computed 면 full_metrics σ = dual ·
          calc_percolation > 0 (관통 일치) · valid_zero 면 full_metrics σ None · 독립 calc_percolation 0
+         ★ 10-15 L214 — 예외 하나: FULL 모형 한계 (not_computed + full_over_conduction) 가 공용 판정 (tau_flux.full_model_limit_problem — ion_record_problem 이 부른다)
+         을 통과하면 받는다 · full_metrics σ None · calc_percolation > 0 (관통 해) · ④ 전력 몫 None + 모형 한계 사유 · ⑦ τ = NOT_COMPUTED full_over_conduction (또는
+         띠 폴백) — 다른 not_computed · 이름만 위조 = 그대로 거부
       ④ 두 모드 `constriction_power_share_ion_<꼬리>` (+ `_status`) — full_metrics = dual · computed σ 면 (0–1 · 'computed') ·
          valid_zero 면 (None · 등록된 물리 사유 `NETWORK_POWER_NULL_REASONS`) — 다른 사유 (내부 예외 · 풀이 실패) 는 거부 (RGL-08)
       ⑤ dual 두 모드 `boundary_rule` ∈ `NETWORK_STOP_BOUNDARY_RULES` · `boundary_band_frac` 유한 양수
@@ -988,7 +1020,10 @@ def network_stop_verdict(results_dir, run_id, fm=None, legacy_ok=False):
         #  ③ 공용 기술 검사 (RGLR-01 · 02) — 상태 ↔ 값 · 관통 분율 · 두 σ 표현 항등식 · 증명된 비관통 조합.  τ 인계 소비자와 **같은 함수**다
         #    (옛 판은 여기서 σ_dim 양수 · 관통 분율 > 0 만 보고 σ_ratio 는 소비자에 맡겼는데, 소비자는 L1/L2 에서 BAND_FALLBACK 로 먼저 돌아갔다).
         prob = tf.ion_record_problem(rec)
-        if st not in NETWORK_STOP_SIGMA_OK or prob is not None:
+        #  ★ 10-15 L214 — FULL 모형 한계 (not_computed + full_over_conduction) 는 공용 기술 검사 (ion_record_problem → 공용 판정 full_model_limit_problem) 가
+        #    통과시켰을 때만 받는다 (이름만으로 아님 · 다른 not_computed = 그대로 거부) · valid_zero 가지로 보내지 않는다 (관통 해 — 아래 따로)
+        mlim = st == 'not_computed' and rsn == tf.MODEL_LIMIT_REASON and prob is None
+        if (st not in NETWORK_STOP_SIGMA_OK and not mlim) or prob is not None:
             bad.append(f'③ {dkey}: 기술적 입력 무효 — {prob[0] if prob else "invalid_input"}: '
                        f'{prob[1] if prob else f"sigma_full_status={st!r} (사유 {rsn!r})"}')
         elif fm.get('sigma_full_status' + sfx) != st or fm.get('sigma_full_reason' + sfx) != rsn:
@@ -999,6 +1034,11 @@ def network_stop_verdict(results_dir, run_id, fm=None, legacy_ok=False):
                 bad.append(f'③ {dkey}: computed 인데 full_metrics {fkey}={fv!r} ≠ dual σ {sv!r} (같은 세대의 값이어야)')
             elif _stop_num(pct) and pct == 0:
                 bad.append(f'③ {dkey}: 솔버는 관통인데 독립 calc_percolation 0 % (관통 불일치)')
+        elif mlim:                                             # ★ L214 — 모형 한계 = 관통 해 (값 없음) · full_metrics σ None · 독립 calc_percolation > 0
+            if fv is not None:
+                bad.append(f'③ {dkey}: FULL 모형 한계인데 full_metrics {fkey}={fv!r} (None 이어야 — 거부된 q 를 값 칸에 싣지 않는다)')
+            if not (_stop_num(pct) and pct > 0):
+                bad.append(f'③ {dkey}: FULL 모형 한계 (관통 해) 인데 독립 calc_percolation {pct!r} % (> 0 이어야 — 관통 불일치)')
         else:                                                  # valid_zero — 레코드 조합은 공용 검사가 봤다 · 여기는 full_metrics · 장부 대조
             if fv is not None:
                 bad.append(f'③ {dkey}: valid_zero 인데 full_metrics {fkey}={fv!r} (None 이어야 — F-12)')
@@ -1010,6 +1050,8 @@ def network_stop_verdict(results_dir, run_id, fm=None, legacy_ok=False):
             bad.append(f'④ {ck}: full_metrics ({cv!r}, {cs!r}) ≠ dual ({rec.get(ck)!r}, {rec.get(ck + "_status")!r})')
         elif st == 'computed' and not (_stop_num(cv) and 0.0 <= cv <= 1.0 and cs == 'computed'):
             bad.append(f'④ {ck}: 관통 해인데 값 {cv!r} · 상태 {cs!r} (0–1 · computed 여야 — 내부 예외 · 풀이 실패는 거부)')
+        elif mlim and not (cv is None and cs == NETWORK_POWER_MODEL_LIMIT_REASON):
+            bad.append(f'④ {ck}: FULL 모형 한계인데 값 {cv!r} · 사유 {cs!r} — FULL 유도 전력 몫은 None + {NETWORK_POWER_MODEL_LIMIT_REASON!r} (L214)')
         elif st == 'valid_zero' and not (cv is None and NETWORK_POWER_NULL_REASONS.get(cs) == 'valid_zero'):
             bad.append(f'④ {ck}: 비관통인데 값 {cv!r} · 사유 {cs!r} — 등록된 물리 사유 {sorted(NETWORK_POWER_NULL_REASONS)} 만 받는다')
         br, bf = rec.get('boundary_rule'), rec.get('boundary_band_frac')
@@ -1025,12 +1067,17 @@ def network_stop_verdict(results_dir, run_id, fm=None, legacy_ok=False):
         for dkey, tail, _f in NETWORK_STOP_MODES:
             s, r = row.get(f'ion_net_status_{tail}'), row.get(f'ion_net_status_reason_{tail}')
             pst = (dual.get(dkey) or {}).get('sigma_full_status')
-            if s not in NETWORK_STOP_TAU_OK:
-                bad.append(f'⑦ τ 인계 {tail}: {s} ({r}) — 기술적 결손 (등록된 과학적 HOLD 아님)')
+            #  ★ 10-15 L214 — τ 의 FULL 모형 한계 (NOT_COMPUTED · 사유 정확히 full_over_conduction) 는 생산자 그 모드가 모형 한계일 때만 받는다 (그 레코드는 ③ 이
+            #    공용 판정으로 확인했다) · 그 밖 NOT_COMPUTED = 기술적 결손 그대로
+            p_ml = pst == 'not_computed' and (dual.get(dkey) or {}).get('sigma_full_reason') == tf.MODEL_LIMIT_REASON
+            if s not in NETWORK_STOP_TAU_OK and not (p_ml and tf.is_model_limit_status(s, r)):
+                bad.append(f'⑦ τ 인계 {tail}: {s} ({r}) — 기술적 결손 (등록된 과학적 HOLD · FULL 모형 한계 아님)')
             elif pst == 'valid_zero' and s not in ('NOT_PERCOLATING', 'BAND_FALLBACK'):
                 bad.append(f'⑦ τ 인계 {tail}: 생산자 비관통인데 τ 상태 {s}')
             elif pst == 'computed' and s == 'NOT_PERCOLATING':
                 bad.append(f'⑦ τ 인계 {tail}: 생산자 관통인데 τ 상태 NOT_PERCOLATING')
+            elif p_ml and not (tf.is_model_limit_status(s, r) or s == 'BAND_FALLBACK'):
+                bad.append(f'⑦ τ 인계 {tail}: 생산자 FULL 모형 한계인데 τ 상태 {s} ({r}) (NOT_COMPUTED full_over_conduction · 띠 폴백만)')
         s0_net = row.get('ion_sigma0_mScm')
         s0_fm = tf.tau2_from_metrics(fm)[1]
         if _stop_num(s0_net) and not (_stop_num(s0_fm) and abs(s0_fm - s0_net) <= 1e-9 * max(1.0, abs(s0_net))):
@@ -1099,12 +1146,16 @@ def network_generation2_problems(dual, row, tf, legacy_ok=False):
     if same_graph:
         out.append(f'⑨ H12: 주 Hertz 와 같은 망 · 띠가 아니다 {same_graph} (H12 는 간선 저항만 다르다)')
     s12, rs12 = row.get(f'ion_net_status_{NETWORK_H12_KEY}'), row.get(f'ion_net_status_reason_{NETWORK_H12_KEY}')
-    if s12 not in NETWORK_STOP_TAU_OK:
-        out.append(f'⑨ τ 인계 {NETWORK_H12_KEY}: {s12} ({rs12}) — 기술적 결손 (등록된 과학적 HOLD 아님)')
+    #  ★ 10-15 L214 — H12 의 FULL 모형 한계도 같은 규칙 (그 레코드가 위 공용 기술 검사 = 공용 판정을 통과했을 때만 · τ = NOT_COMPUTED full_over_conduction)
+    p12_ml = (prob is None and r12.get('sigma_full_status') == 'not_computed' and r12.get('sigma_full_reason') == tf.MODEL_LIMIT_REASON)
+    if s12 not in NETWORK_STOP_TAU_OK and not (p12_ml and tf.is_model_limit_status(s12, rs12)):
+        out.append(f'⑨ τ 인계 {NETWORK_H12_KEY}: {s12} ({rs12}) — 기술적 결손 (등록된 과학적 HOLD · FULL 모형 한계 아님)')
     elif r12.get('sigma_full_status') == 'valid_zero' and s12 not in ('NOT_PERCOLATING', 'BAND_FALLBACK'):
         out.append(f'⑨ τ 인계 {NETWORK_H12_KEY}: 생산자 비관통인데 τ 상태 {s12}')
     elif r12.get('sigma_full_status') == 'computed' and s12 == 'NOT_PERCOLATING':
         out.append(f'⑨ τ 인계 {NETWORK_H12_KEY}: 생산자 관통인데 τ 상태 NOT_PERCOLATING')
+    elif p12_ml and not (tf.is_model_limit_status(s12, rs12) or s12 == 'BAND_FALLBACK'):
+        out.append(f'⑨ τ 인계 {NETWORK_H12_KEY}: 생산자 FULL 모형 한계인데 τ 상태 {s12} ({rs12})')
     return out
 
 

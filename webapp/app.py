@@ -646,13 +646,57 @@ def _pct_delta(h, p):
         return '0%'
 
 
-def _dual_row(label, h_val, p_val, fmt=None):
-    """[label, Hertzian, Physics, Δ%] row. If p_val is None, Physics=Hertzian."""
+#  ★ 10-15 L214-03 (Codex LHS214 판정 §2 · 수정 계획 §1 · CLAUDE.md "코드 → 웹앱 순차 반영" — 같은 묶음) — 모드별 값 · 비 · 차이의 **strict missing**.
+#    옛 `_dual_row` 는 Physics 값이 없으면 Hertz 값을 Physics 칸에 복사하고 Δ 0 % 를 냈다 (σ_ionic · σ_brug/σ_ionic · CF/FULL · 전자 — Codex AST 탐침:
+#    Hertz 0.6 · Physics None 인데 0.6 · 0.6 · 0 %).  FULL 모형 한계 (physics q > 1.5 · 값 미제공) 가 게시되면서 그 칸이 새로 보이게 됐다 → 없는 모드의 칸 · Δ = '—'
+#    (+ 사유: 그 채널 · 모드의 생산자 사유가 모형 한계면 그 이름) · 0 · Hertz · H12 로 대체하지 않는다.
+MODEL_LIMIT_REASON = 'full_over_conduction'                      # = tau_flux.MODEL_LIMIT_REASON · network_conductivity.FULL_OVER_CONDUCTION_REASON
+MODEL_LIMIT_CELL = '— (모형 한계 · full_over_conduction — FULL q > 1.5 출력 상한 · 수치 인증 통과 · 값 미제공)'
+_MISSING_REASON_KEY = {'ionic': 'sigma_full_reason', 'electronic': 'electronic_sigma_full_reason', 'thermal': 'thermal_sigma_full_reason'}
+
+
+def _mode_missing_text(metrics, chan='ionic', mode='physics'):
+    """없는 모드 칸의 문구 — 그 채널 · 모드의 생산자 사유 (full_metrics 투영 · physics = `_physics` 꼬리) 가 FULL 모형 한계면 그 이름 · 그 밖 '—'."""
+    key = _MISSING_REASON_KEY.get(chan, 'sigma_full_reason') + ('_physics' if mode == 'physics' else '')
+    return MODEL_LIMIT_CELL if (metrics or {}).get(key) == MODEL_LIMIT_REASON else '—'
+
+
+def _dual_row(label, h_val, p_val, fmt=None, p_missing='—', h_missing='—'):
+    """[label, Hertzian, Physics, Δ%] row — ★ 10-15 L214-03 strict: 한쪽 값이 없으면 그 칸 = p_missing · h_missing ('—' 또는 사유) · Δ = '—'
+    (옛: Physics 없으면 Physics = Hertz 복사 · Δ 0 %)."""
     if fmt is None:
         fmt = lambda x: x
-    h_disp = fmt(h_val) if h_val is not None else '—'
-    p_disp = fmt(p_val) if p_val is not None else h_disp
-    return [label, h_disp, p_disp, _pct_delta(h_val, p_val)]
+    h_disp = fmt(h_val) if h_val is not None else h_missing
+    p_disp = fmt(p_val) if p_val is not None else p_missing
+    delta = _pct_delta(h_val, p_val) if (h_val is not None and p_val is not None) else '—'
+    return [label, h_disp, p_disp, delta]
+
+
+#: ★ 10-15 L214-03 — 기존 network_summary.csv (analyze_contacts — Hertz 한 열로 쓴 망 절) 의 **모드별** 행 → (Hertz 키, Physics 키, 채널, 표시 식, 값 변환).
+#:   transform 의 Step 1 이 이 행들을 넓힐 때 Physics 칸을 Hertz 복사가 아니라 metrics 의 Physics 값으로 (없으면 '—' + 사유) · Δ 는 두 값이 다 있을 때만.
+_MODE_DEP_CSV_ROWS = {
+    'σ_ionic (mS/cm)': ('sigma_full_mScm', 'sigma_full_mScm_physics', 'ionic', lambda x: round(x, 4), None),
+    'R_brug (과대추정 배수)': ('R_brug_over_full', 'R_brug_over_full_physics', 'ionic', lambda x: f'{x:.1f}×', None),
+    'Constriction 비율(%)': ('bulk_resistance_fraction', 'bulk_resistance_fraction_physics', 'ionic', lambda x: round(x, 1),
+                            lambda b: (1 - b) * 100),
+    'σ_electronic (mS/cm)': ('electronic_sigma_full_mScm', 'electronic_sigma_full_mScm_physics', 'electronic', lambda x: round(x, 2), None),
+    'σ_thermal (mS/cm equiv)': ('thermal_sigma_full_mScm', 'thermal_sigma_full_mScm_physics', 'thermal', lambda x: round(x, 3), None),
+}
+
+
+def _csv_mode_row(label, h_cell, spec, metrics):
+    """기존 CSV 망 절의 모드별 두 열 행 → 네 열 (Hertz 칸 = CSV 값 그대로 · Physics = metrics · strict missing · Δ = 둘 다 있을 때만)."""
+    hk, pk, chan, fmt, conv = spec
+    m = metrics or {}
+
+    def _v(k):
+        x = m.get(k)
+        if not isinstance(x, (int, float)) or isinstance(x, bool) or x != x:
+            return None
+        return conv(x) if conv else x
+    hv, pv = _v(hk), _v(pk)
+    p_disp = fmt(pv) if pv is not None else _mode_missing_text(m, chan)
+    return [label, h_cell, p_disp, _pct_delta(hv, pv) if (hv is not None and pv is not None) else '—']
 
 
 def _same_row(label, val):
@@ -822,6 +866,10 @@ NET_GEN_INVALID_TEXT = '활성 세대 무효'
 #  ★ 10-05 RGLR-01 웹앱 짝 (J20-l) — τ 인계 상태의 두 부류 (도우미 `tau_flux` 의 상태 부류 · 같은 이름)
 ION_HANDOVER_TECH_TEXT = '기술적 실패'     # NOT_COMPUTED — 입력 결손 · 무효 · 솔버 관문 · 온도 짝 · 관통 불일치 · 세대 무효 (RGLR2-02) (값 없음)
 ION_HANDOVER_HOLD_TEXT = '과학적 HOLD'     # BAND_FALLBACK · NOT_PERCOLATING · MODEL_BELOW_CONTINUUM_BOUND — 입력은 유효 · 등록된 규칙대로
+#  ★ 10-15 L214 웹앱 짝 (J20-l) — 셋째 부류 FULL 모형 한계 (tau_flux `is_model_limit_status` — NOT_COMPUTED + 사유 정확히 full_over_conduction · 공용 판정 통과 레코드만)
+ION_HANDOVER_MODEL_LIMIT_TEXT = '모형 한계'   # 기술 실패 아님 — 수치 인증 통과 · FULL q > 1.5 (사전 고정 출력 상한) · 값 미제공 · 거부된 q 와 증서 = 레코드의 증서
+ION_NET_MODEL_LIMIT_TEXT = ('미계산 — FULL 모형 한계 (full_over_conduction · 수치 인증 통과 · q > 1.5 출력 상한 · 값 미제공 · 기술 실패 아님 — '
+                            '거부된 q 와 증서 = 레코드 증서)')
 
 
 def _ion_net_state_text(status, reason):
@@ -831,6 +879,8 @@ def _ion_net_state_text(status, reason):
     if status == 'valid_zero':
         return ION_NET_NO_THROUGH_TEXT if reason == 'no_through_path' else f'0 (valid_zero · {reason or "사유 없음"})'
     if status == 'not_computed':
+        if reason == MODEL_LIMIT_REASON:              # ★ 10-15 L214 — 수치 인증 통과 · 출력 채택 거부 (기술 실패 아님)
+            return ION_NET_MODEL_LIMIT_TEXT
         return ('미계산 — 관통인데 풀지 못함 (solve_failed)' if reason == 'solve_failed'
                 else f'미계산 (not_computed · {reason or "사유 없음"})')
     return '—' if status is None else str(status)
@@ -918,6 +968,9 @@ def _ion_handover_rows(ih, stamp=''):
             return f'{s} — {ION_HANDOVER_HOLD_TEXT} (입력 유효 · 띠 규칙 L0 아님 · 값 빈칸)'
         if s == 'MODEL_BELOW_CONTINUUM_BOUND':
             return f'{s} — {ION_HANDOVER_HOLD_TEXT} (입력 유효 · T < 1 · 값 유지)'
+        if s == 'NOT_COMPUTED' and ih.get(f'ion_net_status_reason_{m}') == MODEL_LIMIT_REASON:     # ★ L214 — 기술 실패 문구가 아니다
+            return (f'{s} ({MODEL_LIMIT_REASON}) — {ION_HANDOVER_MODEL_LIMIT_TEXT} (수치 인증 통과 · FULL q > 1.5 출력 상한 · 값 빈칸 · '
+                    '기술 실패 아님)')
         if s == 'NOT_COMPUTED':
             return f'{s} ({r}) — {ION_HANDOVER_TECH_TEXT}' if r else f'{s} — {ION_HANDOVER_TECH_TEXT}'
         return f'{s} ({r})' if r else s
@@ -1865,22 +1918,23 @@ def _suppress_phantom_sigma_rows(data, metrics, debug=False):
     p_th_p = (src_fb.get('sigma_thermal_physics') == 'fallback_weighted_factor'
               or not metrics.get('thermal_sigma_full_mScm_physics'))
     LABEL_PHANTOM = {
-        'σ_electronic (mS/cm)':                              (p_e_h, p_e_p),
-        'σ_e — electronic conductivity (mS/cm)':             (p_e_h, p_e_p),
-        'σ_electronic [physics] (mS/cm)':                    (p_e_h, p_e_p),
-        'σ_e^physics — Tabor plastic film (mS/cm)':          (p_e_h, p_e_p),
-        'σ_thermal (mS/cm equiv)':                           (p_th_h, p_th_p),
-        'κ — thermal conductivity (mS/cm equiv)':            (p_th_h, p_th_p),
-        'σ_thermal [physics] (mS/cm equiv)':                 (p_th_h, p_th_p),
-        'κ^physics — Tabor plastic film (mS/cm equiv)':      (p_th_h, p_th_p),
+        'σ_electronic (mS/cm)':                              (p_e_h, p_e_p, 'electronic'),
+        'σ_e — electronic conductivity (mS/cm)':             (p_e_h, p_e_p, 'electronic'),
+        'σ_electronic [physics] (mS/cm)':                    (p_e_h, p_e_p, 'electronic'),
+        'σ_e^physics — Tabor plastic film (mS/cm)':          (p_e_h, p_e_p, 'electronic'),
+        'σ_thermal (mS/cm equiv)':                           (p_th_h, p_th_p, 'thermal'),
+        'κ — thermal conductivity (mS/cm equiv)':            (p_th_h, p_th_p, 'thermal'),
+        'σ_thermal [physics] (mS/cm equiv)':                 (p_th_h, p_th_p, 'thermal'),
+        'κ^physics — Tabor plastic film (mS/cm equiv)':      (p_th_h, p_th_p, 'thermal'),
     }
     for r in data:
         if not r or not isinstance(r, list) or len(r) < 2: continue
         lbl = str(r[0]).strip() if r[0] else ''
         if lbl not in LABEL_PHANTOM: continue
-        h_phantom, p_phantom = LABEL_PHANTOM[lbl]
-        if len(r) >= 2 and h_phantom: r[1] = '—'
-        if len(r) >= 3 and p_phantom: r[2] = '—'
+        h_phantom, p_phantom, _chan = LABEL_PHANTOM[lbl]
+        if len(r) >= 2 and h_phantom: r[1] = _mode_missing_text(metrics, _chan, 'hertz')
+        #  ★ 10-15 L214-03 — Physics 칸의 '—' 에 사유 (그 채널 Physics FULL 모형 한계면 그 이름 · 그 밖 '—' 그대로)
+        if len(r) >= 3 and p_phantom: r[2] = _mode_missing_text(metrics, _chan)
         if len(r) >= 4 and (h_phantom or p_phantom): r[3] = '—'
 
 
@@ -2218,8 +2272,13 @@ def normalize_network_summary_layout(tables, metrics):
     if _find_row('R_brug (과대추정 배수)') is None:
         rb = metrics.get('R_brug_over_full') if metrics else None
         rb_str = f'{rb:.1f}×' if isinstance(rb, (int, float)) and rb else '—'
+        #  ★ 10-15 L214-03 — Physics 칸 = Physics 의 CF/FULL (옛: Hertz 값 복사 · Δ 0 %) · 없으면 '—' (+ 모형 한계 사유)
+        rbp = metrics.get('R_brug_over_full_physics') if metrics else None
+        rbp_ok = isinstance(rbp, (int, float)) and not isinstance(rbp, bool) and bool(rbp)
+        rb_ok = isinstance(rb, (int, float)) and not isinstance(rb, bool) and bool(rb)
+        rbp_str = f'{rbp:.1f}×' if rbp_ok else _mode_missing_text(metrics, 'ionic')
         _insert_after('σ_ionic (mS/cm)',
-                      ['R_brug (과대추정 배수)', rb_str, rb_str, '0%'])
+                      ['R_brug (과대추정 배수)', rb_str, rbp_str, _pct_delta(rb, rbp) if (rb_ok and rbp_ok) else '—'])
     if _find_row('σ_ionic ratio (physics/Hertzian)') is None:
         sh = metrics.get('sigma_full_mScm') if metrics else None
         sp = metrics.get('sigma_full_mScm_physics') if metrics else None
@@ -2236,7 +2295,7 @@ def normalize_network_summary_layout(tables, metrics):
     # Some legacy/freshly-analysed cases write σ_e or κ as None when the
     # respective channel was numerically zero. We still want a placeholder
     # row for layout uniformity (audit-ui = 1 variant goal).
-    def _ensure_baseline_row(label, h_key, p_key, fmt='%.2f'):
+    def _ensure_baseline_row(label, h_key, p_key, fmt='%.2f', chan='electronic'):
         # full_metrics.json is the source of truth for these baseline σ values.
         # Render None (solver returned no value — didn't converge / didn't
         # percolate) as '—' so "not computed" is visually distinct from a
@@ -2249,8 +2308,9 @@ def normalize_network_summary_layout(tables, metrics):
             p_str = f'{p_val:{fmt[1:]}}'
             d_str = f'{(p_val - h_val) / h_val * 100:+.1f}%' if h_val else '0%'
         else:
-            p_str = h_str
-            d_str = '0%'
+            #  ★ 10-15 L214-03 — Physics 값이 없으면 Physics 칸 '—' (+ 모형 한계 사유) · Δ '—' (옛: Hertz 값 복사 · Δ 0 %)
+            p_str = _mode_missing_text(metrics, chan)
+            d_str = '—'
         new_cells = [h_str, p_str, d_str]
         for r in data:
             if (isinstance(r, list) and r and isinstance(r[0], str)
@@ -2271,10 +2331,10 @@ def normalize_network_summary_layout(tables, metrics):
 
     _ensure_baseline_row('σ_electronic (mS/cm)',
                          'electronic_sigma_full_mScm',
-                         'electronic_sigma_full_mScm_physics', fmt='%.2f')
+                         'electronic_sigma_full_mScm_physics', fmt='%.2f', chan='electronic')
     _ensure_baseline_row('σ_thermal (mS/cm equiv)',
                          'thermal_sigma_full_mScm',
-                         'thermal_sigma_full_mScm_physics', fmt='%.3f')
+                         'thermal_sigma_full_mScm_physics', fmt='%.3f', chan='thermal')
 
     # ── Pass F: sort rows within each section by canonical order ──
     # All 160 cases now have identical row CONTENT after passes A-E, but
@@ -2548,7 +2608,7 @@ _PAPER_LABEL_MAP = {
         'Network generation contract — g2 · inferred_legacy (historical, inferred) · invalid (G2R-01 · 02)',
     #  ★ 10-05 RGL-02 · 04 웹앱 짝 — ⚠ 바꾸면 single.html PAPER_TO_ORIG 역맵도 같이 (test_closed_param_labels T1)
     'σ_ionic 망 상태 (생산자 sigma_full_status)':
-        'σ_ionic network state — producer sigma_full_status (valid_zero = proven no through path · not_computed = solve failed)',
+        'σ_ionic network state — producer sigma_full_status (valid_zero = proven no through path · not_computed = solve failed or FULL model limit)',
     '망 최근 시도 (network_attempt — 활성 세대와 다를 때)':
         'Latest network attempt — failed candidate not promoted (network_attempt.json · active generation kept)',
     #  ★ 10-05 RGLR2-02 웹앱 짝 — ⚠ 바꾸면 single.html PAPER_TO_ORIG 역맵도 같이
@@ -2895,6 +2955,10 @@ def transform_network_summary_4col(tables, metrics, meta):
             expanded.append([label, '', '', ''])
         elif len(row) >= 4:
             expanded.append(list(row))  # already 4-col
+        elif label_clean in _MODE_DEP_CSV_ROWS:
+            #  ★ 10-15 L214-03 — 기존 CSV 망 절 (analyze_contacts — Hertz 한 열) 의 모드별 행: Physics 칸 = metrics 의 Physics 값 (없으면 '—' + 사유) ·
+            #    Hertz 를 복사하지 않는다 (옛: [Hertz, Hertz, 0 %] — Codex "Existing two-column CSV rows are expanded by copying values too")
+            expanded.append(_csv_mode_row(label, row[1] if len(row) > 1 else '', _MODE_DEP_CSV_ROWS[label_clean], metrics))
         else:
             value = row[1] if len(row) > 1 else ''
             expanded.append([label, value, value, '0%'])
@@ -3054,10 +3118,12 @@ def transform_network_summary_4col(tables, metrics, meta):
                 break
         net_rows = [['── Network Solver (DEM-native vs Tabor+volume physics) ──', '', '', '']]
         if metrics and metrics.get('sigma_full_mScm'):
+            #  ★ 10-15 L214-03 — Physics 값이 없으면 Physics 칸 · Δ = '—' (+ 모형 한계 사유) · Hertz 복사 · 0 % 없음 (아래 모드별 행 전부 같은 규칙)
+            _pm_ion = _mode_missing_text(metrics, 'ionic')
             net_rows.append(_dual_row('σ_ionic (mS/cm)',
                                       metrics.get('sigma_full_mScm'),
                                       metrics.get('sigma_full_mScm_physics'),
-                                      fmt=lambda x: round(x, 4)))
+                                      fmt=lambda x: round(x, 4), p_missing=_pm_ion))
             if metrics.get('sigma_bruggeman_mScm'):
                 v = round(metrics['sigma_bruggeman_mScm'], 4)
                 net_rows.append(_same_row('σ_Bruggeman (mS/cm)', v))
@@ -3065,16 +3131,16 @@ def transform_network_summary_4col(tables, metrics, meta):
                 # R_brug/R_full = σ_Bruggeman / σ_ionic. σ_Bruggeman is mode-
                 # agnostic but σ_ionic changes with Physics, so the ratio changes.
                 r_h = metrics.get('R_brug_over_full')
-                r_p = metrics.get('R_brug_over_full_physics', r_h)
+                r_p = metrics.get('R_brug_over_full_physics')            # ★ L214-03 — 옛: (…, r_h) 로 Hertz 를 대신 썼다
                 net_rows.append(_dual_row('Contact-free / Full',
                                           r_h, r_p,
-                                          fmt=lambda x: f"{x:.1f}×"))
+                                          fmt=lambda x: f"{x:.1f}×", p_missing=_pm_ion))
             if metrics.get('bulk_resistance_fraction') is not None:
                 # Constriction % = (1 − bulk_fraction) × 100 · bulk_fraction = 접촉별 R_bulk/R_total 의 **비가중 평균** (L2-08 —
                 # 전력 몫 아님).  Physics 모드에서 달라지는 이유 = 간선마다 **접촉 면적 → R_c** 가 바뀌어서다 (R_bulk 는 그대로) ·
                 # 전력 몫은 '협착 전력 몫' 행 (④a · constriction_power_share_ion_*).  ⚠ 옛 주석 ("σ_ionic 이 움직여서") 은 틀렸다.
                 bf_h = metrics.get('bulk_resistance_fraction')
-                bf_p = metrics.get('bulk_resistance_fraction_physics', bf_h)
+                bf_p = metrics.get('bulk_resistance_fraction_physics')          # ★ L214-03 — 옛: (…, bf_h) 로 Hertz 를 대신 썼다
                 cstr_h = (1 - bf_h) * 100 if bf_h is not None else None
                 cstr_p = (1 - bf_p) * 100 if bf_p is not None else None
                 #  ★ L2-08 — 이 행 이름은 **조회 키**다 (app.py:1909·:2077 ·
@@ -3086,12 +3152,12 @@ def transform_network_summary_4col(tables, metrics, meta):
             if metrics.get('sigma_ratio') and metrics.get('sigma_full_mScm'):
                 sig_brug = _sigma_grain_mS_cm(metrics) * metrics['sigma_ratio']
                 sig_ion_h = metrics.get('sigma_full_mScm')
-                sig_ion_p = metrics.get('sigma_full_mScm_physics') or sig_ion_h
+                sig_ion_p = metrics.get('sigma_full_mScm_physics')             # ★ L214-03 — 옛: `or sig_ion_h` (Hertz 대체)
                 ratio_h = sig_brug / sig_ion_h if sig_ion_h > 0 else 0
-                ratio_p = sig_brug / sig_ion_p if sig_ion_p and sig_ion_p > 0 else ratio_h
+                ratio_p = sig_brug / sig_ion_p if (sig_ion_p is not None and sig_ion_p > 0) else None   # 옛: `else ratio_h`
                 net_rows.append(_dual_row('σ_brug / σ_ionic',
                                           ratio_h, ratio_p,
-                                          fmt=lambda x: f"{x:.1f}×"))
+                                          fmt=lambda x: f"{x:.1f}×", p_missing=_pm_ion))
 
             # ── τ 3종 비교 (Dijkstra vs Laplace geom vs Laplace eff) ──
             # Derivation only, no re-analysis needed; σ_grain 은 se_material 단일 출처 +
@@ -3115,7 +3181,7 @@ def transform_network_summary_4col(tables, metrics, meta):
                 net_rows.append(_dual_row('σ_electronic (mS/cm)',
                                           metrics.get('electronic_sigma_full_mScm'),
                                           metrics.get('electronic_sigma_full_mScm_physics'),
-                                          fmt=lambda x: round(x, 2)))
+                                          fmt=lambda x: round(x, 2), p_missing=_mode_missing_text(metrics, 'electronic')))
             if metrics.get('electronic_percolating_fraction') is not None:
                 v = f"{metrics['electronic_percolating_fraction']*100:.1f}"
                 net_rows.append(_same_row('AM Percolation (%)', v))
@@ -3126,7 +3192,7 @@ def transform_network_summary_4col(tables, metrics, meta):
                 net_rows.append(_dual_row('σ_thermal (mS/cm equiv)',
                                           metrics.get('thermal_sigma_full_mScm'),
                                           metrics.get('thermal_sigma_full_mScm_physics'),
-                                          fmt=lambda x: round(x, 3)))
+                                          fmt=lambda x: round(x, 3), p_missing=_mode_missing_text(metrics, 'thermal')))
         else:
             ns = (meta or {}).get('network_solver_status', 'unknown')
             ns_err = (meta or {}).get('network_solver_error', '')
@@ -3194,22 +3260,22 @@ def transform_network_summary_4col(tables, metrics, meta):
         if (not _has_label('Contact-free / Full')
                 and metrics.get('R_brug_over_full')):
             r_h = metrics.get('R_brug_over_full')
-            r_p = metrics.get('R_brug_over_full_physics', r_h)
+            r_p = metrics.get('R_brug_over_full_physics')                # ★ L214-03 — 옛: (…, r_h) 로 Hertz 를 대신 썼다
             new_rows.append(_dual_row('Contact-free / Full',
                                        r_h, r_p,
-                                       fmt=lambda x: f"{x:.1f}×"))
+                                       fmt=lambda x: f"{x:.1f}×", p_missing=_mode_missing_text(metrics, 'ionic')))
 
         # σ_brug / σ_ionic
         if (not _has_label('σ_brug / σ_ionic')
                 and metrics.get('sigma_ratio') and metrics.get('sigma_full_mScm')):
             sig_brug = _sigma_grain_mS_cm(metrics) * metrics['sigma_ratio']
             sig_ion_h = metrics.get('sigma_full_mScm')
-            sig_ion_p = metrics.get('sigma_full_mScm_physics') or sig_ion_h
+            sig_ion_p = metrics.get('sigma_full_mScm_physics')                 # ★ L214-03 — 옛: `or sig_ion_h` (Hertz 대체)
             ratio_h = sig_brug / sig_ion_h if sig_ion_h > 0 else 0
-            ratio_p = sig_brug / sig_ion_p if sig_ion_p and sig_ion_p > 0 else ratio_h
+            ratio_p = sig_brug / sig_ion_p if (sig_ion_p is not None and sig_ion_p > 0) else None   # 옛: `else ratio_h`
             new_rows.append(_dual_row('σ_brug / σ_ionic',
                                        ratio_h, ratio_p,
-                                       fmt=lambda x: f"{x:.1f}×"))
+                                       fmt=lambda x: f"{x:.1f}×", p_missing=_mode_missing_text(metrics, 'ionic')))
 
         # ── τ 3종 비교 ── (always-inject if absent)
         phi_se   = metrics.get('phi_se')
@@ -3467,7 +3533,7 @@ def _network_projection(results_dir, run_id):
         except (OSError, ValueError):
             _dual = None
         _pair = _ps.network_sigma0_problem(_dual, net_data, fm_data)
-        _chv = {ch: _ps.channel_verdict(net_data, ch) for ch in _ps.NETWORK_CHANNELS}
+        _chv = {ch: _ps.channel_verdict(net_data, ch, mode='hertz') for ch in _ps.NETWORK_CHANNELS}   # ★ L214 — legacy = 주 Hertz 자리
         for _ch, (_v, _why) in _chv.items():
             fm_data[f'{_ch}_channel_verdict'] = _v
             fm_data[f'{_ch}_channel_reason'] = _why

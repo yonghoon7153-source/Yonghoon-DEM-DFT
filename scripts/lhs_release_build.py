@@ -654,7 +654,30 @@ V13_BLANK_CODES = {
     'EMPTY_NO_REASON': '텍스트 칸의 빈칸 = 사유 없음 (빈 집합) — hold_reason_codes (적격성 OK 행) · ion_net_status_reason (NOT_COMPUTED 가 아닌 행)',
     'NA_NOT_DESIGN_INPUT': ('부피분율 규칙 행 (AM < 70 wt% · 보충 lhss 의 volfrac_free) — 하중 (loading_mAh_cm2) 이 설계 입력이 아니다 (부피분율로 설계 · '
                             '역산값은 인계표 출처 열에만 · 1저자 10-12 Q6 (가))'),
+    #  ★ 10-15 L214 (Codex LHS214 판정 §3 Q3 · 수정 계획 Q2 (가)) — FULL 모형 한계 칸 = 미제공 (기술 실패 · 미퍼콜 0 · 무한대가 아니다)
+    'NA_MODEL_LIMIT': ('FULL 모형 한계 (ion_net_status = NOT_COMPUTED · 사유 full_over_conduction) — 수치 풀이 인증을 통과했으나 사전 고정된 FULL 출력 상한 '
+                       '(q > 1.5) 을 넘은 모드의 전도도 · 유도 타깃은 미제공 (0 · ∞ 아님 · 기술 실패 아님 · 미퍼콜과 다르다 — 그 행은 관통) · 거부된 q 와 수치 증서는 '
+                       'canonical 결과의 증서에 별도 진단으로 보존 · 무작위 결측이 아니다 (q 가 높은 쪽 · 남은 행만으로 코호트 전체를 대표한다고 쓰지 않는다)'),
 }
+#: ★ 10-15 L214 — FULL 모형 한계 사유 (tau_flux.MODEL_LIMIT_REASON 과 같은 값 — test_lhs214_model_limit V 가 대조).
+V13_MODEL_LIMIT_REASON = 'full_over_conduction'
+
+
+def _v13_is_model_limit(row, mode):
+    """인계 · 배포 행의 한 모드가 FULL 모형 한계인가 — 상태 NOT_COMPUTED · 사유 정확히 full_over_conduction (tau_flux.is_model_limit_status 와 같은 규칙)."""
+    return row.get(f'ion_net_status_{mode}', '') == 'NOT_COMPUTED' and row.get(f'ion_net_status_reason_{mode}', '') == V13_MODEL_LIMIT_REASON
+
+
+def v13_primary_model_limit_problems(rows):
+    """★ 10-15 L214 (Codex LHS214 판정 §3 Q2 · consumer Q2 · 수정 계획 Q2 (가) · 1저자 10-14 비준) — **주 타깃 (Hertz H0) 이 FULL 모형 한계인 행** → 문제 목록.
+    v1.3 주 타깃 배포 = HOLD (실행 가능한 관문 — build · check 같은 함수).  진단 레코드는 남는다 (인계표 · canonical 결과) · Physics · H12 · 0 · 1.5 로 대체하거나
+    행을 지우지 않는다 · 주 타깃 결측을 허용하는 마스킹 부분 배포는 별도 등록 · 1저자 결정 · 집계 · 학습 규약이 먼저다.  Physics · H12 만 모형 한계 = 문제 아님
+    (부록 공란 · NA_MODEL_LIMIT)."""
+    bad = [r.get(KEY, '?') for r in rows if _v13_is_model_limit(r, 'hertz')]
+    if not bad:
+        return []
+    return [f'주 타깃 Hertz (H0) FULL 모형 한계 {len(bad)} 행 {bad[:6]} — v1.3 주 타깃 배포 HOLD (등록되지 않은 마스킹 · Physics · H12 · 0 · 1.5 대체 금지 · '
+            '행 삭제 금지 · 진단 레코드는 보존 — 부분 배포는 별도 등록 · 1저자 결정 필요 · L214 Q2 (가))']
 V13_ML_SUFFIX = '__blank'
 V13_ML_CLASS = 'ion_percolates_hertz'
 _V13_PHASE_TOKEN = re.compile(r'(?<![A-Za-z0-9])AM_([PS])(?![A-Za-z0-9])')
@@ -858,7 +881,7 @@ def v13_blank_reason(row, col):
         if st == 'NOT_PERCOLATING':
             return None if m.group(1) == 'f_ion' else 'INF_NOT_PERCOLATING'
         if st == 'NOT_COMPUTED':
-            return 'NOT_COMPUTED'
+            return 'NA_MODEL_LIMIT' if _v13_is_model_limit(row, m.group(2)) else 'NOT_COMPUTED'     # ★ L214 — 모형 한계 ≠ 기술 실패
         if st == 'BAND_FALLBACK':
             return 'HOLD_BAND_FALLBACK'
         return None
@@ -908,6 +931,8 @@ def _v13_class(r):
         v, code = '1', ''
     elif st == 'NOT_PERCOLATING':
         v, code = '0', ''
+    elif _v13_is_model_limit(r, 'hertz'):
+        v, code = '1', ''        # ★ L214 — FULL 모형 한계 = 관통 해 (값만 미제공 · 그래프 관통은 확인됨) — 기술 실패 · 미퍼콜로 읽지 않는다 (주 타깃 배포는 관문이 HOLD)
     elif st == 'NOT_COMPUTED':
         v, code = '', 'NOT_COMPUTED'
     elif st == 'BAND_FALLBACK':
@@ -1800,8 +1825,10 @@ def refit_porosity_sigma_cn(rows, dry_run=False):
         o.update({k: r.get(k, '') for k in ('dataset', 'case_id', 'ion_net_status_hertz', 'porosity_union_exact_pct', 'phi_se_mass_conserving',
                                               'se_se_cn', 'f_ion_hertz')})
         if st in REFIT_SKIP_STATUSES:
-            o.update(included='0', excluded_reason=st)
-            excl[st] += 1
+            #  ★ 10-15 L214 — FULL 모형 한계 (NOT_COMPUTED + full_over_conduction) 는 기술 실패와 다른 제외 사유로 센다 (주 타깃이면 배포 관문이 HOLD — 이 표는 진단)
+            why = f'{st}:{V13_MODEL_LIMIT_REASON}' if _v13_is_model_limit(r, 'hertz') else st
+            o.update(included='0', excluded_reason=why)
+            excl[why] += 1
             out_rows.append(o)
             continue
         if st not in REFIT_FIT_STATUSES:
@@ -2105,7 +2132,15 @@ def _v13_out_guard(out_dir, dry_run, diagnostic=False):
 
 
 def _v13_status_counts(rows, col):
-    return dict(sorted(collections.Counter(r.get(col, '') for r in rows).items()))
+    """상태 열 → {상태: 수} · ★ 10-15 L214 — FULL 모형 한계 (NOT_COMPUTED + full_over_conduction) 는 기술 실패 NOT_COMPUTED 와 **따로** 센다 (C9 — Hertz 주 타깃
+    가용성 · Physics 모형 한계 수를 별도 보고)."""
+    mode = col[len('ion_net_status_'):] if col.startswith('ion_net_status_') else None
+
+    def lab(r):
+        if mode and _v13_is_model_limit(r, mode):
+            return f'NOT_COMPUTED ({V13_MODEL_LIMIT_REASON} — FULL 모형 한계)'
+        return r.get(col, '')
+    return dict(sorted(collections.Counter(lab(r) for r in rows).items()))
 
 
 def _v13_iso_stats(rows):
@@ -2192,6 +2227,12 @@ def build_v13(*, out_dir, handover_dir, batch_root=None, supp_batch_root=None, d
     cp = v13_combined_problems(hrows, dicts)                                  # ★ 10-12 결합 (ID 교집합 공집합 · 물성 · 세대 · 열 정의)
     if cp:
         raise ReleaseError(f'데이터셋 결합 문제 {len(cp)} ({datasets}) — ' + ' | '.join(cp[:4]))
+    #  ★ 10-15 L214 — 주 타깃 Hertz (H0) FULL 모형 한계 = v1.3 주 타깃 배포 HOLD (Q2 (가) · check_v13 과 같은 함수) · 진단 · dry-run 은 경고로 남기고 만든다 (배포 아님)
+    mlp = [f'{ds}: {p}' for ds in datasets for p in v13_primary_model_limit_problems(hrows[ds])]
+    if mlp:
+        if not (diagnostic or dry_run):
+            raise ReleaseError(f'주 타깃 모형 한계 {len(mlp)} — ' + ' | '.join(mlp[:3]))
+        warnings += mlp
     tau_reread = 'not_performed (dry run — 세대 1 원천 · τ 원천 폴더 없음)'
     if not dry_run:
         rp = []
@@ -2394,6 +2435,9 @@ def check_v13(release_dir, handover_dir, dry_run=False, diagnostic=False):
                     probs.append(f'{ds}: 주 표에 se_isolated_pct 가 없다')
     if len(hrows_all) == len(datasets):
         probs += [f'결합 — {p}' for p in v13_combined_problems(hrows_all, dicts if len(dicts) == len(datasets) else None)]
+    if not (diagnostic or dry_run):
+        #  ★ 10-15 L214 — 배포 대조 = 주 타깃 Hertz 모형 한계 행 0 (build_v13 과 같은 함수 · 진단 · dry-run 묶음은 경고로 기록된 대로)
+        probs += [f'{ds}: {p}' for ds, hr_ in hrows_all.items() for p in v13_primary_model_limit_problems(hr_)]
     if len(by_ds) == len(datasets):
         try:
             tables, drows = v13_ml_table(by_ds)
@@ -2664,7 +2708,8 @@ def _v13_readme(ctx):
     for k, v in V13_BLANK_CODES.items():
         L.append(f'| `{k}` | {v} | ' + ' | '.join(str(cnt.get(ds, {}).get(k, 0)) for ds in dss) + ' |')
     L += ['', '- 쓰는 법: `NA_*` = 결측 표지 (그 특징을 못 쓰는 행 — 0 대입 금지 · 모델이 결측을 못 받으면 표지 열과 함께) · `INF_NOT_PERCOLATING` = T · √T 의 '
-          '무한대 (회귀 타깃으로 쓰지 말고 §3 의 분류 가지로) · `NOT_COMPUTED` · `HOLD_BAND_FALLBACK` = 그 칸만 제외 사유 (무한대 아님) · `EMPTY_NO_REASON` = 빈 집합.',
+          '무한대 (회귀 타깃으로 쓰지 말고 §3 의 분류 가지로) · `NOT_COMPUTED` · `HOLD_BAND_FALLBACK` = 그 칸만 제외 사유 (무한대 아님) · `EMPTY_NO_REASON` = 빈 집합 · '
+          '`NA_MODEL_LIMIT` = 그 모드의 FULL 출력 미제공 (모형 한계 — 0 · ∞ · 기술 실패 아님 · 무작위 결측 아님 · 부록 표 — 주 타깃 Hertz 의 모형 한계는 배포 관문이 HOLD).',
           f'- 열 역할 = ML 열 사전 (`{pre}<ds>_mltable_{d}_v13_columns.tsv` 의 role) — ' + ' · '.join(f'`{k}` {v}' for k, v in V13_ROLE_MEANING.items()) + '.', '',
           '## 3. 타깃 — `f_ion_hertz` 와 관통 분류 (#2)', '']
     for ds in dss:
@@ -2725,9 +2770,16 @@ def _v13_readme(ctx):
         L += [f'- 194 만 참고 줄 (`reference_without_supp` · 요약 JSON) — {ref["note"]}.']
     L += ['',
           '## 7. Physics 부록 (opt-in) · H12', '']
+    n_ml = 0
     for ds in dss:
         sc = _v13_status_counts(ctx['hrows'][ds], 'ion_net_status_physics')
         L.append(f'- {ds} Physics 상태: ' + ' · '.join(f'{k} {v}' for k, v in sc.items()))
+        n_ml += sum(1 for r in ctx['hrows'][ds] for m_ in ('physics', 'hertz_h12') if _v13_is_model_limit(r, m_))
+    if n_ml:
+        #  ★ 10-15 L214 — Codex LHS214 판정 §3 Q3 권장 문구 (해당 검사 — 공용 판정 · 정지 계약 재검사 · 빈칸 일관성 · 주 타깃 관문 — 가 이 빌드에서 통과한 뒤에만 실린다)
+        L.append(f'- FULL 모형 한계 (부록 모드 칸 {n_ml}) — 등록 사례를 모두 유지하였다. 수치 풀이 인증을 통과했으나 사전 고정된 FULL 출력 상한을 넘은 모드의 전도도와 '
+                 '유도 타깃은 미제공으로 표시했으며 (빈칸 코드 `NA_MODEL_LIMIT`), 거부된 q와 수치 증서는 별도 진단으로 보존하였다 (canonical 결과의 증서).  '
+                 '높은 q 때문에 빠진 값은 무작위 결측이 아니다 — 남은 행만으로 코호트 전체의 Physics 를 대표한다고 쓰지 않는다 · 비교는 실제 쌍대응 수와 제외 사유를 밝힌다.')
     L += ['- 기본 학습 열에 자동 포함하지 않는다 · `MODEL_BELOW_CONTINUUM_BOUND` 행은 값 유지 + 표지 — 그 행만 지우고 나머지 Physics 의 타당성을 주장하지 않는다 (Codex QV3).',
           '- 세대 2 Physics = ψ 곱셈 + 면적 physics_g2 + 정확 Dirichlet (출처 표지 열 — 부록에 있다) · Hertz 와 Physics 의 차이를 "소성 접촉 면적만의 민감도" 로 읽지 않는다.', '',
           '## 8. 규약 (v1.2 README §3 · §4 그대로 — 요지)', '',
@@ -2746,7 +2798,7 @@ def _v13_readme(ctx):
           '1) X = role X 다섯 (am_pct · ps_frac · d_am_p_um · d_am_s_um · d_se_um).  X_DERIVED 는 같은 정보 · CONST · FLAG · ID · STATUS 는 특징이 아니다.',
           '   RESULT_COUNT (실측 입자 수) · 두께 · CN 같은 결과를 설계 → 구조 예측의 X 로 쓰면 누설이다.',
           '2) 빈칸은 <열>__blank 코드가 뜻을 정한다.  0 으로 채우지 마라.  NA_* = 결측 표지 · INF_NOT_PERCOLATING = 무한대 (관통 경로 없음) ·',
-          '   NOT_COMPUTED · HOLD_BAND_FALLBACK = 그 칸만 제외 · EMPTY_NO_REASON = 빈 집합.',
+          '   NOT_COMPUTED · HOLD_BAND_FALLBACK = 그 칸만 제외 · EMPTY_NO_REASON = 빈 집합 · NA_MODEL_LIMIT (부록) = 모형 한계로 그 모드 값 미제공 (0 · ∞ 아님).',
           f'3) 이온 수송 타깃 = f_ion_hertz (유한 · 비관통 0.0).  먼저 {V13_ML_CLASS} (1 관통 · 0 비관통) 를 분류하고 관통 행에서 f (또는 폴드 안에서',
           '   고른 log f) 를 회귀하라.  tau2_ion_hertz (수송 tortuosity T) · tau_ion_hertz (√T) 는 role Y_IDENTITY — f 와 항등식 (T = φ_SE,mc/f) 이라',
           '   f 를 예측하면서 특징으로 넣지 마라.  tortuosity_SE_wall 은 기하학적 tortuosity (다른 양) 다.',

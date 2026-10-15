@@ -1760,7 +1760,11 @@ _TAU_STATUS = ('이온 망 인계 상태 (tau_flux 게이트 G1–G6 · v2 §5-2
                'tau_flux 를 부르지 않았다) · ★ 인계표에는 NOT_COMPUTED 가 실리지 않는다 (10-05 RGLR3-02) — done · partial 행의 폴더가 기술적 결손이면 그 배치의 '
                '망 정지 계약이 done 을 줄 수 없는 상태 (배치 뒤 폴더가 바뀌었다) 이므로 생성기가 인계 때 τ P4 (망 정지 계약 재검사) 에서 거부한다 — 기술적 결손을 '
                '"같은 세대 검증 통과" 행으로 싣지 않는다 (NOT_COMPUTED 는 tau_flux CLI · 웹앱 케이스 페이지의 어휘) · 실린 행 = 출처 부록의 같은 세대 검사 '
-               '(P0–P4) 를 다 통과한 케이스')
+               '(P0–P4) 를 다 통과한 케이스 · ★ 10-15 L214 예외 하나 (기술적 실패 아님) — NOT_COMPUTED + 사유 정확히 full_over_conduction = FULL 모형 한계 '
+               '(수치 풀이 인증을 통과했으나 사전 고정된 FULL 출력 상한 q > 1.5 를 넘은 모드 · 값 f · tau2 · tau 빈칸 = 미제공 (0 · ∞ 아님) · 거부된 q 와 수치 증서 = '
+               'canonical 결과 (network_conductivity_dual.json) 의 증서에 별도 진단으로 보존 · 공용 판정 tau_flux.full_model_limit_problem 을 통과한 레코드만 — '
+               'τ P4 망 정지 계약 재검사가 같은 함수로 확인 · 사유만 위조 · 증서 결손 · 틀린 q = 거부) — 이 행은 실린다 · 주 타깃 (Hertz) 이 모형 한계인 행은 '
+               'v1.3 주 타깃 배포 관문이 HOLD (행 삭제 · 대체 없음) · Physics · H12 만 모형 한계면 부록 공란 (빈칸 뜻 NA_MODEL_LIMIT)')
 _TAU_REASON = ('NOT_COMPUTED 의 사유 (사유 코드 = ":" 앞) — missing_input (망 결과 · 장부 L_gap · L_mc · φ_mc · calc_percolation · 띠 규칙 기록 · '
                '온도 기록 없음) · invalid_input: 세부 (공용 기술 검사 tau_flux.ion_record_problem — 생산자 계약 위반: computed 인데 σ 두 표현이 유한 양수가 '
                '아니거나 서로 다름 (RGLR-02) · 관통 분율 (0, 1] 밖 · 증명된 비관통 조합이 아닌 valid_zero · 모르는 상태 · ★ 10-06 밤 세대 계약 위반 '
@@ -1769,7 +1773,8 @@ _TAU_REASON = ('NOT_COMPUTED 의 사유 (사유 코드 = ":" 앞) — missing_in
                '생산자 not_computed) · percolation_disagree (G2 — 솔버 관통 ≠ calc_percolation) · temperature_mismatch (G4 — σ₀ 와 σ_full 의 온도가 다르다 · '
                '두 모드의 (σ₀, T) 가 다르다) · generation_invalid: 세부 (10-05 RGLR2-02 — 케이스 폴더의 망 활성 세대가 확정되지 않음: '
                'tau_flux.network_generation_problem — full_metrics ↔ 도장 불일치 · 되돌림 실패 · 중단된 게시 흔적 · 도장 손상 · 두 모드 모두) · 다른 상태면 빈칸 · '
-               '인계표 (network 배치 done · partial 행) 에서는 늘 빈칸 — NOT_COMPUTED 행은 생성기가 τ P4 에서 거부한다 (10-05 RGLR3-02)')
+               '인계표 (network 배치 done · partial 행) 에서는 늘 빈칸 — NOT_COMPUTED 행은 생성기가 τ P4 에서 거부한다 (10-05 RGLR3-02) · ★ 10-15 L214 예외 — '
+               'full_over_conduction (FULL 모형 한계 · 기술적 실패 사유가 아니다 · 세부 꼬리 없음) 은 인계표에도 실린다 (공용 판정 통과 레코드만 · 위 상태 열 참조)')
 _TAU_PER_MODE = {
     'f_ion': ('★ 이온 유효 전도도 비 f = σ_eff/σ₀ ({m} 망 · 무차원 · 단위 1) = σ_ratio × L_gap/L_mc — σ_ratio = 솔버 FULL 해의 무차원 sigma_full '
               '(8 자리 · TAU-25) · L_gap = 판 간격 · L_mc = 질량 보존 두께 = **판 간격 해의 질량보존 두께 재척도 (해 아님)** · 문헌 ε/τ² (Tjaden) · '

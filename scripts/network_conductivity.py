@@ -146,8 +146,36 @@ CURRENT_CONSERVATION_FAILED_REASON = 'current_conservation_failed'
 #     성분을 수축해야 하고 (B · T 를 함께 품으면 무한 conductance) 작은 ε 저항 치환은 새 수치 매개변수라 쓰지 않는다 → 그 가지만 NOT_COMPUTED +
 #     이 사유 · FULL (R_bulk > 0) · CF (1e-12 floor) 는 그대로.
 ZERO_RESISTANCE_REASON = 'zero_resistance_requires_contraction'
+#  ★ 10-15 L214-01 (Codex LHS214 판정 §2 최소 처방 ① · 1저자 10-14 비준 Q1–Q5 권고대로) — 입력 · 경계 · 수치 검사 **먼저**: 풀이 기하 (plate_z · box_x ·
+#     box_y · scale) 가 유한 양수가 아니거나 (NaN · ±∞ · 0 · 음수 · bool · 문자열) G→q 인자가 유한 양수가 아니면 풀지 않는다 (그 가지 = not_computed + 이
+#     사유).  옛 판은 plate_z = +∞ 인 유효 회로를 풀고 q = ∞ 를 FULL 가드에 넣어 **같은** over_conduction_guard 사유를 냈다 (Codex 3 노드 반례 — 사유
+#     이름만으로는 모형 한계를 가를 수 없다) · NaN 은 q = NaN 으로 게시 직전까지 갔다.  비관통보다 먼저 본다 (무효 입력을 증명된 0 으로 읽지 않는다).
+INVALID_GEOMETRY_REASON = 'invalid_geometry'
 #: 망 σ 가 None 일 때 solve_info 사유를 그대로 상태 사유로 올리는 것 (그 밖 = solve_failed) — `_net_sigma_status`.
-NOT_COMPUTED_SOLVE_REASONS = (BOUNDARY_OVERLAP_REASON, CURRENT_CONSERVATION_FAILED_REASON, ZERO_RESISTANCE_REASON)
+#:   ★ 10-15 L214 — + 무효 기하 · 비유한 q (같은 사유 이름이 증서에도 남는다 · 기술 실패 부류 — 게시 차단 그대로).
+NOT_COMPUTED_SOLVE_REASONS = (BOUNDARY_OVERLAP_REASON, CURRENT_CONSERVATION_FAILED_REASON, ZERO_RESISTANCE_REASON, INVALID_GEOMETRY_REASON,
+                              'non_finite')
+#  ★ 10-15 L214-01 · 02 (Codex LHS214 판정 §2 · §4 A1 · 수정 계획 §1 · 1저자 10-14 비준 Q1–Q5 권고대로) — **FULL 모형 한계** = 수치 인증 성공 / 출력 채택 거부.
+#     단상 이온 · 전자 FULL 가지에서 수치 사다리가 증서를 낸 해를 채택했는데 (보존 · 내부 잔차 ≤ 1e-6 · 0 < G ≤ 1.1·Σg — 그대로) q = σ_eff/σ_bulk 가
+#     원 정밀도에서 엄격히 > 1.5 (문턱 · 수치 허용치 · 사다리 · 병렬 상한 = 그대로 · Q5 (가)) 이면 그 FULL 값은 게시하지 않는다 (C1-5 그대로) — 그러나 그것은
+#     풀이 실패가 아니다 (옛 판은 solve_failed 로 뭉개 Hertz 포함 레코드 전체를 막았다 · 10-14 실패 14 건).  이제:
+#       · 가지 상태 = not_computed + 사유 FULL_OVER_CONDUCTION_REASON (accepted FULL σ · 차원 σ = null · FULL 유도값 (f · τ · 협착 전력 몫 · 비) 없음)
+#       · 진단 q = **별도 키** (증서 `q_withheld` — 반올림 없는 원 값) + 문턱 기록 `q_guard_max` · 정책 판 `guard_policy` · Σg `sum_g` (병렬 상한 대조) ·
+#         수치 증서 · 결합 (가지 · 채널 · 역할 · ΔV · 기하 · G→q · σ₀) 보존
+#       · 채널 상태 = CHANNEL_MODEL_LIMIT (failed 아님) — 소비자는 상태 이름이 아니라 공용 판정 (`tau_flux.full_model_limit_problem` · 증서 수준
+#         `model_limit_certificate_problem` — 생산자 · 소비자 같은 함수) 이 통과한 레코드만 받는다 (사유만 위조 · 증서 결손 · 남의 증서 · 틀린 q 재구성 ·
+#         세대 결손 = 거부 · 같은 레코드의 다른 채널 · 가지 진짜 실패가 우선 · 열 채널은 이 예외 밖).
+#     ⚠ 1.5 는 출력 거부 문턱이지 물리 경계 · 오차막대가 아니다 (Codex §2 · 수정 계획 §2-1 — 2026-05-05 경험값) — 물리 근거 가드 (q ≤ φ 계열) 는 v1.3 뒤
+#       다음 세대 등록에서 결과 전에 정한다 (Q5 (가)).
+FULL_OVER_CONDUCTION_REASON = 'full_over_conduction'
+FULL_Q_GUARD_MAX = 1.5                        # FULL 단상 출력 거부 문턱 (엄격 >) — 옛 리터럴 1.5 그대로 (값 · 비교 연산자 불변)
+OVER_CONDUCTION_GUARD_STATUS = 'over_conduction_guard'
+OVER_CONDUCTION_GUARD_REASON = 'sigma_ratio > 1.5'
+MODEL_LIMIT_POLICY = 'full_single_phase_q_gt_1p5/v1'   # 정책 판 (불변 · 바꾸면 새 판 이름) — 증서에 싣고 소비자가 대조한다
+MODEL_LIMIT_CHANNELS = ('ionic', 'electronic')        # 단상 망만 (열 = 다상 상위 망 · 정규화가 달라 이 예외 밖 — 병렬 상한이 따로 있다)
+CHANNEL_MODEL_LIMIT = 'model_limit'                   # 채널 상태 (CHANNEL_STATES) — failed 와 다른 이름 · 가지 상태 (not_computed) 와 다른 층
+CPS_MODEL_LIMIT_STATUS = 'not_computed (FULL output withheld — model limit q > 1.5)'   # 협착 전력 몫 (FULL 유도값) 의 사유
+_Q_REC_REL_TOL = 16 * sys.float_info.epsilon          # 진단 q 재구성 허용 (같은 식 · 같은 순서 = 비트 같다 · JSON 왕복 비트 보존 — 16ε 은 여유)
 #  ③ Hertz 가지 (C1-3) — 기본 H0 = Maxwell 협착 1/(2σa) + 원기둥 반 d bulk (세대 1 과 같은 간선 · 주 값).  H12 = ψ 곱셈 협착 + 구 조각 bulk 를
 #     **짝으로만** (ψ 단독 H1 = 모든 기하에서 과전도 +6…+50 % · 기각 · bulk 단독도 받지 않는다) — 이온 민감도 레코드 (`hertz_h12`) 로만 쓴다.
 HERTZ_CONSTRICTION_MAXWELL = 'maxwell'
@@ -209,27 +237,35 @@ def _sigma_status(v):
 #:   failed 로 막았다.  이제 **같은 그래프에서 bottom ↔ top 관통 성분이 없음을 확인한 경우에만** valid_zero + 이 사유를 낸다.
 #:   숫자 필드 (`sigma_*`) 는 F-12 대로 None 을 유지한다 (UI '—' · 코퍼스 불변).  관통 σ 는 비트 동일 (해는 그대로 · 상태 필드만).
 NO_THROUGH_REASON = 'no_through_path'        # 관통 성분 없음 = 물리적 0 (valid_zero) — conductivity · f 의 0
-SOLVE_FAILED_REASON = 'solve_failed'         # 관통 성분은 있는데 σ 를 못 냈다 (예외 · V_source ≤ 0 · Σg 상한 · σ_ratio>1.5 · 경계 겹침 퇴화)
+SOLVE_FAILED_REASON = 'solve_failed'         # 관통 성분은 있는데 σ 를 못 냈다 (첫 단 예외 · 미수렴 · 0 < G ≤ 1.1·Σg 밖 — 해를 낸 단이 없다)
 #                                              ★ 10-06 밤 — 증서 실패 (current_conservation_failed) · 협착-only 의 R_c = 0 (zero_resistance_requires_contraction) ·
 #                                              경계 겹침은 따로 이름을 가진다 (`NOT_COMPUTED_SOLVE_REASONS` — 상태는 셋 다 not_computed)
+#                                              ★ 10-15 L214 — 증서가 통과한 단상 FULL 의 q > 1.5 는 풀이 실패가 아니다 → FULL_OVER_CONDUCTION_REASON (모형 한계 ·
+#                                              공용 판정이 증서로 확인) · 무효 기하 = INVALID_GEOMETRY_REASON · 비유한 q = NON_FINITE_REASON (옛 판은 셋 다 solve_failed ·
+#                                              또는 같은 가드 사유였다)
 NON_FINITE_REASON = 'non_finite'             # 값이 NaN (수치 실패)
 #: 협착 전력 몫 (④a) 이 None 일 때의 상태 — 비관통 (0/0 미정의) 과 관통인데 FULL 풀이 실패를 가른다 (RGL-08: 등록된 물리 사유 ↔ 실패).
 CPS_NO_THROUGH_STATUS = 'not_computed (no percolating FULL solution)'      # 옛 문자열 그대로 = 비관통 (constriction_power_share(None))
 CPS_SOLVE_FAILED_STATUS = 'not_computed (FULL solve failed on a percolating network)'
 
 
-def _net_sigma_status(v, no_through, solve_info=None):
+def _net_sigma_status(v, no_through, solve_info=None, channel=None):
     """망 σ (FULL · CONTACT_FREE · CONSTRICTION_ONLY) 의 (상태, 사유) — 값 분류는 `_sigma_status` 를 재사용한다 (판정 중복 금지).
 
       · 값 있음 → ('computed', None)  (실제 0 이면 ('valid_zero', 'zero_value'))
         ★ 10-06 C1-5: 솔버가 그 풀이를 모형 과전도로 표지했으면 (CF · 협착-only 의 q > 1.5) → ('model_over_conduction', 'q_gt_1p5') · 값 유지
+      · ★ 10-15 L214-01 — None ∧ 무효 기하 (솔버 사유 invalid_geometry — 입력 검사 먼저) → ('not_computed', INVALID_GEOMETRY_REASON) — 비관통보다 **먼저**
+        (무효 입력을 증명된 0 으로 읽지 않는다)
       · None ∧ no_through (같은 그래프의 관통 성분 0) → ('valid_zero', NO_THROUGH_REASON)   ← 증명된 비관통
+      · ★ 10-15 L214-01 · 02 — None ∧ channel ∈ MODEL_LIMIT_CHANNELS (단상 이온 · 전자) ∧ 증서 수준 판정 `model_limit_certificate_problem(solve_info)`
+        통과 (FULL 가지 · 가드 상태 · 사유 · 수치 증서 · 채택 단 pass · ΔV · 유한 양수 기하 · G→q · q_withheld 재구성 · 엄격 > 1.5 · 문턱 · 정책 · 병렬 상한) →
+        ('not_computed', FULL_OVER_CONDUCTION_REASON) = 모형 한계 (풀이 실패 아님).  channel 이 없거나 thermal 이면 이 범주를 내지 않는다 (옛 규칙).
       · None ∧ 경계 겹침 (★ 10-06 L2-05 — 솔버 사유 boundary_overlap) → ('not_computed', BOUNDARY_OVERLAP_REASON)
       · None ∧ ★ 10-06 밤 — 증서 실패 (G2R-03 · current_conservation_failed) · 협착-only 의 R_c = 0 (GEN2-01 ·
-        zero_resistance_requires_contraction) → ('not_computed', 그 사유)   (`NOT_COMPUTED_SOLVE_REASONS`)
+        zero_resistance_requires_contraction) · ★ 10-15 비유한 q (non_finite) → ('not_computed', 그 사유)   (`NOT_COMPUTED_SOLVE_REASONS`)
       · None ∧ 관통 → ('not_computed', SOLVE_FAILED_REASON)  · NaN → ('not_computed', NON_FINITE_REASON)
     no_through 는 `active_fractions(net)['perc_nodes']` 가 비었는가 (반올림 전 · solve_network 와 같은 그래프 · 같은 띠).
-    solve_info = 그 풀이의 `net['solve_info'][mode]` (solve_network 가 남긴다 · 없으면 옛 규칙)."""
+    solve_info = 그 풀이의 `net['solve_info'][mode]` (solve_network 가 남긴다 · 없으면 옛 규칙) · channel = 그 망의 채널 (run_decomposition `_mode`)."""
     st = _sigma_status(v)
     info = solve_info if isinstance(solve_info, dict) else {}
     if st == 'computed':
@@ -239,9 +275,13 @@ def _net_sigma_status(v, no_through, solve_info=None):
         return st, None
     if st == 'valid_zero':
         return st, 'zero_value'
+    if v is None and info.get('reason') == INVALID_GEOMETRY_REASON:        # ★ L214-01 — 입력 · 경계 검사 먼저 (비관통보다 앞)
+        return 'not_computed', INVALID_GEOMETRY_REASON
     if v is None and no_through:
         return 'valid_zero', NO_THROUGH_REASON
-    if v is None and info.get('reason') in NOT_COMPUTED_SOLVE_REASONS:     # 경계 겹침 · 증서 실패 · 협착-only 의 R_c = 0
+    if v is None and channel in MODEL_LIMIT_CHANNELS and model_limit_certificate_problem(info) is None:
+        return 'not_computed', FULL_OVER_CONDUCTION_REASON               # ★ L214 — 수치 인증 성공 / 출력 채택 거부 (모형 한계)
+    if v is None and info.get('reason') in NOT_COMPUTED_SOLVE_REASONS:     # 경계 겹침 · 증서 실패 · 협착-only 의 R_c = 0 · 무효 기하 · 비유한 q
         return 'not_computed', info['reason']
     return 'not_computed', (SOLVE_FAILED_REASON if v is None else NON_FINITE_REASON)
 
@@ -798,6 +838,10 @@ SOLVE_CERTIFICATE_FIELDS = ('electrode_model', 'status', 'reason', 'method', 'n_
                             'branch', 'delta_V', 'geometry', 'g_to_q')
 SOLVE_ATTEMPT_FIELDS = ('method', 'outcome', 'krylov_info', 'refine_passes', 'I_bottom', 'I_top', 'conservation_rel', 'residual_rel',
                         'error')
+#: ★ 10-15 L214 — FULL 모형 한계 증서에만 더 싣는 진단 키 (solve_info 에 있을 때만 · 정상 · 실패 증서는 바이트 그대로):
+#:   q_withheld (거부된 q — 솔버가 1.5 와 비교한 바로 그 원 값 · 반올림 없음) · q_guard_max (그때 문턱 = FULL_Q_GUARD_MAX) · guard_policy (정책 판) ·
+#:   sum_g (관통 간선 Σg — 병렬 상한 0 < G ≤ 1.1·Σg 를 소비자가 다시 본다).  판정 = `model_limit_certificate_problem` (생산자 · 소비자 같은 함수).
+SOLVE_CERTIFICATE_GUARD_FIELDS = ('q_withheld', 'q_guard_max', 'guard_policy', 'sum_g')
 #: 결과 레코드의 가지별 증서 키 (σ 키 꼬리와 같다 — full · bulk_net (CONTACT_FREE) · constr_net (CONSTRICTION_ONLY)).
 SOLVE_CERTIFICATE_KEYS = ('solve_certificate_full', 'solve_certificate_bulk_net', 'solve_certificate_constr_net')
 #  ★ 10-06 밤 G2RR-02 (Codex 세대 2 재검증 §3 · §7-2 · 1저자 비준 *"권고대로"*) — 증서 ↔ 가지 · 역할 · 발행값 결합.
@@ -854,6 +898,9 @@ def solve_certificate(info, binding=None):
     out['geometry'] = {k: _json_val(_geo.get(k)) for k in CERT_GEOMETRY_FIELDS} if isinstance(_geo, dict) else None
     out['attempts'] = [{k: _json_val(a.get(k)) for k in SOLVE_ATTEMPT_FIELDS}
                        for a in (info.get('attempts') or []) if isinstance(a, dict)]
+    for k in SOLVE_CERTIFICATE_GUARD_FIELDS:                 # ★ 10-15 L214 — 모형 한계 증서에만 (있을 때만 · 다른 증서 바이트 불변)
+        if k in info:
+            out[k] = _json_val(info[k])
     if isinstance(binding, dict):
         out.update({k: _json_val(v) for k, v in binding.items()})
     return out
@@ -873,6 +920,12 @@ def certificate_problem(cert):
     st = cert.get('status')
     if st not in ('computed', MODEL_OVER_CONDUCTION):
         return f'풀이 상태 {st!r} (사유 {cert.get("reason")!r}) — 게시할 해가 없다'
+    return _certificate_numeric_problem(cert)
+
+
+def _certificate_numeric_problem(cert):
+    """증서의 **수치** 부분 (방법 · 두 전류 · 보존 잔차 재측정 · 내부 잔차 · 허용치 = 모듈 상수) → None | 사유.  ★ 10-15 L214 — `certificate_problem` (게시 값) 과
+    `model_limit_certificate_problem` (모형 한계 — 같은 수치 검사 · 다른 상태 문) 이 이 한 함수를 쓴다 (검사 순서 · 문구는 옛 판 그대로)."""
     m = cert.get('method')
     if m not in DIRICHLET_METHODS:
         return f'모르는 풀이 방법 {m!r} (DIRICHLET_METHODS 밖)'
@@ -893,6 +946,81 @@ def certificate_problem(cert):
         return f'내부 잔차 결손 · 비유한 · 음수 ({cert.get("residual_rel")!r})'
     if res > DIRICHLET_RESIDUAL_REL_MAX:
         return f'내부 잔차 {res:.3g} > {DIRICHLET_RESIDUAL_REL_MAX:g} — 해가 그 선형계를 풀지 않았다'
+    return None
+
+
+def _geometry_TA(geo):
+    """풀이 기하 dict → (T, A, '') | (None, None, 사유) — T = plate_z·scale · A = box_x·box_y·scale² (solve_network σ 환산과 같은 식 · 같은 순서) ·
+    네 값 모두 유한 양수 (bool · 문자열 · NaN · ±∞ · 0 · 음수 = 사유)."""
+    if not isinstance(geo, dict):
+        return None, None, f'기하 (geometry) 없음 · 객체 아님 ({type(geo).__name__})'
+    bad = [k for k in CERT_GEOMETRY_FIELDS if not (_cert_num(geo.get(k)) is not None and _cert_num(geo.get(k)) > 0)]
+    if bad:
+        return None, None, f'기하 {bad} 가 유한 양수가 아니다 ({ {k: geo.get(k) for k in bad} })'
+    T = geo['plate_z'] * geo['scale']
+    A = geo['box_x'] * geo['box_y'] * geo['scale'] ** 2
+    if not (np.isfinite(T) and T > 0 and np.isfinite(A) and A > 0):
+        return None, None, f'기하 환산 T {T!r} · A {A!r} 가 유한 양수가 아니다 (넘침 · 밑넘침)'
+    return T, A, ''
+
+
+def model_limit_certificate_problem(cert):
+    """★ 10-15 L214-01 · 02 — FULL 모형 한계 증서 (수치 인증 성공 / 출력 채택 거부) → None (유효) | 사유.  순수 함수 (기록만 본다).
+
+    cert = `solve_network` 의 `network_data['solve_info']['full']` 또는 결과 레코드의 `solve_certificate_full` (같은 모양 · 생산자 `_net_sigma_status` 와
+    소비자 `tau_flux.full_model_limit_problem` 이 이 한 함수를 쓴다).  순서 = 입력 · 상태 문 → 수치 증서 → 채택 단 → ΔV · 기하 · G→q → q 재구성 · 문턱 · 정책 ·
+    병렬 상한 (앞이 실패하면 높은 q 로 구제하지 않는다):
+      ① 객체 · branch = full · status = over_conduction_guard · reason = 'sigma_ratio > 1.5' (단상 FULL 가드 · 열 병렬 상한 가드 · CF · 협착-only 의 값 유지 표지는
+         이 범주가 아니다)
+      ② 수치 증서 = 게시 값과 **같은** 검사 (`_certificate_numeric_problem` — 방법 · I_bottom 유한 양수 · I_top 유한 · 보존 잔차 재측정 ≤ 1e-6 · 내부 잔차 ≤ 1e-6)
+      ③ 채택 단 = 마지막 시도 (outcome pass · 같은 방법 · 같은 두 전류) — 예외 · 미수렴 · 증서 실패 · 병렬 상한 밖에서 끝난 풀이는 여기서 거부
+      ④ ΔV = 1 · 기하 네 값 유한 양수 · g_to_q = T/A (상대 1e-12) · 환산 T · A 유한 양수
+      ⑤ q_withheld 유한 실수 (bool · 문자열 · NaN · ±∞ 거부) · 재구성 q = (I_bottom/ΔV)·T/A (솔버와 같은 식 · 같은 순서) 와 16ε 안 · **재구성 q 와 기록 q 둘 다**
+         원 정밀도에서 엄격히 > FULL_Q_GUARD_MAX (반올림한 값으로 넣고 빼지 않는다 · q = 1.5 는 computed)
+      ⑥ q_guard_max = FULL_Q_GUARD_MAX (문턱은 기록이 아니라 이 모듈 상수가 정한다 — 기록은 대조만) · guard_policy = MODEL_LIMIT_POLICY ·
+         sum_g 유한 양수 · I_bottom ≤ 1.1·Σg (병렬 상한 — 사다리가 본 것을 다시)
+    ⚠ 이것은 **증서** 판정이다 — 레코드 (상태 · 사유 · 값 null · 유도값 · 채널 상태 · 결합 · 세대) 는 `tau_flux.full_model_limit_problem` 이 같이 본다."""
+    if not isinstance(cert, dict):
+        return f'증서 없음 ({type(cert).__name__}) — 모형 한계를 증명할 수치 증서가 없다'
+    if cert.get('branch') != 'full':
+        return f'가지 {cert.get("branch")!r} — FULL 모형 한계는 full 가지만 (CF · 협착-only 의 q > 1.5 는 값 유지 표지 model_over_conduction)'
+    if cert.get('status') != OVER_CONDUCTION_GUARD_STATUS or cert.get('reason') != OVER_CONDUCTION_GUARD_REASON:
+        return (f'증서 상태 {cert.get("status")!r} · 사유 {cert.get("reason")!r} — 단상 FULL 출력 가드 ({OVER_CONDUCTION_GUARD_STATUS} · '
+                f'{OVER_CONDUCTION_GUARD_REASON!r}) 가 아니다')
+    p = _certificate_numeric_problem(cert)
+    if p is not None:
+        return f'수치 증서 실패 — {p}'
+    atts = cert.get('attempts')
+    last = atts[-1] if isinstance(atts, list) and atts and isinstance(atts[-1], dict) else None
+    if (last is None or last.get('outcome') != 'pass' or last.get('method') != cert.get('method')
+            or _cert_num(last.get('I_bottom')) != _cert_num(cert.get('I_bottom')) or _cert_num(last.get('I_top')) != _cert_num(cert.get('I_top'))):
+        return (f'채택 단 기록 — 마지막 시도 {({k: last.get(k) for k in ("method", "outcome")} if last else None)!r} 가 증서 방법 {cert.get("method")!r} · '
+                '두 전류와 같은 pass 단이 아니다 (앞 단계 실패를 높은 q 로 구제하지 않는다)')
+    dv = _cert_num(cert.get('delta_V'))
+    if dv != CERT_DELTA_V:
+        return f'ΔV {cert.get("delta_V")!r} ≠ {CERT_DELTA_V!r} (정확 Dirichlet — 바닥 띠 1 · 위 띠 0)'
+    T, A, why = _geometry_TA(cert.get('geometry'))
+    if why:
+        return why
+    g2q = _cert_num(cert.get('g_to_q'))
+    if g2q is None or not g2q > 0 or not abs(g2q - T / A) <= 1e-12 * (T / A):
+        return f'G→q 인자 {cert.get("g_to_q")!r} ≠ 기하에서 다시 잰 T/A = {T / A!r}'
+    q = _cert_num(cert.get('q_withheld'))
+    if q is None:
+        return (f'q_withheld {cert.get("q_withheld")!r} — 없음 · 유한 실수 아님 (옛 생산자 증서 · 위조) — 거부된 q 를 증서에서 확인할 수 없다')
+    q_rec = (_cert_num(cert.get('I_bottom')) / dv) * T / A
+    if not abs(q - q_rec) <= _Q_REC_REL_TOL * abs(q_rec):
+        return f'q_withheld {q!r} ≠ 증서 재구성 (I_bottom/ΔV)·T/A = {q_rec!r} (같은 식 · 같은 순서 — 진단 q 가 그 해의 q 가 아니다)'
+    if not (q_rec > FULL_Q_GUARD_MAX and q > FULL_Q_GUARD_MAX):
+        return f'q {q_rec!r} ≤ 문턱 {FULL_Q_GUARD_MAX!r} — 출력 가드 대상이 아니다 (q = 1.5 는 computed · 원 정밀도의 엄격 >)'
+    qm = _cert_num(cert.get('q_guard_max'))
+    if qm != FULL_Q_GUARD_MAX:
+        return f'q_guard_max {cert.get("q_guard_max")!r} ≠ 이 모듈의 문턱 {FULL_Q_GUARD_MAX!r} (기록은 대조만 — 문턱은 코드가 정한다)'
+    if cert.get('guard_policy') != MODEL_LIMIT_POLICY:
+        return f'guard_policy {cert.get("guard_policy")!r} ≠ {MODEL_LIMIT_POLICY!r}'
+    sg = _cert_num(cert.get('sum_g'))
+    if sg is None or not sg > 0 or not _cert_num(cert.get('I_bottom')) <= sg * 1.1:
+        return f'병렬 상한 — Σg {cert.get("sum_g")!r} · I_bottom {cert.get("I_bottom")!r} (0 < G ≤ 1.1·Σg 여야 · 사다리가 본 것을 다시)'
     return None
 
 
@@ -923,6 +1051,8 @@ def solve_network(network_data, mode='full', return_field=False):
       · 어느 고정 노드와도 (R > 0 간선으로) 이어지지 않은 자유 노드 = 떠 있는 섬 — 풀이에서 빼고 V = 0 (전류 0 · solve_info n_floating)
       · 가드: 열 = 병렬 상한 · 단상 σ_ratio > 1.5 = **FULL 만** 거부 (★ C1-5 — CF · 협착-only 의 q > 1.5 = 모형 과전도: 값 유지 + 상태
         model_over_conduction)
+        ★ 10-15 L214 — FULL 거부 때 solve_info 에 q_withheld (원 값) · q_guard_max · guard_policy · sum_g 를 더 싣는다 (값 칸은 None 그대로 · 결과 증서에도 실린다 ·
+        판정 = model_limit_certificate_problem) · 풀이 **앞**에서 기하 넷 · G→q 가 유한 양수가 아니면 풀지 않는다 (invalid_geometry) · 비유한 q = non_finite
     기록: network_data['solve_info'][mode] = {electrode_model, status, reason, method, n_free, n_fixed, n_floating, n_zero_resistance,
           I_bottom, I_top, conservation_rel, residual_rel, conservation_rel_max, residual_rel_max, attempts} — 증서 판정 = `certificate_problem`.
           ★ 10-06 밤 G2RR-02 — + branch (= mode) · delta_V (1) · geometry {plate_z, box_x, box_y, scale} · g_to_q (T_um/A_um2) — 풀이 앞에서 싣는다
@@ -960,6 +1090,13 @@ def solve_network(network_data, mode='full', return_field=False):
     def _none(status, reason):
         info.update(status=status, reason=reason)
         return (None, None, None) if return_field else (None, None)
+
+    #  ★ 10-15 L214-01 (Codex LHS214 판정 §2 최소 처방 ①) — 입력 · 경계 검사 먼저: 기하 넷 · G→q 가 유한 양수가 아니면 풀지 않는다 (INVALID_GEOMETRY_REASON 주석).
+    #    정상 기하 (유한 양수) 에서는 아무것도 바꾸지 않는다 — 해 · σ · 증서 비트 동일.
+    _geo_T, _geo_A, _geo_why = _geometry_TA(info['geometry'])
+    if _geo_why or _cert_num(_g2q) is None or not _g2q > 0:
+        print(f"  ⚠ 풀이 기하가 유한 양수가 아니다 — {_geo_why or f'G→q {_g2q!r}'} → 풀지 않는다 ({INVALID_GEOMETRY_REASON})")
+        return _none('not_computed', INVALID_GEOMETRY_REASON)
 
     if not bottom or not top or not edges:
         return _none('no_input', 'empty boundary or edge set')
@@ -1220,6 +1357,11 @@ def solve_network(network_data, mode='full', return_field=False):
 
     # σ_ratio = σ_eff / σ_bulk = G_eff × T / A  (dimensionless when ρ=1)
     sigma_ratio = G_eff * T_um / A_um2
+    #  ★ 10-15 L214-01 — 유한 양수 기하 · 증서가 통과한 G 에서도 곱이 넘칠 수 있다 (극단 기하) → 비유한 · 0 이하 q 는 어느 가지에서도 값 · 가드 판정에 넣지 않는다
+    #    (옛 판: q = ∞ 가 FULL 가드의 over_conduction_guard 로 · CF 의 model_over_conduction 값 ∞ 로 나갔다).  정상 침대에서는 일어나지 않는다 (비트 동일).
+    if not (np.isfinite(sigma_ratio) and sigma_ratio > 0):
+        print(f"  ⚠ q = {sigma_ratio!r} — 유한 양수가 아니다 (기하 환산 넘침) → 값 없음 ({NON_FINITE_REASON})")
+        return _none('not_computed', NON_FINITE_REASON)
 
     # Output-level sanity check: σ_eff cannot exceed σ_bulk for a porous
     # composite (sigma_ratio = σ_eff/σ_bulk should be ≤ 1 for any
@@ -1250,7 +1392,11 @@ def solve_network(network_data, mode='full', return_field=False):
     if is_thermal:
         reject = G_eff > sum_g_check * 1.1
     elif mode == 'full':
-        reject = sigma_ratio > 1.5
+        reject = sigma_ratio > FULL_Q_GUARD_MAX                     # = 옛 리터럴 1.5 (값 · 연산자 그대로)
+        if reject:
+            #  ★ 10-15 L214 — 수치 인증은 끝났다 (위 사다리 · 증서 · 병렬 상한).  거부된 q 를 **별도 키**로 싣는다 (값 칸 sigma_full 은 None 그대로) ·
+            #    문턱 · 정책 판 · Σg (소비자가 병렬 상한을 다시 본다) — 증서 판정 `model_limit_certificate_problem` 이 이 넷과 증서를 함께 본다.
+            info.update(q_withheld=float(sigma_ratio), q_guard_max=FULL_Q_GUARD_MAX, guard_policy=MODEL_LIMIT_POLICY, sum_g=float(sum_g_check))
     else:
         reject = False
         if sigma_ratio > 1.5:
@@ -1264,7 +1410,7 @@ def solve_network(network_data, mode='full', return_field=False):
                 print(f"  ⚠ sigma_ratio={sigma_ratio:.3f} > 1.5 — non-physical "
                       f"(σ_eff cannot exceed σ_bulk for porous composite). "
                       f"Returning None.")
-        return _none('over_conduction_guard', 'sigma_ratio > 1.5' if not is_thermal else 'G > 1.1·Σg (thermal parallel bound)')
+        return _none(OVER_CONDUCTION_GUARD_STATUS, OVER_CONDUCTION_GUARD_REASON if not is_thermal else 'G > 1.1·Σg (thermal parallel bound)')
     if info['status'] is None:
         info['status'] = 'computed'
 
@@ -1516,10 +1662,14 @@ def run_decomposition(atoms_raw, contacts_raw, target_types, scale,
     if dump_raw_dir and _field and dump_tag:
         dump_network_raw(dump_raw_dir, atoms_raw, net, _field, tag=dump_tag)
     cps, cps_status = constriction_power_share(_field)
+    #  ★ 10-15 L214 — FULL 가지 상태는 FULL 풀이 바로 뒤에 정한다 (solve_info['full'] — 아래 CF · 협착-only 풀이와 무관) · 채널 = 이 망의 _mode (단상 이온 · 전자만
+    #    모형 한계 범주를 낸다 · 열 = 그대로)
+    _sf_st, _sf_rs = _net_sigma_status(sigma_full, _no_through, (net.get('solve_info') or {}).get('full'), channel=_mode)
     #  ★ 10-05 RGL-02 · 08 — 해가 없을 때 constriction_power_share(None) 는 늘 '비관통' 문자열을 낸다.  관통 성분이 **있는데** FULL 풀이가
     #    실패한 경우는 비관통이 아니다 → 사유를 가른다 (정지 계약은 비관통 사유만 등록된 물리 사유로 받는다).
+    #  ★ 10-15 L214 — FULL 모형 한계 (수치 인증 통과 · 출력 거부) 면 풀이 실패 문구가 아니라 모형 한계 사유 (FULL 유도값 = 미제공 · 0 아님)
     if _field is None and not _no_through:
-        cps_status = CPS_SOLVE_FAILED_STATUS
+        cps_status = CPS_MODEL_LIMIT_STATUS if _sf_rs == FULL_OVER_CONDUCTION_REASON else CPS_SOLVE_FAILED_STATUS
     #  키 = 채널 · 모드 꼬리 명시 (τ 명명 규약 — 새 코드부터) · 한 양 = 한 이름
     _cps_key = 'constriction_power_share_{}_{}'.format({'ionic': 'ion', 'electronic': 'el', 'thermal': 'th'}.get(_mode, _mode),
                                                        'physics' if contact_mode == 'physics' else 'hertz')
@@ -1546,7 +1696,7 @@ def run_decomposition(atoms_raw, contacts_raw, target_types, scale,
     #  (active / percolating 분율 = 위 `_af` — 풀이 앞에서 셌다 · RGL-02)
     #  ★ 10-06 — 풀이마다 솔버가 남긴 기록 (정확 Dirichlet 전극 · 경계 겹침 사유 · CF 모형 과전도 표지 — L2-05 · C1-5)
     _si = net.get('solve_info') or {}
-    _sf_st, _sf_rs = _net_sigma_status(sigma_full, _no_through, _si.get('full'))
+    #  (FULL 상태 _sf_st · _sf_rs 는 위 — FULL 풀이 바로 뒤 · ★ 10-15 L214 채널 결합)
     _cf_st, _cf_rs = _net_sigma_status(sigma_cf, _no_through, _si.get('bulk_only'))
     _cn_st, _cn_rs = _net_sigma_status(sigma_constr_net, _no_through, _si.get('constriction_only'))
     _h12 = (net.get('hertz_arm') == 'H12')
@@ -1771,6 +1921,10 @@ def _run_all_networks(atoms_raw, contacts_raw, target_types, am_types, type_map,
         if results_el:
             results['electronic_sigma_full']      = results_el.get('sigma_full')
             results['electronic_sigma_full_mScm'] = results_el.get('sigma_full_mScm')
+            #  ★ 10-15 L214 (Codex LHS214 판정 §2 끝 문단 — "전자 · 열 증서는 전파되지만 이온과 같은 FULL 상태/사유 열이 자동으로 전파되지 않는다") —
+            #    전자 FULL 가지 상태 · 사유를 이온 중심 결과로 올린다 (기록 키 · 값 칸 아님 — 모형 한계 · 비관통 · 실패를 소비자 · 화면이 이름으로 읽는다)
+            results['electronic_sigma_full_status'] = results_el.get('sigma_full_status')
+            results['electronic_sigma_full_reason'] = results_el.get('sigma_full_reason')
             results['electronic_R_brug']          = results_el.get('R_brug_over_full')
             results['electronic_bulk_frac']       = results_el.get('bulk_resistance_fraction')
             results['electronic_n_nodes']         = results_el.get('n_nodes')
@@ -1821,6 +1975,8 @@ def _run_all_networks(atoms_raw, contacts_raw, target_types, am_types, type_map,
         if results_th:
             results['thermal_sigma_full']      = results_th.get('sigma_full')
             results['thermal_sigma_full_mScm'] = results_th.get('sigma_full_mScm')
+            results['thermal_sigma_full_status'] = results_th.get('sigma_full_status')     # ★ 10-15 L214 — 열 FULL 상태 · 사유 전파 (전자와 같은 꼴)
+            results['thermal_sigma_full_reason'] = results_th.get('sigma_full_reason')
             results['thermal_R_brug']          = results_th.get('R_brug_over_full')
             results['thermal_bulk_frac']       = results_th.get('bulk_resistance_fraction')
             results['thermal_boundary_rule']      = results_th.get('boundary_rule')           # ★ 10-04 안 A
@@ -1905,6 +2061,15 @@ def _channel_solve_failure(res, chan):
     if not isinstance(res, dict) or res.get('sigma_full_status') != 'not_computed':
         return None
     sym = {'ionic': 'σ_ion', 'electronic': 'σ_e', 'thermal': 'κ'}.get(chan, chan)
+    #  ★ 10-15 L214-01 · 02 — FULL 모형 한계 (가지 사유 full_over_conduction — `_net_sigma_status` 가 증서 수준 판정으로만 낸다 · 단상 이온 · 전자만) 는 풀이
+    #    실패가 아니다 → 채널 상태 CHANNEL_MODEL_LIMIT.  소비자는 이 이름을 그대로 믿지 않고 공용 판정 (`tau_flux.full_model_limit_problem`) 으로 확인한다.
+    #    열 채널 · 다른 사유 · 모르는 사유 = 그대로 failed (WEB-03 Q1).
+    if res.get('sigma_full_reason') == FULL_OVER_CONDUCTION_REASON and chan in MODEL_LIMIT_CHANNELS:
+        q = (res.get('solve_certificate_full') or {}).get('q_withheld')
+        q_txt = f'{q:.6g}' if isinstance(q, float) else repr(q)
+        return CHANNEL_MODEL_LIMIT, (f'FULL 모형 한계 — 수치 인증 통과 (증서 · 보존 · 잔차 ≤ 1e-6) · {sym} 의 q = σ_eff/σ_bulk = {q_txt} > {FULL_Q_GUARD_MAX:g} '
+                                     '(사전 고정 출력 상한) → FULL 값 미제공 (σ · 차원 σ · FULL 유도값 없음 · 진단 q = 증서 q_withheld) · 풀이 실패 아님 '
+                                     '(L214-01 · 02)')
     return 'failed', (f'관통 성분은 있는데 {sym} 을 풀지 못했다 ({res.get("sigma_full_reason")}) — 미퍼콜이 아니다 · '
                       '수치 실패 = 게시 차단 (WEB-03 Q1 — 일반 · 정지 경로 모두)')
 
@@ -1914,7 +2079,8 @@ def _channel_solve_failure(res, chan):
 #:   webapp/pipeline_service._CHANNEL_OK_STATES 와 어휘를 맞춘다 — 갈라지면 게시 게이트가
 #:   정상 케이스를 실패로 오인하거나 실패를 통과시킨다.
 CHANNEL_STATES = ('computed', 'valid_zero', 'valid_null', 'no_result',
-                  'not_applicable', 'not_run', 'failed')
+                  'not_applicable', 'not_run', 'failed',
+                  CHANNEL_MODEL_LIMIT)       # ★ 10-15 L214 — FULL 모형 한계 (단상 이온 · 전자) · 게이트는 공용 판정으로 확인 (이 이름만으로 ok 아님)
 
 
 def status_for_value(value, chan):
@@ -2000,6 +2166,11 @@ def _selftest_status():
             and set(getattr(_ps, 'NETWORK_POWER_NULL_REASONS', {})) == {CPS_NO_THROUGH_STATUS}
             and CPS_SOLVE_FAILED_STATUS not in getattr(_ps, 'NETWORK_POWER_NULL_REASONS', {})
             and constriction_power_share(None)[1] == CPS_NO_THROUGH_STATUS)
+        #  ★ 10-15 L214 — 모형 한계 어휘 짝 (갈라지면 정상 모형 한계가 failed · 또는 이름만으로 통과) · 채널 상태 이름만으로는 ok 가 아니다 (공용 판정 필요)
+        chk('10) ★ L214 모형 한계 — 전력 몫 사유 · 채널 상태 이름이 게이트 (pipeline_service) 와 같다 · 상태 이름만 (증서 · 레코드 없음) 이면 fail',
+            getattr(_ps, 'NETWORK_POWER_MODEL_LIMIT_REASON', None) == CPS_MODEL_LIMIT_STATUS
+            and CPS_MODEL_LIMIT_STATUS not in getattr(_ps, 'NETWORK_POWER_NULL_REASONS', {})
+            and all(_ps.channel_verdict({f'{c}_status': CHANNEL_MODEL_LIMIT}, c)[0] == 'fail' for c in ('ionic', 'electronic', 'thermal')))
     except ImportError as e:
         chk(f'5-8) ⚠ webapp import 불가 → 어휘 대조 생략 ({e})', True)
 

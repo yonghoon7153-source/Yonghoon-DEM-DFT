@@ -42,11 +42,14 @@ CF · 협착-only 진단도 같은 검사 · 해 없는 가지는 증서를 요�
 | 2 | G2 솔버 관통 (`percolating_fraction > 0`) == calc_percolation (`percolation_pct > 0`) — 판정은 관통 분율로 한다 (`TAU-22` · 상태 ↔ 값 정합은 0b 가 먼저 본다) | `NOT_COMPUTED` (`percolation_disagree`) |
 | 3 | G4 온도 짝 — 그 모드의 σ₀ · T 기록이 있다 (없으면 `missing_input`) · 두 모드의 (σ₀, T) 가 같다 · 호출자가 σ₀ 의 T 를 주장하면 망 T 와 같다 | `NOT_COMPUTED` (`temperature_mismatch`) |
 | 4 | G3 비관통 (G1 · G2 통과 + 관통 성분 없음) | `NOT_PERCOLATING` — f = 0 · tau2 · tau 빈칸 (= ∞) |
-| 5 | 관통인데 σ 가 없거나 0 · 음수 · 비유한 (0b 뒤에는 도달하지 않는 방어) | `NOT_COMPUTED` (`solver_guard`) |
+| 5 | 관통인데 σ 가 없거나 0 · 음수 · 비유한 (0b 뒤에는 도달하지 않는 방어) | `NOT_COMPUTED` (`solver_guard`) — ★ 10-15 L214: 0b 의 공용 판정이 확인한 FULL 모형 한계면 `NOT_COMPUTED` (`full_over_conduction`) |
 | 6 | G5 f > φ (T < 1) | `MODEL_BELOW_CONTINUUM_BOUND` — **값 유지** + 표지 (빈칸으로 거르면 코퍼스를 T ≥ 1 쪽으로 선별한다) |
 G6 (협착 세대) = 메타 `ion_net_constriction_<m>` · 두 모드 모두 **물리 타깃 (실험 절대 대조) HOLD** — 값은 싣는다.
 상태 부류 (10-05 RGLR-01): `NOT_COMPUTED` = **기술적 실패** (입력 결손 · 무효 · 솔버 관문 · 온도 짝 · 관통 불일치 · 세대 무효 (RGLR2-02) — 값 없음) ↔ `BAND_FALLBACK` ·
 `NOT_PERCOLATING` · `MODEL_BELOW_CONTINUUM_BOUND` = **등록된 과학적 HOLD** (입력은 0b 를 통과한 유효값 · 규칙대로 빈칸 또는 표지).
+★ 10-15 L214 (Codex LHS214 판정 §2 · 1저자 10-14 비준 Q1–Q5) — 셋째 부류 **FULL 모형 한계** = `NOT_COMPUTED` + 사유 정확히 `full_over_conduction`
+(`is_model_limit_status`) · 기술 실패 아님 · 값 빈칸 (거부된 q · 수치 증서 = 레코드의 증서) · 공용 판정 `full_model_limit_problem` (생산자 · 게시 · 정지 계약 ·
+다시 읽기 · 인계 · 배포가 같은 함수) 을 통과한 레코드만 (사유만 위조 · 증서 결손 · 남의 증서 · 틀린 q 재구성 = invalid_input).  앞 게이트 (띠 · 관통 불일치 · 온도 짝) 우선.
 ⚠ 옛 판은 0b 가 없어 L1/L2 레코드가 G1 에서 바로 BAND_FALLBACK 로 돌아갔다 — computed 인데 σ_ratio None · NaN · −1 · 관통 분율 2 가 '과학적 HOLD'
 로 통과했고 (RGLR-01), σ_ratio 만 ×4 인 레코드는 tau2 ÷4 로 OK 였다 (RGLR-02).
 
@@ -106,6 +109,18 @@ STATUSES = ('OK', 'NOT_PERCOLATING', 'BAND_FALLBACK', 'MODEL_BELOW_CONTINUUM_BOU
 REASONS = ('solver_guard', 'missing_input', 'temperature_mismatch', 'percolation_disagree', 'invalid_input', 'generation_invalid')
 INVALID_INPUT = 'invalid_input'
 GENERATION_INVALID = 'generation_invalid'
+#: ★ 10-15 L214-01 · 02 (Codex LHS214 판정 §2 · §4 A1 · 1저자 10-14 비준 Q1–Q5 권고대로) — **FULL 모형 한계** (수치 인증 성공 / 출력 채택 거부) 의 사유.
+#:   기술 실패 사유 (REASONS) 가 **아니다** — 상태 NOT_COMPUTED · 사유 정확히 이 값 (세부 꼬리 없음 · `is_model_limit_status`) 이면 그 모드의 단상 FULL q 가
+#:   사전 고정 출력 상한 1.5 를 넘어 값 (f · tau2 · tau · f_gap) 을 내지 않은 것이고, 그 레코드는 공용 판정 `full_model_limit_problem` 을 통과했다 (0b 가
+#:   확인 — 사유만 위조 · 증서 결손 · 남의 증서 · 틀린 q 재구성 = invalid_input).  값 = 생산자 상수와 같은 문자열 (무거운 생산자를 임포트하지 않으려고 둔다 ·
+#:   test_lhs214_model_limit T6 이 대조).
+MODEL_LIMIT_REASON = 'full_over_conduction'           # = network_conductivity.FULL_OVER_CONDUCTION_REASON
+CHANNEL_MODEL_LIMIT = 'model_limit'                   # = network_conductivity.CHANNEL_MODEL_LIMIT (채널 상태)
+
+
+def is_model_limit_status(status, reason):
+    """τ 인계 상태 · 사유 칸 → FULL 모형 한계인가 (NOT_COMPUTED · 사유 정확히 full_over_conduction — 세부 꼬리 · 다른 상태 = 아니다)."""
+    return status == 'NOT_COMPUTED' and reason == MODEL_LIMIT_REASON
 #: 협착식 라벨 (G6 세대 메타 `ion_net_constriction_<m>`) — 저항 모델 **과 결과의 ψ 배치**로 정한다 (`constriction_label`).
 #:   ★ 10-06 (`L2-01` 세대 2 · 1저자 개정) — physics 기본이 ψ 곱셈이 됐다.  resistance_model 만 보면 세대 1 · 2 가 같은 'mikic' 이라
 #:   라벨이 세대를 거짓으로 말한다 ⇒ physics (mikic) 는 결과의 `psi_placement` 를 따른다 (값 = network_conductivity.PSI_* 와 같은 문자열 ·
@@ -194,6 +209,9 @@ def ion_record_problem(rec):
       valid_zero   RGL-02 의 증명된 비관통 조합만 — 사유 no_through_path · σ_ratio · σ_dim None (F-12) · 관통 분율 0 · CF · constr 상태 valid_zero ·
                    이온 채널 valid_zero  (정지 계약 ③ 과 같은 조합 — 'zero_value' 같은 다른 valid_zero 는 받지 않는다)
       not_computed 생산자가 "관통인데 풀지 못함" 을 신고했다 → ('solver_guard', 사유)  — 기술적 실패
+                   ★ 10-15 L214 — 단, 사유가 정확히 full_over_conduction (FULL 모형 한계) 이면 공용 판정 `full_model_limit_problem` 을 부른다: 통과 =
+                   None (유효 입력 — 값 없음은 그 범주가 정한다 · 소비자는 NOT_COMPUTED full_over_conduction 으로 싣는다) · 실패 = ('invalid_input', …)
+                   (사유만 위조 · 증서 결손 · 남의 증서 · 틀린 q · 남은 값 = 기술 실패).  모르는 사유 · 오타 = solver_guard 그대로.
       그 밖        (None · 키 없음 · 모르는 문자열 · 채널 어휘) → ('invalid_input', …)
     띠 규칙 (L0 · L1 · L2) 과 **무관하게** 같은 판정이다 — L1/L2 라는 이유로 무효값 검사를 건너뛰지 않는다 (RGLR-01).  과학적 HOLD (띠 폴백 ·
     비관통 · 연속체 하한) 의 허용은 그대로 — 이 검사를 통과한 유효 입력에서만 그 게이트로 간다."""
@@ -236,8 +254,105 @@ def ion_record_problem(rec):
             return INVALID_INPUT, 'valid_zero 인데 증명된 비관통 (RGL-02) 조합이 아니다 — ' + ' · '.join(why)
         return None
     if st == 'not_computed':
+        if rec.get('sigma_full_reason') == MODEL_LIMIT_REASON:             # ★ 10-15 L214 — 모형 한계 주장은 공용 판정으로만 받는다 (이름만으로 아님)
+            mp = full_model_limit_problem(rec, 'ionic')
+            if mp is None:
+                return None
+            return INVALID_INPUT, f'FULL 모형 한계 주장이 공용 판정을 못 넘는다 (L214-01 · 02): {mp}'
         return 'solver_guard', f'생산자 not_computed ({rec.get("sigma_full_reason")!r}) — 관통인데 σ 를 못 냈다'
     return INVALID_INPUT, f'sigma_full_status={st!r} — 생산자 계약 밖 (computed · valid_zero · not_computed 만)'
+
+
+#  ── ★ 10-15 L214-01 · 02 — FULL 모형 한계의 공용 판정 (Codex LHS214 판정 §2 · §4 A1 최소 처방 · 1저자 10-14 비준 Q1–Q5 권고대로) ──────────────────
+#  "수치 인증 성공 / 출력 채택 거부" 를 명시 범주로 — 생산자 (`network_conductivity._net_sigma_status` · `_channel_solve_failure` 가 증서 수준 판정
+#  `model_limit_certificate_problem` 으로만 이 범주를 낸다) 와 소비처 전부 (일반 게시 · 정지 계약 — `pipeline_service.channel_verdict` · `network_stop_verdict` ·
+#  `network_record_verdict` · τ 0b `ion_record_problem` · 세대 계약 `certificate_binding_problems` · 다시 읽기 K6 · 인계 P4 · 배포) 가 **이 함수 하나**를 쓴다 (규율 ①).
+#  옛 판의 구멍 (Codex 반례 · 우리 시험 test_lhs214_model_limit): FULL q > 1.5 가 solve_failed 로 뭉개져 Hertz 포함 레코드 전체 차단 (10-14 실패 14 건) ·
+#  plate_z = +∞ 가 같은 가드 사유 · 이름만 허용목록에 넣으면 실패 레코드의 검사 면제 (CF 증서 · 세대 필드 · 숫자 없는 가지 증서) 를 새 범주가 상속.
+_ML_CHANNEL_PREFIX = {'ionic': '', 'electronic': 'electronic_'}
+_ML_CPS_TAIL = {'ionic': 'ion', 'electronic': 'el'}
+#: 채널마다 FULL 에서 유도되는 비 (FULL 값이 없으면 없어야 한다) — 생산자 run_decomposition 의 R_brug_over_full (CF/FULL) · R_bruggeman_over_full ·
+#:   전자 = 이온 중심 결과로 올린 electronic_R_brug.
+_ML_DERIVED = {'ionic': ('R_brug_over_full', 'R_bruggeman_over_full'), 'electronic': ('electronic_R_brug',)}
+
+
+def record_mode(rec):
+    """망 레코드 한 모드 → 그 레코드가 말하는 역할 ('hertz' = 주 Hertz H0 · 'hertz_h12' = H12 민감도 · 'physics') | None (contact_mode 를 모른다)."""
+    if not isinstance(rec, dict):
+        return None
+    cm = rec.get('contact_mode')
+    if cm == 'physics':
+        return 'physics'
+    if cm == 'hertzian':
+        return H12_MODE if rec.get('sensitivity_mode') == H12_MODE else 'hertz'
+    return None
+
+
+def full_model_limit_problem(rec, channel='ionic', mode=None):
+    """★ 10-15 L214-01 · 02 — 망 레코드 한 모드의 한 채널 (단상 이온 · 전자) 이 **유효한 FULL 모형 한계** 인가 → None (유효) | 사유 (문자열).
+
+      ① 범위 — channel ∈ {ionic, electronic} (열 = 다상 정규화 · 병렬 상한 — 이 예외 밖) · 레코드 역할 (contact_mode · sensitivity_mode) 을 정할 수 있고 ·
+         mode (자리 — hertz · hertz_h12 · physics) 를 주면 그 역할과 같아야 (다른 모드의 레코드 거부)
+      ② 상태 · 사유 = (not_computed, full_over_conduction) 정확히 · accepted FULL σ · 차원 σ = null · FULL 유도값 없음 (CF/FULL · Bruggeman/FULL 비 · 그 채널 ·
+         모드의 협착 전력 몫 = None + 사유 `network_conductivity.CPS_MODEL_LIMIT_STATUS`)
+      ③ 관통 — 그 채널의 percolating_fraction ∈ (0, 1] (모형 한계 = 관통 해가 있었다)
+      ④ 채널 상태 = model_limit (failed · 다른 이름이면 그 채널 판정이 우선)
+      ⑤ 수치 증서 — `network_conductivity.model_limit_certificate_problem` (FULL 가지 · 가드 상태 · 사유 · 게시 값과 같은 수치 검사 · 채택 단 pass · ΔV · 유한 양수
+         기하 · G→q · q_withheld = (I_b/ΔV)·T/A 재구성 · 엄격 > 1.5 · 문턱 · 정책 · 병렬 상한)
+      ⑥ 결합 — 증서 채널 = channel · 역할 = 자리의 역할 (H0 · H12 · physics) · contact_mode = 세대 2 표 · 전극 dirichlet_exact · σ₀ = 이온은 부모 sigma_grain_S_cm
+         (정확히) · 전자는 `network_conductivity.SIGMA_AM_ELECTRONIC`
+    ⚠ 이것은 그 채널 · 그 FULL 가지의 판정이다 — 같은 레코드의 다른 채널 진짜 실패 (게시 채널 판정 · fail 우선) · CF · 협착-only 진단 (가지 표 · 증서 결합 —
+      `certificate_binding_problems` 의 기존 정책) · 세대 표기 (`_g2_mode_problems` — 모형 한계 레코드는 실패 면제를 받지 않는다) 는 각자의 자리에서 본다."""
+    if not isinstance(rec, dict):
+        return f'레코드가 객체가 아니다 ({type(rec).__name__})'
+    if channel not in _ML_CHANNEL_PREFIX:
+        return f'채널 {channel!r} — FULL 모형 한계 예외는 단상 이온 · 전자 FULL 만 (열은 다상 정규화 · 병렬 상한 — 이 예외 밖)'
+    rm = record_mode(rec)
+    if rm is None:
+        return f'레코드 역할을 정할 수 없다 (contact_mode {rec.get("contact_mode")!r}) — 어느 자리의 증서와 대조할지 모른다'
+    if mode is not None and mode != rm:
+        return f'자리 {mode!r} ↔ 레코드 역할 {rm!r} — 다른 모드의 레코드 (H12 를 주 Hertz 자리에 · physics 를 Hertz 자리에 …)'
+    if channel == 'electronic' and rm == H12_MODE:
+        return 'H12 민감도 레코드에는 전자 채널이 없다 (이온 민감도만)'
+    nc = _nc_mod()
+    p = _ML_CHANNEL_PREFIX[channel]
+    why = []
+    st, rsn = rec.get(p + 'sigma_full_status'), rec.get(p + 'sigma_full_reason')
+    if st != 'not_computed' or rsn != MODEL_LIMIT_REASON:
+        why.append(f'{p}sigma_full_status · _reason = ({st!r}, {rsn!r}) ≠ (not_computed, {MODEL_LIMIT_REASON!r})')
+    for k in (p + 'sigma_full', p + 'sigma_full_mScm'):
+        if rec.get(k) is not None:
+            why.append(f'{k} = {rec.get(k)!r} — 모형 한계는 accepted FULL σ · 차원 σ = null (거부된 q 를 값 칸에 싣지 않는다)')
+    for k in _ML_DERIVED[channel]:
+        if rec.get(k) is not None:
+            why.append(f'{k} = {rec.get(k)!r} — FULL 에서 유도되는 비가 남았다 (FULL 값이 없으면 없어야)')
+    ck = f'constriction_power_share_{_ML_CPS_TAIL[channel]}_{"physics" if rm == "physics" else "hertz"}'
+    if rec.get(ck) is not None or rec.get(ck + '_status') != nc.CPS_MODEL_LIMIT_STATUS:
+        why.append(f'{ck} = ({rec.get(ck)!r}, {rec.get(ck + "_status")!r}) — FULL 유도 전력 몫은 None + 모형 한계 사유 {nc.CPS_MODEL_LIMIT_STATUS!r}')
+    pf = _num(rec.get(p + 'percolating_fraction'))
+    if pf is None or not (0.0 < pf <= 1.0):
+        why.append(f'{p}percolating_fraction {rec.get(p + "percolating_fraction")!r} — (0, 1] 밖 (모형 한계 = 관통 해가 있었다 · 비관통은 valid_zero)')
+    if rec.get(channel + '_status') != CHANNEL_MODEL_LIMIT:
+        why.append(f'채널 상태 {channel}_status = {rec.get(channel + "_status")!r} ≠ {CHANNEL_MODEL_LIMIT!r} (그 채널 판정이 우선 — 모형 한계로 덮지 않는다)')
+    cert = rec.get(p + 'solve_certificate_full')
+    cp = nc.model_limit_certificate_problem(cert)
+    if cp is not None:
+        why.append(f'{p}solve_certificate_full: {cp}')
+    else:
+        want_role, want_cm = CERT_ROLE[rm], dict(G2_MODE_CONTRACT[rm]).get('contact_mode')
+        if cert.get('channel') != channel:
+            why.append(f'증서 채널 {cert.get("channel")!r} ≠ {channel!r} (다른 물리 채널의 증서)')
+        if cert.get('role') != want_role:
+            why.append(f'증서 역할 {cert.get("role")!r} ≠ {want_role!r} ({ROLE_NAME.get(rm, rm)} 자리 — 다른 역할의 증서)')
+        if cert.get('contact_mode') != want_cm:
+            why.append(f'증서 contact_mode {cert.get("contact_mode")!r} ≠ {want_cm!r}')
+        if cert.get('electrode_model') != ELECTRODE_G2:
+            why.append(f'증서 전극 {cert.get("electrode_model")!r} ≠ {ELECTRODE_G2!r}')
+        s_ref = rec.get('sigma_grain_S_cm') if channel == 'ionic' else float(getattr(nc, 'SIGMA_AM_ELECTRONIC'))
+        cs = _num(cert.get('sigma_bulk_S_cm'))
+        if cs is None or _num(s_ref) is None or cs != _num(s_ref):
+            why.append(f'증서 σ₀ (sigma_bulk_S_cm) {cert.get("sigma_bulk_S_cm")!r} ≠ 그 채널의 σ₀ {s_ref!r} (G2RR2-04 — 정확히 같은 수)')
+    return ' · '.join(why) if why else None
 
 
 #  ── 망 활성 세대의 확정 여부 (10-05 RGLR2-02 · Codex 3차 재검증 §2 · Q2 ③ · 1저자 비준 범위) ─────────────────────────────────────────
@@ -758,7 +873,11 @@ def certificate_binding_problems(m, rec):
         if branch in bad_b:
             continue
         q, sd, st, cert = rec.get(qk), rec.get(dk), rec.get(sk), rec.get(ck)
-        if st in CERT_PUBLISHED_STATES or q is not None or sd is not None:
+        if branch == 'full' and st == 'not_computed' and rec.get(rk) == MODEL_LIMIT_REASON and q is None and sd is None:
+            #  ★ 10-15 L214-02 (consumer C1 #3) — FULL 모형 한계 가지: 실제 FULL 수치 증서를 **보존**한 것이 정상이다 ("숫자 없는 가지가 해를 주장" 규칙의 예외 ·
+            #    증서를 버리거나 상태만 바꿔 옛 검사를 통과시키지 않는다) — 공용 판정 (자리의 역할 · 증서 결합 · q 재구성) 으로만 받는다
+            why = full_model_limit_problem(rec, 'ionic', m)
+        elif st in CERT_PUBLISHED_STATES or q is not None or sd is not None:
             why = _cert_published_problem(m, branch, rec, q, sd, st, cert)
         else:
             why = _cert_unpublished_problem(branch, st, rec.get(rk), cert)
@@ -794,7 +913,9 @@ def _g2_mode_problems(m, rec):
     """세대 2 한 모드 레코드 → 어긋남 목록 (부분 결손 · 모르는 값 · 다른 역할의 값).  생산자 실패 레코드 (sigma_full_status not_computed — H12 풀이
     예외 가지는 표기 일부만 싣는다) 는 **있는** 표기만 대조한다 — 그 모드는 공용 기술 검사가 solver_guard 로 막아 값이 실리지 않는다."""
     bad = []
-    failed = rec.get('sigma_full_status') == 'not_computed'
+    #  ★ 10-15 L214-02 (Codex LHS214 판정 §2 · consumer C1 #2) — 표기 결손 면제는 **게시되지 않는 진짜 실패 레코드**에만.  FULL 모형 한계 (사유 full_over_conduction)
+    #    레코드는 게시될 수 있으므로 정상 세대 표기를 전부 요구한다 (옛 판: not_computed 면 무엇이든 면제 → bulk_model 삭제가 [] 로 통과).
+    failed = rec.get('sigma_full_status') == 'not_computed' and rec.get('sigma_full_reason') != MODEL_LIMIT_REASON
     want = dict(G2_MODE_CONTRACT[m])
     for k, v in G2_MODE_CONTRACT[m]:
         if v is None:
@@ -1128,7 +1249,10 @@ def ion_columns(dual, ledger, perc_pct, sigma0_T_claim=None):
             continue
         sf = _pos(res.get('sigma_full'))
         if sf is None:                                   # 솔버 관문 (관통인데 σ 없음 · 0 · 음수 · 비유한)
-            out.update(fail('NOT_COMPUTED', 'solver_guard'))
+            #  ★ 10-15 L214 — 0b 가 통과시킨 not_computed 는 공용 판정이 확인한 FULL 모형 한계뿐 (그 밖 not_computed 는 0b 가 solver_guard 로 이미 막았다) →
+            #    정확한 사유 그대로 (solver_guard 로 뭉개지 않는다 · 값 넷 빈칸 · 띠 · 관통 불일치 · 온도 짝 같은 앞 게이트의 우선순위는 그대로)
+            mlim = res.get('sigma_full_status') == 'not_computed' and res.get('sigma_full_reason') == MODEL_LIMIT_REASON
+            out.update(fail('NOT_COMPUTED', MODEL_LIMIT_REASON if mlim else 'solver_guard'))
             continue
         f = sf * L_gap / L_mc
         t2 = phi_mc / f

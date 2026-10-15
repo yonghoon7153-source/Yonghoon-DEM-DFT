@@ -28,7 +28,8 @@
   K5 열 역할 — `tau_flux.case_row` 의 ion_net_generation = 기대 세대 · `tau_flux.row_generation_problems(행)` = (세대, []) (모드마다 협착 · ψ · 면적 규칙 ·
      전극 · bulk 칸 = 세대 2 표 — 주 hertz = H0 · hertz_h12 = H12 민감도 · physics)
   K6 관통 일치 — 생산자 FULL 상태 (세 모드) ↔ τ 상태: computed → OK 또는 등록된 과학적 HOLD (NOT_COMPUTED · NOT_PERCOLATING 아님) /
-     valid_zero → NOT_PERCOLATING
+     valid_zero → NOT_PERCOLATING / ★ 10-15 L214 not_computed + full_over_conduction (FULL 모형 한계) → 레코드가 공용 판정을 통과하고 τ = NOT_COMPUTED
+     full_over_conduction (또는 띠 폴백) — 그 밖 not_computed · 이름만 위조 = 실패
   K7 가지 표 — ★ 10-07 G2RR2-05: 공용 계약의 결과 그대로 (`tau_flux.branch_table_problems` — 숫자 있음 ⇔ 게시 상태 / 숫자 없음 ⇒ 비게시 상태 + 사유 /
      상태 기록 결손 = 거부 · 별도 자격 없음 · 증서 가지 · 역할 결합은 K2)
   H1 인계 출처 관문 — `lhs_design_dataset.load_tau_results(…, expected_generation=기대 세대)` (P0–P4 · 도장 대조 · 배치 기대 세대 교차 대조) 통과 · 칸 = case_row
@@ -510,11 +511,18 @@ def reread_case(cd, expected, ps, tf):
     bad6 = []
     for m in tf.MODES:
         st_full = ((table.get(m) or {}).get('full') or {}).get('status')
+        rs_full = ((table.get(m) or {}).get('full') or {}).get('reason')
         s, r_ = statuses[m]
         if st_full == 'computed' and s in ('NOT_COMPUTED', 'NOT_PERCOLATING', None):
             bad6.append(f'{m}: 생산자 computed ↔ τ {s} ({r_})')
         elif st_full == 'valid_zero' and s != 'NOT_PERCOLATING':
             bad6.append(f'{m}: 생산자 valid_zero ↔ τ {s} ({r_})')
+        elif st_full == 'not_computed' and rs_full == tf.MODEL_LIMIT_REASON:
+            #  ★ 10-15 L214 — FULL 모형 한계 (수치 인증 통과 · 출력 거부): 그 레코드가 공용 판정 (ion_record_problem → full_model_limit_problem) 을 통과하고
+            #    τ 가 정확히 NOT_COMPUTED full_over_conduction (또는 앞 게이트 띠 폴백) 일 때만 — 이름만 위조 · 다른 τ 사유 = 실패 (NOT_COMPUTED 통째 허용 아님)
+            pm = tf.ion_record_problem(tf.mode_record(dual, m))
+            if pm is not None or not (tf.is_model_limit_status(s, r_) or s == 'BAND_FALLBACK'):
+                bad6.append(f'{m}: 생산자 FULL 모형 한계 ↔ τ {s} ({r_}) · 공용 판정 {pm!r}')
         elif st_full not in ('computed', 'valid_zero'):
             bad6.append(f'{m}: 생산자 FULL 상태 {st_full!r} (게시된 레코드에 있을 수 없는 상태)')
     ck('K6 관통 일치 — 생산자 FULL 상태 ↔ τ 상태 (세 모드)', not bad6, ' · '.join(bad6) or statuses)

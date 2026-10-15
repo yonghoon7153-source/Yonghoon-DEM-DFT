@@ -113,7 +113,7 @@ scripts/mpm_webapp_payload.py	--selftest-temperature	fast	both	claude	초록 0.9
 scripts/network_conductivity.py	--selftest	fast	none	claude	초록 0.8s (실측)
 scripts/network_conductivity.py	--selftest-status	fast	none	claude	초록 1.0s (실측)
 scripts/network_conductivity.py	--selftest-temp	fast	none	claude	초록 0.7s (실측)
-scripts/test_lhs214_model_limit.py	--selftest	broken	none	claude	시험 먼저 (10-15 · L214-01 · 02 — Codex LHS214 판정 §2 · 수정 계획 §3 A2) — 고치기 전 코드에서 13/54 (FULL q > 1.5 가 solve_failed 로 뭉개짐 · plate_z = +∞ 가 같은 가드 사유 · 공용 판정 함수 tau_flux.full_model_limit_problem 없음 · 실패 레코드 검사 면제 상속 · 배포 빈칸 뜻 · 주 타깃 관문 없음) — 다음 커밋 (수정) 에서 초록 · fast 로 바꾼다
+scripts/test_lhs214_model_limit.py	--selftest	fast	none	claude	초록 55/55 · 0.7 s (실측 10-15 · 이 컨테이너) — L214-01 · 02 FULL 모형 한계 (수치 인증 성공 / 출력 채택 거부) 양성 · 음성 행렬 (Codex LHS214 판정 §2 · 수정 계획 §3 A2): 실제 3 노드 q = 2 · 문턱 경계 1.5 · 1.49999998 · 1.50000002 (원 정밀도 엄격 >) · H0 · H12 · Physics · 이온 · 전자 · 열 예외 · CF · 협착 진단 유지 · 비관통 valid_zero · 무효 기하 (plate_z ±∞ · NaN · 0 · 음수 · 타입) · 앞 단계 실패 (첫 단 예외 · 미수렴 · 증서 실패 · 병렬 상한) · 위조 · 결손 33 (사유만 · 남의 증서 · 틀린 q · 세대 결손 · 모르는 사유) · 실제 lhsx_054 증서 (q 1.5370331988867805) · 배포 빈칸 뜻 NA_MODEL_LIMIT · 주 타깃 Hertz HOLD — 시험 먼저 = 고치기 전 코드 13/54 (FULL q > 1.5 가 solve_failed 로 뭉개짐 · plate_z = +∞ 가 같은 가드 사유 · 공용 판정 없음 · 실패 레코드 검사 면제 상속 · 배포 빈칸 뜻 · 주 타깃 관문 없음)
 scripts/network_mode_io.py	--selftest	fast	none	claude	초록 0.1s (실측)
 scripts/network_projection_preflight.py	--selftest	fast	none	claude	초록 0.1s (실측)
 scripts/oat_sensitivity.py	--selftest	fast	check_all	claude	초록 0.3s (실측)
