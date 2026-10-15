@@ -536,6 +536,37 @@ def plain_axes(ax, size=11):
     return ax
 
 
+def origin_rich(formula):
+    """Sc2O3 → Sc\\-(2)O\\-(3) (Origin rich-text subscript). Only digits after an element symbol are subscripts."""
+    if not re.fullmatch(r'([A-Z][a-z]?\d*)+', formula):
+        raise ValueError(f'not a plain formula: {formula!r}')
+    return re.sub(r'(?<=[A-Za-z])(\d+)', r'\\-(\1)', formula)
+
+
+def p07d(n=10):
+    # p07d (user 10-15: "이거 origin으로 그리게 csv"): the top 10 of p07_stage1_composite_score_91.csv exactly as the slim
+    # slide draws it — read from that file (no second score run), rows in Origin's plotting order.
+    sc = rows_of(os.path.join(OUT, 'p07_stage1_composite_score_91.csv'))
+    ix = {k: sc[0].index(k) for k in sc[0]}
+    top = sc[1:n + 1]
+    if [int(r[ix['rank_91']]) for r in top] != list(range(1, n + 1)):
+        raise ValueError('p07_stage1_composite_score_91.csv is not in rank order')
+    out = []
+    for r in reversed(top):                       # rank 10 first: Origin's horizontal bars put row 1 at the bottom
+        rank, sp, s = int(r[ix['rank_91']]), r[ix['precursor']], float(r[ix['score']])
+        out.append([n + 1 - rank, rank, sp, f'{rank}. {sp}', f'{rank}. {origin_rich(sp)}', r[ix['score']], f'{s:.2f}'])
+    return write('p07_stage1_composite_score_top10_origin.csv',
+                 [f'Page 7 — slim slide, right: Stage-1 composite score, top {n} of 91 (copied from p07_stage1_composite_score_91.csv).',
+                  'Exploratory and flawed: the September audit (slide 8) found this score unusable as a ranking. Never cite a rank as a result.',
+                  f'Rows run from rank {n} to rank 1: Origin draws row 1 of a horizontal bar plot at the bottom, so rank 1 ends up on top.',
+                  'Plot: Bar (horizontal), X = tick_label_origin_richtext (or tick_label_plain), Y = composite_score.',
+                  'Axis as on the slide: 0 to 1.0, ticks 0 / 0.5 / 1.0, title "composite score (August method)".',
+                  'Bars: fill #bdbdbd, black edge 0.8 pt. Value labels: value_label_2dp (2 decimals, as on the slide; score keeps 3).',
+                  'tick_label_origin_richtext uses Origin escapes (\\-(2) = subscript); if the axis shows the backslashes, use tick_label_plain.'],
+                 ['bar_position_bottom_to_top', 'rank_91', 'precursor', 'tick_label_plain', 'tick_label_origin_richtext',
+                  'composite_score', 'value_label_2dp'], out)
+
+
 def figures():
     import matplotlib
     matplotlib.use('Agg')
@@ -696,6 +727,7 @@ site-preference backup p18 (old p12 / p17 files are removed by the script). p06 
 | 6 | Candidate set | `p06_candidate_set_by_anion_family.csv` | bars: n_planned vs n_relaxed vs n_gate_evaluation per anion family |
 | 7 | Stage-1 coverage | `p07_stage1_coverage_by_ledger.csv` · `p07_structures_by_anion_family.csv` | not drawn on the slim deck since 2026-10-14 (the slide shows the five-step pipeline box; the full deck keeps the step table) — kept for questions and Origin (As2S3 / AlI3 flags) |
 | 7 | Stage-1 composite score | `p07_stage1_composite_score_91.csv` | horizontal bars, top 10 of 91 (slim deck, beside the pipeline box) — the August method re-run on 10-14 with As2S3 and AlI3 added; exploratory and flawed (the audit, slide 8, says why); never cite a rank as a result |
+| 7 | Stage-1 composite score, Origin copy (10-15) | `p07_stage1_composite_score_top10_origin.csv` | the slide's ten bars only, copied from the 91 file · rows in Origin plotting order (rank 10 → 1, so rank 1 is on top) · tick labels plain and Origin rich text (`\\-(2)` subscripts) · value labels at 2 decimals as on the slide · same caution |
 | 8 | Configuration sampling | `p08_configurations_per_site_pair_long.csv` · `_matrix.csv` | heat map: cation site × anion site → configurations (main batch 3,615) |
 | 8 | Short anneal (slim slide 9, 10-15) | `p08_anneal_energy_change.csv` | histogram: ΔE per structure (meV per supercell · 693 · bin 50 · −1250 … 0) — replaces the August Step-5 histogram (681) |
 | 9 | DFT EOS | `p09_eos_bm3_fit_curves.csv` | lines: E − E0 vs V per f.u. (fit curves; raw points not in repo) |
@@ -720,7 +752,7 @@ def main():
     for old in ('p12_md_campaign_runs.csv', 'p12_md_campaign_progress.csv', 'p17_site_preference_vs_ionic_radius.csv'):
         if os.path.exists(os.path.join(OUT, old)):      # renamed when the audit slide became page 11
             os.remove(os.path.join(OUT, old))
-    made = [p06(), p07(), p07b(), p07c(), p08(), p08b(), p09(), p10(), p13(), p18()]
+    made = [p06(), p07(), p07b(), p07c(), p07d(), p08(), p08b(), p09(), p10(), p13(), p18()]
     with open(os.path.join(OUT, 'README.md'), 'w', encoding='utf-8') as f:
         f.write(README)
     print('wrote', len(os.listdir(OUT)), 'files to', os.path.relpath(OUT, ROOT))
@@ -817,6 +849,34 @@ def selftest():
             raise AssertionError('lit_crops accepted a box outside the image')
     finally:
         LIT_CROPS[:] = saved
+    # p07d: Origin subscripts — positive, then a non-formula must be refused (not passed through half-converted)
+    assert origin_rich('Sc2O3') == 'Sc\\-(2)O\\-(3)' and origin_rich('WO3') == 'WO\\-(3)' and origin_rich('LiCl') == 'LiCl'; ok += 1
+    for bad in ('Sc₂O₃', '1. Sc2O3', 'sc2o3'):
+        try:
+            origin_rich(bad)
+        except ValueError:
+            ok += 1
+        else:
+            raise AssertionError(f'origin_rich accepted {bad!r}')
+    # p07d: rows reversed for Origin (rank 1 last = top bar); a 91 file out of rank order must be refused
+    global OUT
+    saved_out, tmpd = OUT, tempfile.mkdtemp(prefix='p07d_')
+    try:
+        OUT = tmpd
+        hdr = 'rank_91,precursor,anion_family,score\n'
+        open(os.path.join(tmpd, 'p07_stage1_composite_score_91.csv'), 'w').write('# x\n' + hdr + '1,Sc2O3,oxides,0.828\n2,Cr2O3,oxides,0.822\n3,Y2O3,oxides,0.694\n')
+        p07d(3)
+        got = rows_of(os.path.join(tmpd, 'p07_stage1_composite_score_top10_origin.csv'))
+        assert [r[1] for r in got[1:]] == ['3', '2', '1'] and got[1][0] == '1' and got[3][4] == '1. Sc\\-(2)O\\-(3)' and got[1][6] == '0.69'; ok += 1
+        open(os.path.join(tmpd, 'p07_stage1_composite_score_91.csv'), 'w').write(hdr + '2,Cr2O3,oxides,0.822\n1,Sc2O3,oxides,0.828\n3,Y2O3,oxides,0.694\n')
+        try:
+            p07d(3)
+        except ValueError:
+            ok += 1
+        else:
+            raise AssertionError('p07d accepted a 91 file out of rank order')
+    finally:
+        OUT = saved_out
     print(f'selftest PASS ({ok})')
 
 
