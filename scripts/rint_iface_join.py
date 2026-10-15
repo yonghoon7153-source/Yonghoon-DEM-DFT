@@ -24,6 +24,19 @@ G-frame (같은 프레임 · v3 §6-3 "v2 관문 2 개정"):
   f5  pos1/pos2 = 원자 위치 (주기 축 정수 영상 허용 · 토큰 반폭 안) — 행 단위 같은 프레임 증거 (RGL Q5: 해시는 프레임 증거가 아니다)
   f6  δ 자기 일관: δ_dump ↔ r1 + r2 − |최소 영상 (pos1 − pos2)| (토큰 반폭 전파) · δ_dump > 0 (접촉 행)
 scaffold 머리줄에 원 덤프 step 이 없으면 scaffold ↔ 덤프는 **G-geo 까지만** 주장한다 (v3 §6-3).  N1: dilate_z ≠ 1 = 거부 (기하가 DEM 이 아님).
+입구 검사 (RIMP-02 · 03 · Codex 10-14 판정문 §3 · §4 · 1저자 Q2 (가) — 봉인 helper 는 그대로 · 이 소비자에서 엄격) — 관문 계산 **전**, 하나라도 걸리면
+  REJECT (관문 계산 생략 · 사유만):
+  e1  유한 — scaffold x y z r · 원자 x y z radius · 접촉 pos1 pos2 면적 δ 주기 플래그 · 상자 경계 (nan · inf · 못 읽는 토큰 = nonfinite_value)
+  e2  양수 — scaffold r · 원자 radius > 0 (nonpositive_radius) · 상자 hi > lo (box_format)
+  e3  정확 정수 — TIMESTEP · 머리 수 · 원자 id · type · 접촉 id1 · id2 · scaffold type 토큰 = 정수 문자열만 (`2060000.9` · `201.0` · `1e+06` = int_token ·
+      `int(float(…))` 로 줄이지 않는다)
+  e4  지원 상자 — 직교 `ITEM: BOX BOUNDS f1 f2 f3` (플래그 [pfsm]² · p 는 pp 만) + 경계 줄 셋 · 줄마다 토큰 둘.  기울어진 머리 (xy xz yz) = box_tilted (지원 밖 ·
+      tilt 를 버리고 비교하지 않는다) · 그 밖 모양 = box_format.  상자 동일 (f3) = 머리 · 경계 줄 **전 토큰** 비교
+  e5  형식 = **6 유효숫자 `%g` 생산 포맷만** (LIGGGHTS dump 기본 · 토큰 = '%g' % 값) — 다른 정밀도 · 끝 0 · 혼합 포맷 = numeric_format.  면적 포괄
+      helper 는 고정 6 자리 (`lhs_descriptor_harvest.AREA_CHECK_SIGFIG`) 라 지원 형식을 그 가정과 같게 묶는다 (기록 S 를 helper 에 넘기지 않는다 · 봉인 무변경)
+  g3 보강 — AM–AM 행의 음수 면적 = area_negative · 포괄 미인증 (d 하한 ≤ 0 · 생산자 오차 상한 없음) = area_uncertified · PASS = 전 AM–AM 행 인증
+      (n_area_tested = n_dem_am_am · `area_all_certified`).  AM–AM 밖 행 (AM–SE · SE–SE) 의 면적은 조인이 인증하지 않는다 (음수 수만 기록 —
+      case15 AM_P–SE 2 행).
 
   python3 scripts/rint_iface_join.py --scaffold S.csv --atom A.liggghts[.gz] --contact C.liggghts[.gz] --type-map 1:AM_P,2:AM_S,3:SE [--json OUT]
 """
@@ -46,7 +59,7 @@ import lhs_descriptor_harvest as H                             # noqa: E402  면
 from lhs_contact_audit import SIGFIG_FLOOR, _half_ulp, _sigfigs   # noqa: E402  반폭 규약 (규율 ①)
 
 JOIN_KIND = 'am_iface_join'
-JOIN_VERSION = 'g_geo_g_frame_v1'
+JOIN_VERSION = 'g_geo_g_frame_v2'           # v2 (RIMP-02 · 03) = 입구 검사 e1–e5 + AM–AM 면적 전 행 인증 · v1 (10-13) = 그 전
 SIM_TO_UM = 1000.0              # LIGGGHTS 상자 단위 → µm (덱 머리 "Scale: r*1000" · real_14 README)
 AM_KINDS = ('AM_P', 'AM_S')
 SCAFFOLD_TYPE = {1: 'AM_P', 2: 'AM_S'}                         # scaffold CSV 규약 (머리줄 "AM_P=1,AM_S=2")
@@ -54,6 +67,12 @@ POS1 = ('c_cpl[1]', 'c_cpl[2]', 'c_cpl[3]')                    # pair/gran/local
 POS2 = ('c_cpl[4]', 'c_cpl[5]', 'c_cpl[6]')
 _EPS = float(np.finfo(np.float64).eps)
 _STEP_RE = re.compile(r'(?:time)?step\s*[=:]?\s*(\d+)', re.I)
+_INT_RE = re.compile(r'[+-]?\d+')                              # e3 정확 정수 토큰 (소수점 · 지수 · 밑줄 없음)
+_BOX_FLAG_RE = re.compile(r'[pfsm]{2}')                        # e4 LAMMPS 경계 플래그 (축마다 lo · hi)
+_TILT_TOKENS = ('xy', 'xz', 'yz')
+NUMERIC_FORMAT = 'g6'                                          # e5 — 지원하는 유일한 실수 형식 (6 유효숫자 `%g` · LIGGGHTS dump 기본)
+ENTRANCE_RULE = ('e1 유한 · e2 양수 (반경 · 상자 길이) · e3 정확 정수 (step · 머리 수 · id · type) · e4 직교 상자만 (기울어진 머리 = 거부) · '
+                 'e5 6 유효숫자 %g 생산 포맷만 (다른 정밀도 · 혼합 = 거부) — 하나라도 걸리면 관문 계산 없이 REJECT (RIMP-02 · 03)')
 
 WHY = {
     'dilate_z': 'N1 — dilate_z ≠ 1 이면 raster 기하가 DEM 이 아니다 (덤프 면적 · 접촉 집합을 쓸 수 없다)',
@@ -80,6 +99,14 @@ WHY = {
     'area_enclosure': 'AM–AM 접촉의 c_cpl[22] 이 lens_geometry(r1, r2, δ_dump) 포괄 구간 밖',
     'dem_contact_missing': 'scaffold 에서 확실한 AM–AM 접촉 (δ > 폭) 인데 접촉 덤프에 행이 없다',
     'dem_duplicate_pair': '접촉 덤프에 같은 AM–AM 쌍 두 행',
+    'nonfinite_value': 'e1 — 비유한 (nan · inf) 또는 못 읽는 수 토큰 (NaN 비교는 어떤 허용폭 검사도 실패시키지 않는다 — 입구에서 거부 · RIMP-02)',
+    'nonpositive_radius': 'e2 — 반경 ≤ 0 (scaffold 또는 원자 덤프)',
+    'int_token': 'e3 — 정수여야 할 토큰 (TIMESTEP · 머리 수 · id · type) 이 정확한 정수 문자열이 아니다 (int(float(…)) 로 줄이지 않는다 · RIMP-02)',
+    'box_tilted': 'e4 — 기울어진 상자 머리 (xy xz yz) · 직교 상자만 지원 (tilt 를 버리고 비교하지 않는다 · RIMP-02)',
+    'box_format': 'e4 — 상자 머리 · 경계 줄 모양이 직교 LAMMPS 꼴이 아니다 (플래그 셋 · 줄마다 토큰 둘 · hi > lo)',
+    'numeric_format': 'e5 — 실수 토큰이 6 유효숫자 %g 생산 포맷이 아니다 (다른 정밀도 · 끝 0 · 혼합 · 면적 포괄 helper 의 고정 6 자리 가정 밖 · RIMP-03)',
+    'area_negative': 'g3 — AM–AM 접촉의 c_cpl[22] 가 음수 (진단 helper 는 음수 행을 포괄 비교에서 뺀다 — 뺀 것을 인증으로 읽지 않는다 · RIMP-02)',
+    'area_uncertified': 'g3 — AM–AM 접촉의 면적 포괄을 인증할 수 없다 (토큰 상자 위 거리 하한 ≤ 0 · 생산자 오차 상한 없음 — "포괄 밖 0" ≠ "전 행 인증" · RIMP-02)',
 }
 
 
@@ -97,18 +124,69 @@ def _file_digest(path):
             'sha256_content': hashlib.sha256(content).hexdigest()}
 
 
-def _tokens_sigfig_half(columns):
-    """토큰 열 여럿 → (파일 유효숫자 S = max(6, 고유 토큰의 `_sigfigs` 최대), 열마다 반폭 배열 = `_half_ulp(tok, S)`) — 고유 토큰마다 한 번."""
-    if not columns or not len(columns[0]):
-        return SIGFIG_FLOOR, [np.zeros(len(c)) for c in columns]
-    allt = np.concatenate([np.asarray(c) for c in columns])
+def _safe_float(t):
+    try:
+        return float(t)
+    except (TypeError, ValueError):
+        return float('nan')                                    # 못 읽는 토큰 = 비유한 (e1 이 거부한다)
+
+
+def _float_col(tokens):
+    """토큰 문자열 배열 → float64 (numpy 변환 · 실패하면 토큰마다 — 못 읽는 것 = NaN)."""
+    tokens = np.asarray(tokens, dtype=str)
+    try:
+        return tokens.astype(np.float64)
+    except ValueError:
+        return np.array([_safe_float(t) for t in tokens.tolist()], np.float64)
+
+
+def _int_token(tok):
+    """e3 — 정확한 정수 문자열이면 (int, True) · 아니면 (None, False).  `int(float(…))` 로 줄이지 않는다 (RIMP-02 · Codex `2060000.9`)."""
+    if isinstance(tok, str) and _INT_RE.fullmatch(tok):
+        return int(tok), True
+    return None, False
+
+
+def _int_col(tokens):
+    """정수 토큰 열 → (int64 값 · 정수가 아닌 토큰 수 · 보기 셋) — 정수가 아닌 자리는 0 (입구 검사가 거부하므로 값으로 쓰이지 않는다)."""
+    out = np.zeros(len(tokens), np.int64)
+    bad = []
+    for k, t in enumerate(tokens):
+        v, ok = _int_token(t)
+        if ok:
+            out[k] = v
+        else:
+            bad.append(t)
+    return out, len(bad), bad[:3]
+
+
+def _numeric_cols(columns):
+    """실수 토큰 열 여럿 → (열마다 값 · 파일 유효숫자 S · 열마다 반폭 · 진단) — 고유 토큰마다 한 번.
+
+    S = max(6, 유한 고유 토큰의 `_sigfigs` 최대) · 반폭 = `_half_ulp(tok, S)` (옛 `_tokens_sigfig_half` 와 같은 값 — 유한 토큰) · 비유한 토큰 반폭 = NaN.
+    진단: n_nonfinite (비유한 · 못 읽음 · 출현 수) · n_not_g6 (유한인데 토큰 ≠ '%g' % 값 — e5 · 출현 수) · 보기."""
+    info = {'n_nonfinite': 0, 'n_not_g6': 0, 'examples_nonfinite': [], 'examples_not_g6': []}
+    if not columns or not sum(len(c) for c in columns):
+        return [np.zeros(len(c)) for c in columns], SIGFIG_FLOOR, [np.zeros(len(c)) for c in columns], info
+    allt = np.concatenate([np.asarray(c, dtype=str) for c in columns])
     u, inv = np.unique(allt, return_inverse=True)
-    S = max(SIGFIG_FLOOR, max(_sigfigs(str(t)) for t in u))
-    hu = np.array([_half_ulp(str(t), S) for t in u], np.float64)[inv]
-    out, k = [], 0
+    ul = u.tolist()
+    vu = np.array([_safe_float(t) for t in ul], np.float64)
+    fin = np.isfinite(vu)
+    g6 = np.array([bool(fin[k]) and ('%g' % vu[k]) == t for k, t in enumerate(ul)], bool)
+    S = max(SIGFIG_FLOOR, max((_sigfigs(t) for k, t in enumerate(ul) if fin[k]), default=0))
+    hu = np.array([_half_ulp(t, S) if fin[k] else np.nan for k, t in enumerate(ul)], np.float64)
+    nf_occ, ng_occ = (~fin)[inv], (fin & ~g6)[inv]
+    info.update(n_nonfinite=int(nf_occ.sum()), n_not_g6=int(ng_occ.sum()),
+                examples_nonfinite=[ul[k] for k in np.flatnonzero(~fin)[:3]],
+                examples_not_g6=[ul[k] for k in np.flatnonzero(fin & ~g6)[:3]])
+    vals, halves, k0 = [], [], 0
     for c in columns:
-        out.append(hu[k:k + len(c)]); k += len(c)
-    return int(S), out
+        n_ = len(c)
+        vals.append(_float_col(c))
+        halves.append(hu[inv[k0:k0 + n_]])
+        k0 += n_
+    return vals, int(S), halves, info
 
 
 def half_ulp_tokens(tokens, sigfig):
@@ -118,29 +196,50 @@ def half_ulp_tokens(tokens, sigfig):
     return np.array([_half_ulp(str(t), int(sigfig)) for t in u], np.float64)[inv].reshape(tokens.shape)
 
 
+def _box_shape(hdr_tok, lines3):
+    """e4 — 상자 머리 토큰 · 경계 줄 셋 → (모양 'orthogonal' | 'tilted' | 'malformed', 사유 목록)."""
+    if any(t in _TILT_TOKENS for t in hdr_tok):
+        return 'tilted', ['xy xz yz 머리 (삼사정계)']
+    why = []
+    if len(hdr_tok) != 3:
+        why.append(f'플래그 수 {len(hdr_tok)} ≠ 3')
+    for f in hdr_tok:
+        if not _BOX_FLAG_RE.fullmatch(f) or (('p' in f) and f != 'pp'):
+            why.append(f'플래그 {f!r}')
+    for k, b in enumerate(lines3):
+        if len(b) != 2:
+            why.append(f'경계 줄 {k} 토큰 {len(b)} ≠ 2')
+    return ('orthogonal' if not why else 'malformed'), why
+
+
 def _scan_frame(path, count_item, rows_item):
-    """마지막 프레임의 (step · 머리 수 · 상자 플래그 · 상자 토큰 · 열 머리 · 행) + 프레임 수."""
+    """마지막 프레임의 (step · 머리 수 · 상자 플래그 · 상자 토큰 · 열 머리 · 행) + 프레임 수 + 입구 검사 재료 (step · 머리 수 토큰 정수 여부 ·
+    상자 머리 · 경계 줄 전 토큰 · 상자 모양).  정수가 아닌 step · 머리 수 = None (줄이지 않는다)."""
     with _open_text(path) as fh:
         lines = fh.read().splitlines()
     starts = [i for i, ln in enumerate(lines) if ln.startswith('ITEM: TIMESTEP')]
     if not starts:
         raise ValueError(f'{path}: `ITEM: TIMESTEP` 이 없다 — LIGGGHTS 덤프가 아니다')
     i = starts[-1]
-    step = int(float(lines[i + 1].split()[0]))
-    n_decl, flags, btok, hdr, rows = None, None, None, None, []
+    step_tok = (lines[i + 1].split() or [''])[0] if i + 1 < len(lines) else ''
+    step, step_ok = _int_token(step_tok)
+    n_decl, n_decl_ok, n_decl_tok = None, True, None
+    flags, btok, bhdr, blines, hdr, rows = None, None, None, None, None, []
     i += 2
     while i < len(lines):
         ln = lines[i]
         if ln.startswith('ITEM: TIMESTEP'):
             break
         if ln.startswith(count_item):
-            n_decl = int(float(lines[i + 1].split()[0]))
+            n_decl_tok = (lines[i + 1].split() or [''])[0] if i + 1 < len(lines) else ''
+            n_decl, n_decl_ok = _int_token(n_decl_tok)
             i += 2
             continue
         if ln.startswith('ITEM: BOX BOUNDS'):
-            fl = ln.replace('ITEM: BOX BOUNDS', '').split()
-            flags = tuple(fl[-3:]) if len(fl) >= 3 else None
-            btok = [tuple(lines[i + 1 + k].split()[:2]) for k in range(3)]
+            bhdr = ln.replace('ITEM: BOX BOUNDS', '').split()
+            flags = tuple(bhdr[-3:]) if len(bhdr) >= 3 else None
+            blines = [lines[i + 1 + k].split() if i + 1 + k < len(lines) else [] for k in range(3)]
+            btok = [tuple(b[:2]) for b in blines]
             i += 4
             continue
         if ln.startswith(rows_item):
@@ -155,13 +254,23 @@ def _scan_frame(path, count_item, rows_item):
         i += 1
     if hdr is None or btok is None:
         raise ValueError(f'{path}: `{rows_item}` 또는 `ITEM: BOX BOUNDS` 가 마지막 프레임에 없다')
+    bvals, _S, _h, binfo = _numeric_cols([np.array([b[0] if len(b) > 0 else '' for b in btok], dtype=str),
+                                          np.array([b[1] if len(b) > 1 else '' for b in btok], dtype=str)])
+    shape, shape_why = _box_shape(bhdr, blines)
+    lo, hi = bvals[0], bvals[1]
+    if shape == 'orthogonal' and np.isfinite(lo).all() and np.isfinite(hi).all() and not (hi > lo).all():
+        shape, shape_why = 'malformed', [f'hi ≤ lo (축 {np.flatnonzero(~(hi > lo)).tolist()})']
     return {'step': step, 'n_frames': len(starts), 'n_declared': n_decl, 'box_flags': flags, 'box_tokens': btok,
-            'box_lo': np.array([float(b[0]) for b in btok]), 'box_hi': np.array([float(b[1]) for b in btok]),
-            'header': hdr, 'rows': rows}
+            'box_lo': lo, 'box_hi': hi, 'header': hdr, 'rows': rows,
+            'entrance': {'step_token': step_tok, 'step_int_ok': step_ok, 'n_declared_token': n_decl_tok, 'n_declared_int_ok': n_decl_ok,
+                         'box_header': list(bhdr), 'box_lines': [list(b) for b in blines], 'box_shape': shape, 'box_shape_why': shape_why,
+                         'box_n_nonfinite': binfo['n_nonfinite'], 'box_n_not_g6': binfo['n_not_g6'],
+                         'box_examples_not_g6': binfo['examples_not_g6']}}
 
 
 def read_atom_dump_frame(path):
-    """원자 덤프 마지막 프레임 — id · type · x (N, 3) · r · 토큰 반폭 (hx · hr) · 파일 유효숫자 · step · 프레임 수 · 상자."""
+    """원자 덤프 마지막 프레임 — id · type · x (N, 3) · r · 토큰 반폭 (hx · hr) · 파일 유효숫자 · step · 프레임 수 · 상자 · 입구 검사 재료
+    (`entrance` — 비유한 · %g 아님 · 정수 아님 · 반경 ≤ 0 · 상자 모양)."""
     F = _scan_frame(path, 'ITEM: NUMBER OF ATOMS', 'ITEM: ATOMS')
     hdr, rows = F.pop('header'), F.pop('rows')
     need = ('id', 'type', 'x', 'y', 'z', 'radius')
@@ -171,18 +280,23 @@ def read_atom_dump_frame(path):
     ix = {c: hdr.index(c) for c in need}
     cols = ('x', 'y', 'z', 'radius')
     tok = {c: np.array([r[ix[c]] for r in rows], dtype=str) for c in cols}
-    S, hs = _tokens_sigfig_half([tok[c] for c in cols])
+    vals, S, hs, info = _numeric_cols([tok[c] for c in cols])
     n = len(rows)
-    F.update(ids=np.array([int(float(r[ix['id']])) for r in rows], np.int64),
-             types=np.array([int(float(r[ix['type']])) for r in rows], np.int64),
-             x=(np.stack([tok[c].astype(np.float64) for c in cols[:3]], axis=1) if n else np.zeros((0, 3))),
-             r=tok['radius'].astype(np.float64),
+    ids, nb_id, ex_id = _int_col([r[ix['id']] for r in rows])
+    types, nb_ty, ex_ty = _int_col([r[ix['type']] for r in rows])
+    rr = vals[3]
+    F.update(ids=ids, types=types,
+             x=(np.stack(vals[:3], axis=1) if n else np.zeros((0, 3))), r=rr,
              hx=(np.stack(hs[:3], axis=1) if n else np.zeros((0, 3))), hr=hs[3], sigfig=int(S), n_rows=n)
+    F['entrance'].update(n_nonfinite=info['n_nonfinite'], n_not_g6=info['n_not_g6'], examples_nonfinite=info['examples_nonfinite'],
+                         examples_not_g6=info['examples_not_g6'], n_int_bad={'id': nb_id, 'type': nb_ty},
+                         examples_int_bad=ex_id + ex_ty, n_nonpositive_radius=int((np.isfinite(rr) & ~(rr > 0.0)).sum()))
     return F
 
 
 def read_contact_dump_frame(path):
-    """접촉 덤프 (pair/gran/local) 마지막 프레임 — id1 · id2 · pos1 · pos2 · 면적 c_cpl[22] · δ c_cpl[23] · 주기 플래그 c_cpl[9] · 토큰 반폭."""
+    """접촉 덤프 (pair/gran/local) 마지막 프레임 — id1 · id2 · pos1 · pos2 · 면적 c_cpl[22] · δ c_cpl[23] · 주기 플래그 c_cpl[9] · 토큰 반폭 ·
+    입구 검사 재료 (`entrance`)."""
     F = _scan_frame(path, 'ITEM: NUMBER OF ENTRIES', 'ITEM: ENTRIES')
     hdr, rows = F.pop('header'), F.pop('rows')
     need = POS1 + POS2 + (H.COL_D1, H.COL_D2, H.COL_PERIODIC, H.COL_AREA, H.COL_DELTA)
@@ -190,26 +304,27 @@ def read_contact_dump_frame(path):
     if miss:
         raise ValueError(f'{path}: 접촉 덤프에 열 {miss} 이 없다 — pos · id · 면적 · δ 규약을 모르는 채로 조인하지 않는다')
     ix = {c: hdr.index(c) for c in need}
-    cols = POS1 + POS2 + (H.COL_AREA, H.COL_DELTA)
+    cols = POS1 + POS2 + (H.COL_AREA, H.COL_DELTA, H.COL_PERIODIC)
     tok = {c: np.array([r[ix[c]] for r in rows], dtype=str) for c in cols}
-    S, hs = _tokens_sigfig_half([tok[c] for c in cols])
+    vals, S, hs, info = _numeric_cols([tok[c] for c in cols])
     n = len(rows)
+    id1, nb1, ex1 = _int_col([r[ix[H.COL_D1]] for r in rows])
+    id2, nb2, ex2 = _int_col([r[ix[H.COL_D2]] for r in rows])
 
     def _st(arrs):
         return np.stack(arrs, axis=1) if n else np.zeros((0, 3))
-    F.update(id1=np.array([int(float(r[ix[H.COL_D1]])) for r in rows], np.int64),
-             id2=np.array([int(float(r[ix[H.COL_D2]])) for r in rows], np.int64),
-             pflag=np.array([float(r[ix[H.COL_PERIODIC]]) for r in rows], np.float64),
-             pos1=_st([tok[c].astype(np.float64) for c in POS1]), pos2=_st([tok[c].astype(np.float64) for c in POS2]),
-             h_pos1=_st(hs[0:3]), h_pos2=_st(hs[3:6]),
-             area=tok[H.COL_AREA].astype(np.float64), delta=tok[H.COL_DELTA].astype(np.float64),
-             h_area=hs[6], h_delta=hs[7], sigfig=int(S), n_rows=n)
+    F.update(id1=id1, id2=id2, pflag=vals[8],
+             pos1=_st(vals[0:3]), pos2=_st(vals[3:6]), h_pos1=_st(hs[0:3]), h_pos2=_st(hs[3:6]),
+             area=vals[6], delta=vals[7], h_area=hs[6], h_delta=hs[7], sigfig=int(S), n_rows=n)
+    F['entrance'].update(n_nonfinite=info['n_nonfinite'], n_not_g6=info['n_not_g6'], examples_nonfinite=info['examples_nonfinite'],
+                         examples_not_g6=info['examples_not_g6'], n_int_bad={'id1': nb1, 'id2': nb2}, examples_int_bad=ex1 + ex2)
     return F
 
 
 def read_scaffold_csv(path):
     """AM scaffold CSV (`type,x,y,z,r` · 상자 단위 · 고정 소수) — 반폭 h_s = 0.5·10^(가장 고운 소수 지수) (고정 소수 형식이라 유효숫자가 아니라
-    자릿수로 잰다 · 파일 전체의 가장 고운 자리 = 좁은 쪽 = 덜 통과시키는 쪽)."""
+    자릿수로 잰다 · 파일 전체의 가장 고운 자리 = 좁은 쪽 = 덜 통과시키는 쪽).  자릿수는 **유한** 토큰에서만 잰다 (nan · inf · 못 읽는 토큰 =
+    `n_nonfinite` · type 정수 아님 = `n_int_bad` · r ≤ 0 = `n_nonpositive_r` — 입구 검사 e1–e3 이 거부한다 · 예외로 멈추지 않는다)."""
     header, rows = [], []
     with _open_text(path) as fh:
         for ln in fh:
@@ -222,12 +337,24 @@ def read_scaffold_csv(path):
             rows.append([x.strip() for x in s.split(',')])
     if not rows or any(len(r) != 5 for r in rows):
         raise ValueError(f'{path}: scaffold 행은 type,x,y,z,r 다섯 열이어야 한다')
-    exps = {decimal.Decimal(t).as_tuple().exponent for r in rows for t in r[1:]}
-    e_min = int(min(exps))
-    return {'t': np.array([int(float(r[0])) for r in rows], np.int64),
-            'xyz': np.array([[float(x) for x in r[1:4]] for r in rows], np.float64),
-            'r': np.array([float(r[4]) for r in rows], np.float64),
-            'half': 0.5 * 10.0 ** e_min, 'dec_exp': sorted(int(e) for e in exps), 'header': header, 'n': len(rows)}
+    exps, n_nf = set(), 0
+    for r in rows:
+        for t in r[1:]:
+            try:
+                d = decimal.Decimal(t)
+            except decimal.InvalidOperation:
+                d = None
+            if d is not None and d.is_finite():
+                exps.add(int(d.as_tuple().exponent))
+            else:
+                n_nf += 1
+    e_min = int(min(exps)) if exps else 0
+    t_, nb_t, _ex = _int_col([r[0] for r in rows])
+    xyz = np.array([[_safe_float(x) for x in r[1:4]] for r in rows], np.float64)
+    rr = np.array([_safe_float(r[4]) for r in rows], np.float64)
+    return {'t': t_, 'xyz': xyz, 'r': rr,
+            'half': 0.5 * 10.0 ** e_min, 'dec_exp': sorted(int(e) for e in exps), 'header': header, 'n': len(rows),
+            'n_nonfinite': int(n_nf), 'n_int_bad': int(nb_t), 'n_nonpositive_r': int((np.isfinite(rr) & ~(rr > 0.0)).sum())}
 
 
 # ═════════════════════════ 관문 ═════════════════════════
@@ -279,26 +406,100 @@ def _ids_index(ids):
     return look, dup
 
 
+def _entrance(sc, A, Cd, add):
+    """입구 검사 e1–e5 (RIMP-02 · 03) — 걸린 사유를 `add` 로 더하고 요약 dict 를 돌려준다 (status PASS | REJECT)."""
+    ea, ec = A['entrance'], Cd['entrance']
+    n0 = [0]                                                   # 걸린 사유 수
+
+    def _add(code, n, detail):
+        n0[0] += 1
+        add(code, 'entrance', n, detail)
+    nf = {'scaffold': sc['n_nonfinite'], 'atom': ea['n_nonfinite'], 'contact': ec['n_nonfinite'],
+          'atom_box': ea['box_n_nonfinite'], 'contact_box': ec['box_n_nonfinite']}
+    if sum(nf.values()):
+        _add('nonfinite_value', sum(nf.values()), [f'{k} {v}' for k, v in nf.items() if v]
+             + [str(x) for x in ea['examples_nonfinite'] + ec['examples_nonfinite']])
+    npr = {'scaffold': sc['n_nonpositive_r'], 'atom': ea['n_nonpositive_radius']}
+    if sum(npr.values()):
+        _add('nonpositive_radius', sum(npr.values()), [f'{k} {v}' for k, v in npr.items() if v])
+    ib = {'atom_step': int(not ea['step_int_ok']), 'contact_step': int(not ec['step_int_ok']),
+          'atom_count': int(not ea['n_declared_int_ok']), 'contact_count': int(not ec['n_declared_int_ok']),
+          'atom_id': ea['n_int_bad']['id'], 'atom_type': ea['n_int_bad']['type'],
+          'contact_id1': ec['n_int_bad']['id1'], 'contact_id2': ec['n_int_bad']['id2'], 'scaffold_type': sc['n_int_bad']}
+    if sum(ib.values()):
+        _add('int_token', sum(ib.values()), [f'{k} {v}' for k, v in ib.items() if v]
+             + [f'step {ea["step_token"]!r}' if not ea['step_int_ok'] else '', f'step {ec["step_token"]!r}' if not ec['step_int_ok'] else '']
+             + [repr(x) for x in ea['examples_int_bad'] + ec['examples_int_bad']])
+    shapes = {'atom': ea['box_shape'], 'contact': ec['box_shape']}
+    if 'tilted' in shapes.values():
+        _add('box_tilted', sum(1 for v in shapes.values() if v == 'tilted'), [f'{k} {v}' for k, v in shapes.items()])
+    if 'malformed' in shapes.values():
+        _add('box_format', sum(1 for v in shapes.values() if v == 'malformed'),
+             [f'atom {w}' for w in ea['box_shape_why']] + [f'contact {w}' for w in ec['box_shape_why']])
+    ng = {'atom': ea['n_not_g6'], 'contact': ec['n_not_g6'], 'atom_box': ea['box_n_not_g6'], 'contact_box': ec['box_n_not_g6']}
+    if sum(ng.values()):
+        _add('numeric_format', sum(ng.values()), [f'{k} {v}' for k, v in ng.items() if v]
+             + [repr(x) for x in ea['examples_not_g6'] + ec['examples_not_g6'] + ea['box_examples_not_g6'] + ec['box_examples_not_g6']])
+    return {'status': 'PASS' if not n0[0] else 'REJECT', 'rule': ENTRANCE_RULE,
+            'n_nonfinite': int(sum(nf.values())), 'nonfinite': nf, 'n_nonpositive_radius': int(sum(npr.values())),
+            'n_int_token_bad': int(sum(ib.values())), 'int_token_bad': ib,
+            'box': shapes,
+            'format': {'rule': NUMERIC_FORMAT, 'atom_ok': ea['n_not_g6'] == 0 and ea['box_n_not_g6'] == 0,
+                       'contact_ok': ec['n_not_g6'] == 0 and ec['box_n_not_g6'] == 0, 'n_not_g6': ng,
+                       'area_helper_sigfig': int(H.AREA_CHECK_SIGFIG),
+                       'meaning': ('6 유효숫자 %g 생산 포맷만 지원 — 면적 포괄 helper (봉인 · 고정 6 자리) 의 가정과 같다 · 다른 정밀도 · 혼합 = 거부 '
+                                   '(기록 S 를 helper 에 넘기지 않는다 · RIMP-03)')}}
+
+
+def _early_reject(rej, ent, sc, A, Cd, files, um, dilate_z, tmap):
+    """입구 검사 실패 — 관문 계산 없이 REJECT 기록 (소비자가 읽는 키는 다 있다 · 값은 '계산 안 함')."""
+    ns = int(len(sc['t']))
+    z = np.zeros(0, np.int64)
+    skip = '입구 검사 실패 — 관문 계산 안 함 (RIMP-02 · 03)'
+    join = {'kind': JOIN_KIND, 'version': JOIN_VERSION, 'status': 'REJECT', 'rejections': rej, 'entrance': ent,
+            'g_geo': {'skipped': skip, 'n_scaffold': ns},
+            'g_frame': {'skipped': skip, 'atom_step': A['step'], 'contact_step': Cd['step'], 'atom_frames': A['n_frames'],
+                        'contact_frames': Cd['n_frames'], 'atom_sigfig': A['sigfig'], 'contact_sigfig': Cd['sigfig']},
+            'geom_reuse': None, 'scaffold_frame_claim': '주장 없음 — 입구 검사 실패',
+            'files': files, 'steps': {'atom': A['step'], 'contact': Cd['step']}, 'sim_to_um': um, 'dilate_z': float(dilate_z),
+            'type_map': {str(k): v for k, v in sorted(tmap.items())},
+            'particles': {'c_um': sc['xyz'] * um, 'r_um': sc['r'] * um, 't': sc['t'].astype(np.int64)},
+            'atom_id_of_row': np.full(ns, -1, np.int64),
+            'dem_am_am': {'row_a': z, 'row_b': z.copy(), 'delta_um': np.zeros(0), 'area_um2': np.zeros(0), 'seam': np.zeros(0, bool),
+                          'pflag': np.zeros(0)},
+            'status_note': '입구 검사 실패 — 출처 증명 없음 · ①′ 정량 채택 · 생산 HOLD · 기구 · 시험 전용'}
+    join['fp_particles'] = S3._iface_particles_fp(join['particles']['c_um'], join['particles']['r_um'], join['particles']['t'])
+    join['fp_join'] = S3.iface_join_fp(join)
+    return join
+
+
 def am_iface_join(scaffold_csv, atom_dump, contact_dump, *, type_map, sim_to_um=SIM_TO_UM, geom_reuse=None, dilate_z=1.0):
-    """G-geo · G-frame 조인 관문 → 조인 기록 dict (kind `am_iface_join` · status PASS | REJECT · 거부 사유 · 관문 요약 · 인증 입자 (µm) ·
-    fp_particles (= step3_sigma._iface_particles_fp) · DEM AM–AM 접촉 (scaffold 행 쌍) · 파일 sha256 · step · fp_join).
+    """G-geo · G-frame 조인 관문 → 조인 기록 dict (kind `am_iface_join` · status PASS | REJECT · 거부 사유 · 입구 검사 요약 (`entrance`) ·
+    관문 요약 · 인증 입자 (µm) · fp_particles (= step3_sigma._iface_particles_fp) · DEM AM–AM 접촉 (scaffold 행 쌍) · 파일 sha256 · step · fp_join).
 
     type_map   {덤프 형: 'AM_P' | 'AM_S' | 다른 이름} — **필수** (real_14 = {1: AM_P, 2: AM_S, 3: SE} · case15 = {1: AM_P, 2: SE})
     geom_reuse 다른 step 기하 재사용 선언 {'atom_step', 'contact_step', 'reason'} (D19 · 기본 None = 같은 step 요구)
-    dilate_z   raster 에 쓴 z 늘림 — ≠ 1 이면 거부 (N1)"""
+    dilate_z   raster 에 쓴 z 늘림 — ≠ 1 이면 거부 (N1)
+    입구 검사 (e1–e5 · RIMP-02 · 03) 가 하나라도 걸리면 관문 계산 없이 REJECT (사유만 · `g_geo` · `g_frame` = 'skipped')."""
     tmap = _check_type_map(type_map)
     reuse = _check_reuse(geom_reuse)
     um = float(sim_to_um)
+    if not (np.isfinite(um) and um > 0.0):
+        raise ValueError(f'sim_to_um 은 유한한 양수: {sim_to_um!r}')
     rej = []
 
     def add(code, gate, n, detail=None):
-        rej.append({'code': code, 'gate': gate, 'n': int(n), 'detail': [x for x in (detail or [])][:8], 'why': WHY.get(code, code)})
+        rej.append({'code': code, 'gate': gate, 'n': int(n), 'detail': [x for x in (detail or []) if x != ''][:8], 'why': WHY.get(code, code)})
 
     sc = read_scaffold_csv(scaffold_csv)
     A = read_atom_dump_frame(atom_dump)
     Cd = read_contact_dump_frame(contact_dump)
     if float(dilate_z) != 1.0:
         add('dilate_z', 'N1', 1, [float(dilate_z)])
+    ent = _entrance(sc, A, Cd, add)
+    if ent['status'] != 'PASS':
+        files = {'scaffold': _file_digest(scaffold_csv), 'atom': _file_digest(atom_dump), 'contact': _file_digest(contact_dump)}
+        return _early_reject(rej, ent, sc, A, Cd, files, um, dilate_z, tmap)
     # ── G-frame ──────────────────────────────────────────────────────────────
     if A['n_frames'] != 1 or Cd['n_frames'] != 1:
         add('multi_frame', 'G-frame', 1, [A['n_frames'], Cd['n_frames']])
@@ -313,7 +514,9 @@ def am_iface_join(scaffold_csv, atom_dump, contact_dump, *, type_map, sim_to_um=
     else:
         gr = {'declared': reuse, 'observed': {'atom_step': A['step'], 'contact_step': Cd['step']}, 'status': 'accepted',
               'rule': 'D19 — 다른 step 기하 재사용 = 선언 + 두 step 기록일 때만 (위치 · 상자 · id · δ · A 관문은 그대로 다 통과해야 한다)'}
-    box_equal = bool(A['box_flags'] == Cd['box_flags'] and A['box_tokens'] == Cd['box_tokens'])
+    #  f3 — 머리 · 경계 줄 **전 토큰** (옛 판은 플래그 끝 셋 · 경계 앞 두 토큰만 비교해 tilt 를 버렸다 · RIMP-02 · 기울어진 머리는 e4 가 이미 거부)
+    box_equal = bool(A['entrance']['box_header'] == Cd['entrance']['box_header']
+                     and A['entrance']['box_lines'] == Cd['entrance']['box_lines'])
     if not box_equal:
         add('box_mismatch', 'G-frame', 1, [A['box_flags'], Cd['box_flags']])
     if A['n_declared'] != A['n_rows'] or Cd['n_declared'] != Cd['n_rows']:
@@ -362,7 +565,7 @@ def am_iface_join(scaffold_csv, atom_dump, contact_dump, *, type_map, sim_to_um=
                'n_rows_image_shift': int(shifted.sum()), 'n_rows_image_shift_flag0': int((shifted & (Cd['pflag'] == 0.0)).sum()),
                'n_delta_pos_mismatch': int(dbad.sum()), 'max_delta_pos_ratio': float((dd[ok] / wd[ok]).max()) if ok.any() else None,
                'n_delta_nonpositive': int(nonpos.sum()), 'atom_sigfig': A['sigfig'], 'contact_sigfig': Cd['sigfig'],
-               'rule': ('f1 프레임 각 1 · f2 TIMESTEP 같음 (선언된 재사용만 예외) · f3 상자 같음 · f4 id 유일 · 머리 수 = 행 수 · 고아 0 · '
+               'rule': ('f1 프레임 각 1 · f2 TIMESTEP 같음 (선언된 재사용만 예외) · f3 상자 같음 (머리 · 경계 줄 전 토큰) · f4 id 유일 · 머리 수 = 행 수 · 고아 0 · '
                         'f5 pos = 원자 위치 (주기 축 정수 영상 · 토큰 반폭 `_half_ulp` 합) · f6 δ = r1 + r2 − |최소 영상 거리| (반폭 전파) · δ > 0')}
     # ── G-geo ────────────────────────────────────────────────────────────────
     hs = float(sc['half'])
@@ -439,6 +642,15 @@ def am_iface_join(scaffold_csv, atom_dump, contact_dump, *, type_map, sim_to_um=
         beyond, xd = np.zeros(0, bool), {'uncertified': np.zeros(0, bool), 'negative': np.zeros(0, bool)}
     if beyond.any():
         add('area_enclosure', 'G-geo', int(beyond.sum()), q[beyond].tolist())
+    #  RIMP-02 — 진단 helper 가 비교에서 **뺀** 행 (음수 · 미인증) 을 인증으로 읽지 않는다: PASS = 전 AM–AM 행 인증
+    neg_q = np.asarray(xd['negative'], bool)
+    unc_q = np.asarray(xd['uncertified'], bool) & ~neg_q
+    if neg_q.any():
+        add('area_negative', 'G-geo', int(neg_q.sum()), q[neg_q].tolist())
+    if unc_q.any():
+        add('area_uncertified', 'G-geo', int(unc_q.sum()), q[unc_q].tolist())
+    not_q = np.ones(len(Cd['area']), bool); not_q[q] = False
+    n_neg_other = int((not_q & (Cd['area'] < 0.0)).sum())
     pa, pb = np.minimum(a_, b_), np.maximum(a_, b_)
     keyp = pa * max(ns, 1) + pb
     uk, cnt = np.unique(keyp, return_counts=True)
@@ -475,11 +687,18 @@ def am_iface_join(scaffold_csv, atom_dump, contact_dump, *, type_map, sim_to_um=
              'n_delta_scaffold_mismatch': int(dmis.sum()),
              'max_delta_scaffold_ratio': (float((np.abs(Cd['delta'][q] - dsc) / wsc).max()) if len(q) else None),
              'n_area_tested': int((~xd['uncertified'] & ~xd['negative']).sum()), 'n_area_beyond': int(beyond.sum()),
-             'n_area_uncertified': int(xd['uncertified'].sum()),
+             'n_area_uncertified': int(xd['uncertified'].sum()), 'n_area_negative': int(neg_q.sum()),
+             'area_all_certified': bool(int((~xd['uncertified'] & ~xd['negative']).sum()) == int(len(q))),
+             'n_area_negative_not_am_am': n_neg_other,
+             'area_sigfig_assumed': int(H.AREA_CHECK_SIGFIG),
+             'area_scope': ('조인이 인증하는 면적 = AM–AM 행 (두 원자 모두 scaffold 와 1:1) 뿐 — AM–SE · SE–SE 행의 c_cpl[22] 는 인증하지 않는다 '
+                            '(음수 수만 기록 · n_area_negative_not_am_am)'),
              'n_scaffold_certain_pairs': int(n_cert), 'n_dem_contact_missing': int(len(miss)),
              'rule': ('g1 1:1 (축마다 |Δ| ≤ h_s + h_d · 주기 축 최소 영상 · 형 · 반경) · g2 δ_dump ↔ δ_scaffold · '
-                      'g3 c_cpl[22] ↔ lens_geometry 포괄 (lhs_descriptor_harvest._contact_area_rows) · g4 scaffold 확실한 접촉 ⊆ 덤프')}
+                      'g3 c_cpl[22] ↔ lens_geometry 포괄 (lhs_descriptor_harvest._contact_area_rows) · 음수 · 미인증 = 거부 (전 행 인증) · '
+                      'g4 scaffold 확실한 접촉 ⊆ 덤프')}
     join = {'kind': JOIN_KIND, 'version': JOIN_VERSION, 'status': ('PASS' if not rej else 'REJECT'), 'rejections': rej,
+            'entrance': ent,
             'g_geo': g_geo, 'g_frame': g_frame, 'geom_reuse': (gr if not rej else None),
             'scaffold_frame_claim': claim,
             'files': {'scaffold': _file_digest(scaffold_csv), 'atom': _file_digest(atom_dump), 'contact': _file_digest(contact_dump)},

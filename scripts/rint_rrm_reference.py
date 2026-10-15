@@ -23,6 +23,15 @@
 
 ⚠ 이 모듈의 PASS 는 **기구의 증거**다 — RRM 자체 오차 (T3-D) · CNC 편향 (T2-4 · T3-B) 의 검증이 아니다 (D12-V 수치 봉인 전 ·
   개발 판만 · 개발 결과를 나중에 독립 검증으로 재분류하지 않는다 — 판정문 §4 · §8 · v3.1 §6-2).
+
+★ RIMP-04 (Codex 10-14 판정문 §5 · 1저자 Q3 (가)) — N9 `rrm_check` 는 계획 기록 (resolve_k · r 표 · 예외 법칙) 을 **믿지 않는다**:
+  ① 기록 (recipe) 모양 · 값 검사 (없음 · 비유한 k · 파싱 안 되는 r 표 · 모르는 법칙 = 위반)
+  ② 행 값 — rface 유한 · ≥ 0 · 절단 행 = tombstone (rface 0 · ck 0) · 막 행 rface 0 은 그 접점의 등록 r = 0 일 때만 (RRM-4 경로)
+  ③ 기대 접점 · 적격성 재계산 — 원장에서 막 후보 (부류 · N_c^surv · 면적) 를 r 표 **없이** 정하고, 빠진 접점 (r 없음 · 기울기 · 미해상) 은 계획 거부
+     사유 수로 덮여야 한다 (메타데이터로 검사 집합을 비울 수 없다) · 남은 접점 = owner 면 전수 대조 (NaN 은 불일치)
+  ④ 재현 결합 — 기록된 recipe 로 `rrm_plan` 을 다시 만들어 행 · 거부 사유가 비트 같아야 한다 (복합 변이 = 재현 불가)
+★ RIMP-06 (판정문 §7) — RRM 계획 · 풀이 기록의 표준 `iface_contact_ledger` = **실제 RRM 행**에서 다시 셈 (`summary_source`) · CNC 값
+  (원장 요약 · 탄소 법칙 · 균일 rface_c) = 별도 이름공간 `iface_cnc_comparison` (기록) · `cnc_comparison` (계획) · `iface_carbon_cover` = None.
 """
 import math
 import os
@@ -232,10 +241,31 @@ def rrm_plan(ledger, r_type, *, resolve_k, gap_law=None, unreg_law=None, ambiguo
     plan['n_film_rows'] = int(sum(int((~a_['cut']).sum()) for a_ in axes))
     plan['n_cut_rows'] = int(sum(int(a_['cut'].sum()) for a_ in axes))
     plan['rejections'] = rej
+    #  ★ RIMP-06 — CNC 계획의 접점별 균일 r_face · 탄소 법칙 · realized 는 이 계획의 행이 아니다 → 비교 이름공간으로.  realized = RRM 기준 접점
+    nC = len(base['realized'])
+    ref_mask = np.zeros(nC, bool)
+    for x in info:
+        if x['status'] == 'reference':
+            ref_mask[int(x['cid'])] = True
+    plan['cnc_comparison'] = {'meaning': 'CNC 비교값 — 같은 원장 · 같은 r 표의 CNC 계획 (이 RRM 계획의 행이 아니다 · RIMP-06)',
+                              'carbon_cover': base['carbon_cover'], 'realized': base['realized'], 'rface_c': base['rface_c'],
+                              'rface_remove': base.get('rface_remove'), 'rface_renorm': base.get('rface_renorm'),
+                              'n_film_rows': base['n_film_rows'], 'n_cut_rows': base['n_cut_rows']}
+    for kk in ('rface_remove', 'rface_renorm'):
+        plan.pop(kk, None)
+    plan.update(rface_c=None, carbon_cover=None, realized=ref_mask)
     rec = dict(base['record'])
     rec.update({
         'iface_reference': RRM_REFERENCE, 'iface_area_law': RRM_AREA_LAW, 'iface_status': RRM_STATUS,
         'iface_rejections': [{k_: v_ for k_, v_ in x.items() if k_ != 'detail'} for x in rej],
+        'iface_carbon_cover': None,
+        'iface_carbon_cover_status': 'RRM — 탄소 가림 법칙 (CNC remove_area · renormalize) 미사용 · CNC 판 = iface_cnc_comparison (RIMP-06)',
+        'iface_contact_ledger': _rrm_summary(base['record']['iface_contact_ledger'], plan, info, ledger),
+        'iface_cnc_comparison': {'meaning': 'CNC 비교값 — 같은 원장 · 같은 r 표의 CNC 계획 요약 (이 RRM 계획의 행 · 풀이가 아니다 · RIMP-06)',
+                                 'iface_area_law': base['record']['iface_area_law'],
+                                 'iface_carbon_cover': base['record']['iface_carbon_cover'],
+                                 'iface_contact_ledger': base['record']['iface_contact_ledger'],
+                                 'n_film_rows': base['n_film_rows'], 'n_cut_rows': base['n_cut_rows']},
         'iface_rrm': {'outside_law': RRM_OUTSIDE_LAW, 'outside_law_status': RRM_OUTSIDE_LAW_STATUS,
                       'resolve_k': k, 'resolve_k_status': RRM_RESOLVE_K_STATUS,
                       'axis_rule': '축 정렬 접점만 (다른 축 면 = 투영 면적 0 = 절단) · 기울기 = D11 전 거부',
@@ -244,6 +274,37 @@ def rrm_plan(ledger, r_type, *, resolve_k, gap_law=None, unreg_law=None, ambiguo
                       'n_unsupported_tilt': n_tilt, 'n_unresolved_subgrid': n_unres, 'contacts': info}})
     plan['record'] = rec
     return plan
+
+
+#: RRM 표준 요약에 그대로 두는 CNC 요약 키 — 원장 기하 (법칙 · 행과 무관) 만.
+_GEOM_SUMMARY_KEYS = ('vox_um', 'bridge_um', 'tol_am_um', 'delta_bound_um', 'n_particles', 'carbon_path_current_share',
+                      'carbon_path_current_share_status', 'n_contacts', 'n_film_contacts', 'unrealized', 'unregistered',
+                      'n_cells_multi_claim', 'n_faces_triple', 'Nsurv_over_N0', 'Nsurv_over_N0_meaning', 'carbon_cover_frac')
+
+
+def _rrm_summary(cnc_summary, plan, info, ledger):
+    """RIMP-06 — RRM 계획의 표준 `iface_contact_ledger` = 원장 기하 키 (CNC 요약 그대로) + **실제 RRM 행**에서 다시 센 행 · 막 몫."""
+    s = {k_: cnc_summary[k_] for k_ in _GEOM_SUMMARY_KEYS if k_ in cnc_summary}
+    rf = np.concatenate([np.asarray(a_['rface'], np.float64)[~np.asarray(a_['cut'], bool)] for a_ in plan['axes']])
+    ref = [x for x in info if x['status'] == 'reference']
+    C = ledger.get('contacts')
+    a_lt = 0
+    if C is not None:
+        a_lt = int(sum(1 for x in ref if bool(C['a_lt_h'][int(x['cid'])])))
+    fp = (cnc_summary.get('film_faces') or {})
+    G = float(S3.iface_plan_film_G_S(plan).sum()) if len(plan['realized']) else 0.0
+    s.update({
+        'summary_source': 'rrm_rows — 실제 RRM 행 · 면 가중에서 다시 셈 (CNC 비교값 = iface_cnc_comparison · RIMP-06)',
+        'n_realized': len(ref),
+        'a_lt_h': {'n': a_lt, 'film_current_share': None,
+                   'meaning': 'a < h — RRM 기준 접점 중 (해상 조건 a ≥ k·h 를 통과한 것) · 풀이 뒤 막 전류 몫'},
+        'A_film_sum_um2': float(sum(float(x['sum_w_um2']) for x in ref)),
+        'film_faces': {'pre': fp.get('pre'), 'surv': fp.get('surv'), 'active': int((rf > 0.0).sum()), 'zero_r': int((rf == 0.0).sum())},
+        'cut_faces': int(sum(int(np.asarray(a_['cut'], bool).sum()) for a_ in plan['axes'])),
+        'rface_ohm_cm2': {'rrm': S3._iface_quant(rf[rf > 0.0])},
+        'film_G_S_total': {'rrm': G},
+    })
+    return s
 
 
 # ═════════════════════════ N9 원장 검사 ═════════════════════════
@@ -256,12 +317,48 @@ _N9_WHY = {
     'cid_mismatch': '행의 접점 번호가 그 면의 접점과 다르다',
     'row_not_owner_face': '기준 접점의 행인데 그 접점의 S_c^surv 면이 아니다',
     'duplicate_row': '같은 면에 행 둘',
+    'recipe_missing': '계획 기록에 RRM recipe (iface_rrm · r 표 · 예외 법칙) 가 없다 — 검사 집합을 정할 수 없다 (RIMP-04)',
+    'recipe_invalid': 'RRM recipe 값이 틀렸다 (resolve_k 비유한 · ≤ 0 · r 표 파싱 실패 · 모르는 예외 법칙) (RIMP-04)',
+    'rface_nonfinite': '행 rface 가 유한하지 않다 (NaN 비교는 어떤 허용폭도 실패시키지 않는다 · 솔버는 NaN 면을 bulk 로 둔다 · RIMP-04)',
+    'rface_negative': '행 rface < 0',
+    'cut_not_tombstone': '절단 행이 tombstone 이 아니다 (rface ≠ 0 또는 ck ≠ 0)',
+    'film_rface_zero': '막 행 rface 0 인데 그 접점의 등록 r 가 0 이 아니다 (등록된 r = 0 경로만 허용)',
+    'row_cid_invalid': '막 행의 접점 번호가 원장 접점 범위 밖',
+    'excluded_without_rejection': '기준에서 빠진 접점 (r 없음 · 기울기 · 미해상) 이 계획 거부 사유로 덮이지 않았다 — 메타데이터로 검사 집합을 비웠다 (RIMP-04)',
+    'row_for_excluded_contact': '기준에서 빠진 접점의 막 행이 있다',
+    'plan_not_reproducible': '기록된 recipe 로 rrm_plan 을 다시 만들면 행 · 거부 사유가 다르다 (복합 변이 · RIMP-04)',
 }
+
+
+def _recipe(rec):
+    """계획 기록 → (resolve_k, r 표 (정규화), 예외 법칙 dict) 또는 (None, 사유) — RIMP-04 ① (기록 모양 · 값)."""
+    rr = rec.get('iface_rrm')
+    if not isinstance(rr, dict) or 'resolve_k' not in rr or 'iface_r_type_ohm_cm2' not in rec or 'iface_exception_law' not in rec:
+        return None, 'recipe_missing'
+    try:
+        k = float(rr['resolve_k'])
+    except (TypeError, ValueError):
+        return None, 'recipe_invalid'
+    if isinstance(rr['resolve_k'], (bool, np.bool_)) or not (math.isfinite(k) and k > 0.0):
+        return None, 'recipe_invalid'
+    try:
+        rt = S3.parse_iface_r_type(rec['iface_r_type_ohm_cm2'])
+    except (TypeError, ValueError):
+        return None, 'recipe_invalid'
+    law = rec['iface_exception_law']
+    if not isinstance(law, dict) or set(law) != {'gap', 'unregistered', 'ambiguous_arm'}:
+        return None, 'recipe_invalid'
+    if (law['gap'] not in (None,) + S3.IFACE_EXCEPTION_LAWS or law['unregistered'] not in (None,) + S3.IFACE_EXCEPTION_LAWS
+            or law['ambiguous_arm'] not in (None,) + S3.IFACE_AMBIGUOUS_ARMS):
+        return None, 'recipe_invalid'
+    return (k, rt, dict(law)), None
 
 
 def rrm_check(plan, ledger):
     """N9 `reject_film_off_outside` — RRM 원장 검사 (v3 §2-3): 기준 접점마다 owner 쌍 면 (S_c^surv) = 막 행 (w > 0 · r_face = r·h²/w)
     또는 절단 tombstone (w = 0) · **그 밖은 없다**.  면 가중은 원장에서 다시 계산한다 (계획의 기록을 믿지 않는다).
+    ★ RIMP-04 — 기록 (recipe) 검사 · 행 값 (유한 · ≥ 0 · tombstone · r = 0 경로) · 기대 접점 · 적격성 재계산 (빠진 접점은 거부 사유로 덮여야
+      한다 · 메타데이터로 검사 집합을 비울 수 없다) · recipe 로 다시 만든 계획과 행 · 거부 사유 비트 같음 (재현 결합).
     → 위반 목록 [{code, n, detail, why}] (빈 목록 = 통과).  계획 행 지문 (E5) · 원장 격자 지문도 본다."""
     V = []
 
@@ -281,47 +378,105 @@ def rrm_check(plan, ledger):
         V.append({'code': 'fp_rows', 'n': 1, 'detail': [], 'why': '계획 행이 만든 뒤 바뀌었다 (지문 불일치 · E5)'})
     if plan.get('fp_sid') != ledger.get('fp_sid'):
         V.append({'code': 'ledger_mismatch', 'n': 1, 'detail': [], 'why': '계획이 다른 원장 (격자) 에서 만들어졌다'})
+    got, why = _recipe(rec)
+    if got is None:                                        # ① recipe 없이는 검사 집합을 정할 수 없다 → 위반 (통과 아님)
+        V.append({'code': why, 'n': 1, 'detail': [], 'why': _N9_WHY[why]})
+        return V
+    k, rt, law = got
+    arm = law['ambiguous_arm']
+    h = float(ledger['vox'])
+    C = ledger.get('contacts')
+    nC = 0 if C is None else len(C['cls'])
+    #  ② 행 값 (모든 행)
     rows = {}
     for ax, A in enumerate(plan['axes']):
+        rf_ = np.asarray(A['rface'], np.float64); cut_ = np.asarray(A['cut'], bool)
+        ck_ = np.asarray(A['ck'], np.int64); cid_ = np.asarray(A['cid'], np.int64)
         for e in range(len(A['lin'])):
             key = (ax, int(A['lin'][e]))
             if key in rows:
                 add('duplicate_row', key)
-            rows[key] = (bool(A['cut'][e]), float(A['rface'][e]), int(A['cid'][e]))
-    if ledger.get('owner') is None:
-        return V
-    rt = S3.parse_iface_r_type(rec.get('iface_r_type_ohm_cm2') or {})
-    arm = (rec.get('iface_exception_law') or {}).get('ambiguous_arm')
-    k = float((rec.get('iface_rrm') or {}).get('resolve_k', float('nan')))
-    h = float(ledger['vox'])
-    C = ledger['contacts']
-    film = _film_contacts(ledger, rt, arm)
-    for q in np.flatnonzero(film).tolist():
-        W = rrm_face_weights(ledger, q)
-        if not W['eligible'] or W['disc']['a'] < k * h:
-            continue                                       # 기준 밖 접점 — 계획 거부 사유가 따로 막는다
-        r_q = float(rt[str(C['type_key'][q])])
-        mine = set()
-        for e in range(len(W['lin'])):
-            key = (int(W['axis'][e]), int(W['lin'][e])); w = float(W['w'][e])
-            mine.add(key)
-            if key not in rows:
-                add('film_off_outside' if w == 0.0 else 'film_off_inside', key)
+            rows[key] = (bool(cut_[e]), float(rf_[e]), int(cid_[e]))
+            if not math.isfinite(float(rf_[e])):
+                add('rface_nonfinite', key)
+            elif rf_[e] < 0.0:
+                add('rface_negative', key)
+            if cut_[e]:
+                if not (rf_[e] == 0.0 and ck_[e] == 0):
+                    add('cut_not_tombstone', key)
+            else:
+                if not (0 <= cid_[e] < nC):
+                    add('row_cid_invalid', key)
+                elif rf_[e] == 0.0 and rt.get(str(C['type_key'][cid_[e]])) != 0.0:
+                    add('film_rface_zero', key)
+    if ledger.get('owner') is not None:
+        #  ③ 기대 접점 — 막 후보 = 부류 (팔) · N_c^surv > 0 · 면적 > 0 (r 표 없이) · 빠진 것은 계획 거부 사유로 덮여야 한다
+        cls = C['cls']
+        film = (cls == 0) | ((cls == 1) & (arm == 'a_hi'))
+        A_f = np.where(cls == 0, C['A_true'], np.where(cls == 1, C['A_hi'], 0.0))
+        cand = film & (C['nsurv'] > 0) & (A_f > 0.0)
+        need = {'r_type_missing': 0, 'rrm_unsupported_tilt': 0, 'rrm_unresolved_subgrid': 0}
+        excluded = set()
+        for q in np.flatnonzero(cand).tolist():
+            tkey = str(C['type_key'][q])
+            if tkey not in rt:
+                need['r_type_missing'] += 1; excluded.add(q)
                 continue
-            cut, rface, cid = rows[key]
-            if cid != q:
-                add('cid_mismatch', key)
-            if w == 0.0 and not cut:
-                add('outside_not_cut', key)
-            elif w > 0.0 and cut:
-                add('inside_cut', key)
-            elif w > 0.0:
-                want = float(S3.iface_rface_ohm_cm2(r_q, 1, h, w))
-                if abs(rface - want) > 1e-12 * max(abs(want), 1e-300):
-                    add('rface_mismatch', key)
+            W = rrm_face_weights(ledger, q)
+            if not W['eligible']:
+                need['rrm_unsupported_tilt'] += 1; excluded.add(q)
+                continue
+            if not (W['disc']['a'] >= k * h):
+                need['rrm_unresolved_subgrid'] += 1; excluded.add(q)
+                continue
+            r_q = float(rt[tkey])
+            mine = set()
+            for e in range(len(W['lin'])):
+                key = (int(W['axis'][e]), int(W['lin'][e])); w = float(W['w'][e])
+                mine.add(key)
+                if key not in rows:
+                    add('film_off_outside' if w == 0.0 else 'film_off_inside', key)
+                    continue
+                cut, rface, cid = rows[key]
+                if cid != q:
+                    add('cid_mismatch', key)
+                if w == 0.0 and not cut:
+                    add('outside_not_cut', key)
+                elif w > 0.0 and cut:
+                    add('inside_cut', key)
+                elif w > 0.0:
+                    want = float(S3.iface_rface_ohm_cm2(r_q, 1, h, w))
+                    if not (math.isfinite(rface) and abs(rface - want) <= 1e-12 * max(abs(want), 1e-300)):
+                        add('rface_mismatch', key)
+            for key, (cut, rface, cid) in rows.items():
+                if cid == q and key not in mine:
+                    add('row_not_owner_face', key)
+        have = {}
+        for x in plan.get('rejections') or ():
+            have[x.get('code')] = have.get(x.get('code'), 0) + int(x.get('n') or 0)
+        for code_, n_ in need.items():
+            if n_ and have.get(code_, 0) < n_:
+                add('excluded_without_rejection', (code_, n_, have.get(code_, 0)))
         for key, (cut, rface, cid) in rows.items():
-            if cid == q and key not in mine:
-                add('row_not_owner_face', key)
+            if not cut and cid in excluded:
+                add('row_for_excluded_contact', key)
+    #  ④ 재현 결합 — 기록된 recipe 로 다시 만든 계획과 행 · 거부 사유 · 행 수가 비트 같아야 한다
+    try:
+        E = rrm_plan(ledger, rt, resolve_k=k, gap_law=law['gap'], unreg_law=law['unregistered'], ambiguous_arm=arm)
+    except (TypeError, ValueError) as ex:
+        add('plan_not_reproducible', f'rrm_plan 재생성 실패 — {type(ex).__name__}: {ex}')
+        return V
+    if sorted((x['code'], int(x.get('n') or 0)) for x in plan.get('rejections') or ()) != \
+            sorted((x['code'], int(x.get('n') or 0)) for x in E['rejections']):
+        add('plan_not_reproducible', 'rejections')
+    for ax in range(3):
+        for kk in ('lin', 'rface', 'cut', 'ck', 'cid', 'olo'):
+            a_, b_ = np.asarray(plan['axes'][ax][kk]), np.asarray(E['axes'][ax][kk])
+            if not (a_.dtype == b_.dtype and a_.shape == b_.shape and a_.tobytes() == b_.tobytes()):
+                add('plan_not_reproducible', f'axes[{ax}].{kk}')
+    for kk in ('n_film_rows', 'n_cut_rows'):
+        if plan.get(kk) != E[kk]:
+            add('plan_not_reproducible', kk)
     return V
 
 

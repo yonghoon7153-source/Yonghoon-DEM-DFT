@@ -1594,9 +1594,12 @@ def am_iface_plan(ledger, r_type, *, carbon_cover='remove_area', gap_law=None, u
     return plan
 
 
-def iface_require_quantitative(plan, sid=None, sigma_of_sid=None, rint=None, periodic_xy=False):
+def iface_require_quantitative(plan, sid=None, sigma_of_sid=None, rint=None, periodic_xy=False, vox=None):
     """①′ 정량 모드 관문 — 거부 입력이면 ValueError (계획 행 변조 · 원장/계획 거부 사유 · r1 탐침 동시 사용 (N3) · 주기 (N2) ·
-    다른 격자 (E5) · 이 채널에서 AM 이 절연 (막이 조용히 무효 — RINT-14 와 같은 부류))."""
+    다른 격자 (E5) · 다른 물리 격자 간격 (vox · RIMP-05) · 이 채널에서 AM 이 절연 (막이 조용히 무효 — RINT-14 와 같은 부류)).
+    vox  솔버의 격자 간격 [µm] (`solve_sigma_z` 가 늘 넘긴다) — 유한 양수 · 계획 vox (= 계획 원장 vox) 와 **같은 float64** 여야 한다
+         (sid 바이트 지문은 물리 격자 간격을 담지 않는다: 같은 sid · 같은 계획을 h 0.4 로 풀면 막 G 가 기록의 4 배 · Codex 10-14 판정문 §6).
+         None = 검사 안 함 (직접 호출 호환 — 솔버 경로는 None 이 아니다)."""
     if not isinstance(plan, dict) or plan.get('kind') != 'am_iface_plan':
         raise TypeError('iface 는 am_iface_plan 의 결과여야 한다')
     _miss = [k for k in ('axes', 'fp_rows', 'rejections', 'fp_sid', 'n_film_rows', 'n_cut_rows', 'record', 'ledger',
@@ -1615,6 +1618,19 @@ def iface_require_quantitative(plan, sid=None, sigma_of_sid=None, rint=None, per
         raise ValueError('①′ 정량 모드는 주기 경계를 거부한다 — raster 가 주기 영상 · 이음매 브리지를 만들지 않는다 (N2 · D13)')
     if sid is not None and _grid_fp(sid) != plan['fp_sid']:
         raise ValueError('①′ 계획이 다른 격자에서 만들어졌다 (sid 지문 불일치 · E5)')
+    if vox is not None:
+        #  ★ RIMP-05 (Codex 10-14 · 1저자 Q4 (가)) — 물리 격자 간격 결합: 조립은 솔버 vox 로 면적 h² 를 쓰고 계획의 r_face 는 계획 vox 로
+        #    정규화돼 있다 → 다르면 크기를 바꾼 문제를 풀면서 옛 기하 (A · G) 를 증서로 붙인다.  조립 **전** 거부.
+        _v = float(vox)
+        if not (np.isfinite(_v) and _v > 0.0):
+            raise ValueError(f'①′ 솔버 vox 는 유한한 양수 (µm): {vox!r}')
+        _pv = float(plan.get('vox', np.nan))
+        _lv = float(plan['ledger'].get('vox', np.nan)) if isinstance(plan.get('ledger'), dict) else np.nan
+        if not (_pv == _lv):
+            raise ValueError(f'①′ 계획 vox {plan.get("vox")!r} ≠ 계획 원장 vox {_lv!r} — 계획이 원장과 다른 격자 간격을 적었다 (RIMP-05)')
+        if _v != _pv:
+            raise ValueError(f'①′ 솔버 vox {_v!r} µm ≠ 계획 vox {_pv!r} µm — 같은 sid 라도 물리 격자 간격이 다르면 막 면적 · G 가 '
+                             f'(vox/계획 vox)² 배 어긋난다 (RIMP-05 · 계획을 그 vox 의 원장으로 다시 만들 것)')
     if sigma_of_sid is not None and sid is not None and plan['n_film_rows'] > 0:
         a = np.asarray(sigma_of_sid, np.float64)
         sid_ = np.asarray(sid)
@@ -1838,7 +1854,7 @@ def solve_sigma_z(sid, sigma_of_sid, vox, return_field=False, z_top_um=None, pla
                              f'으로 조용히 무효 (unsupported identity · RINT-02/14)')
     #  ①′ AM–AM 막 (2026-10-07 · Rint G2 · 기구만 · 정량 채택 HOLD) — `iface` = am_iface_plan(...) 의 결과.  None (기본) 이면
     #    아래 어떤 줄도 바뀌지 않는다 (옛 조립 · 연결성 · 반환 dict 키 비트 같음).  거부 입력 · r1 동시 · 주기 · 다른 격자 → 거부.
-    _ifp = (iface_require_quantitative(iface, sid, sigma_of_sid, rint=_rint, periodic_xy=periodic_xy)
+    _ifp = (iface_require_quantitative(iface, sid, sigma_of_sid, rint=_rint, periodic_xy=periodic_xy, vox=vox)
             if iface is not None else None)
     _ife_used = {}                                           # ①′ 조립이 실제로 쓴 간선 (축마다) — 진단이 이것을 읽는다 (E2)
     _faces = {}                                              # 계면 면 수 (상 쌍별 · 실물 증거)
