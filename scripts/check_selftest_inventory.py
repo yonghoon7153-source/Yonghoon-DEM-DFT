@@ -52,6 +52,8 @@ WORKFLOW = '.github/workflows/discipline.yml'
 
 CLASSES = ('fast', 'gpu', 'external', 'slow', 'broken', 'legacy')
 LANES = ('both', 'check_all', 'ci', 'none')
+#: 등재 7번째 칸 (선택) — 등재별 fast 레인 시간 제한 (`load_inventory` · `run_fast`).
+_RE_TIMEOUT = re.compile(r'^timeout=(\d+)$')
 
 #: ★ `fast` 는 **드라이버**가 한꺼번에 돌린다.  72개를 손으로 두 파일에 적으면 그 목록이
 #:  또 낡는다 — 규칙 K 의 10개짜리 손목록이 정확히 그렇게 낡았다.  드라이버 한 줄이
@@ -217,7 +219,19 @@ def load_inventory(root: str):
             raise SystemExit(f'⛔ {INVENTORY}:{i} 알 수 없는 레인 {lane!r} — {LANES}')
         if (path, flag) in out:
             raise SystemExit(f'⛔ {INVENTORY}:{i} 중복 등재 — {path} {flag}')
-        out[(path, flag)] = dict(klass=klass, lane=lane, owner=owner, why=why)
+        #  ★ 7번째 칸 (선택) = 등재별 시간 제한 `timeout=<초>` (10-15 Q5 · 1저자 *"권고대로"*):
+        #    fast 레인 기본 180 s 에 경계로 걸리는 시험만 늘린다.  잘못 적은 칸은 기본값으로
+        #    조용히 가지 않고 거부한다 · fast 가 아니면 드라이버가 안 돌리므로 뜻이 없어 거부.
+        tmo = None
+        if len(parts) >= 7 and parts[6]:
+            m = _RE_TIMEOUT.match(parts[6])
+            if not m or not 1 <= int(m.group(1)) <= 3600:
+                raise SystemExit(f'⛔ {INVENTORY}:{i} 7번째 칸은 timeout=<1–3600 정수 초> — '
+                                 f'{parts[6]!r}')
+            if klass != 'fast':
+                raise SystemExit(f'⛔ {INVENTORY}:{i} timeout 칸은 fast 등재에만 — {klass!r}')
+            tmo = int(m.group(1))
+        out[(path, flag)] = dict(klass=klass, lane=lane, owner=owner, why=why, timeout=tmo)
     return out
 
 
@@ -506,13 +520,14 @@ def run_fast(root: str, timeout: int = 180, workers: int = 6):
         p, fl = key
         cmd = (['bash', p] if p.endswith('.sh')
                else ['node', p] if p.endswith('.mjs') else [sys.executable, p])
+        lim = inv[key].get('timeout') or timeout     # 등재별 제한이 있으면 그것이 우선
         t = time.time()
         try:
             r = subprocess.run(cmd + [fl], cwd=root, capture_output=True,
-                               text=True, timeout=timeout)
+                               text=True, timeout=lim)
             rc, out = r.returncode, r.stdout + r.stderr
         except subprocess.TimeoutExpired:
-            rc, out = 124, f'{timeout}s TIMEOUT'
+            rc, out = 124, f'{lim}s TIMEOUT'
         except OSError as e:
             rc, out = 127, str(e)
         return key, rc, time.time() - t, out
@@ -756,6 +771,54 @@ def _selftest():
     _need = import_closure(root, ci_python_targets(root), driver_expanded_starts(root))
     chk('★④e 확장 진입점은 최상위만 — 함수 안 cupy 를 CI 에 요구하지 않는다',
         'pandas' in _need and 'cupy' not in _need, str(sorted(_need)))
+
+    #  ★★ ⑤ 등재별 시간 제한 (10-15 Q5 · 1저자 *"권고대로"*) — fast 레인 기본 180 s 에
+    #     경계로 걸리는 시험 하나 (`run_network_194_parallel.py` 혼자 166–169 s) 만 등재
+    #     7번째 칸 `timeout=<초>` 로 늘린다.  시험 내용 · 레인 · 등급은 그대로다.
+    import contextlib
+    import io
+    r5 = tempfile.mkdtemp(prefix='inv5_')
+    for d in ('scripts', 'docs/reviews'):
+        os.makedirs(os.path.join(r5, d), exist_ok=True)
+
+    def w5(rel, s):
+        open(os.path.join(r5, rel), 'w', encoding='utf-8').write(s)
+
+    w5('scripts/slow.py', "import sys\nimport time\nif '--selftest' in sys.argv:\n"
+                          "    time.sleep(1.5)\n")
+    row = 'scripts/slow.py\t--selftest\tfast\tboth\tclaude\t시험'
+    w5(INVENTORY, row + '\ttimeout=300\n')
+    _inv5 = load_inventory(r5).get(('scripts/slow.py', '--selftest'), {})
+    chk('★⑤a 7번째 칸 timeout=300 을 읽는다', _inv5.get('timeout') == 300, repr(_inv5))
+    w5(INVENTORY, row + '\n')
+    _inv5 = load_inventory(r5).get(('scripts/slow.py', '--selftest'), {})
+    chk('⑤b 7번째 칸이 없으면 등재 제한 없음 (None = 드라이버 기본값)',
+        'timeout' in _inv5 and _inv5.get('timeout') is None, repr(_inv5))
+    for _badcol in ('timeout=abc', 'timeout=0', 'timeout=5000', 't=300', 'timeout=30.5'):
+        w5(INVENTORY, row + '\t' + _badcol + '\n')
+        try:
+            load_inventory(r5)
+            _raised = False
+        except SystemExit:
+            _raised = True
+        chk(f'⑤c 잘못된 7번째 칸 {_badcol!r} 은 거부한다 (조용히 기본값으로 가지 않는다)', _raised)
+    w5(INVENTORY, row.replace('\tfast\t', '\tslow\t') + '\ttimeout=300\n')
+    try:
+        load_inventory(r5)
+        _raised = False
+    except SystemExit:
+        _raised = True
+    chk('⑤c2 timeout 칸은 fast 등재에만 (드라이버가 돌리지 않는 등급엔 뜻이 없다)', _raised)
+    w5(INVENTORY, row + '\n')
+    with contextlib.redirect_stdout(io.StringIO()) as _o:
+        _rc = run_fast(r5, timeout=1, workers=1)
+    chk('★⑤d 등재 제한이 없으면 드라이버 기본값 (1 s) 에서 1.5 s 시험은 시간 초과 (rc 1)',
+        _rc == 1 and '1s TIMEOUT' in _o.getvalue(), _o.getvalue()[-200:])
+    w5(INVENTORY, row + '\ttimeout=5\n')
+    with contextlib.redirect_stdout(io.StringIO()) as _o:
+        _rc = run_fast(r5, timeout=1, workers=1)
+    chk('★⑤e 등재 제한 5 s 면 같은 시험이 통과 (rc 0) — 드라이버 기본값보다 등재가 우선',
+        _rc == 0, _o.getvalue()[-200:])
 
     print(f'check_selftest_inventory selftest: {ok}/{ok + len(bad)} PASS')
     for b in bad:
