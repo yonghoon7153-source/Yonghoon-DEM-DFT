@@ -1,0 +1,15 @@
+시험 먼저 판 (고치기 전) — 이 폴더 tests_first/*.log 를 낸 파일의 내용 해시 (작업 트리 판 — 본 가지 대응 = 시험 먼저 e9d0cd87d · 메인 세션 대조 10-15)
+시험 4 파일 = 새 시험을 넣은 판 (최종 판과 같은 blob) · 수정 대상 4 파일 = 본 가지 44a034534 (= Codex 검토 핀 1087a9b2f 와 같은 blob)
+git_blob                                  sha256                                                            path
+77069c5956a88f62c32ad53efe6dc4f1c87d978e  8473df867c95cbdffeac5b6f8325e2011a186e43aedb19d5248bd501579d4f7f  scripts/test_rint_t2_dev.py
+2b3b25cdb072e85e8b0e43806e52214378508a1b  197fdbef463dcb46b365cd5c8ebfd564127ceb071c4d2e07aa28697a4144bba3  scripts/test_rint_g2_join.py
+bd9671ecd889a667a5e00db9ad4411f82e977c11  fe7dd701b271428e767aa1d7ce4b5eed1991a735e2cfff3b8a9168b6b77284dc  scripts/test_rint_g2_rrm.py
+479b2fc7105228e14f7ad4d40cef88098aa80cf4  3884aa10adbcacc49b9eb1aeef90401107b3a225f55c4675cdbf99aecdd33234  scripts/test_rint_g2_am_iface.py
+0a936c627faa9d837de6b06c7a7eefbf1ed656ab  ff7a0165326f95389d7fc76bb565d1b5989815b473664a6cc2c0690c53cdbfee  scripts/rint_t2_dev.py
+08de177c772fbfad78ca08caf4aa52db123a3c73  790b03ea810ffd07538ccca1cfc06c320cf0da9e3bac16a3f52ea3949d96618e  scripts/rint_iface_join.py
+56145863ecfbb236ccf567e0a121c377c86b7e52  dfc4f221f9dbf1fd396cfb3b5c83bd41d322b1f4c480f1810b9e81ac5f21d5b4  scripts/rint_rrm_reference.py
+ad202738e7003d2bc903556ec225764ffcbb5d51  81af3215e6cc1ac10053816e40ce75c175666c4bf67f6d5191d9129b7edf93f5  scripts/step3_sigma.py
+05686cf18da4b4da4f04d251bacd4c9f76a761c7  96fa643e309aab46b2a5cbd59e2276ee16b99107a9a7514e5d9fdcaf5c2d8d9e  scripts/lhs_descriptor_harvest.py   (봉인 32 · 무변경)
+44ea02a696e8849892de5208957521e02869a181  bcce52d689552bcdb5556596d0a50c4fd785f2aeb52d849a501be4770aec8635  scripts/lhs_contact_audit.py
+53a20c31554740957c21a0fa52362df0b000cc97  891ac67f8b6c1b4c7978b5e806800ae74f5c8791928d6ece19a29e5f3b212b77  scripts/lens_geometry.py            (봉인 32 · 무변경)
+환경: Linux · Python 3.11.15 · NumPy 2.4.6 · SciPy 1.17.1 · OMP/OPENBLAS/MKL_NUM_THREADS=1 · nice 10

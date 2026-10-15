@@ -1,0 +1,1154 @@
+{
+ "kind": "rint_t2_dev",
+ "version": "v2",
+ "label": "개발 실행 — D12-V 봉인 전 · 검증 PASS 아님 (v3.1 §6-2 · 개발 결과를 나중에 독립 검증으로 재분류하지 않는다 · 허용치 · 관측 위치 · L1 ↔ 축별 (D11) = 1저자)",
+ "boundary_rule": "crossing_half_cell_series_v1",
+ "history": "v1 = t2_dev.json (10-13 · 첫 사다리) — 경계 반 셀을 bulk 2σh 로 바로 이은 결함 판 (RIMP-01 · Codex 10-14 판정문 §2) · v2 = 이 파일 (경계 교차 반 셀 = 거리 가중 직렬 + 같은 법칙의 r_face · 이동 45° 추가) — 둘 다 개발 산출",
+ "date_utc": "2026-10-15T03:40:35+00:00",
+ "git_head": "작업 트리 판 (원격에 없음 · 본 가지 대응은 메인 세션이 적는다) — 출처 = code_blobs (git blob · 내용 해시)",
+ "code_blobs": {
+  "scripts/rint_t2_dev.py": "1c54e75e36aa02e17b64ddca151a3d072f280b18",
+  "scripts/step3_sigma.py": "9f1781b71f518a661e0381877476b8e4d5ba249a",
+  "scripts/rint_rrm_reference.py": "f08a15379117c71029b66dd871459dec2cffb8c6"
+ },
+ "environment": {
+  "python": "3.11.15",
+  "numpy": "2.4.6",
+  "scipy": "1.17.1"
+ },
+ "mms_sign_check": {
+  "normal_from_1_to_2": true,
+  "normal_flux_1": -6.4,
+  "normal_flux_2": -6.400000000000001,
+  "phi1_minus_phi2": -0.6400000000000001,
+  "r_times_Jn": -0.6400000000000001
+ },
+ "t2_4a_trace_jump_operator": {
+  "label": "개발 실행 — D12-V 봉인 전 · 검증 PASS 아님 (v3.1 §6-2 · 개발 결과를 나중에 독립 검증으로 재분류하지 않는다 · 허용치 · 관측 위치 · L1 ↔ 축별 (D11) = 1저자)",
+  "a_um": 0.14106735979665894,
+  "b_um": 0.24,
+  "beta_per_um": 4.0,
+  "center_um": [
+   0.013,
+   0.007
+  ],
+  "continuum": {
+   "rrm": 1.0796000000000001,
+   "cnc": 1.2304
+  },
+  "continuum_rel_diff": 0.13968136346795101,
+  "rows": [
+   {
+    "h_um": 0.12,
+    "rrm": 1.0999966309305114,
+    "cnc": 1.1099039999999998,
+    "n_faces_rrm": 12,
+    "n_faces_cnc": 12,
+    "sum_w_over_pi_a2": 1.0,
+    "err_rrm": 0.02039663093051125,
+    "err_cnc": -0.12049600000000016
+   },
+   {
+    "h_um": 0.06,
+    "rrm": 1.0882131693862276,
+    "cnc": 1.1728800000000001,
+    "n_faces_rrm": 29,
+    "n_faces_cnc": 50,
+    "sum_w_over_pi_a2": 1.0,
+    "err_rrm": 0.00861316938622747,
+    "err_cnc": -0.057519999999999794
+   },
+   {
+    "h_um": 0.03,
+    "rrm": 1.0802691027010265,
+    "cnc": 1.2080496716417908,
+    "n_faces_rrm": 89,
+    "n_faces_cnc": 201,
+    "sum_w_over_pi_a2": 0.9999999999999996,
+    "err_rrm": 0.0006691027010263806,
+    "err_cnc": -0.02235032835820916
+   },
+   {
+    "h_um": 0.015,
+    "rrm": 1.0798335453565155,
+    "cnc": 1.22888549068323,
+    "n_faces_rrm": 312,
+    "n_faces_cnc": 805,
+    "sum_w_over_pi_a2": 1.000000000000005,
+    "err_rrm": 0.00023354535651542996,
+    "err_cnc": -0.0015145093167698853
+   },
+   {
+    "h_um": 0.0075,
+    "rrm": 1.0796948667383925,
+    "cnc": 1.2306646424581005,
+    "n_faces_rrm": 1185,
+    "n_faces_cnc": 3222,
+    "sum_w_over_pi_a2": 1.0000000000000109,
+    "err_rrm": 9.486673839242954e-05,
+    "err_cnc": 0.0002646424581005391
+   },
+   {
+    "h_um": 0.00375,
+    "rrm": 1.0796158460742635,
+    "cnc": 1.229740161380597,
+    "n_faces_rrm": 4597,
+    "n_faces_cnc": 12864,
+    "sum_w_over_pi_a2": 1.0000000000000417,
+    "err_rrm": 1.5846074263414778e-05,
+    "err_cnc": -0.000659838619402997
+   },
+   {
+    "h_um": 0.001875,
+    "rrm": 1.07960419458528,
+    "cnc": 1.2305037206912124,
+    "n_faces_rrm": 18085,
+    "n_faces_cnc": 51482,
+    "sum_w_over_pi_a2": 0.9999999999997456,
+    "err_rrm": 4.194585279782004e-06,
+    "err_cnc": 0.00010372069121244998
+   }
+  ],
+  "observed_order": [
+   {
+    "err_rrm": 1.2437147621250675,
+    "err_cnc": 1.0668496744787046
+   },
+   {
+    "err_rrm": 3.6862446303115726,
+    "err_cnc": 1.3637676489645787
+   },
+   {
+    "err_rrm": 1.5185249071794937,
+    "err_cnc": 3.883373668547643
+   },
+   {
+    "err_rrm": 1.2997285090015416,
+    "err_cnc": 2.516734008051393
+   },
+   {
+    "err_rrm": 2.581776878190774,
+    "err_cnc": -1.3180686792462417
+   },
+   {
+    "err_rrm": 1.9175253855871333,
+    "err_cnc": 2.6694094935318406
+   }
+  ]
+ },
+ "t2_1_mms_linear_jump": {
+  "label": "개발 실행 — D12-V 봉인 전 · 검증 PASS 아님 (v3.1 §6-2 · 개발 결과를 나중에 독립 검증으로 재분류하지 않는다 · 허용치 · 관측 위치 · L1 ↔ 축별 (D11) = 1저자)",
+  "boundary_rule": "crossing_half_cell_series_v1",
+  "params": {
+   "L_um": 1.6,
+   "alpha_V_per_um": 2.0,
+   "beta_V_per_um2": 3.0,
+   "s1_S_cm": 2.0,
+   "s2_S_cm": 5.0,
+   "r_face_ohm_cm2": 1e-05,
+   "rprime_um_cm_per_S": 0.1
+  },
+  "cases": [
+   {
+    "theta_deg": 0.0,
+    "offset_um": 0.0,
+    "law": "L1",
+    "rows": [
+     {
+      "n": 8,
+      "h_um": 0.2,
+      "law": "L1",
+      "mutant": null,
+      "theta_deg": 0.0,
+      "offset_um": 0.0,
+      "n_film_faces": 8,
+      "n_bc_cross": 0,
+      "tie_count": 0,
+      "boundary_rule": "crossing_half_cell_series_v1",
+      "err_max": 8.881784197001252e-16,
+      "err_l2": 1.9204229190816967e-16
+     },
+     {
+      "n": 16,
+      "h_um": 0.1,
+      "law": "L1",
+      "mutant": null,
+      "theta_deg": 0.0,
+      "offset_um": 0.0,
+      "n_film_faces": 16,
+      "n_bc_cross": 0,
+      "tie_count": 0,
+      "boundary_rule": "crossing_half_cell_series_v1",
+      "err_max": 8.881784197001252e-16,
+      "err_l2": 2.819816690547041e-16
+     },
+     {
+      "n": 32,
+      "h_um": 0.05,
+      "law": "L1",
+      "mutant": null,
+      "theta_deg": 0.0,
+      "offset_um": 0.0,
+      "n_film_faces": 32,
+      "n_bc_cross": 0,
+      "tie_count": 0,
+      "boundary_rule": "crossing_half_cell_series_v1",
+      "err_max": 5.662137425588298e-15,
+      "err_l2": 2.1791733077443458e-15
+     },
+     {
+      "n": 64,
+      "h_um": 0.025,
+      "law": "L1",
+      "mutant": null,
+      "theta_deg": 0.0,
+      "offset_um": 0.0,
+      "n_film_faces": 64,
+      "n_bc_cross": 0,
+      "tie_count": 0,
+      "boundary_rule": "crossing_half_cell_series_v1",
+      "err_max": 1.2212453270876722e-14,
+      "err_l2": 5.920363564312187e-15
+     },
+     {
+      "n": 128,
+      "h_um": 0.0125,
+      "law": "L1",
+      "mutant": null,
+      "theta_deg": 0.0,
+      "offset_um": 0.0,
+      "n_film_faces": 128,
+      "n_bc_cross": 0,
+      "tie_count": 0,
+      "boundary_rule": "crossing_half_cell_series_v1",
+      "err_max": 5.395683899678261e-14,
+      "err_l2": 1.9952532476654896e-14
+     }
+    ],
+    "observed_order_l2": [
+     -0.5541773206608196,
+     -2.950107652614559,
+     -1.4419048359170274,
+     -1.7528141939248154
+    ],
+    "mutants_at_finest": {
+     "film_deleted": {
+      "err_l2": 0.11365561867647785,
+      "err_max": 0.562780328612185,
+      "ratio_to_correct_l2": 5696300397428.676
+     },
+     "unit_1e4_missing": {
+      "err_l2": 0.1136392602315757,
+      "err_max": 0.5626532874049149,
+      "ratio_to_correct_l2": 5695480529328.158
+     },
+     "jump_sign_flipped": {
+      "err_l2": 0.1649448746779051,
+      "err_max": 0.6863510979007289,
+      "ratio_to_correct_l2": 8266864112156.986
+     }
+    }
+   },
+   {
+    "theta_deg": 0.0,
+    "offset_um": 0.0,
+    "law": "axis",
+    "rows": [
+     {
+      "n": 8,
+      "h_um": 0.2,
+      "law": "axis",
+      "mutant": null,
+      "theta_deg": 0.0,
+      "offset_um": 0.0,
+      "n_film_faces": 8,
+      "n_bc_cross": 0,
+      "tie_count": 0,
+      "boundary_rule": "crossing_half_cell_series_v1",
+      "err_max": 8.881784197001252e-16,
+      "err_l2": 1.9204229190816967e-16
+     },
+     {
+      "n": 16,
+      "h_um": 0.1,
+      "law": "axis",
+      "mutant": null,
+      "theta_deg": 0.0,
+      "offset_um": 0.0,
+      "n_film_faces": 16,
+      "n_bc_cross": 0,
+      "tie_count": 0,
+      "boundary_rule": "crossing_half_cell_series_v1",
+      "err_max": 8.881784197001252e-16,
+      "err_l2": 2.819816690547041e-16
+     },
+     {
+      "n": 32,
+      "h_um": 0.05,
+      "law": "axis",
+      "mutant": null,
+      "theta_deg": 0.0,
+      "offset_um": 0.0,
+      "n_film_faces": 32,
+      "n_bc_cross": 0,
+      "tie_count": 0,
+      "boundary_rule": "crossing_half_cell_series_v1",
+      "err_max": 5.662137425588298e-15,
+      "err_l2": 2.1791733077443458e-15
+     },
+     {
+      "n": 64,
+      "h_um": 0.025,
+      "law": "axis",
+      "mutant": null,
+      "theta_deg": 0.0,
+      "offset_um": 0.0,
+      "n_film_faces": 64,
+      "n_bc_cross": 0,
+      "tie_count": 0,
+      "boundary_rule": "crossing_half_cell_series_v1",
+      "err_max": 1.2212453270876722e-14,
+      "err_l2": 5.920363564312187e-15
+     },
+     {
+      "n": 128,
+      "h_um": 0.0125,
+      "law": "axis",
+      "mutant": null,
+      "theta_deg": 0.0,
+      "offset_um": 0.0,
+      "n_film_faces": 128,
+      "n_bc_cross": 0,
+      "tie_count": 0,
+      "boundary_rule": "crossing_half_cell_series_v1",
+      "err_max": 5.395683899678261e-14,
+      "err_l2": 1.9952532476654896e-14
+     }
+    ],
+    "observed_order_l2": [
+     -0.5541773206608196,
+     -2.950107652614559,
+     -1.4419048359170274,
+     -1.7528141939248154
+    ],
+    "mutants_at_finest": {
+     "film_deleted": {
+      "err_l2": 0.11365561867647785,
+      "err_max": 0.562780328612185,
+      "ratio_to_correct_l2": 5696300397428.676
+     },
+     "unit_1e4_missing": {
+      "err_l2": 0.1136392602315757,
+      "err_max": 0.5626532874049149,
+      "ratio_to_correct_l2": 5695480529328.158
+     },
+     "jump_sign_flipped": {
+      "err_l2": 0.1649448746779051,
+      "err_max": 0.6863510979007289,
+      "ratio_to_correct_l2": 8266864112156.986
+     }
+    }
+   },
+   {
+    "theta_deg": 15.0,
+    "offset_um": 0.0,
+    "law": "L1",
+    "rows": [
+     {
+      "n": 8,
+      "h_um": 0.2,
+      "law": "L1",
+      "mutant": null,
+      "theta_deg": 15.0,
+      "offset_um": 0.0,
+      "n_film_faces": 10,
+      "n_bc_cross": 0,
+      "tie_count": 0,
+      "boundary_rule": "crossing_half_cell_series_v1",
+      "err_max": 0.04551357638448729,
+      "err_l2": 0.009793699238268443
+     },
+     {
+      "n": 16,
+      "h_um": 0.1,
+      "law": "L1",
+      "mutant": null,
+      "theta_deg": 15.0,
+      "offset_um": 0.0,
+      "n_film_faces": 20,
+      "n_bc_cross": 0,
+      "tie_count": 0,
+      "boundary_rule": "crossing_half_cell_series_v1",
+      "err_max": 0.030113533460593624,
+      "err_l2": 0.005125921194807153
+     },
+     {
+      "n": 32,
+      "h_um": 0.05,
+      "law": "L1",
+      "mutant": null,
+      "theta_deg": 15.0,
+      "offset_um": 0.0,
+      "n_film_faces": 40,
+      "n_bc_cross": 0,
+      "tie_count": 0,
+      "boundary_rule": "crossing_half_cell_series_v1",
+      "err_max": 0.031106709825746794,
+      "err_l2": 0.0029329563709962637
+     },
+     {
+      "n": 64,
+      "h_um": 0.025,
+      "law": "L1",
+      "mutant": null,
+      "theta_deg": 15.0,
+      "offset_um": 0.0,
+      "n_film_faces": 80,
+      "n_bc_cross": 2,
+      "tie_count": 0,
+      "boundary_rule": "crossing_half_cell_series_v1",
+      "err_max": 0.020304095712676037,
+      "err_l2": 0.0014060423643385575
+     },
+     {
+      "n": 128,
+      "h_um": 0.0125,
+      "law": "L1",
+      "mutant": null,
+      "theta_deg": 15.0,
+      "offset_um": 0.0,
+      "n_film_faces": 162,
+      "n_bc_cross": 0,
+      "tie_count": 0,
+      "boundary_rule": "crossing_half_cell_series_v1",
+      "err_max": 0.010608875952239425,
+      "err_l2": 0.0006705088857299983
+     }
+    ],
+    "observed_order_l2": [
+     0.9340425929616419,
+     0.8054556884717027,
+     1.0607155467808767,
+     1.068311707477958
+    ],
+    "mutants_at_finest": {
+     "film_deleted": {
+      "err_l2": 0.12200240736023055,
+      "err_max": 0.6401033590912659,
+      "ratio_to_correct_l2": 181.95494490338297
+     },
+     "unit_1e4_missing": {
+      "err_l2": 0.12198369258819733,
+      "err_max": 0.6399547014269772,
+      "ratio_to_correct_l2": 181.92703360730394
+     },
+     "jump_sign_flipped": {
+      "err_l2": 0.17543840238135153,
+      "err_max": 0.7443494011014996,
+      "ratio_to_correct_l2": 261.649630773122
+     }
+    }
+   },
+   {
+    "theta_deg": 15.0,
+    "offset_um": 0.0,
+    "law": "axis",
+    "rows": [
+     {
+      "n": 8,
+      "h_um": 0.2,
+      "law": "axis",
+      "mutant": null,
+      "theta_deg": 15.0,
+      "offset_um": 0.0,
+      "n_film_faces": 10,
+      "n_bc_cross": 0,
+      "tie_count": 0,
+      "boundary_rule": "crossing_half_cell_series_v1",
+      "err_max": 0.03246191281548358,
+      "err_l2": 0.008903318355744833
+     },
+     {
+      "n": 16,
+      "h_um": 0.1,
+      "law": "axis",
+      "mutant": null,
+      "theta_deg": 15.0,
+      "offset_um": 0.0,
+      "n_film_faces": 20,
+      "n_bc_cross": 0,
+      "tie_count": 0,
+      "boundary_rule": "crossing_half_cell_series_v1",
+      "err_max": 0.025446377974196754,
+      "err_l2": 0.0037935441669144435
+     },
+     {
+      "n": 32,
+      "h_um": 0.05,
+      "law": "axis",
+      "mutant": null,
+      "theta_deg": 15.0,
+      "offset_um": 0.0,
+      "n_film_faces": 40,
+      "n_bc_cross": 0,
+      "tie_count": 0,
+      "boundary_rule": "crossing_half_cell_series_v1",
+      "err_max": 0.01226127269745969,
+      "err_l2": 0.001240658847531407
+     },
+     {
+      "n": 64,
+      "h_um": 0.025,
+      "law": "axis",
+      "mutant": null,
+      "theta_deg": 15.0,
+      "offset_um": 0.0,
+      "n_film_faces": 80,
+      "n_bc_cross": 2,
+      "tie_count": 0,
+      "boundary_rule": "crossing_half_cell_series_v1",
+      "err_max": 0.006475555384883203,
+      "err_l2": 0.0004495112904488085
+     },
+     {
+      "n": 128,
+      "h_um": 0.0125,
+      "law": "axis",
+      "mutant": null,
+      "theta_deg": 15.0,
+      "offset_um": 0.0,
+      "n_film_faces": 162,
+      "n_bc_cross": 0,
+      "tie_count": 0,
+      "boundary_rule": "crossing_half_cell_series_v1",
+      "err_max": 0.00338183725893737,
+      "err_l2": 0.00015973243111395803
+     }
+    ],
+    "observed_order_l2": [
+     1.2307968085542464,
+     1.6124398723610727,
+     1.4646772045398553,
+     1.4927000939728639
+    ],
+    "mutants_at_finest": {
+     "film_deleted": {
+      "err_l2": 0.12200240736023055,
+      "err_max": 0.6401033590912659,
+      "ratio_to_correct_l2": 763.7923401615935
+     },
+     "unit_1e4_missing": {
+      "err_l2": 0.1219835344601273,
+      "err_max": 0.6398699159106463,
+      "ratio_to_correct_l2": 763.6741869476743
+     },
+     "jump_sign_flipped": {
+      "err_l2": 0.17489130130710923,
+      "err_max": 0.7449937292060136,
+      "ratio_to_correct_l2": 1094.901643250746
+     }
+    }
+   },
+   {
+    "theta_deg": 30.0,
+    "offset_um": 0.0,
+    "law": "L1",
+    "rows": [
+     {
+      "n": 8,
+      "h_um": 0.2,
+      "law": "L1",
+      "mutant": null,
+      "theta_deg": 30.0,
+      "offset_um": 0.0,
+      "n_film_faces": 12,
+      "n_bc_cross": 0,
+      "tie_count": 0,
+      "boundary_rule": "crossing_half_cell_series_v1",
+      "err_max": 0.03441846635491158,
+      "err_l2": 0.00938379192877744
+     },
+     {
+      "n": 16,
+      "h_um": 0.1,
+      "law": "L1",
+      "mutant": null,
+      "theta_deg": 30.0,
+      "offset_um": 0.0,
+      "n_film_faces": 24,
+      "n_bc_cross": 2,
+      "tie_count": 0,
+      "boundary_rule": "crossing_half_cell_series_v1",
+      "err_max": 0.028148397819404064,
+      "err_l2": 0.004466542638246096
+     },
+     {
+      "n": 32,
+      "h_um": 0.05,
+      "law": "L1",
+      "mutant": null,
+      "theta_deg": 30.0,
+      "offset_um": 0.0,
+      "n_film_faces": 50,
+      "n_bc_cross": 0,
+      "tie_count": 0,
+      "boundary_rule": "crossing_half_cell_series_v1",
+      "err_max": 0.011907771704592146,
+      "err_l2": 0.0017019601521234171
+     },
+     {
+      "n": 64,
+      "h_um": 0.025,
+      "law": "L1",
+      "mutant": null,
+      "theta_deg": 30.0,
+      "offset_um": 0.0,
+      "n_film_faces": 100,
+      "n_bc_cross": 0,
+      "tie_count": 0,
+      "boundary_rule": "crossing_half_cell_series_v1",
+      "err_max": 0.008269722587171319,
+      "err_l2": 0.0009590759866961873
+     },
+     {
+      "n": 128,
+      "h_um": 0.0125,
+      "law": "L1",
+      "mutant": null,
+      "theta_deg": 30.0,
+      "offset_um": 0.0,
+      "n_film_faces": 202,
+      "n_bc_cross": 0,
+      "tie_count": 0,
+      "boundary_rule": "crossing_half_cell_series_v1",
+      "err_max": 0.004993609560610568,
+      "err_l2": 0.00048564751992918263
+     }
+    ],
+    "observed_order_l2": [
+     1.0710124899903286,
+     1.3919612744774883,
+     0.8274802314317284,
+     0.9817355289663775
+    ],
+    "mutants_at_finest": {
+     "film_deleted": {
+      "err_l2": 0.1355896336941351,
+      "err_max": 0.731645291606902,
+      "ratio_to_correct_l2": 279.19350584536465
+     },
+     "unit_1e4_missing": {
+      "err_l2": 0.13556905209070774,
+      "err_max": 0.7314923488327167,
+      "ratio_to_correct_l2": 279.1511261304835
+     },
+     "jump_sign_flipped": {
+      "err_l2": 0.19273215230161395,
+      "err_max": 0.8256624291617947,
+      "ratio_to_correct_l2": 396.8560414551654
+     }
+    }
+   },
+   {
+    "theta_deg": 30.0,
+    "offset_um": 0.0,
+    "law": "axis",
+    "rows": [
+     {
+      "n": 8,
+      "h_um": 0.2,
+      "law": "axis",
+      "mutant": null,
+      "theta_deg": 30.0,
+      "offset_um": 0.0,
+      "n_film_faces": 12,
+      "n_bc_cross": 0,
+      "tie_count": 0,
+      "boundary_rule": "crossing_half_cell_series_v1",
+      "err_max": 0.05656597373983384,
+      "err_l2": 0.011644850877552647
+     },
+     {
+      "n": 16,
+      "h_um": 0.1,
+      "law": "axis",
+      "mutant": null,
+      "theta_deg": 30.0,
+      "offset_um": 0.0,
+      "n_film_faces": 24,
+      "n_bc_cross": 2,
+      "tie_count": 0,
+      "boundary_rule": "crossing_half_cell_series_v1",
+      "err_max": 0.016337040710746376,
+      "err_l2": 0.0030877918386629415
+     },
+     {
+      "n": 32,
+      "h_um": 0.05,
+      "law": "axis",
+      "mutant": null,
+      "theta_deg": 30.0,
+      "offset_um": 0.0,
+      "n_film_faces": 50,
+      "n_bc_cross": 0,
+      "tie_count": 0,
+      "boundary_rule": "crossing_half_cell_series_v1",
+      "err_max": 0.008587558334109069,
+      "err_l2": 0.0011735681922688116
+     },
+     {
+      "n": 64,
+      "h_um": 0.025,
+      "law": "axis",
+      "mutant": null,
+      "theta_deg": 30.0,
+      "offset_um": 0.0,
+      "n_film_faces": 100,
+      "n_bc_cross": 0,
+      "tie_count": 0,
+      "boundary_rule": "crossing_half_cell_series_v1",
+      "err_max": 0.004546123887380293,
+      "err_l2": 0.0003845884535677439
+     },
+     {
+      "n": 128,
+      "h_um": 0.0125,
+      "law": "axis",
+      "mutant": null,
+      "theta_deg": 30.0,
+      "offset_um": 0.0,
+      "n_film_faces": 202,
+      "n_bc_cross": 0,
+      "tie_count": 0,
+      "boundary_rule": "crossing_half_cell_series_v1",
+      "err_max": 0.002349809651808088,
+      "err_l2": 0.00013227488581211446
+     }
+    ],
+    "observed_order_l2": [
+     1.9150447619868065,
+     1.3956738229422385,
+     1.6095143200018132,
+     1.5397762772237409
+    ],
+    "mutants_at_finest": {
+     "film_deleted": {
+      "err_l2": 0.1355896336941351,
+      "err_max": 0.731645291606902,
+      "ratio_to_correct_l2": 1025.0595406805262
+     },
+     "unit_1e4_missing": {
+      "err_l2": 0.13556809558034383,
+      "err_max": 0.7314669904735391,
+      "ratio_to_correct_l2": 1024.8967122368724
+     },
+     "jump_sign_flipped": {
+      "err_l2": 0.19241721021753508,
+      "err_max": 0.824765086669698,
+      "ratio_to_correct_l2": 1454.6768196862995
+     }
+    }
+   },
+   {
+    "theta_deg": 45.0,
+    "offset_um": 0.0,
+    "law": "L1",
+    "rows": [
+     {
+      "n": 8,
+      "h_um": 0.2,
+      "law": "L1",
+      "mutant": null,
+      "theta_deg": 45.0,
+      "offset_um": 0.0,
+      "n_film_faces": 14,
+      "n_bc_cross": 2,
+      "tie_count": 8,
+      "boundary_rule": "crossing_half_cell_series_v1",
+      "err_max": 0.07694304871715499,
+      "err_l2": 0.025270461591718068
+     },
+     {
+      "n": 16,
+      "h_um": 0.1,
+      "law": "L1",
+      "mutant": null,
+      "theta_deg": 45.0,
+      "offset_um": 0.0,
+      "n_film_faces": 30,
+      "n_bc_cross": 2,
+      "tie_count": 16,
+      "boundary_rule": "crossing_half_cell_series_v1",
+      "err_max": 0.035569377912157474,
+      "err_l2": 0.008064957736360111
+     },
+     {
+      "n": 32,
+      "h_um": 0.05,
+      "law": "L1",
+      "mutant": null,
+      "theta_deg": 45.0,
+      "offset_um": 0.0,
+      "n_film_faces": 62,
+      "n_bc_cross": 2,
+      "tie_count": 32,
+      "boundary_rule": "crossing_half_cell_series_v1",
+      "err_max": 0.019786843425622258,
+      "err_l2": 0.003434737407360432
+     },
+     {
+      "n": 64,
+      "h_um": 0.025,
+      "law": "L1",
+      "mutant": null,
+      "theta_deg": 45.0,
+      "offset_um": 0.0,
+      "n_film_faces": 126,
+      "n_bc_cross": 2,
+      "tie_count": 64,
+      "boundary_rule": "crossing_half_cell_series_v1",
+      "err_max": 0.011885553441225216,
+      "err_l2": 0.0017170361638959126
+     },
+     {
+      "n": 128,
+      "h_um": 0.0125,
+      "law": "L1",
+      "mutant": null,
+      "theta_deg": 45.0,
+      "offset_um": 0.0,
+      "n_film_faces": 254,
+      "n_bc_cross": 2,
+      "tie_count": 128,
+      "boundary_rule": "crossing_half_cell_series_v1",
+      "err_max": 0.007143742552657262,
+      "err_l2": 0.0008522241397596449
+     }
+    ],
+    "observed_order_l2": [
+     1.647713138666769,
+     1.2314671667972301,
+     1.0002793808637658,
+     1.0106156030248752
+    ],
+    "mutants_at_finest": {
+     "film_deleted": {
+      "err_l2": 0.13352402971053615,
+      "err_max": 0.7488018151279687,
+      "ratio_to_correct_l2": 156.67712692132176
+     },
+     "unit_1e4_missing": {
+      "err_l2": 0.13350292340378245,
+      "err_max": 0.7465815247964394,
+      "ratio_to_correct_l2": 156.65236077616228
+     },
+     "jump_sign_flipped": {
+      "err_l2": 0.19264527528214562,
+      "err_max": 0.7953896989594624,
+      "ratio_to_correct_l2": 226.0500099615553
+     }
+    }
+   },
+   {
+    "theta_deg": 45.0,
+    "offset_um": 0.0,
+    "law": "axis",
+    "rows": [
+     {
+      "n": 8,
+      "h_um": 0.2,
+      "law": "axis",
+      "mutant": null,
+      "theta_deg": 45.0,
+      "offset_um": 0.0,
+      "n_film_faces": 14,
+      "n_bc_cross": 2,
+      "tie_count": 8,
+      "boundary_rule": "crossing_half_cell_series_v1",
+      "err_max": 0.07694304871715504,
+      "err_l2": 0.02527046159171807
+     },
+     {
+      "n": 16,
+      "h_um": 0.1,
+      "law": "axis",
+      "mutant": null,
+      "theta_deg": 45.0,
+      "offset_um": 0.0,
+      "n_film_faces": 30,
+      "n_bc_cross": 2,
+      "tie_count": 16,
+      "boundary_rule": "crossing_half_cell_series_v1",
+      "err_max": 0.035569377912157474,
+      "err_l2": 0.008064957736360113
+     },
+     {
+      "n": 32,
+      "h_um": 0.05,
+      "law": "axis",
+      "mutant": null,
+      "theta_deg": 45.0,
+      "offset_um": 0.0,
+      "n_film_faces": 62,
+      "n_bc_cross": 2,
+      "tie_count": 32,
+      "boundary_rule": "crossing_half_cell_series_v1",
+      "err_max": 0.019786843425622258,
+      "err_l2": 0.003434737407360432
+     },
+     {
+      "n": 64,
+      "h_um": 0.025,
+      "law": "axis",
+      "mutant": null,
+      "theta_deg": 45.0,
+      "offset_um": 0.0,
+      "n_film_faces": 126,
+      "n_bc_cross": 2,
+      "tie_count": 64,
+      "boundary_rule": "crossing_half_cell_series_v1",
+      "err_max": 0.011885553441225216,
+      "err_l2": 0.0017170361638959308
+     },
+     {
+      "n": 128,
+      "h_um": 0.0125,
+      "law": "axis",
+      "mutant": null,
+      "theta_deg": 45.0,
+      "offset_um": 0.0,
+      "n_film_faces": 254,
+      "n_bc_cross": 2,
+      "tie_count": 128,
+      "boundary_rule": "crossing_half_cell_series_v1",
+      "err_max": 0.007143742552657983,
+      "err_l2": 0.0008522241397597504
+     }
+    ],
+    "observed_order_l2": [
+     1.647713138666769,
+     1.2314671667972303,
+     1.0002793808637505,
+     1.0106156030247118
+    ],
+    "mutants_at_finest": {
+     "film_deleted": {
+      "err_l2": 0.13352402971053615,
+      "err_max": 0.7488018151279687,
+      "ratio_to_correct_l2": 156.67712692130237
+     },
+     "unit_1e4_missing": {
+      "err_l2": 0.13350292340378245,
+      "err_max": 0.7465815247964394,
+      "ratio_to_correct_l2": 156.6523607761429
+     },
+     "jump_sign_flipped": {
+      "err_l2": 0.1926452752821456,
+      "err_max": 0.7953896989594624,
+      "ratio_to_correct_l2": 226.05000996152728
+     }
+    }
+   },
+   {
+    "theta_deg": 45.0,
+    "offset_um": 0.001,
+    "law": "L1",
+    "rows": [
+     {
+      "n": 8,
+      "h_um": 0.2,
+      "law": "L1",
+      "mutant": null,
+      "theta_deg": 45.0,
+      "offset_um": 0.001,
+      "n_film_faces": 14,
+      "n_bc_cross": 2,
+      "tie_count": 0,
+      "boundary_rule": "crossing_half_cell_series_v1",
+      "err_max": 0.06792830071941318,
+      "err_l2": 0.020563948455554905
+     },
+     {
+      "n": 16,
+      "h_um": 0.1,
+      "law": "L1",
+      "mutant": null,
+      "theta_deg": 45.0,
+      "offset_um": 0.001,
+      "n_film_faces": 30,
+      "n_bc_cross": 2,
+      "tie_count": 0,
+      "boundary_rule": "crossing_half_cell_series_v1",
+      "err_max": 0.03752684765465551,
+      "err_l2": 0.010055659191635464
+     },
+     {
+      "n": 32,
+      "h_um": 0.05,
+      "law": "L1",
+      "mutant": null,
+      "theta_deg": 45.0,
+      "offset_um": 0.001,
+      "n_film_faces": 62,
+      "n_bc_cross": 2,
+      "tie_count": 0,
+      "boundary_rule": "crossing_half_cell_series_v1",
+      "err_max": 0.019050031767490188,
+      "err_l2": 0.004832086016550764
+     },
+     {
+      "n": 64,
+      "h_um": 0.025,
+      "law": "L1",
+      "mutant": null,
+      "theta_deg": 45.0,
+      "offset_um": 0.001,
+      "n_film_faces": 126,
+      "n_bc_cross": 2,
+      "tie_count": 0,
+      "boundary_rule": "crossing_half_cell_series_v1",
+      "err_max": 0.009146481896805718,
+      "err_l2": 0.0022583489063149518
+     },
+     {
+      "n": 128,
+      "h_um": 0.0125,
+      "law": "L1",
+      "mutant": null,
+      "theta_deg": 45.0,
+      "offset_um": 0.001,
+      "n_film_faces": 254,
+      "n_bc_cross": 2,
+      "tie_count": 0,
+      "boundary_rule": "crossing_half_cell_series_v1",
+      "err_max": 0.004030350534204785,
+      "err_l2": 0.0009823643238669924
+     }
+    ],
+    "observed_order_l2": [
+     1.032109641428919,
+     1.0572896180035798,
+     1.0973777422552407,
+     1.2009383212340028
+    ],
+    "mutants_at_finest": {
+     "film_deleted": {
+      "err_l2": 0.13334780362659648,
+      "err_max": 0.7059347146874714,
+      "ratio_to_correct_l2": 135.74170029066647
+     },
+     "unit_1e4_missing": {
+      "err_l2": 0.13332695686508603,
+      "err_max": 0.7056208428393727,
+      "ratio_to_correct_l2": 135.7204792823257
+     },
+     "jump_sign_flipped": {
+      "err_l2": 0.19368413845780924,
+      "err_max": 0.7932448574729197,
+      "ratio_to_correct_l2": 197.1612096980358
+     }
+    }
+   },
+   {
+    "theta_deg": 45.0,
+    "offset_um": 0.001,
+    "law": "axis",
+    "rows": [
+     {
+      "n": 8,
+      "h_um": 0.2,
+      "law": "axis",
+      "mutant": null,
+      "theta_deg": 45.0,
+      "offset_um": 0.001,
+      "n_film_faces": 14,
+      "n_bc_cross": 2,
+      "tie_count": 0,
+      "boundary_rule": "crossing_half_cell_series_v1",
+      "err_max": 0.06792830071941318,
+      "err_l2": 0.020563948455554912
+     },
+     {
+      "n": 16,
+      "h_um": 0.1,
+      "law": "axis",
+      "mutant": null,
+      "theta_deg": 45.0,
+      "offset_um": 0.001,
+      "n_film_faces": 30,
+      "n_bc_cross": 2,
+      "tie_count": 0,
+      "boundary_rule": "crossing_half_cell_series_v1",
+      "err_max": 0.03752684765465539,
+      "err_l2": 0.010055659191635456
+     },
+     {
+      "n": 32,
+      "h_um": 0.05,
+      "law": "axis",
+      "mutant": null,
+      "theta_deg": 45.0,
+      "offset_um": 0.001,
+      "n_film_faces": 62,
+      "n_bc_cross": 2,
+      "tie_count": 0,
+      "boundary_rule": "crossing_half_cell_series_v1",
+      "err_max": 0.019050031767490188,
+      "err_l2": 0.004832086016550764
+     },
+     {
+      "n": 64,
+      "h_um": 0.025,
+      "law": "axis",
+      "mutant": null,
+      "theta_deg": 45.0,
+      "offset_um": 0.001,
+      "n_film_faces": 126,
+      "n_bc_cross": 2,
+      "tie_count": 0,
+      "boundary_rule": "crossing_half_cell_series_v1",
+      "err_max": 0.009146481896805777,
+      "err_l2": 0.0022583489063149613
+     },
+     {
+      "n": 128,
+      "h_um": 0.0125,
+      "law": "axis",
+      "mutant": null,
+      "theta_deg": 45.0,
+      "offset_um": 0.001,
+      "n_film_faces": 254,
+      "n_bc_cross": 2,
+      "tie_count": 0,
+      "boundary_rule": "crossing_half_cell_series_v1",
+      "err_max": 0.004030350534204818,
+      "err_l2": 0.0009823643238669937
+     }
+    ],
+    "observed_order_l2": [
+     1.0321096414289208,
+     1.0572896180035787,
+     1.0973777422552347,
+     1.2009383212340068
+    ],
+    "mutants_at_finest": {
+     "film_deleted": {
+      "err_l2": 0.13334780362659648,
+      "err_max": 0.7059347146874714,
+      "ratio_to_correct_l2": 135.74170029066627
+     },
+     "unit_1e4_missing": {
+      "err_l2": 0.13332695686508603,
+      "err_max": 0.7056208428393727,
+      "ratio_to_correct_l2": 135.72047928232553
+     },
+     "jump_sign_flipped": {
+      "err_l2": 0.19368413845780924,
+      "err_max": 0.7932448574729195,
+      "ratio_to_correct_l2": 197.16120969803555
+     }
+    }
+   }
+  ]
+ }
+}

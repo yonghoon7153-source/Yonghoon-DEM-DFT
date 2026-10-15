@@ -1,0 +1,186 @@
+{
+ "old_source_sha256": "81af3215e6cc1ac10053816e40ce75c175666c4bf67f6d5191d9129b7edf93f5",
+ "new_source_sha256": "22839a15c0faf3849180d50c200eaceff0b14c8876e483ce36f4009bebbf9803",
+ "solver": "same spsolve small-fixture control (both sides)",
+ "n_cases": 16,
+ "n_equal": 16,
+ "cases": [
+  {
+   "h": 0.1,
+   "order": [
+    0,
+    1
+   ],
+   "bridge": 0.24,
+   "r1_on": false,
+   "all_keys_values_array_bytes_equal": true,
+   "sigma": 0.001772852196537847
+  },
+  {
+   "h": 0.1,
+   "order": [
+    0,
+    1
+   ],
+   "bridge": 0.24,
+   "r1_on": true,
+   "all_keys_values_array_bytes_equal": true,
+   "sigma": 0.001691269481410314
+  },
+  {
+   "h": 0.1,
+   "order": [
+    0,
+    1
+   ],
+   "bridge": null,
+   "r1_on": false,
+   "all_keys_values_array_bytes_equal": true,
+   "sigma": 0.0018043891264153248
+  },
+  {
+   "h": 0.1,
+   "order": [
+    0,
+    1
+   ],
+   "bridge": null,
+   "r1_on": true,
+   "all_keys_values_array_bytes_equal": true,
+   "sigma": 0.0017046862854855347
+  },
+  {
+   "h": 0.1,
+   "order": [
+    1,
+    0
+   ],
+   "bridge": 0.24,
+   "r1_on": false,
+   "all_keys_values_array_bytes_equal": true,
+   "sigma": 0.0018568975000463012
+  },
+  {
+   "h": 0.1,
+   "order": [
+    1,
+    0
+   ],
+   "bridge": 0.24,
+   "r1_on": true,
+   "all_keys_values_array_bytes_equal": true,
+   "sigma": 0.0017674806012866193
+  },
+  {
+   "h": 0.1,
+   "order": [
+    1,
+    0
+   ],
+   "bridge": null,
+   "r1_on": false,
+   "all_keys_values_array_bytes_equal": true,
+   "sigma": 0.0019110103650383987
+  },
+  {
+   "h": 0.1,
+   "order": [
+    1,
+    0
+   ],
+   "bridge": null,
+   "r1_on": true,
+   "all_keys_values_array_bytes_equal": true,
+   "sigma": 0.0018004362367371723
+  },
+  {
+   "h": 0.2,
+   "order": [
+    0,
+    1
+   ],
+   "bridge": 0.24,
+   "r1_on": false,
+   "all_keys_values_array_bytes_equal": true,
+   "sigma": 0.0024466681683399847
+  },
+  {
+   "h": 0.2,
+   "order": [
+    0,
+    1
+   ],
+   "bridge": 0.24,
+   "r1_on": true,
+   "all_keys_values_array_bytes_equal": true,
+   "sigma": 0.0023562518556639023
+  },
+  {
+   "h": 0.2,
+   "order": [
+    0,
+    1
+   ],
+   "bridge": null,
+   "r1_on": false,
+   "all_keys_values_array_bytes_equal": true,
+   "sigma": 0.0024466681683399847
+  },
+  {
+   "h": 0.2,
+   "order": [
+    0,
+    1
+   ],
+   "bridge": null,
+   "r1_on": true,
+   "all_keys_values_array_bytes_equal": true,
+   "sigma": 0.0023562518556639023
+  },
+  {
+   "h": 0.2,
+   "order": [
+    1,
+    0
+   ],
+   "bridge": 0.24,
+   "r1_on": false,
+   "all_keys_values_array_bytes_equal": true,
+   "sigma": 0.0024466681683399847
+  },
+  {
+   "h": 0.2,
+   "order": [
+    1,
+    0
+   ],
+   "bridge": 0.24,
+   "r1_on": true,
+   "all_keys_values_array_bytes_equal": true,
+   "sigma": 0.0023562518556639023
+  },
+  {
+   "h": 0.2,
+   "order": [
+    1,
+    0
+   ],
+   "bridge": null,
+   "r1_on": false,
+   "all_keys_values_array_bytes_equal": true,
+   "sigma": 0.0024466681683399847
+  },
+  {
+   "h": 0.2,
+   "order": [
+    1,
+    0
+   ],
+   "bridge": null,
+   "r1_on": true,
+   "all_keys_values_array_bytes_equal": true,
+   "sigma": 0.0023562518556639023
+  }
+ ]
+}
+[runlog] cmd: python3 docs/reviews/rint_g2_impl_fix_evidence_20261015/off_compat_16.py --old /tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/oldblobs/step3_sigma_prefix_44a034534.py --new scripts/step3_sigma.py --json /home/user/Yonghoon-DEM-DFT/.claude/worktrees/agent-a575ca7294ec68fd8/docs/reviews/rint_g2_impl_fix_evidence_20261015/final/off_compat_16_vs_prefix.json · rc=0 · 1792035993-1792035989=4 s

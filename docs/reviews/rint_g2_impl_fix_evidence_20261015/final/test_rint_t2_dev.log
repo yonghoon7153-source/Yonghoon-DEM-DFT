@@ -1,0 +1,53 @@
+
+── d1_sign
+D1 — mms_sign_check (Codex 증거 evidence.json 값)
+  PASS  D1 J_n −6.4 · J_n(영역 2) −6.400000000000001 · φ1 − φ2 = −0.64 = r·J_n (Codex 값 그대로)
+
+── d2_fields
+D2 — 제조해 (θ 30° · σ1 2 · σ2 5 · r_face 1e−5 Ω·cm² → r′ = 0.1 µm·cm/S): 조화 · flux 연속 · jump = r′·σ1 ∂φ1/∂u
+  PASS  D2 계면 u = 0 에서 σ1 ∂φ1/∂u = σ2 ∂φ2/∂u (1e−12)
+  PASS  D2 φ1 − φ2 = r′·J_n (J_n = −σ1 ∂φ1/∂u · r′ = 1e4·r_face — 단위 cm → µm)
+  PASS  D2 두 영역 모두 조화 (쌍선형 — ∂²/∂u² + ∂²/∂v² = 0 · 해석)
+
+── d3_exact
+D3 — 정확 이산 층: θ 0 · 계면 = 면 평면 · β 0 · σ1 ≠ σ2 · 막 r → FV 해 = 제조해 (반올림 안)
+  PASS  D3 FV 해 = 제조해 (최대 오차 ≤ 1e−12 × 최대 |φ|) · 막 면 > 0
+  PASS  D3 판별력: 변이 셋 (막 삭제 · ×1e4 누락 · jump 부호 반전) 은 반올림이 아닌 차 (> 1e6 × 정답 오차 · > 1e−6 × 최대 |φ|)
+  PASS  D3 축별 법칙도 θ 0 에서 같은 해 (두 법칙이 축 정렬 면에서 같다)
+
+── d4_shared
+D4 — harness 가 생산 면 함수 interface_face_g 를 공유한다
+  PASS  D4 mms_solve 가 step3_sigma.interface_face_g 를 부른다 (호출 > 0)
+
+── d5_trace
+D5 — T2-4a 연속 극한 (Codex support_smearing_continuum) · 개발 표지
+  PASS  D5 RRM 연속 = 1 + β²a²/4 = 1.0796000000000001 · CNC (b 0.24) = 1.2304 (Codex 값 그대로)
+  PASS  D5 사다리 산출에 개발 표지 (D12-V 봉인 전 · 검증 PASS 아님) · RRM · CNC 값
+
+── d6a_boundary_exact
+D6a — RIMP-01 정확 이산 층: θ 0 · β 0 · 계면이 경계 반 셀 안 (n 16 · L 1.6 · h 0.1 · 계면 x = −0.78 / +0.78) → FV 해 = 제조해
+  PASS  D6a 계면 x = -0.78 µm · L1: 경계 반 셀 교차 16 (> 0) · tie 0 · 내부 막 면 0 → FV 해 = 제조해 (최대 오차 ≤ 1e−12 × max|φ|) — 경계 반 셀의 막 · 두 상이 직렬로 들어가야 정확하다
+  PASS  D6a 계면 x = -0.78 µm · axis: 경계 반 셀 교차 16 (> 0) · tie 0 · 내부 막 면 0 → FV 해 = 제조해 (최대 오차 ≤ 1e−12 × max|φ|) — 경계 반 셀의 막 · 두 상이 직렬로 들어가야 정확하다
+  PASS  D6a 계면 x = +0.78 µm · L1: 경계 반 셀 교차 16 (> 0) · tie 0 · 내부 막 면 0 → FV 해 = 제조해 (최대 오차 ≤ 1e−12 × max|φ|) — 경계 반 셀의 막 · 두 상이 직렬로 들어가야 정확하다
+  PASS  D6a 계면 x = +0.78 µm · axis: 경계 반 셀 교차 16 (> 0) · tie 0 · 내부 막 면 0 → FV 해 = 제조해 (최대 오차 ≤ 1e−12 × max|φ|) — 경계 반 셀의 막 · 두 상이 직렬로 들어가야 정확하다
+
+── d6b_boundary_api
+D6b — RIMP-01 harness 인자: Mms(offset_um) = 위 subclass 와 같은 해 · 교차 수 기록 · 변이 셋이 경계 막에도 걸린다
+  PASS  D6b offset_um 인자 = subclass (u − off) — 오차 · 정답 φ 비트 같음 · 출력에 offset_um
+  PASS  D6b 출력: 경계 반 셀 교차 수 n_bc_cross = 16 (시험 쪽 독립 기하와 같음) · tie_count 0 · 경계 규칙 이름
+  PASS  D6b 판별력: 경계 막뿐인 배치에서도 변이 셋 (막 삭제 · ×1e4 누락 · jump 부호) 이 반올림 아닌 차 (> 1e6 × 정답 · > 1e−6 × max|φ|)
+  PASS  D6b offset 0 (기본) = 옛 배치 — 교차 0 · 정확 이산 (D3 와 같은 층)
+
+── d7_tilt_regression
+D7 — RIMP-01 회귀: tie 없는 15° n64 · 30° n16 · 이동 45° n128 (+ 15° n64 L1) — Codex 경계 대조 값 (판정문 §2 표) 재현
+  PASS  D7 θ 15° n 64 axis 이동 0 µm: tie 0 · 경계 교차 2 > 0 · L2 0.0004495112904 · 최대 0.006475555385 (Codex 대조 · 상대 1e−9) — 회귀 판별 (D11 · D12-V 근거 아님)
+  PASS  D7 θ 30° n 16 axis 이동 0 µm: tie 0 · 경계 교차 2 > 0 · L2 0.003087791839 · 최대 0.01633704071 (Codex 대조 · 상대 1e−9) — 회귀 판별 (D11 · D12-V 근거 아님)
+  PASS  D7 θ 45° n 128 axis 이동 0.001 µm: tie 0 · 경계 교차 2 > 0 · L2 0.0009823643239 · 최대 0.004030350534 (Codex 대조 · 상대 1e−9) — 회귀 판별 (D11 · D12-V 근거 아님)
+  PASS  D7 θ 15° n 64 L1 이동 0 µm: tie 0 · 경계 교차 2 > 0 · L2 0.001406042364 · 최대 0.02030409571 (Codex 대조 · 상대 1e−9) — 회귀 판별 (D11 · D12-V 근거 아님)
+
+── d8_tie_record
+D8 — tie · 경계 교차 수 기록 (45° n128 원점 대칭 = 셀 중심이 계면 위인 셀 n 개 — 배정은 부동소수 반올림에 걸린다 · 플랫폼 의존)
+  PASS  D8 45° n128: tie_count = 128 (시험 쪽 독립 셈과 같음) · n_bc_cross = 독립 셈
+
+23 PASS · 0 FAIL
+[runlog] cmd: python3 scripts/test_rint_t2_dev.py · rc=0 · 1792035825-1792035824=1 s

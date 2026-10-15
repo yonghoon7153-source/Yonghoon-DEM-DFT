@@ -1,0 +1,22 @@
+최종 판 (수정 뒤) — 이 폴더 final/*.log · *.json 을 낸 파일의 내용 해시 (작업 트리 판 — 본 가지 대응 = 수정 25aecac22 · 메인 세션 대조 10-15)
+git_blob                                  sha256                                                            path
+77069c5956a88f62c32ad53efe6dc4f1c87d978e  8473df867c95cbdffeac5b6f8325e2011a186e43aedb19d5248bd501579d4f7f  scripts/test_rint_t2_dev.py
+2b3b25cdb072e85e8b0e43806e52214378508a1b  197fdbef463dcb46b365cd5c8ebfd564127ceb071c4d2e07aa28697a4144bba3  scripts/test_rint_g2_join.py
+bd9671ecd889a667a5e00db9ad4411f82e977c11  fe7dd701b271428e767aa1d7ce4b5eed1991a735e2cfff3b8a9168b6b77284dc  scripts/test_rint_g2_rrm.py
+479b2fc7105228e14f7ad4d40cef88098aa80cf4  3884aa10adbcacc49b9eb1aeef90401107b3a225f55c4675cdbf99aecdd33234  scripts/test_rint_g2_am_iface.py
+a3f795b408c6e0ca00ec3d232f9c0005cffd4973  9b64a5fbb55f54160196716c83554f0cc884f3c50e8cf881291d6af784a4448d  scripts/test_rint_t4_census.py
+1c17c99969d732f85c8f6ebe82b3bd79265e551f  ac653bb0b59431a15d8da8576a448383126aa645182bb14dc7fd58256b9555fe  scripts/test_rint_t43_order.py
+1c54e75e36aa02e17b64ddca151a3d072f280b18  7f7e909153260de319c3411bfbb2a0e171226f2bd2998d129028d553677199c2  scripts/rint_t2_dev.py
+fa47bd94d7c8d9061d1666235442deb6cc0d4198  ee72b0d149b65522dc1ddc3698b149b687cccde87285167f9fe6c21c8b6b4f83  scripts/rint_iface_join.py
+f08a15379117c71029b66dd871459dec2cffb8c6  6cb16e030c0a25ce737b6c7a35b2ebc59e451b88521dfac47b4304c8b27c30a0  scripts/rint_rrm_reference.py
+9f1781b71f518a661e0381877476b8e4d5ba249a  22839a15c0faf3849180d50c200eaceff0b14c8876e483ce36f4009bebbf9803  scripts/step3_sigma.py
+358d6d58158c2b2fc9c848dc3b9027cc2d485535  3d3af19196042669ed6409693dc1b90ced6375b038cb39d292ffdc0bb68265d4  scripts/rint_t41_census.py
+05686cf18da4b4da4f04d251bacd4c9f76a761c7  96fa643e309aab46b2a5cbd59e2276ee16b99107a9a7514e5d9fdcaf5c2d8d9e  scripts/lhs_descriptor_harvest.py   (봉인 32 · 무변경)
+44ea02a696e8849892de5208957521e02869a181  bcce52d689552bcdb5556596d0a50c4fd785f2aeb52d849a501be4770aec8635  scripts/lhs_contact_audit.py        (무변경)
+53a20c31554740957c21a0fa52362df0b000cc97  891ac67f8b6c1b4c7978b5e806800ae74f5c8791928d6ece19a29e5f3b212b77  scripts/lens_geometry.py            (봉인 32 · 무변경)
+54d7a8ea8bdf8ecd4acbf09b89a60bfc7c63217d  9ee47b4a1a61285f980ae3c10cbcccb3c0b22c4ec48058599a19586dfbd43285  docs/reviews/rint_g2_impl_fix_evidence_20261015/off_compat_16.py
+e69aa15dafd93932987ab38a2858118e4b5c8060  4a0d493eb9985b0810f4b82adca138782b40391207649b0d486a9b2ab967abcf  docs/data/rint_t2_dev_20261013/t2_dev_v2.json
+OFF 비교의 옛 판 (원격 커밋에서 꺼낸 사본 · 리포에 넣지 않음):
+  git show 44a034534:scripts/step3_sigma.py  → sha256 81af3215e6cc1ac10053816e40ce75c175666c4bf67f6d5191d9129b7edf93f5 (blob ad202738 · = Codex 검토 핀 1087a9b2f 의 step3_sigma.py)
+  git show 1d9af09d0:scripts/step3_sigma.py  → sha256 23f1e22e7a83b444dbd3c44786cd3de98b679ca3abff5c327b27e58de9d0ee39 (blob 4b33c7a4 · = Codex 묶음 source_prior · ①′ 구현 전)
+환경: Linux · Python 3.11.15 · NumPy 2.4.6 · SciPy 1.17.1 · OMP/OPENBLAS/MKL_NUM_THREADS=1 · nice 10
