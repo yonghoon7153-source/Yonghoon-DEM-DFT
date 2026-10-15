@@ -197,6 +197,7 @@ evidenceScope: multi-source-mixed
 > *"점수표 관련해서는 틀린 내용이라는걸 나중에 얘기할거니까 인용해도 될듯"* · 다음 장 = 감사 (*"그 다음페이지가 이런 방향성이 왜 잘못됐어서 방향성을 바꿨는지 설명"*).
 > 화면 (슬림판 7장 · 사용자 8쪽): 왼쪽 점선 박스 'Pipeline' 다섯 단계 (오른쪽 회색 = 91 · 3,675 · 693 selected · 91 · 91) + `< Stage-1 pipeline, first attempt >` (10-15 · 옛 'run from June to August') ·
 > 오른쪽 회색 막대 = 8월 방법 점수 상위 10 (91 개 중) + `< Stage-1 composite score, top 10 of 91 >` (`p07_stage1_composite_score_91.csv` · 강조 없음).
+> 10-15 사용자 판 (8쪽): 오른쪽 위 주석 두 줄 *'MLIP: Machine Learning Interatomic Potential, trained on DFT energies and forces'* · *'UMA: Universal Model for Atoms, a pretrained MLIP (Meta FAIR) used in this work'* · 막대는 Origin 판 (파랑 · 1위 Sc₂O₃ 빗금) · 오른쪽 캡션 빠짐 (값은 CSV 와 일치 10-15 재확인). 권고: 빗금 빼기 (위 '강조 없음' · 10-14 '보여 주고 다음 장에서 틀렸다고 말한다') · 오른쪽 캡션 되살리기 ('top 10 of 91' 이 화면에서 사라졌다).
 > 앞 장 끝: *'그러면 이 91 개를 1단계에서 어떻게 계산했는지 보겠습니다.'*
 > 10-14 보강 (사용자 *"이거를 대본에 잘 녹아내면 좋을듯"*): 점수 만든 방법 두 문장 · 에너지 기준 문제와 ML 이야기는 8장 · 숫자는 디펜스 S7 · S8.
 
