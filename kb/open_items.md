@@ -22,6 +22,7 @@
   · 함께 바뀐 문장: 3쪽 마무리 (사용자 *'우리 랩실은 황화물 코팅이 특화가 되어 있고 … 여러축을 통해서 도펀트 스크리닝'* → '저희 랩은 황화물 고체전해질 코팅에 특화 …') · 8쪽 '그 구조로 Li 지형 · 단단함, 조성으로 안정창 · 계면 반응성' (안정창 · 계면 반응성은 구조가 아니라 조성 + MP 상 자료) · 12쪽 '91 개 전부의 창을 다시 구했다' (재유도 · 새 DFT 아님) · 15쪽 끝 = 2부로 ('감사합니다' 아님).
 - 📝 **전체 제목 안 (사용자 결정 · 10-16 전달)** — 표지 *Atomistic and Particle-Scale Simulation of Sulfide All-Solid-State Batteries* (대안 *Simulation of Sulfide All-Solid-State Batteries: From Dopant Screening to Composite Cathodes* · 'Design' 은 과장이라 피함) · 1부 간지 *DFT/MLIP Screening of Dopant Precursors for Li₆PS₅Cl*.
 - 사용자 덱 남은 확인 (선택): 부록 27쪽 그림 제목 '3675' → 3,615 (그림 안 구조 수) · '1284' → 1,284.
+- ✅ **10-16 15:43 — li2s B 650 K gabia 몫 세 런 끝 (트랙 li2s · ⛔ 외부 1저자 · 사용자 watch 붙여넣기 · 결과값 없음)** — seed2·4·5 각 9.2 h · rc 0 · 가드 0 · 피크 합계 ≤ 39,351 MiB · 큐 끝 12:48:08 · **공존 예외 (7) 소멸** (CLAUDE.md 갱신 · 지금 살아 있는 공존 예외 0 건) · 기록 `lpscl_glass_bmeas_650k_runlog_2026_10_14.json` `✅_완주_gabia_2026_10_16`. gabia GPU 는 Li₃Nd r2 pw.x 혼자 (BFGS 117 · 37,250 MiB) → 그 뒤 탄성 재개. ⏭ kgy 몫 (seed1·3) 확인 → 인벤토리 · 합치기 · ⛔ 650 K 결과는 편지 CX 회신 전까지 안 연다 (CX = 10-14 초안 · 발송 대기).
 - ⏭ 세미나 뒤: ① 15쪽 질문 셋에 교수님이 준 답을 축 · 선택 규칙 결정 (결과 전) 의 근거로 기록 ② cascade v7 본 라운드 판독 (10-15 감시 기준 끝 10-24 전후 · 40 런 뒤 한 번) ③ 그 뒤 축 확장 계획 `D-2026-10-15-cascade-screening-axes-plan` 시작 ④ 빌더 `build_cascade_briefing_2026_10.py` 의 BVSE 각주 (그림 정의와 반대) 는 빌더를 다시 돌릴 때 고친다.
 
 ### ⏭-NOW-z14. 2026-10-14 새벽 — cascade 1단계 보충 (As₂S₃ · 계면 산물) · 8쪽을 파이프라인으로
