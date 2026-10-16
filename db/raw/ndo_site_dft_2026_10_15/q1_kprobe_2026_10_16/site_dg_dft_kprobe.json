@@ -1,0 +1,156 @@
+{
+ "refs_eV_per_fu": {
+  "Li2S": -725.7358107864108,
+  "Li3PS4": -2100.8386191037
+ },
+ "reservoir_4Li2S_minus_Li3PS4_eV": -802.1046240419432,
+ "error_records": [],
+ "dopants": {
+  "Nd": {
+   "models": {
+    "MP": {
+     "formula": "Cl8Li31Nd2O3P3S19",
+     "n": 3,
+     "n_converged": 3,
+     "excluded_unconverged": [],
+     "gap_min_second_eV": 0.2744291432609316,
+     "top": [
+      "MP_07",
+      "MP_09",
+      "MP_00"
+     ],
+     "ranked": [
+      {
+       "name": "MP_07",
+       "E_eV": -31908.064200754216,
+       "dE_from_min_eV": 0.0,
+       "converged": true,
+       "n_relax_steps": null,
+       "post_relax_xyz": "/home/kgy/work/runs/ndo_site_dft_2026_10_15/MP_07/scf.in"
+      },
+      {
+       "name": "MP_09",
+       "E_eV": -31907.789771610955,
+       "dE_from_min_eV": 0.2744291432609316,
+       "converged": true,
+       "n_relax_steps": null,
+       "post_relax_xyz": "/home/kgy/work/runs/ndo_site_dft_2026_10_15/MP_09/scf.in"
+      },
+      {
+       "name": "MP_00",
+       "E_eV": -31907.691121628166,
+       "dE_from_min_eV": 0.3730791260495607,
+       "converged": true,
+       "n_relax_steps": null,
+       "post_relax_xyz": "/home/kgy/work/runs/ndo_site_dft_2026_10_15/MP_00/scf.in"
+      }
+     ]
+    },
+    "MLi": {
+     "formula": "Cl8Li21Nd2O3P5S19",
+     "n": 3,
+     "n_converged": 3,
+     "excluded_unconverged": [],
+     "gap_min_second_eV": 0.03226562912823283,
+     "top": [
+      "MLi_04",
+      "MLi_03",
+      "MLi_05"
+     ],
+     "ranked": [
+      {
+       "name": "MLi_04",
+       "E_eV": -30304.335027239205,
+       "dE_from_min_eV": 0.0,
+       "converged": true,
+       "n_relax_steps": null,
+       "post_relax_xyz": "/home/kgy/work/runs/ndo_site_dft_2026_10_15/MLi_04/scf.in"
+      },
+      {
+       "name": "MLi_03",
+       "E_eV": -30304.302761610077,
+       "dE_from_min_eV": 0.03226562912823283,
+       "converged": true,
+       "n_relax_steps": null,
+       "post_relax_xyz": "/home/kgy/work/runs/ndo_site_dft_2026_10_15/MLi_03/scf.in"
+      },
+      {
+       "name": "MLi_05",
+       "E_eV": -30304.19123642383,
+       "dE_from_min_eV": 0.14379081537481397,
+       "converged": true,
+       "n_relax_steps": null,
+       "post_relax_xyz": "/home/kgy/work/runs/ndo_site_dft_2026_10_15/MLi_05/scf.in"
+      }
+     ]
+    }
+   },
+   "refusals": [],
+   "closure": {
+    "a_Li2S": 8,
+    "b_Li3PS4": -2,
+    "n_dopant": 2
+   },
+   "dG_site_eV_per_dopant": 0.24003728443813088,
+   "polymorph_recheck": [
+    {
+     "threshold": 0.3,
+     "distance": 0.05996271556186911,
+     "triggered": true
+    }
+   ],
+   "gates": {
+    "G3_margin": 0.3,
+    "G3_triggered": true,
+    "min_cells": {
+     "MP": "MP_07",
+     "MLi": "MLi_04"
+    },
+    "G2_uma_dG": 0.31852753300422165,
+    "G2_same_sign": true,
+    "G4": {
+     "done": true,
+     "k_probe": "3 3 1",
+     "dG_probe": 0.25738284245881005,
+     "moved": 0.017345558020679164,
+     "limit": 0.05,
+     "triggered": false
+    }
+   }
+  }
+ },
+ "hosts": [],
+ "method": "DFT",
+ "skipped_dirs": [],
+ "inputs": {
+  "/home/kgy/work/runs/ndo_site_dft_2026_10_15/Li2S/scf.in": "991583979641fc9b0912113525acfcf6b4066b1e280a109ec16f035097e02ca1",
+  "/home/kgy/work/runs/ndo_site_dft_2026_10_15/Li2S/scf.out": "ae3d3d798a9eedc95aea78dc21762c16ac5e48d515756eb9dd1e86e4eb336631",
+  "/home/kgy/work/runs/ndo_site_dft_2026_10_15/Li3PS4/scf.in": "7cde1de461874133268f0da65f2ea3a04df19cd1367d67cfb2dbf25483459f0e",
+  "/home/kgy/work/runs/ndo_site_dft_2026_10_15/Li3PS4/scf.out": "2e01d103b6b87f987daa55c45e8653bfefcaefbe511779966f503d03b3aeda7c",
+  "/home/kgy/work/runs/ndo_site_dft_2026_10_15/MLi_03/scf.in": "c1186f0fd4956d79b3b0692b805aca5332d2694be26537f22b6e0fc0f3752bc8",
+  "/home/kgy/work/runs/ndo_site_dft_2026_10_15/MLi_03/scf.out": "0bb098e8e9550a2242da6d7df928e38377fdea5d5357814b5ef56e492458ec2e",
+  "/home/kgy/work/runs/ndo_site_dft_2026_10_15/MLi_04/scf.in": "8214c746fe5106630ecbb4e5d3a416ab29117ab09c0464e99741d3b6f7227007",
+  "/home/kgy/work/runs/ndo_site_dft_2026_10_15/MLi_04/scf.out": "ffd31089db9af18b9dc9e6db31ef1837f42f3ca7a6ffbeba9e95dccae1ad6478",
+  "/home/kgy/work/runs/ndo_site_dft_2026_10_15/MLi_05/scf.in": "4fb7d2f261730a009a1e7c035c5bea8591bba22bf6408c5da78fc773a0edf80d",
+  "/home/kgy/work/runs/ndo_site_dft_2026_10_15/MLi_05/scf.out": "89506fb061f15a5639154bab2c4ea1a202c5b763f51f868c7cf7563a58c5ff36",
+  "/home/kgy/work/runs/ndo_site_dft_2026_10_15/MP_00/scf.in": "6cddaf21ce4d6b56b1f4ab09f85fe8ae9ed19e14babc28326ddb74a3911b7bcd",
+  "/home/kgy/work/runs/ndo_site_dft_2026_10_15/MP_00/scf.out": "739f94f86d94db8a790158b24237655b7ba77ee9aeb4a8aa6dc92a3b9057399d",
+  "/home/kgy/work/runs/ndo_site_dft_2026_10_15/MP_07/scf.in": "fdc3048da18ff2d2c89dd558fa663e71ca2ba98c1cb5a645950f226fa4304af8",
+  "/home/kgy/work/runs/ndo_site_dft_2026_10_15/MP_07/scf.out": "b7dd4a04c203d974f14f7faad77872736779a7c02414bf83f51a6945f430ec8b",
+  "/home/kgy/work/runs/ndo_site_dft_2026_10_15/MP_09/scf.in": "a39ee1b41118344b85551165c2f62a8baf9453845f9839f979782272d4900e81",
+  "/home/kgy/work/runs/ndo_site_dft_2026_10_15/MP_09/scf.out": "20a86ff7bae0fe56deb8dbf5871784080737929202f3b14e6f4a501ab5a58648",
+  "db/raw/ndo_site_2026_10_14/uma_rietveld_2026_10_15/site_dg_rietveld.json": "53249e6b6c804ab07b977072b0259b3b08e7422cf93db48e0d0229baa49ff690"
+ },
+ "args": {
+  "qe": "/home/kgy/work/runs/ndo_site_dft_2026_10_15",
+  "expect": 3,
+  "allow_incomplete": false,
+  "top": 3,
+  "thresholds": [
+   "Nd=0.30"
+  ],
+  "g3": 0.3,
+  "kprobe": "/home/kgy/work/runs/ndo_site_dft_kprobe_2026_10_16",
+  "compare_uma": "db/raw/ndo_site_2026_10_14/uma_rietveld_2026_10_15/site_dg_rietveld.json"
+ }
+}
