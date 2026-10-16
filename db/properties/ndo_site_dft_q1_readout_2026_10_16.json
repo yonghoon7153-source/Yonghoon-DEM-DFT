@@ -47,7 +47,7 @@
     "모델_안_산포_기록": "M@Li 최저 둘이 0.032 eV 차 (MLi_04 · MLi_03) — UMA 에서도 둘이 0.038 차였는데 최저가 MLi_03 → DFT 는 MLi_04 로 바뀜 (G3 는 DFT 최저 MLi_04 를 쓴다) · M@P 최저는 UMA · DFT 둘 다 MP_07"
   },
   "허용_서술": "지금은 없음 — §5 Q1 문장은 단일점 ≥ +0.30 이거나 EOS 뒤 ≥ +0.10 · ≤ −0.10 · |·| < 0.10 일 때만",
-  "회수": "⏳ kgy $R/bundle_dft (8 폴더 scf.in · scf.out · site_dg_summary.json) + site_dg_dft.json + run.log → db/raw/ndo_site_dft_2026_10_15/q1_singlepoint_2026_10_16/ — 사용자 붙여넣기 블록 (실행 결과 미확인)",
+  "회수": "✅ 40a1b6aa (kgy 사용자 push 2026-10-16) → db/raw/ndo_site_dft_2026_10_15/q1_singlepoint_2026_10_16/ — 파일 20 개 (8 폴더 scf.in · scf.out + site_dg_summary.json = site_dg_dft.json (바이트 같음) + run.log + SHA256SUMS) · repo 에서 SHA256SUMS 19/19 통과 · **8 점 scf.in 이 repo 입력 (db/inputs/ndo_site_dft_2026_10_15/) 과 바이트가 같다** · 요약 ΔG 0.24004 = 화면 값 · G2 UMA 0.31853 같은 부호 · G3 발동",
   "⏭": [
     "G4 k 탐침 2 SCF (kgy · tmux ndsite_kp) → site_dg.py --qe … --kprobe 로 다시 판독",
     "G3 고정셀 + EOS 설계 · 입력 (두 최저 셀 · 부피 격자 선례 b2o3 0.96–1.04 5 점 · lpsocl ±6 % 7 점 · forc_conv_thr 1e-3) — ⏳ 사용자 GPU 자리 (카드 §7.4)",
