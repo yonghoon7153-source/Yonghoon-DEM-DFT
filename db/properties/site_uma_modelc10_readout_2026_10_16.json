@@ -1,0 +1,106 @@
+{
+  "id": "site_uma_modelc10_readout_2026_10_16",
+  "제목": "B₂O₃ · Nd₂O₃ 자리 비교 UMA 판독 — 정본 LPSCl1.6 10 f.u. (modelc10) · 25 구조 · site_dg.py",
+  "written_on": "2026-10-16",
+  "트랙": {
+    "B": "우리 DFT 기준선 (B₂O₃) — 1저자 = 사용자 · 카드 db/properties/b2o3_site_screen_estimand_2026_10_14.json · 결정 D-2026-10-14-b2o3-site-screen (proposed · 사용자 비준 대기)",
+    "Nd": "CEI/Nd — 1저자 = 실험 쪽 (박재현) · 보조 host · 카드 db/properties/ndo_lpscl16_site_stability_estimand_2026_10_14.json §1b 보조_host_modelc10 · 결정 D-2026-10-14-ndo-site-stability-estimand (proposed)"
+  },
+  "실행": {
+    "기계": "kgy (RTX 3090 · 공유)",
+    "어닐": "tmux site10_uma (WAIT_FOR ndsite_uma) · run_anneal.py 500 K × 20 ps + 이완 (셀 포함) · B · Nd 각 M@P 6 · M@Li 6 + host 1 (공용) = 25 · 결과 ~/work/runs/ndo_site_2026_10_14/uma_anneal_modelc10/anneal_results.json (mtime 10-16 07:25)",
+    "끝_확인": "사용자 watch 붙여넣기 10-16 11:33:18 — site10_uma 25 / 25 rc 0 (kgy 전원 끊김 약 11:34 전에 끝남)",
+    "판독": "2026-10-16 사용자 붙여넣기 (kgy) — site_dg.py sha16 11e661ece18e1b53 (worktree ~/wt_bmeas_1016 @25404563 · 결과 전 커밋 d309ed2e 뒤로 안 바뀜) · python = uma env · rc 0",
+    "명령": "site_dg.py --anneal $R/uma_anneal_modelc10/anneal_results.json --refs $R/uma_ref_relax/anneal_results.json --expect 6 --top 3 --thresholds B=0.20 Nd=0 --out $R/site_dg_modelc10.json --bundle $R/bundle_modelc10 (R = ~/work/runs/ndo_site_2026_10_14)",
+    "문턱_출처": "B=0.20 — B 카드 G2 경계 · G4 다형 재확인 (0.20 ± 0.11) · Nd=0 — Nd 카드 G7 '보조 host 의 부호 0' (둘 다 결과 전에 적힌 값)"
+  },
+  "게이트_기계_확인": {
+    "개수": "B M@P 6/6 · M@Li 6/6 · Nd M@P 6/6 · M@Li 6/6 (--expect 6) · host 1 (Bhost_00 · 공용)",
+    "오류_미수렴": "0 — 24 후보 전부 수렴 · host 수렴 True",
+    "조성": "B M@P B2Cl16Li58O3P8S41 · M@Li B2Cl16Li48O3P10S41 · Nd M@P Cl16Li58Nd2O3P8S41 · M@Li Cl16Li48Nd2O3P10S41 · host Cl16Li54P10S44 — 모델 안에서 같다",
+    "조성차_닫힘": "두 도펀트 다 n 2 · 조성차 = 8 Li₂S − 2 Li₃PS₄ ✓"
+  },
+  "값_UMA_내부": {
+    "⛔": "UMA 내부 값 — DFT 자리선호라고 부르지 않는다 · DFT 에너지와 섞지 않는다 · E_above_hull 이라 부르지 않는다 · x 0.2 의 크기를 다른 농도로 옮기지 않는다",
+    "기준상": "e(Li₂S) −12.00067 · e(Li₃PS₄) −35.18095 eV/f.u. · 저장소 항 4·e(Li₂S) − e(Li₃PS₄) = −12.82175 eV (site_refs_uma_li2s_li3ps4_2026_10_14.json · Rietveld 판독과 같은 기준상 파일)",
+    "B": {
+      "M_P": {
+        "최저": "BMP_04",
+        "둘째와_차_eV": 0.1744,
+        "모델_안_상대_eV_화면_소수3자리": {
+          "BMP_04": 0.0,
+          "BMP_05": 0.174,
+          "BMP_02": 0.214,
+          "BMP_01": 0.287,
+          "BMP_03": 0.474,
+          "BMP_00": 0.579
+        }
+      },
+      "M_Li": {
+        "최저": "BMLi_01",
+        "둘째와_차_eV": 0.51,
+        "모델_안_상대_eV_화면_소수3자리": {
+          "BMLi_01": 0.0,
+          "BMLi_04": 0.51,
+          "BMLi_00": 1.881,
+          "BMLi_02": 2.12,
+          "BMLi_05": 2.146,
+          "BMLi_03": 2.875
+        }
+      },
+      "ΔG_site_UMA_eV_per_B": 0.171,
+      "부호_뜻": "> 0 ⇒ P 자리 모델이 불리 · Li 자리 쪽이 낮다 — Li₃PS₄/Li₂S 교환 기준 · B/(B+P) 0.2 · UMA"
+    },
+    "Nd": {
+      "M_P": {
+        "최저": "NdMP_00",
+        "둘째와_차_eV": 0.1627,
+        "모델_안_상대_eV_화면_소수3자리": {
+          "NdMP_00": 0.0,
+          "NdMP_02": 0.163,
+          "NdMP_04": 0.52,
+          "NdMP_01": 0.625,
+          "NdMP_03": 0.957,
+          "NdMP_05": 1.957
+        }
+      },
+      "M_Li": {
+        "최저": "NdMLi_00",
+        "둘째와_차_eV": 0.07,
+        "모델_안_상대_eV_화면_소수3자리": {
+          "NdMLi_00": 0.0,
+          "NdMLi_01": 0.07,
+          "NdMLi_04": 0.243,
+          "NdMLi_02": 0.636,
+          "NdMLi_03": 0.744,
+          "NdMLi_05": 0.84
+        }
+      },
+      "ΔG_site_UMA_eV_per_Nd": 0.519,
+      "부호_뜻": "> 0 ⇒ P 자리 모델이 불리 · Li 자리 쪽이 낮다 — Li₃PS₄/Li₂S 교환 기준 · Nd/(Nd+P) 0.2 · UMA"
+    }
+  },
+  "결과_전_규칙_적용_B": {
+    "G1": "✓ 6 + 6 · host 1 · 기준상 2 다 있음",
+    "G2_여유": "|ΔG_site| 0.171 < 0.20 ⇒ 카드 문장 'UMA 로는 경계선이다' (UMA 로 가를 수 없다)",
+    "G3_모델_안_산포": "M@P 최저와 둘째 차 0.174 eV · M@Li 0.510 eV — **M@Li 최저가 한 배치 (BMLi_01) 에 기댄다** (나머지 다섯은 0.51–2.88 eV 위)",
+    "G4_기준상_다형": "**발동** — 0.171 이 0.09–0.31 안 (문턱 0.20 에서 0.029). 규칙: Li₃PS₄ 다른 다형 둘 (mp-2646995 I-42m · mp-1097036 Pnma) 을 같은 --refs 방식으로 이완해 최저를 쓴다 — 안 할 거면 사용자 명시 결정으로 닫는다. ⏳ 사용자 결정 대기",
+    "G4_방향_검산": "다형이 UMA 에서 더 낮으면 e(Li₃PS₄) 가 δ 만큼 내려가고 ΔG_site 는 δ 만큼 **내려가기만** 한다 (B 하나당 Li₃PS₄ 1 f.u.) · 더 높으면 지금 최저가 그대로라 안 바뀐다 ⇒ ΔG ∈ [0.171 − δ, 0.171] · '경계선' (|ΔG| < 0.20) 범주는 δ > 0.371 eV/f.u. (0.046 eV/atom · MP 다형 차 최대 0.0138 의 3 배 넘음) 가 아니면 안 바뀐다 · 바뀌는 것은 숫자 X 뿐 (MP 규모면 0.06–0.17)",
+    "허용_서술": "'UMA 로는 경계선이다.' · 'cascade 같은 조성 교환과 달리 보상까지 맞춘 비교다.' (카드 §5) — 숫자 X 를 쓰는 문장 ('B@P 가 B@Li 보다 X eV/B 높다') 은 G4 가 닫히기 전에는 쓰지 않는다",
+    "10_14_질문과의_관계": "사용자 10-14 'b2o3에서 b가 li 보다 p 를 더 선호한다는 내용은 repo에 남아있나' — 이 보상 맞춘 UMA 비교로는 'B 가 P 를 선호한다' 를 말할 수 없다 (경계선 · 숫자는 Li 쪽으로 0.17 기울지만 문턱 안). 판정 아님"
+  },
+  "결과_전_규칙_적용_Nd_보조_host": {
+    "부호": "+0.519 eV/Nd ⇒ UMA 에서 Li 자리 쪽이 낮다 — 카드의 사전 기대 (Li 자리) · Rietveld host UMA (+0.319 · Nd/(Nd+P) 0.40 · ndo_site_uma_rietveld_readout_2026_10_15.json) 와 같은 방향. 판정 아님 — 판정은 Rietveld 셀 DFT Q1 (kgy 진행 중) 과 G3 문턱으로만",
+    "G7": "발동 안 함 — 문턱 0 에서 0.519 (> 0.11)",
+    "G2_부호_대조": "해당 없음 — modelc10 은 DFT 짝이 없다 (Q1 DFT 는 Rietveld 셀)",
+    "허용_서술": "카드 §5 에 보조 host 문장이 없다 ⇒ 밖으로 내는 문장 없음 (내부 기록만)",
+    "B_와_같은_배치": "같은 시드 = 같은 도펀트 자리 (카드 §1b) — 두 값은 이 표에 나란히 있지만 B 쪽이 경계선이라 '어느 도펀트가 더 Li 자리 쪽' 같은 비교 문장은 쓰지 않는다 (어느 카드에도 그 허용 서술이 없다)"
+  },
+  "회수": "⏳ kgy $R/bundle_modelc10 (anneal_results.json 둘 · structures/*.xyz · site_dg_summary.json) + $R/site_dg_modelc10.json + 로그 끝 3 줄 → db/raw/ndo_site_2026_10_14/uma_modelc10_2026_10_16/ (SHA256SUMS 같이) — 사용자 붙여넣기 블록 (2026-10-16 · 실행 결과 미확인)",
+  "⏭": [
+    "사용자: B G4 — ① 다형 둘 이완 (MP CIF 받기 → kgy UMA 몇 분) ② 안 하고 닫기 (명시 결정 · 이유 = G4_방향_검산 · 숫자 X 는 안 씀) · 권고 ②",
+    "사용자: B 카드 비준 (규칙 변경 없이 그대로 쓴다는 확인 — 이제는 결과 뒤라 '결과 전 고정' 의 뜻은 없다)",
+    "회수 블록 → repo 원자료 · 해시 대조",
+    "(선택 · 기록만) 회수본에서 B · Nd 주변 배위 세기 — 어닐 뒤 처음 자리에 남았는지 (특히 BMLi_01) · 판정 · ΔG 에 안 씀"
+  ]
+}
