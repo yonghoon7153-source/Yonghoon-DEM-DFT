@@ -32,6 +32,14 @@
    "Li_A": "li_outer · Li60P12S54Cl12 + C224 = 362 원자 · 변형 +1.936 / +0.890 % · registry A = 원자 43 (같은 종결 V5 의 A 와 같다) · c 32.5515 Å · far 직접 10.0 / 영상 11.0 Å · 고정 69 · 깃발 0 · bound sha256 706b94a794b85451…",
    "조성_대조": "카드 §1b 식과 같다 (398 · 362)"
   },
-  "⏭": "② 부모 둘 UMA+D3 이완 — GPU 자리 사용자 결정 뒤 붙여넣기 블록 (kgy 는 cascade v7 + Nd EOS pw.x 가 돌고 있다 · 최대 합계 14,301 MiB 실측 10-17 05:54)"
+  "⏭": "② 부모 둘 UMA+D3 이완 — kgy (아래 ②_이완)"
+ },
+ "②_이완_2026_10_17": {
+  "GPU_자리": "kgy · cascade v7 · Nd EOS pw.x 옆 — 사용자 2026-10-17 AskUserQuestion 'kgy · cascade·EOS 옆 (Recommended)' (10-15 V5 단일점 kgy 선례와 같은 가드 꼴 · ④ UMA 단일점도 같은 기계·같은 판)",
+  "러너": "db/inputs/wad_p2small_geometries_2026_10_17/run_relax_kgy.sh — ① 입력 해시 (파일 = meta = build_record) ② 판 (fairchem · torch · ase · simple-dftd3 — 없으면 시작 안 함 7) ③ 메모리 프로브 S_A (체크포인트 sha 앞 16 = S1 결박값 07068e9c76702ca1 아니면 멈춤 5) ④ 이완 S_A → Li_A ⑤ SHA256SUMS (opt.traj 제외)",
+  "결박": "relax_uma_d3.py · uma-s-1p1 · omat · default · D3(BJ) 2체 simple-dftd3 고정 (--d3 dftd3 · auto 아님) · FIRE · fmax 0.02 · 3000 스텝 · 셀 고정 · 마스크 = 빌더 far_half — 카드 G1",
+  "가드": "시작 문턱 GPU 합계 ≤ 16,000 MiB (kgy 실측 최대 14,301 · cascade + EOS) · 합계 > 23,500 이면 이 이완만 종료 3 · torch 상한 4,000 MiB (P2 630 원자 이완 실측 할당 최대 3,433 MiB → 398 원자는 그 아래 어림)",
+  "러너_시험": "레포 밖 시험 트리 (EMT · 가짜 nvidia-smi · 대역 모델 V2) — DRY_RUN 0 · 전체 2 (3 스텝 미수렴) · 이어 돌리기가 앞 미수렴을 끝 코드에 반영 2 · 체크포인트 불일치 5 · simple-dftd3 없음 7 · 시작 문턱 못 엶 4 · 잠금 8 · 입력 해시 불일치 9 — 전부 기대값",
+  "상태": "붙여넣기 블록 전달 — 실행 결과 미확인"
  }
 }
