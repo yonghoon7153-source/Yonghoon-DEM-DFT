@@ -67,5 +67,11 @@
     "다섯_런": "gabia seed2 · 4 · 5 (10-16 12:48 끝) + kgy seed1 · 3 = 5 / 5 — B 650 K 카드의 첫 묶음 다 모였다",
     "곁의_잡": "li2s 가 끝나 cascade 대기 스크립트가 이어받기를 띄웠다 (tmux cv7main 살아 있음 · 이어받기 줄 · 정산 값은 cascade 실행 기록에서 확인)",
     "⏭": "① 인벤토리 (kgy · gabia · 해시 · 파일 수 · 종료 줄만) ② kgy → gabia 합치기 (rsync -c 대조 · kgy 전원 끊김 뒤라 바로) ③ ⛔ 650 K 결과는 편지 CX 회신 전까지 안 연다 (CX 발송 기록 아직 없음) ④ 회신 → 카드 개정 · 비준 → 판독 도구 온도 인자 (판독 전 커밋) → B 판독"
+  },
+  "합치기_2026_10_17": {
+    "출처": "사용자 붙여넣기 2026-10-17 (kgy rsync 줄 출력만 · 인벤토리 · cascade 줄 출력은 안 붙임)",
+    "results_seen": false,
+    "합치기": "kgy `rsync -a -R seed1/T650 seed3/T650 → gabia $ROOT/.incoming/` → `rsync -a -c -R --dry-run -i` **빈 출력** (전 파일 체크섬 같음 · 두 rsync 종료 0) · kgy 원본 보존",
+    "⏭": "gabia: .incoming sha16 · 파일 수 기록 → 제자리 mv (msd.json 5 개 확인) · ⛔ 결과는 편지 CX 회신 전까지 안 연다"
   }
 }
