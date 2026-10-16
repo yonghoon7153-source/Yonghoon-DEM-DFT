@@ -72,6 +72,7 @@
     "출처": "사용자 붙여넣기 2026-10-17 (kgy rsync 줄 출력만 · 인벤토리 · cascade 줄 출력은 안 붙임)",
     "results_seen": false,
     "합치기": "kgy `rsync -a -R seed1/T650 seed3/T650 → gabia $ROOT/.incoming/` → `rsync -a -c -R --dry-run -i` **빈 출력** (전 파일 체크섬 같음 · 두 rsync 종료 0) · kgy 원본 보존",
-    "⏭": "gabia: .incoming sha16 · 파일 수 기록 → 제자리 mv (msd.json 5 개 확인) · ⛔ 결과는 편지 CX 회신 전까지 안 연다"
+    "⏭": "⛔ 650 K 결과는 편지 CX 회신 전까지 안 연다 (CX 발송 기록 없음 — 사용자 확인) → 회신 → 카드 개정 · 비준 → 판독 도구 온도 인자 (판독 전 커밋) → B 판독 (gabia $ROOT)",
+    "gabia_제자리": "사용자 붙여넣기 2026-10-17 (gabia) — .incoming sha16 (mv 전): seed1/T650 msd 24bb9629e1645791 · meta 102420cd3444af3e · 파일 7 · seed3/T650 msd 7ffc56abd783fdd9 · meta 25cacfb7f3ff0a2e · 파일 7 · 대조 ok=1 → 제자리 mv · gabia $ROOT 의 msd.json 5 개 (다섯 런 한 곳에 모임)"
   }
 }
