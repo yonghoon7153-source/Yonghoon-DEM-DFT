@@ -703,7 +703,8 @@ def _csv_mode_row(label, h_cell, spec, metrics):
 #    최종 병합 뒤 **현재 모드별 망 상태가 이긴다**.  network 게시는 contact 단계의 network_summary.csv 를 갱신하지 않는다 → 옛 CSV 숫자가 split 병합 (Pass A) ·
 #    두 열 Hertz 칸 · 네 열 그대로 경로로 모형 한계 · σ 미채택 모드에 다시 채워졌다 (같은 화면의 상태 행 = 모형 한계 · τ 행 = NOT_COMPUTED 와 모순).
 #    채택 = 생산자 상태 키 없음 (옛 세대) 또는 computed + 유한 σ > 0 · 그 밖 (not_computed · valid_zero · unknown · 값 없음 · 비유한) = 칸 '—' (+ 사유) · Δ '—'.
-#    채택된 모드의 칸은 건드리지 않는다.  Constriction 비율 (접촉별 비가중 평균 — 생산자가 모형 한계에도 싣는다) · 전자 · 열 (Pass D 가 metrics 로 다시 씀) 은 밖.
+#    채택된 모드의 칸은 건드리지 않는다 (★ 10-16 WEB-09 — 그 칸은 바로 앞 단계 `_refresh_accepted_ion_modes` 가 현재 metrics 로 다시 쓴다).
+#    Constriction 비율 (접촉별 비가중 평균 — 생산자가 모형 한계에도 싣는다) · 전자 · 열 (Pass D 가 metrics 로 다시 씀) 은 밖.
 _ION_MODE_ROWS = ('σ_ionic (mS/cm)', 'R_brug (과대추정 배수)', 'Contact-free / Full', 'σ_brug / σ_ionic')   # 모드별 칸 = 이온 FULL σ · FULL 유도비
 _ION_RATIO_ROW = 'σ_ionic ratio (physics/Hertzian)'       # Plastic amplification = σ_P / σ_H — 두 모드 다 채택일 때만 정의
 
@@ -717,14 +718,104 @@ def _ion_mode_accepted(metrics, mode):
     return m.get('sigma_full_status' + sx) in (None, 'computed') and _v2_num(v) and float(v) > 0
 
 
+def _ion_cell_blank(c):
+    """값 없는 칸 — '' · '-' · '—' · 'nan' · 'None' · '—' 로 시작 (모형 한계 사유 문구 포함).  Pass G 두 단계가 같이 쓴다."""
+    s = '' if c is None else str(c).strip()
+    return s in ('', '-', '—', 'nan', 'None') or s.startswith('—')
+
+
+#  ★ 10-16 WEB-09 (1저자 10-16 Q1 "권고대로" = 화면만 — 분석기 CSV · 계산 무변경) — 이온 행을 metrics 로 만드는 식 **한 곳**.
+#    새 표 경로 (CSV 망 절이 없을 때: transform Step 4 · 4b · normalize Pass E) 와 최종 화면의 채택 모드 갱신 (Pass G) 이 같이 부른다 — 정의 · 꼴 · Δ 가 둘로 갈리지 않게.
+#    식은 옮기기 전 그대로 (새 표 렌더 무변경).  부르는 조건 (σ_H 가 있어야 행을 낸다 등) 은 각 자리에 그대로 둔다.
+def _ion_sigma_row(metrics):
+    """σ_ionic — round(σ, 4) · Physics 없으면 '—' (+ 모형 한계 사유) · Δ = 둘 다 있을 때 _pct_delta (transform Step 4)."""
+    m = metrics or {}
+    return _dual_row('σ_ionic (mS/cm)', m.get('sigma_full_mScm'), m.get('sigma_full_mScm_physics'),
+                     fmt=lambda x: round(x, 4), p_missing=_mode_missing_text(m, 'ionic'))
+
+
+def _ion_cf_full_row(metrics):
+    """Contact-free / Full = R_brug_over_full[_physics] (σ_Bruggeman 은 모드 무관 · σ_ionic 이 모드마다 달라 비가 바뀐다) — transform Step 4 · 4b.
+    ★ L214-03 — Physics 칸 = Physics 값 (옛: Hertz 를 대신 썼다)."""
+    m = metrics or {}
+    return _dual_row('Contact-free / Full', m.get('R_brug_over_full'), m.get('R_brug_over_full_physics'),
+                     fmt=lambda x: f"{x:.1f}×", p_missing=_mode_missing_text(m, 'ionic'))
+
+
+def _ion_brug_over_sigma_row(metrics):
+    """σ_brug / σ_ionic = σ_grain · sigma_ratio / σ_full — transform Step 4 · 4b · sigma_ratio 가 없으면 None (그 행을 만들 수 없다).
+    ★ L214-03 — Physics σ 가 없으면 Physics 칸 '—' (옛: `or sig_ion_h` · `else ratio_h` 로 Hertz 대체).  Hertz σ 가 없으면 Hertz 칸 '—' (갱신이 Physics 칸만 쓸 때)."""
+    m = metrics or {}
+    if not m.get('sigma_ratio'):
+        return None
+    sig_brug = _sigma_grain_mS_cm(m) * m['sigma_ratio']
+    sig_ion_h = m.get('sigma_full_mScm')
+    sig_ion_p = m.get('sigma_full_mScm_physics')
+    ratio_h = (sig_brug / sig_ion_h if sig_ion_h > 0 else 0) if sig_ion_h is not None else None
+    ratio_p = sig_brug / sig_ion_p if (sig_ion_p is not None and sig_ion_p > 0) else None
+    return _dual_row('σ_brug / σ_ionic', ratio_h, ratio_p, fmt=lambda x: f"{x:.1f}×", p_missing=_mode_missing_text(m, 'ionic'))
+
+
+def _ion_r_brug_row(metrics):
+    """R_brug (과대추정 배수) — normalize Pass E (늘 내는 행).  ★ L214-03 — Physics 칸 = Physics 의 CF/FULL (옛: Hertz 값 복사 · Δ 0 %) · 없으면 '—' (+ 사유)."""
+    m = metrics or {}
+    rb = m.get('R_brug_over_full')
+    rb_str = f'{rb:.1f}×' if isinstance(rb, (int, float)) and rb else '—'
+    rbp = m.get('R_brug_over_full_physics')
+    rbp_ok = isinstance(rbp, (int, float)) and not isinstance(rbp, bool) and bool(rbp)
+    rb_ok = isinstance(rb, (int, float)) and not isinstance(rb, bool) and bool(rb)
+    rbp_str = f'{rbp:.1f}×' if rbp_ok else _mode_missing_text(m, 'ionic')
+    return ['R_brug (과대추정 배수)', rb_str, rbp_str, _pct_delta(rb, rbp) if (rb_ok and rbp_ok) else '—']
+
+
+def _ion_plastic_amp_row(metrics):
+    """σ_ionic ratio (physics/Hertzian) = Plastic amplification σ_P / σ_H — 한 값을 두 칸에 · Δ '0%' (normalize Pass E)."""
+    m = metrics or {}
+    sh, sp = m.get('sigma_full_mScm'), m.get('sigma_full_mScm_physics')
+    ratio_str = f'{sp / sh:.2f}×' if (sh and sp) else '—'
+    return [_ION_RATIO_ROW, ratio_str, ratio_str, '0%']
+
+
+_ION_ROW_BUILDERS = {'σ_ionic (mS/cm)': _ion_sigma_row, 'R_brug (과대추정 배수)': _ion_r_brug_row,
+                     'Contact-free / Full': _ion_cf_full_row, 'σ_brug / σ_ionic': _ion_brug_over_sigma_row}   # = _ION_MODE_ROWS 넷
+
+
+def _refresh_accepted_ion_modes(data, metrics):
+    """normalize Pass G 앞 단계 (★ 10-16 WEB-09) — **채택** 모드의 이온 σ · FULL 유도비 칸 = 새 표 식 (`_ION_ROW_BUILDERS`) 이 현재 metrics 로 내는 값.
+    contact 단계가 쓴 network_summary.csv 는 network 게시가 갱신하지 않는다 → 망을 다시 분석하면 채택 칸에 옛 CSV 숫자가 남고 Δ 만 현재 값이었다.
+    그 식이 그 칸을 못 만들면 (필요한 metric 없음 → '—' · 행 없음) 기존 칸 그대로 (지어내지 않는다) · Δ = 두 칸이 다 현재 값이면 새 표 Δ · 한 칸만이면 '—'.
+    Plastic amplification = 두 모드 다 채택이면 새 표 행 그대로.  미채택 모드 칸은 건드리지 않는다 (뒤의 `_mask_unaccepted_ion_modes` 몫)."""
+    ok = {mode: _ion_mode_accepted(metrics, mode) for mode in ('hertz', 'physics')}
+    if not (ok['hertz'] or ok['physics']):
+        return
+    for r in data:
+        if not (isinstance(r, list) and len(r) >= 4 and isinstance(r[0], str)):
+            continue
+        lab = r[0].strip()
+        if lab == _ION_RATIO_ROW:
+            if ok['hertz'] and ok['physics']:
+                ref = _ion_plastic_amp_row(metrics)
+                r[1], r[2], r[3] = ref[1], ref[2], ref[3]
+            continue
+        if lab not in _ION_ROW_BUILDERS:
+            continue
+        try:
+            ref = _ION_ROW_BUILDERS[lab](metrics)
+        except (TypeError, ValueError, OverflowError):      # 미채택 모드 칸의 값이 수가 아니면 — 그 행은 기존 칸 그대로 (화면이 죽지 않게 · 뒤 단계가 가린다)
+            ref = None
+        if ref is None:
+            continue
+        fresh = [i for i, mode in ((1, 'hertz'), (2, 'physics')) if ok[mode] and not _ion_cell_blank(ref[i])]
+        for i in fresh:
+            r[i] = ref[i]
+        if fresh:
+            r[3] = ref[3] if len(fresh) == 2 else '—'
+
+
 def _mask_unaccepted_ion_modes(data, metrics):
     """normalize 의 마지막 (Pass G) — 미채택 모드의 이온 σ · FULL 유도비 칸 = `_mode_missing_text` ('—' 또는 모형 한계 사유) · Plastic amplification 은
     두 모드 다 채택이 아니면 '— / —' · 이 행들에서 한 칸이라도 값이 없으면 Δ '—' (비 미제공 '— / — / 0%' 포함).  CSV 꼴 (split · 두 열 · 네 열 · 새 표) 무관."""
     ok = {mode: _ion_mode_accepted(metrics, mode) for mode in ('hertz', 'physics')}
-
-    def _blank(c):
-        s = '' if c is None else str(c).strip()
-        return s in ('', '-', '—', 'nan', 'None') or s.startswith('—')
     for r in data:
         if not (isinstance(r, list) and len(r) >= 4 and isinstance(r[0], str)):
             continue
@@ -738,7 +829,7 @@ def _mask_unaccepted_ion_modes(data, metrics):
                 r[1] = r[2] = '—'
         else:
             continue
-        if _blank(r[1]) or _blank(r[2]):
+        if _ion_cell_blank(r[1]) or _ion_cell_blank(r[2]):
             r[3] = '—'
 
 
@@ -2005,6 +2096,8 @@ def normalize_network_summary_layout(tables, metrics):
       Pass G (★ 10-16 L214R-03): after the merge / always-emit rows / sort — the current per-mode network
               status wins: an unaccepted mode (FULL model limit · no σ · not_computed · valid_zero) shows
               '—' (+ reason) in the ionic σ and FULL-derived ratio rows, Δ '—' (old CSV numbers never return).
+              (★ 10-16 WEB-09) before that, an accepted mode's cells in those rows are rewritten from the
+              current metrics with the new-table builders (_ion_*_row) — old CSV numbers never stay either.
     """
     if 'network_summary' not in tables:
         return
@@ -2315,27 +2408,12 @@ def normalize_network_summary_layout(tables, metrics):
                 _anchor = _lab
 
     # R_brug + Plastic amplification — always emit
+    #  ★ 10-15 L214-03 — R_brug Physics 칸 = Physics 의 CF/FULL (옛: Hertz 값 복사 · Δ 0 %) · 없으면 '—' (+ 모형 한계 사유)
+    #  ★ 10-16 WEB-09 — 두 행의 식 = `_ion_r_brug_row` · `_ion_plastic_amp_row` (Pass G 의 채택 모드 갱신과 한 곳 · 식 그대로 옮김)
     if _find_row('R_brug (과대추정 배수)') is None:
-        rb = metrics.get('R_brug_over_full') if metrics else None
-        rb_str = f'{rb:.1f}×' if isinstance(rb, (int, float)) and rb else '—'
-        #  ★ 10-15 L214-03 — Physics 칸 = Physics 의 CF/FULL (옛: Hertz 값 복사 · Δ 0 %) · 없으면 '—' (+ 모형 한계 사유)
-        rbp = metrics.get('R_brug_over_full_physics') if metrics else None
-        rbp_ok = isinstance(rbp, (int, float)) and not isinstance(rbp, bool) and bool(rbp)
-        rb_ok = isinstance(rb, (int, float)) and not isinstance(rb, bool) and bool(rb)
-        rbp_str = f'{rbp:.1f}×' if rbp_ok else _mode_missing_text(metrics, 'ionic')
-        _insert_after('σ_ionic (mS/cm)',
-                      ['R_brug (과대추정 배수)', rb_str, rbp_str, _pct_delta(rb, rbp) if (rb_ok and rbp_ok) else '—'])
+        _insert_after('σ_ionic (mS/cm)', _ion_r_brug_row(metrics))
     if _find_row('σ_ionic ratio (physics/Hertzian)') is None:
-        sh = metrics.get('sigma_full_mScm') if metrics else None
-        sp = metrics.get('sigma_full_mScm_physics') if metrics else None
-        if sh and sp:
-            r = sp / sh
-            ratio_str = f'{r:.2f}×'
-        else:
-            ratio_str = '—'
-        _insert_after('σ_ionic (mS/cm)',
-                      ['σ_ionic ratio (physics/Hertzian)',
-                       ratio_str, ratio_str, '0%'])
+        _insert_after('σ_ionic (mS/cm)', _ion_plastic_amp_row(metrics))
 
     # ── Pass D: ensure σ_e and κ baseline rows exist ──
     # Some legacy/freshly-analysed cases write σ_e or κ as None when the
@@ -2508,7 +2586,9 @@ def normalize_network_summary_layout(tables, metrics):
             data[row_idxs[0] + offset] = sr
 
     # ── Pass G (★ 10-16 L214R-03): 최종 병합 (Pass A) · 늘 내는 행 · 정렬 뒤 — 현재 모드별 망 상태가 이긴다 ──
+    #    ★ 10-16 WEB-09 — 먼저 채택 모드 (computed · 옛 세대 + 유한 σ > 0) 칸 = 새 표 식이 현재 metrics 로 내는 값 · Δ 도 새 표 식 (옛 CSV 숫자 · 옛 Δ 남김 차단)
     #    미채택 모드 (모형 한계 · σ 없음 · not_computed · valid_zero) 의 이온 σ · FULL 유도비 = '—' (+ 사유) · Δ '—' — 옛 CSV 숫자 복원 차단 (split · 두 열 · 네 열)
+    _refresh_accepted_ion_modes(data, metrics)
     _mask_unaccepted_ion_modes(data, metrics)
 
 
@@ -3169,22 +3249,15 @@ def transform_network_summary_4col(tables, metrics, meta):
         net_rows = [['── Network Solver (DEM-native vs Tabor+volume physics) ──', '', '', '']]
         if metrics and metrics.get('sigma_full_mScm'):
             #  ★ 10-15 L214-03 — Physics 값이 없으면 Physics 칸 · Δ = '—' (+ 모형 한계 사유) · Hertz 복사 · 0 % 없음 (아래 모드별 행 전부 같은 규칙)
-            _pm_ion = _mode_missing_text(metrics, 'ionic')
-            net_rows.append(_dual_row('σ_ionic (mS/cm)',
-                                      metrics.get('sigma_full_mScm'),
-                                      metrics.get('sigma_full_mScm_physics'),
-                                      fmt=lambda x: round(x, 4), p_missing=_pm_ion))
+            #  ★ 10-16 WEB-09 — 이온 행 식 = `_ion_*_row` 한 곳 (최종 화면의 채택 모드 갱신과 같은 식 · 값 · 꼴 그대로 옮김)
+            net_rows.append(_ion_sigma_row(metrics))
             if metrics.get('sigma_bruggeman_mScm'):
                 v = round(metrics['sigma_bruggeman_mScm'], 4)
                 net_rows.append(_same_row('σ_Bruggeman (mS/cm)', v))
             if metrics.get('R_brug_over_full'):
                 # R_brug/R_full = σ_Bruggeman / σ_ionic. σ_Bruggeman is mode-
                 # agnostic but σ_ionic changes with Physics, so the ratio changes.
-                r_h = metrics.get('R_brug_over_full')
-                r_p = metrics.get('R_brug_over_full_physics')            # ★ L214-03 — 옛: (…, r_h) 로 Hertz 를 대신 썼다
-                net_rows.append(_dual_row('Contact-free / Full',
-                                          r_h, r_p,
-                                          fmt=lambda x: f"{x:.1f}×", p_missing=_pm_ion))
+                net_rows.append(_ion_cf_full_row(metrics))
             if metrics.get('bulk_resistance_fraction') is not None:
                 # Constriction % = (1 − bulk_fraction) × 100 · bulk_fraction = 접촉별 R_bulk/R_total 의 **비가중 평균** (L2-08 —
                 # 전력 몫 아님).  Physics 모드에서 달라지는 이유 = 간선마다 **접촉 면적 → R_c** 가 바뀌어서다 (R_bulk 는 그대로) ·
@@ -3200,14 +3273,7 @@ def transform_network_summary_4col(tables, metrics, meta):
                                           cstr_h, cstr_p,
                                           fmt=lambda x: round(x, 1)))
             if metrics.get('sigma_ratio') and metrics.get('sigma_full_mScm'):
-                sig_brug = _sigma_grain_mS_cm(metrics) * metrics['sigma_ratio']
-                sig_ion_h = metrics.get('sigma_full_mScm')
-                sig_ion_p = metrics.get('sigma_full_mScm_physics')             # ★ L214-03 — 옛: `or sig_ion_h` (Hertz 대체)
-                ratio_h = sig_brug / sig_ion_h if sig_ion_h > 0 else 0
-                ratio_p = sig_brug / sig_ion_p if (sig_ion_p is not None and sig_ion_p > 0) else None   # 옛: `else ratio_h`
-                net_rows.append(_dual_row('σ_brug / σ_ionic',
-                                          ratio_h, ratio_p,
-                                          fmt=lambda x: f"{x:.1f}×", p_missing=_pm_ion))
+                net_rows.append(_ion_brug_over_sigma_row(metrics))
 
             # ── τ 3종 비교 (Dijkstra vs Laplace geom vs Laplace eff) ──
             # Derivation only, no re-analysis needed; σ_grain 은 se_material 단일 출처 +
@@ -3306,26 +3372,15 @@ def transform_network_summary_4col(tables, metrics, meta):
             new_rows.append(_same_row('σ_Bruggeman (mS/cm)',
                                        round(metrics['sigma_bruggeman_mScm'], 4)))
 
-        # Contact-free / Full
+        # Contact-free / Full  (★ 10-16 WEB-09 — Step 4 와 같은 식 `_ion_cf_full_row` 한 곳)
         if (not _has_label('Contact-free / Full')
                 and metrics.get('R_brug_over_full')):
-            r_h = metrics.get('R_brug_over_full')
-            r_p = metrics.get('R_brug_over_full_physics')                # ★ L214-03 — 옛: (…, r_h) 로 Hertz 를 대신 썼다
-            new_rows.append(_dual_row('Contact-free / Full',
-                                       r_h, r_p,
-                                       fmt=lambda x: f"{x:.1f}×", p_missing=_mode_missing_text(metrics, 'ionic')))
+            new_rows.append(_ion_cf_full_row(metrics))
 
-        # σ_brug / σ_ionic
+        # σ_brug / σ_ionic  (★ 10-16 WEB-09 — Step 4 와 같은 식 `_ion_brug_over_sigma_row` 한 곳)
         if (not _has_label('σ_brug / σ_ionic')
                 and metrics.get('sigma_ratio') and metrics.get('sigma_full_mScm')):
-            sig_brug = _sigma_grain_mS_cm(metrics) * metrics['sigma_ratio']
-            sig_ion_h = metrics.get('sigma_full_mScm')
-            sig_ion_p = metrics.get('sigma_full_mScm_physics')                 # ★ L214-03 — 옛: `or sig_ion_h` (Hertz 대체)
-            ratio_h = sig_brug / sig_ion_h if sig_ion_h > 0 else 0
-            ratio_p = sig_brug / sig_ion_p if (sig_ion_p is not None and sig_ion_p > 0) else None   # 옛: `else ratio_h`
-            new_rows.append(_dual_row('σ_brug / σ_ionic',
-                                       ratio_h, ratio_p,
-                                       fmt=lambda x: f"{x:.1f}×", p_missing=_mode_missing_text(metrics, 'ionic')))
+            new_rows.append(_ion_brug_over_sigma_row(metrics))
 
         # ── τ 3종 비교 ── (always-inject if absent)
         phi_se   = metrics.get('phi_se')
