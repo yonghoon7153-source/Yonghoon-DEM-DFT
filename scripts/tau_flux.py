@@ -171,11 +171,30 @@ def constriction_label(res, legacy=False):
 
 
 def _num(v):
-    """유한한 수 (bool 제외) 면 float, 아니면 None."""
+    """유한한 수 (bool 제외) 면 float, 아니면 None.
+    ★ 10-16 L214R-08 — float 로 못 옮기는 큰 정수 (JSON 정수 10⁴⁰⁰ — json.loads 가 int 로 준다) 도 None (OverflowError 를 내지 않는다 · 생산자
+    `network_conductivity._cert_num` 의 L214R-01 A 와 같은 규칙).  부르는 자리는 None 을 거부 사유 (공용 기술 검사 · 증서 결합 · σ₀ 결합 · 온도 규약 · 모형 한계 ·
+    τ 게이트 0 · G4) 또는 값 없음 (표시 메타 · 등급 τ getter) 으로 읽는다 — None 을 '숫자 없음 = 받음' 으로 읽는 자리 (숫자 없는 가지 증서의 I_bottom) 는
+    `_overflow_int` 로 '숫자가 실렸다' 를 따로 본다 (변환 불가 = 기술 실패 · 없음으로 읽지 않는다)."""
     if isinstance(v, bool) or not isinstance(v, (int, float)):
         return None
-    v = float(v)
+    try:
+        v = float(v)
+    except OverflowError:                          # ★ L214R-08 — 큰 정수의 float 변환 넘침 = 유한 실수가 아니다 (예외 대신 None · 자리마다 사유)
+        return None
     return v if math.isfinite(v) else None
+
+
+def _overflow_int(v):
+    """★ 10-16 L214R-08 — float 로 못 옮기는 정수 (bool 제외 — JSON 10⁴⁰⁰) 인가.  `_num` 은 이 값을 None 으로 주므로, None 을 '숫자 없음' 으로 읽는 자리가
+    이 함수로 **숫자가 실렸다** 는 사실을 따로 본다 (`_cert_unpublished_problem` — 숫자 없는 가지 증서의 I_bottom = 해 주장)."""
+    if isinstance(v, bool) or not isinstance(v, int):
+        return False
+    try:
+        float(v)
+    except OverflowError:
+        return True
+    return False
 
 
 def _pos(v):
@@ -215,7 +234,7 @@ def ion_record_problem(rec):
     """망 레코드 (모드 하나 · dual 의 'hertzian' 또는 'physics') 의 **기술적 입력 유효성** → None (유효) | (사유 코드, 세부).
 
       computed     σ_ratio (`sigma_full`) · σ_dim (`sigma_full_mScm`) 둘 다 유한 양수 · 관통 분율 (0, 1] · s₀ (`sigma_grain_S_cm`) 유한 양수 ·
-                   두 표현 항등식 (`sigma_identity_tol`)
+                   두 표현 항등식 (`sigma_identity_tol` — ★ 10-16 L214R-07 곱 · 차 · 허용을 비교 전에 유한으로 · 넘침 · 밑넘침 = non_finite 사유)
       valid_zero   RGL-02 의 증명된 비관통 조합만 — 사유 no_through_path · σ_ratio · σ_dim None (F-12) · 관통 분율 0 · CF · constr 상태 valid_zero ·
                    이온 채널 valid_zero  (정지 계약 ③ 과 같은 조합 — 'zero_value' 같은 다른 valid_zero 는 받지 않는다)
       not_computed 생산자가 "관통인데 풀지 못함" 을 신고했다 → ('solver_guard', 사유)  — 기술적 실패
@@ -230,6 +249,7 @@ def ion_record_problem(rec):
     st = rec.get('sigma_full_status')
     q, sd, pf = rec.get('sigma_full'), rec.get('sigma_full_mScm'), rec.get('percolating_fraction')
     if st == 'computed':
+        #  ★ 10-16 L214R-08 — float 로 못 옮기는 큰 JSON 정수 (σ 두 표현 · 관통 분율 · σ₀) = `_num` None → 아래 사유 (예외 아님 · 거부)
         why = []
         if _pos(q) is None:
             why.append(f'σ_ratio (sigma_full) {q!r} — 유한 양수여야')
@@ -243,9 +263,19 @@ def ion_record_problem(rec):
             why.append(f'σ₀ (sigma_grain_S_cm) {rec.get("sigma_grain_S_cm")!r} — 없거나 양수가 아니어서 두 표현 항등식을 검산할 수 없다')
         if why:
             return INVALID_INPUT, 'computed 인데 ' + ' · '.join(why)
-        d, tol = abs(sd - 1000.0 * s0 * q), sigma_identity_tol(s0, q, sd)
+        #  ★ 10-16 L214R-07 (Codex 재검증 뒤 같은 부류 Q5 · L214R-01 A · 05 와 같은 규칙) — 1000·σ₀·σ_ratio · |차| · 허용을 비교 **전에** 본다: 곱은 유한 양수 · |차| ·
+        #    허용은 유한.  옛 판은 σ_ratio 1e308 · σ_dim 1.0 (σ₀ 3e-3) 에서 곱이 +∞ 로 넘쳐 |차| = 허용 = +∞ 이고 inf ≤ inf 가 참이었다 — 세대 2 는 증서 결합이
+        #    따로 막지만 증서 없는 옛 세대 레코드 (inferred_legacy) 는 역사 인계 · τ 행에서 f_ion = ∞ · tau2 = 0 으로 나갔다 · 곱이 0 으로 밑넘치면 절대 반폭 5e-7
+        #    뒤에 숨는다.  넘침 · 밑넘침 = 기술 실패 사유 (생산자 NON_FINITE_REASON 꼬리표) — 정상 레코드는 식 · 순서 · 허용 · 판정 그대로
+        #    (생산자 값이면 곱 ≥ 1000·σ₀·1e-8 > 0 · 둘 다 작은 유한수)
+        prod = 1000.0 * s0 * q
+        d, tol = abs(sd - prod), sigma_identity_tol(s0, q, sd)
+        if not (math.isfinite(prod) and prod > 0 and math.isfinite(d) and math.isfinite(tol)):
+            return INVALID_INPUT, (f'{_nc_mod().NON_FINITE_REASON} — 두 σ 표현 항등식 (RGLR-02) 을 비교할 수 없다: 1000·σ₀·σ_ratio = {prod!r} · |차| {d!r} · 허용 '
+                                   f'{tol!r} (곱 = 유한 양수 · 차 · 허용 = 유한이어야 — 넘침 · 밑넘침 · σ_ratio {q!r} · σ_dim {sd!r} · σ₀ {s0!r} · 생산자 저장 범위 밖 · '
+                                   'inf ≤ inf 를 같다로 읽지 않는다)')
         if not d <= tol:
-            return INVALID_INPUT, (f'두 σ 표현 불일치 (RGLR-02): σ_dim {sd!r} mS/cm ≠ 1000·σ₀·σ_ratio = {1000.0 * s0 * q!r} '
+            return INVALID_INPUT, (f'두 σ 표현 불일치 (RGLR-02): σ_dim {sd!r} mS/cm ≠ 1000·σ₀·σ_ratio = {prod!r} '
                                    f'(|차| {d:.6g} > 허용 {tol:.6g} — 저장 정밀도 8 · 6 자리 반올림 밖)')
         return None
     if st == 'valid_zero':
@@ -359,7 +389,7 @@ def full_model_limit_problem(rec, channel='ionic', mode=None):
         if cert.get('electrode_model') != ELECTRODE_G2:
             why.append(f'증서 전극 {cert.get("electrode_model")!r} ≠ {ELECTRODE_G2!r}')
         s_ref = rec.get('sigma_grain_S_cm') if channel == 'ionic' else float(getattr(nc, 'SIGMA_AM_ELECTRONIC'))
-        cs = _num(cert.get('sigma_bulk_S_cm'))
+        cs = _num(cert.get('sigma_bulk_S_cm'))                  # ★ 10-16 L214R-08 — 증서 · 부모 σ₀ 의 큰 JSON 정수 = None → 아래 사유 (예외 아님 · 거부)
         if cs is None or _num(s_ref) is None or cs != _num(s_ref):
             why.append(f'증서 σ₀ (sigma_bulk_S_cm) {cert.get("sigma_bulk_S_cm")!r} ≠ 그 채널의 σ₀ {s_ref!r} (G2RR2-04 — 정확히 같은 수)')
     return ' · '.join(why) if why else None
@@ -638,6 +668,8 @@ def _cert_problem(cert):
 #       (`sigma0_convention_problem` — temperature_provenance 의 T_C · Ea · T_ref 로 se_material 을 다시 부른 값) · 전자 · 열 채널 증서는 그 채널의 기준
 #       전도도 (`network_conductivity.SIGMA_AM_ELECTRONIC` · `K_SE_THERMAL`) — 이온 σ₀ 를 강제하지 않는다
 #    ④ 수치 증서 — `network_conductivity.certificate_problem` (보존 · 잔차 · 방법 · 허용치 1e-6)
+#    ④b ★ 10-16 L214R-06 — 채택 단 (마지막 시도) ↔ 요약 결합 = `network_conductivity.adopted_attempt_binding_problem` (모형 한계 증서 ③ 과 같은 함수 · 마지막 시도 =
+#       pass · 같은 방법 · 같은 두 전류 · 예외 없음 · 방법별 수렴 상태 · 수치 · 보존 · 내부 잔차 = 요약 · 앞선 실패 시도 = 정상 fallback 은 허용)
 #  정책 (`CERT_BRANCH_POLICY` · 봉인 — 새 194 전 고정 · 결과를 보고 옮기지 않는다):
 #    · FULL — 게시 (computed) 면 ①–④ 필수 (τ 의 수치 의존).
 #    · CF (bulk_only) · 협착-only (constriction_only) 진단 — **숫자를 싣는** 가지 (값 있음 · 상태 computed · model_over_conduction) 면 ①–④ 필수 ·
@@ -721,6 +753,12 @@ def _cert_published_problem(m, branch, rec, q, sd, st, cert):
     p = _cert_problem(cert)
     if p is not None:
         return p
+    #  ★ 10-16 L214R-06 (Codex 재검증 뒤 같은 부류 Q4) — 채택 단 (마지막 시도) ↔ 요약 결합: 모형 한계 증서 ③ 과 **같은 함수** (생산자 수용 상수 그대로 · 앞선 실패
+    #    시도 = 정상 fallback 은 허용).  옛 판은 게시 증서의 시도 기록을 읽지 않아 마지막 시도를 실패 · 잔차 1.0 · 예외 · 다른 방법 · 전류 ×2 · 목록 비움 / 뺌 ·
+    #    직접해 단 krylov_info 1 로 바꿔도 게시 · τ OK 였다 (생산자는 해를 낸 모든 증서에 시도 목록을 싣고 pass 단에서 멈춘다 — 정직한 증서는 늘 통과)
+    ap = _nc_mod().adopted_attempt_binding_problem(cert)
+    if ap is not None:
+        return ap
     bad = []
     if cert.get('branch') != branch:
         bad.append(f'가지 {cert.get("branch")!r} ≠ 자리 {branch!r} (다른 가지의 증서)')
@@ -783,6 +821,11 @@ def _cert_unpublished_problem(branch, st, rsn, cert):
     if cert.get('status') in CERT_PUBLISHED_STATES or _num(cert.get('I_bottom')) is not None:
         return (f'숫자 없는 가지 ({st} · {rsn}) 인데 증서가 해를 주장한다 (status {cert.get("status")!r} · I_bottom {cert.get("I_bottom")!r}) — '
                 '해 없는 가지를 거짓 수렴 증서로 채우지 않는다')
+    #  ★ 10-16 L214R-08 (같은 부류 Q6) — 여기서 None 은 '해 주장 없음 = 받음' 이다 → float 로 못 옮기는 큰 정수 (JSON 10⁴⁰⁰ · `_num` = None) 를 그 None 으로 읽지 않는다:
+    #    숫자가 실렸으므로 해를 주장한 것 = 기술 실패 사유 (옛 판 = OverflowError) · NaN · None (숫자 아님) 의 기존 뜻은 그대로
+    if _overflow_int(cert.get('I_bottom')):
+        return (f'{_nc_mod().NON_FINITE_REASON} — 숫자 없는 가지 ({st} · {rsn}) 인데 증서 I_bottom 이 float 로 못 옮기는 정수 ({cert["I_bottom"].bit_length()} 비트) — '
+                '숫자가 실렸으므로 해를 주장한다 (변환 불가 = 기술 실패 · 없음으로 읽지 않는다 · 해 없는 가지를 거짓 수렴 증서로 채우지 않는다)')
     if 'branch' in cert and cert.get('branch') != branch:
         return f'가지 {cert.get("branch")!r} ≠ 자리 {branch!r} (다른 가지의 증서)'
     if rsn in _nc_mod().NOT_COMPUTED_SOLVE_REASONS and cert.get('reason') != rsn:
@@ -895,6 +938,7 @@ def sigma0_binding_problems(rec):
             if refs is None:
                 nc = _nc_mod()
                 refs = {p_: float(getattr(nc, a_)) for p_, a_ in CHANNEL_SIGMA_REF.items()}
+            #  ★ 10-16 L214R-08 — 큰 JSON 정수 (`_num` = None) ≠ 기준 전도도 → 아래 사유 (옛 판 = OverflowError · 키가 있으면 값이 맞아야 — 없음으로 읽지 않는다)
             if 'sigma_bulk_S_cm' in c and _num(c.get('sigma_bulk_S_cm')) != refs[pre]:
                 out.append(f'{pre}{ck}: 증서 σ_bulk {c.get("sigma_bulk_S_cm")!r} ≠ {CHANNEL_CERT_NAME[pre]} 채널 기준 전도도 {refs[pre]!r} '
                            f'(network_conductivity.{CHANNEL_SIGMA_REF[pre]} · G2RR2-04)')

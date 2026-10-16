@@ -21,7 +21,8 @@ L214R-01 의 모형 한계 경로 시험 = `scripts/test_l214r01_certificate.py`
      A3 봉인 일관 T/A 넘침 — 모든 증서 T 1e300 · A 1e−10 (g_to_q 그대로) → T/A = +∞ · 게시 증서 전부 q_rec = +∞
      A4 봉인 일관 scale 1e200 — 모든 증서 scale² = OverflowError (고치기 전: 증서 결합 · 세대 계약 · τ 행 · 기록 판정이 예외)
      A5 증서 하나 (증서 결합 관문) — T = A = 1e308 (Codex 모양 그대로) + 전류 2 · T/A 밑넘침 · q_rec 0 밑넘침 · d_rec 넘침 · 허용 넘침 · 큰 JSON 정수 일곱 칸
-        (plate_z · box_x · scale · g_to_q · delta_V · I_bottom · sigma_bulk_S_cm)
+        (plate_z · box_x · scale · g_to_q · delta_V · I_bottom · sigma_bulk_S_cm) · ★ 10-16 L214R-07 — d_rec · 허용 넘침 두 레코드는 레코드 항등식도 넘쳐 0b 가 먼저
+        non_finite 로 거부 (증서 경로 검사는 직접 호출로 본다 · `scripts/test_l214r06_same_class.py` B)
   C  대조 (그대로여야):
      C1 실제 생산자 정상 게시 레코드 — 상자 1.5 · 2.0 (CF computed) · SE+AM 침대 (전자 게시 증서) — 세 모드 소비자 전부 통과 · τ 값 = φ_mc/f 그대로
      C2 사다리 fallback 게시 레코드 — spsolve 증서 실패 → cg+jacobi · + cg+jacobi 미수렴 → gmres+ilu (모든 풀이)
@@ -306,19 +307,30 @@ def main():
                      ('A5e 차원 σ 허용 넘침 (σ_dim + 1000·σ₀·q)', a5e))
             dd = {lab: mut(fn) for lab, fn in cases}
             c_a, c_c, c_d, c_e = (cert(dd[k]) for k in (cases[0][0], cases[2][0], cases[3][0], cases[4][0]))
+            #  ★ 10-16 L214R-07 — A5d · A5e 레코드는 레코드 자신의 두 표현 항등식도 넘친다 (1000·σ₀·σ_ratio = +∞ · 허용 = +∞) → 공용 기술 검사 0b 가 먼저
+            #    non_finite 로 거부한다 (옛 판: 0b 가 inf ≤ inf 로 통과 · 증서 결합만 막았다 — 그 구멍이 L214R-07).  증서 결합은 0b 위임이라 [] → 증서 경로의
+            #    유한성 검사 (`_cert_published_problem`) 는 직접 불러 그대로 본다 (이중 방어 · 문구 그대로)
             chk('A5-0 전제 — 넷 다 수치 증서 통과 · A5a 재구성 +∞ · A5c 재구성 0.0 · A5d 재구성 = 기록 q 유한 · 1000·σ₀·q = +∞ · A5e 재구성 = 기록 q · '
-                '1000·σ₀·q 유한 · 허용 = +∞ · A5c–e 기록은 0b 통과 (증서 결합만 막을 수 있다)',
+                '1000·σ₀·q 유한 · 허용 = +∞ · A5c 기록은 0b 통과 (증서 결합만 막을 수 있다) · A5d · A5e 기록은 0b 가 non_finite 로 먼저 거부 (L214R-07)',
                 all(nc.certificate_problem(c) is None for c in (c_a, c_c, c_d, c_e))
                 and math.isinf(q_rec_of(c_a)) and q_rec_of(c_c) == 0.0
                 and q_rec_of(c_d) == 1e308 and math.isinf(1000.0 * s0 * 1e308)
                 and q_rec_of(c_e) == 3e307 and math.isfinite(1000.0 * s0 * 3e307) and math.isinf(tf.sigma_identity_tol(s0, 3e307, 1.7e308))
-                and all(tf.ion_record_problem(dd[cases[i][0]]['hertzian']) is None for i in (2, 3, 4)))
+                and tf.ion_record_problem(dd[cases[2][0]]['hertzian']) is None
+                and all(str((tf.ion_record_problem(dd[cases[i][0]]['hertzian']) or ('', ''))[1]).startswith(TAG) for i in (3, 4)))
             for lab, _fn in cases:
                 d = dd[lab]
                 v = verdicts(d, 'hertz')
                 acc, det = v.pop('0b∧증서 결합')
                 chk(f'{lab} ★ 0b∧증서 결합 = 거부 (예외 아님)', acc is False, det)
-                tagged(f'{lab} ★', d, 'hertz', FULL)
+                if lab in (cases[3][0], cases[4][0]):
+                    r = d['hertzian']
+                    irp = tf.ion_record_problem(r)
+                    cp, ce = _call(tf._cert_published_problem, 'hertz', 'full', r, r['sigma_full'], r['sigma_full_mScm'], r['sigma_full_status'], cert(d))
+                    chk(f'{lab} ★ 0b 사유 = {TAG} … (L214R-07 — 레코드 항등식) · 증서 경로 직접 = {TAG} … (예외 아님) — {irp!r:.120} · {ce or cp!r:.120}',
+                        isinstance(irp, tuple) and str(irp[1]).startswith(TAG) and ce is None and isinstance(cp, str) and TAG in cp)
+                else:
+                    tagged(f'{lab} ★', d, 'hertz', FULL)
                 chk(f'{lab} · 세대 계약 · 게시 관문 · τ 행 = 예외 없이 거부 {[(k, a) for k, (a, _x) in v.items()]}',
                     all(a is False for a, _x in v.values()), v)
 

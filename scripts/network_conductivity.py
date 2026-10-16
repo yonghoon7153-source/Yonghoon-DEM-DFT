@@ -1004,6 +1004,31 @@ def _adopted_attempt_problem(last, cert):
     return None
 
 
+def adopted_attempt_binding_problem(cert):
+    """★ 10-16 L214R-06 (Codex 재검증 뒤 같은 부류 Q4 · 수정 계획 §4-2 · 1저자 10-16 (가)) — 증서의 채택 단 (마지막 시도) 이 요약과 **같은 해**를 낸 pass 단인가 →
+    None | 사유.  옛 판은 이 판정이 모형 한계 증서 (`model_limit_certificate_problem` ③) 안에만 있어, 숫자를 싣는 게시 증서 (이온 FULL · CF · 협착-only —
+    `tau_flux._cert_published_problem`) 의 마지막 시도를 실패 · 잔차 1.0 · 예외 · 다른 방법 · 전류 ×2 · 목록 비움 / 뺌 · 직접해 단 krylov_info 1 로 바꿔도 게시 ·
+    τ OK 였다 → 두 경로가 **이 한 함수**를 쓴다 (규율 ① · 규칙 = L214R-01 B 그대로 · 생산자 수용 상수 그대로 · 새 문턱 없음):
+      ① 마지막 시도가 있고 객체 · outcome pass · 방법 = 요약 방법 · 두 전류 = 요약 두 전류 (`_cert_num` — 생산자가 채택 단의 값을 요약에 그대로 옮긴다)
+      ② 그 단의 예외 없음 · 방법별 수렴 상태 · 수치 · 보존 · 내부 잔차 = 요약 (`_adopted_attempt_problem`)
+    생산자 사다리 (`solve_network`) 는 해를 낸 모든 증서에 시도 목록을 싣고 채택 단 (pass) 에서 멈춘다 (none_free 도 한 단 · G2R-03 05977e94a 부터 같은 기록) →
+    정직한 게시 · 모형 한계 증서는 늘 통과 · 앞선 실패 시도 (정상 fallback 성공) 는 보지 않는다.  사유 문구 = 옛 ③ 그대로 — 모형 한계 증서 (상태 = 가드) 의 출력
+    바이트 불변 · 게시 증서는 괄호의 구제 대상만 '게시 값' 으로 적는다."""
+    if not isinstance(cert, dict):
+        return f'증서 없음 ({type(cert).__name__}) — 채택 단 기록을 볼 수 없다'
+    atts = cert.get('attempts')
+    last = atts[-1] if isinstance(atts, list) and atts and isinstance(atts[-1], dict) else None
+    if (last is None or last.get('outcome') != 'pass' or last.get('method') != cert.get('method')
+            or _cert_num(last.get('I_bottom')) != _cert_num(cert.get('I_bottom')) or _cert_num(last.get('I_top')) != _cert_num(cert.get('I_top'))):
+        rescue = '높은 q 로' if cert.get('status') == OVER_CONDUCTION_GUARD_STATUS else '게시 값으로'
+        return (f'채택 단 기록 — 마지막 시도 {({k: last.get(k) for k in ("method", "outcome")} if last else None)!r} 가 증서 방법 {cert.get("method")!r} · '
+                f'두 전류와 같은 pass 단이 아니다 (앞 단계 실패를 {rescue} 구제하지 않는다)')
+    ap = _adopted_attempt_problem(last, cert)                # ★ L214R-01 B — 채택 단의 실패 기록을 요약의 pass 가 가리지 않게
+    if ap is not None:
+        return f'채택 단 기록 — 마지막 pass 시도가 요약과 같은 해가 아니다: {ap}'
+    return None
+
+
 def model_limit_certificate_problem(cert):
     """★ 10-15 L214-01 · 02 — FULL 모형 한계 증서 (수치 인증 성공 / 출력 채택 거부) → None (유효) | 사유.  순수 함수 (기록만 본다).
 
@@ -1014,7 +1039,8 @@ def model_limit_certificate_problem(cert):
          이 범주가 아니다)
       ② 수치 증서 = 게시 값과 **같은** 검사 (`_certificate_numeric_problem` — 방법 · I_bottom 유한 양수 · I_top 유한 · 보존 잔차 재측정 ≤ 1e-6 · 내부 잔차 ≤ 1e-6)
       ③ 채택 단 = 마지막 시도 (outcome pass · 같은 방법 · 같은 두 전류) — 예외 · 미수렴 · 증서 실패 · 병렬 상한 밖에서 끝난 풀이는 여기서 거부 ·
-         ★ 10-16 L214R-01 B — 그 단의 예외 없음 · 방법별 수렴 상태 · 수치 (같은 상수) · 보존 · 내부 잔차 = 요약 (`_adopted_attempt_problem` · 앞선 실패 시도는 허용)
+         ★ 10-16 L214R-01 B — 그 단의 예외 없음 · 방법별 수렴 상태 · 수치 (같은 상수) · 보존 · 내부 잔차 = 요약 (`_adopted_attempt_problem` · 앞선 실패 시도는 허용) ·
+         ★ 10-16 L214R-06 — ③ 전체 = 공용 함수 `adopted_attempt_binding_problem` (게시 증서 경로 `tau_flux._cert_published_problem` 과 같은 함수 · 문구 그대로)
       ④ ΔV = 1 · 기하 네 값 유한 양수 · 환산 T · A 유한 양수 · ★ L214R-01 A — T/A 도 유한 양수 (넘침 · 밑넘침 = NON_FINITE_REASON 사유 · 예외 아님) ·
          g_to_q = T/A (상대 1e-12)
       ⑤ q_withheld 유한 실수 (bool · 문자열 · NaN · ±∞ 거부) · 재구성 q = (I_bottom/ΔV)·T/A (솔버와 같은 식 · 같은 순서) — ★ L214R-01 A — 비교 **전에** 유한 양수
@@ -1033,15 +1059,9 @@ def model_limit_certificate_problem(cert):
     p = _certificate_numeric_problem(cert)
     if p is not None:
         return f'수치 증서 실패 — {p}'
-    atts = cert.get('attempts')
-    last = atts[-1] if isinstance(atts, list) and atts and isinstance(atts[-1], dict) else None
-    if (last is None or last.get('outcome') != 'pass' or last.get('method') != cert.get('method')
-            or _cert_num(last.get('I_bottom')) != _cert_num(cert.get('I_bottom')) or _cert_num(last.get('I_top')) != _cert_num(cert.get('I_top'))):
-        return (f'채택 단 기록 — 마지막 시도 {({k: last.get(k) for k in ("method", "outcome")} if last else None)!r} 가 증서 방법 {cert.get("method")!r} · '
-                '두 전류와 같은 pass 단이 아니다 (앞 단계 실패를 높은 q 로 구제하지 않는다)')
-    ap = _adopted_attempt_problem(last, cert)                # ★ L214R-01 B — 채택 단의 실패 기록을 요약의 pass 가 가리지 않게
+    ap = adopted_attempt_binding_problem(cert)               # ★ 10-16 L214R-06 — ③ 을 한 함수로 (게시 증서 경로와 같은 판정 · 상태 = 가드라 문구 그대로)
     if ap is not None:
-        return f'채택 단 기록 — 마지막 pass 시도가 요약과 같은 해가 아니다: {ap}'
+        return ap
     dv = _cert_num(cert.get('delta_V'))
     if dv != CERT_DELTA_V:
         return f'ΔV {cert.get("delta_V")!r} ≠ {CERT_DELTA_V!r} (정확 Dirichlet — 바닥 띠 1 · 위 띠 0)'

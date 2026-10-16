@@ -95,6 +95,9 @@ def _g2_net_records(rec_h, rec_p):
         #  ★ 10-07 G2RR2-05 (fixture-drift — 같은 규약) — 계약이 세 가지의 상태 기록을 요구한다 (상태 키 결손 = 기록 결손 ≠ 정직한 실패) → 숫자 없는
         #    가짜 진단 가지 (CF · 협착-only) 는 생산자의 정직한 실패 모양 (상태 + 사유) 을 단다: 비관통 = valid_zero · no_through_path · 그 밖 = not_computed ·
         #    solve_failed.  FULL · 숫자 있는 가지는 그대로.
+        #  ★ 10-16 L214R-06 (fixture-drift — 같은 규약) — 계약이 게시 증서의 채택 단 (마지막 시도 = pass · 같은 방법 · 같은 두 전류 · 예외 없음 · 방법별 수렴 상태 ·
+        #    보존 · 내부 잔차 = 요약 — `network_conductivity.adopted_attempt_binding_problem`) 을 본다 → 가짜 증서도 생산자 사다리 모양의 시도 목록
+        #    (직접해 spsolve 한 단 · outcome pass · krylov_info 없음 · 값 = 요약) 을 단다.  값 · 상태는 그대로.
         for branch, qk, _dk, sk, rk, ck in _tf.CERT_BRANCH_KEYS:
             if branch == 'full' or out.get(qk) is not None:
                 continue
@@ -111,7 +114,9 @@ def _g2_net_records(rec_h, rec_p):
                        'conservation_rel': 0.0, 'residual_rel': 0.0, 'electrode_model': out.get('electrode_model'),
                        'branch': branch, 'channel': 'ionic', 'role': _tf.CERT_ROLE[mode], 'contact_mode': out.get('contact_mode'),
                        'delta_V': 1.0, 'geometry': {'plate_z': 1.0, 'box_x': 1.0, 'box_y': 1.0, 'scale': 1}, 'g_to_q': 1.0,
-                       'sigma_bulk_S_cm': out.get('sigma_grain_S_cm')}
+                       'sigma_bulk_S_cm': out.get('sigma_grain_S_cm'),
+                       'attempts': [{'method': 'spsolve', 'outcome': 'pass', 'krylov_info': None, 'refine_passes': None, 'I_bottom': float(q),
+                                     'I_top': -float(q), 'conservation_rel': 0.0, 'residual_rel': 0.0, 'error': None}]}
         return out
     h = _lab(rec_h, 'hertz')
     h[_tf.H12_MODE] = _lab(rec_h, _tf.H12_MODE)
