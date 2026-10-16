@@ -74,5 +74,11 @@
     "처리": "Li3PS4 scf.out · tmp → *.crash_<시각> (처음부터 다시 · 옛 BFGS 이력이 섞이지 않게) → 같은 러너 같은 인자 (MIN_FREE_MIB 8000 · LOCK /tmp/ndsite_dft.lock · 로그 run.log 이어 쓰기) — 러너 sha16 e6fc5b25e4f2b3ad = 발사판 09a88aba 와 같음 · Li2S 는 완료 판정으로 건너뛴다",
     "결과_영향": "없음 — 기준상 에너지는 완료 판정 (bfgs 수렴 + 최종 scf) 을 통과한 출력만 쓴다",
     "⏭": "재시작 DRY_RUN 표 (Li2S 완료 · 나머지 대기) 확인 → 8 점 끝 → site_dg.py --qe 판독 (위 ⏭ 그대로)"
+  },
+  "✅_재시작_2026_10_16": {
+    "출처": "사용자 붙여넣기 2026-10-16 (kgy · tmux ls · 로그 끝 · nvidia-smi)",
+    "발사": "tmux ndsite_dft 16:29:08 · worktree ~/wt_bmeas_1016 (러너 sha16 e6fc5b25e4f2b3ad = 발사판) · MIN_FREE_MIB 8000 · LOCK /tmp/ndsite_dft.lock · run.log 이어 쓰기 · Li3PS4 의 끊긴 scf.out · tmp 는 *.crash_<시각> 으로 옮김",
+    "진행": "16:29:08 skip Li2S (완료: JOB DONE + 수렴 + 힘) · VRAM 여유 23740 MiB (문턱 8000) → Li3PS4 vc-relax 처음부터",
+    "곁의_GPU_잡": "li2s B 650 K seed3 (UMA) · cascade 는 대기"
   }
 }
