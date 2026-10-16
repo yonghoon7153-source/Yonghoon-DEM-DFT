@@ -7,7 +7,7 @@
   "amends_after": [
     "amendment_3 v6.1 (VASP 경로 · ratified 09-30)"
   ],
-  "status": "초안 v2 — Codex CY 조건부 GO 반영 · 1저자 선택 1 건 (점검 범위) · 빌드 전",
+  "status": "ratified 2026-10-17 (v2 그대로) — 빌드 전",
   "status_note": "1저자 선택 1 건 = 탄소 카드 (wad_p2small_vasp_card_2026_10_15) 의 점검 범위 (선택 1 / 2) — 은 a4 의 내용과는 무관하다 · 한 묶음으로 보내므로 같은 상태로 적는다",
   "개정_이력": [
     {
@@ -119,7 +119,7 @@
     "은 a4 의 실패·미완료를 탄소 G5_C · δ · C–C 판정에 옮기기",
     "G4 PASS 를 '총 수치오차가 문턱 안' 으로 쓰기 (등록한 설정 변화 검사다)"
   ],
-  "결정": "비준 때 결정 원장에 올린다 — 이름 후보 D-2026-10-15-wad-aprime-v5-e70-a4-rerun (D-2026-09-27-wad-aprime-v5-vasp-route 에 덧붙임)",
+  "결정": "D-2026-10-15-wad-aprime-v5-e70-a4-rerun (active · 비준 2026-10-17 · D-2026-09-27-wad-aprime-v5-vasp-route 에 덧붙임) — 1저자 (사용자) 2026-10-17 AskUserQuestion — ⓐ 점검 범위 '선택 2 · S_A/PBE 대표 (Recommended)' (80 % 발동 규칙 한 묶음) · ⓑ 단계 누적 상한 '1.5 배 (Recommended)' · ⓒ 전자 스텝 ≥ 1 뒤 충돌 '실행 실패 · 사다리 한 단 소모 (Recommended)' (0 스텝 중단만 인프라 재시작 · 잡마다 2 회) · '비준 · 빌드 시작 (Recommended)'",
   "CY_반영_2026_10_15": [
     {
       "CY": "Q-CY-7",
