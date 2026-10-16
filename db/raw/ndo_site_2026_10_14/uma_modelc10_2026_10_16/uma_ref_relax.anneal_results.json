@@ -1,0 +1,154 @@
+{
+  "provenance": {
+    "timestamp_iso": "2026-10-14T14:01:02.511486+09:00",
+    "python_version": "3.11.15",
+    "platform": "Linux-5.15.0-139-generic-x86_64-with-glibc2.31",
+    "machine": "x86_64",
+    "hostname": "esp-Z590-AORUS-MASTER",
+    "ase_version": "3.29.0",
+    "numpy_version": "2.4.6",
+    "scipy_version": "1.17.1",
+    "fairchem_version": "unknown",
+    "torch_version": "2.8.0+cu128",
+    "uma_model_name": "uma-s-1p1",
+    "uma_task_name": "omat",
+    "git_commit": "unknown",
+    "git_branch": "unknown",
+    "git_dirty": null
+  },
+  "temperature_K": 500,
+  "time_ps": 0.0,
+  "n_done": 2,
+  "results": [
+    {
+      "name": "sei_li2s_mp-1153",
+      "seed": 20299960,
+      "rng_streams": {
+        "velocities": 20299960,
+        "langevin": 21299963
+      },
+      "struct_sha256": {
+        "input": "cae62c5f8cf85bec",
+        "post_md": "1a355e4cc7915f11",
+        "post_relax": "a57a3d75c1464736"
+      },
+      "\u26a0_\uc7ac\ud604": "seed \uace0\uc815\uc740 \uc7ac\ud604\uc758 **\ud544\uc694\uc870\uac74**\uc774\uc9c0 \ucda9\ubd84\uc870\uac74\uc774 \uc544\ub2c8\ub2e4 \u2014 GPU \ucee4\ub110 \ube44\uacb0\uc815\uc131\u00b7ASE/torch \ubc84\uc804\u00b7\uc7a5\uce58\uac00 \ubc14\ub00c\uba74 \ub2ec\ub77c\uc9c4\ub2e4",
+      "xyz_input": "/home/kgy/work/runs/ndo_site_2026_10_14/src_ref/db/structures/sei_li2s_mp-1153.cif",
+      "n_atoms": 3,
+      "temperature_K": 500,
+      "time_ps": 0.0,
+      "dt_fs": 2.0,
+      "E_pre_anneal": -12.000147074962733,
+      "E_md_final": -12.000147074962733,
+      "E_post_relax": -12.000673282163255,
+      "delta_E_anneal_meV_per_atom": -0.17540240017410724,
+      "cell_pre": [
+        [
+          4.009533739034128,
+          0.0,
+          0.0
+        ],
+        [
+          2.004766379155434,
+          3.4723567050293105,
+          0.0
+        ],
+        [
+          2.004766630482912,
+          1.1574532936506619,
+          3.273769617491192
+        ]
+      ],
+      "cell_post": [
+        [
+          4.014069714887447,
+          4.1512639329689486e-08,
+          8.894614322425602e-09
+        ],
+        [
+          2.007034402478335,
+          3.476285190116301,
+          -8.037000868496847e-08
+        ],
+        [
+          2.007034637385246,
+          1.1587627237483635,
+          3.277473344927498
+        ]
+      ],
+      "volume_pre": 45.57916017402562,
+      "volume_post": 45.73403059980944,
+      "t_md_s": 0.0010821819305419922,
+      "t_relax_s": 1.034853458404541,
+      "n_relax_steps": 3,
+      "converged": true,
+      "post_md_xyz": "/home/kgy/work/runs/ndo_site_2026_10_14/uma_ref_relax/sei_li2s_mp-1153/post_md.xyz",
+      "post_relax_xyz": "/home/kgy/work/runs/ndo_site_2026_10_14/uma_ref_relax/sei_li2s_mp-1153/post_relax.xyz"
+    },
+    {
+      "name": "li3ps4_mp-985583",
+      "seed": 20266192,
+      "rng_streams": {
+        "velocities": 20266192,
+        "langevin": 21266195
+      },
+      "struct_sha256": {
+        "input": "f21e393dbd164c25",
+        "post_md": "f21e393dbd164c25",
+        "post_relax": "dcda1f0310af43ec"
+      },
+      "\u26a0_\uc7ac\ud604": "seed \uace0\uc815\uc740 \uc7ac\ud604\uc758 **\ud544\uc694\uc870\uac74**\uc774\uc9c0 \ucda9\ubd84\uc870\uac74\uc774 \uc544\ub2c8\ub2e4 \u2014 GPU \ucee4\ub110 \ube44\uacb0\uc815\uc131\u00b7ASE/torch \ubc84\uc804\u00b7\uc7a5\uce58\uac00 \ubc14\ub00c\uba74 \ub2ec\ub77c\uc9c4\ub2e4",
+      "xyz_input": "/home/kgy/work/runs/ndo_site_2026_10_14/src_ref/db/structures/li3ps4_mp-985583.cif",
+      "n_atoms": 32,
+      "temperature_K": 500,
+      "time_ps": 0.0,
+      "dt_fs": 2.0,
+      "E_pre_anneal": -140.657324716257,
+      "E_md_final": -140.657324716257,
+      "E_post_relax": -140.72378427113787,
+      "delta_E_anneal_meV_per_atom": -2.076861090027471,
+      "cell_pre": [
+        [
+          6.17176593,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          8.01859859,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          13.03281824
+        ]
+      ],
+      "cell_post": [
+        [
+          6.215801942963788,
+          -5.5612669597244734e-09,
+          -1.5519792562155524e-08
+        ],
+        [
+          -7.225388137350375e-09,
+          8.062394976230134,
+          -2.5340912664712607e-09
+        ],
+        [
+          -3.2822886213165356e-08,
+          -4.121232601331839e-09,
+          13.093623188921018
+        ]
+      ],
+      "volume_pre": 644.9800156367473,
+      "volume_post": 656.177110585426,
+      "t_md_s": 0.0018696784973144531,
+      "t_relax_s": 8.054029941558838,
+      "n_relax_steps": 26,
+      "converged": true,
+      "post_md_xyz": "/home/kgy/work/runs/ndo_site_2026_10_14/uma_ref_relax/li3ps4_mp-985583/post_md.xyz",
+      "post_relax_xyz": "/home/kgy/work/runs/ndo_site_2026_10_14/uma_ref_relax/li3ps4_mp-985583/post_relax.xyz"
+    }
+  ]
+}

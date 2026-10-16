@@ -1,0 +1,316 @@
+{
+ "refs_eV_per_fu": {
+  "Li2S": -12.000673282163255,
+  "Li3PS4": -35.18094606778447
+ },
+ "reservoir_4Li2S_minus_Li3PS4_eV": -12.821747060868553,
+ "error_records": [],
+ "dopants": {
+  "B": {
+   "models": {
+    "MP": {
+     "formula": "B2Cl16Li58O3P8S41",
+     "n": 6,
+     "n_converged": 6,
+     "excluded_unconverged": [],
+     "gap_min_second_eV": 0.1743896008036927,
+     "top": [
+      "BMP_04",
+      "BMP_05",
+      "BMP_02"
+     ],
+     "ranked": [
+      {
+       "name": "BMP_04",
+       "E_eV": -542.8207379111375,
+       "dE_from_min_eV": 0.0,
+       "converged": true,
+       "n_relax_steps": 253,
+       "post_relax_xyz": "/home/kgy/work/runs/ndo_site_2026_10_14/uma_anneal_modelc10/BMP_04/post_relax.xyz"
+      },
+      {
+       "name": "BMP_05",
+       "E_eV": -542.6463483103338,
+       "dE_from_min_eV": 0.1743896008036927,
+       "converged": true,
+       "n_relax_steps": 215,
+       "post_relax_xyz": "/home/kgy/work/runs/ndo_site_2026_10_14/uma_anneal_modelc10/BMP_05/post_relax.xyz"
+      },
+      {
+       "name": "BMP_02",
+       "E_eV": -542.606978531799,
+       "dE_from_min_eV": 0.2137593793385122,
+       "converged": true,
+       "n_relax_steps": 184,
+       "post_relax_xyz": "/home/kgy/work/runs/ndo_site_2026_10_14/uma_anneal_modelc10/BMP_02/post_relax.xyz"
+      },
+      {
+       "name": "BMP_01",
+       "E_eV": -542.5340571732761,
+       "dE_from_min_eV": 0.2866807378613885,
+       "converged": true,
+       "n_relax_steps": 109,
+       "post_relax_xyz": "/home/kgy/work/runs/ndo_site_2026_10_14/uma_anneal_modelc10/BMP_01/post_relax.xyz"
+      },
+      {
+       "name": "BMP_03",
+       "E_eV": -542.3469145462485,
+       "dE_from_min_eV": 0.4738233648889718,
+       "converged": true,
+       "n_relax_steps": 207,
+       "post_relax_xyz": "/home/kgy/work/runs/ndo_site_2026_10_14/uma_anneal_modelc10/BMP_03/post_relax.xyz"
+      },
+      {
+       "name": "BMP_00",
+       "E_eV": -542.2420226280813,
+       "dE_from_min_eV": 0.5787152830562263,
+       "converged": true,
+       "n_relax_steps": 148,
+       "post_relax_xyz": "/home/kgy/work/runs/ndo_site_2026_10_14/uma_anneal_modelc10/BMP_00/post_relax.xyz"
+      }
+     ]
+    },
+    "MLi": {
+     "formula": "B2Cl16Li48O3P10S41",
+     "n": 6,
+     "n_converged": 6,
+     "excluded_unconverged": [],
+     "gap_min_second_eV": 0.5099501895791718,
+     "top": [
+      "BMLi_01",
+      "BMLi_04",
+      "BMLi_00"
+     ],
+     "ranked": [
+      {
+       "name": "BMLi_01",
+       "E_eV": -517.519828767735,
+       "dE_from_min_eV": 0.0,
+       "converged": true,
+       "n_relax_steps": 150,
+       "post_relax_xyz": "/home/kgy/work/runs/ndo_site_2026_10_14/uma_anneal_modelc10/BMLi_01/post_relax.xyz"
+      },
+      {
+       "name": "BMLi_04",
+       "E_eV": -517.0098785781558,
+       "dE_from_min_eV": 0.5099501895791718,
+       "converged": true,
+       "n_relax_steps": 274,
+       "post_relax_xyz": "/home/kgy/work/runs/ndo_site_2026_10_14/uma_anneal_modelc10/BMLi_04/post_relax.xyz"
+      },
+      {
+       "name": "BMLi_00",
+       "E_eV": -515.6387745129808,
+       "dE_from_min_eV": 1.88105425475419,
+       "converged": true,
+       "n_relax_steps": 104,
+       "post_relax_xyz": "/home/kgy/work/runs/ndo_site_2026_10_14/uma_anneal_modelc10/BMLi_00/post_relax.xyz"
+      },
+      {
+       "name": "BMLi_02",
+       "E_eV": -515.3998510305277,
+       "dE_from_min_eV": 2.119977737207364,
+       "converged": true,
+       "n_relax_steps": 192,
+       "post_relax_xyz": "/home/kgy/work/runs/ndo_site_2026_10_14/uma_anneal_modelc10/BMLi_02/post_relax.xyz"
+      },
+      {
+       "name": "BMLi_05",
+       "E_eV": -515.3737891908088,
+       "dE_from_min_eV": 2.1460395769262277,
+       "converged": true,
+       "n_relax_steps": 228,
+       "post_relax_xyz": "/home/kgy/work/runs/ndo_site_2026_10_14/uma_anneal_modelc10/BMLi_05/post_relax.xyz"
+      },
+      {
+       "name": "BMLi_03",
+       "E_eV": -514.6446202115834,
+       "dE_from_min_eV": 2.8752085561516196,
+       "converged": true,
+       "n_relax_steps": 78,
+       "post_relax_xyz": "/home/kgy/work/runs/ndo_site_2026_10_14/uma_anneal_modelc10/BMLi_03/post_relax.xyz"
+      }
+     ]
+    }
+   },
+   "refusals": [],
+   "closure": {
+    "a_Li2S": 8,
+    "b_Li3PS4": -2,
+    "n_dopant": 2
+   },
+   "dG_site_eV_per_dopant": 0.1712924891673211,
+   "polymorph_recheck": [
+    {
+     "threshold": 0.2,
+     "distance": 0.028707510832678917,
+     "triggered": true
+    }
+   ]
+  },
+  "Nd": {
+   "models": {
+    "MP": {
+     "formula": "Cl16Li58Nd2O3P8S41",
+     "n": 6,
+     "n_converged": 6,
+     "excluded_unconverged": [],
+     "gap_min_second_eV": 0.16266612538856862,
+     "top": [
+      "NdMP_00",
+      "NdMP_02",
+      "NdMP_04"
+     ],
+     "ranked": [
+      {
+       "name": "NdMP_00",
+       "E_eV": -546.3021836021624,
+       "dE_from_min_eV": 0.0,
+       "converged": true,
+       "n_relax_steps": 316,
+       "post_relax_xyz": "/home/kgy/work/runs/ndo_site_2026_10_14/uma_anneal_modelc10/NdMP_00/post_relax.xyz"
+      },
+      {
+       "name": "NdMP_02",
+       "E_eV": -546.1395174767738,
+       "dE_from_min_eV": 0.16266612538856862,
+       "converged": true,
+       "n_relax_steps": 252,
+       "post_relax_xyz": "/home/kgy/work/runs/ndo_site_2026_10_14/uma_anneal_modelc10/NdMP_02/post_relax.xyz"
+      },
+      {
+       "name": "NdMP_04",
+       "E_eV": -545.7819556604932,
+       "dE_from_min_eV": 0.5202279416691908,
+       "converged": true,
+       "n_relax_steps": 272,
+       "post_relax_xyz": "/home/kgy/work/runs/ndo_site_2026_10_14/uma_anneal_modelc10/NdMP_04/post_relax.xyz"
+      },
+      {
+       "name": "NdMP_01",
+       "E_eV": -545.6771002350158,
+       "dE_from_min_eV": 0.6250833671465443,
+       "converged": true,
+       "n_relax_steps": 386,
+       "post_relax_xyz": "/home/kgy/work/runs/ndo_site_2026_10_14/uma_anneal_modelc10/NdMP_01/post_relax.xyz"
+      },
+      {
+       "name": "NdMP_03",
+       "E_eV": -545.3454339129626,
+       "dE_from_min_eV": 0.9567496891997962,
+       "converged": true,
+       "n_relax_steps": 115,
+       "post_relax_xyz": "/home/kgy/work/runs/ndo_site_2026_10_14/uma_anneal_modelc10/NdMP_03/post_relax.xyz"
+      },
+      {
+       "name": "NdMP_05",
+       "E_eV": -544.3451814784642,
+       "dE_from_min_eV": 1.957002123698203,
+       "converged": true,
+       "n_relax_steps": 151,
+       "post_relax_xyz": "/home/kgy/work/runs/ndo_site_2026_10_14/uma_anneal_modelc10/NdMP_05/post_relax.xyz"
+      }
+     ]
+    },
+    "MLi": {
+     "formula": "Cl16Li48Nd2O3P10S41",
+     "n": 6,
+     "n_converged": 6,
+     "excluded_unconverged": [],
+     "gap_min_second_eV": 0.06998250159222152,
+     "top": [
+      "NdMLi_00",
+      "NdMLi_01",
+      "NdMLi_04"
+     ],
+     "ranked": [
+      {
+       "name": "NdMLi_00",
+       "E_eV": -521.6974729950714,
+       "dE_from_min_eV": 0.0,
+       "converged": true,
+       "n_relax_steps": 186,
+       "post_relax_xyz": "/home/kgy/work/runs/ndo_site_2026_10_14/uma_anneal_modelc10/NdMLi_00/post_relax.xyz"
+      },
+      {
+       "name": "NdMLi_01",
+       "E_eV": -521.6274904934792,
+       "dE_from_min_eV": 0.06998250159222152,
+       "converged": true,
+       "n_relax_steps": 120,
+       "post_relax_xyz": "/home/kgy/work/runs/ndo_site_2026_10_14/uma_anneal_modelc10/NdMLi_01/post_relax.xyz"
+      },
+      {
+       "name": "NdMLi_04",
+       "E_eV": -521.4543098879635,
+       "dE_from_min_eV": 0.24316310710787548,
+       "converged": true,
+       "n_relax_steps": 122,
+       "post_relax_xyz": "/home/kgy/work/runs/ndo_site_2026_10_14/uma_anneal_modelc10/NdMLi_04/post_relax.xyz"
+      },
+      {
+       "name": "NdMLi_02",
+       "E_eV": -521.0613297294541,
+       "dE_from_min_eV": 0.6361432656173065,
+       "converged": true,
+       "n_relax_steps": 84,
+       "post_relax_xyz": "/home/kgy/work/runs/ndo_site_2026_10_14/uma_anneal_modelc10/NdMLi_02/post_relax.xyz"
+      },
+      {
+       "name": "NdMLi_03",
+       "E_eV": -520.9531044765419,
+       "dE_from_min_eV": 0.7443685185295408,
+       "converged": true,
+       "n_relax_steps": 137,
+       "post_relax_xyz": "/home/kgy/work/runs/ndo_site_2026_10_14/uma_anneal_modelc10/NdMLi_03/post_relax.xyz"
+      },
+      {
+       "name": "NdMLi_05",
+       "E_eV": -520.8573979603169,
+       "dE_from_min_eV": 0.8400750347544772,
+       "converged": true,
+       "n_relax_steps": 257,
+       "post_relax_xyz": "/home/kgy/work/runs/ndo_site_2026_10_14/uma_anneal_modelc10/NdMLi_05/post_relax.xyz"
+      }
+     ]
+    }
+   },
+   "refusals": [],
+   "closure": {
+    "a_Li2S": 8,
+    "b_Li3PS4": -2,
+    "n_dopant": 2
+   },
+   "dG_site_eV_per_dopant": 0.5193917573230706,
+   "polymorph_recheck": [
+    {
+     "threshold": 0.0,
+     "distance": 0.5193917573230706,
+     "triggered": false
+    }
+   ]
+  }
+ },
+ "hosts": [
+  {
+   "name": "Bhost_00",
+   "E_eV": -516.081594188808,
+   "converged": true,
+   "formula": "Cl16Li54P10S44",
+   "post_relax_xyz": "/home/kgy/work/runs/ndo_site_2026_10_14/uma_anneal_modelc10/Bhost_00/post_relax.xyz"
+  }
+ ],
+ "inputs": {
+  "/home/kgy/work/runs/ndo_site_2026_10_14/uma_anneal_modelc10/anneal_results.json": "c4b29d16bd9736ee4d6789b670171d87e70245b75259ff66ceb09f737ffeed20",
+  "/home/kgy/work/runs/ndo_site_2026_10_14/uma_ref_relax/anneal_results.json": "df4f5c11338efe725b6a650c07d4b34b0034c1fda21f956e05ee71cfbc735b64"
+ },
+ "args": {
+  "expect": 6,
+  "allow_incomplete": false,
+  "top": 3,
+  "thresholds": [
+   "B=0.20",
+   "Nd=0"
+  ]
+ }
+}
