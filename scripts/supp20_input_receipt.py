@@ -20,6 +20,9 @@
   ⑥ ★ 10-15 (나′) 대기 지문 (1저자 10-15 Q1 (나′)) — 등록 문서의 선택 선언 `code_fp_pending <64 hex>` (비준 · 재등록 전의 새 봉인 지문) 를 읽어 D1 상세에만 싣는다
      (값 둘 이상 · 등록 §3 과 같음 = R0 문제).  발사 대조 D1 · E2 · F5 · G5 = 등록 §3 값만 (대기 선언은 통과시키지 않는다 — 비준 · 재등록 전 발사 불가) ·
      selftest 만 선언된 대기 상태를 기록 종류별 정확한 실패 집합으로 받는다 (컨테이너 {D1} · 사전 점검 {D1 · E2} · 발사 manifest 둘 {D1 · F5 · G5}).
+  ⑦ ★ 10-16 L214R-04 (Codex LHS214 재검증 판정문 §5 · 수정 계획 `docs/reviews/lhs214r_fix_plan_20261016.md` Q4 = 1저자 비준) — 등록 code_fp = **활성 §3 (`## 3.` 절)
+     안의** `code_fp <64 hex>` 만 읽는다.  옛 판은 문서 전체의 같은 기계 구문을 읽어, 안내된 비준 단계 (§3 갱신 + 대기 선언 삭제 + 역사 표 보존) 가 R0 · D1
+     (registered None) 였다.  등록 문서 · 역사 표는 고치지 않는다 · §3 제목이 없거나 둘이면 R0 · 대기 선언 · 발사 대조 규칙은 ⑥ 그대로 (selftest ⑫).
 값의 정본은 실행기 함수 (`run_network_194_parallel` — registered_id_set · build_plan · cohort_specs · plan_input_digest · registered_production_set ·
 print_followups · preflight_receipt_checks · parse_preflight_log · launch_eligibility · production_observation_problem) 와 등록 문서 · 수확 묶음 README 다 —
 값을 이 파일에 베껴 두지 않는다 (r2 대조의 허용 차이 두 칸만 README 끝 문장을 옮긴 상수 · 묶음 폴더 이름 둘).
@@ -102,24 +105,58 @@ def _sha_after(text, anchor):
     return (m.group(1), '') if m else (None, f'{anchor[:48]} 뒤 같은 줄에 sha256 이 없다')
 
 
+_MD_HEADING = re.compile(r'^(#{1,6})[ \t]+(\S.*?)[ \t]*$')
+_MD_FENCE = re.compile(r'^[ \t]{0,3}(```|~~~)')
+
+
+def _md_section(text, num):
+    """등록 문서의 '## <num>.' 절 (제목 줄 포함 · 다음 같은 수준 이하 (#  · ##) 제목 앞까지) → (글, 사유).  ★ 10-16 L214R-04.
+    코드 울타리 (``` · ~~~) 안의 '#' 줄은 제목이 아니다 · 그 제목이 없거나 둘 이상이면 (None, 사유) — 활성 절을 정할 수 없다 (fail-closed)."""
+    lines = text.split('\n')
+    heads, fence = [], None
+    for i, ln in enumerate(lines):
+        f_ = _MD_FENCE.match(ln)
+        if f_:
+            fence = None if fence == f_.group(1) else (fence or f_.group(1))
+            continue
+        if fence is None:
+            m_ = _MD_HEADING.match(ln)
+            if m_:
+                heads.append((i, len(m_.group(1)), m_.group(2)))
+    hit = [h for h in heads if h[1] == 2 and re.match(rf'{re.escape(str(num))}\.(\s|$)', h[2])]
+    if len(hit) != 1:
+        return None, f'§{num} 제목 (## {num}.) ' + ('없음' if not hit else f'둘 이상 (줄 {[h[0] + 1 for h in hit]})')
+    i0, lv, _t = hit[0]
+    i1 = next((h[0] for h in heads if h[0] > i0 and h[1] <= lv), len(lines))
+    return '\n'.join(lines[i0:i1]), ''
+
+
 def registration_values(reg_doc=REG_DOC, readme=RUNS_README):
     """등록 문서 §2 · §3 + 수확 묶음 README 의 값 → (dict, 문제 목록).  손으로 옮겨 적지 않고 문서에서 읽는다 (문서 오타 = 재계산과 다름 = rc 1).
-    ★ 10-15 (나′) + 선택 항목 code_fp_pending (대기 지문 선언 — 없으면 None · 문제 아님 · 값 둘 이상 · 등록 §3 과 같음 = 문제 · 값 None)."""
+    ★ 10-15 (나′) + 선택 항목 code_fp_pending (대기 지문 선언 — 없으면 None · 문제 아님 · 값 둘 이상 · 등록 §3 과 같음 = 문제 · 값 None).
+    ★ 10-16 L214R-04 (Codex LHS214 재검증 판정문 §5 · 1저자 Q4) — code_fp = **활성 §3 (`## 3.` 절) 안의** `code_fp <64 hex>` 만 (자리 하나 · 값 하나).  역사 표 ·
+      초안 표 (§9 등) 에 같은 기계 구문으로 남은 옛 값은 읽지 않는다 (비준 전환 = §3 갱신 + 대기 선언 삭제 + 역사 표 보존 이 rc 0 이 되게 · 문서 · 역사는 고치지 않는다).
+      §3 제목이 없거나 둘이면 문제 (값 None) · 문서 전체 토큰으로 대신하지 않는다.  대기 선언은 예전처럼 문서 전체에서 읽고 발사 대조에는 쓰지 않는다."""
     out, probs = {}, []
     try:
         t = _rp(reg_doc).read_text(encoding='utf-8')
     except OSError as e:
         return out, [f'등록 문서 {reg_doc} 를 못 읽었다 ({type(e).__name__})']
+    s3, s3_why = _md_section(t, 3)
     design = NP.COHORT_SPECS[COHORT]['design']
     for k, kind, how in (('n', 're', r'^\|\s*케이스 수\s*\|\s*(\d+)\b'),
                          ('ids_sha256', 're', r'^\|\s*`ids_sha256`[^|\n]*\|\s*`([0-9a-f]{64})`'),
                          ('raw_sha256_table_sha256', 're', r'^\|\s*`raw_sha256_table_sha256`\s*\|\s*`([0-9a-f]{64})`'),
                          ('cohort_tsv_sha256', 're', r'^\|\s*코호트 TSV sha256\s*\|\s*`([0-9a-f]{64})`'),
-                         ('code_fp', 're', r'`code_fp ([0-9a-f]{64})`'),
+                         ('code_fp', 's3', r'`code_fp ([0-9a-f]{64})`'),
                          ('harvest_pin', 're', r'재수확 r3 \(`([0-9a-f]{7,40})`\)'),
                          ('design_csv_sha256', 'after', f'(설계 `{SUPP_DESIGN}`'),
                          ('adapter_csv_sha256', 'after', f'설계 어댑터 출력 = `{design}`')):
-        v, why = _one(how, t) if kind == 're' else _sha_after(t, how)
+        if kind == 's3':                     # ★ L214R-04 — 활성 §3 안에서만
+            v, why = _one(how, s3) if s3 is not None else (None, s3_why)
+            why = f'§3 안 {why}' if (why and s3 is not None) else why
+        else:
+            v, why = _one(how, t) if kind == 're' else _sha_after(t, how)
         if why:
             probs.append(f'등록 문서 {k} — {why}')
         out[k] = int(v) if (k == 'n' and v is not None) else v
