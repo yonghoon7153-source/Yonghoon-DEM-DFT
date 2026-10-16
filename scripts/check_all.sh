@@ -256,6 +256,10 @@ run 'gen2 role contract (G2R-01 · 02 — 역할 · 닫힌 열거 · 옛 세대 
 #    (current_conservation_failed) · 협착-only 의 R_c = 0 = 그 가지만 NOT_COMPUTED (zero_resistance_requires_contraction) · 레코드 직렬화
 #    (세 채널 · H12 · CLI 네 JSON · real_14) · 정상 망 = 고치기 전 모듈 (git a0a24c538) 과 비트 동일.
 run 'network solve certificate (G2R-03 · GEN2-01)' python3 scripts/test_network_solve_certificate.py
+#  ★ 2026-10-16 (Codex LHS214 재검증 L214R-01 · 수정 계획 Q1 = 생산자 수용 상수 그대로) — FULL 모형 한계 증서의 비유한 재구성 q (유한 입력의 중간 넘침 ·
+#    T = A = 1e308 · scale 1e200 · 큰 정수) = 기술 실패 사유 (non_finite · 예외 아님) · 마지막 채택 시도 ↔ 요약 결합 (잔차 · 보존 · 방법별 수렴 상태 · 예외) ·
+#    레코드 소비자 아홉 · 실 생산자 대조 (정상 모형 한계 · fallback 사다리 · 여섯 단) — 고치기 전 코드 48/112.
+run 'L214R-01 증서 유한성 · 채택 단 결합 (반례 먼저)' python3 scripts/test_l214r01_certificate.py
 #  ★ 2026-10-06 밤 (3단계 · C2-⑥ 1저자 비준 · LHS-25 · LHSC-08 · LHS-27) — Physics 피복 = 합집합 cap (`*_physics_union` 새 키 · 해석해 ·
 #    생산자 빈칸 계약 · real_14 51.522 → 43.218 = 설계 원형 AM 457 개 1e-13 안 · case15 = 빈칸 (c_cpl[22] < 0) · 원형 ×0.87 재현) ·
 #    벽 근접 접선 수 (분류 불변 · 자릿수는 파일마다 · STL 따로) · 피복 CLI 가 실행 위치 추적 파일을 안 덮는다 (--summary-out 명시만).

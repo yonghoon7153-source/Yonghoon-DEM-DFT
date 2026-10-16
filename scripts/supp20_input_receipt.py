@@ -519,11 +519,11 @@ def _selftest() -> int:
         'pending (대기 선언 하나 · 체크아웃 = 대기 ≠ 등록) = rc 1 · 실패 칸 정확히 {D1} · D1 상세 now = 대기 · registered = 등록 · pending = 대기 / undeclared = FAIL · '
         '범위 container · 수동 칸 셋', ok0, dict(state=state, why=why_state, bad=sorted(bad_ids(base)), D1=cdet(base, 'D1')))
     dg0 = base['recomputed']['input_digest']
-    chk('S0b 다시 계산 = 등록 §2 (케이스 20 · ids 991cf115… · raw a7aaa3c8… · 코호트 TSV 69d3f913…) · 등록 §3 code_fp e8b2496b… · ★ 10-15 (나′) 대기 선언이 있으면 = acc7bfa3… '
-        '(lhs214_fix_evidence_20261015/code_fp_report.log 의 고친 트리 값) — 값은 문서 · 반입 파일에서 (도구에 사본 없음 · 값 None 안전)',
+    chk('S0b 다시 계산 = 등록 §2 (케이스 20 · ids 991cf115… · raw a7aaa3c8… · 코호트 TSV 69d3f913…) · 등록 §3 code_fp e8b2496b… · ★ 10-15 (나′) 대기 선언이 있으면 = a3610281… '
+        '(★ 10-16 L214R 수정 반영 지문 — 커밋마다 갱신 · 진행 기록 10-16) — 값은 문서 · 반입 파일에서 (도구에 사본 없음 · 값 None 안전)',
         dg0.get('n') == 20 and str(dg0.get('ids_sha256')).startswith('991cf115') and str(dg0.get('raw_sha256_table_sha256')).startswith('a7aaa3c8')
         and str((dg0.get('cohort_tsv_sha256') or {}).get(COHORT)).startswith('69d3f913') and str(R_reg or '').startswith('e8b2496b')
-        and (P_reg is None or str(P_reg).startswith('acc7bfa3')), (dg0, R_reg, P_reg))
+        and (P_reg is None or str(P_reg).startswith('a3610281')), (dg0, R_reg, P_reg))
     with tempfile.TemporaryDirectory(prefix='supp20_receipt_') as td:
         td = Path(td)
         rtxt = _rp(REG_DOC).read_text(encoding='utf-8')

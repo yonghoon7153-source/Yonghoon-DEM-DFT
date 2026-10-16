@@ -869,10 +869,13 @@ CERT_BINDING_FIELDS = ('branch', 'channel', 'role', 'contact_mode', 'delta_V', '
 
 
 def _cert_num(v):
-    """유한 실수 → float · 그 밖 (None · bool · 문자열 · NaN · ±inf) → None."""
+    """유한 실수 → float · 그 밖 (None · bool · 문자열 · NaN · ±inf · ★ 10-16 L214R-01 float 로 못 옮기는 큰 정수 — JSON 10⁴⁰⁰) → None."""
     if isinstance(v, bool) or not isinstance(v, (int, float, np.integer, np.floating)):
         return None
-    f = float(v)
+    try:
+        f = float(v)
+    except OverflowError:                          # ★ L214R-01 A — 큰 정수의 float 변환 넘침 = 유한 실수가 아니다 (예외 대신 None — 판정이 사유를 낸다)
+        return None
     return f if np.isfinite(f) else None
 
 
@@ -951,17 +954,54 @@ def _certificate_numeric_problem(cert):
 
 def _geometry_TA(geo):
     """풀이 기하 dict → (T, A, '') | (None, None, 사유) — T = plate_z·scale · A = box_x·box_y·scale² (solve_network σ 환산과 같은 식 · 같은 순서) ·
-    네 값 모두 유한 양수 (bool · 문자열 · NaN · ±∞ · 0 · 음수 = 사유)."""
+    네 값 모두 유한 양수 (bool · 문자열 · NaN · ±∞ · 0 · 음수 = 사유).
+    ★ 10-16 L214R-01 A — 환산의 넘침 · 밑넘침은 예외가 아니라 기술 실패 사유 (NON_FINITE_REASON 꼬리표 · 생산자는 이 기하를 풀지 않는다 — invalid_geometry):
+    Python float 의 scale ** 2 넘침은 OverflowError (곱 · 나눗셈은 inf) · 큰 정수도 같다 — 유한성은 `_cert_num` 으로 본다 (np.isfinite 는 큰 정수에 TypeError)."""
     if not isinstance(geo, dict):
         return None, None, f'기하 (geometry) 없음 · 객체 아님 ({type(geo).__name__})'
     bad = [k for k in CERT_GEOMETRY_FIELDS if not (_cert_num(geo.get(k)) is not None and _cert_num(geo.get(k)) > 0)]
     if bad:
         return None, None, f'기하 {bad} 가 유한 양수가 아니다 ({ {k: geo.get(k) for k in bad} })'
-    T = geo['plate_z'] * geo['scale']
-    A = geo['box_x'] * geo['box_y'] * geo['scale'] ** 2
-    if not (np.isfinite(T) and T > 0 and np.isfinite(A) and A > 0):
-        return None, None, f'기하 환산 T {T!r} · A {A!r} 가 유한 양수가 아니다 (넘침 · 밑넘침)'
+    try:
+        T = geo['plate_z'] * geo['scale']
+        A = geo['box_x'] * geo['box_y'] * geo['scale'] ** 2
+    except OverflowError as e:                     # ★ L214R-01 A — scale = 1e200 의 scale² 등 (Codex 판정 §2 최소 해제 — 예외를 사유로)
+        return None, None, f'{NON_FINITE_REASON} — 기하 환산 넘침 ({e}) · T = plate_z·scale · A = box_x·box_y·scale² 가 유한하지 않다'
+    if not (_cert_num(T) is not None and T > 0 and _cert_num(A) is not None and A > 0):
+        return None, None, f'{NON_FINITE_REASON} — 기하 환산 T {T!r} · A {A!r} 가 유한 양수가 아니다 (넘침 · 밑넘침)'
     return T, A, ''
+
+
+#: ★ 10-16 L214R-01 B — 사다리에서 krylov_info 를 싣는 단 (첫 단 cg = int(cg_info) · `_krylov` 의 cg+jacobi · gmres+ilu = 마지막 Krylov info — pass 면 0) ·
+#:   나머지 단 (spsolve · spsolve_fallback · none_free) 은 싣지 않는다 (None).  채택 단 결합 `_adopted_attempt_problem` 이 쓴다 — 수용 조건은 사다리 그대로
+#:   (krylov_info ∉ (None, 0) = not_converged) · 새 문턱 아님.
+DIRICHLET_KRYLOV_METHODS = ('cg', 'cg+jacobi', 'gmres+ilu')
+
+
+def _adopted_attempt_problem(last, cert):
+    """★ 10-16 L214R-01 B (Codex 재검증 판정 §2 반례 B · 수정 계획 Q1 — 생산자 수용 상수 그대로 · 새 문턱 없음) — 채택 단 (마지막 시도 · outcome pass ·
+    방법 · 두 전류는 호출자가 이미 대조) 이 요약과 **같은 해**인가 → None | 사유.  생산자 사다리 (`solve_network`) 가 pass 를 주는 조건 그대로:
+      ① 예외 없음 — error None (사다리는 예외 단에만 error 를 싣는다)
+      ② 방법별 수렴 상태 — Krylov 단 (DIRICHLET_KRYLOV_METHODS) 은 krylov_info = 0 (사다리: 0 이 아니면 not_converged · 상태 없음 · bool 은 받지 않는다) ·
+         그 밖 단 (직접해 · none_free) 은 krylov_info 를 싣지 않는다 (None)
+      ③ 수치 — `_certificate_numeric_problem` (요약과 같은 함수 · 같은 상수 DIRICHLET_CONSERVATION_REL_MAX · DIRICHLET_RESIDUAL_REL_MAX = 사다리 `_certified`)
+      ④ 요약 결합 — 보존 · 내부 잔차 = 요약 값과 같은 수 (생산자는 채택 단의 두 값을 요약에 그대로 옮긴다 — 두 전류와 같은 규칙 · JSON 왕복 비트 보존)
+    앞선 실패 시도 (사다리 기록) 는 보지 않는다 — 정상 fallback 성공 (앞 단 실패 + 마지막 pass) 을 막지 않는다."""
+    if last.get('error') is not None:
+        return f'예외 기록 {last.get("error")!r} 이 있는데 pass — 사다리는 예외 단을 채택하지 않는다'
+    m, ki = last.get('method'), last.get('krylov_info')
+    if m in DIRICHLET_KRYLOV_METHODS:
+        if _cert_num(ki) != 0.0:
+            return f'수렴 상태 — Krylov 단 {m!r} 의 krylov_info {ki!r} ≠ 0 (사다리: 0 이 아니면 not_converged · 상태 없음 = 수렴 증명 없음)'
+    elif ki is not None:
+        return f'수렴 상태 — {m!r} 단은 krylov_info 를 싣지 않는다 ({ki!r} — 사다리 기록과 다르다)'
+    p = _certificate_numeric_problem(last)
+    if p is not None:
+        return f'수치 — {p}'
+    for k in ('conservation_rel', 'residual_rel'):
+        if _cert_num(last.get(k)) != _cert_num(cert.get(k)):
+            return f'{k} {last.get(k)!r} ≠ 요약 {cert.get(k)!r} — 채택 단과 요약이 다른 해'
+    return None
 
 
 def model_limit_certificate_problem(cert):
@@ -973,10 +1013,13 @@ def model_limit_certificate_problem(cert):
       ① 객체 · branch = full · status = over_conduction_guard · reason = 'sigma_ratio > 1.5' (단상 FULL 가드 · 열 병렬 상한 가드 · CF · 협착-only 의 값 유지 표지는
          이 범주가 아니다)
       ② 수치 증서 = 게시 값과 **같은** 검사 (`_certificate_numeric_problem` — 방법 · I_bottom 유한 양수 · I_top 유한 · 보존 잔차 재측정 ≤ 1e-6 · 내부 잔차 ≤ 1e-6)
-      ③ 채택 단 = 마지막 시도 (outcome pass · 같은 방법 · 같은 두 전류) — 예외 · 미수렴 · 증서 실패 · 병렬 상한 밖에서 끝난 풀이는 여기서 거부
-      ④ ΔV = 1 · 기하 네 값 유한 양수 · g_to_q = T/A (상대 1e-12) · 환산 T · A 유한 양수
-      ⑤ q_withheld 유한 실수 (bool · 문자열 · NaN · ±∞ 거부) · 재구성 q = (I_bottom/ΔV)·T/A (솔버와 같은 식 · 같은 순서) 와 16ε 안 · **재구성 q 와 기록 q 둘 다**
-         원 정밀도에서 엄격히 > FULL_Q_GUARD_MAX (반올림한 값으로 넣고 빼지 않는다 · q = 1.5 는 computed)
+      ③ 채택 단 = 마지막 시도 (outcome pass · 같은 방법 · 같은 두 전류) — 예외 · 미수렴 · 증서 실패 · 병렬 상한 밖에서 끝난 풀이는 여기서 거부 ·
+         ★ 10-16 L214R-01 B — 그 단의 예외 없음 · 방법별 수렴 상태 · 수치 (같은 상수) · 보존 · 내부 잔차 = 요약 (`_adopted_attempt_problem` · 앞선 실패 시도는 허용)
+      ④ ΔV = 1 · 기하 네 값 유한 양수 · 환산 T · A 유한 양수 · ★ L214R-01 A — T/A 도 유한 양수 (넘침 · 밑넘침 = NON_FINITE_REASON 사유 · 예외 아님) ·
+         g_to_q = T/A (상대 1e-12)
+      ⑤ q_withheld 유한 실수 (bool · 문자열 · NaN · ±∞ 거부) · 재구성 q = (I_bottom/ΔV)·T/A (솔버와 같은 식 · 같은 순서) — ★ L214R-01 A — 비교 **전에** 유한 양수
+         (넘침 · 밑넘침 = NON_FINITE_REASON 사유 — 생산자 solve_network 의 비유한 q = non_finite 와 같은 계약 · inf ≤ inf 를 '같다' 로 읽지 않는다) — 와 16ε 안 ·
+         **재구성 q 와 기록 q 둘 다** 원 정밀도에서 엄격히 > FULL_Q_GUARD_MAX (반올림한 값으로 넣고 빼지 않는다 · q = 1.5 는 computed)
       ⑥ q_guard_max = FULL_Q_GUARD_MAX (문턱은 기록이 아니라 이 모듈 상수가 정한다 — 기록은 대조만) · guard_policy = MODEL_LIMIT_POLICY ·
          sum_g 유한 양수 · I_bottom ≤ 1.1·Σg (병렬 상한 — 사다리가 본 것을 다시)
     ⚠ 이것은 **증서** 판정이다 — 레코드 (상태 · 사유 · 값 null · 유도값 · 채널 상태 · 결합 · 세대) 는 `tau_flux.full_model_limit_problem` 이 같이 본다."""
@@ -996,19 +1039,32 @@ def model_limit_certificate_problem(cert):
             or _cert_num(last.get('I_bottom')) != _cert_num(cert.get('I_bottom')) or _cert_num(last.get('I_top')) != _cert_num(cert.get('I_top'))):
         return (f'채택 단 기록 — 마지막 시도 {({k: last.get(k) for k in ("method", "outcome")} if last else None)!r} 가 증서 방법 {cert.get("method")!r} · '
                 '두 전류와 같은 pass 단이 아니다 (앞 단계 실패를 높은 q 로 구제하지 않는다)')
+    ap = _adopted_attempt_problem(last, cert)                # ★ L214R-01 B — 채택 단의 실패 기록을 요약의 pass 가 가리지 않게
+    if ap is not None:
+        return f'채택 단 기록 — 마지막 pass 시도가 요약과 같은 해가 아니다: {ap}'
     dv = _cert_num(cert.get('delta_V'))
     if dv != CERT_DELTA_V:
         return f'ΔV {cert.get("delta_V")!r} ≠ {CERT_DELTA_V!r} (정확 Dirichlet — 바닥 띠 1 · 위 띠 0)'
     T, A, why = _geometry_TA(cert.get('geometry'))
     if why:
         return why
+    try:                                                     # ★ L214R-01 A — T/A 를 비교 전에 유한 양수로 (넘친 T/A 와는 어떤 g_to_q 도 inf ≤ inf 로 '같다')
+        t_a = T / A
+    except (OverflowError, ZeroDivisionError):
+        t_a = None
+    if _cert_num(t_a) is None or not t_a > 0:
+        return (f'{NON_FINITE_REASON} — 기하 환산 T/A = {t_a!r} 가 유한 양수가 아니다 (넘침 · 밑넘침 · T {T!r} · A {A!r} — 생산자는 이 기하를 풀지 않는다 '
+                f'· {INVALID_GEOMETRY_REASON})')
     g2q = _cert_num(cert.get('g_to_q'))
-    if g2q is None or not g2q > 0 or not abs(g2q - T / A) <= 1e-12 * (T / A):
-        return f'G→q 인자 {cert.get("g_to_q")!r} ≠ 기하에서 다시 잰 T/A = {T / A!r}'
+    if g2q is None or not g2q > 0 or not abs(g2q - t_a) <= 1e-12 * t_a:
+        return f'G→q 인자 {cert.get("g_to_q")!r} ≠ 기하에서 다시 잰 T/A = {t_a!r}'
     q = _cert_num(cert.get('q_withheld'))
     if q is None:
         return (f'q_withheld {cert.get("q_withheld")!r} — 없음 · 유한 실수 아님 (옛 생산자 증서 · 위조) — 거부된 q 를 증서에서 확인할 수 없다')
     q_rec = (_cert_num(cert.get('I_bottom')) / dv) * T / A
+    if _cert_num(q_rec) is None or not q_rec > 0:           # ★ L214R-01 A — 같은 식 · 같은 순서의 재구성이 유한 입력에서 넘치면 비교하지 않는다
+        return (f'{NON_FINITE_REASON} — 재구성 q = (I_bottom/ΔV)·T/A = {q_rec!r} 가 유한 양수가 아니다 (넘침 · 밑넘침 — 생산자 solve_network 는 이 해를 '
+                f'{NON_FINITE_REASON} 로 거부한다 · 기록 q {q!r} 와 비교하지 않는다)')
     if not abs(q - q_rec) <= _Q_REC_REL_TOL * abs(q_rec):
         return f'q_withheld {q!r} ≠ 증서 재구성 (I_bottom/ΔV)·T/A = {q_rec!r} (같은 식 · 같은 순서 — 진단 q 가 그 해의 q 가 아니다)'
     if not (q_rec > FULL_Q_GUARD_MAX and q > FULL_Q_GUARD_MAX):
