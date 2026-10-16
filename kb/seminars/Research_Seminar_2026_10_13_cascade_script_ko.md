@@ -28,7 +28,7 @@ evidenceScope: multi-source-mixed
 > 확정된 장만 이 파일의 해당 절이 **최종본**이다. 나머지 절은 옛 판이라 그 장을 볼 때 다시 쓴다.
 > 마지막에 주는 것: ① 장별 **[스토리라인 한 줄 + 대본]** 한 파일 (내부 메모 · 원장 괄호는 빼고 발표용으로) ② 덱 전체 슬라이드 노트에 같은 대본.
 > 사용자 덱은 슬림판보다 한 장씩 뒤다 (앞에 한 장이 더 있다 · Overview = 사용자 4쪽).
-> 장 제목은 08-18 덱 순서 그대로다 — 4–5장 *Introduction* → 6–13장 *Results & Discussion* (사용자 10-13 · 'Approach' · 'Progress' 를 되돌림) · 14–15장도 *Results & Discussion* 이다 (Future plans · Discussion points — 사용자 10-16 · 요약 장 없음).
+> 장 제목은 08-18 덱 순서 그대로다 — 4–5장 *Introduction* → 6–13장 *Results & Discussion* (사용자 10-13 · 'Approach' · 'Progress' 를 되돌림) · 14장 *Plan* (사용자 10-16 자기 판 · ■ Future plans) · 15장 *Results & Discussion* (■ Discussion points) · 요약 장 없음 (사용자 10-16).
 >
 > | 슬림판 장 | 내용 | 상태 | 확정 커밋 |
 > |---|---|---|---|
@@ -378,6 +378,7 @@ evidenceScope: multi-source-mixed
 ## 14. Future plans (사용자 14쪽 · 사용자 틀 유지) ⏱ 21:15
 > ✎ 10-16 사용자 14쪽 ('Plan') → v2 (글만 · 사용자 예시 양식) 를 거쳐 사용자 *'이걸 잘 수정해서 reference 빼고 등등'* · *'stage 2 라는 이름은 안들어가나?'* → **v4 = 사용자 틀 그대로** (빨간 점선 'Milestones' 상자 + Phuthi 2026 Fig. 1a). 고친 것: 제목 'Plan' → 'Results & Discussion' (장 순서 규칙 · 사용자 예시) · ■ 'Next calculations' → 'Future plans' (실험까지 들어가는 목록) · 항목 1 'Stage 2 pilot verdict (late October)' · 2 'Stage 2 transport runs beyond the pilot' (옛 'Run scope and ranking margin δ' 는 10-15 결정과 어긋난다 — 목적은 다축 · D_rel 은 수송 한 축 · `D-2026-10-15-cascade-objective-scope`) · 3 'Stage 1 descriptors vs. Stage 2 transport' (명사구 목록에 질문 하나가 섞여 있었다) · 4 'More screening axes for all 91 precursors' (안정창은 12쪽에서 끝 · 계면은 10-15 축 확장 계획의 첫 묶음 · `D-2026-10-15-cascade-screening-axes-plan` · 계산 승인 아님) · 5 그대로 · 그림 위 'Literature:' 꼬리표와 그림 밑 'Reproduced from …' 줄을 빼고 캡션 *'< length and time scales needed for each property >'* + 오른쪽 위 *Chem. Mater.*, in press (2026). (12 · 13쪽과 같은 방식) · 맨 아래 줄 콜론 없앰 *'Next runs will use simulation cells ≥ 2 nm (now ≈ 1.6 nm).'* ('cell' 은 배터리 셀과 헷갈려서 'simulation cells').
 > ✎ 10-16 v5 (사용자 *'milestones이라는 단어를 쓰나'*) — 상자 이름 'Milestones' → **'Next steps'**. 'Milestone' 은 랩 덱에 없던 말이다 (08-18 덱은 'Future plan' · 'next step' · 'Milestone' 은 10-13 슬림판 빌더가 처음 넣었다) · 날짜가 붙은 산출물 목록이라는 과제 관리 말이라 순서 목록인 이 상자와 맞지 않는다.
+> ✅ 10-16 **사용자 최종** (*'이렇게 했고 각각 설명해줘'*) — v5 에서 제목만 'Plan' 으로 되돌렸다 (사용자 판) · 'vs' 마침표 없음 · 출처 줄은 구분선 아래 오른쪽. 나머지 (Next steps 1–5 · 캡션 · 맨 아래 줄) 는 v5 그대로.
 
 다음 계획입니다. **[가리킴: 왼쪽 상자, 위에서 아래로]**
 - 1번, 2단계 파일럿 판정입니다. 이번 달 말쯤 40 런이 끝나면 한 번만 분석합니다. 결과가 차이, 동등, 판정 불가, 기준 미달 중 어느 쪽이든 다음에 할 일을 분석 전에 적어 둡니다.
@@ -392,12 +393,12 @@ evidenceScope: multi-source-mixed
 
 ## 15. Discussion points (사용자 15쪽 · 초안) ⏱ 21:45
 > 10-16 새 장 — 요약 장 대신 (사용자 *'summary는 굳이 안들어가용'*). 첫 초안 (선택 규칙의 무게 · GPU 예산 · 새 축 순서 · 실험 조건) 은 사용자 *'이걸 discussion point라고 할 수 있나? 교수님이 대답할 수 있는 거리로 · 우리거에 너무 치중'* 로 바꿨다 — 우리 내부 결정이 아니라 **교수님이 경험으로 답할 수 있는 질문** 넷: ① 같은 도펀트의 산화물 대 황화물 전구체가 실험에서 다른지 (파일럿 질문의 실험 쪽) ② NCM 복합 양극에서 황화물 고체전해질 열화의 주된 원인 (어느 계산 축을 먼저 볼지) ③ 계산 후보를 검증할 측정 ④ 독성 전구체 (As₂S₃) 를 미리 뺄지. 질문 글은 사용자가 고친다.
+> ✅ 10-16 **사용자 최종** — 질문 **셋** (넷째 As₂S₃ 독성 전구체 질문은 사용자가 뺐다 · 말에서도 뺐다).
 
 마지막으로 의견을 여쭙고 싶은 것들입니다. **[가리킴: 위에서 아래로]**
 - 첫째, 오늘 파일럿 질문을 실험 쪽에서 여쭙고 싶습니다. 도펀트 원소가 같아도 산화물로 넣을 때와 황화물로 넣을 때 상 순도나 이온전도도, 안정성에 차이가 나타나는지요.
 - 둘째, 이 스크리닝은 양극재 코팅용 황화물 고체전해질을 대상으로 합니다. NCM 복합 양극에서 열화의 주된 원인이 고전압 산화 분해인지, 계면 접촉 손실인지, 수분인지에 따라 어떤 계산 축을 먼저 볼지가 달라집니다.
 - 셋째, 계산이 후보를 추리면 실험으로 검증해야 하는데, 이온전도도, 산화 안정성, 전고체 셀 사이클 중 무엇을 먼저 보는 것이 좋을지 여쭙고 싶습니다.
-- 넷째, 91 개 전구체 중에는 As₂S₃ 처럼 독성이 있는 것도 있습니다. 랩에서 다루기 어려운 것은 후보에서 미리 빼는 것이 맞을지 여쭙고 싶습니다.
 
 아직 어느 도펀트가 좋다고 말씀드리지 않습니다. **스크린이 제안하고, 미리 정한 시험이 결정합니다.** 감사합니다.
 
@@ -447,7 +448,7 @@ evidenceScope: multi-source-mixed
 | 12 | **[문헌] 'Literature: run-to-run spread and fit-window sensitivity'** He 2018 Fig. 3 + 'Our pilot: 10 start configurations × 2 seeds per precursor; 2–50 ps fit window.' | 그림은 '왜 반복과 고정 창이 필요한가' 의 근거이고, **10 × 2 · 2–50 ps 는 우리가 정한 값**이다 (그림에서 나온 숫자가 아니다) · 설정 UMA · NVT 1000 K · 400 ps · 204 원자 · 40 런 (화면 줄은 뺐다) · 점검 넷 · 동등성 검정 (±ln 1.5) |
 | 13 | ■ Stage 2 pilot at 1000 K · 명단 (끝 12 · 진행 1 · 대기 27) + **[문헌] 'Literature: temperature-dependent ordering'** Jung 2026 Fig. 5b | 600 K 판을 닫은 이유 · 한계 둘 · 끝나는 날 10월 21일 무렵 (화면에서 뺐다) · 오른쪽은 **문헌 물질** (Li₉P₃OS₁₁ 등) 이다 — 우리 Al₂O₃ / Al₂S₃ 순서를 말하는 그림이 아니다 |
 | 14 | (10-16 사용자 14쪽 · 사용자 틀) ■ Future plans · 빨간 점선 'Next steps' 1–5 (1–3 에 Stage 이름) + Phuthi 2026 Fig. 1a + 캡션 '< length and time scales needed for each property >' + 맨 아래 줄 'Next runs will use simulation cells ≥ 2 nm (now ≈ 1.6 nm).' · 출처 오른쪽 위 (*Chem. Mater.*, in press (2026).) | 항목마다 한 줄 (대본 14장) · 결과 네 경우별 다음 일 · 축마다 보고량 먼저 · 수송은 한 축 · 그림은 Phuthi 의 하한 약 2 nm · 0.3 ns |
-| 15 | (10-16 · 요약 장 대신) ■ Discussion points · 한국어 질문 넷 (교수님이 경험으로 답할 수 있는 것 · 초안) | 질문마다 한 문장 배경 (대본 15장) · 마무리 '스크린이 제안하고, 미리 정한 시험이 결정한다' |
+| 15 | (10-16 · 요약 장 대신) ■ Discussion points · 한국어 질문 셋 (교수님이 경험으로 답할 수 있는 것 · 사용자 최종) | 질문마다 한 문장 배경 (대본 15장) · 마무리 '스크린이 제안하고, 미리 정한 시험이 결정한다' |
 | 20–23 | **백업 (10-15 · 사용자 '권고대로')** — 08-18 덱 Step 3 · 4 · 5 · 8 을 **그대로** (고치지 않음) · 머리 'Backup' + 오른쪽 위 빨간 표지 'August 18 version, superseded' 와 바뀐 이유 한 줄 | 질문이 올 때만 꺼낸다 · 각 장 표지대로 무엇이 바뀌었는지 말한다 (부피 기준 · '상위 3' 아님과 에너지 축 · 'top ten' 철회 · 안정창 정의) — 숫자는 디펜스 §1 표 안에서만 |
 
 - 우리 그래프 넷은 CSV 에서 그린 **수수한 미리보기**다 (`kb/seminars/assets_2026_10_13/fig_p06 · p07 · p10 · p13` · 생성 `export_cascade_briefing_csvs_2026_10.py --figures`). Origin 으로 다시 그리면 같은 자리에 바꿔 넣는다. 10-13 부터 p06 (가로 막대) 은 **슬라이드에 들어가는 크기로** 그려서 (p07 커버리지 그림 `fig_p07_stage1_coverage.png` 은 10-14 에 슬림판에서 빠졌다 — 파이프라인 박스로 바꿈 · CSV 는 질문용으로 남김) 그림 속 글씨가 화면 글씨와 같다 (13–14 pt) — Origin 판도 그 크기에서 글씨를 맞춘다. 족별 구조 수 CSV (`p07_structures_by_anion_family.csv`) 는 Origin 용으로 남겼다.
