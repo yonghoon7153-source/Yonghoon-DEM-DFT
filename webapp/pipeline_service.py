@@ -902,8 +902,12 @@ NETWORK_STOP_LEDGER_KEYS = ('thickness_um', 'thickness_mass_conserving_um', 'phi
 
 
 def _stop_num(v):
-    """유한 실수 (bool · 문자열 · NaN · ±inf 아님)."""
-    return isinstance(v, (int, float)) and not isinstance(v, bool) and math.isfinite(v)
+    """유한 실수 (bool · 문자열 · NaN · ±inf 아님).
+    ★ 10-16 L214R-11 (같은 부류 N3 · L214R-08 과 같은 규칙) — 판정 = `tau_flux._num` 그대로 (float 로 못 옮기는 큰 정수 — JSON 10⁴⁰⁰ — 도 유한 실수가 아니다 ·
+    OverflowError 를 내지 않는다 · 사본 없음).  옛 판은 `math.isfinite(10**400)` 의 OverflowError 로 정지 계약 전체가 예외였다 (다시 읽기 K4 · 인계 P4 는 잡았지만
+    사유 대신 예외 문구).  거짓을 받는 자리는 전부 기존 거부 사유로 간다 (⑦ 장부 · ③ full_metrics σ · 모형 한계의 관통 · ④ 전력 몫 · ⑤ 띠 폭) · 거짓을 '숫자 없음 =
+    통과' 로 읽던 자리 (③ valid_zero 의 calc_percolation ≠ 0) 는 `tau_flux._overflow_int` 로 따로 본다.  부르는 곳 = 정지 계약 (tau_flux 를 불러온 뒤) 뿐."""
+    return _scripts_import('tau_flux')._num(v) is not None
 
 
 def _scripts_import(name):
@@ -1042,7 +1046,9 @@ def network_stop_verdict(results_dir, run_id, fm=None, legacy_ok=False):
         else:                                                  # valid_zero — 레코드 조합은 공용 검사가 봤다 · 여기는 full_metrics · 장부 대조
             if fv is not None:
                 bad.append(f'③ {dkey}: valid_zero 인데 full_metrics {fkey}={fv!r} (None 이어야 — F-12)')
-            if _stop_num(pct) and pct != 0:
+            #  ★ 10-16 L214R-11 — float 로 못 옮기는 큰 JSON 정수 (`_stop_num` 거짓) 를 '숫자 없음 = 통과' 로 읽지 않는다: 0 이 아닌 수가 실렸다 → 같은 사유
+            #    (⑦ 장부 줄도 따로 거부 · 보통 값 · NaN · ±∞ · 문자열의 판정은 그대로)
+            if (_stop_num(pct) and pct != 0) or tf._overflow_int(pct):
                 bad.append(f'③ {dkey}: valid_zero 인데 독립 calc_percolation {pct!r} % (0 이어야)')
         ck = f'constriction_power_share_ion_{tail}'
         cv, cs = fm.get(ck), fm.get(ck + '_status')

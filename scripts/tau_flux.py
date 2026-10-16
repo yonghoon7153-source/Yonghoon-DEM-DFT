@@ -44,6 +44,7 @@ CF · 협착-only 진단도 같은 검사 · 해 없는 가지는 증서를 요�
 | 3 | G4 온도 짝 — 그 모드의 σ₀ · T 기록이 있다 (없으면 `missing_input`) · 두 모드의 (σ₀, T) 가 같다 · 호출자가 σ₀ 의 T 를 주장하면 망 T 와 같다 | `NOT_COMPUTED` (`temperature_mismatch`) |
 | 4 | G3 비관통 (G1 · G2 통과 + 관통 성분 없음) | `NOT_PERCOLATING` — f = 0 · tau2 · tau 빈칸 (= ∞) |
 | 5 | 관통인데 σ 가 없거나 0 · 음수 · 비유한 (0b 뒤에는 도달하지 않는 방어) | `NOT_COMPUTED` (`solver_guard`) — ★ 10-15 L214: 0b 의 공용 판정이 확인한 FULL 모형 한계면 `NOT_COMPUTED` (`full_over_conduction`) |
+| 5b | ★ 10-16 L214R-09 — 게시할 f · tau2 · tau 가 셋 다 유한 양수 (값 상태 OK · MBCB 를 주기 전 · 넘침 · 밑넘침 · 0 나누기 — 밑정규 σ_ratio · 장부 극값) | `NOT_COMPUTED` (`invalid_input: non_finite — 세부` · 기술적 실패 · 값 빈칸 · 유한한 극값은 그대로) |
 | 6 | G5 f > φ (T < 1) | `MODEL_BELOW_CONTINUUM_BOUND` — **값 유지** + 표지 (빈칸으로 거르면 코퍼스를 T ≥ 1 쪽으로 선별한다) |
 G6 (협착 세대) = 메타 `ion_net_constriction_<m>` · 두 모드 모두 **물리 타깃 (실험 절대 대조) HOLD** — 값은 싣는다.
 상태 부류 (10-05 RGLR-01): `NOT_COMPUTED` = **기술적 실패** (입력 결손 · 무효 · 솔버 관문 · 온도 짝 · 관통 불일치 · 세대 무효 (RGLR2-02) — 값 없음) ↔ `BAND_FALLBACK` ·
@@ -875,7 +876,9 @@ def sigma0_convention_problem(rec):
     """★ 10-07 G2RR2-04 — 레코드의 σ₀ (sigma_grain_S_cm) = 그 레코드의 온도 규약 (temperature_provenance — T_C · Ea_ion_eV · T_ref_C 로 se_material 을
     다시 부른 값) 인가 → None | 사유.  T_dependence (NOT_MODELLED ⇔ T_C 없음) · sigma_ion_T_factor 도 같은 규약이어야 한다.  허용 = 상대
     SIGMA0_CONVENTION_REL_TOL (같은 함수 · 같은 인자 — 다른 기계의 libm 마지막 자리만).  옛 판은 두 모드의 (σ₀, 온도) 가 서로 같은지만 봐서, 모드 셋 ·
-    사본 넷의 T_C 만 60 °C 로 바꾼 레코드가 σ₀ 3.0 mS/cm '@60 °C' 로 게시 · 인계됐다."""
+    사본 넷의 T_C 만 60 °C 로 바꾼 레코드가 σ₀ 3.0 mS/cm '@60 °C' 로 게시 · 인계됐다.
+    ★ 10-16 L214R-10 — 다시 계산한 σ_grain · 배수가 유한 양수가 아니거나 대조의 차 · 허용이 유한하지 않으면 (넘침 · 밑넘침) 생산자 NON_FINITE_REASON 꼬리표 사유
+    (None 아님 · inf ≤ inf 를 같다로 읽지 않는다)."""
     if not isinstance(rec, dict):
         return f'레코드가 객체가 아니다 ({type(rec).__name__})'
     s0, prov = _pos(rec.get('sigma_grain_S_cm')), rec.get('temperature_provenance')
@@ -894,14 +897,26 @@ def sigma0_convention_problem(rec):
         fac = sm.arrhenius_sigma_factor(_num(t_c), _num(ea), _num(t_ref))
     except (TypeError, ValueError, OverflowError) as e:
         return f'온도 규약을 다시 계산할 수 없다 ({type(e).__name__}: {e})'
+    #  ★ 10-16 L214R-10 (같은 부류 N2 · L214R-01 A · 05 · 07 과 같은 규칙) — 다시 계산한 σ_grain · 규약 배수 (want · fac) 와 대조의 차 · 허용을 비교 **전에** 본다:
+    #    want · fac = 유한 양수 · 차 · 허용 = 유한.  옛 판은 T_C −272.15 · Ea −0.0613 eV 에서 (T_ref/T)·exp(…) 가 예외 없이 +∞ (exp 는 넘치지 않고 곱이 넘친다) →
+    #    |σ₀ − ∞| ≤ 1e−12·∞ (inf ≤ inf) 가 참이라 **어떤 σ₀ 든** None 이었다 (σ₀ 결합 · 증서 결합 · 세대 계약 · τ 행 · 정지 계약 ⑧ ⑨ · 기록 판정 · 다시 읽기가
+    #    받았다) · 0 으로 밑넘친 배수는 어긋남으로만 걸렸다.  넘침 · 밑넘침 = 기술 실패 사유 (생산자 NON_FINITE_REASON 꼬리표 · None 아님) — 정상 규약 (25 °C 상수
+    #    3e−3 · 생산자의 Arrhenius 값) 은 식 · 허용 · 판정 · 문구 그대로 (같은 식을 미리 계산해 둘 뿐)
+    f_rec = _num(prov.get('sigma_ion_T_factor'))
+    d_f = None if f_rec is None else abs(f_rec - fac)
+    tol_f, d_s, tol_s = SIGMA0_CONVENTION_REL_TOL * abs(fac), abs(s0 - want), SIGMA0_CONVENTION_REL_TOL * abs(want)
+    if not (math.isfinite(want) and want > 0 and math.isfinite(fac) and fac > 0
+            and all(math.isfinite(v) for v in (tol_f, d_s, tol_s) + (() if d_f is None else (d_f,)))):
+        return (f'{_nc_mod().NON_FINITE_REASON} — 온도 규약 (T_C {t_c!r} · Ea {ea!r} · T_ref {t_ref!r}) 을 다시 계산한 σ_grain {want!r} · 규약 배수 {fac!r} 가 '
+                f'유한 양수가 아니거나 대조의 차 · 허용 (배수 {d_f!r} / {tol_f!r} · σ₀ {d_s!r} / {tol_s!r}) 이 유한하지 않다 — 넘침 · 밑넘침 ((T_ref/T)·exp(…) 가 '
+                '예외 없이 +∞ · 0) · inf ≤ inf 를 같다로 읽지 않는다 (생산자는 이 규약으로 σ₀ 를 내지 않는다)')
     bad = []
     dep = 'NOT_MODELLED' if t_c is None else 'ARRHENIUS'
     if prov.get('T_dependence') != dep:
         bad.append(f'T_dependence {prov.get("T_dependence")!r} ≠ {dep!r} (T_C {t_c!r})')
-    f_rec = _num(prov.get('sigma_ion_T_factor'))
-    if f_rec is None or not abs(f_rec - fac) <= SIGMA0_CONVENTION_REL_TOL * abs(fac):
+    if f_rec is None or not d_f <= tol_f:
         bad.append(f'sigma_ion_T_factor {prov.get("sigma_ion_T_factor")!r} ≠ 규약 배수 {fac!r}')
-    if not abs(s0 - want) <= SIGMA0_CONVENTION_REL_TOL * abs(want):
+    if not d_s <= tol_s:
         bad.append(f'σ₀ {s0!r} S/cm ≠ 온도 규약 (T_C {t_c!r} · Ea {ea!r} · T_ref {t_ref!r}) 의 σ_grain {want!r}')
     return ('σ₀ ↔ 온도 규약 (G2RR2-04): ' + ' · '.join(bad)) if bad else None
 
@@ -1347,8 +1362,20 @@ def ion_columns(dual, ledger, perc_pct, sigma0_T_claim=None):
             out.update(fail('NOT_COMPUTED', MODEL_LIMIT_REASON if mlim else 'solver_guard'))
             continue
         f = sf * L_gap / L_mc
-        t2 = phi_mc / f
-        o[f'f_ion_{m}'], o[f'f_ion_{m}_gap'], o[f'tau2_ion_{m}'], o[f'tau_ion_{m}'] = f, sf, t2, math.sqrt(t2)
+        #  ★ 10-16 L214R-09 (L214R-06–08 수정 중 보고된 같은 부류 N1 · L214R-01 A · 05 · 07 과 같은 규칙) — 값 상태 (OK · MBCB) 를 주기 **전에** 게시할 수 f · tau2 ·
+        #    tau 가 셋 다 유한 양수인가 본다 (`_pos`).  옛 판은 0b 를 통과한 밑정규 σ_ratio (옛 세대 lhs00_000 σ_ratio 1e−310 · σ_dim 1e−7 — 두 표현 항등식의 절대
+        #    반폭 5e−7 안) 에서 tau2 = +∞ 로 OK · 장부 극값 (L_gap 1e308 + L_mc 1e−10 · L_mc 1e−310) 에서 f = +∞ · tau2 = tau = 0 으로 MBCB (세대 2 도 — 증서는 장부를
+        #    묶지 않는다 · 정지 계약 · 다시 읽기 · 인계 관문이 받았다) · φ_mc 1e308 에서 tau2 = +∞ · f 가 0 으로 밑넘치면 (L_gap 5e−324) ZeroDivisionError 였다.
+        #    넘침 · 밑넘침 = 기술 실패 (NOT_COMPUTED · invalid_input · 생산자 NON_FINITE_REASON 꼬리표 · 값 넷 빈칸 — 기존 사유 어휘 그대로) · 유한한 극값은 그대로
+        #    (새 범위 문턱 없음) · 정상 행은 식 · 순서 · 값 그대로 · 비관통 (f = 0 · tau2 빈칸 = 등록된 물리적 ∞) 은 위 G3 에서 이미 끝났다
+        t2 = phi_mc / f if _pos(f) is not None else None
+        tau = math.sqrt(t2) if _pos(t2) is not None else None
+        if None in (_pos(f), _pos(t2), _pos(tau)):
+            out.update(fail('NOT_COMPUTED', f'{INVALID_INPUT}: {_nc_mod().NON_FINITE_REASON} — τ 환산이 유한 양수가 아니다: f = σ_ratio·L_gap/L_mc = {f!r} · '
+                                            f'tau2 = φ_mc/f = {t2!r} · tau = √tau2 = {tau!r} (σ_ratio {sf!r} · L_gap {L_gap!r} · L_mc {L_mc!r} · φ_mc {phi_mc!r} — '
+                                            '넘침 · 밑넘침 · 생산자 저장 범위 밖 입력 · +∞ · 0 을 값으로 싣지 않는다)'))
+            continue
+        o[f'f_ion_{m}'], o[f'f_ion_{m}_gap'], o[f'tau2_ion_{m}'], o[f'tau_ion_{m}'] = f, sf, t2, tau
         out.update(fail('MODEL_BELOW_CONTINUUM_BOUND' if t2 < 1.0 else 'OK'))   # G5 — 값 유지
     return {k: out[k] for k in column_names()}
 
