@@ -49,8 +49,13 @@
   "허용_서술": "지금은 없음 — §5 Q1 문장은 단일점 ≥ +0.30 이거나 EOS 뒤 ≥ +0.10 · ≤ −0.10 · |·| < 0.10 일 때만",
   "회수": "✅ 40a1b6aa (kgy 사용자 push 2026-10-16) → db/raw/ndo_site_dft_2026_10_15/q1_singlepoint_2026_10_16/ — 파일 20 개 (8 폴더 scf.in · scf.out + site_dg_summary.json = site_dg_dft.json (바이트 같음) + run.log + SHA256SUMS) · repo 에서 SHA256SUMS 19/19 통과 · **8 점 scf.in 이 repo 입력 (db/inputs/ndo_site_dft_2026_10_15/) 과 바이트가 같다** · 요약 ΔG 0.24004 = 화면 값 · G2 UMA 0.31853 같은 부호 · G3 발동",
   "⏭": [
-    "G4 k 탐침 2 SCF (kgy · tmux ndsite_kp) → site_dg.py --qe … --kprobe 로 다시 판독",
-    "G3 고정셀 + EOS 설계 · 입력 (두 최저 셀 · 부피 격자 선례 b2o3 0.96–1.04 5 점 · lpsocl ±6 % 7 점 · forc_conv_thr 1e-3) — ⏳ 사용자 GPU 자리 (카드 §7.4)",
-    "EOS 뒤 ΔG → G7 판단 → §5 문장 하나 → 1저자 통지 (사용자 통해)"
-  ]
+    "G3 고정셀 + EOS 설계안 → 사용자 OK · GPU 자리 (카드 §7.4) → 입력 · 실행",
+    "EOS 뒤 ΔG (site_dg.py --qe · 문턱 0.10) → G7 판단 (0.10 ± 0.11) → §5 문장 하나 → 1저자 통지 (사용자 통해)"
+  ],
+  "G4_결과_2026_10_16": {
+    "판독": "site_dg.py --qe … --kprobe ~/work/runs/ndo_site_dft_kprobe_2026_10_16 --out $R/site_dg_dft_kprobe.json (kgy · 22:39 탐침 끝 뒤 · 화면 출력은 안 붙였고 요약 json 을 회수본에서 읽음)",
+    "값": "k 3 3 1 탐침 ΔG 0.2574 vs 단일점 (2 2 1) 0.2400 → 움직임 0.0173 eV/Nd ≤ 0.05 ⇒ **G4 안 걸림** — 후보를 3 3 1 로 다시 돌리지 않는다 · G3 EOS 는 k 2 2 1",
+    "G3": "여전히 발동 (탐침 값도 0.30 안)",
+    "회수": "✅ d128a588 → db/raw/ndo_site_dft_2026_10_15/q1_kprobe_2026_10_16/ — 파일 7 개 (MP_07 · MLi_04 scf.in · scf.out + run.log + site_dg_dft_kprobe.json + SHA256SUMS) · repo 에서 해시 6/6 · 탐침 입력 = repo 입력 (db/inputs/ndo_site_dft_kprobe_2026_10_16/)"
+  }
 }
