@@ -1,0 +1,56 @@
+{
+  "id": "ndo_site_dft_q1_readout_2026_10_16",
+  "제목": "Nd 자리 비교 Q1 — DFT 단일점 판독 (Rietveld 5 f.u. 셀 · 후보 6 + 기준상 2 · site_dg.py --qe)",
+  "written_on": "2026-10-16",
+  "트랙": "CEI/Nd — 1저자 = 실험 쪽 (박재현) · 사용자 실행 승인 · 1저자 동의 전 잠정",
+  "카드": "db/properties/ndo_lpscl16_site_stability_estimand_2026_10_14.json (G3 개정 2026-10-15 결과 전 포함)",
+  "결정": "D-2026-10-14-ndo-site-stability-estimand (proposed)",
+  "실행": "kgy 8 점 — 10-16 07:28:48 시작 · 전원 끊김 (Li₃PS₄ 25 스텝에서) · 16:29:08 재시작 · 21:23:50 끝 (완료 7 · 건너뜀 1 · 실패 0) · 기록 ndo_site_dft_runlog_2026_10_15.json",
+  "판독": {
+    "때": "2026-10-16 사용자 붙여넣기 (kgy) · rc 0",
+    "도구": "db/inputs/ndo_site_2026_10_14/site_dg.py sha16 11e661ece18e1b53 (결과 전 커밋 d309ed2e 뒤로 안 바뀜 · worktree ~/wt_bmeas_1016 @25404563) · python = uma env",
+    "명령": "site_dg.py --qe $R --expect 3 --top 3 --thresholds Nd=0.30 --compare_uma db/raw/ndo_site_2026_10_14/uma_rietveld_2026_10_15/site_dg_rietveld.json --out $R/site_dg_dft.json --bundle $R/bundle_dft (R = ~/work/runs/ndo_site_dft_2026_10_15)"
+  },
+  "게이트_기계_확인": {
+    "G1": "✓ 후보 M@P 3 · M@Li 3 (전부 완료 판정 통과) + 기준상 Li₂S · Li₃PS₄ (vc-relax · bfgs 수렴 + 최종 scf)",
+    "조성": "M@P Cl8Li31Nd2O3P3S19 · M@Li Cl8Li21Nd2O3P5S19 — 모델 안에서 같다 · n_Nd 2 · 조성차 = 8 Li₂S − 2 Li₃PS₄ ✓"
+  },
+  "값_DFT_단일점": {
+    "⛔": "G3 발동 — 이 단일점 값으로는 카드 §5 Q1 의 어느 문장도 아직 못 쓴다 (부호도). 1저자 통지 · 원고 · 화면에 싣지 않는다",
+    "기준상": "e(Li₂S) −725.73581 · e(Li₃PS₄) −2100.83862 eV/f.u. · 저장소 항 4·e(Li₂S) − e(Li₃PS₄) = −802.10462 eV",
+    "M_P": {
+      "최저": "MP_07",
+      "둘째와_차_eV": 0.2744,
+      "모델_안_상대_eV": {
+        "MP_07": 0.0,
+        "MP_09": 0.274,
+        "MP_00": 0.373
+      }
+    },
+    "M_Li": {
+      "최저": "MLi_04",
+      "둘째와_차_eV": 0.0323,
+      "모델_안_상대_eV": {
+        "MLi_04": 0.0,
+        "MLi_03": 0.032,
+        "MLi_05": 0.144
+      }
+    },
+    "ΔG_site_DFT_단일점_eV_per_Nd": 0.24,
+    "부호_뜻": "> 0 ⇒ Nd@4b (P 자리) 모델이 불리 · Li₃PS₄/Li₂S 교환 기준 · Nd/(Nd+P) 0.40 셀 · frozen-4f PBE · 단일점 (UMA 이완 기하)"
+  },
+  "결과_전_규칙_적용": {
+    "G2_UMA_DFT_부호": "✓ 같은 부호 (UMA +0.319 · DFT +0.240) ⇒ 카드대로 UMA x-추세를 쓸 수 있다",
+    "G3_여유": "**발동** — |0.240| < 0.30 ⇒ 두 모델 최저 셀 (MP_07 · MLi_04) 을 고정셀 + EOS (Rietveld host 셀 모양 등방 스케일 · 점마다 이온만 relax · BM3 → V₀ 에서 이온만 relax · vc-relax 안 씀) 로 이완한 뒤에만 부호를 쓴다 · 그 뒤 < 0.10 이면 '구별 불가'",
+    "G4_k_탐침": "대상 MP_07 · MLi_04 (k 3 3 1 · 입력 db/inputs/ndo_site_dft_kprobe_2026_10_16/ · 단일점 입력과 K_POINTS 한 줄만 다름) — ΔG 움직임 > 0.05 eV/Nd 면 후보 전 점을 3 3 1 로 다시 (재개 규칙). G3 EOS 를 어느 k 로 할지가 이것으로 정해지므로 G4 → G3 순서",
+    "G7_기준상_다형": "발동 (단일점 문턱 0.30 에서 0.060) — 그러나 G3 때문에 판정은 EOS 뒤 값 · 문턱 0.10 으로 한다 ⇒ 의미 있는 G7 검사는 EOS 뒤 ΔG 가 0.10 ± 0.11 (−0.01 … 0.21) 안인지다. 다형이 더 낮으면 ΔG 는 내려가기만 한다 (Nd 하나당 Li₃PS₄ 1 f.u.) — EOS 뒤 값이 0.10 위에 있으면 이것이 범주를 바꿀 수 있다 (B 와 달리). ⏳ 사용자: 지금 할지 · EOS 뒤 조건부로 할지 (권고: EOS 뒤 조건부) · 할 때는 비-argyrodite 기준상 vc-relax 2 잡 새 허락 + MP CIF (gabia uma env)",
+    "모델_안_산포_기록": "M@Li 최저 둘이 0.032 eV 차 (MLi_04 · MLi_03) — UMA 에서도 둘이 0.038 차였는데 최저가 MLi_03 → DFT 는 MLi_04 로 바뀜 (G3 는 DFT 최저 MLi_04 를 쓴다) · M@P 최저는 UMA · DFT 둘 다 MP_07"
+  },
+  "허용_서술": "지금은 없음 — §5 Q1 문장은 단일점 ≥ +0.30 이거나 EOS 뒤 ≥ +0.10 · ≤ −0.10 · |·| < 0.10 일 때만",
+  "회수": "⏳ kgy $R/bundle_dft (8 폴더 scf.in · scf.out · site_dg_summary.json) + site_dg_dft.json + run.log → db/raw/ndo_site_dft_2026_10_15/q1_singlepoint_2026_10_16/ — 사용자 붙여넣기 블록 (실행 결과 미확인)",
+  "⏭": [
+    "G4 k 탐침 2 SCF (kgy · tmux ndsite_kp) → site_dg.py --qe … --kprobe 로 다시 판독",
+    "G3 고정셀 + EOS 설계 · 입력 (두 최저 셀 · 부피 격자 선례 b2o3 0.96–1.04 5 점 · lpsocl ±6 % 7 점 · forc_conv_thr 1e-3) — ⏳ 사용자 GPU 자리 (카드 §7.4)",
+    "EOS 뒤 ΔG → G7 판단 → §5 문장 하나 → 1저자 통지 (사용자 통해)"
+  ]
+}
