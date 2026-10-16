@@ -1,0 +1,37 @@
+{
+ "schema": "runlog/v1",
+ "record_kind": "runlog",
+ "date": "2026-10-17",
+ "track": "W_ad 점착 — 1저자 = 사용자 (DEM 쪽은 결과를 받는 쪽 · 통지할 제3자 없음)",
+ "card": [
+  "db/properties/wad_p2small_vasp_card_2026_10_15.json (탄소 P2′)",
+  "db/properties/wad_aprime_pilot_prereg_v5_amendment_4_e70_rerun_2026_10_15.json (은 a4 다시)"
+ ],
+ "decision": [
+  "D-2026-10-15-wad-p2small-vasp-card (active · 비준 2026-10-17)",
+  "D-2026-10-15-wad-aprime-v5-e70-a4-rerun (active · 비준 2026-10-17)"
+ ],
+ "results_seen": false,
+ "results_seen_note": "빌드 기록이다 — 에너지·W 값 없음. 점착 W 값은 이 파일에 싣지 않는다 (화면 · open_items 와 같은 규율).",
+ "빌드_단계(카드_만들_것_빌드_단계)": [
+  "① 빌더 플래그 (P2S) + selftest + 깨기",
+  "② 부모 둘 UMA+D3 이완 (G1) → p05 강체 (G1p) → far → 봉인 → D3 만 G3 예측 (80 % 규칙)",
+  "③ VASP 묶음 v7 (탄소 잡 · optB88 · 재시도 사다리 · 러너 = 검사기 SCF 계약 · 단계 상한 1.5 배 · 은 a4) + 검사기·집계기 확장",
+  "④ UMA 단일점 결박 (G5_C 봉인 구조 + G3 세 구조)",
+  "⑤ Codex CZ 묶음 리뷰 → 전달 프롬프트 + zip → 사용자 발송"
+ ],
+ "①_빌더_2026_10_17": {
+  "무엇": "tools/wad/build_aprime_interfaces.py 에 build_p2small (키 'P2S' = 카드의 P2′) · p05_probe · check_rigid_shift — 새 파일이 아니라 플래그 (--build P2S) · tools/wad/relax_uma_d3.py ROLES 에 P2S (SE | C) 한 줄",
+  "모델": "SE = se_sym_slab.build_slab(n_layers=2) (V5 절단 · 이완 좌표 아님) × (1,3,1) + 흑연 AB 2층 4×7√3 (graphite_rect_slab · P2 배치 · SE 에 맞춤) · registry A 하나 (registry_select 그대로 · 같은 종결 V5 의 A 와 같은 원자) · d0 3.2 Å · 마스크 SE far_half · 끝점 make_endpoints gap 10 Å",
+  "p05": "p05_probe(부모 bound, 부모 far) — 흡착층 C 전체 +0.5 Å 강체 (비이완) · 거부: dz ≤ 0 · 셀 위끝 넘음 · 부모가 끝점 정규화본이 아님 (좌표가 움직임) · 규칙이 탐침에 주는 c 가 부모와 다름 · 부모 far 가 아님 · 쌍극자 구간 다름 · 강체 검사 실패. check_rigid_shift 는 봉인 단계가 파일에서 다시 읽은 구조로도 쓴다 (extxyz 왕복 시험 통과)",
+  "selftest": "build_aprime_interfaces 75/75 (P2′ 조성 카드 식 · 변형 · registry A = V5 A · 흑연 2층 AB · 마스크·끝점 10 Å · 결정성 · p05 정확성 · 음성 14) · relax_uma_d3 44/44 (P2S 두 종결 사전 점검 · 마스크 = 정책) · build_aprime_s3 19/19 · collect_aprime_s4 25/25",
+  "깨기": "빌더 11/11 빨강 — SE 옆 셀 1×2 (변형 거부) · 흑연 3층 · gap 8 · A 대신 중점 · 강체 검사가 z 만 · 셀 비교 빠짐 · dz 부호 검사 빠짐 · 정규화 검사 빠짐 · c 변화 검사 빠짐 · 공유 far 검사 빠짐 · 탐침 +0.4 · relax_uma_d3 ROLES 에서 P2S 빼면 2 빨강",
+  "초기_구조": {
+   "폴더": "db/inputs/wad_p2small_geometries_2026_10_17/ (build_record.json · P2S_s_outer/A · P2S_li_outer/A)",
+   "S_A": "s_outer · Li84P12S66Cl12 + C224 = 398 원자 · 변형 +1.936 / +0.890 % · registry A = 원자 56 (같은 종결 V5 의 A 와 같다 · selftest) · c 34.9977 Å · far 직접 10.0 / 영상 11.0 Å · 고정 90 · 깃발 0 · bound sha256 d6ceddfd90b9db73…",
+   "Li_A": "li_outer · Li60P12S54Cl12 + C224 = 362 원자 · 변형 +1.936 / +0.890 % · registry A = 원자 43 (같은 종결 V5 의 A 와 같다) · c 32.5515 Å · far 직접 10.0 / 영상 11.0 Å · 고정 69 · 깃발 0 · bound sha256 706b94a794b85451…",
+   "조성_대조": "카드 §1b 식과 같다 (398 · 362)"
+  },
+  "⏭": "② 부모 둘 UMA+D3 이완 — GPU 자리 사용자 결정 뒤 붙여넣기 블록 (kgy 는 cascade v7 + Nd EOS pw.x 가 돌고 있다 · 최대 합계 14,301 MiB 실측 10-17 05:54)"
+ }
+}

@@ -6,6 +6,7 @@
     python3 tools/wad/build_aprime_interfaces.py --build V3 --term s_outer --out <dir>   # Ag₄ | SE 4층 (정본 이완 좌표) · registry A·B
     python3 tools/wad/build_aprime_interfaces.py --build V4 --term li_outer --out <dir>  # C₆H₆ | SE 4층
     python3 tools/wad/build_aprime_interfaces.py --build V5 --term s_outer --out <dir>   # SE 2층 1×2 + Ag(111) 3층 2√3×7
+    python3 tools/wad/build_aprime_interfaces.py --build P2S --term s_outer --out <dir>  # P2′ 작은 탄소 (외주 2차): SE 2층 1×3 + 흑연 AB 2층 · registry A 하나
     python3 tools/wad/build_aprime_interfaces.py --registry <구조> --species S           # 임의 구조에서 규칙 적용 결과만
 
 registry 선택 규칙 (카드 v5 §0 `registry_선택_규칙_결정적` · Codex CB Q4 반영 · **초기 구조에서만**):
@@ -426,6 +427,135 @@ def build_full(kind, term, a_ag=A_AG_PBE_D3, a_c=A_C_PBE_D3, d0=None, gap=10.0, 
     return out
 
 
+# ─────────────── P2′ 작은 탄소 모델 (외주 2차 카드 wad_p2small_vasp_card_2026_10_15 · 키 'P2S') ───────────────
+P05_DZ_A = 0.5          # 카드 §1b · G1p — 이완한 부모 bound 의 흡착층 강체 +z (비이완 탐침)
+RIGID_TOL_A = 1e-6      # G1p ① 성분별 허용 [Å]
+FORMULA_ORDER = ("Li", "P", "S", "Cl", "C", "Ag", "H")
+
+
+def _formula(symbols):
+    n = {e: 0 for e in FORMULA_ORDER}
+    for s in symbols:
+        if s not in n:
+            raise SlabError(f"_formula: 모르는 원소 {s}")
+        n[s] += 1
+    return "".join(f"{e}{n[e]}" for e in FORMULA_ORDER if n[e])
+
+
+def build_p2small(term, a_c=A_C_PBE_D3, d0=3.2, gap=10.0, c_layers=2, vacuum_tmp=16.0):
+    """P2′ 작은 탄소 모델 (카드 §1b) — SE 2층 (V5 절단) 1×3 + 흑연 AB 2층 4×7√3 · registry **A 하나**.
+
+    · SE = `se_sym_slab.build_slab(n_layers=2)` (V5 와 같은 절단 · 이완 좌표 아님) × (1,3,1) — P2 전체 계면과 같은 옆 셀
+    · 흑연 = graphite_rect_slab 를 SE 에 맞춘다 (P2 와 같은 배치 · 같은 변형) · 첫 층 최소 ID 원자를 registry A 위 · d0 3.2 Å
+    · registry A = registry_select 그대로 (같은 종결 V5 의 A 와 같은 원자) — B 는 카드의 비용 선택으로 만들지 않는다
+    · 마스크 = SE far_half 만 (흡착층 자유) · 측방 제약 없음 · 끝점 = make_endpoints (기본 gap 10 Å)
+    ⛔ 못 하는 것: 이완·에너지 없음 · p05 는 여기서 만들지 않는다 (이완한 부모에서 `p05_probe`) · 변형률 3 % 넘으면 거부만 한다.
+    """
+    from ase import Atoms
+    from ase.io import read
+    bulk = read(S.BULK_DEFAULT)
+    slab, smeta = S.build_slab(bulk, term, n_layers=2, vacuum=vacuum_tmp)
+    sub = slab.repeat((1, 3, 1))
+    reg = registry_select(sub, RELAXED[term][2], sgn=1.0)
+    ads = graphite_rect_slab(a_c, 4, 7, c_layers)
+    Cse, Ca = sub.cell.array, ads.cell.array
+    eps = [100 * (Cse[0, 0] / Ca[0, 0] - 1), 100 * (Cse[1, 1] / Ca[1, 1] - 1)]
+    _strain_guard(eps, f"P2′ 흑연 AB 4×7√3 × {c_layers} on SE 2층 1×3")
+    x = ads.get_positions().copy(); x[:, 0] *= Cse[0, 0] / Ca[0, 0]; x[:, 1] *= Cse[1, 1] / Ca[1, 1]
+    bottom = np.where(x[:, 2] < x[:, 2].min() + 0.3)[0]; anchor = int(bottom.min())
+    x[:, :2] += np.array(reg["A_xy_A"]) - x[anchor, :2]
+    x[:, 2] += (sub.get_positions()[:, 2].max() + d0) - x[:, 2].min()
+    bound = sub + Atoms("C" * len(x), positions=x)
+    bound.set_cell(Cse); bound.set_pbc((True, True, False))
+    is_ads = np.array([s == "C" for s in bound.get_chemical_symbols()])
+    b, f, em = make_endpoints(bound, is_ads, gap)
+    fixed = S.fixed_mask_policy(b, ads_elements=("C",))
+    chk = S.interface_check(b, f, ads_elements=("C",), fixed_idx=fixed)
+    sym = b.get_chemical_symbols()
+    meta = {"model": "P2S", "card": "wad_p2small_vasp_card_2026_10_15 (P2′)", "term": term, "registry": "A", "registry_rule": reg,
+            "se_layers": 2, "se_lateral": [1, 3], "se_cut_meta": smeta,
+            "se_formula": _formula([s for s, a in zip(sym, is_ads) if not a]), "n_se": int((~is_ads).sum()), "n_ads": int(is_ads.sum()),
+            "ads_element": "C", "ads_layers": c_layers, "ads_strain_pct_x_y": [round(e, 3) for e in eps], "anchor_ads_index_in_layer": anchor,
+            "fixed_idx": fixed, "lateral_fixed_idx": [], "d0_A": d0, "endpoints": em, "interface_check_flags": chk["flags"]}
+    return {"A": {"bound": b, "far": f, "meta": meta}}
+
+
+def check_rigid_shift(parent, probe, is_ads, dz=P05_DZ_A, tol=RIGID_TOL_A):
+    """G1p ① 강체 이동 정확성 — 흡착층 원자마다 변위 (0, 0, dz) · 기판 변위 0 (성분별 ≤ tol) · 셀·원자 순서·원소 같음.
+    봉인 단계가 파일에서 다시 읽은 구조로도 쓴다 (extxyz 는 1e-8 Å 자리까지 쓴다). 반환 dict (ok · violations · 최대 오차)."""
+    if len(parent) != len(probe) or len(is_ads) != len(parent):
+        return {"ok": False, "violations": [f"원자 수 부모 {len(parent)} · 탐침 {len(probe)} · 마스크 {len(is_ads)}"]}
+    is_ads = np.asarray(is_ads, bool)
+    bad = []
+    if parent.get_chemical_symbols() != probe.get_chemical_symbols():
+        bad.append("원소·원자 순서가 다르다")
+    if not np.allclose(parent.cell.array, probe.cell.array, rtol=0, atol=tol):
+        bad.append("셀이 다르다")
+    if not is_ads.any() or is_ads.all():
+        bad.append("흡착층·기판 둘 다 있어야 한다")
+        return {"ok": False, "violations": bad}
+    err = probe.get_positions() - parent.get_positions()
+    err[is_ads, 2] -= dz
+    e_ads, e_sub = float(np.abs(err[is_ads]).max()), float(np.abs(err[~is_ads]).max())
+    if e_ads > tol:
+        bad.append(f"흡착층 변위가 (0, 0, {dz}) 에서 {e_ads:.2e} Å 벗어난다 (> {tol})")
+    if e_sub > tol:
+        bad.append(f"기판 원자가 {e_sub:.2e} Å 움직였다 (> {tol})")
+    return {"ok": not bad, "violations": bad, "dz_A": dz, "tol_A": tol, "max_err_ads_A": e_ads, "max_err_sub_A": e_sub,
+            "n_ads": int(is_ads.sum()), "n_sub": int((~is_ads).sum())}
+
+
+def p05_probe(parent_bound, parent_far, dz=P05_DZ_A, gap=10.0, ads_elements=("C",), fixed_idx=None):
+    """카드 §1b · G1p — 이완한 부모 bound (make_endpoints 로 정규화한 것) 에서 흡착층 전체를 +dz 강체 이동한 **비이완 탐침**.
+    far 는 부모와 공유한다 — 같은 규칙 (make_endpoints) 이 탐침에 주는 far 가 부모 far 와 같은지 확인해서 공유를 정당화한다.
+
+    반환 (probe, rec): rec = G1p ① 강체 이동 (check_rigid_shift) · 공유 far 정합 · 쌍극자 구간 (탐침·far 집합 = 부모·far 집합) ·
+      G1p ③ interface_check 깃발 (fixed_idx 를 주면) · 간격 (직접 +dz · 영상 −dz).
+    거부 (SlabError): dz ≤ 0 · 흡착층 꼭대기가 셀 위끝을 넘음 · 부모가 끝점 정규화본이 아님 · 공유 far 불일치 (부모 직접 간격 > gap − dz) ·
+      쌍극자 구간 불일치 · 강체 이동 검사 실패.
+    ⛔ 못 하는 것: 이완하지 않는다 · sha 사슬 봉인은 부르는 쪽 (S3 와 같은 봉인 단계) 이 한다 — 여기선 변환 기록만 준다.
+    """
+    if not dz > 0:
+        raise SlabError(f"p05_probe: dz {dz} — 계면을 벌리는 강체 인장만 (dz > 0)")
+    is_ads = np.array([s in ads_elements for s in parent_bound.get_chemical_symbols()])
+    x = parent_bound.get_positions().copy()
+    x[is_ads, 2] += dz
+    c = float(parent_bound.cell.array[2, 2])
+    if x[is_ads, 2].max() >= c:
+        raise SlabError(f"p05_probe: 흡착층 꼭대기 {x[is_ads, 2].max():.3f} Å 가 셀 위끝 c {c:.3f} Å 를 넘는다")
+    probe = parent_bound.copy(); probe.set_positions(x)
+    rig = check_rigid_shift(parent_bound, probe, is_ads, dz)
+    if not rig["ok"]:
+        raise SlabError(f"p05_probe: 강체 이동 검사 실패 {rig['violations']}")
+    bb, ff, em = make_endpoints(probe, is_ads, gap)
+    e_bound = float(np.abs(bb.get_positions() - x).max())
+    if e_bound > RIGID_TOL_A:
+        raise SlabError(f"p05_probe: 부모가 끝점 정규화(make_endpoints) 된 bound 가 아니다 — 탐침을 다시 정규화하면 좌표가 {e_bound:.3e} Å 움직인다")
+    dc = float(bb.cell.array[2, 2]) - c
+    if abs(dc) > RIGID_TOL_A:
+        raise SlabError(f"p05_probe: 공유 far 불일치 — 규칙 (gap {gap}) 이 탐침에 주는 c 가 부모와 {dc:+.4f} Å 다르다 "
+                        f"(부모 직접 간격 {em['d0_A'] - dz:.3f} Å 가 gap − dz 를 넘거나 부모의 gap 규칙이 다르다)")
+    if len(ff) != len(parent_far) or ff.get_chemical_symbols() != parent_far.get_chemical_symbols():
+        raise SlabError("p05_probe: 공유 far 와 원자 수·순서가 다르다")
+    e_far = float(np.abs(ff.get_positions() - parent_far.get_positions()).max())
+    e_cell = float(np.abs(ff.cell.array - parent_far.cell.array).max())
+    if e_far > RIGID_TOL_A or e_cell > RIGID_TOL_A:
+        raise SlabError(f"p05_probe: 공유 far 불일치 — 탐침의 규칙 far 와 부모 far 가 {max(e_far, e_cell):.3e} Å 다르다 (부모의 far 가 아니다)")
+    d_par, d_pro = dip_region([parent_bound, parent_far]), dip_region([probe, parent_far])
+    if (d_par["emaxpos"], d_par["eopreg"]) != (d_pro["emaxpos"], d_pro["eopreg"]):
+        raise SlabError(f"p05_probe: 쌍극자 구간이 부모 집합과 다르다 {d_par['region_A']} ≠ {d_pro['region_A']}")
+
+    def gaps(at):
+        y = at.get_positions()
+        return round(float(y[is_ads, 2].min() - y[~is_ads, 2].max()), 4), round(float(c - (y[is_ads, 2].max() - y[~is_ads, 2].min())), 4)
+    rec = {"transform": {"kind": "흡착층 강체 +z (비이완)", "dz_A": dz, "ads_elements": list(ads_elements), "tol_A": RIGID_TOL_A},
+           "rigid_check": rig, "shared_far": {"ok": True, "max_err_A": max(e_far, e_cell), "rule": f"make_endpoints(탐침, gap {gap}) 의 far ≡ 부모 far"},
+           "dip_same_as_parent": True, "dipfield": d_pro, "gap_direct_image_A": {"parent": gaps(parent_bound), "probe": gaps(probe)}}
+    if fixed_idx is not None:
+        rec["interface_check_flags"] = S.interface_check(probe, parent_far, ads_elements=ads_elements, fixed_idx=fixed_idx)["flags"]
+    return probe, rec
+
+
 # ─────────────── registry 거리 (SE 쌍 카드 §4 '합쳐짐' — 이완 뒤 A·B 가 같은 자리로 모였나) ───────────────
 MERGE_TOL_A = 0.2       # SE 쌍 카드 §4 registry_합쳐짐 — 결과 전 문턱
 
@@ -699,6 +829,99 @@ def _selftest():
     ck("⛔음성 registry 거리: 다른 모델을 섞으면 거부", bad)
     rd5 = registry_distance("P1", p1m["A"]["bound"], p1m["B"]["bound"], p1m["A"]["bound"], p1m["B"]["bound"], "Ag")
     ck("registry 거리 P1: 초기 1.08 Å · 접촉층 28 · 격자 검사 통과", abs(rd5["init_A"] - 1.077) < 0.01 and rd5["n_contact"] == 28, rd5)
+    # ⑭ P2′ 작은 탄소 모델 (외주 2차 카드 §1b · 조성은 카드에 적힌 식 그대로)
+    want = {"s_outer": ("Li84P12S66Cl12", 398), "li_outer": ("Li60P12S54Cl12", 362)}
+    ps = {}
+    for term, (fse, ntot) in want.items():
+        mm = build_p2small(term); ps[term] = mm; m = mm["A"]["meta"]; b = mm["A"]["bound"]
+        isC = np.array([s == "C" for s in b.get_chemical_symbols()])
+        ck(f"P2′ {term}: registry A 하나 (B 를 만들지 않는다) · 모델 키 P2S", list(mm) == ["A"] and m["model"] == "P2S" and m["registry"] == "A", list(mm))
+        ck(f"P2′ {term}: SE {fse} + C224 = {ntot} (카드 식) · 깃발 0", m["se_formula"] == fse and m["n_ads"] == 224 == int(isC.sum()) and len(b) == ntot
+           and _formula(b.get_chemical_symbols()) == fse + "C224" and not m["interface_check_flags"], (m["se_formula"], m["n_ads"], len(b), m["interface_check_flags"]))
+        e = m["ads_strain_pct_x_y"]
+        ck(f"P2′ {term}: 변형 +1.94/+0.89 % (P2 와 같다 · 두 방향 < 2 %)", abs(e[0] - 1.935) < 0.02 and abs(e[1] - 0.890) < 0.02 and max(abs(v) for v in e) < 2.0, e)
+        r5 = build_v5(term)["A"]["meta"]["registry_rule"]
+        ck(f"P2′ {term}: registry A = 같은 종결 V5 의 A (원자 ID · xy)", m["registry_rule"]["A"] == r5["A"] and np.allclose(m["registry_rule"]["A_xy_A"], r5["A_xy_A"], atol=1e-9),
+           (m["registry_rule"]["A"], r5["A"]))
+        xb = b.get_positions(); n_se = m["n_se"]
+        ck(f"P2′ {term}: 흑연 첫 층 최소 ID 원자가 A 위 (xy) · 직접 간격 d0 3.2", np.allclose(xb[n_se + m["anchor_ads_index_in_layer"], :2], m["registry_rule"]["A_xy_A"], atol=1e-9)
+           and abs(m["endpoints"]["d0_A"] - 3.2) < 1e-6, (xb[n_se + m["anchor_ads_index_in_layer"], :2], m["registry_rule"]["A_xy_A"]))
+        zc = np.sort(np.unique(np.round(xb[isC, 2], 6)))
+        lay0 = xb[isC & (xb[:, 2] < zc[0] + 0.1)].copy(); lay1 = xb[isC & (xb[:, 2] > zc[0] + 0.1)].copy()
+        lay0[:, 2] = 0.0; lay1[:, 2] = 0.0
+        _, Dl = get_distances(lay1, lay0, cell=b.cell, pbc=(True, True, False))
+        ck(f"P2′ {term}: 흑연 2층 (112 + 112 · 간격 3.35) · AB (둘째 층 절반 56 만 첫 층 원자 위)", len(zc) == 2 and abs(zc[1] - zc[0] - D_GRAPHITE) < 1e-6
+           and len(lay0) == len(lay1) == 112 and int((Dl.min(axis=1) < 1e-3).sum()) == 56, (zc, len(lay0), len(lay1)))
+        ep = m["endpoints"]
+        ck(f"P2′ {term}: 마스크 = SE 만 (0 < n < SE) · 측방 없음 · far 직접·영상 ≥ 10 Å · gap 규칙 10", all(i < n_se for i in m["fixed_idx"]) and 0 < len(m["fixed_idx"]) < n_se
+           and m["lateral_fixed_idx"] == [] and min(ep["far_gap_direct_image_A"]) >= 10.0 - 1e-6 and ep["gap_rule_A"] == 10.0, (len(m["fixed_idx"]), ep["far_gap_direct_image_A"]))
+    try:
+        build_p2small("s_outer", a_c=2.35); bad = False
+    except SlabError as e:
+        bad = "변형률" in str(e)
+    ck("⛔음성 P2′: 흑연 격자 2.35 → 변형률 > 3 % → 거부", bad)
+    q1 = build_p2small("li_outer")["A"]["bound"].get_positions(); q2 = build_p2small("li_outer")["A"]["bound"].get_positions()
+    ck("결정성: P2′ li_outer 두 번 → 같은 좌표", np.array_equal(q1, q2))
+    # ⑮ p05 탐침 (G1p) — 부모 대역으로 빌드한 bound 를 쓴다 (실제 부모는 UMA+D3 이완본 · 변환 규칙은 같다)
+    pb, pf, pm = ps["s_outer"]["A"]["bound"], ps["s_outer"]["A"]["far"], ps["s_outer"]["A"]["meta"]
+    isC = np.array([s == "C" for s in pb.get_chemical_symbols()])
+    pr, rec = p05_probe(pb, pf, fixed_idx=pm["fixed_idx"])
+    dd = pr.get_positions() - pb.get_positions()
+    ck("p05: 흡착층 변위 (0, 0, +0.5) · 기판 변위 0 · 셀·순서·원소 같음", np.abs(dd[isC] - [0.0, 0.0, 0.5]).max() < 1e-12 and not np.abs(dd[~isC]).any()
+       and np.array_equal(pr.cell.array, pb.cell.array) and pr.get_chemical_symbols() == pb.get_chemical_symbols() and rec["rigid_check"]["ok"], rec["rigid_check"])
+    gp = rec["gap_direct_image_A"]
+    ck("p05: 공유 far = 탐침에 규칙이 주는 far · 쌍극자 구간 같음 · 깃발 0 · 직접 +0.5 / 영상 −0.5", rec["shared_far"]["ok"] and rec["dip_same_as_parent"]
+       and rec["interface_check_flags"] == [] and abs(gp["probe"][0] - gp["parent"][0] - 0.5) < 1e-3 and abs(gp["parent"][1] - gp["probe"][1] - 0.5) < 1e-3, rec)
+    import tempfile
+    from ase.io import read as _read, write as _write
+    with tempfile.TemporaryDirectory() as td:
+        _write(os.path.join(td, "p.extxyz"), pb); _write(os.path.join(td, "q.extxyz"), pr)
+        rt = check_rigid_shift(_read(os.path.join(td, "p.extxyz")), _read(os.path.join(td, "q.extxyz")), isC)
+    ck("p05: extxyz 왕복 뒤에도 G1p ① 통과 (봉인 단계가 파일에서 다시 검사)", rt["ok"], rt)
+    iC, iS = int(np.where(isC)[0][0]), int(np.where(~isC)[0][0])
+
+    def broken(f):
+        y = pr.copy(); f(y); return check_rigid_shift(pb, y, isC)
+
+    def swap2(sy):
+        j = next(k for k in range(len(sy)) if sy[k] != sy[0] and not isC[k]); sy = list(sy); sy[0], sy[j] = sy[j], sy[0]; return sy
+    for name, f in (("흡착층 원자 하나 x 2e-6 Å", lambda y: y.positions.__setitem__((iC, 0), y.positions[iC, 0] + 2e-6)),
+                    ("기판 원자 하나 z 2e-6 Å", lambda y: y.positions.__setitem__((iS, 2), y.positions[iS, 2] + 2e-6)),
+                    ("흡착층 전체 dz 0.5 + 2e-6", lambda y: y.positions.__setitem__((isC, 2), y.positions[isC, 2] + 2e-6)),
+                    ("셀 c +1e-3", lambda y: y.set_cell(y.cell.array + np.diag([0.0, 0.0, 1e-3]))),
+                    ("원자 순서 (다른 원소 두 기판 원자 맞바꿈)", lambda y: y.set_chemical_symbols(swap2(y.get_chemical_symbols())))):
+        r = broken(f)
+        ck(f"⛔음성 G1p ①: {name} → 잡는다", not r["ok"], r)
+    ck("⛔음성 G1p ①: 탐침 = 부모 그대로 (dz 0) → 잡는다", not check_rigid_shift(pb, pb, isC)["ok"])
+    for name, kw, key in (("dz −0.5 (계면을 누름)", {"dz": -0.5}, "강체 인장만"), ("dz 40 (셀 위끝 넘음)", {"dz": 40.0}, "셀 위끝")):
+        try:
+            p05_probe(pb, pf, **kw); bad = False
+        except SlabError as e:
+            bad = key in str(e)
+        ck(f"⛔음성 p05: {name} → 거부", bad)
+    raw = pb.copy(); raw.positions[:, 2] += 1.0
+    try:
+        p05_probe(raw, pf); bad = False
+    except SlabError as e:
+        bad = "끝점 정규화" in str(e)
+    ck("⛔음성 p05: 끝점 정규화 전 좌표를 부모로 주면 거부 (조용히 다른 셀)", bad)
+    try:
+        p05_probe(pb, pf, gap=12.0); bad = False
+    except SlabError as e:
+        bad = "공유 far 불일치" in str(e) and "c 가" in str(e)
+    ck("⛔음성 p05: 부모와 다른 gap 규칙 (12) → 거부 (c 가 바뀜)", bad)
+    near = build_p2small("s_outer", d0=9.8)["A"]
+    try:
+        p05_probe(near["bound"], near["far"]); bad = False
+    except SlabError as e:
+        bad = "공유 far 불일치" in str(e) and "c 가" in str(e)
+    ck("⛔음성 p05: 부모 직접 간격 9.8 > gap − dz → c 가 바뀌어 공유 불가 → 거부", bad)
+    wrongfar = pf.copy(); wrongfar.positions[np.where(isC)[0], 2] += 0.3
+    try:
+        p05_probe(pb, wrongfar); bad = False
+    except SlabError as e:
+        bad = "부모의 far 가 아니다" in str(e)
+    ck("⛔음성 p05: 부모 far 가 아닌 far → 거부", bad)
     print(f"{'✅' if n_bad == 0 else '⛔'} build_aprime_interfaces selftest {n_ok}/{n_ok + n_bad} 통과")
     return 0 if n_bad == 0 else 1
 
@@ -706,12 +929,12 @@ def _selftest():
 def main():
     ap = argparse.ArgumentParser(description=__doc__.split("\n")[0])
     ap.add_argument("--selftest", action="store_true")
-    ap.add_argument("--build", choices=["V2", "V3", "V4", "V5", "P1", "P2"])
+    ap.add_argument("--build", choices=["V2", "V3", "V4", "V5", "P1", "P2", "P2S"])
     ap.add_argument("--term", choices=["s_outer", "li_outer"], default="s_outer")
     ap.add_argument("--out")
     ap.add_argument("--a_ag", type=float, default=A_AG_PBE_D3)
     ap.add_argument("--a_c", type=float, default=A_C_PBE_D3)
-    ap.add_argument("--gap", type=float, default=None, help="끝점 간격 (Å) — 기본 V2–V5 8 · P1·P2 10 (SE 쌍 카드)")
+    ap.add_argument("--gap", type=float, default=None, help="끝점 간격 (Å) — 기본 V2–V5 8 · P1·P2·P2S 10 (SE 쌍 카드 · 외주 2차 카드)")
     ap.add_argument("--registry", metavar="STRUCT", help="임의 구조에 규칙만 적용해 JSON 출력")
     ap.add_argument("--species", default="S")
     a = ap.parse_args()
@@ -724,13 +947,15 @@ def main():
     if a.build:
         if not a.out:
             ap.error("--out 이 필요하다")
-        gap = a.gap if a.gap is not None else (10.0 if a.build in ("P1", "P2") else 8.0)
+        gap = a.gap if a.gap is not None else (10.0 if a.build in ("P1", "P2", "P2S") else 8.0)
         if a.build == "V2":
             models = build_v2(a.a_ag, a.a_c, gap=gap)
         elif a.build in ("V3", "V4"):
             models = build_v34(a.build, a.term, gap=gap)
         elif a.build == "V5":
             models = build_v5(a.term, a.a_ag, gap=gap)
+        elif a.build == "P2S":
+            models = build_p2small(a.term, a.a_c, gap=gap)
         else:
             models = build_full(a.build, a.term, a.a_ag, a.a_c, gap=gap)
         man = write_models(a.out, models)

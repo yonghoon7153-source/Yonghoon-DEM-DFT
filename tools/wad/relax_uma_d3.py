@@ -42,7 +42,8 @@ import se_sym_slab as S  # noqa: E402
 SlabError = S.SlabError
 D3_PARAMS = {"functional": "PBE", "damping": "BJ", "s6": 1.0, "s8": 0.7875, "a1": 0.4289, "a2": 4.4407, "three_body": False}
 ROLES = {"V2": (("Ag",), ("C",)), "V3": (S.SE_ELEMENTS, ("Ag",)), "V4": (S.SE_ELEMENTS, ("C", "H")), "V5": (S.SE_ELEMENTS, ("Ag",)),
-         "P1": (S.SE_ELEMENTS, ("Ag",)), "P2": (S.SE_ELEMENTS, ("C",))}      # P1·P2 = SE 쌍 전체 계면 (build_full)
+         "P1": (S.SE_ELEMENTS, ("Ag",)), "P2": (S.SE_ELEMENTS, ("C",)),      # P1·P2 = SE 쌍 전체 계면 (build_full)
+         "P2S": (S.SE_ELEMENTS, ("C",))}                                      # P2′ 작은 탄소 (외주 2차 카드 · build_p2small)
 
 
 def _sha(p):
@@ -674,6 +675,14 @@ def _selftest():
             except SlabError as e:
                 okp, infop = False, str(e)
             ck(f"{kind} {term}: 사전 점검 통과 (마스크 = 정책 · 깃발 0)", okp, infop)
+        for term in ("s_outer", "li_outer"):
+            B.write_models(os.path.join(T, "P2S", term), B.build_p2small(term))
+            try:
+                recp, rcp = relax(os.path.join(T, "P2S", term, "A"), os.path.join(T, "P2S", term, "A", "pre"), calc_kind="emt", d3_kind="none", preflight_only=True)
+                okp = rcp == 0 and recp["model"] == "P2S" and recp["preflight"]["mask_matches_policy"] and not recp["preflight"]["flags"]; infop = recp.get("preflight")
+            except SlabError as e:
+                okp, infop = False, str(e)
+            ck(f"P2S {term}: 사전 점검 통과 (외주 2차 작은 탄소 · 마스크 = 정책 · 깃발 0)", okp, infop)
         # ── --collect (SE 쌍 카드 §4·§5 집계) — 가짜 이완·W 로 논리만 · 음성: fmax · 깃발 · G3 · sha · 빠진 W · 합쳐짐 ──
         import shutil
         from ase.io import write as awrite
