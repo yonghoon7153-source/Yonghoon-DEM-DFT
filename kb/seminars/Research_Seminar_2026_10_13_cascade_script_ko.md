@@ -317,8 +317,9 @@ evidenceScope: multi-source-mixed
 ## 11. 안정창과 계면 반응성 ⏱ 16:30
 > ⏳ 10-14 순서 바뀜 (옛 10장 → 감사 뒤 · 같은 검토에서 고친 정의). 이 장을 볼 때 다시 확정한다.
 > ✎ 10-15 밤 사용자 12쪽 pptx (*'이것도 스토리에 맞게 부탁할게용'*) → 교체본 v2 (사용자 판이 원본 · 빌더는 안 바꿈): 이 장의 줄거리 = **정의를 바로잡았고 그래서 91 개를 다시 냈다** 인데 화면에 정의도 이유도 없었다 ('this definition' 이 가리키는 문장이 없었음) → 불렛 *'The window is the voltage range with no Li exchange on a grand-potential phase diagram.'* · *'The earlier lower limit lay in the Li-uptake range, so all 91 precursors were recomputed.'* (옛 둘째 줄은 마침표 붙은 조각) · 왼쪽 그림에 옛 하한 1.242 V 를 회색 점선으로 더함 (축 1.1–2.5 V · `export_cascade_briefing_csvs_2026_10.py --fig-p10` · 값은 원장 `first_reduction_plateau_V` · CSV `p10_stability_window_host_legacy.csv`) · 맨 아래 줄 *'For Li₆PS₅Cl, the window is 0.423 V wide, less than half the earlier 0.898 V.'* · 문헌 꼬리표의 콜론을 뺌 *'Literature (decomposition and intrinsic windows)'* · 출처 랩 표준 · 오른쪽 위. 91 = 본 배치 90 + As₂S₃ (`oxidation_stability_cascade_v3_pinned.json` + 10-13 부록 · 전구체 이름 기준 91/91). 계면 반응성은 화면에 없어서 말 한 줄로 줄였다 ('오른쪽 글' · 'Sundar 그림' 가리킴은 슬림판에 없는 자리였다).
+> ✎ 10-16 사용자: 문헌 꼬리표와 'Reproduced from' 줄을 빼고 *'두 번째 figure 에 caption 으로'* → 교체본 v3 캡션 *'< decomposition and intrinsic windows reported in JACS Au, 1, 1488 (2021) >'* (무엇 · 문헌 · 출처를 한 줄에). 사용자 질문 *'대본에 이 내용이 다 들어가?'* → 출처 네 편 중 셋을 쓰는 자리에서 말로 밝힘: Zhu 2015 = 방법 (첫 불렛) · Schwietert 2021 = 오른쪽 그림 · Richards 2016 = 계면 한 줄. Xiao 2020 (계면 안정성 리뷰) 은 일반 참고라 말하지 않는다.
 다음은 안정창입니다. 점검하면서 정의도 하나 바로잡았습니다. **[가리킴: 첫 불렛]**
-- 대권위 상도표에서 Li 화학퍼텐셜을 전압으로 바꿔 훑습니다. MP 상 자료를 쓴 0 K 벌크 열역학입니다.
+- 대권위 상도표에서 Li 화학퍼텐셜을 전압으로 바꿔 훑습니다. Zhu 등 (2015) 의 방법이고, MP 상 자료를 쓴 0 K 벌크 열역학입니다.
 - 안정창은 **전극과 Li 을 주고받는 반응이 없는 전압 구간**입니다. 그런 구간이 없으면 '안정창 없음' 으로 기록합니다.
 
 **[가리킴: 왼쪽 그림]** 호스트 Li₆PS₅Cl 로 보면,
@@ -327,9 +328,9 @@ evidenceScope: multi-source-mixed
 - **[가리킴: 회색 점선]** 예전 계산은 하한을 1.242 V 에 두었습니다. 이 자리는 아직 Li 을 받아들이는 구간이라, 창이 0.898 V 로 넓게 나왔습니다.
 - **[가리킴: 둘째 불렛]** 그래서 91 개 전구체를 모두 이 정의로 다시 계산했습니다.
 
-**[가리킴: 오른쪽 그림]** 문헌에서는 이 정의를 decomposition window 라고 부르고, Li₆PS₅Cl 하한 1.72 V 가 우리 1.717 V 와 맞습니다. 옅은 막대 intrinsic window 는 정의가 달라서 비교하지 않습니다.
+**[가리킴: 오른쪽 그림]** Schwietert 등 (2021) 의 그림입니다. 이 논문은 이 정의를 decomposition window 라고 부르고, Li₆PS₅Cl 하한 1.72 V 가 우리 1.717 V 와 맞습니다. 옅은 막대 intrinsic window 는 정의가 달라서 비교하지 않습니다.
 
-계면 반응성도 같은 상 자료로 계산해 두었지만, 반응 산물을 판정하는 규칙을 정하기 전이라 오늘은 쓰지 않습니다.
+계면 반응성도 Richards 등 (2016) 의 방식으로, 같은 상 자료로 계산해 두었지만, 반응 산물을 판정하는 규칙을 정하기 전이라 오늘은 쓰지 않습니다.
 
 **[클릭 전에]** 여기까지가 1단계를 다시 점검하며 고친 것들입니다. 이렇게 먼저 박은 규칙으로 지금 도는 것이 2단계 파일럿입니다.
 
