@@ -295,6 +295,8 @@
   · ⚠ **MP 가 id 를 옮기는 중이다** — `mp-1211324` 로 물으면 `mp-aaacqxxk` 가 돌아온다. 기록엔 둘 다 남긴다.
 - **desktop WSL**: ORCA r2SCAN-3c (SDCP 분자 계열).
 - 공통: 실행 스크립트에 pgrep 중복실행 가드, 출력 grep은 `grep -a`(NUL 오염 대비), watch 스크립트 관례 유지.
+  · ⭐ **감시 블록은 `watch -n 30 '…'` 꼴로 준다** (사용자 2026-10-16 *"어느샌가 계속 loop로 주는데 watch 30 으로 줘"*) — 스크립트의 `--loop` · `while :; do …; sleep` 꼴로 주지 않는다.
+    따옴표 안에서는 `~` 대신 `$HOME` 을 쓴다 (watch 가 `sh -c` 로 돈다). watch 는 화면 폭보다 긴 줄을 자르니 창을 넓히거나 `cut -c` 로 줄인다.
 - ⛔ **붙여넣기 블록에서 저장소 위치를 `git rev-parse --git-common-dir` 로 유도하지 마라** (2026-10-12 gabia) — 메인 저장소에서는 **상대경로(`.git`)** 를 줘서
   사용자 셸의 현재 폴더가 다르면 `cd .git/..` 가 깨진다 (linked worktree 에서만 절대경로). 10-11 블록은 사용자가 마침 `/data/work/repo` 에 있어서 우연히 맞았다.
   ⇒ 메인 저장소 경로를 **직접** 쓴다: gabia `/data/work/repo` · kgy `~/lldvar` (`git -C <그 경로> fetch … && git -C <그 경로> worktree add …`).
