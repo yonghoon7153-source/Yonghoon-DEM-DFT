@@ -1,0 +1,3 @@
+{"evidence": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/d26d1e75-209f-540f-83a8-c0e1957edc2f/scratchpad/l214r_rerun/run_pre_6cb256956/evidence/numeric_probes.json", "solves": 38, "certificate_mutations": 14, "records": 5, "ladder_bytes_identical": true, "overflow_record": {"result": [true, "ok: hertzian, physics"], "error": null}, "attempt_record": {"result": [true, "ok: hertzian, physics"], "error": null}}
+
+--- stderr ---

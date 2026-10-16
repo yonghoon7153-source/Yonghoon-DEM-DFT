@@ -11063,7 +11063,7 @@
       "found_by": "codex 10-15 LHS214 수정 재검증 (검토 핀 9e3ef54ca · 기준 0c557e72a · 실제 함수 · 합성 생산자 사슬 · 새 214 · WSL 발사 없음)",
       "opened_in": "docs/reviews/codex_review_lhs214_fix_reverify_20261015.md",
       "title": "공용 수치 증서 검사가 비유한 재구성 q 와 마지막 채택 시도의 실패 기록을 수용한다 — 증서 전류 ±1e308 · sum_g 1e308 이면 q_rec = +inf 인데 상대 비교가 `inf <= inf` 로 참이 되고, 마지막 시도 residual_rel 1.0 · conservation_rel 1.0 · krylov_info 1 도 각각 통과해 full_model_limit_problem · ion_record_problem = None · certificate_binding_problems = [] · channel_verdict ok · 모드 파일 network_content_verdict = True",
-      "note": "판정문 §2 · 자리 (핀 9e3ef54ca): scripts/network_conductivity.py:993–998 · :1005–1015 (재구성 검사).  반례 A = 실제 21 노드 합성 생산자의 Physics 모형 한계 레코드 (원 진단 q 2.593468501694396) 에서 기하 · 출력 null 유지 · 증서 전류 I_bottom = 1e308 · I_top = −1e308 · sum_g = 1e308 (마지막 pass 시도의 전류도 맞춤 · T 20 · A 1 · ΔV 1) → q_rec = ((I_bottom/ΔV)·T)/A = +inf · 저장 q 는 유한 그대로 · `abs(q − inf) <= 16ε·abs(inf)` = `inf <= inf` 참 → 재구성 q · 저장 q 의 > 1.5 검사도 참 → 위 함수 전부 통과 · T = A = 1e308 증서도 같음 · 실제 solve_network 는 환산 중 q 가 무한대면 non_finite 로 거부 ⇒ 생산자와 소비자가 같은 유한성 계약을 보증한다는 결론이 무너진다.  반례 B = 같은 레코드의 마지막 시도 residual_rel 만 1.0 · conservation_rel 1.0 · krylov_info 1 = 각각 통과 (대조군 outcome 변경 · 마지막 전류 변경은 거부).  한정: 실제 침대에서 1e308 전류가 났다는 주장 아님 (모든 입력 필드를 유한하게 둔 공격) · 정상 생산자가 실패한 해를 채택한다는 증거 아님 (증서 내부 모순을 소비 검사가 거부하지 않는 문제) · 앞선 실패 시도는 사다리의 정상 기록일 수 있어 전부 금지할 일 아님 · scale = 1e200 의 scale**2 예외는 지금 상위 검사에서 실패 (별도 false-green 아님).  최소 해제 = T/A · q_rec 를 비교 전에 유한 양수로 확인 · 넘침 · 밑넘침 = 기술 실패로 정리 (scale**2 예외도 사유화) · 마지막 채택 시도의 잔차 · 보존 · 방법별 수렴 상태 · 예외 여부 ↔ 최종 요약 결합 · 두 반례가 증서 → 모드 파일 소비에서 거부되고 정상 fallback 성공 · 경계 대조는 유지.  설계 선택 Q2 2 (q 재구성 · 16ε = 유한 영역에서 동의 · 유한성 검사를 먼저) · 9 (non_finite = 생산자뿐 아니라 재구성 소비자에도 같은 기준) (§6).  ⬜ 수정 계획 = 세미나 뒤 (1저자 10-15 — 24 시간 세미나 집중).  ✅ 10-16 고침 3676a33eb (시험 먼저 a955050df · scripts/test_l214r01_certificate.py 48/112 → 112/112 · 1저자 10-16 수정 계획 Q1–Q5 권고대로 · docs/reviews/lhs214r_fix_plan_20261016.md): ① 비교 전에 T · A · 재구성 q 를 유한 양수로 확인 — 넘침 · 밑넘침 = non_finite · 기하 환산 넘침 (scale² 포함) = 사유 문자열 (예외 아님) · 기하 환산 = 생산자와 같은 _geometry_TA · ② 마지막 채택 시도 (outcome pass) 를 최종 요약과 결합 — 내부 잔차 ≤ 1e−6 · 보존 = 두 전류로 다시 잰 값 · 방법별 수렴 상태 (spsolve = krylov_info 없음 · cg · cg+jacobi · gmres+ilu = 0 · DIRICHLET_KRYLOV_METHODS) · 예외 기록 없음 · 전류 = 요약 — 생산자 수용 상수 그대로 (새 문턱 없음 · 앞선 실패 시도 = 사다리 기록이라 허용).  문턱 1.5 · 16ε · 사다리 그대로.  부수 효과 = solve_network(scale = 1e200) 이 OverflowError 대신 not_computed · invalid_geometry (탐침 solves[35]).  증서 결합 (certificate_binding_problems) · 세대 계약은 이 레코드에 문제 없음 그대로 — 거부는 0b 공용 판정 (ion_record_problem → full_model_limit_problem) 에서 난다 (설계 선택 · 재확인 질문).  Codex 탐침 다섯 무변경 재실행 (리포 밖 · 고치기 전 6cb256956 ↔ 고친 뒤 dcd06869d · 기준 0c557e72a · 요약 = docs/session_20260923_progress.md 10-16 5) = 반례 A · B 레코드 넷이 full_model_limit_problem · ion_record_problem (invalid_input) · 채널 판정 fail · 모드 파일 내용 판정 False · Physics τ invalid_input 에서 거부 · 증서 변이 7 거부 사유 · 정상 합성 레코드 그대로.  ⬜ 같은 결합을 게시 증서 경로에 (Q4) · 레코드 σ 항등식 유한성 (Q5) · 거대 정수 예외 사유화 (Q6) = 1저자 결정 대기 · Codex 짧은 재확인 대기.",
+      "note": "판정문 §2 · 자리 (핀 9e3ef54ca): scripts/network_conductivity.py:993–998 · :1005–1015 (재구성 검사).  반례 A = 실제 21 노드 합성 생산자의 Physics 모형 한계 레코드 (원 진단 q 2.593468501694396) 에서 기하 · 출력 null 유지 · 증서 전류 I_bottom = 1e308 · I_top = −1e308 · sum_g = 1e308 (마지막 pass 시도의 전류도 맞춤 · T 20 · A 1 · ΔV 1) → q_rec = ((I_bottom/ΔV)·T)/A = +inf · 저장 q 는 유한 그대로 · `abs(q − inf) <= 16ε·abs(inf)` = `inf <= inf` 참 → 재구성 q · 저장 q 의 > 1.5 검사도 참 → 위 함수 전부 통과 · T = A = 1e308 증서도 같음 · 실제 solve_network 는 환산 중 q 가 무한대면 non_finite 로 거부 ⇒ 생산자와 소비자가 같은 유한성 계약을 보증한다는 결론이 무너진다.  반례 B = 같은 레코드의 마지막 시도 residual_rel 만 1.0 · conservation_rel 1.0 · krylov_info 1 = 각각 통과 (대조군 outcome 변경 · 마지막 전류 변경은 거부).  한정: 실제 침대에서 1e308 전류가 났다는 주장 아님 (모든 입력 필드를 유한하게 둔 공격) · 정상 생산자가 실패한 해를 채택한다는 증거 아님 (증서 내부 모순을 소비 검사가 거부하지 않는 문제) · 앞선 실패 시도는 사다리의 정상 기록일 수 있어 전부 금지할 일 아님 · scale = 1e200 의 scale**2 예외는 지금 상위 검사에서 실패 (별도 false-green 아님).  최소 해제 = T/A · q_rec 를 비교 전에 유한 양수로 확인 · 넘침 · 밑넘침 = 기술 실패로 정리 (scale**2 예외도 사유화) · 마지막 채택 시도의 잔차 · 보존 · 방법별 수렴 상태 · 예외 여부 ↔ 최종 요약 결합 · 두 반례가 증서 → 모드 파일 소비에서 거부되고 정상 fallback 성공 · 경계 대조는 유지.  설계 선택 Q2 2 (q 재구성 · 16ε = 유한 영역에서 동의 · 유한성 검사를 먼저) · 9 (non_finite = 생산자뿐 아니라 재구성 소비자에도 같은 기준) (§6).  ⬜ 수정 계획 = 세미나 뒤 (1저자 10-15 — 24 시간 세미나 집중).  ✅ 10-16 고침 3676a33eb (시험 먼저 a955050df · scripts/test_l214r01_certificate.py 48/112 → 112/112 · 1저자 10-16 수정 계획 Q1–Q5 권고대로 · docs/reviews/lhs214r_fix_plan_20261016.md): ① 비교 전에 T · A · 재구성 q 를 유한 양수로 확인 — 넘침 · 밑넘침 = non_finite · 기하 환산 넘침 (scale² 포함) = 사유 문자열 (예외 아님) · 기하 환산 = 생산자와 같은 _geometry_TA · ② 마지막 채택 시도 (outcome pass) 를 최종 요약과 결합 — 내부 잔차 ≤ 1e−6 · 보존 = 두 전류로 다시 잰 값 · 방법별 수렴 상태 (spsolve = krylov_info 없음 · cg · cg+jacobi · gmres+ilu = 0 · DIRICHLET_KRYLOV_METHODS) · 예외 기록 없음 · 전류 = 요약 — 생산자 수용 상수 그대로 (새 문턱 없음 · 앞선 실패 시도 = 사다리 기록이라 허용).  문턱 1.5 · 16ε · 사다리 그대로.  부수 효과 = solve_network(scale = 1e200) 이 OverflowError 대신 not_computed · invalid_geometry (탐침 solves[35]).  증서 결합 (certificate_binding_problems) · 세대 계약은 이 레코드에 문제 없음 그대로 — 거부는 0b 공용 판정 (ion_record_problem → full_model_limit_problem) 에서 난다 (설계 선택 · 재확인 질문).  Codex 탐침 다섯 무변경 재실행 (리포 밖 · 고치기 전 6cb256956 ↔ 고친 뒤 dcd06869d · 기준 0c557e72a · 요약 = docs/session_20260923_progress.md 10-16 5) = 반례 A · B 레코드 넷이 full_model_limit_problem · ion_record_problem (invalid_input) · 채널 판정 fail · 모드 파일 내용 판정 False · Physics τ invalid_input 에서 거부 · 증서 변이 7 거부 사유 · 정상 합성 레코드 그대로.  ⬜ 같은 결합을 게시 증서 경로에 (Q4) · 레코드 σ 항등식 유한성 (Q5) · 거대 정수 예외 사유화 (Q6) = 1저자 결정 대기 · Codex 짧은 재확인 대기.  ★ 10-16 같은 부류 후속 = L214R-06–08 (2e85d08eb · 게시 증서 채택 단 결합 · 레코드 σ 항등식 · 큰 정수) · L214R-09–11 (60ba39e22) · 알려진 항목 L214K-01–08 (수정 계획 §4-2 · §4-3).",
       "evidence_tests": [
         "docs/reviews/codex_review_lhs214_fix_reverify_20261015.md §2",
         "docs/reviews/codex_lhs214_fix_reverify_evidence_20261015/evidence/numeric_probes.json (records.overflow_q_reconstruction_currents · contradictory_attempt_residual_rel · certificate_mutations · 직접 풀이 탐침 38 · 증서 변이 14 · 레코드 탐침 5)",
@@ -11139,10 +11139,98 @@
       "found_by": "메인 세션 10-16 L214R-01 수정 에이전트 탐침 (게시 FULL 증서 경로 · 합성 증서) · 메인 재현 = 시험 먼저 755b71feb (109/184)",
       "opened_in": "docs/reviews/lhs214r_fix_plan_20261016.md",
       "title": "게시 FULL 증서 경로 (tau_flux._cert_published_problem · _cert_geometry · sigma0_binding_problems) 가 재구성 값을 비교 전에 유한성으로 거르지 않는다 — 정상 Hertz 증서의 전류를 ±1e308 로 바꾸면 재구성 q = inf 인데 `inf <= inf` 로 통과해 증서 결합 · 채널 판정 · τ 가 OK (L214R-01 A 와 같은 구멍 · 게시 경로)",
-      "note": "수정 계획 §4 Q3 (1저자 10-16 권고대로 — 같은 규칙으로 이번에).  자리: scripts/tau_flux.py _cert_geometry · _cert_published_problem · sigma0_binding_problems.  ✅ 10-16 고침 530ddb355 (시험 먼저 755b71feb · scripts/test_l214r05_published_certificate.py 109/184 → 184/184): 기하 환산 = _geometry_TA (생산자 · 모형 한계 경로와 같은 함수) + T · A 유한 양수 · 재구성 q · 차원 σ · 허용치를 비교 전에 유한으로 확인 (아니면 non_finite 사유) · σ₀ 결합의 수 변환 = _cert_num (넘침을 사유로).  수정 범위 = tau_flux.py 만 · 정상 증서 판정 그대로.  한정: 실제 침대에서 1e308 전류가 났다는 주장 아님 (유한 입력 공격) · 같은 부류 셋 (게시 경로 마지막 채택 시도 결합 = Q4 · 레코드 σ 항등식 유한성 = Q5 · 거대 정수 예외 = Q6) 은 이 항목 밖 — 1저자 결정 대기 (진행 기록 10-16 5) · Codex 짧은 재확인 대기.",
+      "note": "수정 계획 §4 Q3 (1저자 10-16 권고대로 — 같은 규칙으로 이번에).  자리: scripts/tau_flux.py _cert_geometry · _cert_published_problem · sigma0_binding_problems.  ✅ 10-16 고침 530ddb355 (시험 먼저 755b71feb · scripts/test_l214r05_published_certificate.py 109/184 → 184/184): 기하 환산 = _geometry_TA (생산자 · 모형 한계 경로와 같은 함수) + T · A 유한 양수 · 재구성 q · 차원 σ · 허용치를 비교 전에 유한으로 확인 (아니면 non_finite 사유) · σ₀ 결합의 수 변환 = _cert_num (넘침을 사유로).  수정 범위 = tau_flux.py 만 · 정상 증서 판정 그대로.  한정: 실제 침대에서 1e308 전류가 났다는 주장 아님 (유한 입력 공격) · 같은 부류 셋 (게시 경로 마지막 채택 시도 결합 = Q4 · 레코드 σ 항등식 유한성 = Q5 · 거대 정수 예외 = Q6) 은 이 항목 밖 — 1저자 결정 대기 (진행 기록 10-16 5) · Codex 짧은 재확인 대기.  ★ 10-16 같은 부류 후속 = L214R-06–08 (2e85d08eb · 게시 증서 채택 단 결합 · 레코드 σ 항등식 · 큰 정수) · L214R-09–11 (60ba39e22) · 알려진 항목 L214K-01–08 (수정 계획 §4-2 · §4-3).",
       "claimed_fixed_sha": "530ddb355",
       "evidence_tests": [
         "scripts/test_l214r05_published_certificate.py (109/184 → 184/184 · 1e308 전류 · T = A = 1e308 · 차원 σ · 허용치 · σ₀ 결합)"
+      ]
+    },
+    {
+      "id": "L214R-06",
+      "severity": "P2",
+      "status": "claimed_fixed",
+      "owner": "claude",
+      "found_by": "L214R-05 수정 에이전트 탐침 (10-16 · 같은 부류 Q4–Q6) · 메인 재현 = 시험 먼저 40a08afb5 (본 가지 체크아웃 118/306)",
+      "opened_in": "docs/reviews/lhs214r_fix_plan_20261016.md",
+      "title": "게시 증서 경로 (tau_flux._cert_published_problem — 이온 FULL · CF · 협착-only) 가 마지막 채택 시도 기록 (attempts) 을 읽지 않는다 — 정상 H0 증서의 마지막 시도를 실패 · 잔차 1.0 · 보존 1.0 · 예외 · 다른 방법 · 전류 ×2 · 목록 비움 / 뺌 · 직접해 단 krylov_info 1 로 바꿔도 증서 결합 [] · 세대 g2 · 게시 판정 ok · τ OK",
+      "note": "수정 계획 §4-2 Q4 (1저자 10-16 (가)).  ✅ 고침 2e85d08eb (시험 먼저 40a08afb5): 모형 한계 증서 ③ 을 꺼낸 한 함수 `network_conductivity.adopted_attempt_binding_problem` (마지막 시도 = pass · 같은 방법 · 같은 두 전류 · `_adopted_attempt_problem`) 를 `model_limit_certificate_problem` (문구 바이트 그대로) 과 `tau_flux._cert_published_problem` 이 같이 부른다 · 생산자는 해를 낸 증서마다 시도 목록 (pass 단에서 끝) 을 싣는다 (정직한 증서 43 개 통과 · 정상 fallback 통과).  같은 커밋 = `webapp/test_pipeline_provenance.py` 가짜 증서에 생산자 모양 시도 목록 (fixture-drift · 첫 게이트 267/284 → 284/284).  증거 docs/reviews/lhs214r_fix_evidence_20261016/ · Codex 짧은 재확인 대기.",
+      "claimed_fixed_sha": "2e85d08eb",
+      "evidence_tests": [
+        "scripts/test_l214r06_same_class.py (118/306 → 306/306 · 본 가지 재현)",
+        "webapp/test_pipeline_provenance.py (fixture-drift · 267/284 → 284/284)",
+        "docs/reviews/lhs214r_fix_evidence_20261016/ (시험 먼저 · 최종 · 탐침 재실행 · 무영향 대조)"
+      ]
+    },
+    {
+      "id": "L214R-07",
+      "severity": "P2",
+      "status": "claimed_fixed",
+      "owner": "claude",
+      "found_by": "L214R-05 수정 에이전트 탐침 (10-16 · 같은 부류 Q4–Q6) · 메인 재현 = 시험 먼저 40a08afb5 (본 가지 체크아웃 118/306)",
+      "opened_in": "docs/reviews/lhs214r_fix_plan_20261016.md",
+      "title": "레코드 공용 검사 (tau_flux.ion_record_problem) 의 두 σ 표현 항등식이 `inf <= inf` 를 받는다 — σ_ratio 1e308 · σ_dim 1.0 (σ₀ 3e-3) 통과 · 세대 2 는 증서 결합이 막지만 증서 없는 옛 세대 레코드는 역사 인계 경로에서 f_ion = ∞ · tau2 = 0 (실제 v1.2 lhs00_000 에서 재현)",
+      "note": "수정 계획 §4-2 Q5.  ✅ 고침 2e85d08eb: 1000·σ₀·σ_ratio (유한 양수) · |차| · 허용 (유한) 을 비교 전에 · 아니면 invalid_input (non_finite 꼬리표) · 옛 세대 경로 (ion_columns · case_row · 정지 계약 ③ · 인계 P4) 도 같은 함수 · `scripts/test_l214r05_published_certificate.py` A5-0 · A5d · A5e 기대 갱신 (그 두 레코드는 0b 가 먼저 거부 · 증서 경로는 직접 호출로 · 184 그대로).  증거 docs/reviews/lhs214r_fix_evidence_20261016/ · Codex 짧은 재확인 대기.",
+      "claimed_fixed_sha": "2e85d08eb",
+      "evidence_tests": [
+        "scripts/test_l214r06_same_class.py (118/306 → 306/306 · 본 가지 재현)",
+        "scripts/test_l214r05_published_certificate.py (184/184 · A5d · A5e 기대 = 0b non_finite)"
+      ]
+    },
+    {
+      "id": "L214R-08",
+      "severity": "P3",
+      "status": "claimed_fixed",
+      "owner": "claude",
+      "found_by": "L214R-05 수정 에이전트 탐침 (10-16 · 같은 부류 Q4–Q6) · 메인 재현 = 시험 먼저 40a08afb5 (본 가지 체크아웃 118/306)",
+      "opened_in": "docs/reviews/lhs214r_fix_plan_20261016.md",
+      "title": "float 로 못 옮기는 큰 JSON 정수 (10⁴⁰⁰) 가 네 자리 (숫자 없는 가지 증서 I_bottom · 전자 · 열 증서 σ_bulk · 모형 한계 증서 σ_bulk · 레코드 σ) 에서 사유 대신 OverflowError (거부는 되지만 기록된 사유가 없다)",
+      "note": "수정 계획 §4-2 Q6.  ✅ 고침 2e85d08eb: `tau_flux._num` = 큰 정수 → None (생산자 `_cert_num` 과 같은 규칙) · None 을 '해 주장 없음 = 받음' 으로 읽던 한 자리 (숫자 없는 가지 증서 I_bottom) 는 `_overflow_int` 로 거부 · 그 밖 자리 = 기존 거부 사유 (감사한 자리 목록 = 요청서 §1).  증거 docs/reviews/lhs214r_fix_evidence_20261016/ · Codex 짧은 재확인 대기.",
+      "claimed_fixed_sha": "2e85d08eb",
+      "evidence_tests": [
+        "scripts/test_l214r06_same_class.py (118/306 → 306/306 · 본 가지 재현)"
+      ]
+    },
+    {
+      "id": "L214R-09",
+      "severity": "P2",
+      "status": "claimed_fixed",
+      "owner": "claude",
+      "found_by": "L214R-06–08 수정 에이전트 탐침 (10-16 · 같은 부류 N1–N3) · 메인 재현 = 시험 먼저 a5cab63c7 (본 가지 체크아웃 43/96)",
+      "opened_in": "docs/reviews/lhs214r_fix_plan_20261016.md",
+      "title": "τ 출력 (tau_flux.ion_columns 의 f · tau2 · tau) 유한성 검사가 없다 — 옛 세대 σ_ratio 1e-310 · σ_dim 1e-7 (0b 절대 허용 안) → τ OK · tau2 = ∞ · 장부 극값 (L_gap 1e308 + L_mc 1e-10 · L_mc 1e-310) → f = ∞ · tau2 = 0 MBCB (세대 2 · 웹 게시 폴더 · 정지 계약 · 다시 읽기 통과) · L_gap 5e-324 → ZeroDivisionError (다시 읽기 실행 전체 중단)",
+      "note": "수정 계획 §4-3 N1 (1저자 10-16 권고대로 · 마지막 고침 라운드).  ✅ 고침 60ba39e22 (시험 먼저 a5cab63c7): 값 상태 (OK · MBCB) 를 주기 전에 f · tau2 · tau 셋 다 유한 양수 (`_pos`) · 아니면 NOT_COMPUTED `invalid_input: non_finite — …` · 값 넷 빈칸 · 비관통 행 그대로 · 사유 어휘 새로 만들지 않음 · 유한한 극값은 그대로 (범위 문턱 없음 — 알려진 항목 L214K-06).  증거 docs/reviews/lhs214r_fix_evidence_20261016/ · Codex 짧은 재확인 대기.",
+      "claimed_fixed_sha": "60ba39e22",
+      "evidence_tests": [
+        "scripts/test_l214r09_same_class.py (43/96 → 96/96 · 본 가지 재현)",
+        "docs/reviews/lhs214r_fix_evidence_20261016/a4_l214r_no_impact.log (PASS 36/36 · v1.2 194 옛 칸 비트 같음)"
+      ]
+    },
+    {
+      "id": "L214R-10",
+      "severity": "P2",
+      "status": "claimed_fixed",
+      "owner": "claude",
+      "found_by": "L214R-06–08 수정 에이전트 탐침 (10-16 · 같은 부류 N1–N3) · 메인 재현 = 시험 먼저 a5cab63c7 (본 가지 체크아웃 43/96)",
+      "opened_in": "docs/reviews/lhs214r_fix_plan_20261016.md",
+      "title": "온도 규약 검사 (tau_flux.sigma0_convention_problem) 가 비교 전 유한성을 보지 않는다 — T_C −272.15 · Ea −0.0613 eV 면 규약 배수 +∞ (예외 없음) → inf ≤ inf 로 어떤 σ₀ 든 None (σ₀ 결합 · 증서 결합 · 세대 계약 · τ 행 · 정지 계약 ⑧ ⑨ · 기록 판정 · 다시 읽기 K2 · K4 통과)",
+      "note": "수정 계획 §4-3 N2.  ✅ 고침 60ba39e22: 다시 계산한 σ_grain · 배수 (유한 양수) · 차 · 허용 (유한) 을 비교 전에 · 아니면 non_finite 사유 (None 아님) · 정상 규약 (25 °C 3e-3 · 생산자 Arrhenius) 식 · 허용 · 문구 그대로.  증거 docs/reviews/lhs214r_fix_evidence_20261016/ · Codex 짧은 재확인 대기.",
+      "claimed_fixed_sha": "60ba39e22",
+      "evidence_tests": [
+        "scripts/test_l214r09_same_class.py (43/96 → 96/96 · 본 가지 재현)"
+      ]
+    },
+    {
+      "id": "L214R-11",
+      "severity": "P3",
+      "status": "claimed_fixed",
+      "owner": "claude",
+      "found_by": "L214R-06–08 수정 에이전트 탐침 (10-16 · 같은 부류 N1–N3) · 메인 재현 = 시험 먼저 a5cab63c7 (본 가지 체크아웃 43/96)",
+      "opened_in": "docs/reviews/lhs214r_fix_plan_20261016.md",
+      "title": "정지 계약 수 변환 (webapp/pipeline_service._stop_num) 이 큰 JSON 정수에서 OverflowError — 정지 계약 전체가 예외 (다시 읽기 K4 · 인계 P4 는 잡아 거부하지만 사유 대신 예외 문구)",
+      "note": "수정 계획 §4-3 N3.  ✅ 고침 60ba39e22: `_stop_num` = `tau_flux._num` 그대로 (사본 없음) · '숫자 없음 = 통과' 로 읽던 한 자리 (③ valid_zero 의 calc_percolation) 는 `tau_flux._overflow_int` 로 거부 · 감사한 자리 = 요청서 §1 · 지연 import 수 91 → 92.  증거 docs/reviews/lhs214r_fix_evidence_20261016/ · Codex 짧은 재확인 대기.",
+      "claimed_fixed_sha": "60ba39e22",
+      "evidence_tests": [
+        "scripts/test_l214r09_same_class.py (43/96 → 96/96 · 본 가지 재현)"
       ]
     },
     {
@@ -11157,6 +11245,110 @@
       "claimed_fixed_sha": "dcd06869d",
       "evidence_tests": [
         "webapp/test_web09_accepted_refresh.py (7/16 → 16/16 · 합성 정상 · Physics 모형 한계 · 옛 세대 · 실 생산자 ml_el · ml_physics · ml_hertz · valid_zero · 새 표 불변)"
+      ]
+    },
+    {
+      "id": "L214K-01",
+      "severity": "P3",
+      "status": "open",
+      "owner": "claude",
+      "found_by": "L214R-09–11 수정 에이전트 보고 (10-16 · 메인 재현 전)",
+      "opened_in": "docs/reviews/lhs214r_fix_plan_20261016.md",
+      "title": "등급 τ getter (tau_flux.tau2_from_metrics · tau2_value) 출력 유한성 검사 없음 — tau2_from_metrics({phi_se 0.3, sigma_full_mScm 1e-310}) = (inf, 3.0) · tau2_value(1e308, 3.0, 1e-3) = inf (웹앱 등급 표시값 · 인계 · 배포 아님)",
+      "note": "1저자 10-16 (수정 계획 §4-3 — 이번 라운드 뒤 새것은 고치지 않고 요청서 알려진 항목) · 요청서 §6 · Codex 가 GO 전 고칠 것을 고르면 그때 시험 먼저.",
+      "evidence_tests": [
+        "docs/reviews/codex_lhs214r_fix_recheck_request_20261016.md §6"
+      ]
+    },
+    {
+      "id": "L214K-02",
+      "severity": "P3",
+      "status": "open",
+      "owner": "claude",
+      "found_by": "L214R-09–11 수정 에이전트 보고 (10-16 · 메인 재현 전)",
+      "opened_in": "docs/reviews/lhs214r_fix_plan_20261016.md",
+      "title": "se_material.sigma_grain_context 의 float(10**400) — full_metrics 온도 기록에 큰 정수면 tau2_from_metrics OverflowError (정지 계약 ⑦ 이 잡아 거부 · 사유 대신 예외 문구)",
+      "note": "1저자 10-16 (수정 계획 §4-3 — 이번 라운드 뒤 새것은 고치지 않고 요청서 알려진 항목) · 요청서 §6 · Codex 가 GO 전 고칠 것을 고르면 그때 시험 먼저.",
+      "evidence_tests": [
+        "docs/reviews/codex_lhs214r_fix_recheck_request_20261016.md §6"
+      ]
+    },
+    {
+      "id": "L214K-03",
+      "severity": "P3",
+      "status": "open",
+      "owner": "claude",
+      "found_by": "L214R-09–11 수정 에이전트 보고 (10-16 · 메인 재현 전)",
+      "opened_in": "docs/reviews/lhs214r_fix_plan_20261016.md",
+      "title": "σ₀ 메타 ion_sigma0_mScm = round(σ₀·1000, 10) 유한성 검사 없음 — 옛 세대 비관통 행에 σ₀ 1e306 이면 메타 = inf (게시 때 정지 계약 ⑧ 이 그 레코드를 거부)",
+      "note": "1저자 10-16 (수정 계획 §4-3 — 이번 라운드 뒤 새것은 고치지 않고 요청서 알려진 항목) · 요청서 §6 · Codex 가 GO 전 고칠 것을 고르면 그때 시험 먼저.",
+      "evidence_tests": [
+        "docs/reviews/codex_lhs214r_fix_recheck_request_20261016.md §6"
+      ]
+    },
+    {
+      "id": "L214K-04",
+      "severity": "P3",
+      "status": "open",
+      "owner": "claude",
+      "found_by": "L214R-09–11 수정 에이전트 보고 (10-16 · 메인 재현 전)",
+      "opened_in": "docs/reviews/lhs214r_fix_plan_20261016.md",
+      "title": "pipeline_service.stage_e_missing_keys 의 math.isfinite(10**400) OverflowError (app.py 호출이 try 로 감싸 실패로 닫힘 · 사유 줄 없음)",
+      "note": "1저자 10-16 (수정 계획 §4-3 — 이번 라운드 뒤 새것은 고치지 않고 요청서 알려진 항목) · 요청서 §6 · Codex 가 GO 전 고칠 것을 고르면 그때 시험 먼저.",
+      "evidence_tests": [
+        "docs/reviews/codex_lhs214r_fix_recheck_request_20261016.md §6"
+      ]
+    },
+    {
+      "id": "L214K-05",
+      "severity": "P3",
+      "status": "open",
+      "owner": "claude",
+      "found_by": "L214R-09–11 수정 에이전트 보고 (10-16 · 메인 재현 전)",
+      "opened_in": "docs/reviews/lhs214r_fix_plan_20261016.md",
+      "title": "g2_network_reread.reread_case 가 tf.case_row (다시 읽기 검사 K5 · K6 자리) 를 try 밖에서 부른다 — 소비자 예외 하나가 다시 읽기 실행 전체를 멈춘다 (기록 없음 → 배포 관문 거부 = fail-closed)",
+      "note": "1저자 10-16 (수정 계획 §4-3 — 이번 라운드 뒤 새것은 고치지 않고 요청서 알려진 항목) · 요청서 §6 · Codex 가 GO 전 고칠 것을 고르면 그때 시험 먼저.",
+      "evidence_tests": [
+        "docs/reviews/codex_lhs214r_fix_recheck_request_20261016.md §6"
+      ]
+    },
+    {
+      "id": "L214K-06",
+      "severity": "P3",
+      "status": "open",
+      "owner": "claude",
+      "found_by": "L214R-09–11 수정 에이전트 보고 (10-16 · 메인 재현 전)",
+      "opened_in": "docs/reviews/lhs214r_fix_plan_20261016.md",
+      "title": "터무니없지만 유한한 입력은 게시된다 (범위 정책 없음) — L_gap 1e308 만 → MBCB tau2 ≈ 1e-306 · φ_mc 5e-324 → tau2 1.5e-323 (범위 문턱은 등록 정책 밖)",
+      "note": "1저자 10-16 (수정 계획 §4-3 — 이번 라운드 뒤 새것은 고치지 않고 요청서 알려진 항목) · 요청서 §6 · Codex 가 GO 전 고칠 것을 고르면 그때 시험 먼저.",
+      "evidence_tests": [
+        "docs/reviews/codex_lhs214r_fix_recheck_request_20261016.md §6"
+      ]
+    },
+    {
+      "id": "L214K-07",
+      "severity": "P3",
+      "status": "open",
+      "owner": "claude",
+      "found_by": "L214R-09–11 수정 에이전트 보고 (10-16 · 메인 재현 전)",
+      "opened_in": "docs/reviews/lhs214r_fix_plan_20261016.md",
+      "title": "열 사전 (lhs_design_dataset _TAU_REASON) 의 invalid_input 문구가 τ 환산 출처 (L214R-09) 를 말하지 않는다 (NOT_COMPUTED 행은 인계표 값이 비어 어휘 변경 불요)",
+      "note": "1저자 10-16 (수정 계획 §4-3 — 이번 라운드 뒤 새것은 고치지 않고 요청서 알려진 항목) · 요청서 §6 · Codex 가 GO 전 고칠 것을 고르면 그때 시험 먼저.",
+      "evidence_tests": [
+        "docs/reviews/codex_lhs214r_fix_recheck_request_20261016.md §6"
+      ]
+    },
+    {
+      "id": "L214K-08",
+      "severity": "P3",
+      "status": "open",
+      "owner": "claude",
+      "found_by": "L214R-09–11 수정 에이전트 보고 (10-16 · 메인 재현 전)",
+      "opened_in": "docs/reviews/lhs214r_fix_plan_20261016.md",
+      "title": "배포 빌더는 f 만 유한성 검사 (tau2 · tau 아님) — tau_flux 가 셋 다 보장 (L214R-09) · 이중 방어 부재일 뿐",
+      "note": "1저자 10-16 (수정 계획 §4-3 — 이번 라운드 뒤 새것은 고치지 않고 요청서 알려진 항목) · 요청서 §6 · Codex 가 GO 전 고칠 것을 고르면 그때 시험 먼저.",
+      "evidence_tests": [
+        "docs/reviews/codex_lhs214r_fix_recheck_request_20261016.md §6"
       ]
     },
     {

@@ -1,0 +1,7 @@
+
+--- stderr ---
+Traceback (most recent call last):
+  File "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/d26d1e75-209f-540f-83a8-c0e1957edc2f/scratchpad/l214r_rerun/run_post_60ba39e22/probes/receipt_identity.py", line 40, in <module>
+    assert out['variants']['minimal_activate_section3']['bad']==['R0','D1']
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError

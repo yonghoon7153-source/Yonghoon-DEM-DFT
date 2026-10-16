@@ -1,0 +1,1474 @@
+{
+  "scope": "Small synthetic fixtures and post-producer mutations only. No production execution.",
+  "cases": {
+    "ml_physics": {
+      "status": "done",
+      "failed": [],
+      "run_id": "20261016T073715-0278a00f",
+      "full": {
+        "hertz": {
+          "sigma_full_status": "computed",
+          "sigma_full_reason": null,
+          "boundary_rule": "L0",
+          "ionic_status": "computed"
+        },
+        "physics": {
+          "sigma_full_status": "not_computed",
+          "sigma_full_reason": "full_over_conduction",
+          "boundary_rule": "L0",
+          "ionic_status": "model_limit"
+        },
+        "hertz_h12": {
+          "sigma_full_status": "computed",
+          "sigma_full_reason": null,
+          "boundary_rule": "L0",
+          "ionic_status": "computed"
+        }
+      },
+      "q": {
+        "hertz": null,
+        "physics": 2.593468501694396,
+        "hertz_h12": null
+      },
+      "tau": {
+        "hertz": [
+          "OK",
+          ""
+        ],
+        "physics": [
+          "NOT_COMPUTED",
+          "full_over_conduction"
+        ],
+        "hertz_h12": [
+          "OK",
+          ""
+        ]
+      },
+      "full_model_limit": {
+        "hertz": "sigma_full_status · _reason = ('computed', None) ≠ (not_computed, 'full_over_conduction') · sigma_full = 0.79535562 — 모형 한계는 accepted FULL σ · 차원 σ = null (거부된 q 를 값 칸에 싣지 않는다) · sigma_full_mScm = 2.386067 — 모형 한계는 accepted FULL σ · 차원 σ = null (거부된 q 를 값 칸에 싣지 않는다) · R_brug_over_full = 4.9374 — FULL 에서 유도되는 비가 남았다 (FULL 값이 없으면 없어야) · R_bruggeman_over_full = 11.5973 — FULL 에서 유도되는 비가 남았다 (FULL 값이 없으면 없어야) · constriction_power_share_ion_hertz = (0.797464, 'computed') — FULL 유도 전력 몫은 None + 모형 한계 사유 'not_computed (FULL output withheld — model limit q > 1.5)' · 채널 상태 ionic_status = 'computed' ≠ 'model_limit' (그 채널 판정이 우선 — 모형 한계로 덮지 않는다) · solve_certificate_full: 증서 상태 'computed' · 사유 None — 단상 FULL 출력 가드 (over_conduction_guard · 'sigma_ratio > 1.5') 가 아니다",
+        "physics": null,
+        "hertz_h12": "sigma_full_status · _reason = ('computed', None) ≠ (not_computed, 'full_over_conduction') · sigma_full = 1.34224459 — 모형 한계는 accepted FULL σ · 차원 σ = null (거부된 q 를 값 칸에 싣지 않는다) · sigma_full_mScm = 4.026734 — 모형 한계는 accepted FULL σ · 차원 σ = null (거부된 q 를 값 칸에 싣지 않는다) · R_brug_over_full = 2.6819 — FULL 에서 유도되는 비가 남았다 (FULL 값이 없으면 없어야) · R_bruggeman_over_full = 6.872 — FULL 에서 유도되는 비가 남았다 (FULL 값이 없으면 없어야) · constriction_power_share_ion_hertz = (0.627128, 'computed') — FULL 유도 전력 몫은 None + 모형 한계 사유 'not_computed (FULL output withheld — model limit q > 1.5)' · 채널 상태 ionic_status = 'computed' ≠ 'model_limit' (그 채널 판정이 우선 — 모형 한계로 덮지 않는다) · solve_certificate_full: 증서 상태 'computed' · 사유 None — 단상 FULL 출력 가드 (over_conduction_guard · 'sigma_ratio > 1.5') 가 아니다"
+      },
+      "release_primary_hold": [],
+      "blank_code": null,
+      "reread_checks": [
+        {
+          "name": "K1 게시 — solver success · 도장 valid/success · run id (도장 = full_metrics = active)",
+          "ok": true,
+          "detail": "solver 'success' · 도장 'valid'/'success' · run id '20261016T073715-0278a00f' · '20261016T073715-0278a00f' · '20261016T073715-0278a00f'"
+        },
+        {
+          "name": "K2 세대 계약 + 증서 결합 — 세대 'g2' · 문제 0 (모드 셋 × 가지 셋 증서 · G2R-01 · 02 · G2RR-02)",
+          "ok": true,
+          "detail": "세대 'g2' · "
+        },
+        {
+          "name": "K3 도장 ↔ 레코드 — 네 세대 값 = 레코드에서 유도한 기대값 (G2RR-01)",
+          "ok": true,
+          "detail": "{'psi_placement_physics': 'multiply', 'electrode_model': 'dirichlet_exact', 'area_rule_physics': 'physics_g2', 'hertz_h12': True}"
+        },
+        {
+          "name": "K4 망 정지 계약 다시 (①–⑨ · legacy_ok False)",
+          "ok": true,
+          "detail": "ok"
+        },
+        {
+          "name": "K5 열 역할 — ion_net_generation 'g2' · 행 세대 계약 문제 0 (모드별 협착 · ψ · 면적 · 전극 · bulk 칸)",
+          "ok": true,
+          "detail": "칸 'g2' · 행 판정 'g2' · []"
+        },
+        {
+          "name": "K6 관통 일치 — 생산자 FULL 상태 ↔ τ 상태 (세 모드)",
+          "ok": true,
+          "detail": "{'hertz': ('OK', ''), 'physics': ('NOT_COMPUTED', 'full_over_conduction'), 'hertz_h12': ('OK', '')}"
+        },
+        {
+          "name": "K7 가지 표 — 공용 계약 (tau_flux.branch_table_problems) 그대로: 숫자 ⇔ 게시 상태 / 숫자 없음 ⇒ 비게시 상태 + 사유 / 상태 기록 결손 = 거부",
+          "ok": true,
+          "detail": ""
+        }
+      ]
+    },
+    "ml_hertz": {
+      "status": "done",
+      "failed": [],
+      "run_id": "20261016T073715-e44e2496",
+      "full": {
+        "hertz": {
+          "sigma_full_status": "not_computed",
+          "sigma_full_reason": "full_over_conduction",
+          "boundary_rule": "L0",
+          "ionic_status": "model_limit"
+        },
+        "physics": {
+          "sigma_full_status": "not_computed",
+          "sigma_full_reason": "full_over_conduction",
+          "boundary_rule": "L0",
+          "ionic_status": "model_limit"
+        },
+        "hertz_h12": {
+          "sigma_full_status": "not_computed",
+          "sigma_full_reason": "full_over_conduction",
+          "boundary_rule": "L0",
+          "ionic_status": "model_limit"
+        }
+      },
+      "q": {
+        "hertz": 1.6231747351909949,
+        "physics": 5.292792860600809,
+        "hertz_h12": 2.7392746689761913
+      },
+      "tau": {
+        "hertz": [
+          "NOT_COMPUTED",
+          "full_over_conduction"
+        ],
+        "physics": [
+          "NOT_COMPUTED",
+          "full_over_conduction"
+        ],
+        "hertz_h12": [
+          "NOT_COMPUTED",
+          "full_over_conduction"
+        ]
+      },
+      "full_model_limit": {
+        "hertz": null,
+        "physics": null,
+        "hertz_h12": null
+      },
+      "release_primary_hold": [
+        "주 타깃 Hertz (H0) FULL 모형 한계 1 행 ['ml_hertz'] — v1.3 주 타깃 배포 HOLD (등록되지 않은 마스킹 · Physics · H12 · 0 · 1.5 대체 금지 · 행 삭제 금지 · 진단 레코드는 보존 — 부분 배포는 별도 등록 · 1저자 결정 필요 · L214 Q2 (가))"
+      ],
+      "blank_code": "NA_MODEL_LIMIT",
+      "reread_checks": [
+        {
+          "name": "K1 게시 — solver success · 도장 valid/success · run id (도장 = full_metrics = active)",
+          "ok": true,
+          "detail": "solver 'success' · 도장 'valid'/'success' · run id '20261016T073715-e44e2496' · '20261016T073715-e44e2496' · '20261016T073715-e44e2496'"
+        },
+        {
+          "name": "K2 세대 계약 + 증서 결합 — 세대 'g2' · 문제 0 (모드 셋 × 가지 셋 증서 · G2R-01 · 02 · G2RR-02)",
+          "ok": true,
+          "detail": "세대 'g2' · "
+        },
+        {
+          "name": "K3 도장 ↔ 레코드 — 네 세대 값 = 레코드에서 유도한 기대값 (G2RR-01)",
+          "ok": true,
+          "detail": "{'psi_placement_physics': 'multiply', 'electrode_model': 'dirichlet_exact', 'area_rule_physics': 'physics_g2', 'hertz_h12': True}"
+        },
+        {
+          "name": "K4 망 정지 계약 다시 (①–⑨ · legacy_ok False)",
+          "ok": true,
+          "detail": "ok"
+        },
+        {
+          "name": "K5 열 역할 — ion_net_generation 'g2' · 행 세대 계약 문제 0 (모드별 협착 · ψ · 면적 · 전극 · bulk 칸)",
+          "ok": true,
+          "detail": "칸 'g2' · 행 판정 'g2' · []"
+        },
+        {
+          "name": "K6 관통 일치 — 생산자 FULL 상태 ↔ τ 상태 (세 모드)",
+          "ok": true,
+          "detail": "{'hertz': ('NOT_COMPUTED', 'full_over_conduction'), 'physics': ('NOT_COMPUTED', 'full_over_conduction'), 'hertz_h12': ('NOT_COMPUTED', 'full_over_conduction')}"
+        },
+        {
+          "name": "K7 가지 표 — 공용 계약 (tau_flux.branch_table_problems) 그대로: 숫자 ⇔ 게시 상태 / 숫자 없음 ⇒ 비게시 상태 + 사유 / 상태 기록 결손 = 거부",
+          "ok": true,
+          "detail": ""
+        }
+      ]
+    },
+    "ml_el": {
+      "status": "done",
+      "failed": [],
+      "run_id": "20261016T073715-a71bc9e7",
+      "full": {
+        "hertz": {
+          "sigma_full_status": "computed",
+          "sigma_full_reason": null,
+          "boundary_rule": "L0",
+          "ionic_status": "computed"
+        },
+        "physics": {
+          "sigma_full_status": "computed",
+          "sigma_full_reason": null,
+          "boundary_rule": "L0",
+          "ionic_status": "computed"
+        },
+        "hertz_h12": {
+          "sigma_full_status": "computed",
+          "sigma_full_reason": null,
+          "boundary_rule": "L0",
+          "ionic_status": "computed"
+        }
+      },
+      "q": {
+        "hertz": null,
+        "physics": null,
+        "hertz_h12": null
+      },
+      "tau": {
+        "hertz": [
+          "OK",
+          ""
+        ],
+        "physics": [
+          "OK",
+          ""
+        ],
+        "hertz_h12": [
+          "OK",
+          ""
+        ]
+      },
+      "full_model_limit": {
+        "hertz": "sigma_full_status · _reason = ('computed', None) ≠ (not_computed, 'full_over_conduction') · sigma_full = 0.40053762 — 모형 한계는 accepted FULL σ · 차원 σ = null (거부된 q 를 값 칸에 싣지 않는다) · sigma_full_mScm = 1.201613 — 모형 한계는 accepted FULL σ · 차원 σ = null (거부된 q 를 값 칸에 싣지 않는다) · R_brug_over_full = 9.8043 — FULL 에서 유도되는 비가 남았다 (FULL 값이 없으면 없어야) · R_bruggeman_over_full = 23.0289 — FULL 에서 유도되는 비가 남았다 (FULL 값이 없으면 없어야) · constriction_power_share_ion_hertz = (0.898004, 'computed') — FULL 유도 전력 몫은 None + 모형 한계 사유 'not_computed (FULL output withheld — model limit q > 1.5)' · 채널 상태 ionic_status = 'computed' ≠ 'model_limit' (그 채널 판정이 우선 — 모형 한계로 덮지 않는다) · solve_certificate_full: 증서 상태 'computed' · 사유 None — 단상 FULL 출력 가드 (over_conduction_guard · 'sigma_ratio > 1.5') 가 아니다",
+        "physics": "sigma_full_status · _reason = ('computed', None) ≠ (not_computed, 'full_over_conduction') · sigma_full = 0.69275452 — 모형 한계는 accepted FULL σ · 차원 σ = null (거부된 q 를 값 칸에 싣지 않는다) · sigma_full_mScm = 2.078264 — 모형 한계는 accepted FULL σ · 차원 σ = null (거부된 q 를 값 칸에 싣지 않는다) · R_brug_over_full = 5.6687 — FULL 에서 유도되는 비가 남았다 (FULL 값이 없으면 없어야) · R_bruggeman_over_full = 13.3149 — FULL 에서 유도되는 비가 남았다 (FULL 값이 없으면 없어야) · constriction_power_share_ion_physics = (0.823592, 'computed') — FULL 유도 전력 몫은 None + 모형 한계 사유 'not_computed (FULL output withheld — model limit q > 1.5)' · 채널 상태 ionic_status = 'computed' ≠ 'model_limit' (그 채널 판정이 우선 — 모형 한계로 덮지 않는다) · solve_certificate_full: 증서 상태 'computed' · 사유 None — 단상 FULL 출력 가드 (over_conduction_guard · 'sigma_ratio > 1.5') 가 아니다",
+        "hertz_h12": "sigma_full_status · _reason = ('computed', None) ≠ (not_computed, 'full_over_conduction') · sigma_full = 0.51350245 — 모형 한계는 accepted FULL σ · 차원 σ = null (거부된 q 를 값 칸에 싣지 않는다) · sigma_full_mScm = 1.540507 — 모형 한계는 accepted FULL σ · 차원 σ = null (거부된 q 를 값 칸에 싣지 않는다) · R_brug_over_full = 7.0102 — FULL 에서 유도되는 비가 남았다 (FULL 값이 없으면 없어야) · R_bruggeman_over_full = 17.9628 — FULL 에서 유도되는 비가 남았다 (FULL 값이 없으면 없어야) · constriction_power_share_ion_hertz = (0.85735, 'computed') — FULL 유도 전력 몫은 None + 모형 한계 사유 'not_computed (FULL output withheld — model limit q > 1.5)' · 채널 상태 ionic_status = 'computed' ≠ 'model_limit' (그 채널 판정이 우선 — 모형 한계로 덮지 않는다) · solve_certificate_full: 증서 상태 'computed' · 사유 None — 단상 FULL 출력 가드 (over_conduction_guard · 'sigma_ratio > 1.5') 가 아니다"
+      },
+      "release_primary_hold": [],
+      "blank_code": null,
+      "reread_checks": [
+        {
+          "name": "K1 게시 — solver success · 도장 valid/success · run id (도장 = full_metrics = active)",
+          "ok": true,
+          "detail": "solver 'success' · 도장 'valid'/'success' · run id '20261016T073715-a71bc9e7' · '20261016T073715-a71bc9e7' · '20261016T073715-a71bc9e7'"
+        },
+        {
+          "name": "K2 세대 계약 + 증서 결합 — 세대 'g2' · 문제 0 (모드 셋 × 가지 셋 증서 · G2R-01 · 02 · G2RR-02)",
+          "ok": true,
+          "detail": "세대 'g2' · "
+        },
+        {
+          "name": "K3 도장 ↔ 레코드 — 네 세대 값 = 레코드에서 유도한 기대값 (G2RR-01)",
+          "ok": true,
+          "detail": "{'psi_placement_physics': 'multiply', 'electrode_model': 'dirichlet_exact', 'area_rule_physics': 'physics_g2', 'hertz_h12': True}"
+        },
+        {
+          "name": "K4 망 정지 계약 다시 (①–⑨ · legacy_ok False)",
+          "ok": true,
+          "detail": "ok"
+        },
+        {
+          "name": "K5 열 역할 — ion_net_generation 'g2' · 행 세대 계약 문제 0 (모드별 협착 · ψ · 면적 · 전극 · bulk 칸)",
+          "ok": true,
+          "detail": "칸 'g2' · 행 판정 'g2' · []"
+        },
+        {
+          "name": "K6 관통 일치 — 생산자 FULL 상태 ↔ τ 상태 (세 모드)",
+          "ok": true,
+          "detail": "{'hertz': ('OK', ''), 'physics': ('OK', ''), 'hertz_h12': ('OK', '')}"
+        },
+        {
+          "name": "K7 가지 표 — 공용 계약 (tau_flux.branch_table_problems) 그대로: 숫자 ⇔ 게시 상태 / 숫자 없음 ⇒ 비게시 상태 + 사유 / 상태 기록 결손 = 거부",
+          "ok": true,
+          "detail": ""
+        }
+      ]
+    },
+    "independent_l1_h0": {
+      "status": "done",
+      "failed": [],
+      "run_id": "20261016T073715-0d7e6828",
+      "full": {
+        "hertz": {
+          "sigma_full_status": "not_computed",
+          "sigma_full_reason": "full_over_conduction",
+          "boundary_rule": "L1",
+          "ionic_status": "model_limit"
+        },
+        "physics": {
+          "sigma_full_status": "not_computed",
+          "sigma_full_reason": "full_over_conduction",
+          "boundary_rule": "L1",
+          "ionic_status": "model_limit"
+        },
+        "hertz_h12": {
+          "sigma_full_status": "not_computed",
+          "sigma_full_reason": "full_over_conduction",
+          "boundary_rule": "L1",
+          "ionic_status": "model_limit"
+        }
+      },
+      "q": {
+        "hertz": 8.927503013108016,
+        "physics": 15.16555588756596,
+        "hertz_h12": 11.228845419323783
+      },
+      "tau": {
+        "hertz": [
+          "BAND_FALLBACK",
+          ""
+        ],
+        "physics": [
+          "BAND_FALLBACK",
+          ""
+        ],
+        "hertz_h12": [
+          "BAND_FALLBACK",
+          ""
+        ]
+      },
+      "full_model_limit": {
+        "hertz": null,
+        "physics": null,
+        "hertz_h12": null
+      },
+      "release_primary_hold": [],
+      "blank_code": "HOLD_BAND_FALLBACK",
+      "reread_checks": [
+        {
+          "name": "K1 게시 — solver success · 도장 valid/success · run id (도장 = full_metrics = active)",
+          "ok": true,
+          "detail": "solver 'success' · 도장 'valid'/'success' · run id '20261016T073715-0d7e6828' · '20261016T073715-0d7e6828' · '20261016T073715-0d7e6828'"
+        },
+        {
+          "name": "K2 세대 계약 + 증서 결합 — 세대 'g2' · 문제 0 (모드 셋 × 가지 셋 증서 · G2R-01 · 02 · G2RR-02)",
+          "ok": true,
+          "detail": "세대 'g2' · "
+        },
+        {
+          "name": "K3 도장 ↔ 레코드 — 네 세대 값 = 레코드에서 유도한 기대값 (G2RR-01)",
+          "ok": true,
+          "detail": "{'psi_placement_physics': 'multiply', 'electrode_model': 'dirichlet_exact', 'area_rule_physics': 'physics_g2', 'hertz_h12': True}"
+        },
+        {
+          "name": "K4 망 정지 계약 다시 (①–⑨ · legacy_ok False)",
+          "ok": true,
+          "detail": "ok"
+        },
+        {
+          "name": "K5 열 역할 — ion_net_generation 'g2' · 행 세대 계약 문제 0 (모드별 협착 · ψ · 면적 · 전극 · bulk 칸)",
+          "ok": true,
+          "detail": "칸 'g2' · 행 판정 'g2' · []"
+        },
+        {
+          "name": "K6 관통 일치 — 생산자 FULL 상태 ↔ τ 상태 (세 모드)",
+          "ok": true,
+          "detail": "{'hertz': ('BAND_FALLBACK', ''), 'physics': ('BAND_FALLBACK', ''), 'hertz_h12': ('BAND_FALLBACK', '')}"
+        },
+        {
+          "name": "K7 가지 표 — 공용 계약 (tau_flux.branch_table_problems) 그대로: 숫자 ⇔ 게시 상태 / 숫자 없음 ⇒ 비게시 상태 + 사유 / 상태 기록 결손 = 거부",
+          "ok": true,
+          "detail": ""
+        }
+      ]
+    },
+    "independent_l2_h0": {
+      "status": "done",
+      "failed": [],
+      "run_id": "20261016T073716-61fdd5ab",
+      "full": {
+        "hertz": {
+          "sigma_full_status": "not_computed",
+          "sigma_full_reason": "full_over_conduction",
+          "boundary_rule": "L2",
+          "ionic_status": "model_limit"
+        },
+        "physics": {
+          "sigma_full_status": "not_computed",
+          "sigma_full_reason": "full_over_conduction",
+          "boundary_rule": "L2",
+          "ionic_status": "model_limit"
+        },
+        "hertz_h12": {
+          "sigma_full_status": "not_computed",
+          "sigma_full_reason": "full_over_conduction",
+          "boundary_rule": "L2",
+          "ionic_status": "model_limit"
+        }
+      },
+      "q": {
+        "hertz": 35.710012052432674,
+        "physics": 60.66222355026451,
+        "hertz_h12": 44.915381677294796
+      },
+      "tau": {
+        "hertz": [
+          "BAND_FALLBACK",
+          ""
+        ],
+        "physics": [
+          "BAND_FALLBACK",
+          ""
+        ],
+        "hertz_h12": [
+          "BAND_FALLBACK",
+          ""
+        ]
+      },
+      "full_model_limit": {
+        "hertz": null,
+        "physics": null,
+        "hertz_h12": null
+      },
+      "release_primary_hold": [],
+      "blank_code": "HOLD_BAND_FALLBACK",
+      "reread_checks": [
+        {
+          "name": "K1 게시 — solver success · 도장 valid/success · run id (도장 = full_metrics = active)",
+          "ok": true,
+          "detail": "solver 'success' · 도장 'valid'/'success' · run id '20261016T073716-61fdd5ab' · '20261016T073716-61fdd5ab' · '20261016T073716-61fdd5ab'"
+        },
+        {
+          "name": "K2 세대 계약 + 증서 결합 — 세대 'g2' · 문제 0 (모드 셋 × 가지 셋 증서 · G2R-01 · 02 · G2RR-02)",
+          "ok": true,
+          "detail": "세대 'g2' · "
+        },
+        {
+          "name": "K3 도장 ↔ 레코드 — 네 세대 값 = 레코드에서 유도한 기대값 (G2RR-01)",
+          "ok": true,
+          "detail": "{'psi_placement_physics': 'multiply', 'electrode_model': 'dirichlet_exact', 'area_rule_physics': 'physics_g2', 'hertz_h12': True}"
+        },
+        {
+          "name": "K4 망 정지 계약 다시 (①–⑨ · legacy_ok False)",
+          "ok": true,
+          "detail": "ok"
+        },
+        {
+          "name": "K5 열 역할 — ion_net_generation 'g2' · 행 세대 계약 문제 0 (모드별 협착 · ψ · 면적 · 전극 · bulk 칸)",
+          "ok": true,
+          "detail": "칸 'g2' · 행 판정 'g2' · []"
+        },
+        {
+          "name": "K6 관통 일치 — 생산자 FULL 상태 ↔ τ 상태 (세 모드)",
+          "ok": true,
+          "detail": "{'hertz': ('BAND_FALLBACK', ''), 'physics': ('BAND_FALLBACK', ''), 'hertz_h12': ('BAND_FALLBACK', '')}"
+        },
+        {
+          "name": "K7 가지 표 — 공용 계약 (tau_flux.branch_table_problems) 그대로: 숫자 ⇔ 게시 상태 / 숫자 없음 ⇒ 비게시 상태 + 사유 / 상태 기록 결손 = 거부",
+          "ok": true,
+          "detail": ""
+        }
+      ]
+    }
+  },
+  "mutations": {
+    "cf_bad_residual": {
+      "model_limit": null,
+      "ion": null,
+      "binding": [
+        "solve_certificate_bulk_net: 내부 잔차 1 > 1e-06 — 해가 그 선형계를 풀지 않았다"
+      ],
+      "generation": {
+        "generation": "invalid",
+        "problems": [
+          [
+            "physics",
+            "cert",
+            "solve_certificate_bulk_net: 내부 잔차 1 > 1e-06 — 해가 그 선형계를 풀지 않았다"
+          ]
+        ],
+        "markers": {
+          "hertz": [
+            "electrode_model",
+            "bulk_model",
+            "area_rule",
+            "area_rule_physics",
+            "hertz_constriction",
+            "hertz_h12",
+            "area_binding_counts_physics",
+            "n_area_physics_unavailable",
+            "n_clamp_zero",
+            "n_floor_only",
+            "h_film_nm",
+            "h_film_status",
+            "solve_method_full",
+            "solve_certificate_full",
+            "solve_certificate_bulk_net",
+            "solve_certificate_constr_net",
+            "thermal_electrode_model",
+            "thermal_bulk_model",
+            "thermal_area_rule",
+            "thermal_area_rule_physics",
+            "thermal_area_binding_counts_physics",
+            "thermal_n_clamp_zero",
+            "thermal_n_floor_only",
+            "thermal_psi_placement",
+            "psi_placement=multiply"
+          ],
+          "physics": [
+            "electrode_model",
+            "bulk_model",
+            "area_rule",
+            "area_rule_physics",
+            "hertz_constriction",
+            "area_binding_counts_physics",
+            "n_area_physics_unavailable",
+            "n_clamp_zero",
+            "n_floor_only",
+            "h_film_nm",
+            "h_film_status",
+            "solve_method_full",
+            "solve_certificate_full",
+            "solve_certificate_bulk_net",
+            "solve_certificate_constr_net",
+            "thermal_electrode_model",
+            "thermal_bulk_model",
+            "thermal_area_rule",
+            "thermal_area_rule_physics",
+            "thermal_area_binding_counts_physics",
+            "thermal_n_clamp_zero",
+            "thermal_n_floor_only",
+            "thermal_psi_placement",
+            "psi_placement=multiply"
+          ],
+          "hertz_h12": [
+            "electrode_model",
+            "bulk_model",
+            "area_rule",
+            "area_rule_physics",
+            "hertz_constriction",
+            "sensitivity_mode",
+            "area_binding_counts_physics",
+            "n_area_physics_unavailable",
+            "n_clamp_zero",
+            "n_floor_only",
+            "h_film_nm",
+            "h_film_status",
+            "solve_method_full",
+            "solve_certificate_full",
+            "solve_certificate_bulk_net",
+            "solve_certificate_constr_net",
+            "psi_placement=multiply"
+          ]
+        }
+      },
+      "channels": {
+        "ionic": [
+          "ok",
+          "model_limit — FULL 모형 한계 — 수치 인증 통과 (증서 · 보존 · 잔차 ≤ 1e-6) · σ_ion 의 q = σ_eff/σ_bulk = 2.59347 > 1.5 (사전 고정 출력 상한) → FULL 값 미제공 (σ · 차원 σ · FULL 유도값 없음 · 진단 q = 증서 q_withheld) · 풀이 실패 아님 (L214-01 · 02) (공용 판정 통과 · L214)"
+        ],
+        "electronic": [
+          "ok",
+          "AM 타입이 없다 (전자망 자체가 존재하지 않는 베드)"
+        ],
+        "thermal": [
+          "ok",
+          "computed"
+        ]
+      },
+      "tau": [
+        "NOT_COMPUTED",
+        "invalid_input: 세대 계약 (G2R-01 · 02): physics: 수치 증서 · 결합 (G2R-03 · G2RR-02 — 가지 · 역할 · 발행값) — solve_certificate_bulk_net: 내부 잔차 1 > 1e-06 — 해가 그 선형계를 풀지 않았다"
+      ]
+    },
+    "missing_bulk_model": {
+      "model_limit": null,
+      "ion": null,
+      "binding": [],
+      "generation": {
+        "generation": "invalid",
+        "problems": [
+          [
+            "physics",
+            "role",
+            "bulk_model 없음 (부분 결손)"
+          ]
+        ],
+        "markers": {
+          "hertz": [
+            "electrode_model",
+            "bulk_model",
+            "area_rule",
+            "area_rule_physics",
+            "hertz_constriction",
+            "hertz_h12",
+            "area_binding_counts_physics",
+            "n_area_physics_unavailable",
+            "n_clamp_zero",
+            "n_floor_only",
+            "h_film_nm",
+            "h_film_status",
+            "solve_method_full",
+            "solve_certificate_full",
+            "solve_certificate_bulk_net",
+            "solve_certificate_constr_net",
+            "thermal_electrode_model",
+            "thermal_bulk_model",
+            "thermal_area_rule",
+            "thermal_area_rule_physics",
+            "thermal_area_binding_counts_physics",
+            "thermal_n_clamp_zero",
+            "thermal_n_floor_only",
+            "thermal_psi_placement",
+            "psi_placement=multiply"
+          ],
+          "physics": [
+            "electrode_model",
+            "area_rule",
+            "area_rule_physics",
+            "hertz_constriction",
+            "area_binding_counts_physics",
+            "n_area_physics_unavailable",
+            "n_clamp_zero",
+            "n_floor_only",
+            "h_film_nm",
+            "h_film_status",
+            "solve_method_full",
+            "solve_certificate_full",
+            "solve_certificate_bulk_net",
+            "solve_certificate_constr_net",
+            "thermal_electrode_model",
+            "thermal_bulk_model",
+            "thermal_area_rule",
+            "thermal_area_rule_physics",
+            "thermal_area_binding_counts_physics",
+            "thermal_n_clamp_zero",
+            "thermal_n_floor_only",
+            "thermal_psi_placement",
+            "psi_placement=multiply"
+          ],
+          "hertz_h12": [
+            "electrode_model",
+            "bulk_model",
+            "area_rule",
+            "area_rule_physics",
+            "hertz_constriction",
+            "sensitivity_mode",
+            "area_binding_counts_physics",
+            "n_area_physics_unavailable",
+            "n_clamp_zero",
+            "n_floor_only",
+            "h_film_nm",
+            "h_film_status",
+            "solve_method_full",
+            "solve_certificate_full",
+            "solve_certificate_bulk_net",
+            "solve_certificate_constr_net",
+            "psi_placement=multiply"
+          ]
+        }
+      },
+      "channels": {
+        "ionic": [
+          "ok",
+          "model_limit — FULL 모형 한계 — 수치 인증 통과 (증서 · 보존 · 잔차 ≤ 1e-6) · σ_ion 의 q = σ_eff/σ_bulk = 2.59347 > 1.5 (사전 고정 출력 상한) → FULL 값 미제공 (σ · 차원 σ · FULL 유도값 없음 · 진단 q = 증서 q_withheld) · 풀이 실패 아님 (L214-01 · 02) (공용 판정 통과 · L214)"
+        ],
+        "electronic": [
+          "ok",
+          "AM 타입이 없다 (전자망 자체가 존재하지 않는 베드)"
+        ],
+        "thermal": [
+          "ok",
+          "computed"
+        ]
+      },
+      "tau": [
+        "NOT_COMPUTED",
+        "invalid_input: 세대 계약 (G2R-01 · 02): physics: 세대 2 physics (ψ 곱 + physics_g2 + 원기둥 bulk) 역할 표기가 아니다 — bulk_model 없음 (부분 결손)"
+      ]
+    },
+    "withheld_q_x101": {
+      "model_limit": "solve_certificate_full: q_withheld 2.61940318671134 ≠ 증서 재구성 (I_bottom/ΔV)·T/A = 2.593468501694396 (같은 식 · 같은 순서 — 진단 q 가 그 해의 q 가 아니다)",
+      "ion": [
+        "invalid_input",
+        "FULL 모형 한계 주장이 공용 판정을 못 넘는다 (L214-01 · 02): solve_certificate_full: q_withheld 2.61940318671134 ≠ 증서 재구성 (I_bottom/ΔV)·T/A = 2.593468501694396 (같은 식 · 같은 순서 — 진단 q 가 그 해의 q 가 아니다)"
+      ],
+      "binding": [],
+      "generation": {
+        "generation": "g2",
+        "problems": [],
+        "markers": {
+          "hertz": [
+            "electrode_model",
+            "bulk_model",
+            "area_rule",
+            "area_rule_physics",
+            "hertz_constriction",
+            "hertz_h12",
+            "area_binding_counts_physics",
+            "n_area_physics_unavailable",
+            "n_clamp_zero",
+            "n_floor_only",
+            "h_film_nm",
+            "h_film_status",
+            "solve_method_full",
+            "solve_certificate_full",
+            "solve_certificate_bulk_net",
+            "solve_certificate_constr_net",
+            "thermal_electrode_model",
+            "thermal_bulk_model",
+            "thermal_area_rule",
+            "thermal_area_rule_physics",
+            "thermal_area_binding_counts_physics",
+            "thermal_n_clamp_zero",
+            "thermal_n_floor_only",
+            "thermal_psi_placement",
+            "psi_placement=multiply"
+          ],
+          "physics": [
+            "electrode_model",
+            "bulk_model",
+            "area_rule",
+            "area_rule_physics",
+            "hertz_constriction",
+            "area_binding_counts_physics",
+            "n_area_physics_unavailable",
+            "n_clamp_zero",
+            "n_floor_only",
+            "h_film_nm",
+            "h_film_status",
+            "solve_method_full",
+            "solve_certificate_full",
+            "solve_certificate_bulk_net",
+            "solve_certificate_constr_net",
+            "thermal_electrode_model",
+            "thermal_bulk_model",
+            "thermal_area_rule",
+            "thermal_area_rule_physics",
+            "thermal_area_binding_counts_physics",
+            "thermal_n_clamp_zero",
+            "thermal_n_floor_only",
+            "thermal_psi_placement",
+            "psi_placement=multiply"
+          ],
+          "hertz_h12": [
+            "electrode_model",
+            "bulk_model",
+            "area_rule",
+            "area_rule_physics",
+            "hertz_constriction",
+            "sensitivity_mode",
+            "area_binding_counts_physics",
+            "n_area_physics_unavailable",
+            "n_clamp_zero",
+            "n_floor_only",
+            "h_film_nm",
+            "h_film_status",
+            "solve_method_full",
+            "solve_certificate_full",
+            "solve_certificate_bulk_net",
+            "solve_certificate_constr_net",
+            "psi_placement=multiply"
+          ]
+        }
+      },
+      "channels": {
+        "ionic": [
+          "fail",
+          "model_limit 주장이 공용 판정을 못 넘는다 (L214-01 · 02): solve_certificate_full: q_withheld 2.61940318671134 ≠ 증서 재구성 (I_bottom/ΔV)·T/A = 2.593468501694396 (같은 식 · 같은 순서 — 진단 q 가 그 해의 q 가 아니다)"
+        ],
+        "electronic": [
+          "ok",
+          "AM 타입이 없다 (전자망 자체가 존재하지 않는 베드)"
+        ],
+        "thermal": [
+          "ok",
+          "computed"
+        ]
+      },
+      "tau": [
+        "NOT_COMPUTED",
+        "invalid_input: FULL 모형 한계 주장이 공용 판정을 못 넘는다 (L214-01 · 02): solve_certificate_full: q_withheld 2.61940318671134 ≠ 증서 재구성 (I_bottom/ΔV)·T/A = 2.593468501694396 (같은 식 · 같은 순서 — 진단 q 가 그 해의 q 가 아니다)"
+      ]
+    },
+    "other_thermal_failure": {
+      "model_limit": null,
+      "ion": null,
+      "binding": [],
+      "generation": {
+        "generation": "g2",
+        "problems": [],
+        "markers": {
+          "hertz": [
+            "electrode_model",
+            "bulk_model",
+            "area_rule",
+            "area_rule_physics",
+            "hertz_constriction",
+            "hertz_h12",
+            "area_binding_counts_physics",
+            "n_area_physics_unavailable",
+            "n_clamp_zero",
+            "n_floor_only",
+            "h_film_nm",
+            "h_film_status",
+            "solve_method_full",
+            "solve_certificate_full",
+            "solve_certificate_bulk_net",
+            "solve_certificate_constr_net",
+            "thermal_electrode_model",
+            "thermal_bulk_model",
+            "thermal_area_rule",
+            "thermal_area_rule_physics",
+            "thermal_area_binding_counts_physics",
+            "thermal_n_clamp_zero",
+            "thermal_n_floor_only",
+            "thermal_psi_placement",
+            "psi_placement=multiply"
+          ],
+          "physics": [
+            "electrode_model",
+            "bulk_model",
+            "area_rule",
+            "area_rule_physics",
+            "hertz_constriction",
+            "area_binding_counts_physics",
+            "n_area_physics_unavailable",
+            "n_clamp_zero",
+            "n_floor_only",
+            "h_film_nm",
+            "h_film_status",
+            "solve_method_full",
+            "solve_certificate_full",
+            "solve_certificate_bulk_net",
+            "solve_certificate_constr_net",
+            "thermal_electrode_model",
+            "thermal_bulk_model",
+            "thermal_area_rule",
+            "thermal_area_rule_physics",
+            "thermal_area_binding_counts_physics",
+            "thermal_n_clamp_zero",
+            "thermal_n_floor_only",
+            "thermal_psi_placement",
+            "psi_placement=multiply"
+          ],
+          "hertz_h12": [
+            "electrode_model",
+            "bulk_model",
+            "area_rule",
+            "area_rule_physics",
+            "hertz_constriction",
+            "sensitivity_mode",
+            "area_binding_counts_physics",
+            "n_area_physics_unavailable",
+            "n_clamp_zero",
+            "n_floor_only",
+            "h_film_nm",
+            "h_film_status",
+            "solve_method_full",
+            "solve_certificate_full",
+            "solve_certificate_bulk_net",
+            "solve_certificate_constr_net",
+            "psi_placement=multiply"
+          ]
+        }
+      },
+      "channels": {
+        "ionic": [
+          "ok",
+          "model_limit — FULL 모형 한계 — 수치 인증 통과 (증서 · 보존 · 잔차 ≤ 1e-6) · σ_ion 의 q = σ_eff/σ_bulk = 2.59347 > 1.5 (사전 고정 출력 상한) → FULL 값 미제공 (σ · 차원 σ · FULL 유도값 없음 · 진단 q = 증서 q_withheld) · 풀이 실패 아님 (L214-01 · 02) (공용 판정 통과 · L214)"
+        ],
+        "electronic": [
+          "ok",
+          "AM 타입이 없다 (전자망 자체가 존재하지 않는 베드)"
+        ],
+        "thermal": [
+          "fail",
+          "failed"
+        ]
+      },
+      "tau": [
+        "NOT_COMPUTED",
+        "full_over_conduction"
+      ]
+    },
+    "other_electronic_failure": {
+      "model_limit": null,
+      "ion": null,
+      "binding": [],
+      "generation": {
+        "generation": "g2",
+        "problems": [],
+        "markers": {
+          "hertz": [
+            "electrode_model",
+            "bulk_model",
+            "area_rule",
+            "area_rule_physics",
+            "hertz_constriction",
+            "hertz_h12",
+            "area_binding_counts_physics",
+            "n_area_physics_unavailable",
+            "n_clamp_zero",
+            "n_floor_only",
+            "h_film_nm",
+            "h_film_status",
+            "solve_method_full",
+            "solve_certificate_full",
+            "solve_certificate_bulk_net",
+            "solve_certificate_constr_net",
+            "thermal_electrode_model",
+            "thermal_bulk_model",
+            "thermal_area_rule",
+            "thermal_area_rule_physics",
+            "thermal_area_binding_counts_physics",
+            "thermal_n_clamp_zero",
+            "thermal_n_floor_only",
+            "thermal_psi_placement",
+            "psi_placement=multiply"
+          ],
+          "physics": [
+            "electrode_model",
+            "bulk_model",
+            "area_rule",
+            "area_rule_physics",
+            "hertz_constriction",
+            "area_binding_counts_physics",
+            "n_area_physics_unavailable",
+            "n_clamp_zero",
+            "n_floor_only",
+            "h_film_nm",
+            "h_film_status",
+            "solve_method_full",
+            "solve_certificate_full",
+            "solve_certificate_bulk_net",
+            "solve_certificate_constr_net",
+            "thermal_electrode_model",
+            "thermal_bulk_model",
+            "thermal_area_rule",
+            "thermal_area_rule_physics",
+            "thermal_area_binding_counts_physics",
+            "thermal_n_clamp_zero",
+            "thermal_n_floor_only",
+            "thermal_psi_placement",
+            "psi_placement=multiply"
+          ],
+          "hertz_h12": [
+            "electrode_model",
+            "bulk_model",
+            "area_rule",
+            "area_rule_physics",
+            "hertz_constriction",
+            "sensitivity_mode",
+            "area_binding_counts_physics",
+            "n_area_physics_unavailable",
+            "n_clamp_zero",
+            "n_floor_only",
+            "h_film_nm",
+            "h_film_status",
+            "solve_method_full",
+            "solve_certificate_full",
+            "solve_certificate_bulk_net",
+            "solve_certificate_constr_net",
+            "psi_placement=multiply"
+          ]
+        }
+      },
+      "channels": {
+        "ionic": [
+          "ok",
+          "model_limit — FULL 모형 한계 — 수치 인증 통과 (증서 · 보존 · 잔차 ≤ 1e-6) · σ_ion 의 q = σ_eff/σ_bulk = 2.59347 > 1.5 (사전 고정 출력 상한) → FULL 값 미제공 (σ · 차원 σ · FULL 유도값 없음 · 진단 q = 증서 q_withheld) · 풀이 실패 아님 (L214-01 · 02) (공용 판정 통과 · L214)"
+        ],
+        "electronic": [
+          "fail",
+          "AM 타입이 없다 (전자망 자체가 존재하지 않는 베드)"
+        ],
+        "thermal": [
+          "ok",
+          "computed"
+        ]
+      },
+      "tau": [
+        "NOT_COMPUTED",
+        "full_over_conduction"
+      ]
+    },
+    "unknown_full_reason": {
+      "model_limit": "sigma_full_status · _reason = ('not_computed', 'full_over_conduction:extra') ≠ (not_computed, 'full_over_conduction')",
+      "ion": [
+        "solver_guard",
+        "생산자 not_computed ('full_over_conduction:extra') — 관통인데 σ 를 못 냈다"
+      ],
+      "binding": [],
+      "generation": {
+        "generation": "g2",
+        "problems": [],
+        "markers": {
+          "hertz": [
+            "electrode_model",
+            "bulk_model",
+            "area_rule",
+            "area_rule_physics",
+            "hertz_constriction",
+            "hertz_h12",
+            "area_binding_counts_physics",
+            "n_area_physics_unavailable",
+            "n_clamp_zero",
+            "n_floor_only",
+            "h_film_nm",
+            "h_film_status",
+            "solve_method_full",
+            "solve_certificate_full",
+            "solve_certificate_bulk_net",
+            "solve_certificate_constr_net",
+            "thermal_electrode_model",
+            "thermal_bulk_model",
+            "thermal_area_rule",
+            "thermal_area_rule_physics",
+            "thermal_area_binding_counts_physics",
+            "thermal_n_clamp_zero",
+            "thermal_n_floor_only",
+            "thermal_psi_placement",
+            "psi_placement=multiply"
+          ],
+          "physics": [
+            "electrode_model",
+            "bulk_model",
+            "area_rule",
+            "area_rule_physics",
+            "hertz_constriction",
+            "area_binding_counts_physics",
+            "n_area_physics_unavailable",
+            "n_clamp_zero",
+            "n_floor_only",
+            "h_film_nm",
+            "h_film_status",
+            "solve_method_full",
+            "solve_certificate_full",
+            "solve_certificate_bulk_net",
+            "solve_certificate_constr_net",
+            "thermal_electrode_model",
+            "thermal_bulk_model",
+            "thermal_area_rule",
+            "thermal_area_rule_physics",
+            "thermal_area_binding_counts_physics",
+            "thermal_n_clamp_zero",
+            "thermal_n_floor_only",
+            "thermal_psi_placement",
+            "psi_placement=multiply"
+          ],
+          "hertz_h12": [
+            "electrode_model",
+            "bulk_model",
+            "area_rule",
+            "area_rule_physics",
+            "hertz_constriction",
+            "sensitivity_mode",
+            "area_binding_counts_physics",
+            "n_area_physics_unavailable",
+            "n_clamp_zero",
+            "n_floor_only",
+            "h_film_nm",
+            "h_film_status",
+            "solve_method_full",
+            "solve_certificate_full",
+            "solve_certificate_bulk_net",
+            "solve_certificate_constr_net",
+            "psi_placement=multiply"
+          ]
+        }
+      },
+      "channels": {
+        "ionic": [
+          "fail",
+          "model_limit 주장이 공용 판정을 못 넘는다 (L214-01 · 02): sigma_full_status · _reason = ('not_computed', 'full_over_conduction:extra') ≠ (not_computed, 'full_over_conduction')"
+        ],
+        "electronic": [
+          "ok",
+          "AM 타입이 없다 (전자망 자체가 존재하지 않는 베드)"
+        ],
+        "thermal": [
+          "ok",
+          "computed"
+        ]
+      },
+      "tau": [
+        "NOT_COMPUTED",
+        "solver_guard"
+      ]
+    },
+    "h12_role_in_physics": {
+      "model_limit": "증서 역할 'H12' ≠ 'physics' (세대 2 physics (ψ 곱 + physics_g2 + 원기둥 bulk) 자리 — 다른 역할의 증서)",
+      "ion": [
+        "invalid_input",
+        "FULL 모형 한계 주장이 공용 판정을 못 넘는다 (L214-01 · 02): 증서 역할 'H12' ≠ 'physics' (세대 2 physics (ψ 곱 + physics_g2 + 원기둥 bulk) 자리 — 다른 역할의 증서)"
+      ],
+      "binding": [],
+      "generation": {
+        "generation": "g2",
+        "problems": [],
+        "markers": {
+          "hertz": [
+            "electrode_model",
+            "bulk_model",
+            "area_rule",
+            "area_rule_physics",
+            "hertz_constriction",
+            "hertz_h12",
+            "area_binding_counts_physics",
+            "n_area_physics_unavailable",
+            "n_clamp_zero",
+            "n_floor_only",
+            "h_film_nm",
+            "h_film_status",
+            "solve_method_full",
+            "solve_certificate_full",
+            "solve_certificate_bulk_net",
+            "solve_certificate_constr_net",
+            "thermal_electrode_model",
+            "thermal_bulk_model",
+            "thermal_area_rule",
+            "thermal_area_rule_physics",
+            "thermal_area_binding_counts_physics",
+            "thermal_n_clamp_zero",
+            "thermal_n_floor_only",
+            "thermal_psi_placement",
+            "psi_placement=multiply"
+          ],
+          "physics": [
+            "electrode_model",
+            "bulk_model",
+            "area_rule",
+            "area_rule_physics",
+            "hertz_constriction",
+            "area_binding_counts_physics",
+            "n_area_physics_unavailable",
+            "n_clamp_zero",
+            "n_floor_only",
+            "h_film_nm",
+            "h_film_status",
+            "solve_method_full",
+            "solve_certificate_full",
+            "solve_certificate_bulk_net",
+            "solve_certificate_constr_net",
+            "thermal_electrode_model",
+            "thermal_bulk_model",
+            "thermal_area_rule",
+            "thermal_area_rule_physics",
+            "thermal_area_binding_counts_physics",
+            "thermal_n_clamp_zero",
+            "thermal_n_floor_only",
+            "thermal_psi_placement",
+            "psi_placement=multiply"
+          ],
+          "hertz_h12": [
+            "electrode_model",
+            "bulk_model",
+            "area_rule",
+            "area_rule_physics",
+            "hertz_constriction",
+            "sensitivity_mode",
+            "area_binding_counts_physics",
+            "n_area_physics_unavailable",
+            "n_clamp_zero",
+            "n_floor_only",
+            "h_film_nm",
+            "h_film_status",
+            "solve_method_full",
+            "solve_certificate_full",
+            "solve_certificate_bulk_net",
+            "solve_certificate_constr_net",
+            "psi_placement=multiply"
+          ]
+        }
+      },
+      "channels": {
+        "ionic": [
+          "fail",
+          "model_limit 주장이 공용 판정을 못 넘는다 (L214-01 · 02): 증서 역할 'H12' ≠ 'physics' (세대 2 physics (ψ 곱 + physics_g2 + 원기둥 bulk) 자리 — 다른 역할의 증서)"
+        ],
+        "electronic": [
+          "ok",
+          "AM 타입이 없다 (전자망 자체가 존재하지 않는 베드)"
+        ],
+        "thermal": [
+          "ok",
+          "computed"
+        ]
+      },
+      "tau": [
+        "NOT_COMPUTED",
+        "invalid_input: FULL 모형 한계 주장이 공용 판정을 못 넘는다 (L214-01 · 02): 증서 역할 'H12' ≠ 'physics' (세대 2 physics (ψ 곱 + physics_g2 + 원기둥 bulk) 자리 — 다른 역할의 증서)"
+      ]
+    }
+  },
+  "handover": {
+    "report": {
+      "n": 5,
+      "blank_by_status": {},
+      "held_back": {
+        "tortuosity_dijkstra_SE": "LHS-08 열림 — 130 중 14 만 값이 있고 `NOT_PERCOLATING` 이 규약 실패와 물리 미관통을 **한 값으로 접는다**.  재수확 뒤 공급.  ↪ J20 (09-28): 벽 규약 τ 를 **새 열** `tortuosity_SE_wall` 로 공급 — 이 옛 규약 열은 계속 보류."
+      },
+      "mono_rows": 0,
+      "mono_harvest_filled": 0,
+      "eligibility_checked": 5,
+      "eligibility_on": true,
+      "desc07_cov_checked": 5,
+      "union_extra": [
+        "lhs00_001",
+        "lhs00_006",
+        "lhs00_007",
+        "lhs00_008",
+        "lhs00_009",
+        "lhs00_010",
+        "lhs00_011",
+        "lhs00_012",
+        "lhs00_013",
+        "lhs00_014",
+        "lhs00_015",
+        "lhs00_016",
+        "lhs00_017",
+        "lhs00_018",
+        "lhs00_019",
+        "lhs00_020",
+        "lhs00_021",
+        "lhs00_022",
+        "lhs00_023",
+        "lhs00_024",
+        "lhs00_025",
+        "lhs00_026",
+        "lhs00_027",
+        "lhs00_028",
+        "lhs00_029",
+        "lhs00_030",
+        "lhs00_031",
+        "lhs00_032",
+        "lhs00_033",
+        "lhs00_034",
+        "lhs00_035",
+        "lhs00_036",
+        "lhs00_037",
+        "lhs00_038",
+        "lhs00_039",
+        "lhs00_040",
+        "lhs00_041",
+        "lhs00_042",
+        "lhs00_043",
+        "lhs00_044",
+        "lhs00_045",
+        "lhs00_046",
+        "lhs00_047",
+        "lhs00_048",
+        "lhs00_049",
+        "lhs00_050",
+        "lhs00_051",
+        "lhs00_052",
+        "lhs00_053",
+        "lhs00_054",
+        "lhs00_055",
+        "lhs00_056",
+        "lhs00_057",
+        "lhs00_058",
+        "lhs00_059",
+        "lhs00_060",
+        "lhs00_061",
+        "lhs00_062",
+        "lhs00_063",
+        "lhs00_064",
+        "lhs00_065",
+        "lhs00_066",
+        "lhs00_067",
+        "lhs00_068",
+        "lhs00_069",
+        "lhs00_070",
+        "lhs00_071",
+        "lhs00_072",
+        "lhs00_073",
+        "lhs00_074",
+        "lhs00_075",
+        "lhs00_076",
+        "lhs00_077",
+        "lhs00_078",
+        "lhs00_079",
+        "lhs00_080",
+        "lhs00_081",
+        "lhs00_082",
+        "lhs00_083",
+        "lhs00_084",
+        "lhs00_085",
+        "lhs00_086",
+        "lhs00_087",
+        "lhs00_088",
+        "lhs00_089",
+        "lhs00_090",
+        "lhs00_091",
+        "lhs00_092",
+        "lhs00_093",
+        "lhs00_094",
+        "lhs00_095",
+        "lhs00_096",
+        "lhs00_097",
+        "lhs00_098",
+        "lhs00_099",
+        "lhs00_100",
+        "lhs00_101",
+        "lhs00_102",
+        "lhs00_103",
+        "lhs00_104",
+        "lhs00_105",
+        "lhs00_106",
+        "lhs00_107",
+        "lhs00_108",
+        "lhs00_109",
+        "lhs00_110",
+        "lhs00_111",
+        "lhs00_112",
+        "lhs00_113",
+        "lhs00_114",
+        "lhs00_115",
+        "lhs00_116",
+        "lhs00_117",
+        "lhs00_118",
+        "lhs00_119",
+        "lhs00_120",
+        "lhs00_121",
+        "lhs00_122",
+        "lhs00_123",
+        "lhs00_124",
+        "lhs00_125",
+        "lhs00_126",
+        "lhs00_127",
+        "lhs00_128",
+        "lhs00_129",
+        "perc"
+      ],
+      "se_share_checked": 5,
+      "tau_wall_status": {
+        "OK": 5
+      },
+      "tau_wall_checked": 5,
+      "tau_perc_crosschecked": 0,
+      "se_cluster_checked": 5,
+      "wa_collisions": [],
+      "wa_n_cols": 0,
+      "wa_status_counts": {
+        "done": 5
+      },
+      "wa_porosity_absmax": 1.1997070004099442e-10,
+      "wa_reviewed_only": true,
+      "wa_unreviewed_dropped": 0,
+      "wa_pair_zero_filled": 0,
+      "wa_mono_renamed_cases": 0,
+      "wa_mono_design_filled": 0,
+      "wa_mono_absent_blanked": 0,
+      "wa_cn_identity_checked": 0,
+      "wa_am_identity_checked": 0,
+      "wa_amse_identity_checked": 0,
+      "wa_perc_checked": 0,
+      "wa_ionic_checked": 0,
+      "wa_f1_checked": 0,
+      "wa_frac_checked": 0,
+      "wa_area_checked": 0,
+      "wa_s567_final_checked": 0,
+      "wa_area_mean_blanked": 0,
+      "wa_area_total_zero_filled": 0,
+      "wa_excluded_dropped": 80,
+      "wa_raw_sha_checked": 5,
+      "wa_se_iso_checked": 0,
+      "tau_checked": 5,
+      "tau_blank_rows": 0,
+      "tau_status": {
+        "hertz:OK": 2,
+        "physics:NOT_COMPUTED": 2,
+        "hertz_h12:OK": 2,
+        "hertz:NOT_COMPUTED": 1,
+        "hertz_h12:NOT_COMPUTED": 1,
+        "physics:OK": 1,
+        "hertz:BAND_FALLBACK": 2,
+        "physics:BAND_FALLBACK": 2,
+        "hertz_h12:BAND_FALLBACK": 2
+      },
+      "tau_source": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/d26d1e75-209f-540f-83a8-c0e1957edc2f/scratchpad/l214r_rerun/run_pre_6cb256956/evidence/consumers_fixtures/handover_results",
+      "tau_flux_sha256": "679967215b10fd20c15e33647e4185a8fb86cf510fff8789aad219ec13368d8d",
+      "pressure_checked": 0,
+      "pressure_on": false
+    },
+    "cases": {
+      "ml_physics": {
+        "case_id": "lhs00_000",
+        "tau": {
+          "hertz": [
+            "OK",
+            ""
+          ],
+          "physics": [
+            "NOT_COMPUTED",
+            "full_over_conduction"
+          ],
+          "hertz_h12": [
+            "OK",
+            ""
+          ]
+        },
+        "primary_hold": [],
+        "blank_code": null,
+        "blank_problems": []
+      },
+      "ml_hertz": {
+        "case_id": "lhs00_002",
+        "tau": {
+          "hertz": [
+            "NOT_COMPUTED",
+            "full_over_conduction"
+          ],
+          "physics": [
+            "NOT_COMPUTED",
+            "full_over_conduction"
+          ],
+          "hertz_h12": [
+            "NOT_COMPUTED",
+            "full_over_conduction"
+          ]
+        },
+        "primary_hold": [
+          "주 타깃 Hertz (H0) FULL 모형 한계 1 행 ['lhs00_002'] — v1.3 주 타깃 배포 HOLD (등록되지 않은 마스킹 · Physics · H12 · 0 · 1.5 대체 금지 · 행 삭제 금지 · 진단 레코드는 보존 — 부분 배포는 별도 등록 · 1저자 결정 필요 · L214 Q2 (가))"
+        ],
+        "blank_code": "NA_MODEL_LIMIT",
+        "blank_problems": []
+      },
+      "ml_el": {
+        "case_id": "lhs00_003",
+        "tau": {
+          "hertz": [
+            "OK",
+            ""
+          ],
+          "physics": [
+            "OK",
+            ""
+          ],
+          "hertz_h12": [
+            "OK",
+            ""
+          ]
+        },
+        "primary_hold": [],
+        "blank_code": null,
+        "blank_problems": []
+      },
+      "independent_l1_h0": {
+        "case_id": "lhs00_004",
+        "tau": {
+          "hertz": [
+            "BAND_FALLBACK",
+            ""
+          ],
+          "physics": [
+            "BAND_FALLBACK",
+            ""
+          ],
+          "hertz_h12": [
+            "BAND_FALLBACK",
+            ""
+          ]
+        },
+        "primary_hold": [],
+        "blank_code": "HOLD_BAND_FALLBACK",
+        "blank_problems": []
+      },
+      "independent_l2_h0": {
+        "case_id": "lhs00_005",
+        "tau": {
+          "hertz": [
+            "BAND_FALLBACK",
+            ""
+          ],
+          "physics": [
+            "BAND_FALLBACK",
+            ""
+          ],
+          "hertz_h12": [
+            "BAND_FALLBACK",
+            ""
+          ]
+        },
+        "primary_hold": [],
+        "blank_code": "HOLD_BAND_FALLBACK",
+        "blank_problems": []
+      }
+    }
+  }
+}

@@ -1,0 +1,160 @@
+{
+  "cf_bad_residual": {
+    "content": [
+      true,
+      "ok: hertzian, physics"
+    ],
+    "general_record": [
+      false,
+      "세대 계약 (G2R-01 · 02) network_conductivity_dual.json: physics: 수치 증서 · 결합 (G2R-03 · G2RR-02 — 가지 · 역할 · 발행값) — solve_certificate_bulk_net: 내부 잔차 1 > 1e-06 — 해가 그 선형계를 풀지 않았다; 세대 계약 (G2R-01 · 02) network_conductivity.json + network_conductivity_physics.json: physics: 수치 증서 · 결합 (G2R-03 · G2RR-02 — 가지 · 역할 · 발행값) — solve_certificate_bulk_net: 내부 잔차 1 > 1e-06 — 해가 그 선형계를 풀지 않았다; 세대 계약 (G2R-01 · 02) network_conductivity_hertzian.json + network_conductivity_physics.json: physics: 수치 증서 · 결합 (G2R-03 · G2RR-02 — 가지 · 역할 · 발행값) — solve_certificate_bulk_net: 내부 잔차 1 > 1e-06 — 해가 그 선형계를 풀지 않았다"
+    ],
+    "stop": [
+      false,
+      "⑦ τ 인계 hertz: NOT_COMPUTED (invalid_input: 세대 계약 (G2R-01 · 02): physics: 수치 증서 · 결합 (G2R-03 · G2RR-02 — 가지 · 역할 · 발행값) — solve_certificate_bulk_net: 내부 잔차 1 > 1e-06 — 해가 그 선형계를 풀지 않았다) — 기술적 결손 (등록된 과학적 HOLD · FULL 모형 한계 아님); ⑦ τ 인계 physics: NOT_COMPUTED (invalid_input: 세대 계약 (G2R-01 · 02): physics: 수치 증서 · 결합 (G2R-03 · G2RR-02 — 가지 · 역할 · 발행값) — solve_certificate_bulk_net: 내부 잔차 1 > 1e-06 — 해가 그 선형계를 풀지 않았다) — 기술적 결손 (등록된 과학적 HOLD · FULL 모형 한계 아님); ⑨ physics: 수치 증서 · 결합 (G2R-03 · G2RR-02 — 가지 · 역할 · 발행값): solve_certificate_bulk_net: 내부 잔차 1 > 1e-06 — 해가 그 선형계를 풀지 않았다"
+    ],
+    "reread_rejects": [
+      "K2",
+      "K3",
+      "K4",
+      "K5",
+      "K6"
+    ],
+    "handover": {
+      "accepted": false,
+      "exception": "FillRefusal: cf_bad_residual: τ P4 — 세대 계약 위반 (G2R-01 · 02 · tau_flux.network_generation_contract): physics: 수치 증서 · 결합 (G2R-03 · G2RR-02 — 가지 · 역할 · 발행값) — solve_certificate_bulk_net: 내부 잔차 1 > 1e-06 — 해가 그 선형계를 풀지 않았다 — 역할 · 표기가 확정되지 않은 망의 τ 를 싣지 않는다 (주 Hertz = H0 · H12 · physics 표)"
+    }
+  },
+  "missing_bulk_model": {
+    "content": [
+      true,
+      "ok: hertzian, physics"
+    ],
+    "general_record": [
+      false,
+      "세대 계약 (G2R-01 · 02) network_conductivity_dual.json: physics: 세대 2 physics (ψ 곱 + physics_g2 + 원기둥 bulk) 역할 표기가 아니다 — bulk_model 없음 (부분 결손); 세대 계약 (G2R-01 · 02) network_conductivity.json + network_conductivity_physics.json: physics: 세대 2 physics (ψ 곱 + physics_g2 + 원기둥 bulk) 역할 표기가 아니다 — bulk_model 없음 (부분 결손); 세대 계약 (G2R-01 · 02) network_conductivity_hertzian.json + network_conductivity_physics.json: physics: 세대 2 physics (ψ 곱 + physics_g2 + 원기둥 bulk) 역할 표기가 아니다 — bulk_model 없음 (부분 결손)"
+    ],
+    "stop": [
+      false,
+      "⑦ τ 인계 hertz: NOT_COMPUTED (invalid_input: 세대 계약 (G2R-01 · 02): physics: 세대 2 physics (ψ 곱 + physics_g2 + 원기둥 bulk) 역할 표기가 아니다 — bulk_model 없음 (부분 결손)) — 기술적 결손 (등록된 과학적 HOLD · FULL 모형 한계 아님); ⑦ τ 인계 physics: NOT_COMPUTED (invalid_input: 세대 계약 (G2R-01 · 02): physics: 세대 2 physics (ψ 곱 + physics_g2 + 원기둥 bulk) 역할 표기가 아니다 — bulk_model 없음 (부분 결손)) — 기술적 결손 (등록된 과학적 HOLD · FULL 모형 한계 아님); ⑨ physics: 역할 표기가 세대 2 physics (ψ 곱 + physics_g2 + 원기둥 bulk) 가 아니다 — 세대 계약 (G2R-01 · 02): bulk_model 없음 (부분 결손)"
+    ],
+    "reread_rejects": [
+      "K2",
+      "K3",
+      "K4",
+      "K5",
+      "K6"
+    ],
+    "handover": {
+      "accepted": false,
+      "exception": "FillRefusal: missing_bulk_model: τ P4 — 세대 계약 위반 (G2R-01 · 02 · tau_flux.network_generation_contract): physics: 세대 2 physics (ψ 곱 + physics_g2 + 원기둥 bulk) 역할 표기가 아니다 — bulk_model 없음 (부분 결손) — 역할 · 표기가 확정되지 않은 망의 τ 를 싣지 않는다 (주 Hertz = H0 · H12 · physics 표)"
+    }
+  },
+  "withheld_q_x101": {
+    "content": [
+      false,
+      "physics.ionic=fail (model_limit 주장이 공용 판정을 못 넘는다 (L214-01 · 02): solve_certificate_full: q_withheld 2.61940318671134 ≠ 증서 재구성 (I_bottom/ΔV)·T/A = 2.593468501694396 (같은 식 · 같은 순서 — 진단 q 가 그 해의 q 가 아니다))"
+    ],
+    "general_record": [
+      false,
+      "network_conductivity_dual.json[physics]: invalid_input: FULL 모형 한계 주장이 공용 판정을 못 넘는다 (L214-01 · 02): solve_certificate_full: q_withheld 2.61940318671134 ≠ 증서 재구성 (I_bottom/ΔV)·T/A = 2.593468501694396 (같은 식 · 같은 순서 — 진단 q 가 그 해의 q 가 아니다); network_conductivity_physics.json: invalid_input: FULL 모형 한계 주장이 공용 판정을 못 넘는다 (L214-01 · 02): solve_certificate_full: q_withheld 2.61940318671134 ≠ 증서 재구성 (I_bottom/ΔV)·T/A = 2.593468501694396 (같은 식 · 같은 순서 — 진단 q 가 그 해의 q 가 아니다)"
+    ],
+    "stop": [
+      false,
+      "① physics.ionic=fail (model_limit 주장이 공용 판정을 못 넘는다 (L214-01 · 02): solve_certificate_full: q_withheld 2.61940318671134 ≠ 증서 재구성 (I_bottom/ΔV)·T/A = 2.593468501694396 (같은 식 · 같은 순서 — 진단 q 가 그 해의 q 가 아니다)); ③ physics: 기술적 입력 무효 — invalid_input: FULL 모형 한계 주장이 공용 판정을 못 넘는다 (L214-01 · 02): solve_certificate_full: q_withheld 2.61940318671134 ≠ 증서 재구성 (I_bottom/ΔV)·T/A = 2.593468501694396 (같은 식 · 같은 순서 — 진단 q 가 그 해의 q 가 아니다); ⑦ τ 인계 physics: NOT_COMPUTED (invalid_input: FULL 모형 한계 주장이 공용 판정을 못 넘는다 (L214-01 · 02): solve_certificate_full: q_withheld 2.61940318671134 ≠ 증서 재구성 (I_bottom/ΔV)·T/A = 2.593468501694396 (같은 식 · 같은 순서 — 진단 q 가 그 해의 q 가 아니다)) — 기술적 결손 (등록된 과학적 HOLD · FULL 모형 한계 아님)"
+    ],
+    "reread_rejects": [
+      "K4",
+      "K6"
+    ],
+    "handover": {
+      "accepted": false,
+      "exception": "FillRefusal: withheld_q_x101: τ P4 — 망 정지 계약 재검사 실패 (인계 때 · 배치가 done 을 준 같은 계약 pipeline_service.network_stop_verdict ①–⑨): ① physics.ionic=fail (model_limit 주장이 공용 판정을 못 넘는다 (L214-01 · 02): solve_certificate_full: q_withheld 2.61940318671134 ≠ 증서 재구성 (I_bottom/ΔV)·T/A = 2.593468501694396 (같은 식 · 같은 순서 — 진단 q 가 그 해의 q 가 아니다)); ③ physics: 기술적 입력 무효 — invalid_input: FULL 모형 한계 주장이 공용 판정을 못 넘는다 (L214-01 · 02): solve_certificate_full: q_withheld 2.61940318671134 ≠ 증서 재구성 (I_bottom/ΔV)·T/A = 2.593468501694396 (같은 식 · 같은 순서 — 진단 q 가 그 해의 q 가 아니다); ⑦ τ 인계 physics: NOT_COMPUTED (invalid_input: FULL 모형 한계 주장이 공용 판정을 못 넘는다 (L214-01 · 02): solve_certificate_full: q_withheld 2.61940318671134 ≠ 증서 재구성 (I_bottom/ΔV)·T/A = 2.593468501694396 (같은 식 · 같은 순서 — 진단 q 가 그 해의 q 가 아니다)) — 기술적 결손 (등록된 과학적 HOLD · FULL 모형 한계 아님) — 그 계약을 통과한 세대의 폴더가 아니다 (배치 뒤 사본 · 투영 · σ₀ · 띠 규칙이 바뀌었거나 기술적 결손) · 이 케이스 τ 를 싣지 않는다 (NOT_COMPUTED 로도 싣지 않는다 — \"같은 세대 검증 통과\" 로 보이지 않게)"
+    }
+  },
+  "other_thermal_failure": {
+    "content": [
+      false,
+      "physics.thermal=fail (failed)"
+    ],
+    "general_record": [
+      true,
+      "ok"
+    ],
+    "stop": [
+      false,
+      "① physics.thermal=fail (failed)"
+    ],
+    "reread_rejects": [
+      "K4"
+    ],
+    "handover": {
+      "accepted": false,
+      "exception": "FillRefusal: other_thermal_failure: τ P4 — 망 정지 계약 재검사 실패 (인계 때 · 배치가 done 을 준 같은 계약 pipeline_service.network_stop_verdict ①–⑨): ① physics.thermal=fail (failed) — 그 계약을 통과한 세대의 폴더가 아니다 (배치 뒤 사본 · 투영 · σ₀ · 띠 규칙이 바뀌었거나 기술적 결손) · 이 케이스 τ 를 싣지 않는다 (NOT_COMPUTED 로도 싣지 않는다 — \"같은 세대 검증 통과\" 로 보이지 않게)"
+    }
+  },
+  "other_electronic_failure": {
+    "content": [
+      false,
+      "physics.electronic=fail (AM 타입이 없다 (전자망 자체가 존재하지 않는 베드))"
+    ],
+    "general_record": [
+      true,
+      "ok"
+    ],
+    "stop": [
+      false,
+      "① physics.electronic=fail (AM 타입이 없다 (전자망 자체가 존재하지 않는 베드))"
+    ],
+    "reread_rejects": [
+      "K4"
+    ],
+    "handover": {
+      "accepted": false,
+      "exception": "FillRefusal: other_electronic_failure: τ P4 — 망 정지 계약 재검사 실패 (인계 때 · 배치가 done 을 준 같은 계약 pipeline_service.network_stop_verdict ①–⑨): ① physics.electronic=fail (AM 타입이 없다 (전자망 자체가 존재하지 않는 베드)) — 그 계약을 통과한 세대의 폴더가 아니다 (배치 뒤 사본 · 투영 · σ₀ · 띠 규칙이 바뀌었거나 기술적 결손) · 이 케이스 τ 를 싣지 않는다 (NOT_COMPUTED 로도 싣지 않는다 — \"같은 세대 검증 통과\" 로 보이지 않게)"
+    }
+  },
+  "unknown_full_reason": {
+    "content": [
+      false,
+      "physics.ionic=fail (model_limit 주장이 공용 판정을 못 넘는다 (L214-01 · 02): sigma_full_status · _reason = ('not_computed', 'full_over_conduction:extra') ≠ (not_computed, 'full_over_conduction'))"
+    ],
+    "general_record": [
+      false,
+      "network_conductivity_dual.json[physics]: solver_guard: 생산자 not_computed ('full_over_conduction:extra') — 관통인데 σ 를 못 냈다; network_conductivity_physics.json: solver_guard: 생산자 not_computed ('full_over_conduction:extra') — 관통인데 σ 를 못 냈다"
+    ],
+    "stop": [
+      false,
+      "① physics.ionic=fail (model_limit 주장이 공용 판정을 못 넘는다 (L214-01 · 02): sigma_full_status · _reason = ('not_computed', 'full_over_conduction:extra') ≠ (not_computed, 'full_over_conduction')); ③ physics: 기술적 입력 무효 — solver_guard: 생산자 not_computed ('full_over_conduction:extra') — 관통인데 σ 를 못 냈다; ⑦ τ 인계 physics: NOT_COMPUTED (solver_guard) — 기술적 결손 (등록된 과학적 HOLD · FULL 모형 한계 아님)"
+    ],
+    "reread_rejects": [
+      "K4",
+      "K6"
+    ],
+    "handover": {
+      "accepted": false,
+      "exception": "FillRefusal: unknown_full_reason: τ P4 — 망 정지 계약 재검사 실패 (인계 때 · 배치가 done 을 준 같은 계약 pipeline_service.network_stop_verdict ①–⑨): ① physics.ionic=fail (model_limit 주장이 공용 판정을 못 넘는다 (L214-01 · 02): sigma_full_status · _reason = ('not_computed', 'full_over_conduction:extra') ≠ (not_computed, 'full_over_conduction')); ③ physics: 기술적 입력 무효 — solver_guard: 생산자 not_computed ('full_over_conduction:extra') — 관통인데 σ 를 못 냈다; ⑦ τ 인계 physics: NOT_COMPUTED (solver_guard) — 기술적 결손 (등록된 과학적 HOLD · FULL 모형 한계 아님) — 그 계약을 통과한 세대의 폴더가 아니다 (배치 뒤 사본 · 투영 · σ₀ · 띠 규칙이 바뀌었거나 기술적 결손) · 이 케이스 τ 를 싣지 않는다 (NOT_COMPUTED 로도 싣지 않는다 — \"같은 세대 검증 통과\" 로 보이지 않게)"
+    }
+  },
+  "h12_role_in_physics": {
+    "content": [
+      false,
+      "physics.ionic=fail (model_limit 주장이 공용 판정을 못 넘는다 (L214-01 · 02): 증서 역할 'H12' ≠ 'physics' (세대 2 physics (ψ 곱 + physics_g2 + 원기둥 bulk) 자리 — 다른 역할의 증서))"
+    ],
+    "general_record": [
+      false,
+      "network_conductivity_dual.json[physics]: invalid_input: FULL 모형 한계 주장이 공용 판정을 못 넘는다 (L214-01 · 02): 증서 역할 'H12' ≠ 'physics' (세대 2 physics (ψ 곱 + physics_g2 + 원기둥 bulk) 자리 — 다른 역할의 증서); network_conductivity_physics.json: invalid_input: FULL 모형 한계 주장이 공용 판정을 못 넘는다 (L214-01 · 02): 증서 역할 'H12' ≠ 'physics' (세대 2 physics (ψ 곱 + physics_g2 + 원기둥 bulk) 자리 — 다른 역할의 증서)"
+    ],
+    "stop": [
+      false,
+      "① physics.ionic=fail (model_limit 주장이 공용 판정을 못 넘는다 (L214-01 · 02): 증서 역할 'H12' ≠ 'physics' (세대 2 physics (ψ 곱 + physics_g2 + 원기둥 bulk) 자리 — 다른 역할의 증서)); ③ physics: 기술적 입력 무효 — invalid_input: FULL 모형 한계 주장이 공용 판정을 못 넘는다 (L214-01 · 02): 증서 역할 'H12' ≠ 'physics' (세대 2 physics (ψ 곱 + physics_g2 + 원기둥 bulk) 자리 — 다른 역할의 증서); ⑦ τ 인계 physics: NOT_COMPUTED (invalid_input: FULL 모형 한계 주장이 공용 판정을 못 넘는다 (L214-01 · 02): 증서 역할 'H12' ≠ 'physics' (세대 2 physics (ψ 곱 + physics_g2 + 원기둥 bulk) 자리 — 다른 역할의 증서)) — 기술적 결손 (등록된 과학적 HOLD · FULL 모형 한계 아님)"
+    ],
+    "reread_rejects": [
+      "K4",
+      "K6"
+    ],
+    "handover": {
+      "accepted": false,
+      "exception": "FillRefusal: h12_role_in_physics: τ P4 — 망 정지 계약 재검사 실패 (인계 때 · 배치가 done 을 준 같은 계약 pipeline_service.network_stop_verdict ①–⑨): ① physics.ionic=fail (model_limit 주장이 공용 판정을 못 넘는다 (L214-01 · 02): 증서 역할 'H12' ≠ 'physics' (세대 2 physics (ψ 곱 + physics_g2 + 원기둥 bulk) 자리 — 다른 역할의 증서)); ③ physics: 기술적 입력 무효 — invalid_input: FULL 모형 한계 주장이 공용 판정을 못 넘는다 (L214-01 · 02): 증서 역할 'H12' ≠ 'physics' (세대 2 physics (ψ 곱 + physics_g2 + 원기둥 bulk) 자리 — 다른 역할의 증서); ⑦ τ 인계 physics: NOT_COMPUTED (invalid_input: FULL 모형 한계 주장이 공용 판정을 못 넘는다 (L214-01 · 02): 증서 역할 'H12' ≠ 'physics' (세대 2 physics (ψ 곱 + physics_g2 + 원기둥 bulk) 자리 — 다른 역할의 증서)) — 기술적 결손 (등록된 과학적 HOLD · FULL 모형 한계 아님) — 그 계약을 통과한 세대의 폴더가 아니다 (배치 뒤 사본 · 투영 · σ₀ · 띠 규칙이 바뀌었거나 기술적 결손) · 이 케이스 τ 를 싣지 않는다 (NOT_COMPUTED 로도 싣지 않는다 — \"같은 세대 검증 통과\" 로 보이지 않게)"
+    }
+  }
+}

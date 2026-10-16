@@ -1,0 +1,143 @@
+# Codex 짧은 재확인 요청 — LHS214 재검증 반례 수정 (L214R-01–04 · + 같은 부류 L214R-05–11 · WEB-09) (2026-10-16 · 결과 0 건 · 발송 = 1저자)
+
+> **한 줄**: Codex 재검증 (10-15 · 검토 핀 `9e3ef54ca` · 판정문 `docs/reviews/codex_review_lhs214_fix_reverify_20261015.md` · HOLD) 의 P2 셋 (`L214R-01`–`03`) · P3 하나 (`L214R-04`) 를
+> 판정문 §9 최소 해제 목록대로 고쳤다.  고치는 동안 같은 부류를 세 번 더 찾아 1저자 결정대로 같은 묶음에서 고쳤다 — `L214R-05` (게시 증서 경로의 `inf <= inf`) · `WEB-09`
+> (받아들인 모드 칸의 옛 CSV 값) · `L214R-06`–`08` (게시 증서 채택 단 결합 · 레코드 σ 항등식 유한성 · 큰 JSON 정수) · `L214R-09`–`11` (τ 출력 유한성 · 온도 규약 유한성 ·
+> 정지 계약 수 변환).  그 뒤에 보인 것은 고치지 않고 §6 에 **알려진 항목**으로 적었다 (1저자 10-16 — 마지막 고침 라운드).  열둘이 닫히는지 · 새 결함이 있는지 짧게 판정해 달라.
+> ✅ **1저자 10-16** — 수정 계획 `docs/reviews/lhs214r_fix_plan_20261016.md` Q1–Q5 권고대로 · §4 추가 결정 (Q1–Q3) · §4-2 (Q4–Q6 = (가) 먼저 고치고 보내기) · §4-3 (N1–N3 고침 · N4 · N5 범위 경계 · 이번이 마지막 라운드).
+> **리뷰 핀** = 이 요청서와 증거 폴더를 담은 본 가지 커밋 (코드 = `60ba39e22` 와 같다 — 그 커밋은 문서 · 증거만 더한다 · SHA 는 발송 때 1저자가 적는다) · **기준** = `6cb256956` (수정 직전 본 가지 — 검토 핀 `9e3ef54ca` 와 그 사이 바뀐 코드 = `scripts/check_doc_refs.py` 하나 (게이트 도구 ·
+> 봉인 · 인계 밖) ⇒ 봉인 32 · 인계 도구 · 배포 빌더 · 영수증 도구 바이트 같음).  증거 = `docs/reviews/lhs214r_fix_evidence_20261016/README.md`.
+
+## 0. 대상 · 지위
+
+- 코드 diff = `git diff 6cb256956 <리뷰 핀> -- scripts/network_conductivity.py scripts/tau_flux.py webapp/app.py webapp/pipeline_service.py scripts/lhs_release_build.py scripts/lhs_design_dataset.py scripts/supp20_input_receipt.py`
+  + 새 시험 일곱 (`scripts/test_l214r01_certificate.py` · `scripts/test_l214r02_model_limit_flag.py` · `webapp/test_l214r03_display.py` · `scripts/test_l214r05_published_certificate.py` ·
+  `webapp/test_web09_accepted_refresh.py` · `scripts/test_l214r06_same_class.py` · `scripts/test_l214r09_same_class.py` — 전부 `scripts/check_all.sh` 의 `run` 줄로 매 게이트) + 영수증 selftest 블록 S12 +
+  기존 시험 기대 갱신 (§2 끝).
+- ⚠ **봉인 32 가 다시 바뀐다** — 바뀐 봉인 파일 (기준 `0c557e72a` 대비) 4 = `scripts/network_conductivity.py` · `scripts/tau_flux.py` · `webapp/app.py` · `webapp/pipeline_service.py` ⇒
+  대기 지문 `acc7bfa3…` → **`code_fp_pending e76dbe0897c4a0f5e2a359f07e7197400d49be3d257a8676c0bf8a1cd052a07e`** (재봉인 아님 · 두 등록 초안 194 §9-8 · 보충 20 §9-3 의 대기 선언만 갱신 ·
+  등록 §3 `e8b2496b…` 그대로 · 발사 대조 D1 · E2 · F5 · G5 = 등록 값만 — `SELF-118` 규칙 그대로).  인계 도구 지문: `scripts/lhs_design_dataset.py` · `scripts/lhs_release_build.py` 바뀜 (194 §9-8 표).
+- 새 214 실행 · WSL · 수치 재계산 없음 · 등록 비준 · 재봉인 = GO 뒤 1저자 · S3 = 별개 HOLD.
+
+## 1. 판정문 최소 해제 ↔ 수정
+
+| 원장 | 수정 (자리) |
+|---|---|
+| `L214R-01` A (§2 — 유한 입력에서 재구성 q = +inf · `inf <= inf`) | `network_conductivity.model_limit_certificate_problem` — 비교 **전에** T · A · **T/A** · 재구성 q 를 유한 양수로 확인 · 아니면 `NON_FINITE_REASON` 꼬리표 사유 (생산자 비유한 q = `non_finite` 와 같은 계약) · 기하 환산 `_geometry_TA` 가 `scale ** 2` 의 OverflowError · 큰 정수를 예외가 아니라 사유로 · `_cert_num` 이 큰 정수 → None |
+| `L214R-01` B (§2 — 마지막 채택 시도의 실패 기록 수용) | 새 `_adopted_attempt_problem(last, cert)` — 마지막 pass 시도: 예외 기록 없음 · 방법별 수렴 상태 (`DIRICHLET_KRYLOV_METHODS = ('cg', 'cg+jacobi', 'gmres+ilu')` = krylov_info 0 · 그 밖 단 = 싣지 않음) · 수치 = 요약과 같은 함수 (같은 상수 1e−6) · 보존 · 내부 잔차 = 요약 — 생산자 사다리 수용 조건 그대로 (새 문턱 없음) · 앞선 실패 시도 = 허용 |
+| `L214R-02` (§3 — 띠 폴백이 H0 모형 한계 배포 HOLD 를 가림) | τ 표시 우선순위 (BAND_FALLBACK 먼저) 그대로 · `tau_flux.full_model_limit_flag` → 인계 독립 칸 `full_model_limit_hertz` · `full_model_limit_physics` (True / False · 공용 판정 그대로 · 띠 · 앞 게이트와 무관 · 세대 무효 · 레코드 없음 = 빈칸 · τ 열 50 → 52) → `lhs_release_build.v13_primary_model_limit_problems` (build · check 공용) = 상태 **또는** 표지 True 면 주 타깃 HOLD · 표지 열 없음 · 값 모름 · 상태와 모순 = 문제 (fail-closed) · 배포 주 표 · Physics 부록 각 + 1 열 · 열 사전 · 재적합 제외 · 상태 집계 |
+| `L214R-03` (§4 — 최종 화면이 미채택 값을 옛 CSV 에서 복원) | `webapp/app.py` `normalize_network_summary_layout` 끝 Pass G `_mask_unaccepted_ion_modes` — 받아들이지 않은 모드의 이온 σ · FULL 유도비 = `—` (모형 한계면 사유) · Plastic amplification = 두 모드 다 채택일 때만 · Δ = `—` · CSV · 분석기 무변경 |
+| `L214R-04` (§5 — 비준 전환 절차가 역사 지문과 충돌) | `scripts/supp20_input_receipt.py` — `_md_section` (울타리 안 제목 무시) 으로 **활성 `## 3.` 절 안에서만** `code_fp` 를 읽는다 · §3 없음 · 둘 이상 = R0 · 역사 표 값 보존 · 대기 선언은 발사 대조 허용값이 되지 않는다 |
+| `L214R-05` (같은 부류 · 1저자 Q3) 게시 FULL 증서 경로의 `inf <= inf` | `tau_flux._cert_geometry` = `_geometry_TA` + T/A 유한 양수 · `_cert_published_problem` = 재구성 q · 차원 σ · 허용을 비교 전에 유한으로 · `sigma0_binding_problems` = `_cert_num` |
+| `WEB-09` (같은 부류 · 1저자 Q1) 받아들인 모드 칸의 옛 CSV 값 | Pass G 앞 `_refresh_accepted_ion_modes` — 받아들인 모드 칸 = 새 표와 같은 도우미 (`_ion_sigma_row` · `_ion_cf_full_row` · `_ion_brug_over_sigma_row` · `_ion_r_brug_row` · `_ion_plastic_amp_row`) 의 현재 값 · Δ = 두 칸 모두 숫자일 때만 |
+| `L214R-06` (같은 부류 Q4) 게시 증서가 채택 단 기록을 읽지 않음 | `network_conductivity.adopted_attempt_binding_problem(cert)` — 모형 한계 증서 ③ 을 꺼낸 **한 함수** (마지막 시도 = pass · 같은 방법 · 같은 두 전류 · `_adopted_attempt_problem`) 를 `model_limit_certificate_problem` (문구 바이트 그대로) 과 `tau_flux._cert_published_problem` (FULL · CF · 협착-only) 이 같이 부른다 · 생산자는 해를 낸 증서마다 시도 목록 (pass 단에서 끝) 을 싣는다 (정직한 증서 43 개 통과) |
+| `L214R-07` (같은 부류 Q5) 레코드 두 σ 표현 항등식의 `inf <= inf` | `tau_flux.ion_record_problem` — 1000·σ₀·σ_ratio (유한 양수) · |차| · 허용 (유한) 을 비교 전에 · 아니면 `invalid_input: non_finite` · 옛 세대 역사 인계 경로 (inferred_legacy · `ion_columns` · `case_row` · 정지 계약 ③ · 인계 P4) 도 같은 함수 |
+| `L214R-08` (같은 부류 Q6) 큰 JSON 정수 (10⁴⁰⁰) 의 예외 | `tau_flux._num` = 큰 정수 → None (생산자 `_cert_num` 과 같은 규칙) · None 을 '해 주장 없음 = 받음' 으로 읽던 한 자리 (숫자 없는 가지 증서 I_bottom) 는 `_overflow_int` 로 '숫자가 실렸다' = 거부 · 나머지 자리 = 기존 거부 사유 |
+| `L214R-09` (같은 부류 N1) τ 출력 유한성 | `tau_flux.ion_columns` — 값 상태 (OK · MBCB) 를 주기 전에 f · tau2 · tau 셋 다 유한 양수 (`_pos`) · 아니면 NOT_COMPUTED `invalid_input: non_finite — …` · 값 넷 빈칸 · 비관통 행 그대로 · 사유 어휘 새로 만들지 않음 |
+| `L214R-10` (같은 부류 N2) 온도 규약 검사의 `inf <= inf` | `tau_flux.sigma0_convention_problem` — 다시 계산한 σ_grain · 배수 (유한 양수) · 차 · 허용 (유한) 을 비교 전에 · 아니면 non_finite 사유 (None 아님) |
+| `L214R-11` (같은 부류 N3) 정지 계약 수 변환의 예외 | `webapp/pipeline_service._stop_num` = `tau_flux._num` 그대로 · '숫자 없음 = 통과' 로 읽던 한 자리 (③ valid_zero 의 calc_percolation) 는 `tau_flux._overflow_int` 로 따로 거부 |
+
+## 2. 시험 (시험 먼저 — 고치기 전 코드에서 실패 확인 · 커밋마다 게이트 통과 뒤 push)
+
+| 항목 | 시험 먼저 커밋 · 고치기 전 | 수정 커밋 · 고친 뒤 |
+|---|---|---|
+| `L214R-01` | `a955050df` · `scripts/test_l214r01_certificate.py` 48/112 | `3676a33eb` · 112/112 |
+| `L214R-02` | `1cd47e940` · `scripts/test_l214r02_model_limit_flag.py` 17/47 | `2450cb858` · 47/47 |
+| `L214R-03` | `f28636a54` · `webapp/test_l214r03_display.py` 5/14 | `2fc138274` · 14/14 |
+| `L214R-04` | `3b739519c` · `scripts/supp20_input_receipt.py --selftest` 100/111 | `e6f7895d0` · 111/111 |
+| `L214R-05` | `755b71feb` · `scripts/test_l214r05_published_certificate.py` 109/184 | `530ddb355` · 184/184 |
+| `WEB-09` | `7a54d0199` · `webapp/test_web09_accepted_refresh.py` 7/16 | `dcd06869d` · 16/16 |
+| `L214R-06`–`08` | `40a08afb5` · `scripts/test_l214r06_same_class.py` 118/306 | `2e85d08eb` · 306/306 |
+| `L214R-09`–`11` | `a5cab63c7` · `scripts/test_l214r09_same_class.py` 43/96 | `60ba39e22` · 96/96 |
+
+- 고치기 전 수는 통합 때 메인 세션이 본 가지 체크아웃에서 다시 돌려 확인했다 (`L214R-06`–`11` 포함 · 실패 = 등록한 반례 묶음 · 대조군 통과).  증거 폴더의 로그는 깨끗한 작업 폴더 (`git worktree` · detached) 에서 다시 돌린 것 — 시험 먼저 여덟 = 종료코드 전부 1 · 최종 열 (+ `webapp/test_pipeline_provenance.py` · 지문 보고) = 전부 0 · 수 위 표와 같음 (`before/` · `final/` · `rc.tsv`).
+- 기존 시험 기대 갱신 (결과로 맞춘 것이 아니라 설계 변경을 따라감): τ 열 50 → 52 · 열 목록 (`scripts/test_tau_flux.py` · `scripts/test_network_generation2.py`) · 배포 주 표 · Physics 부록 + 1 열 (`scripts/test_lhs_release_v13.py`) ·
+  합성 인계 행에 표지 두 칸 (`scripts/test_lhs214_model_limit.py` · `scripts/test_lhs_release_v13.py` — 관문이 표지 열 없음을 fail-closed 로 거부하므로 · v1.2 유래 행 = 그 행의 상태에서 유도한 'False') ·
+  `scripts/test_l214r05_published_certificate.py` A5-0 · A5d · A5e (L214R-07 뒤 그 두 레코드는 0b 가 먼저 non_finite 로 거부 — 증서 경로 검사는 직접 호출로 그대로 본다 · 수 184 그대로) ·
+  ⚠ `webapp/test_pipeline_provenance.py` 의 가짜 망 레코드 증서에 시도 목록 (spsolve 한 단 pass) 추가 — L214R-06 뒤 첫 게이트가 267/284 로 잡았다 (가짜 증서에 시도 목록이 없어 새 규칙이 거부) ·
+  저장소의 fixture-drift 규약 (RC7-02 · RGLR2-01 · G2RR-02 · G2RR2-05) 대로 생산자 모양에 맞춤 · 284/284 · push 전 (원격 영향 없음).
+
+## 3. Codex 탐침 무변경 재실행 (리포 밖 · 고치기 전 `6cb256956` ↔ 최종 `60ba39e22` · 기준 트리 `0c557e72a` · 증거 `probe_rerun/`)
+
+- 방식 = 판정문 증거 `docs/reviews/codex_lhs214_fix_reverify_evidence_20261015/` 의 탐침 다섯 (sha256 = 묶음 manifest 와 같음) 을 바이트 그대로 · 같은 순서로 · source = 그 rev 의 manifest 경로 ∪
+  `scripts/*.py` · `webapp/**` · `python3 -E -X utf8 -B` (사용자 site 의 requests 가 웹앱 import 에 필요 — `-I` 는 그것을 뺀다).  `l214_a4.py` 는 Codex 핀 manifest 에 묶여 있어 돌리지 않았다 (§4 로 대신).
+- `receipt_identity.py` 는 결함의 존재를 assert 로 적어 두었다 (`minimal_activate_section3 = {R0, D1}`) — 최종 트리에서 그 줄에서 멈춘다 (rc 1 = 고침 표지).  변이 값을 남기려고 assert 일곱 줄만 뺀
+  파생 `receipt_identity_noassert.py` (머리에 뺀 줄 그대로) 도 돌렸다.
+- 종료코드: 고치기 전 아홉 실행 전부 0 (Codex 증거와 판정값 같음) · 최종 = 전부 0 · `receipt_identity` 1 (위 assert) · noassert 파생 0.
+
+| 탐침 출력 | 고치기 전 ↔ 최종 (판정값이 바뀐 것 전부 · `cmp_pre_vs_final.json`) |
+|---|---|
+| `numeric_probes.json` | 증서 변이 7 (cons_1 · error_present · krylov_nonzero · residual_1 · residual_nan · overflow_geometry_scale_square · overflow_q_reconstruction_geometry) = None → 거부 사유 · 레코드 넷 (overflow_q_reconstruction_currents · contradictory_attempt × 3) = 공용 판정 · 0b (`invalid_input`) · 채널 판정 fail · 모드 파일 내용 판정 False · Physics τ `invalid_input` · 정상 합성 레코드 그대로 · solves[35] (scale 1e200) = OverflowError → `not_computed` · `invalid_geometry` (§5-2) · τ 표지 두 칸 더함 · 증서 결합 · 세대 계약 [] · {} 그대로 (§5-3) |
+| `consumers_*.json` | 띠 폴백 (L1 · L2) + H0 모형 한계 두 고정 사례 = `build_v13` ReleaseError (주 타깃 HOLD · 가려진 1 행 BAND_FALLBACK 명시) · 인계 행 primary_hold 1 · 인계표 표지 두 칸 · 음성 경로 74 칸 같음 · 나머지 = run id · tau_flux sha256 |
+| `display_source.json` | 68 케이스 중 55 바뀜 — 받아들이지 않은 모드 칸 `—` (모형 한계면 사유) · 받아들인 모드 칸 = 지금 값 (실 생산자 ml_physics Hertz 0.6 → 2.3861 · ml_el 0.6 → 1.2016 · Plastic amplification 1.50× → 1.73× = 2.0783/1.2016 · 정상 네 열 CSV 의 Physics 0.6 → 0.9) · valid_zero `—` · 두 칸 모두 숫자일 때만 Δ · 그 밖의 변화 없음 · 13 케이스 그대로 (normal_new · normal_csv · normal_split 포함 · `display_rowdiff_pre_vs_final.txt`) |
+| `display_base.json` | 기준 트리 — 판정값 같음 |
+| `receipt_identity/*` | minimal_activate_section3 rc 1 (R0 · D1) → rc 0 (읽은 §3 = 체크아웃 지문) · 다른 변이 여섯 rc · 실패 칸 그대로 · 대기 지문 값 · 지연 import 수 91 → 92 (L214R-11 의 `_stop_num` 이 `tau_flux` 를 부름) |
+
+- `L214R-06`–`11` 수정 전 (`dcd06869d`) ↔ 최종 사이에 Codex 탐침 판정값은 바뀌지 않았다 — 새 수정이 겨눈 입력은 Codex 탐침 밖 (새 시험 둘이 본다).
+
+## 4. 무영향 대조 (`docs/reviews/lhs214r_fix_evidence_20261016/a4_l214r_no_impact.py` · 기준 `6cb256956` ↔ 최종 `60ba39e22` · 읽기 전용) — PASS 36/36 (197.7 s)
+
+- N 생산자 16 = 결과 JSON **전체** 비트 같음 (합성 SE+AM · GEN2-01 사슬 · 진짜 비관통 · CF 모형 과전도 · real_14 · case15 × 두 모드 · real_14 run_decomposition × 두 모드 · 격자 cg 34×34×30 · spsolve 3×3×6 의 G · q · solve_info).
+- T τ 소비자 6 = v1.2 τ 원천 194 케이스 옛 50 칸 비트 같음 + 새 표지 두 칸 194 건 전부 False · 새 생산자 레코드 넷 (ion_columns 옛 칸 · 세대 계약 · 0b · 증서 결합) · lhsx_054 진단 레코드 (옛 생산자) 같음.
+- R 배포 빌더 6 = v1.2 인계표 (130 · 64) 빈칸 뜻 · 관통 분류 · 상태 집계 같음 · **의도 변경 2** = 주 타깃 관문이 v1.2 표 (표지 칸 없음) 에 문제 하나 (§5-5 fail-closed) · 같은 표에 상태에서 유도한 표지를 붙인 사본 = 문제 없음 (합성 · 관문 논리 확인).
+- W 웹앱 `transform_network_summary_4col` 8 = 네 꼴 × 두 표 같음 (`L214R-03` · `WEB-09` 는 최종 split 병합 단계 — 그 화면 대조는 §3 display 탐침).
+- 그 밖 (에이전트 보고 · 메인이 다시 돌리지 않음): 생산자 · 모든 소비자 판정 · v1.2 194 `case_row` · 웹 게시 폴더 10 개의 정지 · 기록 · 내용 판정 · 다시 읽기가 고치기 전 · 뒤 바이트 같음 (L214R-06–08 · 09–11 각 에이전트).
+
+## 5. 설계 선택 · 범위 경계 — 판정해 달라
+
+1. **채택 시도의 수렴 상태 규칙** — Krylov 단 셋만 krylov_info = 0 · 직접해 · `none_free` 는 krylov_info 를 싣지 않아야 한다 (사다리가 싣는 방식 그대로).
+2. **부수 효과** — `solve_network(scale = 1e200)` 이 OverflowError 대신 `not_computed` · `invalid_geometry`.
+3. **0b 위임** — 증서 결합 · 세대 계약은 0b 를 못 넘은 레코드에 문제를 내지 않는다 ([] · g2) · 거부는 0b · 채널 판정 · 모드 파일 내용 판정 · τ 에서 난다 (L214 때 정한 위임 · K2 와 같음).
+4. **게시 채널 판정의 경계** — `pipeline_service.channel_verdict` · 모드 파일 내용 판정은 computed 채널의 **상태**만 본다 (RC6-02 · RC7-02) · 증서 대조는 결합 · τ 쪽.
+5. **표지 칸 규약** — 'True' · 'False' 만 · 열 없음 (v1.2 등 옛 인계표) = 주 타깃 관문 문제 (역사 인계표는 v1.3 관문을 지날 수 없다) · 세대 무효 · 레코드 없음 = 빈칸 · H12 칸 없음.
+6. **화면 범위** — `L214R-03` · `WEB-09` 는 최종 화면만 · valid_zero = `—` · Δ 는 두 칸 모두 숫자일 때만.
+7. **영수증 파서** — 활성 §3 = `## 3.` 절 하나 · 그 절의 `code_fp` 하나 · 대기 선언은 §3 밖.
+8. **대기 지문 갱신** — 봉인 파일을 바꾼 수정 커밋마다 세 자리 (194 §9-8 · 보충 20 §9-3 · 영수증 S0b 접두) 를 같은 커밋에서.
+9. **범위 경계 N4** — 전자 · 열 게시 σ 는 증서와 숫자 대조가 없다 (채널 판정 = 상태 · σ₀ 결합만) — σ_e · σ_th 인계는 Codex 5차 QV4 별도 개정이라 이번 범위 밖으로 둔다.  맞나?
+10. **범위 경계 N5** — 숫자 없는 가지 증서의 I_bottom NaN 을 '해 주장 없음' 으로 읽는다 (생산자는 None 만 쓴다 · NaN 은 위조에서만) — 그대로 두었다.  맞나?
+
+## 6. 알려진 항목 (L214R-09–11 수정 중 보고 · 고치지 않음 — 1저자 10-16 마지막 라운드 결정)
+
+| | 내용 | 지금 결과 |
+|---|---|---|
+| K1 | 등급 τ getter (`tau_flux.tau2_from_metrics` · `tau2_value`) 출력 유한성 — `tau2_from_metrics({'phi_se': 0.3, 'sigma_full_mScm': 1e-310})` = (inf, 3.0) · `tau2_value(1e308, 3.0, 1e-3)` = inf | 웹앱 등급 표시값 (인계 · 배포 아님) |
+| K2 | `se_material.sigma_grain_context` 의 `float(10**400)` — full_metrics 온도 기록에 큰 정수면 `tau2_from_metrics` 가 OverflowError | 정지 계약 ⑦ 이 잡아 거부 — 사유 대신 예외 문구 |
+| K3 | σ₀ 메타 `ion_sigma0_mScm = round(σ₀·1000, 10)` 유한성 — 옛 세대 비관통 행에 σ₀ 1e306 이면 메타 = inf | 게시 때 정지 계약 ⑧ 이 그 레코드를 거부 |
+| K4 | `pipeline_service.stage_e_missing_keys` 의 `math.isfinite(10**400)` OverflowError | app.py 호출이 try 로 감싸 실패로 닫힘 — 사유 줄 없음 |
+| K5 | `g2_network_reread.reread_case` 가 `tf.case_row` (다시 읽기 검사 K5 · K6 자리) 를 try 밖에서 부른다 — 소비자 예외 하나가 다시 읽기 실행 전체를 멈춘다 | 실행 실패 = 다시 읽기 기록 없음 → 배포 관문 거부 (fail-closed) |
+| K6 | 터무니없지만 유한한 입력은 게시된다 (범위 정책 없음) — L_gap 1e308 만 → MBCB tau2 ≈ 1e−306 · φ_mc 5e−324 → tau2 1.5e−323 | 범위 문턱은 등록 정책 밖 (새 문턱을 만들지 않았다) |
+| K7 | 열 사전의 `invalid_input` 문구가 τ 환산 출처를 말하지 않는다 | NOT_COMPUTED 행은 인계표 값이 비므로 어휘 변경 불요 |
+| K8 | 배포 빌더는 f 만 유한성 검사 (tau2 · tau 아님) | tau_flux 가 셋 다 보장 (L214R-09) — 이중 방어 부재일 뿐 |
+
+## 7. 범위 밖 · 남은 것
+
+- 두 등록 개정 초안 (194 §9-8 · 보충 20 §9-3) 비준 · 재봉인 · B7 새 승인 핀 · 새 214 · 인계 · 배포 = GO 뒤 (판정문 §9 그대로).
+- 옛 13 건 원인 = unknown 그대로 · 문턱 1.5 · 허용치 · 띠 정책 그대로 · S3 별개 HOLD.
+
+## 8. 질문
+
+- **Q1.** `L214R-01` A · B · `02` · `03` · `04` 가 판정문 §9 최소 해제대로 닫히나.
+- **Q2.** 같은 부류 수정 `L214R-05`–`11` · `WEB-09` 가 닫히나.
+- **Q3.** §5 의 1–10 중 바꿔야 할 것 — 특히 3 (0b 위임) · 4 (채널 판정 경계) · 5 (역사 인계표 fail-closed) · 9 · 10 (범위 경계).
+- **Q4.** §6 알려진 항목 중 GO 전에 고쳐야 하는 것이 있나 (등급 · 이유).
+- **Q5.** §3 탐침 재실행 · §4 무영향 대조가 "정상 사례 무영향 · 바뀐 것은 고친 결함뿐" 의 증거로 충분한가.
+- **Q6.** 새 결함이 있나 — 있으면 등급 · 반례.
+
+## 9. 재현 (리뷰 핀 · 컨테이너 Linux · Python 3.11 · `OMP_NUM_THREADS=1`)
+
+```bash
+git diff 6cb256956 <리뷰 핀> --stat -- scripts/ webapp/
+python3 scripts/test_l214r01_certificate.py                 # 112/112
+python3 scripts/test_l214r02_model_limit_flag.py            # 47/47
+python3 webapp/test_l214r03_display.py                      # 14/14
+python3 scripts/supp20_input_receipt.py --selftest          # 111/111 · 상태 pending
+python3 scripts/test_l214r05_published_certificate.py       # 184/184
+python3 webapp/test_web09_accepted_refresh.py               # 16/16
+python3 scripts/test_l214r06_same_class.py                  # 306/306
+python3 scripts/test_l214r09_same_class.py                  # 96/96
+python3 webapp/test_pipeline_provenance.py                  # 284/284
+python3 -B docs/reviews/lhs214r_fix_evidence_20261016/a4_l214r_no_impact.py --base 6cb256956 --json /tmp/a4.json   # PASS 36/36 (~3 분)
+python3 docs/reviews/lhs214_fix_evidence_20261015/code_fp_report.py --base 0c557e72a                                # code_fp e76dbe08… · 바뀐 봉인 파일 4
+L214R_REPO=$PWD python3 -I docs/reviews/lhs214r_fix_evidence_20261016/probe_rerun/drive_l214r_probe.py /tmp/l214r_probe_final <리뷰 핀>   # 탐침 다섯 무변경 (~10 분 · OUT = 리포 밖 새 폴더)
+# 시험 먼저 확인: §2 표의 시험 먼저 커밋을 체크아웃해 그 시험 → 고치기 전 수
+```

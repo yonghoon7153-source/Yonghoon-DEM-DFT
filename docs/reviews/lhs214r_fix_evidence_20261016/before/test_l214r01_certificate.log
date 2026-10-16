@@ -1,0 +1,114 @@
+  PASS  C1a 기준 레코드 = 실제 생산자 physics FULL 모형 한계 (q_withheld 2.593468501694396 · 방법 'spsolve' · 시도 [('spsolve', 'pass')])
+  PASS  C1b 정상 모형 한계 레코드 · 증서 = 통과
+  PASS  C1b 정상 모형 한계 레코드 · 생산자 상태 = 통과
+  PASS  C1b 정상 모형 한계 레코드 · 공용 판정 = 통과
+  PASS  C1b 정상 모형 한계 레코드 · 0b = 통과
+  PASS  C1b 정상 모형 한계 레코드 · 0b∧증서 결합 = 통과
+  PASS  C1b 정상 모형 한계 레코드 · 0b∧세대 계약 (K2) = 통과
+  PASS  C1b 정상 모형 한계 레코드 · 채널 판정 = 통과
+  PASS  C1b 정상 모형 한계 레코드 · 내용 판정 = 통과
+  PASS  C1b 정상 모형 한계 레코드 · τ 행 = 통과
+  PASS  C1c 3 노드 실제 증서 (q = 2) — solve_info · 결과 증서 둘 다 증서 판정 통과 · 생산자 상태 = 모형 한계
+  PASS  A1a 전제 — 기하 T 20 · A 1 (유한) · 같은 순서 재구성 (I_b/ΔV)·T/A 가 +∞ 로 넘친다 · 저장 q 는 유한 그대로
+  FAIL  A1b ★ 증서 판정 = 기술 실패 사유 (non_finite …) · 예외 아님 — None
+  FAIL  A1c ★ 전류 1e308 넘침 레코드 · 증서 = 거부   reject 기대 · 얻음 True · None
+  FAIL  A1c ★ 전류 1e308 넘침 레코드 · 생산자 상태 = 거부   reject 기대 · 얻음 True · ('not_computed', 'full_over_conduction')
+  FAIL  A1c ★ 전류 1e308 넘침 레코드 · 공용 판정 = 거부   reject 기대 · 얻음 True · None
+  FAIL  A1c ★ 전류 1e308 넘침 레코드 · 0b = 거부   reject 기대 · 얻음 True · None
+  FAIL  A1c ★ 전류 1e308 넘침 레코드 · 0b∧증서 결합 = 거부   reject 기대 · 얻음 True · (None, [])
+  FAIL  A1c ★ 전류 1e308 넘침 레코드 · 0b∧세대 계약 (K2) = 거부   reject 기대 · 얻음 True · (None, 'g2', [])
+  FAIL  A1c ★ 전류 1e308 넘침 레코드 · 채널 판정 = 거부   reject 기대 · 얻음 True · ('ok', 'model_limit — FULL 모형 한계 — 수치 인증 통과 (증서 · 보존 · 잔차 ≤ 1e-6) · σ_ion 의 q = σ_eff/σ_bulk = 2.59347 > 1.5 (사전 고정 출력 상한) → FULL 값 미제공 (σ · 차원 σ · FULL 유도값 없음 · 진단 q = 증서 q_withheld) · 풀이 실패 아님 (L214-01 · 02) (공용 판정 통과 · L214)')
+  FAIL  A1c ★ 전류 1e308 넘침 레코드 · 내용 판정 = 거부   reject 기대 · 얻음 True · (True, 'ok: hertzian, physics')
+  FAIL  A1c ★ 전류 1e308 넘침 레코드 · τ 행 = 거부   reject 기대 · 얻음 True · ('NOT_COMPUTED', 'full_over_conduction')
+  PASS  A2a 전제 — T = 20·2¹⁰¹⁹ · A = 2¹⁰¹⁹ 유한 · T/A = 20 정확히 (g_to_q 그대로) · 다른 증서 전류 < 0.4 (넘치지 않음) · 모형 한계 증서 (2·T)/A = +∞ · 수학값 2·20 = 40 = 저장 q · Σg 41.49549602711035 ≥ 2/1.1
+  FAIL  A2b ★ 증서 판정 = 기술 실패 사유 (non_finite …) · 예외 아님 — None
+  FAIL  A2c ★ 봉인된 기하 T · A ≈ 1e308 넘침 레코드 · 증서 = 거부   reject 기대 · 얻음 True · None
+  FAIL  A2c ★ 봉인된 기하 T · A ≈ 1e308 넘침 레코드 · 생산자 상태 = 거부   reject 기대 · 얻음 True · ('not_computed', 'full_over_conduction')
+  FAIL  A2c ★ 봉인된 기하 T · A ≈ 1e308 넘침 레코드 · 공용 판정 = 거부   reject 기대 · 얻음 True · None
+  FAIL  A2c ★ 봉인된 기하 T · A ≈ 1e308 넘침 레코드 · 0b = 거부   reject 기대 · 얻음 True · None
+  FAIL  A2c ★ 봉인된 기하 T · A ≈ 1e308 넘침 레코드 · 0b∧증서 결합 = 거부   reject 기대 · 얻음 True · (None, [])
+  FAIL  A2c ★ 봉인된 기하 T · A ≈ 1e308 넘침 레코드 · 0b∧세대 계약 (K2) = 거부   reject 기대 · 얻음 True · (None, 'g2', [])
+  FAIL  A2c ★ 봉인된 기하 T · A ≈ 1e308 넘침 레코드 · 채널 판정 = 거부   reject 기대 · 얻음 True · ('ok', 'model_limit — FULL 모형 한계 — 수치 인증 통과 (증서 · 보존 · 잔차 ≤ 1e-6) · σ_ion 의 q = σ_eff/σ_bulk = 2.59347 > 1.5 (사전 고정 출력 상한) → FULL 값 미제공 (σ · 차원 σ · FULL 유도값 없음 · 진단 q = 증서 q_withheld) · 풀이 실패 아님 (L214-01 · 02) (공용 판정 통과 · L214)')
+  FAIL  A2c ★ 봉인된 기하 T · A ≈ 1e308 넘침 레코드 · 내용 판정 = 거부   reject 기대 · 얻음 True · (True, 'ok: hertzian, physics')
+  FAIL  A2c ★ 봉인된 기하 T · A ≈ 1e308 넘침 레코드 · τ 행 = 거부   reject 기대 · 얻음 True · ('NOT_COMPUTED', 'full_over_conduction')
+  FAIL  A3a T = A = 1e308 (plate_z 1e308 · 상자 1e154 × 1e154 · T/A = 1 그대로 — Codex 반례) [solve_info] ★ 증서 판정 = non_finite 사유 · 예외 아님 · 생산자 상태 ≠ 모형 한계 — None · ('not_computed', 'full_over_conduction')
+  FAIL  A3a T = A = 1e308 (plate_z 1e308 · 상자 1e154 × 1e154 · T/A = 1 그대로 — Codex 반례) [결과 증서] ★ 증서 판정 = non_finite 사유 · 예외 아님 · 생산자 상태 ≠ 모형 한계 — None · ('not_computed', 'full_over_conduction')
+  FAIL  A3b scale 1e200 (scale² = Python float OverflowError) [solve_info] ★ 증서 판정 = non_finite 사유 · 예외 아님 · 생산자 상태 ≠ 모형 한계 — "OverflowError: (34, 'Numerical result out of range')" · "OverflowError: (34, 'Numerical result out of range')"
+  FAIL  A3b scale 1e200 (scale² = Python float OverflowError) [결과 증서] ★ 증서 판정 = non_finite 사유 · 예외 아님 · 생산자 상태 ≠ 모형 한계 — "OverflowError: (34, 'Numerical result out of range')" · "OverflowError: (34, 'Numerical result out of range')"
+  FAIL  A3c T/A 넘침 (T 1e300 · A 1e−10 — 둘 다 유한 양수 · g_to_q 1 그대로) [solve_info] ★ 증서 판정 = non_finite 사유 · 예외 아님 · 생산자 상태 ≠ 모형 한계 — None · ('not_computed', 'full_over_conduction')
+  FAIL  A3c T/A 넘침 (T 1e300 · A 1e−10 — 둘 다 유한 양수 · g_to_q 1 그대로) [결과 증서] ★ 증서 판정 = non_finite 사유 · 예외 아님 · 생산자 상태 ≠ 모형 한계 — None · ('not_computed', 'full_over_conduction')
+  FAIL  A3d T/A 밑넘침 (T 1e−300 · A 1e100 → 0) [solve_info] ★ 증서 판정 = non_finite 사유 · 예외 아님 · 생산자 상태 ≠ 모형 한계 — 'G→q 인자 1.0 ≠ 기하에서 다시 잰 T/A = 0.0' · ('not_computed', 'solve_failed')
+  FAIL  A3d T/A 밑넘침 (T 1e−300 · A 1e100 → 0) [결과 증서] ★ 증서 판정 = non_finite 사유 · 예외 아님 · 생산자 상태 ≠ 모형 한계 — 'G→q 인자 1.0 ≠ 기하에서 다시 잰 T/A = 0.0' · ('not_computed', 'solve_failed')
+  FAIL  A3e ★ 큰 정수 (JSON 10⁴⁰⁰ — float 로 못 옮김) 다섯 칸 → 증서 판정 = 사유 · 예외 아님 (기준 3 노드 증서는 통과) {'기하 plate_z': 'OverflowError: int too large to convert to float', '기하 scale': 'OverflowError: int too large to convert to float', 'I_bottom': 'OverflowError: int too large to convert to float', 'q_withheld': 'OverflowError: int too large to convert to float', 'sum_g': 'OverflowError: int too large to convert to float'}
+  FAIL  B1 ★ 마지막 pass 시도 residual_rel = 1.0 (요약은 정상) → 증서 판정 사유 · 예외 아님 — None
+  FAIL  B2 ★ 마지막 시도 residual_rel 1.0 레코드 · 증서 = 거부   reject 기대 · 얻음 True · None
+  FAIL  B2 ★ 마지막 시도 residual_rel 1.0 레코드 · 생산자 상태 = 거부   reject 기대 · 얻음 True · ('not_computed', 'full_over_conduction')
+  FAIL  B2 ★ 마지막 시도 residual_rel 1.0 레코드 · 공용 판정 = 거부   reject 기대 · 얻음 True · None
+  FAIL  B2 ★ 마지막 시도 residual_rel 1.0 레코드 · 0b = 거부   reject 기대 · 얻음 True · None
+  FAIL  B2 ★ 마지막 시도 residual_rel 1.0 레코드 · 0b∧증서 결합 = 거부   reject 기대 · 얻음 True · (None, [])
+  FAIL  B2 ★ 마지막 시도 residual_rel 1.0 레코드 · 0b∧세대 계약 (K2) = 거부   reject 기대 · 얻음 True · (None, 'g2', [])
+  FAIL  B2 ★ 마지막 시도 residual_rel 1.0 레코드 · 채널 판정 = 거부   reject 기대 · 얻음 True · ('ok', 'model_limit — FULL 모형 한계 — 수치 인증 통과 (증서 · 보존 · 잔차 ≤ 1e-6) · σ_ion 의 q = σ_eff/σ_bulk = 2.59347 > 1.5 (사전 고정 출력 상한) → FULL 값 미제공 (σ · 차원 σ · FULL 유도값 없음 · 진단 q = 증서 q_withheld) · 풀이 실패 아님 (L214-01 · 02) (공용 판정 통과 · L214)')
+  FAIL  B2 ★ 마지막 시도 residual_rel 1.0 레코드 · 내용 판정 = 거부   reject 기대 · 얻음 True · (True, 'ok: hertzian, physics')
+  FAIL  B2 ★ 마지막 시도 residual_rel 1.0 레코드 · τ 행 = 거부   reject 기대 · 얻음 True · ('NOT_COMPUTED', 'full_over_conduction')
+  FAIL  B1 ★ 마지막 pass 시도 conservation_rel = 1.0 (요약은 정상) → 증서 판정 사유 · 예외 아님 — None
+  FAIL  B2 ★ 마지막 시도 conservation_rel 1.0 레코드 · 증서 = 거부   reject 기대 · 얻음 True · None
+  FAIL  B2 ★ 마지막 시도 conservation_rel 1.0 레코드 · 생산자 상태 = 거부   reject 기대 · 얻음 True · ('not_computed', 'full_over_conduction')
+  FAIL  B2 ★ 마지막 시도 conservation_rel 1.0 레코드 · 공용 판정 = 거부   reject 기대 · 얻음 True · None
+  FAIL  B2 ★ 마지막 시도 conservation_rel 1.0 레코드 · 0b = 거부   reject 기대 · 얻음 True · None
+  FAIL  B2 ★ 마지막 시도 conservation_rel 1.0 레코드 · 0b∧증서 결합 = 거부   reject 기대 · 얻음 True · (None, [])
+  FAIL  B2 ★ 마지막 시도 conservation_rel 1.0 레코드 · 0b∧세대 계약 (K2) = 거부   reject 기대 · 얻음 True · (None, 'g2', [])
+  FAIL  B2 ★ 마지막 시도 conservation_rel 1.0 레코드 · 채널 판정 = 거부   reject 기대 · 얻음 True · ('ok', 'model_limit — FULL 모형 한계 — 수치 인증 통과 (증서 · 보존 · 잔차 ≤ 1e-6) · σ_ion 의 q = σ_eff/σ_bulk = 2.59347 > 1.5 (사전 고정 출력 상한) → FULL 값 미제공 (σ · 차원 σ · FULL 유도값 없음 · 진단 q = 증서 q_withheld) · 풀이 실패 아님 (L214-01 · 02) (공용 판정 통과 · L214)')
+  FAIL  B2 ★ 마지막 시도 conservation_rel 1.0 레코드 · 내용 판정 = 거부   reject 기대 · 얻음 True · (True, 'ok: hertzian, physics')
+  FAIL  B2 ★ 마지막 시도 conservation_rel 1.0 레코드 · τ 행 = 거부   reject 기대 · 얻음 True · ('NOT_COMPUTED', 'full_over_conduction')
+  FAIL  B1 ★ 마지막 pass 시도 krylov_info = 1 (요약은 정상) → 증서 판정 사유 · 예외 아님 — None
+  FAIL  B2 ★ 마지막 시도 krylov_info 1 레코드 · 증서 = 거부   reject 기대 · 얻음 True · None
+  FAIL  B2 ★ 마지막 시도 krylov_info 1 레코드 · 생산자 상태 = 거부   reject 기대 · 얻음 True · ('not_computed', 'full_over_conduction')
+  FAIL  B2 ★ 마지막 시도 krylov_info 1 레코드 · 공용 판정 = 거부   reject 기대 · 얻음 True · None
+  FAIL  B2 ★ 마지막 시도 krylov_info 1 레코드 · 0b = 거부   reject 기대 · 얻음 True · None
+  FAIL  B2 ★ 마지막 시도 krylov_info 1 레코드 · 0b∧증서 결합 = 거부   reject 기대 · 얻음 True · (None, [])
+  FAIL  B2 ★ 마지막 시도 krylov_info 1 레코드 · 0b∧세대 계약 (K2) = 거부   reject 기대 · 얻음 True · (None, 'g2', [])
+  FAIL  B2 ★ 마지막 시도 krylov_info 1 레코드 · 채널 판정 = 거부   reject 기대 · 얻음 True · ('ok', 'model_limit — FULL 모형 한계 — 수치 인증 통과 (증서 · 보존 · 잔차 ≤ 1e-6) · σ_ion 의 q = σ_eff/σ_bulk = 2.59347 > 1.5 (사전 고정 출력 상한) → FULL 값 미제공 (σ · 차원 σ · FULL 유도값 없음 · 진단 q = 증서 q_withheld) · 풀이 실패 아님 (L214-01 · 02) (공용 판정 통과 · L214)')
+  FAIL  B2 ★ 마지막 시도 krylov_info 1 레코드 · 내용 판정 = 거부   reject 기대 · 얻음 True · (True, 'ok: hertzian, physics')
+  FAIL  B2 ★ 마지막 시도 krylov_info 1 레코드 · τ 행 = 거부   reject 기대 · 얻음 True · ('NOT_COMPUTED', 'full_over_conduction')
+  PASS  B3 전제 — 기준 요약 잔차 4.589522519516339e-16 ≠ 9e−7 · 마지막 시도 = spsolve pass · krylov_info None
+  FAIL  B4 ★ 마지막 시도 residual_rel NaN → 증서 판정 사유 · 내용 판정 (모드 파일) 거부 — None · (True, 'ok: hertzian, physics')
+  FAIL  B4 ★ 마지막 시도 error 있음 (pass 인데 예외 기록) → 증서 판정 사유 · 내용 판정 (모드 파일) 거부 — None · (True, 'ok: hertzian, physics')
+  FAIL  B4 ★ 마지막 시도 residual_rel 9e−7 (문턱 안 · 요약과 다름) → 증서 판정 사유 · 내용 판정 (모드 파일) 거부 — None · (True, 'ok: hertzian, physics')
+  FAIL  B4 ★ 마지막 시도 직접해 (spsolve) 의 krylov_info 0 (사다리는 직접해에 싣지 않는다) → 증서 판정 사유 · 내용 판정 (모드 파일) 거부 — None · (True, 'ok: hertzian, physics')
+  PASS  C2a spsolve 증서 실패 → cg+jacobi pass (3 노드 · 실제 사다리) — 시도 [('spsolve', 'certificate_failed', None), ('cg+jacobi', 'pass', 0)] · 마지막 Krylov pass 의 krylov_info = 0 (int) · 증서 판정 통과 (solve_info · 결과 증서) · 생산자 상태 = 모형 한계
+  PASS  C2b spsolve 증서 실패 → cg+jacobi 미수렴 → gmres+ilu pass (3 노드 · 실제 사다리) — 시도 [('spsolve', 'certificate_failed', None), ('cg+jacobi', 'not_converged', 1), ('gmres+ilu', 'pass', 0)] · 마지막 Krylov pass 의 krylov_info = 0 (int) · 증서 판정 통과 (solve_info · 결과 증서) · 생산자 상태 = 모형 한계
+  PASS  C2c 레코드 단 fallback (모든 풀이가 spsolve 증서 실패 → cg+jacobi) — physics FULL 시도 [('spsolve', 'certificate_failed', None), ('cg+jacobi', 'pass', 0)] · q_withheld 2.593468501694396
+  PASS  C2d ★ fallback 성공 레코드 (앞 단 실패 기록 + 마지막 pass) · 증서 = 통과
+  PASS  C2d ★ fallback 성공 레코드 (앞 단 실패 기록 + 마지막 pass) · 생산자 상태 = 통과
+  PASS  C2d ★ fallback 성공 레코드 (앞 단 실패 기록 + 마지막 pass) · 공용 판정 = 통과
+  PASS  C2d ★ fallback 성공 레코드 (앞 단 실패 기록 + 마지막 pass) · 0b = 통과
+  PASS  C2d ★ fallback 성공 레코드 (앞 단 실패 기록 + 마지막 pass) · 0b∧증서 결합 = 통과
+  PASS  C2d ★ fallback 성공 레코드 (앞 단 실패 기록 + 마지막 pass) · 0b∧세대 계약 (K2) = 통과
+  PASS  C2d ★ fallback 성공 레코드 (앞 단 실패 기록 + 마지막 pass) · 채널 판정 = 통과
+  PASS  C2d ★ fallback 성공 레코드 (앞 단 실패 기록 + 마지막 pass) · 내용 판정 = 통과
+  PASS  C2d ★ fallback 성공 레코드 (앞 단 실패 기록 + 마지막 pass) · τ 행 = 통과
+  FAIL  C2e ★ Krylov 단 (cg+jacobi) pass 의 krylov_info None · False · 1 · −1 → 증서 판정 사유 · 예외 아님 (사다리: Krylov 단은 늘 int 를 싣고 0 이 아니면 not_converged — 수렴 상태 없음 · bool · 미수렴) [('None', 'None'), ('False', 'None'), ('1', 'None'), ('-1', 'None')]
+  PASS  C2f ★ 사다리 여섯 단 (none_free · spsolve · cg · spsolve_fallback · cg+jacobi · gmres+ilu) 의 실제 모형 한계 증서 — 채택 방법 = 그 단 · Krylov 단 krylov_info int 0 · 그 밖 None · 증서 판정 통과 (solve_info · 결과 증서) {'none_free': ('none_free', None, 'over_conduction_guard'), 'spsolve': ('spsolve', None, 'over_conduction_guard'), 'cg': ('cg', 0, 'over_conduction_guard'), 'spsolve_fallback': ('spsolve_fallback', None, 'over_conduction_guard'), 'cg+jacobi': ('cg+jacobi', 0, 'over_conduction_guard'), 'gmres+ilu': ('gmres+ilu', 0, 'over_conduction_guard')} · {'none_free': True, 'spsolve': True, 'cg': True, 'spsolve_fallback': True, 'cg+jacobi': True, 'gmres+ilu': True}
+  PASS  C3a 마지막 시도 outcome certificate_failed · 증서 = 거부
+  PASS  C3a 마지막 시도 outcome certificate_failed · 생산자 상태 = 거부
+  PASS  C3a 마지막 시도 outcome certificate_failed · 공용 판정 = 거부
+  PASS  C3a 마지막 시도 outcome certificate_failed · 0b = 거부
+  PASS  C3a 마지막 시도 outcome certificate_failed · 0b∧증서 결합 = 거부
+  PASS  C3a 마지막 시도 outcome certificate_failed · 0b∧세대 계약 (K2) = 거부
+  PASS  C3a 마지막 시도 outcome certificate_failed · 채널 판정 = 거부
+  PASS  C3a 마지막 시도 outcome certificate_failed · 내용 판정 = 거부
+  PASS  C3a 마지막 시도 outcome certificate_failed · τ 행 = 거부
+  PASS  C3b 마지막 시도 전류 다름 (I_bottom ×1.01) · 증서 = 거부
+  PASS  C3b 마지막 시도 전류 다름 (I_bottom ×1.01) · 생산자 상태 = 거부
+  PASS  C3b 마지막 시도 전류 다름 (I_bottom ×1.01) · 공용 판정 = 거부
+  PASS  C3b 마지막 시도 전류 다름 (I_bottom ×1.01) · 0b = 거부
+  PASS  C3b 마지막 시도 전류 다름 (I_bottom ×1.01) · 0b∧증서 결합 = 거부
+  PASS  C3b 마지막 시도 전류 다름 (I_bottom ×1.01) · 0b∧세대 계약 (K2) = 거부
+  PASS  C3b 마지막 시도 전류 다름 (I_bottom ×1.01) · 채널 판정 = 거부
+  PASS  C3b 마지막 시도 전류 다름 (I_bottom ×1.01) · 내용 판정 = 거부
+  PASS  C3b 마지막 시도 전류 다름 (I_bottom ×1.01) · τ 행 = 거부
+  PASS  C4a q = 1.5 정확 → computed (2.0, 1.5) (가드 아님 · 증서 판정 거부) · 다음 수 q 1.5000000000000002 → 값 거부 · 모형 한계 (원 정밀도 엄격 >)
+  PASS  C4b q_withheld +16 ulp 통과 · +17 ulp 거부 (같은 식 · 같은 순서 재구성 · 16ε 그대로) — 'q_withheld 2.0000000000000075 ≠ 증서 재구성 (I_bottom/ΔV)·T/A = 2.0 (같은 식 · 같은 순서 — 진단 q 가 그 해의 q 가 아니다)'
+  PASS  C4c 상수 그대로 — FULL_Q_GUARD_MAX 1.5 · 사다리 수용 상수 (보존 · 내부 잔차) 1e−6 · q 재구성 허용 16ε
+
+test_l214r01_certificate: 48/112 PASS   FAILED: 64

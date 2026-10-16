@@ -1,0 +1,186 @@
+  PASS  C1a 기준 = 실제 생산자 정상 침대 (상자 1.5) — FULL computed (q 0.35349139 · 0.59655315 · 1.15265267) · CF ['model_over_conduction', 'model_over_conduction', 'model_over_conduction'] · 협착-only ['computed', 'computed', 'model_over_conduction'] · σ₀ 0.003
+  PASS  C1b 정상 게시 레코드 (상자 1.5 · hertz) · 0b∧증서 결합 = 통과
+  PASS  C1b 정상 게시 레코드 (상자 1.5 · hertz) · 0b∧세대 계약 (K2) = 통과
+  PASS  C1b 정상 게시 레코드 (상자 1.5 · hertz) · 게시 관문 (내용 ∧ 기록 판정) = 통과
+  PASS  C1b 정상 게시 레코드 (상자 1.5 · hertz) · τ 행 = 통과
+  PASS  C1b 정상 게시 레코드 (상자 1.5 · hertz_h12) · 0b∧증서 결합 = 통과
+  PASS  C1b 정상 게시 레코드 (상자 1.5 · hertz_h12) · 0b∧세대 계약 (K2) = 통과
+  PASS  C1b 정상 게시 레코드 (상자 1.5 · hertz_h12) · 게시 관문 (내용 ∧ 기록 판정) = 통과
+  PASS  C1b 정상 게시 레코드 (상자 1.5 · hertz_h12) · τ 행 = 통과
+  PASS  C1b 정상 게시 레코드 (상자 1.5 · physics) · 0b∧증서 결합 = 통과
+  PASS  C1b 정상 게시 레코드 (상자 1.5 · physics) · 0b∧세대 계약 (K2) = 통과
+  PASS  C1b 정상 게시 레코드 (상자 1.5 · physics) · 게시 관문 (내용 ∧ 기록 판정) = 통과
+  PASS  C1b 정상 게시 레코드 (상자 1.5 · physics) · τ 행 = 통과
+  PASS  C1c τ 값 그대로 — tau2 = φ_mc/f (f = σ_ratio·L_gap/L_mc) 세 모드 [('hertz', 5.529890734350414), ('hertz_h12', 3.276772174002683), ('physics', 1.695887072585056)]
+  PASS  C1d 전제 — 상자 2.0 (CF computed) 세 모드 FULL computed
+  PASS  C1e 정상 게시 레코드 (상자 2.0 (CF computed) · hertz) · 0b∧증서 결합 = 통과
+  PASS  C1e 정상 게시 레코드 (상자 2.0 (CF computed) · hertz) · 0b∧세대 계약 (K2) = 통과
+  PASS  C1e 정상 게시 레코드 (상자 2.0 (CF computed) · hertz) · 게시 관문 (내용 ∧ 기록 판정) = 통과
+  PASS  C1e 정상 게시 레코드 (상자 2.0 (CF computed) · hertz) · τ 행 = 통과
+  PASS  C1e 정상 게시 레코드 (상자 2.0 (CF computed) · hertz_h12) · 0b∧증서 결합 = 통과
+  PASS  C1e 정상 게시 레코드 (상자 2.0 (CF computed) · hertz_h12) · 0b∧세대 계약 (K2) = 통과
+  PASS  C1e 정상 게시 레코드 (상자 2.0 (CF computed) · hertz_h12) · 게시 관문 (내용 ∧ 기록 판정) = 통과
+  PASS  C1e 정상 게시 레코드 (상자 2.0 (CF computed) · hertz_h12) · τ 행 = 통과
+  PASS  C1e 정상 게시 레코드 (상자 2.0 (CF computed) · physics) · 0b∧증서 결합 = 통과
+  PASS  C1e 정상 게시 레코드 (상자 2.0 (CF computed) · physics) · 0b∧세대 계약 (K2) = 통과
+  PASS  C1e 정상 게시 레코드 (상자 2.0 (CF computed) · physics) · 게시 관문 (내용 ∧ 기록 판정) = 통과
+  PASS  C1e 정상 게시 레코드 (상자 2.0 (CF computed) · physics) · τ 행 = 통과
+  PASS  C1d 전제 — SE+AM 침대 상자 1.5 (전자 게시 증서) 세 모드 FULL computed
+  PASS  C1e 정상 게시 레코드 (SE+AM 침대 상자 1.5 (전자 게시 증서) · hertz) · 0b∧증서 결합 = 통과
+  PASS  C1e 정상 게시 레코드 (SE+AM 침대 상자 1.5 (전자 게시 증서) · hertz) · 0b∧세대 계약 (K2) = 통과
+  PASS  C1e 정상 게시 레코드 (SE+AM 침대 상자 1.5 (전자 게시 증서) · hertz) · 게시 관문 (내용 ∧ 기록 판정) = 통과
+  PASS  C1e 정상 게시 레코드 (SE+AM 침대 상자 1.5 (전자 게시 증서) · hertz) · τ 행 = 통과
+  PASS  C1e 정상 게시 레코드 (SE+AM 침대 상자 1.5 (전자 게시 증서) · hertz_h12) · 0b∧증서 결합 = 통과
+  PASS  C1e 정상 게시 레코드 (SE+AM 침대 상자 1.5 (전자 게시 증서) · hertz_h12) · 0b∧세대 계약 (K2) = 통과
+  PASS  C1e 정상 게시 레코드 (SE+AM 침대 상자 1.5 (전자 게시 증서) · hertz_h12) · 게시 관문 (내용 ∧ 기록 판정) = 통과
+  PASS  C1e 정상 게시 레코드 (SE+AM 침대 상자 1.5 (전자 게시 증서) · hertz_h12) · τ 행 = 통과
+  PASS  C1e 정상 게시 레코드 (SE+AM 침대 상자 1.5 (전자 게시 증서) · physics) · 0b∧증서 결합 = 통과
+  PASS  C1e 정상 게시 레코드 (SE+AM 침대 상자 1.5 (전자 게시 증서) · physics) · 0b∧세대 계약 (K2) = 통과
+  PASS  C1e 정상 게시 레코드 (SE+AM 침대 상자 1.5 (전자 게시 증서) · physics) · 게시 관문 (내용 ∧ 기록 판정) = 통과
+  PASS  C1e 정상 게시 레코드 (SE+AM 침대 상자 1.5 (전자 게시 증서) · physics) · τ 행 = 통과
+  PASS  A1a 전제 [H0 FULL (Codex 반례 A 모양)] — 게시 상태 'computed' · 수치 증서 통과 (보존 0 · 잔차 그대로) · 기하 T 20 · A 2.25 유한 · 같은 순서 재구성 = +∞ · 저장 σ_ratio 0.35349139 유한
+  PASS  A1b ★ 전류 1e308 넘침 [H0 FULL (Codex 반례 A 모양)] · 0b∧증서 결합 = 거부
+  PASS  A1b ★ 전류 1e308 넘침 [H0 FULL (Codex 반례 A 모양)] · 0b∧세대 계약 (K2) = 거부
+  PASS  A1b ★ 전류 1e308 넘침 [H0 FULL (Codex 반례 A 모양)] · 게시 관문 (내용 ∧ 기록 판정) = 거부
+  PASS  A1b ★ 전류 1e308 넘침 [H0 FULL (Codex 반례 A 모양)] · τ 행 = 거부
+  PASS  A1c ★ [H0 FULL (Codex 반례 A 모양)] · 증서 결합 사유 = solve_certificate_full: non_finite … (예외 아님) — 'solve_certificate_full: non_finite — 증서 재구성 q = I_bottom/ΔV × T/A = inf 가 유한 양수가 아니다 (넘침 · 밑넘침 — 생산자 solve_network 는 이 해를 non_finite 로 거부한다 · 발행 σ_ratio 0.35349139 와 비교하지 않는다)'
+  PASS  A1a 전제 [physics FULL] — 게시 상태 'computed' · 수치 증서 통과 (보존 0 · 잔차 그대로) · 기하 T 20 · A 2.25 유한 · 같은 순서 재구성 = +∞ · 저장 σ_ratio 1.15265267 유한
+  PASS  A1b ★ 전류 1e308 넘침 [physics FULL] · 0b∧증서 결합 = 거부
+  PASS  A1b ★ 전류 1e308 넘침 [physics FULL] · 0b∧세대 계약 (K2) = 거부
+  PASS  A1b ★ 전류 1e308 넘침 [physics FULL] · 게시 관문 (내용 ∧ 기록 판정) = 거부
+  PASS  A1b ★ 전류 1e308 넘침 [physics FULL] · τ 행 = 거부
+  PASS  A1c ★ [physics FULL] · 증서 결합 사유 = solve_certificate_full: non_finite … (예외 아님) — 'solve_certificate_full: non_finite — 증서 재구성 q = I_bottom/ΔV × T/A = inf 가 유한 양수가 아니다 (넘침 · 밑넘침 — 생산자 solve_network 는 이 해를 non_finite 로 거부한다 · 발행 σ_ratio 1.15265267 와 비교하지 않는다)'
+  PASS  A1a 전제 [H12 FULL] — 게시 상태 'computed' · 수치 증서 통과 (보존 0 · 잔차 그대로) · 기하 T 20 · A 2.25 유한 · 같은 순서 재구성 = +∞ · 저장 σ_ratio 0.59655315 유한
+  PASS  A1b ★ 전류 1e308 넘침 [H12 FULL] · 0b∧증서 결합 = 거부
+  PASS  A1b ★ 전류 1e308 넘침 [H12 FULL] · 0b∧세대 계약 (K2) = 거부
+  PASS  A1b ★ 전류 1e308 넘침 [H12 FULL] · 게시 관문 (내용 ∧ 기록 판정) = 거부
+  PASS  A1b ★ 전류 1e308 넘침 [H12 FULL] · τ 행 = 거부
+  PASS  A1c ★ [H12 FULL] · 증서 결합 사유 = solve_certificate_full: non_finite … (예외 아님) — 'solve_certificate_full: non_finite — 증서 재구성 q = I_bottom/ΔV × T/A = inf 가 유한 양수가 아니다 (넘침 · 밑넘침 — 생산자 solve_network 는 이 해를 non_finite 로 거부한다 · 발행 σ_ratio 0.59655315 와 비교하지 않는다)'
+  PASS  A1a 전제 [H0 CF (게시 model_over_conduction)] — 게시 상태 'model_over_conduction' · 수치 증서 통과 (보존 0 · 잔차 그대로) · 기하 T 20 · A 2.25 유한 · 같은 순서 재구성 = +∞ · 저장 σ_ratio 1.74532925 유한
+  PASS  A1b ★ 전류 1e308 넘침 [H0 CF (게시 model_over_conduction)] · 0b∧증서 결합 = 거부
+  PASS  A1b ★ 전류 1e308 넘침 [H0 CF (게시 model_over_conduction)] · 0b∧세대 계약 (K2) = 거부
+  PASS  A1b ★ 전류 1e308 넘침 [H0 CF (게시 model_over_conduction)] · 게시 관문 (내용 ∧ 기록 판정) = 거부
+  PASS  A1b ★ 전류 1e308 넘침 [H0 CF (게시 model_over_conduction)] · τ 행 = 거부
+  PASS  A1c ★ [H0 CF (게시 model_over_conduction)] · 증서 결합 사유 = solve_certificate_bulk_net: non_finite … (예외 아님) — 'solve_certificate_bulk_net: non_finite — 증서 재구성 q = I_bottom/ΔV × T/A = inf 가 유한 양수가 아니다 (넘침 · 밑넘침 — 생산자 solve_network 는 이 해를 non_finite 로 거부한다 · 발행 σ_ratio 1.74532925 와 비교하지 않는다)'
+  PASS  A1a 전제 [physics 협착-only (게시 model_over_conduction)] — 게시 상태 'model_over_conduction' · 수치 증서 통과 (보존 0 · 잔차 그대로) · 기하 T 20 · A 2.25 유한 · 같은 순서 재구성 = +∞ · 저장 σ_ratio 3.39436123 유한
+  PASS  A1b ★ 전류 1e308 넘침 [physics 협착-only (게시 model_over_conduction)] · 0b∧증서 결합 = 거부
+  PASS  A1b ★ 전류 1e308 넘침 [physics 협착-only (게시 model_over_conduction)] · 0b∧세대 계약 (K2) = 거부
+  PASS  A1b ★ 전류 1e308 넘침 [physics 협착-only (게시 model_over_conduction)] · 게시 관문 (내용 ∧ 기록 판정) = 거부
+  PASS  A1b ★ 전류 1e308 넘침 [physics 협착-only (게시 model_over_conduction)] · τ 행 = 거부
+  PASS  A1c ★ [physics 협착-only (게시 model_over_conduction)] · 증서 결합 사유 = solve_certificate_constr_net: non_finite … (예외 아님) — 'solve_certificate_constr_net: non_finite — 증서 재구성 q = I_bottom/ΔV × T/A = inf 가 유한 양수가 아니다 (넘침 · 밑넘침 — 생산자 solve_network 는 이 해를 non_finite 로 거부한다 · 발행 σ_ratio 3.39436123 와 비교하지 않는다)'
+  PASS  A2a 전제 — T = 20·2¹⁰¹⁹ · A = 2.25·2¹⁰¹⁹ 유한 · T/A = g_to_q 비트 그대로 · 다른 증서 재구성 = 원래 재구성 비트 그대로 · H0 FULL (2·T)/A = +∞
+  PASS  A2b ★ 봉인 일관 T ≈ A ≈ 1e308 + H0 FULL 전류 2 · 0b∧증서 결합 = 거부
+  PASS  A2b ★ 봉인 일관 T ≈ A ≈ 1e308 + H0 FULL 전류 2 · 0b∧세대 계약 (K2) = 거부
+  PASS  A2b ★ 봉인 일관 T ≈ A ≈ 1e308 + H0 FULL 전류 2 · 게시 관문 (내용 ∧ 기록 판정) = 거부
+  PASS  A2b ★ 봉인 일관 T ≈ A ≈ 1e308 + H0 FULL 전류 2 · τ 행 = 거부
+  PASS  A2c ★ · 증서 결합 사유 = solve_certificate_full: non_finite … (예외 아님) — 'solve_certificate_full: non_finite — 증서 재구성 q = I_bottom/ΔV × T/A = inf 가 유한 양수가 아니다 (넘침 · 밑넘침 — 생산자 solve_network 는 이 해를 non_finite 로 거부한다 · 발행 σ_ratio 0.35349139 와 비교하지 않는다)'
+  PASS  A3a 전제 — 모든 증서 T 1e300 · A 1e−10 (둘 다 유한 양수 · g_to_q 그대로 8.89) · T/A = +∞ · 게시 증서 전부 같은 순서 재구성 +∞
+  PASS  A3b ★ 봉인 일관 T/A 넘침 · hertz · 0b∧증서 결합 = 거부
+  PASS  A3b ★ 봉인 일관 T/A 넘침 · hertz · 0b∧세대 계약 (K2) = 거부
+  PASS  A3b ★ 봉인 일관 T/A 넘침 · hertz · 게시 관문 (내용 ∧ 기록 판정) = 거부
+  PASS  A3b ★ 봉인 일관 T/A 넘침 · hertz · τ 행 = 거부
+  PASS  A3c ★ T/A 넘침 · hertz · 증서 결합 사유 = solve_certificate_full: non_finite … (예외 아님) — 'solve_certificate_full: non_finite — 기하 환산 T/A = inf 가 유한 양수가 아니다 (넘침 · 밑넘침 · T 1e+300 · A 1.0000000000000002e-10 — 생산자는 이 기하를 풀지 않는다 · invalid_geometry)'
+  PASS  A3b ★ 봉인 일관 T/A 넘침 · hertz_h12 · 0b∧증서 결합 = 거부
+  PASS  A3b ★ 봉인 일관 T/A 넘침 · hertz_h12 · 0b∧세대 계약 (K2) = 거부
+  PASS  A3b ★ 봉인 일관 T/A 넘침 · hertz_h12 · 게시 관문 (내용 ∧ 기록 판정) = 거부
+  PASS  A3b ★ 봉인 일관 T/A 넘침 · hertz_h12 · τ 행 = 거부
+  PASS  A3c ★ T/A 넘침 · hertz_h12 · 증서 결합 사유 = solve_certificate_full: non_finite … (예외 아님) — 'solve_certificate_full: non_finite — 기하 환산 T/A = inf 가 유한 양수가 아니다 (넘침 · 밑넘침 · T 1e+300 · A 1.0000000000000002e-10 — 생산자는 이 기하를 풀지 않는다 · invalid_geometry)'
+  PASS  A3b ★ 봉인 일관 T/A 넘침 · physics · 0b∧증서 결합 = 거부
+  PASS  A3b ★ 봉인 일관 T/A 넘침 · physics · 0b∧세대 계약 (K2) = 거부
+  PASS  A3b ★ 봉인 일관 T/A 넘침 · physics · 게시 관문 (내용 ∧ 기록 판정) = 거부
+  PASS  A3b ★ 봉인 일관 T/A 넘침 · physics · τ 행 = 거부
+  PASS  A3c ★ T/A 넘침 · physics · 증서 결합 사유 = solve_certificate_full: non_finite … (예외 아님) — 'solve_certificate_full: non_finite — 기하 환산 T/A = inf 가 유한 양수가 아니다 (넘침 · 밑넘침 · T 1e+300 · A 1.0000000000000002e-10 — 생산자는 이 기하를 풀지 않는다 · invalid_geometry)'
+  PASS  A4a 전제 — scale 1e200 은 유한 · Python float 의 scale ** 2 = OverflowError (곱 · 나눗셈은 inf)
+  PASS  A4b ★ 봉인 일관 scale 1e200 (scale² OverflowError) · hertz · 0b∧증서 결합 = 거부
+  PASS  A4b ★ 봉인 일관 scale 1e200 (scale² OverflowError) · hertz · 0b∧세대 계약 (K2) = 거부
+  PASS  A4b ★ 봉인 일관 scale 1e200 (scale² OverflowError) · hertz · 게시 관문 (내용 ∧ 기록 판정) = 거부
+  PASS  A4b ★ 봉인 일관 scale 1e200 (scale² OverflowError) · hertz · τ 행 = 거부
+  PASS  A4c ★ scale² 넘침 · hertz · 증서 결합 사유 = solve_certificate_full: non_finite … (예외 아님) — "solve_certificate_full: non_finite — 기하 환산 넘침 ((34, 'Numerical result out of range')) · T = plate_z·scale · A = box_x·box_y·scale² 가 유한하지 않다"
+  PASS  A4b ★ 봉인 일관 scale 1e200 (scale² OverflowError) · hertz_h12 · 0b∧증서 결합 = 거부
+  PASS  A4b ★ 봉인 일관 scale 1e200 (scale² OverflowError) · hertz_h12 · 0b∧세대 계약 (K2) = 거부
+  PASS  A4b ★ 봉인 일관 scale 1e200 (scale² OverflowError) · hertz_h12 · 게시 관문 (내용 ∧ 기록 판정) = 거부
+  PASS  A4b ★ 봉인 일관 scale 1e200 (scale² OverflowError) · hertz_h12 · τ 행 = 거부
+  PASS  A4c ★ scale² 넘침 · hertz_h12 · 증서 결합 사유 = solve_certificate_full: non_finite … (예외 아님) — "solve_certificate_full: non_finite — 기하 환산 넘침 ((34, 'Numerical result out of range')) · T = plate_z·scale · A = box_x·box_y·scale² 가 유한하지 않다"
+  PASS  A4b ★ 봉인 일관 scale 1e200 (scale² OverflowError) · physics · 0b∧증서 결합 = 거부
+  PASS  A4b ★ 봉인 일관 scale 1e200 (scale² OverflowError) · physics · 0b∧세대 계약 (K2) = 거부
+  PASS  A4b ★ 봉인 일관 scale 1e200 (scale² OverflowError) · physics · 게시 관문 (내용 ∧ 기록 판정) = 거부
+  PASS  A4b ★ 봉인 일관 scale 1e200 (scale² OverflowError) · physics · τ 행 = 거부
+  PASS  A4c ★ scale² 넘침 · physics · 증서 결합 사유 = solve_certificate_full: non_finite … (예외 아님) — "solve_certificate_full: non_finite — 기하 환산 넘침 ((34, 'Numerical result out of range')) · T = plate_z·scale · A = box_x·box_y·scale² 가 유한하지 않다"
+  PASS  A5-0 전제 — 넷 다 수치 증서 통과 · A5a 재구성 +∞ · A5c 재구성 0.0 · A5d 재구성 = 기록 q 유한 · 1000·σ₀·q = +∞ · A5e 재구성 = 기록 q · 1000·σ₀·q 유한 · 허용 = +∞ · A5c 기록은 0b 통과 (증서 결합만 막을 수 있다) · A5d · A5e 기록은 0b 가 non_finite 로 먼저 거부 (L214R-07)
+  PASS  A5a T = A = 1e308 (Codex 모양) + 전류 2 ★ 0b∧증서 결합 = 거부 (예외 아님)
+  PASS  A5a T = A = 1e308 (Codex 모양) + 전류 2 ★ · 증서 결합 사유 = solve_certificate_full: non_finite … (예외 아님) — 'solve_certificate_full: non_finite — 증서 재구성 q = I_bottom/ΔV × T/A = inf 가 유한 양수가 아니다 (넘침 · 밑넘침 — 생산자 solve_network 는 이 해를 non_finite 로 거부한다 · 발행 σ_ratio 0.35349139 와 비교하지 않는다)'
+  PASS  A5a T = A = 1e308 (Codex 모양) + 전류 2 · 세대 계약 · 게시 관문 · τ 행 = 예외 없이 거부 [('0b∧세대 계약 (K2)', False), ('게시 관문 (내용 ∧ 기록 판정)', False), ('τ 행', False)]
+  PASS  A5b T/A 밑넘침 (T 1e−300 · A 1e100) ★ 0b∧증서 결합 = 거부 (예외 아님)
+  PASS  A5b T/A 밑넘침 (T 1e−300 · A 1e100) ★ · 증서 결합 사유 = solve_certificate_full: non_finite … (예외 아님) — 'solve_certificate_full: non_finite — 기하 환산 T/A = 0.0 가 유한 양수가 아니다 (넘침 · 밑넘침 · T 1e-300 · A 1.0000000000000002e+100 — 생산자는 이 기하를 풀지 않는다 · invalid_geometry)'
+  PASS  A5b T/A 밑넘침 (T 1e−300 · A 1e100) · 세대 계약 · 게시 관문 · τ 행 = 예외 없이 거부 [('0b∧세대 계약 (K2)', False), ('게시 관문 (내용 ∧ 기록 판정)', False), ('τ 행', False)]
+  PASS  A5c q_rec 0 밑넘침 (절대 반폭 5e-9 뒤에 숨음) ★ 0b∧증서 결합 = 거부 (예외 아님)
+  PASS  A5c q_rec 0 밑넘침 (절대 반폭 5e-9 뒤에 숨음) ★ · 증서 결합 사유 = solve_certificate_full: non_finite … (예외 아님) — 'solve_certificate_full: non_finite — 증서 재구성 q = I_bottom/ΔV × T/A = 0.0 가 유한 양수가 아니다 (넘침 · 밑넘침 — 생산자 solve_network 는 이 해를 non_finite 로 거부한다 · 발행 σ_ratio 1e-09 와 비교하지 않는다)'
+  PASS  A5c q_rec 0 밑넘침 (절대 반폭 5e-9 뒤에 숨음) · 세대 계약 · 게시 관문 · τ 행 = 예외 없이 거부 [('0b∧세대 계약 (K2)', False), ('게시 관문 (내용 ∧ 기록 판정)', False), ('τ 행', False)]
+  PASS  A5d 차원 σ 재구성 1000·σ₀·q 넘침 ★ 0b∧증서 결합 = 거부 (예외 아님)
+  PASS  A5d 차원 σ 재구성 1000·σ₀·q 넘침 ★ 0b 사유 = non_finite … (L214R-07 — 레코드 항등식) · 증서 경로 직접 = non_finite … (예외 아님) — ('invalid_input', 'non_finite — 두 σ 표현 항등식 (RGLR-02) 을 비교할 수 없다: 1000·σ₀·σ_ratio = inf · |차| inf · 허용 inf (곱 = 유한 양수 · 차 · 'non_finite — 증서 재구성 차원 σ 1000·σ₀(부모)·q = inf · 저장 정밀도 허용 inf 가 유한하지 않다 (넘침 · 밑넘침 — 발행 σ_dim 1.0 와 비교하지 않는다)'
+  PASS  A5d 차원 σ 재구성 1000·σ₀·q 넘침 · 세대 계약 · 게시 관문 · τ 행 = 예외 없이 거부 [('0b∧세대 계약 (K2)', False), ('게시 관문 (내용 ∧ 기록 판정)', False), ('τ 행', False)]
+  PASS  A5e 차원 σ 허용 넘침 (σ_dim + 1000·σ₀·q) ★ 0b∧증서 결합 = 거부 (예외 아님)
+  PASS  A5e 차원 σ 허용 넘침 (σ_dim + 1000·σ₀·q) ★ 0b 사유 = non_finite … (L214R-07 — 레코드 항등식) · 증서 경로 직접 = non_finite … (예외 아님) — ('invalid_input', 'non_finite — 두 σ 표현 항등식 (RGLR-02) 을 비교할 수 없다: 1000·σ₀·σ_ratio = 8.999999999999999e+307 · |차| 8.000000 · 'non_finite — 증서 재구성 차원 σ 1000·σ₀(부모)·q = 8.999999999999999e+307 · 저장 정밀도 허용 inf 가 유한하지 않다 (넘침 · 밑넘침 — 발행 σ_dim 1.7e+308
+  PASS  A5e 차원 σ 허용 넘침 (σ_dim + 1000·σ₀·q) · 세대 계약 · 게시 관문 · τ 행 = 예외 없이 거부 [('0b∧세대 계약 (K2)', False), ('게시 관문 (내용 ∧ 기록 판정)', False), ('τ 행', False)]
+  PASS  A5f ★ 큰 JSON 정수 (10⁴⁰⁰ — float 로 못 옮김) H0 FULL 증서 기하 plate_z → 네 소비자 예외 없이 거부 [('0b∧증서 결합', False), ('0b∧세대 계약 (K2)', False), ('게시 관문 (내용 ∧ 기록 판정)', False), ('τ 행', False)]
+  PASS  A5f ★ 큰 JSON 정수 (10⁴⁰⁰ — float 로 못 옮김) H0 FULL 증서 기하 box_x → 네 소비자 예외 없이 거부 [('0b∧증서 결합', False), ('0b∧세대 계약 (K2)', False), ('게시 관문 (내용 ∧ 기록 판정)', False), ('τ 행', False)]
+  PASS  A5f ★ 큰 JSON 정수 (10⁴⁰⁰ — float 로 못 옮김) H0 FULL 증서 기하 scale → 네 소비자 예외 없이 거부 [('0b∧증서 결합', False), ('0b∧세대 계약 (K2)', False), ('게시 관문 (내용 ∧ 기록 판정)', False), ('τ 행', False)]
+  PASS  A5f ★ 큰 JSON 정수 (10⁴⁰⁰ — float 로 못 옮김) H0 FULL 증서 g_to_q → 네 소비자 예외 없이 거부 [('0b∧증서 결합', False), ('0b∧세대 계약 (K2)', False), ('게시 관문 (내용 ∧ 기록 판정)', False), ('τ 행', False)]
+  PASS  A5f ★ 큰 JSON 정수 (10⁴⁰⁰ — float 로 못 옮김) H0 FULL 증서 delta_V → 네 소비자 예외 없이 거부 [('0b∧증서 결합', False), ('0b∧세대 계약 (K2)', False), ('게시 관문 (내용 ∧ 기록 판정)', False), ('τ 행', False)]
+  PASS  A5f ★ 큰 JSON 정수 (10⁴⁰⁰ — float 로 못 옮김) H0 FULL 증서 I_bottom → 네 소비자 예외 없이 거부 [('0b∧증서 결합', False), ('0b∧세대 계약 (K2)', False), ('게시 관문 (내용 ∧ 기록 판정)', False), ('τ 행', False)]
+  PASS  A5f ★ 큰 JSON 정수 (10⁴⁰⁰ — float 로 못 옮김) H0 FULL 증서 sigma_bulk_S_cm → 네 소비자 예외 없이 거부 [('0b∧증서 결합', False), ('0b∧세대 계약 (K2)', False), ('게시 관문 (내용 ∧ 기록 판정)', False), ('τ 행', False)]
+  PASS  C2a 전제 [spsolve 증서 실패 → cg+jacobi] — H0 FULL 게시 증서 시도 [('spsolve', 'certificate_failed'), ('cg+jacobi', 'pass')] · 세 모드 computed · σ_ratio = 기준 침대와 같다
+  PASS  C2b fallback 게시 레코드 [spsolve 증서 실패 → cg+jacobi · hertz] · 0b∧증서 결합 = 통과
+  PASS  C2b fallback 게시 레코드 [spsolve 증서 실패 → cg+jacobi · hertz] · 0b∧세대 계약 (K2) = 통과
+  PASS  C2b fallback 게시 레코드 [spsolve 증서 실패 → cg+jacobi · hertz] · 게시 관문 (내용 ∧ 기록 판정) = 통과
+  PASS  C2b fallback 게시 레코드 [spsolve 증서 실패 → cg+jacobi · hertz] · τ 행 = 통과
+  PASS  C2b fallback 게시 레코드 [spsolve 증서 실패 → cg+jacobi · hertz_h12] · 0b∧증서 결합 = 통과
+  PASS  C2b fallback 게시 레코드 [spsolve 증서 실패 → cg+jacobi · hertz_h12] · 0b∧세대 계약 (K2) = 통과
+  PASS  C2b fallback 게시 레코드 [spsolve 증서 실패 → cg+jacobi · hertz_h12] · 게시 관문 (내용 ∧ 기록 판정) = 통과
+  PASS  C2b fallback 게시 레코드 [spsolve 증서 실패 → cg+jacobi · hertz_h12] · τ 행 = 통과
+  PASS  C2b fallback 게시 레코드 [spsolve 증서 실패 → cg+jacobi · physics] · 0b∧증서 결합 = 통과
+  PASS  C2b fallback 게시 레코드 [spsolve 증서 실패 → cg+jacobi · physics] · 0b∧세대 계약 (K2) = 통과
+  PASS  C2b fallback 게시 레코드 [spsolve 증서 실패 → cg+jacobi · physics] · 게시 관문 (내용 ∧ 기록 판정) = 통과
+  PASS  C2b fallback 게시 레코드 [spsolve 증서 실패 → cg+jacobi · physics] · τ 행 = 통과
+  PASS  C2a 전제 [spsolve 증서 실패 → cg+jacobi 미수렴 → gmres+ilu] — H0 FULL 게시 증서 시도 [('spsolve', 'certificate_failed'), ('cg+jacobi', 'not_converged'), ('gmres+ilu', 'pass')] · 세 모드 computed · σ_ratio = 기준 침대와 같다
+  PASS  C2b fallback 게시 레코드 [spsolve 증서 실패 → cg+jacobi 미수렴 → gmres+ilu · hertz] · 0b∧증서 결합 = 통과
+  PASS  C2b fallback 게시 레코드 [spsolve 증서 실패 → cg+jacobi 미수렴 → gmres+ilu · hertz] · 0b∧세대 계약 (K2) = 통과
+  PASS  C2b fallback 게시 레코드 [spsolve 증서 실패 → cg+jacobi 미수렴 → gmres+ilu · hertz] · 게시 관문 (내용 ∧ 기록 판정) = 통과
+  PASS  C2b fallback 게시 레코드 [spsolve 증서 실패 → cg+jacobi 미수렴 → gmres+ilu · hertz] · τ 행 = 통과
+  PASS  C2b fallback 게시 레코드 [spsolve 증서 실패 → cg+jacobi 미수렴 → gmres+ilu · hertz_h12] · 0b∧증서 결합 = 통과
+  PASS  C2b fallback 게시 레코드 [spsolve 증서 실패 → cg+jacobi 미수렴 → gmres+ilu · hertz_h12] · 0b∧세대 계약 (K2) = 통과
+  PASS  C2b fallback 게시 레코드 [spsolve 증서 실패 → cg+jacobi 미수렴 → gmres+ilu · hertz_h12] · 게시 관문 (내용 ∧ 기록 판정) = 통과
+  PASS  C2b fallback 게시 레코드 [spsolve 증서 실패 → cg+jacobi 미수렴 → gmres+ilu · hertz_h12] · τ 행 = 통과
+  PASS  C2b fallback 게시 레코드 [spsolve 증서 실패 → cg+jacobi 미수렴 → gmres+ilu · physics] · 0b∧증서 결합 = 통과
+  PASS  C2b fallback 게시 레코드 [spsolve 증서 실패 → cg+jacobi 미수렴 → gmres+ilu · physics] · 0b∧세대 계약 (K2) = 통과
+  PASS  C2b fallback 게시 레코드 [spsolve 증서 실패 → cg+jacobi 미수렴 → gmres+ilu · physics] · 게시 관문 (내용 ∧ 기록 판정) = 통과
+  PASS  C2b fallback 게시 레코드 [spsolve 증서 실패 → cg+jacobi 미수렴 → gmres+ilu · physics] · τ 행 = 통과
+  PASS  C3 숫자 없는 가지 (비관통) — 세 모드 valid_zero · 증서 결합 [] · 세대 g2 · τ NOT_PERCOLATING · 게시 관문 통과 (기존 정책 그대로)
+  PASS  C4 FULL 모형 한계 레코드 (상자 1.0 · physics) — 증서 결합 [] 세 모드 · 세대 g2 · τ H0 OK · physics NOT_COMPUTED full_over_conduction · 게시 관문 통과
+  PASS  C5 이미 거부 — H0 FULL 전류 ×1.01 (시도 맞춤) → 0b∧증서 결합 · 0b∧세대 계약 · 게시 관문 · τ 행 거부 그대로 [('0b∧증서 결합', False), ('0b∧세대 계약 (K2)', False), ('게시 관문 (내용 ∧ 기록 판정)', False), ('τ 행', False)]
+  PASS  C5 이미 거부 — H0 FULL ΔV 2 → 0b∧증서 결합 · 0b∧세대 계약 · 게시 관문 · τ 행 거부 그대로 [('0b∧증서 결합', False), ('0b∧세대 계약 (K2)', False), ('게시 관문 (내용 ∧ 기록 판정)', False), ('τ 행', False)]
+  PASS  C5 이미 거부 — H0 FULL 보존 실패 (I_top 0) → 0b∧증서 결합 · 0b∧세대 계약 · 게시 관문 · τ 행 거부 그대로 [('0b∧증서 결합', False), ('0b∧세대 계약 (K2)', False), ('게시 관문 (내용 ∧ 기록 판정)', False), ('τ 행', False)]
+  PASS  C5 이미 거부 — H0 FULL g_to_q ×2 → 0b∧증서 결합 · 0b∧세대 계약 · 게시 관문 · τ 행 거부 그대로 [('0b∧증서 결합', False), ('0b∧세대 계약 (K2)', False), ('게시 관문 (내용 ∧ 기록 판정)', False), ('τ 행', False)]
+  PASS  C5 이미 거부 — H0 CF 증서 삭제 (숫자 실림) → 0b∧증서 결합 · 0b∧세대 계약 · 게시 관문 · τ 행 거부 그대로 [('0b∧증서 결합', False), ('0b∧세대 계약 (K2)', False), ('게시 관문 (내용 ∧ 기록 판정)', False), ('τ 행', False)]
+  PASS  C5 이미 거부 — 숫자만 ×1.25 (항등식 맞춤 · 두 모드) → 0b∧증서 결합 · 0b∧세대 계약 · 게시 관문 · τ 행 거부 그대로 [('0b∧증서 결합', False), ('0b∧세대 계약 (K2)', False), ('게시 관문 (내용 ∧ 기록 판정)', False), ('τ 행', False)]
+  PASS  C5 숫자만 변이의 사유 = 재구성 (문구 그대로) — ['solve_certificate_full: 발행 σ_ratio 0.44186424 ≠ 증서 재구성 I_bottom/ΔV × T/A = 0.35349138677492775 (저장 반올림 반폭 5e-09 밖) · 발행 σ_dim 1.325593 mS/cm ≠ 증서 재구성 1000·σ₀(
+  PASS  C6a 발행 σ_ratio = 재구성 q ± 0.9·5e-9 통과 · +1.1·5e-9 · −1.1·5e-9 거부 (저장 반폭 그대로 · 재구성 문구) — ['solve_certificate_full: 발행 σ_ratio 0.35349139227492776 ≠ 증서 재구성 I_bottom/ΔV × T/A = 0.35349138677492775 (저장 반올림 반폭 5e-
+  PASS  C6b G→q 상대 0.9e−12 통과 · 1.1e−12 거부 (CERT_G2Q_REL_TOL 그대로) — ['solve_certificate_full: G→q 인자 g_to_q 8.888888888898666 ≠ 기하에서 다시 잰 (plate_z·scale)/(box_x·box_y·scale²) = 8.888888888
+  PASS  C6c 전제 — 큰 유한 기하 (모든 증서 2¹⁰¹⁹ 배 · 전류 그대로) 는 재구성이 넘치지 않는다 (게시 증서 전부 q_rec = 원래 재구성 비트 그대로)
+  PASS  C6d 큰 유한 기하 (넘침 없음) · hertz · 0b∧증서 결합 = 통과
+  PASS  C6d 큰 유한 기하 (넘침 없음) · hertz · 0b∧세대 계약 (K2) = 통과
+  PASS  C6d 큰 유한 기하 (넘침 없음) · hertz · 게시 관문 (내용 ∧ 기록 판정) = 통과
+  PASS  C6d 큰 유한 기하 (넘침 없음) · hertz · τ 행 = 통과
+  PASS  C6d 큰 유한 기하 (넘침 없음) · hertz_h12 · 0b∧증서 결합 = 통과
+  PASS  C6d 큰 유한 기하 (넘침 없음) · hertz_h12 · 0b∧세대 계약 (K2) = 통과
+  PASS  C6d 큰 유한 기하 (넘침 없음) · hertz_h12 · 게시 관문 (내용 ∧ 기록 판정) = 통과
+  PASS  C6d 큰 유한 기하 (넘침 없음) · hertz_h12 · τ 행 = 통과
+  PASS  C6d 큰 유한 기하 (넘침 없음) · physics · 0b∧증서 결합 = 통과
+  PASS  C6d 큰 유한 기하 (넘침 없음) · physics · 0b∧세대 계약 (K2) = 통과
+  PASS  C6d 큰 유한 기하 (넘침 없음) · physics · 게시 관문 (내용 ∧ 기록 판정) = 통과
+  PASS  C6d 큰 유한 기하 (넘침 없음) · physics · τ 행 = 통과
+  PASS  C6e 상수 그대로 — σ_ratio 반폭 5e-9 · σ_dim 반폭 5e-7 · 16ε · G→q 1e−12 · ΔV 1
+  PASS  D1 0b (ion_record_problem) 는 증서를 읽지 않는다 — computed 레코드의 기록 값 · 두 표현 항등식만 (A1 H0 FULL 반례에 None) · 증서 결합 · 세대 계약이 0b 위임 뒤 증서를 본다 — None
+  PASS  D2 게시 채널 판정 · 내용 판정 (모드 파일) 은 computed 채널의 상태만 본다 (RC6-02 · RC7-02 — 증서를 읽지 않는다) → A1 반례에 ok — ('ok', 'computed') · (True, 'ok: hertzian, physics')
+
+test_l214r05_published_certificate: 184/184 PASS
