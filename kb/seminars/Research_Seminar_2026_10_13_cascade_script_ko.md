@@ -1,7 +1,7 @@
 ---
 title: "연구세미나 2026-10-13 — cascade 진행 브리핑 발표 대본 (장별)"
 date: 2026-10-12
-updated: 2026-10-15
+updated: 2026-10-16
 tags: [seminar, cascade, script, briefing]
 status: 진행
 kind: seminars
@@ -16,6 +16,12 @@ evidenceScope: multi-source-mixed
 ---
 
 # 발표 대본 — 2026-10-13 연구세미나 (약 22 분 · 10-14 8장 · 14장 보강으로 +45 초)
+
+> ✅ **10-16 발표용 정본은 쉬운 판이다** — `kb/seminars/Research_Seminar_2026_10_16_cascade_script_plain_ko.md` (사용자 덱 1–15쪽 · 노트 칸 붙여넣기 글과 같음 ·
+> 사용자 10-16 *'나도 이해안되고 듣는 사람도 이해안될거 같은데 좀 쉬운 설명으로 · 1분 오버해도 되니까'*). 이 파일 §1–§15 는 그 앞 판 (1분판 · 그 전 2분판) 과
+> 장별 결정 기록으로 남긴다 — 물으면 쓸 말과 근거는 여기서 찾는다. 같은 쉬운 판이 Claude Docs '세미나 대본 1–15쪽'
+> (https://claude.ai/code/artifact/0ecac255-3204-4900-9752-773f2b9aefaa) 에, 쪽별 배경 · 예상 질문은 '세미나 자세한 설명 1–15쪽'
+> (https://claude.ai/code/artifact/d8a5051b-2b4a-446b-b9c7-455c49275ee5) 에 있다.
 
 > 덱: `kb/seminars/Research_Seminar_2026_10_13_cascade_progress.pptx` · **슬림판** `…_progress_lean.pptx` (같은 19장 · 같은 순서) · 흐름: `…_storyline_ko.md` · 질문 대비: `…_defense_ko.md`
 > 슬림판으로 발표하면 이 대본을 그대로 쓰고, 화면에서 빠진 세부는 말로 한다 — 맨 끝 **§슬림판으로 발표할 때** 표.
