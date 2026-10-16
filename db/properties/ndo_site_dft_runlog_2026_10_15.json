@@ -80,5 +80,13 @@
     "발사": "tmux ndsite_dft 16:29:08 · worktree ~/wt_bmeas_1016 (러너 sha16 e6fc5b25e4f2b3ad = 발사판) · MIN_FREE_MIB 8000 · LOCK /tmp/ndsite_dft.lock · run.log 이어 쓰기 · Li3PS4 의 끊긴 scf.out · tmp 는 *.crash_<시각> 으로 옮김",
     "진행": "16:29:08 skip Li2S (완료: JOB DONE + 수렴 + 힘) · VRAM 여유 23740 MiB (문턱 8000) → Li3PS4 vc-relax 처음부터",
     "곁의_GPU_잡": "li2s B 650 K seed3 (UMA) · cascade 는 대기"
+  },
+  "✅_8점_끝_2026_10_16": {
+    "출처": "사용자 붙여넣기 2026-10-16 21:32:53 (kgy · run.log 끝 · watch_qe_relax.sh)",
+    "러너_끝줄": "[10-16 21:23:50] 끝 — 완료 7 · 건너뜀 1 (Li2S) · 실패 0 · 총 294 분 (16:29:08 재시작부터)",
+    "점별": "Li2S ✅ 수렴 (BFGS 7 · 끊기기 전 08:00:59) · Li3PS4 ✅ 수렴 (BFGS 37 · 러너 실패 0 = 완료 판정 bfgs 수렴 + 최종 scf 통과) · MLi_03 · MLi_04 · MLi_05 (19 분) · MP_00 (35 분) · MP_07 · MP_09 (24 분) ✅ 단발 종료 · 죽음/오류 0",
+    "⚠_러너_끝_안내줄": "'다음: UMA 힘 (같은 frame.xyz) → 분석' 은 힘 대조 카드 때의 고정 문구다 — 이 캠페인과 무관 (다음은 site_dg.py --qe 판독)",
+    "값": "없음 — 에너지는 판독 도구로만 읽는다 (감시 화면의 E_Ry 열로 ΔG 를 손계산하지 않는다 · vc-relax 는 최종 scf 에너지를 써야 한다)",
+    "⏭": "site_dg.py --qe 판독 (G1 · G2 UMA 부호 대조 · G3 0.30 · G7) → 묶음 회수 → G4 k 탐침 (두 최저 셀 · k 3 3 1)"
   }
 }
