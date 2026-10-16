@@ -41,5 +41,13 @@
   "가드": "시작 문턱 GPU 합계 ≤ 16,000 MiB (kgy 실측 최대 14,301 · cascade + EOS) · 합계 > 23,500 이면 이 이완만 종료 3 · torch 상한 4,000 MiB (P2 630 원자 이완 실측 할당 최대 3,433 MiB → 398 원자는 그 아래 어림)",
   "러너_시험": "레포 밖 시험 트리 (EMT · 가짜 nvidia-smi · 대역 모델 V2) — DRY_RUN 0 · 전체 2 (3 스텝 미수렴) · 이어 돌리기가 앞 미수렴을 끝 코드에 반영 2 · 체크포인트 불일치 5 · simple-dftd3 없음 7 · 시작 문턱 못 엶 4 · 잠금 8 · 입력 해시 불일치 9 — 전부 기대값",
   "상태": "붙여넣기 블록 전달 — 실행 결과 미확인"
+ },
+ "②_봉인_도구_2026_10_17": {
+  "무엇": "tools/wad/build_aprime_s3.py --seal_p2s (seal_p2s · p2s_d3_g3_prediction) — V5 S3 와 같은 자리의 봉인 단계 (새 파일 아님)",
+  "하는_일": "이완 부모 둘 (회수본 relax/P2S_*/A) → 계보 (이완 시작 sha = 레포 초기 구조 = build_record) · G1 (수렴 · fmax ≤ 0.02 · 3000 스텝 안) · G2 (깃발 0) · 계산기 결박 (uma-s-1p1 · omat · default · 체크포인트 07068e9c76702ca1 · simple-dftd3) → 하나라도 어긋나면 봉인 거부 (교체 없음) → make_endpoints (gap 10) · p05_probe (흡착층 +0.5 Å · far 공유 · 파일 왕복 강체 검사) · S_A G3 세 구조 (c+2 bound · far_i · far_ii) · 집합별 쌍극자 구간 → 발송 전 D3 만 G3 예측 (build_v5_vasp_package.d3_ref_eV · 80 % 규칙: 0.008 J/m² 를 넘으면 끝점을 한 번만 12 Å · 그래도 넘으면 봉인 거부 · 1저자) → structures 9 + p2s_seal_manifest.json",
+  "못_하는_것": "VASP 잡 행렬 (k · σ · ENCUT · 함수) 은 정하지 않는다 — ③ 묶음 빌더 몫 · D3 예측은 PBE 몫을 모른다",
+  "selftest": "build_aprime_s3 40/40 (P2′ 21: 구조 9 · p05 far 공유 · 파일 G1p ① · G3 간격 · c+2 bound = 표본 좌표 · 문턱 0.008 · 결정성 · 80 % 규칙 10 → 12 · 두 번 발동 거부 · 음성 10 (손댄 좌표 · 계보 · G1 셋 · G2 · 결박 셋 · 모델) · 파일 왕복 · 결정 비활성)",
+  "깨기": "12/12 빨강 — 계보 · G1 스텝 · G2 · 결박 · 결정 · p05 0.4 · G3 (ii) 1.5 · G3 bound 대신 far · 80 % → 90 % · 발동 시 +4 · 두 번 발동해도 봉인 · 파일 왕복 검사 빠짐",
+  "다른_selftest": "collect_aprime_s4 25/25 · build_v5_vasp_package 222/222 · relax_uma_d3 44/44 · build_aprime_interfaces 75/75 · convention_check 0 위반"
  }
 }

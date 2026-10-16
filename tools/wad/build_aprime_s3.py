@@ -3,6 +3,7 @@
 
     python3 tools/wad/build_aprime_s3.py --s3 --relax db/raw/wad_aprime_s2_relax_2026_09_25 --geom db/inputs/wad_aprime_s2_geometries_2026_09_25 --out db/inputs/wad_aprime_s3_2026_09_25
     python3 tools/wad/build_aprime_s3.py --v2_ed <V2 relax pw.out> --model_dir <S3/V2_top_fcc> --out <dir>   # 2단계: DFT 이완 좌표 → E(d)·far·G3·G4 입력
+    python3 tools/wad/build_aprime_s3.py --seal_p2s --out <dir>   # P2′ (외주 2차 카드): 이완 부모 둘 → 끝점 · p05 · G3 · D3 만 예측 (80 % 규칙) · sha — VASP 잡 행렬은 묶음 빌더 몫
     python3 tools/wad/build_aprime_s3.py --selftest
 
 규칙 (전부 카드 v5 에 봉인된 것을 코드로 옮김 · 결과 보고 바꾸지 않는다):
@@ -319,6 +320,148 @@ def v2_stage2(pw_out, model_dir, out, s3_manifest, pseudo_dir="/data/work/pseudo
     return add
 
 
+# ─────────────── P2′ 작은 탄소 모델 봉인 (외주 2차 카드 wad_p2small_vasp_card_2026_10_15 · 빌드 ②) ───────────────
+P2S_CARD = "db/properties/wad_p2small_vasp_card_2026_10_15.json"
+P2S_DECISION = "D-2026-10-15-wad-p2small-vasp-card"
+P2S_SAMPLES = (("S_A", "P2S_s_outer/A", "s_outer"), ("Li_A", "P2S_li_outer/A", "li_outer"))
+P2S_FMAX, P2S_STEPS = 0.02, 3000            # 카드 G1 (부모 둘만 · S2 와 같다)
+P2S_G3_DW, P2S_G3_TRIGGER = 0.01, 0.8       # 카드 G3 문턱 · '발송 전 D3 만 예측 80 % 규칙'
+P2S_GAPS = (10.0, 12.0)                     # 기본 끝점 직접 간격 · 80 % 규칙이 발동하면 한 번만 +2 Å (모든 표본의 far 를 같이)
+P2S_BIND = {"model": "uma-s-1p1", "task": "omat", "inference_settings": "default", "checkpoint_sha16": "07068e9c76702ca1", "d3_impl": "simple-dftd3"}
+
+
+def _decision_state(did, ledger=None):
+    d = json.load(open(ledger or os.path.join(REPO, "db", "governance", "decisions.json"), encoding="utf-8"))
+    rows = [e for e in (d["decisions"] if isinstance(d, dict) else d) if e.get("id") == did]
+    return rows[0].get("decision_state") if rows else None
+
+
+def p2s_d3_g3_prediction(b, f, b2, f2i, f2ii):
+    """카드 '발송 전 D3 만 예측' — 외부 D3 2체 (build_v5_vasp_package.d3_ref_eV · simple-dftd3 · VASP 절단 · V5 jobs.json 의 d3_2body_eV_ref 와 같은 함수) 로
+    ΔW_i = W_D3(c+2 bound, far_i) − W_D3(bound, far) · ΔW_ii = W_D3(c+2 bound, far_ii) − W_D3(bound, far) [J/m²] · W = (E_far − E_bound)/A.
+    ⚠ D3 몫만이다 — PBE 몫은 모른다 (작다고 전체 변화가 작다는 뜻이 아니다 · 카드)."""
+    import build_v5_vasp_package as V
+    E = {k: V.d3_ref_eV(a) for k, a in (("bound", b), ("far", f), ("c2_bound", b2), ("c2_far_i", f2i), ("c2_far_ii", f2ii))}
+    c = b.cell.array
+    A = abs(float(c[0, 0] * c[1, 1] - c[0, 1] * c[1, 0]))
+    W = lambda eb, ef: (ef - eb) * V.EV_J / (A * V.A2_M2)
+    base = W(E["bound"], E["far"])
+    di, dii = W(E["c2_bound"], E["c2_far_i"]) - base, W(E["c2_bound"], E["c2_far_ii"]) - base
+    lim = P2S_G3_TRIGGER * P2S_G3_DW
+    return {"E_D3_2body_eV": E, "area_A2": round(A, 6), "dW_D3_i_J_m2": di, "dW_D3_ii_J_m2": dii, "trigger_J_m2": lim,
+            "triggered": bool(max(abs(di), abs(dii)) > lim), "d3_ref": "build_v5_vasp_package.d3_ref_eV (simple-dftd3 2체 · VASP 절단 50.2 / 21.17 Å · 3축 주기)"}
+
+
+def _p2s_parent(relax_dir, geom_dir, rec_build, name, sub, term):
+    """부모 하나 — 계보 (이완 시작 = 레포 초기 구조) · G1 · G2 · 계산기 결박. 하나라도 어긋나면 SlabError (교체 없음)."""
+    at, meta, chk, lin = load_relaxed(relax_dir, sub)
+    gm = json.load(open(os.path.join(geom_dir, sub, "meta.json"), encoding="utf-8"))
+    want = rec_build["samples"][name]["sha256"]["bound"]
+    if not (lin["init_sha256"] == gm["sha256"]["bound"] == want):
+        raise SlabError(f"{name}: 계보 — 이완 시작 sha {lin['init_sha256'][:16]} 가 레포 초기 구조 {want[:16]} 와 다르다")
+    if meta.get("model") != "P2S" or meta.get("term") != term or meta.get("registry") != "A":
+        raise SlabError(f"{name}: relax_meta 의 모델·종결·registry 가 {('P2S', term, 'A')} 가 아니다 — {(meta.get('model'), meta.get('term'), meta.get('registry'))}")
+    g1 = {"converged_fmax": meta.get("converged_fmax"), "fmax_free_final_eV_A": meta.get("fmax_free_final_eV_A"), "steps_taken": meta.get("steps_taken")}
+    if not (g1["converged_fmax"] is True and isinstance(g1["fmax_free_final_eV_A"], (int, float)) and g1["fmax_free_final_eV_A"] <= P2S_FMAX
+            and isinstance(g1["steps_taken"], int) and g1["steps_taken"] <= P2S_STEPS):
+        raise SlabError(f"{name}: G1 미통과 {g1} (fmax ≤ {P2S_FMAX} · {P2S_STEPS} 스텝 안) — 봉인하지 않는다 (교체 없음 · 1저자 결정)")
+    if meta.get("interface_check_flags") or chk.get("flags"):
+        raise SlabError(f"{name}: G2 깃발 {meta.get('interface_check_flags') or chk.get('flags')} — 봉인하지 않는다 (교체 없음 · 1저자 결정)")
+    c = meta.get("calculator") or {}
+    ck = c.get("checkpoint")
+    got = {"model": c.get("model"), "task": c.get("task"), "inference_settings": c.get("inference_settings"),
+           "checkpoint_sha16": ck[0]["sha256"][:16] if isinstance(ck, list) and ck else None, "d3_impl": str((c.get("d3") or {}).get("impl", ""))}
+    if any(got[k] != P2S_BIND[k] for k in ("model", "task", "inference_settings", "checkpoint_sha16")) or not got["d3_impl"].startswith(P2S_BIND["d3_impl"]):
+        raise SlabError(f"{name}: 계산기 결박 불일치 {got} ≠ {P2S_BIND}")
+    got.update({"fairchem.core": c.get("fairchem.core"), "d3_version": (c.get("d3") or {}).get("version")})
+    return at, gm, {"lineage": lin, "G1": g1, "G2_flags": [], "binding": got, "disp_max_A": meta.get("disp_max_A")}
+
+
+def seal_p2s(relax_dir, geom_dir, out, date=None, gaps=P2S_GAPS, ledger=None, predict=None):
+    """P2′ 봉인 (카드 '만들 것' 3–4 단계) — 이완한 부모 둘 → 끝점 (make_endpoints) · p05 (비이완 강체 · far 공유) · S_A G3 세 구조 ·
+    발송 전 D3 만 G3 예측 (80 % 규칙: 발동하면 끝점 설계를 한 번만 +2 Å · 그래도 발동하면 멈추고 1저자에게) · 구조 sha · 계보.
+
+    산출: out/structures/<이름>.extxyz 9 개 + out/p2s_seal_manifest.json (structures_sha256 · 집합별 쌍극자 구간 · 표본 쌍 · G3 쌍 ·
+      p05 변환 기록 · 부모 계보·G1·G2·결박 · D3 예측 · 코드 sha). VASP 잡 행렬 (설정·k·σ·함수) 은 여기서 정하지 않는다 — 묶음 빌더 몫.
+    ⛔ 못 하는 것: 이완·DFT 없음 · G1/G2 를 못 넘은 부모를 고치거나 바꾸지 않는다 (봉인 거부) · D3 예측은 PBE 몫을 모른다.
+    """
+    st = _decision_state(P2S_DECISION, ledger)
+    if st != "active":
+        raise SlabError(f"{P2S_DECISION} 가 원장에서 active 가 아니다 ({st}) — 봉인하지 않는다")
+    predict = predict or p2s_d3_g3_prediction
+    date = date or _dt.date.today().isoformat()
+    bp = os.path.join(geom_dir, "build_record.json")
+    rec_build = json.load(open(bp, encoding="utf-8"))
+    par = {name: _p2s_parent(relax_dir, geom_dir, rec_build, name, sub, term) for name, sub, term in P2S_SAMPLES}
+    preds, chosen = [], None
+    for gap in gaps:
+        S_ = {}
+        for name, (at, gm, info) in par.items():
+            is_ads = _ads_mask(at, "P2S")
+            b, f, em = B.make_endpoints(at, is_ads, gap)
+            pr, prec = B.p05_probe(b, f, dz=B.P05_DZ_A, gap=gap, ads_elements=("C",), fixed_idx=gm["fixed_idx"])
+            if prec.get("interface_check_flags"):
+                raise SlabError(f"{name}_p05: G1p ③ interface_check 깃발 {prec['interface_check_flags']}")
+            S_[name] = {"is_ads": is_ads, "bound": b, "far": f, "p05": pr, "p05_rec": prec, "endpoints": em,
+                        "dip": B.dip_region([b, f, pr])}
+        s = S_["S_A"]
+        b2, f2i = _c_plus(s["bound"], 2.0), _c_plus(s["far"], 2.0)
+        f2ii = _rigid_shift(f2i, s["is_ads"], 2.0)
+        g3 = {"bound": b2, "far_i": f2i, "far_ii": f2ii, "dip": B.dip_region([b2, f2i, f2ii]),
+              "gaps_direct_image_A": {"i": _gaps(f2i, s["is_ads"]), "ii": _gaps(f2ii, s["is_ads"])}}
+        p = predict(s["bound"], s["far"], b2, f2i, f2ii)
+        preds.append({"gap_A": gap, **p})
+        if not p["triggered"]:
+            chosen = (gap, S_, g3)
+            break
+    if chosen is None:
+        os.makedirs(out, exist_ok=True)
+        json.dump({"schema": "p2s_d3_g3_prediction/v1", "date": date, "predictions": preds, "⛔": "80 % 규칙이 끝점 설계 두 번 다 발동 — 봉인하지 않는다 · 1저자에게 묻는다 (카드)"},
+                  open(os.path.join(out, "p2s_d3_g3_prediction_refused.json"), "w", encoding="utf-8"), ensure_ascii=False, indent=1, default=float)
+        raise SlabError(f"D3 만 G3 예측이 끝점 {list(gaps)} Å 모두에서 80 % 문턱 ({P2S_G3_TRIGGER * P2S_G3_DW:g} J/m²) 을 넘는다 — 멈추고 1저자에게 묻는다")
+    gap, S_, g3 = chosen
+    P = Pack(out, None)
+    for name, s in S_.items():
+        P.add_struct(f"{name}_bound", s["bound"]); P.add_struct(f"{name}_far", s["far"]); P.add_struct(f"{name}_p05_bound", s["p05"])
+    for k in ("bound", "far_i", "far_ii"):
+        P.add_struct(f"S_A_G3_c2_{k}", g3[k])
+    from ase.io import read
+    rd = lambda n: read(os.path.join(out, "structures", f"{n}.extxyz"))
+    p05_file = {}
+    for name, s in S_.items():
+        rc = B.check_rigid_shift(rd(f"{name}_bound"), rd(f"{name}_p05_bound"), s["is_ads"], B.P05_DZ_A)
+        if not rc["ok"]:
+            raise SlabError(f"{name}_p05: 파일에서 다시 읽은 구조가 강체 이동 검사를 못 넘는다 {rc['violations']}")
+        p05_file[name] = rc
+    code = {os.path.relpath(p, REPO): _sha(p) for p in (os.path.abspath(__file__), os.path.join(HERE, "build_aprime_interfaces.py"), os.path.join(HERE, "se_sym_slab.py"),
+                                                         os.path.join(HERE, "relax_uma_d3.py"), os.path.join(HERE, "build_v5_vasp_package.py"))}
+    lite = lambda d: {"emaxpos": d["emaxpos"], "eopreg": d["eopreg"], "region_A": d["region_A"], "clearance_A": d["clearance_A"]}
+    man = {"schema": "p2s_seal/v1", "date": date, "card": P2S_CARD, "decision": {"id": P2S_DECISION, "state_at_seal": st},
+           "relax_dir": relax_dir, "geom_dir": geom_dir, "build_record_sha256": _sha(bp), "code_sha256": code,
+           "endpoint_gap_A": gap, "gap_rule": f"기본 {gaps[0]} Å · 80 % 규칙 발동 시 한 번만 {gaps[-1]} Å (카드 '발송 전 D3 만 예측')",
+           "d3_g3_prediction": preds,
+           "structures_sha256": dict(P.struct),
+           "sets": {**{name: {"structures": [f"{name}_bound", f"{name}_far", f"{name}_p05_bound"], "dipfield": lite(s["dip"]), "c_A": s["endpoints"]["c_A"]}
+                       for name, s in S_.items()},
+                    "S_A_G3": {"structures": ["S_A_G3_c2_bound", "S_A_G3_c2_far_i", "S_A_G3_c2_far_ii"], "dipfield": lite(g3["dip"]),
+                               "c_A": round(float(g3["bound"].cell.array[2, 2]), 4), "far_gaps_direct_image_A": g3["gaps_direct_image_A"]}},
+           "samples_W_pairs": {"S_A": ["S_A_bound", "S_A_far"], "S_A_p05": ["S_A_p05_bound", "S_A_far"],
+                               "Li_A": ["Li_A_bound", "Li_A_far"], "Li_A_p05": ["Li_A_p05_bound", "Li_A_far"]},
+           "G3_pairs": {"base": ["S_A_bound", "S_A_far"], "i": ["S_A_G3_c2_bound", "S_A_G3_c2_far_i"], "ii": ["S_A_G3_c2_bound", "S_A_G3_c2_far_ii"]},
+           "parents": {name: {**info, "endpoints": {k: S_[name]["endpoints"][k] for k in ("c_A", "delta_A", "d0_A", "gap_rule_A", "bound_gap_direct_image_A", "far_gap_direct_image_A")},
+                              "fixed_idx_n": len(gm["fixed_idx"]), "sealed_bound_sha256": P.struct[f"{name}_bound"], "sealed_far_sha256": P.struct[f"{name}_far"]}
+                       for name, (at, gm, info) in par.items()},
+           "p05": {name: {"parent_bound_sha256": P.struct[f"{name}_bound"], "probe_sha256": P.struct[f"{name}_p05_bound"], "far_shared_sha256": P.struct[f"{name}_far"],
+                          "transform": s["p05_rec"]["transform"], "rigid_check_memory": s["p05_rec"]["rigid_check"], "rigid_check_files": p05_file[name],
+                          "shared_far": s["p05_rec"]["shared_far"], "interface_check_flags": s["p05_rec"]["interface_check_flags"],
+                          "gap_direct_image_A": s["p05_rec"]["gap_direct_image_A"]} for name, s in S_.items()},
+           "⛔": "구조·계보·D3 몫 예측만 — UMA·VASP 에너지 없음 · 이 파일을 고치지 않는다 (다시 만들면 새 봉인)"}
+    mp = os.path.join(out, "p2s_seal_manifest.json")
+    open(mp, "w", encoding="utf-8").write(json.dumps(man, ensure_ascii=False, indent=1, default=float) + "\n")
+    man["manifest_sha256"] = _sha(mp)
+    return man
+
+
 def _selftest():
     import tempfile, re
     n_ok = n_bad = 0
@@ -393,6 +536,108 @@ def _selftest():
         except SlabError:
             bad = True
         ck("⛔음성: V2 이완 실패 출력 → 2단계 거부 (P0)", bad)
+    # ── P2′ 봉인 (외주 2차 카드) — 가짜 이완 산출물 = 레포 초기 구조에서 흑연을 +0.1 Å 옮긴 것 · 계산기 결박값은 카드 값 ──
+    import shutil
+    from ase.io import read, write
+    pgeom = os.path.join(REPO, "db", "inputs", "wad_p2small_geometries_2026_10_17")
+    with tempfile.TemporaryDirectory() as T:
+        def fake_relax(root, mut=None):
+            for name, sub, term in P2S_SAMPLES:
+                d = os.path.join(root, sub); os.makedirs(d, exist_ok=True)
+                at = read(os.path.join(pgeom, sub, "bound.extxyz")); x = at.get_positions(); x[_ads_mask(at, "P2S"), 2] += 0.1; at.set_positions(x)
+                write(os.path.join(d, "relaxed.extxyz"), at)
+                gm = json.load(open(os.path.join(pgeom, sub, "meta.json"), encoding="utf-8"))
+                meta = {"model": "P2S", "term": term, "registry": "A", "init_sha256": gm["sha256"]["bound"], "relaxed_sha256": _sha(os.path.join(d, "relaxed.extxyz")),
+                        "converged_fmax": True, "fmax_free_final_eV_A": 0.0151, "steps_taken": 321, "interface_check_flags": [], "disp_max_A": 0.1,
+                        "calculator": {"model": "uma-s-1p1", "task": "omat", "inference_settings": "default", "fairchem.core": "2.21.0",
+                                       "checkpoint": [{"sha256": "07068e9c76702ca1" + "0" * 48}], "d3": {"impl": "simple-dftd3 (python)", "version": "1.6.0"}}}
+                if mut:
+                    mut(name, meta, d)
+                json.dump(meta, open(os.path.join(d, "relax_meta.json"), "w", encoding="utf-8"))
+                json.dump({"flags": []}, open(os.path.join(d, "interface_check.json"), "w", encoding="utf-8"))
+            return root
+        R0 = fake_relax(os.path.join(T, "r0"))
+        sm = seal_p2s(R0, pgeom, os.path.join(T, "s0"), date="2026-10-17")
+        S0 = os.path.join(T, "s0", "structures")
+        names = sorted(n[:-7] for n in os.listdir(S0))
+        ck("P2′ 봉인: 구조 9 (표본 4 + far 2 + G3 3) · sha = 파일", len(names) == 9 and all(_sha(os.path.join(S0, f"{n}.extxyz")) == sm["structures_sha256"][n] for n in names), names)
+        ck("P2′ 봉인: p05 는 부모 far 를 공유 (표본 쌍) · 끝점 10 Å · D3 예측 기록 (유한)", sm["samples_W_pairs"]["S_A_p05"] == ["S_A_p05_bound", "S_A_far"]
+           and sm["samples_W_pairs"]["Li_A_p05"] == ["Li_A_p05_bound", "Li_A_far"] and sm["endpoint_gap_A"] in P2S_GAPS
+           and all(np.isfinite(p["dW_D3_i_J_m2"]) and np.isfinite(p["dW_D3_ii_J_m2"]) for p in sm["d3_g3_prediction"]), (sm["endpoint_gap_A"], sm["d3_g3_prediction"][-1]["triggered"]))
+        isC = _ads_mask(read(os.path.join(S0, "S_A_bound.extxyz")), "P2S")
+        rr = B.check_rigid_shift(read(os.path.join(S0, "S_A_bound.extxyz")), read(os.path.join(S0, "S_A_p05_bound.extxyz")), isC, 0.5)
+        fb, fa = read(os.path.join(S0, "S_A_far.extxyz")), read(os.path.join(S0, "S_A_bound.extxyz"))
+        ck("P2′ 봉인: 파일에서 p05 = 부모 bound 흡착층 +0.5 Å (G1p ①) · far 는 같은 셀", rr["ok"] and np.allclose(fb.cell.array, fa.cell.array), rr)
+        g = sm["sets"]["S_A_G3"]["far_gaps_direct_image_A"]; gp = sm["endpoint_gap_A"]
+        ck("P2′ 봉인: G3 (i) 직접 그대로 · 영상 +2 / (ii) 직접 +2 · 영상 그대로 · 셀 c+2",
+           abs(g["i"][0] - gp) < 1e-3 and abs(g["i"][1] - (gp + 3)) < 1e-3 and abs(g["ii"][0] - (gp + 2)) < 1e-3 and abs(g["ii"][1] - (gp + 1)) < 1e-3
+           and abs(sm["sets"]["S_A_G3"]["c_A"] - sm["sets"]["S_A"]["c_A"] - 2.0) < 1e-3, (g, sm["sets"]["S_A_G3"]["c_A"], sm["sets"]["S_A"]["c_A"]))
+        ck("P2′ 봉인: 집합별 쌍극자 구간 (S_A·Li_A·G3) · 계보 (초기 sha = 레포) · 결박값 기록", all("emaxpos" in v["dipfield"] for v in sm["sets"].values())
+           and all(sm["parents"][n]["lineage"]["init_sha256"] == json.load(open(os.path.join(pgeom, sub, "meta.json")))["sha256"]["bound"] for n, sub, _ in P2S_SAMPLES)
+           and sm["parents"]["S_A"]["binding"]["checkpoint_sha16"] == "07068e9c76702ca1", sm["parents"]["S_A"]["binding"])
+        gb, gc = read(os.path.join(S0, "S_A_G3_c2_bound.extxyz")), read(os.path.join(S0, "S_A_bound.extxyz"))
+        ck("P2′ 봉인: G3 c+2 bound = 표본 S_A bound 좌표 그대로 (셀만 c+2) · D3 예측 문턱 0.008 J/m² (0.8 × 0.01)",
+           np.array_equal(gb.get_positions(), gc.get_positions()) and abs(gb.cell.array[2, 2] - gc.cell.array[2, 2] - 2.0) < 1e-6
+           and all(abs(p["trigger_J_m2"] - 0.008) < 1e-12 for p in sm["d3_g3_prediction"]), (gb.cell.array[2, 2], gc.cell.array[2, 2]))
+        sm2 = seal_p2s(R0, pgeom, os.path.join(T, "s0b"), date="2026-10-17")
+        ck("P2′ 봉인: 결정성 — 두 번 봉인해도 구조 sha 동일", sm2["structures_sha256"] == sm["structures_sha256"])
+        cnt = {"n": 0}
+
+        def pred_first(*a):
+            cnt["n"] += 1
+            p = p2s_d3_g3_prediction(*a); p["triggered"] = cnt["n"] == 1; return p
+        sm3 = seal_p2s(R0, pgeom, os.path.join(T, "s3"), date="2026-10-17", predict=pred_first)
+        f3, b3 = read(os.path.join(T, "s3", "structures", "S_A_far.extxyz")), read(os.path.join(T, "s3", "structures", "S_A_G3_c2_far_ii.extxyz"))
+        i3 = _ads_mask(f3, "P2S")
+        ck("80 % 규칙: 10 Å 에서 발동 → 12 Å 로 한 번 옮김 · 예측 둘 기록 · far 직접 12 · G3 (ii) 직접 14",
+           sm3["endpoint_gap_A"] == 12.0 and len(sm3["d3_g3_prediction"]) == 2 and abs(_gaps(f3, i3)[0] - 12.0) < 1e-3 and abs(_gaps(b3, i3)[0] - 14.0) < 1e-3,
+           (sm3["endpoint_gap_A"], _gaps(f3, i3), _gaps(b3, i3)))
+
+        def pred_always(*a):
+            p = p2s_d3_g3_prediction(*a); p["triggered"] = True; return p
+        try:
+            seal_p2s(R0, pgeom, os.path.join(T, "s4"), predict=pred_always); bad = False
+        except SlabError as e:
+            bad = "1저자" in str(e) and os.path.isfile(os.path.join(T, "s4", "p2s_d3_g3_prediction_refused.json")) and not os.path.isdir(os.path.join(T, "s4", "structures"))
+        ck("⛔음성 80 % 규칙: 두 번 다 발동 → 봉인 거부 · 예측 기록만 · 구조 없음", bad)
+        neg = (("relaxed.extxyz 를 손댐", lambda n, m, d: open(os.path.join(d, "relaxed.extxyz"), "a").write(" \n") if n == "Li_A" else None, "sha"),
+               ("이완 시작 sha 가 레포 초기 구조가 아님", lambda n, m, d: m.update(init_sha256="0" * 64) if n == "S_A" else None, "계보"),
+               ("G1 미수렴", lambda n, m, d: m.update(converged_fmax=False) if n == "Li_A" else None, "G1"),
+               ("G1 3001 스텝", lambda n, m, d: m.update(steps_taken=3001) if n == "S_A" else None, "G1"),
+               ("G1 fmax 0.021", lambda n, m, d: m.update(fmax_free_final_eV_A=0.021) if n == "S_A" else None, "G1"),
+               ("G2 깃발", lambda n, m, d: m.update(interface_check_flags=["비혼합"]) if n == "Li_A" else None, "G2"),
+               ("체크포인트 sha 다름", lambda n, m, d: m["calculator"].update(checkpoint=[{"sha256": "f" * 64}]) if n == "S_A" else None, "결박"),
+               ("D3 구현 torch-dftd", lambda n, m, d: m["calculator"].update(d3={"impl": "torch-dftd"}) if n == "Li_A" else None, "결박"),
+               ("turbo 모드", lambda n, m, d: m["calculator"].update(inference_settings="turbo") if n == "S_A" else None, "결박"),
+               ("모델이 P2 (전체 계면)", lambda n, m, d: m.update(model="P2") if n == "S_A" else None, "모델"))
+        for i, (lab, mut, key) in enumerate(neg):
+            Rn = fake_relax(os.path.join(T, f"rn{i}"), mut)
+            try:
+                seal_p2s(Rn, pgeom, os.path.join(T, f"sn{i}")); bad = False
+            except SlabError as e:
+                bad = key in str(e) and not os.path.isdir(os.path.join(T, f"sn{i}", "structures"))
+            ck(f"⛔음성 P2′ 봉인: {lab} → 거부 · 구조 안 씀", bad)
+        orig_add = Pack.add_struct
+
+        def bad_add(self, name, atoms):
+            if name.endswith("_p05_bound"):
+                atoms = atoms.copy(); x = atoms.get_positions(); x[_ads_mask(atoms, "P2S"), 0] += 1e-5; atoms.set_positions(x)
+            return orig_add(self, name, atoms)
+        Pack.add_struct = bad_add
+        try:
+            seal_p2s(R0, pgeom, os.path.join(T, "s6")); bad = False
+        except SlabError as e:
+            bad = "파일에서 다시 읽은" in str(e)
+        finally:
+            Pack.add_struct = orig_add
+        ck("⛔음성 P2′ 봉인: 쓴 p05 파일이 메모리 탐침과 어긋나면 (흡착층 x 1e-5 Å) 거부 — 파일 왕복 검사", bad)
+        led = os.path.join(T, "ledger.json")
+        json.dump({"decisions": [{"id": P2S_DECISION, "decision_state": "proposed"}]}, open(led, "w"))
+        try:
+            seal_p2s(R0, pgeom, os.path.join(T, "s5"), ledger=led); bad = False
+        except SlabError as e:
+            bad = "active" in str(e)
+        ck("⛔음성 P2′ 봉인: 카드 결정이 active 아님 → 거부", bad)
     print(f"{'✅' if n_bad == 0 else '⛔'} build_aprime_s3 selftest {n_ok}/{n_ok + n_bad} 통과")
     return 0 if n_bad == 0 else 1
 
@@ -408,6 +653,9 @@ def main():
     ap.add_argument("--v2_ed", metavar="PW_OUT")
     ap.add_argument("--model_dir")
     ap.add_argument("--s3_manifest", default="db/inputs/wad_aprime_s3_2026_09_25/s3_manifest.json")
+    ap.add_argument("--seal_p2s", action="store_true", help="P2′ 봉인 (외주 2차 카드 · 빌드 ②): 이완 부모 둘 → 끝점 · p05 · G3 · D3 만 예측 · sha")
+    ap.add_argument("--p2s_relax", default="db/raw/wad_p2small_relax_2026_10_17/relax")
+    ap.add_argument("--p2s_geom", default="db/inputs/wad_p2small_geometries_2026_10_17")
     a = ap.parse_args()
     if a.selftest:
         return _selftest()
@@ -418,13 +666,22 @@ def main():
         print(json.dumps({"n_candidates": m["n_candidates"], "n_incomplete": m["n_incomplete"], "incomplete": list(m["incomplete_findings"]), "n_jobs": len(m["jobs"]),
                           "jobs_by_kind": {k: sum(1 for j in m["jobs"] if j["kind"] == k) for k in ("relax", "scf", "probe", "g3", "g4")}}, ensure_ascii=False, indent=1))
         return 0
+    if a.seal_p2s:
+        if not a.out:
+            ap.error("--out 이 필요하다")
+        m = seal_p2s(a.p2s_relax, a.p2s_geom, a.out)
+        print(json.dumps({"endpoint_gap_A": m["endpoint_gap_A"], "n_structures": len(m["structures_sha256"]),
+                          "d3_g3_prediction": [{k: p[k] for k in ("gap_A", "dW_D3_i_J_m2", "dW_D3_ii_J_m2", "triggered")} for p in m["d3_g3_prediction"]],
+                          "G1": {n: v["G1"] for n, v in m["parents"].items()}, "manifest_sha256": m["manifest_sha256"]}, ensure_ascii=False, indent=1, default=float))
+        print(f"→ {a.out}/p2s_seal_manifest.json")
+        return 0
     if a.v2_ed:
         if not (a.model_dir and a.out):
             ap.error("--v2_ed 에는 --model_dir 와 --out 이 필요하다")
         add = v2_stage2(a.v2_ed, a.model_dir, a.out, a.s3_manifest, a.pseudo_dir)
         print(json.dumps({k: add[k] for k in ("model", "d0_A", "pw_out_sha256")}, ensure_ascii=False, indent=1)); print(f"→ {a.out}/jobs.json ({len(add['jobs'])} 잡)")
         return 0
-    ap.error("--selftest · --s3 · --v2_ed 중 하나")
+    ap.error("--selftest · --s3 · --v2_ed · --seal_p2s 중 하나")
 
 
 if __name__ == "__main__":
