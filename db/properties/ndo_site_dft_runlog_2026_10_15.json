@@ -1,70 +1,78 @@
 {
- "id": "ndo_site_dft_runlog_2026_10_15",
- "제목": "Nd 자리 비교 Q1 DFT — 후보 6 scf + 기준상 2 vc-relax · kgy 실행 기록",
- "written_on": "2026-10-15",
- "트랙": "CEI/Nd — 1저자 = 실험 쪽 (박재현) · 사용자 실행 승인 · 1저자 동의 전 잠정",
- "카드": "db/properties/ndo_lpscl16_site_stability_estimand_2026_10_14.json",
- "결정": "D-2026-10-14-ndo-site-stability-estimand (proposed)",
- "UMA_단계": "db/properties/ndo_site_uma_rietveld_readout_2026_10_15.json · 원자료 db/raw/ndo_site_2026_10_14/uma_rietveld_2026_10_15/ (38197e6 · 해시 30/30)",
- "입력": {
-  "커밋": "3165011",
-  "폴더": "db/inputs/ndo_site_dft_2026_10_15/<이름>/scf.in (후보 MP_07 · MP_09 · MP_00 · MLi_03 · MLi_04 · MLi_05 = scf · 기준상 Li2S · Li3PS4 = vc-relax)",
-  "생성기": "make_inputs.py — 카드 §6 을 읽어 generate_dft_inputs.generate_pwin 에 넘긴다 · selftest 13 · 변이 4/4 빨강",
-  "⚠_Nd_PP": "generate_dft_inputs.PSEUDOS 의 Nd 기본값은 4f-원자가 (Nd.paw.z_14.atompaw.wentzcovitch.v1.2.upf) — 카드 §6 의 4f-in-core (Nd.pbe-spdn-kjpaw_psl.1.0.0.UPF) 로 덮고 생성 뒤 대조한다 (안 덮으면 조용히 다른 계산)",
-  "k": "후보 2 2 1 (카드 §6) · 기준상 ceil(13.9 Å / 축 길이) → Li2S 4 4 4 · Li3PS4 3 2 2",
-  "러너": "tools/doping/run_force_check_scf.sh — relax · vc-relax 완료 판정 추가 ('bfgs converged in' + vc-relax 는 'End final coordinates' 뒤 최종 scf 에너지) · selftest 11 · 변이 3/3 빨강 (중복이라 빨간불이 안 난 'nstep 소진' 줄은 뺐다)",
-  "manifest": "inputs_manifest.json — 점별 출처 · sha256 · k · calculation"
- },
- "GPU_자리_결정": {
-  "사용자_2026_10_15": "'kgy · site10_uma 뒤 자동 (Recommended) … 이거하자'",
-  "근거": "카드 §7.4 (GPU 자리는 사용자가 고른다)",
-  "방식": "tmux ndsite_dft 가 5 분마다 site10_uma 가 끝났는지 보고 시작 → 그 뒤 cascade v7 (+ li2s B 650 K kgy 몫) 과 GPU 공유 · 점은 한 번에 하나 · MIN_FREE_MIB 8000 (점마다 시작 전 VRAM 여유가 모자라면 이 잡이 물러나고 남은 점을 안 던진다 — 같은 명령으로 이어 돌리면 끝난 점은 건너뛴다)"
- },
- "기준상_vc_relax_결과_전에_정함": {
-  "사용자_물음": "'vc-relax 하는 이유가 뭐지? 우린 relax하는거 아니였나 · 저번에 했던것처럼 이번엔 EOS 안하니까 vc-relax 하는건가?'",
-  "답": "카드 §2 Q1 은 기준상을 '같은 QE 설정으로 이완' 이라고만 적었다 — 셀까지 그 설정의 바닥에 둔다 (MP 격자는 VASP PBE 값이라 우리 PP 의 바닥과 조금 다르다). 셀 바닥을 찾는 길은 둘이다: EOS (부피 여러 점 고정셀 relax → 맞춤 · 체적탄성률 B0 까지 나온다 · b2o3 / modelC B0 때 쓴 길) 와 vc-relax (응력으로 셀과 원자를 함께 옮긴다). 여기는 바닥 에너지만 필요해서 vc-relax 한 번이 싸다",
-  "Pulay": "컷오프를 고정한 vc-relax 는 응력에 기저 오차 (Pulay) 가 섞여 부피가 조금 빗나갈 수 있다 — QE 가 끝에 새 셀의 G-벡터로 SCF 를 다시 풀어 에너지를 다시 낸다 (러너 완료 판정이 그 최종 scf 를 요구한다)",
-  "크기_어림": "격자 1 % (부피 3 %) 빗나감이면 기준상 에너지는 ½·B·V·(ΔV/V)² 만큼 높아진다 — Li₂S (B ≈ 45 GPa · 45.6 Å³/f.u.) ≈ 6 meV/f.u. · Li₃PS₄ (B ≈ 25 GPa · 161 Å³/f.u.) ≈ 11 meV/f.u. ⇒ 저장소 항 4e(Li₂S) − e(Li₃PS₄) 에 ≈ 0.01–0.02 eV/Nd (B 는 어림값). 문턱 0.30 · 0.10 eV/Nd 보다 한 자리 이상 작다 — 그래도 공짜로 없앨 수 있는 치우침이라 vc-relax",
-  "후보": "후보 6 개는 DFT 로 이완하지 않는다 — 카드 §3 'UMA 이완 → DFT 단일점'. G3 (|ΔG_site| < 0.30 eV/Nd) 가 걸리면 두 모델 최저 셀을 **고정셀 + EOS** (Rietveld host 셀 모양 등방 스케일 · BM3 · V₀ 에서 이온만 relax) 로 이완한 뒤에만 부호를 쓴다 (10-15 결과 전 개정 · vc-relax 안 씀)",
-  "사용자_결정_2026_10_15": {
-   "기준상": "AskUserQuestion 'vc-relax 2잡 (Recommended)' — 비-argyrodite 정렬 결정 둘만의 예외 (이 캠페인 정본은 vc-relax 를 안 쓴다 · kb/methodology/computational_methods_canonical.md §3-1)",
-   "G3": "AskUserQuestion 'EOS → V0로 고친다 (Recommended)' + '이 사항은 기본인데' — 카드 G3 · §5 · 결정 enforcement ③ 개정 (결과 전)",
-   "사용자_관례_원문": "'우린 원래 argyrodite 유지하려고 relax해서 EOS 해서 최적 V0를 찾았잖아 · 근데 저번 새로운 PP할때 bond strength 정도만 보려고 한번 vc-relax 허락해준거고'",
-   "⚠_내_실수": "10-14 카드 작성 때 정본 규약 (§3-1) 을 안 보고 G3 에 vc-relax 를 적었다 · CLAUDE.md 에 이 규약이 없었다 → 10-15 CLAUDE.md §데이터 규율에 한 줄 추가",
-   "UMA_셀": "후보의 UMA 이완은 셀도 움직였다 (FrechetCellFilter · O 배치 카드와 같은 조건 · UMA 경로 셀 정책 차이 = cell_policy_gap_2026_09_13.json GAP-1·2). Rietveld 정수화 셀 (ndo_lpscl16_n5fu · 1175.7 Å³ · a = b 6.928 · 60°) 대비 부피 — M@P 상위 3 +2.9 – +4.5 % · M@Li 상위 3 +0.1 – +1.3 % · UMA host 셋 +1.5 – +3.2 % (도핑 없는 host 도 늘었다 = UMA 격자 쪽 치우침 후보 · 판정 아님) · 각 58.95 – 62.35°. 단일점은 그 셀에서 푼다 (카드 §3) · G3 EOS 는 Rietveld 셀 모양으로 돌아간다"
+  "id": "ndo_site_dft_runlog_2026_10_15",
+  "제목": "Nd 자리 비교 Q1 DFT — 후보 6 scf + 기준상 2 vc-relax · kgy 실행 기록",
+  "written_on": "2026-10-15",
+  "트랙": "CEI/Nd — 1저자 = 실험 쪽 (박재현) · 사용자 실행 승인 · 1저자 동의 전 잠정",
+  "카드": "db/properties/ndo_lpscl16_site_stability_estimand_2026_10_14.json",
+  "결정": "D-2026-10-14-ndo-site-stability-estimand (proposed)",
+  "UMA_단계": "db/properties/ndo_site_uma_rietveld_readout_2026_10_15.json · 원자료 db/raw/ndo_site_2026_10_14/uma_rietveld_2026_10_15/ (38197e6 · 해시 30/30)",
+  "입력": {
+    "커밋": "3165011",
+    "폴더": "db/inputs/ndo_site_dft_2026_10_15/<이름>/scf.in (후보 MP_07 · MP_09 · MP_00 · MLi_03 · MLi_04 · MLi_05 = scf · 기준상 Li2S · Li3PS4 = vc-relax)",
+    "생성기": "make_inputs.py — 카드 §6 을 읽어 generate_dft_inputs.generate_pwin 에 넘긴다 · selftest 13 · 변이 4/4 빨강",
+    "⚠_Nd_PP": "generate_dft_inputs.PSEUDOS 의 Nd 기본값은 4f-원자가 (Nd.paw.z_14.atompaw.wentzcovitch.v1.2.upf) — 카드 §6 의 4f-in-core (Nd.pbe-spdn-kjpaw_psl.1.0.0.UPF) 로 덮고 생성 뒤 대조한다 (안 덮으면 조용히 다른 계산)",
+    "k": "후보 2 2 1 (카드 §6) · 기준상 ceil(13.9 Å / 축 길이) → Li2S 4 4 4 · Li3PS4 3 2 2",
+    "러너": "tools/doping/run_force_check_scf.sh — relax · vc-relax 완료 판정 추가 ('bfgs converged in' + vc-relax 는 'End final coordinates' 뒤 최종 scf 에너지) · selftest 11 · 변이 3/3 빨강 (중복이라 빨간불이 안 난 'nstep 소진' 줄은 뺐다)",
+    "manifest": "inputs_manifest.json — 점별 출처 · sha256 · k · calculation"
+  },
+  "GPU_자리_결정": {
+    "사용자_2026_10_15": "'kgy · site10_uma 뒤 자동 (Recommended) … 이거하자'",
+    "근거": "카드 §7.4 (GPU 자리는 사용자가 고른다)",
+    "방식": "tmux ndsite_dft 가 5 분마다 site10_uma 가 끝났는지 보고 시작 → 그 뒤 cascade v7 (+ li2s B 650 K kgy 몫) 과 GPU 공유 · 점은 한 번에 하나 · MIN_FREE_MIB 8000 (점마다 시작 전 VRAM 여유가 모자라면 이 잡이 물러나고 남은 점을 안 던진다 — 같은 명령으로 이어 돌리면 끝난 점은 건너뛴다)"
+  },
+  "기준상_vc_relax_결과_전에_정함": {
+    "사용자_물음": "'vc-relax 하는 이유가 뭐지? 우린 relax하는거 아니였나 · 저번에 했던것처럼 이번엔 EOS 안하니까 vc-relax 하는건가?'",
+    "답": "카드 §2 Q1 은 기준상을 '같은 QE 설정으로 이완' 이라고만 적었다 — 셀까지 그 설정의 바닥에 둔다 (MP 격자는 VASP PBE 값이라 우리 PP 의 바닥과 조금 다르다). 셀 바닥을 찾는 길은 둘이다: EOS (부피 여러 점 고정셀 relax → 맞춤 · 체적탄성률 B0 까지 나온다 · b2o3 / modelC B0 때 쓴 길) 와 vc-relax (응력으로 셀과 원자를 함께 옮긴다). 여기는 바닥 에너지만 필요해서 vc-relax 한 번이 싸다",
+    "Pulay": "컷오프를 고정한 vc-relax 는 응력에 기저 오차 (Pulay) 가 섞여 부피가 조금 빗나갈 수 있다 — QE 가 끝에 새 셀의 G-벡터로 SCF 를 다시 풀어 에너지를 다시 낸다 (러너 완료 판정이 그 최종 scf 를 요구한다)",
+    "크기_어림": "격자 1 % (부피 3 %) 빗나감이면 기준상 에너지는 ½·B·V·(ΔV/V)² 만큼 높아진다 — Li₂S (B ≈ 45 GPa · 45.6 Å³/f.u.) ≈ 6 meV/f.u. · Li₃PS₄ (B ≈ 25 GPa · 161 Å³/f.u.) ≈ 11 meV/f.u. ⇒ 저장소 항 4e(Li₂S) − e(Li₃PS₄) 에 ≈ 0.01–0.02 eV/Nd (B 는 어림값). 문턱 0.30 · 0.10 eV/Nd 보다 한 자리 이상 작다 — 그래도 공짜로 없앨 수 있는 치우침이라 vc-relax",
+    "후보": "후보 6 개는 DFT 로 이완하지 않는다 — 카드 §3 'UMA 이완 → DFT 단일점'. G3 (|ΔG_site| < 0.30 eV/Nd) 가 걸리면 두 모델 최저 셀을 **고정셀 + EOS** (Rietveld host 셀 모양 등방 스케일 · BM3 · V₀ 에서 이온만 relax) 로 이완한 뒤에만 부호를 쓴다 (10-15 결과 전 개정 · vc-relax 안 씀)",
+    "사용자_결정_2026_10_15": {
+      "기준상": "AskUserQuestion 'vc-relax 2잡 (Recommended)' — 비-argyrodite 정렬 결정 둘만의 예외 (이 캠페인 정본은 vc-relax 를 안 쓴다 · kb/methodology/computational_methods_canonical.md §3-1)",
+      "G3": "AskUserQuestion 'EOS → V0로 고친다 (Recommended)' + '이 사항은 기본인데' — 카드 G3 · §5 · 결정 enforcement ③ 개정 (결과 전)",
+      "사용자_관례_원문": "'우린 원래 argyrodite 유지하려고 relax해서 EOS 해서 최적 V0를 찾았잖아 · 근데 저번 새로운 PP할때 bond strength 정도만 보려고 한번 vc-relax 허락해준거고'",
+      "⚠_내_실수": "10-14 카드 작성 때 정본 규약 (§3-1) 을 안 보고 G3 에 vc-relax 를 적었다 · CLAUDE.md 에 이 규약이 없었다 → 10-15 CLAUDE.md §데이터 규율에 한 줄 추가",
+      "UMA_셀": "후보의 UMA 이완은 셀도 움직였다 (FrechetCellFilter · O 배치 카드와 같은 조건 · UMA 경로 셀 정책 차이 = cell_policy_gap_2026_09_13.json GAP-1·2). Rietveld 정수화 셀 (ndo_lpscl16_n5fu · 1175.7 Å³ · a = b 6.928 · 60°) 대비 부피 — M@P 상위 3 +2.9 – +4.5 % · M@Li 상위 3 +0.1 – +1.3 % · UMA host 셋 +1.5 – +3.2 % (도핑 없는 host 도 늘었다 = UMA 격자 쪽 치우침 후보 · 판정 아님) · 각 58.95 – 62.35°. 단일점은 그 셀에서 푼다 (카드 §3) · G3 EOS 는 Rietveld 셀 모양으로 돌아간다"
+    }
+  },
+  "점검_대조": "kgy 블록이 새 MP_07 입력의 설정 줄 (숫자 표기 정규화) · PP 를 O 배치 카드 nd_scf 원본과 대조하고, 러너 selftest · DRY_RUN 을 거친 뒤에만 tmux 를 띄운다 (&& 사슬)",
+  "발사": {
+    "at": "2026-10-15 10:08:47 KST (kgy · 사용자 붙여넣기 · 이어하기 블록)",
+    "tmux": "ndsite_dft — site10_uma 끝을 5 분마다 보고 시작 (그 시각 site10_uma 살아 있음 · 10-14 13:37:29 생성)",
+    "점검": "설정 줄 nd_scf 와 같다 (mixing_ndim 8 = QE 기본값) · PP 같다",
+    "DRY_RUN": "pw.x /home/kgy/apps/qe-7.4.1-gpu/bin/pw.x · MPI /home/kgy/apps/openmpi-4.1.6 (ldd) · libnvomp + libgomp → OMP_NUM_THREADS 1 · 랭크 1 · 설정 균일성 ✓ (8 점 · key bc3759b0) · pseudo /home/kgy/work/pseudo · 8 점 대기",
+    "실행_인자": "MIN_FREE_MIB 8000 · LOCK /tmp/ndsite_dft.lock · 로그 ~/work/runs/ndo_site_dft_2026_10_15/run.log",
+    "GPU_그때": "6333 / 24576 MiB · 99 % (site10_uma · cascade v7)",
+    "감시": "watch -n 60 — ~/w_site10_uma.sh + ndsite_dft tmux · run.log 끝 3 줄 + ~/watch_qe_relax.sh <R>"
+  },
+  "결과": null,
+  "⏭": [
+    "site10_uma 끝 → ndsite_dft 자동 시작 (8 점 · 한 번에 하나) — 감시로 본다",
+    "8 점 끝 → kgy 에서 site_dg.py --qe 판독 (위 명령) → 묶음 회수 (scf.in · scf.out · SHA256SUMS)",
+    "G4 탐침 (두 최저 셀 · k 3 3 1) → --kprobe 로 다시 판독 · G3 발동이면 고정셀 + EOS · G7 발동이면 Li₃PS₄ 다형 둘",
+    "→ §5 허용 서술 중 하나 → 1저자 동의 (사용자 통해)"
+  ],
+  "점검_대조_결과_2026_10_15": {
+    "출처": "사용자 붙여넣기 10-15 (kgy · 발사 블록 1 차)",
+    "받은_판": "09a88aba ($R/src/SOURCE_COMMIT)",
+    "러너_selftest": "11 통과 · 0 실패",
+    "대조_원본": "/home/kgy/work/runs/nd_scf_2026_09_08/ndo_lpscl16_n4fu_O-bo4/scf.in",
+    "설정_diff": "유일한 차이 '> mixing_ndim=8' — 새 입력은 명시 · 원본은 생략 = QE 기본값 8 ⇒ 같은 설정. 나머지 (ecutwfc · ecutrho · occupations · smearing · degauss · conv_thr · mixing_mode · mixing_beta · electron_maxstep · diagonalization · nosym · tprnfor · tstress · pseudo_dir) 는 숫자 표기 정규화 뒤 같다",
+    "처리": "사슬이 diff 에서 멈춰 tmux 를 안 띄웠다 (설계대로) → 이어하기 블록은 새 쪽의 'mixing_ndim=8' 한 줄만 빼고 대조 · 그다음 PP 대조 · DRY_RUN · tmux",
+    "GPU": "6332 / 24576 MiB · 99 % (site10_uma · cascade v7)"
+  },
+  "판독_도구_결과_전": {
+    "도구": "db/inputs/ndo_site_2026_10_14/site_dg.py --qe (DFT 모드 · UMA 판독과 같은 계산부 analyze())",
+    "시험": "selftest 32/32 (UMA 17 + DFT 15 · 완료 판정은 러너 _fc_ok 와 9 fixture 대조) · 변이 6/6 빨강 (bfgs 검사 · 최종 scf 순서 · G2 부호 · G3 비교 · G4 같은 k 거부 · G4 문턱) · 진짜 입력 8 + 가짜 출력으로 명령 끝까지 (rc 0 · 묶음 해시)",
+    "명령": "python3 site_dg.py --qe $R --expect 3 --top 3 --thresholds Nd=0.30 --compare_uma db/raw/ndo_site_2026_10_14/uma_rietveld_2026_10_15/site_dg_rietveld.json --out $R/site_dg_dft.json --bundle $R/bundle_dft",
+    "G4_k_정의_결과_전": "'k 한 단계' = 3 3 1 — 카드 §6 의 2 2 1 에서 a · b 축 +1 (kxL 13.8 → 20.7 Å) · c 축은 kxL 36 Å 라 그대로. 두 모델 최저 셀만 SCF · 기준상은 그대로 (저장소 항 불변) · 탐침 입력은 단일점 뒤 make_inputs.py 설정 그대로 k 만 바꿔 만든다",
+    "G7_문턱": "단일점 판정 문턱 0.30 (--thresholds Nd=0.30) · G3 EOS 뒤 판정이면 0.10"
+  },
+  "⛔_kgy_전원_끊김_2026_10_16": {
+    "출처": "사용자 붙여넣기 10-16 (QE 감시 11:33:18 · 16:06 확인 블록 — run.log 끝 · Li3PS4 폴더 · JOB DONE 수)",
+    "원인": "kgy 전원 끊김 2026-10-16 약 11:34 KST — who -b '2018-01-01 09:01' (시계 초기화) · last -x 세션 끝이 'crash' (shutdown 기록 없음) · 16:06:33 uptime 2:23 → 재부팅 약 13:43 · tmux 소켓 없음 (/tmp 비움) · 우리 잡 마지막 쓰기 11:33–11:33:54 · journalctl -b -1 끝은 10-15 03:29 (시계 초기화로 부트 순서가 섞였을 수 있다 · 판단에 안 씀)",
+    "진행": "site10_uma 끝 07:25:52 → 자동 시작 07:28:48 (8 점) · Li2S ✓ 32 분 (08:00:59) · Li3PS4 vc-relax 08:00:59 시작 → scf.out 마지막 쓰기 11:33 · JOB DONE 0 (11:33:18 감시 기준 BFGS 25 스텝) · 후보 6 점은 시작 전",
+    "처리": "Li3PS4 scf.out · tmp → *.crash_<시각> (처음부터 다시 · 옛 BFGS 이력이 섞이지 않게) → 같은 러너 같은 인자 (MIN_FREE_MIB 8000 · LOCK /tmp/ndsite_dft.lock · 로그 run.log 이어 쓰기) — 러너 sha16 e6fc5b25e4f2b3ad = 발사판 09a88aba 와 같음 · Li2S 는 완료 판정으로 건너뛴다",
+    "결과_영향": "없음 — 기준상 에너지는 완료 판정 (bfgs 수렴 + 최종 scf) 을 통과한 출력만 쓴다",
+    "⏭": "재시작 DRY_RUN 표 (Li2S 완료 · 나머지 대기) 확인 → 8 점 끝 → site_dg.py --qe 판독 (위 ⏭ 그대로)"
   }
- },
- "점검_대조": "kgy 블록이 새 MP_07 입력의 설정 줄 (숫자 표기 정규화) · PP 를 O 배치 카드 nd_scf 원본과 대조하고, 러너 selftest · DRY_RUN 을 거친 뒤에만 tmux 를 띄운다 (&& 사슬)",
- "발사": {
-  "at": "2026-10-15 10:08:47 KST (kgy · 사용자 붙여넣기 · 이어하기 블록)",
-  "tmux": "ndsite_dft — site10_uma 끝을 5 분마다 보고 시작 (그 시각 site10_uma 살아 있음 · 10-14 13:37:29 생성)",
-  "점검": "설정 줄 nd_scf 와 같다 (mixing_ndim 8 = QE 기본값) · PP 같다",
-  "DRY_RUN": "pw.x /home/kgy/apps/qe-7.4.1-gpu/bin/pw.x · MPI /home/kgy/apps/openmpi-4.1.6 (ldd) · libnvomp + libgomp → OMP_NUM_THREADS 1 · 랭크 1 · 설정 균일성 ✓ (8 점 · key bc3759b0) · pseudo /home/kgy/work/pseudo · 8 점 대기",
-  "실행_인자": "MIN_FREE_MIB 8000 · LOCK /tmp/ndsite_dft.lock · 로그 ~/work/runs/ndo_site_dft_2026_10_15/run.log",
-  "GPU_그때": "6333 / 24576 MiB · 99 % (site10_uma · cascade v7)",
-  "감시": "watch -n 60 — ~/w_site10_uma.sh + ndsite_dft tmux · run.log 끝 3 줄 + ~/watch_qe_relax.sh <R>"
- },
- "결과": null,
- "⏭": [
-  "site10_uma 끝 → ndsite_dft 자동 시작 (8 점 · 한 번에 하나) — 감시로 본다",
-  "8 점 끝 → kgy 에서 site_dg.py --qe 판독 (위 명령) → 묶음 회수 (scf.in · scf.out · SHA256SUMS)",
-  "G4 탐침 (두 최저 셀 · k 3 3 1) → --kprobe 로 다시 판독 · G3 발동이면 고정셀 + EOS · G7 발동이면 Li₃PS₄ 다형 둘",
-  "→ §5 허용 서술 중 하나 → 1저자 동의 (사용자 통해)"
- ],
- "점검_대조_결과_2026_10_15": {
-  "출처": "사용자 붙여넣기 10-15 (kgy · 발사 블록 1 차)",
-  "받은_판": "09a88aba ($R/src/SOURCE_COMMIT)",
-  "러너_selftest": "11 통과 · 0 실패",
-  "대조_원본": "/home/kgy/work/runs/nd_scf_2026_09_08/ndo_lpscl16_n4fu_O-bo4/scf.in",
-  "설정_diff": "유일한 차이 '> mixing_ndim=8' — 새 입력은 명시 · 원본은 생략 = QE 기본값 8 ⇒ 같은 설정. 나머지 (ecutwfc · ecutrho · occupations · smearing · degauss · conv_thr · mixing_mode · mixing_beta · electron_maxstep · diagonalization · nosym · tprnfor · tstress · pseudo_dir) 는 숫자 표기 정규화 뒤 같다",
-  "처리": "사슬이 diff 에서 멈춰 tmux 를 안 띄웠다 (설계대로) → 이어하기 블록은 새 쪽의 'mixing_ndim=8' 한 줄만 빼고 대조 · 그다음 PP 대조 · DRY_RUN · tmux",
-  "GPU": "6332 / 24576 MiB · 99 % (site10_uma · cascade v7)"
- },
- "판독_도구_결과_전": {
-  "도구": "db/inputs/ndo_site_2026_10_14/site_dg.py --qe (DFT 모드 · UMA 판독과 같은 계산부 analyze())",
-  "시험": "selftest 32/32 (UMA 17 + DFT 15 · 완료 판정은 러너 _fc_ok 와 9 fixture 대조) · 변이 6/6 빨강 (bfgs 검사 · 최종 scf 순서 · G2 부호 · G3 비교 · G4 같은 k 거부 · G4 문턱) · 진짜 입력 8 + 가짜 출력으로 명령 끝까지 (rc 0 · 묶음 해시)",
-  "명령": "python3 site_dg.py --qe $R --expect 3 --top 3 --thresholds Nd=0.30 --compare_uma db/raw/ndo_site_2026_10_14/uma_rietveld_2026_10_15/site_dg_rietveld.json --out $R/site_dg_dft.json --bundle $R/bundle_dft",
-  "G4_k_정의_결과_전": "'k 한 단계' = 3 3 1 — 카드 §6 의 2 2 1 에서 a · b 축 +1 (kxL 13.8 → 20.7 Å) · c 축은 kxL 36 Å 라 그대로. 두 모델 최저 셀만 SCF · 기준상은 그대로 (저장소 항 불변) · 탐침 입력은 단일점 뒤 make_inputs.py 설정 그대로 k 만 바꿔 만든다",
-  "G7_문턱": "단일점 판정 문턱 0.30 (--thresholds Nd=0.30) · G3 EOS 뒤 판정이면 0.10"
- }
 }
