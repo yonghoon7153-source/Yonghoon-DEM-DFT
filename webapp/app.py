@@ -699,6 +699,49 @@ def _csv_mode_row(label, h_cell, spec, metrics):
     return [label, h_cell, p_disp, _pct_delta(hv, pv) if (hv is not None and pv is not None) else '—']
 
 
+#  ★ 10-16 L214R-03 (Codex LHS214 재검증 판정문 §4 · 수정 계획 lhs214r_fix_plan_20261016 Q3 = 1저자 비준 "화면만" — 분석기 CSV · 계산 무변경) —
+#    최종 병합 뒤 **현재 모드별 망 상태가 이긴다**.  network 게시는 contact 단계의 network_summary.csv 를 갱신하지 않는다 → 옛 CSV 숫자가 split 병합 (Pass A) ·
+#    두 열 Hertz 칸 · 네 열 그대로 경로로 모형 한계 · σ 미채택 모드에 다시 채워졌다 (같은 화면의 상태 행 = 모형 한계 · τ 행 = NOT_COMPUTED 와 모순).
+#    채택 = 생산자 상태 키 없음 (옛 세대) 또는 computed + 유한 σ > 0 · 그 밖 (not_computed · valid_zero · unknown · 값 없음 · 비유한) = 칸 '—' (+ 사유) · Δ '—'.
+#    채택된 모드의 칸은 건드리지 않는다.  Constriction 비율 (접촉별 비가중 평균 — 생산자가 모형 한계에도 싣는다) · 전자 · 열 (Pass D 가 metrics 로 다시 씀) 은 밖.
+_ION_MODE_ROWS = ('σ_ionic (mS/cm)', 'R_brug (과대추정 배수)', 'Contact-free / Full', 'σ_brug / σ_ionic')   # 모드별 칸 = 이온 FULL σ · FULL 유도비
+_ION_RATIO_ROW = 'σ_ionic ratio (physics/Hertzian)'       # Plastic amplification = σ_P / σ_H — 두 모드 다 채택일 때만 정의
+
+
+def _ion_mode_accepted(metrics, mode):
+    """그 모드 ('hertz' · 'physics') 의 이온 FULL σ 가 채택됐나 — 생산자 상태 (sigma_full_status[_physics]) 가 없거나 (옛 세대) computed 이고
+    σ (sigma_full_mScm[_physics]) 가 유한 양수."""
+    sx = '_physics' if mode == 'physics' else ''
+    m = metrics or {}
+    v = m.get('sigma_full_mScm' + sx)
+    return m.get('sigma_full_status' + sx) in (None, 'computed') and _v2_num(v) and float(v) > 0
+
+
+def _mask_unaccepted_ion_modes(data, metrics):
+    """normalize 의 마지막 (Pass G) — 미채택 모드의 이온 σ · FULL 유도비 칸 = `_mode_missing_text` ('—' 또는 모형 한계 사유) · Plastic amplification 은
+    두 모드 다 채택이 아니면 '— / —' · 이 행들에서 한 칸이라도 값이 없으면 Δ '—' (비 미제공 '— / — / 0%' 포함).  CSV 꼴 (split · 두 열 · 네 열 · 새 표) 무관."""
+    ok = {mode: _ion_mode_accepted(metrics, mode) for mode in ('hertz', 'physics')}
+
+    def _blank(c):
+        s = '' if c is None else str(c).strip()
+        return s in ('', '-', '—', 'nan', 'None') or s.startswith('—')
+    for r in data:
+        if not (isinstance(r, list) and len(r) >= 4 and isinstance(r[0], str)):
+            continue
+        lab = r[0].strip()
+        if lab in _ION_MODE_ROWS:
+            for i, mode in ((1, 'hertz'), (2, 'physics')):
+                if not ok[mode]:
+                    r[i] = _mode_missing_text(metrics, 'ionic', mode)
+        elif lab == _ION_RATIO_ROW:
+            if not (ok['hertz'] and ok['physics']):
+                r[1] = r[2] = '—'
+        else:
+            continue
+        if _blank(r[1]) or _blank(r[2]):
+            r[3] = '—'
+
+
 def _same_row(label, val):
     """[label, val, val, '0%'] — metric not affected by contact mode."""
     return [label, val, val, '0%']
@@ -1959,6 +2002,9 @@ def normalize_network_summary_layout(tables, metrics):
               '── τ 비교 ──' back to network solver section.
       Pass C: de-duplicate σ_Bruggeman.
       Pass D: insert σ_e baseline row if missing (using metrics value or 0).
+      Pass G (★ 10-16 L214R-03): after the merge / always-emit rows / sort — the current per-mode network
+              status wins: an unaccepted mode (FULL model limit · no σ · not_computed · valid_zero) shows
+              '—' (+ reason) in the ionic σ and FULL-derived ratio rows, Δ '—' (old CSV numbers never return).
     """
     if 'network_summary' not in tables:
         return
@@ -2460,6 +2506,10 @@ def normalize_network_summary_layout(tables, metrics):
         sorted_rows = sorted(rows_in_section, key=_sort_key)
         for offset, sr in enumerate(sorted_rows):
             data[row_idxs[0] + offset] = sr
+
+    # ── Pass G (★ 10-16 L214R-03): 최종 병합 (Pass A) · 늘 내는 행 · 정렬 뒤 — 현재 모드별 망 상태가 이긴다 ──
+    #    미채택 모드 (모형 한계 · σ 없음 · not_computed · valid_zero) 의 이온 σ · FULL 유도비 = '—' (+ 사유) · Δ '—' — 옛 CSV 숫자 복원 차단 (split · 두 열 · 네 열)
+    _mask_unaccepted_ion_modes(data, metrics)
 
 
 # ──────────────────────────────────────────────────────────────────────────

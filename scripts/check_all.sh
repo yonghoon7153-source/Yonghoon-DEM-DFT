@@ -211,6 +211,9 @@ run 'webapp: constriction_power'  python3 webapp/test_constriction_power_labels.
 run 'webapp: s567_labels'         python3 webapp/test_s567_labels.py   # 10-04 ⑤⑥⑦ — F1 툴팁 (10 nm 출처 없음) · 경로 면적 선별 표본 (LHS-32) · 파괴 LHS-31 · eff_area 식 · A_dem_geometric
 run 'webapp: tau_grade_unify'     python3 webapp/test_tau_grade_unify.py   # 10-04 ②b TAU-03 — 등급 τ · overhead = Hertz 원 솔버 σ + 짝 σ₀ (한 도우미) · COMSOL 2D 두 모드 행 · regime DB · L4-04
 run 'webapp: network_handover_chain' python3 webapp/test_network_handover_chain.py  # 10-05 RGL · SELF-86 — 실 생산자 → 정지 helper → τ → 배치 기록 (stop_after=network) → build_handover 끝-끝 (옛 코드 5/8 = RGL-02 · 03 · 04)
+#  ★ 2026-10-16 (Codex LHS214 재검증 L214R-03 · 수정 계획 Q3 = 화면만) — 최종 병합 뒤 현재 모드별 망 상태가 이긴다: 미채택 모드 (모형 한계 · σ 없음 · not_computed ·
+#    valid_zero) 의 이온 σ · FULL 유도비 = '—' (+ 사유) · Δ '—' — split · 두 열 · 네 열 옛 CSV · 실 생산자 · Flask GET /single — 고치기 전 app.py 5/14.
+run 'webapp: l214r03_display'   python3 webapp/test_l214r03_display.py
 run 'webapp: psi_generation_stamp' python3 webapp/test_psi_generation_stamp.py  # 10-06 L2-01 세대 2 — full_metrics · 도장 psi_placement_physics (솔버 출력) · 망 소유 키 · 정지 계약 ⑥b · 옛 세대 재투영 · τ 협착 라벨
 run 'webapp: gen2_publication_handover' python3 webapp/test_gen2_publication_handover.py  # 10-06 밤 G2R-01 · 02 — Codex 게시 · 인계 반례 (H12 주 자리 · ψ/전극 오타 · 부분 결손 · 표지 없는 후보) 를 실 생산자 사슬로: 정지 · 일반 경로 게시 전 거부 · 강제 폴더 인계 거부 · 같은 결함 코호트 · 옛 세대 추론 자격 (도장) · build_handover (옛 코드 2/11)
 run 'g2_network_reread --selftest' python3 scripts/g2_network_reread.py --selftest  # 10-07 Codex 세대 2 재검증 §7-4 — 게시 다시 읽기 (읽기 전용): 실 생산자 게시 (관통 · 비관통 · GEN2-01) 양성 · 증서 CF → FULL · 도장 null · 기대 세대 다름 · manifest 선언 없음 반례 · ★ G2RR4-01 실 생산자 JSON = 상세 계약 (17/19 → 19/19)
