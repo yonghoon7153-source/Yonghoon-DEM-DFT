@@ -101,5 +101,12 @@
     "설계_결과_전": "db/inputs/ndo_site_eos_2026_10_16/eos_plan.json — 셀 (Rietveld 모양 등방 스케일) · 격자 x 0.98–1.08 6 점 · relax (힘 1e-3 · 에너지 1e-5 · BFGS) · 끝점 연장 · BM3 (ASE) · 바닥 확인 (x 1.04 기준 · 0.3 Å) · V₀ relax · site_dg.py --qe 문턱 0.10 · G7 조건",
     "입력": "db/inputs/ndo_site_eos_2026_10_16/<이름>_x<XXX>/scf.in 12 개 (MLi_04 · MP_07 × 6) + inputs_manifest.json · 생성기 make_eos_inputs.py selftest 14/14 (음성 7 — Rietveld 각 · 조성 · Q1 좌표 · degauss · &CELL · vc-relax · 카드 k) · Q1 단일점 입력과 바뀐 곳 = calculation · 문턱 두 줄 · &IONS · CELL 3 줄뿐 (diff 확인)",
     "⏭": "kgy 발사 (tmux ndsite_eos · LOCK /tmp/ndsite_eos.lock · run.log) → 12 점 끝 → 2 단계 맞춤 도구 (eos_plan.json 규칙 그대로 · 결과 보기 전에 커밋) → V₀ relax → site_dg.py --qe 문턱 0.10"
+  },
+  "G3_EOS_발사_2026_10_16": {
+    "출처": "사용자 붙여넣기 2026-10-16 23:45 (kgy)",
+    "입력": "git archive 699bab4c → ~/work/runs/ndo_site_eos_2026_10_16 · 입력 해시 12 / 12 ✓ (inputs_manifest.json 대조)",
+    "DRY_RUN": "GPU 빌드 랭크 1 · MPI openmpi-4.1.6 (ldd) · OMP 1 · 설정 균일성 ✓ (12 점 · key bc3759b0 = Q1 단일점과 같은 키) · 12 점 대기",
+    "발사": "tmux ndsite_eos 23:45:33 · MIN_FREE_MIB 8000 · LOCK /tmp/ndsite_eos.lock · run.log · 순서 MLi_04_x098 → … → MP_07_x108 · 곁의 GPU 잡 = li2s B 650 K seed3 → (li2s 끝나면) cascade v7 (사용자 ②)",
+    "⏭": "12 점 끝 전에 2 단계 맞춤 도구 커밋 (eos_plan.json 규칙 그대로) → 끝 → 맞춤 · 바닥 확인 · 끝점 연장 판단 → V₀ relax"
   }
 }
