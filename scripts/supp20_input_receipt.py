@@ -528,19 +528,52 @@ def _selftest() -> int:
         td = Path(td)
         rtxt = _rp(REG_DOC).read_text(encoding='utf-8')
 
-        def reg_variant(name, registered, pending=(), old_second=None):
+        def s3_span(t_):
+            """시험 쪽 §3 자리 (도구 파서와 따로 — 맨 '## 3.' 제목 줄부터 다음 '## ' 제목 앞까지) → (시작, 끝) · 없으면 (None, None)."""
+            i3_ = t_.find('\n## 3.')
+            if i3_ < 0:
+                return None, None
+            i4_ = t_.find('\n## ', i3_ + 1)
+            return i3_, (i4_ if i4_ >= 0 else len(t_))
+
+        def reg_variant(name, registered, pending=(), old_second=None, old_second_at='s3'):
             """★ 10-15 (나′) 등록 문서 사본 — 지문 토큰만 바꾼다 (다른 칸은 실물 그대로 · 실물이 옛 초안 꼴이든 대기 선언 꼴이든 같은 결과):
             모든 `code_fp <hex>` → `code_fp <registered>` · 있던 대기 선언 `code_fp_pending <hex>` → 맨 hex (선언 아님) · pending 값마다 대기 선언 한 줄 ·
-            old_second = 옛 초안 꼴 둘째 값 (`code_fp <hex>`) 한 줄."""
+            old_second = 옛 초안 꼴 둘째 값 (`code_fp <hex>`) 한 줄 — ★ 10-16 L214R-04: 파서가 활성 §3 만 읽으므로 자리를 고른다 ('s3' = §3 끝 · 'end' = 문서 끝 = §3 밖)."""
             t_ = re.sub(r'`code_fp ([0-9a-f]{64})`', f'`code_fp {registered}`', rtxt)
             t_ = re.sub(r'`code_fp_pending ([0-9a-f]{64})`', r'`\1`', t_)
             for v_ in pending:
                 t_ += f'\n| 대기 지문 (selftest 사본) | `code_fp_pending {v_}` |\n'
-            if old_second:
-                t_ += f'\n| 개정 초안 (옛 꼴 · selftest 사본) | `code_fp {old_second}` |\n'
+            if old_second and old_second_at == 's3':
+                _i3, _i4 = s3_span(t_)
+                line_ = f'\n- 개정 초안 (옛 꼴 · selftest 사본 · §3 안): `code_fp {old_second}`\n'
+                t_ = (t_[:_i4] + line_ + t_[_i4:]) if _i3 is not None else (t_ + line_)
+            elif old_second:
+                t_ += f'\n| 개정 초안 (옛 꼴 · selftest 사본 · §3 밖) | `code_fp {old_second}` |\n'
             p_ = td / f'reg_fp_{name}.md'
             p_.write_text(t_, encoding='utf-8')
             return str(p_)
+
+        def reg_ratify(name, new_fp):
+            """★ 10-16 L214R-04 — Codex 변이 minimal_activate_section3 그대로 (판정문 §5 · 등록 문서가 안내한 비준 단계): 대기 선언 삭제 · 활성 §3 의
+            `code_fp <hex>` 만 new_fp 로 · 역사 표 (같은 기계 구문 옛 값) 는 그대로.  → (경로, 정보 — §3 안 토큰을 바꿨나 · §3 밖 역사 토큰 (new_fp 와 다른 값) ·
+            합성 역사 행을 붙였나).  실물에 그런 역사 토큰이 없으면 (미래 판) 같은 기계 구문의 역사 행 하나를 붙여 조건을 늘 시험한다."""
+            t_ = re.sub(r'`code_fp_pending [0-9a-f]{64}`', '(대기 선언 삭제 — selftest 비준 전환 사본)', rtxt)
+            _i3, _i4 = s3_span(t_)
+            m_ = re.search(r'`code_fp ([0-9a-f]{64})`', t_[_i3:_i4]) if _i3 is not None else None
+            if m_:
+                a_ = _i3 + m_.start()
+                t_ = t_[:a_] + f'`code_fp {new_fp}`' + t_[a_ + len(m_.group(0)):]
+                _i3, _i4 = s3_span(t_)
+            hist_ = sorted({v for v in re.findall(r'`code_fp ([0-9a-f]{64})`', t_[:_i3] + t_[_i4:]) if v != new_fp}) if _i3 is not None else []
+            synth_ = not hist_
+            if synth_:
+                t_ += f'\n| §3 코드 신원 (selftest 역사 사본 · 원문 보존) | `code_fp {R_SIM}` |\n'
+                hist_ = [R_SIM]
+            p_ = td / f'reg_ratify_{name}.md'
+            p_.write_text(t_, encoding='utf-8')
+            return str(p_), dict(in_s3=bool(m_), old=(m_.group(1) if m_ else None), history=hist_, synthetic_history=synth_,
+                                 pending_left=bool(re.search(r'`code_fp_pending [0-9a-f]{64}`', t_)))
         #  ⓕ 비준 쌍둥이 — 등록 §3 := 체크아웃 지문 · 대기 선언 없음 (비준 · 재등록 뒤의 꼴).  판별 문서 DISC = 상태 registered 면 실물 · 아니면 이 쌍둥이 —
         #  pending 에서는 D1 · E2 · F5 · G5 가 이미 실패라, 그 칸을 겨눈 음성 대조 (S7l · S8e · S8f) 를 이미 실패 중인 칸으로 통과시키지 않으려고 쌍둥이에서 판별한다
         #  (쌍둥이의 정상 기록 = rc 0 · S11f · S11f2 · S11f3).
@@ -988,11 +1021,12 @@ def _selftest() -> int:
 
         def r0_says(rec, word):
             return any(word in str(x) for x in (cdet_raw(rec, 'R0') or []))
-        #  ⓐ 옛 초안 꼴 — 새 지문을 `code_fp <hex>` 둘째 값으로 (10-15 게이트 실패의 꼴)
+        #  ⓐ 옛 초안 꼴 — 새 지문을 `code_fp <hex>` 둘째 값으로 (10-15 게이트 실패의 꼴) · ★ 10-16 L214R-04: 파서가 활성 §3 만 읽으므로 둘째 값을 §3 안에 둔다
+        #     (같은 꼴이 §3 밖 = 역사 · 초안 표면 활성 값으로 읽지 않는다 → S12b)
         ra = receipt(reg_doc=reg_variant('a_old', registered=R_SIM, old_second=fp_now))
         va = ra['registration']['values']
-        chk('S11a ★ (나′) ⓐ 옛 초안 꼴 (새 지문을 `code_fp <hex>` 둘째 값으로 적은 등록 문서) → rc 1 · 실패 칸 정확히 {R0 · D1} (값이 둘 = 등록 §3 을 못 읽음 · code_fp None) · '
-            '상태 판정 = undeclared (시험 충돌 없음)',
+        chk('S11a ★ (나′) ⓐ 옛 초안 꼴 (새 지문을 `code_fp <hex>` 둘째 값으로 적은 등록 문서 — §3 안 · L214R-04) → rc 1 · 실패 칸 정확히 {R0 · D1} '
+            '(값이 둘 = 등록 §3 을 못 읽음 · code_fp None) · 상태 판정 = undeclared (시험 충돌 없음)',
             ra['rc'] == 1 and bad_ids(ra) == {'R0', 'D1'} and va.get('code_fp') is None and r0_says(ra, '값이 둘 이상') and fp_state(va, fp_now)[0] == 'undeclared',
             (sorted(bad_ids(ra)), cdet_raw(ra, 'R0'), fp_state(va, fp_now)))
         #  ⓑ 대기 선언 값 둘 (서로 다름) — 등록 = 체크아웃 (D1 은 같음 → R0 만 겨눈다)
@@ -1039,6 +1073,86 @@ def _selftest() -> int:
         rf3 = receipt(manifest=ms0, primary_manifest=mp194, reg_doc=TWIN)
         chk('S11f3 ★ (나′) ⓕ 같은 쌍둥이 · 정상 발사 manifest 둘 (S8) → rc 0 (pending 의 F5 · G5 실패 = 지문 하나뿐 · S8e · S8f 판별의 기준)', rf3['rc'] == 0,
             sorted(bad_ids(rf3)))
+        #  ⑫ ★ 10-16 L214R-04 (Codex LHS214 재검증 판정문 §5 · 수정 계획 lhs214r_fix_plan_20261016 Q4 = 1저자 비준) — 파서가 **활성 §3 의 code_fp 만** 읽는다
+        #    (역사 표 · 초안 표의 같은 기계 구문 `code_fp <hex>` = 읽지 않음 · 등록 문서 · 역사 표는 고치지 않는다).  반례 먼저 — 고치기 전 판은 문서 전체의 토큰을 읽어
+        #    안내된 비준 단계 (§3 갱신 + 대기 선언 삭제 + 역사 표 보존) 가 R0 · D1 (registered None) 였다 (ⓕ 쌍둥이는 전역 치환이라 이 구멍을 놓쳤다).
+        #    대기 선언은 여전히 발사 허용값이 아니다 (D1 · E2 · F5 · G5 = 등록 §3 값만) · 상충 대기 = R0 (그대로).
+        rat_doc, rat = reg_ratify('min', fp_now)
+        r12a = receipt(reg_doc=rat_doc)
+        v12a = r12a['registration']['values']
+        chk('S12a ★ L214R-04 비준 전환 (Codex minimal_activate_section3 — 대기 선언 삭제 · 활성 §3 만 체크아웃 지문으로 · 역사 표의 옛 `code_fp <hex>` 보존) → rc 0 · '
+            '읽은 등록 §3 = 체크아웃 · 대기 None (고치기 전: R0 · D1 · registered None)',
+            rat['in_s3'] and bool(rat['history']) and not rat['pending_left'] and r12a['rc'] == 0 and v12a.get('code_fp') == fp_now
+            and v12a.get('code_fp_pending') is None, (sorted(bad_ids(r12a)), cdet_raw(r12a, 'R0'), cdet(r12a, 'D1'), rat))
+        r12a2 = rsafe(preflight_receipt=P_pos, reg_doc=rat_doc)
+        chk('S12a2 ★ L214R-04 같은 비준 전환 사본 · 정상 사전 점검 영수증 (S7) → rc 0 (E2 = 활성 §3 값 · 역사 값을 읽지 않는다)',
+            rat['in_s3'] and bool(rat['history']) and r12a2.get('rc') == 0, (sorted(bad_ids(r12a2)), e2_fp(r12a2), r12a2.get('error')))
+        r12a3 = receipt(manifest=ms0, primary_manifest=mp194, reg_doc=rat_doc)
+        chk('S12a3 ★ L214R-04 같은 비준 전환 사본 · 정상 발사 manifest 둘 (S8) → rc 0 (F5 · G5 = 활성 §3 값)',
+            rat['in_s3'] and bool(rat['history']) and r12a3['rc'] == 0, sorted(bad_ids(r12a3)))
+        #  옛 초안 꼴이 §3 밖 (10-15 게이트 실패의 실제 자리 = §9 표) — 활성 값도 대기 선언도 아니다 → 발사 대조는 §3 값 그대로 (그 토큰이 체크아웃과 같아도 통과 못 함)
+        rg = receipt(reg_doc=reg_variant('g_out', registered=R_SIM, old_second=fp_now, old_second_at='end'))
+        vg = rg['registration']['values']
+        chk('S12b ★ L214R-04 옛 초안 꼴 (`code_fp <체크아웃>`) 이 §3 밖 (역사 · 초안 표) → 읽지 않음 · rc 1 · 실패 칸 정확히 {D1} · 읽은 등록 §3 = 모의 값 · 대기 None · '
+            '상태 undeclared (그 토큰이 체크아웃과 같아도 활성 · 대기 값이 아니다 — 고치기 전: R0 · D1)',
+            rg['rc'] == 1 and bad_ids(rg) == {'D1'} and vg.get('code_fp') == R_SIM and vg.get('code_fp_pending') is None
+            and fp_state(vg, fp_now)[0] == 'undeclared' and cdet(rg, 'D1').get('registered') == R_SIM and cdet(rg, 'D1').get('now') == fp_now,
+            (sorted(bad_ids(rg)), cdet_raw(rg, 'R0'), cdet(rg, 'D1')))
+        #  대기 선언 + §3 밖 역사 토큰 (같은 기계 구문 · 체크아웃과 같은 값) — 대기 · 역사 어느 쪽도 발사 허용값이 아니다 (D1 · E2 · F5 · G5 = 등록 §3 값만)
+        hdoc = reg_variant('h_pend_hist', registered=R_SIM, pending=(fp_now,), old_second=fp_now, old_second_at='end')
+        rh = receipt(reg_doc=hdoc)
+        vh = rh['registration']['values']
+        chk('S12c ★ L214R-04 대기 선언 (= 체크아웃) + §3 밖 역사 토큰 (= 체크아웃) · 등록 §3 = 모의 값 → 상태 pending · rc 1 · 실패 칸 정확히 {D1} · D1 상세 registered = §3 · '
+            'pending = 체크아웃 (대기 선언이 발사 허용값이 되지 않는다 — 고치기 전: R0 · D1)',
+            fp_state(vh, fp_now)[0] == 'pending' and rh['rc'] == 1 and bad_ids(rh) == {'D1'} and fp_why_ok(rh, {'D1'}, R_SIM, fp_now),
+            (fp_state(vh, fp_now), sorted(bad_ids(rh)), cdet(rh, 'D1')))
+        rh2 = rsafe(preflight_receipt=P_pos, reg_doc=hdoc)
+        chk('S12c2 ★ L214R-04 같은 문서 · 정상 사전 점검 영수증 → rc 1 · 실패 칸 정확히 {D1 · E2} (E2 = 등록 §3 값만)',
+            rh2.get('rc') == 1 and bad_ids(rh2) == {'D1', 'E2'} and fp_why_ok(rh2, {'D1', 'E2'}, R_SIM, fp_now), (sorted(bad_ids(rh2)), e2_fp(rh2), rh2.get('error')))
+        rh3 = receipt(manifest=ms0, primary_manifest=mp194, reg_doc=hdoc)
+        chk('S12c3 ★ L214R-04 같은 문서 · 정상 발사 manifest 둘 → rc 1 · 실패 칸 정확히 {D1 · F5 · G5} (발사 봉인 = 등록 §3 값만)',
+            rh3['rc'] == 1 and bad_ids(rh3) == {'D1', 'F5', 'G5'} and fp_why_ok(rh3, {'D1', 'F5', 'G5'}, R_SIM, fp_now), (sorted(bad_ids(rh3)), cdet(rh3, 'F5')))
+
+        def with_pending(src, name, vals):
+            """비준 전환 사본 (역사 표 보존) 에 대기 선언 줄을 붙인 사본."""
+            t_ = Path(src).read_text(encoding='utf-8')
+            for v_ in vals:
+                t_ += f'\n| 대기 지문 (selftest 사본) | `code_fp_pending {v_}` |\n'
+            q_ = td / f'reg_ratify_{name}.md'
+            q_.write_text(t_, encoding='utf-8')
+            return str(q_)
+        #  상충 대기 (역사 표를 보존한 비준 사본 위) — 대기 = 활성 §3 (모순) · 대기 값 둘 = R0 (그대로)
+        ri = receipt(reg_doc=with_pending(rat_doc, 'i_same', (fp_now,)))
+        chk('S12d ★ L214R-04 역사 표 보존 비준 사본 + 대기 선언 = 활성 §3 (모순) → rc 1 · 실패 칸 정확히 {R0} · 읽은 대기 None (고치기 전: R0 · D1)',
+            ri['rc'] == 1 and bad_ids(ri) == {'R0'} and r0_says(ri, 'code_fp_pending') and ri['registration']['values'].get('code_fp_pending') is None,
+            (sorted(bad_ids(ri)), cdet_raw(ri, 'R0')))
+        rj = receipt(reg_doc=with_pending(rat_doc, 'j_two', (P_SIM, P_SIM2)))
+        chk('S12d2 ★ L214R-04 역사 표 보존 비준 사본 + 대기 선언 값 둘 (서로 다름) → rc 1 · 실패 칸 정확히 {R0} · 읽은 대기 None (고치기 전: R0 · D1)',
+            rj['rc'] == 1 and bad_ids(rj) == {'R0'} and r0_says(rj, 'code_fp_pending') and rj['registration']['values'].get('code_fp_pending') is None,
+            (sorted(bad_ids(rj)), cdet_raw(rj, 'R0')))
+        #  §3 자리 — 제목이 없거나 둘이면 활성 값을 정할 수 없다 (fail-closed · R0 · 문서 전체 토큰으로 대신하지 않는다)
+        q12 = td / 'reg_no_s3.md'
+        q12.write_text(rtxt.replace('\n## 3.', '\n## 삼.', 1), encoding='utf-8')          # §3 제목만 지움 (토큰은 그대로)
+        rk = receipt(reg_doc=str(q12))
+        chk('S12e ★ L214R-04 §3 제목 (## 3.) 없음 → rc 1 · R0 (§3 자리 없음) · D1 · 읽은 code_fp None (고치기 전: §3 와 무관하게 문서 전체에서 읽음)',
+            rk['rc'] == 1 and {'R0', 'D1'} <= bad_ids(rk) and r0_says(rk, '§3') and rk['registration']['values'].get('code_fp') is None,
+            (sorted(bad_ids(rk)), cdet_raw(rk, 'R0')))
+        q12 = td / 'reg_two_s3.md'
+        q12.write_text(rtxt + f'\n## 3. 코드 신원 (selftest 중복)\n\n- 봉인 32 · `code_fp {R_reg}`\n', encoding='utf-8')
+        rl = receipt(reg_doc=str(q12))
+        chk('S12e2 ★ L214R-04 §3 제목 둘 (같은 등록 값을 담은 중복 절) → rc 1 · R0 (§3 자리 둘 이상) · 읽은 code_fp None (고치기 전: 값이 하나라 R0 통과)',
+            rl['rc'] == 1 and 'R0' in bad_ids(rl) and r0_says(rl, '§3') and rl['registration']['values'].get('code_fp') is None,
+            (sorted(bad_ids(rl)), cdet_raw(rl, 'R0')))
+        #  울타리 (```) 안의 '#' 줄은 제목이 아니다 — §3 을 거기서 끊지 않는다 (지킴 시험 · 고치기 전 판도 통과)
+        s3a, _s3b = s3_span(rtxt)
+        jfp = rtxt.find('`code_fp ', s3a) if s3a is not None else -1
+        lfp = rtxt.rfind('\n', 0, jfp) if jfp >= 0 else -1
+        fence = '\n```bash\n## 4. 울타리 안 (제목 아님)\n# 주석\n```\n'
+        q12 = td / 'reg_fence.md'
+        q12.write_text((rtxt[:lfp] + fence + rtxt[lfp:]) if lfp >= 0 else (rtxt + fence), encoding='utf-8')
+        rfe = receipt(reg_doc=str(q12))
+        chk('S12f L214R-04 지킴 — §3 안 code_fp 줄 앞 울타리 (```) 에 "## 4." · "# 주석" 줄 → 제목으로 보지 않음 · 읽은 등록 §3 = 실물 값 · R0 통과',
+            lfp >= 0 and rfe['registration']['values'].get('code_fp') == R_reg and 'R0' not in bad_ids(rfe), (sorted(bad_ids(rfe)), cdet_raw(rfe, 'R0')))
     print(f'\nsupp20_input_receipt selftest: {ok}/{ok + len(fail)} PASS' + (f'   FAILED: {fail}' if fail else ''))
     return 1 if fail else 0
 
