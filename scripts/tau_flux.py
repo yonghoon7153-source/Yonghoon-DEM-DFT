@@ -626,7 +626,10 @@ def _cert_problem(cert):
 #    ② 기하 — geometry {plate_z, box_x, box_y, scale} 유한 양수 · g_to_q = (plate_z·scale)/(box_x·box_y·scale²) (상대 1e-12) · 한 실행의 모든 증서
 #       (모드 셋 · 가지 셋 · 채널 사본) 가 같은 기하 = 봉인된 기하 (`_cert_geometry_problems`)
 #    ③ 재구성 — q = (I_bottom/ΔV)·T/A (생산자 σ 환산과 같은 식 · 같은 순서) 가 저장 σ_ratio 의 반올림 반폭 (5e-9 + 16ε) 안 · 1000·σ₀·q 가 저장
-#       σ_dim 의 저장 정밀도 허용 (`sigma_identity_tol` — 6 자리 반폭 5e-7 + 8 자리 반폭 몫 + 16ε) 안 · σ₀ = **세 가지 모두 부모 sigma_grain_S_cm**
+#       σ_dim 의 저장 정밀도 허용 (`sigma_identity_tol` — 6 자리 반폭 5e-7 + 8 자리 반폭 몫 + 16ε) 안 · σ₀ = **세 가지 모두 부모 sigma_grain_S_cm** ·
+#       ★ 10-16 L214R-05 (L214R-01 A 의 규칙 그대로 — 1저자 10-16 Q3 권고대로) — 기하 환산 T · A · T/A · ΔV · 재구성 q · 차원 σ · 그 허용을 비교 **전에** 유한 (양수)
+#       로 본다: 넘침 · 밑넘침 (scale² 의 OverflowError · float 로 못 옮기는 큰 JSON 정수 포함) = 기술 실패 사유 (생산자 NON_FINITE_REASON 꼬리표) · 예외 · inf ≤ inf 아님
+#       (생산자 판정 `_geometry_TA` · `_cert_num` 을 그대로 부른다 · 식 · 순서 · 허용치 · 정상 레코드 결과 그대로)
 #       (★ 10-07 G2RR2-04 — 옛 판은 CF · 협착-only 를 그 증서 자신의 sigma_bulk_S_cm 로 재구성해 증서 내부 자기일관성만 봤고 · 주석은 증서 ↔ 부모 짝을
 #       정지 계약 ⑧ 에 맡긴다고 했는데 ⑧ (`pipeline_service.network_sigma0_problem`) 은 증서를 읽지 않았다 → CF 증서 σ₀ ×2 + CF 차원값 재계산이 게시 ·
 #       인계 · 다시 읽기를 다 지났다 · Codex 세대 2 재검증 2 §5)
@@ -683,17 +686,22 @@ CHANNEL_CERT_NAME = {'electronic_': 'electronic', 'thermal_': 'thermal'}
 
 
 def _cert_geometry(cert):
-    """증서 → (T, A, '') | (None, None, 사유) — T = plate_z·scale · A = box_x·box_y·scale² (생산자 σ 환산과 같은 식) · g_to_q 대조."""
-    g = cert.get('geometry')
-    if not isinstance(g, dict):
-        return None, None, f'기하 (geometry) 없음 · 객체 아님 ({type(g).__name__})'
-    bad = [k for k in CERT_GEOMETRY_KEYS if _pos(g.get(k)) is None]
-    if bad:
-        return None, None, f'기하 {bad} 결손 · 비유한 · 양수 아님'
-    T = g['plate_z'] * g['scale']
-    A = g['box_x'] * g['box_y'] * g['scale'] ** 2
-    want, g2q = T / A, _pos(cert.get('g_to_q'))
-    if g2q is None or not abs(g2q - want) <= CERT_G2Q_REL_TOL * want:
+    """증서 → (T, A, '') | (None, None, 사유) — T = plate_z·scale · A = box_x·box_y·scale² (생산자 σ 환산과 같은 식) · g_to_q 대조.
+    ★ 10-16 L214R-05 — 기하 네 값 · 환산 T · A 는 생산자 판정 `_geometry_TA` 그대로 (scale² 넘침 · 큰 정수 = 예외가 아니라 사유 · 넘침 · 밑넘침 = NON_FINITE_REASON) ·
+    T/A 도 대조 **전에** 유한 양수 (넘친 T/A 와는 어떤 g_to_q 도 inf ≤ inf 로 '같다' — 모형 한계 증서 `model_limit_certificate_problem` 과 같은 규칙)."""
+    nc = _nc_mod()
+    T, A, why = nc._geometry_TA(cert.get('geometry'))
+    if why:
+        return None, None, why
+    try:
+        want = T / A
+    except (OverflowError, ZeroDivisionError):                  # 큰 정수끼리의 나눗셈 넘침 (float 나눗셈은 inf)
+        want = None
+    if nc._cert_num(want) is None or not want > 0:
+        return None, None, (f'{nc.NON_FINITE_REASON} — 기하 환산 T/A = {want!r} 가 유한 양수가 아니다 (넘침 · 밑넘침 · T {T!r} · A {A!r} — 생산자는 이 기하를 '
+                            f'풀지 않는다 · {nc.INVALID_GEOMETRY_REASON})')
+    g2q = nc._cert_num(cert.get('g_to_q'))                      # 큰 정수 = None (사유) · 예외 아님
+    if g2q is None or not g2q > 0 or not abs(g2q - want) <= CERT_G2Q_REL_TOL * want:
         return None, None, (f'G→q 인자 g_to_q {cert.get("g_to_q")!r} ≠ 기하에서 다시 잰 (plate_z·scale)/(box_x·box_y·scale²) = {want!r} '
                             '(기하 인자 변이)')
     return T, A, ''
@@ -729,7 +737,8 @@ def _cert_published_problem(m, branch, rec, q, sd, st, cert):
         bad.append(f'전극 {cert.get("electrode_model")!r} ≠ {ELECTRODE_G2!r} (부모 · 자리)')
     if cert.get('status') != st:
         bad.append(f'증서 상태 {cert.get("status")!r} ≠ 그 가지 상태 {st!r}')
-    dv = _num(cert.get('delta_V'))
+    nc = _nc_mod()
+    dv = nc._cert_num(cert.get('delta_V'))                          # ★ 10-16 L214R-05 — 큰 정수 = None (ΔV 사유) · 예외 아님
     if dv != CERT_DELTA_V:
         bad.append(f'ΔV {cert.get("delta_V")!r} ≠ {CERT_DELTA_V!r} (정확 Dirichlet — 바닥 띠 1 · 위 띠 0)')
     T, A, gwhy = _cert_geometry(cert)
@@ -737,6 +746,10 @@ def _cert_published_problem(m, branch, rec, q, sd, st, cert):
         bad.append(gwhy)
     if T is not None and dv is not None and dv > 0:                 # 재구성 — 결합 어긋남과 함께 보인다 (무엇이 어긋났는지 한 번에)
         q_rec = (float(cert['I_bottom']) / dv) * T / A
+        if nc._cert_num(q_rec) is None or not q_rec > 0:            # ★ L214R-05 — 같은 식 · 같은 순서의 재구성이 유한 입력에서 넘치거나 0 으로 밑넘치면 비교하지 않는다
+            bad.append(f'{nc.NON_FINITE_REASON} — 증서 재구성 q = I_bottom/ΔV × T/A = {q_rec!r} 가 유한 양수가 아니다 (넘침 · 밑넘침 — 생산자 solve_network 는 '
+                       f'이 해를 {nc.NON_FINITE_REASON} 로 거부한다 · 발행 σ_ratio {q!r} 와 비교하지 않는다)')
+            return ' · '.join(bad)
         qn, sdn = _num(q), _num(sd)
         if qn is None or not abs(qn - q_rec) <= SIGMA_RATIO_ROUND_HALF + _ID_FP * abs(q_rec):
             bad.append(f'발행 σ_ratio {q!r} ≠ 증서 재구성 I_bottom/ΔV × T/A = {q_rec!r} (저장 반올림 반폭 {SIGMA_RATIO_ROUND_HALF:g} 밖)')
@@ -749,7 +762,10 @@ def _cert_published_problem(m, branch, rec, q, sd, st, cert):
         else:
             d_rec = 1000.0 * s_ref * q_rec
             tol = sigma_identity_tol(s_ref, q_rec, sdn)
-            if not abs(sdn - d_rec) <= tol:
+            if nc._cert_num(d_rec) is None or not d_rec > 0 or nc._cert_num(tol) is None:   # ★ L214R-05 — 넘친 차원 σ · 허용 (σ_dim + 1000·σ₀·q) 과는 x ≤ inf 가 참
+                bad.append(f'{nc.NON_FINITE_REASON} — 증서 재구성 차원 σ 1000·σ₀(부모)·q = {d_rec!r} · 저장 정밀도 허용 {tol!r} 가 유한하지 않다 (넘침 · '
+                           f'밑넘침 — 발행 σ_dim {sdn!r} 와 비교하지 않는다)')
+            elif not abs(sdn - d_rec) <= tol:
                 bad.append(f'발행 σ_dim {sdn!r} mS/cm ≠ 증서 재구성 1000·σ₀(부모)·q = {d_rec!r} (G2RR2-04 · 저장 정밀도 허용 {tol:.3g} 밖 — 증서 σ₀ 로 '
                            '다시 계산한 차원값은 받지 않는다)')
     return ' · '.join(bad) if bad else None
@@ -866,7 +882,8 @@ def sigma0_binding_problems(rec):
         c = rec.get(ck)
         if isinstance(c, dict) and 'sigma_bulk_S_cm' in c:
             cs = c.get('sigma_bulk_S_cm')
-            if _num(cs) is None or _num(p0) is None or _num(cs) != _num(p0):
+            csn = _nc_mod()._cert_num(cs)                       # ★ 10-16 L214R-05 — 증서 값의 큰 JSON 정수 = None (아래 사유) · 예외 아님 (생산자 `_cert_num` 그대로)
+            if csn is None or _num(p0) is None or csn != _num(p0):
                 out.append(f'{ck}: 증서 σ₀ (sigma_bulk_S_cm) {cs!r} ≠ 부모 σ₀ (sigma_grain_S_cm) {p0!r} — 이온 가지 증서는 그 실행의 σ₀ 로 풀린다 '
                            '(G2RR2-04 · 정확히 같은 수)')
     refs = None

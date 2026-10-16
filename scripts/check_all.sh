@@ -267,6 +267,9 @@ run 'L214R-01 증서 유한성 · 채택 단 결합 (반례 먼저)' python3 scr
 #    `full_model_limit_hertz` · `_physics` 칸으로 보존 → 배포 build · check 가 같은 함수로 H0 주 타깃 HOLD (표지 없음 · 모르는 값 · 모순 = fail-closed) ·
 #    실 생산자 레코드 · 게시 → 인계 사슬 · 실제 build_v13 / check_v13 — 고치기 전 코드 17/47.
 run 'L214R-02 모형 한계 독립 표지 · 배포 HOLD (반례 먼저)' python3 scripts/test_l214r02_model_limit_flag.py
+#  ★ 2026-10-16 (1저자 Q3 — L214R-01 A 규칙을 게시 증서 경로로 · 원장 L214R-05) — 게시된 FULL · CF · 협착-only 증서의 재구성 q · σ 가 유한 입력에서 넘치면
+#    non_finite 사유 (inf ≤ inf 통과 · 예외 아님) · 0b ∧ 결합 · 0b ∧ 세대 계약 · 레코드 판정 · τ 행 · 실 생산자 정상 증서 대조 — 고치기 전 코드 109/184.
+run 'L214R-05 게시 증서 유한성 (반례 먼저)' python3 scripts/test_l214r05_published_certificate.py
 #  ★ 2026-10-06 밤 (3단계 · C2-⑥ 1저자 비준 · LHS-25 · LHSC-08 · LHS-27) — Physics 피복 = 합집합 cap (`*_physics_union` 새 키 · 해석해 ·
 #    생산자 빈칸 계약 · real_14 51.522 → 43.218 = 설계 원형 AM 457 개 1e-13 안 · case15 = 빈칸 (c_cpl[22] < 0) · 원형 ×0.87 재현) ·
 #    벽 근접 접선 수 (분류 불변 · 자릿수는 파일마다 · STL 따로) · 피복 CLI 가 실행 위치 추적 파일을 안 덮는다 (--summary-out 명시만).
