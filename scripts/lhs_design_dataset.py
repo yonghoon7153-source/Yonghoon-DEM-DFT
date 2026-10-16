@@ -1362,7 +1362,8 @@ WA_GROUPS = ('contact', 'percolation', 'f1', 'fracture', 'area')
 #:   ④a 협착 전력 몫 · electronic_active_fraction 은 아직 인계 묶음이 아니다 (v1.2 범위 밖 · Codex 10-05 3차 §6-5).
 #:   생산 쪽 정지점 (배치 `--stop-after` choices · 웹앱 `PIPELINE_STOP_AFTER`) 이 늘면 여기에 역량을 적기 전까지 거부한다 (selftest ㉖i 가 동기를 본다).
 #: ★ 망 τ 묶음 (v1.2 · Codex 10-05 3차 재검증 §3 Q5 · §6-5 *"⑤⑥⑦ · 망 τ 만 · LW 제외"*) — network 정지 배치의 케이스 폴더 (`<--work>/results/<case>/`)
-#:   에서 **tau_flux 자신** (`case_row`) 이 낸 이온 망 인계 열 (v2 §5-1 · 모드 꼬리 · `tau_flux.column_names()` — 10-06 밤부터 50 열: 모드 셋 × 15 + 공통 5 (σ₀ · T · φ · L 기준 · 세대 칸)) 을 싣는다.  census 열이 아니라
+#:   에서 **tau_flux 자신** (`case_row`) 이 낸 이온 망 인계 열 (v2 §5-1 · 모드 꼬리 · `tau_flux.column_names()` — 10-06 밤부터 50 열: 모드 셋 × 15 + 공통 5 (σ₀ · T · φ · L 기준 · 세대 칸) ·
+#:   ★ 10-16 L214R-02 부터 끝에 FULL 모형 한계 독립 표지 두 칸 (full_model_limit_hertz · full_model_limit_physics — `_TAU_ML_FLAG`) = 52 열) 을 싣는다.  census 열이 아니라
 #:   (metrics_flat 에 dual 레코드가 없다) 별도 원천 (`load_tau_results` · CLI `--tau-results`) 이 필요하다 — 묶음만 부르거나 원천만 주면 거부.
 WA_TAU_GROUP = 'tau'
 #: ★ v1.3 (1저자 비준 10-06 밤 · 10-07 "v1.3 생성기 미리 준비") — **유도 묶음** se_isolation: 고립 전해질 se_isolated_pct = 100 − top_reachable_pct
@@ -1844,6 +1845,31 @@ _TAU_SHARED = {
                            '레코드는 증서 재구성이 잡는다 · 증서 · 숫자 · 기하를 함께 일관되게 바꾼 전면 위조는 재계산 없이 못 잡는다 · 한 인계표 = 한 세대 '
                            '(행마다 계약 먼저 · 그다음 섞임)'),
 }
+#: ★ 10-16 L214R-02 (Codex LHS214 재검증 §3 · §6-4 · 7 · 10 · 수정 계획 Q2 · 1저자 10-16 비준 "권고대로") — FULL 모형 한계 **독립 표지** 두 칸
+#:   (tau_flux.MODEL_LIMIT_FLAG_COL · tau_flux.full_model_limit_flag — 상태 게이트와 따로 레코드에서 바로).  τ 상태 칸은 앞 게이트 우선 (띠 L1 · L2 = BAND_FALLBACK ·
+#:   사유 공란) 이라 FULL 모형 한계 사실이 상태에서 사라진다 — 이 칸이 띠 규칙과 무관하게 보존하고, 배포 build · check (lhs_release_build) 가 주 타깃 표지로 HOLD ·
+#:   ML 사용자도 빈칸 이유를 본다.  H12 표지 칸은 없다 (1저자 Q2 = 두 칸).  ⚠ 뜻 · 한정어 글에 주 배포 표에 없는 인계표 열 이름을 표지 없이 쓰지 않는다
+#:   (full_model_limit_hertz 는 v1.3 주 표에 실린다 — lhs_release_build 프로필 ml_v1 의 사전 참조 검사).
+#:   판정 칸은 다른 τ 열과 같은 TAU_NET_VERDICT (τ 묶음 · selftest ㉙m2) — 진단 표지라는 뜻은 한정어 첫머리에 적는다.
+CAVEAT_TAU_ML_FLAG = ('진단 표지 (10-16 L214R-02 · 1저자 비준 Q2) — 특징 · 타깃 아님 (상태 열과 같이 읽는다) · v1.3 배포 관문 (build · check 같은 함수) 이 읽는다 · '
+                      '공용 판정 (tau_flux.full_model_limit_problem — 생산자 · 게시 · 정지 계약 · 다시 읽기 · 인계 출처 관문 P4 가 같은 함수) 을 통과한 레코드만 True · '
+                      '거부된 q 와 수치 증서는 canonical 결과 (network_conductivity_dual.json) 의 증서에 별도 진단으로 · 값 = tau_flux 직렬화 (True · False) · '
+                      '출처 관문 = 다른 τ 칸과 같다 (P0–P4 · 읽기 안정) · 분류 · 게시 계약의 표지이지 물리 타당성 검증이 아니다 · 무작위 결측 표지가 아니다 (q 가 높은 쪽)')
+_TAU_ML_FLAG = {
+    'full_model_limit_hertz': (
+        'FULL 모형 한계 독립 표지 (hertz = 주 타깃 H0 · 10-16 L214R-02) — True = 그 모드 망 레코드의 FULL 해가 수치 풀이 인증을 통과했으나 사전 고정 출력 상한 '
+        '(q > 1.5) 을 넘어 값을 내지 않은 레코드 (사유 full_over_conduction · 공용 판정 통과 — 사유만 위조 · 증서 결손 · 틀린 q 는 True 가 아니다) · '
+        '**띠 규칙과 무관** (L0 · L1 · L2 — 상태 칸 ion_net_status_hertz 은 앞 게이트 우선이라 띠 L1 · L2 면 BAND_FALLBACK · 사유 공란으로 보이고 '
+        'f · tau2 · tau 의 빈칸 뜻도 HOLD_BAND_FALLBACK 이지만 이 칸은 True 로 남는다 · L0 이면 상태도 NOT_COMPUTED full_over_conduction) · False = 그 밖 '
+        '(값이 있는 FULL · 증명된 비관통 · 기술적 무효 레코드 포함) · 빈칸 = 그 모드 레코드 없음 · 케이스 폴더의 망 활성 세대 무효 (인계표 done · partial 행에는 '
+        '생기지 않는다) · v1.3 주 타깃 배포 관문 (build · check 같은 함수) 이 True 행 · 칸 없음 · 모르는 값 · 상태와 모순인 행을 HOLD (행 삭제 · Physics · '
+        'H12 · 0 · 1.5 대체 없음) ⇒ 실제 v1.3 배포 주 표에서는 전부 False'),
+    'full_model_limit_physics': (
+        'FULL 모형 한계 독립 표지 (physics · 10-16 L214R-02) — True = 그 모드 망 레코드의 FULL 해가 수치 풀이 인증을 통과했으나 사전 고정 출력 상한 (q > 1.5) 을 '
+        '넘어 값을 내지 않은 레코드 (사유 full_over_conduction · 공용 판정 통과) · **띠 규칙과 무관** (상태 칸 ion_net_status_physics 은 띠 L1 · L2 면 '
+        'BAND_FALLBACK · 사유 공란 · 빈칸 뜻 HOLD_BAND_FALLBACK 으로 보이지만 이 칸은 True 로 남는다 — Physics 모형 한계 집계에서 빠지지 않는다) · False = 그 밖 · '
+        '빈칸 = 그 모드 레코드 없음 · 세대 무효 · Physics = opt-in 부록 정책 그대로 (모형 한계 = 부록 공란 · 배포 HOLD 아님)'),
+}
 _TAU_COL_RE = re.compile(r'(f_ion|tau2_ion|tau_ion|ion_net_status_reason|ion_net_status|ion_net_area_mode|ion_net_constriction|ion_net_psi|'
                          r'ion_net_area_rule|ion_net_electrode|ion_net_bulk|'
                          r'ion_net_band_rule|ion_net_band_frac|ion_net_basis_check)_(hertz_h12|hertz|physics)(_gap)?')
@@ -1853,6 +1879,8 @@ def tau_net_define(col):
     """망 τ 열 (tau_flux.column_names()) → (뜻, 한정어) · 아니면 None.  이름이 정확히 τ 규약 꼴일 때만 (옛 열을 잡지 않는다 — selftest ㉙f1)."""
     if col in _TAU_SHARED:
         return _TAU_SHARED[col], CAVEAT_TAU_NET
+    if col in _TAU_ML_FLAG:                          # ★ 10-16 L214R-02 — 모형 한계 독립 표지 (두 이름 정확히 · τ 값 열 꼴 밖이라 따로)
+        return _TAU_ML_FLAG[col], CAVEAT_TAU_ML_FLAG
     m_ = _TAU_COL_RE.fullmatch(col)
     if m_ is None or (m_.group(3) and m_.group(1) != 'f_ion'):
         return None

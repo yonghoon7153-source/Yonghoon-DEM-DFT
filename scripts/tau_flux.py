@@ -10,7 +10,8 @@
 `ion_net_status_hertz` …).  σ₀ · 온도 · φ · L 기준은 두 모드 공통이라 꼬리가 없다.
 ★ 10-06 저녁 세대 2 (1저자 비준) — 셋째 모드 `hertz_h12` = Hertz 이온 **민감도** (ψ 곱 협착 + 구 조각 bulk · 같은 망 · 같은 전극 ·
 Hertz 레코드 안 `hertz_h12` 에서 읽는다 · **기본 학습 열 아님** = 배포 부록).  모드마다 세대 표기 셋 (`ion_net_area_rule_<m>` ·
-`ion_net_electrode_<m>` · `ion_net_bulk_<m>`) + 공통 세대 칸 `ion_net_generation` → 한 행 50 열 (모드 셋 × 15 + 공통 5).
+`ion_net_electrode_<m>` · `ion_net_bulk_<m>`) + 공통 세대 칸 `ion_net_generation` → 한 행 50 열 (모드 셋 × 15 + 공통 5) · ★ 10-16 L214R-02 부터 끝에
+FULL 모형 한계 독립 표지 두 칸 (`full_model_limit_hertz` · `full_model_limit_physics`) → 52 열 (옛 50 열의 이름 · 자리는 그대로).
 ★ 10-06 밤 세대 계약 (Codex 세대 2 적대 리뷰 G2R-01 · G2R-02 · 1저자 비준) — 모드마다 허용 모델 조합을 **닫힌 표**로 본다 (`network_generation_contract` ·
 `G2_MODE_CONTRACT` · `LEGACY_MODE_CONTRACT`): 세대 2 = 표기 전부 필수 (부분 결손 · 모르는 값 · H12 를 주 Hertz 자리에 = 거부) · 옛 세대 추론 =
 세대 2 표지 (`G2_MARKER_KEYS`) 가 **하나도 없는** 레코드에만 (`inferred_legacy` 로 표지 — 이력 사실 physics_g1 · virtual_source_legacy · cylinder_half_d) ·
@@ -50,6 +51,10 @@ G6 (협착 세대) = 메타 `ion_net_constriction_<m>` · 두 모드 모두 **�
 ★ 10-15 L214 (Codex LHS214 판정 §2 · 1저자 10-14 비준 Q1–Q5) — 셋째 부류 **FULL 모형 한계** = `NOT_COMPUTED` + 사유 정확히 `full_over_conduction`
 (`is_model_limit_status`) · 기술 실패 아님 · 값 빈칸 (거부된 q · 수치 증서 = 레코드의 증서) · 공용 판정 `full_model_limit_problem` (생산자 · 게시 · 정지 계약 ·
 다시 읽기 · 인계 · 배포가 같은 함수) 을 통과한 레코드만 (사유만 위조 · 증서 결손 · 남의 증서 · 틀린 q 재구성 = invalid_input).  앞 게이트 (띠 · 관통 불일치 · 온도 짝) 우선.
+★ 10-16 L214R-02 (Codex LHS214 재검증 §3 · 수정 계획 Q2 · 1저자 10-16 비준 "권고대로") — 위 표시 우선순위는 그대로 두고 FULL 모형 한계 **사실**을 상태와 따로
+독립 표지 두 칸 (`MODEL_LIMIT_FLAG_COL` · `full_model_limit_flag`) 으로 싣는다: 표지 = 그 모드 레코드가 공용 판정 `full_model_limit_problem` 을 통과한 모형 한계인가 —
+띠 규칙 · 앞 게이트와 무관.  옛 판은 L1 · L2 띠에서 상태가 BAND_FALLBACK (사유 공란) 이 되며 그 사실이 사라져, 상태만 읽는 배포 관문 (주 타깃 H0 HOLD) 이
+L1 · L2 + H0 모형 한계 행을 배포했다 (Codex 반례 · 27 파일 · check 문제 0).  배포 build · check 는 이 칸으로 HOLD 한다 (`lhs_release_build`).  H12 표지 칸은 없다 (1저자 Q2 = 두 칸).
 ⚠ 옛 판은 0b 가 없어 L1/L2 레코드가 G1 에서 바로 BAND_FALLBACK 로 돌아갔다 — computed 인데 σ_ratio None · NaN · −1 · 관통 분율 2 가 '과학적 HOLD'
 로 통과했고 (RGLR-01), σ_ratio 만 ×4 인 레코드는 tau2 ÷4 로 OK 였다 (RGLR-02).
 
@@ -116,6 +121,11 @@ GENERATION_INVALID = 'generation_invalid'
 #:   test_lhs214_model_limit T6 이 대조).
 MODEL_LIMIT_REASON = 'full_over_conduction'           # = network_conductivity.FULL_OVER_CONDUCTION_REASON
 CHANNEL_MODEL_LIMIT = 'model_limit'                   # = network_conductivity.CHANNEL_MODEL_LIMIT (채널 상태)
+#: ★ 10-16 L214R-02 (Codex LHS214 재검증 §3 · 수정 계획 Q2 · 1저자 10-16 비준) — FULL 모형 한계 **독립 표지** 인계 칸 (모드 → 열 이름 · 값 = `full_model_limit_flag` ·
+#:   직렬화 `_cell` = 'True' · 'False' · 레코드 없음 · 세대 무효 = 빈칸).  상태 칸은 앞 게이트 우선 (띠 L1 · L2 = BAND_FALLBACK · 사유 공란) 이라 모형 한계 사실을
+#:   덮는다 — 이 칸이 띠 규칙과 무관하게 그 사실을 보존하고, 배포 build · check (`lhs_release_build.V13_MODEL_LIMIT_FLAG` — 같은 이름 · test_l214r02 D8 이 대조) 가
+#:   주 타깃 (hertz = H0) 표지로 HOLD 한다.  H12 는 칸이 없다 (1저자 Q2 = 두 칸 · H12 = 민감도 부록 정책 그대로).
+MODEL_LIMIT_FLAG_COL = {'hertz': 'full_model_limit_hertz', 'physics': 'full_model_limit_physics'}
 
 
 def is_model_limit_status(status, reason):
@@ -355,6 +365,21 @@ def full_model_limit_problem(rec, channel='ionic', mode=None):
     return ' · '.join(why) if why else None
 
 
+def full_model_limit_flag(rec, m):
+    """★ 10-16 L214R-02 — 망 레코드 한 모드 (자리 m) → FULL 모형 한계 독립 표지: True | False | None.
+
+      True  — 그 레코드의 이온 FULL 이 공용 판정 `full_model_limit_problem(rec, 'ionic', m)` 을 통과한 모형 한계 (수치 인증 통과 · 사전 고정 출력 상한 q > 1.5 ·
+              거부된 q = 증서) — **띠 규칙 · 앞 게이트 (관통 불일치 · 온도 짝 · 세대 계약) 와 무관** (τ 상태 칸이 BAND_FALLBACK 이어도 사실은 남는다)
+      False — 그 밖 (값 있는 FULL · 증명된 비관통 · 기술 실패 · 사유만 위조 · 증서 결손 · 남의 증서 · 틀린 q 재구성 = 모형 한계가 아니다)
+      None  — 그 모드 레코드 없음 (판정할 사실이 없다)
+    새 판정을 만들지 않는다 (규율 ① — 0b `ion_record_problem` · 게시 · 정지 계약 · 다시 읽기 · 인계 · 배포가 쓰는 같은 함수)."""
+    if not isinstance(rec, dict):
+        return None
+    if rec.get('sigma_full_status') != 'not_computed' or rec.get('sigma_full_reason') != MODEL_LIMIT_REASON:
+        return False
+    return full_model_limit_problem(rec, 'ionic', m) is None
+
+
 #  ── 망 활성 세대의 확정 여부 (10-05 RGLR2-02 · Codex 3차 재검증 §2 · Q2 ③ · 1저자 비준 범위) ─────────────────────────────────────────
 #  케이스 폴더 (웹앱 results) 의 망 값은 여러 파일 (네 망 JSON · network_provenance.json · full_metrics.json) 에 나뉘어 있다.  게시 (승격) 는 동기
 #  예외를 되돌리지만 **되돌림 자체가 실패**하거나 프로세스가 중간에 죽으면 파일들이 서로 다른 세대를 가리킬 수 있다 (Codex rollback_destination_failure:
@@ -442,8 +467,8 @@ def network_generation_problem(case_dir, fm=None):
 
 
 def generation_override(row, prob):
-    """τ 인계 행 (`ion_columns` · `case_row`) 에 세대 무효를 덮는다 — 두 모드 NOT_COMPUTED (generation_invalid: 사유) · f · tau2 · tau · σ₀ 메타 빈칸.
-    prob 가 비면 그대로 돌려준다."""
+    """τ 인계 행 (`ion_columns` · `case_row`) 에 세대 무효를 덮는다 — 두 모드 NOT_COMPUTED (generation_invalid: 사유) · f · tau2 · tau · σ₀ 메타 빈칸 ·
+    ★ 10-16 L214R-02 모형 한계 표지 두 칸도 빈칸 (확정되지 않은 세대의 레코드에서 읽은 사실을 싣지 않는다).  prob 가 비면 그대로 돌려준다."""
     if not prob or not isinstance(row, dict):
         return row
     for m in MODES:
@@ -451,6 +476,8 @@ def generation_override(row, prob):
         row[f'ion_net_status_{m}'] = 'NOT_COMPUTED'
         row[f'ion_net_status_reason_{m}'] = f'{GENERATION_INVALID}: {prob}'
     row['ion_sigma0_mScm'] = row['ion_sigma0_T_C'] = None
+    for col in MODEL_LIMIT_FLAG_COL.values():
+        row[col] = None
     return row
 
 
@@ -494,7 +521,7 @@ def column_names():
                 f'ion_net_status_reason_{m}', f'ion_net_area_mode_{m}', f'ion_net_constriction_{m}', f'ion_net_psi_{m}',
                 f'ion_net_area_rule_{m}', f'ion_net_electrode_{m}', f'ion_net_bulk_{m}',          # ★ 10-06 세대 2 표기
                 f'ion_net_band_rule_{m}', f'ion_net_band_frac_{m}', f'ion_net_basis_check_{m}']
-    return out + list(SHARED)
+    return out + list(SHARED) + list(MODEL_LIMIT_FLAG_COL.values())     # ★ 10-16 L214R-02 — 표지 둘은 끝 (옛 50 열 자리 그대로)
 
 
 def generation_meta(res, m, legacy=False):
@@ -1186,6 +1213,10 @@ def ion_columns(dual, ledger, perc_pct, sigma0_T_claim=None):
     out['ion_sigma0_mScm'] = None if (t_bad or shared_s0 is None) else shared_s0[0]
     out['ion_sigma0_T_C'] = None if (t_bad or shared_s0 is None) else shared_s0[1]
     out['phi_basis'], out['L_basis'] = 'mass_conserving', 'L_mc'
+    #  ★ 10-16 L214R-02 — FULL 모형 한계 독립 표지: 아래 게이트 (띠 폴백 먼저 · 관통 불일치 · 온도 짝 · 세대 계약) 의 표시와 **따로** 레코드에서 바로 (공용 판정) —
+    #    상태 칸이 BAND_FALLBACK 이어도 그 모드의 모형 한계 사실이 인계 · 배포까지 간다 (표시 우선순위는 그대로)
+    for m, col in MODEL_LIMIT_FLAG_COL.items():
+        out[col] = full_model_limit_flag(recs[m], m)
 
     #  ★ 10-06 밤 세대 계약 (G2R-01 · 02) — 케이스의 세대를 닫힌 표로 먼저 정한다 (옛 판: 한 행 안 전극이 서로 같은지만 봤다 = "서로 같다" 를 "유효하다"
     #    로).  위반이면 레코드 있는 모드 전부 기술적 무효 (invalid_input · 값 빈칸) · 옛 기본값은 inferred_legacy 케이스에만 채운다.

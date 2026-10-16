@@ -300,10 +300,11 @@ def main():
             f'rc {r.returncode} · {r.stderr[-200:]!r} · 한 세대 rc {r1.returncode}')
         cols = tf.column_names()
         #  ★ 10-06 밤 (G2R-02) — 공통 세대 칸 ion_net_generation 이 더해졌다 (g2 · inferred_legacy · invalid — 옛 세대 추론이 행에서 보인다) → 공통 5
+        #  ★ 10-16 L214R-02 (1저자 Q2) — 끝에 FULL 모형 한계 독립 표지 두 칸 (full_model_limit_hertz · _physics) → 52 (옛 50 열 자리 그대로)
         chk('E7 열 — 모드 셋 (hertz · physics · hertz_h12) × (12 + 전극 · bulk · 면적 규칙 3) + 공통 5 (σ₀ · T · φ · L 기준 · 세대 칸) = 50 · 모드 꼬리 · '
-            '꼬리 없는 상태 키 없음',
-            tuple(tf.MODES) == ('hertz', 'physics', 'hertz_h12') and len(cols) == 3 * 15 + 5 and len(set(cols)) == len(cols)
-            and cols[-1] == 'ion_net_generation'
+            '꼬리 없는 상태 키 없음 · + 모형 한계 표지 2 (끝 · L214R-02) = 52',
+            tuple(tf.MODES) == ('hertz', 'physics', 'hertz_h12') and len(cols) == 3 * 15 + 5 + 2 and len(set(cols)) == len(cols)
+            and cols[-3] == 'ion_net_generation' and cols[-2:] == ['full_model_limit_hertz', 'full_model_limit_physics']
             and all(f'ion_net_{b}_{m}' in cols for b in ('electrode', 'bulk', 'area_rule') for m in tf.MODES) and 'ion_net_status' not in cols)
     _guard('E', sE)
 

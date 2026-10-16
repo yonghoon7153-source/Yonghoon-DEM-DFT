@@ -567,9 +567,13 @@ def main(argv=None):
         cols = ['case_id', 'f_ion_physics', 'tau2_ion_physics', 'tau_ion_physics', 'ion_net_status_physics', 'ion_net_status_reason_physics']
         chk('V2 physics 부록 행 (모형 한계 · 값 빈칸 + 사유) = 빈칸 일관성 통과 · 같은 행에 값이 남으면 거부',
             LRB.v13_blank_problems([rp], cols) == [] and bool(LRB.v13_blank_problems([dict(rp, f_ion_physics='0.5')], cols)))
-        rh = {'case_id': 'synthetic_H0', 'ion_net_status_hertz': 'NOT_COMPUTED', 'ion_net_status_reason_hertz': ML, 'percolation_pct': '100.0'}
+        #  ★ 10-16 L214R-02 — 지금 생성기 인계 행은 FULL 모형 한계 독립 표지 두 칸 (full_model_limit_hertz · _physics — 'True' · 'False') 을 늘 싣는다 ·
+        #    관문은 그 칸이 없는 행을 fail-closed 로 거부한다 (test_l214r02 D4) → 이 행들도 그 칸을 단다 (값 = 그 행의 상태와 같은 사실)
+        rh = {'case_id': 'synthetic_H0', 'ion_net_status_hertz': 'NOT_COMPUTED', 'ion_net_status_reason_hertz': ML, 'percolation_pct': '100.0',
+              'full_model_limit_hertz': 'True', 'full_model_limit_physics': 'True'}
         rh_ok = {'case_id': 'synthetic_ok', 'ion_net_status_hertz': 'OK', 'ion_net_status_reason_hertz': '', 'percolation_pct': '100.0',
-                 'ion_net_status_physics': 'NOT_COMPUTED', 'ion_net_status_reason_physics': ML}
+                 'ion_net_status_physics': 'NOT_COMPUTED', 'ion_net_status_reason_physics': ML,
+                 'full_model_limit_hertz': 'False', 'full_model_limit_physics': 'True'}
         gate = getattr(LRB, 'v13_primary_model_limit_problems', None)
         chk('V3 ★ 주 타깃 Hertz (H0) 모형 한계 = v1.3 주 타깃 배포 HOLD (실행 가능한 관문 · Q2 (가)) · physics 만 모형 한계 = 통과 (부록 공란)',
             gate is not None and bool(gate([rh])) and gate([rh_ok]) == [] and 'HOLD' in ' '.join(gate([rh])))

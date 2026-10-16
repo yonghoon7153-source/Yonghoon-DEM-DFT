@@ -192,6 +192,10 @@ def make_g2_handover_dir(td, mutate=None, with_lhss=True):
             for c in ('ion_sigma0_mScm', 'ion_sigma0_T_C', 'phi_basis', 'L_basis'):
                 o[c] = r.get(c, '')
             o['ion_net_generation'] = 'g2'
+            #  ★ 10-16 L214R-02 — τ 열에 FULL 모형 한계 독립 표지 두 칸 (tau_flux.MODEL_LIMIT_FLAG_COL) — 지금 생성기 인계표는 늘 True · False 를 싣는다.
+            #    v1.2 행 (모형 한계 범주 전 · 표지 칸 없음) 은 모형 한계가 아니므로 그 행의 상태로 정한다 (= False) — 빈칸으로 두면 배포 관문이 '표지 모름' 으로 거부한다
+            for m, col in getattr(TF, 'MODEL_LIMIT_FLAG_COL', {}).items():
+                o[col] = TF._cell(TF.is_model_limit_status(o[f'ion_net_status_{m}'], o[f'ion_net_status_reason_{m}']))
             o.update(PRESS)
             out.append(o)
         prep[ds] = (new_head, out)
@@ -465,17 +469,19 @@ ph_l = safe(lambda: LRB.v13_columns('lhs', 'physics'))
 b12 = [r[0] for r in csv.reader(open(os.path.join(REL12, 'lhs_release_20261006_v12_columns.tsv'), encoding='utf-8'), delimiter='\t')][1:]
 b12x = [r[0] for r in csv.reader(open(os.path.join(REL12, 'lhsx_release_20261006_v12_columns.tsv'), encoding='utf-8'), delimiter='\t')][1:]
 p12 = [r[0] for r in csv.reader(open(os.path.join(REL12, 'lhs_release_20261006_v12_physics_columns.tsv'), encoding='utf-8'), delimiter='\t')][1:]
+#  ★ 10-16 L214R-02 — 주 표에 주 타깃 모형 한계 독립 표지 full_model_limit_hertz · Physics 부록에 full_model_limit_physics (세대 2 표기 뒤 · 압력 앞)
 ADD = ['se_isolated_pct', 'ion_net_generation', 'ion_net_constriction_hertz', 'ion_net_area_rule_hertz', 'ion_net_electrode_hertz',
-       'ion_net_bulk_hertz', 'press_target_mpa', 'press_last_loop_mpa', 'press_reached']
-chk('V1a 주 표 (130) = v1.2 주 표 열 (순서 그대로) + se_isolated_pct · 세대 2 표기 (Hertz) · 완료 압력 (끝에)',
+       'ion_net_bulk_hertz', 'full_model_limit_hertz', 'press_target_mpa', 'press_last_loop_mpa', 'press_reached']
+chk('V1a 주 표 (130) = v1.2 주 표 열 (순서 그대로) + se_isolated_pct · 세대 2 표기 (Hertz) · 주 타깃 모형 한계 표지 (L214R-02) · 완료 압력 (끝에)',
     isinstance(m_l, list) and m_l == b12 + ADD, m_l if not isinstance(m_l, list) else [c for c in m_l if c not in b12])
 chk('V1b 주 표 (64) = v1.2 주 표 열 + 같은 추가 · H12 · physics 열 없음',
     isinstance(m_x, list) and m_x == b12x + ADD and not any('h12' in c or c.endswith('_physics') for c in m_x), m_x)
-chk('V1c Physics 부록 = v1.2 부록 열 + 세대 칸 · Physics 표기 다섯 (협착 · ψ · 면적 규칙 · 전극 · bulk)',
+chk('V1c Physics 부록 = v1.2 부록 열 + 세대 칸 · Physics 표기 다섯 (협착 · ψ · 면적 규칙 · 전극 · bulk) · Physics 모형 한계 표지 (L214R-02)',
     isinstance(ph_l, list) and ph_l == p12 + ['ion_net_generation', 'ion_net_constriction_physics', 'ion_net_psi_physics',
-                                              'ion_net_area_rule_physics', 'ion_net_electrode_physics', 'ion_net_bulk_physics'], ph_l)
+                                              'ion_net_area_rule_physics', 'ion_net_electrode_physics', 'ion_net_bulk_physics',
+                                              'full_model_limit_physics'], ph_l)
 chk('V1d 완료 압력 미검사 (--pressure-unverified) 명세는 press_* 를 빼고 나머지 같다',
-    safe(lambda: LRB.v13_columns('lhs', 'main', press=False)) == b12 + ADD[:6])
+    safe(lambda: LRB.v13_columns('lhs', 'main', press=False)) == b12 + ADD[:7])
 
 # ═══ V2 빈칸 뜻 규칙 ══════════════════════════════════════════════════════════════════════════════════════════════════════════════
 print('V2  빈칸 뜻 규칙')
@@ -809,8 +815,9 @@ with tempfile.TemporaryDirectory() as td:
         all(w in names for w in want) and not any(n.startswith('DRYRUN') for n in names), [w for w in want if w not in names])
     if okb:
         hl, rl = _read_csv(os.path.join(out, f'lhs_release_{DATE}_v13.csv'))
-        chk('V12c 주 표 130 × (v1.2 132 + 9) · se_isolated_pct = 100 − top_reachable_pct (전 행) · H12 열 없음',
-            len(rl) == 130 and len(hl) == 141 and all(abs(float(r['se_isolated_pct']) - (100 - float(r['top_reachable_pct']))) < 1e-9 for r in rl)
+        #  ★ 10-16 L214R-02 — 주 표 추가 열 9 → 10 (주 타깃 모형 한계 표지 full_model_limit_hertz · V1a 의 ADD)
+        chk('V12c 주 표 130 × (v1.2 132 + 10) · se_isolated_pct = 100 − top_reachable_pct (전 행) · H12 열 없음',
+            len(rl) == 130 and len(hl) == 142 and all(abs(float(r['se_isolated_pct']) - (100 - float(r['top_reachable_pct']))) < 1e-9 for r in rl)
             and not any('h12' in c for c in hl), len(hl))
         prob = safe(lambda: LRB.check_v13(out, hdir))
         chk('V12d check_v13 — 배포 ⊆ 인계표 · ML 표 되읽기 · 빈칸 일관성 · se_isolated · 재적합 재현 · 세대 · sha256 = 문제 0', prob == [], prob)

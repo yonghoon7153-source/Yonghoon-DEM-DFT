@@ -99,6 +99,8 @@ def main():
                  f'ion_net_band_rule_{m}', f'ion_net_band_frac_{m}', f'ion_net_basis_check_{m}'}
     #  ★ 10-06 밤 (G2R-02) — 공통 세대 칸 ion_net_generation (g2 · inferred_legacy · invalid — 옛 세대 추론이 행에서 보인다)
     want |= {'ion_sigma0_mScm', 'ion_sigma0_T_C', 'phi_basis', 'L_basis', 'ion_net_generation'}
+    #  ★ 10-16 L214R-02 (1저자 Q2) — FULL 모형 한계 독립 표지 두 칸 (tau_flux.MODEL_LIMIT_FLAG_COL · 띠와 무관 · 행동은 test_l214r02_model_limit_flag 가 본다)
+    want |= {'full_model_limit_hertz', 'full_model_limit_physics'}
     chk('A3 키 = v2 §5-1 (상태 · 메타는 모드 꼬리 — 10-04 비준) + 10-06 세대 2 (모드 hertz_h12 · 표기 셋) + 10-06 밤 세대 칸 · 꼬리 없는 상태 키 '
         '(`ion_net_status`) 없음 · 표기 없는 손 레코드 = inferred_legacy',
         set(o) == want and 'ion_net_status' not in o and o.get('ion_net_generation') == 'inferred_legacy')

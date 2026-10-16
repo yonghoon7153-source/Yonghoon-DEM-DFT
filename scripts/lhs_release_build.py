@@ -629,12 +629,19 @@ V13_WEBAPP_GROUPS = 'contact,percolation,f1,fracture,area,tau,se_isolation'
 V13_BASE_OF = {'lhs': 'lhs', 'lhsx': 'lhsx', 'lhss': 'lhs'}
 V13_BASE_FROM = {ds: f'docs/data/lhs_release_20261006_v12/{b}_release_20261006_v12_columns.tsv' for ds, b in V13_BASE_OF.items()}
 V13_PHYSICS_BASE_FROM = {ds: f'docs/data/lhs_release_20261006_v12/{b}_release_20261006_v12_physics_columns.tsv' for ds, b in V13_BASE_OF.items()}
-#: v1.3 주 표에 더하는 열 — 새 열 se_isolated_pct · 세대 2 출처 (세대 칸 + 주 Hertz 의 역할 표기 넷) · 완료 압력 셋 (DESC-06)
+#: ★ 10-16 L214R-02 (Codex LHS214 재검증 §3 · 수정 계획 Q2 · 1저자 10-16 비준 "권고대로") — FULL 모형 한계 **독립 표지** 인계 칸 (생성기 τ 묶음 =
+#:   tau_flux.MODEL_LIMIT_FLAG_COL 과 같은 이름 · test_l214r02 D8 이 대조 · 값 = tau_flux 직렬화 'True' | 'False').  τ 상태 칸은 앞 게이트 우선 (띠 L1 · L2 =
+#:   BAND_FALLBACK · 사유 공란) 이라 상태만 읽던 주 타깃 관문이 L1 · L2 + H0 모형 한계 행을 배포했다 (Codex 반례 · 27 파일 · check 문제 0) — build · check 가 같은
+#:   함수 (`v13_primary_model_limit_problems`) 로 이 칸을 읽는다.  주 표 = hertz 표지 (실제 배포에서는 전부 False) · Physics 부록 = physics 표지 (가려진 Physics
+#:   모형 한계 = 부록 공란 정책 그대로 · 사실은 남는다) · H12 칸은 없다 (1저자 Q2 = 두 칸).
+V13_MODEL_LIMIT_FLAG = {'hertz': 'full_model_limit_hertz', 'physics': 'full_model_limit_physics'}
+V13_FLAG_TRUE, V13_FLAG_FALSE = 'True', 'False'
+#: v1.3 주 표에 더하는 열 — 새 열 se_isolated_pct · 세대 2 출처 (세대 칸 + 주 Hertz 의 역할 표기 넷) · ★ 10-16 주 타깃 모형 한계 표지 · 완료 압력 셋 (DESC-06)
 V13_MAIN_ADD = ('se_isolated_pct', 'ion_net_generation', 'ion_net_constriction_hertz', 'ion_net_area_rule_hertz', 'ion_net_electrode_hertz',
-                'ion_net_bulk_hertz')
+                'ion_net_bulk_hertz', V13_MODEL_LIMIT_FLAG['hertz'])
 V13_PRESS_ADD = ('press_target_mpa', 'press_last_loop_mpa', 'press_reached')
 V13_PHYSICS_ADD = ('ion_net_generation', 'ion_net_constriction_physics', 'ion_net_psi_physics', 'ion_net_area_rule_physics',
-                   'ion_net_electrode_physics', 'ion_net_bulk_physics')
+                   'ion_net_electrode_physics', 'ion_net_bulk_physics', V13_MODEL_LIMIT_FLAG['physics'])
 #: H12 민감도 부록 (선택 · --h12-appendix — 1저자 결정 대기 · 기본 학습 열 아님 · 부록 전용 판정)
 V13_H12_COLUMNS = ('case_id', 'f_ion_hertz_h12', 'tau2_ion_hertz_h12', 'tau_ion_hertz_h12', 'ion_net_status_hertz_h12',
                    'ion_net_status_reason_hertz_h12', 'ion_net_generation', 'ion_net_constriction_hertz_h12', 'ion_net_psi_hertz_h12',
@@ -664,20 +671,66 @@ V13_MODEL_LIMIT_REASON = 'full_over_conduction'
 
 
 def _v13_is_model_limit(row, mode):
-    """인계 · 배포 행의 한 모드가 FULL 모형 한계인가 — 상태 NOT_COMPUTED · 사유 정확히 full_over_conduction (tau_flux.is_model_limit_status 와 같은 규칙)."""
+    """인계 · 배포 행의 한 모드가 **상태로** FULL 모형 한계인가 — 상태 NOT_COMPUTED · 사유 정확히 full_over_conduction (tau_flux.is_model_limit_status 와 같은 규칙).
+    ★ 10-16 L214R-02 — 표시 쪽 (빈칸 뜻 · 관통 분류) 은 이것 그대로 (띠 폴백이 먼저인 표시 우선순위) · 모형 한계 **사실** (주 타깃 관문 · 집계) 은 `v13_model_limit`."""
     return row.get(f'ion_net_status_{mode}', '') == 'NOT_COMPUTED' and row.get(f'ion_net_status_reason_{mode}', '') == V13_MODEL_LIMIT_REASON
+
+
+def _v13_flag(row, mode):
+    """★ 10-16 L214R-02 — 행의 모형 한계 독립 표지 칸 → 'True' · 'False' · 그 밖 문자열 (모르는 값 · 빈칸) · None (칸 없음 · 표지 없는 모드 H12)."""
+    col = V13_MODEL_LIMIT_FLAG.get(mode)
+    if col is None or col not in row:
+        return None
+    return row.get(col)
+
+
+def v13_model_limit(row, mode):
+    """★ 10-16 L214R-02 — 그 행 · 모드의 FULL 모형 한계 **사실** = 상태 (NOT_COMPUTED full_over_conduction — 띠 L0) **또는** 독립 표지 'True' (띠 폴백 등 앞 상태가
+    덮어도 — tau_flux.full_model_limit_flag 가 레코드에서 바로 낸 칸).  모르는 표지 값은 사실로 치지 않는다 (주 타깃 관문이 따로 문제로 보고 — fail-closed)."""
+    return _v13_is_model_limit(row, mode) or _v13_flag(row, mode) == V13_FLAG_TRUE
 
 
 def v13_primary_model_limit_problems(rows):
     """★ 10-15 L214 (Codex LHS214 판정 §3 Q2 · consumer Q2 · 수정 계획 Q2 (가) · 1저자 10-14 비준) — **주 타깃 (Hertz H0) 이 FULL 모형 한계인 행** → 문제 목록.
     v1.3 주 타깃 배포 = HOLD (실행 가능한 관문 — build · check 같은 함수).  진단 레코드는 남는다 (인계표 · canonical 결과) · Physics · H12 · 0 · 1.5 로 대체하거나
     행을 지우지 않는다 · 주 타깃 결측을 허용하는 마스킹 부분 배포는 별도 등록 · 1저자 결정 · 집계 · 학습 규약이 먼저다.  Physics · H12 만 모형 한계 = 문제 아님
-    (부록 공란 · NA_MODEL_LIMIT)."""
-    bad = [r.get(KEY, '?') for r in rows if _v13_is_model_limit(r, 'hertz')]
-    if not bad:
-        return []
-    return [f'주 타깃 Hertz (H0) FULL 모형 한계 {len(bad)} 행 {bad[:6]} — v1.3 주 타깃 배포 HOLD (등록되지 않은 마스킹 · Physics · H12 · 0 · 1.5 대체 금지 · '
-            '행 삭제 금지 · 진단 레코드는 보존 — 부분 배포는 별도 등록 · 1저자 결정 필요 · L214 Q2 (가))']
+    (부록 공란 · NA_MODEL_LIMIT).
+    ★ 10-16 L214R-02 (Codex LHS214 재검증 §3 · 수정 계획 Q2 · 1저자 10-16 비준) — 모형 한계 사실 = 상태 **또는** 독립 표지 full_model_limit_hertz 'True'
+    (`v13_model_limit` — 띠 L1 · L2 의 BAND_FALLBACK 표시가 사실을 덮어도 HOLD · 옛 판은 상태만 읽어 L1 · L2 + H0 모형 한계 행을 배포했다).  fail-closed — 표지 칸
+    없음 (옛 생성기 인계표) · 모르는 값 (True · False 밖 · 빈칸) · 표지 ↔ 상태 모순 (표지 False 인데 상태 모형 한계 · 표지 True 인데 값 있는 상태 · 비관통) 도
+    문제 (주 타깃 모형 한계 사실을 확인할 수 없는 행을 통과시키지 않는다).  띠 폴백 행 자체를 막지 않는다 (표지 False 면 통과 — 과학적 HOLD 정책 그대로)."""
+    col = V13_MODEL_LIMIT_FLAG['hertz']
+    bad, masked, absent, unknown, contra = [], [], [], [], []
+    for r in rows:
+        k = r.get(KEY, '?')
+        st = r.get('ion_net_status_hertz', '')
+        by_status, fv = _v13_is_model_limit(r, 'hertz'), _v13_flag(r, 'hertz')
+        if fv is None:
+            absent.append(k)
+        elif fv not in (V13_FLAG_TRUE, V13_FLAG_FALSE):
+            unknown.append(f'{k}={fv!r}')
+        if by_status or fv == V13_FLAG_TRUE:
+            bad.append(k)
+            if not by_status:
+                masked.append(f'{k}:{st or "?"}')
+        if (fv == V13_FLAG_FALSE and by_status) or (fv == V13_FLAG_TRUE and st in _V13_VALUE_STATUSES + ('NOT_PERCOLATING',)):
+            contra.append(f'{k} (상태 {st} · 표지 {fv})')
+    probs = []
+    if bad:
+        probs.append(f'주 타깃 Hertz (H0) FULL 모형 한계 {len(bad)} 행 {bad[:6]}'
+                     + (f' — 앞 상태 (띠 폴백 등) 에 가려진 {len(masked)} 행 {masked[:6]} 포함 (독립 표지 {col} = True · L214R-02)' if masked else '')
+                     + ' — v1.3 주 타깃 배포 HOLD (등록되지 않은 마스킹 · Physics · H12 · 0 · 1.5 대체 금지 · 행 삭제 금지 · 진단 레코드는 보존 — '
+                     '부분 배포는 별도 등록 · 1저자 결정 필요 · L214 Q2 (가))')
+    if absent:
+        probs.append(f'주 타깃 모형 한계 독립 표지 {col} 칸이 없는 행 {len(absent)} {absent[:6]} — 띠 폴백에 가려진 H0 모형 한계를 확인할 수 없다 '
+                     '(지금 생성기의 세대 2 τ 묶음 인계표가 아니다 · L214R-02) — v1.3 주 타깃 배포 HOLD')
+    if unknown:
+        probs.append(f'주 타깃 모형 한계 독립 표지 {col} 값 모름 {len(unknown)} {unknown[:6]} (True · False 만 — 판정할 수 없는 행을 통과시키지 않는다 · '
+                     'L214R-02) — v1.3 주 타깃 배포 HOLD')
+    if contra:
+        probs.append(f'주 타깃 모형 한계 독립 표지 {col} ↔ τ 상태 모순 {len(contra)} {contra[:6]} (생성기는 같은 레코드에서 둘을 함께 낸다 — 인계표 편집 · '
+                     '다른 생성기 · L214R-02) — v1.3 주 타깃 배포 HOLD')
+    return probs
 V13_ML_SUFFIX = '__blank'
 V13_ML_CLASS = 'ion_percolates_hertz'
 _V13_PHASE_TOKEN = re.compile(r'(?<![A-Za-z0-9])AM_([PS])(?![A-Za-z0-9])')
@@ -700,7 +753,7 @@ V13_ROLE_FIXED = {
     'ion_net_constriction_hertz': 'CONST', 'ion_net_area_rule_hertz': 'CONST', 'ion_net_electrode_hertz': 'CONST', 'ion_net_bulk_hertz': 'CONST',
     'press_target_mpa': 'CONST', 'press_reached': 'CONST', 'press_last_loop_mpa': 'DIAG',
     'physical_target_status': 'FLAG', 'hold_reason_codes': 'FLAG', 'boundary_state': 'FLAG',
-    'ion_net_status_hertz': 'STATUS', 'ion_net_status_reason_hertz': 'STATUS',
+    'ion_net_status_hertz': 'STATUS', 'ion_net_status_reason_hertz': 'STATUS', V13_MODEL_LIMIT_FLAG['hertz']: 'STATUS',
     'n_AM_P_measured': 'RESULT_COUNT', 'n_AM_S_measured': 'RESULT_COUNT', 'n_SE_measured': 'RESULT_COUNT',
     'f_ion_hertz': 'Y_TARGET', 'tau2_ion_hertz': 'Y_IDENTITY', 'tau_ion_hertz': 'Y_IDENTITY', 'se_isolated_pct': 'Y',
 }
@@ -1826,7 +1879,8 @@ def refit_porosity_sigma_cn(rows, dry_run=False):
                                               'se_se_cn', 'f_ion_hertz')})
         if st in REFIT_SKIP_STATUSES:
             #  ★ 10-15 L214 — FULL 모형 한계 (NOT_COMPUTED + full_over_conduction) 는 기술 실패와 다른 제외 사유로 센다 (주 타깃이면 배포 관문이 HOLD — 이 표는 진단)
-            why = f'{st}:{V13_MODEL_LIMIT_REASON}' if _v13_is_model_limit(r, 'hertz') else st
+            #  ★ 10-16 L214R-02 (Codex 재검증 §6-10) — 띠 폴백 등 앞 상태에 가려진 모형 한계 (독립 표지 True) 도 원인을 남긴다 (BAND_FALLBACK:full_over_conduction)
+            why = f'{st}:{V13_MODEL_LIMIT_REASON}' if v13_model_limit(r, 'hertz') else st
             o.update(included='0', excluded_reason=why)
             excl[why] += 1
             out_rows.append(o)
@@ -2133,12 +2187,15 @@ def _v13_out_guard(out_dir, dry_run, diagnostic=False):
 
 def _v13_status_counts(rows, col):
     """상태 열 → {상태: 수} · ★ 10-15 L214 — FULL 모형 한계 (NOT_COMPUTED + full_over_conduction) 는 기술 실패 NOT_COMPUTED 와 **따로** 센다 (C9 — Hertz 주 타깃
-    가용성 · Physics 모형 한계 수를 별도 보고)."""
+    가용성 · Physics 모형 한계 수를 별도 보고).  ★ 10-16 L214R-02 (Codex 재검증 §6-10) — 앞 상태 (띠 폴백 등) 에 가려진 모형 한계 (독립 표지 True) 도 그 상태와
+    **따로** 센다 (모형 한계 원인 집계에서 빠지지 않는다 · 상태 이름은 표시 그대로 앞에)."""
     mode = col[len('ion_net_status_'):] if col.startswith('ion_net_status_') else None
 
     def lab(r):
         if mode and _v13_is_model_limit(r, mode):
             return f'NOT_COMPUTED ({V13_MODEL_LIMIT_REASON} — FULL 모형 한계)'
+        if mode and v13_model_limit(r, mode):
+            return f'{r.get(col, "")} (+ {V13_MODEL_LIMIT_REASON} — 가려진 FULL 모형 한계 · {V13_MODEL_LIMIT_FLAG[mode]} = True)'
         return r.get(col, '')
     return dict(sorted(collections.Counter(lab(r) for r in rows).items()))
 
@@ -2715,6 +2772,9 @@ def _v13_readme(ctx):
     for ds in dss:
         sc = _v13_status_counts(ctx['by_ds'][ds][1], 'ion_net_status_hertz')
         L.append(f'- {ds} 상태 (`ion_net_status_hertz`): ' + ' · '.join(f'{k} {v}' for k, v in sc.items()))
+    if any(V13_MODEL_LIMIT_FLAG['hertz'] in ctx['by_ds'][ds][0] for ds in dss):
+        L.append(f'- `{V13_MODEL_LIMIT_FLAG["hertz"]}` (STATUS · 진단 표지 · L214R-02) = 주 타깃 H0 의 FULL 모형 한계 독립 표지 — 띠 폴백 (`BAND_FALLBACK`) 등 앞 상태가 '
+                 '상태 칸을 덮어도 사실을 남긴다 · True 행은 주 타깃 배포 관문 (build · check 같은 함수) 이 HOLD 하므로 실제 v1.3 배포에서는 전부 False · 특징 아님.')
     L += ['- **이온 수송 타깃은 `f_ion_hertz`** (= σ_eff/σ₀ · 무차원 · 유한 — 비관통 행 = **0.0 = 물리적 0**, 결측이 아니다).  `tau2_ion_hertz` (수송 tortuosity T) · '
           '`tau_ion_hertz` (√T) 는 비관통에서 ∞ (빈칸) 라 그대로는 회귀 타깃이 아니다 · T = φ_SE,mc / f 항등식이라 **f 를 예측하면서 T · √T 를 특징으로 넣지 않는다**.',
           f'- **2 단계 (권장)**: ① 관통 분류 `{V13_ML_CLASS}` (ML 표 · 1 = 관통 · 0 = 비관통 · `percolation_pct > 0` 과 같은 판정) → ② 관통 행에서 f (또는 폴드 안에서 고른 '
@@ -2770,11 +2830,17 @@ def _v13_readme(ctx):
         L += [f'- 194 만 참고 줄 (`reference_without_supp` · 요약 JSON) — {ref["note"]}.']
     L += ['',
           '## 7. Physics 부록 (opt-in) · H12', '']
-    n_ml = 0
+    n_ml, n_mask = 0, 0
     for ds in dss:
         sc = _v13_status_counts(ctx['hrows'][ds], 'ion_net_status_physics')
         L.append(f'- {ds} Physics 상태: ' + ' · '.join(f'{k} {v}' for k, v in sc.items()))
         n_ml += sum(1 for r in ctx['hrows'][ds] for m_ in ('physics', 'hertz_h12') if _v13_is_model_limit(r, m_))
+        n_mask += sum(1 for r in ctx['hrows'][ds] if v13_model_limit(r, 'physics') and not _v13_is_model_limit(r, 'physics'))
+    if n_mask:
+        #  ★ 10-16 L214R-02 (Codex 재검증 §6-10) — 앞 상태 (띠 폴백) 에 가려진 Physics 모형 한계를 집계에서 빠뜨리지 않는다 (부록 공란 정책 그대로 · 사실은 부록 표지 열에)
+        L.append(f'- 앞 상태 (띠 폴백 `BAND_FALLBACK` 등) 에 가려진 Physics FULL 모형 한계 {n_mask} 행 — 상태 칸은 표시 우선순위대로 앞 상태 그대로 (띠 폴백이면 '
+                 f'빈칸 코드 `HOLD_BAND_FALLBACK`) 이고 사실 (`{V13_MODEL_LIMIT_REASON}`) 은 부록 표지 열 `{V13_MODEL_LIMIT_FLAG["physics"]}` = True 로 '
+                 '보존했다 (모형 한계 집계에서 빠지지 않는다 · Physics = 부록 공란 정책 그대로 · L214R-02).')
     if n_ml:
         #  ★ 10-15 L214 — Codex LHS214 판정 §3 Q3 권장 문구 (해당 검사 — 공용 판정 · 정지 계약 재검사 · 빈칸 일관성 · 주 타깃 관문 — 가 이 빌드에서 통과한 뒤에만 실린다)
         L.append(f'- FULL 모형 한계 (부록 모드 칸 {n_ml}) — 등록 사례를 모두 유지하였다. 수치 풀이 인증을 통과했으나 사전 고정된 FULL 출력 상한을 넘은 모드의 전도도와 '
