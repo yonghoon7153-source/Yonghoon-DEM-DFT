@@ -939,7 +939,10 @@ def check_job(job, pkgdir, attdir, attempt="0", pp_registry=None):
         return done("NOT_TERMINATED")
     # SCF (CY Q-CY-9): 확인된 미수렴 (SCF_NOT_CONVERGED · r1 자격) = OSZICAR 한 구간의 마지막 전자 반복행이 **유한값 > EDIFF** 일 때만.
     # 못 읽음 · 비유한 · 스텝 번호·구간 이상 · NELM 초과 · OUTCAR 수렴 줄과 어긋남 = 미확인 (SCF_UNVERIFIED · OK 아님 · r1 자격 아님).
-    nelm = int(RESCUE["NELM"]) if attempt == "r1" else 200
+    # NELM 은 시도 이름으로 박지 않는다 — 검증된 이 시도의 INCAR 에서 읽는다 (개정 4 · CY Q-CY-9 · 위에서 패키지 INCAR 와 의미상 같음을 확인했다)
+    nelm = int(ran["NELM"]) if re.fullmatch(r"[0-9]+", ran.get("NELM", "")) else None
+    if nelm is None:
+        return done("SCF_UNVERIFIED", f"이 시도의 INCAR 에서 NELM 을 읽지 못했다 ({ran.get('NELM')!r})")
     try:
         n_el, d_e, d_eps, unv = oszicar_last(open(os.path.join(attdir, "OSZICAR"), encoding="utf-8", errors="replace").read())
     except OSError as e:
@@ -1005,7 +1008,28 @@ def validate_pp_registry(reg, manifest_sha256, meta=None):
     return e
 
 
-def check(out, ret, manifest_sha256, pp_registry=None):
+A4_TARGET = "V5_s_outer_A_G4_e70_far"
+
+
+def adopt_a4(base, r1, a4):
+    """개정 4 — G4 e70 far 의 a4 채택. 부모 자격: 첫 시도·r1 둘 다 확인된 미수렴 (SCF_NOT_CONVERGED · 마지막 두 값 유한 · 무결성·설정 정상).
+    a4 (외주 2차 묶음 검사기 resolve_job 결과 · ⓐ 자격 · 재시작 확인 · ⓑ 판정 계약) 가 OK 일 때만 그 값을 쓴다. 이력 (first_attempt · r1 · a4) 은 늘 남긴다.
+    ⛔ 재시작 미이행·SCF 미확인·ⓐ 자격 미달은 자동 채택하지 않는다 · a4 결과를 보고 다른 설정으로 또 돌리지 않는다 (a4 가 마지막)."""
+    fin_ = lambda r: r is not None and r.get("status") == "SCF_NOT_CONVERGED" and fin((r.get("oszicar_last") or {}).get("dE")) is not None \
+        and fin((r.get("oszicar_last") or {}).get("d_eps")) is not None
+    hist = {"first_attempt": base.get("status"), "r1": (r1 or {}).get("status"), "a4": (a4 or {}).get("status")}
+    if not (fin_(base) and fin_(r1)):
+        return {**(r1 if r1 and base["status"] in R1_ELIGIBLE else base), "a4_history": hist,
+                "a4_note": "부모 자격 없음 (첫 시도·r1 이 둘 다 확인된 미수렴이 아니다) — a4 를 쓰지 않는다"}
+    if (a4 or {}).get("status") == "OK":
+        return {**a4, "status": "OK", "adopted": "a4", "a4_history": hist}
+    keep = r1 if r1 else base
+    note = {"RESTART_NOT_HONOURED": "재시작 미이행 — 자동 채택 없음 · 1저자 검토 (라벨과 함께 쓸지 · 값 없음)",
+            "STAGE_A_INELIGIBLE": "ⓐ 자격 미달 — 값 없음 (최종)", "SCF_UNVERIFIED": "SCF 미확인 — 값 없음 · 보고 (최종)"}.get((a4 or {}).get("status"), "a4 값 없음 (최종 — 이 잡은 더 열지 않는다)")
+    return {**keep, "a4_history": hist, "a4_note": note}
+
+
+def check(out, ret, manifest_sha256, pp_registry=None, a4_result=None):
     verify_manifest(out, manifest_sha256)
     meta = json.load(open(os.path.join(out, "jobs.json"), encoding="utf-8"))
     if pp_registry is not None:
@@ -1014,11 +1038,12 @@ def check(out, ret, manifest_sha256, pp_registry=None):
             raise PkgError(f"PP 등록부 검증 실패: {errs}")
     J = {j["dir"]: j for j in meta["jobs"]}
     run = os.path.join(ret, "run") if os.path.isdir(os.path.join(ret, "run")) else ret
-    res, every = {}, []
+    res, every, att = {}, [], {}
     for job in meta["jobs"]:
         bdir, rdir = os.path.join(run, job["dir"]), os.path.join(run, job["dir"] + "_r1")
         base = check_job(job, out, bdir, "0", pp_registry); every.append((job["dir"], base))
         r1 = check_job(job, out, rdir, "r1", pp_registry) if os.path.isdir(rdir) else None
+        att[job["dir"]] = (base, r1)
         if r1 is not None:
             every.append((job["dir"], r1))
         if r1 is None:
@@ -1028,6 +1053,10 @@ def check(out, ret, manifest_sha256, pp_registry=None):
         else:
             res[job["dir"]] = {**base, "r1_ignored": f"첫 시도 상태 {base['status']} 는 재시도 자격이 아니다 (사전등록: 실행 실패·미종료·미수렴만)",
                                "r1_status": r1["status"]}
+    # 개정 4 — a4 (외주 2차 반송) 를 G4 e70 far 에 적용한다. a4 시도도 일관성 검사 (PP 종별 sha · VASP 버전) 에 넣는다 (같은 빌드·같은 PP 여야 한다)
+    if a4_result is not None and A4_TARGET in att:
+        res[A4_TARGET] = adopt_a4(*att[A4_TARGET], a4_result)
+        every.append((A4_TARGET, a4_result))
     # 잡 사이 일관성 — 첫 시도·r1 **모든 시도**에서 모은다 (어긋나면 어느 쪽이 맞는지 모르므로 전부 막는다)
     by_sp, by_spec, vers = {}, {}, set()
     for n, r in every:
@@ -1184,9 +1213,10 @@ def size_effect_vs_p1(smp, p1, w10_first=None):
             "⚠": "정보 — ① G5 (방법 오차) 와 합쳐 오차막대로 만들지 않는다 (카드 §1b ③) · 끝점 다름 (V5 8 Å · P1 10 Å · ① 만 10 Å 줄) · P1 값은 기록 표 4 자리"}
 
 
-def collect(out, ret, manifest_sha256, uma=None, pp_registry=None, pp_registry_sha256=None, p1=None):
-    """최종 사용 판정은 봉인 PP 등록부가 있어야만 열린다 (없으면 파일럿 단계 집계 — G5 BLOCKED · total W 인용 불가)."""
-    meta, res = check(out, ret, manifest_sha256, pp_registry)
+def collect(out, ret, manifest_sha256, uma=None, pp_registry=None, pp_registry_sha256=None, p1=None, a4_result=None):
+    """최종 사용 판정은 봉인 PP 등록부가 있어야만 열린다 (없으면 파일럿 단계 집계 — G5 BLOCKED · total W 인용 불가).
+    a4_result (개정 4) 를 주면 G4 e70 far 에 adopt_a4 를 적용한다 — G5 와 §1b ② 는 a4 반송 뒤 한 번에 연다 (그 전에 열지 않는다)."""
+    meta, res = check(out, ret, manifest_sha256, pp_registry, a4_result)
     reg_ok = pp_registry is not None
     J = {j["dir"]: j for j in meta["jobs"]}
     ok = lambda n: res.get(n, {}).get("status") == "OK"
@@ -2120,6 +2150,19 @@ def _selftest():
             ck(rcode9 == 0 and os.path.isfile(os.path.join(w8, "V5_vasp_return.tgz")) and os.path.isfile(os.path.join(w8, "V5_vasp_return.tgz.sha256"))
                and len(open(os.path.join(w8, "run", "status.tsv")).read().splitlines()) == n_status and not os.path.exists(os.path.join(w8, "V5_vasp_return.tgz.part")),
                f"CF P1-3 PACK_ONLY=1 → 포장만 다시 (계산 재실행 없음 · status.tsv 불변 · 임시 파일 승격) — rc {rcode9}")
+    # ── 개정 4: a4 채택 (adopt_a4 · 합성 기록) ──
+    nc = lambda: {"status": "SCF_NOT_CONVERGED", "oszicar_last": {"n_elec_steps": 200, "dE": 1.2e-3, "d_eps": 4.4e-6}}
+    a4ok = {"status": "OK", "TOTEN_eV": -1.0, "E_sigma0_eV": -1.0, "Edisp_eV": -2.0, "run_id": "20261020T000000-1-1"}
+    r_ = adopt_a4(nc(), {**nc(), "oszicar_last": {"n_elec_steps": 300, "dE": 4e-4, "d_eps": 2e-6}}, a4ok)
+    ck(r_["status"] == "OK" and r_["adopted"] == "a4" and r_["a4_history"] == {"first_attempt": "SCF_NOT_CONVERGED", "r1": "SCF_NOT_CONVERGED", "a4": "OK"},
+       "개정 4: 첫 시도·r1 둘 다 확인된 미수렴 + a4 OK → a4 채택 · 이력 셋")
+    r_ = adopt_a4({**nc(), "status": "SCF_UNVERIFIED"}, nc(), a4ok)
+    ck(r_.get("adopted") is None and "부모 자격 없음" in r_["a4_note"], "⛔음성 개정 4: 첫 시도가 SCF 미확인이면 부모 자격 없음 → a4 를 쓰지 않는다")
+    r_ = adopt_a4(nc(), {**nc(), "oszicar_last": {"n_elec_steps": 300, "dE": None, "d_eps": 2e-6}}, a4ok)
+    ck(r_.get("adopted") is None, "⛔음성 개정 4: r1 마지막 값이 비유한 (None) 이면 부모 자격 없음")
+    for st_, key in (("RESTART_NOT_HONOURED", "재시작 미이행"), ("STAGE_A_INELIGIBLE", "ⓐ 자격 미달"), ("SCF_NOT_CONVERGED", "a4 값 없음")):
+        r_ = adopt_a4(nc(), nc(), {"status": st_})
+        ck(r_.get("adopted") is None and r_["status"] != "OK" and key in r_["a4_note"] and r_["a4_history"]["a4"] == st_, f"⛔음성 개정 4: a4 {st_} → 자동 채택 없음 ({key})")
     print(f"{'✅' if not bad else '⛔'} build_v5_vasp_package selftest {ok}/{ok + bad}")
     return 0 if not bad else 1
 
@@ -2131,6 +2174,8 @@ def main():
     ap.add_argument("--pkg", default="db/inputs/wad_aprime_s3v2_2026_09_26"); ap.add_argument("--out"); ap.add_argument("--ret"); ap.add_argument("--uma")
     ap.add_argument("--json"); ap.add_argument("--manifest_sha256"); ap.add_argument("--pp_registry"); ap.add_argument("--pp_registry_sha256")
     ap.add_argument("--p1_result", help="--collect 와 함께 (UMA 있을 때): SE 쌍 결과 기록 → 카드 §1b ② 크기 효과 (정보 · 판정 아님)")
+    ap.add_argument("--a4_result", help="개정 4: 외주 2차 검사기의 a4 결과 JSON (build_round2_vasp_package.py --a4_result) → G4 e70 far 에 adopt_a4")
+    ap.add_argument("--a4_result_sha256", help="a4 결과 JSON 의 고정 sha256")
     a = ap.parse_args()
     if a.selftest:
         return _selftest()
@@ -2143,6 +2188,14 @@ def main():
         if not (a.out and a.ret):
             ap.error("--out 과 --ret 가 필요하다")
         reg = load_pp_registry(a.pp_registry, a.pp_registry_sha256, a.manifest_sha256)
+        a4 = None
+        if a.a4_result:
+            if not a.a4_result_sha256 or _sha(a.a4_result) != a.a4_result_sha256.lower():
+                raise PkgError("a4 결과 JSON sha 가 고정값과 다르다")
+            a4 = json.load(open(a.a4_result, encoding="utf-8"))
+            if a4.get("schema") != "wad_round2_a4_result/v1" or a4.get("job") != "V5_s_outer_A_G4_e70_far_a4":
+                raise PkgError("a4 결과 JSON 의 schema·잡이 맞지 않는다")
+            a4 = a4["result"]
         if a.seal_pp:
             r = seal_pp(a.out, a.ret, a.manifest_sha256)
             if a.json:
@@ -2153,7 +2206,7 @@ def main():
                 raise PkgError("최종 집계(--collect)는 봉인 PP 등록부가 필수다 — --pp_registry R --pp_registry_sha256 H (파일럿 단계 집계면 --pilot 을 명시)")
             uma = json.load(open(a.uma, encoding="utf-8")) if a.uma else None
             p1 = json.load(open(a.p1_result, encoding="utf-8")) if a.p1_result else None
-            rec = collect(a.out, a.ret, a.manifest_sha256, uma, reg, a.pp_registry_sha256 if reg is not None else None, p1)
+            rec = collect(a.out, a.ret, a.manifest_sha256, uma, reg, a.pp_registry_sha256 if reg is not None else None, p1, a4)
             for k, s in rec["samples"].items():
                 print(f"  {k} W {s['W_J_m2']} · W_PBE {s['W_PBE_J_m2']} · ΔD3 {s['dD3_J_m2']} · D3 쌍 오차 {s['d3_pair_err_J_m2']} · 총 W 인용 {s['total_w_citable']}"
                       f"{' · ' + ' / '.join(s['total_w_labels']) if s['total_w_labels'] else ''}")
@@ -2170,7 +2223,7 @@ def main():
                 _write(a.json, json.dumps(rec, ensure_ascii=False, indent=1, allow_nan=False) + "\n")
             return collect_exit(rec)
         if a.check:
-            _, res = check(a.out, a.ret, a.manifest_sha256, reg)
+            _, res = check(a.out, a.ret, a.manifest_sha256, reg, a4)
             for n, r in res.items():
                 print(f"  {n:34s} {r['status']}{(' · ' + str(r.get('why'))) if r.get('why') else ''}")
             rb = return_manifest_info(a.ret, a.manifest_sha256)

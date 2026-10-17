@@ -49,5 +49,16 @@
   "selftest": "build_aprime_s3 40/40 (P2′ 21: 구조 9 · p05 far 공유 · 파일 G1p ① · G3 간격 · c+2 bound = 표본 좌표 · 문턱 0.008 · 결정성 · 80 % 규칙 10 → 12 · 두 번 발동 거부 · 음성 10 (손댄 좌표 · 계보 · G1 셋 · G2 · 결박 셋 · 모델) · 파일 왕복 · 결정 비활성)",
   "깨기": "12/12 빨강 — 계보 · G1 스텝 · G2 · 결박 · 결정 · p05 0.4 · G3 (ii) 1.5 · G3 bound 대신 far · 80 % → 90 % · 발동 시 +4 · 두 번 발동해도 봉인 · 파일 왕복 검사 빠짐",
   "다른_selftest": "collect_aprime_s4 25/25 · build_v5_vasp_package 222/222 · relax_uma_d3 44/44 · build_aprime_interfaces 75/75 · convention_check 0 위반"
+ },
+ "③_VASP_묶음_2026_10_17": {
+  "새_파일": "tools/wad/build_round2_vasp_package.py — 묶음 빌더 · 러너 (bash · 업체 쪽 python 가정 없음) · 검사기 · 집계기 · 등록부 봉인 · 해제 파일 · a4 결과. V5 도구의 파서·검사 함수를 가져다 쓴다 (V5 반송 재검사가 저장본과 바이트 일치로 묶여 있어 V5 파일에 탄소를 섞지 않았다)",
+  "잡_행렬": "24 잡 — 단계 P (은 a4 · 탄소 S_A bound·far · C–C optB88 bound·far) · 1 (Li_A 쌍 · p05 둘) · 2 (G3 셋 · G4 여섯: Γ6×2 σ · Γ6×2 σ/2 · ENCUT 650) · 3 (optB88 넷) · 4 (C–C PBE+D3 둘) · 단계 상한 117 · 170 · 586 · 204 · 24 h · 전체 1,080 h",
+  "러너": "사다리 단 0 → r1 ⓐ (LDIPOL F · LWAVE T) + ⓑ (ISTART 1 · ICHARG 0 · AMIN 0.01 · NELM 300) → r2 ⓑ (+ AMIX 0.1 · BMIX 0.01 · 같은 ⓐ WAVECAR) · 은 a4 = ⓐ+ⓑ 한 번 · 다음 단 = 확인된 미수렴 · 실행 실패만 · SCF 판정 = OSZICAR 마지막 전자 반복행 (검사기와 같은 계약·같은 순서) · ⓐ 자격 (정상 종료·유한 · WAVECAR 머리 = OUTCAR NKPTS·NBANDS·ENCUT · 복사본 sha) · 재시작 확인 (Startparameter ISTART 1 · ICHARG 0 · 'WAVECAR not read' 없음 · sha 셋 같음) · 단계·전체 누적 상한 (0 스텝 중단 벽시계 포함) · 해제 파일 (sha) 없이는 P 밖 단계 안 돎 · 공통 환경 고장 (VASP 빌드 · PP · vdW 커널) = 전체 정지 6 · 0 스텝 인프라 중단 기록 (--infra-abort · 잡마다 2 회) · 120 스텝 뒤 20 스텝마다 조기 경보 · 허용 목록 포장",
+  "검사기·집계기": "check_attempt (실행 기록 결박 · 입력 무결성 · POTCAR·버전·설정·D3·커널 모순 · 판정 계약 · 재시작 · 완결성) · resolve_job (사다리 채택 + 이력) · collect (W · Δ_C · G3 · G4 같은 기하 D3 동일성 · G5_C 상태 순서 · 80 % 발동 기록 · δ 라벨 규칙 · ②′ · far 진단 · 전하이동 신호 ⓐⓑ · 질문별 실패 전파) · seal_registry (파일럿 → C 포함 등록부 · V5 등록부와 같은 빌드·같은 PP 아니면 거부)",
+  "V5_도구_고침(개정_4)": "check_job 의 NELM 을 시도 이름이 아니라 검증된 그 시도의 INCAR 에서 읽는다 · adopt_a4 (부모 자격 = 첫 시도·r1 둘 다 확인된 미수렴 · a4 OK 만 채택 · 이력 셋 · 재시작 미이행·미확인·ⓐ 자격 미달 자동 채택 없음) · check/collect --a4_result (sha 고정) · selftest 228/228 · **실물 V5 반송 재검사·재집계 = 저장본과 바이트 일치** (check_2026_10_15.json · collect_noUMA_2026_10_15.json)",
+  "selftest": "build_round2_vasp_package 53/53 — 묶음 (잡·단계·상한 · 카드 값 리터럴 대조 · 사다리 INCAR 의미상 차이 · a4 = V5 봉인 + 개정 4 차이만 · 결정성 · 봉인 sha · 결정 비활성) · 판정 계약 러너 awk = 파이썬 (탐침 26) + V5 계약 일치 · 러너 가짜 VASP (파일럿 사다리 · NaN 미확인 승격 없음 · a4 재시작 미이행 · WAVECAR 보관 규칙 · 포장 허용 목록 · 이어 돌리기 · 해제 · 0 스텝 기록 · 공통 환경 고장 셋 · 상한 · 조기 경보 · 재시작 조건 셋 각각) · 집계 (깨끗 → G3·G4·G5_C PASS · BLOCKED 둘 · FAIL · 80 % 발동 · 신호 둘 · δ 라벨 · G4 D3 불일치 · 실패 전파) · 검사기 음성 (INCAR 손댐 · 커널 sha · ⓑ 복사본 sha)",
+  "깨기": "1차 22 개 중 18 빨강 → 안 잡힌 넷 (파이썬 판정 순서 · 러너 재시작의 ISTART · G4 같은 기하 D3 · δ 10 s 조건) 에 시험을 더해 넷 다 빨강 · 그 과정에서 **진짜 버그 하나**: 러너가 ISTART·ICHARG 를 OUTCAR 첫 줄에서 읽었다 — INCAR 를 되울리는 빌드면 입력값 (1·0) 을 실제값으로 읽는다 (5.4.4 실물은 되울림 없음) → Startparameter 줄 ('job :' · 'charge:') 의 마지막 값으로 고침 · 같은 깨기 추가 (빨강) · 최종 23 개 재실행 중",
+  "⚠_파일럿으로_확정할_것": "WAVECAR 를 읽었다는 긍정 문구 (5.4.4 는 'WAVECAR not read' 만 찍는 것으로 보인다 — 해제 파일 restart_read_regex 로 더할 수 있다) · optB88 설정 되울림 줄 형식 (GGA·PARAM1/2·Zab_vdW·AGGAC·LUSE_VDW) · vdW 커널 읽기 문구 · far 퍼텐셜 계단 줄",
+  "상태": "커밋 — Codex CZ 묶음 리뷰 전 · 실제 묶음은 P2′ 봉인 (kgy 이완 회수) 뒤에 만든다"
  }
 }
