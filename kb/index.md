@@ -1,15 +1,16 @@
 # kb 카탈로그 (생성물 — 손으로 고치지 말 것)
 
-> `python3 tools/kb_wiki.py index` 가 만든다 · 2026-10-16 · managed-files: 528
+> `python3 tools/kb_wiki.py index` 가 만든다 · 2026-10-17 · managed-files: 529
 
 규칙: kb/SCHEMA.md · 코드 체계: kb/CODES.md · 열린 질문: kb/questions/ · 논지 카드: kb/syntheses/ · 원장: kb/open_items.md · 문헌: litdb/INDEX.md
 
 값 = `db/properties/canonical_registry.json` · 금지 = `db/properties/citation_hazards.json` · 판정 = `db/governance/decisions.json` · 리뷰 = `kb/reviews/INDEX.md`
 
-## 최근 갱신 상위 20 (frontmatter `updated` 기준 · 전체 322건)
+## 최근 갱신 상위 20 (frontmatter `updated` 기준 · 전체 323건)
+- 2026-10-17 · `kb/reviews/INDEX.md` — 리뷰 사슬 색인 — 프롬프트↔회신 (자동 생성) · 자동생성
+- 2026-10-17 · `kb/reviews/codex_CZ_prompt_wad_outsourcing_round2_bundle_2026_10_17.md` — CZ 프롬프트 — W_ad 외주 2차 묶음 리뷰: 탄소 P2′ · C–C · 은 a4 VASP 묶음 (코드 · 러너 사다리 · 판정 계약 · 검사기·집계기 · 봉인) · 발송 승인 여부 · 초안 — P2′ 봉인·실제 묶음 전 (⟨봉인 뒤 채움⟩ 칸이 남아 있…
 - 2026-10-16 · `kb/seminars/Research_Seminar_2026_10_13_cascade_script_ko.md` — 연구세미나 2026-10-13 — cascade 진행 브리핑 발표 대본 (장별) · 진행
 - 2026-10-16 · `kb/seminars/Research_Seminar_2026_10_16_cascade_script_plain_ko.md` — 연구세미나 2026-10-16 — cascade 1부 대본 쉬운 판 (1–15쪽 · 노트 칸 붙여넣기용) · 진행
-- 2026-10-15 · `kb/reviews/INDEX.md` — 리뷰 사슬 색인 — 프롬프트↔회신 (자동 생성) · 자동생성
 - 2026-10-15 · `kb/reviews/codex_CY_prompt_wad_outsourcing_round2_design_2026_10_15.md` — CY 프롬프트 — W_ad 외주 2차 설계 리뷰: 탄소 작은 모델 (P2′) 보고량 카드 + V5 은 쪽 ENCUT 짝 재시도 (개정 4) + 러너 고칠 점 · 빌드 전 · 범위·수렴·문턱부터 · 발송 2026-10-15 · ✅ 회신 수령 2026-10-15 → `…
 - 2026-10-15 · `kb/reviews/codex_CY_reply_wad_outsourcing_round2_design_2026_10_15.md` — CY 회신 — W_ad 외주 2차 설계 리뷰: 조건부 GO · 탄소 작은 모델 추가와 은 a4 재개 찬성 · 카드 그대로 실행 승인 아님 · 최소 수정 여섯 묶음 뒤 빌드 · 발송 승인은 CZ · 수령 2026-10-15 (사용자 붙여넣기 · 원문 보존 · 마크다운…
 - 2026-10-15 · `kb/seminars/Research_Seminar_2026_10_13_cascade_defense_ko.md` — 연구세미나 2026-10-13 — cascade 진행 브리핑 디펜스 (예상 질문 · 개념 설명 · 숫자 카드) · 진행
@@ -26,7 +27,6 @@
 - 2026-10-07 · `kb/reviews/codex_CT_prompt_cascade_v7_main_runner_2026_10_07.md` — CT 프롬프트 — cascade D_rel v7 본 라운드 러너 (--main) 코드 리뷰: 이미 돌고 있는 40 런 · 조용히 틀린 경로 · 판정까지 이어지는가 · 확인 요청 여섯 · 발송 완료 2026-10-08 · ✅ 회신 수령 2026-10-08 …
 - 2026-10-07 · `kb/reviews/codex_CU_prompt_wad_agc_graphite_k9_closure_2026_10_07.md` — CU 프롬프트 — P1b Ag(111)|흑연 3층 W_sep 마감 교체 (k9 넷 · 사전 규칙 REPLACE) 사후 감사: DEM 이 Ag–C 기본값으로 채택한 뒤 · 다음 DEM 편지 전 · 확인 요청 다섯 · 발송 2026-10-08 · ✅ 회신 수령 2026-10-08 → `…
 - 2026-10-07 · `kb/reviews/codex_CV_prompt_cei_easy_story_2026_10_07.md` — CV 프롬프트 — CEI 쉬운 스토리 4 단계 (P 가 양극 금속을 끌어가고 Nd 가 P 를 먼저 잡는다) + 그림 여섯: 계산이 받치는 범위를 넘는가 · 확인 요청 다섯 · 발송 2026-10-08 · ✅ 회신 수령 2026-10-08 → `…
-- 2026-10-06 · `kb/syntheses/cei_nd_manuscript_framing_2026_09_18.md` — Nd 원고 논지 확정안 — "고전압 안정성 개선" 대신 "고전압 계면 분해 산물의 재분배" 로 (09-30 · 외부 리뷰 회신 CM — 종전 "양극 계면 열화 억제" 철회) · 확정 — 사용자 승인 2026-09-29 "ㅇㅇ si 쪽으로 가는게 …
 
 ⚠ frontmatter 없는 레거시 문서는 이 목록에 안 뜬다 (날짜를 기계로 읽을 수 없다 — SCHEMA 상 소급하지 않는다).
 
@@ -212,9 +212,9 @@
 - `kb/results/vgcf_hbn_figure_plan.md` — VGCF/h-BN 원고 — 층수 연구를 어디에 둘 것인가 (2026-07-31 결정)
 - `kb/results/vgcf_hbn_gallery_mechanism_2026_07_30.md` — h-BN@VGCF — 209 meV 층수효과의 정체: confinement 확정 (2026-07-30)
 
-## reviews/ (208)
+## reviews/ (209)
 - `kb/reviews/ECERD2600097_review_notes.md` — 📝 리뷰 노트 — ECER-D-26-00097 (Fan 외, *Stability Issues in Sulfide-Based ASSB*)
-- `kb/reviews/INDEX.md` — 리뷰 사슬 색인 — 프롬프트↔회신 (자동 생성)  (2026-10-15 · 자동생성)
+- `kb/reviews/INDEX.md` — 리뷰 사슬 색인 — 프롬프트↔회신 (자동 생성)  (2026-10-17 · 자동생성)
 - `kb/reviews/_superseded_BN_replan_2026_09_12.md` — 회신 BN 요청 — cascade 재실행 계획의 **선(先)심사**: go / no-go
 - `kb/reviews/cascade_preflight_audit_2026_09_09.md` — cascade_preflight_audit_2026_09_09  (2026-09-09 · 진행)
 - `kb/reviews/codex_AA_prompt_stageA_v5_regate_2026_08_29.md` — Codex 재검토 요청 AA — 회신 Z 의 P0 8건 처리 후 Stage A v5 재게이트  (2026-08-29 · 발송 완료 — 회신 AA 접수, 후속은 codex_AB_prompt_…)
@@ -330,6 +330,7 @@
 - `kb/reviews/codex_CW_reply_seminar_lean_deck_aesthetics_2026_10_13.md` — CW 회신 — 10-13 세미나 슬림판 덱 미감: 조건부 GO · P0 = p11 표가 없는 대응을 암시 · p12 문헌 그림과 우리 설계 구분 · p13 문헌 그림 역할 표시 · P1 = 그림 확대 · 글 덜기 · 규율 문장 반복 · 흐린 화살표  (2026-10-13 · 수령 2026-10-13 (사용자 붙여넣기 · 원문 보존 · 표는 붙…)
 - `kb/reviews/codex_CY_prompt_wad_outsourcing_round2_design_2026_10_15.md` — CY 프롬프트 — W_ad 외주 2차 설계 리뷰: 탄소 작은 모델 (P2′) 보고량 카드 + V5 은 쪽 ENCUT 짝 재시도 (개정 4) + 러너 고칠 점 · 빌드 전 · 범위·수렴·문턱부터  (2026-10-15 · 발송 2026-10-15 · ✅ 회신 수령 2026-10-15 → `…)
 - `kb/reviews/codex_CY_reply_wad_outsourcing_round2_design_2026_10_15.md` — CY 회신 — W_ad 외주 2차 설계 리뷰: 조건부 GO · 탄소 작은 모델 추가와 은 a4 재개 찬성 · 카드 그대로 실행 승인 아님 · 최소 수정 여섯 묶음 뒤 빌드 · 발송 승인은 CZ  (2026-10-15 · 수령 2026-10-15 (사용자 붙여넣기 · 원문 보존 · 마크다운…)
+- `kb/reviews/codex_CZ_prompt_wad_outsourcing_round2_bundle_2026_10_17.md` — CZ 프롬프트 — W_ad 외주 2차 묶음 리뷰: 탄소 P2′ · C–C · 은 a4 VASP 묶음 (코드 · 러너 사다리 · 판정 계약 · 검사기·집계기 · 봉인) · 발송 승인 여부  (2026-10-17 · 초안 — P2′ 봉인·실제 묶음 전 (⟨봉인 뒤 채움⟩ 칸이 남아 있…)
 - `kb/reviews/codex_C_funnel_2026_08_20.md` — 교차리뷰 C v2.1 — cascade 깔때기는 잘 작동했나 (codex 2라운드 종료)  (2026-08-20 · v2.1 — codex 2라운드 종료 (manifest 지적 철회 ·…)
 - `kb/reviews/codex_D_symposium_talk_standard_2026_08_25.md` — 교차리뷰 D — 심포지엄 세션(덱+녹취) 표준 (codex 작업지시서)  (2026-08-25 · 리뷰완료-HOLD)
 - `kb/reviews/codex_E_sdcp_wave1_gate_2026_08_25.md` — 교차리뷰 E — SDCP wave1 게이트 수정·물리 결론 (판정 수령 + 반영)  (2026-08-25 · 종결-실행승인(내부 max 리뷰))
