@@ -107,7 +107,9 @@ for m in $MODELS; do
   esac
 done
 
-# ⑤ 해시
+# ⑤ 해시 — 끝 줄을 queue.log 에 먼저 쓰고 해시한다 (2026-10-17 고침: ce87bc90 판은 해시 뒤에 '■ 큐 끝' 을 덧붙여
+#    SHA256SUMS 의 queue.log 줄이 어긋났다 · 그 판의 회수는 'queue.log 마지막 줄을 빼면 해시가 맞는다' 로 대조한다)
+say "■ 큐 끝 · 끝 코드 $final"
 ( cd "$OUT" && find . -type f ! -name 'opt.traj' ! -name '.lock' ! -name SHA256SUMS -print0 | sort -z | xargs -0 sha256sum > SHA256SUMS )
-say "■ 큐 끝 · 끝 코드 $final · SHA256SUMS $(wc -l < "$OUT/SHA256SUMS") 줄"
+echo "SHA256SUMS $(wc -l < "$OUT/SHA256SUMS") 줄 (queue.log 포함 · 이 줄은 queue.log 에 안 쓴다)"
 exit "$final"
