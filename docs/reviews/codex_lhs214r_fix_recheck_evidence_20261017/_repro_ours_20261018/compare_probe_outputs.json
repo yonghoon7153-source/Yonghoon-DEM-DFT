@@ -1,0 +1,561 @@
+{
+  "ours_dir_files": {
+    "receipt_fences/results.json": "bac5877b7bac731d1b1464b9d3ac9b772a79f73ac4937787e941bb576126dadc",
+    "numeric_adversarial.json": "16f6f65c2a1a8393d339b011a087d67e4e22841a8b59033865b10a60644bda11",
+    "display_fresh_source.json": "76e155cd5e001691efa5361b330f41b8cd78566198d3b6531273359c63eaaca6",
+    "display_fresh_base.json": "df0bd1622df1a59a711b66f648d7e21b3714c27600a3561cc131c0f738830cba",
+    "consumers_probe.json": "f06a93598b3b11b474ed3663e5b09d7995d81c472e6a27961af77939e079c831",
+    "consumer_h0_resurrection.json": "35d0c2a94b4fbdb03918f7d6f6d91a769d96d4dd1cc961b15e3eeb4671c757f2"
+  },
+  "probes": {
+    "receipt_fences": {
+      "four_backtick_nested_example": {
+        "ours": [
+          0,
+          []
+        ],
+        "codex": [
+          0,
+          []
+        ],
+        "same": true
+      },
+      "three_backtick_plain_example": {
+        "ours": [
+          1,
+          [
+            "R0",
+            "D1"
+          ]
+        ],
+        "codex": [
+          1,
+          [
+            "R0",
+            "D1"
+          ]
+        ],
+        "same": true
+      }
+    },
+    "numeric_adversarial": {
+      "restored_primary_H0": {
+        "same": true,
+        "ours": {
+          "before": [
+            "NOT_COMPUTED",
+            "full_over_conduction",
+            true
+          ],
+          "after": [
+            "OK",
+            1.62317474,
+            false
+          ],
+          "content": [
+            true,
+            "ok: hertzian, physics"
+          ],
+          "record": [
+            true,
+            "ok"
+          ],
+          "ion": {
+            "hertzian": null,
+            "physics": null
+          },
+          "binding": {
+            "hertzian": [],
+            "physics": []
+          },
+          "hold_before": {
+            "value": [
+              "주 타깃 Hertz (H0) FULL 모형 한계 1 행 ['?'] — v1.3 주 타깃 배포 HOLD (등록되지 않은 마스킹 · Physics · H12 · 0 · 1.5 대체 금지 · 행 삭제 금지 · 진단 레코드는 보존 — 부분 배포는 별도 등록 · 1저자 결정 필요 · L214 Q2 (가))"
+            ],
+            "error": null
+          },
+          "hold_after": {
+            "value": [],
+            "error": null
+          }
+        }
+      },
+      "q_withheld": {
+        "ours": 1.6231747351909949,
+        "codex": 1.6231747351909995,
+        "note": "판정값 아님 — Linux ↔ Windows 부동소수 끝자리 · 8 자리 반올림 (게시 칸) 같음"
+      },
+      "tau2_after": {
+        "ours": 5.529890768418778,
+        "codex": 5.529890768418778
+      },
+      "restored_physics": {
+        "same": true,
+        "ours": [
+          2.593468501694396,
+          "OK",
+          2.5934685
+        ]
+      },
+      "full_guard_rounding_boundary": {
+        "same": true,
+        "ours": [
+          [
+            "q1p5",
+            1.5,
+            1.5,
+            "computed",
+            {
+              "value": null,
+              "error": null
+            }
+          ],
+          [
+            "q1p5_nextdown",
+            1.4999999999999998,
+            1.5,
+            "computed",
+            {
+              "value": null,
+              "error": null
+            }
+          ],
+          [
+            "q1p5_nextup",
+            1.5000000000000002,
+            1.5,
+            "over_conduction_guard",
+            {
+              "value": null,
+              "error": null
+            }
+          ],
+          [
+            "q2",
+            2.0,
+            2.0,
+            "over_conduction_guard",
+            {
+              "value": null,
+              "error": null
+            }
+          ]
+        ]
+      },
+      "adopted_attempt_sweep": {
+        "ours": [
+          252,
+          0,
+          0
+        ],
+        "codex": [
+          252,
+          0,
+          0
+        ]
+      },
+      "ledger_sweep": {
+        "ours": [
+          36,
+          0
+        ],
+        "codex": [
+          36,
+          0
+        ]
+      },
+      "known_K": {
+        "same": true
+      }
+    },
+    "display_fresh_source": {
+      "checks": {
+        "n": 13,
+        "failed_ours": 7,
+        "failed_codex": 7,
+        "same": true
+      },
+      "cases": {
+        "n": 21,
+        "differing": []
+      },
+      "failed_ours": [
+        [
+          "missing_both_derived_csv",
+          "no delta when neither derived value current",
+          "Contact-free / Full",
+          [
+            "31.0×",
+            "31.0×",
+            "0%"
+          ]
+        ],
+        [
+          "missing_both_derived_csv",
+          "no delta when neither derived value current",
+          "σ_brug / σ_ionic",
+          [
+            "41.0×",
+            "41.0×",
+            "0%"
+          ]
+        ],
+        [
+          "missing_both_derived_split",
+          "no delta when neither derived value current",
+          "Contact-free / Full",
+          [
+            "31.0×",
+            "31.0×",
+            "0%"
+          ]
+        ],
+        [
+          "missing_both_derived_split",
+          "no delta when neither derived value current",
+          "σ_brug / σ_ionic",
+          [
+            "41.0×",
+            "41.0×",
+            "0%"
+          ]
+        ],
+        [
+          "missing_both_derived_fourcol",
+          "no delta when neither derived value current",
+          "R_brug (과대추정 배수)",
+          [
+            "31.0×",
+            "37.0×",
+            "+19.4%"
+          ]
+        ],
+        [
+          "missing_both_derived_fourcol",
+          "no delta when neither derived value current",
+          "Contact-free / Full",
+          [
+            "31.0×",
+            "37.0×",
+            "+19.4%"
+          ]
+        ],
+        [
+          "missing_both_derived_fourcol",
+          "no delta when neither derived value current",
+          "σ_brug / σ_ionic",
+          [
+            "41.0×",
+            "43.0×",
+            "+4.9%"
+          ]
+        ]
+      ]
+    },
+    "display_fresh_base": {
+      "checks": {
+        "n": 13,
+        "failed_ours": 10,
+        "failed_codex": 10,
+        "same": true
+      },
+      "cases": {
+        "n": 21,
+        "differing": []
+      },
+      "failed_ours": [
+        [
+          "normal_csv",
+          "current ionic sigma",
+          null,
+          [
+            "17.0",
+            "0.8",
+            "+300.0%"
+          ]
+        ],
+        [
+          "normal_split",
+          "current ionic sigma",
+          null,
+          [
+            "17.0",
+            "19.0",
+            "+11.8%"
+          ]
+        ],
+        [
+          "normal_fourcol",
+          "current ionic sigma",
+          null,
+          [
+            "17.0",
+            "19.0",
+            "+11.8%"
+          ]
+        ],
+        [
+          "missing_both_derived_csv",
+          "no delta when neither derived value current",
+          "Contact-free / Full",
+          [
+            "31.0×",
+            "31.0×",
+            "0%"
+          ]
+        ],
+        [
+          "missing_both_derived_csv",
+          "no delta when neither derived value current",
+          "σ_brug / σ_ionic",
+          [
+            "41.0×",
+            "41.0×",
+            "0%"
+          ]
+        ],
+        [
+          "missing_both_derived_split",
+          "no delta when neither derived value current",
+          "Contact-free / Full",
+          [
+            "31.0×",
+            "31.0×",
+            "0%"
+          ]
+        ],
+        [
+          "missing_both_derived_split",
+          "no delta when neither derived value current",
+          "σ_brug / σ_ionic",
+          [
+            "41.0×",
+            "41.0×",
+            "0%"
+          ]
+        ],
+        [
+          "missing_both_derived_fourcol",
+          "no delta when neither derived value current",
+          "R_brug (과대추정 배수)",
+          [
+            "31.0×",
+            "37.0×",
+            "+19.4%"
+          ]
+        ],
+        [
+          "missing_both_derived_fourcol",
+          "no delta when neither derived value current",
+          "Contact-free / Full",
+          [
+            "31.0×",
+            "37.0×",
+            "+19.4%"
+          ]
+        ],
+        [
+          "missing_both_derived_fourcol",
+          "no delta when neither derived value current",
+          "σ_brug / σ_ionic",
+          [
+            "41.0×",
+            "43.0×",
+            "+4.9%"
+          ]
+        ]
+      ]
+    },
+    "consumers_probe": {
+      "independent_l1_h0": {
+        "status": [
+          "done",
+          "done"
+        ],
+        "tau_same": true,
+        "hold_same": true,
+        "full_model_limit_same": true,
+        "reread_ok_same": true,
+        "reread_all_ok": true,
+        "q_ours": {
+          "hertz": 8.927503013108016,
+          "physics": 15.16555588756596,
+          "hertz_h12": 11.228845419323783
+        },
+        "q_codex": {
+          "hertz": 8.927503013108073,
+          "physics": 15.16555588756596,
+          "hertz_h12": 11.228845419323783
+        }
+      },
+      "independent_l2_h0": {
+        "status": [
+          "done",
+          "done"
+        ],
+        "tau_same": true,
+        "hold_same": true,
+        "full_model_limit_same": true,
+        "reread_ok_same": true,
+        "reread_all_ok": true,
+        "q_ours": {
+          "hertz": 35.710012052432674,
+          "physics": 60.66222355026451,
+          "hertz_h12": 44.915381677294796
+        },
+        "q_codex": {
+          "hertz": 35.710012052432674,
+          "physics": 60.66222355026451,
+          "hertz_h12": 44.91538167729469
+        }
+      },
+      "ml_el": {
+        "status": [
+          "done",
+          "done"
+        ],
+        "tau_same": true,
+        "hold_same": true,
+        "full_model_limit_same": true,
+        "reread_ok_same": true,
+        "reread_all_ok": true,
+        "q_ours": {
+          "hertz": null,
+          "physics": null,
+          "hertz_h12": null
+        },
+        "q_codex": {
+          "hertz": null,
+          "physics": null,
+          "hertz_h12": null
+        }
+      },
+      "ml_hertz": {
+        "status": [
+          "done",
+          "done"
+        ],
+        "tau_same": true,
+        "hold_same": true,
+        "full_model_limit_same": true,
+        "reread_ok_same": true,
+        "reread_all_ok": true,
+        "q_ours": {
+          "hertz": 1.6231747351909949,
+          "physics": 5.292792860600809,
+          "hertz_h12": 2.7392746689761913
+        },
+        "q_codex": {
+          "hertz": 1.6231747351909995,
+          "physics": 5.292792860600809,
+          "hertz_h12": 2.7392746689761824
+        }
+      },
+      "ml_physics": {
+        "status": [
+          "done",
+          "done"
+        ],
+        "tau_same": true,
+        "hold_same": true,
+        "full_model_limit_same": true,
+        "reread_ok_same": true,
+        "reread_all_ok": true,
+        "q_ours": {
+          "hertz": null,
+          "physics": 2.593468501694396,
+          "hertz_h12": null
+        },
+        "q_codex": {
+          "hertz": null,
+          "physics": 2.593468501694396,
+          "hertz_h12": null
+        }
+      }
+    },
+    "consumer_h0_resurrection": {
+      "numeric_only_stop_same": true,
+      "numeric_only_stop": [
+        false,
+        "④ constriction_power_share_ion_hertz: 관통 해인데 값 None · 상태 'not_computed (FULL output withheld — model limit q > 1.5)' (0–1 · computed 여야 — 내부 예외 · 풀이 실패는 거부)"
+      ],
+      "after_same": true,
+      "after": {
+        "content": [
+          true,
+          "ok: hertzian, physics"
+        ],
+        "record": [
+          true,
+          "ok"
+        ],
+        "stop": [
+          true,
+          "ok"
+        ]
+      },
+      "certificate_numeric_unchanged": [
+        true,
+        true
+      ],
+      "mutation_leaves": {
+        "ours": {
+          "network_conductivity_dual.json": 10,
+          "network_conductivity_hertzian.json": 10,
+          "network_conductivity.json": 10,
+          "full_metrics.json": 6
+        },
+        "codex": {
+          "network_conductivity_dual.json": 10,
+          "network_conductivity_hertzian.json": 10,
+          "network_conductivity.json": 10,
+          "full_metrics.json": 6
+        }
+      },
+      "build_same_except_out_dir": true,
+      "build": {
+        "dry_run": false,
+        "diagnostic": false,
+        "generation": {
+          "lhs": "g2",
+          "lhsx": "g2",
+          "lhss": "g2"
+        },
+        "missing_columns": {},
+        "warnings": [],
+        "tau_reread": "performed",
+        "n_files": 27
+      },
+      "check": [
+        {
+          "value": [],
+          "exception": null
+        },
+        {
+          "value": [],
+          "exception": null
+        }
+      ],
+      "selected": {
+        "ours": {
+          "case": "lhs00_002",
+          "status": "OK",
+          "f": "1.62317474",
+          "tau2": "5.529890768418778",
+          "tau": "2.351571978149676"
+        },
+        "codex": {
+          "case": "lhs00_002",
+          "status": "OK",
+          "f": "1.62317474",
+          "tau2": "5.52989076841878",
+          "tau": "2.351571978149676"
+        }
+      },
+      "after_row_differing_columns": [
+        "tau2_ion_hertz"
+      ],
+      "note": "after_row · selected 의 차이 = tau2 끝자리 (φ 8.975979010256552 ↔ …554 · Linux ↔ Windows) 뿐"
+    }
+  }
+}
