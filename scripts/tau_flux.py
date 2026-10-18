@@ -672,7 +672,8 @@ def _cert_problem(cert):
 #    ④b ★ 10-16 L214R-06 — 채택 단 (마지막 시도) ↔ 요약 결합 = `network_conductivity.adopted_attempt_binding_problem` (모형 한계 증서 ③ 과 같은 함수 · 마지막 시도 =
 #       pass · 같은 방법 · 같은 두 전류 · 예외 없음 · 방법별 수렴 상태 · 수치 · 보존 · 내부 잔차 = 요약 · 앞선 실패 시도 = 정상 fallback 은 허용)
 #  정책 (`CERT_BRANCH_POLICY` · 봉인 — 새 194 전 고정 · 결과를 보고 옮기지 않는다):
-#    · FULL — 게시 (computed) 면 ①–④ 필수 (τ 의 수치 의존).
+#    · FULL — 게시 (computed) 면 ①–④ 필수 (τ 의 수치 의존) · ★ 10-18 L214R-R01 — ③ 의 재구성 q (반올림 전) ≤ 생산자 출력 문턱 FULL_Q_GUARD_MAX (엄격 > 이면
+#      생산자가 보류하는 값 — 보류 값을 게시 상태로 되돌린 레코드 거부 · CF · 협착-only 진단 가지에는 걸지 않는다).
 #    · CF (bulk_only) · 협착-only (constriction_only) 진단 — **숫자를 싣는** 가지 (값 있음 · 상태 computed · model_over_conduction) 면 ①–④ 필수 ·
 #      model_over_conduction 은 모형 해석 표지이지 수치 증서 면제가 아니다 (Codex Q4).
 #    · 숫자 없는 가지 (비관통 valid_zero · 0 저항 수축 미구현 · 증서 실패 · 경계 겹침 = not_computed) — **없는 수렴 증서를 요구하지 않는다**: 상태가
@@ -789,6 +790,16 @@ def _cert_published_problem(m, branch, rec, q, sd, st, cert):
             bad.append(f'{nc.NON_FINITE_REASON} — 증서 재구성 q = I_bottom/ΔV × T/A = {q_rec!r} 가 유한 양수가 아니다 (넘침 · 밑넘침 — 생산자 solve_network 는 '
                        f'이 해를 {nc.NON_FINITE_REASON} 로 거부한다 · 발행 σ_ratio {q!r} 와 비교하지 않는다)')
             return ' · '.join(bad)
+        #  ★ 10-18 L214R-R01 (Codex 재확인 판정 §1 · 표기 L214RR-01 · 1저자 10-18 Q1 권고대로) — 이온 FULL 이 숫자를 싣는데 증서에서 재구성한 **반올림 전** q
+        #    (생산자 σ 환산과 같은 식 · 같은 순서 = 생산자가 문턱과 비교한 바로 그 수) 가 생산자 고정 출력 정책 (`network_conductivity.FULL_Q_GUARD_MAX` · 엄격 >)
+        #    을 넘으면 = 생산자는 이 값을 보류한다 (not_computed · full_over_conduction) → 보류 값을 게시 상태로 되돌린 레코드다.  옛 판은 증서 수치를 그대로 두고 값 ·
+        #    상태만 바꾼 레코드가 정지 · 다시 읽기 · 인계 · 배포까지 지났다.  증서의 q_withheld 자기 신고는 읽지 않는다 (지워도 같다) · 저장 8 자리 q 로 비교하지
+        #    않는다 (raw 1.5000000000000002 → 저장 1.5) · CF · 협착-only 의 q > 1.5 (model_over_conduction 진단 값) · 열 · 전자 채널은 이 정책 밖 (이 함수 = 이온 세 가지 ·
+        #    전자 FULL 의 같은 복원 = 1저자 Q4 범위 밖)
+        if branch == 'full' and q_rec > nc.FULL_Q_GUARD_MAX:
+            bad.append(f'FULL 게시 값 (σ_ratio {q!r} · 상태 {st!r}) 인데 증서 재구성 q (반올림 전) = I_bottom/ΔV × T/A = {q_rec!r} > 생산자 출력 문턱 '
+                       f'{nc.FULL_Q_GUARD_MAX!r} (정책 {nc.MODEL_LIMIT_POLICY} · 엄격 >) — 생산자는 이 FULL 값을 보류한다 (not_computed · '
+                       f'{nc.FULL_OVER_CONDUCTION_REASON}) · 보류 값을 게시 상태로 되돌린 레코드는 받지 않는다 (L214R-R01)')
         qn, sdn = _num(q), _num(sd)
         if qn is None or not abs(qn - q_rec) <= SIGMA_RATIO_ROUND_HALF + _ID_FP * abs(q_rec):
             bad.append(f'발행 σ_ratio {q!r} ≠ 증서 재구성 I_bottom/ΔV × T/A = {q_rec!r} (저장 반올림 반폭 {SIGMA_RATIO_ROUND_HALF:g} 밖)')

@@ -1,6 +1,6 @@
-# LHS214 재확인 반례 (L214R-R01–R03 · Codex 표기 L214RR-01–03) 수정 계획 (2026-10-18 · ⬜ 1저자 비준 대기)
+# LHS214 재확인 반례 (L214R-R01–R03 · Codex 표기 L214RR-01–03) 수정 계획 (2026-10-18 · ✅ 1저자 10-18 비준 — Q1–Q5 권고대로)
 
-> **지위**: 초안 · 코드 변경 0 · 결과 0 건.  근거 = Codex 재확인 판정문 `docs/reviews/codex_review_lhs214r_fix_recheck_20261017.md` (코드 핀 `60ba39e22`) §1–§3 · §8 최소 남은 조치 · 보충 판정 `docs/reviews/codex_lhs214r_evidence_supplement_20261017.md` (핀 `a4a1e52c0` · HOLD 유지) · 증거 `docs/reviews/codex_lhs214r_fix_recheck_evidence_20261017/` (우리 트리 재현 = 판정값 차이 0 · `_repro_ours_20261018/`).
+> **지위**: ✅ 1저자 10-18 *"비준"* (Q1–Q5 권고대로) → 수정 (R01 → R02 → R03 · 커밋 하나씩) · 이 표는 비준 전 판 그대로 (결과 0 건에서 쓴 것).  근거 = Codex 재확인 판정문 `docs/reviews/codex_review_lhs214r_fix_recheck_20261017.md` (코드 핀 `60ba39e22`) §1–§3 · §8 최소 남은 조치 · 보충 판정 `docs/reviews/codex_lhs214r_evidence_supplement_20261017.md` (핀 `a4a1e52c0` · HOLD 유지) · 증거 `docs/reviews/codex_lhs214r_fix_recheck_evidence_20261017/` (우리 트리 재현 = 판정값 차이 0 · `_repro_ours_20261018/`).
 > **원칙**: 반례 먼저 (Codex 반례 셋을 상주 시험으로 옮겨 고치기 전 실패 확인) → 고침 → 정상 사례 무영향 (A4 36/36 꼴) → 웹앱 같은 묶음 → 게이트 → 커밋.  문턱 1.5 · 허용치 · 띠 정책 · 사다리 변경 · 과거 결과 · 승인 핀 소급 변경 = 하지 않는다.
 
 ## 0. 사실
