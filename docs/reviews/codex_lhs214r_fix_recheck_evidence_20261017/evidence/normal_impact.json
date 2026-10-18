@@ -1,0 +1,407 @@
+{
+  "base": "6cb2569569ec74b7f5a96e0ef19494e872da5272",
+  "source": "60ba39e224aff48a030dccfe750342f3bf9db61f",
+  "rows": [
+    {
+      "section": "N",
+      "case": "합성 SE + AM (이온 · 전자 · 열 · H12)",
+      "mode": "hertzian",
+      "compared": "수 333 · 문자 167 · null 68 (더한 기록 키 넷 뺀 뒤)",
+      "identical": true,
+      "diff": "",
+      "guard_fields": 0,
+      "sec": 0.2,
+      "statuses": {
+        "sigma_full_status": "computed",
+        "sigma_full_reason": null,
+        "ionic_status": "computed",
+        "electronic_status": "computed",
+        "thermal_status": "computed"
+      }
+    },
+    {
+      "section": "N",
+      "case": "합성 SE + AM (이온 · 전자 · 열 · H12)",
+      "mode": "physics",
+      "compared": "수 239 · 문자 118 · null 50 (더한 기록 키 넷 뺀 뒤)",
+      "identical": true,
+      "diff": "",
+      "guard_fields": 0,
+      "sec": 0.0,
+      "statuses": {
+        "sigma_full_status": "computed",
+        "sigma_full_reason": null,
+        "ionic_status": "computed",
+        "electronic_status": "computed",
+        "thermal_status": "computed"
+      }
+    },
+    {
+      "section": "N",
+      "case": "합성 GEN2-01 사슬 (협착-only R_c = 0)",
+      "mode": "hertzian",
+      "compared": "수 249 · 문자 132 · null 57 (더한 기록 키 넷 뺀 뒤)",
+      "identical": true,
+      "diff": "",
+      "guard_fields": 0,
+      "sec": 0.0,
+      "statuses": {
+        "sigma_full_status": "computed",
+        "sigma_full_reason": null,
+        "ionic_status": "computed",
+        "electronic_status": "not_applicable",
+        "thermal_status": "computed"
+      }
+    },
+    {
+      "section": "N",
+      "case": "합성 GEN2-01 사슬 (협착-only R_c = 0)",
+      "mode": "physics",
+      "compared": "수 144 · 문자 81 · null 42 (더한 기록 키 넷 뺀 뒤)",
+      "identical": true,
+      "diff": "",
+      "guard_fields": 0,
+      "sec": 0.0,
+      "statuses": {
+        "sigma_full_status": "computed",
+        "sigma_full_reason": null,
+        "ionic_status": "computed",
+        "electronic_status": "not_applicable",
+        "thermal_status": "computed"
+      }
+    },
+    {
+      "section": "N",
+      "case": "합성 진짜 비관통",
+      "mode": "hertzian",
+      "compared": "수 143 · 문자 123 · null 96 (더한 기록 키 넷 뺀 뒤)",
+      "identical": true,
+      "diff": "",
+      "guard_fields": 0,
+      "sec": 0.0,
+      "statuses": {
+        "sigma_full_status": "valid_zero",
+        "sigma_full_reason": "no_through_path",
+        "ionic_status": "valid_zero",
+        "electronic_status": "not_applicable",
+        "thermal_status": "valid_null"
+      }
+    },
+    {
+      "section": "N",
+      "case": "합성 진짜 비관통",
+      "mode": "physics",
+      "compared": "수 89 · 문자 77 · null 63 (더한 기록 키 넷 뺀 뒤)",
+      "identical": true,
+      "diff": "",
+      "guard_fields": 0,
+      "sec": 0.0,
+      "statuses": {
+        "sigma_full_status": "valid_zero",
+        "sigma_full_reason": "no_through_path",
+        "ionic_status": "valid_zero",
+        "electronic_status": "not_applicable",
+        "thermal_status": "valid_null"
+      }
+    },
+    {
+      "section": "N",
+      "case": "합성 CF 모형 과전도 (상자 1 × 1)",
+      "mode": "hertzian",
+      "compared": "수 258 · 문자 137 · null 49 (더한 기록 키 넷 뺀 뒤)",
+      "identical": true,
+      "diff": "",
+      "guard_fields": 0,
+      "sec": 0.0,
+      "statuses": {
+        "sigma_full_status": "computed",
+        "sigma_full_reason": null,
+        "ionic_status": "computed",
+        "electronic_status": "not_applicable",
+        "thermal_status": "computed"
+      }
+    },
+    {
+      "section": "N",
+      "case": "합성 CF 모형 과전도 (상자 1 × 1)",
+      "mode": "physics",
+      "compared": "수 164 · 문자 86 · null 33 (더한 기록 키 넷 뺀 뒤)",
+      "identical": true,
+      "diff": "",
+      "guard_fields": 0,
+      "sec": 0.0,
+      "statuses": {
+        "sigma_full_status": "computed",
+        "sigma_full_reason": null,
+        "ionic_status": "computed",
+        "electronic_status": "not_applicable",
+        "thermal_status": "computed"
+      }
+    },
+    {
+      "section": "N",
+      "case": "real_14 (세 채널 · 커밋된 기준 덤프)",
+      "mode": "hertzian",
+      "compared": "수 339 · 문자 167 · null 68 (더한 기록 키 넷 뺀 뒤)",
+      "identical": true,
+      "diff": "",
+      "guard_fields": 0,
+      "sec": 21.8,
+      "statuses": {
+        "sigma_full_status": "computed",
+        "sigma_full_reason": null,
+        "ionic_status": "computed",
+        "electronic_status": "computed",
+        "thermal_status": "computed"
+      }
+    },
+    {
+      "section": "N",
+      "case": "real_14 (세 채널 · 커밋된 기준 덤프)",
+      "mode": "physics",
+      "compared": "수 221 · 문자 115 · null 57 (더한 기록 키 넷 뺀 뒤)",
+      "identical": true,
+      "diff": "",
+      "guard_fields": 0,
+      "sec": 13.6,
+      "statuses": {
+        "sigma_full_status": "computed",
+        "sigma_full_reason": null,
+        "ionic_status": "computed",
+        "electronic_status": "computed",
+        "thermal_status": "computed"
+      }
+    },
+    {
+      "section": "N",
+      "case": "case15 음성 대조 (실패 침대 · 띠 겹침 · 음수 면적)",
+      "mode": "hertzian",
+      "compared": "수 276 · 문자 159 · null 88 (더한 기록 키 넷 뺀 뒤)",
+      "identical": true,
+      "diff": "",
+      "guard_fields": 0,
+      "sec": 22.8,
+      "statuses": {
+        "sigma_full_status": "computed",
+        "sigma_full_reason": null,
+        "ionic_status": "computed",
+        "electronic_status": "failed",
+        "thermal_status": "failed"
+      }
+    },
+    {
+      "section": "N",
+      "case": "case15 음성 대조 (실패 침대 · 띠 겹침 · 음수 면적)",
+      "mode": "physics",
+      "compared": "수 125 · 문자 79 · null 50 (더한 기록 키 넷 뺀 뒤)",
+      "identical": true,
+      "diff": "",
+      "guard_fields": 0,
+      "sec": 7.7,
+      "statuses": {
+        "sigma_full_status": "computed",
+        "sigma_full_reason": null,
+        "ionic_status": "computed",
+        "electronic_status": "failed",
+        "thermal_status": "failed"
+      }
+    },
+    {
+      "section": "N",
+      "case": "real_14 이온 run_decomposition",
+      "mode": "hertzian",
+      "compared": "수 90 · 문자 42 · null 17",
+      "identical": true,
+      "diff": "",
+      "guard_fields": 0,
+      "sec": null,
+      "statuses": {
+        "sigma_full_status": "computed",
+        "sigma_full_reason": null
+      }
+    },
+    {
+      "section": "N",
+      "case": "real_14 이온 run_decomposition",
+      "mode": "physics",
+      "compared": "수 78 · 문자 40 · null 22",
+      "identical": true,
+      "diff": "",
+      "guard_fields": 0,
+      "sec": null,
+      "statuses": {
+        "sigma_full_status": "computed",
+        "sigma_full_reason": null
+      }
+    },
+    {
+      "section": "N",
+      "case": "격자 34×34×30 (자유 노드 > 30,000 · cg)",
+      "mode": "solve_network full",
+      "compared": "G · q · solve_info (증서 수치 · 단 기록)",
+      "identical": true,
+      "diff": "",
+      "guard_fields": 0,
+      "sec": null,
+      "statuses": {
+        "G": "0x1.16d424c7fc33ep+5",
+        "q": "0x1.cf1b4184d8eafp-1"
+      }
+    },
+    {
+      "section": "N",
+      "case": "격자 3×3×6 (spsolve)",
+      "mode": "solve_network full",
+      "compared": "G · q · solve_info (증서 수치 · 단 기록)",
+      "identical": true,
+      "diff": "",
+      "guard_fields": 0,
+      "sec": null,
+      "statuses": {
+        "G": "0x1.d1f358c831678p-1",
+        "q": "0x1.36a23b3020efbp-1"
+      }
+    },
+    {
+      "section": "T",
+      "case": "194 historical cases all old cells",
+      "identical": true,
+      "bad": [],
+      "flags_unique": [
+        [
+          false,
+          false
+        ]
+      ]
+    },
+    {
+      "section": "T",
+      "case": "합성 SE + AM (이온 · 전자 · 열 · H12)",
+      "identical": true,
+      "diff": ""
+    },
+    {
+      "section": "T",
+      "case": "real_14 (세 채널 · 커밋된 기준 덤프)",
+      "identical": true,
+      "diff": ""
+    },
+    {
+      "section": "T",
+      "case": "합성 진짜 비관통",
+      "identical": true,
+      "diff": ""
+    },
+    {
+      "section": "T",
+      "case": "합성 CF 모형 과전도 (상자 1 × 1)",
+      "identical": true,
+      "diff": ""
+    },
+    {
+      "section": "T",
+      "case": "lhsx_054 old diagnosed record",
+      "identical": true,
+      "diff": ""
+    },
+    {
+      "section": "R",
+      "case": "lhs blank/class/status",
+      "identical": true,
+      "bad": []
+    },
+    {
+      "section": "R",
+      "case": "lhs historical missing flags refused",
+      "identical": true,
+      "new": [
+        "주 타깃 모형 한계 독립 표지 full_model_limit_hertz 칸이 없는 행 130 ['lhs00_000', 'lhs00_001', 'lhs00_002', 'lhs00_003', 'lhs00_004', 'lhs00_005'] — 띠 폴백에 가려진 H0 모형 한계를 확인할 수 없다 (지금 생성기의 세대 2 τ 묶음 인계표가 아니다 · L214R-02) — v1.3 주 타깃 배포 HOLD"
+      ],
+      "old": [],
+      "intentional_change": true
+    },
+    {
+      "section": "R",
+      "case": "lhs synthetic explicit flags admitted",
+      "identical": true,
+      "problems": [],
+      "qualification": "synthetic gate test, not historical data upgrade"
+    },
+    {
+      "section": "R",
+      "case": "lhsx blank/class/status",
+      "identical": true,
+      "bad": []
+    },
+    {
+      "section": "R",
+      "case": "lhsx historical missing flags refused",
+      "identical": true,
+      "new": [
+        "주 타깃 모형 한계 독립 표지 full_model_limit_hertz 칸이 없는 행 64 ['lhsx_001', 'lhsx_002', 'lhsx_003', 'lhsx_004', 'lhsx_005', 'lhsx_006'] — 띠 폴백에 가려진 H0 모형 한계를 확인할 수 없다 (지금 생성기의 세대 2 τ 묶음 인계표가 아니다 · L214R-02) — v1.3 주 타깃 배포 HOLD"
+      ],
+      "old": [],
+      "intentional_change": true
+    },
+    {
+      "section": "R",
+      "case": "lhsx synthetic explicit flags admitted",
+      "identical": true,
+      "problems": [],
+      "qualification": "synthetic gate test, not historical data upgrade"
+    },
+    {
+      "section": "W",
+      "case": "Hertz 만 있는 옛 케이스 (physics 키 없음) | 기존 CSV 표",
+      "identical": true,
+      "diff": ""
+    },
+    {
+      "section": "W",
+      "case": "Hertz 만 있는 옛 케이스 (physics 키 없음) | 새 표",
+      "identical": true,
+      "diff": ""
+    },
+    {
+      "section": "W",
+      "case": "모형 한계 (Codex 합성 — physics None · full_over_conduction) | 기존 CSV 표",
+      "identical": true,
+      "diff": ""
+    },
+    {
+      "section": "W",
+      "case": "모형 한계 (Codex 합성 — physics None · full_over_conduction) | 새 표",
+      "identical": true,
+      "diff": ""
+    },
+    {
+      "section": "W",
+      "case": "비관통 (두 모드 valid_zero) | 기존 CSV 표",
+      "identical": true,
+      "diff": ""
+    },
+    {
+      "section": "W",
+      "case": "비관통 (두 모드 valid_zero) | 새 표",
+      "identical": true,
+      "diff": ""
+    },
+    {
+      "section": "W",
+      "case": "정상 (두 모드 · 세 채널 값) | 기존 CSV 표",
+      "identical": true,
+      "diff": ""
+    },
+    {
+      "section": "W",
+      "case": "정상 (두 모드 · 세 채널 값) | 새 표",
+      "identical": true,
+      "diff": ""
+    }
+  ],
+  "method": "Earlier fixture constructors only; no claimed 10-16 A4 script available. N whole JSON, T old columns, R declared flag policy, W pre-final transform.",
+  "producer_errors": [],
+  "seconds": 81.79699999999139,
+  "pass": 36,
+  "total": 36
+}

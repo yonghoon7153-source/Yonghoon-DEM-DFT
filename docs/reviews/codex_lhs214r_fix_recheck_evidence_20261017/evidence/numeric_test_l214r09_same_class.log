@@ -1,0 +1,98 @@
+  PASS  H1 정상 세대 2 레코드 (상자 1.5) τ 세 모드 = 독립 식 φ_mc/(σ_ratio·L_gap/L_mc) · 유한 양수 · 상태 그대로 [('OK', '', 0.35349139), ('OK', '', 0.59655315), ('OK', '', 1.15265267)]
+  PASS  H1 정상 세대 2 레코드 (상자 2.0 면적 3.2) τ 세 모드 = 독립 식 φ_mc/(σ_ratio·L_gap/L_mc) · 유한 양수 · 상태 그대로 [('OK', '', 0.384036), ('OK', '', 0.8999354), ('OK', '', 0.9817477)]
+  PASS  H2 FULL 모형 한계 (상자 1.0 · physics) = NOT_COMPUTED full_over_conduction · 값 빈칸 · H0 · H12 = 독립 식 [('OK', '', 0.79535562), ('OK', '', 1.34224459), ('NOT_COMPUTED', 'full_over_conduction', None)]
+  PASS  H3 정직한 비관통 (valid_zero) = NOT_PERCOLATING · f = f_gap = 0.0 · tau2 · tau 빈칸 (등록된 물리적 ∞ 표현) [('NOT_PERCOLATING', '', 0.0, 0.0, None, None), ('NOT_PERCOLATING', '', 0.0, 0.0, None, None), ('NOT_PERCOLATING', '', 0.0, 0.0, None, None)]
+  PASS  H4 정직한 풀이 실패 (모든 단 실패) = NOT_COMPUTED solver_guard · 값 빈칸 ('NOT_COMPUTED', 'solver_guard', None, None, None, None)
+  PASS  H5 정지 계약 수 판정 (_stop_num) 의 보통 값 그대로 [(1.0, True), (0, True), (-3, True), (9007199254740992, True), (1e+308, True), (5e-324, True)] …
+  PASS  H6 ★ 진짜 194 역사 레코드 폴더 행 전부 = 고치기 전 코드의 지문 그대로 (비트 같음) — 194 행 · 739b98b1a9e5a850…
+  PASS  H7 194 역사 레코드 τ = 독립 식 (값 상태 340 칸) · 비관통 48 칸 = f 0.0 · tau2 빈칸 · 그 밖 상태 없음 — 어긋남 []
+  PASS  H8 웹 게시 폴더 [through] = done · 정지 계약 (True, ok) · 기록 판정 통과 · 다시 읽기 실패 0 · τ 상태 ('OK', 'OK', 'OK')
+  PASS  H8 웹 게시 폴더 [nonthrough] = done · 정지 계약 (True, ok) · 기록 판정 통과 · 다시 읽기 실패 0 · τ 상태 ('NOT_PERCOLATING', 'NOT_PERCOLATING', 'NOT_PERCOLATING')
+  PASS  H8 웹 게시 폴더 [ml_physics] = done · 정지 계약 (True, ok) · 기록 판정 통과 · 다시 읽기 실패 0 · τ 상태 ('OK', 'OK', 'NOT_COMPUTED')
+  PASS  H8 웹 게시 폴더 [band_l1] = done · 정지 계약 (True, ok) · 기록 판정 통과 · 다시 읽기 실패 0 · τ 상태 ('BAND_FALLBACK', 'BAND_FALLBACK', 'BAND_FALLBACK')
+  PASS  H8 웹 게시 폴더 [through_60C] = done · 정지 계약 (True, ok) · 기록 판정 통과 · 다시 읽기 실패 0 · τ 상태 ('OK', 'OK', 'OK')
+  PASS  H9 생산자 온도 규약 (60 °C Arrhenius · 웹 게시) — σ₀ 0.014355301874382767 · 규약 대조 None
+  PASS  H10 생산자 온도 규약 (T_C None · Ea None) — σ₀ 0.003 · 배수 1.0 · H0 · H12 규약 대조 None
+  PASS  H10 생산자 온도 규약 (T_C 60.0 · Ea None) — σ₀ 0.014355301874382767 · 배수 4.785100624794255 · H0 · H12 규약 대조 None
+  PASS  H10 생산자 온도 규약 (T_C 60.0 · Ea 0.29) — σ₀ 0.008788424745400768 · 배수 2.9294749151335893 · H0 · H12 규약 대조 None
+  PASS  H10 생산자 온도 규약 (T_C -20.0 · Ea 0.46) — σ₀ 0.00014654941061242725 · 배수 0.04884980353747575 · H0 · H12 규약 대조 None
+  PASS  H10 생산자 온도 규약 (T_C 25.0 · Ea None) — σ₀ 0.003 · 배수 1.0 · H0 · H12 규약 대조 None
+  PASS  H11 유한 어긋남 (25 °C · σ₀ ×2) 의 사유 문구 그대로 — 'σ₀ ↔ 온도 규약 (G2RR2-04): σ₀ 0.006 S/cm ≠ 온도 규약 (T_C None · Ea None · T_ref 25.0) 의 σ_grain 0.003'
+  PASS  H12 exp 자체가 넘치는 규약 (T_C −272.15 · Ea −0.07) = 기존 사유 그대로 (재계산 불가 · OverflowError 를 사유로) — '온도 규약을 다시 계산할 수 없다 (OverflowError: math range error)'
+  PASS  H13 배수가 0 으로 밑넘치는 규약 (T_C −272.15 · Ea +0.07) = 거부 (사유 · None 아님 · 예외 아님 — 고치기 전에도 거부) — 'non_finite — 온도 규약 (T_C -272.15 · Ea 0.07 · T_ref 25.0) 을 다시 계산한 σ_grain 0.0 · 규약 배수 0.0 가 유한 양수가 아니거나 대조의 차 · 허용 (배수 1
+  PASS  A0 전제 [L_gap 1e308 만] — 유한한 극값 하나만으로는 f · tau2 · tau 가 유한 양수 · 값 상태 그대로 (새 범위 문턱 없음) [('MODEL_BELOW_CONTINUUM_BOUND', '', 1.76745695e+306, 0.35349139), ('MODEL_BELOW_CONTINUUM_BOUND', '', 2.98276575e+306, 0.59655315), ('MODEL_BELOW_CONTINUUM_BOUND', '', 5.76326335e+306, 1.15265267)]
+  PASS  A0 전제 [L_mc 1e−10 만] — 유한한 극값 하나만으로는 f · tau2 · tau 가 유한 양수 · 값 상태 그대로 (새 범위 문턱 없음) [('MODEL_BELOW_CONTINUUM_BOUND', '', 70698278000.0, 0.35349139), ('MODEL_BELOW_CONTINUUM_BOUND', '', 119310630000.0, 0.59655315), ('MODEL_BELOW_CONTINUUM_BOUND', '', 230530534000.0, 1.15265267)]
+  PASS  A1 L_gap 1e308 + L_mc 1e−10 (f = +∞ · tau2 = 0) ★ 세대 2 실 생산자 레코드 τ 행 — ('hertz', 'hertz_h12', 'physics') = NOT_COMPUTED invalid_input: non_finite … · 값 빈칸 · 예외 아님 — [('NOT_COMPUTED', 'invalid_input: non_finite — τ 환산이 유한 양수가 아니다: f = σ_ratio·L_gap/L_mc =', None, None, None, None), ('NOT_COMPUTED', 'invalid_input: non_finite — τ 환산이 유한 양수가 아니다: f = σ_ratio·L_gap/L_mc =', None, None, None, None), ('NOT_COMPUTED', 'invalid_input: non_finite — τ 환산이 유한 양수가 아니다: f = σ_ratio·L_gap/L_mc =', None, None, None, None)]
+  PASS  A2 L_mc 1e−310 (f = +∞ · tau2 = 0) ★ 세대 2 실 생산자 레코드 τ 행 — ('hertz', 'hertz_h12', 'physics') = NOT_COMPUTED invalid_input: non_finite … · 값 빈칸 · 예외 아님 — [('NOT_COMPUTED', 'invalid_input: non_finite — τ 환산이 유한 양수가 아니다: f = σ_ratio·L_gap/L_mc =', None, None, None, None), ('NOT_COMPUTED', 'invalid_input: non_finite — τ 환산이 유한 양수가 아니다: f = σ_ratio·L_gap/L_mc =', None, None, None, None), ('NOT_COMPUTED', 'invalid_input: non_finite — τ 환산이 유한 양수가 아니다: f = σ_ratio·L_gap/L_mc =', None, None, None, None)]
+  PASS  A3 L_gap 5e−324 (f 가 0 으로 밑넘침 — 고치기 전 ZeroDivisionError) ★ 세대 2 실 생산자 레코드 τ 행 — ('hertz', 'hertz_h12', 'physics') = NOT_COMPUTED invalid_input: non_finite … · 값 빈칸 · 예외 아님 — [('NOT_COMPUTED', 'invalid_input: non_finite — τ 환산이 유한 양수가 아니다: f = σ_ratio·L_gap/L_mc =', None, None, None, None), ('NOT_COMPUTED', 'invalid_input: non_finite — τ 환산이 유한 양수가 아니다: f = σ_ratio·L_gap/L_mc =', None, None, None, None), ('NOT_COMPUTED', 'invalid_input: non_finite — τ 환산이 유한 양수가 아니다: f = σ_ratio·L_gap/L_mc =', None, None, None, None)]
+  PASS  A4 φ_mc 1e308 (H0 tau2 = +∞) ★ 세대 2 실 생산자 레코드 τ 행 — ('hertz',) = NOT_COMPUTED invalid_input: non_finite … · 값 빈칸 · 예외 아님 — [('NOT_COMPUTED', 'invalid_input: non_finite — τ 환산이 유한 양수가 아니다: f = σ_ratio·L_gap/L_mc =', None, None, None, None)]
+  PASS  A4 φ_mc 1e308 (H0 tau2 = +∞) · physics · H12 (유한) = 독립 식 그대로
+  PASS  AL0 전제 — lhs00_000 = inferred_legacy · 증서 없음 · H0 OK (tau2 18.815673633304673) · physics OK
+  PASS  AL1 σ_ratio 1e−310 · σ_dim 1e−7 (Codex 모양 — 0b 통과 · 고치기 전 OK tau2 = +∞) ★ 폴더 행 H0 = NOT_COMPUTED invalid_input: non_finite … · 값 빈칸 · physics OK 그대로 — ('NOT_COMPUTED', 'invalid_input: non_finite — τ 환산이 유한 양수가 아니다: f = σ_ratio·L_gap/L_mc =', None, None, None, None) · 0b None
+  PASS  AL1 σ_ratio 1e−310 · σ_dim 1e−7 (Codex 모양 — 0b 통과 · 고치기 전 OK tau2 = +∞) ★ τ 행 (ion_columns · 같은 입력) 도 같다
+  PASS  AL1 σ_ratio 1e−310 · σ_dim 1e−7 (Codex 모양 — 0b 통과 · 고치기 전 OK tau2 = +∞) ★ 배포 빈칸 규칙 — 값 칸 빈칸 = NOT_COMPUTED (사유 어휘 무관 · 새 코드 없음) · 문제 0 · 관통 분류 = ("", NOT_COMPUTED) — None · ('', 'NOT_COMPUTED')
+  PASS  AL2 σ_ratio 5e−324 · σ_dim 1e−7 ★ 폴더 행 H0 = NOT_COMPUTED invalid_input: non_finite … · 값 빈칸 · physics OK 그대로 — ('NOT_COMPUTED', 'invalid_input: non_finite — τ 환산이 유한 양수가 아니다: f = σ_ratio·L_gap/L_mc =', None, None, None, None) · 0b None
+  PASS  AL2 σ_ratio 5e−324 · σ_dim 1e−7 ★ τ 행 (ion_columns · 같은 입력) 도 같다
+  PASS  AL3 장부 L_gap 1e308 + L_mc 1e−10 ★ 폴더 행 두 모드 = NOT_COMPUTED invalid_input: non_finite … · 값 빈칸 · 예외 아님 — [('NOT_COMPUTED', 'invalid_input: non_finite — τ 환산이 유한 양수가 아니다: f = σ_ratio·L_gap/L_mc =', None, None, None, None), ('NOT_COMPUTED', 'invalid_input: non_finite — τ 환산이 유한 양수가 아니다: f = σ_ratio·L_gap/L_mc =', None, None, None, None)]
+  PASS  AL4 장부 L_gap 5e−324 (고치기 전 ZeroDivisionError) ★ 폴더 행 두 모드 = NOT_COMPUTED invalid_input: non_finite … · 값 빈칸 · 예외 아님 — [('NOT_COMPUTED', 'invalid_input: non_finite — τ 환산이 유한 양수가 아니다: f = σ_ratio·L_gap/L_mc =', None, None, None, None), ('NOT_COMPUTED', 'invalid_input: non_finite — τ 환산이 유한 양수가 아니다: f = σ_ratio·L_gap/L_mc =', None, None, None, None)]
+  PASS  AL5 되돌린 역사 레코드 = 처음 행 그대로
+  PASS  AW1 L_gap 1e308 + L_mc 1e−10 ★ 정지 계약 = 거부 · 사유 ⑦ τ 인계 … non_finite (예외 · 예외 문구 아님) — (False, '⑦ τ 인계 hertz: NOT_COMPUTED (invalid_input: non_finite — τ 환산이 유한 양수가 아니다: f = σ_ratio·L_gap/L_mc = inf · tau2 = φ_mc/f = None · tau = √tau2 = None (σ_ratio 0.00400538 · L_gap 1e+308 · L_mc 1e
+  PASS  AW1 L_gap 1e308 + L_mc 1e−10 ★ 폴더 행 ('hertz', 'hertz_h12', 'physics') = NOT_COMPUTED invalid_input: non_finite … · 값 빈칸 — [('NOT_COMPUTED', 'invalid_input: non_finite — τ 환산이 유한 양수가 아니다: f = σ_ratio·L_gap/L_mc =', None, None, None, None), ('NOT_COMPUTED', 'invalid_input: non_finite — τ 환산이 유한 양수가 아니다: f = σ_ratio·L_gap/L_mc =', None, None, None, None), ('NOT_COMPUTED', 'invalid_input: non_finite — τ 환산이 유한 양수가 아니다: f = σ_ratio·L_gap/L_mc =', None, None, None, None)]
+  PASS  AW1 L_gap 1e308 + L_mc 1e−10 ★ 다시 읽기 = 거부 (예외 없이 · K4 정지 계약 · K6 관통 일치 · H1 인계 출처 관문 P4 실패) — ['H1', 'K4', 'K6']
+  PASS  AW1 L_gap 1e308 + L_mc 1e−10 ★ 배포 빈칸 규칙 — 세 모드 값 칸 = NOT_COMPUTED · 문제 0 (고치기 전: MBCB 인데 f = inf 문제) — None
+  PASS  AW2 L_mc 1e−310 ★ 정지 계약 = 거부 · 사유 ⑦ τ 인계 … non_finite (예외 · 예외 문구 아님) — (False, '⑦ τ 인계 hertz: NOT_COMPUTED (invalid_input: non_finite — τ 환산이 유한 양수가 아니다: f = σ_ratio·L_gap/L_mc = inf · tau2 = φ_mc/f = None · tau = √tau2 = None (σ_ratio 0.00400538 · L_gap 20.0 · L_mc 1e-3
+  PASS  AW2 L_mc 1e−310 ★ 폴더 행 ('hertz', 'hertz_h12', 'physics') = NOT_COMPUTED invalid_input: non_finite … · 값 빈칸 — [('NOT_COMPUTED', 'invalid_input: non_finite — τ 환산이 유한 양수가 아니다: f = σ_ratio·L_gap/L_mc =', None, None, None, None), ('NOT_COMPUTED', 'invalid_input: non_finite — τ 환산이 유한 양수가 아니다: f = σ_ratio·L_gap/L_mc =', None, None, None, None), ('NOT_COMPUTED', 'invalid_input: non_finite — τ 환산이 유한 양수가 아니다: f = σ_ratio·L_gap/L_mc =', None, None, None, None)]
+  PASS  AW2 L_mc 1e−310 ★ 다시 읽기 = 거부 (예외 없이 · K4 정지 계약 · K6 관통 일치 · H1 인계 출처 관문 P4 실패) — ['H1', 'K4', 'K6']
+  PASS  AW3 φ_mc 1e308 (H0 tau2 = +∞) ★ 정지 계약 = 거부 · 사유 ⑦ τ 인계 … non_finite (예외 · 예외 문구 아님) — (False, '⑦ τ 인계 hertz: NOT_COMPUTED (invalid_input: non_finite — τ 환산이 유한 양수가 아니다: f = σ_ratio·L_gap/L_mc = 0.00400538 · tau2 = φ_mc/f = inf · tau = √tau2 = None (σ_ratio 0.00400538 · L_gap 20.0 · L_m
+  PASS  AW3 φ_mc 1e308 (H0 tau2 = +∞) ★ 폴더 행 ('hertz',) = NOT_COMPUTED invalid_input: non_finite … · 값 빈칸 — [('NOT_COMPUTED', 'invalid_input: non_finite — τ 환산이 유한 양수가 아니다: f = σ_ratio·L_gap/L_mc =', None, None, None, None)]
+  PASS  AW3 φ_mc 1e308 (H0 tau2 = +∞) ★ 다시 읽기 = 거부 (예외 없이 · K4 정지 계약 · K6 관통 일치 · H1 인계 출처 관문 P4 실패) — ['H1', 'K4', 'K6']
+  PASS  AW4 L_gap 5e−324 (고치기 전 ZeroDivisionError) ★ 정지 계약 = 거부 · 사유 ⑦ τ 인계 … non_finite (예외 · 예외 문구 아님) — (False, '⑦ τ 인계 hertz: NOT_COMPUTED (invalid_input: non_finite — τ 환산이 유한 양수가 아니다: f = σ_ratio·L_gap/L_mc = 0.0 · tau2 = φ_mc/f = None · tau = √tau2 = None (σ_ratio 0.00400538 · L_gap 5e-324 · L_mc 20
+  PASS  AW4 L_gap 5e−324 (고치기 전 ZeroDivisionError) ★ 폴더 행 ('hertz', 'hertz_h12', 'physics') = NOT_COMPUTED invalid_input: non_finite … · 값 빈칸 — [('NOT_COMPUTED', 'invalid_input: non_finite — τ 환산이 유한 양수가 아니다: f = σ_ratio·L_gap/L_mc =', None, None, None, None), ('NOT_COMPUTED', 'invalid_input: non_finite — τ 환산이 유한 양수가 아니다: f = σ_ratio·L_gap/L_mc =', None, None, None, None), ('NOT_COMPUTED', 'invalid_input: non_finite — τ 환산이 유한 양수가 아니다: f = σ_ratio·L_gap/L_mc =', None, None, None, None)]
+  PASS  AW4 L_gap 5e−324 (고치기 전 ZeroDivisionError) ★ 다시 읽기 = 거부 (예외 없이 · K4 정지 계약 · K6 관통 일치 · H1 인계 출처 관문 P4 실패) — ['H1', 'K4', 'K6']
+  PASS  AW5 되돌린 웹 게시 폴더 = 정지 계약 (True, ok)
+  PASS  B0 전제 — 규약 배수 (T_C −272.15 · Ea −0.0613) = inf · σ_grain = inf (예외 없이 +∞ — (T_ref/T)·exp(…) 넘침)
+  PASS  B1 σ₀ 그대로 (3e−3) ★ 규약 대조 = 사유 non_finite … (None · 예외 아님) — 'non_finite — 온도 규약 (T_C -272.15 · Ea -0.0613 · T_ref 25.0) 을 다시 계산한 σ_grain inf · 규약 배수 inf 가 유한 양수가 아니거나 대조의 차 · 허용 (배수 inf / inf · σ₀ inf / inf) 이 유한하지 않다 — 
+  PASS  B2 σ₀ 123.0 (아무 값) ★ 규약 대조 = 사유 non_finite … (None · 예외 아님) — 'non_finite — 온도 규약 (T_C -272.15 · Ea -0.0613 · T_ref 25.0) 을 다시 계산한 σ_grain inf · 규약 배수 inf 가 유한 양수가 아니거나 대조의 차 · 허용 (배수 inf / inf · σ₀ inf / inf) 이 유한하지 않다 — 
+  PASS  B3 ★ σ₀ 결합 (sigma0_binding_problems) = [non_finite …] — ['non_finite — 온도 규약 (T_C -272.15 · Ea -0.0613 · T_ref 25.0) 을 다시 계산한 σ_grain inf · 규약 배수 inf 가 유한 양수가 아니거나 대조의 차 · 허용 (배수 inf / inf · σ₀ inf / inf) 이 유한하지 않다 —
+  PASS  B4 ★ 증서 결합 (hertz) 에 규약 사유 non_finite … — ['non_finite — 온도 규약 (T_C -272.15 · Ea -0.0613 · T_ref 25.0) 을 다시 계산한 σ_grain inf · 규약 배수 inf 가 유한 양수가 아니거나 대조의 차 · 허용 (배수 inf / inf · σ₀ in
+  PASS  B4 ★ 증서 결합 (hertz_h12) 에 규약 사유 non_finite … — ['non_finite — 온도 규약 (T_C -272.15 · Ea -0.0613 · T_ref 25.0) 을 다시 계산한 σ_grain inf · 규약 배수 inf 가 유한 양수가 아니거나 대조의 차 · 허용 (배수 inf / inf · σ₀ in
+  PASS  B4 ★ 증서 결합 (physics) 에 규약 사유 non_finite … — ['non_finite — 온도 규약 (T_C -272.15 · Ea -0.0613 · T_ref 25.0) 을 다시 계산한 σ_grain inf · 규약 배수 inf 가 유한 양수가 아니거나 대조의 차 · 허용 (배수 inf / inf · σ₀ in
+  PASS  B5 ★ 세대 계약 = invalid (cert 문제) — 'invalid'
+  PASS  B6 ★ τ 행 세 모드 = NOT_COMPUTED invalid_input (세대 계약) · 값 빈칸 — [('NOT_COMPUTED', 'invalid_input: 세대 계약 (G2R-01 · 02): hertz: 수치 증서 · 결합 (G2R-03 · G2RR-0'), ('NOT_COMPUTED', 'invalid_input: 세대 계약 (G2R-01 · 02): hertz: 수치 증서 · 결합 (G2R-03 · G2RR-0'), ('NOT_COMPUTED', 'invalid_input: 세대 계약 (G2R-01 · 02): hertz: 수치 증서 · 결합 (G2R-03 · G2RR-0')]
+  PASS  B7 ★ 정지 계약 (모든 사본의 온도 규약을 같이 바꿈) = 거부 · ⑧ σ₀ 결합 사유 non_finite … — (False, '⑧ σ₀ 결합 (G2RR2-04 — 증서 σ₀ ↔ 부모 σ₀ · 온도 규약): hertzian: non_finite — 온도 규약 (T_C -272.15 · Ea -0.0613 · T_ref 25.0) 을 다시 계산한 σ_grain inf · 규약 배수 inf 가 유한 양수가 아니거나 대조의 차 · 허용 (배수 inf / inf · σ₀ inf / inf) 이 유한하지 않다 
+  PASS  B8 ★ 정지 계약 ⑧ (network_sigma0_problem) = 사유 non_finite … (빈 문자열 아님) — 'σ₀ 결합 (G2RR2-04 — 증서 σ₀ ↔ 부모 σ₀ · 온도 규약): hertzian: non_finite — 온도 규약 (T_C -272.15 · Ea -0.0613 · T_ref 25.0) 을 다시 계산한 σ_grain inf · 규약 배수 inf 가 유한 양수가 아니거나 대
+  PASS  B9 ★ 기록 판정 (승격 전) = 거부 (세대 계약) — (False, '세대 계약 (G2R-01 · 02) network_conductivity_dual.json: hertz: 수치 증서 · 결합 (G2R-03 · G2RR-02 — 가지 · 역할 · 발행값) — non_finite — 온도 규약 (T_C -272.15 · Ea -0.0613
+  PASS  B10 ★ 다시 읽기 = 거부 (K2 세대 계약 · K4 정지 계약) — ['H1', 'K2', 'K3', 'K4', 'K5', 'K6']
+  PASS  B11 되돌린 웹 게시 폴더 = 정지 계약 (True, ok)
+  PASS  C0 ★ _stop_num(10⁴⁰⁰) = False (유한 실수가 아니다 · OverflowError 아님) — False
+  PASS  C1 장부 thickness_um = 10⁴⁰⁰ ★ 정지 계약 = 거부 · 사유 "⑦ τ 인계 장부" (예외 · 예외 문구 아님) — (False, "⑦ τ 인계 장부 (full_metrics) 없음 · 비유한 · 범위 밖: ['thickness_um']; ⑦ τ 인계 hertz: NOT_COMPUTED (missing_input) — 기술적 결손 (등록된 과학적 HOLD · FULL 모형 한계 아님); ⑦ τ 인계 physics: NOT_COMPUTED (missing_input) — 
+  PASS  C1 장부 thickness_um = 10⁴⁰⁰ ★ 다시 읽기 K4 (정지 계약) · H1 (인계 P4) = 거부 · 세부가 사유 (OverflowError 문구 아님) — {'K4': "⑦ τ 인계 장부 (full_metrics) 없음 · 비유한 · 범위 밖: ['thickness_um']; ⑦ τ 인계 hertz: NOT_CO", 'H1': 'FillRefusal: web_through_ayhqm8ua: τ P4 — 망 정지 계약 재검사 실패 (인계 때 · 배치가 done 을 준 같은'}
+  PASS  C1 장부 thickness_um = 10⁴⁰⁰ · 기록 판정 (이 칸을 읽지 않는다) = 예외 없이 끝난다
+  PASS  C1 장부 thickness_mass_conserving_um = 10⁴⁰⁰ ★ 정지 계약 = 거부 · 사유 "⑦ τ 인계 장부" (예외 · 예외 문구 아님) — (False, "⑦ τ 인계 장부 (full_metrics) 없음 · 비유한 · 범위 밖: ['thickness_mass_conserving_um']; ⑦ τ 인계 hertz: NOT_COMPUTED (missing_input) — 기술적 결손 (등록된 과학적 HOLD · FULL 모형 한계 아님); ⑦ τ 인계 physics: NOT_COMPUTED (m
+  PASS  C1 장부 thickness_mass_conserving_um = 10⁴⁰⁰ · 기록 판정 (이 칸을 읽지 않는다) = 예외 없이 끝난다
+  PASS  C1 장부 phi_se_mass_conserving = 10⁴⁰⁰ ★ 정지 계약 = 거부 · 사유 "⑦ τ 인계 장부" (예외 · 예외 문구 아님) — (False, "⑦ τ 인계 장부 (full_metrics) 없음 · 비유한 · 범위 밖: ['phi_se_mass_conserving']; ⑦ τ 인계 hertz: NOT_COMPUTED (missing_input) — 기술적 결손 (등록된 과학적 HOLD · FULL 모형 한계 아님); ⑦ τ 인계 physics: NOT_COMPUTED (missing
+  PASS  C1 장부 phi_se_mass_conserving = 10⁴⁰⁰ · 기록 판정 (이 칸을 읽지 않는다) = 예외 없이 끝난다
+  PASS  C1 장부 percolation_pct = 10⁴⁰⁰ ★ 정지 계약 = 거부 · 사유 "⑦ τ 인계 장부" (예외 · 예외 문구 아님) — (False, "⑦ τ 인계 장부 (full_metrics) 없음 · 비유한 · 범위 밖: ['percolation_pct']; ⑦ τ 인계 hertz: NOT_COMPUTED (missing_input) — 기술적 결손 (등록된 과학적 HOLD · FULL 모형 한계 아님); ⑦ τ 인계 physics: NOT_COMPUTED (missing_input)
+  PASS  C1 장부 percolation_pct = 10⁴⁰⁰ · 기록 판정 (이 칸을 읽지 않는다) = 예외 없이 끝난다
+  PASS  C2 full_metrics σ (sigma_full_mScm · H0) = 10⁴⁰⁰ ★ 정지 계약 = 거부 · 사유 "③ hertzian: computed 인데 full_metrics sigma_full_mScm" (예외 · 예외 문구 아님) — (False, "⑥ full_metrics 의 망 소유 키가 이번 세대 투영과 다르다 (옛 세대 값 · 복사 어긋남): ['sigma_full_mScm']; ③ hertzian: computed 인데 full_metrics sigma_full_mScm=10000000000000000000000000000000000000000000000000000000000
+  PASS  C2 full_metrics σ (sigma_full_mScm · H0) = 10⁴⁰⁰ · 기록 판정 (이 칸을 읽지 않는다) = 예외 없이 끝난다
+  PASS  C2 full_metrics σ (sigma_full_mScm_physics) = 10⁴⁰⁰ ★ 정지 계약 = 거부 · 사유 "③ physics: computed 인데 full_metrics sigma_full_mScm_physics" (예외 · 예외 문구 아님) — (False, "⑥ full_metrics 의 망 소유 키가 이번 세대 투영과 다르다 (옛 세대 값 · 복사 어긋남): ['sigma_full_mScm_physics']; ③ physics: computed 인데 full_metrics sigma_full_mScm_physics=10000000000000000000000000000000000000000000
+  PASS  C2 full_metrics σ (sigma_full_mScm_physics) = 10⁴⁰⁰ · 기록 판정 (이 칸을 읽지 않는다) = 예외 없이 끝난다
+  PASS  C3 협착 전력 몫 (H0 · full_metrics + 레코드 사본) = 10⁴⁰⁰ ★ 정지 계약 = 거부 · 사유 "④ constriction_power_share_ion_hertz" (예외 · 예외 문구 아님) — (False, "④ constriction_power_share_ion_hertz: 관통 해인데 값 100000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+  PASS  C3 협착 전력 몫 (H0 · full_metrics + 레코드 사본) = 10⁴⁰⁰ ★ 다시 읽기 K4 (정지 계약) · H1 (인계 P4) = 거부 · 세부가 사유 (OverflowError 문구 아님) — {'K4': '④ constriction_power_share_ion_hertz: 관통 해인데 값 100000000000000000000000000000000', 'H1': 'FillRefusal: web_through_ayhqm8ua: τ P4 — 망 정지 계약 재검사 실패 (인계 때 · 배치가 done 을 준 같은'}
+  PASS  C3 협착 전력 몫 (H0 · full_metrics + 레코드 사본) = 10⁴⁰⁰ · 기록 판정 (이 칸을 읽지 않는다) = 예외 없이 끝난다
+  PASS  C3 협착 전력 몫 (physics · full_metrics + 레코드 사본) = 10⁴⁰⁰ ★ 정지 계약 = 거부 · 사유 "④ constriction_power_share_ion_physics" (예외 · 예외 문구 아님) — (False, "④ constriction_power_share_ion_physics: 관통 해인데 값 1000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+  PASS  C3 협착 전력 몫 (physics · full_metrics + 레코드 사본) = 10⁴⁰⁰ · 기록 판정 (이 칸을 읽지 않는다) = 예외 없이 끝난다
+  PASS  C4 띠 폭 (H0 레코드 사본) = 10⁴⁰⁰ ★ 정지 계약 = 거부 · 사유 "⑤ hertzian: boundary_rule" (예외 · 예외 문구 아님) — (False, "⑤ hertzian: boundary_rule='L0' · boundary_band_frac=1000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+  PASS  C4 띠 폭 (H0 레코드 사본) = 10⁴⁰⁰ ★ 다시 읽기 K4 (정지 계약) · H1 (인계 P4) = 거부 · 세부가 사유 (OverflowError 문구 아님) — {'K4': "⑤ hertzian: boundary_rule='L0' · boundary_band_frac=1000000000000000000000000000", 'H1': 'FillRefusal: web_through_ayhqm8ua: τ P4 — 망 정지 계약 재검사 실패 (인계 때 · 배치가 done 을 준 같은'}
+  PASS  C4 띠 폭 (H0 레코드 사본) = 10⁴⁰⁰ · 기록 판정 (이 칸을 읽지 않는다) = 예외 없이 끝난다
+  PASS  C4 띠 폭 (physics 레코드 사본) = 10⁴⁰⁰ ★ 정지 계약 = 거부 · 사유 "⑤ physics: boundary_rule" (예외 · 예외 문구 아님) — (False, "⑤ physics: boundary_rule='L0' · boundary_band_frac=10000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+  PASS  C4 띠 폭 (physics 레코드 사본) = 10⁴⁰⁰ · 기록 판정 (이 칸을 읽지 않는다) = 예외 없이 끝난다
+  PASS  C5 비관통 (valid_zero) 의 calc_percolation = 10⁴⁰⁰ ★ 정지 계약 = 거부 · 사유 "③ hertzian: valid_zero 인데 독립 calc_percolation" (예외 · 예외 문구 아님) — (False, "⑦ τ 인계 장부 (full_metrics) 없음 · 비유한 · 범위 밖: ['percolation_pct']; ③ hertzian: valid_zero 인데 독립 calc_percolation 1000000000000000000000000000000000000000000000000000000000000000000000000000000000
+  PASS  C5 비관통 (valid_zero) 의 calc_percolation = 10⁴⁰⁰ ★ 다시 읽기 K4 (정지 계약) · H1 (인계 P4) = 거부 · 세부가 사유 (OverflowError 문구 아님) — {'K4': "⑦ τ 인계 장부 (full_metrics) 없음 · 비유한 · 범위 밖: ['percolation_pct']; ③ hertzian: valid", 'H1': 'FillRefusal: web_nonthrough_dkoxyesp: τ P4 — 망 정지 계약 재검사 실패 (인계 때 · 배치가 done 을 준'}
+  PASS  C5 비관통 (valid_zero) 의 calc_percolation = 10⁴⁰⁰ · 기록 판정 (이 칸을 읽지 않는다) = 예외 없이 끝난다
+  PASS  C6 FULL 모형 한계 가지 (physics) 의 calc_percolation = 10⁴⁰⁰ ★ 정지 계약 = 거부 · 사유 "③ physics: FULL 모형 한계 (관통 해) 인데 독립 calc_percolation" (예외 · 예외 문구 아님) — (False, "⑦ τ 인계 장부 (full_metrics) 없음 · 비유한 · 범위 밖: ['percolation_pct']; ③ physics: FULL 모형 한계 (관통 해) 인데 독립 calc_percolation 1000000000000000000000000000000000000000000000000000000000000000000000000000
+  PASS  C6 FULL 모형 한계 가지 (physics) 의 calc_percolation = 10⁴⁰⁰ · 기록 판정 (이 칸을 읽지 않는다) = 예외 없이 끝난다
+  PASS  C7 되돌린 웹 게시 폴더 셋 = 정지 계약 (True, ok)
+
+test_l214r09_same_class: 96/96 PASS

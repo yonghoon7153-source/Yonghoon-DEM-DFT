@@ -1,0 +1,461 @@
+{
+  "git_blob_checks": [
+    {
+      "path": "README.md",
+      "expected": "1f5663af21498c529852c8478b658d873779e011",
+      "actual": "1f5663af21498c529852c8478b658d873779e011",
+      "ok": true
+    },
+    {
+      "path": "SHA256SUMS",
+      "expected": "1314d35d11de3a653c45d6c3f705e15aedd5ae45",
+      "actual": "1314d35d11de3a653c45d6c3f705e15aedd5ae45",
+      "ok": true
+    },
+    {
+      "path": "a4_l214r_no_impact.json",
+      "expected": "a837f5dad00953b40ffe5f6221bb8a545deb25e8",
+      "actual": "a837f5dad00953b40ffe5f6221bb8a545deb25e8",
+      "ok": true
+    },
+    {
+      "path": "a4_l214r_no_impact.log",
+      "expected": "c8c188019bfe0169e6fbcace86d315b6139ff735",
+      "actual": "c8c188019bfe0169e6fbcace86d315b6139ff735",
+      "ok": true
+    },
+    {
+      "path": "a4_l214r_no_impact.py",
+      "expected": "c956cce28c0f5dee1dad3819b255f8a79e8ce38c",
+      "actual": "c956cce28c0f5dee1dad3819b255f8a79e8ce38c",
+      "ok": true
+    },
+    {
+      "path": "before/supp20_input_receipt_selftest.log",
+      "expected": "531113307efd32e59dbdf094fd64bbd5bd99dc8b",
+      "actual": "531113307efd32e59dbdf094fd64bbd5bd99dc8b",
+      "ok": true
+    },
+    {
+      "path": "before/test_l214r01_certificate.log",
+      "expected": "3d1bad9f7db0a7ae3278235ad01b94513bbb9203",
+      "actual": "3d1bad9f7db0a7ae3278235ad01b94513bbb9203",
+      "ok": true
+    },
+    {
+      "path": "before/test_l214r02_model_limit_flag.log",
+      "expected": "6d7d842e403d9abd0fe37944365afd86748b8441",
+      "actual": "6d7d842e403d9abd0fe37944365afd86748b8441",
+      "ok": true
+    },
+    {
+      "path": "before/test_l214r03_display.log",
+      "expected": "e0d2cbba30d43458868883b4b09aa9fe2d77c679",
+      "actual": "e0d2cbba30d43458868883b4b09aa9fe2d77c679",
+      "ok": true
+    },
+    {
+      "path": "before/test_l214r05_published_certificate.log",
+      "expected": "d1f1edcbb813a7ea915cf72bcc71c76046385154",
+      "actual": "d1f1edcbb813a7ea915cf72bcc71c76046385154",
+      "ok": true
+    },
+    {
+      "path": "before/test_l214r06_same_class.log",
+      "expected": "749cf3eea472f39eec43bd5eb6d8a3eea53f1182",
+      "actual": "749cf3eea472f39eec43bd5eb6d8a3eea53f1182",
+      "ok": true
+    },
+    {
+      "path": "before/test_l214r09_same_class.log",
+      "expected": "742fbbf300207b2403cba4dfb43184b60b1e3db4",
+      "actual": "742fbbf300207b2403cba4dfb43184b60b1e3db4",
+      "ok": true
+    },
+    {
+      "path": "before/test_web09_accepted_refresh.log",
+      "expected": "589b1598aa406ff02dfee74bcc35b83f32d1f250",
+      "actual": "589b1598aa406ff02dfee74bcc35b83f32d1f250",
+      "ok": true
+    },
+    {
+      "path": "final/code_fp_report.log",
+      "expected": "bcf28ca16e9908e5a4f2deec98882b4f02e868af",
+      "actual": "bcf28ca16e9908e5a4f2deec98882b4f02e868af",
+      "ok": true
+    },
+    {
+      "path": "final/supp20_input_receipt_selftest.log",
+      "expected": "cde0a9c511b49f5cbcb3b146c4c2f05e19923cfa",
+      "actual": "cde0a9c511b49f5cbcb3b146c4c2f05e19923cfa",
+      "ok": true
+    },
+    {
+      "path": "final/test_l214r01_certificate.log",
+      "expected": "17aa6cfbc9ebab8f4b05f7f220eedc3cb87437ee",
+      "actual": "17aa6cfbc9ebab8f4b05f7f220eedc3cb87437ee",
+      "ok": true
+    },
+    {
+      "path": "final/test_l214r02_model_limit_flag.log",
+      "expected": "dcf9d0198c8ddf50a8cf562b3717513f99e33405",
+      "actual": "dcf9d0198c8ddf50a8cf562b3717513f99e33405",
+      "ok": true
+    },
+    {
+      "path": "final/test_l214r03_display.log",
+      "expected": "96dff826808d003de41b2f6f9680de5ec97a1637",
+      "actual": "96dff826808d003de41b2f6f9680de5ec97a1637",
+      "ok": true
+    },
+    {
+      "path": "final/test_l214r05_published_certificate.log",
+      "expected": "4c6f8a05fde9da289d3d63186ee5107867ff26be",
+      "actual": "4c6f8a05fde9da289d3d63186ee5107867ff26be",
+      "ok": true
+    },
+    {
+      "path": "final/test_l214r06_same_class.log",
+      "expected": "7dfac771fec137e5e37ad4699ec2dd36d5d7ef56",
+      "actual": "7dfac771fec137e5e37ad4699ec2dd36d5d7ef56",
+      "ok": true
+    },
+    {
+      "path": "final/test_l214r09_same_class.log",
+      "expected": "0f5f735e111fa382834cdf8b890386b21af3c50d",
+      "actual": "0f5f735e111fa382834cdf8b890386b21af3c50d",
+      "ok": true
+    },
+    {
+      "path": "final/test_pipeline_provenance.log",
+      "expected": "91dfec24ee734b9b1908f5a1c7a06eadeb55e70a",
+      "actual": "91dfec24ee734b9b1908f5a1c7a06eadeb55e70a",
+      "ok": true
+    },
+    {
+      "path": "final/test_web09_accepted_refresh.log",
+      "expected": "29cf124e73167be2b98c949c6427446002f9e665",
+      "actual": "29cf124e73167be2b98c949c6427446002f9e665",
+      "ok": true
+    },
+    {
+      "path": "probe_rerun/cmp_pre_vs_final.json",
+      "expected": "270781ffac473caec769dd9f1ec7a8b12759a3f5",
+      "actual": "270781ffac473caec769dd9f1ec7a8b12759a3f5",
+      "ok": true
+    },
+    {
+      "path": "probe_rerun/display_rowdiff.py",
+      "expected": "60813740967f43948b0ef3cb13bb1bb1a057f599",
+      "actual": "60813740967f43948b0ef3cb13bb1bb1a057f599",
+      "ok": true
+    },
+    {
+      "path": "probe_rerun/display_rowdiff_pre_vs_final.txt",
+      "expected": "e9e73e028484faa40f75043e4d34da3f96655a45",
+      "actual": "e9e73e028484faa40f75043e4d34da3f96655a45",
+      "ok": true
+    },
+    {
+      "path": "probe_rerun/drive_l214r_probe.py",
+      "expected": "788aea28440647d6947a3cf54696f0367a05db92",
+      "actual": "788aea28440647d6947a3cf54696f0367a05db92",
+      "ok": true
+    },
+    {
+      "path": "probe_rerun/final_60ba39e22/_driver_consumers.log",
+      "expected": "75e08f67c1f178f3c2d09b119e11bd92644b6d5a",
+      "actual": "75e08f67c1f178f3c2d09b119e11bd92644b6d5a",
+      "ok": true
+    },
+    {
+      "path": "probe_rerun/final_60ba39e22/_driver_consumers_negative.log",
+      "expected": "e5710f36eb4ee7a6b5137bd35aa04194a8fdc072",
+      "actual": "e5710f36eb4ee7a6b5137bd35aa04194a8fdc072",
+      "ok": true
+    },
+    {
+      "path": "probe_rerun/final_60ba39e22/_driver_consumers_release.log",
+      "expected": "720bcc37fefa67d52a17880e61e3221c4ea2b539",
+      "actual": "720bcc37fefa67d52a17880e61e3221c4ea2b539",
+      "ok": true
+    },
+    {
+      "path": "probe_rerun/final_60ba39e22/_driver_display_base.log",
+      "expected": "a323abbc6c0fdf35de6e6e9370175ca2d3b8c4b9",
+      "actual": "a323abbc6c0fdf35de6e6e9370175ca2d3b8c4b9",
+      "ok": true
+    },
+    {
+      "path": "probe_rerun/final_60ba39e22/_driver_display_source.log",
+      "expected": "9173cc43ab3168e7ae924791e0767effe71e5fb7",
+      "actual": "9173cc43ab3168e7ae924791e0767effe71e5fb7",
+      "ok": true
+    },
+    {
+      "path": "probe_rerun/final_60ba39e22/_driver_numeric.log",
+      "expected": "9592f90ec92ee667926e2f73cc7ec5b6515aa504",
+      "actual": "9592f90ec92ee667926e2f73cc7ec5b6515aa504",
+      "ok": true
+    },
+    {
+      "path": "probe_rerun/final_60ba39e22/_driver_numeric_selftests.log",
+      "expected": "5c60e9847c0597414e412859b02eae1f1919787e",
+      "actual": "5c60e9847c0597414e412859b02eae1f1919787e",
+      "ok": true
+    },
+    {
+      "path": "probe_rerun/final_60ba39e22/_driver_receipt_identity.log",
+      "expected": "572fa968e718982fffedaa38887ff4c514320f50",
+      "actual": "572fa968e718982fffedaa38887ff4c514320f50",
+      "ok": true
+    },
+    {
+      "path": "probe_rerun/final_60ba39e22/_driver_receipt_identity_noassert.log",
+      "expected": "2c8b26506e3f1787b591d4a52c2d367615cb6e8a",
+      "actual": "2c8b26506e3f1787b591d4a52c2d367615cb6e8a",
+      "ok": true
+    },
+    {
+      "path": "probe_rerun/final_60ba39e22/consumers_handover_rows.json",
+      "expected": "2cb38febeebb8923da8149270beeb4ff244cd11d",
+      "actual": "2cb38febeebb8923da8149270beeb4ff244cd11d",
+      "ok": true
+    },
+    {
+      "path": "probe_rerun/final_60ba39e22/consumers_negative_paths.json",
+      "expected": "3236db1936d7a27cd49da742d29c7af94786157b",
+      "actual": "3236db1936d7a27cd49da742d29c7af94786157b",
+      "ok": true
+    },
+    {
+      "path": "probe_rerun/final_60ba39e22/consumers_probe.json",
+      "expected": "23f54807b3376f3aed3bca204f59794f1eda6cd3",
+      "actual": "23f54807b3376f3aed3bca204f59794f1eda6cd3",
+      "ok": true
+    },
+    {
+      "path": "probe_rerun/final_60ba39e22/consumers_release_probe.json",
+      "expected": "93015f053debbd6e7b24132aad1f60c34ae2e0a5",
+      "actual": "93015f053debbd6e7b24132aad1f60c34ae2e0a5",
+      "ok": true
+    },
+    {
+      "path": "probe_rerun/final_60ba39e22/display_base.json",
+      "expected": "002edf80dc402568e7c417d49b57d9b5af659e8c",
+      "actual": "002edf80dc402568e7c417d49b57d9b5af659e8c",
+      "ok": true
+    },
+    {
+      "path": "probe_rerun/final_60ba39e22/display_source.json",
+      "expected": "655ee9044e1fb5bcb23efc199d1b9d0493484be7",
+      "actual": "655ee9044e1fb5bcb23efc199d1b9d0493484be7",
+      "ok": true
+    },
+    {
+      "path": "probe_rerun/final_60ba39e22/driver_summary.json",
+      "expected": "2df39dae8e334f31dc024e505781f7e31f210998",
+      "actual": "2df39dae8e334f31dc024e505781f7e31f210998",
+      "ok": true
+    },
+    {
+      "path": "probe_rerun/final_60ba39e22/numeric_probes.json",
+      "expected": "89c0e86cc340fb6969f49b42ab7b5297eb83374e",
+      "actual": "89c0e86cc340fb6969f49b42ab7b5297eb83374e",
+      "ok": true
+    },
+    {
+      "path": "probe_rerun/final_60ba39e22/numeric_selftests.json",
+      "expected": "316bbc136d29d33ed6abba30b0b4e0f93767e739",
+      "actual": "316bbc136d29d33ed6abba30b0b4e0f93767e739",
+      "ok": true
+    },
+    {
+      "path": "probe_rerun/final_60ba39e22/receipt_identity/current_receipt.json",
+      "expected": "7734d680c3ffbd5c4a3ec8d22140445447416393",
+      "actual": "7734d680c3ffbd5c4a3ec8d22140445447416393",
+      "ok": true
+    },
+    {
+      "path": "probe_rerun/final_60ba39e22/receipt_identity/results.json",
+      "expected": "5213fcfba7332a80daeecd91659095087a7eb0fb",
+      "actual": "5213fcfba7332a80daeecd91659095087a7eb0fb",
+      "ok": true
+    },
+    {
+      "path": "probe_rerun/final_60ba39e22/receipt_identity/selftest_pos_preflight.json",
+      "expected": "463f48dd30523d991e3bad57e7539fec175c646c",
+      "actual": "463f48dd30523d991e3bad57e7539fec175c646c",
+      "ok": true
+    },
+    {
+      "path": "probe_rerun/pre_6cb256956/_driver_consumers.log",
+      "expected": "02dd44d712e1a5c4f558be2531af745a3b8f1d6a",
+      "actual": "02dd44d712e1a5c4f558be2531af745a3b8f1d6a",
+      "ok": true
+    },
+    {
+      "path": "probe_rerun/pre_6cb256956/_driver_consumers_negative.log",
+      "expected": "e5710f36eb4ee7a6b5137bd35aa04194a8fdc072",
+      "actual": "e5710f36eb4ee7a6b5137bd35aa04194a8fdc072",
+      "ok": true
+    },
+    {
+      "path": "probe_rerun/pre_6cb256956/_driver_consumers_release.log",
+      "expected": "7b9ef81cd5a44739397a454a2647de1108eaf46d",
+      "actual": "7b9ef81cd5a44739397a454a2647de1108eaf46d",
+      "ok": true
+    },
+    {
+      "path": "probe_rerun/pre_6cb256956/_driver_display_base.log",
+      "expected": "9acc588733b12b5eff1bf992a771ce40d33af9af",
+      "actual": "9acc588733b12b5eff1bf992a771ce40d33af9af",
+      "ok": true
+    },
+    {
+      "path": "probe_rerun/pre_6cb256956/_driver_display_source.log",
+      "expected": "2c9b42e9c69d96539400a0aac5b58b6cc4b720f4",
+      "actual": "2c9b42e9c69d96539400a0aac5b58b6cc4b720f4",
+      "ok": true
+    },
+    {
+      "path": "probe_rerun/pre_6cb256956/_driver_numeric.log",
+      "expected": "e57a4043f9017be45443212119da02f8be67d8cd",
+      "actual": "e57a4043f9017be45443212119da02f8be67d8cd",
+      "ok": true
+    },
+    {
+      "path": "probe_rerun/pre_6cb256956/_driver_numeric_selftests.log",
+      "expected": "a919fdf2e640eca80bd504e3c6d58443fc397b73",
+      "actual": "a919fdf2e640eca80bd504e3c6d58443fc397b73",
+      "ok": true
+    },
+    {
+      "path": "probe_rerun/pre_6cb256956/_driver_receipt_identity.log",
+      "expected": "9bf9768f34617548adadeb353f8e6d90d7b48f52",
+      "actual": "9bf9768f34617548adadeb353f8e6d90d7b48f52",
+      "ok": true
+    },
+    {
+      "path": "probe_rerun/pre_6cb256956/_driver_receipt_identity_noassert.log",
+      "expected": "9bf9768f34617548adadeb353f8e6d90d7b48f52",
+      "actual": "9bf9768f34617548adadeb353f8e6d90d7b48f52",
+      "ok": true
+    },
+    {
+      "path": "probe_rerun/pre_6cb256956/consumers_handover_rows.json",
+      "expected": "ab4f1492328f61f6ae706fcbf5fe506cc7f365e6",
+      "actual": "ab4f1492328f61f6ae706fcbf5fe506cc7f365e6",
+      "ok": true
+    },
+    {
+      "path": "probe_rerun/pre_6cb256956/consumers_negative_paths.json",
+      "expected": "3236db1936d7a27cd49da742d29c7af94786157b",
+      "actual": "3236db1936d7a27cd49da742d29c7af94786157b",
+      "ok": true
+    },
+    {
+      "path": "probe_rerun/pre_6cb256956/consumers_probe.json",
+      "expected": "08b7b8701772610ab2f91342b198922506e8615c",
+      "actual": "08b7b8701772610ab2f91342b198922506e8615c",
+      "ok": true
+    },
+    {
+      "path": "probe_rerun/pre_6cb256956/consumers_release_probe.json",
+      "expected": "33006bec41b7bf61c666d5a77b1091abff1948c5",
+      "actual": "33006bec41b7bf61c666d5a77b1091abff1948c5",
+      "ok": true
+    },
+    {
+      "path": "probe_rerun/pre_6cb256956/display_base.json",
+      "expected": "fb54534977a69b176c12d9951043f14888531229",
+      "actual": "fb54534977a69b176c12d9951043f14888531229",
+      "ok": true
+    },
+    {
+      "path": "probe_rerun/pre_6cb256956/display_source.json",
+      "expected": "e42a0036a66acddc7ef9029497389a9a488d7efa",
+      "actual": "e42a0036a66acddc7ef9029497389a9a488d7efa",
+      "ok": true
+    },
+    {
+      "path": "probe_rerun/pre_6cb256956/driver_summary.json",
+      "expected": "c373122093298b0e02cba99c9ec32fa8ed13ef14",
+      "actual": "c373122093298b0e02cba99c9ec32fa8ed13ef14",
+      "ok": true
+    },
+    {
+      "path": "probe_rerun/pre_6cb256956/numeric_probes.json",
+      "expected": "d0ad2328dea1b8135376a553cef99d9d374cc0c2",
+      "actual": "d0ad2328dea1b8135376a553cef99d9d374cc0c2",
+      "ok": true
+    },
+    {
+      "path": "probe_rerun/pre_6cb256956/numeric_selftests.json",
+      "expected": "9fa5c4e909721329d14666dcaa960ae7f5a67bb1",
+      "actual": "9fa5c4e909721329d14666dcaa960ae7f5a67bb1",
+      "ok": true
+    },
+    {
+      "path": "probe_rerun/pre_6cb256956/receipt_identity/current_receipt.json",
+      "expected": "e6830e668844be009b1a19ba865a106c6ed06233",
+      "actual": "e6830e668844be009b1a19ba865a106c6ed06233",
+      "ok": true
+    },
+    {
+      "path": "probe_rerun/pre_6cb256956/receipt_identity/results.json",
+      "expected": "f8f43d354e46311dee28046351ee87b8ccf28bb4",
+      "actual": "f8f43d354e46311dee28046351ee87b8ccf28bb4",
+      "ok": true
+    },
+    {
+      "path": "probe_rerun/pre_6cb256956/receipt_identity/selftest_pos_preflight.json",
+      "expected": "f5c6a49428616e2affbf43544d6a8f081e4d65bc",
+      "actual": "f5c6a49428616e2affbf43544d6a8f081e4d65bc",
+      "ok": true
+    },
+    {
+      "path": "probe_rerun/receipt_identity_noassert.py",
+      "expected": "942ff8dc64edd6fdebcbb3862bdac7aecd4b91db",
+      "actual": "942ff8dc64edd6fdebcbb3862bdac7aecd4b91db",
+      "ok": true
+    },
+    {
+      "path": "rc.tsv",
+      "expected": "889368734679948b5c9a34f4333b075442836b61",
+      "actual": "889368734679948b5c9a34f4333b075442836b61",
+      "ok": true
+    }
+  ],
+  "request_remote_exact": true,
+  "tracked_files": 72,
+  "extra_zip_files": [
+    "PIN.txt"
+  ],
+  "intake": {
+    "zip": {
+      "path": "C:\\Users\\Administrator\\Downloads\\lhs214r_recheck_a4a1e52c0.zip",
+      "bytes": 273887,
+      "sha256": "b2ae23005ab1443f53b73453dfcaf42bc5f5ab8b832b5b4321ea8462a2eb6a07"
+    },
+    "sha256sums_all_ok": true,
+    "request_previous_byte_identical": true,
+    "tree_identity": {
+      "scripts": {
+        "old": "a69100c80b69d9f977130f9170834a4d61d6ff10",
+        "new": "a69100c80b69d9f977130f9170834a4d61d6ff10",
+        "identical": true
+      },
+      "webapp": {
+        "old": "12b824f827092280dd8c040cd0bd733632e8904c",
+        "new": "12b824f827092280dd8c040cd0bd733632e8904c",
+        "identical": true
+      },
+      "AGENTS.md": {
+        "old": "2829b46196a08ffae439ddbdc20dc093cde511c4",
+        "new": "2829b46196a08ffae439ddbdc20dc093cde511c4",
+        "identical": true
+      }
+    }
+  }
+}

@@ -1,0 +1,32 @@
+{
+  "utc": "2026-10-16T21:23:56.927736+00:00",
+  "integrity": {
+    "source": {
+      "files": 1920,
+      "mismatches": [],
+      "pin": "60ba39e224aff48a030dccfe750342f3bf9db61f"
+    },
+    "base": {
+      "files": 682,
+      "mismatches": [],
+      "pin": "6cb2569569ec74b7f5a96e0ef19494e872da5272"
+    }
+  },
+  "probe_syntax": [
+    "consumer_adversarial.py",
+    "consumer_chain_derivative.py",
+    "consumer_h0_resurrection.py",
+    "consumer_submitted_checks.py",
+    "display_fresh.py",
+    "display_rerun.py",
+    "display_run_command.py",
+    "display_summarize.py",
+    "normal_impact.py",
+    "numeric_adversarial.py",
+    "numeric_runner.py",
+    "pin_and_integrity.py",
+    "receipt_fences.py",
+    "root_checks.py"
+  ],
+  "production_changes": false
+}

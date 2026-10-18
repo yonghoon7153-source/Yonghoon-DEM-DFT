@@ -1,0 +1,27 @@
+[
+  {
+    "name": "provenance",
+    "command": [
+      "webapp/test_pipeline_provenance.py"
+    ],
+    "rc": 0,
+    "seconds": 42.96899999998277
+  },
+  {
+    "name": "reread",
+    "command": [
+      "scripts/g2_network_reread.py",
+      "--selftest"
+    ],
+    "rc": 0,
+    "seconds": 31.937000000005355
+  },
+  {
+    "name": "reread_v12",
+    "command": [
+      "scripts/test_reread_v12.py"
+    ],
+    "rc": 0,
+    "seconds": 4.171999999991385
+  }
+]

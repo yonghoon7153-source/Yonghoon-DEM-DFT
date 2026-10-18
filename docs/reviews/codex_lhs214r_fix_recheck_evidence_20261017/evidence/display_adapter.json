@@ -1,0 +1,6 @@
+{
+  "original": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\lhs214r_fix_recheck_20261017\\probes\\display_original.py.b64",
+  "sha256": "a8815414b3ebf282ad05a987048df9c88255ab03fd541be632b8c4b019020db2",
+  "runtime_file": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\lhs214r_fix_recheck_20261017\\probes\\display_rerun.py",
+  "change": "__file__ only: root source/evidence relocation; bytes compiled unchanged"
+}

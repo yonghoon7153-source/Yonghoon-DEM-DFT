@@ -100,11 +100,11 @@
 
 | | 내용 | 지금 결과 |
 |---|---|---|
-| K1 | 등급 τ getter (`tau_flux.tau2_from_metrics` · `tau2_value`) 출력 유한성 — `tau2_from_metrics({'phi_se': 0.3, 'sigma_full_mScm': 1e-310})` = (inf, 3.0) · `tau2_value(1e308, 3.0, 1e-3)` = inf | 웹앱 등급 표시값 (인계 · 배포 아님) |
+| K1 | 등급 τ getter (`tau_flux.tau2_from_metrics` · `tau2_value`) 출력 유한성 — `tau2_from_metrics({'phi_se': 0.3, 'sigma_full_mScm': 1e-310})` = (inf, 3.0) · `tau2_value(1e308, 3.0, 1e-3)` = inf | 웹앱 등급 표시값 (인계 · 배포 아님) ⛔ **정정 10-18 (Codex 재확인 §6 K1 · `SELF-119` (b))**: 표시만이 아니다 — 실제 D 등급 · 0 점 · 종합 점수에 들어간다 (`grade_engine.py:810` · `:1336` · `:1481` · `:1494` · `:1631` · 핀 `60ba39e22`) · 이번 수치 인계에는 P3 알려진 한계 (`L214K-01`) |
 | K2 | `se_material.sigma_grain_context` 의 `float(10**400)` — full_metrics 온도 기록에 큰 정수면 `tau2_from_metrics` 가 OverflowError | 정지 계약 ⑦ 이 잡아 거부 — 사유 대신 예외 문구 |
 | K3 | σ₀ 메타 `ion_sigma0_mScm = round(σ₀·1000, 10)` 유한성 — 옛 세대 비관통 행에 σ₀ 1e306 이면 메타 = inf | 게시 때 정지 계약 ⑧ 이 그 레코드를 거부 |
 | K4 | `pipeline_service.stage_e_missing_keys` 의 `math.isfinite(10**400)` OverflowError | app.py 호출이 try 로 감싸 실패로 닫힘 — 사유 줄 없음 |
-| K5 | `g2_network_reread.reread_case` 가 `tf.case_row` (다시 읽기 검사 K5 · K6 자리) 를 try 밖에서 부른다 — 소비자 예외 하나가 다시 읽기 실행 전체를 멈춘다 | 실행 실패 = 다시 읽기 기록 없음 → 배포 관문 거부 (fail-closed) |
+| K5 | `g2_network_reread.reread_case` 가 `tf.case_row` (다시 읽기 검사 K5 · K6 자리) 를 try 밖에서 부른다 — 소비자 예외 하나가 다시 읽기 실행 전체를 멈춘다 | 실행 실패 = 다시 읽기 기록 없음 → 배포 관문 거부 (fail-closed) ⛔ **정정 10-18 (Codex 재확인 §6 K5 · `SELF-119` (a))**: 틀렸다 — 같은 출력 경로에 이전 정상 JSON 이 있으면 같은 SHA 로 남는다 · 이번 rc · 새 출력 경로 · 지금 입력 정체성을 확인할 때만 fail-closed (새 build 는 별도 원천 대조로 거부) |
 | K6 | 터무니없지만 유한한 입력은 게시된다 (범위 정책 없음) — L_gap 1e308 만 → MBCB tau2 ≈ 1e−306 · φ_mc 5e−324 → tau2 1.5e−323 | 범위 문턱은 등록 정책 밖 (새 문턱을 만들지 않았다) |
 | K7 | 열 사전의 `invalid_input` 문구가 τ 환산 출처를 말하지 않는다 | NOT_COMPUTED 행은 인계표 값이 비므로 어휘 변경 불요 |
 | K8 | 배포 빌더는 f 만 유한성 검사 (tau2 · tau 아님) | tau_flux 가 셋 다 보장 (L214R-09) — 이중 방어 부재일 뿐 |

@@ -1,0 +1,15 @@
+{
+  "original": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\lhs214_fix_reverify_20261015\\probes\\receipt_identity.py",
+  "sha256": "c73e685d4090a867333d133260def1c1f8d8557900558a84b9deda8acef6eda1",
+  "replacements": [
+    [
+      "9e3ef54ca228111360bfe5f6d9dad4ebe26d54af",
+      "60ba39e224aff48a030dccfe750342f3bf9db61f"
+    ],
+    [
+      "assert out['variants']['minimal_activate_section3']['bad']==['R0','D1']",
+      "assert out['variants']['minimal_activate_section3']['bad']==[]"
+    ]
+  ],
+  "paths": "__file__ points to new review probes; algorithms and seven mutations unchanged"
+}

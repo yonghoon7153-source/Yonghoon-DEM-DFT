@@ -1,0 +1,16 @@
+{
+  "test": "scripts/test_l214r02_model_limit_flag.py",
+  "rc": 0,
+  "seconds": 18.812000000005355,
+  "tail": [
+    "  PASS  C1 L1_phys 실제 빌드 → 만들고 check_v13 문제 0 (띠 폴백만 · Physics · H12 모형 한계는 배포 HOLD 아님 — 정책 그대로) []",
+    "  PASS  C2 L1_phys ★ 배포 표지 열 — 주 표 full_model_limit_hertz (전 행 False) · Physics 부록 full_model_limit_physics (선택 행 True · 상태 칸 BAND_FALLBACK 그대로) ('True' · 'BAND_FALLBACK')",
+    "  PASS  C3 L1_phys README 집계 — 띠 폴백에 가려진 Physics 모형 한계가 Physics 상태 셈 · 문단에 따로 (full_model_limit_physics · 빠지지 않는다)",
+    "  PASS  C1 L2_h12 실제 빌드 → 만들고 check_v13 문제 0 (띠 폴백만 · Physics · H12 모형 한계는 배포 HOLD 아님 — 정책 그대로) []",
+    "  PASS  C2 L2_h12 ★ 배포 표지 열 — 주 표 full_model_limit_hertz (전 행 False) · Physics 부록 full_model_limit_physics (선택 행 True · 상태 칸 BAND_FALLBACK 그대로) ('True' · 'BAND_FALLBACK')",
+    "  PASS  C3 L2_h12 README 집계 — 띠 폴백에 가려진 Physics 모형 한계가 Physics 상태 셈 · 문단에 따로 (full_model_limit_physics · 빠지지 않는다)",
+    "",
+    "test_l214r02_model_limit_flag: 47/47 PASS"
+  ],
+  "stderr_tail": []
+}

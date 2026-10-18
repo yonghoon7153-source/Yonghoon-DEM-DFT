@@ -1,0 +1,36 @@
+{
+  "utc": "2026-10-16T21:14:29.781136+00:00",
+  "requested_evidence_path": "docs/reviews/codex_lhs214r_fix_recheck_request_20261016.md",
+  "request_history": [],
+  "branch_head_observed": "724c4ef08deeb5a5b955bf99580897d9c4163307",
+  "code_pin": "60ba39e224aff48a030dccfe750342f3bf9db61f",
+  "base_pin": "6cb2569569ec74b7f5a96e0ef19494e872da5272",
+  "request_and_evidence_at_code_pin": [
+    "docs/reviews/lhs214r_fix_plan_20261016.md"
+  ],
+  "script_web_changes": [
+    "scripts/check_all.sh",
+    "scripts/lhs_design_dataset.py",
+    "scripts/lhs_release_build.py",
+    "scripts/network_conductivity.py",
+    "scripts/supp20_input_receipt.py",
+    "scripts/tau_flux.py",
+    "scripts/test_l214r01_certificate.py",
+    "scripts/test_l214r02_model_limit_flag.py",
+    "scripts/test_l214r05_published_certificate.py",
+    "scripts/test_l214r06_same_class.py",
+    "scripts/test_l214r09_same_class.py",
+    "scripts/test_lhs214_model_limit.py",
+    "scripts/test_lhs_release_v13.py",
+    "scripts/test_network_generation2.py",
+    "scripts/test_tau_flux.py",
+    "webapp/app.py",
+    "webapp/pipeline_service.py",
+    "webapp/test_l214r03_display.py",
+    "webapp/test_pipeline_provenance.py",
+    "webapp/test_web09_accepted_refresh.py"
+  ],
+  "previous_pin_to_base_script_web_changes": [
+    "scripts/check_doc_refs.py"
+  ]
+}

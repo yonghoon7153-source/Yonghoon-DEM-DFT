@@ -1,0 +1,21 @@
+{
+  "network_run_id": "20261017T060724-f815eb11",
+  "code_sha": "unknown",
+  "stamped_at": "2026-10-17T06:07:24",
+  "solver_status": "success",
+  "solver": "network_conductivity.py",
+  "argv": {
+    "type_map": "1:SE,2:AM_P",
+    "scale": 1,
+    "contact_mode": "both"
+  },
+  "units_contract": "sim_to_real_v1",
+  "input_digests": {
+    "atoms.csv": "f1bb9e2576d6ef41",
+    "contacts.csv": "ab193412e059d145"
+  },
+  "psi_placement_physics": "multiply",
+  "electrode_model": "dirichlet_exact",
+  "area_rule_physics": "physics_g2",
+  "hertz_h12": true
+}
