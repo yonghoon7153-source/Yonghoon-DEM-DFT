@@ -783,7 +783,8 @@ _ION_ROW_BUILDERS = {'σ_ionic (mS/cm)': _ion_sigma_row, 'R_brug (과대추정 �
 def _refresh_accepted_ion_modes(data, metrics):
     """normalize Pass G 앞 단계 (★ 10-16 WEB-09) — **채택** 모드의 이온 σ · FULL 유도비 칸 = 새 표 식 (`_ION_ROW_BUILDERS`) 이 현재 metrics 로 내는 값.
     contact 단계가 쓴 network_summary.csv 는 network 게시가 갱신하지 않는다 → 망을 다시 분석하면 채택 칸에 옛 CSV 숫자가 남고 Δ 만 현재 값이었다.
-    그 식이 그 칸을 못 만들면 (필요한 metric 없음 → '—' · 행 없음) 기존 칸 그대로 (지어내지 않는다) · Δ = 두 칸이 다 현재 값이면 새 표 Δ · 한 칸만이면 '—'.
+    그 식이 그 칸을 못 만들면 (필요한 metric 없음 → '—' · 행 없음) 기존 칸 그대로 (지어내지 않는다) · Δ = 두 칸이 다 현재 값이면 새 표 Δ · 그 밖 '—'
+    (★ 10-18 L214R-R02 — 한 칸만 · 둘 다 아님 · 새 표 행 없음 모두: 옛 칸 둘의 옛 Δ 를 현재 비교처럼 남기지 않는다 · 옛 칸 값 보존은 그대로).
     Plastic amplification = 두 모드 다 채택이면 새 표 행 그대로.  미채택 모드 칸은 건드리지 않는다 (뒤의 `_mask_unaccepted_ion_modes` 몫)."""
     ok = {mode: _ion_mode_accepted(metrics, mode) for mode in ('hertz', 'physics')}
     if not (ok['hertz'] or ok['physics']):
@@ -803,13 +804,13 @@ def _refresh_accepted_ion_modes(data, metrics):
             ref = _ION_ROW_BUILDERS[lab](metrics)
         except (TypeError, ValueError, OverflowError):      # 미채택 모드 칸의 값이 수가 아니면 — 그 행은 기존 칸 그대로 (화면이 죽지 않게 · 뒤 단계가 가린다)
             ref = None
-        if ref is None:
-            continue
-        fresh = [i for i, mode in ((1, 'hertz'), (2, 'physics')) if ok[mode] and not _ion_cell_blank(ref[i])]
+        #  ★ 10-18 L214R-R02 (Codex 재확인 판정 §2 · 표기 L214RR-02 · 1저자 10-18 Q2) — Δ 는 freshness 로만: 두 칸이 다 현재 값 = 새 표 Δ · 그 밖 (한 칸만 ·
+        #    둘 다 아님 · 새 표 행 없음 ref None) = '—'.  옛 판은 ref None · fresh [] 에서 Δ 를 건드리지 않아, 두 유도값이 모두 현재 값 없는 옛 CSV 행
+        #    (31.0× / 37.0× +19.4% 등) 의 옛 Δ 가 현재 비교처럼 남았다.  칸 값은 그대로 (옛 값 보존 정책 · 지어내지 않는다).
+        fresh = [] if ref is None else [i for i, mode in ((1, 'hertz'), (2, 'physics')) if ok[mode] and not _ion_cell_blank(ref[i])]
         for i in fresh:
             r[i] = ref[i]
-        if fresh:
-            r[3] = ref[3] if len(fresh) == 2 else '—'
+        r[3] = ref[3] if len(fresh) == 2 else '—'
 
 
 def _mask_unaccepted_ion_modes(data, metrics):

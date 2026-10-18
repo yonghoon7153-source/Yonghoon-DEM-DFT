@@ -15,6 +15,11 @@
 방식 (두 칸이 다 현재 값일 때만 — 한 칸이 옛 칸 그대로면 '—').  미채택 모드 = Pass G 그대로 ('—' 또는 모형 한계 사유) · valid_zero = '—' (1저자 Q2).
 옛 세대 (상태 키 없음): metrics 에 값이 있으면 새 표와 똑같이 · 필요한 metric 이 없으면 기존 칸 그대로 (지어내지 않는다).  Constriction · 전자 · 열 행 무변경.
 정상 새 표 (CSV 망 절 없음) 는 수정 전과 똑같이 렌더된다.
+★ 10-18 L214R-R02 (Codex 재확인 판정 `docs/reviews/codex_review_lhs214r_fix_recheck_20261017.md` §2 · 표기 L214RR-02 · 1저자 10-18 Q2) — 인식된 이온 행의
+Δ 는 freshness 로만 정한다: 두 칸이 다 현재 값이면 새 표 Δ · 그 밖 (한 칸만 · 둘 다 아님 · 새 표 행 없음) = '—'.  옛 칸 값 보존 정책은 그대로 (지어내지
+않는다).  반례 (⑧) = 채택된 옛 형식 이온 (H 0.2 / P 0.8 · 상태 키 없음) + R_brug_over_full · Physics 대응 값 · sigma_ratio 없음 × 옛 CSV (31 / 37 · 41 / 43)
+× 두 열 · split · 네 열 — 고치기 전 일곱 행에 옛 Δ (0% · +19.4% · +4.9%) 가 남았다 (탐침 `docs/reviews/codex_lhs214r_fix_recheck_evidence_20261017/probes/
+display_fresh.py` 의 꼴을 그대로 옮겼다 — 실행하지 않았다).
 
 경로: 실제 `app` import · 실 생산자 CLI (`test_network_handover_chain._run_ml` — 침대 ml_el · ml_physics · ml_hertz) 로 게시한 폴더 · `_load_case_tables`
 (케이스 · 보고서 · 보관함 라우트 공용) · Flask GET /single/<id> (전체 single.html).  옛 CSV 꼴 · 합성 metrics · HTML 판독 = `test_l214r03_display` 의 것을 그대로 쓴다.
@@ -89,12 +94,40 @@ FOURCOL_EQ = [['── Network Solver (Hertzian DEM-native) ──', '', '', '']
               ['SE Volume Fraction', 0.5, 0.5, '0%']]
 
 
+#  ★ 10-18 L214R-R02 — Codex display_fresh 의 옛 CSV (`OLD`) · metrics (`BASE` 에서 R_brug_over_full* · sigma_ratio · 상태 키를 뺀 것) 그대로
+CX_LABELS = ('σ_ionic (mS/cm)', 'R_brug (과대추정 배수)', 'Contact-free / Full', 'σ_brug / σ_ionic', 'σ_ionic ratio (physics/Hertzian)')
+CX_OLD = [['── Network Solver (Hertzian DEM-native) ──', '', '', ''],
+          [CX_LABELS[0], 17., 19., '+11.8%'], [CX_LABELS[1], '31.0×', '37.0×', '+19.4%'],
+          [CX_LABELS[2], '31.0×', '37.0×', '+19.4%'], [CX_LABELS[3], '41.0×', '43.0×', '+4.9%'],
+          [CX_LABELS[4], '1.12×', '1.12×', '0%'], ['SE Volume Fraction', .5, .5, '0%']]
+CX_BASE = dict(sigma_full_mScm=.2, sigma_full_mScm_physics=.8, sigma_full_status='computed', sigma_full_status_physics='computed',
+               network_solver_status='success', sigma_ratio=.4, phi_se=.5, sigma_bulk_net_mScm=1., sigma_bulk_net_mScm_physics=1.,
+               R_brug_over_full=3., R_brug_over_full_physics=.75, bulk_resistance_fraction=.6, bulk_resistance_fraction_physics=.8,
+               electronic_sigma_full_mScm=2., electronic_sigma_full_mScm_physics=3., thermal_sigma_full_mScm=.3, thermal_sigma_full_mScm_physics=.45,
+               tortuosity_mean=1.2)
+CX_MISSING_BOTH = {k: v for k, v in CX_BASE.items() if not k.startswith('R_brug_over_full') and k != 'sigma_ratio' and 'status' not in k}
+
+
+def cx_layout(layout):
+    """Codex display_fresh 의 옛 CSV 꼴 → (머리, 행) — fourcol = OLD · csv = 두 열 (비 행 없음) · split = 두 열 + Physics 절."""
+    if layout == 'fourcol':
+        return ['metric', 'H', 'P', 'delta'], [list(r) for r in CX_OLD]
+    rows = [[r[0], r[1]] for r in CX_OLD if r[0] != CX_LABELS[4]]
+    if layout == 'split':
+        rows += [['── Physics (Plastic film, Tabor+volume) ──', ''], ['σ_ionic [physics] (mS/cm)', 19.], [CX_LABELS[4], '1.12×']]
+    return ['metric', 'value'], rows
+
+
 def write_layout(rd, layout):
-    """L.LAYOUTS (new · csv · split · fourcol) = L.write_csv 그대로 · fourcol_x = 네 열 + STALE_X · fourcol_eq = FOURCOL_EQ."""
+    """L.LAYOUTS (new · csv · split · fourcol) = L.write_csv 그대로 · fourcol_x = 네 열 + STALE_X · fourcol_eq = FOURCOL_EQ ·
+    ★ L214R-R02 cx_csv · cx_split · cx_fourcol = Codex display_fresh 의 옛 CSV."""
     if layout in L.LAYOUTS:
         return L.write_csv(rd, layout)
-    head, rows = L.csv_layout('fourcol')
-    rows = rows[:3] + STALE_X + rows[3:] if layout == 'fourcol_x' else FOURCOL_EQ
+    if layout.startswith('cx_'):
+        head, rows = cx_layout(layout[3:])
+    else:
+        head, rows = L.csv_layout('fourcol')
+        rows = rows[:3] + STALE_X + rows[3:] if layout == 'fourcol_x' else FOURCOL_EQ
     p = os.path.join(rd, 'network_summary.csv')
     with open(p, 'w', encoding='utf-8', newline='') as f:
         w = csv.writer(f)
@@ -298,6 +331,21 @@ def main():
         bad = [nm for nm, v in news.items() if v['full'] != off[nm]['full'] or v['route_net'] != off[nm]['route_net']]
         chk(f'⑦b 새 표 전체 (모든 행 · 칸 · loader · route) = 채택 갱신 단계를 끈 렌더 — 그 단계는 새 표에서 아무것도 바꾸지 않는다 '
             f'(수정 전 = 그 단계 없음 · 같은 렌더 두 번) {bad}', not bad and all(v['http'] == 200 for v in news.values()))
+
+        print('⑧ ★ L214R-R02 — 두 유도값이 모두 현재 값 없음 (Codex 재확인 §2 · display_fresh missing_both_derived) — Δ = — (옛 칸 보존 · 옛 Δ 를 남기지 않는다)')
+        cx = {lay: case(f'web09_cx_missing_both_{lay}', CX_MISSING_BOTH, 'cx_' + lay) for lay in ('csv', 'split', 'fourcol')}
+        st = {k: (v['http'], v['csv_kept']) for k, v in cx.items()}
+        want_cx = {'csv': {RB: ['31.0×', D, D], CF: ['31.0×', '31.0×', D], SBI: ['41.0×', '41.0×', D]},
+                   'split': {RB: ['31.0×', D, D], CF: ['31.0×', '31.0×', D], SBI: ['41.0×', '41.0×', D]},
+                   'fourcol': {RB: ['31.0×', '37.0×', D], CF: ['31.0×', '37.0×', D], SBI: ['41.0×', '43.0×', D]}}
+        bad = [(lay, w, lab[:14], cells(v, w, lab), want) for lay, v in cx.items() for w in ('loader', 'route') for lab, want in want_cx[lay].items()
+               if cells(v, w, lab) != want]
+        chk(f'⑧a ★ 채택된 옛 형식 이온 (H 0.2 / P 0.8 · 상태 키 없음) + R_brug_over_full · Physics 대응 값 · sigma_ratio 없음 × 옛 CSV (31 / 37 · 41 / 43) × '
+            f'(두 열 · split · 네 열) → R_brug · CF/Full · σ_brug/σ_ionic 의 Δ = — (옛: 일곱 행 0% · +19.4% · +4.9%) · 칸 = 옛 값 그대로 (지어내지도 지우지도 '
+            f'않는다) · GET 200 · CSV 바이트 그대로 {st} {bad}', not bad and all(x == (200, True) for x in st.values()))
+        keep = [(lay, w, cells(v, w, ION), cells(v, w, PAMP)) for lay, v in cx.items() for w in ('loader', 'route')
+                if cells(v, w, ION) != ['0.2', '0.8', '+300.0%'] or cells(v, w, PAMP) != ['4.00×', '4.00×', '0%']]
+        chk(f'⑧b 같은 케이스 — 이온 σ 행 = 현재 값 0.2 / 0.8 / +300.0% · Plastic amplification 4.00× / 4.00× / 0% (두 칸 다 현재 → 새 표 Δ 그대로) {keep}', not keep)
     finally:
         shutil.rmtree(WORK, ignore_errors=True)
     print(f'\ntest_web09_accepted_refresh: {PASS}/{PASS + FAIL} PASS' + ('' if not FAIL else f'   ({FAIL} FAIL)'))
