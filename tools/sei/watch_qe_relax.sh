@@ -62,11 +62,16 @@ _pid_for_dir() {                       # $1=dir → "pid" 또는 빈 문자열
 }
 
 # ── GPU 를 실제로 물고 있는 pid ─────────────────────────────────────────────
-_gpu_map=""
+#   ⛔ 2026-10-18 kgy 실물: 프로세스별 정보가 막힌 기계는 표 대신 'Process-level GPU information is restricted.'
+#     한 줄을 준다. 예전엔 그 줄을 프로세스 하나로 세서 'GPU 점유 프로세스 1개' 를 찍었다 — cascade MD 가 EOS pw.x
+#     옆에서 돌고 있었는데 '혼자 돈다' 로 읽혔다. ⇒ 숫자 행 (pid,MiB) 만 세고, 막혔으면 막혔다고 말한다.
+_gpu_map=""; _gpu_restricted=0
 _scan_gpu() {
   command -v nvidia-smi >/dev/null 2>&1 || return 0
-  _gpu_map=$(nvidia-smi --query-compute-apps=pid,used_memory \
-             --format=csv,noheader,nounits 2>/dev/null | tr -d ' ')
+  local raw
+  raw=$(nvidia-smi --query-compute-apps=pid,used_memory --format=csv,noheader,nounits 2>&1)
+  printf '%s' "$raw" | grep -qiE 'restricted|insufficient permission' && _gpu_restricted=1
+  _gpu_map=$(printf '%s\n' "$raw" | tr -d ' ' | grep -E '^[0-9]+,[0-9]+$')
 }
 _gpu_for_pid() { printf '%s' "$_gpu_map" | awk -F, -v p="$1" '$1==p {print $2; exit}'; }
 
@@ -265,6 +270,22 @@ if [ "${1:-}" = "--selftest" ]; then
   chk "$(echo "$OUT" | grep -qE '단발종료 2' && echo 1 || echo 0)" \
       "⑫-b 합계에 단발종료를 따로 센다 (죽음/오류에 섞지 않는다)"
 
+  # ⛔ 2026-10-18 kgy 실물 — 프로세스별 정보가 막힌 nvidia-smi. 가짜 nvidia-smi 둘 (막힘 · 프로세스 둘) 로 본다.
+  mkdir -p "$T/nsr" "$T/ns2"
+  printf '#!/bin/sh\ncase "$*" in *query-compute-apps*) echo "Process-level GPU information is restricted.";; *) echo "12613 MiB, 24576 MiB, 98 %%";; esac\n' > "$T/nsr/nvidia-smi"
+  printf '#!/bin/sh\ncase "$*" in *query-compute-apps*) printf "1225986, 10200\\n244770, 2300\\n";; *) echo "12853 MiB, 24576 MiB, 98 %%";; esac\n' > "$T/ns2/nvidia-smi"
+  chmod +x "$T/nsr/nvidia-smi" "$T/ns2/nvidia-smi"
+  OUTR=$(PATH="$T/nsr:$PATH" QE_PROC_NAMES=qefake bash "$0" "$R" 2>&1)
+  OUTG=$(PATH="$T/ns2:$PATH" QE_PROC_NAMES=qefake bash "$0" "$R" 2>&1)
+  chk "$(echo "$OUTR" | grep -q 'GPU 점유 프로세스' && echo 0 || echo 1)" \
+      "⑮ ⛔음성(kgy 10-18 실물): 'information is restricted' 한 줄을 프로세스 1 개로 세지 않는다"
+  chk "$(echo "$OUTR" | grep -q '프로세스별 정보 막힘' && echo 1 || echo 0)" \
+      "⑮-b 막혔으면 막혔다고 말한다 (몇 개인지 모른다 · 합계는 낸다)"
+  chk "$(echo "$OUTG" | grep -q 'GPU 점유 프로세스 2개' && echo 1 || echo 0)" \
+      "⑮-c 양성: 숫자 행 둘이면 2 개로 센다 (+ 나눠 쓴다는 경고)"
+  chk "$(echo "$OUTG" | grep -q '둘 이상이 나눠 쓴다' && echo 1 || echo 0)" \
+      "⑮-d 양성: 둘 이상이면 공유 경고를 낸다"
+
   OUT2=$(bash "$0" "$T/nonexistent" 2>&1); _rc=$?
   chk "$([ $_rc -ne 0 ] && echo 1 || echo 0)" "⑧ ⛔음성: 루트가 없으면 0 이 아닌 코드로 끝난다"
   chk "$(echo "$OUT2" | grep -qi '없' && echo 1 || echo 0)" "⑧-b ⛔음성: 없다고 말한다 (빈 표를 정상처럼 그리지 않는다)"
@@ -290,7 +311,12 @@ fi
 _scan_procs; _scan_gpu
 
 echo "════════ QE relax/NEB 생사 · $(hostname -s) · $(date '+%m-%d %H:%M:%S') ════════"
-if [ -n "$_gpu_map" ]; then
+if [ "$_gpu_restricted" = 1 ]; then
+  printf "  GPU 프로세스별 정보 막힘 (이 기계 nvidia-smi · 몇 개가 나눠 쓰는지 못 본다 — 합계만)"
+  command -v nvidia-smi >/dev/null && \
+    printf " · %s" "$(nvidia-smi --query-gpu=memory.used,memory.total,utilization.gpu --format=csv,noheader | head -1)"
+  echo
+elif [ -n "$_gpu_map" ]; then
   _ngpu=$(printf '%s' "$_gpu_map" | grep -c . )
   printf "  GPU 점유 프로세스 %s개" "$_ngpu"
   command -v nvidia-smi >/dev/null && \
