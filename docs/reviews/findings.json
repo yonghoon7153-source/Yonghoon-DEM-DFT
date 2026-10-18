@@ -11784,17 +11784,30 @@
     {
       "id": "L214R-R03",
       "severity": "P3",
-      "status": "open",
+      "status": "claimed_fixed",
       "owner": "claude",
       "found_by": "codex 10-17 LHS214 수정 재확인 (영수증 lane · 임시 등록 사본만 · 원 등록 파일 무변경)",
       "opened_in": "docs/reviews/codex_review_lhs214r_fix_recheck_20261017.md",
       "title": "등록 문서 파서가 울타리 길이를 잃어 네 개 백틱 코드 블록 안의 예시 §3 를 활성 등록으로 읽는다 — 실제 ## 3. 을 ## 30. 으로 바꾸고 pending 선언을 지운 임시 사본에 네 백틱 블록 (안에 세 백틱 예시 + 가짜 §3 · 현재 code_fp) 을 넣으면 영수증 rc 0 · 실패 칸 [] (보통 세 백틱 예시만이면 rc 1 · R0 · D1)",
-      "note": "원장 ID L214R-R03 = Codex 표기 L214RR-03 (원장 ID 형식 = 앞 칸 다섯 글자까지).  판정문 §3 · 자리 (코드 핀 60ba39e22): scripts/supp20_input_receipt.py:109 · :112–:131 · :145–:160 — _MD_FENCE 가 네 개 백틱을 세 개로 기록하고 안의 세 개 백틱을 닫는 울타리로 취급.  CommonMark §4.5: 닫는 울타리 = 여는 울타리와 같은 문자 · 길이가 적어도 같아야 함.  원 L214R-04 의 일반 문서 전환 반례는 닫힘 · 현재 보통 형식의 두 등록 문서가 잘못 읽힌다는 뜻도 · 영수증 rc 0 만으로 발사가 승인됐다는 뜻도 아니다 (판정문 §3).  최소 해결: 여는 울타리 문자 · 전체 길이를 보존하고 유효한 닫는 줄 판별 · 또는 지원하지 않는 울타리 형식을 명시적으로 거부 · 이 반례와 정상 §3 · 역사 표 보존 대조를 함께 시험.  ⚠ 이 도구는 봉인 CODE_FILES 32 밖 (등록 · 영수증 도구) — 고쳐도 대기 지문 e76dbe08… 은 그대로인지 수정 때 확인.  ⬜ 수정 계획 = 1저자 비준 대기.  ★ 우리 트리 재현 10-18 (Codex 탐침 무변경) = 판정값 차이 0 (docs/reviews/codex_lhs214r_fix_recheck_evidence_20261017/_repro_ours_20261018/README.md · compare_probe_outputs.json).  ⬜ 수정 계획 docs/reviews/lhs214rr_fix_plan_20261018.md (1저자 비준 대기).",
+      "note": "원장 ID L214R-R03 = Codex 표기 L214RR-03 (원장 ID 형식 = 앞 칸 다섯 글자까지).  판정문 §3 · 자리 (코드 핀 60ba39e22): scripts/supp20_input_receipt.py:109 · :112–:131 · :145–:160 — _MD_FENCE 가 네 개 백틱을 세 개로 기록하고 안의 세 개 백틱을 닫는 울타리로 취급.  CommonMark §4.5: 닫는 울타리 = 여는 울타리와 같은 문자 · 길이가 적어도 같아야 함.  원 L214R-04 의 일반 문서 전환 반례는 닫힘 · 현재 보통 형식의 두 등록 문서가 잘못 읽힌다는 뜻도 · 영수증 rc 0 만으로 발사가 승인됐다는 뜻도 아니다 (판정문 §3).  최소 해결: 여는 울타리 문자 · 전체 길이를 보존하고 유효한 닫는 줄 판별 · 또는 지원하지 않는 울타리 형식을 명시적으로 거부 · 이 반례와 정상 §3 · 역사 표 보존 대조를 함께 시험.  ⚠ 이 도구는 봉인 CODE_FILES 32 밖 (등록 · 영수증 도구) — 고쳐도 대기 지문 e76dbe08… 은 그대로인지 수정 때 확인.  ★ 우리 트리 재현 10-18 (Codex 탐침 무변경) = 판정값 차이 0 (docs/reviews/codex_lhs214r_fix_recheck_evidence_20261017/_repro_ours_20261018/README.md · compare_probe_outputs.json).  ⬜ 수정 계획 docs/reviews/lhs214rr_fix_plan_20261018.md (1저자 비준 대기).  ✅ 10-18 고침 f8871224b (1저자 10-18 \"비준\" Q2 · Q3 = 지원 · 시험 먼저 같은 커밋): scripts/supp20_input_receipt.py _md_section · _md_fence — 여는 울타리 문자 · 길이 보존 · 닫는 줄 = 같은 문자 · 길이 이상 · 뒤 공백만 · 닫히지 않은 울타리 = 문서 끝까지 코드 · 백틱 울타리 뒤 글의 백틱 = 울타리 아님.  selftest S12g (Codex receipt_fences 꼴 · 네 백틱 · 네 물결표 · 정보 문자열 안쪽 줄 · 세 백틱 대조 · 닫히지 않음) · S12h (지킴 — 긴 닫는 줄 · 공백 붙은 닫는 줄 · 다른 문자 줄) 112/113 → 113/113 · L214R-04 비준 전환 시험 그대로.  봉인 밖 도구 → 대기 지문 그대로.  Codex 탐침 무변경 재실행 (최종 코드) = 네 백틱 예시 rc 1 · R0 · D1 (docs/reviews/lhs214rr_fix_evidence_20261018/).  Codex 짧은 재확인 전.",
       "evidence_tests": [
+        "scripts/supp20_input_receipt.py --selftest S12g · S12h (112/113 → 113/113)",
         "docs/reviews/codex_lhs214r_fix_recheck_evidence_20261017/evidence/receipt_fences/results.json",
         "docs/reviews/codex_lhs214r_fix_recheck_evidence_20261017/probes/receipt_fences.py (읽기만)",
         "docs/reviews/codex_lhs214r_fix_recheck_evidence_20261017/_repro_ours_20261018/compare_probe_outputs.json"
-      ]
+      ],
+      "claimed_fixed_sha": "f8871224b"
+    },
+    {
+      "id": "L214R-R04",
+      "severity": "P3",
+      "status": "open",
+      "owner": "claude",
+      "found_by": "claude 10-18 같은 부류 점검 (L214R-R01 수정 중 · 1저자에게 제안한 점검 · 읽기 전용 · 리포 밖 복제본)",
+      "opened_in": "docs/reviews/lhs214rr_fix_plan_20261018.md",
+      "title": "CF (bulk_only) · 협착-only 진단 가지의 생산자 표지 model_over_conduction (raw q > 1.5) ↔ computed 를 증서와 함께 바꾼 레코드를 공용 증서 판정이 받는다 — 값은 그대로 · 해석 표지만 바뀜 (12 침대 실 생산자: model_over_conduction → computed 51 가지 · computed → model_over_conduction 21 가지 모두 수용 · 3 노드 경계 표지 반전도 수용)",
+      "note": "자리: scripts/tau_flux.py _cert_published_problem (숫자를 싣는 가지의 상태가 게시 상태 둘 중 하나 · 증서 상태 = 가지 상태 인지만 · q ↔ 표지 미대조).  생산자 규칙 = network_conductivity.solve_network (CF · 협착-only · 이온 · 전자 — raw q > 1.5 면 status model_over_conduction · 값 유지) · _net_sigma_status.  영향: τ 인계 수치 (FULL 만) 없음 · 해석 표지 (배포 · 화면의 과전도 표지) 무결성.  고친다면 값은 거부하지 않는다 (Codex 재확인 판정 §1-4) — q ↔ 표지 일치만.  초안 시험 (리포 밖) = 1/4 (원 레코드 통과 · 표지 반전 두 방향 · 경계 반전 = 수용).  ⬜ 1저자 Q1 (이번 바퀴에 고칠지) 대기 — 권고: 고침 (시험 먼저 · 함수 하나).  재확인 요청서 docs/reviews/codex_lhs214rr_fix_recheck_request_20261018.md §5-6 에 보고.",
+      "evidence_tests": []
     },
     {
       "id": "SELF-119",

@@ -1,0 +1,382 @@
+{
+  "probe_sha256": "993b69cf6b1a94b223ac158369d73763db37181bfe78fde7029844440729ae4c",
+  "exception": "Traceback (most recent call last):\n  File \"/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/d26d1e75-209f-540f-83a8-c0e1957edc2f/scratchpad/repro_fix/run_h0_resurrection_capture.py\", line 12, in <module>\n    exec(compile(src, str(probe), 'exec'), ns)\n  File \"/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/d26d1e75-209f-540f-83a8-c0e1957edc2f/scratchpad/repro_fix/ws/lhs214r_fix_recheck_20261017/probes/consumer_h0_resurrection.py\", line 89, in <module>\n    C.release_probe(report, target_name='ml_hertz', source_mutator=mutate, minimal=True)\n  File \"/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/d26d1e75-209f-540f-83a8-c0e1957edc2f/scratchpad/repro_fix/ws/lhs214r_fix_recheck_20261017/probes/consumer_adversarial.py\", line 95, in release_probe\n    tau_now = DD.load_tau_results(source_root / 'results', wb, expected_generation='g2')\n              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/d26d1e75-209f-540f-83a8-c0e1957edc2f/scratchpad/repro_fix/ws/lhs214r_fix_recheck_20261017/source/scripts/lhs_design_dataset.py\", line 2082, in load_tau_results\n    raise FillRefusal(f'{case}: τ P4 — 세대 계약 위반 (G2R-01 · 02 · tau_flux.network_generation_contract): '\nlhs_design_dataset.FillRefusal: lhs00_002: τ P4 — 세대 계약 위반 (G2R-01 · 02 · tau_flux.network_generation_contract): hertz: 수치 증서 · 결합 (G2R-03 · G2RR-02 — 가지 · 역할 · 발행값) — solve_certificate_full: FULL 게시 값 (σ_ratio 1.62317474 · 상태 'computed') 인데 증서 재구성 q (반올림 전) = I_bottom/ΔV × T/A = 1.6231747351909949 > 생산자 출력 문턱 1.5 (정책 full_single_phase_q_gt_1p5/v1 · 엄격 >) — 생산자는 이 FULL 값을 보류한다 (not_computed · full_over_conduction) · 보류 값을 게시 상태로 되돌린 레코드는 받지 않는다 (L214R-R01) — 역할 · 표기가 확정되지 않은 망의 τ 를 싣지 않는다 (주 Hertz = H0 · H12 · physics 표)\n",
+  "report": {
+    "scope": "Extend independent numeric H0 resurrection through actual stop/reread/build.\n\nThe genuine producer ml_hertz fixture supplies every number. Only H0 publication\nvalues/statuses are restored from its withheld q; current/geometry/attempts and\nq_guard diagnostics are unchanged. The ionic power share is copied from that\nsame producer record's thermal H0 share (identical resistor ratios here); its\nstatus and full_metrics projection are made consistent, explicitly enumerated.\nThe source-copy fixture and synthetic unselected release rows are not production.\n",
+    "root": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/d26d1e75-209f-540f-83a8-c0e1957edc2f/scratchpad/repro_fix/ws/lhs214r_fix_recheck_20261017/evidence/consumer_adversarial_1792319581597314022",
+    "before": {
+      "stop": {
+        "value": [
+          true,
+          "ok"
+        ],
+        "exception": null
+      },
+      "row": {
+        "case": "lhs00_002",
+        "f_ion_hertz": null,
+        "f_ion_hertz_gap": null,
+        "tau2_ion_hertz": null,
+        "tau_ion_hertz": null,
+        "ion_net_status_hertz": "NOT_COMPUTED",
+        "ion_net_status_reason_hertz": "full_over_conduction",
+        "ion_net_area_mode_hertz": "hertz",
+        "ion_net_constriction_hertz": "maxwell_halfspace",
+        "ion_net_psi_hertz": "",
+        "ion_net_area_rule_hertz": "hertz_ccpl22",
+        "ion_net_electrode_hertz": "dirichlet_exact",
+        "ion_net_bulk_hertz": "cylinder_half_d",
+        "ion_net_band_rule_hertz": "L0",
+        "ion_net_band_frac_hertz": 0.2,
+        "ion_net_basis_check_hertz": "ok",
+        "f_ion_physics": null,
+        "f_ion_physics_gap": null,
+        "tau2_ion_physics": null,
+        "tau_ion_physics": null,
+        "ion_net_status_physics": "NOT_COMPUTED",
+        "ion_net_status_reason_physics": "full_over_conduction",
+        "ion_net_area_mode_physics": "physics",
+        "ion_net_constriction_physics": "mikic_psi_multiply",
+        "ion_net_psi_physics": "multiply",
+        "ion_net_area_rule_physics": "physics_g2",
+        "ion_net_electrode_physics": "dirichlet_exact",
+        "ion_net_bulk_physics": "cylinder_half_d",
+        "ion_net_band_rule_physics": "L0",
+        "ion_net_band_frac_physics": 0.2,
+        "ion_net_basis_check_physics": "ok",
+        "f_ion_hertz_h12": null,
+        "f_ion_hertz_h12_gap": null,
+        "tau2_ion_hertz_h12": null,
+        "tau_ion_hertz_h12": null,
+        "ion_net_status_hertz_h12": "NOT_COMPUTED",
+        "ion_net_status_reason_hertz_h12": "full_over_conduction",
+        "ion_net_area_mode_hertz_h12": "hertz",
+        "ion_net_constriction_hertz_h12": "mikic_psi_multiply",
+        "ion_net_psi_hertz_h12": "multiply",
+        "ion_net_area_rule_hertz_h12": "hertz_ccpl22",
+        "ion_net_electrode_hertz_h12": "dirichlet_exact",
+        "ion_net_bulk_hertz_h12": "sphere_segment",
+        "ion_net_band_rule_hertz_h12": "L0",
+        "ion_net_band_frac_hertz_h12": 0.2,
+        "ion_net_basis_check_hertz_h12": "ok",
+        "ion_sigma0_mScm": 3.0,
+        "ion_sigma0_T_C": 25.0,
+        "phi_basis": "mass_conserving",
+        "L_basis": "L_mc",
+        "ion_net_generation": "g2",
+        "full_model_limit_hertz": true,
+        "full_model_limit_physics": true
+      },
+      "q": 1.6231747351909949
+    },
+    "numeric_only_stop": {
+      "value": [
+        false,
+        "④ constriction_power_share_ion_hertz: 관통 해인데 값 None · 상태 'not_computed (FULL output withheld — model limit q > 1.5)' (0–1 · computed 여야 — 내부 예외 · 풀이 실패는 거부); ⑦ τ 인계 hertz: NOT_COMPUTED (invalid_input: 세대 계약 (G2R-01 · 02): hertz: 수치 증서 · 결합 (G2R-03 · G2RR-02 — 가지 · 역할 · 발행값) — solve_certificate_full: FULL 게시 값 (σ_ratio 1.62317474 · 상태 'computed') 인데 증서 재구성 q (반올림 전) = I_bottom/ΔV × T/A = 1.6231747351909949 > 생산자 출력 문턱 1.5 (정책 full_single_phase_q_gt_1p5/v1 · 엄격 >) — 생산자는 이 FULL 값을 보류한다 (not_computed · full_over_conduction) · 보류 값을 게시 상태로 되돌린 레코드는 받지 않는다 (L214R-R01)) — 기술적 결손 (등록된 과학적 HOLD · FULL 모형 한계 아님); ⑦ τ 인계 physics: NOT_COMPUTED (invalid_input: 세대 계약 (G2R-01 · 02): hertz: 수치 증서 · 결합 (G2R-03 · G2RR-02 — 가지 · 역할 · 발행값) — solve_certificate_full: FULL 게시 값 (σ_ratio 1.62317474 · 상태 'computed') 인데 증서 재구성 q (반올림 전) = I_bottom/ΔV × T/A = 1.6231747351909949 > 생산자 출력 문턱 1.5 (정책 full_single_phase_q_gt_1p5/v1 · 엄격 >) — 생산자는 이 FULL 값을 보류한다 (not_computed · full_over_conduction) · 보류 값을 게시 상태로 되돌린 레코드는 받지 않는다 (L214R-R01)) — 기술적 결손 (등록된 과학적 HOLD · FULL 모형 한계 아님); ⑨ 주 Hertz (H0 자리): 수치 증서 · 결합 (G2R-03 · G2RR-02 — 가지 · 역할 · 발행값): solve_certificate_full: FULL 게시 값 (σ_ratio 1.62317474 · 상태 'computed') 인데 증서 재구성 q (반올림 전) = I_bottom/ΔV × T/A = 1.6231747351909949 > 생산자 출력 문턱 1.5 (정책 full_single_phase_q_gt_1p5/v1 · 엄격 >) — 생산자는 이 FULL 값을 보류한다 (not_computed · full_over_conduction) · 보류 값을 게시 상태로 되돌린 레코드는 받지 않는다 (L214R-R01)"
+      ],
+      "exception": null
+    },
+    "after": {
+      "content": {
+        "value": [
+          true,
+          "ok: hertzian, physics"
+        ],
+        "exception": null
+      },
+      "record": {
+        "value": [
+          false,
+          "세대 계약 (G2R-01 · 02) network_conductivity_dual.json: hertz: 수치 증서 · 결합 (G2R-03 · G2RR-02 — 가지 · 역할 · 발행값) — solve_certificate_full: FULL 게시 값 (σ_ratio 1.62317474 · 상태 'computed') 인데 증서 재구성 q (반올림 전) = I_bottom/ΔV × T/A = 1.6231747351909949 > 생산자 출력 문턱 1.5 (정책 full_single_phase_q_gt_1p5/v1 · 엄격 >) — 생산자는 이 FULL 값을 보류한다 (not_computed · full_over_conduction) · 보류 값을 게시 상태로 되돌린 레코드는 받지 않는다 (L214R-R01); 세대 계약 (G2R-01 · 02) network_conductivity.json + network_conductivity_physics.json: hertz: 수치 증서 · 결합 (G2R-03 · G2RR-02 — 가지 · 역할 · 발행값) — solve_certificate_full: FULL 게시 값 (σ_ratio 1.62317474 · 상태 'computed') 인데 증서 재구성 q (반올림 전) = I_bottom/ΔV × T/A = 1.6231747351909949 > 생산자 출력 문턱 1.5 (정책 full_single_phase_q_gt_1p5/v1 · 엄격 >) — 생산자는 이 FULL 값을 보류한다 (not_computed · full_over_conduction) · 보류 값을 게시 상태로 되돌린 레코드는 받지 않는다 (L214R-R01); 세대 계약 (G2R-01 · 02) network_conductivity_hertzian.json + network_conductivity_physics.json: hertz: 수치 증서 · 결합 (G2R-03 · G2RR-02 — 가지 · 역할 · 발행값) — solve_certificate_full: FULL 게시 값 (σ_ratio 1.62317474 · 상태 'computed') 인데 증서 재구성 q (반올림 전) = I_bottom/ΔV × T/A = 1.6231747351909949 > 생산자 출력 문턱 1.5 (정책 full_single_phase_q_gt_1p5/v1 · 엄격 >) — 생산자는 이 FULL 값을 보류한다 (not_computed · full_over_conduction) · 보류 값을 게시 상태로 되돌린 레코드는 받지 않는다 (L214R-R01)"
+        ],
+        "exception": null
+      },
+      "stop": {
+        "value": [
+          false,
+          "⑦ τ 인계 hertz: NOT_COMPUTED (invalid_input: 세대 계약 (G2R-01 · 02): hertz: 수치 증서 · 결합 (G2R-03 · G2RR-02 — 가지 · 역할 · 발행값) — solve_certificate_full: FULL 게시 값 (σ_ratio 1.62317474 · 상태 'computed') 인데 증서 재구성 q (반올림 전) = I_bottom/ΔV × T/A = 1.6231747351909949 > 생산자 출력 문턱 1.5 (정책 full_single_phase_q_gt_1p5/v1 · 엄격 >) — 생산자는 이 FULL 값을 보류한다 (not_computed · full_over_conduction) · 보류 값을 게시 상태로 되돌린 레코드는 받지 않는다 (L214R-R01)) — 기술적 결손 (등록된 과학적 HOLD · FULL 모형 한계 아님); ⑦ τ 인계 physics: NOT_COMPUTED (invalid_input: 세대 계약 (G2R-01 · 02): hertz: 수치 증서 · 결합 (G2R-03 · G2RR-02 — 가지 · 역할 · 발행값) — solve_certificate_full: FULL 게시 값 (σ_ratio 1.62317474 · 상태 'computed') 인데 증서 재구성 q (반올림 전) = I_bottom/ΔV × T/A = 1.6231747351909949 > 생산자 출력 문턱 1.5 (정책 full_single_phase_q_gt_1p5/v1 · 엄격 >) — 생산자는 이 FULL 값을 보류한다 (not_computed · full_over_conduction) · 보류 값을 게시 상태로 되돌린 레코드는 받지 않는다 (L214R-R01)) — 기술적 결손 (등록된 과학적 HOLD · FULL 모형 한계 아님); ⑨ 주 Hertz (H0 자리): 수치 증서 · 결합 (G2R-03 · G2RR-02 — 가지 · 역할 · 발행값): solve_certificate_full: FULL 게시 값 (σ_ratio 1.62317474 · 상태 'computed') 인데 증서 재구성 q (반올림 전) = I_bottom/ΔV × T/A = 1.6231747351909949 > 생산자 출력 문턱 1.5 (정책 full_single_phase_q_gt_1p5/v1 · 엄격 >) — 생산자는 이 FULL 값을 보류한다 (not_computed · full_over_conduction) · 보류 값을 게시 상태로 되돌린 레코드는 받지 않는다 (L214R-R01)"
+        ],
+        "exception": null
+      },
+      "row": {
+        "case": "lhs00_002",
+        "f_ion_hertz": null,
+        "f_ion_hertz_gap": null,
+        "tau2_ion_hertz": null,
+        "tau_ion_hertz": null,
+        "ion_net_status_hertz": "NOT_COMPUTED",
+        "ion_net_status_reason_hertz": "invalid_input: 세대 계약 (G2R-01 · 02): hertz: 수치 증서 · 결합 (G2R-03 · G2RR-02 — 가지 · 역할 · 발행값) — solve_certificate_full: FULL 게시 값 (σ_ratio 1.62317474 · 상태 'computed') 인데 증서 재구성 q (반올림 전) = I_bottom/ΔV × T/A = 1.6231747351909949 > 생산자 출력 문턱 1.5 (정책 full_single_phase_q_gt_1p5/v1 · 엄격 >) — 생산자는 이 FULL 값을 보류한다 (not_computed · full_over_conduction) · 보류 값을 게시 상태로 되돌린 레코드는 받지 않는다 (L214R-R01)",
+        "ion_net_area_mode_hertz": "hertz",
+        "ion_net_constriction_hertz": "maxwell_halfspace",
+        "ion_net_psi_hertz": "",
+        "ion_net_area_rule_hertz": "hertz_ccpl22",
+        "ion_net_electrode_hertz": "dirichlet_exact",
+        "ion_net_bulk_hertz": "cylinder_half_d",
+        "ion_net_band_rule_hertz": "L0",
+        "ion_net_band_frac_hertz": 0.2,
+        "ion_net_basis_check_hertz": "ok",
+        "f_ion_physics": null,
+        "f_ion_physics_gap": null,
+        "tau2_ion_physics": null,
+        "tau_ion_physics": null,
+        "ion_net_status_physics": "NOT_COMPUTED",
+        "ion_net_status_reason_physics": "invalid_input: 세대 계약 (G2R-01 · 02): hertz: 수치 증서 · 결합 (G2R-03 · G2RR-02 — 가지 · 역할 · 발행값) — solve_certificate_full: FULL 게시 값 (σ_ratio 1.62317474 · 상태 'computed') 인데 증서 재구성 q (반올림 전) = I_bottom/ΔV × T/A = 1.6231747351909949 > 생산자 출력 문턱 1.5 (정책 full_single_phase_q_gt_1p5/v1 · 엄격 >) — 생산자는 이 FULL 값을 보류한다 (not_computed · full_over_conduction) · 보류 값을 게시 상태로 되돌린 레코드는 받지 않는다 (L214R-R01)",
+        "ion_net_area_mode_physics": "physics",
+        "ion_net_constriction_physics": "mikic_psi_multiply",
+        "ion_net_psi_physics": "multiply",
+        "ion_net_area_rule_physics": "physics_g2",
+        "ion_net_electrode_physics": "dirichlet_exact",
+        "ion_net_bulk_physics": "cylinder_half_d",
+        "ion_net_band_rule_physics": "L0",
+        "ion_net_band_frac_physics": 0.2,
+        "ion_net_basis_check_physics": "ok",
+        "f_ion_hertz_h12": null,
+        "f_ion_hertz_h12_gap": null,
+        "tau2_ion_hertz_h12": null,
+        "tau_ion_hertz_h12": null,
+        "ion_net_status_hertz_h12": "NOT_COMPUTED",
+        "ion_net_status_reason_hertz_h12": "invalid_input: 세대 계약 (G2R-01 · 02): hertz: 수치 증서 · 결합 (G2R-03 · G2RR-02 — 가지 · 역할 · 발행값) — solve_certificate_full: FULL 게시 값 (σ_ratio 1.62317474 · 상태 'computed') 인데 증서 재구성 q (반올림 전) = I_bottom/ΔV × T/A = 1.6231747351909949 > 생산자 출력 문턱 1.5 (정책 full_single_phase_q_gt_1p5/v1 · 엄격 >) — 생산자는 이 FULL 값을 보류한다 (not_computed · full_over_conduction) · 보류 값을 게시 상태로 되돌린 레코드는 받지 않는다 (L214R-R01)",
+        "ion_net_area_mode_hertz_h12": "hertz",
+        "ion_net_constriction_hertz_h12": "mikic_psi_multiply",
+        "ion_net_psi_hertz_h12": "multiply",
+        "ion_net_area_rule_hertz_h12": "hertz_ccpl22",
+        "ion_net_electrode_hertz_h12": "dirichlet_exact",
+        "ion_net_bulk_hertz_h12": "sphere_segment",
+        "ion_net_band_rule_hertz_h12": "L0",
+        "ion_net_band_frac_hertz_h12": 0.2,
+        "ion_net_basis_check_hertz_h12": "ok",
+        "ion_sigma0_mScm": 3.0,
+        "ion_sigma0_T_C": 25.0,
+        "phi_basis": "mass_conserving",
+        "L_basis": "L_mc",
+        "ion_net_generation": "invalid",
+        "full_model_limit_hertz": false,
+        "full_model_limit_physics": true
+      },
+      "certificate_numeric_unchanged": true,
+      "power_source": 0.797464
+    },
+    "mutations": {
+      "network_conductivity_dual.json": [
+        {
+          "path": "hertzian.constriction_power_share_ion_hertz",
+          "before": null,
+          "after": 0.797464
+        },
+        {
+          "path": "hertzian.constriction_power_share_ion_hertz_status",
+          "before": "not_computed (FULL output withheld — model limit q > 1.5)",
+          "after": "computed"
+        },
+        {
+          "path": "hertzian.ionic_status",
+          "before": "model_limit",
+          "after": "computed"
+        },
+        {
+          "path": "hertzian.ionic_status_reason",
+          "before": "FULL 모형 한계 — 수치 인증 통과 (증서 · 보존 · 잔차 ≤ 1e-6) · σ_ion 의 q = σ_eff/σ_bulk = 1.62317 > 1.5 (사전 고정 출력 상한) → FULL 값 미제공 (σ · 차원 σ · FULL 유도값 없음 · 진단 q = 증서 q_withheld) · 풀이 실패 아님 (L214-01 · 02)",
+          "after": null
+        },
+        {
+          "path": "hertzian.sigma_full",
+          "before": null,
+          "after": 1.62317474
+        },
+        {
+          "path": "hertzian.sigma_full_mScm",
+          "before": null,
+          "after": 4.869524
+        },
+        {
+          "path": "hertzian.sigma_full_reason",
+          "before": "full_over_conduction",
+          "after": null
+        },
+        {
+          "path": "hertzian.sigma_full_status",
+          "before": "not_computed",
+          "after": "computed"
+        },
+        {
+          "path": "hertzian.solve_certificate_full.reason",
+          "before": "sigma_ratio > 1.5",
+          "after": null
+        },
+        {
+          "path": "hertzian.solve_certificate_full.status",
+          "before": "over_conduction_guard",
+          "after": "computed"
+        }
+      ],
+      "network_conductivity_hertzian.json": [
+        {
+          "path": "constriction_power_share_ion_hertz",
+          "before": null,
+          "after": 0.797464
+        },
+        {
+          "path": "constriction_power_share_ion_hertz_status",
+          "before": "not_computed (FULL output withheld — model limit q > 1.5)",
+          "after": "computed"
+        },
+        {
+          "path": "ionic_status",
+          "before": "model_limit",
+          "after": "computed"
+        },
+        {
+          "path": "ionic_status_reason",
+          "before": "FULL 모형 한계 — 수치 인증 통과 (증서 · 보존 · 잔차 ≤ 1e-6) · σ_ion 의 q = σ_eff/σ_bulk = 1.62317 > 1.5 (사전 고정 출력 상한) → FULL 값 미제공 (σ · 차원 σ · FULL 유도값 없음 · 진단 q = 증서 q_withheld) · 풀이 실패 아님 (L214-01 · 02)",
+          "after": null
+        },
+        {
+          "path": "sigma_full",
+          "before": null,
+          "after": 1.62317474
+        },
+        {
+          "path": "sigma_full_mScm",
+          "before": null,
+          "after": 4.869524
+        },
+        {
+          "path": "sigma_full_reason",
+          "before": "full_over_conduction",
+          "after": null
+        },
+        {
+          "path": "sigma_full_status",
+          "before": "not_computed",
+          "after": "computed"
+        },
+        {
+          "path": "solve_certificate_full.reason",
+          "before": "sigma_ratio > 1.5",
+          "after": null
+        },
+        {
+          "path": "solve_certificate_full.status",
+          "before": "over_conduction_guard",
+          "after": "computed"
+        }
+      ],
+      "network_conductivity.json": [
+        {
+          "path": "constriction_power_share_ion_hertz",
+          "before": null,
+          "after": 0.797464
+        },
+        {
+          "path": "constriction_power_share_ion_hertz_status",
+          "before": "not_computed (FULL output withheld — model limit q > 1.5)",
+          "after": "computed"
+        },
+        {
+          "path": "ionic_status",
+          "before": "model_limit",
+          "after": "computed"
+        },
+        {
+          "path": "ionic_status_reason",
+          "before": "FULL 모형 한계 — 수치 인증 통과 (증서 · 보존 · 잔차 ≤ 1e-6) · σ_ion 의 q = σ_eff/σ_bulk = 1.62317 > 1.5 (사전 고정 출력 상한) → FULL 값 미제공 (σ · 차원 σ · FULL 유도값 없음 · 진단 q = 증서 q_withheld) · 풀이 실패 아님 (L214-01 · 02)",
+          "after": null
+        },
+        {
+          "path": "sigma_full",
+          "before": null,
+          "after": 1.62317474
+        },
+        {
+          "path": "sigma_full_mScm",
+          "before": null,
+          "after": 4.869524
+        },
+        {
+          "path": "sigma_full_reason",
+          "before": "full_over_conduction",
+          "after": null
+        },
+        {
+          "path": "sigma_full_status",
+          "before": "not_computed",
+          "after": "computed"
+        },
+        {
+          "path": "solve_certificate_full.reason",
+          "before": "sigma_ratio > 1.5",
+          "after": null
+        },
+        {
+          "path": "solve_certificate_full.status",
+          "before": "over_conduction_guard",
+          "after": "computed"
+        }
+      ],
+      "full_metrics.json": [
+        {
+          "path": "constriction_power_share_ion_hertz",
+          "before": null,
+          "after": 0.797464
+        },
+        {
+          "path": "constriction_power_share_ion_hertz_status",
+          "before": "not_computed (FULL output withheld — model limit q > 1.5)",
+          "after": "computed"
+        },
+        {
+          "path": "sigma_full",
+          "before": null,
+          "after": 1.62317474
+        },
+        {
+          "path": "sigma_full_mScm",
+          "before": null,
+          "after": 4.869524
+        },
+        {
+          "path": "sigma_full_reason",
+          "before": "full_over_conduction",
+          "after": null
+        },
+        {
+          "path": "sigma_full_status",
+          "before": "not_computed",
+          "after": "computed"
+        }
+      ]
+    },
+    "batch_projection_changes": [
+      {
+        "path": "percolation_pct",
+        "before": "100.0",
+        "after": 100.0
+      },
+      {
+        "path": "phi_se_mass_conserving",
+        "before": "8.975979010256552",
+        "after": 8.975979010256552
+      },
+      {
+        "path": "sigma_full",
+        "before": null,
+        "after": 1.62317474
+      },
+      {
+        "path": "sigma_full_status",
+        "before": "not_computed",
+        "after": "computed"
+      },
+      {
+        "path": "thickness_mass_conserving_um",
+        "before": "20.0",
+        "after": 20.0
+      },
+      {
+        "path": "thickness_um",
+        "before": "20.0",
+        "after": 20.0
+      }
+    ]
+  }
+}
