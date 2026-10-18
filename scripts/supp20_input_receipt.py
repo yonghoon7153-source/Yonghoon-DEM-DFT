@@ -106,23 +106,38 @@ def _sha_after(text, anchor):
 
 
 _MD_HEADING = re.compile(r'^(#{1,6})[ \t]+(\S.*?)[ \t]*$')
-_MD_FENCE = re.compile(r'^[ \t]{0,3}(```|~~~)')
+#: ★ 10-18 L214R-R03 — 울타리 줄 = 들여쓰기 0–3 · 같은 문자 (` 또는 ~) 3 개 이상 + 뒤 글 (CommonMark §4.5 · 백틱 울타리의 뒤 글에는 백틱이 없다).
+_MD_FENCE = re.compile(r'^[ \t]{0,3}(`{3,}|~{3,})(.*)$')
+
+
+def _md_fence(ln):
+    """줄 → (문자, 길이, 뒤 글) | None (울타리 줄 아님)."""
+    m_ = _MD_FENCE.match(ln)
+    if not m_ or (m_.group(1)[0] == '`' and '`' in m_.group(2)):
+        return None
+    return m_.group(1)[0], len(m_.group(1)), m_.group(2)
 
 
 def _md_section(text, num):
     """등록 문서의 '## <num>.' 절 (제목 줄 포함 · 다음 같은 수준 이하 (#  · ##) 제목 앞까지) → (글, 사유).  ★ 10-16 L214R-04.
-    코드 울타리 (``` · ~~~) 안의 '#' 줄은 제목이 아니다 · 그 제목이 없거나 둘 이상이면 (None, 사유) — 활성 절을 정할 수 없다 (fail-closed)."""
+    코드 울타리 (``` · ~~~) 안의 '#' 줄은 제목이 아니다 · 그 제목이 없거나 둘 이상이면 (None, 사유) — 활성 절을 정할 수 없다 (fail-closed).
+    ★ 10-18 L214R-R03 (Codex 재확인 판정 §3 · 표기 L214RR-03 · 1저자 10-18 Q3 = 지원) — 여는 울타리의 문자 · 길이를 보존한다: 닫는 줄 = 같은 문자 · 길이 이상 ·
+    뒤에 공백만 (짧은 줄 · 다른 문자 · 정보 문자열 붙은 줄 = 코드 안 글) · 닫히지 않은 울타리 = 문서 끝까지 코드 (그 뒤 제목은 활성 절이 아니다).  옛 판은
+    네 백틱 블록 속 세 백틱 예시를 닫는 줄로 읽어 그 예시의 '## 3.' 을 활성 §3 로 받았다."""
     lines = text.split('\n')
     heads, fence = [], None
     for i, ln in enumerate(lines):
-        f_ = _MD_FENCE.match(ln)
-        if f_:
-            fence = None if fence == f_.group(1) else (fence or f_.group(1))
+        f_ = _md_fence(ln)
+        if fence is not None:
+            if f_ and f_[0] == fence[0] and f_[1] >= fence[1] and not f_[2].strip():
+                fence = None
             continue
-        if fence is None:
-            m_ = _MD_HEADING.match(ln)
-            if m_:
-                heads.append((i, len(m_.group(1)), m_.group(2)))
+        if f_:
+            fence = f_[:2]
+            continue
+        m_ = _MD_HEADING.match(ln)
+        if m_:
+            heads.append((i, len(m_.group(1)), m_.group(2)))
     hit = [h for h in heads if h[1] == 2 and re.match(rf'{re.escape(str(num))}\.(\s|$)', h[2])]
     if len(hit) != 1:
         return None, f'§{num} 제목 (## {num}.) ' + ('없음' if not hit else f'둘 이상 (줄 {[h[0] + 1 for h in hit]})')
@@ -1190,6 +1205,40 @@ def _selftest() -> int:
         rfe = receipt(reg_doc=str(q12))
         chk('S12f L214R-04 지킴 — §3 안 code_fp 줄 앞 울타리 (```) 에 "## 4." · "# 주석" 줄 → 제목으로 보지 않음 · 읽은 등록 §3 = 실물 값 · R0 통과',
             lfp >= 0 and rfe['registration']['values'].get('code_fp') == R_reg and 'R0' not in bad_ids(rfe), (sorted(bad_ids(rfe)), cdet_raw(rfe, 'R0')))
+        #  ★ 10-18 L214R-R03 (Codex 재확인 판정 §3 · 표기 L214RR-03 · 1저자 10-18 Q3 = 지원) — 울타리 문자 · 길이 (CommonMark §4.5 의 부분 규칙): 닫는 줄 = 같은
+        #    문자 · 여는 길이 이상 · 뒤에 공백만 · 닫히지 않은 울타리 = 문서 끝까지 코드.  반례 = Codex probes/receipt_fences.py 그대로 (실제 '## 3.' → '## 30.' ·
+        #    대기 선언 지움 · §3 은 울타리 속 예시에만 · 예시의 code_fp = 이 체크아웃 값) — 실행하지 않고 같은 꼴을 옮겼다.
+        no_act = re.sub(r'^## 3\.', '## 30.', re.sub(r'`code_fp_pending [0-9a-f]{64}`', '(대기 선언 지움 — selftest 사본)', rtxt), flags=re.M)
+        fx = {'four_backtick': f'\n````markdown\n```python\n## 3. 예시만\n`code_fp {fp_now}`\n```\n````\n',
+              'four_tilde': f'\n~~~~markdown\n~~~text\n## 3. 예시만\n`code_fp {fp_now}`\n~~~\n~~~~\n',
+              'info_inner': f'\n```markdown\n```python\n## 3. 예시만\n`code_fp {fp_now}`\n```\n',
+              'three_plain': f'\n```markdown\n## 3. 예시만\n`code_fp {fp_now}`\n```\n',
+              'unclosed': f'\n````markdown\n## 3. 예시만\n`code_fp {fp_now}`\n'}
+        rfx = {}
+        for nm_, extra_ in fx.items():
+            q_ = td / f'reg_fence_r03_{nm_}.md'
+            q_.write_text(no_act + extra_, encoding='utf-8')
+            rfx[nm_] = receipt(reg_doc=str(q_))
+        chk('S12g ★ L214R-R03 활성 §3 없음 + 울타리 속 예시 §3 (이 체크아웃 code_fp) — 네 백틱 안 세 백틱 (Codex 반례) · 네 물결표 안 세 물결표 · 정보 문자열 붙은 '
+            '안쪽 줄 (```python 은 닫지 않는다) · 세 백틱 (대조) · 닫히지 않은 네 백틱 → 다섯 다 rc 1 · R0 (§3 자리 없음) · 읽은 code_fp None '
+            '(고치기 전: 앞 셋 = rc 0 · 실패 칸 [] — 여는 울타리 길이 · 정보 문자열을 잃었다)',
+            all(r_['rc'] == 1 and 'R0' in bad_ids(r_) and r0_says(r_, '§3') and r_['registration']['values'].get('code_fp') is None for r_ in rfx.values()),
+            {k: (v['rc'], sorted(bad_ids(v)), v['registration']['values'].get('code_fp')) for k, v in rfx.items()})
+        keep_fx = {'long_close': '\n```markdown\n## 3. 예시만 (닫힌 울타리 속)\n`````\n',
+                   'space_close': '\n~~~~\n## 3. 예시만 (닫힌 울타리 속)\n~~~~   \n',
+                   'other_char': '\n```\n~~~\n## 3. 예시만 (다른 문자 줄은 닫지 않는다)\n~~~\n```\n'}
+        rkf, s3k = {}, {}
+        for nm_, extra_ in keep_fx.items():
+            _i3, _i4 = s3_span(rtxt)
+            t_ = (rtxt[:_i3] + extra_ + rtxt[_i3:]) if _i3 is not None else (rtxt + extra_)
+            q_ = td / f'reg_fence_r03_keep_{nm_}.md'
+            q_.write_text(t_, encoding='utf-8')
+            rkf[nm_] = receipt(reg_doc=str(q_))
+            s3k[nm_] = _md_section(t_, 3)[1]
+        chk('S12h L214R-R03 지킴 — 실제 §3 앞에 닫힌 울타리 (긴 닫는 줄 ``` … ````` · 공백 붙은 닫는 줄 ~~~~ · 다른 문자 줄은 닫지 않음) 속 예시 §3 → 활성 §3 = 실물 하나 · '
+            '읽은 등록 §3 = 실물 값 · R0 통과',
+            all(v['registration']['values'].get('code_fp') == R_reg and 'R0' not in bad_ids(v) and not s3k[k] for k, v in rkf.items()),
+            {k: (v['rc'], sorted(bad_ids(v)), v['registration']['values'].get('code_fp'), s3k[k]) for k, v in rkf.items()})
     print(f'\nsupp20_input_receipt selftest: {ok}/{ok + len(fail)} PASS' + (f'   FAILED: {fail}' if fail else ''))
     return 1 if fail else 0
 

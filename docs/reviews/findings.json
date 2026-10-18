@@ -11302,14 +11302,15 @@
     {
       "id": "WEB-09",
       "severity": "P2",
-      "status": "open",
+      "status": "claimed_fixed",
       "owner": "claude",
       "found_by": "Codex 10-15 LHS214 재검증 탐침 출력 (display_source · 실 생산자 케이스 · 판정문의 결함 항목 아님) · 메인 세션 10-16 판독",
       "opened_in": "docs/reviews/lhs214r_fix_plan_20261016.md",
       "title": "최종 케이스 화면 (single.html) 의 받아들인 (computed) 모드 칸이 망 재분석 뒤에도 contact 단계의 옛 CSV 값을 보인다 — 실 생산자 ml_physics 의 Hertz 칸 0.6 (CSV) ↔ 지금 full_metrics 2.3861 · ml_el 0.6 ↔ 1.2016 · 유도비 (R_brug · Plastic amplification) 도 옛 값 (L214R-03 가림 범위 밖)",
-      "note": "수정 계획 §4 Q1 (1저자 10-16 권고대로 — 화면만).  자리: webapp/app.py 최종 split 병합 뒤.  network 게시는 contact 단계 CSV 를 갱신하지 않는다 (판정문 §4) ⇒ 망 재분석 케이스에서만 생긴다.  ✅ 10-16 고침 dcd06869d (시험 먼저 7a54d0199 · webapp/test_web09_accepted_refresh.py 7/16 → 16/16): 받아들인 모드 칸 = 지금 full_metrics 값 · 새 표와 같은 도우미 (_ion_sigma_row · _ion_cf_full_row · _ion_brug_over_sigma_row · _ion_r_brug_row · _ion_plastic_amp_row) · Δ 는 두 칸이 모두 숫자일 때만 · 새 표 (CSV 없는 케이스) 는 그 단계를 꺼도 같은 렌더 · CSV · 분석기 무변경.  Codex 탐침 다섯 무변경 재실행 (리포 밖 · 고치기 전 6cb256956 ↔ 고친 뒤 dcd06869d · 기준 0c557e72a · 요약 = docs/session_20260923_progress.md 10-16 5) = ml_physics Hertz 칸 0.6 → 2.3861 · ml_el 0.6 → 1.2016 · Plastic amplification 1.50× → 1.73× (= 2.0783 / 1.2016) · 정상 네 열 CSV 의 Physics 칸 0.6 → 0.9 (지금 값) · Codex 짧은 재확인 대기.  ⛔ 10-17 Codex 재확인 §2 · §4 = 부분 (재개방 · claimed_fixed_sha dcd06869d = 이력): 지금 채택 값 · 유도값 갱신은 닫힘 (현재 이온 σ 행 0.2 / 0.8 / +300.0% · 원 68 사례 재현) · 두 유도값이 모두 현재 값 없음이면 옛 Δ 가 남는다 = L214R-R02 (P3) — 이 항목은 L214R-R02 가 닫힐 때 같이 닫는다.  수치 인계 · 배포 우회 아님 (판정문 §2).",
-      "claimed_fixed_sha": "dcd06869d",
+      "note": "수정 계획 §4 Q1 (1저자 10-16 권고대로 — 화면만).  자리: webapp/app.py 최종 split 병합 뒤.  network 게시는 contact 단계 CSV 를 갱신하지 않는다 (판정문 §4) ⇒ 망 재분석 케이스에서만 생긴다.  ✅ 10-16 고침 dcd06869d (시험 먼저 7a54d0199 · webapp/test_web09_accepted_refresh.py 7/16 → 16/16): 받아들인 모드 칸 = 지금 full_metrics 값 · 새 표와 같은 도우미 (_ion_sigma_row · _ion_cf_full_row · _ion_brug_over_sigma_row · _ion_r_brug_row · _ion_plastic_amp_row) · Δ 는 두 칸이 모두 숫자일 때만 · 새 표 (CSV 없는 케이스) 는 그 단계를 꺼도 같은 렌더 · CSV · 분석기 무변경.  Codex 탐침 다섯 무변경 재실행 (리포 밖 · 고치기 전 6cb256956 ↔ 고친 뒤 dcd06869d · 기준 0c557e72a · 요약 = docs/session_20260923_progress.md 10-16 5) = ml_physics Hertz 칸 0.6 → 2.3861 · ml_el 0.6 → 1.2016 · Plastic amplification 1.50× → 1.73× (= 2.0783 / 1.2016) · 정상 네 열 CSV 의 Physics 칸 0.6 → 0.9 (지금 값) · Codex 짧은 재확인 대기.  ⛔ 10-17 Codex 재확인 §2 · §4 = 부분 (재개방 · claimed_fixed_sha dcd06869d = 이력): 지금 채택 값 · 유도값 갱신은 닫힘 (현재 이온 σ 행 0.2 / 0.8 / +300.0% · 원 68 사례 재현) · 두 유도값이 모두 현재 값 없음이면 옛 Δ 가 남는다 = L214R-R02 (P3) — 이 항목은 L214R-R02 가 닫힐 때 같이 닫는다.  수치 인계 · 배포 우회 아님 (판정문 §2).  ✅ 10-18 잔여 (L214R-R02) 고침 43223d823 — 두 유도값 모두 현재 값 없음의 Δ = — (같은 커밋 · 원장 L214R-R02) · claimed_fixed_sha 를 43223d823 로 (dcd06869d = 이력) · Codex 짧은 재확인 전.",
+      "claimed_fixed_sha": "43223d823",
       "evidence_tests": [
+        "webapp/test_web09_accepted_refresh.py (⑧ 추가 · 17/18 → 18/18)",
         "webapp/test_web09_accepted_refresh.py (7/16 → 16/16 · 합성 정상 · Physics 모형 한계 · 옛 세대 · 실 생산자 ml_el · ml_physics · ml_hertz · valid_zero · 새 표 불변)",
         "docs/reviews/codex_lhs214r_fix_recheck_evidence_20261017/evidence/display_fresh_source.json (일곱 실패 = 양쪽 옛 유도값 Δ) · display_fresh_source_missing_both_derived_fourcol.html"
       ]
@@ -11765,18 +11766,20 @@
     {
       "id": "L214R-R02",
       "severity": "P3",
-      "status": "open",
+      "status": "claimed_fixed",
       "owner": "claude",
       "found_by": "codex 10-17 LHS214 수정 재확인 (화면 lane · 실제 loader + Flask GET 21 사례 × 두 트리)",
       "opened_in": "docs/reviews/codex_review_lhs214r_fix_recheck_20261017.md",
       "title": "두 유도값이 모두 현재 값 없음이면 최종 케이스 화면에 옛 Δ 가 남는다 — 채택된 옛 형식 이온 H 0.2 / P 0.8 · 현재 R_brug_over_full · Physics 대응 값 · sigma_ratio 없음 · 옛 네 열 CSV (31 / 37 · 41 / 43) → Bruggeman overestimation · σ_contact-free/σ_full 31.0× / 37.0× +19.4% · σ_Bruggeman/σ_ionic 41.0× / 43.0× +4.9% (규약상 Δ = —) · 세 레이아웃 일곱 행",
-      "note": "원장 ID L214R-R02 = Codex 표기 L214RR-02 (원장 ID 형식 = 앞 칸 다섯 글자까지).  판정문 §2 · 자리 (코드 핀 60ba39e22): webapp/app.py:806–:812 (새 참조 행이 없으면 continue · 양쪽 모두 갱신 안 되면 fresh = [] 로 Δ 를 지우지 않음) · :832–:833 (뒤 마스크는 표시 칸이 숫자면 옛 Δ 보존).  규약 출처 = webapp/test_web09_accepted_refresh.py:14–:16 · :250–:256 (두 값 모두 현재 값일 때만 Δ · 보존한 옛 값이 끼면 —) — 한쪽만 옛 값인 시험은 있으나 양쪽 모두 옛 값인 시험이 없다.  기준 · 수정 트리 모두 같은 잔여 = 수정이 만든 회귀가 아니라 빠뜨린 경계 (display_summary.json fresh_old_and_new_same_derived_rows).  수치 인계 · 배포 우회 · 미채택 σ 복구 아님 = 수치 GO 의 독립 차단 사유 아님 (판정문 §2).  최소 해결: 인식된 모든 행의 Δ 를 freshness 로 결정 (ref = None · fresh = [] 포함) · 양쪽 None/빈칸 대조 시험 추가 · 승인된 옛 값 보존 정책은 유지.  WEB-09 (재개방) 의 잔여.  ⬜ 수정 계획 = 1저자 비준 대기.  ★ 우리 트리 재현 10-18 (Codex 탐침 무변경) = 판정값 차이 0 (docs/reviews/codex_lhs214r_fix_recheck_evidence_20261017/_repro_ours_20261018/README.md · compare_probe_outputs.json).  ⬜ 수정 계획 docs/reviews/lhs214rr_fix_plan_20261018.md (1저자 비준 대기).",
+      "note": "원장 ID L214R-R02 = Codex 표기 L214RR-02 (원장 ID 형식 = 앞 칸 다섯 글자까지).  판정문 §2 · 자리 (코드 핀 60ba39e22): webapp/app.py:806–:812 (새 참조 행이 없으면 continue · 양쪽 모두 갱신 안 되면 fresh = [] 로 Δ 를 지우지 않음) · :832–:833 (뒤 마스크는 표시 칸이 숫자면 옛 Δ 보존).  규약 출처 = webapp/test_web09_accepted_refresh.py:14–:16 · :250–:256 (두 값 모두 현재 값일 때만 Δ · 보존한 옛 값이 끼면 —) — 한쪽만 옛 값인 시험은 있으나 양쪽 모두 옛 값인 시험이 없다.  기준 · 수정 트리 모두 같은 잔여 = 수정이 만든 회귀가 아니라 빠뜨린 경계 (display_summary.json fresh_old_and_new_same_derived_rows).  수치 인계 · 배포 우회 · 미채택 σ 복구 아님 = 수치 GO 의 독립 차단 사유 아님 (판정문 §2).  최소 해결: 인식된 모든 행의 Δ 를 freshness 로 결정 (ref = None · fresh = [] 포함) · 양쪽 None/빈칸 대조 시험 추가 · 승인된 옛 값 보존 정책은 유지.  WEB-09 (재개방) 의 잔여.  ★ 우리 트리 재현 10-18 (Codex 탐침 무변경) = 판정값 차이 0 (docs/reviews/codex_lhs214r_fix_recheck_evidence_20261017/_repro_ours_20261018/README.md · compare_probe_outputs.json).  ⬜ 수정 계획 docs/reviews/lhs214rr_fix_plan_20261018.md (1저자 비준 대기).  ✅ 10-18 고침 43223d823 (1저자 10-18 \"비준\" Q2 · 시험 먼저 같은 커밋): webapp/app.py _refresh_accepted_ion_modes — 인식된 이온 행의 Δ = 두 칸 다 현재 값이면 새 표 Δ · 그 밖 (한 칸만 · 둘 다 아님 · 새 표 행 없음 ref None) '—' · 칸 값 보존 그대로.  시험 webapp/test_web09_accepted_refresh.py ⑧ (Codex display_fresh missing_both_derived 꼴 · 세 레이아웃 일곱 행) 17/18 → 18/18 · 웹앱 l214r03 14/14 · 사슬 34/34 · provenance 284/284.  봉인 app.py 바뀜 → 대기 지문 755325e1f24488bb… (등록 §3 e8b2496b… 그대로).  Codex 짧은 재확인 전.",
       "evidence_tests": [
+        "webapp/test_web09_accepted_refresh.py ⑧ (17/18 → 18/18)",
         "docs/reviews/codex_lhs214r_fix_recheck_evidence_20261017/evidence/display_fresh_source.json",
         "docs/reviews/codex_lhs214r_fix_recheck_evidence_20261017/evidence/display_fresh_source_missing_both_derived_fourcol.html",
         "docs/reviews/codex_lhs214r_fix_recheck_evidence_20261017/probes/display_fresh.py (읽기만)",
         "docs/reviews/codex_lhs214r_fix_recheck_evidence_20261017/_repro_ours_20261018/compare_probe_outputs.json"
-      ]
+      ],
+      "claimed_fixed_sha": "43223d823"
     },
     {
       "id": "L214R-R03",
