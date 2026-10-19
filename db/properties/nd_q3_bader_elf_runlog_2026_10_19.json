@@ -1,0 +1,28 @@
+{
+ "schema": "runlog/v1",
+ "record_kind": "runlog",
+ "date": "2026-10-19",
+ "track": "CEI/Nd — 1저자 = 실험 쪽 · 사용자 (계산 담당) 결정 · 1저자 통지는 사용자를 통해",
+ "decision": "D-2026-10-19-nd-q23-ppswap-structure (active · 사용자 10-19)",
+ "card": "db/properties/ndo_lpscl16_site_stability_estimand_2026_10_14.json §2 Q2 · Q3 · G5 · G6",
+ "results_seen": false,
+ "구조": "6 월 최종 Nd₂O₃@LPSCl1.6 (Nd@Li · Li48Nd2P10O3S41Cl16 · 120 원자) 의 9 월 새 PP (Nd.pbe-spdn-kjpaw_psl.1.0.0 · 4f-in-core) vc-relax 판 (nd_ppswap_vcrelax_result_2026_09_18.json · 부피 −0.15 % · 모양 유지) — gabia /data/work/runs/nd_ppswap_2026_09_16",
+ "gabia_점검_2026_10_19": {
+  "출처": "사용자 붙여넣기 10-19 (gabia 읽기 블록)",
+  "런_폴더": "kprobe_k331/ (4.4 G · kprobe.in · .out · tmp_kprobe/kprobe_k331.save) · lc_nd_doped_DFTrela/ (16 G · 01_vcrelax · 02_scf · 04_nscf_dos …) · lobster_frozen4f/ (18 G)",
+  "k331_SCF_설정": "prefix kprobe_k331 · ecut 70/560 · smearing mv · kjpaw_psl 세트 (Li sl · P n · S nl · Cl nl · O n 0.1 · Nd spdn) = 호스트 AE Bader 표 (bader_ae_modelc_LPSCl16.csv) 와 같은 PP · ecut",
+  "bader": "/data/apps/bader/bader 있음",
+  "NC_Nd_PP": "없음 — gabia 의 Nd PP 는 PAW 둘뿐 (Nd.pbe-spdn-kjpaw_psl.1.0.0 4f-in-core · Nd.paw.z_14.atompaw.wentzcovitch 4f-in-valence) ⇒ ELF NC 규약 (run_lpsocl_elf_gabia.sh · ONCV 80/320) 은 4f-in-core NC Nd (예: PseudoDojo nc-sr-04-3plus) 를 먼저 구해야 한다",
+  "GPU": "37,250 / 49,140 MiB · 100 % (tmux li3nd_r2 · el_mc2x_1001 등) — 새 GPU pw.x 는 지금 못 띄운다"
+ },
+ "Bader_계획_결과_전": {
+  "방법": "기존 AE Bader 규약 그대로 — k331 SCF save 를 읽기만 · pp.x plot_num=17 (AE 가전자) · bader (-p all_atom 안 씀 · 전하 같음) · net = ZVAL − N_bader · ZVAL 은 UPF z_valence 에서 (표와 다르면 멈춤 · Nd 11)",
+  "다른_점": "occupations smearing mv · k 3 3 1 (호스트 표는 fixed · k444) — 절연체라 Bader 영향 작다고 본다 · 기록에 남긴다",
+  "자리_분류_결과_전": "거리 하나 — R_PS 2.4 · R_PO 1.9 · R_NdX 3.3 · R_NdO 2.9 Å (6 월 실측 Nd–S 2.62–3.18 · Nd–O 2.48 · 2.61). 6 월 구조로 미리 본 개수 (전하 아님): S_PS4 31 · S_PS4_nearNd 6 · S_free 2 · S_free_nearNd 2 · O_P 1 · O_P_nearNd 2 · P_S4 8 · P_withO 2 · Cl 14 · Cl_nearNd 2 · Li 48 · Nd 2 · d_Nd 3.0–3.6 Å 사이 원자 0 (문턱이 애매하지 않다)",
+  "비교": "같은 계산 안 — Nd 이웃 S 대 Nd 없는 S (1저자 1 · 2 번: 전자가 음이온 쪽 · 밀도) · 원소 평균 — 호스트 modelc (같은 규약 · 원소 평균뿐) · 자리별 호스트 비교는 없다",
+  "도구": "tools/electronic/bader_summary_zval.py (확장 · selftest 17/17 · 깨기 9/9 빨강 + 셀 밖 좌표 시험 보탬) · tools/electronic/run_nd_bader_from_scf_gabia.sh (계보 = vc-relax 'Begin final coordinates' 짝 · 시험 트리 8 가지 기대값)",
+  "CPU": "pp.x · bader 는 CPU 후처리 — SCF · relax · nscf 실행이 아니다 (결정 enforcement ③) · 8 랭크 · OMP 1"
+ },
+ "ELF_계획": "NC 규약 — 새 SCF (GPU) 가 필요하다: ① 4f-in-core NC Nd 확보 (PseudoDojo 3plus · gabia 에 없음) ② GPU 가 비면 같은 vc-relax 기하로 ONCV 80/320 SCF ③ 호스트 modelc ELF (modelc_elf_bonds.csv · 같은 NC 규약) 와 결합 ELF 비교 — 사용자 결정 대기 (Nd NC PP 선택은 새 PP 라 결합 묘사가 PAW 와 다를 수 있다)",
+ "Q2_계획": "분해상 기저 (UMA/MP hull · G5) → 같은 설정 (kjpaw 70/560) 의 상 에너지 (GPU) → dft_decomp_check.py — Bader 뒤에 정한다"
+}
