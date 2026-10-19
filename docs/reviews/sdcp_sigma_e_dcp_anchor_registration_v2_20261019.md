@@ -151,3 +151,21 @@ python3 ~/dem-anchor1019/scripts/sdcp_bed_meta.py ~/sdcp/kit_SBE ~/sdcp/kit_DBE
   빠지는 방향 · 관찰 · R2 에서 확인) · 점 합 ≈ 6,790 만 → 필요 VRAM ≈ 11 GB + 격자 (158 B/점 어림 · 추정) ⇒ 다시 발사 = 그만큼 GPU 가 빌 때 (1저자).
   ⚠ 정정 (`SELF-123`): 위 R1 줄의 "`run_*` 제외" 를 옮긴 첫 rsync `--exclude 'run_*'` 가 런 폴더뿐 아니라 `run_mpm.sh` · `run_a1_anchors.sh` 파일까지 뺐다 (확인 단계에서 멈춤 ·
   바뀐 것 없음) → `--exclude 'run_*/'` (디렉터리만) 로 다시 채움 · `run_mpm.sh` 두 줄 diff (88 · 90 줄 = 계획한 두 곳) 확인 뒤 발사.
+- **10-19 저녁 R1 시도 2–4 = 계산 전 멈춤 · 시도 5 = 완주 (kgy · 1저자 화면)**: 시도 2 (18:42:42) = 같은 OOM · 시도 3 (18:54:26) = `(uma)` 셸에서 발사해 run_mpm.sh 가 다른 venv
+  (Python 3.13) 를 켬 → Taichi import `GLIBC_2.32 not found` · 시도 4 (18:55:18 · dem-venv) = OOM (다른 작업 14.7 GB) · cascade 드라이버 = 1저자가 끝냄 · 시도 5 = 19:12:17
+  (런 폴더 `kit_DBE_sdcp1um/run_VGCF3_PTFE0.5_SDCP0.5_20261019_191217_2231061` · 같은 GPU 의 다른 작업 12.4 GB 와 같이 · `--gpu-mem` 자동 10.3 GB) → 압밀 FINAL wallP 0.0069 GPa ·
+  porosity(settled) **7.37 %** · porosity@target 7.37 % · 두께 **72.53 µm** · 점 67,919,722 · n_grid 263 · scaffold 1271 AM · E_SE 1.53 · ν 0.49 · readout wallP · xy periodic →
+  payload → `mpm_done.marker` · `latest_run` = 이 폴더 · 자동 발사 대기 스크립트 없음 (1저자 확인).  porosity · 두께 = 옛 DBE 08-27 침대와 같다 (`docs/reviews/table_s3_data_20260827.md` §1 ·
+  식 1 − 고체/(면적·두께) · 첨가제 부피 = 처방 고정 (점 수와 무관) · hold 정지 자리 같음 · MPM 관례 진단값 = 전극 porosity 아님).
+- **10-19 저녁 R2 (읽기만 · 1저자 화면)**: `sdcp_bed_meta.py` — 압밀 명령 차이 = `--sdcp-agg-d 1.0 --add-e-override VGCF=10` 둘뿐 · seed 3 · 시딩 AM 45.68 % · SE 40.01 % 같음 ·
+  SDCP agg_d 0 → 1.0 · 덩어리당 24 · 채움 0.64 (가정) · 시딩 점 138,988 → 116,532 · E 표지 `ADD_E_SET_20260818_9.0GPa` → `ADD_E_SET_20260926+override:VGCF=10.0GPa` (값 같음 · 시도 1 줄) /
+  `phase.npy` · `fibre.npy` 상별 = SE 66,044,152 · VGCF 1,643,483 · PTFE 115,555 점 수 · 섬유 id 옛 침대와 같음 · SDCP 만 다름 ⇒ **"SDCP 크기만 바뀜"** (시딩 기준 — 압밀 뒤 위치는
+  다른 상도 같이 움직였을 수 있다 · 옛 ↔ 새 DBE 차이 = SDCP 크기 바꿈 (재압밀 포함) 의 효과).  새 킷 SDCP 실현 부착 몫 (`realized_anchor_frac`) 은 화면에서 잘림 — 16 팔 뒤 읽는다.
+- **10-19 저녁 최종 16 팔 발사 (등록 밖 — 이 줄 = 개정 · 결과 전 기록)**: 1저자 10-19 *"내일까지 제출이야"* → 권고 ② 발사 = 비교 단계 (`--stage dbe`) 를 따로 돌리지 않고 최종 16 팔을
+  바로 · DBE 먼저 (첫 팔 = 새 DBE arm 0 @ σ* = §3-C 와 같은 계산 · 같은 비교값) · 뜻 = 추가 보정 단계 (S1b · PTFE 표현 · Rint) 없이 최종 값으로 간다 (§3 머리 순서 *"비교 → 1저자 결정 → 16 팔"*
+  의 결정을 비교 값 전에 내림).  명령 = `env VOX=0.15 SDCP_SPHERE_D=0.30 PTFE_STAMP=centerline BRIDGE_UM=0.48 ARMS=8 LEAN=4 SIGMA_AM_S_OVERRIDE=0.0041 SIGMA_SDCP_OVERRIDE=256.6
+  SIGMA_VGCF_OVERRIDE=$S SIGMA_ION_SE=0.000745 SIGMA_ION_SDCP=0.000248 KITS="kit_DBE_sdcp1um kit_SBE" OUTDIR=~/sdcp/final16_1019 bash ~/dem-anchor1019b/scripts/sdcp_gain_vox015_8arm.sh`
+  (`$S` = `~/sdcp/anchor_v2_1019b/chain_summary.json` 의 `s2.sigma_star` = 0.347 · 사람이 옮겨 적지 않음 · 사슬 ENV_FIXED 와 같은 값 + ARMS 8 · LEAN 4 (σ_e + σ_ion + 필드) · 이온 두 값 = §3-D ·
+  작업트리 `298a73197` · PID 2290343 · 로그 `~/final16_1019.log`).  첫 팔 `p2_DBE_sdcp1um_sph_a0` 시작 확인 (입력 digest `5e92a35fe600485f` · 섬유 선분 스탬프 도체점 1,875,570 · 섬유 55,017 ·
+  AM 집전체 연결 100 % · SDCP 부피-보존 구 스탬프 Ø0.30 · PTFE centerline exact-zero DOF = S1 · C 와 같은 표지).  확인 칸 = §3-D (SBE 8 팔 평균 σ_ion 0.137 ± 1 %) · 보고 칸 = §3 보고 그대로.
+  시간 = DBE arm 0 약 1 시간 · 16 팔 대략 10–13 시간 (추정 — σ_e 만 SBE ≈ 15 분 · DBE ≈ 50 분 + 이온 · 필드).
