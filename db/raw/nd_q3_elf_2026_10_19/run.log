@@ -1,0 +1,54 @@
+[2026-10-19 16:12:08] ════ Nd ELF (NC 80/320) · HEAD 707528bc8 · MODE auto · DRY_RUN · OUT /data/work/runs/nd_q3_elf_2026_10_19 ════
+[2026-10-19 16:12:08] pseudo ✓ Li=Li_ONCV_PBE-1.2.upf(c91dd4ce) P=P_ONCV_PBE-1.2.upf(0688a67b) S=S_ONCV_PBE-1.2.upf(f9d02029) Cl=Cl_ONCV_PBE-1.2.upf(0f993535) O=O_ONCV_PBE-1.0.upf(2e7c0b1a) Nd=Nd3plus_f-in-core.dojo_psp8_conv.upf(465d92ca) 
+scf.in ✓ nat 120 (원자 줄 120) · 종 Li Nd P O S Cl · k 3 3 1 0 0 0 · 셀·좌표 = kprobe 그대로 · NC 80/320 · mv 0.01 · nosym
+[2026-10-19 16:12:08] ▶ 메모리 프로브 — CPU pw.x 1 랭크 · 검사용 (run 아님) · 'Estimated' 줄을 읽으면 바로 끝 (최대 300 s)
+[2026-10-19 16:12:12] ⛔ 프로브가 'Estimated … RAM' 을 안 찍었다 — probe/probe.out 끝:
+
+NOTE: invoking MPI_ABORT causes Open MPI to kill all MPI processes.
+You may or may not see output from other processes, depending on
+exactly when Open MPI kills them.
+--------------------------------------------------------------------------
+[2026-10-19 16:17:04] ════ Nd ELF (NC 80/320) · HEAD fdd6f378e · MODE auto · DRY_RUN · OUT /data/work/runs/nd_q3_elf_2026_10_19 ════
+[2026-10-19 16:17:04] pseudo ✓ Li=Li_ONCV_PBE-1.2.upf(c91dd4ce) P=P_ONCV_PBE-1.2.upf(0688a67b) S=S_ONCV_PBE-1.2.upf(f9d02029) Cl=Cl_ONCV_PBE-1.2.upf(0f993535) O=O_ONCV_PBE-1.0.upf(2e7c0b1a) Nd=Nd3plus_f-in-core.dojo_psp8_conv.upf(465d92ca) 
+scf.in ✓ nat 120 (원자 줄 120) · 종 Li Nd P O S Cl · k 3 3 1 0 0 0 · 셀·좌표 = kprobe 그대로 · NC 80/320 · mv 0.01 · nosym
+[2026-10-19 16:17:04] ▶ 메모리 프로브 — CPU pw.x 1 랭크 · 검사용 (run 아님) · 'Estimated' 줄을 읽으면 바로 끝 (최대 300 s)
+[2026-10-19 16:17:08] 프로브: QE 7.4.1 이 pseudo 여섯을 읽었다 (Nd 변환 UPF 포함)
+[2026-10-19 16:17:08] 프로브 ✓  Estimated static dynamical RAM per process > 9.89 GB
+[2026-10-19 16:17:08] GPU 총 49140 · 사용 37250 · 빔 11890 MiB · 추정 10127 → need 14189 MiB (×1.3 + 1024) · r2 pw.x: 3384461 · 다른 잡: 없음
+[2026-10-19 16:17:08] 결정: pause — r2 를 다음 BFGS 줄 직후 EXIT 로 세우고 · ELF 혼자 · 끝나면 r2 restart
+[2026-10-19 16:17:08] DRY_RUN — 여기서 끝 (GPU 계산 0 · r2 손대지 않음)
+[2026-10-19 16:17:08] ════ Nd ELF (NC 80/320) · HEAD fdd6f378e · MODE auto · OUT /data/work/runs/nd_q3_elf_2026_10_19 ════
+[2026-10-19 16:17:08] pseudo ✓ Li=Li_ONCV_PBE-1.2.upf(c91dd4ce) P=P_ONCV_PBE-1.2.upf(0688a67b) S=S_ONCV_PBE-1.2.upf(f9d02029) Cl=Cl_ONCV_PBE-1.2.upf(0f993535) O=O_ONCV_PBE-1.0.upf(2e7c0b1a) Nd=Nd3plus_f-in-core.dojo_psp8_conv.upf(465d92ca) 
+scf.in ✓ nat 120 (원자 줄 120) · 종 Li Nd P O S Cl · k 3 3 1 0 0 0 · 셀·좌표 = kprobe 그대로 · NC 80/320 · mv 0.01 · nosym
+[2026-10-19 16:17:08] 프로브 재사용 (같은 scf.in) —  Estimated static dynamical RAM per process > 9.89 GB
+[2026-10-19 16:17:08] GPU 총 49140 · 사용 37250 · 빔 11890 MiB · 추정 10127 → need 14189 MiB (×1.3 + 1024) · r2 pw.x: 3384461 · 다른 잡: 없음
+[2026-10-19 16:17:08] 결정: pause — r2 를 다음 BFGS 줄 직후 EXIT 로 세우고 · ELF 혼자 · 끝나면 r2 restart
+[2026-10-19 16:17:09] GPU 런타임 ✓ libmpi /data/apps/nvhpc/Linux_x86_64/24.11/comm_libs/12.6/hpcx/hpcx-2.20/ompi/lib/libmpi.so.40 → /data/apps/nvhpc/Linux_x86_64/24.11/comm_libs/12.6/hpcx/hpcx-2.20/ompi/bin/mpirun · OMP 1
+[2026-10-19 16:17:09] ▶ r2 정지 — pw.x 3384461 · in 00_control_relax.restart.in · out 00_control_relax.out · 다음 BFGS 줄 직후 EXIT (최대 14400 s)
+[2026-10-19 16:17:09] pw.x 3384461 · cwd /data/work/runs/sei_control/li3nd_mp-976264_p333_r2 · prefix li3nd_mp-976264_p333_r2 · bfgs /data/work/runs/sei_control/li3nd_mp-976264_p333_r2/./tmp/li3nd_mp-976264_p333_r2.bfgs · 출력 00_control_relax.out · 러너 안 얼림 (--no_runner)
+[2026-10-19 16:17:09] BFGS 줄 137 개에서 다음 줄을 기다린다 (최대 14400 s)
+[2026-10-19 17:01:14] BFGS 줄 138 — /data/work/runs/sei_control/li3nd_mp-976264_p333_r2/li3nd_mp-976264_p333_r2.EXIT 생성
+[2026-10-19 17:01:34] pw.x 끝 (20 s 뒤)
+[2026-10-19 17:01:34] .bfgs 79687d0b · 2026-10-19 17:01:06
+[2026-10-19 17:01:34] 상태 = stopped · BFGS 줄 138 · 마지막  Total force = 0.011978 Total SCF correction = 0.000034
+[2026-10-19 17:01:34] ✅ 세움 (러너 안 얼림 · --no_runner) · 재개 = 드라이버를 새로 띄운다 (stopped/exhausted + .bfgs → restart)
+[2026-10-19 17:01:34] r2 정지 확인:  ⏸ li3nd_mp-976264_p333_r2 사람이 세움(EXIT·max_seconds) → nstep 200 · restart (BFGS 이력 승계)
+[2026-10-19 17:02:05] GPU 빔 × 2 — ELF SCF 혼자 간다
+[2026-10-19 17:02:05] ▶ ELF SCF (GPU · pause)
+[2026-10-19 17:33:58] SCF ✓ ! total energy = -2396.77815454 Ry · 반복 16 iterations ·  PWSCF : 31m43.81s CPU 31m51.69s WALL
+[2026-10-19 17:33:58] r2 판정:  ⏸ li3nd_mp-976264_p333_r2 사람이 세움(EXIT·max_seconds) → nstep 200 · restart (BFGS 이력 승계)
+[2026-10-19 17:34:03] ✅ r2 재개 — tmux li3nd_r2_res_10191733 (restart_qe_relax.sh --run --nstep 200 · GPU 여유를 스스로 기다린다) · 로그 /data/work/runs/nd_q3_elf_2026_10_19/r2_resume.log
+[2026-10-19 17:34:03] ▶ pp.x plot_num=8 (ELF · CPU 8 랭크 · save 읽기만)
+[2026-10-19 17:36:13] pp.x ✓ nd_elf_nc.cube 53M
+[Nd_at_Li_newPP_NC] ELF midpoint (covalency: P-S > Li-S > Li-Cl):
+  Cl-Li   n=  69  d=2.47A  ELF_mid=0.893±0.020
+  Cl-Nd   n=   2  d=2.75A  ELF_mid=0.372±0.010
+  Li-O    n=   4  d=1.98A  ELF_mid=0.779±0.012
+  Li-S    n= 119  d=2.49A  ELF_mid=0.931±0.018
+  Nd-O    n=   2  d=2.49A  ELF_mid=0.311±0.033
+  Nd-S    n=   7  d=2.84A  ELF_mid=0.486±0.044
+  O-P     n=   3  d=1.57A  ELF_mid=0.923±0.002
+  P-S     n=  37  d=2.06A  ELF_mid=0.943±0.002
+-> nd_elf_bonds.csv
+gap: E_F 3.8487 eV · 최고 점유 3.1234 · 최저 빈 4.6265 → 1.503 eV (k 5 블록 · smearing mv 0.01 Ry = 0.136 eV 와 비교)
+[2026-10-19 17:36:15] ■ 끝 · 끝 코드 0 · 결정 pause

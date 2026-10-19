@@ -1,0 +1,9 @@
+system,bond,n_bonds,mean_dist_A,ELF_midpoint,ELF_mid_std,ELF_central_min
+Nd_at_Li_newPP_NC_mic,Cl-Li,69,2.475,0.893,0.020,0.413
+Nd_at_Li_newPP_NC_mic,Cl-Nd,2,2.748,0.372,0.010,0.329
+Nd_at_Li_newPP_NC_mic,Li-O,4,1.975,0.779,0.012,0.161
+Nd_at_Li_newPP_NC_mic,Li-S,119,2.492,0.931,0.018,0.570
+Nd_at_Li_newPP_NC_mic,Nd-O,2,2.492,0.311,0.033,0.296
+Nd_at_Li_newPP_NC_mic,Nd-S,8,2.879,0.466,0.067,0.379
+Nd_at_Li_newPP_NC_mic,O-P,3,1.571,0.923,0.002,0.891
+Nd_at_Li_newPP_NC_mic,P-S,37,2.065,0.943,0.002,0.922
