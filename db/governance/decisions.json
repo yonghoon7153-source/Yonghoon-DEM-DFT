@@ -9085,6 +9085,58 @@
     }
    ],
    "_note": "proposed — 사용자 실행 승인 (10-19 '이것만 하고 합쳐서 편지 보내자') · 외부 1저자 동의는 편지 DA Q-DA-4 · 원장 active 전환은 그 뒤 사용자 비준."
+  },
+  {
+   "id": "D-2026-10-19-nd-anion-removal",
+   "schema_version": 2,
+   "kind": "estimand",
+   "scope": "cei_nd.anion_removal_energy",
+   "slot": "nd_anion_removal_near_far",
+   "applies_to": {
+    "systems": [
+     "nd2o3_lpscl16_nd_at_li"
+    ],
+    "tasks": [
+     "anion_removal_energy_frozen"
+    ],
+    "methods": [
+     "qe_pbe_paw_frozen4f_70_560_k331"
+    ],
+    "use_cases": [
+     "internal"
+    ]
+   },
+   "title": "Nd 가 이웃 음이온을 얼마나 세게 붙잡나 — 자유 S²⁻ · Cl⁻ 떼어내기 에너지 Nd 옆 대 먼 (같은 셀 · 같은 전하 · 얼린 격자 · SCF 8) (트랙 CEI · 1저자 = 실험 쪽 · 결정은 사용자)",
+   "statement": "카드 db/properties/nd_anion_removal_estimand_2026_10_19.json. ΔE_rm(X) = 평균 E[셀 − X_옆] − 평균 E[셀 − X_먼] (X = 자유 S²⁻ tot_charge +2 · Cl⁻ +1 · 계보 kprobe.in sha adbd6f70… 의 설정 그대로 · 원자 한 줄 · nat · tot_charge · prefix · outdir 만 바꿈) · 자리 = Bader 사전등록 거리 (이미지 전수 최소상) · 자유 S 51 · 112 / 54 · 115 · Cl 56 · 117 / 114 · 59 · 갈래 = 두 값이 두 값과 겹치지 않을 때만 방향 · 안정성 판정 아님.",
+   "rationale": "사용자 10-19 '이온결합이라서 더 결합이 썐거일 수 도 있어' → '그걸 해볼까' → '떼어내기 에너지 (권고)'.",
+   "decision_state": "proposed",
+   "record_kind": "estimand",
+   "results_seen": false,
+   "results_seen_note": "떼어낸 셀 계산 0",
+   "card": "db/properties/nd_anion_removal_estimand_2026_10_19.json",
+   "depends_on": [
+    "D-2026-10-19-nd-q23-ppswap-structure"
+   ],
+   "evidence": [
+    "db/properties/nd_q3_bader_elf_runlog_2026_10_19.json",
+    "db/raw/nd_q3_bader_2026_10_19/scf_input_copy.in"
+   ],
+   "reopen_criteria": [
+    "이완 판 · 다른 자리 · Nd@P 모델은 새 카드",
+    "'자리를 하나 더 봤다' 는 재개 사유가 아니다"
+   ],
+   "track": {
+    "name": "CEI",
+    "first_author": "실험 쪽 (사용자 아님)"
+   },
+   "proposed_by": [
+    {
+     "actor_type": "agent",
+     "actor_id": "claude",
+     "date": "2026-10-19"
+    }
+   ],
+   "_note": "proposed — 사용자 비준 대기 (CEI 트랙 결정은 '사용자' 로 적는다) · 기계 (gabia r2 정지 여부) 는 따로 사용자 결정."
   }
  ]
 }
