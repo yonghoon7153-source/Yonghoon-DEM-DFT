@@ -11,8 +11,21 @@ free-electron; <0.3 = depleted. So P-S (covalent) >> Li-S, Li-Cl (ionic).
 
 Usage:
     python3 sample_elf_bonds.py --cube X.cube --system comp1 --out elf_bonds.csv
+    python3 sample_elf_bonds.py --selftest
+
+Minimum image (2026-10-19 fix): rounding the fractional difference alone is NOT the minimum image in a
+skewed cell. The Sept Nd@Li cell (60 deg angles, c = 69 A) lost one Nd-S bond that way (3.141 A read as
+5.234 A -> 7 of 8 Nd-S). `make_mic` rounds, then searches the neighbouring images; the search width
+n_i = ceil(rmax*|b_i|) + 1 (b_i = reciprocal vector without 2 pi) covers every image within rmax.
+In an orthogonal cell the result is identical to plain rounding, so the cubic host tables
+(modelc / b2o3 / lpsocl) are unchanged.
+
+What this tool cannot do: it reports ELF at fixed fractions of each bond (midpoint, [0.4, 0.6] minimum);
+it does not find ELF basins or attractors, and a midpoint value near 0.5 does not by itself say
+"no bond" (the midpoint of a long cation-anion bond can sit outside the anion's lone-pair region).
 """
 import argparse
+import itertools
 import numpy as np
 
 BOHR = 0.5291772108
@@ -68,24 +81,86 @@ def elf_at(data, gn, cell_inv, origin, r):
     return val
 
 
+def make_mic(cell, rmax):
+    """Minimum-image displacement for any cell (rows = lattice vectors, A).
+    Round the fractional difference, then take the shortest of the neighbouring images
+    s_i in [-n_i, n_i], n_i = ceil(rmax*|b_i|) + 1 -- every image within rmax is searched."""
+    cell_inv = np.linalg.inv(cell.T)
+    recip = np.linalg.inv(cell).T                # rows b_i with a_i . b_j = delta_ij
+    n = [int(np.ceil(rmax * np.linalg.norm(recip[i]))) + 1 for i in range(3)]
+    shifts = np.array(list(itertools.product(*[range(-k, k + 1) for k in n])), float)
+
+    def mic(rij):
+        f = cell_inv @ rij
+        f -= np.round(f)
+        cand = (f + shifts) @ cell
+        return cand[int(np.argmin(np.einsum("ij,ij->i", cand, cand)))]
+    return mic
+
+
+def selftest():
+    fails = []
+
+    def ck(name, cond):
+        print(f"  {'ok ' if cond else 'BAD'} {name}")
+        if not cond:
+            fails.append(name)
+    # the Sept Nd@Li cell (scf_input_copy.in, db/raw/nd_q3_bader_2026_10_19) and its Nd1 / S44 pair
+    cell = np.array([[6.9981521450, -0.0038493990, -0.0076859570],
+                     [3.4203457800, 6.0142217730, 0.0014754540],
+                     [34.6984274870, 19.6853743570, 56.8750722600]])
+    nd = np.array([6.0652079823, 6.2641664098, 5.7451996488])
+    s44 = np.array([8.3091056391, 5.4722628589, 3.6942688291])
+    rmax = max(CUT.values())
+    d_new = np.linalg.norm(make_mic(cell, rmax)(s44 - nd))
+    f = np.linalg.inv(cell.T) @ (s44 - nd)
+    d_round = np.linalg.norm(cell.T @ (f - np.round(f)))
+    ck(f"skewed Nd cell: Nd1-S44 = 3.141 A (got {d_new:.3f})", abs(d_new - 3.141) < 5e-4)
+    ck(f"negative: plain rounding reads it as 5.234 A (got {d_round:.3f}) -- the bug this fixes",
+       abs(d_round - 5.234) < 5e-4)
+    rng = np.random.default_rng(3)
+    v = rng.normal(size=(200, 3))
+    v = v / np.linalg.norm(v, axis=1)[:, None] * rng.uniform(0.5, rmax, (200, 1))   # a true image within rmax
+    rs = v + rng.integers(-3, 4, (200, 3)) @ cell                                    # hidden behind lattice shifts
+    ci = np.linalg.inv(cell.T)
+    brute = [min(np.linalg.norm(cell.T @ (ci @ r - np.round(ci @ r) + np.array(t)))
+                 for t in itertools.product(range(-5, 6), repeat=3)) for r in rs]
+    mic = make_mic(cell, rmax)
+    got = [np.linalg.norm(mic(r)) for r in rs]
+    ck("skewed cell: 200 pairs with an image inside rmax -- search == +-5 brute force, and <= the planted length",
+       all(abs(g - b) < 1e-9 for g, b in zip(got, brute)) and all(g <= np.linalg.norm(x) + 1e-9 for g, x in zip(got, v)))
+    rnd = [np.linalg.norm(cell.T @ (ci @ r - np.round(ci @ r))) for r in rs]
+    ck(f"negative: plain rounding misses some of them ({sum(1 for a, b in zip(rnd, brute) if a - b > 1e-6)} of 200)",
+       any(a - b > 1e-6 for a, b in zip(rnd, brute)))
+    cub = np.eye(3) * 10.0
+    mc = make_mic(cub, rmax)
+    rr = rng.uniform(-20, 20, (40, 3))
+    same = all(np.allclose(mc(r), cub.T @ ((np.linalg.inv(cub.T) @ r) - np.round(np.linalg.inv(cub.T) @ r))) for r in rr
+               if np.linalg.norm(cub.T @ ((np.linalg.inv(cub.T) @ r) - np.round(np.linalg.inv(cub.T) @ r))) < 4.9)
+    ck("orthogonal cell: identical to plain rounding (host tables unchanged)", same)
+    print(f"selftest {'PASS' if not fails else 'FAIL'} ({len(fails)} fail)")
+    return 0 if not fails else 1
+
+
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("--cube", required=True)
-    ap.add_argument("--system", required=True)
-    ap.add_argument("--out", required=True)
+    ap.add_argument("--cube")
+    ap.add_argument("--system")
+    ap.add_argument("--out")
     ap.add_argument("--append", action="store_true")
+    ap.add_argument("--selftest", action="store_true")
     args = ap.parse_args()
+    if args.selftest:
+        raise SystemExit(selftest())
+    if not (args.cube and args.system and args.out):
+        ap.error("--cube --system --out are required (or --selftest)")
 
     data, origin, cell, gn, atoms = read_cube(args.cube)
     cell_inv = np.linalg.inv(cell.T)             # so cell_inv @ r = fractional
     syms = [a[0] for a in atoms]
     pos = np.array([a[1] for a in atoms])
     n = len(atoms)
-    # minimum-image displacement helper
-    def mic(rij):
-        f = cell_inv @ rij
-        f -= np.round(f)
-        return cell.T @ f
+    mic = make_mic(cell, max(CUT.values()))      # minimum image -- correct in skewed cells too
 
     acc = {}
     for i in range(n):

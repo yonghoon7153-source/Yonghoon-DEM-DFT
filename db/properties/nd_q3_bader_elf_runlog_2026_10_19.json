@@ -84,5 +84,29 @@
   "DRY_RUN": "gabia 16:17:04–08 · HEAD fdd6f378e · worktree /data/work/wt_ndelf_1019b · QE 7.4.1 CPU 프로브가 pseudo 여섯 (Nd 변환 UPF 포함) 을 읽었다 = 변환 UPF 가 7.4.1 에서 읽힌다 · 'Estimated static dynamical RAM per process > 9.89 GB' (⚠ static 줄 — 아래) · GPU 49,140 · 사용 37,250 · 빔 11,890 · need 14,189 (static 기준) · r2 pw.x 3384461 · 다른 잡 없음 → 결정 pause",
   "발사": "tmux ndelf 16:17:08 (본 실행 · 프로브 재사용 → pause) — r2 다음 BFGS 줄 직후 EXIT 를 기다린다 (r2 한 스텝 ≈ 65 분 · 정지 도구 상한 4 h)",
   "⚠_static_줄": "QE 7.4 는 static 다음에 max 추정을 찍는다 — 러너가 첫 줄 (static) 을 읽었다. 그날 결정은 max 로도 같다 (max ≥ static → need 더 큼 → pause) · 혼자 돌 때 48 GB 안이다. 고침 (다음 실행부터 · 도는 worktree 는 안 건드림): max 줄을 쓰고 없으면 static (조금 기다린 뒤) · selftest 31 · 첫 줄 읽기로 되돌리면 12 빨강"
+ },
+ "ELF_완주_2026_10_19_1736": {
+  "출처": "사용자 watch 붙여넣기 2026-10-19 18:07 (gabia · run.log tail -8 · w_li3nd_r2.sh) — 파일 회수 전 (회수 블록 = 다음 메시지)",
+  "끝": "17:36:15 ■ 끝 · 끝 코드 0 · 결정 pause — r2 를 BFGS 경계에서 EXIT 로 세우고 ELF SCF 혼자 · SCF 뒤 r2 재개",
+  "r2_재개": "tmux li3nd_r2_res_10191733 (17:33:58 · restart_qe_relax.sh --run --nstep 200) · 18:07 pw.x 4081873 경과 33:30 · GPU 25,356 MiB · watch 의 BFGS 번호 칸은 빔 (새 .out 첫 SCF 중으로 보임 — 이력 승계 줄은 다음 블록에서 확인)",
+  "표_붙여넣기_tail8": {
+   "Li-S": "n 119 · d 2.49 Å · ELF_mid 0.931 ± 0.018",
+   "Nd-O": "n 2 · d 2.49 · 0.311 ± 0.033",
+   "Nd-S": "n 7 · d 2.84 · 0.486 ± 0.044 — ⚠ 8 이어야 한다 (아래)",
+   "O-P": "n 3 · d 1.57 · 0.923 ± 0.002",
+   "P-S": "n 37 · d 2.06 · 0.943 ± 0.002",
+   "안_보인_행": "Cl-Li · Cl-Nd · Li-O (tail 밖) — 회수 뒤 채운다"
+  },
+  "gap_줄": "E_F 3.8487 eV · 최고 점유 3.1234 · 최저 빈 4.6265 → 1.503 eV (k 5 블록) — ⛔ 우리 band gap 규율 밖이다: smearing (mv 0.01) SCF · k 3 3 1 · Nd f-in-core NC (4f 가 코어에 얼려 있어 4f 준위가 없다) ⇒ canonical gap 이 아니다 · 참고 숫자로만",
+  "⚠_결함_표본_도구_최소상_결과_후_발견": {
+   "무엇": "tools/figures/sample_elf_bonds.py 의 최소상이 분수좌표 반올림만 했다 — 이 셀은 각 60° · c = (34.70, 19.69, 56.88) Å (길이 69.5 Å) 로 크게 기울어 반올림이 최소상이 아니다",
+   "영향": "입력 구조 (scf_input_copy.in) 로 바른 최소상 (±5 상 전수) 과 대조: Nd–S 만 8 → 7 (Nd1–S44 3.141 Å 가 5.234 Å 로 읽힘) · 나머지 Cl–Li 69 · Cl–Nd 2 · Li–O 4 · Li–S 119 · Nd–O 2 · O–P 3 · P–S 37 은 개수 같음 · 들어간 쌍의 값은 바르다 (셀 최단 병진 ≈ 6.9 Å 라 컷 3.3 Å 안에 상이 둘일 수 없다)",
+   "고침": "make_mic — 반올림 뒤 이웃 상 탐색 (폭 n_i = ceil(rmax·|b_i|) + 1) · selftest 5 (이 셀의 Nd1–S44 · 200 쌍 ±5 전수 대조 · 직교 셀은 반올림과 같음) · 반올림으로 되돌린 변형 빨강 · 합성 cube (이 셀 · 120 원자) 로 Nd–S 8 · 다른 행 개수 같음",
+   "호스트_표": "직교 셀이면 결과가 반올림과 같다 — modelc · b2o3 · lpsocl 표는 셀이 직교면 그대로 (셀 확인은 안 했다)",
+   "같은_꼴_다른_도구": "tools/ 에 분수좌표 반올림 최소상이 26 곳쯤 있다 (rg '-= np.round(') — 대부분 직교 셀용 · 기울어진 셀 (육방 슬랩 · 이 Nd 셀) 에 쓰는 곳은 따로 점검해야 한다 (미점검 · 목록만)",
+   "다음": "gabia 에서 같은 cube 를 고친 도구로 다시 읽어 nd_elf_bonds_mic.csv (옛 csv 는 지우지 않는다) → 회수"
+  },
+  "사전등록_비교": "ELF_계획 ③ — 호스트 modelc_elf_bonds.csv (같은 NC 규약) 와 결합 ELF 비교: P–S 0.943 대 호스트 0.944 · Li–S 0.931 대 0.940 (붙여넣기 기준 · Li–Cl 은 회수 뒤)",
+  "by": "agent · 2026-10-19"
  }
 }
