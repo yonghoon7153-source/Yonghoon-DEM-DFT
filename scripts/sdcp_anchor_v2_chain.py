@@ -17,7 +17,8 @@
       ÷2 (0.1636 → 0.0818) 또는 ×2 (2.618 → 5.236) 점을 최대 둘 더 (같은 보간).  σ_e 가 σ_VGCF 에 단조 증가가 아니면 멈춘다.
   C   σ_VGCF* 에서 SBE arm 0 · DBE arm 0 (σ_e 만 · σ_SDCP 256.6 그대로) — 비교만 (판정 아님 · 16 팔 = 1저자 결정 뒤 · 등록 §3).
   공통 env = VOX 0.15 · SDCP_SPHERE_D 0.30 · PTFE_STAMP centerline · BRIDGE_UM 0.48 · SIGMA_AM_S_OVERRIDE 0.0041 · SIGMA_SDCP_OVERRIDE 256.6 ·
-  SIGMA_ION_SE 0.0015 (LEAN=2 = σ_e 만이라 이온 σ 는 기록뿐) · 출력 폴더 = --out 아래 런마다 새 폴더 (`_arm1` 로 끝남 — 러너 접미사 규칙).
+  출력 폴더 = --out 아래 런마다 새 폴더 (`_arm1` 로 끝남 — 러너 접미사 규칙).  ★ 10-19 (`SELF-120`) — 이온 축 (SIGMA_ION_* · PTFE_BLOCK_*) 은 넣지 않고
+  부모 셸에서 물려받은 것도 지운다: LEAN=2 (σ_e 만 · --no-ion) 런에 이온 축이 있으면 러너가 계산 전에 ABORT (rc 2) 한다 (첫 kgy 발사가 그렇게 멈췄다).
 멈춤 (rc 3 · 그 자리까지의 요약은 남긴다): 출력 폴더가 이미 있고 비어 있지 않음 (러너 SKIP 캐시가 옛 팔을 재사용하는 것을 막는다) · 러너 rc ≠ 0 ·
   σ_e 를 실은 팔 JSON ≠ 1 · 매니페스트 (σ_VGCF · σ_AM_S · σ_SDCP · vox · 브리지 · PTFE · SDCP 구 지름) ≠ 요청 · 수렴 (`run_contract.conv_ok`) 실패 ·
   둘 더해도 목표 밖 · 단조 아님 · 시간 상한 (--max-hours).
@@ -48,7 +49,9 @@ EXT_DOWN = ('0.1636', '0.0818')
 EXT_UP = ('2.618', '5.236')
 MAX_EXT = 2
 ENV_FIXED = {'VOX': '0.15', 'SDCP_SPHERE_D': '0.30', 'PTFE_STAMP': 'centerline', 'BRIDGE_UM': '0.48', 'ARMS': '1', 'LEAN': '2',
-             'SIGMA_AM_S_OVERRIDE': '0.0041', 'SIGMA_SDCP_OVERRIDE': '256.6', 'SIGMA_ION_SE': '0.0015'}
+             'SIGMA_AM_S_OVERRIDE': '0.0041', 'SIGMA_SDCP_OVERRIDE': '256.6'}
+#: LEAN=2 런에서 지우는 부모 env 접두 (러너 가드 — 이온을 안 푸는 런에 이온 축 = ABORT)
+ENV_SCRUB_PREFIX = ('SIGMA_ION_', 'PTFE_BLOCK_')
 #: 매니페스트 키 → 기대값 (env 와 같은 값 · 상대 1e-9)
 MAN_EXPECT = {'sigma_am_s_S_cm': 0.0041, 'sigma_sdcp_S_cm': 256.6, 'vox_um': 0.15, 'bridge_um': 0.48, 'sdcp_sphere_d_um': 0.30}
 KITS = {'SBE': 'kit_SBE', 'DBE': 'kit_DBE'}
@@ -149,7 +152,8 @@ class Chain:
 
     def run(self, name, kit, sg):
         outdir = self.out / f'{name}_arm1'
-        env = dict(self.env_base, **ENV_FIXED, KITS=KITS[kit], SIGMA_VGCF_OVERRIDE=sg, OUTDIR=str(outdir))
+        base = {k: v for k, v in self.env_base.items() if not k.startswith(ENV_SCRUB_PREFIX)}
+        env = dict(base, **ENV_FIXED, KITS=KITS[kit], SIGMA_VGCF_OVERRIDE=sg, OUTDIR=str(outdir))
         cmd = ['bash', str(self.runner)]
         rec = {'name': name, 'kit': kit, 'sigma_vgcf': sg, 'outdir': str(outdir)}
         self.calls.append(rec)
@@ -294,6 +298,8 @@ def main(argv=None):
 FAKE = r'''import json, os, sys, math
 sg = float(os.environ['SIGMA_VGCF_OVERRIDE']); kit = os.environ['KITS']; mode = os.environ.get('FAKE_MODE', 'normal')
 out = os.environ['OUTDIR']; os.makedirs(out, exist_ok=True)
+if os.environ.get('LEAN') == '2' and any(os.environ.get(k) for k in os.environ if k.startswith(('SIGMA_ION_', 'PTFE_BLOCK_'))):
+    print('ABORT — 이온 축(SIGMA_ION_* 또는 PTFE_BLOCK_*)을 줬는데 LEAN=2 의 조립 flags 에 --no-ion 이 있다.'); sys.exit(2)   # 실제 러너 가드 그대로
 if mode == 'rc1':
     sys.exit(1)
 a, b, f = 2.6, 0.55, 0.05
@@ -436,11 +442,18 @@ def selftest():
         lo = math.log(0.3272) + (math.log(1.63) - math.log(1.5)) / (math.log(2.0) - math.log(1.5)) * (math.log(0.6545) - math.log(0.3272))
         chk(f'T10 S2 — 보간 3 자리 {r1} (독립 {math.exp(lo):.3g}) · 끝점 = 목표면 그 점 · 위 = down · 단조 아님 = 멈춤',
             r1[0] == 'ok' and r1[1] == f'{math.exp(lo):.3g}' and r2[:2] == ('ok', '0.327') and r3[0] == 'down' and '단조' in r4, (r1, r2, r3, r4))
+        # T12 ★ 부모 셸에 이온 축 (SIGMA_ION_SE) 이 export 돼 있어도 σ_e 런 (LEAN=2) 은 돈다 — 사슬이 지운다 (러너 가드 rc 2 재발 방지)
+        os.environ['SIGMA_ION_SE'] = '0.0015'
+        try:
+            rc_12, ch_12 = go('normal', 'inherit_ion')
+        finally:
+            os.environ.pop('SIGMA_ION_SE', None)
+        chk('T12 부모 env 의 SIGMA_ION_SE → 지우고 돈다 (LEAN=2 러너 가드 통과)', rc_12 == 0 and len(ch_12.summary['runs']) == 5, ch_12.summary.get('stop'))
         # T11 등록 문서와 상수 대조 (있을 때만 — 리포 체크아웃)
         reg = HERE.parent / 'docs' / 'reviews' / 'sdcp_sigma_e_dcp_anchor_registration_v2_20261019.md'
         if reg.exists():
             t = reg.read_text(encoding='utf-8')
-            need = [f'{TARGET_SBE_MS:.2f}', f'{EXP_DBE_MS:.2f}', *LADDER, *EXT_DOWN, *EXT_UP, '0.0041', '256.6', '0.0015']
+            need = [f'{TARGET_SBE_MS:.2f}', f'{EXP_DBE_MS:.2f}', *LADDER, *EXT_DOWN, *EXT_UP, '0.0041', '256.6']
             miss = [n for n in need if n not in t]
             chk(f'T11 등록 문서에 이 도구의 값 ({len(need)}) 이 다 있다', not miss, miss)
         else:

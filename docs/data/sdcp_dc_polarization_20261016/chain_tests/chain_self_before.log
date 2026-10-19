@@ -1,0 +1,31 @@
+S1 정찰 (SBE arm 0 · σ_e 만)
+  FAIL  T1 sbe 단계 정상 → σ* = 독립 보간 0.404 · SBE arm 0 · 옛 kit_DBE arm 0 @ σ* (비 1.25 가짜 모형) · 런 다섯   (3, {'registration': 'docs/reviews/sdcp_sigma_e_dcp_anchor_registration_v2_20261019.md', 'target_sbe_mScm': 1.63, 'exp_dbe_mScm': 4.68, 'exp_ratio': 2.86, 'env_fixed': {'VOX': '0.15', 'SDCP_SPHERE_D': '0.30', 'PTFE_STAMP': 'centerline', 'BRIDGE_UM': '0.48', 'ARMS': '1', 'LEAN': '2', 'SIGMA_AM_S_OVERRIDE': '0.0041', 'SIGMA_SDCP_OVERRIDE': '256.6', 'SIGMA_ION_SE': '0.0015'}, 'runs': [], 's1': {}, 's
+  FAIL  T1b dbe 단계 → 같은 --out 요약의 σ* 로 재압밀 킷 arm 0 · 옛 kit_DBE 값 보존 · 킷별 칸 둘 · 런 여섯 · 같은 킷 두 번 = 멈춤   (3, "sbe 단계가 끝나지 않았다 (멈춤 's1_sbe_sg1.309: 러너 rc 2 (로그 /tmp/sdcp_chain_st_2w3m4r4_/out_normal/logs/s1_sbe_sg1.309.log)' · σ* None · SBE None)", {})
+  PASS  T1c sbe 요약 없이 dbe 단계 → 멈춤
+S1 정찰 (SBE arm 0 · σ_e 만)
+  FAIL  T2 목표 < 세 점 → ÷2 점 0.1636 하나 더 → 보간 (확장 1)   (3, None, 's1_sbe_sg1.309: 러너 rc 2 (로그 /tmp/sdcp_chain_st_2w3m4r4_/out_low/logs/s1_sbe_sg1.309.log)')
+S1 정찰 (SBE arm 0 · σ_e 만)
+  FAIL  T2b 목표 > 세 점 → ×2 점 2.618 더 → 보간   (3, None, 's1_sbe_sg1.309: 러너 rc 2 (로그 /tmp/sdcp_chain_st_2w3m4r4_/out_high/logs/s1_sbe_sg1.309.log)')
+S1 정찰 (SBE arm 0 · σ_e 만)
+  FAIL  T3 σ_e 단조 아님 → 멈춤 rc 3 · 비교 런 없음   s1_sbe_sg1.309: 러너 rc 2 (로그 /tmp/sdcp_chain_st_2w3m4r4_/out_flat/logs/s1_sbe_sg1.309.log)
+S1 정찰 (SBE arm 0 · σ_e 만)
+  FAIL  T4 정찰 둘째 점 미수렴 → 멈춤 (수렴 실패)   s1_sbe_sg1.309: 러너 rc 2 (로그 /tmp/sdcp_chain_st_2w3m4r4_/out_unconv/logs/s1_sbe_sg1.309.log)
+S1 정찰 (SBE arm 0 · σ_e 만)
+  FAIL  T5 매니페스트 σ_AM_S ≠ 0.0041 → 멈춤   s1_sbe_sg1.309: 러너 rc 2 (로그 /tmp/sdcp_chain_st_2w3m4r4_/out_badman/logs/s1_sbe_sg1.309.log)
+S1 정찰 (SBE arm 0 · σ_e 만)
+  FAIL  T6 러너 rc 1 → 멈춤   s1_sbe_sg1.309: 러너 rc 2 (로그 /tmp/sdcp_chain_st_2w3m4r4_/out_rc1/logs/s1_sbe_sg1.309.log)
+S1 정찰 (SBE arm 0 · σ_e 만)
+  PASS  T7 옛 출력 폴더 (SKIP 캐시 위험) → 러너 부르기 전 멈춤
+S1 정찰 (SBE arm 0 · σ_e 만)
+  FAIL  T8 팔 JSON 둘 → 멈춤   s1_sbe_sg1.309: 러너 rc 2 (로그 /tmp/sdcp_chain_st_2w3m4r4_/out_two/logs/s1_sbe_sg1.309.log)
+S1 정찰 (SBE arm 0 · σ_e 만)
+S1 정찰 (SBE arm 0 · σ_e 만)
+S1 정찰 (SBE arm 0 · σ_e 만)
+  FAIL  T8b SBE 의 SDCP 키 결손 = 통과 (SDCP 상 없음) · DBE 의 결손 = 멈춤 · .rejected_* = 멈춤   (3, 's1_sbe_sg1.309: 러너 rc 2 (로그 /tmp/sdcp_chain_st_2w3m4r4_/out_nosdcp/logs/s1_sbe_sg1.309.log)', 3, "sbe 단계가 끝나지 않았다 (멈춤 's1_sbe_sg1.309: 러너 rc 2 (로그 /tmp/sdcp_chain_st_2w3m4r4_/out_nosdcpdbe/logs/s1_sbe_sg1.309.log)' · σ* None · SBE None)", 3, 's1_sbe_sg1.309: 러너 rc 2 (로그 /tmp/sdcp_chain_st_2w3m4r4_/out_rejected/logs/s1_sbe_sg1.309.log)')
+  PASS  T9 dry-run → 명령 셋만 찍고 출력 폴더 없음
+  PASS  T10 S2 — 보간 3 자리 ('ok', '0.4', ('0.3272', '0.6545')) (독립 0.4) · 끝점 = 목표면 그 점 · 위 = down · 단조 아님 = 멈춤
+S1 정찰 (SBE arm 0 · σ_e 만)
+  FAIL  T12 부모 env 의 SIGMA_ION_SE → 지우고 돈다 (LEAN=2 러너 가드 통과)   s1_sbe_sg1.309: 러너 rc 2 (로그 /tmp/sdcp_chain_st_2w3m4r4_/out_inherit_ion/logs/s1_sbe_sg1.309.log)
+  PASS  T11 등록 문서에 이 도구의 값 (12) 이 다 있다
+
+sdcp_anchor_v2_chain selftest: 5/16 PASS   FAILED: ['T1 sbe 단계 정상 → σ* = 독립 보간 0.404 · SBE arm 0 · 옛 kit_DBE arm 0 @ σ* (비 1.25 가짜 모형) · 런 다섯', 'T1b dbe 단계 → 같은 --out 요약의 σ* 로 재압밀 킷 arm 0 · 옛 kit_DBE 값 보존 · 킷별 칸 둘 · 런 여섯 · 같은 킷 두 번 = 멈춤', 'T2 목표 < 세 점 → ÷2 점 0.1636 하나 더 → 보간 (확장 1)', 'T2b 목표 > 세 점 → ×2 점 2.618 더 → 보간', 'T3 σ_e 단조 아님 → 멈춤 rc 3 · 비교 런 없음', 'T4 정찰 둘째 점 미수렴 → 멈춤 (수렴 실패)', 'T5 매니페스트 σ_AM_S ≠ 0.0041 → 멈춤', 'T6 러너 rc 1 → 멈춤', 'T8 팔 JSON 둘 → 멈춤', 'T8b SBE 의 SDCP 키 결손 = 통과 (SDCP 상 없음) · DBE 의 결손 = 멈춤 · .rejected_* = 멈춤', 'T12 부모 env 의 SIGMA_ION_SE → 지우고 돈다 (LEAN=2 러너 가드 통과)']

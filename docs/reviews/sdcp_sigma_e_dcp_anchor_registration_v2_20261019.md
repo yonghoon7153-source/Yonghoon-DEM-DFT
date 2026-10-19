@@ -130,4 +130,12 @@ python3 ~/dem-anchor1019/scripts/sdcp_bed_meta.py ~/sdcp/kit_SBE ~/sdcp/kit_DBE
 
 ## 7. 실행 기록
 
-- (비어 있음 — R1 명령 · 발사 · 결과를 여기에 적는다)
+- **10-19 R0 (kgy · 1저자 · 읽기만)**: 옛 두 침대 = 같은 명령 (조성만 3:1 ↔ 3:0.5:0.5) · `--mixing thinky` · `--seed 3` · `--n-grid 263` · `--frames 150` · `--protocol hold` ·
+  `--lateral-box 0.05` · `--dilate-z 1.0719` · `--coh-ptfe 0.10` · `--binder-opt-wt 1.5` · `--fibre-buckle --fibre-align 0.606` · V/c_P 0.2717 · 08-27 런 · 세대 `ADD_E_SET_20260818_9.0GPa`
+  (VGCF E 10 GPa · 지금 코드 기본 100 = `CL-93`) · SDCP 낱알 (agg 0) · 붙는 몫 0.5 · 시딩 138,988 (붙음 61,762 · 공극 77,226) · 코드 판 기록 없음 · `--gpu-mem 28` (V100 시절 값).
+  ⇒ Table S2 SDCP E 9.0 = 침대 실제 값 (체크리스트 질문 닫힘).
+- **10-19 R1 명령 (결과 전 · 제안 = 1저자에게 전달)**: 새 킷 `kit_DBE_sdcp1um` = 옛 킷 입력만 복사 (`run_*` · `latest_run` · `scripts` 제외) + `scripts` → 고정 작업트리 링크 ·
+  `run_mpm.sh` 의 mpm3d 줄에 `--sdcp-agg-d 1.0 --add-e-override VGCF=10` (옛 세대 VGCF 10 GPa 고정) · `--gpu-mem 28 → 20` (자원만) · `MPM_NO_PULL=1` · 나머지 그대로.
+  한정: 코드 판이 08-27 과 다를 수 있다 → R2 에서 VGCF · PTFE 섬유 (`fibre.npy`) sha256 를 옛 침대와 대조 (같으면 앞 상 시딩 그대로 · 다르면 "새 실현").
+- **10-19 첫 S1 발사 = 멈춤 (계산 전)**: 사슬이 LEAN=2 런에 `SIGMA_ION_SE` 를 넘겨 러너 가드 *"이온 축을 줬는데 --no-ion"* 이 rc 2 (`SELF-120` — 사슬 결함 · 가짜 러너가
+  그 가드를 흉내내지 않았다) → 고침 (이온 축 빼고 부모 env 의 것도 지움 · 시험 먼저 5/16 → 16/16 · 로그 `docs/data/sdcp_dc_polarization_20261016/chain_tests/`) → 다시 발사 대기.

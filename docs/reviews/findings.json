@@ -11828,6 +11828,19 @@
         "docs/reviews/codex_lhs214r_fix_recheck_evidence_20261017/supplement/notes/consumer_supplement.md §2"
       ],
       "claimed_fixed_sha": "396d76eff"
+    },
+    {
+      "id": "SELF-120",
+      "severity": "P3",
+      "status": "open",
+      "owner": "claude",
+      "found_by": "1저자 kgy 첫 발사 10-19 (러너 가드 rc 2 · 계산 전)",
+      "opened_in": "docs/reviews/sdcp_sigma_e_dcp_anchor_registration_v2_20261019.md",
+      "title": "SDCP 앵커 v2 사슬이 LEAN=2 (σ_e 만 · --no-ion) 런에 이온 축 SIGMA_ION_SE 를 넘겨 러너 가드가 계산 전에 ABORT (rc 2) — 가짜 러너가 실제 러너 가드를 흉내내지 않아 자기 시험 15/15 가 못 잡았다",
+      "note": "자리: scripts/sdcp_anchor_v2_chain.py ENV_FIXED (SIGMA_ION_SE 0.0015) · 러너 scripts/sdcp_gain_vox015_8arm.sh 의 이온 축 ↔ --no-ion 가드.  피해 = 계산 0 (첫 S1 런 시작 전 멈춤 · 요약 stop 칸).  고침 = 같은 커밋 (이온 축 제거 · 부모 env 의 SIGMA_ION_* · PTFE_BLOCK_* 지움) · 시험 먼저 = 가짜 러너에 같은 가드 → 5/16 → 16/16 (T12 = 부모 env 이온 축).  \"실제 경로를 안 타는 시험\" 부류 (규율 ②).  push 뒤 claimed_fixed.",
+      "evidence_tests": [
+        "scripts/sdcp_anchor_v2_chain.py --selftest (5/16 → 16/16)"
+      ]
     }
   ]
 }
