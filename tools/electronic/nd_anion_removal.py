@@ -216,8 +216,9 @@ def predict(at, sel, card, bader_csv=BADER_SITES) -> dict:
 
 
 # ───────────────────────── 입력 · 판독 ─────────────────────────
-def removal_input(text, idx, el, card) -> str:
-    """계보 입력에서 원자 idx (1 부터) 하나를 빼고 nat · tot_charge · prefix · outdir 만 바꾼다."""
+def removal_input(text, idx, el, card, pseudo_dir=None) -> str:
+    """계보 입력에서 원자 idx (1 부터) 하나를 빼고 nat · tot_charge · prefix · outdir 만 바꾼다.
+    pseudo_dir 를 주면 그 줄도 바꾼다 (실행 기계의 PAW 폴더 · 시험 폴더) — 차이 검사가 그 값일 때만 허용한다."""
     lines = text.splitlines()
     i0 = next(i for i, l in enumerate(lines) if l.strip().upper().startswith("ATOMIC_POSITIONS"))
     atoms = [i for i in range(i0 + 1, len(lines)) if re.match(r"^\s*[A-Z][a-z]?\s+[-\d.]+\s+[-\d.]+\s+[-\d.]+\s*$", lines[i])]
@@ -237,6 +238,8 @@ def removal_input(text, idx, el, card) -> str:
             l = f"  prefix='{tag}'"
         elif re.match(r"^\s*outdir\s*=", l):
             l = f"  outdir='./tmp_{tag}/'"
+        elif pseudo_dir is not None and re.match(r"^\s*pseudo_dir\s*=", l):
+            l = f"  pseudo_dir='{pseudo_dir}'"
         elif re.match(r"^\s*nat\s*=", l):
             out.append(f"  nat={nat - 1}")
             l = f"  tot_charge={q:+.1f}"
@@ -244,16 +247,19 @@ def removal_input(text, idx, el, card) -> str:
     return "\n".join(out) + "\n"
 
 
-def input_diff_ok(orig, new) -> list[str]:
-    """줄 단위 차이가 prefix · outdir · nat · tot_charge(추가) · 원자 한 줄(삭제) 뿐인가."""
+def input_diff_ok(orig, new, pseudo_dir=None) -> list[str]:
+    """줄 단위 차이가 prefix · outdir · nat · tot_charge(추가) · 원자 한 줄(삭제) 뿐인가 (+ 준 pseudo_dir 값 그대로일 때만 그 줄)."""
     import difflib
     allow = re.compile(r"^\s*(prefix|outdir|nat|tot_charge)\s*=")
+    pd_ok = re.compile(r"^\s*pseudo_dir\s*=")
     bad, removed_atoms = [], 0
     for d in difflib.ndiff(orig.splitlines(), new.splitlines()):
         if d.startswith("? ") or d.startswith("  "):
             continue
         body = d[2:]
         if allow.match(body):
+            continue
+        if pseudo_dir is not None and pd_ok.match(body) and (d.startswith("- ") or body.strip() == f"pseudo_dir='{pseudo_dir}'"):
             continue
         if d.startswith("- ") and re.match(r"^\s*[A-Z][a-z]?\s+[-\d.]+\s+[-\d.]+\s+[-\d.]+\s*$", body):
             removed_atoms += 1
@@ -376,6 +382,10 @@ def _selftest() -> int:
     chk("tot_charge=+1.0" in removal_input(text, sel["Cl"]["near"][0], "Cl", card), "[양성] Cl⁻ 떼기 → tot_charge +1")
     chk(any("ecutwfc" in b for b in input_diff_ok(text, new.replace("ecutwfc=70.0", "ecutwfc=60.0"))),
         "[음성] ecutwfc 를 바꾸면 줄 차이 검사가 잡는다")
+    new_pd = removal_input(text, sel["S"]["near"][0], "S", card, "/tmp/paw")
+    chk(input_diff_ok(text, new_pd, "/tmp/paw") == [] and "pseudo_dir='/tmp/paw'" in new_pd,
+        "[양성] pseudo_dir 를 준 값으로 바꾸면 그 줄은 허용")
+    chk(input_diff_ok(text, new_pd) != [], "[음성] pseudo_dir 를 안 준 검사에서는 pseudo_dir 줄 차이도 잡는다")
     try:
         removal_input(text, sel["S"]["near"][0], "Cl", card)
         chk(False, "[음성] 원소가 다른 번호 → 죽어야 한다")
@@ -427,6 +437,8 @@ def main() -> int:
     ap.add_argument("--readout", action="store_true")
     ap.add_argument("--runs")
     ap.add_argument("--out")
+    ap.add_argument("--pseudo_dir", help="--make_inputs: 실행 기계 PAW 폴더 (주면 그 줄을 바꾼다 · 안 주면 계보 값 그대로)")
+    ap.add_argument("--lineage", help="--make_inputs: 계보 입력 경로 (기본 저장소 사본 · sha256 이 카드와 같아야 한다)")
     a = ap.parse_args()
     if a.selftest:
         return _selftest()
@@ -447,13 +459,17 @@ def main() -> int:
     if a.make_inputs:
         if not a.out:
             ap.error("--make_inputs 는 --out 이 필요하다")
-        text = LINEAGE.read_text()
-        man = {"lineage": str(LINEAGE.relative_to(REPO)), "lineage_sha256": hashlib.sha256(text.encode()).hexdigest(), "inputs": []}
+        lp = pathlib.Path(a.lineage) if a.lineage else LINEAGE
+        raw = lp.read_bytes()
+        if hashlib.sha256(raw).hexdigest() != card["lineage_sha256"]:
+            raise SystemExit(f"⛔ 계보 입력 sha256 ≠ 카드 ({lp}) — 다른 기하다")
+        text = raw.decode()
+        man = {"lineage": str(lp), "lineage_sha256": card["lineage_sha256"], "pseudo_dir": a.pseudo_dir, "inputs": []}
         for el in ("S", "Cl"):
             for side in ("near", "far"):
                 for idx in card["selected"][el][side]:
-                    t = removal_input(text, idx, el, card)
-                    b = input_diff_ok(text, t)
+                    t = removal_input(text, idx, el, card, a.pseudo_dir)
+                    b = input_diff_ok(text, t, a.pseudo_dir)
                     if b:
                         raise SystemExit(f"⛔ rm_{el}{idx}: 허용 밖 차이 {b[:3]}")
                     d = pathlib.Path(a.out) / f"rm_{el}{idx}"

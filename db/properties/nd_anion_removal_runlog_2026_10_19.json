@@ -4,7 +4,7 @@
  "date": "2026-10-19",
  "track": "CEI (1저자 = 실험 쪽 · 결정은 사용자)",
  "card": "db/properties/nd_anion_removal_estimand_2026_10_19.json",
- "decision": "D-2026-10-19-nd-anion-removal (proposed)",
+ "decision": "D-2026-10-19-nd-anion-removal (active · 사용자 비준 10-19) · GPU 자리 D-2026-10-19-gabia-nd-removal-pause-li3nd (active)",
  "results_seen": false,
  "citable": false,
  "✅_자리_대조_2026_10_19": "tools/electronic/nd_anion_removal.py --sites — 이미지 전수 최소상으로 다시 잰 범주 · Nd 최소거리가 Bader 표 (bader_summary_zval.py 반올림 최소상) 와 120 원자 중 0 개 어긋남 ⇒ Q3 Bader 의 옆/먼 분류 · 숫자는 그대로 유효 · 반올림이 실제로 틀리는 쌍 (Nd2–S45 반올림 5.234 · 실제 3.141 Å) 은 있으나 Bader 범주에는 영향 없음",
@@ -62,5 +62,17 @@
   "읽기_결과_전": "형식 전하 모형은 두 원소 다 '옆이 더 든다' (S 는 옆 · 먼 값이 겹침 · Cl 은 분리) · Bader 전하 모형은 S 가 반대이고 자리마다 수십 eV 로 흔들린다 (PS₄ 분할 인공물 전하 P +3.2~+4.9 가 퍼텐셜을 오염) ⇒ 점전하는 모형 사이에서도 방향이 갈려 이 질문을 못 정한다 — DFT 가 정한다 · 차폐 (ε∞ 몇) 가 없어 크기는 수 배 과대",
   "원자료": "db/raw/nd_anion_removal_2026_10_19/pointcharge_prediction.json"
  },
- "by": "agent · 2026-10-19"
+ "by": "agent · 2026-10-19",
+ "✅_비준_기계_2026_10_19": {
+  "사용자": "AskUserQuestion — 카드 '비준 (권고)' · 기계 'gabia · r2 잠깐 세움'",
+  "결정": "D-2026-10-19-nd-anion-removal active (decision_digest 지문) · 새 정지 결정 D-2026-10-19-gabia-nd-removal-pause-li3nd active — ELF 정지 결정은 'ELF SCF 한 번 끝나면 소멸' 이라 넘어오지 않는다",
+  "by": "agent · 2026-10-19"
+ },
+ "✅_러너_결과_전_2026_10_19": {
+  "러너": "tools/electronic/run_nd_elf_nc_gabia.sh JOB=removal (기존 ELF 러너 확장 — 입력 · 프로브 대상 · SCF 8 루프 · 후처리 건너뛰기 · 해시 목록만 갈라지고 GPU 자리 결정 · r2 정지/재개는 같은 코드)",
+  "입력": "러너가 gabia kprobe.in (sha256 adbd6f70…) 에서 nd_anion_removal.py --make_inputs --lineage --pseudo_dir 로 만든다 (계보 sha · 줄 차이 검사 · pseudo_dir 는 준 값일 때만 허용)",
+  "실패_규칙": "실패 점은 같은 입력으로 한 번 다시 · 두 번 실패면 남은 점을 멈추고 r2 재개 (끝 7)",
+  "selftest": "도구 20/20 · 러너 38/38 (ELF 31 그대로 + removal 7 — 혼자 · tot_charge · pseudo_dir · 후처리 없음 · 해시 · 정지/재개 · 두 번 실패 · PAW 빠짐)",
+  "by": "agent · 2026-10-19"
+ }
 }

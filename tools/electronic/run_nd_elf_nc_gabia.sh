@@ -22,6 +22,11 @@
 #        GPU 빔 × 2 → ELF SCF 혼자 → **성공·실패 상관없이** r2 를 restart_qe_relax.sh --run 으로 다시 건다 (tmux · BFGS 이력 승계)
 #      r2 말고 다른 잡이 GPU 에 있으면 아무것도 세우지 않는다 (끝 5). 탄성 · UMA 는 건드리지 않는다.
 #
+# JOB=removal (2026-10-19 · 카드 db/properties/nd_anion_removal_estimand_2026_10_19.json · 결정 D-2026-10-19-nd-anion-removal ·
+#   GPU 자리 D-2026-10-19-gabia-nd-removal-pause-li3nd): 같은 kprobe.in 에서 tools/electronic/nd_anion_removal.py --make_inputs 로
+#   떼어낸 셀 8 개 (PAW 그대로 · pseudo_dir = PSEUDO_DIR) 를 만들고, 같은 프로브 · GPU 자리 결정 · r2 정지/재개 안에서
+#   8 SCF 를 차례로 돌린다 (실패 점은 같은 입력으로 한 번 다시 · 두 번 실패면 멈추고 r2 재개) · ELF 후처리 (pp.x · 표본 · gap) 는 없다.
+#
 # 쓰는 법 (worktree 뿌리에서)
 #   DRY_RUN=1 PY=<uma python> bash tools/electronic/run_nd_elf_nc_gabia.sh    # 점검 + 프로브 + 결정만 (CPU 검사 · GPU 계산 0)
 #   tmux new -d -s ndelf "PY=<uma python> bash $PWD/tools/electronic/run_nd_elf_nc_gabia.sh"
@@ -39,7 +44,12 @@ SCF_IN_SHA=${SCF_IN_SHA:-adbd6f707af0c3b92209dad10fa08fa2ab8633b66a75d0947651dd4
 ND_UPF=${ND_UPF:-$REPO/db/inputs/nd_q3_elf_nc_2026_10_19/pseudo/Nd3plus_f-in-core.dojo_psp8_conv.upf}
 ND_UPF_SHA=${ND_UPF_SHA:-56b2e141cc9726c8b544bfd1fe87e5a2098ac8d8117e4f2c23b280da85d00654}
 SG15_DIR=${SG15_DIR:-/data/work/runs/lpsocl_elf/pseudo}
-OUT=${OUT:-/data/work/runs/nd_q3_elf_2026_10_19}
+JOB=${JOB:-elf}
+case "$JOB" in elf) OUT_DEF=/data/work/runs/nd_q3_elf_2026_10_19 ;; removal) OUT_DEF=/data/work/runs/nd_anion_removal_2026_10_19 ;;
+  *) echo "⛔ JOB '$JOB' 모름 (elf · removal)"; exit 3 ;; esac
+OUT=${OUT:-$OUT_DEF}
+PSEUDO_DIR=${PSEUDO_DIR:-/data/work/pseudo}       # JOB=removal: PAW (kprobe.in 의 pseudo_dir 와 같다)
+RM_TOOL=${RM_TOOL:-$REPO/tools/electronic/nd_anion_removal.py}
 GPU_PW=${GPU_PW:-/data/apps/qe-7.4.1-gpu/bin/pw.x}
 CPU_BIN=${CPU_BIN:-/data/apps/qe-7.4.1-cpu/bin}
 MPIRUN_CPU=${MPIRUN_CPU:-/usr/bin/mpirun}
@@ -186,7 +196,7 @@ EOF
     local n=$1; shift
     timeout 120 env SCF_IN="$KP" SG15_DIR="$T/sg15" OUT="$T/out_$n" GPU_PW="$T/gpu/pw.x" CPU_BIN="$T/cpu" MPIRUN_CPU="$T/bin/mpirun_cpu" \
       SKIP_LDD=1 MPIRUN_GPU="$T/bin/mpirun_gpu" R2_DIR="$T/r2" NVSMI="$T/bin/nvsmi" NVSTATE="$T/st_$n" TMUX_BIN="$T/bin/tmux" \
-      PAUSE_TOOL="$T/bin/pause.sh" RESTART_TOOL="$T/bin/restart.sh" PY=python3 PROBE_S=10 PROBE_MAXWAIT=6 POLL=1 EMPTY_N=2 EMPTY_MAX=15 PAUSE_TIMEOUT=10 \
+      PAUSE_TOOL="$T/bin/pause.sh" RESTART_TOOL="$T/bin/restart.sh" PY="$PY" PROBE_S=10 PROBE_MAXWAIT=6 POLL=1 EMPTY_N=2 EMPTY_MAX=15 PAUSE_TIMEOUT=10 \
       "$@" bash "$SELF" > "$T/out_$n.console" 2>&1
     local rc=$?; echo "$n $SECONDS" >> "$T/timing"; echo $rc
   }
@@ -264,6 +274,24 @@ EOF
   # 13 GPU 런타임 격리 — ldd 로 읽은 hpcx OPAL_PREFIX 는 GPU mpirun 에만 · CPU pp.x mpirun 으로 새면 97
   st m 500; rc=$(run m SKIP_LDD=0 PATH="$T/lddbin:$PATH" WANT_OPAL="$T/hpcx")
   ck "GPU 환경 격리: rc 0 (GPU mpirun 에 OPAL_PREFIX 있음 · CPU mpirun 에 없음)" "$rc" 0
+  # 14–17 JOB=removal — 떼어낸 셀 8 개 (가짜 PAW 폴더 · 같은 kprobe 사본) · PY 는 ase 가 있어야 한다 (gabia 는 uma python)
+  mkdir -p "$T/paw"; for f in $(sed -n '/^ATOMIC_SPECIES/,/^$/p' "$KP" | awk 'NF==3{print $3}'); do echo fake > "$T/paw/$f"; done
+  st r 500; rc=$(run r JOB=removal PSEUDO_DIR="$T/paw")
+  ck "removal alone: rc 0 · scf.out 8 · MANIFEST" "$rc:$(ls "$T"/out_r/rm_*/scf.out 2>/dev/null | wc -l | tr -d ' '):$(has "$T/out_r/MANIFEST.json")" "0:8:yes"
+  ck "removal: tot_charge (S +2 넷 · Cl +1 넷) · pseudo_dir = PAW 폴더 (여덟)" \
+     "$(grep -l 'tot_charge=+2.0' "$T"/out_r/rm_S*/scf.in 2>/dev/null | wc -l | tr -d ' '):$(grep -l 'tot_charge=+1.0' "$T"/out_r/rm_Cl*/scf.in 2>/dev/null | wc -l | tr -d ' '):$(grep -l "pseudo_dir='$T/paw'" "$T"/out_r/rm_*/scf.in 2>/dev/null | wc -l | tr -d ' ')" "4:4:8"
+  ck "removal: ELF 후처리 없음 (cube · 표본 없음)" "$(has "$T/out_r/nd_elf_nc.cube"):$(has "$T/out_r/nd_elf_bonds.csv")" "no:no"
+  ck "removal: SHA256SUMS 에 rm_*/scf.out 여덟" "$(grep -c '/rm_.*/scf.out$' "$T/out_r/SHA256SUMS" 2>/dev/null)" 8
+  st s 37250; r2_up "$T/st_s"; rc=$(run s JOB=removal PSEUDO_DIR="$T/paw")
+  ck "removal pause: rc 0 · 정지 있음 · 재개 1 · scf.out 8" \
+     "$rc:$(has "$T/st_s/pause_args"):$(grep -c -- '--run' "$T/st_s/restart_ran" 2>/dev/null):$(ls "$T"/out_s/rm_*/scf.out 2>/dev/null | wc -l | tr -d ' ')" "0:yes:1:8"
+  down "$T/st_s"
+  st u 37250; r2_up "$T/st_u"; rc=$(run u JOB=removal PSEUDO_DIR="$T/paw" SCF_MODE=fail)
+  ck "⛔음성: removal 두 번 실패 → rc 7 · r2 재개 · '한 번 다시' 기록" \
+     "$rc:$(grep -c -- '--run' "$T/st_u/restart_ran" 2>/dev/null):$(grep -c '같은 입력으로 한 번 다시' "$T/out_u/run.log" 2>/dev/null)" "7:1:1"
+  down "$T/st_u"
+  mkdir -p "$T/paw2"; cp "$T"/paw/* "$T/paw2/"; rm "$T/paw2/$(ls "$T/paw2" | head -1)"
+  st w 500; ck "⛔음성: removal PAW 하나 없음 → rc 3" "$(run w JOB=removal PSEUDO_DIR="$T/paw2")" 3
   for x in $(pgrep -f -- "$T/bin/" 2>/dev/null); do kill -9 "$x" 2>/dev/null; done
   cat "$T"/st_*/orphans 2>/dev/null | xargs -r kill 2>/dev/null
   [ "${KEEP_T:-0}" = 1 ] && echo "  (시험 폴더 남김: $T)" || rm -rf "$T"
@@ -276,11 +304,23 @@ say(){ echo "[$(date '+%F %T')] $*" | tee -a "$LOG"; }
 exec 9>"$OUT/.lock"; flock -n 9 || { say "⛔ 이미 실행 중 ($OUT/.lock)"; exit 10; }
 # ⚠ 자식 프로세스에는 fd 9 를 닫아서 넘긴다 (… 9>&-) — 물려받은 자식이 남으면 락이 안 풀린다
 #   (2026-10-19 selftest 실측: 프로브의 자식이 살아 남아 DRY_RUN 뒤 본 실행이 '이미 실행 중' 으로 멈췄다)
-say "════ Nd ELF (NC 80/320) · HEAD $(git -C "$REPO" rev-parse --short HEAD 2>/dev/null) · MODE $MODE${DRY_RUN:+ · DRY_RUN} · OUT $OUT ════"
+say "════ Nd $([ "$JOB" = removal ] && echo '떼어내기 SCF 8 (PAW 70/560)' || echo 'ELF (NC 80/320)') · HEAD $(git -C "$REPO" rev-parse --short HEAD 2>/dev/null) · MODE $MODE${DRY_RUN:+ · DRY_RUN} · OUT $OUT ════"
 
 # ① 입력 ───────────────────────────────────────────────────────────────────
 [ -s "$SCF_IN" ] || { say "⛔ kprobe 입력 없음 ($SCF_IN)"; exit 3; }
 [ "$(sha256sum "$SCF_IN" | cut -c1-64)" = "$SCF_IN_SHA" ] || { say "⛔ kprobe 입력 sha256 ≠ Bader 계보 기록 ($SCF_IN_SHA) — 다른 기하다"; exit 3; }
+if [ "$JOB" = removal ]; then
+  PAWS=$(sed -n '/^ATOMIC_SPECIES/,/^$/p' "$SCF_IN" | awk 'NF==3{print $3}')
+  [ "$(echo "$PAWS" | grep -c .)" = 6 ] || { say "⛔ kprobe 의 ATOMIC_SPECIES 가 여섯이 아니다"; exit 3; }
+  for f in $PAWS; do [ -s "$PSEUDO_DIR/$f" ] || { say "⛔ PAW pseudo 없음 ($PSEUDO_DIR/$f)"; exit 3; }; done
+  say "PAW pseudo ✓ $(for f in $PAWS; do printf '%s(%s) ' "$f" "$(md5sum "$PSEUDO_DIR/$f" | cut -c1-8)"; done)"
+  "$PY" "$RM_TOOL" --make_inputs --out "$OUT" --lineage "$SCF_IN" --pseudo_dir "$PSEUDO_DIR" 2>&1 9>&- | tee -a "$LOG"
+  [ "${PIPESTATUS[0]}" = 0 ] || { say "⛔ 떼어낸 입력 만들기 실패 (계보 sha · 줄 차이 검사)"; exit 3; }
+  RM_DIRS=$(ls -d "$OUT"/rm_*/ 2>/dev/null | sed 's#/$##' | sort)
+  [ "$(echo "$RM_DIRS" | grep -c .)" = 8 ] || { say "⛔ 떼어낸 입력이 8 개가 아니다 ($(echo "$RM_DIRS" | grep -c .))"; exit 3; }
+  PROBE_IN=$(echo "$RM_DIRS" | head -1)/scf.in
+  say "입력 ✓ $(echo "$RM_DIRS" | xargs -n1 basename | tr '\n' ' ')· 프로브 = $(basename "$(dirname "$PROBE_IN")")"
+else
 [ -s "$ND_UPF" ] && [ "$(sha256sum "$ND_UPF" | cut -c1-64)" = "$ND_UPF_SHA" ] || { say "⛔ Nd UPF 없음 또는 sha256 ≠ $ND_UPF_SHA ($ND_UPF)"; exit 3; }
 mkdir -p "$OUT/pseudo"
 declare -A PPF
@@ -334,6 +374,8 @@ open(dst, "w").write(inp)
 print(f"scf.in ✓ nat {nat} (원자 줄 {len(pos)}) · 종 {' '.join(species)} · k {' '.join(kp)} · 셀·좌표 = kprobe 그대로 · NC 80/320 · mv 0.01 · nosym")
 PY
 [ "${PIPESTATUS[0]}" = 0 ] && [ -s "$OUT/scf.in" ] || { say "⛔ scf.in 만들기 실패"; exit 3; }
+PROBE_IN=$OUT/scf.in
+fi
 
 # ② 메모리 프로브 (CPU 검사 · run 아님) ──────────────────────────────────────
 #   ⚠ QE 7.4 는 'Estimated static dynamical RAM' 다음 줄에 'Estimated max dynamical RAM' 을 찍는다 — **max 를 쓴다**
@@ -342,7 +384,7 @@ est_line(){ grep -a "Estimated max\|Estimated total" "$1" 2>/dev/null | head -1 
 est_mib(){ echo "$1" | awk '{for(i=1;i<=NF;i++) if($i ~ /^[0-9.]+$/ && ($(i+1)=="GB"||$(i+1)=="MB")) {printf "%d", ($(i+1)=="GB" ? $i*1024 : $i); exit}}'; }
 EST_MIB=""
 if [ -n "${PROBE_EST_MIB:-}" ]; then EST_MIB=$PROBE_EST_MIB; say "프로브 생략 — PROBE_EST_MIB=$EST_MIB 를 준 값으로 쓴다"
-elif [ -f "$OUT/probe/scf.in.sha256" ] && [ "$(cat "$OUT/probe/scf.in.sha256")" = "$(sha256sum "$OUT/scf.in" | cut -c1-64)" ] \
+elif [ -f "$OUT/probe/scf.in.sha256" ] && [ "$(cat "$OUT/probe/scf.in.sha256")" = "$(sha256sum "$PROBE_IN" | cut -c1-64)" ] \
      && grep -aq "Estimated" "$OUT/probe/probe.out" 2>/dev/null; then
   L=$(est_line "$OUT/probe/probe.out"); EST_MIB=$(est_mib "$L")
   say "프로브 재사용 (같은 scf.in) — $(echo "$L" | tr -s ' ')"
@@ -353,7 +395,7 @@ else
   ln -s ../pseudo "$PD/pseudo"
   say "▶ 메모리 프로브 — CPU pw.x 1 랭크 · 검사용 (run 아님) · 'Estimated' 줄을 읽으면 바로 끝 (최대 ${PROBE_S} s)"
   ( cd "$PD" && OMP_NUM_THREADS=1 ESPRESSO_TMPDIR="$PD/tmp" exec "$MPIRUN_CPU" --allow-run-as-root --bind-to none --mca btl self,vader -np 1 \
-      "$CPU_BIN/pw.x" -in ../scf.in > probe.out 2>&1 9>&- ) &
+      "$CPU_BIN/pw.x" -in "$PROBE_IN" > probe.out 2>&1 9>&- ) &
   PPID_PROBE=$!; t0=$(date +%s); tS=""
   while kill -0 "$PPID_PROBE" 2>/dev/null; do
     grep -aq "Estimated max\|Estimated total" "$PD/probe.out" 2>/dev/null && break
@@ -365,7 +407,7 @@ else
     sleep 2
   done
   kill -TERM "$PPID_PROBE" 2>/dev/null; sleep 2; kill -KILL "$PPID_PROBE" 2>/dev/null; wait "$PPID_PROBE" 2>/dev/null
-  for x in $(pgrep -f -- "-in ../scf.in" 2>/dev/null); do
+  for x in $(pgrep -f -- "-in $PROBE_IN" 2>/dev/null); do
     [ "$(readlink -f /proc/$x/cwd 2>/dev/null)" = "$(readlink -f "$PD")" ] && kill -KILL "$x" 2>/dev/null
   done
   rm -rf "$PD/tmp"
@@ -374,7 +416,7 @@ else
                          grep -a -A4 "Error in routine" "$PD/probe.out" | head -8 | tee -a "$LOG"; exit 4; }
   grep -aq "PseudoPot. # 6\|PseudoPot. #  6" "$PD/probe.out" && say "프로브: QE 7.4.1 이 pseudo 여섯을 읽었다 (Nd 변환 UPF 포함)"
   say "프로브 ✓ $(echo "$L" | tr -s ' ')"
-  sha256sum "$OUT/scf.in" | cut -c1-64 > "$PD/scf.in.sha256"
+  sha256sum "$PROBE_IN" | cut -c1-64 > "$PD/scf.in.sha256"
 fi
 NEED=$(awk -v e="$EST_MIB" -v f="$NEED_FACTOR" -v p="$NEED_PLUS" 'BEGIN{printf "%d", e*f+p}')
 
@@ -470,15 +512,17 @@ if [ "$DEC" = pause ]; then
   say "GPU 빔 × $EMPTY_N — ELF SCF 혼자 간다"
 fi
 
-# ⑤ ELF SCF (GPU) ──────────────────────────────────────────────────────────
-cd "$OUT" || finish_fail 7
-if grep -aq "JOB DONE" scf.out 2>/dev/null && grep -aq "convergence has been achieved" scf.out; then
-  say "scf.out 이 이미 끝나 있다 — SCF 생략"
-else
+# ⑤ SCF (GPU) — ELF 는 OUT 하나 · removal 은 rm_* 여덟 ──────────────────────────
+run_scf(){   # $1 = 폴더 → 0 수렴 · 7 실패 · 11 가드
+  local d=$1 rc GP=""
+  cd "$d" || return 7
+  if grep -aq "JOB DONE" scf.out 2>/dev/null && grep -aq "convergence has been achieved" scf.out; then
+    say "$(basename "$d"): scf.out 이 이미 끝나 있다 — 생략"; return 0
+  fi
   [ -f scf.out ] && mv scf.out "scf.out.$(date +%m%d%H%M%S)"
-  say "▶ ELF SCF (GPU · $DEC)"
+  say "▶ SCF $(basename "$d") (GPU · $DEC)"
   env "${GPU_ENV[@]}" "$MPIRUN_GPU" --oversubscribe -np 1 "$GPU_PW" -nk 1 -in scf.in > scf.out 2>&1 9>&- &
-  MP=$!
+  local MP=$!
   if [ "$DEC" = coexist ]; then
     ( while kill -0 "$MP" 2>/dev/null; do
         u=$(gpu_used)
@@ -486,7 +530,7 @@ else
           echo "[$(date '+%F %T')] ⛔ 가드 — GPU 합계 $u > $GUARD_MIB MiB · 우리 pw.x 만 죽인다" >> "$LOG"
           : > "$OUT/.guard_fired"
           for x in $(pgrep -f -- "-in scf.in" 2>/dev/null); do
-            [ "$(readlink -f /proc/$x/cwd 2>/dev/null)" = "$(readlink -f "$OUT")" ] && kill -KILL "$x" 2>/dev/null
+            [ "$(readlink -f /proc/$x/cwd 2>/dev/null)" = "$(readlink -f "$d")" ] && kill -KILL "$x" 2>/dev/null
           done
           kill -KILL "$MP" 2>/dev/null; break
         fi
@@ -495,18 +539,34 @@ else
     GP=$!
   fi
   wait "$MP"; rc=$?
-  [ -n "${GP:-}" ] && { kill "$GP" 2>/dev/null; wait "$GP" 2>/dev/null; }
-  if [ -e "$OUT/.guard_fired" ]; then rm -f "$OUT/.guard_fired"; say "⛔ 공존 가드 발동 — 우리 SCF 만 죽였다 · MODE=pause 로 다시"; exit 11; fi
-  grep -aq "convergence has been achieved" scf.out && grep -aq "JOB DONE" scf.out \
-    || { say "⛔ ELF SCF rc=$rc · 수렴/JOB DONE 없음 — scf.out 끝:"; tail -5 scf.out | tee -a "$LOG"; finish_fail 7; }
+  [ -n "$GP" ] && { kill "$GP" 2>/dev/null; wait "$GP" 2>/dev/null; }
+  if [ -e "$OUT/.guard_fired" ]; then rm -f "$OUT/.guard_fired"; say "⛔ 공존 가드 발동 — 우리 SCF 만 죽였다 · MODE=pause 로 다시"; return 11; fi
+  if grep -aq "convergence has been achieved" scf.out && grep -aq "JOB DONE" scf.out; then
+    say "SCF ✓ $(basename "$d") $(grep -a '^!' scf.out | tail -1 | tr -s ' ') · 반복 $(grep -a 'convergence has been achieved' scf.out | tail -1 | grep -oE '[0-9]+ iterations') · $(grep -a 'PWSCF.*WALL' scf.out | tail -1 | tr -s ' ')"
+    return 0
+  fi
+  say "⛔ SCF $(basename "$d") rc=$rc · 수렴/JOB DONE 없음 — scf.out 끝:"; tail -5 scf.out | tee -a "$LOG"; return 7
+}
+if [ "$JOB" = removal ]; then
+  for d in $RM_DIRS; do
+    run_scf "$d"; r=$?
+    [ "$r" = 11 ] && exit 11
+    if [ "$r" != 0 ]; then say "↻ $(basename "$d") 같은 입력으로 한 번 다시"; run_scf "$d"; r=$?; [ "$r" = 11 ] && exit 11; fi
+    [ "$r" = 0 ] || { say "⛔ $(basename "$d") 두 번 실패 — 남은 점을 멈춘다"; finish_fail 7; }
+  done
+  cd "$OUT" || finish_fail 7
+else
+  run_scf "$OUT"; r=$?
+  [ "$r" = 11 ] && exit 11
+  [ "$r" = 0 ] || finish_fail 7
 fi
-say "SCF ✓ $(grep -a '^!' scf.out | tail -1 | tr -s ' ') · 반복 $(grep -a 'convergence has been achieved' scf.out | tail -1 | grep -oE '[0-9]+ iterations') · $(grep -a 'PWSCF.*WALL' scf.out | tail -1 | tr -s ' ')"
 if [ "$R2_PAUSED" = 1 ]; then
-  resume_r2 || { say "⛔⛔ r2 재개 실패 — r2 가 서 있다 · 사람이 바로 본다 (ELF 후처리는 계속한다)"; R2_FAIL=1; }
+  resume_r2 || { say "⛔⛔ r2 재개 실패 — r2 가 서 있다 · 사람이 바로 본다 (뒤 처리는 계속한다)"; R2_FAIL=1; }
   R2_PAUSED=0
 fi
 
 # ⑥ pp.x ELF (CPU 후처리 · 계산 아님) ────────────────────────────────────────
+if [ "$JOB" = elf ]; then
 if [ ! -s nd_elf_nc.cube ]; then
   cat > pp_elf.in <<EOF
 &INPUTPP
@@ -537,13 +597,15 @@ if not ef or not ev:
 e = float(ef[-1]); vb = max(x for x in ev if x <= e); cb = min((x for x in ev if x > e), default=float("nan"))
 print(f"gap: E_F {e:.4f} eV · 최고 점유 {vb:.4f} · 최저 빈 {cb:.4f} → {cb - vb:.3f} eV (k {len(blocks)} 블록 · smearing mv 0.01 Ry = 0.136 eV 와 비교)")
 PY
+fi
 
 # ⑧ 기록 · 끝 줄 → 해시 ───────────────────────────────────────────────────────
 git -C "$REPO" rev-parse HEAD > SOURCE_COMMIT 2>/dev/null || echo unknown > SOURCE_COMMIT
 RC_END=0; [ -n "${R2_FAIL:-}" ] && RC_END=12
-say "■ 끝 · 끝 코드 $RC_END$([ "$RC_END" = 12 ] && echo ' (ELF 는 끝 · ⛔ r2 재개 실패 — 사람이 바로 본다)') · 결정 $DEC"
+say "■ 끝 · 끝 코드 $RC_END$([ "$RC_END" = 12 ] && echo ' (계산은 끝 · ⛔ r2 재개 실패 — 사람이 바로 본다)') · 결정 $DEC"
 find . -maxdepth 1 -type f ! -name '.lock' ! -name SHA256SUMS ! -name 'nd_elf_pl' ! -name '*.cube' -print0 | sort -z | xargs -0 sha256sum > SHA256SUMS
-( cd pseudo && sha256sum * ) | sed 's#  #  ./pseudo/#' >> SHA256SUMS
+[ "$JOB" = removal ] && find . -mindepth 2 -maxdepth 2 -path './rm_*' -type f \( -name scf.in -o -name scf.out \) -print0 | sort -z | xargs -0 sha256sum >> SHA256SUMS
+[ -d pseudo ] && ( cd pseudo && sha256sum * ) | sed 's#  #  ./pseudo/#' >> SHA256SUMS
 [ -f probe/probe.out ] && sha256sum probe/probe.out | sed 's#  probe/#  ./probe/#' >> SHA256SUMS
-echo "SHA256SUMS $(wc -l < SHA256SUMS) 줄 (회수: scf.in · scf.out · pp_elf.* · nd_elf_bonds.csv · run.log · probe/probe.out · SOURCE_COMMIT — cube 는 gabia 에 둔다)"
+echo "SHA256SUMS $(wc -l < SHA256SUMS) 줄 (회수: $([ "$JOB" = removal ] && echo 'rm_*/scf.in · rm_*/scf.out · MANIFEST.json' || echo 'scf.in · scf.out · pp_elf.* · nd_elf_bonds.csv') · run.log · probe/probe.out · SOURCE_COMMIT)"
 exit "$RC_END"

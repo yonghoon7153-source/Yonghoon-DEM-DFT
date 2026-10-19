@@ -3,7 +3,7 @@
  "kind": "estimand",
  "record_kind": "estimand_card",
  "date": "2026-10-19",
- "status": "draft — 사용자 10-19 선택 ('떼어내기 에너지 (권고)') · 결정 proposed · 사용자 비준 대기 · 결과 없음",
+ "status": "사용자 비준 2026-10-19 (결정 D-2026-10-19-nd-anion-removal active) · 기계 = gabia · r2 잠깐 세움 (D-2026-10-19-gabia-nd-removal-pause-li3nd) · 결과 없음",
  "citable": false,
  "results_seen": false,
  "results_seen_note": "떼어낸 셀 계산 0 개 · 점전하 예측은 이 카드 커밋 뒤에 낸다 (아래 §5 예측은 결과 전 기록 칸)",
@@ -114,6 +114,12 @@
    "state": "draft",
    "by": "agent",
    "note": "사용자 10-19 '떼어내기 에너지 (권고)' — 결정 D-2026-10-19-nd-anion-removal proposed · 결과 없음"
+  },
+  {
+   "at": "2026-10-19",
+   "state": "active",
+   "by": "사용자",
+   "note": "AskUserQuestion '비준 (권고)' · 기계 'gabia · r2 잠깐 세움'"
   }
  ]
 }
