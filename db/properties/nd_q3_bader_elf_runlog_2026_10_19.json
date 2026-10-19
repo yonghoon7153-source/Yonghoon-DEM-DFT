@@ -63,5 +63,15 @@
   "1저자_질문_답": "'전자가 음이온 쪽으로 가나' → 아니다, 반대다 (같은 셀 안 비교 · 방법 차 무관) · 'Li 는 그대로인가' → 그대로 (+0.884 대 호스트 +0.883)",
   "한계": "n 이 작다 (Nd 2 · 자유 S 이웃 2 · Cl 이웃 2 · PS₄ 이웃 단위 2) · 구조 하나 (6 월 Nd@Li 선별 모델의 9 월 새 PP 판) · smearing mv · k331 (호스트 fixed · k444 — 셀 안 비교는 무관 · 원소 평균 비교에만 걸린다) · Bader 는 분할 규칙 하나의 답이다 (ELF 로 교차 확인 예정)",
   "도구_후속": "bader_summary_zval.py 에 BCF.dat 극대 거리 검사 (껍질 밖 극대 → 경고) · 단위 합 (P 중심) 을 넣을 것 — 다음 Bader 에서 같은 인공물을 사람이 찾지 않게"
+ },
+ "ELF_러너_2026_10_19": {
+  "사용자": "'일단 같이 돌려봐 ㅇㅇ' (GPU 가 비길 기다리지 말고) · '안되면 잠깐 li3Nd stop하고 해도 되잖아' → 결정 D-2026-10-19-gabia-nd-elf-coexist-or-pause-li3nd (active · 비준)",
+  "러너": "tools/electronic/run_nd_elf_nc_gabia.sh — kprobe.in (sha256 adbd6f70… = Bader 계보) 의 셀·좌표·k 그대로 · pseudo 만 NC (SG15 Li P S Cl O = gabia lpsocl_elf/pseudo · Nd = 변환 UPF 56b2e141…) · ecut 80/320 · mv 0.01 · nosym · conv 1e-10 · β 0.3 · verbosity high → GPU pw.x → CPU pp.x plot_num 8 → sample_elf_bonds.py (호스트 표와 같은 도구 · Nd–S · Cl–Nd 3.3 Å 보탬 = Bader 사전등록 거리) → gap (고유값)",
+  "GPU_자리": "CPU 프로브 (검사) 추정 × 1.3 + 1024 = need · GPU 0 → alone · 빔 − need ≥ 4,096 → coexist (가드 47,500 MiB → 우리 pw.x 만 죽임 · 끝 11) · 아니면 GPU 위가 r2 하나뿐일 때만 pause (BFGS 줄 직후 EXIT → 판정 '사람이 세움 → restart' → GPU 빔 × 2 → ELF 혼자 → 성공·실패 상관없이 r2 restart · tmux) · 다른 잡 있으면 아무것도 안 세움 (끝 5)",
+  "메모리_어림_결과_전": "셀 2,395 Å³ · NC 80 Ry → k 점마다 평면파 ≈ 19.5 만 · 밴드 ≈ 355 (smearing 기본 1.2×) · 투영자 ≈ 1,000 → GPU ≈ 11–12 GB · 10-19 아침 gabia 빔 ≈ 11.6 GB (r2 37.2 GB) → 같이는 빠듯 — 프로브가 정한다",
+  "정지_도구_보탬": "pause_relax_at_bfgs.sh 에 --out · --no_runner — restart_qe_relax.sh 는 'X.restart.in' 으로 돌리고 'X.out' 에 쓴다 → 옛 도구는 '<입력>.out 없음' 으로 거부했을 것 (시험으로 확인) · 이 드라이버는 끝난 잡을 다시 걸지 않아 얼릴 필요 없음 · selftest 29 (새 10) · 깨기 2/2 빨강",
+  "시험": "러너 selftest 29 (가짜 nvidia-smi · CPU/GPU pw.x · pp.x · mpirun 둘 · 정지 도구 · 드라이버 · tmux · ldd · 실물 kprobe 사본) — alone · coexist · pause · 다른 잡 거부 · 정지 실패 · 정지 뒤 SCF 실패 (r2 재개) · 가드 · 프로브 실패 · 입력 해시 셋 · DRY_RUN (r2 안 건드림) · 프로브 재사용 · 정지 뒤 판정 이상 · 재개 판정 이상 (끝 12) · GPU 환경 격리 · 깨기 7/7 빨강 (GPU 환경 전역 export · 실패 뒤 재개 빠짐 · 다른 잡 거부 두 겹 (한 겹만 빼면 다른 겹이 막는다 — 둘 다 빼야 빨강) · 프로브 락 fd · 가드 · 블록 정규식 옛판)",
+  "시험이_잡은_진짜_버그": "① 자식이 락 fd 9 를 물려받아 DRY_RUN 뒤 본 실행이 '이미 실행 중' 으로 멈춤 → 자식마다 9>&- ② kprobe 블록 정규식 '^\\s*' 가 앞 빈 줄을 먹어 k 줄 · 셀 셋째 줄 · 마지막 원자가 빠졌는데 가짜 QE 시험은 통과 → '^[ \\t]*' + 블록 개수 검사 + 실물 사본 대조 (원자 블록 글자까지 같음) ③ (설계 중) GPU 런타임 환경을 전역 export 하면 뒤의 CPU pp.x (시스템 OpenMPI) 가 hpcx OPAL_PREFIX 를 받는다 → env 배열로 GPU mpirun 에만",
+  "실행": "gabia 새 worktree → DRY_RUN=1 (점검 + 프로브 + 결정만 · CPU 검사) → tmux ndelf (본 실행 · 프로브 재사용) · 감시 = run.log · nvidia-smi · tmux (ndelf · li3nd_r2_res_*)"
  }
 }

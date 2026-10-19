@@ -8808,6 +8808,73 @@
     "근거_발화": "사용자 2026-10-19 (이 세션): 권고 'Nd 분해 · Bader · ELF: 9 월 vc-relax 구조를 쓰려면 vc-relax 예외를 이 용도까지 넓혀야 해요. 권고는 넓히기예요.' 를 인용하며 '이걸 바로 분석에 사용하자' → 'gabia에서'",
     "decision_digest": "sha256:59600fcb4aeac6cd4b77e9c3fe8e2558d4fca6b55b67b35520cf721a344b6c5a"
    }
+  },
+  {
+   "id": "D-2026-10-19-gabia-nd-elf-coexist-or-pause-li3nd",
+   "schema_version": 2,
+   "kind": "policy",
+   "scope": "ops.gabia.gpu.concurrency",
+   "slot": "gabia_gpu_nd_elf_coexist_or_pause_li3nd_r2",
+   "applies_to": {
+    "systems": [
+     "modelc_nd_doped",
+     "li3nd_pristine_333_control"
+    ],
+    "tasks": [
+     "nd_elf_nc_scf",
+     "li3nd_p0_2_control_r2_pause_resume"
+    ],
+    "methods": [
+     "qe_gpu_scf",
+     "qe_gpu_relax"
+    ],
+    "use_cases": [
+     "internal"
+    ]
+   },
+   "title": "Nd ELF NC SCF (gabia GPU · 1 회) 는 Li₃Nd r2 옆에서 같이 돌리고, 자리가 모자라면 r2 를 BFGS 경계에서 EXIT 로 잠깐 세운 뒤 ELF 를 혼자 돌리고 r2 를 restart 로 잇는다",
+   "statement": "tools/electronic/run_nd_elf_nc_gabia.sh 한 번 (MODE=auto) 만 해당한다. ① CPU 메모리 프로브 (검사 · run 아님) 의 추정 × 1.3 + 1024 MiB 를 need 로 본다. ② GPU 계산 프로세스가 0 이면 혼자 · 빔 − need ≥ 4,096 MiB 면 r2 옆에서 같이 (가드: GPU 합계 > 47,500 MiB 면 우리 pw.x 만 죽이고 끝 11 — 그때는 MODE=pause 로 다시) · 아니면 GPU 위가 Li₃Nd r2 (/data/work/runs/sei_control/li3nd_mp-976264_p333_r2) 하나뿐일 때만 r2 를 세운다. ③ 세우기 = tools/elastic/pause_relax_at_bfgs.sh --no_runner --out <첫 .in 의 .out> 으로 다음 'number of bfgs steps' 줄 직후 <prefix>.EXIT · 뒤에 restart_qe_relax.sh 판정이 '사람이 세움 → restart' (또는 수렴) 여야 ELF 를 돌린다. ④ ELF SCF 가 끝나면 성공 · 실패 상관없이 r2 를 restart_qe_relax.sh --run --nstep 200 (restart_mode='restart' · BFGS 이력 승계 · GPU 여유 20,000 MiB 를 스스로 기다림) 으로 tmux 에서 다시 건다 — 판정이 restart 가 아니면 걸지 않고 끝 12 로 사람을 부른다. ⑤ r2 말고 다른 잡이 GPU 에 있으면 아무것도 세우지 않는다 (끝 5). 탄성은 건드리지 않는다 (D-2026-10-11 ⑤ 그대로 — r2 끝난 뒤 또는 사용자 결정).",
+   "rationale": "사용자 10-19 — Nd ELF 러너를 'GPU 가 비면 돌리게 짤게요' 에 '일단 같이 돌려봐 ㅇㅇ' · 이어서 '안되면 잠깐 li3Nd stop하고 해도 되잖아'. 어림: 9 월 구조 (2,395 Å³ · 120 원자) NC 80/320 은 k 점마다 평면파 ≈ 19.5 만 · 밴드 ≈ 355 → GPU ≈ 11–12 GB · 지금 빔 ≈ 11.6 GB (r2 37.2 GB) → 같이는 빠듯하다 — 프로브가 정한다. r2 는 restart_qe_relax.sh 가 한 번 돌리고 끝내는 드라이버라 (끝난 잡을 다시 걸지 않는다) 러너를 얼릴 필요가 없다 → --no_runner. EXIT 정지 + BFGS 이력 승계는 비정상 종료가 아니다 (1저자 09-29 해석 · 10-01 · 10-11 선례).",
+   "decision_state": "active",
+   "record_kind": "scope_declaration",
+   "results_seen": false,
+   "results_seen_note": "ELF 결과 0 건 · r2 는 10-12 실측 BFGS 70 이후 상태 모름 (러너가 판정을 찍는다)",
+   "record": "db/properties/nd_q3_bader_elf_runlog_2026_10_19.json",
+   "depends_on": [
+    "D-2026-10-19-nd-q23-ppswap-structure",
+    "D-2026-10-11-gabia-elastic-pause-li3nd-r2"
+   ],
+   "supersedes": [],
+   "amends": null,
+   "evidence": [
+    "tools/electronic/run_nd_elf_nc_gabia.sh",
+    "tools/elastic/pause_relax_at_bfgs.sh",
+    "tools/sei/restart_qe_relax.sh"
+   ],
+   "reopen_criteria": [
+    "이 러너의 ELF SCF 한 번 (실패 뒤 다시 한 번 포함) 이 끝나면 소멸 — 다른 GPU 잡 · 다른 공존 · 탄성 재개로 넘어가지 않는다 (새 결정)"
+   ],
+   "enforcement": "러너가 건다: kprobe.in sha256 (Bader 계보) · Nd UPF sha256 · SG15 원소마다 하나 · 프로브 추정 줄 없으면 멈춤 · GPU 위 프로세스를 /proc cwd 로 r2 / 다른 잡으로 가름 · pause 는 r2 하나뿐일 때만 · 정지 도구 끝 코드 0 + 판정 '사람이 세움 → restart' 확인 · GPU 빔 × 2 · SCF 뒤 무조건 r2 재개 시도 (실패면 끝 12) · 공존 가드 · 자식 프로세스에 락 fd 를 넘기지 않음 · selftest 29 (가짜 nvidia-smi · pw.x · pp.x · mpirun · 정지 도구 · 드라이버 · tmux) · 일부러 깨기 7 (GPU 환경 전역 export · 실패 뒤 재개 빠짐 · 다른 잡 거부 두 겹 · 프로브 락 fd · 가드 · 블록 정규식) 전부 빨강",
+   "proposed_by": "claude-session-2026-10-19",
+   "status": "active",
+   "status_history": [
+    {
+     "at": "2026-10-19",
+     "state": "active",
+     "by": "사용자 (gabia GPU 자리 · CEI/Nd 트랙 계산 담당)",
+     "note": "'일단 같이 돌려봐 ㅇㅇ' · '안되면 잠깐 li3Nd stop하고 해도 되잖아'"
+    }
+   ],
+   "ratification": {
+    "state": "ratified",
+    "role": "scientific_owner",
+    "actor_id": "yonghoon7153@gmail.com",
+    "timestamp": "2026-10-19T07:10:08Z",
+    "commit": "77faa202a2db530442efdd43377eb240f6e24b28",
+    "⚠_digest_의_뜻": "`ratification` 을 뺀 결정 내용의 sha256 이다.",
+    "근거_발화": "사용자 2026-10-19 (이 세션): 'gabia GPU 가 비면 돌리게 짤게요' 에 '일단 같이 돌려봐 ㅇㅇ' → 이어서 '안되면 잠깐 li3Nd stop하고 해도 되잖아'",
+    "decision_digest": "sha256:4dd00eb56cc772568a7eb741103bfca213e729de935a8e5c7c9842b84b6ac270"
+   }
   }
  ]
 }

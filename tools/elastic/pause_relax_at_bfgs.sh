@@ -33,14 +33,23 @@
 #
 #   bash tools/elastic/pause_relax_at_bfgs.sh --in strain_13_m.in --runner run_elastic_relaxedion_gabia.sh
 #   bash tools/elastic/pause_relax_at_bfgs.sh --selftest
+#
+# 2026-10-19 보탬 (Nd ELF 를 위해 Li₃Nd r2 를 잠깐 세운다 · 사용자 '안되면 잠깐 li3Nd stop하고 해도 되잖아')
+#   --out FILE   pw.x 의 출력 파일 (pw.x cwd 기준 · 기본 <입력>.out). restart_qe_relax.sh 는 'X.restart.in' 으로 돌리고
+#                'X.out' 에 쓴다 — 기본 규칙으로는 '파일이 없다' 로 거부된다 (그 경우를 selftest 가 잡는다).
+#   --no_runner  러너를 얼리지도 죽이지도 않는다 (②③⑥ 생략). pw.x 가 끝난 뒤 **다음 잡을 안 띄우는** 드라이버일 때만 쓴다
+#                (restart_qe_relax.sh 는 끝난 잡을 판정·출력만 하고 다시 걸지 않는다 — '▶ … mode=' 다음 줄들).
+#   bash tools/elastic/pause_relax_at_bfgs.sh --in 00_control_relax.restart.in --out 00_control_relax.out --no_runner
 # =============================================================================
 set -uo pipefail
 
-IN=""; RUNNER_PAT=""; POLL=20; TIMEOUT=14400; EXIT_WAIT=7200; SELFTEST=0; PANE_PIDS_OVERRIDE=""
+IN=""; RUNNER_PAT=""; POLL=20; TIMEOUT=14400; EXIT_WAIT=7200; SELFTEST=0; PANE_PIDS_OVERRIDE=""; OUTF=""; NO_RUNNER=0
 while [ $# -gt 0 ]; do
   case "$1" in
     --in) IN="$2"; shift ;;
     --runner) RUNNER_PAT="$2"; shift ;;
+    --out) OUTF="$2"; shift ;;
+    --no_runner) NO_RUNNER=1 ;;
     --poll) POLL="$2"; shift ;;
     --timeout) TIMEOUT="$2"; shift ;;
     --exit_wait) EXIT_WAIT="$2"; shift ;;
@@ -80,25 +89,31 @@ inkey(){   # $1 = .in · $2 = 키 → 값 (따옴표 제거)
 nbfgs(){ grep -ac "number of bfgs steps" "$1" 2>/dev/null || true; }
 
 main(){
-  [ -n "$IN" ] && [ -n "$RUNNER_PAT" ] || { echo "⛔ --in 과 --runner 가 필요하다"; return 2; }
+  [ -n "$IN" ] && { [ -n "$RUNNER_PAT" ] || [ "$NO_RUNNER" = 1 ]; } || { echo "⛔ --in 과 (--runner 또는 --no_runner) 가 필요하다"; return 2; }
   local pids n P C OUT PFX ODIR BFGS R n0 t0 tE ended=0
   pids=$(find_pw "$IN"); n=$(echo "$pids" | grep -c . || true)
   [ "$n" = 1 ] || { say "⛔ '$IN' 을 돌리는 pw.x 가 ${n} 개다 (하나여야 한다) — 아무것도 안 했다"; return 3; }
-  P=$pids; C=$(readlink "/proc/$P/cwd"); OUT="$C/${IN%.in}.out"
+  P=$pids; C=$(readlink "/proc/$P/cwd")
+  if [ -n "$OUTF" ]; then case "$OUTF" in /*) OUT=$OUTF ;; *) OUT="$C/$OUTF" ;; esac; else OUT="$C/${IN%.in}.out"; fi
   [ -f "$C/$IN" ] && [ -f "$OUT" ] || { say "⛔ $C 에 $IN · $(basename "$OUT") 가 없다 — 아무것도 안 했다"; return 3; }
   PFX=$(inkey "$C/$IN" prefix); PFX=${PFX:-pwscf}
   ODIR=$(inkey "$C/$IN" outdir); ODIR=${ODIR:-./}; case "$ODIR" in /*) ;; *) ODIR="$C/$ODIR" ;; esac
   BFGS="$ODIR/$PFX.bfgs"
-  R=$(find_runner "$P" "$RUNNER_PAT") || { say "⛔ pw.x $P 의 조상에 '$RUNNER_PAT' 가 없다 — 아무것도 안 했다"; return 3; }
-  for x in $(pane_pids); do
-    [ "$x" = "$R" ] && { say "⛔ 러너 $R 가 tmux 창 셸 자체다 — STOP 을 tmux 가 풀어 버린다. 아무것도 안 했다"; return 4; }
-  done
-  say "pw.x $P · cwd $C · prefix $PFX · bfgs $BFGS · 러너 $R"
-  kill -STOP "$R"; sleep 1
-  case "$(pstat "$R")" in
-    T*) say "러너 $R 얼림 (T) — 13_m 같은 이 점이 끝나도 다음 점을 못 띄운다" ;;
-    *)  kill -CONT "$R" 2>/dev/null; say "⛔ 러너 상태가 T 가 아니다 ($(pstat "$R")) — CONT 로 되돌리고 멈춘다"; return 5 ;;
-  esac
+  if [ "$NO_RUNNER" = 1 ]; then
+    R=""
+    say "pw.x $P · cwd $C · prefix $PFX · bfgs $BFGS · 출력 $(basename "$OUT") · 러너 안 얼림 (--no_runner)"
+  else
+    R=$(find_runner "$P" "$RUNNER_PAT") || { say "⛔ pw.x $P 의 조상에 '$RUNNER_PAT' 가 없다 — 아무것도 안 했다"; return 3; }
+    for x in $(pane_pids); do
+      [ "$x" = "$R" ] && { say "⛔ 러너 $R 가 tmux 창 셸 자체다 — STOP 을 tmux 가 풀어 버린다. 아무것도 안 했다"; return 4; }
+    done
+    say "pw.x $P · cwd $C · prefix $PFX · bfgs $BFGS · 러너 $R"
+    kill -STOP "$R"; sleep 1
+    case "$(pstat "$R")" in
+      T*) say "러너 $R 얼림 (T) — 13_m 같은 이 점이 끝나도 다음 점을 못 띄운다" ;;
+      *)  kill -CONT "$R" 2>/dev/null; say "⛔ 러너 상태가 T 가 아니다 ($(pstat "$R")) — CONT 로 되돌리고 멈춘다"; return 5 ;;
+    esac
+  fi
   n0=$(nbfgs "$OUT"); t0=$(date +%s); say "BFGS 줄 ${n0} 개에서 다음 줄을 기다린다 (최대 ${TIMEOUT} s)"
   while :; do
     if ! alive "$P"; then ended=1; say "pw.x 가 스스로 끝났다 — EXIT 를 만들지 않는다"; break; fi
@@ -106,8 +121,8 @@ main(){
       : > "$C/$PFX.EXIT"; tE=$(date +%s); say "BFGS 줄 $(nbfgs "$OUT") — $C/$PFX.EXIT 생성"; break
     fi
     if [ $(( $(date +%s) - t0 )) -gt "$TIMEOUT" ]; then
-      kill -CONT "$R" 2>/dev/null
-      say "⛔ ${TIMEOUT} s 안에 BFGS 줄이 안 늘었다 — 러너를 CONT 로 되돌리고 EXIT 없이 끝낸다 (상태 $(pstat "$R"))"; return 6
+      [ -n "$R" ] && kill -CONT "$R" 2>/dev/null
+      say "⛔ ${TIMEOUT} s 안에 BFGS 줄이 안 늘었다 — EXIT 없이 끝낸다$([ -n "$R" ] && echo " · 러너를 CONT 로 되돌림 (상태 $(pstat "$R"))")"; return 6
     fi
     sleep "$POLL"
   done
@@ -128,6 +143,10 @@ main(){
   if [ -f "$BFGS" ]; then say ".bfgs $(sha256sum "$BFGS" | cut -c1-8) · $(date -r "$BFGS" '+%F %T')"; else say "⚠ .bfgs 없음 ($BFGS) — 재개는 처음부터가 된다"; fi
   say "상태 = $st · BFGS 줄 $(nbfgs "$OUT") · 마지막 $(grep -a 'Total force' "$OUT" | tail -1 | tr -s ' ')"
   case "$st" in done|exhausted|stopped) ;; *) say "⛔ 재개 가능한 상태가 아니다 ($st) — 러너는 얼린 채 둔다 (사람이 본다)"; return 8 ;; esac
+  if [ -z "$R" ]; then
+    say "✅ 세움 (러너 안 얼림 · --no_runner) · 재개 = 드라이버를 새로 띄운다 (stopped/exhausted + .bfgs → restart)"
+    return 0
+  fi
   kill -9 "$R" 2>/dev/null; sleep 1
   kill -0 "$R" 2>/dev/null && { say "⛔ 러너 $R 가 아직 있다"; return 9; }
   say "✅ 러너 $R 종료 · 다음 점 안 띄움 · 재개 = 러너를 새로 띄운다 (stopped/exhausted + .bfgs → restart)"
@@ -141,7 +160,7 @@ if [ "$SELFTEST" = 1 ]; then
   # 가짜 pw.x: BFGS 줄을 STEP 초마다 쓰고, <prefix>.EXIT 가 보이면 QE 처럼 멈춘다 (파일을 지운다)
   cat > "$T/bin/pw.x" <<'EOF'
 #!/bin/bash
-in=$2; out=${in%.in}.out; k=0; : > "$out"; mkdir -p tmp
+in=$2; out=${OUTNAME:-${in%.in}.out}; k=0; : > "$out"; mkdir -p tmp
 while :; do
   sleep "${STEP:-1}"; k=$((k+1)); echo "     number of bfgs steps    = $k" >> "$out"; echo "$k" > tmp/fk.bfgs
   echo "     Total force =     0.0$k" >> "$out"
@@ -198,6 +217,35 @@ EOF
   ck "⛔음성: BFGS 줄이 시간 안에 안 늘면 rc 6" "$rcf" 6
   ck "⛔음성: 시간 초과면 EXIT 를 만들지 않았다" "$([ -e "$T/f/fk.EXIT" ] && echo yes || echo no)" no
   ck "⛔음성: 시간 초과면 러너를 되돌렸다 (상태 T 아님)" "$(ps -o stat= -p $rpf | tr -d ' ' | cut -c1)" S
+  cleanup
+  # ── 2026-10-19 보탬: --out · --no_runner (restart_qe_relax.sh 꼴 — 'X.restart.in' 으로 돌리고 'X.out' 에 쓴다) ──
+  cat > "$T/bin/fake_relax_driver.sh" <<'EOF'
+#!/bin/bash
+cd "$1" && OUTNAME="$3.out" "$2/pw.x" -in "$3.restart.in"; echo judged > "$1/driver_done"
+EOF
+  chmod +x "$T/bin/fake_relax_driver.sh"
+  mkr(){ mkjob "$1"; cp "$T/$1/$XN.in" "$T/$1/$XN.restart.in"; }
+  mkr g; env STEP=1 "$T/bin/fake_relax_driver.sh" "$T/g" "$T/bin" "$XN" & rpg=$!; disown $rpg; sleep 1.5
+  ( cd "$T/g" && IN=$XN.restart.in POLL=0.3 TIMEOUT=20 EXIT_WAIT=20 main ) > "$T/g0.log" 2>&1; rcg0=$?
+  ck "⛔음성: --runner 도 --no_runner 도 없으면 rc 2" "$rcg0" 2
+  ( cd "$T/g" && IN=$XN.restart.in NO_RUNNER=1 POLL=0.3 TIMEOUT=20 EXIT_WAIT=20 main ) > "$T/g1.log" 2>&1; rcg1=$?
+  ck "⛔음성: --out 없이 restart.in 잡 → '<입력>.out 없음' 으로 거부 rc 3" "$rcg1" 3
+  ck "⛔음성: 거부했으면 EXIT 를 만들지 않았다" "$([ -e "$T/g/fk.EXIT" ] && echo yes || echo no)" no
+  ( cd "$T/g" && IN=$XN.restart.in OUTF=$XN.out NO_RUNNER=1 POLL=0.3 TIMEOUT=20 EXIT_WAIT=20 main ) > "$T/g.log" 2>&1; rcg=$?
+  sleep 1
+  ck "양성: --out + --no_runner → BFGS 줄 뒤 EXIT → 세움 · rc 0" "$rcg" 0
+  ck "양성: X.out 에 'Program stopped by user request'" "$(grep -c 'Program stopped by user request' "$T/g/$XN.out")" 1
+  ck "양성: 러너를 얼리지 않았다 — 드라이버가 판정 단계까지 갔다" "$([ -e "$T/g/driver_done" ] && echo yes || echo no)" yes
+  ck "양성: EXIT 파일이 남지 않았다" "$([ -e "$T/g/fk.EXIT" ] && echo yes || echo no)" no
+  ck "양성: 로그에 '러너 안 얼림' 두 줄 (시작 · 끝)" "$(grep -c '러너 안 얼림' "$T/g.log")" 2
+  cleanup
+  mkr h; env STEP=1 "$T/bin/fake_relax_driver.sh" "$T/h" "$T/bin" "$XN" & rph=$!; disown $rph; sleep 1.5
+  ( cd "$T/h" && IN=$XN.restart.in OUTF=no_such.out NO_RUNNER=1 POLL=0.3 TIMEOUT=5 EXIT_WAIT=5 main ) > "$T/h.log" 2>&1; rch=$?
+  ck "⛔음성: --out 이 없는 파일이면 rc 3 · EXIT 안 만듦" "$rch:$([ -e "$T/h/fk.EXIT" ] && echo yes || echo no)" "3:no"
+  cleanup
+  mkr i; env STEP=30 "$T/bin/fake_relax_driver.sh" "$T/i" "$T/bin" "$XN" & rpi=$!; disown $rpi; sleep 1.5
+  ( cd "$T/i" && IN=$XN.restart.in OUTF=$XN.out NO_RUNNER=1 POLL=0.3 TIMEOUT=2 EXIT_WAIT=5 main ) > "$T/i.log" 2>&1; rci=$?
+  ck "⛔음성: --no_runner 시간 초과 → rc 6 · EXIT 안 만듦" "$rci:$([ -e "$T/i/fk.EXIT" ] && echo yes || echo no)" "6:no"
   cleanup
   rm -rf "$T"
   echo "  selftest: ⭕ $ok · ⛔ $bad"; [ "$bad" = 0 ] && exit 0 || exit 1
