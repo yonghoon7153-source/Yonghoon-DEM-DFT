@@ -265,5 +265,19 @@
   "selftest": "113/113 (새 12 — 라벨 · 카드 격자 · V/V_final = x · fmax 수렴 · 모드 기록 · 기하 파일 · 재개 · ⛔ turbo · ⛔ 입력 sha 바뀜 · ⛔ 카드 키 없음 · ⛔ 라벨 꼴)",
   "깨기": "3/3 잡힘 — 길이를 x 배 (부피 아님) · sha 검사 뺌 · turbo 허용",
   "by": "agent · 2026-10-19"
+ },
+ "✅_압력부피_판독_도구_결과_전_2026_10_19": {
+  "도구": "tools/ionic/glass_model_check.py --qe_inputs (경로 + 대조 셋 입력 · c_입력_설정 대조) · --eos (판독) — UMA · QE 결과 0 개인 상태에서 커밋",
+  "selftest": "48/48 (EOS 26 새로 — 합성 BM3 V₀ 복원 · ε · UMA 자기일관 · 분해 합 · P3 · ⛔ P 0.6 GPa 밀기 · ⛔ 토폴로지 점 빼기 · ⛔ 점 부족 · ⛔ 연장 필요 · D3 부호 · 갈래 p1/p2/p3/p0 · ⛔ 구조 부족 · ⛔ 대조 없음 → 보류 · 입력 넷 카드 대조 · ⛔ maxstep 100 · ⛔ k 1 1 1 · relax &CELL 지움 · relax 마지막 응력 · ⛔ bfgs 미수렴 · simple-dftd3 실행)",
+  "깨기": "5/5 잡힘 — 띠 무시 · 자기일관 끔 · 토폴로지 규칙 끔 · maxstep 대조 뺌 · ε 뒤집음",
+  "결과_전_도구_규칙_카드에_없던_것": [
+   "대조 셋 (relax · k222 · ecut_hi) 중 하나라도 없거나 미수렴이면 그 계의 띠는 없음 → 갈래 '보류' (보수 쪽)",
+   "띠 b = (|δP_relax| + (|ΔP_k| > 0.1 GPa 일 때만 |ΔP_k|)) / B₀^PBE (대조 시드의 맞춤) — 카드 c_이완 · c_k 그대로를 식으로 적음",
+   "UMA 나 PBE 의 V₀ 가 연장 뒤에도 밖이면 그 구조는 '격자 밖' (ε 계산에 안 씀) · PBE+D3 만 밖이면 그 구조의 ε_D3 만 비운다",
+   "relax 대조 입력 = generate_pwin(calculation relax) 에서 &CELL 하나 지우고 forc_conv_thr 를 카드 값으로 (Nd EOS 생성기 선례 · etot 은 생성기 기본 1.0d-6 그대로)",
+   "D3 는 판독하는 곳 (클라우드 · simple-dftd3 1.6.0) 에서 기하 파일로 계산 — 원격 기계에 dftd3 가 없어도 된다"
+  ],
+  "⚠_발견_잠복_결함_미수정": "tools/doping/generate_dft_inputs.py --from_xyz 경로는 CLI 의 --electron_maxstep · --mixing_beta · --mixing_ndim · --mixing_mode 를 받기만 하고 scf_from_xyz 로 넘기지 않는다 (생성기 기본 100 · 0.2 · 8 · plain 으로 고정) — 조용히 틀린 경로. 저장소에 그 조합으로 만든 입력 기록은 없다 (grep). 이번 경로는 generate_pwin 을 직접 불러 카드 표로 대조하므로 영향 없음 · 고치는 것은 따로 (open_items)",
+  "by": "agent · 2026-10-19"
  }
 }
