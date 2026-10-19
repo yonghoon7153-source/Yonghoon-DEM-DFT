@@ -1,0 +1,32 @@
+{
+ "schema": "runlog/v1",
+ "record_kind": "runlog",
+ "date": "2026-10-19",
+ "track": "li2s — ⛔ 외부 1저자 트랙 (사용자 ≠ 1저자 · 카드 잠정 · 편지 DA 로 동의 묻는다)",
+ "card": "db/properties/lpscl_smallcell_glass_model_check_estimand_2026_10_19.json",
+ "decision": "D-2026-10-19-lpscl-smallcell-glass-model-check (proposed)",
+ "results_seen": false,
+ "citable": false,
+ "✅_A_구조_회수_2026_10_19": {
+  "kgy": "사용자 push 4418f1c5 — A seed1·2 final.xyz · final.vasp · result.json + 09-16 소셀 gb3 유리 프레임 셋 (smallcell_1_t1005ps · t1025ps · t1045ps 의 scf.in · scf.out)",
+  "gabia": "사용자 push c53e80a7 — A seed3·4·5 final.xyz · final.vasp · result.json",
+  "해시": "SHA256SUMS_kgy 12/12 · SHA256SUMS_gabia 9/9 OK",
+  "⚠_내_블록_실수": "kgy 블록의 find 거름이 `! -name SHA256SUMS` 라 쓰는 중인 SHA256SUMS_kgy 자신을 해시해 그 한 줄만 틀렸다 (데이터 파일 12 개는 전부 OK) — 그 자기 줄을 repo 에서 지웠다 · 다음 블록은 `-name 'SHA256SUMS*'` 를 뺀다",
+  "값_지문_카드_기계_판독_값": "A seed1 2.0373/12/1.6212 · seed2 2.0211/12/1.5782 · seed3 2.0055/12/1.5933 · seed4 2.0324/12/1.5910 · seed5 2.0302/11/1.6181 (최단 P–S Å / PS₄ / ρ g/cm³) — 다섯 다 허용폭 안 ✓ · 다섯 다 직교 입방 (L 13.983 · 14.109 · 14.064 · 14.071 · 13.992 Å) · 조성 Li48P12S48Cl12",
+  "sha16": {
+   "A1": "f7d95f98b6f28575",
+   "A2": "7050760e75ad4046",
+   "A3": "58aac606e6996d69",
+   "A4": "6555e1cb002ee88d",
+   "A5": "7425e1a9c51a3f54"
+  }
+ },
+ "✅_판독_도구_결과_전_2026_10_19": {
+  "도구": "tools/ionic/glass_model_check.py (BVSE 부분 · 숫자는 카드 기계_판독_값 에서만)",
+  "selftest": "22/22 — 음성 12 (카드 키 없음 · 동률 · 한 값 겹침 · 구조 부족 · onset 분리 없음 · 침투 없음 · 정본 흔들기 · 기울어진 셀 · 비입방 · P–S 0.1 Å 흔든 지문 …)",
+  "깨기": "4/4 잡힘 — 동률을 분리로 · onset 분리 조건 뺌 · 대조 잡 늘 통과 · 비입방 허용",
+  "대조_잡": "modelc 정본 재현 ✓ (onset 0.40 / 0.35 / 1.40 · 채널 1.23 / 3.32 / 8.36 / 13.44 / 17.85 글자 그대로)",
+  "EOS_부분": "아직 — UMA 경로 · QE 결과 전에 같은 도구에 붙여 커밋한다"
+ },
+ "by": "agent · 2026-10-19"
+}
