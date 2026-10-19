@@ -48,7 +48,7 @@ R2_NSTEP=${R2_NSTEP:-200}
 MODE=${MODE:-auto}
 MARGIN_MIB=${MARGIN_MIB:-4096}; GUARD_MIB=${GUARD_MIB:-47500}
 NEED_FACTOR=${NEED_FACTOR:-1.3}; NEED_PLUS=${NEED_PLUS:-1024}
-PROBE_S=${PROBE_S:-300}; POLL=${POLL:-30}; EMPTY_N=${EMPTY_N:-2}; EMPTY_MAX=${EMPTY_MAX:-3600}
+PROBE_S=${PROBE_S:-300}; PROBE_MAXWAIT=${PROBE_MAXWAIT:-20}; POLL=${POLL:-30}; EMPTY_N=${EMPTY_N:-2}; EMPTY_MAX=${EMPTY_MAX:-3600}
 PAUSE_TIMEOUT=${PAUSE_TIMEOUT:-14400}; PAUSE_POLL=${PAUSE_POLL:-20}
 NVSMI=${NVSMI:-nvidia-smi}; TMUX_BIN=${TMUX_BIN:-tmux}
 PAUSE_TOOL=${PAUSE_TOOL:-$REPO/tools/elastic/pause_relax_at_bfgs.sh}
@@ -92,7 +92,8 @@ EOF
 #!/bin/bash
 "$(dirname "$0")/../bin/ppcheck" "$@" || exit 1
 case "${PROBE_MODE:-ok}" in
-  ok) echo "     PseudoPot. # 6 for Nd read from file:"; echo "     Estimated max dynamical RAM per process >       ${PROBE_GB:-9.50} GB"
+  ok) echo "     PseudoPot. # 6 for Nd read from file:"; echo "     Estimated static dynamical RAM per process >       ${PROBE_GB_STATIC:-1.00} GB"
+      [ "${PROBE_ONLY_STATIC:-0}" = 1 ] || { sleep 3; echo "     Estimated max dynamical RAM per process >       ${PROBE_GB:-9.50} GB"; }
       sleep 60 & echo $! >> "$NVSTATE/orphans"     # 고아 자식 하나 — 부모를 죽여도 남는다 (락 fd 를 물려받으면 락이 안 풀린다)
       exec sleep 60 ;;
   *)  echo "no estimate"; exec sleep 2 ;;
@@ -185,7 +186,7 @@ EOF
     local n=$1; shift
     timeout 120 env SCF_IN="$KP" SG15_DIR="$T/sg15" OUT="$T/out_$n" GPU_PW="$T/gpu/pw.x" CPU_BIN="$T/cpu" MPIRUN_CPU="$T/bin/mpirun_cpu" \
       SKIP_LDD=1 MPIRUN_GPU="$T/bin/mpirun_gpu" R2_DIR="$T/r2" NVSMI="$T/bin/nvsmi" NVSTATE="$T/st_$n" TMUX_BIN="$T/bin/tmux" \
-      PAUSE_TOOL="$T/bin/pause.sh" RESTART_TOOL="$T/bin/restart.sh" PY=python3 PROBE_S=10 POLL=1 EMPTY_N=2 EMPTY_MAX=15 PAUSE_TIMEOUT=10 \
+      PAUSE_TOOL="$T/bin/pause.sh" RESTART_TOOL="$T/bin/restart.sh" PY=python3 PROBE_S=10 PROBE_MAXWAIT=6 POLL=1 EMPTY_N=2 EMPTY_MAX=15 PAUSE_TIMEOUT=10 \
       "$@" bash "$SELF" > "$T/out_$n.console" 2>&1
     local rc=$?; echo "$n $SECONDS" >> "$T/timing"; echo $rc
   }
@@ -207,6 +208,7 @@ EOF
   st b 37250; r2_up "$T/st_b"; rc=$(run b PROBE_GB=4.88)
   ck "coexist: rc 0 · 결정 coexist" "$rc:$(grep -c '결정: coexist' "$T/out_b/run.log")" "0:1"
   ck "coexist: r2 를 안 건드렸다 (살아 있음 · 정지 호출 없음)" "$(alive "$T/st_b"):$(has "$T/st_b/pause_args")" "yes:no"
+  ck "프로브: static (1.00 GB) 다음에 오는 max (4.88 GB) 를 쓴다 → 추정 4997" "$(grep -c '추정 4997 →' "$T/out_b/run.log")" 1
   down "$T/st_b"
   # 3 pause (9.5 GB → need 13,670 > 빔)
   st c 37250; r2_up "$T/st_c"; rc=$(run c)
@@ -233,6 +235,9 @@ EOF
   ck "⛔음성: 가드 발동 → rc 11 · r2 살아 있음 · 정지·재개 없음" "$rc:$(alive "$T/st_g"):$(has "$T/st_g/pause_args"):$(has "$T/st_g/restart_ran")" "11:yes:no:no"
   ck "⛔음성: 가드가 우리 가짜 pw.x 를 죽였다 (남은 프로세스 0)" "$(pgrep -fc -- "$T/gpu/pw.x" 2>/dev/null || true)" 0
   down "$T/st_g"
+  # 7b max 줄이 없는 QE (static 만) — 조금 기다린 뒤 static 을 쓴다
+  st g2 500; rc=$(run g2 PROBE_ONLY_STATIC=1 PROBE_GB_STATIC=2.00)
+  ck "프로브: max 줄이 없으면 static 2.00 GB → 추정 2048 · rc 0" "$rc:$(grep -c '추정 2048 →' "$T/out_g2/run.log")" "0:1"
   # 8 프로브가 추정 줄을 안 찍으면 멈춘다
   st h 500; rc=$(run h PROBE_MODE=none)
   ck "⛔음성: 프로브 추정 없음 → rc 4 · SCF 없음" "$rc:$(has "$T/out_h/scf.out")" "4:no"
@@ -331,12 +336,15 @@ PY
 [ "${PIPESTATUS[0]}" = 0 ] && [ -s "$OUT/scf.in" ] || { say "⛔ scf.in 만들기 실패"; exit 3; }
 
 # ② 메모리 프로브 (CPU 검사 · run 아님) ──────────────────────────────────────
+#   ⚠ QE 7.4 는 'Estimated static dynamical RAM' 다음 줄에 'Estimated max dynamical RAM' 을 찍는다 — **max 를 쓴다**
+#     (2026-10-19 gabia 첫 프로브: 첫 'Estimated' 줄 = static 9.89 GB 를 읽었다 · 그날 결정 (pause) 은 같았다)
+est_line(){ grep -a "Estimated max\|Estimated total" "$1" 2>/dev/null | head -1 | grep . || grep -a "Estimated" "$1" 2>/dev/null | head -1; }
+est_mib(){ echo "$1" | awk '{for(i=1;i<=NF;i++) if($i ~ /^[0-9.]+$/ && ($(i+1)=="GB"||$(i+1)=="MB")) {printf "%d", ($(i+1)=="GB" ? $i*1024 : $i); exit}}'; }
 EST_MIB=""
 if [ -n "${PROBE_EST_MIB:-}" ]; then EST_MIB=$PROBE_EST_MIB; say "프로브 생략 — PROBE_EST_MIB=$EST_MIB 를 준 값으로 쓴다"
 elif [ -f "$OUT/probe/scf.in.sha256" ] && [ "$(cat "$OUT/probe/scf.in.sha256")" = "$(sha256sum "$OUT/scf.in" | cut -c1-64)" ] \
      && grep -aq "Estimated" "$OUT/probe/probe.out" 2>/dev/null; then
-  L=$(grep -a "Estimated" "$OUT/probe/probe.out" | head -1)
-  EST_MIB=$(echo "$L" | awk '{for(i=1;i<=NF;i++) if($i ~ /^[0-9.]+$/ && ($(i+1)=="GB"||$(i+1)=="MB")) {printf "%d", ($(i+1)=="GB" ? $i*1024 : $i); exit}}')
+  L=$(est_line "$OUT/probe/probe.out"); EST_MIB=$(est_mib "$L")
   say "프로브 재사용 (같은 scf.in) — $(echo "$L" | tr -s ' ')"
 else
   PD=$OUT/probe; rm -rf "$PD"; mkdir -p "$PD"
@@ -346,9 +354,13 @@ else
   say "▶ 메모리 프로브 — CPU pw.x 1 랭크 · 검사용 (run 아님) · 'Estimated' 줄을 읽으면 바로 끝 (최대 ${PROBE_S} s)"
   ( cd "$PD" && OMP_NUM_THREADS=1 ESPRESSO_TMPDIR="$PD/tmp" exec "$MPIRUN_CPU" --allow-run-as-root --bind-to none --mca btl self,vader -np 1 \
       "$CPU_BIN/pw.x" -in ../scf.in > probe.out 2>&1 9>&- ) &
-  PPID_PROBE=$!; t0=$(date +%s)
+  PPID_PROBE=$!; t0=$(date +%s); tS=""
   while kill -0 "$PPID_PROBE" 2>/dev/null; do
-    grep -aq "Estimated" "$PD/probe.out" 2>/dev/null && break
+    grep -aq "Estimated max\|Estimated total" "$PD/probe.out" 2>/dev/null && break
+    if grep -aq "Estimated" "$PD/probe.out" 2>/dev/null; then   # static 만 보였다 — max 를 조금 기다린다
+      [ -z "$tS" ] && tS=$(date +%s)
+      [ $(( $(date +%s) - tS )) -ge "$PROBE_MAXWAIT" ] && break
+    fi
     [ $(( $(date +%s) - t0 )) -gt "$PROBE_S" ] && break
     sleep 2
   done
@@ -357,8 +369,7 @@ else
     [ "$(readlink -f /proc/$x/cwd 2>/dev/null)" = "$(readlink -f "$PD")" ] && kill -KILL "$x" 2>/dev/null
   done
   rm -rf "$PD/tmp"
-  L=$(grep -a "Estimated" "$PD/probe.out" | head -1)
-  EST_MIB=$(echo "$L" | awk '{for(i=1;i<=NF;i++) if($i ~ /^[0-9.]+$/ && ($(i+1)=="GB"||$(i+1)=="MB")) {printf "%d", ($(i+1)=="GB" ? $i*1024 : $i); exit}}')
+  L=$(est_line "$PD/probe.out"); EST_MIB=$(est_mib "$L")
   [ -n "$EST_MIB" ] || { say "⛔ 프로브가 'Estimated … RAM' 을 안 찍었다 — QE 오류 줄 (probe/probe.out):"
                          grep -a -A4 "Error in routine" "$PD/probe.out" | head -8 | tee -a "$LOG"; exit 4; }
   grep -aq "PseudoPot. # 6\|PseudoPot. #  6" "$PD/probe.out" && say "프로브: QE 7.4.1 이 pseudo 여섯을 읽었다 (Nd 변환 UPF 포함)"
