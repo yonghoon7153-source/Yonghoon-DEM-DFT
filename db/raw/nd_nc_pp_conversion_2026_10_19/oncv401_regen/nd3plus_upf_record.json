@@ -1,0 +1,18 @@
+{
+ "schema": "nd3plus_nc_upf/v2",
+ "source": "PseudoDojo ONCVPSP-PBE-PDv0.4/Nd/Nd3+_f-in-core (ONCVPSP 3.2.3.1)",
+ "dojo_md5": "474ce0fc5175ff9ddf2621f906febf65",
+ "dojo_psp8_sha256": "c9c335c4da271c426f87603767cb021e3291932488a0399d9ffc8addbbec014c",
+ "upf": "upf/Nd3plus_f-in-core.dojo_psp8_conv.upf",
+ "upf_sha256": "56b2e141cc9726c8b544bfd1fe87e5a2098ac8d8117e4f2c23b280da85d00654",
+ "repo_upf": "/home/user/Yonghoon-DEM-DFT/db/inputs/nd_q3_elf_nc_2026_10_19/pseudo/Nd3plus_f-in-core.dojo_psp8_conv.upf",
+ "repo_upf_same": true,
+ "conversion": "oncv_regen_check.py --to_upf (ONCVPSP 4.0.1 upfout.f90 규약 · 보간 없음 · PP_PSWFC 없음 · rchrg 밖 쿨롱)",
+ "regen": {
+  "done": true,
+  "oncvpsp_ref": "4.0.1",
+  "oncvpsp_commit": "2dbd947edb44a2e81d07ad5796724e6f00ee4c9e",
+  "regen_psp8_vs_dojo": "differ",
+  "same_run_pair_check": "pass"
+ }
+}

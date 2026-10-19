@@ -40,5 +40,17 @@
   "실행파일": "pp.x · bader · libmpi /lib/x86_64-linux-gnu/libmpi.so.40 → /usr/bin/mpirun · np 8 · OMP 1 (CPU 후처리)",
   "고친_판_재확인_2026_10_19": "가짜 트리 (Å 좌표 vc-relax 출력 + crystal SCF 입력 · 13 원자): 옛 판 212c94a9 = gabia 와 같은 메시지로 멈춤 (분율 차 4.77e-01) · 새 판 = 통과 (5.2e-11) · 원자 하나 0.05 Å 옮김 = 잡음 (3.6e-03)",
   "회수_계획": "■ 끝 확인 → OUT SHA256SUMS 대조 → cube (nd_rho_ae.cube) · filplot (nd_ae) 빼고 db/raw/nd_q3_bader_2026_10_19/ 로 → 복사본 대조 (--ignore-missing) → 사용자 commit·push (gabia 자격 증명)"
+ },
+ "ELF_NC_Nd_PP_변환_2026_10_19": {
+  "gabia_첫_시도": "14:52:54 ⛔ 빌드 실패 (끝 코드 6) — 'oncvpsp 에 CMakeLists.txt 가 없다'. 58dd54f1 판이 CMake 를 가정했다 (내 실수 · 4.0.1 은 make.inc 빌드) · 그 앞 ① 받기·md5 · ② 도구 (gfortran · cmake · LAPACK) 는 통과",
+  "4.0.1_재생성_결과": "클라우드에서 make.inc 빌드 (gfortran 13.3 · libxc 끔) 로 같은 입력을 돌림 → **다른 pseudo**: r_core 2.10908/1.91712/1.91712/2.52232 → 2.11163/1.90745/1.90745/2.51166 · ekb 상대 최대 0.83 (l=3) · 투영자 0.2–1.2 · l=0 'WARNING - GHOST(+)' (3.2.3.1 출력에는 없음) ⇒ 4.0.1 UPF 는 PseudoDojo 가 검증한 pseudo 가 아니다 — 안 쓴다",
+  "바꾼_경로": "배포본 psp8 을 그대로 UPF 로 옮긴다 — oncv_regen_check.py --to_upf (ONCVPSP 4.0.1 upfout.f90 의 단위·격자 규약: LOCAL 2·v · BETA 그대로 · DIJ 2·ekb · NLCC core/4π · RHOATOM r²·ρ · 보간 없음) · runlog 'ELF_계획' 의 대비책 (같은 실행 짝으로 변환기 검증 → 배포본에) 그대로",
+  "변환기_검증_같은_실행_짝": "4.0.1 실행이 쓴 psp8 → --to_upf 대 같은 실행이 쓴 UPF (--compare_upf): R · RAB · NLCC · RHOATOM · DIJ 상대 0 · LOCAL 5e-12 · BETA ≤7e-11 (psp8 격자 600 점) · 따로 적은 둘: ① 투영자 꼬리 — 4.0.1 psp8 이 rc+2·drl 뒤를 '0.' 으로 쓴 1–3 점 (최대 상대 1.0e-4 · l=3) ② psp8 격자 밖 (원본 UPF 17.55 bohr) — 국소 퍼텐셜이 쿨롱과 최대 8.8e-5 Ry · 시작 밀도 0.27 e",
+  "QE_대조_샌드박스": "QE 6.7 (Ubuntu 패키지 · 클라우드 CPU · 사용자 기계 run 아님 · md5 fortify 버그 우회 심) · fcc Nd 1 원자 60/240 Ry k666: 원본 UPF − 변환본 = −4.56 mRy · −4.3 meV (E_F) · −1.53 kbar → 원본의 r ≥ 6 bohr 국소 퍼텐셜만 쿨롱으로 바꾸면 −0.05 mRy · −0.1 meV · −0.05 kbar (차의 99 % 가 그 꼬리 = QE 가 10 bohr 까지 적분하는 G=0 상수항) · 밀도 최대 차 2.0e-5 · **ELF 최대 차 1.7e-4 · 평균 1.7e-5** (값 범위 0.007–0.868)",
+  "배포본의_다른_점": "3.2.3.1 psp8 은 투영자 잔물결을 rc 뒤 ~0.1 bohr 까지 그대로 쓴다 (l=3 최대 상대 1.7e-3) — 버리지 않고 cutoff_radius_index 를 268 로 늘려 담았다 (ABINIT 가 검증에 쓴 값 그대로)",
+  "산출": "db/inputs/nd_q3_elf_nc_2026_10_19/pseudo/Nd3plus_f-in-core.dojo_psp8_conv.upf (sha256 56b2e141cc9726c8b544bfd1fe87e5a2098ac8d8117e4f2c23b280da85d00654 · 격자 600 · 투영자 7 · z 11 · wfc 0) · 원본 pseudo_src/ (psp8 md5 474ce0fc… = djrepo) · 검증 원자료 db/raw/nd_nc_pp_conversion_2026_10_19/",
+  "쓰는_범위": "밀도에서 나오는 양 (ELF · 밀도 그림) 만 — 절대 에너지는 같은 pseudo 의 ONCVPSP UPF 와 수 mRy 다르다 → 에너지 비교 (Q2 분해 등) 에 섞지 않는다 (Q2 는 PAW frozen-4f 세트)",
+  "도구": "oncv_regen_check.py selftest 30/30 (변환·UPF 대조 18 · 음성 14) · 일부러 깨기 6/6 빨강 (vloc ×1 · nlcc /2π · 잔물결 cutoff · 꼬리 창 40 — 처음엔 tail_tol 이 대신 막아 창 크기를 못 쟀다 → 창 밖 작은 잔물결 시험 보탬 · PP_INFO 거르개 · dij ×1) · make_nd3plus_nc_upf_gabia.sh 고침 (기본 = 원본에서 다시 변환해 저장소 UPF 와 sha256 대조 · REGEN=1 = make.inc 빌드로 짝 검증 재현) · 로컬 시험 양성 2 · 음성 8 (md5 3 · 받기 3 · 저장소 UPF 다름 4 · 없음 4 · FC 5 · LAPACK 5 · clone 6 · upfout 을 깬 ONCVPSP 로 짝 대조 7)",
+  "gabia_에서_할_일": "없다 — ELF 러너가 저장소 UPF 를 쓰고 sha256 을 본다 · QE 7.4.1 이 이 UPF 를 읽는지는 ELF 러너의 메모리 프로브 (CPU 검사 · run 아님) 로 확인"
  }
 }

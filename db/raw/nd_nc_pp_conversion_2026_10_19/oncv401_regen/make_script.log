@@ -1,0 +1,116 @@
+[2026-10-19 06:20:48] ════ Nd3+ NC psp8 → UPF · HEAD b8b83651 · REGEN 1 · /tmp/claude-0/-home-user-Yonghoon-DEM-DFT/d4f5961c-ef3a-5479-873f-4bd1d00ec122/scratchpad/mk_t2 ════
+md5 474ce0fc5175ff9ddf2621f906febf65 = 474ce0fc5175ff9ddf2621f906febf65
+[2026-10-19 06:20:48] 원본 ✓ md5 474ce0fc5175ff9ddf2621f906febf65 (psp8 = djrepo)
+→ /tmp/claude-0/-home-user-Yonghoon-DEM-DFT/d4f5961c-ef3a-5479-873f-4bd1d00ec122/scratchpad/mk_t2/upf/Nd3plus_f-in-core.dojo_psp8_conv.upf · 격자 600 (r ≤ 5.99) · 투영자 7 (cutoff_radius_index 268) · z_valence 11.00 · wfc 0
+[2026-10-19 06:20:48] UPF ✓ 원본에서 다시 만든 것 = 저장소 UPF (sha256 56b2e141cc9726c8…)
+[2026-10-19 06:20:48] 도구 ✓ GNU Fortran (Ubuntu 13.3.0-6ubuntu2~24.04.1) 13.3.0 · LIBS  -llapack -lblas
+warning: --depth is ignored in local clones; use file:// instead.
+Note: switching to '2dbd947edb44a2e81d07ad5796724e6f00ee4c9e'.
+
+You are in 'detached HEAD' state. You can look around, make experimental
+changes and commit them, and you can discard any commits you make in this
+state without impacting any branches by switching back to a branch.
+
+If you want to create a new branch to retain commits you create, you may
+do so (now or later) by using -c with the switch command. Example:
+
+  git switch -c <new-branch-name>
+
+Or undo this operation with:
+
+  git switch -
+
+Turn off this advice by setting config variable advice.detachedHead to false
+
+make: Entering directory '/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/d4f5961c-ef3a-5479-873f-4bd1d00ec122/scratchpad/mk_t2/oncvpsp/src'
+gfortran -O3 -ffast-math -funroll-loops  -c oncvpsp.f90
+gfortran -O3 -ffast-math -funroll-loops  -c fphsft.f90
+gfortran -O3 -ffast-math -funroll-loops  -c fpovlp.f90
+gfortran -O3 -ffast-math -funroll-loops  -c gnu_script.f90
+gfortran -O3 -ffast-math -funroll-loops  -c linout.f90
+gfortran -O3 -ffast-math -funroll-loops  -c psatom.f90
+gfortran -O3 -ffast-math -funroll-loops  -c relatom.f90
+gfortran -O3 -ffast-math -funroll-loops  -c run_config.f90
+run_config.f90:287:24:
+
+  287 |  write(6,'(a,1p,d10.2)'), '      PSP excitation error=', &
+      |                        1
+Warning: Legacy Extension: Comma before i/o item list at (1)
+gfortran -O3 -ffast-math -funroll-loops  -c run_diag.f90
+gfortran -O3 -ffast-math -funroll-loops  -c run_phsft.f90
+gfortran -O3 -ffast-math -funroll-loops  -c run_plot.f90
+gfortran -O3 -ffast-math -funroll-loops  -c run_vkb.f90
+gfortran -O3 -ffast-math -funroll-loops  -c sratom.f90
+gfortran -O3 -ffast-math -funroll-loops  -c upfout.f90
+gfortran -O3 -ffast-math -funroll-loops  -c wellstate.f90
+gfortran -O3 -ffast-math -funroll-loops  -c aeo.f90
+gfortran -O3 -ffast-math -funroll-loops  -c check_data.f90
+gfortran -O3 -ffast-math -funroll-loops  -c const_basis.f90
+gfortran -O3 -ffast-math -funroll-loops  -c dpnint.f90
+gfortran -O3 -ffast-math -funroll-loops  -c eresid.f90
+gfortran -O3 -ffast-math -funroll-loops  -c exchdl.f90
+gfortran -O3 -ffast-math -funroll-loops  -c exc_off_pbe.f
+gfortran -O3 -ffast-math -funroll-loops  -c excpzca.f90
+gfortran -O3 -ffast-math -funroll-loops  -c excwig.f90
+gfortran -O3 -ffast-math -funroll-loops  -c ldiracfb.f90
+gfortran -O3 -ffast-math -funroll-loops  -c ldiracfs.f90
+gfortran -O3 -ffast-math -funroll-loops  -c lschfb.f90
+gfortran -O3 -ffast-math -funroll-loops  -c lschfs.f90
+gfortran -O3 -ffast-math -funroll-loops  -c lschkb.f90
+gfortran -O3 -ffast-math -funroll-loops  -c lschpb.f90
+gfortran -O3 -ffast-math -funroll-loops  -c lschpse.f90
+gfortran -O3 -ffast-math -funroll-loops  -c lschps.f90
+gfortran -O3 -ffast-math -funroll-loops  -c lschvkbbe.f90
+gfortran -O3 -ffast-math -funroll-loops  -c lschvkbb.f90
+gfortran -O3 -ffast-math -funroll-loops  -c lschvkbs.f90
+gfortran -O3 -ffast-math -funroll-loops  -c modcore.f90
+gfortran -O3 -ffast-math -funroll-loops  -c optimize.f90
+gfortran -O3 -ffast-math -funroll-loops  -c pspot.f90
+gfortran -O3 -ffast-math -funroll-loops  -c qroots.f90
+gfortran -O3 -ffast-math -funroll-loops  -c run_optimize.f90
+gfortran -O3 -ffast-math -funroll-loops  -c sbf8.f90
+gfortran -O3 -ffast-math -funroll-loops  -c sbf_basis.f90
+gfortran -O3 -ffast-math -funroll-loops  -c sbf_rc_der.f90
+gfortran -O3 -ffast-math -funroll-loops  -c tfapot.f90
+gfortran -O3 -ffast-math -funroll-loops  -c vkboutwf.f90
+gfortran -O3 -ffast-math -funroll-loops  -c vkbphsft.f90
+gfortran -O3 -ffast-math -funroll-loops  -c vout.f90
+gfortran -O3 -ffast-math -funroll-loops  -c vpinteg.f90
+gfortran -O3 -ffast-math -funroll-loops  -c vploc.f90
+gfortran -O3 -ffast-math -funroll-loops  -c wf_rc_der.f90
+gfortran -O3 -ffast-math -funroll-loops  -c modcore2.f90
+gfortran -O3 -ffast-math -funroll-loops  -c gg1cc.f90
+gfortran -O3 -ffast-math -funroll-loops  -c gp1cc.f90
+gfortran -O3 -ffast-math -funroll-loops  -c gpp1cc.f90
+gfortran -O3 -ffast-math -funroll-loops  -c der2exc.f90
+gfortran -O3 -ffast-math -funroll-loops  -c modcore3.f90
+gfortran -O3 -ffast-math -funroll-loops  -c sbf_basis_con.f90
+gfortran -O3 -ffast-math -funroll-loops  -c run_ghosts.f90
+gfortran -O3 -ffast-math -funroll-loops  -c lschpsbar.f90
+gfortran -O3 -ffast-math -funroll-loops  -c vrel.f90
+gfortran -O3 -ffast-math -funroll-loops  -c exc_libxc_stub.f90
+gfortran -o oncvpsp.x oncvpsp.o fphsft.o fpovlp.o gnu_script.o linout.o psatom.o relatom.o run_config.o run_diag.o run_phsft.o run_plot.o run_vkb.o sratom.o upfout.o wellstate.o aeo.o check_data.o const_basis.o dpnint.o eresid.o exchdl.o exc_off_pbe.o excpzca.o excwig.o ldiracfb.o ldiracfs.o lschfb.o lschfs.o lschkb.o lschpb.o lschpse.o lschps.o lschvkbbe.o lschvkbb.o lschvkbs.o modcore.o optimize.o pspot.o qroots.o run_optimize.o sbf8.o sbf_basis.o sbf_rc_der.o tfapot.o vkboutwf.o vkbphsft.o vout.o vpinteg.o vploc.o wf_rc_der.o modcore2.o gg1cc.o gp1cc.o gpp1cc.o der2exc.o modcore3.o sbf_basis_con.o run_ghosts.o lschpsbar.o vrel.o exc_libxc_stub.o -llapack -lblas
+make: Leaving directory '/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/d4f5961c-ef3a-5479-873f-4bd1d00ec122/scratchpad/mk_t2/oncvpsp/src'
+[2026-10-19 06:20:53] ONCVPSP ✓ ref 4.0.1 · commit 2dbd947edb44
+→ Nd3+_both.dat
+[2026-10-19 06:20:58] ONCVPSP 실행 ✓ scalar-relativistic version 4.0.1 03/01/2019 · 경고 1 줄
+→ Nd3+_regen.psp8
+→ Nd3+_f-in-core.oncvpsp401.upf
+[2026-10-19 06:20:58] 재생성 psp8 대 배포본: differ (기록만 — 4.0.1 은 다른 pseudo 를 낸다고 알려져 있다)
+→ conv401.upf · 격자 600 (r ≤ 5.99) · 투영자 7 (cutoff_radius_index 256) · z_valence 11.00 · wfc 0
+  ✓ PP_R        상대 0.00e+00 (|Δ| 0.00e+00 / 5.99e+00 · 600 점)
+  ✓ PP_RAB      상대 0.00e+00 (|Δ| 0.00e+00 / 1.00e-02 · 600 점)
+  ✓ PP_LOCAL    상대 5.29e-12 (|Δ| 1.00e-10 / 1.89e+01 · 600 점)
+  ✓ PP_NLCC     상대 0.00e+00 (|Δ| 0.00e+00 / 1.76e+00 · 600 점)
+  ✓ PP_RHOATOM  상대 0.00e+00 (|Δ| 0.00e+00 / 6.73e+00 · 600 점)
+  ✓ PP_BETA.1   상대 0.00e+00 (|Δ| 0.00e+00 / 1.31e+00 · 600 점) · cut [256, 256] · psp8 꼬리 (점 215~) 상대 6.9e-07
+  ✓ PP_BETA.2   상대 6.91e-11 (|Δ| 1.00e-10 / 1.45e+00 · 600 점) · cut [256, 256] · psp8 꼬리 (점 215~) 상대 3.3e-06
+  ✓ PP_BETA.3   상대 7.17e-11 (|Δ| 1.00e-10 / 1.39e+00 · 600 점) · cut [256, 256] · psp8 꼬리 (점 194~) 상대 2.9e-07
+  ✓ PP_BETA.4   상대 0.00e+00 (|Δ| 0.00e+00 / 1.81e+00 · 600 점) · cut [256, 256] · psp8 꼬리 (점 194~) 상대 2.3e-06
+  ✓ PP_BETA.5   상대 0.00e+00 (|Δ| 0.00e+00 / 1.42e+00 · 600 점) · cut [256, 256] · psp8 꼬리 (점 194~) 상대 2.9e-06
+  ✓ PP_BETA.6   상대 0.00e+00 (|Δ| 0.00e+00 / 1.45e+00 · 600 점) · cut [256, 256] · psp8 꼬리 (점 194~) 상대 4.7e-06
+  ✓ PP_BETA.7   상대 0.00e+00 (|Δ| 0.00e+00 / 1.20e+00 · 600 점) · cut [256, 256] · psp8 꼬리 (점 255~) 상대 1.0e-04
+  ✓ PP_DIJ      상대 0.00e+00 (|Δ| 0.00e+00 / 1.13e+01 · 49 점)
+  · 긴 쪽 (ref) 에만 있는 r 6.00–17.55: PP_LOCAL − (−2Zv/r) 최대 8.83e-05 Ry · PP_RHOATOM 전하 0.2709 / 전체 11.0000
+✅ 같은 값 (상대 ≤ 1e-08 · 짧은 격자까지)
+[2026-10-19 06:20:58] ■ 끝 · 끝 코드 0
