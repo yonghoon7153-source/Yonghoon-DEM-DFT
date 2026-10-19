@@ -11879,12 +11879,26 @@
     {
       "id": "L214R-S04",
       "severity": "P3",
-      "status": "open",
+      "status": "claimed_fixed",
       "owner": "claude",
       "found_by": "codex 재확인 10-19 (리뷰 핀 77d8fd445)",
       "opened_in": "docs/reviews/codex_review_lhs214rr_fix_recheck_20261019.md",
       "title": "L214RR2-04 · 과거 메트릭 `sigma_ratio` 가 JSON null 이면 `/single` 이 500 (`single.html:2114` 의 %.4f · phi_se 를 빼도 `:2187–2189` 툴팁 곱셈)",
-      "note": "판정문 §5 · 현재 생산자는 None 이면 키를 넣지 않음 (`analyze_contacts.py:649–650`) → 현재 정상 생산자가 이 null 을 쓴다는 증거 없음 · 과거 · 외부 nullable 자료의 UI 견고성 · 네 레이아웃 16 변형이 두 핀에서 같음 · 수치 인계 HOLD 근거 아님.  우리 트리 재현 10-19 = 같음 (null 500 · 키 없음 200) · 수정 계획 docs/reviews/lhs214s_fix_plan_20261019.md Q4 (⬜ 1저자).",
+      "note": "판정문 §5 · 현재 생산자는 None 이면 키를 넣지 않음 (`analyze_contacts.py:649–650`) → 현재 정상 생산자가 이 null 을 쓴다는 증거 없음 · 과거 · 외부 nullable 자료의 UI 견고성 · 네 레이아웃 16 변형이 두 핀에서 같음 · 수치 인계 HOLD 근거 아님.  우리 트리 재현 10-19 = 같음 (null 500 · 키 없음 200) · 수정 계획 docs/reviews/lhs214s_fix_plan_20261019.md Q4 (⬜ 1저자).  ✅ 10-19 고침 aa6663bb9 (1저자 10-19 \"권고대로 ㄱ\" Q4 · 봉인 밖 템플릿 · app.py 안 건드림): webapp/templates/single.html 툴팁 세 블록 (σ_brug/σ_grain · σ_brug / σ_ionic · σ_Bruggeman) = 값이 숫자일 때만 형식화 · 곱셈 (`is number` — 키 없음 · null 둘 다) · 아니면 '—' 또는 일반 문구 (옛: null = 500 · 키 없음 = 지어낸 0.0000).  시험 webapp/test_single_null_metrics.py 2/6 → 6/6 (N2 Codex 반례 · N3 키 없음 · N4 phi_se 없음 · N5 phi_se · tortuosity null · 대조 N1 정상 수치 · N6 R_brug null) · 기존 웹앱 시험 (closed_param_labels · l214r03_display 14/14 · web09 18/18 · tau_labels 46) 그대로.  범위 = 이 세 툴팁 블록 — 같은 부류 남은 것 = L214R-S05.  Codex 짧은 재확인 전.",
+      "evidence_tests": [
+        "webapp/test_single_null_metrics.py (2/6 → 6/6)"
+      ],
+      "claimed_fixed_sha": "aa6663bb9"
+    },
+    {
+      "id": "L214R-S05",
+      "severity": "P3",
+      "status": "open",
+      "owner": "claude",
+      "found_by": "claude 10-19 S04 시험 중 (같은 부류 · percolation_pct null 실측)",
+      "opened_in": "docs/reviews/lhs214s_fix_evidence_20261019/README.md",
+      "title": "`/single` 머리 배지 (Percolation 등) 가 `is defined` 만 보고 숫자 형식화 — 과거 · 외부 메트릭이 JSON null 이면 여전히 500 (percolation_pct null 실측 · single.html 29 줄)",
+      "note": "S04 (툴팁 세 블록) 범위 밖으로 남긴 같은 부류.  현재 정상 생산자가 null 을 쓴다는 증거 없음 (Codex 판정 §5 의 S04 와 같은 한정) · 수치 인계 무관.  고친다면 머리 배지 · 다른 툴팁의 숫자 형식화 자리를 전수로 보고 `is number` (또는 값 없음 = 배지 숨김) — 문자열 숫자 · 옛 케이스 로더 변환과 함께 시험 먼저.  ⬜ 시점 = 1저자 (권고: 다음 세대 · v1.3 뒤).",
       "evidence_tests": []
     },
     {
@@ -11921,13 +11935,31 @@
     {
       "id": "SELF-121",
       "severity": "P3",
-      "status": "open",
+      "status": "claimed_fixed",
       "owner": "claude",
       "found_by": "codex 재확인 10-19 §7",
       "opened_in": "docs/reviews/codex_review_lhs214rr_fix_recheck_20261019.md",
       "title": "R04 뒤 대기 지문 설명이 낡음 — 요청서 머리 · 10-18 증거 README 가 `755325e1…` (R04 이전) 를 적었다 · 실제 대기 선언 · 영수증 S0b = `2149f873…`",
-      "note": "판정문 §7 · 런을 통과시킨 오기는 아님 (활성 등록 e8b2496b · 영수증 D1 실패 = 승인 전 정상).  처리 = 반입 기록 정정 줄 · 요청서 머리에 정정 표지 (10-18 증거 README 는 SHA256SUMS 봉인이라 덮어쓰지 않는다).",
-      "evidence_tests": []
+      "note": "판정문 §7 · 런을 통과시킨 오기는 아님 (활성 등록 e8b2496b · 영수증 D1 실패 = 승인 전 정상).  처리 = 반입 기록 정정 줄 · 요청서 머리에 정정 표지 (10-18 증거 README 는 SHA256SUMS 봉인이라 덮어쓰지 않는다).  ✅ 처리 be75bdd07 (판정문 §7 의 처리 그대로 · 반입 커밋): 10-18 요청서 머리 7 줄에 정정 표지 (실제 대기 지문 = 2149f8738bb20b6a… · 194 §9-8 · 보충 §9-3 · 영수증 S0b) · 10-18 증거 README 는 SHA256SUMS 봉인이라 원문 그대로 (덮어쓰지 않음) · 반입 기록 정정 줄.  Codex 짧은 재확인 전.",
+      "evidence_tests": [
+        "docs/reviews/codex_lhs214rr_fix_recheck_request_20261018.md (머리 7 줄 정정 표지 — 실제 대기 지문 2149f8738bb20b6a…)",
+        "docs/reviews/codex_lhs214rr_fix_recheck_evidence_20261019/_README_import.md (정정 기록 — 10-18 증거 README 는 SHA256SUMS 봉인이라 원문 그대로)"
+      ],
+      "claimed_fixed_sha": "be75bdd07"
+    },
+    {
+      "id": "SELF-122",
+      "severity": "P3",
+      "status": "claimed_fixed",
+      "owner": "claude",
+      "found_by": "1저자 10-19 kgy (첫 S1 재발사 뒤 \"들어간거야?\" — 사슬 로그가 비어 보임)",
+      "opened_in": "docs/reviews/sdcp_sigma_e_dcp_anchor_registration_v2_20261019.md",
+      "title": "SDCP 앵커 v2 사슬 (scripts/sdcp_anchor_v2_chain.py) 이 print 를 flush 하지 않아 화면을 파일로 돌리면 (setsid nohup … > log) 끝날 때까지 로그가 비어 있다 — 진행은 팔마다 러너 로그에만 보였다",
+      "note": "계산 영향 없음 (런은 정상 · 10-19 kgy S1 첫 팔 = STEP3 CG · GPU 98 % 확인).  임시 방편 = python3 -u 또는 팔 로그 (~/sdcp/anchor_v2_1019b/logs/<이름>.log) · 지금 도는 S1 (~/dem-anchor1019b) 의 작업트리는 런 중에 바꾸지 않는다 (팔마다 그 트리 코드를 읽는다).  ✅ 고침 aa6663bb9 (시험 먼저 같은 커밋): main() 머리에 sys.stdout.reconfigure(line_buffering=True) · selftest T13 (첫 러너가 3 초 자는 동안 로그에 'S1 정찰' 줄 · 프로세스 살아 있을 때) 16/17 → 17/17.",
+      "evidence_tests": [
+        "scripts/sdcp_anchor_v2_chain.py --selftest T13 (16/17 → 17/17)"
+      ],
+      "claimed_fixed_sha": "aa6663bb9"
     }
   ]
 }
