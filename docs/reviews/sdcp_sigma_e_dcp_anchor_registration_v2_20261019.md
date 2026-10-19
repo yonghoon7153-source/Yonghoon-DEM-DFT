@@ -139,3 +139,8 @@ python3 ~/dem-anchor1019/scripts/sdcp_bed_meta.py ~/sdcp/kit_SBE ~/sdcp/kit_DBE
   한정: 코드 판이 08-27 과 다를 수 있다 → R2 에서 VGCF · PTFE 섬유 (`fibre.npy`) sha256 를 옛 침대와 대조 (같으면 앞 상 시딩 그대로 · 다르면 "새 실현").
 - **10-19 첫 S1 발사 = 멈춤 (계산 전)**: 사슬이 LEAN=2 런에 `SIGMA_ION_SE` 를 넘겨 러너 가드 *"이온 축을 줬는데 --no-ion"* 이 rc 2 (`SELF-120` — 사슬 결함 · 가짜 러너가
   그 가드를 흉내내지 않았다) → 고침 (이온 축 빼고 부모 env 의 것도 지움 · 시험 먼저 5/16 → 16/16 · 로그 `docs/data/sdcp_dc_polarization_20261016/chain_tests/`) → 다시 발사 대기.
+- **10-19 저녁 S1 · S2 · C 결과 (kgy · 사슬 `--stage sbe` · 작업트리 `~/dem-anchor1019b` 코드 `298a73197` dirty 아님 · 1저자 화면 붙여넣기 · 요약 `~/sdcp/anchor_v2_1019b/chain_summary.json` — 리포에는 값만)**:
+  S1 = σ_VGCF 1.309 · 0.6545 · 0.3272 S/cm → σ_e 2.7790 · 2.0818 · 1.5926 mS/cm (rc 0 셋 · 992 · 924 · 863 s · 단조) · S2 σ* = **0.347 S/cm** (보간 구간 0.3272–0.6545 · 확장 0) ·
+  C = SBE arm 0 @ σ* **1.6287 mS/cm** (목표 1.63 대비 −0.08 % · ±5 % 안 · 879 s) · 옛 DBE 킷 arm 0 @ σ* **1.9385 mS/cm** (실험 4.68 대비 −58.6 % · 3009 s) · 비 **1.190** (실험 2.86) · 멈춤 없음.
+  결과 전 어림 대조 (판정 아님 · §3 보고): σ* 0.2–0.6 안 · 옛 DBE 1.8–2.0 안 · 비 ≤ 1.24 맞음.  S1 의 d ln σ_e / d ln σ_VGCF = 0.39–0.40 (σ_VGCF ×4 → σ_e ×1.75).
+  ⬜ 다음 = 1저자 (§3 — R1 재압밀 `kit_DBE_sdcp1um` → R2 침대 점검 → `--stage dbe --dbe-kit kit_DBE_sdcp1um` → 최종 16 팔).
