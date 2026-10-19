@@ -1,0 +1,120 @@
+{
+ "markdown_it_version": "3.0.0",
+ "preset": "commonmark",
+ "tool_sha256": "2c7e0b81dbe81d0518e27c8e1781959b9cc983509a1ce66001028faa3768a2f9",
+ "stats": {
+  "lines": 275148,
+  "heading_cm": 34122,
+  "mismatch_heading": 0,
+  "mismatch_level": 0,
+  "mismatch_title": 0,
+  "new_vs_old_added": 11754,
+  "new_vs_old_removed": 0,
+  "sec3_new_vs_old_diff": 0
+ },
+ "examples": {
+  "mismatch_heading": [],
+  "mismatch_level": [],
+  "mismatch_title": [],
+  "new_vs_old_added": [
+   [
+    "#",
+    null,
+    [
+     1,
+     ""
+    ]
+   ],
+   [
+    "#\t",
+    null,
+    [
+     1,
+     ""
+    ]
+   ],
+   [
+    "#\t\t",
+    null,
+    [
+     1,
+     ""
+    ]
+   ],
+   [
+    "#\t\t\t",
+    null,
+    [
+     1,
+     ""
+    ]
+   ],
+   [
+    "#\t\t\t\t",
+    null,
+    [
+     1,
+     ""
+    ]
+   ],
+   [
+    "#\t\t\t\f",
+    null,
+    [
+     1,
+     "\f"
+    ]
+   ],
+   [
+    "#\t\t\t ",
+    null,
+    [
+     1,
+     ""
+    ]
+   ],
+   [
+    "#\t\t\t ",
+    null,
+    [
+     1,
+     " "
+    ]
+   ],
+   [
+    "#\t\t\t ",
+    null,
+    [
+     1,
+     " "
+    ]
+   ],
+   [
+    "#\t\t\t ",
+    null,
+    [
+     1,
+     " "
+    ]
+   ],
+   [
+    "#\t\t\f",
+    null,
+    [
+     1,
+     "\f"
+    ]
+   ],
+   [
+    "#\t\t\f\t",
+    null,
+    [
+     1,
+     "\f"
+    ]
+   ]
+  ],
+  "new_vs_old_removed": [],
+  "sec3_new_vs_old_diff": []
+ }
+}

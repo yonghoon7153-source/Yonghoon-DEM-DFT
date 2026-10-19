@@ -1,0 +1,329 @@
+{
+  "tree": "/home/user/Yonghoon-DEM-DFT/.claude/worktrees/agent-af01581ba72a5262c",
+  "total": 19,
+  "ours_vs_oracle_mismatch": 14,
+  "codex": {
+    "total": 19,
+    "mismatches": 14,
+    "fail_open": 12,
+    "false_rejections": 2
+  },
+  "differences_vs_codex_actual": [],
+  "rows": [
+    {
+      "name": "h1_empty",
+      "ours": {
+        "rc": 0,
+        "bad": [],
+        "code_fp": "2149f8738bb20b6a311b3c5b344b9745271a3f1324cabfb4582c175c3983c3eb"
+      },
+      "codex_actual": {
+        "rc": 0,
+        "bad": [],
+        "code_fp": "2149f8738bb20b6a311b3c5b344b9745271a3f1324cabfb4582c175c3983c3eb"
+      },
+      "oracle_code_fp": null,
+      "ours_matches_oracle": false
+    },
+    {
+      "name": "h1_space",
+      "ours": {
+        "rc": 0,
+        "bad": [],
+        "code_fp": "2149f8738bb20b6a311b3c5b344b9745271a3f1324cabfb4582c175c3983c3eb"
+      },
+      "codex_actual": {
+        "rc": 0,
+        "bad": [],
+        "code_fp": "2149f8738bb20b6a311b3c5b344b9745271a3f1324cabfb4582c175c3983c3eb"
+      },
+      "oracle_code_fp": null,
+      "ours_matches_oracle": false
+    },
+    {
+      "name": "h1_tab",
+      "ours": {
+        "rc": 0,
+        "bad": [],
+        "code_fp": "2149f8738bb20b6a311b3c5b344b9745271a3f1324cabfb4582c175c3983c3eb"
+      },
+      "codex_actual": {
+        "rc": 0,
+        "bad": [],
+        "code_fp": "2149f8738bb20b6a311b3c5b344b9745271a3f1324cabfb4582c175c3983c3eb"
+      },
+      "oracle_code_fp": null,
+      "ours_matches_oracle": false
+    },
+    {
+      "name": "h1_space_tab",
+      "ours": {
+        "rc": 0,
+        "bad": [],
+        "code_fp": "2149f8738bb20b6a311b3c5b344b9745271a3f1324cabfb4582c175c3983c3eb"
+      },
+      "codex_actual": {
+        "rc": 0,
+        "bad": [],
+        "code_fp": "2149f8738bb20b6a311b3c5b344b9745271a3f1324cabfb4582c175c3983c3eb"
+      },
+      "oracle_code_fp": null,
+      "ours_matches_oracle": false
+    },
+    {
+      "name": "h1_nbsp",
+      "ours": {
+        "rc": 0,
+        "bad": [],
+        "code_fp": "2149f8738bb20b6a311b3c5b344b9745271a3f1324cabfb4582c175c3983c3eb"
+      },
+      "codex_actual": {
+        "rc": 0,
+        "bad": [],
+        "code_fp": "2149f8738bb20b6a311b3c5b344b9745271a3f1324cabfb4582c175c3983c3eb"
+      },
+      "oracle_code_fp": null,
+      "ours_matches_oracle": false
+    },
+    {
+      "name": "h1_emspace",
+      "ours": {
+        "rc": 0,
+        "bad": [],
+        "code_fp": "2149f8738bb20b6a311b3c5b344b9745271a3f1324cabfb4582c175c3983c3eb"
+      },
+      "codex_actual": {
+        "rc": 0,
+        "bad": [],
+        "code_fp": "2149f8738bb20b6a311b3c5b344b9745271a3f1324cabfb4582c175c3983c3eb"
+      },
+      "oracle_code_fp": null,
+      "ours_matches_oracle": false
+    },
+    {
+      "name": "h1_normal",
+      "ours": {
+        "rc": 1,
+        "bad": [
+          "R0",
+          "D1"
+        ],
+        "code_fp": null
+      },
+      "codex_actual": {
+        "rc": 1,
+        "bad": [
+          "R0",
+          "D1"
+        ],
+        "code_fp": null
+      },
+      "oracle_code_fp": null,
+      "ours_matches_oracle": true
+    },
+    {
+      "name": "h2_empty",
+      "ours": {
+        "rc": 0,
+        "bad": [],
+        "code_fp": "2149f8738bb20b6a311b3c5b344b9745271a3f1324cabfb4582c175c3983c3eb"
+      },
+      "codex_actual": {
+        "rc": 0,
+        "bad": [],
+        "code_fp": "2149f8738bb20b6a311b3c5b344b9745271a3f1324cabfb4582c175c3983c3eb"
+      },
+      "oracle_code_fp": null,
+      "ours_matches_oracle": false
+    },
+    {
+      "name": "h2_space",
+      "ours": {
+        "rc": 0,
+        "bad": [],
+        "code_fp": "2149f8738bb20b6a311b3c5b344b9745271a3f1324cabfb4582c175c3983c3eb"
+      },
+      "codex_actual": {
+        "rc": 0,
+        "bad": [],
+        "code_fp": "2149f8738bb20b6a311b3c5b344b9745271a3f1324cabfb4582c175c3983c3eb"
+      },
+      "oracle_code_fp": null,
+      "ours_matches_oracle": false
+    },
+    {
+      "name": "h2_tab",
+      "ours": {
+        "rc": 0,
+        "bad": [],
+        "code_fp": "2149f8738bb20b6a311b3c5b344b9745271a3f1324cabfb4582c175c3983c3eb"
+      },
+      "codex_actual": {
+        "rc": 0,
+        "bad": [],
+        "code_fp": "2149f8738bb20b6a311b3c5b344b9745271a3f1324cabfb4582c175c3983c3eb"
+      },
+      "oracle_code_fp": null,
+      "ours_matches_oracle": false
+    },
+    {
+      "name": "h2_space_tab",
+      "ours": {
+        "rc": 0,
+        "bad": [],
+        "code_fp": "2149f8738bb20b6a311b3c5b344b9745271a3f1324cabfb4582c175c3983c3eb"
+      },
+      "codex_actual": {
+        "rc": 0,
+        "bad": [],
+        "code_fp": "2149f8738bb20b6a311b3c5b344b9745271a3f1324cabfb4582c175c3983c3eb"
+      },
+      "oracle_code_fp": null,
+      "ours_matches_oracle": false
+    },
+    {
+      "name": "h2_nbsp",
+      "ours": {
+        "rc": 0,
+        "bad": [],
+        "code_fp": "2149f8738bb20b6a311b3c5b344b9745271a3f1324cabfb4582c175c3983c3eb"
+      },
+      "codex_actual": {
+        "rc": 0,
+        "bad": [],
+        "code_fp": "2149f8738bb20b6a311b3c5b344b9745271a3f1324cabfb4582c175c3983c3eb"
+      },
+      "oracle_code_fp": null,
+      "ours_matches_oracle": false
+    },
+    {
+      "name": "h2_emspace",
+      "ours": {
+        "rc": 0,
+        "bad": [],
+        "code_fp": "2149f8738bb20b6a311b3c5b344b9745271a3f1324cabfb4582c175c3983c3eb"
+      },
+      "codex_actual": {
+        "rc": 0,
+        "bad": [],
+        "code_fp": "2149f8738bb20b6a311b3c5b344b9745271a3f1324cabfb4582c175c3983c3eb"
+      },
+      "oracle_code_fp": null,
+      "ours_matches_oracle": false
+    },
+    {
+      "name": "h2_normal",
+      "ours": {
+        "rc": 1,
+        "bad": [
+          "R0",
+          "D1"
+        ],
+        "code_fp": null
+      },
+      "codex_actual": {
+        "rc": 1,
+        "bad": [
+          "R0",
+          "D1"
+        ],
+        "code_fp": null
+      },
+      "oracle_code_fp": null,
+      "ours_matches_oracle": true
+    },
+    {
+      "name": "fence_value_control",
+      "ours": {
+        "rc": 1,
+        "bad": [
+          "R0",
+          "D1"
+        ],
+        "code_fp": null
+      },
+      "codex_actual": {
+        "rc": 1,
+        "bad": [
+          "R0",
+          "D1"
+        ],
+        "code_fp": null
+      },
+      "oracle_code_fp": null,
+      "ours_matches_oracle": true
+    },
+    {
+      "name": "outside_and_fenced_value",
+      "ours": {
+        "rc": 0,
+        "bad": [],
+        "code_fp": "2149f8738bb20b6a311b3c5b344b9745271a3f1324cabfb4582c175c3983c3eb"
+      },
+      "codex_actual": {
+        "rc": 0,
+        "bad": [],
+        "code_fp": "2149f8738bb20b6a311b3c5b344b9745271a3f1324cabfb4582c175c3983c3eb"
+      },
+      "oracle_code_fp": "2149f8738bb20b6a311b3c5b344b9745271a3f1324cabfb4582c175c3983c3eb",
+      "ours_matches_oracle": true
+    },
+    {
+      "name": "normal_value_control",
+      "ours": {
+        "rc": 0,
+        "bad": [],
+        "code_fp": "2149f8738bb20b6a311b3c5b344b9745271a3f1324cabfb4582c175c3983c3eb"
+      },
+      "codex_actual": {
+        "rc": 0,
+        "bad": [],
+        "code_fp": "2149f8738bb20b6a311b3c5b344b9745271a3f1324cabfb4582c175c3983c3eb"
+      },
+      "oracle_code_fp": "2149f8738bb20b6a311b3c5b344b9745271a3f1324cabfb4582c175c3983c3eb",
+      "ours_matches_oracle": true
+    },
+    {
+      "name": "h1_live_before_blank_history",
+      "ours": {
+        "rc": 1,
+        "bad": [
+          "R0",
+          "D1"
+        ],
+        "code_fp": null
+      },
+      "codex_actual": {
+        "rc": 1,
+        "bad": [
+          "R0",
+          "D1"
+        ],
+        "code_fp": null
+      },
+      "oracle_code_fp": "2149f8738bb20b6a311b3c5b344b9745271a3f1324cabfb4582c175c3983c3eb",
+      "ours_matches_oracle": false
+    },
+    {
+      "name": "h2_live_before_blank_history",
+      "ours": {
+        "rc": 1,
+        "bad": [
+          "R0",
+          "D1"
+        ],
+        "code_fp": null
+      },
+      "codex_actual": {
+        "rc": 1,
+        "bad": [
+          "R0",
+          "D1"
+        ],
+        "code_fp": null
+      },
+      "oracle_code_fp": "2149f8738bb20b6a311b3c5b344b9745271a3f1324cabfb4582c175c3983c3eb",
+      "ours_matches_oracle": false
+    }
+  ]
+}

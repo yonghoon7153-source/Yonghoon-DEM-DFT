@@ -1,0 +1,2296 @@
+{
+  "tree": "/home/user/Yonghoon-DEM-DFT/.claude/worktrees/agent-af01581ba72a5262c",
+  "code_fp_now": "2149f8738bb20b6a311b3c5b344b9745271a3f1324cabfb4582c175c3983c3eb",
+  "total": 114,
+  "mismatches": 0,
+  "mismatch_rc0": 0,
+  "codex_total": 114,
+  "codex_mismatches": 32,
+  "differences_vs_codex": [
+    [
+      "96_3_indent_tab",
+      "parser_accept",
+      true,
+      false
+    ],
+    [
+      "96_3_indent_tab",
+      "parser_reason",
+      "",
+      "§3 제목 (## 3.) 없음"
+    ],
+    [
+      "96_3_indent_tab",
+      "heading_mismatch",
+      true,
+      false
+    ],
+    [
+      "96_3_indent_tab",
+      "receipt_rc",
+      0,
+      1
+    ],
+    [
+      "96_3_indent_tab",
+      "bad",
+      [],
+      [
+        "R0",
+        "D1"
+      ]
+    ],
+    [
+      "96_3_indent_tab",
+      "code_fp",
+      "2149f8738bb20b6a311b3c5b344b9745271a3f1324cabfb4582c175c3983c3eb",
+      null
+    ],
+    [
+      "96_3_indent_space_tab",
+      "parser_accept",
+      true,
+      false
+    ],
+    [
+      "96_3_indent_space_tab",
+      "parser_reason",
+      "",
+      "§3 제목 (## 3.) 없음"
+    ],
+    [
+      "96_3_indent_space_tab",
+      "heading_mismatch",
+      true,
+      false
+    ],
+    [
+      "96_3_indent_space_tab",
+      "receipt_rc",
+      0,
+      1
+    ],
+    [
+      "96_3_indent_space_tab",
+      "bad",
+      [],
+      [
+        "R0",
+        "D1"
+      ]
+    ],
+    [
+      "96_3_indent_space_tab",
+      "code_fp",
+      "2149f8738bb20b6a311b3c5b344b9745271a3f1324cabfb4582c175c3983c3eb",
+      null
+    ],
+    [
+      "96_3_tail_nbsp",
+      "parser_accept",
+      true,
+      false
+    ],
+    [
+      "96_3_tail_nbsp",
+      "parser_reason",
+      "",
+      "§3 제목 (## 3.) 없음"
+    ],
+    [
+      "96_3_tail_nbsp",
+      "heading_mismatch",
+      true,
+      false
+    ],
+    [
+      "96_3_tail_nbsp",
+      "receipt_rc",
+      0,
+      1
+    ],
+    [
+      "96_3_tail_nbsp",
+      "bad",
+      [],
+      [
+        "R0",
+        "D1"
+      ]
+    ],
+    [
+      "96_3_tail_nbsp",
+      "code_fp",
+      "2149f8738bb20b6a311b3c5b344b9745271a3f1324cabfb4582c175c3983c3eb",
+      null
+    ],
+    [
+      "96_3_tail_emspace",
+      "parser_accept",
+      true,
+      false
+    ],
+    [
+      "96_3_tail_emspace",
+      "parser_reason",
+      "",
+      "§3 제목 (## 3.) 없음"
+    ],
+    [
+      "96_3_tail_emspace",
+      "heading_mismatch",
+      true,
+      false
+    ],
+    [
+      "96_3_tail_emspace",
+      "receipt_rc",
+      0,
+      1
+    ],
+    [
+      "96_3_tail_emspace",
+      "bad",
+      [],
+      [
+        "R0",
+        "D1"
+      ]
+    ],
+    [
+      "96_3_tail_emspace",
+      "code_fp",
+      "2149f8738bb20b6a311b3c5b344b9745271a3f1324cabfb4582c175c3983c3eb",
+      null
+    ],
+    [
+      "96_4_indent_tab",
+      "parser_accept",
+      true,
+      false
+    ],
+    [
+      "96_4_indent_tab",
+      "parser_reason",
+      "",
+      "§3 제목 (## 3.) 없음"
+    ],
+    [
+      "96_4_indent_tab",
+      "heading_mismatch",
+      true,
+      false
+    ],
+    [
+      "96_4_indent_tab",
+      "receipt_rc",
+      0,
+      1
+    ],
+    [
+      "96_4_indent_tab",
+      "bad",
+      [],
+      [
+        "R0",
+        "D1"
+      ]
+    ],
+    [
+      "96_4_indent_tab",
+      "code_fp",
+      "2149f8738bb20b6a311b3c5b344b9745271a3f1324cabfb4582c175c3983c3eb",
+      null
+    ],
+    [
+      "96_4_indent_space_tab",
+      "parser_accept",
+      true,
+      false
+    ],
+    [
+      "96_4_indent_space_tab",
+      "parser_reason",
+      "",
+      "§3 제목 (## 3.) 없음"
+    ],
+    [
+      "96_4_indent_space_tab",
+      "heading_mismatch",
+      true,
+      false
+    ],
+    [
+      "96_4_indent_space_tab",
+      "receipt_rc",
+      0,
+      1
+    ],
+    [
+      "96_4_indent_space_tab",
+      "bad",
+      [],
+      [
+        "R0",
+        "D1"
+      ]
+    ],
+    [
+      "96_4_indent_space_tab",
+      "code_fp",
+      "2149f8738bb20b6a311b3c5b344b9745271a3f1324cabfb4582c175c3983c3eb",
+      null
+    ],
+    [
+      "96_4_tail_nbsp",
+      "parser_accept",
+      true,
+      false
+    ],
+    [
+      "96_4_tail_nbsp",
+      "parser_reason",
+      "",
+      "§3 제목 (## 3.) 없음"
+    ],
+    [
+      "96_4_tail_nbsp",
+      "heading_mismatch",
+      true,
+      false
+    ],
+    [
+      "96_4_tail_nbsp",
+      "receipt_rc",
+      0,
+      1
+    ],
+    [
+      "96_4_tail_nbsp",
+      "bad",
+      [],
+      [
+        "R0",
+        "D1"
+      ]
+    ],
+    [
+      "96_4_tail_nbsp",
+      "code_fp",
+      "2149f8738bb20b6a311b3c5b344b9745271a3f1324cabfb4582c175c3983c3eb",
+      null
+    ],
+    [
+      "96_4_tail_emspace",
+      "parser_accept",
+      true,
+      false
+    ],
+    [
+      "96_4_tail_emspace",
+      "parser_reason",
+      "",
+      "§3 제목 (## 3.) 없음"
+    ],
+    [
+      "96_4_tail_emspace",
+      "heading_mismatch",
+      true,
+      false
+    ],
+    [
+      "96_4_tail_emspace",
+      "receipt_rc",
+      0,
+      1
+    ],
+    [
+      "96_4_tail_emspace",
+      "bad",
+      [],
+      [
+        "R0",
+        "D1"
+      ]
+    ],
+    [
+      "96_4_tail_emspace",
+      "code_fp",
+      "2149f8738bb20b6a311b3c5b344b9745271a3f1324cabfb4582c175c3983c3eb",
+      null
+    ],
+    [
+      "96_5_indent_tab",
+      "parser_accept",
+      true,
+      false
+    ],
+    [
+      "96_5_indent_tab",
+      "parser_reason",
+      "",
+      "§3 제목 (## 3.) 없음"
+    ],
+    [
+      "96_5_indent_tab",
+      "heading_mismatch",
+      true,
+      false
+    ],
+    [
+      "96_5_indent_tab",
+      "receipt_rc",
+      0,
+      1
+    ],
+    [
+      "96_5_indent_tab",
+      "bad",
+      [],
+      [
+        "R0",
+        "D1"
+      ]
+    ],
+    [
+      "96_5_indent_tab",
+      "code_fp",
+      "2149f8738bb20b6a311b3c5b344b9745271a3f1324cabfb4582c175c3983c3eb",
+      null
+    ],
+    [
+      "96_5_indent_space_tab",
+      "parser_accept",
+      true,
+      false
+    ],
+    [
+      "96_5_indent_space_tab",
+      "parser_reason",
+      "",
+      "§3 제목 (## 3.) 없음"
+    ],
+    [
+      "96_5_indent_space_tab",
+      "heading_mismatch",
+      true,
+      false
+    ],
+    [
+      "96_5_indent_space_tab",
+      "receipt_rc",
+      0,
+      1
+    ],
+    [
+      "96_5_indent_space_tab",
+      "bad",
+      [],
+      [
+        "R0",
+        "D1"
+      ]
+    ],
+    [
+      "96_5_indent_space_tab",
+      "code_fp",
+      "2149f8738bb20b6a311b3c5b344b9745271a3f1324cabfb4582c175c3983c3eb",
+      null
+    ],
+    [
+      "96_5_tail_nbsp",
+      "parser_accept",
+      true,
+      false
+    ],
+    [
+      "96_5_tail_nbsp",
+      "parser_reason",
+      "",
+      "§3 제목 (## 3.) 없음"
+    ],
+    [
+      "96_5_tail_nbsp",
+      "heading_mismatch",
+      true,
+      false
+    ],
+    [
+      "96_5_tail_nbsp",
+      "receipt_rc",
+      0,
+      1
+    ],
+    [
+      "96_5_tail_nbsp",
+      "bad",
+      [],
+      [
+        "R0",
+        "D1"
+      ]
+    ],
+    [
+      "96_5_tail_nbsp",
+      "code_fp",
+      "2149f8738bb20b6a311b3c5b344b9745271a3f1324cabfb4582c175c3983c3eb",
+      null
+    ],
+    [
+      "96_5_tail_emspace",
+      "parser_accept",
+      true,
+      false
+    ],
+    [
+      "96_5_tail_emspace",
+      "parser_reason",
+      "",
+      "§3 제목 (## 3.) 없음"
+    ],
+    [
+      "96_5_tail_emspace",
+      "heading_mismatch",
+      true,
+      false
+    ],
+    [
+      "96_5_tail_emspace",
+      "receipt_rc",
+      0,
+      1
+    ],
+    [
+      "96_5_tail_emspace",
+      "bad",
+      [],
+      [
+        "R0",
+        "D1"
+      ]
+    ],
+    [
+      "96_5_tail_emspace",
+      "code_fp",
+      "2149f8738bb20b6a311b3c5b344b9745271a3f1324cabfb4582c175c3983c3eb",
+      null
+    ],
+    [
+      "96_8_indent_tab",
+      "parser_accept",
+      true,
+      false
+    ],
+    [
+      "96_8_indent_tab",
+      "parser_reason",
+      "",
+      "§3 제목 (## 3.) 없음"
+    ],
+    [
+      "96_8_indent_tab",
+      "heading_mismatch",
+      true,
+      false
+    ],
+    [
+      "96_8_indent_tab",
+      "receipt_rc",
+      0,
+      1
+    ],
+    [
+      "96_8_indent_tab",
+      "bad",
+      [],
+      [
+        "R0",
+        "D1"
+      ]
+    ],
+    [
+      "96_8_indent_tab",
+      "code_fp",
+      "2149f8738bb20b6a311b3c5b344b9745271a3f1324cabfb4582c175c3983c3eb",
+      null
+    ],
+    [
+      "96_8_indent_space_tab",
+      "parser_accept",
+      true,
+      false
+    ],
+    [
+      "96_8_indent_space_tab",
+      "parser_reason",
+      "",
+      "§3 제목 (## 3.) 없음"
+    ],
+    [
+      "96_8_indent_space_tab",
+      "heading_mismatch",
+      true,
+      false
+    ],
+    [
+      "96_8_indent_space_tab",
+      "receipt_rc",
+      0,
+      1
+    ],
+    [
+      "96_8_indent_space_tab",
+      "bad",
+      [],
+      [
+        "R0",
+        "D1"
+      ]
+    ],
+    [
+      "96_8_indent_space_tab",
+      "code_fp",
+      "2149f8738bb20b6a311b3c5b344b9745271a3f1324cabfb4582c175c3983c3eb",
+      null
+    ],
+    [
+      "96_8_tail_nbsp",
+      "parser_accept",
+      true,
+      false
+    ],
+    [
+      "96_8_tail_nbsp",
+      "parser_reason",
+      "",
+      "§3 제목 (## 3.) 없음"
+    ],
+    [
+      "96_8_tail_nbsp",
+      "heading_mismatch",
+      true,
+      false
+    ],
+    [
+      "96_8_tail_nbsp",
+      "receipt_rc",
+      0,
+      1
+    ],
+    [
+      "96_8_tail_nbsp",
+      "bad",
+      [],
+      [
+        "R0",
+        "D1"
+      ]
+    ],
+    [
+      "96_8_tail_nbsp",
+      "code_fp",
+      "2149f8738bb20b6a311b3c5b344b9745271a3f1324cabfb4582c175c3983c3eb",
+      null
+    ],
+    [
+      "96_8_tail_emspace",
+      "parser_accept",
+      true,
+      false
+    ],
+    [
+      "96_8_tail_emspace",
+      "parser_reason",
+      "",
+      "§3 제목 (## 3.) 없음"
+    ],
+    [
+      "96_8_tail_emspace",
+      "heading_mismatch",
+      true,
+      false
+    ],
+    [
+      "96_8_tail_emspace",
+      "receipt_rc",
+      0,
+      1
+    ],
+    [
+      "96_8_tail_emspace",
+      "bad",
+      [],
+      [
+        "R0",
+        "D1"
+      ]
+    ],
+    [
+      "96_8_tail_emspace",
+      "code_fp",
+      "2149f8738bb20b6a311b3c5b344b9745271a3f1324cabfb4582c175c3983c3eb",
+      null
+    ],
+    [
+      "126_3_indent_tab",
+      "parser_accept",
+      true,
+      false
+    ],
+    [
+      "126_3_indent_tab",
+      "parser_reason",
+      "",
+      "§3 제목 (## 3.) 없음"
+    ],
+    [
+      "126_3_indent_tab",
+      "heading_mismatch",
+      true,
+      false
+    ],
+    [
+      "126_3_indent_tab",
+      "receipt_rc",
+      0,
+      1
+    ],
+    [
+      "126_3_indent_tab",
+      "bad",
+      [],
+      [
+        "R0",
+        "D1"
+      ]
+    ],
+    [
+      "126_3_indent_tab",
+      "code_fp",
+      "2149f8738bb20b6a311b3c5b344b9745271a3f1324cabfb4582c175c3983c3eb",
+      null
+    ],
+    [
+      "126_3_indent_space_tab",
+      "parser_accept",
+      true,
+      false
+    ],
+    [
+      "126_3_indent_space_tab",
+      "parser_reason",
+      "",
+      "§3 제목 (## 3.) 없음"
+    ],
+    [
+      "126_3_indent_space_tab",
+      "heading_mismatch",
+      true,
+      false
+    ],
+    [
+      "126_3_indent_space_tab",
+      "receipt_rc",
+      0,
+      1
+    ],
+    [
+      "126_3_indent_space_tab",
+      "bad",
+      [],
+      [
+        "R0",
+        "D1"
+      ]
+    ],
+    [
+      "126_3_indent_space_tab",
+      "code_fp",
+      "2149f8738bb20b6a311b3c5b344b9745271a3f1324cabfb4582c175c3983c3eb",
+      null
+    ],
+    [
+      "126_3_tail_nbsp",
+      "parser_accept",
+      true,
+      false
+    ],
+    [
+      "126_3_tail_nbsp",
+      "parser_reason",
+      "",
+      "§3 제목 (## 3.) 없음"
+    ],
+    [
+      "126_3_tail_nbsp",
+      "heading_mismatch",
+      true,
+      false
+    ],
+    [
+      "126_3_tail_nbsp",
+      "receipt_rc",
+      0,
+      1
+    ],
+    [
+      "126_3_tail_nbsp",
+      "bad",
+      [],
+      [
+        "R0",
+        "D1"
+      ]
+    ],
+    [
+      "126_3_tail_nbsp",
+      "code_fp",
+      "2149f8738bb20b6a311b3c5b344b9745271a3f1324cabfb4582c175c3983c3eb",
+      null
+    ],
+    [
+      "126_3_tail_emspace",
+      "parser_accept",
+      true,
+      false
+    ],
+    [
+      "126_3_tail_emspace",
+      "parser_reason",
+      "",
+      "§3 제목 (## 3.) 없음"
+    ],
+    [
+      "126_3_tail_emspace",
+      "heading_mismatch",
+      true,
+      false
+    ],
+    [
+      "126_3_tail_emspace",
+      "receipt_rc",
+      0,
+      1
+    ],
+    [
+      "126_3_tail_emspace",
+      "bad",
+      [],
+      [
+        "R0",
+        "D1"
+      ]
+    ],
+    [
+      "126_3_tail_emspace",
+      "code_fp",
+      "2149f8738bb20b6a311b3c5b344b9745271a3f1324cabfb4582c175c3983c3eb",
+      null
+    ],
+    [
+      "126_4_indent_tab",
+      "parser_accept",
+      true,
+      false
+    ],
+    [
+      "126_4_indent_tab",
+      "parser_reason",
+      "",
+      "§3 제목 (## 3.) 없음"
+    ],
+    [
+      "126_4_indent_tab",
+      "heading_mismatch",
+      true,
+      false
+    ],
+    [
+      "126_4_indent_tab",
+      "receipt_rc",
+      0,
+      1
+    ],
+    [
+      "126_4_indent_tab",
+      "bad",
+      [],
+      [
+        "R0",
+        "D1"
+      ]
+    ],
+    [
+      "126_4_indent_tab",
+      "code_fp",
+      "2149f8738bb20b6a311b3c5b344b9745271a3f1324cabfb4582c175c3983c3eb",
+      null
+    ],
+    [
+      "126_4_indent_space_tab",
+      "parser_accept",
+      true,
+      false
+    ],
+    [
+      "126_4_indent_space_tab",
+      "parser_reason",
+      "",
+      "§3 제목 (## 3.) 없음"
+    ],
+    [
+      "126_4_indent_space_tab",
+      "heading_mismatch",
+      true,
+      false
+    ],
+    [
+      "126_4_indent_space_tab",
+      "receipt_rc",
+      0,
+      1
+    ],
+    [
+      "126_4_indent_space_tab",
+      "bad",
+      [],
+      [
+        "R0",
+        "D1"
+      ]
+    ],
+    [
+      "126_4_indent_space_tab",
+      "code_fp",
+      "2149f8738bb20b6a311b3c5b344b9745271a3f1324cabfb4582c175c3983c3eb",
+      null
+    ],
+    [
+      "126_4_tail_nbsp",
+      "parser_accept",
+      true,
+      false
+    ],
+    [
+      "126_4_tail_nbsp",
+      "parser_reason",
+      "",
+      "§3 제목 (## 3.) 없음"
+    ],
+    [
+      "126_4_tail_nbsp",
+      "heading_mismatch",
+      true,
+      false
+    ],
+    [
+      "126_4_tail_nbsp",
+      "receipt_rc",
+      0,
+      1
+    ],
+    [
+      "126_4_tail_nbsp",
+      "bad",
+      [],
+      [
+        "R0",
+        "D1"
+      ]
+    ],
+    [
+      "126_4_tail_nbsp",
+      "code_fp",
+      "2149f8738bb20b6a311b3c5b344b9745271a3f1324cabfb4582c175c3983c3eb",
+      null
+    ],
+    [
+      "126_4_tail_emspace",
+      "parser_accept",
+      true,
+      false
+    ],
+    [
+      "126_4_tail_emspace",
+      "parser_reason",
+      "",
+      "§3 제목 (## 3.) 없음"
+    ],
+    [
+      "126_4_tail_emspace",
+      "heading_mismatch",
+      true,
+      false
+    ],
+    [
+      "126_4_tail_emspace",
+      "receipt_rc",
+      0,
+      1
+    ],
+    [
+      "126_4_tail_emspace",
+      "bad",
+      [],
+      [
+        "R0",
+        "D1"
+      ]
+    ],
+    [
+      "126_4_tail_emspace",
+      "code_fp",
+      "2149f8738bb20b6a311b3c5b344b9745271a3f1324cabfb4582c175c3983c3eb",
+      null
+    ],
+    [
+      "126_5_indent_tab",
+      "parser_accept",
+      true,
+      false
+    ],
+    [
+      "126_5_indent_tab",
+      "parser_reason",
+      "",
+      "§3 제목 (## 3.) 없음"
+    ],
+    [
+      "126_5_indent_tab",
+      "heading_mismatch",
+      true,
+      false
+    ],
+    [
+      "126_5_indent_tab",
+      "receipt_rc",
+      0,
+      1
+    ],
+    [
+      "126_5_indent_tab",
+      "bad",
+      [],
+      [
+        "R0",
+        "D1"
+      ]
+    ],
+    [
+      "126_5_indent_tab",
+      "code_fp",
+      "2149f8738bb20b6a311b3c5b344b9745271a3f1324cabfb4582c175c3983c3eb",
+      null
+    ],
+    [
+      "126_5_indent_space_tab",
+      "parser_accept",
+      true,
+      false
+    ],
+    [
+      "126_5_indent_space_tab",
+      "parser_reason",
+      "",
+      "§3 제목 (## 3.) 없음"
+    ],
+    [
+      "126_5_indent_space_tab",
+      "heading_mismatch",
+      true,
+      false
+    ],
+    [
+      "126_5_indent_space_tab",
+      "receipt_rc",
+      0,
+      1
+    ],
+    [
+      "126_5_indent_space_tab",
+      "bad",
+      [],
+      [
+        "R0",
+        "D1"
+      ]
+    ],
+    [
+      "126_5_indent_space_tab",
+      "code_fp",
+      "2149f8738bb20b6a311b3c5b344b9745271a3f1324cabfb4582c175c3983c3eb",
+      null
+    ],
+    [
+      "126_5_tail_nbsp",
+      "parser_accept",
+      true,
+      false
+    ],
+    [
+      "126_5_tail_nbsp",
+      "parser_reason",
+      "",
+      "§3 제목 (## 3.) 없음"
+    ],
+    [
+      "126_5_tail_nbsp",
+      "heading_mismatch",
+      true,
+      false
+    ],
+    [
+      "126_5_tail_nbsp",
+      "receipt_rc",
+      0,
+      1
+    ],
+    [
+      "126_5_tail_nbsp",
+      "bad",
+      [],
+      [
+        "R0",
+        "D1"
+      ]
+    ],
+    [
+      "126_5_tail_nbsp",
+      "code_fp",
+      "2149f8738bb20b6a311b3c5b344b9745271a3f1324cabfb4582c175c3983c3eb",
+      null
+    ],
+    [
+      "126_5_tail_emspace",
+      "parser_accept",
+      true,
+      false
+    ],
+    [
+      "126_5_tail_emspace",
+      "parser_reason",
+      "",
+      "§3 제목 (## 3.) 없음"
+    ],
+    [
+      "126_5_tail_emspace",
+      "heading_mismatch",
+      true,
+      false
+    ],
+    [
+      "126_5_tail_emspace",
+      "receipt_rc",
+      0,
+      1
+    ],
+    [
+      "126_5_tail_emspace",
+      "bad",
+      [],
+      [
+        "R0",
+        "D1"
+      ]
+    ],
+    [
+      "126_5_tail_emspace",
+      "code_fp",
+      "2149f8738bb20b6a311b3c5b344b9745271a3f1324cabfb4582c175c3983c3eb",
+      null
+    ],
+    [
+      "126_8_indent_tab",
+      "parser_accept",
+      true,
+      false
+    ],
+    [
+      "126_8_indent_tab",
+      "parser_reason",
+      "",
+      "§3 제목 (## 3.) 없음"
+    ],
+    [
+      "126_8_indent_tab",
+      "heading_mismatch",
+      true,
+      false
+    ],
+    [
+      "126_8_indent_tab",
+      "receipt_rc",
+      0,
+      1
+    ],
+    [
+      "126_8_indent_tab",
+      "bad",
+      [],
+      [
+        "R0",
+        "D1"
+      ]
+    ],
+    [
+      "126_8_indent_tab",
+      "code_fp",
+      "2149f8738bb20b6a311b3c5b344b9745271a3f1324cabfb4582c175c3983c3eb",
+      null
+    ],
+    [
+      "126_8_indent_space_tab",
+      "parser_accept",
+      true,
+      false
+    ],
+    [
+      "126_8_indent_space_tab",
+      "parser_reason",
+      "",
+      "§3 제목 (## 3.) 없음"
+    ],
+    [
+      "126_8_indent_space_tab",
+      "heading_mismatch",
+      true,
+      false
+    ],
+    [
+      "126_8_indent_space_tab",
+      "receipt_rc",
+      0,
+      1
+    ],
+    [
+      "126_8_indent_space_tab",
+      "bad",
+      [],
+      [
+        "R0",
+        "D1"
+      ]
+    ],
+    [
+      "126_8_indent_space_tab",
+      "code_fp",
+      "2149f8738bb20b6a311b3c5b344b9745271a3f1324cabfb4582c175c3983c3eb",
+      null
+    ],
+    [
+      "126_8_tail_nbsp",
+      "parser_accept",
+      true,
+      false
+    ],
+    [
+      "126_8_tail_nbsp",
+      "parser_reason",
+      "",
+      "§3 제목 (## 3.) 없음"
+    ],
+    [
+      "126_8_tail_nbsp",
+      "heading_mismatch",
+      true,
+      false
+    ],
+    [
+      "126_8_tail_nbsp",
+      "receipt_rc",
+      0,
+      1
+    ],
+    [
+      "126_8_tail_nbsp",
+      "bad",
+      [],
+      [
+        "R0",
+        "D1"
+      ]
+    ],
+    [
+      "126_8_tail_nbsp",
+      "code_fp",
+      "2149f8738bb20b6a311b3c5b344b9745271a3f1324cabfb4582c175c3983c3eb",
+      null
+    ],
+    [
+      "126_8_tail_emspace",
+      "parser_accept",
+      true,
+      false
+    ],
+    [
+      "126_8_tail_emspace",
+      "parser_reason",
+      "",
+      "§3 제목 (## 3.) 없음"
+    ],
+    [
+      "126_8_tail_emspace",
+      "heading_mismatch",
+      true,
+      false
+    ],
+    [
+      "126_8_tail_emspace",
+      "receipt_rc",
+      0,
+      1
+    ],
+    [
+      "126_8_tail_emspace",
+      "bad",
+      [],
+      [
+        "R0",
+        "D1"
+      ]
+    ],
+    [
+      "126_8_tail_emspace",
+      "code_fp",
+      "2149f8738bb20b6a311b3c5b344b9745271a3f1324cabfb4582c175c3983c3eb",
+      null
+    ],
+    [
+      "active_section_fenced_value",
+      "receipt_rc",
+      0,
+      1
+    ],
+    [
+      "active_section_fenced_value",
+      "bad",
+      [],
+      [
+        "R0",
+        "D1"
+      ]
+    ],
+    [
+      "active_section_fenced_value",
+      "code_fp",
+      "2149f8738bb20b6a311b3c5b344b9745271a3f1324cabfb4582c175c3983c3eb",
+      null
+    ]
+  ],
+  "cases": [
+    {
+      "name": "96_3_indent_empty",
+      "parser_accept": true,
+      "parser_reason": "",
+      "commonmark_active": true,
+      "heading_mismatch": false
+    },
+    {
+      "name": "96_3_indent_space1",
+      "parser_accept": true,
+      "parser_reason": "",
+      "commonmark_active": true,
+      "heading_mismatch": false
+    },
+    {
+      "name": "96_3_indent_space3",
+      "parser_accept": true,
+      "parser_reason": "",
+      "commonmark_active": true,
+      "heading_mismatch": false
+    },
+    {
+      "name": "96_3_indent_tab",
+      "parser_accept": false,
+      "parser_reason": "§3 제목 (## 3.) 없음",
+      "commonmark_active": false,
+      "heading_mismatch": false,
+      "receipt_rc": 1,
+      "bad": [
+        "R0",
+        "D1"
+      ],
+      "code_fp": null
+    },
+    {
+      "name": "96_3_indent_space_tab",
+      "parser_accept": false,
+      "parser_reason": "§3 제목 (## 3.) 없음",
+      "commonmark_active": false,
+      "heading_mismatch": false,
+      "receipt_rc": 1,
+      "bad": [
+        "R0",
+        "D1"
+      ],
+      "code_fp": null
+    },
+    {
+      "name": "96_3_tail_empty",
+      "parser_accept": true,
+      "parser_reason": "",
+      "commonmark_active": true,
+      "heading_mismatch": false
+    },
+    {
+      "name": "96_3_tail_space",
+      "parser_accept": true,
+      "parser_reason": "",
+      "commonmark_active": true,
+      "heading_mismatch": false
+    },
+    {
+      "name": "96_3_tail_tab",
+      "parser_accept": true,
+      "parser_reason": "",
+      "commonmark_active": true,
+      "heading_mismatch": false
+    },
+    {
+      "name": "96_3_tail_nbsp",
+      "parser_accept": false,
+      "parser_reason": "§3 제목 (## 3.) 없음",
+      "commonmark_active": false,
+      "heading_mismatch": false,
+      "receipt_rc": 1,
+      "bad": [
+        "R0",
+        "D1"
+      ],
+      "code_fp": null
+    },
+    {
+      "name": "96_3_tail_emspace",
+      "parser_accept": false,
+      "parser_reason": "§3 제목 (## 3.) 없음",
+      "commonmark_active": false,
+      "heading_mismatch": false,
+      "receipt_rc": 1,
+      "bad": [
+        "R0",
+        "D1"
+      ],
+      "code_fp": null
+    },
+    {
+      "name": "96_3_tail_text",
+      "parser_accept": false,
+      "parser_reason": "§3 제목 (## 3.) 없음",
+      "commonmark_active": false,
+      "heading_mismatch": false
+    },
+    {
+      "name": "96_3_shorter",
+      "parser_accept": false,
+      "parser_reason": "§3 제목 (## 3.) 없음",
+      "commonmark_active": false,
+      "heading_mismatch": false
+    },
+    {
+      "name": "96_3_unclosed",
+      "parser_accept": false,
+      "parser_reason": "§3 제목 (## 3.) 없음",
+      "commonmark_active": false,
+      "heading_mismatch": false
+    },
+    {
+      "name": "96_3_normal_active_after",
+      "parser_accept": true,
+      "parser_reason": "",
+      "commonmark_active": true,
+      "heading_mismatch": false
+    },
+    {
+      "name": "96_4_indent_empty",
+      "parser_accept": true,
+      "parser_reason": "",
+      "commonmark_active": true,
+      "heading_mismatch": false
+    },
+    {
+      "name": "96_4_indent_space1",
+      "parser_accept": true,
+      "parser_reason": "",
+      "commonmark_active": true,
+      "heading_mismatch": false
+    },
+    {
+      "name": "96_4_indent_space3",
+      "parser_accept": true,
+      "parser_reason": "",
+      "commonmark_active": true,
+      "heading_mismatch": false
+    },
+    {
+      "name": "96_4_indent_tab",
+      "parser_accept": false,
+      "parser_reason": "§3 제목 (## 3.) 없음",
+      "commonmark_active": false,
+      "heading_mismatch": false,
+      "receipt_rc": 1,
+      "bad": [
+        "R0",
+        "D1"
+      ],
+      "code_fp": null
+    },
+    {
+      "name": "96_4_indent_space_tab",
+      "parser_accept": false,
+      "parser_reason": "§3 제목 (## 3.) 없음",
+      "commonmark_active": false,
+      "heading_mismatch": false,
+      "receipt_rc": 1,
+      "bad": [
+        "R0",
+        "D1"
+      ],
+      "code_fp": null
+    },
+    {
+      "name": "96_4_tail_empty",
+      "parser_accept": true,
+      "parser_reason": "",
+      "commonmark_active": true,
+      "heading_mismatch": false
+    },
+    {
+      "name": "96_4_tail_space",
+      "parser_accept": true,
+      "parser_reason": "",
+      "commonmark_active": true,
+      "heading_mismatch": false
+    },
+    {
+      "name": "96_4_tail_tab",
+      "parser_accept": true,
+      "parser_reason": "",
+      "commonmark_active": true,
+      "heading_mismatch": false
+    },
+    {
+      "name": "96_4_tail_nbsp",
+      "parser_accept": false,
+      "parser_reason": "§3 제목 (## 3.) 없음",
+      "commonmark_active": false,
+      "heading_mismatch": false,
+      "receipt_rc": 1,
+      "bad": [
+        "R0",
+        "D1"
+      ],
+      "code_fp": null
+    },
+    {
+      "name": "96_4_tail_emspace",
+      "parser_accept": false,
+      "parser_reason": "§3 제목 (## 3.) 없음",
+      "commonmark_active": false,
+      "heading_mismatch": false,
+      "receipt_rc": 1,
+      "bad": [
+        "R0",
+        "D1"
+      ],
+      "code_fp": null
+    },
+    {
+      "name": "96_4_tail_text",
+      "parser_accept": false,
+      "parser_reason": "§3 제목 (## 3.) 없음",
+      "commonmark_active": false,
+      "heading_mismatch": false
+    },
+    {
+      "name": "96_4_shorter",
+      "parser_accept": false,
+      "parser_reason": "§3 제목 (## 3.) 없음",
+      "commonmark_active": false,
+      "heading_mismatch": false,
+      "receipt_rc": 1,
+      "bad": [
+        "R0",
+        "D1"
+      ],
+      "code_fp": null
+    },
+    {
+      "name": "96_4_unclosed",
+      "parser_accept": false,
+      "parser_reason": "§3 제목 (## 3.) 없음",
+      "commonmark_active": false,
+      "heading_mismatch": false
+    },
+    {
+      "name": "96_4_normal_active_after",
+      "parser_accept": true,
+      "parser_reason": "",
+      "commonmark_active": true,
+      "heading_mismatch": false,
+      "receipt_rc": 0,
+      "bad": [],
+      "code_fp": "2149f8738bb20b6a311b3c5b344b9745271a3f1324cabfb4582c175c3983c3eb"
+    },
+    {
+      "name": "96_5_indent_empty",
+      "parser_accept": true,
+      "parser_reason": "",
+      "commonmark_active": true,
+      "heading_mismatch": false
+    },
+    {
+      "name": "96_5_indent_space1",
+      "parser_accept": true,
+      "parser_reason": "",
+      "commonmark_active": true,
+      "heading_mismatch": false
+    },
+    {
+      "name": "96_5_indent_space3",
+      "parser_accept": true,
+      "parser_reason": "",
+      "commonmark_active": true,
+      "heading_mismatch": false
+    },
+    {
+      "name": "96_5_indent_tab",
+      "parser_accept": false,
+      "parser_reason": "§3 제목 (## 3.) 없음",
+      "commonmark_active": false,
+      "heading_mismatch": false,
+      "receipt_rc": 1,
+      "bad": [
+        "R0",
+        "D1"
+      ],
+      "code_fp": null
+    },
+    {
+      "name": "96_5_indent_space_tab",
+      "parser_accept": false,
+      "parser_reason": "§3 제목 (## 3.) 없음",
+      "commonmark_active": false,
+      "heading_mismatch": false,
+      "receipt_rc": 1,
+      "bad": [
+        "R0",
+        "D1"
+      ],
+      "code_fp": null
+    },
+    {
+      "name": "96_5_tail_empty",
+      "parser_accept": true,
+      "parser_reason": "",
+      "commonmark_active": true,
+      "heading_mismatch": false
+    },
+    {
+      "name": "96_5_tail_space",
+      "parser_accept": true,
+      "parser_reason": "",
+      "commonmark_active": true,
+      "heading_mismatch": false
+    },
+    {
+      "name": "96_5_tail_tab",
+      "parser_accept": true,
+      "parser_reason": "",
+      "commonmark_active": true,
+      "heading_mismatch": false
+    },
+    {
+      "name": "96_5_tail_nbsp",
+      "parser_accept": false,
+      "parser_reason": "§3 제목 (## 3.) 없음",
+      "commonmark_active": false,
+      "heading_mismatch": false,
+      "receipt_rc": 1,
+      "bad": [
+        "R0",
+        "D1"
+      ],
+      "code_fp": null
+    },
+    {
+      "name": "96_5_tail_emspace",
+      "parser_accept": false,
+      "parser_reason": "§3 제목 (## 3.) 없음",
+      "commonmark_active": false,
+      "heading_mismatch": false,
+      "receipt_rc": 1,
+      "bad": [
+        "R0",
+        "D1"
+      ],
+      "code_fp": null
+    },
+    {
+      "name": "96_5_tail_text",
+      "parser_accept": false,
+      "parser_reason": "§3 제목 (## 3.) 없음",
+      "commonmark_active": false,
+      "heading_mismatch": false
+    },
+    {
+      "name": "96_5_shorter",
+      "parser_accept": false,
+      "parser_reason": "§3 제목 (## 3.) 없음",
+      "commonmark_active": false,
+      "heading_mismatch": false
+    },
+    {
+      "name": "96_5_unclosed",
+      "parser_accept": false,
+      "parser_reason": "§3 제목 (## 3.) 없음",
+      "commonmark_active": false,
+      "heading_mismatch": false
+    },
+    {
+      "name": "96_5_normal_active_after",
+      "parser_accept": true,
+      "parser_reason": "",
+      "commonmark_active": true,
+      "heading_mismatch": false
+    },
+    {
+      "name": "96_8_indent_empty",
+      "parser_accept": true,
+      "parser_reason": "",
+      "commonmark_active": true,
+      "heading_mismatch": false
+    },
+    {
+      "name": "96_8_indent_space1",
+      "parser_accept": true,
+      "parser_reason": "",
+      "commonmark_active": true,
+      "heading_mismatch": false
+    },
+    {
+      "name": "96_8_indent_space3",
+      "parser_accept": true,
+      "parser_reason": "",
+      "commonmark_active": true,
+      "heading_mismatch": false
+    },
+    {
+      "name": "96_8_indent_tab",
+      "parser_accept": false,
+      "parser_reason": "§3 제목 (## 3.) 없음",
+      "commonmark_active": false,
+      "heading_mismatch": false,
+      "receipt_rc": 1,
+      "bad": [
+        "R0",
+        "D1"
+      ],
+      "code_fp": null
+    },
+    {
+      "name": "96_8_indent_space_tab",
+      "parser_accept": false,
+      "parser_reason": "§3 제목 (## 3.) 없음",
+      "commonmark_active": false,
+      "heading_mismatch": false,
+      "receipt_rc": 1,
+      "bad": [
+        "R0",
+        "D1"
+      ],
+      "code_fp": null
+    },
+    {
+      "name": "96_8_tail_empty",
+      "parser_accept": true,
+      "parser_reason": "",
+      "commonmark_active": true,
+      "heading_mismatch": false
+    },
+    {
+      "name": "96_8_tail_space",
+      "parser_accept": true,
+      "parser_reason": "",
+      "commonmark_active": true,
+      "heading_mismatch": false
+    },
+    {
+      "name": "96_8_tail_tab",
+      "parser_accept": true,
+      "parser_reason": "",
+      "commonmark_active": true,
+      "heading_mismatch": false
+    },
+    {
+      "name": "96_8_tail_nbsp",
+      "parser_accept": false,
+      "parser_reason": "§3 제목 (## 3.) 없음",
+      "commonmark_active": false,
+      "heading_mismatch": false,
+      "receipt_rc": 1,
+      "bad": [
+        "R0",
+        "D1"
+      ],
+      "code_fp": null
+    },
+    {
+      "name": "96_8_tail_emspace",
+      "parser_accept": false,
+      "parser_reason": "§3 제목 (## 3.) 없음",
+      "commonmark_active": false,
+      "heading_mismatch": false,
+      "receipt_rc": 1,
+      "bad": [
+        "R0",
+        "D1"
+      ],
+      "code_fp": null
+    },
+    {
+      "name": "96_8_tail_text",
+      "parser_accept": false,
+      "parser_reason": "§3 제목 (## 3.) 없음",
+      "commonmark_active": false,
+      "heading_mismatch": false
+    },
+    {
+      "name": "96_8_shorter",
+      "parser_accept": false,
+      "parser_reason": "§3 제목 (## 3.) 없음",
+      "commonmark_active": false,
+      "heading_mismatch": false
+    },
+    {
+      "name": "96_8_unclosed",
+      "parser_accept": false,
+      "parser_reason": "§3 제목 (## 3.) 없음",
+      "commonmark_active": false,
+      "heading_mismatch": false
+    },
+    {
+      "name": "96_8_normal_active_after",
+      "parser_accept": true,
+      "parser_reason": "",
+      "commonmark_active": true,
+      "heading_mismatch": false
+    },
+    {
+      "name": "126_3_indent_empty",
+      "parser_accept": true,
+      "parser_reason": "",
+      "commonmark_active": true,
+      "heading_mismatch": false
+    },
+    {
+      "name": "126_3_indent_space1",
+      "parser_accept": true,
+      "parser_reason": "",
+      "commonmark_active": true,
+      "heading_mismatch": false
+    },
+    {
+      "name": "126_3_indent_space3",
+      "parser_accept": true,
+      "parser_reason": "",
+      "commonmark_active": true,
+      "heading_mismatch": false
+    },
+    {
+      "name": "126_3_indent_tab",
+      "parser_accept": false,
+      "parser_reason": "§3 제목 (## 3.) 없음",
+      "commonmark_active": false,
+      "heading_mismatch": false,
+      "receipt_rc": 1,
+      "bad": [
+        "R0",
+        "D1"
+      ],
+      "code_fp": null
+    },
+    {
+      "name": "126_3_indent_space_tab",
+      "parser_accept": false,
+      "parser_reason": "§3 제목 (## 3.) 없음",
+      "commonmark_active": false,
+      "heading_mismatch": false,
+      "receipt_rc": 1,
+      "bad": [
+        "R0",
+        "D1"
+      ],
+      "code_fp": null
+    },
+    {
+      "name": "126_3_tail_empty",
+      "parser_accept": true,
+      "parser_reason": "",
+      "commonmark_active": true,
+      "heading_mismatch": false
+    },
+    {
+      "name": "126_3_tail_space",
+      "parser_accept": true,
+      "parser_reason": "",
+      "commonmark_active": true,
+      "heading_mismatch": false
+    },
+    {
+      "name": "126_3_tail_tab",
+      "parser_accept": true,
+      "parser_reason": "",
+      "commonmark_active": true,
+      "heading_mismatch": false
+    },
+    {
+      "name": "126_3_tail_nbsp",
+      "parser_accept": false,
+      "parser_reason": "§3 제목 (## 3.) 없음",
+      "commonmark_active": false,
+      "heading_mismatch": false,
+      "receipt_rc": 1,
+      "bad": [
+        "R0",
+        "D1"
+      ],
+      "code_fp": null
+    },
+    {
+      "name": "126_3_tail_emspace",
+      "parser_accept": false,
+      "parser_reason": "§3 제목 (## 3.) 없음",
+      "commonmark_active": false,
+      "heading_mismatch": false,
+      "receipt_rc": 1,
+      "bad": [
+        "R0",
+        "D1"
+      ],
+      "code_fp": null
+    },
+    {
+      "name": "126_3_tail_text",
+      "parser_accept": false,
+      "parser_reason": "§3 제목 (## 3.) 없음",
+      "commonmark_active": false,
+      "heading_mismatch": false
+    },
+    {
+      "name": "126_3_shorter",
+      "parser_accept": false,
+      "parser_reason": "§3 제목 (## 3.) 없음",
+      "commonmark_active": false,
+      "heading_mismatch": false
+    },
+    {
+      "name": "126_3_unclosed",
+      "parser_accept": false,
+      "parser_reason": "§3 제목 (## 3.) 없음",
+      "commonmark_active": false,
+      "heading_mismatch": false
+    },
+    {
+      "name": "126_3_normal_active_after",
+      "parser_accept": true,
+      "parser_reason": "",
+      "commonmark_active": true,
+      "heading_mismatch": false
+    },
+    {
+      "name": "126_4_indent_empty",
+      "parser_accept": true,
+      "parser_reason": "",
+      "commonmark_active": true,
+      "heading_mismatch": false
+    },
+    {
+      "name": "126_4_indent_space1",
+      "parser_accept": true,
+      "parser_reason": "",
+      "commonmark_active": true,
+      "heading_mismatch": false
+    },
+    {
+      "name": "126_4_indent_space3",
+      "parser_accept": true,
+      "parser_reason": "",
+      "commonmark_active": true,
+      "heading_mismatch": false
+    },
+    {
+      "name": "126_4_indent_tab",
+      "parser_accept": false,
+      "parser_reason": "§3 제목 (## 3.) 없음",
+      "commonmark_active": false,
+      "heading_mismatch": false,
+      "receipt_rc": 1,
+      "bad": [
+        "R0",
+        "D1"
+      ],
+      "code_fp": null
+    },
+    {
+      "name": "126_4_indent_space_tab",
+      "parser_accept": false,
+      "parser_reason": "§3 제목 (## 3.) 없음",
+      "commonmark_active": false,
+      "heading_mismatch": false,
+      "receipt_rc": 1,
+      "bad": [
+        "R0",
+        "D1"
+      ],
+      "code_fp": null
+    },
+    {
+      "name": "126_4_tail_empty",
+      "parser_accept": true,
+      "parser_reason": "",
+      "commonmark_active": true,
+      "heading_mismatch": false
+    },
+    {
+      "name": "126_4_tail_space",
+      "parser_accept": true,
+      "parser_reason": "",
+      "commonmark_active": true,
+      "heading_mismatch": false
+    },
+    {
+      "name": "126_4_tail_tab",
+      "parser_accept": true,
+      "parser_reason": "",
+      "commonmark_active": true,
+      "heading_mismatch": false
+    },
+    {
+      "name": "126_4_tail_nbsp",
+      "parser_accept": false,
+      "parser_reason": "§3 제목 (## 3.) 없음",
+      "commonmark_active": false,
+      "heading_mismatch": false,
+      "receipt_rc": 1,
+      "bad": [
+        "R0",
+        "D1"
+      ],
+      "code_fp": null
+    },
+    {
+      "name": "126_4_tail_emspace",
+      "parser_accept": false,
+      "parser_reason": "§3 제목 (## 3.) 없음",
+      "commonmark_active": false,
+      "heading_mismatch": false,
+      "receipt_rc": 1,
+      "bad": [
+        "R0",
+        "D1"
+      ],
+      "code_fp": null
+    },
+    {
+      "name": "126_4_tail_text",
+      "parser_accept": false,
+      "parser_reason": "§3 제목 (## 3.) 없음",
+      "commonmark_active": false,
+      "heading_mismatch": false
+    },
+    {
+      "name": "126_4_shorter",
+      "parser_accept": false,
+      "parser_reason": "§3 제목 (## 3.) 없음",
+      "commonmark_active": false,
+      "heading_mismatch": false,
+      "receipt_rc": 1,
+      "bad": [
+        "R0",
+        "D1"
+      ],
+      "code_fp": null
+    },
+    {
+      "name": "126_4_unclosed",
+      "parser_accept": false,
+      "parser_reason": "§3 제목 (## 3.) 없음",
+      "commonmark_active": false,
+      "heading_mismatch": false
+    },
+    {
+      "name": "126_4_normal_active_after",
+      "parser_accept": true,
+      "parser_reason": "",
+      "commonmark_active": true,
+      "heading_mismatch": false
+    },
+    {
+      "name": "126_5_indent_empty",
+      "parser_accept": true,
+      "parser_reason": "",
+      "commonmark_active": true,
+      "heading_mismatch": false
+    },
+    {
+      "name": "126_5_indent_space1",
+      "parser_accept": true,
+      "parser_reason": "",
+      "commonmark_active": true,
+      "heading_mismatch": false
+    },
+    {
+      "name": "126_5_indent_space3",
+      "parser_accept": true,
+      "parser_reason": "",
+      "commonmark_active": true,
+      "heading_mismatch": false
+    },
+    {
+      "name": "126_5_indent_tab",
+      "parser_accept": false,
+      "parser_reason": "§3 제목 (## 3.) 없음",
+      "commonmark_active": false,
+      "heading_mismatch": false,
+      "receipt_rc": 1,
+      "bad": [
+        "R0",
+        "D1"
+      ],
+      "code_fp": null
+    },
+    {
+      "name": "126_5_indent_space_tab",
+      "parser_accept": false,
+      "parser_reason": "§3 제목 (## 3.) 없음",
+      "commonmark_active": false,
+      "heading_mismatch": false,
+      "receipt_rc": 1,
+      "bad": [
+        "R0",
+        "D1"
+      ],
+      "code_fp": null
+    },
+    {
+      "name": "126_5_tail_empty",
+      "parser_accept": true,
+      "parser_reason": "",
+      "commonmark_active": true,
+      "heading_mismatch": false
+    },
+    {
+      "name": "126_5_tail_space",
+      "parser_accept": true,
+      "parser_reason": "",
+      "commonmark_active": true,
+      "heading_mismatch": false
+    },
+    {
+      "name": "126_5_tail_tab",
+      "parser_accept": true,
+      "parser_reason": "",
+      "commonmark_active": true,
+      "heading_mismatch": false
+    },
+    {
+      "name": "126_5_tail_nbsp",
+      "parser_accept": false,
+      "parser_reason": "§3 제목 (## 3.) 없음",
+      "commonmark_active": false,
+      "heading_mismatch": false,
+      "receipt_rc": 1,
+      "bad": [
+        "R0",
+        "D1"
+      ],
+      "code_fp": null
+    },
+    {
+      "name": "126_5_tail_emspace",
+      "parser_accept": false,
+      "parser_reason": "§3 제목 (## 3.) 없음",
+      "commonmark_active": false,
+      "heading_mismatch": false,
+      "receipt_rc": 1,
+      "bad": [
+        "R0",
+        "D1"
+      ],
+      "code_fp": null
+    },
+    {
+      "name": "126_5_tail_text",
+      "parser_accept": false,
+      "parser_reason": "§3 제목 (## 3.) 없음",
+      "commonmark_active": false,
+      "heading_mismatch": false
+    },
+    {
+      "name": "126_5_shorter",
+      "parser_accept": false,
+      "parser_reason": "§3 제목 (## 3.) 없음",
+      "commonmark_active": false,
+      "heading_mismatch": false
+    },
+    {
+      "name": "126_5_unclosed",
+      "parser_accept": false,
+      "parser_reason": "§3 제목 (## 3.) 없음",
+      "commonmark_active": false,
+      "heading_mismatch": false
+    },
+    {
+      "name": "126_5_normal_active_after",
+      "parser_accept": true,
+      "parser_reason": "",
+      "commonmark_active": true,
+      "heading_mismatch": false
+    },
+    {
+      "name": "126_8_indent_empty",
+      "parser_accept": true,
+      "parser_reason": "",
+      "commonmark_active": true,
+      "heading_mismatch": false
+    },
+    {
+      "name": "126_8_indent_space1",
+      "parser_accept": true,
+      "parser_reason": "",
+      "commonmark_active": true,
+      "heading_mismatch": false
+    },
+    {
+      "name": "126_8_indent_space3",
+      "parser_accept": true,
+      "parser_reason": "",
+      "commonmark_active": true,
+      "heading_mismatch": false
+    },
+    {
+      "name": "126_8_indent_tab",
+      "parser_accept": false,
+      "parser_reason": "§3 제목 (## 3.) 없음",
+      "commonmark_active": false,
+      "heading_mismatch": false,
+      "receipt_rc": 1,
+      "bad": [
+        "R0",
+        "D1"
+      ],
+      "code_fp": null
+    },
+    {
+      "name": "126_8_indent_space_tab",
+      "parser_accept": false,
+      "parser_reason": "§3 제목 (## 3.) 없음",
+      "commonmark_active": false,
+      "heading_mismatch": false,
+      "receipt_rc": 1,
+      "bad": [
+        "R0",
+        "D1"
+      ],
+      "code_fp": null
+    },
+    {
+      "name": "126_8_tail_empty",
+      "parser_accept": true,
+      "parser_reason": "",
+      "commonmark_active": true,
+      "heading_mismatch": false
+    },
+    {
+      "name": "126_8_tail_space",
+      "parser_accept": true,
+      "parser_reason": "",
+      "commonmark_active": true,
+      "heading_mismatch": false
+    },
+    {
+      "name": "126_8_tail_tab",
+      "parser_accept": true,
+      "parser_reason": "",
+      "commonmark_active": true,
+      "heading_mismatch": false
+    },
+    {
+      "name": "126_8_tail_nbsp",
+      "parser_accept": false,
+      "parser_reason": "§3 제목 (## 3.) 없음",
+      "commonmark_active": false,
+      "heading_mismatch": false,
+      "receipt_rc": 1,
+      "bad": [
+        "R0",
+        "D1"
+      ],
+      "code_fp": null
+    },
+    {
+      "name": "126_8_tail_emspace",
+      "parser_accept": false,
+      "parser_reason": "§3 제목 (## 3.) 없음",
+      "commonmark_active": false,
+      "heading_mismatch": false,
+      "receipt_rc": 1,
+      "bad": [
+        "R0",
+        "D1"
+      ],
+      "code_fp": null
+    },
+    {
+      "name": "126_8_tail_text",
+      "parser_accept": false,
+      "parser_reason": "§3 제목 (## 3.) 없음",
+      "commonmark_active": false,
+      "heading_mismatch": false
+    },
+    {
+      "name": "126_8_shorter",
+      "parser_accept": false,
+      "parser_reason": "§3 제목 (## 3.) 없음",
+      "commonmark_active": false,
+      "heading_mismatch": false
+    },
+    {
+      "name": "126_8_unclosed",
+      "parser_accept": false,
+      "parser_reason": "§3 제목 (## 3.) 없음",
+      "commonmark_active": false,
+      "heading_mismatch": false
+    },
+    {
+      "name": "126_8_normal_active_after",
+      "parser_accept": true,
+      "parser_reason": "",
+      "commonmark_active": true,
+      "heading_mismatch": false
+    },
+    {
+      "name": "active_section_fenced_value",
+      "parser_accept": true,
+      "parser_reason": "",
+      "commonmark_active": true,
+      "heading_mismatch": false,
+      "receipt_rc": 1,
+      "bad": [
+        "R0",
+        "D1"
+      ],
+      "code_fp": null
+    },
+    {
+      "name": "active_section_plain_value",
+      "parser_accept": true,
+      "parser_reason": "",
+      "commonmark_active": true,
+      "heading_mismatch": false,
+      "receipt_rc": 0,
+      "bad": [],
+      "code_fp": "2149f8738bb20b6a311b3c5b344b9745271a3f1324cabfb4582c175c3983c3eb"
+    }
+  ]
+}

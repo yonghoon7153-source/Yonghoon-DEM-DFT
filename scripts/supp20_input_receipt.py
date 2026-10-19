@@ -105,7 +105,12 @@ def _sha_after(text, anchor):
     return (m.group(1), '') if m else (None, f'{anchor[:48]} 뒤 같은 줄에 sha256 이 없다')
 
 
-_MD_HEADING = re.compile(r'^(#{1,6})[ \t]+(\S.*?)[ \t]*$')
+#: ★ 10-19 L214R-S06 (Codex 재확인 3 판정 §3-2 · 표기 L214S-CX01 · 1저자 10-19 Q1 (가)) — 0 열 ATX 제목 = CommonMark 0.31.2 §4.2: `#` 1–6 개 뒤가 **줄 끝 또는
+#:    space · tab** 이면 제목이다 (그 뒤 내용은 비어도 된다).  빈 제목 (`#` · `##` · `## ` + space · tab 뿐 · 내용이 NBSP · U+2003 뿐) 도 제목 = 절 경계.
+#:    옛 판 식 `^(#{1,6})[ \t]+(\S.*?)[ \t]*$` 는 `#` 뒤 공백 + 비공백 (`\S` = Unicode 공백 아님) 내용을 요구해 그런 줄을 경계로 보지 않았다 → 값 없는 활성 §3
+#:    뒤 빈 제목 다음의 `code_fp` 를 활성 값으로 받거나, 값 있는 활성 §3 뒤 빈 제목 다음의 역사 값과 합쳐 값 둘로 거부했다.  일반 경계 인식만 넓힌다 —
+#:    활성 §3 식별 (수준 2 · 제목이 '<num>.' 로 시작) 규칙은 그대로 (`_md_section`).
+_MD_ATX_OPEN = re.compile(r'(#{1,6})(?=[ \t]|$)')
 #: ★ 10-18 L214R-R03 — 울타리 줄 = 들여쓰기 0–3 · 같은 문자 (` 또는 ~) 3 개 이상 + 뒤 글 (CommonMark §4.5 · 백틱 울타리의 뒤 글에는 백틱이 없다).
 #: ★ 10-19 L214R-S01 (Codex 재확인 2 판정 §4 · 1저자 Q1 (가)) — 들여쓰기는 글자 수가 아니라 **열 수** (탭 = 다음 4 의 배수 열 · CommonMark §2.2) ·
 #:    닫는 줄 꼬리 = **space · tab 만** (§4.5 — NBSP · U+2003 같은 다른 Unicode 공백 꼬리는 닫는 줄이 아니다).  옛 판은 `[ \t]{0,3}` 로 탭을 한 글자로 세고
@@ -134,6 +139,21 @@ def _md_fence(ln):
     return m_.group(1)[0], len(m_.group(1)), m_.group(2)
 
 
+def _md_atx(ln):
+    """줄 → (수준, 제목) | None — 0 열 ATX 제목만 (CommonMark 0.31.2 §4.2 · ★ 10-19 L214R-S06).  `#` 1–6 개 뒤가 줄 끝 또는 space · tab 이어야 한다
+    (`#5 bolt` · `#hashtag` · `#` 7 개 이상 · `#` 바로 뒤 NBSP = 제목 아님).  제목 = 그 뒤 글에서 끝 space · tab 를 떼고, 끝의 `#` 줄이 space · tab 바로 뒤에
+    있으면 (닫는 줄) 그것도 떼고, 앞뒤 space · tab 를 뗀 것 — 비어도 된다 (빈 제목도 절 경계).  space · tab 밖의 Unicode 공백 (NBSP · U+2003) 은 내용이다.
+    들여쓴 (1–3 칸) 제목 · setext 제목은 해석하지 않는다 (지원 범위 밖 — 옛 판과 같음)."""
+    m_ = _MD_ATX_OPEN.match(ln)
+    if not m_:
+        return None
+    body = ln[m_.end():].rstrip(' \t')
+    k = len(body.rstrip('#'))
+    if k < len(body) and body[k - 1:k] in (' ', '\t'):          # 닫는 `#` 줄 — space · tab 뒤에서만 (`# foo#` 의 `#` 은 내용)
+        body = body[:k]
+    return len(m_.group(1)), body.strip(' \t')
+
+
 def _md_section(text, num, strip_code=False):
     """등록 문서의 '## <num>.' 절 (제목 줄 포함 · 다음 같은 수준 이하 (#  · ##) 제목 앞까지) → (글, 사유).  ★ 10-16 L214R-04.
     코드 울타리 (``` · ~~~) 안의 '#' 줄은 제목이 아니다 · 그 제목이 없거나 둘 이상이면 (None, 사유) — 활성 절을 정할 수 없다 (fail-closed).
@@ -143,7 +163,10 @@ def _md_section(text, num, strip_code=False):
     ★ 10-19 L214R-S01 (Codex 재확인 2 판정 §4 · 1저자 Q1 (가)) — 들여쓰기 = 열 수 (탭 4 열) · 닫는 줄 꼬리 = space · tab 만 (`_md_fence` · `_MD_CLOSE_TAIL`).
     · Q2 (가): strip_code=True 면 절 안 **울타리 코드 블록 줄 (여는 · 닫는 줄 포함)** 을 뺀 글을 돌려준다 — 코드 예시의 값은 승인값이 아니다
       (registration_values 의 §3 code_fp 읽기).  ⚠ 지원 범위 = 울타리 코드 블록 · ATX 제목 (`#` 이 0 열) 만 — 들여쓴 코드 블록 · 목록 · 인용 · HTML 블록 ·
-      들여쓴 (1–3 칸) 제목은 해석하지 않는다 (들여쓴 제목은 제목으로 안 보여 §3 이 없으면 fail-closed)."""
+      들여쓴 (1–3 칸) 제목 · setext 제목 (밑줄 === · ---) 은 해석하지 않는다 (들여쓴 제목은 제목으로 안 보여 §3 이 없으면 fail-closed).
+    ★ 10-19 L214R-S06 (Codex 재확인 3 판정 §3-2 · 표기 L214S-CX01 · 1저자 10-19 Q1 (가)) — 경계 = `_md_atx` 가 인식한 0 열 ATX 제목 전부 (CommonMark §4.2 —
+      빈 `#` · `##` · 내용이 NBSP · U+2003 뿐인 제목 포함 · 닫는 `#` 줄은 space · tab 뒤에서만).  활성 절 식별 (수준 2 · 제목 '<num>.') 은 옛 규칙 그대로 — 옛 판은
+      한 식으로 두 일을 해 빈 제목을 경계로 보지 않았다."""
     lines = text.split('\n')
     heads, fence, code = [], None, [False] * len(lines)
     for i, ln in enumerate(lines):
@@ -157,10 +180,10 @@ def _md_section(text, num, strip_code=False):
             fence = f_[:2]
             code[i] = True
             continue
-        m_ = _MD_HEADING.match(ln)
-        if m_:
-            heads.append((i, len(m_.group(1)), m_.group(2)))
-    hit = [h for h in heads if h[1] == 2 and re.match(rf'{re.escape(str(num))}\.(\s|$)', h[2])]
+        h_ = _md_atx(ln)                     # ★ 10-19 L214R-S06 — 빈 제목 포함 모든 0 열 ATX 제목 = 경계 후보
+        if h_:
+            heads.append((i, h_[0], h_[1]))
+    hit = [h for h in heads if h[1] == 2 and re.match(rf'{re.escape(str(num))}\.(\s|$)', h[2])]     # 활성 절 식별 = 옛 규칙 그대로 (빈 제목은 해당 없음)
     if len(hit) != 1:
         return None, f'§{num} 제목 (## {num}.) ' + ('없음' if not hit else f'둘 이상 (줄 {[h[0] + 1 for h in hit]})')
     i0, lv, _t = hit[0]
@@ -1319,6 +1342,64 @@ def _selftest() -> int:
             '(블록 속 값은 세지 않는다 · 고치기 전: 값 둘 = R0 실패)',
             lfp2 >= 0 and rbo['registration']['values'].get('code_fp') == R_reg and 'R0' not in bad_ids(rbo),
             (sorted(bad_ids(rbo)), rbo['registration']['values'].get('code_fp'), cdet_raw(rbo, 'R0')))
+        #  ★ 10-19 L214R-S06 (Codex 재확인 3 판정 §3-2 · 표기 L214S-CX01 · 1저자 10-19 Q1 (가)) — 0 열 ATX 제목은 **빈 제목도** 절 경계다 (CommonMark 0.31.2 §4.2 —
+        #    `#` 1–6 개 뒤 줄 끝 또는 space · tab · 그 뒤 내용은 비어도 된다).  옛 판 제목 식은 `#` 뒤 공백 + 비공백 내용을 요구해 빈 `#` · `##` 와 내용이
+        #    NBSP · U+2003 뿐인 줄을 경계로 보지 않았다 → ① 값 없는 활성 §3 → 빈 제목 → `code_fp` 줄 = 활성 값으로 수용 (rc 0) · ② 값 있는 활성 §3 → 빈 제목 →
+        #    다른 역사 값 = §3 안 값 둘 (R0 · D1) 로 거부.  반례 = Codex evidence/s01_new_cases (19 문서) 의 꼴 그대로 (실행하지 않고 같은 꼴 · 바탕 = no_act ·
+        #    값 = 이 체크아웃 지문 (지금 = 대기 지문) · 역사 값 = 0 × 64).
+        H_TAILS = (('eol', ''), ('space', ' '), ('tab', '\t'), ('space_tab', ' \t'), ('space_nbsp', ' \u00a0'), ('space_emspace', ' \u2003'))
+        HIST0 = '0' * 64
+
+        def rdoc(name, extra_):
+            """no_act + extra_ 사본의 영수증 → 비교용 요약 (rc · 실패 칸 · 읽은 code_fp · R0 사유가 '§3 안 자리 없음' 인가)."""
+            q_ = td / f'reg_heading_s06_{name}.md'
+            q_.write_text(no_act + extra_, encoding='utf-8')
+            r_ = receipt(reg_doc=str(q_))
+            return dict(rc=r_['rc'], bad=sorted(bad_ids(r_)), code_fp=r_['registration']['values'].get('code_fp'), r0_no_value=r0_says(r_, '§3 안 자리 없음'))
+        NO_VAL = dict(rc=1, bad=['D1', 'R0'], code_fp=None, r0_no_value=True)       # 값 없는 활성 §3 (= 이름 있는 경계 대조 · 코드 블록 속 값 대조의 실패)
+        OK_VAL = dict(rc=0, bad=[], code_fp=fp_now, r0_no_value=False)               # 활성 §3 의 값 하나 = 이 체크아웃 (D1 같음)
+        hk = {f'h{lv_}_{lb_}': rdoc(f'h{lv_}_{lb_}', f'\n## 3. 활성 제목 · 값 없음\n\n{"#" * lv_}{tl_}\n\n`code_fp {fp_now}`\n')
+              for lv_ in (1, 2) for lb_, tl_ in H_TAILS}
+        bad_hk = {k: v for k, v in hk.items() if v != NO_VAL}
+        chk(f'S12k ★ L214R-S06 값 없는 활성 §3 → 빈 h1 · h2 제목 (줄 끝 · space · tab · space+tab · space+NBSP · space+U+2003) → 이 체크아웃 `code_fp` 줄 → '
+            f'{len(hk)} 꼴 다 거부 = 이름 있는 경계와 같은 실패 (rc 1 · 실패 칸 정확히 {{R0 · D1}} · R0 = "§3 안 자리 없음" · 읽은 code_fp None) '
+            f'(고치기 전: {len(hk)} 꼴 rc 0 · 실패 칸 [] — 빈 제목을 경계로 보지 않아 뒤의 값을 활성 값으로 수용 · Codex fail-open 12)',
+            len(hk) == 12 and not bad_hk,
+            (f'{len(bad_hk)}/{len(hk)} 꼴 다름 · 결과 종류 (rc · 실패 칸 · code_fp 앞 8)',
+             sorted({(v['rc'], tuple(v['bad']), (v['code_fp'] or '-')[:8]) for v in bad_hk.values()}), sorted(bad_hk)))
+        live = {f'h{lv_}_live_blank_history': rdoc(f'h{lv_}_live', f'\n## 3. 활성 제목 · 값 있음\n`code_fp {fp_now}`\n\n{"#" * lv_}\n\n역사 값: `code_fp {HIST0}`\n')
+                for lv_ in (1, 2)}
+        bad_live = {k: v for k, v in live.items() if v != OK_VAL}
+        chk('S12k2 ★ L214R-S06 활성 §3 의 값 (이 체크아웃 지문) → 빈 h1 · h2 제목 → 다른 역사 값 (0 × 64) → 2 꼴 다 활성 값 수용 (rc 0 · 실패 칸 [] · '
+            '읽은 code_fp = 이 체크아웃) (고치기 전: 2 꼴 rc 1 · R0 · D1 · code_fp None — 역사 값을 §3 안으로 읽어 값 둘 · Codex false rejection 2)',
+            len(live) == 2 and not bad_live, bad_live)
+        ctl5 = {f'h{lv_}_named': rdoc(f'h{lv_}_named', f'\n## 3. 활성 제목 · 값 없음\n\n{"#" * lv_} 바깥 절\n\n`code_fp {fp_now}`\n') for lv_ in (1, 2)}
+        ctl5.update(fence_value_control=rdoc('ctl_fenced', f'\n## 3. 활성 제목\n````markdown\n`code_fp {fp_now}`\n````\n'),
+                    normal_value_control=rdoc('ctl_normal', f'\n## 3. 활성 제목\n`code_fp {fp_now}`\n'),
+                    outside_and_fenced_value=rdoc('ctl_both', f'\n## 3. 활성 제목\n`code_fp {fp_now}`\n```text\n`code_fp {HIST0}`\n```\n'))
+        want5 = dict(h1_named=NO_VAL, h2_named=NO_VAL, fence_value_control=NO_VAL, normal_value_control=OK_VAL, outside_and_fenced_value=OK_VAL)
+        bad5 = {k: v for k, v in ctl5.items() if v != want5.get(k)}
+        chk('S12k3 L214R-S06 대조 (고치기 전과 같음) — 이름 있는 h1 · h2 경계 뒤 값 = 거부 · 활성 §3 의 값이 코드 블록 속에만 = 거부 · 정상 활성 값 = 수용 · '
+            '활성 값 + 다른 값을 담은 코드 블록 = 활성 값 수용 → 5 꼴 다 기대대로 (Codex 대조 5)', len(ctl5) == 5 and not bad5, bad5)
+
+        def s3_has(extra_):
+            """no_act + extra_ 의 활성 §3 (코드 블록 줄 뺀 글) 에 이 체크아웃 `code_fp` 줄이 있나 → (True/False · §3 없으면 None, 사유)."""
+            b_, w_ = _md_section(no_act + extra_, 3, strip_code=True)
+            return (None if b_ is None else f'`code_fp {fp_now}`' in b_), w_
+        #  제목 아닌 줄 (CommonMark §4.2 — `#` 뒤가 space · tab · 줄 끝이 아님 · `#` 7 개 이상 · 백슬래시) · 빈 h3 · h6 (제목이지만 h2 절을 끝내지 않는다 = 수준 규칙
+        #  그대로) · 울타리 속 빈 `#` · `##` (제목 아님) → 뒤의 값은 §3 안.  이름 있는 제목 · 닫는 `#` 줄 제목 (옛 판도 경계) → 뒤의 값은 §3 밖.
+        keep_in = ('#5 bolt', '#hashtag', '#######', '####### 바깥', '#\u00a0', '#\u2003', '#\u00a0바깥', '\\## 바깥', '###', '### ', '######\t', '### ###',
+                   '```\n##\n```', '~~~~\n#\n~~~~')
+        keep_out = ('# 바깥', '## 바깥', '# #', '## ##', '#\t#', '## 바깥 ##')
+        g_ = {ln_: (s3_has(f'\n## 3. 활성 제목\n\n{ln_}\n\n`code_fp {fp_now}`\n'), (True, '')) for ln_ in keep_in}
+        g_.update({ln_: (s3_has(f'\n## 3. 활성 제목\n\n{ln_}\n\n`code_fp {fp_now}`\n'), (False, '')) for ln_ in keep_out})
+        #  §3 식별 (제목 '## 3.') — 닫는 `#` 줄이 있어도 같다 · `## 3.##` 는 §3 아님 (닫는 줄은 space · tab 뒤에서만 · 옛 판도 같음)
+        g_.update({t_: (s3_has(f'\n{t_}\n`code_fp {fp_now}`\n')[0], want_) for t_, want_ in
+                   (('## 3. 활성 제목 ##', True), ('## 3. ##', True), ('## 3.\t#', True), ('## 3.##', None))})
+        bad_g = {repr(k): v[0] for k, v in g_.items() if v[0] != v[1]}
+        chk('S12k4 L214R-S06 지킴 (고치기 전과 같음) — 제목 아닌 줄 (`#5 bolt` · `#hashtag` · `#` 7 개 · `#` 바로 뒤 NBSP · U+2003 · `\\##`) · 빈 h3 · h6 · 울타리 속 '
+            '빈 `#` · `##` = h2 절을 끝내지 않음 / 이름 있는 제목 · 닫는 `#` 줄 제목 = 경계 / §3 식별은 닫는 `#` 줄과 무관 (`## 3.##` = §3 아님) '
+            f'→ {len(g_)} 꼴 다 기대대로', len(g_) == 24 and not bad_g, dict(list(bad_g.items())[:8]))
     print(f'\nsupp20_input_receipt selftest: {ok}/{ok + len(fail)} PASS' + (f'   FAILED: {fail}' if fail else ''))
     return 1 if fail else 0
 
