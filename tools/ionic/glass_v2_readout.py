@@ -54,6 +54,19 @@
   · p90² 창 수 = 선언된 prod_ps / 50 (aimd_results.json) — 400 ps 는 4000 프레임이라 프레임 수로 세면 7 창이 된다.
   ⛔ 대조 모드가 못 하는 것: 담금질 기록 (밀도 · T₅₀ · 시드 게이트) 과 기계 · 벽시계 · VRAM 은 러너 기록 (runlog) 에서 온다 —
     이 도구가 다시 재지 않는다 · 갈래를 확정하지 않는다 (외부 1저자) · Tg 를 맞추지 않는다.
+  B 측정 가능 조건 카드 ① 단계 (2026-10-19 · 카드 lpscl_smallcell_glass_control_bmeasurable_estimand_2026_10_14 §1b · §4 ·
+  개정 CX · 결과 전 커밋)
+    python3 tools/ionic/glass_v2_readout.py --bmeas_b --root_a <A 600 K 다섯 루트> --root_b <B 650 K 다섯 루트> --out <json>
+  · B 650 K 다섯만 — 런마다 C1 · 최종 C2 · 골격 네 기준 (대조 모드와 같은 함수 `_control_system` · 같은 숫자) → N_B ·
+    b1 (N_B ≤ 2 → A 650 K 를 돌리지 않고 닫는다) · b2 (N_B ≥ 3 → ② 단계 A 650 K · 새 GPU 결정 · B R 집합 < 4 면 '② 를 돌려도
+    R 은 없다' 를 적고 A 실행은 외부 1저자 확인) · 허용 문장 (카드 §1a · 단서를 문장 안에 — 개정 CX §8).
+  · 대조 잡 둘 (상시 · 개정 CX §7): ① A 600 K ↔ v2 마감 ② A 600 K ↔ 10-14 판독 기록 (도구를 바꿨으니 — 행 그대로 ·
+    같은 n_boot) — 다르거나 못 보면 판정 보류. 최종 C2 가 빈 런도 판정 보류 (미통과로 세지 않는다). 런이 빠지면 읽기 전에 종료 2.
+  · 기록 (개정 CX §4): 골격 네 지표 분포 (모든 런 · B 650 · A 600 · B 600 기록) · p90² 창 초과 · 포화 런 수 ·
+    b2 · B R 집합 ≥ 4 면 ② 단계 검출한계를 A 650 K 결과 전에 낸다 (B 650 K 실측 σ_ln · A 600 K 기준 0.0935 가정).
+  ⛔ ① 단계가 못 하는 것: R 을 내지 않는다 (A 650 K 가 없다 · 600 K 런을 650 K R 에 섞지 않는다) · 온도를 못 바꾼다
+    (650 고정 · CLI 인자 없음) · ② 단계 판독 (A · B 650 K · R · b2a/b2b/b2c) 은 아직 없다 — b2 면 A 결과 전에 넣는다 ·
+    갈래를 확정하지 않는다 (외부 1저자).
   ⛔ 검출한계가 못 하는 것: 산포 모양을 로그정규로 가정한다 (치우침·이상치는 σ 를 고르는 데서만 들어간다) ·
     B 의 산포는 가정이다 (기본 = A 와 같음) · 시드 다섯의 백분위 부트스트랩은 덜 덮인다 — 그건 R = 1 의
     오검출률 줄로만 보인다 (고치지 않고 적는다).
@@ -484,9 +497,13 @@ def p90sq_windows(traj, save_fs, lag_ps=P90_LAG_PS, min_dist=P90_MIN_DIST_A, win
             "max_A2": max(vals), "⚠": "기록 전용 — 판정과 무관 · (d/2)² 는 상자 짧은 변 기준"}
 
 
-def collect_control(root, n_li, n_boot=400, framework=True, p90=True):
-    """ROOT/seed<S>/T600/d0.00_cfg0/T600/msd.json 다섯 → ({seed: rec}, 빠진 런). 런마다 카드 §5 기록 열
-    (N_eff · 생산 T · p90²) 을 더한다 — 판정에는 안 쓴다."""
+def control_msd_path(root, sd, temp=CONTROL_T) -> pathlib.Path:
+    return pathlib.Path(root) / f"seed{sd}" / f"T{temp}" / "d0.00_cfg0" / f"T{temp}" / "msd.json"
+
+
+def collect_control(root, n_li, n_boot=400, framework=True, p90=True, temp=CONTROL_T):
+    """ROOT/seed<S>/T<temp>/d0.00_cfg0/T<temp>/msd.json 다섯 → ({seed: rec}, 빠진 런). 런마다 카드 §5 기록 열
+    (N_eff · 생산 T · p90²) 을 더한다 — 판정에는 안 쓴다. temp 기본 600 (대조 계) · B 650 K 카드는 650 (2026-10-19)."""
     import msd_diffusive_check as M
     root = pathlib.Path(root)
     runs, missing = {}, []
@@ -495,7 +512,7 @@ def collect_control(root, n_li, n_boot=400, framework=True, p90=True):
         import quench_ss_event as Q
         mq = Q._load_mq(str(HERE))
     for sd in SEEDS:
-        jp = root / f"seed{sd}" / f"T{CONTROL_T}" / "d0.00_cfg0" / f"T{CONTROL_T}" / "msd.json"
+        jp = control_msd_path(root, sd, temp)
         if not jp.is_file():
             missing.append(str(jp))
             continue
@@ -594,50 +611,58 @@ def control_detect_limit_pre(path=CONTROL_CARD):
         return {"status": f"카드에서 못 읽었다 ({type(e).__name__})"}
 
 
+def _control_system(name, runs, errs):
+    """계 하나 — 런별 행 · N (C1 ∧ 최종 C2) · R 집합 (N ∧ 골격 통과) · 상대 산포. 오류 · 결측 · 골격 못 잰 런은 errs 에 더한다.
+    → (계 출력, R 집합 D, N 집합 D) — D 는 호출부가 비 · 산포로만 쓰고 버린다. `control_aggregate` 와 B 650 K ① 단계
+    (`bmeas_stage_b`) 가 같이 쓴다 (2026-10-19 · control_aggregate 본문을 그대로 옮김 — 600 K 출력이 같은지 결과 전 대조)."""
+    rows, D, DN = [], [], []
+    for sd in SEEDS:
+        r = runs.get(sd)
+        if r is None:
+            errs.append(f"{name} seed{sd}: 런 없음")
+            rows.append({"seed": sd, "machine": CONTROL_MACHINE[sd], "status": "런 없음"})
+            continue
+        if r.get("error"):
+            errs.append(f"{name} seed{sd}: {r['error']}")
+        sk = skeleton_gate(r)
+        if sk["pass"] is None:
+            errs.append(f"{name} seed{sd}: 골격 판정 못 함 ({sk.get('status')})")
+        ok = run_pass(r)
+        c2 = r.get("C2") or {}
+        b_sto, b_mto = r.get("beta_STO"), r.get("beta_MTO")
+        fw = r.get("framework") or {}
+        rows.append({"seed": sd, "machine": CONTROL_MACHINE[sd], "C1_pass": r.get("C1_pass"),
+                     "C1_msd_at_50_mto_A2": r.get("C1_msd_at_50_mto_A2"), "beta_MTO": b_mto,
+                     "C2_final": c2.get("final_verdict"), "n_sigma_end": c2.get("n_sigma_end_signed"),
+                     "n_sigma_prev": c2.get("n_sigma_prev_signed"), "b_end": c2.get("b_end"), "b_prev": c2.get("b_prev"),
+                     "counts_in_N": ok, "skeleton": sk, "in_R_set": bool(ok and sk["pass"]),
+                     "record": {"beta_STO": b_sto,
+                                "STO_minus_MTO": (b_sto - b_mto) if b_sto is not None and b_mto is not None else None,
+                                "aux_50_200": r.get("aux_50_200"), "C2_common_b": r.get("C2_common_b"),
+                                "N_eff_he2018": r.get("N_eff_he2018"), "T_prod": r.get("T_prod"),
+                                "p90sq_5ps_lag": r.get("p90sq_5ps_lag"),
+                                "skeleton_literal": fw.get("literal"),
+                                "skeleton_literal_moved": fw.get("literal_framework_moved"),
+                                "SS_at_first_frame": fw.get("SS_at_first_frame")}})
+        if ok and sk["pass"]:
+            D.append(r.get("_D_slope"))
+        if ok:
+            DN.append(r.get("_D_slope"))
+    out = {"N": sum(1 for x in rows if x.get("counts_in_N")), "of": len(SEEDS),
+           "D_relative_spread_R_set": spread_ctrl(D),
+           "D_relative_spread_N_set_record": spread_ctrl(DN),
+           "R_set_seeds": [x["seed"] for x in rows if x.get("in_R_set")],
+           "skeleton_moved_seeds": [x["seed"] for x in rows if (x.get("skeleton") or {}).get("pass") is False],
+           "rows": rows}
+    return out, D, DN
+
+
 def control_aggregate(runs_a, runs_b, detect_pre=None, n_boot_r=10000, v2_closed=V2_CLOSED) -> dict:
     """카드 §4 — 계별 N (C1 ∧ 최종 C2) · R 집합 (N ∧ 골격 통과) · 골격 이동 수 → 갈래.
     오류 · 결측 · 골격을 못 잰 런이 하나라도 있으면 갈래를 내지 않는다 (판정 보류). ⛔ D 절대값을 남기지 않는다 (R 은 비)."""
-    sys_out, errs, D, DN = {}, [], {"A": [], "B": []}, {"A": [], "B": []}
+    sys_out, errs, D = {}, [], {}
     for name, runs in (("A", runs_a), ("B", runs_b)):
-        rows = []
-        for sd in SEEDS:
-            r = runs.get(sd)
-            if r is None:
-                errs.append(f"{name} seed{sd}: 런 없음")
-                rows.append({"seed": sd, "machine": CONTROL_MACHINE[sd], "status": "런 없음"})
-                continue
-            if r.get("error"):
-                errs.append(f"{name} seed{sd}: {r['error']}")
-            sk = skeleton_gate(r)
-            if sk["pass"] is None:
-                errs.append(f"{name} seed{sd}: 골격 판정 못 함 ({sk.get('status')})")
-            ok = run_pass(r)
-            c2 = r.get("C2") or {}
-            b_sto, b_mto = r.get("beta_STO"), r.get("beta_MTO")
-            fw = r.get("framework") or {}
-            rows.append({"seed": sd, "machine": CONTROL_MACHINE[sd], "C1_pass": r.get("C1_pass"),
-                         "C1_msd_at_50_mto_A2": r.get("C1_msd_at_50_mto_A2"), "beta_MTO": b_mto,
-                         "C2_final": c2.get("final_verdict"), "n_sigma_end": c2.get("n_sigma_end_signed"),
-                         "n_sigma_prev": c2.get("n_sigma_prev_signed"), "b_end": c2.get("b_end"), "b_prev": c2.get("b_prev"),
-                         "counts_in_N": ok, "skeleton": sk, "in_R_set": bool(ok and sk["pass"]),
-                         "record": {"beta_STO": b_sto,
-                                    "STO_minus_MTO": (b_sto - b_mto) if b_sto is not None and b_mto is not None else None,
-                                    "aux_50_200": r.get("aux_50_200"), "C2_common_b": r.get("C2_common_b"),
-                                    "N_eff_he2018": r.get("N_eff_he2018"), "T_prod": r.get("T_prod"),
-                                    "p90sq_5ps_lag": r.get("p90sq_5ps_lag"),
-                                    "skeleton_literal": fw.get("literal"),
-                                    "skeleton_literal_moved": fw.get("literal_framework_moved"),
-                                    "SS_at_first_frame": fw.get("SS_at_first_frame")}})
-            if ok and sk["pass"]:
-                D[name].append(r.get("_D_slope"))
-            if ok:
-                DN[name].append(r.get("_D_slope"))
-        sys_out[name] = {"N": sum(1 for x in rows if x.get("counts_in_N")), "of": len(SEEDS),
-                         "D_relative_spread_R_set": spread_ctrl(D[name]),
-                         "D_relative_spread_N_set_record": spread_ctrl(DN[name]),
-                         "R_set_seeds": [x["seed"] for x in rows if x.get("in_R_set")],
-                         "skeleton_moved_seeds": [x["seed"] for x in rows if (x.get("skeleton") or {}).get("pass") is False],
-                         "rows": rows}
+        sys_out[name], D[name], _ = _control_system(name, runs, errs)
     a_chk = (a_reproduces_v2(runs_a, v2_closed) if v2_closed is not None
              else {"status": "안 봄 (v2_closed=None · selftest 전용)", "D_same": None, "p90_same": None})
     if v2_closed is not None and a_chk.get("D_same") is not True:
@@ -675,29 +700,32 @@ def control_aggregate(runs_a, runs_b, detect_pre=None, n_boot_r=10000, v2_closed
             "⛔": "갈래는 카드 §4 의 기계적 적용이다 — 확정 · 해석은 외부 1저자 · D 절대값은 싣지 않는다 (R 은 비)"}
 
 
+def _control_row_line(x) -> str:
+    """런 한 줄 (control_show · bmeas_show 가 같이 쓴다 — 2026-10-19 control_show 에서 그대로 옮김)."""
+    if x.get("status"):
+        return f"   seed{x['seed']} {x['machine']:5s} ⛔ {x['status']}"
+    sk, rec = x["skeleton"], x["record"]
+    v = sk.get("values") or {}
+    p9 = rec.get("p90sq_5ps_lag") or {}
+    tp = rec.get("T_prod") or {}
+    return (f"   seed{x['seed']} {x['machine']:5s} C1 {'통과' if x['C1_pass'] else '미달'} "
+            f"({(x['C1_msd_at_50_mto_A2'] or float('nan')):.1f} Å²) · β_MTO {(x['beta_MTO'] or float('nan')):.4f} · "
+            f"σ 거리 끝 b{x['b_end']} {x['n_sigma_end']} · 앞 b{x['b_prev']} {x['n_sigma_prev']} → **{x['C2_final']}** | "
+            f"골격 {'통과' if sk['pass'] else ('이동' if sk['pass'] is False else '못 잼')} "
+            f"(① {v.get('①_P_frac')} · ② {v.get('②_S_moved')} · ③ {v.get('③_SS_new')} · ④ {v.get('④_S_transient')}) | "
+            f"N_eff {round(rec['N_eff_he2018']) if rec.get('N_eff_he2018') else '—'} · "
+            f"T {tp.get('mean_K', '—')}±{tp.get('sd_K', '—')} K · "
+            f"p90² 중앙 {p9.get('median_A2', '—')} · 최대 {p9.get('max_A2', '—')} · (d/2)² {p9.get('half_box_sq_A2', '—')} "
+            f"· 초과 창 {p9.get('n_windows_over', '—')}/{p9.get('n_windows', '—')}")
+
+
 def control_show(agg) -> list[str]:
     L = []
     for name in ("A", "B"):
         sy = agg["systems"][name]
         L.append(f"■ {name} {CONTROL_T} K — N = {sy['N']}/{sy['of']} (C1 ∧ 최종 C2) · R 집합 {sy['R_set_seeds']} · "
                  f"골격 이동 {sy['skeleton_moved_seeds']}")
-        for x in sy["rows"]:
-            if x.get("status"):
-                L.append(f"   seed{x['seed']} {x['machine']:5s} ⛔ {x['status']}")
-                continue
-            sk, rec = x["skeleton"], x["record"]
-            v = sk.get("values") or {}
-            p9 = rec.get("p90sq_5ps_lag") or {}
-            tp = rec.get("T_prod") or {}
-            L.append(f"   seed{x['seed']} {x['machine']:5s} C1 {'통과' if x['C1_pass'] else '미달'} "
-                     f"({(x['C1_msd_at_50_mto_A2'] or float('nan')):.1f} Å²) · β_MTO {(x['beta_MTO'] or float('nan')):.4f} · "
-                     f"σ 거리 끝 b{x['b_end']} {x['n_sigma_end']} · 앞 b{x['b_prev']} {x['n_sigma_prev']} → **{x['C2_final']}** | "
-                     f"골격 {'통과' if sk['pass'] else ('이동' if sk['pass'] is False else '못 잼')} "
-                     f"(① {v.get('①_P_frac')} · ② {v.get('②_S_moved')} · ③ {v.get('③_SS_new')} · ④ {v.get('④_S_transient')}) | "
-                     f"N_eff {round(rec['N_eff_he2018']) if rec.get('N_eff_he2018') else '—'} · "
-                     f"T {tp.get('mean_K', '—')}±{tp.get('sd_K', '—')} K · "
-                     f"p90² 중앙 {p9.get('median_A2', '—')} · 최대 {p9.get('max_A2', '—')} · (d/2)² {p9.get('half_box_sq_A2', '—')} "
-                     f"· 초과 창 {p9.get('n_windows_over', '—')}/{p9.get('n_windows', '—')}")
+        L.extend(_control_row_line(x) for x in sy["rows"])
     for name in ("A", "B"):
         sp = agg["systems"][name].get("D_relative_spread_R_set") or {}
         spn = agg["systems"][name].get("D_relative_spread_N_set_record") or {}
@@ -718,6 +746,271 @@ def control_show(agg) -> list[str]:
     if agg.get("errors"):
         L.extend("   ⛔ " + e for e in agg["errors"])
     return L
+
+
+# ── B 측정 가능 조건 카드 ① 단계 — B 650 K 만 (카드 lpscl_smallcell_glass_control_bmeasurable_estimand_2026_10_14
+#    §1b · §4 · 개정 CX 2026-10-19 · 결과 전 커밋) ──
+BMEAS_CARD = REPO / "db" / "properties" / "lpscl_smallcell_glass_control_bmeasurable_estimand_2026_10_14.json"
+BMEAS_AMEND = REPO / "db" / "properties" / "lpscl_smallcell_glass_control_bmeasurable_amendment_cx_2026_10_19.json"
+BMEAS_T = 650                # 카드 §1b — 한 점 · 결과를 보고 온도를 더 고르지 않는다 (CLI 로 못 바꾼다)
+#: 10-14 대조 계 판독 기록 (A · B 600 K · 도구 sha16 097c8a8092e011e7 · n_boot 400) — B 600 K 네 지표 · N 을 나란히 싣고,
+#  A 600 K 를 지금 도구로 다시 읽은 행이 이 기록과 같은지 본다 (대조 잡 ② · 도구를 바꿨으니)
+READOUT_600 = (REPO / "db" / "raw" / "lpscl_glass_control_li3ps4_2026_10_05" / "readout_control_2026_10_14"
+               / "readout_control.json")
+SKEL_KEYS = {"①_P_frac": "①_P_frac_frames_changed_max", "②_S_moved": "②_S_moved_max", "③_SS_new": "③_SS_new_pairs_max",
+             "④_S_transient": "④_S_transient_max"}
+#: 대조 계 카드 §4 결과 전 모의의 기준 행 σ_ln (A 600 K 다섯 · 표본 SD) — ② 단계 검출한계의 A 쪽 가정
+SIGMA_LN_A600 = 0.0935
+ROW_SAME_EXACT = ("C1_pass", "C2_final", "n_sigma_end", "n_sigma_prev", "b_end", "b_prev", "counts_in_N", "in_R_set")
+ROW_SAME_FLOAT = ("C1_msd_at_50_mto_A2", "beta_MTO")
+
+
+def skeleton_distribution(rows) -> dict:
+    """골격 네 지표 — **모든 런** (통과 포함) 의 런별 값 · 범위 · 중앙 · 문턱 초과 수 (개정 CX §4 · 650 K 의 첫 눈금).
+    기록 전용 — 게이트는 `skeleton_gate` 다. 못 잰 런은 값이 None 이고 n 에 안 든다 (0 으로 그리지 않는다)."""
+    good = [x for x in rows if not x.get("status")]
+    out = {}
+    for k, gk in SKEL_KEYS.items():
+        per = {x["seed"]: ((x.get("skeleton") or {}).get("values") or {}).get(k) for x in good}
+        v = [y for y in per.values() if y is not None]
+        thr = SKELETON_GATE[gk]
+        out[k] = {"per_seed": per, "n": len(v), "min": min(v) if v else None,
+                  "median": statistics.median(v) if v else None, "max": max(v) if v else None,
+                  "gate": thr, "n_over_gate": sum(1 for y in v if y > thr)}
+    out["seeds_counting_in_N"] = [x["seed"] for x in good if x.get("counts_in_N")]
+    return out
+
+
+def p90_saturation(rows) -> dict:
+    """5 ps lag p90² 창 초과 — 런별 초과 창 / 창 수 · 포화 (전 창 초과) 런 수 (개정 CX §4 · 기록 전용 · 650 K 는 포화를
+    예상한다 → R(650) 에 붙는 유한크기 단서가 600 K 보다 강하다). ⛔ 게이트가 아니다."""
+    per = {}
+    for x in rows:
+        p9 = (x.get("record") or {}).get("p90sq_5ps_lag") or {}
+        if x.get("status") or not p9.get("n_windows"):
+            per[x["seed"]] = {"status": x.get("status") or p9.get("status") or "p90² 기록이 없다"}
+            continue
+        per[x["seed"]] = {"over": p9.get("n_windows_over"), "of": p9["n_windows"],
+                          "saturated": p9.get("n_windows_over") == p9["n_windows"], "median_A2": p9.get("median_A2"),
+                          "max_A2": p9.get("max_A2"), "half_box_sq_A2": p9.get("half_box_sq_A2")}
+    ok = [y for y in per.values() if "of" in y]
+    return {"per_seed": per, "n_runs": len(ok), "n_saturated": sum(1 for y in ok if y["saturated"]),
+            "⚠": "기록 전용 — 포화를 게이트로 쓰지 않는다 · 편입은 C1 · C2 로만 (회신 CH) · 포화면 R(650) 의 유한크기 단서가 강해진다"}
+
+
+def readout600(path=READOUT_600) -> dict:
+    """10-14 대조 계 판독 기록 → A · B 행 · N · n_boot · 도구 sha16. 못 읽으면 status (지어내지 않는다)."""
+    try:
+        d = json.loads(pathlib.Path(path).read_text(encoding="utf-8"))
+        sy = d["aggregate"]["systems"]
+        return {"A": sy["A"]["rows"], "B": sy["B"]["rows"], "N": {"A": sy["A"]["N"], "B": sy["B"]["N"]},
+                "n_boot": d.get("n_boot"), "tool_sha16": (d.get("tool_sha16") or {}).get("glass_v2_readout.py")}
+    except (OSError, ValueError, KeyError, TypeError) as e:
+        return {"status": f"10-14 판독 기록을 못 읽었다 ({type(e).__name__})"}
+
+
+def a600_reproduces_readout(rows_now, n_boot, rec) -> dict:
+    """대조 잡 ② (2026-10-19 · 도구를 바꿨으니 — 회신 CX Q-CX-2 ③ 상시 절차) — A 600 K 를 지금 도구로 다시 읽은 행이
+    10-14 판독 기록의 행과 같은가: C1 · C1 값 · β_MTO (1e-9) · 최종 C2 · σ 거리 둘 · 끝 두 b · N · R 집합 · 골격 네 값
+    (그대로) · p90² 창 (0.01). 다르면 B 650 K 를 600 K 와 같은 잣대로 읽는다고 할 수 없다 → 판정 보류 (호출부).
+    기록을 못 읽거나 n_boot 가 기록과 다르면 '못 봄' (같다고 하지 않는다)."""
+    if rec.get("status"):
+        return {"same": None, "status": rec["status"]}
+    if rec.get("n_boot") != n_boot:
+        return {"same": None, "status": f"n_boot 가 기록 ({rec.get('n_boot')}) 과 다르다 ({n_boot}) — σ 가 달라 못 봄"}
+    old = {x.get("seed"): x for x in rec["A"]}
+    diffs = []
+    for x in rows_now:
+        sd = x["seed"]
+        y = old.get(sd)
+        if y is None or x.get("status") or y.get("status"):
+            diffs.append(f"seed{sd}: 한쪽 행이 없다 ({x.get('status') or (y or {}).get('status') or '기록에 없음'})")
+            continue
+        for k in ROW_SAME_EXACT:
+            if x.get(k) != y.get(k):
+                diffs.append(f"seed{sd} {k}: 기록 {y.get(k)} · 지금 {x.get(k)}")
+        for k in ROW_SAME_FLOAT:
+            u, w = x.get(k), y.get(k)
+            if u is None or w is None or abs(u - w) > 1e-9:
+                diffs.append(f"seed{sd} {k}: 기록 {w} · 지금 {u}")
+        va, vb = (x.get("skeleton") or {}).get("values"), (y.get("skeleton") or {}).get("values")
+        if va != vb:
+            diffs.append(f"seed{sd} 골격 네 값: 기록 {vb} · 지금 {va}")
+        pa = ((x.get("record") or {}).get("p90sq_5ps_lag") or {}).get("p90sq_A2")
+        pb = ((y.get("record") or {}).get("p90sq_5ps_lag") or {}).get("p90sq_A2")
+        if not pa or not pb or len(pa) != len(pb) or max(abs(u - w) for u, w in zip(pa, pb)) > 0.01 + 1e-9:
+            diffs.append(f"seed{sd} p90² 창: 기록 {pb} · 지금 {pa}")
+    if len(rows_now) != len(old):
+        diffs.append(f"행 수: 기록 {len(old)} · 지금 {len(rows_now)}")
+    return {"same": not diffs, "diffs": diffs, "n_boot": n_boot, "record_tool_sha16": rec.get("tool_sha16"),
+            "⚠": "대조 잡 — 판정 규칙이 아니다 · 도구 무결성 확인 (결과 전 박음)"}
+
+
+def bmeas_stage_b(runs_a600, runs_b, n_boot=400, v2_closed=V2_CLOSED, ref600=READOUT_600, detect_n_sim=2000) -> dict:
+    """B 측정 가능 조건 카드 ① 단계 — B 650 K 다섯만 판독 (A 650 K 없음 · R 없음).
+    · B: 런별 C1 · 최종 C2 · 골격 네 기준 (대조 계 카드 §4 와 같은 함수 · 같은 숫자 — `_control_system`) → N_B · R 집합 ·
+      골격 이동. 최종 C2 가 빈 런 (오류 없이) 도 판정 보류다 — 미통과로 조용히 세지 않는다.
+    · 대조 잡 (상시 · 개정 CX §7): ① A 600 K ↔ v2 마감 (`a_reproduces_v2`) ② A 600 K ↔ 10-14 판독 기록 (도구를 바꿨으니) —
+      어느 쪽이든 다르거나 못 봤으면 판정 보류.
+    · 기록 (개정 CX §4): 골격 네 지표 분포 — B 650 K (모든 런) · A 600 K (지금 다시 읽음) · B 600 K (10-14 기록) ·
+      p90² 창 초과 · 포화 런 수 (세 묶음).
+    · 갈래 (카드 §4 · 개정 CX §3): b1 (N_B ≤ 2 → A 650 K 를 돌리지 않고 닫는다) · b2 (N_B ≥ 3 → ② 단계 A 650 K · 새 GPU
+      공존 결정). b2 인데 B R 집합 < 4 면 ② 를 돌려도 R 이 없다 (b2c 로 정해짐) — 그 사실만 적고 A 실행은 외부 1저자
+      확인으로 남긴다. b2 · B R 집합 ≥ 4 면 ② 단계 검출한계를 A 650 K 결과 전에 낸다 (카드 §4 회신 CS 덧붙임 — B 650 K
+      실측 σ_ln · A 는 600 K 기준 0.0935 가정 · 대조 계 카드의 기준 행 · B 두 배 행과 병기).
+    · 허용 문장 (카드 §1a · 개정 CX §8 — 단서를 문장 안에: N_B · 경계 · 미통과 · C1 · 골격 이동이 있으면 그 수).
+    ⛔ R 을 내지 않는다 (A 650 K 가 없다 · 600 K 런은 650 K R 에 섞지 않는다 — 카드 §4) · D 절대값을 남기지 않는다 ·
+       갈래를 확정하지 않는다 (외부 1저자)."""
+    errs = []
+    sys_a, _, _ = _control_system("A", runs_a600, errs)
+    sys_b, d_r, _ = _control_system("B", runs_b, errs)
+    for sd in SEEDS:
+        r = runs_b.get(sd)
+        if r is not None and not r.get("error") and (r.get("C2") or {}).get("final_verdict") is None:
+            errs.append(f"B seed{sd}: 최종 C2 가 비었다 — 판정 못 함 (미통과로 세지 않는다)")
+    a_chk = (a_reproduces_v2(runs_a600, v2_closed) if v2_closed is not None
+             else {"status": "안 봄 (v2_closed=None · selftest 전용)", "D_same": None, "p90_same": None})
+    if v2_closed is not None and a_chk.get("D_same") is not True:
+        errs.append(f"대조 잡 ① A 600 K 가 v2 마감의 D 상대 산포를 재현하지 못했다 "
+                    f"({a_chk.get('status') or a_chk.get('D_max_abs_diff')}) — 판독 경로를 믿을 수 없다")
+    rec = readout600(ref600) if ref600 is not None else {"status": "안 봄 (ref600=None · selftest 전용)"}
+    r_chk = a600_reproduces_readout(sys_a["rows"], n_boot, rec)
+    if ref600 is not None and r_chk.get("same") is not True:
+        errs.append(f"대조 잡 ② A 600 K 가 10-14 판독 기록을 재현하지 못했다 "
+                    f"({r_chk.get('status') or ' ; '.join(r_chk.get('diffs', [])[:3])}) — 바뀐 도구를 믿을 수 없다")
+    rows_b = sys_b["rows"]
+    present = [x for x in rows_b if not x.get("status")]
+    fin = [str(x.get("C2_final") or "") for x in present]
+    tally = {"통과": sum(1 for f in fin if f == "통과"), "경계": sum(1 for f in fin if f.startswith("경계")),
+             "미통과": sum(1 for f in fin if f == "미통과")}
+    c1 = sum(1 for x in present if x.get("C1_pass"))
+    nb, nbr, moved = sys_b["N"], len(sys_b["R_set_seeds"]), sys_b["skeleton_moved_seeds"]
+    n600 = (rec.get("N") or {}).get("B")
+    cav = f"N_B = {nb}/{len(SEEDS)} · 경계 {tally['경계']} · 미통과 {tally['미통과']} · C1 {c1}/{len(SEEDS)}"
+    if moved:
+        cav += f" · 골격 이동 {len(moved)}"
+    sent, nxt, dl = None, None, None
+    if errs:
+        br = (f"판정 보류 — 오류 · 결측 · 골격 못 잰 런 · 빈 C2 · 대조 잡 실패 {len(errs)} 개 (통과도 미통과도 아니다 · "
+              "런 유효성 위반은 판독 전 재실행 · 카드 §4 · §7)")
+    elif nb <= N_B_MIN - 1:
+        br = f"b1 (N_B = {nb}/{len(SEEDS)} ≤ {N_B_MIN - 1}) — A 650 K 를 돌리지 않고 닫는다 (카드 §1b · 개정 CX §3) · R 없음"
+        sent = (f"「A 와 같은 게이트로 a-Li₃PS₄ 유리는 650 K 에서도 과반이 통과하지 못했다 ({cav}) — 이 120 원자 셀 · "
+                "프로토콜에서 B 의 측정 가능 온도는 650 K 보다 위다. A 650 K 는 돌리지 않았고 두 유리의 D 는 비교하지 않는다.」")
+        nxt = ("닫는다 — A 650 K 안 돌림 · 카드 마감 (lpscl_smallcell_glass_control_bmeasurable_closed_<날짜>.json) → "
+               "트랙 마감 (lpscl_smallcell_glass_track_closed_<날짜>.json) → 결과 편지 (외부 1저자 · 갈래 확정)")
+    else:
+        br = (f"b2 (N_B = {nb}/{len(SEEDS)} ≥ {N_B_MIN}) — ② 단계 A 650 K × 5 (카드 §1b · 새 GPU 공존 결정 · 예외 (7) 은 소멸) · "
+              f"B R 집합 {nbr}")
+        sent = (f"「같은 게이트로 a-Li₃PS₄ 유리는 650 K 에서 측정 가능했다 ({cav} · 600 K 는 "
+                f"{n600 if n600 is not None else '기록 못 읽음'}/{len(SEEDS)}) — 이 셀 · 프로토콜에서 B 의 측정 가능 온도는 "
+                "600 K 와 650 K 사이다.」")
+        if nbr < MIN_SEEDS_FOR_R:
+            br += f" · ⚠ B R 집합 {nbr} < {MIN_SEEDS_FOR_R} — ② 를 돌려도 R 은 없다 (b2c 로 정해짐)"
+            nxt = (f"B R 집합 {nbr} < {MIN_SEEDS_FOR_R} 라 ② 단계의 목적 (R) 이 이미 불가 — 카드 문자 규칙은 'N_B ≥ 3 → A 650 K' 다 · "
+                   "A 650 K 실행 여부는 결과 편지로 외부 1저자 확인 (새 GPU 공존 결정도 필요)")
+        else:
+            nxt = ("② A 650 K × 5 — 새 GPU 공존 결정 (사용자) · 시드–기계 대응 같음 · --seed 2000 + 시드 · "
+                   "② 단계 판독 경로 (A · B 650 K · R · b2a/b2b/b2c) 는 A 결과 전에 도구에 넣는다")
+            sp = spread_ctrl(d_r)
+            if sp.get("sd_ln") is None:
+                dl = {"status": f"B 650 K σ_ln 을 못 냈다 ({sp.get('status')})"}
+            else:
+                pre = control_detect_limit_pre()
+                card_rows = {k: {kk: (pre.get("결과", {}).get(k) or {}).get(kk) for kk in ("σ_ln_A", "σ_ln_B", "R50", "R80")}
+                             for k in ("σ_표본SD_0.094", "B_산포_2배")} if isinstance(pre, dict) else None
+                dl = {**ratio_detect_limit(SIGMA_LN_A600, n_a=len(SEEDS), n_b=len(d_r), sigma_b=sp["sd_ln"], n_sim=detect_n_sim),
+                      "card_rows_pre": card_rows,
+                      "⚠": ("② 단계 결과 전 (A 650 K 전) — B = 650 K 실측 σ_ln (R 집합) · A = 600 K 기준 0.0935 가정 · n_A 5 가정 · "
+                            "카드 §4 (회신 CS 덧붙임) · 대조 계 카드의 기준 행 · B 두 배 행과 병기 (어느 행을 쓸지 고르지 않는다)")}
+    rec_b = rec.get("B") or []
+    return {"stage": f"① B {BMEAS_T} K 만 (카드 §1b · 개정 CX §3 — A {BMEAS_T} K 없음 · R 없음)", "T_K_B": BMEAS_T,
+            "B": {"N": nb, "of": len(SEEDS), "C2_tally": tally, "C1_pass": c1, "R_set_seeds": sys_b["R_set_seeds"],
+                  "skeleton_moved_seeds": moved, "D_relative_spread_R_set": sys_b["D_relative_spread_R_set"],
+                  "D_relative_spread_N_set_record": sys_b["D_relative_spread_N_set_record"], "rows": rows_b},
+            "A600_now": {"N": sys_a["N"], "R_set_seeds": sys_a["R_set_seeds"], "rows": sys_a["rows"],
+                         "⚠": "대조 잡 전용 — 650 K R · 판정에 쓰지 않는다 (카드 §4)"},
+            "skeleton_distribution": {"B650": skeleton_distribution(rows_b), "A600_now": skeleton_distribution(sys_a["rows"]),
+                                      "B600_record_1014": (skeleton_distribution(rec_b) if rec_b
+                                                           else {"status": rec.get("status", "기록 없음")})},
+            "p90_saturation": {"B650": p90_saturation(rows_b), "A600_now": p90_saturation(sys_a["rows"]),
+                               "B600_record_1014": p90_saturation(rec_b) if rec_b else {"status": rec.get("status", "기록 없음")},
+                               "A600_p90_matches_v2": a_chk.get("p90_same")},
+            "control_jobs": {"①_A600_vs_v2_closure": a_chk, "②_A600_vs_readout_1014": r_chk},
+            "branch": br, "sentence": sent,
+            "sentence_⛔": ("문장 안의 괄호 (단서) 를 떼고 인용하지 않는다 (회신 CX) · 600 K c2 문장을 바꾸지 않는다 · 'LiCl 이 Li 수송을 "
+                            "빠르게/느리게 한다' 를 650 K · 이 셀 밖으로 넓히지 않는다 · 기구 · Tg 탓을 말하지 않는다 · 'B 에서 확산하지 "
+                            "않는다' 로 쓰지 않는다 (C1 은 따로 본다) · b2 를 'B 의 측정 가능 온도 = 650 K' 로 쓰지 않는다 (카드 §1a)"),
+            "next": nxt, "detect_limit_stage2_pre": dl, "errors": errs,
+            "N_eff_⛔": "두 계 N_eff 의 비는 사실상 MSD 의 비다 (N_eff ∝ n_Li × max MSD · Li 48 대 45) — D 의 비처럼 읽지 않는다 (회신 CX)",
+            "rules": {"N_B_min": N_B_MIN, "C1_min_A2": C1_MIN_A2,
+                      "C2": "β_MTO 2–50 ps ∈ [0.8, 1.2] · 2σ · 끝 두 b (400 ps → b 256 · 192)",
+                      "skeleton_gate": SKELETON_GATE,
+                      "skeleton_gate_scale": "① 5 % · ④ 5 는 A 600 K 눈금 — 650 K 눈금은 없다 (마감에 적는다 · 개정 CX §4)",
+                      "Tg_distance": "R(650) 을 낼 때만 그 문장에 싣는다 — ① 단계에는 R 이 없다 (개정 CX §2)",
+                      "sequential": "b1 → A 650 K 안 돌림 · b2 → A 650 K (새 GPU 결정) (카드 §1b · 개정 CX §3)",
+                      "card": str(BMEAS_CARD.relative_to(REPO)), "amendment": str(BMEAS_AMEND.relative_to(REPO))},
+            "⛔": "갈래는 카드 §4 의 기계적 적용이다 — 확정 · 해석은 외부 1저자 · R · D 절대값은 싣지 않는다"}
+
+
+def _fmt_dist(dd) -> str:
+    if not dd or dd.get("n") in (None, 0):
+        return "—"
+    per = " ".join(f"s{k}:{v}" for k, v in dd["per_seed"].items())
+    return f"[{per}] 범위 {dd['min']}–{dd['max']} · 중앙 {dd['median']} · 문턱 초과 {dd['n_over_gate']}"
+
+
+def bmeas_show(o) -> list[str]:
+    b, t = o["B"], o["B"]["C2_tally"]
+    L = [f"■ B {BMEAS_T} K — N_B = {b['N']}/{b['of']} (C1 ∧ 최종 C2) · C2 통과 {t['통과']} · 경계 {t['경계']} · 미통과 {t['미통과']} · "
+         f"C1 {b['C1_pass']}/{b['of']} · R 집합 {b['R_set_seeds']} · 골격 이동 {b['skeleton_moved_seeds']}"]
+    L.extend(_control_row_line(x) for x in b["rows"])
+    L.append(f"   ⛔ {o['N_eff_⛔']}")
+    sp = b.get("D_relative_spread_R_set") or {}
+    L.append(f"   B 시드 간 상대 산포 (R 집합 · 기록) n {sp.get('n')} · IQR/중앙 {sp.get('IQR_over_median', '—')} · "
+             f"max/min {sp.get('max_over_min', '—')} · sd(ln D) {sp.get('sd_ln', '—')}")
+    L.append(f"■ 골격 네 지표 분포 — 모든 런 (통과 포함 · 개정 CX §4) · B {BMEAS_T} K | A {CONTROL_T} K (지금 다시 읽음) | "
+             f"B {CONTROL_T} K (10-14 기록)")
+    sd_ = o["skeleton_distribution"]
+    for k in SKEL_KEYS:
+        L.append(f"   {k} (문턱 {SKELETON_GATE[SKEL_KEYS[k]]}): B{BMEAS_T} {_fmt_dist(sd_['B650'].get(k))} | "
+                 f"A{CONTROL_T} {_fmt_dist(sd_['A600_now'].get(k))} | B{CONTROL_T} {_fmt_dist((sd_['B600_record_1014'] or {}).get(k))}")
+    ps = o["p90_saturation"]
+
+    def p9(x):
+        if "per_seed" not in x:
+            return f"— ({x.get('status')})"
+        per = " ".join(f"s{k}:{v['over']}/{v['of']}" if "of" in v else f"s{k}:—" for k, v in x["per_seed"].items())
+        return f"[{per}] 포화 {x['n_saturated']}/{x['n_runs']}"
+    L.append(f"■ p90² 창 초과 (기록 · 게이트 아님 · {BMEAS_T} K 는 포화 예상): B{BMEAS_T} {p9(ps['B650'])} | "
+             f"A{CONTROL_T} {p9(ps['A600_now'])} | B{CONTROL_T} {p9(ps['B600_record_1014'])}")
+    c1, c2 = o["control_jobs"]["①_A600_vs_v2_closure"], o["control_jobs"]["②_A600_vs_readout_1014"]
+    if c1.get("status"):
+        L.append(f"   대조 잡 ① A {CONTROL_T} K ↔ v2 마감: ⛔ {c1['status']}")
+    else:
+        L.append(f"   대조 잡 ① A {CONTROL_T} K ↔ v2 마감: D/중앙 {'같음' if c1.get('D_same') else '⛔ 다름'} "
+                 f"(최대 차 {c1.get('D_max_abs_diff')}) · p90² {'5/5 같음' if c1.get('p90_same') else '⛔ 다르거나 못 봄'}")
+    if c2.get("status"):
+        L.append(f"   대조 잡 ② A {CONTROL_T} K ↔ 10-14 판독 기록: ⛔ 못 봄 — {c2['status']}")
+    else:
+        L.append(f"   대조 잡 ② A {CONTROL_T} K ↔ 10-14 판독 기록 (n_boot {c2.get('n_boot')}): "
+                 + ("같음 (C1 · β · C2 · σ 거리 · 골격 네 값 · p90² 창)" if c2.get("same") else
+                    "⛔ 다름 — " + " ; ".join(c2.get("diffs", [])[:4])))
+    L.append(f"→ 갈래 (규칙 적용 · 확정은 외부 1저자): {o['branch']}")
+    if o.get("sentence"):
+        L.append(f"   문장 (단서 안): {o['sentence']}")
+    if o.get("next"):
+        L.append(f"   다음: {o['next']}")
+    dl = o.get("detect_limit_stage2_pre")
+    if dl:
+        if dl.get("status"):
+            L.append(f"   ② 단계 결과 전 검출한계: ⛔ {dl['status']}")
+        else:
+            L.append(f"   ② 단계 결과 전 검출한계 (B 실측 σ_ln {dl['sigma_ln_B']} · A {dl['sigma_ln_A']} 가정 · n {dl['n_a']}/{dl['n_b']}): "
+                     f"R₅₀ {dl['R50']} · R₈₀ {dl['R80']} · R=1 오검출 {dl['false_detect_at_R1']} | 카드 행 {dl.get('card_rows_pre')}")
+    L.extend("   ⛔ " + e for e in o.get("errors", []))
+    return L
+
 
 def _selftest() -> int:
     import tempfile
@@ -892,6 +1185,124 @@ def _selftest() -> int:
        "status" not in _real and _real["D_over_median_v2"] == card_A
        and all(x.get("n_windows_v2") == 8 for x in _real["p90"].values()))
 
+    # ── B 측정 가능 조건 카드 ① 단계 (B 650 K 만 · 2026-10-19 · 결과 전) ──
+    def bfake(final="통과", c1=True, D=0.5, P=0.0, Sm=0, SS=0, St=0, err=None, over=8, nwin=8):
+        r = cfake(final=final, c1=c1, D=D, P=P, Sm=Sm, SS=SS, St=St, err=err)
+        r["p90sq_5ps_lag"] = {"p90sq_A2": [60.0] * nwin, "n_windows": nwin, "n_windows_over": over, "median_A2": 60.0,
+                              "max_A2": 60.0, "half_box_sq_A2": 50.0}
+        return r
+    dB = {sd: 0.5137291 + 0.0011 * sd for sd in SEEDS}
+    B1 = {1: bfake(D=dB[1]), 2: bfake(D=dB[2]), 3: bfake("경계 · 구분 불가", D=dB[3]),
+          4: bfake("경계 · 끝 두 b 갈림", D=dB[4], P=0.012, St=3), 5: bfake("미통과", D=dB[5], over=6)}
+    o = bmeas_stage_b(A5, B1, v2_closed=None, ref600=None, detect_n_sim=20)
+    ck("b1: N_B 2 → A 650 K 를 돌리지 않고 닫는다 · 문장 안에 단서 (경계 2 · 미통과 1 · C1 5/5)",
+       o["branch"].startswith("b1") and "(N_B = 2/5 · 경계 2 · 미통과 1 · C1 5/5)" in (o["sentence"] or "")
+       and "A 650 K 는 돌리지 않았고" in o["sentence"] and o["errors"] == [])
+    def _allkeys(x):
+        if isinstance(x, dict):
+            for k, v in x.items():
+                yield k
+                yield from _allkeys(v)
+        elif isinstance(x, list):
+            for v in x:
+                yield from _allkeys(v)
+    ck("⛔ ① 단계는 R 을 내지 않는다 (어느 깊이에도 R · excludes_1 키가 없다 · 검출한계도 b1 이면 없다)",
+       not ({"R", "excludes_1", "lo", "hi"} & set(_allkeys(o))) and o["detect_limit_stage2_pre"] is None)
+    _sd = o["skeleton_distribution"]["B650"]
+    ck("네 지표 분포: 통과 런 (seed1 · 2) 도 싣는다 · 다섯 런 · ① 최대 0.012 · 중앙 0.0 · ④ 최대 3 · 문턱 초과 0",
+       set(_sd["①_P_frac"]["per_seed"]) == set(SEEDS) and _sd["①_P_frac"]["n"] == 5 and _sd["①_P_frac"]["max"] == 0.012
+       and _sd["①_P_frac"]["median"] == 0.0 and _sd["④_S_transient"]["max"] == 3 and _sd["④_S_transient"]["n_over_gate"] == 0
+       and _sd["seeds_counting_in_N"] == [1, 2])
+    ck("p90² 포화: 8/8 넷 · 6/8 하나 → 포화 4/5 (기록 · 갈래와 무관)",
+       o["p90_saturation"]["B650"]["n_saturated"] == 4 and o["p90_saturation"]["B650"]["n_runs"] == 5)
+    _jo = json.dumps(o, ensure_ascii=False, default=str)
+    ck("⛔ ① 단계 산출물에 D 가 없다 (_D_slope · 심은 D 값이 안 보인다)",
+       "_D_slope" not in _jo and not any(repr(v) in _jo for v in dB.values()))
+    B2r = {sd: bfake(final="통과" if sd <= 4 else "경계 · 구분 불가", D=dB[sd]) for sd in SEEDS}
+    o = bmeas_stage_b(A5, B2r, v2_closed=None, ref600=None, detect_n_sim=40)
+    _dl = o["detect_limit_stage2_pre"] or {}
+    ck("b2 · B R 집합 4: ② 단계 검출한계를 A 650 K 전에 낸다 (B 실측 σ_ln · A 0.0935 가정 · n 5/4 · 카드 기준 행 병기)",
+       o["branch"].startswith("b2") and "B R 집합 4" in o["branch"] and "측정 가능했다" in (o["sentence"] or "")
+       and _dl.get("sigma_ln_B") == spread_ctrl([dB[sd] for sd in (1, 2, 3, 4)])["sd_ln"] and _dl.get("sigma_ln_A") == 0.0935
+       and _dl.get("n_a") == 5 and _dl.get("n_b") == 4
+       and (_dl.get("card_rows_pre") or {}).get("σ_표본SD_0.094", {}).get("R50") == 1.2
+       and (_dl.get("card_rows_pre") or {}).get("B_산포_2배", {}).get("R80") == 1.5)
+    ck("⛔ b2 문장은 '사이' 로 쓴다 · '= 650 K' 금지가 같이 실린다", "600 K 와 650 K 사이다" in o["sentence"]
+       and "'B 의 측정 가능 온도 = 650 K' 로 쓰지 않는다" in o["sentence_⛔"])
+    o = bmeas_stage_b(A5, {sd: bfake(final="통과" if sd <= 3 else "미통과", D=dB[sd]) for sd in SEEDS}, v2_closed=None, ref600=None, detect_n_sim=20)
+    ck("⛔ b2 · N_B 3 → R 집합 3 < 4: ② 를 돌려도 R 이 없다고 적고 A 실행은 외부 1저자 확인 (검출한계 안 냄)",
+       o["branch"].startswith("b2") and "R 은 없다 (b2c 로 정해짐)" in o["branch"] and o["detect_limit_stage2_pre"] is None
+       and "외부 1저자" in (o["next"] or ""))
+    Bmv = dict(B2r); Bmv[2] = bfake(D=dB[2], St=6)
+    o = bmeas_stage_b(A5, Bmv, v2_closed=None, ref600=None, detect_n_sim=20)
+    ck("골격 이동 하나 → N_B 4 그대로 · R 집합 3 · 문장 안에 '골격 이동 1'",
+       o["B"]["N"] == 4 and o["B"]["R_set_seeds"] == [1, 3, 4] and "· C1 5/5 · 골격 이동 1 ·" in o["sentence"]
+       and "R 은 없다" in o["branch"])
+    for nm, bb in (("오류 런", {**B1, 3: bfake(err="traj.xyz 를 못 읽었다")}),
+                   ("런 하나 빠짐", {sd: B1[sd] for sd in (1, 2, 3, 5)}),
+                   ("골격 못 잰 런", {**B1, 5: dict(B1[5], framework={"status": "못 쟀다"})}),
+                   ("최종 C2 가 빈 런 (오류 없이)", {**B1, 4: bfake(final=None, D=dB[4])})):
+        o = bmeas_stage_b(A5, bb, v2_closed=None, ref600=None, detect_n_sim=20)
+        ck(f"⛔음성 ① 단계 {nm} → 판정 보류 (문장 · 다음 없음)",
+           o["branch"].startswith("판정 보류") and o["sentence"] is None and o["next"] is None and o["errors"])
+    o = bmeas_stage_b({**A5, 2: cfake(err="msd 를 못 읽었다")}, B1, v2_closed=None, ref600=None, detect_n_sim=20)
+    ck("⛔음성 대조 잡 쪽 A 600 K 런이 오류면 판정 보류", o["branch"].startswith("판정 보류"))
+    rd600 = readout600()
+    _s6b, _s6a = skeleton_distribution(rd600.get("B", [])), skeleton_distribution(rd600.get("A", []))
+    ck("10-14 기록 (실파일): B 600 K N 1 · 네 지표 ① 최대 0.003 · ④ 최대 1 · p90² 포화 1/5 | A ① 최대 0.006 · ④ 최대 2",
+       rd600.get("N") == {"A": 5, "B": 1} and rd600.get("n_boot") == 400 and _s6b["①_P_frac"]["max"] == 0.003
+       and _s6b["④_S_transient"]["max"] == 1 and p90_saturation(rd600["B"])["n_saturated"] == 1
+       and _s6a["①_P_frac"]["max"] == 0.006 and _s6a["④_S_transient"]["max"] == 2)
+    ck("대조 잡 ② (실파일): 기록의 A 행을 그대로 넣으면 같다 (n_boot 400)",
+       a600_reproduces_readout(json.loads(json.dumps(rd600["A"])), 400, rd600)["same"] is True)
+    ck("⛔음성 대조 잡 ②: n_boot 가 기록과 다르면 '못 봄' (같다고 하지 않는다)",
+       a600_reproduces_readout(rd600["A"], 200, rd600)["same"] is None)
+    ck("⛔음성 대조 잡 ②: 기록 파일이 없으면 '못 봄'", a600_reproduces_readout(rd600["A"], 400, readout600("/nonexistent.json"))["same"] is None)
+    with tempfile.TemporaryDirectory() as td3:
+        A5q = {sd: bfake(D=1.0 + 0.0213 * sd) for sd in SEEDS}          # p90² 창이 있는 A (대조 잡 ② 는 창까지 본다)
+        rows_a = json.loads(json.dumps(_control_system("A", A5q, [])[0]["rows"], default=str))
+        rows_b6 = json.loads(json.dumps(_control_system("B", {sd: bfake(final="통과" if sd == 2 else "경계 · 구분 불가")
+                                                              for sd in SEEDS}, [])[0]["rows"], default=str))
+
+        def _rec(rows, name, nb=400):
+            f = pathlib.Path(td3) / name
+            f.write_text(json.dumps({"aggregate": {"systems": {"A": {"rows": rows, "N": 5}, "B": {"rows": rows_b6, "N": 1}}},
+                                     "n_boot": nb, "tool_sha16": {"glass_v2_readout.py": "x"}}, ensure_ascii=False), encoding="utf-8")
+            return f
+        o = bmeas_stage_b(A5q, B2r, v2_closed=None, ref600=_rec(rows_a, "same.json"), detect_n_sim=20)
+        ck("대조 잡 ②: A 600 K 행이 기록과 같으면 갈래를 그대로 낸다 · b2 문장에 '600 K 는 1/5'",
+           o["control_jobs"]["②_A600_vs_readout_1014"]["same"] is True and o["branch"].startswith("b2")
+           and "600 K 는 1/5" in o["sentence"] and o["skeleton_distribution"]["B600_record_1014"]["①_P_frac"]["n"] == 5)
+        bad = json.loads(json.dumps(rows_a)); bad[2]["skeleton"]["values"]["④_S_transient"] = 1
+        o = bmeas_stage_b(A5q, B2r, v2_closed=None, ref600=_rec(bad, "bad_sk.json"), detect_n_sim=20)
+        ck("⛔음성 대조 잡 ②: A 골격 값 하나가 기록과 다르면 판정 보류",
+           o["branch"].startswith("판정 보류") and o["control_jobs"]["②_A600_vs_readout_1014"]["same"] is False)
+        bad = json.loads(json.dumps(rows_a)); bad[0]["beta_MTO"] += 1e-6
+        ck("⛔음성 대조 잡 ②: β_MTO 가 1e-6 다르면 판정 보류",
+           bmeas_stage_b(A5q, B2r, v2_closed=None, ref600=_rec(bad, "bad_b.json"), detect_n_sim=20)["branch"].startswith("판정 보류"))
+        bad = json.loads(json.dumps(rows_a)); bad[3]["record"]["p90sq_5ps_lag"]["p90sq_A2"][5] += 0.02
+        ok01 = json.loads(json.dumps(rows_a)); ok01[3]["record"]["p90sq_5ps_lag"]["p90sq_A2"][5] += 0.01
+        ck("대조 잡 ②: p90² 창 하나가 0.01 (둘째 자리 반올림 한 칸) 다르면 같다 · 0.02 면 판정 보류",
+           a600_reproduces_readout(rows_a, 400, readout600(_rec(ok01, "p01.json")))["same"] is True
+           and bmeas_stage_b(A5q, B2r, v2_closed=None, ref600=_rec(bad, "p02.json"), detect_n_sim=20)["branch"].startswith("판정 보류"))
+        ck("⛔음성 대조 잡 ②: 기록 n_boot 가 다르면 판정 보류",
+           bmeas_stage_b(A5q, B2r, v2_closed=None, ref600=_rec(rows_a, "nb.json", nb=200), detect_n_sim=20)["branch"].startswith("판정 보류"))
+        ck("⛔음성 대조 잡 ②: 기록이 없으면 판정 보류",
+           bmeas_stage_b(A5q, B2r, v2_closed=None, ref600=pathlib.Path(td3) / "none.json", detect_n_sim=20)["branch"].startswith("판정 보류"))
+        cl = pathlib.Path(td3) / "v2bad.json"
+        cl.write_text(json.dumps({"1_확정": {"D_시드간_상대산포_보고량": {"600K": {"D_over_median_정렬": [0.9, 1.0, 1.0, 1.1, 1.2]}}},
+                                  "4_기록_남길_것": {"p90²_5ps_lag": {"✅_측정_2026_10_05": {"런별": {}}}}}), encoding="utf-8")
+        ck("⛔음성 대조 잡 ①: A 600 K 가 v2 마감 D/중앙을 재현 못 하면 판정 보류 (상시 · 개정 CX §7)",
+           bmeas_stage_b(A5q, B2r, v2_closed=cl, ref600=_rec(rows_a, "same2.json"), detect_n_sim=20)["branch"].startswith("판정 보류"))
+        import subprocess
+        e1, e2 = pathlib.Path(td3) / "ra", pathlib.Path(td3) / "rb"
+        e1.mkdir(); e2.mkdir()
+        cp = subprocess.run([sys.executable, str(HERE / "glass_v2_readout.py"), "--bmeas_b", "--root_a", str(e1), "--root_b", str(e2)],
+                            capture_output=True, text=True)
+        ck("⛔음성 CLI --bmeas_b: 런이 없으면 아무 것도 안 읽고 종료 2 · A 는 T600 · B 는 T650 경로 다섯씩",
+           cp.returncode == 2 and cp.stdout.count("/T600/msd.json") == 5 and cp.stdout.count("/T650/msd.json") == 5
+           and "판독 · B 650 K" not in cp.stdout)
+
     # 실제 경로: 짧은 합성 궤적 하나 (Li 20 · PS₄ 1 · 1100 프레임 = 110 ps · save 100 fs)
     try:
         import numpy as np
@@ -978,6 +1389,16 @@ def _selftest() -> int:
         ck("⛔음성 N_eff: msd_max_A2 가 없는 옛 기록은 msd_Li_A2 배열 max 로 되살린다 (rsd_report 한 곳 · 48 × 99 / a²)",
            abs(cr2[1]["N_eff_he2018"] - M.he2018_neff(48, 99.0)) < 1e-9
            and cr2[1]["N_eff_inputs"]["msd_max_from"].startswith("msd_Li_A2"))
+        _, cm650 = collect_control(pathlib.Path(td), N_LI["B"], n_boot=10, framework=False, p90=False, temp=BMEAS_T)
+        ck("⛔음성 온도 인자: T600 만 있는 루트를 650 K 로 읽으면 다섯 다 결측 (600 K 런을 650 K 로 읽지 않는다)",
+           len(cm650) == 5 and all("/T650/" in m and "/T600/" not in m for m in cm650))
+        import shutil
+        r650 = pathlib.Path(td) / "r650" / "seed1" / "T650" / "d0.00_cfg0" / "T650"
+        shutil.copytree(rd, r650)
+        cr650, cm650 = collect_control(pathlib.Path(td) / "r650", N_LI["B"], n_boot=10, framework=False, p90=False, temp=BMEAS_T)
+        ck("온도 인자: T650 트리를 읽는다 (seed1 · msd_json 이 T650 · 나머지 넷 결측) · 기본값은 그대로 T600",
+           1 in cr650 and "/T650/" in cr650[1]["msd_json"] and len(cm650) == 4
+           and "/T600/" in str(control_msd_path(td, 1)) and "/T650/" in str(control_msd_path(td, 1, BMEAS_T)))
         (rd / "traj.xyz").unlink()
         r2 = read_run(js, n_boot=10, framework=False)
         ck("⛔음성 궤적이 없으면 error · 통과 아님", "error" in r2 and not run_pass(r2))
@@ -1002,10 +1423,50 @@ def main() -> int:
     ap.add_argument("--n_sim", type=int, default=2000)
     ap.add_argument("--control", action="store_true", help="대조 계 판독 (카드 §4 · A 600 K 다섯 대 B 600 K 다섯)")
     ap.add_argument("--root_a", help="--control: A (v2) 600 K 루트 — seed<S>/T600/d0.00_cfg0/T600/msd.json")
-    ap.add_argument("--root_b", help="--control: B (Li₃PS₄) 600 K 루트 — 같은 꼴")
+    ap.add_argument("--root_b", help="--control: B (Li₃PS₄) 600 K 루트 — 같은 꼴 · --bmeas_b: B 650 K 루트 (T650)")
+    ap.add_argument("--bmeas_b", action="store_true",
+                    help="B 측정 가능 조건 카드 ① 단계 — B 650 K 다섯만 판독 (--root_b) · A 600 K (--root_a) 는 대조 잡")
     a = ap.parse_args()
     if a.selftest:
         return _selftest()
+    if a.bmeas_b:
+        if a.control:
+            ap.error("--control 과 --bmeas_b 는 같이 쓰지 않는다")
+        if not (a.root_a and a.root_b):
+            ap.error("--bmeas_b 에는 --root_a (A 600 K · 대조 잡) 와 --root_b (B 650 K) 가 둘 다 필요하다")
+        try:
+            sys.stdout.reconfigure(line_buffering=True)
+        except Exception:
+            pass
+        #: 읽기 전에 경로부터 — 런이 빠졌으면 아무 것도 안 읽고 멈춘다 (B 경로가 틀렸는데 A 를 다 읽고서야 알지 않게)
+        miss = [str(p) for root, T in ((a.root_a, CONTROL_T), (a.root_b, BMEAS_T)) for sd in SEEDS
+                for p in [control_msd_path(root, sd, T)] if not p.is_file()]
+        if miss:
+            print(f"⛔ msd.json 이 없는 런 {len(miss)} 개 — 읽지 않는다 (카드: 점 · 시드를 빼지 않는다):")
+            for m in miss:
+                print("   ·", m)
+            return 2
+        import hashlib
+        sha = {f: hashlib.sha256((HERE / f).read_bytes()).hexdigest()[:16]
+               for f in ("glass_v2_readout.py", "msd_diffusive_check.py", "quench_ss_event.py", "aimd_jump_stats.py",
+                         "melt_quench_uma.py", "../modelc_v3/disorder_ensemble_diffusion.py")}
+        print(f"li2s B 측정 가능 조건 카드 ① 단계 판독 · B {BMEAS_T} K {a.root_b} · 대조 잡 A {CONTROL_T} K {a.root_a} · "
+              f"n_boot {a.n_boot} · 골격 네 기준 {SKELETON_GATE}")
+        print("도구 sha16 · " + " · ".join(f"{pathlib.Path(k).name} {v}" for k, v in sha.items()))
+        ra, ma = collect_control(a.root_a, N_LI["A"], n_boot=a.n_boot)
+        rb, mb = collect_control(a.root_b, N_LI["B"], n_boot=a.n_boot, temp=BMEAS_T)
+        if ma or mb:
+            print(f"⛔ 읽는 사이에 msd.json 이 사라진 런 {len(ma) + len(mb)} 개 — 판독하지 않는다")
+            return 2
+        o = bmeas_stage_b(ra, rb, n_boot=a.n_boot)
+        print("\n".join(bmeas_show(o)))
+        if a.out:
+            out = {"what": f"li2s B 측정 가능 조건 카드 ① 단계 판독 (B {BMEAS_T} K 만 · 결과 전 커밋 도구)", "tool_sha16": sha,
+                   "stage_b": o, "runs_B650": strip_D(rb), "runs_A600_control_job": strip_D(ra), "n_boot": a.n_boot}
+            pathlib.Path(a.out).parent.mkdir(parents=True, exist_ok=True)
+            pathlib.Path(a.out).write_text(json.dumps(out, ensure_ascii=False, indent=1, default=str) + "\n", encoding="utf-8")
+            print(f"-> {a.out}")
+        return 3 if o["errors"] else 0
     if a.control:
         if not (a.root_a and a.root_b):
             ap.error("--control 에는 --root_a 와 --root_b 가 둘 다 필요하다")
