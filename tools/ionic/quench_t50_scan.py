@@ -60,6 +60,27 @@ def window_T(tset, a, b):
     return [tset[ka], tset[kb]], 0.5 * (tset[ka] + tset[kb])
 
 
+def traj_frames(traj):
+    """extxyz 프레임 수 — 첫 줄 원자 수 n 으로 (n + 2) 줄 단위를 센다 (나머지가 남으면 멈춘다)."""
+    with open(traj) as f:
+        first = f.readline()
+        n_lines = 1 + sum(1 for _ in f)
+    nat = int(first.split()[0])
+    if n_lines % (nat + 2):
+        raise SystemExit(f"{traj}: 줄 수 {n_lines} 가 (원자 {nat} + 2) 의 배수가 아니다")
+    return n_lines // (nat + 2)
+
+
+def check_spacing(traj, tset):
+    """궤적 저장 간격이 SAVE_FS (1 ps) 인지 — 프레임 수 = thermo 끝 시간 / 1 ps + 1 (B · A seed1 기록 = 1051 · 1050 ps).
+    다르면 멈춘다: --save_fs 1000 으로 창을 자르면 창이 조용히 틀린다."""
+    want = int(round(max(tset) / (SAVE_FS / 1000.0))) + 1
+    got = traj_frames(traj)
+    if got != want:
+        raise SystemExit(f"{traj}: 프레임 {got} ≠ thermo 끝 {max(tset)} ps / {SAVE_FS / 1000.0} ps + 1 = {want} — 저장 간격이 다르다 · 창을 자르지 않는다")
+    return got
+
+
 def crossings(rows, level=LEVEL):
     """시간순 창 → frac_moved 가 level 을 지나는 T (이웃 두 창 사이 선형 보간) 의 목록."""
     out = []
@@ -73,6 +94,7 @@ def crossings(rows, level=LEVEL):
 
 def scan(traj, thermo, label, py=sys.executable, win=WIN_PS, t_end=None, jump=JUMP):
     tset = read_tset(thermo)
+    check_spacing(traj, tset)
     t_end = t_end if t_end is not None else max(tset)
     rows, a = [], 0.0
     with tempfile.TemporaryDirectory(prefix="t50_") as td:
@@ -178,6 +200,15 @@ def selftest():
             ck("⛔음성: 기록에 없는 창 끝이면 멈춘다", False)
         except SystemExit:
             ck("⛔음성: 기록에 없는 창 끝이면 멈춘다", True)
+        tr = Path(td) / "t.xyz"
+        tr.write_text("".join(f"1\nframe {k}\nLi 0 0 0\n" for k in range(101)))
+        ck("저장 간격: 101 프레임 · thermo 끝 100 ps → 1 ps 간격 (통과)", check_spacing(tr, {0.0: 1.0, 100.0: 1.0}) == 101)
+        tr.write_text("".join(f"1\nframe {k}\nLi 0 0 0\n" for k in range(51)))
+        try:
+            check_spacing(tr, {0.0: 1.0, 100.0: 1.0})
+            ck("⛔음성: 51 프레임 · 100 ps (2 ps 간격) 이면 멈춘다", False)
+        except SystemExit:
+            ck("⛔음성: 51 프레임 · 100 ps (2 ps 간격) 이면 멈춘다", True)
     ref = a1_record()
     ck("A seed1 기록 표 (21 창 · 이동 수 정수) 로 낸 T₅₀ = 383.824 K (교차 하나 · 38/48 → 21/48 · 카드의 ≈ 384 는 반올림 비율로 낸 383.76)",
        len(ref) == 21 and [round(x, 3) for x in a1_t50_from_record(ref)] == [383.824])
