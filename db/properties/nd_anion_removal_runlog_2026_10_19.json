@@ -114,5 +114,13 @@
   "results_seen": "false 그대로 — 떼어낸 셀 에너지 0 (수렴한 SCF 없음)",
   "다음": "재시도는 결정론이라 끄기 권고 (러너가 '두 번 실패' 로 남은 7 점을 멈추고 r2 를 restart — 결정에 박힌 경로) · 방향 (중성 떼어내기 카드 v2 / 닫기) 은 사용자 결정",
   "by": "agent · 2026-10-20"
+ },
+ "✅_v2_결과_전_2026_10_20": {
+  "사용자": "AskUserQuestion 'Nd 떼어내기를 어떻게 이어갈까요?' → 'S 넷 중성으로 (권고)' (선택지: S 넷 중성 · S·Cl 여덟 중성 · 여기서 닫기)",
+  "카드": "db/properties/nd_s_vacancy_neutral_estimand_2026_10_20.json (결정 D-2026-10-20-nd-s-vacancy-neutral proposed · supersedes v1 은 비준 때 적용)",
+  "도구": "nd_anion_removal.py — 기본 카드 v2 · --card · make_inputs (모드 neutral 만 · v1 거부 · 옆 → 먼 순서 MANIFEST) · read_out 이 점유 (verbosity high) · gap 을 읽음 (점유 블록 없으면 죽음 — '없음' 을 0 으로 안 읽는다) · readout 상태 규칙 (일부만 부분 점유 → 구분 안 됨) · 문턱 0.3 eV · selftest 30/30 · 깨기 5/5 (문턱 · 상태 규칙 · v1 거부 · 점유 없음 · 붙은 음수 끊기)",
+  "러너": "run_nd_elf_nc_gabia.sh JOB=removal — RM_CARD (기본 v2) · OUT 기본 /data/work/runs/nd_s_vacancy_2026_10_20 · 실행 순서 = MANIFEST · MANIFEST 밖 rm_* 면 멈춤 · 'convergence NOT achieved' = 끝 8 → 다시 안 돌리고 멈춤 + r2 재개 (v1 첫 점이 같은 입력으로 비트 동일하게 다시 돈 것의 교정) · ELF 문구 남은 것 정리 (SCF 혼자 · SCF 를 안 돌린다) · selftest 42/42 · 깨기 4/4 (다시 안 돌림 · 옛 입력 섞임 · 카드 전달 · 미수렴 감지)",
+  "GPU_자리": "결정 D-2026-10-20-gabia-nd-svac-pause-li3nd proposed — v1 정지 결정은 그 러너가 끝나며 소멸 (항목은 안 건드림 · 선례대로)",
+  "by": "agent · 2026-10-20"
  }
 }

@@ -1,23 +1,30 @@
 #!/usr/bin/env python3
-"""nd_anion_removal.py — Nd@Li (6 월 선별 구조의 9 월 새 PP 판 · 120 원자) **음이온 떼어내기 에너지** 카드 도구.
+"""nd_anion_removal.py — Nd@Li (6 월 선별 구조의 9 월 새 PP 판 · 120 원자) **음이온 떼어내기 / 중성 S 빈자리** 카드 도구.
 
-카드: db/properties/nd_anion_removal_estimand_2026_10_19.json (숫자 · 자리 규칙은 카드의 `기계_판독_값` 에서만)
+카드 (숫자 · 자리 규칙 · 모드는 카드의 `기계_판독_값` 에서만 · --card 로 고른다):
+  v2 (기본) db/properties/nd_s_vacancy_neutral_estimand_2026_10_20.json — 중성 S 넷 (removal_mode neutral · 전자 586)
+  v1 (대체됨) db/properties/nd_anion_removal_estimand_2026_10_19.json — 전하 떼어내기 S²⁻ +2 · Cl⁻ +1 (모드 키 없음 = charged)
+    ⛔ v1 은 계보 셀 (바늘 꼴 · 면 안 7 Å) 에서 배경 전하 띠 휨이 띠틈보다 커서 정의되지 않는다 — --make_inputs 가 거부한다
+       (runlog nd_anion_removal_runlog_2026_10_19.json ⛔_첫_점_미수렴_진단_2026_10_20). --sites · --predict 는 기록 재현용으로 남긴다.
 계보: db/raw/nd_q3_bader_2026_10_19/scf_input_copy.in (= gabia kprobe.in · sha256 adbd6f70… · Bader 와 같은 기하)
 
   --sites                  자리 다시 재기 (이미지 전수 최소상) + Bader 표 (반올림 최소상) 와 대조 → 어긋남 목록
-  --predict [--out J]      점전하 Ewald 예측 (형식 전하 · Bader 전하) — 결과 전에 카드에 적는 '방향' 예측
-  --make_inputs --out DIR  계보 입력에서 원자 하나 빼고 nat · tot_charge · prefix · outdir 만 바꾼 입력 (카드의 8 자리)
-  --readout --runs DIR     출력 → ΔE_rm (옆 − 먼) · 갈래 · 문장
+  --predict [--out J]      (v1 기록) 점전하 Ewald 예측 (형식 전하 · Bader 전하) — 전하 떼기의 '방향' 예측이었다
+  --make_inputs --out DIR  계보 입력에서 원자 하나 빼고 nat · prefix · outdir 만 바꾼 입력 (카드 elements 의 옆 → 먼 순서) · MANIFEST.json
+  --readout --runs DIR     출력 → ΔE (옆 − 먼) · 점유 셈 · gap · 갈래 · 문장
   --selftest
 
-ΔE_rm(X) = 평균 E[셀 − X_옆] − 평균 E[셀 − X_먼]  (같은 셀 · 같은 전하 q 라 배경 · 이미지 항이 상쇄된다)
-  > 0 ⇒ Nd 옆 음이온을 떼어 내는 데 더 든다 (Nd 가 더 세게 붙잡는다)
+v2: ΔE_vac(S) = 평균 E[셀 − S⁰_옆] − 평균 E[셀 − S⁰_먼]  (같은 셀 · 중성 · 같은 전자 수라 S 원자 기준 · 원래 셀이 빠진다)
+  > 0 ⇒ Nd 옆 S 를 빼는 데 더 든다 · 갈래는 값이 겹치지 않고 |ΔE| ≥ dE_floor_eV (셀 쌍극자 이미지 상한) 일 때만 방향
+  · 넷 중 일부만 부분 점유 (frac_occ_tol < f < 1 − tol) 면 상태가 섞여 '구분 안 됨' · 넷 다면 갈래 + '부분 점유' 단서
 
 ⛔ 이 도구가 못 하는 것
-  · 이완하지 않는다 — 얼린 격자 (떼어 낸 뒤 이웃이 움직이는 에너지는 안 본다).
-  · 절대 떼어내기 에너지를 내지 않는다 — 전하 셀 · 떼어 낸 이온의 기준 상태가 없다 (차이만 뜻이 있다).
-  · '결합 하나의 에너지' 가 아니다 — 그 자리 환경 전체 (정전 · 결합 · 보상 빈자리) 의 차이다.
-  · 점전하 예측은 가리개 (유전 차폐) 가 없어 크기를 과대평가한다 — **방향 (부호) 만** 예측으로 쓴다.
+  · 이완하지 않는다 — 얼린 격자 (빼고 나서 이웃이 움직이는 에너지는 안 본다).
+  · 절대 빈자리 · 떼어내기 에너지를 내지 않는다 — S 기준 화학 퍼텐셜 / 떼어 낸 이온의 기준 상태가 없다 (차이만 뜻이 있다).
+  · '결합 하나의 에너지' 가 아니다 — 그 자리 환경 전체 + (v2) 남은 전자 2 개가 가는 곳의 차이다.
+  · 남은 전자가 어디 있는지 (빈자리 · Nd 5d) 재지 않는다 — 점유 셈 · gap 만 본다 (사영 · 밀도 적분 없음).
+  · 셀 쌍극자를 계산하지 않는다 — 카드 문턱 (최악 어림) 으로만 막는다.
+  · 점전하 예측은 가리개 (유전 차폐) 가 없어 크기를 과대평가한다 — v1 의 **방향 (부호) 만** 예측이었다.
   · 돌리지 않는다 (러너 몫) · 4f 를 다루지 않는다 (frozen-4f PP).
 """
 from __future__ import annotations
@@ -34,7 +41,8 @@ import sys
 import numpy as np
 
 REPO = pathlib.Path(__file__).resolve().parents[2]
-CARD = REPO / "db" / "properties" / "nd_anion_removal_estimand_2026_10_19.json"
+CARD = REPO / "db" / "properties" / "nd_s_vacancy_neutral_estimand_2026_10_20.json"
+CARD_V1 = REPO / "db" / "properties" / "nd_anion_removal_estimand_2026_10_19.json"     # 대체됨 (전하 · 이 셀에서 정의 안 됨)
 LINEAGE = REPO / "db" / "raw" / "nd_q3_bader_2026_10_19" / "scf_input_copy.in"
 BADER_SITES = REPO / "db" / "raw" / "nd_q3_bader_2026_10_19" / "nd_bader_sites.csv"
 KE = 14.399645478425668                 # e²/(4πε₀) [eV·Å]
@@ -217,7 +225,7 @@ def predict(at, sel, card, bader_csv=BADER_SITES) -> dict:
 
 # ───────────────────────── 입력 · 판독 ─────────────────────────
 def removal_input(text, idx, el, card, pseudo_dir=None) -> str:
-    """계보 입력에서 원자 idx (1 부터) 하나를 빼고 nat · tot_charge · prefix · outdir 만 바꾼다.
+    """계보 입력에서 원자 idx (1 부터) 하나를 빼고 nat · prefix · outdir 만 바꾼다 (charged 카드면 tot_charge 줄을 더한다).
     pseudo_dir 를 주면 그 줄도 바꾼다 (실행 기계의 PAW 폴더 · 시험 폴더) — 차이 검사가 그 값일 때만 허용한다."""
     lines = text.splitlines()
     i0 = next(i for i, l in enumerate(lines) if l.strip().upper().startswith("ATOMIC_POSITIONS"))
@@ -228,7 +236,7 @@ def removal_input(text, idx, el, card, pseudo_dir=None) -> str:
     li = atoms[idx - 1]
     if lines[li].split()[0] != el:
         raise ValueError(f"⛔ 원자 {idx} 는 {lines[li].split()[0]} 이다 ({el} 아님)")
-    q = card["tot_charge"][el]
+    charged = mode_of(card) == "charged"
     tag = f"rm_{el}{idx}"
     out = []
     for i, l in enumerate(lines):
@@ -241,16 +249,23 @@ def removal_input(text, idx, el, card, pseudo_dir=None) -> str:
         elif pseudo_dir is not None and re.match(r"^\s*pseudo_dir\s*=", l):
             l = f"  pseudo_dir='{pseudo_dir}'"
         elif re.match(r"^\s*nat\s*=", l):
-            out.append(f"  nat={nat - 1}")
-            l = f"  tot_charge={q:+.1f}"
+            l = f"  nat={nat - 1}"
+            if charged:
+                out.append(l)
+                l = f"  tot_charge={card['tot_charge'][el]:+.1f}"
         out.append(l)
     return "\n".join(out) + "\n"
 
 
-def input_diff_ok(orig, new, pseudo_dir=None) -> list[str]:
-    """줄 단위 차이가 prefix · outdir · nat · tot_charge(추가) · 원자 한 줄(삭제) 뿐인가 (+ 준 pseudo_dir 값 그대로일 때만 그 줄)."""
+def mode_of(card) -> str:
+    """카드 모드 — v2 는 'neutral' 을 적는다 · 키가 없으면 v1 (charged)."""
+    return card.get("removal_mode", "charged")
+
+
+def input_diff_ok(orig, new, pseudo_dir=None, charged=False) -> list[str]:
+    """줄 단위 차이가 prefix · outdir · nat · 원자 한 줄(삭제) 뿐인가 (charged 면 tot_charge 추가도 · 준 pseudo_dir 값 그대로일 때만 그 줄)."""
     import difflib
-    allow = re.compile(r"^\s*(prefix|outdir|nat|tot_charge)\s*=")
+    allow = re.compile(r"^\s*(prefix|outdir|nat" + ("|tot_charge" if charged else "") + r")\s*=")
     pd_ok = re.compile(r"^\s*pseudo_dir\s*=")
     bad, removed_atoms = [], 0
     for d in difflib.ndiff(orig.splitlines(), new.splitlines()):
@@ -270,7 +285,61 @@ def input_diff_ok(orig, new, pseudo_dir=None) -> list[str]:
     return bad
 
 
-def read_out(path) -> dict:
+def make_inputs(card, text, out, pseudo_dir=None, lineage="") -> dict:
+    """카드 elements 의 옆 → 먼 자리마다 rm_<El><idx>/scf.in + MANIFEST.json (그 순서가 러너의 실행 순서 · 첫 줄이 탐침).
+    ⛔ charged (v1) 카드는 거부한다 — 이 셀에서 정의되지 않는다 (바늘 셀 배경 전하 띠 휨 > 띠틈)."""
+    if mode_of(card) != "neutral":
+        raise SystemExit("⛔ 전하 떼어내기 카드 (v1) 는 대체됐다 — 바늘 셀 (면 안 7 Å) 에서 배경 전하 띠 휨이 띠틈보다 커 정의되지 않는다 "
+                         "(runlog nd_anion_removal_runlog_2026_10_19.json ⛔_첫_점_미수렴_진단_2026_10_20) · 중성 카드 v2 로")
+    if hashlib.sha256(text.encode()).hexdigest() != card["lineage_sha256"]:
+        raise SystemExit(f"⛔ 계보 입력 sha256 ≠ 카드 ({lineage}) — 다른 기하다")
+    man = {"lineage": str(lineage), "lineage_sha256": card["lineage_sha256"], "pseudo_dir": pseudo_dir,
+           "removal_mode": mode_of(card), "n_electrons_after": card["n_electrons_after"], "inputs": []}
+    for el in card["elements"]:
+        for side in ("near", "far"):
+            for idx in card["selected"][el][side]:
+                t = removal_input(text, idx, el, card, pseudo_dir)
+                b = input_diff_ok(text, t, pseudo_dir)
+                if b:
+                    raise SystemExit(f"⛔ rm_{el}{idx}: 허용 밖 차이 {b[:3]}")
+                d = pathlib.Path(out) / f"rm_{el}{idx}"
+                d.mkdir(parents=True, exist_ok=True)
+                (d / "scf.in").write_text(t)
+                man["inputs"].append({"dir": d.name, "element": el, "side": side, "index": idx,
+                                      "sha256": hashlib.sha256(t.encode()).hexdigest()})
+    (pathlib.Path(out) / "MANIFEST.json").write_text(json.dumps(man, ensure_ascii=False, indent=1) + "\n")
+    return man
+
+
+_NUM = re.compile(r"-?\d+\.\d+")          # QE f9.4 는 음수가 붙어 나온다 (-40.1000-12.2000) — 소수점으로 끊는다
+
+
+def read_occupations(t) -> list[tuple[list[float], list[float]]]:
+    """마지막 'End of self-consistent calculation' 뒤 k 점마다 (고유값 eV, 점유) — verbosity high 출력.
+    못 찾으면 [] (부르는 쪽이 '없음' 으로 죽인다 — 0 으로 두지 않는다)."""
+    i = t.rfind("End of self-consistent calculation")
+    if i < 0:
+        return []
+    ks, mode, e, f = [], None, [], []
+    for line in t[i:].splitlines():
+        if "bands (ev)" in line:
+            if e or f:
+                ks.append((e, f))
+            mode, e, f = "e", [], []
+        elif "occupation numbers" in line:
+            mode = "f"
+        elif "Fermi energy" in line or "highest occupied" in line or line.lstrip().startswith("!"):
+            break
+        elif mode == "e":
+            e += [float(x) for x in _NUM.findall(line)]
+        elif mode == "f":
+            f += [float(x) for x in _NUM.findall(line)]
+    if e or f:
+        ks.append((e, f))
+    return ks
+
+
+def read_out(path, tol=0.02) -> dict:
     t = pathlib.Path(path).read_text(errors="replace")
     if t.count("JOB DONE") != 1 or len(re.findall(r"Program PWSCF .*? starts on", t)) > 1:
         raise ValueError("JOB DONE 이 정확히 하나가 아니다 (실행이 붙었거나 안 끝났다)")
@@ -280,36 +349,68 @@ def read_out(path) -> dict:
     ne = re.findall(r"number of electrons\s+=\s+([-\d.]+)", t)
     if not E or not ne:
         raise ValueError("총에너지 · 전자 수 줄이 없다")
-    return {"E_eV": float(E[-1]) * RY_TO_EV, "n_electrons": float(ne[0])}
+    ks = read_occupations(t)
+    if not ks:
+        raise ValueError("점유 줄이 없다 (verbosity high 인데 'occupation numbers' 블록을 못 찾음)")
+    if any(len(e) != len(f) or not e for e, f in ks):
+        raise ValueError(f"고유값 · 점유 수가 k 점마다 안 맞는다 ({[(len(e), len(f)) for e, f in ks]})")
+    frac = sum(1 for e, f in ks for x in f if tol < x < 1 - tol)
+    occ = [x for e, f in ks for x, y in zip(e, f) if y > 0.5]
+    emp = [x for e, f in ks for x, y in zip(e, f) if y <= 0.5]
+    gap = (min(emp) - max(occ)) if occ and emp else None
+    return {"E_eV": float(E[-1]) * RY_TO_EV, "n_electrons": float(ne[0]), "n_k": len(ks), "n_frac": frac,
+            "homo_eV": max(occ) if occ else None, "lumo_eV": min(emp) if emp else None,
+            "gap_eV": gap}
 
 
 def readout(runs, card) -> dict:
-    """runs/<rm_ElIdx>/scf.out → 원소마다 ΔE_rm · 갈래 (두 값이 두 값과 겹치지 않을 때만 방향)."""
-    sel = card["selected"]
+    """runs/<rm_ElIdx>/scf.out → 원소마다 ΔE · 점유 셈 · gap · 갈래 (상태 규칙 → 겹침 → 문턱)."""
+    sel, tol = card["selected"], float(card.get("frac_occ_tol", 0.02))
+    floor = float(card.get("dE_floor_eV", 0.0))
     res = {}
-    for el in ("S", "Cl"):
-        vals = {}
+    for el in card.get("elements", ("S", "Cl")):
+        vals, cells = {}, {}
         for side in ("near", "far"):
             vals[side] = []
             for idx in sel[el][side]:
-                o = read_out(pathlib.Path(runs) / f"rm_{el}{idx}" / "scf.out")
+                o = read_out(pathlib.Path(runs) / f"rm_{el}{idx}" / "scf.out", tol)
                 if abs(o["n_electrons"] - float(card["n_electrons_after"])) > 1e-6:
                     raise ValueError(f"⛔ rm_{el}{idx}: 전자 수 {o['n_electrons']} ≠ {card['n_electrons_after']}")
                 vals[side].append(o["E_eV"])
+                cells[f"rm_{el}{idx}"] = {k: o[k] for k in ("n_frac", "gap_eV", "homo_eV", "lumo_eV", "n_k")}
         n, f = vals["near"], vals["far"]
         d = float(np.mean(n) - np.mean(f))
-        if min(n) > max(f):
-            br = "옆이 더 세게"
-        elif max(n) < min(f):
-            br = "옆이 덜"
-        else:
+        fr = [c["n_frac"] > 0 for c in cells.values()]
+        caveat = ""
+        if any(fr) and not all(fr):
             br = "구분 안 됨"
-        res[el] = {"E_near_eV": n, "E_far_eV": f, "dE_rm_eV": d, "spread_near_eV": float(np.ptp(n)),
-                   "spread_far_eV": float(np.ptp(f)), "branch": br, "sentence": sentence(el, d, br, len(n), len(f))}
+            caveat = "상태가 섞임 (일부만 부분 점유)"
+        else:
+            if min(n) > max(f) and d >= floor:
+                br = "옆이 더 세게"
+            elif max(n) < min(f) and d <= -floor:
+                br = "옆이 덜"
+            else:
+                br = "구분 안 됨"
+            if all(fr):
+                caveat = "넷 다 부분 점유 (금속성)"
+        res[el] = {"E_near_eV": n, "E_far_eV": f, "dE_eV": d, "spread_near_eV": float(np.ptp(n)),
+                   "spread_far_eV": float(np.ptp(f)), "floor_eV": floor, "cells": cells, "branch": br,
+                   "caveat": caveat, "sentence": sentence(el, d, br, len(n), len(f), mode_of(card), floor, caveat)}
     return res
 
 
-def sentence(el, d, br, nn, nf) -> str:
+def sentence(el, d, br, nn, nf, mode="charged", floor=0.0, caveat="") -> str:
+    tail = f" ({caveat})" if caveat else ""
+    if mode == "neutral":
+        what, cond = "자유 S", "같은 셀 · 얼린 격자 · 중성 (닫힌 껍질) 에서"
+        if br == "옆이 더 세게":
+            return (f"{cond} Nd 옆 {what} 를 빼는 데 (빈자리 에너지) Li 만 이웃한 {what} 보다 {d:.2f} eV 더 든다 "
+                    f"(n {nn} 대 {nf} · 값이 겹치지 않음 · 문턱 {floor:.1f} eV 넘음) — 이 모델 · 이 셀에서 Nd 옆 S 가 더 단단히 붙잡혀 있다.{tail}")
+        if br == "옆이 덜":
+            return (f"{cond} Nd 옆 {what} 를 빼는 데 {abs(d):.2f} eV 덜 든다 (n {nn} 대 {nf} · 값이 겹치지 않음 · 문턱 {floor:.1f} eV 넘음)"
+                    f" — 이 모델 · 이 셀에서 Nd 옆 S 가 오히려 빠지기 쉽다.{tail}")
+        return f"{cond} Nd 옆 · 먼 {what} 의 빈자리 에너지는 이 표본 (n {nn} 대 {nf}) 으로 구분되지 않는다 (차 {d:+.2f} eV).{tail}"
     ion = {"S": "자유 S²⁻", "Cl": "Cl⁻"}[el]
     if br == "옆이 더 세게":
         return (f"같은 셀 · 같은 전하 · 얼린 격자에서 Nd 옆 {ion} 를 떼어 내는 데 Li 만 이웃한 같은 이온보다 {d:.2f} eV 더 든다 "
@@ -370,16 +471,23 @@ def _selftest() -> int:
     chk(at.get_chemical_symbols()[1] == "Nd" and at.get_chemical_symbols()[44] == "S"
         and abs(da - brute) < 1e-9 and dr > da + 1.0,
         f"[음성] 실물 Nd2–S45: 반올림 {dr:.3f} Å · 전수 {da:.3f} Å = 무차별 {brute:.3f}")
-    # 계보 · 자리 · 입력
+    # 계보 · 자리 · 입력 (v2 = 기본 카드 · 중성 S)
+    chk(card.get("removal_mode") == "neutral" and card["elements"] == ["S"] and card["n_electrons_after"] == 586,
+        "[양성] 기본 카드 = v2 (중성 · S 만 · 전자 586)")
     chk(hashlib.sha256(LINEAGE.read_bytes()).hexdigest() == card["lineage_sha256"], "[양성] 계보 입력 sha256 = 카드")
     rows = classify(at, card)
     sel = select_sites(rows, card)
     chk(sel == card["selected"], f"[양성] 카드 규칙으로 고른 자리 = 카드 기록 {sel}")
     text = LINEAGE.read_text()
     new = removal_input(text, sel["S"]["near"][0], "S", card)
-    chk(input_diff_ok(text, new) == [], "[양성] 떼어낸 입력: 줄 차이가 prefix · outdir · nat · tot_charge · 원자 한 줄뿐")
-    chk("tot_charge=+2.0" in new and "nat=119" in new, "[양성] S²⁻ 떼기 → tot_charge +2 · nat 119")
-    chk("tot_charge=+1.0" in removal_input(text, sel["Cl"]["near"][0], "Cl", card), "[양성] Cl⁻ 떼기 → tot_charge +1")
+    chk(input_diff_ok(text, new) == [] and "tot_charge" not in new and "nat=119" in new,
+        "[양성] 중성 S 입력: 줄 차이가 prefix · outdir · nat · 원자 한 줄뿐 · tot_charge 없음 · nat 119")
+    chk(any("tot_charge" in b for b in input_diff_ok(text, new.replace("  nat=119", "  nat=119\n  tot_charge=+2.0"))),
+        "[음성] 중성 입력에 tot_charge 가 끼면 줄 차이 검사가 잡는다")
+    v1 = load_card(CARD_V1)
+    old = removal_input(text, sel["S"]["near"][0], "S", v1)
+    chk("tot_charge=+2.0" in old and input_diff_ok(text, old, charged=True) == [],
+        "[양성] v1 (기록) 생성기는 그대로 — S²⁻ → tot_charge +2 (charged 검사에서만 허용)")
     chk(any("ecutwfc" in b for b in input_diff_ok(text, new.replace("ecutwfc=70.0", "ecutwfc=60.0"))),
         "[음성] ecutwfc 를 바꾸면 줄 차이 검사가 잡는다")
     new_pd = removal_input(text, sel["S"]["near"][0], "S", card, "/tmp/paw")
@@ -391,39 +499,90 @@ def _selftest() -> int:
         chk(False, "[음성] 원소가 다른 번호 → 죽어야 한다")
     except ValueError:
         chk(True, "[음성] 원소가 다른 번호 → ValueError")
-    # 판독 갈래 (가짜 출력)
     td = pathlib.Path(tempfile.mkdtemp())
+    man = make_inputs(card, text, td / "mk", "/tmp/paw", "x")
+    chk([m["dir"] for m in man["inputs"]] == ["rm_S51", "rm_S112", "rm_S54", "rm_S115"]
+        and len(list((td / "mk").glob("rm_*/scf.in"))) == 4,
+        "[양성] make_inputs: 넷 · 옆 → 먼 순서 (첫 줄 = 탐침 rm_S51) · MANIFEST")
+    try:                                           # elements 를 붙인 v1 — 거부 줄 말고 다른 데서 우연히 죽지 않게 (KeyError)
+        make_inputs(dict(v1, elements=["S", "Cl"]), text, td / "mk1", None, "x")
+        chk(False, "[음성] v1 (전하) 카드로 입력 만들기 → 거부해야 한다")
+    except SystemExit as e:
+        chk("대체" in str(e) and not (td / "mk1").exists(), "[음성] v1 (전하) 카드 → 거부 · 아무것도 안 만든다")
+    try:
+        make_inputs(card, text + "\n", td / "mk2", None, "x")
+        chk(False, "[음성] 계보 sha 다름 → 거부해야 한다")
+    except SystemExit:
+        chk(True, "[음성] 계보 sha 다름 → 거부")
+    # 점유 읽기 (QE f9.4 붙은 음수 · k 점 둘)
+    occ_ok = ("     End of self-consistent calculation\n\n          k = 0.0000 0.0000 0.0000 ( 24512 PWs)   bands (ev):\n\n"
+              "  -40.1000-12.2000   1.5000   2.0000   4.6000   5.1000\n\n     occupation numbers\n"
+              "     1.0000   1.0000   1.0000   1.0000   0.0000   0.0000\n\n"
+              "          k = 0.3333 0.0000 0.0000 ( 24498 PWs)   bands (ev):\n\n"
+              "  -40.0500 -12.1000   1.6000   2.1000   4.7000   5.2000\n\n     occupation numbers\n"
+              "     1.0000   1.0000   1.0000   1.0000   0.0000   0.0000\n\n     the Fermi energy is     3.1000 ev\n")
+    try:
+        ks = read_occupations(occ_ok)
+    except ValueError as e:                        # 끊는 규칙이 틀리면 float 변환에서 죽는다 — 죽어도 ✗ 로 센다
+        ks = []; print(f"    ({e})")
+    chk(len(ks) == 2 and [len(e) for e, f in ks] == [6, 6] and ks[0][0][:2] == [-40.1, -12.2],
+        "[양성] 점유 읽기: k 둘 · 고유값 여섯 · 붙은 음수 (-40.1000-12.2000) 를 둘로 끊는다")
+    occ_frac = occ_ok.replace("1.0000   1.0000   1.0000   1.0000   0.0000   0.0000\n\n     the",
+                              "1.0000   1.0000   1.0000   0.5000   0.5000   0.0000\n\n     the")
 
-    def fake(name, E, ne=None, conv=True):
+    def fake(name, E, ne=None, conv=True, occ=occ_ok):
         d = td / name
         d.mkdir(parents=True, exist_ok=True)
         (d / "scf.out").write_text("     Program PWSCF v.7.4.1 starts on x\n"
                                    f"     number of electrons       =   {ne or card['n_electrons_after']:.2f}\n"
                                    + ("     convergence has been achieved in  10 iterations\n" if conv else "")
-                                   + f"!    total energy              =   {E / RY_TO_EV:.8f} Ry\n     JOB DONE.\n")
-    for el in ("S", "Cl"):
-        for i in card["selected"][el]["near"]:
-            fake(f"rm_{el}{i}", -100.0 + (0.5 if el == "S" else 0.01 * i))
-        for i in card["selected"][el]["far"]:
-            fake(f"rm_{el}{i}", -100.0 - (0.0 if el == "S" else 0.01 * i))
+                                   + occ + f"!    total energy              =   {E / RY_TO_EV:.8f} Ry\n     JOB DONE.\n")
+    near, far = card["selected"]["S"]["near"], card["selected"]["S"]["far"]
+    for i in near:
+        fake(f"rm_S{i}", -100.0 + 0.5)
+    for i in far:
+        fake(f"rm_S{i}", -100.0)
     r = readout(td, card)
-    chk(r["S"]["branch"] == "옆이 더 세게" and abs(r["S"]["dE_rm_eV"] - 0.5) < 1e-6, "[양성] 옆 값이 둘 다 크면 '옆이 더 세게' · ΔE 0.5")
-    chk(r["Cl"]["branch"] in ("구분 안 됨", "옆이 더 세게", "옆이 덜"), "[양성] Cl 갈래 계산")
-    i0 = card["selected"]["S"]["near"][0]
-    fake(f"rm_S{i0}", -100.0 - 0.2)                                 # 옆 하나가 먼 값 아래로 → 겹침
+    chk(set(r) == {"S"} and r["S"]["branch"] == "옆이 더 세게" and abs(r["S"]["dE_eV"] - 0.5) < 1e-6
+        and r["S"]["cells"][f"rm_S{near[0]}"]["n_frac"] == 0 and abs(r["S"]["cells"][f"rm_S{near[0]}"]["gap_eV"] - 2.5) < 1e-9,
+        "[양성] 옆 둘 다 0.5 eV 위 · 문턱 0.3 넘음 → '옆이 더 세게' · 점유 셈 0 · gap 2.5 (최고 점유 2.1 · 최저 빈 4.6)")
+    chk("빈자리 에너지" in r["S"]["sentence"] and "더 단단히" in r["S"]["sentence"], "[양성] 중성 문장 (빈자리 에너지)")
+    for i in near:
+        fake(f"rm_S{i}", -100.0 + 0.2)
+    chk(readout(td, card)["S"]["branch"] == "구분 안 됨", "[음성] 겹치지 않아도 |ΔE| 0.2 < 문턱 0.3 → '구분 안 됨'")
+    for i in near:
+        fake(f"rm_S{i}", -100.0 - 0.5)
+    chk(readout(td, card)["S"]["branch"] == "옆이 덜", "[양성] 옆 둘 다 0.5 eV 아래 → '옆이 덜'")
+    fake(f"rm_S{near[0]}", -100.0 - 0.5, occ=occ_frac)
+    rr = readout(td, card)["S"]
+    chk(rr["branch"] == "구분 안 됨" and "섞임" in rr["caveat"], "[음성] 넷 중 하나만 부분 점유 → '구분 안 됨 (상태가 섞임)'")
+    for i in near + far:
+        fake(f"rm_S{i}", -100.0 - (0.5 if i in near else 0.0), occ=occ_frac)
+    rr = readout(td, card)["S"]
+    chk(rr["branch"] == "옆이 덜" and "금속성" in rr["caveat"] and "금속성" in rr["sentence"],
+        "[양성] 넷 다 부분 점유 → 갈래는 내고 '부분 점유 (금속성)' 단서")
+    for i in near + far:
+        fake(f"rm_S{i}", -100.0 + (0.5 if i in near else 0.0))
+    fake(f"rm_S{near[1]}", -100.0 - 0.2)                              # 옆 하나가 먼 값 아래로 → 겹침
     chk(readout(td, card)["S"]["branch"] == "구분 안 됨", "[음성] 옆 하나가 먼 값과 겹치면 '구분 안 됨'")
-    fake(f"rm_S{i0}", -100.0, conv=False)
+    fake(f"rm_S{near[1]}", -100.0, conv=False)
     try:
         readout(td, card)
         chk(False, "[음성] 미수렴 출력 → 죽어야 한다")
     except ValueError:
         chk(True, "[음성] 미수렴 출력 → ValueError")
-    fake(f"rm_S{i0}", -100.0, ne=card["n_electrons_after"] + 2)
+    fake(f"rm_S{near[1]}", -100.0, ne=584)
     try:
         readout(td, card)
-        chk(False, "[음성] 전자 수가 다르면 (전하 빠짐) → 죽어야 한다")
+        chk(False, "[음성] 전자 584 (전하 셀) → 죽어야 한다")
     except ValueError:
-        chk(True, "[음성] 전자 수가 다르면 → ValueError")
+        chk(True, "[음성] 전자 584 (전하 셀 · v1 출력) → ValueError")
+    fake(f"rm_S{near[1]}", -100.0, occ="")
+    try:
+        readout(td, card)
+        chk(False, "[음성] 점유 블록 없음 → 죽어야 한다 (0 으로 두지 않는다)")
+    except ValueError:
+        chk(True, "[음성] 점유 블록 없음 → ValueError ('없음' 을 0 으로 안 읽는다)")
     print(f"selftest {'PASS' if ok[1] == 0 else 'FAIL'}  ({ok[0]}/{ok[0] + ok[1]})")
     return 0 if ok[1] == 0 else 1
 
@@ -439,10 +598,11 @@ def main() -> int:
     ap.add_argument("--out")
     ap.add_argument("--pseudo_dir", help="--make_inputs: 실행 기계 PAW 폴더 (주면 그 줄을 바꾼다 · 안 주면 계보 값 그대로)")
     ap.add_argument("--lineage", help="--make_inputs: 계보 입력 경로 (기본 저장소 사본 · sha256 이 카드와 같아야 한다)")
+    ap.add_argument("--card", default=str(CARD), help="카드 (기본 v2 중성 S · v1 은 --sites · --predict 기록 재현에만)")
     a = ap.parse_args()
     if a.selftest:
         return _selftest()
-    card = load_card()
+    card = load_card(a.card)
     at = read_lineage()
     if a.sites:
         rows = classify(at, card)
@@ -460,25 +620,9 @@ def main() -> int:
         if not a.out:
             ap.error("--make_inputs 는 --out 이 필요하다")
         lp = pathlib.Path(a.lineage) if a.lineage else LINEAGE
-        raw = lp.read_bytes()
-        if hashlib.sha256(raw).hexdigest() != card["lineage_sha256"]:
-            raise SystemExit(f"⛔ 계보 입력 sha256 ≠ 카드 ({lp}) — 다른 기하다")
-        text = raw.decode()
-        man = {"lineage": str(lp), "lineage_sha256": card["lineage_sha256"], "pseudo_dir": a.pseudo_dir, "inputs": []}
-        for el in ("S", "Cl"):
-            for side in ("near", "far"):
-                for idx in card["selected"][el][side]:
-                    t = removal_input(text, idx, el, card, a.pseudo_dir)
-                    b = input_diff_ok(text, t, a.pseudo_dir)
-                    if b:
-                        raise SystemExit(f"⛔ rm_{el}{idx}: 허용 밖 차이 {b[:3]}")
-                    d = pathlib.Path(a.out) / f"rm_{el}{idx}"
-                    d.mkdir(parents=True, exist_ok=True)
-                    (d / "scf.in").write_text(t)
-                    man["inputs"].append({"dir": d.name, "element": el, "side": side, "index": idx,
-                                          "sha256": hashlib.sha256(t.encode()).hexdigest()})
-        (pathlib.Path(a.out) / "MANIFEST.json").write_text(json.dumps(man, ensure_ascii=False, indent=1) + "\n")
-        print(f"입력 {len(man['inputs'])} → {a.out}")
+        man = make_inputs(card, lp.read_bytes().decode(), a.out, a.pseudo_dir, lp)
+        print(f"입력 {len(man['inputs'])} ({mode_of(card)} · 전자 {card['n_electrons_after']}) → {a.out} · "
+              f"순서 {' '.join(m['dir'] for m in man['inputs'])}")
         return 0
     if a.readout:
         if not a.runs:
