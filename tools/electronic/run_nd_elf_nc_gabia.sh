@@ -79,8 +79,18 @@ exec "$@"
 EOF
   cp "$T/bin/mpirun_gpu" "$T/hpcx/bin/mpirun"; : > "$T/hpcx/lib/libmpi.so.40"
   printf '#!/bin/bash\necho "\tlibmpi.so.40 => %s/hpcx/lib/libmpi.so.40 (0x0)"\n' "$T" > "$T/lddbin/ldd"
+  cat > "$T/bin/ppcheck" <<'EOF'
+#!/bin/bash
+# QE 처럼 pseudo_dir (실행 폴더 기준) 에서 ATOMIC_SPECIES 의 파일을 찾는다 — 없으면 readpp 오류로 죽는다
+f=$(printf '%s\n' "$@" | awk 'p{print; exit} /^-in$/{p=1}')
+pd=$(grep -o "pseudo_dir='[^']*'" "$f" | cut -d"'" -f2)
+for u in $(sed -n '/^ATOMIC_SPECIES/,/^$/p' "$f" | awk 'NF==3{print $3}'); do
+  [ -f "$pd/$u" ] || { echo "     Error in routine readpp (1):"; echo "     file $pd/$u not found"; exit 1; }
+done
+EOF
   cat > "$T/cpu/pw.x" <<'EOF'
 #!/bin/bash
+"$(dirname "$0")/../bin/ppcheck" "$@" || exit 1
 case "${PROBE_MODE:-ok}" in
   ok) echo "     PseudoPot. # 6 for Nd read from file:"; echo "     Estimated max dynamical RAM per process >       ${PROBE_GB:-9.50} GB"
       sleep 60 & echo $! >> "$NVSTATE/orphans"     # 고아 자식 하나 — 부모를 죽여도 남는다 (락 fd 를 물려받으면 락이 안 풀린다)
@@ -99,6 +109,7 @@ f=$(grep -o "fileout='[^']*'" "$2" | cut -d"'" -f2)
 EOF
   cat > "$T/gpu/pw.x" <<'EOF'
 #!/bin/bash
+"$(dirname "$0")/../bin/ppcheck" "$@" || exit 1
 case "${SCF_MODE:-ok}" in
   fail) echo "     Error in routine c_bands (1):"; exit 1 ;;
   long) exec sleep 60 ;;
@@ -329,6 +340,9 @@ elif [ -f "$OUT/probe/scf.in.sha256" ] && [ "$(cat "$OUT/probe/scf.in.sha256")" 
   say "프로브 재사용 (같은 scf.in) — $(echo "$L" | tr -s ' ')"
 else
   PD=$OUT/probe; rm -rf "$PD"; mkdir -p "$PD"
+  # scf.in 의 pseudo_dir='./pseudo' 는 **실행 폴더** 기준이다 — 프로브는 probe/ 에서 도니 링크를 건다
+  #   (2026-10-19 gabia 첫 DRY_RUN: 링크 없이 4 초 만에 MPI_ABORT · 가짜 pw.x 가 pseudo 를 안 읽어 시험이 못 잡았다)
+  ln -s ../pseudo "$PD/pseudo"
   say "▶ 메모리 프로브 — CPU pw.x 1 랭크 · 검사용 (run 아님) · 'Estimated' 줄을 읽으면 바로 끝 (최대 ${PROBE_S} s)"
   ( cd "$PD" && OMP_NUM_THREADS=1 ESPRESSO_TMPDIR="$PD/tmp" exec "$MPIRUN_CPU" --allow-run-as-root --bind-to none --mca btl self,vader -np 1 \
       "$CPU_BIN/pw.x" -in ../scf.in > probe.out 2>&1 9>&- ) &
@@ -345,7 +359,8 @@ else
   rm -rf "$PD/tmp"
   L=$(grep -a "Estimated" "$PD/probe.out" | head -1)
   EST_MIB=$(echo "$L" | awk '{for(i=1;i<=NF;i++) if($i ~ /^[0-9.]+$/ && ($(i+1)=="GB"||$(i+1)=="MB")) {printf "%d", ($(i+1)=="GB" ? $i*1024 : $i); exit}}')
-  [ -n "$EST_MIB" ] || { say "⛔ 프로브가 'Estimated … RAM' 을 안 찍었다 — probe/probe.out 끝:"; tail -5 "$PD/probe.out" | tee -a "$LOG"; exit 4; }
+  [ -n "$EST_MIB" ] || { say "⛔ 프로브가 'Estimated … RAM' 을 안 찍었다 — QE 오류 줄 (probe/probe.out):"
+                         grep -a -A4 "Error in routine" "$PD/probe.out" | head -8 | tee -a "$LOG"; exit 4; }
   grep -aq "PseudoPot. # 6\|PseudoPot. #  6" "$PD/probe.out" && say "프로브: QE 7.4.1 이 pseudo 여섯을 읽었다 (Nd 변환 UPF 포함)"
   say "프로브 ✓ $(echo "$L" | tr -s ' ')"
   sha256sum "$OUT/scf.in" | cut -c1-64 > "$PD/scf.in.sha256"
