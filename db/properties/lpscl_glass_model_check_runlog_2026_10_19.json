@@ -254,5 +254,16 @@
   "⛔": "확산계수 · Ea · σ 아님 · val² 단위 · 결정 BVSE 숫자 (modelc 3.32 % 등) 와 한 표에 놓지 않는다 · BVSE 로 수송 순위를 매기지 않는다",
   "원자료": "db/raw/lpscl_glass_model_check_2026_10_19/bvse/ (bvse_readout.json · bvse_run.log · SHA256SUMS)",
   "by": "agent · 2026-10-19"
+ },
+ "✅_기계_결정_2026_10_19": {
+  "사용자": "AskUserQuestion 답 — QE 압력–부피 = 'kgy (Nd EOS 뒤)' · UMA 경로 = 'kgy · Nd EOS 옆 (권고)'",
+  "뜻": "UMA 경로 70 점은 지금 kgy GPU (Nd EOS pw.x 옆 — cascade MD 공존과 같은 꼴 · CPU 1 코어) · QE 는 Nd EOS (≈ 10-26) 끝난 뒤 kgy GPU ⇒ 편지 DA 는 DFT 결과 뒤 (≈ 10-27) 에 BVSE 와 합쳐 보낸다",
+  "by": "agent · 2026-10-19"
+ },
+ "✅_UMA_경로_도구_결과_전_2026_10_19": {
+  "도구": "tools/ionic/melt_quench_uma.py --eos_path (기존 도구 확장 · make_calc default · 카드 기계_판독_값에서 격자 · fmax · 스텝 · 토폴로지 컷오프를 읽는다)",
+  "selftest": "113/113 (새 12 — 라벨 · 카드 격자 · V/V_final = x · fmax 수렴 · 모드 기록 · 기하 파일 · 재개 · ⛔ turbo · ⛔ 입력 sha 바뀜 · ⛔ 카드 키 없음 · ⛔ 라벨 꼴)",
+  "깨기": "3/3 잡힘 — 길이를 x 배 (부피 아님) · sha 검사 뺌 · turbo 허용",
+  "by": "agent · 2026-10-19"
  }
 }

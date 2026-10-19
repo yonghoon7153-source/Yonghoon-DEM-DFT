@@ -1277,6 +1277,122 @@ def gb2_compare(run_small, run_big, card=GB2_CARD, frame_card=None, log=print):
 
 
 # ───────────────────────── selftest ─────────────────────────
+# ───────────────────────── 모델 검증 카드: 0 K 등방 경로 (UMA) ─────────────────────────
+MC_CARD = "db/properties/lpscl_smallcell_glass_model_check_estimand_2026_10_19.json"
+
+
+def read_mc_values(card=MC_CARD):
+    """모델 검증 카드의 `기계_판독_값` — 키가 없으면 KeyError 로 죽는다 (숫자를 지어내지 않는다)."""
+    q = pathlib.Path(card)
+    if not q.exists():                       # repo 루트 상대 (도구가 어디서 불리든 같은 카드)
+        q = pathlib.Path(__file__).resolve().parents[2] / card
+    return json.loads(q.read_text(encoding="utf-8"))["기계_판독_값"], q
+
+
+def eos_label(path):
+    """…/<A|B>/seed<N>/<파일> → 'A_s<N>' — 경로에서 계 · 시드를 읽는다 (못 읽으면 죽는다 · 추측 안 한다)."""
+    p = pathlib.Path(path)
+    m = re.fullmatch(r"seed(\d+)", p.parent.name)
+    if not m or p.parent.parent.name not in ("A", "B"):
+        raise SystemExit(f"⛔ {path}: '…/<A|B>/seed<N>/<파일>' 꼴이 아니다 — 라벨을 추측하지 않는다")
+    return f"{p.parent.parent.name}_s{int(m.group(1))}"
+
+
+def eos_topology(atoms, rPS, rSS):
+    """(P–S ≤ rPS 결합 수, S–S ≤ rSS 쌍 수) — 카드 토폴로지 규칙의 입력 (최소상 · 직교 셀)."""
+    sym = np.array(atoms.get_chemical_symbols()); pos = atoms.get_positions(); cell = atoms.cell.array
+    P, S = pos[sym == "P"], pos[sym == "S"]
+    nPS = int((mic_dists(P, S, cell) <= rPS).sum()) if len(P) and len(S) else 0
+    nSS = 0
+    if len(S) > 1:
+        D = mic_dists(S, S, cell); np.fill_diagonal(D, np.inf); nSS = int((D <= rSS).sum() // 2)
+    return nPS, nSS
+
+
+def eos_path(structs, out_dir, which="main", device="cuda", card=MC_CARD, calc=None, log=print):
+    """모델 검증 카드 §1b 경로 — 구조마다 등방 스케일 점 (분율 좌표 유지) 에서 UMA **default** 고정셀 FIRE 이완.
+
+    점마다 <out>/<라벨>/x<0.85>.xyz (기하만) 와 <out>/<라벨>/uma_path.json
+    (E · virial P (운동 항 없음) · σ · Fmax · 스텝 · 수렴 · P–S/S–S 수 · 기하 sha256).
+    which = 'main' (path_scales) · 'ext_low' · 'ext_high' (카드 연장 점 — 판독 도구가 연장 규칙을 말할 때만).
+    json 에 이미 있는 점은 건너뛴다 (재개 · 같은 입력 sha 일 때만).
+
+    ⛔ 못 하는 것: QE · D3 · BM3 를 하지 않는다 (판독 도구 몫) · turbo 를 안 쓴다 (카드 uma_mode) ·
+      셀 모양을 안 바꾼다 (등방 스케일만) · 카드 밖 격자를 받지 않는다 (결과 보고 격자를 넓히지 않는다) ·
+      점마다 스케일된 원본에서 따로 시작한다 (연쇄 아님 — 카드 §1b).
+    """
+    import hashlib
+    from ase.io import read, write
+    from ase.optimize import FIRE
+    v, card_path = read_mc_values(card)
+    key = {"main": "path_scales", "ext_low": "path_ext_low", "ext_high": "path_ext_high"}[which]
+    scales = [float(x) for x in v[key]]
+    fmax, steps = float(v["relax_fmax_eV_A"]), int(v["relax_max_steps"])
+    rPS, rSS = float(v["topo_PS_A"]), float(v["topo_SS_A"])
+    if v["uma_mode"] != "default":
+        raise SystemExit(f"⛔ 카드 uma_mode = {v['uma_mode']} — 이 경로는 default 만 안다")
+    if calc is None:
+        calc = make_calc(device, turbo=False)
+    mode = getattr(calc, "_mq_mode", None)
+    if mode != "default":
+        raise SystemExit(f"⛔ 계산기 모드 {mode!r} — default 여야 한다 (카드 §1b)")
+    try:
+        import fairchem
+        fc_ver = getattr(fairchem, "__version__", "?")
+    except Exception:
+        fc_ver = None
+    out = pathlib.Path(out_dir)
+    res = {}
+    for sp in structs:
+        lab = eos_label(sp)
+        at0 = read(str(sp))
+        d = out / lab; d.mkdir(parents=True, exist_ok=True)
+        jp = d / "uma_path.json"
+        src_sha = hashlib.sha256(pathlib.Path(sp).read_bytes()).hexdigest()
+        if jp.exists():
+            J = json.loads(jp.read_text(encoding="utf-8"))
+            if J["meta"]["source_sha256"] != src_sha:
+                raise SystemExit(f"⛔ {jp}: 다른 입력 구조의 경로다 (sha 다름) — 섞지 않는다")
+        else:
+            J = {"meta": {"label": lab, "source": str(sp), "source_sha256": src_sha,
+                          "card": str(card_path), "card_sha256": hashlib.sha256(card_path.read_bytes()).hexdigest(),
+                          "uma": "uma-s-1p1 · task omat", "mode": mode, "fairchem": fc_ver, "device": device,
+                          "relax": {"kind": "FIRE", "cell": "fixed", "fmax_eV_A": fmax, "max_steps": steps},
+                          "V_final_A3": float(at0.get_volume()),
+                          "⛔": "P_virial 은 운동 항 없음 (0 K 정적) · 기하는 UMA 이완본 — QE 단일점의 입력"},
+                 "points": []}
+        done = {round(p["x"], 4) for p in J["points"]}
+        for x in scales:
+            if round(x, 4) in done:
+                log(f"  {lab} x={x:.2f} 이미 있음 — 건너뜀"); continue
+            at = at0.copy()
+            at.set_cell(at0.cell.array * x ** (1.0 / 3.0), scale_atoms=True)
+            at.calc = calc
+            opt = FIRE(at, logfile=None)
+            t0 = time.time()
+            conv = opt.run(fmax=fmax, steps=steps)
+            F = at.get_forces(); fm = float(np.linalg.norm(F, axis=1).max())
+            conv = bool(conv) if isinstance(conv, (bool, np.bool_)) else (fm <= fmax)
+            E = float(at.get_potential_energy())
+            sig = np.asarray(at.get_stress(voigt=False)) * EV_A3_TO_GPA
+            nPS, nSS = eos_topology(at, rPS, rSS)
+            g = at.copy(); g.calc = None
+            fx = d / f"x{x:.2f}.xyz"
+            write(str(fx), g, format="extxyz")
+            pt = {"x": x, "V_A3": float(at.get_volume()), "E_eV": E,
+                  "P_virial_GPa": float(-np.trace(sig) / 3.0), "sigma_GPa": sig.tolist(),
+                  "Fmax_eV_A": fm, "steps": int(opt.nsteps), "converged": conv,
+                  "n_PS": nPS, "n_SS": nSS, "geom": fx.name,
+                  "geom_sha256": hashlib.sha256(fx.read_bytes()).hexdigest(), "wall_s": round(time.time() - t0, 1)}
+            J["points"].append(pt)
+            J["points"].sort(key=lambda p: p["x"])
+            jp.write_text(json.dumps(J, ensure_ascii=False, indent=1) + "\n", encoding="utf-8")
+            log(f"  {lab} x={x:.2f} V={pt['V_A3']:.1f} E={E:.4f} P={pt['P_virial_GPa']:+.3f} GPa "
+                f"Fmax={fm:.3f} steps={pt['steps']} conv={conv} P–S={nPS} S–S={nSS} ({pt['wall_s']} s)")
+        res[lab] = J
+    return res
+
+
 def _selftest():
     ok = bad = 0
     def chk(c, m):
@@ -1908,6 +2024,59 @@ def _selftest():
         _ok_ow = "덮어쓰지 않는다" in str(e)
     chk(_ok_ow, "⛔음성: 이미 있는 md_init_raw.xyz 가 다르면 덮어쓰지 않고 멈춘다")
 
+    # ── 모델 검증 경로 (--eos_path) — 가짜 계산기 (LJ) 로 배선만 본다 (UMA 아님) ──
+    import tempfile as _tf
+    from ase import Atoms as _At
+    from ase.calculators.lj import LennardJones as _LJ
+    chk(eos_label("x/A/seed3/final.xyz") == "A_s3" and eos_label("y/B/seed12/final.xyz") == "B_s12",
+        "--eos_path: 경로에서 라벨 (A_s3 · B_s12)")
+    try:
+        eos_label("x/C/seed3/final.xyz"); _ok_l = False
+    except SystemExit:
+        _ok_l = True
+    chk(_ok_l, "⛔음성: <A|B>/seed<N> 꼴이 아니면 라벨을 추측하지 않고 멈춘다")
+    _mv, _ = read_mc_values()
+    with _tf.TemporaryDirectory() as _td:
+        _td = pathlib.Path(_td)
+        _sd = _td / "B" / "seed9"; _sd.mkdir(parents=True)
+        _at = _At("PS4LiCl", positions=[[4, 4, 4], [5.2, 5.2, 5.2], [2.8, 2.8, 5.2], [2.8, 5.2, 2.8], [5.2, 2.8, 2.8],
+                                        [1.0, 1.0, 1.0], [6.8, 1.2, 6.8]], cell=[8.0, 8.0, 8.0], pbc=True)
+        from ase.io import write as _w
+        _w(str(_sd / "final.xyz"), _at, format="extxyz")
+        _lj = _LJ(sigma=2.0, epsilon=0.01, rc=5.0); _lj._mq_mode = "default"
+        _q = lambda *a, **k: None
+        _r = eos_path([_sd / "final.xyz"], _td / "out", calc=_lj, log=_q)["B_s9"]
+        _xs = [p["x"] for p in _r["points"]]
+        chk(_xs == sorted(float(x) for x in _mv["path_scales"]), f"--eos_path: 카드 격자 그대로 {_xs}")
+        _V0 = _r["meta"]["V_final_A3"]
+        chk(all(abs(p["V_A3"] / _V0 - p["x"]) < 1e-9 for p in _r["points"]), "--eos_path: 점마다 V/V_final = x (등방 스케일)")
+        chk(all(p["converged"] and p["Fmax_eV_A"] <= float(_mv["relax_fmax_eV_A"]) + 1e-12 for p in _r["points"]),
+            "--eos_path: 점마다 카드 fmax 로 수렴")
+        chk(_r["meta"]["mode"] == "default" and _r["meta"]["relax"]["cell"] == "fixed", "--eos_path: 모드 default · 고정셀 기록")
+        chk(all((_td / "out" / "B_s9" / p["geom"]).is_file() for p in _r["points"]), "--eos_path: 점마다 기하 파일")
+        _logs = []
+        eos_path([_sd / "final.xyz"], _td / "out", calc=_lj, log=lambda m: _logs.append(m))
+        chk(len(_logs) == len(_xs) and all("이미 있음" in m for m in _logs), "--eos_path: 다시 부르면 다 건너뛴다 (재개)")
+        _lj2 = _LJ(sigma=2.0, epsilon=0.01, rc=5.0); _lj2._mq_mode = "turbo"
+        try:
+            eos_path([_sd / "final.xyz"], _td / "out2", calc=_lj2, log=_q); _ok_t = False
+        except SystemExit:
+            _ok_t = True
+        chk(_ok_t, "⛔음성: turbo 계산기면 멈춘다 (카드 default)")
+        _at.positions[0] += 0.3
+        _w(str(_sd / "final.xyz"), _at, format="extxyz")
+        try:
+            eos_path([_sd / "final.xyz"], _td / "out", calc=_lj, log=_q); _ok_s = False
+        except SystemExit:
+            _ok_s = True
+        chk(_ok_s, "⛔음성: 입력 sha 가 바뀐 구조를 옛 경로 json 에 섞지 않고 멈춘다")
+        (_td / "c.json").write_text(json.dumps({"x": 1}), encoding="utf-8")
+        try:
+            read_mc_values(str(_td / "c.json")); _ok_c = False
+        except KeyError:
+            _ok_c = True
+        chk(_ok_c, "⛔음성: 기계_판독_값 없는 카드 → KeyError")
+
     print(f"selftest: ⭕ {ok} · ⛔ {bad}")
     return 0 if bad == 0 else 1
 
@@ -1964,6 +2133,11 @@ def main():
                     help="⭐봉인된 프레임에서 turbo − default 의 응력·힘 차이 (새 MD 0, 회신 BR Q4)")
     ap.add_argument("--frame_card", default="db/properties/li2s_layer1_g2_mode_stress_prereg_2026_09_14.json",
                     help="--mode_stress 프레임 표본 카드 (도구가 프레임을 고르지 않는다)")
+    ap.add_argument("--eos_path", nargs="+", metavar="STRUCT",
+                    help="모델 검증 카드 §1b — …/<A|B>/seed<N>/final.xyz 마다 등방 경로 UMA default 고정셀 이완 (--eos_out 필요)")
+    ap.add_argument("--eos_out", help="--eos_path 출력 루트 → <eos_out>/<A_sN>/uma_path.json · x<..>.xyz")
+    ap.add_argument("--eos_which", choices=("main", "ext_low", "ext_high"), default="main",
+                    help="--eos_path 격자: 카드 path_scales (기본) · 연장 점 (판독 도구가 연장 규칙을 말할 때만)")
     ap.add_argument("--gb2", nargs=2, metavar=("RUN_SMALL", "RUN_BIG"),
                     help="G-B2 겹침 — 소셀 런디렉터리와 400 원자 런디렉터리. 새 계산 0")
     ap.add_argument("--gb2_card", default=GB2_CARD,
@@ -1980,6 +2154,16 @@ def main():
     a = ap.parse_args()
     if a.selftest:
         raise SystemExit(_selftest())
+    if a.eos_path:
+        if not a.eos_out:
+            raise SystemExit("⛔ --eos_path 는 --eos_out 이 필요하다")
+        for s in a.eos_path:
+            if not pathlib.Path(s).is_file():
+                raise SystemExit(f"⛔ 구조 파일이 없다: {s}")
+        r = eos_path(a.eos_path, a.eos_out, which=a.eos_which, device=a.device, log=_flushing_print)
+        n_bad = sum(1 for J in r.values() for p in J["points"] if not p["converged"])
+        print(f"■ 끝 — 구조 {len(r)} · 점 {sum(len(J['points']) for J in r.values())} · 미수렴 {n_bad}")
+        raise SystemExit(0 if n_bad == 0 else 2)
     if a.endpoint_gate:
         r = endpoint_gate(a.endpoint_gate,
                           out_json=a.endpoint_gate_out or
