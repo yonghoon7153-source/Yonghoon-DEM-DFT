@@ -24,5 +24,7 @@
   "CPU": "pp.x · bader 는 CPU 후처리 — SCF · relax · nscf 실행이 아니다 (결정 enforcement ③) · 8 랭크 · OMP 1"
  },
  "ELF_계획": "NC 규약 — 새 SCF (GPU) 가 필요하다: ① 4f-in-core NC Nd 확보 (PseudoDojo 3plus · gabia 에 없음) ② GPU 가 비면 같은 vc-relax 기하로 ONCV 80/320 SCF ③ 호스트 modelc ELF (modelc_elf_bonds.csv · 같은 NC 규약) 와 결합 ELF 비교 — 사용자 결정 대기 (Nd NC PP 선택은 새 PP 라 결합 묘사가 PAW 와 다를 수 있다)",
- "Q2_계획": "분해상 기저 (UMA/MP hull · G5) → 같은 설정 (kjpaw 70/560) 의 상 에너지 (GPU) → dft_decomp_check.py — Bader 뒤에 정한다"
+ "Q2_계획": "분해상 기저 (UMA/MP hull · G5) → 같은 설정 (kjpaw 70/560) 의 상 에너지 (GPU) → dft_decomp_check.py — Bader 뒤에 정한다",
+ "첫_실행_2026_10_19_1434": "gabia 14:34:40 — SCF ✓ (! −6399.21429237 Ry · save ✓) · **계보에서 멈춤 (종료 4)**: 9 월 vc-relax 출력의 최종 좌표가 Å 였는데 러너 첫 판 (212c94a9) 은 crystal 만 받아 Å 값을 분율로 읽었다 (분율 차 0.496 — 계산 오류가 아니라 러너 빈틈 · 가드는 제대로 멈췄다) → Å · Bohr 를 같은 블록의 최종 셀로 분율로 바꿔 대조하게 고침 · 시험 crystal · Å · Bohr ✓ · Å 불일치 · alat · crystal 불일치 거부 · 전체 실행 해시 OK",
+ "ELF_사용자_결정_2026_10_19": "사용자 '권고대로 해' — NC 규약: 4f-in-core NC Nd (PseudoDojo 3plus) 확보 → GPU 가 비면 같은 vc-relax 기하로 ONCV SCF → pp.x ELF → 호스트 modelc ELF 표와 비교"
 }

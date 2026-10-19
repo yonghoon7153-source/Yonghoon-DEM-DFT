@@ -72,10 +72,20 @@ else:
     cv = [[float(x) * (B.BOHR if unit == "bohr" else 1.0) for x in r] for r in cv]
     if unit not in ("angstrom", "bohr"):
         bad.append(f"vc-relax 셀 단위 {unit} 는 못 읽는다")
-    if not mode.lower().startswith("crystal"):
-        bad.append(f"vc-relax 좌표 단위 {mode} — crystal 만 대조한다")
     sv = [l.split()[0] for l in block.strip().splitlines()]
-    fv = [[float(x) for x in l.split()[1:4]] for l in block.strip().splitlines()]
+    pv = [[float(x) for x in l.split()[1:4]] for l in block.strip().splitlines()]
+    # 2026-10-19 gabia 실측: 9 월 vc-relax 출력의 최종 좌표는 **Å** 였다 (첫 판은 crystal 만 받아 Å 값을 분율로 읽고 멈췄다).
+    #   Å · Bohr 는 같은 블록의 최종 셀로 분율로 바꿔 대조한다 — 옛 셀을 쓰지 않는다.
+    m = mode.lower()
+    if m.startswith("crystal"):
+        fv = pv
+    elif m.startswith("angstrom") or m.startswith("bohr"):
+        sc = B.BOHR if m.startswith("bohr") else 1.0
+        iv, _ = B._inv3(cv)
+        fv = [[sum(r[c] * sc * iv[c][k] for c in range(3)) for k in range(3)] for r in pv]
+    else:
+        fv = pv
+        bad.append(f"vc-relax 좌표 단위 {mode} 는 못 읽는다 (crystal · angstrom · bohr 만)")
     ss, cs, cells, _, _ = B.read_qe_input(scf_in)
     inv, _ = B._inv3(cells)
     fs = [[sum(r[c] * inv[c][k] for c in range(3)) for k in range(3)] for r in cs]
