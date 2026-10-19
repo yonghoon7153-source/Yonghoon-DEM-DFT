@@ -1,0 +1,61 @@
+{
+  "env": {
+    "python": "3.11.17",
+    "numpy": "2.4.6",
+    "scipy": "1.17.1",
+    "machine": "x86_64",
+    "system": "Linux"
+  },
+  "ours_registered": {
+    "next": {
+      "raw_q": "1.5000000000000002",
+      "target": "1.5000000000000002",
+      "hit": true,
+      "ulp_off": 0,
+      "status": "not_computed",
+      "reason": "full_over_conduction"
+    },
+    "eq": {
+      "raw_q": "1.5",
+      "target": "1.5",
+      "hit": true,
+      "ulp_off": 0,
+      "status": "computed",
+      "reason": null
+    },
+    "prev": {
+      "raw_q": "1.4999999999999998",
+      "target": "1.4999999999999998",
+      "hit": true,
+      "ulp_off": 0,
+      "status": "computed",
+      "reason": null
+    }
+  },
+  "codex_exact": {
+    "next": {
+      "raw_q": "1.5000000000000044",
+      "target": "1.5000000000000002",
+      "hit": false,
+      "ulp_off": 19,
+      "status": "not_computed",
+      "reason": "full_over_conduction"
+    },
+    "eq": {
+      "raw_q": "1.5000000000000042",
+      "target": "1.5",
+      "hit": false,
+      "ulp_off": 19,
+      "status": "not_computed",
+      "reason": "full_over_conduction"
+    },
+    "prev": {
+      "raw_q": "1.5000000000000038",
+      "target": "1.4999999999999998",
+      "hit": false,
+      "ulp_off": 18,
+      "status": "not_computed",
+      "reason": "full_over_conduction"
+    }
+  }
+}

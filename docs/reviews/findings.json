@@ -11302,7 +11302,7 @@
     {
       "id": "WEB-09",
       "severity": "P2",
-      "status": "claimed_fixed",
+      "status": "verified",
       "owner": "claude",
       "found_by": "Codex 10-15 LHS214 재검증 탐침 출력 (display_source · 실 생산자 케이스 · 판정문의 결함 항목 아님) · 메인 세션 10-16 판독",
       "opened_in": "docs/reviews/lhs214r_fix_plan_20261016.md",
@@ -11313,7 +11313,12 @@
         "webapp/test_web09_accepted_refresh.py (⑧ 추가 · 17/18 → 18/18)",
         "webapp/test_web09_accepted_refresh.py (7/16 → 16/16 · 합성 정상 · Physics 모형 한계 · 옛 세대 · 실 생산자 ml_el · ml_physics · ml_hertz · valid_zero · 새 표 불변)",
         "docs/reviews/codex_lhs214r_fix_recheck_evidence_20261017/evidence/display_fresh_source.json (일곱 실패 = 양쪽 옛 유도값 Δ) · display_fresh_source_missing_both_derived_fourcol.html"
-      ]
+      ],
+      "verified_sha": "77d8fd445",
+      "verified_in": "docs/reviews/codex_review_lhs214rr_fix_recheck_20261019.md",
+      "verified_by": "codex",
+      "verified_scope": "판정문 §3 — 채택 값 갱신 · Δ freshness (원 갱신 · Δ 규약).  범위 밖 = 모든 과거 nullable 메트릭의 화면 렌더 보증 (L214R-S04).",
+      "verification_note": "Codex 재확인 10-19 (리뷰 핀 77d8fd445 · 비교 60ba39e22) — 증거 docs/reviews/codex_lhs214rr_fix_recheck_evidence_20261019/ (반입 기록 _README_import.md)."
     },
     {
       "id": "L214K-01",
@@ -11748,7 +11753,7 @@
     {
       "id": "L214R-R01",
       "severity": "P2",
-      "status": "claimed_fixed",
+      "status": "verified",
       "owner": "claude",
       "found_by": "codex 10-17 LHS214 수정 재확인 (코드 핀 60ba39e22 · 기준 6cb256956 · 보충 = 요청서 · 증거 핀 a4a1e52c0 같은 코드 · 실제 함수 · 작은 합성 생산자 사슬 · 새 214 · WSL · DEM 실행 없음)",
       "opened_in": "docs/reviews/codex_review_lhs214r_fix_recheck_20261017.md",
@@ -11761,12 +11766,17 @@
         "docs/reviews/codex_lhs214r_fix_recheck_evidence_20261017/probes/consumer_h0_resurrection.py · probes/numeric_adversarial.py (읽기만 · 우리 트리 재현은 별도 기록)",
         "docs/reviews/codex_lhs214r_fix_recheck_evidence_20261017/_repro_ours_20261018/compare_probe_outputs.json"
       ],
-      "claimed_fixed_sha": "91e732517"
+      "claimed_fixed_sha": "91e732517",
+      "verified_sha": "77d8fd445",
+      "verified_in": "docs/reviews/codex_review_lhs214rr_fix_recheck_20261019.md",
+      "verified_by": "codex",
+      "verified_scope": "판정문 §1 — 이온 FULL 이 숫자를 싣고 증서 재구성 raw q > FULL_Q_GUARD_MAX (엄격) 면 거부 · 경계 1.4999999999999998 · 1.5 수용 / 1.5000000000000002 거부 (정확 경계 입력) · 원 10 leaf 복원 = P4 FillRefusal · 아홉 변이 build 거부.  범위 밖 = 경계 시험의 환경 의존 (L214R-S02).",
+      "verification_note": "Codex 재확인 10-19 (리뷰 핀 77d8fd445 · 비교 60ba39e22) — 증거 docs/reviews/codex_lhs214rr_fix_recheck_evidence_20261019/ (반입 기록 _README_import.md)."
     },
     {
       "id": "L214R-R02",
       "severity": "P3",
-      "status": "claimed_fixed",
+      "status": "verified",
       "owner": "claude",
       "found_by": "codex 10-17 LHS214 수정 재확인 (화면 lane · 실제 loader + Flask GET 21 사례 × 두 트리)",
       "opened_in": "docs/reviews/codex_review_lhs214r_fix_recheck_20261017.md",
@@ -11779,12 +11789,17 @@
         "docs/reviews/codex_lhs214r_fix_recheck_evidence_20261017/probes/display_fresh.py (읽기만)",
         "docs/reviews/codex_lhs214r_fix_recheck_evidence_20261017/_repro_ours_20261018/compare_probe_outputs.json"
       ],
-      "claimed_fixed_sha": "43223d823"
+      "claimed_fixed_sha": "43223d823",
+      "verified_sha": "77d8fd445",
+      "verified_in": "docs/reviews/codex_review_lhs214rr_fix_recheck_20261019.md",
+      "verified_by": "codex",
+      "verified_scope": "판정문 §3 — 인식된 이온 행 Δ = 두 칸 다 현재 값일 때만 새 Δ · 그 밖 — · 칸 값 보존 · 최종 Flask 화면까지.  범위 밖 = 과거 nullable 메트릭 렌더 (L214R-S04).",
+      "verification_note": "Codex 재확인 10-19 (리뷰 핀 77d8fd445 · 비교 60ba39e22) — 증거 docs/reviews/codex_lhs214rr_fix_recheck_evidence_20261019/ (반입 기록 _README_import.md)."
     },
     {
       "id": "L214R-R03",
       "severity": "P3",
-      "status": "claimed_fixed",
+      "status": "verified",
       "owner": "claude",
       "found_by": "codex 10-17 LHS214 수정 재확인 (영수증 lane · 임시 등록 사본만 · 원 등록 파일 무변경)",
       "opened_in": "docs/reviews/codex_review_lhs214r_fix_recheck_20261017.md",
@@ -11796,12 +11811,17 @@
         "docs/reviews/codex_lhs214r_fix_recheck_evidence_20261017/probes/receipt_fences.py (읽기만)",
         "docs/reviews/codex_lhs214r_fix_recheck_evidence_20261017/_repro_ours_20261018/compare_probe_outputs.json"
       ],
-      "claimed_fixed_sha": "f8871224b"
+      "claimed_fixed_sha": "f8871224b",
+      "verified_sha": "77d8fd445",
+      "verified_in": "docs/reviews/codex_review_lhs214rr_fix_recheck_20261019.md",
+      "verified_by": "codex",
+      "verified_scope": "판정문 §4 — 원 반례 (네 백틱 안 세 백틱 · 물결표 · 정보 문자열 안쪽 줄 · 미닫힘) 거부.  범위 밖 = 탭 들여쓰기 · 특수 공백 꼬리 (L214R-S01) · 절 본문 코드 블록의 값 (S01 메모).",
+      "verification_note": "Codex 재확인 10-19 (리뷰 핀 77d8fd445 · 비교 60ba39e22) — 증거 docs/reviews/codex_lhs214rr_fix_recheck_evidence_20261019/ (반입 기록 _README_import.md)."
     },
     {
       "id": "L214R-R04",
       "severity": "P3",
-      "status": "claimed_fixed",
+      "status": "verified",
       "owner": "claude",
       "found_by": "claude 10-18 같은 부류 점검 (L214R-R01 수정 중 · 1저자에게 제안한 점검 · 읽기 전용 · 리포 밖 복제본)",
       "opened_in": "docs/reviews/lhs214rr_fix_plan_20261018.md",
@@ -11810,7 +11830,56 @@
       "evidence_tests": [
         "scripts/test_l214r_r04_cf_label.py (4/12 → 12/12)"
       ],
-      "claimed_fixed_sha": "155534744"
+      "claimed_fixed_sha": "155534744",
+      "verified_sha": "77d8fd445",
+      "verified_in": "docs/reviews/codex_review_lhs214rr_fix_recheck_20261019.md",
+      "verified_by": "codex",
+      "verified_scope": "판정문 §1 — 이온 FULL · CF · 협착-only 의 가지 · 증서 (status, reason) 쌍 = raw q 생산자 표지 · 적법한 과전도 진단값 보존 · 어긋남 = 레코드 전체 거부 (동의).  범위 밖 = 이온 채널 요약 칸 (L214R-S03) · 전자 · 열 채널.",
+      "verification_note": "Codex 재확인 10-19 (리뷰 핀 77d8fd445 · 비교 60ba39e22) — 증거 docs/reviews/codex_lhs214rr_fix_recheck_evidence_20261019/ (반입 기록 _README_import.md)."
+    },
+    {
+      "id": "L214R-S01",
+      "severity": "P3",
+      "status": "open",
+      "owner": "claude",
+      "found_by": "codex 재확인 10-19 (리뷰 핀 77d8fd445)",
+      "opened_in": "docs/reviews/codex_review_lhs214rr_fix_recheck_20261019.md",
+      "title": "L214RR2-01 · 등록 파서 공백 — `supp20_input_receipt._md_fence` 의 `[ \\t]{0,3}` 가 탭을 한 글자로 세고 닫는 줄 꼬리를 `.strip()` (모든 Unicode 공백) 으로 받아, 탭 들여쓴 닫는 줄 · NBSP · U+2003 꼬리 뒤의 코드 예시 §3 을 활성 등록으로 읽는다 (영수증 rc 0 · 현재 지문 수용)",
+      "note": "판정문 §4 · Codex 114 문서 대조 중 32 = 표준 파서와 제목 판정 다름 · 전부 rc 0 (두 울타리 문자 × 네 길이 × 네 공백 변형).  최소 해결 = 들여쓰기를 지원 규약대로 (또는 탭 등 미지원 형태 명시 거부) · 닫는 줄 꼬리 = space/tab 만 · 원 반례 · 두 부류 · 정상 §3 · 역사 표 보존 함께 시험.  추가 범위 주의 (별건) = 실제 §3 제목 아래 코드 블록의 code_fp 도 registration_values 가 읽는다 — 승인 형식으로 허용할지 = 결정 필요.  반례 입력 = evidence/receipt_fence_cases/.  우리 트리 재현 10-19 = 같음 (114 중 32 · rc 0 · _repro_ours_20261019/) · 수정 계획 docs/reviews/lhs214s_fix_plan_20261019.md Q1 · Q2 (⬜ 1저자).",
+      "evidence_tests": []
+    },
+    {
+      "id": "L214R-S02",
+      "severity": "P3",
+      "status": "open",
+      "owner": "claude",
+      "found_by": "codex 재확인 10-19 (리뷰 핀 77d8fd445)",
+      "opened_in": "docs/reviews/codex_review_lhs214rr_fix_recheck_20261019.md",
+      "title": "L214RR2-02 · R01 경계 시험 (`scripts/test_l214r_r01_restored_full.py` E) 의 하드코딩 입력이 환경에 의존 — Codex Windows Py3.12 NumPy 2.5.3 에서 raw q 1.4999999999999962 · …958 · …956 (셋 다 문턱 아래) → 23/26 rc 1 · E1/E3 실패 뒤 복원 helper KeyError 로 E4/E5 미완결",
+      "note": "판정문 §2 · 생산 코드 · 판정식 · 합격선은 정상 (정확 경계 입력 면적 0.500000001001 · box_y …80614/…80615/…80616 으로 다섯 단언 통과).  최소 개선 = 정확한 3 노드 경계 검사를 독립 실행 · 실 사슬은 계산된 q 가 경계 전제에 맞는지 먼저 확인 · 실패해도 뒤 검사가 KeyError 로 생략되지 않게 · 허용치 완화 금지 · 원 실패 로그 보존.  우리 트리 재현 10-19 = 이 환경에서 Codex 정확 경계 입력이 18–19 ULP 위 (양방향 환경 차) · 수정 계획 docs/reviews/lhs214s_fix_plan_20261019.md (⬜ 1저자).",
+      "evidence_tests": []
+    },
+    {
+      "id": "L214R-S03",
+      "severity": "P3",
+      "status": "open",
+      "owner": "claude",
+      "found_by": "codex 재확인 10-19 (리뷰 핀 77d8fd445)",
+      "opened_in": "docs/reviews/codex_review_lhs214rr_fix_recheck_20261019.md",
+      "title": "L214RR2-03 · 이온 채널 요약 표지 (`ionic_status` · `ionic_status_reason`) 를 FULL computed 와 모순되게 (valid_zero · no_through_path 등) 바꿔도 content · record · stop · 세대 g2 · τ OK — 요약 칸이 FULL 범주와 결합되지 않는다",
+      "note": "판정문 §5 · R04 범위 (가지 · 증서 쌍) 밖 · 60ba39e22 에서도 같은 기존 누락 · 화면 200 (요약 σ · τ 같음 · 화면은 sigma_full_status 사용) · 수치가 바뀌는 반례 아님.  추후 g2 채널 요약 ↔ FULL 범주 결합 (자연어 사유 문자열 전체 동일성은 강제 불필요).  우리 트리 재현 10-19 = 같음 · 수정 계획 docs/reviews/lhs214s_fix_plan_20261019.md Q3 (권고 = 다음 세대 · ⬜ 1저자).",
+      "evidence_tests": []
+    },
+    {
+      "id": "L214R-S04",
+      "severity": "P3",
+      "status": "open",
+      "owner": "claude",
+      "found_by": "codex 재확인 10-19 (리뷰 핀 77d8fd445)",
+      "opened_in": "docs/reviews/codex_review_lhs214rr_fix_recheck_20261019.md",
+      "title": "L214RR2-04 · 과거 메트릭 `sigma_ratio` 가 JSON null 이면 `/single` 이 500 (`single.html:2114` 의 %.4f · phi_se 를 빼도 `:2187–2189` 툴팁 곱셈)",
+      "note": "판정문 §5 · 현재 생산자는 None 이면 키를 넣지 않음 (`analyze_contacts.py:649–650`) → 현재 정상 생산자가 이 null 을 쓴다는 증거 없음 · 과거 · 외부 nullable 자료의 UI 견고성 · 네 레이아웃 16 변형이 두 핀에서 같음 · 수치 인계 HOLD 근거 아님.  우리 트리 재현 10-19 = 같음 (null 500 · 키 없음 200) · 수정 계획 docs/reviews/lhs214s_fix_plan_20261019.md Q4 (⬜ 1저자).",
+      "evidence_tests": []
     },
     {
       "id": "SELF-119",
@@ -11832,15 +11901,27 @@
     {
       "id": "SELF-120",
       "severity": "P3",
-      "status": "open",
+      "status": "claimed_fixed",
       "owner": "claude",
       "found_by": "1저자 kgy 첫 발사 10-19 (러너 가드 rc 2 · 계산 전)",
       "opened_in": "docs/reviews/sdcp_sigma_e_dcp_anchor_registration_v2_20261019.md",
       "title": "SDCP 앵커 v2 사슬이 LEAN=2 (σ_e 만 · --no-ion) 런에 이온 축 SIGMA_ION_SE 를 넘겨 러너 가드가 계산 전에 ABORT (rc 2) — 가짜 러너가 실제 러너 가드를 흉내내지 않아 자기 시험 15/15 가 못 잡았다",
-      "note": "자리: scripts/sdcp_anchor_v2_chain.py ENV_FIXED (SIGMA_ION_SE 0.0015) · 러너 scripts/sdcp_gain_vox015_8arm.sh 의 이온 축 ↔ --no-ion 가드.  피해 = 계산 0 (첫 S1 런 시작 전 멈춤 · 요약 stop 칸).  고침 = 같은 커밋 (이온 축 제거 · 부모 env 의 SIGMA_ION_* · PTFE_BLOCK_* 지움) · 시험 먼저 = 가짜 러너에 같은 가드 → 5/16 → 16/16 (T12 = 부모 env 이온 축).  \"실제 경로를 안 타는 시험\" 부류 (규율 ②).  push 뒤 claimed_fixed.",
+      "note": "자리: scripts/sdcp_anchor_v2_chain.py ENV_FIXED (SIGMA_ION_SE 0.0015) · 러너 scripts/sdcp_gain_vox015_8arm.sh 의 이온 축 ↔ --no-ion 가드.  피해 = 계산 0 (첫 S1 런 시작 전 멈춤 · 요약 stop 칸).  고침 = 같은 커밋 (이온 축 제거 · 부모 env 의 SIGMA_ION_* · PTFE_BLOCK_* 지움) · 시험 먼저 = 가짜 러너에 같은 가드 → 5/16 → 16/16 (T12 = 부모 env 이온 축).  \"실제 경로를 안 타는 시험\" 부류 (규율 ②).  고침 298a73197 (push · 게이트 139 통과).",
       "evidence_tests": [
         "scripts/sdcp_anchor_v2_chain.py --selftest (5/16 → 16/16)"
-      ]
+      ],
+      "claimed_fixed_sha": "298a73197"
+    },
+    {
+      "id": "SELF-121",
+      "severity": "P3",
+      "status": "open",
+      "owner": "claude",
+      "found_by": "codex 재확인 10-19 §7",
+      "opened_in": "docs/reviews/codex_review_lhs214rr_fix_recheck_20261019.md",
+      "title": "R04 뒤 대기 지문 설명이 낡음 — 요청서 머리 · 10-18 증거 README 가 `755325e1…` (R04 이전) 를 적었다 · 실제 대기 선언 · 영수증 S0b = `2149f873…`",
+      "note": "판정문 §7 · 런을 통과시킨 오기는 아님 (활성 등록 e8b2496b · 영수증 D1 실패 = 승인 전 정상).  처리 = 반입 기록 정정 줄 · 요청서 머리에 정정 표지 (10-18 증거 README 는 SHA256SUMS 봉인이라 덮어쓰지 않는다).",
+      "evidence_tests": []
     }
   ]
 }

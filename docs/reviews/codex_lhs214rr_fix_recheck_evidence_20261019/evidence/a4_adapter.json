@@ -1,0 +1,36 @@
+{
+  "original_sha256": "3d1db464d2cfea67c140aad2d7c43b895f9d1deba37b683026dea859cb9083aa",
+  "source_text_unchanged": true,
+  "git_requests": [
+    [
+      "diff",
+      "--name-only",
+      "6cb256956",
+      "--",
+      "scripts",
+      "webapp"
+    ],
+    [
+      "show",
+      "6cb256956:scripts/network_conductivity.py"
+    ],
+    [
+      "show",
+      "6cb256956:scripts/tau_flux.py"
+    ],
+    [
+      "show",
+      "6cb256956:scripts/lhs_release_build.py"
+    ],
+    [
+      "archive",
+      "--format=tar",
+      "6cb256956",
+      "webapp",
+      "scripts"
+    ]
+  ],
+  "no_git_commands": true,
+  "seconds": 91.60899999999674,
+  "rc": 0
+}

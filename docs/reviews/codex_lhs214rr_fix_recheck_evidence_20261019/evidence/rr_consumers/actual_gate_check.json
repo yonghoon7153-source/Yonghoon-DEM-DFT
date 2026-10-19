@@ -1,0 +1,10 @@
+{
+  "variant": "h0_cf_flip",
+  "actual_gate_check_problems": [
+    "빌드 manifest 의 배치 관문 기록 ≠ 지금 배치 뿌리 ['reread.json'] (sha256 · 판정 필드) — 빌드 뒤 증거가 바뀌었거나 기록이 고쳐졌다 (G2RR3-01)",
+    "배치 관문 (G2RR3-01) reread.json — 상세 (G2RR4-01) — 상세 실패 재계수 5 ≠ n_fail 0 — 요약이 상세를 덮는다 (또는 상세가 요약을 뒷받침하지 않는다)",
+    "배치 관문 (G2RR3-01) reread.json — 상세 (G2RR4-01) — 상세 실패 5 — 첫 [\"lhs00_000: K2 세대 계약 + 증서 결합 — 세대 'g2' · 문제 0 (모드 셋 × 가지 셋 증서 · G2R-01 ·\", 'lhs00_000: K3 도장 ↔ 레코드 — 네 세대 값 = 레코드에서 유도한 기대값 (G2RR-01)', 'lhs00_000: K4 망 정지 계약 다시 (①–⑨ · legacy_ok False)', \"lhs00_000: K5 열 역할 — ion_net_generation 'g2' · 행 세대 계약 문제 0 (모드별 협착 · ψ\"] (전부 통과여야)"
+  ],
+  "K2_present": true,
+  "restored_check": []
+}

@@ -1,0 +1,619 @@
+{"cases": 128, "checks": 2288, "failed": 72, "failures": [{"case": "rbrug_absent_both_csv", "where": "loader", "lab": "Contact-free / Full", "got": [["31.0×", "31.0×", "0%"]], "want": [["31.0×", "31.0×", "—"]], "absent_ok": false, "passed": false}, {"case": "rbrug_absent_both_csv", "where": "route", "lab": "Contact-free / Full", "got": [["31.0×", "31.0×", "0%"]], "want": [["31.0×", "31.0×", "—"]], "absent_ok": false, "passed": false}, {"case": "rbrug_absent_both_split", "where": "loader", "lab": "Contact-free / Full", "got": [["31.0×", "31.0×", "0%"]], "want": [["31.0×", "31.0×", "—"]], "absent_ok": false, "passed": false}, {"case": "rbrug_absent_both_split", "where": "route", "lab": "Contact-free / Full", "got": [["31.0×", "31.0×", "0%"]], "want": [["31.0×", "31.0×", "—"]], "absent_ok": false, "passed": false}, {"case": "rbrug_absent_both_fourcol", "where": "loader", "lab": "R_brug (과대추정 배수)", "got": [["31.0×", "37.0×", "+19.4%"]], "want": [["31.0×", "37.0×", "—"]], "absent_ok": false, "passed": false}, {"case": "rbrug_absent_both_fourcol", "where": "loader", "lab": "Contact-free / Full", "got": [["31.0×", "37.0×", "+19.4%"]], "want": [["31.0×", "37.0×", "—"]], "absent_ok": false, "passed": false}, {"case": "rbrug_absent_both_fourcol", "where": "route", "lab": "R_brug (과대추정 배수)", "got": [["31.0×", "37.0×", "+19.4%"]], "want": [["31.0×", "37.0×", "—"]], "absent_ok": false, "passed": false}, {"case": "rbrug_absent_both_fourcol", "where": "route", "lab": "Contact-free / Full", "got": [["31.0×", "37.0×", "+19.4%"]], "want": [["31.0×", "37.0×", "—"]], "absent_ok": false, "passed": false}, {"case": "brug_absent_csv", "where": "loader", "lab": "σ_brug / σ_ionic", "got": [["41.0×", "41.0×", "0%"]], "want": [["41.0×", "41.0×", "—"]], "absent_ok": false, "passed": false}, {"case": "brug_absent_csv", "where": "route", "lab": "σ_brug / σ_ionic", "got": [["41.0×", "41.0×", "0%"]], "want": [["41.0×", "41.0×", "—"]], "absent_ok": false, "passed": false}, {"case": "brug_absent_split", "where": "loader", "lab": "σ_brug / σ_ionic", "got": [["41.0×", "41.0×", "0%"]], "want": [["41.0×", "41.0×", "—"]], "absent_ok": false, "passed": false}, {"case": "brug_absent_split", "where": "route", "lab": "σ_brug / σ_ionic", "got": [["41.0×", "41.0×", "0%"]], "want": [["41.0×", "41.0×", "—"]], "absent_ok": false, "passed": false}]}
+
+STDERR
+[2026-10-19 15:13:41,147] ERROR in app: Exception on /single/brug_null_new [GET]
+Traceback (most recent call last):
+  File "C:\Users\Administrator\Documents\Codex\2026-08-24\claude-stoic-knuth-nobvq-x20\lhs_coverage_review_20260930\deps\flask\app.py", line 1511, in wsgi_app
+    response = self.full_dispatch_request()
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Administrator\Documents\Codex\2026-08-24\claude-stoic-knuth-nobvq-x20\lhs_coverage_review_20260930\deps\flask\app.py", line 919, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Administrator\Documents\Codex\2026-08-24\claude-stoic-knuth-nobvq-x20\lhs_coverage_review_20260930\deps\flask\app.py", line 917, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Administrator\Documents\Codex\2026-08-24\claude-stoic-knuth-nobvq-x20\lhs_coverage_review_20260930\deps\flask\app.py", line 902, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Administrator\Documents\Codex\2026-08-24\claude-stoic-knuth-nobvq-x20\lhs214r_fix_recheck_20261017\source\webapp\app.py", line 7632, in single
+    return render_template('single.html', case=meta, figures=figures,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Administrator\Documents\Codex\2026-08-24\claude-stoic-knuth-nobvq-x20\lhs_coverage_review_20260930\deps\flask\templating.py", line 151, in render_template
+    return _render(app, template, context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Administrator\Documents\Codex\2026-08-24\claude-stoic-knuth-nobvq-x20\lhs_coverage_review_20260930\deps\flask\templating.py", line 132, in _render
+    rv = template.render(context)
+         ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Administrator\Documents\Codex\2026-08-24\claude-stoic-knuth-nobvq-x20\lhs_coverage_review_20260930\deps\jinja2\environment.py", line 1295, in render
+    self.environment.handle_exception()
+  File "C:\Users\Administrator\Documents\Codex\2026-08-24\claude-stoic-knuth-nobvq-x20\lhs_coverage_review_20260930\deps\jinja2\environment.py", line 942, in handle_exception
+    raise rewrite_traceback_stack(source=source)
+  File "C:\Users\Administrator\Documents\Codex\2026-08-24\claude-stoic-knuth-nobvq-x20\lhs214r_fix_recheck_20261017\source\webapp\templates\single.html", line 3, in top-level template code
+    {% import "_ledger.html" as L %}
+    ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Administrator\Documents\Codex\2026-08-24\claude-stoic-knuth-nobvq-x20\lhs214r_fix_recheck_20261017\source\webapp\templates\base.html", line 92, in top-level template code
+    {% block scripts %}{% endblock %}
+    ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Administrator\Documents\Codex\2026-08-24\claude-stoic-knuth-nobvq-x20\lhs214r_fix_recheck_20261017\source\webapp\templates\single.html", line 2114, in block 'scripts'
+    + '= {{ "%.4f"|format(metrics.sigma_ratio if metrics.sigma_ratio is defined else 0) }}\n\n'
+    ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Administrator\Documents\Codex\2026-08-24\claude-stoic-knuth-nobvq-x20\lhs_coverage_review_20260930\deps\jinja2\filters.py", line 1043, in do_format
+    return soft_str(value) % (kwargs or args)
+           ~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~
+TypeError: must be real number, not NoneType
+[2026-10-19 15:13:41,182] ERROR in app: Exception on /single/brug_null_csv [GET]
+Traceback (most recent call last):
+  File "C:\Users\Administrator\Documents\Codex\2026-08-24\claude-stoic-knuth-nobvq-x20\lhs_coverage_review_20260930\deps\flask\app.py", line 1511, in wsgi_app
+    response = self.full_dispatch_request()
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Administrator\Documents\Codex\2026-08-24\claude-stoic-knuth-nobvq-x20\lhs_coverage_review_20260930\deps\flask\app.py", line 919, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Administrator\Documents\Codex\2026-08-24\claude-stoic-knuth-nobvq-x20\lhs_coverage_review_20260930\deps\flask\app.py", line 917, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Administrator\Documents\Codex\2026-08-24\claude-stoic-knuth-nobvq-x20\lhs_coverage_review_20260930\deps\flask\app.py", line 902, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Administrator\Documents\Codex\2026-08-24\claude-stoic-knuth-nobvq-x20\lhs214r_fix_recheck_20261017\source\webapp\app.py", line 7632, in single
+    return render_template('single.html', case=meta, figures=figures,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Administrator\Documents\Codex\2026-08-24\claude-stoic-knuth-nobvq-x20\lhs_coverage_review_20260930\deps\flask\templating.py", line 151, in render_template
+    return _render(app, template, context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Administrator\Documents\Codex\2026-08-24\claude-stoic-knuth-nobvq-x20\lhs_coverage_review_20260930\deps\flask\templating.py", line 132, in _render
+    rv = template.render(context)
+         ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Administrator\Documents\Codex\2026-08-24\claude-stoic-knuth-nobvq-x20\lhs_coverage_review_20260930\deps\jinja2\environment.py", line 1295, in render
+    self.environment.handle_exception()
+  File "C:\Users\Administrator\Documents\Codex\2026-08-24\claude-stoic-knuth-nobvq-x20\lhs_coverage_review_20260930\deps\jinja2\environment.py", line 942, in handle_exception
+    raise rewrite_traceback_stack(source=source)
+  File "C:\Users\Administrator\Documents\Codex\2026-08-24\claude-stoic-knuth-nobvq-x20\lhs214r_fix_recheck_20261017\source\webapp\templates\single.html", line 3, in top-level template code
+    {% import "_ledger.html" as L %}
+    ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Administrator\Documents\Codex\2026-08-24\claude-stoic-knuth-nobvq-x20\lhs214r_fix_recheck_20261017\source\webapp\templates\base.html", line 92, in top-level template code
+    {% block scripts %}{% endblock %}
+    ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Administrator\Documents\Codex\2026-08-24\claude-stoic-knuth-nobvq-x20\lhs214r_fix_recheck_20261017\source\webapp\templates\single.html", line 2114, in block 'scripts'
+    + '= {{ "%.4f"|format(metrics.sigma_ratio if metrics.sigma_ratio is defined else 0) }}\n\n'
+    ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Administrator\Documents\Codex\2026-08-24\claude-stoic-knuth-nobvq-x20\lhs_coverage_review_20260930\deps\jinja2\filters.py", line 1043, in do_format
+    return soft_str(value) % (kwargs or args)
+           ~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~
+TypeError: must be real number, not NoneType
+[2026-10-19 15:13:41,211] ERROR in app: Exception on /single/brug_null_split [GET]
+Traceback (most recent call last):
+  File "C:\Users\Administrator\Documents\Codex\2026-08-24\claude-stoic-knuth-nobvq-x20\lhs_coverage_review_20260930\deps\flask\app.py", line 1511, in wsgi_app
+    response = self.full_dispatch_request()
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Administrator\Documents\Codex\2026-08-24\claude-stoic-knuth-nobvq-x20\lhs_coverage_review_20260930\deps\flask\app.py", line 919, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Administrator\Documents\Codex\2026-08-24\claude-stoic-knuth-nobvq-x20\lhs_coverage_review_20260930\deps\flask\app.py", line 917, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Administrator\Documents\Codex\2026-08-24\claude-stoic-knuth-nobvq-x20\lhs_coverage_review_20260930\deps\flask\app.py", line 902, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Administrator\Documents\Codex\2026-08-24\claude-stoic-knuth-nobvq-x20\lhs214r_fix_recheck_20261017\source\webapp\app.py", line 7632, in single
+    return render_template('single.html', case=meta, figures=figures,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Administrator\Documents\Codex\2026-08-24\claude-stoic-knuth-nobvq-x20\lhs_coverage_review_20260930\deps\flask\templating.py", line 151, in render_template
+    return _render(app, template, context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Administrator\Documents\Codex\2026-08-24\claude-stoic-knuth-nobvq-x20\lhs_coverage_review_20260930\deps\flask\templating.py", line 132, in _render
+    rv = template.render(context)
+         ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Administrator\Documents\Codex\2026-08-24\claude-stoic-knuth-nobvq-x20\lhs_coverage_review_20260930\deps\jinja2\environment.py", line 1295, in render
+    self.environment.handle_exception()
+  File "C:\Users\Administrator\Documents\Codex\2026-08-24\claude-stoic-knuth-nobvq-x20\lhs_coverage_review_20260930\deps\jinja2\environment.py", line 942, in handle_exception
+    raise rewrite_traceback_stack(source=source)
+  File "C:\Users\Administrator\Documents\Codex\2026-08-24\claude-stoic-knuth-nobvq-x20\lhs214r_fix_recheck_20261017\source\webapp\templates\single.html", line 3, in top-level template code
+    {% import "_ledger.html" as L %}
+    ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Administrator\Documents\Codex\2026-08-24\claude-stoic-knuth-nobvq-x20\lhs214r_fix_recheck_20261017\source\webapp\templates\base.html", line 92, in top-level template code
+    {% block scripts %}{% endblock %}
+    ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Administrator\Documents\Codex\2026-08-24\claude-stoic-knuth-nobvq-x20\lhs214r_fix_recheck_20261017\source\webapp\templates\single.html", line 2114, in block 'scripts'
+    + '= {{ "%.4f"|format(metrics.sigma_ratio if metrics.sigma_ratio is defined else 0) }}\n\n'
+    ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Administrator\Documents\Codex\2026-08-24\claude-stoic-knuth-nobvq-x20\lhs_coverage_review_20260930\deps\jinja2\filters.py", line 1043, in do_format
+    return soft_str(value) % (kwargs or args)
+           ~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~
+TypeError: must be real number, not NoneType
+[2026-10-19 15:13:41,231] ERROR in app: Exception on /single/brug_null_fourcol [GET]
+Traceback (most recent call last):
+  File "C:\Users\Administrator\Documents\Codex\2026-08-24\claude-stoic-knuth-nobvq-x20\lhs_coverage_review_20260930\deps\flask\app.py", line 1511, in wsgi_app
+    response = self.full_dispatch_request()
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Administrator\Documents\Codex\2026-08-24\claude-stoic-knuth-nobvq-x20\lhs_coverage_review_20260930\deps\flask\app.py", line 919, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Administrator\Documents\Codex\2026-08-24\claude-stoic-knuth-nobvq-x20\lhs_coverage_review_20260930\deps\flask\app.py", line 917, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Administrator\Documents\Codex\2026-08-24\claude-stoic-knuth-nobvq-x20\lhs_coverage_review_20260930\deps\flask\app.py", line 902, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Administrator\Documents\Codex\2026-08-24\claude-stoic-knuth-nobvq-x20\lhs214r_fix_recheck_20261017\source\webapp\app.py", line 7632, in single
+    return render_template('single.html', case=meta, figures=figures,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Administrator\Documents\Codex\2026-08-24\claude-stoic-knuth-nobvq-x20\lhs_coverage_review_20260930\deps\flask\templating.py", line 151, in render_template
+    return _render(app, template, context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Administrator\Documents\Codex\2026-08-24\claude-stoic-knuth-nobvq-x20\lhs_coverage_review_20260930\deps\flask\templating.py", line 132, in _render
+    rv = template.render(context)
+         ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Administrator\Documents\Codex\2026-08-24\claude-stoic-knuth-nobvq-x20\lhs_coverage_review_20260930\deps\jinja2\environment.py", line 1295, in render
+    self.environment.handle_exception()
+  File "C:\Users\Administrator\Documents\Codex\2026-08-24\claude-stoic-knuth-nobvq-x20\lhs_coverage_review_20260930\deps\jinja2\environment.py", line 942, in handle_exception
+    raise rewrite_traceback_stack(source=source)
+  File "C:\Users\Administrator\Documents\Codex\2026-08-24\claude-stoic-knuth-nobvq-x20\lhs214r_fix_recheck_20261017\source\webapp\templates\single.html", line 3, in top-level template code
+    {% import "_ledger.html" as L %}
+    ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Administrator\Documents\Codex\2026-08-24\claude-stoic-knuth-nobvq-x20\lhs214r_fix_recheck_20261017\source\webapp\templates\base.html", line 92, in top-level template code
+    {% block scripts %}{% endblock %}
+    ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Administrator\Documents\Codex\2026-08-24\claude-stoic-knuth-nobvq-x20\lhs214r_fix_recheck_20261017\source\webapp\templates\single.html", line 2114, in block 'scripts'
+    + '= {{ "%.4f"|format(metrics.sigma_ratio if metrics.sigma_ratio is defined else 0) }}\n\n'
+    ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Administrator\Documents\Codex\2026-08-24\claude-stoic-knuth-nobvq-x20\lhs_coverage_review_20260930\deps\jinja2\filters.py", line 1043, in do_format
+    return soft_str(value) % (kwargs or args)
+           ~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~
+TypeError: must be real number, not NoneType
+[2026-10-19 15:13:41,251] ERROR in app: Exception on /single/all_derived_null_new [GET]
+Traceback (most recent call last):
+  File "C:\Users\Administrator\Documents\Codex\2026-08-24\claude-stoic-knuth-nobvq-x20\lhs_coverage_review_20260930\deps\flask\app.py", line 1511, in wsgi_app
+    response = self.full_dispatch_request()
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Administrator\Documents\Codex\2026-08-24\claude-stoic-knuth-nobvq-x20\lhs_coverage_review_20260930\deps\flask\app.py", line 919, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Administrator\Documents\Codex\2026-08-24\claude-stoic-knuth-nobvq-x20\lhs_coverage_review_20260930\deps\flask\app.py", line 917, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Administrator\Documents\Codex\2026-08-24\claude-stoic-knuth-nobvq-x20\lhs_coverage_review_20260930\deps\flask\app.py", line 902, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Administrator\Documents\Codex\2026-08-24\claude-stoic-knuth-nobvq-x20\lhs214r_fix_recheck_20261017\source\webapp\app.py", line 7632, in single
+    return render_template('single.html', case=meta, figures=figures,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Administrator\Documents\Codex\2026-08-24\claude-stoic-knuth-nobvq-x20\lhs_coverage_review_20260930\deps\flask\templating.py", line 151, in render_template
+    return _render(app, template, context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Administrator\Documents\Codex\2026-08-24\claude-stoic-knuth-nobvq-x20\lhs_coverage_review_20260930\deps\flask\templating.py", line 132, in _render
+    rv = template.render(context)
+         ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Administrator\Documents\Codex\2026-08-24\claude-stoic-knuth-nobvq-x20\lhs_coverage_review_20260930\deps\jinja2\environment.py", line 1295, in render
+    self.environment.handle_exception()
+  File "C:\Users\Administrator\Documents\Codex\2026-08-24\claude-stoic-knuth-nobvq-x20\lhs_coverage_review_20260930\deps\jinja2\environment.py", line 942, in handle_exception
+    raise rewrite_traceback_stack(source=source)
+  File "C:\Users\Administrator\Documents\Codex\2026-08-24\claude-stoic-knuth-nobvq-x20\lhs214r_fix_recheck_20261017\source\webapp\templates\single.html", line 3, in top-level template code
+    {% import "_ledger.html" as L %}
+    ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Administrator\Documents\Codex\2026-08-24\claude-stoic-knuth-nobvq-x20\lhs214r_fix_recheck_20261017\source\webapp\templates\base.html", line 92, in top-level template code
+    {% block scripts %}{% endblock %}
+    ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Administrator\Documents\Codex\2026-08-24\claude-stoic-knuth-nobvq-x20\lhs214r_fix_recheck_20261017\source\webapp\templates\single.html", line 2114, in block 'scripts'
+    + '= {{ "%.4f"|format(metrics.sigma_ratio if metrics.sigma_ratio is defined else 0) }}\n\n'
+    ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Administrator\Documents\Codex\2026-08-24\claude-stoic-knuth-nobvq-x20\lhs_coverage_review_20260930\deps\jinja2\filters.py", line 1043, in do_format
+    return soft_str(value) % (kwargs or args)
+           ~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~
+TypeError: must be real number, not NoneType
+[2026-10-19 15:13:41,272] ERROR in app: Exception on /single/all_derived_null_csv [GET]
+Traceback (most recent call last):
+  File "C:\Users\Administrator\Documents\Codex\2026-08-24\claude-stoic-knuth-nobvq-x20\lhs_coverage_review_20260930\deps\flask\app.py", line 1511, in wsgi_app
+    response = self.full_dispatch_request()
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Administrator\Documents\Codex\2026-08-24\claude-stoic-knuth-nobvq-x20\lhs_coverage_review_20260930\deps\flask\app.py", line 919, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Administrator\Documents\Codex\2026-08-24\claude-stoic-knuth-nobvq-x20\lhs_coverage_review_20260930\deps\flask\app.py", line 917, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Administrator\Documents\Codex\2026-08-24\claude-stoic-knuth-nobvq-x20\lhs_coverage_review_20260930\deps\flask\app.py", line 902, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Administrator\Documents\Codex\2026-08-24\claude-stoic-knuth-nobvq-x20\lhs214r_fix_recheck_20261017\source\webapp\app.py", line 7632, in single
+    return render_template('single.html', case=meta, figures=figures,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Administrator\Documents\Codex\2026-08-24\claude-stoic-knuth-nobvq-x20\lhs_coverage_review_20260930\deps\flask\templating.py", line 151, in render_template
+    return _render(app, template, context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Administrator\Documents\Codex\2026-08-24\claude-stoic-knuth-nobvq-x20\lhs_coverage_review_20260930\deps\flask\templating.py", line 132, in _render
+    rv = template.render(context)
+         ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Administrator\Documents\Codex\2026-08-24\claude-stoic-knuth-nobvq-x20\lhs_coverage_review_20260930\deps\jinja2\environment.py", line 1295, in render
+    self.environment.handle_exception()
+  File "C:\Users\Administrator\Documents\Codex\2026-08-24\claude-stoic-knuth-nobvq-x20\lhs_coverage_review_20260930\deps\jinja2\environment.py", line 942, in handle_exception
+    raise rewrite_traceback_stack(source=source)
+  File "C:\Users\Administrator\Documents\Codex\2026-08-24\claude-stoic-knuth-nobvq-x20\lhs214r_fix_recheck_20261017\source\webapp\templates\single.html", line 3, in top-level template code
+    {% import "_ledger.html" as L %}
+    ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Administrator\Documents\Codex\2026-08-24\claude-stoic-knuth-nobvq-x20\lhs214r_fix_recheck_20261017\source\webapp\templates\base.html", line 92, in top-level template code
+    {% block scripts %}{% endblock %}
+    ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Administrator\Documents\Codex\2026-08-24\claude-stoic-knuth-nobvq-x20\lhs214r_fix_recheck_20261017\source\webapp\templates\single.html", line 2114, in block 'scripts'
+    + '= {{ "%.4f"|format(metrics.sigma_ratio if metrics.sigma_ratio is defined else 0) }}\n\n'
+    ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Administrator\Documents\Codex\2026-08-24\claude-stoic-knuth-nobvq-x20\lhs_coverage_review_20260930\deps\jinja2\filters.py", line 1043, in do_format
+    return soft_str(value) % (kwargs or args)
+           ~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~
+TypeError: must be real number, not NoneType
+[2026-10-19 15:13:41,302] ERROR in app: Exception on /single/all_derived_null_split [GET]
+Traceback (most recent call last):
+  File "C:\Users\Administrator\Documents\Codex\2026-08-24\claude-stoic-knuth-nobvq-x20\lhs_coverage_review_20260930\deps\flask\app.py", line 1511, in wsgi_app
+    response = self.full_dispatch_request()
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Administrator\Documents\Codex\2026-08-24\claude-stoic-knuth-nobvq-x20\lhs_coverage_review_20260930\deps\flask\app.py", line 919, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Administrator\Documents\Codex\2026-08-24\claude-stoic-knuth-nobvq-x20\lhs_coverage_review_20260930\deps\flask\app.py", line 917, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Administrator\Documents\Codex\2026-08-24\claude-stoic-knuth-nobvq-x20\lhs_coverage_review_20260930\deps\flask\app.py", line 902, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Administrator\Documents\Codex\2026-08-24\claude-stoic-knuth-nobvq-x20\lhs214r_fix_recheck_20261017\source\webapp\app.py", line 7632, in single
+    return render_template('single.html', case=meta, figures=figures,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Administrator\Documents\Codex\2026-08-24\claude-stoic-knuth-nobvq-x20\lhs_coverage_review_20260930\deps\flask\templating.py", line 151, in render_template
+    return _render(app, template, context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Administrator\Documents\Codex\2026-08-24\claude-stoic-knuth-nobvq-x20\lhs_coverage_review_20260930\deps\flask\templating.py", line 132, in _render
+    rv = template.render(context)
+         ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Administrator\Documents\Codex\2026-08-24\claude-stoic-knuth-nobvq-x20\lhs_coverage_review_20260930\deps\jinja2\environment.py", line 1295, in render
+    self.environment.handle_exception()
+  File "C:\Users\Administrator\Documents\Codex\2026-08-24\claude-stoic-knuth-nobvq-x20\lhs_coverage_review_20260930\deps\jinja2\environment.py", line 942, in handle_exception
+    raise rewrite_traceback_stack(source=source)
+  File "C:\Users\Administrator\Documents\Codex\2026-08-24\claude-stoic-knuth-nobvq-x20\lhs214r_fix_recheck_20261017\source\webapp\templates\single.html", line 3, in top-level template code
+    {% import "_ledger.html" as L %}
+    ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Administrator\Documents\Codex\2026-08-24\claude-stoic-knuth-nobvq-x20\lhs214r_fix_recheck_20261017\source\webapp\templates\base.html", line 92, in top-level template code
+    {% block scripts %}{% endblock %}
+    ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Administrator\Documents\Codex\2026-08-24\claude-stoic-knuth-nobvq-x20\lhs214r_fix_recheck_20261017\source\webapp\templates\single.html", line 2114, in block 'scripts'
+    + '= {{ "%.4f"|format(metrics.sigma_ratio if metrics.sigma_ratio is defined else 0) }}\n\n'
+    ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Administrator\Documents\Codex\2026-08-24\claude-stoic-knuth-nobvq-x20\lhs_coverage_review_20260930\deps\jinja2\filters.py", line 1043, in do_format
+    return soft_str(value) % (kwargs or args)
+           ~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~
+TypeError: must be real number, not NoneType
+[2026-10-19 15:13:41,329] ERROR in app: Exception on /single/all_derived_null_fourcol [GET]
+Traceback (most recent call last):
+  File "C:\Users\Administrator\Documents\Codex\2026-08-24\claude-stoic-knuth-nobvq-x20\lhs_coverage_review_20260930\deps\flask\app.py", line 1511, in wsgi_app
+    response = self.full_dispatch_request()
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Administrator\Documents\Codex\2026-08-24\claude-stoic-knuth-nobvq-x20\lhs_coverage_review_20260930\deps\flask\app.py", line 919, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Administrator\Documents\Codex\2026-08-24\claude-stoic-knuth-nobvq-x20\lhs_coverage_review_20260930\deps\flask\app.py", line 917, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Administrator\Documents\Codex\2026-08-24\claude-stoic-knuth-nobvq-x20\lhs_coverage_review_20260930\deps\flask\app.py", line 902, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Administrator\Documents\Codex\2026-08-24\claude-stoic-knuth-nobvq-x20\lhs214r_fix_recheck_20261017\source\webapp\app.py", line 7632, in single
+    return render_template('single.html', case=meta, figures=figures,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Administrator\Documents\Codex\2026-08-24\claude-stoic-knuth-nobvq-x20\lhs_coverage_review_20260930\deps\flask\templating.py", line 151, in render_template
+    return _render(app, template, context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Administrator\Documents\Codex\2026-08-24\claude-stoic-knuth-nobvq-x20\lhs_coverage_review_20260930\deps\flask\templating.py", line 132, in _render
+    rv = template.render(context)
+         ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Administrator\Documents\Codex\2026-08-24\claude-stoic-knuth-nobvq-x20\lhs_coverage_review_20260930\deps\jinja2\environment.py", line 1295, in render
+    self.environment.handle_exception()
+  File "C:\Users\Administrator\Documents\Codex\2026-08-24\claude-stoic-knuth-nobvq-x20\lhs_coverage_review_20260930\deps\jinja2\environment.py", line 942, in handle_exception
+    raise rewrite_traceback_stack(source=source)
+  File "C:\Users\Administrator\Documents\Codex\2026-08-24\claude-stoic-knuth-nobvq-x20\lhs214r_fix_recheck_20261017\source\webapp\templates\single.html", line 3, in top-level template code
+    {% import "_ledger.html" as L %}
+    ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Administrator\Documents\Codex\2026-08-24\claude-stoic-knuth-nobvq-x20\lhs214r_fix_recheck_20261017\source\webapp\templates\base.html", line 92, in top-level template code
+    {% block scripts %}{% endblock %}
+    ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Administrator\Documents\Codex\2026-08-24\claude-stoic-knuth-nobvq-x20\lhs214r_fix_recheck_20261017\source\webapp\templates\single.html", line 2114, in block 'scripts'
+    + '= {{ "%.4f"|format(metrics.sigma_ratio if metrics.sigma_ratio is defined else 0) }}\n\n'
+    ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Administrator\Documents\Codex\2026-08-24\claude-stoic-knuth-nobvq-x20\lhs_coverage_review_20260930\deps\jinja2\filters.py", line 1043, in do_format
+    return soft_str(value) % (kwargs or args)
+           ~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~
+TypeError: must be real number, not NoneType
+[2026-10-19 15:13:41,361] ERROR in app: Exception on /single/brug_null_no_phi_new [GET]
+Traceback (most recent call last):
+  File "C:\Users\Administrator\Documents\Codex\2026-08-24\claude-stoic-knuth-nobvq-x20\lhs_coverage_review_20260930\deps\flask\app.py", line 1511, in wsgi_app
+    response = self.full_dispatch_request()
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Administrator\Documents\Codex\2026-08-24\claude-stoic-knuth-nobvq-x20\lhs_coverage_review_20260930\deps\flask\app.py", line 919, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Administrator\Documents\Codex\2026-08-24\claude-stoic-knuth-nobvq-x20\lhs_coverage_review_20260930\deps\flask\app.py", line 917, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Administrator\Documents\Codex\2026-08-24\claude-stoic-knuth-nobvq-x20\lhs_coverage_review_20260930\deps\flask\app.py", line 902, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Administrator\Documents\Codex\2026-08-24\claude-stoic-knuth-nobvq-x20\lhs214r_fix_recheck_20261017\source\webapp\app.py", line 7632, in single
+    return render_template('single.html', case=meta, figures=figures,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Administrator\Documents\Codex\2026-08-24\claude-stoic-knuth-nobvq-x20\lhs_coverage_review_20260930\deps\flask\templating.py", line 151, in render_template
+    return _render(app, template, context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Administrator\Documents\Codex\2026-08-24\claude-stoic-knuth-nobvq-x20\lhs_coverage_review_20260930\deps\flask\templating.py", line 132, in _render
+    rv = template.render(context)
+         ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Administrator\Documents\Codex\2026-08-24\claude-stoic-knuth-nobvq-x20\lhs_coverage_review_20260930\deps\jinja2\environment.py", line 1295, in render
+    self.environment.handle_exception()
+  File "C:\Users\Administrator\Documents\Codex\2026-08-24\claude-stoic-knuth-nobvq-x20\lhs_coverage_review_20260930\deps\jinja2\environment.py", line 942, in handle_exception
+    raise rewrite_traceback_stack(source=source)
+  File "C:\Users\Administrator\Documents\Codex\2026-08-24\claude-stoic-knuth-nobvq-x20\lhs214r_fix_recheck_20261017\source\webapp\templates\single.html", line 3, in top-level template code
+    {% import "_ledger.html" as L %}
+    ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Administrator\Documents\Codex\2026-08-24\claude-stoic-knuth-nobvq-x20\lhs214r_fix_recheck_20261017\source\webapp\templates\base.html", line 92, in top-level template code
+    {% block scripts %}{% endblock %}
+    ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Administrator\Documents\Codex\2026-08-24\claude-stoic-knuth-nobvq-x20\lhs214r_fix_recheck_20261017\source\webapp\templates\single.html", line 2188, in block 'scripts'
+    'σ_brug / σ_ionic = {{ "%.4f"|format(metrics.sigma_ratio * sigma_grain(metrics)) }} / {{ "%.4f"|format(metrics.sigma_full_mScm) }}\n'
+    ^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: unsupported operand type(s) for *: 'NoneType' and 'float'
+[2026-10-19 15:13:41,387] ERROR in app: Exception on /single/brug_null_no_phi_csv [GET]
+Traceback (most recent call last):
+  File "C:\Users\Administrator\Documents\Codex\2026-08-24\claude-stoic-knuth-nobvq-x20\lhs_coverage_review_20260930\deps\flask\app.py", line 1511, in wsgi_app
+    response = self.full_dispatch_request()
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Administrator\Documents\Codex\2026-08-24\claude-stoic-knuth-nobvq-x20\lhs_coverage_review_20260930\deps\flask\app.py", line 919, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Administrator\Documents\Codex\2026-08-24\claude-stoic-knuth-nobvq-x20\lhs_coverage_review_20260930\deps\flask\app.py", line 917, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Administrator\Documents\Codex\2026-08-24\claude-stoic-knuth-nobvq-x20\lhs_coverage_review_20260930\deps\flask\app.py", line 902, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Administrator\Documents\Codex\2026-08-24\claude-stoic-knuth-nobvq-x20\lhs214r_fix_recheck_20261017\source\webapp\app.py", line 7632, in single
+    return render_template('single.html', case=meta, figures=figures,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Administrator\Documents\Codex\2026-08-24\claude-stoic-knuth-nobvq-x20\lhs_coverage_review_20260930\deps\flask\templating.py", line 151, in render_template
+    return _render(app, template, context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Administrator\Documents\Codex\2026-08-24\claude-stoic-knuth-nobvq-x20\lhs_coverage_review_20260930\deps\flask\templating.py", line 132, in _render
+    rv = template.render(context)
+         ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Administrator\Documents\Codex\2026-08-24\claude-stoic-knuth-nobvq-x20\lhs_coverage_review_20260930\deps\jinja2\environment.py", line 1295, in render
+    self.environment.handle_exception()
+  File "C:\Users\Administrator\Documents\Codex\2026-08-24\claude-stoic-knuth-nobvq-x20\lhs_coverage_review_20260930\deps\jinja2\environment.py", line 942, in handle_exception
+    raise rewrite_traceback_stack(source=source)
+  File "C:\Users\Administrator\Documents\Codex\2026-08-24\claude-stoic-knuth-nobvq-x20\lhs214r_fix_recheck_20261017\source\webapp\templates\single.html", line 3, in top-level template code
+    {% import "_ledger.html" as L %}
+    ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Administrator\Documents\Codex\2026-08-24\claude-stoic-knuth-nobvq-x20\lhs214r_fix_recheck_20261017\source\webapp\templates\base.html", line 92, in top-level template code
+    {% block scripts %}{% endblock %}
+    ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Administrator\Documents\Codex\2026-08-24\claude-stoic-knuth-nobvq-x20\lhs214r_fix_recheck_20261017\source\webapp\templates\single.html", line 2188, in block 'scripts'
+    'σ_brug / σ_ionic = {{ "%.4f"|format(metrics.sigma_ratio * sigma_grain(metrics)) }} / {{ "%.4f"|format(metrics.sigma_full_mScm) }}\n'
+    ^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: unsupported operand type(s) for *: 'NoneType' and 'float'
+[2026-10-19 15:13:41,410] ERROR in app: Exception on /single/brug_null_no_phi_split [GET]
+Traceback (most recent call last):
+  File "C:\Users\Administrator\Documents\Codex\2026-08-24\claude-stoic-knuth-nobvq-x20\lhs_coverage_review_20260930\deps\flask\app.py", line 1511, in wsgi_app
+    response = self.full_dispatch_request()
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Administrator\Documents\Codex\2026-08-24\claude-stoic-knuth-nobvq-x20\lhs_coverage_review_20260930\deps\flask\app.py", line 919, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Administrator\Documents\Codex\2026-08-24\claude-stoic-knuth-nobvq-x20\lhs_coverage_review_20260930\deps\flask\app.py", line 917, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Administrator\Documents\Codex\2026-08-24\claude-stoic-knuth-nobvq-x20\lhs_coverage_review_20260930\deps\flask\app.py", line 902, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Administrator\Documents\Codex\2026-08-24\claude-stoic-knuth-nobvq-x20\lhs214r_fix_recheck_20261017\source\webapp\app.py", line 7632, in single
+    return render_template('single.html', case=meta, figures=figures,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Administrator\Documents\Codex\2026-08-24\claude-stoic-knuth-nobvq-x20\lhs_coverage_review_20260930\deps\flask\templating.py", line 151, in render_template
+    return _render(app, template, context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Administrator\Documents\Codex\2026-08-24\claude-stoic-knuth-nobvq-x20\lhs_coverage_review_20260930\deps\flask\templating.py", line 132, in _render
+    rv = template.render(context)
+         ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Administrator\Documents\Codex\2026-08-24\claude-stoic-knuth-nobvq-x20\lhs_coverage_review_20260930\deps\jinja2\environment.py", line 1295, in render
+    self.environment.handle_exception()
+  File "C:\Users\Administrator\Documents\Codex\2026-08-24\claude-stoic-knuth-nobvq-x20\lhs_coverage_review_20260930\deps\jinja2\environment.py", line 942, in handle_exception
+    raise rewrite_traceback_stack(source=source)
+  File "C:\Users\Administrator\Documents\Codex\2026-08-24\claude-stoic-knuth-nobvq-x20\lhs214r_fix_recheck_20261017\source\webapp\templates\single.html", line 3, in top-level template code
+    {% import "_ledger.html" as L %}
+    ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Administrator\Documents\Codex\2026-08-24\claude-stoic-knuth-nobvq-x20\lhs214r_fix_recheck_20261017\source\webapp\templates\base.html", line 92, in top-level template code
+    {% block scripts %}{% endblock %}
+    ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Administrator\Documents\Codex\2026-08-24\claude-stoic-knuth-nobvq-x20\lhs214r_fix_recheck_20261017\source\webapp\templates\single.html", line 2188, in block 'scripts'
+    'σ_brug / σ_ionic = {{ "%.4f"|format(metrics.sigma_ratio * sigma_grain(metrics)) }} / {{ "%.4f"|format(metrics.sigma_full_mScm) }}\n'
+    ^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: unsupported operand type(s) for *: 'NoneType' and 'float'
+[2026-10-19 15:13:41,436] ERROR in app: Exception on /single/brug_null_no_phi_fourcol [GET]
+Traceback (most recent call last):
+  File "C:\Users\Administrator\Documents\Codex\2026-08-24\claude-stoic-knuth-nobvq-x20\lhs_coverage_review_20260930\deps\flask\app.py", line 1511, in wsgi_app
+    response = self.full_dispatch_request()
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Administrator\Documents\Codex\2026-08-24\claude-stoic-knuth-nobvq-x20\lhs_coverage_review_20260930\deps\flask\app.py", line 919, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Administrator\Documents\Codex\2026-08-24\claude-stoic-knuth-nobvq-x20\lhs_coverage_review_20260930\deps\flask\app.py", line 917, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Administrator\Documents\Codex\2026-08-24\claude-stoic-knuth-nobvq-x20\lhs_coverage_review_20260930\deps\flask\app.py", line 902, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Administrator\Documents\Codex\2026-08-24\claude-stoic-knuth-nobvq-x20\lhs214r_fix_recheck_20261017\source\webapp\app.py", line 7632, in single
+    return render_template('single.html', case=meta, figures=figures,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Administrator\Documents\Codex\2026-08-24\claude-stoic-knuth-nobvq-x20\lhs_coverage_review_20260930\deps\flask\templating.py", line 151, in render_template
+    return _render(app, template, context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Administrator\Documents\Codex\2026-08-24\claude-stoic-knuth-nobvq-x20\lhs_coverage_review_20260930\deps\flask\templating.py", line 132, in _render
+    rv = template.render(context)
+         ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Administrator\Documents\Codex\2026-08-24\claude-stoic-knuth-nobvq-x20\lhs_coverage_review_20260930\deps\jinja2\environment.py", line 1295, in render
+    self.environment.handle_exception()
+  File "C:\Users\Administrator\Documents\Codex\2026-08-24\claude-stoic-knuth-nobvq-x20\lhs_coverage_review_20260930\deps\jinja2\environment.py", line 942, in handle_exception
+    raise rewrite_traceback_stack(source=source)
+  File "C:\Users\Administrator\Documents\Codex\2026-08-24\claude-stoic-knuth-nobvq-x20\lhs214r_fix_recheck_20261017\source\webapp\templates\single.html", line 3, in top-level template code
+    {% import "_ledger.html" as L %}
+    ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Administrator\Documents\Codex\2026-08-24\claude-stoic-knuth-nobvq-x20\lhs214r_fix_recheck_20261017\source\webapp\templates\base.html", line 92, in top-level template code
+    {% block scripts %}{% endblock %}
+    ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Administrator\Documents\Codex\2026-08-24\claude-stoic-knuth-nobvq-x20\lhs214r_fix_recheck_20261017\source\webapp\templates\single.html", line 2188, in block 'scripts'
+    'σ_brug / σ_ionic = {{ "%.4f"|format(metrics.sigma_ratio * sigma_grain(metrics)) }} / {{ "%.4f"|format(metrics.sigma_full_mScm) }}\n'
+    ^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: unsupported operand type(s) for *: 'NoneType' and 'float'
+[2026-10-19 15:13:41,466] ERROR in app: Exception on /single/all_derived_null_no_phi_new [GET]
+Traceback (most recent call last):
+  File "C:\Users\Administrator\Documents\Codex\2026-08-24\claude-stoic-knuth-nobvq-x20\lhs_coverage_review_20260930\deps\flask\app.py", line 1511, in wsgi_app
+    response = self.full_dispatch_request()
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Administrator\Documents\Codex\2026-08-24\claude-stoic-knuth-nobvq-x20\lhs_coverage_review_20260930\deps\flask\app.py", line 919, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Administrator\Documents\Codex\2026-08-24\claude-stoic-knuth-nobvq-x20\lhs_coverage_review_20260930\deps\flask\app.py", line 917, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Administrator\Documents\Codex\2026-08-24\claude-stoic-knuth-nobvq-x20\lhs_coverage_review_20260930\deps\flask\app.py", line 902, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Administrator\Documents\Codex\2026-08-24\claude-stoic-knuth-nobvq-x20\lhs214r_fix_recheck_20261017\source\webapp\app.py", line 7632, in single
+    return render_template('single.html', case=meta, figures=figures,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Administrator\Documents\Codex\2026-08-24\claude-stoic-knuth-nobvq-x20\lhs_coverage_review_20260930\deps\flask\templating.py", line 151, in render_template
+    return _render(app, template, context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Administrator\Documents\Codex\2026-08-24\claude-stoic-knuth-nobvq-x20\lhs_coverage_review_20260930\deps\flask\templating.py", line 132, in _render
+    rv = template.render(context)
+         ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Administrator\Documents\Codex\2026-08-24\claude-stoic-knuth-nobvq-x20\lhs_coverage_review_20260930\deps\jinja2\environment.py", line 1295, in render
+    self.environment.handle_exception()
+  File "C:\Users\Administrator\Documents\Codex\2026-08-24\claude-stoic-knuth-nobvq-x20\lhs_coverage_review_20260930\deps\jinja2\environment.py", line 942, in handle_exception
+    raise rewrite_traceback_stack(source=source)
+  File "C:\Users\Administrator\Documents\Codex\2026-08-24\claude-stoic-knuth-nobvq-x20\lhs214r_fix_recheck_20261017\source\webapp\templates\single.html", line 3, in top-level template code
+    {% import "_ledger.html" as L %}
+    ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Administrator\Documents\Codex\2026-08-24\claude-stoic-knuth-nobvq-x20\lhs214r_fix_recheck_20261017\source\webapp\templates\base.html", line 92, in top-level template code
+    {% block scripts %}{% endblock %}
+    ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Administrator\Documents\Codex\2026-08-24\claude-stoic-knuth-nobvq-x20\lhs214r_fix_recheck_20261017\source\webapp\templates\single.html", line 2188, in block 'scripts'
+    'σ_brug / σ_ionic = {{ "%.4f"|format(metrics.sigma_ratio * sigma_grain(metrics)) }} / {{ "%.4f"|format(metrics.sigma_full_mScm) }}\n'
+    ^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: unsupported operand type(s) for *: 'NoneType' and 'float'
+[2026-10-19 15:13:41,491] ERROR in app: Exception on /single/all_derived_null_no_phi_csv [GET]
+Traceback (most recent call last):
+  File "C:\Users\Administrator\Documents\Codex\2026-08-24\claude-stoic-knuth-nobvq-x20\lhs_coverage_review_20260930\deps\flask\app.py", line 1511, in wsgi_app
+    response = self.full_dispatch_request()
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Administrator\Documents\Codex\2026-08-24\claude-stoic-knuth-nobvq-x20\lhs_coverage_review_20260930\deps\flask\app.py", line 919, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Administrator\Documents\Codex\2026-08-24\claude-stoic-knuth-nobvq-x20\lhs_coverage_review_20260930\deps\flask\app.py", line 917, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Administrator\Documents\Codex\2026-08-24\claude-stoic-knuth-nobvq-x20\lhs_coverage_review_20260930\deps\flask\app.py", line 902, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Administrator\Documents\Codex\2026-08-24\claude-stoic-knuth-nobvq-x20\lhs214r_fix_recheck_20261017\source\webapp\app.py", line 7632, in single
+    return render_template('single.html', case=meta, figures=figures,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Administrator\Documents\Codex\2026-08-24\claude-stoic-knuth-nobvq-x20\lhs_coverage_review_20260930\deps\flask\templating.py", line 151, in render_template
+    return _render(app, template, context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Administrator\Documents\Codex\2026-08-24\claude-stoic-knuth-nobvq-x20\lhs_coverage_review_20260930\deps\flask\templating.py", line 132, in _render
+    rv = template.render(context)
+         ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Administrator\Documents\Codex\2026-08-24\claude-stoic-knuth-nobvq-x20\lhs_coverage_review_20260930\deps\jinja2\environment.py", line 1295, in render
+    self.environment.handle_exception()
+  File "C:\Users\Administrator\Documents\Codex\2026-08-24\claude-stoic-knuth-nobvq-x20\lhs_coverage_review_20260930\deps\jinja2\environment.py", line 942, in handle_exception
+    raise rewrite_traceback_stack(source=source)
+  File "C:\Users\Administrator\Documents\Codex\2026-08-24\claude-stoic-knuth-nobvq-x20\lhs214r_fix_recheck_20261017\source\webapp\templates\single.html", line 3, in top-level template code
+    {% import "_ledger.html" as L %}
+    ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Administrator\Documents\Codex\2026-08-24\claude-stoic-knuth-nobvq-x20\lhs214r_fix_recheck_20261017\source\webapp\templates\base.html", line 92, in top-level template code
+    {% block scripts %}{% endblock %}
+    ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Administrator\Documents\Codex\2026-08-24\claude-stoic-knuth-nobvq-x20\lhs214r_fix_recheck_20261017\source\webapp\templates\single.html", line 2188, in block 'scripts'
+    'σ_brug / σ_ionic = {{ "%.4f"|format(metrics.sigma_ratio * sigma_grain(metrics)) }} / {{ "%.4f"|format(metrics.sigma_full_mScm) }}\n'
+    ^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: unsupported operand type(s) for *: 'NoneType' and 'float'
+[2026-10-19 15:13:41,517] ERROR in app: Exception on /single/all_derived_null_no_phi_split [GET]
+Traceback (most recent call last):
+  File "C:\Users\Administrator\Documents\Codex\2026-08-24\claude-stoic-knuth-nobvq-x20\lhs_coverage_review_20260930\deps\flask\app.py", line 1511, in wsgi_app
+    response = self.full_dispatch_request()
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Administrator\Documents\Codex\2026-08-24\claude-stoic-knuth-nobvq-x20\lhs_coverage_review_20260930\deps\flask\app.py", line 919, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Administrator\Documents\Codex\2026-08-24\claude-stoic-knuth-nobvq-x20\lhs_coverage_review_20260930\deps\flask\app.py", line 917, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Administrator\Documents\Codex\2026-08-24\claude-stoic-knuth-nobvq-x20\lhs_coverage_review_20260930\deps\flask\app.py", line 902, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Administrator\Documents\Codex\2026-08-24\claude-stoic-knuth-nobvq-x20\lhs214r_fix_recheck_20261017\source\webapp\app.py", line 7632, in single
+    return render_template('single.html', case=meta, figures=figures,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Administrator\Documents\Codex\2026-08-24\claude-stoic-knuth-nobvq-x20\lhs_coverage_review_20260930\deps\flask\templating.py", line 151, in render_template
+    return _render(app, template, context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Administrator\Documents\Codex\2026-08-24\claude-stoic-knuth-nobvq-x20\lhs_coverage_review_20260930\deps\flask\templating.py", line 132, in _render
+    rv = template.render(context)
+         ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Administrator\Documents\Codex\2026-08-24\claude-stoic-knuth-nobvq-x20\lhs_coverage_review_20260930\deps\jinja2\environment.py", line 1295, in render
+    self.environment.handle_exception()
+  File "C:\Users\Administrator\Documents\Codex\2026-08-24\claude-stoic-knuth-nobvq-x20\lhs_coverage_review_20260930\deps\jinja2\environment.py", line 942, in handle_exception
+    raise rewrite_traceback_stack(source=source)
+  File "C:\Users\Administrator\Documents\Codex\2026-08-24\claude-stoic-knuth-nobvq-x20\lhs214r_fix_recheck_20261017\source\webapp\templates\single.html", line 3, in top-level template code
+    {% import "_ledger.html" as L %}
+    ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Administrator\Documents\Codex\2026-08-24\claude-stoic-knuth-nobvq-x20\lhs214r_fix_recheck_20261017\source\webapp\templates\base.html", line 92, in top-level template code
+    {% block scripts %}{% endblock %}
+    ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Administrator\Documents\Codex\2026-08-24\claude-stoic-knuth-nobvq-x20\lhs214r_fix_recheck_20261017\source\webapp\templates\single.html", line 2188, in block 'scripts'
+    'σ_brug / σ_ionic = {{ "%.4f"|format(metrics.sigma_ratio * sigma_grain(metrics)) }} / {{ "%.4f"|format(metrics.sigma_full_mScm) }}\n'
+    ^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: unsupported operand type(s) for *: 'NoneType' and 'float'
+[2026-10-19 15:13:41,543] ERROR in app: Exception on /single/all_derived_null_no_phi_fourcol [GET]
+Traceback (most recent call last):
+  File "C:\Users\Administrator\Documents\Codex\2026-08-24\claude-stoic-knuth-nobvq-x20\lhs_coverage_review_20260930\deps\flask\app.py", line 1511, in wsgi_app
+    response = self.full_dispatch_request()
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Administrator\Documents\Codex\2026-08-24\claude-stoic-knuth-nobvq-x20\lhs_coverage_review_20260930\deps\flask\app.py", line 919, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Administrator\Documents\Codex\2026-08-24\claude-stoic-knuth-nobvq-x20\lhs_coverage_review_20260930\deps\flask\app.py", line 917, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Administrator\Documents\Codex\2026-08-24\claude-stoic-knuth-nobvq-x20\lhs_coverage_review_20260930\deps\flask\app.py", line 902, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Administrator\Documents\Codex\2026-08-24\claude-stoic-knuth-nobvq-x20\lhs214r_fix_recheck_20261017\source\webapp\app.py", line 7632, in single
+    return render_template('single.html', case=meta, figures=figures,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Administrator\Documents\Codex\2026-08-24\claude-stoic-knuth-nobvq-x20\lhs_coverage_review_20260930\deps\flask\templating.py", line 151, in render_template
+    return _render(app, template, context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Administrator\Documents\Codex\2026-08-24\claude-stoic-knuth-nobvq-x20\lhs_coverage_review_20260930\deps\flask\templating.py", line 132, in _render
+    rv = template.render(context)
+         ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Administrator\Documents\Codex\2026-08-24\claude-stoic-knuth-nobvq-x20\lhs_coverage_review_20260930\deps\jinja2\environment.py", line 1295, in render
+    self.environment.handle_exception()
+  File "C:\Users\Administrator\Documents\Codex\2026-08-24\claude-stoic-knuth-nobvq-x20\lhs_coverage_review_20260930\deps\jinja2\environment.py", line 942, in handle_exception
+    raise rewrite_traceback_stack(source=source)
+  File "C:\Users\Administrator\Documents\Codex\2026-08-24\claude-stoic-knuth-nobvq-x20\lhs214r_fix_recheck_20261017\source\webapp\templates\single.html", line 3, in top-level template code
+    {% import "_ledger.html" as L %}
+    ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Administrator\Documents\Codex\2026-08-24\claude-stoic-knuth-nobvq-x20\lhs214r_fix_recheck_20261017\source\webapp\templates\base.html", line 92, in top-level template code
+    {% block scripts %}{% endblock %}
+    ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Administrator\Documents\Codex\2026-08-24\claude-stoic-knuth-nobvq-x20\lhs214r_fix_recheck_20261017\source\webapp\templates\single.html", line 2188, in block 'scripts'
+    'σ_brug / σ_ionic = {{ "%.4f"|format(metrics.sigma_ratio * sigma_grain(metrics)) }} / {{ "%.4f"|format(metrics.sigma_full_mScm) }}\n'
+    ^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: unsupported operand type(s) for *: 'NoneType' and 'float'

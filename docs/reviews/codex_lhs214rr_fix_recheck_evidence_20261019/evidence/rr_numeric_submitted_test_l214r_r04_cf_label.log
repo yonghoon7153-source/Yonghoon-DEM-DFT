@@ -1,0 +1,19 @@
+R  레코드 단 — 12 침대 × 세 모드 (실 생산자)
+  PASS  R0 원 레코드 = 생산자 출력 그대로 통과 (결합 []) · 게시 가지 FULL computed 18 · CF / 협착-only model_over_conduction 51 · computed 21
+  PASS  R1 ★ model_over_conduction (raw q > 1.5) → computed (가지 · 증서 상태 · 사유) → 거부 (옛: 51 수용) — 수용 0
+  PASS  R2 ★ computed (raw q ≤ 1.5) → model_over_conduction → 거부 (옛: 21 수용) — 수용 0
+  PASS  R3 ★ 사유만 반대 표지의 사유로 (가지 사유 · 증서 사유 각각 — 상태 그대로) → 거부 — 수용 0
+  PASS  R4 ★ FULL computed (18 가지) 의 사유만 q_gt_1p5 로 (가지 · 증서 · 둘 다 — 생산자 FULL 게시 = computed · 사유 없음) → 거부 (옛: 수용) — 수용 0
+  PASS  R5 ★ 표지 바꾼 레코드 → 세대 계약 invalid · 그 모드에 cert 문제 (정지 계약 ⑨ · 다시 읽기 K2 · 인계 · 배포가 부르는 같은 함수)
+  PASS  R6 ★ τ 행 (ion_columns) — 그 모드 NOT OK (세대 invalid → 값 공란)
+  PASS  R7 ★ 레코드 판정 (network_record_verdict — 네 사본 · 세대 계약 · 15 레코드) 거부 · 사유에 L214R-R04
+E  경계 (3 노드 실제 풀이 · 함수 단 — 결합 정보를 붙여 게시 증서 판정에 직접)
+  PASS  E1 ★ 생산자 표지 그대로 = 통과 (raw q 1.5 = computed · 다음 수 1.5000000000000002 = model_over_conduction) · 표지만 반대로 = 거부 {('bulk_only', 'prev'): (1.4999999999999996, 'computed', True, True), ('bulk_only', 'eq'): (1.5, 'computed', True, True), ('bulk_only', 'next'): (1.5000000000000002, 'model_over_conduction', True, True), ('constriction_only', 'prev'): (1.5, 'computed', True, True), ('constriction_only', 'eq'): (1.5, 'computed', True, True), ('constriction_only', 'next'): (1.5000000000000002, 'model_over_conduction', True, True)}
+C  대조
+  PASS  C1 보류 FULL 복원 (18 칸 · L214R-R01) → R01 사유 하나 (생산자 정책) · 표지 사유를 겹치지 않는다
+  PASS  C2 원 레코드의 전자 · 열 채널 판정 그대로 (이 검사 밖 — 이온 세 가지만)
+  PASS  C3 FULL 상태를 model_over_conduction 으로 바꿈 (18 가지) → 공용 기술 검사 거부 · τ 행 NOT OK (고치기 전에도 · 그대로)
+
+test_l214r_r04_cf_label: 12/12 PASS
+
+--- STDERR ---

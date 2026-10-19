@@ -1,0 +1,208 @@
+{
+  "python": "3.12.14 (main, Aug 25 2026, 14:01:42) [MSC v.1944 64 bit (AMD64)]",
+  "platform": "Windows-11-10.0.26200-SP0",
+  "numpy": "2.5.3",
+  "scipy": "1.16.3",
+  "source_area": 0.500000001,
+  "source_box_x": 0.7281737983374794,
+  "source_box_y": {
+    "next": 0.7281737983374881,
+    "eq": 0.7281737983374882,
+    "prev": 0.7281737983374883
+  },
+  "measured_original_I_bottom": 0.03976778104389278,
+  "measured_original_eq_q": 1.4999999999999958,
+  "nearest_search_center": 0.7281737983380616,
+  "calibrated_area": 0.500000001001,
+  "calibrated_I_bottom": 0.0397677810439242,
+  "calibrated_box_x": 0.7281737983374794,
+  "calibrated_box_y": {
+    "next": 0.7281737983380614,
+    "eq": 0.7281737983380615,
+    "prev": 0.7281737983380616
+  },
+  "expected_q": {
+    "next": 1.5000000000000002,
+    "eq": 1.5,
+    "prev": 1.4999999999999998
+  },
+  "search": [
+    {
+      "area": 0.500000001,
+      "I_bottom": 0.03976778104389278,
+      "found": [
+        "next",
+        "eq"
+      ]
+    },
+    {
+      "area": 0.500000001001,
+      "I_bottom": 0.0397677810439242,
+      "found": [
+        "next",
+        "eq",
+        "prev"
+      ]
+    }
+  ],
+  "cases": {
+    "next": {
+      "raw_q": 1.5000000000000002,
+      "saved_q": null,
+      "status": "not_computed",
+      "reason": "full_over_conduction",
+      "binding": [],
+      "tau_status": "NOT_COMPUTED",
+      "certificate": {
+        "electrode_model": "dirichlet_exact",
+        "status": "over_conduction_guard",
+        "reason": "sigma_ratio > 1.5",
+        "method": "spsolve",
+        "n_free": 15,
+        "n_fixed": 6,
+        "n_floating": 0,
+        "n_zero_resistance": null,
+        "I_bottom": 0.0397677810439242,
+        "I_top": -0.03976778104392452,
+        "conservation_rel": 8.026324607530404e-15,
+        "residual_rel": 4.234865057977181e-16,
+        "conservation_rel_max": 1e-06,
+        "residual_rel_max": 1e-06,
+        "branch": "full",
+        "delta_V": 1.0,
+        "g_to_q": 37.7189765338736,
+        "geometry": {
+          "plate_z": 20.0,
+          "box_x": 0.7281737983374794,
+          "box_y": 0.7281737983380614,
+          "scale": 1
+        },
+        "attempts": [
+          {
+            "method": "spsolve",
+            "outcome": "pass",
+            "krylov_info": null,
+            "refine_passes": null,
+            "I_bottom": 0.0397677810439242,
+            "I_top": -0.03976778104392452,
+            "conservation_rel": 8.026324607530404e-15,
+            "residual_rel": 4.234865057977181e-16,
+            "error": null
+          }
+        ],
+        "q_withheld": 1.5000000000000002,
+        "q_guard_max": 1.5,
+        "guard_policy": "full_single_phase_q_gt_1p5/v1",
+        "sum_g": 12.725689934055818,
+        "channel": "ionic",
+        "role": "H0",
+        "contact_mode": "hertzian",
+        "sigma_bulk_S_cm": 0.003
+      }
+    },
+    "eq": {
+      "raw_q": 1.5,
+      "saved_q": 1.5,
+      "status": "computed",
+      "reason": null,
+      "binding": [],
+      "tau_status": "OK",
+      "certificate": {
+        "electrode_model": "dirichlet_exact",
+        "status": "computed",
+        "reason": null,
+        "method": "spsolve",
+        "n_free": 15,
+        "n_fixed": 6,
+        "n_floating": 0,
+        "n_zero_resistance": null,
+        "I_bottom": 0.0397677810439242,
+        "I_top": -0.03976778104392452,
+        "conservation_rel": 8.026324607530404e-15,
+        "residual_rel": 4.234865057977181e-16,
+        "conservation_rel_max": 1e-06,
+        "residual_rel_max": 1e-06,
+        "branch": "full",
+        "delta_V": 1.0,
+        "g_to_q": 37.718976533873594,
+        "geometry": {
+          "plate_z": 20.0,
+          "box_x": 0.7281737983374794,
+          "box_y": 0.7281737983380615,
+          "scale": 1
+        },
+        "attempts": [
+          {
+            "method": "spsolve",
+            "outcome": "pass",
+            "krylov_info": null,
+            "refine_passes": null,
+            "I_bottom": 0.0397677810439242,
+            "I_top": -0.03976778104392452,
+            "conservation_rel": 8.026324607530404e-15,
+            "residual_rel": 4.234865057977181e-16,
+            "error": null
+          }
+        ],
+        "channel": "ionic",
+        "role": "H0",
+        "contact_mode": "hertzian",
+        "sigma_bulk_S_cm": 0.003
+      }
+    },
+    "prev": {
+      "raw_q": 1.4999999999999998,
+      "saved_q": 1.5,
+      "status": "computed",
+      "reason": null,
+      "binding": [],
+      "tau_status": "OK",
+      "certificate": {
+        "electrode_model": "dirichlet_exact",
+        "status": "computed",
+        "reason": null,
+        "method": "spsolve",
+        "n_free": 15,
+        "n_fixed": 6,
+        "n_floating": 0,
+        "n_zero_resistance": null,
+        "I_bottom": 0.0397677810439242,
+        "I_top": -0.03976778104392452,
+        "conservation_rel": 8.026324607530404e-15,
+        "residual_rel": 4.234865057977181e-16,
+        "conservation_rel_max": 1e-06,
+        "residual_rel_max": 1e-06,
+        "branch": "full",
+        "delta_V": 1.0,
+        "g_to_q": 37.71897653387359,
+        "geometry": {
+          "plate_z": 20.0,
+          "box_x": 0.7281737983374794,
+          "box_y": 0.7281737983380616,
+          "scale": 1
+        },
+        "attempts": [
+          {
+            "method": "spsolve",
+            "outcome": "pass",
+            "krylov_info": null,
+            "refine_passes": null,
+            "I_bottom": 0.0397677810439242,
+            "I_top": -0.03976778104392452,
+            "conservation_rel": 8.026324607530404e-15,
+            "residual_rel": 4.234865057977181e-16,
+            "error": null
+          }
+        ],
+        "channel": "ionic",
+        "role": "H0",
+        "contact_mode": "hertzian",
+        "sigma_bulk_S_cm": 0.003
+      }
+    }
+  },
+  "derived_E_assertions": {
+    "passed": 5,
+    "failed": []
+  }
+}

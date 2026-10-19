@@ -1,0 +1,7 @@
+{
+  "normal": 200,
+  "sigma_ratio_null": 500,
+  "sigma_ratio_absent": 200,
+  "sigma_ratio_null_no_phi": 500,
+  "R_brug_null": 200
+}

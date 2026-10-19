@@ -1,0 +1,1224 @@
+{
+  "cases": 128,
+  "checks_each": 2288,
+  "source_failures": [
+    {
+      "case": "brug_null_new",
+      "check": "HTTP200 and unchanged source inputs",
+      "passed": false
+    },
+    {
+      "case": "brug_null_csv",
+      "check": "HTTP200 and unchanged source inputs",
+      "passed": false
+    },
+    {
+      "case": "brug_null_split",
+      "check": "HTTP200 and unchanged source inputs",
+      "passed": false
+    },
+    {
+      "case": "brug_null_fourcol",
+      "check": "HTTP200 and unchanged source inputs",
+      "passed": false
+    },
+    {
+      "case": "all_derived_null_new",
+      "check": "HTTP200 and unchanged source inputs",
+      "passed": false
+    },
+    {
+      "case": "all_derived_null_csv",
+      "check": "HTTP200 and unchanged source inputs",
+      "passed": false
+    },
+    {
+      "case": "all_derived_null_split",
+      "check": "HTTP200 and unchanged source inputs",
+      "passed": false
+    },
+    {
+      "case": "all_derived_null_fourcol",
+      "check": "HTTP200 and unchanged source inputs",
+      "passed": false
+    },
+    {
+      "case": "brug_null_no_phi_new",
+      "check": "HTTP200 and unchanged source inputs",
+      "passed": false
+    },
+    {
+      "case": "brug_null_no_phi_csv",
+      "check": "HTTP200 and unchanged source inputs",
+      "passed": false
+    },
+    {
+      "case": "brug_null_no_phi_split",
+      "check": "HTTP200 and unchanged source inputs",
+      "passed": false
+    },
+    {
+      "case": "brug_null_no_phi_fourcol",
+      "check": "HTTP200 and unchanged source inputs",
+      "passed": false
+    },
+    {
+      "case": "all_derived_null_no_phi_new",
+      "check": "HTTP200 and unchanged source inputs",
+      "passed": false
+    },
+    {
+      "case": "all_derived_null_no_phi_csv",
+      "check": "HTTP200 and unchanged source inputs",
+      "passed": false
+    },
+    {
+      "case": "all_derived_null_no_phi_split",
+      "check": "HTTP200 and unchanged source inputs",
+      "passed": false
+    },
+    {
+      "case": "all_derived_null_no_phi_fourcol",
+      "check": "HTTP200 and unchanged source inputs",
+      "passed": false
+    }
+  ],
+  "old_failure_count": 72,
+  "changes": [
+    {
+      "case": "rbrug_absent_both_csv",
+      "where": "loader",
+      "label": "σ_contact-free / σ_full — constriction overestimation",
+      "old": [
+        [
+          "31.0×",
+          "31.0×",
+          "0%"
+        ]
+      ],
+      "new": [
+        [
+          "31.0×",
+          "31.0×",
+          "—"
+        ]
+      ]
+    },
+    {
+      "case": "rbrug_absent_both_csv",
+      "where": "route",
+      "label": "σ_contact-free / σ_full — constriction overestimation",
+      "old": [
+        [
+          "31.0×",
+          "31.0×",
+          "0%"
+        ]
+      ],
+      "new": [
+        [
+          "31.0×",
+          "31.0×",
+          "—"
+        ]
+      ]
+    },
+    {
+      "case": "rbrug_absent_both_split",
+      "where": "loader",
+      "label": "σ_contact-free / σ_full — constriction overestimation",
+      "old": [
+        [
+          "31.0×",
+          "31.0×",
+          "0%"
+        ]
+      ],
+      "new": [
+        [
+          "31.0×",
+          "31.0×",
+          "—"
+        ]
+      ]
+    },
+    {
+      "case": "rbrug_absent_both_split",
+      "where": "route",
+      "label": "σ_contact-free / σ_full — constriction overestimation",
+      "old": [
+        [
+          "31.0×",
+          "31.0×",
+          "0%"
+        ]
+      ],
+      "new": [
+        [
+          "31.0×",
+          "31.0×",
+          "—"
+        ]
+      ]
+    },
+    {
+      "case": "rbrug_absent_both_fourcol",
+      "where": "loader",
+      "label": "Bruggeman overestimation, R_brug = σ_Bruggeman / σ_ionic",
+      "old": [
+        [
+          "31.0×",
+          "37.0×",
+          "+19.4%"
+        ]
+      ],
+      "new": [
+        [
+          "31.0×",
+          "37.0×",
+          "—"
+        ]
+      ]
+    },
+    {
+      "case": "rbrug_absent_both_fourcol",
+      "where": "loader",
+      "label": "σ_contact-free / σ_full — constriction overestimation",
+      "old": [
+        [
+          "31.0×",
+          "37.0×",
+          "+19.4%"
+        ]
+      ],
+      "new": [
+        [
+          "31.0×",
+          "37.0×",
+          "—"
+        ]
+      ]
+    },
+    {
+      "case": "rbrug_absent_both_fourcol",
+      "where": "route",
+      "label": "Bruggeman overestimation, R_brug = σ_Bruggeman / σ_ionic",
+      "old": [
+        [
+          "31.0×",
+          "37.0×",
+          "+19.4%"
+        ]
+      ],
+      "new": [
+        [
+          "31.0×",
+          "37.0×",
+          "—"
+        ]
+      ]
+    },
+    {
+      "case": "rbrug_absent_both_fourcol",
+      "where": "route",
+      "label": "σ_contact-free / σ_full — constriction overestimation",
+      "old": [
+        [
+          "31.0×",
+          "37.0×",
+          "+19.4%"
+        ]
+      ],
+      "new": [
+        [
+          "31.0×",
+          "37.0×",
+          "—"
+        ]
+      ]
+    },
+    {
+      "case": "brug_absent_csv",
+      "where": "loader",
+      "label": "σ_Bruggeman / σ_ionic — EMT vs Network solver",
+      "old": [
+        [
+          "41.0×",
+          "41.0×",
+          "0%"
+        ]
+      ],
+      "new": [
+        [
+          "41.0×",
+          "41.0×",
+          "—"
+        ]
+      ]
+    },
+    {
+      "case": "brug_absent_csv",
+      "where": "route",
+      "label": "σ_Bruggeman / σ_ionic — EMT vs Network solver",
+      "old": [
+        [
+          "41.0×",
+          "41.0×",
+          "0%"
+        ]
+      ],
+      "new": [
+        [
+          "41.0×",
+          "41.0×",
+          "—"
+        ]
+      ]
+    },
+    {
+      "case": "brug_absent_split",
+      "where": "loader",
+      "label": "σ_Bruggeman / σ_ionic — EMT vs Network solver",
+      "old": [
+        [
+          "41.0×",
+          "41.0×",
+          "0%"
+        ]
+      ],
+      "new": [
+        [
+          "41.0×",
+          "41.0×",
+          "—"
+        ]
+      ]
+    },
+    {
+      "case": "brug_absent_split",
+      "where": "route",
+      "label": "σ_Bruggeman / σ_ionic — EMT vs Network solver",
+      "old": [
+        [
+          "41.0×",
+          "41.0×",
+          "0%"
+        ]
+      ],
+      "new": [
+        [
+          "41.0×",
+          "41.0×",
+          "—"
+        ]
+      ]
+    },
+    {
+      "case": "brug_absent_fourcol",
+      "where": "loader",
+      "label": "σ_Bruggeman / σ_ionic — EMT vs Network solver",
+      "old": [
+        [
+          "41.0×",
+          "43.0×",
+          "+4.9%"
+        ]
+      ],
+      "new": [
+        [
+          "41.0×",
+          "43.0×",
+          "—"
+        ]
+      ]
+    },
+    {
+      "case": "brug_absent_fourcol",
+      "where": "route",
+      "label": "σ_Bruggeman / σ_ionic — EMT vs Network solver",
+      "old": [
+        [
+          "41.0×",
+          "43.0×",
+          "+4.9%"
+        ]
+      ],
+      "new": [
+        [
+          "41.0×",
+          "43.0×",
+          "—"
+        ]
+      ]
+    },
+    {
+      "case": "all_derived_absent_csv",
+      "where": "loader",
+      "label": "σ_Bruggeman / σ_ionic — EMT vs Network solver",
+      "old": [
+        [
+          "41.0×",
+          "41.0×",
+          "0%"
+        ]
+      ],
+      "new": [
+        [
+          "41.0×",
+          "41.0×",
+          "—"
+        ]
+      ]
+    },
+    {
+      "case": "all_derived_absent_csv",
+      "where": "loader",
+      "label": "σ_contact-free / σ_full — constriction overestimation",
+      "old": [
+        [
+          "31.0×",
+          "31.0×",
+          "0%"
+        ]
+      ],
+      "new": [
+        [
+          "31.0×",
+          "31.0×",
+          "—"
+        ]
+      ]
+    },
+    {
+      "case": "all_derived_absent_csv",
+      "where": "route",
+      "label": "σ_Bruggeman / σ_ionic — EMT vs Network solver",
+      "old": [
+        [
+          "41.0×",
+          "41.0×",
+          "0%"
+        ]
+      ],
+      "new": [
+        [
+          "41.0×",
+          "41.0×",
+          "—"
+        ]
+      ]
+    },
+    {
+      "case": "all_derived_absent_csv",
+      "where": "route",
+      "label": "σ_contact-free / σ_full — constriction overestimation",
+      "old": [
+        [
+          "31.0×",
+          "31.0×",
+          "0%"
+        ]
+      ],
+      "new": [
+        [
+          "31.0×",
+          "31.0×",
+          "—"
+        ]
+      ]
+    },
+    {
+      "case": "all_derived_absent_split",
+      "where": "loader",
+      "label": "σ_Bruggeman / σ_ionic — EMT vs Network solver",
+      "old": [
+        [
+          "41.0×",
+          "41.0×",
+          "0%"
+        ]
+      ],
+      "new": [
+        [
+          "41.0×",
+          "41.0×",
+          "—"
+        ]
+      ]
+    },
+    {
+      "case": "all_derived_absent_split",
+      "where": "loader",
+      "label": "σ_contact-free / σ_full — constriction overestimation",
+      "old": [
+        [
+          "31.0×",
+          "31.0×",
+          "0%"
+        ]
+      ],
+      "new": [
+        [
+          "31.0×",
+          "31.0×",
+          "—"
+        ]
+      ]
+    },
+    {
+      "case": "all_derived_absent_split",
+      "where": "route",
+      "label": "σ_Bruggeman / σ_ionic — EMT vs Network solver",
+      "old": [
+        [
+          "41.0×",
+          "41.0×",
+          "0%"
+        ]
+      ],
+      "new": [
+        [
+          "41.0×",
+          "41.0×",
+          "—"
+        ]
+      ]
+    },
+    {
+      "case": "all_derived_absent_split",
+      "where": "route",
+      "label": "σ_contact-free / σ_full — constriction overestimation",
+      "old": [
+        [
+          "31.0×",
+          "31.0×",
+          "0%"
+        ]
+      ],
+      "new": [
+        [
+          "31.0×",
+          "31.0×",
+          "—"
+        ]
+      ]
+    },
+    {
+      "case": "all_derived_absent_fourcol",
+      "where": "loader",
+      "label": "Bruggeman overestimation, R_brug = σ_Bruggeman / σ_ionic",
+      "old": [
+        [
+          "31.0×",
+          "37.0×",
+          "+19.4%"
+        ]
+      ],
+      "new": [
+        [
+          "31.0×",
+          "37.0×",
+          "—"
+        ]
+      ]
+    },
+    {
+      "case": "all_derived_absent_fourcol",
+      "where": "loader",
+      "label": "σ_Bruggeman / σ_ionic — EMT vs Network solver",
+      "old": [
+        [
+          "41.0×",
+          "43.0×",
+          "+4.9%"
+        ]
+      ],
+      "new": [
+        [
+          "41.0×",
+          "43.0×",
+          "—"
+        ]
+      ]
+    },
+    {
+      "case": "all_derived_absent_fourcol",
+      "where": "loader",
+      "label": "σ_contact-free / σ_full — constriction overestimation",
+      "old": [
+        [
+          "31.0×",
+          "37.0×",
+          "+19.4%"
+        ]
+      ],
+      "new": [
+        [
+          "31.0×",
+          "37.0×",
+          "—"
+        ]
+      ]
+    },
+    {
+      "case": "all_derived_absent_fourcol",
+      "where": "route",
+      "label": "Bruggeman overestimation, R_brug = σ_Bruggeman / σ_ionic",
+      "old": [
+        [
+          "31.0×",
+          "37.0×",
+          "+19.4%"
+        ]
+      ],
+      "new": [
+        [
+          "31.0×",
+          "37.0×",
+          "—"
+        ]
+      ]
+    },
+    {
+      "case": "all_derived_absent_fourcol",
+      "where": "route",
+      "label": "σ_Bruggeman / σ_ionic — EMT vs Network solver",
+      "old": [
+        [
+          "41.0×",
+          "43.0×",
+          "+4.9%"
+        ]
+      ],
+      "new": [
+        [
+          "41.0×",
+          "43.0×",
+          "—"
+        ]
+      ]
+    },
+    {
+      "case": "all_derived_absent_fourcol",
+      "where": "route",
+      "label": "σ_contact-free / σ_full — constriction overestimation",
+      "old": [
+        [
+          "31.0×",
+          "37.0×",
+          "+19.4%"
+        ]
+      ],
+      "new": [
+        [
+          "31.0×",
+          "37.0×",
+          "—"
+        ]
+      ]
+    },
+    {
+      "case": "rbrug_null_both_csv",
+      "where": "loader",
+      "label": "σ_contact-free / σ_full — constriction overestimation",
+      "old": [
+        [
+          "31.0×",
+          "31.0×",
+          "0%"
+        ]
+      ],
+      "new": [
+        [
+          "31.0×",
+          "31.0×",
+          "—"
+        ]
+      ]
+    },
+    {
+      "case": "rbrug_null_both_csv",
+      "where": "route",
+      "label": "σ_contact-free / σ_full — constriction overestimation",
+      "old": [
+        [
+          "31.0×",
+          "31.0×",
+          "0%"
+        ]
+      ],
+      "new": [
+        [
+          "31.0×",
+          "31.0×",
+          "—"
+        ]
+      ]
+    },
+    {
+      "case": "rbrug_null_both_split",
+      "where": "loader",
+      "label": "σ_contact-free / σ_full — constriction overestimation",
+      "old": [
+        [
+          "31.0×",
+          "31.0×",
+          "0%"
+        ]
+      ],
+      "new": [
+        [
+          "31.0×",
+          "31.0×",
+          "—"
+        ]
+      ]
+    },
+    {
+      "case": "rbrug_null_both_split",
+      "where": "route",
+      "label": "σ_contact-free / σ_full — constriction overestimation",
+      "old": [
+        [
+          "31.0×",
+          "31.0×",
+          "0%"
+        ]
+      ],
+      "new": [
+        [
+          "31.0×",
+          "31.0×",
+          "—"
+        ]
+      ]
+    },
+    {
+      "case": "rbrug_null_both_fourcol",
+      "where": "loader",
+      "label": "Bruggeman overestimation, R_brug = σ_Bruggeman / σ_ionic",
+      "old": [
+        [
+          "31.0×",
+          "37.0×",
+          "+19.4%"
+        ]
+      ],
+      "new": [
+        [
+          "31.0×",
+          "37.0×",
+          "—"
+        ]
+      ]
+    },
+    {
+      "case": "rbrug_null_both_fourcol",
+      "where": "loader",
+      "label": "σ_contact-free / σ_full — constriction overestimation",
+      "old": [
+        [
+          "31.0×",
+          "37.0×",
+          "+19.4%"
+        ]
+      ],
+      "new": [
+        [
+          "31.0×",
+          "37.0×",
+          "—"
+        ]
+      ]
+    },
+    {
+      "case": "rbrug_null_both_fourcol",
+      "where": "route",
+      "label": "Bruggeman overestimation, R_brug = σ_Bruggeman / σ_ionic",
+      "old": [
+        [
+          "31.0×",
+          "37.0×",
+          "+19.4%"
+        ]
+      ],
+      "new": [
+        [
+          "31.0×",
+          "37.0×",
+          "—"
+        ]
+      ]
+    },
+    {
+      "case": "rbrug_null_both_fourcol",
+      "where": "route",
+      "label": "σ_contact-free / σ_full — constriction overestimation",
+      "old": [
+        [
+          "31.0×",
+          "37.0×",
+          "+19.4%"
+        ]
+      ],
+      "new": [
+        [
+          "31.0×",
+          "37.0×",
+          "—"
+        ]
+      ]
+    },
+    {
+      "case": "brug_null_csv",
+      "where": "loader",
+      "label": "σ_Bruggeman / σ_ionic — EMT vs Network solver",
+      "old": [
+        [
+          "41.0×",
+          "41.0×",
+          "0%"
+        ]
+      ],
+      "new": [
+        [
+          "41.0×",
+          "41.0×",
+          "—"
+        ]
+      ]
+    },
+    {
+      "case": "brug_null_split",
+      "where": "loader",
+      "label": "σ_Bruggeman / σ_ionic — EMT vs Network solver",
+      "old": [
+        [
+          "41.0×",
+          "41.0×",
+          "0%"
+        ]
+      ],
+      "new": [
+        [
+          "41.0×",
+          "41.0×",
+          "—"
+        ]
+      ]
+    },
+    {
+      "case": "brug_null_fourcol",
+      "where": "loader",
+      "label": "σ_Bruggeman / σ_ionic — EMT vs Network solver",
+      "old": [
+        [
+          "41.0×",
+          "43.0×",
+          "+4.9%"
+        ]
+      ],
+      "new": [
+        [
+          "41.0×",
+          "43.0×",
+          "—"
+        ]
+      ]
+    },
+    {
+      "case": "all_derived_null_csv",
+      "where": "loader",
+      "label": "σ_Bruggeman / σ_ionic — EMT vs Network solver",
+      "old": [
+        [
+          "41.0×",
+          "41.0×",
+          "0%"
+        ]
+      ],
+      "new": [
+        [
+          "41.0×",
+          "41.0×",
+          "—"
+        ]
+      ]
+    },
+    {
+      "case": "all_derived_null_csv",
+      "where": "loader",
+      "label": "σ_contact-free / σ_full — constriction overestimation",
+      "old": [
+        [
+          "31.0×",
+          "31.0×",
+          "0%"
+        ]
+      ],
+      "new": [
+        [
+          "31.0×",
+          "31.0×",
+          "—"
+        ]
+      ]
+    },
+    {
+      "case": "all_derived_null_split",
+      "where": "loader",
+      "label": "σ_Bruggeman / σ_ionic — EMT vs Network solver",
+      "old": [
+        [
+          "41.0×",
+          "41.0×",
+          "0%"
+        ]
+      ],
+      "new": [
+        [
+          "41.0×",
+          "41.0×",
+          "—"
+        ]
+      ]
+    },
+    {
+      "case": "all_derived_null_split",
+      "where": "loader",
+      "label": "σ_contact-free / σ_full — constriction overestimation",
+      "old": [
+        [
+          "31.0×",
+          "31.0×",
+          "0%"
+        ]
+      ],
+      "new": [
+        [
+          "31.0×",
+          "31.0×",
+          "—"
+        ]
+      ]
+    },
+    {
+      "case": "all_derived_null_fourcol",
+      "where": "loader",
+      "label": "Bruggeman overestimation, R_brug = σ_Bruggeman / σ_ionic",
+      "old": [
+        [
+          "31.0×",
+          "37.0×",
+          "+19.4%"
+        ]
+      ],
+      "new": [
+        [
+          "31.0×",
+          "37.0×",
+          "—"
+        ]
+      ]
+    },
+    {
+      "case": "all_derived_null_fourcol",
+      "where": "loader",
+      "label": "σ_Bruggeman / σ_ionic — EMT vs Network solver",
+      "old": [
+        [
+          "41.0×",
+          "43.0×",
+          "+4.9%"
+        ]
+      ],
+      "new": [
+        [
+          "41.0×",
+          "43.0×",
+          "—"
+        ]
+      ]
+    },
+    {
+      "case": "all_derived_null_fourcol",
+      "where": "loader",
+      "label": "σ_contact-free / σ_full — constriction overestimation",
+      "old": [
+        [
+          "31.0×",
+          "37.0×",
+          "+19.4%"
+        ]
+      ],
+      "new": [
+        [
+          "31.0×",
+          "37.0×",
+          "—"
+        ]
+      ]
+    },
+    {
+      "case": "brug_null_no_phi_csv",
+      "where": "loader",
+      "label": "σ_Bruggeman / σ_ionic — EMT vs Network solver",
+      "old": [
+        [
+          "41.0×",
+          "41.0×",
+          "0%"
+        ]
+      ],
+      "new": [
+        [
+          "41.0×",
+          "41.0×",
+          "—"
+        ]
+      ]
+    },
+    {
+      "case": "brug_null_no_phi_split",
+      "where": "loader",
+      "label": "σ_Bruggeman / σ_ionic — EMT vs Network solver",
+      "old": [
+        [
+          "41.0×",
+          "41.0×",
+          "0%"
+        ]
+      ],
+      "new": [
+        [
+          "41.0×",
+          "41.0×",
+          "—"
+        ]
+      ]
+    },
+    {
+      "case": "brug_null_no_phi_fourcol",
+      "where": "loader",
+      "label": "σ_Bruggeman / σ_ionic — EMT vs Network solver",
+      "old": [
+        [
+          "41.0×",
+          "43.0×",
+          "+4.9%"
+        ]
+      ],
+      "new": [
+        [
+          "41.0×",
+          "43.0×",
+          "—"
+        ]
+      ]
+    },
+    {
+      "case": "all_derived_null_no_phi_csv",
+      "where": "loader",
+      "label": "σ_Bruggeman / σ_ionic — EMT vs Network solver",
+      "old": [
+        [
+          "41.0×",
+          "41.0×",
+          "0%"
+        ]
+      ],
+      "new": [
+        [
+          "41.0×",
+          "41.0×",
+          "—"
+        ]
+      ]
+    },
+    {
+      "case": "all_derived_null_no_phi_csv",
+      "where": "loader",
+      "label": "σ_contact-free / σ_full — constriction overestimation",
+      "old": [
+        [
+          "31.0×",
+          "31.0×",
+          "0%"
+        ]
+      ],
+      "new": [
+        [
+          "31.0×",
+          "31.0×",
+          "—"
+        ]
+      ]
+    },
+    {
+      "case": "all_derived_null_no_phi_split",
+      "where": "loader",
+      "label": "σ_Bruggeman / σ_ionic — EMT vs Network solver",
+      "old": [
+        [
+          "41.0×",
+          "41.0×",
+          "0%"
+        ]
+      ],
+      "new": [
+        [
+          "41.0×",
+          "41.0×",
+          "—"
+        ]
+      ]
+    },
+    {
+      "case": "all_derived_null_no_phi_split",
+      "where": "loader",
+      "label": "σ_contact-free / σ_full — constriction overestimation",
+      "old": [
+        [
+          "31.0×",
+          "31.0×",
+          "0%"
+        ]
+      ],
+      "new": [
+        [
+          "31.0×",
+          "31.0×",
+          "—"
+        ]
+      ]
+    },
+    {
+      "case": "all_derived_null_no_phi_fourcol",
+      "where": "loader",
+      "label": "Bruggeman overestimation, R_brug = σ_Bruggeman / σ_ionic",
+      "old": [
+        [
+          "31.0×",
+          "37.0×",
+          "+19.4%"
+        ]
+      ],
+      "new": [
+        [
+          "31.0×",
+          "37.0×",
+          "—"
+        ]
+      ]
+    },
+    {
+      "case": "all_derived_null_no_phi_fourcol",
+      "where": "loader",
+      "label": "σ_Bruggeman / σ_ionic — EMT vs Network solver",
+      "old": [
+        [
+          "41.0×",
+          "43.0×",
+          "+4.9%"
+        ]
+      ],
+      "new": [
+        [
+          "41.0×",
+          "43.0×",
+          "—"
+        ]
+      ]
+    },
+    {
+      "case": "all_derived_null_no_phi_fourcol",
+      "where": "loader",
+      "label": "σ_contact-free / σ_full — constriction overestimation",
+      "old": [
+        [
+          "31.0×",
+          "37.0×",
+          "+19.4%"
+        ]
+      ],
+      "new": [
+        [
+          "31.0×",
+          "37.0×",
+          "—"
+        ]
+      ]
+    }
+  ],
+  "changed_cases": 24,
+  "old_new_template_equal": true,
+  "template_sha256": "78be881634be85f6391b79a4a7bcebf11b7968537fe9d67bd5afb8cbb63df71c",
+  "http": {
+    "source": {
+      "200": 112,
+      "500": 16
+    },
+    "old": {
+      "200": 112,
+      "500": 16
+    }
+  },
+  "input_files_all_unchanged": true,
+  "all_changes_only_stale_delta_to_dash": true,
+  "state_label_controls": [
+    {
+      "case": "valid_zero_0.0_no_through_path_h_fourcol",
+      "cells": [
+        "비관통 (관통 경로 없음)",
+        "계산됨",
+        ""
+      ],
+      "passed": true
+    },
+    {
+      "case": "valid_zero_0.0_no_through_path_p_fourcol",
+      "cells": [
+        "계산됨",
+        "비관통 (관통 경로 없음)",
+        ""
+      ],
+      "passed": true
+    },
+    {
+      "case": "valid_zero_0.0_no_through_path_both_fourcol",
+      "cells": [
+        "비관통 (관통 경로 없음)",
+        "비관통 (관통 경로 없음)",
+        ""
+      ],
+      "passed": true
+    },
+    {
+      "case": "not_computed_None_full_over_conduction_h_fourcol",
+      "cells": [
+        "미계산 — FULL 모형 한계 (full_over_conduction · 수치 인증 통과 · q > 1.5 출력 상한 · 값 미제공 · 기술 실패 아님 — 거부된 q 와 증서 = 레코드 증서)",
+        "계산됨",
+        ""
+      ],
+      "passed": true
+    },
+    {
+      "case": "not_computed_None_full_over_conduction_p_fourcol",
+      "cells": [
+        "계산됨",
+        "미계산 — FULL 모형 한계 (full_over_conduction · 수치 인증 통과 · q > 1.5 출력 상한 · 값 미제공 · 기술 실패 아님 — 거부된 q 와 증서 = 레코드 증서)",
+        ""
+      ],
+      "passed": true
+    },
+    {
+      "case": "not_computed_None_full_over_conduction_both_fourcol",
+      "cells": [
+        "미계산 — FULL 모형 한계 (full_over_conduction · 수치 인증 통과 · q > 1.5 출력 상한 · 값 미제공 · 기술 실패 아님 — 거부된 q 와 증서 = 레코드 증서)",
+        "미계산 — FULL 모형 한계 (full_over_conduction · 수치 인증 통과 · q > 1.5 출력 상한 · 값 미제공 · 기술 실패 아님 — 거부된 q 와 증서 = 레코드 증서)",
+        ""
+      ],
+      "passed": true
+    }
+  ]
+}
