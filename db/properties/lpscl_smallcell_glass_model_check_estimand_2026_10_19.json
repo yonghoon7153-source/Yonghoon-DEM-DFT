@@ -151,6 +151,165 @@
    "state": "draft",
    "by": "agent",
    "note": "사용자 10-19 *'이것만 하고 합쳐서 편지 보내자'* — 실행 승인 · 카드 잠정 · 외부 1저자 동의는 편지 DA Q-DA-4 · 결과 없음 · 결정 D-2026-10-19-lpscl-smallcell-glass-model-check proposed"
+  },
+  {
+   "at": "2026-10-19",
+   "state": "draft",
+   "by": "agent",
+   "note": "결과 전 편집 — 기계_판독_값 블록 보탬 (산문과 같은 숫자 · 도구가 여기서만 읽는다) · 문턱 · 설계 안 바뀜 · 결과 0"
   }
- ]
+ ],
+ "기계_판독_값": {
+  "⚠": "도구 (melt_quench_uma.py --eos_path · glass_model_check.py) 가 숫자를 여기서만 읽는다 — 위 산문과 같은 값이다 (2026-10-19 · 결과 전 · 도구가 숫자를 자체 보관하지 않게)",
+  "path_scales": [
+   0.85,
+   0.88,
+   0.91,
+   0.94,
+   0.97,
+   1.0,
+   1.03
+  ],
+  "path_ext_low": [
+   0.82,
+   0.79
+  ],
+  "path_ext_high": [
+   1.06,
+   1.09
+  ],
+  "ext_trigger_x": [
+   0.86,
+   1.02
+  ],
+  "uma_mode": "default",
+  "relax_fmax_eV_A": 0.02,
+  "relax_max_steps": 3000,
+  "topo_PS_A": 2.6,
+  "topo_SS_A": 2.3,
+  "min_points_fit": 5,
+  "eps_threshold": 0.03,
+  "uma_selfconsistency_tol": 0.005,
+  "k_band_trigger_GPa": 0.1,
+  "pulay_trigger_GPa": 0.05,
+  "min_valid_structures": 3,
+  "control_seeds": {
+   "A": 3,
+   "B": 4
+  },
+  "qe": {
+   "ecutwfc": 52,
+   "ecutrho": 520,
+   "kpoints": "gamma",
+   "occupations": "smearing",
+   "smearing": "gaussian",
+   "degauss": 0.01,
+   "conv_thr": "1.0d-8",
+   "mixing_mode": "plain",
+   "mixing_beta": 0.2,
+   "mixing_ndim": 8,
+   "electron_maxstep": 200,
+   "nosym": true,
+   "nspin": 1,
+   "pp": {
+    "Li": "li_pbe_v1.4.uspp.F.UPF",
+    "P": "P.pbe-n-rrkjus_psl.1.0.0.UPF",
+    "S": "s_pbe_v1.4.uspp.F.UPF",
+    "Cl": "cl_pbe_v1.4.uspp.F.UPF"
+   }
+  },
+  "qe_relax_forc_conv_thr": "1.0d-3",
+  "qe_k_control": "2 2 2 0 0 0",
+  "qe_pulay_control_ecut": [
+   64,
+   640
+  ],
+  "d3": {
+   "s6": 1.0,
+   "s8": 0.7875,
+   "a1": 0.4289,
+   "a2": 4.4407,
+   "alp": 14.0,
+   "s9_main": 0.0,
+   "s9_atm": 1.0
+  },
+  "bvse_grid": 56,
+  "bvse_iso_main": 0.5,
+  "bvse_min_per_system": 4,
+  "bvse_onset_step": 0.05,
+  "bvse_onset_differ_steps": 3,
+  "bvse_onset_same_steps": 1,
+  "bvse_control": {
+   "map": "db/properties/bvse_modelc/modelc_bvse_map.npy",
+   "onset": {
+    "a": 0.4,
+    "b": 0.35,
+    "c": 1.4
+   },
+   "iso_pct": {
+    "0.25": 1.23,
+    "0.5": 3.32,
+    "1.0": 8.36,
+    "1.5": 13.44,
+    "2.0": 17.85
+   }
+  },
+  "rho_ref_g_cm3": {
+   "A": 1.91347,
+   "B": 1.88
+  },
+  "a_fingerprint": {
+   "1": [
+    2.037,
+    12,
+    1.6212
+   ],
+   "2": [
+    2.021,
+    12,
+    1.5782
+   ],
+   "3": [
+    2.0055,
+    12,
+    1.5933
+   ],
+   "4": [
+    2.0324,
+    12,
+    1.591
+   ],
+   "5": [
+    2.03,
+    11,
+    1.6181
+   ]
+  },
+  "a_fingerprint_tol": {
+   "min_PS_A": 0.003,
+   "rho": 0.001
+  },
+  "b_structures": {
+   "1": [
+    "kgy",
+    "93913580166614d5"
+   ],
+   "2": [
+    "kgy",
+    "5a990bc4b633d99d"
+   ],
+   "3": [
+    "gabia",
+    "13ee12b07e67b32c"
+   ],
+   "4": [
+    "gabia",
+    "1fcc5943b2848b02"
+   ],
+   "5": [
+    "gabia",
+    "172d34407410ce0f"
+   ]
+  }
+ }
 }
