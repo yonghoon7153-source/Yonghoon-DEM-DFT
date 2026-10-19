@@ -33,5 +33,12 @@
   "판_문제": "GitHub oncvpsp 에 3.2.3 소스가 없다 (태그 4.0.1 · master 에 old_optimize 없음) — 4.0.1 에는 3.3.0 optimize 수정 · 4.0.1 modcore 3·4 차 도함수 잡음 제거가 들어 있어 숫자가 조금 다를 수 있다 ⇒ 러너는 재고 기록만 · UPF 설치는 차이를 보고 정한다 (필요하면 같은 실행의 psp8+UPF 짝으로 psp8→UPF 변환기를 검증해 배포본에 쓴다)",
   "도구": "tools/electronic/oncv_regen_check.py (psp8 열마다 상대 대조 · 추출 · psfile · md5 · selftest 12/12 · 깨기 4/5 빨강 + 1 등가 변이 (mmax 헤더 — 모양 대조가 같은 곳을 잡는다)) · 실물: 배포 psp8 대 .out 안의 psp8 = 상대 0 · tools/electronic/make_nd3plus_nc_upf_gabia.sh (가짜 트리 시험: 같음 0 · 2 % 다름 기록 0 · md5·받기 실패 3 · cmake·gfortran·LAPACK 없음 5 · ONCVPSP ERROR 6)",
   "CPU": "ONCVPSP 빌드·원자 계산 (수 초) — QE 계산 아님 (준비)"
+ },
+ "재실행_2026_10_19_1456": {
+  "시작": "gabia 14:56:34 — worktree /data/work/wt_ndq3_1019c · HEAD 58dd54f13 (Bader 경로 파일 = 0bca4188 과 같다 · 58dd54f1 은 NC 준비 도구만 더함) · DRY_RUN 통과 뒤 tmux ndq3bader 시작 (pp.x plot_num 17 → bader → 요약)",
+  "계보": "✓ 셀 0.0e+00 Å · 좌표 0.0e+00 · 120 원자 — 차가 정확히 0 = SCF 입력 (kprobe.in) 이 vc-relax 최종 Å 좌표·셀을 그대로 옮긴 것",
+  "실행파일": "pp.x · bader · libmpi /lib/x86_64-linux-gnu/libmpi.so.40 → /usr/bin/mpirun · np 8 · OMP 1 (CPU 후처리)",
+  "고친_판_재확인_2026_10_19": "가짜 트리 (Å 좌표 vc-relax 출력 + crystal SCF 입력 · 13 원자): 옛 판 212c94a9 = gabia 와 같은 메시지로 멈춤 (분율 차 4.77e-01) · 새 판 = 통과 (5.2e-11) · 원자 하나 0.05 Å 옮김 = 잡음 (3.6e-03)",
+  "회수_계획": "■ 끝 확인 → OUT SHA256SUMS 대조 → cube (nd_rho_ae.cube) · filplot (nd_ae) 빼고 db/raw/nd_q3_bader_2026_10_19/ 로 → 복사본 대조 (--ignore-missing) → 사용자 commit·push (gabia 자격 증명)"
  }
 }
