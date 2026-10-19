@@ -1,0 +1,3 @@
+|a1| 7.00 |a2| 6.92 |a3| 69.47 A(a1xa2) 42.1 A^2  height 56.90 A  V 2395
+Cl114: alpha-check max|dphi| 7.11e-15 V · phi range over sites -10.19 .. +18.18 V · mean phi |dz| 6.5-8.5 A +6.11 V (n 8) · |dz| > 22.8 A -9.77 V (n 24) · difference 15.88 V per unit charge · screened eps 4/5: 4.0/3.2 V
+S51: alpha-check max|dphi| 8.88e-15 V · phi range over sites -10.19 .. +18.18 V · mean phi |dz| 6.5-8.5 A +7.27 V (n 6) · |dz| > 22.8 A -9.78 V (n 24) · difference 17.05 V per unit charge · screened eps 4/5: 4.3/3.4 V
