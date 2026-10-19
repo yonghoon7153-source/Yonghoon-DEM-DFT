@@ -9027,6 +9027,64 @@
     "근거_발화": "AskUserQuestion 답 (2026-10-19 · 이 세션): 'li2s 결정 셋을 비준할까요? … ① B 650 K 카드 ② 카드 개정 CX ③ 600 K 대조 계 마감' → '셋 다 비준 (Recommended)' — 앞선 발화 'li2S는 이렇게 회신 왔어' (회신 CX 원문 붙여넣기)",
     "decision_digest": "sha256:d8b1b22e013f9d5f30c1b2654593dc46d3caf4e9baaad0b7b639612966845999"
    }
+  },
+  {
+   "id": "D-2026-10-19-lpscl-smallcell-glass-model-check",
+   "schema_version": 2,
+   "kind": "estimand",
+   "scope": "lpscl_smallcell.glass_model_check",
+   "slot": "lpscl_smallcell_glass_model_check",
+   "applies_to": {
+    "systems": [
+     "lpscl_smallcell_glass",
+     "li3ps4_glass"
+    ],
+    "tasks": [
+     "li2s_glass_model_check_pv_bvse"
+    ],
+    "methods": [
+     "uma-s-1p1-omat",
+     "qe_pbe_uspp_52_520_gamma",
+     "dftd3_bj_pbe",
+     "bvse_softbv"
+    ],
+    "use_cases": [
+     "internal"
+    ]
+   },
+   "title": "li2s 소셀 유리 모델 검증 (잠정) — UMA↔DFT 압력–부피 대조 (같은 구조 · 0 K 등방 이온 이완 경로 · UMA · PBE · PBE+D3 BM3 평형 부피) + 정적 BVSE 지도 (A 5 · B 5) · 수송 카드 아님 (트랙 li2s · 외부 1저자 동의 대기 = 편지 DA)",
+   "statement": "카드 db/properties/lpscl_smallcell_glass_model_check_estimand_2026_10_19.json. 주 보고량 ε_V(PBE|UMA) = V₀^PBE / V₀^UMA − 1 (구조마다 · 계 중앙값) — 경로 x_V ∈ {0.85 … 1.03} 7 점 (연장 규칙 한 번) · UMA default 고정셀 FIRE 0.02 eV/Å 이완 기하 위 QE PBE 단일점 (09-16 소셀 카드 §3b 설정 · 52/520 · Γ) · D3(BJ) 2체 · ASE BM3. 갈래 p1 |중앙 ε| + 띠 ≤ 3 % · p2 · p3 · p0 (띠 = 밀도 중앙 시드 PBE 이완 대조 |δP| / B₀ + k 대조) · 분해 표 (d_열 · d_모델 · d_분산 · d_나머지) · 대조 잡 (UMA 자기일관 0.5 % · 이완 · k · Pulay · BVSE 정본 재현 · 입력 설정) 결과 전. BVSE = iso 0.5 채널 % 주 · 완전 분리 (계마다 ≥ 4) 일 때만 '구분'. D · R · Ea · σ 를 다루지 않는다.",
+   "rationale": "회신 CX 미해결 ① *'UMA↔DFT 단일점·압력–부피 대조 … 그게 이 항목을 실제로 가를 측정입니다'* · 사용자 10-19 *'그냥 닫아? … 전혀 발전적이지 않은거 같은데'* → *'이것만 하고 합쳐서 편지 보내자'*.",
+   "decision_state": "proposed",
+   "record_kind": "estimand",
+   "results_seen": false,
+   "results_seen_note": "모델 검증 결과 0 — A 구조는 repo 밖 · UMA 경로 · QE · D3 · BVSE 를 이 열 구조에 돌린 적 없다 (카드 results_seen_note)",
+   "card": "db/properties/lpscl_smallcell_glass_model_check_estimand_2026_10_19.json",
+   "depends_on": [
+    "D-2026-10-14-lpscl-smallcell-glass-control-bmeasurable"
+   ],
+   "evidence": [
+    "kb/reviews/li2s1a_CX_reply_li2s_glass_control_readout_2026_10_19.md",
+    "kb/reviews/codex_BR_reply_li2s_layer1_g2_density_2026_09_14.md",
+    "db/properties/lpscl_smallcell_uma_qe_force_estimand_2026_09_16.json",
+    "db/properties/lpscl_glass_control_li3ps4_runlog_2026_10_05.json"
+   ],
+   "reopen_criteria": [
+    "없다 — PBE+D3 밀도로 다시 담금질 · 셀 확대 · 고온 PES 대조 · 다른 조성 · 400 원자는 새 트랙",
+    "외부 1저자가 설계를 바꾸면 다른 부분의 결과는 기록만 (마감 문서 · 문장에 안 싣는다)"
+   ],
+   "track": {
+    "name": "li2s",
+    "first_author": "외부 1저자 (사용자 아님)"
+   },
+   "proposed_by": [
+    {
+     "actor_type": "agent",
+     "actor_id": "claude",
+     "date": "2026-10-19"
+    }
+   ],
+   "_note": "proposed — 사용자 실행 승인 (10-19 '이것만 하고 합쳐서 편지 보내자') · 외부 1저자 동의는 편지 DA Q-DA-4 · 원장 active 전환은 그 뒤 사용자 비준."
   }
  ]
 }
