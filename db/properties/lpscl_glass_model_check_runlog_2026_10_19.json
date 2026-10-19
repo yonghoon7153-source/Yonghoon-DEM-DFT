@@ -279,5 +279,28 @@
   ],
   "⚠_발견_잠복_결함_미수정": "tools/doping/generate_dft_inputs.py --from_xyz 경로는 CLI 의 --electron_maxstep · --mixing_beta · --mixing_ndim · --mixing_mode 를 받기만 하고 scf_from_xyz 로 넘기지 않는다 (생성기 기본 100 · 0.2 · 8 · plain 으로 고정) — 조용히 틀린 경로. 저장소에 그 조합으로 만든 입력 기록은 없다 (grep). 이번 경로는 generate_pwin 을 직접 불러 카드 표로 대조하므로 영향 없음 · 고치는 것은 따로 (open_items)",
   "by": "agent · 2026-10-19"
+ },
+ "✅_UMA_경로_회수_2026_10_20": {
+  "회수": "kgy ~/wt_mcpath_1019 → 1fcd674d · db/raw/lpscl_glass_model_check_2026_10_19/uma_path/ (구조 10 폴더 · 점마다 xyz + uma_path.json · run.log) · SHA256SUMS 81 파일 대조 ✓ (클라우드 sha256sum -c)",
+  "실행": "kgy GPU · melt_quench_uma.py --eos_path (Nd EOS pw.x 옆 · 사용자 기계 결정 그대로) · run.log 끝 '■ 끝 — 구조 10 · 점 70 · 미수렴 0' · rc 0",
+  "수렴": "70/70 converged (Fmax ≤ 0.02 eV/Å) · FIRE 스텝 13–249 (최대 3000 에 한참 못 미침)",
+  "토폴로지_규칙": "구조마다 7 점의 P–S (≤ 2.6) · S–S (≤ 2.3) 수가 x = 1.00 점과 전부 같다 ⇒ 뺀 점 0 · 경로 불량 0 — A s1–s4 = 48/0 · A s5 = 47/1 (원 구조부터 · 카드 a_fingerprint seed5 의 11 과 같은 특징 · 경로 중 바뀐 게 아님) · B s1–s5 = 60/0",
+  "P_UMA_x1_GPa_기록만": {
+   "A_s1": -0.366,
+   "A_s2": -0.298,
+   "A_s3": -0.364,
+   "A_s4": -0.275,
+   "A_s5": -0.357,
+   "B_s1": -0.322,
+   "B_s2": -0.327,
+   "B_s3": -0.254,
+   "B_s4": -0.434,
+   "B_s5": -0.276
+  },
+  "P_UMA_읽기": "열 구조 다 −0.25 ~ −0.43 GPa (0 K 정적 · 운동 항 없음) · 기계 묶음 (kgy s1·s2 / gabia s3–s5) 사이 눈에 띄는 차이 없음 — UMA 안의 값이라 인용 안 함 · ε 판독 아님",
+  "⛔_아직_안_한_것": "ε(PBE|UMA) · V₀ 맞춤 · UMA 자기일관 (E-맞춤 V₀ 대 P-근 0.5 %) 은 판독 단계 — QE 70 점 + 대조 6 이 있어야 하고 커밋된 glass_model_check.py --eos 로만 읽는다",
+  "⚠_출처_빈칸": "uma_path.json meta 의 fairchem 버전이 '?' (러너가 못 읽음) — UMA 체크포인트 · 모드 · 장치는 기록됨 · 다음 kgy 블록 때 버전 한 줄 받아 둘 것",
+  "다음": "QE 단계 = kgy Nd EOS (≈ 10-26) 뒤 kgy GPU (사용자 기계 결정) — --qe_inputs (kgy pseudo_dir) → 메모리 프로브 (검사용 · CPU) → 경로 70 + 대조 6 → 회수 → --eos",
+  "by": "agent · 2026-10-20"
  }
 }
