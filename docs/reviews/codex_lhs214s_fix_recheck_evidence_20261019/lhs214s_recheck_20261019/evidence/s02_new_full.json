@@ -1,0 +1,31 @@
+{
+  "label": "new",
+  "source": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\lhs214s_recheck_20261019\\source",
+  "sha256": "eaff4ba49cfe4a245eb7039a694292eb1cc0967e0037c558c4cbcf5c79bc9896",
+  "command": [
+    "C:\\Users\\Administrator\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\python.exe",
+    "-X",
+    "utf8",
+    "-B",
+    "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\lhs214s_recheck_20261019\\source\\scripts\\test_l214r_r01_restored_full.py"
+  ],
+  "cwd": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\lhs214s_recheck_20261019\\source",
+  "python": "3.12.14 (main, Aug 25 2026, 14:01:42) [MSC v.1944 64 bit (AMD64)]",
+  "platform": "Windows-11-10.0.26200-SP0",
+  "returncode": 1,
+  "seconds": 11.16530779999448,
+  "stdout_tail": [
+    "  PASS  B9 ★ τ 다시 읽기 (v13_reread_tau — 다시 읽기 관문은 픽스처 그대로 통과 · 원천만 복원) 거부 = load_tau_results FillRefusal 전파 — 9 변이 중 실패 0",
+    "",
+    "test_l214r_r01_restored_full: 23/29 PASS   FAILED: [\"E0 ★ 전제 (10-19 L214R-S02) — 이 환경에서 세 경계 raw q 를 정확히 내는 box_y 를 등록 입력에서 찾았다 (걸음 {'next': 18, 'eq': 17} · 상한 512 · 허용 폭 없음) {'next': 0.7281737983374861, 'eq': 0.7281737983374863}\", 'E1 전제 불성립 (E0 — 이 환경의 경계 입력 없음) — 판정하지 않는다', 'E2 전제 불성립 (E0 — 이 환경의 경계 입력 없음) — 판정하지 않는다', 'E3 전제 불성립 (E0 — 이 환경의 경계 입력 없음) — 판정하지 않는다', 'E4 전제 불성립 (E0 — 이 환경의 경계 입력 없음) — 판정하지 않는다', 'E′ 전제 불성립 (E0 — 이 환경의 정확한 경계 입력 없음) — 이식성 판정하지 않는다']"
+  ],
+  "env": {
+    "PYTHONPATH": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\lhs214s_recheck_20261019\\source\\scripts;C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\lhs214s_recheck_20261019\\source\\webapp;C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\lhs_coverage_review_20260930\\deps;C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\gen2_network_reverify3_20261007\\deps",
+    "TMP": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\lhs214s_recheck_20261019\\tmp\\s02_new",
+    "TEMP": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\lhs214s_recheck_20261019\\tmp\\s02_new",
+    "OMP_NUM_THREADS": "1",
+    "OPENBLAS_NUM_THREADS": "1",
+    "MKL_NUM_THREADS": "1"
+  },
+  "log": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\lhs214s_recheck_20261019\\evidence\\s02_new_full.log"
+}

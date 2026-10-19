@@ -1,0 +1,12 @@
+{
+  "command": [
+    "C:\\Users\\Administrator\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\python.exe",
+    "-X",
+    "utf8",
+    "-B",
+    "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\lhs214s_recheck_20261019\\source\\webapp\\test_web09_accepted_refresh.py"
+  ],
+  "returncode": 0,
+  "seconds": 6.563,
+  "log": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\lhs214s_recheck_20261019\\evidence\\s04_reg_web09.log"
+}

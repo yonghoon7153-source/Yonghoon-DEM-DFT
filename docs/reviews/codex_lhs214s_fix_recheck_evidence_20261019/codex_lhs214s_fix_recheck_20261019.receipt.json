@@ -1,0 +1,12 @@
+{
+  "file": "codex_lhs214s_fix_recheck_20261019.zip",
+  "bytes": 139590801,
+  "sha256": "e6dda87144db957624d799f5c465ea659eef104ca99876d7a95440bfbcef1c8e",
+  "entries": 6021,
+  "payload_entries": 6020,
+  "uncompressed_bytes": 319679292,
+  "crc_ok": true,
+  "all_payload_sha256_ok": true,
+  "current_pin": "685c2bbdbbfee82898a9ec062bb9c2bc94612fc8",
+  "baseline_pin": "77d8fd44545c33cd10ab18fc250c7ad3023833ea"
+}

@@ -1,0 +1,45 @@
+--- 77d8fd445/webapp/templates/single.html
++++ 685c2bbdb/webapp/templates/single.html
+@@ -2108,10 +2108,11 @@
+   },
+   'σ_brug/σ_grain (Bruggeman)': {
+     title: 'Bruggeman 추정 비율 (σ_brug/σ_grain)',
+-    formula: {% if metrics and metrics.phi_se is defined %}
++    {#- ★ 10-19 L214R-S04 (Codex 재확인 2 §5 · 1저자 Q4) — 숫자일 때만 형식화 (`is number` = 키 없음 · null 둘 다 거름) · 값 없으면 '—' (옛 판: null = 500 · 키 없음 = 지어낸 0.0000) #}
++    formula: {% if metrics and metrics.phi_se is number %}
+       'σ_brug/σ_grain = φ_SE × f_perc / τ²\n'
+-      + '= {{ "%.3f"|format(metrics.phi_se) }} × {{ "%.3f"|format(metrics.percolation_pct / 100 if metrics.percolation_pct is defined else 1.0) }} / {{ "%.2f"|format(metrics.tortuosity_recommended if metrics.tortuosity_recommended is defined else (metrics.tortuosity_mean if metrics.tortuosity_mean is defined else 1.0)) }}²\n'
+-      + '= {{ "%.4f"|format(metrics.sigma_ratio if metrics.sigma_ratio is defined else 0) }}\n\n'
++      + '= {{ "%.3f"|format(metrics.phi_se) }} × {{ "%.3f"|format(metrics.percolation_pct / 100 if metrics.percolation_pct is number else 1.0) }} / {{ "%.2f"|format(metrics.tortuosity_recommended if metrics.tortuosity_recommended is number else (metrics.tortuosity_mean if metrics.tortuosity_mean is number else 1.0)) }}²\n'
++      + '= {% if metrics.sigma_ratio is number %}{{ "%.4f"|format(metrics.sigma_ratio) }}{% else %}—{% endif %}\n\n'
+       + '⚠ 접촉 저항(constriction) 무시 → 3~10× 과대추정'
+     {% else %}
+       'σ_brug/σ_grain = φ_SE × f_perc / τ²\n⚠ 접촉 저항 무시 → 3~10× 과대추정'
+@@ -2184,7 +2185,7 @@
+   },
+   'σ_brug / σ_ionic': {
+     title: 'Bruggeman Overestimation vs Network Solver',
+-    formula: {% if metrics and metrics.sigma_ratio is defined and metrics.sigma_full_mScm is defined and metrics.sigma_full_mScm %}
++    formula: {% if metrics and metrics.sigma_ratio is number and metrics.sigma_full_mScm is number and metrics.sigma_full_mScm %}{#- ★ 10-19 L214R-S04 — null 곱셈 = 500 이던 자리 #}
+       'σ_brug / σ_ionic = {{ "%.4f"|format(metrics.sigma_ratio * sigma_grain(metrics)) }} / {{ "%.4f"|format(metrics.sigma_full_mScm) }}\n'
+       + '= {{ "%.1f"|format(metrics.sigma_ratio * sigma_grain(metrics) / metrics.sigma_full_mScm) }}×\n\n'
+       + 'σ_brug: Bruggeman 추정 (φ×f_perc/τ², constriction 무시)\n'
+@@ -2269,14 +2270,14 @@
+   },
+   'σ_Bruggeman (mS/cm)': {
+     title: 'Bruggeman EMT Prediction',
+-    formula: {% if metrics and metrics.phi_se is defined and metrics.sigma_ratio is defined %}
++    formula: {% if metrics and metrics.phi_se is number and metrics.sigma_ratio is number %}{#- ★ 10-19 L214R-S04 — 숫자일 때만 #}
+       'σ_Bruggeman = σ_grain × φ_SE × f_perc / τ²\n'
+-      + '= {{ "%.1f"|format(sigma_grain(metrics)) }} × {{ "%.3f"|format(metrics.phi_se) }} × {{ "%.3f"|format(metrics.percolation_pct / 100 if metrics.percolation_pct is defined else 1.0) }} / {{ "%.2f"|format(metrics.tortuosity_recommended if metrics.tortuosity_recommended is defined else (metrics.tortuosity_mean if metrics.tortuosity_mean is defined else 1.0)) }}²\n'
++      + '= {{ "%.1f"|format(sigma_grain(metrics)) }} × {{ "%.3f"|format(metrics.phi_se) }} × {{ "%.3f"|format(metrics.percolation_pct / 100 if metrics.percolation_pct is number else 1.0) }} / {{ "%.2f"|format(metrics.tortuosity_recommended if metrics.tortuosity_recommended is number else (metrics.tortuosity_mean if metrics.tortuosity_mean is number else 1.0)) }}²\n'
+       + '= {{ "%.4f"|format(metrics.sigma_ratio * sigma_grain(metrics)) }} mS/cm\n\n'
+       + 'σ_grain = {{ "%.1f"|format(sigma_grain(metrics)) }} mS/cm (LPSCl grain interior){% if sigma_grain_note(metrics) %}\n{{ sigma_grain_note(metrics) }}{% endif %}\n'
+       + 'φ_SE = {{ "%.3f"|format(metrics.phi_se) }}\n'
+-      + 'f_perc = {{ "%.1f"|format(metrics.percolation_pct if metrics.percolation_pct is defined else 100) }}%\n'
+-      + 'τ = {{ "%.2f"|format(metrics.tortuosity_recommended if metrics.tortuosity_recommended is defined else (metrics.tortuosity_mean if metrics.tortuosity_mean is defined else 0)) }}'
++      + 'f_perc = {{ "%.1f"|format(metrics.percolation_pct if metrics.percolation_pct is number else 100) }}%\n'
++      + 'τ = {{ "%.2f"|format(metrics.tortuosity_recommended if metrics.tortuosity_recommended is number else (metrics.tortuosity_mean if metrics.tortuosity_mean is number else 0)) }}'
+     {% else %}
+       'σ_Bruggeman = σ_grain × φ_SE × f_perc / τ²\nσ_grain = {{ "%.1f"|format(sigma_grain(metrics)) }} mS/cm (LPSCl)'
+     {% endif %},

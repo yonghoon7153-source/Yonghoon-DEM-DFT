@@ -1,0 +1,28 @@
+# 묶음 루트 기준 경로	bytes	sha256	왜 리포에 사본이 없나
+lhs214rr_recheck_20261019/source/AGENTS.md	2822	38b8708ba8a50c8a08819c7c4138763bce02b6dc6c5b8112f4c8aa386fb17ec3	git 사본 = 핀 blob 같음 (685c2bbdb 12/12 · 77d8fd445 10/10)
+lhs214rr_recheck_20261019/source/docs/reviews/lhs_network_batch_registration_20261007_g2.md	63079	7fd158cb5b130e2150e58e5938c92b80731fc3292ef8e363346adfc2b62e1699	git 사본 = 핀 blob 같음 (685c2bbdb 12/12 · 77d8fd445 10/10)
+lhs214rr_recheck_20261019/source/scripts/analyze_contacts.py	80829	a383ada7aef3d13ba08bd84728a20b6207f9b124a01ce3852c01ae2518ca1aa9	git 사본 = 핀 blob 같음 (685c2bbdb 12/12 · 77d8fd445 10/10)
+lhs214rr_recheck_20261019/source/scripts/check_all.sh	44185	3d4b72aec9ff75141d93e8a53b779388890aba9071ca8609e39383081119f245	git 사본 = 핀 blob 같음 (685c2bbdb 12/12 · 77d8fd445 10/10)
+lhs214rr_recheck_20261019/source/scripts/network_conductivity.py	180968	a525e2db98fd044f0aa9353b028a3d5c7164c006a8e870dda24e7a0991d9751e	git 사본 = 핀 blob 같음 (685c2bbdb 12/12 · 77d8fd445 10/10)
+lhs214rr_recheck_20261019/source/scripts/supp20_input_receipt.py	107253	2f83b771209099c051b174a029fad36da18a51823c8774e226dc75e33a3443eb	git 사본 = 핀 blob 같음 (685c2bbdb 12/12 · 77d8fd445 10/10)
+lhs214rr_recheck_20261019/source/scripts/tau_flux.py	125811	c0a7da6e1b73bea97136f06803810dbe159bf5c4395d8d218a90217a58ef0f78	git 사본 = 핀 blob 같음 (685c2bbdb 12/12 · 77d8fd445 10/10)
+lhs214rr_recheck_20261019/source/scripts/test_l214r_r01_restored_full.py	33240	8ca1ece9237440b9c521cde195730038285ea9ba263bbb1d2c06135be0585940	git 사본 = 핀 blob 같음 (685c2bbdb 12/12 · 77d8fd445 10/10)
+lhs214rr_recheck_20261019/source/webapp/app.py	705589	3e82140f47c7e87b138f8a6f24b8f8575bc7476e91b8369b20cdf698b69b4bc1	git 사본 = 핀 blob 같음 (685c2bbdb 12/12 · 77d8fd445 10/10)
+lhs214rr_recheck_20261019/source/webapp/templates/single.html	282834	78be881634be85f6391b79a4a7bcebf11b7968537fe9d67bd5afb8cbb63df71c	git 사본 = 핀 blob 같음 (685c2bbdb 12/12 · 77d8fd445 10/10)
+lhs214s_recheck_20261019/evidence/compare.json	1405849	a61ae9f0018bcd83ba1787d2fec493c0a345401c6455471d15a8dc012a0eae2c	1 MB 넘는 JSON — hash-only
+lhs214s_recheck_20261019/evidence/s04_matrix_baseline.json	3663412	f78af255838d515b382020af129cf681c289484c4fd786222804871cacb2b6d4	1 MB 넘는 JSON — hash-only
+lhs214s_recheck_20261019/evidence/s04_matrix_source.json	3940550	5a49fde3585a67c1cd0a8516dfe91f07378d80ef661c72703a603361e65b61c0	1 MB 넘는 JSON — hash-only
+lhs214s_recheck_20261019/evidence/source_integrity.json	1266195	96130eb468d114f6430827f92f4a268ffaf95a587ed3ae9306b6c16d28e489c0	1 MB 넘는 JSON — hash-only
+lhs214s_recheck_20261019/evidence/tree.json	3932960	cac9d92ff6e89b79a94b717ad121b4db2ba66634cf8090c9a94f4a69c7269c89	1 MB 넘는 JSON — hash-only
+lhs214s_recheck_20261019/source/AGENTS.md	2822	38b8708ba8a50c8a08819c7c4138763bce02b6dc6c5b8112f4c8aa386fb17ec3	git 사본 = 핀 blob 같음 (685c2bbdb 12/12 · 77d8fd445 10/10)
+lhs214s_recheck_20261019/source/docs/reviews/codex_lhs214s_fix_recheck_request_20261019.md	6241	a665847f6216768c957d3620ad33fffa4bde8a28c6d0655b151cc4fe4d531b84	git 사본 = 핀 blob 같음 (685c2bbdb 12/12 · 77d8fd445 10/10)
+lhs214s_recheck_20261019/source/docs/reviews/lhs_network_batch_registration_20261007_g2.md	63079	7fd158cb5b130e2150e58e5938c92b80731fc3292ef8e363346adfc2b62e1699	git 사본 = 핀 blob 같음 (685c2bbdb 12/12 · 77d8fd445 10/10)
+lhs214s_recheck_20261019/source/scripts/analyze_contacts.py	80829	a383ada7aef3d13ba08bd84728a20b6207f9b124a01ce3852c01ae2518ca1aa9	git 사본 = 핀 blob 같음 (685c2bbdb 12/12 · 77d8fd445 10/10)
+lhs214s_recheck_20261019/source/scripts/check_all.sh	44645	eeb589edd6050cb35b461ae7b99afe4fb934881ccacb7a0bd2ed3a05b984fc0d	git 사본 = 핀 blob 같음 (685c2bbdb 12/12 · 77d8fd445 10/10)
+lhs214s_recheck_20261019/source/scripts/network_conductivity.py	180968	a525e2db98fd044f0aa9353b028a3d5c7164c006a8e870dda24e7a0991d9751e	git 사본 = 핀 blob 같음 (685c2bbdb 12/12 · 77d8fd445 10/10)
+lhs214s_recheck_20261019/source/scripts/supp20_input_receipt.py	114874	bcd669616fe86c34a4623118ac0a27354691d3d682b0f34bb7feb815b8408f01	git 사본 = 핀 blob 같음 (685c2bbdb 12/12 · 77d8fd445 10/10)
+lhs214s_recheck_20261019/source/scripts/tau_flux.py	125811	c0a7da6e1b73bea97136f06803810dbe159bf5c4395d8d218a90217a58ef0f78	git 사본 = 핀 blob 같음 (685c2bbdb 12/12 · 77d8fd445 10/10)
+lhs214s_recheck_20261019/source/scripts/test_l214r_r01_restored_full.py	39889	eaff4ba49cfe4a245eb7039a694292eb1cc0967e0037c558c4cbcf5c79bc9896	git 사본 = 핀 blob 같음 (685c2bbdb 12/12 · 77d8fd445 10/10)
+lhs214s_recheck_20261019/source/webapp/app.py	705589	3e82140f47c7e87b138f8a6f24b8f8575bc7476e91b8369b20cdf698b69b4bc1	git 사본 = 핀 blob 같음 (685c2bbdb 12/12 · 77d8fd445 10/10)
+lhs214s_recheck_20261019/source/webapp/templates/single.html	283178	751a248c68ccef4f8d64947b2032b1c7ca9197d74e6782cda7ac5f3f4dda1a72	git 사본 = 핀 blob 같음 (685c2bbdb 12/12 · 77d8fd445 10/10)
+lhs214s_recheck_20261019/source/webapp/test_single_null_metrics.py	8027	6f7a100fc739756842829fd63d090bccb3c51e3143fbb8542c176b140f58a149	git 사본 = 핀 blob 같음 (685c2bbdb 12/12 · 77d8fd445 10/10)

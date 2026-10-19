@@ -11804,7 +11804,7 @@
       "found_by": "codex 10-17 LHS214 수정 재확인 (영수증 lane · 임시 등록 사본만 · 원 등록 파일 무변경)",
       "opened_in": "docs/reviews/codex_review_lhs214r_fix_recheck_20261017.md",
       "title": "등록 문서 파서가 울타리 길이를 잃어 네 개 백틱 코드 블록 안의 예시 §3 를 활성 등록으로 읽는다 — 실제 ## 3. 을 ## 30. 으로 바꾸고 pending 선언을 지운 임시 사본에 네 백틱 블록 (안에 세 백틱 예시 + 가짜 §3 · 현재 code_fp) 을 넣으면 영수증 rc 0 · 실패 칸 [] (보통 세 백틱 예시만이면 rc 1 · R0 · D1)",
-      "note": "원장 ID L214R-R03 = Codex 표기 L214RR-03 (원장 ID 형식 = 앞 칸 다섯 글자까지).  판정문 §3 · 자리 (코드 핀 60ba39e22): scripts/supp20_input_receipt.py:109 · :112–:131 · :145–:160 — _MD_FENCE 가 네 개 백틱을 세 개로 기록하고 안의 세 개 백틱을 닫는 울타리로 취급.  CommonMark §4.5: 닫는 울타리 = 여는 울타리와 같은 문자 · 길이가 적어도 같아야 함.  원 L214R-04 의 일반 문서 전환 반례는 닫힘 · 현재 보통 형식의 두 등록 문서가 잘못 읽힌다는 뜻도 · 영수증 rc 0 만으로 발사가 승인됐다는 뜻도 아니다 (판정문 §3).  최소 해결: 여는 울타리 문자 · 전체 길이를 보존하고 유효한 닫는 줄 판별 · 또는 지원하지 않는 울타리 형식을 명시적으로 거부 · 이 반례와 정상 §3 · 역사 표 보존 대조를 함께 시험.  ⚠ 이 도구는 봉인 CODE_FILES 32 밖 (등록 · 영수증 도구) — 고쳐도 대기 지문 e76dbe08… 은 그대로인지 수정 때 확인.  ★ 우리 트리 재현 10-18 (Codex 탐침 무변경) = 판정값 차이 0 (docs/reviews/codex_lhs214r_fix_recheck_evidence_20261017/_repro_ours_20261018/README.md · compare_probe_outputs.json).  ⬜ 수정 계획 docs/reviews/lhs214rr_fix_plan_20261018.md (1저자 비준 대기).  ✅ 10-18 고침 f8871224b (1저자 10-18 \"비준\" Q2 · Q3 = 지원 · 시험 먼저 같은 커밋): scripts/supp20_input_receipt.py _md_section · _md_fence — 여는 울타리 문자 · 길이 보존 · 닫는 줄 = 같은 문자 · 길이 이상 · 뒤 공백만 · 닫히지 않은 울타리 = 문서 끝까지 코드 · 백틱 울타리 뒤 글의 백틱 = 울타리 아님.  selftest S12g (Codex receipt_fences 꼴 · 네 백틱 · 네 물결표 · 정보 문자열 안쪽 줄 · 세 백틱 대조 · 닫히지 않음) · S12h (지킴 — 긴 닫는 줄 · 공백 붙은 닫는 줄 · 다른 문자 줄) 112/113 → 113/113 · L214R-04 비준 전환 시험 그대로.  봉인 밖 도구 → 대기 지문 그대로.  Codex 탐침 무변경 재실행 (최종 코드) = 네 백틱 예시 rc 1 · R0 · D1 (docs/reviews/lhs214rr_fix_evidence_20261018/).  Codex 짧은 재확인 전.",
+      "note": "원장 ID L214R-R03 = Codex 표기 L214RR-03 (원장 ID 형식 = 앞 칸 다섯 글자까지).  판정문 §3 · 자리 (코드 핀 60ba39e22): scripts/supp20_input_receipt.py:109 · :112–:131 · :145–:160 — _MD_FENCE 가 네 개 백틱을 세 개로 기록하고 안의 세 개 백틱을 닫는 울타리로 취급.  CommonMark §4.5: 닫는 울타리 = 여는 울타리와 같은 문자 · 길이가 적어도 같아야 함.  원 L214R-04 의 일반 문서 전환 반례는 닫힘 · 현재 보통 형식의 두 등록 문서가 잘못 읽힌다는 뜻도 · 영수증 rc 0 만으로 발사가 승인됐다는 뜻도 아니다 (판정문 §3).  최소 해결: 여는 울타리 문자 · 전체 길이를 보존하고 유효한 닫는 줄 판별 · 또는 지원하지 않는 울타리 형식을 명시적으로 거부 · 이 반례와 정상 §3 · 역사 표 보존 대조를 함께 시험.  ⚠ 이 도구는 봉인 CODE_FILES 32 밖 (등록 · 영수증 도구) — 고쳐도 대기 지문 e76dbe08… 은 그대로인지 수정 때 확인.  ★ 우리 트리 재현 10-18 (Codex 탐침 무변경) = 판정값 차이 0 (docs/reviews/codex_lhs214r_fix_recheck_evidence_20261017/_repro_ours_20261018/README.md · compare_probe_outputs.json).  ⬜ 수정 계획 docs/reviews/lhs214rr_fix_plan_20261018.md (1저자 비준 대기).  ✅ 10-18 고침 f8871224b (1저자 10-18 \"비준\" Q2 · Q3 = 지원 · 시험 먼저 같은 커밋): scripts/supp20_input_receipt.py _md_section · _md_fence — 여는 울타리 문자 · 길이 보존 · 닫는 줄 = 같은 문자 · 길이 이상 · 뒤 공백만 · 닫히지 않은 울타리 = 문서 끝까지 코드 · 백틱 울타리 뒤 글의 백틱 = 울타리 아님.  selftest S12g (Codex receipt_fences 꼴 · 네 백틱 · 네 물결표 · 정보 문자열 안쪽 줄 · 세 백틱 대조 · 닫히지 않음) · S12h (지킴 — 긴 닫는 줄 · 공백 붙은 닫는 줄 · 다른 문자 줄) 112/113 → 113/113 · L214R-04 비준 전환 시험 그대로.  봉인 밖 도구 → 대기 지문 그대로.  Codex 탐침 무변경 재실행 (최종 코드) = 네 백틱 예시 rc 1 · R0 · D1 (docs/reviews/lhs214rr_fix_evidence_20261018/).  Codex 짧은 재확인 전.  ⚠ Codex 10-19 (핀 685c2bbdb) — 전체 종결 = 부분 유지: S01 로 울타리 공백 꼴은 닫힘 · 지원 범위 안 빈 ATX 제목 경계 결함 = 새 L214R-S06 (Codex L214S-CX01 · 이전 핀에도 있음).",
       "evidence_tests": [
         "scripts/supp20_input_receipt.py --selftest S12g · S12h (112/113 → 113/113)",
         "docs/reviews/codex_lhs214r_fix_recheck_evidence_20261017/evidence/receipt_fences/results.json",
@@ -11840,7 +11840,7 @@
     {
       "id": "L214R-S01",
       "severity": "P3",
-      "status": "claimed_fixed",
+      "status": "verified",
       "owner": "claude",
       "found_by": "codex 재확인 10-19 (리뷰 핀 77d8fd445)",
       "opened_in": "docs/reviews/codex_review_lhs214rr_fix_recheck_20261019.md",
@@ -11849,17 +11849,22 @@
       "evidence_tests": [
         "scripts/supp20_input_receipt.py --selftest S12i · S12i2 · S12i3 · S12j · S12j2 (114/118 → 118/118)"
       ],
-      "claimed_fixed_sha": "aa207a6bd"
+      "claimed_fixed_sha": "aa207a6bd",
+      "verified_sha": "685c2bbdb",
+      "verified_in": "docs/reviews/codex_review_lhs214s_fix_recheck_20261019.md",
+      "verified_by": "codex",
+      "verified_scope": "판정문 §3-1 — 지정 결함 (탭 · 공백+탭 들여쓰기 · NBSP · U+2003 닫는 줄 꼬리) + 승인된 활성 §3 안 울타리 코드 블록 값 배제 (114 문서 불일치 0 · 울타리 19,200/19,200 · 자체시험 118/118).  범위 밖 = 빈 ATX 제목 경계 (L214R-S06 = Codex L214S-CX01) · 목록 · 인용 · HTML · 들여쓴 코드 · 1–3 칸 들여쓴 제목.",
+      "verification_note": "Codex 재확인 10-19 (리뷰 핀 685c2bbdb · 비교 77d8fd445) — 증거 docs/reviews/codex_lhs214s_fix_recheck_evidence_20261019/ (반입 기록 _README_import.md)."
     },
     {
       "id": "L214R-S02",
       "severity": "P3",
-      "status": "claimed_fixed",
+      "status": "open",
       "owner": "claude",
       "found_by": "codex 재확인 10-19 (리뷰 핀 77d8fd445)",
       "opened_in": "docs/reviews/codex_review_lhs214rr_fix_recheck_20261019.md",
       "title": "L214RR2-02 · R01 경계 시험 (`scripts/test_l214r_r01_restored_full.py` E) 의 하드코딩 입력이 환경에 의존 — Codex Windows Py3.12 NumPy 2.5.3 에서 raw q 1.4999999999999962 · …958 · …956 (셋 다 문턱 아래) → 23/26 rc 1 · E1/E3 실패 뒤 복원 helper KeyError 로 E4/E5 미완결",
-      "note": "판정문 §2 · 생산 코드 · 판정식 · 합격선은 정상 (정확 경계 입력 면적 0.500000001001 · box_y …80614/…80615/…80616 으로 다섯 단언 통과).  최소 개선 = 정확한 3 노드 경계 검사를 독립 실행 · 실 사슬은 계산된 q 가 경계 전제에 맞는지 먼저 확인 · 실패해도 뒤 검사가 KeyError 로 생략되지 않게 · 허용치 완화 금지 · 원 실패 로그 보존.  우리 트리 재현 10-19 = 이 환경에서 Codex 정확 경계 입력이 18–19 ULP 위 (양방향 환경 차) · 수정 계획 docs/reviews/lhs214s_fix_plan_20261019.md (⬜ 1저자).  ✅ 10-19 고침 72da834ee (1저자 10-19 \"권고대로 ㄱ\" · 시험만 — 생산 코드 · 판정식 · 합격선 그대로): scripts/test_l214r_r01_restored_full.py E0 = 이 환경에서 실 사슬 H0 raw q 가 세 경계와 정확히 같은 box_y 를 등록 입력에서 ULP 한 걸음씩 탐색 (상한 512 · 허용 폭 없음 · 건너뛰면 문제) · 못 찾으면 E1–E4 = 전제 불성립 FAIL · E3 가 아니면 E4 는 복원 안 부름 · E5 독립 묶음 · E′ = 찾은 정확한 입력에서 ±18 ULP 출발 → 같은 판정 · 복원 helper = q_withheld 없으면 사유 (KeyError 아님).  그대로 27/27 → 30/30 · 등록 입력 +18 ULP (이 컨테이너의 Codex 환경 꼴 · 출발 raw q …962 · …960 · …956) = 고치기 전 23/26 (Codex 와 같음 · E1 · E3 · E4 KeyError · E5 미실행) → 고친 뒤 30/30 · −18 ULP 30/30.  증거 docs/reviews/lhs214s_fix_evidence_20261019/ (s02_*).  한정: Codex Windows 환경 재실행 아님.  Codex 짧은 재확인 전.",
+      "note": "판정문 §2 · 생산 코드 · 판정식 · 합격선은 정상 (정확 경계 입력 면적 0.500000001001 · box_y …80614/…80615/…80616 으로 다섯 단언 통과).  최소 개선 = 정확한 3 노드 경계 검사를 독립 실행 · 실 사슬은 계산된 q 가 경계 전제에 맞는지 먼저 확인 · 실패해도 뒤 검사가 KeyError 로 생략되지 않게 · 허용치 완화 금지 · 원 실패 로그 보존.  우리 트리 재현 10-19 = 이 환경에서 Codex 정확 경계 입력이 18–19 ULP 위 (양방향 환경 차) · 수정 계획 docs/reviews/lhs214s_fix_plan_20261019.md (⬜ 1저자).  ✅ 10-19 고침 72da834ee (1저자 10-19 \"권고대로 ㄱ\" · 시험만 — 생산 코드 · 판정식 · 합격선 그대로): scripts/test_l214r_r01_restored_full.py E0 = 이 환경에서 실 사슬 H0 raw q 가 세 경계와 정확히 같은 box_y 를 등록 입력에서 ULP 한 걸음씩 탐색 (상한 512 · 허용 폭 없음 · 건너뛰면 문제) · 못 찾으면 E1–E4 = 전제 불성립 FAIL · E3 가 아니면 E4 는 복원 안 부름 · E5 독립 묶음 · E′ = 찾은 정확한 입력에서 ±18 ULP 출발 → 같은 판정 · 복원 helper = q_withheld 없으면 사유 (KeyError 아님).  그대로 27/27 → 30/30 · 등록 입력 +18 ULP (이 컨테이너의 Codex 환경 꼴 · 출발 raw q …962 · …960 · …956) = 고치기 전 23/26 (Codex 와 같음 · E1 · E3 · E4 KeyError · E5 미실행) → 고친 뒤 30/30 · −18 ULP 30/30.  증거 docs/reviews/lhs214s_fix_evidence_20261019/ (s02_*).  한정: Codex Windows 환경 재실행 아님.  Codex 짧은 재확인 전.  ⛔ Codex 재확인 10-19 (핀 685c2bbdb) = 부분 (재개방): 실제 Windows (11 · Py 3.12.14 · NumPy 2.5.3 · SciPy 1.16.3) 원본 23/29 rc 1 — 고정 기하 (면적 .500000001 · box_x .7281737983374794) 의 box_y 한 축 탐색이 prev 목표 1.4999999999999998 을 건너뜀 (인접 box_y …863 → 1.5 · …864 → 1.4999999999999996 · ±512 ULP 1,025 입력 평가에 prev 없음 = 상한을 올려도 안 됨).  닫힘 = 실패 설명 · E4 보호 · 독립 E5.  최소 해결 = 두 번째 기하 자유도까지 공개된 유한 탐색 또는 정확 경계 보증 주체를 독립 3 노드 시험으로 명시 (판정문 §4-3) · 허용 폭 · 문턱 변경 금지.",
       "evidence_tests": [
         "scripts/test_l214r_r01_restored_full.py E0 · E′±18 · E5 (27/27 → 30/30 · +18 ULP 이동 고치기 전 23/26 → 30/30)"
       ],
@@ -11879,7 +11884,7 @@
     {
       "id": "L214R-S04",
       "severity": "P3",
-      "status": "claimed_fixed",
+      "status": "verified",
       "owner": "claude",
       "found_by": "codex 재확인 10-19 (리뷰 핀 77d8fd445)",
       "opened_in": "docs/reviews/codex_review_lhs214rr_fix_recheck_20261019.md",
@@ -11888,7 +11893,12 @@
       "evidence_tests": [
         "webapp/test_single_null_metrics.py (2/6 → 6/6)"
       ],
-      "claimed_fixed_sha": "aa6663bb9"
+      "claimed_fixed_sha": "aa6663bb9",
+      "verified_sha": "685c2bbdb",
+      "verified_in": "docs/reviews/codex_review_lhs214s_fix_recheck_20261019.md",
+      "verified_by": "codex",
+      "verified_scope": "판정문 §5 — 세 툴팁 블록 (σ_brug/σ_grain · σ_brug / σ_ionic · σ_Bruggeman) 의 null · 키 없음 (이전 128 경우 HTTP500 16 → 0 · 단언 2,432/2,432 · 정상 출력 보존 · 의도한 0.0000 → — 8).  범위 밖 = 머리 배지 null (L214R-S05) · bool · NaN · inf (`is number` 는 유한 검사 아님) · 브라우저 JS · CI 포함 (check_all 배선만 확인).",
+      "verification_note": "Codex 재확인 10-19 (리뷰 핀 685c2bbdb · 비교 77d8fd445) — 증거 docs/reviews/codex_lhs214s_fix_recheck_evidence_20261019/ (반입 기록 _README_import.md)."
     },
     {
       "id": "L214R-S05",
@@ -11899,6 +11909,17 @@
       "opened_in": "docs/reviews/lhs214s_fix_evidence_20261019/README.md",
       "title": "`/single` 머리 배지 (Percolation 등) 가 `is defined` 만 보고 숫자 형식화 — 과거 · 외부 메트릭이 JSON null 이면 여전히 500 (percolation_pct null 실측 · single.html 29 줄)",
       "note": "S04 (툴팁 세 블록) 범위 밖으로 남긴 같은 부류.  현재 정상 생산자가 null 을 쓴다는 증거 없음 (Codex 판정 §5 의 S04 와 같은 한정) · 수치 인계 무관.  고친다면 머리 배지 · 다른 툴팁의 숫자 형식화 자리를 전수로 보고 `is number` (또는 값 없음 = 배지 숨김) — 문자열 숫자 · 옛 케이스 로더 변환과 함께 시험 먼저.  ⬜ 시점 = 1저자 (권고: 다음 세대 · v1.3 뒤).",
+      "evidence_tests": []
+    },
+    {
+      "id": "L214R-S06",
+      "severity": "P3",
+      "status": "open",
+      "owner": "claude",
+      "found_by": "codex 재확인 10-19 (리뷰 핀 685c2bbdb)",
+      "opened_in": "docs/reviews/codex_review_lhs214s_fix_recheck_20261019.md",
+      "title": "L214S-CX01 · 빈 ATX 제목 (`#` · `##` · 0 열) 을 절 경계로 보지 않아 그 뒤 `code_fp` 를 활성 §3 지문으로 받아들임 — `supp20_input_receipt._MD_HEADING` (`:108`) 이 마커 뒤 공백 + 비공백 제목을 요구 (CommonMark §4.2) · 거꾸로 정상 활성 값 → 빈 h1/h2 → 다른 역사 값은 잘못 거부 (`code_fp=None`)",
+      "note": "판정문 §3-2 · 실제 receipt() rc 0 · bad=[] (고립 사본) · 12/12 잘못 수용 (h1/h2 × 줄끝 · space · tab · space+tab · space+NBSP · space+U+2003) · 2/2 잘못 거부 · 대조 5/5 · 이전 핀에도 있는 결함 (이번 패치 회귀 아님) · 실제 등록 문서 오독 · 수치 · 발사 우회 실측 아님.  최소 해결 = 활성 §3 식별과 일반 절 경계 인식 분리 · 0 열 빈 ATX 경계 인식 (지원 안 할 꼴은 묵살 말고 명시 거부) · 양방향 반례 + 기존 114 문서 · 코드 블록 값 상주 시험.",
       "evidence_tests": []
     },
     {
@@ -11955,7 +11976,7 @@
       "found_by": "1저자 10-19 kgy (첫 S1 재발사 뒤 \"들어간거야?\" — 사슬 로그가 비어 보임)",
       "opened_in": "docs/reviews/sdcp_sigma_e_dcp_anchor_registration_v2_20261019.md",
       "title": "SDCP 앵커 v2 사슬 (scripts/sdcp_anchor_v2_chain.py) 이 print 를 flush 하지 않아 화면을 파일로 돌리면 (setsid nohup … > log) 끝날 때까지 로그가 비어 있다 — 진행은 팔마다 러너 로그에만 보였다",
-      "note": "계산 영향 없음 (런은 정상 · 10-19 kgy S1 첫 팔 = STEP3 CG · GPU 98 % 확인).  임시 방편 = python3 -u 또는 팔 로그 (~/sdcp/anchor_v2_1019b/logs/<이름>.log) · 지금 도는 S1 (~/dem-anchor1019b) 의 작업트리는 런 중에 바꾸지 않는다 (팔마다 그 트리 코드를 읽는다).  ✅ 고침 aa6663bb9 (시험 먼저 같은 커밋): main() 머리에 sys.stdout.reconfigure(line_buffering=True) · selftest T13 (첫 러너가 3 초 자는 동안 로그에 'S1 정찰' 줄 · 프로세스 살아 있을 때) 16/17 → 17/17.",
+      "note": "계산 영향 없음 (런은 정상 · 10-19 kgy S1 첫 팔 = STEP3 CG · GPU 98 % 확인).  임시 방편 = python3 -u 또는 팔 로그 (~/sdcp/anchor_v2_1019b/logs/<이름>.log) · 지금 도는 S1 (~/dem-anchor1019b) 의 작업트리는 런 중에 바꾸지 않는다 (팔마다 그 트리 코드를 읽는다).  ✅ 고침 aa6663bb9 (시험 먼저 같은 커밋): main() 머리에 sys.stdout.reconfigure(line_buffering=True) · selftest T13 (첫 러너가 3 초 자는 동안 로그에 'S1 정찰' 줄 · 프로세스 살아 있을 때) 16/17 → 17/17.  Codex 10-19 §2 — 판정 대상 아님 · 77d8fd445..685c2bbdb 의 사슬 diff 에는 SELF-120 (부모 env 이온 축 지움 · 298a73197) 도 들어 있어 \"화면 버퍼만\" 으로 인증하지 않음 (범위 사실).",
       "evidence_tests": [
         "scripts/sdcp_anchor_v2_chain.py --selftest T13 (16/17 → 17/17)"
       ],

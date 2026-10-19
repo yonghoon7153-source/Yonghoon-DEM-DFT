@@ -1,0 +1,31 @@
+{
+  "label": "old",
+  "source": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\lhs214rr_recheck_20261019\\source",
+  "sha256": "8ca1ece9237440b9c521cde195730038285ea9ba263bbb1d2c06135be0585940",
+  "command": [
+    "C:\\Users\\Administrator\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\python.exe",
+    "-X",
+    "utf8",
+    "-B",
+    "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\lhs214rr_recheck_20261019\\source\\scripts\\test_l214r_r01_restored_full.py"
+  ],
+  "cwd": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\lhs214rr_recheck_20261019\\source",
+  "python": "3.12.14 (main, Aug 25 2026, 14:01:42) [MSC v.1944 64 bit (AMD64)]",
+  "platform": "Windows-11-10.0.26200-SP0",
+  "returncode": 1,
+  "seconds": 11.195540599990636,
+  "stdout_tail": [
+    "  PASS  B9 ★ τ 다시 읽기 (v13_reread_tau — 다시 읽기 관문은 픽스처 그대로 통과 · 원천만 복원) 거부 = load_tau_results FillRefusal 전파 — 9 변이 중 실패 0",
+    "",
+    "test_l214r_r01_restored_full: 23/26 PASS   FAILED: [\"E1 실 생산자 H0 증서의 반올림 전 q = 1.5000000000000002 · 1.5 · 1.4999999999999998 (비트 그대로) {'next': 1.4999999999999962, 'eq': 1.4999999999999958, 'prev': 1.4999999999999956}\", \"E3 q = 1.5000000000000002 → 생산자 보류 (not_computed · full_over_conduction · 공용 판정 통과 · 표지 True) ('computed' · None)\", \"E — 예외 없이 끝난다 (KeyError: 'q_withheld')\"]"
+  ],
+  "env": {
+    "PYTHONPATH": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\lhs214rr_recheck_20261019\\source\\scripts;C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\lhs214rr_recheck_20261019\\source\\webapp;C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\lhs_coverage_review_20260930\\deps;C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\gen2_network_reverify3_20261007\\deps",
+    "TMP": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\lhs214s_recheck_20261019\\tmp\\s02_old",
+    "TEMP": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\lhs214s_recheck_20261019\\tmp\\s02_old",
+    "OMP_NUM_THREADS": "1",
+    "OPENBLAS_NUM_THREADS": "1",
+    "MKL_NUM_THREADS": "1"
+  },
+  "log": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\lhs214s_recheck_20261019\\evidence\\s02_old_full.log"
+}

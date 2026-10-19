@@ -1,0 +1,9 @@
+{
+  "declared_source_pin": "685c2bbdbbfee82898a9ec062bb9c2bc94612fc8",
+  "source_sha256": "bcd669616fe86c34a4623118ac0a27354691d3d682b0f34bb7feb815b8408f01",
+  "baseline_sha256": "2f83b771209099c051b174a029fad36da18a51823c8774e226dc75e33a3443eb",
+  "markdown_it_version": "3.0.0",
+  "git_commands_executed": false,
+  "git_info_stub_calls": 133,
+  "no_production_source_changes": true
+}

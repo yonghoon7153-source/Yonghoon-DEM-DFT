@@ -1,0 +1,12 @@
+{
+  "command": [
+    "C:\\Users\\Administrator\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\python.exe",
+    "-X",
+    "utf8",
+    "-B",
+    "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\lhs214s_recheck_20261019\\probes\\s04_tau_adapter.py"
+  ],
+  "returncode": 1,
+  "seconds": 2.875,
+  "log": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\lhs214s_recheck_20261019\\evidence\\s04_reg_tau_adapted.log"
+}
