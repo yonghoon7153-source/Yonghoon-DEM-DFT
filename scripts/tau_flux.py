@@ -676,6 +676,9 @@ def _cert_problem(cert):
 #      생산자가 보류하는 값 — 보류 값을 게시 상태로 되돌린 레코드 거부 · CF · 협착-only 진단 가지에는 걸지 않는다).
 #    · CF (bulk_only) · 협착-only (constriction_only) 진단 — **숫자를 싣는** 가지 (값 있음 · 상태 computed · model_over_conduction) 면 ①–④ 필수 ·
 #      model_over_conduction 은 모형 해석 표지이지 수치 증서 면제가 아니다 (Codex Q4).
+#    · ★ 10-19 L214R-R04 — 숫자를 싣는 이온 가지의 표지 (가지 상태 · 사유 = 증서 상태 · 사유) = 생산자가 ③ 의 재구성 q (반올림 전) 로 낼 표지:
+#      CF · 협착-only = q > CF_MODEL_OVER_CONDUCTION_Q (엄격) ⇔ (model_over_conduction · q_gt_1p5) · 그 밖 (computed · 사유 없음) / FULL = (computed · 사유 없음) 만
+#      (q > 1.5 = 위 보류 규칙).  값은 거부하지 않는다 — 표지만 생산자 규칙과 맞는가 (표지를 증서와 함께 바꾼 레코드 = 조립 · 편집 모순).
 #    · 숫자 없는 가지 (비관통 valid_zero · 0 저항 수축 미구현 · 증서 실패 · 경계 겹침 = not_computed) — **없는 수렴 증서를 요구하지 않는다**: 상태가
 #      있으면 이유를 말해야 하고 (valid_zero · not_computed) · 증서가 있으면 해를 주장하지 않아야 (status computed · I_bottom 없음) · 생산자 사유
 #      (경계 겹침 · 증서 실패 · 0 저항) 는 증서 사유와 같아야 한다 — 해 없는 가지를 거짓 수렴으로 채우지 않는다.
@@ -704,6 +707,11 @@ CERT_BRANCH_KEYS = (('full', 'sigma_full', 'sigma_full_mScm', 'sigma_full_status
                      'solve_certificate_bulk_net'),
                     ('constriction_only', 'sigma_constr_net', 'sigma_constr_net_mScm', 'sigma_constr_net_status', 'sigma_constr_net_reason',
                      'solve_certificate_constr_net'))
+#: 가지 → 사유 키 (★ 10-19 L214R-R04 — 표지 대조).
+CERT_BRANCH_REASON_KEY = {b: rk for b, _qk, _dk, _sk, rk, _ck in CERT_BRANCH_KEYS}
+#: ★ 10-19 L214R-R04 — CF · 협착-only 진단 가지의 생산자 표지 문턱 = `network_conductivity.solve_network` 의 리터럴 (`if sigma_ratio > 1.5:` · 엄격 > ·
+#:   반올림 전 q) 을 옮긴 값.  생산자를 바꾸면 함께 바꾼다 — 경계 시험 `scripts/test_l214r_r04_cf_label.py` E (실제 3 노드 풀이의 prev · eq · next) 가 지킨다.
+CF_MODEL_OVER_CONDUCTION_Q = 1.5
 CERT_PUBLISHED_STATES = ('computed', 'model_over_conduction')
 CERT_UNPUBLISHED_STATES = ('valid_zero', 'not_computed')
 #: ★ 10-07 G2RR2-05 — 가지 상태의 닫힌 집합 (생산자 `_net_sigma_status` 가 내는 넷) · 정직한 실패 = 숫자 없음 + 이 중 비게시 상태 + 사유.
@@ -800,6 +808,20 @@ def _cert_published_problem(m, branch, rec, q, sd, st, cert):
             bad.append(f'FULL 게시 값 (σ_ratio {q!r} · 상태 {st!r}) 인데 증서 재구성 q (반올림 전) = I_bottom/ΔV × T/A = {q_rec!r} > 생산자 출력 문턱 '
                        f'{nc.FULL_Q_GUARD_MAX!r} (정책 {nc.MODEL_LIMIT_POLICY} · 엄격 >) — 생산자는 이 FULL 값을 보류한다 (not_computed · '
                        f'{nc.FULL_OVER_CONDUCTION_REASON}) · 보류 값을 게시 상태로 되돌린 레코드는 받지 않는다 (L214R-R01)')
+        else:
+            #  ★ 10-19 L214R-R04 (10-18 같은 부류 점검 · 1저자 10-19 Q1) — 표지 = 생산자가 이 재구성 q (반올림 전 · 위와 같은 수) 로 낼 표지.  CF · 협착-only:
+            #    q > 1.5 (엄격 · `solve_network` 리터럴) ⇔ (model_over_conduction · q_gt_1p5) · 그 밖 (computed · None) / FULL: (computed · None) 만 (q > 1.5 =
+            #    위 보류 사유 하나로).  가지 표지 · 증서 표지 둘 다 본다.  옛 판은 증서 상태 = 가지 상태만 보아 표지를 증서와 함께 바꾼 레코드 (값 그대로 ·
+            #    해석 표지만 반전 — 실 생산자 12 침대 model_over_conduction → computed 51 가지 · computed → model_over_conduction 21 가지 · 3 노드 경계) 를
+            #    받았다.  값은 거부하지 않는다 (Codex 재확인 판정 §1-4) · 이온 세 가지만 (전자 · 열 = 이 검사 밖 · 위 정책).
+            over = branch != 'full' and q_rec > CF_MODEL_OVER_CONDUCTION_Q
+            want = (nc.MODEL_OVER_CONDUCTION, nc.MODEL_OVER_CONDUCTION_REASON) if over else ('computed', None)
+            got_b = (st, rec.get(CERT_BRANCH_REASON_KEY[branch]))
+            got_c = (cert.get('status'), cert.get('reason'))
+            if got_b != want or got_c != want:
+                bad.append(f'표지 (가지 상태 · 사유 {got_b!r} / 증서 {got_c!r}) ≠ 생산자가 증서 재구성 q (반올림 전) = {q_rec!r} 로 낼 표지 {want!r} '
+                           f'(CF · 협착-only: q > {CF_MODEL_OVER_CONDUCTION_Q!r} 엄격 ⇔ model_over_conduction · 그 밖 computed / FULL 게시 = computed 만) — '
+                           '표지를 바꾼 레코드는 받지 않는다 (값은 거부하지 않는다 · L214R-R04)')
         qn, sdn = _num(q), _num(sd)
         if qn is None or not abs(qn - q_rec) <= SIGMA_RATIO_ROUND_HALF + _ID_FP * abs(q_rec):
             bad.append(f'발행 σ_ratio {q!r} ≠ 증서 재구성 I_bottom/ΔV × T/A = {q_rec!r} (저장 반올림 반폭 {SIGMA_RATIO_ROUND_HALF:g} 밖)')
