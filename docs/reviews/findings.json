@@ -11801,13 +11801,16 @@
     {
       "id": "L214R-R04",
       "severity": "P3",
-      "status": "open",
+      "status": "claimed_fixed",
       "owner": "claude",
       "found_by": "claude 10-18 같은 부류 점검 (L214R-R01 수정 중 · 1저자에게 제안한 점검 · 읽기 전용 · 리포 밖 복제본)",
       "opened_in": "docs/reviews/lhs214rr_fix_plan_20261018.md",
       "title": "CF (bulk_only) · 협착-only 진단 가지의 생산자 표지 model_over_conduction (raw q > 1.5) ↔ computed 를 증서와 함께 바꾼 레코드를 공용 증서 판정이 받는다 — 값은 그대로 · 해석 표지만 바뀜 (12 침대 실 생산자: model_over_conduction → computed 51 가지 · computed → model_over_conduction 21 가지 모두 수용 · 3 노드 경계 표지 반전도 수용)",
-      "note": "자리: scripts/tau_flux.py _cert_published_problem (숫자를 싣는 가지의 상태가 게시 상태 둘 중 하나 · 증서 상태 = 가지 상태 인지만 · q ↔ 표지 미대조).  생산자 규칙 = network_conductivity.solve_network (CF · 협착-only · 이온 · 전자 — raw q > 1.5 면 status model_over_conduction · 값 유지) · _net_sigma_status.  영향: τ 인계 수치 (FULL 만) 없음 · 해석 표지 (배포 · 화면의 과전도 표지) 무결성.  고친다면 값은 거부하지 않는다 (Codex 재확인 판정 §1-4) — q ↔ 표지 일치만.  초안 시험 (리포 밖) = 1/4 (원 레코드 통과 · 표지 반전 두 방향 · 경계 반전 = 수용).  ⬜ 1저자 Q1 (이번 바퀴에 고칠지) 대기 — 권고: 고침 (시험 먼저 · 함수 하나).  재확인 요청서 docs/reviews/codex_lhs214rr_fix_recheck_request_20261018.md §5-6 에 보고.",
-      "evidence_tests": []
+      "note": "자리: scripts/tau_flux.py _cert_published_problem (숫자를 싣는 가지의 상태가 게시 상태 둘 중 하나 · 증서 상태 = 가지 상태 인지만 · q ↔ 표지 미대조).  생산자 규칙 = network_conductivity.solve_network (CF · 협착-only · 이온 · 전자 — raw q > 1.5 면 status model_over_conduction · 값 유지) · _net_sigma_status.  영향: τ 인계 수치 (FULL 만) 없음 · 해석 표지 (배포 · 화면의 과전도 표지) 무결성.  고친다면 값은 거부하지 않는다 (Codex 재확인 판정 §1-4) — q ↔ 표지 일치만.  초안 시험 (리포 밖) = 1/4 (원 레코드 통과 · 표지 반전 두 방향 · 경계 반전 = 수용).  재확인 요청서 docs/reviews/codex_lhs214rr_fix_recheck_request_20261018.md §5-6 에 보고.  ✅ 10-19 고침 155534744 (1저자 10-19 *\"q1 한다음에 하자\"* · 시험 먼저 같은 커밋): tau_flux._cert_published_problem — 숫자를 싣는 이온 가지의 표지 (가지 상태 · 사유 · 증서 상태 · 사유) = 생산자가 증서 재구성 q (반올림 전) 로 낼 표지 · CF · 협착-only = q > CF_MODEL_OVER_CONDUCTION_Q 1.5 (엄격) ⇔ (model_over_conduction · q_gt_1p5) · 그 밖 (computed · None) · FULL = (computed · None) 만 (q > 1.5 = R01 사유).  같은 부류로 새로 찾은 칸: FULL computed 의 사유만 q_gt_1p5 (가지 · 증서 · 둘 다 — 옛 판 수용 18/18).  시험 scripts/test_l214r_r04_cf_label.py 4/12 → 12/12 · 관련 묶음 그대로 · 봉인 tau_flux.py → 대기 지문 2149f873… (등록 §3 e8b2496b… 그대로) · Codex 탐침 재실행 = 10-18 판정값과 차이 0 칸 · A4 36/36 (docs/reviews/lhs214rr_fix_evidence_20261018/).  어긋남 = 기존 결합 어긋남 정책 (세대 invalid) — 그 정책이 P3 에 맞는지 = 요청서 Q2b.  Codex 짧은 재확인 전.",
+      "evidence_tests": [
+        "scripts/test_l214r_r04_cf_label.py (4/12 → 12/12)"
+      ],
+      "claimed_fixed_sha": "155534744"
     },
     {
       "id": "SELF-119",

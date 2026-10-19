@@ -1,0 +1,258 @@
+{
+ "zip_sha256": "50076bb02462fe57b2f249ffe19d5a954502ce23e10ee657c8b0b3ef4c81ad48",
+ "thickness_um": {
+  "SBE": 90.0,
+  "DBE": 80.0
+ },
+ "diameter_mm": 10.0,
+ "area_cm2": 0.7853981633974483,
+ "window_s": 60.0,
+ "galvani": "0.5.0",
+ "rows": [
+  {
+   "file": "DBE_10pi_2_0_005V_C06.mpr",
+   "sample": "DBE",
+   "channel": "C06",
+   "v_mV": 5.0,
+   "minus": false,
+   "npts": 600,
+   "dur_s": 598.9999848679872,
+   "E_ss_mV": 5.442750930786133,
+   "I_ss_mA": 2.3415503948649405,
+   "drift_pct_per_min": -3.0408141782140694
+  },
+  {
+   "file": "DBE_10pi_2_0_005V_minus_C06.mpr",
+   "sample": "DBE",
+   "channel": "C06",
+   "v_mV": 5.0,
+   "minus": true,
+   "npts": 600,
+   "dur_s": 598.9999848679872,
+   "E_ss_mV": -4.719020843505859,
+   "I_ss_mA": -2.278951885170234,
+   "drift_pct_per_min": 0.6632210061164033
+  },
+  {
+   "file": "DBE_10pi_2_0_015V_C06.mpr",
+   "sample": "DBE",
+   "channel": "C06",
+   "v_mV": 15.0,
+   "minus": false,
+   "npts": 600,
+   "dur_s": 598.9999848679872,
+   "E_ss_mV": 15.49185848236084,
+   "I_ss_mA": 6.9474172894430835,
+   "drift_pct_per_min": 0.0918756749245281
+  },
+  {
+   "file": "DBE_10pi_2_0_015V_minus_C06.mpr",
+   "sample": "DBE",
+   "channel": "C06",
+   "v_mV": 15.0,
+   "minus": true,
+   "npts": 600,
+   "dur_s": 598.9999848679872,
+   "E_ss_mV": -14.691328048706055,
+   "I_ss_mA": -6.829297913329335,
+   "drift_pct_per_min": 0.08841391503290971
+  },
+  {
+   "file": "DBE_10pi_2_0_01V_C06.mpr",
+   "sample": "DBE",
+   "channel": "C06",
+   "v_mV": 10.0,
+   "minus": false,
+   "npts": 600,
+   "dur_s": 598.9999848679872,
+   "E_ss_mV": 10.476842880249023,
+   "I_ss_mA": 4.751933993065941,
+   "drift_pct_per_min": -0.16835764866159503
+  },
+  {
+   "file": "DBE_10pi_2_0_01V_minus_C06.mpr",
+   "sample": "DBE",
+   "channel": "C06",
+   "v_mV": 10.0,
+   "minus": true,
+   "npts": 600,
+   "dur_s": 598.9999848679872,
+   "E_ss_mV": -9.652836799621582,
+   "I_ss_mA": -4.650669277592961,
+   "drift_pct_per_min": -0.08521425045009731
+  },
+  {
+   "file": "DBE_10pi_2_0_02V_C06.mpr",
+   "sample": "DBE",
+   "channel": "C06",
+   "v_mV": 20.0,
+   "minus": false,
+   "npts": 600,
+   "dur_s": 598.9999848679872,
+   "E_ss_mV": 20.49954605102539,
+   "I_ss_mA": 9.209408448266194,
+   "drift_pct_per_min": 0.14430243434754716
+  },
+  {
+   "file": "DBE_10pi_2_0_02V_minus_C06.mpr",
+   "sample": "DBE",
+   "channel": "C06",
+   "v_mV": 20.0,
+   "minus": true,
+   "npts": 600,
+   "dur_s": 598.9999848679872,
+   "E_ss_mV": -19.73314094543457,
+   "I_ss_mA": -9.255053876276493,
+   "drift_pct_per_min": 0.15786255256301626
+  },
+  {
+   "file": "SBE_10pi_2_0_005V_C05.mpr",
+   "sample": "SBE",
+   "channel": "C05",
+   "v_mV": 5.0,
+   "minus": false,
+   "npts": 600,
+   "dur_s": 598.9999848679872,
+   "E_ss_mV": 5.529130935668945,
+   "I_ss_mA": 0.7598780791026641,
+   "drift_pct_per_min": 0.41928808460459466
+  },
+  {
+   "file": "SBE_10pi_2_0_005V_minus_C05.mpr",
+   "sample": "SBE",
+   "channel": "C05",
+   "v_mV": 5.0,
+   "minus": true,
+   "npts": 600,
+   "dur_s": 598.9999848679872,
+   "E_ss_mV": -4.775547027587891,
+   "I_ss_mA": -0.7109136675692003,
+   "drift_pct_per_min": -0.0892634522088916
+  },
+  {
+   "file": "SBE_10pi_2_0_015V_C05.mpr",
+   "sample": "SBE",
+   "channel": "C05",
+   "v_mV": 15.0,
+   "minus": false,
+   "npts": 600,
+   "dur_s": 598.9999848679872,
+   "E_ss_mV": 15.353986740112305,
+   "I_ss_mA": 2.1581229541747278,
+   "drift_pct_per_min": -0.1741706094886256
+  },
+  {
+   "file": "SBE_10pi_2_0_015V_minus_C05.mpr",
+   "sample": "SBE",
+   "channel": "C05",
+   "v_mV": 15.0,
+   "minus": true,
+   "npts": 600,
+   "dur_s": 598.9999848679872,
+   "E_ss_mV": -14.725192070007324,
+   "I_ss_mA": -2.1246321506257937,
+   "drift_pct_per_min": 0.02619704136980155
+  },
+  {
+   "file": "SBE_10pi_2_0_01V_C05.mpr",
+   "sample": "SBE",
+   "channel": "C05",
+   "v_mV": 10.0,
+   "minus": false,
+   "npts": 600,
+   "dur_s": 598.9999848679872,
+   "E_ss_mV": 10.336420059204102,
+   "I_ss_mA": 1.450074244135324,
+   "drift_pct_per_min": 0.07053737980412907
+  },
+  {
+   "file": "SBE_10pi_2_0_01V_minus_C05.mpr",
+   "sample": "SBE",
+   "channel": "C05",
+   "v_mV": 10.0,
+   "minus": true,
+   "npts": 600,
+   "dur_s": 598.9999848679872,
+   "E_ss_mV": -9.703309059143066,
+   "I_ss_mA": -1.4116913832527709,
+   "drift_pct_per_min": 0.0641990894568849
+  },
+  {
+   "file": "SBE_10pi_2_0_02V_C05.mpr",
+   "sample": "SBE",
+   "channel": "C05",
+   "v_mV": 20.0,
+   "minus": false,
+   "npts": 600,
+   "dur_s": 598.9999848679872,
+   "E_ss_mV": 20.35759925842285,
+   "I_ss_mA": 2.8743931815249004,
+   "drift_pct_per_min": -0.08132696638259264
+  },
+  {
+   "file": "SBE_10pi_2_0_02V_minus_C05.mpr",
+   "sample": "SBE",
+   "channel": "C05",
+   "v_mV": 20.0,
+   "minus": true,
+   "npts": 600,
+   "dur_s": 598.9999848679872,
+   "E_ss_mV": -19.691816329956055,
+   "I_ss_mA": -2.8335794422907923,
+   "drift_pct_per_min": -0.05564559627354854
+  }
+ ],
+ "samples": {
+  "SBE": {
+   "n": 8,
+   "R_ohm": 7.016277099140703,
+   "offset_mV": 0.19338482221227177,
+   "r2": 0.9999987268644076,
+   "sigma_mScm": 1.6332245349916255,
+   "pairs": {
+    "5": {
+     "R_ohm": 7.006211441269273,
+     "sigma_mScm": 1.6355709499598658
+    },
+    "10": {
+     "R_ohm": 7.002575237664459,
+     "sigma_mScm": 1.6364202473657952
+    },
+    "15": {
+     "R_ohm": 7.023324489510037,
+     "sigma_mScm": 1.631585714106153
+    },
+    "20": {
+     "R_ohm": 7.016399381678618,
+     "sigma_mScm": 1.6331960709846243
+    }
+   }
+  },
+  "DBE": {
+   "n": 8,
+   "R_ohm": 2.1780081604226225,
+   "offset_mV": 0.3249909268946973,
+   "r2": 0.9999251387667163,
+   "sigma_mScm": 4.6767117511188845,
+   "pairs": {
+    "5": {
+     "R_ohm": 2.1992785975239544,
+     "sigma_mScm": 4.631480690690601
+    },
+    "10": {
+     "R_ohm": 2.1408623867696153,
+     "sigma_mScm": 4.757856656658352
+    },
+    "15": {
+     "R_ohm": 2.1908841176445923,
+     "sigma_mScm": 4.649226435961444
+    },
+    "20": {
+     "R_ohm": 2.178925456333666,
+     "sigma_mScm": 4.674742923523631
+    }
+   }
+  }
+ },
+ "ratio_dbe_sbe": 2.863483649015146
+}
