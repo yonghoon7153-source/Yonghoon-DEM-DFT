@@ -144,3 +144,10 @@ python3 ~/dem-anchor1019/scripts/sdcp_bed_meta.py ~/sdcp/kit_SBE ~/sdcp/kit_DBE
   C = SBE arm 0 @ σ* **1.6287 mS/cm** (목표 1.63 대비 −0.08 % · ±5 % 안 · 879 s) · 옛 DBE 킷 arm 0 @ σ* **1.9385 mS/cm** (실험 4.68 대비 −58.6 % · 3009 s) · 비 **1.190** (실험 2.86) · 멈춤 없음.
   결과 전 어림 대조 (판정 아님 · §3 보고): σ* 0.2–0.6 안 · 옛 DBE 1.8–2.0 안 · 비 ≤ 1.24 맞음.  S1 의 d ln σ_e / d ln σ_VGCF = 0.39–0.40 (σ_VGCF ×4 → σ_e ×1.75).
   ⬜ 다음 = 1저자 (§3 — R1 재압밀 `kit_DBE_sdcp1um` → R2 침대 점검 → `--stage dbe --dbe-kit kit_DBE_sdcp1um` → 최종 16 팔).
+- **10-19 저녁 R1 시도 1 = 계산 전 멈춤 (kgy · 18:36:59 KST · 런 폴더 `kit_DBE_sdcp1um/run_VGCF3_PTFE0.5_SDCP0.5_20261019_183659_2209365`)**: Taichi `CUDA_ERROR_OUT_OF_MEMORY`
+  (첫 `load` 커널) · `--gpu-mem 20` → 8.3 GB 로 자동 낮춤 (같은 GPU 에 다른 작업 14.7 GB · free 9 GB) · 압밀 · payload 안 돎 (러너가 옛 se_dump 로 payload 를 만들지 않고 멈춤).
+  로그로 본 설정 = 계획대로: `ADD_E_SET_20260926` + override VGCF=10 (그 세대 차이 = VGCF 하나뿐 → 옛 `ADD_E_SET_20260818` 값과 같음 · SDCP 9.0 · PTFE 1.8 · SuperP 0.5) ·
+  SE 146,420 구 → 66,044,152 점 · VGCF 48,189 → 1,643,483 점 · PTFE 657 → 115,555 · SDCP 목표 154,452 → 116,532 점 (옛 침대 시딩 138,988 — 덩어리가 NCM 에 걸치면 NCM 속 구성원이
+  빠지는 방향 · 관찰 · R2 에서 확인) · 점 합 ≈ 6,790 만 → 필요 VRAM ≈ 11 GB + 격자 (158 B/점 어림 · 추정) ⇒ 다시 발사 = 그만큼 GPU 가 빌 때 (1저자).
+  ⚠ 정정 (`SELF-123`): 위 R1 줄의 "`run_*` 제외" 를 옮긴 첫 rsync `--exclude 'run_*'` 가 런 폴더뿐 아니라 `run_mpm.sh` · `run_a1_anchors.sh` 파일까지 뺐다 (확인 단계에서 멈춤 ·
+  바뀐 것 없음) → `--exclude 'run_*/'` (디렉터리만) 로 다시 채움 · `run_mpm.sh` 두 줄 diff (88 · 90 줄 = 계획한 두 곳) 확인 뒤 발사.

@@ -11960,6 +11960,17 @@
         "scripts/sdcp_anchor_v2_chain.py --selftest T13 (16/17 → 17/17)"
       ],
       "claimed_fixed_sha": "aa6663bb9"
+    },
+    {
+      "id": "SELF-123",
+      "severity": "P3",
+      "status": "open",
+      "owner": "claude",
+      "found_by": "claude 10-19 (kgy R1 첫 명령 — 넣어 둔 확인 단계가 멈춤)",
+      "opened_in": "docs/reviews/sdcp_sigma_e_dcp_anchor_registration_v2_20261019.md",
+      "title": "R1 새 킷 복사 명령의 rsync `--exclude 'run_*'` 가 런 폴더뿐 아니라 `run_mpm.sh` · `run_a1_anchors.sh` 파일까지 뺐다 — 킷 구조를 보지 않고 쓴 패턴 (등록 v2 §7 R1 줄의 \"`run_*` 제외\" 문구도 같은 뜻으로 읽힌다)",
+      "note": "영향 없음 — 같은 명령의 확인 단계 (mpm3d 줄 1 · gpu-mem 28 1) 가 run_mpm.sh 없음으로 멈춰 수정 · 발사가 없었다.  처리 = `--exclude 'run_*/'` (디렉터리만) 로 다시 채움 · diff 두 줄 확인 뒤 발사 · 등록 §7 에 정정 표지.  교훈 = 지시문의 패턴도 실제 폴더 목록 (ls) 을 보고 쓴다 (CLAUDE.md \"확인하지 않은 추정을 지시문에 쓰지 않는다\").",
+      "evidence_tests": []
     }
   ]
 }
