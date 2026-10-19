@@ -26,5 +26,12 @@
  "ELF_계획": "NC 규약 — 새 SCF (GPU) 가 필요하다: ① 4f-in-core NC Nd 확보 (PseudoDojo 3plus · gabia 에 없음) ② GPU 가 비면 같은 vc-relax 기하로 ONCV 80/320 SCF ③ 호스트 modelc ELF (modelc_elf_bonds.csv · 같은 NC 규약) 와 결합 ELF 비교 — 사용자 결정 대기 (Nd NC PP 선택은 새 PP 라 결합 묘사가 PAW 와 다를 수 있다)",
  "Q2_계획": "분해상 기저 (UMA/MP hull · G5) → 같은 설정 (kjpaw 70/560) 의 상 에너지 (GPU) → dft_decomp_check.py — Bader 뒤에 정한다",
  "첫_실행_2026_10_19_1434": "gabia 14:34:40 — SCF ✓ (! −6399.21429237 Ry · save ✓) · **계보에서 멈춤 (종료 4)**: 9 월 vc-relax 출력의 최종 좌표가 Å 였는데 러너 첫 판 (212c94a9) 은 crystal 만 받아 Å 값을 분율로 읽었다 (분율 차 0.496 — 계산 오류가 아니라 러너 빈틈 · 가드는 제대로 멈췄다) → Å · Bohr 를 같은 블록의 최종 셀로 분율로 바꿔 대조하게 고침 · 시험 crystal · Å · Bohr ✓ · Å 불일치 · alat · crystal 불일치 거부 · 전체 실행 해시 OK",
- "ELF_사용자_결정_2026_10_19": "사용자 '권고대로 해' — NC 규약: 4f-in-core NC Nd (PseudoDojo 3plus) 확보 → GPU 가 비면 같은 vc-relax 기하로 ONCV SCF → pp.x ELF → 호스트 modelc ELF 표와 비교"
+ "ELF_사용자_결정_2026_10_19": "사용자 '권고대로 해' — NC 규약: 4f-in-core NC Nd (PseudoDojo 3plus) 확보 → GPU 가 비면 같은 vc-relax 기하로 ONCV SCF → pp.x ELF → 호스트 modelc ELF 표와 비교",
+ "ELF_NC_Nd_PP_준비_2026_10_19": {
+  "출처": "PseudoDojo GitHub ONCVPSP-PBE-PDv0.4/Nd/Nd3+_f-in-core.{in,psp8,djrepo,out} — 4f³ 를 core 에 (nc 10 · nv 4) · 가전자 5s²5p⁶5d¹6s² = 11 (지금 PAW Nd.pbe-spdn-kjpaw_psl 과 같은 가전자) · ONCVPSP 3.2.3.1 · md5 474ce0fc5175ff9ddf2621f906febf65 (= djrepo) · sha256 c9c335c4…014c · 권장 컷 normal 24 Ha · high 28 Ha (ELF 규약 80 Ry 면 충분) · 표준 표 밖 (논문: f 가 물리에 중요하지 않을 때만)",
+  "형식_문제": "psp8 만 있다 (UPF 404) · QE 7.4 가 psp8 을 읽는다는 근거 못 찾음 ⇒ ONCVPSP 를 빌드해 같은 입력으로 psfile 'both' (psp8 + UPF 한 실행) → psp8 을 배포본과 열마다 대조",
+  "판_문제": "GitHub oncvpsp 에 3.2.3 소스가 없다 (태그 4.0.1 · master 에 old_optimize 없음) — 4.0.1 에는 3.3.0 optimize 수정 · 4.0.1 modcore 3·4 차 도함수 잡음 제거가 들어 있어 숫자가 조금 다를 수 있다 ⇒ 러너는 재고 기록만 · UPF 설치는 차이를 보고 정한다 (필요하면 같은 실행의 psp8+UPF 짝으로 psp8→UPF 변환기를 검증해 배포본에 쓴다)",
+  "도구": "tools/electronic/oncv_regen_check.py (psp8 열마다 상대 대조 · 추출 · psfile · md5 · selftest 12/12 · 깨기 4/5 빨강 + 1 등가 변이 (mmax 헤더 — 모양 대조가 같은 곳을 잡는다)) · 실물: 배포 psp8 대 .out 안의 psp8 = 상대 0 · tools/electronic/make_nd3plus_nc_upf_gabia.sh (가짜 트리 시험: 같음 0 · 2 % 다름 기록 0 · md5·받기 실패 3 · cmake·gfortran·LAPACK 없음 5 · ONCVPSP ERROR 6)",
+  "CPU": "ONCVPSP 빌드·원자 계산 (수 초) — QE 계산 아님 (준비)"
+ }
 }
