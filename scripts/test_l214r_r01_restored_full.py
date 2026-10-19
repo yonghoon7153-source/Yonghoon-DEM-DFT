@@ -21,9 +21,14 @@ sigma_full_reason None · ionic_status computed · ionic_status_reason None) · 
      L0 · L1 · L2 포함) 을 하나씩 복원: 공용 증서 판정 (`certificate_binding_problems`) 거부 (사유 = 반올림 전 재구성 q · 생산자 정책 이름) · 세대 계약
      invalid · τ 행 그 모드 값 공란 (NOT OK) · 레코드 판정 (`network_record_verdict`) 거부.  변이: 가드 진단 넷을 지움 (자기 신고를 읽지 않는다 —
      같은 판정) · 협착 전력 몫 2 leaf 더함 (Codex 10 leaf)
-  E  경계 — 실 생산자 사슬 (면적 0.500000001 · 상자 0.7281737983374794 × …881 / …882 / …883) 의 H0 raw q 1.5000000000000002 (생산자 보류) · 1.5 ·
-     1.4999999999999998 (게시) — 저장 q 셋 다 1.5 (8 자리): 앞 둘 = 게시 그대로 통과 · 셋째 복원 = 거부 / Codex 함수 단 (3 노드 증서 · 결합 정보를
-     붙여 게시 상태로) q 1.4999999999999998 · 1.5 = 통과 · 1.5000000000000002 · 2.0 = 거부
+  E  경계 — 실 생산자 사슬 (면적 0.500000001 · 상자 0.7281737983374794 × box_y) 의 H0 raw q 1.5000000000000002 (생산자 보류) · 1.5 ·
+     1.4999999999999998 (게시) — 저장 q 셋 다 1.5 (8 자리): 앞 둘 = 게시 그대로 통과 · 셋째 복원 = 거부.
+     ★ 10-19 L214R-S02 (Codex 재확인 2 판정 §2 · 1저자 Q5) — 실 사슬 풀이의 끝자리가 환경마다 다르다 (Codex Windows Py3.12 NumPy 2.5.3 = 등록 입력에서
+       17–19 ULP 아래 · 이 컨테이너 = Codex 정확 입력에서 18–19 ULP 위) → box_y 를 등록 입력 (…881 / …882 / …883) 에서 **ULP 한 걸음씩** 옮겨 이 환경에서
+       raw q 가 세 경계와 **정확히** 같은 입력을 먼저 찾는다 (E0 · 허용 폭 없음 · 엄격 > 그대로).  못 찾으면 E1–E4 = 전제 불성립 FAIL (KeyError 로 끊기지 않음).
+       E′ = 출발 입력을 ±18 ULP 옮겨 (Codex 환경 꼴 · 반대 꼴) 같은 판정이 나오는지 · 복원 helper 는 보류 증서가 아니면 명시 오류.
+  E5 Codex 함수 단 (3 노드 증서 · 결합 정보를 붙여 게시 상태로) q 1.4999999999999998 · 1.5 = 통과 · 1.5000000000000002 · 2.0 = 거부 — ★ 10-19 독립 묶음
+     (실 사슬 E 의 실패 · 예외와 상관없이 돈다 · 옛 판은 E4 KeyError 뒤라 Codex 환경에서 안 돌았다)
   C  대조 (그대로) — 12 침대 원 레코드 (computed · 적법한 보류) 결합 [] · CF · 협착-only model_over_conduction (q > 1.5 게시 값) 결합 [] · 열 FULL
      (q > 1.5 게시 · 병렬 상한) 채널 판정 ok · 진짜 비관통 (valid_zero) 결합 [] · NOT_PERCOLATING
   B  실 사슬 (9 변이 = 띠 L0 · L1 · L2 의 H0 모형 한계 침대 × 복원 모드 H0 · Physics · H12) — 생산자 CLI → 정지 경로 게시 (L0 = Codex 반례 침대:
@@ -62,6 +67,9 @@ E_AREA = 0.500000001
 E_BX = 0.7281737983374794
 E_BY = {'next': 0.7281737983374881, 'eq': 0.7281737983374882, 'prev': 0.7281737983374883}
 E_Q = {'next': math.nextafter(1.5, 2.0), 'eq': 1.5, 'prev': math.nextafter(1.5, 0.0)}
+#: ★ 10-19 L214R-S02 — 경계 입력 탐색 상한 (box_y ULP 걸음) · 이식성 시험의 출발 이동 (Codex 환경 = 등록 입력에서 raw q 17–19 ULP 아래)
+E_SEARCH_ULP = 512
+E_SHIFT_ULP = 18
 _ok, _fail = 0, []
 
 
@@ -116,6 +124,8 @@ def restore(rec, m, power=False, drop_guard=False):
     """보류된 FULL → 게시 상태 (Codex 의 8 leaf) — 반환 = 증서의 q_withheld (반올림 전 · 지우기 전).  power = 협착 전력 몫 2 leaf (주 Hertz · Physics) ·
     drop_guard = 증서의 가드 진단 넷 지움."""
     c = rec['solve_certificate_full']
+    if 'q_withheld' not in c:          # ★ 10-19 L214R-S02 — 게시된 (보류 아닌) 레코드에 부르면 KeyError 대신 사유 (Codex 환경의 E4 가 여기서 끊겼다)
+        raise ValueError('복원 전제 불성립 — 보류 증서가 아니다 (q_withheld 없음 · 생산자가 게시한 레코드)')
     q = c['q_withheld']
     rec.update(sigma_full=round(q, 8), sigma_full_mScm=round(q * rec['sigma_grain_S_cm'] * 1000, 6), sigma_full_status='computed',
                sigma_full_reason=None, ionic_status='computed', ionic_status_reason=None)
@@ -238,42 +248,126 @@ def sec_R(state):
 
 
 # ══ E. 경계 — 반올림 전 q 로만 가를 수 있는 세 수 ═════════════════════════════════════════════════════════════════════════════════════
-def sec_E(state):
-    import network_conductivity as nc
-    import tau_flux as tf
-    from test_lhs214_model_limit import chain_bed, net3
-    print('E  경계 — 실 생산자 사슬 (상자 조정) 의 H0 raw q 1.5000000000000002 · 1.5 · 1.4999999999999998 / Codex 함수 단 (3 노드 증서)')
-    A, C, plate, _b = chain_bed(1.0, area=E_AREA)
+def _e_raw_q(nc, A, C, plate, bx, by):
+    """실 사슬 H0 증서의 반올림 전 q = (I_bottom/ΔV)·T/A (생산자와 같은 산술)."""
+    du = quiet(lambda: nc._run_all_networks(A, C, [1], [], {1: 'SE'}, 1, plate, bx, by, None, contact_mode='hertzian'))
+    c = du['solve_certificate_full']
+    T, Ar, _w = nc._geometry_TA(c['geometry'])
+    return (c['I_bottom'] / c['delta_V']) * T / Ar
+
+
+def find_boundary_inputs(nc, A, C, plate, bx, by0, cap=E_SEARCH_ULP):
+    """★ 10-19 L214R-S02 — 이 환경에서 실 사슬 H0 raw q 가 세 경계 (E_Q) 와 **정확히** 같아지는 box_y.  출발 = by0[k] · ULP 한 걸음씩 ·
+    q = G·T/(bx·by) 는 by 에 단조 감소라 q < 목표면 by 를 줄이고 > 면 늘린다 · 허용 폭 없이 == 만 (건너뛰면 그 칸 문제).  → ({k: by}, {k: 걸음}, {k: 문제})."""
+    found, steps, probs = {}, {}, {}
+    for k, tgt in E_Q.items():
+        by = by0[k]
+        q = _e_raw_q(nc, A, C, plate, bx, by)
+        down = q < tgt                                   # q 가 목표 아래 → by 를 줄인다
+        n = 0
+        while q != tgt and n < cap:
+            by = math.nextafter(by, 0.0 if down else math.inf)
+            q = _e_raw_q(nc, A, C, plate, bx, by)
+            n += 1
+            if q != tgt and (q < tgt) != down:
+                break                                    # 목표를 건너뛰었다 — 이 걸음에 정확한 값이 없다
+        if q == tgt:
+            found[k], steps[k] = by, n
+        else:
+            probs[k] = f'출발 {by0[k]!r} 에서 {n} 걸음 · 마지막 raw q {q!r} ≠ 목표 {tgt!r} (상한 {cap} 또는 건너뜀)'
+    return found, steps, probs
+
+
+def _e_checks(nc, tf, A, C, plate, bx, bys):
+    """찾은 입력 → E1–E4 판정 [(이름, 조건, 부가)] (옛 E 와 같은 단언 · 허용 폭 없음)."""
     recs, rows = {}, {}
-    for k, by in E_BY.items():
-        du = quiet(lambda: {cm: nc._run_all_networks(A, C, [1], [], {1: 'SE'}, 1, plate, E_BX, by, None, contact_mode=cm)
+    for k, by in bys.items():
+        du = quiet(lambda: {cm: nc._run_all_networks(A, C, [1], [], {1: 'SE'}, 1, plate, bx, by, None, contact_mode=cm)
                             for cm in ('hertzian', 'physics')})
         du = json.loads(json.dumps(du))
         led = {'thickness_um': plate, 'thickness_mass_conserving_um': plate,
-               'phi_se_mass_conserving': sum(4.0 / 3.0 * math.pi * a['radius'] ** 3 for a in A.values()) / (E_BX * by * plate)}
+               'phi_se_mass_conserving': sum(4.0 / 3.0 * math.pi * a['radius'] ** 3 for a in A.values()) / (bx * by * plate)}
         recs[k], rows[k] = du, (led, 100.0)
+    out = []
     raw = {}
     for k, du in recs.items():
         c = du['hertzian']['solve_certificate_full']
         T, Ar, _w = nc._geometry_TA(c['geometry'])
         raw[k] = (c['I_bottom'] / c['delta_V']) * T / Ar
-    chk(f'E1 실 생산자 H0 증서의 반올림 전 q = 1.5000000000000002 · 1.5 · 1.4999999999999998 (비트 그대로) {raw}',
-        all(raw[k] == E_Q[k] for k in E_Q) and recs['next']['hertzian']['solve_certificate_full'].get('q_withheld') == E_Q['next'])
+    out.append((f'E1 실 생산자 H0 증서의 반올림 전 q = 1.5000000000000002 · 1.5 · 1.4999999999999998 (비트 그대로) {raw}',
+                all(raw[k] == E_Q[k] for k in E_Q) and recs['next']['hertzian']['solve_certificate_full'].get('q_withheld') == E_Q['next'], ''))
     h = {k: recs[k]['hertzian'] for k in recs}
     pub = {k: (h[k]['sigma_full_status'], h[k]['sigma_full'], tf.certificate_binding_problems('hertz', h[k]),
                tf.ion_columns(recs[k], *rows[k]).get('ion_net_status_hertz')) for k in ('eq', 'prev')}
-    chk(f'E2 q = 1.5 · 1.4999999999999998 → 생산자 게시 (computed · 저장 1.5) · 공용 증서 판정 [] · τ OK — 그대로 (엄격 > · q = 1.5 는 computed) {pub}',
-        all(v[0] == 'computed' and v[1] == 1.5 and v[2] == [] and v[3] == 'OK' for v in pub.values()))
+    out.append((f'E2 q = 1.5 · 1.4999999999999998 → 생산자 게시 (computed · 저장 1.5) · 공용 증서 판정 [] · τ OK — 그대로 (엄격 > · q = 1.5 는 computed) {pub}',
+                all(v[0] == 'computed' and v[1] == 1.5 and v[2] == [] and v[3] == 'OK' for v in pub.values()), ''))
     rn = h['next']
-    chk(f"E3 q = 1.5000000000000002 → 생산자 보류 (not_computed · full_over_conduction · 공용 판정 통과 · 표지 True) "
-        f"({rn['sigma_full_status']!r} · {rn['sigma_full_reason']!r})",
-        rn['sigma_full_status'] == 'not_computed' and rn['sigma_full_reason'] == ML and tf.full_model_limit_problem(rn, 'ionic', 'hertz') is None
-        and tf.full_model_limit_flag(rn, 'hertz') is True)
-    dn = copy.deepcopy(recs['next'])
-    restore(dn['hertzian'], 'hertz')
-    rej, txt = _binding_reject(tf, nc, 'hertz', dn['hertzian'])
-    chk(f"E4 ★ 그 보류 값을 복원 → 저장 q {dn['hertzian']['sigma_full']!r} = 게시된 두 레코드의 저장 q (8 자리 — 저장 값으로는 못 가른다) · "
-        f"공용 증서 판정 거부 (옛: []) — {txt[:200] or '[]'}", dn['hertzian']['sigma_full'] == 1.5 == h['eq']['sigma_full'] == h['prev']['sigma_full'] and rej)
+    e3 = (rn['sigma_full_status'] == 'not_computed' and rn['sigma_full_reason'] == ML and tf.full_model_limit_problem(rn, 'ionic', 'hertz') is None
+          and tf.full_model_limit_flag(rn, 'hertz') is True)
+    out.append((f"E3 q = 1.5000000000000002 → 생산자 보류 (not_computed · full_over_conduction · 공용 판정 통과 · 표지 True) "
+                f"({rn['sigma_full_status']!r} · {rn['sigma_full_reason']!r})", e3, ''))
+    if e3:
+        dn = copy.deepcopy(recs['next'])
+        restore(dn['hertzian'], 'hertz')
+        rej, txt = _binding_reject(tf, nc, 'hertz', dn['hertzian'])
+        out.append((f"E4 ★ 그 보류 값을 복원 → 저장 q {dn['hertzian']['sigma_full']!r} = 게시된 두 레코드의 저장 q (8 자리 — 저장 값으로는 못 가른다) · "
+                    f"공용 증서 판정 거부 (옛: []) — {txt[:200] or '[]'}",
+                    dn['hertzian']['sigma_full'] == 1.5 == h['eq']['sigma_full'] == h['prev']['sigma_full'] and rej, ''))
+    else:
+        out.append(('E4 전제 불성립 (E3 — 보류 레코드가 없다) — 복원 · 판정하지 않는다', False, ''))
+    return out
+
+
+def sec_E(state):
+    import network_conductivity as nc
+    import tau_flux as tf
+    from test_lhs214_model_limit import chain_bed
+    print('E  경계 — 실 생산자 사슬 (box_y = 이 환경의 정확한 경계 입력) 의 H0 raw q 1.5000000000000002 · 1.5 · 1.4999999999999998')
+    A, C, plate, _b = chain_bed(1.0, area=E_AREA)
+    bys, steps, probs = find_boundary_inputs(nc, A, C, plate, E_BX, E_BY)
+    if not chk(f'E0 ★ 전제 (10-19 L214R-S02) — 이 환경에서 세 경계 raw q 를 정확히 내는 box_y 를 등록 입력에서 찾았다 (걸음 {steps} · 상한 {E_SEARCH_ULP} '
+               f'· 허용 폭 없음) {bys}', not probs, probs):
+        for nm in ('E1', 'E2', 'E3', 'E4'):
+            chk(f'{nm} 전제 불성립 (E0 — 이 환경의 경계 입력 없음) — 판정하지 않는다', False)
+        return
+    for name, cond, extra in _e_checks(nc, tf, A, C, plate, E_BX, bys):
+        chk(name, cond, extra)
+
+
+def sec_E_shift(state):
+    """★ 10-19 L214R-S02 이식성 — 이 환경의 정확한 경계 입력 (E0 탐색) 에서 출발을 ±E_SHIFT_ULP 옮겨 (raw q 가 세 경계 모두 아래 = Codex 환경 꼴 ·
+    모두 위 = 반대 꼴) 같은 E0–E4 판정.  ⚠ 기준 = 찾은 정확한 입력 (등록 입력이 아니다 — 등록 입력이 이미 어긋난 환경에서도 같은 시험이 되게)."""
+    import network_conductivity as nc
+    import tau_flux as tf
+    from test_lhs214_model_limit import chain_bed
+    print(f"E′ 이식성 — 이 환경의 정확한 경계 입력에서 출발 box_y ±{E_SHIFT_ULP} ULP (Codex 환경 꼴 · 반대 꼴) → 탐색이 경계를 다시 찾고 같은 판정")
+    A, C, plate, _b = chain_bed(1.0, area=E_AREA)
+    base, _st, bprobs = find_boundary_inputs(nc, A, C, plate, E_BX, E_BY)
+    if bprobs:
+        chk('E′ 전제 불성립 (E0 — 이 환경의 정확한 경계 입력 없음) — 이식성 판정하지 않는다', False, bprobs)
+        return
+    for sh in (E_SHIFT_ULP, -E_SHIFT_ULP):
+        by0 = {}
+        for k, v in base.items():
+            b = v
+            for _ in range(abs(sh)):
+                b = math.nextafter(b, math.inf if sh > 0 else 0.0)
+            by0[k] = b
+        q0 = {k: _e_raw_q(nc, A, C, plate, E_BX, by0[k]) for k in E_Q}
+        bys, steps, probs = find_boundary_inputs(nc, A, C, plate, E_BX, by0)
+        res = _e_checks(nc, tf, A, C, plate, E_BX, bys) if not probs else []
+        bad = [nm[:3] for nm, cond, _x in res if not cond]
+        side = '아래' if all(q0[k] < E_Q[k] for k in E_Q) else ('위' if all(q0[k] > E_Q[k] for k in E_Q) else '섞임')
+        chk(f'E′{sh:+d} 출발 raw q 가 세 경계의 {side} ({ {k: repr(v) for k, v in q0.items()} }) → 탐색 걸음 {steps} · E1–E4 전부 같은 판정',
+            not probs and len(res) == 4 and not bad and side == ('아래' if sh > 0 else '위'), probs or bad)
+
+
+def sec_E5(state):
+    """★ 10-19 독립 묶음 — Codex 함수 단 (3 노드 실제 풀이 증서) 경계 넷.  옛 판은 sec_E 끝이라 실 사슬 E4 예외 뒤에 안 돌았다."""
+    import network_conductivity as nc
+    import tau_flux as tf
+    from test_lhs214_model_limit import net3
+    print('E5 경계 — Codex 함수 단 (3 노드 증서 · 결합 정보를 붙여 게시 상태로) · 실 사슬 E 와 독립')
     out = {}
     for lab, pz in (('prev', math.nextafter(0.75, 0.0)), ('eq', 0.75), ('next', math.nextafter(0.75, 1.0)), ('q2', 1.0)):
         n = net3(plate_z=pz)
@@ -473,6 +567,8 @@ def main():
     try:
         _guard('R', lambda: sec_R(state))
         _guard('E', lambda: sec_E(state))
+        _guard('E′', lambda: sec_E_shift(state))
+        _guard('E5', lambda: sec_E5(state))
         _guard('C', lambda: sec_C(state))
         _guard('B', lambda: sec_B(state))
     finally:

@@ -11840,13 +11840,16 @@
     {
       "id": "L214R-S01",
       "severity": "P3",
-      "status": "open",
+      "status": "claimed_fixed",
       "owner": "claude",
       "found_by": "codex 재확인 10-19 (리뷰 핀 77d8fd445)",
       "opened_in": "docs/reviews/codex_review_lhs214rr_fix_recheck_20261019.md",
       "title": "L214RR2-01 · 등록 파서 공백 — `supp20_input_receipt._md_fence` 의 `[ \\t]{0,3}` 가 탭을 한 글자로 세고 닫는 줄 꼬리를 `.strip()` (모든 Unicode 공백) 으로 받아, 탭 들여쓴 닫는 줄 · NBSP · U+2003 꼬리 뒤의 코드 예시 §3 을 활성 등록으로 읽는다 (영수증 rc 0 · 현재 지문 수용)",
-      "note": "판정문 §4 · Codex 114 문서 대조 중 32 = 표준 파서와 제목 판정 다름 · 전부 rc 0 (두 울타리 문자 × 네 길이 × 네 공백 변형).  최소 해결 = 들여쓰기를 지원 규약대로 (또는 탭 등 미지원 형태 명시 거부) · 닫는 줄 꼬리 = space/tab 만 · 원 반례 · 두 부류 · 정상 §3 · 역사 표 보존 함께 시험.  추가 범위 주의 (별건) = 실제 §3 제목 아래 코드 블록의 code_fp 도 registration_values 가 읽는다 — 승인 형식으로 허용할지 = 결정 필요.  반례 입력 = evidence/receipt_fence_cases/.  우리 트리 재현 10-19 = 같음 (114 중 32 · rc 0 · _repro_ours_20261019/) · 수정 계획 docs/reviews/lhs214s_fix_plan_20261019.md Q1 · Q2 (⬜ 1저자).",
-      "evidence_tests": []
+      "note": "판정문 §4 · Codex 114 문서 대조 중 32 = 표준 파서와 제목 판정 다름 · 전부 rc 0 (두 울타리 문자 × 네 길이 × 네 공백 변형).  최소 해결 = 들여쓰기를 지원 규약대로 (또는 탭 등 미지원 형태 명시 거부) · 닫는 줄 꼬리 = space/tab 만 · 원 반례 · 두 부류 · 정상 §3 · 역사 표 보존 함께 시험.  추가 범위 주의 (별건) = 실제 §3 제목 아래 코드 블록의 code_fp 도 registration_values 가 읽는다 — 승인 형식으로 허용할지 = 결정 필요.  반례 입력 = evidence/receipt_fence_cases/.  우리 트리 재현 10-19 = 같음 (114 중 32 · rc 0 · _repro_ours_20261019/) · 수정 계획 docs/reviews/lhs214s_fix_plan_20261019.md Q1 · Q2 (⬜ 1저자).  ✅ 10-19 고침 aa207a6bd (1저자 10-19 \"권고대로 ㄱ\" Q1 (가) · Q2 (가) · 시험 먼저 같은 커밋): scripts/supp20_input_receipt.py _md_indent_cols · _md_fence (들여쓰기 = 열 수 · 탭 = 다음 4 의 배수 열 · 0–3 열만 울타리) · 닫는 줄 꼬리 = space · tab 만 (_MD_CLOSE_TAIL) · Q2 = registration_values 가 §3 의 울타리 코드 블록 밖 줄에서만 code_fp (_md_section strip_code=True).  selftest 114/118 → 118/118 (S12i Codex 32 꼴 · S12i2 지킴 40 · S12i3 탭 여는 줄 · S12j · S12j2) · Codex 반례 114 문서 표준 파서와 다름 32 → 0 · 실제 등록 영수증 무영향 (도구 sha · dirty 만 다름) · 봉인 밖 → 대기 지문 그대로.  증거 docs/reviews/lhs214s_fix_evidence_20261019/.  지원 범위 = 울타리 코드 블록 · 0 열 ATX 제목 (들여쓴 코드 · 목록 · 인용 · HTML · 들여쓴 제목 = 해석 안 함 · 문서화).  Codex 짧은 재확인 전.",
+      "evidence_tests": [
+        "scripts/supp20_input_receipt.py --selftest S12i · S12i2 · S12i3 · S12j · S12j2 (114/118 → 118/118)"
+      ],
+      "claimed_fixed_sha": "aa207a6bd"
     },
     {
       "id": "L214R-S02",
