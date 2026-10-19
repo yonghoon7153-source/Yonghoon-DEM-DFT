@@ -3,11 +3,11 @@ title: "CX 프롬프트 — li2s 소셀 유리 대조 계 B 600 K 판독: 규칙
 tags: [review, li2s, lpscl_smallcell, glass, control-system, li3ps4, readout, branch-c2, track-closure, external-first-author, prompt, letter]
 letter: CX
 date: 2026-10-14
-updated: 2026-10-14
+updated: 2026-10-19
 track: li2s / lpscl_smallcell_glass
 channel: li2s1a
 kind: prompt
-status: 초안 (2026-10-14) — 사용자 검토 · 발송 대기 (발송판 `kb/projects/li2s_glass_control_readout_letter_CX_send_2026_10_14.md` = 보내는 글 그대로)
+status: 발송됨 (사용자 · 발송일 기록 없음 · 발송판 `kb/projects/li2s_glass_control_readout_letter_CX_send_2026_10_14.md` = 보내는 글 그대로) — ✅ 회신 CX 수령 2026-10-19 → `li2s1a_CX_reply_li2s_glass_control_readout_2026_10_19.md`
 confidence: medium
 verificationStatus: verified
 verifiedAt: 2026-10-14

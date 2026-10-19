@@ -1,13 +1,13 @@
 ---
 title: "리뷰 사슬 색인 — 프롬프트↔회신 (자동 생성)"
-date: 2026-10-17
-updated: 2026-10-17
+date: 2026-10-19
+updated: 2026-10-19
 tags: [index, review, codex]
 status: 자동생성
 kind: index
 confidence: high
 verificationStatus: verified
-verifiedAt: 2026-10-17
+verifiedAt: 2026-10-19
 verifiedBy: tools/kb_wiki.py reviews --write (산출물에서 재구성)
 explored: false
 authoredBy: agent
@@ -123,7 +123,7 @@ evidenceScope: multi-source-primary
 | CU | 2026-10-07 | `codex_CU_prompt_wad_agc_graphite_k9_closure_2026_10_07.md` | `codex_CU_reply_wad_agc_graphite_k9_closure_2026_10_08.md` | 발송 2026-10-08 · ✅ 회신 수령 2026-10-08 → `codex_CU_reply_wad_agc_graphite_k9_closure_2026_10_08.md` (조건부 GO · 값 유지 · P1 '기판만' 정정 · P2 라벨) | 같은 라벨 · 주제 토큰 일치 ['agc', 'closure', 'graphite', 'k9', 'wad'] |
 | CV | 2026-10-07 | `codex_CV_prompt_cei_easy_story_2026_10_07.md` | `codex_CV_reply_cei_easy_story_2026_10_08.md` | 발송 2026-10-08 · ✅ 회신 수령 2026-10-08 → `codex_CV_reply_cei_easy_story_2026_10_08.md` (조건부 GO · 스토리 그림 NO-GO · P0 2 · P1 5) | 같은 라벨 · 주제 토큰 일치 ['cei', 'easy', 'story'] |
 | CW | 2026-10-12 | `codex_CW_prompt_seminar_lean_deck_aesthetics_2026_10_12.md` | `codex_CW_reply_seminar_lean_deck_aesthetics_2026_10_13.md` | 발송 2026-10-13 · ✅ 회신 수령 2026-10-13 → `codex_CW_reply_seminar_lean_deck_aesthetics_2026_10_13.md` (조건부 GO · P0 3 · P1 5) | 같은 라벨 · 주제 토큰 일치 ['aesthetics', 'deck', 'lean', 'seminar'] |
-| CX | 2026-10-14 | `li2s1a_CX_prompt_li2s_glass_control_readout_2026_10_14.md` | — | 초안 (2026-10-14) — 사용자 검토 · 발송 대기 (발송판 `kb/projects/li2s_glass_control_readout_letter_CX_send_2026_10_14.md` = 보내는 글 그대로) | — |
+| CX | 2026-10-14 | `li2s1a_CX_prompt_li2s_glass_control_readout_2026_10_14.md` | `li2s1a_CX_reply_li2s_glass_control_readout_2026_10_19.md` | 발송됨 (사용자 · 발송일 기록 없음 · 발송판 `kb/projects/li2s_glass_control_readout_letter_CX_send_2026_10_14.md` = 보내는 글 그대로) — ✅ 회신 CX 수령 2026-10-19 → `li2s1a_CX_reply_li2s_glass_control_readout_2026_10_19.md` | 같은 라벨 · 주제 토큰 일치 ['control', 'glass', 'li2s', 'readout'] |
 | CY | 2026-10-15 | `codex_CY_prompt_wad_outsourcing_round2_design_2026_10_15.md` | `codex_CY_reply_wad_outsourcing_round2_design_2026_10_15.md` | 발송 2026-10-15 · ✅ 회신 수령 2026-10-15 → `codex_CY_reply_wad_outsourcing_round2_design_2026_10_15.md` (조건부 GO · 탄소 추가·은 a4 찬성 · 최소 수정 여섯 묶음 뒤 빌드 · 발송 승인은 CZ) | 같은 라벨 · 주제 토큰 일치 ['design', 'outsourcing', 'round2', 'wad'] |
 | CZ | 2026-10-17 | `codex_CZ_prompt_wad_outsourcing_round2_bundle_2026_10_17.md` | — | 초안 — P2′ 봉인·실제 묶음 전 (⟨봉인 뒤 채움⟩ 칸이 남아 있다) · 발송 전 | — |
 

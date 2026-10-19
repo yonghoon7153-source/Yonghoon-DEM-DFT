@@ -8875,6 +8875,110 @@
     "근거_발화": "사용자 2026-10-19 (이 세션): 'gabia GPU 가 비면 돌리게 짤게요' 에 '일단 같이 돌려봐 ㅇㅇ' → 이어서 '안되면 잠깐 li3Nd stop하고 해도 되잖아'",
     "decision_digest": "sha256:4dd00eb56cc772568a7eb741103bfca213e729de935a8e5c7c9842b84b6ac270"
    }
+  },
+  {
+   "id": "D-2026-10-19-lpscl-smallcell-glass-control-closed",
+   "schema_version": 2,
+   "kind": "closure",
+   "scope": null,
+   "slot": "lpscl_smallcell_glass_control_li3ps4_closure",
+   "applies_to": {
+    "systems": [
+     "lpscl_smallcell_glass",
+     "li3ps4_glass"
+    ]
+   },
+   "title": "소셀 유리 대조 계 카드 (a-Li₃PS₄ · 600 K) — 닫는다: 갈래 c2 (N_B 1/5 · 경계 4 · 미통과 0 · C1 5/5) · R 없음 · 단서를 문장 안에 · ⛔ 트랙은 닫지 않는다 (다음 = B 측정 가능 조건 카드 = 마지막) — 외부 1저자 회신 CX 확정",
+   "statement": "마감 기록 db/properties/lpscl_smallcell_glass_control_li3ps4_closed_2026_10_19.json. 허용 문장은 회신 CX 판 하나 — 「A와 같은 게이트·같은 600 K에서 a-Li₃PS₄ 유리는 과반이 게이트를 통과하지 못했다(N_B = 1/5 · 나머지 넷은 경계이며 미통과는 없고 C1은 5/5다). 같은 조건에서 두 계가 다르게 거동했다는 1차 관측이다. 두 유리의 D를 같은 잣대로 비교하지 않는다.」 · 잣대 비대칭 (B β 낮고 σ 큼 · 2σ 규칙에서 느린 계일수록 통과가 어렵다 → N_B 1/5 는 'B 는 확산영역이 아니다' 보다 좁은 뜻) 을 같이 · N_eff 범위는 'D 의 비처럼 읽지 않는다' 금지 문구와 한 항목으로만. Q-CX-2 결과 전 선택 셋 수용 · 대조 잡은 상시 절차.",
+   "rationale": "회신 CX Q-CX-1 — *'규칙 적용이 맞습니다 … §1 문장과 지키는 것 문단이 떨어져 있으면 인용될 때 앞 문장만 떠다닙니다'* · Q-CX-2 *'셋 다 받습니다 … ③ 은 상시 절차로 승격'*.",
+   "decision_state": "proposed",
+   "record_kind": "closure",
+   "results_seen": true,
+   "card": "db/properties/lpscl_smallcell_glass_control_li3ps4_closed_2026_10_19.json",
+   "record": "db/properties/lpscl_glass_control_li3ps4_runlog_2026_10_05.json",
+   "amends": [
+    "D-2026-10-05-lpscl-smallcell-glass-control-li3ps4"
+   ],
+   "depends_on": [
+    "D-2026-10-05-lpscl-smallcell-glass-control-li3ps4",
+    "D-2026-10-05-lpscl-smallcell-glass-control-cost"
+   ],
+   "review": "kb/reviews/li2s1a_CX_reply_li2s_glass_control_readout_2026_10_19.md",
+   "evidence": [
+    "kb/reviews/li2s1a_CX_reply_li2s_glass_control_readout_2026_10_19.md",
+    "db/properties/lpscl_smallcell_glass_control_li3ps4_closed_2026_10_19.json",
+    "db/properties/lpscl_glass_control_li3ps4_runlog_2026_10_05.json"
+   ],
+   "reopen_criteria": [
+    "⛔ 이 카드는 재개 조건이 없다 — 다음은 B 측정 가능 조건 카드 (650 K · 트랙 마지막)"
+   ],
+   "enforcement": "① 마감 기록 §2 허용 서술 밖으로 쓰지 않는다 — 특히 단서 없는 카드 §1a 판 c2 문장 단독 인용 · 'B 에서 확산하지 않는다 · 확산영역이 아니다' 금지 ② R · D 비 · N_eff 비를 D 의 비처럼 싣지 않는다 ③ 늦은 창 β 로 구제·재판정하지 않는다 ④ 절대 D · σ · Ea 없음.",
+   "proposed_by": "claude-session-2026-10-19",
+   "status": "proposed",
+   "status_history": [
+    {
+     "at": "2026-10-19",
+     "state": "proposed",
+     "by": "외부 1저자 (회신 CX)",
+     "note": "c2 확정 · 단서를 문장 안에 · 잣대 비대칭 · N_eff 옆 금지 문구 · 결과 전 선택 셋 수용. 판정은 외부 1저자가 확정했다 — 원장 active 전환(ratification)은 카드 저자(사용자) 몫. 트랙 = li2s (사용자 ≠ 1저자)."
+    }
+   ]
+  },
+  {
+   "id": "D-2026-10-19-lpscl-smallcell-glass-control-bmeasurable-amend-cx",
+   "schema_version": 2,
+   "kind": "estimand",
+   "scope": "lpscl_smallcell.glass_control_bmeasurable_650k",
+   "slot": "lpscl_smallcell_glass_control_bmeasurable_amend_cx",
+   "applies_to": {
+    "systems": [
+     "lpscl_smallcell_glass",
+     "li3ps4_glass"
+    ],
+    "tasks": [
+     "li2s_glass_control_650K400ps"
+    ],
+    "methods": [
+     "uma_md_turbo"
+    ],
+    "use_cases": [
+     "internal"
+    ]
+   },
+   "title": "B 측정 가능 조건 카드 개정 CX (결과 전) — 설계 (i) 650 K 두 계 확정 · Tg 거리 한계 · 통과 런도 골격 네 지표 분포 · p90² 포화 예상 · 유한크기 단서 · 순차 · 이 카드로 트랙을 닫고 그 전에 비용 0 둘 (A T₅₀ 다섯 시드 · 결정 Li₃PS₄ 1.88 상·출처)",
+   "statement": "개정 db/properties/lpscl_smallcell_glass_control_bmeasurable_amendment_cx_2026_10_19.json. 게이트 숫자 · 갈래 · 순차는 그대로이고 결과 전 기록 · 문장 단서만 보탠다: ① R(650) 은 650 K 한 점의 상대차이고 두 계가 각자의 Tg 에서 다른 거리 (T₅₀ B 408 · A ≈ 384 K) — 'Tg 때문' 금지 ② 모든 런 (통과 포함) 의 골격 네 지표를 분포째 기록 (650 K 첫 눈금) ③ p90² 는 기록만 · 650 K 포화 예상 → R 에 붙는 유한크기 단서가 600 K 보다 강하다 ④ 대조 잡 (A 600 K ↔ v2 마감) 유지 ⑤ 트랙 마감 전 비용 0 둘. 회신 전에 잠정으로 돌린 B 650 K 다섯 런은 설계가 안 바뀌어 그대로 쓴다 (미열람).",
+   "rationale": "회신 CX Q-CX-3a–3d — *'R(650) 이 나오더라도 … 이 한계를 결과 전에 적어야 나중에 R 을 보고 Tg 때문이라고 말하는 게 사후 해명이 되지 않습니다'* · *'통과한 런도 네 지표 분포를 전부 기록하세요'* · *'p90² 는 … 650 K 에서는 포화를 예상하세요'* · *'닫기 전에 비용이 0 인 것 둘'*.",
+   "decision_state": "proposed",
+   "record_kind": "amendment",
+   "results_seen": false,
+   "results_seen_note": "B 650 K 다섯 런 끝 · 미열람 — 이 개정과 판독 도구를 커밋한 뒤에만 연다",
+   "card": "db/properties/lpscl_smallcell_glass_control_bmeasurable_amendment_cx_2026_10_19.json",
+   "record": "db/properties/lpscl_glass_bmeas_650k_runlog_2026_10_14.json",
+   "depends_on": [
+    "D-2026-10-14-lpscl-smallcell-glass-control-bmeasurable"
+   ],
+   "amends": [
+    "D-2026-10-14-lpscl-smallcell-glass-control-bmeasurable"
+   ],
+   "review": "kb/reviews/li2s1a_CX_reply_li2s_glass_control_readout_2026_10_19.md",
+   "evidence": [
+    "kb/reviews/li2s1a_CX_reply_li2s_glass_control_readout_2026_10_19.md",
+    "db/properties/lpscl_smallcell_glass_control_bmeasurable_amendment_cx_2026_10_19.json"
+   ],
+   "reopen_criteria": [
+    "카드 §4 갈래 그대로 (b1 · b2a · b2b · b2c) — 어느 갈래든 트랙 마감 · 재개 조건 없음"
+   ],
+   "enforcement": "판독 도구 (온도 인자 · B 만 경로 · 네 지표 분포 · 대조 잡) 를 판독 전에 커밋 · 갈래 문장에 단서 (경계 · 미통과 · C1) 를 안에 · R 을 내면 Tg 거리 한계와 유한크기 단서를 같은 자리에.",
+   "proposed_by": "claude-session-2026-10-19",
+   "status": "proposed",
+   "status_history": [
+    {
+     "at": "2026-10-19",
+     "state": "proposed",
+     "by": "외부 1저자 (회신 CX)",
+     "note": "설계 (i) 확정 · 결과 전 기록 보탬. 원장 active 전환은 사용자 비준. 트랙 = li2s (사용자 ≠ 1저자)."
+    }
+   ]
   }
  ]
 }

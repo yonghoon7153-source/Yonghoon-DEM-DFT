@@ -1,20 +1,21 @@
 # kb 카탈로그 (생성물 — 손으로 고치지 말 것)
 
-> `python3 tools/kb_wiki.py index` 가 만든다 · 2026-10-17 · managed-files: 529
+> `python3 tools/kb_wiki.py index` 가 만든다 · 2026-10-19 · managed-files: 530
 
 규칙: kb/SCHEMA.md · 코드 체계: kb/CODES.md · 열린 질문: kb/questions/ · 논지 카드: kb/syntheses/ · 원장: kb/open_items.md · 문헌: litdb/INDEX.md
 
 값 = `db/properties/canonical_registry.json` · 금지 = `db/properties/citation_hazards.json` · 판정 = `db/governance/decisions.json` · 리뷰 = `kb/reviews/INDEX.md`
 
-## 최근 갱신 상위 20 (frontmatter `updated` 기준 · 전체 323건)
-- 2026-10-17 · `kb/reviews/INDEX.md` — 리뷰 사슬 색인 — 프롬프트↔회신 (자동 생성) · 자동생성
+## 최근 갱신 상위 20 (frontmatter `updated` 기준 · 전체 324건)
+- 2026-10-19 · `kb/reviews/INDEX.md` — 리뷰 사슬 색인 — 프롬프트↔회신 (자동 생성) · 자동생성
+- 2026-10-19 · `kb/reviews/li2s1a_CX_prompt_li2s_glass_control_readout_2026_10_14.md` — CX 프롬프트 — li2s 소셀 유리 대조 계 B 600 K 판독: 규칙 적용 갈래 c2 (N_B 1/5) · 결과 전 선택 셋 확인 · 트랙 끝 제안 · 발송됨 (사용자 · 발송일 기록 없음 · 발송판 `kb/project…
+- 2026-10-19 · `kb/reviews/li2s1a_CX_reply_li2s_glass_control_readout_2026_10_19.md` — 회신 CX — 외부 1저자 (li2s 소셀 유리 대조 계 B 600 K 판독): Q-CX-1 c2 확정 · 문장 안에 단서 (경계 4 · 미통과 0 · C1 5/5) · 잣대 비대칭 한 줄 · N_eff 옆 금지 문구 · Q-CX-2 셋 수용 (③ 대조 잡은 상시 절차로) · Q-CX-3a 650 K 두 계 + Tg 거리 한계 결과 전 · 3b 순차 · 3c 문턱 5 + 통과 런도 네 지표 분포 기록 · p90² 포화 예상 · 3d 이 카드로 닫음 + 닫기 전 비용 0 둘 (A T₅₀ 네 시드 · 결정 Li₃PS₄ 1.88 의 상·출처) · 담금질 발견 둘 · 미해결 목록 7 · 수령 (2026-10-19 · 사용자 붙여넣기 'li2S는 이렇게 회…
 - 2026-10-17 · `kb/reviews/codex_CZ_prompt_wad_outsourcing_round2_bundle_2026_10_17.md` — CZ 프롬프트 — W_ad 외주 2차 묶음 리뷰: 탄소 P2′ · C–C · 은 a4 VASP 묶음 (코드 · 러너 사다리 · 판정 계약 · 검사기·집계기 · 봉인) · 발송 승인 여부 · 초안 — P2′ 봉인·실제 묶음 전 (⟨봉인 뒤 채움⟩ 칸이 남아 있…
 - 2026-10-16 · `kb/seminars/Research_Seminar_2026_10_13_cascade_script_ko.md` — 연구세미나 2026-10-13 — cascade 진행 브리핑 발표 대본 (장별) · 진행
 - 2026-10-16 · `kb/seminars/Research_Seminar_2026_10_16_cascade_script_plain_ko.md` — 연구세미나 2026-10-16 — cascade 1부 대본 쉬운 판 (1–15쪽 · 노트 칸 붙여넣기용) · 진행
 - 2026-10-15 · `kb/reviews/codex_CY_prompt_wad_outsourcing_round2_design_2026_10_15.md` — CY 프롬프트 — W_ad 외주 2차 설계 리뷰: 탄소 작은 모델 (P2′) 보고량 카드 + V5 은 쪽 ENCUT 짝 재시도 (개정 4) + 러너 고칠 점 · 빌드 전 · 범위·수렴·문턱부터 · 발송 2026-10-15 · ✅ 회신 수령 2026-10-15 → `…
 - 2026-10-15 · `kb/reviews/codex_CY_reply_wad_outsourcing_round2_design_2026_10_15.md` — CY 회신 — W_ad 외주 2차 설계 리뷰: 조건부 GO · 탄소 작은 모델 추가와 은 a4 재개 찬성 · 카드 그대로 실행 승인 아님 · 최소 수정 여섯 묶음 뒤 빌드 · 발송 승인은 CZ · 수령 2026-10-15 (사용자 붙여넣기 · 원문 보존 · 마크다운…
 - 2026-10-15 · `kb/seminars/Research_Seminar_2026_10_13_cascade_defense_ko.md` — 연구세미나 2026-10-13 — cascade 진행 브리핑 디펜스 (예상 질문 · 개념 설명 · 숫자 카드) · 진행
-- 2026-10-14 · `kb/reviews/li2s1a_CX_prompt_li2s_glass_control_readout_2026_10_14.md` — CX 프롬프트 — li2s 소셀 유리 대조 계 B 600 K 판독: 규칙 적용 갈래 c2 (N_B 1/5) · 결과 전 선택 셋 확인 · 트랙 끝 제안 · 초안 (2026-10-14) — 사용자 검토 · 발송 대기 (발송판 …
 - 2026-10-13 · `kb/reviews/codex_CW_reply_seminar_lean_deck_aesthetics_2026_10_13.md` — CW 회신 — 10-13 세미나 슬림판 덱 미감: 조건부 GO · P0 = p11 표가 없는 대응을 암시 · p12 문헌 그림과 우리 설계 구분 · p13 문헌 그림 역할 표시 · P1 = 그림 확대 · 글 덜기 · 규율 문장 반복 · 흐린 화살표 · 수령 2026-10-13 (사용자 붙여넣기 · 원문 보존 · 표는 붙…
 - 2026-10-12 · `kb/reviews/codex_CW_prompt_seminar_lean_deck_aesthetics_2026_10_12.md` — CW 프롬프트 — 10-13 연구실 세미나 cascade 슬림판 덱 19장 미감 리뷰: 글 밀도 · AI 티 · 08-18 덱 문법 일관성 · 문헌 그림 · 확인 요청 여덟 · 발송 2026-10-13 · ✅ 회신 수령 2026-10-13 → `…
 - 2026-10-12 · `kb/seminars/Research_Seminar_2026_10_13_cascade_storyline_ko.md` — 연구세미나 2026-10-13 — cascade 진행 브리핑 스토리라인 (대본 준비용) · 진행
@@ -26,7 +27,6 @@
 - 2026-10-08 · `kb/projects/wad_v5_vasp_r1_request_2026_10_08.md` — V5 VASP 외주 — far_i r1 재시도 승인 + 남은 잡 상시 승인 (VASP 5.x NELM 소진 판정 버그) · 전달 프롬프트 · 발송 대기 (사용자 2026-10-08 '전달할 프롬프트 부탁' = …
 - 2026-10-07 · `kb/reviews/codex_CT_prompt_cascade_v7_main_runner_2026_10_07.md` — CT 프롬프트 — cascade D_rel v7 본 라운드 러너 (--main) 코드 리뷰: 이미 돌고 있는 40 런 · 조용히 틀린 경로 · 판정까지 이어지는가 · 확인 요청 여섯 · 발송 완료 2026-10-08 · ✅ 회신 수령 2026-10-08 …
 - 2026-10-07 · `kb/reviews/codex_CU_prompt_wad_agc_graphite_k9_closure_2026_10_07.md` — CU 프롬프트 — P1b Ag(111)|흑연 3층 W_sep 마감 교체 (k9 넷 · 사전 규칙 REPLACE) 사후 감사: DEM 이 Ag–C 기본값으로 채택한 뒤 · 다음 DEM 편지 전 · 확인 요청 다섯 · 발송 2026-10-08 · ✅ 회신 수령 2026-10-08 → `…
-- 2026-10-07 · `kb/reviews/codex_CV_prompt_cei_easy_story_2026_10_07.md` — CV 프롬프트 — CEI 쉬운 스토리 4 단계 (P 가 양극 금속을 끌어가고 Nd 가 P 를 먼저 잡는다) + 그림 여섯: 계산이 받치는 범위를 넘는가 · 확인 요청 다섯 · 발송 2026-10-08 · ✅ 회신 수령 2026-10-08 → `…
 
 ⚠ frontmatter 없는 레거시 문서는 이 목록에 안 뜬다 (날짜를 기계로 읽을 수 없다 — SCHEMA 상 소급하지 않는다).
 
@@ -212,9 +212,9 @@
 - `kb/results/vgcf_hbn_figure_plan.md` — VGCF/h-BN 원고 — 층수 연구를 어디에 둘 것인가 (2026-07-31 결정)
 - `kb/results/vgcf_hbn_gallery_mechanism_2026_07_30.md` — h-BN@VGCF — 209 meV 층수효과의 정체: confinement 확정 (2026-07-30)
 
-## reviews/ (209)
+## reviews/ (210)
 - `kb/reviews/ECERD2600097_review_notes.md` — 📝 리뷰 노트 — ECER-D-26-00097 (Fan 외, *Stability Issues in Sulfide-Based ASSB*)
-- `kb/reviews/INDEX.md` — 리뷰 사슬 색인 — 프롬프트↔회신 (자동 생성)  (2026-10-17 · 자동생성)
+- `kb/reviews/INDEX.md` — 리뷰 사슬 색인 — 프롬프트↔회신 (자동 생성)  (2026-10-19 · 자동생성)
 - `kb/reviews/_superseded_BN_replan_2026_09_12.md` — 회신 BN 요청 — cascade 재실행 계획의 **선(先)심사**: go / no-go
 - `kb/reviews/cascade_preflight_audit_2026_09_09.md` — cascade_preflight_audit_2026_09_09  (2026-09-09 · 진행)
 - `kb/reviews/codex_AA_prompt_stageA_v5_regate_2026_08_29.md` — Codex 재검토 요청 AA — 회신 Z 의 P0 8건 처리 후 Stage A v5 재게이트  (2026-08-29 · 발송 완료 — 회신 AA 접수, 후속은 codex_AB_prompt_…)
@@ -409,7 +409,8 @@
 - `kb/reviews/li2s1a_CR_reply_li2s_glass_control_card_2026_10_05.md` — 회신 CR — 외부 1저자 (li2s 소셀 유리 대조 계 카드): 검산 셋 수용 (1.49 eV⁻¹ · 산포 문장은 IQR 에만) · Q-CR-1~6 전건 · R 은 두 계 모두 통과 시드 ≥ 4 · 1 포함 문장에 검출한계 (결과 전 모의) · 골격 게이트 600 K 에서도 · 일시 변화 문턱은 A 실측에서 (예 5) · c2 = 1차 관측 · N_eff 열 · 밀도 −15 % 단서 · Tg 100 K 사전 문장 · 대조표 항목  (2026-10-05 · 수령 (2026-10-05 · 사용자 붙여넣기) — 회신 원문 · 고…)
 - `kb/reviews/li2s1a_CS_prompt_li2s_glass_control_cost_2026_10_05.md` — CS 프롬프트 — li2s 소셀 유리 대조 계: 담금질 시작 · ⚠ 비용 견적 오류 정정 (시드당 3 h → 실측 ≈ 33–39 h 벽시계) · 총상한 80 GPU-h 를 MD 전에 넘는다 · 셈법·새 상한 140·그 사이 처리 확인 요청 셋 (외부 1저자에게)  (2026-10-05 · 발송됨 (사용자 · 2026-10-05 · 발송판 `kb/projec…)
 - `kb/reviews/li2s1a_CS_reply_li2s_glass_control_cost_2026_10_05.md` — 회신 CS — 외부 1저자 (li2s 소셀 유리 대조 계 비용): Q-CS-1 kgy 는 등분 가정으로 상한 비교 (과대평가 방향 = 보수적 · 벽시계 병기 · gabia 는 nvidia-smi 실측 · 기계별 방식 명시) · Q-CS-2 140 수용 + 셋 (80 이 틀린 이유 기록 · 다음 카드 비용 항목에 실측 장부 대조 필수 · 여유 14 % 얇음 → 160 또는 멈춤 경로 명시 · MD 40 을 v2 장부에서 다시) · Q-CS-3 그 처리로 됨 + 넷에서 멈출 때 규칙을 지금 박을 것 · 덧붙임 R 은 B 실제 산포 쪽 검출한계로 읽기  (2026-10-05 · 수령 (2026-10-05 · 사용자 붙여넣기) — 회신 원문 · 고…)
-- `kb/reviews/li2s1a_CX_prompt_li2s_glass_control_readout_2026_10_14.md` — CX 프롬프트 — li2s 소셀 유리 대조 계 B 600 K 판독: 규칙 적용 갈래 c2 (N_B 1/5) · 결과 전 선택 셋 확인 · 트랙 끝 제안  (2026-10-14 · 초안 (2026-10-14) — 사용자 검토 · 발송 대기 (발송판 …)
+- `kb/reviews/li2s1a_CX_prompt_li2s_glass_control_readout_2026_10_14.md` — CX 프롬프트 — li2s 소셀 유리 대조 계 B 600 K 판독: 규칙 적용 갈래 c2 (N_B 1/5) · 결과 전 선택 셋 확인 · 트랙 끝 제안  (2026-10-19 · 발송됨 (사용자 · 발송일 기록 없음 · 발송판 `kb/project…)
+- `kb/reviews/li2s1a_CX_reply_li2s_glass_control_readout_2026_10_19.md` — 회신 CX — 외부 1저자 (li2s 소셀 유리 대조 계 B 600 K 판독): Q-CX-1 c2 확정 · 문장 안에 단서 (경계 4 · 미통과 0 · C1 5/5) · 잣대 비대칭 한 줄 · N_eff 옆 금지 문구 · Q-CX-2 셋 수용 (③ 대조 잡은 상시 절차로) · Q-CX-3a 650 K 두 계 + Tg 거리 한계 결과 전 · 3b 순차 · 3c 문턱 5 + 통과 런도 네 지표 분포 기록 · p90² 포화 예상 · 3d 이 카드로 닫음 + 닫기 전 비용 0 둘 (A T₅₀ 네 시드 · 결정 Li₃PS₄ 1.88 의 상·출처) · 담금질 발견 둘 · 미해결 목록 7  (2026-10-19 · 수령 (2026-10-19 · 사용자 붙여넣기 'li2S는 이렇게 회…)
 - `kb/reviews/litdb_dopant_sota_2026_09_09.md` — litdb_dopant_sota_2026_09_09  (2026-09-09 · 진행)
 - `kb/reviews/section3_review_candidates.md` — 📋 §3 리뷰 코멘트 후보 — 소거법 작업용 (ECER-D-26-00097)
 - `kb/reviews/section3_review_comments_compressed.md` — Comments on Section 3 (Intrinsic Stability of Sulfide SEs) — 압축판 v2
