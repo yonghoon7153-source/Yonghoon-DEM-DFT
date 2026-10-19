@@ -75,5 +75,15 @@
   "selftest": "도구 20/20 · 러너 38/38 (ELF 31 그대로 + removal 7 — 혼자 · tot_charge · pseudo_dir · 후처리 없음 · 해시 · 정지/재개 · 두 번 실패 · PAW 빠짐)",
   "by": "agent · 2026-10-19",
   "깨기": "2/2 잡힘 (러너 전체 selftest 를 변이 사본으로 · 각 37/38) — '같은 입력으로 한 번 다시' 뺌 → 다시 기록 0 · 두 번 실패 뒤 r2 재개 빼고 exit 7 → 재개 0"
+ },
+ "✅_DRY_RUN_2026_10_19_2105": {
+  "worktree": "gabia /data/work/wt_ndrm_1019 @5007c2508",
+  "PAW_md5": "Li.pbe-sl-kjpaw_psl.1.0.0 4449e4b2 · Nd.pbe-spdn-kjpaw_psl.1.0.0 af9d8c60 · P.pbe-n-kjpaw_psl.1.0.0 06b8cad1 · O.pbe-n-kjpaw_psl.0.1 0234752a · S.pbe-nl-kjpaw_psl.1.0.0 a0db168f · Cl.pbe-nl-kjpaw_psl.1.0.0 daecd58d",
+  "입력": "8 (rm_Cl114 · Cl117 · Cl56 · Cl59 · S112 · S115 · S51 · S54) · 프로브 = rm_Cl114",
+  "프로브_검사용": "CPU pw.x 1 랭크 4 초 — Estimated max dynamical RAM 27.94 GB → need 38,217 MiB (×1.3 + 1024)",
+  "GPU": "총 49,140 · 사용 37,220 (r2 pw.x 4081873 하나) · 빔 11,920 MiB → 결정 pause (r2 를 세우면 혼자 들어간다)",
+  "⚠_로그_문구": "'결정: pause — … ELF 혼자 …' 와 '프로브: … (Nd 변환 UPF 포함)' 는 ELF 때 문구가 남은 것 — removal 에서도 같은 코드 경로이고 실제로는 떼어내기 SCF 8 · PAW Nd 다 (동작 차이 없음 · 다음 러너 손질 때 문구만 고친다)",
+  "메모리_어림_정정": "카드 §3 의 '≈ 14 GB' 는 ELF NC 80/320 값을 옮긴 것이었다 — PAW 70/560 전하 셀은 추정 27.9 GB (×1.3 + 1 GB = 38.2 GB) · SCF 시간도 32 분보다 길 수 있다",
+  "by": "agent · 2026-10-19"
  }
 }
