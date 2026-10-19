@@ -1,0 +1,12 @@
+{
+ "schema": "nd_bader_lineage/v1",
+ "scf_in": "/data/work/runs/nd_ppswap_2026_09_16/kprobe_k331/kprobe.in",
+ "scf_in_sha256": "adbd6f707af0c3b92209dad10fa08fa2ab8633b66a75d0947651dd4665f3f4e2",
+ "vcrelax_out": "/data/work/runs/nd_ppswap_2026_09_16/lc_nd_doped_DFTrela/01_vcrelax.out",
+ "vcrelax_out_sha256": "5012a366f3e79a5ab654b49c5e2be8bbd8f808886b84b089805fbb7cc16e6b00",
+ "ok": true,
+ "problems": [],
+ "max_cell_diff_A": 0.0,
+ "max_frac_diff": 0.0,
+ "nat": 120
+}

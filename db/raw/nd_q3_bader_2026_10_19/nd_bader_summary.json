@@ -1,0 +1,167 @@
+{
+  "method": "AE **valence** density plot_num=17, PAW kjpaw_psl. net = ZVAL - N_bader (NOT Z - N_bader).",
+  "zval_used": {
+    "Cl": 7,
+    "Li": 3,
+    "Nd": 11,
+    "O": 6,
+    "P": 5,
+    "S": 6
+  },
+  "per_species": {
+    "Cl": {
+      "n": 16,
+      "mean": -0.903,
+      "min": -0.933,
+      "max": -0.832
+    },
+    "Li": {
+      "n": 48,
+      "mean": 0.884,
+      "min": 0.864,
+      "max": 0.905
+    },
+    "Nd": {
+      "n": 2,
+      "mean": 1.959,
+      "min": 1.913,
+      "max": 2.004
+    },
+    "O": {
+      "n": 3,
+      "mean": -1.866,
+      "min": -1.898,
+      "max": -1.848
+    },
+    "P": {
+      "n": 10,
+      "mean": 4.231,
+      "min": 3.172,
+      "max": 4.848
+    },
+    "S": {
+      "n": 41,
+      "mean": -1.674,
+      "min": -1.883,
+      "max": -0.966
+    }
+  },
+  "sites": {
+    "csv": "nd_bader_sites.csv",
+    "ACF_volume_unit": "bohr3",
+    "cell_volume_A3": 2395.415,
+    "rules_A": {
+      "R_PS": 2.4,
+      "R_PO": 1.9,
+      "R_NdX": 3.3,
+      "R_NdO": 2.9,
+      "note": "2026-10-19 Nd Q3 결과 전에 박은 거리 · 거리 하나로 분류 (각도 안 봄)"
+    },
+    "per_category": {
+      "Cl": {
+        "n": 14,
+        "net_mean": -0.9133,
+        "net_min": -0.9331,
+        "net_max": -0.8979,
+        "V_mean_A3": 38.4425,
+        "N_per_V_mean_e_A3": 0.2061
+      },
+      "Cl_nearNd": {
+        "n": 2,
+        "net_mean": -0.8327,
+        "net_min": -0.8331,
+        "net_max": -0.8324,
+        "V_mean_A3": 32.613,
+        "N_per_V_mean_e_A3": 0.2403
+      },
+      "Li": {
+        "n": 48,
+        "net_mean": 0.8839,
+        "net_min": 0.8645,
+        "net_max": 0.9052,
+        "V_mean_A3": 4.0532,
+        "N_per_V_mean_e_A3": 0.5233
+      },
+      "Nd": {
+        "n": 2,
+        "net_mean": 1.9588,
+        "net_min": 1.9134,
+        "net_max": 2.0041,
+        "V_mean_A3": 19.627,
+        "N_per_V_mean_e_A3": 0.4607
+      },
+      "O_P": {
+        "n": 1,
+        "net_mean": -1.8984,
+        "net_min": -1.8984,
+        "net_max": -1.8984,
+        "V_mean_A3": 21.944,
+        "N_per_V_mean_e_A3": 0.3599
+      },
+      "O_P_nearNd": {
+        "n": 2,
+        "net_mean": -1.8499,
+        "net_min": -1.8522,
+        "net_max": -1.8477,
+        "V_mean_A3": 19.6605,
+        "N_per_V_mean_e_A3": 0.3998
+      },
+      "P_S4": {
+        "n": 8,
+        "net_mean": 4.1668,
+        "net_min": 3.1716,
+        "net_max": 4.8467,
+        "V_mean_A3": 2.2931,
+        "N_per_V_mean_e_A3": 0.547
+      },
+      "P_withO": {
+        "n": 2,
+        "net_mean": 4.4851,
+        "net_min": 4.1219,
+        "net_max": 4.8484,
+        "V_mean_A3": 1.3385,
+        "N_per_V_mean_e_A3": 0.5987
+      },
+      "S_PS4": {
+        "n": 31,
+        "net_mean": -1.7175,
+        "net_min": -1.8833,
+        "net_max": -1.0217,
+        "V_mean_A3": 36.3477,
+        "N_per_V_mean_e_A3": 0.2125
+      },
+      "S_PS4_nearNd": {
+        "n": 6,
+        "net_mean": -1.5102,
+        "net_min": -1.8167,
+        "net_max": -0.9662,
+        "V_mean_A3": 32.8585,
+        "N_per_V_mean_e_A3": 0.229
+      },
+      "S_free": {
+        "n": 2,
+        "net_mean": -1.6898,
+        "net_min": -1.6901,
+        "net_max": -1.6896,
+        "V_mean_A3": 42.1485,
+        "N_per_V_mean_e_A3": 0.1825
+      },
+      "S_free_nearNd": {
+        "n": 2,
+        "net_mean": -1.4703,
+        "net_min": -1.4948,
+        "net_max": -1.4459,
+        "V_mean_A3": 33.827,
+        "N_per_V_mean_e_A3": 0.2211
+      }
+    }
+  },
+  "zval_from_upf": {
+    "Cl": "Cl.pbe-nl-kjpaw_psl.1.0.0.UPF → 7",
+    "Li": "Li.pbe-sl-kjpaw_psl.1.0.0.UPF → 3",
+    "Nd": "Nd.pbe-spdn-kjpaw_psl.1.0.0.UPF → 11",
+    "O": "O.pbe-n-kjpaw_psl.0.1.UPF → 6",
+    "P": "P.pbe-n-kjpaw_psl.1.0.0.UPF → 5",
+    "S": "S.pbe-nl-kjpaw_psl.1.0.0.UPF → 6"
+  }
+}
