@@ -1,0 +1,99 @@
+S1 정찰 (SBE arm 0 · σ_e 만)
+  s1_sbe_sg1.309: σ_VGCF 1.309 → σ_e 3.0650 mS/cm (0 s)
+  s1_sbe_sg0.6545: σ_VGCF 0.6545 → σ_e 2.1093 mS/cm (0 s)
+  s1_sbe_sg0.3272: σ_VGCF 0.3272 → σ_e 1.4564 mS/cm (0 s)
+S2 σ_VGCF* = 0.404 S/cm (보간 구간 0.3272 – 0.6545)
+C 비교 — SBE arm 0 @ σ* · 옛 DBE 킷 arm 0 @ σ* (재압밀한 DBE = --stage dbe)
+  c_kit_SBE_sg0.404: σ_VGCF 0.404 → σ_e 1.6294 mS/cm (0 s)
+  SBE 1.6294 mS/cm (목표 1.63 대비 -0.04 %)
+  c_kit_DBE_sg0.404: σ_VGCF 0.404 → σ_e 2.0367 mS/cm (0 s)
+  DBE [kit_DBE] 2.0367 mS/cm (실험 4.68 대비 -56.5 %) · 비 1.2500 (실험 2.86)
+  PASS  T1 sbe 단계 정상 → σ* = 독립 보간 0.404 · SBE arm 0 · 옛 kit_DBE arm 0 @ σ* (비 1.25 가짜 모형) · 런 다섯
+C 비교 (DBE arm 0 @ σ* 0.404 · 킷 kit_DBE_sdcp1um · σ_SDCP 256.6 그대로)
+  c_kit_DBE_sdcp1um_sg0.404: σ_VGCF 0.404 → σ_e 2.0367 mS/cm (0 s)
+  DBE [kit_DBE_sdcp1um] 2.0367 mS/cm (실험 4.68 대비 -56.5 %) · 비 1.2500 (실험 2.86)
+  PASS  T1b dbe 단계 → 같은 --out 요약의 σ* 로 재압밀 킷 arm 0 · 옛 kit_DBE 값 보존 · 킷별 칸 둘 · 런 여섯 · 같은 킷 두 번 = 멈춤
+  PASS  T1c sbe 요약 없이 dbe 단계 → 멈춤
+S1 정찰 (SBE arm 0 · σ_e 만)
+  s1_sbe_sg1.309: σ_VGCF 1.309 → σ_e 4.6885 mS/cm (0 s)
+  s1_sbe_sg0.6545: σ_VGCF 0.6545 → σ_e 3.2182 mS/cm (0 s)
+  s1_sbe_sg0.3272: σ_VGCF 0.3272 → σ_e 2.2138 mS/cm (0 s)
+S1 + 점 1 (down) σ_VGCF 0.1636
+  s1_sbe_sg0.1636: σ_VGCF 0.1636 → σ_e 1.5279 mS/cm (0 s)
+S2 σ_VGCF* = 0.185 S/cm (보간 구간 0.1636 – 0.3272)
+C 비교 — SBE arm 0 @ σ* · 옛 DBE 킷 arm 0 @ σ* (재압밀한 DBE = --stage dbe)
+  c_kit_SBE_sg0.185: σ_VGCF 0.185 → σ_e 1.6313 mS/cm (0 s)
+  SBE 1.6313 mS/cm (목표 1.63 대비 +0.08 %)
+  c_kit_DBE_sg0.185: σ_VGCF 0.185 → σ_e 2.0391 mS/cm (0 s)
+  DBE [kit_DBE] 2.0391 mS/cm (실험 4.68 대비 -56.4 %) · 비 1.2500 (실험 2.86)
+  PASS  T2 목표 < 세 점 → ÷2 점 0.1636 하나 더 → 보간 (확장 1)
+S1 정찰 (SBE arm 0 · σ_e 만)
+  s1_sbe_sg1.309: σ_VGCF 1.309 → σ_e 1.0937 mS/cm (0 s)
+  s1_sbe_sg0.6545: σ_VGCF 0.6545 → σ_e 0.7628 mS/cm (0 s)
+  s1_sbe_sg0.3272: σ_VGCF 0.3272 → σ_e 0.5368 mS/cm (0 s)
+S1 + 점 1 (up) σ_VGCF 2.618
+  s1_sbe_sg2.618: σ_VGCF 2.618 → σ_e 1.5780 mS/cm (0 s)
+S1 + 점 2 (up) σ_VGCF 5.236
+  s1_sbe_sg5.236: σ_VGCF 5.236 → σ_e 2.2871 mS/cm (0 s)
+S2 σ_VGCF* = 2.78 S/cm (보간 구간 2.618 – 5.236)
+C 비교 — SBE arm 0 @ σ* · 옛 DBE 킷 arm 0 @ σ* (재압밀한 DBE = --stage dbe)
+  c_kit_SBE_sg2.78: σ_VGCF 2.78 → σ_e 1.6293 mS/cm (0 s)
+  SBE 1.6293 mS/cm (목표 1.63 대비 -0.04 %)
+  c_kit_DBE_sg2.78: σ_VGCF 2.78 → σ_e 2.0366 mS/cm (0 s)
+  DBE [kit_DBE] 2.0366 mS/cm (실험 4.68 대비 -56.5 %) · 비 1.2500 (실험 2.86)
+  PASS  T2b 목표 > 세 점 → ×2 점 2.618 더 → 보간
+S1 정찰 (SBE arm 0 · σ_e 만)
+  s1_sbe_sg1.309: σ_VGCF 1.309 → σ_e 5.0000 mS/cm (0 s)
+  s1_sbe_sg0.6545: σ_VGCF 0.6545 → σ_e 5.0000 mS/cm (0 s)
+  s1_sbe_sg0.3272: σ_VGCF 0.3272 → σ_e 5.0000 mS/cm (0 s)
+  PASS  T3 σ_e 단조 아님 → 멈춤 rc 3 · 비교 런 없음
+S1 정찰 (SBE arm 0 · σ_e 만)
+  s1_sbe_sg1.309: σ_VGCF 1.309 → σ_e 3.0650 mS/cm (0 s)
+  PASS  T4 정찰 둘째 점 미수렴 → 멈춤 (수렴 실패)
+S1 정찰 (SBE arm 0 · σ_e 만)
+  s1_sbe_sg1.309: σ_VGCF 1.309 → σ_e 3.0650 mS/cm (0 s)
+  PASS  T5 매니페스트 σ_AM_S ≠ 0.0041 → 멈춤
+S1 정찰 (SBE arm 0 · σ_e 만)
+  PASS  T6 러너 rc 1 → 멈춤
+S1 정찰 (SBE arm 0 · σ_e 만)
+  PASS  T7 옛 출력 폴더 (SKIP 캐시 위험) → 러너 부르기 전 멈춤
+S1 정찰 (SBE arm 0 · σ_e 만)
+  PASS  T8 팔 JSON 둘 → 멈춤
+S1 정찰 (SBE arm 0 · σ_e 만)
+  s1_sbe_sg1.309: σ_VGCF 1.309 → σ_e 3.0650 mS/cm (0 s)
+  s1_sbe_sg0.6545: σ_VGCF 0.6545 → σ_e 2.1093 mS/cm (0 s)
+  s1_sbe_sg0.3272: σ_VGCF 0.3272 → σ_e 1.4564 mS/cm (0 s)
+S2 σ_VGCF* = 0.404 S/cm (보간 구간 0.3272 – 0.6545)
+C 비교 — SBE arm 0 @ σ* · 옛 DBE 킷 arm 0 @ σ* (재압밀한 DBE = --stage dbe)
+  c_kit_SBE_sg0.404: σ_VGCF 0.404 → σ_e 1.6294 mS/cm (0 s)
+  SBE 1.6294 mS/cm (목표 1.63 대비 -0.04 %)
+  c_kit_DBE_sg0.404: σ_VGCF 0.404 → σ_e 2.0367 mS/cm (0 s)
+  DBE [kit_DBE] 2.0367 mS/cm (실험 4.68 대비 -56.5 %) · 비 1.2500 (실험 2.86)
+S1 정찰 (SBE arm 0 · σ_e 만)
+  s1_sbe_sg1.309: σ_VGCF 1.309 → σ_e 3.0650 mS/cm (0 s)
+  s1_sbe_sg0.6545: σ_VGCF 0.6545 → σ_e 2.1093 mS/cm (0 s)
+  s1_sbe_sg0.3272: σ_VGCF 0.3272 → σ_e 1.4564 mS/cm (0 s)
+S2 σ_VGCF* = 0.404 S/cm (보간 구간 0.3272 – 0.6545)
+C 비교 — SBE arm 0 @ σ* · 옛 DBE 킷 arm 0 @ σ* (재압밀한 DBE = --stage dbe)
+  c_kit_SBE_sg0.404: σ_VGCF 0.404 → σ_e 1.6294 mS/cm (0 s)
+  SBE 1.6294 mS/cm (목표 1.63 대비 -0.04 %)
+S1 정찰 (SBE arm 0 · σ_e 만)
+  PASS  T8b SBE 의 SDCP 키 결손 = 통과 (SDCP 상 없음) · DBE 의 결손 = 멈춤 · .rejected_* = 멈춤
+  PASS  T9 dry-run → 명령 셋만 찍고 출력 폴더 없음
+  PASS  T10 S2 — 보간 3 자리 ('ok', '0.4', ('0.3272', '0.6545')) (독립 0.4) · 끝점 = 목표면 그 점 · 위 = down · 단조 아님 = 멈춤
+S1 정찰 (SBE arm 0 · σ_e 만)
+  s1_sbe_sg1.309: σ_VGCF 1.309 → σ_e 3.0650 mS/cm (0 s)
+  s1_sbe_sg0.6545: σ_VGCF 0.6545 → σ_e 2.1093 mS/cm (0 s)
+  s1_sbe_sg0.3272: σ_VGCF 0.3272 → σ_e 1.4564 mS/cm (0 s)
+S2 σ_VGCF* = 0.404 S/cm (보간 구간 0.3272 – 0.6545)
+C 비교 — SBE arm 0 @ σ* · 옛 DBE 킷 arm 0 @ σ* (재압밀한 DBE = --stage dbe)
+  c_kit_SBE_sg0.404: σ_VGCF 0.404 → σ_e 1.6294 mS/cm (0 s)
+  SBE 1.6294 mS/cm (목표 1.63 대비 -0.04 %)
+  c_kit_DBE_sg0.404: σ_VGCF 0.404 → σ_e 2.0367 mS/cm (0 s)
+  DBE [kit_DBE] 2.0367 mS/cm (실험 4.68 대비 -56.5 %) · 비 1.2500 (실험 2.86)
+  PASS  T12 부모 env 의 SIGMA_ION_SE → 지우고 돈다 (LEAN=2 러너 가드 통과)
+  FAIL  T13 화면을 파일로 돌려도 첫 런 도중 'S1 정찰' 줄이 이미 로그에 있다 (줄 버퍼 · 옛 판: 끝날 때까지 빈 로그)   (False, True, '')
+  PASS  T11 등록 문서에 이 도구의 값 (11) 이 다 있다
+
+sdcp_anchor_v2_chain selftest: 16/17 PASS   FAILED: ["T13 화면을 파일로 돌려도 첫 런 도중 'S1 정찰' 줄이 이미 로그에 있다 (줄 버퍼 · 옛 판: 끝날 때까지 빈 로그)"]
+rc=1

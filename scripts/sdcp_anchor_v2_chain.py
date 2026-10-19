@@ -256,6 +256,10 @@ def git_identity(path):
 
 
 def main(argv=None):
+    try:                                   # ★ SELF-122 — 화면을 파일로 돌려도 (setsid nohup … > log) 줄마다 바로 쓴다 (옛 판: 끝날 때까지 빈 로그)
+        sys.stdout.reconfigure(line_buffering=True)
+    except (AttributeError, ValueError):
+        pass
     ap = argparse.ArgumentParser(description=__doc__.split('\n')[0])
     ap.add_argument('--runner')
     ap.add_argument('--root', help='킷 (kit_SBE · kit_DBE) 이 있는 폴더 = 러너 작업 폴더')
@@ -449,6 +453,27 @@ def selftest():
         finally:
             os.environ.pop('SIGMA_ION_SE', None)
         chk('T12 부모 env 의 SIGMA_ION_SE → 지우고 돈다 (LEAN=2 러너 가드 통과)', rc_12 == 0 and len(ch_12.summary['runs']) == 5, ch_12.summary.get('stop'))
+        # T13 ★ (SELF-122) 사슬 화면을 파일로 돌려도 (setsid nohup … > log) 줄이 바로 찍힌다 — 옛 판은 print 를 flush 하지 않아 첫 런이 도는 동안 로그가 비어 있었다
+        #     (10-19 kgy 첫 S1 — 1저자 "들어간거야?").  첫 러너가 8 초 자는 동안 (7.5 초 안에 · 보이면 바로 끝) 'S1 정찰' 줄이 보여야 한다 · 프로세스가 아직 살아 있을 때.
+        slow = td / 'runner_slow.sh'
+        slow.write_text(f'#!/bin/bash\nsleep 8\nexec {sys.executable} -I {td / "fake.py"}\n', encoding='utf-8')
+        logf = td / 't13.log'
+        with open(logf, 'w', encoding='utf-8') as lf:
+            pr = subprocess.Popen([sys.executable, '-I', str(Path(__file__).resolve()), '--stage', 'sbe', '--runner', str(slow), '--root', str(root),
+                                   '--out', str(td / 'out_t13')], stdout=lf, stderr=subprocess.STDOUT)
+        seen, t0 = False, time.time()
+        try:
+            while time.time() - t0 < 7.5 and pr.poll() is None:
+                if 'S1 정찰' in logf.read_text(encoding='utf-8', errors='replace'):
+                    seen = True
+                    break
+                time.sleep(0.1)
+            alive = pr.poll() is None
+        finally:
+            pr.kill()
+            pr.wait()
+        chk('T13 화면을 파일로 돌려도 첫 런 도중 \'S1 정찰\' 줄이 이미 로그에 있다 (줄 버퍼 · 옛 판: 끝날 때까지 빈 로그)', seen and alive,
+            (seen, alive, logf.read_text(encoding='utf-8', errors='replace')[:200]))
         # T11 등록 문서와 상수 대조 (있을 때만 — 리포 체크아웃)
         reg = HERE.parent / 'docs' / 'reviews' / 'sdcp_sigma_e_dcp_anchor_registration_v2_20261019.md'
         if reg.exists():

@@ -11854,13 +11854,16 @@
     {
       "id": "L214R-S02",
       "severity": "P3",
-      "status": "open",
+      "status": "claimed_fixed",
       "owner": "claude",
       "found_by": "codex 재확인 10-19 (리뷰 핀 77d8fd445)",
       "opened_in": "docs/reviews/codex_review_lhs214rr_fix_recheck_20261019.md",
       "title": "L214RR2-02 · R01 경계 시험 (`scripts/test_l214r_r01_restored_full.py` E) 의 하드코딩 입력이 환경에 의존 — Codex Windows Py3.12 NumPy 2.5.3 에서 raw q 1.4999999999999962 · …958 · …956 (셋 다 문턱 아래) → 23/26 rc 1 · E1/E3 실패 뒤 복원 helper KeyError 로 E4/E5 미완결",
-      "note": "판정문 §2 · 생산 코드 · 판정식 · 합격선은 정상 (정확 경계 입력 면적 0.500000001001 · box_y …80614/…80615/…80616 으로 다섯 단언 통과).  최소 개선 = 정확한 3 노드 경계 검사를 독립 실행 · 실 사슬은 계산된 q 가 경계 전제에 맞는지 먼저 확인 · 실패해도 뒤 검사가 KeyError 로 생략되지 않게 · 허용치 완화 금지 · 원 실패 로그 보존.  우리 트리 재현 10-19 = 이 환경에서 Codex 정확 경계 입력이 18–19 ULP 위 (양방향 환경 차) · 수정 계획 docs/reviews/lhs214s_fix_plan_20261019.md (⬜ 1저자).",
-      "evidence_tests": []
+      "note": "판정문 §2 · 생산 코드 · 판정식 · 합격선은 정상 (정확 경계 입력 면적 0.500000001001 · box_y …80614/…80615/…80616 으로 다섯 단언 통과).  최소 개선 = 정확한 3 노드 경계 검사를 독립 실행 · 실 사슬은 계산된 q 가 경계 전제에 맞는지 먼저 확인 · 실패해도 뒤 검사가 KeyError 로 생략되지 않게 · 허용치 완화 금지 · 원 실패 로그 보존.  우리 트리 재현 10-19 = 이 환경에서 Codex 정확 경계 입력이 18–19 ULP 위 (양방향 환경 차) · 수정 계획 docs/reviews/lhs214s_fix_plan_20261019.md (⬜ 1저자).  ✅ 10-19 고침 72da834ee (1저자 10-19 \"권고대로 ㄱ\" · 시험만 — 생산 코드 · 판정식 · 합격선 그대로): scripts/test_l214r_r01_restored_full.py E0 = 이 환경에서 실 사슬 H0 raw q 가 세 경계와 정확히 같은 box_y 를 등록 입력에서 ULP 한 걸음씩 탐색 (상한 512 · 허용 폭 없음 · 건너뛰면 문제) · 못 찾으면 E1–E4 = 전제 불성립 FAIL · E3 가 아니면 E4 는 복원 안 부름 · E5 독립 묶음 · E′ = 찾은 정확한 입력에서 ±18 ULP 출발 → 같은 판정 · 복원 helper = q_withheld 없으면 사유 (KeyError 아님).  그대로 27/27 → 30/30 · 등록 입력 +18 ULP (이 컨테이너의 Codex 환경 꼴 · 출발 raw q …962 · …960 · …956) = 고치기 전 23/26 (Codex 와 같음 · E1 · E3 · E4 KeyError · E5 미실행) → 고친 뒤 30/30 · −18 ULP 30/30.  증거 docs/reviews/lhs214s_fix_evidence_20261019/ (s02_*).  한정: Codex Windows 환경 재실행 아님.  Codex 짧은 재확인 전.",
+      "evidence_tests": [
+        "scripts/test_l214r_r01_restored_full.py E0 · E′±18 · E5 (27/27 → 30/30 · +18 ULP 이동 고치기 전 23/26 → 30/30)"
+      ],
+      "claimed_fixed_sha": "72da834ee"
     },
     {
       "id": "L214R-S03",

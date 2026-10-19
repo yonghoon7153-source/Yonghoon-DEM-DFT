@@ -38,3 +38,29 @@
 - "고치기 전" 기록 = 부모 커밋의 시험 파일을 **바이트 그대로** 불러 E_BY 만 이동해 실행 (`docs/reviews/lhs214s_fix_evidence_20261019/s02_run_shifted.py` — 파일 sha256 을 로그 첫 줄에 적는다).
   Codex 의 원 실패 로그 = 반입 증거 `docs/reviews/codex_lhs214rr_fix_recheck_evidence_20261019/evidence/rr_numeric_submitted_test_l214r_r01_restored_full.log` (보존 · 덮지 않음).
 - 한정: 이식성은 이 컨테이너에서 ±18 ULP 이동으로 재현한 꼴 — Codex Windows 환경에서 다시 돈 것은 아니다 (재확인에서 확인 요청).
+
+## S04 — `/single` 의 null 메트릭 (`webapp/templates/single.html` · 봉인 밖 템플릿 · `app.py` 안 건드림)
+
+| 시험 | 고치기 전 | 고친 뒤 | 기록 |
+|---|---|---|---|
+| `webapp/test_single_null_metrics.py` (새 · 게이트 `run` 줄) | 2/6 (N2 Codex 반례 `sigma_ratio` null = 500 · N3 키 없음 = 지어낸 `0.0000` · N4 `sigma_ratio` null + `phi_se` 없음 = 500 · N5 `phi_se` · `tortuosity_*` null = 500) | 6/6 | `tests/s04_before.log` · `tests/s04_after.log` |
+| 기존 웹앱 시험 (closed_param_labels · l214r03_display 14 · web09_accepted_refresh 18 · tau_labels 46) | — | 그대로 | `tests/s04_reg_*.log` |
+
+- 고친 것: 툴팁 세 블록 (σ_brug/σ_grain · σ_brug / σ_ionic · σ_Bruggeman) — 값이 **숫자일 때만** 형식화 · 곱셈 (`is number` = 키 없음 · null 둘 다 거른다) ·
+  아니면 σ_brug/σ_grain 끝 줄 = '—' · 나머지 둘 = 일반 문구 (식만).  f_perc · τ 의 기본값 대입도 `is number` 로 (null 이면 기본값).
+- 대조: 정상 케이스의 세 툴팁 수치 그대로 (N1 = 0.2400 · 0.7200 / 0.2400 · 0.7200 mS/cm) · `R_brug_over_full` null = 200 (N6 · Codex 대조 · 고치기 전도 200).
+- 범위 = 이 세 툴팁 블록 (서버 Jinja) — `/single` 전체의 nullable 메트릭 보증 아님 · 브라우저 JS (what-if 응답) 아님.
+  같은 부류 남은 것 = 머리 배지 (`percolation_pct` 등 `is defined` 만 보고 형식화 — null 이면 여전히 500 · 10-19 실측) → 원장 `L214R-S05` (P3 · open · 따로).
+- 한정: 현재 정상 생산자가 null 을 쓴다는 증거는 없다 (Codex 판정 §5 와 같은 한정 — 과거 · 외부 nullable 자료의 화면 견고성).
+  "고치기 전" = `single.html` 이 이 커밋 직전과 바이트 같은 `be75bdd07` 복제본에 새 시험만 넣고 실행.
+
+## (별건 · 같은 커밋) SELF-122 — SDCP 앵커 v2 사슬 화면 버퍼 (`scripts/sdcp_anchor_v2_chain.py` · LHS 밖 · Codex 판정 대상 아님)
+
+| 시험 | 고치기 전 | 고친 뒤 | 기록 |
+|---|---|---|---|
+| `sdcp_anchor_v2_chain.py --selftest` | 16/17 (새 T13 실패 — 첫 런 도중 로그가 비어 있음) | 17/17 | `tests/self122_before.log` · `tests/self122_after.log` |
+
+- 고친 것: `main()` 머리에서 `sys.stdout.reconfigure(line_buffering=True)` — 화면을 파일로 돌려도 (`setsid nohup … > log`) 줄마다 바로 쓴다
+  (10-19 kgy 첫 S1 재발사 뒤 사슬 로그가 비어 보였다 — 1저자 *"들어간거야?"*).
+- 새 시험 T13: 첫 러너가 8 초 자는 동안 (7.5 초 안에 · 보이면 바로 끝) 로그 파일에 'S1 정찰' 줄이 이미 있고 프로세스가 살아 있어야 한다.
+- 계산 영향 없음 (화면 줄이 찍히는 시점만) · 지금 도는 kgy S1 (`~/dem-anchor1019b`) 은 런 중에 바꾸지 않는다 — 다음 단계도 `python3 -u` 로 돌리면 같다.
