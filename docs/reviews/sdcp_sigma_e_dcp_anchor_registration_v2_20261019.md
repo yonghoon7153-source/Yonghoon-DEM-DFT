@@ -169,3 +169,9 @@ python3 ~/dem-anchor1019/scripts/sdcp_bed_meta.py ~/sdcp/kit_SBE ~/sdcp/kit_DBE
   작업트리 `298a73197` · 셸 작업 `[1] 2290343` = setsid 번호 (새 프로세스를 띄우고 곧 끝남 · 러너는 다른 PID — `pgrep -of sdcp_gain_vox015_8arm.sh`) · 첫 팔 계산 = `mpm_webapp_payload` 2291944 · 로그 `~/final16_1019.log`).  첫 팔 STEP3 전자 풀이 26,734,242 dof · 판 접촉 12,623 / 10,059 · GPU 19.8 / 24.6 GB (다른 작업 12.4 GB 포함 → 두 팔 동시 불가).  첫 팔 `p2_DBE_sdcp1um_sph_a0` 시작 확인 (입력 digest `5e92a35fe600485f` · 섬유 선분 스탬프 도체점 1,875,570 · 섬유 55,017 ·
   AM 집전체 연결 100 % · SDCP 부피-보존 구 스탬프 Ø0.30 · PTFE centerline exact-zero DOF = S1 · C 와 같은 표지).  확인 칸 = §3-D (SBE 8 팔 평균 σ_ion 0.137 ± 1 %) · 보고 칸 = §3 보고 그대로.
   시간 = DBE arm 0 약 1 시간 · 16 팔 대략 10–13 시간 (추정 — σ_e 만 SBE ≈ 15 분 · DBE ≈ 50 분 + 이온 · 필드).
+- **10-20 00:2x 최종 16 팔 첫 시도 = 멈춤 (2/16 · 1저자 화면)**: 끝난 팔 = `p2_DBE_sdcp1um_sph_a0` · `p2_SBE_sph_a0` (SBE a0 σ_e 풀이 26,378,531 dof · resid 1.0e-08 · 704 s · σ_ion 230 s) ·
+  `p2_DBE_sdcp1um_sph_a1` (shift (0 0 0.075)) = 전자 풀이 미수렴 (26,732,800 dof · resid **1.1e-08** > 기준 1e-08 · 반복 한도 30,000 · 3,054 s · σ_ion 은 수렴 236 s) →
+  payload `STEP3_REQUIRED_INCOMPLETE ['electronic(unconverged)']` · 진단본 `p2_DBE_sdcp1um_sph_a1.json.failed` (보존) · 러너 fail-fast 중단.  값은 봉인 (`--show-results` 전 미열람).
+  ⇒ 다시 발사 = 같은 명령 + `P2_EXTRA="--step3-maxiter N"` (러너 허용 목록 · `run_contract` 분류 **numeric** = 규약 · 물리 해시 · 영수증 밖 → 끝난 두 팔 SKIP · 수렴 기준 1e-08 그대로) ·
+  권고 N = 100,000 (한도는 상한 — 일찍 수렴하는 팔은 시간 같음 · 1저자에게 60,000 안내 뒤 100,000 권고로 고침) · 팔마다 수렴한 값끼리만 비교 (payload help 문구).
+  관찰: SBE 대비 DBE 전자 풀이가 4 배 이상 느리다 (σ_SDCP 256.6 ↔ σ_AM 0.0041 S/cm 대비 ≈ 6 × 10⁴ → 조건수 · 추정) · DBE 팔들이 반복 30,000 근처에 걸쳐 있다.
