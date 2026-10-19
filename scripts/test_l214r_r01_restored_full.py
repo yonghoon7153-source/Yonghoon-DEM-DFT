@@ -27,6 +27,13 @@ sigma_full_reason None · ionic_status computed · ionic_status_reason None) · 
        17–19 ULP 아래 · 이 컨테이너 = Codex 정확 입력에서 18–19 ULP 위) → box_y 를 등록 입력 (…881 / …882 / …883) 에서 **ULP 한 걸음씩** 옮겨 이 환경에서
        raw q 가 세 경계와 **정확히** 같은 입력을 먼저 찾는다 (E0 · 허용 폭 없음 · 엄격 > 그대로).  못 찾으면 E1–E4 = 전제 불성립 FAIL (KeyError 로 끊기지 않음).
        E′ = 출발 입력을 ±18 ULP 옮겨 (Codex 환경 꼴 · 반대 꼴) 같은 판정이 나오는지 · 복원 helper 는 보류 증서가 아니면 명시 오류.
+     ★ 10-19 저녁 L214R-S02 둘째 축 (Codex 재확인 판정 codex_review_lhs214s_fix_recheck_20261019 §4 · 1저자 계획 Q2 (가)) — 고정 기하에서 box_y 한 축 걸음은
+       경계를 **건너뛸** 수 있다 (Codex Windows 23/29 = prev: box_y …863 → 1.5 · …864 → 1.4999999999999996 · 상한을 올려도 못 고친다 — 그 기하에서 prev 를
+       내는 box_y 가 없다).  → E0 = 둘째 기하 자유도 접촉 면적을 등록값에서 k ULP (0, +1, −1, …, ±64) 옮기며 면적마다 box_y 걸음 (출발 raw q 로 한 번 옮긴 뒤 ·
+       상한 512) → 세 경계를 **한 면적에서** 모두 == 로 찾은 첫 면적 · 못 찾으면 전제 불성립 FAIL (이 환경 · 탐색 범위 · E4 복원 안 부름 · E5 독립 그대로).
+       box_x 는 못 쓴다 (q 에 곱 box_x·box_y 로만 들어가고 I_bottom 은 상자와 무관 — 닿는 q 집합이 같다).  E′ = 찾은 면적에서 box_y 걸음 ±18 그대로.
+       E″ = 이 기계에서 한 축 걸음이 경계를 건너뛰는 출발 면적 둘 (a = 등록 +5 ULP · Codex Windows 와 같은 raw q 꼴 · prev / b = −9 ULP · next) → 같은 E0 탐색 → E1–E4
+       (고치기 전 한 축 탐색 = 30/40 · 고친 뒤 40/40 — 증거 docs/reviews/lhs214cx_fix_evidence_20261019/s02/).
   E5 Codex 함수 단 (3 노드 증서 · 결합 정보를 붙여 게시 상태로) q 1.4999999999999998 · 1.5 = 통과 · 1.5000000000000002 · 2.0 = 거부 — ★ 10-19 독립 묶음
      (실 사슬 E 의 실패 · 예외와 상관없이 돈다 · 옛 판은 E4 KeyError 뒤라 Codex 환경에서 안 돌았다)
   C  대조 (그대로) — 12 침대 원 레코드 (computed · 적법한 보류) 결합 [] · CF · 협착-only model_over_conduction (q > 1.5 게시 값) 결합 [] · 열 FULL
@@ -70,6 +77,19 @@ E_Q = {'next': math.nextafter(1.5, 2.0), 'eq': 1.5, 'prev': math.nextafter(1.5, 
 #: ★ 10-19 L214R-S02 — 경계 입력 탐색 상한 (box_y ULP 걸음) · 이식성 시험의 출발 이동 (Codex 환경 = 등록 입력에서 raw q 17–19 ULP 아래)
 E_SEARCH_ULP = 512
 E_SHIFT_ULP = 18
+#: ★ 10-19 L214R-S02 둘째 축 (Codex 재확인 판정 §4-2 최소 해결 — 공개된 유한 탐색 · 전제 검증) — 접촉 면적 (chain_bed contact_area) 을 등록값에서 ULP 단위로
+#:   옮긴다 · 순서 k = 0, +1, −1, +2, −2, …, +E_AREA_ULP, −E_AREA_ULP (결정적 · 최대 129 면적) · 면적마다 box_y 걸음 (find_boundary_inputs · 상한 E_SEARCH_ULP) ·
+#:   세 경계를 **한 면적에서** 모두 정확히 (==) 찾은 첫 면적에서 멈춘다 · 못 찾으면 전제 불성립 FAIL (허용 폭 · 문턱 · 엄격 > 그대로).
+#:   box_x 가 아닌 이유 — 생산자 q = fl(fl(I_bottom·T) / fl(box_x·box_y)) 이고 이 사슬 (x = y = 0) 의 I_bottom 은 상자와 무관 (이 기계: box 0.9 × 0.6 에서도 비트 같음)
+#:   → 상자는 곱 P 로만 들어가고 box_y 걸음이 이미 P 의 모든 double 을 지난다 = box_x 를 옮겨도 닿는 q 집합이 같다.  접촉 면적은 I_bottom (Holm 협착) 을 바꾼다.
+#:   상한 64 의 근거 (이 기계 실측 · 다른 환경은 추정) — I_bottom 은 2^-53 격자 · 세 경계가 다 나오는 격자 칸 = 3 칸마다 하나 (T/q = 40/3) · dlnG/dln(면적) 0.399 →
+#:   ±64 ULP = G ±2.0 칸 (잡음 없는 풀이도 연속한 칸 넷 이상을 지난다).
+E_AREA_ULP = 64
+#: ★ 10-19 L214R-S02 E″ (Codex 재확인 판정 §4-2) — 이 기계 (Linux) 에서 box_y 한 축 탐색이 경계 하나를 건너뛰는 출발 접촉 면적 (등록 면적에서 ULP 이동 · 값 · 이동 둘 다 적고 시험이 대조)
+#:   a = +5 ULP → raw q 가 Codex Windows 의 등록 입력 결과와 같은 꼴 (box_y …861 = 1.5000000000000002 · …862 · …863 = 1.5 · …864 = 1.4999999999999996 → prev 건너뜀)
+#:   b = −9 ULP → next 건너뜀 (반대 꼴)
+E2_START = {'a': 0.5000000010000005, 'b': 0.500000000999999}
+E2_START_ULP = {'a': 5, 'b': -9}
 _ok, _fail = 0, []
 
 
@@ -256,13 +276,19 @@ def _e_raw_q(nc, A, C, plate, bx, by):
     return (c['I_bottom'] / c['delta_V']) * T / Ar
 
 
-def find_boundary_inputs(nc, A, C, plate, bx, by0, cap=E_SEARCH_ULP):
+def find_boundary_inputs(nc, A, C, plate, bx, by0, cap=E_SEARCH_ULP, recenter=False):
     """★ 10-19 L214R-S02 — 이 환경에서 실 사슬 H0 raw q 가 세 경계 (E_Q) 와 **정확히** 같아지는 box_y.  출발 = by0[k] · ULP 한 걸음씩 ·
-    q = G·T/(bx·by) 는 by 에 단조 감소라 q < 목표면 by 를 줄이고 > 면 늘린다 · 허용 폭 없이 == 만 (건너뛰면 그 칸 문제).  → ({k: by}, {k: 걸음}, {k: 문제})."""
+    q = G·T/(bx·by) 는 by 에 단조 감소라 q < 목표면 by 를 줄이고 > 면 늘린다 · 허용 폭 없이 == 만 (건너뛰면 그 칸 문제).  → ({k: by}, {k: 걸음}, {k: 문제}).
+    recenter (둘째 축 탐색 e0_search 만) = 출발 raw q 가 목표와 다르면 box_y 를 한 번 by·q/목표 로 옮긴 뒤 걷는다 (q ∝ 1/box_y 근사 — 출발점만 정한다 ·
+    판정은 그대로 실 사슬 == · 옮김은 걸음 수에 안 센다).  E′ 는 recenter 없이 ±E_SHIFT_ULP 걸음을 실제로 걷는다."""
     found, steps, probs = {}, {}, {}
     for k, tgt in E_Q.items():
         by = by0[k]
         q = _e_raw_q(nc, A, C, plate, bx, by)
+        if recenter and q != tgt:
+            by = by * (q / tgt)
+            q = _e_raw_q(nc, A, C, plate, bx, by)
+        start = by
         down = q < tgt                                   # q 가 목표 아래 → by 를 줄인다
         n = 0
         while q != tgt and n < cap:
@@ -274,8 +300,56 @@ def find_boundary_inputs(nc, A, C, plate, bx, by0, cap=E_SEARCH_ULP):
         if q == tgt:
             found[k], steps[k] = by, n
         else:
-            probs[k] = f'출발 {by0[k]!r} 에서 {n} 걸음 · 마지막 raw q {q!r} ≠ 목표 {tgt!r} (상한 {cap} 또는 건너뜀)'
+            moved = f' (옮긴 출발 {start!r})' if start != by0[k] else ''
+            probs[k] = f'출발 {by0[k]!r}{moved} 에서 {n} 걸음 · 마지막 raw q {q!r} ≠ 목표 {tgt!r} (상한 {cap} 또는 건너뜀)'
     return found, steps, probs
+
+
+def _ulp(v, n):
+    """v 를 n ULP 옮김 (n > 0 위 · n < 0 아래 · math.nextafter 반복)."""
+    d = math.inf if n > 0 else 0.0
+    for _ in range(abs(n)):
+        v = math.nextafter(v, d)
+    return v
+
+
+def area_order(kmax):
+    """둘째 축 (접촉 면적) 의 ULP 이동 순서 — 0, +1, −1, +2, −2, …, +kmax, −kmax (결정적 · 2·kmax+1 개)."""
+    yield 0
+    for i in range(1, kmax + 1):
+        yield i
+        yield -i
+
+
+def e0_search(nc, area0, bx, by0, kmax=None, cap=None):
+    """★ 10-19 L214R-S02 E0 전제 탐색 (둘째 축) — 접촉 면적 area0 를 area_order 순서로 k ULP 옮기며 면적마다 box_y 걸음 (find_boundary_inputs ·
+    recenter) → 세 경계 raw q 를 **한 면적에서** 모두 정확히 (==) 내는 첫 면적에서 멈춘다 (세 레코드는 box_y 만 다르다 — 같은 접촉망).
+    kmax · cap 기본 = 부를 때의 E_AREA_ULP · E_SEARCH_ULP (증거 하네스가 모듈 상수를 바꿔 범위 밖 실패 경로를 보일 수 있게).
+    → {'area', 'k', 'A', 'C', 'plate', 'bys', 'steps', 'probs', 'tried' = [(k, 빠진 경계)]} · 못 찾으면 probs = 범위 + 마지막 면적의 문제 (전제 불성립)."""
+    from test_lhs214_model_limit import chain_bed
+    kmax = E_AREA_ULP if kmax is None else kmax
+    cap = E_SEARCH_ULP if cap is None else cap
+    tried, probs = [], {}
+    for k in area_order(kmax):
+        area = _ulp(area0, k)
+        A, C, plate, _b = chain_bed(1.0, area=area)
+        bys, steps, probs = find_boundary_inputs(nc, A, C, plate, bx, by0, cap, recenter=True)
+        tried.append((k, sorted(probs)))
+        if not probs:
+            return dict(area=area, k=k, A=A, C=C, plate=plate, bys=bys, steps=steps, probs={}, tried=tried)
+    return dict(area=None, k=None, A=None, C=None, plate=None, bys={}, steps={}, tried=tried,
+                probs={'범위': f'전제 불성립 (이 환경 · 탐색 범위) — 접촉 면적 {area0!r} ±{kmax} ULP ({len(tried)} 면적) × box_y 걸음 ≤ {cap} 에서 '
+                               '세 경계를 한 면적에 다 못 찾음', '마지막 면적': probs})
+
+
+def _e0_txt(r):
+    """E0 탐색 결과 한 줄 (찾은 면적 · 시도 · box_y · 걸음) — 시도 목록은 앞 12 개 + 마지막."""
+    items = [f'{k:+d}:{",".join(p) or "찾음"}' for k, p in r['tried']]
+    tr = ' '.join(items if len(items) <= 13 else items[:12] + ['…', items[-1]])
+    if r['probs']:
+        return f'전제 불성립 (이 환경 · 탐색 범위 — 접촉 면적 ±{E_AREA_ULP} ULP × box_y ≤ {E_SEARCH_ULP} 걸음) · 시도 {len(items)} ({tr})'
+    return (f'접촉 면적 {r["area"]!r} (출발에서 {r["k"]:+d} ULP · 시도 {len(items)} = {tr}) · box_y {r["bys"]} · 걸음 {r["steps"]} · '
+            f'범위 ±{E_AREA_ULP} ULP × ≤ {E_SEARCH_ULP} · 허용 폭 없음')
 
 
 def _e_checks(nc, tf, A, C, plate, bx, bys):
@@ -321,45 +395,56 @@ def _e_checks(nc, tf, A, C, plate, bx, bys):
 def sec_E(state):
     import network_conductivity as nc
     import tau_flux as tf
-    from test_lhs214_model_limit import chain_bed
-    print('E  경계 — 실 생산자 사슬 (box_y = 이 환경의 정확한 경계 입력) 의 H0 raw q 1.5000000000000002 · 1.5 · 1.4999999999999998')
-    A, C, plate, _b = chain_bed(1.0, area=E_AREA)
-    bys, steps, probs = find_boundary_inputs(nc, A, C, plate, E_BX, E_BY)
-    if not chk(f'E0 ★ 전제 (10-19 L214R-S02) — 이 환경에서 세 경계 raw q 를 정확히 내는 box_y 를 등록 입력에서 찾았다 (걸음 {steps} · 상한 {E_SEARCH_ULP} '
-               f'· 허용 폭 없음) {bys}', not probs, probs):
+    print('E  경계 — 실 생산자 사슬 (접촉 면적 · box_y = 이 환경의 정확한 경계 입력) 의 H0 raw q 1.5000000000000002 · 1.5 · 1.4999999999999998')
+    r = e0_search(nc, E_AREA, E_BX, E_BY)
+    if not chk(f'E0 ★ 전제 (10-19 L214R-S02 · 둘째 축 = 접촉 면적) — 등록 입력 (면적 {E_AREA!r} · box_y 셋) 에서 출발 → 세 경계 raw q 를 정확히 내는 입력 — '
+               f'{_e0_txt(r)}', not r['probs'], r['probs']):
         for nm in ('E1', 'E2', 'E3', 'E4'):
-            chk(f'{nm} 전제 불성립 (E0 — 이 환경의 경계 입력 없음) — 판정하지 않는다', False)
+            chk(f'{nm} 전제 불성립 (E0 — 이 환경 · 탐색 범위에서 경계 입력 없음) — 판정하지 않는다', False)
         return
-    for name, cond, extra in _e_checks(nc, tf, A, C, plate, E_BX, bys):
+    for name, cond, extra in _e_checks(nc, tf, r['A'], r['C'], r['plate'], E_BX, r['bys']):
         chk(name, cond, extra)
 
 
 def sec_E_shift(state):
-    """★ 10-19 L214R-S02 이식성 — 이 환경의 정확한 경계 입력 (E0 탐색) 에서 출발을 ±E_SHIFT_ULP 옮겨 (raw q 가 세 경계 모두 아래 = Codex 환경 꼴 ·
-    모두 위 = 반대 꼴) 같은 E0–E4 판정.  ⚠ 기준 = 찾은 정확한 입력 (등록 입력이 아니다 — 등록 입력이 이미 어긋난 환경에서도 같은 시험이 되게)."""
+    """★ 10-19 L214R-S02 이식성 — 이 환경의 정확한 경계 입력 (E0 탐색 — 둘째 축 포함) 에서 출발 box_y 를 ±E_SHIFT_ULP 옮겨 (raw q 가 세 경계 모두 아래 =
+    Codex 환경 꼴 · 모두 위 = 반대 꼴) 같은 접촉 면적에서 box_y 한 축 걸음 (recenter 없음 — 걸음을 실제로 걷는다) → 같은 E1–E4 판정.
+    ⚠ 기준 = 찾은 정확한 입력 (등록 입력이 아니다 — 등록 입력이 이미 어긋난 환경에서도 같은 시험이 되게)."""
     import network_conductivity as nc
     import tau_flux as tf
-    from test_lhs214_model_limit import chain_bed
     print(f"E′ 이식성 — 이 환경의 정확한 경계 입력에서 출발 box_y ±{E_SHIFT_ULP} ULP (Codex 환경 꼴 · 반대 꼴) → 탐색이 경계를 다시 찾고 같은 판정")
-    A, C, plate, _b = chain_bed(1.0, area=E_AREA)
-    base, _st, bprobs = find_boundary_inputs(nc, A, C, plate, E_BX, E_BY)
-    if bprobs:
-        chk('E′ 전제 불성립 (E0 — 이 환경의 정확한 경계 입력 없음) — 이식성 판정하지 않는다', False, bprobs)
+    base = e0_search(nc, E_AREA, E_BX, E_BY)
+    if base['probs']:
+        chk('E′ 전제 불성립 (E0 — 이 환경 · 탐색 범위에서 정확한 경계 입력 없음) — 이식성 판정하지 않는다', False, base['probs'])
         return
+    A, C, plate = base['A'], base['C'], base['plate']
     for sh in (E_SHIFT_ULP, -E_SHIFT_ULP):
-        by0 = {}
-        for k, v in base.items():
-            b = v
-            for _ in range(abs(sh)):
-                b = math.nextafter(b, math.inf if sh > 0 else 0.0)
-            by0[k] = b
+        by0 = {k: _ulp(v, sh) for k, v in base['bys'].items()}
         q0 = {k: _e_raw_q(nc, A, C, plate, E_BX, by0[k]) for k in E_Q}
         bys, steps, probs = find_boundary_inputs(nc, A, C, plate, E_BX, by0)
         res = _e_checks(nc, tf, A, C, plate, E_BX, bys) if not probs else []
         bad = [nm[:3] for nm, cond, _x in res if not cond]
         side = '아래' if all(q0[k] < E_Q[k] for k in E_Q) else ('위' if all(q0[k] > E_Q[k] for k in E_Q) else '섞임')
-        chk(f'E′{sh:+d} 출발 raw q 가 세 경계의 {side} ({ {k: repr(v) for k, v in q0.items()} }) → 탐색 걸음 {steps} · E1–E4 전부 같은 판정',
-            not probs and len(res) == 4 and not bad and side == ('아래' if sh > 0 else '위'), probs or bad)
+        chk(f'E′{sh:+d} (접촉 면적 {base["area"]!r}) 출발 raw q 가 세 경계의 {side} ({ {k: repr(v) for k, v in q0.items()} }) → 탐색 걸음 {steps} · '
+            'E1–E4 전부 같은 판정', not probs and len(res) == 4 and not bad and side == ('아래' if sh > 0 else '위'), probs or bad)
+
+
+def sec_E2(state):
+    """★ 10-19 L214R-S02 (Codex 재확인 판정 §4) E″ — 이 기계에서 box_y 한 축 탐색이 경계 하나를 건너뛰는 출발 접촉 면적 (E2_START) 에서 E0 탐색 → 찾은 입력에서
+    E1–E4.  고치기 전 탐색 (면적 고정 · box_y 한 축) = 전제 불성립 FAIL (Codex Windows 의 실패 꼴) · 고친 뒤 = 통과."""
+    import network_conductivity as nc
+    import tau_flux as tf
+    print('E″ 둘째 축 — 이 기계에서 box_y 한 축 탐색이 경계를 건너뛰는 출발 면적 (a = prev 건너뜀 · Codex Windows 꼴 / b = next 건너뜀) → E0 탐색 → E1–E4')
+    for lab, a0 in E2_START.items():
+        r = e0_search(nc, a0, E_BX, E_BY)
+        same = _ulp(E_AREA, E2_START_ULP[lab]) == a0
+        if not chk(f'E″{lab}0 출발 면적 {a0!r} (= 등록 {E_AREA!r} {E2_START_ULP[lab]:+d} ULP: {same}) · box_y 등록 입력 → 세 경계 raw q 를 정확히 내는 입력 — '
+                   f'{_e0_txt(r)}', same and not r['probs'], r['probs']):
+            for nm in ('E1', 'E2', 'E3', 'E4'):
+                chk(f'E″{lab}·{nm} 전제 불성립 (E″{lab}0) — 판정하지 않는다', False)
+            continue
+        for name, cond, extra in _e_checks(nc, tf, r['A'], r['C'], r['plate'], E_BX, r['bys']):
+            chk(f'E″{lab}·{name}', cond, extra)
 
 
 def sec_E5(state):
@@ -568,6 +653,7 @@ def main():
         _guard('R', lambda: sec_R(state))
         _guard('E', lambda: sec_E(state))
         _guard('E′', lambda: sec_E_shift(state))
+        _guard('E″', lambda: sec_E2(state))
         _guard('E5', lambda: sec_E5(state))
         _guard('C', lambda: sec_C(state))
         _guard('B', lambda: sec_B(state))

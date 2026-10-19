@@ -1,0 +1,40 @@
+# L214R-S02 timing — sections of parent (base) / before (old search + E'') / after; E0 search and fail-path cost (after only)
+# test file sha256: 8af2a5e6041bf26076968b90f54984557f14e9a4b83bf8055c4438d2ca0e99a9
+# base commit: 216951103 (+ working-tree change of the test file only)
+# env: Python 3.11.17 · Linux x86_64 · NumPy 2.4.6 · SciPy 1.17.1 · OMP_NUM_THREADS=1
+# command: python3 -B docs/reviews/lhs214cx_fix_evidence_20261019/s02/s02_timing.py . scripts/_s02_parent_tmp.py scripts/_s02_before_tmp.py scripts/test_l214r_r01_restored_full.py
+
+== scripts/_s02_parent_tmp.py sha256 eaff4ba49cfe4a24…
+   R     0.83 s · PASS 8/8
+   E     0.08 s · PASS 5/5
+   E′    1.07 s · PASS 2/2
+   E″  (없음)
+   E5    0.00 s · PASS 1/1
+   C     0.01 s · PASS 4/4
+   B     2.85 s · PASS 10/10
+   합계   4.85 s · PASS 30/30
+== scripts/_s02_before_tmp.py sha256 f2e225a6b7339f94…
+   R     0.34 s · PASS 8/8
+   E     0.07 s · PASS 5/5
+   E′    1.15 s · PASS 2/2
+   E″    1.45 s · PASS 0/10
+   E5    0.00 s · PASS 1/1
+   C     0.01 s · PASS 4/4
+   B     1.95 s · PASS 10/10
+   합계   4.97 s · PASS 30/40
+== scripts/test_l214r_r01_restored_full.py sha256 8af2a5e6041bf260…
+   R     0.35 s · PASS 8/8
+   E     0.07 s · PASS 5/5
+   E′    1.13 s · PASS 2/2
+   E″    0.91 s · PASS 10/10
+   E5    0.00 s · PASS 1/1
+   C     0.01 s · PASS 4/4
+   B     2.38 s · PASS 10/10
+   합계   4.87 s · PASS 40/40
+   e0_search 등록     0.05 s · 시도 1 · 찾음 True
+   e0_search E″a    0.26 s · 시도 4 · 찾음 True
+   e0_search E″b    0.73 s · 시도 9 · 찾음 True
+   범위 밖 실패 (E″b 출발 · kmax 3)   0.48 s · 면적 7 · 찾음 False · 면적당 0.068 s → 129 면적 추정    8.8 s
+   전 범위 실패 상한 (이웃한 경계 넷 · kmax 64)  10.31 s · 면적 129 · 찾음 False
+
+# rc=0 · elapsed_s=26.87
