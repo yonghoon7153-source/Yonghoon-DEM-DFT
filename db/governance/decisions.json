@@ -8738,6 +8738,76 @@
     "근거_발화": "AskUserQuestion 답 (2026-10-17 · 이 세션): 1저자 (사용자) 2026-10-17 AskUserQuestion — ⓐ 점검 범위 '선택 2 · S_A/PBE 대표 (Recommended)' (80 % 발동 규칙 한 묶음) · ⓑ 단계 누적 상한 '1.5 배 (Recommended)' · ⓒ 전자 스텝 ≥ 1 뒤 충돌 '실행 실패 · 사다리 한 단 소모 (Recommended)' (0 스텝 중단만 인프라 재시작 · 잡마다 2 회) · '비준 · 빌드 시작 (Recommended)'",
     "decision_digest": "sha256:79821a3da9ab370baa214e4462f625cbef804b65a81c1ab4528ec66f503e6abb"
    }
+  },
+  {
+   "id": "D-2026-10-19-nd-q23-ppswap-structure",
+   "schema_version": 2,
+   "kind": "policy",
+   "scope": "cei.nd_doped.q2_q3_structure",
+   "slot": "nd_q2_q3_structure_choice",
+   "applies_to": {
+    "systems": [
+     "modelc_nd_doped"
+    ],
+    "tasks": [
+     "decomposition_energy",
+     "bader",
+     "elf",
+     "deformation_density"
+    ],
+    "methods": [
+     "qe_pbe_frozen4f"
+    ],
+    "use_cases": [
+     "internal",
+     "manuscript_support"
+    ]
+   },
+   "title": "Nd 분해에너지 · Bader · ELF 는 6 월 최종 Nd₂O₃@LPSCl1.6 (Nd@Li · 120 원자) 의 9 월 새 PP (frozen-4f) vc-relax 판으로 한다 — vc-relax 예외를 이 용도까지 넓힘 (새 vc-relax 실행 아님 · gabia)",
+   "statement": "카드 ndo_lpscl16_site_stability_estimand_2026_10_14 의 Q2 (닫힌계 분해 구동력) · Q3 (Bader · Bader/부피 · ELF · Δρ) 의 도핑 구조는 db/properties/nd_ppswap_vcrelax_result_2026_09_18.json 의 vc-relax 결과 (gabia /data/work/runs/nd_ppswap_2026_09_16 · 시작 = db/structures/modelc_nd_doped_DFTrelax · Nd PP Nd.pbe-spdn-kjpaw_psl.1.0.0.UPF 4f-in-core) 를 그대로 쓴다. 새 vc-relax 를 돌리지 않는다 — 9 월 예외 (결합 세기 보기 1 회) 로 이미 나온 구조를 재사용하는 범위만 넓힌다. 계산 자리는 gabia.",
+   "rationale": "사용자 10-19 — '이미 nd2o3@lpscl1.6 이 최종 · 그 상태에서의 분해에너지 · bader · elf 등만 보면 된다' · '새로운 pp 로 한 걸로' · '이걸 바로 분석에 사용하자' · 'gabia에서'. 근거: 그 vc-relax 는 부피 −0.15 % · 길이 0.27 % · 각 0.10° 안 (DFT 가 argyrodite 모양을 지지 · 이완 전 구조 argyrodite 시험 충족) — vc-relax 를 피하는 이유 (모양 뒤틀림) 가 이 구조에서는 나타나지 않았다.",
+   "decision_state": "active",
+   "record_kind": "prospective",
+   "results_seen": false,
+   "results_seen_note": "Q2 · Q3 결과 0 건 (Bader · ELF · 분해에너지 없음). 9 월 ICOHP 결과 (Nd–S 약 8 배) 는 본 상태.",
+   "card": "db/properties/ndo_lpscl16_site_stability_estimand_2026_10_14.json",
+   "record": "db/properties/ndo_site_dft_runlog_2026_10_15.json",
+   "depends_on": [
+    "D-2026-10-14-ndo-site-stability-estimand",
+    "D-2026-09-24-nd-icohp-close"
+   ],
+   "supersedes": [],
+   "amends": null,
+   "evidence": [
+    "db/properties/nd_ppswap_vcrelax_result_2026_09_18.json",
+    "db/properties/nd_icohp_pp_swap_card_2026_09_16.json",
+    "db/properties/nd_icohp_frozen4f_result_2026_09_23.json"
+   ],
+   "reopen_criteria": [
+    "① 이완 후 구조의 argyrodite 시험 (9 월 기록 §4 '아직 안 했다') 이 실패하면 — 그때 고정셀 이완으로 바꾼다",
+    "② Q1 (자리) 판정이 Li 자리가 아니라고 나오면 — 이 구조 (Nd@Li) 의 Q2 · Q3 서술 범위를 다시 정한다"
+   ],
+   "enforcement": "① 서술은 '우리 스크리닝 최저 모델 (Nd@Li) 에서' 로 묶는다 — 1저자 Rietveld 는 Nd@P (자리 판정 아님) ② Q3 의 도핑 셀과 host 는 같은 PP · ecut · k (카드 G6) ③ QE SCF · relax · nscf 실행은 GPU (CLAUDE.md · 2026-10-11) — pp.x · bader 후처리는 계산이 아니다 ④ 1저자 (실험 쪽) 통지는 사용자를 통해",
+   "proposed_by": "claude-session-2026-10-19",
+   "status": "active",
+   "status_history": [
+    {
+     "at": "2026-10-19",
+     "state": "active",
+     "by": "사용자 (CEI/Nd 트랙 · 계산 담당 — 1저자는 실험 쪽)",
+     "note": "권고 '9 월 vc-relax 구조를 쓰려면 예외를 이 용도까지 넓혀야 · 권고는 넓히기' 를 인용하며 '이걸 바로 분석에 사용하자' · 'gabia에서'"
+    }
+   ],
+   "ratification": {
+    "state": "ratified",
+    "role": "scientific_owner",
+    "actor_id": "yonghoon7153@gmail.com",
+    "timestamp": "2026-10-19T05:17:10Z",
+    "commit": "fe488ced01d987ab2dbe6373e08abd0b01a00630",
+    "⚠_digest_의_뜻": "`ratification` 을 뺀 결정 내용의 sha256 이다.",
+    "근거_발화": "사용자 2026-10-19 (이 세션): 권고 'Nd 분해 · Bader · ELF: 9 월 vc-relax 구조를 쓰려면 vc-relax 예외를 이 용도까지 넓혀야 해요. 권고는 넓히기예요.' 를 인용하며 '이걸 바로 분석에 사용하자' → 'gabia에서'",
+    "decision_digest": "sha256:59600fcb4aeac6cd4b77e9c3fe8e2558d4fca6b55b67b35520cf721a344b6c5a"
+   }
   }
  ]
 }

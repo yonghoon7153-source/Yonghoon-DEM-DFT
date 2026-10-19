@@ -91,7 +91,7 @@
 - ⛔ **argyrodite 셀의 DFT 이완은 고정셀 + EOS 가 기본이다 — vc-relax 를 쓰지 않는다** (사용자 2026-10-15 *"이 사항은 기본인데"*):
   등방 스케일 부피 격자 → BM3 → V₀ 에서 **이온만** relax (정본 `kb/methodology/computational_methods_canonical.md` §3-1 —
   정적 스냅숏 셀은 cubic 이 아니라 vc-relax 셀 뒤틀림은 배치 선택의 인공물 · 유한 기저 Pulay 함정).
-  예외는 **사용자 허락**으로만: 2026-09 새 Nd PP 결합 세기 보기 1 회 · 2026-10-15 비-argyrodite 기준상 Li₂S·Li₃PS₄ vc-relax 2 잡.
+  예외는 **사용자 허락**으로만: 2026-09 새 Nd PP 결합 세기 보기 1 회 · 2026-10-15 비-argyrodite 기준상 Li₂S·Li₃PS₄ vc-relax 2 잡 · 2026-10-19 그 9 월 Nd 구조 (새 vc-relax 아님) 를 분해 · Bader · ELF 에 재사용 (`D-2026-10-19-nd-q23-ppswap-structure`).
   ⚠ 2026-10-14 Nd 자리 카드 G3 에 내가 'vc-relax' 를 적었다 (10-15 결과 전 개정) — **카드·입력에 이완 방식을 적을 때 이 줄부터 본다.**
   UMA 경로는 형상 무제한 셀 필터라 셀 정책이 다르다 (`db/properties/cell_policy_gap_2026_09_13.json` GAP-1·2).
 - **장벽(Ea)을 인용할 때는 홉 수 검산 한 줄을 같이 싣는다** (1저자 2026-09-27 · `D-2026-09-27-barrier-hop-count`):
