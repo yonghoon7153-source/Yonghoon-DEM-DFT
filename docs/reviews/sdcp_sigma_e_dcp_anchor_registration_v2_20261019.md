@@ -58,17 +58,24 @@ SDCP 이온 σ 1.0 × 10⁻³ (가정) · 러너 `scripts/sdcp_gain_vox015_8arm.
 
 - 같은 `--out` 의 3-A 요약에서 σ* 를 읽어 (사람이 옮겨 적지 않는다) 재압밀 킷 arm 0 @ σ*.
 
-### 3-D. 이온 σ₀ 유효값 (⬜ 1저자 Q1 · Q2 — 정해지면 이 절을 채우고 결과 전에 커밋)
+### 3-D. 이온 σ₀ 유효값 — ✅ 1저자 10-19 (결과 전 고정)
 
-- 1저자 10-19: *"이온전도도 관련된 전류밀도도 지금 rint가 구현이 안돼서 애매하니까 우선적으로 논문용으로 문헌 anchoring, 이종기술이랑 약간 anchoring한 값으로 해서
-  전도도 bulk를 조절할 수 있나?"* · *"0.55 이건 너무 높은듯"* (= STEP3 σ_ion · ion8 런 08-31 · σ₀ 3.0 · SBE 0.552 · DBE 0.556 mS/cm · f = σ_ion/σ₀ 0.184 · 0.186 ·
-  σ₀ 1.5 면 0.276 · 0.278).
-- 방법 (σ_VGCF 보정과 같은 꼴 — 빠진 접촉 · 입계 저항을 bulk 유효값에): σ₀,eff = σ_ion,앵커 / f (SBE · f 는 σ₀ 와 무관 — SE 만 이온을 나르므로 σ_ion ∝ σ₀ 정확) ·
-  SBE 는 다시 돌리지 않는다 (비례 환산) · DBE 는 최종 16 팔에서 σ₀,eff 로.
-- 앵커 후보: Bazzoun 2026 (LPSCl + NCM811 · CAM 70 wt% · 전자 차단 EIS · 400 MPa · 0.137 mS/cm — 값은 litdb 정본 카드에서 · 300 MPa 환산 규칙은 결과 전에 여기 적는다) ·
-  이종기술 측정값 (리포에 없음 · 받으면 대조).  어림 σ₀,eff ≈ 0.137 / 0.184 ≈ 0.74 mS/cm (400 MPa 기준 · 판정 아님).
-- 한정: 균일 bulk 보정은 σ_ion **크기만** 바꾼다 — 전류 밀도 분포 모양 · 집중 인자는 그대로 (SBE 정확 불변 · 접촉 협착이 빠진 모양 = "contact-free 분포" 한정어 유지) ·
-  Bazzoun 전극은 VGCF · PTFE 없음 (우리 첨가제는 이온 길을 더 막는다) · DBE 의 SDCP 이온 σ (1.0 × 10⁻³ 가정) 를 같은 비율로 낮출지 = Q2.
+- 1저자 10-19: *"이온전도도 관련된 전류밀도도 지금 rint가 구현이 안돼서 애매하니까 우선적으로 논문용으로 문헌 anchoring … 전도도 bulk를 조절할 수 있나?"* ·
+  *"0.55 이건 너무 높은듯"* · 권고 (Bazzoun 2026 70 wt% · 정본 카드 확인 뒤 300 MPa 환산 규칙과 같이 등록) 에 *"우선 이걸 anchoring 해줘"* · *"sdcp도 그거랑 맞게 anchoring 해줘"*.
+- **앵커** = litdb 정본 카드 `bazzoun2026_dem_fem_rnm_ionic` (정본 가지 · status ✅): LPSCl + NCM811 (POSCO) · CAM **70 wt%** · 전자 차단 대칭셀 EIS (Z-type TLM) · **400 MPa** ·
+  σ_eff,ion **0.137 mS/cm** (SI Table S1 반복 0.123 / 0.135 / 0.153) · 그 연구의 펠릿 1.02 mS/cm.
+- **압력 규칙**: 주 값 = 400 MPa 값 그대로 (카드의 RNM σ–P 는 ~400 MPa 포화 · 끝점 (100 · 400 MPa) 만 있어 300 MPa 값을 못 정한다) · 민감도 = RNM 끝점 선형 보간으로 300 MPa
+  (70 wt%: 0.068 → 0.135 · 배수 0.8346 → 0.114 mS/cm · 곡선이 오목하므로 하한).
+- **기하 인자** f_SBE = σ_ion/σ_SE = **0.18395** (`docs/data/ion8_isd10e-03_20260831/` SBE 8 팔 평균 0.55184 mS/cm @ σ_SE 3.0 mS/cm · 같은 SBE 침대).  STEP3 이온 표
+  (`step3_sigma.ionic_sigma_table`) 에서 이온을 나르는 상은 SE (sid 6) · SDCP (sid 5) 뿐 (AM · 탄소 · PTFE = 0) ⇒ SBE σ_ion ∝ σ_SE 정확 · SE 와 SDCP 를 **같은 배수**로 바꾸면 DBE 도 정확히 비례.
+- **값 (유효숫자 3 자리)**: σ₀,eff = 0.137 / 0.18395 = **7.45 × 10⁻⁴ S/cm** (`SIGMA_ION_SE=0.000745`) · SDCP 이온 σ = 같은 배수 k = 0.745/3.0 = 0.2483 × 기존 1.0 × 10⁻³
+  = **2.48 × 10⁻⁴ S/cm** (`SIGMA_ION_SDCP=0.000248` · 1저자 *"sdcp도 그거랑 맞게"*) / 민감도 6.22 × 10⁻⁴ · 2.07 × 10⁻⁴.
+- **결과 (산술 · 다시 돌릴 런 없음)**: SBE σ_ion = 0.137 mS/cm (맞춘 값) · 옛 DBE 침대 = 0.2483 × 0.55641 = 0.138 mS/cm (비 1.008 그대로) · 새 DBE 침대 = 최종 16 팔 (LEAN=4 ·
+  위 두 env) · 확인 = 최종 16 팔 SBE 8 팔 평균 σ_ion 이 0.137 ± 1 % (같은 침대 · 같은 f 면 정확).  이온 전류 밀도 **분포 모양 · 집중 인자는 그대로** (모든 이온 상을 같은 배수로) — 크기만 k 배.
+- **Table S2**: LPSCl σ_ion = 7.45 × 10⁻⁴ S/cm · "Calibrated (composite EIS, CAM 70 wt%, Bazzoun 2026)" · 각주 = 복셀 모델에 없는 접촉 · 입계 저항을 bulk 유효값에 뭉뚱그린 값
+  (재료 물성 아님) · 이 연구의 펠릿 실측 (원고 본문의 LPSCl σ) 과 다른 이유를 Methods 에 한 줄 · SDCP 이온 σ = 2.48 × 10⁻⁴ (가정 · LPSCl 과 같은 배수).
+- 한정: Bazzoun 전극은 VGCF · PTFE 없음 (우리 첨가제는 이온 길을 더 막는다 → 같은 앵커면 우리 σ_ion 이 약간 높게 잡힌다) · 400 vs 300 MPa (위 민감도) · 반복 ±11 % ·
+  균일 보정이라 접촉 협착이 빠진 분포 모양은 그대로 (= "contact-free 분포" 한정어 유지 · Rint = 다음 세대).
 
 ### 보고 (판정 아님) · 결과 전 기록
 
@@ -115,8 +122,11 @@ python3 ~/dem-anchor1019/scripts/sdcp_bed_meta.py ~/sdcp/kit_SBE ~/sdcp/kit_DBE
 - 전자 전도망 그림 (원고 · 1저자 10-19 *"이거 전체적으로 바뀌겠네 · a도 바뀌고 1um로 바뀌었으니까"*): (a) CA density near AM 지도 (DBE 바뀜 · SBE 정규화 기준 그대로) ·
   (b) CA contacts per AM (`scripts/cbd_contacts_per_am.py` · `scripts/plot_cbd_contacts.py` — SBE 74 그대로 예상 · DBE 86 은 SDCP 개체 수가 ~24 배 줄어 바뀜 ·
   덩어리 = 개체 하나) · σ_ele_eff 막대 (SBE ≈ 1.63 보정 · DBE 예측).
-- Table S3 (σ_e · σ_ion · 전자 연결도 · 전류 집중 인자) · 전류 밀도 그림 S14 · S15 · Table S2 (VGCF σ* = "Calibrated (SBE DC polarization)" · SDCP = 0.3 µm 1 차 입자의
-  평균 1 µm 덩어리 (SEM) · σ₀ = 3-D 결정 뒤).
+- Table S3 (σ_e · σ_ion · 전자 연결도 · 전류 집중 인자 + DBE 두께 · 기공 · SE / CA coverage) · 전류 밀도 그림 · Table S2 (VGCF σ* = "Calibrated (SBE DC polarization)" ·
+  SDCP = 0.3 µm 1 차 입자의 평균 1 µm 덩어리 (SEM) · LPSCl σ_ion = 3-D · SDCP 이온 σ = 3-D).
+- ⚠ 그림 번호 = 이 문서는 옛 판 번호를 썼다 — 1저자 10-19 판 (원고 PDF sha256 `ffb824e4…` · SI docx `7e034a20…`) 에서 SDCP 크기 앵커 = Fig 3c · S1 · 전류 밀도 = S16 · S17 ·
+  그림 S15 도 다시 만든다.  자리별 목록 = `docs/reviews/ms_change_checklist_sdcp_v2_20261019.md` (본문 25 · SI 25 · 값 나오면 일괄 수정 — 1저자 10-19 *"값 나오면 일괄적으로 수정하자"*).
+- 원고 글 추가: Methods 에 σ_VGCF · σ₀ 보정 문장 · Experimental Section 에 전극 DC 분극 방법 (지금은 바인더–LPSCl 혼합물 측정만).
 
 ## 7. 실행 기록
 
