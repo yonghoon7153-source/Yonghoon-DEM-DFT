@@ -3,7 +3,7 @@
  "kind": "estimand",
  "record_kind": "estimand_card",
  "date": "2026-10-20",
- "status": "초안 · 결정 D-2026-10-20-nd-s-vacancy-neutral proposed · 사용자 비준 전 · 결과 없음",
+ "status": "사용자 비준 2026-10-20 (결정 D-2026-10-20-nd-s-vacancy-neutral active) · 기계 = gabia · r2 잠깐 세움 (D-2026-10-20-gabia-nd-svac-pause-li3nd active) · 결과 없음",
  "citable": false,
  "results_seen": false,
  "results_seen_note": "중성 S 빈자리 셀 계산 0 개 · 전하 떼어내기 (v1) 도 수렴한 SCF 0 개 (첫 점 rm_Cl114 가 100 반복 미수렴 — runlog ⛔_첫_점_미수렴_진단_2026_10_20)",
@@ -75,11 +75,39 @@
  "6_닫힘": "4 개 판독으로 닫는다 · 재개 조건 = 이완 판 · 다른 자리 · Cl (스핀 선언) · Nd@P 모델은 새 카드",
  "기계_판독_값": {
   "lineage_sha256": "adbd6f707af0c3b92209dad10fa08fa2ab8633b66a75d0947651dd4665f3f4e2",
-  "site_rules": {"R_PS": 2.4, "R_NdX": 3.3, "R_NdO": 2.9, "R_LiX_coord": 3.0},
+  "site_rules": {
+   "R_PS": 2.4,
+   "R_NdX": 3.3,
+   "R_NdO": 2.9,
+   "R_LiX_coord": 3.0
+  },
   "far_cl_n": 2,
-  "selected": {"S": {"near": [51, 112], "far": [54, 115]}, "Cl": {"near": [56, 117], "far": [59, 114]}},
+  "selected": {
+   "S": {
+    "near": [
+     51,
+     112
+    ],
+    "far": [
+     54,
+     115
+    ]
+   },
+   "Cl": {
+    "near": [
+     56,
+     117
+    ],
+    "far": [
+     59,
+     114
+    ]
+   }
+  },
   "removal_mode": "neutral",
-  "elements": ["S"],
+  "elements": [
+   "S"
+  ],
   "n_electrons_after": 586,
   "dE_floor_eV": 0.3,
   "frac_occ_tol": 0.02
@@ -92,6 +120,17 @@
   "db/properties/ndo_lpscl16_site_stability_estimand_2026_10_14.json (§5 금지)"
  ],
  "status_history": [
-  {"at": "2026-10-20", "state": "draft", "by": "agent", "note": "사용자 10-20 'S 넷 중성으로 (권고)' — v1 이 바늘 셀 띠 휨으로 정의 안 됨 · 결정 D-2026-10-20-nd-s-vacancy-neutral proposed · 결과 없음"}
+  {
+   "at": "2026-10-20",
+   "state": "draft",
+   "by": "agent",
+   "note": "사용자 10-20 'S 넷 중성으로 (권고)' — v1 이 바늘 셀 띠 휨으로 정의 안 됨 · 결정 D-2026-10-20-nd-s-vacancy-neutral proposed · 결과 없음"
+  },
+  {
+   "at": "2026-10-20",
+   "state": "active",
+   "by": "사용자",
+   "note": "AskUserQuestion '비준 (권고)' · 기계 'gabia · r2 잠깐 세움 (권고)'"
+  }
  ]
 }

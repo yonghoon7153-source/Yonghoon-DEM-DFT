@@ -9109,7 +9109,7 @@
    "title": "Nd 가 이웃 음이온을 얼마나 세게 붙잡나 — 자유 S²⁻ · Cl⁻ 떼어내기 에너지 Nd 옆 대 먼 (같은 셀 · 같은 전하 · 얼린 격자 · SCF 8) (트랙 CEI · 1저자 = 실험 쪽 · 결정은 사용자)",
    "statement": "카드 db/properties/nd_anion_removal_estimand_2026_10_19.json. ΔE_rm(X) = 평균 E[셀 − X_옆] − 평균 E[셀 − X_먼] (X = 자유 S²⁻ tot_charge +2 · Cl⁻ +1 · 계보 kprobe.in sha adbd6f70… 의 설정 그대로 · 원자 한 줄 · nat · tot_charge · prefix · outdir 만 바꿈) · 자리 = Bader 사전등록 거리 (이미지 전수 최소상) · 자유 S 51 · 112 / 54 · 115 · Cl 56 · 117 / 114 · 59 · 갈래 = 두 값이 두 값과 겹치지 않을 때만 방향 · 안정성 판정 아님.",
    "rationale": "사용자 10-19 '이온결합이라서 더 결합이 썐거일 수 도 있어' → '그걸 해볼까' → '떼어내기 에너지 (권고)'.",
-   "decision_state": "active",
+   "decision_state": "superseded",
    "record_kind": "estimand",
    "results_seen": false,
    "results_seen_note": "떼어낸 셀 계산 0",
@@ -9136,7 +9136,7 @@
      "date": "2026-10-19"
     }
    ],
-   "status": "active",
+   "status": "superseded",
    "status_history": [
     {
      "at": "2026-10-19",
@@ -9149,6 +9149,12 @@
      "state": "active",
      "by": "사용자 (CEI/Nd 트랙 계산 담당)",
      "note": "AskUserQuestion '비준 (권고)' — 떼어낸 셀 결과 0 · 기계는 따로 결정 (gabia · r2 잠깐 세움)"
+    },
+    {
+     "at": "2026-10-20",
+     "state": "superseded",
+     "by": "사용자 (CEI/Nd 트랙 계산 담당)",
+     "note": "D-2026-10-20-nd-s-vacancy-neutral 가 명시적으로 대체한다 — 전하 떼어내기는 계보 바늘 셀 (면 안 7 Å) 에서 배경 전하 띠 휨 (Cl 3–4 · S 7–8 eV > 띠틈 ≈ 2 eV) 때문에 정의되지 않음 (첫 점 rm_Cl114 100 반복 미수렴 · runlog ⛔_첫_점_미수렴_진단_2026_10_20) · 수렴한 SCF 0 · 값 없음 · S 는 중성 빈자리로 옮기고 Cl 은 대체 없음. 승인 내용 그대로 · 지문만 다시 냄 · 결속 커밋은 그대로 (cascade 10-15 · 예외 (5)·(6) 선례)."
     }
    ],
    "ratification": {
@@ -9159,8 +9165,9 @@
     "commit": "a445cf121ae41cc4be79819bc0d1570a90f32401",
     "⚠_digest_의_뜻": "`ratification` 을 뺀 결정 내용의 sha256 이다.",
     "근거_발화": "AskUserQuestion 답 (2026-10-19 · 이 세션): 'Nd 떼어내기 카드 … 를 비준할까요?' → '비준 (권고)' — 앞선 발화 '그걸 해볼까' · '떼어내기 에너지 (권고)'",
-    "decision_digest": "sha256:33440da02d557a62511ac8291e5bb69acaf05a6f5780b52f975c1f01bb744ded"
-   }
+    "decision_digest": "sha256:ee7a5c10f109e20051762e6de4f921ba69ed39df858a7d219bf215ccddda7bdb"
+   },
+   "superseded_by": "D-2026-10-20-nd-s-vacancy-neutral"
   },
   {
    "id": "D-2026-10-19-gabia-nd-removal-pause-li3nd",
@@ -9253,7 +9260,7 @@
    "title": "Nd 옆 자유 S 가 더 단단히 붙잡혀 있나 — 중성 S 빈자리 에너지 Nd 옆 대 먼 (같은 셀 · 중성 · 얼린 격자 · 닫힌 껍질 · SCF 4) (트랙 CEI · 1저자 = 실험 쪽 · 결정은 사용자)",
    "statement": "카드 db/properties/nd_s_vacancy_neutral_estimand_2026_10_20.json. ΔE_vac(S) = 평균 E[셀 − S⁰_옆] − 평균 E[셀 − S⁰_먼] (중성 · nspin 1 닫힌 껍질 선언 · 전자 586 · 계보 kprobe.in sha adbd6f70… 의 설정 그대로 · 원자 한 줄 · nat · prefix · outdir 만 바꿈 · tot_charge 없음) · 자리 = v1 의 자유 S (옆 51 · 112 / 먼 54 · 115) · 갈래 = 넷 중 일부만 부분 점유면 '구분 안 됨 (상태가 섞임)' · 아니면 두 값이 두 값과 겹치지 않고 |ΔE| ≥ 0.3 eV (셀 쌍극자 이미지 최악 어림) 일 때만 방향 · 안정성 판정 아님 · Cl 은 안 본다.",
    "rationale": "v1 (전하 떼어내기) 이 계보 바늘 셀 (면 안 7 Å · 높이 57 Å) 에서 배경 전하 띠 휨 (Cl 3–4 · S 7–8 eV > 띠틈 ≈ 2 eV) 때문에 정의되지 않음 (첫 점 100 반복 미수렴 · 재시도 비트 동일 · runlog ⛔_첫_점_미수렴_진단_2026_10_20) → 사용자 10-20 AskUserQuestion 'S 넷 중성으로 (권고)'.",
-   "decision_state": "proposed",
+   "decision_state": "active",
    "record_kind": "estimand",
    "results_seen": false,
    "results_seen_note": "중성 빈자리 셀 계산 0 · v1 수렴한 SCF 0",
@@ -9291,8 +9298,25 @@
      "state": "proposed",
      "by": "agent",
      "note": "카드 · 도구 (30/30 · 깨기 5/5) · 러너 (42/42 · 깨기 4/4) 결과 전 커밋 · 사용자 방향 'S 넷 중성으로 (권고)'"
+    },
+    {
+     "at": "2026-10-20",
+     "state": "active",
+     "by": "사용자 (CEI/Nd 트랙 계산 담당)",
+     "note": "AskUserQuestion '중성 S 빈자리 카드 v2를 비준할까요?' → '비준 (권고)' — 빈자리 셀 결과 0 · 기계는 따로 결정 (gabia · r2 잠깐 세움)"
     }
-   ]
+   ],
+   "status": "active",
+   "ratification": {
+    "state": "ratified",
+    "role": "scientific_owner",
+    "actor_id": "yonghoon7153@gmail.com",
+    "timestamp": "2026-10-19T17:50:29Z",
+    "commit": "e1ba8cbac8b488c78785d7aff9bcfe1eb43d71a1",
+    "⚠_digest_의_뜻": "`ratification` 을 뺀 결정 내용의 sha256 이다.",
+    "근거_발화": "AskUserQuestion 답 (2026-10-20 · 이 세션): '중성 S 빈자리 카드 v2를 비준할까요? (비준하면 v1 전하 떼어내기 결정은 대체됨으로 바뀌어요)' → '비준 (권고)' — 앞선 발화 'S 넷 중성으로 (권고)'",
+    "decision_digest": "sha256:be3a7a94ed457bb08e4826e6ff4d61d2160f5f51d125ecb52d598d29b9c90577"
+   }
   },
   {
    "id": "D-2026-10-20-gabia-nd-svac-pause-li3nd",
@@ -9320,7 +9344,7 @@
    "title": "중성 S 빈자리 SCF 4 개 (gabia GPU · 한 묶음) 는 Li₃Nd r2 옆에 자리가 모자라면 r2 를 BFGS 경계에서 EXIT 로 잠깐 세우고 넷을 차례로 돌린 뒤 r2 를 restart 로 잇는다",
    "statement": "tools/electronic/run_nd_elf_nc_gabia.sh JOB=removal (RM_CARD = 중성 S 카드 v2 · OUT /data/work/runs/nd_s_vacancy_2026_10_20) 한 번 (MODE=auto) 만 해당한다. v1 정지 결정 (D-2026-10-19-gabia-nd-removal-pause-li3nd · 그 러너가 끝나며 소멸) 과 같은 규칙 — ① CPU 메모리 프로브 (검사 · run 아님 · 첫 입력) 추정 × 1.3 + 1024 MiB = need ② GPU 계산 0 → 혼자 · 빔 − need ≥ 4,096 → r2 옆 (가드 47,500 MiB) · 아니면 GPU 위가 r2 하나뿐일 때만 세운다 ③ 세우기 = pause_relax_at_bfgs.sh --no_runner (다음 BFGS 줄 직후 EXIT) · 판정 '사람이 세움 → restart' 확인 ④ 넷을 MANIFEST 순서로 (오류로 죽은 점은 같은 입력으로 한 번 다시 · 'convergence NOT achieved' 는 다시 안 돌리고 바로 멈춘다) · 끝나면 성공 · 실패 상관없이 r2 를 restart_qe_relax.sh --run --nstep 200 으로 tmux 에서 다시 건다 ⑤ r2 말고 다른 잡이 GPU 에 있으면 아무것도 세우지 않는다. 탄성은 건드리지 않는다.",
    "rationale": "사용자 10-20 'S 넷 중성으로 (권고)' — 카드 §3 기계 = gabia · r2 잠깐 세움 (v1 과 같은 꼴 · v1 프로브 27.9 GB → need 38.2 GB > r2 옆 빔 ≈ 11.9 GB). EXIT 정지 + BFGS 이력 승계는 비정상 종료가 아니다 (10-19 ELF · v1 선례).",
-   "decision_state": "proposed",
+   "decision_state": "active",
    "record_kind": "scope_declaration",
    "results_seen": false,
    "results_seen_note": "중성 빈자리 셀 결과 0",
@@ -9348,8 +9372,25 @@
      "state": "proposed",
      "by": "agent",
      "note": "카드 v2 와 함께 · 사용자 비준 전"
+    },
+    {
+     "at": "2026-10-20",
+     "state": "active",
+     "by": "사용자 (gabia GPU 자리 · CEI/Nd 트랙 계산 담당)",
+     "note": "AskUserQuestion 'gabia · r2 잠깐 세움 (권고)'"
     }
-   ]
+   ],
+   "status": "active",
+   "ratification": {
+    "state": "ratified",
+    "role": "scientific_owner",
+    "actor_id": "yonghoon7153@gmail.com",
+    "timestamp": "2026-10-19T17:50:29Z",
+    "commit": "e1ba8cbac8b488c78785d7aff9bcfe1eb43d71a1",
+    "⚠_digest_의_뜻": "`ratification` 을 뺀 결정 내용의 sha256 이다.",
+    "근거_발화": "AskUserQuestion 답 (2026-10-20 · 이 세션): '어디서 돌릴까요? (필요한 GPU 메모리가 약 38 GB라 kgy 24 GB에는 안 들어가요)' → 'gabia · r2 잠깐 세움 (권고)'",
+    "decision_digest": "sha256:871eddc39b3f472ea3ec4047f6ae082cdc3fa2efdebd5ca75188d9cd33053648"
+   }
   }
  ]
 }
