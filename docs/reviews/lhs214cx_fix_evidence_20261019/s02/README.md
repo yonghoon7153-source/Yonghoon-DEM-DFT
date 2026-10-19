@@ -1,5 +1,7 @@
 # 증거 — L214R-S02 둘째 축 (Codex 표기 L214RR2-02 · Codex 재확인 판정 §4 의 남은 P3) (2026-10-19)
 
+> 반입 (10-19 · `df551f708`) = 판정문 `docs/reviews/codex_review_lhs214s_fix_recheck_20261019.md` · 증거 `docs/reviews/codex_lhs214s_fix_recheck_evidence_20261019/` · 우리 트리 재현 `docs/reviews/codex_lhs214s_fix_recheck_evidence_20261019/_repro_ours_20261019/README.md` · 짧은 재확인 요청서 `docs/reviews/codex_lhs214cx_fix_recheck_request_20261019.md`.
+
 근거 = Codex 재확인 판정 codex_review_lhs214s_fix_recheck_20261019.md §4 (Windows 원본 23/29 — 고정 기하의 box_y 한 축 탐색이 prev 를 건너뜀 · 반입 = 본 세션, 이 커밋에 없음) ·
 1저자 10-19 계획 Q2 (가) · 바로 앞 수정 커밋 `72da834ee` (box_y 한 축 탐색) 와 그 증거 `docs/reviews/lhs214s_fix_evidence_20261019/README.md`.
 기계 = 이 컨테이너 (Linux · Python 3.11.17 · NumPy 2.4.6 · SciPy 1.17.1 · `OMP_NUM_THREADS=1`) · 기준 커밋 `216951103`.

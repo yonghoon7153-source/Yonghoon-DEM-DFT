@@ -1,4 +1,4 @@
-# Codex 10-19 재확인 (핀 `685c2bbdb`) 의 남은 둘 — `L214R-S06` (= Codex L214S-CX01) · `L214R-S02` 수정 계획 (2026-10-19 · ✅ 1저자 10-19 *"권고대로 해"* — Q1 (가) · Q2 (가) · Q3 순서 · 표는 비준 전 판 그대로 · 결과 0 건에서 씀)
+# Codex 10-19 재확인 (핀 `685c2bbdb`) 의 남은 둘 — `L214R-S06` (= Codex L214S-CX01) · `L214R-S02` 수정 계획 (2026-10-19 · ✅ 1저자 10-19 *"권고대로 해"* — Q1 (가) · Q2 (가) · Q3 순서 → ✅ 수정 S06 `3260891d4` → S02 `4c285dd5d` (커밋 하나씩 · 시험 먼저 · 증거 `docs/reviews/lhs214cx_fix_evidence_20261019/`) → 짧은 재확인 요청서 `docs/reviews/codex_lhs214cx_fix_recheck_request_20261019.md` (발송 = 1저자) · 표는 비준 전 판 그대로 · 결과 0 건에서 씀)
 
 > 근거 = 판정문 `docs/reviews/codex_review_lhs214s_fix_recheck_20261019.md` §3-2 · §4 · 증거 `docs/reviews/codex_lhs214s_fix_recheck_evidence_20261019/` ·
 > 우리 트리 재현 `docs/reviews/codex_lhs214s_fix_recheck_evidence_20261019/_repro_ours_20261019/README.md` (S06 19 경우 = Codex 실제 결과와 차이 0).

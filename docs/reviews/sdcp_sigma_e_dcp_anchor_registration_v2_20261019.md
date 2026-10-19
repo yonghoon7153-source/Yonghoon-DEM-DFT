@@ -166,6 +166,6 @@ python3 ~/dem-anchor1019/scripts/sdcp_bed_meta.py ~/sdcp/kit_SBE ~/sdcp/kit_DBE
   의 결정을 비교 값 전에 내림).  명령 = `env VOX=0.15 SDCP_SPHERE_D=0.30 PTFE_STAMP=centerline BRIDGE_UM=0.48 ARMS=8 LEAN=4 SIGMA_AM_S_OVERRIDE=0.0041 SIGMA_SDCP_OVERRIDE=256.6
   SIGMA_VGCF_OVERRIDE=$S SIGMA_ION_SE=0.000745 SIGMA_ION_SDCP=0.000248 KITS="kit_DBE_sdcp1um kit_SBE" OUTDIR=~/sdcp/final16_1019 bash ~/dem-anchor1019b/scripts/sdcp_gain_vox015_8arm.sh`
   (`$S` = `~/sdcp/anchor_v2_1019b/chain_summary.json` 의 `s2.sigma_star` = 0.347 · 사람이 옮겨 적지 않음 · 사슬 ENV_FIXED 와 같은 값 + ARMS 8 · LEAN 4 (σ_e + σ_ion + 필드) · 이온 두 값 = §3-D ·
-  작업트리 `298a73197` · PID 2290343 · 로그 `~/final16_1019.log`).  첫 팔 `p2_DBE_sdcp1um_sph_a0` 시작 확인 (입력 digest `5e92a35fe600485f` · 섬유 선분 스탬프 도체점 1,875,570 · 섬유 55,017 ·
+  작업트리 `298a73197` · 셸 작업 `[1] 2290343` = setsid 번호 (새 프로세스를 띄우고 곧 끝남 · 러너는 다른 PID — `pgrep -of sdcp_gain_vox015_8arm.sh`) · 첫 팔 계산 = `mpm_webapp_payload` 2291944 · 로그 `~/final16_1019.log`).  첫 팔 STEP3 전자 풀이 26,734,242 dof · 판 접촉 12,623 / 10,059 · GPU 19.8 / 24.6 GB (다른 작업 12.4 GB 포함 → 두 팔 동시 불가).  첫 팔 `p2_DBE_sdcp1um_sph_a0` 시작 확인 (입력 digest `5e92a35fe600485f` · 섬유 선분 스탬프 도체점 1,875,570 · 섬유 55,017 ·
   AM 집전체 연결 100 % · SDCP 부피-보존 구 스탬프 Ø0.30 · PTFE centerline exact-zero DOF = S1 · C 와 같은 표지).  확인 칸 = §3-D (SBE 8 팔 평균 σ_ion 0.137 ± 1 %) · 보고 칸 = §3 보고 그대로.
   시간 = DBE arm 0 약 1 시간 · 16 팔 대략 10–13 시간 (추정 — σ_e 만 SBE ≈ 15 분 · DBE ≈ 50 분 + 이온 · 필드).

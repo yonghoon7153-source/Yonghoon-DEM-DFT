@@ -11859,16 +11859,17 @@
     {
       "id": "L214R-S02",
       "severity": "P3",
-      "status": "open",
+      "status": "claimed_fixed",
       "owner": "claude",
       "found_by": "codex 재확인 10-19 (리뷰 핀 77d8fd445)",
       "opened_in": "docs/reviews/codex_review_lhs214rr_fix_recheck_20261019.md",
       "title": "L214RR2-02 · R01 경계 시험 (`scripts/test_l214r_r01_restored_full.py` E) 의 하드코딩 입력이 환경에 의존 — Codex Windows Py3.12 NumPy 2.5.3 에서 raw q 1.4999999999999962 · …958 · …956 (셋 다 문턱 아래) → 23/26 rc 1 · E1/E3 실패 뒤 복원 helper KeyError 로 E4/E5 미완결",
-      "note": "판정문 §2 · 생산 코드 · 판정식 · 합격선은 정상 (정확 경계 입력 면적 0.500000001001 · box_y …80614/…80615/…80616 으로 다섯 단언 통과).  최소 개선 = 정확한 3 노드 경계 검사를 독립 실행 · 실 사슬은 계산된 q 가 경계 전제에 맞는지 먼저 확인 · 실패해도 뒤 검사가 KeyError 로 생략되지 않게 · 허용치 완화 금지 · 원 실패 로그 보존.  우리 트리 재현 10-19 = 이 환경에서 Codex 정확 경계 입력이 18–19 ULP 위 (양방향 환경 차) · 수정 계획 docs/reviews/lhs214s_fix_plan_20261019.md (⬜ 1저자).  ✅ 10-19 고침 72da834ee (1저자 10-19 \"권고대로 ㄱ\" · 시험만 — 생산 코드 · 판정식 · 합격선 그대로): scripts/test_l214r_r01_restored_full.py E0 = 이 환경에서 실 사슬 H0 raw q 가 세 경계와 정확히 같은 box_y 를 등록 입력에서 ULP 한 걸음씩 탐색 (상한 512 · 허용 폭 없음 · 건너뛰면 문제) · 못 찾으면 E1–E4 = 전제 불성립 FAIL · E3 가 아니면 E4 는 복원 안 부름 · E5 독립 묶음 · E′ = 찾은 정확한 입력에서 ±18 ULP 출발 → 같은 판정 · 복원 helper = q_withheld 없으면 사유 (KeyError 아님).  그대로 27/27 → 30/30 · 등록 입력 +18 ULP (이 컨테이너의 Codex 환경 꼴 · 출발 raw q …962 · …960 · …956) = 고치기 전 23/26 (Codex 와 같음 · E1 · E3 · E4 KeyError · E5 미실행) → 고친 뒤 30/30 · −18 ULP 30/30.  증거 docs/reviews/lhs214s_fix_evidence_20261019/ (s02_*).  한정: Codex Windows 환경 재실행 아님.  Codex 짧은 재확인 전.  ⛔ Codex 재확인 10-19 (핀 685c2bbdb) = 부분 (재개방): 실제 Windows (11 · Py 3.12.14 · NumPy 2.5.3 · SciPy 1.16.3) 원본 23/29 rc 1 — 고정 기하 (면적 .500000001 · box_x .7281737983374794) 의 box_y 한 축 탐색이 prev 목표 1.4999999999999998 을 건너뜀 (인접 box_y …863 → 1.5 · …864 → 1.4999999999999996 · ±512 ULP 1,025 입력 평가에 prev 없음 = 상한을 올려도 안 됨).  닫힘 = 실패 설명 · E4 보호 · 독립 E5.  최소 해결 = 두 번째 기하 자유도까지 공개된 유한 탐색 또는 정확 경계 보증 주체를 독립 3 노드 시험으로 명시 (판정문 §4-3) · 허용 폭 · 문턱 변경 금지.",
+      "note": "판정문 §2 · 생산 코드 · 판정식 · 합격선은 정상 (정확 경계 입력 면적 0.500000001001 · box_y …80614/…80615/…80616 으로 다섯 단언 통과).  최소 개선 = 정확한 3 노드 경계 검사를 독립 실행 · 실 사슬은 계산된 q 가 경계 전제에 맞는지 먼저 확인 · 실패해도 뒤 검사가 KeyError 로 생략되지 않게 · 허용치 완화 금지 · 원 실패 로그 보존.  우리 트리 재현 10-19 = 이 환경에서 Codex 정확 경계 입력이 18–19 ULP 위 (양방향 환경 차) · 수정 계획 docs/reviews/lhs214s_fix_plan_20261019.md (⬜ 1저자).  ✅ 10-19 고침 72da834ee (1저자 10-19 \"권고대로 ㄱ\" · 시험만 — 생산 코드 · 판정식 · 합격선 그대로): scripts/test_l214r_r01_restored_full.py E0 = 이 환경에서 실 사슬 H0 raw q 가 세 경계와 정확히 같은 box_y 를 등록 입력에서 ULP 한 걸음씩 탐색 (상한 512 · 허용 폭 없음 · 건너뛰면 문제) · 못 찾으면 E1–E4 = 전제 불성립 FAIL · E3 가 아니면 E4 는 복원 안 부름 · E5 독립 묶음 · E′ = 찾은 정확한 입력에서 ±18 ULP 출발 → 같은 판정 · 복원 helper = q_withheld 없으면 사유 (KeyError 아님).  그대로 27/27 → 30/30 · 등록 입력 +18 ULP (이 컨테이너의 Codex 환경 꼴 · 출발 raw q …962 · …960 · …956) = 고치기 전 23/26 (Codex 와 같음 · E1 · E3 · E4 KeyError · E5 미실행) → 고친 뒤 30/30 · −18 ULP 30/30.  증거 docs/reviews/lhs214s_fix_evidence_20261019/ (s02_*).  한정: Codex Windows 환경 재실행 아님.  Codex 짧은 재확인 전.  ⛔ Codex 재확인 10-19 (핀 685c2bbdb) = 부분 (재개방): 실제 Windows (11 · Py 3.12.14 · NumPy 2.5.3 · SciPy 1.16.3) 원본 23/29 rc 1 — 고정 기하 (면적 .500000001 · box_x .7281737983374794) 의 box_y 한 축 탐색이 prev 목표 1.4999999999999998 을 건너뜀 (인접 box_y …863 → 1.5 · …864 → 1.4999999999999996 · ±512 ULP 1,025 입력 평가에 prev 없음 = 상한을 올려도 안 됨).  닫힘 = 실패 설명 · E4 보호 · 독립 E5.  최소 해결 = 두 번째 기하 자유도까지 공개된 유한 탐색 또는 정확 경계 보증 주체를 독립 3 노드 시험으로 명시 (판정문 §4-3) · 허용 폭 · 문턱 변경 금지.  ✅ 10-19 2차 수정 (1저자 계획 Q2 (가) · 시험 먼저) — 1차 `72da834ee` (box_y 한 축 탐색 · Codex Windows 23/29 = 부분) 위에 둘째 기하 자유도 = 접촉 면적 공개 유한 탐색 (순서 0, +1, −1, … ±64 ULP · 면적마다 box_y 걸음 · 한 면적에서 세 경계 == · 못 찾으면 전제 불성립 FAIL) · box_x 는 곱으로만 들어가 무용 (이 기계 실측) · 새 E″ = 이 기계의 건너뜀 기하 둘 (a = Codex Windows 표와 같은 box_y · q 꼴) · `4c285dd5d` · 닫힘 = Codex 가 같은 Windows 환경에서 원본 재실행 (판정문 §4-3) · 요청서 docs/reviews/codex_lhs214cx_fix_recheck_request_20261019.md.",
       "evidence_tests": [
-        "scripts/test_l214r_r01_restored_full.py E0 · E′±18 · E5 (27/27 → 30/30 · +18 ULP 이동 고치기 전 23/26 → 30/30)"
+        "scripts/test_l214r_r01_restored_full.py E0 둘째 축 (접촉 면적 ±64 ULP) · E″a · E″b (이 기계 30/40 → 40/40 · 등록 box_y ±18 ULP 이동 40/40 · 상한 3 강제 = 명시 실패 35/40)",
+        "docs/reviews/lhs214cx_fix_evidence_20261019/s02/ (축 분석 · 출발 면적 401/401 · 시간)"
       ],
-      "claimed_fixed_sha": "72da834ee"
+      "claimed_fixed_sha": "4c285dd5d"
     },
     {
       "id": "L214R-S03",
@@ -11914,13 +11915,17 @@
     {
       "id": "L214R-S06",
       "severity": "P3",
-      "status": "open",
+      "status": "claimed_fixed",
       "owner": "claude",
       "found_by": "codex 재확인 10-19 (리뷰 핀 685c2bbdb)",
       "opened_in": "docs/reviews/codex_review_lhs214s_fix_recheck_20261019.md",
       "title": "L214S-CX01 · 빈 ATX 제목 (`#` · `##` · 0 열) 을 절 경계로 보지 않아 그 뒤 `code_fp` 를 활성 §3 지문으로 받아들임 — `supp20_input_receipt._MD_HEADING` (`:108`) 이 마커 뒤 공백 + 비공백 제목을 요구 (CommonMark §4.2) · 거꾸로 정상 활성 값 → 빈 h1/h2 → 다른 역사 값은 잘못 거부 (`code_fp=None`)",
-      "note": "판정문 §3-2 · 실제 receipt() rc 0 · bad=[] (고립 사본) · 12/12 잘못 수용 (h1/h2 × 줄끝 · space · tab · space+tab · space+NBSP · space+U+2003) · 2/2 잘못 거부 · 대조 5/5 · 이전 핀에도 있는 결함 (이번 패치 회귀 아님) · 실제 등록 문서 오독 · 수치 · 발사 우회 실측 아님.  최소 해결 = 활성 §3 식별과 일반 절 경계 인식 분리 · 0 열 빈 ATX 경계 인식 (지원 안 할 꼴은 묵살 말고 명시 거부) · 양방향 반례 + 기존 114 문서 · 코드 블록 값 상주 시험.",
-      "evidence_tests": []
+      "note": "판정문 §3-2 · 실제 receipt() rc 0 · bad=[] (고립 사본) · 12/12 잘못 수용 (h1/h2 × 줄끝 · space · tab · space+tab · space+NBSP · space+U+2003) · 2/2 잘못 거부 · 대조 5/5 · 이전 핀에도 있는 결함 (이번 패치 회귀 아님) · 실제 등록 문서 오독 · 수치 · 발사 우회 실측 아님.  최소 해결 = 활성 §3 식별과 일반 절 경계 인식 분리 · 0 열 빈 ATX 경계 인식 (지원 안 할 꼴은 묵살 말고 명시 거부) · 양방향 반례 + 기존 114 문서 · 코드 블록 값 상주 시험.  ✅ 10-19 수정 (1저자 계획 Q1 (가) · 시험 먼저) — 0 열 ATX 제목 = `#` 1–6 개 뒤 줄 끝 또는 space · tab (빈 제목 포함 · CommonMark §4.2) 전부 절 경계 · 활성 §3 식별 그대로 · `3260891d4` · 짧은 재확인 요청서 docs/reviews/codex_lhs214cx_fix_recheck_request_20261019.md.",
+      "evidence_tests": [
+        "scripts/supp20_input_receipt.py --selftest S12k · S12k2 · S12k3 · S12k4 (120/122 → 122/122)",
+        "docs/reviews/lhs214cx_fix_evidence_20261019/s06/ (Codex 빈 제목 19 문서 oracle 불일치 14 → 0 · 울타리 114 문서 0 → 0 · 실제 보충 20 등록 영수증 무영향 · markdown-it-py 3.0.0 줄 275,148 · 문서 234,256 불일치 0)"
+      ],
+      "claimed_fixed_sha": "3260891d4"
     },
     {
       "id": "SELF-119",

@@ -1,5 +1,7 @@
 # 증거 — L214R-S06 (Codex 표기 L214S-CX01 · P3) 빈 ATX 제목도 절 경계 (2026-10-19)
 
+> 반입 (10-19 · `df551f708`) = 판정문 `docs/reviews/codex_review_lhs214s_fix_recheck_20261019.md` · 증거 `docs/reviews/codex_lhs214s_fix_recheck_evidence_20261019/` · 우리 트리 재현 `docs/reviews/codex_lhs214s_fix_recheck_evidence_20261019/_repro_ours_20261019/README.md` · 짧은 재확인 요청서 `docs/reviews/codex_lhs214cx_fix_recheck_request_20261019.md`.
+
 근거 = Codex 재확인 3 판정 §3-2 (S01 · S02 · S04 짧은 재확인 · 검토 핀 `685c2bbdb` · 판정문 · 증거 묶음 lhs214s_recheck_20261019 의 반입 = 본 세션) ·
 1저자 10-19 수정 계획 Q1 (가).  기계 = 이 컨테이너 (Linux · Python 3.11.17).
 "고치기 전" = 커밋 `216951103` 의 `scripts/supp20_input_receipt.py` (tool sha256 `bcd66961…`) · "고친 뒤" = 이 항목의 커밋 내용 (tool sha256 `2c7e0b81…`).
