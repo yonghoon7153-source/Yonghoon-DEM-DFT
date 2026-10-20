@@ -436,6 +436,15 @@ LAST_BACKEND = {'requested': None, 'used': None, 'fallback_reason': None, 'preco
 #:   (기존 런의 규약을 유지).  GPU 경로는 Jacobi 고정이라 AMG 로는 못 푼다.
 CG_MAXITER = 30000
 
+#: ★ 2026-10-20 (Rint ② 설계 v1 §6 · N15) — CG 정지 rtol 노브 (numeric · `--step3-rtol`).  기본 1e-8 = 옛 고정값 그대로 (비트 같음).
+#:   다음 세대 꼴 (섬유 σ 7,853.98 · 대비 1.9e6) 에서 1e-8 은 틀린 σ 를 수렴으로 인증한다 [탐침 · `step3_conv_cert.probe_table`].
+#:   기본이 아닐 때만 LAST_BACKEND 에 'rtol' 이 실린다 (끔 = 매니페스트 바이트 그대로).
+CG_RTOL = 1.0e-8
+_CG_RTOL_DEFAULT = 1.0e-8
+#: 수렴 증서 (ⓐ 정지 rtol ≤ 봉인 · ⓑ 판 전류 불균형 ≤ ε_I · ⓒ rtol/100 이어 풀기 |Δσ|/σ ≤ 1e-4 — `step3_conv_cert`) — 켜면 실패 = 미수렴.
+#:   기본 False = 이 파일의 솔브 결과 · 키가 옛 그대로.
+CONV_CERT = False
+
 
 def _amg_M(L):
     """pyamg smoothed-aggregation 전처리 (그래프-라플라시안 특화).  실패하면 None → Jacobi.
@@ -465,7 +474,7 @@ def _amg_M(L):
         return None
 
 
-def _solve_cg(L, b):
+def _solve_cg(L, b, x0=None, rtol=None):
     """Preconditioned CG for the SPD Kirchhoff system L·φ = b.  GPU (CuPy) when GPU_SOLVE and
     the import succeeds, else scipy CPU — same matrix + same rtol (1e-8), so φ is **expected
     within solver tolerance** (backend swap only).
@@ -476,10 +485,17 @@ def _solve_cg(L, b):
     CPU preconditioner = Jacobi (default) or AMG when AMG_SOLVE (SR-03, 해-불변 측정 완료).
     Returns (phi: np.ndarray, info: int).
 
-    ★ 실제로 쓴 backend·전처리를 모듈 전역 `LAST_BACKEND` 에 남긴다 (RC6-08 / SR-03)."""
+    ★ 실제로 쓴 backend·전처리를 모듈 전역 `LAST_BACKEND` 에 남긴다 (RC6-08 / SR-03).
+    ★ 2026-10-20 — x0 (초기값 · 수렴 증서 ⓒ 이어 풀기) · rtol (호출별 · None = `CG_RTOL`) — 둘 다 None 이고 CG_RTOL 기본이면
+      옛 호출 그대로 (비트 같음)."""
     diag = L.diagonal()
+    _rt = CG_RTOL if rtol is None else float(rtol)
+    _x0k = {} if x0 is None else {'x0': np.asarray(x0, np.float64)}
     LAST_BACKEND.update(requested=('gpu' if GPU_SOLVE else 'cpu'),
                         used=None, fallback_reason=None, precond=None)
+    LAST_BACKEND.pop('rtol', None)
+    if CG_RTOL != _CG_RTOL_DEFAULT:                        # 노브를 켰을 때만 기록 (끔 = 옛 키 그대로)
+        LAST_BACKEND['rtol'] = float(CG_RTOL)
     if GPU_SOLVE:
         try:
             import cupy as cp
@@ -488,10 +504,11 @@ def _solve_cg(L, b):
             Lg = cxs.csr_matrix(L.astype(np.float64))
             bg = cp.asarray(b, dtype=np.float64)
             Mg = cxs.diags(1.0 / cp.asarray(diag))
+            _x0g = {} if x0 is None else {'x0': cp.asarray(x0, dtype=np.float64)}
             try:
-                xg, info = cg_gpu(Lg, bg, tol=1e-8, maxiter=CG_MAXITER, M=Mg)
+                xg, info = cg_gpu(Lg, bg, tol=_rt, maxiter=CG_MAXITER, M=Mg, **_x0g)
             except TypeError:                              # newer CuPy renamed tol → rtol/atol
-                xg, info = cg_gpu(Lg, bg, rtol=1e-8, atol=0.0, maxiter=CG_MAXITER, M=Mg)
+                xg, info = cg_gpu(Lg, bg, rtol=_rt, atol=0.0, maxiter=CG_MAXITER, M=Mg, **_x0g)
             LAST_BACKEND.update(used='gpu', precond='jacobi')   # v1: GPU 경로는 Jacobi 유지
             return cp.asnumpy(xg), int(info)
         except Exception as _e:
@@ -512,9 +529,9 @@ def _solve_cg(L, b):
     if Minv is None:
         Minv = sparse.diags(1.0 / diag)
     try:
-        return cg(L, b, rtol=1e-8, maxiter=CG_MAXITER, M=Minv)
+        return cg(L, b, rtol=_rt, maxiter=CG_MAXITER, M=Minv, **_x0k)
     except TypeError:                                      # scipy < 1.12 has no rtol kwarg
-        return cg(L, b, tol=1e-8, maxiter=CG_MAXITER, M=Minv)
+        return cg(L, b, tol=_rt, maxiter=CG_MAXITER, M=Minv, **_x0k)
 
 
 def _ball_cells(centre_um, rad_um, lo, vox, n):
@@ -1830,7 +1847,7 @@ PLATE_RULE_VERSION = 'p2-occupied-surface-first'
 
 def solve_sigma_z(sid, sigma_of_sid, vox, return_field=False, z_top_um=None, plate_band_um=None,
                   z_bot_um=None, plate_band_bot_um=None, bot_allowed=None, periodic_xy=False,
-                  area_um2=None, rint=None, pid=None, iface=None):
+                  area_um2=None, rint=None, pid=None, iface=None, cjunc=None):
     """Effective through-plane (z) σ of the voxel σ-id grid.  Finite volume, harmonic-mean face
     conductance g = (2σaσb/(σa+σb))·vox (cubic voxels: face area vox² / distance vox), collector
     plate φ=1 at the bed bottom, φ=0 plate at the bed top, lateral Neumann.
@@ -1869,6 +1886,13 @@ def solve_sigma_z(sid, sigma_of_sid, vox, return_field=False, z_top_um=None, pla
             if iface is not None else None)
     _ife_used = {}                                           # ①′ 조립이 실제로 쓴 간선 (축마다) — 진단이 이것을 읽는다 (E2)
     _faces = {}                                              # 계면 면 수 (상 쌍별 · 실물 증거)
+    #  ② 탄소 접합 (2026-10-20 · Rint ② S2/S3 · 기구만 · `carbon_junction`) — None (기본) 이면 아래 어떤 줄도 바뀌지 않는다.
+    #    거부 입력 · r1 · ①′ · 주기 · return_field · 다른 격자 · VGCF 절연 채널 → 조립 전 거부 (CG 0).
+    _cjp = _cjs = None
+    if cjunc is not None:
+        import carbon_junction as _cjm
+        _cjp = _cjm.cjunc_require_quantitative(cjunc, sid, vox, sigma_of_sid=sigma_of_sid, rint=_rint, iface=iface,
+                                               periodic_xy=periodic_xy, return_field=return_field)
 
     def _iface(solved):
         #  ① 계면 원장 — **쓴 것**: 표 · pid 사용 · 실제로 걸린 면 수 · 이 해가 풀렸는가.  r 를 안 줬으면 None.
@@ -1885,6 +1909,10 @@ def solve_sigma_z(sid, sigma_of_sid, vox, return_field=False, z_top_um=None, pla
         #  ①′ — 조기 반환 해에도 기록 (solved False) · iface 를 안 줬으면 dict 를 **그대로** 돌려준다 (옛 키 그대로).
         if _ifp is not None:
             d['iface'] = dict(_ifp['record'], solved=False)
+        if _cjp is not None:                                 # ② — 조기 반환 해에도 계획 기록 (solved False · 사유)
+            d['cjunc'] = _cjm.early_record(_cjp, d.get('reason'))
+            if _cjs is not None and getattr(_cjs, 'stats', None):
+                d['cjunc'].update(_cjs.stats)
         return d
     cond = sig > 0
     if not cond.any():
@@ -1960,7 +1988,9 @@ def solve_sigma_z(sid, sigma_of_sid, vox, return_field=False, z_top_um=None, pla
     #   모른다.  σ_z/thermal/pore 는 무해(plate 안 닿는 성분은 어차피 net through-flux 0=dangling).
     #   solve_reaction_current 은 seam으로만 본류에 붙은 경계 patch의 BV 반응전류를 0으로 과소계상할
     #   수 있으나, 프로덕션 조밀 베드는 본류가 bulk로 x=0 에 닿아 실질 영향 미미(경계 몇 입자).
-    if _ifp is not None and _ifp['n_cut_rows'] > 0:
+    if _cjp is not None:
+        lab, _nl = cond.astype(np.int32), 1               # ② — 셀 라벨로 가지치기하지 않는다 (실제 그래프 = 조립 뒤 · J7 · J12)
+    elif _ifp is not None and _ifp['n_cut_rows'] > 0:
         #  ①′ E3 — 절단 면 (g = 0) 을 뺀 **실제 간선** 그래프로 떠 있는 성분을 가린다 (셀 6-연결 라벨은 절단을 모른다).
         #    절단이 없으면 위 옛 라벨 그대로 (성분 집합이 같다 → I2 비트 같음).
         lab, _nl = _iface_label_cut(cond, tuple(ax['lin'][ax['cut']] for ax in _ifp['axes']))
@@ -2008,6 +2038,8 @@ def solve_sigma_z(sid, sigma_of_sid, vox, return_field=False, z_top_um=None, pla
     sig = np.where(cond, sig, 0.0)
     idx = -np.ones(sid.shape, np.int64)
     idx[cond] = np.arange(n_dof)
+    if _cjp is not None:                                   # ② — 멤버십 dof (J1) · 면 재배선 · 접합 간선 조립기
+        _cjs = _cjm.CjuncAssembler(_cjp, sid, cond, idx, n_dof, sig, vox)
 
     rows, cols, vals = [], [], []
     diag = np.zeros(n_dof, np.float64)
@@ -2066,6 +2098,9 @@ def solve_sigma_z(sid, sigma_of_sid, vox, return_field=False, z_top_um=None, pla
         a2, b2 = A[m], B[m]
         if _ifp is not None and axis is not None:          # ①′ AM–AM 막 · 절단 (원장 행만 · 나머지 면 그대로)
             g, a2, b2 = _ifa_assemble(axis, m, sa[m], sb[m], g, a2, b2)
+        if _cjs is not None:                               # ② — 면은 탄소 접합 조립기가 받는다 (멤버십 재배선 · 절단 · 법칙)
+            _cjs.add_faces(axis, a2, b2, g)
+            return
         rows.append(a2); cols.append(b2); vals.append(-g)
         rows.append(b2); cols.append(a2); vals.append(-g)
         np.add.at(diag, a2, g); np.add.at(diag, b2, g)
@@ -2101,6 +2136,18 @@ def solve_sigma_z(sid, sigma_of_sid, vox, return_field=False, z_top_um=None, pla
                            (np.concatenate(rows + [np.arange(n_dof)]),
                             np.concatenate(cols + [np.arange(n_dof)]))),
                           shape=(n_dof, n_dof)).tocsr()
+    if _cjs is not None:                                   # ② — 실제 그래프 (멤버십 dof · 접합 · 축약 · 절단) · 가지치기 · 관통 · 단락
+        _cjb = _cjs.build(_Ab, _gb, _At, _gt, _cb, _ct)
+        if _cjb.get('reason'):
+            return _ret({'sigma_eff': 0.0, 'n_dof': int(_cjs.stats['n_plate_reachable_dof']),
+                         'n_through_dof': int(_cjs.stats['n_through_dof']),
+                         'n_floating_dropped': int(_cjs.stats['n_floating_dropped']), 'cg_info': 0, 'resid': 0.0,
+                         'unconverged': False, 'reason': _cjb['reason'], 'periodic_xy': bool(periodic_xy),
+                         'interface': _iface(False)})
+        L, b, _Ab, _gb, _At, _gt = _cjb['L'], _cjb['b'], _cjb['Ab'], _cjb['gb'], _cjb['At'], _cjb['gt']
+        _cb, _ct = _cjb['cb'], _cjb['ct']                  # 판 간선 원장 = 남은 결합만 (좌표 · g 길이 같음)
+        n_dof = int(_cjb['n_dof']); n_float = int(_cjs.stats['n_floating_dropped'])
+        n_through_dof = int(_cjs.stats['n_through_dof']); n_plate_reachable_dof = n_dof
     print(f'    STEP3 solve: {n_dof:,} dof, plate contacts {n_pb:,}/{n_pt:,} — CG running '
           f'({"GPU" if GPU_SOLVE else "CPU"}, 수 분 소요 가능)…', flush=True)
     phi, info = _solve_cg(L, b)
@@ -2123,6 +2170,15 @@ def solve_sigma_z(sid, sigma_of_sid, vox, return_field=False, z_top_um=None, pla
     #     (보정 Δ 1.6e-6) — 절대값을 인용할 때만 문제다.
     _A = float(area_um2) if area_um2 else (nx * ny * vox * vox)
     sigma_eff = max(0.0, I * (z_plate - z_b) / _A)
+    _cert = None
+    if CONV_CERT:                                          # 수렴 증서 (설계 §6 · 끔 = 이 블록 없음 · 결과 키 그대로)
+        import step3_conv_cert as _cc
+        _cert = _cc.certify(L, b, phi, int(info) if info else 0, resid, CG_RTOL, _Ab, _gb, _At, _gt,
+                            (z_plate - z_b) / _A, lambda L_, b_, x0_, rt_: _solve_cg(L_, b_, x0=x0_, rtol=rt_))
+        if not _cert['ok']:
+            print(f"  ⚠ STEP3 수렴 증서 실패 (ⓐ {_cert['pass_a']} · ⓑ {_cert['pass_b']} 불균형 {_cert['imbalance']:.2e} · "
+                  f"ⓒ {_cert['pass_c']} Δσ {_cert['dsigma_rel']:.2e}) — 미수렴 = 미게시", flush=True)
+            unconv = True
     out = {'sigma_eff': float(sigma_eff), 'n_dof': n_dof, 'n_floating_dropped': n_float,
            # ★ n_dof 는 **합집합**(한쪽 플레이트에라도 닿음).  아래 둘을 병기해 이름을 정직하게.
            'n_plate_reachable_dof': n_plate_reachable_dof,      # ≡ n_dof (legacy: either_plate)
@@ -2145,6 +2201,16 @@ def solve_sigma_z(sid, sigma_of_sid, vox, return_field=False, z_top_um=None, pla
            '_rint': ((_rint, pid, _grid_fp(sid), _grid_fp(pid), _grid_fp(np.asarray(sigma_of_sid, np.float64)))
                      if (_rint and sum(_faces.values()) > 0) else None),
            'unconverged': unconv}
+    if _cert is not None:
+        out['conv_cert'] = _cert
+    if _cjs is not None:                                   # ② — 원장을 읽는 소산 분담 · 접합 전류 (E1 · E2 · E4′)
+        _cjr = _cjs.record(phi)
+        out['cjunc'] = dict(_cjm.early_record(_cjp), **_cjs.stats,
+                            **{k_: v_ for k_, v_ in _cjr.items() if k_ != 'junction_current_code'})
+        out['cjunc']['solved'] = True
+        out['_cjunc'] = {'kind': 'cjunc_edges', 'version': _cjm.CJUNC_MODEL_VERSION, 'phi_dof': phi, 'sys': _cjs.sys,
+                         'junction_inst': _cjs.junction_edge_inst, 'junction_current_code': _cjr['junction_current_code'],
+                         'fp_sid': _grid_fp(sid)}
     if return_field:
         P = np.zeros(sid.shape, np.float64); P[cond] = phi
         out['phi'] = P; out['cond'] = cond

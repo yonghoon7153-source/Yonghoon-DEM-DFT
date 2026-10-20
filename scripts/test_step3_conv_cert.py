@@ -15,7 +15,6 @@ import argparse
 import contextlib
 import importlib.util
 import io
-import math
 import os
 import re
 import subprocess
@@ -179,6 +178,9 @@ def t_k5_certify_unit():
     chk('K5 ⓒ 재풀이 자체가 미수렴 (info ≠ 0) → 실패', not c7['pass_c'])
     chk('K5 증서 판 이름 · 봉인값 기록', c['version'] == CC.CERT_VERSION and c['rtol_max'] == CC.CERT_RTOL_MAX
         and c['eps_I'] == CC.CERT_EPS_I and c['resolve_rtol'] == 1e-12 * CC.CERT_RESOLVE_FACTOR)
+    c8 = CC.certify(L, b, phi, 0, 0.0, 1e-14, Ab, gb, At, gt, 1.0, exact)
+    chk('K5 ⓒ 이어 풀기 rtol 바닥 1e-14 (정지 rtol 1e-14 → 1e-16 으로 내려가 maxiter 까지 돌지 않는다)',
+        c8['resolve_rtol'] == CC.CERT_RESOLVE_RTOL_FLOOR == 1e-14 and c8['ok'], f"{c8['resolve_rtol']}")
 
 
 def t_k6_solve_cert():
@@ -229,9 +231,13 @@ def t_k7_probe():
 def t_k8_seal():
     tab = _table()
     s = CC.derive_seal(tab)
-    chk('K8 봉인 규칙 (설계 §6 절차 3) 의 결과 = 코드 상수 (정지 rtol)', s['rtol_stop'] == CC.CERT_RTOL_MAX,
-        f"{s['rtol_stop']} ↔ {CC.CERT_RTOL_MAX}")
-    chk('K8 봉인 규칙의 결과 = 코드 상수 (ε_I · 구간 비지 않음)', (not s['b_diagnostic_only']) and s['eps_I'] == CC.CERT_EPS_I,
+    lo, hi = s['interval']
+    chk('K8a 봉인값이 이 환경에서도 유효 — 봉인 rtol 의 해 전부 σ 오차 ≤ 1e-4 · 봉인 ε_I ∈ [좋은 해 불균형 최대, 나쁜 해 최소)',
+        all(r['sigma_err'] <= 1e-4 for r in tab if r['rtol'] == CC.CERT_RTOL_MAX) and lo <= CC.CERT_EPS_I < hi,
+        f'interval [{lo:.3e}, {hi:.3e}) ε_I {CC.CERT_EPS_I}')
+    chk('K8b 봉인 규칙 (설계 §6 절차 3) 의 결과 = 코드 상수 (정지 rtol) — 다르면 봉인이 환경에 걸린다는 정보 (R 개정으로 다시 봉인)',
+        s['rtol_stop'] == CC.CERT_RTOL_MAX, f"{s['rtol_stop']} ↔ {CC.CERT_RTOL_MAX}")
+    chk('K8b 봉인 규칙의 결과 = 코드 상수 (ε_I · 구간 비지 않음)', (not s['b_diagnostic_only']) and s['eps_I'] == CC.CERT_EPS_I,
         f"{s} ↔ {CC.CERT_EPS_I}")
 
 

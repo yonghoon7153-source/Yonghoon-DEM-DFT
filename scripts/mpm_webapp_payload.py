@@ -1363,6 +1363,11 @@ def main():
                          '진단 팔(예: --sigma-vgcf 7854 → σ 대비 785,400x)이 rtol 1e-8 에 '
                          '못 닿아 info=30000 으로 끝날 때 올린다.  ⚠ 규약을 바꾸는 것이 아니라 '
                          '수렴에 도달시키는 것이다 — 수렴한 값끼리만 비교할 수 있다.')
+    ap.add_argument('--step3-rtol', type=float, default=0.0,
+                    help='STEP3 CG 정지 rtol (기본 0 = 코드 기본 1e-8 그대로 · 결과 · 매니페스트 바이트 같음).  주면 '
+                         '수렴 증서 (step3_conv_cert: 정지 rtol 봉인 상한 · 판 전류 불균형 · rtol/100 이어 풀기) 를 켠다 — 셋 '
+                         '중 하나라도 실패하면 그 솔브 = unconverged (미게시).  다음 세대 꼴 (섬유 σ 7854 대비 1.9e6) 에서 '
+                         '1e-8 은 틀린 σ 를 수렴으로 인증한다 [합성 탐침] (Rint 2 설계 v1 6 · N15).  numeric 축 (규약 해시 밖).')
     ap.add_argument('--step3-amg', action='store_true',
                     help='STEP3 CPU CG 전처리를 Jacobi → AMG (pyamg smoothed-aggregation).  '
                          '값은 반복수 절벽 회피: 합성 침대 실측(61.6k→487k dof)에서 Jacobi 는 '
@@ -1976,6 +1981,14 @@ def main():
                 _s3.CG_MAXITER = int(a.step3_maxiter)
                 print(f'  STEP3: CG maxiter {_s3.CG_MAXITER:,} (기본 30,000) — 조건수가 나쁜 '
                       f'팔을 수렴시키기 위한 것이지 규약 변경이 아니다', flush=True)
+            _rtl3 = float(getattr(a, 'step3_rtol', 0.0) or 0.0)
+            if _rtl3 != 0.0:                               # ★ 2026-10-20 — 정지 rtol + 수렴 증서 (기본 0 = 옛 경로 그대로)
+                if not (np.isfinite(_rtl3) and 0.0 < _rtl3 < 1.0):
+                    raise SystemExit(f'--step3-rtol 은 (0, 1) 의 유한한 값: {a.step3_rtol!r}')
+                _s3.CG_RTOL = _rtl3
+                _s3.CONV_CERT = True
+                print(f'  STEP3: CG rtol {_rtl3:.1e} + 수렴 증서 (ⓐ 정지 rtol 상한 · ⓑ 판 전류 불균형 · ⓒ 이어 풀기) — '
+                      f'실패 = 미수렴 (미게시)', flush=True)
             _yv3 = bool(getattr(a, 'step3_sdcp_yield_to_vgcf', False))
             _sbr3 = float(getattr(a, 'step3_sdcp_bridge', 0.0) or 0.0)
             _pbl3 = float(getattr(a, 'step3_ptfe_block_um', 0.0) or 0.0)
@@ -2172,6 +2185,8 @@ def main():
                                    'plate contacts abundant; carbon/SDCP σ = F1 hooks; AM_S/P = A1-locked '
                                    '10/5 mS/cm; lateral Neumann; sub-voxel constriction not modelled)'
                                    + (' ⚠UNCONVERGED' if _res3.get('unconverged') else ''))}
+                if _res3.get('conv_cert') is not None:     # 수렴 증서 (--step3-rtol 일 때만 · 끔 = 키 없음)
+                    step3['conv_cert'] = dict(_res3['conv_cert'])
                 if _p998e is not None:                      # 정량 컬러바 스케일 (뷰어 라벨용): 내부
                     # jmag=σ_hm·Δφ_face=J·vox_cm → J[A/cm²]=jmag/vox_cm (ΔV=1V 선형해).
                     # ⟨J_z⟩=σ_eff·ΔV/L.  focus=J/⟨J_z⟩=바이어스-무관 집중계수 (균일도체=1 검산).
@@ -2590,6 +2605,8 @@ def main():
                     step3['temperature_provenance'] = dict(_temp_prov)
                     step3['sigma_ion_se_at_T_ref_S_cm'] = a._sigma_ion_se_ref
                     step3['ion_resid'] = float(_res3i['resid'])
+                    if _res3i.get('conv_cert') is not None:     # 수렴 증서 (--step3-rtol 일 때만)
+                        step3['ion_conv_cert'] = dict(_res3i['conv_cert'])
                     print(f"  STEP3 σ_ion_eff = {_sig_str(a, step3['sigma_ion_eff_S_cm'])} "
                           f"S/cm  ({_res3i['n_dof']:,} dof, resid {_res3i['resid']:.1e}, "
                           f"{_time.time()-_t1:.0f}s)"

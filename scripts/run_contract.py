@@ -150,6 +150,9 @@ CLI_ACCOUNTING = {
     # ── numeric (수치 방법.  해에 영향은 있으나 규약은 아니다) ──────────────
     '--step3-gpu': ('numeric', None), '--step3-amg': ('numeric', None),
     '--step3-maxiter': ('numeric', None),
+    #  ★ 2026-10-20 (Rint ② 설계 v1 §6 · N15) — 정지 rtol + 수렴 증서.  해에 영향 (수렴 정도) · 규약 아님 → numeric.
+    #    값은 LAST_BACKEND['rtol'] (노브를 켰을 때만) · 증서는 step3['conv_cert'] 로 매니페스트에 남는다.
+    '--step3-rtol': ('numeric', None),
     #  ★ `--step3-require-gpu` = **numeric** 이다 (규약 아님).  근거는 "backend 가 σ 를 안
     #    바꾼다" 가 **아니라** — 그것은 미측정이다 (Codex R7 Q4c) — backend 를 **고르는**
     #    플래그가 `--step3-gpu` 이고 이 플래그는 **성공한 GPU 계산을 바꾸지 않기** 때문이다.

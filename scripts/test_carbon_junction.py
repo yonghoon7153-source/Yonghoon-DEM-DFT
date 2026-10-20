@@ -395,6 +395,9 @@ def t_c1_cross_shared():
         Is.append(I_of(r, F1_N)); errs.append(rel(Is[-1], F1_I(rj)))
     chk('C1 σ = 해석 직렬 사슬 판 + A 3 면 + R_j + B 7 면 + 판 (R_j 10 · 1e3 · 1e5 Ω · 1e-12)', max(errs) < 1e-12, f'{errs}')
     chk('C1 Rayleigh — R_j 가 커지면 σ 엄격히 줄어든다 (같은 그래프)', Is[0] > Is[1] > Is[2], f'{Is}')
+    pe = r['plate_edges']
+    chk('C1 판 간선 원장 = 남은 결합만 (좌표 · g 길이 같음 · 해의 판 전류와 같은 계)',
+        all(len(pe[s][0][0]) == len(pe[s][1]) for s in ('bot', 'top')) and r['cjunc']['solved'] is True)
     r0 = solve(sid, sig_e(), F1_N, plan(reg, 0.0, allow_rj_limits=True))
     rl = solve_legacy(sid, sig_e(), F1_N)
     chk('T1-7 R_j → 0 (축약) = 축약 그래프 = 옛 융합 교차 셀 (1e-12)', rel(I_of(r0, F1_N), I_of(rl, F1_N)) < 1e-12
@@ -520,9 +523,13 @@ def t_t16_multi():
     sid, _ = bed(P, F6_N)
     reg = registry(sid, P)
     rj = 3.0e3
-    I = I_of(solve(sid, sig_e(), F6_N, plan(reg, rj)), F6_N)
+    r6 = solve(sid, sig_e(), F6_N, plan(reg, rj))
+    I = I_of(r6, F6_N)
     want = _f6_reference(rj)
     chk('T1-6 두 자리 사다리 회로 (손으로 세운 기준 · 1e-12)', rel(I, want) < 1e-12, f'{I} ↔ {want}')
+    jI = r6['_cjunc']['junction_current_code']
+    chk('T1-6 원장 — instance 마다 접합 전류 · 두 자리 합 = 단자 전류 (A → B 는 접합으로만 · 1e-10)',
+        len(jI) == 2 and np.all(np.isfinite(jI)) and rel(float(np.sum(np.abs(jI))), I) < 1e-10, f'{jI} {I}')
     big = sig_e(s_vgcf=1.0e9)
     Ib = I_of(solve(sid, big, F6_N, plan(reg, rj)), F6_N)
     chk('T1-6 등전위 극한 (σ 1e9) — R → R_j/2 (상대 1e-5)', rel(1.0 / Ib, rjc(rj) / 2.0) < 1e-5, f'{1 / Ib} ↔ {rjc(rj) / 2}')
@@ -711,8 +718,10 @@ def t_c8_guards():
     pt2 = dict(pl); pt2['g_code'] = np.full_like(pl['g_code'], np.nan)
     pt2['fp_rows'] = CJ.plan_rows_fp(pt2)
     g.append(('계획 g NaN (지문 다시 만든 변이 · Q7 불변량)', raises(lambda: solve(sid, sig_e(), F1_N, pt2))))
-    rt = dict(reg); rt['instances'] = dict(reg['instances']); rt['instances']['port_i'] = reg['instances']['port_i'][::-1].copy()
-    g.append(('원장 변조 (지문)', raises(lambda: plan(rt, 1e3))))
+    rt = dict(reg); rt['instances'] = dict(reg['instances'])
+    rt['instances']['port_i'] = reg['instances']['port_j'].copy()           # 포트를 다른 위치로 (값이 실제로 바뀐다)
+    g.append(('원장 변조 (지문)', bool(np.any(rt['instances']['port_i'] != reg['instances']['port_i']))
+              and raises(lambda: plan(rt, 1e3))))
     g.append(('VGCF 절연 채널 (이온 표)', raises(lambda: solve(sid, S3.ionic_sigma_table(0.3e-3, 3e-3), F1_N, pl))))
     cg_before = _CG_CALLS[0]
     Pn = (P[0].copy(), P[1], P[2], P[3]); Pn[0][3, 1] = np.nan
@@ -746,13 +755,14 @@ def _ptfe_rows(polys, fid0=900):
 @case('P-junc')
 def t_pjunc():
     P = rows(F1)
-    #  PTFE 피브릴이 접점 (1.5,1.5,3.5) 근처를 지난다 — 중심선 거리 = r_P + r_f + tol_P 정확히 (경계 = 포함)
-    rP = 0.124
-    dist = rP + RF + TOL
+    #  PTFE 피브릴이 접점 (1.5,1.5,3.5) 근처를 지난다 — 중심선 거리 = r_P + r_f + tol_P 정확히 (경계 = 포함).
+    #  경계값이 이진 정확 (0.25 + 0.5 + 0.25 = 1.0 · 좌표 2.5 − 1.5) 이어야 경계 시험이 반올림이 아닌 규칙을 본다.
+    rP, tP = 0.25, 0.25
+    dist = rP + RF + tP
     pt = _ptfe_rows([[(0.5, 1.5 + dist, 3.5), (5.5, 1.5 + dist, 3.5)]])
     allr = cat_rows(P, pt)
     sid, _ = bed(allr, F1_N, stamp=allr[1] != 4)                    # face_alpha 침대 = PTFE 셀 없음 (off 격자)
-    reg = registry(sid, allr, tol_P_um=TOL, r_ptfe_um=rP)
+    reg = registry(sid, allr, tol_P_um=tP, r_ptfe_um=rP)
     cov = reg['instances']['ptfe_cov']
     chk('P-1 덮임 경계 = 정확히 tol_P 포함 (≤)', len(cov) == 1 and bool(cov[0]), f'{cov}')
     I0 = I_of(solve(sid, sig_e(), F1_N, plan(reg, 1e3, ptfe_stamp='face_alpha', ptfe_jlaw='P0')), F1_N)
@@ -761,7 +771,7 @@ def t_pjunc():
         rel(I0, F1_I(1e3)) < 1e-12 and r1['sigma_eff'] == 0.0 and r1['cjunc']['n_cut_p1'] == 1, f"{I0} {r1.get('reason')}")
     pt_far = _ptfe_rows([[(0.5, 1.5 + dist + 1e-9, 3.5), (5.5, 1.5 + dist + 1e-9, 3.5)]])
     allf = cat_rows(P, pt_far)
-    regf = registry(sid, allf, tol_P_um=TOL, r_ptfe_um=rP)
+    regf = registry(sid, allf, tol_P_um=tP, r_ptfe_um=rP)
     chk('P-1 경계 밖 (+1e-9 µm) = 덮이지 않음', not bool(regf['instances']['ptfe_cov'][0]))
     chk('P-1 centerline + P1 = 거부 (centerline 이 이미 VGCF 셀을 sid 7 로 자른다)',
         raises(lambda: plan(reg, 1e3, ptfe_stamp='centerline', ptfe_jlaw='P1')))
@@ -769,7 +779,7 @@ def t_pjunc():
     sd = rows([[(1.5, 2.5, 3.5)]], phase=5, kind=0, fid0=700)            # SDCP 점이 접점에 근접 (면 이웃 빈 셀)
     alls = cat_rows(P, pt, sd)
     sids, _ = bed(alls, F1_N, stamp=alls[1] != 4)
-    regs = registry(sids, alls, tol_P_um=TOL, r_ptfe_um=rP, tol_sj_um=0.5, r_sdcp_um=0.5)
+    regs = registry(sids, alls, tol_P_um=tP, r_ptfe_um=rP, tol_sj_um=0.5, r_sdcp_um=0.5)
     pp = plan(regs, 1e3, ptfe_stamp='face_alpha', ptfe_jlaw='P1', sdcp_mod={'c': 1.0})
     chk('P-2 PTFE 덮임 ∧ SDCP 근접 · (P1, c = 1) → 절단 먼저 (축약 아님 · N18)',
         int(pp['mode'][0]) == CJ.MODE_CUT_P1 and bool(regs['instances']['a_sdcp'][0]), f"{pp['mode']}")
@@ -907,6 +917,71 @@ def t_sv():
     r2 = solve(sid2, sig_e(), F1_N, plan(registry(sid2, P2), 1e3))
     chk('SV SDCP 없음 → SV 몫 0 · SV_DOMINANT 아님', r2['cjunc']['dissipation_share']['sv_face'] == 0.0
         and r2['cjunc']['sv_dominant'] is False)
+
+
+@case('MUT')
+def t_mutants():
+    """설계 §4-4 변이 — 조립기를 바꿔 끼운 변이가 위 시험 (해석 회로) 에 **걸려야** 한다 (판별력 · 안 걸리면 시험 무효)."""
+    base_cls = CJ.CjuncAssembler
+
+    class SingleWinner(base_cls):                          # 멤버십 단일 승자 — 교차 셀의 추가 dof 를 주 dof 로 접는다
+        def __init__(self, *a, **k):
+            super().__init__(*a, **k)
+            pos = self.reg['positions']
+            ex = np.flatnonzero(pos['live'] & ~pos['primary'])
+            prim_of = {int(pos['lin'][p]): int(self.pos_dof[p]) for p in np.flatnonzero(pos['primary'])}
+            for p in ex:
+                self.pos_dof[p] = prim_of[int(pos['lin'][p])]
+
+    class KeepTomb(base_cls):                              # tombstone 삭제 — 접합 자리 면을 옛 융합으로 남긴다
+        def __init__(self, *a, **k):
+            super().__init__(*a, **k)
+            ft = dict(self.ft)
+            ft['kind'] = np.where(ft['kind'] == CJ.K_CUT_SITE, CJ.K_AXIAL, ft['kind'])
+            self.ft = ft
+
+    class WrongDof(base_cls):                              # 간선을 다른 dof 에 — 포트 j 를 그 경로의 다음 위치로
+        def build(self, *a, **k):
+            inst = self.reg['instances']
+            pj = inst['port_j'].copy()
+            self.reg = dict(self.reg)
+            self.reg['instances'] = dict(inst)
+            self.reg['instances']['port_j'] = np.minimum(pj + 1, len(self.reg['positions']['lin']) - 1)
+            return super().build(*a, **k)
+
+    class PairCut(base_cls):                               # 쌍 단위 절단 — 미등록 자리도 그 쌍이면 절단
+        def __init__(self, *a, **k):
+            super().__init__(*a, **k)
+            ft = dict(self.ft)
+            ft['kind'] = np.where(ft['kind'] == CJ.K_UNREG, CJ.K_CUT_SITE, ft['kind'])
+            self.ft = ft
+
+    def run_with(cls, fn):
+        CJ.CjuncAssembler = cls
+        try:
+            v = fn()
+            print(f'    MUT {cls.__name__}: σ 기반 전류 {v!r}')
+            return v
+        except Exception as e:                             # noqa: BLE001 — 변이가 예외로 끝나도 '걸렸다' (기록한다)
+            print(f'    MUT {cls.__name__}: 예외 {type(e).__name__}: {e}')
+            return None
+        finally:
+            CJ.CjuncAssembler = base_cls
+
+    P1_ = rows(F1); sid1, _ = bed(P1_, F1_N); reg1 = registry(sid1, P1_)
+    P2_ = rows(F2); sid2, _ = bed(P2_, F2_N); reg2 = registry(sid2, P2_)
+    P10 = rows(F10); sid10, _ = bed(P10, F6_N); reg10 = registry(sid10, P10)
+    rj = 1e3
+    I1 = run_with(SingleWinner, lambda: I_of(solve(sid1, sig_e(), F1_N, plan(reg1, rj)), F1_N))
+    chk('MUT 멤버십 단일 승자 → C1 해석 사슬에서 벗어난다 (R_j 가 사라짐)', I1 is None or rel(I1, F1_I(rj)) > 1e-6, f'{I1}')
+    w2 = chain_I([G_PL] + [G_AX] * 3 + [1e4 / rj] + [G_AX] * 4 + [G_PL])
+    I2 = run_with(KeepTomb, lambda: I_of(solve(sid2, sig_e(), F2_N, plan(reg2, rj)), F2_N))
+    chk('MUT tombstone 삭제 (옛 융합 면이 접합을 우회) → C2a 해석에서 벗어난다', I2 is None or rel(I2, w2) > 1e-6, f'{I2} {w2}')
+    I3 = run_with(WrongDof, lambda: I_of(solve(sid1, sig_e(), F1_N, plan(reg1, rj)), F1_N))
+    chk('MUT 접합 간선을 다른 dof 에 → C1 해석에서 벗어난다', I3 is None or rel(I3, F1_I(rj)) > 1e-6, f'{I3}')
+    I4 = run_with(PairCut, lambda: I_of(solve(sid10, sig_e(), F6_N, plan(reg10, 3e3, unreg_law='fused')), F6_N))
+    wf = _f6_reference(3e3, second_site=True, fused_second=True)
+    chk('MUT 쌍 단위 절단 (미등록 자리까지 자름) → T1-12 fused 기준에서 벗어난다', I4 is None or rel(I4, wf) > 1e-6, f'{I4} {wf}')
 
 
 def main():
