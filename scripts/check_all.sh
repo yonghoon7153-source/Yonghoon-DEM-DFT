@@ -259,6 +259,8 @@ run 'ca_ext_verdict (Rint ② B6 판정기 소비자 검사 · 시험 먼저)' p
 #    (고치기 전 17/86 · `--old-scripts DIR` = 끔 경로 ZB) · 10-20 실측 42 s.
 run 'ca_ext_z1 (Rint ② Z1 러너 · 판정기 굳히기 · 시험 먼저)' python3 scripts/test_ca_ext_z1.py
 run 'rint_r_chain (Rint ② R 런 사슬 · 사다리 · 예측 · 판정 · 가짜 러너 · 시험 먼저)' python3 scripts/test_rint_r_chain.py
+run 'ca_ext_z3 (Rint ② Z3 face_alpha + 탄소 접합 한 런 · 극한 런 · ARM_LIST · sid_off · CG 반복 수 · 시험 먼저)' python3 scripts/test_ca_ext_z3.py
+run 'rint_r_chain_e2e (Rint ② R 사슬 · 실제 러너 끝-끝 · 픽스처 킷 · CPU)' python3 scripts/test_rint_r_chain_e2e.py
 # step3_conv_cert (STEP3 수렴 증서) = 게이트 밖 · 손으로 돌린다 — 10-20 실측 2,305 s (부하 8–12 · 합성 직접해 대조 탐침) 라 매 커밋 게이트에 넣지 않는다.
 #   python3 scripts/test_step3_conv_cert.py   (리뷰 핀 · 판정 런 전 · 수렴 코드를 바꾼 커밋 뒤 한 번)
 #  ★ 2026-10-20 (Rint ② S0 · 설계 v1 §2 · 등록 R §2-1) — 표현 원장 (raster 만 · 솔브 없음): 기하 원시 · 접합 census 미리보기 · 격자 원시 ·
