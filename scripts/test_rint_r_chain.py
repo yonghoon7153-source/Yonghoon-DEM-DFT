@@ -382,7 +382,7 @@ def call(argv, wpath=None, env=None):
     kv = dict(env or {})
     kv['FAKE_WORLD'] = wpath
     buf = io.StringIO()
-    with envset(**kv), contextlib.redirect_stdout(buf):
+    with envset(**kv), contextlib.redirect_stdout(buf), contextlib.redirect_stderr(buf):
         try:
             rc = RR.main([str(a) for a in argv], contract=fake_contract())
         except SystemExit as e:
@@ -643,7 +643,7 @@ def t_L14():
 
 @check('L15', '평탄 (τ_mono 안에서 오름) = 기록만 · 비단조로 멈추지 않음')
 def t_L15():
-    W = dict(PW)
+    W = dict(PW, sbe=dict(PW_SBE, floor=0.05e-3))         # 바닥 < σ(1e10) = 0.2e-3 (세계 자체가 단조여야 한다)
     W['rj_sigma'] = {'100000000.0': 2.0e-3 * 1.0005}
     r = scen('L15', lambda: ladder('L15', world('L15', W)))
     return (r['sum']['status'] != 'CALIB_NONMONOTONE' and ['1000000.0', '100000000.0'] in lad(r).get('flat_pairs', []),
