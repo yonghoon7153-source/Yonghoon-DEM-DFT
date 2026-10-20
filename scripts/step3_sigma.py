@@ -1595,8 +1595,9 @@ def am_iface_plan(ledger, r_type, *, carbon_cover='remove_area', gap_law=None, u
 
 
 def iface_require_quantitative(plan, sid=None, sigma_of_sid=None, rint=None, periodic_xy=False, vox=None):
-    """①′ 정량 모드 관문 — 거부 입력이면 ValueError (계획 행 변조 · 원장/계획 거부 사유 · r1 탐침 동시 사용 (N3) · 주기 (N2) ·
-    다른 격자 (E5) · 다른 물리 격자 간격 (vox · RIMP-05) · 이 채널에서 AM 이 절연 (막이 조용히 무효 — RINT-14 와 같은 부류)).
+    """①′ 정량 모드 관문 — 거부 입력이면 ValueError (계획 행 변조 · 막 값 r_face 비유한 · 음수 (Q7) · 원장/계획 거부 사유 ·
+    r1 탐침 동시 사용 (N3) · 주기 (N2) · 다른 격자 (E5) · 다른 물리 격자 간격 (vox · RIMP-05) · 이 채널에서 AM 이 절연
+    (막이 조용히 무효 — RINT-14 와 같은 부류)).
     vox  솔버의 격자 간격 [µm] (`solve_sigma_z` 가 늘 넘긴다) — 유한 양수 · 계획 vox (= 계획 원장 vox) 와 **같은 float64** 여야 한다
          (sid 바이트 지문은 물리 격자 간격을 담지 않는다: 같은 sid · 같은 계획을 h 0.4 로 풀면 막 G 가 기록의 4 배 · Codex 10-14 판정문 §6).
          None = 검사 안 함 (직접 호출 호환 — 솔버 경로는 None 이 아니다)."""
@@ -1608,6 +1609,16 @@ def iface_require_quantitative(plan, sid=None, sigma_of_sid=None, rint=None, per
         raise TypeError(f'iface 계획 모양이 틀렸다 (빠진 키 {_miss}) — am_iface_plan 의 결과를 그대로 줄 것')
     if _iface_rows_fp(plan['axes']) != plan.get('fp_rows'):
         raise ValueError('①′ 계획의 간선 행이 만든 뒤 바뀌었다 (지문 불일치 · E5)')
+    #  ★ Codex 10-15 재확인 Q7 (1저자 10-20 승인) — 막 값 공통 불변량: 모든 축 행의 r_face 는 유한 · ≥ 0.  지문은 만든 뒤 바뀐 행만 잡고
+    #    (지문을 다시 만든 변이는 통과) 조립은 r_face > 0 면에만 막을 건다 → NaN · 음수 = 막이 조용히 빠지고 +inf = 면 g 0.  r = 0 허용.
+    for _k, _ax in enumerate(plan['axes']):
+        _rf = np.asarray(_ax['rface'], np.float64)
+        _fin = np.isfinite(_rf)
+        _bad = ~(_fin & (_rf >= 0.0))
+        if _bad.any():
+            raise ValueError(f'①′ 계획 축 {_k} 의 막 값 r_face 는 유한한 0 이상 (Ω·cm²) — 어긋난 행 {int(_bad.sum())} '
+                             f'(NaN {int(np.isnan(_rf).sum())} · ±inf {int(np.isinf(_rf).sum())} · 유한 음수 {int((_fin & (_rf < 0.0)).sum())}) — '
+                             f'NaN · 음수 = 막이 조용히 빠지고 +inf = 면이 끊긴다 (Codex 10-15 Q7)')
     if plan['rejections']:
         raise ValueError('①′ 정량 모드 거부 — ' + ' · '.join(
             f"{x['code']}({x.get('test', '')}{'' if not x.get('test') else ' '}n={x.get('n')})" for x in plan['rejections']))

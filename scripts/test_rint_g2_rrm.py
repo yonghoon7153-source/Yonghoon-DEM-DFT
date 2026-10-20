@@ -24,7 +24,8 @@
   ── RIMP-04 · 06 (Codex 10-14 · 판정문 §5 · §7 · 수정 계획 Q3 (가)) ──
   N9b    복합 변이 — 원판 밖 cut 행 삭제 + 기록 resolve_k 4→5 · + r 표 비움 · film rface NaN (cut 유지) · 음수 rface · k 만 바꿈 ·
          RRM 기록 없음 → rrm_check 위반 · rrm_require · rrm_solve 거부 (메타데이터로 검사 집합을 비울 수 없다) · 우회 σ 기록 (Codex 값) ·
-         양성: 정상 계획 · 등록된 r = 0 계획 = 위반 없음
+         양성: 정상 계획 · 등록된 r = 0 계획 = 위반 없음 · ★ 10-20 Codex Q7: film rface NaN 계획 = 일반 솔버도 거부 (막힌 우회 크기 =
+         같은 조립의 등록 r = 0 계획 σ · cut 삭제 변이 (유한 값) 는 그대로 일반 관문 밖)
   RRM-7  표준 요약 = 실제 RRM 행 — film 67 · cut 85 · 순수 막 G (행 합 = 접점 기록) · CNC 값 = 별도 이름공간 (`iface_cnc_comparison`) ·
          반쪽 탄소 변형 (Codex: 행 37 · 42 · G 2.7535056597827278e−6 S ↔ CNC 2.612935414333538e−6 / 5.027420037705035e−6)
 """
@@ -447,18 +448,29 @@ def t_n9b():
         chk(f'N9b {tag} → rrm_check 위반 > 0 · rrm_require 거부 · rrm_solve 거부 (고치기 전 = 위반 없음 · 풀이)',
             len(V) > 0 and raises(lambda Q=Q: RRM.rrm_require(Q, L)) and refused, repr([x['code'] for x in V]))
     #  우회 크기 (기록) — 일반 솔버는 RRM 을 모른다 (설계 · 공개된 범위) · Codex 값 재현
+    #  ★ 10-20 Codex Q7 (10-15 재확인 판정문 §5 · 1저자 10-20 승인) — 일반 관문이 막 값 (유한 · ≥ 0) 은 본다 → film rface NaN 계획은
+    #    일반 솔버도 조립 전에 거부한다 (cut 삭제 변이는 값이 유한해서 그대로 일반 관문 밖 = RRM 원장 검사 몫).  막힌 NaN 우회 크기는
+    #    같은 조립의 등록 r = 0 계획으로 기록한다 — NaN 면 = r_face > 0 아님 = 막 없음 = r 0 면과 같은 행렬 (Codex registered_zero 와 같은 값).
+    P0 = RRM.rrm_plan(L, {'AM_S|AM_S': 0.0}, resolve_k=K_FIX)
     with direct_solver():
         s_k = quiet(S3.solve_sigma_z, sid, te(), A_VOX, iface=muts['cut 삭제 + 기록 resolve_k 4→5'], **kw)['sigma_eff']
-        s_n = quiet(S3.solve_sigma_z, sid, te(), A_VOX, iface=muts['cut 유지 + film 67 행 rface NaN'], **kw)
+        try:
+            quiet(S3.solve_sigma_z, sid, te(), A_VOX, iface=muts['cut 유지 + film 67 행 rface NaN'], **kw)
+            n_refused, n_msg = False, ''
+        except ValueError as e:
+            n_refused, n_msg = True, str(e)
+        s_z = quiet(S3.solve_sigma_z, sid, te(), A_VOX, iface=P0, **kw)
         s_0 = quiet(RRM.rrm_solve, sid, te(), A_VOX, P, L, **kw)['sigma_eff']
-    print(f'    기록 (픽스처 · 재료값 아님): σ_RRM {s_0!r} · 우회 (cut 삭제) {s_k!r} · NaN rface {s_n["sigma_eff"]!r} S/cm · '
-          f'NaN 해 unconverged {s_n["unconverged"]} · 잔차 {s_n["resid"]:.3e}')
-    chk('N9b 기록: 막아야 할 우회 크기 = Codex 값 (σ_RRM 0.003334457143882423 · 우회 0.0040840140889134725 · NaN 0.0037299595666211234 · 상대 1e−9) '
-        '— 작은 잔차가 틀린 조립을 구제하지 않는다 (NaN 해 unconverged False)',
-        abs(s_0 / 0.003334457143882423 - 1) < 1e-9 and abs(s_k / 0.0040840140889134725 - 1) < 1e-9
-        and abs(s_n['sigma_eff'] / 0.0037299595666211234 - 1) < 1e-9 and s_n['unconverged'] is False, f'{s_0} {s_k} {s_n["sigma_eff"]}')
+    print(f'    기록 (픽스처 · 재료값 아님): σ_RRM {s_0!r} · 우회 (cut 삭제) {s_k!r} · NaN 계획 일반 솔버 거부 {n_refused} · '
+          f'같은 조립 (r = 0) {s_z["sigma_eff"]!r} S/cm · unconverged {s_z["unconverged"]} · 잔차 {s_z["resid"]:.3e}')
+    chk('N9b 기록: 막아야 할 우회 크기 = Codex 값 (σ_RRM 0.003334457143882423 · 우회 (cut 삭제 · 유한 값 = 일반 관문 밖) 0.0040840140889134725 · '
+        '상대 1e−9)',
+        abs(s_0 / 0.003334457143882423 - 1) < 1e-9 and abs(s_k / 0.0040840140889134725 - 1) < 1e-9, f'{s_0} {s_k}')
+    chk('N9b Q7: film rface NaN 계획 → 일반 솔버도 거부 (일반 관문 ValueError · r_face 표지) · 막힌 우회 크기 = 같은 조립의 등록 r = 0 계획 '
+        'σ 0.0037299595666211234 (Codex NaN 값 · 상대 1e−9) — 작은 잔차가 틀린 조립을 구제하지 않는다 (unconverged False)',
+        n_refused and 'r_face' in n_msg and abs(s_z['sigma_eff'] / 0.0037299595666211234 - 1) < 1e-9 and s_z['unconverged'] is False,
+        f'거부 {n_refused} · {n_msg[:80]!r} · {s_z["sigma_eff"]!r}')
     #  양성 — 등록된 r = 0 경로 (막 행 rface 0 · 절단 남음) 는 허용
-    P0 = RRM.rrm_plan(L, {'AM_S|AM_S': 0.0}, resolve_k=K_FIX)
     chk('N9b 양성: 등록된 r = 0 계획 (막 행 rface 0) = 위반 없음 · 정상 계획 = 위반 없음',
         RRM.rrm_check(P0, L) == [] and RRM.rrm_check(P, L) == [], repr([x['code'] for x in RRM.rrm_check(P0, L)]))
 

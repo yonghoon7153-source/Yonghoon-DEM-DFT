@@ -21,7 +21,10 @@
   원장      T0-6b ledger_integrity (변조 · 끼워 넣기 거부) · E2 진단이 원장을 읽는다 (AST) · 기록 필드 · PROTOCOL_FIELDS 밖
   RIMP-05   T0-7 plan_vox_binding (Codex 10-14 판정문 §6 · 수정 계획 Q4 (가)) — 같은 sid · 같은 계획 · 다른 솔버 vox = 조립 전 거부 ·
             정상 재생성 계획 (중심 · 반경 · h × 2) = 통과 · σ · A · G (Codex 값) · 관문 vox 인자 (iface 끔 = 비트 같음은 T0-5′)
-  보류      T2 · T3 검증 · D12-V · 직접 R_j 간선 (②) — 이 묶음 밖 (PENDING 줄로 표시) · N9 · RRM = test_rint_g2_rrm.py ·
+  Q7        일반 관문 막 값 불변량 (Codex 10-15 재확인 판정문 §5 Q7 · 1저자 10-20 승인) — 막 행 하나 r_face NaN · 음수 · +inf
+            (지문 다시 만듦) = 관문 ValueError · 조립 전 거부 (CG 0) · RRM r = 0 (막 행 r_face 0) · 정상 RRM · CNC r = 0 · 유한 양수
+            변이 = 통과 (r = 0 보존 · 절단 tombstone 그대로)
+  보류     T2 · T3 검증 · D12-V · 직접 R_j 간선 (②) — 이 묶음 밖 (PENDING 줄로 표시) · N9 · RRM = test_rint_g2_rrm.py ·
             N1 · N5′ · T4-2 = test_rint_g2_join.py · T4-1 · T4-3 = test_rint_t4_census.py · test_rint_t43_order.py ·
             T2 개발 = test_rint_t2_dev.py (10-13)
 """
@@ -896,6 +899,111 @@ def t_plan_vox_binding():
     Pt = dict(P); Pt['vox'] = 2.0 * h
     chk('T0-7 계획 vox ≠ 계획 원장 vox (계획 사전 vox 만 바꿈) → 거부 (계획 내부 일관)',
         raises(lambda: S3.iface_require_quantitative(Pt, sid, vox=2.0 * h)))
+
+
+# ═════════════════════════════════ Q7 (막 값 공통 불변량) ═════════════════════════════════
+#  Codex 10-15 재확인 판정문 §5 Q7 (docs/reviews/codex_review_rint_g2_impl_fix_recheck_20261015.md) · 1저자 10-20 승인 —
+#  조립은 r_face > 0 인 면에만 막을 건다 → NaN · 음수 = 막이 조용히 빠지고 +inf = 면 g 0.  행 지문 (E5) 은 **만든 뒤 바뀐 것**만
+#  잡으므로 지문을 다시 만든 변이는 옛 관문을 통과했다 (Codex: CNC 0.0038116099134384756 → 0.004141925781633665 S/cm · 잔차 6.2e−15).
+#  RRM_A 픽스처 = test_rint_g2_rrm.py 와 같은 리터럴 (R 1 µm 두 AM_S · δ 0.167 · h 0.1 · 고정 브리지 0.7 · film 67 · cut 85).
+Q7_RRM_C = np.array([[1.03, 0.97, 1.0], [1.03, 0.97, 2.833]])
+Q7_RRM_HI, Q7_RRM_VOX, Q7_RRM_BR = (2.0, 2.0, 3.833), 0.1, 0.7
+Q7_RRM_RT = {'AM_S|AM_S': 1.0e-3, 'AM_S|AM_P': 2.0e-3, 'AM_P|AM_P': 1.5e-3}
+
+
+def rrm_module():
+    """RRM 기준 모듈 (시험 전용) 을 **시험 대상 S3** 에 묶어 읽는다 (test_rint_g2_rrm.py main 과 같은 방식 — 한 모듈만 시험)."""
+    prev = sys.modules.get('step3_sigma')
+    sys.modules['step3_sigma'] = S3
+    try:
+        spec = importlib.util.spec_from_file_location('rint_rrm_reference_q7', os.path.join(SCRIPTS, 'rint_rrm_reference.py'))
+        R = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(R)
+    finally:
+        if prev is None:
+            sys.modules.pop('step3_sigma', None)
+        else:
+            sys.modules['step3_sigma'] = prev
+    return R
+
+
+def with_rface(P, ax, row, value):
+    """계획 P 의 축 ax · 행 row 의 r_face 하나만 value 로 바꾼 사본 — 행 지문 (fp_rows) 을 **다시 만든다**
+    (지문 · 거부 사유 · vox · 채널 검사로는 못 가르는 변이 · 원장 · 기록은 공유)."""
+    Q = dict(P)
+    axes = [{k: np.array(v, copy=True) for k, v in A.items()} for A in P['axes']]
+    axes[ax]['rface'][row] = value
+    Q['axes'] = tuple(axes)
+    Q['fp_rows'] = S3._iface_rows_fp(Q['axes'])
+    return Q
+
+
+@case('Q7 rface_finite_nonneg (Codex 10-15 재확인 Q7 · 일반 관문 막 값 불변량)')
+def t_q7_rface_guard():
+    print('Q7 — 일반 관문 (iface_require_quantitative) 이 막 값 r_face 를 본다: 유한 · ≥ 0 (r = 0 보존) · 조립 전 거부 · iface 끔 무관')
+    from scipy.sparse.linalg import spsolve
+    h = 0.2
+    c = np.array([[1., 1., 1.], [1., 1., 2.98]]); r = np.ones(2); t = np.array([2, 2])
+    sid, _ = quiet(S3.rasterize, c, r, t, None, None, (0., 0., 0.), (2., 2., 4.), h, bridge_um=1.2 * h)
+    L = S3.am_iface_ledger(c, r, t, sid, sid, (0., 0., 0.), h, delta_bound_um=0., bridge_um=1.2 * h)
+    P = S3.am_iface_plan(L, {'AM_S|AM_S': 1e-3})
+    ax = next(i for i, A in enumerate(P['axes']) if (~A['cut']).any())
+    row = int(np.flatnonzero(~P['axes'][ax]['cut'])[0])
+    r0 = float(P['axes'][ax]['rface'][row])
+    kw = dict(return_field=True, z_bot_um=0.0, z_top_um=20 * h)
+    calls = [0]
+    old = S3._solve_cg
+
+    def spy(L_, b_):
+        calls[0] += 1
+        return spsolve(L_.tocsc(), b_), 0
+    for tag, val in (('NaN', float('nan')), ('음수 (−r_face)', -r0), ('+inf', float('inf'))):
+        Q = with_rface(P, ax, row, val)
+        msg, gate = '', False
+        try:
+            S3.iface_require_quantitative(Q, sid, te(), vox=h)
+        except ValueError as e:
+            gate, msg = True, str(e)
+        n0 = calls[0]
+        S3._solve_cg = spy
+        try:
+            solve = raises(lambda Q=Q: quiet(S3.solve_sigma_z, sid, te(), h, iface=Q, **kw), (ValueError,))
+        finally:
+            S3._solve_cg = old
+        chk(f'Q7 막 행 하나 r_face = {tag} (지문 다시 만듦 = 지문 · 거부 사유 · vox · 채널 검사가 못 본다) → '
+            f'관문 ValueError (r_face 표지) · 솔브 조립 전 거부 (CG 호출 0)',
+            Q['fp_rows'] == S3._iface_rows_fp(Q['axes']) and gate and 'r_face' in msg and solve and calls[0] == n0,
+            f'관문 거부 {gate} · 솔브 거부 {solve} · CG 호출 {calls[0] - n0} · {msg[:80]!r}')
+    #  양성 — r = 0 보존 (RRM r = 0 = 막 행 r_face 0 · CNC r = 0 = 막 행 없음) · 절단 tombstone (r_face 0) 그대로 · 정상 RRM 계획 ·
+    #    같은 꼴의 유한 양수 변이 (r_face × 2 · 지문 다시 만듦) = 통과 · 풀이 → 위 셋을 가르는 것은 새 검사뿐 (옛 검사는 행 값을 못 본다)
+    RRM = rrm_module()
+    tA = np.array([2, 2])
+    sidA, _ = quiet(S3.rasterize, Q7_RRM_C, np.ones(2), tA, None, None, (0., 0., 0.), Q7_RRM_HI, Q7_RRM_VOX, bridge_um=Q7_RRM_BR)
+    LA = S3.am_iface_ledger(Q7_RRM_C, np.ones(2), tA, sidA, sidA, (0., 0., 0.), Q7_RRM_VOX, delta_bound_um=0.0, bridge_um=Q7_RRM_BR)
+    PA = RRM.rrm_plan(LA, Q7_RRM_RT, resolve_k=4.0)
+    PA0 = RRM.rrm_plan(LA, {'AM_S|AM_S': 0.0}, resolve_k=4.0)
+    P0 = S3.am_iface_plan(L, {'AM_S|AM_S': 0.0})
+    Q2 = with_rface(P, ax, row, 2.0 * r0)
+    gates = all(S3.iface_require_quantitative(X, s_, te(), vox=v_) is X
+                for X, s_, v_ in ((PA, sidA, Q7_RRM_VOX), (PA0, sidA, Q7_RRM_VOX), (P0, sid, h), (Q2, sid, h), (P, sid, h)))
+    kwA = dict(return_field=True, z_bot_um=0.0, z_top_um=Q7_RRM_HI[2])
+    with direct_solver():
+        sA = quiet(S3.solve_sigma_z, sidA, te(), Q7_RRM_VOX, iface=PA, **kwA)['sigma_eff']
+        sA0 = quiet(S3.solve_sigma_z, sidA, te(), Q7_RRM_VOX, iface=PA0, **kwA)['sigma_eff']
+        off = quiet(S3.solve_sigma_z, sid, te(), h, **kw)
+        on0 = quiet(S3.solve_sigma_z, sid, te(), h, iface=P0, **kw)
+        on1 = quiet(S3.solve_sigma_z, sid, te(), h, iface=P, **kw)
+        on2 = quiet(S3.solve_sigma_z, sid, te(), h, iface=Q2, **kw)
+    n_zero = sum(int(((A['rface'] == 0.0) & ~A['cut']).sum()) for A in PA0['axes'])
+    n_tomb = sum(int((A['cut'] & (A['rface'] == 0.0)).sum()) for A in PA0['axes'])
+    chk(f'Q7 양성: RRM r = 0 계획 (막 행 r_face 0 = {n_zero} · 절단 tombstone {n_tomb}) σ 0.0037299595666211234 · 정상 RRM 계획 '
+        f'σ 0.003334457143882423 (Codex · 상대 1e−9) · CNC r = 0 계획 (막 행 0) = OFF 비트 같음 · 유한 양수 변이 (r_face × 2 · 지문 다시 만듦) '
+        f'= 관문 통과 · 풀이 (σ 감소)',
+        gates and n_zero > 0 and n_tomb > 0 and P0['n_film_rows'] == 0
+        and abs(sA / 0.003334457143882423 - 1) < 1e-9 and abs(sA0 / 0.0037299595666211234 - 1) < 1e-9
+        and on0['sigma_eff'].hex() == off['sigma_eff'].hex() and np.array_equal(on0['phi'], off['phi'])
+        and on2['sigma_eff'] < on1['sigma_eff'] < off['sigma_eff'],
+        f'관문 {gates} · 막 0 {n_zero} · tombstone {n_tomb} · σ_RRM {sA!r} · σ_RRM0 {sA0!r} · σ {on2["sigma_eff"]!r} < {on1["sigma_eff"]!r} < {off["sigma_eff"]!r}')
 
 
 @case('PENDING (이 묶음 밖)')
