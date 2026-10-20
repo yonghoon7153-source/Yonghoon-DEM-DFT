@@ -1358,9 +1358,15 @@ def check_cli_accounting(verbose=True, payload=None):
     _src = open(_p, encoding='utf-8').read()
     _mi = _src.find("step3['manifest'] = {")
     _mblk = _src[_mi:_src.index('\n        }', _mi)] if _mi >= 0 else ''
+    #  ★ 2026-10-20 (Rint ② · 설계 v1 §7) — `protocol_ext` 칸 = 다음 세대 블록 `ca_ext` 하위 블록의 protocol 정본 키.
+    #    못 읽으면 None → 아래 ⑦ 이 "확인 불가" 로 낸다 (모르는 것을 통과시키지 않는다).
+    try:
+        _ext = _rc_m.ca_ext_protocol_fields()
+    except Exception as e:                              # noqa: BLE001
+        _ext = e
     problems += cli_accounting_problems(_opts, _rc_m.CLI_ACCOUNTING,
                                         _rc_m.PROTOCOL_FIELDS, _rc_m.PROTOCOL_CODE_CONST,
-                                        _rc_m.CLI_CATEGORIES, _mblk)
+                                        _rc_m.CLI_CATEGORIES, _mblk, _ext_fields=_ext)
     if verbose and not problems:
         _n = _collections.Counter(c for c, _f in _rc_m.CLI_ACCOUNTING.values())
         print(f'  ✓ 규칙 M — 실물 파서 CLI {len(_opts) - 1}개가 전부 회계에 있다 ('
@@ -1370,7 +1376,7 @@ def check_cli_accounting(verbose=True, payload=None):
 
 
 def cli_accounting_problems(_opts, _acct, _protocol_fields, _code_const, _categories,
-                            _manifest_blk=''):
+                            _manifest_blk='', _ext_fields=None):
     """→ 문제 목록.  규칙 M 의 **순수 부분** — 잡은 옵션 목록과 회계를 대조한다.
 
     ★ 분리한 이유: 음성 대조를 돌리려면 "새 옵션이 하나 생겼다" 를 모방해야 하는데,
@@ -1432,6 +1438,17 @@ def cli_accounting_problems(_opts, _acct, _protocol_fields, _code_const, _catego
     if _orphan:
         problems.append(f'M_ORPHAN_FIELD| CLI 로 못 바꾸는 규약 축 {_orphan} — '
                         f'코드 상수면 `PROTOCOL_CODE_CONST` 에, 아니면 회계에 적을 것')
+    #  ⑦ 2026-10-20 (Rint ② · 설계 v1 §7) — `protocol_ext` (다음 세대 블록 `ca_ext` 의 물리 칸) 은 그 칸이 **하위 블록 protocol 정본에
+    #     실재**해야 한다 ('ca_ext.<하위>.<키>').  `_ext_fields` 를 안 넘기면 (옛 호출 · 합성 selftest) 이 검사는 돌지 않는다.
+    _px = sorted((o, flds) for o, (c, flds) in _acct.items() if c == 'protocol_ext')
+    if _px and isinstance(_ext_fields, Exception):
+        problems.append(f'M_EXT_UNVERIFIABLE| `protocol_ext` 칸 정본을 못 읽었다 ({type(_ext_fields).__name__}: '
+                        f'{_ext_fields}) — 확인 못 한 것을 통과시키지 않는다')
+    elif _px and _ext_fields is not None:
+        _bad_x = sorted(o for o, flds in _px if not flds or any(f not in _ext_fields for f in flds))
+        if _bad_x:
+            problems.append(f'M_EXT_NOTINBLOCK| `protocol_ext` 로 적었는데 그 칸이 ca_ext 하위 블록 protocol 정본에 없다 '
+                            f'{_bad_x} — 선언과 거동이 갈렸다')
     return problems
 
 

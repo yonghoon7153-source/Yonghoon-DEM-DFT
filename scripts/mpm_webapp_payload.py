@@ -538,8 +538,14 @@ def _selftest_temperature():
     #  ⚠ needle 을 **쪼개서** 만든다 — 통짜로 적으면 이 줄 자신이 파일에 들어가
     #    검사가 스스로를 잡는다 (자기참조).  실제로 초판이 그렇게 실패했다.
     _old_gate = 'if a.sigma_ptfe > 0 else ' + '(2, 3, 5, 6)'
-    _p('ptfe-gate-split ★ _cond_ph 가 σ 가 아니라 규약으로 갈린다 (옛 결함 회귀)',
-       "_ptfe_stamp != 'off'" in _txt and _old_gate not in _txt)
+    #  ★ 2026-10-20 (Rint ② S1) — 게이트가 `!= 'off'` 이진 분기에서 **셀 스탬프 규약 목록**으로 바뀌었다 (face_alpha 는 셀을 찍지
+    #    않는다).  ⓑ `_cond_ph` · ⓒ `ptfe_zero_dof` 둘 다 그 목록으로 갈려야 하고, 목록은 centerline 하나 (face_alpha 가 들어가면
+    #    sid 격자가 off 격자가 아니게 된다).  ⚠ needle 은 쪼개서 만든다 (자기참조 — 위 주석).
+    _gate_b = '_ptfe_stamp in PTFE_STAMPS_' + 'CELL\n'
+    _gate_c = "'ptfe_zero_dof': bool(a._ptfe_stamp in PTFE_STAMPS_" + 'CELL and'
+    _p('ptfe-gate-split ★ _cond_ph · ptfe_zero_dof 가 σ 가 아니라 셀 스탬프 규약 목록으로 갈린다 (옛 결함 회귀 · face_alpha 제외)',
+       _gate_b in _txt and _gate_c in _txt and _old_gate not in _txt and PTFE_STAMPS_CELL == ('centerline',)
+       and 'face_alpha' in PTFE_STAMPS and 'face_alpha' not in PTFE_STAMPS_RESERVED)
     _p('ptfe-dia-early  ★ --fibre-dia 를 solve **전에** 읽는다 (뷰어 블록은 재사용)',
        '_dia_all = np.load(a.fibre_dia)' in _txt and 'dia = _dia_all' in _txt)
 
@@ -849,9 +855,18 @@ def assert_contract_seal(expect_physics, physics_expect, ptfe_legacy, ptfe_appli
 physics_protocol_id = _RC.physics_protocol_id
 
 #: PTFE 스탬프 규약 이름들.  '' = 옛 규약 유도 (매니페스트에 legacy-unversioned).
-PTFE_STAMPS = ('off', 'centerline', 'capsule')
+#  ★ 2026-10-20 (Rint ② S1 · 설계 v1 §3-2 · N1) — `face_alpha` = 면 개구율 연산자 (셀을 찍지 않는다 · R18 Q6).  예약값 `capsule`
+#    (셀 스탬프의 원래 뜻) 과 이름을 섞지 않는다 — R18 §Q6 끝 문단이 둘을 *"다른 물건"* 으로 갈랐다.
+PTFE_STAMPS = ('off', 'centerline', 'capsule', 'face_alpha')
 #: 아직 구현되지 않은 예약값 — 고르면 **중단**한다 (centerline 별칭 금지, Codex Q3).
 PTFE_STAMPS_RESERVED = ('capsule',)
+#: ★ 2026-10-20 (Rint ② S1) — PTFE 를 **셀로 찍는** 규약 (phase 4 → sid 7 · `ptfe_zero_dof` 가 그것을 말한다).  face_alpha 는
+#   셀을 찍지 않는다 (sid 격자 = off 격자) — 옛 `!= 'off'` 이진 분기 (`_cond_ph` · `ptfe_zero_dof`) 가 이 목록으로 갈린다.
+PTFE_STAMPS_CELL = ('centerline',)
+#: ★ face_alpha v0 가 요구하는 런 모양 (설계 v1 §3-3 · §7 LEAN 표) — 진단 · 보조 솔브가 면 α 를 원장에서 읽기 전까지 LEAN 2 · 3 의
+#   플래그 집합만 허용한다 (`--no-ion` 은 선택).  키 = argparse 속성 · 값 = 거부 코드.
+FACE_ALPHA_REQUIRED_OFF = (('no_field', 'FIELD'), ('no_collector', 'COLLECTOR'), ('no_thermal', 'THERMAL'),
+                           ('no_pore', 'PORE'), ('no_step4', 'STEP4'), ('no_trackb', 'TRACKB'))
 
 
 def resolve_ptfe_stamp(requested, sigma_ptfe):
@@ -1063,6 +1078,12 @@ def _payload_reject_reason(a, step3):
         _iok, _iwhy = _RC.interface_record_ok(_m)
         if not _iok:
             return f'STEP3_INTERFACE: {_iwhy}'
+    #  ★ 2026-10-20 (Rint ② · 설계 v1 §7) — 다음 세대 블록 `ca_ext` (요청 ↔ 블록 · 영수증 · v0 조건) — check_arm · 판정기와 같은 함수.
+    #    블록 없음 + 기능 끔 = 통과 (현 생산 그대로).  exit 4 (요청 ↔ 적용 불일치 = 규약 불일치 부류).
+    if not a.allow_partial_step3:
+        _cok, _cwhy = _RC.ca_ext_record_ok(_m)
+        if not _cok:
+            return f'STEP3_CA_EXT: {_cwhy}'
     return None
 
 
@@ -1295,12 +1316,20 @@ def main():
                     help='러너가 설정한 물리 인자 선언 `KEY=VAL,KEY=VAL…` (KEY 는 '
                          'PROTOCOL_FIELDS).  적용값과 다르면 **중단**한다 (exit 4).  '
                          '⚠ 첫 팔의 id 를 베끼는 것과 다르다 — 그것은 첫 팔을 진리로 삼는다')
-    ap.add_argument('--ptfe-stamp', default='', choices=('', 'off', 'centerline', 'capsule'),
+    ap.add_argument('--ptfe-stamp', default='', choices=('', 'off', 'centerline', 'capsule', 'face_alpha'),
                     help="PTFE 를 전도 격자에 어떻게 그릴지.  off = 안 그린다 · centerline = "
-                         "1-셀 선분(현행) · capsule = 직경 인식(**예약값, 미구현 — 고르면 중단**).  "
+                         "1-셀 선분(현행) · capsule = 직경 인식(**예약값, 미구현 — 고르면 중단**) · "
+                         "face_alpha = 다음 세대 면 개구율 (Rint ② S1 · 셀을 찍지 않는다 · sid 격자 = off 격자 · "
+                         "g = α·g0 · Ø0.248 rope = 규약 선택 · v0 = LEAN 2 · 3 플래그만).  "
                          "빈 값 = 옛 규약 유도(sigma_ptfe > 0 이면 centerline, 아니면 off) 이고 "
                          "매니페스트에 legacy-unversioned 로 적힌다.  ⚠ σ 와 무관하다 — "
                          "`--ptfe-stamp centerline --sigma-ptfe 0` 이 exact-zero DOF 다")
+    ap.add_argument('--step3-face-alpha-channel', default=None, choices=('both', 'electronic', 'ionic'),
+                    help='S1 face_alpha 면 개구율을 거는 채널 (기본 both = 전자 · 이온 둘 다 · 규약 고정 Q7 · 한쪽만 = '
+                         '민감도).  --ptfe-stamp face_alpha 일 때만 (아니면 거부 — 조용한 no-op 금지)')
+    ap.add_argument('--step3-face-alpha-dia-law', default=None, choices=('rope', 'two_pop'),
+                    help='S1 face_alpha 지름 법칙 (기본 rope = 모든 경로 Ø0.248 µm · 1저자 규약 선택 · DIA_UNCHECKED · '
+                         'two_pop = 13 / 87 두 집단 민감도 · 보고만).  --ptfe-stamp face_alpha 일 때만')
     ap.add_argument('--sigma-swcnt', type=float, default=100.0,
                     help='σ_e SWCNT sheath (S/cm) — A14.  VGCF급 lit order ⚠hook: 개별 SWCNT 축방향은 '
                          '1e4-1e5 S/cm급이나 vein-번들 film 유효값은 미앵커.  ⚠ koo2026의 0.20 S/cm은 '
@@ -1422,6 +1451,7 @@ def main():
     a._rint_e = a._rint_i = None
     a._iface = {}
     a._iface_rcpt = {}                                     # G1-2 — 네 솔브의 적용 영수증 (run_contract.interface_receipt)
+    a._fa_rcpt = {}                                        # ② S1 — face_alpha 네 솔브 영수증 (ptfe_face_alpha.solve_receipt)
     if a.step3_rint_e or a.step3_rint_i:
         from step3_sigma import parse_rint_table as _prt
         try:                                                # 반복 플래그 사이 같은 쌍 · 모르는 상 · 같은 상 비-AM …
@@ -1495,6 +1525,12 @@ def main():
     #    바로 아래 :1513 이 그 사고를 막으려고 세운 가드의 짝이 여기 없었다.
     #  ⚠ `--step3-fibre-stamp` 의 **기본값이 `point`** 라 이 조합은 기본 설정으로 도달한다.
     if a._ptfe_stamp != 'off' and getattr(a, 'step3_fibre_stamp', 'point') != 'segment':
+        #  ★ 2026-10-20 (Rint ② S1 · 분기 ⓐ) — face_alpha 도 선분 경로가 있어야 캡슐 중심선이 선다 (같은 요구 · 다른 문장).
+        if a._ptfe_stamp == 'face_alpha':
+            raise SystemExit(
+                'S1_FACE_ALPHA_REFUSED|SEGMENT| --ptfe-stamp face_alpha 는 PTFE 중심선 (경로 fid) 이 있어야 캡슐이 선다 — '
+                f'지금 --step3-fibre-stamp 는 `{getattr(a, "step3_fibre_stamp", "point")}` 다.  '
+                '`--step3-fibre-stamp segment` 를 --fibre npy 와 함께 줄 것 (조각난 점으로 내려가지 않는다)')
         raise SystemExit(
             f'ABORT — --ptfe-stamp {a._ptfe_stamp} 는 **선분 스탬프에서만** 1-셀 중심선이 '
             f'된다.  지금 --step3-fibre-stamp 는 `{getattr(a, "step3_fibre_stamp", "point")}` '
@@ -1502,6 +1538,47 @@ def main():
             f'`ptfe_stamp={a._ptfe_stamp}` 로 적힌다 = 요청과 실행이 다른데 성공으로 끝난다.\n'
             f'  ⇒ `--step3-fibre-stamp segment` 를 (--fibre npy 와 함께) 주거나, '
             f'`--ptfe-stamp off` 로 명시할 것.')
+    #  ★★ 2026-10-20 (Rint ② S1 · 설계 v1 §3-2 · §3-3 · §7) — face_alpha 조합 계약.  거부 = 조용한 no-op (PTFE 셀이 없어 차단 ·
+    #    σ_PTFE 가 걸릴 자리가 없다) · 정의 안 된 결합 (r1 계면 표) · 주기 seam 미지원 · 면 α 를 원장에서 안 읽는 솔브 · 진단
+    #    (v0 = LEAN 2 · 3 의 플래그 집합만 · `--no-ion` 은 선택).  GPU 를 잡기 전에 죽는다.
+    a._fa_channels, a._fa_dia_law = (), None
+    if a._ptfe_stamp == 'face_alpha':
+        _fa_ch = {'both': ('electronic', 'ionic'), 'electronic': ('electronic',),
+                  'ionic': ('ionic',)}[a.step3_face_alpha_channel or 'both']
+        _fa_bad = []
+        if not [c for c in _fa_ch if c == 'electronic' or not a.no_ion]:
+            _fa_bad.append(('NOOP_CHANNEL', '--step3-face-alpha-channel ionic 인데 --no-ion — 계획이 어느 솔브에도 안 걸린다 '
+                                            '(조용한 no-op · 이온 솔브를 켜거나 (LEAN 3) 전자 채널을 고를 것)'))
+        if float(a.sigma_ptfe or 0.0) > 0.0:
+            _fa_bad.append(('SIGMA_PTFE', '--sigma-ptfe > 0 — face_alpha 는 PTFE 셀이 없어 σ_PTFE 가 걸릴 자리가 없다'))
+        if float(getattr(a, 'step3_ptfe_block_um', 0.0) or 0.0) > 0.0:
+            _fa_bad.append(('PTFE_BLOCK', '--step3-ptfe-block-um > 0 — PTFE 셀이 없어 차단이 조용한 no-op'))
+        if str(getattr(a, 'step3_ptfe_block_scope', 'se') or 'se') != 'se':
+            _fa_bad.append(('PTFE_BLOCK', f'--step3-ptfe-block-scope {a.step3_ptfe_block_scope} — 차단 범위를 골랐는데 '
+                                          'PTFE 셀이 없어 차단할 것이 없다 (조용한 no-op · 기본 se 만 허용)'))
+        if a.periodic:
+            _fa_bad.append(('PERIODIC', '--periodic — 정량 모드 거부 (주기 seam 미지원 · R18 조건을 "거부" 로 대신)'))
+        if a.joule_heat:
+            _fa_bad.append(('JOULE', '--joule-heat — Joule 지도가 면 α 를 원장에서 안 읽는다 (E2)'))
+        if a.save_step4_grid:
+            _fa_bad.append(('STEP4_GRID', '--save-step4-grid — STEP4 격자는 면 α 를 싣지 않는다'))
+        if a.step3_rint_e or a.step3_rint_i:
+            _fa_bad.append(('RINT', '--step3-rint-e/-i — r1 계면 표와 면 α 의 결합은 v0 에서 정의되지 않는다'))
+        if a.no_step3:
+            _fa_bad.append(('NO_STEP3', '--no-step3 — face_alpha 가 걸릴 솔브가 없다 (조용한 no-op)'))
+        if not a.phase:
+            _fa_bad.append(('NO_PHASE', '--phase 없음 — PTFE 점 (phase 4) 을 가릴 수 없다'))
+        for _att, _code in FACE_ALPHA_REQUIRED_OFF:
+            if not getattr(a, _att, False):
+                _fa_bad.append((_code, f'--{_att.replace("_", "-")} 가 없다 — v0 = LEAN 2 · 3 만 (면 α 를 원장에서 안 읽는 '
+                                       f'솔브 · 진단 · 설계 v1 §3-3)'))
+        if _fa_bad:
+            raise SystemExit('\n'.join(f'S1_FACE_ALPHA_REFUSED|{c}| {w}' for c, w in _fa_bad))
+        a._fa_channels = _fa_ch
+        a._fa_dia_law = a.step3_face_alpha_dia_law or 'rope'
+    elif a.step3_face_alpha_channel is not None or a.step3_face_alpha_dia_law is not None:
+        raise SystemExit('S1_FACE_ALPHA_REFUSED|FLAG_WITHOUT_STAMP| --step3-face-alpha-channel · --step3-face-alpha-dia-law 는 '
+                         f'--ptfe-stamp face_alpha 일 때만 뜻이 있다 (지금 `{a._ptfe_stamp}` — 조용한 no-op 금지)')
     if a.selftest_contract:
         _sys.exit(_selftest_contract())
     if a.selftest_provenance:
@@ -1897,6 +1974,7 @@ def main():
             f'--fibre-dia 가 없거나 길이가 SE 점과 다르다.  직경 없이 돌면 요청과 '
             f'**다른 규약**(1-셀 선분)을 재게 된다.')
     _bru = None; _osh = np.zeros(3); _zt3 = _zb3 = None; _afid = None
+    _fa_prep = _fa_e = _fa_i = None                          # ② S1 — 매니페스트가 읽는 이름 (STEP3 가 그 전에 멈춰도 정의)
     step3 = None; je_am = None; jb_am = None; elec_field = None; ion_field = None; jrxn_am = None
     thermal_field = None                                     # STEP3 열류 |k∇T| 점군 (전자/이온 필드처럼)
     joule_field = None                                       # #29 STEP3 Joule 발열밀도 q∝|J|²/σ hot-spot 점군
@@ -1915,7 +1993,9 @@ def main():
             #    `--ptfe-stamp centerline --sigma-ptfe 0` 이면 sid 7 이 찍히되 σ=0 이라
             #    솔버의 `cond = sig > 0` 이 그 셀을 **dof 에서 제외**한다 = exact-zero DOF.
             #    1e-16 우회로(σ 대비 1e18)와 달리 조건수를 건드리지 않는다.
-            _cond_ph = ((2, 3, 5, 6, 4) if a._ptfe_stamp != 'off'
+            #  ★ 2026-10-20 (Rint ② S1 · 분기 ⓑ) — 셀로 찍는 규약 (centerline) 만 phase 4 를 넣는다.  face_alpha 는 PTFE 를 면 연산자
+            #    입력으로만 쓰므로 sid 격자 = `off` 격자 (PTFE 셀 0 · 매니페스트 `ptfe_cells_observed` = 0 을 계약이 본다).
+            _cond_ph = ((2, 3, 5, 6, 4) if a._ptfe_stamp in PTFE_STAMPS_CELL
                         else (2, 3, 5, 6))   # 6=SWCNT sheath(A14, 도체)
             _m = (np.isin(phase, _cond_ph) if phase is not None
                   else np.zeros(len(se), bool))            # conductive additives (PTFE 4 = insulator, default)
@@ -2072,6 +2152,28 @@ def main():
                           f'그 중 결함판이 뺏었을 PTFE/SWCNT = {_led["defect_would_steal"]}',
                           flush=True)
                 raise SystemExit(0)
+            #  ★★ 2026-10-20 (Rint ② S1) — face_alpha 준비: PTFE 중심선 (phase 4 · fid · kind) → 캡슐 → 채널마다 계획 (sid 격자 =
+            #    off 격자 · 지문으로 그 격자 · 채널에 묶인다).  이온 솔브를 안 돌리면 이온 계획을 만들지 않는다 (영수증 = disabled).
+            _fa_prep = _fa_e = _fa_i = None
+            if a._ptfe_stamp == 'face_alpha':
+                import ptfe_face_alpha as _pfa
+                _t_fa = _time.time()
+                _m4 = (phase == 4) if phase is not None else np.zeros(len(se), bool)
+                _sim_add = sim_m.get('additives') if isinstance(sim_m.get('additives'), dict) else {}
+                _fa_sig_e, _fa_sig_i = _step3_sigma_tables(a, _s3)[:2]   # 솔브와 같은 공용 표 (R5-CX-09 — 사본 없음)
+                _fa_prep = _pfa.payload_prepare(
+                    sid3, pid3, lo=_lo3, vox=a.step3_vox, sig_e=_fa_sig_e,
+                    sig_i=_fa_sig_i, pts=(se[_m4] - _off) * UM,
+                    fid=(_fid_all[_m4] if _fid_all is not None else np.full(int(_m4.sum()), -1, np.int64)),
+                    kind=(_kind_all[_m4] if _kind_all is not None and len(_kind_all) == len(se) else None),
+                    channels=a._fa_channels, dia_law=a._fa_dia_law,
+                    true_volume_um3=(_sim_add.get('PTFE') or {}).get('vol_um3'), build_ionic=not a.no_ion)
+                _fa_e, _fa_i = _fa_prep['plans']['electronic'], _fa_prep['plans']['ionic']
+                _fcap = _fa_prep['caps']
+                print(f"  STEP3: ★ S1 face_alpha — 캡슐 경로 {_fcap['n_paths']:,} · 조각 {_fcap['n_pieces']:,} · 선분 "
+                      f"{_fcap['n_segments']:,} · 부피 비 {_fa_prep['volume']['ratio']} ({_fa_prep['volume']['status']}) · "
+                      f"α 행 전자 {(_fa_e or {}).get('n_rows', '—')} · 이온 {(_fa_i or {}).get('n_rows', '—')} "
+                      f"({_time.time() - _t_fa:.0f}s) — 지름 {a._fa_dia_law} = 규약 선택 (DIA_UNCHECKED)", flush=True)
             #  ★ R5-CX-09 — 표는 `step3_sigma` 의 **공용 함수**가 만든다 (selftest 가 같은
             #    것을 소비한다).  사본을 두면 회귀가 생산을 증언하지 못한다.
             _sig3 = _step3_sigma_tables(a, _s3)[0]           # ELECTRONIC table: SE = e-insulator;
@@ -2088,7 +2190,10 @@ def main():
             _zt3, _zb3 = _ztop + float(_osh[2]), 0.0 + float(_osh[2])
             _res3 = _s3.solve_sigma_z(sid3, _sig3, a.step3_vox, return_field=True,
                                       z_top_um=_zt3, z_bot_um=_zb3, periodic_xy=a.periodic,
-                                      rint=a._rint_e, pid=(pid3 if a._rint_e else None))   # ① 계면 (기본 None)
+                                      rint=a._rint_e, pid=(pid3 if (a._rint_e or _fa_e is not None) else None),
+                                      **({'face_alpha': _fa_e} if _fa_e is not None else {}))   # ① 계면 · ② S1 (기본 None)
+            if _fa_prep is not None:                        # ② S1 — 솔브마다 영수증 (요청 채널 ↔ 솔브 기록 · 계획 지문)
+                a._fa_rcpt['electronic_main'] = _pfa.solve_receipt(_res3, _fa_e, requested='electronic' in a._fa_channels)
             a._iface['electronic'] = _res3.get('interface')
             #  ★ G1-2 (RINT-02) — 솔브마다 **적용 영수증** (요청 표는 파서 출력 그대로 · 솔브 기록과 따로 본다)
             a._iface_rcpt['electronic_main'] = _RC.interface_receipt(_res3, _s3.rint_table_record(a._rint_e))
@@ -2097,8 +2202,10 @@ def main():
                 _s3mark('electronic', 'not_solvable', _res3['reason'])
                 step3 = {'sigma_e_eff_S_cm': 0.0, 'reason': _res3['reason'], 'vox_um': a.step3_vox}
             elif _res3['n_dof']:
-                je_am = np.nan_to_num(_s3.per_particle_current(_res3, sid3, pid3, _sig3, len(r)),
-                                      nan=0.0, posinf=0.0, neginf=0.0)   # a bare NaN token kills JSON.parse
+                #  ② S1 v0 — face_alpha 해의 je 는 미계산 (진단이 면 α 를 원장에서 안 읽는다 · E2 · 증거 diagnostics 표).
+                je_am = (None if _fa_e is not None else
+                         np.nan_to_num(_s3.per_particle_current(_res3, sid3, pid3, _sig3, len(r)),
+                                       nan=0.0, posinf=0.0, neginf=0.0))   # a bare NaN token kills JSON.parse
                 _p998e = _este = None                       # 필드 정량 스케일용 (아래 step3에 기록)
                 if not a.no_field:                          # ELECTRONIC field (AM+carbon {1,2,3,4,5}) — the
                     _ep, _ej, _este = _s3.field_point_cloud(  # paper Fig-4 grammar: |J_e| cloud, hot backbone
@@ -2136,7 +2243,8 @@ def main():
                                        for i in range(len(_jhs['pts']))]
                         print(f"  STEP3 Joule hot-spot: {len(joule_field):,} pts · 집중 hot_frac_50 "
                               f"{_jhs['hot_frac_50']:.3f} (작을수록 집중) · conc {_jhs['conc_ratio']:.1f}× — 어디서 발열 몰리나")
-                _share = _s3.phase_current_share(_res3, sid3, _sig3)   # ① 계면 몫은 share_label 이 이름 짓는다
+                _share = (None if _fa_e is not None else       # ② S1 v0 — 소산 분담 미계산 (E2)
+                          _s3.phase_current_share(_res3, sid3, _sig3))   # ① 계면 몫은 share_label 이 이름 짓는다
                 #  ★ 2026-08-20 (전수 감사 코드 하위 γ) — **미수렴을 `complete` 로 적지 않는다.**
                 #    판정기(`sdcp_gain_verdict`)는 `cg_info`/`unconverged` 를 직접 보므로
                 #    prereg 는 안전했지만, manifest 의 component status 만 읽는 소비자는
@@ -2161,8 +2269,8 @@ def main():
                          #    fail-open 이었다 (resid 는 로그에만 있었다).
                          'cg_info': int(_res3.get('cg_info', 0) or 0),
                          'unconverged': bool(_res3.get('unconverged', False)),
-                         'dissipation_share': {_s3.share_label(k): round(v, 4)   # ① 계면 몫 = 'interface'
-                                               for k, v in _share.items()},
+                         'dissipation_share': ({_s3.share_label(k): round(v, 4)   # ① 계면 몫 = 'interface'
+                                                for k, v in _share.items()} if _share is not None else None),
                          #  ★ 2026-10-03 (RINT-03) — 입자별 je · jb 의 정의.  옛 payload 는 이 키가 없다
                          #    (= 탄소·첨가제 셀이 AM 몫에 섞인 옛 정의).  뷰어가 표지로 읽는다 · 솔버 상수 그대로.
                          'je_definition': _s3.PER_PARTICLE_CURRENT_DEF,
@@ -2274,7 +2382,7 @@ def main():
                 print(f"  STEP3 σ_e_eff = {_sig_str(a, step3['sigma_e_eff_S_cm'])} S/cm  "
                       f"(vox {a.step3_vox}µm, {_res3['n_dof']:,} dof, "
                       f"resid {_res3['resid']:.1e}, {_time.time()-_t0:.0f}s)"
-                      + ('' if _blind(a) else '  share: ' + ' '.join(
+                      + ('' if (_blind(a) or step3['dissipation_share'] is None) else '  share: ' + ' '.join(
                           f"{k} {100*v:.0f}%" for k, v in step3['dissipation_share'].items())))
                 if _jhs is not None:                        # #29 Joule 발열 hot-spot 요약 (joule_field는 별도 export)
                     step3['joule'] = {'hot_frac_50': _jhs['hot_frac_50'], 'conc_ratio': round(_jhs['conc_ratio'], 2),
@@ -2370,6 +2478,9 @@ def main():
                     for _nmr in ('electronic_wetted', 'electronic_bare'):     # G1-2 — 끈 솔브도 영수증
                         a._iface_rcpt[_nmr] = _RC.interface_receipt(
                             None, _s3.rint_table_record(a._rint_e), disabled_why='--no-collector')
+                        if _fa_prep is not None:                      # ② S1 — 끈 솔브도 영수증 (v0 = 집전체 끔 필수)
+                            a._fa_rcpt[_nmr] = _pfa.solve_receipt(None, None, requested='electronic' in a._fa_channels,
+                                                                  disabled_why='--no-collector')
                 else:
                     _mw, _mb = _bot_mask(0.30), _bot_mask(0.10)
                     _res3w = _s3.solve_sigma_z(sid3, _sig3, a.step3_vox, return_field=False,
@@ -2516,10 +2627,16 @@ def main():
                     _res3i = {'n_dof': 0}
                     a._iface_rcpt['ionic'] = _RC.interface_receipt(          # G1-2 — 끈 솔브도 영수증
                         None, _s3.rint_table_record(a._rint_i), disabled_why='--no-ion')
+                    if _fa_prep is not None:                                  # ② S1 — 끈 솔브도 영수증
+                        a._fa_rcpt['ionic'] = _pfa.solve_receipt(None, None, requested='ionic' in a._fa_channels,
+                                                                 disabled_why='--no-ion')
                 else:
                     _res3i = _s3.solve_sigma_z(sid3, _sig3i, a.step3_vox, return_field=True,
                                                z_top_um=_zt3, z_bot_um=_zb3, periodic_xy=a.periodic,
-                                               rint=a._rint_i, pid=(pid3 if a._rint_i else None))   # ① 계면 (기본 None)
+                                               rint=a._rint_i, pid=(pid3 if a._rint_i else None),
+                                               **({'face_alpha': _fa_i} if _fa_i is not None else {}))   # ① · ② S1 (기본 None)
+                    if _fa_prep is not None:                                  # ② S1 — reason 가드가 `_res3i` 를 덮기 전에
+                        a._fa_rcpt['ionic'] = _pfa.solve_receipt(_res3i, _fa_i, requested='ionic' in a._fa_channels)
                     a._iface['ionic'] = _res3i.get('interface')
                     #  ⚠ 아래 reason 가드가 `_res3i` 를 덮어쓰기 **전에** 영수증을 뜬다 (G1-2)
                     a._iface_rcpt['ionic'] = _RC.interface_receipt(_res3i, _s3.rint_table_record(a._rint_i))
@@ -2539,7 +2656,8 @@ def main():
                     _ion_reason_marked = True
                     _res3i = {'n_dof': 0, 'reason': _res3i['reason']}
                 if _res3i['n_dof']:
-                    _sharei = _s3.phase_current_share(_res3i, sid3, _sig3i)
+                    _sharei = (None if _fa_i is not None else      # ② S1 v0 — 이온 소산 분담 미계산 (E2)
+                               _s3.phase_current_share(_res3i, sid3, _sig3i))
                     if not a.no_field:                      # IONIC field (SE+SDCP {5,6}) — Li⁺ |J| cloud,
                         _ip, _ij, _esti = _s3.field_point_cloud(  # partner panel to the electronic field
                             _res3i, sid3, _sig3i, a.step3_vox, (5, 6, 8), max_points=a.field_max_points)
@@ -2598,8 +2716,8 @@ def main():
                     #    로는 **이온 쪽 집중계수를 고칠 수 없다** (도체셀 수 N 을 모른다) —
                     #    `repair_focus_top.py` 가 그 경우 fail-closed 로 거부한다.
                     step3['ion_n_dof'] = int(_res3i['n_dof'])
-                    step3['ion_dissipation_share'] = {_s3.share_label(k): round(v, 4)   # ① 계면 몫 = 'interface'
-                                                      for k, v in _sharei.items()}
+                    step3['ion_dissipation_share'] = ({_s3.share_label(k): round(v, 4)   # ① 계면 몫 = 'interface'
+                                                       for k, v in _sharei.items()} if _sharei is not None else None)
                     step3['sigma_ion_table_S_cm'] = {'SE': a.sigma_ion_se, 'SDCP': a.sigma_ion_sdcp}
                     # T1-a provenance: which temperature convention produced this σ_ion?
                     step3['temperature_provenance'] = dict(_temp_prov)
@@ -2610,7 +2728,7 @@ def main():
                     print(f"  STEP3 σ_ion_eff = {_sig_str(a, step3['sigma_ion_eff_S_cm'])} "
                           f"S/cm  ({_res3i['n_dof']:,} dof, resid {_res3i['resid']:.1e}, "
                           f"{_time.time()-_t1:.0f}s)"
-                          + ('' if _blind(a) else '  share: ' + ' '.join(
+                          + ('' if (_blind(a) or step3['ion_dissipation_share'] is None) else '  share: ' + ' '.join(
                               f"{k} {100*v:.0f}%"
                               for k, v in step3['ion_dissipation_share'].items())))
                     # ★ Track-B — COMSOL 하이브리드(AM 해상구 + SE 연속체) 파라미터: τ_full/τ_geo/
@@ -3028,7 +3146,8 @@ def main():
             'ptfe_stamp': a._ptfe_stamp,
             'ptfe_stamp_requested': (a.ptfe_stamp or 'legacy-unversioned'),
             #  σ=0 으로 찍혔나 = 그 셀이 dof 에서 빠졌나 (1e-16 = 극저-σ dof 와 **다른 규약**)
-            'ptfe_zero_dof': bool(a._ptfe_stamp != 'off' and float(a.sigma_ptfe or 0.0) == 0.0),
+            #  ★ 2026-10-20 (Rint ② S1 · 분기 ⓒ) — 셀로 찍는 규약에서만 뜻이 있다 (face_alpha = PTFE 셀 0 → False · 옛 식이면 True 로 잘못 적힌다).
+            'ptfe_zero_dof': bool(a._ptfe_stamp in PTFE_STAMPS_CELL and float(a.sigma_ptfe or 0.0) == 0.0),
             'sdcp_stamp': ('sphere' if getattr(a, 'step3_sdcp_sphere_d', 0) > 0 else 'point'),
             'sdcp_sphere_d_um': float(getattr(a, 'step3_sdcp_sphere_d', 0.0)),
             # ★ 2026-08-18 (CL-43) — 진단 팔은 **매니페스트에 남아야** 한다.  안 그러면
@@ -3191,6 +3310,12 @@ def main():
         #    `schema_version` 은 파일 **구조**, 이것은 **물리 의미**다.  적용된 값에서
         #    파생하므로 자유 입력 라벨이 아니라 **결과**다 (Codex: "디렉터리 태그와 선언
         #    enum 은 검증 근거가 아니라 결과여야 한다").
+        #  ★★ 2026-10-20 (Rint ② · 설계 v1 §7) — 다음 세대 블록 `ca_ext` (기능을 켰을 때만 — 끈 매니페스트는 키 자체가 없다 = 옛 바이트).
+        #    기능을 켰는데 STEP3 가 그 전에 멈춰 블록이 없으면 id = `unknown:ca_ext` → 게시 관문이 거부한다 (fail-closed).
+        if _fa_prep is not None:
+            import ptfe_face_alpha as _pfa_m
+            step3['manifest']['ca_ext'] = {'schema': _RC.CA_EXT_SCHEMA,
+                                           'ptfe_face': _pfa_m.payload_block(_fa_prep, a._fa_rcpt)}
         step3['manifest']['physics_protocol_id'] = physics_protocol_id(step3['manifest'])
         #  ★ 요청↔적용 불일치를 **기계가 읽게** 남긴다.  러너가 `--ptfe-stamp centerline`
         #    을 줬는데 payload 가 `off` 로 돌아도, 팔끼리만 같으면 옛 게이트는 통과했다.

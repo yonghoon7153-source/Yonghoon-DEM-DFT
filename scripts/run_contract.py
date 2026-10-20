@@ -110,6 +110,11 @@ CLI_ACCOUNTING = {
     #  ⛔ **생산 규약으로 채택하는 날 p3 로 올린다** (④ 입력 σ 규약 · ⑤ 검증 뒤 · 1저자 결정).
     '--step3-rint-e': ('record', ('interface_rint_e_ohm_cm2',)),
     '--step3-rint-i': ('record', ('interface_rint_i_ohm_cm2',)),
+    #  ★ 2026-10-20 (Rint ② S1 · 설계 v1 §7 회계) — 다음 세대 블록 `ca_ext` 의 **물리 칸**.  `PROTOCOL_FIELDS` 밖 (p2 봉인 코호트
+    #    32 팔의 id 보존 — `--step3-ptfe-block-scope` 와 같은 청구서) · 블록이 있으면 id 가 `p3ca-` 로 갈린다 (`physics_protocol_id`).
+    #    범주 `protocol_ext` = 필드명 'ca_ext.<하위 블록>.<protocol 키>' — 규칙 M 이 그 키가 하위 블록 protocol 정본에 있는지 센다.
+    '--step3-face-alpha-channel': ('protocol_ext', ('ca_ext.ptfe_face.channels',)),
+    '--step3-face-alpha-dia-law': ('protocol_ext', ('ca_ext.ptfe_face.dia_law',)),
     #  ★ `ptfe_zero_dof` = (스탬프 ON) ∧ (σ_PTFE == 0) — 두 옵션이 함께 정한다.
     '--ptfe-stamp': ('protocol', ('ptfe_stamp', 'ptfe_zero_dof')),
     '--sigma-ptfe': ('protocol', ('sigma_ptfe_S_cm', 'ptfe_zero_dof')),
@@ -207,7 +212,7 @@ CLI_ACCOUNTING = {
 
 #: 회계 범주 어휘.  이 밖의 값은 오타다 (규칙 M 이 거부한다).
 CLI_CATEGORIES = ('protocol', 'derived', 'plan', 'numeric', 'solve',
-                  'input', 'report', 'mode', 'record')
+                  'input', 'report', 'mode', 'record', 'protocol_ext')
 
 #: 규약 축인데 **CLI 로 못 바꾸는** 것 = 코드 상수.  여기 적힌 것만 고아 검사에서 빠진다.
 PROTOCOL_CODE_CONST = ('plate_rule',)
@@ -369,6 +374,10 @@ def observed_generation(man):
     if not isinstance(man, dict):
         return None
     pid = physics_protocol_id(man)
+    #  ★ 2026-10-20 (Rint ② · 설계 v1 §7) — 다음 세대 `p3ca-` 도 현행 세대다 (p2 축 전부 + ca_ext 블록).  안 세면 p3ca 매니페스트가
+    #    `schema_version` 을 낮춰 신고해 증거 계약을 끄는 길 (R5-CX-02) 이 다시 열린다.
+    if isinstance(pid, str) and pid.startswith(CA_EXT_PREFIX + '-'):
+        return SCHEMA_VERSION
     if isinstance(pid, str) and pid.startswith(PROTOCOL_SCHEMA + '-') and 'unknown' not in pid:
         return SCHEMA_VERSION
     return None
@@ -436,7 +445,20 @@ def physics_protocol_id(man):
        그대로면 옛 id 와 새 id 가 같은 이름공간에 산다.
 
     ⚠ 값이 하나라도 없으면 `unknown:<빠진 필드>` 를 낸다 (임의 기본값으로 채우지 않는다).
+
+    ★ 2026-10-20 (Rint ② · 설계 v1 §7) — **다음 세대 블록 `ca_ext`**.  블록이 없고 기능도 꺼져 있으면 옛 p2 함수 그대로
+      (`_p2_protocol_id` · 코드 지문 칸을 뺀 매니페스트가 같으면 id 비트 같음) · 블록이 있으면 `p3ca-` + sha256(p2 id ∪ 하위
+      블록들의 protocol 칸)[:16] · 블록 모양이 틀리거나 **기능을 켰는데 블록이 없으면** `unknown:ca_ext` (지금 p2 함수는
+      `ptfe_stamp = face_alpha` 만으로 정상 p2 id 를 냈다 = 세대 섞임 구멍).  p2 축 결손이 먼저다 (그 사유를 숨기지 않는다).
     """
+    _ca = _ca_ext_protocol_id(man)
+    if _ca is not None:
+        return _ca
+    return _p2_protocol_id(man)
+
+
+def _p2_protocol_id(man):
+    """p2 규약 id — 옛 `physics_protocol_id` 본문 그대로 (ca_ext 블록 없는 매니페스트의 id 를 바꾸지 않는다)."""
     import hashlib as _hl
     import json as _json
     _v, _miss = {}, []
@@ -456,6 +478,101 @@ def physics_protocol_id(man):
         return 'unknown:' + ','.join(sorted(set(_miss)))
     _canon = _json.dumps(_v, sort_keys=True, ensure_ascii=False, separators=(',', ':'))
     return f'{PROTOCOL_SCHEMA}-' + _hl.sha256(_canon.encode('utf-8')).hexdigest()[:16]
+
+
+#: ★ 2026-10-20 (Rint ② · 설계 v1 §7) — **다음 세대 블록 `ca_ext`** (S1 · S2 · S3 중 하나라도 켤 때만 매니페스트에 쓴다).
+#   `PROTOCOL_FIELDS` 를 늘리지 않는다 — 전역 p3 승격은 봉인 p2 코호트 id 를 다 바꾼다 (`--step3-ptfe-block-scope` 와 같은 이유).
+CA_EXT_SCHEMA = 'ca-ext-v1'
+CA_EXT_PREFIX = 'p3ca'
+CA_EXT_UNKNOWN = 'unknown:ca_ext'
+#: 하위 블록 등록부 — 이름 → (요청 술어 (매니페스트 → bool), 검증기 모듈, 검증기 함수, protocol 정본 키 목록 이름).
+#  ⚠ 모르는 하위 블록 = `unknown:ca_ext` (fail-closed).  S2 (`cjunc`) · S3 (`sdcp_mod`) 는 같은 꼴로 여기에 더한다.
+#  ⚠ 블록 부재 = 끔 으로 읽는 것은 R3-CX-03 ("키 부재 = 모름") 의 예외다 → 켠 producer 가 블록을 빠뜨리는 길을 요청 술어 ·
+#    `ca_ext_record_ok` · `unknown:ca_ext` 로 막는다 (설계 v1 §7 · Codex Q A10).
+CA_EXT_SUBBLOCKS = {
+    'ptfe_face': (lambda m: m.get('ptfe_stamp') == 'face_alpha', 'ptfe_face_alpha', 'ptfe_face_block_problem',
+                  'PROTOCOL_KEYS'),
+}
+
+
+def _ca_ext_requested(man):
+    """기능 요청 (블록이 있어야 하는) 매니페스트인가 — 등록된 하위 블록의 요청 술어 중 하나라도 참."""
+    return isinstance(man, dict) and any(pred(man) for pred, _m, _f, _k in CA_EXT_SUBBLOCKS.values())
+
+
+def _ca_ext_shape_problem(man):
+    blk = man.get('ca_ext')
+    if not isinstance(blk, dict):
+        return 'ca_ext 가 dict 가 아니다'
+    if blk.get('schema') != CA_EXT_SCHEMA:
+        return f'schema {blk.get("schema")!r} ≠ {CA_EXT_SCHEMA!r}'
+    subs = [k for k in blk if k != 'schema']
+    if not subs:
+        return '하위 블록이 없다'
+    for k in subs:
+        if k not in CA_EXT_SUBBLOCKS:
+            return f'모르는 하위 블록 {k!r}'
+        b = blk[k]
+        if not isinstance(b, dict) or not isinstance(b.get('protocol'), dict) or not isinstance(b.get('evidence'), dict):
+            return f'{k} = {{protocol, evidence}} dict 이어야 한다'
+    for k, (pred, _m, _f, _kk) in CA_EXT_SUBBLOCKS.items():
+        if bool(pred(man)) != (k in blk):
+            return f'{k}: 기능 요청 {bool(pred(man))} ↔ 블록 {k in blk} 불일치'
+    return None
+
+
+def _ca_ext_protocol_id(man):
+    """→ None (블록 없음 + 기능 끔 = 옛 p2 함수) | p2 축 결손 id | `unknown:ca_ext` | `p3ca-…`."""
+    if not isinstance(man, dict) or ('ca_ext' not in man and not _ca_ext_requested(man)):
+        return None
+    base = _p2_protocol_id(man)
+    if base.startswith('unknown:'):
+        return base
+    if 'ca_ext' not in man or _ca_ext_shape_problem(man):
+        return CA_EXT_UNKNOWN
+    import hashlib as _hl
+    import json as _json
+    blk = man['ca_ext']
+    body = {'p2': base, 'schema': blk['schema'], 'protocol': {k: blk[k]['protocol'] for k in sorted(blk) if k != 'schema'}}
+    try:
+        canon = _json.dumps(body, sort_keys=True, ensure_ascii=False, separators=(',', ':'), allow_nan=False)
+    except (TypeError, ValueError):
+        return CA_EXT_UNKNOWN
+    return f'{CA_EXT_PREFIX}-' + _hl.sha256(canon.encode('utf-8')).hexdigest()[:16]
+
+
+def ca_ext_protocol_fields():
+    """규칙 M — `protocol_ext` 회계가 이름 댈 수 있는 칸 {'ca_ext.<하위>.<키>'} (하위 블록 모듈의 protocol 정본 키 · 사본 없음)."""
+    import importlib
+    out = set()
+    for k, (_p, mod, _f, keys) in CA_EXT_SUBBLOCKS.items():
+        out |= {f'ca_ext.{k}.{x}' for x in getattr(importlib.import_module(mod), keys)}
+    return out
+
+
+def ca_ext_record_ok(man):
+    """다음 세대 블록 `ca_ext` 계약 → `(ok, reason|None)` — producer (게시 전) · `check_arm` · 판정기가 같이 부른다 (설계 v1 §7).
+    · 블록 없음 + 기능 끔 = 통과 (옛 세대 · 현 생산 그대로) · 기능 켬 + 블록 없음 = 위반 (`unknown:ca_ext`)
+    · 블록 모양 · 하위 블록 등록 · 요청 ↔ 블록 · 하위 블록 검증기 (그 모듈이 정본 — 여기에 사본을 두지 않는다)"""
+    m = man if isinstance(man, dict) else {}
+    if 'ca_ext' not in m:
+        if _ca_ext_requested(m):
+            return False, ('CAEXT|absent| 기능 요청 (예: ptfe_stamp = face_alpha) 인데 ca_ext 블록이 없다 — 세대 '
+                           f'{CA_EXT_UNKNOWN} (요청과 실행의 기록이 갈렸다)')
+        return True, None
+    why = _ca_ext_shape_problem(m)
+    if why:
+        return False, f'CAEXT|shape| {why}'
+    import importlib
+    for k in sorted(kk for kk in m['ca_ext'] if kk != 'schema'):
+        _p, mod, fn, _keys = CA_EXT_SUBBLOCKS[k]
+        try:
+            prob = getattr(importlib.import_module(mod), fn)(m)
+        except Exception as e:                                   # noqa: BLE001 — 확인 못 한 것을 통과시키지 않는다
+            return False, f'CAEXT|{k}|unverifiable| {type(e).__name__}: {e}'
+        if prob:
+            return False, f'CAEXT|{k}| {prob}'
+    return True, None
 
 
 def protocol_ok(man):
@@ -560,6 +677,13 @@ def ptfe_record_ok(man):
         return True, None                       # 옛 세대는 면제
     if type(v) is not int or v < 0:             # noqa: E721
         return False, f'PTFE|domain| ptfe_cells_observed={v!r} (음이 아닌 정수여야 한다)'
+    #  ★ 2026-10-20 (Rint ② S1) — face_alpha 는 셀을 찍지 않는다 (sid 격자 = off 격자) ⇒ 관측 0 이 **정상**이고 > 0 이 위반이다
+    #    (도장 ≠ 실물 — centerline 과 이중 계상).  아래 `!= off` 이진 분기에 face_alpha 를 넣으면 정상 런이 전부 거부된다.
+    if man.get('ptfe_stamp') == 'face_alpha':
+        if v != 0:
+            return False, (f'PTFE|face_alpha_cells| `ptfe_stamp=face_alpha` 인데 관측 sid7 셀이 {v} 이다 — 면 개구율은 셀을 '
+                           f'찍지 않는다 (sid 격자 = off 격자) · centerline 과 이중 계상')
+        return True, None
     if man.get('ptfe_stamp') not in (None, '', 'off') and v == 0:
         return False, (f'PTFE|no_effect| `ptfe_stamp={man.get("ptfe_stamp")}` 인데 관측 '
                        f'sid7 셀이 0 이다 — 격자에 아무것도 안 그려졌다.  그 팔의 PTFE '

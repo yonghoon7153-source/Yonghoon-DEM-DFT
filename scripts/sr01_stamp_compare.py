@@ -310,6 +310,11 @@ def check_arm(path, want, expect_backend=None, receipt=None):
     _iok, _iwhy = _RC.interface_record_ok(_man)
     if not _iok:
         return f'계면 저항 요청 ↔ 적용 영수증이 계약과 다르다 — {_iwhy}'
+    #  ★ 2026-10-20 (Rint ② · 설계 v1 §7) — 다음 세대 블록 `ca_ext` (S1 face_alpha …) — producer · 판정기와 같은 함수.  블록 없음 + 기능 끔 =
+    #    통과 (현 생산 그대로) · 기능 켬 + 블록 없음 · 모양 · 영수증 위반 = 거부 (캐시 경로에서도).
+    _cok, _cwhy = _RC.ca_ext_record_ok(_man)
+    if not _cok:
+        return f'다음 세대 ca_ext 기록이 계약과 다르다 — {_cwhy}'
     if _man.get('component_plan') is not None:
         _pok, _pwhy = _RC.plan_ok(_man.get('component_plan'))
         if not _pok:

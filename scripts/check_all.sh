@@ -234,6 +234,12 @@ run 'rint_receipts (요청 ↔ 적용 영수증 · AST 변이 4)' python3 script
 #    OFF 비트 같음 (막 0 + 예외 융합 · 순서마다) · 단위 (같은 리드 · 1e−8·A/r) · 탄소 가림 (막 소자만) · E4′ 부류 FD · 원장 무결성.
 #    고치기 전 코드 = 10 PASS · 18 FAIL (새 API 없음) · `--s3 PATH` 로 다른 step3_sigma 를 시험할 수 있다.
 run 'rint_g2_am_iface (①′ AM–AM 계약 v3.1 · 반례 먼저)' python3 scripts/test_rint_g2_am_iface.py
+#  ★ 2026-10-20 (Rint ② S1 · 설계 v1 §3 · R18 Q6 · 1저자 N1–N18 권고대로) — PTFE 면 개구율 `face_alpha` (기본 끔 · 끄면 옛 경로 비트 같음):
+#    R18 종료조건 8 · F16 해석 개구율 (판별력) · 변이 8 · 계획 무결성 · 진단 거부 · p3ca id · ca_ext_record_ok · payload 끝-끝
+#    (세 분기 · 거부 조합 19 · sid = off 격자 · 채널 독립 · check_arm).  고치기 전 (d1768cf0c) = 1+3 PASS (끔 경로 지킴이) ·
+#    22+31 FAIL · 웹앱 표지 2 PASS · 7 FAIL.  `--old-scripts DIR` (기반 scripts 사본) 을 주면 끔 경로 비트 대조 B1 · B2 도 돈다.
+run 'ptfe_face_alpha (Rint ② S1 · 시험 먼저)' python3 scripts/test_ptfe_face_alpha.py
+run 'webapp: ca_ext_labels (S1 표지 · 봉인 밖 템플릿)' python3 webapp/test_ca_ext_labels.py
 #  ★ 2026-10-04 (τ 결정 16 ② · 1저자 비준 *"권고대로"*) — 안 A: 망 솔버 띠 선택을 `boundary_sets` 로 추출 (추출 전 기준값과 비트 동일)
 #    + 쓴 규칙 · 띠 폭 기록 (LHS-17 · TAU-14) · 이온 인계 열 도우미 `tau_flux` (v2 §5 · 게이트 G1–G6 · 생산자 ↔ 소비자 계약).
 run 'network boundary_rule (안 A · 동작 중립)' python3 scripts/test_network_boundary_rule.py

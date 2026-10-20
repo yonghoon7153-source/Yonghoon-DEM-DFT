@@ -1891,7 +1891,7 @@ def solve_sigma_z(sid, sigma_of_sid, vox, return_field=False, z_top_um=None, pla
     #  ② S1 (2026-10-20 · Rint ② · 설계 v1 §3 · R18 Q6) — PTFE 면 개구율 `face_alpha` = ptfe_face_alpha.build_plan(...) 의 결과.
     #    None (기본) 이면 아래 어떤 줄도 바뀌지 않는다 (옛 조립 · 연결성 · 반환 키 비트 같음).  계획 무결성 · 격자 · 지문은
     #    `require_plan` 이 조립 전에 본다 (CG 0) · r1 표 · ①′ · 주기와 동시 = 거부 (v0 미정의 조합 · seam 미지원).
-    _pfa = _fap = None
+    _fap = None                                              # `_pfa` (모듈) 는 _fap 가 있을 때만 쓰인다
     _fa_used, _fa_iso = {}, 0
     if face_alpha is not None:
         import ptfe_face_alpha as _pfa

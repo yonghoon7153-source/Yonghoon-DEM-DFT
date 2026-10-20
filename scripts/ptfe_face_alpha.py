@@ -97,6 +97,16 @@ def _path_radius(Q, dia_law):
     return ((ROPE_D_UM / 2.0, 'rope') if u < TWO_POP_ROPE_FRAC else (FIBRE_D_UM / 2.0, 'fibre'))
 
 
+def _caps_fp(caps):
+    """캡슐 기하 지문 — 지름 법칙 · gap_tol · 선분 끝점 · 반지름 바이트 (계획 입구가 다시 계산해 기하 변조를 막는다)."""
+    if not caps.get('n_segments'):
+        return _h16('caps-v1', caps.get('dia_law'), repr(caps.get('gap_tol')), 'empty')
+    return _h16('caps-v1', caps.get('dia_law'), repr(caps.get('gap_tol')),
+                np.ascontiguousarray(np.asarray(caps['A'], np.float64)).tobytes(),
+                np.ascontiguousarray(np.asarray(caps['B'], np.float64)).tobytes(),
+                np.ascontiguousarray(np.asarray(caps['r'], np.float64)).tobytes())
+
+
 def build_capsules(pts, fid, kind=None, *, dia_law='rope', gap_tol=GAP_TOL):
     """PTFE 중심선 점열 → 캡슐 기하 (선분 A–B · 반지름 · 조각 · 부피 · 표본점).  입력 계약 (설계 §3-3 · F15):
     점 float64 유한 · fid 정수 ≥ 0 · kind (있으면) 정수 ∈ {0, 1} 이고 PTFE 는 전부 경로 (1) · 길이 정확 일치 · 같은 fid 는 연속 한
@@ -140,7 +150,7 @@ def build_capsules(pts, fid, kind=None, *, dia_law='rope', gap_tol=GAP_TOL):
             'A': np.zeros((0, 3)), 'B': np.zeros((0, 3)), 'r': np.zeros(0), 'seg_path': np.zeros(0, np.int64),
             'samples': np.zeros((0, 3)), 'sample_seg': np.zeros(0, np.int64), 's_spacing': 0.0}
     if n == 0:
-        caps['fp'] = _h16('caps-v1', dia_law, repr(g_t), 'empty')
+        caps['fp'] = _caps_fp(caps)
         return caps
     starts = np.r_[0, np.flatnonzero(np.diff(F) != 0) + 1]
     run_f = F[starts]
@@ -199,8 +209,7 @@ def build_capsules(pts, fid, kind=None, *, dia_law='rope', gap_tol=GAP_TOL):
     caps.update(n_paths=int(len(starts)), n_pieces=int(n_pieces), n_point_pieces=int(n_point), n_segments=int(len(A)),
                 volume_um3=float(vol), r_max=r_max, dia_classes=cls, A=A, B=B, r=R, seg_path=SP,
                 samples=samples, sample_seg=seg_of, s_spacing=float(spacing))
-    caps['fp'] = _h16('caps-v1', dia_law, repr(g_t), np.ascontiguousarray(A).tobytes(), np.ascontiguousarray(B).tobytes(),
-                      np.ascontiguousarray(R).tobytes())
+    caps['fp'] = _caps_fp(caps)
     return caps
 
 
@@ -236,14 +245,24 @@ def _quad_offsets(axis, K, h):
     return off
 
 
+_FACE_CHUNK = 100_000                          # 면 묶음 (실침대 면 수 10⁶ 규모에서 KD 쌍 · 덮임 배열 메모리를 묶음 크기로 묶는다)
+
+
 def face_alpha_values(caps, axis, lower_ijk, lo, vox, K=K_SEALED):
     """면 α — 축 `axis` 의 면 (아래 셀 `lower_ijk` 와 그 위 셀 사이 · 평면 lo_a + (c_a + 1)·h) 마다 K × K 중점 구적.
-    캡슐 안 판정 = 중심선 선분까지 거리 ≤ r (닫힌 캡슐 · `_ball_cells` 와 같은 ≤).  캡슐이 없으면 α ≡ 1."""
+    캡슐 안 판정 = 중심선 선분까지 거리 ≤ r (닫힌 캡슐 · `_ball_cells` 와 같은 ≤).  캡슐이 없으면 α ≡ 1.
+    면 묶음마다 따로 푼다 (값은 묶음 크기와 무관 — 면마다 독립)."""
     K = _check_K(K)
     lower = np.asarray(lower_ijk, np.int64).reshape(-1, 3)
     out = np.ones(len(lower))
     if len(lower) == 0 or caps['n_segments'] == 0:
         return out
+    for f0 in range(0, len(lower), _FACE_CHUNK):
+        out[f0:f0 + _FACE_CHUNK] = _face_alpha_chunk(caps, axis, lower[f0:f0 + _FACE_CHUNK], lo, vox, K)
+    return out
+
+
+def _face_alpha_chunk(caps, axis, lower, lo, vox, K):
     h = float(vox)
     lo = np.asarray(lo, np.float64)
     b, c = _inplane(axis)
@@ -257,7 +276,7 @@ def face_alpha_values(caps, axis, lower_ijk, lo, vox, K=K_SEALED):
     rad = rad * (1.0 + 1e-9) + 1e-12
     sdm = cKDTree(ctr).sparse_distance_matrix(_tree(caps), rad, output_type='ndarray')
     if len(sdm) == 0:
-        return out
+        return np.ones(len(lower))
     nseg = int(caps['n_segments'])
     key = np.unique(sdm['i'].astype(np.int64) * nseg + caps['sample_seg'][sdm['j']])
     pf, ps = key // nseg, key % nseg
@@ -306,14 +325,16 @@ def _candidate_cells(caps, lo, vox, shape):
 
 
 # ══ 계획 (채널 하나 · 격자 하나에 묶인 α 행) ══════════════════════════════════════════════════════
-def _channel_cond(channel, sigma_of_sid, sid):
-    """그 채널의 도체 셀 (σ > 0) — 표 (sid → σ) 또는 복셀별 σ 장."""
+def _channel_cond(channel, sigma_of_sid, sid, lin=None):
+    """그 채널의 도체 셀 (σ > 0) — 표 (sid → σ) 또는 복셀별 σ 장.  `lin` (평탄 번호) 을 주면 그 셀들만 (격자 전체 float 임시 없음 ·
+    판정식은 솔버 `sigma_field` 와 같은 `σ[sid] > 0` — 표 밖 sid 는 같은 IndexError)."""
     s = np.asarray(sigma_of_sid, np.float64)
+    sid = np.asarray(sid)
     if s.ndim == 1:
-        return s[np.asarray(sid)] > 0
-    if s.shape == tuple(np.shape(sid)):
-        return s > 0
-    raise ValueError(f'face_alpha: σ 표 모양 {s.shape} 를 sid {np.shape(sid)} 에 쓸 수 없다')
+        return (s[sid] > 0) if lin is None else (s[sid.reshape(-1)[lin]] > 0)
+    if s.shape == sid.shape:
+        return (s > 0) if lin is None else (s.reshape(-1)[lin] > 0)
+    raise ValueError(f'face_alpha: σ 표 모양 {s.shape} 를 sid {sid.shape} 에 쓸 수 없다')
 
 
 def _exempt_mask(channel, sa, sb, pa, pb):
@@ -372,35 +393,38 @@ def build_plan(sid, sigma_of_sid, caps, *, lo, vox, channel, pid=None, K=K_SEALE
             raise ValueError(f'face_alpha: pid 모양 {pid.shape} ≠ sid {sid.shape}')
     else:
         pid = None
-    cond = _channel_cond(channel, sigma_of_sid, sid)
     shape = sid.shape
     axes, counts = [], {}
     cand = _candidate_cells(caps, lo, h, shape) if caps['n_segments'] else None
+    #  후보 셀 목록 (오름차순 평탄 번호) 에서만 면을 만든다 — 격자 전체 임시 (bool · float) 를 만들지 않는다 (실침대 10⁸ 셀).
+    cl = np.flatnonzero(cand.reshape(-1)) if cand is not None else np.zeros(0, np.int64)
+    cijk = np.stack(np.unravel_index(cl, shape), -1) if len(cl) else np.zeros((0, 3), np.int64)
+    stride = (shape[1] * shape[2], shape[2], 1)
+    sid_f = sid.reshape(-1)
+    pid_f = pid.reshape(-1) if pid is not None else None
     for ax in range(3):
-        if cand is None or shape[ax] < 2:
+        if not len(cl) or shape[ax] < 2:
             axes.append({'lin': np.zeros(0, np.int64), 'alpha': np.zeros(0)})
             continue
-        sa = [slice(None)] * 3
-        sb = [slice(None)] * 3
-        sa[ax] = slice(0, -1)
-        sb[ax] = slice(1, None)
-        sa, sb = tuple(sa), tuple(sb)
-        m = cand[sa] & cand[sb] & cond[sa] & cond[sb]
-        low = np.argwhere(m)
-        if not len(low):
+        lo_lin = cl[cijk[:, ax] < shape[ax] - 1]
+        lo_lin = lo_lin[cand.reshape(-1)[lo_lin + stride[ax]]]
+        if len(lo_lin):
+            cnd = (_channel_cond(channel, sigma_of_sid, sid, lo_lin)
+                   & _channel_cond(channel, sigma_of_sid, sid, lo_lin + stride[ax]))
+            lo_lin = lo_lin[cnd]
+        if not len(lo_lin):
             axes.append({'lin': np.zeros(0, np.int64), 'alpha': np.zeros(0)})
             continue
-        up = low.copy()
-        up[:, ax] += 1
-        s_a, s_b = sid[tuple(low.T)], sid[tuple(up.T)]
-        p_a = pid[tuple(low.T)] if pid is not None else None
-        p_b = pid[tuple(up.T)] if pid is not None else None
+        up_lin = lo_lin + stride[ax]
+        s_a, s_b = sid_f[lo_lin], sid_f[up_lin]
+        p_a = pid_f[lo_lin] if pid_f is not None else None
+        p_b = pid_f[up_lin] if pid_f is not None else None
         keep = ~_exempt_mask(channel, s_a, s_b, p_a, p_b)
-        low, s_a, s_b = low[keep], s_a[keep], s_b[keep]
+        lo_lin, s_a, s_b = lo_lin[keep], s_a[keep], s_b[keep]
+        low = np.stack(np.unravel_index(lo_lin, shape), -1)
         al = face_alpha_values(caps, ax, low, lo, h, K)
         hit = al < 1.0
-        low, al, s_a, s_b = low[hit], al[hit], s_a[hit], s_b[hit]
-        lin = np.ravel_multi_index(tuple(low.T), shape).astype(np.int64)
+        lin, al, s_a, s_b = lo_lin[hit].astype(np.int64), al[hit], s_a[hit], s_b[hit]
         o = np.argsort(lin, kind='stable')
         lin, al, s_a, s_b = lin[o], al[o], s_a[o], s_b[o]
         axes.append({'lin': lin, 'alpha': al.astype(np.float64)})
@@ -452,7 +476,6 @@ def require_plan(plan, sid, sigma_of_sid, vox, pid=None):
     if not isinstance(axes, (tuple, list)) or len(axes) != 3:
         raise ValueError('face_alpha: 계획 axes 는 축 셋')
     N = int(np.prod(shape))
-    cond = _channel_cond(ch, sigma_of_sid, sid)
     pidv = np.asarray(pid) if (ch == 'electronic') else None
     norm = []
     for ax in range(3):
@@ -482,7 +505,8 @@ def require_plan(plan, sid, sigma_of_sid, vox, pid=None):
                 raise ValueError('face_alpha: 행의 위 이웃 셀이 격자 밖 (축 끝 셀)')
             up = low.copy()
             up[:, ax] += 1
-            ok = cond[tuple(low.T)] & cond[tuple(up.T)]
+            ok = (_channel_cond(ch, sigma_of_sid, sid, lin)
+                  & _channel_cond(ch, sigma_of_sid, sid, np.ravel_multi_index(tuple(up.T), shape)))
             if not ok.all():
                 raise ValueError('face_alpha: 행에 그 채널의 비도체 셀이 낀 면 — 다른 격자 · 다른 채널의 계획')
             ex = _exempt_mask(ch, sid[tuple(low.T)], sid[tuple(up.T)],
@@ -495,8 +519,8 @@ def require_plan(plan, sid, sigma_of_sid, vox, pid=None):
     if plan_fp(plan) != plan.get('fp_plan'):
         raise ValueError('face_alpha: 계획 지문 불일치 (E5)')
     caps = plan.get('caps')
-    if not isinstance(caps, dict) or caps.get('fp') != plan.get('fp_caps'):
-        raise ValueError('face_alpha: 캡슐 기하 지문 불일치')
+    if not isinstance(caps, dict) or caps.get('fp') != plan.get('fp_caps') or _caps_fp(caps) != caps.get('fp'):
+        raise ValueError('face_alpha: 캡슐 기하 지문 불일치 (계획 · 기하 배열)')
     return {'channel': ch, 'K': K, 'shape': shape, 'vox': float(vox), 'lo': tuple(float(x) for x in plan['lo_um']),
             'axes': tuple(norm), 'caps': caps, 'n_rows': int(sum(len(a['lin']) for a in norm)),
             'n_cut_rows': int(sum(int(a['cut'].sum()) for a in norm)), 'fp_plan': plan['fp_plan'],
@@ -552,28 +576,31 @@ def plate_coupling_factor(fap, ii, jj, kk, side):
 
 
 def isolated_by_cut(cond, cuts):
-    """사방 절단 셀 수 — 도체 이웃이 하나 이상 있고 그 면이 전부 절단된 셀 (기록 · 가지치기는 E3 가 한다)."""
+    """사방 절단 셀 수 — 도체 이웃이 하나 이상 있고 그 면이 전부 절단된 셀 (기록 · 가지치기는 E3 가 한다).
+    절단 면 양끝 셀만 본다 (격자 전체 배열 없음)."""
     cond = np.asarray(cond, bool)
     shape = cond.shape
-    deg = np.zeros(shape, np.int16)
-    dcut = np.zeros(shape, np.int16)
+    cf = cond.reshape(-1)
+    stride = np.array([shape[1] * shape[2], shape[2], 1], np.int64)
+    ends = []
     for ax in range(3):
-        sa = [slice(None)] * 3
-        sb = [slice(None)] * 3
-        sa[ax] = slice(0, -1)
-        sb[ax] = slice(1, None)
-        both = cond[tuple(sa)] & cond[tuple(sb)]
-        deg[tuple(sa)] += both
-        deg[tuple(sb)] += both
         lin = np.asarray(cuts[ax], np.int64)
-        if len(lin):
-            low = np.stack(np.unravel_index(lin, shape), -1)
-            up = low.copy()
-            up[:, ax] += 1
-            okk = cond[tuple(low.T)] & cond[tuple(up.T)]
-            np.add.at(dcut, tuple(low[okk].T), 1)
-            np.add.at(dcut, tuple(up[okk].T), 1)
-    return int((cond & (deg > 0) & (deg == dcut)).sum())
+        if not len(lin):
+            continue
+        up = lin + stride[ax]
+        ok = cf[lin] & cf[up]
+        ends += [lin[ok], up[ok]]
+    if not ends:
+        return 0
+    cells, dcut = np.unique(np.concatenate(ends), return_counts=True)
+    ijk = np.stack(np.unravel_index(cells, shape), -1)
+    deg = np.zeros(len(cells), np.int64)
+    for ax in range(3):
+        for sgn in (-1, 1):
+            nb = ijk[:, ax] + sgn
+            okb = (nb >= 0) & (nb < shape[ax])
+            deg[okb] += cf[cells[okb] + sgn * stride[ax]]
+    return int(((deg > 0) & (deg == dcut)).sum())
 
 
 def edges_fp(axes):
@@ -777,6 +804,9 @@ def ptfe_face_block_problem(man):
         return 'v0| periodic_xy — 정량 모드 거부 (seam 미지원)'
     if float(man.get('ptfe_block_um') or 0.0) != 0.0 or float(man.get('sigma_ptfe_S_cm') or 0.0) != 0.0:
         return 'combo| PTFE 차단 · σ_PTFE 와 face_alpha 동시 (PTFE 셀이 없어 조용한 no-op)'
+    if man.get('ptfe_block_scope') not in (None, 'se'):
+        return (f'combo| PTFE 차단 범위 {man.get("ptfe_block_scope")!r} 와 face_alpha 동시 (차단할 PTFE 셀이 없다 · '
+                f'기본 se 만)')
     if man.get('interface_model') is not None:
         return 'combo| 계면 표 (r1) 와 face_alpha 동시 — v0 미정의 조합'
     rc = ev.get('receipts')
@@ -815,6 +845,10 @@ def ptfe_face_block_problem(man):
                 return f'receipts|{name}| 솔브 계획 지문 ≠ 증거의 {ch} 계획 지문'
         if st in ('failed', 'disabled') and not r.get('why'):
             return f'receipts|{name}| {st} 인데 사유 없음'
+    #  요청한 채널의 솔브가 전부 꺼졌다 (예: 이온만 + --no-ion) = 연산자가 어디에도 안 걸린 조용한 no-op — producer 거부의 짝
+    if not [n for n in ('electronic_main', 'ionic')
+            if ('ionic' if n == 'ionic' else 'electronic') in chans and rc[n].get('status') != 'disabled']:
+        return f'noop| 요청 채널 {chans} 의 솔브가 전부 disabled — face_alpha 가 어느 솔브에도 안 걸렸다'
     caps = ev.get('capsules') if isinstance(ev.get('capsules'), dict) else None
     if caps is None or any(type(caps.get(k)) is not int or caps.get(k) < 0                    # noqa: E721
                            for k in ('n_paths', 'n_pieces', 'n_point_pieces', 'n_segments')):

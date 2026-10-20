@@ -16,6 +16,7 @@
   python3 webapp/test_ca_ext_labels.py
 """
 import os
+import shutil
 import sys
 
 HERE = os.path.dirname(os.path.abspath(__file__))
@@ -57,6 +58,60 @@ def main():
     chk('W2c 표지 문자열 사본을 템플릿에 두지 않는다 (producer 상수 하나)', bool(lab) and lab not in tpl)
     chk('W3 face_alpha + 관측 PTFE 셀 > 0 = 불일치 경고 (두 행)',
         all('face_alpha' in ln and 'ptfe_cells_observed' in ln for ln in (jinja + js)) and len(jinja + js) == 2)
+    try:
+        import jinja2
+    except Exception:                                       # noqa: BLE001
+        jinja2 = None
+    if jinja2 is None:
+        print('  SKIP  W5 · W6 (jinja2 없음)')
+    else:
+        env = jinja2.Environment(autoescape=True)
+        try:
+            env.parse(tpl)
+            _parsed = True
+        except jinja2.TemplateSyntaxError as e:
+            _parsed = False
+            print(f'      {e}')
+        chk('W5 템플릿 전체가 Jinja 문법으로 파싱된다', _parsed)
+        if len(jinja) == 1:
+            row = env.from_string(jinja[0])
+            fa = {'mpm_metrics': {'step3': {'manifest': {'ptfe_stamp': 'face_alpha', 'ptfe_cells_observed': 0,
+                                                         'ca_ext': {'ptfe_face': {'evidence': {'label': lab}}}}}}}
+            bad = {'mpm_metrics': {'step3': {'manifest': {'ptfe_stamp': 'face_alpha', 'ptfe_cells_observed': 7,
+                                                          'ca_ext': {'ptfe_face': {'evidence': {'label': lab}}}}}}}
+            out_fa = row.render(it=fa)
+            out_bad = row.render(it=bad)
+            out_plain = row.render(it={'mpm_metrics': {}})
+            out_none = row.render(it={})
+            from markupsafe import escape as _escape
+            esc = str(_escape(lab)) if lab else '\0'
+            chk('W6 Jinja 행 렌더 — face_alpha = 표지 · 셀 > 0 = 경고 · 옛 meta (매니페스트 없음) = 둘 다 없음',
+                esc in out_fa and '이중 계상 의심' not in out_fa and '이중 계상 의심' in out_bad
+                and esc not in out_plain and '🧱' not in out_plain and '🧱' not in out_none,
+                (out_fa[-200:], out_plain[-120:]))
+    if shutil.which('node') is None:
+        print('  SKIP  W7 (node 없음)')
+    else:
+        import json as _json
+        from test_closed_param_labels import js_fn, run_node
+        mk = lambda cells, with_ca: {'id': 'x', 'has_additives': True, 'recipe': 'PTFE 1', 'convention_label': 'PTFE face_alpha',   # noqa: E731
+                                     'mpm_metrics': ({'step3': {'manifest': {'ptfe_stamp': 'face_alpha', 'ptfe_cells_observed': cells,
+                                                                            **({'ca_ext': {'ptfe_face': {'evidence': {'label': lab}}}}
+                                                                               if with_ca else {})}}}
+                                                     if with_ca is not None else {})}
+        script = ('const made = [];\n'
+                  'const document = {getElementById: (id) => ({style: {}, textContent: "", insertBefore: () => {}, '
+                  'firstChild: null, querySelectorAll: () => []}), createElement: (t) => { const o = {dataset: {}, style: {}}; '
+                  'made.push(o); return o; }};\n' + js_fn(tpl, 'labAddRow') + '\n'
+                  f'const cases = {_json.dumps([mk(0, True), mk(5, True), mk(0, None)], ensure_ascii=False)};\n'
+                  'const out = cases.map(c => { labAddRow(c); return made[made.length - 1].innerHTML; });\n'
+                  'console.log(JSON.stringify(out));\n')
+        try:
+            o_fa, o_bad, o_old = run_node(script)          # run_node = 마지막 줄 JSON (실패면 None → 아래 except)
+            chk('W7 JS 행 (node 실행) — face_alpha = 표지 · 셀 > 0 = 경고 · 옛 meta = 둘 다 없음',
+                lab in o_fa and '이중 계상 의심' not in o_fa and '이중 계상 의심' in o_bad and '🧱' not in o_old)
+        except Exception as e:                              # noqa: BLE001
+            chk('W7 JS 행 (node 실행)', False, f'{type(e).__name__}: {e}')
     import mpm_lab_register as REG                         # 봉인 파일 — 읽기만 (고치지 않는다)
     data = {'mpm_metrics': {'step3': {'manifest': {'ptfe_stamp': 'face_alpha', 'ptfe_stamp_requested': 'face_alpha',
                                                    'ptfe_cells_observed': 0, 'vox_um': 0.15}}}}

@@ -792,8 +792,8 @@ def t_f14():
         ('면제 무시', '_exempt_mask', lambda ch, sa, sb, pa, pb: np.zeros(np.shape(sa), bool), _f12_check),
         ('판에 α', 'plate_coupling_factor', lambda fap, ii, jj, kk, side: FA._plate_alpha(fap, ii, jj, kk, side),
          _f17_check),
-        ('다른 채널 (이온 계획을 전자 도체로)', '_channel_cond', lambda ch, sg, sid: _orig_cond('electronic', te(), sid),
-         _f13_ion_check),
+        ('다른 채널 (이온 계획을 전자 도체로)', '_channel_cond',
+         lambda ch, sg, sid, lin=None: _orig_cond('electronic', te(), sid, lin), _f13_ion_check),
         ('절단 면을 가지치기에 안 넘김', 'cut_lin', lambda fap: tuple(np.zeros(0, np.int64) for _ in range(3)), t_f2),
     ]
     for nm, attr, val, fn in muts:
@@ -942,6 +942,45 @@ def t_contract():
     chk('C19 다른 sid 로 원장 읽기 → 거부', raises(lambda: FA.edges_ctx_from(r, np.where(sid == 5, 6, 5).astype(np.int8), ti())))
     r0 = solve(sid, ti(), H)
     chk('C20 끈 해 = 기록 · 원장 키 없음 (옛 반환 키 그대로)', 'face_alpha' not in r0 and '_face_alpha' not in r0, sorted(r0))
+    old_chunk = FA._FACE_CHUNK
+    try:
+        FA._FACE_CHUNK = 3
+        p3 = plan_of(sid, ti(), cap, H, 'ionic')
+    finally:
+        FA._FACE_CHUNK = old_chunk
+    chk('C21 면 묶음 크기 불변 (묶음 3 ↔ 기본) — 행 · α 바이트 같음', p3['fp_rows'] == p['fp_rows'] and plan_rows(p3) == plan_rows(p))
+    capt = dict(cap, A=np.asarray(cap['A']) + 0.01)
+    chk('C22 캡슐 기하 변조 (끝점 이동 · 지문 그대로) → 계획 입구 거부', raises(lambda: solve(sid, ti(), H, plan=dict(p, caps=capt))))
+
+    def iso_brute(cond, cuts):
+        shape = cond.shape
+        deg = np.zeros(shape, int)
+        dc = np.zeros(shape, int)
+        for ax in range(3):
+            sa = [slice(None)] * 3
+            sb = [slice(None)] * 3
+            sa[ax] = slice(0, -1)
+            sb[ax] = slice(1, None)
+            both = cond[tuple(sa)] & cond[tuple(sb)]
+            deg[tuple(sa)] += both
+            deg[tuple(sb)] += both
+            for lin in np.asarray(cuts[ax]).tolist():
+                c = np.unravel_index(lin, shape)
+                nb = list(c)
+                nb[ax] += 1
+                if cond[c] and cond[tuple(nb)]:
+                    dc[c] += 1
+                    dc[tuple(nb)] += 1
+        return int((cond & (deg > 0) & (deg == dc)).sum())
+    rng = np.random.default_rng(4)
+    okk = True
+    for _ in range(20):
+        cnd = rng.random((4, 3, 5)) < 0.7
+        cuts = tuple(np.flatnonzero((rng.random(cnd.shape) < 0.4).reshape(-1)
+                                    & (np.stack(np.unravel_index(np.arange(cnd.size), cnd.shape), -1)[:, a]
+                                       < cnd.shape[a] - 1)) for a in range(3))
+        okk &= FA.isolated_by_cut(cnd, cuts) == iso_brute(cnd, cuts)
+    chk('C23 isolated_by_cut (절단 면 주변만) = 격자 전체 무차별 계산 (무작위 20)', okk)
 
 
 @case('C-D 진단 거부 (E2) — je · 소산 분담 · |J| 점군 · Joule 은 face_alpha 해를 거부 (v0)')
@@ -1074,9 +1113,21 @@ def t_rc():
         '진단 상태 빠짐': lambda x: E(x).pop('diagnostics'),
         '계획 지문 ↔ 영수증 불일치': lambda x: E(x)['receipts']['electronic_main'].update(fp_plan='f' * 32),
         'ptfe_stamp off 인데 블록': lambda x: x.update(ptfe_stamp='off'),
+        #  소비자 쪽 조합 거부 = producer 거부의 짝 (payload 를 거치지 않은 매니페스트도 같은 판정)
+        'σ_PTFE > 0': lambda x: x.update(sigma_ptfe_S_cm=0.5),
+        'PTFE 차단 두께 > 0': lambda x: x.update(ptfe_block_um=0.2),
+        'PTFE 차단 범위 ion (두께 0)': lambda x: x.update(ptfe_block_scope='ion'),
+        '주기 xy': lambda x: x.update(periodic_xy=True),
+        '계면 표 (r1) 동시': lambda x: x.update(interface_model='r1'),
     }
     for nm, fn in bad.items():
         chk(f'R14 ca_ext_record_ok 거부 [{nm}]', not mut(fn))
+    m_noop = fa_manifest(channels=('ionic',), ionic_plan=False)
+    chk('R14b ca_ext_record_ok 거부 [이온만 요청 + 이온 솔브 끔 = 어디에도 안 걸림 (조용한 no-op)]',
+        not RC.ca_ext_record_ok(m_noop)[0], RC.ca_ext_record_ok(m_noop))
+    chk('R14c 전자만 요청 + 이온 솔브 끔 = 정상 (전자 주 솔브가 적용)',
+        RC.ca_ext_record_ok(fa_manifest(channels=('electronic',), ionic_plan=False)) == (True, None),
+        RC.ca_ext_record_ok(fa_manifest(channels=('electronic',), ionic_plan=False)))
     acct = RC.CLI_ACCOUNTING
     chk('R15 CLI 회계 — 새 플래그 = protocol_ext (ca_ext 칸 이름)', 'protocol_ext' in RC.CLI_CATEGORIES
         and acct.get('--step3-face-alpha-channel', (None,))[0] == 'protocol_ext'
@@ -1130,11 +1181,15 @@ LEAN2 = ['--no-step4', '--no-thermal', '--no-trackb', '--no-field', '--no-ion', 
 LEAN3 = [x for x in LEAN2 if x != '--no-ion']
 
 
-def run_payload(d, extra, out='p.json', payload=None):
+def run_payload(d, extra, out='p.json', payload=None, drop=()):
+    """`drop` = 기본 인자에서 뺄 플래그 (값과 함께 — 예: ('--phase',))."""
     pay = payload or os.path.join(SCRIPTS, 'mpm_webapp_payload.py')
-    cmd = [sys.executable, pay, '--scaffold', 'am.csv', '--se', 'se.npy', '--phase', 'phase.npy', '--fibre', 'fibre.npy',
-           '--fibre-dia', 'fibre_dia.npy', '--n-vox', '24', '--step3-vox', '1.0', '--step3-fibre-stamp', 'segment',
-           '--out', out, '--show-results', *extra]
+    base = ['--scaffold', 'am.csv', '--se', 'se.npy', '--phase', 'phase.npy', '--fibre', 'fibre.npy',
+            '--fibre-dia', 'fibre_dia.npy', '--n-vox', '24', '--step3-vox', '1.0', '--step3-fibre-stamp', 'segment']
+    for fl in drop:
+        i = base.index(fl)
+        del base[i:i + 2]
+    cmd = [sys.executable, pay, *base, '--out', out, '--show-results', *extra]
     r = subprocess.run(cmd, capture_output=True, text=True, timeout=900, cwd=d, stdin=subprocess.DEVNULL)
     log = (r.stdout or '') + (r.stderr or '')
     data = None
@@ -1166,6 +1221,8 @@ def t_payload():
             'SEGMENT (점 스탬프)': (FAL + LEAN2, ['--step3-fibre-stamp', 'point']),
             'SIGMA_PTFE': (FAL + LEAN2 + ['--sigma-ptfe', '0.5'], None),
             'PTFE_BLOCK': (FAL + LEAN2 + ['--step3-ptfe-block-um', '0.2'], None),
+            #  ★ PTFE_BLOCK_* 의 둘째 손잡이 — 범위만 바꿔도 (두께 0) 차단할 PTFE 셀이 없어 조용한 no-op
+            'PTFE_BLOCK (범위 ion · 두께 0)': (FAL + LEAN2 + ['--step3-ptfe-block-scope', 'ion'], None),
             'PERIODIC': (FAL + LEAN2 + ['--periodic'], None),
             'FIELD (LEAN 4)': (FAL + [x for x in LEAN2 if x != '--no-field'], None),
             'COLLECTOR': (FAL + [x for x in LEAN2 if x != '--no-collector'], None),
@@ -1177,6 +1234,8 @@ def t_payload():
             'STEP4_GRID': (FAL + LEAN2 + ['--save-step4-grid', 'g.npz'], None),
             'RINT': (FAL + LEAN2 + ['--step3-rint-e', 'AM_S|VGCF=1e-3'], None),
             'NO_STEP3': (FAL + LEAN2 + ['--no-step3'], None),
+            #  이온만 요청 + --no-ion (LEAN 2) = 계획이 어느 솔브에도 안 걸린다 (조용한 no-op)
+            'NOOP_CHANNEL (이온만 + --no-ion)': (FAL + LEAN2 + ['--step3-face-alpha-channel', 'ionic'], None),
             '채널 플래그만 (face_alpha 아님)': (['--ptfe-stamp', 'off'] + LEAN2 + ['--step3-face-alpha-channel', 'ionic'], None),
             '지름 법칙 플래그만 (face_alpha 아님)': (['--ptfe-stamp', 'off'] + LEAN2 + ['--step3-face-alpha-dia-law', 'rope'],
                                          None),
@@ -1188,6 +1247,9 @@ def t_payload():
             rc, log, _d = run_payload(d, ex, out=f'refuse_{i_r}.json')
             chk(f'P-거부 [{nm}] → rc ≠ 0 · 표지 S1_FACE_ALPHA_REFUSED', rc != 0 and 'S1_FACE_ALPHA_REFUSED' in log,
                 (rc, log.strip()[-160:]))
+        rc, log, _d = run_payload(d, FAL + LEAN2, out='refuse_nophase.json', drop=('--phase',))
+        chk('P-거부 [NO_PHASE (--phase 없음)] → rc ≠ 0 · 표지 S1_FACE_ALPHA_REFUSED|NO_PHASE',
+            rc != 0 and 'S1_FACE_ALPHA_REFUSED|NO_PHASE' in log, (rc, log.strip()[-160:]))
         rc_o, log_o, p_off = run_payload(d, ['--ptfe-stamp', 'off'] + LEAN2, out='off.json')
         rc_c, log_c, p_cl = run_payload(d, ['--ptfe-stamp', 'centerline'] + LEAN2, out='cl.json')
         rc_f, log_f, p_fa = run_payload(d, FAL + LEAN2, out='fa.json')
@@ -1258,6 +1320,10 @@ def t_payload():
         chk('P14 둘 다 (LEAN 3) — 이온 영수증 applied · 이온 소산 분담 None · ca_ext_record_ok',
             _r4 == 0 and (rb.get('ionic') or {}).get('status') == 'applied' and sb3.get('ion_dissipation_share') is None
             and RC.ca_ext_record_ok(sb3.get('manifest') or {}) == (True, None), (_r4, rb))
+        print(f"    보고 P (픽스처 · vox 1.0) σ_e off {so.get('sigma_e_eff_S_cm')!r} → face_alpha {sf.get('sigma_e_eff_S_cm')!r} · "
+              f"LEAN 3 σ_ion off {so3.get('sigma_ion_eff_S_cm')!r} → 이온만 {si3.get('sigma_ion_eff_S_cm')!r} · "
+              f"전자 행 {((ev.get('faces') or {}).get('electronic') or {}).get('n_rows')} · 캡슐 {ev.get('capsules')} · "
+              f"off 격자 PTFE 점 셀 {ev.get('off_grid_ptfe_point_cells')}")
         rc_t = subprocess.run([sys.executable, os.path.join(SCRIPTS, 'mpm_webapp_payload.py'), '--selftest-temperature'],
                               capture_output=True, text=True, timeout=300, cwd=td)
         chk('P15 payload --selftest-temperature (PTFE 규약 문자열 검사 포함) rc 0', rc_t.returncode == 0,
