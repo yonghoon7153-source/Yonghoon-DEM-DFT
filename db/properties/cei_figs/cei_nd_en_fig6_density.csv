@@ -1,0 +1,10 @@
+anion,quantity,li_only_mean,next_to_nd_mean,change_pct,n_li_only,n_next_to_nd
+S,electrons_e,7.68985,7.47035,-2.85,2,2
+S,volume_A3,42.1485,33.827,-19.74,2,2
+S,density_e_per_A3,0.18247,0.22114,21.19,2,2
+Cl,electrons_e,7.91333,7.83275,-1.02,14,2
+Cl,volume_A3,38.4425,32.613,-15.16,14,2
+Cl,density_e_per_A3,0.20611,0.24033,16.61,14,2
+O,electrons_e,7.8984,7.84995,-0.61,1,2
+O,volume_A3,21.944,19.6605,-10.41,1,2
+O,density_e_per_A3,0.35994,0.39984,11.09,1,2

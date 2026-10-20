@@ -1,0 +1,866 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Electrons Around Nd</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<meta name="description" content="Pauling electronegativity expectations set beside DFT Bader charges and bond-midpoint ELF for Nd in Nd/O-doped LPSCl1.6, written for the experimental first author.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans+KR:wght@400;600;700&display=swap">
+<style>
+:root{
+  /* Layout: one reading column (max 860px); figures sit in cards and scroll sideways on phones instead of shrinking */
+  --bg:#fcfbfd; --card:#ffffff; --ink:#1f2937; --ink-2:#374151; --mut:#6b7280; --line:#e9e4ee; --grid:#ebe8ef; --axis:#9ca3af;
+  --nd:#be185d; --nd-soft:#fdf2f8; --c-nd:#db2777; --c-ref:#94a3b8; --c-ref-strong:#64748b; --on-mark:#ffffff;
+  --ok:#0f766e; --ok-soft:#e7f5f2; --warn:#92400e; --warn-soft:#fdf6e3; --open:#57534e; --open-soft:#f1f0f4;
+  --font-sans:"IBM Plex Sans KR","IBM Plex Sans",system-ui,-apple-system,"Apple SD Gothic Neo","Malgun Gothic",sans-serif;
+  --font-mono:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#141118; --card:#1f1b24; --ink:#ece8f0; --ink-2:#d4cdd9; --mut:#a39cad; --line:#352e3c; --grid:#2d2733; --axis:#6b6475;
+    --nd:#f9a8d4; --nd-soft:#2e1a27; --c-nd:#f472b6; --c-ref:#6b7484; --c-ref-strong:#9aa3b1; --on-mark:#1f1b24;
+    --ok:#5eead4; --ok-soft:#12302b; --warn:#fcd34d; --warn-soft:#30260f; --open:#c9c2d1; --open-soft:#2a2530;
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#141118; --card:#1f1b24; --ink:#ece8f0; --ink-2:#d4cdd9; --mut:#a39cad; --line:#352e3c; --grid:#2d2733; --axis:#6b6475;
+  --nd:#f9a8d4; --nd-soft:#2e1a27; --c-nd:#f472b6; --c-ref:#6b7484; --c-ref-strong:#9aa3b1; --on-mark:#1f1b24;
+  --ok:#5eead4; --ok-soft:#12302b; --warn:#fcd34d; --warn-soft:#30260f; --open:#c9c2d1; --open-soft:#2a2530;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+body{margin:0;background:var(--bg);color:var(--ink);font:400 16px/1.75 var(--font-sans);-webkit-font-smoothing:antialiased}
+.wrap{max-width:860px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:40px 80px}
+.eyebrow{font:600 .74rem/1.4 var(--font-mono);letter-spacing:.06em;color:var(--nd);margin:0 0 10px}
+h1{font:700 2.05rem/1.25 var(--font-sans);margin:0 0 10px;letter-spacing:-.01em;text-wrap:balance}
+.sub{color:var(--ink-2);font-size:1.02rem;margin:0 0 18px}
+h2{font:700 1.28rem/1.4 var(--font-sans);margin:52px 0 12px;text-wrap:balance}
+h3{font:600 1rem/1.4 var(--font-sans);margin:0 0 6px}
+p,li{max-width:68ch}
+p{margin:0 0 12px}
+b,strong{font-weight:600}
+a{color:var(--nd)}
+.toc{display:flex;flex-wrap:wrap;gap:4px 16px;font-size:.86rem;margin:0}
+.toc a{color:var(--ink-2);text-decoration:none;border-bottom:1px solid var(--line)}
+.toc a:hover,.toc a:focus-visible{color:var(--nd);border-color:var(--nd)}
+.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:18px 20px;margin:16px 0}
+.answer{background:var(--nd-soft);border-color:transparent;margin-top:28px}
+.answer h2{margin:0 0 10px}
+.sum{margin:0;padding-left:1.3em;display:grid;gap:10px}
+.qlabel{font:600 .74rem/1.4 var(--font-mono);letter-spacing:.05em;color:var(--mut);margin:0 0 6px}
+.qhead{font-weight:600;margin:0 0 6px}
+.quote ol{margin:0;padding-left:1.3em;display:grid;gap:4px}
+.trio{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;margin:12px 0}
+.concept{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px 16px;min-width:0}
+.concept p{font-size:.94rem;margin:0}
+figure{margin:18px 0;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px 16px 12px;min-width:0}
+.chart{overflow-x:auto}
+.chart svg{display:block;width:100%;min-width:520px;max-width:780px;height:auto;margin:0 auto}
+.duo{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:14px}
+.duo svg{display:block;width:100%;max-width:380px;height:auto;margin:0 auto}
+.legend{display:flex;flex-wrap:wrap;gap:6px 18px;font-size:.84rem;color:var(--ink-2);margin:0 0 6px}
+.legend span{display:inline-flex;align-items:center;gap:7px}
+.sw{width:12px;height:12px;border-radius:3px;display:inline-block;flex:none}
+.sw-nd{background:var(--c-nd)}
+.sw-ref{background:var(--c-ref)}
+.sw-host{background:var(--c-ref-strong)}
+.sw-ring{background:var(--card);border:2px solid var(--c-ref-strong);border-radius:50%}
+.sw-dia{background:var(--c-nd);transform:rotate(45deg);border-radius:2px;width:10px;height:10px}
+figcaption{font-size:.84rem;line-height:1.6;color:var(--mut);margin-top:10px}
+figcaption b{color:var(--ink)}
+details.tv{margin-top:8px}
+details.tv summary{cursor:pointer;font-size:.82rem;color:var(--nd);width:max-content}
+.tablewrap{overflow-x:auto}
+table{border-collapse:collapse;font-size:.86rem;margin:8px 0;width:100%}
+th,td{border-bottom:1px solid var(--line);padding:6px 10px;text-align:left;vertical-align:top}
+th{font-weight:600;color:var(--ink-2);background:var(--bg)}
+td.n,th.n{text-align:right;font-variant-numeric:tabular-nums;font-family:var(--font-mono);white-space:nowrap}
+.claims td:first-child{font-weight:600;min-width:8.5em}
+.claims td:last-child{white-space:nowrap}
+.cmp td:first-child{white-space:nowrap;font-weight:600}
+.chip{display:inline-block;font:600 .72rem/1.6 var(--font-mono);padding:1px 8px;border-radius:999px;white-space:nowrap}
+.chip-ok{background:var(--ok-soft);color:var(--ok)}
+.chip-part{background:var(--warn-soft);color:var(--warn)}
+.chip-open{background:var(--open-soft);color:var(--open)}
+.note{font-size:.92rem;color:var(--ink-2)}
+.nb{margin:8px 0 14px;padding-left:1.3em;font-size:.95rem;display:grid;gap:4px}
+.ex{display:grid;gap:12px;margin:10px 0 0;padding-left:1.3em}
+.ex .en{display:block;font-size:.9rem;color:var(--ink-2);margin-top:3px}
+.dont{display:grid;gap:8px;padding-left:1.3em;margin:10px 0 0}
+dl.meth{display:grid;grid-template-columns:max-content 1fr;gap:8px 18px;font-size:.88rem;margin:12px 0 0}
+dl.meth dt{font-weight:600;color:var(--ink-2)}
+dl.meth dd{margin:0;min-width:0;overflow-wrap:anywhere}
+details.methods summary{cursor:pointer;font-weight:600}
+code{font-family:var(--font-mono);font-size:.84em;overflow-wrap:anywhere}
+footer{margin-top:48px;font-size:.8rem;color:var(--mut)}
+svg text{font-family:var(--font-sans);fill:var(--ink)}
+svg .tk{font:12px var(--font-mono);fill:var(--mut)}
+svg .lb{font-size:13.5px;fill:var(--ink)}
+svg .lb2{font:11.5px var(--font-mono);fill:var(--mut)}
+svg .hd{font-size:13px;font-weight:600;fill:var(--ink-2)}
+svg .sym{font-size:15px;font-weight:700;fill:var(--ink)}
+svg .val{font:12.5px var(--font-mono);fill:var(--ink)}
+svg .atxt{font-size:11.5px;font-weight:600;fill:var(--ink-2)}
+svg .on{font-size:13px;font-weight:700;fill:var(--on-mark)}
+svg .pilltxt{fill:var(--ink-2)}
+svg .ax{stroke:var(--grid);stroke-width:1}
+svg .ax0{stroke:var(--axis);stroke-width:1}
+svg .refline{stroke:var(--mut);stroke-width:1}
+svg .nd{fill:var(--c-nd)}
+svg .ref{fill:var(--c-ref)}
+svg .host{fill:var(--c-ref-strong)}
+svg .ringed{stroke:var(--card);stroke-width:2}
+svg .ring{fill:var(--card);stroke:var(--c-ref-strong);stroke-width:2}
+svg .dia{fill:var(--c-nd);stroke:var(--card);stroke-width:2}
+svg .err{stroke:var(--ink-2);stroke-width:1.5}
+svg .meanbar{stroke:var(--c-nd);stroke-width:2.5}
+svg .hitbox{fill:transparent}
+svg .hit{outline:none}
+svg .hit:hover .mk,svg .hit:focus-visible .mk{filter:brightness(1.1)}
+svg .hit:focus-visible .hitbox{fill:var(--nd-soft)}
+svg .bond{stroke:var(--c-ref);stroke-width:2.5}
+svg .atom-s{fill:var(--card);stroke:var(--c-ref-strong);stroke-width:1.8}
+svg .atom-c{fill:var(--c-ref-strong)}
+svg .atom-nd{fill:var(--c-nd)}
+svg .arrow{stroke:var(--mut);stroke-width:1.5;fill:none}
+svg .arrowhead{fill:var(--mut)}
+svg .pill-open{fill:var(--open-soft)}
+svg .pill-ok{fill:var(--nd-soft)}
+svg .curve-ref{stroke:var(--c-ref-strong);stroke-width:2;fill:none;stroke-linecap:round;stroke-linejoin:round}
+svg .curve-nd{stroke:var(--c-nd);stroke-width:2;fill:none;stroke-linecap:round;stroke-linejoin:round}
+#tip{position:fixed;z-index:30;pointer-events:none;background:var(--ink);color:var(--bg);padding:6px 10px;border-radius:6px;font:12px/1.45 var(--font-mono);max-width:300px;box-shadow:0 4px 14px rgba(0,0,0,.2)}
+#tip strong{display:block;font-weight:600}
+@media (max-width:560px){h1{font-size:1.72rem}.card{padding:16px}figure{padding:12px}dl.meth{grid-template-columns:1fr;gap:2px 0}dl.meth dd{margin-bottom:8px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+<p class="eyebrow">CEI · Nd/O 공도핑 LPSCl1.6 · 전자 배치 설명 · 2026-10-20</p>
+<h1>Nd 옆 전자는 어디에 있나</h1>
+<p class="sub">Pauling 전기음성도로 본 기대와 DFT 계산 (Bader 전하 · ELF) 을 나란히 놓았어요. 계산 모델은 LPSCl1.6 에 Nd₂O₃ 를 넣은 120 원자 셀 (Li₄₈Nd₂P₁₀O₃S₄₁Cl₁₆) 이고, Nd 는 Li 자리에 있어요.</p>
+<nav class="toc" aria-label="Sections"><a href="#summary">요약</a><a href="#q">질문</a><a href="#concepts">개념</a><a href="#pauling">Pauling 으로 보면</a><a href="#replace">무엇을 대신하나</a><a href="#bader">Bader 전하</a><a href="#density">밀도</a><a href="#elf">ELF</a><a href="#table">한 표로</a><a href="#write">원고에 옮길 때</a><a href="#open">아직 답하지 않은 것</a><a href="#methods">계산 조건</a></nav>
+</header>
+
+<section id="summary" class="card answer">
+<h2>요약</h2>
+<ol class="sum">
+<li><b>전기음성도로 보면 방향은 Nd 가 무엇을 대신하느냐로 정해져요.</b> Nd 가 P 자리에 들어가면 (Rietveld 모델) S 의 결합 상대가 P (χ 2.19) 에서 Nd (1.14) 로 바뀌어 S 가 전자를 더 받아요. Li 자리에 들어가면 (이번 DFT 모델) 상대가 Li (0.98) 에서 Nd 로 바뀌어 아주 조금 덜 받아요.</li>
+<li><b>이번에 계산한 Li 자리 모델은 전기음성도가 말하는 방향 그대로 나왔어요.</b> Nd 와 닿은 S²⁻ · Cl⁻ · PS₄ 단위는 Li 만 이웃한 같은 종류보다 0.08–0.22 e 덜 음전하이고, Nd 는 형식 전하 +3 가운데 65 % 만 내줬어요 (Li 는 88 %).</li>
+<li><b>Nd–음이온 결합은 주로 이온 결합이고, Li–음이온보다 공유성이 조금 더 있어요.</b> Nd–S 결합 가운데에는 P–S 같은 공유 전자쌍이 없어요 (결합 중점 ELF 0.47, P–S 0.94).</li>
+<li><b>이 페이지는 전자가 어디 있는지 보여 주는 묘사예요.</b> 이 물질이 안정한지, 곧 Nd 가 어느 자리에서 에너지가 낮은지와 분해되기 쉬운지는 에너지 계산이 따로 답하고, 아직 진행 중이에요.</li>
+</ol>
+</section>
+
+<section id="q">
+<h2>1저자가 정리한 질문</h2>
+<div class="card quote">
+<p class="qlabel">1저자 카톡 요지 · 2026-10-14</p>
+<p class="qhead">Nd/O 치환에 의해 전해질 격자 구조 내에서 전자 배치가 바뀐다</p>
+<ol>
+<li>P–S 결합보다 Nd–S 와 P–O 결합에서 모두 전자가 음이온에 더 많이 배치된다 (Pauling Nd 1.14 · P 2.19 · S 2.58 · O 3.44)</li>
+<li>전자 구름의 부피가 아닌 전자 구름의 밀도가 중요</li>
+<li>전해질 자체만 놓고 생각하기에 전기화학적 개념이 아님</li>
+<li>이온 결합보다 전자의 배치가 중요</li>
+</ol>
+</div>
+<p>주장마다 이번 계산으로 본 것을 먼저 짧게 적고, 아래에서 그림으로 하나씩 풀어요.</p>
+<div class="tablewrap"><table class="claims">
+<thead><tr><th>주장</th><th>짧은 답</th><th>그림</th></tr></thead>
+<tbody>
+<tr><td>전자 배치가 바뀐다</td><td>바뀌어요. Nd 와 닿은 음이온은 전자가 조금 적고 (0.08–0.22 e), Bader 영역이 15–20 % 작아요.</td><td>4 · 6</td></tr>
+<tr><td>1. Nd–S · P–O 에서 음이온 쪽 전자가 더</td><td>P–S 와 견주면 전기음성도로는 맞는 방향이에요. 다만 이번 모델의 Nd 는 Li 를 대신해서 Nd–S 의 비교 상대가 Li–S 이고, 그 비교에서는 조금 덜해요. 이 비교에서도 전기음성도와 DFT 는 같은 방향이에요. P 에 붙은 O 는 이 셀의 S²⁻ 보다 음전하가 커요.</td><td>2 · 3 · 4</td></tr>
+<tr><td>2. 부피가 아니라 밀도</td><td>Nd 옆 S²⁻ · Cl⁻ 의 전자 밀도가 17–21 % 높아요. 전자가 늘어서가 아니라 영역이 줄어서예요.</td><td>6</td></tr>
+<tr><td>3. 전기화학 개념이 아님</td><td>같은 생각이에요. 이 계산은 전해질 셀 하나의 바닥 상태만 봐요 (전압 · Li 출입 · 계면 없음).</td><td>—</td></tr>
+<tr><td>4. 이온 결합보다 전자 배치</td><td>전자 배치로 보면 Nd–음이온은 주로 이온 결합이고 Li–음이온보다 공유성이 조금 더 있어요. 이 묘사만으로 안정성을 말하지는 않아요.</td><td>5 · 7</td></tr>
+</tbody></table></div>
+</section>
+
+<section id="concepts">
+<h2>먼저 개념 세 가지</h2>
+<div class="trio">
+<div class="concept"><h3>전기음성도 χ (Pauling)</h3><p>원자가 결합 전자를 자기 쪽으로 끌어당기는 세기예요. 결합한 두 원자의 차 Δχ 가 클수록 전자가 χ 가 큰 쪽 (음이온) 으로 더 쏠려요. Δχ 가 작으면 전자를 나눠 갖는 공유 결합에, 크면 이온 결합에 가까워요.</p></div>
+<div class="concept"><h3>Bader 전하</h3><p>계산한 전자 밀도를 원자마다 나눠서 (밀도가 가장 옅은 골짜기 면이 경계) 각 원자 몫의 전자를 센 값이에요. + 는 전자를 내준 것, − 는 받은 것이에요. 형식 전하 (Li⁺ = +1, S²⁻ = −2) 보다 작게 나오는 게 보통이라, 같은 계산 안에서 원자끼리 견줄 때 의미가 있어요.</p></div>
+<div class="concept"><h3>ELF (전자 국재 함수)</h3><p>전자쌍이 한 곳에 모여 있는 정도를 0–1 로 나타내요. 공유 결합이면 두 원자 사이 가운데에 전자쌍이 있어서 결합 중점 값이 높고 (0.9 안팎), 이온 결합이면 전자가 음이온에 붙어 있어 중점 값이 낮아요.</p></div>
+</div>
+<figure><div class="legend"><span><i class="sw sw-host"></i>Shared pair</span><span><i class="sw sw-nd"></i>Ionic</span></div><div class="chart"><svg viewBox="0 0 640 214" role="img" aria-label="Schematic, not data. ELF along a bond from cation to anion. A shared pair gives a high value at the midpoint; in an ionic bond the electrons sit on the anion and the midpoint value is low." xmlns="http://www.w3.org/2000/svg">
+<title>Schematic, not data. ELF along a bond from cation to anion. A shared pair gives a high value at the midpoint; in an ionic bond the electrons sit on the anion and the midpoint value is low.</title>
+<line class="ax0" x1="64" y1="164.0" x2="600" y2="164.0"/><text class="tk" x="54" y="168.0" text-anchor="end">0</text>
+<line class="ax" x1="64" y1="99.0" x2="600" y2="99.0"/><text class="tk" x="54" y="103.0" text-anchor="end">0.5</text>
+<line class="ax" x1="64" y1="34.0" x2="600" y2="34.0"/><text class="tk" x="54" y="38.0" text-anchor="end">1</text>
+<text class="tk" x="54" y="20" text-anchor="end">ELF</text>
+<line class="refline" x1="332.0" y1="26" x2="332.0" y2="164"/><text class="tk" x="338.0" y="24">bond midpoint</text>
+<path class="curve-ref" d="M64.0,148.2 L67.3,148.2 L70.7,148.1 L74.0,148.1 L77.4,148.0 L80.8,148.0 L84.1,147.9 L87.5,147.8 L90.8,147.7 L94.2,147.6 L97.5,147.5 L100.8,147.4 L104.2,147.3 L107.6,147.1 L110.9,146.9 L114.2,146.7 L117.6,146.5 L120.9,146.2 L124.3,146.0 L127.7,145.7 L131.0,145.3 L134.4,144.9 L137.7,144.5 L141.1,144.0 L144.4,143.5 L147.8,143.0 L151.1,142.4 L154.4,141.7 L157.8,141.0 L161.1,140.2 L164.5,139.3 L167.9,138.4 L171.2,137.4 L174.6,136.4 L177.9,135.2 L181.2,134.0 L184.6,132.7 L187.9,131.3 L191.3,129.8 L194.7,128.3 L198.0,126.6 L201.3,124.9 L204.7,123.0 L208.0,121.1 L211.4,119.1 L214.8,117.0 L218.1,114.8 L221.5,112.5 L224.8,110.1 L228.2,107.7 L231.5,105.2 L234.8,102.7 L238.2,100.0 L241.5,97.4 L244.9,94.7 L248.2,91.9 L251.6,89.1 L255.0,86.4 L258.3,83.6 L261.6,80.8 L265.0,78.0 L268.4,75.3 L271.7,72.6 L275.0,70.0 L278.4,67.4 L281.8,64.9 L285.1,62.5 L288.5,60.2 L291.8,58.0 L295.1,56.0 L298.5,54.1 L301.9,52.3 L305.2,50.7 L308.5,49.3 L311.9,48.0 L315.2,46.9 L318.6,46.0 L321.9,45.3 L325.3,44.8 L328.7,44.5 L332.0,44.4 L335.3,44.5 L338.7,44.8 L342.1,45.3 L345.4,46.0 L348.8,46.9 L352.1,48.0 L355.4,49.3 L358.8,50.7 L362.2,52.3 L365.5,54.1 L368.8,56.0 L372.2,58.0 L375.6,60.2 L378.9,62.5 L382.2,64.9 L385.6,67.4 L388.9,70.0 L392.3,72.6 L395.7,75.3 L399.0,78.0 L402.3,80.8 L405.7,83.6 L409.1,86.4 L412.4,89.1 L415.8,91.9 L419.1,94.7 L422.4,97.4 L425.8,100.0 L429.2,102.7 L432.5,105.2 L435.8,107.7 L439.2,110.1 L442.6,112.5 L445.9,114.8 L449.2,117.0 L452.6,119.1 L455.9,121.1 L459.3,123.0 L462.7,124.9 L466.0,126.6 L469.3,128.3 L472.7,129.8 L476.1,131.3 L479.4,132.7 L482.8,134.0 L486.1,135.2 L489.4,136.4 L492.8,137.4 L496.2,138.4 L499.5,139.3 L502.8,140.2 L506.2,141.0 L509.6,141.7 L512.9,142.4 L516.2,143.0 L519.6,143.5 L523.0,144.0 L526.3,144.5 L529.7,144.9 L533.0,145.3 L536.3,145.7 L539.7,146.0 L543.0,146.2 L546.4,146.5 L549.8,146.7 L553.1,146.9 L556.5,147.1 L559.8,147.3 L563.2,147.4 L566.5,147.5 L569.8,147.6 L573.2,147.7 L576.6,147.8 L579.9,147.9 L583.2,148.0 L586.6,148.0 L589.9,148.1 L593.3,148.1 L596.6,148.2 L600.0,148.2"/><path class="curve-nd" d="M64.0,153.6 L67.3,153.6 L70.7,153.6 L74.0,153.6 L77.4,153.6 L80.8,153.6 L84.1,153.6 L87.5,153.6 L90.8,153.6 L94.2,153.6 L97.5,153.6 L100.8,153.6 L104.2,153.6 L107.6,153.6 L110.9,153.6 L114.2,153.5 L117.6,153.5 L120.9,153.5 L124.3,153.5 L127.7,153.5 L131.0,153.5 L134.4,153.5 L137.7,153.5 L141.1,153.4 L144.4,153.4 L147.8,153.4 L151.1,153.4 L154.4,153.3 L157.8,153.3 L161.1,153.3 L164.5,153.2 L167.9,153.2 L171.2,153.1 L174.6,153.1 L177.9,153.0 L181.2,152.9 L184.6,152.8 L187.9,152.8 L191.3,152.7 L194.7,152.6 L198.0,152.4 L201.3,152.3 L204.7,152.2 L208.0,152.0 L211.4,151.8 L214.8,151.7 L218.1,151.5 L221.5,151.2 L224.8,151.0 L228.2,150.7 L231.5,150.4 L234.8,150.1 L238.2,149.8 L241.5,149.5 L244.9,149.1 L248.2,148.7 L251.6,148.2 L255.0,147.7 L258.3,147.2 L261.6,146.7 L265.0,146.1 L268.4,145.4 L271.7,144.8 L275.0,144.0 L278.4,143.3 L281.8,142.5 L285.1,141.6 L288.5,140.7 L291.8,139.8 L295.1,138.7 L298.5,137.7 L301.9,136.6 L305.2,135.4 L308.5,134.2 L311.9,132.9 L315.2,131.5 L318.6,130.1 L321.9,128.7 L325.3,127.1 L328.7,125.6 L332.0,123.9 L335.3,122.2 L338.7,120.5 L342.1,118.7 L345.4,116.9 L348.8,115.0 L352.1,113.0 L355.4,111.0 L358.8,109.0 L362.2,106.9 L365.5,104.8 L368.8,102.7 L372.2,100.5 L375.6,98.3 L378.9,96.1 L382.2,93.9 L385.6,91.7 L388.9,89.4 L392.3,87.2 L395.7,85.0 L399.0,82.8 L402.3,80.6 L405.7,78.4 L409.1,76.3 L412.4,74.2 L415.8,72.2 L419.1,70.2 L422.4,68.3 L425.8,66.4 L429.2,64.6 L432.5,62.9 L435.8,61.3 L439.2,59.7 L442.6,58.3 L445.9,56.9 L449.2,55.7 L452.6,54.5 L455.9,53.5 L459.3,52.6 L462.7,51.8 L466.0,51.1 L469.3,50.5 L472.7,50.1 L476.1,49.8 L479.4,49.6 L482.8,49.6 L486.1,49.7 L489.4,49.9 L492.8,50.3 L496.2,50.7 L499.5,51.3 L502.8,52.1 L506.2,52.9 L509.6,53.9 L512.9,55.0 L516.2,56.1 L519.6,57.4 L523.0,58.8 L526.3,60.3 L529.7,61.9 L533.0,63.6 L536.3,65.3 L539.7,67.2 L543.0,69.0 L546.4,71.0 L549.8,73.0 L553.1,75.1 L556.5,77.2 L559.8,79.3 L563.2,81.5 L566.5,83.7 L569.8,85.9 L573.2,88.1 L576.6,90.3 L579.9,92.6 L583.2,94.8 L586.6,97.0 L589.9,99.2 L593.3,101.4 L596.6,103.5 L600.0,105.7"/>
+<circle class="mk host ringed" cx="332.0" cy="44.4" r="5"/>
+<circle class="mk nd ringed" cx="332.0" cy="123.9" r="5"/>
+<text class="lb" x="224.8" y="40.5" text-anchor="end">shared pair (P–S type)</text>
+<text class="lb" x="482.1" y="37.6" text-anchor="middle">ionic (Nd–S type)</text>
+<circle class="atom-c" cx="64" cy="190" r="9"/><text class="lb2" x="80" y="194">cation</text><circle class="atom-s" cx="600" cy="190" r="9"/><text class="lb2" x="584" y="194" text-anchor="end">anion</text>
+</svg></div><figcaption><b>Schematic, not data.</b> ELF along a bond from a cation (left) to an anion (right). A shared electron pair gives a high value at the bond midpoint (P–S type). In an ionic bond the electrons sit on the anion and the midpoint value is low (Nd–S type).</figcaption></figure>
+</section>
+
+<section id="pauling">
+<h2>Pauling 전기음성도로 보면</h2>
+<p>1저자가 쓴 값 (Nd 1.14 · P 2.19 · S 2.58 · O 3.44) 에 같은 Pauling 표의 Li 0.98 · Cl 3.16 를 더해 한 줄에 놓았어요. Nd 는 Li 바로 옆에 있고 P 와는 멀어요.</p>
+<figure><div class="legend"><span><i class="sw sw-nd"></i>Nd</span><span><i class="sw sw-host"></i>Cations that Nd can replace (Li, P)</span><span><i class="sw sw-ring"></i>Anions</span></div><div class="chart"><svg viewBox="0 0 640 168" role="img" aria-label="Pauling electronegativity of Li, Nd, P, S, Cl and O on one line. Nd at 1.14 sits next to Li at 0.98 and far below P at 2.19." xmlns="http://www.w3.org/2000/svg">
+<title>Pauling electronegativity of Li, Nd, P, S, Cl and O on one line. Nd at 1.14 sits next to Li at 0.98 and far below P at 2.19.</title>
+<line class="ax0" x1="40" y1="98" x2="600" y2="98"/>
+<line class="ax0" x1="80.0" y1="94" x2="80.0" y2="102"/>
+<line class="ax0" x1="180.0" y1="94" x2="180.0" y2="102"/>
+<line class="ax0" x1="280.0" y1="94" x2="280.0" y2="102"/>
+<line class="ax0" x1="380.0" y1="94" x2="380.0" y2="102"/>
+<line class="ax0" x1="480.0" y1="94" x2="480.0" y2="102"/>
+<line class="ax0" x1="580.0" y1="94" x2="580.0" y2="102"/>
+<text class="tk" x="600" y="160" text-anchor="end">Pauling electronegativity χ (ticks every 0.5)</text>
+<path class="arrow" d="M76.0,50 V44 H108.0 V50"/>
+<text class="val" x="92.0" y="37" text-anchor="middle">Δχ 0.16</text>
+<path class="arrow" d="M108.0,50 V44 H318.0 V50"/>
+<text class="val" x="213.0" y="37" text-anchor="middle">Δχ 1.05</text>
+<g class="hit" tabindex="0" role="img" aria-label="Li (Pauling), χ = 0.98" data-v="χ = 0.98" data-l="Li (Pauling)">
+<circle class="hitbox" cx="76.0" cy="98" r="14"/><circle class="mk host" cx="76.0" cy="98" r="8"/></g>
+<text class="sym" x="76.0" y="80" text-anchor="middle">Li</text>
+<text class="val" x="76.0" y="124" text-anchor="middle">0.98</text>
+<g class="hit" tabindex="0" role="img" aria-label="Nd (Pauling), χ = 1.14" data-v="χ = 1.14" data-l="Nd (Pauling)">
+<circle class="hitbox" cx="108.0" cy="98" r="14"/><circle class="mk nd" cx="108.0" cy="98" r="8"/></g>
+<text class="sym" x="108.0" y="80" text-anchor="middle">Nd</text>
+<text class="val" x="108.0" y="139" text-anchor="middle">1.14</text>
+<g class="hit" tabindex="0" role="img" aria-label="P (Pauling), χ = 2.19" data-v="χ = 2.19" data-l="P (Pauling)">
+<circle class="hitbox" cx="318.0" cy="98" r="14"/><circle class="mk host" cx="318.0" cy="98" r="8"/></g>
+<text class="sym" x="318.0" y="80" text-anchor="middle">P</text>
+<text class="val" x="318.0" y="124" text-anchor="middle">2.19</text>
+<g class="hit" tabindex="0" role="img" aria-label="S (Pauling), χ = 2.58" data-v="χ = 2.58" data-l="S (Pauling)">
+<circle class="hitbox" cx="396.0" cy="98" r="14"/><circle class="mk ring" cx="396.0" cy="98" r="7"/></g>
+<text class="sym" x="396.0" y="80" text-anchor="middle">S</text>
+<text class="val" x="396.0" y="124" text-anchor="middle">2.58</text>
+<g class="hit" tabindex="0" role="img" aria-label="Cl (Pauling), χ = 3.16" data-v="χ = 3.16" data-l="Cl (Pauling)">
+<circle class="hitbox" cx="512.0" cy="98" r="14"/><circle class="mk ring" cx="512.0" cy="98" r="7"/></g>
+<text class="sym" x="512.0" y="80" text-anchor="middle">Cl</text>
+<text class="val" x="512.0" y="124" text-anchor="middle">3.16</text>
+<g class="hit" tabindex="0" role="img" aria-label="O (Pauling), χ = 3.44" data-v="χ = 3.44" data-l="O (Pauling)">
+<circle class="hitbox" cx="568.0" cy="98" r="14"/><circle class="mk ring" cx="568.0" cy="98" r="7"/></g>
+<text class="sym" x="568.0" y="80" text-anchor="middle">O</text>
+<text class="val" x="568.0" y="124" text-anchor="middle">3.44</text>
+</svg></div><figcaption><b>Fig. 1. Pauling electronegativity of the six elements in the cell.</b> Nd (1.14) sits next to Li (0.98) and far below P (2.19). The values for Nd, P, S, and O are the ones in the first author's message; Li and Cl come from the same standard table.</figcaption><details class="tv"><summary>Table view</summary><div class="tablewrap"><table><thead><tr><th>Element</th><th class="n">χ (Pauling)</th><th>Role here</th><th>Source</th></tr></thead><tbody><tr><td>Li</td><td class="n">0.98</td><td>cation (Nd site in this model)</td><td>same standard table</td></tr><tr><td>Nd</td><td class="n">1.14</td><td>dopant</td><td>first author&#x27;s message</td></tr><tr><td>P</td><td class="n">2.19</td><td>cation (Nd site in the Rietveld model)</td><td>first author&#x27;s message</td></tr><tr><td>S</td><td class="n">2.58</td><td>anion</td><td>first author&#x27;s message</td></tr><tr><td>Cl</td><td class="n">3.16</td><td>anion</td><td>same standard table</td></tr><tr><td>O</td><td class="n">3.44</td><td>anion</td><td>first author&#x27;s message</td></tr></tbody></table></div></details></figure>
+<p>결합 하나의 극성은 두 원자의 차 Δχ 로 봐요. 아래는 이 셀에 있는 결합들의 Δχ 예요.</p>
+<figure><div class="legend"><span><i class="sw sw-nd"></i>Bonds to Nd</span><span><i class="sw sw-ref"></i>Other bonds in the cell</span></div><div class="chart"><svg viewBox="0 0 640 434" role="img" aria-label="Electronegativity difference for each bond type in the cell, grouped by anion. Bonds to Nd highlighted." xmlns="http://www.w3.org/2000/svg">
+<title>Electronegativity difference for each bond type in the cell, grouped by anion. Bonds to Nd highlighted.</title>
+<line class="ax0" x1="150.0" y1="62" x2="150.0" y2="96"/>
+<line class="ax0" x1="150.0" y1="96" x2="150.0" y2="130"/>
+<line class="ax0" x1="150.0" y1="130" x2="150.0" y2="164"/>
+<line class="ax0" x1="150.0" y1="192" x2="150.0" y2="226"/>
+<line class="ax0" x1="150.0" y1="226" x2="150.0" y2="260"/>
+<line class="ax0" x1="150.0" y1="260" x2="150.0" y2="294"/>
+<line class="ax0" x1="150.0" y1="322" x2="150.0" y2="356"/>
+<line class="ax0" x1="150.0" y1="356" x2="150.0" y2="390"/>
+<text class="tk" x="150.0" y="408" text-anchor="middle">0.0</text>
+<line class="ax" x1="231.5" y1="62" x2="231.5" y2="96"/>
+<line class="ax" x1="231.5" y1="96" x2="231.5" y2="130"/>
+<line class="ax" x1="231.5" y1="130" x2="231.5" y2="164"/>
+<line class="ax" x1="231.5" y1="192" x2="231.5" y2="226"/>
+<line class="ax" x1="231.5" y1="226" x2="231.5" y2="260"/>
+<line class="ax" x1="231.5" y1="260" x2="231.5" y2="294"/>
+<line class="ax" x1="231.5" y1="322" x2="231.5" y2="356"/>
+<line class="ax" x1="231.5" y1="356" x2="231.5" y2="390"/>
+<text class="tk" x="231.5" y="408" text-anchor="middle">0.5</text>
+<line class="ax" x1="313.1" y1="62" x2="313.1" y2="96"/>
+<line class="ax" x1="313.1" y1="96" x2="313.1" y2="130"/>
+<line class="ax" x1="313.1" y1="130" x2="313.1" y2="164"/>
+<line class="ax" x1="313.1" y1="192" x2="313.1" y2="226"/>
+<line class="ax" x1="313.1" y1="226" x2="313.1" y2="260"/>
+<line class="ax" x1="313.1" y1="260" x2="313.1" y2="294"/>
+<line class="ax" x1="313.1" y1="322" x2="313.1" y2="356"/>
+<line class="ax" x1="313.1" y1="356" x2="313.1" y2="390"/>
+<text class="tk" x="313.1" y="408" text-anchor="middle">1.0</text>
+<line class="ax" x1="394.6" y1="62" x2="394.6" y2="96"/>
+<line class="ax" x1="394.6" y1="96" x2="394.6" y2="130"/>
+<line class="ax" x1="394.6" y1="130" x2="394.6" y2="164"/>
+<line class="ax" x1="394.6" y1="192" x2="394.6" y2="226"/>
+<line class="ax" x1="394.6" y1="226" x2="394.6" y2="260"/>
+<line class="ax" x1="394.6" y1="260" x2="394.6" y2="294"/>
+<line class="ax" x1="394.6" y1="322" x2="394.6" y2="356"/>
+<line class="ax" x1="394.6" y1="356" x2="394.6" y2="390"/>
+<text class="tk" x="394.6" y="408" text-anchor="middle">1.5</text>
+<line class="ax" x1="476.2" y1="62" x2="476.2" y2="96"/>
+<line class="ax" x1="476.2" y1="96" x2="476.2" y2="130"/>
+<line class="ax" x1="476.2" y1="130" x2="476.2" y2="164"/>
+<line class="ax" x1="476.2" y1="192" x2="476.2" y2="226"/>
+<line class="ax" x1="476.2" y1="226" x2="476.2" y2="260"/>
+<line class="ax" x1="476.2" y1="260" x2="476.2" y2="294"/>
+<line class="ax" x1="476.2" y1="322" x2="476.2" y2="356"/>
+<line class="ax" x1="476.2" y1="356" x2="476.2" y2="390"/>
+<text class="tk" x="476.2" y="408" text-anchor="middle">2.0</text>
+<line class="ax" x1="557.7" y1="62" x2="557.7" y2="96"/>
+<line class="ax" x1="557.7" y1="96" x2="557.7" y2="130"/>
+<line class="ax" x1="557.7" y1="130" x2="557.7" y2="164"/>
+<line class="ax" x1="557.7" y1="192" x2="557.7" y2="226"/>
+<line class="ax" x1="557.7" y1="226" x2="557.7" y2="260"/>
+<line class="ax" x1="557.7" y1="260" x2="557.7" y2="294"/>
+<line class="ax" x1="557.7" y1="322" x2="557.7" y2="356"/>
+<line class="ax" x1="557.7" y1="356" x2="557.7" y2="390"/>
+<text class="tk" x="557.7" y="408" text-anchor="middle">2.5</text>
+<text class="tk" x="362.0" y="428" text-anchor="middle">Δχ (Pauling), larger = electrons sit more on the anion</text>
+<text class="hd" x="2" y="53">Bonds to S²⁻</text>
+<text class="lb" x="138" y="83.5" text-anchor="end">P–S</text>
+<g class="hit" tabindex="0" role="img" aria-label="P–S (P 2.19, S 2.58), Δχ = 0.39" data-v="Δχ = 0.39" data-l="P–S (P 2.19, S 2.58)">
+<rect class="hitbox" x="150" y="62" width="424" height="34"/>
+<path class="mk ref" d="M150.0,73.0H209.6Q213.6,73.0 213.6,77.0V81.0Q213.6,85.0 209.6,85.0H150.0Z"/>
+</g>
+<text class="val" x="220.6" y="83.5">0.39</text>
+<text class="lb" x="138" y="117.5" text-anchor="end">Nd–S</text>
+<g class="hit" tabindex="0" role="img" aria-label="Nd–S (Nd 1.14, S 2.58), Δχ = 1.44" data-v="Δχ = 1.44" data-l="Nd–S (Nd 1.14, S 2.58)">
+<rect class="hitbox" x="150" y="96" width="424" height="34"/>
+<path class="mk nd" d="M150.0,107.0H380.8Q384.8,107.0 384.8,111.0V115.0Q384.8,119.0 380.8,119.0H150.0Z"/>
+</g>
+<text class="val" x="391.8" y="117.5">1.44</text>
+<text class="lb" x="138" y="151.5" text-anchor="end">Li–S</text>
+<g class="hit" tabindex="0" role="img" aria-label="Li–S (Li 0.98, S 2.58), Δχ = 1.60" data-v="Δχ = 1.60" data-l="Li–S (Li 0.98, S 2.58)">
+<rect class="hitbox" x="150" y="130" width="424" height="34"/>
+<path class="mk ref" d="M150.0,141.0H406.9Q410.9,141.0 410.9,145.0V149.0Q410.9,153.0 406.9,153.0H150.0Z"/>
+</g>
+<text class="val" x="417.9" y="151.5">1.60</text>
+<text class="hd" x="2" y="183">Bonds to O²⁻</text>
+<text class="lb" x="138" y="213.5" text-anchor="end">P–O</text>
+<g class="hit" tabindex="0" role="img" aria-label="P–O (P 2.19, O 3.44), Δχ = 1.25" data-v="Δχ = 1.25" data-l="P–O (P 2.19, O 3.44)">
+<rect class="hitbox" x="150" y="192" width="424" height="34"/>
+<path class="mk ref" d="M150.0,203.0H349.8Q353.8,203.0 353.8,207.0V211.0Q353.8,215.0 349.8,215.0H150.0Z"/>
+</g>
+<text class="val" x="360.8" y="213.5">1.25</text>
+<text class="lb" x="138" y="247.5" text-anchor="end">Nd–O</text>
+<g class="hit" tabindex="0" role="img" aria-label="Nd–O (Nd 1.14, O 3.44), Δχ = 2.30" data-v="Δχ = 2.30" data-l="Nd–O (Nd 1.14, O 3.44)">
+<rect class="hitbox" x="150" y="226" width="424" height="34"/>
+<path class="mk nd" d="M150.0,237.0H521.1Q525.1,237.0 525.1,241.0V245.0Q525.1,249.0 521.1,249.0H150.0Z"/>
+</g>
+<text class="val" x="532.1" y="247.5">2.30</text>
+<text class="lb" x="138" y="281.5" text-anchor="end">Li–O</text>
+<g class="hit" tabindex="0" role="img" aria-label="Li–O (Li 0.98, O 3.44), Δχ = 2.46" data-v="Δχ = 2.46" data-l="Li–O (Li 0.98, O 3.44)">
+<rect class="hitbox" x="150" y="260" width="424" height="34"/>
+<path class="mk ref" d="M150.0,271.0H547.2Q551.2,271.0 551.2,275.0V279.0Q551.2,283.0 547.2,283.0H150.0Z"/>
+</g>
+<text class="val" x="558.2" y="281.5">2.46</text>
+<text class="hd" x="2" y="313">Bonds to Cl⁻</text>
+<text class="lb" x="138" y="343.5" text-anchor="end">Nd–Cl</text>
+<g class="hit" tabindex="0" role="img" aria-label="Nd–Cl (Nd 1.14, Cl 3.16), Δχ = 2.02" data-v="Δχ = 2.02" data-l="Nd–Cl (Nd 1.14, Cl 3.16)">
+<rect class="hitbox" x="150" y="322" width="424" height="34"/>
+<path class="mk nd" d="M150.0,333.0H475.4Q479.4,333.0 479.4,337.0V341.0Q479.4,345.0 475.4,345.0H150.0Z"/>
+</g>
+<text class="val" x="486.4" y="343.5">2.02</text>
+<text class="lb" x="138" y="377.5" text-anchor="end">Li–Cl</text>
+<g class="hit" tabindex="0" role="img" aria-label="Li–Cl (Li 0.98, Cl 3.16), Δχ = 2.18" data-v="Δχ = 2.18" data-l="Li–Cl (Li 0.98, Cl 3.16)">
+<rect class="hitbox" x="150" y="356" width="424" height="34"/>
+<path class="mk ref" d="M150.0,367.0H501.5Q505.5,367.0 505.5,371.0V375.0Q505.5,379.0 501.5,379.0H150.0Z"/>
+</g>
+<text class="val" x="512.5" y="377.5">2.18</text>
+</svg></div><figcaption><b>Fig. 2. Electronegativity difference Δχ for each bond type in the cell, grouped by anion.</b> A larger Δχ means the bonding electrons sit more on the anion. Bonds to Nd are highlighted. For S, Nd–S (1.44) lies far above P–S (0.39) and just below Li–S (1.60).</figcaption><details class="tv"><summary>Table view</summary><div class="tablewrap"><table><thead><tr><th>Bond</th><th class="n">Δχ</th><th class="n">Pauling ionic character (%)</th><th>Note</th></tr></thead><tbody><tr><td>P–S</td><td class="n">0.39</td><td class="n">3.7</td><td>1 − exp(−Δχ²/4); used for ordering only</td></tr><tr><td>Nd–S</td><td class="n">1.44</td><td class="n">40.5</td><td>1 − exp(−Δχ²/4); used for ordering only</td></tr><tr><td>Li–S</td><td class="n">1.60</td><td class="n">47.3</td><td>1 − exp(−Δχ²/4); used for ordering only</td></tr><tr><td>P–O</td><td class="n">1.25</td><td class="n">32.3</td><td>1 − exp(−Δχ²/4); used for ordering only</td></tr><tr><td>Nd–O</td><td class="n">2.30</td><td class="n">73.4</td><td>1 − exp(−Δχ²/4); used for ordering only</td></tr><tr><td>Li–O</td><td class="n">2.46</td><td class="n">78.0</td><td>1 − exp(−Δχ²/4); used for ordering only</td></tr><tr><td>Nd–Cl</td><td class="n">2.02</td><td class="n">63.9</td><td>1 − exp(−Δχ²/4); used for ordering only</td></tr><tr><td>Li–Cl</td><td class="n">2.18</td><td class="n">69.5</td><td>1 − exp(−Δχ²/4); used for ordering only</td></tr></tbody></table></div></details></figure>
+<p>1저자 1 번 주장은 이 그림에서 바로 나와요. P–S 의 Δχ 는 0.39, P–O 는 1.25, Nd–S 는 1.44 라서 셋 가운데 P–S 결합의 전자가 음이온 쪽으로 가장 덜 쏠려요.</p>
+<p class="note">Pauling 은 Δχ 로 이온성 퍼센트 (percent ionic character) 를 어림하는 식 1 − e<sup>−Δχ²/4</sup> 도 줬어요. 그림 2 의 표 보기에 같이 적었지만, 이 % 를 그대로 읽으면 Li₂S 의 Li–S 도 47 % 로 절반만 이온성이 돼요. 그래서 여기서는 결합끼리 순서를 보는 데만 써요.</p>
+</section>
+
+<section id="replace">
+<h2>방향은 Nd 가 대신하는 원자가 정해요</h2>
+<p>Nd 가 들어가면 원래 그 자리에 있던 원자 대신 Nd 가 음이온과 결합해요. 그래서 음이온 쪽 전자가 늘었는지는 Nd–S 를 무엇과 견주느냐에 달려 있어요.</p>
+<figure><div class="duo"><svg viewBox="0 0 300 262" role="img" aria-label="(a) Nd on the P site. Rietveld model (4b). S bonds to Nd instead of P. Δχ 0.39 → 1.44 (larger). S expected to gain electrons. Not computed yet." xmlns="http://www.w3.org/2000/svg">
+<title>(a) Nd on the P site. Rietveld model (4b). S bonds to Nd instead of P. Δχ 0.39 → 1.44 (larger). S expected to gain electrons. Not computed yet.</title>
+<text class="hd" x="150" y="20" text-anchor="middle">(a) Nd on the P site</text>
+<text class="lb2" x="150" y="37" text-anchor="middle">Rietveld model (4b)</text>
+<line class="bond" x1="68.0" y1="106.0" x2="100.5" y2="138.5"/>
+<line class="bond" x1="68.0" y1="106.0" x2="35.5" y2="138.5"/>
+<line class="bond" x1="68.0" y1="106.0" x2="35.5" y2="73.5"/>
+<line class="bond" x1="68.0" y1="106.0" x2="100.5" y2="73.5"/>
+<circle class="atom-s" cx="100.5" cy="138.5" r="12"/><text class="atxt" x="100.5" y="143.0" text-anchor="middle">S</text>
+<circle class="atom-s" cx="35.5" cy="138.5" r="12"/><text class="atxt" x="35.5" y="143.0" text-anchor="middle">S</text>
+<circle class="atom-s" cx="35.5" cy="73.5" r="12"/><text class="atxt" x="35.5" y="78.0" text-anchor="middle">S</text>
+<circle class="atom-s" cx="100.5" cy="73.5" r="12"/><text class="atxt" x="100.5" y="78.0" text-anchor="middle">S</text>
+<circle class="atom-c" cx="68" cy="106" r="17"/><text class="on" x="68" y="111" text-anchor="middle">P</text>
+<path class="arrow" d="M124,106 H170"/><path class="arrowhead" d="M178,106 L168,100 L168,112 Z"/>
+<line class="bond" x1="232.0" y1="106.0" x2="264.5" y2="138.5"/>
+<line class="bond" x1="232.0" y1="106.0" x2="199.5" y2="138.5"/>
+<line class="bond" x1="232.0" y1="106.0" x2="199.5" y2="73.5"/>
+<line class="bond" x1="232.0" y1="106.0" x2="264.5" y2="73.5"/>
+<circle class="atom-s" cx="264.5" cy="138.5" r="12"/><text class="atxt" x="264.5" y="143.0" text-anchor="middle">S</text>
+<circle class="atom-s" cx="199.5" cy="138.5" r="12"/><text class="atxt" x="199.5" y="143.0" text-anchor="middle">S</text>
+<circle class="atom-s" cx="199.5" cy="73.5" r="12"/><text class="atxt" x="199.5" y="78.0" text-anchor="middle">S</text>
+<circle class="atom-s" cx="264.5" cy="73.5" r="12"/><text class="atxt" x="264.5" y="78.0" text-anchor="middle">S</text>
+<circle class="atom-nd" cx="232" cy="106" r="19"/><text class="on" x="232" y="111" text-anchor="middle">Nd</text>
+<text class="lb" x="150" y="186" text-anchor="middle">S bonds to Nd instead of P</text>
+<text class="lb" x="150" y="204" text-anchor="middle">Δχ 0.39 → 1.44 (larger)</text>
+<text class="hd" x="150" y="222" text-anchor="middle">S expected to gain electrons</text>
+<rect class="pill-open" x="70" y="232" width="160" height="24" rx="12"/><text class="lb2 pilltxt" x="150" y="248.5" text-anchor="middle">Not computed yet</text>
+</svg><svg viewBox="0 0 300 262" role="img" aria-label="(b) Nd on a Li site. DFT model on this page. S bonds to Nd instead of Li. Δχ 1.60 → 1.44 (slightly smaller). S expected to lose a little. Computed, see Fig. 4." xmlns="http://www.w3.org/2000/svg">
+<title>(b) Nd on a Li site. DFT model on this page. S bonds to Nd instead of Li. Δχ 1.60 → 1.44 (slightly smaller). S expected to lose a little. Computed, see Fig. 4.</title>
+<text class="hd" x="150" y="20" text-anchor="middle">(b) Nd on a Li site</text>
+<text class="lb2" x="150" y="37" text-anchor="middle">DFT model on this page</text>
+<line class="bond" x1="68.0" y1="106.0" x2="100.5" y2="138.5"/>
+<line class="bond" x1="68.0" y1="106.0" x2="35.5" y2="138.5"/>
+<line class="bond" x1="68.0" y1="106.0" x2="35.5" y2="73.5"/>
+<line class="bond" x1="68.0" y1="106.0" x2="100.5" y2="73.5"/>
+<circle class="atom-s" cx="100.5" cy="138.5" r="12"/><text class="atxt" x="100.5" y="143.0" text-anchor="middle">S</text>
+<circle class="atom-s" cx="35.5" cy="138.5" r="12"/><text class="atxt" x="35.5" y="143.0" text-anchor="middle">S</text>
+<circle class="atom-s" cx="35.5" cy="73.5" r="12"/><text class="atxt" x="35.5" y="78.0" text-anchor="middle">S</text>
+<circle class="atom-s" cx="100.5" cy="73.5" r="12"/><text class="atxt" x="100.5" y="78.0" text-anchor="middle">S</text>
+<circle class="atom-c" cx="68" cy="106" r="17"/><text class="on" x="68" y="111" text-anchor="middle">Li</text>
+<path class="arrow" d="M124,106 H170"/><path class="arrowhead" d="M178,106 L168,100 L168,112 Z"/>
+<line class="bond" x1="232.0" y1="106.0" x2="264.5" y2="138.5"/>
+<line class="bond" x1="232.0" y1="106.0" x2="199.5" y2="138.5"/>
+<line class="bond" x1="232.0" y1="106.0" x2="199.5" y2="73.5"/>
+<line class="bond" x1="232.0" y1="106.0" x2="264.5" y2="73.5"/>
+<circle class="atom-s" cx="264.5" cy="138.5" r="12"/><text class="atxt" x="264.5" y="143.0" text-anchor="middle">S</text>
+<circle class="atom-s" cx="199.5" cy="138.5" r="12"/><text class="atxt" x="199.5" y="143.0" text-anchor="middle">S</text>
+<circle class="atom-s" cx="199.5" cy="73.5" r="12"/><text class="atxt" x="199.5" y="78.0" text-anchor="middle">S</text>
+<circle class="atom-s" cx="264.5" cy="73.5" r="12"/><text class="atxt" x="264.5" y="78.0" text-anchor="middle">S</text>
+<circle class="atom-nd" cx="232" cy="106" r="19"/><text class="on" x="232" y="111" text-anchor="middle">Nd</text>
+<text class="lb" x="150" y="186" text-anchor="middle">S bonds to Nd instead of Li</text>
+<text class="lb" x="150" y="204" text-anchor="middle">Δχ 1.60 → 1.44 (slightly smaller)</text>
+<text class="hd" x="150" y="222" text-anchor="middle">S expected to lose a little</text>
+<rect class="pill-ok" x="70" y="232" width="160" height="24" rx="12"/><text class="lb2 pilltxt" x="150" y="248.5" text-anchor="middle">Computed, see Fig. 4</text>
+</svg></div><figcaption><b>Fig. 3. What Nd replaces sets the direction (schematic, not data).</b> (a) Nd on the P site, as in the Rietveld model. The S partner changes from P to Nd and Δχ rises from 0.39 to 1.44, so electronegativity predicts more electrons on S. Not computed yet. (b) Nd on a Li site, as in the DFT model on this page. The partner changes from Li to Nd and Δχ falls slightly from 1.60 to 1.44, so electronegativity predicts slightly fewer electrons on S. Computed in Fig. 4.</figcaption></figure>
+<p>1저자의 Rietveld 정련은 Nd 를 P 자리 (4b) 에 두었고 (그림 3a), 이 페이지의 DFT 모델은 Nd 를 Li 자리에 둔 모델이에요 (그림 3b). 이 모델에서 Nd 하나는 Li 셋의 몫을 맡아요. 한 자리에는 Nd 가 앉고, 두 자리는 전하를 맞추려고 비워 뒀어요. Nd 가 실제로 어느 자리에서 에너지가 낮은지는 지금 따로 계산하고 있어요.</p>
+</section>
+
+<section id="bader">
+<h2>DFT 결과 1. Nd 옆 음이온은 전자가 조금 적어요</h2>
+<p>같은 셀 안에서 Nd 와 닿은 음이온과, Li 만 이웃한 같은 종류의 음이온을 견줬어요. 닿았다고 보는 거리는 결과를 보기 전에 정했어요 (Nd–S · Nd–Cl 3.3 Å, Nd–O 2.9 Å). 이 셀의 Nd 두 개는 각각 음이온 여섯과 닿아 있어요.</p>
+<ul class="nb">
+<li>Nd ① 은 O 2 개 (2.44 · 2.55 Å), 자유 S²⁻ 1 개 (2.61 Å), Cl⁻ 1 개 (2.77 Å), PS₄ 의 S 2 개 (2.94 · 3.14 Å) 와 닿아 있어요.</li>
+<li>Nd ② 은 자유 S²⁻ 1 개 (2.68 Å), Cl⁻ 1 개 (2.72 Å), PS₄ 의 S 4 개 (2.81–3.00 Å) 와 닿아 있어요.</li>
+</ul>
+<figure><div class="legend"><span><i class="sw sw-dia"></i>Anion next to Nd</span><span><i class="sw sw-ring"></i>Same anion, Li neighbours only</span></div><div class="chart"><svg viewBox="0 0 640 318" role="img" aria-label="Shift in Bader charge of anions next to Nd, measured from the mean of the same anion with Li neighbours only. All four classes shift to less negative values." xmlns="http://www.w3.org/2000/svg">
+<title>Shift in Bader charge of anions next to Nd, measured from the mean of the same anion with Li neighbours only. All four classes shift to less negative values.</title>
+<line class="ax0" x1="242.0" y1="28" x2="242.0" y2="274"/>
+<text class="tk" x="242.0" y="292" text-anchor="middle">0</text>
+<line class="ax" x1="348.7" y1="28" x2="348.7" y2="274"/>
+<text class="tk" x="348.7" y="292" text-anchor="middle">+0.1</text>
+<line class="ax" x1="455.3" y1="28" x2="455.3" y2="274"/>
+<text class="tk" x="455.3" y="292" text-anchor="middle">+0.2</text>
+<line class="ax" x1="562.0" y1="28" x2="562.0" y2="274"/>
+<text class="tk" x="562.0" y="292" text-anchor="middle">+0.3</text>
+<text class="tk" x="248.0" y="18">Li-only mean</text>
+<text class="tk" x="370.0" y="312" text-anchor="middle">Shift in Bader charge (e), positive = fewer electrons on the anion</text>
+<text class="lb" x="166" y="62.0" text-anchor="end">Free S²⁻</text>
+<text class="lb2" x="166" y="76.0" text-anchor="end">n 2 vs 2</text>
+<g class="hit" tabindex="0" role="img" aria-label="Free S²⁻, Li neighbours only, atom 54, −1.690 e (shift −0.000)" data-v="−1.690 e (shift −0.000)" data-l="Free S²⁻, Li neighbours only, atom 54">
+<circle class="hitbox" cx="241.7" cy="54.0" r="12"/><circle class="mk ring" cx="241.7" cy="54.0" r="4.5"/></g>
+<g class="hit" tabindex="0" role="img" aria-label="Free S²⁻, Li neighbours only, atom 115, −1.690 e (shift +0.000)" data-v="−1.690 e (shift +0.000)" data-l="Free S²⁻, Li neighbours only, atom 115">
+<circle class="hitbox" cx="242.3" cy="50.0" r="12"/><circle class="mk ring" cx="242.3" cy="50.0" r="4.5"/></g>
+<g class="hit" tabindex="0" role="img" aria-label="Free S²⁻, next to Nd, atom 112, −1.495 e (shift +0.195)" data-v="−1.495 e (shift +0.195)" data-l="Free S²⁻, next to Nd, atom 112">
+<circle class="hitbox" cx="450.1" cy="75.0" r="12"/><rect class="mk dia" x="445.1" y="70.0" width="10" height="10" transform="rotate(45 450.1 75.0)"/></g>
+<g class="hit" tabindex="0" role="img" aria-label="Free S²⁻, next to Nd, atom 51, −1.446 e (shift +0.244)" data-v="−1.446 e (shift +0.244)" data-l="Free S²⁻, next to Nd, atom 51">
+<circle class="hitbox" cx="502.2" cy="75.0" r="12"/><rect class="mk dia" x="497.2" y="70.0" width="10" height="10" transform="rotate(45 502.2 75.0)"/></g>
+<line class="meanbar" x1="476.1" y1="65.0" x2="476.1" y2="85.0"/>
+<text class="val" x="514.2" y="79.5">+0.22 e</text>
+<text class="lb" x="166" y="122.0" text-anchor="end">PS₄ unit (P + 4 S)</text>
+<text class="lb2" x="166" y="136.0" text-anchor="end">n 2 vs 6</text>
+<line class="ax" x1="0" y1="94" x2="640" y2="94"/>
+<g class="hit" tabindex="0" role="img" aria-label="PS₄ unit (P + 4 S), Li neighbours only, P 90 unit, −2.651 e (shift −0.029)" data-v="−2.651 e (shift −0.029)" data-l="PS₄ unit (P + 4 S), Li neighbours only, P 90 unit">
+<circle class="hitbox" cx="211.3" cy="114.0" r="12"/><circle class="mk ring" cx="211.3" cy="114.0" r="4.5"/></g>
+<g class="hit" tabindex="0" role="img" aria-label="PS₄ unit (P + 4 S), Li neighbours only, P 28 unit, −2.635 e (shift −0.013)" data-v="−2.635 e (shift −0.013)" data-l="PS₄ unit (P + 4 S), Li neighbours only, P 28 unit">
+<circle class="hitbox" cx="228.6" cy="114.0" r="12"/><circle class="mk ring" cx="228.6" cy="114.0" r="4.5"/></g>
+<g class="hit" tabindex="0" role="img" aria-label="PS₄ unit (P + 4 S), Li neighbours only, P 89 unit, −2.633 e (shift −0.011)" data-v="−2.633 e (shift −0.011)" data-l="PS₄ unit (P + 4 S), Li neighbours only, P 89 unit">
+<circle class="hitbox" cx="230.6" cy="110.0" r="12"/><circle class="mk ring" cx="230.6" cy="110.0" r="4.5"/></g>
+<g class="hit" tabindex="0" role="img" aria-label="PS₄ unit (P + 4 S), Li neighbours only, P 29 unit, −2.627 e (shift −0.004)" data-v="−2.627 e (shift −0.004)" data-l="PS₄ unit (P + 4 S), Li neighbours only, P 29 unit">
+<circle class="hitbox" cx="237.3" cy="118.0" r="12"/><circle class="mk ring" cx="237.3" cy="118.0" r="4.5"/></g>
+<g class="hit" tabindex="0" role="img" aria-label="PS₄ unit (P + 4 S), Li neighbours only, P 27 unit, −2.603 e (shift +0.019)" data-v="−2.603 e (shift +0.019)" data-l="PS₄ unit (P + 4 S), Li neighbours only, P 27 unit">
+<circle class="hitbox" cx="262.5" cy="114.0" r="12"/><circle class="mk ring" cx="262.5" cy="114.0" r="4.5"/></g>
+<g class="hit" tabindex="0" role="img" aria-label="PS₄ unit (P + 4 S), Li neighbours only, P 88 unit, −2.585 e (shift +0.037)" data-v="−2.585 e (shift +0.037)" data-l="PS₄ unit (P + 4 S), Li neighbours only, P 88 unit">
+<circle class="hitbox" cx="281.7" cy="114.0" r="12"/><circle class="mk ring" cx="281.7" cy="114.0" r="4.5"/></g>
+<g class="hit" tabindex="0" role="img" aria-label="PS₄ unit (P + 4 S), next to Nd, P 87 unit, −2.442 e (shift +0.181)" data-v="−2.442 e (shift +0.181)" data-l="PS₄ unit (P + 4 S), next to Nd, P 87 unit">
+<circle class="hitbox" cx="434.7" cy="135.0" r="12"/><rect class="mk dia" x="429.7" y="130.0" width="10" height="10" transform="rotate(45 434.7 135.0)"/></g>
+<g class="hit" tabindex="0" role="img" aria-label="PS₄ unit (P + 4 S), next to Nd, P 86 unit, −2.407 e (shift +0.215)" data-v="−2.407 e (shift +0.215)" data-l="PS₄ unit (P + 4 S), next to Nd, P 86 unit">
+<circle class="hitbox" cx="471.7" cy="135.0" r="12"/><rect class="mk dia" x="466.7" y="130.0" width="10" height="10" transform="rotate(45 471.7 135.0)"/></g>
+<line class="meanbar" x1="453.2" y1="125.0" x2="453.2" y2="145.0"/>
+<text class="val" x="483.7" y="139.5">+0.20 e</text>
+<text class="lb" x="166" y="182.0" text-anchor="end">Cl⁻</text>
+<text class="lb2" x="166" y="196.0" text-anchor="end">n 2 vs 14</text>
+<line class="ax" x1="0" y1="154" x2="640" y2="154"/>
+<g class="hit" tabindex="0" role="img" aria-label="Cl⁻, Li neighbours only, atom 120, −0.933 e (shift −0.020)" data-v="−0.933 e (shift −0.020)" data-l="Cl⁻, Li neighbours only, atom 120">
+<circle class="hitbox" cx="220.9" cy="174.0" r="12"/><circle class="mk ring" cx="220.9" cy="174.0" r="4.5"/></g>
+<g class="hit" tabindex="0" role="img" aria-label="Cl⁻, Li neighbours only, atom 59, −0.931 e (shift −0.018)" data-v="−0.931 e (shift −0.018)" data-l="Cl⁻, Li neighbours only, atom 59">
+<circle class="hitbox" cx="222.9" cy="170.0" r="12"/><circle class="mk ring" cx="222.9" cy="170.0" r="4.5"/></g>
+<g class="hit" tabindex="0" role="img" aria-label="Cl⁻, Li neighbours only, atom 119, −0.917 e (shift −0.004)" data-v="−0.917 e (shift −0.004)" data-l="Cl⁻, Li neighbours only, atom 119">
+<circle class="hitbox" cx="237.7" cy="174.0" r="12"/><circle class="mk ring" cx="237.7" cy="174.0" r="4.5"/></g>
+<g class="hit" tabindex="0" role="img" aria-label="Cl⁻, Li neighbours only, atom 114, −0.916 e (shift −0.003)" data-v="−0.916 e (shift −0.003)" data-l="Cl⁻, Li neighbours only, atom 114">
+<circle class="hitbox" cx="238.8" cy="170.0" r="12"/><circle class="mk ring" cx="238.8" cy="170.0" r="4.5"/></g>
+<g class="hit" tabindex="0" role="img" aria-label="Cl⁻, Li neighbours only, atom 111, −0.914 e (shift −0.001)" data-v="−0.914 e (shift −0.001)" data-l="Cl⁻, Li neighbours only, atom 111">
+<circle class="hitbox" cx="241.2" cy="178.0" r="12"/><circle class="mk ring" cx="241.2" cy="178.0" r="4.5"/></g>
+<g class="hit" tabindex="0" role="img" aria-label="Cl⁻, Li neighbours only, atom 57, −0.914 e (shift −0.001)" data-v="−0.914 e (shift −0.001)" data-l="Cl⁻, Li neighbours only, atom 57">
+<circle class="hitbox" cx="241.3" cy="174.0" r="12"/><circle class="mk ring" cx="241.3" cy="174.0" r="4.5"/></g>
+<g class="hit" tabindex="0" role="img" aria-label="Cl⁻, Li neighbours only, atom 118, −0.913 e (shift −0.000)" data-v="−0.913 e (shift −0.000)" data-l="Cl⁻, Li neighbours only, atom 118">
+<circle class="hitbox" cx="241.9" cy="170.0" r="12"/><circle class="mk ring" cx="241.9" cy="170.0" r="4.5"/></g>
+<g class="hit" tabindex="0" role="img" aria-label="Cl⁻, Li neighbours only, atom 58, −0.912 e (shift +0.001)" data-v="−0.912 e (shift +0.001)" data-l="Cl⁻, Li neighbours only, atom 58">
+<circle class="hitbox" cx="243.0" cy="178.0" r="12"/><circle class="mk ring" cx="243.0" cy="178.0" r="4.5"/></g>
+<g class="hit" tabindex="0" role="img" aria-label="Cl⁻, Li neighbours only, atom 55, −0.912 e (shift +0.001)" data-v="−0.912 e (shift +0.001)" data-l="Cl⁻, Li neighbours only, atom 55">
+<circle class="hitbox" cx="243.5" cy="174.0" r="12"/><circle class="mk ring" cx="243.5" cy="174.0" r="4.5"/></g>
+<g class="hit" tabindex="0" role="img" aria-label="Cl⁻, Li neighbours only, atom 113, −0.910 e (shift +0.004)" data-v="−0.910 e (shift +0.004)" data-l="Cl⁻, Li neighbours only, atom 113">
+<circle class="hitbox" cx="246.0" cy="170.0" r="12"/><circle class="mk ring" cx="246.0" cy="170.0" r="4.5"/></g>
+<g class="hit" tabindex="0" role="img" aria-label="Cl⁻, Li neighbours only, atom 116, −0.908 e (shift +0.005)" data-v="−0.908 e (shift +0.005)" data-l="Cl⁻, Li neighbours only, atom 116">
+<circle class="hitbox" cx="247.6" cy="178.0" r="12"/><circle class="mk ring" cx="247.6" cy="178.0" r="4.5"/></g>
+<g class="hit" tabindex="0" role="img" aria-label="Cl⁻, Li neighbours only, atom 50, −0.904 e (shift +0.009)" data-v="−0.904 e (shift +0.009)" data-l="Cl⁻, Li neighbours only, atom 50">
+<circle class="hitbox" cx="251.5" cy="174.0" r="12"/><circle class="mk ring" cx="251.5" cy="174.0" r="4.5"/></g>
+<g class="hit" tabindex="0" role="img" aria-label="Cl⁻, Li neighbours only, atom 52, −0.903 e (shift +0.011)" data-v="−0.903 e (shift +0.011)" data-l="Cl⁻, Li neighbours only, atom 52">
+<circle class="hitbox" cx="253.2" cy="170.0" r="12"/><circle class="mk ring" cx="253.2" cy="170.0" r="4.5"/></g>
+<g class="hit" tabindex="0" role="img" aria-label="Cl⁻, Li neighbours only, atom 53, −0.898 e (shift +0.015)" data-v="−0.898 e (shift +0.015)" data-l="Cl⁻, Li neighbours only, atom 53">
+<circle class="hitbox" cx="258.5" cy="178.0" r="12"/><circle class="mk ring" cx="258.5" cy="178.0" r="4.5"/></g>
+<g class="hit" tabindex="0" role="img" aria-label="Cl⁻, next to Nd, atom 117, −0.833 e (shift +0.080)" data-v="−0.833 e (shift +0.080)" data-l="Cl⁻, next to Nd, atom 117">
+<circle class="hitbox" cx="327.6" cy="195.0" r="12"/><rect class="mk dia" x="322.6" y="190.0" width="10" height="10" transform="rotate(45 327.6 195.0)"/></g>
+<g class="hit" tabindex="0" role="img" aria-label="Cl⁻, next to Nd, atom 56, −0.832 e (shift +0.081)" data-v="−0.832 e (shift +0.081)" data-l="Cl⁻, next to Nd, atom 56">
+<circle class="hitbox" cx="328.3" cy="195.0" r="12"/><rect class="mk dia" x="323.3" y="190.0" width="10" height="10" transform="rotate(45 328.3 195.0)"/></g>
+<line class="meanbar" x1="328.0" y1="185.0" x2="328.0" y2="205.0"/>
+<text class="val" x="340.3" y="199.5">+0.08 e</text>
+<text class="lb" x="166" y="242.0" text-anchor="end">O bonded to P</text>
+<text class="lb2" x="166" y="256.0" text-anchor="end">n 2 vs 1</text>
+<line class="ax" x1="0" y1="214" x2="640" y2="214"/>
+<g class="hit" tabindex="0" role="img" aria-label="O bonded to P, Li neighbours only, atom 30, −1.898 e (shift +0.000)" data-v="−1.898 e (shift +0.000)" data-l="O bonded to P, Li neighbours only, atom 30">
+<circle class="hitbox" cx="242.0" cy="234.0" r="12"/><circle class="mk ring" cx="242.0" cy="234.0" r="4.5"/></g>
+<g class="hit" tabindex="0" role="img" aria-label="O bonded to P, next to Nd, atom 35, −1.852 e (shift +0.046)" data-v="−1.852 e (shift +0.046)" data-l="O bonded to P, next to Nd, atom 35">
+<circle class="hitbox" cx="291.3" cy="255.0" r="12"/><rect class="mk dia" x="286.3" y="250.0" width="10" height="10" transform="rotate(45 291.3 255.0)"/></g>
+<g class="hit" tabindex="0" role="img" aria-label="O bonded to P, next to Nd, atom 41, −1.848 e (shift +0.051)" data-v="−1.848 e (shift +0.051)" data-l="O bonded to P, next to Nd, atom 41">
+<circle class="hitbox" cx="296.1" cy="255.0" r="12"/><rect class="mk dia" x="291.1" y="250.0" width="10" height="10" transform="rotate(45 296.1 255.0)"/></g>
+<line class="meanbar" x1="293.7" y1="245.0" x2="293.7" y2="265.0"/>
+<text class="val" x="308.1" y="259.5">+0.05 e</text>
+</svg></div><figcaption><b>Fig. 4. Bader charge of anions next to Nd, measured from the mean of the same anion with Li neighbours only.</b> Positive means less negative, that is, fewer electrons on the anion. Each marker is one anion or one PS₄ unit; n gives the count next to Nd vs with Li neighbours only. Free S²⁻ +0.22 e, PS₄ unit +0.20 e, Cl⁻ +0.08 e, and O bonded to P +0.05 e (only one O without an Nd neighbour, so that reference is a single atom).</figcaption><details class="tv"><summary>Table view</summary><div class="tablewrap"><table><thead><tr><th>Anion class</th><th>Group</th><th>Site</th><th class="n">Bader net charge (e)</th><th class="n">Shift from Li-only mean (e)</th></tr></thead><tbody><tr><td>Free S²⁻</td><td>Li only</td><td>atom 54</td><td class="n">−1.690</td><td class="n">−0.000</td></tr><tr><td>Free S²⁻</td><td>Li only</td><td>atom 115</td><td class="n">−1.690</td><td class="n">+0.000</td></tr><tr><td>Free S²⁻</td><td>next to Nd</td><td>atom 112</td><td class="n">−1.495</td><td class="n">+0.195</td></tr><tr><td>Free S²⁻</td><td>next to Nd</td><td>atom 51</td><td class="n">−1.446</td><td class="n">+0.244</td></tr><tr><td>PS₄ unit (P + 4 S)</td><td>Li only</td><td>P 90 unit</td><td class="n">−2.651</td><td class="n">−0.029</td></tr><tr><td>PS₄ unit (P + 4 S)</td><td>Li only</td><td>P 28 unit</td><td class="n">−2.635</td><td class="n">−0.013</td></tr><tr><td>PS₄ unit (P + 4 S)</td><td>Li only</td><td>P 89 unit</td><td class="n">−2.633</td><td class="n">−0.011</td></tr><tr><td>PS₄ unit (P + 4 S)</td><td>Li only</td><td>P 29 unit</td><td class="n">−2.627</td><td class="n">−0.004</td></tr><tr><td>PS₄ unit (P + 4 S)</td><td>Li only</td><td>P 27 unit</td><td class="n">−2.603</td><td class="n">+0.019</td></tr><tr><td>PS₄ unit (P + 4 S)</td><td>Li only</td><td>P 88 unit</td><td class="n">−2.585</td><td class="n">+0.037</td></tr><tr><td>PS₄ unit (P + 4 S)</td><td>next to Nd</td><td>P 87 unit</td><td class="n">−2.442</td><td class="n">+0.181</td></tr><tr><td>PS₄ unit (P + 4 S)</td><td>next to Nd</td><td>P 86 unit</td><td class="n">−2.407</td><td class="n">+0.215</td></tr><tr><td>Cl⁻</td><td>Li only</td><td>atom 120</td><td class="n">−0.933</td><td class="n">−0.020</td></tr><tr><td>Cl⁻</td><td>Li only</td><td>atom 59</td><td class="n">−0.931</td><td class="n">−0.018</td></tr><tr><td>Cl⁻</td><td>Li only</td><td>atom 119</td><td class="n">−0.917</td><td class="n">−0.004</td></tr><tr><td>Cl⁻</td><td>Li only</td><td>atom 114</td><td class="n">−0.916</td><td class="n">−0.003</td></tr><tr><td>Cl⁻</td><td>Li only</td><td>atom 111</td><td class="n">−0.914</td><td class="n">−0.001</td></tr><tr><td>Cl⁻</td><td>Li only</td><td>atom 57</td><td class="n">−0.914</td><td class="n">−0.001</td></tr><tr><td>Cl⁻</td><td>Li only</td><td>atom 118</td><td class="n">−0.913</td><td class="n">−0.000</td></tr><tr><td>Cl⁻</td><td>Li only</td><td>atom 58</td><td class="n">−0.912</td><td class="n">+0.001</td></tr><tr><td>Cl⁻</td><td>Li only</td><td>atom 55</td><td class="n">−0.912</td><td class="n">+0.001</td></tr><tr><td>Cl⁻</td><td>Li only</td><td>atom 113</td><td class="n">−0.910</td><td class="n">+0.004</td></tr><tr><td>Cl⁻</td><td>Li only</td><td>atom 116</td><td class="n">−0.908</td><td class="n">+0.005</td></tr><tr><td>Cl⁻</td><td>Li only</td><td>atom 50</td><td class="n">−0.904</td><td class="n">+0.009</td></tr><tr><td>Cl⁻</td><td>Li only</td><td>atom 52</td><td class="n">−0.903</td><td class="n">+0.011</td></tr><tr><td>Cl⁻</td><td>Li only</td><td>atom 53</td><td class="n">−0.898</td><td class="n">+0.015</td></tr><tr><td>Cl⁻</td><td>next to Nd</td><td>atom 117</td><td class="n">−0.833</td><td class="n">+0.080</td></tr><tr><td>Cl⁻</td><td>next to Nd</td><td>atom 56</td><td class="n">−0.832</td><td class="n">+0.081</td></tr><tr><td>O bonded to P</td><td>Li only</td><td>atom 30</td><td class="n">−1.898</td><td class="n">+0.000</td></tr><tr><td>O bonded to P</td><td>next to Nd</td><td>atom 35</td><td class="n">−1.852</td><td class="n">+0.046</td></tr><tr><td>O bonded to P</td><td>next to Nd</td><td>atom 41</td><td class="n">−1.848</td><td class="n">+0.051</td></tr></tbody></table></div></details></figure>
+<p>Nd 와 닿은 자유 S²⁻ 는 −1.47 e, Li 만 이웃한 자유 S²⁻ 는 −1.69 e 예요. 결합 상대가 Li 에서 Nd 로 바뀌면 Δχ 가 1.60 에서 1.44 로 조금 줄어서 S 쪽 전자가 조금 줄 거라는 기대와 방향이 같아요. Cl⁻ (−0.91 → −0.83 e) 도 같아요.</p>
+<p class="note">PS₄ 는 P 와 S 넷을 더한 단위 전하로 견줬어요. 이번 Bader 계산에서는 P–S 결합 사이의 전자 일부가 P 나 S 한쪽에 통째로 붙는 분할 문제가 있어서, PS₄ 안의 P · S 값은 하나씩 쓰지 않아요. 단위 합은 이 문제에 흔들리지 않아요. 이 지표는 결과를 본 뒤에 골랐어요.</p>
+<figure><div class="legend"><span><i class="sw sw-nd"></i>Nd</span><span><i class="sw sw-ref"></i>Li</span></div><div class="chart"><svg viewBox="0 0 640 214" role="img" aria-label="Share of the formal charge each cation gives away. Li about 88 percent, Nd about 65 percent." xmlns="http://www.w3.org/2000/svg">
+<title>Share of the formal charge each cation gives away. Li about 88 percent, Nd about 65 percent.</title>
+<line class="ax0" x1="178.0" y1="34" x2="178.0" y2="68"/>
+<line class="ax0" x1="178.0" y1="68" x2="178.0" y2="102"/>
+<line class="ax0" x1="178.0" y1="102" x2="178.0" y2="136"/>
+<line class="ax0" x1="178.0" y1="136" x2="178.0" y2="170"/>
+<text class="tk" x="178.0" y="188" text-anchor="middle">0 %</text>
+<line class="ax" x1="277.0" y1="34" x2="277.0" y2="68"/>
+<line class="ax" x1="277.0" y1="68" x2="277.0" y2="102"/>
+<line class="ax" x1="277.0" y1="102" x2="277.0" y2="136"/>
+<line class="ax" x1="277.0" y1="136" x2="277.0" y2="170"/>
+<text class="tk" x="277.0" y="188" text-anchor="middle">25 %</text>
+<line class="ax" x1="376.0" y1="34" x2="376.0" y2="68"/>
+<line class="ax" x1="376.0" y1="68" x2="376.0" y2="102"/>
+<line class="ax" x1="376.0" y1="102" x2="376.0" y2="136"/>
+<line class="ax" x1="376.0" y1="136" x2="376.0" y2="170"/>
+<text class="tk" x="376.0" y="188" text-anchor="middle">50 %</text>
+<line class="ax" x1="475.0" y1="34" x2="475.0" y2="68"/>
+<line class="ax" x1="475.0" y1="68" x2="475.0" y2="102"/>
+<line class="ax" x1="475.0" y1="102" x2="475.0" y2="136"/>
+<line class="ax" x1="475.0" y1="136" x2="475.0" y2="170"/>
+<text class="tk" x="475.0" y="188" text-anchor="middle">75 %</text>
+<line class="ax" x1="574.0" y1="34" x2="574.0" y2="68"/>
+<line class="ax" x1="574.0" y1="68" x2="574.0" y2="102"/>
+<line class="ax" x1="574.0" y1="102" x2="574.0" y2="136"/>
+<line class="ax" x1="574.0" y1="136" x2="574.0" y2="170"/>
+<text class="tk" x="574.0" y="188" text-anchor="middle">100 %</text>
+<text class="tk" x="376.0" y="208" text-anchor="middle">Bader charge as a share of the formal charge (Li +1, Nd +3)</text>
+<text class="lb" x="166" y="49.0" text-anchor="end">Li, this cell</text>
+<text class="lb2" x="166" y="63.0" text-anchor="end">mean of 48 sites</text>
+<g class="hit" tabindex="0" role="img" aria-label="Li, this cell, 0.884 e of +1 (88.4 %)" data-v="0.884 e of +1 (88.4 %)" data-l="Li, this cell">
+<rect class="hitbox" x="178" y="34" width="396" height="34"/>
+<path class="mk ref" d="M178.0,45.0H524.0Q528.0,45.0 528.0,49.0V53.0Q528.0,57.0 524.0,57.0H178.0Z"/>
+</g>
+<text class="val" x="535.0" y="55.5">88 %</text>
+<text class="lb" x="166" y="83.0" text-anchor="end">Li, undoped LPSCl1.6</text>
+<text class="lb2" x="166" y="97.0" text-anchor="end">same method</text>
+<g class="hit" tabindex="0" role="img" aria-label="Li, undoped LPSCl1.6, 0.883 e of +1" data-v="0.883 e of +1" data-l="Li, undoped LPSCl1.6">
+<rect class="hitbox" x="178" y="68" width="396" height="34"/>
+<path class="mk ref" d="M178.0,79.0H523.7Q527.7,79.0 527.7,83.0V87.0Q527.7,91.0 523.7,91.0H178.0Z"/>
+</g>
+<text class="val" x="534.7" y="89.5">88 %</text>
+<text class="lb" x="166" y="117.0" text-anchor="end">Nd ①</text>
+<text class="lb2" x="166" y="131.0" text-anchor="end">site 2</text>
+<g class="hit" tabindex="0" role="img" aria-label="Nd, site 2, 2.004 e of +3 (66.8 %)" data-v="2.004 e of +3 (66.8 %)" data-l="Nd, site 2">
+<rect class="hitbox" x="178" y="102" width="396" height="34"/>
+<path class="mk nd" d="M178.0,113.0H438.5Q442.5,113.0 442.5,117.0V121.0Q442.5,125.0 438.5,125.0H178.0Z"/>
+</g>
+<text class="val" x="449.5" y="123.5">67 %</text>
+<text class="lb" x="166" y="151.0" text-anchor="end">Nd ②</text>
+<text class="lb2" x="166" y="165.0" text-anchor="end">site 79</text>
+<g class="hit" tabindex="0" role="img" aria-label="Nd, site 79, 1.913 e of +3 (63.8 %)" data-v="1.913 e of +3 (63.8 %)" data-l="Nd, site 79">
+<rect class="hitbox" x="178" y="136" width="396" height="34"/>
+<path class="mk nd" d="M178.0,147.0H426.6Q430.6,147.0 430.6,151.0V155.0Q430.6,159.0 426.6,159.0H178.0Z"/>
+</g>
+<text class="val" x="437.6" y="157.5">64 %</text>
+</svg></div><figcaption><b>Fig. 5. Share of the formal charge each cation gives away, from Bader charges.</b> Li keeps the same share as in undoped LPSCl1.6 computed the same way (+0.88 e). Nd gives +1.96 e of its formal +3.</figcaption><details class="tv"><summary>Table view</summary><div class="tablewrap"><table><thead><tr><th>Cation</th><th class="n">Bader net charge (e)</th><th>Formal charge</th><th class="n">Share (%)</th></tr></thead><tbody><tr><td>Li, this cell (mean)</td><td class="n">0.884</td><td>+1</td><td class="n">88.4</td></tr><tr><td>Li, undoped LPSCl1.6</td><td class="n">0.883</td><td>+1</td><td class="n">88.3</td></tr><tr><td>Nd, site 2</td><td class="n">2.004</td><td>+3</td><td class="n">66.8</td></tr><tr><td>Nd, site 79</td><td class="n">1.913</td><td>+3</td><td class="n">63.8</td></tr></tbody></table></div></details></figure>
+<p>양이온 쪽에서 보면 Nd 는 +1.96 e 로 형식 전하 +3 가운데 65 % 만 내줬고, Li 는 +0.88 e 로 88 % 를 내줬어요. Li 는 Nd 를 넣기 전 LPSCl1.6 (같은 방법 +0.88 e) 과 그대로예요. χ 가 Li 보다 큰 Nd 가 전자를 덜 내주는 것은 전기음성도와 같은 방향이에요. 다만 Nd 는 형식 전하가 +3 이라는 점도 이 비율에 들어가서, 이 차이를 전기음성도만의 효과로 읽지는 않아요.</p>
+</section>
+
+<section id="density">
+<h2>DFT 결과 2. 밀도는 높아지는데, 전자가 늘어서가 아니에요</h2>
+<p>1저자 2 번 주장 (부피가 아니라 밀도) 은 Bader 영역 안의 전자 수를 영역 부피로 나눈 값으로 봤어요.</p>
+<figure><div class="legend"><span><i class="sw sw-nd"></i>Electron density (claim 2)</span><span><i class="sw sw-ref"></i>Its two parts</span></div><div class="chart"><svg viewBox="0 0 640 338" role="img" aria-label="Change next to Nd for free sulfide and chloride. Electron count barely moves, basin volume shrinks, electron density rises." xmlns="http://www.w3.org/2000/svg">
+<title>Change next to Nd for free sulfide and chloride. Electron count barely moves, basin volume shrinks, electron density rises.</title>
+<line class="ax" x1="244.0" y1="62" x2="244.0" y2="96"/>
+<line class="ax" x1="244.0" y1="96" x2="244.0" y2="130"/>
+<line class="ax" x1="244.0" y1="130" x2="244.0" y2="164"/>
+<line class="ax" x1="244.0" y1="192" x2="244.0" y2="226"/>
+<line class="ax" x1="244.0" y1="226" x2="244.0" y2="260"/>
+<line class="ax" x1="244.0" y1="260" x2="244.0" y2="294"/>
+<text class="tk" x="244.0" y="312" text-anchor="middle">−20 %</text>
+<line class="ax" x1="310.0" y1="62" x2="310.0" y2="96"/>
+<line class="ax" x1="310.0" y1="96" x2="310.0" y2="130"/>
+<line class="ax" x1="310.0" y1="130" x2="310.0" y2="164"/>
+<line class="ax" x1="310.0" y1="192" x2="310.0" y2="226"/>
+<line class="ax" x1="310.0" y1="226" x2="310.0" y2="260"/>
+<line class="ax" x1="310.0" y1="260" x2="310.0" y2="294"/>
+<text class="tk" x="310.0" y="312" text-anchor="middle">−10 %</text>
+<line class="ax0" x1="376.0" y1="62" x2="376.0" y2="96"/>
+<line class="ax0" x1="376.0" y1="96" x2="376.0" y2="130"/>
+<line class="ax0" x1="376.0" y1="130" x2="376.0" y2="164"/>
+<line class="ax0" x1="376.0" y1="192" x2="376.0" y2="226"/>
+<line class="ax0" x1="376.0" y1="226" x2="376.0" y2="260"/>
+<line class="ax0" x1="376.0" y1="260" x2="376.0" y2="294"/>
+<text class="tk" x="376.0" y="312" text-anchor="middle">0</text>
+<line class="ax" x1="442.0" y1="62" x2="442.0" y2="96"/>
+<line class="ax" x1="442.0" y1="96" x2="442.0" y2="130"/>
+<line class="ax" x1="442.0" y1="130" x2="442.0" y2="164"/>
+<line class="ax" x1="442.0" y1="192" x2="442.0" y2="226"/>
+<line class="ax" x1="442.0" y1="226" x2="442.0" y2="260"/>
+<line class="ax" x1="442.0" y1="260" x2="442.0" y2="294"/>
+<text class="tk" x="442.0" y="312" text-anchor="middle">+10 %</text>
+<line class="ax" x1="508.0" y1="62" x2="508.0" y2="96"/>
+<line class="ax" x1="508.0" y1="96" x2="508.0" y2="130"/>
+<line class="ax" x1="508.0" y1="130" x2="508.0" y2="164"/>
+<line class="ax" x1="508.0" y1="192" x2="508.0" y2="226"/>
+<line class="ax" x1="508.0" y1="226" x2="508.0" y2="260"/>
+<line class="ax" x1="508.0" y1="260" x2="508.0" y2="294"/>
+<text class="tk" x="508.0" y="312" text-anchor="middle">+20 %</text>
+<text class="tk" x="376.0" y="332" text-anchor="middle">Change next to Nd, relative to the same anion with Li neighbours only</text>
+<text class="hd" x="2" y="53">Free S²⁻  (n 2 next to Nd · 2 Li only)</text>
+<text class="lb" x="166" y="83.5" text-anchor="end">Electrons in basin</text>
+<g class="hit" tabindex="0" role="img" aria-label="Free S²⁻, electrons in basin, −2.9 % (7.690 → 7.470 e)" data-v="−2.9 % (7.690 → 7.470 e)" data-l="Free S²⁻, electrons in basin">
+<rect class="hitbox" x="178" y="62" width="396" height="34"/>
+<path class="mk ref" d="M376.0,73.0H361.2Q357.2,73.0 357.2,77.0V81.0Q357.2,85.0 361.2,85.0H376.0Z"/>
+</g>
+<text class="val" x="350.2" y="83.5" text-anchor="end">−3 %</text>
+<text class="lb" x="166" y="117.5" text-anchor="end">Basin volume</text>
+<g class="hit" tabindex="0" role="img" aria-label="Free S²⁻, basin volume, −19.7 % (42.1 → 33.8 Å³)" data-v="−19.7 % (42.1 → 33.8 Å³)" data-l="Free S²⁻, basin volume">
+<rect class="hitbox" x="178" y="96" width="396" height="34"/>
+<path class="mk ref" d="M376.0,107.0H249.7Q245.7,107.0 245.7,111.0V115.0Q245.7,119.0 249.7,119.0H376.0Z"/>
+</g>
+<text class="val" x="238.7" y="117.5" text-anchor="end">−20 %</text>
+<text class="lb" x="166" y="151.5" text-anchor="end">Electron density</text>
+<g class="hit" tabindex="0" role="img" aria-label="Free S²⁻, electron density, +21.2 % (0.182 → 0.221 e/Å³)" data-v="+21.2 % (0.182 → 0.221 e/Å³)" data-l="Free S²⁻, electron density">
+<rect class="hitbox" x="178" y="130" width="396" height="34"/>
+<path class="mk nd" d="M376.0,141.0H511.9Q515.9,141.0 515.9,145.0V149.0Q515.9,153.0 511.9,153.0H376.0Z"/>
+</g>
+<text class="val" x="522.9" y="151.5">+21 %</text>
+<text class="hd" x="2" y="183">Cl⁻  (n 2 next to Nd · 14 Li only)</text>
+<text class="lb" x="166" y="213.5" text-anchor="end">Electrons in basin</text>
+<g class="hit" tabindex="0" role="img" aria-label="Cl⁻, electrons in basin, −1.0 % (7.913 → 7.833 e)" data-v="−1.0 % (7.913 → 7.833 e)" data-l="Cl⁻, electrons in basin">
+<rect class="hitbox" x="178" y="192" width="396" height="34"/>
+<path class="mk ref" d="M376.0,203.0H372.6Q369.3,203.0 369.3,206.4V211.6Q369.3,215.0 372.6,215.0H376.0Z"/>
+</g>
+<text class="val" x="362.3" y="213.5" text-anchor="end">−1 %</text>
+<text class="lb" x="166" y="247.5" text-anchor="end">Basin volume</text>
+<g class="hit" tabindex="0" role="img" aria-label="Cl⁻, basin volume, −15.2 % (38.4 → 32.6 Å³)" data-v="−15.2 % (38.4 → 32.6 Å³)" data-l="Cl⁻, basin volume">
+<rect class="hitbox" x="178" y="226" width="396" height="34"/>
+<path class="mk ref" d="M376.0,237.0H279.9Q275.9,237.0 275.9,241.0V245.0Q275.9,249.0 279.9,249.0H376.0Z"/>
+</g>
+<text class="val" x="268.9" y="247.5" text-anchor="end">−15 %</text>
+<text class="lb" x="166" y="281.5" text-anchor="end">Electron density</text>
+<g class="hit" tabindex="0" role="img" aria-label="Cl⁻, electron density, +16.6 % (0.206 → 0.240 e/Å³)" data-v="+16.6 % (0.206 → 0.240 e/Å³)" data-l="Cl⁻, electron density">
+<rect class="hitbox" x="178" y="260" width="396" height="34"/>
+<path class="mk nd" d="M376.0,271.0H481.6Q485.6,271.0 485.6,275.0V279.0Q485.6,283.0 481.6,283.0H376.0Z"/>
+</g>
+<text class="val" x="492.6" y="281.5">+17 %</text>
+</svg></div><figcaption><b>Fig. 6. Change next to Nd, relative to the same anion with Li neighbours only.</b> The electron count in the Bader basin barely moves (−3 % for free S²⁻, −1 % for Cl⁻) while the basin shrinks (−20 %, −15 %), so the electron density rises (+21 %, +17 %).</figcaption><details class="tv"><summary>Table view</summary><div class="tablewrap"><table><thead><tr><th>Anion</th><th>Quantity</th><th class="n">Li only (mean)</th><th class="n">Next to Nd (mean)</th><th class="n">Change (%)</th></tr></thead><tbody><tr><td>Free S²⁻</td><td>electrons (e)</td><td class="n">7.6898</td><td class="n">7.4703</td><td class="n">−2.9</td></tr><tr><td>Free S²⁻</td><td>volume (Å³)</td><td class="n">42.1485</td><td class="n">33.8270</td><td class="n">−19.7</td></tr><tr><td>Free S²⁻</td><td>density (e/Å³)</td><td class="n">0.1825</td><td class="n">0.2211</td><td class="n">+21.2</td></tr><tr><td>Cl⁻</td><td>electrons (e)</td><td class="n">7.9133</td><td class="n">7.8327</td><td class="n">−1.0</td></tr><tr><td>Cl⁻</td><td>volume (Å³)</td><td class="n">38.4425</td><td class="n">32.6130</td><td class="n">−15.2</td></tr><tr><td>Cl⁻</td><td>density (e/Å³)</td><td class="n">0.2061</td><td class="n">0.2403</td><td class="n">+16.6</td></tr><tr><td>O bonded to P (reference n 1)</td><td>electrons (e)</td><td class="n">7.8984</td><td class="n">7.8499</td><td class="n">−0.6</td></tr><tr><td>O bonded to P (reference n 1)</td><td>volume (Å³)</td><td class="n">21.9440</td><td class="n">19.6605</td><td class="n">−10.4</td></tr><tr><td>O bonded to P (reference n 1)</td><td>density (e/Å³)</td><td class="n">0.3599</td><td class="n">0.3998</td><td class="n">+11.1</td></tr></tbody></table></div></details></figure>
+<p>Nd 옆 자유 S²⁻ 는 전자 수가 3 % 줄고 영역 부피가 20 % 줄어서 밀도가 21 % 높아요. Cl⁻ 도 1 % · 15 % · 17 % 로 같은 꼴이에요. 밀도로 보면 Nd 옆이 뚜렷하게 다르고, 전자 수로 보면 거의 같아요. Nd 의 Bader 영역이 Li 보다 훨씬 커서 (19.6 Å³, Li 4.1 Å³) 이웃 음이온의 공간을 가져가서 생긴 차이예요. 원고에 밀도를 쓸 때는 전자 수와 부피를 같이 적으면 오해가 없어요.</p>
+</section>
+
+<section id="elf">
+<h2>DFT 결과 3. Nd–음이온 결합 가운데에는 공유 전자쌍이 없어요</h2>
+<p>결합 중점에서 ELF 를 견줬어요. P–S · P–O 는 0.92–0.94 로 가운데에 공유 전자쌍이 있고, Nd–S · Nd–Cl · Nd–O 는 0.31–0.47 로 없어요.</p>
+<figure><div class="legend"><span><i class="sw sw-nd"></i>Bonds to Nd</span><span><i class="sw sw-ref"></i>Bonds to P</span><span><i class="sw sw-host"></i>Undoped LPSCl1.6</span></div><div class="chart"><svg viewBox="0 0 640 348" role="img" aria-label="ELF at the bond midpoint. P–S and P–O near 0.93; bonds to Nd between 0.31 and 0.47." xmlns="http://www.w3.org/2000/svg">
+<title>ELF at the bond midpoint. P–S and P–O near 0.93; bonds to Nd between 0.31 and 0.47.</title>
+<line class="ax0" x1="178.0" y1="72" x2="178.0" y2="106"/>
+<line class="ax0" x1="178.0" y1="106" x2="178.0" y2="140"/>
+<line class="ax0" x1="178.0" y1="140" x2="178.0" y2="174"/>
+<line class="ax0" x1="178.0" y1="202" x2="178.0" y2="236"/>
+<line class="ax0" x1="178.0" y1="236" x2="178.0" y2="270"/>
+<line class="ax0" x1="178.0" y1="270" x2="178.0" y2="304"/>
+<text class="tk" x="178.0" y="322" text-anchor="middle">0</text>
+<line class="ax" x1="277.0" y1="72" x2="277.0" y2="106"/>
+<line class="ax" x1="277.0" y1="106" x2="277.0" y2="140"/>
+<line class="ax" x1="277.0" y1="140" x2="277.0" y2="174"/>
+<line class="ax" x1="277.0" y1="202" x2="277.0" y2="236"/>
+<line class="ax" x1="277.0" y1="236" x2="277.0" y2="270"/>
+<line class="ax" x1="277.0" y1="270" x2="277.0" y2="304"/>
+<text class="tk" x="277.0" y="322" text-anchor="middle">0.25</text>
+<line class="ax" x1="376.0" y1="72" x2="376.0" y2="106"/>
+<line class="ax" x1="376.0" y1="106" x2="376.0" y2="140"/>
+<line class="ax" x1="376.0" y1="140" x2="376.0" y2="174"/>
+<line class="ax" x1="376.0" y1="202" x2="376.0" y2="236"/>
+<line class="ax" x1="376.0" y1="236" x2="376.0" y2="270"/>
+<line class="ax" x1="376.0" y1="270" x2="376.0" y2="304"/>
+<text class="tk" x="376.0" y="322" text-anchor="middle">0.5</text>
+<line class="ax" x1="475.0" y1="72" x2="475.0" y2="106"/>
+<line class="ax" x1="475.0" y1="106" x2="475.0" y2="140"/>
+<line class="ax" x1="475.0" y1="140" x2="475.0" y2="174"/>
+<line class="ax" x1="475.0" y1="202" x2="475.0" y2="236"/>
+<line class="ax" x1="475.0" y1="236" x2="475.0" y2="270"/>
+<line class="ax" x1="475.0" y1="270" x2="475.0" y2="304"/>
+<text class="tk" x="475.0" y="322" text-anchor="middle">0.75</text>
+<line class="ax" x1="574.0" y1="72" x2="574.0" y2="106"/>
+<line class="ax" x1="574.0" y1="106" x2="574.0" y2="140"/>
+<line class="ax" x1="574.0" y1="140" x2="574.0" y2="174"/>
+<line class="ax" x1="574.0" y1="202" x2="574.0" y2="236"/>
+<line class="ax" x1="574.0" y1="236" x2="574.0" y2="270"/>
+<line class="ax" x1="574.0" y1="270" x2="574.0" y2="304"/>
+<text class="tk" x="574.0" y="322" text-anchor="middle">1</text>
+<text class="tk" x="376.0" y="342" text-anchor="middle">ELF at the bond midpoint (mean ± s.d. over bonds)</text>
+<line class="refline" x1="376.0" y1="72" x2="376.0" y2="106"/>
+<line class="refline" x1="376.0" y1="106" x2="376.0" y2="140"/>
+<line class="refline" x1="376.0" y1="140" x2="376.0" y2="174"/>
+<line class="refline" x1="376.0" y1="202" x2="376.0" y2="236"/>
+<line class="refline" x1="376.0" y1="236" x2="376.0" y2="270"/>
+<line class="refline" x1="376.0" y1="270" x2="376.0" y2="304"/>
+<text class="tk" x="382.0" y="34">0.5 = uniform electron gas</text>
+<text class="hd" x="2" y="63">Bonds to P (shared electron pair)</text>
+<text class="lb" x="166" y="87.0" text-anchor="end">P–S</text>
+<text class="lb2" x="166" y="101.0" text-anchor="end">n 37 · 2.06 Å</text>
+<g class="hit" tabindex="0" role="img" aria-label="P–S, this cell, ELF 0.943 ± 0.002" data-v="ELF 0.943 ± 0.002" data-l="P–S, this cell">
+<rect class="hitbox" x="178" y="72" width="396" height="34"/>
+<path class="mk ref" d="M178.0,83.0H547.4Q551.4,83.0 551.4,87.0V91.0Q551.4,95.0 547.4,95.0H178.0Z"/>
+<line class="err" x1="550.6" y1="89.0" x2="552.2" y2="89.0"/><line class="err" x1="550.6" y1="84.0" x2="550.6" y2="94.0"/><line class="err" x1="552.2" y1="84.0" x2="552.2" y2="94.0"/>
+</g>
+<text class="val" x="559.2" y="93.5">0.94</text>
+<text class="lb" x="166" y="121.0" text-anchor="end">P–O</text>
+<text class="lb2" x="166" y="135.0" text-anchor="end">n 3 · 1.57 Å</text>
+<g class="hit" tabindex="0" role="img" aria-label="P–O, this cell, ELF 0.923 ± 0.002" data-v="ELF 0.923 ± 0.002" data-l="P–O, this cell">
+<rect class="hitbox" x="178" y="106" width="396" height="34"/>
+<path class="mk ref" d="M178.0,117.0H539.5Q543.5,117.0 543.5,121.0V125.0Q543.5,129.0 539.5,129.0H178.0Z"/>
+<line class="err" x1="542.7" y1="123.0" x2="544.3" y2="123.0"/><line class="err" x1="542.7" y1="118.0" x2="542.7" y2="128.0"/><line class="err" x1="544.3" y1="118.0" x2="544.3" y2="128.0"/>
+</g>
+<text class="val" x="551.3" y="127.5">0.92</text>
+<text class="lb" x="166" y="155.0" text-anchor="end">P–S, undoped</text>
+<text class="lb2" x="166" y="169.0" text-anchor="end">n 20 · LPSCl1.6</text>
+<g class="hit" tabindex="0" role="img" aria-label="P–S in undoped LPSCl1.6, same settings, ELF 0.944 ± 0.001" data-v="ELF 0.944 ± 0.001" data-l="P–S in undoped LPSCl1.6, same settings">
+<rect class="hitbox" x="178" y="140" width="396" height="34"/>
+<path class="mk host" d="M178.0,151.0H547.8Q551.8,151.0 551.8,155.0V159.0Q551.8,163.0 547.8,163.0H178.0Z"/>
+<line class="err" x1="551.4" y1="157.0" x2="552.2" y2="157.0"/><line class="err" x1="551.4" y1="152.0" x2="551.4" y2="162.0"/><line class="err" x1="552.2" y1="152.0" x2="552.2" y2="162.0"/>
+</g>
+<text class="val" x="559.2" y="161.5">0.94</text>
+<text class="hd" x="2" y="193">Bonds to Nd</text>
+<text class="lb" x="166" y="217.0" text-anchor="end">Nd–S</text>
+<text class="lb2" x="166" y="231.0" text-anchor="end">n 8 · 2.88 Å</text>
+<g class="hit" tabindex="0" role="img" aria-label="Nd–S, this cell, ELF 0.466 ± 0.067" data-v="ELF 0.466 ± 0.067" data-l="Nd–S, this cell">
+<rect class="hitbox" x="178" y="202" width="396" height="34"/>
+<path class="mk nd" d="M178.0,213.0H358.5Q362.5,213.0 362.5,217.0V221.0Q362.5,225.0 358.5,225.0H178.0Z"/>
+<line class="err" x1="336.0" y1="219.0" x2="389.1" y2="219.0"/><line class="err" x1="336.0" y1="214.0" x2="336.0" y2="224.0"/><line class="err" x1="389.1" y1="214.0" x2="389.1" y2="224.0"/>
+</g>
+<text class="val" x="396.1" y="223.5">0.47</text>
+<text class="lb" x="166" y="251.0" text-anchor="end">Nd–Cl</text>
+<text class="lb2" x="166" y="265.0" text-anchor="end">n 2 · 2.75 Å</text>
+<g class="hit" tabindex="0" role="img" aria-label="Nd–Cl, this cell, ELF 0.372 ± 0.010" data-v="ELF 0.372 ± 0.010" data-l="Nd–Cl, this cell">
+<rect class="hitbox" x="178" y="236" width="396" height="34"/>
+<path class="mk nd" d="M178.0,247.0H321.3Q325.3,247.0 325.3,251.0V255.0Q325.3,259.0 321.3,259.0H178.0Z"/>
+<line class="err" x1="321.4" y1="253.0" x2="329.3" y2="253.0"/><line class="err" x1="321.4" y1="248.0" x2="321.4" y2="258.0"/><line class="err" x1="329.3" y1="248.0" x2="329.3" y2="258.0"/>
+</g>
+<text class="val" x="336.3" y="257.5">0.37</text>
+<text class="lb" x="166" y="285.0" text-anchor="end">Nd–O</text>
+<text class="lb2" x="166" y="299.0" text-anchor="end">n 2 · 2.49 Å</text>
+<g class="hit" tabindex="0" role="img" aria-label="Nd–O, this cell, ELF 0.311 ± 0.033" data-v="ELF 0.311 ± 0.033" data-l="Nd–O, this cell">
+<rect class="hitbox" x="178" y="270" width="396" height="34"/>
+<path class="mk nd" d="M178.0,281.0H297.2Q301.2,281.0 301.2,285.0V289.0Q301.2,293.0 297.2,293.0H178.0Z"/>
+<line class="err" x1="288.1" y1="287.0" x2="314.2" y2="287.0"/><line class="err" x1="288.1" y1="282.0" x2="288.1" y2="292.0"/><line class="err" x1="314.2" y1="282.0" x2="314.2" y2="292.0"/>
+</g>
+<text class="val" x="321.2" y="291.5">0.31</text>
+</svg></div><figcaption><b>Fig. 7. ELF at the bond midpoint.</b> P–S and P–O keep a shared pair (0.92–0.94); bonds to Nd do not (0.31–0.47). The darker gray bar is P–S in undoped LPSCl1.6 computed with the same settings (0.944). The line at 0.5 marks the uniform electron gas value, a reference rather than a bond threshold. Li–S and Li–Cl are left out on purpose (see text).</figcaption><details class="tv"><summary>Table view</summary><div class="tablewrap"><table><thead><tr><th>Bond</th><th>Cell</th><th class="n">Bonds (n)</th><th class="n">Mean length (Å)</th><th class="n">ELF midpoint</th><th class="n">s.d.</th></tr></thead><tbody><tr><td>P–S</td><td>Nd-doped (this page)</td><td class="n">37</td><td class="n">2.065</td><td class="n">0.943</td><td class="n">0.002</td></tr><tr><td>P–O</td><td>Nd-doped (this page)</td><td class="n">3</td><td class="n">1.571</td><td class="n">0.923</td><td class="n">0.002</td></tr><tr><td>Nd–S</td><td>Nd-doped (this page)</td><td class="n">8</td><td class="n">2.879</td><td class="n">0.466</td><td class="n">0.067</td></tr><tr><td>Nd–Cl</td><td>Nd-doped (this page)</td><td class="n">2</td><td class="n">2.748</td><td class="n">0.372</td><td class="n">0.010</td></tr><tr><td>Nd–O</td><td>Nd-doped (this page)</td><td class="n">2</td><td class="n">2.492</td><td class="n">0.311</td><td class="n">0.033</td></tr><tr><td>P–S</td><td>undoped LPSCl1.6</td><td class="n">20</td><td class="n">2.06</td><td class="n">0.944</td><td class="n">0.001</td></tr></tbody></table></div></details></figure>
+<p>Bader 와 ELF 는 다른 것을 재요. Bader 는 Nd 가 Li 보다 전자를 덜 내줬다는 것을, 중점 ELF 는 Nd–S 가 P–S 꼴 공유 결합은 아니라는 것을 보여 줘요. 둘을 합치면 주로 이온 결합이고 Li–음이온보다 공유성이 조금 더 있다는 그림이에요. ELF 는 그 공유성이 얼마나 되는지는 재지 못해서, ELF 결과는 Bader 를 확인했다기보다 어긋나지 않는다는 데까지예요.</p>
+<p class="note">두 가지는 일부러 그림에서 빼거나 읽지 않았어요. Li–S · Li–Cl 의 중점 ELF 는 0.89–0.93 으로 높게 나오는데, Li 가 작아서 결합 중점이 S · Cl 의 전자 껍질 안에 들어가기 때문이에요. 공유 결합이라는 뜻이 아니어서 그림에서 뺐어요. 그리고 Nd–S · Nd–Cl · Nd–O 의 중점 값 순서가 전기음성도 순서와 같아 보이지만, 결합 길이가 달라서 (2.88 · 2.75 · 2.49 Å) 이 값으로 이온성 순서를 매기지 않아요.</p>
+</section>
+
+<section id="table">
+<h2>전기음성도와 DFT 를 한 표로</h2>
+<div class="tablewrap"><table class="cmp">
+<thead><tr><th>비교</th><th>모델</th><th>전기음성도 기대</th><th>DFT (이 셀)</th><th>판정</th></tr></thead>
+<tbody><tr><td>Li–S → Nd–S</td><td>이번 모델</td><td>Δχ 1.60 → 1.44, S 쪽 전자가 조금 준다</td><td>자유 S²⁻ −1.69 → −1.47 e (덜 음)</td><td><span class="chip chip-ok">✓ 같은 방향</span></td></tr><tr><td>Li–Cl → Nd–Cl</td><td>이번 모델</td><td>Δχ 2.18 → 2.02, Cl 쪽 전자가 조금 준다</td><td>Cl⁻ −0.91 → −0.83 e (덜 음)</td><td><span class="chip chip-ok">✓ 같은 방향</span></td></tr><tr><td>Li → Nd (양이온 쪽)</td><td>이번 모델</td><td>χ 0.98 → 1.14, Nd 가 전자를 덜 내준다</td><td>형식 전하 가운데 내준 몫 Li 88 %, Nd 65 %</td><td><span class="chip chip-ok">✓ 같은 방향</span> 형식 전하 +3 영향도 섞임</td></tr><tr><td>P–S → Nd–S</td><td>Rietveld 모델</td><td>Δχ 0.39 → 1.44, S 쪽 전자가 는다</td><td>아직 계산하지 않았어요</td><td><span class="chip chip-open">○ 계산 전</span></td></tr><tr><td>P–S → P–O</td><td>두 모델 공통</td><td>Δχ 0.39 → 1.25, O 쪽 전자가 더 많다</td><td>P 에 붙은 O 는 −1.90 ~ −1.85 e 로 자유 S²⁻ 보다 더 음이에요. PS₄ 안 S 와의 직접 비교는 못 해요.</td><td><span class="chip chip-part">△ 방향만</span></td></tr><tr><td>결합 성격</td><td>이번 모델</td><td>Nd–S 는 P–S 보다 훨씬 이온성이고 Li–S 보다 조금 덜</td><td>중점 ELF P–S 0.94, Nd–S 0.47. Bader 와 합치면 주로 이온 결합이고 Li–음이온보다 공유성이 조금 더 있어요.</td><td><span class="chip chip-ok">✓ 같은 방향</span></td></tr></tbody></table></div>
+</section>
+
+<section id="write">
+<h2>원고에 옮길 때</h2>
+<h3>이렇게 쓸 수 있어요 (예)</h3>
+<ol class="ex">
+<li>같은 셀 · 같은 설정에서 Nd 와 닿은 자유 S²⁻ 의 Bader 전하는 Li 만 이웃한 자유 S²⁻ 보다 0.22 e 덜 음이다 (각 2 개).
+<span class="en" lang="en">In the same cell and with the same settings, free S²⁻ in contact with Nd carries a Bader charge 0.22 e less negative than free S²⁻ coordinated only by Li (two sites each).</span></li>
+<li>Pauling 전기음성도 차는 Nd–S (1.44) 가 Li–S (1.60) 보다 조금 작고 P–S (0.39) 보다 훨씬 크다. Li 자리 모델의 Bader 전하는 Nd 가 Li 를 대신할 때 기대되는 방향을 따른다.
+<span class="en" lang="en">The Pauling electronegativity difference is slightly smaller for Nd–S (1.44) than for Li–S (1.60) and much larger than for P–S (0.39). The Bader charges of the Li-site model follow the direction expected when Nd replaces Li.</span></li>
+<li>결합 중점 ELF 는 P–S 0.94, Nd–S 0.47 로, Nd–S 에는 P–S 와 같은 공유 전자쌍이 없다.
+<span class="en" lang="en">The ELF at the bond midpoint is 0.94 for P–S but 0.47 for Nd–S, so Nd–S has no shared electron pair of the P–S type.</span></li>
+</ol>
+<h3 style="margin-top:22px">이렇게는 쓰지 않아요</h3>
+<ul class="dont">
+<li><b>"전자 배치가 바뀌어서 안정하다."</b> Bader · ELF 는 묘사예요. 안정성은 에너지 계산 (자리 · 분해) 이 답하고, 둘을 원인과 결과로 잇지 않아요.</li>
+<li><b>"Nd 옆 S 는 전자를 더 받는다."</b> 이번 Li 자리 모델에서는 반대로 나왔어요. 이 문장은 P 자리 모델에서만 시험할 수 있고, 아직 계산하지 않았어요.</li>
+<li><b>ELF 중점 값으로 Nd–S · Nd–Cl · Nd–O 의 이온성 순서를 매기는 문장.</b> 결합 길이가 달라서 중점이 음이온에서 떨어진 거리가 달라요.</li>
+<li><b>"Li–S 는 공유 결합이다 (ELF 0.93)."</b> Li 가 작아서 중점이 S 껍질 안에 들어가 생긴 값이에요.</li>
+<li><b>"ELF 가 0.5 근처라 결합이 없다."</b> 0.5 는 균일 전자기체의 값이라 결합이 있고 없음을 가르는 문턱이 아니에요.</li>
+<li><b>이 셀의 숫자를 실험 조성으로 옮기는 문장.</b> 이 셀은 화학식 단위당 Nd 0.2 개로, 목표 조성 (0.02) 의 10 배예요.</li>
+<li><b>Nd 4f 전자에 관한 문장.</b> 계산에서 4f 전자는 핵심부에 얼려 뒀어요.</li>
+<li><b>이 결과로 이온 전도도 변화를 설명하는 문장.</b></li>
+<li><b>Pauling 이온성 % 를 절대 이온성으로 쓰는 문장.</b></li>
+</ul>
+</section>
+
+<section id="open">
+<h2>아직 답하지 않은 것 (안정성)</h2>
+<p>안정성은 두 가지 에너지 계산으로 보고 있어요.</p>
+<ul class="nb">
+<li><b>자리.</b> Nd 가 P 자리 (Rietveld 4b) 와 Li 자리 가운데 어디에서 에너지가 낮은지 견줘요. 두 모델은 같은 조성 균형으로 만들었어요. DFT 이완 (셀 모양은 고정하고 부피를 바꿔 가며 맞추는 방식) 이 진행 중이라 숫자는 아직 없어요.</li>
+<li><b>분해.</b> Nd/O 를 넣은 셀이 넣기 전보다 분해되기 쉬운지 봐요. 같은 분해 생성물을 기준으로, Li 가 드나들지 않는 닫힌 계에서 견줘요. 아직 시작 전이에요.</li>
+</ul>
+<p>그림 3a (Nd 가 P 자리) 의 전기음성도 기대도 아직 계산으로 확인하지 않았어요. 안정성을 다른 뜻으로 생각하셨다면 알려 주세요.</p>
+</section>
+
+<section id="methods">
+<h2>계산 조건과 자료</h2>
+<details class="methods card"><summary>펼쳐 보기</summary>
+<dl class="meth">
+<dt>구조</dt><dd>Li₄₈Nd₂P₁₀O₃S₄₁Cl₁₆ (120 원자). LPSCl1.6 10 화학식 단위에 Nd₂O₃ 1 단위를 넣은 셀이고, Nd 는 Li 자리, O 는 PS₄ 의 S 자리에 있어요. 6 월에 만든 모델을 9 월에 새 Nd PP (4f 핵심부) 로 다시 이완한 구조예요 (부피 −0.15 %). 화학식 단위당 Nd 0.2 개.</dd>
+<dt>Bader</dt><dd>Quantum ESPRESSO PBE · PAW 전전자 가전자 밀도 (pp.x plot_num 17) · SCF 70 / 560 Ry · k 3 × 3 × 1 · mv smearing 0.01 Ry · Henkelman bader 코드 · 순 전하 = 원자가 전자 수 − 센 전자 수 · 전자 합 592.025 (원자가 전자 합 592).</dd>
+<dt>이웃 판정</dt><dd>결과 전에 정한 거리 하나 (각도 안 봄): S–P 2.4 Å, O–P 1.9 Å, Nd–S · Nd–Cl 3.3 Å, Nd–O 2.9 Å. 3.0–3.6 Å 사이에 애매한 원자는 없었어요.</dd>
+<dt>ELF</dt><dd>같은 구조로 노름 보존 PP SCF 를 새로 돌림 (Li · P · S · Cl · O 는 SG15, Nd 는 PseudoDojo 4f 핵심부 PP 를 UPF 로 옮김) · 80 / 320 Ry · k 3 × 3 × 1 · pp.x ELF (plot_num 8) · 결합 중점 값 (최소 이미지). 호스트 LPSCl1.6 은 같은 규약 · 같은 도구로 낸 표예요.</dd>
+<dt>전기음성도</dt><dd>Pauling 척도. Nd · P · S · O 는 1저자 메시지의 값과 같고, Li 0.98 · Cl 3.16 는 같은 표준 표의 값이에요. 이온성 % 식은 L. Pauling, <i>The Nature of the Chemical Bond</i> (3rd ed., 1960) 의 어림식이에요.</dd>
+<dt>자료</dt><dd><code>db/raw/nd_q3_bader_2026_10_19/</code> · <code>db/raw/nd_q3_elf_2026_10_19/</code> · 기록 <code>db/properties/nd_q3_bader_elf_runlog_2026_10_19.json</code> · 그림 숫자 <code>db/properties/cei_figs/cei_nd_en_*.csv</code> · 생성기 <code>tools/figures/build_nd_electronegativity_page.py</code></dd>
+</dl>
+</details>
+</section>
+
+<footer>2026-10-20 · 숫자는 원자료 파일에서 생성기가 뽑았어요 (손으로 옮기지 않았어요). 한계: Nd 두 개 · 이웃 음이온 종류마다 두 개 · 구조 하나.</footer>
+</div>
+<div id="tip" role="tooltip" hidden></div>
+<script>
+(() => {
+  const tip = document.getElementById('tip');
+  if (!tip) return;
+  const place = (x, y) => {
+    const r = tip.getBoundingClientRect();
+    let left = x + 14, top = y - r.height - 12;
+    if (left + r.width > window.innerWidth - 8) left = x - r.width - 14;
+    if (left < 8) left = 8;
+    if (top < 8) top = y + 18;
+    tip.style.left = left + 'px';
+    tip.style.top = top + 'px';
+  };
+  const show = (el, x, y) => {
+    const v = document.createElement('strong');
+    v.textContent = el.getAttribute('data-v') || '';
+    const l = document.createElement('span');
+    l.textContent = el.getAttribute('data-l') || '';
+    tip.replaceChildren(v, l);
+    tip.hidden = false;
+    place(x, y);
+  };
+  const hide = () => { tip.hidden = true; };
+  document.querySelectorAll('[data-v]').forEach((el) => {
+    el.addEventListener('pointermove', (e) => show(el, e.clientX, e.clientY));
+    el.addEventListener('pointerdown', (e) => show(el, e.clientX, e.clientY));
+    el.addEventListener('pointerleave', hide);
+    el.addEventListener('focus', () => { const b = el.getBoundingClientRect(); show(el, b.left + b.width / 2, b.top); });
+    el.addEventListener('blur', hide);
+  });
+  window.addEventListener('scroll', hide, { passive: true });
+})();
+</script>
+</body>
+</html>
