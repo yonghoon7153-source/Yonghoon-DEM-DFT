@@ -61,6 +61,10 @@ docs/data/case15_corner_20261001/ (atom · contact 1,710,000 + case15_am_scaffol
   J18 scaffold 머리줄 step 선언 = ASCII · int64 — `# step １００` · `step<U+3000>100` · `ſtep 100` · `step 100١` (+ 덤프 1001) → 입구 REJECT (int_token ·
       scaffold_step · 고치기 전 = G-frame 주장으로 PASS) · 5,000 자리 → 예외 없이 REJECT (고치기 전 = int() 한도 ValueError) · 양성: ASCII step 100 ·
       int64 최댓값 19 자리 = PASS (주장 G-frame) · 대조: `step 101` = scaffold_step_mismatch 그대로
+      v6 (PB1 F1 · 10-20 사전 공격 리뷰 — 숫자 뒤 꼬리 · e3 `2060000.9` 거부와 같은 원칙): `# step 2060000.9` (+ 덤프 2060000) · `# step 100_000` ·
+      `# step 1e6` (+ 덤프 1) · `# step 100²` · `# step 100x` → 입구 REJECT (int_token · scaffold_step · 고치기 전 v5 = 꼬리 앞 ASCII 숫자만 읽어 G-frame
+      주장으로 PASS) · 왼쪽 경계: `# laststep 100` = 선언 아님 (PASS · 주장 G-geo 만 · 고치기 전 = step 100 으로 읽어 G-frame) · 양성: 문장 끝
+      `# compacted at step 100.` · `# step 100,` · `# timestep 100` · heckel LOOSE 머리줄 원문 (`… **step 405000 = …` + 덤프 405000) = PASS (주장 G-frame)
   J15P 정상 양성 그대로 — real_14 · case15 원 gz · LIGGGHTS 꼴 머리 (`… ix iy iz vx … omegaz radius ` 끝 공백 · `1e-05` · `-0` · `5` · 추가 열) ·
       소비 좌표 `-0` + scaffold `-0.000000000000` · 탭 · 겹 공백 · mm · fs · sm 플래그 · CR 만 · CRLF/LF 섞임 · gzip 두 멤버 → PASS (고치기 전 · 뒤 같음)
 """
@@ -96,6 +100,7 @@ C15_ATOM = os.path.join(C15, 'atom_v4_1710000.liggghts.gz')
 C15_CONT = os.path.join(C15, 'contact_v4_1710000.liggghts.gz')
 C15_SCAF = os.path.join(C15, 'case15_am_scaffold.csv')
 C15_TMAP = {1: 'AM_P', 2: 'SE'}
+HECKEL_LOOSE_AM = os.path.join(ROOT, 'docs', 'data', 'heckel_sweep_scaffolds', 'LOOSE_am_scaffold.csv')   # 첫 줄 = 리포 scaffold 의 실제 step 선언 머리줄 (J18 양성)
 
 
 def chk(name, cond, why=''):
@@ -1292,9 +1297,11 @@ def sc_head(line, steps=None):
     return ed
 
 
-@case('J18 scaffold 머리줄 step 선언 = ASCII · int64 — 전각 · 유니코드 공백 · ſ · 섞인 숫자 = 입구 REJECT · 긴 숫자열 = 예외 없이 (RIMPR-03 같은 부류)')
+@case('J18 scaffold 머리줄 step 선언 = ASCII · int64 — 전각 · 유니코드 공백 · ſ · 섞인 숫자 · 숫자 뒤 꼬리 = 입구 REJECT · 긴 숫자열 = 예외 없이 · '
+      '`laststep` = 선언 아님 (RIMPR-03 같은 부류)')
 def t_scaffold_step():
     print('J18 — `_STEP_RE` (\\d · \\s · re.I 유니코드) 가 비-ASCII 머리줄로 G-frame 주장을 올리던 것 · 5,000 자리 = int() 한도 ValueError · '
+          'v6: 선언 찾기 `(\\d+)` 가 꼬리 앞에서 멈춰 앞 ASCII 숫자만 읽던 것 (`2060000.9` · `100_000` · `1e6` · `100²` · `100x`) · `laststep` 안의 step · '
           '고치기 전 = PASS (주장 G-frame) / 예외')
     base, sid, L = consumer_ctx()
     rows = (
@@ -1304,6 +1311,12 @@ def t_scaffold_step():
         ('`# step 100١` + 두 덤프 step 1001 (ASCII 뒤 아라비아-인도 숫자 — ASCII 부분만 읽고 나머지를 버리지 않는다)',
          sc_head('# step 100١', steps='1001')),
         ('긴 ASCII step (5,000 자리 · int64 밖 — 고치기 전 = int() 한도 ValueError)', sc_head('# step ' + '9' * 5000)),
+        #  v6 (PB1 F1 · 10-20 사전 공격 리뷰) — 숫자 뒤 꼬리: v5 선언 찾기 `(\d+)` 가 꼬리 앞에서 멈춰 앞 ASCII 숫자만 값으로 읽었다 (e3 `2060000.9` 거부와 같은 원칙)
+        ('`# step 2060000.9` + 두 덤프 step 2060000 (소수 꼬리 — v5 = 2060000 으로 읽었다)', sc_head('# step 2060000.9', steps='2060000')),
+        ('`# step 100_000` (밑줄 꼬리 — v5 = 100)', sc_head('# step 100_000')),
+        ('`# step 1e6` + 두 덤프 step 1 (지수 꼬리 — v5 = 1)', sc_head('# step 1e6', steps='1')),
+        ('`# step 100²` (U+00B2 위첨자 — `\\d` 아님 · v5 = 100)', sc_head('# step 100²')),
+        ('`# step 100x` (글자 꼬리 — v5 = 100)', sc_head('# step 100x')),
     )
     for k, (tag, ed) in enumerate(rows):
         (sc, at, ct), _ = synth(f'pb1_t{k}', fmt='g6', edit=ed)
@@ -1315,9 +1328,16 @@ def t_scaffold_step():
         ok, why = consumer_blocks(jm, sid, L)
         chk(f'J18 {tag} → 계획 join_gate_failed · 정량 관문 거부 (고치기 전 = 정량 ACCEPT 또는 예외)', ok, why)
     #  양성 · 대조 — ASCII step 은 그대로 읽는다 (주장 G-frame 까지) · 다른 ASCII step = 지금처럼 scaffold_step_mismatch
+    #  v6 양성 — 문장 끝 `.` · `,` 는 꼬리가 아니다 · 왼쪽 경계가 `timestep` 을 막지 않는다 · 리포의 실제 step 머리줄 (heckel LOOSE) 그대로 (고치기 전 · 뒤 같음)
     i64m = '9223372036854775807'
+    loose = text_lines(HECKEL_LOOSE_AM)[0]
     for k, (tag, ed) in enumerate((('`# type,x,y,z,r  # step 100` (ASCII · 두 덤프 step 100)', sc_head('# type,x,y,z,r  # step 100')),
-                                   ('긴 ASCII step = int64 최댓값 19 자리 (두 덤프 같은 step)', sc_head('# step ' + i64m, steps=i64m)))):
+                                   ('긴 ASCII step = int64 최댓값 19 자리 (두 덤프 같은 step)', sc_head('# step ' + i64m, steps=i64m)),
+                                   ('`# compacted at step 100.` (문장 끝 마침표 = 꼬리 아님 · v6)', sc_head('# compacted at step 100.')),
+                                   ('`# step 100,` (쉼표 = 꼬리 아님 · v6)', sc_head('# step 100,')),
+                                   ('`# timestep 100` (time 접두 — 왼쪽 경계가 막지 않는다 · v6)', sc_head('# timestep 100')),
+                                   ('heckel LOOSE_am_scaffold.csv 머리줄 원문 (`… **step 405000 = 압축 시작 직전** …`) + 두 덤프 step 405000 (v6)',
+                                    sc_head(loose, steps='405000')))):
         (sc, at, ct), _ = synth(f'pb1_tok{k}', fmt='g6', edit=ed)
         jm, err = try_join((sc, at, ct))
         chk(f'J18 양성: {tag} → PASS (거부 없음) · 주장 = G-frame 까지',
@@ -1327,6 +1347,14 @@ def t_scaffold_step():
     jm, err = try_join((sc, at, ct))
     ok, why = gate_reject(jm, err, 'scaffold_step_mismatch', 'G-geo')
     chk('J18 대조: `# step 101` (ASCII · 두 덤프 step 100) → REJECT (scaffold_step_mismatch · G-geo — 고치기 전 · 뒤 같음)', ok, why)
+    #  v6 왼쪽 경계 — 낱말 안의 `step` (`laststep`) 은 선언이 아니다 (고치기 전 v5 = step 100 으로 읽어 G-frame 주장 · 두 덤프 step 100)
+    (sc, at, ct), _ = synth('pb1_t_last', fmt='g6', edit=sc_head('# laststep 100'))
+    jm, err = try_join((sc, at, ct))
+    ib = ((jm or {}).get('entrance') or {}).get('int_token_bad') or {}
+    chk('J18 왼쪽 경계: `# laststep 100` (두 덤프 step 100) → 선언 아님 = PASS (거부 없음) · 주장 = G-geo 만 · scaffold_step 0 '
+        '(고치기 전 = step 100 으로 읽어 G-frame 주장)',
+        jm is not None and jm['status'] == 'PASS' and jm['rejections'] == [] and jm['scaffold_frame_claim'].startswith('G-geo')
+        and int(ib.get('scaffold_step', 0)) == 0, err or (repr(codes(jm)) + ' ' + jm['scaffold_frame_claim']))
 
 
 @case('J15P 정상 양성 그대로 — 실자료 원 gz · LIGGGHTS 꼴 머리 · %g 값 · 탭 · 겹 공백 · CR · CRLF/LF · gzip 두 멤버 · mm fs sm (J15–J18 거짓 거부 방지)')
