@@ -36,19 +36,31 @@ scaffold 머리줄에 원 덤프 step 이 없으면 scaffold ↔ 덤프는 **G-g
   e3  정확 정수 — TIMESTEP · 머리 수 · 원자 id · type · 접촉 id1 · id2 · scaffold type 토큰 = 정수 문자열 · int64 범위만 (`2060000.9` · `201.0` · `1e+06` ·
       int64 를 넘는 토큰 = int_token · `int(float(…))` 로 줄이지 않는다 · OverflowError 로 끝나지 않는다).  TIMESTEP · NUMBER OF 절은 몸통 **전체**가
       정확히 한 토큰 (RIMPR-01 — `100 0.9` · `1 garbage` · 둘째 줄의 뒤 토큰을 버리지 않는다 = int_token) · 숫자 = **ASCII `[0-9]` 만** (RIMPR-03 —
-      전각 `１` · 아라비아-인도 `١` 숫자 = int_token · 생산 덤프는 ASCII `%g`)
+      전각 `１` · 아라비아-인도 `١` 숫자 = int_token · 생산 덤프는 ASCII `%g`).
+      scaffold 머리줄 (`#` 주석) 의 step 선언 (v5 · RIMPR-03 같은 부류) — v4 판 문법 (`(time)step` + `\\s` · `\\d` · re.I 유니코드) 으로 보이는 것은
+      전부 선언이다 (조용히 버리지 않는다) · 값 = 선언 전체가 ASCII `(time)step[ \\t]*[=:]?[ \\t]*[0-9]+` (re.ASCII) 이고 수가 int64 일 때만 ·
+      전각 · 유니코드 공백 · `ſ` (U+017F) · ASCII 뒤 섞인 비-ASCII 숫자 · int64 밖 긴 숫자열 = int_token (`scaffold_step` · `int()` 로 읽지 않는다)
   e4  지원 상자 — 직교 `ITEM: BOX BOUNDS f1 f2 f3` (플래그 [pfsm]² · p 는 pp 만) + 경계 줄 정확히 셋 · 줄마다 토큰 둘.  기울어진 머리 (xy xz yz) = box_tilted
       (지원 밖 · tilt 를 버리고 비교하지 않는다) · 그 밖 모양 (넷째 줄 포함) = box_format.  상자 동일 (f3) = 머리 · 경계 줄 **전 토큰** 비교
   e5  형식 = **6 유효숫자 `%g` 생산 포맷만** (LIGGGHTS dump 기본 · 토큰 = '%g' % 값) — 다른 정밀도 · 끝 0 · 혼합 포맷 = numeric_format.  면적 포괄
-      helper 는 고정 6 자리 (`lhs_descriptor_harvest.AREA_CHECK_SIGFIG`) 라 지원 형식을 그 가정과 같게 묶는다 (기록 S 를 helper 에 넘기지 않는다 · 봉인 무변경)
+      helper 는 고정 6 자리 (`lhs_descriptor_harvest.AREA_CHECK_SIGFIG`) 라 지원 형식을 그 가정과 같게 묶는다 (기록 S 를 helper 에 넘기지 않는다 · 봉인 무변경).
+      scaffold 실수 열 (x y z r · v5 · RIMPR-03 같은 부류) = **ASCII 고정소수 `[+-]?[0-9]+(\\.[0-9]+)?` 만** (생산 `mpm_input_from_case.write_csv` =
+      `%.6f`) — 유한 토큰 중 전각 · 아라비아-인도 숫자 · 밑줄 · 지수 표기 · 유니코드 공백 덧붙임 = numeric_format (`scaffold_bad.scaffold_grammar` ·
+      Decimal · float 은 그것들을 받는다) · scaffold 주석 아닌 줄의 글자 어휘 (TAB · CR · LF · 0x20–0x7E 밖 = `scaffold_bad.scaffold_lexical` · 중복
+      방어 — 그 밖 글자는 어느 토큰 안에 남아 e1 · e3 · e5 에도 걸린다) · 빈 줄 · 주석 판정 · 토큰 앞뒤 떼기 = ASCII 공백 · 탭만 (옛 판 `strip()` 은 유니코드
+      공백도 뗐다) · 주석 줄은 어휘 관문 밖 (case15 · kit 머리줄 U+2014 · 한국어)
   e6  전수 소비 (RIMPR-01 · Codex 10-15 판정문 §2 — 형식 검사를 적용할 원본을 **온전히** 읽는다 · 파서가 검사 전에 버리는 줄 · 열 · 토큰이 없다):
       행 절 (ITEM: ATOMS · ENTRIES) 의 비어 있지 않은 **모든** 행을 세고 열 수 ≠ 머리 열 수 = row_width (조용히 빼지 않는다) · 소비하는 필수 열 이름은
       정확히 한 번 (중복 = header_duplicate — 첫 열만 읽고 뒤 열을 검사 밖에 두지 않는다) · 마지막 프레임의 모든 줄은 아는 절 넷 (TIMESTEP ·
       NUMBER OF · BOX BOUNDS · 행) 중 하나에 한 번씩 — 모르는 ITEM 절 · 같은 절 두 번 · 첫 프레임 앞 비어 있지 않은 줄 · TIMESTEP · NUMBER OF 머리 줄의
       뒤 토큰 = frame_layout.  빈 줄 (공백뿐) 처리는 옛 판과 같다 — 행 절 안 · 절 끝의 빈 줄 = 내용 아님 · TIMESTEP · NUMBER OF · BOX BOUNDS
       절의 내용 앞 · 사이 빈 줄 = 모양 위반 (int_token · box_format).
+      덤프 글자 어휘 (v5 · RIMPR-R01 같은 부류) — 파일 전체가 TAB · LF · CR · 출력 가능 ASCII (0x20–0x7E) 만: 그 밖 글자 (유니코드 공백 U+00A0 ·
+      U+2003 · U+3000 · 제어 U+001F · 줄 경계 FF · VT · NEL · U+2028 …) = frame_layout (`lexical` — `str.split()` · `splitlines()` 가 그것들을 구분자 ·
+      줄 끝으로 정상화해 값이 같은 채 통과하던 것 · 정상화하지 않고 거부).
       구역 머리 줄 (RIMPR-R01 · Codex 10-20 판정문 §3) — 구역 이름 = **정확한 단어 경계** (표지 `ITEM: TIMESTEP` · `ITEM: NUMBER OF …` ·
-      `ITEM: BOX BOUNDS` · `ITEM: ATOMS` · `ITEM: ENTRIES` 바로 뒤 = 줄 끝 · 공백 · 탭 — `ITEM: ATOMSid …` · `ITEM: BOX BOUNDSff …` ·
+      `ITEM: BOX BOUNDS` · `ITEM: ATOMS` · `ITEM: ENTRIES` 바로 뒤 = 줄 끝 · 공백 (U+0020) · 탭 (U+0009) 만 — `isspace()` 아님 (v5 · U+00A0 · U+2003 ·
+      U+3000 · U+001F 는 경계가 아니다) · `ITEM: ATOMSid …` · `ITEM: BOX BOUNDSff …` ·
       `ITEM: ATOMSITEM: ATOMS …` = frame_layout (header_boundary)) · 표지는 **앞에서 한 번만** 뗀다 (옛 판의 전역 `replace()` 아님) — 나머지 토큰은
       그대로 열 · 상자 검사로 (행 표지 후첨 = 머리 열 수 ≠ 행 폭 = row_width · 상자 표지 후첨 = 플래그 셋 아님 = box_format) · 정상 공백 · 탭 구분 ·
       끝 공백 · 쓰지 않는 진단 열은 그대로 받는다
@@ -77,23 +89,28 @@ import lhs_descriptor_harvest as H                             # noqa: E402  면
 from lhs_contact_audit import SIGFIG_FLOOR, _half_ulp, _sigfigs   # noqa: E402  반폭 규약 (규율 ①)
 
 JOIN_KIND = 'am_iface_join'
-JOIN_VERSION = 'g_geo_g_frame_v4'           # v4 (RIMPR-R01 · 03 · 04 부분) = 구역 이름 단어 경계 · 표지 한 번 · ASCII 정수 · 파생값 유한 / v3 (RIMPR-01 · 02) = e6 전수 소비 · e1 float64 + µm 변환 · e3 절 전체 · int64 / v2 (RIMP-02 · 03) = 입구 검사 e1–e5 + AM–AM 면적 전 행 인증 · v1 (10-13) = 그 전
+JOIN_VERSION = 'g_geo_g_frame_v5'           # v5 (RIMPR-R01 · 03 같은 부류 · 10-20 내부 사전 리뷰) = 표지 경계 공백 · 탭만 · 덤프 글자 어휘 · scaffold ASCII 고정소수 + 주석 아닌 줄 어휘 · scaffold step 선언 ASCII · int64 / v4 (RIMPR-R01 · 03 · 04 부분) = 구역 이름 단어 경계 · 표지 한 번 · ASCII 정수 · 파생값 유한 / v3 (RIMPR-01 · 02) = e6 전수 소비 · e1 float64 + µm 변환 · e3 절 전체 · int64 / v2 (RIMP-02 · 03) = 입구 검사 e1–e5 + AM–AM 면적 전 행 인증 · v1 (10-13) = 그 전
 SIM_TO_UM = 1000.0              # LIGGGHTS 상자 단위 → µm (덱 머리 "Scale: r*1000" · real_14 README)
 AM_KINDS = ('AM_P', 'AM_S')
 SCAFFOLD_TYPE = {1: 'AM_P', 2: 'AM_S'}                         # scaffold CSV 규약 (머리줄 "AM_P=1,AM_S=2")
 POS1 = ('c_cpl[1]', 'c_cpl[2]', 'c_cpl[3]')                    # pair/gran/local pos (덱 `compute … pair/gran/local pos id force …`)
 POS2 = ('c_cpl[4]', 'c_cpl[5]', 'c_cpl[6]')
 _EPS = float(np.finfo(np.float64).eps)
-_STEP_RE = re.compile(r'(?:time)?step\s*[=:]?\s*(\d+)', re.I)
+_STEP_RE = re.compile(r'(?:time)?step[ \t]*[=:]?[ \t]*([0-9]+)', re.I | re.A)    # scaffold 머리줄 step 값 — ASCII 엄격 (v5 · re.A = 대소문자 접기도 ASCII 만)
+_STEP_DECL_RE = re.compile(r'(?:time)?step\s*[=:]?\s*(\d+)', re.I)              # v4 판 문법 (\s · \d · re.I 유니코드 — 전각 · U+3000 · ſ 를 받는다) = 선언 찾기 전용 (v5)
 _INT_RE = re.compile(r'[+-]?[0-9]+')                           # e3 정확 정수 토큰 (소수점 · 지수 · 밑줄 없음 · ASCII 숫자만 — `\d` 는 전각 · 아라비아-인도 숫자도 받는다 · RIMPR-03)
+_LEX_BAD = re.compile(r'[^\t\n\r\x20-\x7e]')                   # 덤프 글자 · scaffold 주석 아닌 줄 어휘 — TAB · LF · CR · 출력 가능 ASCII (0x20–0x7E) 밖 (v5)
+_FIX_RE = re.compile(r'[+-]?[0-9]+(?:\.[0-9]+)?')              # scaffold 실수 열 = ASCII 고정소수 (생산 `%.6f` · 지수 · 밑줄 · 유니코드 숫자 없음 · v5)
 _I64_MIN, _I64_MAX = -(1 << 63), (1 << 63) - 1                  # e3 정수 토큰 범위 (id · type 은 int64 배열 · LIGGGHTS step = bigint) — RIMPR-02
 _BOX_FLAG_RE = re.compile(r'[pfsm]{2}')                        # e4 LAMMPS 경계 플래그 (축마다 lo · hi)
 _TILT_TOKENS = ('xy', 'xz', 'yz')
-NUMERIC_FORMAT = 'g6'                                          # e5 — 지원하는 유일한 실수 형식 (6 유효숫자 `%g` · LIGGGHTS dump 기본)
+NUMERIC_FORMAT = 'g6'                                          # e5 — 지원하는 유일한 덤프 실수 형식 (6 유효숫자 `%g` · LIGGGHTS dump 기본)
+SCAFFOLD_FORMAT = 'ascii_fixed_decimal'                        # e5 — scaffold 실수 열 형식 (`[+-]?[0-9]+(.[0-9]+)?` · 생산 `%.6f` · v5)
 ENTRANCE_RULE = ('e1 유한 (실제로 쓰는 float64 값 · scaffold µm 변환값) · e2 양수 (반경 · 상자 길이) · e3 정확 정수 · ASCII [0-9] · int64 (step · 머리 수 · '
-                 'id · type · TIMESTEP · NUMBER OF 절 몸통 전체 = 한 토큰) · e4 직교 상자만 (기울어진 머리 = 거부 · 경계 줄 정확히 셋) · '
-                 'e5 6 유효숫자 %g 생산 포맷만 (다른 정밀도 · 혼합 = 거부) · e6 전수 소비 (행 열 수 · 필수 열 한 번 · 프레임 절 배치 · 구역 이름 단어 경계 · '
-                 '표지 앞에서 한 번 — 버리는 줄 · 토큰 없음) — 하나라도 걸리면 관문 계산 없이 REJECT (RIMP-02 · 03 · RIMPR-01 · 02 · R01 · 03)')
+                 'id · type · TIMESTEP · NUMBER OF 절 몸통 전체 = 한 토큰 · scaffold 머리줄 step 선언 전체 ASCII) · e4 직교 상자만 (기울어진 머리 = 거부 · '
+                 '경계 줄 정확히 셋) · e5 덤프 = 6 유효숫자 %g 생산 포맷만 (다른 정밀도 · 혼합 = 거부) · scaffold 실수 열 = ASCII 고정소수 + 주석 아닌 줄 어휘 · '
+                 'e6 전수 소비 (행 열 수 · 필수 열 한 번 · 프레임 절 배치 · 구역 이름 단어 경계 = 줄 끝 · 공백 · 탭 · 표지 앞에서 한 번 · 덤프 글자 = TAB · LF · '
+                 'CR · 0x20–0x7E — 버리는 줄 · 토큰 · 정상화 없음) — 하나라도 걸리면 관문 계산 없이 REJECT (RIMP-02 · 03 · RIMPR-01 · 02 · R01 · 03 · v5 같은 부류)')
 
 WHY = {
     'dilate_z': 'N1 — dilate_z ≠ 1 이면 raster 기하가 DEM 이 아니다 (덤프 면적 · 접촉 집합을 쓸 수 없다)',
@@ -125,7 +142,9 @@ WHY = {
     'nonpositive_radius': 'e2 — 반경 ≤ 0 (scaffold 또는 원자 덤프)',
     'int_token': ('e3 — 정수여야 할 토큰 (TIMESTEP · 머리 수 · id · type) 이 정확한 정수 문자열 · int64 범위가 아니다 (int(float(…)) 로 줄이지 않는다 · '
                   'RIMP-02) · TIMESTEP · NUMBER OF 절 몸통 전체가 정확히 한 토큰이 아니다 (뒤 토큰 · 둘째 줄을 버리지 않는다 · RIMPR-01) · '
-                  'int64 를 넘는 토큰 (OverflowError 대신 · RIMPR-02) · ASCII 숫자 [0-9] 가 아닌 숫자 (전각 · 아라비아-인도 · RIMPR-03)'),
+                  'int64 를 넘는 토큰 (OverflowError 대신 · RIMPR-02) · ASCII 숫자 [0-9] 가 아닌 숫자 (전각 · 아라비아-인도 · RIMPR-03) · '
+                  'scaffold 머리줄 step 선언이 ASCII `(time)step[ \\t]*[=:]?[ \\t]*[0-9]+` · int64 가 아니다 (전각 · 유니코드 공백 · ſ · 섞인 숫자 · 긴 숫자열 — '
+                  'int() 로 읽지 않는다 · v5)'),
     'box_tilted': 'e4 — 기울어진 상자 머리 (xy xz yz) · 직교 상자만 지원 (tilt 를 버리고 비교하지 않는다 · RIMP-02)',
     'box_format': 'e4 — 상자 머리 · 경계 줄 모양이 직교 LAMMPS 꼴이 아니다 (플래그 셋 · 경계 줄 정확히 셋 · 줄마다 토큰 둘 · hi > lo)',
     'row_width': ('e6 — 행 절 (ITEM: ATOMS · ENTRIES) 의 비어 있지 않은 행의 열 수 ≠ 머리 열 수 — 조용히 빼면 머리 수 · 형식 · 유한 검사를 받지 않은 채 '
@@ -134,8 +153,12 @@ WHY = {
                          'RIMPR-01)'),
     'frame_layout': ('e6 — 마지막 프레임의 줄이 아는 절 넷 (TIMESTEP · NUMBER OF · BOX BOUNDS · 행) 에 한 번씩 배정되지 않는다 — 모르는 ITEM 절 · '
                      '같은 절 두 번 · 첫 프레임 앞 비어 있지 않은 줄 · TIMESTEP · NUMBER OF 머리 줄의 뒤 토큰 (버리지 않고 거부 · RIMPR-01) · '
-                     '구역 이름 뒤 단어 경계 없음 (`ITEM: ATOMSid …` · `ITEM: BOX BOUNDSITEM: …` — 정상화하지 않고 거부 · RIMPR-R01)'),
-    'numeric_format': 'e5 — 실수 토큰이 6 유효숫자 %g 생산 포맷이 아니다 (다른 정밀도 · 끝 0 · 혼합 · 면적 포괄 helper 의 고정 6 자리 가정 밖 · RIMP-03)',
+                     '구역 이름 뒤 단어 경계 없음 (`ITEM: ATOMSid …` · `ITEM: BOX BOUNDSITEM: …` — 정상화하지 않고 거부 · RIMPR-R01) · 경계 = 줄 끝 · '
+                     '공백 · 탭만 (U+00A0 · U+2003 · U+3000 · U+001F 는 경계 아님 · v5) · 덤프 글자 어휘 — TAB · LF · CR · 출력 가능 ASCII (0x20–0x7E) 밖 '
+                     '글자 (유니코드 공백 · 제어 문자 · 비-ASCII 줄 경계 — split() · splitlines() 가 정상화하던 것 · lexical · v5)'),
+    'numeric_format': ('e5 — 실수 토큰이 6 유효숫자 %g 생산 포맷이 아니다 (다른 정밀도 · 끝 0 · 혼합 · 면적 포괄 helper 의 고정 6 자리 가정 밖 · RIMP-03) · '
+                       'scaffold 실수 열 (x y z r) 이 ASCII 고정소수 `[+-]?[0-9]+(.[0-9]+)?` 가 아니다 (전각 · 아라비아-인도 숫자 · 밑줄 · 지수 · 유니코드 공백 — '
+                       'Decimal · float 은 받는다 · scaffold_grammar · v5) · scaffold 주석 아닌 줄에 TAB · CR · LF · 0x20–0x7E 밖 글자 (scaffold_lexical · v5)'),
     'area_negative': 'g3 — AM–AM 접촉의 c_cpl[22] 가 음수 (진단 helper 는 음수 행을 포괄 비교에서 뺀다 — 뺀 것을 인증으로 읽지 않는다 · RIMP-02)',
     'area_uncertified': 'g3 — AM–AM 접촉의 면적 포괄을 인증할 수 없다 (토큰 상자 위 거리 하한 ≤ 0 · 생산자 오차 상한 없음 — "포괄 밖 0" ≠ "전 행 인증" · RIMP-02)',
     'derived_nonfinite': ('파생값 비유한 — 입력이 유한이어도 산술 (제곱합 · 곱) 이 넘친다: G-frame f6 거리 · 허용폭 · 차 (고아 아닌 행) · G-geo δ 반올림 폭 '
@@ -273,14 +296,15 @@ def _scalar_token(body):
 def _item_section(ln, items):
     """`ITEM:` 머리 줄 → (구역 · 표지 뒤 토큰 · 단어 경계 위반) — RIMPR-R01 (Codex 10-20 판정문 §3 최소 해결).
     items = ((구역, 표지), …) — 표지 (`ITEM: TIMESTEP` · `ITEM: NUMBER OF …` · `ITEM: BOX BOUNDS` · `ITEM: ATOMS` · `ITEM: ENTRIES`) 로 시작하면 그 구역.
-    구역 이름 = **정확한 단어 경계**: 표지 바로 뒤가 줄 끝 · 공백 · 탭이 아니면 (`ITEM: ATOMSid …` · `ITEM: BOX BOUNDSff …` · `ITEM: ATOMSITEM: ATOMS …`)
+    구역 이름 = **정확한 단어 경계**: 표지 바로 뒤가 줄 끝 · 공백 (U+0020) · 탭 (U+0009) 이 아니면 (`ITEM: ATOMSid …` · `ITEM: BOX BOUNDSff …` ·
+    `ITEM: ATOMSITEM: ATOMS …` · v5: `isspace()` 가 참인 U+00A0 · U+2003 · U+3000 · U+001F 도 경계가 아니다 — RIMPR-R01 같은 부류)
     경계 위반 = 입구 frame_layout (header_boundary · 정상화하지 않고 거부 — 그 줄의 절은 그대로 읽어 나머지 검사도 돈다).  표지는 **앞에서 한 번만**
     뗀다 (옛 판의 전역 `replace()` 아님): 나머지 토큰 (반복 · 후첨 표지 포함) = `split()` 그대로 열 · 상자 검사로 (공백 · 탭 구분 · 쓰지 않는 진단 열은
-    옛 판과 같게 받는다).  어느 표지로도 시작하지 않으면 (None, None, False) = 모르는 절."""
+    옛 판과 같게 받는다 · 비-ASCII 구분자는 덤프 어휘 관문 `_LEX_BAD` 가 따로 거부).  어느 표지로도 시작하지 않으면 (None, None, False) = 모르는 절."""
     for kind, mk in items:
         if ln.startswith(mk):
             rest = ln[len(mk):]
-            return kind, rest.split(), bool(rest) and not rest[0].isspace()
+            return kind, rest.split(), bool(rest) and rest[0] not in ' \t'
     return None, None, False
 
 
@@ -294,9 +318,18 @@ def _scan_frame(path, count_item, rows_item):
     모르는 ITEM 절 · 같은 절 두 번 · 첫 프레임 앞 비어 있지 않은 줄 · TIMESTEP · NUMBER OF 머리 줄의 뒤 토큰 = 입구 frame_layout.
     빈 줄: 행 절 안 · 절 끝 = 내용 아님 (옛 판과 같음) · TIMESTEP · NUMBER OF · BOX BOUNDS 절의 내용 앞 · 사이 = 모양 위반 (옛 판과 같음 · `_section_content`).
     RIMPR-R01 (Codex 10-20 판정문 §3) — 구역 분류 = `_item_section` (구역 이름 정확한 단어 경계 · 표지 앞에서 한 번만 떼기): 경계 위반 머리 줄 = 입구
-    frame_layout (header_boundary) · 상자 머리 · 열 머리 = 표지 뒤 토큰 그대로 (반복 · 후첨 표지가 남아 box_format · row_width 가 본다)."""
+    frame_layout (header_boundary) · 상자 머리 · 열 머리 = 표지 뒤 토큰 그대로 (반복 · 후첨 표지가 남아 box_format · row_width 가 본다).
+    v5 (RIMPR-R01 같은 부류) — 덤프 글자 어휘: 읽은 글 전체 (줄로 쪼개기 전 · 모든 프레임) 에서 TAB · LF · CR · 출력 가능 ASCII (0x20–0x7E) 밖 글자를
+    센다 (`n_lexical` · 보기 = 줄 번호 + 부호점) → 입구 frame_layout (lexical).  `split()` · `splitlines()` 가 유니코드 공백 · 제어 문자 · FF · VT · NEL ·
+    U+2028 을 구분자 · 줄 끝으로 정상화해 값이 같은 채 지나가던 것을 그 정상화 **전에** 잡는다 (쪼개기 · 읽기 규칙은 옛 판과 같다)."""
     with _open_text(path) as fh:
-        lines = fh.read().splitlines()
+        txt = fh.read()
+    n_lex, ex_lex = 0, []
+    for m in _LEX_BAD.finditer(txt):
+        n_lex += 1
+        if len(ex_lex) < 3:
+            ex_lex.append(f'줄 {txt.count(chr(10), 0, m.start()) + 1} U+{ord(m.group()):04X}')
+    lines = txt.splitlines()
     starts = [i for i, ln in enumerate(lines) if ln.startswith('ITEM: TIMESTEP')]
     if not starts:
         raise ValueError(f'{path}: `ITEM: TIMESTEP` 이 없다 — LIGGGHTS 덤프가 아니다')
@@ -357,7 +390,8 @@ def _scan_frame(path, count_item, rows_item):
                          'examples_width_bad': [f'행 절 {k} 째 열 {w} ≠ 머리 {len(hdr)}' for k, w in wbad[:3]],
                          'n_preamble_lines': int(n_pre), 'n_unknown_sections': len(unknown), 'unknown_sections': unknown[:3],
                          'duplicate_sections': dup_sec, 'scalar_header_extra': head_extra,
-                         'header_boundary': head_edge}}                 # 구역 이름 뒤 단어 경계 없음 (RIMPR-R01)
+                         'header_boundary': head_edge,                  # 구역 이름 뒤 단어 경계 없음 (RIMPR-R01 · v5 = 공백 · 탭만)
+                         'n_lexical': int(n_lex), 'examples_lexical': ex_lex}}   # 덤프 글자 어휘 (v5 · TAB · LF · CR · 0x20–0x7E 밖)
 
 
 def read_atom_dump_frame(path):
@@ -420,20 +454,30 @@ def read_scaffold_csv(path):
     자릿수로 잰다 · 파일 전체의 가장 고운 자리 = 좁은 쪽 = 덜 통과시키는 쪽).  자릿수는 **유한** 토큰에서만 잰다 (nan · inf · 못 읽는 토큰 =
     `n_nonfinite` · type 정수 아님 = `n_int_bad` · r ≤ 0 = `n_nonpositive_r` — 입구 검사 e1–e3 이 거부한다 · 예외로 멈추지 않는다).
     유한 = Decimal 유한 **이고** 실제로 쓰는 float64 값도 유한 (RIMPR-02 — `1e309` · 고정소수 ±10^309 는 Decimal 로는 유한 · float64 로는 ±inf).
-    µm 변환 (×sim_to_um) 뒤 유한은 단위를 아는 입구 검사 (`_entrance` · `scaffold_um`) 가 본다."""
-    header, rows = [], []
+    µm 변환 (×sim_to_um) 뒤 유한은 단위를 아는 입구 검사 (`_entrance` · `scaffold_um`) 가 본다.
+    v5 (RIMPR-03 같은 부류 · 입구 e3 · e5 재료 — 거부는 `_entrance`):
+      빈 줄 · 주석 판정 · 토큰 앞뒤 떼기 = ASCII 공백 · 탭만 (옛 판 `strip()` 은 유니코드 공백도 뗐다 — 값이 같은 채 통과) · 주석 줄 (`#`) 은 어휘 관문 밖
+      (case15 · kit 머리줄 U+2014 · 한국어) · 주석 아닌 줄의 TAB · CR · LF · 0x20–0x7E 밖 글자 = `n_lexical` · 유한 실수 토큰 중 ASCII 고정소수
+      (`_FIX_RE`) 가 아닌 것 = `n_format_bad` (비유한 · 못 읽음 = 옛 판처럼 `n_nonfinite` 만) · 머리줄 step 선언 = `_STEP_DECL_RE` (v4 판 문법) 로 찾고
+      선언 전체가 `_STEP_RE` (ASCII) 이고 수가 int64 일 때만 값 (`steps`) · 아니면 `n_step_bad` (`int()` 로 읽지 않는다 — 긴 숫자열도 예외 없이)."""
+    header, rows, n_lex, ex_lex = [], [], 0, []
     with _open_text(path) as fh:
-        for ln in fh:
-            s = ln.strip()
+        for k, ln in enumerate(fh, 1):
+            body = ln.rstrip('\r\n')
+            s = body.strip(' \t')
             if not s:
                 continue
             if s.startswith('#'):
                 header.append(s)
                 continue
-            rows.append([x.strip() for x in s.split(',')])
+            bad = _LEX_BAD.findall(body)
+            if bad:
+                n_lex += len(bad)
+                ex_lex += [f'줄 {k} U+{ord(c):04X}' for c in bad[:3 - len(ex_lex)]]
+            rows.append([x.strip(' \t') for x in s.split(',')])
     if not rows or any(len(r) != 5 for r in rows):
         raise ValueError(f'{path}: scaffold 행은 type,x,y,z,r 다섯 열이어야 한다')
-    exps, n_nf = set(), 0
+    exps, n_nf, n_fmt, ex_fmt = set(), 0, 0, []
     for r in rows:
         for t in r[1:]:
             try:
@@ -442,15 +486,31 @@ def read_scaffold_csv(path):
                 d = None
             if d is not None and d.is_finite() and np.isfinite(_safe_float(t)):   # float64 로도 유한 (RIMPR-02)
                 exps.add(int(d.as_tuple().exponent))
+                if not _FIX_RE.fullmatch(t):                   # 유한인데 ASCII 고정소수 아님 (전각 · 밑줄 · 지수 · 유니코드 공백 · v5)
+                    n_fmt += 1
+                    if len(ex_fmt) < 3:
+                        ex_fmt.append(t)
             else:
                 n_nf += 1
+    steps, step_bad = [], []
+    for h_ in header:
+        for m in _STEP_DECL_RE.finditer(h_):
+            sm = _STEP_RE.fullmatch(m.group(0))
+            v, ok = _int_token(sm.group(1)) if sm else (None, False)
+            if ok:
+                steps.append(v)
+            else:
+                g = m.group(0)
+                step_bad.append(g if len(g) <= 40 else g[:40] + f'…[{len(g)} 자]')
     e_min = int(min(exps)) if exps else 0
     t_, nb_t, _ex = _int_col([r[0] for r in rows])
     xyz = np.array([[_safe_float(x) for x in r[1:4]] for r in rows], np.float64)
     rr = np.array([_safe_float(r[4]) for r in rows], np.float64)
     return {'t': t_, 'xyz': xyz, 'r': rr,
             'half': 0.5 * 10.0 ** e_min, 'dec_exp': sorted(int(e) for e in exps), 'header': header, 'n': len(rows),
-            'n_nonfinite': int(n_nf), 'n_int_bad': int(nb_t), 'n_nonpositive_r': int((np.isfinite(rr) & ~(rr > 0.0)).sum())}
+            'n_nonfinite': int(n_nf), 'n_int_bad': int(nb_t), 'n_nonpositive_r': int((np.isfinite(rr) & ~(rr > 0.0)).sum()),
+            'n_format_bad': int(n_fmt), 'examples_format_bad': ex_fmt, 'n_lexical': int(n_lex), 'examples_lexical': ex_lex,
+            'steps': steps, 'n_step_bad': len(step_bad), 'examples_step_bad': step_bad[:3]}
 
 
 # ═════════════════════════ 관문 ═════════════════════════
@@ -503,8 +563,10 @@ def _ids_index(ids):
 
 
 def _entrance(sc, A, Cd, add, um):
-    """입구 검사 e1–e6 (RIMP-02 · 03 · RIMPR-01 · 02) — 걸린 사유를 `add` 로 더하고 요약 dict 를 돌려준다 (status PASS | REJECT).
-    um = sim_to_um (scaffold µm 변환값 = 내보내는 c_um · r_um 의 유한 검사 · RIMPR-02)."""
+    """입구 검사 e1–e6 (RIMP-02 · 03 · RIMPR-01 · 02 · R01 · 03 · v5 같은 부류) — 걸린 사유를 `add` 로 더하고 요약 dict 를 돌려준다 (status PASS | REJECT).
+    um = sim_to_um (scaffold µm 변환값 = 내보내는 c_um · r_um 의 유한 검사 · RIMPR-02).
+    v5: 덤프 글자 어휘 = frame_layout (`atom_lexical` · `contact_lexical`) · scaffold ASCII 고정소수 · 주석 아닌 줄 어휘 = numeric_format
+    (`scaffold_grammar` · `scaffold_lexical`) · scaffold 머리줄 step 선언 = int_token (`scaffold_step`) · 요약 `lexical` · `format.scaffold_bad`."""
     ea, ec = A['entrance'], Cd['entrance']
     n0 = [0]                                                   # 걸린 사유 수
 
@@ -526,11 +588,13 @@ def _entrance(sc, A, Cd, add, um):
     ib = {'atom_step': int(not ea['step_int_ok']), 'contact_step': int(not ec['step_int_ok']),
           'atom_count': int(not ea['n_declared_int_ok']), 'contact_count': int(not ec['n_declared_int_ok']),
           'atom_id': ea['n_int_bad']['id'], 'atom_type': ea['n_int_bad']['type'],
-          'contact_id1': ec['n_int_bad']['id1'], 'contact_id2': ec['n_int_bad']['id2'], 'scaffold_type': sc['n_int_bad']}
+          'contact_id1': ec['n_int_bad']['id1'], 'contact_id2': ec['n_int_bad']['id2'], 'scaffold_type': sc['n_int_bad'],
+          'scaffold_step': sc['n_step_bad']}                   # scaffold 머리줄 step 선언 ASCII · int64 (v5)
     if sum(ib.values()):
         _add('int_token', sum(ib.values()), [f'{k} {v}' for k, v in ib.items() if v]
              + [f'step {ea["step_token"]!r}' if not ea['step_int_ok'] else '', f'step {ec["step_token"]!r}' if not ec['step_int_ok'] else '']
-             + [repr(x) for x in ea['examples_int_bad'] + ec['examples_int_bad']])
+             + [repr(x) for x in ea['examples_int_bad'] + ec['examples_int_bad']]
+             + [f'scaffold_step {x!r}' for x in sc['examples_step_bad']])
     shapes = {'atom': ea['box_shape'], 'contact': ec['box_shape']}
     if 'tilted' in shapes.values():
         _add('box_tilted', sum(1 for v in shapes.values() if v == 'tilted'), [f'{k} {v}' for k, v in shapes.items()])
@@ -538,9 +602,11 @@ def _entrance(sc, A, Cd, add, um):
         _add('box_format', sum(1 for v in shapes.values() if v == 'malformed'),
              [f'atom {w}' for w in ea['box_shape_why']] + [f'contact {w}' for w in ec['box_shape_why']])
     ng = {'atom': ea['n_not_g6'], 'contact': ec['n_not_g6'], 'atom_box': ea['box_n_not_g6'], 'contact_box': ec['box_n_not_g6']}
-    if sum(ng.values()):
-        _add('numeric_format', sum(ng.values()), [f'{k} {v}' for k, v in ng.items() if v]
-             + [repr(x) for x in ea['examples_not_g6'] + ec['examples_not_g6'] + ea['box_examples_not_g6'] + ec['box_examples_not_g6']])
+    sf = {'scaffold_grammar': sc['n_format_bad'], 'scaffold_lexical': sc['n_lexical']}   # scaffold ASCII 고정소수 · 주석 아닌 줄 어휘 (v5)
+    if sum(ng.values()) + sum(sf.values()):
+        _add('numeric_format', sum(ng.values()) + sum(sf.values()), [f'{k} {v}' for k, v in ng.items() if v] + [f'{k} {v}' for k, v in sf.items() if v]
+             + [repr(x) for x in ea['examples_not_g6'] + ec['examples_not_g6'] + ea['box_examples_not_g6'] + ec['box_examples_not_g6']]
+             + [repr(x) for x in sc['examples_format_bad']] + [f'scaffold {x}' for x in sc['examples_lexical']])
     #  e6 전수 소비 (RIMPR-01) — 열 수 다른 행 · 필수 열 중복 · 절 배치 (파서가 버리던 것) = 거부
     rw = {'atom': ea['n_rows_width_bad'], 'contact': ec['n_rows_width_bad']}
     if sum(rw.values()):
@@ -552,9 +618,11 @@ def _entrance(sc, A, Cd, add, um):
     fl = {f'{nm}_{k}': int(v) for nm, e_ in (('atom', ea), ('contact', ec))
           for k, v in (('preamble_lines', e_['n_preamble_lines']), ('unknown_sections', e_['n_unknown_sections']),
                        ('duplicate_sections', len(e_['duplicate_sections'])), ('scalar_header_extra', len(e_['scalar_header_extra'])),
-                       ('header_boundary', len(e_['header_boundary'])))}      # 구역 이름 뒤 단어 경계 없음 (RIMPR-R01)
+                       ('header_boundary', len(e_['header_boundary'])),     # 구역 이름 뒤 단어 경계 없음 (RIMPR-R01 · v5 = 공백 · 탭만)
+                       ('lexical', e_['n_lexical']))}                       # 덤프 글자 어휘 (v5 · TAB · LF · CR · 0x20–0x7E 밖)
     if sum(fl.values()):
         _add('frame_layout', sum(fl.values()), [f'{k} {v}' for k, v in fl.items() if v]
+             + [f'{nm} {x}' for nm, e_ in (('atom', ea), ('contact', ec)) for x in e_['examples_lexical']]
              + [f'{nm} {x!r}' for nm, e_ in (('atom', ea), ('contact', ec))
                 for x in e_['unknown_sections'] + e_['duplicate_sections'] + e_['scalar_header_extra'] + e_['header_boundary']])
     return {'status': 'PASS' if not n0[0] else 'REJECT', 'rule': ENTRANCE_RULE,
@@ -563,18 +631,23 @@ def _entrance(sc, A, Cd, add, um):
             'n_rows_physical': {'atom': int(ea['n_rows_physical']), 'contact': int(ec['n_rows_physical'])},
             'n_row_width_bad': int(sum(rw.values())), 'row_width_bad': rw, 'header_duplicate': hd, 'frame_layout': fl,
             'box': shapes,
+            'lexical': {'atom': int(ea['n_lexical']), 'contact': int(ec['n_lexical']), 'scaffold': int(sc['n_lexical']),
+                        'rule': ('TAB · LF · CR · 출력 가능 ASCII (0x20–0x7E) 만 — 덤프 = 글 전체 (frame_layout) · scaffold = 주석 아닌 줄 '
+                                 '(numeric_format · 주석 줄은 밖) · v5')},
             'format': {'rule': NUMERIC_FORMAT, 'atom_ok': ea['n_not_g6'] == 0 and ea['box_n_not_g6'] == 0,
                        'contact_ok': ec['n_not_g6'] == 0 and ec['box_n_not_g6'] == 0, 'n_not_g6': ng,
+                       'scaffold_rule': SCAFFOLD_FORMAT, 'scaffold_ok': not sum(sf.values()), 'scaffold_bad': sf,
                        'area_helper_sigfig': int(H.AREA_CHECK_SIGFIG),
-                       'meaning': ('6 유효숫자 %g 생산 포맷만 지원 — 면적 포괄 helper (봉인 · 고정 6 자리) 의 가정과 같다 · 다른 정밀도 · 혼합 = 거부 '
-                                   '(기록 S 를 helper 에 넘기지 않는다 · RIMP-03)')}}
+                       'meaning': ('덤프 = 6 유효숫자 %g 생산 포맷만 지원 — 면적 포괄 helper (봉인 · 고정 6 자리) 의 가정과 같다 · 다른 정밀도 · 혼합 = 거부 '
+                                   '(기록 S 를 helper 에 넘기지 않는다 · RIMP-03) · scaffold 실수 열 = ASCII 고정소수 `[+-]?[0-9]+(.[0-9]+)?` 만 '
+                                   '(생산 %.6f · v5)')}}
 
 
 def _early_reject(rej, ent, sc, A, Cd, files, um, dilate_z, tmap):
     """입구 검사 실패 — 관문 계산 없이 REJECT 기록 (소비자가 읽는 키는 다 있다 · 값은 '계산 안 함')."""
     ns = int(len(sc['t']))
     z = np.zeros(0, np.int64)
-    skip = '입구 검사 실패 — 관문 계산 안 함 (RIMP-02 · 03 · RIMPR-01 · 02 · R01 · 03)'
+    skip = '입구 검사 실패 — 관문 계산 안 함 (RIMP-02 · 03 · RIMPR-01 · 02 · R01 · 03 · v5 같은 부류)'
     with np.errstate(over='ignore', invalid='ignore'):        # 거부 기록의 입자 µm 값 (넘침 = 거부 사유 · 기록은 그대로 inf)
         c_um, r_um = sc['xyz'] * um, sc['r'] * um
     join = {'kind': JOIN_KIND, 'version': JOIN_VERSION, 'status': 'REJECT', 'rejections': rej, 'entrance': ent,
@@ -703,7 +776,7 @@ def am_iface_join(scaffold_csv, atom_dump, contact_dump, *, type_map, sim_to_um=
     ns = len(st)
     if not np.isin(st, list(SCAFFOLD_TYPE)).all():
         add('scaffold_type_unknown', 'G-geo', int((~np.isin(st, list(SCAFFOLD_TYPE))).sum()))
-    stepm = [int(m.group(1)) for h_ in sc['header'] for m in _STEP_RE.finditer(h_)]
+    stepm = list(sc['steps'])                                   # ASCII · int64 step 선언만 (나머지는 입구 int_token · scaffold_step — v5)
     if stepm:
         if any(s_ != A['step'] for s_ in stepm):
             add('scaffold_step_mismatch', 'G-geo', 1, stepm + [A['step']])
