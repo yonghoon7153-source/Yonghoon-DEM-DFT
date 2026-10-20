@@ -40,6 +40,10 @@ scaffold 머리줄에 원 덤프 step 이 없으면 scaffold ↔ 덤프는 **G-g
       scaffold 머리줄 (`#` 주석) 의 step 선언 (v5 · RIMPR-03 같은 부류) — v4 판 문법 (`(time)step` + `\\s` · `\\d` · re.I 유니코드) 으로 보이는 것은
       전부 선언이다 (조용히 버리지 않는다) · 값 = 선언 전체가 ASCII `(time)step[ \\t]*[=:]?[ \\t]*[0-9]+` (re.ASCII) 이고 수가 int64 일 때만 ·
       전각 · 유니코드 공백 · `ſ` (U+017F) · ASCII 뒤 섞인 비-ASCII 숫자 · int64 밖 긴 숫자열 = int_token (`scaffold_step` · `int()` 로 읽지 않는다)
+      v6 (PB1 F1 · 10-20 사전 공격 리뷰 · e3 `2060000.9` 거부와 같은 원칙) — 선언의 수 토큰 = 숫자로 시작해 **붙은** 낱말 글자 (`\\w` — 글자 · 숫자 · 밑줄 ·
+      유니코드) 와 안쪽 점 (`.` 뒤 낱말 글자) 까지: `2060000.9` · `100_000` · `1e6` · `100²` · `100x` = int_token (v5 = 꼬리 앞 ASCII 숫자만 값으로 읽었다) ·
+      꼬리 아님 = 문장 끝 `.` (`step 100.`) · `,` · 공백 · 괄호 등 낱말 글자 아닌 것.  왼쪽 단어 경계 — 바로 앞이 낱말 글자인 `step` 은 선언이 아니다
+      (`laststep 100` · `_step2` · v5 = step 100 · 2 로 읽었다 · `timestep` 은 그대로 선언)
   e4  지원 상자 — 직교 `ITEM: BOX BOUNDS f1 f2 f3` (플래그 [pfsm]² · p 는 pp 만) + 경계 줄 정확히 셋 · 줄마다 토큰 둘.  기울어진 머리 (xy xz yz) = box_tilted
       (지원 밖 · tilt 를 버리고 비교하지 않는다) · 그 밖 모양 (넷째 줄 포함) = box_format.  상자 동일 (f3) = 머리 · 경계 줄 **전 토큰** 비교
   e5  형식 = **6 유효숫자 `%g` 생산 포맷만** (LIGGGHTS dump 기본 · 토큰 = '%g' % 값) — 다른 정밀도 · 끝 0 · 혼합 포맷 = numeric_format.  면적 포괄
@@ -89,7 +93,7 @@ import lhs_descriptor_harvest as H                             # noqa: E402  면
 from lhs_contact_audit import SIGFIG_FLOOR, _half_ulp, _sigfigs   # noqa: E402  반폭 규약 (규율 ①)
 
 JOIN_KIND = 'am_iface_join'
-JOIN_VERSION = 'g_geo_g_frame_v5'           # v5 (RIMPR-R01 · 03 같은 부류 · 10-20 내부 사전 리뷰) = 표지 경계 공백 · 탭만 · 덤프 글자 어휘 · scaffold ASCII 고정소수 + 주석 아닌 줄 어휘 · scaffold step 선언 ASCII · int64 / v4 (RIMPR-R01 · 03 · 04 부분) = 구역 이름 단어 경계 · 표지 한 번 · ASCII 정수 · 파생값 유한 / v3 (RIMPR-01 · 02) = e6 전수 소비 · e1 float64 + µm 변환 · e3 절 전체 · int64 / v2 (RIMP-02 · 03) = 입구 검사 e1–e5 + AM–AM 면적 전 행 인증 · v1 (10-13) = 그 전
+JOIN_VERSION = 'g_geo_g_frame_v6'           # v6 (PB1 F1 · 10-20 사전 공격 리뷰) = scaffold step 선언의 숫자 뒤 꼬리 (낱말 글자 · 안쪽 점) = int_token · 왼쪽 단어 경계 (`laststep` = 선언 아님) / v5 (RIMPR-R01 · 03 같은 부류 · 10-20 내부 사전 리뷰) = 표지 경계 공백 · 탭만 · 덤프 글자 어휘 · scaffold ASCII 고정소수 + 주석 아닌 줄 어휘 · scaffold step 선언 ASCII · int64 / v4 (RIMPR-R01 · 03 · 04 부분) = 구역 이름 단어 경계 · 표지 한 번 · ASCII 정수 · 파생값 유한 / v3 (RIMPR-01 · 02) = e6 전수 소비 · e1 float64 + µm 변환 · e3 절 전체 · int64 / v2 (RIMP-02 · 03) = 입구 검사 e1–e5 + AM–AM 면적 전 행 인증 · v1 (10-13) = 그 전
 SIM_TO_UM = 1000.0              # LIGGGHTS 상자 단위 → µm (덱 머리 "Scale: r*1000" · real_14 README)
 AM_KINDS = ('AM_P', 'AM_S')
 SCAFFOLD_TYPE = {1: 'AM_P', 2: 'AM_S'}                         # scaffold CSV 규약 (머리줄 "AM_P=1,AM_S=2")
@@ -97,7 +101,7 @@ POS1 = ('c_cpl[1]', 'c_cpl[2]', 'c_cpl[3]')                    # pair/gran/local
 POS2 = ('c_cpl[4]', 'c_cpl[5]', 'c_cpl[6]')
 _EPS = float(np.finfo(np.float64).eps)
 _STEP_RE = re.compile(r'(?:time)?step[ \t]*[=:]?[ \t]*([0-9]+)', re.I | re.A)    # scaffold 머리줄 step 값 — ASCII 엄격 (v5 · re.A = 대소문자 접기도 ASCII 만)
-_STEP_DECL_RE = re.compile(r'(?:time)?step\s*[=:]?\s*(\d+)', re.I)              # v4 판 문법 (\s · \d · re.I 유니코드 — 전각 · U+3000 · ſ 를 받는다) = 선언 찾기 전용 (v5)
+_STEP_DECL_RE = re.compile(r'(?<!\w)(?:time)?step\s*[=:]?\s*(\d\w*(?:\.\w+)*)', re.I)   # 선언 찾기 전용 = v4 판 문법 (\s · \d · re.I 유니코드 — 전각 · U+3000 · ſ 를 받는다 · v5) + 수 토큰 = 붙은 낱말 글자 · 안쪽 점까지 (`2060000.9` · `100_000` · `1e6` · `100²` · `100x` 는 통째로 선언 = _STEP_RE 실패 · 문장 끝 `.` · `,` 는 꼬리 아님) + 왼쪽 단어 경계 (`laststep` · `_step2` = 선언 아님) — v6
 _INT_RE = re.compile(r'[+-]?[0-9]+')                           # e3 정확 정수 토큰 (소수점 · 지수 · 밑줄 없음 · ASCII 숫자만 — `\d` 는 전각 · 아라비아-인도 숫자도 받는다 · RIMPR-03)
 _LEX_BAD = re.compile(r'[^\t\n\r\x20-\x7e]')                   # 덤프 글자 · scaffold 주석 아닌 줄 어휘 — TAB · LF · CR · 출력 가능 ASCII (0x20–0x7E) 밖 (v5)
 _FIX_RE = re.compile(r'[+-]?[0-9]+(?:\.[0-9]+)?')              # scaffold 실수 열 = ASCII 고정소수 (생산 `%.6f` · 지수 · 밑줄 · 유니코드 숫자 없음 · v5)
@@ -107,7 +111,7 @@ _TILT_TOKENS = ('xy', 'xz', 'yz')
 NUMERIC_FORMAT = 'g6'                                          # e5 — 지원하는 유일한 덤프 실수 형식 (6 유효숫자 `%g` · LIGGGHTS dump 기본)
 SCAFFOLD_FORMAT = 'ascii_fixed_decimal'                        # e5 — scaffold 실수 열 형식 (`[+-]?[0-9]+(.[0-9]+)?` · 생산 `%.6f` · v5)
 ENTRANCE_RULE = ('e1 유한 (실제로 쓰는 float64 값 · scaffold µm 변환값) · e2 양수 (반경 · 상자 길이) · e3 정확 정수 · ASCII [0-9] · int64 (step · 머리 수 · '
-                 'id · type · TIMESTEP · NUMBER OF 절 몸통 전체 = 한 토큰 · scaffold 머리줄 step 선언 전체 ASCII) · e4 직교 상자만 (기울어진 머리 = 거부 · '
+                 'id · type · TIMESTEP · NUMBER OF 절 몸통 전체 = 한 토큰 · scaffold 머리줄 step 선언 전체 ASCII · 숫자 뒤 붙은 꼬리 없음) · e4 직교 상자만 (기울어진 머리 = 거부 · '
                  '경계 줄 정확히 셋) · e5 덤프 = 6 유효숫자 %g 생산 포맷만 (다른 정밀도 · 혼합 = 거부) · scaffold 실수 열 = ASCII 고정소수 + 주석 아닌 줄 어휘 · '
                  'e6 전수 소비 (행 열 수 · 필수 열 한 번 · 프레임 절 배치 · 구역 이름 단어 경계 = 줄 끝 · 공백 · 탭 · 표지 앞에서 한 번 · 덤프 글자 = TAB · LF · '
                  'CR · 0x20–0x7E — 버리는 줄 · 토큰 · 정상화 없음) — 하나라도 걸리면 관문 계산 없이 REJECT (RIMP-02 · 03 · RIMPR-01 · 02 · R01 · 03 · v5 같은 부류)')
@@ -144,7 +148,7 @@ WHY = {
                   'RIMP-02) · TIMESTEP · NUMBER OF 절 몸통 전체가 정확히 한 토큰이 아니다 (뒤 토큰 · 둘째 줄을 버리지 않는다 · RIMPR-01) · '
                   'int64 를 넘는 토큰 (OverflowError 대신 · RIMPR-02) · ASCII 숫자 [0-9] 가 아닌 숫자 (전각 · 아라비아-인도 · RIMPR-03) · '
                   'scaffold 머리줄 step 선언이 ASCII `(time)step[ \\t]*[=:]?[ \\t]*[0-9]+` · int64 가 아니다 (전각 · 유니코드 공백 · ſ · 섞인 숫자 · 긴 숫자열 — '
-                  'int() 로 읽지 않는다 · v5)'),
+                  'int() 로 읽지 않는다 · v5 · 숫자 뒤 붙은 낱말 글자 · 안쪽 점 꼬리 `2060000.9` · `100_000` · `1e6` · `100²` · `100x` — 앞 숫자만 읽지 않는다 · v6)'),
     'box_tilted': 'e4 — 기울어진 상자 머리 (xy xz yz) · 직교 상자만 지원 (tilt 를 버리고 비교하지 않는다 · RIMP-02)',
     'box_format': 'e4 — 상자 머리 · 경계 줄 모양이 직교 LAMMPS 꼴이 아니다 (플래그 셋 · 경계 줄 정확히 셋 · 줄마다 토큰 둘 · hi > lo)',
     'row_width': ('e6 — 행 절 (ITEM: ATOMS · ENTRIES) 의 비어 있지 않은 행의 열 수 ≠ 머리 열 수 — 조용히 빼면 머리 수 · 형식 · 유한 검사를 받지 않은 채 '
@@ -459,7 +463,9 @@ def read_scaffold_csv(path):
       빈 줄 · 주석 판정 · 토큰 앞뒤 떼기 = ASCII 공백 · 탭만 (옛 판 `strip()` 은 유니코드 공백도 뗐다 — 값이 같은 채 통과) · 주석 줄 (`#`) 은 어휘 관문 밖
       (case15 · kit 머리줄 U+2014 · 한국어) · 주석 아닌 줄의 TAB · CR · LF · 0x20–0x7E 밖 글자 = `n_lexical` · 유한 실수 토큰 중 ASCII 고정소수
       (`_FIX_RE`) 가 아닌 것 = `n_format_bad` (비유한 · 못 읽음 = 옛 판처럼 `n_nonfinite` 만) · 머리줄 step 선언 = `_STEP_DECL_RE` (v4 판 문법) 로 찾고
-      선언 전체가 `_STEP_RE` (ASCII) 이고 수가 int64 일 때만 값 (`steps`) · 아니면 `n_step_bad` (`int()` 로 읽지 않는다 — 긴 숫자열도 예외 없이)."""
+      선언 전체가 `_STEP_RE` (ASCII) 이고 수가 int64 일 때만 값 (`steps`) · 아니면 `n_step_bad` (`int()` 로 읽지 않는다 — 긴 숫자열도 예외 없이).
+    v6 (PB1 F1): `_STEP_DECL_RE` 의 수 토큰 = 붙은 낱말 글자 · 안쪽 점까지 (`step 2060000.9` · `100_000` · `1e6` · `100²` · `100x` = 선언 통째로
+      `_STEP_RE` 실패 → `n_step_bad` · v5 는 꼬리 앞 숫자만 값으로 읽었다) · 왼쪽 단어 경계 (`laststep` · `_step2` 안의 step = 선언 아님)."""
     header, rows, n_lex, ex_lex = [], [], 0, []
     with _open_text(path) as fh:
         for k, ln in enumerate(fh, 1):
