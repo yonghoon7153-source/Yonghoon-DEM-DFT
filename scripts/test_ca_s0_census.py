@@ -21,9 +21,7 @@ docs/reviews/rint_carbon_additive_registration_R_draft_20261020.md §2-1 (문턱
       단계 관문 (S0-7) · 거부 (S0-5) · 순열 불변 (S0-4) · 상자 밖 · 판 위 (S0-6) · 위생 · 솔브 0 · 킷 폴더 불변 (S0-3) ·
       payload 자신의 rasterize-only 원장과 셀 수 대조 · 가로채기 안 걸림 = 거부
 """
-import contextlib
 import hashlib
-import io
 import json
 import math
 import os
@@ -66,7 +64,7 @@ def run(name, fn):
 def raises(fn, exc=Exception):
     try:
         fn()
-    except exc as e:                                         # noqa: F841
+    except exc:
         return True
     except Exception:                                        # noqa: BLE001
         return False
@@ -103,9 +101,11 @@ def t_geometry():
     PA = A0[:, None, :] + u[None, :, None] * (A1 - A0)[:, None, :]
     PB = B0[:, None, :] + u[None, :, None] * (B1 - B0)[:, None, :]
     brute = np.sqrt(((PA[:, :, None, :] - PB[:, None, :, :]) ** 2).sum(-1)).min(axis=(1, 2))
-    chk('G1d 무작위 300 쌍 (평행 40 포함) — d ≤ 표본 최솟값 + 1e-12 · 차이 ≤ 2e-5',
-        bool((d <= brute + 1e-12).all() and (brute - d <= 2e-5).all()),
-        f'max diff {float((brute - d).max()):.3g}')
+    #  표본 401 점 = 매개변수 간격 1/400 → 가장 가까운 표본은 최근접점에서 각 선분 길이의 1/800 안 (1 차 오차 한계)
+    bound = (np.linalg.norm(A1 - A0, axis=1) + np.linalg.norm(B1 - B0, axis=1)) / 800.0 + 1e-12
+    chk('G1d 무작위 300 쌍 (평행 40 포함) — d ≤ 표본 최솟값 + 1e-12 · 차이 ≤ 표본 해상도 한계 (|d1| + |d2|)/800',
+        bool((d <= brute + 1e-12).all() and (brute - d <= bound).all()),
+        f'max diff {float((brute - d).max()):.3g} · worst ratio {float(((brute - d) / bound).max()):.3g}')
     chk('G1e 최근접점이 선분 위 · 거리 일치',
         bool(np.allclose(np.linalg.norm(C1 - C2, axis=1), d, atol=1e-12)
              and ((s >= 0) & (s <= 1) & (t >= 0) & (t <= 1)).all()))
@@ -135,8 +135,10 @@ def t_census():
     I = c['inst']
     Lb = 1.0 + 2 * math.sqrt(THR ** 2 - 0.15 ** 2)
     chk('C1a 평행 접촉 — instance 1', c['n_vv'] == 1 and c['n_self'] == 0, str((c['n_vv'], c['n_self'])))
-    chk('C1b L_touch = 겹침 길이 1.0 · L_band = 1 + 2√(thr² − 0.15²) = %.6f' % Lb,
-        close(I['L_touch'][0], 1.0, 1e-9) and close(I['L_band'][0], Lb, 1e-9),
+    #  ⚠ 이 픽스처는 겹침 구간 전체가 정확히 d = D (퇴화 접점) — 제곱 거리 비교의 반올림이 양 끝에 √ulp(0.0225) ≈ 1.3e-9 씩
+    #    남는다 (실측 2.6e-9) → L_touch 허용폭 1e-8 (L_band 는 경계가 비퇴화라 1e-9)
+    chk('C1b L_touch = 겹침 길이 1.0 (퇴화 경계 1e-8) · L_band = 1 + 2√(thr² − 0.15²) = %.6f' % Lb,
+        close(I['L_touch'][0], 1.0, 1e-8) and close(I['L_band'][0], Lb, 1e-9),
         f"{I['L_touch'][0]!r} {I['L_band'][0]!r}")
     chk('C1c 긴 접촉 (> L_par 0.30) — 두 판 모두 1 · 각 0°',
         c['n_long']['touch'] == 1 and c['n_long']['band'] == 1 and close(I['theta_deg'][0], 0.0, 1e-6))
@@ -189,6 +191,22 @@ def t_census():
             and all(np.array_equal(np.sort(a['inst'][k]), np.sort(b['inst'][k]))
                     for k in ('gap', 'L_touch', 'L_band', 'theta_deg')))
     chk('C8 섬유 순열 · 이름 불변 — 수 · 분포 같음', same, f"{a['n_vv']} vs {b['n_vv']}")
+    #  C8b 무작위 섬유 묶음 — 비대칭 기하에서도 **비트** 같음 (두 선분의 계산 순서 = 좌표 사전순 정준 · 입력 순서 · 이름 무관)
+    rng = np.random.default_rng(11)
+    rp = []
+    for f in range(40):
+        p0 = rng.uniform(0, 1.5, 3); u_ = rng.normal(size=3); u_ /= np.linalg.norm(u_)
+        n_ = int(rng.integers(6, 12))
+        rp.append((f, p0 + np.outer(np.arange(n_) * rng.uniform(0.25, 0.35), u_)))
+    a = _vv(rp)
+    perm = rng.permutation(len(rp))
+    b = _vv([(100 + 7 * int(k), rp[int(k)][1]) for k in perm[::-1]])
+    keys = ('gap', 'L_touch', 'L_band', 'theta_deg', 'd_min')
+    chk('C8b 무작위 40 섬유 — instance ≥ 5 · 순열 · 이름 바꿔도 분포가 비트 같음',
+        a['n_vv'] >= 5 and a['n_vv'] == b['n_vv'] and a['n_self'] == b['n_self']
+        and all(np.array_equal(np.sort(a['inst'][k]), np.sort(b['inst'][k])) for k in keys),
+        f"{a['n_vv']} vs {b['n_vv']} · " + str([k for k in keys if not np.array_equal(np.sort(a['inst'][k]),
+                                                                                      np.sort(b['inst'][k]))]))
     chk('C9 정의 표지 — lc_definition 이 두 판을 이름으로 싣는다',
         isinstance(a.get('lc_definition'), dict) and set(a['lc_definition']) >= {'touch', 'band'})
 
@@ -356,7 +374,9 @@ P1 = np.column_stack([np.full(15, 4.05), 2.05 + 0.35 * np.arange(15), np.full(15
 F2 = np.column_stack([np.full(15, 5.05), 2.05 + 0.35 * np.arange(15), np.full(15, 2.15)])
 S1 = np.array([[3.05, 4.55, 2.05]])
 SE = np.array([[0.35 + 0.5 * a, 0.35 + 0.5 * b, 1.05] for a in range(18) for b in range(18)])
-AM = [(2, 1.0, 1.0, 2.5, 1.0)]
+#  AM 둘 — 한 줄짜리 scaffold CSV 는 np.loadtxt 가 1 차원으로 돌려줘 payload 의 load_am 이 IndexError (실침대 AM 1271 개 = 무관 ·
+#  픽스처 결함 · 처음 판에서 E1 · E10 · E11 이 그것으로 실패).  둘째 AM 은 섬유 · PTFE · SE 와 멀다.
+AM = [(2, 1.0, 1.0, 2.5, 1.0), (2, 8.0, 1.0, 2.5, 1.0)]
 V_SDCP1 = math.pi / 6 * 0.3 ** 3
 
 
@@ -538,6 +558,7 @@ def t_e2e_stage2():
     st = L['sdcp_stretch']['off']
     chk('E7d SDCP 가 덮은 섬유 구간 — 1 구간 · 3 셀 · 섬유 1', st['n_runs'] == 1 and st['cells_total'] == 3
         and st['fibres_affected'] == 1, str(st))
+    chk('E7d2 섬유 축방향 경로가 지나는 3|5 면 (설계 §3-1 ⚠ 회색 지대) — 구간 양 끝 2', st.get('axial_3_5_faces') == 2, str(st))
     chk('E7e SDCP 표현 부피 비 = 19 셀 · vox³ / V_true', close(L['volume_ratio']['prod']['SDCP'], 0.019 / V_SDCP1, 1e-9))
     chk('E7f SDCP 경유 섬유 연결 — 덩어리 1 · 두 섬유 잇는 것 0',
         L['sdcp_via']['off']['n_components'] == 1 and L['sdcp_via']['off']['n_bridging'] == 0, str(L['sdcp_via']))
@@ -674,7 +695,10 @@ def t_e2e_box_plate():
     tmp = STATE['tmp']
     F3 = np.column_stack([8.05 + 0.3 * np.arange(7), np.full(7, 6.55), np.full(7, 3.55)])
     F4 = np.column_stack([np.full(10, 8.55), 5.05 + 0.3 * np.arange(10), np.full(10, 3.55)])
-    kitC = write_kit(tmp, 'kit_C', vgcf=[F1, F3, F4], ptfe=[P1], vol={'VGCF': 0.08, 'PTFE': 0.1})
+    #  AM2 (중심 (8, 1, 2.5) · R 1) 곁을 지나는 섬유 둘 — 중심선 거리 1.115 (틈 +0.04 = VA 아님 · tol_fs 0) · 1.05 (틈 −0.025 = VA)
+    F5 = np.column_stack([np.full(5, 9.115), 0.5 + 0.25 * np.arange(5), np.full(5, 2.5)])
+    F6 = np.column_stack([np.full(5, 6.95), 0.5 + 0.25 * np.arange(5), np.full(5, 2.5)])
+    kitC = write_kit(tmp, 'kit_C', vgcf=[F1, F3, F4, F5, F6], ptfe=[P1], vol={'VGCF': 0.08, 'PTFE': 0.1})
     out = os.path.join(tmp, 'outC')
     _stage(1, [kitC], out)
     rep = _load(os.path.join(out, 's0_stage1_kit_C.json'))
@@ -683,17 +707,56 @@ def t_e2e_box_plate():
         vv['location'].get('above_top_plate') == 1 and vv['n_instances'] == 1, str(vv.get('location')))
     chk('S0-6b 상자 밖 VGCF 점 수 기록 (x > 9.2 µm → 3)', rep['inputs']['counts']['vgcf_points_outside_box'] == 3,
         str(rep['inputs']['counts']))
+    va = rep['census_preview']['va']
+    chk('E11c VA (J2b · tol_fs 0) — 틈 +0.04 섬유 아님 · −0.025 섬유 1 instance (보고값 = 생산 상수 경로)',
+        va['tol_fs_um'] == 0.0 and va['n_instances'] == 1 and close(va['gap_um']['min'], 1.05 - 1.075, 1e-9), str(va))
+
+
+FAKE_PAYLOAD = '''import sys
+import step3_sigma as _s3
+
+
+def main():
+    mode = sys.argv[1] if len(sys.argv) > 1 else 'none'
+    if mode == 'raise':
+        raise ValueError('fake payload failure')
+    if mode == 'raster':
+        _s3.rasterize([[0.5, 0.5, 0.5]], [0.3], [2], None, None, (0.0, 0.0, 0.0), (1.0, 1.0, 1.0), 0.1, bridge_um=0.48)
+        print('NOT CAPTURED')
+'''
 
 
 def t_e2e_no_capture():
     tmp = STATE['tmp']
     kit = write_kit(tmp, 'kit_nostep3', vgcf=[F1], ptfe=[P1], vol={'VGCF': 0.04, 'PTFE': 0.1}, extra=' --no-step3')
     out = os.path.join(tmp, 'out_nostep3')
-    chk('E10 payload 가 rasterize 를 안 부름 (--no-step3 킷) → 거부 (가로채기 안 걸림)',
+    chk('E10a --no-step3 킷 (payload 가 rasterize 전 · 뒤 경로에서 예외) → S0Error 로 거부 (fail-closed)',
         raises(lambda: _stage(1, [kit], out), S0.S0Error))
+    fd = os.path.join(tmp, 'fakepay'); os.makedirs(fd)
+    with open(os.path.join(fd, 'mpm_webapp_payload.py'), 'w') as f:
+        f.write(FAKE_PAYLOAD)
+    rd = os.path.join(tmp, 'fakerun'); os.makedirs(rd)
+    orig = S3.rasterize
+    chk('E10b payload main 이 rasterize 없이 정상 종료 → 거부 (가로채기 안 걸림)',
+        raises(lambda: S0.capture_raster_inputs(['none'], rd, scripts_dir=fd), S0.S0Error) and S3.rasterize is orig)
+    chk('E10c payload 예외 (ValueError) → S0Error · rasterize 원상',
+        raises(lambda: S0.capture_raster_inputs(['raise'], rd, scripts_dir=fd), S0.S0Error) and S3.rasterize is orig)
+    kw = S0.capture_raster_inputs(['raster'], rd, scripts_dir=fd)
+    chk('E10d rasterize 호출 → 인자 (기본값 채움) 를 잡고 멈춤 · 원상 복구',
+        S3.rasterize is orig and float(kw['vox']) == 0.1 and kw['bridge_um'] == 0.48 and kw['fid_gap_tol'] == 2.0
+        and kw['se_pts'] is None, str(sorted(kw)))
 
 
 def main():
+    global S0
+    if '--s0' in sys.argv:                               # 다른 판의 S0 모듈로 (변이 · 고치기 전 판 실패 기록용)
+        import importlib.util
+        p = sys.argv[sys.argv.index('--s0') + 1]
+        spec = importlib.util.spec_from_file_location('ca_s0_census', p)
+        S0 = importlib.util.module_from_spec(spec)
+        sys.modules['ca_s0_census'] = S0
+        spec.loader.exec_module(S0)
+        print(f'  (S0 = {p})')
     print('── G 기하 원시'); run('G', t_geometry)
     print('── C 접합 census 미리보기'); run('C', t_census)
     print('── P 격자 원시'); run('P', t_grid)
