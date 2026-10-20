@@ -333,12 +333,11 @@ def ca_ext_contrast(man_a, man_b, expect_differ):
             if (k in qa) == (k in qb) and _canon(qa.get(k)) == _canon(qb.get(k)):
                 continue
             kx = f'{ax}.{k}'
+            if kx in exp:                              # 칸을 등록했고 실제로 다르다 (하위 블록 축을 같이 등록해도 — 둘 다 "다름")
+                differed.add(kx)
             if ax in exp:
                 differed.add(ax)
-            elif kx in keys_ok or (k in exp and k in FIELD_CONTRACT):
-                if kx in exp:
-                    differed.add(kx)
-            else:
+            elif not (kx in keys_ok or (k in exp and k in FIELD_CONTRACT)):
                 bad.append(kx)
     return bad, differed
 

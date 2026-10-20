@@ -128,6 +128,15 @@ def t_hand():
     chk('Z1a3 VGCF Ø 비균일 · VGCF 없음 · 길이 다름 = ValueError (러너 옛 판의 ABORT 와 같은 조건 · 조용한 강제 없음)', not bad, bad)
     chk('Z1a4 식 이름이 기준 지름을 말한다 (기록만 봐도 식이 정해진다)', '0.15' in S3.VGCF_SIGMA_RULE and 'diameter' in S3.VGCF_SIGMA_RULE,
         S3.VGCF_SIGMA_RULE)
+    bad = []
+    for nm, (b, v) in {'넘침 (bulk 1e308 · vox 0.001 → σ inf)': (1e308, 0.001), '언더플로 (bulk 1e-320 · vox 1000 → σ 0)': (1e-320, 1000.0),
+                       'bulk nan': (float('nan'), 0.15), 'bulk inf': (float('inf'), 0.15), 'bulk 0': (0.0, 0.15)}.items():
+        try:
+            bad.append((nm, fn(b, dia, ph, v)))
+        except ValueError:
+            pass
+    chk('Z1a5 결과 σ 가 유한 > 0 이 아니면 (넘침 · 언더플로 · nan · inf · 0) ValueError — "inf" · "0" 문자열을 payload 에 넘기지 않는다',
+        not bad, bad)
 
 
 @case('Z1b 러너 발사 전 검사 — SIGMA_FIBRE_BULK 값 · SIGMA_VGCF_OVERRIDE 동시 = 거부 · 영수증 선택 칸')
@@ -198,6 +207,20 @@ def t_view():
     flag = [o for o, (c, f) in RC.CLI_ACCOUNTING.items() if f and 'sigma_vgcf_bulk_S_cm' in f]
     chk('Z1c7 payload 플래그 `--sigma-vgcf-bulk` = CLI 회계 record (기록 · 규약 해시 밖 — σ 자체는 --sigma-vgcf 가 규약 축)',
         flag == ['--sigma-vgcf-bulk'] and RC.CLI_ACCOUNTING['--sigma-vgcf-bulk'][0] == 'record', flag)
+    bad = {}
+    for nm, r in {'bulk = True (bool)': {'sigma_vgcf_bulk_S_cm': True, 'sigma_vgcf_rule': rule},
+                  'bulk = 문자열 "1e4"': {'sigma_vgcf_bulk_S_cm': '1e4', 'sigma_vgcf_rule': rule},
+                  'bulk = nan': {'sigma_vgcf_bulk_S_cm': float('nan'), 'sigma_vgcf_rule': rule},
+                  'bulk = 0': {'sigma_vgcf_bulk_S_cm': 0.0, 'sigma_vgcf_rule': rule},
+                  '식 이름 없음': {'sigma_vgcf_bulk_S_cm': 1e4},
+                  '식 이름 = 빈 문자열': {'sigma_vgcf_bulk_S_cm': 1e4, 'sigma_vgcf_rule': ''},
+                  '식 이름 = 수': {'sigma_vgcf_bulk_S_cm': 1e4, 'sigma_vgcf_rule': 3}}.items():
+        try:
+            bad[nm] = RC.runner_ca_ext_view(r)
+        except ValueError:
+            pass
+    chk('Z1c8 손으로 바뀐 영수증 (bulk = bool · 문자열 · nan · 0 · 식 이름 없음 · 빈 · 수) → 이름 태그를 만들지 않는다 (ValueError · fail-closed)',
+        not bad, bad)
 
 
 @case('Z1d receipt_match — 영수증 bulk · 식 이름 ↔ 매니페스트 (없음 · 다름 · 요청 안 한 기록)')
@@ -536,6 +559,12 @@ def t_compare():
         '등록하면 설명 · 아니면 위반', fn is not None and res['증거만'] == ([], set()) and 'ca_ext.schema' in res['schema'][0]
         and res['사본 칸 · 최상위 등록'][0] == [] and res['사본 칸 · 등록 없음'][0] == ['ca_ext.cjunc.ptfe_stamp'],
         {k: res[k] for k in ('증거만', 'schema', '사본 칸 · 최상위 등록', '사본 칸 · 등록 없음')} if fn else None)
+    both = {'ca_ext.cjunc', 'ca_ext.cjunc.R_j_ohm'}
+    r2 = fn(me, _mut(lambda b: b['cjunc']['protocol'].update(R_j_ohm=1e4)), both) if fn else None
+    c = cmp_(A, B, both)
+    chk('Z4q 하위 블록 축과 그 칸을 **같이** 등록 · R_j 만 다름 → 둘 다 "실제로 다름" (거짓 "노브 안 걸림" 없음) · compare_dirs measured',
+        r2 is not None and r2[0] == [] and both <= r2[1] and c.get('decision') == 'measured',
+        (r2, c.get('decision'), c.get('reason', '')[:200]))
 
 
 # ═════════════════════════ Z5 — --expect-generation ═════════════════════════

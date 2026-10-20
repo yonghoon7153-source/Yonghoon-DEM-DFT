@@ -2679,7 +2679,11 @@ def vgcf_sigma_from_bulk(sigma_bulk, dia_rel, phase, vox_um, d_ref_um=VGCF_DIA_R
     if v is None or not v['uniform']:
         raise ValueError(f'VGCF Ø 비균일/부재: {v}')
     se, _pv = diameter_preserving_sigma(float(sigma_bulk), d[ph == 2], d_ref_um, vox_um)
-    return f'{se:.6g}'
+    s = f'{se:.6g}'
+    #  ⚠ 결과가 유한 > 0 이 아니면 (bulk nan · inf · 0 · 넘침 · 언더플로) 문자열 "inf" · "nan" · "0" 을 payload 에 넘기지 않는다 (조용한 절연 · 발산 금지)
+    if not (np.isfinite(se) and se > 0.0 and np.isfinite(float(s)) and float(s) > 0.0):
+        raise ValueError(f'VGCF 복셀 σ = {s} (bulk {sigma_bulk!r} · vox {vox_um!r}) — 유한 > 0 이 아니다 (넘침 · 언더플로 · nan · 0)')
+    return s
 
 
 def carbon_se_contact_area(sid, vox, periodic_xy=False):

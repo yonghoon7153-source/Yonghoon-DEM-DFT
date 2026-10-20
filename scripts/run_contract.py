@@ -1019,9 +1019,12 @@ def runner_ca_ext_view(rec):
     fb = rec.get('sigma_vgcf_bulk_S_cm')
     vgcf_bulk = ''
     if fb is not None:
+        _rl = rec.get('sigma_vgcf_rule')
+        #  ⚠ 형을 먼저 본다 — `float(True)` = 1.0 · `float('1e4')` = 1e4 로 조용히 바뀌면 손으로 바뀐 영수증이 정상 태그를 얻는다
+        if isinstance(fb, bool) or not isinstance(fb, (int, float)) or not (math.isfinite(float(fb)) and float(fb) > 0.0) \
+                or not isinstance(_rl, str) or not _rl:
+            raise ValueError(f'영수증의 sigma_vgcf_bulk_S_cm = {fb!r} · sigma_vgcf_rule = {_rl!r} — 유한 > 0 수 + 식 이름 문자열이어야 한다')
         _x = float(fb)
-        if not (math.isfinite(_x) and _x > 0.0) or rec.get('sigma_vgcf_rule') is None:
-            raise ValueError(f'영수증의 sigma_vgcf_bulk_S_cm = {fb!r} · sigma_vgcf_rule = {rec.get("sigma_vgcf_rule")!r} — 유한 > 0 + 식 이름이어야 한다')
         _hit = [o for o, (_c, _f) in CLI_ACCOUNTING.items() if _f and 'sigma_vgcf_bulk_S_cm' in _f]
         if len(_hit) != 1:
             raise ValueError(f'sigma_vgcf_bulk_S_cm 를 내는 payload 플래그가 {len(_hit)} 개다 (정확히 1 개여야 · CLI_ACCOUNTING)')
