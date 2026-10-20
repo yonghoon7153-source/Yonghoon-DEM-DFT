@@ -6,11 +6,13 @@
 허용폭 · origin) · §4 (모서리 넷 · 같은 P 일관 · origin 0.1 W) · §5 (구간 · 정보량 · 판정 · 표지) · §10 (명령 꼴 · 멈춤 목록) ·
 설계 v1 §6 (수렴 증서) · §7 (세대 p3ca · 영수증 · LEAN 표).
 
-가짜 러너 = 작은 파이썬 (bash 감쌈) — env (KITS · CJUNC_RJ · CJUNC_PTFE_JLAW · SDCP_MOD_C · VOX · SIGMA_FIBRE_BULK · …) 를 읽어 **정해 둔 σ(R_j)**
-(거듭제곱 · 로지스틱) 로 진짜 꼴의 팔 JSON (매니페스트 · `ca_ext` 세 하위 블록 · 수렴 증서) · `run_receipt.json` 을 쓴다.  고장 주입 = 세계 파일
-`faults` (rc 2 · 기각 기록 · 증서 실패 · 세대 · 변조 · LEAN · PTFE 셀 · sid 지문 · 잠 …).
-⚠ `ca_ext_record_ok` · `check_arm` 의 정본은 지금 face_alpha + 접합 조합을 거부한다 (Z1 이 같이 고치는 중) → 이 시험은 계약 자리에
-**가짜 인지 계약** (블록 지문 대조) 을 넣는다 · 기본 계약이 정본 함수에 위임하는지는 X03 이 따로 본다.
+가짜 러너 = 작은 파이썬 (bash 감쌈) — env (KITS · ARMS | ARM_LIST · CJUNC_RJ · CJUNC_PTFE_JLAW · SDCP_MOD_C · VOX · SIGMA_FIBRE_BULK · …) 를 읽어
+**정해 둔 σ(R_j)** (거듭제곱 · 로지스틱) 로 진짜 꼴의 팔 JSON (매니페스트 · `ca_ext` 세 하위 블록 · 수렴 증서) · `run_receipt.json` 을 쓴다.
+고장 주입 = 세계 파일 `faults` (rc 2 · 기각 기록 · 증서 실패 · 세대 · 변조 · LEAN · PTFE 셀 · sid 지문 · 잠 …).
+★ Z3 (10-20) — 계약 자리 = **정본** (`RealContract` — `run_contract.ca_ext_record_ok` · `sr01_stamp_compare.check_arm`).  face_alpha + 접합
+  조합 · 극한 런 (`rj_limit` 'inf' · 'zero') · 팔 고르기 (`ARM_LIST`) · off 격자 sid 지문 (`sid_off`) 이 들어와 가짜 인지 계약을 뺐다.
+  가짜 러너는 `-S` (numpy 없음) 라 정본 producer 를 부를 수 없다 → 시험 프로세스가 정본 함수로 만든 **기록 틀** (protocol · 표지 · 진단 표 ·
+  한정어 · 부피 기록) 을 세계 파일로 넘기고, 가짜 러너는 런마다 바뀌는 칸 (R_j · 원장 수 · 지문 · σ) 만 채운다 → 팔이 정본 검증기를 지난다.
 
   python3 scripts/test_rint_r_chain.py              # 전부
   python3 scripts/test_rint_r_chain.py --only L0,S1  # 이름 접두
@@ -89,6 +91,7 @@ import hashlib, json, math, os, sys, time
 E = os.environ
 W = json.load(open(E['FAKE_WORLD'], encoding='utf-8'))
 WD = W['dir']
+T = W['tpl']                                   # 정본 기록 틀 (시험 프로세스가 정본 함수로 만들었다 · 이 프로세스는 -S = numpy 없음)
 sys.path.insert(0, W['scripts'])
 import run_contract as RC
 exec(W['model_src'])
@@ -99,17 +102,39 @@ def jl(name, rec):
         f.write(json.dumps(rec, sort_keys=True) + '\n')
 
 
+def cp_(o):
+    return json.loads(json.dumps(o))
+
+
 cp = os.path.join(WD, 'calls.txt')
 n = (int(open(cp).read()) if os.path.exists(cp) else 0) + 1
 open(cp, 'w').write(str(n))
 SEEN = ('SIGMA_', 'SDCP_', 'PTFE_', 'CJUNC', 'STEP3_', 'P2_')
 jl('env.jsonl', {k: E[k] for k in sorted(E) if k.startswith(SEEN) or k in (
-    'VOX', 'BRIDGE_UM', 'ARMS', 'KITS', 'OUTDIR', 'LEAN', 'FIBRE_STAMP', 'MPM_PERIODIC_SIGMA', 'EXPECT_BACKEND', 'EXPECT_PROTOCOL')})
-kit, arms, out = E['KITS'], int(E['ARMS']), E['OUTDIR']
+    'VOX', 'BRIDGE_UM', 'ARMS', 'ARM_LIST', 'KITS', 'OUTDIR', 'LEAN', 'FIBRE_STAMP', 'MPM_PERIODIC_SIGMA', 'EXPECT_BACKEND',
+    'EXPECT_PROTOCOL')})
+kit, out = E['KITS'], E['OUTDIR']
+#  팔 고르기 — 러너 꼴 (ARM_LIST = 정규 목록 · ARMS 와 동시 = 거부 · 0..N−1 접두 = 거부 · 팔 이름 = origin 번호 · OUTDIR 접미사 강제)
+if 'ARM_LIST' in E:
+    if 'ARMS' in E:
+        print('[fake] ABORT — ARM_LIST 와 ARMS 를 같이 줬다')
+        sys.exit(2)
+    idx = [int(x) for x in E['ARM_LIST'].split(',')]
+    if idx != sorted(set(idx)) or any(not 0 <= i <= 7 for i in idx) or idx == list(range(len(idx))):
+        print('[fake] ABORT — ARM_LIST %r' % E['ARM_LIST'])
+        sys.exit(2)
+else:
+    idx = list(range(int(E.get('ARMS', '8'))))
+arms = len(idx)
+if arms != 8 and ('_arm%d' % arms) not in out:
+    out = out + '_arm%d' % arms
+if 'ARM_LIST' in E and ('_arml' + '-'.join(map(str, idx))) not in out:
+    out = out + '_arml' + '-'.join(map(str, idx))
 rj, law, c = E['CJUNC_RJ'], E['CJUNC_PTFE_JLAW'], E.get('SDCP_MOD_C', '')
 vox, bulk = float(E['VOX']), float(E['SIGMA_FIBRE_BULK'])
 unreg, yv = E['CJUNC_UNREG_LAW'], E.get('SDCP_YIELD_VGCF', '') == '1'
 rtol = float(E['STEP3_RTOL'])
+backend = E.get('EXPECT_BACKEND', 'gpu')
 ctx = {'kit': kit, 'rj': rj, 'law': law, 'c': c, 'arms': arms, 'n': n}
 
 
@@ -153,60 +178,102 @@ af = W.get('arm_factor_dbe' if is_dbe else 'arm_factor') or [1.0] * 8
 os.makedirs(out, exist_ok=True)
 H = float(f'{vox / 2:.6f}')
 shifts = [(x, y, z) for x in (0.0, H) for y in (0.0, H) for z in (0.0, H)]
-limit = 'floor' if rj == 'inf' else ('ceiling' if rj == '0' else None)
-Rv = None if rj == 'inf' else float(rj)
+#  극한 런 — 러너 꼴 (`run_contract.runner_ca_ext`): 낱말 `inf` = 바닥 (R_j_ohm null + 표지 'inf') · ASCII 10 진 0 = 천장 (0.0 + 'zero')
+lim = 'inf' if rj == 'inf' else ('zero' if float(rj) == 0.0 else None)
+Rv = None if lim == 'inf' else float(rj)
 s_min, tol_ff = float(E['CJUNC_S_MIN_UM']), float(E['CJUNC_TOL_FF_UM'])
+if hit('receipt_rtol'):                        # 러너가 다른 rtol 로 돌았다 (영수증 · 매니페스트 · 증서 한 꼴 = 정본 계약은 지나고 사슬 계획 대조만 잡는다)
+    rtol = rtol * 0.1
+am_s = float(E['SIGMA_AM_S_OVERRIDE']) * (0.01 / 0.0041 if hit('bad_am_s') else 1.0)   # 러너가 다른 σ_AM_S 로 (영수증 = 매니페스트)
 CERT = W['cert']
+#  원장 수 (가짜 접합 원장 · 정본 검증기의 항등식을 채운다): instance 12 · PTFE 덮임 2 · DBE SDCP 근접 7
+N_INST, N_COV = 12, 2
+near = 7 if is_dbe else 0
+cut = N_COV if law == 'P1' else 0
+if lim == 'zero':                              # 천장 — 실현 · 미절단 instance 전부 축약 (R_j 몫 · c 몫 0)
+    n_ctr, n_ctr_c, n_edge, n_inf = N_INST - cut, 0, 0, 0
+else:
+    n_ctr = near if c == '1' else 0            # c = 1 — 근접 instance 축약 (P1 이 먼저 끊은 것과 겹치지 않게 둔다)
+    n_ctr_c = n_ctr
+    rest = N_INST - n_ctr - cut
+    n_edge, n_inf = (0, rest) if lim == 'inf' else (rest, 0)
+COUNTS = {'n_instances': N_INST, 'n_edge': n_edge, 'n_contract': n_ctr, 'n_cut_p1': cut, 'n_unrealized': 0, 'n_none_inf': n_inf,
+          'n_long': 1, 'n_sdcp_near': near, 'n_contracted_by_c': n_ctr_c, 'n_ptfe_cov': N_COV}
 
 
-def canon(o):
-    return json.dumps(o, sort_keys=True, ensure_ascii=False, separators=(',', ':'))
+def hx(s):
+    return hashlib.blake2b(s.encode(), digest_size=16).hexdigest()
+
+
+def lean2(kind):
+    return {'electronic_wetted': {'status': 'disabled', 'why': 'LEAN 2 (--no-collector)'},
+            'electronic_bare': {'status': 'disabled', 'why': 'LEAN 2 (--no-collector)'},
+            'ionic': {'status': 'disabled', 'why': 'LEAN 2 (--no-ion)'}}
 
 
 def manifest(i, si):
-    cjp = {'wiring': 'b6-cjunc-payload-v1', 'model': 'fake-cjunc-v0', 'schema': 'fake', 'len_law': E['CJUNC_LEN_LAW'], 'R_j_ohm': Rv,
-           'unreg_law': unreg, 'ptfe_jlaw': law, 'ptfe_stamp': E['PTFE_STAMP'], 'r_f_um': 0.075, 'tol_ff_um': tol_ff, 'L_par_um': 0.3,
-           'r_port_um': 0.3, 's_min_um': s_min, 'gap_tol': 2.0, 'tol_P_um': tol_ff, 'tol_sj_um': tol_ff, 'r_ptfe_um': 0.124,
-           'r_sdcp_um': 0.15, 'rj_reference_plane': 'model_internal_port_centre', 'half_cell_in_edge': False,
-           'quantitative': limit is None, 'allow_rj_limits': limit is not None, 'channel': 'electronic'}
-    if limit:
-        cjp['rj_limit'] = limit
-    rc_ = {'electronic_main': {'status': 'applied', 'n_instances': 12}, 'electronic_wetted': {'status': 'disabled', 'why': 'LEAN 2'},
-           'electronic_bare': {'status': 'disabled', 'why': 'LEAN 2'}, 'ionic': {'status': 'disabled', 'why': 'LEAN 2 (--no-ion)'}}
-    if hit('lean_bad'):
-        rc_['electronic_wetted'] = {'status': 'applied'}
-    sid = 'sidfp-%s-%g-%s' % (kit, vox, yv)
-    if hit('sid_fp'):
-        sid = 'sidfp-OTHER'
-    solve = {'solved': True, 'short': False, 'sv_dominant': False,
-             'dissipation_share': {'junction': 0.4, 'va_face': 0.2, 'sv_face': 0.05, 'sdcp_cell': 0.02}}
+    #  격자 지문 — 킷 · 래스터 (vox · SDCP 양보) · origin (팔 번호) 마다 (R_j · c · P 는 래스터를 안 바꾼다) · 소문자 hex 32
+    sid = hx('sid|%s|%r|%s|%d' % (kit, vox, yv, i))
+    if hit('sid_fp'):                          # 같은 킷 · 같은 래스터 · 같은 origin 인데 다른 격자 (두 블록 다 — 정본 계약은 지난다)
+        sid = 'f' * 32
+    regfp = hx('reg|' + sid)
+    cjp = cp_(T['cj']['%s|%s|%s' % (law, unreg, lim or 'q')])
+    if lim is None:
+        cjp['R_j_ohm'] = Rv
+    cjp['ptfe_stamp'] = E['PTFE_STAMP']
+    rc_cj = dict(lean2('cj'), electronic_main={'status': 'applied', 'n_instances': N_INST, 'n_junction_edges': n_edge, 'solved': True,
+                                               'fp_registry': regfp})
+    if hit('lean_bad'):                        # 주 솔브 실패 영수증 (정본 계약 허용 · LEAN 2 표 = applied | absent_geometry 만)
+        rc_cj['electronic_main'] = dict(rc_cj['electronic_main'], status='failed', solved=False, why='fake fault')
+    if hit('lean_wetted'):                     # 집전체 솔브에 접합 적용 (LEAN 2 표 밖 — 정본 계약이 먼저 잡는다)
+        rc_cj['electronic_wetted'] = {'status': 'applied'}
+    solve = {'solved': True, 'short': False, 'sv_dominant': False, 'n_junction_edges': n_edge, 'n_contracted': n_ctr,
+             'dissipation_share': {'junction': (0.4 if n_edge else 0.0), 'va_face': 0.2, 'sv_face': 0.05, 'sdcp_cell': 0.02}}
     if hit('sv_dominant'):
         solve['sv_dominant'] = True
     if hit('sv_missing'):
         solve.pop('sv_dominant')
-    ca = {'schema': 'ca-ext-v1',
-          'ptfe_face': {'protocol': {'operator': 'fake-face', 'channels': ['electronic', 'ionic'], 'dia_law': 'rope'},
-                        'evidence': {'receipts': json.loads(json.dumps(rc_)), 'fp': {'caps': 'capfp'}}},
-          'cjunc': {'protocol': cjp, 'evidence': {'receipts': rc_, 'fp': {'registry': 'regfp', 'sid': sid},
-                                                  'counts': {'n_instances': 12, 'n_edge': 12}, 'solve': solve}}}
+    fa_plan = hx('plan_e|' + sid)
+    rc_fa = dict(lean2('fa'), electronic_main={'status': 'applied', 'n_rows_used': 5, 'n_cut_used': 1, 'n_isolated_by_cut': 0,
+                                               'plate_cross_columns': 0, 'solved': True, 'fp_plan': fa_plan})
+    fa_fp = {'caps': hx('caps|' + kit), 'plan_electronic': fa_plan, 'plan_ionic': None, 'sid_off': sid}
+    if hit('sid_off_other'):                   # off 격자 지문 ≠ 접합 원장 지문 (같은 솔브인데) — 정본 계약이 잡는다
+        fa_fp['sid_off'] = '0' * 32
+    if hit('no_sid_off'):
+        fa_fp.pop('sid_off')
+    ca = {'schema': T['ca_schema'],
+          'ptfe_face': {'protocol': cp_(T['fa']),
+                        'evidence': {'capsules': {'n_paths': 2, 'n_pieces': 2, 'n_point_pieces': 0, 'n_segments': 6,
+                                                  'volume_um3': T['fa_volume']['capsule_um3']},
+                                     'volume': cp_(T['fa_volume']),
+                                     'faces': {'electronic': {'n_rows': 5, 'n_cut_rows': 1, 'by_class': {}}, 'ionic': None},
+                                     'receipts': rc_fa, 'off_grid_ptfe_point_cells': {'0': 3}, 'fp': fa_fp,
+                                     'diagnostics': cp_(T['fa_diag']), 'label': T['fa_label']}},
+          'cjunc': {'protocol': cjp,
+                    'evidence': {'counts': cp_(COUNTS), 'census': {'n_fibres': 4}, 'solve': solve, 'receipts': rc_cj,
+                                 'fp': {'registry': regfp, 'sid': sid, 'plan_rows': hx('rows|' + regfp), 'centreline': hx('cl|' + kit),
+                                        'membership': hx('mem|' + kit)},
+                                 'rejections': [], 'sdcp_mod_c': (None if c == '' else float(c)), 'status': T['cj_status'],
+                                 'qualifiers': cp_(T['cj_qual']), 'diagnostics': cp_(T['cj_diag']), 'label': T['cj_label']}}}
     req = ['cjunc']
     if c != '':
-        nn = 7 if is_dbe else 0
-        ca['sdcp_mod'] = {'protocol': {'c': float(c), 'tol_sj_um': tol_ff},
-                          'evidence': {'n_sdcp_near': nn, 'n_contracted_by_c': nn if c == '1' else 0, 's3_discriminating': nn > 0}}
+        ca['sdcp_mod'] = {'protocol': cp_(T['sd'][c]),
+                          'evidence': {'n_sdcp_near': near, 'n_contracted_by_c': n_ctr_c, 's3_discriminating': near > 0,
+                                       'label': T['sd_label']}}
         req = ['cjunc', 'sdcp_mod']
     man = {'schema_version': 3, 'vox_um': vox, 'bridge_um': float(E['BRIDGE_UM']), 'fibre_stamp': 'segment', 'sdcp_stamp': 'sphere',
            'sdcp_sphere_d_um': float(E['SDCP_SPHERE_D']), 'sdcp_yield_to_vgcf': yv, 'sdcp_bridge_um': 0.0, 'ptfe_block_um': 0.0,
            'ptfe_stamp': E['PTFE_STAMP'], 'ptfe_zero_dof': False,
            'sigma_vgcf_S_cm': float('%.6g' % (bulk * math.pi * 0.15 ** 2 / (4.0 * vox * vox))),
+           'sigma_vgcf_bulk_S_cm': bulk, 'sigma_vgcf_rule': T['vgcf_rule'],
            'sigma_sdcp_S_cm': float(E['SIGMA_SDCP_OVERRIDE']), 'sigma_ptfe_S_cm': 0.0, 'sigma_ion_se_S_cm': 0.003,
-           'sigma_ion_sdcp_S_cm': 0.001, 'sigma_am_s_S_cm': float(E['SIGMA_AM_S_OVERRIDE']), 'sigma_am_p_S_cm': 0.0041,
+           'sigma_ion_sdcp_S_cm': 0.001, 'sigma_am_s_S_cm': am_s, 'sigma_am_p_S_cm': 0.0041,
            'cam': 'ncm811', 'temp_c': None, 'periodic_xy': False, 'plate_rule': 'p2-occupied-surface-first',
            'sigma_superp_S_cm': 0.0, 'sigma_swcnt_S_cm': 0.0, 'swcnt_ion_block': False, 'dilate_z': 0.0, 'se_source': 'file:se.npy',
-           'origin_shift_um': list(shifts[i]), 'ptfe_cells_observed': 0,
+           'origin_shift_um': list(shifts[i]), 'ptfe_cells_observed': 0, 'field_requested': False,
            'component_plan': {'electronic': True, 'ionic': False, 'thermal': False, 'pore': False, 'collector': False},
-           'components': {'electronic': {'status': 'complete', 'backend': {'used': 'gpu'}}},
-           'backend': {'used': 'gpu', 'rtol': rtol}, 'code_sha': 'fake0000', 'input_digest': 'in-' + kit,
+           'components': {'electronic': {'status': 'complete', 'backend': {'used': backend}}},
+           'backend': {'used': backend, 'rtol': rtol}, 'code_sha': 'fake0000', 'input_digest': 'in-' + kit,
            'ca_ext_requested': req, 'ca_ext': ca}
     if hit('p2gen'):
         man.pop('ca_ext')
@@ -214,16 +281,15 @@ def manifest(i, si):
         man['ptfe_stamp'] = 'centerline'
     if hit('unknown_caext'):
         man.pop('ca_ext')
-    if hit('bad_am_s'):
+    if hit('bad_am_s_man'):                    # 매니페스트만 (영수증 ≠ 결과) — 정본 check_arm (receipt_match) 이 잡는다
         man['sigma_am_s_S_cm'] = 0.01
     if hit('ptfe_cells'):
         man['ptfe_cells_observed'] = 5
     man['physics_protocol_id'] = RC.physics_protocol_id(man)
     if hit('stale_id'):
         man['physics_protocol_id'] = 'p3ca-0000000000000000'
-    man['_fake_caext_sha'] = hashlib.sha256(canon(man.get('ca_ext')).encode()).hexdigest()
-    if hit('tamper_caext'):
-        man['ca_ext']['cjunc']['evidence']['counts']['n_edge'] = 11
+    if hit('tamper_caext'):                    # 쓴 뒤 원장 수 변조 (id 는 protocol 만 덮는다 → 정본 검증기의 항등식이 잡는다)
+        man['ca_ext']['cjunc']['evidence']['counts']['n_edge'] -= 1
     return man
 
 
@@ -232,25 +298,31 @@ def cert(si):
     return {'version': CERT['version'], 'rtol_used': rtol, 'rtol_max': CERT['rtol_max'], 'eps_I': CERT['eps_I'],
             'resolve_rtol': max(rtol * 1e-2, 1e-14), 'resolve_rtol_floor': 1e-14, 'resolve_tol': CERT['resolve_tol'],
             'info': 0, 'resid': 3e-13, 'I_bot': 1.0, 'I_top': 1.0, 'imbalance': (2e-7 if ok else 3e-4), 'sigma': si,
-            'sigma_resolve': si, 'dsigma_rel': 1e-9, 'resolve_info': 0, 'pass_a': True, 'pass_b': ok, 'pass_c': True, 'ok': ok}
+            'sigma_resolve': si, 'dsigma_rel': 1e-9, 'resolve_info': 0, 'pass_a': True, 'pass_b': ok, 'pass_c': True, 'ok': ok,
+            'iters': 321, 'resolve_iters': 17}
 
 
 tag = rj.replace('.', 'p').replace('+', '').replace('-', 'm')
-for i in range(arms):
+for i in idx:
     si = s0 * af[i]
     st = {'sigma_e_eff_S_cm': si, 'cg_info': 0, 'unconverged': False, 'cg_resid': 3e-13, 'n_dof': 1234, 'vox_um': vox,
-          'status': 'complete', 'manifest': manifest(i, si), 'conv_cert': cert(si)}
+          'status': 'complete', 'manifest': manifest(i, si), 'conv_cert': cert(si), 'cg_iters': 321}
     json.dump({'mpm_metrics': {'step3': st}}, open(os.path.join(out, 'p2_%s_sph_fa_cj%s_c%s_a%d.json' % (kit[4:], tag, c, i)), 'w'))
     jl('ledger.jsonl', {'sigma': si})
 cj_req = {'R_j_ohm': Rv, 'len_law': E['CJUNC_LEN_LAW'], 'unreg_law': unreg, 's_min_um': s_min, 'tol_ff_um': tol_ff, 'ptfe_jlaw': law}
+if lim:
+    cj_req['rj_limit'] = lim
 req = {'cjunc': cj_req}
 if c != '':
     req['sdcp_mod'] = {'c': float(c)}
 rec = {'vox_um': vox, 'bridge_um': float(E['BRIDGE_UM']), 'fibre_stamp': 'segment', 'sdcp_stamp': 'sphere',
        'sdcp_sphere_d_um': float(E['SDCP_SPHERE_D']), 'sdcp_yield_to_vgcf': yv, 'ptfe_stamp': E['PTFE_STAMP'], 'periodic_xy': False,
-       'arms': arms, 'expect_backend': 'gpu', 'origins': [list(o) for o in RC.expected_origins_for(vox)],
-       'sigma_am_s_S_cm': float(E['SIGMA_AM_S_OVERRIDE']), 'sigma_sdcp_S_cm': float(E['SIGMA_SDCP_OVERRIDE']),
-       'ca_ext_request': req, 'step3_rtol': rtol * (10.0 if hit('receipt_rtol') else 1.0), 'code_sha': 'fake0000'}
+       'arms': arms, 'expect_backend': backend, 'origins': [list(o) for o in RC.expected_origins_for(vox)],
+       'sigma_am_s_S_cm': am_s, 'sigma_sdcp_S_cm': float(E['SIGMA_SDCP_OVERRIDE']),
+       'sigma_vgcf_bulk_S_cm': bulk, 'sigma_vgcf_rule': T['vgcf_rule'],
+       'ca_ext_request': req, 'step3_rtol': rtol, 'code_sha': 'fake0000'}
+if 'ARM_LIST' in E:
+    rec['arm_list'] = idx
 json.dump(rec, open(os.path.join(out, 'run_receipt.json'), 'w'), sort_keys=True)
 if hit('rejected'):
     open(os.path.join(out, '.rejected_20261020T000000Z'), 'w').write('reason=seal_broken\n')
@@ -267,6 +339,33 @@ PW = {'sbe': PW_SBE, 'law_factor': {'P0': 1.0, 'P1': 0.95}, 'c_factor': {'0': 0.
       'var_sbe': {'FIBRE': 0.9, 'UNREG': 1.05, 'GRID': 0.97}, 'var_dbe': {'SVORDER': 1.01}}
 
 
+def record_templates():
+    """정본 기록 틀 — 가짜 러너 (-S · numpy 없음) 가 채울 protocol · 표지 · 진단 표 · 한정어 · 부피 기록을 **정본 함수로** 만든다
+    (한 번 · 계획의 s_min · tol_ff 로).  접합 protocol = 법칙 × 미등록 면 법칙 × {정량 · 바닥 · 천장} (정량은 R_j 만 가짜가 바꾼다)."""
+    if 'tpl' not in FX:
+        import ca_ext_cjunc as CW
+        import carbon_junction as CJ
+        import ptfe_face_alpha as FA
+        import run_contract as RCm
+        import step3_sigma as S3
+        p = FX['plan_obj']
+        cj = {}
+        for law in CJ.PTFE_JLAWS:
+            for unreg in CJ.UNREG_LAWS:
+                for lim in (None,) + tuple(CW.RJ_LIMITS):
+                    R = {None: 1.0, 'inf': None, 'zero': 0.0}[lim]
+                    cj[f'{law}|{unreg}|{lim or "q"}'] = CW.cjunc_protocol_record(
+                        R_j_ohm=R, len_law=p['len_law'], unreg_law=unreg, s_min_um=float(p['s_min_um']),
+                        tol_ff_um=float(p['tol_ff_um']), ptfe_jlaw=law, ptfe_stamp='face_alpha', rj_limit=lim)
+        FX['tpl'] = {'ca_schema': RCm.CA_EXT_SCHEMA, 'cj': cj,
+                     'sd': {c: CW.sdcp_mod_protocol_record(c=float(c), tol_sj_um=float(p['tol_ff_um'])) for c in ('0', '1')},
+                     'cj_status': CJ.CJUNC_STATUS, 'cj_qual': list(CJ.CJUNC_QUALIFIERS), 'cj_diag': dict(CW.DIAGNOSTICS_V0),
+                     'cj_label': CW.LABEL_CJUNC, 'sd_label': CW.LABEL_SDCP,
+                     'fa': FA.protocol_record(('electronic', 'ionic'), 'rope'), 'fa_diag': dict(FA.DIAGNOSTICS_V0), 'fa_label': FA.LABEL,
+                     'fa_volume': FA.volume_record(0.05, 0.06), 'vgcf_rule': S3.VGCF_SIGMA_RULE}
+    return FX['tpl']
+
+
 def world(name, base=None, **kw):
     """세계 파일 → 경로 (이름마다 새 폴더 · 호출 수 · 장부 · env 기록이 그 폴더에 쌓인다)."""
     import step3_conv_cert as CC                           # 증서 봉인 상수 = 정본 (시험 프로세스에서 한 번)
@@ -275,7 +374,7 @@ def world(name, base=None, **kw):
     d.mkdir(parents=True)
     W = copy.deepcopy(base if base is not None else PW)
     W.update(copy.deepcopy(kw))
-    W.update({'dir': str(d), 'scripts': str(SCRIPTS), 'model_src': MODEL_SRC,
+    W.update({'dir': str(d), 'scripts': str(SCRIPTS), 'model_src': MODEL_SRC, 'tpl': record_templates(),
               'cert': {'version': CC.CERT_VERSION, 'rtol_max': CC.CERT_RTOL_MAX, 'eps_I': CC.CERT_EPS_I,
                        'resolve_tol': CC.CERT_RESOLVE_TOL}})
     (d / 'world.json').write_text(json.dumps(W), encoding='utf-8')
@@ -362,35 +461,32 @@ def envset(**kv):
                 os.environ[k] = v
 
 
-def fake_contract():
-    class FakeContract(RR.RealContract):
-        """가짜 인지 계약 — 블록 지문 (가짜 러너가 쓴 `_fake_caext_sha`) 대조 · check_arm 자리는 통과 (Z1 조합 전)."""
-
-        def arm_problem(self, path, receipt):
-            return None
-
-        def ca_ext_record(self, man):
-            want = man.get('_fake_caext_sha')
-            got = hashlib.sha256(json.dumps(man.get('ca_ext'), sort_keys=True, ensure_ascii=False,
-                                            separators=(',', ':')).encode()).hexdigest()
-            return (True, None) if want == got else (False, 'CAEXT|fake| 블록이 쓴 뒤 바뀌었다')
-    return FakeContract()
-
-
-def call(argv, wpath=None, env=None):
-    """사슬 main 을 프로세스 안에서 → (rc, 화면).  SystemExit 는 rc 로."""
+def call(argv, wpath=None, env=None, contract=None):
+    """사슬 main 을 프로세스 안에서 → (rc, 화면).  SystemExit 는 rc 로.  ★ Z3 — 계약 = 정본 (`RealContract` · main 기본값) ·
+    `contract` 는 사슬 **자신의** 검사층만 보려는 시험 (X09) 에서만 넣는다."""
     kv = dict(env or {})
     kv['FAKE_WORLD'] = wpath
     buf = io.StringIO()
     with envset(**kv), contextlib.redirect_stdout(buf), contextlib.redirect_stderr(buf):
         try:
-            rc = RR.main([str(a) for a in argv], contract=fake_contract())
+            rc = RR.main([str(a) for a in argv], contract=contract)
         except SystemExit as e:
             rc = e.code if isinstance(e.code, int) else 2
     return rc, buf.getvalue()
 
 
-def ladder(tag, wpath, law='P0', variant=None, extra=(), reg=None, max_hours='2', env=None, prefill=False):
+def pass_contract():
+    """통과 계약 — 정본 두 검사를 비켜 사슬 자신의 대조 (sid_off · 매니페스트 · LEAN · PTFE 셀) 만 남긴다 (X09 · 변이 대조용)."""
+    class PassContract(RR.RealContract):
+        def arm_problem(self, path, receipt):
+            return None
+
+        def ca_ext_record(self, man):
+            return True, None
+    return PassContract()
+
+
+def ladder(tag, wpath, law='P0', variant=None, extra=(), reg=None, max_hours='2', env=None, prefill=False, contract=None):
     out = Path(TD) / 'runs' / tag
     if prefill:
         out.mkdir(parents=True)
@@ -399,7 +495,7 @@ def ladder(tag, wpath, law='P0', variant=None, extra=(), reg=None, max_hours='2'
             '--plan', FX['plan'], '--registration', reg or FX['reg_ok'], '--max-hours', max_hours, '--out', out]
     if variant:
         argv += ['--variant', variant]
-    rc, so = call(argv + list(extra), wpath, env)
+    rc, so = call(argv + list(extra), wpath, env, contract=contract)
     sp = out / 'ladder_summary.json'
     return {'rc': rc, 'out': out, 'so': so, 'sum': json.loads(sp.read_text(encoding='utf-8')) if sp.exists() else None,
             'world': wpath}
@@ -669,12 +765,22 @@ def t_L17():
             (r['sum']['status'], roles(r), stop_code(r)))
 
 
-@check('L18', 'origin §3-3 통과 — R_j,0 에서 arm 1 · 2 (ARMS 3 한 런) · ln(max/min) ≤ 0.02 · 8 팔 없음 · 표지 없음')
+@check('L18', 'origin §3-3 통과 — R_j,0 에서 arm 1 · 2 만 (ARM_LIST=1,2 한 런 · ARMS 없음 · a0 다시 안 돎) · 팔 sid 지문 = origin 마다 '
+               '(arm 1 ≠ arm 2 인데 SID_GRID 아님) · ln(max/min) ≤ 0.02 · 8 팔 없음 · 표지 없음')
 def t_L18():
-    r = s_main('P0')
+    return eval_L18(s_main('P0'))
+
+
+def eval_L18(r):
     o = lad(r).get('origin') or {}
-    return (o.get('status') == 'pass' and roles(r).count('origin3') == 1 and 'origin8' not in roles(r)
-            and r['sum'].get('flags') == [], (o, roles(r), r['sum'].get('flags')))
+    runs = [x for x in r['sum'].get('runs', []) if x['role'] == 'origin']
+    ev = [e for e in env_log(r['world']) if 'ARM_LIST' in e]
+    ar = (runs[0].get('arms_read') or []) if runs else []
+    return (o.get('status') == 'pass' and len(runs) == 1 and 'origin3' not in roles(r) and 'origin8' not in roles(r)
+            and r['sum'].get('flags') == [] and len(ev) == 1 and ev[0].get('ARM_LIST') == '1,2' and 'ARMS' not in ev[0]
+            and [a.get('index') for a in ar] == [1, 2] and not [a for a in ar if a['file'].endswith('_a0.json')]
+            and len({a.get('sid_fp') for a in ar}) == 2,
+            (o, roles(r), ev, [(a.get('index'), a.get('file')) for a in ar], stop_code(r)))
 
 
 def run_L19(tag):
@@ -735,7 +841,7 @@ def t_S04():
     return stop_case('S04', [{'do': 'two_json', 'match': {'rj': 'inf'}}], 'ARM_JSON_COUNT')
 
 
-@check('S05', '매니페스트 σ_AM_S 변조 (0.01) → MANIFEST_MISMATCH')
+@check('S05', '러너가 다른 σ_AM_S (0.01 · 영수증 = 매니페스트 → 정본 계약은 지난다) → 사슬 MAN_FIXED 대조 → MANIFEST_MISMATCH')
 def t_S05():
     return stop_case('S05', [{'do': 'bad_am_s', 'match': {'rj': '1000000.0'}}], 'MANIFEST_MISMATCH')
 
@@ -760,17 +866,17 @@ def t_S09():
     return stop_case('S09', [{'do': 'tamper_caext', 'match': {'rj': 'inf'}}], 'CA_EXT_RECORD')
 
 
-@check('S10', '솔브 영수증 ≠ LEAN 2 표 (wetted applied) → RECEIPT_LEAN')
+@check('S10', '솔브 영수증 ≠ LEAN 2 표 (접합 주 솔브 failed — 정본 계약 허용 · LEAN 2 표 = applied | absent_geometry) → RECEIPT_LEAN')
 def t_S10():
     return stop_case('S10', [{'do': 'lean_bad', 'match': {'rj': '10000.0'}}], 'RECEIPT_LEAN')
 
 
-@check('S11', 'face_alpha 런의 ptfe_cells_observed > 0 → PTFE_CELLS_OBSERVED')
+@check('S11', 'face_alpha 런의 ptfe_cells_observed > 0 → 정본 계약 (ptfe_face 검증기) 이 먼저 잡는다 → CA_EXT_RECORD')
 def t_S11():
-    return stop_case('S11', [{'do': 'ptfe_cells', 'match': {'rj': '0'}}], 'PTFE_CELLS_OBSERVED')
+    return stop_case('S11', [{'do': 'ptfe_cells', 'match': {'rj': '0'}}], 'CA_EXT_RECORD')
 
 
-@check('S12', 'sid 격자 지문이 같은 킷 런 사이에서 다르다 → SID_GRID')
+@check('S12', 'sid 격자 지문이 같은 킷 · 같은 래스터 · 같은 origin 런 사이에서 다르다 (두 블록 다 · 정본 계약은 지난다) → SID_GRID')
 def t_S12():
     return stop_case('S12', [{'do': 'sid_fp', 'match': {'rj': '1000000.0'}}], 'SID_GRID')
 
@@ -781,14 +887,16 @@ def t_S13():
     return (r['rc'] == 3 and stop_code(r) == 'ENV_SIGMA_VGCF_OVERRIDE' and n_calls(r['world']) == 0, (r['rc'], stop_code(r)))
 
 
-@check('S14', '부모 env 오염 (SIGMA_ION_SE · P2_SCR · SIGMA_PTFE · MPM_PERIODIC_SIGMA · EXPECT_PROTOCOL · CJUNC_RJ) → 지우고 돈다 · 요약에 이름')
+@check('S14', '부모 env 오염 (SIGMA_ION_SE · P2_SCR · SIGMA_PTFE · MPM_PERIODIC_SIGMA · EXPECT_PROTOCOL · CJUNC_RJ · ★ ARM_LIST · EXPECT_BACKEND) '
+               '→ 지우고 돈다 · 요약에 이름')
 def t_S14():
     bad = {'SIGMA_ION_SE': '0.0015', 'P2_SCR': '/tmp/elsewhere', 'SIGMA_PTFE': '1e-16', 'MPM_PERIODIC_SIGMA': '1',
-           'EXPECT_PROTOCOL': 'p2-0000', 'CJUNC_RJ': '999'}
+           'EXPECT_PROTOCOL': 'p2-0000', 'CJUNC_RJ': '999', 'ARM_LIST': '3,4', 'EXPECT_BACKEND': 'cpu'}
     r = scen('S14', lambda: ladder('S14', world('S14', dict(PW, sbe=dict(PW_SBE, ceiling=1.5e-3))), env=bad))
     ev = env_log(r['world'])
-    leak = [k for e in ev for k in bad if k in e and not (k == 'CJUNC_RJ' and e[k] in ('inf', '0'))]
-    return (len(ev) == 2 and not leak and set(bad) <= set(r['sum'].get('env_scrubbed', [])) and ev[0].get('CJUNC_RJ') == 'inf',
+    leak = [k for e in ev for k in bad if e.get(k) == bad[k]]          # 오염 값이 러너에 닿았다 (사슬이 정한 값 = CJUNC_RJ · EXPECT_BACKEND 는 정상)
+    return (len(ev) == 2 and not leak and set(bad) <= set(r['sum'].get('env_scrubbed', [])) and ev[0].get('CJUNC_RJ') == 'inf'
+            and all('ARM_LIST' not in e and e.get('EXPECT_BACKEND') == 'gpu' for e in ev),
             (leak, r['sum'].get('env_scrubbed'), [e.get('CJUNC_RJ') for e in ev]))
 
 
@@ -811,7 +919,7 @@ def t_S17():
     return r['rc'] == 3 and stop_code(r) == 'TIME_LIMIT', (r['rc'], stop_code(r))
 
 
-@check('S18', '영수증 step3_rtol ≠ 계획 → MANIFEST_MISMATCH')
+@check('S18', '러너가 다른 rtol (1e-13 · 영수증 = 매니페스트 = 증서 → 정본 계약 · 증서는 지난다) ≠ 계획 → MANIFEST_MISMATCH')
 def t_S18():
     return stop_case('S18', [{'do': 'receipt_rtol', 'match': {'rj': '10000.0'}}], 'MANIFEST_MISMATCH')
 
@@ -887,13 +995,36 @@ def t_S23():
     return (set(st) >= {'code', 'cause', 'run'} and st['run'] and 'RUNNER_RC' in r['so'], st)
 
 
+@check('S24', '매니페스트만 σ_AM_S 0.01 (영수증 0.0041) → 정본 check_arm (receipt_match) → ARM_CONTRACT')
+def t_S24():
+    return stop_case('S24', [{'do': 'bad_am_s_man', 'match': {'rj': '1000000.0'}}], 'ARM_CONTRACT')
+
+
+@check('S25', '집전체 솔브에 접합 적용 (LEAN 2 표 밖) → 정본 계약 (접합 검증기) → CA_EXT_RECORD')
+def t_S25():
+    return stop_case('S25', [{'do': 'lean_wetted', 'match': {'rj': '10000.0'}}], 'CA_EXT_RECORD')
+
+
+@check('S26', 'off 격자 sid 지문 ≠ 접합 원장 sid (같은 솔브) → 정본 계약 → CA_EXT_RECORD')
+def t_S26():
+    return stop_case('S26', [{'do': 'sid_off_other', 'match': {'rj': '1000000.0'}}], 'CA_EXT_RECORD')
+
+
+@check('S27', 'off 격자 sid 지문 칸 없음 → 정본 계약 (ptfe_face 검증기) → CA_EXT_RECORD')
+def t_S27():
+    return stop_case('S27', [{'do': 'no_sid_off', 'match': {'rj': '1000000.0'}}], 'CA_EXT_RECORD')
+
+
 # ── P 예측 ──
-@check('P01', '예측 — SBE c no-op 런 둘 · 모서리 12 런 (arm 0) · origin 넷 (ARMS 3) · 상태 PREDICTED')
+@check('P01', '예측 — SBE c no-op 런 둘 · 모서리 12 런 (arm 0) · origin 넷 (ARM_LIST=1,2 · ARMS 없음 · a0 다시 안 돎) · 상태 PREDICTED')
 def t_P01():
     r = s_main_predict()
     rl = roles(r)
+    ev = [e for e in env_log(r['world']) if 'ARM_LIST' in e]
     return (r['rc'] == 0 and r['sum']['status'] == 'PREDICTED' and rl.count('sbe_noop') == 2 and rl.count('corner') == 12
-            and rl.count('origin3') == 4 and 'origin8' not in rl, (r['rc'], r['sum'] and r['sum']['status'], rl, stop_code(r)))
+            and rl.count('origin') == 4 and 'origin3' not in rl and 'origin8' not in rl and len(ev) == 4
+            and all(e.get('ARM_LIST') == '1,2' and 'ARMS' not in e and 'DBE' in e.get('KITS', '') for e in ev),
+            (r['rc'], r['sum'] and r['sum']['status'], rl, stop_code(r)))
 
 
 @check('P02', 'R_j 는 사다리 요약에서 — 모서리 런의 CJUNC_RJ = 사다리 R_j,lo · R_j,0 · R_j,hi 문자열 그대로 (사람 옮김 없음)')
@@ -1128,7 +1259,7 @@ def t_V13():
 @check('V14', '감도 변이 사다리에는 origin 런이 없다 (등록 §10 런 수 = 사다리 ≤ 12 × 2 + DBE 4) · 주 사다리만 §3-3')
 def t_V14():
     lads = s_variant_set('FIBRE')['ladders']
-    bad = [(o['sum']['law'], roles(o)) for o in lads if {'origin3', 'origin8'} & set(roles(o)) or lad(o).get('origin') is not None]
+    bad = [(o['sum']['law'], roles(o)) for o in lads if {'origin', 'origin3', 'origin8'} & set(roles(o)) or lad(o).get('origin') is not None]
     return (not bad and all(o['sum']['status'] == 'CALIBRATED' for o in lads), bad)
 
 
@@ -1251,11 +1382,68 @@ def t_X05():
     return not miss and consts, (miss, consts)
 
 
-@check('X06', '바닥 · 천장 극한 = 러너 env CJUNC_RJ=inf · 0 (런 순서 첫 둘) · 극한 팔 표지 rj_limit 대조')
+@check('X06', '바닥 · 천장 극한 = 러너 env CJUNC_RJ=inf · 0 (런 순서 첫 둘) · 팔 protocol 표지 rj_limit inf · zero (R_j_ohm null · 0.0 · '
+               'quantitative False · allow_rj_limits True) · 영수증 요청 같은 꼴 — 사슬이 받아 다음 런으로 간다')
 def t_X06():
-    ev = env_log(s_main('P0')['world'])
-    return [e.get('CJUNC_RJ') for e in ev[:2]] == ['inf', '0'] and roles(s_main('P0'))[:2] == ['floor', 'ceiling'], (
-        [e.get('CJUNC_RJ') for e in ev[:3]])
+    r = s_main('P0')
+    ev = env_log(r['world'])
+    got = []
+    for run in (r['sum'] or {}).get('runs', [])[:2]:
+        d = Path(r['out']) / run['outdir']
+        a = json.loads((d / run['arms_read'][0]['file']).read_text(encoding='utf-8'))
+        cjp = a['mpm_metrics']['step3']['manifest']['ca_ext']['cjunc']['protocol']
+        rq = json.loads((d / 'run_receipt.json').read_text(encoding='utf-8'))['ca_ext_request']['cjunc']
+        got.append((cjp.get('rj_limit'), cjp.get('R_j_ohm'), cjp.get('quantitative'), cjp.get('allow_rj_limits'),
+                    rq.get('rj_limit'), rq.get('R_j_ohm')))
+    return ([e.get('CJUNC_RJ') for e in ev[:2]] == ['inf', '0'] and roles(r)[:2] == ['floor', 'ceiling'] and len(roles(r)) > 2
+            and got == [('inf', None, False, True, 'inf', None), ('zero', 0.0, False, True, 'zero', 0.0)],
+            ([e.get('CJUNC_RJ') for e in ev[:3]], got, stop_code(r)))
+
+
+@check('X07', '극한 표지 = 정본 낱말 (ca_ext_cjunc.RJ_LIMITS) · 사슬이 기대하는 요청 (expected_request) 에 rj_limit · R_j null · 0.0 · 정량 런엔 칸 없음')
+def t_X07():
+    import ca_ext_cjunc as CW
+    mk = getattr(RR, 'LIMIT_MARK', None)
+    plan = FX['plan_obj']
+    reqs = {}
+    for rj in ('inf', '0', '1000000.0'):
+        reqs[rj] = RR.expected_request({'rj': rj, 'law': 'P0', 'c': '0', 'variant': None}, plan)['cjunc']
+    ok = (isinstance(mk, dict) and set(mk) == {'inf', '0'} and set(mk.values()) == set(CW.RJ_LIMITS)
+          and reqs['inf'].get('rj_limit') == mk['inf'] and reqs['inf'].get('R_j_ohm') is None
+          and reqs['0'].get('rj_limit') == mk['0'] and reqs['0'].get('R_j_ohm') == 0.0
+          and 'rj_limit' not in reqs['1000000.0'] and reqs['1000000.0'].get('R_j_ohm') == 1e6)
+    return ok, (mk, reqs)
+
+
+@check('X08', '러너 backend = 사슬 상수 EXPECT_BACKEND (gpu) — env 로 넘긴다 (부모 셸 값은 지운다) · 정본 check_arm 에도 같은 값')
+def t_X08():
+    w = world('X08')
+    out = Path(TD) / 'runs' / 'X08'
+    rc, so = call(['--stage', 'ladder', '--law', 'P0', '--target', '1.63', '--runner', FX['runner'], '--root', FX['root'],
+                   '--plan', FX['plan'], '--registration', FX['reg_ok'], '--max-hours', '1', '--out', out, '--dry-run'], w,
+                  env={'EXPECT_BACKEND': 'cpu'})
+    lines = [x for x in so.splitlines() if 'bash ' in x]
+    return (rc == 0 and getattr(RR, 'EXPECT_BACKEND', None) == 'gpu' and len(lines) == 5
+            and all('EXPECT_BACKEND=gpu' in x and 'EXPECT_BACKEND=cpu' not in x for x in lines), (rc, lines[:1]))
+
+
+@check('X09', '사슬 자신의 off 격자 대조 — 정본 계약을 비켜도 (통과 계약) sid_off 없음 · ≠ 접합 sid = SID_GRID (계약 뒤 둘째 겹)')
+def t_X09():
+    rs = []
+    for tag, do in (('X09a', 'no_sid_off'), ('X09b', 'sid_off_other')):
+        r = scen(tag, lambda tag=tag, do=do: ladder(tag, world(tag, dict(PW, faults=[{'do': do, 'match': {'rj': '1000000.0'}}])),
+                                                   contract=pass_contract()))
+        rs.append((r['rc'], stop_code(r)))
+    return rs == [(3, 'SID_GRID'), (3, 'SID_GRID')], rs
+
+
+@check('X10', 'CG 반복 수 (주 솔브 · ⓒ 이어 풀기) = 공개 기록 · 화면 (등록 R §11 숫자 탐침 칸 · σ 아님)')
+def t_X10():
+    r = s_main('P0')
+    ar = [a for run in (r['sum'] or {}).get('runs', []) for a in (run.get('arms_read') or [])]
+    return (bool(ar) and all(a.get('cg_iters') == 321 and a.get('resolve_iters') == 17 for a in ar)
+            and 'CG 반복 321' in r['so'] and '이어 풀기 17' in r['so'], ([(a.get('cg_iters'), a.get('resolve_iters')) for a in ar[:3]],
+                                                                     r['so'][-300:]))
 
 
 # ── M 변이 (시험이 떨어져야 한다) ──
@@ -1320,6 +1508,38 @@ def t_M07():
         r = run_L16('M07')
         return r['sum']['status'] == 'CALIB_LADDER_EXHAUSTED' and len(roles(r)) == 12, (r['sum']['status'], len(roles(r)))
     return mutant('M07', {'MAX_LADDER_POINTS': 13}, ev)
+
+
+def _contract_without(which):
+    """기본 계약 (main 이 짓는 RealContract) 에서 정본 검사 하나를 끈 변이 클래스."""
+    base = RR.RealContract
+
+    class C(base):
+        if which == 'ca':
+            def ca_ext_record(self, man):
+                return True, None
+        else:
+            def arm_problem(self, path, receipt):
+                return None
+    return C
+
+
+@check('M08', '변이: 정본 ca_ext_record_ok 끔 → S09 (원장 수 변조) 가 CA_EXT_RECORD 를 못 낸다 (정본 계약이 실제로 일한다)')
+def t_M08():
+    return mutant('M08', {'RealContract': _contract_without('ca')},
+                  lambda: stop_case('M08', [{'do': 'tamper_caext', 'match': {'rj': 'inf'}}], 'CA_EXT_RECORD'))
+
+
+@check('M09', '변이: 정본 check_arm 끔 → S24 (매니페스트만 σ_AM_S) 가 ARM_CONTRACT 를 못 낸다')
+def t_M09():
+    return mutant('M09', {'RealContract': _contract_without('arm')},
+                  lambda: stop_case('M09', [{'do': 'bad_am_s_man', 'match': {'rj': '1000000.0'}}], 'ARM_CONTRACT'))
+
+
+@check('M10', '변이: sid 무리에서 origin 을 뺌 (옛 키) → L18 (origin 팔 1 · 2 의 다른 지문) 이 떨어진다')
+def t_M10():
+    return mutant('M10', {'sid_group': lambda kit, variant, origin_idx: RR.variant_raster(kit, variant)},
+                  lambda: eval_L18(ladder('M10', world('M10'))))
 
 
 # ═════════════════════════ 실행 ═════════════════════════
