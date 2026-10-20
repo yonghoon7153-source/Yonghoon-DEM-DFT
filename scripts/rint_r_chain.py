@@ -20,8 +20,11 @@
 
 값 봉인: 사슬은 σ 를 읽어 점을 고르지만 화면 · 로그 · 공개 요약에는 σ 를 쓰지 않는다 (반복 수 · 잔차 · 판 전류 불균형 · 시간 · 상태만 ·
   σ 가 든 멈춤 사유는 그 수를 가린다).  σ 는 팔 JSON 에만 있고, 판정 결과 (`verdict_results.json`) 는 `--show-results` 로 연다.
-⚠ 지금 코드 상태 (Z1 이 러너 · run_contract 를 같이 고치는 중) — 극한 런 (CJUNC_RJ=inf · 0) · face_alpha + 접합 · P1 · SIGMA_FIBRE_BULK 는
-  지금 러너가 거부한다 (rc 2) → 사슬은 그 자리에서 RUNNER_RC 로 멈춘다 (fail-closed).  필요한 API 는 보고서에.
+★ Z3 (10-20) — 러너 · payload API 와 맞춤: face_alpha + 접합 (+ P1) 한 런 · 극한 런 (env `CJUNC_RJ=inf` · `0` → protocol · 영수증 표지
+  `rj_limit` 'inf' · 'zero' · `R_j_ohm` null · 0.0 · `quantitative` False) · origin 검사 = `ARM_LIST=1,2` 한 런 (a0 를 다시 돌지 않는다 ·
+  옛 ARMS=3 우회 삭제 · 넘으면 8 팔 = `ARMS=8`) · off 격자 sid 지문 (`ca_ext.ptfe_face.evidence.fp.sid_off` = 접합 원장 `fp.sid` 필수 ·
+  같은 킷 · 같은 래스터 · **같은 origin** 런끼리 대조) · CG 반복 수 (공개 기록 · 화면 — 등록 R §11 숫자 탐침 칸 · σ 아님) · 계약 = 정본
+  (`ca_ext_record_ok` · `check_arm` · backend = `EXPECT_BACKEND` 를 러너 env 로도 넘긴다).
 """
 import argparse
 import glob
@@ -86,7 +89,12 @@ VARIANTS = ('FIBRE', 'UNREG', 'GRID', 'SVORDER')   # §5-6 필수 감도
 VARIANT_ENV = {'FIBRE': {'SIGMA_FIBRE_BULK': '1e3'}, 'UNREG': {'CJUNC_UNREG_LAW': 'fused'}, 'GRID': {'VOX': '0.125'},
                'SVORDER': {'SDCP_YIELD_VGCF': '1'}}
 LIMIT_RJ = {'floor': 'inf', 'ceiling': '0'}   # §3-1 R_j → ∞ (바닥 · 간선 없음) · R_j → 0 (천장 · 정확 축약) — 러너 env 꼴
-LIMIT_OF = {v: k for k, v in LIMIT_RJ.items()}
+#: ★ Z3 — 극한 env → protocol · 영수증 요청의 표지 (정본 낱말 = `ca_ext_cjunc.RJ_LIMITS` · 시험 X07 이 대조 · 이 모듈은 numpy 없이 뜬다)
+LIMIT_MARK = {'inf': 'inf', '0': 'zero'}
+#: ★ Z3 — §3-3 · §4-2 origin 검사 팔 (러너 `ARM_LIST` · a0 = 앞 런의 값 그대로 · 다시 돌지 않는다)
+ORIGIN_ARMS = (1, 2)
+#: 러너 · 정본 check_arm 의 backend (등록 R §10 = GPU · 러너 기본값과 같다 — 사슬이 env 로 정한다 · 부모 셸 값은 지운다)
+EXPECT_BACKEND = 'gpu'
 LEAN2_PLAN = {'electronic': True, 'ionic': False, 'thermal': False, 'pore': False, 'collector': False}
 LEAN2_RECEIPTS = {'electronic_main': ('applied', 'absent_geometry'), 'electronic_wetted': ('disabled',),
                   'electronic_bare': ('disabled',), 'ionic': ('disabled',)}   # 설계 §7 LEAN 표 (LEAN 2)
@@ -95,8 +103,8 @@ PLAN_KEYS = ('schema', 'len_law', 'unreg_law', 's_min_um', 'tol_ff_um', 'step3_r
 PLAN_UNREG_MAIN = 'cut'              # 설계 §1-2 #12 — 주 cut · 감도 fused (UNREG)
 #: 러너가 읽는 env (부모 셸에서 물려받으면 지운다 — 사슬이 런마다 정확히 정한다 · 지운 이름은 요약에)
 ENV_SCRUB_RE = re.compile(r'^(SIGMA_|SDCP_|PTFE_|CJUNC|STEP3_)')
-ENV_SCRUB_NAMES = frozenset({'VOX', 'BRIDGE_UM', 'ARMS', 'KITS', 'OUTDIR', 'LEAN', 'FIBRE_STAMP', 'MPM_PERIODIC_SIGMA', 'P2_EXTRA',
-                             'EXPECT_BACKEND', 'EXPECT_PROTOCOL', 'P2_SCR', 'P2_SELF', 'P2_ENV_GUARD_ONLY'})
+ENV_SCRUB_NAMES = frozenset({'VOX', 'BRIDGE_UM', 'ARMS', 'ARM_LIST', 'KITS', 'OUTDIR', 'LEAN', 'FIBRE_STAMP', 'MPM_PERIODIC_SIGMA',
+                             'P2_EXTRA', 'EXPECT_BACKEND', 'EXPECT_PROTOCOL', 'P2_SCR', 'P2_SELF', 'P2_ENV_GUARD_ONLY'})
 ENV_FORBIDDEN = ('SIGMA_VGCF_OVERRIDE',)   # §10 — 있으면 멈춤 (지워서 넘어가지 않는다)
 
 # ═════════════════════════ 판정 이름 · 표지 · 문장 ═════════════════════════
@@ -164,7 +172,7 @@ class RealContract:
     def arm_problem(self, path, receipt):
         """러너가 팔을 OUTDIR 로 옮기기 전에 거는 검사와 같은 함수 (`sr01_stamp_compare.check_arm`) — 쓴 뒤 바뀐 팔을 다시 잡는다."""
         import sr01_stamp_compare as SC
-        return SC.check_arm(path, 'segment', expect_backend='gpu', receipt=receipt)
+        return SC.check_arm(path, 'segment', expect_backend=EXPECT_BACKEND, receipt=receipt)
 
     def ca_ext_record(self, man):
         return RC.ca_ext_record_ok(man)
@@ -291,6 +299,11 @@ def _same(a, b, rel=1e-12):
     return a == b
 
 
+def _int_or_none(x):
+    """반복 수 칸 → int | None (bool · 수 아닌 것 · 음수 = None — 기록 칸이지 판정 칸이 아니다)."""
+    return x if type(x) is int and x >= 0 else None          # noqa: E721 — bool 제외
+
+
 def variant_vox(variant):
     return VOX_GRID if variant == 'GRID' else VOX_MAIN
 
@@ -298,6 +311,12 @@ def variant_vox(variant):
 def variant_raster(kit, variant):
     """sid 격자 무리 키 — R_j · c · P 는 래스터를 안 바꾼다 · vox · SDCP 양보는 바꾼다."""
     return f'{kit}|vox={variant_vox(variant)}|yield={variant == "SVORDER"}'
+
+
+def sid_group(kit, variant, origin_idx):
+    """★ Z3 — sid 지문 대조 무리 = 킷 · 래스터 · **origin** (팔 번호 — 격자 위상이 다르면 sid 격자도 다르다 · origin 검사 팔 1 · 2 가
+    a0 와 다른 지문을 내는 것은 정상)."""
+    return f'{variant_raster(kit, variant)}|origin={int(origin_idx)}'
 
 
 def origins_for(vox):
@@ -372,11 +391,14 @@ def check_plan_registered(plan_sha, reg_path):
 
 # ═════════════════════════ 팔 읽기 · 계약 (런 하나 = 폴더 하나) ═════════════════════════
 def expected_request(req, plan):
-    """러너에 요청한 다음 세대 선언 (영수증 `ca_ext_request` 와 매니페스트 protocol 이 같아야 한다)."""
+    """러너에 요청한 다음 세대 선언 (영수증 `ca_ext_request` 와 매니페스트 protocol 이 같아야 한다).
+    ★ Z3 — 극한 런 = 러너 꼴 (`run_contract.runner_ca_ext`): 바닥 `R_j_ohm` null + `rj_limit` 'inf' · 천장 0.0 + 'zero' (정량 런엔 칸 없음)."""
     rj = req['rj']
     unreg = 'fused' if req['variant'] == 'UNREG' else plan['unreg_law']
     cj = {'R_j_ohm': (None if rj == 'inf' else rj_float(rj)), 'len_law': plan['len_law'], 'unreg_law': unreg,
           's_min_um': float(plan['s_min_um']), 'tol_ff_um': float(plan['tol_ff_um']), 'ptfe_jlaw': req['law']}
+    if rj in LIMIT_MARK:
+        cj['rj_limit'] = LIMIT_MARK[rj]
     out = {'cjunc': cj}
     if req['c'] != '':
         out['sdcp_mod'] = {'c': float(req['c'])}
@@ -421,13 +443,15 @@ def manifest_problems(man, rcpt, req, plan, idx, cert):
     if set(ca) != want_blk:
         bad.append(f'ca_ext 하위 블록 {sorted(ca)} ≠ {sorted(want_blk)}')
     cjp = ((ca.get('cjunc') or {}).get('protocol') or {}) if isinstance(ca.get('cjunc'), dict) else {}
-    lim = LIMIT_OF.get(req['rj'])
+    lim = LIMIT_MARK.get(req['rj'])
     if lim:
         if not (cjp.get('rj_limit') == lim and cjp.get('allow_rj_limits') is True and cjp.get('quantitative') is False):
             bad.append(f'극한 런 ({lim}) 표지 — rj_limit {cjp.get("rj_limit")!r} · allow_rj_limits {cjp.get("allow_rj_limits")!r} · '
                        f'quantitative {cjp.get("quantitative")!r}')
-        if lim == 'ceiling' and not _same(cjp.get('R_j_ohm'), 0.0):
-            bad.append(f'천장 R_j_ohm {cjp.get("R_j_ohm")!r} ≠ 0')
+        if lim == 'zero' and not (type(cjp.get('R_j_ohm')) is float and cjp.get('R_j_ohm') == 0.0):   # noqa: E721
+            bad.append(f'천장 R_j_ohm {cjp.get("R_j_ohm")!r} ≠ 0.0')
+        if lim == 'inf' and cjp.get('R_j_ohm') is not None:
+            bad.append(f'바닥 R_j_ohm {cjp.get("R_j_ohm")!r} ≠ null (JSON 은 inf 를 못 쓴다 · 표지 inf 와 한 꼴)')
     else:
         if not (cjp.get('allow_rj_limits') is False and cjp.get('quantitative') is True and 'rj_limit' not in cjp):
             bad.append('정량 런인데 극한 표지가 있다')
@@ -456,9 +480,13 @@ def manifest_problems(man, rcpt, req, plan, idx, cert):
         bad.append(f'영수증 ca_ext_request {rq!r} ≠ 요청 {want_req!r}')
     if not _same(rcpt.get('step3_rtol'), float(plan['step3_rtol'])):
         bad.append(f'영수증 step3_rtol {rcpt.get("step3_rtol")!r} ≠ 계획 {plan["step3_rtol"]!r}')
-    for k, v in (('arms', req['arms']), ('ptfe_stamp', 'face_alpha'), ('vox_um', vox), ('sdcp_yield_to_vgcf', yv)):
+    for k, v in (('arms', req['arms']), ('ptfe_stamp', 'face_alpha'), ('vox_um', vox), ('sdcp_yield_to_vgcf', yv),
+                 ('expect_backend', EXPECT_BACKEND)):
         if not _same(rcpt.get(k), v):
             bad.append(f'영수증 {k} {rcpt.get(k)!r} ≠ {v!r}')
+    al = req.get('arm_list')                                  # ★ Z3 — 팔 고르기 런 = 영수증 arm_list (정렬 목록) · 아닌 런 = 칸 없음
+    if (al is None and 'arm_list' in rcpt) or (al is not None and rcpt.get('arm_list') != list(al)):
+        bad.append(f'영수증 arm_list {rcpt.get("arm_list")!r} ≠ 요청 {al!r}')
     if 'sigma_vgcf_S_cm' in rcpt:
         bad.append(f'영수증이 σ_VGCF 를 직접 정했다 ({rcpt["sigma_vgcf_S_cm"]!r} · SIGMA_VGCF_OVERRIDE 세대)')
     ok, why = RC.receipt_match(rcpt, man, origin=man.get('origin_shift_um'))
@@ -482,7 +510,16 @@ def lean_problems(man):
     return bad
 
 
-ARM_PUBLIC = ('file', 'index', 'sha256', 'protocol_id', 'cg_info', 'cg_resid', 'imbalance', 'cert_pass', 'sid_fp')
+ARM_PUBLIC = ('file', 'index', 'sha256', 'protocol_id', 'cg_info', 'cg_resid', 'imbalance', 'cert_pass', 'sid_fp',
+              'cg_iters', 'resolve_iters')                    # ★ Z3 — CG 반복 수 (주 솔브 · ⓒ 이어 풀기 · 등록 R §11 숫자 탐침 칸 · σ 아님)
+#: 런 요청 칸 (요약 `runs` · 다시 판정 · 사다리 확인 팔 다시 읽기가 같은 칸을 쓴다)
+REQ_KEYS = ('name', 'role', 'kit', 'law', 'c', 'rj', 'arms', 'arm_list', 'variant')
+
+
+def arm_indices(req):
+    """요청 → 팔 번호 (origin 번호) 목록 — `ARM_LIST` 런 = 그 목록 · 아니면 0..ARMS−1."""
+    al = req.get('arm_list')
+    return list(al) if al is not None else list(range(req['arms']))
 
 
 def arm_file_shas(outdir):
@@ -512,22 +549,23 @@ def read_run(outdir, req, plan, contract, sid_reg, want_sha=None):
         if not m or int(m.group(1)) in byi:
             raise Stop('ARM_JSON_COUNT', f'{outdir.name}: 팔 번호가 없거나 겹친다 ({os.path.basename(p)})', name)
         byi[int(m.group(1))] = p
-    if sorted(byi) != list(range(req['arms'])):
-        raise Stop('ARM_JSON_COUNT', f'{outdir.name}: 팔 번호 {sorted(byi)} ≠ 0..{req["arms"] - 1}', name)
+    idx = arm_indices(req)
+    if sorted(byi) != idx:
+        raise Stop('ARM_JSON_COUNT', f'{outdir.name}: 팔 번호 {sorted(byi)} ≠ 요청 {idx}', name)
     pref = f'p2_{req["kit"][len("kit_"):]}_'
     if any(not os.path.basename(p).startswith(pref) for p in byi.values()):
         raise Stop('ARM_JSON_COUNT', f'{outdir.name}: 팔 이름이 킷 {req["kit"]} 의 것이 아니다', name)
-    if want_sha is not None and len(want_sha) != req['arms']:
-        raise Stop('INPUT_SHA_MISMATCH', f'{outdir.name}: 기록된 sha256 {len(want_sha)} 개 ≠ 팔 {req["arms"]}', name)
+    if want_sha is not None and len(want_sha) != len(idx):
+        raise Stop('INPUT_SHA_MISMATCH', f'{outdir.name}: 기록된 sha256 {len(want_sha)} 개 ≠ 팔 {len(idx)}', name)
     try:
         rcpt = json.loads((outdir / 'run_receipt.json').read_text(encoding='utf-8'))
     except (OSError, ValueError):
         rcpt = None
     out = []
-    for i in range(req['arms']):
+    for j, i in enumerate(idx):
         p = byi[i]
         if want_sha is not None:
-            why = sha_mismatch(p, want_sha[i])
+            why = sha_mismatch(p, want_sha[j])
             if why:
                 raise Stop('INPUT_SHA_MISMATCH', why, name)
         try:
@@ -574,9 +612,10 @@ def read_run(outdir, req, plan, contract, sid_reg, want_sha=None):
         fp = (ca['cjunc'].get('evidence') or {}).get('fp') or {}
         sid = fp.get('sid')
         off = ((ca['ptfe_face'].get('evidence') or {}).get('fp') or {}).get('sid_off')
-        if not isinstance(sid, str) or not sid or (off is not None and off != sid):
-            stop('SID_GRID', f'sid 지문 {sid!r} · off 격자 지문 {off!r}')
-        key = variant_raster(req['kit'], req['variant'])
+        #  ★ Z3 — off 격자 지문 필수 (face_alpha 의 sid 격자 = off 격자 · 접합 원장과 같은 솔브 · 같은 지문 함수) · 정본 계약 뒤 둘째 겹
+        if not isinstance(sid, str) or not sid or off != sid:
+            stop('SID_GRID', f'접합 원장 sid 지문 {sid!r} · off 격자 지문 {off!r} (둘이 같아야 한다)')
+        key = sid_group(req['kit'], req['variant'], i)
         if sid_reg.setdefault(key, sid) != sid:
             stop('SID_GRID', f'{key} 의 sid 지문이 앞 런과 다르다')
         sig = s3.get('sigma_e_eff_S_cm')
@@ -587,7 +626,9 @@ def read_run(outdir, req, plan, contract, sid_reg, want_sha=None):
         out.append({'file': os.path.basename(p), 'index': i, 'sha256': hashlib.sha256(raw).hexdigest(), 'protocol_id': pid,
                     'cg_info': s3.get('cg_info'), 'cg_resid': s3.get('cg_resid'), 'imbalance': (cert or {}).get('imbalance'),
                     'cert_pass': [(cert or {}).get('pass_a'), (cert or {}).get('pass_b'), (cert or {}).get('pass_c')],
-                    'sid_fp': sid, 'sigma': float(sig), 'dsigma_rel': (cert or {}).get('dsigma_rel'),
+                    'sid_fp': sid, 'cg_iters': _int_or_none(s3.get('cg_iters')),
+                    'resolve_iters': _int_or_none((cert or {}).get('resolve_iters')),
+                    'sigma': float(sig), 'dsigma_rel': (cert or {}).get('dsigma_rel'),
                     'sv_dominant': svd if isinstance(svd, bool) else None,
                     'dissipation_share': solve.get('dissipation_share'),
                     'n_sdcp_near': (((ca.get('sdcp_mod') or {}).get('evidence') or {}).get('n_sdcp_near')
@@ -610,22 +651,36 @@ class Runner:
         d = dict(ENV_FIXED)
         d.update(plan_env(self.plan))
         d.update(VARIANT_ENV.get(self.variant) or {})
-        d.update({'KITS': req['kit'], 'ARMS': str(req['arms']), 'OUTDIR': str(outdir), 'CJUNC_RJ': req['rj'],
-                  'CJUNC_PTFE_JLAW': req['law']})
+        d.update({'KITS': req['kit'], 'OUTDIR': str(outdir), 'CJUNC_RJ': req['rj'], 'CJUNC_PTFE_JLAW': req['law'],
+                  'EXPECT_BACKEND': EXPECT_BACKEND})
+        if req.get('arm_list') is not None:                  # ★ Z3 — 팔 고르기 (러너: ARMS 와 동시 = 거부 · 팔 수 = 목록 길이)
+            d['ARM_LIST'] = ','.join(str(i) for i in req['arm_list'])
+        else:
+            d['ARMS'] = str(req['arms'])
         if req['c'] != '':
             d['SDCP_MOD_C'] = req['c']
         return d
 
     def run(self, kit, role, law, c, rj, arms):
-        """런 하나 → 팔 기록 목록.  같은 킷 · 같은 계획 두 번 · 출력 폴더 있음 · 시간 · rc · 팔 계약 = Stop."""
+        """런 하나 → 팔 기록 목록.  `arms` = 팔 수 (ARMS · 0..N−1) 또는 팔 번호 튜플 (ARM_LIST · 예 ORIGIN_ARMS).
+        같은 킷 · 같은 계획 두 번 · 출력 폴더 있음 · 시간 · rc · 팔 계약 = Stop."""
         self.n += 1
         name = f'{self.prefix}{self.n:02d}_{role}'
-        req = {'name': name, 'role': role, 'kit': kit, 'law': law, 'c': c, 'rj': rj, 'arms': int(arms), 'variant': self.variant}
-        key = (kit, variant_raster(kit, self.variant), self.variant, law, c, rj_float(rj), int(arms))
+        al = None if isinstance(arms, int) else sorted(int(i) for i in arms)
+        n_arms = int(arms) if al is None else len(al)
+        if al is not None and (not al or len(set(al)) != len(al) or al[0] < 0 or al[-1] > 7 or al == list(range(n_arms))):
+            raise Stop('NOT_REGISTERED', f'팔 고르기 {al} — 0–7 · 중복 없음 · 0..N−1 접두 아님 (그건 ARMS=N)', name)
+        req = {'name': name, 'role': role, 'kit': kit, 'law': law, 'c': c, 'rj': rj, 'arms': n_arms, 'arm_list': al,
+               'variant': self.variant}
+        key = (kit, variant_raster(kit, self.variant), self.variant, law, c, rj_float(rj), tuple(arm_indices(req)))
         if key in self.keys:
-            raise Stop('DUPLICATE_RUN', f'{kit} · {law} · c {c} · R_j {disp_rj(rj)} · arms {arms} 를 두 번 요청', name)
+            raise Stop('DUPLICATE_RUN', f'{kit} · {law} · c {c} · R_j {disp_rj(rj)} · 팔 {arm_indices(req)} 를 두 번 요청', name)
         self.keys.add(key)
-        outdir = self.out / (f'{name}_arm{arms}' if int(arms) != 8 else name)
+        #  출력 폴더 = 러너가 강제하는 접미사 그대로 (`_arm<N>` · 팔 고르기면 `_arml<목록>`) — 다르면 러너가 다른 폴더에 쓴다
+        sfx = '' if n_arms == 8 and al is None else f'_arm{n_arms}'
+        if al is not None:
+            sfx += '_arml' + '-'.join(str(i) for i in al)
+        outdir = self.out / f'{name}{sfx}'
         delta = self.env_delta(req, outdir)
         if self.dry:
             self.dry_lines.append('  env ' + ' '.join(f'{k}={shlex.quote(delta[k])}' for k in sorted(delta)) + f' bash {self.runner}')
@@ -660,8 +715,9 @@ class Runner:
         rec['arms_read'] = [{k: a[k] for k in ARM_PUBLIC} for a in arms_]
         a0 = arms_[0]
         ok = '✓' if all(x is True for x in a0['cert_pass']) else '✗'
-        print(f'  {name}: {role} · R_j {disp_rj(rj)} · {law} · c {c or "-"} · arms {arms} → rc 0 · {rec["seconds"]:.1f} s · '
-              f'cg_info {a0["cg_info"]} · 잔차 {_e(a0["cg_resid"])} · 판 전류 불균형 {_e(a0["imbalance"])} · 증서 ⓐⓑⓒ {ok}')
+        print(f'  {name}: {role} · R_j {disp_rj(rj)} · {law} · c {c or "-"} · 팔 {arm_indices(req)} → rc 0 · {rec["seconds"]:.1f} s · '
+              f'cg_info {a0["cg_info"]} · CG 반복 {a0["cg_iters"]} · 이어 풀기 {a0["resolve_iters"]} · 잔차 {_e(a0["cg_resid"])} · '
+              f'판 전류 불균형 {_e(a0["imbalance"])} · 증서 ⓐⓑⓒ {ok}')
         return arms_
 
 
@@ -679,11 +735,13 @@ class Replay:
         if self.i >= len(self.recs):
             raise Stop('REPLAY_MISMATCH', f'{self.dir.name}: 다시 계산이 {role} · R_j {disp_rj(rj)} 를 요구하는데 기록에 더 없다')
         r = self.recs[self.i]
-        want, got = (kit, role, law, c, rj, int(arms)), (r.get('kit'), r.get('role'), r.get('law'), r.get('c'), r.get('rj'), r.get('arms'))
+        al = None if isinstance(arms, int) else sorted(int(i) for i in arms)
+        want = (kit, role, law, c, rj, int(arms) if al is None else len(al), al)
+        got = (r.get('kit'), r.get('role'), r.get('law'), r.get('c'), r.get('rj'), r.get('arms'), r.get('arm_list'))
         if want != got or r.get('rc') != 0 or r.get('variant') != self.variant:
             raise Stop('REPLAY_MISMATCH', f'{self.dir.name}: 다시 계산 {want} ≠ 기록 {got} (rc {r.get("rc")!r})', r.get('name'))
         self.i += 1
-        req = {k: r[k] for k in ('name', 'role', 'kit', 'law', 'c', 'rj', 'arms', 'variant')}
+        req = {k: r.get(k) for k in REQ_KEYS}
         arms_ = read_run(self.dir / r['outdir'], req, self.plan, self.contract, self.sid_reg,
                          want_sha=[a.get('sha256') for a in r.get('arms_read') or []])
         self.cert_reg[f'{self.dir.name}/{r["name"]}'] = [a['dsigma_rel'] for a in arms_]   # §8 수렴 증서 ⓒ 값 (판정 결과로만)
@@ -782,16 +840,18 @@ class Ladder:
                 raise Stop('CALIB_UNCONFIRMED', f'확인 {MAX_CONFIRM} 번 다 ±{CONFIRM_TOL:.0%} 밖 (값은 봉인)')
 
     def origin(self):
-        """§3-3 — R_j,0 에서 arm 1 · 2 (ARMS 3 한 런 · a0 는 재현 대조만) → ln(max/min) ≤ 0.02 · 넘으면 8 팔 평균 · 표지 (R_j,0 그대로)."""
+        """§3-3 — R_j,0 에서 arm 1 · 2 (★ Z3 — `ARM_LIST=1,2` 한 런 · a0 = 확인 팔 값 그대로 · 다시 돌지 않는다) → ln(max/min) ≤ 0.02 ·
+        넘으면 8 팔 평균 (`ARMS=8` 한 런) · 표지 (R_j,0 그대로)."""
         k0 = self.st['R_j0']
         s0 = self.pts[k0][1]
-        r3 = self.fetch('origin3', k0, 3)
-        ok, sp = sbe_origin_ok([s0, r3[1]['sigma'], r3[2]['sigma']])
-        o = {'status': 'pass' if ok else 'sensitive', 'arms': 3, 'a0_replay_exact': r3[0]['sigma'] == s0}
-        self.sealed['origin'] = {'spread': sp, 'a0_replay': r3[0]['sigma'], 'arms': [x['sigma'] for x in r3], 'mean8': None}
+        r12 = self.fetch('origin', k0, ORIGIN_ARMS)
+        vals = [s0] + [x['sigma'] for x in r12]
+        ok, sp = sbe_origin_ok(vals)
+        o = {'status': 'pass' if ok else 'sensitive', 'arm_list': list(ORIGIN_ARMS), 'mean8': False}
+        self.sealed['origin'] = {'spread': sp, 'arms': vals, 'mean8': None}
         if not ok:
             r8 = self.fetch('origin8', k0, 8)
-            o['arms'] = 8
+            o['mean8'] = True
             self.sealed['origin']['mean8'] = sum(x['sigma'] for x in r8) / 8.0
             self.flags.append('CALIB_ORIGIN_SENSITIVE')
         self.st['origin'] = o
@@ -841,10 +901,11 @@ class Predict:
         for law in LAWS:
             for c in CS:
                 a0 = self.vals[(c, law, 'R_j0')]['sigma']
-                r3 = self.fetch(DBE_KIT, 'origin3', law, c, self.ladders[law]['R_j0'], 3)
-                ok, sp = dbe_origin_ok([a0, r3[1]['sigma'], r3[2]['sigma']], W0)
-                ent = {'c': c, 'law': law, 'status': 'pass' if ok else 'adjusted', 'a0_replay_exact': r3[0]['sigma'] == a0}
-                so = {'spread': sp, 'arms': [x['sigma'] for x in r3]}
+                r12 = self.fetch(DBE_KIT, 'origin', law, c, self.ladders[law]['R_j0'], ORIGIN_ARMS)   # ★ Z3 — ARM_LIST=1,2 (a0 = 모서리 런)
+                vals = [a0] + [x['sigma'] for x in r12]
+                ok, sp = dbe_origin_ok(vals, W0)
+                ent = {'c': c, 'law': law, 'status': 'pass' if ok else 'adjusted', 'arm_list': list(ORIGIN_ARMS)}
+                so = {'spread': sp, 'arms': vals}
                 if not ok:
                     r8 = self.fetch(DBE_KIT, 'origin8', law, c, self.ladders[law]['R_j0'], 8)
                     mean8 = sum(x['sigma'] for x in r8) / 8.0
@@ -1006,11 +1067,12 @@ def load_ladders(dirs, variant, reg_path, contract, sid_reg):
             raise Stop('CODE_PIN_MISMATCH', '두 사다리의 사슬 코드가 다르다')
         plan, plan_sha, code = s['plan']['content'], s['plan']['sha256'], s.get('code') or {}
         L = s['ladder']
-        r0run = [r for r in s['runs'] if r.get('rj') == L['R_j0'] and r.get('arms') == 1 and r.get('role') in ('confirm', 'point')]
+        r0run = [r for r in s['runs'] if r.get('rj') == L['R_j0'] and r.get('arms') == 1 and r.get('arm_list') is None
+                 and r.get('role') in ('confirm', 'point')]
         if not r0run:
             raise Stop('LADDER_SET', f'{rd.name}: R_j,0 확인 팔 기록이 없다')
         r = r0run[-1]
-        req = {k: r[k] for k in ('name', 'role', 'kit', 'law', 'c', 'rj', 'arms', 'variant')}
+        req = {k: r.get(k) for k in REQ_KEYS}
         arm = read_run(rd / r['outdir'], req, plan, contract, sid_reg, want_sha=[x['sha256'] for x in r['arms_read']])[0]
         out[law] = {'dir': str(rd), 'summary_sha256': sha, 'variant': s.get('variant'), 'R_j0': L['R_j0'], 'R_j_lo': L['R_j_lo'],
                     'R_j_hi': L['R_j_hi'], 'r0_sigma': arm['sigma']}
