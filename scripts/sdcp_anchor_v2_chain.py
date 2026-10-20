@@ -19,7 +19,8 @@
   공통 env = VOX 0.15 · SDCP_SPHERE_D 0.30 · PTFE_STAMP centerline · BRIDGE_UM 0.48 · SIGMA_AM_S_OVERRIDE 0.0041 · SIGMA_SDCP_OVERRIDE 256.6 ·
   출력 폴더 = --out 아래 런마다 새 폴더 (`_arm1` 로 끝남 — 러너 접미사 규칙).  ★ 10-19 (`SELF-120`) — 이온 축 (SIGMA_ION_* · PTFE_BLOCK_*) 은 넣지 않고
   부모 셸에서 물려받은 것도 지운다: LEAN=2 (σ_e 만 · --no-ion) 런에 이온 축이 있으면 러너가 계산 전에 ABORT (rc 2) 한다 (첫 kgy 발사가 그렇게 멈췄다).
-멈춤 (rc 3 · 그 자리까지의 요약은 남긴다): 출력 폴더가 이미 있고 비어 있지 않음 (러너 SKIP 캐시가 옛 팔을 재사용하는 것을 막는다) · 러너 rc ≠ 0 ·
+멈춤 (rc 3 · 그 자리까지의 요약은 남긴다): ★ 10-20 (Z1) 부모 셸에 다음 세대 노브 (CJUNC* · SDCP_MOD_C · STEP3_RTOL · SIGMA_FIBRE_BULK) =
+  러너 부르기 전 거부 (`NEXTGEN_ENV` · 지우지 않는다) · 출력 폴더가 이미 있고 비어 있지 않음 (러너 SKIP 캐시가 옛 팔을 재사용하는 것을 막는다) · 러너 rc ≠ 0 ·
   σ_e 를 실은 팔 JSON ≠ 1 · 매니페스트 (σ_VGCF · σ_AM_S · σ_SDCP · vox · 브리지 · PTFE · SDCP 구 지름) ≠ 요청 · 수렴 (`run_contract.conv_ok`) 실패 ·
   둘 더해도 목표 밖 · 단조 아님 · 시간 상한 (--max-hours).
 판정을 하지 않는다 — 요약 (`chain_summary.json`) 에 S1 점 · σ* · 비교 두 값 · 실험값 옆 비를 적을 뿐 (해석 = 1저자 · 등록 §3).
@@ -52,6 +53,18 @@ ENV_FIXED = {'VOX': '0.15', 'SDCP_SPHERE_D': '0.30', 'PTFE_STAMP': 'centerline',
              'SIGMA_AM_S_OVERRIDE': '0.0041', 'SIGMA_SDCP_OVERRIDE': '256.6'}
 #: LEAN=2 런에서 지우는 부모 env 접두 (러너 가드 — 이온을 안 푸는 런에 이온 축 = ABORT)
 ENV_SCRUB_PREFIX = ('SIGMA_ION_', 'PTFE_BLOCK_')
+#: ★ 2026-10-20 (Rint ② Z1) — **다음 세대 노브** (현 세대 사슬 = 등록 v2 · 그것 없이 돈다).  부모 셸에 있으면 **거부** (지우지 않는다 = 사람이 안다).
+#   이름 = 러너 손잡이 표 정본 (`run_contract.RUNNER_CA_EXT_ENV` — CJUNC* · SDCP_MOD_C · STEP3_RTOL · SIGMA_FIBRE_BULK · 사본 없음) +
+#   `CJUNC` 접두 (오타 이름까지).  ⚠ 값이 비어도 거부한다 (있기만 해도 — 셸 rc 의 흔적을 사람이 지운다).
+#   안 막으면: 러너가 접합 · bulk 팔을 같은 `p2_*.json` 꼴로 내고 read_arm 은 σ_VGCF · σ_AM_S · vox … 만 대조해 받는다 (현 세대 표 오염).
+import run_contract as _RC0                                     # noqa: E402 — HERE 를 sys.path 에 넣은 뒤
+NEXTGEN_ENV_NAMES = tuple(n for n, _s, _k in _RC0.RUNNER_CA_EXT_ENV)
+NEXTGEN_ENV_PREFIX = ('CJUNC',)
+
+
+def nextgen_env_found(env):
+    """env → 다음 세대 노브 이름 (정렬) — 하나라도 있으면 현 세대 사슬은 멈춘다."""
+    return sorted(k for k in (env or {}) if k in NEXTGEN_ENV_NAMES or k.startswith(NEXTGEN_ENV_PREFIX))
 #: 매니페스트 키 → 기대값 (env 와 같은 값 · 상대 1e-9)
 MAN_EXPECT = {'sigma_am_s_S_cm': 0.0041, 'sigma_sdcp_S_cm': 256.6, 'vox_um': 0.15, 'bridge_um': 0.48, 'sdcp_sphere_d_um': 0.30}
 KITS = {'SBE': 'kit_SBE', 'DBE': 'kit_DBE'}
@@ -151,6 +164,11 @@ class Chain:
         self.calls = []
 
     def run(self, name, kit, sg):
+        _ng = nextgen_env_found(self.env_base)
+        if _ng:                                                  # ★ Z1 — 러너를 부르기 전 · dry-run 도 (찍은 명령이 실제 런과 갈리지 않게)
+            raise Stop(f'NEXTGEN_ENV| 부모 셸에 다음 세대 노브 {_ng} 가 있다 — 현 세대 사슬 (등록 v2) 은 그것 없이 돈다.  '
+                       f'지우지 않고 멈춘다: `unset {" ".join(_ng)}` 하고 다시 (러너가 접합 · bulk 팔을 같은 p2_*.json 꼴로 내면 '
+                       f'read_arm 이 받는다)')
         outdir = self.out / f'{name}_arm1'
         base = {k: v for k, v in self.env_base.items() if not k.startswith(ENV_SCRUB_PREFIX)}
         env = dict(base, **ENV_FIXED, KITS=KITS[kit], SIGMA_VGCF_OVERRIDE=sg, OUTDIR=str(outdir))
