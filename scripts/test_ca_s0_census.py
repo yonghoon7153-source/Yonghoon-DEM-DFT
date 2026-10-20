@@ -754,6 +754,10 @@ def _kit_j_fibres():
     return [J1, J2, KU]
 
 
+#: 나란한 접촉선 (y 6.10 · z 2.0) 위 0.2 µm 를 지나는 PTFE — 덮임 문턱 r_P + r_f + tol_P = 0.124 + 0.075 + 0.01875 ≥ 0.2 → 그 instance 만 덮임
+J_PTFE = np.column_stack([3.62 + 0.1 * np.arange(21), np.full(21, 6.10), np.full(21, 2.20)])
+
+
 def _spy_registry():
     """carbon_junction.cjunc_registry 엿보기 — 부른 인자 · 돌려준 원장을 모은다 (값은 그대로 돌려준다)."""
     import carbon_junction as CJ
@@ -770,7 +774,7 @@ def _spy_registry():
 
 def t_e2e_registry():
     tmp = STATE['tmp']
-    kitJ = write_kit(tmp, 'kit_J', vgcf=_kit_j_fibres(), ptfe=[], vol={'VGCF': 0.05})
+    kitJ = write_kit(tmp, 'kit_J', vgcf=_kit_j_fibres(), ptfe=[J_PTFE], vol={'VGCF': 0.05, 'PTFE': 0.1})
     out = os.path.join(tmp, 'outJ')
     CJ, orig, calls = _spy_registry()
     try:
@@ -833,6 +837,15 @@ def t_e2e_registry():
     chk('R6 S0-2 — 보고 · 접합 npz 에 σ · 전류 · 소산 칸 없음 (원장 = 기하만)',
         S0.schema_forbidden_keys(rep) == [] and z is not None and S0.schema_forbidden_keys({k: 0 for k in z.files}) == [],
         str(S0.schema_forbidden_keys(rep)[:5]))
+    n_pts = sum(int(v) for v in rep['inputs']['counts']['points_by_phase'].values()) - int(
+        rep['inputs']['counts']['points_by_phase'].get('1', 0))
+    ph_in = np.asarray(a_[4]) if len(a_) > 4 else np.zeros(0)
+    cov = z['ptfe_cov'] if z is not None and 'ptfe_cov' in z.files else None
+    chk('R7 원장 입력 = 잡은 첨가제 입력 전부 (PTFE 행 포함 · P-junc 덮임) — 접촉선 위 0.2 µm PTFE → 그 instance 만 덮임 '
+        '(n_ptfe_cov 1 · 자기 후보는 아님)',
+        reg is not None and len(a_) > 6 and len(ph_in) == n_pts and bool((ph_in == 4).any()) and jc.get('n_ptfe_cov') == 1
+        and cov is not None and inst is not None and len(dl) == 1 and bool(cov[dl[0]]) and int(cov.sum()) == 1,
+        f"입력 점 {len(ph_in)} ↔ {n_pts} · n_ptfe_cov {jc.get('n_ptfe_cov')}")
 
 
 FAKE_PAYLOAD = '''import sys

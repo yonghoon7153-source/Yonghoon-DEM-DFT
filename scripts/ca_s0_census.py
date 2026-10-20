@@ -12,7 +12,11 @@
   · PTFE 가 끊은 VGCF 경로 (경로 셀 집합에서 sid 7 셀을 빼면 6-면 성분이 늘어난 경로 수 · 늘어난 조각 수)
   · SDCP 가 덮은 VGCF · AM 셀 · SDCP 가 덮은 섬유 구간 (경로 셀 열의 연속 구간) · SDCP 경유 섬유 연결 수 (둘 이상 fid 에 닿는 SDCP 덩어리)
   · 교차 셀 멤버십 (≥ 2 · ≥ 3) · 캡슐 부피 비 (F11) · 문턱 입력 u (VGCF 경로 점 간격 중앙값 / 2)
-  · 접합 기하 census — **B0 미리보기** (판정 · 보고 = B3 `cjunc_registry` 와 같은 함수로만 · 설계 §2 ① · §4-1):
+  · 접합 census — **판정 · 보고 판** (`junction_census` · 2 일 차) = B3 `carbon_junction.cjunc_registry` 를 **그대로** 부른다
+    (사본 없음 · 설계 §2 ① · §4-1 끝): off 격자 (= face_alpha 의 sid 격자) · 계획 문턱 · s_min 미등록 (거르지 않음) →
+    원장 census · 긴 접촉 수 · L_c 분포 (요약 + 후보별 npz) · 자기 (같은 가닥) 후보마다 경로 호 길이 s (s_min 근거 · 목록) ·
+    길이 법칙 배율 합 · PTFE 덮임 · SDCP 근접 수 (`s0_junctions_<킷>.npz` = 후보별 배열)
+  · 접합 기하 census — **B0 미리보기** (표지 `b0_preview` · 판정 · 보고에 쓰지 않는다):
     VV instance (J2a · J2c) 수 · 표면 틈 · 접촉 길이 (두 판) · 각 · 긴 접촉 수 (J8) · 위치 · 포트 (직접 · 덮임 → 탐색 · 미실현) ·
     복셀 관계 · PTFE · SDCP 근접 · 부피로 이미 이어진 몫 (k = 2) · VA (J2b) · SV · SA 후보 · 섬유당 접합 간격 ℓ_j
 
@@ -64,6 +68,7 @@ if _SELF_DIR not in sys.path:
     sys.path.insert(0, _SELF_DIR)
 
 import step3_sigma as s3                          # noqa: E402  (생산 raster · 경로 셀 · SID_NAME)
+import carbon_junction as cj                      # noqa: E402  (접합 census 판정 · 보고 판 = cjunc_registry 그대로)
 from fibre_segment_raster import cell_of, n_components_6face, segment_cells   # noqa: E402
 
 #: 생산 모듈 (payload · raster) 이 있는 폴더 = step3_sigma 가 있는 곳 (정상 사용 = 이 도구와 같은 scripts/ · 변이 판을 리포 밖에서
@@ -71,9 +76,12 @@ from fibre_segment_raster import cell_of, n_components_6face, segment_cells   # 
 SCRIPTS = os.path.dirname(os.path.abspath(s3.__file__))
 ROOT = os.path.dirname(SCRIPTS)
 
-SCHEMA = 'ca-s0-census-v1'
+SCHEMA = 'ca-s0-census-v2'                       # v2 (10-20 2 일 차) = junction_census 블록 (cjunc_registry 같은 함수) 추가
 PLAN_SCHEMA = 'ca-cjunc-plan-v1'
-TOOL_VERSION = 's0-b0-preview-v1'
+TOOL_VERSION = 's0-b3-registry-v1'               # 옛 s0-b0-preview-v1 = 미리보기 census 만
+#: 접합 census (판정 · 보고 판) 의 격자 — off (= 잡은 생산 입력에서 PTFE 행을 뺀 raster = ptfe_stamp off · face_alpha 의 sid 격자 ·
+#  다음 세대 판정 격자).  원장에는 PTFE 행을 포함한 전 상 입력을 준다 (P-junc 덮임 판정 · PTFE 는 셀을 찍지 않는다).
+JUNCTION_GRID = 'off'
 R_DOC_DEFAULT = 'docs/reviews/rint_carbon_additive_registration_R_draft_20261020.md'
 #: 등록 R §2-1 · 설계 §1-2 #11 · #18 · #29 — 식은 지금 고정 (N17).
 R_PORT_UM = 0.30                 # 포트 탐색 반경 (물리 단위 · 격자에 묶지 않는다 · RINTG-05 부류)
@@ -110,7 +118,10 @@ try:
 except Exception:                # noqa: BLE001
     R_F_UM = None
 NOTES = (
-    'B0 미리보기 — 판정 · 보고의 instance census 는 B3 cjunc_registry 와 같은 함수로만 (설계 §2 ① · §4-1) · 이 판 = 미리보기',
+    '접합 census 판정 · 보고 판 = junction_census (B3 carbon_junction.cjunc_registry 그대로 · off 격자 · 계획 문턱 · '
+    's_min 미등록 = 거르지 않음 · 후보별 배열 = s0_junctions_<킷>.npz) · census_preview = B0 미리보기 (판정 · 보고에 쓰지 않는다)',
+    '자기 (같은 가닥) 후보의 경로 호 길이 s = 원장 규칙 (두 쪽 셀 조각 최근접점 쌍 · ε 띠 · 띠 안 = 작은 s) — s_min 을 정하는 근거 · '
+    's_min 숫자는 등록 R §2-1 개정 (이 도구는 고르지 않는다)',
     '접촉 길이 L_c 의 정의가 계약 (J8 · v2 §3-8) · 설계 · 등록 R 에 없다 — touch (d ≤ r_fi + r_fj 인 중심선 길이) · '
     'band (d ≤ 검출 문턱 r_fi + r_fj + tol_ff 인 중심선 길이) 두 판 · 긴 접촉 수 = 판마다 · 수직 스침도 band 판에서는 '
     '2√(thr² − (2r_f)²) = 0.335 µm > L_par 0.30 (tol_ff 0.075 일 때)',
@@ -676,6 +687,74 @@ def _runs(mask):
     d = np.diff(np.r_[0, m.astype(np.int8), 0])
     st = np.nonzero(d == 1)[0]; en = np.nonzero(d == -1)[0]
     return (en - st).tolist()
+
+
+# ══ 접합 census — 판정 · 보고 판 (B3 cjunc_registry 같은 함수) ═══════════════════════════════════════════════════════
+def _jf(x):
+    """JSON 칸 실수 — 비유한 (자기 후보가 아닌 행의 s · 자기 행의 d0 = NaN) 은 None."""
+    x = float(x)
+    return x if math.isfinite(x) else None
+
+
+def junction_census(kw, sid, *, tol_ff, L_par, r_port, tol_P, tol_sj, r_ptfe, r_sdcp):
+    """접합 census (판정 · 보고 판) — B3 `carbon_junction.cjunc_registry` 를 **그대로** 부른다 (사본 없음 · 설계 §2 ① · §4-1 끝).
+    입력 = 잡은 생산 raster 입력 (전 상 — PTFE 행 포함 = P-junc 덮임 판정 · SDCP 점 = 근접 판정) + `sid` (off 격자) · 계획 문턱 ·
+    s_min 미등록 (None — 거르지 않고 자기 후보 전부를 s 와 함께 낸다 = s_min 근거).  솔브 없음 (원장 = 기하만).
+    → (보고 블록 · 후보별 배열 dict).  원장이 입력을 거부하면 S0Error (조용한 강등 없음)."""
+    try:
+        reg = cj.cjunc_registry(sid, tuple(float(x) for x in kw['box_lo']), float(kw['vox']), kw['add_pts'], kw['add_phase'],
+                                kw['add_fid'], kw['add_kind'], r_f_um=R_F_UM, tol_ff_um=tol_ff, L_par_um=L_par,
+                                r_port_um=r_port, s_min_um=None, gap_tol=float(kw['fid_gap_tol']), tol_P_um=tol_P,
+                                tol_sj_um=tol_sj, r_ptfe_um=r_ptfe, r_sdcp_um=r_sdcp)
+    except (ValueError, TypeError) as e:
+        raise S0Error(f'접합 원장 (carbon_junction.cjunc_registry) 이 입력을 거부했다: {e}') from e
+    I = reg['instances']
+    n_i = len(I['fi'])
+    isself = np.asarray(I['self'], bool)
+    Lc = np.asarray(I['Lc'], np.float64)
+    mult = np.asarray(I['mult'], np.float64)
+    lng = np.asarray(I['long'], bool)
+    s = np.asarray(I['s'], np.float64)
+    real = np.asarray(I['realized'], bool)
+    selfc = [{'fid': int(I['fi'][q]), 's_um': _jf(s[q]), 'Lc_um': _jf(Lc[q]), 'mult': _jf(mult[q]),
+              'dk_min': int(I['self_dk_min'][q]), 'long': bool(lng[q]), 'realized': bool(real[q])}
+             for q in np.flatnonzero(isself)]
+    selfc.sort(key=lambda d: (d['s_um'] is None, d['s_um'] if d['s_um'] is not None else 0.0, d['fid']))
+    longc = [{'kind': 'self' if isself[q] else 'distinct', 'fi': int(I['fi'][q]), 'fj': int(I['fj'][q]), 'Lc_um': _jf(Lc[q]),
+              'mult': _jf(mult[q]), 'd0_um': _jf(I['d0'][q]), 's_um': _jf(s[q]), 'realized': bool(real[q])}
+             for q in np.flatnonzero(lng)]
+    longc.sort(key=lambda d: (-(d['Lc_um'] or 0.0), d['fi'], d['fj']))
+    block = {
+        'status': 'registry',
+        'function': 'carbon_junction.cjunc_registry',
+        'verdict_use': '판정 · 보고의 instance census 판 (B3 · 길이 법칙 v0 · 설계 §2 ① · §4-1 끝) — 기하만 · 솔브 없음',
+        'model': cj.CJUNC_MODEL_VERSION, 'schema': cj.CJUNC_SCHEMA, 'len_law': cj.CJUNC_LEN_LAW,
+        'grid': JUNCTION_GRID,
+        'grid_definition': 'captured production inputs minus PTFE rows (= ptfe_stamp off · face_alpha sid grid); '
+                           'the registry gets every phase (PTFE paths = P-junc cover · SDCP points = proximity)',
+        's_min_status': 'not_applied — S0 계획 (cjunc_plan.json) 에 s_min 칸이 없어 원장을 s_min None 으로 부른다 (거르지 않음 · '
+                        '자기 후보 전부 + 후보마다 s = s_min 근거 · s_min 숫자 = 등록 R §2-1 · 이 도구는 고르지 않는다)',
+        'thresholds': dict(reg['thresholds']), 'rules': dict(reg['rules']),
+        'rejection_codes': [x['code'] for x in reg['rejections']],
+        'census': reg['census'],
+        'n_instances': int(n_i), 'n_long': int(lng.sum()), 'n_long_distinct': int((lng & ~isself).sum()),
+        'n_long_self': int((lng & isself).sum()),
+        'Lc_um': _dist(Lc), 'Lc_distinct_um': _dist(Lc[~isself]), 'Lc_self_um': _dist(Lc[isself]),
+        'len_mult_sum': float(mult.sum()), 'len_mult_sum_realized': float(mult[real].sum()),
+        'len_mult_max': (float(mult.max()) if n_i else None), 'n_mult_gt1': int((mult > 1.0).sum()),
+        'self_s_um': _dist(s[isself]),
+        'port_search_um': _dist(np.asarray(I['port_search_um'], np.float64)[real]),
+        'n_ptfe_cov': int(np.sum(I['ptfe_cov'])), 'n_sdcp_near': int(np.sum(I['a_sdcp'])),
+        'self_candidates': selfc,
+        'long_contacts': longc,
+    }
+    arrays = {'fi': np.asarray(I['fi'], np.int64), 'fj': np.asarray(I['fj'], np.int64), 'is_self': isself,
+              'd0': np.asarray(I['d0'], np.float64), 'Lc': Lc, 'mult': mult, 'long': lng, 's': s,
+              'self_dk_min': np.asarray(I['self_dk_min'], np.int64), 'realized': real,
+              'reason': np.asarray([str(x) for x in I['reason']], dtype=str),
+              'port_search_um': np.asarray(I['port_search_um'], np.float64), 'cp': np.asarray(I['cp'], np.float64),
+              'ptfe_cov': np.asarray(I['ptfe_cov'], bool), 'a_sdcp': np.asarray(I['a_sdcp'], bool)}
+    return block, arrays
 
 
 # ══ 계획 (등록 R §2-1) ══════════════════════════════════════════════════════════════════════════════════════════
@@ -1346,6 +1425,10 @@ def census_kit(kit, out_dir, *, stage, plan=None, plan_sha=None, plan_source=Non
         'junction_spacing': {'lj_um': _dist(lj), 'fibres_without_instance': int(sum(1 for f in v_fids if ninst[f] == 0)),
                              'fibres_total': len(v_fids)},
     }
+    # ── 접합 census — 판정 · 보고 판 = B3 cjunc_registry 그대로 (off 격자 · 계획 문턱 · s_min 미등록) ──
+    junction, jarrays = junction_census(kw, off, tol_ff=tol_ff, L_par=L_par, r_port=r_port, tol_P=tol_P, tol_sj=tol_sj,
+                                        r_ptfe=r_P, r_sdcp=r_s)
+    junction['arrays_file'] = f's0_junctions_{kname}.npz'
     rep = {
         'schema': SCHEMA, 'stage': int(stage), 'tool': TOOL_VERSION,
         'kit': {'path': kit, 'name': kname, 'run_dir': run_dir, 'run_dir_name': os.path.basename(run_dir),
@@ -1372,6 +1455,7 @@ def census_kit(kit, out_dir, *, stage, plan=None, plan_sha=None, plan_source=Non
         'thresholds_used': {'tol_ff_um': tol_ff, 'L_par_um': L_par, 'r_port_um': r_port, 'tol_P_um': tol_P,
                             'tol_sj_um': tol_sj, 'tol_fs_um': TOL_FS_PREVIEW_UM, 'r_f_um': R_F_UM},
         'plan': {'sha256': plan_sha, 'source': plan_source},
+        'junction_census': junction,
         'census_preview': census,
         'notes': list(NOTES),
         'elapsed_s': round(time.time() - t0, 1),
@@ -1385,7 +1469,7 @@ def census_kit(kit, out_dir, *, stage, plan=None, plan_sha=None, plan_source=Non
               'theta_deg': I['theta_deg'], 'L_touch': I['L_touch'], 'L_band': I['L_band'], 'C1': I['C1'], 'C2': I['C2'],
               'mid': I['mid'], 'location': np.array(loc, dtype='<U24'), 'ptfe_excess_um': ptfe_ex,
               'sdcp_excess_um': sdcp_ex, 'via_depth': via_d, 'lj_um': lj, 'lj_fid': lj_f}
-    return rep, arrays, plan_out
+    return rep, arrays, plan_out, jarrays
 
 
 def run_stage(stage, kits, out_dir, *, threshold_commit=None, plan_path=None, repo=None, r_doc=R_DOC_DEFAULT,
@@ -1416,13 +1500,15 @@ def run_stage(stage, kits, out_dir, *, threshold_commit=None, plan_path=None, re
     os.makedirs(out_dir, exist_ok=True)
     res = {'reports': [], 'plan': None, 'plan_sha256': plan_sha}
     for kit in kits:
-        rep, arrays, pout = census_kit(kit, out_dir, stage=stage, plan=plan, plan_sha=plan_sha, plan_source=plan_source,
-                                       vox=vox, bridge_um=bridge_um, sdcp_sphere_d=sdcp_sphere_d, scripts_dir=scripts_dir)
+        rep, arrays, pout, jarrays = census_kit(kit, out_dir, stage=stage, plan=plan, plan_sha=plan_sha,
+                                                plan_source=plan_source, vox=vox, bridge_um=bridge_um,
+                                                sdcp_sphere_d=sdcp_sphere_d, scripts_dir=scripts_dir)
         kn = rep['kit']['name']
         rp = os.path.join(out_dir, f's0_stage{stage}_{kn}.json')
         with open(rp, 'w', encoding='utf-8') as f:
             json.dump(rep, f, ensure_ascii=False, indent=1)
         np.savez(os.path.join(out_dir, f's0_instances_{kn}.npz'), **arrays)
+        np.savez(os.path.join(out_dir, rep['junction_census']['arrays_file']), **jarrays)
         res['reports'].append(rp)
         if pout is not None:
             _p, pbytes, psha = pout
@@ -1451,6 +1537,13 @@ def _summary(rep):
     ti, tu = rep['threshold_inputs'], rep['thresholds_used']
     lines.append(f"  점 간격 중앙값 {ti['spacing_median_um']:.6g} µm (n {ti['n_spacings']}) → u {ti['u_um']:.6g} · "
                  f"tol_ff {tu['tol_ff_um']:.6g} · L_par {tu['L_par_um']:.6g} · r_port {tu['r_port_um']:.6g}")
+    J = rep.get('junction_census') or {}
+    if J:
+        jc, ss = J.get('census') or {}, J.get('self_s_um') or {}
+        lines.append(f"  [접합 census · cjunc_registry · {J.get('grid')} 격자] VV {jc.get('n_instances_distinct')} · 자기 후보 "
+                     f"{jc.get('n_self_candidates')} (s 최소 {ss.get('min')} · 중앙 {ss.get('p50')} µm · 거르지 않음 = S0 는 s_min 안 씀) · "
+                     f"긴 접촉 {J.get('n_long')} (distinct {J.get('n_long_distinct')} · self {J.get('n_long_self')}) · 배율 합 "
+                     f"{J.get('len_mult_sum'):.6g} · 미실현 {jc.get('n_unrealized_by_reason')} · 후보별 → {J.get('arrays_file')}")
     vv = C['vv']
     lines.append(f"  [B0 미리보기] VV {vv['n_instances']} · 자기 {vv['n_self']} · 긴 접촉 (> L_par) touch {vv['n_long']['touch']} "
                  f"· band {vv['n_long']['band']} · 관통 {vv['penetrating']} · 위치 {vv['location']}")
