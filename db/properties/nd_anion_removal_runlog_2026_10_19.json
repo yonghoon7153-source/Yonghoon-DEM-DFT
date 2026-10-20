@@ -128,5 +128,13 @@
   "결정": "D-2026-10-20-nd-s-vacancy-neutral active · D-2026-10-20-gabia-nd-svac-pause-li3nd active (decision_digest 지문 · 결속 커밋 e1ba8cba) · v1 D-2026-10-19-nd-anion-removal superseded (승인 내용 그대로 · 지문만 다시 냄)",
   "다음": "① gabia 옛 ndrm 재시도 끄기 (r2 재개) ② worktree wt_svac_1020 + DRY_RUN (검사용) ③ tmux ndsvac ④ 회수 → --readout",
   "by": "agent · 2026-10-20"
+ },
+ "✅_v1_러너_끝_r2_재개_2026_10_20_0342": {
+  "사용자_화면": "gabia run.log 끝 6 줄 + tmux ls (≈ 03:43)",
+  "끝": "재시도도 100 반복 미수렴 (03:11 기준 반복 82 · accuracy 0.07–0.10 Ry · 반복당 ≈ 97 s) → 03:42:48 '⛔ rm_Cl114 두 번 실패 — 남은 점을 멈춘다' (사용자는 끄지 않고 끝까지 둠 · 남은 7 점 안 돌림) ⇒ v1 정지 결정 D-2026-10-19-gabia-nd-removal-pause-li3nd 소멸 (항목은 안 건드림)",
+  "r2": "03:42:48 판정 '사람이 세움 → restart (BFGS 이력 승계)' · 03:42:53 ✅ 재개 tmux li3nd_r2_res_10200342 (restart_qe_relax.sh --run --nstep 200 · 로그 /data/work/runs/nd_anion_removal_2026_10_19/r2_resume.log) · ndrm 세션 없음 (러너 끝)",
+  "⚠_worktree": "r2 재개 드라이버가 /data/work/wt_ndrm_1019/tools/sei/restart_qe_relax.sh 로 돈다 (러너의 RESTART_TOOL = 그 worktree) ⇒ wt_ndrm_1019 를 지우거나 pull 하지 않는다 — v2 러너가 r2 를 세웠다가 자기 worktree (wt_svac_1020) 의 드라이버로 다시 걸면 풀린다",
+  "v1_원자료": "gabia /data/work/runs/nd_anion_removal_2026_10_19 (run.log · MANIFEST.json · rm_*/scf.in · rm_Cl114/scf.out.1020005728 (첫 시도) · rm_Cl114/scf.out (재시도) · probe/) — v2 회수 때 같이 저장소로 (진단 증거)",
+  "by": "agent · 2026-10-20"
  }
 }
