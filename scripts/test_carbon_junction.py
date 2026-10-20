@@ -52,6 +52,9 @@ r_port = 2.0 (= 2h) · gap_tol 2.0 · σ_VGCF = 100 S/cm → 축방향 면 g = �
          sid 불변 · 우선순위)
   SV     SV 면 · SDCP 셀 소산 몫 · SV_DOMINANT 표지 · SDCP 경유 섬유 연결 수
   PIECE  멤버십 셀 = `_fibre_segment_ijk` 의 VGCF 셀 (같은 끊기 규칙 · 복제 + 동등 시험)
+  PIECE4 끊기 규칙 사본 대조 (2 일 차) — 생산 `step3_sigma._fibre_segment_ijk` ↔ B `carbon_junction.fibre_pieces` ↔
+         C `ca_s0_census.pieces_of` ↔ A `ptfe_face_alpha.build_capsules`: 끊김이 있는 합성 침대에서 조각 경계 · 셀 열 · 셀 집합 같음 ·
+         네 곳 각각의 `>` → `>=` 변이 사본이 시험을 떨어뜨린다 (하나로 합치는 리팩터는 하지 않는다 — 생산 경로 비트 동일 부담)
   FP     지문 재현 (RINT-23 · 2 일 차) — 같은 내용 · 다른 객체 → 같은 지문 · 별도 `python3 -I` 하위 프로세스 둘 → 같은 지문 ·
          한 글자 다름 → 다른 지문.  `carbon_junction._fp` (객체 배열 = 내용 직렬화 · 숫자 배열 = dtype · 모양 · C 순서 바이트) ·
          원장 · 계획 지문 · 격자 지문 감싸개 (`_grid_fp` — 객체 격자 거부) · 같은 꼴 확인 = `ptfe_face_alpha` (캡슐 · 행 · 계획 ·
@@ -1802,6 +1805,173 @@ def t_fp():
     want = {m_: set(v) for m_, v in FP_INVENTORY.items()}
     chk('FP-m 지문 · 해시 함수 목록 = 이 시험의 표 (새 함수 = 덮을 때까지 실패 · step3_conv_cert = 없음)', got == want,
         f'{ {m_: sorted(got[m_] ^ want[m_]) for m_ in got if got[m_] != want[m_]} }')
+
+
+# ═════════════════════════ PIECE4 — 끊기 규칙 사본 대조 (생산 · B · C · A · 2 일 차) ═════════════════════════
+#  같은 gap_tol 규칙 (연속 점 간격 > gap_tol × 그 경로 간격 중앙값 → 끊음) 이 네 곳에 따로 있다: 생산 `step3_sigma._fibre_segment_ijk`
+#  (셀만 낸다) · B `carbon_junction.fibre_pieces` · C `ca_s0_census.pieces_of` · A `ptfe_face_alpha.build_capsules` (안쪽 줄).
+#  하나로 합치지 않는다 (생산 경로 비트 동일 부담) — 이 시험이 넷을 묶는다.  침대 (µm · vox 0.1): 틈 > 2 셀 · 한 점 조각 (앞 · 가운데 ·
+#  뒤) · 정확히 경계인 틈 (d = gap_tol × 중앙값 → 끊지 않는다 · 이진 정확 좌표) · 두 점 · 한 점 경로 · 무작위 3D (지운 점 = 틈).
+#  ① 조각 경계 (점 번호 구간) B = C = A ② 생산 셀 열 = 각 사본의 조각을 생산 원시 함수 (`segment_cells`) 로 다시 구운 셀 열 (순서 그대로)
+#  ③ C 의 셀 빌더 (`_cells_from_pieces`) = 생산 셀 열 · B 의 멤버십 위치 셀 집합 = 생산 셀 집합.
+PIECE4_VOX = 0.1
+PIECE4_N = (40, 40, 40)
+_PIECE4_MUT = {'step3_sigma': 'np.nonzero(d > gap_tol * med)', 'carbon_junction': 'np.nonzero(d > gap_tol * med)',
+               'ca_s0_census': 'np.nonzero(d > gap_tol * med)', 'ptfe_face_alpha': 'np.nonzero(d > g_t * med)'}
+
+
+def _piece4_beds():
+    def line(x0, n, dx=0.1, y=1.05, z=1.05):
+        return [(x0 + dx * k, y, z) for k in range(n)]
+    beds = []
+    beds.append(('틈 하나 (0.6 µm = 6 셀)', np.array(line(0.15, 10) + line(1.65, 10))))
+    beds.append(('한 점 조각 — 앞 · 가운데 · 뒤', np.array([(0.15, 2.05, 1.05)] + line(0.75, 5, y=2.05) + [(1.85, 2.05, 1.05)]
+                                                       + line(2.45, 4, y=2.05) + [(3.55, 2.05, 1.05)])))
+    #  정확 경계: 간격 0.25 (이진 정확) · 0.5 = 2 × 중앙값 (끊지 않음 · 엄격 >) · 0.75 (끊음) — `>=` 변이는 0.5 에서도 끊는다
+    xs = [0.25, 0.5, 0.75, 1.0, 1.5, 1.75, 2.0, 2.75, 3.0, 3.25]
+    beds.append(('정확히 경계인 틈 (0.5 = 2 × 0.25 · 끊지 않음) + 끊는 틈 0.75', np.array([(x, 0.375, 2.125) for x in xs])))
+    beds.append(('두 점 경로', np.array([(0.35, 3.05, 3.05), (0.95, 3.05, 3.05)])))
+    beds.append(('한 점 경로', np.array([(2.35, 3.05, 3.05)])))
+    rng = np.random.default_rng(20261020)
+    box = np.array(PIECE4_N, float) * PIECE4_VOX
+    for t in range(6):
+        p = [rng.uniform(0.6, box - 0.6)]
+        for _ in range(int(rng.integers(25, 45))):
+            d = rng.normal(size=3); d /= np.linalg.norm(d)
+            p.append(np.clip(p[-1] + d * rng.uniform(0.07, 0.12), 0.02, box - 0.02))
+        Q = np.asarray(p)
+        keep = np.ones(len(Q), bool)
+        for _ in range(int(rng.integers(1, 4))):                # 지운 점 = 틈 (시더가 AM 안 점을 드랍하는 꼴)
+            a = int(rng.integers(2, len(Q) - 6)); keep[a:a + int(rng.integers(3, 7))] = False
+        beds.append((f'무작위 3D {t}', Q[keep]))
+    return beds
+
+
+def _piece4_ranges_index(Q, pcs):
+    out, a = [], 0
+    for ix in pcs:
+        ix = np.asarray(ix)
+        if not np.array_equal(ix, np.arange(a, a + len(ix))):
+            return None
+        out.append((a, a + len(ix))); a += len(ix)
+    return out if a == len(Q) else None
+
+
+def _piece4_ranges_points(Q, pcs):
+    out, a = [], 0
+    for R in pcs:
+        R = np.asarray(R, np.float64).reshape(-1, 3)
+        if not np.array_equal(R, Q[a:a + len(R)]):
+            return None
+        out.append((a, a + len(R))); a += len(R)
+    return out if a == len(Q) else None
+
+
+def _piece4_capsule_pieces(caps):
+    """A — 캡슐 선분 (A→B) 에서 조각 점열을 되읽는다: 새 조각 = 앞 선분 끝 ≠ 이 선분 시작 · 선분 하나 · 길이 0 = 한 점 조각."""
+    A, B = np.asarray(caps['A']), np.asarray(caps['B'])
+    pieces = []
+    for i in range(len(A)):
+        if i == 0 or not np.array_equal(A[i], B[i - 1]):
+            pieces.append([A[i], B[i]])
+        else:
+            pieces[-1].append(B[i])
+    return [np.asarray(p[:1]) if len(p) == 2 and np.array_equal(p[0], p[1]) else np.asarray(p) for p in pieces]
+
+
+def _piece4_cells(Q, ranges, lo, vox, n):
+    from fibre_segment_raster import segment_cells
+    out = []
+    for a, b in ranges:
+        R = Q[a:b]
+        if len(R) == 1:
+            out.append(np.floor((R - lo) / vox).astype(int))
+        else:
+            out.append(np.vstack([segment_cells(R[i] - lo, R[i + 1] - lo, vox) for i in range(len(R) - 1)]))
+    ijk = np.vstack(out).astype(int) if out else np.zeros((0, 3), int)
+    return ijk[((ijk >= 0) & (ijk < n)).all(1)]
+
+
+def _piece4_compare(mods, gap_tols=(2.0, 3.0)):
+    """네 구현 (mods = 생산 · B · C · A 모듈) 대조 → (불일치 목록, 정확 경계 틈이 있던 침대 수)."""
+    s3m, cjm, s0m, fam = (mods[k] for k in ('step3_sigma', 'carbon_junction', 'ca_s0_census', 'ptfe_face_alpha'))
+    lo = np.zeros(3); n = np.array(PIECE4_N); vox = PIECE4_VOX
+    bad, n_exact = [], 0
+    for nm, Q in _piece4_beds():
+        Q = np.asarray(Q, np.float64)
+        if len(Q) >= 2:
+            d = np.linalg.norm(np.diff(Q, axis=0), axis=1)
+            n_exact += int(np.any(d == 2.0 * float(np.median(d))))
+        for gt in gap_tols:
+            tag = f'{nm} · gap_tol {gt}'
+            m = len(Q)
+            prod, _ph = quiet(s3m._fibre_segment_ijk, Q, np.full(m, 2), np.full(m, 7), lo, vox, n, gt,
+                              add_kind=np.ones(m, int))
+            rB = _piece4_ranges_index(Q, cjm.fibre_pieces(Q, gt))
+            pcsC = s0m.pieces_of(Q, gt)
+            rC = _piece4_ranges_points(Q, pcsC)
+            caps = fam.build_capsules(Q, np.zeros(m, np.int64), np.ones(m, np.int64), gap_tol=gt)
+            rA = _piece4_ranges_points(Q, _piece4_capsule_pieces(caps))
+            if rB is None or rC is None or rA is None or not (rB == rC == rA):
+                bad.append(f'{tag}: 조각 경계 B {rB} · C {rC} · A {rA}')
+                continue
+            if caps['n_pieces'] != len(rA) or caps['n_point_pieces'] != sum(1 for a, b in rA if b - a == 1):
+                bad.append(f'{tag}: A 조각 수 기록 {caps["n_pieces"]} · 한 점 {caps["n_point_pieces"]} ↔ {rA}')
+            for who, rr in (('B', rB), ('C', rC), ('A', rA)):
+                if not np.array_equal(_piece4_cells(Q, rr, lo, vox, n), prod):
+                    bad.append(f'{tag}: 생산 셀 열 ≠ {who} 조각으로 다시 구운 셀 열')
+            if not np.array_equal(s0m._cells_from_pieces(pcsC, lo, vox, n), prod):
+                bad.append(f'{tag}: C 셀 빌더 ≠ 생산 셀 열')
+            segs, pcs = cjm._segments_of([(7, np.arange(m), True)], Q, gt)
+            pos, _pp = cjm._positions(pcs, segs, lo, vox, n, np.zeros(PIECE4_N, np.int8))
+            inb = pos['lin'] >= 0
+            if {tuple(int(v) for v in c) for c in pos['ijk'][inb]} != {tuple(int(v) for v in c) for c in prod}:
+                bad.append(f'{tag}: B 멤버십 셀 집합 ≠ 생산 셀 집합')
+    return bad, n_exact
+
+
+def _piece4_mutant(modname, tmpd):
+    src = open(os.path.join(SCRIPTS, modname + '.py'), encoding='utf-8').read()
+    old = _PIECE4_MUT[modname]
+    if src.count(old) != 1:
+        return None, f'변이 대상 문자열 {old!r} 이 {modname}.py 에 {src.count(old)} 번 (1 번이어야)'
+    p = os.path.join(tmpd, f'{modname}_piece4_mut.py')
+    with open(p, 'w', encoding='utf-8') as fh:
+        fh.write(src.replace(old, old.replace(' > ', ' >= ')))
+    spec = importlib.util.spec_from_file_location(f'{modname}_piece4_mut', p)
+    m = importlib.util.module_from_spec(spec)
+    quiet(spec.loader.exec_module, m)
+    return m, ''
+
+
+@case('PIECE4')
+def t_piece4():
+    import ptfe_face_alpha as FA
+    import ca_s0_census as S0
+    real = {'step3_sigma': S3, 'carbon_junction': CJ, 'ca_s0_census': S0, 'ptfe_face_alpha': FA}
+    bad, n_exact = _piece4_compare(real)
+    nb = len(_piece4_beds())
+    chk(f'PIECE4 네 구현 (생산 · B · C · A) — 조각 경계 같음 · 생산 셀 열 = 각 사본 조각을 다시 구운 셀 열 · C 셀 빌더 = 생산 · '
+        f'B 멤버십 셀 집합 = 생산 ({nb} 침대 × gap_tol 2 · 3 · 정확 경계 틈 침대 {n_exact})', not bad and n_exact >= 1,
+        f'{bad[:4]} · 정확 경계 {n_exact}')
+    tmpd = tempfile.mkdtemp(prefix='piece4_')
+    try:
+        for modname in ('step3_sigma', 'carbon_junction', 'ca_s0_census', 'ptfe_face_alpha'):
+            mut, why = _piece4_mutant(modname, tmpd)
+            caught = False
+            if mut is not None:
+                mods = dict(real)
+                mods[modname] = mut
+                try:
+                    mb, _ = _piece4_compare(mods)
+                    caught = bool(mb)
+                except Exception as e:                     # noqa: BLE001 — 변이가 예외로 끝나도 '걸렸다' (기록)
+                    print(f'    PIECE4 변이 {modname}: 예외 {type(e).__name__}: {e}')
+                    caught = True
+            chk(f'PIECE4 변이 — {modname} 사본의 `>` → `>=` (나머지 셋은 그대로) → 시험이 떨어진다 (정확 경계 틈)',
+                mut is not None and caught, why or 'not caught')
+    finally:
+        shutil.rmtree(tmpd, ignore_errors=True)
 
 
 def main():
