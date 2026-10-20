@@ -1,0 +1,23 @@
+{
+  "command": [
+    "C:\\Users\\Administrator\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\python.exe",
+    "-X",
+    "utf8",
+    "-B",
+    "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\run_review.py",
+    "probe",
+    "numeric_review.py",
+    "--source",
+    "rint2_carbon_design_review_20261021/part_b/staged_source",
+    "--child"
+  ],
+  "rc": 0,
+  "seconds": 7.25,
+  "source": "rint2_carbon_design_review_20261021/part_b/staged_source",
+  "test_source": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\source",
+  "log": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\evidence\\probe_part_b_numeric_review.py.log",
+  "log_sha256": "5c47185c1b154c4745c47b6a82599ab5b4da69624bff841194a80d5bfea6d7e0",
+  "tail": [
+    "{\"file\": \"C:\\\\Users\\\\Administrator\\\\Documents\\\\Codex\\\\2026-08-24\\\\claude-stoic-knuth-nobvq-x20\\\\rint2_carbon_design_review_20261021\\\\part_b\\\\evidence\\\\numeric_current.json\", \"n_cases\": 113, \"counts\": {\"PASS\": 8, \"REJECT\": 105, \"EXCEPTION\": 0}}"
+  ]
+}

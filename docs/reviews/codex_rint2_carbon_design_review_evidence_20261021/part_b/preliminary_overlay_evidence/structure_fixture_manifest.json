@@ -1,0 +1,1850 @@
+{
+  "baseline": [
+    {
+      "path": "tmp\\structure_fixtures\\baseline_sc.csv",
+      "sha256": "6abcc7525f7a154f9e6b2055fe21cffbe0d78b1307df056ade9039c5dfd2fe11"
+    },
+    {
+      "path": "tmp\\structure_fixtures\\baseline_atom.dump",
+      "sha256": "75d859590136e46ac39a42cbf538fcb762f754f684d8afaecaa1b42e8e44a9da"
+    },
+    {
+      "path": "tmp\\structure_fixtures\\baseline_contact.dump",
+      "sha256": "506de9c9e706890adab1e48fb5504a671f1fcbb2119f9512a00130e8652635f6"
+    }
+  ],
+  "zero_contacts": [
+    {
+      "path": "tmp\\structure_fixtures\\zero_contacts_sc.csv",
+      "sha256": "ef278ba458a6edd035b68ffec9ca11112c2ea5f195d7be36f6b95b63562b331f"
+    },
+    {
+      "path": "tmp\\structure_fixtures\\zero_contacts_atom.dump",
+      "sha256": "11a9dc4df0d7063e9cf004cae2b1bcd1dd1a574e714af825c88ecf686b78ce34"
+    },
+    {
+      "path": "tmp\\structure_fixtures\\zero_contacts_contact.dump",
+      "sha256": "eb3a6f5eb83e80dc77bf2906bcf8e3ad9133d273f6ea36bed7fafa3a31cb7732"
+    }
+  ],
+  "atom_duplicate_id": [
+    {
+      "path": "tmp\\structure_fixtures\\atom_duplicate_id_sc.csv",
+      "sha256": "6abcc7525f7a154f9e6b2055fe21cffbe0d78b1307df056ade9039c5dfd2fe11"
+    },
+    {
+      "path": "tmp\\structure_fixtures\\atom_duplicate_id_atom.dump",
+      "sha256": "eb7bf95161eee9a154192ffa68faebe356af99d39c0cf88d7cadd071ba0960c8"
+    },
+    {
+      "path": "tmp\\structure_fixtures\\atom_duplicate_id_contact.dump",
+      "sha256": "506de9c9e706890adab1e48fb5504a671f1fcbb2119f9512a00130e8652635f6"
+    }
+  ],
+  "atom_duplicate_type": [
+    {
+      "path": "tmp\\structure_fixtures\\atom_duplicate_type_sc.csv",
+      "sha256": "6abcc7525f7a154f9e6b2055fe21cffbe0d78b1307df056ade9039c5dfd2fe11"
+    },
+    {
+      "path": "tmp\\structure_fixtures\\atom_duplicate_type_atom.dump",
+      "sha256": "ef14b536ba7a4c97dba51487db9fe63b9a8cc719004d5c3a80ebecefee66fa06"
+    },
+    {
+      "path": "tmp\\structure_fixtures\\atom_duplicate_type_contact.dump",
+      "sha256": "506de9c9e706890adab1e48fb5504a671f1fcbb2119f9512a00130e8652635f6"
+    }
+  ],
+  "atom_duplicate_x": [
+    {
+      "path": "tmp\\structure_fixtures\\atom_duplicate_x_sc.csv",
+      "sha256": "6abcc7525f7a154f9e6b2055fe21cffbe0d78b1307df056ade9039c5dfd2fe11"
+    },
+    {
+      "path": "tmp\\structure_fixtures\\atom_duplicate_x_atom.dump",
+      "sha256": "24a40cf2fbf490e7f40f6d74d9b7b50ad9d5fe6a7d11898180193bf649d9aac7"
+    },
+    {
+      "path": "tmp\\structure_fixtures\\atom_duplicate_x_contact.dump",
+      "sha256": "506de9c9e706890adab1e48fb5504a671f1fcbb2119f9512a00130e8652635f6"
+    }
+  ],
+  "atom_duplicate_y": [
+    {
+      "path": "tmp\\structure_fixtures\\atom_duplicate_y_sc.csv",
+      "sha256": "6abcc7525f7a154f9e6b2055fe21cffbe0d78b1307df056ade9039c5dfd2fe11"
+    },
+    {
+      "path": "tmp\\structure_fixtures\\atom_duplicate_y_atom.dump",
+      "sha256": "79504dbb1b8c1c80ff4b3c9750aa54d8e17bd7ed0d6227ef7b77ae4abb29a0f6"
+    },
+    {
+      "path": "tmp\\structure_fixtures\\atom_duplicate_y_contact.dump",
+      "sha256": "506de9c9e706890adab1e48fb5504a671f1fcbb2119f9512a00130e8652635f6"
+    }
+  ],
+  "atom_duplicate_z": [
+    {
+      "path": "tmp\\structure_fixtures\\atom_duplicate_z_sc.csv",
+      "sha256": "6abcc7525f7a154f9e6b2055fe21cffbe0d78b1307df056ade9039c5dfd2fe11"
+    },
+    {
+      "path": "tmp\\structure_fixtures\\atom_duplicate_z_atom.dump",
+      "sha256": "69accd2bacd17831c525cbfc12ba49dc5f5a8a04a52d1e4624bb539a63e5e2bf"
+    },
+    {
+      "path": "tmp\\structure_fixtures\\atom_duplicate_z_contact.dump",
+      "sha256": "506de9c9e706890adab1e48fb5504a671f1fcbb2119f9512a00130e8652635f6"
+    }
+  ],
+  "atom_duplicate_radius": [
+    {
+      "path": "tmp\\structure_fixtures\\atom_duplicate_radius_sc.csv",
+      "sha256": "6abcc7525f7a154f9e6b2055fe21cffbe0d78b1307df056ade9039c5dfd2fe11"
+    },
+    {
+      "path": "tmp\\structure_fixtures\\atom_duplicate_radius_atom.dump",
+      "sha256": "bc5f8d15a63356ce0bc695516b357c18360670dabc9a70e42ccb8b0977ca0204"
+    },
+    {
+      "path": "tmp\\structure_fixtures\\atom_duplicate_radius_contact.dump",
+      "sha256": "506de9c9e706890adab1e48fb5504a671f1fcbb2119f9512a00130e8652635f6"
+    }
+  ],
+  "atom_duplicate_section_count": [
+    {
+      "path": "tmp\\structure_fixtures\\atom_duplicate_section_count_sc.csv",
+      "sha256": "6abcc7525f7a154f9e6b2055fe21cffbe0d78b1307df056ade9039c5dfd2fe11"
+    },
+    {
+      "path": "tmp\\structure_fixtures\\atom_duplicate_section_count_atom.dump",
+      "sha256": "26752a5e77afb1787dc93065f15cf0d529a8a7363aebaae4f1f1eff674ff90f7"
+    },
+    {
+      "path": "tmp\\structure_fixtures\\atom_duplicate_section_count_contact.dump",
+      "sha256": "506de9c9e706890adab1e48fb5504a671f1fcbb2119f9512a00130e8652635f6"
+    }
+  ],
+  "atom_duplicate_section_box": [
+    {
+      "path": "tmp\\structure_fixtures\\atom_duplicate_section_box_sc.csv",
+      "sha256": "6abcc7525f7a154f9e6b2055fe21cffbe0d78b1307df056ade9039c5dfd2fe11"
+    },
+    {
+      "path": "tmp\\structure_fixtures\\atom_duplicate_section_box_atom.dump",
+      "sha256": "e91a0a0a56f5bc3dcac69bdab2d4131b5a5e3764f868b8cbfd046a5c3aaa785c"
+    },
+    {
+      "path": "tmp\\structure_fixtures\\atom_duplicate_section_box_contact.dump",
+      "sha256": "506de9c9e706890adab1e48fb5504a671f1fcbb2119f9512a00130e8652635f6"
+    }
+  ],
+  "atom_duplicate_section_rows": [
+    {
+      "path": "tmp\\structure_fixtures\\atom_duplicate_section_rows_sc.csv",
+      "sha256": "6abcc7525f7a154f9e6b2055fe21cffbe0d78b1307df056ade9039c5dfd2fe11"
+    },
+    {
+      "path": "tmp\\structure_fixtures\\atom_duplicate_section_rows_atom.dump",
+      "sha256": "f822d729c1c3396a281e1b00fc66893143d3e29297a7c7fe74256d5eee0345f4"
+    },
+    {
+      "path": "tmp\\structure_fixtures\\atom_duplicate_section_rows_contact.dump",
+      "sha256": "506de9c9e706890adab1e48fb5504a671f1fcbb2119f9512a00130e8652635f6"
+    }
+  ],
+  "atom_unknown_at_0": [
+    {
+      "path": "tmp\\structure_fixtures\\atom_unknown_at_0_sc.csv",
+      "sha256": "6abcc7525f7a154f9e6b2055fe21cffbe0d78b1307df056ade9039c5dfd2fe11"
+    },
+    {
+      "path": "tmp\\structure_fixtures\\atom_unknown_at_0_atom.dump",
+      "sha256": "21bcd064047fe7646061ddf32fcfab24f0bcf5810036ab8bcfdea5a51a9bc7f9"
+    },
+    {
+      "path": "tmp\\structure_fixtures\\atom_unknown_at_0_contact.dump",
+      "sha256": "506de9c9e706890adab1e48fb5504a671f1fcbb2119f9512a00130e8652635f6"
+    }
+  ],
+  "atom_unknown_at_2": [
+    {
+      "path": "tmp\\structure_fixtures\\atom_unknown_at_2_sc.csv",
+      "sha256": "6abcc7525f7a154f9e6b2055fe21cffbe0d78b1307df056ade9039c5dfd2fe11"
+    },
+    {
+      "path": "tmp\\structure_fixtures\\atom_unknown_at_2_atom.dump",
+      "sha256": "0f6886505f734699d60237576c8658732d7e0bd3cf453df1519acb57e5a78577"
+    },
+    {
+      "path": "tmp\\structure_fixtures\\atom_unknown_at_2_contact.dump",
+      "sha256": "506de9c9e706890adab1e48fb5504a671f1fcbb2119f9512a00130e8652635f6"
+    }
+  ],
+  "atom_unknown_at_4": [
+    {
+      "path": "tmp\\structure_fixtures\\atom_unknown_at_4_sc.csv",
+      "sha256": "6abcc7525f7a154f9e6b2055fe21cffbe0d78b1307df056ade9039c5dfd2fe11"
+    },
+    {
+      "path": "tmp\\structure_fixtures\\atom_unknown_at_4_atom.dump",
+      "sha256": "1e540dfba1155e8b0b6be9e72d59aad7164ed647d1e8ed449c2c54a94692e63a"
+    },
+    {
+      "path": "tmp\\structure_fixtures\\atom_unknown_at_4_contact.dump",
+      "sha256": "506de9c9e706890adab1e48fb5504a671f1fcbb2119f9512a00130e8652635f6"
+    }
+  ],
+  "atom_unknown_at_8": [
+    {
+      "path": "tmp\\structure_fixtures\\atom_unknown_at_8_sc.csv",
+      "sha256": "6abcc7525f7a154f9e6b2055fe21cffbe0d78b1307df056ade9039c5dfd2fe11"
+    },
+    {
+      "path": "tmp\\structure_fixtures\\atom_unknown_at_8_atom.dump",
+      "sha256": "214aae8476b60931ab708f8641dd7a48e152e42a06b45081073156d706380c00"
+    },
+    {
+      "path": "tmp\\structure_fixtures\\atom_unknown_at_8_contact.dump",
+      "sha256": "506de9c9e706890adab1e48fb5504a671f1fcbb2119f9512a00130e8652635f6"
+    }
+  ],
+  "atom_unknown_at_11": [
+    {
+      "path": "tmp\\structure_fixtures\\atom_unknown_at_11_sc.csv",
+      "sha256": "6abcc7525f7a154f9e6b2055fe21cffbe0d78b1307df056ade9039c5dfd2fe11"
+    },
+    {
+      "path": "tmp\\structure_fixtures\\atom_unknown_at_11_atom.dump",
+      "sha256": "04366789a25904e3ae3b32879ebc2072f7c0fc34c7b8a6309b294c2ff4e5304f"
+    },
+    {
+      "path": "tmp\\structure_fixtures\\atom_unknown_at_11_contact.dump",
+      "sha256": "506de9c9e706890adab1e48fb5504a671f1fcbb2119f9512a00130e8652635f6"
+    }
+  ],
+  "atom_count_0": [
+    {
+      "path": "tmp\\structure_fixtures\\atom_count_0_sc.csv",
+      "sha256": "6abcc7525f7a154f9e6b2055fe21cffbe0d78b1307df056ade9039c5dfd2fe11"
+    },
+    {
+      "path": "tmp\\structure_fixtures\\atom_count_0_atom.dump",
+      "sha256": "a767fc83268cecd732d83a5c77af496ae4af36e11d6f2a7b25a9f9919b3288a0"
+    },
+    {
+      "path": "tmp\\structure_fixtures\\atom_count_0_contact.dump",
+      "sha256": "506de9c9e706890adab1e48fb5504a671f1fcbb2119f9512a00130e8652635f6"
+    }
+  ],
+  "atom_count_-1": [
+    {
+      "path": "tmp\\structure_fixtures\\atom_count_-1_sc.csv",
+      "sha256": "6abcc7525f7a154f9e6b2055fe21cffbe0d78b1307df056ade9039c5dfd2fe11"
+    },
+    {
+      "path": "tmp\\structure_fixtures\\atom_count_-1_atom.dump",
+      "sha256": "a56a2c2a12485a620377befd6238c2d65639d7ef23a8359b5cdd98873eb26223"
+    },
+    {
+      "path": "tmp\\structure_fixtures\\atom_count_-1_contact.dump",
+      "sha256": "506de9c9e706890adab1e48fb5504a671f1fcbb2119f9512a00130e8652635f6"
+    }
+  ],
+  "atom_count_3": [
+    {
+      "path": "tmp\\structure_fixtures\\atom_count_3_sc.csv",
+      "sha256": "6abcc7525f7a154f9e6b2055fe21cffbe0d78b1307df056ade9039c5dfd2fe11"
+    },
+    {
+      "path": "tmp\\structure_fixtures\\atom_count_3_atom.dump",
+      "sha256": "97ab678fb38ae80a24393bf9e96b77ab9df160b46d25337aef7c891e59b17747"
+    },
+    {
+      "path": "tmp\\structure_fixtures\\atom_count_3_contact.dump",
+      "sha256": "506de9c9e706890adab1e48fb5504a671f1fcbb2119f9512a00130e8652635f6"
+    }
+  ],
+  "atom_count_empty": [
+    {
+      "path": "tmp\\structure_fixtures\\atom_count_empty_sc.csv",
+      "sha256": "6abcc7525f7a154f9e6b2055fe21cffbe0d78b1307df056ade9039c5dfd2fe11"
+    },
+    {
+      "path": "tmp\\structure_fixtures\\atom_count_empty_atom.dump",
+      "sha256": "186575a42da9c9e3a587db4f163db4acbdf52f84fb5b3a3fd38b5ecc420b75ab"
+    },
+    {
+      "path": "tmp\\structure_fixtures\\atom_count_empty_contact.dump",
+      "sha256": "506de9c9e706890adab1e48fb5504a671f1fcbb2119f9512a00130e8652635f6"
+    }
+  ],
+  "atom_count_1.0": [
+    {
+      "path": "tmp\\structure_fixtures\\atom_count_1.0_sc.csv",
+      "sha256": "6abcc7525f7a154f9e6b2055fe21cffbe0d78b1307df056ade9039c5dfd2fe11"
+    },
+    {
+      "path": "tmp\\structure_fixtures\\atom_count_1.0_atom.dump",
+      "sha256": "332c17a7b6a59483ed095a03e75bf57510594ab99f3322a99f6248e2c417c97c"
+    },
+    {
+      "path": "tmp\\structure_fixtures\\atom_count_1.0_contact.dump",
+      "sha256": "506de9c9e706890adab1e48fb5504a671f1fcbb2119f9512a00130e8652635f6"
+    }
+  ],
+  "atom_count_1e0": [
+    {
+      "path": "tmp\\structure_fixtures\\atom_count_1e0_sc.csv",
+      "sha256": "6abcc7525f7a154f9e6b2055fe21cffbe0d78b1307df056ade9039c5dfd2fe11"
+    },
+    {
+      "path": "tmp\\structure_fixtures\\atom_count_1e0_atom.dump",
+      "sha256": "96947015e1ce0deaafed8bc164c4839ea2cf20402d0b005c8e25aaae31a35090"
+    },
+    {
+      "path": "tmp\\structure_fixtures\\atom_count_1e0_contact.dump",
+      "sha256": "506de9c9e706890adab1e48fb5504a671f1fcbb2119f9512a00130e8652635f6"
+    }
+  ],
+  "atom_count_1_0": [
+    {
+      "path": "tmp\\structure_fixtures\\atom_count_1_0_sc.csv",
+      "sha256": "6abcc7525f7a154f9e6b2055fe21cffbe0d78b1307df056ade9039c5dfd2fe11"
+    },
+    {
+      "path": "tmp\\structure_fixtures\\atom_count_1_0_atom.dump",
+      "sha256": "43785ee8ec5b27dccacf61172d66895e30f184de46a108c7ae6bb167887d71ac"
+    },
+    {
+      "path": "tmp\\structure_fixtures\\atom_count_1_0_contact.dump",
+      "sha256": "506de9c9e706890adab1e48fb5504a671f1fcbb2119f9512a00130e8652635f6"
+    }
+  ],
+  "atom_count_1 garbage": [
+    {
+      "path": "tmp\\structure_fixtures\\atom_count_1 garbage_sc.csv",
+      "sha256": "6abcc7525f7a154f9e6b2055fe21cffbe0d78b1307df056ade9039c5dfd2fe11"
+    },
+    {
+      "path": "tmp\\structure_fixtures\\atom_count_1 garbage_atom.dump",
+      "sha256": "d5ac70ec03ea31f52ada7f2011c586dcdcca2ab07c30e38942da35beafc819d3"
+    },
+    {
+      "path": "tmp\\structure_fixtures\\atom_count_1 garbage_contact.dump",
+      "sha256": "506de9c9e706890adab1e48fb5504a671f1fcbb2119f9512a00130e8652635f6"
+    }
+  ],
+  "atom_count_9223372036854775808": [
+    {
+      "path": "tmp\\structure_fixtures\\atom_count_9223372036854775808_sc.csv",
+      "sha256": "6abcc7525f7a154f9e6b2055fe21cffbe0d78b1307df056ade9039c5dfd2fe11"
+    },
+    {
+      "path": "tmp\\structure_fixtures\\atom_count_9223372036854775808_atom.dump",
+      "sha256": "d6ead010667a6c7fef775bda9d14a8dffab00136724fe6c91af7a8f884ddc359"
+    },
+    {
+      "path": "tmp\\structure_fixtures\\atom_count_9223372036854775808_contact.dump",
+      "sha256": "506de9c9e706890adab1e48fb5504a671f1fcbb2119f9512a00130e8652635f6"
+    }
+  ],
+  "atom_count_999999999999999999999999": [
+    {
+      "path": "tmp\\structure_fixtures\\atom_count_999999999999999999999999_sc.csv",
+      "sha256": "6abcc7525f7a154f9e6b2055fe21cffbe0d78b1307df056ade9039c5dfd2fe11"
+    },
+    {
+      "path": "tmp\\structure_fixtures\\atom_count_999999999999999999999999_atom.dump",
+      "sha256": "ab4b653ae972681649828b91fdb8b76c71c40883110c49184c01c97f2b1ee540"
+    },
+    {
+      "path": "tmp\\structure_fixtures\\atom_count_999999999999999999999999_contact.dump",
+      "sha256": "506de9c9e706890adab1e48fb5504a671f1fcbb2119f9512a00130e8652635f6"
+    }
+  ],
+  "atom_step_case_36": [
+    {
+      "path": "tmp\\structure_fixtures\\atom_step_case_36_sc.csv",
+      "sha256": "6abcc7525f7a154f9e6b2055fe21cffbe0d78b1307df056ade9039c5dfd2fe11"
+    },
+    {
+      "path": "tmp\\structure_fixtures\\atom_step_case_36_atom.dump",
+      "sha256": "b61104a649b9de710951fb2f2a560b0ec337a00a4497ebf5db402e85db733abd"
+    },
+    {
+      "path": "tmp\\structure_fixtures\\atom_step_case_36_contact.dump",
+      "sha256": "506de9c9e706890adab1e48fb5504a671f1fcbb2119f9512a00130e8652635f6"
+    }
+  ],
+  "atom_step_case_37": [
+    {
+      "path": "tmp\\structure_fixtures\\atom_step_case_37_sc.csv",
+      "sha256": "6abcc7525f7a154f9e6b2055fe21cffbe0d78b1307df056ade9039c5dfd2fe11"
+    },
+    {
+      "path": "tmp\\structure_fixtures\\atom_step_case_37_atom.dump",
+      "sha256": "f123b71608b879432ec7a60a51f742d78db8a8f0b760a3eb825c7bfe819a4423"
+    },
+    {
+      "path": "tmp\\structure_fixtures\\atom_step_case_37_contact.dump",
+      "sha256": "506de9c9e706890adab1e48fb5504a671f1fcbb2119f9512a00130e8652635f6"
+    }
+  ],
+  "atom_step_case_38": [
+    {
+      "path": "tmp\\structure_fixtures\\atom_step_case_38_sc.csv",
+      "sha256": "6abcc7525f7a154f9e6b2055fe21cffbe0d78b1307df056ade9039c5dfd2fe11"
+    },
+    {
+      "path": "tmp\\structure_fixtures\\atom_step_case_38_atom.dump",
+      "sha256": "10f18824bf9399e0564b3ffe4f212b0197e2a93ba60cb95358c738d0f2743257"
+    },
+    {
+      "path": "tmp\\structure_fixtures\\atom_step_case_38_contact.dump",
+      "sha256": "506de9c9e706890adab1e48fb5504a671f1fcbb2119f9512a00130e8652635f6"
+    }
+  ],
+  "atom_step_case_39": [
+    {
+      "path": "tmp\\structure_fixtures\\atom_step_case_39_sc.csv",
+      "sha256": "6abcc7525f7a154f9e6b2055fe21cffbe0d78b1307df056ade9039c5dfd2fe11"
+    },
+    {
+      "path": "tmp\\structure_fixtures\\atom_step_case_39_atom.dump",
+      "sha256": "d63c8f2fc74de4eb8846b91154b685e5a2d72c7962cd9bfb7f6356aecbf7dc9c"
+    },
+    {
+      "path": "tmp\\structure_fixtures\\atom_step_case_39_contact.dump",
+      "sha256": "506de9c9e706890adab1e48fb5504a671f1fcbb2119f9512a00130e8652635f6"
+    }
+  ],
+  "atom_step_case_40": [
+    {
+      "path": "tmp\\structure_fixtures\\atom_step_case_40_sc.csv",
+      "sha256": "6abcc7525f7a154f9e6b2055fe21cffbe0d78b1307df056ade9039c5dfd2fe11"
+    },
+    {
+      "path": "tmp\\structure_fixtures\\atom_step_case_40_atom.dump",
+      "sha256": "d2bfbfe60eeb1d47d4fc0324c342773b105ec2e13123f867c63b63c7bfce6429"
+    },
+    {
+      "path": "tmp\\structure_fixtures\\atom_step_case_40_contact.dump",
+      "sha256": "506de9c9e706890adab1e48fb5504a671f1fcbb2119f9512a00130e8652635f6"
+    }
+  ],
+  "atom_step_case_41": [
+    {
+      "path": "tmp\\structure_fixtures\\atom_step_case_41_sc.csv",
+      "sha256": "6abcc7525f7a154f9e6b2055fe21cffbe0d78b1307df056ade9039c5dfd2fe11"
+    },
+    {
+      "path": "tmp\\structure_fixtures\\atom_step_case_41_atom.dump",
+      "sha256": "81ccca618687e1068ac463f280ac6b2dd045a6a7207e5aa22e1c1d797842c185"
+    },
+    {
+      "path": "tmp\\structure_fixtures\\atom_step_case_41_contact.dump",
+      "sha256": "506de9c9e706890adab1e48fb5504a671f1fcbb2119f9512a00130e8652635f6"
+    }
+  ],
+  "atom_step_case_42": [
+    {
+      "path": "tmp\\structure_fixtures\\atom_step_case_42_sc.csv",
+      "sha256": "6abcc7525f7a154f9e6b2055fe21cffbe0d78b1307df056ade9039c5dfd2fe11"
+    },
+    {
+      "path": "tmp\\structure_fixtures\\atom_step_case_42_atom.dump",
+      "sha256": "ac05d062ee096ca71d4a07208021d6e6ba8466a6b1b61beeef6f34ffc86f832d"
+    },
+    {
+      "path": "tmp\\structure_fixtures\\atom_step_case_42_contact.dump",
+      "sha256": "506de9c9e706890adab1e48fb5504a671f1fcbb2119f9512a00130e8652635f6"
+    }
+  ],
+  "atom_step_case_43": [
+    {
+      "path": "tmp\\structure_fixtures\\atom_step_case_43_sc.csv",
+      "sha256": "6abcc7525f7a154f9e6b2055fe21cffbe0d78b1307df056ade9039c5dfd2fe11"
+    },
+    {
+      "path": "tmp\\structure_fixtures\\atom_step_case_43_atom.dump",
+      "sha256": "bc674a14f42384acaefbb395329ae3f304a42572f6763f39566ea69244442461"
+    },
+    {
+      "path": "tmp\\structure_fixtures\\atom_step_case_43_contact.dump",
+      "sha256": "506de9c9e706890adab1e48fb5504a671f1fcbb2119f9512a00130e8652635f6"
+    }
+  ],
+  "atom_step_case_44": [
+    {
+      "path": "tmp\\structure_fixtures\\atom_step_case_44_sc.csv",
+      "sha256": "6abcc7525f7a154f9e6b2055fe21cffbe0d78b1307df056ade9039c5dfd2fe11"
+    },
+    {
+      "path": "tmp\\structure_fixtures\\atom_step_case_44_atom.dump",
+      "sha256": "cfb582d1bdaf82acbb4ca59f76599ec3a31ebdceef684ab21ea4fb54b0176211"
+    },
+    {
+      "path": "tmp\\structure_fixtures\\atom_step_case_44_contact.dump",
+      "sha256": "506de9c9e706890adab1e48fb5504a671f1fcbb2119f9512a00130e8652635f6"
+    }
+  ],
+  "atom_step_case_45": [
+    {
+      "path": "tmp\\structure_fixtures\\atom_step_case_45_sc.csv",
+      "sha256": "6abcc7525f7a154f9e6b2055fe21cffbe0d78b1307df056ade9039c5dfd2fe11"
+    },
+    {
+      "path": "tmp\\structure_fixtures\\atom_step_case_45_atom.dump",
+      "sha256": "280bec0658116c30ba51964a17e6581cd10322c997b18f925061748dacb96399"
+    },
+    {
+      "path": "tmp\\structure_fixtures\\atom_step_case_45_contact.dump",
+      "sha256": "506de9c9e706890adab1e48fb5504a671f1fcbb2119f9512a00130e8652635f6"
+    }
+  ],
+  "atom_step_case_46": [
+    {
+      "path": "tmp\\structure_fixtures\\atom_step_case_46_sc.csv",
+      "sha256": "6abcc7525f7a154f9e6b2055fe21cffbe0d78b1307df056ade9039c5dfd2fe11"
+    },
+    {
+      "path": "tmp\\structure_fixtures\\atom_step_case_46_atom.dump",
+      "sha256": "0f1e9d48f9825f80ac18c5719069902abf8c225723bbb1f6d3846d8e3daa0bd6"
+    },
+    {
+      "path": "tmp\\structure_fixtures\\atom_step_case_46_contact.dump",
+      "sha256": "506de9c9e706890adab1e48fb5504a671f1fcbb2119f9512a00130e8652635f6"
+    }
+  ],
+  "atom_step_case_47": [
+    {
+      "path": "tmp\\structure_fixtures\\atom_step_case_47_sc.csv",
+      "sha256": "6abcc7525f7a154f9e6b2055fe21cffbe0d78b1307df056ade9039c5dfd2fe11"
+    },
+    {
+      "path": "tmp\\structure_fixtures\\atom_step_case_47_atom.dump",
+      "sha256": "4714d1fb91e70a3b7c57e244e5b82297dfad23f6dc663cc1ec33f39be663cabc"
+    },
+    {
+      "path": "tmp\\structure_fixtures\\atom_step_case_47_contact.dump",
+      "sha256": "506de9c9e706890adab1e48fb5504a671f1fcbb2119f9512a00130e8652635f6"
+    }
+  ],
+  "atom_missing_count": [
+    {
+      "path": "tmp\\structure_fixtures\\atom_missing_count_sc.csv",
+      "sha256": "6abcc7525f7a154f9e6b2055fe21cffbe0d78b1307df056ade9039c5dfd2fe11"
+    },
+    {
+      "path": "tmp\\structure_fixtures\\atom_missing_count_atom.dump",
+      "sha256": "7885f2e58d81a93ab277f84c436a129672cbb33445818fc78115c5f2ef6ef038"
+    },
+    {
+      "path": "tmp\\structure_fixtures\\atom_missing_count_contact.dump",
+      "sha256": "506de9c9e706890adab1e48fb5504a671f1fcbb2119f9512a00130e8652635f6"
+    }
+  ],
+  "atom_missing_box": [
+    {
+      "path": "tmp\\structure_fixtures\\atom_missing_box_sc.csv",
+      "sha256": "6abcc7525f7a154f9e6b2055fe21cffbe0d78b1307df056ade9039c5dfd2fe11"
+    },
+    {
+      "path": "tmp\\structure_fixtures\\atom_missing_box_atom.dump",
+      "sha256": "020331891d9be745abc12a7eb15498d4d788ddd189be8695bf019e621eeb99af"
+    },
+    {
+      "path": "tmp\\structure_fixtures\\atom_missing_box_contact.dump",
+      "sha256": "506de9c9e706890adab1e48fb5504a671f1fcbb2119f9512a00130e8652635f6"
+    }
+  ],
+  "atom_missing_rows": [
+    {
+      "path": "tmp\\structure_fixtures\\atom_missing_rows_sc.csv",
+      "sha256": "6abcc7525f7a154f9e6b2055fe21cffbe0d78b1307df056ade9039c5dfd2fe11"
+    },
+    {
+      "path": "tmp\\structure_fixtures\\atom_missing_rows_atom.dump",
+      "sha256": "82018951738593c1efc9829ea541f57b6d1b68868c4ea1bd3eb2bebba27dceba"
+    },
+    {
+      "path": "tmp\\structure_fixtures\\atom_missing_rows_contact.dump",
+      "sha256": "506de9c9e706890adab1e48fb5504a671f1fcbb2119f9512a00130e8652635f6"
+    }
+  ],
+  "atom_preamble": [
+    {
+      "path": "tmp\\structure_fixtures\\atom_preamble_sc.csv",
+      "sha256": "6abcc7525f7a154f9e6b2055fe21cffbe0d78b1307df056ade9039c5dfd2fe11"
+    },
+    {
+      "path": "tmp\\structure_fixtures\\atom_preamble_atom.dump",
+      "sha256": "e2feed321c6b4dfb888f741563b02b2e586c500eadecf912c27a941ed431d37d"
+    },
+    {
+      "path": "tmp\\structure_fixtures\\atom_preamble_contact.dump",
+      "sha256": "506de9c9e706890adab1e48fb5504a671f1fcbb2119f9512a00130e8652635f6"
+    }
+  ],
+  "atom_trailing_junk": [
+    {
+      "path": "tmp\\structure_fixtures\\atom_trailing_junk_sc.csv",
+      "sha256": "6abcc7525f7a154f9e6b2055fe21cffbe0d78b1307df056ade9039c5dfd2fe11"
+    },
+    {
+      "path": "tmp\\structure_fixtures\\atom_trailing_junk_atom.dump",
+      "sha256": "078d0fcb91a7edd6d403e3fb23dbca0d07a49e3a1e26d7dc81cc1d74cec3e8aa"
+    },
+    {
+      "path": "tmp\\structure_fixtures\\atom_trailing_junk_contact.dump",
+      "sha256": "506de9c9e706890adab1e48fb5504a671f1fcbb2119f9512a00130e8652635f6"
+    }
+  ],
+  "atom_fourth_box_line": [
+    {
+      "path": "tmp\\structure_fixtures\\atom_fourth_box_line_sc.csv",
+      "sha256": "6abcc7525f7a154f9e6b2055fe21cffbe0d78b1307df056ade9039c5dfd2fe11"
+    },
+    {
+      "path": "tmp\\structure_fixtures\\atom_fourth_box_line_atom.dump",
+      "sha256": "66aad963c7f01d7054506e329025940d271ae5e8a07b4bf255014035df7a62e6"
+    },
+    {
+      "path": "tmp\\structure_fixtures\\atom_fourth_box_line_contact.dump",
+      "sha256": "506de9c9e706890adab1e48fb5504a671f1fcbb2119f9512a00130e8652635f6"
+    }
+  ],
+  "atom_leading_scalar_blank": [
+    {
+      "path": "tmp\\structure_fixtures\\atom_leading_scalar_blank_sc.csv",
+      "sha256": "6abcc7525f7a154f9e6b2055fe21cffbe0d78b1307df056ade9039c5dfd2fe11"
+    },
+    {
+      "path": "tmp\\structure_fixtures\\atom_leading_scalar_blank_atom.dump",
+      "sha256": "81ccca618687e1068ac463f280ac6b2dd045a6a7207e5aa22e1c1d797842c185"
+    },
+    {
+      "path": "tmp\\structure_fixtures\\atom_leading_scalar_blank_contact.dump",
+      "sha256": "506de9c9e706890adab1e48fb5504a671f1fcbb2119f9512a00130e8652635f6"
+    }
+  ],
+  "atom_interior_box_blank": [
+    {
+      "path": "tmp\\structure_fixtures\\atom_interior_box_blank_sc.csv",
+      "sha256": "6abcc7525f7a154f9e6b2055fe21cffbe0d78b1307df056ade9039c5dfd2fe11"
+    },
+    {
+      "path": "tmp\\structure_fixtures\\atom_interior_box_blank_atom.dump",
+      "sha256": "7e27812f44e28f3182d9d61f374dcea0287bccf983122565024afd590d029774"
+    },
+    {
+      "path": "tmp\\structure_fixtures\\atom_interior_box_blank_contact.dump",
+      "sha256": "506de9c9e706890adab1e48fb5504a671f1fcbb2119f9512a00130e8652635f6"
+    }
+  ],
+  "atom_last_frame_empty": [
+    {
+      "path": "tmp\\structure_fixtures\\atom_last_frame_empty_sc.csv",
+      "sha256": "6abcc7525f7a154f9e6b2055fe21cffbe0d78b1307df056ade9039c5dfd2fe11"
+    },
+    {
+      "path": "tmp\\structure_fixtures\\atom_last_frame_empty_atom.dump",
+      "sha256": "9a3851cf35d6bf412f4bfa15f4f5f1628829f0c91ffba790b0615c5c081f02bb"
+    },
+    {
+      "path": "tmp\\structure_fixtures\\atom_last_frame_empty_contact.dump",
+      "sha256": "506de9c9e706890adab1e48fb5504a671f1fcbb2119f9512a00130e8652635f6"
+    }
+  ],
+  "atom_last_frame_partial": [
+    {
+      "path": "tmp\\structure_fixtures\\atom_last_frame_partial_sc.csv",
+      "sha256": "6abcc7525f7a154f9e6b2055fe21cffbe0d78b1307df056ade9039c5dfd2fe11"
+    },
+    {
+      "path": "tmp\\structure_fixtures\\atom_last_frame_partial_atom.dump",
+      "sha256": "669b9d514971b072ae6ca29d3d446b10ebe6bfdcb1fc4372c3ad068fd6ce2e4e"
+    },
+    {
+      "path": "tmp\\structure_fixtures\\atom_last_frame_partial_contact.dump",
+      "sha256": "506de9c9e706890adab1e48fb5504a671f1fcbb2119f9512a00130e8652635f6"
+    }
+  ],
+  "atom_last_frame_valid": [
+    {
+      "path": "tmp\\structure_fixtures\\atom_last_frame_valid_sc.csv",
+      "sha256": "6abcc7525f7a154f9e6b2055fe21cffbe0d78b1307df056ade9039c5dfd2fe11"
+    },
+    {
+      "path": "tmp\\structure_fixtures\\atom_last_frame_valid_atom.dump",
+      "sha256": "f5ee7cd3c2553eedb8ce5627987bd609716b2a2ae1c00a8b242bbee3467dfae1"
+    },
+    {
+      "path": "tmp\\structure_fixtures\\atom_last_frame_valid_contact.dump",
+      "sha256": "506de9c9e706890adab1e48fb5504a671f1fcbb2119f9512a00130e8652635f6"
+    }
+  ],
+  "atom_earlier_frame_malformed": [
+    {
+      "path": "tmp\\structure_fixtures\\atom_earlier_frame_malformed_sc.csv",
+      "sha256": "6abcc7525f7a154f9e6b2055fe21cffbe0d78b1307df056ade9039c5dfd2fe11"
+    },
+    {
+      "path": "tmp\\structure_fixtures\\atom_earlier_frame_malformed_atom.dump",
+      "sha256": "a16fb51a5e2c4f172ccec780d4101cb3b016e4ac8d29801ee07d8f583977592d"
+    },
+    {
+      "path": "tmp\\structure_fixtures\\atom_earlier_frame_malformed_contact.dump",
+      "sha256": "506de9c9e706890adab1e48fb5504a671f1fcbb2119f9512a00130e8652635f6"
+    }
+  ],
+  "atom_step_header_suffix": [
+    {
+      "path": "tmp\\structure_fixtures\\atom_step_header_suffix_sc.csv",
+      "sha256": "6abcc7525f7a154f9e6b2055fe21cffbe0d78b1307df056ade9039c5dfd2fe11"
+    },
+    {
+      "path": "tmp\\structure_fixtures\\atom_step_header_suffix_atom.dump",
+      "sha256": "850924ed9f292bd14a92063d47cb1f4987ddf1a96ce4e5bdeb8a9164e4b9198e"
+    },
+    {
+      "path": "tmp\\structure_fixtures\\atom_step_header_suffix_contact.dump",
+      "sha256": "506de9c9e706890adab1e48fb5504a671f1fcbb2119f9512a00130e8652635f6"
+    }
+  ],
+  "atom_count_header_suffix": [
+    {
+      "path": "tmp\\structure_fixtures\\atom_count_header_suffix_sc.csv",
+      "sha256": "6abcc7525f7a154f9e6b2055fe21cffbe0d78b1307df056ade9039c5dfd2fe11"
+    },
+    {
+      "path": "tmp\\structure_fixtures\\atom_count_header_suffix_atom.dump",
+      "sha256": "da673862208e4863c527149d8e534eebed35115991722442a45f5ae78541fd46"
+    },
+    {
+      "path": "tmp\\structure_fixtures\\atom_count_header_suffix_contact.dump",
+      "sha256": "506de9c9e706890adab1e48fb5504a671f1fcbb2119f9512a00130e8652635f6"
+    }
+  ],
+  "atom_step_header__0.9": [
+    {
+      "path": "tmp\\structure_fixtures\\atom_step_header__0.9_sc.csv",
+      "sha256": "6abcc7525f7a154f9e6b2055fe21cffbe0d78b1307df056ade9039c5dfd2fe11"
+    },
+    {
+      "path": "tmp\\structure_fixtures\\atom_step_header__0.9_atom.dump",
+      "sha256": "c8267287cd3ef049dc4b24dc30079c7e1aa6b2edcbc82a30092491450dcd2a51"
+    },
+    {
+      "path": "tmp\\structure_fixtures\\atom_step_header__0.9_contact.dump",
+      "sha256": "506de9c9e706890adab1e48fb5504a671f1fcbb2119f9512a00130e8652635f6"
+    }
+  ],
+  "atom_count_header__0.9": [
+    {
+      "path": "tmp\\structure_fixtures\\atom_count_header__0.9_sc.csv",
+      "sha256": "6abcc7525f7a154f9e6b2055fe21cffbe0d78b1307df056ade9039c5dfd2fe11"
+    },
+    {
+      "path": "tmp\\structure_fixtures\\atom_count_header__0.9_atom.dump",
+      "sha256": "6da30e49841561f990fcc17e045246a0b1004ee8662c8e9298cf0ec1a964ed64"
+    },
+    {
+      "path": "tmp\\structure_fixtures\\atom_count_header__0.9_contact.dump",
+      "sha256": "506de9c9e706890adab1e48fb5504a671f1fcbb2119f9512a00130e8652635f6"
+    }
+  ],
+  "contact_duplicate_c_cpl_1": [
+    {
+      "path": "tmp\\structure_fixtures\\contact_duplicate_c_cpl_1_sc.csv",
+      "sha256": "6abcc7525f7a154f9e6b2055fe21cffbe0d78b1307df056ade9039c5dfd2fe11"
+    },
+    {
+      "path": "tmp\\structure_fixtures\\contact_duplicate_c_cpl_1_atom.dump",
+      "sha256": "75d859590136e46ac39a42cbf538fcb762f754f684d8afaecaa1b42e8e44a9da"
+    },
+    {
+      "path": "tmp\\structure_fixtures\\contact_duplicate_c_cpl_1_contact.dump",
+      "sha256": "100e9f0888adff5c1eaff90cc4772ad09c773876eb79496c66b2fb1fd133524d"
+    }
+  ],
+  "contact_duplicate_c_cpl_2": [
+    {
+      "path": "tmp\\structure_fixtures\\contact_duplicate_c_cpl_2_sc.csv",
+      "sha256": "6abcc7525f7a154f9e6b2055fe21cffbe0d78b1307df056ade9039c5dfd2fe11"
+    },
+    {
+      "path": "tmp\\structure_fixtures\\contact_duplicate_c_cpl_2_atom.dump",
+      "sha256": "75d859590136e46ac39a42cbf538fcb762f754f684d8afaecaa1b42e8e44a9da"
+    },
+    {
+      "path": "tmp\\structure_fixtures\\contact_duplicate_c_cpl_2_contact.dump",
+      "sha256": "f9e880c4cebb3f4ed3a335b9d2967554dadcdcce73fa6426ed325616ed7dd2c9"
+    }
+  ],
+  "contact_duplicate_c_cpl_3": [
+    {
+      "path": "tmp\\structure_fixtures\\contact_duplicate_c_cpl_3_sc.csv",
+      "sha256": "6abcc7525f7a154f9e6b2055fe21cffbe0d78b1307df056ade9039c5dfd2fe11"
+    },
+    {
+      "path": "tmp\\structure_fixtures\\contact_duplicate_c_cpl_3_atom.dump",
+      "sha256": "75d859590136e46ac39a42cbf538fcb762f754f684d8afaecaa1b42e8e44a9da"
+    },
+    {
+      "path": "tmp\\structure_fixtures\\contact_duplicate_c_cpl_3_contact.dump",
+      "sha256": "c1e5abe6b1c15f6fb955561907d4ff56ddae38d0e48f077347ec9fee6b6bcdcb"
+    }
+  ],
+  "contact_duplicate_c_cpl_4": [
+    {
+      "path": "tmp\\structure_fixtures\\contact_duplicate_c_cpl_4_sc.csv",
+      "sha256": "6abcc7525f7a154f9e6b2055fe21cffbe0d78b1307df056ade9039c5dfd2fe11"
+    },
+    {
+      "path": "tmp\\structure_fixtures\\contact_duplicate_c_cpl_4_atom.dump",
+      "sha256": "75d859590136e46ac39a42cbf538fcb762f754f684d8afaecaa1b42e8e44a9da"
+    },
+    {
+      "path": "tmp\\structure_fixtures\\contact_duplicate_c_cpl_4_contact.dump",
+      "sha256": "501d115595e8205c88e757e61c11cf8a089d0ce54340946452c4a1fbff88fe02"
+    }
+  ],
+  "contact_duplicate_c_cpl_5": [
+    {
+      "path": "tmp\\structure_fixtures\\contact_duplicate_c_cpl_5_sc.csv",
+      "sha256": "6abcc7525f7a154f9e6b2055fe21cffbe0d78b1307df056ade9039c5dfd2fe11"
+    },
+    {
+      "path": "tmp\\structure_fixtures\\contact_duplicate_c_cpl_5_atom.dump",
+      "sha256": "75d859590136e46ac39a42cbf538fcb762f754f684d8afaecaa1b42e8e44a9da"
+    },
+    {
+      "path": "tmp\\structure_fixtures\\contact_duplicate_c_cpl_5_contact.dump",
+      "sha256": "513838edbb2d5107469bec34a7ddfe2b1648aece258802ad1aafd8fed79a3ca8"
+    }
+  ],
+  "contact_duplicate_c_cpl_6": [
+    {
+      "path": "tmp\\structure_fixtures\\contact_duplicate_c_cpl_6_sc.csv",
+      "sha256": "6abcc7525f7a154f9e6b2055fe21cffbe0d78b1307df056ade9039c5dfd2fe11"
+    },
+    {
+      "path": "tmp\\structure_fixtures\\contact_duplicate_c_cpl_6_atom.dump",
+      "sha256": "75d859590136e46ac39a42cbf538fcb762f754f684d8afaecaa1b42e8e44a9da"
+    },
+    {
+      "path": "tmp\\structure_fixtures\\contact_duplicate_c_cpl_6_contact.dump",
+      "sha256": "9ca52e5dbe94330255b7fde1cc85912ba128482f28f7f406b0212ac9ee68c430"
+    }
+  ],
+  "contact_duplicate_c_cpl_7": [
+    {
+      "path": "tmp\\structure_fixtures\\contact_duplicate_c_cpl_7_sc.csv",
+      "sha256": "6abcc7525f7a154f9e6b2055fe21cffbe0d78b1307df056ade9039c5dfd2fe11"
+    },
+    {
+      "path": "tmp\\structure_fixtures\\contact_duplicate_c_cpl_7_atom.dump",
+      "sha256": "75d859590136e46ac39a42cbf538fcb762f754f684d8afaecaa1b42e8e44a9da"
+    },
+    {
+      "path": "tmp\\structure_fixtures\\contact_duplicate_c_cpl_7_contact.dump",
+      "sha256": "5cb42b1664ee0d40787198934b59c403577dbe2d0afb9f4220c1a6afe689f887"
+    }
+  ],
+  "contact_duplicate_c_cpl_8": [
+    {
+      "path": "tmp\\structure_fixtures\\contact_duplicate_c_cpl_8_sc.csv",
+      "sha256": "6abcc7525f7a154f9e6b2055fe21cffbe0d78b1307df056ade9039c5dfd2fe11"
+    },
+    {
+      "path": "tmp\\structure_fixtures\\contact_duplicate_c_cpl_8_atom.dump",
+      "sha256": "75d859590136e46ac39a42cbf538fcb762f754f684d8afaecaa1b42e8e44a9da"
+    },
+    {
+      "path": "tmp\\structure_fixtures\\contact_duplicate_c_cpl_8_contact.dump",
+      "sha256": "f409ba598b6bd32f2cb3ec700facee43d24d574136a2ee4ce686d98f588ca54a"
+    }
+  ],
+  "contact_duplicate_c_cpl_9": [
+    {
+      "path": "tmp\\structure_fixtures\\contact_duplicate_c_cpl_9_sc.csv",
+      "sha256": "6abcc7525f7a154f9e6b2055fe21cffbe0d78b1307df056ade9039c5dfd2fe11"
+    },
+    {
+      "path": "tmp\\structure_fixtures\\contact_duplicate_c_cpl_9_atom.dump",
+      "sha256": "75d859590136e46ac39a42cbf538fcb762f754f684d8afaecaa1b42e8e44a9da"
+    },
+    {
+      "path": "tmp\\structure_fixtures\\contact_duplicate_c_cpl_9_contact.dump",
+      "sha256": "d1d052864c3e840646818ae6d9fdfe0a08c22a36c06501e128cd2f148470c2e0"
+    }
+  ],
+  "contact_duplicate_c_cpl_22": [
+    {
+      "path": "tmp\\structure_fixtures\\contact_duplicate_c_cpl_22_sc.csv",
+      "sha256": "6abcc7525f7a154f9e6b2055fe21cffbe0d78b1307df056ade9039c5dfd2fe11"
+    },
+    {
+      "path": "tmp\\structure_fixtures\\contact_duplicate_c_cpl_22_atom.dump",
+      "sha256": "75d859590136e46ac39a42cbf538fcb762f754f684d8afaecaa1b42e8e44a9da"
+    },
+    {
+      "path": "tmp\\structure_fixtures\\contact_duplicate_c_cpl_22_contact.dump",
+      "sha256": "ab867d5f11288b34efb94fe5c8c89a04781df165d34b3865c2985bef95a16771"
+    }
+  ],
+  "contact_duplicate_c_cpl_23": [
+    {
+      "path": "tmp\\structure_fixtures\\contact_duplicate_c_cpl_23_sc.csv",
+      "sha256": "6abcc7525f7a154f9e6b2055fe21cffbe0d78b1307df056ade9039c5dfd2fe11"
+    },
+    {
+      "path": "tmp\\structure_fixtures\\contact_duplicate_c_cpl_23_atom.dump",
+      "sha256": "75d859590136e46ac39a42cbf538fcb762f754f684d8afaecaa1b42e8e44a9da"
+    },
+    {
+      "path": "tmp\\structure_fixtures\\contact_duplicate_c_cpl_23_contact.dump",
+      "sha256": "f8af4661779c4657f47978e75b21f4965d15c81875c72b5d7caaeb39ee5fe600"
+    }
+  ],
+  "contact_duplicate_section_count": [
+    {
+      "path": "tmp\\structure_fixtures\\contact_duplicate_section_count_sc.csv",
+      "sha256": "6abcc7525f7a154f9e6b2055fe21cffbe0d78b1307df056ade9039c5dfd2fe11"
+    },
+    {
+      "path": "tmp\\structure_fixtures\\contact_duplicate_section_count_atom.dump",
+      "sha256": "75d859590136e46ac39a42cbf538fcb762f754f684d8afaecaa1b42e8e44a9da"
+    },
+    {
+      "path": "tmp\\structure_fixtures\\contact_duplicate_section_count_contact.dump",
+      "sha256": "7078af190adbbfc8f521b396318d525326d923dab9783f7025724dd2be237c18"
+    }
+  ],
+  "contact_duplicate_section_box": [
+    {
+      "path": "tmp\\structure_fixtures\\contact_duplicate_section_box_sc.csv",
+      "sha256": "6abcc7525f7a154f9e6b2055fe21cffbe0d78b1307df056ade9039c5dfd2fe11"
+    },
+    {
+      "path": "tmp\\structure_fixtures\\contact_duplicate_section_box_atom.dump",
+      "sha256": "75d859590136e46ac39a42cbf538fcb762f754f684d8afaecaa1b42e8e44a9da"
+    },
+    {
+      "path": "tmp\\structure_fixtures\\contact_duplicate_section_box_contact.dump",
+      "sha256": "c0d8fd1145248b7708f09d9829132c044998fe3fedaf262c354b04caaa658baf"
+    }
+  ],
+  "contact_duplicate_section_rows": [
+    {
+      "path": "tmp\\structure_fixtures\\contact_duplicate_section_rows_sc.csv",
+      "sha256": "6abcc7525f7a154f9e6b2055fe21cffbe0d78b1307df056ade9039c5dfd2fe11"
+    },
+    {
+      "path": "tmp\\structure_fixtures\\contact_duplicate_section_rows_atom.dump",
+      "sha256": "75d859590136e46ac39a42cbf538fcb762f754f684d8afaecaa1b42e8e44a9da"
+    },
+    {
+      "path": "tmp\\structure_fixtures\\contact_duplicate_section_rows_contact.dump",
+      "sha256": "9c97ea792cd7b6ab16eed83ec43ff59879302db0410cf3ef18cc40943eb5f86d"
+    }
+  ],
+  "contact_unknown_at_0": [
+    {
+      "path": "tmp\\structure_fixtures\\contact_unknown_at_0_sc.csv",
+      "sha256": "6abcc7525f7a154f9e6b2055fe21cffbe0d78b1307df056ade9039c5dfd2fe11"
+    },
+    {
+      "path": "tmp\\structure_fixtures\\contact_unknown_at_0_atom.dump",
+      "sha256": "75d859590136e46ac39a42cbf538fcb762f754f684d8afaecaa1b42e8e44a9da"
+    },
+    {
+      "path": "tmp\\structure_fixtures\\contact_unknown_at_0_contact.dump",
+      "sha256": "b69d9bf0945e90a921db5629477de7acc40ff10f3c0a57ffe66bdeb7a2aa7547"
+    }
+  ],
+  "contact_unknown_at_2": [
+    {
+      "path": "tmp\\structure_fixtures\\contact_unknown_at_2_sc.csv",
+      "sha256": "6abcc7525f7a154f9e6b2055fe21cffbe0d78b1307df056ade9039c5dfd2fe11"
+    },
+    {
+      "path": "tmp\\structure_fixtures\\contact_unknown_at_2_atom.dump",
+      "sha256": "75d859590136e46ac39a42cbf538fcb762f754f684d8afaecaa1b42e8e44a9da"
+    },
+    {
+      "path": "tmp\\structure_fixtures\\contact_unknown_at_2_contact.dump",
+      "sha256": "d4bf5004b4fad3c4e08190cedd143b7f708b9b37e5060c84d457b655f17c7c4b"
+    }
+  ],
+  "contact_unknown_at_4": [
+    {
+      "path": "tmp\\structure_fixtures\\contact_unknown_at_4_sc.csv",
+      "sha256": "6abcc7525f7a154f9e6b2055fe21cffbe0d78b1307df056ade9039c5dfd2fe11"
+    },
+    {
+      "path": "tmp\\structure_fixtures\\contact_unknown_at_4_atom.dump",
+      "sha256": "75d859590136e46ac39a42cbf538fcb762f754f684d8afaecaa1b42e8e44a9da"
+    },
+    {
+      "path": "tmp\\structure_fixtures\\contact_unknown_at_4_contact.dump",
+      "sha256": "3e7669c657f0b8a1a318782106b7b0ad5dfba3d7cac5d143e6c729fa938c6350"
+    }
+  ],
+  "contact_unknown_at_8": [
+    {
+      "path": "tmp\\structure_fixtures\\contact_unknown_at_8_sc.csv",
+      "sha256": "6abcc7525f7a154f9e6b2055fe21cffbe0d78b1307df056ade9039c5dfd2fe11"
+    },
+    {
+      "path": "tmp\\structure_fixtures\\contact_unknown_at_8_atom.dump",
+      "sha256": "75d859590136e46ac39a42cbf538fcb762f754f684d8afaecaa1b42e8e44a9da"
+    },
+    {
+      "path": "tmp\\structure_fixtures\\contact_unknown_at_8_contact.dump",
+      "sha256": "a284ea2d95201450cbe874c7ac2871df2f4d615e8227a9c5017a0653fc00eadb"
+    }
+  ],
+  "contact_unknown_at_10": [
+    {
+      "path": "tmp\\structure_fixtures\\contact_unknown_at_10_sc.csv",
+      "sha256": "6abcc7525f7a154f9e6b2055fe21cffbe0d78b1307df056ade9039c5dfd2fe11"
+    },
+    {
+      "path": "tmp\\structure_fixtures\\contact_unknown_at_10_atom.dump",
+      "sha256": "75d859590136e46ac39a42cbf538fcb762f754f684d8afaecaa1b42e8e44a9da"
+    },
+    {
+      "path": "tmp\\structure_fixtures\\contact_unknown_at_10_contact.dump",
+      "sha256": "b35d07bd100d28517795a93403c3b6f7a1b47e1645f8a314a1676d8120180015"
+    }
+  ],
+  "contact_count_0": [
+    {
+      "path": "tmp\\structure_fixtures\\contact_count_0_sc.csv",
+      "sha256": "6abcc7525f7a154f9e6b2055fe21cffbe0d78b1307df056ade9039c5dfd2fe11"
+    },
+    {
+      "path": "tmp\\structure_fixtures\\contact_count_0_atom.dump",
+      "sha256": "75d859590136e46ac39a42cbf538fcb762f754f684d8afaecaa1b42e8e44a9da"
+    },
+    {
+      "path": "tmp\\structure_fixtures\\contact_count_0_contact.dump",
+      "sha256": "a1fe6a56210eedf255b6c78577d0def87f2c9698d0174c90a9a58c06e840b571"
+    }
+  ],
+  "contact_count_-1": [
+    {
+      "path": "tmp\\structure_fixtures\\contact_count_-1_sc.csv",
+      "sha256": "6abcc7525f7a154f9e6b2055fe21cffbe0d78b1307df056ade9039c5dfd2fe11"
+    },
+    {
+      "path": "tmp\\structure_fixtures\\contact_count_-1_atom.dump",
+      "sha256": "75d859590136e46ac39a42cbf538fcb762f754f684d8afaecaa1b42e8e44a9da"
+    },
+    {
+      "path": "tmp\\structure_fixtures\\contact_count_-1_contact.dump",
+      "sha256": "ccdd30bb9ea11c693449c2172fb7f1e94ae8d3ec486ee24cefd99dee892ebd8b"
+    }
+  ],
+  "contact_count_3": [
+    {
+      "path": "tmp\\structure_fixtures\\contact_count_3_sc.csv",
+      "sha256": "6abcc7525f7a154f9e6b2055fe21cffbe0d78b1307df056ade9039c5dfd2fe11"
+    },
+    {
+      "path": "tmp\\structure_fixtures\\contact_count_3_atom.dump",
+      "sha256": "75d859590136e46ac39a42cbf538fcb762f754f684d8afaecaa1b42e8e44a9da"
+    },
+    {
+      "path": "tmp\\structure_fixtures\\contact_count_3_contact.dump",
+      "sha256": "05cdc8373af02552a6e4cb68644f3311853dbb8e32d1279a681518f95b942b18"
+    }
+  ],
+  "contact_count_empty": [
+    {
+      "path": "tmp\\structure_fixtures\\contact_count_empty_sc.csv",
+      "sha256": "6abcc7525f7a154f9e6b2055fe21cffbe0d78b1307df056ade9039c5dfd2fe11"
+    },
+    {
+      "path": "tmp\\structure_fixtures\\contact_count_empty_atom.dump",
+      "sha256": "75d859590136e46ac39a42cbf538fcb762f754f684d8afaecaa1b42e8e44a9da"
+    },
+    {
+      "path": "tmp\\structure_fixtures\\contact_count_empty_contact.dump",
+      "sha256": "981818498156c6008b92b5ca07a69396a7068e9c67e1843da4d71d0ec74570a5"
+    }
+  ],
+  "contact_count_1.0": [
+    {
+      "path": "tmp\\structure_fixtures\\contact_count_1.0_sc.csv",
+      "sha256": "6abcc7525f7a154f9e6b2055fe21cffbe0d78b1307df056ade9039c5dfd2fe11"
+    },
+    {
+      "path": "tmp\\structure_fixtures\\contact_count_1.0_atom.dump",
+      "sha256": "75d859590136e46ac39a42cbf538fcb762f754f684d8afaecaa1b42e8e44a9da"
+    },
+    {
+      "path": "tmp\\structure_fixtures\\contact_count_1.0_contact.dump",
+      "sha256": "46e83550e4e7d05b1967d2f3a9174b63d8e20a5b2b7628d7540dfcd77c7017e8"
+    }
+  ],
+  "contact_count_1e0": [
+    {
+      "path": "tmp\\structure_fixtures\\contact_count_1e0_sc.csv",
+      "sha256": "6abcc7525f7a154f9e6b2055fe21cffbe0d78b1307df056ade9039c5dfd2fe11"
+    },
+    {
+      "path": "tmp\\structure_fixtures\\contact_count_1e0_atom.dump",
+      "sha256": "75d859590136e46ac39a42cbf538fcb762f754f684d8afaecaa1b42e8e44a9da"
+    },
+    {
+      "path": "tmp\\structure_fixtures\\contact_count_1e0_contact.dump",
+      "sha256": "c5d7184b11c75d54c41fe484313f039124a2004287a35db26a5d79fd61471c96"
+    }
+  ],
+  "contact_count_1_0": [
+    {
+      "path": "tmp\\structure_fixtures\\contact_count_1_0_sc.csv",
+      "sha256": "6abcc7525f7a154f9e6b2055fe21cffbe0d78b1307df056ade9039c5dfd2fe11"
+    },
+    {
+      "path": "tmp\\structure_fixtures\\contact_count_1_0_atom.dump",
+      "sha256": "75d859590136e46ac39a42cbf538fcb762f754f684d8afaecaa1b42e8e44a9da"
+    },
+    {
+      "path": "tmp\\structure_fixtures\\contact_count_1_0_contact.dump",
+      "sha256": "1b8017dedfa28a05421cdede2681c13d3cf9db1308a609c400ae83287c505336"
+    }
+  ],
+  "contact_count_1 garbage": [
+    {
+      "path": "tmp\\structure_fixtures\\contact_count_1 garbage_sc.csv",
+      "sha256": "6abcc7525f7a154f9e6b2055fe21cffbe0d78b1307df056ade9039c5dfd2fe11"
+    },
+    {
+      "path": "tmp\\structure_fixtures\\contact_count_1 garbage_atom.dump",
+      "sha256": "75d859590136e46ac39a42cbf538fcb762f754f684d8afaecaa1b42e8e44a9da"
+    },
+    {
+      "path": "tmp\\structure_fixtures\\contact_count_1 garbage_contact.dump",
+      "sha256": "a8f036f7019615f5ebdac0cc1631c7f53b125e16df4bf4f3d9ac5250fa767e2a"
+    }
+  ],
+  "contact_count_9223372036854775808": [
+    {
+      "path": "tmp\\structure_fixtures\\contact_count_9223372036854775808_sc.csv",
+      "sha256": "6abcc7525f7a154f9e6b2055fe21cffbe0d78b1307df056ade9039c5dfd2fe11"
+    },
+    {
+      "path": "tmp\\structure_fixtures\\contact_count_9223372036854775808_atom.dump",
+      "sha256": "75d859590136e46ac39a42cbf538fcb762f754f684d8afaecaa1b42e8e44a9da"
+    },
+    {
+      "path": "tmp\\structure_fixtures\\contact_count_9223372036854775808_contact.dump",
+      "sha256": "cc11fbd99ccf905ba46c252122b9473c3a63a644096bd51e23f033d93f766e21"
+    }
+  ],
+  "contact_count_999999999999999999999999": [
+    {
+      "path": "tmp\\structure_fixtures\\contact_count_999999999999999999999999_sc.csv",
+      "sha256": "6abcc7525f7a154f9e6b2055fe21cffbe0d78b1307df056ade9039c5dfd2fe11"
+    },
+    {
+      "path": "tmp\\structure_fixtures\\contact_count_999999999999999999999999_atom.dump",
+      "sha256": "75d859590136e46ac39a42cbf538fcb762f754f684d8afaecaa1b42e8e44a9da"
+    },
+    {
+      "path": "tmp\\structure_fixtures\\contact_count_999999999999999999999999_contact.dump",
+      "sha256": "b79514cda113c3a72526644004bd7bae119751beccd837c1145408bb09d2603a"
+    }
+  ],
+  "contact_step_case_93": [
+    {
+      "path": "tmp\\structure_fixtures\\contact_step_case_93_sc.csv",
+      "sha256": "6abcc7525f7a154f9e6b2055fe21cffbe0d78b1307df056ade9039c5dfd2fe11"
+    },
+    {
+      "path": "tmp\\structure_fixtures\\contact_step_case_93_atom.dump",
+      "sha256": "75d859590136e46ac39a42cbf538fcb762f754f684d8afaecaa1b42e8e44a9da"
+    },
+    {
+      "path": "tmp\\structure_fixtures\\contact_step_case_93_contact.dump",
+      "sha256": "f9dc98476462a051b70c83865b49fdd63dcfe3018a83ae604deab99087c6c329"
+    }
+  ],
+  "contact_step_case_94": [
+    {
+      "path": "tmp\\structure_fixtures\\contact_step_case_94_sc.csv",
+      "sha256": "6abcc7525f7a154f9e6b2055fe21cffbe0d78b1307df056ade9039c5dfd2fe11"
+    },
+    {
+      "path": "tmp\\structure_fixtures\\contact_step_case_94_atom.dump",
+      "sha256": "75d859590136e46ac39a42cbf538fcb762f754f684d8afaecaa1b42e8e44a9da"
+    },
+    {
+      "path": "tmp\\structure_fixtures\\contact_step_case_94_contact.dump",
+      "sha256": "f5d7aaf44ce58b850d72ba8d186d01df32bc22525072ce569f2a7b06f8443e11"
+    }
+  ],
+  "contact_step_case_95": [
+    {
+      "path": "tmp\\structure_fixtures\\contact_step_case_95_sc.csv",
+      "sha256": "6abcc7525f7a154f9e6b2055fe21cffbe0d78b1307df056ade9039c5dfd2fe11"
+    },
+    {
+      "path": "tmp\\structure_fixtures\\contact_step_case_95_atom.dump",
+      "sha256": "75d859590136e46ac39a42cbf538fcb762f754f684d8afaecaa1b42e8e44a9da"
+    },
+    {
+      "path": "tmp\\structure_fixtures\\contact_step_case_95_contact.dump",
+      "sha256": "7437885c36a01b321cd2f85e19161abbb3216ea3ae83d831c699784f711e6b40"
+    }
+  ],
+  "contact_step_case_96": [
+    {
+      "path": "tmp\\structure_fixtures\\contact_step_case_96_sc.csv",
+      "sha256": "6abcc7525f7a154f9e6b2055fe21cffbe0d78b1307df056ade9039c5dfd2fe11"
+    },
+    {
+      "path": "tmp\\structure_fixtures\\contact_step_case_96_atom.dump",
+      "sha256": "75d859590136e46ac39a42cbf538fcb762f754f684d8afaecaa1b42e8e44a9da"
+    },
+    {
+      "path": "tmp\\structure_fixtures\\contact_step_case_96_contact.dump",
+      "sha256": "2faff022890d217920de48cee6fd785473f4bf43e406da42bf5a66d3a93c91ab"
+    }
+  ],
+  "contact_step_case_97": [
+    {
+      "path": "tmp\\structure_fixtures\\contact_step_case_97_sc.csv",
+      "sha256": "6abcc7525f7a154f9e6b2055fe21cffbe0d78b1307df056ade9039c5dfd2fe11"
+    },
+    {
+      "path": "tmp\\structure_fixtures\\contact_step_case_97_atom.dump",
+      "sha256": "75d859590136e46ac39a42cbf538fcb762f754f684d8afaecaa1b42e8e44a9da"
+    },
+    {
+      "path": "tmp\\structure_fixtures\\contact_step_case_97_contact.dump",
+      "sha256": "2f02442e4ce103b25811e29a54eb459e0419a494b41c6653503525597e6be12c"
+    }
+  ],
+  "contact_step_case_98": [
+    {
+      "path": "tmp\\structure_fixtures\\contact_step_case_98_sc.csv",
+      "sha256": "6abcc7525f7a154f9e6b2055fe21cffbe0d78b1307df056ade9039c5dfd2fe11"
+    },
+    {
+      "path": "tmp\\structure_fixtures\\contact_step_case_98_atom.dump",
+      "sha256": "75d859590136e46ac39a42cbf538fcb762f754f684d8afaecaa1b42e8e44a9da"
+    },
+    {
+      "path": "tmp\\structure_fixtures\\contact_step_case_98_contact.dump",
+      "sha256": "7f962d43f5a7a02c15a2fc9d0218e2a78ace511372560a335ad28dde310faea1"
+    }
+  ],
+  "contact_step_case_99": [
+    {
+      "path": "tmp\\structure_fixtures\\contact_step_case_99_sc.csv",
+      "sha256": "6abcc7525f7a154f9e6b2055fe21cffbe0d78b1307df056ade9039c5dfd2fe11"
+    },
+    {
+      "path": "tmp\\structure_fixtures\\contact_step_case_99_atom.dump",
+      "sha256": "75d859590136e46ac39a42cbf538fcb762f754f684d8afaecaa1b42e8e44a9da"
+    },
+    {
+      "path": "tmp\\structure_fixtures\\contact_step_case_99_contact.dump",
+      "sha256": "3173c60254faa78136bf8aba3d0f8600e01edaa33c7f6e821def089594790493"
+    }
+  ],
+  "contact_step_case_100": [
+    {
+      "path": "tmp\\structure_fixtures\\contact_step_case_100_sc.csv",
+      "sha256": "6abcc7525f7a154f9e6b2055fe21cffbe0d78b1307df056ade9039c5dfd2fe11"
+    },
+    {
+      "path": "tmp\\structure_fixtures\\contact_step_case_100_atom.dump",
+      "sha256": "75d859590136e46ac39a42cbf538fcb762f754f684d8afaecaa1b42e8e44a9da"
+    },
+    {
+      "path": "tmp\\structure_fixtures\\contact_step_case_100_contact.dump",
+      "sha256": "fa4120adf3abf466e2a62e2aeb19378ffdac6fdc8781d6750ae56f3fca397849"
+    }
+  ],
+  "contact_step_case_101": [
+    {
+      "path": "tmp\\structure_fixtures\\contact_step_case_101_sc.csv",
+      "sha256": "6abcc7525f7a154f9e6b2055fe21cffbe0d78b1307df056ade9039c5dfd2fe11"
+    },
+    {
+      "path": "tmp\\structure_fixtures\\contact_step_case_101_atom.dump",
+      "sha256": "75d859590136e46ac39a42cbf538fcb762f754f684d8afaecaa1b42e8e44a9da"
+    },
+    {
+      "path": "tmp\\structure_fixtures\\contact_step_case_101_contact.dump",
+      "sha256": "cc17b9a04f841e84b593c3f2bea019bf435f795f3b727f34876813b0478cf2a6"
+    }
+  ],
+  "contact_step_case_102": [
+    {
+      "path": "tmp\\structure_fixtures\\contact_step_case_102_sc.csv",
+      "sha256": "6abcc7525f7a154f9e6b2055fe21cffbe0d78b1307df056ade9039c5dfd2fe11"
+    },
+    {
+      "path": "tmp\\structure_fixtures\\contact_step_case_102_atom.dump",
+      "sha256": "75d859590136e46ac39a42cbf538fcb762f754f684d8afaecaa1b42e8e44a9da"
+    },
+    {
+      "path": "tmp\\structure_fixtures\\contact_step_case_102_contact.dump",
+      "sha256": "b6cad2fc85aca0627440993ec00b2907809544dfeebe2816151d73b50f56996e"
+    }
+  ],
+  "contact_step_case_103": [
+    {
+      "path": "tmp\\structure_fixtures\\contact_step_case_103_sc.csv",
+      "sha256": "6abcc7525f7a154f9e6b2055fe21cffbe0d78b1307df056ade9039c5dfd2fe11"
+    },
+    {
+      "path": "tmp\\structure_fixtures\\contact_step_case_103_atom.dump",
+      "sha256": "75d859590136e46ac39a42cbf538fcb762f754f684d8afaecaa1b42e8e44a9da"
+    },
+    {
+      "path": "tmp\\structure_fixtures\\contact_step_case_103_contact.dump",
+      "sha256": "eb33893bf810f0ce89f0ef3d492f3ef5e56fbee1083ca21d3ee60b9bab9b69c7"
+    }
+  ],
+  "contact_step_case_104": [
+    {
+      "path": "tmp\\structure_fixtures\\contact_step_case_104_sc.csv",
+      "sha256": "6abcc7525f7a154f9e6b2055fe21cffbe0d78b1307df056ade9039c5dfd2fe11"
+    },
+    {
+      "path": "tmp\\structure_fixtures\\contact_step_case_104_atom.dump",
+      "sha256": "75d859590136e46ac39a42cbf538fcb762f754f684d8afaecaa1b42e8e44a9da"
+    },
+    {
+      "path": "tmp\\structure_fixtures\\contact_step_case_104_contact.dump",
+      "sha256": "c8f3070d405e8f64915442fbaf41f170a232c5f5cf7ac3b61c4b803e2e068b74"
+    }
+  ],
+  "contact_missing_count": [
+    {
+      "path": "tmp\\structure_fixtures\\contact_missing_count_sc.csv",
+      "sha256": "6abcc7525f7a154f9e6b2055fe21cffbe0d78b1307df056ade9039c5dfd2fe11"
+    },
+    {
+      "path": "tmp\\structure_fixtures\\contact_missing_count_atom.dump",
+      "sha256": "75d859590136e46ac39a42cbf538fcb762f754f684d8afaecaa1b42e8e44a9da"
+    },
+    {
+      "path": "tmp\\structure_fixtures\\contact_missing_count_contact.dump",
+      "sha256": "1a35a0fbd213a397412a29d3fb2de68144159285893bfbb23cd349b649ac65f4"
+    }
+  ],
+  "contact_missing_box": [
+    {
+      "path": "tmp\\structure_fixtures\\contact_missing_box_sc.csv",
+      "sha256": "6abcc7525f7a154f9e6b2055fe21cffbe0d78b1307df056ade9039c5dfd2fe11"
+    },
+    {
+      "path": "tmp\\structure_fixtures\\contact_missing_box_atom.dump",
+      "sha256": "75d859590136e46ac39a42cbf538fcb762f754f684d8afaecaa1b42e8e44a9da"
+    },
+    {
+      "path": "tmp\\structure_fixtures\\contact_missing_box_contact.dump",
+      "sha256": "5869390aa391c185d74228058086356acead90b8adb8fc0daf8da3c4750624c7"
+    }
+  ],
+  "contact_missing_rows": [
+    {
+      "path": "tmp\\structure_fixtures\\contact_missing_rows_sc.csv",
+      "sha256": "6abcc7525f7a154f9e6b2055fe21cffbe0d78b1307df056ade9039c5dfd2fe11"
+    },
+    {
+      "path": "tmp\\structure_fixtures\\contact_missing_rows_atom.dump",
+      "sha256": "75d859590136e46ac39a42cbf538fcb762f754f684d8afaecaa1b42e8e44a9da"
+    },
+    {
+      "path": "tmp\\structure_fixtures\\contact_missing_rows_contact.dump",
+      "sha256": "57532d21dce79abd20540ce00eda0e95e1d3e60e6f2a7dba88da3781fd41f281"
+    }
+  ],
+  "contact_preamble": [
+    {
+      "path": "tmp\\structure_fixtures\\contact_preamble_sc.csv",
+      "sha256": "6abcc7525f7a154f9e6b2055fe21cffbe0d78b1307df056ade9039c5dfd2fe11"
+    },
+    {
+      "path": "tmp\\structure_fixtures\\contact_preamble_atom.dump",
+      "sha256": "75d859590136e46ac39a42cbf538fcb762f754f684d8afaecaa1b42e8e44a9da"
+    },
+    {
+      "path": "tmp\\structure_fixtures\\contact_preamble_contact.dump",
+      "sha256": "7dd1dce9b8ed5e3fbaddd7d96a882ae1c3cdef6c72a62165e19a63c9d4319b9b"
+    }
+  ],
+  "contact_trailing_junk": [
+    {
+      "path": "tmp\\structure_fixtures\\contact_trailing_junk_sc.csv",
+      "sha256": "6abcc7525f7a154f9e6b2055fe21cffbe0d78b1307df056ade9039c5dfd2fe11"
+    },
+    {
+      "path": "tmp\\structure_fixtures\\contact_trailing_junk_atom.dump",
+      "sha256": "75d859590136e46ac39a42cbf538fcb762f754f684d8afaecaa1b42e8e44a9da"
+    },
+    {
+      "path": "tmp\\structure_fixtures\\contact_trailing_junk_contact.dump",
+      "sha256": "45fb3314e1d2497de27f9894c2326e0469136968254f115a8159b2d05cc4c86f"
+    }
+  ],
+  "contact_fourth_box_line": [
+    {
+      "path": "tmp\\structure_fixtures\\contact_fourth_box_line_sc.csv",
+      "sha256": "6abcc7525f7a154f9e6b2055fe21cffbe0d78b1307df056ade9039c5dfd2fe11"
+    },
+    {
+      "path": "tmp\\structure_fixtures\\contact_fourth_box_line_atom.dump",
+      "sha256": "75d859590136e46ac39a42cbf538fcb762f754f684d8afaecaa1b42e8e44a9da"
+    },
+    {
+      "path": "tmp\\structure_fixtures\\contact_fourth_box_line_contact.dump",
+      "sha256": "11e6f15a57d404faa524224748e9e76d529770ff23a0cd17648e688f82de0696"
+    }
+  ],
+  "contact_leading_scalar_blank": [
+    {
+      "path": "tmp\\structure_fixtures\\contact_leading_scalar_blank_sc.csv",
+      "sha256": "6abcc7525f7a154f9e6b2055fe21cffbe0d78b1307df056ade9039c5dfd2fe11"
+    },
+    {
+      "path": "tmp\\structure_fixtures\\contact_leading_scalar_blank_atom.dump",
+      "sha256": "75d859590136e46ac39a42cbf538fcb762f754f684d8afaecaa1b42e8e44a9da"
+    },
+    {
+      "path": "tmp\\structure_fixtures\\contact_leading_scalar_blank_contact.dump",
+      "sha256": "7f962d43f5a7a02c15a2fc9d0218e2a78ace511372560a335ad28dde310faea1"
+    }
+  ],
+  "contact_interior_box_blank": [
+    {
+      "path": "tmp\\structure_fixtures\\contact_interior_box_blank_sc.csv",
+      "sha256": "6abcc7525f7a154f9e6b2055fe21cffbe0d78b1307df056ade9039c5dfd2fe11"
+    },
+    {
+      "path": "tmp\\structure_fixtures\\contact_interior_box_blank_atom.dump",
+      "sha256": "75d859590136e46ac39a42cbf538fcb762f754f684d8afaecaa1b42e8e44a9da"
+    },
+    {
+      "path": "tmp\\structure_fixtures\\contact_interior_box_blank_contact.dump",
+      "sha256": "3acec4b985f5c8c8d2ced40363b382c9d0ef5ade0887f7f117878373091787d0"
+    }
+  ],
+  "contact_last_frame_empty": [
+    {
+      "path": "tmp\\structure_fixtures\\contact_last_frame_empty_sc.csv",
+      "sha256": "6abcc7525f7a154f9e6b2055fe21cffbe0d78b1307df056ade9039c5dfd2fe11"
+    },
+    {
+      "path": "tmp\\structure_fixtures\\contact_last_frame_empty_atom.dump",
+      "sha256": "75d859590136e46ac39a42cbf538fcb762f754f684d8afaecaa1b42e8e44a9da"
+    },
+    {
+      "path": "tmp\\structure_fixtures\\contact_last_frame_empty_contact.dump",
+      "sha256": "1aff606bbc24c7603b186daa9d3f9950c8257697c67c28cc6323a781694aaef0"
+    }
+  ],
+  "contact_last_frame_partial": [
+    {
+      "path": "tmp\\structure_fixtures\\contact_last_frame_partial_sc.csv",
+      "sha256": "6abcc7525f7a154f9e6b2055fe21cffbe0d78b1307df056ade9039c5dfd2fe11"
+    },
+    {
+      "path": "tmp\\structure_fixtures\\contact_last_frame_partial_atom.dump",
+      "sha256": "75d859590136e46ac39a42cbf538fcb762f754f684d8afaecaa1b42e8e44a9da"
+    },
+    {
+      "path": "tmp\\structure_fixtures\\contact_last_frame_partial_contact.dump",
+      "sha256": "5d7230665d6a86f7fbe5fa7ed737d0dbba6efe26442411d0682d722a2d2c3065"
+    }
+  ],
+  "contact_last_frame_valid": [
+    {
+      "path": "tmp\\structure_fixtures\\contact_last_frame_valid_sc.csv",
+      "sha256": "6abcc7525f7a154f9e6b2055fe21cffbe0d78b1307df056ade9039c5dfd2fe11"
+    },
+    {
+      "path": "tmp\\structure_fixtures\\contact_last_frame_valid_atom.dump",
+      "sha256": "75d859590136e46ac39a42cbf538fcb762f754f684d8afaecaa1b42e8e44a9da"
+    },
+    {
+      "path": "tmp\\structure_fixtures\\contact_last_frame_valid_contact.dump",
+      "sha256": "6065f958920c80b5bd5f6f0a89b5ba3764db46205a092e85adeb0db59c4d984b"
+    }
+  ],
+  "contact_earlier_frame_malformed": [
+    {
+      "path": "tmp\\structure_fixtures\\contact_earlier_frame_malformed_sc.csv",
+      "sha256": "6abcc7525f7a154f9e6b2055fe21cffbe0d78b1307df056ade9039c5dfd2fe11"
+    },
+    {
+      "path": "tmp\\structure_fixtures\\contact_earlier_frame_malformed_atom.dump",
+      "sha256": "75d859590136e46ac39a42cbf538fcb762f754f684d8afaecaa1b42e8e44a9da"
+    },
+    {
+      "path": "tmp\\structure_fixtures\\contact_earlier_frame_malformed_contact.dump",
+      "sha256": "e8a5c71672b1ad0cc5d85da770abdf68a503961e592d81248209fc975ee24746"
+    }
+  ],
+  "contact_step_header_suffix": [
+    {
+      "path": "tmp\\structure_fixtures\\contact_step_header_suffix_sc.csv",
+      "sha256": "6abcc7525f7a154f9e6b2055fe21cffbe0d78b1307df056ade9039c5dfd2fe11"
+    },
+    {
+      "path": "tmp\\structure_fixtures\\contact_step_header_suffix_atom.dump",
+      "sha256": "75d859590136e46ac39a42cbf538fcb762f754f684d8afaecaa1b42e8e44a9da"
+    },
+    {
+      "path": "tmp\\structure_fixtures\\contact_step_header_suffix_contact.dump",
+      "sha256": "afc5700dae5b325eacd87922748c561fe8038b977c8824b18d9d43b8bf47b439"
+    }
+  ],
+  "contact_count_header_suffix": [
+    {
+      "path": "tmp\\structure_fixtures\\contact_count_header_suffix_sc.csv",
+      "sha256": "6abcc7525f7a154f9e6b2055fe21cffbe0d78b1307df056ade9039c5dfd2fe11"
+    },
+    {
+      "path": "tmp\\structure_fixtures\\contact_count_header_suffix_atom.dump",
+      "sha256": "75d859590136e46ac39a42cbf538fcb762f754f684d8afaecaa1b42e8e44a9da"
+    },
+    {
+      "path": "tmp\\structure_fixtures\\contact_count_header_suffix_contact.dump",
+      "sha256": "30342cdf59f7f10535073b47b3a19c6fb0caf26b9ec34890ddf06c640633dba7"
+    }
+  ],
+  "contact_step_header__0.9": [
+    {
+      "path": "tmp\\structure_fixtures\\contact_step_header__0.9_sc.csv",
+      "sha256": "6abcc7525f7a154f9e6b2055fe21cffbe0d78b1307df056ade9039c5dfd2fe11"
+    },
+    {
+      "path": "tmp\\structure_fixtures\\contact_step_header__0.9_atom.dump",
+      "sha256": "75d859590136e46ac39a42cbf538fcb762f754f684d8afaecaa1b42e8e44a9da"
+    },
+    {
+      "path": "tmp\\structure_fixtures\\contact_step_header__0.9_contact.dump",
+      "sha256": "2f32e275bf7cb1c81b0c6510f538850e39b14b2239f8c89ddcc700b29ababe40"
+    }
+  ],
+  "contact_count_header__0.9": [
+    {
+      "path": "tmp\\structure_fixtures\\contact_count_header__0.9_sc.csv",
+      "sha256": "6abcc7525f7a154f9e6b2055fe21cffbe0d78b1307df056ade9039c5dfd2fe11"
+    },
+    {
+      "path": "tmp\\structure_fixtures\\contact_count_header__0.9_atom.dump",
+      "sha256": "75d859590136e46ac39a42cbf538fcb762f754f684d8afaecaa1b42e8e44a9da"
+    },
+    {
+      "path": "tmp\\structure_fixtures\\contact_count_header__0.9_contact.dump",
+      "sha256": "46ba81b9d24dc58266f1198d04826a946ece3b97e43fa8c9d0c81f3c243bfd33"
+    }
+  ],
+  "atom_rows_no_boundary": [
+    {
+      "path": "tmp\\structure_fixtures\\atom_rows_no_boundary_sc.csv",
+      "sha256": "6abcc7525f7a154f9e6b2055fe21cffbe0d78b1307df056ade9039c5dfd2fe11"
+    },
+    {
+      "path": "tmp\\structure_fixtures\\atom_rows_no_boundary_atom.dump",
+      "sha256": "a3fe4d27cf84a473357c3a8590c55301b006e546a7c1bfbef65363e6fb55db4c"
+    },
+    {
+      "path": "tmp\\structure_fixtures\\atom_rows_no_boundary_contact.dump",
+      "sha256": "506de9c9e706890adab1e48fb5504a671f1fcbb2119f9512a00130e8652635f6"
+    }
+  ],
+  "atom_box_no_boundary": [
+    {
+      "path": "tmp\\structure_fixtures\\atom_box_no_boundary_sc.csv",
+      "sha256": "6abcc7525f7a154f9e6b2055fe21cffbe0d78b1307df056ade9039c5dfd2fe11"
+    },
+    {
+      "path": "tmp\\structure_fixtures\\atom_box_no_boundary_atom.dump",
+      "sha256": "044385910067de2cae9072bc0f83764c2f3f24cb9823191478cfcc4388959692"
+    },
+    {
+      "path": "tmp\\structure_fixtures\\atom_box_no_boundary_contact.dump",
+      "sha256": "506de9c9e706890adab1e48fb5504a671f1fcbb2119f9512a00130e8652635f6"
+    }
+  ],
+  "atom_rows_repeated_marker": [
+    {
+      "path": "tmp\\structure_fixtures\\atom_rows_repeated_marker_sc.csv",
+      "sha256": "6abcc7525f7a154f9e6b2055fe21cffbe0d78b1307df056ade9039c5dfd2fe11"
+    },
+    {
+      "path": "tmp\\structure_fixtures\\atom_rows_repeated_marker_atom.dump",
+      "sha256": "0963d606dc0ad2a557f3ad887c72d619cd6f187e545c28c7bd0e492929971cf9"
+    },
+    {
+      "path": "tmp\\structure_fixtures\\atom_rows_repeated_marker_contact.dump",
+      "sha256": "506de9c9e706890adab1e48fb5504a671f1fcbb2119f9512a00130e8652635f6"
+    }
+  ],
+  "atom_box_repeated_marker": [
+    {
+      "path": "tmp\\structure_fixtures\\atom_box_repeated_marker_sc.csv",
+      "sha256": "6abcc7525f7a154f9e6b2055fe21cffbe0d78b1307df056ade9039c5dfd2fe11"
+    },
+    {
+      "path": "tmp\\structure_fixtures\\atom_box_repeated_marker_atom.dump",
+      "sha256": "42c01341359379d84063fe13237c6e29978e7ddb2adfc647024e18432aa0eacf"
+    },
+    {
+      "path": "tmp\\structure_fixtures\\atom_box_repeated_marker_contact.dump",
+      "sha256": "506de9c9e706890adab1e48fb5504a671f1fcbb2119f9512a00130e8652635f6"
+    }
+  ],
+  "atom_rows_marker_at_end": [
+    {
+      "path": "tmp\\structure_fixtures\\atom_rows_marker_at_end_sc.csv",
+      "sha256": "6abcc7525f7a154f9e6b2055fe21cffbe0d78b1307df056ade9039c5dfd2fe11"
+    },
+    {
+      "path": "tmp\\structure_fixtures\\atom_rows_marker_at_end_atom.dump",
+      "sha256": "4e102867b40874c6b009641bad68397901156588c3550b96ee5d3c4592176da9"
+    },
+    {
+      "path": "tmp\\structure_fixtures\\atom_rows_marker_at_end_contact.dump",
+      "sha256": "506de9c9e706890adab1e48fb5504a671f1fcbb2119f9512a00130e8652635f6"
+    }
+  ],
+  "contact_rows_no_boundary": [
+    {
+      "path": "tmp\\structure_fixtures\\contact_rows_no_boundary_sc.csv",
+      "sha256": "6abcc7525f7a154f9e6b2055fe21cffbe0d78b1307df056ade9039c5dfd2fe11"
+    },
+    {
+      "path": "tmp\\structure_fixtures\\contact_rows_no_boundary_atom.dump",
+      "sha256": "75d859590136e46ac39a42cbf538fcb762f754f684d8afaecaa1b42e8e44a9da"
+    },
+    {
+      "path": "tmp\\structure_fixtures\\contact_rows_no_boundary_contact.dump",
+      "sha256": "313e43b3850bc654729271169f86761b6f614fe16c627a69ddb88b14afc9da53"
+    }
+  ],
+  "contact_box_no_boundary": [
+    {
+      "path": "tmp\\structure_fixtures\\contact_box_no_boundary_sc.csv",
+      "sha256": "6abcc7525f7a154f9e6b2055fe21cffbe0d78b1307df056ade9039c5dfd2fe11"
+    },
+    {
+      "path": "tmp\\structure_fixtures\\contact_box_no_boundary_atom.dump",
+      "sha256": "75d859590136e46ac39a42cbf538fcb762f754f684d8afaecaa1b42e8e44a9da"
+    },
+    {
+      "path": "tmp\\structure_fixtures\\contact_box_no_boundary_contact.dump",
+      "sha256": "8f7904c0a807508c5cebcd0dbe7a6a5040abae645b56ac125cc5012de1dff55f"
+    }
+  ],
+  "contact_rows_repeated_marker": [
+    {
+      "path": "tmp\\structure_fixtures\\contact_rows_repeated_marker_sc.csv",
+      "sha256": "6abcc7525f7a154f9e6b2055fe21cffbe0d78b1307df056ade9039c5dfd2fe11"
+    },
+    {
+      "path": "tmp\\structure_fixtures\\contact_rows_repeated_marker_atom.dump",
+      "sha256": "75d859590136e46ac39a42cbf538fcb762f754f684d8afaecaa1b42e8e44a9da"
+    },
+    {
+      "path": "tmp\\structure_fixtures\\contact_rows_repeated_marker_contact.dump",
+      "sha256": "32132016399408eca521d50e07f2954a4c810c4a4a39ed90fa77dd0c4c457263"
+    }
+  ],
+  "contact_box_repeated_marker": [
+    {
+      "path": "tmp\\structure_fixtures\\contact_box_repeated_marker_sc.csv",
+      "sha256": "6abcc7525f7a154f9e6b2055fe21cffbe0d78b1307df056ade9039c5dfd2fe11"
+    },
+    {
+      "path": "tmp\\structure_fixtures\\contact_box_repeated_marker_atom.dump",
+      "sha256": "75d859590136e46ac39a42cbf538fcb762f754f684d8afaecaa1b42e8e44a9da"
+    },
+    {
+      "path": "tmp\\structure_fixtures\\contact_box_repeated_marker_contact.dump",
+      "sha256": "238839f314647ab721f575ffa0d7d959f0d3def5d70cc84cc99fcc0380edbc51"
+    }
+  ],
+  "contact_rows_marker_at_end": [
+    {
+      "path": "tmp\\structure_fixtures\\contact_rows_marker_at_end_sc.csv",
+      "sha256": "6abcc7525f7a154f9e6b2055fe21cffbe0d78b1307df056ade9039c5dfd2fe11"
+    },
+    {
+      "path": "tmp\\structure_fixtures\\contact_rows_marker_at_end_atom.dump",
+      "sha256": "75d859590136e46ac39a42cbf538fcb762f754f684d8afaecaa1b42e8e44a9da"
+    },
+    {
+      "path": "tmp\\structure_fixtures\\contact_rows_marker_at_end_contact.dump",
+      "sha256": "b4cc3d7edb9a038352d62b6ef0a6eb6ad1f0816fd213a1774070df010d553d5f"
+    }
+  ],
+  "blank_whitespace_only": [
+    {
+      "path": "tmp\\structure_fixtures\\blank_whitespace_only_sc.csv",
+      "sha256": "6abcc7525f7a154f9e6b2055fe21cffbe0d78b1307df056ade9039c5dfd2fe11"
+    },
+    {
+      "path": "tmp\\structure_fixtures\\blank_whitespace_only_atom.dump",
+      "sha256": "1e2d189fc78bec8d501986a0edc1c34db7dfb247cc310218785d9d0779b02bbb"
+    },
+    {
+      "path": "tmp\\structure_fixtures\\blank_whitespace_only_contact.dump",
+      "sha256": "74bdddf96801d1697b124d2ebf02e0a1ad541d56301bed8608a9d0eda8c2ffcc"
+    }
+  ],
+  "gzip_baseline": [
+    {
+      "path": "tmp\\structure_fixtures\\gzip_baseline_sc.csv.gz",
+      "sha256": "bec9220e1722b7597d4ef103859eb26a394ec376cd6578785a4668c0e65fdfe3"
+    },
+    {
+      "path": "tmp\\structure_fixtures\\gzip_baseline_atom.dump.gz",
+      "sha256": "249b9723c85606d528b611c7e6b20992bea26e0b186b61b5148c06aaee0ec304"
+    },
+    {
+      "path": "tmp\\structure_fixtures\\gzip_baseline_contact.dump.gz",
+      "sha256": "d69afa104cd1a01642f107328fb49eaa7dd432c65820f656435d0f12d360c1fb"
+    }
+  ],
+  "crlf_baseline": [
+    {
+      "path": "tmp\\structure_fixtures\\crlf_baseline_sc.csv",
+      "sha256": "342da1d23e1956f26bd2ad8170b37dc4f142d71e3be28ffb71db5dfdeaef6ff2"
+    },
+    {
+      "path": "tmp\\structure_fixtures\\crlf_baseline_atom.dump",
+      "sha256": "c7564d817e47a442f6cbc6f57f51896d852977c322d5aea6e615681ffaac44e2"
+    },
+    {
+      "path": "tmp\\structure_fixtures\\crlf_baseline_contact.dump",
+      "sha256": "b3228d743df5891099800c57bec7b1dec2e0cb8df485b13e8074562cf08d381c"
+    }
+  ],
+  "integer_valid_+100": [
+    {
+      "path": "tmp\\structure_fixtures\\integer_valid_+100_sc.csv",
+      "sha256": "6abcc7525f7a154f9e6b2055fe21cffbe0d78b1307df056ade9039c5dfd2fe11"
+    },
+    {
+      "path": "tmp\\structure_fixtures\\integer_valid_+100_atom.dump",
+      "sha256": "72e99e98ead443cf61f73e2b0be39a2902aa7001e2e35634422cecc84225eb5c"
+    },
+    {
+      "path": "tmp\\structure_fixtures\\integer_valid_+100_contact.dump",
+      "sha256": "6b1c489b0775dcd76367dc5f0767a302835e50a486c60fb38a9d9ed449bb558b"
+    }
+  ],
+  "integer_valid_000100": [
+    {
+      "path": "tmp\\structure_fixtures\\integer_valid_000100_sc.csv",
+      "sha256": "6abcc7525f7a154f9e6b2055fe21cffbe0d78b1307df056ade9039c5dfd2fe11"
+    },
+    {
+      "path": "tmp\\structure_fixtures\\integer_valid_000100_atom.dump",
+      "sha256": "749e97ee0e785da0c8e8f412e4541f142b29899e51f14802e129b0eb9896db81"
+    },
+    {
+      "path": "tmp\\structure_fixtures\\integer_valid_000100_contact.dump",
+      "sha256": "4877c007fb1d19365d461cec4883857456e25ca06dbd0c4c99b09e251aa6d5e1"
+    }
+  ],
+  "integer_valid_-0": [
+    {
+      "path": "tmp\\structure_fixtures\\integer_valid_-0_sc.csv",
+      "sha256": "6abcc7525f7a154f9e6b2055fe21cffbe0d78b1307df056ade9039c5dfd2fe11"
+    },
+    {
+      "path": "tmp\\structure_fixtures\\integer_valid_-0_atom.dump",
+      "sha256": "4b19c2d7221a322529584eac514f144ca1d3d751688d7fee6ae82ddebec97a16"
+    },
+    {
+      "path": "tmp\\structure_fixtures\\integer_valid_-0_contact.dump",
+      "sha256": "31b2bc50b11617d380b2902185e12cd9829c258420a154b7f805b1c8b45a1cbb"
+    }
+  ],
+  "d19_reject_137": [
+    {
+      "path": "tmp\\structure_fixtures\\d19_reject_137_sc.csv",
+      "sha256": "6abcc7525f7a154f9e6b2055fe21cffbe0d78b1307df056ade9039c5dfd2fe11"
+    },
+    {
+      "path": "tmp\\structure_fixtures\\d19_reject_137_atom.dump",
+      "sha256": "75d859590136e46ac39a42cbf538fcb762f754f684d8afaecaa1b42e8e44a9da"
+    },
+    {
+      "path": "tmp\\structure_fixtures\\d19_reject_137_contact.dump",
+      "sha256": "282896463e933e31a8418ad2fbd22fc92e5051dab65c1fc8d084417d27a2ee6b"
+    }
+  ],
+  "d19_pass_138": [
+    {
+      "path": "tmp\\structure_fixtures\\d19_pass_138_sc.csv",
+      "sha256": "6abcc7525f7a154f9e6b2055fe21cffbe0d78b1307df056ade9039c5dfd2fe11"
+    },
+    {
+      "path": "tmp\\structure_fixtures\\d19_pass_138_atom.dump",
+      "sha256": "75d859590136e46ac39a42cbf538fcb762f754f684d8afaecaa1b42e8e44a9da"
+    },
+    {
+      "path": "tmp\\structure_fixtures\\d19_pass_138_contact.dump",
+      "sha256": "282896463e933e31a8418ad2fbd22fc92e5051dab65c1fc8d084417d27a2ee6b"
+    }
+  ],
+  "d19_reject_139": [
+    {
+      "path": "tmp\\structure_fixtures\\d19_reject_139_sc.csv",
+      "sha256": "6abcc7525f7a154f9e6b2055fe21cffbe0d78b1307df056ade9039c5dfd2fe11"
+    },
+    {
+      "path": "tmp\\structure_fixtures\\d19_reject_139_atom.dump",
+      "sha256": "75d859590136e46ac39a42cbf538fcb762f754f684d8afaecaa1b42e8e44a9da"
+    },
+    {
+      "path": "tmp\\structure_fixtures\\d19_reject_139_contact.dump",
+      "sha256": "282896463e933e31a8418ad2fbd22fc92e5051dab65c1fc8d084417d27a2ee6b"
+    }
+  ],
+  "unconsumed_optional_atom_column": [
+    {
+      "path": "tmp\\structure_fixtures\\unconsumed_optional_atom_column_sc.csv",
+      "sha256": "6abcc7525f7a154f9e6b2055fe21cffbe0d78b1307df056ade9039c5dfd2fe11"
+    },
+    {
+      "path": "tmp\\structure_fixtures\\unconsumed_optional_atom_column_atom.dump",
+      "sha256": "4928b847d6547a3217ac593d3f83e06d04e188ad5ded11cb8fd26efc7654e087"
+    },
+    {
+      "path": "tmp\\structure_fixtures\\unconsumed_optional_atom_column_contact.dump",
+      "sha256": "506de9c9e706890adab1e48fb5504a671f1fcbb2119f9512a00130e8652635f6"
+    }
+  ],
+  "unconsumed_optional_contact_column": [
+    {
+      "path": "tmp\\structure_fixtures\\unconsumed_optional_contact_column_sc.csv",
+      "sha256": "6abcc7525f7a154f9e6b2055fe21cffbe0d78b1307df056ade9039c5dfd2fe11"
+    },
+    {
+      "path": "tmp\\structure_fixtures\\unconsumed_optional_contact_column_atom.dump",
+      "sha256": "75d859590136e46ac39a42cbf538fcb762f754f684d8afaecaa1b42e8e44a9da"
+    },
+    {
+      "path": "tmp\\structure_fixtures\\unconsumed_optional_contact_column_contact.dump",
+      "sha256": "553f90bbba174ac936dc168fd6a0a88d0ade688249d59e4ec016af9e42a41196"
+    }
+  ]
+}

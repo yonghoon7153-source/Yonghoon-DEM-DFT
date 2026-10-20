@@ -1,0 +1,37 @@
+{
+  "command": [
+    "C:\\Users\\Administrator\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\python.exe",
+    "-X",
+    "utf8",
+    "-B",
+    "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\run_review.py",
+    "test",
+    "test_rint_t2_dev.py",
+    "--source",
+    "rint2_carbon_design_review_20261021/part_b/staged_source",
+    "--test-source",
+    "rint2_carbon_design_review_20261021/part_b/staged_source",
+    "--child"
+  ],
+  "rc": 0,
+  "seconds": 1.2969999999622814,
+  "source": "rint2_carbon_design_review_20261021/part_b/staged_source",
+  "test_source": "rint2_carbon_design_review_20261021/part_b/staged_source",
+  "lf_test_writer_adapter": false,
+  "log": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\evidence\\test_part_b_test_rint_t2_dev.py_testsfrom_part_b.log",
+  "log_sha256": "1ae7c4b56369eaa7aac2d5d12c31e5ba964f31ef1221ad846c4993c1f7643809",
+  "tail": [
+    "── d7_tilt_regression",
+    "D7 — RIMP-01 회귀: tie 없는 15° n64 · 30° n16 · 이동 45° n128 (+ 15° n64 L1) — Codex 경계 대조 값 (판정문 §2 표) 재현",
+    "  PASS  D7 θ 15° n 64 axis 이동 0 µm: tie 0 · 경계 교차 2 > 0 · L2 0.0004495112904 · 최대 0.006475555385 (Codex 대조 · 상대 1e−9) — 회귀 판별 (D11 · D12-V 근거 아님)",
+    "  PASS  D7 θ 30° n 16 axis 이동 0 µm: tie 0 · 경계 교차 2 > 0 · L2 0.003087791839 · 최대 0.01633704071 (Codex 대조 · 상대 1e−9) — 회귀 판별 (D11 · D12-V 근거 아님)",
+    "  PASS  D7 θ 45° n 128 axis 이동 0.001 µm: tie 0 · 경계 교차 2 > 0 · L2 0.0009823643239 · 최대 0.004030350534 (Codex 대조 · 상대 1e−9) — 회귀 판별 (D11 · D12-V 근거 아님)",
+    "  PASS  D7 θ 15° n 64 L1 이동 0 µm: tie 0 · 경계 교차 2 > 0 · L2 0.001406042364 · 최대 0.02030409571 (Codex 대조 · 상대 1e−9) — 회귀 판별 (D11 · D12-V 근거 아님)",
+    "",
+    "── d8_tie_record",
+    "D8 — tie · 경계 교차 수 기록 (45° n128 원점 대칭 = 셀 중심이 계면 위인 셀 n 개 — 배정은 부동소수 반올림에 걸린다 · 플랫폼 의존)",
+    "  PASS  D8 45° n128: tie_count = 128 (시험 쪽 독립 셈과 같음) · n_bc_cross = 독립 셈",
+    "",
+    "23 PASS · 0 FAIL"
+  ]
+}

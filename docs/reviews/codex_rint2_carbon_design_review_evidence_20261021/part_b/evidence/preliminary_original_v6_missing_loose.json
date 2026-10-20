@@ -1,0 +1,36 @@
+{
+  "command": [
+    "C:\\Users\\Administrator\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\python.exe",
+    "-X",
+    "utf8",
+    "-B",
+    "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\run_review.py",
+    "test",
+    "test_rint_g2_join.py",
+    "--source",
+    "rint2_carbon_design_review_20261021/part_b/staged_source",
+    "--test-source",
+    "rint2_carbon_design_review_20261021/part_b/staged_source",
+    "--child"
+  ],
+  "rc": 1,
+  "seconds": 76.95299999997951,
+  "source": "rint2_carbon_design_review_20261021/part_b/staged_source",
+  "test_source": "rint2_carbon_design_review_20261021/part_b/staged_source",
+  "log": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\evidence\\test_part_b_test_rint_g2_join.py.log",
+  "log_sha256": "e720aaa997f109d3071cc62cf2b134c707b19f76638eba4c7330549e4c2758e2",
+  "tail": [
+    "  PASS  J15P gzip 두 멤버 (원자 덤프 반씩) → PASS (거부 없음)",
+    "",
+    "312 PASS · 5 FAIL",
+    "  - J12P CRLF 줄 끝 (세 파일) → PASS (거부 없음)",
+    "  - J12P CRLF 줄 끝 (세 파일) → 계획 거부 없음 · 정량 관문 통과",
+    "  - J18 scaffold 머리줄 step 선언 = ASCII · int64 — 전각 · 유니코드 공백 · ſ · 섞인 숫자 · 숫자 뒤 꼬리 = 입구 REJECT · 긴 숫자열 = 예외 없이 · `laststep` = 선언 아님 (RIMPR-03 같은 부류): 실행",
+    "  - J15P CR 만 줄 끝 (세 파일) → PASS (거부 없음)",
+    "  - J15P CRLF / LF 섞임 (원자 덤프 앞 다섯 줄 CRLF) → PASS (거부 없음)",
+    "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\staged_source\\scripts\\rint_iface_join.py:773: RuntimeWarning: invalid value encountered in divide",
+    "  'n_delta_pos_mismatch': int(dbad.sum()), 'max_delta_pos_ratio': float((dd[ok] / wd[ok]).max()) if ok.any() else None,",
+    "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\staged_source\\scripts\\rint_iface_join.py:744: RuntimeWarning: invalid value encountered in divide",
+    "  max_pos_ratio = max(max_pos_ratio, float((np.abs(res) / tol).max()))"
+  ]
+}

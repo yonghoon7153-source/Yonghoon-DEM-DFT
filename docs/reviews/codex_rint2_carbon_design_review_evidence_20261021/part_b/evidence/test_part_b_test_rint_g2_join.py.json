@@ -1,0 +1,37 @@
+{
+  "command": [
+    "C:\\Users\\Administrator\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\python.exe",
+    "-X",
+    "utf8",
+    "-B",
+    "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\run_review.py",
+    "test",
+    "test_rint_g2_join.py",
+    "--source",
+    "rint2_carbon_design_review_20261021/part_b/staged_source",
+    "--test-source",
+    "rint_join_q7_recheck_20261020/source",
+    "--child"
+  ],
+  "rc": 0,
+  "seconds": 70.20299999997951,
+  "source": "rint2_carbon_design_review_20261021/part_b/staged_source",
+  "test_source": "rint_join_q7_recheck_20261020/source",
+  "lf_test_writer_adapter": false,
+  "log": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\evidence\\test_part_b_test_rint_g2_join.py.log",
+  "log_sha256": "c84df8b3befdf950136d86f2414cf72128106962d42c15399b2eccef7db706f4",
+  "tail": [
+    "  PASS  J11 µm 변환 넘침 — 한 구 x 10^306 sim (float64 유한 · ×1000 = inf · 고치기 전 = PASS · c_um inf) → 계획 join_gate_failed · 정량 관문 거부",
+    "  PASS  J11 원자 id int64 넘침 `9223372036854775808` (Codex · 고치기 전 = OverflowError) → 입구 REJECT (int_token · atom_id ≥ 1) · 관문 계산 안 함",
+    "  PASS  J11 원자 id int64 넘침 `9223372036854775808` (Codex · 고치기 전 = OverflowError) → 계획 join_gate_failed · 정량 관문 거부",
+    "  PASS  J11 접촉 id1 int64 넘침 → 입구 REJECT (int_token · contact_id1 ≥ 1) · 관문 계산 안 함",
+    "  PASS  J11 접촉 id1 int64 넘침 → 계획 join_gate_failed · 정량 관문 거부",
+    "  PASS  J11 scaffold type int64 넘침 → 입구 REJECT (int_token · scaffold_type ≥ 1) · 관문 계산 안 함",
+    "  PASS  J11 scaffold type int64 넘침 → 계획 join_gate_failed · 정량 관문 거부",
+    "  PASS  J11 두 덤프 step int64 넘침 (e3 = int64 정수 · 같은 규칙) → 입구 REJECT (int_token · atom_step ≥ 1) · 관문 계산 안 함",
+    "  PASS  J11 두 덤프 step int64 넘침 (e3 = int64 정수 · 같은 규칙) → 계획 join_gate_failed · 정량 관문 거부",
+    "  PASS  J11 경계 양성: 원자 · 접촉 id = int64 최댓값 9223372036854775807 → PASS (거부 없음)",
+    "",
+    "138 PASS · 0 FAIL"
+  ]
+}

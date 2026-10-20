@@ -1,0 +1,4 @@
+review_pin=5dc6f7f0b91fd9db39ab595f6b8c79a8f0d2f3b5
+branch=claude/stoic-knuth-NObVQ
+request=repo/docs/reviews/codex_rint_carbon_additive_design_request_20261020.md
+litdb_ref=c654b81413df065e6cf9c6bce8beb59982fae422
