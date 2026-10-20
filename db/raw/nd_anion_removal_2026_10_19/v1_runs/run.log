@@ -1,0 +1,46 @@
+[2026-10-19 21:05:27] ════ Nd 떼어내기 SCF 8 (PAW 70/560) · HEAD 5007c2508 · MODE auto · DRY_RUN · OUT /data/work/runs/nd_anion_removal_2026_10_19 ════
+[2026-10-19 21:05:27] PAW pseudo ✓ Li.pbe-sl-kjpaw_psl.1.0.0.UPF(4449e4b2) Nd.pbe-spdn-kjpaw_psl.1.0.0.UPF(af9d8c60) P.pbe-n-kjpaw_psl.1.0.0.UPF(06b8cad1) O.pbe-n-kjpaw_psl.0.1.UPF(0234752a) S.pbe-nl-kjpaw_psl.1.0.0.UPF(a0db168f) Cl.pbe-nl-kjpaw_psl.1.0.0.UPF(daecd58d) 
+입력 8 → /data/work/runs/nd_anion_removal_2026_10_19
+[2026-10-19 21:05:30] 입력 ✓ rm_Cl114 rm_Cl117 rm_Cl56 rm_Cl59 rm_S112 rm_S115 rm_S51 rm_S54 · 프로브 = rm_Cl114
+[2026-10-19 21:05:30] ▶ 메모리 프로브 — CPU pw.x 1 랭크 · 검사용 (run 아님) · 'Estimated' 줄을 읽으면 바로 끝 (최대 300 s)
+[2026-10-19 21:05:34] 프로브: QE 7.4.1 이 pseudo 여섯을 읽었다 (Nd 변환 UPF 포함)
+[2026-10-19 21:05:34] 프로브 ✓  Estimated max dynamical RAM per process > 27.94 GB
+[2026-10-19 21:05:34] GPU 총 49140 · 사용 37220 · 빔 11920 MiB · 추정 28610 → need 38217 MiB (×1.3 + 1024) · r2 pw.x: 4081873 · 다른 잡: 없음
+[2026-10-19 21:05:34] 결정: pause — r2 를 다음 BFGS 줄 직후 EXIT 로 세우고 · ELF 혼자 · 끝나면 r2 restart
+[2026-10-19 21:05:34] DRY_RUN — 여기서 끝 (GPU 계산 0 · r2 손대지 않음)
+[2026-10-19 21:12:51] ════ Nd 떼어내기 SCF 8 (PAW 70/560) · HEAD 5007c2508 · MODE auto · OUT /data/work/runs/nd_anion_removal_2026_10_19 ════
+[2026-10-19 21:12:51] PAW pseudo ✓ Li.pbe-sl-kjpaw_psl.1.0.0.UPF(4449e4b2) Nd.pbe-spdn-kjpaw_psl.1.0.0.UPF(af9d8c60) P.pbe-n-kjpaw_psl.1.0.0.UPF(06b8cad1) O.pbe-n-kjpaw_psl.0.1.UPF(0234752a) S.pbe-nl-kjpaw_psl.1.0.0.UPF(a0db168f) Cl.pbe-nl-kjpaw_psl.1.0.0.UPF(daecd58d) 
+입력 8 → /data/work/runs/nd_anion_removal_2026_10_19
+[2026-10-19 21:12:52] 입력 ✓ rm_Cl114 rm_Cl117 rm_Cl56 rm_Cl59 rm_S112 rm_S115 rm_S51 rm_S54 · 프로브 = rm_Cl114
+[2026-10-19 21:12:52] 프로브 재사용 (같은 scf.in) —  Estimated max dynamical RAM per process > 27.94 GB
+[2026-10-19 21:12:52] GPU 총 49140 · 사용 37220 · 빔 11920 MiB · 추정 28610 → need 38217 MiB (×1.3 + 1024) · r2 pw.x: 4081873 · 다른 잡: 없음
+[2026-10-19 21:12:52] 결정: pause — r2 를 다음 BFGS 줄 직후 EXIT 로 세우고 · ELF 혼자 · 끝나면 r2 restart
+[2026-10-19 21:12:52] GPU 런타임 ✓ libmpi /data/apps/nvhpc/Linux_x86_64/24.11/comm_libs/12.6/hpcx/hpcx-2.20/ompi/lib/libmpi.so.40 → /data/apps/nvhpc/Linux_x86_64/24.11/comm_libs/12.6/hpcx/hpcx-2.20/ompi/bin/mpirun · OMP 1
+[2026-10-19 21:12:53] ▶ r2 정지 — pw.x 4081873 · in 00_control_relax.restart.in · out 00_control_relax.out · 다음 BFGS 줄 직후 EXIT (최대 14400 s)
+[2026-10-19 21:12:53] pw.x 4081873 · cwd /data/work/runs/sei_control/li3nd_mp-976264_p333_r2 · prefix li3nd_mp-976264_p333_r2 · bfgs /data/work/runs/sei_control/li3nd_mp-976264_p333_r2/./tmp/li3nd_mp-976264_p333_r2.bfgs · 출력 00_control_relax.out · 러너 안 얼림 (--no_runner)
+[2026-10-19 21:12:53] BFGS 줄 3 개에서 다음 줄을 기다린다 (최대 14400 s)
+[2026-10-19 22:11:58] BFGS 줄 4 — /data/work/runs/sei_control/li3nd_mp-976264_p333_r2/li3nd_mp-976264_p333_r2.EXIT 생성
+[2026-10-19 22:12:39] pw.x 끝 (41 s 뒤)
+[2026-10-19 22:12:39] .bfgs 1f6ca47b · 2026-10-19 22:11:40
+[2026-10-19 22:12:39] 상태 = stopped · BFGS 줄 4 · 마지막  Total force = 0.010631 Total SCF correction = 0.000034
+[2026-10-19 22:12:39] ✅ 세움 (러너 안 얼림 · --no_runner) · 재개 = 드라이버를 새로 띄운다 (stopped/exhausted + .bfgs → restart)
+[2026-10-19 22:12:39] r2 정지 확인:  ⏸ li3nd_mp-976264_p333_r2 사람이 세움(EXIT·max_seconds) → nstep 200 · restart (BFGS 이력 승계)
+[2026-10-19 22:13:09] GPU 빔 × 2 — ELF SCF 혼자 간다
+[2026-10-19 22:13:09] ▶ SCF rm_Cl114 (GPU · pause)
+[2026-10-20 00:57:28] ⛔ SCF rm_Cl114 rc=0 · 수렴/JOB DONE 없음 — scf.out 끝:
+Warning: ieee_invalid is signaling
+Warning: ieee_divide_by_zero is signaling
+Warning: ieee_underflow is signaling
+Warning: ieee_inexact is signaling
+FORTRAN STOP
+[2026-10-20 00:57:28] ↻ rm_Cl114 같은 입력으로 한 번 다시
+[2026-10-20 00:57:28] ▶ SCF rm_Cl114 (GPU · pause)
+[2026-10-20 03:42:48] ⛔ SCF rm_Cl114 rc=0 · 수렴/JOB DONE 없음 — scf.out 끝:
+Warning: ieee_invalid is signaling
+Warning: ieee_divide_by_zero is signaling
+Warning: ieee_underflow is signaling
+Warning: ieee_inexact is signaling
+FORTRAN STOP
+[2026-10-20 03:42:48] ⛔ rm_Cl114 두 번 실패 — 남은 점을 멈춘다
+[2026-10-20 03:42:48] r2 판정:  ⏸ li3nd_mp-976264_p333_r2 사람이 세움(EXIT·max_seconds) → nstep 200 · restart (BFGS 이력 승계)
+[2026-10-20 03:42:53] ✅ r2 재개 — tmux li3nd_r2_res_10200342 (restart_qe_relax.sh --run --nstep 200 · GPU 여유를 스스로 기다린다) · 로그 /data/work/runs/nd_anion_removal_2026_10_19/r2_resume.log

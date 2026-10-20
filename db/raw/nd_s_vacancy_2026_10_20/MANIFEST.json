@@ -1,0 +1,37 @@
+{
+ "lineage": "/data/work/runs/nd_ppswap_2026_09_16/kprobe_k331/kprobe.in",
+ "lineage_sha256": "adbd6f707af0c3b92209dad10fa08fa2ab8633b66a75d0947651dd4665f3f4e2",
+ "pseudo_dir": "/data/work/pseudo",
+ "removal_mode": "neutral",
+ "n_electrons_after": 586,
+ "inputs": [
+  {
+   "dir": "rm_S51",
+   "element": "S",
+   "side": "near",
+   "index": 51,
+   "sha256": "07a5ea5193d78063a128dd8cba6ac44b1d6c377a036bc4be7ede48b31d516c95"
+  },
+  {
+   "dir": "rm_S112",
+   "element": "S",
+   "side": "near",
+   "index": 112,
+   "sha256": "1acdd26bfa3ee0d782c3225771b3e45918d30a1296bee3b29684be6080bd2d2d"
+  },
+  {
+   "dir": "rm_S54",
+   "element": "S",
+   "side": "far",
+   "index": 54,
+   "sha256": "9d06eaaa9831f223b8944344ca277865e53f683e15009e4943f6966b1bd8dae8"
+  },
+  {
+   "dir": "rm_S115",
+   "element": "S",
+   "side": "far",
+   "index": 115,
+   "sha256": "7a0c31db500b7cdd1ba83da57c77ce09f684727997cb84161b4ab160f4497d2f"
+  }
+ ]
+}

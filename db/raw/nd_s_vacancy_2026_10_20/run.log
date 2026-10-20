@@ -1,0 +1,39 @@
+[2026-10-20 09:11:45] ════ Nd 떼어내기 SCF (nd_s_vacancy_neutral_estimand_2026_10_20 · PAW 70/560) · HEAD d0521b38e · MODE auto · DRY_RUN · OUT /data/work/runs/nd_s_vacancy_2026_10_20 ════
+[2026-10-20 09:11:45] PAW pseudo ✓ Li.pbe-sl-kjpaw_psl.1.0.0.UPF(4449e4b2) Nd.pbe-spdn-kjpaw_psl.1.0.0.UPF(af9d8c60) P.pbe-n-kjpaw_psl.1.0.0.UPF(06b8cad1) O.pbe-n-kjpaw_psl.0.1.UPF(0234752a) S.pbe-nl-kjpaw_psl.1.0.0.UPF(a0db168f) Cl.pbe-nl-kjpaw_psl.1.0.0.UPF(daecd58d) 
+입력 4 (neutral · 전자 586) → /data/work/runs/nd_s_vacancy_2026_10_20 · 순서 rm_S51 rm_S112 rm_S54 rm_S115
+[2026-10-20 09:11:46] 입력 ✓ 4 개 rm_S51 rm_S112 rm_S54 rm_S115 · 프로브 = rm_S51 (MANIFEST 순서 = 실행 순서)
+[2026-10-20 09:11:46] ▶ 메모리 프로브 — CPU pw.x 1 랭크 · 검사용 (run 아님) · 'Estimated' 줄을 읽으면 바로 끝 (최대 300 s)
+[2026-10-20 09:11:50] 프로브: QE 7.4.1 이 pseudo 여섯을 읽었다
+[2026-10-20 09:11:50] 프로브 ✓  Estimated max dynamical RAM per process > 27.97 GB
+[2026-10-20 09:11:51] GPU 총 49140 · 사용 37204 · 빔 11936 MiB · 추정 28641 → need 38257 MiB (×1.3 + 1024) · r2 pw.x: 205682 · 다른 잡: 없음
+[2026-10-20 09:11:51] 결정: pause — r2 를 다음 BFGS 줄 직후 EXIT 로 세우고 · removal SCF 혼자 · 끝나면 r2 restart
+[2026-10-20 09:11:51] DRY_RUN — 여기서 끝 (GPU 계산 0 · r2 손대지 않음)
+[2026-10-20 09:21:00] ════ Nd 떼어내기 SCF (nd_s_vacancy_neutral_estimand_2026_10_20 · PAW 70/560) · HEAD d0521b38e · MODE auto · OUT /data/work/runs/nd_s_vacancy_2026_10_20 ════
+[2026-10-20 09:21:00] PAW pseudo ✓ Li.pbe-sl-kjpaw_psl.1.0.0.UPF(4449e4b2) Nd.pbe-spdn-kjpaw_psl.1.0.0.UPF(af9d8c60) P.pbe-n-kjpaw_psl.1.0.0.UPF(06b8cad1) O.pbe-n-kjpaw_psl.0.1.UPF(0234752a) S.pbe-nl-kjpaw_psl.1.0.0.UPF(a0db168f) Cl.pbe-nl-kjpaw_psl.1.0.0.UPF(daecd58d) 
+입력 4 (neutral · 전자 586) → /data/work/runs/nd_s_vacancy_2026_10_20 · 순서 rm_S51 rm_S112 rm_S54 rm_S115
+[2026-10-20 09:21:01] 입력 ✓ 4 개 rm_S51 rm_S112 rm_S54 rm_S115 · 프로브 = rm_S51 (MANIFEST 순서 = 실행 순서)
+[2026-10-20 09:21:01] 프로브 재사용 (같은 scf.in) —  Estimated max dynamical RAM per process > 27.97 GB
+[2026-10-20 09:21:01] GPU 총 49140 · 사용 37204 · 빔 11936 MiB · 추정 28641 → need 38257 MiB (×1.3 + 1024) · r2 pw.x: 205682 · 다른 잡: 없음
+[2026-10-20 09:21:01] 결정: pause — r2 를 다음 BFGS 줄 직후 EXIT 로 세우고 · removal SCF 혼자 · 끝나면 r2 restart
+[2026-10-20 09:21:02] GPU 런타임 ✓ libmpi /data/apps/nvhpc/Linux_x86_64/24.11/comm_libs/12.6/hpcx/hpcx-2.20/ompi/lib/libmpi.so.40 → /data/apps/nvhpc/Linux_x86_64/24.11/comm_libs/12.6/hpcx/hpcx-2.20/ompi/bin/mpirun · OMP 1
+[2026-10-20 09:21:02] ▶ r2 정지 — pw.x 205682 · in 00_control_relax.restart.in · out 00_control_relax.out · 다음 BFGS 줄 직후 EXIT (최대 14400 s)
+[2026-10-20 09:21:02] pw.x 205682 · cwd /data/work/runs/sei_control/li3nd_mp-976264_p333_r2 · prefix li3nd_mp-976264_p333_r2 · bfgs /data/work/runs/sei_control/li3nd_mp-976264_p333_r2/./tmp/li3nd_mp-976264_p333_r2.bfgs · 출력 00_control_relax.out · 러너 안 얼림 (--no_runner)
+[2026-10-20 09:21:02] BFGS 줄 4 개에서 다음 줄을 기다린다 (최대 14400 s)
+[2026-10-20 09:56:05] BFGS 줄 5 — /data/work/runs/sei_control/li3nd_mp-976264_p333_r2/li3nd_mp-976264_p333_r2.EXIT 생성
+[2026-10-20 09:56:25] pw.x 끝 (20 s 뒤)
+[2026-10-20 09:56:25] .bfgs e5670490 · 2026-10-20 09:55:52
+[2026-10-20 09:56:25] 상태 = stopped · BFGS 줄 5 · 마지막  Total force = 0.011840 Total SCF correction = 0.000037
+[2026-10-20 09:56:25] ✅ 세움 (러너 안 얼림 · --no_runner) · 재개 = 드라이버를 새로 띄운다 (stopped/exhausted + .bfgs → restart)
+[2026-10-20 09:56:26] r2 정지 확인:  ⏸ li3nd_mp-976264_p333_r2 사람이 세움(EXIT·max_seconds) → nstep 200 · restart (BFGS 이력 승계)
+[2026-10-20 09:56:56] GPU 빔 × 2 — removal SCF 혼자 간다
+[2026-10-20 09:56:56] ▶ SCF rm_S51 (GPU · pause)
+[2026-10-20 10:40:56] SCF ✓ rm_S51 ! total energy = -6332.60252154 Ry · 반복 22 iterations ·  PWSCF : 43m51.57s CPU 43m59.15s WALL
+[2026-10-20 10:40:57] ▶ SCF rm_S112 (GPU · pause)
+[2026-10-20 11:15:56] SCF ✓ rm_S112 ! total energy = -6332.58357429 Ry · 반복 16 iterations ·  PWSCF : 34m51.60s CPU 34m58.82s WALL
+[2026-10-20 11:15:56] ▶ SCF rm_S54 (GPU · pause)
+[2026-10-20 11:58:35] SCF ✓ rm_S54 ! total energy = -6332.58588040 Ry · 반복 20 iterations ·  PWSCF : 42m30.57s CPU 42m38.03s WALL
+[2026-10-20 11:58:35] ▶ SCF rm_S115 (GPU · pause)
+[2026-10-20 12:34:09] SCF ✓ rm_S115 ! total energy = -6332.58426451 Ry · 반복 16 iterations ·  PWSCF : 35m25.96s CPU 35m33.39s WALL
+[2026-10-20 12:34:10] r2 판정:  ⏸ li3nd_mp-976264_p333_r2 사람이 세움(EXIT·max_seconds) → nstep 200 · restart (BFGS 이력 승계)
+[2026-10-20 12:34:15] ✅ r2 재개 — tmux li3nd_r2_res_10201234 (restart_qe_relax.sh --run --nstep 200 · GPU 여유를 스스로 기다린다) · 로그 /data/work/runs/nd_s_vacancy_2026_10_20/r2_resume.log
+[2026-10-20 12:34:15] ■ 끝 · 끝 코드 0 · 결정 pause
