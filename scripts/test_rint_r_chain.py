@@ -1116,6 +1116,49 @@ def t_V12():
             (rc1, v['rc'], views.exists()))
 
 
+@check('V13', '사다리 NOT_COMPUTED (증서 실패) → 판정 = NOT_COMPUTED (등록 결과 · rc 0 · 멈춤 아님 — 실패 팔 sha256 도 기록돼 다시 계산된다)')
+def t_V13():
+    r = scen('V13', lambda: verdict('V13', [scen('L17', lambda: ladder('L17', world('L17', dict(
+        PW, faults=[{'do': 'certfail', 'match': {'rj': '1000000.0'}}]))))['out'], s_main('P1')['out']]))
+    v = r['v'] or {}
+    return (r['rc'] == 0 and v.get('verdict') == 'NOT_COMPUTED' and v.get('stop') is None
+            and v.get('calib') == {'P0': 'NOT_COMPUTED', 'P1': 'CALIBRATED'}, (r['rc'], v.get('verdict'), v.get('stop'), v.get('calib')))
+
+
+@check('V14', '감도 변이 사다리에는 origin 런이 없다 (등록 §10 런 수 = 사다리 ≤ 12 × 2 + DBE 4) · 주 사다리만 §3-3')
+def t_V14():
+    lads = s_variant_set('FIBRE')['ladders']
+    bad = [(o['sum']['law'], roles(o)) for o in lads if {'origin3', 'origin8'} & set(roles(o)) or lad(o).get('origin') is not None]
+    return (not bad and all(o['sum']['status'] == 'CALIBRATED' for o in lads), bad)
+
+
+@check('V15', '판정 코드 ≠ 단계 코드 (지금 사슬 HEAD 가 다르다) → CODE_PIN_MISMATCH · 판정 NOT_COMPUTED')
+def t_V15():
+    def go():
+        dirs = main_dirs()                                  # 단계는 진짜 HEAD 로 먼저 (판정만 다른 HEAD 에서)
+        orig = RR.git_identity
+        RR.git_identity = lambda path: {'head': 'deadbeef' * 5, 'dirty': False}
+        try:
+            return verdict('V15', dirs)
+        finally:
+            RR.git_identity = orig
+    r = scen('V15', go)
+    return (r['rc'] == 3 and stop_code(r) == 'CODE_PIN_MISMATCH' and (r['v'] or {}).get('verdict') == 'NOT_COMPUTED',
+            (r['rc'], stop_code(r)))
+
+
+@check('V16', '판정 결과에 수렴 증서 ⓒ 값 (런마다 Δσ/σ · §8) · 공개 판정에 §9 격자 문장 = not_computed (이 사슬 밖 · 현 세대 대조)')
+def t_V16():
+    v = s_verdict_main()
+    names = set()
+    for d in main_dirs():
+        s, = [json.loads(p.read_text(encoding='utf-8')) for p in Path(d).glob('*_summary.json')]
+        names |= {f'{Path(d).name}/{x["name"]}' for x in s['runs']}
+    cert = (v['r'] or {}).get('certificates_dsigma_rel') or {}
+    return (set(cert) == names and all(isinstance(x, list) and x and all(isinstance(y, float) for y in x) for x in cert.values())
+            and (v['v'] or {}).get('grid_sentence') == 'not_computed', (len(cert), len(names), (v['v'] or {}).get('grid_sentence')))
+
+
 # ── X 봉인 · 기타 ──
 _NUM = re.compile(r'[-+]?(?:\d+\.\d*|\.\d+|\d+)(?:[eE][-+]?\d+)?')
 

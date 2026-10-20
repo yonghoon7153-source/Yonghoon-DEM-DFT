@@ -105,6 +105,7 @@ CALIB_ORDER = ('CALIB_IMPOSSIBLE', 'CALIB_EDGE', 'CALIB_UNIDENTIFIED', 'CALIB_UN
 REGISTERED_OUTCOMES = frozenset(CALIB_ORDER)
 SENTENCE_PASS = ('SBE 한 점으로 접합 저항을 보정하고 PTFE · SDCP 법칙을 독립 자료와 시나리오 끝으로 고정한 모형이 DBE 를 '
                  '등록 구간 안에서 예측했다.')    # §7-1 (PASS_INFORMATIVE · 표지 없음일 때만)
+GRID_SENTENCE = 'not_computed'       # §9 '격자 의존이 현 세대보다 작았다' — 현 세대 vox 0.125 대조는 이 사슬 밖 (그 문장 금지 · GRID 표지와 별개)
 SENTENCE_BY_VERDICT = {'CONSISTENT_WEAK': '넓은 시나리오 구간 안에 들었다', 'UNINFORMATIVE': None, 'FAIL': None}   # §5-5
 QUALIFIERS = ('Q1_holdout_known_one_sided', 'Q2_Rj0_model_internal', 'Q3_scenario_ends_not_material', 'Q4_two_electrode_n1',
               'Q5_grid_flag', 'Q6_sensitivity_flags', 'Q7_S1P_pellet', 'Q8_SV_contact_zero', 'DIA_UNCHECKED',
@@ -484,6 +485,19 @@ def lean_problems(man):
 ARM_PUBLIC = ('file', 'index', 'sha256', 'protocol_id', 'cg_info', 'cg_resid', 'imbalance', 'cert_pass', 'sid_fp')
 
 
+def arm_file_shas(outdir):
+    """읽기가 멈춘 런의 팔 파일 → [{file, index, sha256}] (번호 순 · 번호 없는 이름은 뺀다) — 계약 판정은 하지 않는다."""
+    out = []
+    for p in sorted(glob.glob(str(Path(outdir) / 'p2_*.json'))):
+        m = re.search(r'_a(\d+)\.json$', p)
+        if m:
+            try:
+                out.append({'file': os.path.basename(p), 'index': int(m.group(1)), 'sha256': sha256_file(p)})
+            except OSError:
+                pass
+    return sorted(out, key=lambda x: (x['index'], x['file']))
+
+
 def read_run(outdir, req, plan, contract, sid_reg, want_sha=None):
     """런 폴더 하나 → [팔 기록 …] (번호 순).  등록 R §10 멈춤 목록의 팔 쪽 전부 — 어긋나면 Stop (원인 칸 = σ 를 가린 문장)."""
     outdir = Path(outdir)
@@ -637,7 +651,12 @@ class Runner:
         rec['rc'], rec['seconds'] = r.returncode, round(time.time() - t0, 3)
         if r.returncode != 0:
             raise Stop('RUNNER_RC', f'rc {r.returncode} (로그 {logp})', name)
-        arms_ = read_run(outdir, req, self.plan, self.contract, self.sid_reg)
+        try:
+            arms_ = read_run(outdir, req, self.plan, self.contract, self.sid_reg)
+        except Stop:
+            #  읽기가 멈춰도 팔 파일 sha256 은 남긴다 — 등록 결과 (NOT_COMPUTED) 로 끝난 사다리를 판정이 원 팔에서 다시 계산할 수 있게.
+            rec['arms_read'] = arm_file_shas(outdir)
+            raise
         rec['arms_read'] = [{k: a[k] for k in ARM_PUBLIC} for a in arms_]
         a0 = arms_[0]
         ok = '✓' if all(x is True for x in a0['cert_pass']) else '✗'
@@ -649,11 +668,12 @@ class Runner:
 class Replay:
     """판정 단계의 fetch — 기록된 런을 순서대로 대조해 원 팔 JSON 을 다시 읽는다 (sha256 대조 · 같은 계약)."""
 
-    def __init__(self, stage_dir, summary, plan, contract, sid_reg):
+    def __init__(self, stage_dir, summary, plan, contract, sid_reg, cert_reg=None):
         self.dir, self.plan, self.contract, self.sid_reg = Path(stage_dir), plan, contract, sid_reg
         self.recs = list(summary.get('runs') or [])
         self.variant = summary.get('variant')
         self.i = 0
+        self.cert_reg = {} if cert_reg is None else cert_reg
 
     def run(self, kit, role, law, c, rj, arms):
         if self.i >= len(self.recs):
@@ -664,8 +684,10 @@ class Replay:
             raise Stop('REPLAY_MISMATCH', f'{self.dir.name}: 다시 계산 {want} ≠ 기록 {got} (rc {r.get("rc")!r})', r.get('name'))
         self.i += 1
         req = {k: r[k] for k in ('name', 'role', 'kit', 'law', 'c', 'rj', 'arms', 'variant')}
-        return read_run(self.dir / r['outdir'], req, self.plan, self.contract, self.sid_reg,
-                        want_sha=[a.get('sha256') for a in r.get('arms_read') or []])
+        arms_ = read_run(self.dir / r['outdir'], req, self.plan, self.contract, self.sid_reg,
+                         want_sha=[a.get('sha256') for a in r.get('arms_read') or []])
+        self.cert_reg[f'{self.dir.name}/{r["name"]}'] = [a['dsigma_rel'] for a in arms_]   # §8 수렴 증서 ⓒ 값 (판정 결과로만)
+        return arms_
 
     def done(self):
         if self.i != len(self.recs):
@@ -865,7 +887,7 @@ def env_forbidden_or_stop(env=None):
 
 
 def write_json(path, obj):
-    Path(path).write_bytes(canon_bytes(obj))
+    Path(path).write_bytes(canon_bytes(_clean(obj)))
 
 
 def print_stop(e):
@@ -927,7 +949,8 @@ def stage_ladder(a, contract):
         try:
             try:
                 lad.run()
-                lad.origin()
+                if a.variant is None:          # §3-3 origin = 주 사다리만 (§10 런 수 — 감도 변이는 사다리 ≤ 12 × 2 + DBE 4)
+                    lad.origin()
                 s['status'] = 'CALIBRATED'
             finally:
                 s['ladder'], s['flags'] = lad.st, list(lad.flags)
@@ -947,7 +970,8 @@ def stage_ladder(a, contract):
     L = s.get('ladder') or {}
     if s['status'] == 'CALIBRATED':
         print(f'보정 = CALIBRATED · R_j,0 = {disp_rj(L["R_j0"])} · R_j,lo {disp_rj(L["R_j_lo"])} · R_j,hi {disp_rj(L["R_j_hi"])} · '
-              f'런 {L["n_runs"]} · ×100 {L["n_ext"]} · 반씩 {L["n_bisect"]} · 확인 {len(L["confirms"])} · origin {L["origin"]["status"]}'
+              f'런 {L["n_runs"]} · ×100 {L["n_ext"]} · 반씩 {L["n_bisect"]} · 확인 {len(L["confirms"])} · '
+              f'origin {(L["origin"] or {}).get("status", "— (감도 변이 · §10)")}'
               + (f' · 표지 {s["flags"]}' if s['flags'] else ''))
     else:
         print(f'보정 = {s["status"]}')
@@ -1064,13 +1088,14 @@ def stage_predict(a, contract):
 
 
 # ═════════════════════════ (5) 판정 단계 ═════════════════════════
-def _replay_ladder(d, s, contract, sid_reg):
-    rp = Replay(d, s, s['plan']['content'], contract, sid_reg)
+def _replay_ladder(d, s, contract, sid_reg, cert_reg):
+    rp = Replay(d, s, s['plan']['content'], contract, sid_reg, cert_reg)
     lad = Ladder(lambda role, rj, arms: rp.run(SBE_KIT, role, s['law'], LADDER_C, rj, arms))
     status = 'CALIBRATED'
     try:
         lad.run()
-        lad.origin()
+        if s.get('variant') is None:
+            lad.origin()
     except Stop as e:
         if e.code not in REGISTERED_OUTCOMES:
             raise
@@ -1082,8 +1107,8 @@ def _replay_ladder(d, s, contract, sid_reg):
     return {'status': status, 'st': lad.st, 'sealed': lad.sealed, 'flags': lad.flags, 'pts': lad.pts}
 
 
-def _replay_predict(d, s, lads, contract, sid_reg):
-    rp = Replay(d, s, s['plan']['content'], contract, sid_reg)
+def _replay_predict(d, s, lads, contract, sid_reg, cert_reg):
+    rp = Replay(d, s, s['plan']['content'], contract, sid_reg, cert_reg)
     pr = Predict(rp.run, lads, s.get('variant'))
     pr.run()
     rp.done()
@@ -1096,7 +1121,7 @@ def verdict_compute(dirs, reg_path, contract):
     """판정 계산기 (§5 · 설계 §7) — 원 팔 JSON 전부에서.  → (공개 dict, 결과 dict | None).  입력 계약 실패 = Stop."""
     pub = {'tool': TOOL, 'schema': SCHEMA, 'stage': 'verdict', 'verdict': None, 'stop': None, 'flags': [],
            'qualifiers': list(QUALIFIERS), 'sentence_allowed': False, 'sentence': None, 'calib': {}, 'variants': {},
-           'inputs': [], 'arms': [], 'registration': None}
+           'inputs': [], 'arms': [], 'registration': None, 'grid_sentence': GRID_SENTENCE}
     stages, seen = [], set()
     for d in dirs:
         rd = Path(d).resolve()
@@ -1126,6 +1151,9 @@ def verdict_compute(dirs, reg_path, contract):
         key = ((c.get('chain') or {}).get('head'), (c.get('runner') or {}).get('head'), c.get('runner_path'))
         if code0 is None:
             code0 = key
+            now = git_identity(HERE / 'rint_r_chain.py').get('head')
+            if now != key[0]:
+                raise Stop('CODE_PIN_MISMATCH', f'지금 사슬 HEAD {now} ≠ 단계를 만든 사슬 {key[0]} — 판정 계산기도 같은 핀에서 (다시 판정 = 같은 코드)')
         elif key != code0:
             raise Stop('CODE_PIN_MISMATCH', f'{rd.name}: 코드 {key} ≠ {code0}')
         for r in s.get('runs') or []:
@@ -1139,7 +1167,7 @@ def verdict_compute(dirs, reg_path, contract):
         if k in tgt:
             raise Stop('DUPLICATE_RUN', f'같은 단계 두 번 {k} ({tgt[k][0].name} · {rd.name})')
         tgt[k] = (rd, s, h)
-    sid_reg = {}
+    sid_reg, cert_reg = {}, {}
     res = {'reference': {'exp_dbe_mScm': EXP_DBE_MS, 'cur_gen_dbe_mScm': CUR_GEN_DBE_MS, 'cur_gen_sigma_star_dbe_S_cm': CUR_GEN_SIGMA_STAR_DBE,
                          'exp_ratio_dbe_sbe': EXP_RATIO, 'G0': G0}, 'ladders': {}, 'variants': {}}
 
@@ -1149,7 +1177,7 @@ def verdict_compute(dirs, reg_path, contract):
             if (variant, law) not in lad_in:
                 return None
             rd, s, h = lad_in[(variant, law)]
-            out[law] = (rd, s, h, _replay_ladder(rd, s, contract, sid_reg))
+            out[law] = (rd, s, h, _replay_ladder(rd, s, contract, sid_reg, cert_reg))
         return out
     main_l = ladders_of(None)
     if main_l is None:
@@ -1168,6 +1196,7 @@ def verdict_compute(dirs, reg_path, contract):
     if bad:
         pub['verdict'] = min(bad, key=CALIB_ORDER.index)
         pub['flags'] = sorted(set(flags))
+        res['certificates_dsigma_rel'] = dict(cert_reg)
         return pub, _clean(res)
 
     def predict_of(variant, lads):
@@ -1180,7 +1209,7 @@ def verdict_compute(dirs, reg_path, contract):
                 raise Stop('PREDICT_LADDER_MISMATCH', f'{rd.name}: {law} 사다리 요약 sha256 ≠ 판정 입력')
         lin = {law: {'R_j0': lads[law][3]['st']['R_j0'], 'R_j_lo': lads[law][3]['st']['R_j_lo'], 'R_j_hi': lads[law][3]['st']['R_j_hi'],
                      'r0_sigma': lads[law][3]['pts'][lads[law][3]['st']['R_j0']][1]} for law in LAWS}
-        return _replay_predict(rd, s, lin, contract, sid_reg)
+        return _replay_predict(rd, s, lin, contract, sid_reg, cert_reg)
     pr = predict_of(None, main_l)
     if pr is None:
         raise Stop('INPUT_MISSING', '주 예측 폴더가 없다 (사다리 둘 다 보정됨)')
@@ -1232,6 +1261,7 @@ def verdict_compute(dirs, reg_path, contract):
                                                                                                       'CALIB_ORIGIN_SENSITIVE')]
     pub['sentence_allowed'] = pub['verdict'] == 'PASS_INFORMATIVE' and not blocking
     pub['sentence'] = SENTENCE_PASS if pub['sentence_allowed'] else SENTENCE_BY_VERDICT.get(pub['verdict'])
+    res['certificates_dsigma_rel'] = dict(cert_reg)          # §8 수렴 증서 ⓒ (런마다 · 판정 결과로만)
     return pub, _clean(res)
 
 
@@ -1262,6 +1292,7 @@ def stage_verdict(a, contract):
         print_stop(e)
         pub = {'tool': TOOL, 'schema': SCHEMA, 'stage': 'verdict', 'verdict': 'NOT_COMPUTED', 'stop': e.record(), 'flags': [],
                'qualifiers': list(QUALIFIERS), 'sentence_allowed': False, 'sentence': None, 'calib': {}, 'variants': {},
+               'grid_sentence': GRID_SENTENCE,
                'inputs': [str(Path(d).resolve()) for d in a.runs], 'arms': [], 'registration': str(Path(a.registration).resolve())}
         res, rc_ = None, 3
     pub['input_dirs'] = [str(Path(d).resolve()) for d in a.runs]
@@ -1306,6 +1337,7 @@ def reverify(vdir, contract):
     except Stop as e:
         pub = {'tool': TOOL, 'schema': SCHEMA, 'stage': 'verdict', 'verdict': 'NOT_COMPUTED', 'stop': e.record(), 'flags': [],
                'qualifiers': list(QUALIFIERS), 'sentence_allowed': False, 'sentence': None, 'calib': {}, 'variants': {},
+               'grid_sentence': GRID_SENTENCE,
                'inputs': [str(Path(d).resolve()) for d in dirs], 'arms': [], 'registration': str(Path(reg).resolve()) if reg else None}
         res = None
     pub['input_dirs'] = dirs
