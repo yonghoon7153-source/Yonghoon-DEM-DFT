@@ -159,6 +159,7 @@
 ## 10. 기계 · 명령 꼴 (구현 · Codex GO · 1저자 결정 뒤 확정 — 지금은 꼴만)
 
 - 기계 = kgy (RTX 3090 24 GB · 다른 작업과 GPU 공유 가능 — 등록 v2 §7 의 OOM · 공유 기록) · S0 = CPU · 파이썬 = `~/dem-venv`.
+- 킷 이름 (10-20 밤 · 리뷰 핀 뒤 · 머리 줄 7 의 규약을 명령에 그대로 — 복사 위험) = 새 킷 `kit_SBE_vgcf100` · `kit_DBE_sdcp1um_vgcf100` · `--kit ~/sdcp/kit_DBE` 는 S0 표현 대조 전용 옛 침대 그대로.
 - 노브 이름은 후보 (설계 §7) — 구현 때 확정해 이 절을 개정한다 · 아래 PTFE_STAMP · PTFE_JLAW · SDCP_C · rtol 은 ✅ 1저자 10-20 *"다 권고대로 해"* N2 · N7 · N11 · N15 비준 뒤의 꼴이다.
 
 ```bash
@@ -166,21 +167,21 @@
 cd ~/dem-mt && git fetch -q origin <가지> && git worktree add --detach ~/dem-ca1 <핀> && git -C ~/dem-ca1 log --oneline -1
 
 # (1a) S0 단계 1 — SBE 기하 census (CPU · σ 없음) → 보고 → §2-1 개정 커밋 (숫자 + 계획 해시 · 결과 0 건)
-python3 ~/dem-ca1/scripts/<S0 도구> --stage 1 --kit ~/sdcp/kit_SBE --out ~/sdcp/ca1_s0_sbe
+python3 ~/dem-ca1/scripts/<S0 도구> --stage 1 --kit ~/sdcp/kit_SBE_vgcf100 --out ~/sdcp/ca1_s0_sbe
 # (1b) S0 단계 2 — DBE 두 침대 (§2-1 개정 커밋 sha 를 넘겨야 돈다)
-python3 ~/dem-ca1/scripts/<S0 도구> --stage 2 --threshold-commit <§2-1 개정 커밋> --kit ~/sdcp/kit_DBE_sdcp1um --kit ~/sdcp/kit_DBE --out ~/sdcp/ca1_s0_dbe
+python3 ~/dem-ca1/scripts/<S0 도구> --stage 2 --threshold-commit <§2-1 개정 커밋> --kit ~/sdcp/kit_DBE_sdcp1um_vgcf100 --kit ~/sdcp/kit_DBE --out ~/sdcp/ca1_s0_dbe
 
 # (2) 숫자 탐침 — SBE · 값 봉인 (반복 수 · 잔차 · 판 전류 불균형 · 시간만 열람) · 합성 직접해 대조 (B1 시험 · 실침대 아님) 가 먼저
 #     SIGMA_VGCF_OVERRIDE 는 env 에 없어야 한다 (SIGMA_FIBRE_BULK 와 함께 있으면 러너 거부)
 COMMON="VOX=0.15 SDCP_SPHERE_D=0.30 PTFE_STAMP=face_alpha BRIDGE_UM=0.48 SIGMA_AM_S_OVERRIDE=0.0041 SIGMA_SDCP_OVERRIDE=256.6 SIGMA_FIBRE_BULK=1e4 CJUNC_PLAN=<§2-1 개정의 계획>"
-env $COMMON P2_EXTRA="--step3-rtol <§3-5 봉인값> --step3-maxiter <탐침 뒤>" PTFE_JLAW=P0 CJUNC_RJ=1e6 SDCP_C=0 KITS="kit_SBE" ARMS=1 LEAN=2 OUTDIR=~/sdcp/ca1_probe bash ~/dem-ca1/scripts/sdcp_gain_vox015_8arm.sh
+env $COMMON P2_EXTRA="--step3-rtol <§3-5 봉인값> --step3-maxiter <탐침 뒤>" PTFE_JLAW=P0 CJUNC_RJ=1e6 SDCP_C=0 KITS="kit_SBE_vgcf100" ARMS=1 LEAN=2 OUTDIR=~/sdcp/ca1_probe bash ~/dem-ca1/scripts/sdcp_gain_vox015_8arm.sh
 
 # (3) 보정 사다리 — 법칙 끝마다 (사슬이 점을 고르고 값을 봉인한 채 보간 · 식별성 · 허용폭 양끝 · 등록 v2 §3-A 사슬과 같은 꼴)
 python3 ~/dem-ca1/scripts/<사다리 사슬> --law P0 --target 1.63 --runner ~/dem-ca1/scripts/sdcp_gain_vox015_8arm.sh --out ~/sdcp/ca1_ladder_P0
 python3 ~/dem-ca1/scripts/<사다리 사슬> --law P1 --target 1.63 --runner ~/dem-ca1/scripts/sdcp_gain_vox015_8arm.sh --out ~/sdcp/ca1_ladder_P1
 
 # (4) 예측 — 네 모서리 × {R_j,lo · R_j,0 · R_j,hi} (DBE arm 0 · R_j 는 사다리 요약에서 사슬이 읽는다 · 사람이 옮겨 적지 않는다)
-python3 ~/dem-ca1/scripts/<사다리 사슬> --stage predict --ladders ~/sdcp/ca1_ladder_P0 ~/sdcp/ca1_ladder_P1 --kit kit_DBE_sdcp1um --out ~/sdcp/ca1_predict
+python3 ~/dem-ca1/scripts/<사다리 사슬> --stage predict --ladders ~/sdcp/ca1_ladder_P0 ~/sdcp/ca1_ladder_P1 --kit kit_DBE_sdcp1um_vgcf100 --out ~/sdcp/ca1_predict
 
 # (5) 판정 — 원 JSON 전부에서 (§5-7 · 다시 판정 도구로 같은 답인지 확인)
 python3 ~/dem-ca1/scripts/<사다리 사슬> --stage verdict --runs ~/sdcp/ca1_ladder_P0 ~/sdcp/ca1_ladder_P1 ~/sdcp/ca1_predict <origin · 감도 · 격자 폴더> --out ~/sdcp/ca1_verdict

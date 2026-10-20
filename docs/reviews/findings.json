@@ -12177,16 +12177,17 @@
     {
       "id": "RINT-23",
       "severity": "P3",
-      "status": "open",
+      "status": "claimed_fixed",
       "owner": "claude",
       "found_by": "claude 10-20 밤 (Q17 길이 법칙 구현 에이전트 실측)",
       "opened_in": "docs/reviews/rint_carbon_additive_design_v1_20261020.md",
       "title": "`scripts/carbon_junction.py` 의 지문 함수 `_fp` 가 객체 배열 (dtype=object) 의 포인터 바이트를 해시한다 — 문자열이 같아도 객체가 다르면 지문이 달라져, 탄소 접합 원장 · 계획 지문이 프로세스 사이에서 재현되지 않을 수 있다 (거짓 거부 쪽 · 런 사슬의 계획 대조를 막는다)",
-      "note": "구현 B 부터 있던 성질 (Q17 구현이 실측) · 거짓 수용이 아니라 거짓 거부 쪽 (fail-closed) 이지만 판정 런 사슬 (계획 해시 · 원장 지문 대조) 이 서려면 **런 전에 반드시** 고친다 — 시험 먼저 (두 프로세스 · 같은 내용 다른 객체 → 지문 같아야 함) → 객체 배열은 내용 직렬화 (정렬된 문자열 · 길이 접두) 로 해시 · 숫자 배열은 dtype · shape · C 순서 바이트.  같은 부류 = 지문 · 증서 결합 (RINTV · G2RR 계열).",
+      "note": "구현 B 부터 있던 성질 (Q17 구현이 실측) · 거짓 수용이 아니라 거짓 거부 쪽 (fail-closed) 이지만 판정 런 사슬 (계획 해시 · 원장 지문 대조) 이 서려면 **런 전에 반드시** 고친다 — 시험 먼저 (두 프로세스 · 같은 내용 다른 객체 → 지문 같아야 함) → 객체 배열은 내용 직렬화 (정렬된 문자열 · 길이 접두) 로 해시 · 숫자 배열은 dtype · shape · C 순서 바이트.  같은 부류 = 지문 · 증서 결합 (RINTV · G2RR 계열).  ✅ 10-20 밤 2 일 차 수정 (시험 먼저 `468c09ec2` pre-fix 150/158 = 실패 검사 8 · 반례 3 (객체 배열 포인터 바이트 · 내용 직렬화 없는 값을 주소 · repr 로 · 객체 dtype 격자를 받는 `_grid_fp` 감싸개 둘) → 수정 `d8295601f` 158/158): 객체 (· 구조체 객체 칸) 배열 = 원소 내용 직렬화 (형 표지 · 길이 접두 · 문자열 UTF-8 · 정수 십진 · 실수 float64 큰 끝 · 중첩 = 그 `_fp` · C 순서) · 숫자 배열 = dtype · 모양 · C 순서 바이트 (옛 지문 비트 그대로) · 내용 직렬화가 정의되지 않은 값 (임의 객체 · set · 구조체 void) = TypeError · `carbon_junction` · `ptfe_face_alpha` 의 `_grid_fp` 감싸개 = 객체 dtype 격자 거부 (`step3_sigma._grid_fp` 자체는 그대로) · 시험 = 같은 내용 다른 객체 · 별도 `python3 -I` 자식 둘 (힙 선할당 0 / 20000) 이 이 프로세스와 같은 지문 · 한 글자 다르면 다른 지문 · 같은 모양 쌍 ([1, 23] ↔ [12, 3] 등) · `ptfe_face_alpha` · `ca_s0_census` 내용 지문은 이미 통과 · `step3_conv_cert` 엔 지문 함수 없음 (목록 검사 FP-m).  메인 회귀 (aef62d81a · 10-20 18:0x UTC): test_carbon_junction 163/163 · test_ca_s0_census 121/121 · test_ptfe_face_alpha 227/227 (+ `--old-scripts` B 묶음 11/11 · 대조 사본의 docs 링크를 고친 뒤 — 옛 링크는 지운 작업 트리를 가리켰다 · 코드 결함 아님) · step3_sigma --selftest · --selftest-rint PASS · check_method_discipline --selftest 128/128 · 인자 없이 오류 0.  Codex 확인 전.",
       "evidence_tests": [
         "scripts/carbon_junction.py",
         "scripts/test_carbon_junction.py"
-      ]
+      ],
+      "claimed_fixed_sha": "d8295601f"
     }
   ]
 }

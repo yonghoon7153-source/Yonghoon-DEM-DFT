@@ -5,7 +5,9 @@
 > VGCF voxel σ = 두 전극 같은 값 하나 (직경 보존 · Endo 단섬유 → 7,854 S/cm · Q5) · 보정 손잡이 = R_j,0 하나 (SBE 1.63) · DBE 4.68 에 맞추지 않음.
 > 압밀 명령 = 등록 v2 `docs/reviews/sdcp_sigma_e_dcp_anchor_registration_v2_20261019.md` §7 R0 · R1 (10-19) + SBE 원 침대 `docs/reviews/table_s3_data_20260827.md` §1.
 > S0 = 설계 v1 `docs/reviews/rint_carbon_additive_design_v1_20261020.md` §2 · 등록 R 초안 `docs/reviews/rint_carbon_additive_registration_R_draft_20261020.md` §2-1 · §10 · §11 ·
-> 도구 `scripts/ca_s0_census.py` · 시험 `scripts/test_ca_s0_census.py` (108 PASS · 변이 14/14 잡힘).
+> 도구 `scripts/ca_s0_census.py` · 시험 `scripts/test_ca_s0_census.py` (108 PASS · 변이 14/14 잡힘) → ✅ **10-20 밤 2 일 차 판 `aef62d81a`** (SCHEMA `ca-s0-census-v2`):
+> 판정 · 보고 접합 census = `carbon_junction.cjunc_registry` **같은 함수** (`junction_census` · s_min 없음 = 같은 가닥 후보 전부 + 경로 호 길이 s 후보별 목록 · 긴 접촉 수 · L_c 분포 · 길이 법칙 배율 합 ·
+> `s0_junctions_<킷>.npz`) · α 분포 = S1 `ptfe_face_alpha` 함수 (`alpha_census`) · 옛 B0 미리보기 = `census_preview` 블록 (status `b0_preview` · 판정 · 보고에 안 씀) 으로 남김 · 시험 121 PASS · σ 칸 없음 (솔브 0) 그대로.
 > **이름 (10-20 확정)** — 새 킷 = `~/sdcp/kit_SBE_vgcf100` · `~/sdcp/kit_DBE_sdcp1um_vgcf100` · 현 세대 `~/sdcp/kit_SBE` · `~/sdcp/kit_DBE_sdcp1um` 은 **그대로** (건드리지 않는다).
 > **코드** — 재압밀 = `~/dem-anchor1019b` (`298a73197` · R1 · 최종 16 팔과 같은 코드) · S0 = 새 작업 트리 `~/dem-ca1` (S0 도구가 든 가지 커밋 · 메인이 옮긴 뒤) · 파이썬 = `~/dem-venv`.
 > **표지** — [리포] 리포 기록 · [우리 산술] 그 값으로 한 계산 · [합성] 합성 시험 (실침대 아님 · 인용 불가) · (어림) · ⬜ = 할 일.
@@ -15,6 +17,7 @@
 | # | 무엇 | 기계 | 시간 (어림) | 끝나면 |
 |---|---|---|---|---|
 | ① | 재압밀 SBE → DBE (차례로 · 한 GPU) | kgy GPU | 침대당 ≈ 1.5–2 h · 둘 ≈ 3–4 h (§1-3) | §1-4 검사 출력 보내기 |
+| ②′ | (선택 · 지금 가능 · ①과 무관) S0 **도구 시험** — 현 세대 `kit_SBE` (옛 VGCF 10 GPa 침대) | kgy CPU | ≈ 15–30 분 (§2-1b) | 화면 요약 보내기 — **s_min · 문턱 결정에 쓰지 않는다** |
 | ② | S0 단계 1 — SBE 새 침대 | kgy CPU | 침대당 ≈ 15–30 분 (§2-2) | 보고 · 계획 보내기 → 등록 R §2-1 개정 커밋 |
 | ③ | S0 단계 2 — DBE 새 침대 (+ 옛 `kit_DBE`) | kgy CPU | 침대당 ≈ 15–30 분 | 보고 보내기 |
 | ④ | 런 사슬 | — | — | ⛔ **발사 금지** (§3 · 등록 R §11 관문 뒤) |
@@ -165,8 +168,19 @@ ls ~/dem-ca1/scripts/ca_s0_census.py ~/dem-ca1/scripts/test_ca_s0_census.py
 
 ```bash
 . ~/dem-venv/bin/activate
-python3 ~/dem-ca1/scripts/test_ca_s0_census.py 2>&1 | tail -3        # '108 PASS · 0 FAIL' 이어야 (payload 를 작은 픽스처로 실제로 돌린다 · GPU 없음 · 임시 git 저장소)
+python3 ~/dem-ca1/scripts/test_ca_s0_census.py 2>&1 | tail -3        # '121 PASS · 0 FAIL' 이어야 (2 일 차 판 · 옛 판 108) (payload 를 작은 픽스처로 실제로 돌린다 · GPU 없음 · 임시 git 저장소)
 ```
+
+### 2-1b. (선택) 도구 시험 — 현 세대 `kit_SBE` (옛 침대 · 재압밀과 무관 · GPU 안 씀)
+
+> **지위** — 실침대에서 S0 도구가 끝까지 도는지 · 거부 사유가 없는지를 재압밀 **전에** 보는 시험.  옛 침대 (VGCF 10 GPa 세대) 라 VGCF 경로 기하가 새 침대와 다를 수 있다 ⇒
+> 이 출력의 숫자로 s_min · 문턱 (u · tol_ff · tol_P · tol_sj) 을 정하지 않는다 (등록 R §2-1 = 새 침대 단계 1) · σ 없음 (솔브 0) · 결과 열람 제약 없음 (census).  작업 트리 = §2-0 (핀 `aef62d81a` 이상).
+
+```bash
+python3 ~/dem-ca1/scripts/ca_s0_census.py --stage 1 --kit ~/sdcp/kit_SBE --out ~/sdcp/ca1_s0_sbe_oldbed_tooltest 2>&1 | tee ~/ca1_s0_sbe_oldbed_tooltest.log
+```
+
+- 보내 주세요: 화면 끝 요약 (`── kit_SBE (단계 1)` 부터) · 거부되면 `[S0] ⛔ 거부 — …` 줄 (출력 폴더는 지우지 않는다).
 
 ### 2-2. 단계 1 — SBE 새 침대 (재압밀 완주 뒤 · 그 킷의 런이 돌고 있으면 거부된다)
 
@@ -175,7 +189,8 @@ python3 ~/dem-ca1/scripts/ca_s0_census.py --stage 1 --kit ~/sdcp/kit_SBE_vgcf100
 ls -la ~/sdcp/ca1_s0_sbe && cat ~/sdcp/ca1_s0_sbe/cjunc_plan.sha256
 ```
 
-- 산출: `s0_stage1_kit_SBE_vgcf100.json` (보고) · `s0_instances_kit_SBE_vgcf100.npz` (instance 배열) · `cjunc_plan.json` (정준 바이트) · `cjunc_plan.sha256` ·
+- 산출: `s0_stage1_kit_SBE_vgcf100.json` (보고 · 2 일 차 블록 `junction_census` · `alpha_census` · `census_preview`) · `s0_instances_kit_SBE_vgcf100.npz` (instance 배열) ·
+  `s0_junctions_kit_SBE_vgcf100.npz` (접합 후보별 배열 — 같은 가닥 후보의 fid · s · L_c · 배율 = s_min 근거) · `cjunc_plan.json` (정준 바이트) · `cjunc_plan.sha256` ·
   `payload_capture_kit_SBE_vgcf100.log`.
 - **보내 주세요**: 화면 끝 요약 (`── kit_SBE_vgcf100 (단계 1)` 부터) · `cjunc_plan.json` · `cjunc_plan.sha256` · 보고 JSON → 리포 `docs/data/rint2_s0_sbe_<날짜>/` 로 반입
   (npz 는 크면 kgy 에 두고 sha256 만).
@@ -205,7 +220,7 @@ python3 ~/dem-ca1/scripts/ca_s0_census.py --stage 2 --threshold-commit <§2-1 �
 ## 3. ③ 런 사슬 — 꼴만 (⛔ 발사 금지)
 
 > ⛔ **발사 = 등록 R §11 선행 관문 1–8 이 전부 선 뒤** — 구현 B0–B6 (시험 먼저 · 게이트 · 웹앱 같은 묶음 · Codex 구현 리뷰) · Codex 설계 리뷰 GO ·
-> 1저자 N1–N18 ✅ (10-20) · S0 단계 1 → §2-1 개정 → 단계 2 (긴 접촉 ≥ 1 이면 여기서 멈춤 — §4 ①) · B1 합성 직접해 대조 → 수렴 숫자 개정 · 숫자 탐침 · 결과 전 어림 · 1저자 비준.
+> 1저자 N1–N18 ✅ (10-20) · S0 단계 1 → §2-1 개정 (s_min 포함) → 단계 2 (~~긴 접촉 ≥ 1 이면 여기서 멈춤 — §4 ①~~ → ✅ 10-20 밤 Q17: 멈추지 않는다 · 길이 비례 접합) · B1 합성 직접해 대조 → 수렴 숫자 개정 · 숫자 탐침 · 결과 전 어림 · 1저자 비준.
 > 노브 이름은 후보 (설계 §7) — B6 에서 확정해 등록 R §10 을 개정한다.  아래는 등록 R §10 의 꼴에 새 킷 이름만 넣은 것이다.
 
 ```bash
@@ -234,8 +249,10 @@ touch = 정확히 2 (r_fi + r_fj) = 0.30 µm (= L_par · 경계) [우리 산술]
 **긴 접촉 ≥ 1 은 거의 확실** (추정) ⇒ 등록 R §11 ④ (*"1 이상이면 여기서 멈춘다"*) 가 정량 R 을 S0 에서 멈출 공산이 크다.
 → ⬜ 1저자 (+ Codex): L_c 정의 (권고 = touch 판 — 표면 겹침 길이 · 검출 문턱의 위치 불확도 tol_ff 를 길이에 넣지 않는다) · J8 처리 (N10 개정 경로 — 길이 법칙 등록,
 또는 긴 접촉을 길이 L_par 단위의 instance 로 나누는 규칙 등 · 둘 다 결과 전) 를 S0 단계 1 숫자 전에.
+→ ✅ **10-20 밤 1저자 Q17 = 권고대로** — 길이 비례 접합 G_j = max(1, L_c/L_par)/R_j,0 (J8 정량 거부 대체 · 새 손잡이 없음) · L_c = touch 판 · 꺾임 자기 접합 = 경로 호 길이 s < s_min 이면 접합 아님 ·
+  s_min = 필수 · 기본값 없음 · 단계 1 (새 침대) 뒤 §2-1 개정 · 구현 시험 먼저 `80a9a4ab1` → `c5a3473d3` · S0 가 같은 함수로 센다 (2 일 차 `2e2b08c09`).
 
-② **재하율** — §1-5 (기하 규칙 플래튼 · V/c_P 0.27 → ≈ 0.41) · 1저자 (가) / (나).
+② **재하율** — §1-5 (기하 규칙 플래튼 · V/c_P 0.27 → ≈ 0.41) · 1저자 (가) / (나).  → ✅ **10-20 밤 1저자 Q18 = (가)** VGCF E 만 · 이름 *"E + dt + 재하율 세대 전환"*.
 
 ③ **미리보기 정의** (보고의 `notes`) — 포트 (그 fid 경로 셀 중 sid 3 · 최근접점 ↔ 셀 중심 유클리드 ≤ r_port · 동률 = 경로 열 번호 작은 셀) · 자기 접촉 (선분 번호 차 ≥ 2 ·
 호 길이 차 > (π/2)·thr) · VA 문턱 tol_fs = 0 (계획에 숫자 없음 · J2b 판정문 예시 경계 = r_f + R_AM) — 판정 · 보고의 instance census = B3 `cjunc_registry` (같은 함수 · 사본 금지) 가
