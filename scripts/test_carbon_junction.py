@@ -861,6 +861,27 @@ def t_len_oblique():
         all(ms[i + 1] > ms[i] for i in range(len(ms) - 1)) and min(ms) >= 1.0, f'{ms}')
 
 
+@case('LEN-G')
+def t_len_gate():
+    """배율 기록 ↔ 쓰는 값 결합 — 계획의 배율만 바꾸고 행 지문을 다시 만든 변이 (g 는 옛 값) 는 솔브 입구에서 거부 (CG 0).
+    구현과 같은 커밋에서 더한 시험 (자기 리뷰 · 증서 ↔ 결과 결합 부류)."""
+    P = rows(LP)
+    sid, _ = bed(P, LP_N)
+    pl = plan(registry(sid, P), 1e3)
+    ok_base = _try(lambda: I_of(solve(sid, sig_e(), LP_N, pl), LP_N)) > 0
+    bad = []
+    for nm, f in (('배율 ×2', 2.0), ('배율 ×0.5 (< 1)', 0.5)):
+        pm = dict(pl)
+        pm['mult'] = np.asarray(pl['mult'], np.float64) * f
+        pm['fp_rows'] = CJ.plan_rows_fp(pm)
+        _CG_CALLS[0] = 0
+        rej = raises(lambda pm=pm: solve(sid, sig_e(), LP_N, pm))
+        if not (rej and _CG_CALLS[0] == 0):
+            bad.append(nm)
+    chk('LEN-G 배율만 바꾸고 지문을 다시 만든 계획 (×2 · ×0.5) = 솔브 입구 거부 · CG 0 (정상 계획은 풀린다)', ok_base and not bad,
+        f'base {ok_base} 통과한 변이 {bad}')
+
+
 @case('J8')
 def t_j8_long():
     P = rows(LP)
@@ -954,6 +975,50 @@ def t_kink():
     mw = _plan_mult(plan(rw, rj)) if rw is not None else None
     chk('KINK 자기 접합 L_c = 닿음 규칙 (셀 셈 아님) — 면으로 닿는 셀 셋 · 중심선 1.2 > r_f + r_f → L_c 0 · 배율 1',
         len(lcw) == 1 and float(lcw[0]) == 0.0 and mw is not None and list(mw) == [1.0], f'{list(lcw)} {mw}')
+
+
+#  KR 꺾임 재방문: 위로 (1,1,0..3) → 오른쪽 (2,1,3) → 위 (2,1,4) → 왼쪽 (1,1,4) → 아래로 셀 (1,1,3) 에 **다시** 들어옴 → 왼쪽 (0,1,3) →
+#     위로 (0,1,3..7) 위 판.  자기 후보 둘 = 재방문 (1,1,3) (s = 1.0 + 1.3 + 1.2 + 0.9 = 4.4) · 면 (1,1,4)|(0,1,4) (s ≲ 2.6).
+KR_N = (4, 3, 8)
+KR = [[(1.5, 1.5, 0.5), (1.5, 1.5, 3.2), (2.5, 1.5, 3.2), (2.5, 1.5, 4.5), (1.3, 1.5, 4.5), (1.3, 1.5, 3.6), (0.5, 1.5, 3.6),
+       (0.5, 1.5, 7.5)]]
+
+
+@case('KINK-R')
+def t_kink_revisit():
+    """s < s_min 재방문 = 옛 복셀 한 셀 (두 위치를 한 노드로) — 구현과 같은 커밋에서 더한 시험 (합침 경로의 판별력 · 변이 = 합침 끔)."""
+    P = rows(KR)
+    sid, _ = bed(P, KR_N)
+    I_leg = I_of(solve_legacy(sid, sig_e(), KR_N), KR_N)
+    rc = _try(lambda: registry(sid, P, s_min_um=10.0), None)            # 둘 다 s < s_min → 같은 가닥의 연속
+    cc = (rc or {}).get('census') or {}
+    chk('KINK-R s < s_min — 후보 2 · 거른 수 2 · 합친 재방문 1 · 융합 자기 면 1 · 접합 0',
+        rc is not None and cc.get('n_self_candidates') == 2 and cc.get('n_self_filtered') == 2
+        and cc.get('n_self_merged_revisits') == 1 and cc.get('n_self_fused_faces') == 1 and len(rc['instances']['fi']) == 0,
+        f'{cc}')
+    rj = 1e3
+    r = _try(lambda: solve(sid, sig_e(), KR_N, plan(rc, rj)), None)
+    chk('KINK-R s < s_min — σ = 옛 경로 (재방문 = 한 노드 · 면 = 융합 · 1e-12) · 솔브 기록 합침 1',
+        r is not None and rel(I_of(r, KR_N), I_leg) < 1e-12 and r['cjunc'].get('n_self_merged_revisits') == 1,
+        f"{None if r is None else I_of(r, KR_N)} ↔ {I_leg}")
+    base_cls = CJ.CjuncAssembler
+
+    class NoMerge(base_cls):                                # 변이 — 재방문 합침을 끈다 (두 위치가 따로 남는다)
+        def build(self, *a, **k):
+            self.reg = dict(self.reg)
+            self.reg['self_merge'] = np.zeros((0, 2), np.int64)
+            return super().build(*a, **k)
+    CJ.CjuncAssembler = NoMerge
+    try:
+        Im = _try(lambda: I_of(solve(sid, sig_e(), KR_N, plan(rc, rj)), KR_N))
+    finally:
+        CJ.CjuncAssembler = base_cls
+    chk('KINK-R 변이 (재방문 합침 끔) → 옛 경로에서 벗어난다', not rel(Im, I_leg) < 1e-12, f'{Im} ↔ {I_leg}')
+    rj_ = _try(lambda: registry(sid, P, s_min_um=0.5), None)            # 둘 다 s ≥ s_min → 자기 접합 둘
+    cj_ = (rj_ or {}).get('census') or {}
+    chk('KINK-R s ≥ s_min — 자기 접합 둘 · 합친 재방문 0 · 융합 자기 면 0',
+        rj_ is not None and int(np.sum(rj_['instances']['self'])) == 2 and cj_.get('n_self_merged_revisits') == 0
+        and cj_.get('n_self_fused_faces') == 0, f'{cj_}')
 
 
 @case('INV')
@@ -1434,24 +1499,26 @@ def t_mut_len():
         Ih = _try(lambda: I_of(solve(sidku, sig_e(), KU_N, plan(reg, rj)), KU_N))
         return int(np.sum(reg['instances']['self'])) == 0 and rel(Ih, I_of(solve_legacy(sidku, sig_e(), KU_N), KU_N)) < 1e-12
 
+    #  (이름 · 훅 · 변이 · 검사) — 변이 전 검사 통과 · 변이 뒤 같은 검사 실패 (예외로 멈춰도 '걸렸다' · B 의 MUT 와 같은 규약:
+    #   max(1, ·) 빼기는 계획의 배율 ≥ 1 불변량이 해석 대조 전에 막는다)
     cases = (
         ('배율 제곱 → LEN-P 해석에서 벗어난다', 'junction_len_mult',
-         lambda Lc, Lp: np.maximum(1.0, np.asarray(Lc, np.float64) / Lp) ** 2, lambda: lp_err() < 1e-12, lambda: lp_err() > 1e-6),
-        ('max(1, ·) 빼기 (짧은 접촉이 약해짐) → C1 해석에서 벗어난다', 'junction_len_mult',
-         lambda Lc, Lp: np.asarray(Lc, np.float64) / Lp, lambda: f1_err() < 1e-12, lambda: f1_err() > 1e-6),
+         lambda Lc, Lp: np.maximum(1.0, np.asarray(Lc, np.float64) / Lp) ** 2, lambda: lp_err() < 1e-12),
+        ('max(1, ·) 빼기 (짧은 접촉이 약해짐) → C1 해석 · 배율 불변량에 걸린다', 'junction_len_mult',
+         lambda Lc, Lp: np.asarray(Lc, np.float64) / Lp, lambda: f1_err() < 1e-12),
         ('s 거르기 끔 → s < s_min 인데 자기 접합이 생긴다 (KINK 연속 기준 실패)', '_self_is_junction',
-         lambda s, smin: np.ones(np.shape(np.atleast_1d(s)), bool), ku_cont_ok, lambda: not ku_cont_ok()),
+         lambda s, smin: np.ones(np.shape(np.atleast_1d(s)), bool), ku_cont_ok),
         ('발자국 = 최근접 선분 쌍만 → run 위 A|B 면이 fused 로 남아 LEN-P (fused) 해석에서 벗어난다', '_footprint_segs',
          lambda inst, k: (np.atleast_1d(inst['si_min'][k]), np.atleast_1d(inst['sj_min'][k])),
-         lambda: lp_err('fused') < 1e-12, lambda: lp_err('fused') > 1e-6),
+         lambda: lp_err('fused') < 1e-12),
     )
-    for nm, name, fn, base_ok, caught in cases:
+    for nm, name, fn, check in cases:
         h = hook(name)
-        b = bool(base_ok()) if h else False
+        b = bool(check()) if h else False
         c = None
         if h:
             with patched(name, fn):
-                c = bool(caught())
+                c = not bool(check())
         chk(f'MUT-LEN {nm} (훅 `{name}` 있음 · 변이 전 통과 · 변이 실패)', h and b and c is True, f'hook {h} base {b} caught {c}')
 
 

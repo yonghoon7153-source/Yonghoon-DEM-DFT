@@ -18,9 +18,21 @@ v3 §5 J2a–J12 · v3.1 (겹치면 뒤가 이긴다) · 1저자 10-20 N1–N18 
   solve_sigma_z(…, cjunc=plan) → res['cjunc'] (기록) · res['_cjunc'] (dof 수준 원장 — 시험 · 진단)
 
 구현이 정한 것 (설계에 식이 없던 자리 · 1저자 확인 대상 — 보고에 적는다):
-  L_c (J8 긴 접촉 길이) = 두 가닥 각각에서 **중심선 거리 ≤ r_fi + r_fj (닿음)** 인 구간 길이의 최댓값 (`CJUNC_LC_RULE`) —
-    L_par = 2(r_fi + r_fj) 가 "직교 교차의 최대 닿음 길이" 와 같아지는 읽기 (직교 교차 = 긴 접촉 아님 · 비스듬한 깊은 교차는 길 수 있다).
-  자기 접합 = 같은 fid 의 비연속 두 위치가 면으로 닿거나 (설계 §4-1 J1) 같은 셀을 다시 지남 (재방문) — 이웃 위치로 무리 지은 하나.
+  L_c (접촉 길이) = 두 가닥 각각에서 **중심선 거리 ≤ r_fi + r_fj (닿음)** 인 구간 길이의 최댓값 (`CJUNC_LC_RULE`) —
+    L_par = 2(r_fi + r_fj) 가 "직교 교차의 최대 닿음 길이" 와 같아지는 읽기 (직교 교차 = 배율 1 · 비스듬한 깊은 교차는 길 수 있다).
+  ★ 길이 법칙 v0 (`CJUNC_LEN_LAW` · 1저자 10-20 밤 Q17 · 옛 J8 "긴 접촉 = 정량 거부" 대체): 접합 G = max(1, L_c/L_par) / R_j,0 —
+    긴 접촉 = 점 접합 L_c/L_par 개 병렬 (선 접촉 협착 컨덕턴스 ∝ 길이의 1차 근사) · 새 손잡이 없음 (R_j,0 하나) · instance 하나 =
+    간선 하나 (lumped · 포트 규칙 그대로 · 접촉을 따라 ceil(L_c/L_par) 간선으로 나누는 분산판 = v1 후보).  L_c ≤ L_par·(1 + 1e-9) 이면
+    배율 = 정확히 1 (`junction_len_mult`) — 법칙은 경계에서 연속이라 묶음의 크기 ≤ 1e-9 상대이고, 깊은 직교 교차 (L_c = L_par) 의
+    선분 길이 합 반올림 몇 ulp 가 점 접합 결과를 비트에서 바꾸지 않게 한다 (긴 접촉 표지 · 집계 = 같은 문턱).
+  자기 접합 = 같은 fid 의 비연속 두 위치가 면으로 닿거나 (설계 §4-1 J1) 같은 셀을 다시 지남 (재방문) — 이웃 위치로 무리 지은 후보 하나.
+    ★ 꺾임 거르기: 후보마다 두 쪽 (항목의 앞 · 뒤 위치) 셀 조각 (그 셀 닫힌 상자로 자른 중심선) 사이 **최근접점 쌍** (거리² ε 띠 ·
+      띠 안 동률 = 호 길이가 작은 쪽) 의 경로 호 길이 s (fid 경로를 정준 방향으로 누적 · 조각 사이 간격 현 포함 · 점 역순 불변) ·
+      s < s_min = 같은 가닥의 연속 (접합 아님 · 면 = 옛 융합 그대로 · 재방문 = 옛 셀 한 노드) · s ≥ s_min = 진짜 접힘 · 고리 접촉
+      (절단 + R_j 간선 · 같은 길이 법칙).  s_min = 필수 · 기본값 없음 (None = 미등록 → 정량 거부 · 시험 모드 = 거르지 않음).
+    자기 접합 L_c = 닿음 규칙을 두 쪽 셀 조각 사이에 (구현 B 의 '위치 수 × vox' 셈을 대체 — 배율이 σ 에 들어가므로 격자 셈을 쓰지 않는다).
+  절단 발자국 = instance 로 묶인 **선분 쌍 run 전체** (`_footprint_segs` — 구현 B 부터 최근접 쌍만이 아니었다) · 긴 접촉의 run 위
+    융합 i|j 면이 lumped 간선을 우회하지 않는다.
   포트 동률 = 정준 방향 (조각의 사전순 작은 끝에서 시작) 경로 번호가 작은 위치 (점 역순에 불변).
   교차 셀의 비탄소 면 · 판 결합 · 미등록 융합 면 = 기하 최근접 멤버십 (J9 · ε 띠 1e-9 µm² · 최근접점 → 방향 → (fid, 조각, 번호)).
 """
@@ -33,13 +45,17 @@ from scipy import ndimage, sparse
 CJUNC_MODEL_VERSION = 'r3-carbon-junction-port'
 CJUNC_SCHEMA = 'cjunc-v1'
 CJUNC_LC_RULE = 'touch_len_max_v1'
+CJUNC_SELF_LC_RULE = 'touch_len_max_cellclip_v1'   # 자기 접합 L_c — 같은 닿음 규칙 · 두 쪽 = 항목 위치들의 셀 조각
+CJUNC_SELF_S_RULE = 'arc_between_nearest_points_cellclip_v1'
+CJUNC_LEN_LAW = 'len_scaled_v0'            # G_j = max(1, L_c/L_par) / R_j,0 (lumped 간선 하나 · 1저자 10-20 밤 Q17)
 CJUNC_PORT_RULE = 'nearest_cell_centre_within_rport_tie_canonical_seq_v1'
-CJUNC_FOOTPRINT_RULE = 'owner_cells_within_D_plus_half_diag_v1'
+CJUNC_FOOTPRINT_RULE = 'owner_cells_within_D_plus_half_diag_v1'   # 발자국 선분 = instance run 전체 (`_footprint_segs` · B 와 같은 동작)
 CJUNC_SELF_RULE = 'nonconsecutive_face_or_revisit_v1'
 CJUNC_OWNER_RULE = 'nearest_centreline_eps_band_point_dir_lex_v1'
-CJUNC_EPS_D2_UM2 = 1.0e-9                  # J9 집합 규칙 ε 띠 (거리² µm²) — 봉인 (①′ ε_p 와 같은 꼴)
-#: J8 비교의 **수치** 허용 (상대) — 깊은 직교 교차 (d0 = 0) 의 닿음 길이는 정확히 L_par = 2(r_fi + r_fj) 다.  선분 길이 합의 반올림
-#:   (몇 ulp) 이 그 경계를 넘기지 않게 L_c > L_par·(1 + 이 값) 만 긴 접촉 — 1e-9 × 0.30 µm = 3e-10 µm (기하 뜻 없음 · 봉인).
+CJUNC_EPS_D2_UM2 = 1.0e-9                  # J9 집합 규칙 ε 띠 (거리² µm²) — 봉인 (①′ ε_p 와 같은 꼴) · 자기 접합 최근접점 띠도 같은 값
+#: L_c ↔ L_par 비교의 **수치** 허용 (상대) — 깊은 직교 교차 (d0 = 0) 의 닿음 길이는 정확히 L_par = 2(r_fi + r_fj) 다.  선분 길이 합의
+#:   반올림 (몇 ulp) 이 그 경계를 넘기지 않게 L_c > L_par·(1 + 이 값) 만 긴 접촉 (표지 · 집계) · 그 아래 배율 = 정확히 1 (점 접합과 비트
+#:   같게) — 길이 법칙은 경계에서 연속이라 배율 쪽 묶음의 크기는 ≤ 이 값 (1e-9 상대 · 기하 뜻 없음 · 봉인).
 CJUNC_LPAR_RTOL = 1.0e-9
 RJ_REFERENCE_PLANE = 'model_internal_port_centre'
 VGCF_R_UM = 0.075                          # 생산 VGCF Ø0.15 µm (`additives.VGCF_D`)
@@ -53,7 +69,7 @@ RJ_OHM_TO_CODE = 1.0e4                     # g_code [S/cm·µm] = 1e4 / R_j [Ω]
 MODE_EDGE, MODE_CONTRACT, MODE_CUT_P1, MODE_UNREALIZED, MODE_NONE_INF = 1, 2, 3, 4, 5
 MODE_NAME = {MODE_EDGE: 'edge', MODE_CONTRACT: 'contract', MODE_CUT_P1: 'cut_p1', MODE_UNREALIZED: 'unrealized',
              MODE_NONE_INF: 'none_inf'}
-K_AXIAL, K_VX, K_CUT_SITE, K_CUT_SELF, K_UNREG = 1, 2, 3, 4, 5
+K_AXIAL, K_VX, K_CUT_SITE, K_CUT_SELF, K_UNREG, K_SELF_FUSED = 1, 2, 3, 4, 5, 6
 
 CJUNC_STATUS = ('mechanism_only — 탄소 접합 R_j v0 (VGCF–VGCF) · 정량 판정 = 등록 R 비준 · Codex GO · S0 문턱 개정 뒤 · '
                 'payload 미배선 (B6) · 웹앱 표지 = 봉인 파일 (mpm_lab_register) 이라 보류')
@@ -61,7 +77,9 @@ CJUNC_QUALIFIERS = (
     'R_j = 모형 내부 보정값 (재료값 아님 · 포트 = 셀 중심 · 직접 간선에 반셀 · 접근 몫 없음 → 그 몫이 R_j 에 묶인다)',
     'VGCF–VGCF 만 정량 — VGCF–AM · SDCP–VGCF · SDCP–AM 면 = 옛 융합 (SDCP–VGCF 접촉 저항 0 가정)',
     'instance = 중심선 기하 근접 (관통 포함 · MPM 은 섬유 접촉 역학을 풀지 않는다) · 중심선 위치 불확도 = MPM 점 간격',
-    'R_j 는 모든 VV instance 에 같은 값 (길이 · 면적 법칙 없음) · 긴 접촉 (L_c > L_par) = 정량 거부 (J8)',
+    'R_j,0 는 모든 VV instance 에 같은 값 · 접합 G = max(1, L_c/L_par)/R_j,0 (길이 법칙 v0 — 선 접촉 협착 ∝ 길이의 1차 근사 · '
+    '점 접합 L_c/L_par 개 병렬 · instance 하나 = lumped 간선 하나 · 분산판 = v1 후보) · L_c = 닿음 길이 (중심선 기하 근접)',
+    '꺾임 자기 접합 = 두 최근접점 사이 경로 호 길이 s < s_min 이면 접합 아님 (옛 복셀 융합 그대로) · s_min = 등록 문턱 (없으면 정량 거부)',
     'S3 c ∈ {0, 1} = 시나리오 끝 (재료 예측 아님 · c = 1 = 근접 접합 축약 끝 · 젖음 상한 아님)',
 )
 
@@ -77,6 +95,25 @@ def junction_g_code(R_ohm):
 def sdcp_rj_eff(R0, c, a):
     """S3 — R_j′ = R_j,0 · (1 − c · a_j) (설계 §5-1).  a ∈ {0, 1} · c ∈ [0, 1]."""
     return R0 * (1.0 - c * a)
+
+
+def junction_len_mult(Lc, L_par):
+    """길이 법칙 v0 (`CJUNC_LEN_LAW`) — instance 배율 m = max(1, L_c/L_par) · 접합 g_code = 1e4 · m / R_j.
+    L_c ≤ L_par·(1 + `CJUNC_LPAR_RTOL`) = 정확히 1.0 (법칙은 연속 · 묶음 크기 ≤ 1e-9 상대 · 긴 접촉 없는 침대 = 점 접합과 비트 같음 —
+    깊은 직교 교차의 L_c 는 L_par 보다 1–3 ulp 클 때가 많다).  NaN L_c = NaN (조용히 1 로 만들지 않는다 · 계획의 불변량이 거부)."""
+    r = np.asarray(Lc, np.float64) / float(L_par)
+    return np.where(np.isnan(r), np.nan, np.where(r > 1.0 + CJUNC_LPAR_RTOL, r, 1.0))
+
+
+def _self_is_junction(s_um, s_min_um):
+    """꺾임 자기 접합 거르기 — s ≥ s_min = 진짜 접힘 · 고리 접촉 (접합) · s < s_min = 같은 가닥의 연속 (접합 아님)."""
+    return np.asarray(s_um, np.float64) >= float(s_min_um)
+
+
+def _footprint_segs(inst, k):
+    """J3 자리 발자국의 선분 — distinct instance k 로 묶인 선분 쌍 run 전체 (d ≤ r_fi + r_fj + tol_ff 인 쌍들의 i · j 선분).
+    최근접 쌍만이면 긴 접촉 run 의 나머지 융합 i|j 면이 미등록 법칙 (fused) 으로 남아 lumped 접합 간선을 병렬로 우회한다."""
+    return inst['seg_i'][k], inst['seg_j'][k]
 
 
 # ═════════════════════════ 기하 원시 함수 ═════════════════════════
@@ -263,29 +300,41 @@ def _paths_of(P, PH, F, K, phase, rej, label):
 
 
 def _segments_of(paths, P, gap_tol):
-    """경로 → 조각 (정준 방향) → 선분 표.  → dict(arrays) · 조각마다 (fid, 점 배열)."""
-    sP0, sP1, sfid, spiece, sk = [], [], [], [], []
+    """경로 → 조각 (정준 방향) → 선분 표.  → dict(arrays) · 조각마다 (fid, 점 배열).
+    arc_a · arc_b = 선분 두 끝의 **경로 호 좌표** (꺾임 자기 접합 s) — fid 경로 전체를 정준 방향 (사전순 작은 끝에서) 으로 놓고 연속 점
+    거리를 누적 (조각 사이 간격 현 포함) · 점 역순 입력에서도 같은 비트.  선분 위 호 좌표 = arc_a + t·(arc_b − arc_a)."""
+    sP0, sP1, sfid, spiece, sk, sa0, sa1 = [], [], [], [], [], [], []
     pieces = []
     for f, r, kind_path in paths:
         Q = P[r]
+        flip = bool(kind_path and len(Q) > 1 and tuple(Q[-1]) < tuple(Q[0]))
+        Qc = Q[::-1] if flip else Q
+        cum = (np.r_[0.0, np.cumsum(np.linalg.norm(np.diff(Qc, axis=0), axis=1))] if (kind_path and len(Q) > 1)
+               else np.zeros(len(Q)))
+        arc_of = cum[::-1] if flip else cum                  # 원래 점 번호 → 호 좌표
         for ix in (fibre_pieces(Q, gap_tol) if kind_path else [np.arange(len(Q))]):
             R = Q[ix]
+            ixo = ix
             if kind_path and len(R) > 1 and tuple(R[-1]) < tuple(R[0]):
                 R = R[::-1]
+                ixo = ix[::-1]
             gp = len(pieces)
             pieces.append((f, R, kind_path))
             if len(R) == 1 or not kind_path:
                 A = R; B = R                                  # 점 = 퇴화 선분 (경로 아닌 fid 도 점마다)
+                a0 = arc_of[ixo]; a1 = arc_of[ixo]
             else:
                 A = R[:-1]; B = R[1:]
-            sP0.append(A); sP1.append(B)
+                a0 = arc_of[ixo[:-1]]; a1 = arc_of[ixo[1:]]
+            sP0.append(A); sP1.append(B); sa0.append(a0); sa1.append(a1)
             sfid.append(np.full(len(A), f)); spiece.append(np.full(len(A), gp)); sk.append(np.arange(len(A)))
     if not pieces:
         z = np.zeros((0, 3))
         return {'P0': z, 'P1': z.copy(), 'fid': np.zeros(0, np.int64), 'piece': np.zeros(0, np.int64),
-                'k': np.zeros(0, np.int64)}, pieces
+                'k': np.zeros(0, np.int64), 'arc_a': np.zeros(0), 'arc_b': np.zeros(0)}, pieces
     return {'P0': np.vstack(sP0), 'P1': np.vstack(sP1), 'fid': np.concatenate(sfid).astype(np.int64),
-            'piece': np.concatenate(spiece).astype(np.int64), 'k': np.concatenate(sk).astype(np.int64)}, pieces
+            'piece': np.concatenate(spiece).astype(np.int64), 'k': np.concatenate(sk).astype(np.int64),
+            'arc_a': np.concatenate(sa0).astype(np.float64), 'arc_b': np.concatenate(sa1).astype(np.float64)}, pieces
 
 
 def _positions(pieces, segs, lo, vox, n, sid):
@@ -398,9 +447,11 @@ class _UF:
 
 # ═════════════════════════ 원장 (기하만) ═════════════════════════
 def cjunc_registry(sid, box_lo, vox, add_pts, add_phase, add_fid, add_kind, *, r_f_um, tol_ff_um, L_par_um, r_port_um,
-                   gap_tol=2.0, tol_P_um=None, tol_sj_um=None, r_ptfe_um=PTFE_R_UM, r_sdcp_um=SDCP_R_UM):
+                   s_min_um, gap_tol=2.0, tol_P_um=None, tol_sj_um=None, r_ptfe_um=PTFE_R_UM, r_sdcp_um=SDCP_R_UM):
     """② 탄소 접합 원장 — **기하만** (σ · 전류 없음).  문턱 = 식 고정 · 숫자 = S0 단계 1 (설계 §4-1 · R §2-1) — 기본값을 두지 않는다
-    (r_f · tol_ff · L_par · r_port 필수).  tol_P · tol_sj 기본 = tol_ff (설계: 한 숫자).  → dict (지문 포함)."""
+    (r_f · tol_ff · L_par · r_port · s_min 필수).  tol_P · tol_sj 기본 = tol_ff (설계: 한 숫자).  → dict (지문 포함).
+    s_min_um = 꺾임 자기 접합 거르기 문턱 (경로 호 길이 µm) — None = 미등록 (구조화 거부 `self_s_min_missing` · 정량 계획이 막는다 ·
+    시험 모드는 거르지 않고 진행 · 표지 `off_s_min_missing`)."""
     sid = np.asarray(sid)
     if sid.ndim != 3:
         raise ValueError('② 탄소 접합: sid 는 3 차원 격자')
@@ -418,6 +469,13 @@ def cjunc_registry(sid, box_lo, vox, add_pts, add_phase, add_fid, add_kind, *, r
     thr = {k_: float(v_) for k_, v_ in thr.items()}
     if thr['r_f_um'] <= 0.0 or thr['gap_tol'] <= 0.0:
         raise ValueError('② 탄소 접합: r_f · gap_tol > 0')
+    if thr['L_par_um'] <= 0.0:
+        raise ValueError('② 탄소 접합: L_par > 0 (길이 법칙 v0 의 분모 · 배율 = max(1, L_c/L_par))')
+    if s_min_um is not None and (isinstance(s_min_um, bool) or not isinstance(s_min_um, (int, float, np.floating, np.integer))
+                                 or not math.isfinite(float(s_min_um)) or float(s_min_um) < 0.0):
+        raise ValueError(f'② 탄소 접합: s_min = {s_min_um!r} — None (미등록 · 정량 거부) 또는 유한한 0 이상 실수 '
+                         f'(꺾임 자기 접합 경로 호 길이 µm · 숫자 = S0 단계 1 뒤 R §2-1)')
+    thr['s_min_um'] = None if s_min_um is None else float(s_min_um)
     P, PH, F, K = _input_check(add_pts, add_phase, add_fid, add_kind)
     n = np.array(sid.shape, np.int64)
     rej = []
@@ -545,7 +603,7 @@ def cjunc_registry(sid, box_lo, vox, add_pts, add_phase, add_fid, add_kind, *, r
         best, bestd = -1, math.inf
         nmatch = 0
         for k in by_pair.get(key, ()):
-            Si = inst['seg_i'][k]; Sj = inst['seg_j'][k]
+            Si, Sj = _footprint_segs(inst, k)                # run 전체 (긴 접촉 = lumped 간선 · run 위 면이 남으면 우회)
             seg_of_fa = Si if int(inst['fi'][k]) == fa else Sj
             seg_of_fb = Sj if int(inst['fi'][k]) == fa else Si
             da = float(np.sqrt(np.min(pt_seg_d2(np.repeat(ca[None], len(seg_of_fb), 0), segs['P0'][seg_of_fb],
@@ -574,12 +632,48 @@ def cjunc_registry(sid, box_lo, vox, add_pts, add_phase, add_fid, add_kind, *, r
             for y in range(x + 1, len(mem)):
                 if pos['fid'][mem[x]] == pos['fid'][mem[y]]:
                     self_items.append((int(mem[x]), int(mem[y]), int(cell_lin[c_i]), -1, 0))
-    selfinst, self_face_inst = _self_instances(self_items, pos, vox)
+    selfcand, self_face_inst, self_groups, self_norm = _self_instances(self_items, pos, vox)
+    # ── 꺾임 자기 접합 거르기 (s = 두 최근접점 사이 경로 호 길이 · s < s_min = 같은 가닥의 연속) · 자기 L_c (닿음) ──
+    s_arc, s_lc = _self_geometry(self_groups, self_norm, pos, segs, lo, vox, T_touch)
+    ncand = len(selfcand)
+    if thr['s_min_um'] is None:
+        keep = np.ones(ncand, bool)
+        self_filter = 'off_s_min_missing'
+        rej.append({'code': 'self_s_min_missing', 'test': 'J8-self', 'n': int(ncand),
+                    'why': 's_min (꺾임 자기 접합 거르기 · 경로 호 길이) 미등록 — 숫자 = S0 단계 1 의 분포를 본 뒤 등록 R §2-1 개정 · '
+                           '기본값 없음 (시험 모드 = 거르지 않고 진행)'})
+    else:
+        filt = np.asarray(_self_is_junction(s_arc, thr['s_min_um']), bool).reshape(ncand)
+        keep = np.where(np.isfinite(s_arc), filt, True)     # 셀 조각이 없어 s 를 못 잰 후보 = 접합 그대로 (수 기록)
+        self_filter = 'applied'
+    kidx = np.cumsum(keep) - 1
+    self_merge = []
+    n_self_fused = 0
     for it_idx, (pa_, pb_, lin_a, ax, isface) in enumerate(self_items):
-        if isface:
-            rows_lin.append(np.array([lin_a])); rows_ax.append(np.array([ax])); rows_kind.append(np.array([K_CUT_SELF]))
-            rows_pa.append(np.array([pa_])); rows_pb.append(np.array([pb_]))
-            rows_inst.append(np.array([len(inst['fi']) + self_face_inst[it_idx]]))
+        g_ = self_face_inst[it_idx]
+        if keep[g_]:
+            if isface:
+                rows_lin.append(np.array([lin_a])); rows_ax.append(np.array([ax])); rows_kind.append(np.array([K_CUT_SELF]))
+                rows_pa.append(np.array([pa_])); rows_pb.append(np.array([pb_]))
+                rows_inst.append(np.array([len(inst['fi']) + int(kidx[g_])]))
+        elif isface:                                          # 같은 가닥의 연속 — 면 = 옛 융합 그대로 (접합 · 절단 아님)
+            rows_lin.append(np.array([lin_a])); rows_ax.append(np.array([ax])); rows_kind.append(np.array([K_SELF_FUSED]))
+            rows_pa.append(np.array([pa_])); rows_pb.append(np.array([pb_])); rows_inst.append(np.array([-1]))
+            n_self_fused += 1
+        else:                                                 # 같은 가닥의 연속 재방문 — 옛 셀 한 노드 (두 위치 합침)
+            self_merge.append((int(pa_), int(pb_)))
+    selfinst = []
+    for g_ in np.flatnonzero(keep):
+        d_ = dict(selfcand[g_])
+        d_['Lc'] = float(s_lc[g_])
+        d_['s'] = float(s_arc[g_])
+        selfinst.append(d_)
+    fin = s_arc[np.isfinite(s_arc)]
+    self_census = {'self_filter': self_filter, 'n_self_candidates': int(ncand), 'n_self_kept': int(np.sum(keep)),
+                   'n_self_filtered': int(ncand - np.sum(keep)), 'n_self_s_undefined': int(ncand - len(fin)),
+                   'n_self_fused_faces': int(n_self_fused), 'n_self_merged_revisits': int(len(self_merge)),
+                   'self_s_um': ({'min': float(fin.min()), 'median': float(np.median(fin)), 'max': float(fin.max())}
+                                 if len(fin) else None)}
     # ── instance 합치기 (distinct + self) · 포트 ──
     allinst = _merge_instances(inst, selfinst, segs)
     ports = _ports(allinst, pos, piece_pos, segs, lo, vox, n, flat, thr['r_port_um'])
@@ -603,7 +697,8 @@ def cjunc_registry(sid, box_lo, vox, add_pts, add_phase, add_fid, add_kind, *, r
             ptfe_cov[k] = math.sqrt(float(np.min(d2))) <= lim
     allinst['a_sdcp'] = a_sdcp
     allinst['ptfe_cov'] = ptfe_cov
-    allinst['long'] = allinst['Lc'] > thr['L_par_um'] * (1.0 + CJUNC_LPAR_RTOL)   # J8 — 원장에서 한 번 (계획은 읽기만)
+    allinst['long'] = allinst['Lc'] > thr['L_par_um'] * (1.0 + CJUNC_LPAR_RTOL)   # 긴 접촉 표지 (집계 · 거부 아님) — 원장에서 한 번
+    allinst['mult'] = np.asarray(junction_len_mult(allinst['Lc'], thr['L_par_um']), np.float64).reshape(nI)   # 길이 법칙 v0
     # ── 면 표 정렬 ──
     if rows_lin:
         ft = {'lin': np.concatenate(rows_lin).astype(np.int64), 'ax': np.concatenate(rows_ax).astype(np.int64),
@@ -619,12 +714,15 @@ def cjunc_registry(sid, box_lo, vox, add_pts, add_phase, add_fid, add_kind, *, r
     census = _census(allinst, pos, ft, cell_lin, cell_ptr, sid, flat, owner_ties, multi_site, n_cut_site, n_unreg, segs,
                      len(vg_paths_ok), len(pieces), rf)
     census.update(_sdcp_bridging(sid, ft, pos, n))
+    census.update(self_census)
     reg = {'kind': 'cjunc_registry', 'version': CJUNC_MODEL_VERSION, 'schema': CJUNC_SCHEMA, 'vox': vox, 'lo': lo,
            'shape': tuple(int(x) for x in n), 'thresholds': thr,
            'rules': {'lc': CJUNC_LC_RULE, 'port': CJUNC_PORT_RULE, 'footprint': CJUNC_FOOTPRINT_RULE, 'self': CJUNC_SELF_RULE,
-                     'owner': CJUNC_OWNER_RULE, 'eps_d2_um2': CJUNC_EPS_D2_UM2, 'lpar_rtol': CJUNC_LPAR_RTOL},
+                     'owner': CJUNC_OWNER_RULE, 'eps_d2_um2': CJUNC_EPS_D2_UM2, 'lpar_rtol': CJUNC_LPAR_RTOL,
+                     'len_law': CJUNC_LEN_LAW, 'self_lc': CJUNC_SELF_LC_RULE, 'self_s': CJUNC_SELF_S_RULE},
            'positions': pos, 'segments': segs, 'instances': allinst, 'faces': ft, 'cell_lin': cell_lin,
-           'cell_ptr': cell_ptr, 'cell_pos': cell_pos, 'n_extra_dofs': n_extra, 'rejections': rej, 'census': census}
+           'cell_ptr': cell_ptr, 'cell_pos': cell_pos, 'n_extra_dofs': n_extra,
+           'self_merge': np.asarray(self_merge, np.int64).reshape(-1, 2), 'rejections': rej, 'census': census}
     reg['fp'] = {'sid': _grid_fp(sid), 'centreline': _fp(segs), 'membership': _fp(pos), 'registry': registry_fp(reg)}
     return reg
 
@@ -633,7 +731,7 @@ def registry_fp(reg):
     """원장 지문 (E5) — 기하 · 문턱 · 규칙 · 표 전부 (만든 뒤 바뀐 원장 = 계획 거부)."""
     return _fp(reg['vox'], reg['lo'], reg['shape'], reg['thresholds'], reg['rules'], reg['positions'], reg['segments'],
                reg['instances'], reg['faces'], reg['cell_lin'], reg['cell_ptr'], reg['cell_pos'], reg['n_extra_dofs'],
-               [x['code'] for x in reg['rejections']])
+               reg['self_merge'], [x['code'] for x in reg['rejections']])
 
 
 def _distinct_instances(segs, D, T):
@@ -748,9 +846,10 @@ def _touch_len_all(seg_i, seg_j, segs, T):
 
 
 def _self_instances(items, pos, vox):
-    """자기 접합 — 항목 (같은 fid 비연속 면 · 재방문) 을 이웃 위치끼리 무리 지은 instance.  → (instance 표, 면 항목 → instance)."""
+    """자기 접합 후보 — 항목 (같은 fid 비연속 면 · 재방문) 을 이웃 위치끼리 무리 지은 하나.
+    → (후보 표, 항목 → 후보, 후보마다 항목 번호 목록, 항목마다 (앞 위치, 뒤 위치)).  L_c · s 는 `_self_geometry` 가 셀 조각으로 잰다."""
     if not items:
-        return [], {}
+        return [], {}, [], []
     norm = []
     for (p, q, lin, ax, isface) in items:
         kp = (int(pos['piece'][p]), int(pos['k'][p])); kq = (int(pos['piece'][q]), int(pos['k'][q]))
@@ -784,16 +883,120 @@ def _self_instances(items, pos, vox):
             if bkey is None or key < bkey:
                 best, bkey = (p, q), key
             face_map[x] = gi
-        kps = {int(pos['k'][norm[x][0]]) for x in mem}; kqs = {int(pos['k'][norm[x][1]]) for x in mem}
         same_piece = [abs(int(pos['k'][norm[x][1]]) - int(pos['k'][norm[x][0]])) for x in mem
                       if pos['piece'][norm[x][0]] == pos['piece'][norm[x][1]]]
-        out.append({'fid': int(pos['fid'][best[0]]), 'p': best[0], 'q': best[1], 'Lc': vox * max(len(kps), len(kqs)),
+        out.append({'fid': int(pos['fid'][best[0]]), 'p': best[0], 'q': best[1], 'Lc': math.nan,
                     'n_items': len(mem), 'dk_min': (min(same_piece) if same_piece else -1)})
     # 면 항목 (원래 items 순서) → instance
     fmap = {}
     for x in range(len(items)):
         fmap[x] = face_map[x]
-    return out, fmap
+    return out, fmap, [list(m) for m in gl], norm
+
+
+def _clip_box(P0, P1, bmin, bmax):
+    """선분 P0→P1 ∩ 닫힌 상자 [bmin, bmax] (배열 · Liang–Barsky) → 매개 (t0, t1) · 빈 = t0 > t1."""
+    d = P1 - P0
+    t0 = np.zeros(len(P0))
+    t1 = np.ones(len(P0))
+    for ax in range(3):
+        da = d[:, ax]
+        z = da == 0.0
+        out = z & ((P0[:, ax] < bmin[:, ax]) | (P0[:, ax] > bmax[:, ax]))
+        den = np.where(z, 1.0, da)
+        ta = np.where(z, -np.inf, (bmin[:, ax] - P0[:, ax]) / den)
+        tb = np.where(z, np.inf, (bmax[:, ax] - P0[:, ax]) / den)
+        t0 = np.maximum(t0, np.minimum(ta, tb))
+        t1 = np.minimum(t1, np.maximum(ta, tb))
+        t0 = np.where(out, 1.0, t0)
+        t1 = np.where(out, 0.0, t1)
+    return t0, t1
+
+
+def _pos_portions(plist, pos, segs, lo, vox):
+    """위치들의 셀 안 중심선 조각 — 각 위치의 선분 (s0..s1) 을 그 셀의 **닫힌 상자 그대로** (띠 없음) 로 자른 것.
+    이웃 셀 상자는 같은 식 (lo + ijk·vox) 이라 경계가 비트로 같고, 경계에만 닿는 선분 (스냅된 셀) 은 길이 0 점이다 —
+    띠를 두면 조각이 셀 밖으로 늘어 자기 L_c 가 부풀어진다.  → (X0, X1, a0, a1) = 조각 끝점 · 끝의 경로 호 좌표 (선분 위 선형)."""
+    pl = np.asarray(sorted({int(p) for p in plist}), np.int64)
+    if len(pl) == 0:
+        z = np.zeros((0, 3))
+        return z, z.copy(), np.zeros(0), np.zeros(0)
+    cnt = pos['s1'][pl] - pos['s0'][pl] + 1
+    rp = np.repeat(pl, cnt)
+    sg = pos['s0'][rp] + (np.arange(len(rp)) - np.repeat(np.cumsum(cnt) - cnt, cnt))
+    ijk = pos['ijk'][rp].astype(np.float64)
+    bmin = lo + ijk * vox
+    bmax = lo + (ijk + 1.0) * vox
+    P0, P1 = segs['P0'][sg], segs['P1'][sg]
+    t0, t1 = _clip_box(P0, P1, bmin, bmax)
+    ok = t0 <= t1
+    d = (P1 - P0)[ok]
+    X0 = P0[ok] + t0[ok, None] * d
+    X1 = P0[ok] + t1[ok, None] * d
+    aa, ab = segs['arc_a'][sg][ok], segs['arc_b'][sg][ok]
+    return X0, X1, aa + t0[ok] * (ab - aa), aa + t1[ok] * (ab - aa)
+
+
+def _touch_len_sets(A0, A1, B0, B1, T):
+    """닿음 길이 (`CJUNC_LC_RULE` 와 같은 규칙) — 두 선분 집합 사이: 쪽마다 선분별 구간 합집합 (안쪽 경계) 길이의 합 · 두 쪽의 최댓값."""
+    best = 0.0
+    for S0, S1, Q0, Q1 in ((A0, A1, B0, B1), (B0, B1, A0, A1)):
+        ns, nq = len(S0), len(Q0)
+        if ns == 0 or nq == 0:
+            continue
+        si = np.repeat(np.arange(ns), nq)
+        qi = np.tile(np.arange(nq), ns)
+        _, us, _, _, _ = seg_seg_closest(S0[si], S1[si], Q0[qi], Q1[qi])
+        ua, ub = _touch_intervals(S0[si], S1[si], Q0[qi], Q1[qi], T, us)
+        ok = np.isfinite(ua)
+        if not ok.any():
+            continue
+        si, ua, ub = si[ok], ua[ok], ub[ok]
+        o = np.lexsort((ua, si))
+        si, ua, ub = si[o], ua[o], ub[o]
+        seglen = np.linalg.norm(S1 - S0, axis=1)
+        tot = 0.0
+        start, n = 0, len(si)
+        while start < n:                                     # 선분마다 구간 합집합
+            end = start
+            while end < n and si[end] == si[start]:
+                end += 1
+            cur_a, cur_b = ua[start], ub[start]
+            acc = 0.0
+            for x in range(start + 1, end):
+                if ua[x] <= cur_b:
+                    cur_b = max(cur_b, ub[x])
+                else:
+                    acc += cur_b - cur_a
+                    cur_a, cur_b = ua[x], ub[x]
+            acc += cur_b - cur_a
+            tot += acc * seglen[si[start]]
+            start = end
+        best = max(best, tot)
+    return best
+
+
+def _self_geometry(groups, norm, pos, segs, lo, vox, T):
+    """자기 접합 후보마다 (s, L_c) — 두 쪽 = 그 후보 항목의 앞 위치들 · 뒤 위치들의 셀 조각.
+    s = 두 쪽 사이 **최근접점 쌍** (거리² ε 띠 `CJUNC_EPS_D2_UM2` · 띠 안 = 호 길이가 작은 쪽) 의 경로 호 길이 (`CJUNC_SELF_S_RULE`) ·
+    L_c = 두 쪽 사이 닿음 길이 (`CJUNC_SELF_LC_RULE`).  조각이 없는 쪽 = s NaN (재지 못함 · 기록) · L_c 0."""
+    ng = len(groups)
+    s_out = np.full(ng, np.nan)
+    lc_out = np.zeros(ng)
+    for gi, mem in enumerate(groups):
+        A0, A1, a0, a1 = _pos_portions([norm[x][0] for x in mem], pos, segs, lo, vox)
+        B0, B1, b0, b1 = _pos_portions([norm[x][1] for x in mem], pos, segs, lo, vox)
+        if len(A0) == 0 or len(B0) == 0:
+            continue
+        ia = np.repeat(np.arange(len(A0)), len(B0))
+        ib = np.tile(np.arange(len(B0)), len(A0))
+        d, s_, t_, _, _ = seg_seg_closest(A0[ia], A1[ia], B0[ib], B1[ib])
+        sep = np.abs((a0[ia] + s_ * (a1[ia] - a0[ia])) - (b0[ib] + t_ * (b1[ib] - b0[ib])))
+        d2 = d * d
+        band = d2 <= float(d2.min()) + CJUNC_EPS_D2_UM2
+        s_out[gi] = float(sep[band].min())
+        lc_out[gi] = _touch_len_sets(A0, A1, B0, B1, T)
+    return s_out, lc_out
 
 
 def _merge_instances(inst, selfinst, segs):
@@ -803,6 +1006,7 @@ def _merge_instances(inst, selfinst, segs):
            'self': np.r_[np.zeros(nI, bool), np.ones(nS, bool)],
            'd0': np.r_[inst['d0'], np.full(nS, np.nan)],
            'Lc': np.r_[inst['Lc'], np.array([s['Lc'] for s in selfinst], np.float64)],
+           's': np.r_[np.full(nI, np.nan), np.array([s['s'] for s in selfinst], np.float64)],   # 자기 접합 경로 호 길이 (distinct = NaN)
            'Ci': np.r_[inst['Ci'], np.zeros((nS, 3))].reshape(-1, 3),
            'Cj': np.r_[inst['Cj'], np.zeros((nS, 3))].reshape(-1, 3),
            'piece_i': np.r_[inst['piece_i'], np.full(nS, -1)].astype(np.int64),
@@ -909,8 +1113,12 @@ def _census(inst, pos, ft, cell_lin, cell_ptr, sid, flat, owner_ties, multi_site
             'owner_tie_noncanonical': int(owner_ties), 'n_faces_multi_site': int(multi_site),
             'surface_gap_um': ({'min': float(gap.min()), 'median': float(np.median(gap)), 'max': float(gap.max())}
                                if len(gap) else None),
-            'Lc_um': ({'min': float(lc.min()), 'median': float(np.median(lc)), 'max': float(lc.max())} if len(lc) else None),
-            #  J8 이 꺾임 (같은 조각 · 경로 간격 작음) 에서 걸리는지 고리 · 머리핀 (간격 큼) 에서 걸리는지 가르는 진단 (S0 용 · 판정 아님)
+            'Lc_um': ({'min': float(lc.min()), 'median': float(np.median(lc)), 'p90': float(np.quantile(lc, 0.90)),
+                       'p99': float(np.quantile(lc, 0.99)), 'max': float(lc.max())} if len(lc) else None),
+            #  길이 법칙 v0 배율 (max(1, L_c/L_par)) — 합 · 최댓값 · 1 넘는 수 (긴 접촉이 σ 에 얼마나 들어가는가 · S0 용)
+            'len_mult': ({'sum': float(np.sum(inst['mult'])), 'max': float(np.max(inst['mult'])),
+                          'n_gt1': int(np.sum(inst['mult'] > 1.0))} if len(lc) else None),
+            #  긴 접촉이 꺾임 (같은 조각 · 경로 간격 작음) 에서 생기는지 고리 · 머리핀 (간격 큼) 에서 생기는지 가르는 진단 (S0 용 · 판정 아님)
             'n_long_distinct': int(np.sum(inst['long'] & ~inst['self'])) if 'long' in inst else None,
             'n_long_self': int(np.sum(inst['long'] & inst['self'])) if 'long' in inst else None,
             'self_dk_min': ({'min': int(dk.min()), 'median': float(np.median(dk)), 'max': int(dk.max()),
@@ -952,14 +1160,15 @@ def _sdcp_bridging(sid, ft, pos, n):
 
 # ═════════════════════════ 계획 ═════════════════════════
 def plan_rows_fp(plan):
-    return _fp(plan['mode'], plan['g_code'], plan['rj_eff'], plan['registry']['fp']['registry'], plan['unreg_law'],
+    return _fp(plan['mode'], plan['g_code'], plan['rj_eff'], plan['mult'], plan['registry']['fp']['registry'], plan['unreg_law'],
                plan['ptfe_jlaw'], plan['ptfe_stamp'], plan['sdcp_mod'], plan['quantitative'])
 
 
 def cjunc_plan(reg, R_j_ohm, *, unreg_law, ptfe_stamp, ptfe_jlaw='P0', sdcp_mod=None, quantitative=True,
                allow_rj_limits=False, rj_reference=RJ_REFERENCE_PLANE, lead_subtraction=None):
-    """instance 마다 간선 (g = 1e4/R_j′) · 축약 (R_j′ = 0) · 절단 (P1) · 미실현.  S3 = sdcp_mod {'c': c} (S2 원장 없이 = 거부).
-    정량 (quantitative=True): R_j 유한 > 0 (극한 0 · ∞ = allow_rj_limits 사다리 진단 전용) · c ∈ {0, 1} · 긴 접촉 · 원장 거부 사유 = 거부."""
+    """instance 마다 간선 (g = 1e4·m/R_j′ · m = 길이 법칙 v0 배율) · 축약 (R_j′ = 0) · 절단 (P1) · 미실현.  S3 = sdcp_mod {'c': c}
+    (S2 원장 없이 = 거부).  정량 (quantitative=True): R_j 유한 > 0 (극한 0 · ∞ = allow_rj_limits 사다리 진단 전용) · c ∈ {0, 1} ·
+    원장 거부 사유 (s_min 미등록 포함) = 거부.  긴 접촉은 거부하지 않는다 (옛 J8 · 길이 법칙이 맡는다 · 수는 기록)."""
     if not isinstance(reg, dict) or reg.get('kind') != 'cjunc_registry':
         raise TypeError('cjunc_plan: 원장은 cjunc_registry 의 결과여야 한다 (S3 = S2 원장 없이 거부 · 설계 §5-2)')
     if registry_fp(reg) != reg.get('fp', {}).get('registry'):
@@ -1002,6 +1211,9 @@ def cjunc_plan(reg, R_j_ohm, *, unreg_law, ptfe_stamp, ptfe_jlaw='P0', sdcp_mod=
     g = np.zeros(nI, np.float64)
     rje = np.full(nI, np.nan)
     a = inst['a_sdcp'].astype(np.float64)
+    mult = np.asarray(inst['mult'], np.float64).copy()       # 길이 법칙 v0 (원장에서 한 번 · 계획은 읽기만)
+    if not (np.isfinite(mult).all() and (mult >= 1.0).all()):
+        raise ValueError('cjunc_plan: 길이 법칙 배율은 유한 · ≥ 1 이어야 한다 (max(1, L_c/L_par)) — 원장 이상')
     for k in range(nI):
         if not inst['realized'][k]:
             mode[k] = MODE_UNREALIZED
@@ -1017,12 +1229,9 @@ def cjunc_plan(reg, R_j_ohm, *, unreg_law, ptfe_stamp, ptfe_jlaw='P0', sdcp_mod=
             mode[k] = MODE_NONE_INF
         else:
             mode[k] = MODE_EDGE
-            g[k] = float(junction_g_code(r))
+            g[k] = float(junction_g_code(r)) * float(mult[k])   # G_j = max(1, L_c/L_par) / R_j′ (lumped 간선 하나)
     long = np.asarray(inst['long'], bool)
-    rej = [dict(x) for x in reg['rejections']]
-    if np.any(long):
-        rej.append({'code': 'long_contact', 'test': 'J8', 'n': int(np.sum(long)),
-                    'why': f"긴 접촉 L_c > L_par ({reg['thresholds']['L_par_um']} µm) — 길이 법칙 없는 counting 금지 (J8 · N10)"})
+    rej = [dict(x) for x in reg['rejections']]               # 긴 접촉 = 거부 아님 (길이 법칙 v0 · 1저자 10-20 Q17)
     if not quantitative:
         rej = []
     near = int(np.sum(inst['a_sdcp'] & inst['realized']))
@@ -1030,9 +1239,12 @@ def cjunc_plan(reg, R_j_ohm, *, unreg_law, ptfe_stamp, ptfe_jlaw='P0', sdcp_mod=
               'n_cut_p1': int(np.sum(mode == MODE_CUT_P1)), 'n_unrealized': int(np.sum(mode == MODE_UNREALIZED)),
               'n_none_inf': int(np.sum(mode == MODE_NONE_INF)), 'n_long': int(np.sum(long)), 'n_sdcp_near': near,
               'n_contracted_by_c': int(np.sum((mode == MODE_CONTRACT) & (R0 > 0.0))),
-              'n_ptfe_cov': int(np.sum(inst['ptfe_cov']))}
+              'n_ptfe_cov': int(np.sum(inst['ptfe_cov'])),
+              'len_mult_sum_edge': float(np.sum(mult[mode == MODE_EDGE])),
+              'len_mult_max': (float(np.max(mult)) if nI else None)}
     record = {'model': CJUNC_MODEL_VERSION, 'schema': CJUNC_SCHEMA, 'status': CJUNC_STATUS,
               'qualifiers': list(CJUNC_QUALIFIERS), 'R_j_ohm': (R0 if math.isfinite(R0) else 'inf'),
+              'len_law': CJUNC_LEN_LAW, 's_min_um': reg['thresholds']['s_min_um'],
               'rj_reference_plane': RJ_REFERENCE_PLANE, 'half_cell_in_edge': False, 'unreg_law': unreg_law,
               'ptfe_jlaw': ptfe_jlaw, 'ptfe_stamp': ptfe_stamp,
               'sdcp_mod': (None if c is None else {'c': c, 'tol_sj_um': reg['thresholds']['tol_sj_um'],
@@ -1042,7 +1254,7 @@ def cjunc_plan(reg, R_j_ohm, *, unreg_law, ptfe_stamp, ptfe_jlaw='P0', sdcp_mod=
               'thresholds': dict(reg['thresholds']), 'rules': dict(reg['rules']), 'census': dict(reg['census']),
               'counts': counts, 'fp_registry': reg['fp']['registry'], 'fp_sid': reg['fp']['sid']}
     plan = {'kind': 'cjunc_plan', 'version': CJUNC_MODEL_VERSION, 'registry': reg, 'mode': mode, 'g_code': g, 'rj_eff': rje,
-            'unreg_law': unreg_law, 'ptfe_jlaw': ptfe_jlaw, 'ptfe_stamp': ptfe_stamp,
+            'mult': mult, 'unreg_law': unreg_law, 'ptfe_jlaw': ptfe_jlaw, 'ptfe_stamp': ptfe_stamp,
             'sdcp_mod': (None if c is None else {'c': c}), 'quantitative': bool(quantitative), 'rejections': rej,
             'record': record}
     plan['fp_rows'] = plan_rows_fp(plan)
@@ -1061,10 +1273,18 @@ def cjunc_require_quantitative(plan, sid, vox, sigma_of_sid=None, rint=None, ifa
         raise ValueError('cjunc: 원장이 계획 뒤 바뀌었다 (지문 · E5)')
     if plan_rows_fp(plan) != plan.get('fp_rows'):
         raise ValueError('cjunc: 계획 행이 만든 뒤 바뀌었다 (지문 · E5)')
+    if reg.get('rules', {}).get('len_law') != CJUNC_LEN_LAW or plan.get('record', {}).get('len_law') != CJUNC_LEN_LAW:
+        raise ValueError(f"cjunc: 다른 접합 길이 법칙의 원장 · 계획 ({reg.get('rules', {}).get('len_law')!r}) — "
+                         f'{CJUNC_LEN_LAW} 만 (옛 점 접합 · J8 거부 판 섞임 거부)')
     g = np.asarray(plan['g_code'], np.float64)
     e = plan['mode'] == MODE_EDGE
     if not (np.isfinite(g).all() and (g >= 0.0).all() and (g[e] > 0.0).all()):
         raise ValueError('cjunc: 계획 간선 g 는 유한 · 0 이상 (간선 행 > 0) — NaN · 음수 · inf = 조립 전 거부 (Q7 와 같은 꼴 · 지문을 다시 만든 변이도)')
+    m = np.asarray(plan.get('mult'), np.float64)
+    if m.shape != g.shape or not (np.isfinite(m).all() and (m >= 1.0).all()):
+        raise ValueError('cjunc: 계획 배율 (길이 법칙 v0) 은 instance 마다 유한 · ≥ 1 — 조립 전 거부')
+    if e.any() and not np.array_equal(g[e], junction_g_code(np.asarray(plan['rj_eff'], np.float64)[e]) * m[e]):
+        raise ValueError('cjunc: 계획 간선 g ≠ 1e4·m/R_j′ — 배율 기록과 쓰는 값이 묶이지 않았다 (지문을 다시 만든 변이 · 조립 전 거부)')
     if plan['rejections']:
         raise ValueError('cjunc 정량 모드 거부 — ' + ' · '.join(f"{x['code']}(n={x.get('n')})" for x in plan['rejections']))
     if rint:
@@ -1090,7 +1310,8 @@ def cjunc_require_quantitative(plan, sid, vox, sigma_of_sid=None, rint=None, ifa
 
 
 # ═════════════════════════ 조립 (solve_sigma_z 훅) ═════════════════════════
-_CAT = {'other_bulk': 0, 'vv_axial': 1, 'vv_unreg_fused': 2, 'va_face': 3, 'sv_face': 4, 'vx_other': 5, 'vv_junction': 6}
+_CAT = {'other_bulk': 0, 'vv_axial': 1, 'vv_unreg_fused': 2, 'va_face': 3, 'sv_face': 4, 'vx_other': 5, 'vv_junction': 6,
+        'vv_self_fused': 7}
 _CAT_NAME = {v: k for k, v in _CAT.items()}
 
 
@@ -1123,6 +1344,7 @@ class CjuncAssembler:
         self.E = []                                          # (u, v, g, cat, sa, sb, sida, sidb)
         self.tomb = {'cut_site': 0, 'cut_self': 0, 'unreg_cut': 0}
         self.n_unreg_fused = 0
+        self.n_self_fused = 0
 
     def add_faces(self, axis, a2, b2, g):
         if axis is None:
@@ -1163,6 +1385,11 @@ class CjuncAssembler:
                 self.n_unreg_fused += int(m.sum())
             else:
                 self.tomb['unreg_cut'] += int(m.sum())
+        m = kind == K_SELF_FUSED
+        if m.any():                                          # 꺾임 (s < s_min) = 같은 가닥의 연속 — 옛 복셀 융합 그대로 (접합 아님)
+            self._emit(self.pos_dof[pa[m]], self.pos_dof[pb[m]], g[fi[m]], np.full(int(m.sum()), _CAT['vv_self_fused']),
+                       la[fi[m]], lb[fi[m]])
+            self.n_self_fused += int(m.sum())
         self.tomb['cut_site'] += int(np.sum(kind == K_CUT_SITE))
         self.tomb['cut_self'] += int(np.sum(kind == K_CUT_SELF))
 
@@ -1211,16 +1438,29 @@ class CjuncAssembler:
                            np.full(len(e), np.nan), np.full(len(e), 3), np.full(len(e), 3), e.astype(np.int64)))
         self.junction_edge_inst = e
         rep = np.arange(self.n_total)
+        #  ① 꺾임 (s < s_min) 재방문 = 같은 가닥의 연속 — 두 위치를 옛 셀 한 노드로 합친다 (접합 아님 · J11 단락 판정 밖)
+        mg = np.asarray(reg.get('self_merge', np.zeros((0, 2), np.int64)), np.int64).reshape(-1, 2)
+        if len(mg):
+            uf0 = _UF()
+            for p_, q_ in mg:
+                uf0.union(int(self.pos_dof[p_]), int(self.pos_dof[q_]))
+            for x in list(uf0.p):
+                rep[x] = uf0.find(x)
+        #  ② 접합 축약 (R_j′ = 0 · J6) — 단락 판정 (J11) 대상은 이 무리뿐
         con = np.flatnonzero(mode == MODE_CONTRACT)
         uf = _UF()
         for k in con:
-            uf.union(int(pu[k]), int(pv[k]))
+            uf.union(int(rep[pu[k]]), int(rep[pv[k]]))
         members = {}
         for x in list(uf.p):
             members.setdefault(uf.find(x), []).append(x)
-        for r_, ms in members.items():
-            rep[np.asarray(ms)] = r_
+        if members:
+            jr = np.arange(self.n_total)
+            for r_, ms in members.items():
+                jr[np.asarray(ms)] = r_
+            rep = jr[rep]
         self.n_contracted = int(len(con))
+        self.n_self_merged = int(len(mg))
         Ab2 = rep[self._plate_owner(Ab, False)] if Ab is not None else np.zeros(0, np.int64)
         At2 = rep[self._plate_owner(At, True)] if At is not None else np.zeros(0, np.int64)
         gb = np.asarray(gb if gb is not None else [], np.float64); gt = np.asarray(gt if gt is not None else [], np.float64)
@@ -1259,7 +1499,8 @@ class CjuncAssembler:
         self.stats = {'n_extra_dofs': int(self.n_total - self.n_cells), 'n_contracted': self.n_contracted,
                       'n_floating_dropped': int((is_rep & ~kept).sum()), 'n_through_dof': n_through,
                       'n_plate_reachable_dof': n_kept, 'short': bool(short), 'tombstones': dict(self.tomb),
-                      'n_unreg_fused': int(self.n_unreg_fused), 'n_junction_edges': int(np.sum(TG >= 0))}
+                      'n_unreg_fused': int(self.n_unreg_fused), 'n_junction_edges': int(np.sum(TG >= 0)),
+                      'n_self_fused_faces': int(self.n_self_fused), 'n_self_merged_revisits': int(self.n_self_merged)}
         if short:
             return {'reason': 'cjunc_electrode_short'}
         if n_kept == 0:
