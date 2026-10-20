@@ -52,13 +52,21 @@ r_port = 2.0 (= 2h) · gap_tol 2.0 · σ_VGCF = 100 S/cm → 축방향 면 g = �
          sid 불변 · 우선순위)
   SV     SV 면 · SDCP 셀 소산 몫 · SV_DOMINANT 표지 · SDCP 경유 섬유 연결 수
   PIECE  멤버십 셀 = `_fibre_segment_ijk` 의 VGCF 셀 (같은 끊기 규칙 · 복제 + 동등 시험)
+  FP     지문 재현 (RINT-23 · 2 일 차) — 같은 내용 · 다른 객체 → 같은 지문 · 별도 `python3 -I` 하위 프로세스 둘 → 같은 지문 ·
+         한 글자 다름 → 다른 지문.  `carbon_junction._fp` (객체 배열 = 내용 직렬화 · 숫자 배열 = dtype · 모양 · C 순서 바이트) ·
+         원장 · 계획 지문 · 격자 지문 감싸개 (`_grid_fp` — 객체 격자 거부) · 같은 꼴 확인 = `ptfe_face_alpha` (캡슐 · 행 · 계획 ·
+         간선) · `ca_s0_census` (계획 sha256 · 파일 sha256) · `step3_conv_cert` (지문 함수 없음 — 목록 시험이 지킨다)
 """
 import argparse
+import ast
 import contextlib
+import hashlib
 import importlib.util
 import io
+import json
 import math
 import os
+import shutil
 import subprocess
 import sys
 import tempfile
@@ -1520,6 +1528,277 @@ def t_mut_len():
             with patched(name, fn):
                 c = not bool(check())
         chk(f'MUT-LEN {nm} (훅 `{name}` 있음 · 변이 전 통과 · 변이 실패)', h and b and c is True, f'hook {h} base {b} caught {c}')
+
+
+# ═════════════════════════ FP — 지문 재현 (RINT-23 · 같은 꼴 확인 · 2 일 차) ═════════════════════════
+#  계약: 같은 내용 · 다른 객체 → 같은 지문 · 별도 `python3 -I` 하위 프로세스 둘 → 같은 지문 · 내용 한 글자 다름 → 다른 지문.
+#  RINT-23 — `_fp` 가 dtype=object 배열의 **포인터 바이트** (`x.data`) 를 해시했다.  원장 `instances['reason']` (포트 미실현 사유 ·
+#  f-문자열 = 호출마다 새 객체) 이 그 배열이라, 같은 입력으로 다시 만든 원장 · 계획 지문이 프로세스 안에서도 사이에서도 갈렸다 (거짓 거부).
+#  픽스처 = F1 + 교차 셀 (1,1,3) 을 덮는 SDCP 점 (r_port 0.5 → 포트 미실현 'covered_SDCP') + z = 3 면 위 PTFE (S1 VGCF|SDCP 면 α < 1).
+_FP_SDCP = [[(1.5, 1.5, 3.5)]]
+_FP_PTFE = [[(0.5, 1.5, 3.0), (2.5, 1.5, 3.0)]]
+_FP_RPORT = 0.5
+_FP_WORDS = ('covered_SDCP', '', 'out_of_box', '탄소 접합 · 포트 (UTF-8)', 'no_live_port_in_rport')
+
+#  하위 프로세스 · 이 프로세스가 **같은 글** 을 돌린다 (지문을 만드는 경로 하나 — 기대값을 이 파일이 따로 만들지 않는다).
+_FP_PROG = r'''
+def fp_values(cfg):
+    import hashlib
+    import numpy as np
+    import step3_sigma as S3
+    import carbon_junction as CJ
+    import ptfe_face_alpha as FA
+    import ca_s0_census as S0
+    z = np.load(cfg['npz'])
+    P, PH, F, K = z['P'], z['PH'], z['F'], z['K']
+    n = tuple(int(x) for x in z['n'])
+    vox = float(z['vox'])
+    lo = (0.0, 0.0, 0.0)
+    hi = tuple(n[i] * vox for i in range(3))
+    m = PH != 4                                                # face_alpha 침대 = PTFE 셀 없음 (off 격자)
+    sid, pid = S3.rasterize(np.zeros((0, 3)), np.zeros(0), np.zeros(0, np.int64), P[m], PH[m], lo, hi, vox,
+                            add_fid=F[m], add_kind=K[m])
+    reg = CJ.cjunc_registry(sid, lo, vox, P, PH, F, K, **cfg['thr'])
+    pl = CJ.cjunc_plan(reg, 1.0e3, unreg_law='cut', ptfe_stamp='off')
+    obj = np.empty(len(cfg['words']), dtype=object)
+    for i, w in enumerate(cfg['words']):
+        obj[i] = ''.join(list(w))                              # 실행 중 만든 문자열 (상수 · 인턴 객체 아님)
+    m4 = PH == 4
+    caps = FA.build_capsules(P[m4], F[m4], K[m4])
+    sig = S3.electronic_sigma_table(0.010, 0.005, 100.0, 10.0, 250.0)
+    fa = FA.build_plan(sid, sig, caps, lo=lo, vox=vox, channel='electronic', pid=pid)
+    used = tuple({'lin': fa['axes'][a]['lin'], 'alpha': fa['axes'][a]['alpha'], 'g': fa['axes'][a]['alpha'] * 2.0}
+                 for a in range(3))
+    plan0, pbytes, psha = S0.make_plan(0.15, 0.075, 2.0, {'stage': 1, 'kit_name': ''.join(['kit', '_fp'])})
+    return {'cj_objarr': CJ._fp(obj), 'cj_reg_sid': reg['fp']['sid'], 'cj_reg_centreline': reg['fp']['centreline'],
+            'cj_reg_membership': reg['fp']['membership'], 'cj_reg_registry': reg['fp']['registry'],
+            'cj_plan_rows': pl['fp_rows'], 'cj_plan_record_registry': pl['record']['fp_registry'],
+            'fa_caps': caps['fp'], 'fa_rows': fa['fp_rows'], 'fa_plan': fa['fp_plan'], 'fa_edges': FA.edges_fp(used),
+            'fa_grid_sid': FA._grid_fp(sid), 'fa_grid_pid': FA._grid_fp(pid),
+            's0_plan_sha': psha, 's0_plan_bytes_sha': hashlib.sha256(S0.plan_bytes_of(plan0)).hexdigest(),
+            's0_file_sha': S0._sha256_file(cfg['npz'])}
+'''
+_FP_CHILD_MAIN = r'''
+import json, sys
+cfg = json.loads(sys.argv[1])
+for p in cfg['paths']:
+    if p not in sys.path:
+        sys.path.insert(0, p)
+_junk = [str(i) * 7 for i in range(int(cfg['junk']))]        # 힙 배치를 바꾼다 (ASLR 이 꺼진 기계에서도 객체 주소가 갈리게)
+g = {}
+exec(compile(cfg['prog'], '<fp-prog>', 'exec'), g)
+print('FPJSON ' + json.dumps(g['fp_values'](cfg), sort_keys=True))
+'''
+
+
+def _rt(s):
+    """실행 중 새로 만든 같은 내용 문자열 — 두 글자 이상이면 다른 객체 (CPython 은 '' · 한 글자만 공유한다)."""
+    return ''.join(list(s))
+
+
+def _objarr(items):
+    a = np.empty(len(items), dtype=object)
+    for i, v in enumerate(items):
+        a[i] = v
+    return a
+
+
+def _fp_numeric_formula(x):
+    """숫자 배열 지문의 **독립** 식 (모듈 밖) — blake2b-16 (dtype.str · repr(모양) · C 순서 바이트)."""
+    c = np.ascontiguousarray(x)
+    h = hashlib.blake2b(digest_size=16)
+    h.update(c.dtype.str.encode()); h.update(repr(c.shape).encode()); h.update(c.tobytes(order='C'))
+    return h.hexdigest()
+
+
+def _fp_fixture():
+    P = cat_rows(rows(F1), rows(_FP_SDCP, phase=5, kind=0, fid0=700), _ptfe_rows(_FP_PTFE))
+    sid, pid = bed(P, F1_N, stamp=P[1] != 4)
+    return P, sid, pid
+
+
+def _fp_thr():
+    return dict(r_f_um=RF, tol_ff_um=TOL, L_par_um=LPAR, r_port_um=_FP_RPORT, gap_tol=2.0, s_min_um=S_MIN)
+
+
+def _fp_children(tmpd, P):
+    """같은 글 (`_FP_PROG`) 을 별도 `python3 -I` 하위 프로세스 둘 (힙 선할당 0 · 20000) 과 이 프로세스에서 돌린다 → (자식 둘, 이 프로세스)."""
+    npz = os.path.join(tmpd, 'fp_fixture.npz')
+    np.savez(npz, P=P[0], PH=P[1], F=P[2], K=P[3], n=np.array(F1_N), vox=np.float64(H))
+    paths = [SCRIPTS]
+    for mod in (np, __import__('scipy')):                 # 사용자 site 의 numpy 도 -I 에서 찾게 (명시 경로 · 암묵 경로 없음)
+        d = os.path.dirname(os.path.dirname(os.path.abspath(mod.__file__)))
+        if d not in paths:
+            paths.append(d)
+    thr = reg_kw(_fp_thr())
+    cfg = {'paths': paths, 'npz': npz, 'thr': thr, 'words': list(_FP_WORDS), 'prog': _FP_PROG}
+    kids = []
+    for junk in (0, 20000):
+        c = dict(cfg, junk=junk)
+        r = subprocess.run([sys.executable, '-I', '-c', _FP_CHILD_MAIN, json.dumps(c)], capture_output=True, text=True,
+                           timeout=600)
+        line = [x for x in r.stdout.splitlines() if x.startswith('FPJSON ')]
+        if r.returncode != 0 or not line:
+            print(f'    FP 하위 프로세스 (junk {junk}) rc {r.returncode}: {(r.stderr or r.stdout)[-400:]}')
+            kids.append(None)
+        else:
+            kids.append(json.loads(line[-1][len('FPJSON '):]))
+    g = {}
+    exec(compile(_FP_PROG, '<fp-prog>', 'exec'), g)
+    here = quiet(g['fp_values'], dict(cfg, junk=0))
+    return kids, here
+
+
+#: 지문 · 해시 함수 목록 (AST — 본문이 `hashlib` 을 쓰는 함수) — 이 표 밖의 함수가 생기면 FP 시험이 그것을 덮지 못한다 → 실패.
+FP_INVENTORY = {
+    'carbon_junction': {'_fp': 'FP-a…h · FP-i (원장 · 계획 · 객체 배열)'},
+    'ptfe_face_alpha': {'_h16': 'FP-i · FP-k (캡슐 · 행 · 계획 · 간선 지문 — 고정 dtype 바이트 · 문자열)',
+                        '_path_radius': '두 집단 지름 분류 해시 (점열 float64 바이트 · F-DIA 순열 불변) — 지문 아님'},
+    'ca_s0_census': {'_sha256_file': 'FP-i · FP-l', 'make_plan': 'FP-i · FP-l (정준 JSON 바이트)',
+                     'verify_plan_commit': '커밋 안 계획 파일 바이트 sha256 (L3 시험)',
+                     'validate_kit_arrays': '정확 중복 경로 = 점열 float64 바이트 sha256 (S0-5i)',
+                     'census_kit': 'payload argv sha256 (NUL 결합 UTF-8 · 기록만)'},
+    'step3_conv_cert': {},
+}
+
+
+def _hash_users(path):
+    tree = ast.parse(open(path, encoding='utf-8').read())
+    out = set()
+    for node in ast.walk(tree):
+        if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef)):
+            if any(isinstance(x, ast.Name) and x.id == 'hashlib' for x in ast.walk(node)):
+                out.add(node.name)
+    return out
+
+
+@case('FP')
+def t_fp():
+    import ptfe_face_alpha as FA
+    import ca_s0_census as S0
+    # ── FP-a · b · c · d · e · f — `_fp` 자체 ──
+    a = _objarr([_rt(w) for w in _FP_WORDS])
+    b = _objarr([_rt(w) for w in _FP_WORDS])
+    distinct = any(x is not y for x, y in zip(a, b))
+    chk('FP-a 객체 배열 — 같은 내용 · 다른 객체 (실행 중 만든 문자열 · UTF-8 · 빈 문자열) → 같은 지문 (원소 · dict 안 · 목록 안)',
+        distinct and CJ._fp(a) == CJ._fp(b) and CJ._fp({'reason': a, 'k': 1}) == CJ._fp({'reason': b, 'k': 1})
+        and CJ._fp([a, 3]) == CJ._fp([b, 3]), f'다른 객체 {distinct}')
+    w2 = list(_FP_WORDS); w2[0] = 'covered_SDCQ'
+    w3 = list(_FP_WORDS); w3[3] = w3[3].replace('접합', '접힙')
+    chk('FP-b 한 글자 다름 (ASCII · 한글) → 다른 지문', CJ._fp(a) != CJ._fp(_objarr([_rt(w) for w in w2]))
+        and CJ._fp(a) != CJ._fp(_objarr([_rt(w) for w in w3])))
+    pairs = ((['ab', 'c'], ['a', 'bc']), (['a|b'], ['a', 'b']), (['a', 'b'], ['b', 'a']), (['x'], ['x', '']),
+             (['1'], [1]), ([None], ['None']), ([True], [1]), ([1.0], [1]), ([b'ab'], ['ab']))
+    bad = [f'{p}~{q}' for p, q in pairs if CJ._fp(_objarr([_rt(x) if isinstance(x, str) else x for x in p]))
+           == CJ._fp(_objarr([_rt(x) if isinstance(x, str) else x for x in q]))]
+    sq = _objarr([_rt('ab'), _rt('cd')])
+    if CJ._fp(sq) == CJ._fp(sq.reshape(1, 2)):
+        bad.append('모양 (2,)~(1,2)')
+    chk('FP-c 경계 · 순서 · 개수 · 모양 · 형 (길이 접두 · 순서 보존 · 형 표지) → 다른 지문', not bad, f'{bad}')
+
+    def _mixed():
+        k = int('1000') + 7
+        return _objarr([None, bool(k), k, float(k) / 4.0, np.float64(k) / 8.0, np.int64(k) * 3, bytes([120, 121]),
+                        (_rt('ab'), k), _rt('끝')])
+    m1, m2 = _mixed(), _mixed()
+    chk('FP-d 섞인 원소 (None · bool · int · float · numpy 수 · bytes · 튜플) — 같은 내용 · 다른 객체 → 같은 지문',
+        CJ._fp(m1) == CJ._fp(m2))
+    a2 = np.arange(12, dtype=np.int64).reshape(3, 4)
+    nums = (a2, np.linspace(0.0, 1.0, 7), a2.T, a2[:, ::2], np.zeros((0, 3)), np.array([True, False]))
+    chk('FP-e 숫자 배열 = dtype · 모양 · C 순서 바이트 그대로 (독립 식 · 연속 아닌 뷰 = 연속 사본) — 옛 지문 비트 유지',
+        all(CJ._fp(x) == _fp_numeric_formula(x) for x in nums) and CJ._fp(a2.T) == CJ._fp(np.ascontiguousarray(a2.T)))
+    refused = [raises(lambda v=v: CJ._fp(v), TypeError) for v in
+               (_objarr([object()]), _objarr([_rt('ok'), {1, 2}]), object(), {1, 2}, np.zeros(2, dtype=[('a', 'O')]))]
+    chk('FP-f 내용 직렬화가 없는 원소 · 값 (object() · set · 구조체 객체 칸) = 거부 (주소 · 해시 순서로 지문을 만들지 않는다)',
+        all(refused), f'{refused}')
+    # ── FP-g · h — 원장 · 계획 지문 (픽스처: 포트 미실현 사유 'covered_SDCP' = f-문자열) ──
+    P, sid, pid = _fp_fixture()
+    r1 = registry(sid, P, r_port_um=_FP_RPORT)
+    r2 = registry(sid, P, r_port_um=_FP_RPORT)
+    rs1, rs2 = r1['instances']['reason'], r2['instances']['reason']
+    pre = (len(rs1) == 1 and rs1.dtype == object and rs1[0] == 'covered_SDCP' and rs1[0] is not rs2[0])
+    p1 = _try(lambda: plan(r1, 1e3), None)
+    p2 = _try(lambda: plan(r2, 1e3), None)
+    chk('FP-g 같은 입력으로 다시 만든 원장 — 원장 지문 · 계획 행 지문 같음 (사유 = 실행 중 만든 다른 문자열 객체)',
+        pre and r1['fp']['registry'] == r2['fp']['registry'] and p1 is not None and p2 is not None
+        and p1['fp_rows'] == p2['fp_rows'], f"전제 {pre} · {r1['fp']['registry']} ↔ {r2['fp']['registry']}")
+    rsame = dict(r1); rsame['instances'] = dict(r1['instances'])
+    rsame['instances']['reason'] = _objarr([_rt(x) for x in rs1])
+    ok_same = (CJ.registry_fp(rsame) == r1['fp']['registry']) and (_try(lambda: plan(rsame, 1e3), None) is not None)
+    chk('FP-h 같은 내용 새 객체로 바꾼 원장 → 지문 같음 · 계획이 받아들인다 (거짓 거부 없음)', ok_same)
+    rdiff = dict(r1); rdiff['instances'] = dict(r1['instances'])
+    rdiff['instances']['reason'] = _objarr([_rt(x).replace('SDCP', 'SDCQ') for x in rs1])
+    chk('FP-h 한 글자 바꾼 원장 (사유 SDCP → SDCQ) → 지문 다름 · 계획 거부 (E5)',
+        CJ.registry_fp(rdiff) != r1['fp']['registry'] and raises(lambda: plan(rdiff, 1e3)))
+    # ── FP-i — 별도 `python3 -I` 하위 프로세스 둘 · 이 프로세스 ──
+    tmpd = tempfile.mkdtemp(prefix='cjfp_')
+    try:
+        kids, here = _fp_children(tmpd, P)
+    finally:
+        shutil.rmtree(tmpd, ignore_errors=True)
+    for grp, nm in (('cj_', 'carbon_junction (객체 배열 · 원장 · 계획)'), ('fa_', 'ptfe_face_alpha (캡슐 · 행 · 계획 · 간선 · 격자)'),
+                    ('s0_', 'ca_s0_census (계획 sha256 · 정준 바이트 · 파일 sha256)')):
+        keys = sorted(k for k in (here or {}) if k.startswith(grp))
+        same = (bool(keys) and all(k_ is not None for k_ in kids)
+                and all(kids[0].get(k) == kids[1].get(k) == here[k] for k in keys))
+        diff = [k for k in keys if not (kids[0] and kids[1]) or not (kids[0].get(k) == kids[1].get(k) == here.get(k))]
+        chk(f'FP-i 별도 `python3 -I` 하위 프로세스 둘 (힙 선할당 0 · 20000) = 이 프로세스 — {nm} ({len(keys)} 지문)', same,
+            f'다름 {diff}')
+    # ── FP-j — 격자 지문 감싸개 (`_grid_fp` → step3_sigma._grid_fp) ──
+    g0 = np.arange(24, dtype=np.int8).reshape(2, 3, 4)
+    g1 = g0.copy()
+    g2 = g0.copy(); g2[1, 2, 3] += 1
+    gobj = np.empty((2, 2, 2), dtype=object)
+    for i in range(gobj.size):
+        gobj.flat[i] = int('100') + i
+    for nm_, fn in (('carbon_junction', CJ._grid_fp), ('ptfe_face_alpha', FA._grid_fp)):
+        chk(f'FP-j {nm_}._grid_fp 숫자 격자 — 같은 내용 다른 객체 = 같음 · 한 칸 다름 · dtype 다름 = 다름',
+            fn(g0) == fn(g1) and fn(g0) != fn(g2) and fn(g0) != fn(g0.astype(np.int16)) and fn(None) is None)
+        chk(f'FP-j {nm_}._grid_fp 객체 격자 = 거부 (포인터 바이트 · 격자는 수치 배열 계약)', raises(lambda f_=fn: f_(gobj), TypeError))
+    # ── FP-k — S1 지문 (내용 기반 확인 · 옛 코드도 통과해야 한다) ──
+    m4 = P[1] == 4
+    Q, Fq, Kq = P[0][m4], P[2][m4], P[3][m4]
+    big = np.repeat(Q, 2, axis=0)
+    variants = (Q.copy(), np.asfortranarray(Q), big[::2], Q.tolist())
+    fps = [FA.build_capsules(v, Fq, Kq)['fp'] for v in variants]
+    Qd = Q.copy(); Qd[1, 0] = np.nextafter(Qd[1, 0], np.inf)
+    sig = sig_e()
+    pa = FA.build_plan(sid, sig, FA.build_capsules(Q, Fq, Kq), lo=(0.0, 0.0, 0.0), vox=H, channel='electronic', pid=pid)
+    pb = FA.build_plan(sid.copy(), sig.copy(), FA.build_capsules(Q.copy(), Fq.copy(), Kq.copy()), lo=(0.0, 0.0, 0.0), vox=H,
+                       channel='electronic', pid=pid.copy())
+    ax = tuple({'lin': pa['axes'][k]['lin'].astype(np.int32), 'alpha': pa['axes'][k]['alpha']} for k in range(3))
+    e1 = tuple({'lin': pa['axes'][k]['lin'], 'alpha': pa['axes'][k]['alpha'], 'g': pa['axes'][k]['alpha'] * 2.0} for k in range(3))
+    e2 = tuple({kk: np.array(vv) for kk, vv in e.items()} for e in e1)
+    e3 = tuple({kk: np.array(vv) for kk, vv in e.items()} for e in e1)
+    nz = [k for k in range(3) if len(e3[k]['g'])]
+    if nz:
+        e3[nz[0]]['g'][0] = np.nextafter(e3[nz[0]]['g'][0], np.inf)
+    chk('FP-k ptfe_face_alpha — 캡슐 지문 (사본 · F 순서 · 연속 아닌 뷰 · 목록 = 같음 · 좌표 1 ulp = 다름) · 계획 행 · 계획 · 간선 '
+        '(같은 내용 = 같음 · 1 ulp = 다름)',
+        len(set(fps)) == 1 and FA.build_capsules(Qd, Fq, Kq)['fp'] != fps[0] and pa['n_rows'] > 0
+        and pa['fp_rows'] == pb['fp_rows'] and pa['fp_plan'] == pb['fp_plan'] and FA.rows_fp(ax) == pa['fp_rows']
+        and FA.edges_fp(e1) == FA.edges_fp(e2) and bool(nz) and FA.edges_fp(e1) != FA.edges_fp(e3),
+        f"캡슐 {len(set(fps))} · 행 {pa['n_rows']}")
+    # ── FP-l — S0 계획 · 파일 sha256 ──
+    _, b1, h1 = S0.make_plan(0.15, 0.075, 2.0, {'stage': 1, 'kit_name': _rt('kit_fp')})
+    _, b2, h2 = S0.make_plan(float('0.15'), 0.075, 2.0, dict({'kit_name': _rt('kit_fp')}, stage=1))
+    _, b3, h3 = S0.make_plan(0.15, 0.075, 2.0, {'stage': 1, 'kit_name': _rt('kit_fq')})
+    tmpd = tempfile.mkdtemp(prefix='s0fp_')
+    try:
+        fa_, fb_, fc_ = (os.path.join(tmpd, x) for x in ('a.bin', 'b.bin', 'c.bin'))
+        for pth, data in ((fa_, b1), (fb_, bytes(bytearray(b1))), (fc_, b1[:-2] + b'X\n')):
+            with open(pth, 'wb') as fh:
+                fh.write(data)
+        same_f = S0._sha256_file(fa_) == S0._sha256_file(fb_) and S0._sha256_file(fa_) != S0._sha256_file(fc_)
+    finally:
+        shutil.rmtree(tmpd, ignore_errors=True)
+    chk('FP-l ca_s0_census — 계획 sha256 · 정준 바이트 (다른 객체로 만든 같은 계획 = 같음 · 출처 한 글자 = 다름) · 파일 sha256',
+        h1 == h2 and b1 == b2 and h1 != h3 and same_f)
+    # ── FP-m — 목록 (이 시험이 덮는 지문 · 해시 함수 = 모듈 본문의 hashlib 사용 함수 전부) ──
+    got = {m_: _hash_users(os.path.join(SCRIPTS, m_ + '.py')) for m_ in FP_INVENTORY}
+    want = {m_: set(v) for m_, v in FP_INVENTORY.items()}
+    chk('FP-m 지문 · 해시 함수 목록 = 이 시험의 표 (새 함수 = 덮을 때까지 실패 · step3_conv_cert = 없음)', got == want,
+        f'{ {m_: sorted(got[m_] ^ want[m_]) for m_ in got if got[m_] != want[m_]} }')
 
 
 def main():
