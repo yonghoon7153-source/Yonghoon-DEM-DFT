@@ -1,0 +1,189 @@
+{
+  "cases": [
+    {
+      "name": "indented_heading",
+      "text": "## 3. Active\n ## Outside\n`code_fp 2149f8738bb20b6a311b3c5b344b9745271a3f1324cabfb4582c175c3983c3eb`\n",
+      "markdown_it": {
+        "active": true,
+        "code_fp": null,
+        "body": "## 3. Active",
+        "heads": [
+          [
+            0,
+            2,
+            "3. Active"
+          ],
+          [
+            1,
+            2,
+            "Outside"
+          ]
+        ]
+      },
+      "old": {
+        "active": true,
+        "code_fp": "2149f8738bb20b6a311b3c5b344b9745271a3f1324cabfb4582c175c3983c3eb",
+        "body": "## 3. Active\n ## Outside\n`code_fp 2149f8738bb20b6a311b3c5b344b9745271a3f1324cabfb4582c175c3983c3eb`\n",
+        "reason": ""
+      },
+      "new": {
+        "active": true,
+        "code_fp": "2149f8738bb20b6a311b3c5b344b9745271a3f1324cabfb4582c175c3983c3eb",
+        "body": "## 3. Active\n ## Outside\n`code_fp 2149f8738bb20b6a311b3c5b344b9745271a3f1324cabfb4582c175c3983c3eb`\n",
+        "reason": ""
+      },
+      "in_supported_scope": false
+    },
+    {
+      "name": "setext_heading",
+      "text": "## 3. Active\nOutside\n---\n`code_fp 2149f8738bb20b6a311b3c5b344b9745271a3f1324cabfb4582c175c3983c3eb`\n",
+      "markdown_it": {
+        "active": true,
+        "code_fp": null,
+        "body": "## 3. Active",
+        "heads": [
+          [
+            0,
+            2,
+            "3. Active"
+          ],
+          [
+            1,
+            2,
+            "Outside"
+          ]
+        ]
+      },
+      "old": {
+        "active": true,
+        "code_fp": "2149f8738bb20b6a311b3c5b344b9745271a3f1324cabfb4582c175c3983c3eb",
+        "body": "## 3. Active\nOutside\n---\n`code_fp 2149f8738bb20b6a311b3c5b344b9745271a3f1324cabfb4582c175c3983c3eb`\n",
+        "reason": ""
+      },
+      "new": {
+        "active": true,
+        "code_fp": "2149f8738bb20b6a311b3c5b344b9745271a3f1324cabfb4582c175c3983c3eb",
+        "body": "## 3. Active\nOutside\n---\n`code_fp 2149f8738bb20b6a311b3c5b344b9745271a3f1324cabfb4582c175c3983c3eb`\n",
+        "reason": ""
+      },
+      "in_supported_scope": false
+    },
+    {
+      "name": "html_empty_heading",
+      "text": "## 3. Active\n`code_fp 2149f8738bb20b6a311b3c5b344b9745271a3f1324cabfb4582c175c3983c3eb`\n<div>\n##\n</div>\n\n`code_fp 0000000000000000000000000000000000000000000000000000000000000000`\n",
+      "markdown_it": {
+        "active": true,
+        "code_fp": null,
+        "body": "## 3. Active\n`code_fp 2149f8738bb20b6a311b3c5b344b9745271a3f1324cabfb4582c175c3983c3eb`\n<div>\n##\n</div>\n\n`code_fp 0000000000000000000000000000000000000000000000000000000000000000`\n",
+        "heads": [
+          [
+            0,
+            2,
+            "3. Active"
+          ]
+        ]
+      },
+      "old": {
+        "active": true,
+        "code_fp": null,
+        "body": "## 3. Active\n`code_fp 2149f8738bb20b6a311b3c5b344b9745271a3f1324cabfb4582c175c3983c3eb`\n<div>\n##\n</div>\n\n`code_fp 0000000000000000000000000000000000000000000000000000000000000000`\n",
+        "reason": ""
+      },
+      "new": {
+        "active": true,
+        "code_fp": "2149f8738bb20b6a311b3c5b344b9745271a3f1324cabfb4582c175c3983c3eb",
+        "body": "## 3. Active\n`code_fp 2149f8738bb20b6a311b3c5b344b9745271a3f1324cabfb4582c175c3983c3eb`\n<div>",
+        "reason": ""
+      },
+      "in_supported_scope": false
+    },
+    {
+      "name": "html_named_heading",
+      "text": "## 3. Active\n`code_fp 2149f8738bb20b6a311b3c5b344b9745271a3f1324cabfb4582c175c3983c3eb`\n<div>\n## Example\n</div>\n\n`code_fp 0000000000000000000000000000000000000000000000000000000000000000`\n",
+      "markdown_it": {
+        "active": true,
+        "code_fp": null,
+        "body": "## 3. Active\n`code_fp 2149f8738bb20b6a311b3c5b344b9745271a3f1324cabfb4582c175c3983c3eb`\n<div>\n## Example\n</div>\n\n`code_fp 0000000000000000000000000000000000000000000000000000000000000000`\n",
+        "heads": [
+          [
+            0,
+            2,
+            "3. Active"
+          ]
+        ]
+      },
+      "old": {
+        "active": true,
+        "code_fp": "2149f8738bb20b6a311b3c5b344b9745271a3f1324cabfb4582c175c3983c3eb",
+        "body": "## 3. Active\n`code_fp 2149f8738bb20b6a311b3c5b344b9745271a3f1324cabfb4582c175c3983c3eb`\n<div>",
+        "reason": ""
+      },
+      "new": {
+        "active": true,
+        "code_fp": "2149f8738bb20b6a311b3c5b344b9745271a3f1324cabfb4582c175c3983c3eb",
+        "body": "## 3. Active\n`code_fp 2149f8738bb20b6a311b3c5b344b9745271a3f1324cabfb4582c175c3983c3eb`\n<div>",
+        "reason": ""
+      },
+      "in_supported_scope": false
+    },
+    {
+      "name": "indented_code_value",
+      "text": "## 3. Active\n\n    `code_fp 2149f8738bb20b6a311b3c5b344b9745271a3f1324cabfb4582c175c3983c3eb`\n",
+      "markdown_it": {
+        "active": true,
+        "code_fp": null,
+        "body": "## 3. Active\n\n",
+        "heads": [
+          [
+            0,
+            2,
+            "3. Active"
+          ]
+        ]
+      },
+      "old": {
+        "active": true,
+        "code_fp": "2149f8738bb20b6a311b3c5b344b9745271a3f1324cabfb4582c175c3983c3eb",
+        "body": "## 3. Active\n\n    `code_fp 2149f8738bb20b6a311b3c5b344b9745271a3f1324cabfb4582c175c3983c3eb`\n",
+        "reason": ""
+      },
+      "new": {
+        "active": true,
+        "code_fp": "2149f8738bb20b6a311b3c5b344b9745271a3f1324cabfb4582c175c3983c3eb",
+        "body": "## 3. Active\n\n    `code_fp 2149f8738bb20b6a311b3c5b344b9745271a3f1324cabfb4582c175c3983c3eb`\n",
+        "reason": ""
+      },
+      "in_supported_scope": false
+    },
+    {
+      "name": "quoted_value",
+      "text": "## 3. Active\n> `code_fp 2149f8738bb20b6a311b3c5b344b9745271a3f1324cabfb4582c175c3983c3eb`\n",
+      "markdown_it": {
+        "active": true,
+        "code_fp": "2149f8738bb20b6a311b3c5b344b9745271a3f1324cabfb4582c175c3983c3eb",
+        "body": "## 3. Active\n> `code_fp 2149f8738bb20b6a311b3c5b344b9745271a3f1324cabfb4582c175c3983c3eb`\n",
+        "heads": [
+          [
+            0,
+            2,
+            "3. Active"
+          ]
+        ]
+      },
+      "old": {
+        "active": true,
+        "code_fp": "2149f8738bb20b6a311b3c5b344b9745271a3f1324cabfb4582c175c3983c3eb",
+        "body": "## 3. Active\n> `code_fp 2149f8738bb20b6a311b3c5b344b9745271a3f1324cabfb4582c175c3983c3eb`\n",
+        "reason": ""
+      },
+      "new": {
+        "active": true,
+        "code_fp": "2149f8738bb20b6a311b3c5b344b9745271a3f1324cabfb4582c175c3983c3eb",
+        "body": "## 3. Active\n> `code_fp 2149f8738bb20b6a311b3c5b344b9745271a3f1324cabfb4582c175c3983c3eb`\n",
+        "reason": ""
+      },
+      "in_supported_scope": false
+    }
+  ],
+  "interpretation": "No requirement to support these constructs; retained explicit grammar limitation."
+}

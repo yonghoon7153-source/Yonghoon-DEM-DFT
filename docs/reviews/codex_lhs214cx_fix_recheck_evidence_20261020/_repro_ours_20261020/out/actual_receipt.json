@@ -1,0 +1,37 @@
+{
+  "command": [
+    "/usr/local/bin/python3",
+    "-B",
+    "/home/user/Yonghoon-DEM-DFT/.claude/worktrees/agent-a061bc64d153ead99/scripts/supp20_input_receipt.py",
+    "--json",
+    "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/import_l214cx/repro/out/actual_receipt_ours.json"
+  ],
+  "cwd": "/home/user/Yonghoon-DEM-DFT/.claude/worktrees/agent-a061bc64d153ead99",
+  "returncode": 1,
+  "seconds": 0.6,
+  "python": "3.11.15",
+  "platform": "Linux-6.18.44-fc-v139-x86_64-with-glibc2.39",
+  "script_sha256_before": "2c7e0b81dbe81d0518e27c8e1781959b9cc983509a1ce66001028faa3768a2f9",
+  "script_sha256_after": "2c7e0b81dbe81d0518e27c8e1781959b9cc983509a1ce66001028faa3768a2f9",
+  "unchanged": true,
+  "stdout_tail": [
+    "  ⬜ 수동 (도구가 인증하지 않음) — 새 ROOT 둘 · 같은 발사 커밋 — --manifest 와 --primary-manifest 를 둘 다 주면 기계 대조 (아니면 수동)",
+    "  · 기록 approved_sha: ⚠ --approved-sha 없음 — 사전 점검 · manifest 의 git 기록을 저자 발사 승인 핀과 기계로 대조하지 않았다 (경고 · 실패 아님 · 1저자 Q3) · 발사 핀 확인 = 손으로",
+    "rc 1 — 대조 11 칸 · 다름 1"
+  ],
+  "environment": {
+    "OMP_NUM_THREADS": "1",
+    "OPENBLAS_NUM_THREADS": "1",
+    "MKL_NUM_THREADS": "1",
+    "NUMEXPR_NUM_THREADS": "1",
+    "TMPDIR": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/import_l214cx/repro/tmp/actual_receipt",
+    "TEMP": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/import_l214cx/repro/tmp/actual_receipt",
+    "TMP": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/import_l214cx/repro/tmp/actual_receipt",
+    "MPLCONFIGDIR": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/import_l214cx/repro/tmp/actual_receipt/mpl",
+    "WEBAPP_UPLOAD_FOLDER": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/import_l214cx/repro/tmp/actual_receipt/upload",
+    "WEBAPP_RESULTS_FOLDER": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/import_l214cx/repro/tmp/actual_receipt/results",
+    "WEBAPP_ARCHIVE_FOLDER": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/import_l214cx/repro/tmp/actual_receipt/archive",
+    "WEBAPP_MPM_LAB_FOLDER": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/import_l214cx/repro/tmp/actual_receipt/mpm_lab",
+    "WEBAPP_EIS_FOLDER": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/import_l214cx/repro/tmp/actual_receipt/eis"
+  }
+}

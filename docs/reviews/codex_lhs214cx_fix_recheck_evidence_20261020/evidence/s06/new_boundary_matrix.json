@@ -1,0 +1,7 @@
+{
+  "total": 8736,
+  "old_mismatch": 608,
+  "new_mismatch": 0,
+  "mismatches": [],
+  "scope": "column-zero ATX, fences with 0-3 space opening indentation; malformed closers are content"
+}

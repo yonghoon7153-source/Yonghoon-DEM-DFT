@@ -1,0 +1,52 @@
+{
+  "CODE_FILES": {
+    "n": 32,
+    "same_685_vs_347": 32,
+    "same_347_vs_HEAD": 32,
+    "worktree_blob_eq_HEAD": 32
+  },
+  "HANDOVER_FILES": {
+    "n": 2,
+    "same_685_vs_347": 2,
+    "same_347_vs_HEAD": 2,
+    "worktree_blob_eq_HEAD": 2
+  },
+  "code_fp_rederived": "2149f8738bb20b6a311b3c5b344b9745271a3f1324cabfb4582c175c3983c3eb",
+  "registration_docs_same_685_347_HEAD": {
+    "docs/reviews/lhs_network_batch_registration_20261007_g2.md": true,
+    "docs/reviews/lhs_network_batch_registration_20261012_supp20.md": true
+  },
+  "supp20_reg_code_fp_tokens": [
+    "2149f8738bb20b6a311b3c5b344b9745271a3f1324cabfb4582c175c3983c3eb",
+    "e8b2496b9c2ecf6edad8c6b52d32a2514c96dd54c9a20823c300639249ecae71"
+  ],
+  "tools_same_685_347_HEAD": {
+    "scripts/lhs_release_build.py": true,
+    "scripts/network_conductivity.py": true,
+    "scripts/tau_flux.py": true,
+    "scripts/run_network_194_parallel.py": true
+  },
+  "fixture_now": {
+    "E_AREA": 0.500000001,
+    "E_BX": 0.7281737983374794,
+    "E_BY": {
+      "next": 0.7281737983374881,
+      "eq": 0.7281737983374882,
+      "prev": 0.7281737983374883
+    }
+  },
+  "fixture_same": true,
+  "FULL_Q_GUARD_MAX": 1.5,
+  "producer_strict_lines": [
+    [
+      1471,
+      "reject = sigma_ratio > FULL_Q_GUARD_MAX                     # = 옛 리터럴 1.5 (값 · 연산자 그대로)"
+    ]
+  ],
+  "consumer_strict_lines": [
+    [
+      807,
+      "if branch == 'full' and q_rec > nc.FULL_Q_GUARD_MAX:"
+    ]
+  ]
+}

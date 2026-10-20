@@ -1,0 +1,42 @@
+{
+  "label": "baseline",
+  "kind": "receipt_selftest",
+  "source": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\lhs214s_recheck_20261019\\source",
+  "sha256_before": "bcd669616fe86c34a4623118ac0a27354691d3d682b0f34bb7feb815b8408f01",
+  "sha256_after": "bcd669616fe86c34a4623118ac0a27354691d3d682b0f34bb7feb815b8408f01",
+  "unchanged": true,
+  "command": [
+    "C:\\Users\\Administrator\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\python.exe",
+    "-X",
+    "utf8",
+    "-B",
+    "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\lhs214s_recheck_20261019\\source\\scripts\\supp20_input_receipt.py",
+    "--selftest"
+  ],
+  "cwd": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\lhs214s_recheck_20261019\\source",
+  "python": "3.12.14 (main, Aug 25 2026, 14:01:42) [MSC v.1944 64 bit (AMD64)]",
+  "platform": "Windows-11-10.0.26200-SP0",
+  "dependencies": "{\"numpy\": \"2.5.3\", \"scipy\": \"1.16.3\"}",
+  "returncode": 1,
+  "seconds": 36.91855490003945,
+  "stdout_tail": [
+    "  PASS  S12j ★ L214R-S01 (Q2) 활성 §3 의 code_fp 가 그 절 안 코드 블록 속에만 → rc 1 · R0 (§3 안 자리 없음) · 읽은 code_fp None (고치기 전: rc 0 · 블록 속 현재 지문 수용 — Codex active_section_fenced_value)",
+    "  PASS  S12j2 L214R-S01 (Q2) — 실제 §3 의 울타리 밖 code_fp 줄 앞에 다른 값 (0 × 64) 을 담은 예시 블록 → 읽은 등록 §3 = 실물 값 하나 · R0 통과 (블록 속 값은 세지 않는다 · 고치기 전: 값 둘 = R0 실패)",
+    "",
+    "supp20_input_receipt selftest: 105/118 PASS   FAILED: ['S7 ★ (i) 정상 — 진짜 실행기 dry-run (등록 명령 run --cohorts lhss --dry-run --observe-imports --preflight-receipt) rc 0 → 영수증 JSON + 전체 로그 → rc 0 · 범위 preflight · P0–P9 (실행기 대조) · E1 (로그 INPUT_DIGEST_JSON = 등록 §2 = 반입 재계산) · E2 (봉인 지문 = 등록 §3) 같음 · 승인 SHA 없음 = 경고 기록 (실패 아님) · ★ 10-15 (나′) [상태 pending] pending = rc 1 · 실패 칸 정확히 {D1 · E2} (영수증 = 체크아웃 지문 · 상세 = 등록 §3 ≠ 체크아웃)', 'S7u 영수증 종료코드 = 실행기 CLI 종료코드 (정상 0 — 셸 tee · grep 종료코드가 아니다) · 영수증 로그 = 실행기 화면 (영수증 안내 줄 앞까지 같은 바이트)', 'S7a ★ (a) SUPR-01 — 같은 20 ID · raw 표 · 코호트 TSV 첫 행 deck_sha256 한 글자만 바꾼 파일로 돈 진짜 dry-run (실행기 rc 0 · 새 꼴 로그가 그 TSV sha 를 싣는다) → 값으로 거부: 실패 칸 = E1 (로그 = 등록 §2 = 반입 재계산) · P9 (영수증 지문 = 이 체크아웃 재계산) 둘뿐 · 부재가 아니라 값 · ★ (나′) [상태 pending] pending 이면 + D1 · E2 (정확히)', 'S7a-t (a) 같은 반례의 텍스트 화면 (tee) 을 --dry-run-log 로 → rc 1 (옛 판 = rc 0 오수용 · 판정문 §4 검산)', 'S7a2 (a) Codex 반례 TSV 그대로 (evidence/receipt_extra/alternate_cohort.tsv · sha256 8d5dcbd2… = 판정문 §4 변이값) → 값으로 거부 (실패 칸 = E1 · P9 둘뿐 · ★ (나′) [상태 pending] pending 이면 + D1 · E2 · 정확히)', 'S7d-t (d) 정상 화면에서 세 줄 삭제한 텍스트 → rc 1 (옛 판 = rc 0 오수용 · 판정문 §5 표 넷째 줄)', 'S7j ★ Q3 승인 SHA (접두 7) = 사전 점검 git 기록 · 로그 코드 줄 짧은 sha → rc 0 · P10 같음 · 경고 없음 · ★ (나′) [상태 pending] pending = rc 1 · 실패 칸 정확히 {D1 · E2} (P10 은 같음)', 'S7k1 등록 명령 밖 인자 --allow-missing-raw (dry-run 은 끝까지 rc 0) → 실패 칸 = P6 (argv) 하나 (★ (나′) [상태 pending] pending 이면 + D1 · E2 · 정확히)', 'S7k2 --lhss-cohort 로 같은 경로를 덮어씀 (지문 같음) → 실패 칸 = P6 하나 (경로 덮어쓰기는 등록 명령이 아니다 — 지문 대조와 따로 · ★ (나′) [상태 pending] pending 이면 + D1 · E2 · 정확히)', 'S11d2 ★ (나′) ⓓ 같은 문서 · 정상 사전 점검 영수증 (S7) → rc 1 · 실패 칸 정확히 {D1 · E2} (E2 = 등록 값만 · 상세 registered = 등록 · receipt = 체크아웃)', 'S11f2 ★ (나′) ⓕ 같은 쌍둥이 · 정상 사전 점검 영수증 (S7) → rc 0 (pending 의 E2 실패 = 지문 하나뿐 · S7l 판별의 기준)', 'S12a2 ★ L214R-04 같은 비준 전환 사본 · 정상 사전 점검 영수증 (S7) → rc 0 (E2 = 활성 §3 값 · 역사 값을 읽지 않는다)', 'S12c2 ★ L214R-04 같은 문서 · 정상 사전 점검 영수증 → rc 1 · 실패 칸 정확히 {D1 · E2} (E2 = 등록 §3 값만)']"
+  ],
+  "environment": {
+    "TEMP": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\lhs214cx_recheck_20261020\\tmp\\original_baseline_receipt_selftest",
+    "TMP": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\lhs214cx_recheck_20261020\\tmp\\original_baseline_receipt_selftest",
+    "OMP_NUM_THREADS": "1",
+    "OPENBLAS_NUM_THREADS": "1",
+    "MKL_NUM_THREADS": "1",
+    "NUMEXPR_NUM_THREADS": "1",
+    "WEBAPP_UPLOAD_FOLDER": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\lhs214cx_recheck_20261020\\tmp\\original_baseline_receipt_selftest\\upload",
+    "WEBAPP_RESULTS_FOLDER": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\lhs214cx_recheck_20261020\\tmp\\original_baseline_receipt_selftest\\results",
+    "WEBAPP_ARCHIVE_FOLDER": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\lhs214cx_recheck_20261020\\tmp\\original_baseline_receipt_selftest\\archive",
+    "WEBAPP_MPM_LAB_FOLDER": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\lhs214cx_recheck_20261020\\tmp\\original_baseline_receipt_selftest\\mpm_lab",
+    "WEBAPP_EIS_FOLDER": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\lhs214cx_recheck_20261020\\tmp\\original_baseline_receipt_selftest\\eis",
+    "PYTHONPATH": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\lhs214s_recheck_20261019\\source\\scripts;C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\lhs214s_recheck_20261019\\source\\webapp;C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\lhs_coverage_review_20260930\\deps;C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\gen2_network_reverify3_20261007\\deps"
+  }
+}

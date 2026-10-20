@@ -11817,7 +11817,7 @@
       "found_by": "codex 10-17 LHS214 수정 재확인 (영수증 lane · 임시 등록 사본만 · 원 등록 파일 무변경)",
       "opened_in": "docs/reviews/codex_review_lhs214r_fix_recheck_20261017.md",
       "title": "등록 문서 파서가 울타리 길이를 잃어 네 개 백틱 코드 블록 안의 예시 §3 를 활성 등록으로 읽는다 — 실제 ## 3. 을 ## 30. 으로 바꾸고 pending 선언을 지운 임시 사본에 네 백틱 블록 (안에 세 백틱 예시 + 가짜 §3 · 현재 code_fp) 을 넣으면 영수증 rc 0 · 실패 칸 [] (보통 세 백틱 예시만이면 rc 1 · R0 · D1)",
-      "note": "원장 ID L214R-R03 = Codex 표기 L214RR-03 (원장 ID 형식 = 앞 칸 다섯 글자까지).  판정문 §3 · 자리 (코드 핀 60ba39e22): scripts/supp20_input_receipt.py:109 · :112–:131 · :145–:160 — _MD_FENCE 가 네 개 백틱을 세 개로 기록하고 안의 세 개 백틱을 닫는 울타리로 취급.  CommonMark §4.5: 닫는 울타리 = 여는 울타리와 같은 문자 · 길이가 적어도 같아야 함.  원 L214R-04 의 일반 문서 전환 반례는 닫힘 · 현재 보통 형식의 두 등록 문서가 잘못 읽힌다는 뜻도 · 영수증 rc 0 만으로 발사가 승인됐다는 뜻도 아니다 (판정문 §3).  최소 해결: 여는 울타리 문자 · 전체 길이를 보존하고 유효한 닫는 줄 판별 · 또는 지원하지 않는 울타리 형식을 명시적으로 거부 · 이 반례와 정상 §3 · 역사 표 보존 대조를 함께 시험.  ⚠ 이 도구는 봉인 CODE_FILES 32 밖 (등록 · 영수증 도구) — 고쳐도 대기 지문 e76dbe08… 은 그대로인지 수정 때 확인.  ★ 우리 트리 재현 10-18 (Codex 탐침 무변경) = 판정값 차이 0 (docs/reviews/codex_lhs214r_fix_recheck_evidence_20261017/_repro_ours_20261018/README.md · compare_probe_outputs.json).  ⬜ 수정 계획 docs/reviews/lhs214rr_fix_plan_20261018.md (1저자 비준 대기).  ✅ 10-18 고침 f8871224b (1저자 10-18 \"비준\" Q2 · Q3 = 지원 · 시험 먼저 같은 커밋): scripts/supp20_input_receipt.py _md_section · _md_fence — 여는 울타리 문자 · 길이 보존 · 닫는 줄 = 같은 문자 · 길이 이상 · 뒤 공백만 · 닫히지 않은 울타리 = 문서 끝까지 코드 · 백틱 울타리 뒤 글의 백틱 = 울타리 아님.  selftest S12g (Codex receipt_fences 꼴 · 네 백틱 · 네 물결표 · 정보 문자열 안쪽 줄 · 세 백틱 대조 · 닫히지 않음) · S12h (지킴 — 긴 닫는 줄 · 공백 붙은 닫는 줄 · 다른 문자 줄) 112/113 → 113/113 · L214R-04 비준 전환 시험 그대로.  봉인 밖 도구 → 대기 지문 그대로.  Codex 탐침 무변경 재실행 (최종 코드) = 네 백틱 예시 rc 1 · R0 · D1 (docs/reviews/lhs214rr_fix_evidence_20261018/).  Codex 짧은 재확인 전.  ⚠ Codex 10-19 (핀 685c2bbdb) — 전체 종결 = 부분 유지: S01 로 울타리 공백 꼴은 닫힘 · 지원 범위 안 빈 ATX 제목 경계 결함 = 새 L214R-S06 (Codex L214S-CX01 · 이전 핀에도 있음).",
+      "note": "원장 ID L214R-R03 = Codex 표기 L214RR-03 (원장 ID 형식 = 앞 칸 다섯 글자까지).  판정문 §3 · 자리 (코드 핀 60ba39e22): scripts/supp20_input_receipt.py:109 · :112–:131 · :145–:160 — _MD_FENCE 가 네 개 백틱을 세 개로 기록하고 안의 세 개 백틱을 닫는 울타리로 취급.  CommonMark §4.5: 닫는 울타리 = 여는 울타리와 같은 문자 · 길이가 적어도 같아야 함.  원 L214R-04 의 일반 문서 전환 반례는 닫힘 · 현재 보통 형식의 두 등록 문서가 잘못 읽힌다는 뜻도 · 영수증 rc 0 만으로 발사가 승인됐다는 뜻도 아니다 (판정문 §3).  최소 해결: 여는 울타리 문자 · 전체 길이를 보존하고 유효한 닫는 줄 판별 · 또는 지원하지 않는 울타리 형식을 명시적으로 거부 · 이 반례와 정상 §3 · 역사 표 보존 대조를 함께 시험.  ⚠ 이 도구는 봉인 CODE_FILES 32 밖 (등록 · 영수증 도구) — 고쳐도 대기 지문 e76dbe08… 은 그대로인지 수정 때 확인.  ★ 우리 트리 재현 10-18 (Codex 탐침 무변경) = 판정값 차이 0 (docs/reviews/codex_lhs214r_fix_recheck_evidence_20261017/_repro_ours_20261018/README.md · compare_probe_outputs.json).  ⬜ 수정 계획 docs/reviews/lhs214rr_fix_plan_20261018.md (1저자 비준 대기).  ✅ 10-18 고침 f8871224b (1저자 10-18 \"비준\" Q2 · Q3 = 지원 · 시험 먼저 같은 커밋): scripts/supp20_input_receipt.py _md_section · _md_fence — 여는 울타리 문자 · 길이 보존 · 닫는 줄 = 같은 문자 · 길이 이상 · 뒤 공백만 · 닫히지 않은 울타리 = 문서 끝까지 코드 · 백틱 울타리 뒤 글의 백틱 = 울타리 아님.  selftest S12g (Codex receipt_fences 꼴 · 네 백틱 · 네 물결표 · 정보 문자열 안쪽 줄 · 세 백틱 대조 · 닫히지 않음) · S12h (지킴 — 긴 닫는 줄 · 공백 붙은 닫는 줄 · 다른 문자 줄) 112/113 → 113/113 · L214R-04 비준 전환 시험 그대로.  봉인 밖 도구 → 대기 지문 그대로.  Codex 탐침 무변경 재실행 (최종 코드) = 네 백틱 예시 rc 1 · R0 · D1 (docs/reviews/lhs214rr_fix_evidence_20261018/).  Codex 짧은 재확인 전.  ⚠ Codex 10-19 (핀 685c2bbdb) — 전체 종결 = 부분 유지: S01 로 울타리 공백 꼴은 닫힘 · 지원 범위 안 빈 ATX 제목 경계 결함 = 새 L214R-S06 (Codex L214S-CX01 · 이전 핀에도 있음).  ✅ Codex 10-20 (검토 핀 34713ac96 · docs/reviews/codex_review_lhs214cx_fix_recheck_20261020.md §1 · §3-2) — R03 전체 = 합의한 지원 문법 (울타리 코드 블록 + 0 열 ATX 제목 · 빈 제목 포함) 안에서 닫힘 (L214R-S06 verified) · 들여쓴 제목 · setext · HTML · 목록 · 인용 · 들여쓴 코드 블록은 지원도 자동 거부도 인증 아님 · 등록 문서 형식이 바뀌면 재검토 · 이 항목은 이미 verified (10-19 · 원 반례 범위) 라 status · verified_* 칸은 그대로 두었다.",
       "evidence_tests": [
         "scripts/supp20_input_receipt.py --selftest S12g · S12h (112/113 → 113/113)",
         "docs/reviews/codex_lhs214r_fix_recheck_evidence_20261017/evidence/receipt_fences/results.json",
@@ -11872,7 +11872,7 @@
     {
       "id": "L214R-S02",
       "severity": "P3",
-      "status": "claimed_fixed",
+      "status": "verified",
       "owner": "claude",
       "found_by": "codex 재확인 10-19 (리뷰 핀 77d8fd445)",
       "opened_in": "docs/reviews/codex_review_lhs214rr_fix_recheck_20261019.md",
@@ -11882,7 +11882,12 @@
         "scripts/test_l214r_r01_restored_full.py E0 둘째 축 (접촉 면적 ±64 ULP) · E″a · E″b (이 기계 30/40 → 40/40 · 등록 box_y ±18 ULP 이동 40/40 · 상한 3 강제 = 명시 실패 35/40)",
         "docs/reviews/lhs214cx_fix_evidence_20261019/s02/ (축 분석 · 출발 면적 401/401 · 시간)"
       ],
-      "claimed_fixed_sha": "4c285dd5d"
+      "claimed_fixed_sha": "4c285dd5d",
+      "verified_sha": "34713ac96",
+      "verified_in": "docs/reviews/codex_review_lhs214cx_fix_recheck_20261020.md",
+      "verified_by": "codex",
+      "verified_scope": "판정문 §1 · §4 — 실제 Windows 원본 시험 (Windows 11 build 26200 · Python 3.12.14 · NumPy 2.5.3 · SciPy 1.16.3 · 스레드 1 · 시험 파일 무변경 · monkeypatch · 판정 어댑터 없음 · 전후 sha256 같음): 대조 핀 23/29 rc 1 → 검토 핀 40/40 rc 0 · 세 경계 정확 재현 (raw q 1.5000000000000002 보류 · 1.5 · 1.4999999999999998 게시 · 저장 q 1.5 · 소비자가 증서 재구성 q 로 복원 next 거부) · 접촉 면적 둘째 축 근거 = 이 사슬 · 이 경계 주변 (등록 사슬 · 주변 binade) 한정 동의 · 정책 변이 6 종 탐지 (생산자 · 소비자 >=, 8 자리 반올림, 가드 제거) · fail-closed (탐색 상한 0 · 129 면적 소진 · 예외 주입 · E5 독립) · 독립 단언 29/29 (원본 40/40 과 다른 묶음).  범위 밖 = \"box_y 가 곱의 모든 double 을 지난다\" 의 일반 정리 · ±64 의 미래 환경 성공 보장 (실패 시 명시 FAIL) · 솔버 물리 정확도 (E0/E1 = 고른 입력 전제 확인 · 적응 탐색 시험을 수치 회귀 시험으로 부르지 않는다) · 다른 플랫폼 · 실제 발사 환경 · A4 재수행 · 새 214 발사 (판정문 §5 다섯 단계 전 HOLD).",
+      "verification_note": "Codex 재확인 10-20 (검토 핀 34713ac96 · 대조 핀 685c2bbdb) = CLOSED — 실제 Windows 원본 40/40 (S02 닫는 조건 \"이전 Windows 환경에서 수정 원본 로그\" 충족 · 새 독립 발사 관문으로 추가하지 않음 · 판정문 §5) → 상태를 옮겼다 · verified_sha = 검토 핀 34713ac96 (claimed_fixed_sha 4c285dd5d 를 담음) · 증거 docs/reviews/codex_lhs214cx_fix_recheck_evidence_20261020/ · 우리 트리 재현 (10-20 · Linux) = 검토 핀 원본 40/40 rc 0 · 대조 핀 판 30/30 rc 0 (이 기계는 등록 면적의 box_y 한 축이 경계를 안 건너뜀 = Windows 23/29 와 다름 · 환경) · 변이 6 종 같은 단언 집합 · 독립 탐침 23/28 (sweep 빼고 · 빠진 5 = 모두 Windows 등록 면적 전제 · 환경) · E″a 건너뜀 종류 = 이 기계 prev · Windows next (판정문 §4-2 와 같음) · 세 경계 q · 판정 같음.  Windows ±200 ULP 401/401 · 251 · 9 ULP (우리 Linux 278 · 14 ULP = 10-19 증거) 를 서로 옮겨 쓰지 않는다."
     },
     {
       "id": "L214R-S03",
@@ -11928,7 +11933,7 @@
     {
       "id": "L214R-S06",
       "severity": "P3",
-      "status": "claimed_fixed",
+      "status": "verified",
       "owner": "claude",
       "found_by": "codex 재확인 10-19 (리뷰 핀 685c2bbdb)",
       "opened_in": "docs/reviews/codex_review_lhs214s_fix_recheck_20261019.md",
@@ -11938,7 +11943,12 @@
         "scripts/supp20_input_receipt.py --selftest S12k · S12k2 · S12k3 · S12k4 (120/122 → 122/122)",
         "docs/reviews/lhs214cx_fix_evidence_20261019/s06/ (Codex 빈 제목 19 문서 oracle 불일치 14 → 0 · 울타리 114 문서 0 → 0 · 실제 보충 20 등록 영수증 무영향 · markdown-it-py 3.0.0 줄 275,148 · 문서 234,256 불일치 0)"
       ],
-      "claimed_fixed_sha": "3260891d4"
+      "claimed_fixed_sha": "3260891d4",
+      "verified_sha": "34713ac96",
+      "verified_in": "docs/reviews/codex_review_lhs214cx_fix_recheck_20261020.md",
+      "verified_by": "codex",
+      "verified_scope": "판정문 §1 · §3-1 · §3-2 — 빈 ATX 제목 경계: 이전 제목 19 문서 전체 receipt() oracle 불일치 14 → 0 (잘못 수용 12 = rc 1 · R0 · D1 · 등록값 None / 잘못 거부 2 = 정상 활성값 수용 / 대조 5 같음) · 이전 울타리 114 문서 0 → 0 (수용 57 · 거부 57 그대로) · 새 경계 · 울타리 · 역사값 조합 8,736 문서 608 → 0 · 전이 30,000 문서 (seed 20261020) 2,212 → 0 · 대표 12 문서 전체 영수증 12/12 · LF · CRLF · CR 실제 파일 18/18 · 실제 등록 문서 옛/새 도구 값 · 칸 같음 (rc 1 · D1 하나 · 대기 지문을 승인 지문으로 승격하지 않음) · 회귀 S12k–S12k4 상주.  범위 = 합의한 지원 문법 (울타리 코드 블록 + 0 열 ATX 제목 · 빈 제목 포함).  범위 밖 = 들여쓴 제목 · setext · HTML (HTML 블록 안 빈 `##` 은 도구가 경계로 본다) · 목록 · 인용 · 들여쓴 코드 블록 — 지원도 자동 거부도 인증 아님 · 등록 문서 형식이 바뀌면 재검토 · 전체 Markdown 정합성 · 발사 승인.",
+      "verification_note": "Codex 재확인 10-20 (검토 핀 34713ac96 · 대조 핀 685c2bbdb · Windows 11 · Python 3.12.14 · oracle = markdown-it-py 3.0.0 블록 토큰 · 대상의 _md_atx/_md_fence 를 부르지 않음) = CLOSED · 새 P1/P2/P3 없음 → 상태를 옮겼다 · verified_sha = 검토 핀 34713ac96 (claimed_fixed_sha 3260891d4 를 담음) · 증거 docs/reviews/codex_lhs214cx_fix_recheck_evidence_20261020/ (반입 기록 _README_import.md) · 우리 트리 재현 (10-20 · Linux · Python 3.11.15 · markdown-it-py 없음 = oracle 미재현) = 19 문서 14 → 0 · 114 문서 0 → 0 · 판정 · 영수증 133/133 Codex 기록과 같음 · 8,736 · 30,000 문서의 옛 ↔ 새 판정 차이 608 · 2,212 (= Codex oracle 불일치 수 · 필요조건 대조) · 12/12 · 18/18 · 지원 밖 대조 6/6 · 실제 등록 rc 1 · D1.  자체시험 표기 (판정문 §3-3): Codex Windows 원본 = 대조 핀 105/118 · 검토 핀 109/122 rc 1 (실패 13 같음 · 격리 하위 python -I 세대 탐침이 따로 준 의존성 경로를 못 봄 = Windows 런타임 · S06 회귀 · git 탓 아님) · 명시 어댑터 보조 실행 122/122 — \"무어댑터 원본 Windows 122/122\" 라 쓰지 않는다 · evidence_tests 의 \"120/122 → 122/122\" 는 우리 Linux 컨테이너 값 · 이 반입의 우리 컨테이너 원본도 122/122 rc 0 (SciPy = system dist-packages 라 -I 자식도 본다).  실제 발사 환경 검증을 대신하지 않는다."
     },
     {
       "id": "SELF-119",

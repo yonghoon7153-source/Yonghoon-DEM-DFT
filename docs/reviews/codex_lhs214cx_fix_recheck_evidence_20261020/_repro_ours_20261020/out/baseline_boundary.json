@@ -1,0 +1,37 @@
+{
+  "command": [
+    "/usr/local/bin/python3",
+    "-B",
+    "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/import_l214cx/tools/run_baseline_exec.py",
+    "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/import_l214cx/repro/base_685c2bbdb/scripts/test_l214r_r01_restored_full.py",
+    "/home/user/Yonghoon-DEM-DFT/.claude/worktrees/agent-a061bc64d153ead99/scripts/test_l214r_r01_restored_full.py"
+  ],
+  "cwd": "/home/user/Yonghoon-DEM-DFT/.claude/worktrees/agent-a061bc64d153ead99",
+  "returncode": 0,
+  "seconds": 9.71,
+  "python": "3.11.15",
+  "platform": "Linux-6.18.44-fc-v139-x86_64-with-glibc2.39",
+  "script_sha256_before": "a38a3d593e59212c1e3f46e94523fead456c93cae1cd6b7a0a0abcff9ed9de94",
+  "script_sha256_after": "a38a3d593e59212c1e3f46e94523fead456c93cae1cd6b7a0a0abcff9ed9de94",
+  "unchanged": true,
+  "stdout_tail": [
+    "  PASS  B9 ★ τ 다시 읽기 (v13_reread_tau — 다시 읽기 관문은 픽스처 그대로 통과 · 원천만 복원) 거부 = load_tau_results FillRefusal 전파 — 9 변이 중 실패 0",
+    "",
+    "test_l214r_r01_restored_full: 30/30 PASS"
+  ],
+  "environment": {
+    "OMP_NUM_THREADS": "1",
+    "OPENBLAS_NUM_THREADS": "1",
+    "MKL_NUM_THREADS": "1",
+    "NUMEXPR_NUM_THREADS": "1",
+    "TMPDIR": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/import_l214cx/repro/tmp/baseline_boundary",
+    "TEMP": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/import_l214cx/repro/tmp/baseline_boundary",
+    "TMP": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/import_l214cx/repro/tmp/baseline_boundary",
+    "MPLCONFIGDIR": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/import_l214cx/repro/tmp/baseline_boundary/mpl",
+    "WEBAPP_UPLOAD_FOLDER": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/import_l214cx/repro/tmp/baseline_boundary/upload",
+    "WEBAPP_RESULTS_FOLDER": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/import_l214cx/repro/tmp/baseline_boundary/results",
+    "WEBAPP_ARCHIVE_FOLDER": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/import_l214cx/repro/tmp/baseline_boundary/archive",
+    "WEBAPP_MPM_LAB_FOLDER": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/import_l214cx/repro/tmp/baseline_boundary/mpm_lab",
+    "WEBAPP_EIS_FOLDER": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/import_l214cx/repro/tmp/baseline_boundary/eis"
+  }
+}

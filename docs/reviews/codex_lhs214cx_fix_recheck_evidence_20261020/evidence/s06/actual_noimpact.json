@@ -1,0 +1,26 @@
+{
+  "old": {
+    "rc": 1,
+    "bad": [
+      "D1"
+    ],
+    "code_fp": "e8b2496b9c2ecf6edad8c6b52d32a2514c96dd54c9a20823c300639249ecae71"
+  },
+  "new": {
+    "rc": 1,
+    "bad": [
+      "D1"
+    ],
+    "code_fp": "e8b2496b9c2ecf6edad8c6b52d32a2514c96dd54c9a20823c300639249ecae71"
+  },
+  "values_equal": true,
+  "checks_equal": true,
+  "old_section": [
+    "## 3. 코드 신원\n\n- 봉인 32 · **`code_fp e8b2496b9c2ecf6edad8c6b52d32a2514c96dd54c9a20823c300639249ecae71`** = 194 와 같다 — 보충 지원 변경 (실행기 · 다시 읽기 · 배포 생성기 · 설계 어댑터) 은 봉인 밖.\n- 인계 도구 지문 (`HANDOVER_FILES`) = 발사 핀에서 다시 기록 — `scripts/g2_network_reread.py` 는 재검증 7 핀의 `248ee5c0…` 에서 바뀌었다 (보충 시험 · 문구).\n  봉인 32 불변과 섞지 않는다 · 옛 실행 로그를 새 도구의 증거로 옮기지 않는다 (재검증 7 한정 그대로).\n- 기대 망 세대 = `g2` (봉인 생산자에서 유도) · **import 관측 필수** (실행기 `PRODUCTION_SETS` — 보충 계획인데 `--observe-imports` 가 없으면 사전 점검 ⛔ · audit 문제).\n",
+    ""
+  ],
+  "new_section": [
+    "## 3. 코드 신원\n\n- 봉인 32 · **`code_fp e8b2496b9c2ecf6edad8c6b52d32a2514c96dd54c9a20823c300639249ecae71`** = 194 와 같다 — 보충 지원 변경 (실행기 · 다시 읽기 · 배포 생성기 · 설계 어댑터) 은 봉인 밖.\n- 인계 도구 지문 (`HANDOVER_FILES`) = 발사 핀에서 다시 기록 — `scripts/g2_network_reread.py` 는 재검증 7 핀의 `248ee5c0…` 에서 바뀌었다 (보충 시험 · 문구).\n  봉인 32 불변과 섞지 않는다 · 옛 실행 로그를 새 도구의 증거로 옮기지 않는다 (재검증 7 한정 그대로).\n- 기대 망 세대 = `g2` (봉인 생산자에서 유도) · **import 관측 필수** (실행기 `PRODUCTION_SETS` — 보충 계획인데 `--observe-imports` 가 없으면 사전 점검 ⛔ · audit 문제).\n",
+    ""
+  ]
+}

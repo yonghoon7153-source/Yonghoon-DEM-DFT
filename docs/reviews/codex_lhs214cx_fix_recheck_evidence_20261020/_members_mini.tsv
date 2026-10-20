@@ -1,0 +1,143 @@
+sha256	bytes	status	path (받은 묶음 안)	note
+362c6c416db2fa534b13832d7ed971289b241328f00c14ea624f2054c652400b	21613	meta	CONTENTS_SHA256.json	묶음 뿌리 · 141 항목 sha256 · 크기 = 풀린 파일 전수 같음 (10-20) · 이 폴더에 둔다
+28811b00cfc47adcd0966661de0b87330e11247394cfc795d4437cc71234bc9a	3978	keep	README.md	Codex 전달 안내 (재현 의존성 · 묶음 범위)
+24e109e67fa7677db566d7e68fe2303f87fa6ae854c3e8298c5614a1cae96934	22579	dup-repo	baseline_review/codex_review_lhs214s_fix_recheck_20261019.md	리포 사본 = docs/reviews/codex_review_lhs214s_fix_recheck_20261019.md (같은 바이트)
+bcd669616fe86c34a4623118ac0a27354691d3d682b0f34bb7feb815b8408f01	114874	dup-repo	baseline_review/scripts/supp20_input_receipt.py	리포 사본 = git 685c2bbdb:scripts/supp20_input_receipt.py (같은 바이트 · 작업 트리 판은 34713ac96 에서 바뀜)
+eaff4ba49cfe4a245eb7039a694292eb1cc0967e0037c558c4cbcf5c79bc9896	39889	dup-repo	baseline_review/scripts/test_l214r_r01_restored_full.py	리포 사본 = git 685c2bbdb:scripts/test_l214r_r01_restored_full.py (같은 바이트 · 작업 트리 판은 34713ac96 에서 바뀜)
+56db50ecc1234db24b670611698aa2e8ff4dac3f0aab23546a0643b646e4f51e	590487	dup-repo	baseline_review/source_manifest.json	리포 사본 = docs/reviews/codex_lhs214s_fix_recheck_evidence_20261019/lhs214s_recheck_20261019/source_manifest.json (같은 바이트)
+f5da326d4b05b2af1f3ab318e27ced9274ef7346272cc3db7ef32ba6f2f3b35e	19049	verdict	codex_review_lhs214cx_fix_recheck_20261020.md	→ docs/reviews/codex_review_lhs214cx_fix_recheck_20261020.md (바이트 그대로)
+cab2d5831bd7b7e494c65c49bf7f2f1149e47837ae79c8d94ec2bea146c240af	119064	keep	evidence/commit.json	-
+c38b4c5bd1b397958dcca539dfc6fd6802df859cc068f32d679d86b580457337	92511	keep	evidence/final_integrity.json	-
+ce5033244195fe32a41393c283f1ea624b196465bf845c3c8212404b10bf8f1a	4248	keep	evidence/original_baseline_boundary.json	-
+6c4ef54ac7719a249288518509521e94e5fb29e551895902475d471e7c5931ce	7230	keep	evidence/original_baseline_boundary.log	같은 바이트가 10-19 반입 docs/reviews/codex_lhs214s_fix_recheck_evidence_20261019/lhs214s_recheck_20261019/evidence/s02_new_full.log 에도 있다 (같은 Windows 원본 시험의 같은 출력) · 판정문 §4-1 핵심 증거라 이 폴더에도 둔다
+aedbc6aff97059cedebe794e54eeb5eda77285669b0730dcb2fee834c6532aa2	6757	keep	evidence/original_baseline_receipt_selftest.json	-
+1522b6590c220868a0e54bde92aa258f600a9250a533a96b937a6f0d84391b62	25916	keep	evidence/original_baseline_receipt_selftest.log	-
+1e85198a8d8162b684c7f16b3bc3b0ae75e7e846b1eb414d22c04c995b2efc1e	3484	keep	evidence/original_current_boundary.json	-
+8cb262a380220ad443f0c08bd51cd4e2314327ec55bbe8fc38990250be4589f0	10853	keep	evidence/original_current_boundary.log	-
+29bd75fb8e03b0913b143309c6506b5e514e4e7beff5b4a0979511224ec0df27	6946	keep	evidence/original_current_receipt_selftest.json	-
+fc5e9ec1bcebfb70e572efb8e6f1590d341389d52ebaadc2af00f0e94a779394	27456	keep	evidence/original_current_receipt_selftest.log	-
+0d56030c8abd36e2d36228e6571967d09ce3a38722e0f4a21dc76bb0e102a66a	95008	keep	evidence/s02/axis.json	-
+e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855	0	keep	evidence/s02/axis.log	빈 파일 (0 B · Codex 탐침의 로그 자리)
+8609433cd5f4201cc96360e25d1c382a8370ea7c23d999bb32d967290a26c550	31208	keep	evidence/s02/core.json	-
+eb8cedca185197e1786584868d850d109626424157701eba9d1d98db50d3bc15	6418	keep	evidence/s02/core.log	-
+37876a28b01f8fec378ad1dd36c548a92bd93f0493cbe19aede953dd6de127bf	20925	keep	evidence/s02/failclosed.json	-
+ce14fd257f234e920946ba384b1ccd02f813cf6a19765fa7b7f7d784bdb65c2a	4641	keep	evidence/s02/failclosed.log	-
+edce824f45548a939439058b1eaa13107cd5bd405c0649206136309cf73b294e	46612	keep	evidence/s02/mutants.json	-
+a081cd473eb702059a189e7a7ba3ca6727ae91053722fbb593ade36adf0592fa	3760	keep	evidence/s02/mutants.log	-
+db36daeef12da3366708099190dff5f48757a1c466c222999f56ea5d4ff4d7b9	8053	keep	evidence/s02/review.md	-
+66176e12079e8e7ca456628bd61eb9258e08944d3d3cc488af3d87e61ac0f04d	368657	keep	evidence/s02/sweep.json	-
+e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855	0	keep	evidence/s02/sweep.log	빈 파일 (0 B · Codex 탐침의 로그 자리)
+89bcb07cd156d5f4d69196db1f3a3a931ac4c7e13164a9060bebf004f56743c2	7540	keep	evidence/s06/REVIEW.md	-
+7434d3964fb7c0ac52c0dddc688c7d6f9057b2d6f53313792305354810a3ce6b	2019	keep	evidence/s06/actual_noimpact.json	-
+9700df559247f2f9ef79a5f92877026ddc521e1268f1e64eae378f65cbad08e2	7532	keep	evidence/s06/actual_receipt_new.json	-
+ea39b33e1097ff73720a7604ad19e8dc8fa252936eee9296dcec8633690f1e0d	7900	keep	evidence/s06/actual_receipt_old.json	-
+ed36ea02b368ec45f7a0a3ae194e492fc0a1d0285e20c4ac5250b19c70e31196	3935	keep	evidence/s06/generation_environment.json	-
+5d49c40070164544af596d0db8ddfcce152398b2823f5f7ee01fcc47925ea5ee	1044	keep	evidence/s06/metadata.json	-
+06cf28e0b2e386389d4feca9393dc8bbc2190ebcb381f8aad986ea9d99019e52	193	keep	evidence/s06/new_boundary_matrix.json	-
+b301fabd71c82e43bfee24655f9bc28754e1e56820d6fca0f2ab3bef16fa2896	6855	keep	evidence/s06/new_boundary_receipts.json	-
+169bc02fc9bdc77a23e64a3f90b5ea52ae09bc1601d923e00c1fa04fee1207c3	16363	keep	evidence/s06/new_cases/after_closer_2_0_1_1.md	Codex Windows write_text 산출 = 줄 끝 CRLF (내용 = 우리 재생성 LF 판과 같음 · 12/12)
+34114d3f6468aa3912b19f03795c4e4c09b906cd1646fea908b68d88e0363b67	16288	keep	evidence/s06/new_cases/after_closer_3_0_1_0.md	Codex Windows write_text 산출 = 줄 끝 CRLF (내용 = 우리 재생성 LF 판과 같음 · 12/12)
+f50bc984a9151c95a504dde3a3a05bf7052b39c02ce170d1e405ee8eb39993ae	16286	keep	evidence/s06/new_cases/fenced_2_0_0_0.md	Codex Windows write_text 산출 = 줄 끝 CRLF (내용 = 우리 재생성 LF 판과 같음 · 12/12)
+b450f9491d4f1581d6a51fddc24a41ba3e02381962d31c87f2f61ea779347fda	16287	keep	evidence/s06/new_cases/fenced_2_0_1_0.md	Codex Windows write_text 산출 = 줄 끝 CRLF (내용 = 우리 재생성 LF 판과 같음 · 12/12)
+3a4a26602c4c53e67bb85ca61af5dcc8c7e6c9af77e9f3b06eae8ce25ee2cfc7	16288	keep	evidence/s06/new_cases/fenced_2_0_6_0.md	Codex Windows write_text 산출 = 줄 끝 CRLF (내용 = 우리 재생성 LF 판과 같음 · 12/12)
+a6d437bc2296adedfc9183fba4a0af52db48be41ea4e44e954efdcd97f03ac82	16289	keep	evidence/s06/new_cases/fenced_2_0_9_0.md	Codex Windows write_text 산출 = 줄 끝 CRLF (내용 = 우리 재생성 LF 판과 같음 · 12/12)
+dd72cc21591020af1abe11edd5d9a87a0b38c767434bfa7030785c57b86178f3	16266	keep	evidence/s06/new_cases/outside_1_0_0_0.md	Codex Windows write_text 산출 = 줄 끝 CRLF (내용 = 우리 재생성 LF 판과 같음 · 12/12)
+bfdee78527838675cf974d0f4474f2718645ddce13db9af94aa284d0a8e10fec	16343	keep	evidence/s06/new_cases/outside_2_0_0_1.md	Codex Windows write_text 산출 = 줄 끝 CRLF (내용 = 우리 재생성 LF 판과 같음 · 12/12)
+622fee4690875e10b19a6e79ccec99ae757dc44360ac643c7c5f7f4f68cb60e1	16269	keep	evidence/s06/new_cases/outside_2_11_0_0.md	Codex Windows write_text 산출 = 줄 끝 CRLF (내용 = 우리 재생성 LF 판과 같음 · 12/12)
+b951c020edab802ad04f4ab91d685bb285f13ddb453279e0feca2d9b685c57f1	16269	keep	evidence/s06/new_cases/outside_2_8_0_0.md	Codex Windows write_text 산출 = 줄 끝 CRLF (내용 = 우리 재생성 LF 판과 같음 · 12/12)
+83dcc92caae6ff3bce7af2fdcf8efad5214b7a0f15252af8da86ba99325239e2	16349	keep	evidence/s06/new_cases/outside_2_9_0_1.md	Codex Windows write_text 산출 = 줄 끝 CRLF (내용 = 우리 재생성 LF 판과 같음 · 12/12)
+8fad6c92326ea3e53e90930bf8567fdcea67ebeadc25e047cdb94069acbcd305	16272	keep	evidence/s06/new_cases/outside_7_0_0_0.md	Codex Windows write_text 산출 = 줄 끝 CRLF (내용 = 우리 재생성 LF 판과 같음 · 12/12)
+5c47952c265b5f975579a8e91f28a3d3bca6e44968d33462ea79282212242db7	7299	keep	evidence/s06/new_receipt_after_closer_2_0_1_1.json	-
+22ff295d88f498c56d57fd959fdda4372a725b48e8c0e89042fc9b323d081599	7299	keep	evidence/s06/new_receipt_after_closer_3_0_1_0.json	-
+3f2c218647e0d53d8a36c91f7674dd0cad727ec9cad858244daf128aa629d5c2	7446	keep	evidence/s06/new_receipt_fenced_2_0_0_0.json	-
+7dd8da37ea304c7156569149cf3e11b8d33d87da5fc35d410f71e26b8f3bb1c8	7293	keep	evidence/s06/new_receipt_fenced_2_0_1_0.json	-
+54de1a62b5e6d94ab863f097250b99450ba5fe70d4a79df0b8bdd22b36b7f713	7446	keep	evidence/s06/new_receipt_fenced_2_0_6_0.json	-
+c5cbe0607e8dcf052d727f668340ab548f4fea03ec0e82ad60144c3640cf2e35	7446	keep	evidence/s06/new_receipt_fenced_2_0_9_0.json	-
+9889d7c3c3cd7b69f90fc26ba0c747dcedbf77163ccb6fd8f65773c8597d212d	7447	keep	evidence/s06/new_receipt_outside_1_0_0_0.json	-
+a82ec8fa157ac245b40cd5b2ff887df37a1b8b1c97dfe09ca35029f9ebae8fb1	7294	keep	evidence/s06/new_receipt_outside_2_0_0_1.json	-
+6408be5e1419aa1521875a852da9e1b351af8d4d1cdbcdbb698d6e431c653350	7295	keep	evidence/s06/new_receipt_outside_2_11_0_0.json	-
+fcffc88f3a078340a28341a37dbb8f710f302ce430d2de193ca7c9633ca6beb0	7447	keep	evidence/s06/new_receipt_outside_2_8_0_0.json	-
+310889df8d1a3c81d75b65d4bdac1ff69057b3b1d1e17cd93793f9c6754d6620	7294	keep	evidence/s06/new_receipt_outside_2_9_0_1.json	-
+65a5384305c62d0eff83fd356504972f42d59d88210494c1d3b21d301defcb53	7294	keep	evidence/s06/new_receipt_outside_7_0_0_0.json	-
+ebb94c87578bdabe0862b4a27530268f6730e5d36dd7360db2c4ac39b0f8b65a	16153	keep	evidence/s06/newline_cases/empty_h1_cr.md	-
+dd72cc21591020af1abe11edd5d9a87a0b38c767434bfa7030785c57b86178f3	16266	keep	evidence/s06/newline_cases/empty_h1_crlf.md	-
+ee7625f4802d5cda8ad8242059ea9671d4dee88bf70d5f9a5d85ea1f74f4d9c7	16153	keep	evidence/s06/newline_cases/empty_h1_lf.md	-
+b302f3cc825c0999f1bcbd190e63bfb452758c2d25f88bfd575ff4d1d3103c30	16154	keep	evidence/s06/newline_cases/empty_h2_cr.md	-
+d93796a87b6eb19e46b7e3e3b97b541c909486fc3582fcc947756c0a00f26646	16267	keep	evidence/s06/newline_cases/empty_h2_crlf.md	-
+70c3b7064eb3099ee3a5f8fb1ba4eb9bdbb4245dceba73cff3c52dabaabe5d7c	16154	keep	evidence/s06/newline_cases/empty_h2_lf.md	-
+aa4340cac7f524709dd1e8c483dddf32d374425f893a13616f7d72378ed086e2	16164	keep	evidence/s06/newline_cases/fenced_empty_cr.md	-
+4ed0558d70591ae32836dab60e9aa4ef97019a1dfc2f0f6ea0aac410e219dbe4	16279	keep	evidence/s06/newline_cases/fenced_empty_crlf.md	-
+0d210ded02e3a0c04115dfbee5deaaaca8ec4eb964ff87e4b2437de294a65802	16164	keep	evidence/s06/newline_cases/fenced_empty_lf.md	-
+ac2dbbf3d622dff40238b9a7562b50c6a27cf841e20722051aa6591132811481	16159	keep	evidence/s06/newline_cases/fenced_value_cr.md	-
+53141d5e37f60e325eee1d2fe1b7b1af3644cac06b08e7a4c18122e71f1402cb	16273	keep	evidence/s06/newline_cases/fenced_value_crlf.md	-
+c202794c7bad77f4070ddb493437e8726116e96269bc3c2d7add55fe4dc15a3e	16159	keep	evidence/s06/newline_cases/fenced_value_lf.md	-
+2ca48730d60f1bf42880a32a806fcb90daa53dd39f930f10a8e51accf495178d	16229	keep	evidence/s06/newline_cases/history_cr.md	-
+bfdee78527838675cf974d0f4474f2718645ddce13db9af94aa284d0a8e10fec	16343	keep	evidence/s06/newline_cases/history_crlf.md	-
+3fa4698567b84433d486a51a9aa7afa74dda9c54c341c7fb66d43dbd38b4f821	16229	keep	evidence/s06/newline_cases/history_lf.md	-
+f3abc2b1106caf1f20852b2c9dfa2732ec75f5f4ede8f342eec03749e1becb93	16237	keep	evidence/s06/newline_cases/mixed_cr.md	-
+1e8588a092ba6c600e9ff51fedf46f28ec158d096e7e19d471072a611116c2d2	16353	keep	evidence/s06/newline_cases/mixed_crlf.md	-
+f06dca5521cfad18237565a6eee823bd77ac8528dcd0df2444bf982511973dd9	16237	keep	evidence/s06/newline_cases/mixed_lf.md	-
+7448539bed464865d22cc365ef60a8f8077fab22be91de5220f73983efb69d15	10323	keep	evidence/s06/newline_receipts.json	-
+795cfb585931e6b58ac923b2918e54ed262350e83de096ec57263cb9931b23a7	190423	keep	evidence/s06/prior_133_replay.json	-
+ccadd5b7fd3330e4424e072439d098ea32e9ef6487f49a9c7d7aa94e5c5a429b	111	keep	evidence/s06/random_transitions.json	-
+7b295baa38d28470c7ed43cb8c1364e9250ffd13f34da799c8d1b853caf2dd4c	245	keep	evidence/s06/receipt_source_integrity.json	-
+e20e5286989ceee9b35f3e4917118d23a170591e816a2e5daa0901bb74959a5d	7449	keep	evidence/s06/replay_receipt_fence_value_control.json	-
+d0237a6349ecde213fc7248fc6a1b757049534eb4b0cab13da960ccd91567fef	7438	keep	evidence/s06/replay_receipt_h1_empty.json	-
+7b3d32662926983b4b473e2031dc63f92ba081ced4bdcbc08688b991a4e95078	7440	keep	evidence/s06/replay_receipt_h1_emspace.json	-
+4c16ecb091134f0c6d8802cec9e32fb45a2054febdfdc4ea1bf669a8e2529c84	7305	keep	evidence/s06/replay_receipt_h1_live_before_blank_history.json	-
+8b421cf3a943ccd9198e14e0dc8a189f1e6dc7c3fce949ffa74835d8f5fe6d96	7437	keep	evidence/s06/replay_receipt_h1_nbsp.json	-
+df6fc2e5dfc53b8484c1b2d07c14121256928fdc7566b9d2bb68c62650a05112	7439	keep	evidence/s06/replay_receipt_h1_normal.json	-
+1032f639259f48833bc1304767e1ae18a4b8a92b64dcad6f25a917f913bcfa84	7438	keep	evidence/s06/replay_receipt_h1_space.json	-
+1d26a40c7cbbc342e28f77a37212edc589b3770357f6ccc97bf073167e203ee3	7442	keep	evidence/s06/replay_receipt_h1_space_tab.json	-
+bf99af189df972437398ac691a35be00a72cf3b65f1f70001146cafee6053903	7436	keep	evidence/s06/replay_receipt_h1_tab.json	-
+81097c6393e2b17bd466b55a7f1cf1362797062788d2cd53413a79f6dcb1cdbf	7438	keep	evidence/s06/replay_receipt_h2_empty.json	-
+9d57da04ea187ce5ef8d4195c90b7007bf8f8d49cff0ebca85db0138ec05a5b5	7440	keep	evidence/s06/replay_receipt_h2_emspace.json	-
+ed076804279b13fb7c127e01b6ad9bbcfe724aa928d6cd5d2c64e8972f8cbe7b	7305	keep	evidence/s06/replay_receipt_h2_live_before_blank_history.json	-
+adabbb96f917a253099b67550c699d3dfe69faa5c118c3ab141468b8a3a27ce4	7437	keep	evidence/s06/replay_receipt_h2_nbsp.json	-
+ef0c23497ed953b003e7bf2fddf9bf0107866874e59b971d599e62362a7fcea3	7439	keep	evidence/s06/replay_receipt_h2_normal.json	-
+6ddcec42121cd7298c4b1c91e0b310e9a1fc192b65f5643efd756f4a19789aae	7438	keep	evidence/s06/replay_receipt_h2_space.json	-
+85c2a734b6c51cd40b98382cd6639839d05b55c9a396bc57f592630d732e5b0b	7442	keep	evidence/s06/replay_receipt_h2_space_tab.json	-
+a1da531211ec5cd9ac36c29bdcd9286e56464f000e62cf345ed9f8e30e0c5832	7436	keep	evidence/s06/replay_receipt_h2_tab.json	-
+c0306902ba98341c24c3f888d3935ed0c700517e4dfa6cf10116195f55b08bcb	7297	keep	evidence/s06/replay_receipt_normal_value_control.json	-
+5909e6de3b82d2417b0591735a97494d0aa76949db17b9fc2f036db78cd8ce5f	7301	keep	evidence/s06/replay_receipt_outside_and_fenced_value.json	-
+4914b712c5ec57e1deaf1cd3336b042d852d66b4e1dd645d687536b4fa2749c9	23337	keep	evidence/s06/selftest.log	-
+43c5a751cb710029c869eefe2f41642f962f00ea5a31901a241342160213a67e	14909	keep	evidence/s06/selftest_result.json	-
+031e16441547b5c00ea49e2b786bdf2c66905dc36f7ef71a21dfef628af33604	6974	keep	evidence/s06/unsupported_scope_controls.json	-
+da233f0f0718084771f907a035011c4261fb1550f5632b328ff866563207cfdb	164535	keep	evidence/scope/diffs.json	-
+50a42b22919702619cefc4fbd26f57fc37e67ca792d12719a74bba3ff0b34510	20229	keep	evidence/scope/doc_metadata.json	-
+822a946a4749753fb94f5d481229b34a12d527c1fa5cb8207b53127befbb4071	241138	keep	evidence/scope/doc_refs_remote.json	-
+a4b00fb6cb93b0a94439cd9042bc3498c7573159449cc6c7e8e8e13e713e97a6	73520	keep	evidence/scope/manifest_audit.json	-
+3fc38fb128502c7d22186ec4978c4af6561c7c8a9dfd0913b267452e0eed5c8b	35461	keep	evidence/scope/metadata.json	-
+a7a3b103f4dd53fe0ff728f81adb56c072bd633900392ba2f385195580d929c6	7640	keep	evidence/scope/receipt_new_metadata_none.json	-
+9e38c0ee48cb0bfc69690b1350e0da9e60efb1d03fdcb2f91ea900995d3b7d41	7493	keep	evidence/scope/receipt_new_raw.json	-
+fd91ee7a9e0aa6233391ad5c846b22a689e157ad4ac3c5408d88634552672242	5282	keep	evidence/scope/receipt_new_summary.json	-
+1a1a21dad5ca1999e335596e3000205236a46d5901ed70cba693578de396b38b	7637	keep	evidence/scope/receipt_old_metadata_none.json	-
+458f7774cb49183b3b7436c50a69c9ad94a70e10bce7de4a0735a5faef833c46	7490	keep	evidence/scope/receipt_old_raw.json	-
+25b8a45735f3bebd527a212980b4d50766da05ee61d30ad89a5e96260c14ed59	5282	keep	evidence/scope/receipt_old_summary.json	-
+95f71f356ea5229be5c2515fb7293c84b0bbd20fc63a92510a028d460a175ad8	3989838	big-hash-only	evidence/tree.json	GitHub tree 응답 (검토 핀 34713ac96) · 내용 = git ls-tree -r 34713ac96 의 blob 11,443 (경로 · sha · 모드 같음 · 10-20 확인) · 2 MB 초과 → 해시만
+37227b1183e418775b9d5d626e64de33baa5381c04a42e245ab7973d9973867f	18157	keep	evidence/tree_diff.json	-
+8d05268ac35a77616bb112ca926091ebe41180802288bd910086ddf67fb75778	4209	keep	intake.py	실행하지 않음 — GitHub 네트워크 (urllib) · C:/Users/… 에서 요청서 복사 · 스냅샷 쓰기
+2eb7a2bdc694b19e24398750b44bc5fa4ed70b10b69dca3b7f23109a3f2c4098	5388	keep	package_review.py	실행하지 않음 — 검토 폴더에 ZIP · 영수증을 쓰는 포장 도구
+3cd0a7fad8180fe11bb9209ad4faea45ec684b7e56837c6bedd90e05d0576eb7	2832	keep	probes/run_original.py	실행하지 않음 — 우리 두 시험을 하위 프로세스로 돌리는 래퍼 · 같은 두 시험을 우리 트리에서 직접 돌렸다
+b6f3a47f0cfef9a60b111517675b831a43cca150a65546dc0a897f0a5621f7bf	16953	keep	probes/s02/adversary.py	실행 = 묶음 밖 복사본 · 경로 상수만 바꿈 (core · axis · mutants · failclosed · sweep 은 안 돌림) → _repro_ours_20261020/
+924f63de4a26fee16f85a5eedfb5d324b17d9d34caa1ec4b190d52c8ee5d8f7d	1743	keep	probes/s06/generation_environment.py	실행하지 않음 — parser_audit 을 import (markdown-it-py)
+44c0b581c8712a08f9025ba7d9d61a39887fcd3d9f3723caf028d9db634fd169	13024	keep	probes/s06/parser_audit.py	실행하지 않음 — markdown-it-py 없음 (oracle) · 같은 생성 코드로 우리 판별 → _repro_ours_20261020/
+f9de0ac752f3cdb89f165a2f6756ecf3c7004834ea3608a6298e13acee0a849d	3428	keep	probes/s06/supplementary.py	실행하지 않음 — parser_audit 을 import (markdown-it-py) · 같은 꼴을 우리 판별로
+cfde8072f834ec7128b4202fc9d7234c26bb49e43cf5ed5b7a642b7f7c6a85b4	15191	keep	probes/scope/cx_scope_audit.py	실행하지 않음 — Codex 작업 공간의 source/ 스냅샷 필요 · 같은 대조를 git 으로 직접
+0d61551b11b51eaa9458f98ba95bda21451e580695616985683cc8f339c818bc	609283	keep	source_manifest.json	검토 핀 스냅샷 2,135 파일 (경로 · bytes · sha256 · git_blob) = git 34713ac96 blob 2,135/2,135 같음 (10-20)
+38b8708ba8a50c8a08819c7c4138763bce02b6dc6c5b8112f4c8aa386fb17ec3	2822	dup-repo	source_review/AGENTS.md	리포 사본 = AGENTS.md (같은 이름 · 같은 바이트 = 34713ac96 blob)
+e622b8587eef2615376268adfc66ad1bb593067d395c91e93f4cb736faf402f7	7954	dup-repo	source_review/docs/reviews/codex_lhs214cx_fix_recheck_request_20261019.md	리포 사본 = docs/reviews/codex_lhs214cx_fix_recheck_request_20261019.md (34713ac96 판 · 같은 바이트 — 이 반입 커밋이 머리에 Codex 회신 한 줄을 붙이기 전)
+50dd367b707c72d7dba9e65d3e6fc2ea7192c161784c403435563d6c05f8e942	8091	dup-repo	source_review/docs/reviews/lhs214cx_fix_evidence_20261019/s02/README.md	리포 사본 = docs/reviews/lhs214cx_fix_evidence_20261019/s02/README.md (같은 이름 · 같은 바이트 = 34713ac96 blob)
+4869982e1806da8fa33882a0383c966ed95ac7353e465417a9cc79134bed642b	7830	dup-repo	source_review/docs/reviews/lhs214cx_fix_evidence_20261019/s06/README.md	리포 사본 = docs/reviews/lhs214cx_fix_evidence_20261019/s06/README.md (같은 이름 · 같은 바이트 = 34713ac96 blob)
+7fd158cb5b130e2150e58e5938c92b80731fc3292ef8e363346adfc2b62e1699	63079	dup-repo	source_review/docs/reviews/lhs_network_batch_registration_20261007_g2.md	리포 사본 = docs/reviews/lhs_network_batch_registration_20261007_g2.md (같은 이름 · 같은 바이트 = 34713ac96 blob)
+b2389709695cf3e94095a1855014b44868914362d112e5e0e29d084fc9e11032	16111	dup-repo	source_review/docs/reviews/lhs_network_batch_registration_20261012_supp20.md	리포 사본 = docs/reviews/lhs_network_batch_registration_20261012_supp20.md (같은 이름 · 같은 바이트 = 34713ac96 blob)
+7b3ae565a223ce390c4c0c819d8593bb6e0b0ffb89116b7811e71057d0edb9c9	79869	dup-repo	source_review/docs/reviews/selftest_inventory.tsv	리포 사본 = docs/reviews/selftest_inventory.tsv (같은 이름 · 같은 바이트 = 34713ac96 blob)
+3096e33fd0f1953363bcde251a77368366a0568c923447111a48a873ad4a1383	228690	dup-repo	source_review/scripts/lhs_release_build.py	리포 사본 = scripts/lhs_release_build.py (같은 이름 · 같은 바이트 = 34713ac96 blob)
+a525e2db98fd044f0aa9353b028a3d5c7164c006a8e870dda24e7a0991d9751e	180968	dup-repo	source_review/scripts/network_conductivity.py	리포 사본 = scripts/network_conductivity.py (같은 이름 · 같은 바이트 = 34713ac96 blob)
+f4048aca55b912628278dbdd7b184ac449723736cd3f4f5cdc7eeca31294921a	402234	dup-repo	source_review/scripts/run_network_194_parallel.py	리포 사본 = scripts/run_network_194_parallel.py (같은 이름 · 같은 바이트 = 34713ac96 blob)
+2c7e0b81dbe81d0518e27c8e1781959b9cc983509a1ce66001028faa3768a2f9	124512	dup-repo	source_review/scripts/supp20_input_receipt.py	리포 사본 = scripts/supp20_input_receipt.py (같은 이름 · 같은 바이트 = 34713ac96 blob)
+c0a7da6e1b73bea97136f06803810dbe159bf5c4395d8d218a90217a58ef0f78	125811	dup-repo	source_review/scripts/tau_flux.py	리포 사본 = scripts/tau_flux.py (같은 이름 · 같은 바이트 = 34713ac96 blob)
+16ba06bc282f1b97777ec3c7f84ed88e05bf41daa35d9e28bf48d16ddd9a6835	36354	dup-repo	source_review/scripts/test_l214r02_model_limit_flag.py	리포 사본 = scripts/test_l214r02_model_limit_flag.py (같은 이름 · 같은 바이트 = 34713ac96 blob)
+8af2a5e6041bf26076968b90f54984557f14e9a4b83bf8055c4438d2ca0e99a9	47858	dup-repo	source_review/scripts/test_l214r_r01_restored_full.py	리포 사본 = scripts/test_l214r_r01_restored_full.py (같은 이름 · 같은 바이트 = 34713ac96 blob)
+34b9e5be10d1891536a67941f19d6907801254a74a95cd2315637ecd417fe274	47276	dup-repo	source_review/scripts/test_lhs214_model_limit.py	리포 사본 = scripts/test_lhs214_model_limit.py (같은 이름 · 같은 바이트 = 34713ac96 blob)
+e1961fdaa1fb25306f08a6782140d77ad2d9d0786ff2dc3c4b3ae9a762339ffa	7961	keep	submitted/codex_lhs214cx_fix_recheck_request_20261019_send.md	발송본 · 리포 요청서 (34713ac96 판) 와 7 행 하나만 다름 (리뷰 핀 자리 표시 ↔ 실제 34713ac9650e… · 가지 이름)

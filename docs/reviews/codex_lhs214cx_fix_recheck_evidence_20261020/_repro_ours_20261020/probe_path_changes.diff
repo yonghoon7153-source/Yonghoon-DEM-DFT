@@ -1,0 +1,33 @@
+--- bundle/probes/s02/adversary.py
++++ copy/probes/s02/adversary.py
+@@ -19,6 +19,8 @@
+ 
+ ROOT = Path(__file__).resolve().parents[2]
+ WORK = ROOT.parent
++SRC = Path('/home/user/Yonghoon-DEM-DFT/.claude/worktrees/agent-a061bc64d153ead99')  # our tree (was ROOT / "source")
++BASE_SRC = Path('/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/import_l214cx/repro/base_685c2bbdb')  # git show 685c2bbdb extraction (was WORK / "lhs214s_recheck_20261019/source")
+ OUTDIR = ROOT / "evidence/s02"
+ OUTDIR.mkdir(parents=True, exist_ok=True)
+ TEMP = OUTDIR / "tmp"
+@@ -27,9 +29,7 @@
+     os.environ[key] = "1"
+ os.environ["TEMP"] = os.environ["TMP"] = str(TEMP)
+ sys.path[:0] = [
+-    str(ROOT / "source/scripts"), str(ROOT / "source/webapp"),
+-    str(WORK / "lhs_coverage_review_20260930/deps"),
+-    str(WORK / "gen2_network_reverify3_20261007/deps"),
++    str(SRC / "scripts"), str(SRC / "webapp"),
+ ]
+ import numpy as np
+ import scipy
+@@ -106,8 +106,8 @@
+ if MODE == "core":
+     RESULT["identities"] = {}
+     for rel in ("scripts/network_conductivity.py", "scripts/tau_flux.py"):
+-        now = (ROOT / "source" / rel).read_bytes()
+-        old = (WORK / "lhs214s_recheck_20261019/source" / rel).read_bytes()
++        now = (SRC / rel).read_bytes()
++        old = (BASE_SRC / rel).read_bytes()
+         RESULT["identities"][rel] = dict(same=now == old, sha256=hashlib.sha256(now).hexdigest())
+     mark("producer and consumer byte-identical to prior pin", all(v["same"] for v in RESULT["identities"].values()), RESULT["identities"])
+     RESULT["starts"] = {}

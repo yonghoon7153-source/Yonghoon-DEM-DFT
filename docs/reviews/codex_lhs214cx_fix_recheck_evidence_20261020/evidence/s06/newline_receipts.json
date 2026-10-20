@@ -1,0 +1,474 @@
+{
+  "total": 18,
+  "mismatches": 0,
+  "rows": [
+    {
+      "name": "empty_h1",
+      "newline": "lf",
+      "receipt": {
+        "rc": 1,
+        "bad": [
+          "R0",
+          "D1"
+        ],
+        "code_fp": null
+      },
+      "expected": {
+        "active": true,
+        "code_fp": null,
+        "body": "## 3. Active",
+        "heads": [
+          [
+            0,
+            2,
+            "3. Active"
+          ],
+          [
+            1,
+            1,
+            ""
+          ]
+        ]
+      },
+      "match": true
+    },
+    {
+      "name": "empty_h1",
+      "newline": "crlf",
+      "receipt": {
+        "rc": 1,
+        "bad": [
+          "R0",
+          "D1"
+        ],
+        "code_fp": null
+      },
+      "expected": {
+        "active": true,
+        "code_fp": null,
+        "body": "## 3. Active",
+        "heads": [
+          [
+            0,
+            2,
+            "3. Active"
+          ],
+          [
+            1,
+            1,
+            ""
+          ]
+        ]
+      },
+      "match": true
+    },
+    {
+      "name": "empty_h1",
+      "newline": "cr",
+      "receipt": {
+        "rc": 1,
+        "bad": [
+          "R0",
+          "D1"
+        ],
+        "code_fp": null
+      },
+      "expected": {
+        "active": true,
+        "code_fp": null,
+        "body": "## 3. Active",
+        "heads": [
+          [
+            0,
+            2,
+            "3. Active"
+          ],
+          [
+            1,
+            1,
+            ""
+          ]
+        ]
+      },
+      "match": true
+    },
+    {
+      "name": "empty_h2",
+      "newline": "lf",
+      "receipt": {
+        "rc": 1,
+        "bad": [
+          "R0",
+          "D1"
+        ],
+        "code_fp": null
+      },
+      "expected": {
+        "active": true,
+        "code_fp": null,
+        "body": "## 3. Active",
+        "heads": [
+          [
+            0,
+            2,
+            "3. Active"
+          ],
+          [
+            1,
+            2,
+            ""
+          ]
+        ]
+      },
+      "match": true
+    },
+    {
+      "name": "empty_h2",
+      "newline": "crlf",
+      "receipt": {
+        "rc": 1,
+        "bad": [
+          "R0",
+          "D1"
+        ],
+        "code_fp": null
+      },
+      "expected": {
+        "active": true,
+        "code_fp": null,
+        "body": "## 3. Active",
+        "heads": [
+          [
+            0,
+            2,
+            "3. Active"
+          ],
+          [
+            1,
+            2,
+            ""
+          ]
+        ]
+      },
+      "match": true
+    },
+    {
+      "name": "empty_h2",
+      "newline": "cr",
+      "receipt": {
+        "rc": 1,
+        "bad": [
+          "R0",
+          "D1"
+        ],
+        "code_fp": null
+      },
+      "expected": {
+        "active": true,
+        "code_fp": null,
+        "body": "## 3. Active",
+        "heads": [
+          [
+            0,
+            2,
+            "3. Active"
+          ],
+          [
+            1,
+            2,
+            ""
+          ]
+        ]
+      },
+      "match": true
+    },
+    {
+      "name": "history",
+      "newline": "lf",
+      "receipt": {
+        "rc": 0,
+        "bad": [],
+        "code_fp": "2149f8738bb20b6a311b3c5b344b9745271a3f1324cabfb4582c175c3983c3eb"
+      },
+      "expected": {
+        "active": true,
+        "code_fp": "2149f8738bb20b6a311b3c5b344b9745271a3f1324cabfb4582c175c3983c3eb",
+        "body": "## 3. Active\n`code_fp 2149f8738bb20b6a311b3c5b344b9745271a3f1324cabfb4582c175c3983c3eb`",
+        "heads": [
+          [
+            0,
+            2,
+            "3. Active"
+          ],
+          [
+            2,
+            2,
+            ""
+          ]
+        ]
+      },
+      "match": true
+    },
+    {
+      "name": "history",
+      "newline": "crlf",
+      "receipt": {
+        "rc": 0,
+        "bad": [],
+        "code_fp": "2149f8738bb20b6a311b3c5b344b9745271a3f1324cabfb4582c175c3983c3eb"
+      },
+      "expected": {
+        "active": true,
+        "code_fp": "2149f8738bb20b6a311b3c5b344b9745271a3f1324cabfb4582c175c3983c3eb",
+        "body": "## 3. Active\n`code_fp 2149f8738bb20b6a311b3c5b344b9745271a3f1324cabfb4582c175c3983c3eb`",
+        "heads": [
+          [
+            0,
+            2,
+            "3. Active"
+          ],
+          [
+            2,
+            2,
+            ""
+          ]
+        ]
+      },
+      "match": true
+    },
+    {
+      "name": "history",
+      "newline": "cr",
+      "receipt": {
+        "rc": 0,
+        "bad": [],
+        "code_fp": "2149f8738bb20b6a311b3c5b344b9745271a3f1324cabfb4582c175c3983c3eb"
+      },
+      "expected": {
+        "active": true,
+        "code_fp": "2149f8738bb20b6a311b3c5b344b9745271a3f1324cabfb4582c175c3983c3eb",
+        "body": "## 3. Active\n`code_fp 2149f8738bb20b6a311b3c5b344b9745271a3f1324cabfb4582c175c3983c3eb`",
+        "heads": [
+          [
+            0,
+            2,
+            "3. Active"
+          ],
+          [
+            2,
+            2,
+            ""
+          ]
+        ]
+      },
+      "match": true
+    },
+    {
+      "name": "fenced_empty",
+      "newline": "lf",
+      "receipt": {
+        "rc": 0,
+        "bad": [],
+        "code_fp": "2149f8738bb20b6a311b3c5b344b9745271a3f1324cabfb4582c175c3983c3eb"
+      },
+      "expected": {
+        "active": true,
+        "code_fp": "2149f8738bb20b6a311b3c5b344b9745271a3f1324cabfb4582c175c3983c3eb",
+        "body": "## 3. Active\n`code_fp 2149f8738bb20b6a311b3c5b344b9745271a3f1324cabfb4582c175c3983c3eb`\n",
+        "heads": [
+          [
+            0,
+            2,
+            "3. Active"
+          ]
+        ]
+      },
+      "match": true
+    },
+    {
+      "name": "fenced_empty",
+      "newline": "crlf",
+      "receipt": {
+        "rc": 0,
+        "bad": [],
+        "code_fp": "2149f8738bb20b6a311b3c5b344b9745271a3f1324cabfb4582c175c3983c3eb"
+      },
+      "expected": {
+        "active": true,
+        "code_fp": "2149f8738bb20b6a311b3c5b344b9745271a3f1324cabfb4582c175c3983c3eb",
+        "body": "## 3. Active\n`code_fp 2149f8738bb20b6a311b3c5b344b9745271a3f1324cabfb4582c175c3983c3eb`\n",
+        "heads": [
+          [
+            0,
+            2,
+            "3. Active"
+          ]
+        ]
+      },
+      "match": true
+    },
+    {
+      "name": "fenced_empty",
+      "newline": "cr",
+      "receipt": {
+        "rc": 0,
+        "bad": [],
+        "code_fp": "2149f8738bb20b6a311b3c5b344b9745271a3f1324cabfb4582c175c3983c3eb"
+      },
+      "expected": {
+        "active": true,
+        "code_fp": "2149f8738bb20b6a311b3c5b344b9745271a3f1324cabfb4582c175c3983c3eb",
+        "body": "## 3. Active\n`code_fp 2149f8738bb20b6a311b3c5b344b9745271a3f1324cabfb4582c175c3983c3eb`\n",
+        "heads": [
+          [
+            0,
+            2,
+            "3. Active"
+          ]
+        ]
+      },
+      "match": true
+    },
+    {
+      "name": "fenced_value",
+      "newline": "lf",
+      "receipt": {
+        "rc": 1,
+        "bad": [
+          "R0",
+          "D1"
+        ],
+        "code_fp": null
+      },
+      "expected": {
+        "active": true,
+        "code_fp": null,
+        "body": "## 3. Active\n",
+        "heads": [
+          [
+            0,
+            2,
+            "3. Active"
+          ]
+        ]
+      },
+      "match": true
+    },
+    {
+      "name": "fenced_value",
+      "newline": "crlf",
+      "receipt": {
+        "rc": 1,
+        "bad": [
+          "R0",
+          "D1"
+        ],
+        "code_fp": null
+      },
+      "expected": {
+        "active": true,
+        "code_fp": null,
+        "body": "## 3. Active\n",
+        "heads": [
+          [
+            0,
+            2,
+            "3. Active"
+          ]
+        ]
+      },
+      "match": true
+    },
+    {
+      "name": "fenced_value",
+      "newline": "cr",
+      "receipt": {
+        "rc": 1,
+        "bad": [
+          "R0",
+          "D1"
+        ],
+        "code_fp": null
+      },
+      "expected": {
+        "active": true,
+        "code_fp": null,
+        "body": "## 3. Active\n",
+        "heads": [
+          [
+            0,
+            2,
+            "3. Active"
+          ]
+        ]
+      },
+      "match": true
+    },
+    {
+      "name": "mixed",
+      "newline": "lf",
+      "receipt": {
+        "rc": 0,
+        "bad": [],
+        "code_fp": "2149f8738bb20b6a311b3c5b344b9745271a3f1324cabfb4582c175c3983c3eb"
+      },
+      "expected": {
+        "active": true,
+        "code_fp": "2149f8738bb20b6a311b3c5b344b9745271a3f1324cabfb4582c175c3983c3eb",
+        "body": "## 3. Active\n`code_fp 2149f8738bb20b6a311b3c5b344b9745271a3f1324cabfb4582c175c3983c3eb`\n",
+        "heads": [
+          [
+            0,
+            2,
+            "3. Active"
+          ]
+        ]
+      },
+      "match": true
+    },
+    {
+      "name": "mixed",
+      "newline": "crlf",
+      "receipt": {
+        "rc": 0,
+        "bad": [],
+        "code_fp": "2149f8738bb20b6a311b3c5b344b9745271a3f1324cabfb4582c175c3983c3eb"
+      },
+      "expected": {
+        "active": true,
+        "code_fp": "2149f8738bb20b6a311b3c5b344b9745271a3f1324cabfb4582c175c3983c3eb",
+        "body": "## 3. Active\n`code_fp 2149f8738bb20b6a311b3c5b344b9745271a3f1324cabfb4582c175c3983c3eb`\n",
+        "heads": [
+          [
+            0,
+            2,
+            "3. Active"
+          ]
+        ]
+      },
+      "match": true
+    },
+    {
+      "name": "mixed",
+      "newline": "cr",
+      "receipt": {
+        "rc": 0,
+        "bad": [],
+        "code_fp": "2149f8738bb20b6a311b3c5b344b9745271a3f1324cabfb4582c175c3983c3eb"
+      },
+      "expected": {
+        "active": true,
+        "code_fp": "2149f8738bb20b6a311b3c5b344b9745271a3f1324cabfb4582c175c3983c3eb",
+        "body": "## 3. Active\n`code_fp 2149f8738bb20b6a311b3c5b344b9745271a3f1324cabfb4582c175c3983c3eb`\n",
+        "heads": [
+          [
+            0,
+            2,
+            "3. Active"
+          ]
+        ]
+      },
+      "match": true
+    }
+  ]
+}
