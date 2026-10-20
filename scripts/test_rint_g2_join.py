@@ -47,9 +47,22 @@ docs/data/case15_corner_20261001/ (atom · contact 1,710,000 + case15_am_scaffol
       접촉 0 행 · gzip · CRLF → PASS (고치기 전 · 뒤 같음)
   J13 파생값 유한 — 판정문 §4 반례 (정상 AM 둘 + 비-AM 두 구 x 1e160 · 2e160 sim · 상자 0 … 3e160 · 닿을 수 없는데 δ 0.0005) · 한-AM x 1e160
       (δ 반올림 폭 delta_bound_um = inf) · sim_to_um 1e160 (AM–AM 면적 µm² = inf) → 구조화 REJECT (derived_nonfinite) · 계획 · 정량 관문 거부 ·
-      1e150 대조 = 지금처럼 REJECT (delta_pos_mismatch)
+      1e150 대조 = 지금처럼 REJECT (delta_pos_mismatch) · ⑤ 허용폭만 넘침 (같은 x 1e160 두 비-AM 구 · 거리 0 · δ 틀림 — 10-20 내부 사전 리뷰
+      ② 7: "거리만" · "차만" 검사 변이가 J13 을 통과하던 틈 · v4 도 통과)
   J14 정수 토큰 = ASCII 숫자만 — 전각 숫자 (원자 id · type · step · count · 접촉 id1 · id2 · step · count · scaffold type 하나씩 · 전부) · 아라비아-인도
       숫자 → 입구 REJECT (int_token) · 계획 · 정량 관문 거부 · ASCII 부호 · 앞 0 (`+100` · `000100` · `-0`) = PASS 그대로
+  ── RIMPR-R01 · 03 같은 부류 보강 (10-20 내부 사전 리뷰 · 1저자 10-20 "다 권고대로 해" — 시험 먼저) ──
+  J15 표지 경계 = 줄 끝 · 공백 · 탭만 — `ITEM: ATOMS` · `ITEM: BOX BOUNDS` · `ITEM: ENTRIES` 바로 뒤 · `ITEM: TIMESTEP` 끝의 U+00A0 · U+3000 · U+2003 ·
+      U+001F (4 × 4 = 16 · `isspace()` 참) → 입구 REJECT (frame_layout · header_boundary) · 계획 · 정량 관문 거부
+  J16 덤프 어휘 = TAB · LF · CR · 출력 가능 ASCII 만 — 머리 열 사이 · 행 · 상자 경계 줄 · step / count 값의 NBSP · U+3000 · U+2003 · U+001F · 줄 끝
+      FF · NEL · VT · U+2028 (13 · `split()` · `splitlines()` 가 구분자 · 줄 끝으로 정상화하던 것) → 입구 REJECT (frame_layout · lexical)
+  J17 scaffold 실수 열 (x y z r) = ASCII 고정소수 — 전각 · 아라비아-인도 숫자 · 밑줄 · 유니코드 공백 덧붙임 (5 · Decimal · float 이 받는다) → 입구
+      REJECT (numeric_format · scaffold_bad) · 양성: 주석 줄의 U+2014 · 한국어 (case15 꼴) = PASS
+  J18 scaffold 머리줄 step 선언 = ASCII · int64 — `# step １００` · `step<U+3000>100` · `ſtep 100` · `step 100١` (+ 덤프 1001) → 입구 REJECT (int_token ·
+      scaffold_step · 고치기 전 = G-frame 주장으로 PASS) · 5,000 자리 → 예외 없이 REJECT (고치기 전 = int() 한도 ValueError) · 양성: ASCII step 100 ·
+      int64 최댓값 19 자리 = PASS (주장 G-frame) · 대조: `step 101` = scaffold_step_mismatch 그대로
+  J15P 정상 양성 그대로 — real_14 · case15 원 gz · LIGGGHTS 꼴 머리 (`… ix iy iz vx … omegaz radius ` 끝 공백 · `1e-05` · `-0` · `5` · 추가 열) ·
+      소비 좌표 `-0` + scaffold `-0.000000000000` · 탭 · 겹 공백 · mm · fs · sm 플래그 · CR 만 · CRLF/LF 섞임 · gzip 두 멤버 → PASS (고치기 전 · 뒤 같음)
 """
 import argparse
 import contextlib
@@ -996,7 +1009,8 @@ def t_section_header_positive():
 
 @case('J13 파생값 유한 — 유한 입력의 산술 넘침 = 구조화 REJECT (RIMPR-04 부분 · 판정문 §4)')
 def t_derived_finite():
-    print('J13 — 입구 유한 검사 뒤 산술 (거리 · 허용폭 제곱합 · 반올림 폭 · µm² 면적) 넘침 · 고치기 전 = 조인 PASS / 정량 ACCEPT (1e150 대조 = REJECT)')
+    print('J13 — 입구 유한 검사 뒤 산술 (거리 · 허용폭 제곱합 · 반올림 폭 · µm² 면적) 넘침 · 고치기 전 = 조인 PASS '
+          '(① 정량 ACCEPT · ③④ 는 계획이 이미 join_particles_mismatch) · 1e150 대조 = REJECT')
     base, sid, L = consumer_ctx()
 
     def far_se(scale):
@@ -1070,6 +1084,33 @@ def t_derived_finite():
     ok, why = consumer_blocks(jm, sid, L)
     chk('J13 ④ → 계획 join_gate_failed · 정량 관문 거부 (고치기 전 = 조인 PASS · area_um2 inf)', ok, why)
 
+    #  ⑤ f6 허용폭 (wd) 만 넘침 — 같은 x (1e160 sim) 의 두 비-AM 구 (pos1 = pos2 · 거리 0 = 유한) · δ 0.0005 틀림 (차 |0.0005 − 0.002| = 0.0015
+    #  = 유한) · 허용폭의 위치 반폭 합 (5e154 + 5e154)² = 1e310 = inf.  ①–④ 는 거리 · 차가 함께 넘쳐 "거리만" · "차만" 보는 검사도 통과시켰다
+    #  (10-20 내부 사전 리뷰 ② 7 — 변이 M4a · M4c 가 J13 을 그대로 통과) · 이 줄은 허용폭 검사 하나만 잡는다 (v4 도 통과 = 틈 메움 · 새 반례 아님)
+    def same_x_se(Ls):
+        _sc, at, ct = Ls
+        for F in (at, ct):
+            F[5] = '0 3e+160'
+        at[3] = '4'
+        at.extend(['3 2 1e+160 0.002 0.002 0.001', '4 2 1e+160 0.002 0.002 0.001'])
+        ct[3] = '2'
+        ct.append('1e+160 0.002 0.002 1e+160 0.002 0.002 3 4 0 ' + ' '.join(['0'] * 12) + ' 1e-06 0.0005')
+    h160 = float(J.half_ulp_tokens(np.array(['1e+160']), 6)[0])
+    with np.errstate(over='ignore'):
+        wd_x = float(np.sqrt(np.float64(h160 + h160) ** 2))
+    built = (h160 == 5e154 and np.isinf(wd_x) and abs(0.0005 - (0.001 + 0.001 - 0.0)) == 0.0015)
+    (sc, at, ct), _ = synth('rr4_samex', fmt='g6', edit=same_x_se)
+    jm, err = try_join((sc, at, ct))
+    ok, why = gate_reject(jm, err, 'derived_nonfinite', 'G-frame')
+    gf = (jm or {}).get('g_frame') or {}
+    det = detail_of(jm, 'derived_nonfinite')
+    chk('J13 ⑤ 같은 x 두 비-AM 구 (x 1e160 · 거리 0 · δ 0.0005 틀림) → REJECT (derived_nonfinite 만 · G-frame 접촉 1 행) — 구성: 위치 반폭 5e154 · '
+        '허용폭 x 성분 inf · 차 0.0015 유한',
+        ok and built and codes(jm) == ['derived_nonfinite'] and gf.get('n_derived_nonfinite') == 1 and det == [1],
+        why + f' built={built} n_derived_nonfinite={gf.get("n_derived_nonfinite")!r} detail={det!r}')
+    ok, why = consumer_blocks(jm, sid, L)
+    chk('J13 ⑤ → 계획 join_gate_failed · 정량 관문 거부', ok, why)
+
 
 @case('J14 정수 토큰 = ASCII 숫자만 — 전각 · 아라비아-인도 숫자 = 입구 int_token (RIMPR-03)')
 def t_ascii_int():
@@ -1114,6 +1155,262 @@ def t_ascii_int():
         jm, err = try_join((sc, at, ct))
         chk(f'J14 양성: 두 덤프 step `{s_}` (ASCII 부호 · 앞 0) → PASS (거부 없음)',
             jm is not None and jm['status'] == 'PASS' and jm['rejections'] == [], err or repr(codes(jm)))
+
+
+# ═════════════════════════ RIMPR-R01 · 03 같은 부류 보강 (10-20 내부 사전 리뷰 · 1저자 "다 권고대로 해") ═════════════════════════
+NBSP, IDSP, EMSP, USEP = ' ', '　', ' ', '\x1f'     # U+00A0 · U+3000 · U+2003 · U+001F — 모두 str.isspace() 참 · split() 구분자
+UNI_SEP = (('U+00A0', NBSP), ('U+3000', IDSP), ('U+2003', EMSP), ('U+001F', USEP))
+FW_DIG = str.maketrans('0123456789', '０１２３４５６７８９')     # 전각 ０ … ９
+AR_DIG = str.maketrans('0123456789', '٠١٢٣٤٥٦٧٨٩')     # 아라비아-인도 ٠ … ٩
+
+
+def fl_count(jm, key):
+    return int((((jm or {}).get('entrance') or {}).get('frame_layout') or {}).get(key, 0))
+
+
+@case('J15 표지 경계 = 줄 끝 · 공백 · 탭만 — 유니코드 공백 · 제어 문자 = 입구 REJECT (RIMPR-R01 같은 부류)')
+def t_marker_boundary():
+    print('J15 — 표지 (`ITEM: ATOMS` · `ITEM: BOX BOUNDS` · `ITEM: ENTRIES` 바로 뒤 · `ITEM: TIMESTEP` 끝) 에 U+00A0 · U+3000 · U+2003 · U+001F · '
+          '고치기 전 = isspace() 가 경계로 받아 전부 PASS / 정량 ACCEPT')
+    base, sid, L = consumer_ctx()
+    sites = ((1, 8, 'ITEM: ATOMS ', '원자 `ITEM: ATOMS` 바로 뒤', 'atom'),
+             (1, 4, 'ITEM: BOX BOUNDS ', '원자 `ITEM: BOX BOUNDS` 바로 뒤', 'atom'),
+             (2, 8, 'ITEM: ENTRIES ', '접촉 `ITEM: ENTRIES` 바로 뒤', 'contact'),
+             (1, 0, None, '원자 `ITEM: TIMESTEP` 끝', 'atom'))
+    k = 0
+    for fi, row, mk, lab, nm in sites:
+        for cname, ch in UNI_SEP:
+            ed = _hdr(fi, row, mk, mk.rstrip(' ') + ch) if mk else _hdr(fi, row, None, ch)
+            (sc, at, ct), _ = synth(f'pb1_b{k}', fmt='g6', edit=ed)
+            k += 1
+            jm, err = try_join((sc, at, ct))
+            ok, why = entrance_reject(jm, err, 'frame_layout')
+            key = f'{nm}_header_boundary'
+            chk(f'J15 {lab} {cname} → 입구 REJECT (frame_layout · {key} ≥ 1) · 관문 계산 안 함', ok and fl_count(jm, key) >= 1,
+                why + f' {key}={fl_count(jm, key)}')
+            ok, why = consumer_blocks(jm, sid, L)
+            chk(f'J15 {lab} {cname} → 계획 join_gate_failed · 정량 관문 거부 (고치기 전 = 정량 ACCEPT)', ok, why)
+
+
+@case('J16 덤프 어휘 = TAB · LF · CR · 출력 가능 ASCII 만 — 비-ASCII 구분자 · 줄 경계 = 입구 REJECT (RIMPR-R01 같은 부류)')
+def t_dump_lexical():
+    print('J16 — 머리 열 사이 · 행 · 상자 경계 줄 · step / count 값의 NBSP · U+3000 · U+2003 · U+001F · 줄 끝 FF · NEL · VT · U+2028 · '
+          '고치기 전 = split() · splitlines() 가 구분자 · 줄 끝으로 정상화해 전부 PASS / 정량 ACCEPT')
+    base, sid, L = consumer_ctx()
+
+    def row_edit(fi, row, f):
+        def ed(Ls):
+            Ls[fi][row] = f(Ls[fi][row])
+        return ed
+    rows = (
+        ('원자 머리 열 사이 NBSP (`id<NBSP>type`)', _hdr(1, 8, 'id type', 'id' + NBSP + 'type'), ('atom',)),
+        ('원자 행 첫 구분자 NBSP', row_edit(1, 9, lambda s: s.replace(' ', NBSP, 1)), ('atom',)),
+        ('원자 행 구분자 전부 U+3000', row_edit(1, 9, lambda s: s.replace(' ', IDSP)), ('atom',)),
+        ('접촉 행 끝 U+2003', row_edit(2, 9, lambda s: s + EMSP), ('contact',)),
+        ('원자 행 첫 구분자 U+001F', row_edit(1, 9, lambda s: s.replace(' ', USEP, 1)), ('atom',)),
+        ('원자 상자 경계 줄 NBSP (`0<NBSP>0.01` · 원자만)', _set(1, 5, '0' + NBSP + '0.01'), ('atom',)),
+        ('두 덤프 상자 경계 줄 NBSP (같은 토큰)', lambda Ls: (_set(1, 5, '0' + NBSP + '0.01')(Ls), _set(2, 5, '0' + NBSP + '0.01')(Ls)),
+         ('atom', 'contact')),
+        ('원자 TIMESTEP 값 U+3000 감쌈', _set(1, 1, IDSP + '100' + IDSP), ('atom',)),
+        ('원자 NUMBER OF ATOMS 값 뒤 NBSP', _set(1, 3, '2' + NBSP), ('atom',)),
+        ('원자 행 끝 FF (`\\x0c` — splitlines 가 빈 줄로 쪼갠다)', row_edit(1, 9, lambda s: s + '\x0c'), ('atom',)),
+        ('원자 행 끝 NEL (`\\x85`)', row_edit(1, 9, lambda s: s + '\x85'), ('atom',)),
+        ('원자 ATOMS 머리 끝 VT (`\\x0b` — 행 절 첫 빈 줄)', row_edit(1, 8, lambda s: s + '\x0b'), ('atom',)),
+        ('원자 TIMESTEP 값 뒤 U+2028', _set(1, 1, '100 '), ('atom',)),
+    )
+    for k, (tag, ed, where) in enumerate(rows):
+        (sc, at, ct), _ = synth(f'pb1_l{k}', fmt='g6', edit=ed)
+        jm, err = try_join((sc, at, ct))
+        ok, why = entrance_reject(jm, err, 'frame_layout')
+        keys = [f'{nm}_lexical' for nm in where]
+        cnt = {kk: fl_count(jm, kk) for kk in keys}
+        chk(f'J16 {tag} → 입구 REJECT (frame_layout · {" · ".join(keys)} ≥ 1) · 관문 계산 안 함', ok and min(cnt.values()) >= 1,
+            why + f' {cnt}')
+        ok, why = consumer_blocks(jm, sid, L)
+        chk(f'J16 {tag} → 계획 join_gate_failed · 정량 관문 거부 (고치기 전 = 정량 ACCEPT)', ok, why)
+
+
+def sc_tok(row, col, f):
+    """scaffold 한 칸 변이 (row · col = 쉼표 열)."""
+    def ed(Ls):
+        v = Ls[0][row].split(',')
+        v[col] = f(v[col])
+        Ls[0][row] = ','.join(v)
+    return ed
+
+
+def scaffold_bad(jm):
+    return ((((jm or {}).get('entrance') or {}).get('format') or {}).get('scaffold_bad') or {})
+
+
+@case('J17 scaffold 실수 열 = ASCII 고정소수 — 전각 · 아라비아-인도 숫자 · 밑줄 · 유니코드 공백 = 입구 REJECT (RIMPR-03 같은 부류)')
+def t_scaffold_reals():
+    print('J17 — scaffold x · y · z · r (Decimal · float 이 유니코드 숫자 · 밑줄 · 유니코드 공백을 받는다) · 고치기 전 = 전부 PASS / 정량 ACCEPT · '
+          '주석 줄의 비-ASCII (case15 꼴 U+2014) 는 그대로')
+    base, sid, L = consumer_ctx()
+
+    def all_fw(Ls):
+        for r_ in (0, 1):
+            for c_ in (1, 2, 3, 4):
+                sc_tok(r_, c_, lambda t: t.translate(FW_DIG))(Ls)
+    rows = (
+        ('scaffold x 전각 숫자 (`０.００２…`)', sc_tok(0, 1, lambda t: t.translate(FW_DIG)), ('scaffold_grammar', 'scaffold_lexical')),
+        ('scaffold r 아라비아-인도 숫자 (`٠.٠٠١…`)', sc_tok(1, 4, lambda t: t.translate(AR_DIG)), ('scaffold_grammar', 'scaffold_lexical')),
+        ('scaffold 실수 열 전부 전각 (두 행 · x y z r)', all_fw, ('scaffold_grammar', 'scaffold_lexical')),
+        ('scaffold y 밑줄 (`0.002_000000000`)', sc_tok(0, 2, lambda t: t[:5] + '_' + t[5:]), ('scaffold_grammar',)),
+        ('scaffold z 유니코드 공백 덧붙임 (앞 NBSP · 뒤 U+3000 — x.strip() 이 떼던 것)', sc_tok(0, 3, lambda t: NBSP + t + IDSP),
+         ('scaffold_grammar', 'scaffold_lexical')),
+    )
+    for k, (tag, ed, keys) in enumerate(rows):
+        (sc, at, ct), _ = synth(f'pb1_s{k}', fmt='g6', edit=ed)
+        jm, err = try_join((sc, at, ct))
+        ok, why = entrance_reject(jm, err, 'numeric_format')
+        sb = scaffold_bad(jm)
+        chk(f'J17 {tag} → 입구 REJECT (numeric_format · {" · ".join(keys)} ≥ 1) · 관문 계산 안 함',
+            ok and all(int(sb.get(kk, 0)) >= 1 for kk in keys), why + f' scaffold_bad={sb!r}')
+        ok, why = consumer_blocks(jm, sid, L)
+        chk(f'J17 {tag} → 계획 join_gate_failed · 정량 관문 거부 (고치기 전 = 정량 ACCEPT)', ok, why)
+    #  양성 — 주석 줄의 비-ASCII (case15 · kit scaffold 머리줄 꼴 U+2014 · 한국어) 는 어휘 관문 밖
+    def c15_comment(Ls):
+        Ls[0][0:0] = ['# type,x,y,z,r  # AM scaffold (AM_P=1,AM_S=2) — case 260421_215235_ab3785',
+                      '# 압축 뒤 AM 골격 (주석 — 어휘 관문 밖)']
+    (sc, at, ct), _ = synth('pb1_s_c15', fmt='g6', edit=c15_comment)
+    jm, err = try_join((sc, at, ct))
+    chk('J17 양성: scaffold 주석 줄의 U+2014 · 한국어 (case15 꼴) → PASS (거부 없음) · 주장 = G-geo 만 (step 없음)',
+        jm is not None and jm['status'] == 'PASS' and jm['rejections'] == [] and jm['scaffold_frame_claim'].startswith('G-geo'),
+        err or repr(codes(jm)))
+    ok, why = consumer_accepts(jm, sid, L)
+    chk('J17 양성: → 계획 거부 없음 · 정량 관문 통과', ok, why)
+
+
+def sc_head(line, steps=None):
+    """scaffold 머리줄 (첫 줄) 삽입 + (steps 를 주면) 두 덤프 TIMESTEP 을 그 값으로."""
+    def ed(Ls):
+        Ls[0].insert(0, line)
+        if steps is not None:
+            Ls[1][1] = Ls[2][1] = steps
+    return ed
+
+
+@case('J18 scaffold 머리줄 step 선언 = ASCII · int64 — 전각 · 유니코드 공백 · ſ · 섞인 숫자 = 입구 REJECT · 긴 숫자열 = 예외 없이 (RIMPR-03 같은 부류)')
+def t_scaffold_step():
+    print('J18 — `_STEP_RE` (\\d · \\s · re.I 유니코드) 가 비-ASCII 머리줄로 G-frame 주장을 올리던 것 · 5,000 자리 = int() 한도 ValueError · '
+          '고치기 전 = PASS (주장 G-frame) / 예외')
+    base, sid, L = consumer_ctx()
+    rows = (
+        ('`# type,x,y,z,r  # step １００` (전각 숫자 · 두 덤프 step 100)', sc_head('# type,x,y,z,r  # step １００')),
+        ('`# step<U+3000>100` (유니코드 공백 구분)', sc_head('# step' + IDSP + '100')),
+        ('`# ſtep 100` (U+017F — re.I 유니코드 대소문자 접기가 s 로 받는다)', sc_head('# ſtep 100')),
+        ('`# step 100١` + 두 덤프 step 1001 (ASCII 뒤 아라비아-인도 숫자 — ASCII 부분만 읽고 나머지를 버리지 않는다)',
+         sc_head('# step 100١', steps='1001')),
+        ('긴 ASCII step (5,000 자리 · int64 밖 — 고치기 전 = int() 한도 ValueError)', sc_head('# step ' + '9' * 5000)),
+    )
+    for k, (tag, ed) in enumerate(rows):
+        (sc, at, ct), _ = synth(f'pb1_t{k}', fmt='g6', edit=ed)
+        jm, err = try_join((sc, at, ct))
+        ok, why = entrance_reject(jm, err, 'int_token')
+        ib = ((jm or {}).get('entrance') or {}).get('int_token_bad') or {}
+        chk(f'J18 {tag} → 입구 REJECT (int_token · scaffold_step ≥ 1) · 관문 계산 안 함', ok and int(ib.get('scaffold_step', 0)) >= 1,
+            why + f' scaffold_step={ib.get("scaffold_step")!r}')
+        ok, why = consumer_blocks(jm, sid, L)
+        chk(f'J18 {tag} → 계획 join_gate_failed · 정량 관문 거부 (고치기 전 = 정량 ACCEPT 또는 예외)', ok, why)
+    #  양성 · 대조 — ASCII step 은 그대로 읽는다 (주장 G-frame 까지) · 다른 ASCII step = 지금처럼 scaffold_step_mismatch
+    i64m = '9223372036854775807'
+    for k, (tag, ed) in enumerate((('`# type,x,y,z,r  # step 100` (ASCII · 두 덤프 step 100)', sc_head('# type,x,y,z,r  # step 100')),
+                                   ('긴 ASCII step = int64 최댓값 19 자리 (두 덤프 같은 step)', sc_head('# step ' + i64m, steps=i64m)))):
+        (sc, at, ct), _ = synth(f'pb1_tok{k}', fmt='g6', edit=ed)
+        jm, err = try_join((sc, at, ct))
+        chk(f'J18 양성: {tag} → PASS (거부 없음) · 주장 = G-frame 까지',
+            jm is not None and jm['status'] == 'PASS' and jm['rejections'] == [] and jm['scaffold_frame_claim'].startswith('G-frame'),
+            err or (repr(codes(jm)) + ' ' + jm['scaffold_frame_claim']))
+    (sc, at, ct), _ = synth('pb1_t_mis', fmt='g6', edit=sc_head('# step 101'))
+    jm, err = try_join((sc, at, ct))
+    ok, why = gate_reject(jm, err, 'scaffold_step_mismatch', 'G-geo')
+    chk('J18 대조: `# step 101` (ASCII · 두 덤프 step 100) → REJECT (scaffold_step_mismatch · G-geo — 고치기 전 · 뒤 같음)', ok, why)
+
+
+@case('J15P 정상 양성 그대로 — 실자료 원 gz · LIGGGHTS 꼴 머리 · %g 값 · 탭 · 겹 공백 · CR · CRLF/LF · gzip 두 멤버 · mm fs sm (J15–J18 거짓 거부 방지)')
+def t_pb1_positive():
+    print('J15P — 경계 · 어휘 · scaffold 문법 · step 수정이 정상 덤프 · scaffold 를 거짓 거부하지 않는다 (고치기 전 · 뒤 같음)')
+    base, sid, L = consumer_ctx()
+    for name, jn in (('real_14', join_r14()), ('case15', J.am_iface_join(C15_SCAF, C15_ATOM, C15_CONT, type_map=C15_TMAP))):
+        e = jn.get('entrance') or {}
+        chk(f'J15P {name} 원 gz → PASS · 프레임 배치 (어휘 포함) 위반 0 · 형식 위반 없음',
+            jn['status'] == 'PASS' and jn['rejections'] == [] and sum((e.get('frame_layout') or {}).values()) == 0
+            and 'numeric_format' not in codes(jn), repr(codes(jn)) + repr(e.get('frame_layout')))
+
+    def liggghts_like(Ls):
+        _sc, at, ct = Ls
+        at[8] = 'ITEM: ATOMS id type x y z ix iy iz vx vy vz fx fy fz omegax omegay omegaz radius '
+        for k in (9, 10):
+            v = at[k].split()
+            at[k] = ' '.join(v[:5] + ['0', '0', '-0', '1e-05', '-0', '5', '0', '0', '0', '0', '0', '0', v[5]]) + ' '
+        ct[8] += ' c_cpl[24] c_cpl[25] c_cpl[26] '
+        ct[9] += ' 0 1e-05 -0 '
+
+    def negzero_y(Ls):
+        sc_, at, ct = Ls
+        for k, tok in ((9, '-0'), (10, '0')):
+            v = at[k].split()
+            v[3] = tok
+            at[k] = ' '.join(v)
+        v = ct[9].split()
+        v[1], v[4] = '-0', '0'
+        ct[9] = ' '.join(v)
+        for k, tok in ((0, '-0.000000000000'), (1, '0.000000000000')):
+            v = sc_[k].split(',')
+            v[2] = tok
+            sc_[k] = ','.join(v)
+
+    def tabs(Ls):
+        for fi in (1, 2):
+            for k in range(9, len(Ls[fi])):
+                Ls[fi][k] = Ls[fi][k].replace(' ', '\t')
+
+    def dbl_space(Ls):
+        Ls[2][4] = 'ITEM: BOX BOUNDS ff  ff ff'
+        Ls[1][9] = Ls[1][9].replace(' ', '  ', 1)
+
+    def flags(fl):
+        def ed(Ls):
+            Ls[1][4] = Ls[2][4] = 'ITEM: BOX BOUNDS ' + fl
+        return ed
+    for k, (tag, ed, gs) in enumerate((
+            ('LIGGGHTS 꼴 원자 머리 (`… ix iy iz vx … omegaz radius ` 끝 공백) · 진단 열 `1e-05` · `-0` · `5` · 접촉 추가 열', liggghts_like, True),
+            ('소비하는 좌표 `-0` (원자 · 접촉 y) · scaffold `-0.000000000000` (고정소수 부호)', negzero_y, False),
+            ('두 덤프 행 전부 탭 구분', tabs, True),
+            ('겹 공백 (접촉 상자 머리 `ff  ff ff` · 원자 행)', dbl_space, True),
+            ('상자 플래그 mm mm mm (두 덤프)', flags('mm mm mm'), True),
+            ('상자 플래그 fs fs fs (두 덤프)', flags('fs fs fs'), True),
+            ('상자 플래그 sm ms fm (두 덤프)', flags('sm ms fm'), True))):
+        (sc, at, ct), _ = synth(f'pb1_p{k}', fmt='g6', edit=ed)
+        jm, err = try_join((sc, at, ct))
+        chk(f'J15P {tag} → PASS (거부 없음)', jm is not None and jm['status'] == 'PASS' and jm['rejections'] == [], err or repr(codes(jm)))
+        if gs:
+            ok, why = consumer_accepts(jm, sid, L)
+            chk(f'J15P {tag} → 계획 거부 없음 · 정량 관문 통과', ok, why)
+    #  저장 꼴 — CR 만 · CRLF/LF 섞임 (원자 덤프 앞 다섯 줄 CRLF) · gzip 두 멤버 (원자 덤프 반씩)
+    (sc, at, ct), _ = synth('pb1_p_store', fmt='g6')
+    raws = []
+    for p in (sc, at, ct):
+        with open(p, 'rb') as fh:
+            raws.append(fh.read())
+    cr, mix, gz2 = [], [], []
+    for p, raw in zip((sc, at, ct), raws):
+        with open(p + '_cr', 'wb') as fo:
+            fo.write(raw.replace(b'\n', b'\r'))
+        cr.append(p + '_cr')
+    parts = raws[1].split(b'\n')
+    with open(at + '_mix', 'wb') as fo:
+        fo.write(b'\r\n'.join(parts[:5]) + b'\r\n' + b'\n'.join(parts[5:]))
+    mix = [sc, at + '_mix', ct]
+    half = len(raws[1]) // 2
+    with open(at + '_2m.gz', 'wb') as fo:
+        fo.write(gzip.compress(raws[1][:half], mtime=0) + gzip.compress(raws[1][half:], mtime=0))
+    gz2 = [sc, at + '_2m.gz', ct]
+    for tag, paths in (('CR 만 줄 끝 (세 파일)', cr), ('CRLF / LF 섞임 (원자 덤프 앞 다섯 줄 CRLF)', mix), ('gzip 두 멤버 (원자 덤프 반씩)', gz2)):
+        jm, err = try_join(tuple(paths))
+        chk(f'J15P {tag} → PASS (거부 없음)', jm is not None and jm['status'] == 'PASS' and jm['rejections'] == [], err or repr(codes(jm)))
 
 
 def main():
