@@ -35,6 +35,7 @@ r_port = 2.0 (= 2h) · gap_tol 2.0 · σ_VGCF = 100 S/cm → 축방향 면 g = �
          VGCF 절연 채널 · 법칙 미선언 · R_j 극한 → 조립 전 거부 (CG 호출 0)
   P-1/2  PTFE–접합 법칙 — P1 = 덮인 instance 만 절단 · P0 = 영향 없음 · 경계 = 정확히 tol_P 포함 · centerline + P1 = 거부 ·
          (P1, c = 1) = 절단 먼저 (N18)
+  FA+CJ  S1 face_alpha × S2 cjunc 를 한 솔브에 같이 = 조립 전 거부 (설계 미정의 조합 · CG 0) · 양성 대조 = 같은 두 계획이 각각 홀로는 받아들여짐
   S3-1…11 SDCP 접합 수정자 (c = 0 비트 같음 · SBE no-op · c 단조 · c = 1 축약 · 순열 · 경계 · 펠릿 no-op · 변이 · S2 없이 거부 ·
          sid 불변 · 우선순위)
   SV     SV 면 · SDCP 셀 소산 몫 · SV_DOMINANT 표지 · SDCP 경유 섬유 연결 수
@@ -783,6 +784,44 @@ def t_pjunc():
     pp = plan(regs, 1e3, ptfe_stamp='face_alpha', ptfe_jlaw='P1', sdcp_mod={'c': 1.0})
     chk('P-2 PTFE 덮임 ∧ SDCP 근접 · (P1, c = 1) → 절단 먼저 (축약 아님 · N18)',
         int(pp['mode'][0]) == CJ.MODE_CUT_P1 and bool(regs['instances']['a_sdcp'][0]), f"{pp['mode']}")
+
+
+# ═════════════════════════ FA+CJ — S1 face_alpha × S2 cjunc 동시 = 거부 (A · B 합침 10-20) ═════════════════════════
+@case('FA+CJ')
+def t_fa_cj_both_refused():
+    """한 솔브에 S1 면 개구율 (face_alpha 계획) 과 S2 탄소 접합 (cjunc 계획) 을 **같이** 주는 조합은 설계가 아직 정의하지 않았다
+    (α 를 받은 면의 멤버십 재배선 · P-junc 법칙과의 관계 미정 — 1저자 · Codex 결정 전).  `require_plan` 은 cjunc 를,
+    `cjunc_require_quantitative` 는 face_alpha 를 모른다 → 솔버 입구가 조립 전에 거부해야 한다 (CG 0).
+    양성 대조 = 같은 침대 · 같은 두 계획이 **각각 홀로는** 받아들여진다 (거부 사유가 계획 결함이 아니라 '동시' 임을 가린다)."""
+    import ptfe_face_alpha as FA
+    P = rows(F1)
+    sd = rows([[(1.5, 2.5, 3.5)]], phase=5, kind=0, fid0=700)          # SDCP 셀 (1,2,3) — 교차 VGCF 셀 (1,1,3) 과 y 면 (y = 2) 공유
+    pt = _ptfe_rows([[(1.5, 0.5, 3.5), (1.5, 2.5, 3.5)]])              # PTFE 가 그 VGCF|SDCP 면을 가로지른다 (α = 60/64 · 면 하나)
+    allr = cat_rows(P, sd, pt)
+    sid, pid = bed(allr, F1_N, stamp=allr[1] != 4)                     # face_alpha 침대 = PTFE 셀 없음 (off 격자)
+    sig = sig_e()
+    cj = plan(registry(sid, allr), 1e3, ptfe_stamp='face_alpha', ptfe_jlaw='P0')
+    m4 = allr[1] == 4
+    fa = FA.build_plan(sid, sig, FA.build_capsules(allr[0][m4], allr[2][m4], allr[3][m4]), lo=(0.0, 0.0, 0.0), vox=H,
+                       channel='electronic', pid=pid)
+    r_fa = solve(sid, sig, F1_N, None, face_alpha=fa, pid=pid)
+    r_cj = solve(sid, sig, F1_N, cj)
+    chk('FA+CJ 양성 대조 — face_alpha 홀로 = 받아들임 · 계획 행을 실제로 씀 (VGCF|SDCP 면 α 60/64)',
+        r_fa['sigma_eff'] > 0.0 and r_fa['face_alpha']['n_rows_used'] == 1 and 'cjunc' not in r_fa,
+        f"{r_fa.get('reason')} {r_fa.get('face_alpha')}")
+    chk('FA+CJ 양성 대조 — cjunc 홀로 (ptfe_stamp face_alpha 선언) = 받아들임', r_cj['sigma_eff'] > 0.0
+        and r_cj['cjunc']['solved'] is True and 'face_alpha' not in r_cj, f"{r_cj.get('reason')}")
+    _CG_CALLS[0] = 0
+    err, res = None, None
+    try:
+        res = solve(sid, sig, F1_N, cj, face_alpha=fa, pid=pid)
+    except (ValueError, TypeError) as e:                   # 다른 예외 = 거부 계약 위반 (아래 실패로 드러난다)
+        err = e
+    msg = str(err) if err is not None else ''
+    chk('FA+CJ 동시 (face_alpha + cjunc) = 조립 전 거부 · 사유 = 동시 사용 (계획 결함 아님) · CG 호출 0',
+        err is not None and 'face_alpha' in msg and 'cjunc' in msg and '동시' in msg and _CG_CALLS[0] == 0,
+        f'예외 {type(err).__name__ if err else None}: {msg[:120]} · CG {_CG_CALLS[0]} · '
+        f"풀린 해 키 {sorted(k for k in (res or {}) if k in ('face_alpha', 'cjunc'))}")
 
 
 # ═════════════════════════ S3 ═════════════════════════
