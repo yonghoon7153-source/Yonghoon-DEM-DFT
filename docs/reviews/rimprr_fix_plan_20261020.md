@@ -1,4 +1,4 @@
-# Rint 조인 재확인 (10-20) — RIMPRR-01 · RIMPR-03 · 04 · SELF-124 수정 계획 (2026-10-20 · 결과 0 건 · 초안 · ⬜ 1저자 비준)
+# Rint 조인 재확인 (10-20) — RIMPRR-01 · RIMPR-03 · 04 · SELF-124 수정 계획 (2026-10-20 · 결과 0 건 · 초안 · ⬜ 1저자 비준 → ✅ 비준 10-20 · 수정 결과 = §3 끝)
 
 > 근거 = Codex 재확인 `docs/reviews/codex_review_rint_join_rimpr_q7_recheck_20261020.md` (검토 핀 `2b9efa253` · 대조 핀 `dcb97f1ed`) · 증거 `docs/reviews/codex_rint_join_rimpr_q7_recheck_evidence_20261020/` (우리 트리 재현 = 판정값 차이 0 · `_README_import.md`).
 > 판정 요지: `RIMPR-01` · `02` · Q7 범위 한정 닫힘 (verified) · 새 P1 · P2 없음 · 새 P3 `RIMPRR-01` (원장 `RIMPR-R01` — 원장 ID 규칙 접두 5 글자) · `RIMPR-04` 범위 보강 · `RIMPR-03` = ASCII 범위 명시면 연기 가능 · **①′ 정량 채택 · 생산 HOLD 유지**.
@@ -14,6 +14,8 @@
 | `SELF-124` P3 | 요청서가 *"봉인 32 파일 무변경"* 을 범위 한정 없이 · 시험 수를 *"78/135 → 138/138"* (다른 두 시험 판) 로 적음 | `docs/reviews/codex_rint_join_rimpr_fix_recheck_request_20261020.md` 12 · 19 행 · 원장 RIMPR-01 · 02 evidence_tests 첫 줄 · 커밋 `3b9d51789` 메시지 (고칠 수 없음 = 기록만) | §7 권장 문장 · 현재 시험 138 을 옛 코드에 = 81/138 구분 |
 
 ## 2. 1저자가 정할 것
+
+✅ 1저자 10-20 *"권고대로해"* — Q1 (가) · Q2 (가) · Q3 (가) · Q4 (가) · Q5 반영 · Q6 (나)
 
 | Q | 결정 | 선택지 | 권고 |
 |---|---|---|---|
@@ -32,3 +34,24 @@
 4. Codex (Q6) — 수정 diff + 이번 묶음 탐침 재실행 요청 (`docs/reviews/codex_rint_join_rimpr_q7_recheck_evidence_20261020/probes/structure_probe.py` ·
    `docs/reviews/codex_rint_join_rimpr_q7_recheck_evidence_20261020/probes/structure_minimal_replay.py` · `docs/reviews/codex_rint_join_rimpr_q7_recheck_evidence_20261020/probes/numeric_review.py` ·
    `docs/reviews/codex_rint_join_rimpr_q7_recheck_evidence_20261020/probes/numeric_overflow_replay.py` — 고친 뒤 기대: 헤더 반례 10 = 거부 · Q3 (가) 면 1e160 = 거부 · Q4 (가) 면 전각 정수 = 거부 · 그 밖 판정 그대로).
+
+### 결과 (10-20 · 작업 트리 · `9845d526c` 바로 위 두 커밋 · push 안 함)
+
+- **시험 먼저 `12d894c09`** (`scripts/test_rint_g2_join.py` 만 · 새 검사 68 = J12 26 · J12P 9 · J13 8 · J14 25): 고치기 전 코드 (`9845d526c` 판 `scripts/rint_iface_join.py`) 에 **152/206** — 실패 54 = 새 반례 전부 (J12 26 · J13 6 · J14 22) · 옛 138 + 새 양성 14 (J12P 9 · J13 ② 1e150 대조 2 · J14 ASCII 3) 통과.
+- **수정 `a2cfd0365`** (`scripts/rint_iface_join.py` · 요청서 정정 표지 Q5): 같은 시험 **206/206**.  사유 = 경계 없음 · 붙여 쓴 반복 표지 → `frame_layout` (새 칸 `header_boundary` · 반복 표지는 + `row_width` / `box_format`) · 행 표지 후첨 → `row_width` · 상자 표지 후첨 → `box_format` · 파생값 넘침 → 새 코드 `derived_nonfinite` (G-frame f6 · G-geo `delta_bound_um` · `dem_am_am.area_um2`) · 전각 · 아라비아-인도 숫자 → `int_token`.  `JOIN_VERSION` v4.
+- 회귀 (수정 뒤 · 이 컨테이너 Linux · Python 3.11.15 · NumPy 2.4.6 · SciPy 1.17.1):
+
+| 시험 | 결과 |
+|---|---|
+| `scripts/test_rint_g2_join.py` | 206/206 (고치기 전 152/206) |
+| `scripts/test_rint_g2_am_iface.py` | 136/136 |
+| `scripts/test_rint_g2_rrm.py` | 55/55 |
+| `scripts/test_rint_t4_census.py` | 8/8 |
+| `scripts/test_rint_t43_order.py` | 6/6 |
+| `scripts/test_rint_t2_dev.py` | 23/23 |
+| `scripts/step3_sigma.py --selftest` · `--selftest-rint` | PASS · PASS |
+| `scripts/rint_t41_census.py --selftest` | PASS |
+
+- real14 = PASS · 457 / 457 / 457 · 인증 AM–AM 660 · case15 = PASS · 104 / 104 / 104 · 119 (AM–AM 밖 음수 면적 2 행 기록 그대로) — 수정 전 모듈과 입자 · atom id 사상 · `dem_am_am` 배열 바이트 같음 · `delta_bound_um` 같음 · 바뀐 것 = 기록의 새 칸 · 판 · 규칙 문구뿐 (`fp_join` 이 바뀐다 · 고정해 대조하는 곳 없음).  iface 끔 경로 무영향 (`scripts/step3_sigma.py` 무변경 · 조인 모듈은 그 경로에 없다) · 웹앱 화면 없음 · 봉인 32 · S3 수치 모듈 6 밖.
+- 원장: `RIMPR-R01` · `RIMPR-03` · `SELF-124` → claimed_fixed (`a2cfd0365`) · `RIMPR-04` = open 유지 (부분 수정 note · 연기 조건 ①).
+- ⬜ Codex 재확인 = Rint ② 설계 리뷰 회차에 절을 나눠 (Q6 (나)) — 위 4 의 탐침 재실행 + 수정 diff (`git diff 9845d526c a2cfd0365 -- scripts/rint_iface_join.py scripts/test_rint_g2_join.py`).
