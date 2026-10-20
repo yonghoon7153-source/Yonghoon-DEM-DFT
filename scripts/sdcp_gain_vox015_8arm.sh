@@ -23,6 +23,9 @@
 #   #   CJUNC=1 CJUNC_RJ=<Ω> CJUNC_LEN_LAW=len_scaled_v0 CJUNC_UNREG_LAW=cut CJUNC_S_MIN_UM=<µm> CJUNC_TOL_FF_UM=<µm> \
 #   #   CJUNC_PTFE_JLAW=P0 [SDCP_MOD_C=0|1] STEP3_RTOL=1e-12 PTFE_STAMP=centerline LEAN=2 bash …/sdcp_gain_vox015_8arm.sh
 #   #   S1 면 개구율:  PTFE_STAMP=face_alpha LEAN=2|3 STEP3_RTOL=1e-12 bash …   (face_alpha + CJUNC = 거부 · 조합 미정의)
+#   #   ★ Z1 (10-20) — CJUNC=1 · PTFE_STAMP=face_alpha · SDCP_MOD_C 는 STEP3_RTOL **필수** (없으면 팔 시작 전 거부 · 기본값 없음).
+#   #   VGCF σ = bulk 에서 직경 보존:  SIGMA_FIBRE_BULK=1e4 (S/cm · Endo 단섬유 · 설계 §1-2 #1 · #2 → vox 0.15 에서 7853.98) · 팔 이름 `_fb<값>` ·
+#   #   SIGMA_VGCF_OVERRIDE 와 동시 = 거부 · 끔 (기본) = 옛 bulk 100 그대로.
 set -uo pipefail
 
 VOX="${VOX:-0.15}"
@@ -431,7 +434,8 @@ _RCPT_JSON="$(python3 - "$SCR" "$VOX" "$BRIDGE_UM" "$FIBRE_STAMP" "${SDCP_SPHERE
                   "CJUNC=${CJUNC:-}" "CJUNC_RJ=${CJUNC_RJ:-}" "CJUNC_LEN_LAW=${CJUNC_LEN_LAW:-}" \
                   "CJUNC_UNREG_LAW=${CJUNC_UNREG_LAW:-}" "CJUNC_S_MIN_UM=${CJUNC_S_MIN_UM:-}" \
                   "CJUNC_TOL_FF_UM=${CJUNC_TOL_FF_UM:-}" "CJUNC_PTFE_JLAW=${CJUNC_PTFE_JLAW:-}" \
-                  "SDCP_MOD_C=${SDCP_MOD_C:-}" "STEP3_RTOL=${STEP3_RTOL:-}" <<'PYRCPT'
+                  "SDCP_MOD_C=${SDCP_MOD_C:-}" "STEP3_RTOL=${STEP3_RTOL:-}" \
+                  "SIGMA_FIBRE_BULK=${SIGMA_FIBRE_BULK:-}" <<'PYRCPT'
 import json, os, sys
 sys.path.insert(0, sys.argv[1])
 import run_contract as RC
@@ -522,15 +526,16 @@ PYRCPT
 _RCPT_TAG="_r$(printf '%s' "$_RCPT_JSON" | python3 -c 'import json,sys; print(json.load(sys.stdin)["receipt_digest"])')"
 #  ★★ 2026-10-20 (Rint ② B6 · 설계 v1 §7) — 다음 세대 payload 인자 · `--expect-physics` 선언 칸 · 이름 태그를 **영수증에서** 만든다
 #    (`run_contract.runner_ca_ext_view` — 플래그 이름 = CLI_ACCOUNTING 정본 · 값 = 정규 표기 · 사본 없음 · 선언한 축 = 넘긴 인자 = 영수증).
-#    NG_TAG = OUTDIR · 팔 이름 (`_cj<R_j>_<요청 해시>` · `_c<0|1>` · `_rt<rtol>`) · NG_ATAG = 팔 이름 (+ face_alpha `_fa`) — 옛 팔과 이름이
+#    NG_TAG = OUTDIR · 팔 이름 (`_cj<R_j>_<요청 해시>` · `_c<0|1>` · `_rt<rtol>` · Z1 `_fb<VGCF bulk>`) · NG_ATAG = 팔 이름 (+ face_alpha `_fa`) — 옛 팔과 이름이
 #    겹치지 않는다 (명시 OUTDIR 의 SKIP 캐시 함정) · 끔 (기본) = 넷 다 빈 문자열 → 옛 OUTDIR · 옛 팔 이름 · 옛 인자 그대로.
-NG_TAG=""; NG_ATAG=""; NG_FLAG=""; NG_DECL=""
-_NG_VIEW="$(printf '%s' "$_RCPT_JSON" | python3 -c 'import json, sys; sys.path.insert(0, sys.argv[1]); import run_contract as RC; v = RC.runner_ca_ext_view(json.load(sys.stdin)); print("\n".join((v["tag"], v["arm_tag"], v["flags"], v["expect"])))' "$SCR")" \
+NG_TAG=""; NG_ATAG=""; NG_FLAG=""; NG_DECL=""; NG_VGCF_BULK=""
+#  ★ Z1 (10-20) — 다섯째 줄 = VGCF bulk σ (`SIGMA_FIBRE_BULK` · 영수증에서 · 끔 = 빈 문자열 → run_arm 이 옛 bulk 100 으로 같은 함수를 부른다).
+_NG_VIEW="$(printf '%s' "$_RCPT_JSON" | python3 -c 'import json, sys; sys.path.insert(0, sys.argv[1]); import run_contract as RC; v = RC.runner_ca_ext_view(json.load(sys.stdin)); print("\n".join((v["tag"], v["arm_tag"], v["flags"], v["expect"], v["vgcf_bulk"])))' "$SCR")" \
   || { echo "[p2] ABORT — 다음 세대 인자 (태그 · payload 인자 · 선언) 를 영수증에서 못 만들었다"; exit 2; }
-{ IFS= read -r NG_TAG; IFS= read -r NG_ATAG; IFS= read -r NG_FLAG; IFS= read -r NG_DECL; } <<< "$_NG_VIEW"
-#  ⚠ 이 넷은 생성 스크립트에 박힌다 — 허용 밖 문자 (`$` · 따옴표 · 구분자 · 개행) 가 있으면 돌기 전에 선다 (R5-CX-01 꼴 · 두 겹).
-if printf '%s' "$NG_TAG$NG_ATAG$NG_FLAG$NG_DECL" | LC_ALL=C grep -q '[^A-Za-z0-9._=,+ -]'; then
-  echo "[p2] ABORT — 다음 세대 인자에 허용 밖 문자가 있다 (tag=$NG_TAG flags=$NG_FLAG decl=$NG_DECL)"; exit 2
+{ IFS= read -r NG_TAG; IFS= read -r NG_ATAG; IFS= read -r NG_FLAG; IFS= read -r NG_DECL; IFS= read -r NG_VGCF_BULK; } <<< "$_NG_VIEW"
+#  ⚠ 이 다섯은 생성 스크립트 · run_arm 에 박힌다 — 허용 밖 문자 (`$` · 따옴표 · 구분자 · 개행) 가 있으면 돌기 전에 선다 (R5-CX-01 꼴 · 두 겹).
+if printf '%s' "$NG_TAG$NG_ATAG$NG_FLAG$NG_DECL$NG_VGCF_BULK" | LC_ALL=C grep -q '[^A-Za-z0-9._=,+ -]'; then
+  echo "[p2] ABORT — 다음 세대 인자에 허용 밖 문자가 있다 (tag=$NG_TAG flags=$NG_FLAG decl=$NG_DECL bulk=$NG_VGCF_BULK)"; exit 2
 fi
 OUTDIR="${OUTDIR:-$PWD/prereg_v2_vox${VOX/./}${SD_TAG}${BR_TAG}${SG_TAG}${AS_TAG}${SD_SIG_TAG}${YV_TAG}${PT_TAG}${PS_TAG}${SBRG_TAG}${NG_TAG}${FS_TAG}${SION_TAG}${PB_TAG}${AR_TAG}${LEAN_TAG}${_RCPT_TAG}}"
 #  ★★★ R3-CX-09 — 진단 런(ARMS≠8)은 **사용자가 준 OUTDIR 에도** 접미사를 강제한다.
@@ -683,20 +688,23 @@ run_arm() {   # $1=kit dir  $2="sx sy sz"  $3=tag
   else
   #  ⚠ 2026-08-16 실사고: `P2_SCR` 를 이 heredoc 에 안 넘겨 KeyError 로 전 팔이 실패했다.
   #    (fail-closed 는 작동했다 — 쓰레기 대신 0 팔을 냈다.)  두 변수를 **여기서** 넘긴다.
-  SIGMA=$(cd "$RUN" && P2_SCR="$SCR" STEP3_VOX="$VOX" python3 - <<'PY'
+  #  ★ 2026-10-20 (Rint ② Z1 · 설계 v1 §1-2 #1 · #2) — bulk 를 인자로: `SIGMA_FIBRE_BULK` (영수증 → `NG_VGCF_BULK`) · 끔 = 옛 100.
+  #    식 = `step3_sigma.vgcf_sigma_from_bulk` (payload `--sigma-vgcf-bulk` 가 같은 함수로 다시 계산해 대조 · 기준 지름 VGCF_DIA_REF_UM 0.15 =
+  #    옛 `D_REF`) · 표기 = 유효숫자 6 자리 (옛 `{se:.6g}` 그대로 — 끔 경로의 σ 문자열 · stderr 줄 바이트 같음).
+  SIGMA=$(cd "$RUN" && P2_SCR="$SCR" STEP3_VOX="$VOX" P2_VGCF_BULK="$NG_VGCF_BULK" python3 - <<'PY'
 import os, sys
 import numpy as np
 sys.path.insert(0, os.environ['P2_SCR'])
 import step3_sigma as s3
-VOX, D_REF = float(os.environ['STEP3_VOX']), 0.15
+VOX = float(os.environ['STEP3_VOX'])
+BULK = float(os.environ.get('P2_VGCF_BULK') or 100.0)
 dia, ph = np.load('fibre_dia.npy'), np.load('phase.npy')
-st = s3.dia_stats_by_phase(dia, ph)
-v = st.get(2)
-if v is None or not v['uniform']:
-    sys.stderr.write(f'ABORT — VGCF Ø 비균일/부재: {v}\n'); raise SystemExit(1)
-se, pv = s3.diameter_preserving_sigma(100.0, dia[ph == 2], D_REF, VOX)
-sys.stderr.write(f'  [p2] vox {VOX}: σ_VGCF 100 → {se:.6g}\n')
-print(f'{se:.6g}')
+try:
+    se = s3.vgcf_sigma_from_bulk(BULK, dia, ph, VOX)
+except ValueError as e:
+    sys.stderr.write(f'ABORT — {e}\n'); raise SystemExit(1)
+sys.stderr.write(f'  [p2] vox {VOX}: σ_VGCF {BULK:g} → {se}\n')
+print(se)
 PY
   ) || return 1
   fi

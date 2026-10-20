@@ -256,7 +256,7 @@ def t_payload():
         '반올림 한 자리 다름 (176.714)': (L + ['--sigma-vgcf', '176.714', '--sigma-vgcf-bulk', '1e4'], (), 'MISMATCH'),
         'bulk nan': (L + ['--sigma-vgcf', '176.715', '--sigma-vgcf-bulk', 'nan'], (), 'VALUE'),
         'bulk 0': (L + ['--sigma-vgcf', '0', '--sigma-vgcf-bulk', '0'], (), 'VALUE'),
-        'bulk -1e4': (L + ['--sigma-vgcf', '176.715', '--sigma-vgcf-bulk', '-1e4'], (), 'VALUE'),
+        'bulk -1e4 (= 꼴 · argparse 가 음수를 옵션으로 읽지 않게)': (L + ['--sigma-vgcf', '176.715', '--sigma-vgcf-bulk=-1e4'], (), 'VALUE'),
         '--fibre-dia 없음': (L + ['--sigma-vgcf', '176.715', '--sigma-vgcf-bulk', '1e4'], ('--fibre-dia',), 'NO_DIA'),
         '--no-step3': (L + ['--no-step3', '--sigma-vgcf', '176.715', '--sigma-vgcf-bulk', '1e4'], (), 'NO_STEP3'),
     }

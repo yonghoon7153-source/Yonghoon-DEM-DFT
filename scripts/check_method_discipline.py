@@ -923,7 +923,9 @@ _RUNNER_AXES = ('LEAN', 'VOX', 'ARMS', 'SIGMA_PTFE', 'PTFE_STAMP', 'FIBRE_STAMP'
                 #    L-K6 과 `scripts/test_ca_ext_runner.py` N9 가 대조).  안 넣으면 부모 셸의 `CJUNC=1` 이 LEAN 미지정 탐침으로 새어
                 #    러너의 발사 전 검사가 탐침을 멈추고 → 규칙 L 이 빨개져 **생산이 막힌다** (위 경고와 같은 부류).
                 'CJUNC', 'CJUNC_RJ', 'CJUNC_LEN_LAW', 'CJUNC_UNREG_LAW', 'CJUNC_S_MIN_UM', 'CJUNC_TOL_FF_UM',
-                'CJUNC_PTFE_JLAW', 'SDCP_MOD_C', 'STEP3_RTOL')
+                'CJUNC_PTFE_JLAW', 'SDCP_MOD_C', 'STEP3_RTOL',
+                #  ★ 2026-10-20 (Rint ② Z1) — 열째 손잡이 VGCF bulk σ (같은 정본 표 · 부모 셸의 값이 탐침으로 새면 끔 탐침이 _fb 팔이 된다).
+                'SIGMA_FIBRE_BULK')
 
 
 def _hermetic_env(env):

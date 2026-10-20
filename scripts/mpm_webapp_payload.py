@@ -954,6 +954,41 @@ def _cjunc_entry_contract(a):
                              f'선언에 없다 — 선언 안 한 축은 검사도 안 된다 (PASL-04 꼴 · 러너가 무조건 선언할 것)')
 
 
+def _vgcf_bulk_entry_contract(a):
+    """② Z1 (설계 v1 §1-2 #1 · #2) — `--sigma-vgcf-bulk` = σ_VGCF 를 bulk 에서 **직경 보존 식**으로 만들었다는 기록 → GPU 전에 확인.
+    자기신고를 믿지 않는다: 러너와 **같은 함수** (`step3_sigma.vgcf_sigma_from_bulk`) 로 입력 파일 (`--fibre-dia` · `--phase` ·
+    `--step3-vox`) 에서 다시 계산해 `--sigma-vgcf` 와 같아야 한다 → `a._vgcf_bulk` = 매니페스트에 실을 기록 (bulk · 식 이름).
+    거부 = 구조화 사유 `SIGMA_VGCF_BULK_REFUSED|<코드>|` (전부 한 번에) · 끈 런 (플래그 없음) = 아무것도 안 바꾼다 (매니페스트 바이트 그대로)."""
+    a._vgcf_bulk = None
+    b = getattr(a, 'sigma_vgcf_bulk', None)
+    if b is None:
+        return
+    bad = []
+    if not (np.isfinite(b) and b > 0.0):
+        bad.append(('VALUE', f'--sigma-vgcf-bulk {b!r} — 유한 > 0 [S/cm] 이어야 한다 (VGCF 단섬유 bulk σ)'))
+    if a.no_step3:
+        bad.append(('NO_STEP3', '--no-step3 — σ_VGCF 가 쓰일 솔브가 없다 (조용한 no-op)'))
+    if not a.phase:
+        bad.append(('NO_PHASE', '--phase 없음 — VGCF 점 (phase 2) 을 가릴 수 없어 식을 다시 계산할 수 없다'))
+    if not getattr(a, 'fibre_dia', ''):
+        bad.append(('NO_DIA', '--fibre-dia 없음 — 상대 Ø 없이 직경 보존 식을 다시 계산할 수 없다 (기록이 자기신고가 된다)'))
+    rule = None
+    if not bad:
+        import step3_sigma as _s3b
+        rule = _s3b.VGCF_SIGMA_RULE
+        try:
+            want = _s3b.vgcf_sigma_from_bulk(b, np.load(a.fibre_dia), np.load(a.phase), a.step3_vox)
+        except Exception as _e:                                     # noqa: BLE001 — 확인 못 한 기록을 싣지 않는다
+            bad.append(('DIA', f'직경 보존 식을 다시 계산하지 못했다 ({type(_e).__name__}: {_e})'))
+        else:
+            if float(want) != float(a.sigma_vgcf):
+                bad.append(('MISMATCH', f'--sigma-vgcf {a.sigma_vgcf!r} ≠ 같은 식 ({rule}) 으로 다시 계산한 {want} '
+                                        f'(bulk {b!r} · vox {a.step3_vox!r}) — 기록과 실제 σ 가 갈린다'))
+    if bad:
+        raise SystemExit('\n'.join(f'SIGMA_VGCF_BULK_REFUSED|{c}| {w}' for c, w in bad))
+    a._vgcf_bulk = {'sigma_vgcf_bulk_S_cm': float(b), 'sigma_vgcf_rule': rule}
+
+
 def resolve_ptfe_stamp(requested, sigma_ptfe):
     """(요청, σ_PTFE) → (적용 규약, 옛 규약 유도인가).
 
@@ -1351,6 +1386,13 @@ def main():
                          'a CATEGORY ERROR, not a fix.  ⚠ Not the same epistemic grade as the '
                          'DEM E_eff softening: that was calibrated against a densification '
                          'target, this was calibrated against nothing.')
+    #  ★ 2026-10-20 (Rint ② Z1 · 설계 v1 §1-2 #1 · #2) — σ_VGCF 의 **출처 기록** (러너 `SIGMA_FIBRE_BULK`).  σ 자체는 위 --sigma-vgcf 다.
+    ap.add_argument('--sigma-vgcf-bulk', type=float, default=None,
+                    help='VGCF single-fibre BULK sigma (S/cm) from which --sigma-vgcf was made by the diameter-preserving '
+                         'rule (step3_sigma.vgcf_sigma_from_bulk: sigma_bulk * pi d^2 / 4 / vox^2, d = 0.15 um x relative '
+                         'diameter, 6 significant digits).  RECORD only: the payload recomputes the rule from --fibre-dia / '
+                         '--phase / --step3-vox and REFUSES the run if it differs from --sigma-vgcf; the manifest then '
+                         'carries sigma_vgcf_bulk_S_cm + sigma_vgcf_rule.  Default: absent (old manifests unchanged).')
     ap.add_argument('--sigma-superp', type=float, default=10.0, help='σ_e SuperP (S/cm) — lit order ⚠hook')
     ap.add_argument('--sigma-sdcp', type=float, default=250.0,
                     help='σ_e SDCP (S/cm).  ⚠ NOT a material property — like --sigma-vgcf this is '
@@ -1699,6 +1741,7 @@ def main():
         raise SystemExit('S1_FACE_ALPHA_REFUSED|FLAG_WITHOUT_STAMP| --step3-face-alpha-channel · --step3-face-alpha-dia-law 는 '
                          f'--ptfe-stamp face_alpha 일 때만 뜻이 있다 (지금 `{a._ptfe_stamp}` — 조용한 no-op 금지)')
     _cjunc_entry_contract(a)                               # ② B6 — S2 · S3 입구 계약 (GPU 전 · 구조화 사유)
+    _vgcf_bulk_entry_contract(a)                           # ② Z1 — σ_VGCF 출처 기록 (bulk · 직경 보존 식) 다시 계산 대조 (GPU 전)
     if a.selftest_contract:
         _sys.exit(_selftest_contract())
     if a.selftest_provenance:
@@ -3479,6 +3522,10 @@ def main():
             import ca_ext_cjunc as _cjw_m
             step3['manifest'].setdefault('ca_ext', {'schema': _RC.CA_EXT_SCHEMA}).update(
                 _cjw_m.payload_blocks(_cj_prep, a._cj_rcpt, _cj_res_main))
+        #  ★★ 2026-10-20 (Rint ② Z1) — σ_VGCF 출처 기록 (bulk · 직경 보존 식 이름 · 입구에서 같은 함수로 다시 계산해 --sigma-vgcf 와 대조했다).
+        #    플래그를 줬을 때만 (끈 매니페스트는 키 자체가 없다 = 옛 바이트) · 규약 해시 밖 (record — σ 자체는 sigma_vgcf_S_cm).
+        if getattr(a, '_vgcf_bulk', None):
+            step3['manifest'].update(a._vgcf_bulk)
         step3['manifest']['physics_protocol_id'] = physics_protocol_id(step3['manifest'])
         #  ★ 요청↔적용 불일치를 **기계가 읽게** 남긴다.  러너가 `--ptfe-stamp centerline`
         #    을 줬는데 payload 가 `off` 로 돌아도, 팔끼리만 같으면 옛 게이트는 통과했다.

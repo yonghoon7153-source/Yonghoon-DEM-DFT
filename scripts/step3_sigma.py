@@ -2657,6 +2657,31 @@ def diameter_preserving_sigma(sigma_bulk, dia_rel, d_ref_um, vox_um, mode='harmo
     return float(sigma_bulk * f), prov
 
 
+#: ★ 2026-10-20 (Rint ② Z1 · 설계 v1 §1-2 #1 · #2) — VGCF bulk σ → 직경 보존 복셀 σ 의 **기준 지름 · 식 이름**.
+#   러너 (`SIGMA_FIBRE_BULK` · 옛 기본 bulk 100) 와 payload (`--sigma-vgcf-bulk` 다시 계산 대조) 가 **같은 함수**
+#   (`vgcf_sigma_from_bulk`) 를 쓰고, 매니페스트 · 러너 영수증은 이 이름을 기록한다 (기록만 봐도 식이 정해진다).
+#   기준 지름 = `additives.VGCF_D` (침대 시더의 VGCF Ø) — 러너 옛 판의 `D_REF = 0.15` 와 같은 값 (`test_ca_ext_z1` Z1a0 가 대조).
+VGCF_DIA_REF_UM = 0.15
+VGCF_SIGMA_RULE = f'diameter_preserving:harmonic:phase=2:d_ref_um={VGCF_DIA_REF_UM:g}:round=6g'
+
+
+def vgcf_sigma_from_bulk(sigma_bulk, dia_rel, phase, vox_um, d_ref_um=VGCF_DIA_REF_UM):
+    """VGCF bulk σ [S/cm] → 직경 보존 복셀 σ_VGCF **문자열** (유효숫자 6 자리 = 러너가 payload `--sigma-vgcf` 에 넘기는 표기).
+
+    σ_vox = σ_bulk · (π d_f²/4) / vox²  (d_f = d_ref · 상대 Ø · `diameter_preserving_sigma` harmonic · VGCF 상 2 의 점만).
+    ⚠ VGCF 상대 Ø 가 균일해야 한다 (스칼라 재척도가 정확한 조건 — `dia_stats_by_phase` · CL-16) — 비균일 · VGCF 없음 ·
+      길이 다름 = ValueError (러너 옛 판의 ABORT 와 같은 조건 · 조용한 강제 없음).
+    손계산 (`test_ca_ext_z1` Z1a): vox 0.15 · 1e4 → 7853.98 · vox 0.4 · 100 → 11.0447 · vox 0.125 · 1e4 → 11309.7."""
+    d = np.asarray(dia_rel, np.float64)
+    ph = np.asarray(phase)
+    st = dia_stats_by_phase(d, ph)
+    v = st.get(2)
+    if v is None or not v['uniform']:
+        raise ValueError(f'VGCF Ø 비균일/부재: {v}')
+    se, _pv = diameter_preserving_sigma(float(sigma_bulk), d[ph == 2], d_ref_um, vox_um)
+    return f'{se:.6g}'
+
+
 def carbon_se_contact_area(sid, vox, periodic_xy=False):
     """탄소(VGCF 3·SuperP 4·SWCNT 8) ↔ SE(6) 복셀-면 접촉 면적 (µm²).
     kim2024 Fig3b: NCM–SE–carbon 3상 계면이 sulfide SE 전기화학 분해를 촉매 → 이 면적이

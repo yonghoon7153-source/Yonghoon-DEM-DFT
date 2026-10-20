@@ -131,6 +131,10 @@ CLI_ACCOUNTING = {
     '--ptfe-stamp': ('protocol', ('ptfe_stamp', 'ptfe_zero_dof')),
     '--sigma-ptfe': ('protocol', ('sigma_ptfe_S_cm', 'ptfe_zero_dof')),
     '--sigma-vgcf': ('protocol', ('sigma_vgcf_S_cm',)),
+    #  ★ 2026-10-20 (Rint ② Z1 · 설계 v1 §1-2 #1 · #2) — σ_VGCF 를 bulk 에서 **직경 보존 식**으로 만들었다는 기록 (bulk 값 · 식 이름).
+    #    σ 자체는 `--sigma-vgcf` (규약 축) 가 정한다 — 이것은 출처 기록이라 `record` (p2 id 불변) · payload 가 같은 식으로 다시 계산해
+    #    `--sigma-vgcf` 와 대조한다 (어긋나면 입구 거부) · 섞임은 판정기 `FIELD_CONTRACT` (generation) · 영수증 선택 칸이 본다.
+    '--sigma-vgcf-bulk': ('record', ('sigma_vgcf_bulk_S_cm', 'sigma_vgcf_rule')),
     '--sigma-sdcp': ('protocol', ('sigma_sdcp_S_cm',)),
     '--sigma-superp': ('protocol', ('sigma_superp_S_cm',)),
     '--sigma-swcnt': ('protocol', ('sigma_swcnt_S_cm',)),
@@ -302,7 +306,8 @@ RECEIPT_AXES_NODIGEST = ('field_requested', 'sigma_am_s_S_cm', 'sigma_sdcp_S_cm'
 #   정지 rtol (`step3_rtol`).  **있을 때만** digest 본문에 들어간다 — 옛 영수증 (칸 없음) 의 digest = 비트 같음 (커밋된 OUTDIR ·
 #   코호트 디렉터리 이름 보존 · `RECEIPT_AXES` 에 넣으면 `rec.get(k) = None` 이 본문에 들어가 옛 digest 가 전부 바뀐다).
 #   대조는 `receipt_match` 가 매니페스트 블록 (`ca_ext.<하위>.protocol`) · `backend.rtol` 과 한다 (요청 없는 블록 · rtol 도 거부).
-RECEIPT_OPTIONAL = ('ca_ext_request', 'step3_rtol')
+#  ★ 2026-10-20 (Rint ② Z1) — VGCF bulk σ (`SIGMA_FIBRE_BULK`) 와 그 식 이름 · 같은 규칙 (있을 때만 digest · 매니페스트 기록과 대조).
+RECEIPT_OPTIONAL = ('ca_ext_request', 'step3_rtol', 'sigma_vgcf_bulk_S_cm', 'sigma_vgcf_rule')
 
 
 def expected_origins_for(vox):
@@ -419,6 +424,18 @@ def _receipt_ext_problem(rec, man):
         return f'RCPT|step3_rtol|missing| 러너는 rtol {rt!r} 로 돌라고 했는데 팔에 backend.rtol 이 없다 (증서 없는 옛 꼴)'
     elif not _same_num(mrt, rt):
         return f'RCPT|step3_rtol|differ| 러너 {rt!r} ≠ 결과 {mrt!r}'
+    #  ★ 2026-10-20 (Rint ② Z1) — VGCF bulk σ · 식 이름 (`SIGMA_FIBRE_BULK` ↔ payload `--sigma-vgcf-bulk` 기록).  요청 없는 기록도 거부 —
+    #    bulk 팔이 끈 OUTDIR (또는 옛 팔이 bulk OUTDIR) 의 SKIP 캐시로 들어오지 못하게 (rtol 과 같은 꼴).
+    for k in ('sigma_vgcf_bulk_S_cm', 'sigma_vgcf_rule'):
+        rv, mv = rec.get(k), man.get(k)
+        if rv is None:
+            if mv is not None:
+                return (f'RCPT|{k}|unrequested| 러너는 VGCF bulk σ 를 정하지 않았는데 팔에 {k} = {mv!r} 가 있다 '
+                        f'(SIGMA_FIBRE_BULK 런의 팔 · 지금 요청한 런의 것이 아니다)')
+        elif mv is None:
+            return f'RCPT|{k}|missing| 러너는 {k} = {rv!r} 로 돌라고 했는데 팔에 그 기록이 없다 (bulk 없이 돈 팔)'
+        elif not _same_num(mv, rv):
+            return f'RCPT|{k}|differ| 러너 {rv!r} ≠ 결과 {mv!r}'
     return None
 
 
@@ -784,6 +801,9 @@ RUNNER_CA_EXT_ENV = (
     ('CJUNC_PTFE_JLAW', 'cjunc', 'ptfe_jlaw'),
     ('SDCP_MOD_C', 'sdcp_mod', 'c'),               # S3 — 0 · 1 (payload 선택지 그대로 · S2 와만)
     ('STEP3_RTOL', None, 'step3_rtol'),            # 정지 rtol + 수렴 증서 (numeric · 영수증 선택 칸)
+    #  ★ 2026-10-20 (Rint ② Z1 · 설계 v1 §1-2 #1 · #2 · §7) — VGCF bulk σ [S/cm] → 직경 보존 복셀 σ_VGCF (팔마다 · 같은 함수
+    #    `step3_sigma.vgcf_sigma_from_bulk` · 옛 기본 bulk 100 과 같은 자리) · `SIGMA_VGCF_OVERRIDE` 와 동시 = 거부 · 영수증 선택 칸.
+    ('SIGMA_FIBRE_BULK', None, 'sigma_vgcf_bulk_S_cm'),
 )
 #: 러너 수 칸 — ASCII 10 진 (부호 · 공백 · 밑줄 · 유니코드 숫자 · nan · inf 낱말 거부 · 넘침 (1e999) 은 유한성 검사가 잡는다)
 _RUNNER_NUM_RE = r'(?:[0-9]+(?:\.[0-9]*)?|\.[0-9]+)(?:[eE][+-]?[0-9]+)?'
@@ -907,6 +927,30 @@ def runner_ca_ext(env, *, ptfe_stamp='off', lean='0', fibre_stamp='segment', per
                            f'(봉인 상한 · 설계 §6)')
             else:
                 rec['step3_rtol'] = x
+    #  ★ 2026-10-20 (Rint ② Z1) — 다음 세대 노브 (S1 face_alpha · S2 접합 · S3 수정자) = `STEP3_RTOL` **필수** (팔 시작 전).
+    #    옛 판은 계산을 다 한 뒤 판정기 · 봉인의 `next_gen_cert_ok` 에서 증서 없음 (`CERT|absent|`) 으로 HOLD 했다 = GPU 시간 낭비.
+    #    기본값을 채우지 않는다 (결과 전 선언 원칙 — 값은 등록 R §3-5 의 봉인값을 사람이 · 사슬이 명시한다) · 옛 세대 (노브 끔) 는 그대로.
+    _ng_on = [lab for lab, cond in (('CJUNC=1', on), ('PTFE_STAMP=face_alpha', fa), (f'SDCP_MOD_C={c!r}', c != '')) if cond]
+    if _ng_on and rt == '':
+        import step3_conv_cert as _cc2
+        _p('RTOL_REQUIRED', f'{" · ".join(_ng_on)} 인데 STEP3_RTOL 이 없다 — 다음 세대 팔은 수렴 증서 (설계 §6 · N15) 없이 게시되지 '
+                            f'않아 계산을 다 한 뒤 봉인에서 HOLD 된다 (GPU 시간 낭비) · 기본값 없음 — 값을 명시할 것 '
+                            f'(봉인 상한 {_cc2.CERT_RTOL_MAX:g} · 등록 R §3-5)')
+    #  ★ 2026-10-20 (Rint ② Z1 · 설계 v1 §1-2 #1 · #2 · §7) — VGCF bulk σ → 직경 보존 복셀 σ (러너 run_arm 이 팔마다 같은 함수로 계산).
+    #    `SIGMA_VGCF_OVERRIDE` (복셀값 직접 · 재척도 우회) 와 동시 = 거부 — 둘 다 주면 어느 σ 가 쓰였는지 런이 말할 수 없다.
+    fb = raw['SIGMA_FIBRE_BULK']
+    if fb != '':
+        if str(sigma_vgcf_override or '') != '':
+            _p('SIGMA_VGCF_BOTH', f'SIGMA_FIBRE_BULK={fb!r} + SIGMA_VGCF_OVERRIDE={sigma_vgcf_override!r} — 하나만 (bulk = 직경 보존 식으로 '
+                                  f'복셀 σ 를 만든다 · override = 복셀값 직접 · 다음 세대 판정 런은 override 를 쓰지 않는다 · 설계 §1-2 #2 · §7)')
+        x = _runner_float(fb)
+        if x is None or not x > 0.0:
+            _p('VALUE', f'SIGMA_FIBRE_BULK={fb!r} (ASCII 10 진 · 유한 · > 0 [S/cm] — VGCF 단섬유 bulk σ · 예 1e4 = Endo 흑연화 · '
+                        f'설계 §1-2 #1)')
+        else:
+            import step3_sigma as _s3r
+            rec['sigma_vgcf_bulk_S_cm'] = x
+            rec['sigma_vgcf_rule'] = _s3r.VGCF_SIGMA_RULE
     if req:
         rec['ca_ext_request'] = req
     return {'receipt': ({} if probs else rec), 'problems': probs}
@@ -936,8 +980,9 @@ def runner_ca_ext_view(rec):
     태그를 **영수증 하나에서** 만든다 (선언한 축 = 넘긴 인자 = 영수증 = 매니페스트 축 · `receipt_match` 가 팔마다 대조).
     · flags   = ' --step3-cjunc --step3-cjunc-rj <repr> … --step3-sdcp-mod-c <0|1> --step3-rtol <repr>' (끔 = '')
     · expect  = ',ca_ext.cjunc.<칸>=<값> …' (러너의 선언 뒤에 붙인다 · payload 는 켠 블록의 칸이 다 선언돼야 돈다 · 끔 = '')
-    · tag     = '_cj<R_j>_<요청 해시 8>' + '_c<0|1>' + '_rt<rtol>' (무손실 정규 표기 · OUTDIR 과 팔 이름 · 같은 물리 = 같은 이름)
+    · tag     = '_cj<R_j>_<요청 해시 8>' + '_c<0|1>' + '_rt<rtol>' + '_fb<VGCF bulk σ>' (무손실 정규 표기 · OUTDIR 과 팔 이름 · 같은 물리 = 같은 이름)
     · arm_tag = ('_fa' if face_alpha) + tag — 팔 이름 (옛 팔과 이름이 겹치지 않게 · 명시 OUTDIR 의 SKIP 캐시 함정)
+    · vgcf_bulk = VGCF bulk σ 의 repr (run_arm 이 `step3_sigma.vgcf_sigma_from_bulk` 로 팔마다 복셀 σ 를 계산 · 끔 = '' = 옛 bulk 100)
     ⚠ 요청이 정본 검사를 못 지나거나 출력에 생성 스크립트 밖 문자가 있으면 ValueError (영수증이 손으로 바뀐 경우 · fail-closed)."""
     import hashlib as _hl
     import json as _json
@@ -969,9 +1014,23 @@ def runner_ca_ext_view(rec):
             raise ValueError('--step3-rtol 이 CLI_ACCOUNTING 에 없다 (payload 플래그 정본)')
         fl += ['--step3-rtol', repr(float(rt))]
         tg.append(f'_rt{_runner_tag_num(rt)}')
+    #  ★ 2026-10-20 (Rint ② Z1) — VGCF bulk σ: payload 기록 플래그 (CLI 회계에서 그 칸을 내는 플래그를 찾는다 · 사본 없음) · 이름 태그 `_fb<값>`
+    #    (OUTDIR · 팔 이름 — 명시 OUTDIR 의 옛 팔과 이름이 겹치면 check_arm 이 그 옛 팔을 "불완전" 으로 지운다) · 값 줄 (run_arm 이 직경 보존 σ 를 계산).
+    fb = rec.get('sigma_vgcf_bulk_S_cm')
+    vgcf_bulk = ''
+    if fb is not None:
+        _x = float(fb)
+        if not (math.isfinite(_x) and _x > 0.0) or rec.get('sigma_vgcf_rule') is None:
+            raise ValueError(f'영수증의 sigma_vgcf_bulk_S_cm = {fb!r} · sigma_vgcf_rule = {rec.get("sigma_vgcf_rule")!r} — 유한 > 0 + 식 이름이어야 한다')
+        _hit = [o for o, (_c, _f) in CLI_ACCOUNTING.items() if _f and 'sigma_vgcf_bulk_S_cm' in _f]
+        if len(_hit) != 1:
+            raise ValueError(f'sigma_vgcf_bulk_S_cm 를 내는 payload 플래그가 {len(_hit)} 개다 (정확히 1 개여야 · CLI_ACCOUNTING)')
+        vgcf_bulk = repr(_x)
+        fl += [_hit[0], vgcf_bulk]
+        tg.append(f'_fb{_runner_tag_num(_x)}')
     tag = ''.join(tg)
     out = {'flags': ''.join(' ' + x for x in fl), 'expect': ''.join(',' + x for x in xp), 'tag': tag,
-           'arm_tag': ('_fa' if rec.get('ptfe_stamp') == 'face_alpha' else '') + tag}
+           'arm_tag': ('_fa' if rec.get('ptfe_stamp') == 'face_alpha' else '') + tag, 'vgcf_bulk': vgcf_bulk}
     _bad = [k for k, v in out.items() if not _re.fullmatch(_RUNNER_SAFE_RE, v)]
     if _bad:
         raise ValueError(f'러너 인자 {_bad} 에 생성 스크립트 밖 문자가 있다 ({out})')
@@ -1020,6 +1079,8 @@ STRICT_TYPES = {
     'ptfe_cells_observed': int,
     'sigma_superp_S_cm': float, 'sigma_swcnt_S_cm': float, 'swcnt_ion_block': bool,
     'interface_model': str,                      # ① 계면 규약 표지 (None = 항 없음)
+    #  ★ 2026-10-20 (Rint ② Z1) — σ_VGCF 출처 기록 (있을 때만 · 부재 = 끈 런)
+    'sigma_vgcf_bulk_S_cm': float, 'sigma_vgcf_rule': str,
 }
 
 
