@@ -99,7 +99,11 @@ CJ_ENV = {'CJUNC': '1', 'CJUNC_RJ': '1e6', 'CJUNC_LEN_LAW': 'len_scaled_v0', 'CJ
           'CJUNC_S_MIN_UM': '0.5', 'CJUNC_TOL_FF_UM': '0.5', 'CJUNC_PTFE_JLAW': 'P0'}
 CJ_REQ = {'R_j_ohm': 1e6, 'len_law': 'len_scaled_v0', 'unreg_law': 'cut', 's_min_um': 0.5, 'tol_ff_um': 0.5, 'ptfe_jlaw': 'P0'}
 NEW_ENV_NAMES = ('CJUNC', 'CJUNC_RJ', 'CJUNC_LEN_LAW', 'CJUNC_UNREG_LAW', 'CJUNC_S_MIN_UM', 'CJUNC_TOL_FF_UM', 'CJUNC_PTFE_JLAW',
-                 'SDCP_MOD_C', 'STEP3_RTOL')
+                 'SDCP_MOD_C', 'STEP3_RTOL',
+                 #  ★ Z1 (10-20) — VGCF bulk σ (직경 보존 · 설계 §1-2 #2 · `scripts/test_ca_ext_z1.py` Z1)
+                 'SIGMA_FIBRE_BULK')
+#: ★ Z1 (10-20) — 다음 세대 노브는 `STEP3_RTOL` 필수 (설계 §6 · 팔 시작 전 거부) → 설정부 탐침도 rtol 을 준다
+CJ_RT_ENV = dict(CJ_ENV, STEP3_RTOL='1e-12')
 #: 러너 축 이름꼴 — 부모 셸에서 물려받지 않게 기본 env 에서 걷어낸다
 _AXIS_PREFIX = ('SIGMA_', 'SDCP_', 'PTFE_', 'CJUNC', 'STEP3_', 'MPM_', 'P2_')
 _AXIS_EXACT = ('LEAN', 'VOX', 'ARMS', 'KITS', 'FIBRE_STAMP', 'BRIDGE_UM', 'OUTDIR', 'EXPECT_PROTOCOL', 'EXPECT_BACKEND',
@@ -221,7 +225,7 @@ def t_static():
     chk('N0a 러너 bash -n', bn.returncode == 0, bn.stderr[-200:])
     tab = getattr(RC, 'RUNNER_CA_EXT_ENV', None)
     names = tuple(n for n, _s, _k in (tab or ()))
-    chk('N0b run_contract.RUNNER_CA_EXT_ENV = 러너 손잡이 표 (아홉 이름)', names == NEW_ENV_NAMES, names)
+    chk('N0b run_contract.RUNNER_CA_EXT_ENV = 러너 손잡이 표 (열 이름 · Z1 SIGMA_FIBRE_BULK 보탬)', names == NEW_ENV_NAMES, names)
     import ca_ext_cjunc as CW
     cj = {k for _n, s, k in (tab or ()) if s == 'cjunc' and k}
     sd = {k for _n, s, k in (tab or ()) if s == 'sdcp_mod' and k}
@@ -229,7 +233,7 @@ def t_static():
         cj == set(CW.REQUEST_KEYS_CJUNC) and sd == set(CW.REQUEST_KEYS_SDCP), (sorted(cj), sorted(sd)))
     src = open(RUNNER, encoding='utf-8').read()
     miss = [n for n in NEW_ENV_NAMES if '${' + n + ':-' not in src]
-    chk('N0d 러너가 손잡이 아홉을 `${NAME:-}` 로 읽는다 (env 게이트가 "읽지 않는 축" 으로 죽이지 않게)', not miss, miss)
+    chk('N0d 러너가 손잡이 열을 `${NAME:-}` 로 읽는다 (env 게이트가 "읽지 않는 축" 으로 죽이지 않게)', not miss, miss)
     allowed = re.search(r"^_P2_ALLOWED='([^']*)'", src, re.M)
     chk('N0e P2_EXTRA 허용목록에 --step3-rtol 이 없다 (영수증 · OUTDIR · 증서 대조 = 러너 축 STEP3_RTOL)',
         allowed is not None and '--step3-rtol' not in allowed.group(1).split(), allowed.group(1) if allowed else None)
@@ -478,33 +482,34 @@ def t_mirror():
 @case('N7 OUTDIR · 팔 태그 · 인자 · 선언 — 다른 요청 = 다른 이름 · 같은 물리 = 같은 이름')
 def t_names():
     os.makedirs(os.path.join(TD, '_probe'), exist_ok=True)
-    base = probe(dict(CJ_ENV))
-    chk('N7a 설정부 실행 (접합) — 중단 없음 · 다섯 값이 조립된다', base['_rc'] == 0
+    base = probe(dict(CJ_RT_ENV))
+    chk('N7a 설정부 실행 (접합 + rtol) — 중단 없음 · 다섯 값이 조립된다', base['_rc'] == 0
         and all(base.get(k, '<UNSET>') != '<UNSET>' for k in ('OUTDIR', 'NG_TAG', 'NG_ATAG', 'NG_FLAG', 'NG_DECL')),
         base['_log'][-300:])
     fl = (base.get('NG_FLAG') or '').split()
-    chk('N7b 인자 꼴 — 켜기 + 값 플래그 여섯 (값 = 정규 표기) · 선행 공백', (base.get('NG_FLAG') or '').startswith(' ')
+    chk('N7b 인자 꼴 — 켜기 + 값 플래그 여섯 + rtol (값 = 정규 표기) · 선행 공백', (base.get('NG_FLAG') or '').startswith(' ')
         and fl[:1] == ['--step3-cjunc'] and opt(fl, '--step3-cjunc-rj') == repr(1e6)
         and opt(fl, '--step3-cjunc-s-min-um') == repr(0.5) and opt(fl, '--step3-cjunc-unreg-law') == 'cut'
-        and len(fl) == 13, fl)
+        and opt(fl, '--step3-rtol') == repr(1e-12) and len(fl) == 15, fl)
     dec = dict(kv.split('=', 1) for kv in (base.get('NG_DECL') or '').split(',') if '=' in kv)
     chk('N7c 선언 꼴 — `,ca_ext.cjunc.<칸>=<값>` 여섯 (앞 쉼표 · 러너 선언 뒤에 붙는다)',
         (base.get('NG_DECL') or '').startswith(',ca_ext.cjunc.') and set(dec) == {f'ca_ext.cjunc.{k}' for k in CJ_REQ}, dec)
     off = probe({})
     chk('N7d 끔 — 넷 다 빈 문자열 (옛 조립 그대로)', off['_rc'] == 0
         and all(off.get(k) == '' for k in ('NG_TAG', 'NG_ATAG', 'NG_FLAG', 'NG_DECL')), off)
-    same = [probe(dict(CJ_ENV, CJUNC_RJ=v)) for v in ('1000000', '1.0e6', '1e+6', '1E6')]
+    same = [probe(dict(CJ_RT_ENV, CJUNC_RJ=v)) for v in ('1000000', '1.0e6', '1e+6', '1E6')]
     chk('N7e 같은 R_j 다른 표기 (1000000 · 1.0e6 · 1e+6 · 1E6) = 같은 OUTDIR · 같은 팔 태그 `_cj1000000_…` (정규 · 같은 물리 = 같은 이름)',
         str(base.get('NG_ATAG', '')).startswith('_cj1000000_')
         and all(s.get('OUTDIR') == base.get('OUTDIR') and s.get('NG_ATAG') == base.get('NG_ATAG') for s in same),
         [base.get('NG_ATAG')] + [s.get('NG_ATAG') for s in same])
     variants = {
-        'R_j 1e2': dict(CJ_ENV, CJUNC_RJ='1e2'), 'R_j 1e8': dict(CJ_ENV, CJUNC_RJ='1e8'),
-        'R_j 2.5': dict(CJ_ENV, CJUNC_RJ='2.5'), 'R_j 25': dict(CJ_ENV, CJUNC_RJ='25'),
-        's_min 0.05': dict(CJ_ENV, CJUNC_S_MIN_UM='0.05'), 'tol_ff 0.05': dict(CJ_ENV, CJUNC_TOL_FF_UM='0.05'),
-        'fused': dict(CJ_ENV, CJUNC_UNREG_LAW='fused'), 'c 0': dict(CJ_ENV, SDCP_MOD_C='0'),
-        'c 1': dict(CJ_ENV, SDCP_MOD_C='1'), 'rtol 1e-12': dict(CJ_ENV, STEP3_RTOL='1e-12'),
-        'rtol 1e-13': dict(CJ_ENV, STEP3_RTOL='1e-13'),
+        'R_j 1e2': dict(CJ_RT_ENV, CJUNC_RJ='1e2'), 'R_j 1e8': dict(CJ_RT_ENV, CJUNC_RJ='1e8'),
+        'R_j 2.5': dict(CJ_RT_ENV, CJUNC_RJ='2.5'), 'R_j 25': dict(CJ_RT_ENV, CJUNC_RJ='25'),
+        's_min 0.05': dict(CJ_RT_ENV, CJUNC_S_MIN_UM='0.05'), 'tol_ff 0.05': dict(CJ_RT_ENV, CJUNC_TOL_FF_UM='0.05'),
+        'fused': dict(CJ_RT_ENV, CJUNC_UNREG_LAW='fused'), 'c 0': dict(CJ_RT_ENV, SDCP_MOD_C='0'),
+        'c 1': dict(CJ_RT_ENV, SDCP_MOD_C='1'), 'rtol 1e-14': dict(CJ_RT_ENV, STEP3_RTOL='1e-14'),
+        'rtol 1e-13': dict(CJ_RT_ENV, STEP3_RTOL='1e-13'),
+        'bulk 1e4': dict(CJ_RT_ENV, SIGMA_FIBRE_BULK='1e4'),
     }
     got = {k: probe(v) for k, v in variants.items()}
     outs = [base.get('OUTDIR')] + [g.get('OUTDIR') for g in got.values()]
@@ -513,18 +518,19 @@ def t_names():
         f'R_j 가 같아도 s_min · tol_ff · 법칙이 다르면 다르다)',
         len(set(outs)) == len(outs) and len(set(tags)) == len(tags) and all(outs) and all(tags),
         dict(zip(['base'] + list(got), tags)))
-    chk('N7g 읽을 수 있는 태그 — R_j 1e2 → `_cj100_` · 2.5 → `_cj2p5_` · c 1 → `_c1` · rtol 1e-13 → `_rt1em13`',
+    chk('N7g 읽을 수 있는 태그 — R_j 1e2 → `_cj100_` · 2.5 → `_cj2p5_` · c 1 → `_c1_rt…` · rtol 1e-13 → `_rt1em13` · bulk 1e4 → `_fb10000`',
         got['R_j 1e2'].get('NG_ATAG', '').startswith('_cj100_') and got['R_j 2.5'].get('NG_ATAG', '').startswith('_cj2p5_')
-        and got['c 1'].get('NG_ATAG', '').endswith('_c1') and got['rtol 1e-13'].get('NG_ATAG', '').endswith('_rt1em13'),
-        {k: got[k].get('NG_ATAG') for k in ('R_j 1e2', 'R_j 2.5', 'c 1', 'rtol 1e-13')})
+        and got['c 1'].get('NG_ATAG', '').endswith('_c1_rt1em12') and got['rtol 1e-13'].get('NG_ATAG', '').endswith('_rt1em13')
+        and got['bulk 1e4'].get('NG_ATAG', '').endswith('_rt1em12_fb10000'),
+        {k: got[k].get('NG_ATAG') for k in ('R_j 1e2', 'R_j 2.5', 'c 1', 'rtol 1e-13', 'bulk 1e4')})
     fa = probe({'PTFE_STAMP': 'face_alpha', 'STEP3_RTOL': '1e-12'})
     rt = probe({'STEP3_RTOL': '1e-12'})
     chk('N7h face_alpha + rtol — 팔 태그 `_fa_rt1em12` (OUTDIR 은 `_ptsface_alpha` 가 이미 가른다) · 끔 + rtol = `_rt1em12`',
         fa.get('NG_ATAG') == '_fa_rt1em12' and fa.get('NG_TAG') == '_rt1em12' and rt.get('NG_ATAG') == '_rt1em12'
         and fa.get('OUTDIR') != rt.get('OUTDIR'), (fa.get('NG_ATAG'), rt.get('NG_ATAG')))
-    zero = probe({'PTFE_STAMP': 'face_alpha', 'SIGMA_PTFE': '0'})
+    zero = probe({'PTFE_STAMP': 'face_alpha', 'SIGMA_PTFE': '0', 'STEP3_RTOL': '1e-12'})
     chk('N7i face_alpha + σ_PTFE 0 은 거부하지 않는다 (payload 도 > 0 만 거부 · 과잉차단 없음)', zero['_rc'] == 0
-        and zero.get('NG_ATAG') == '_fa', zero['_log'][-200:])
+        and zero.get('NG_ATAG') == '_fa_rt1em12', zero['_log'][-200:])
 
 
 # ═════════════════════════ N8 — SKIP 캐시 함정 ═════════════════════════
@@ -557,7 +563,7 @@ def t_skip_trap():
 def t_isolation():
     import check_method_discipline as CMD
     axes = tuple(getattr(CMD, '_RUNNER_AXES', ()))
-    chk('N9a 새 손잡이 아홉이 규율 검사기의 격리 목록 (_RUNNER_AXES) 에 있다', set(NEW_ENV_NAMES) <= set(axes),
+    chk('N9a 새 손잡이 열이 규율 검사기의 격리 목록 (_RUNNER_AXES) 에 있다', set(NEW_ENV_NAMES) <= set(axes),
         sorted(set(NEW_ENV_NAMES) - set(axes)))
     polluted = dict(CJ_ENV, SDCP_MOD_C='1', STEP3_RTOL='1e-12')
     saved = {k: os.environ.get(k) for k in polluted}

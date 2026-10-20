@@ -453,6 +453,19 @@ def selftest():
         finally:
             os.environ.pop('SIGMA_ION_SE', None)
         chk('T12 부모 env 의 SIGMA_ION_SE → 지우고 돈다 (LEAN=2 러너 가드 통과)', rc_12 == 0 and len(ch_12.summary['runs']) == 5, ch_12.summary.get('stop'))
+        # T14 ★ (Rint ② Z1 · 10-20) 부모 셸의 **다음 세대 노브** (CJUNC* · SDCP_MOD_C · STEP3_RTOL · SIGMA_FIBRE_BULK) = 거부 (지우지 않는다 = 사람이 안다).
+        #     안 막으면 러너가 접합 · bulk 팔을 같은 `p2_*.json` 꼴로 내고 read_arm 이 σ_VGCF · σ_AM_S 만 대조해 받는다 (현 세대 사슬 오염).
+        bad14 = []
+        for nm in ('CJUNC', 'CJUNC_RJ', 'CJUNC_BOGUS', 'SDCP_MOD_C', 'STEP3_RTOL', 'SIGMA_FIBRE_BULK'):
+            os.environ[nm] = '1'
+            try:
+                rc14, ch14 = go('normal', f'ng_{nm}')
+            finally:
+                os.environ.pop(nm, None)
+            st14 = ch14.summary.get('stop') or ''
+            if not (rc14 == 3 and 'NEXTGEN_ENV' in st14 and nm in st14 and not ch14.summary['runs']):
+                bad14.append((nm, rc14, st14[:160]))
+        chk('T14 부모 env 의 다음 세대 노브 여섯 → 러너 부르기 전 멈춤 (NEXTGEN_ENV · 그 이름 · 런 0)', not bad14, bad14)
         # T13 ★ (SELF-122) 사슬 화면을 파일로 돌려도 (setsid nohup … > log) 줄이 바로 찍힌다 — 옛 판은 print 를 flush 하지 않아 첫 런이 도는 동안 로그가 비어 있었다
         #     (10-19 kgy 첫 S1 — 1저자 "들어간거야?").  첫 러너가 8 초 자는 동안 (7.5 초 안에 · 보이면 바로 끝) 'S1 정찰' 줄이 보여야 한다 · 프로세스가 아직 살아 있을 때.
         slow = td / 'runner_slow.sh'
