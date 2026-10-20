@@ -1,0 +1,250 @@
+step3_sigma = C:\Users\Administrator\Documents\Codex\2026-08-24\claude-stoic-knuth-nobvq-x20\rint_g2_impl_reverify_20261015\source\scripts\step3_sigma.py
+
+── J0 읽기 동등 — 우리 덤프 읽기 = 리포의 읽기 · 반폭 = _half_ulp
+J0 — real_14 를 임시 평문으로 풀어 리포 읽기 함수와 대조
+  PASS  J0 접촉: id1 · id2 · c_cpl[22] · c_cpl[23] · c_cpl[9] = read_contact_dump (마지막 프레임 · 106,563 행)
+  PASS  J0 원자: x · y · z · radius · type · 상자 · 플래그 = read_atom_dump (33,289 행)
+  PASS  J0 반폭 = lhs_contact_audit._half_ulp (토큰 문자열 · 파일 유효숫자 S)
+  PASS  J0 덤프 유효숫자 S = 6 (원자 · 접촉) · scaffold 소수 자리 6 (반폭 5e−7 상자 단위)
+
+── J1 real_14 — G-geo · G-frame 통과
+J1 — real_14 scaffold (457) ↔ atom 2,060,000 ↔ contact 2,060,000
+  PASS  J1 상태 PASS · 거부 없음 · 종류 am_iface_join
+  PASS  J1 G-geo: scaffold 457 행 ↔ AM 원자 457 개 1:1 · 형 · 반경 일치 · 최대 위치 편차 / 허용폭 ≤ 1
+  PASS  J1 G-frame: step 2,060,000 = 2,060,000 · 프레임 각 1 · 상자 같음 · 고아 id 0 · 원자 수 = 머리
+  PASS  J1 G-frame: pos1/pos2 = 원자 위치 (주기 영상 이동 행 수 기록 > 0) · δ 자기 일관 (최대 / 허용폭 < 1)
+  PASS  J1 G-geo: AM–AM 접촉 660 행 (주기 이음매 70) · δ_dump ↔ δ_scaffold · A_dump ↔ lens 포괄 · 확실한 접촉 누락 0
+  PASS  J1 기록: 파일 sha256 (풀린 바이트 = README 표) · scaffold 프레임 주장 = G-geo 만 · 재사용 없음
+  PASS  J1 인증 입자 = scaffold × 1000 µm · fp_particles = step3_sigma._iface_particles_fp · 지문 fp_join 자기 일관
+
+── J2 case15 — 형 지도 1 = AM_P · 2 = SE
+J2 — case15 scaffold (104) ↔ atom 1,710,000 ↔ contact 1,710,000
+  PASS  J2 상태 PASS · 104 ↔ 104 · step 1,710,000 · 거부 없음
+
+── J3 한 줄 변조 → 거부
+J3 — 임시 사본에 한 줄씩 변조 (커밋된 자료 무변경)
+  PASS  J3 ① 원자 AM 한 행 x + 1 nm → REJECT (G-geo 위치 · G-frame pos 불일치)
+  PASS  J3 ② 접촉 AM–AM 한 행 δ 부호 반전 → REJECT (δ 자기 일관 · δ ≤ 0 · δ_scaffold · 면적)
+  PASS  J3 ③ 접촉 한 행 pos1 x + 1 nm → REJECT (pos_mismatch)
+  PASS  J3 ④ scaffold 한 행 x + 1 nm → REJECT (G-geo 1:1 깨짐)
+  PASS  J3 ⑤ 접촉 AM–AM 한 행 c_cpl[22] + 1 % → REJECT (area_enclosure)
+  PASS  J3 ⑥ 접촉 덤프 상자 x 상한 바꿈 → REJECT (box_mismatch)
+  PASS  J3 ⑦ 접촉 한 행 id2 = 없는 원자 → REJECT (orphan_id)
+  PASS  J3 ⑧ 원자 덤프 두 프레임 → REJECT (multi_frame)
+  PASS  J3 ⑨ 접촉 AM–AM 한 행 삭제 (머리 개수 맞춤) → REJECT (dem_contact_missing)
+  PASS  J3 ⑩ 원자 덤프 머리 수 ≠ 행 수 → REJECT (count_mismatch)
+
+── N5′ reject_frame — 다른 step (위치 같음) 거부 · 선언된 재사용만 통과
+N5′ — 접촉 덤프 TIMESTEP 만 2,050,000 으로 (위치 · 나머지 그대로 = 정지 침대 모사)
+  PASS  N5′ 다른 step + 위치 같음 → REJECT (timestep_mismatch) · pos 불일치 0 (위치로는 못 가른다)
+  PASS  N5′ 선언된 재사용 (두 step 기록) → PASS · geom_reuse = 선언 + 관측 step · accepted
+  PASS  N5′ 틀린 선언 (step 다름) → REJECT (geom_reuse_mismatch)
+  PASS  N5′ 같은 step 인데 재사용 선언 → REJECT (geom_reuse_not_needed)
+  PASS  N5′ 선언 모양 틀림 (step 없음) → TypeError
+
+── N1 reject_dilate · 형 지도 필수
+N1 — dilate_z ≠ 1 (기하가 DEM 이 아님) · 형 지도 없음
+  PASS  N1 dilate_z 1.0214 → REJECT (dilate_z)
+  PASS  N1 형 지도 없음 (None) → TypeError (기본값 없음 · 추측하지 않는다)
+  PASS  N1 형 지도에 AM 이 없음 → ValueError
+
+── J4 계획 기록 — iface_join · iface_geom_reuse (요청할 때만)
+J4 — real_14 AM-only raster (vox 0.4 · 기본 브리지) · 같은 원장으로 join 유무 계획
+  PASS  J4 join=None: iface_join None · iface_geom_reuse None · 상태 문구 = 조인 요청 없음
+  PASS  J4 join 통과: 거부 추가 없음 · 계획 행 지문 같음 (조인은 출처 증명만 · σ 경로 무변경)
+  PASS  J4 기록 iface_join: 상태 PASS · G-geo · G-frame 결과 · 파일 sha256 · step · fp_join · scaffold 프레임 주장
+  PASS  J4 iface_join_status = 통과 문구 (면적 원천 scaffold lens 그대로 표지) · iface_area_source 그대로 · iface_geom_reuse None
+  PASS  J4 그 밖의 기록 키 · 값은 join 유무와 같다
+  PASS  J4 원장 ↔ DEM 접촉 대조 (보고만): 부류별 DEM 포함 수 · 이음매 70 · 원장 미등록 DEM 쌍 0
+  PASS  J4 실패한 조인 → join_gate_failed 거부 · 정량 솔브 거부
+  PASS  J4 다른 침대의 조인 (case15 → real_14 원장) → join_particles_mismatch 거부
+  PASS  J4 만든 뒤 바뀐 조인 (지문 그대로) → join_record_tampered 거부
+  PASS  J4 조인이 아닌 것 → TypeError
+
+── J5 입구 검사 — 비유한 · 음수 · 비정수 · 기울어진 상자 (RIMP-02)
+J5 — real_14 임시 사본 한 칸씩 (Codex 행 = 첫 AM–AM 행) · 사유별 거부 (고치기 전 = PASS)
+  PASS  J5 Codex 행 = id 1 · 201 · pos1.x 0.0250327 · A 1.8247e−06 · δ 0.000199496 (판정문 §3-1)
+  PASS  J5 접촉 pos1.x NaN → REJECT (nonfinite_value)
+  PASS  J5 접촉 δ NaN → REJECT (nonfinite_value)
+  PASS  J5 접촉 A NaN → REJECT (nonfinite_value)
+  PASS  J5 접촉 A inf → REJECT (nonfinite_value)
+  PASS  J5 접촉 A 음수 (−1.8247e−06) → REJECT (area_negative)
+  PASS  J5 접촉 id2 비정수 (201.0) → REJECT (int_token)
+  PASS  J5 기울어진 상자 머리 (xy xz yz) 다른 tilt (원자 0.001 · 접촉 0.002) → REJECT (box_tilted · 직교 상자만 지원)
+  PASS  J5 기울어진 상자 머리 (xy xz yz) 같은 tilt (둘 다 0.001) → REJECT (box_tilted · 직교 상자만 지원)
+  PASS  J5 상자 x 경계 lo ≥ hi (두 덤프 같게) → REJECT (box_format)
+  PASS  J5 접촉 step 2060000.9 → REJECT (int_token) · step 을 2060000 으로 줄이지 않는다
+  PASS  J5 원자 type 비정수 (1.0) → REJECT (int_token)
+  PASS  J5 원자 머리 수 비정수 (33289.0) → REJECT (int_token)
+  PASS  J5 원자 반경 −0.006 → REJECT (nonpositive_radius)
+  PASS  J5 scaffold 한 행 x = nan → REJECT (nonfinite_value · 예외 아님)
+
+── J6 형식 — 6 자리 %g 생산 포맷만 (RIMP-03)
+J6 — 16 자리 균일 합성 (Codex) · 끝 0 덧붙인 토큰 하나 (값 같음 · Codex join_global_precision) → 거부 · 정상 = g6
+  PASS  J6 16 자리 균일 (참 면적) → REJECT (numeric_format — 6 자리 %g 생산 포맷만 지원)
+  PASS  J6 16 자리 균일 + 면적 +1 ppm (판정문 §4 · A 1.374448160392321e−06) → REJECT (PASS 아님)
+  PASS  J6 원자 첫 행 x 끝 0 덧붙임 (0.0250327 → 0.02503270000000000 · 값 같음) → REJECT (numeric_format)
+  PASS  J6 접촉 첫 행 pos1.x 끝 0 덧붙임 → REJECT (numeric_format · 전역 S 를 올려 다른 토큰의 폭을 줄이지 않는다)
+  PASS  J6 정상 real_14: 형식 = g6 (원자 · 접촉) · 면적 helper 의 고정 6 자리 = 파일 유효숫자 6 (같은 가정)
+
+── J7 미인증 면적 — PASS 와 분리 (RIMP-02)
+J7 — `%g` 합성 근동심 쌍 (중심 거리 1e−8 sim · δ 0.00199999) — 면적 포괄 미인증 (d 하한 ≤ 0) 행
+  PASS  J7 양성: `%g` 합성 (중심 거리 0.0015 · δ 0.0005) → PASS · AM–AM 1 행 인증 (tested 1)
+  PASS  J7 근동심 면적 100 sim² (Codex) → REJECT (area_uncertified · 포괄 밖 0 ≠ 전 행 인증)
+  PASS  J7 근동심 참 면적 → REJECT (area_uncertified · 포괄 밖 0 ≠ 전 행 인증)
+
+── J8 소비 경로 — 조인 → 원장 → 계획 → 정량 관문 (RIMP-02 · 03)
+J8 — 합성 0.25 µm raster (Codex join_synthetic 꼴) · 변이 조인마다 계획 · 정량 관문
+  PASS  J8 양성: 합성 조인 PASS → 계획 거부 없음 · 정량 관문 통과
+  PASS  J8 면적 음수: 조인 REJECT → 계획 join_gate_failed → 정량 관문 거부 (고치기 전 = 셋 다 통과)
+  PASS  J8 면적 NaN: 조인 REJECT → 계획 join_gate_failed → 정량 관문 거부 (고치기 전 = 셋 다 통과)
+  PASS  J8 pos1.x NaN: 조인 REJECT → 계획 join_gate_failed → 정량 관문 거부 (고치기 전 = 셋 다 통과)
+  PASS  J8 δ NaN: 조인 REJECT → 계획 join_gate_failed → 정량 관문 거부 (고치기 전 = 셋 다 통과)
+  PASS  J8 16 자리 + 1 ppm: 조인 REJECT → 계획 join_gate_failed → 정량 관문 거부 (고치기 전 = 셋 다 통과)
+  PASS  J8 다른 tilt 상자: 조인 REJECT → 계획 join_gate_failed → 정량 관문 거부 (고치기 전 = 셋 다 통과)
+
+── J9 양성 유지 — 전 AM–AM 행 인증 · 음수 면적 = 인증 대상 밖 행만 (RIMP-02)
+J9 — real_14 · case15 의 AM–AM 행 전부 tested · 음수 · 미인증 0 · case15 의 음수 면적 2 행 = AM_P–SE (조인 면적 인증 밖)
+  PASS  J9 real_14: AM–AM 660 행 전부 인증 (tested 660 · 음수 0 · 미인증 0 · area_all_certified) · 음수 면적 (AM–AM 밖) 0
+  PASS  J9 case15: PASS · AM–AM 119 행 전부 인증 · 음수 면적 2 행 = AM–AM 밖 (AM_P–SE · 조인이 인증하지 않는 행 — 기록만)
+  PASS  J9 기록 entrance: 규칙 문구 · 비유한 0 · 비정수 0 · 지원 상자 (직교 · pp pp ff) · 형식 g6
+
+── J10 조인 파서 전수 소비 — 버린 행 · 열 · 토큰 = 입구 REJECT · 후속 계획 이어받음 (RIMPR-01)
+J10 — 합성 두 구 (r 0.001 · 거리 0.0015 · δ 0.0005 sim) 파일 줄 변이 · 고치기 전 = 전부 PASS / 정량 ACCEPT (판정문 §2)
+  PASS  J10 양성: 합성 기준 조인 PASS · 계획 거부 없음 · 정량 관문 (vox 0.25) 통과
+  FAIL  J10 [Codex 반례] 접촉 24 열 행을 블록 안 정상 행 앞에 (선언 1 · 실제 2 · Codex) → 입구 REJECT (row_width) · 관문 계산 안 함  (PASS [])
+  FAIL  J10 [Codex 반례] 접촉 24 열 행을 블록 안 정상 행 앞에 (선언 1 · 실제 2 · Codex) → 계획 join_gate_failed · 정량 관문 거부 (고치기 전 = 정량 ACCEPT)  ([])
+  FAIL  J10 [Codex 반례] 원자 7 열 행을 블록 안 정상 행들 앞에 (선언 2 · 실제 3 · Codex) → 입구 REJECT (row_width) · 관문 계산 안 함  (PASS [])
+  FAIL  J10 [Codex 반례] 원자 7 열 행을 블록 안 정상 행들 앞에 (선언 2 · 실제 3 · Codex) → 계획 join_gate_failed · 정량 관문 거부 (고치기 전 = 정량 ACCEPT)  ([])
+  FAIL  J10 [Codex 반례] 접촉 블록 끝에 4 토큰 행 (Codex malformed_extra_contact_row) → 입구 REJECT (row_width) · 관문 계산 안 함  (PASS [])
+  FAIL  J10 [Codex 반례] 접촉 블록 끝에 4 토큰 행 (Codex malformed_extra_contact_row) → 계획 join_gate_failed · 정량 관문 거부 (고치기 전 = 정량 ACCEPT)  ([])
+  FAIL  J10 [Codex 반례] 원자 블록 끝에 3 토큰 행 (Codex malformed_extra_atom_row) → 입구 REJECT (row_width) · 관문 계산 안 함  (PASS [])
+  FAIL  J10 [Codex 반례] 원자 블록 끝에 3 토큰 행 (Codex malformed_extra_atom_row) → 계획 join_gate_failed · 정량 관문 거부 (고치기 전 = 정량 ACCEPT)  ([])
+  FAIL  J10 [Codex 반례] 원자 radius 필수 열 중복 (뒤 열 nan · 폭 7 = 7 · Codex) → 입구 REJECT (header_duplicate) · 관문 계산 안 함  (PASS [])
+  FAIL  J10 [Codex 반례] 원자 radius 필수 열 중복 (뒤 열 nan · 폭 7 = 7 · Codex) → 계획 join_gate_failed · 정량 관문 거부 (고치기 전 = 정량 ACCEPT)  ([])
+  FAIL  J10 [Codex 반례] 접촉 c_cpl[22] 필수 열 중복 (뒤 열 nan) → 입구 REJECT (header_duplicate) · 관문 계산 안 함  (PASS [])
+  FAIL  J10 [Codex 반례] 접촉 c_cpl[22] 필수 열 중복 (뒤 열 nan) → 계획 join_gate_failed · 정량 관문 거부 (고치기 전 = 정량 ACCEPT)  ([])
+  FAIL  J10 [Codex 반례] 접촉 step 줄 `100 0.9` (Codex) → 입구 REJECT (int_token) · 관문 계산 안 함  (PASS [])
+  FAIL  J10 [Codex 반례] 접촉 step 줄 `100 0.9` (Codex) → 계획 join_gate_failed · 정량 관문 거부 (고치기 전 = 정량 ACCEPT)  ([])
+  FAIL  J10 [Codex 반례] 접촉 count 줄 `1 garbage` (Codex) → 입구 REJECT (int_token) · 관문 계산 안 함  (PASS [])
+  FAIL  J10 [Codex 반례] 접촉 count 줄 `1 garbage` (Codex) → 계획 join_gate_failed · 정량 관문 거부 (고치기 전 = 정량 ACCEPT)  ([])
+  FAIL  J10 [Codex 반례] 원자 step 줄 `100 0.9` → 입구 REJECT (int_token) · 관문 계산 안 함  (PASS [])
+  FAIL  J10 [Codex 반례] 원자 step 줄 `100 0.9` → 계획 join_gate_failed · 정량 관문 거부 (고치기 전 = 정량 ACCEPT)  ([])
+  FAIL  J10 [Codex 반례] 원자 count 줄 `2 garbage` → 입구 REJECT (int_token) · 관문 계산 안 함  (PASS [])
+  FAIL  J10 [Codex 반례] 원자 count 줄 `2 garbage` → 계획 join_gate_failed · 정량 관문 거부 (고치기 전 = 정량 ACCEPT)  ([])
+  FAIL  J10 [같은 뿌리 (판정문 밖 · 버리던 줄)] 접촉 TIMESTEP 절 둘째 줄 `0.9` (절 몸통 전수) → 입구 REJECT (int_token) · 관문 계산 안 함  (PASS [])
+  FAIL  J10 [같은 뿌리 (판정문 밖 · 버리던 줄)] 접촉 TIMESTEP 절 둘째 줄 `0.9` (절 몸통 전수) → 계획 join_gate_failed · 정량 관문 거부 (고치기 전 = 정량 ACCEPT)  ([])
+  FAIL  J10 [같은 뿌리 (판정문 밖 · 버리던 줄)] 접촉 step 줄 `100<VT>0.9` (splitlines 가 줄을 쪼갠다) → 입구 REJECT (int_token) · 관문 계산 안 함  (PASS [])
+  FAIL  J10 [같은 뿌리 (판정문 밖 · 버리던 줄)] 접촉 step 줄 `100<VT>0.9` (splitlines 가 줄을 쪼갠다) → 계획 join_gate_failed · 정량 관문 거부 (고치기 전 = 정량 ACCEPT)  ([])
+  FAIL  J10 [같은 뿌리 (판정문 밖 · 버리던 줄)] 접촉 프레임 안 모르는 ITEM 절 (`ITEM: FOO` · `1 2 3`) → 입구 REJECT (frame_layout) · 관문 계산 안 함  (PASS [])
+  FAIL  J10 [같은 뿌리 (판정문 밖 · 버리던 줄)] 접촉 프레임 안 모르는 ITEM 절 (`ITEM: FOO` · `1 2 3`) → 계획 join_gate_failed · 정량 관문 거부 (고치기 전 = 정량 ACCEPT)  ([])
+  FAIL  J10 [같은 뿌리 (판정문 밖 · 버리던 줄)] 접촉 NUMBER OF ENTRIES 절 두 번 → 입구 REJECT (frame_layout) · 관문 계산 안 함  (PASS [])
+  FAIL  J10 [같은 뿌리 (판정문 밖 · 버리던 줄)] 접촉 NUMBER OF ENTRIES 절 두 번 → 계획 join_gate_failed · 정량 관문 거부 (고치기 전 = 정량 ACCEPT)  ([])
+  FAIL  J10 [같은 뿌리 (판정문 밖 · 버리던 줄)] 접촉 BOX BOUNDS 절 넷째 줄 (`0 0.01`) → 입구 REJECT (box_format) · 관문 계산 안 함  (PASS [])
+  FAIL  J10 [같은 뿌리 (판정문 밖 · 버리던 줄)] 접촉 BOX BOUNDS 절 넷째 줄 (`0 0.01`) → 계획 join_gate_failed · 정량 관문 거부 (고치기 전 = 정량 ACCEPT)  ([])
+  FAIL  J10 [같은 뿌리 (판정문 밖 · 버리던 줄)] 접촉 첫 프레임 앞 비어 있지 않은 줄 → 입구 REJECT (frame_layout) · 관문 계산 안 함  (PASS [])
+  FAIL  J10 [같은 뿌리 (판정문 밖 · 버리던 줄)] 접촉 첫 프레임 앞 비어 있지 않은 줄 → 계획 join_gate_failed · 정량 관문 거부 (고치기 전 = 정량 ACCEPT)  ([])
+  FAIL  J10 [같은 뿌리 (판정문 밖 · 버리던 줄)] 접촉 TIMESTEP 머리 줄 뒤 토큰 (`ITEM: TIMESTEP 0.9`) → 입구 REJECT (frame_layout) · 관문 계산 안 함  (PASS [])
+  FAIL  J10 [같은 뿌리 (판정문 밖 · 버리던 줄)] 접촉 TIMESTEP 머리 줄 뒤 토큰 (`ITEM: TIMESTEP 0.9`) → 계획 join_gate_failed · 정량 관문 거부 (고치기 전 = 정량 ACCEPT)  ([])
+  FAIL  J10 [같은 뿌리 (판정문 밖 · 버리던 줄)] 원자 NUMBER OF ATOMS 머리 줄 뒤 토큰 (`ITEM: NUMBER OF ATOMS 7`) → 입구 REJECT (frame_layout) · 관문 계산 안 함  (PASS [])
+  FAIL  J10 [같은 뿌리 (판정문 밖 · 버리던 줄)] 원자 NUMBER OF ATOMS 머리 줄 뒤 토큰 (`ITEM: NUMBER OF ATOMS 7`) → 계획 join_gate_failed · 정량 관문 거부 (고치기 전 = 정량 ACCEPT)  ([])
+  PASS  J10 양성 차단 대조: 접촉 폭 정상 중복 행 (선언 1 · 실제 2) → REJECT ['count_mismatch', 'dem_duplicate_pair'] 유지 · row_width 아님
+  PASS  J10 양성 차단 대조: 원자 폭 정상 중복 행 (선언 2 · 실제 3) → REJECT ['atom_id_duplicate', 'count_mismatch'] 유지 · row_width 아님
+  PASS  J10 빈 줄 보존: 접촉 TIMESTEP 머리 바로 다음 빈 줄 (값 앞) → 입구 REJECT (int_token) — 옛 판과 같음
+  PASS  J10 빈 줄 보존: 접촉 BOX BOUNDS 경계 줄 사이 빈 줄 → 입구 REJECT (box_format) — 옛 판과 같음
+  PASS  J10 빈 줄 보존: 절 끝 · 행 절 안 · 파일 끝 빈 줄 → PASS (내용 아님 — 옛 판과 같음)
+  PASS  J10 양성: D19 선언된 재사용 (atom 100 · contact 101) → PASS · 계획 거부 없음 · 정량 관문 통과
+  FAIL  J10 정상 real_14: 물리 행 33,289 · 106,563 (= 머리 수) · 열 수 불일치 0 · 필수 열 중복 없음 · 프레임 배치 위반 0  ({'n_rows_physical': None, 'n_row_width_bad': None, 'header_duplicate': None, 'frame_layout': None})
+
+── J11 float64 유한 · µm 변환 · int64 정수 = 입구 REJECT (RIMPR-02)
+J11 — scaffold 토큰 = Decimal 유한 · float64 무한 (1e309 · 고정소수 10^309) · µm 변환 넘침 · int64 넘는 정수 토큰
+  FAIL  J11 scaffold 반경 `1e309` (Codex) → 입구 REJECT (nonfinite_value · scaffold ≥ 1) · 관문 계산 안 함  (PASS [] scaffold=0)
+  FAIL  J11 scaffold 반경 `1e309` (Codex) → 계획 join_gate_failed · 정량 관문 거부  (['join_particles_mismatch'])
+  FAIL  J11 scaffold 반경 고정소수 10^309 (Codex) → 입구 REJECT (nonfinite_value · scaffold ≥ 1) · 관문 계산 안 함  (PASS [] scaffold=0)
+  FAIL  J11 scaffold 반경 고정소수 10^309 (Codex) → 계획 join_gate_failed · 정량 관문 거부  (['join_particles_mismatch'])
+  FAIL  J11 scaffold 반경 고정소수 −10^309 (Codex) → 입구 REJECT (nonfinite_value · scaffold ≥ 1) · 관문 계산 안 함  (PASS [] scaffold=0)
+  FAIL  J11 scaffold 반경 고정소수 −10^309 (Codex) → 계획 join_gate_failed · 정량 관문 거부  (['join_particles_mismatch'])
+  FAIL  J11 scaffold x 고정소수 10^309 (고치기 전 = cKDTree ValueError) → 입구 REJECT (nonfinite_value · scaffold ≥ 1) · 관문 계산 안 함  (ValueError: data must be finite, check for nan or inf values scaffold=None)
+  FAIL  J11 scaffold x 고정소수 10^309 (고치기 전 = cKDTree ValueError) → 계획 join_gate_failed · 정량 관문 거부  (조인 예외 — 계획에 넣을 기록 없음)
+  FAIL  J11 scaffold x `-1e309` → 입구 REJECT (nonfinite_value · scaffold ≥ 1) · 관문 계산 안 함  (ValueError: data must be finite, check for nan or inf values scaffold=None)
+  FAIL  J11 scaffold x `-1e309` → 계획 join_gate_failed · 정량 관문 거부  (조인 예외 — 계획에 넣을 기록 없음)
+  FAIL  J11 µm 변환 넘침 — 한 구 x 10^306 sim (float64 유한 · ×1000 = inf · 고치기 전 = PASS · c_um inf) → 입구 REJECT (nonfinite_value · scaffold_um ≥ 1) · 관문 계산 안 함  (PASS [] scaffold_um=None)
+  FAIL  J11 µm 변환 넘침 — 한 구 x 10^306 sim (float64 유한 · ×1000 = inf · 고치기 전 = PASS · c_um inf) → 계획 join_gate_failed · 정량 관문 거부  (['join_particles_mismatch'])
+  FAIL  J11 원자 id int64 넘침 `9223372036854775808` (Codex · 고치기 전 = OverflowError) → 입구 REJECT (int_token · atom_id ≥ 1) · 관문 계산 안 함  (OverflowError: int too big to convert atom_id=None)
+  FAIL  J11 원자 id int64 넘침 `9223372036854775808` (Codex · 고치기 전 = OverflowError) → 계획 join_gate_failed · 정량 관문 거부  (조인 예외 — 계획에 넣을 기록 없음)
+  FAIL  J11 접촉 id1 int64 넘침 → 입구 REJECT (int_token · contact_id1 ≥ 1) · 관문 계산 안 함  (OverflowError: int too big to convert contact_id1=None)
+  FAIL  J11 접촉 id1 int64 넘침 → 계획 join_gate_failed · 정량 관문 거부  (조인 예외 — 계획에 넣을 기록 없음)
+  FAIL  J11 scaffold type int64 넘침 → 입구 REJECT (int_token · scaffold_type ≥ 1) · 관문 계산 안 함  (OverflowError: int too big to convert scaffold_type=None)
+  FAIL  J11 scaffold type int64 넘침 → 계획 join_gate_failed · 정량 관문 거부  (조인 예외 — 계획에 넣을 기록 없음)
+  FAIL  J11 두 덤프 step int64 넘침 (e3 = int64 정수 · 같은 규칙) → 입구 REJECT (int_token · atom_step ≥ 1) · 관문 계산 안 함  (PASS [] atom_step=0)
+  FAIL  J11 두 덤프 step int64 넘침 (e3 = int64 정수 · 같은 규칙) → 계획 join_gate_failed · 정량 관문 거부  ([])
+  PASS  J11 경계 양성: 원자 · 접촉 id = int64 최댓값 9223372036854775807 → PASS (거부 없음)
+
+81 PASS · 57 FAIL
+  - J10 [Codex 반례] 접촉 24 열 행을 블록 안 정상 행 앞에 (선언 1 · 실제 2 · Codex) → 입구 REJECT (row_width) · 관문 계산 안 함
+  - J10 [Codex 반례] 접촉 24 열 행을 블록 안 정상 행 앞에 (선언 1 · 실제 2 · Codex) → 계획 join_gate_failed · 정량 관문 거부 (고치기 전 = 정량 ACCEPT)
+  - J10 [Codex 반례] 원자 7 열 행을 블록 안 정상 행들 앞에 (선언 2 · 실제 3 · Codex) → 입구 REJECT (row_width) · 관문 계산 안 함
+  - J10 [Codex 반례] 원자 7 열 행을 블록 안 정상 행들 앞에 (선언 2 · 실제 3 · Codex) → 계획 join_gate_failed · 정량 관문 거부 (고치기 전 = 정량 ACCEPT)
+  - J10 [Codex 반례] 접촉 블록 끝에 4 토큰 행 (Codex malformed_extra_contact_row) → 입구 REJECT (row_width) · 관문 계산 안 함
+  - J10 [Codex 반례] 접촉 블록 끝에 4 토큰 행 (Codex malformed_extra_contact_row) → 계획 join_gate_failed · 정량 관문 거부 (고치기 전 = 정량 ACCEPT)
+  - J10 [Codex 반례] 원자 블록 끝에 3 토큰 행 (Codex malformed_extra_atom_row) → 입구 REJECT (row_width) · 관문 계산 안 함
+  - J10 [Codex 반례] 원자 블록 끝에 3 토큰 행 (Codex malformed_extra_atom_row) → 계획 join_gate_failed · 정량 관문 거부 (고치기 전 = 정량 ACCEPT)
+  - J10 [Codex 반례] 원자 radius 필수 열 중복 (뒤 열 nan · 폭 7 = 7 · Codex) → 입구 REJECT (header_duplicate) · 관문 계산 안 함
+  - J10 [Codex 반례] 원자 radius 필수 열 중복 (뒤 열 nan · 폭 7 = 7 · Codex) → 계획 join_gate_failed · 정량 관문 거부 (고치기 전 = 정량 ACCEPT)
+  - J10 [Codex 반례] 접촉 c_cpl[22] 필수 열 중복 (뒤 열 nan) → 입구 REJECT (header_duplicate) · 관문 계산 안 함
+  - J10 [Codex 반례] 접촉 c_cpl[22] 필수 열 중복 (뒤 열 nan) → 계획 join_gate_failed · 정량 관문 거부 (고치기 전 = 정량 ACCEPT)
+  - J10 [Codex 반례] 접촉 step 줄 `100 0.9` (Codex) → 입구 REJECT (int_token) · 관문 계산 안 함
+  - J10 [Codex 반례] 접촉 step 줄 `100 0.9` (Codex) → 계획 join_gate_failed · 정량 관문 거부 (고치기 전 = 정량 ACCEPT)
+  - J10 [Codex 반례] 접촉 count 줄 `1 garbage` (Codex) → 입구 REJECT (int_token) · 관문 계산 안 함
+  - J10 [Codex 반례] 접촉 count 줄 `1 garbage` (Codex) → 계획 join_gate_failed · 정량 관문 거부 (고치기 전 = 정량 ACCEPT)
+  - J10 [Codex 반례] 원자 step 줄 `100 0.9` → 입구 REJECT (int_token) · 관문 계산 안 함
+  - J10 [Codex 반례] 원자 step 줄 `100 0.9` → 계획 join_gate_failed · 정량 관문 거부 (고치기 전 = 정량 ACCEPT)
+  - J10 [Codex 반례] 원자 count 줄 `2 garbage` → 입구 REJECT (int_token) · 관문 계산 안 함
+  - J10 [Codex 반례] 원자 count 줄 `2 garbage` → 계획 join_gate_failed · 정량 관문 거부 (고치기 전 = 정량 ACCEPT)
+  - J10 [같은 뿌리 (판정문 밖 · 버리던 줄)] 접촉 TIMESTEP 절 둘째 줄 `0.9` (절 몸통 전수) → 입구 REJECT (int_token) · 관문 계산 안 함
+  - J10 [같은 뿌리 (판정문 밖 · 버리던 줄)] 접촉 TIMESTEP 절 둘째 줄 `0.9` (절 몸통 전수) → 계획 join_gate_failed · 정량 관문 거부 (고치기 전 = 정량 ACCEPT)
+  - J10 [같은 뿌리 (판정문 밖 · 버리던 줄)] 접촉 step 줄 `100<VT>0.9` (splitlines 가 줄을 쪼갠다) → 입구 REJECT (int_token) · 관문 계산 안 함
+  - J10 [같은 뿌리 (판정문 밖 · 버리던 줄)] 접촉 step 줄 `100<VT>0.9` (splitlines 가 줄을 쪼갠다) → 계획 join_gate_failed · 정량 관문 거부 (고치기 전 = 정량 ACCEPT)
+  - J10 [같은 뿌리 (판정문 밖 · 버리던 줄)] 접촉 프레임 안 모르는 ITEM 절 (`ITEM: FOO` · `1 2 3`) → 입구 REJECT (frame_layout) · 관문 계산 안 함
+  - J10 [같은 뿌리 (판정문 밖 · 버리던 줄)] 접촉 프레임 안 모르는 ITEM 절 (`ITEM: FOO` · `1 2 3`) → 계획 join_gate_failed · 정량 관문 거부 (고치기 전 = 정량 ACCEPT)
+  - J10 [같은 뿌리 (판정문 밖 · 버리던 줄)] 접촉 NUMBER OF ENTRIES 절 두 번 → 입구 REJECT (frame_layout) · 관문 계산 안 함
+  - J10 [같은 뿌리 (판정문 밖 · 버리던 줄)] 접촉 NUMBER OF ENTRIES 절 두 번 → 계획 join_gate_failed · 정량 관문 거부 (고치기 전 = 정량 ACCEPT)
+  - J10 [같은 뿌리 (판정문 밖 · 버리던 줄)] 접촉 BOX BOUNDS 절 넷째 줄 (`0 0.01`) → 입구 REJECT (box_format) · 관문 계산 안 함
+  - J10 [같은 뿌리 (판정문 밖 · 버리던 줄)] 접촉 BOX BOUNDS 절 넷째 줄 (`0 0.01`) → 계획 join_gate_failed · 정량 관문 거부 (고치기 전 = 정량 ACCEPT)
+  - J10 [같은 뿌리 (판정문 밖 · 버리던 줄)] 접촉 첫 프레임 앞 비어 있지 않은 줄 → 입구 REJECT (frame_layout) · 관문 계산 안 함
+  - J10 [같은 뿌리 (판정문 밖 · 버리던 줄)] 접촉 첫 프레임 앞 비어 있지 않은 줄 → 계획 join_gate_failed · 정량 관문 거부 (고치기 전 = 정량 ACCEPT)
+  - J10 [같은 뿌리 (판정문 밖 · 버리던 줄)] 접촉 TIMESTEP 머리 줄 뒤 토큰 (`ITEM: TIMESTEP 0.9`) → 입구 REJECT (frame_layout) · 관문 계산 안 함
+  - J10 [같은 뿌리 (판정문 밖 · 버리던 줄)] 접촉 TIMESTEP 머리 줄 뒤 토큰 (`ITEM: TIMESTEP 0.9`) → 계획 join_gate_failed · 정량 관문 거부 (고치기 전 = 정량 ACCEPT)
+  - J10 [같은 뿌리 (판정문 밖 · 버리던 줄)] 원자 NUMBER OF ATOMS 머리 줄 뒤 토큰 (`ITEM: NUMBER OF ATOMS 7`) → 입구 REJECT (frame_layout) · 관문 계산 안 함
+  - J10 [같은 뿌리 (판정문 밖 · 버리던 줄)] 원자 NUMBER OF ATOMS 머리 줄 뒤 토큰 (`ITEM: NUMBER OF ATOMS 7`) → 계획 join_gate_failed · 정량 관문 거부 (고치기 전 = 정량 ACCEPT)
+  - J10 정상 real_14: 물리 행 33,289 · 106,563 (= 머리 수) · 열 수 불일치 0 · 필수 열 중복 없음 · 프레임 배치 위반 0
+  - J11 scaffold 반경 `1e309` (Codex) → 입구 REJECT (nonfinite_value · scaffold ≥ 1) · 관문 계산 안 함
+  - J11 scaffold 반경 `1e309` (Codex) → 계획 join_gate_failed · 정량 관문 거부
+  - J11 scaffold 반경 고정소수 10^309 (Codex) → 입구 REJECT (nonfinite_value · scaffold ≥ 1) · 관문 계산 안 함
+  - J11 scaffold 반경 고정소수 10^309 (Codex) → 계획 join_gate_failed · 정량 관문 거부
+  - J11 scaffold 반경 고정소수 −10^309 (Codex) → 입구 REJECT (nonfinite_value · scaffold ≥ 1) · 관문 계산 안 함
+  - J11 scaffold 반경 고정소수 −10^309 (Codex) → 계획 join_gate_failed · 정량 관문 거부
+  - J11 scaffold x 고정소수 10^309 (고치기 전 = cKDTree ValueError) → 입구 REJECT (nonfinite_value · scaffold ≥ 1) · 관문 계산 안 함
+  - J11 scaffold x 고정소수 10^309 (고치기 전 = cKDTree ValueError) → 계획 join_gate_failed · 정량 관문 거부
+  - J11 scaffold x `-1e309` → 입구 REJECT (nonfinite_value · scaffold ≥ 1) · 관문 계산 안 함
+  - J11 scaffold x `-1e309` → 계획 join_gate_failed · 정량 관문 거부
+  - J11 µm 변환 넘침 — 한 구 x 10^306 sim (float64 유한 · ×1000 = inf · 고치기 전 = PASS · c_um inf) → 입구 REJECT (nonfinite_value · scaffold_um ≥ 1) · 관문 계산 안 함
+  - J11 µm 변환 넘침 — 한 구 x 10^306 sim (float64 유한 · ×1000 = inf · 고치기 전 = PASS · c_um inf) → 계획 join_gate_failed · 정량 관문 거부
+  - J11 원자 id int64 넘침 `9223372036854775808` (Codex · 고치기 전 = OverflowError) → 입구 REJECT (int_token · atom_id ≥ 1) · 관문 계산 안 함
+  - J11 원자 id int64 넘침 `9223372036854775808` (Codex · 고치기 전 = OverflowError) → 계획 join_gate_failed · 정량 관문 거부
+  - J11 접촉 id1 int64 넘침 → 입구 REJECT (int_token · contact_id1 ≥ 1) · 관문 계산 안 함
+  - J11 접촉 id1 int64 넘침 → 계획 join_gate_failed · 정량 관문 거부
+  - J11 scaffold type int64 넘침 → 입구 REJECT (int_token · scaffold_type ≥ 1) · 관문 계산 안 함
+  - J11 scaffold type int64 넘침 → 계획 join_gate_failed · 정량 관문 거부
+  - J11 두 덤프 step int64 넘침 (e3 = int64 정수 · 같은 규칙) → 입구 REJECT (int_token · atom_step ≥ 1) · 관문 계산 안 함
+  - J11 두 덤프 step int64 넘침 (e3 = int64 정수 · 같은 규칙) → 계획 join_gate_failed · 정량 관문 거부
+C:\Users\Administrator\Documents\Codex\2026-08-24\claude-stoic-knuth-nobvq-x20\rint_g2_impl_reverify_20261015\source\scripts\rint_iface_join.py:614: RuntimeWarning: invalid value encountered in divide
+  rratio = np.where(one, np.abs(sr - rd[cand]) / rtol, np.nan)
+C:\Users\Administrator\Documents\Codex\2026-08-24\claude-stoic-knuth-nobvq-x20\rint_g2_impl_reverify_20261015\source\scripts\rint_iface_join.py:688: RuntimeWarning: invalid value encountered in divide
+  'max_delta_scaffold_ratio': (float((np.abs(Cd['delta'][q] - dsc) / wsc).max()) if len(q) else None),
+C:\Users\Administrator\Documents\Codex\2026-08-24\claude-stoic-knuth-nobvq-x20\rint_g2_impl_reverify_20261015\source\scripts\rint_iface_join.py:597: RuntimeWarning: invalid value encountered in divide
+  rr = (np.abs(res) / tol).max(axis=2)
+C:\Users\Administrator\Documents\Codex\2026-08-24\claude-stoic-knuth-nobvq-x20\rint_g2_impl_reverify_20261015\source\scripts\rint_iface_join.py:678: RuntimeWarning: overflow encountered in square
+  dbound = um * float(np.sqrt(((2.0 * e_max) ** 2).sum()) + 2.0 * (hs + (float(hrd.max()) if nd else 0.0)))
+C:\Users\Administrator\Documents\Codex\2026-08-24\claude-stoic-knuth-nobvq-x20\rint_g2_impl_reverify_20261015\source\scripts\rint_iface_join.py:707: RuntimeWarning: overflow encountered in multiply
+  'particles': {'c_um': sxyz * um, 'r_um': sr * um, 't': st.astype(np.int64)},

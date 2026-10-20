@@ -1,0 +1,209 @@
+[
+  {
+    "mode": "new",
+    "command": [
+      "/usr/local/bin/python3",
+      "-X",
+      "utf8",
+      "-B",
+      "/home/user/Yonghoon-DEM-DFT/.claude/worktrees/agent-a43562c127acff2de/scripts/test_rint_g2_join.py"
+    ],
+    "rc": 0,
+    "seconds": 217.81592976800016,
+    "log_sha256": "5ab6d835cd162118487088d5e90cbb6511dd7689c3393e57f0a60f2ca86559e8",
+    "tail": [
+      "  PASS  J11 접촉 id1 int64 넘침 → 계획 join_gate_failed · 정량 관문 거부",
+      "  PASS  J11 scaffold type int64 넘침 → 입구 REJECT (int_token · scaffold_type ≥ 1) · 관문 계산 안 함",
+      "  PASS  J11 scaffold type int64 넘침 → 계획 join_gate_failed · 정량 관문 거부",
+      "  PASS  J11 두 덤프 step int64 넘침 (e3 = int64 정수 · 같은 규칙) → 입구 REJECT (int_token · atom_step ≥ 1) · 관문 계산 안 함",
+      "  PASS  J11 두 덤프 step int64 넘침 (e3 = int64 정수 · 같은 규칙) → 계획 join_gate_failed · 정량 관문 거부",
+      "  PASS  J11 경계 양성: 원자 · 접촉 id = int64 최댓값 9223372036854775807 → PASS (거부 없음)",
+      "",
+      "138 PASS · 0 FAIL"
+    ]
+  },
+  {
+    "mode": "new",
+    "command": [
+      "/usr/local/bin/python3",
+      "-X",
+      "utf8",
+      "-B",
+      "/home/user/Yonghoon-DEM-DFT/.claude/worktrees/agent-a43562c127acff2de/scripts/test_rint_g2_am_iface.py"
+    ],
+    "rc": 0,
+    "seconds": 10.499687487999836,
+    "log_sha256": "21550959f2b8e95008fcce3a3f52a013686def101570020a33b0f87e4f929753",
+    "tail": [
+      "  PENDING  N9 reject_film_off_outside · RRM (시험 전용 해상 기준) → scripts/test_rint_g2_rrm.py (10-13 · 축 정렬 접점만 · D17 원판 밖 = 절단 = 권고 기본값 · 1저자 확인 전) — T2-4 · T3-B 수렴 · RRM 자체 오차 검증은 D12-V 봉인 뒤",
+      "  PENDING  T2-1′ · T2-4a 개발 harness → scripts/rint_t2_dev.py · test_rint_t2_dev.py (10-13 · 개발 판 · 정확 이산 층만 PASS/FAIL) — T2-2a/b/m · T2-4b · T3-D/B/P 미구현 · 검증 PASS 발행 = D12-V 봉인 뒤",
+      "  PENDING  T4-1 · T4-3 → scripts/rint_t41_census.py · rint_t43_order_diag.py (10-13 · 리포 안 AM-only scaffold · 보고 전용) — 생산 침대 (첨가제) census · 나머지 σ_OFF = 생산 기계",
+      "  PENDING  N1 · N5′ · T4-2 조인 관문 → scripts/test_rint_g2_join.py (10-13 · 출처 증명만) — 덤프 경로의 부류 · 면적 (c_cpl[22]) 채택 · payload 배선은 그대로 보류",
+      "  PENDING  T0-3′ 직접 R_j 간선 팔 · T1-5′ · T1-6~9 — ② 섬유 접합 단계",
+      "  PENDING  탄소 경유 전류 몫 — 정의 미등록 (② 전 · 기록 not_computed)",
+      "",
+      "136 PASS · 0 FAIL"
+    ]
+  },
+  {
+    "mode": "new",
+    "command": [
+      "/usr/local/bin/python3",
+      "-X",
+      "utf8",
+      "-B",
+      "/home/user/Yonghoon-DEM-DFT/.claude/worktrees/agent-a43562c127acff2de/scripts/test_rint_g2_rrm.py"
+    ],
+    "rc": 0,
+    "seconds": 6.140984166999942,
+    "log_sha256": "8ea41bd5d7fe7f7251cda31aca580206cc397d43a966350ea92c1661d60d37f2",
+    "tail": [
+      "  PASS  RRM-7 표준 원장 행 수 = 실제 RRM 행: film_faces.active 67 = n_film_rows · cut_faces 85 = n_cut_rows (고치기 전 = 152 · 0)",
+      "  PASS  RRM-7 표준 순수 막 G = 행 합 ΣG (iface_plan_film_G_S) = iface_rrm.contacts[0].film_G_S (상대 1e−12) · 키 = rrm (CNC 판 이름 아님)",
+      "  PASS  RRM-7 탄소 법칙 표지: iface_carbon_cover ≠ CNC 이름 (RRM 은 탄소 가림 법칙 미사용) · CNC 값 = iface_cnc_comparison (active 152 · cut 0 · 표지)",
+      "  PASS  RRM-7 계획 최상위 균일 rface_c (CNC) 가 RRM 계획의 값으로 남지 않는다 — CNC 비교값 안으로",
+      "  PASS  RRM-7 반쪽 탄소: 행 37 · 42 · RRM ΣG 2.7535056597827278e−6 S (Codex · 1e−12) = 표준 film_G_S_total.rrm · CNC 비교값 remove_area 2.612935414333538e−6 · renormalize 5.027420037705035e−6 (비교 이름공간에만)",
+      "  PASS  RRM-7 풀이 기록: 표준 원장 = RRM 행 (summary_source 표지 · film_faces.active 67) · 쓴 막 행 ≤ 67 · CNC 비교값 = 따로 실림",
+      "",
+      "55 PASS · 0 FAIL"
+    ]
+  },
+  {
+    "mode": "new",
+    "command": [
+      "/usr/local/bin/python3",
+      "-X",
+      "utf8",
+      "-B",
+      "/home/user/Yonghoon-DEM-DFT/.claude/worktrees/agent-a43562c127acff2de/scripts/test_rint_t4_census.py"
+    ],
+    "rc": 0,
+    "seconds": 1.0254234100000303,
+    "log_sha256": "54aab91ce0706a88fe05c3767e4c3ae099be1d2fb3cebfcbe6396e45086376a5",
+    "tail": [
+      "C2 — 동심 비동일 (N8b) 쌍이 있는 침대 → census 가 수를 싣고 owner 없음 표지",
+      "  PASS  C2 N8b 수 1 · owner 없음 note · 나머지 census 없음",
+      "",
+      "── c3",
+      "C3 — 접촉점이 raster 상자 밖 (바닥 아래) 인 contact → 미실현 box_clip",
+      "  PASS  C3 contact 1 · 미실현 1 = box_clip 1 · no_support 0 · carbon 0",
+      "",
+      "8 PASS · 0 FAIL"
+    ]
+  },
+  {
+    "mode": "new",
+    "command": [
+      "/usr/local/bin/python3",
+      "-X",
+      "utf8",
+      "-B",
+      "/home/user/Yonghoon-DEM-DFT/.claude/worktrees/agent-a43562c127acff2de/scripts/test_rint_t43_order.py"
+    ],
+    "rc": 0,
+    "seconds": 0.7549577709999085,
+    "log_sha256": "8a7fcfb5be26fa68f6cb760e811fc5d77f0efedf8c92841f97a466041c818222",
+    "tail": [
+      "O3 — 같은 종류 두 구 (AM_S 둘) 겹침 · sid 는 같고 pid 만 바뀐다",
+      "  PASS  O3 sid 다른 셀 0 · pid 다른 셀 > 0 (렌즈 덮어쓰기 + 브리지 soft = j) · 렌즈 · 브리지 밖 pid 변화 0",
+      "",
+      "── o4",
+      "O4 — 등록된 순서 (K 7 · seed 20261013 … 20261018)",
+      "  PASS  O4 π₀ = 파일 순서 · π₁ = 역순 · π₂ … π₇ = default_rng(seed).permutation(N) (등록 seed 그대로)",
+      "",
+      "6 PASS · 0 FAIL"
+    ]
+  },
+  {
+    "mode": "new",
+    "command": [
+      "/usr/local/bin/python3",
+      "-X",
+      "utf8",
+      "-B",
+      "/home/user/Yonghoon-DEM-DFT/.claude/worktrees/agent-a43562c127acff2de/scripts/test_rint_t2_dev.py"
+    ],
+    "rc": 0,
+    "seconds": 1.0242439510000168,
+    "log_sha256": "6a6709c01b7d223254672da59a29ff697d29250bccc44ef44c55f1d982cdf905",
+    "tail": [
+      "  PASS  D7 θ 45° n 128 axis 이동 0.001 µm: tie 0 · 경계 교차 2 > 0 · L2 0.0009823643239 · 최대 0.004030350534 (Codex 대조 · 상대 1e−9) — 회귀 판별 (D11 · D12-V 근거 아님)",
+      "  PASS  D7 θ 15° n 64 L1 이동 0 µm: tie 0 · 경계 교차 2 > 0 · L2 0.001406042364 · 최대 0.02030409571 (Codex 대조 · 상대 1e−9) — 회귀 판별 (D11 · D12-V 근거 아님)",
+      "",
+      "── d8_tie_record",
+      "D8 — tie · 경계 교차 수 기록 (45° n128 원점 대칭 = 셀 중심이 계면 위인 셀 n 개 — 배정은 부동소수 반올림에 걸린다 · 플랫폼 의존)",
+      "  PASS  D8 45° n128: tie_count = 128 (시험 쪽 독립 셈과 같음) · n_bc_cross = 독립 셈",
+      "",
+      "23 PASS · 0 FAIL"
+    ]
+  },
+  {
+    "mode": "new",
+    "command": [
+      "/usr/local/bin/python3",
+      "-X",
+      "utf8",
+      "-B",
+      "/home/user/Yonghoon-DEM-DFT/.claude/worktrees/agent-a43562c127acff2de/scripts/step3_sigma.py",
+      "--selftest"
+    ],
+    "rc": 0,
+    "seconds": 1.0548707479999848,
+    "log_sha256": "cc7910133b54033f0a554866b1605521b67603f9c1306b00eb6332973c70b076",
+    "tail": [
+      "plate-share-failclosed: 플레이트 원장 없는 res 는 **거부**한다  OK",
+      "    STEP3 solve: 3,503 dof, plate contacts 189/75 — CG running (CPU, 수 분 소요 가능)…",
+      "field-stats-fixture: 구슬 사슬이 관통한다 (σ_eff=0.0534, dof 3,503)  OK",
+      "field-stats-budget-invariant: p99.8/mean/N 이 max_points 에 불변  OK",
+      "field-stats-nonvacuous: 옛 규약(점군 백분위)은 예산에 따라 움직인다 (0.05533 → 0.06382, 1.15×)  OK",
+      "field-stats-markov: p99.8 ≤ 500·⟨|J|⟩ (같은 모집단)  3.1 ≤ 500  OK",
+      "joule-stats-budget-invariant: q 의 전수 p99.8·N 이 max_points 에 불변  OK",
+      "SELFTEST PASS"
+    ]
+  },
+  {
+    "mode": "new",
+    "command": [
+      "/usr/local/bin/python3",
+      "-X",
+      "utf8",
+      "-B",
+      "/home/user/Yonghoon-DEM-DFT/.claude/worktrees/agent-a43562c127acff2de/scripts/step3_sigma.py",
+      "--selftest-rint"
+    ],
+    "rc": 0,
+    "seconds": 0.6760115970000697,
+    "log_sha256": "2ac5d77f3a3ceaf5be15b074facd832b25ab547aca121e470b5c7634afcff222",
+    "tail": [
+      "  OK   ⓚ3 AM_S|AM_S r>0 · pid 없음 → 거부",
+      "  OK   ⓚ4 조기 반환 (degenerate_thin_bed) 에도 interface 기록 · solved False · 표 · 면 0 — {'sigma_eff': 0.0, 'n_dof': 360, 'n_floating_dropped': 0, 'cg_info': 0, 'resid': 0.0, 'unconverged': False, 'reason': 'degenerate_thin_bed', 'periodic_xy': False, 'interface': {'model': 'r1-phase-boundary-series', 'unit': 'ohm_cm2', 'table': {'AM_S|VGCF': 0.0001}, 'pid_used': False, 'n_faces_rint': 0, 'faces_by_pair': {}, 'solved': False}}",
+      "  OK   ⓚ4 r 없는 조기 반환 → interface None",
+      "  OK   ⓚ5 정상 해의 기록은 solved True",
+      "  OK   ⓛ1 joule_hotspot 결과에 scope = bulk_only — 'bulk_only'",
+      "  OK   ⓛ2 제외 항목 = 계면 I²R · 판 결합 간선 (지도 밖) — ['interface_I2R', 'plate_coupling']",
+      "  OK   ⓛ3 포함 항목 = bulk 셀 J²/σ — ['bulk_cell_J2_over_sigma']",
+      "STEP3 RINT SELFTEST PASS"
+    ]
+  },
+  {
+    "mode": "new",
+    "command": [
+      "/usr/local/bin/python3",
+      "-X",
+      "utf8",
+      "-B",
+      "/home/user/Yonghoon-DEM-DFT/.claude/worktrees/agent-a43562c127acff2de/scripts/rint_t41_census.py",
+      "--selftest"
+    ],
+    "rc": 0,
+    "seconds": 0.8675373089999994,
+    "log_sha256": "181f92716a0640378436e8bcd1729e2fde326ac9a0d3465467434fac85b5ce71",
+    "tail": [
+      "  ✓ ① 부류 합 = 등록 쌍 (contact 1 · gap_bridged 1)   {'contact': 1, 'ambiguous': 0, 'gap_bridged': 1}",
+      "  ✓ ② support/true 표본 = contact 중 면 있는 것 · 미실현 0 · 탄소 = 0 (정의상)   {'n': 1, 'p0': 10.237101867217376, 'p10': 10.237101867217376, 'p50': 10.237101867217376, 'p90': 10.237101867217376, 'p100': 10.237101867217376}",
+      "  ✓ ③ 옆면 주기로만 닿는 쌍 = seam 1 (닿음 · 브리지 규칙 둘 다)   {'n_touch': 1, 'n_bridge_rule': 1, 'meaning': '옆면 주기 영상으로만 닿는 AM 쌍 (scaffold 기하) — 비주기 raster 가 표현 못 함 (seam_unrepresented · v2 §3-6)'}",
+      "  ✓ ④ 거부 없음 · N8 · N8b 0 · a_lt_h 정의 (contact_of = 1)   []",
+      "SELFTEST PASS"
+    ]
+  }
+]

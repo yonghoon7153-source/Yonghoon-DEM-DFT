@@ -1,5 +1,7 @@
 # Codex 짧은 재확인 요청 — 10-15 재확인 (코드 핀 `dcb97f1ed`) 의 남은 둘: RIMPR-01 (P2) · RIMPR-02 (P3) 수정 + Q7 권고 (일반 관문 막 값 불변량) (2026-10-20 · 결과 0 건 · 발송 = 1저자)
 
+> ✅ **Codex 재확인 (10-20 · 핀 2b9efa253) = RIMPR-01 · 02 · Q7 닫힘 (범위 한정)** — 새 P3 `RIMPRR-01` (원장 `RIMPR-R01`) (구역 헤더 정상화 false-PASS) · `RIMPR-04` 범위 보강 · ①′ 정량 채택 · 생산 HOLD · 판정문 docs/reviews/codex_review_rint_join_rimpr_q7_recheck_20261020.md (증거 docs/reviews/codex_rint_join_rimpr_q7_recheck_evidence_20261020/).
+
 > **한 줄**: Codex 재확인 (10-15 · 판정문 `docs/reviews/codex_review_rint_g2_impl_fix_recheck_20261015.md`) 이 남긴 RIMPR-01 (§2) · RIMPR-02 (§3) 를 판정문의 최소 해결대로 고쳤고 (시험 먼저),
 > 판정문 §5 의 Q7 권고 (일반 관문이 막 행의 r_face 를 유한 · 비음수로 확인) 도 넣었다 (시험 먼저 · 승인된 wrapper 범위 밖 변경이라 따로 표기).
 > 둘이 닫히는지 · 최소 해결보다 넓힌 같은 부류 보강과 Q7 관문이 정상 입력을 깨지 않는지 · 새 결함이 있는지 짧게 판정해 달라.

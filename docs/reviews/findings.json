@@ -10975,30 +10975,44 @@
     {
       "id": "RIMPR-01",
       "severity": "P2",
-      "status": "claimed_fixed",
+      "status": "verified",
       "owner": "claude",
       "found_by": "codex 10-15 Rint G2 ①′ 수정 재확인 (검토 핀 dcb97f1ed · 실제 함수 반례 · 정상 원장 → 변이 파일 조인 → am_iface_plan → iface_require_quantitative 실 호출)",
       "opened_in": "docs/reviews/codex_review_rint_g2_impl_fix_recheck_20261015.md",
       "title": "조인 파서가 입력 일부를 검증 전에 버린다 — 데이터 블록에서 열 수가 다른 행 (접촉 · 원자) 은 조용히 빠지고, 중복 필수 열은 첫 열만 읽고, step · count 줄의 뒤 토큰은 무시된다 → 틀린 파일이 정상 부분집합으로 조인 PASS · 후속 정량 관문 ACCEPT",
       "note": "판정문 §2 · 자리 (핀 dcb97f1ed): scripts/rint_iface_join.py:222–306 (224 · 234 = 첫 토큰만 · 250–253 = 길이 다른 행 버림 · 280 · 306 = hdr.index 첫 열).  반례 = 합성 AM 두 구 (r 1 µm · 거리 1.5 · δ 0.5 · 교차 원판 면적 1.3744467859455347e−6 sim²) — 24 열 접촉 행 삽입 · 7 열 원자 행 삽입 · radius 중복 (뒤 열 nan · n_nonfinite 0) · step `100 0.9` · count `1 garbage` = 전부 PASS / ACCEPT · 폭 정상 중복 행 = REJECT (양성 차단 대조).  σ 값 변화 주장 아님 · 정상 real14 · case15 계산은 정상.  최소 해결 = 블록의 비어 있지 않은 모든 행 세기 + 열 수 불일치 명시 REJECT · 필수 열 이름 정확히 한 번 · step/count 줄 = 정확히 한 정수 토큰 · 정상 %g 두 침대 · D19 양성 유지 · 후속 계획이 REJECT 를 이어받음 (허용오차 변경 · 수치 재계산 불요).  권고 (Q7 · 승인된 wrapper 범위 밖이라 따로 표기): 일반 관문의 모든 막 행 유한 · 비음수 (r=0 보존).  ⬜ 수정 계획 = 세미나 뒤 (1저자 10-15 — 24 시간 세미나 집중).  ✅ 10-20 수정 (1저자 *\"Rint 관련해서 계속 gate 굴려봐 codex 리뷰 받고\"* · 시험 먼저 · 작업 트리 에이전트 → 본 가지) `3b9d51789` — 판정문 최소 해결 + 같은 부류 보강 (프레임 전 줄 절 배정 frame_layout · 상자 경계 줄 정확히 셋 · step/count int64 · µm 변환 유한 — 1저자 비준 대기) · Codex 짧은 재확인 요청서 docs/reviews/codex_rint_join_rimpr_fix_recheck_request_20261020.md.",
       "evidence_tests": [
-        "scripts/test_rint_g2_join.py (고치기 전 78/135 → 138/138 · 새 반례 J10 37 · J11 20 · 정상 real_14 · case15 · D19 그대로)"
+        "scripts/test_rint_g2_join.py (고치기 전 78/135 → 138/138 · 새 반례 J10 37 · J11 20 · 정상 real_14 · case15 · D19 그대로)",
+        "docs/reviews/codex_review_rint_join_rimpr_q7_recheck_20261020.md §1 (현재 시험 138 을 옛 코드에 = 81/138 · 57 FAIL → 수정 코드 138/138) · §2 (옛 반례 원본 바이트 재실행 · 독립 구조 탐침 144 = 정상 14 · 구조화 거부 112 · ValueError 8 · 헤더 반례 10) · §8",
+        "docs/reviews/codex_rint_join_rimpr_q7_recheck_evidence_20261020/_README_import.md (우리 트리 재현 · 판정값 차이 0 · _repro_ours_20261020/)"
       ],
-      "claimed_fixed_sha": "3b9d51789"
+      "claimed_fixed_sha": "3b9d51789",
+      "verified_by": "codex",
+      "verified_in": "docs/reviews/codex_review_rint_join_rimpr_q7_recheck_20261020.md",
+      "verified_sha": "2b9efa253",
+      "verified_scope": "판정문 §0 Q1 · §2 · §8 = 이전 최소 해결 범위 한정 닫힘 — 옛 반례 원본 바이트 그대로 재실행: 23 열 접촉 블록의 24 열 행 · 6 열 원자 블록의 7 열 행 · 원자 / 접촉 끝 짧은 불량 행 = `row_width` · `radius` 필수 열 중복 (뒤 값 nan) = `header_duplicate` · TIMESTEP `100 0.9` · NUMBER OF `1 garbage` = `int_token` — 불량 폭 행 · 중복 필수 열 · scalar 뒤 토큰을 입구에서 거부하고 `join_gate_failed` 가 실제 계획 · 정량 관문 (ValueError) 까지 전파 · 폭 정상 중복 행 대조 계속 거부 · 정상 real14 457/457 · AM–AM 660/660 · case15 104/104 · 119/119 · %g · 접촉 0 행 · gzip / CRLF · 기존 빈 줄 규약 · D19 양성 유지 (조인 적합성 한정 · 두 침대 생산 σ 새 검증 아님).  범위 밖 = 확대된 *\"아는 절의 정확한 헤더만 받고 헤더 토큰을 버리지 않는다\"* 형식 인증 (§3 · 구역 헤더 정상화 false-PASS = `RIMPR-R01` (Codex 표기 RIMPRR-01) P3 open) · 조인 형식 검증 전체 완결 선언 (§4 끝) · ①′ 정량 채택 · 생산 (HOLD 그대로).",
+      "verification_note": "2026-10-20 Codex Rint 조인 · Q7 재확인 (검토 핀 2b9efa253 · 대조 핀 dcb97f1ed · Windows Python 3.12.14 · NumPy 2.5.3 · SciPy 1.16.3 · 생산 실행 없음) = 이전 최소 해결 조건 범위 한정 닫힘 · 새 P1 · P2 없음 → 상태를 옮겼다 · verified_sha = 검토 핀 2b9efa253 (claimed_fixed_sha 3b9d51789 를 담음 · 두 핀 사이 조인 코드를 바꾼 커밋 = 3b9d51789 하나) · 시험 수: evidence_tests 첫 줄의 78/135 = 시험 작성 중간 시점 (135 개) · 현재 시험 138 을 옛 코드에 = 81/138 (57 FAIL · 판정문 §1) — 같은 집합으로 읽지 않는다 (`SELF-124`) · 우리 트리 재현 (10-20 · Linux · Python 3.11.15 · NumPy 2.4.6 · SciPy 1.17.1) = 수정 코드 138/138 · 옛 코드 81/138 · 옛 반례 · 구조 탐침 144 판정값 Codex 와 차이 0 · 닫힌 것은 이 결함의 최소 해결 범위이지 조인 형식 검증 전체가 아니다 (헤더 P3 = `RIMPR-R01` open)."
     },
     {
       "id": "RIMPR-02",
       "severity": "P3",
-      "status": "claimed_fixed",
+      "status": "verified",
       "owner": "claude",
       "found_by": "codex 10-15 Rint G2 ①′ 수정 재확인 (검토 핀 dcb97f1ed)",
       "opened_in": "docs/reviews/codex_review_rint_g2_impl_fix_recheck_20261015.md",
       "title": "scaffold 반경 · 좌표의 유한성을 Decimal 로만 세고 실제로 쓰는 float64 로는 안 센다 — 1e309 (또는 같은 크기 고정소수) 반경은 float64 inf 인데 조인 PASS · n_nonfinite 0 (원장 생성기가 뒤에서 거부)",
       "note": "판정문 §3 · 자리 (핀 dcb97f1ed): scripts/rint_iface_join.py:339–357 (Decimal.is_finite 로 셈 → float64 변환 → 양수 검사는 isfinite 값만).  음수 고정소수 변이 = −inf 도 같음.  한정: 생산 σ 오염 주장 아님 — 원장 생성 step3_sigma.py:1054 의 독립 유한성 검사가 ValueError · 정상 원장과 섞어도 입자 지문 불일치로 거부 ⇒ 조인 증서의 잘못된 PASS · 진단 완결성 문제 (P3).  최소 해결 = 실제 float64 좌표 · 반경 · 단위변환 결과의 유한성을 입구에서 검사 (±10^309 = structured REJECT · 정상 두 침대 PASS) · int64 넘는 정수 토큰의 OverflowError 도 같은 입구 오류 처리에 포함 가능.  ⬜ 세미나 뒤.  ✅ 10-20 수정 (1저자 *\"Rint 관련해서 계속 gate 굴려봐 codex 리뷰 받고\"* · 시험 먼저 · 작업 트리 에이전트 → 본 가지) `3b9d51789` — 판정문 최소 해결 + 같은 부류 보강 (프레임 전 줄 절 배정 frame_layout · 상자 경계 줄 정확히 셋 · step/count int64 · µm 변환 유한 — 1저자 비준 대기) · Codex 짧은 재확인 요청서 docs/reviews/codex_rint_join_rimpr_fix_recheck_request_20261020.md.",
       "evidence_tests": [
-        "scripts/test_rint_g2_join.py (고치기 전 78/135 → 138/138 · 새 반례 J10 37 · J11 20 · 정상 real_14 · case15 · D19 그대로)"
+        "scripts/test_rint_g2_join.py (고치기 전 78/135 → 138/138 · 새 반례 J10 37 · J11 20 · 정상 real_14 · case15 · D19 그대로)",
+        "docs/reviews/codex_review_rint_join_rimpr_q7_recheck_20261020.md §4 (RIMPR-02 · 독립 수치 탐침 113 = REJECT 98 · PASS 15 · 예외 0) · §8",
+        "docs/reviews/codex_rint_join_rimpr_q7_recheck_evidence_20261020/evidence/numeric_current.json (현재 113) · numeric_baseline.json (대조 핀 113 = PASS 19 · REJECT 56 · 예외 38)"
       ],
-      "claimed_fixed_sha": "3b9d51789"
+      "claimed_fixed_sha": "3b9d51789",
+      "verified_by": "codex",
+      "verified_in": "docs/reviews/codex_review_rint_join_rimpr_q7_recheck_20261020.md",
+      "verified_sha": "2b9efa253",
+      "verified_scope": "판정문 §0 Q1 · §4 (RIMPR-02) · §8 = 이전 최소 해결 범위 한정 닫힘 — scaffold 실수 열의 Decimal 유한 + 실제 float64 유한 (rint_iface_join.py:412) · scaffold µm 변환값 (×1000) 유한 (:483–490) · 원자 · 접촉 · 상자 실수 열 float64 유한 (:204–211) · 소비 정수 자리의 int64 범위 밖 · 5,000 자리 = 구조화 거부 `int_token` (:164–174 · OverflowError 대신) · 거부가 계획 `join_gate_failed` · 정량 관문 거부로 이어짐 · int64 끝값을 같은 ID / step 으로 둔 양성 = 절삭 없이 보존 · 독립 수치 탐침 113 = REJECT 98 · PASS 15 (정상 대조 + 알려진 P3 반례 포함 — 전부 문제없음 뜻 아님) · 예외 0 · 거부 기록 안의 inf 진단값 ≠ 성공 인증서의 inf 발행.  범위 밖 = 계산 결과의 유한성 (입력 유한 ≠ 산술 결과 유한 · 비-AM 거리 넘침 1e160 → 조인 PASS / 정량 ACCEPT = `RIMPR-04` 범위 보강 · open) · 비-ASCII 정수 표기 (`RIMPR-03` · open) · ①′ 정량 채택 · 생산 (HOLD).",
+      "verification_note": "2026-10-20 Codex Rint 조인 · Q7 재확인 (검토 핀 2b9efa253 · 대조 핀 dcb97f1ed) = 이전 최소 해결 조건 범위 한정 닫힘 → 상태를 옮겼다 · verified_sha = 검토 핀 2b9efa253 (claimed_fixed_sha 3b9d51789 를 담음) · 시험 수 구분은 RIMPR-01 과 같다 (78/135 = 중간 시점 · 현재 시험 138 을 옛 코드에 81/138 · `SELF-124`) · 우리 트리 재현 (10-20) = 수치 탐침 현재 113 (REJECT 98 · PASS 15 · 예외 0) 판정값 차이 0 · 대조 핀 113 (PASS 19 · REJECT 56 · 예외 38) 같은 수 (int64 넘침 OverflowError 문구만 플랫폼 차)."
     },
     {
       "id": "L214-01",
@@ -12005,8 +12019,11 @@
       "title": "조인 정수 토큰 정규식 `\\d` 가 전각 숫자 (`１`) 를 받는다 — e3 정확 정수 검사가 ASCII 숫자만이라는 뜻과 다르다",
       "severity": "P3",
       "status": "open",
-      "note": "10-20 RIMPR 수정 에이전트 보고 (고치지 않음) · 자리 scripts/rint_iface_join.py `_INT_RE` · 생산 덤프 (ASCII %g) 무영향 · 진단 관문 완결성 (P3).",
-      "evidence_tests": []
+      "note": "10-20 RIMPR 수정 에이전트 보고 (고치지 않음) · 자리 scripts/rint_iface_join.py `_INT_RE` · 생산 덤프 (ASCII %g) 무영향 · 진단 관문 완결성 (P3).  ★ 10-20 Codex 재확인 (핀 2b9efa253) §4: 원자 ID · type · step · count · 접촉 ID · scaffold type 을 전각으로 바꾼 합성 입력 = 조인 PASS / 정량 ACCEPT · 입자 지문 · atom id 대응은 ASCII 와 같음 (실수 열 전각은 %g 규약으로 거부) — *ASCII 생산 덤프 지원* 범위를 명시하고 open 을 유지하면 별도 보강으로 미룰 수 있다 (진단 · 개발 범위 조건부 · 무제한 형식 지원 · 정량 생산 허가로 읽지 않음 · verified / closed 로 바꾸지 않음) · ASCII 0 앞자리 정규화 때문에 긴 유니코드 0 덧붙임은 수치가 같아도 거부될 수 있다 (같은 어휘 계약 · 증거 notes/numeric.md) · 우리 트리 재현 (10-20) = 판정값 차이 0 · ⬜ 수정 계획 Q4 = docs/reviews/rimprr_fix_plan_20261020.md (1저자 비준 대기).",
+      "evidence_tests": [
+        "docs/reviews/codex_review_rint_join_rimpr_q7_recheck_20261020.md §4 (Q4 — 전각 정수 PASS / ACCEPT · ASCII 범위 명시 + open 유지면 연기 가능)",
+        "docs/reviews/codex_rint_join_rimpr_q7_recheck_evidence_20261020/evidence/numeric_current.json (unicode_fullwidth_integers · int_token_boundaries)"
+      ]
     },
     {
       "found_by": "claude 10-20 RIMPR-01 · 02 수정 중 (작업 트리 에이전트 보고 · 고치지 않음)",
@@ -12016,8 +12033,42 @@
       "title": "아주 큰 유한 입력이 조인 관문 산술 안에서 넘친다 — 좌표 ~1e160 이면 delta_bound_um = inf (입구 유한 검사 뒤 산술 단계)",
       "severity": "P3",
       "status": "open",
-      "note": "10-20 RIMPR 수정 에이전트 보고 (고치지 않음) · RIMPR-02 범위 밖 (입구 검사는 실제 float64 값 · µm 변환값까지) · 생산 침대 무영향 · 진단 관문 완결성 (P3).",
-      "evidence_tests": []
+      "note": "10-20 RIMPR 수정 에이전트 보고 (고치지 않음) · RIMPR-02 범위 밖 (입구 검사는 실제 float64 값 · µm 변환값까지) · 생산 침대 무영향 · 진단 관문 완결성 (P3).  ★ 10-20 Codex 재확인 (핀 2b9efa253) §4: 영향 범위 보강 (새 ID 아님 · 회귀 아님 · 대조 핀에서도 같음) — 정상 AM 두 구 · scaffold 그대로 + SE 두 구 x = 1e160 · 2e160 sim (r 0.001 · 직교 상자 0 … 3e160 안 · 닿을 수 없는데 접촉 행 δ 0.0005) → rint_iface_join.py:641–645 의 제곱합이 넘쳐 거리 · 허용폭 norm = inf · inf → `dd > wd` = inf > inf 거짓 → n_delta_pos_mismatch 0 · max_delta_pos_ratio NaN → 조인 PASS / 정량 ACCEPT (AM delta_bound_um = 정상 2.732324012649634e−05 µm 이라 step3_sigma.py:1201–1202 의 무한 폭 검사가 발화하지 않음) · 같은 꼴 1e150 대조 = REJECT (비 99,999.99998223643 · 안정한 hypot 거리 1e150 · 허용 1.0000000001776356e145) · 전역 G-frame 인증의 false-PASS 이나 비현실적 입력 · 정상 AM 입자 · 계획 그대로라 생산 σ 오염 · P2 승격 주장 아님 · *\"후단이 반드시 거부하므로 무해\"* 설명 철회 (원장 · 요청서에 그 문장은 없다 — 옛 note 의 *\"생산 침대 무영향\"* 을 그 뜻으로 읽지 않는다) · 같은 부류 = 사용자 sim_to_um 1e160 의 dem_am_am.area_um2 inf (:799 · 증거 notes/numeric.md).  연기 조건 넷 (판정문 §4 · 진단 · 개발 묶음): ① verified / closed 로 바꾸지 않음 ② *\"유한한 입력이면 모든 기하 계산이 안전하다\"* 주장 금지 ③ 조인만 단독 신뢰해 새 정량 소비자로 연결하지 않음 (현행 원장 · 정량 관문 유지 · 그것이 비-AM 거리 넘침까지 막는다고 주장하지 않음) ④ 정량 채택 전에 결과 유한성 · 수치적으로 안정한 거리 · 오차폭 계산 검토 (데이터 범위 제한은 사후 관찰이 아니라 명시적 입력 계약으로) · 우리 트리 재현 (10-20) = 두 핀 판정값 차이 0 · ⬜ 수정 계획 Q3 = docs/reviews/rimprr_fix_plan_20261020.md (1저자 비준 대기).",
+      "evidence_tests": [
+        "docs/reviews/codex_review_rint_join_rimpr_q7_recheck_20261020.md §4 (1e150 대조 REJECT ↔ 1e160 PASS / ACCEPT · 연기 조건 넷)",
+        "docs/reviews/codex_rint_join_rimpr_q7_recheck_evidence_20261020/evidence/numeric_overflow_replay_current.json · numeric_overflow_replay_baseline.json (두 핀 같음)"
+      ]
+    },
+    {
+      "id": "RIMPR-R01",
+      "severity": "P3",
+      "status": "open",
+      "owner": "claude",
+      "found_by": "codex 10-20 Rint 조인 재확인 (검토 핀 2b9efa253 · 대조 핀 dcb97f1ed · 실제 조인 → 계획 → 정량 관문 · 구조 탐침 144 · 생산 실행 없음)",
+      "opened_in": "docs/reviews/codex_review_rint_join_rimpr_q7_recheck_20261020.md",
+      "title": "(Codex 표기 RIMPRR-01) 조인 파서가 구역 헤더를 검사 전에 정상화한다 — BOX BOUNDS · ATOMS · ENTRIES 구역을 `startswith()` 로 분류하고 헤더에서 표지를 `replace()` 로 전부 지워, 단어 경계 없는 헤더 (`ITEM: ATOMSid …`) · 반복 · 후첨 표지 (`ITEM: BOX BOUNDS ff ff ff ITEM: BOX BOUNDS`) 가 조인 PASS · 정량 ACCEPT",
+      "note": "판정문 §3 · 자리 (핀 2b9efa253): scripts/rint_iface_join.py:278–279 (구역 분류 `startswith()` · 단어 경계 없음) · :298 (BOX BOUNDS 머리에서 표지의 **모든** 출현을 `replace()` 로 지운 뒤 플래그 셋 검사) · :302 (ATOMS · ENTRIES 같은 꼴 · 필수 열 · 폭 검사 전) · step / count 에만 있는 명시 헤더 검사 (:286–288) 가 BOX BOUNDS · ATOMS · ENTRIES 에는 없다.  반례 둘 (정상 fixture 의 헤더 한 줄만 바꿈): `ITEM: ATOMS id type x y z radius` → `ITEM: ATOMSid type x y z radius` · `ITEM: BOX BOUNDS ff ff ff` → `ITEM: BOX BOUNDS ff ff ff ITEM: BOX BOUNDS` — 둘 다 join.status PASS · rejections [] · entrance PASS · frame_layout 8 카운터 0 · plan.rejections [] · iface_require_quantitative ACCEPT · 소비한 id / type / x / r / 반폭 / 상자 = 정상 입력과 같음 · 독립 탐침의 원자 · 접촉 쪽 경계 없음 · 반복 표지 · 행 표지 후첨 10 건 모두 두 핀에서 PASS.  한정: σ 오염 증거 아님 (소비 물리 배열이 같다 · P2 로 올리지 않음) · 대조 핀 dcb97f1ed 에도 있다 = 이번 패치의 회귀 아님 · RIMPR-01 최소 해결 (불량 데이터 행 차단) 의 닫힘을 취소하지 않음 — 무너지는 것 = 확대된 *\"아는 절의 정확한 헤더만 받고 헤더 토큰을 버리지 않는다\"* 형식 인증 · 조인 형식 검증 전체 완결 선언 (§4 끝).  최소 해결 = 구역 이름을 정확한 단어 경계로 검사 · 표지 하나만 앞에서 제거 · 나머지 토큰은 기존 열 · 상자 검사로 · 정상 공백 · 탭 · 명시적으로 쓰지 않는 진단 열은 일괄 금지할 필요 없음 · 두 사례 + contact (ENTRIES) 대응 사례를 상주 회귀에 · 이전 프레임 전체 검증까지 넓히지 않음.  원장 ID = RIMPR-R01 (원장 ID 규칙 접두 5 글자 · 선례 L214RR-01 → L214R-R01).  우리 트리 재현 (10-20) = 반례 둘 · 10 건 판정값 Codex 와 차이 0.  ⬜ 수정 계획 = docs/reviews/rimprr_fix_plan_20261020.md (1저자 비준 대기).",
+      "evidence_tests": [
+        "docs/reviews/codex_review_rint_join_rimpr_q7_recheck_20261020.md §3 · §8",
+        "docs/reviews/codex_rint_join_rimpr_q7_recheck_evidence_20261020/evidence/structure_minimal_replay.json (반례 둘 · PASS / ACCEPT · 소비 배열 같음)",
+        "docs/reviews/codex_rint_join_rimpr_q7_recheck_evidence_20261020/evidence/structure_results.json (144 · unexpected_pass 10 · 대조 핀도 PASS)",
+        "docs/reviews/codex_rint_join_rimpr_q7_recheck_evidence_20261020/notes/structure.md (Residual candidate 절)",
+        "docs/reviews/codex_rint_join_rimpr_q7_recheck_evidence_20261020/_README_import.md (우리 트리 재현 · 차이 0)"
+      ]
+    },
+    {
+      "id": "SELF-124",
+      "severity": "P3",
+      "status": "open",
+      "owner": "claude",
+      "found_by": "codex 10-20 Rint 조인 재확인 (검토 핀 2b9efa253) §1 · §7 — 우리 요청서 문장 대조",
+      "opened_in": "docs/reviews/codex_review_rint_join_rimpr_q7_recheck_20261020.md",
+      "title": "Rint 조인 짧은 재확인 요청서가 *\"봉인 32 파일 무변경\"* 을 범위 한정 없이 (`dcb97f1ed` → 리뷰 핀 diff 를 적은 바로 다음 줄에) 적었고 시험 수를 *\"78/135 → 138/138\"* 처럼 같은 시험의 전후로 적었다 — 실제 = 두 Rint 커밋 (3b9d51789 · 2b9efa253) 이 봉인 32 를 건드리지 않음 (대조 핀 → 검토 핀 전체 구간에서는 봉인 네 파일 다름) · 78/135 = 시험 작성 중간 시점 (135 개) · 현재 시험 138 을 옛 코드에 = 81/138",
+      "note": "판정문 §1 (*\"요청서의 78/135 와 여기의 81/138 을 같은 시험 집합인 것처럼 혼용하지 않는다\"*) · §7 (권장 문장 *\"이번 Rint 수정 두 커밋은 봉인 32 개를 변경하지 않았다. 대조 핀 이후의 다른 트랙 변경까지 포함한 전체 스냅샷의 동일성은 별도다.\"*).  자리 = docs/reviews/codex_rint_join_rimpr_fix_recheck_request_20261020.md 12 행 (§0 대상 · 지위 — 11 행 = `git diff dcb97f1ed <리뷰 핀> -- …` 다음 줄) · 19 행 (§1 표 시험 칸 *\"78/135 → 138/138\"*) · 50 행은 *\"고치기 전 숫자 78/135 는 시험만 넣은 상태에서 잰 값\"* 으로 시점만 밝히고 집합 차이 (135 ↔ 138 · 옛 코드에서도 통과하는 빈 줄 고정 시험 3 · 26 행) 는 밝히지 않았다 · 같은 표기가 커밋 3b9d51789 메시지 · 원장 RIMPR-01 · 02 evidence_tests 첫 줄에도 있다.  우리 재현 (10-20): `git diff --name-only dcb97f1ed 2b9efa253` ∩ CODE_FILES 32 = network_conductivity · tau_flux · app · pipeline_service (다른 트랙 변경) · 두 Rint 커밋 ∩ 봉인 = 0 · S3 NUMERIC_MODULES 6 무변경 · 현재 시험 138 을 옛 코드에 = 81 PASS · 57 FAIL (판정문 §1 과 같음).  정정 문안 (⬜ 1저자 비준 = 수정 계획 Q5 · 이 반입 커밋에서는 본문을 고치지 않고 요청서 머리에 Codex 회신 한 줄만 붙였다): 12 행 → *\"이번 Rint 수정 두 커밋 (3b9d51789 · 리뷰 핀) 은 봉인 32 개를 변경하지 않았다. 대조 핀 이후의 다른 트랙 변경까지 포함한 전체 스냅샷의 동일성은 별도다 (그 구간에서 봉인 네 파일 = network_conductivity · tau_flux · app · pipeline_service 가 다르다).\"* · 19 행 → *\"78/135 (시험 작성 중간 시점 · 135 개) → 138/138 · 현재 시험 138 을 옛 코드에 = 81/138 (57 FAIL · Codex 판정문 §1)\"* · 원장 RIMPR-01 · 02 evidence_tests 의 같은 표기 = verification_note 에 구분을 적었다 (첫 줄 문자열은 이력이라 그대로).  교훈 = 봉인 · 시험 수 문장은 **구간 (커밋 · 핀)** 과 **집합 (어느 시험 판)** 을 같이 적는다.",
+      "evidence_tests": [
+        "docs/reviews/codex_review_rint_join_rimpr_q7_recheck_20261020.md §1 · §7",
+        "docs/reviews/codex_rint_join_rimpr_q7_recheck_evidence_20261020/_README_import.md (§7 git 재현 · 시험 81/138 재현)"
+      ]
     }
   ]
 }

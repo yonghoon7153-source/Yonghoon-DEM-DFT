@@ -1,0 +1,198 @@
+{
+  "env_ours": {
+    "python": "3.11.15 (main, Mar  3 2026, 09:26:23) [GCC 13.3.0]",
+    "numpy": "2.4.6",
+    "scipy": "1.17.1",
+    "os": "Linux (claude.ai cloud container, 4 vCPU)"
+  },
+  "env_codex": {
+    "python": "3.12.14 (main, Aug 25 2026, 14:01:42) [MSC v.1944 64 bit (AMD64)]",
+    "numpy": "2.5.3",
+    "scipy": "1.16.3",
+    "os": "Windows"
+  },
+  "tree": {
+    "current": "worktree at d8808c164 (code = 2b9efa253; d8808c164 changes CLAUDE.md + two docs only)",
+    "prior": "git archive dcb97f1ed (scripts webapp + 7 docs/data paths + AGENTS.md CLAUDE.md)"
+  },
+  "tests_submitted": {
+    "submitted_new_rint_t41_census_selftest.log": {
+      "ours": "SELFTEST PASS",
+      "codex": "SELFTEST PASS"
+    },
+    "submitted_new_step3_sigma_selftest-rint.log": {
+      "ours": "STEP3 RINT SELFTEST PASS",
+      "codex": "STEP3 RINT SELFTEST PASS"
+    },
+    "submitted_new_step3_sigma_selftest.log": {
+      "ours": "SELFTEST PASS",
+      "codex": "SELFTEST PASS"
+    },
+    "submitted_new_test_rint_g2_am_iface.log": {
+      "ours": "136 PASS / 0 FAIL",
+      "codex": "136 PASS / 0 FAIL"
+    },
+    "submitted_new_test_rint_g2_join.log": {
+      "ours": "138 PASS / 0 FAIL",
+      "codex": "138 PASS / 0 FAIL"
+    },
+    "submitted_new_test_rint_g2_rrm.log": {
+      "ours": "55 PASS / 0 FAIL",
+      "codex": "55 PASS / 0 FAIL"
+    },
+    "submitted_new_test_rint_t2_dev.log": {
+      "ours": "23 PASS / 0 FAIL",
+      "codex": "23 PASS / 0 FAIL"
+    },
+    "submitted_new_test_rint_t43_order.log": {
+      "ours": "6 PASS / 0 FAIL",
+      "codex": "6 PASS / 0 FAIL"
+    },
+    "submitted_new_test_rint_t4_census.log": {
+      "ours": "8 PASS / 0 FAIL",
+      "codex": "8 PASS / 0 FAIL"
+    },
+    "submitted_old_test_rint_g2_am_iface.log": {
+      "ours": "133 PASS / 3 FAIL",
+      "codex": "133 PASS / 3 FAIL"
+    },
+    "submitted_old_test_rint_g2_join.log": {
+      "ours": "81 PASS / 57 FAIL",
+      "codex": "81 PASS / 57 FAIL"
+    },
+    "submitted_old_test_rint_g2_rrm.log": {
+      "ours": "54 PASS / 1 FAIL",
+      "codex": "54 PASS / 1 FAIL"
+    }
+  },
+  "q7_sigma_direct_spsolve": {
+    "cnc_normal": {
+      "codex": 0.0038116099134384756,
+      "ours": 0.0038116099134384773,
+      "rel_diff": 4.551156900554661e-16
+    },
+    "cnc_registered_zero": {
+      "codex": 0.004141925781633665,
+      "ours": 0.004141925781633662,
+      "rel_diff": 8.376410237329722e-16
+    },
+    "cnc_doubled_all": {
+      "codex": 0.0035313954366456347,
+      "ours": 0.003531395436645629,
+      "rel_diff": 1.5964939067486158e-15
+    },
+    "rrm_normal": {
+      "codex": 0.003334457143882423,
+      "ours": 0.0033344571438824267,
+      "rel_diff": 1.0404832937555819e-15
+    },
+    "rrm_registered_zero": {
+      "codex": 0.0037299595666211234,
+      "ours": 0.0037299595666211278,
+      "rel_diff": 1.1626958985699203e-15
+    },
+    "rrm_doubled_all": {
+      "codex": 0.0030984308118989293,
+      "ours": 0.0030984308118989327,
+      "rel_diff": 1.1197432386193257e-15
+    }
+  },
+  "q7_n9b": {
+    "phi_sha256_codex": "c62f28305cd8a7428cfe578908690d91f4b66d006c8a18c8ebf2d3077c03014f",
+    "phi_sha256_ours": "fe37433cab92e4e40097a431becae270aaf2caa62b51b3428edcb55900c5136c",
+    "nan_equals_zero_exact_ours": {
+      "sigma_hex": true,
+      "phi_bytes": true,
+      "n_dof": true,
+      "resid_hex": true,
+      "matrix_rhs": true
+    },
+    "matrix_rhs_hashes_equal_codex_ours": true,
+    "cut_deleted_sigma": {
+      "codex": 0.0040840140889134725,
+      "ours": 0.004084014088913466
+    },
+    "pure_cut_deleted_independent_ours": [
+      {
+        "code": "film_off_outside",
+        "n": 85
+      }
+    ]
+  },
+  "q7_summary_ours": {
+    "negative_value_cases": 36,
+    "all_rejected_before_cg": true,
+    "off_byte_identical": 16,
+    "native_cg_comparisons": 4
+  },
+  "our_outputs_not_copied_here": {
+    "numeric_baseline.json": {
+      "sha256": "4cc7e868be3165284b8024c1eed0a50dea6127f8a7d570e80f4cf9c7c7080324",
+      "bytes": 243668
+    },
+    "numeric_current.json": {
+      "sha256": "8958ad31a13fde29ae56e0b82f8fb2964c152053ec6b749687c3bf1a3dd184ac",
+      "bytes": 416976
+    },
+    "q7_fields.npz": {
+      "sha256": "d4364ad5d91ba0835a092725c746a91bb8c2165dd72e7d73170b6c8872521e65",
+      "bytes": 471638
+    },
+    "structure_fixture_manifest.json": {
+      "sha256": "f236abb872b3f2266ae5c3289ef2c0f112ea2e801aef56fe697e08cafc74e3b0",
+      "bytes": 70851
+    },
+    "structure_results.json": {
+      "sha256": "9d4ae9e5204a62639af637f051ea343c39f77efeb498d8bb7161ed7cf387c6b0",
+      "bytes": 699900
+    },
+    "submitted_new_rint_t41_census_selftest.log": {
+      "sha256": "181f92716a0640378436e8bcd1729e2fde326ac9a0d3465467434fac85b5ce71",
+      "bytes": 725
+    },
+    "submitted_new_step3_sigma_selftest-rint.log": {
+      "sha256": "2ac5d77f3a3ceaf5be15b074facd832b25ab547aca121e470b5c7634afcff222",
+      "bytes": 8225
+    },
+    "submitted_new_step3_sigma_selftest.log": {
+      "sha256": "cc7910133b54033f0a554866b1605521b67603f9c1306b00eb6332973c70b076",
+      "bytes": 11875
+    },
+    "submitted_new_test_rint_g2_am_iface.log": {
+      "sha256": "21550959f2b8e95008fcce3a3f52a013686def101570020a33b0f87e4f929753",
+      "bytes": 19104
+    },
+    "submitted_new_test_rint_g2_join.log": {
+      "sha256": "5ab6d835cd162118487088d5e90cbb6511dd7689c3393e57f0a60f2ca86559e8",
+      "bytes": 19790
+    },
+    "submitted_new_test_rint_g2_rrm.log": {
+      "sha256": "8ea41bd5d7fe7f7251cda31aca580206cc397d43a966350ea92c1661d60d37f2",
+      "bytes": 8769
+    },
+    "submitted_new_test_rint_t2_dev.log": {
+      "sha256": "6a6709c01b7d223254672da59a29ff697d29250bccc44ef44c55f1d982cdf905",
+      "bytes": 4704
+    },
+    "submitted_new_test_rint_t43_order.log": {
+      "sha256": "8a7fcfb5be26fa68f6cb760e811fc5d77f0efedf8c92841f97a466041c818222",
+      "bytes": 1009
+    },
+    "submitted_new_test_rint_t4_census.log": {
+      "sha256": "54aab91ce0706a88fe05c3767e4c3ae099be1d2fb3cebfcbe6396e45086376a5",
+      "bytes": 1014
+    },
+    "submitted_old_test_rint_g2_am_iface.log": {
+      "sha256": "64066235d14af2708d82cbad46fe2df88effc42e4a255bf55a7f1df38337a28d",
+      "bytes": 19978
+    },
+    "submitted_old_test_rint_g2_join.log": {
+      "sha256": "9c95b029fbae62d7ca8d0270446f1ef86d89fd8f75ff49a1ee419e2a1cdba470",
+      "bytes": 31103
+    },
+    "submitted_old_test_rint_g2_rrm.log": {
+      "sha256": "031105563823c0961b02ef327550220189c81abf2821d7ceead5fed521be886b",
+      "bytes": 9176
+    }
+  }
+}

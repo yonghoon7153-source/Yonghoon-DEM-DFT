@@ -1,0 +1,2089 @@
+{
+  "python": "3.12.14 (main, Aug 25 2026, 14:01:42) [MSC v.1944 64 bit (AMD64)]",
+  "numpy": "2.5.3",
+  "scipy": "1.16.3",
+  "source_sha256": {
+    "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint_join_q7_recheck_20261020\\source\\scripts\\step3_sigma.py": "026f8ba49c7421d6cb7b18c7d7b8d3b2e05d4d364c53e4f556823bfb632925aa",
+    "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint_g2_impl_reverify_20261015\\source\\scripts\\step3_sigma.py": "22839a15c0faf3849180d50c200eaceff0b14c8876e483ce36f4009bebbf9803",
+    "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint_join_q7_recheck_20261020\\source\\scripts\\rint_rrm_reference.py": "6cb16e030c0a25ce737b6c7a35b2ebc59e451b88521dfac47b4304c8b27c30a0"
+  },
+  "solver_note": "Unmodified assembly with common direct spsolve for exact comparison; native CG also run separately.",
+  "bad_values": [
+    {
+      "axis": 0,
+      "family": "cnc",
+      "row_role": "film",
+      "value": "nan",
+      "fingerprint_matches": true,
+      "gate": {
+        "accepted": false,
+        "type": "ValueError",
+        "message": "①′ 계획 축 0 의 막 값 r_face 는 유한한 0 이상 (Ω·cm²) — 어긋난 행 1 (NaN 1 · ±inf 0 · 유한 음수 0) — NaN · 음수 = 막이 조용히 빠지고 +inf = 면이 끊긴다 (Codex 10-15 Q7)"
+      },
+      "solve": {
+        "accepted": false,
+        "type": "ValueError",
+        "message": "①′ 계획 축 0 의 막 값 r_face 는 유한한 0 이상 (Ω·cm²) — 어긋난 행 1 (NaN 1 · ±inf 0 · 유한 음수 0) — NaN · 음수 = 막이 조용히 빠지고 +inf = 면이 끊긴다 (Codex 10-15 Q7)"
+      },
+      "cg_calls": 0
+    },
+    {
+      "axis": 0,
+      "family": "cnc",
+      "row_role": "film",
+      "value": "positive_inf",
+      "fingerprint_matches": true,
+      "gate": {
+        "accepted": false,
+        "type": "ValueError",
+        "message": "①′ 계획 축 0 의 막 값 r_face 는 유한한 0 이상 (Ω·cm²) — 어긋난 행 1 (NaN 0 · ±inf 1 · 유한 음수 0) — NaN · 음수 = 막이 조용히 빠지고 +inf = 면이 끊긴다 (Codex 10-15 Q7)"
+      },
+      "solve": {
+        "accepted": false,
+        "type": "ValueError",
+        "message": "①′ 계획 축 0 의 막 값 r_face 는 유한한 0 이상 (Ω·cm²) — 어긋난 행 1 (NaN 0 · ±inf 1 · 유한 음수 0) — NaN · 음수 = 막이 조용히 빠지고 +inf = 면이 끊긴다 (Codex 10-15 Q7)"
+      },
+      "cg_calls": 0
+    },
+    {
+      "axis": 0,
+      "family": "cnc",
+      "row_role": "film",
+      "value": "negative_inf",
+      "fingerprint_matches": true,
+      "gate": {
+        "accepted": false,
+        "type": "ValueError",
+        "message": "①′ 계획 축 0 의 막 값 r_face 는 유한한 0 이상 (Ω·cm²) — 어긋난 행 1 (NaN 0 · ±inf 1 · 유한 음수 0) — NaN · 음수 = 막이 조용히 빠지고 +inf = 면이 끊긴다 (Codex 10-15 Q7)"
+      },
+      "solve": {
+        "accepted": false,
+        "type": "ValueError",
+        "message": "①′ 계획 축 0 의 막 값 r_face 는 유한한 0 이상 (Ω·cm²) — 어긋난 행 1 (NaN 0 · ±inf 1 · 유한 음수 0) — NaN · 음수 = 막이 조용히 빠지고 +inf = 면이 끊긴다 (Codex 10-15 Q7)"
+      },
+      "cg_calls": 0
+    },
+    {
+      "axis": 0,
+      "family": "cnc",
+      "row_role": "film",
+      "value": "negative",
+      "fingerprint_matches": true,
+      "gate": {
+        "accepted": false,
+        "type": "ValueError",
+        "message": "①′ 계획 축 0 의 막 값 r_face 는 유한한 0 이상 (Ω·cm²) — 어긋난 행 1 (NaN 0 · ±inf 0 · 유한 음수 1) — NaN · 음수 = 막이 조용히 빠지고 +inf = 면이 끊긴다 (Codex 10-15 Q7)"
+      },
+      "solve": {
+        "accepted": false,
+        "type": "ValueError",
+        "message": "①′ 계획 축 0 의 막 값 r_face 는 유한한 0 이상 (Ω·cm²) — 어긋난 행 1 (NaN 0 · ±inf 0 · 유한 음수 1) — NaN · 음수 = 막이 조용히 빠지고 +inf = 면이 끊긴다 (Codex 10-15 Q7)"
+      },
+      "cg_calls": 0
+    },
+    {
+      "axis": 0,
+      "family": "rrm",
+      "row_role": "film",
+      "value": "nan",
+      "fingerprint_matches": true,
+      "gate": {
+        "accepted": false,
+        "type": "ValueError",
+        "message": "①′ 계획 축 0 의 막 값 r_face 는 유한한 0 이상 (Ω·cm²) — 어긋난 행 1 (NaN 1 · ±inf 0 · 유한 음수 0) — NaN · 음수 = 막이 조용히 빠지고 +inf = 면이 끊긴다 (Codex 10-15 Q7)"
+      },
+      "solve": {
+        "accepted": false,
+        "type": "ValueError",
+        "message": "①′ 계획 축 0 의 막 값 r_face 는 유한한 0 이상 (Ω·cm²) — 어긋난 행 1 (NaN 1 · ±inf 0 · 유한 음수 0) — NaN · 음수 = 막이 조용히 빠지고 +inf = 면이 끊긴다 (Codex 10-15 Q7)"
+      },
+      "cg_calls": 0
+    },
+    {
+      "axis": 0,
+      "family": "rrm",
+      "row_role": "film",
+      "value": "positive_inf",
+      "fingerprint_matches": true,
+      "gate": {
+        "accepted": false,
+        "type": "ValueError",
+        "message": "①′ 계획 축 0 의 막 값 r_face 는 유한한 0 이상 (Ω·cm²) — 어긋난 행 1 (NaN 0 · ±inf 1 · 유한 음수 0) — NaN · 음수 = 막이 조용히 빠지고 +inf = 면이 끊긴다 (Codex 10-15 Q7)"
+      },
+      "solve": {
+        "accepted": false,
+        "type": "ValueError",
+        "message": "①′ 계획 축 0 의 막 값 r_face 는 유한한 0 이상 (Ω·cm²) — 어긋난 행 1 (NaN 0 · ±inf 1 · 유한 음수 0) — NaN · 음수 = 막이 조용히 빠지고 +inf = 면이 끊긴다 (Codex 10-15 Q7)"
+      },
+      "cg_calls": 0
+    },
+    {
+      "axis": 0,
+      "family": "rrm",
+      "row_role": "film",
+      "value": "negative_inf",
+      "fingerprint_matches": true,
+      "gate": {
+        "accepted": false,
+        "type": "ValueError",
+        "message": "①′ 계획 축 0 의 막 값 r_face 는 유한한 0 이상 (Ω·cm²) — 어긋난 행 1 (NaN 0 · ±inf 1 · 유한 음수 0) — NaN · 음수 = 막이 조용히 빠지고 +inf = 면이 끊긴다 (Codex 10-15 Q7)"
+      },
+      "solve": {
+        "accepted": false,
+        "type": "ValueError",
+        "message": "①′ 계획 축 0 의 막 값 r_face 는 유한한 0 이상 (Ω·cm²) — 어긋난 행 1 (NaN 0 · ±inf 1 · 유한 음수 0) — NaN · 음수 = 막이 조용히 빠지고 +inf = 면이 끊긴다 (Codex 10-15 Q7)"
+      },
+      "cg_calls": 0
+    },
+    {
+      "axis": 0,
+      "family": "rrm",
+      "row_role": "film",
+      "value": "negative",
+      "fingerprint_matches": true,
+      "gate": {
+        "accepted": false,
+        "type": "ValueError",
+        "message": "①′ 계획 축 0 의 막 값 r_face 는 유한한 0 이상 (Ω·cm²) — 어긋난 행 1 (NaN 0 · ±inf 0 · 유한 음수 1) — NaN · 음수 = 막이 조용히 빠지고 +inf = 면이 끊긴다 (Codex 10-15 Q7)"
+      },
+      "solve": {
+        "accepted": false,
+        "type": "ValueError",
+        "message": "①′ 계획 축 0 의 막 값 r_face 는 유한한 0 이상 (Ω·cm²) — 어긋난 행 1 (NaN 0 · ±inf 0 · 유한 음수 1) — NaN · 음수 = 막이 조용히 빠지고 +inf = 면이 끊긴다 (Codex 10-15 Q7)"
+      },
+      "cg_calls": 0
+    },
+    {
+      "axis": 0,
+      "family": "rrm",
+      "row_role": "cut",
+      "value": "nan",
+      "fingerprint_matches": true,
+      "gate": {
+        "accepted": false,
+        "type": "ValueError",
+        "message": "①′ 계획 축 0 의 막 값 r_face 는 유한한 0 이상 (Ω·cm²) — 어긋난 행 1 (NaN 1 · ±inf 0 · 유한 음수 0) — NaN · 음수 = 막이 조용히 빠지고 +inf = 면이 끊긴다 (Codex 10-15 Q7)"
+      },
+      "solve": {
+        "accepted": false,
+        "type": "ValueError",
+        "message": "①′ 계획 축 0 의 막 값 r_face 는 유한한 0 이상 (Ω·cm²) — 어긋난 행 1 (NaN 1 · ±inf 0 · 유한 음수 0) — NaN · 음수 = 막이 조용히 빠지고 +inf = 면이 끊긴다 (Codex 10-15 Q7)"
+      },
+      "cg_calls": 0
+    },
+    {
+      "axis": 0,
+      "family": "rrm",
+      "row_role": "cut",
+      "value": "positive_inf",
+      "fingerprint_matches": true,
+      "gate": {
+        "accepted": false,
+        "type": "ValueError",
+        "message": "①′ 계획 축 0 의 막 값 r_face 는 유한한 0 이상 (Ω·cm²) — 어긋난 행 1 (NaN 0 · ±inf 1 · 유한 음수 0) — NaN · 음수 = 막이 조용히 빠지고 +inf = 면이 끊긴다 (Codex 10-15 Q7)"
+      },
+      "solve": {
+        "accepted": false,
+        "type": "ValueError",
+        "message": "①′ 계획 축 0 의 막 값 r_face 는 유한한 0 이상 (Ω·cm²) — 어긋난 행 1 (NaN 0 · ±inf 1 · 유한 음수 0) — NaN · 음수 = 막이 조용히 빠지고 +inf = 면이 끊긴다 (Codex 10-15 Q7)"
+      },
+      "cg_calls": 0
+    },
+    {
+      "axis": 0,
+      "family": "rrm",
+      "row_role": "cut",
+      "value": "negative_inf",
+      "fingerprint_matches": true,
+      "gate": {
+        "accepted": false,
+        "type": "ValueError",
+        "message": "①′ 계획 축 0 의 막 값 r_face 는 유한한 0 이상 (Ω·cm²) — 어긋난 행 1 (NaN 0 · ±inf 1 · 유한 음수 0) — NaN · 음수 = 막이 조용히 빠지고 +inf = 면이 끊긴다 (Codex 10-15 Q7)"
+      },
+      "solve": {
+        "accepted": false,
+        "type": "ValueError",
+        "message": "①′ 계획 축 0 의 막 값 r_face 는 유한한 0 이상 (Ω·cm²) — 어긋난 행 1 (NaN 0 · ±inf 1 · 유한 음수 0) — NaN · 음수 = 막이 조용히 빠지고 +inf = 면이 끊긴다 (Codex 10-15 Q7)"
+      },
+      "cg_calls": 0
+    },
+    {
+      "axis": 0,
+      "family": "rrm",
+      "row_role": "cut",
+      "value": "negative",
+      "fingerprint_matches": true,
+      "gate": {
+        "accepted": false,
+        "type": "ValueError",
+        "message": "①′ 계획 축 0 의 막 값 r_face 는 유한한 0 이상 (Ω·cm²) — 어긋난 행 1 (NaN 0 · ±inf 0 · 유한 음수 1) — NaN · 음수 = 막이 조용히 빠지고 +inf = 면이 끊긴다 (Codex 10-15 Q7)"
+      },
+      "solve": {
+        "accepted": false,
+        "type": "ValueError",
+        "message": "①′ 계획 축 0 의 막 값 r_face 는 유한한 0 이상 (Ω·cm²) — 어긋난 행 1 (NaN 0 · ±inf 0 · 유한 음수 1) — NaN · 음수 = 막이 조용히 빠지고 +inf = 면이 끊긴다 (Codex 10-15 Q7)"
+      },
+      "cg_calls": 0
+    },
+    {
+      "axis": 1,
+      "family": "cnc",
+      "row_role": "film",
+      "value": "nan",
+      "fingerprint_matches": true,
+      "gate": {
+        "accepted": false,
+        "type": "ValueError",
+        "message": "①′ 계획 축 1 의 막 값 r_face 는 유한한 0 이상 (Ω·cm²) — 어긋난 행 1 (NaN 1 · ±inf 0 · 유한 음수 0) — NaN · 음수 = 막이 조용히 빠지고 +inf = 면이 끊긴다 (Codex 10-15 Q7)"
+      },
+      "solve": {
+        "accepted": false,
+        "type": "ValueError",
+        "message": "①′ 계획 축 1 의 막 값 r_face 는 유한한 0 이상 (Ω·cm²) — 어긋난 행 1 (NaN 1 · ±inf 0 · 유한 음수 0) — NaN · 음수 = 막이 조용히 빠지고 +inf = 면이 끊긴다 (Codex 10-15 Q7)"
+      },
+      "cg_calls": 0
+    },
+    {
+      "axis": 1,
+      "family": "cnc",
+      "row_role": "film",
+      "value": "positive_inf",
+      "fingerprint_matches": true,
+      "gate": {
+        "accepted": false,
+        "type": "ValueError",
+        "message": "①′ 계획 축 1 의 막 값 r_face 는 유한한 0 이상 (Ω·cm²) — 어긋난 행 1 (NaN 0 · ±inf 1 · 유한 음수 0) — NaN · 음수 = 막이 조용히 빠지고 +inf = 면이 끊긴다 (Codex 10-15 Q7)"
+      },
+      "solve": {
+        "accepted": false,
+        "type": "ValueError",
+        "message": "①′ 계획 축 1 의 막 값 r_face 는 유한한 0 이상 (Ω·cm²) — 어긋난 행 1 (NaN 0 · ±inf 1 · 유한 음수 0) — NaN · 음수 = 막이 조용히 빠지고 +inf = 면이 끊긴다 (Codex 10-15 Q7)"
+      },
+      "cg_calls": 0
+    },
+    {
+      "axis": 1,
+      "family": "cnc",
+      "row_role": "film",
+      "value": "negative_inf",
+      "fingerprint_matches": true,
+      "gate": {
+        "accepted": false,
+        "type": "ValueError",
+        "message": "①′ 계획 축 1 의 막 값 r_face 는 유한한 0 이상 (Ω·cm²) — 어긋난 행 1 (NaN 0 · ±inf 1 · 유한 음수 0) — NaN · 음수 = 막이 조용히 빠지고 +inf = 면이 끊긴다 (Codex 10-15 Q7)"
+      },
+      "solve": {
+        "accepted": false,
+        "type": "ValueError",
+        "message": "①′ 계획 축 1 의 막 값 r_face 는 유한한 0 이상 (Ω·cm²) — 어긋난 행 1 (NaN 0 · ±inf 1 · 유한 음수 0) — NaN · 음수 = 막이 조용히 빠지고 +inf = 면이 끊긴다 (Codex 10-15 Q7)"
+      },
+      "cg_calls": 0
+    },
+    {
+      "axis": 1,
+      "family": "cnc",
+      "row_role": "film",
+      "value": "negative",
+      "fingerprint_matches": true,
+      "gate": {
+        "accepted": false,
+        "type": "ValueError",
+        "message": "①′ 계획 축 1 의 막 값 r_face 는 유한한 0 이상 (Ω·cm²) — 어긋난 행 1 (NaN 0 · ±inf 0 · 유한 음수 1) — NaN · 음수 = 막이 조용히 빠지고 +inf = 면이 끊긴다 (Codex 10-15 Q7)"
+      },
+      "solve": {
+        "accepted": false,
+        "type": "ValueError",
+        "message": "①′ 계획 축 1 의 막 값 r_face 는 유한한 0 이상 (Ω·cm²) — 어긋난 행 1 (NaN 0 · ±inf 0 · 유한 음수 1) — NaN · 음수 = 막이 조용히 빠지고 +inf = 면이 끊긴다 (Codex 10-15 Q7)"
+      },
+      "cg_calls": 0
+    },
+    {
+      "axis": 1,
+      "family": "rrm",
+      "row_role": "film",
+      "value": "nan",
+      "fingerprint_matches": true,
+      "gate": {
+        "accepted": false,
+        "type": "ValueError",
+        "message": "①′ 계획 축 1 의 막 값 r_face 는 유한한 0 이상 (Ω·cm²) — 어긋난 행 1 (NaN 1 · ±inf 0 · 유한 음수 0) — NaN · 음수 = 막이 조용히 빠지고 +inf = 면이 끊긴다 (Codex 10-15 Q7)"
+      },
+      "solve": {
+        "accepted": false,
+        "type": "ValueError",
+        "message": "①′ 계획 축 1 의 막 값 r_face 는 유한한 0 이상 (Ω·cm²) — 어긋난 행 1 (NaN 1 · ±inf 0 · 유한 음수 0) — NaN · 음수 = 막이 조용히 빠지고 +inf = 면이 끊긴다 (Codex 10-15 Q7)"
+      },
+      "cg_calls": 0
+    },
+    {
+      "axis": 1,
+      "family": "rrm",
+      "row_role": "film",
+      "value": "positive_inf",
+      "fingerprint_matches": true,
+      "gate": {
+        "accepted": false,
+        "type": "ValueError",
+        "message": "①′ 계획 축 1 의 막 값 r_face 는 유한한 0 이상 (Ω·cm²) — 어긋난 행 1 (NaN 0 · ±inf 1 · 유한 음수 0) — NaN · 음수 = 막이 조용히 빠지고 +inf = 면이 끊긴다 (Codex 10-15 Q7)"
+      },
+      "solve": {
+        "accepted": false,
+        "type": "ValueError",
+        "message": "①′ 계획 축 1 의 막 값 r_face 는 유한한 0 이상 (Ω·cm²) — 어긋난 행 1 (NaN 0 · ±inf 1 · 유한 음수 0) — NaN · 음수 = 막이 조용히 빠지고 +inf = 면이 끊긴다 (Codex 10-15 Q7)"
+      },
+      "cg_calls": 0
+    },
+    {
+      "axis": 1,
+      "family": "rrm",
+      "row_role": "film",
+      "value": "negative_inf",
+      "fingerprint_matches": true,
+      "gate": {
+        "accepted": false,
+        "type": "ValueError",
+        "message": "①′ 계획 축 1 의 막 값 r_face 는 유한한 0 이상 (Ω·cm²) — 어긋난 행 1 (NaN 0 · ±inf 1 · 유한 음수 0) — NaN · 음수 = 막이 조용히 빠지고 +inf = 면이 끊긴다 (Codex 10-15 Q7)"
+      },
+      "solve": {
+        "accepted": false,
+        "type": "ValueError",
+        "message": "①′ 계획 축 1 의 막 값 r_face 는 유한한 0 이상 (Ω·cm²) — 어긋난 행 1 (NaN 0 · ±inf 1 · 유한 음수 0) — NaN · 음수 = 막이 조용히 빠지고 +inf = 면이 끊긴다 (Codex 10-15 Q7)"
+      },
+      "cg_calls": 0
+    },
+    {
+      "axis": 1,
+      "family": "rrm",
+      "row_role": "film",
+      "value": "negative",
+      "fingerprint_matches": true,
+      "gate": {
+        "accepted": false,
+        "type": "ValueError",
+        "message": "①′ 계획 축 1 의 막 값 r_face 는 유한한 0 이상 (Ω·cm²) — 어긋난 행 1 (NaN 0 · ±inf 0 · 유한 음수 1) — NaN · 음수 = 막이 조용히 빠지고 +inf = 면이 끊긴다 (Codex 10-15 Q7)"
+      },
+      "solve": {
+        "accepted": false,
+        "type": "ValueError",
+        "message": "①′ 계획 축 1 의 막 값 r_face 는 유한한 0 이상 (Ω·cm²) — 어긋난 행 1 (NaN 0 · ±inf 0 · 유한 음수 1) — NaN · 음수 = 막이 조용히 빠지고 +inf = 면이 끊긴다 (Codex 10-15 Q7)"
+      },
+      "cg_calls": 0
+    },
+    {
+      "axis": 1,
+      "family": "rrm",
+      "row_role": "cut",
+      "value": "nan",
+      "fingerprint_matches": true,
+      "gate": {
+        "accepted": false,
+        "type": "ValueError",
+        "message": "①′ 계획 축 1 의 막 값 r_face 는 유한한 0 이상 (Ω·cm²) — 어긋난 행 1 (NaN 1 · ±inf 0 · 유한 음수 0) — NaN · 음수 = 막이 조용히 빠지고 +inf = 면이 끊긴다 (Codex 10-15 Q7)"
+      },
+      "solve": {
+        "accepted": false,
+        "type": "ValueError",
+        "message": "①′ 계획 축 1 의 막 값 r_face 는 유한한 0 이상 (Ω·cm²) — 어긋난 행 1 (NaN 1 · ±inf 0 · 유한 음수 0) — NaN · 음수 = 막이 조용히 빠지고 +inf = 면이 끊긴다 (Codex 10-15 Q7)"
+      },
+      "cg_calls": 0
+    },
+    {
+      "axis": 1,
+      "family": "rrm",
+      "row_role": "cut",
+      "value": "positive_inf",
+      "fingerprint_matches": true,
+      "gate": {
+        "accepted": false,
+        "type": "ValueError",
+        "message": "①′ 계획 축 1 의 막 값 r_face 는 유한한 0 이상 (Ω·cm²) — 어긋난 행 1 (NaN 0 · ±inf 1 · 유한 음수 0) — NaN · 음수 = 막이 조용히 빠지고 +inf = 면이 끊긴다 (Codex 10-15 Q7)"
+      },
+      "solve": {
+        "accepted": false,
+        "type": "ValueError",
+        "message": "①′ 계획 축 1 의 막 값 r_face 는 유한한 0 이상 (Ω·cm²) — 어긋난 행 1 (NaN 0 · ±inf 1 · 유한 음수 0) — NaN · 음수 = 막이 조용히 빠지고 +inf = 면이 끊긴다 (Codex 10-15 Q7)"
+      },
+      "cg_calls": 0
+    },
+    {
+      "axis": 1,
+      "family": "rrm",
+      "row_role": "cut",
+      "value": "negative_inf",
+      "fingerprint_matches": true,
+      "gate": {
+        "accepted": false,
+        "type": "ValueError",
+        "message": "①′ 계획 축 1 의 막 값 r_face 는 유한한 0 이상 (Ω·cm²) — 어긋난 행 1 (NaN 0 · ±inf 1 · 유한 음수 0) — NaN · 음수 = 막이 조용히 빠지고 +inf = 면이 끊긴다 (Codex 10-15 Q7)"
+      },
+      "solve": {
+        "accepted": false,
+        "type": "ValueError",
+        "message": "①′ 계획 축 1 의 막 값 r_face 는 유한한 0 이상 (Ω·cm²) — 어긋난 행 1 (NaN 0 · ±inf 1 · 유한 음수 0) — NaN · 음수 = 막이 조용히 빠지고 +inf = 면이 끊긴다 (Codex 10-15 Q7)"
+      },
+      "cg_calls": 0
+    },
+    {
+      "axis": 1,
+      "family": "rrm",
+      "row_role": "cut",
+      "value": "negative",
+      "fingerprint_matches": true,
+      "gate": {
+        "accepted": false,
+        "type": "ValueError",
+        "message": "①′ 계획 축 1 의 막 값 r_face 는 유한한 0 이상 (Ω·cm²) — 어긋난 행 1 (NaN 0 · ±inf 0 · 유한 음수 1) — NaN · 음수 = 막이 조용히 빠지고 +inf = 면이 끊긴다 (Codex 10-15 Q7)"
+      },
+      "solve": {
+        "accepted": false,
+        "type": "ValueError",
+        "message": "①′ 계획 축 1 의 막 값 r_face 는 유한한 0 이상 (Ω·cm²) — 어긋난 행 1 (NaN 0 · ±inf 0 · 유한 음수 1) — NaN · 음수 = 막이 조용히 빠지고 +inf = 면이 끊긴다 (Codex 10-15 Q7)"
+      },
+      "cg_calls": 0
+    },
+    {
+      "axis": 2,
+      "family": "cnc",
+      "row_role": "film",
+      "value": "nan",
+      "fingerprint_matches": true,
+      "gate": {
+        "accepted": false,
+        "type": "ValueError",
+        "message": "①′ 계획 축 2 의 막 값 r_face 는 유한한 0 이상 (Ω·cm²) — 어긋난 행 1 (NaN 1 · ±inf 0 · 유한 음수 0) — NaN · 음수 = 막이 조용히 빠지고 +inf = 면이 끊긴다 (Codex 10-15 Q7)"
+      },
+      "solve": {
+        "accepted": false,
+        "type": "ValueError",
+        "message": "①′ 계획 축 2 의 막 값 r_face 는 유한한 0 이상 (Ω·cm²) — 어긋난 행 1 (NaN 1 · ±inf 0 · 유한 음수 0) — NaN · 음수 = 막이 조용히 빠지고 +inf = 면이 끊긴다 (Codex 10-15 Q7)"
+      },
+      "cg_calls": 0
+    },
+    {
+      "axis": 2,
+      "family": "cnc",
+      "row_role": "film",
+      "value": "positive_inf",
+      "fingerprint_matches": true,
+      "gate": {
+        "accepted": false,
+        "type": "ValueError",
+        "message": "①′ 계획 축 2 의 막 값 r_face 는 유한한 0 이상 (Ω·cm²) — 어긋난 행 1 (NaN 0 · ±inf 1 · 유한 음수 0) — NaN · 음수 = 막이 조용히 빠지고 +inf = 면이 끊긴다 (Codex 10-15 Q7)"
+      },
+      "solve": {
+        "accepted": false,
+        "type": "ValueError",
+        "message": "①′ 계획 축 2 의 막 값 r_face 는 유한한 0 이상 (Ω·cm²) — 어긋난 행 1 (NaN 0 · ±inf 1 · 유한 음수 0) — NaN · 음수 = 막이 조용히 빠지고 +inf = 면이 끊긴다 (Codex 10-15 Q7)"
+      },
+      "cg_calls": 0
+    },
+    {
+      "axis": 2,
+      "family": "cnc",
+      "row_role": "film",
+      "value": "negative_inf",
+      "fingerprint_matches": true,
+      "gate": {
+        "accepted": false,
+        "type": "ValueError",
+        "message": "①′ 계획 축 2 의 막 값 r_face 는 유한한 0 이상 (Ω·cm²) — 어긋난 행 1 (NaN 0 · ±inf 1 · 유한 음수 0) — NaN · 음수 = 막이 조용히 빠지고 +inf = 면이 끊긴다 (Codex 10-15 Q7)"
+      },
+      "solve": {
+        "accepted": false,
+        "type": "ValueError",
+        "message": "①′ 계획 축 2 의 막 값 r_face 는 유한한 0 이상 (Ω·cm²) — 어긋난 행 1 (NaN 0 · ±inf 1 · 유한 음수 0) — NaN · 음수 = 막이 조용히 빠지고 +inf = 면이 끊긴다 (Codex 10-15 Q7)"
+      },
+      "cg_calls": 0
+    },
+    {
+      "axis": 2,
+      "family": "cnc",
+      "row_role": "film",
+      "value": "negative",
+      "fingerprint_matches": true,
+      "gate": {
+        "accepted": false,
+        "type": "ValueError",
+        "message": "①′ 계획 축 2 의 막 값 r_face 는 유한한 0 이상 (Ω·cm²) — 어긋난 행 1 (NaN 0 · ±inf 0 · 유한 음수 1) — NaN · 음수 = 막이 조용히 빠지고 +inf = 면이 끊긴다 (Codex 10-15 Q7)"
+      },
+      "solve": {
+        "accepted": false,
+        "type": "ValueError",
+        "message": "①′ 계획 축 2 의 막 값 r_face 는 유한한 0 이상 (Ω·cm²) — 어긋난 행 1 (NaN 0 · ±inf 0 · 유한 음수 1) — NaN · 음수 = 막이 조용히 빠지고 +inf = 면이 끊긴다 (Codex 10-15 Q7)"
+      },
+      "cg_calls": 0
+    },
+    {
+      "axis": 2,
+      "family": "rrm",
+      "row_role": "film",
+      "value": "nan",
+      "fingerprint_matches": true,
+      "gate": {
+        "accepted": false,
+        "type": "ValueError",
+        "message": "①′ 계획 축 2 의 막 값 r_face 는 유한한 0 이상 (Ω·cm²) — 어긋난 행 1 (NaN 1 · ±inf 0 · 유한 음수 0) — NaN · 음수 = 막이 조용히 빠지고 +inf = 면이 끊긴다 (Codex 10-15 Q7)"
+      },
+      "solve": {
+        "accepted": false,
+        "type": "ValueError",
+        "message": "①′ 계획 축 2 의 막 값 r_face 는 유한한 0 이상 (Ω·cm²) — 어긋난 행 1 (NaN 1 · ±inf 0 · 유한 음수 0) — NaN · 음수 = 막이 조용히 빠지고 +inf = 면이 끊긴다 (Codex 10-15 Q7)"
+      },
+      "cg_calls": 0
+    },
+    {
+      "axis": 2,
+      "family": "rrm",
+      "row_role": "film",
+      "value": "positive_inf",
+      "fingerprint_matches": true,
+      "gate": {
+        "accepted": false,
+        "type": "ValueError",
+        "message": "①′ 계획 축 2 의 막 값 r_face 는 유한한 0 이상 (Ω·cm²) — 어긋난 행 1 (NaN 0 · ±inf 1 · 유한 음수 0) — NaN · 음수 = 막이 조용히 빠지고 +inf = 면이 끊긴다 (Codex 10-15 Q7)"
+      },
+      "solve": {
+        "accepted": false,
+        "type": "ValueError",
+        "message": "①′ 계획 축 2 의 막 값 r_face 는 유한한 0 이상 (Ω·cm²) — 어긋난 행 1 (NaN 0 · ±inf 1 · 유한 음수 0) — NaN · 음수 = 막이 조용히 빠지고 +inf = 면이 끊긴다 (Codex 10-15 Q7)"
+      },
+      "cg_calls": 0
+    },
+    {
+      "axis": 2,
+      "family": "rrm",
+      "row_role": "film",
+      "value": "negative_inf",
+      "fingerprint_matches": true,
+      "gate": {
+        "accepted": false,
+        "type": "ValueError",
+        "message": "①′ 계획 축 2 의 막 값 r_face 는 유한한 0 이상 (Ω·cm²) — 어긋난 행 1 (NaN 0 · ±inf 1 · 유한 음수 0) — NaN · 음수 = 막이 조용히 빠지고 +inf = 면이 끊긴다 (Codex 10-15 Q7)"
+      },
+      "solve": {
+        "accepted": false,
+        "type": "ValueError",
+        "message": "①′ 계획 축 2 의 막 값 r_face 는 유한한 0 이상 (Ω·cm²) — 어긋난 행 1 (NaN 0 · ±inf 1 · 유한 음수 0) — NaN · 음수 = 막이 조용히 빠지고 +inf = 면이 끊긴다 (Codex 10-15 Q7)"
+      },
+      "cg_calls": 0
+    },
+    {
+      "axis": 2,
+      "family": "rrm",
+      "row_role": "film",
+      "value": "negative",
+      "fingerprint_matches": true,
+      "gate": {
+        "accepted": false,
+        "type": "ValueError",
+        "message": "①′ 계획 축 2 의 막 값 r_face 는 유한한 0 이상 (Ω·cm²) — 어긋난 행 1 (NaN 0 · ±inf 0 · 유한 음수 1) — NaN · 음수 = 막이 조용히 빠지고 +inf = 면이 끊긴다 (Codex 10-15 Q7)"
+      },
+      "solve": {
+        "accepted": false,
+        "type": "ValueError",
+        "message": "①′ 계획 축 2 의 막 값 r_face 는 유한한 0 이상 (Ω·cm²) — 어긋난 행 1 (NaN 0 · ±inf 0 · 유한 음수 1) — NaN · 음수 = 막이 조용히 빠지고 +inf = 면이 끊긴다 (Codex 10-15 Q7)"
+      },
+      "cg_calls": 0
+    },
+    {
+      "axis": 2,
+      "family": "rrm",
+      "row_role": "cut",
+      "value": "nan",
+      "fingerprint_matches": true,
+      "gate": {
+        "accepted": false,
+        "type": "ValueError",
+        "message": "①′ 계획 축 2 의 막 값 r_face 는 유한한 0 이상 (Ω·cm²) — 어긋난 행 1 (NaN 1 · ±inf 0 · 유한 음수 0) — NaN · 음수 = 막이 조용히 빠지고 +inf = 면이 끊긴다 (Codex 10-15 Q7)"
+      },
+      "solve": {
+        "accepted": false,
+        "type": "ValueError",
+        "message": "①′ 계획 축 2 의 막 값 r_face 는 유한한 0 이상 (Ω·cm²) — 어긋난 행 1 (NaN 1 · ±inf 0 · 유한 음수 0) — NaN · 음수 = 막이 조용히 빠지고 +inf = 면이 끊긴다 (Codex 10-15 Q7)"
+      },
+      "cg_calls": 0
+    },
+    {
+      "axis": 2,
+      "family": "rrm",
+      "row_role": "cut",
+      "value": "positive_inf",
+      "fingerprint_matches": true,
+      "gate": {
+        "accepted": false,
+        "type": "ValueError",
+        "message": "①′ 계획 축 2 의 막 값 r_face 는 유한한 0 이상 (Ω·cm²) — 어긋난 행 1 (NaN 0 · ±inf 1 · 유한 음수 0) — NaN · 음수 = 막이 조용히 빠지고 +inf = 면이 끊긴다 (Codex 10-15 Q7)"
+      },
+      "solve": {
+        "accepted": false,
+        "type": "ValueError",
+        "message": "①′ 계획 축 2 의 막 값 r_face 는 유한한 0 이상 (Ω·cm²) — 어긋난 행 1 (NaN 0 · ±inf 1 · 유한 음수 0) — NaN · 음수 = 막이 조용히 빠지고 +inf = 면이 끊긴다 (Codex 10-15 Q7)"
+      },
+      "cg_calls": 0
+    },
+    {
+      "axis": 2,
+      "family": "rrm",
+      "row_role": "cut",
+      "value": "negative_inf",
+      "fingerprint_matches": true,
+      "gate": {
+        "accepted": false,
+        "type": "ValueError",
+        "message": "①′ 계획 축 2 의 막 값 r_face 는 유한한 0 이상 (Ω·cm²) — 어긋난 행 1 (NaN 0 · ±inf 1 · 유한 음수 0) — NaN · 음수 = 막이 조용히 빠지고 +inf = 면이 끊긴다 (Codex 10-15 Q7)"
+      },
+      "solve": {
+        "accepted": false,
+        "type": "ValueError",
+        "message": "①′ 계획 축 2 의 막 값 r_face 는 유한한 0 이상 (Ω·cm²) — 어긋난 행 1 (NaN 0 · ±inf 1 · 유한 음수 0) — NaN · 음수 = 막이 조용히 빠지고 +inf = 면이 끊긴다 (Codex 10-15 Q7)"
+      },
+      "cg_calls": 0
+    },
+    {
+      "axis": 2,
+      "family": "rrm",
+      "row_role": "cut",
+      "value": "negative",
+      "fingerprint_matches": true,
+      "gate": {
+        "accepted": false,
+        "type": "ValueError",
+        "message": "①′ 계획 축 2 의 막 값 r_face 는 유한한 0 이상 (Ω·cm²) — 어긋난 행 1 (NaN 0 · ±inf 0 · 유한 음수 1) — NaN · 음수 = 막이 조용히 빠지고 +inf = 면이 끊긴다 (Codex 10-15 Q7)"
+      },
+      "solve": {
+        "accepted": false,
+        "type": "ValueError",
+        "message": "①′ 계획 축 2 의 막 값 r_face 는 유한한 0 이상 (Ω·cm²) — 어긋난 행 1 (NaN 0 · ±inf 0 · 유한 음수 1) — NaN · 음수 = 막이 조용히 빠지고 +inf = 면이 끊긴다 (Codex 10-15 Q7)"
+      },
+      "cg_calls": 0
+    }
+  ],
+  "positive_rotations": [
+    {
+      "axis": 0,
+      "family": "cnc",
+      "shape": [
+        39,
+        20,
+        20
+      ],
+      "film": 152,
+      "cut": 0,
+      "gate": true
+    },
+    {
+      "axis": 0,
+      "family": "rrm",
+      "shape": [
+        39,
+        20,
+        20
+      ],
+      "film": 67,
+      "cut": 85,
+      "gate": true
+    },
+    {
+      "axis": 1,
+      "family": "cnc",
+      "shape": [
+        20,
+        39,
+        20
+      ],
+      "film": 152,
+      "cut": 0,
+      "gate": true
+    },
+    {
+      "axis": 1,
+      "family": "rrm",
+      "shape": [
+        20,
+        39,
+        20
+      ],
+      "film": 67,
+      "cut": 85,
+      "gate": true
+    },
+    {
+      "axis": 2,
+      "family": "cnc",
+      "shape": [
+        20,
+        20,
+        39
+      ],
+      "film": 152,
+      "cut": 0,
+      "gate": true
+    },
+    {
+      "axis": 2,
+      "family": "rrm",
+      "shape": [
+        20,
+        20,
+        39
+      ],
+      "film": 67,
+      "cut": 85,
+      "gate": true
+    }
+  ],
+  "n9b": {
+    "nan_zero": {
+      "old_nan": {
+        "sigma_eff": 0.0037299595666211234,
+        "resid": 6.2089744354216986e-15,
+        "n_dof": 8527,
+        "n_through_dof": 8527,
+        "cg_info": 0,
+        "unconverged": false,
+        "sigma_hex": "0x1.e8e4acb544bd1p-9",
+        "phi": {
+          "shape": [
+            20,
+            20,
+            39
+          ],
+          "dtype": "float64",
+          "sha256": "c62f28305cd8a7428cfe578908690d91f4b66d006c8a18c8ebf2d3077c03014f",
+          "min": 0.0,
+          "max": 0.9801335163288581
+        }
+      },
+      "old_zero": {
+        "sigma_eff": 0.0037299595666211234,
+        "resid": 6.2089744354216986e-15,
+        "n_dof": 8527,
+        "n_through_dof": 8527,
+        "cg_info": 0,
+        "unconverged": false,
+        "sigma_hex": "0x1.e8e4acb544bd1p-9",
+        "phi": {
+          "shape": [
+            20,
+            20,
+            39
+          ],
+          "dtype": "float64",
+          "sha256": "c62f28305cd8a7428cfe578908690d91f4b66d006c8a18c8ebf2d3077c03014f",
+          "min": 0.0,
+          "max": 0.9801335163288581
+        }
+      },
+      "new_zero": {
+        "sigma_eff": 0.0037299595666211234,
+        "resid": 6.2089744354216986e-15,
+        "n_dof": 8527,
+        "n_through_dof": 8527,
+        "cg_info": 0,
+        "unconverged": false,
+        "sigma_hex": "0x1.e8e4acb544bd1p-9",
+        "phi": {
+          "shape": [
+            20,
+            20,
+            39
+          ],
+          "dtype": "float64",
+          "sha256": "c62f28305cd8a7428cfe578908690d91f4b66d006c8a18c8ebf2d3077c03014f",
+          "min": 0.0,
+          "max": 0.9801335163288581
+        }
+      },
+      "exact_equal": {
+        "sigma_hex": true,
+        "phi_bytes": true,
+        "n_dof": true,
+        "resid_hex": true,
+        "matrix_rhs": true
+      },
+      "matrix": [
+        {
+          "shape": [
+            8527,
+            8527
+          ],
+          "nnz": 56019,
+          "data": "5d91c3a899eea3f9566b5450fe805ccd4b45b86cd1d8700a54bfbe9a56d2f035",
+          "indices": "b09c78afcf0b2852b1f9f8e7d53ca3813e5fa33d8cfbb5dde73eb3ff6aa806b0",
+          "indptr": "d1f4c83caea5ce47dc5d0c505b6ba8b703b7671d30dbc53c95d45480abf544bb",
+          "rhs": "1e8bcdd820a3d03aa06a4e379a239202b52e198c18bec94b829a9c3e93ce9170"
+        }
+      ]
+    },
+    "cut_deleted_k_changed": {
+      "generic_gate": true,
+      "generic_solve": {
+        "sigma_eff": 0.0040840140889134725,
+        "resid": 6.166218132327159e-15,
+        "n_dof": 8527,
+        "n_through_dof": 8527,
+        "cg_info": 0,
+        "unconverged": false,
+        "sigma_hex": "0x1.0ba662f2c2e92p-8",
+        "phi": {
+          "shape": [
+            20,
+            20,
+            39
+          ],
+          "dtype": "float64",
+          "sha256": "4edf8b40b03d3c30402681b31d15f8fa9e4fda82c9230e971c668e982d34ed22",
+          "min": 0.0,
+          "max": 0.9782533450684395
+        }
+      },
+      "independent_check_regeneration_disabled": [
+        {
+          "code": "excluded_without_rejection",
+          "n": 1,
+          "detail": [
+            [
+              "rrm_unresolved_subgrid",
+              1,
+              0
+            ]
+          ],
+          "why": "기준에서 빠진 접점 (r 없음 · 기울기 · 미해상) 이 계획 거부 사유로 덮이지 않았다 — 메타데이터로 검사 집합을 비웠다 (RIMP-04)"
+        },
+        {
+          "code": "row_for_excluded_contact",
+          "n": 67,
+          "detail": [
+            [
+              2,
+              4971
+            ],
+            [
+              2,
+              5010
+            ],
+            [
+              2,
+              5049
+            ],
+            [
+              2,
+              5088
+            ],
+            [
+              2,
+              5127
+            ],
+            [
+              2,
+              5712
+            ],
+            [
+              2,
+              5751
+            ],
+            [
+              2,
+              5790
+            ]
+          ],
+          "why": "기준에서 빠진 접점의 막 행이 있다"
+        }
+      ],
+      "wrapper": {
+        "accepted": false,
+        "type": "ValueError",
+        "message": "RRM 원장 검사 (N9) 거부 — excluded_without_rejection(n=1) · row_for_excluded_contact(n=67) · plan_not_reproducible(n=8)"
+      },
+      "wrapper_cg_calls": 0
+    },
+    "pure_cut_deleted_independent": [
+      {
+        "code": "film_off_outside",
+        "n": 85
+      }
+    ]
+  },
+  "schema_boundary": [
+    {
+      "name": "missing_rface",
+      "gate": {
+        "accepted": false,
+        "type": "KeyError",
+        "message": "'rface'"
+      },
+      "solve": {
+        "accepted": false,
+        "type": "KeyError",
+        "message": "'rface'"
+      },
+      "cg_calls": 0,
+      "warnings": []
+    },
+    {
+      "name": "rface_none",
+      "gate": {
+        "accepted": false,
+        "type": "ValueError",
+        "message": "①′ 계획 축 2 의 막 값 r_face 는 유한한 0 이상 (Ω·cm²) — 어긋난 행 1 (NaN 1 · ±inf 0 · 유한 음수 0) — NaN · 음수 = 막이 조용히 빠지고 +inf = 면이 끊긴다 (Codex 10-15 Q7)"
+      },
+      "solve": {
+        "accepted": false,
+        "type": "ValueError",
+        "message": "①′ 계획 축 2 의 막 값 r_face 는 유한한 0 이상 (Ω·cm²) — 어긋난 행 1 (NaN 1 · ±inf 0 · 유한 음수 0) — NaN · 음수 = 막이 조용히 빠지고 +inf = 면이 끊긴다 (Codex 10-15 Q7)"
+      },
+      "cg_calls": 0,
+      "warnings": []
+    },
+    {
+      "name": "rface_empty",
+      "gate": {
+        "accepted": true,
+        "result": true
+      },
+      "solve": {
+        "accepted": false,
+        "type": "IndexError",
+        "message": "boolean index did not match indexed array along axis 0; size of axis is 0 but size of corresponding boolean axis is 152"
+      },
+      "cg_calls": 0,
+      "warnings": []
+    },
+    {
+      "name": "rface_2d",
+      "gate": {
+        "accepted": true,
+        "result": true
+      },
+      "solve": {
+        "accepted": false,
+        "type": "IndexError",
+        "message": "too many indices for array: array is 1-dimensional, but 2 were indexed"
+      },
+      "cg_calls": 0,
+      "warnings": []
+    },
+    {
+      "name": "rface_scalar",
+      "gate": {
+        "accepted": true,
+        "result": true
+      },
+      "solve": {
+        "accepted": false,
+        "type": "IndexError",
+        "message": "too many indices for array: array is 0-dimensional, but 1 were indexed"
+      },
+      "cg_calls": 0,
+      "warnings": []
+    },
+    {
+      "name": "float32_nan",
+      "gate": {
+        "accepted": false,
+        "type": "ValueError",
+        "message": "①′ 계획 축 2 의 막 값 r_face 는 유한한 0 이상 (Ω·cm²) — 어긋난 행 1 (NaN 1 · ±inf 0 · 유한 음수 0) — NaN · 음수 = 막이 조용히 빠지고 +inf = 면이 끊긴다 (Codex 10-15 Q7)"
+      },
+      "solve": {
+        "accepted": false,
+        "type": "ValueError",
+        "message": "①′ 계획 축 2 의 막 값 r_face 는 유한한 0 이상 (Ω·cm²) — 어긋난 행 1 (NaN 1 · ±inf 0 · 유한 음수 0) — NaN · 음수 = 막이 조용히 빠지고 +inf = 면이 끊긴다 (Codex 10-15 Q7)"
+      },
+      "cg_calls": 0,
+      "warnings": []
+    },
+    {
+      "name": "string_inf",
+      "gate": {
+        "accepted": false,
+        "type": "ValueError",
+        "message": "①′ 계획 축 2 의 막 값 r_face 는 유한한 0 이상 (Ω·cm²) — 어긋난 행 1 (NaN 0 · ±inf 1 · 유한 음수 0) — NaN · 음수 = 막이 조용히 빠지고 +inf = 면이 끊긴다 (Codex 10-15 Q7)"
+      },
+      "solve": {
+        "accepted": false,
+        "type": "ValueError",
+        "message": "①′ 계획 축 2 의 막 값 r_face 는 유한한 0 이상 (Ω·cm²) — 어긋난 행 1 (NaN 0 · ±inf 1 · 유한 음수 0) — NaN · 음수 = 막이 조용히 빠지고 +inf = 면이 끊긴다 (Codex 10-15 Q7)"
+      },
+      "cg_calls": 0,
+      "warnings": []
+    },
+    {
+      "name": "string_positive",
+      "gate": {
+        "accepted": true,
+        "result": true
+      },
+      "solve": {
+        "accepted": true,
+        "result": {
+          "sigma_eff": 0.003334457143882423,
+          "resid": 6.6107095948726855e-15,
+          "n_dof": 8527,
+          "n_through_dof": 8527,
+          "cg_info": 0,
+          "unconverged": false,
+          "sigma_hex": "0x1.b50dd0c409f8ap-9",
+          "phi": {
+            "shape": [
+              20,
+              20,
+              39
+            ],
+            "dtype": "float64",
+            "sha256": "c582457e0e183f7e1a68ca1df4d75f92114dda49829bea1418dea6d638490116",
+            "min": 0.0,
+            "max": 0.9822404241869218
+          }
+        }
+      },
+      "cg_calls": 1,
+      "warnings": []
+    },
+    {
+      "name": "complex_imag_nan",
+      "gate": {
+        "accepted": true,
+        "result": true
+      },
+      "solve": {
+        "accepted": true,
+        "result": {
+          "sigma_eff": 0.003334457143882423,
+          "resid": 6.6107095948726855e-15,
+          "n_dof": 8527,
+          "n_through_dof": 8527,
+          "cg_info": 0,
+          "unconverged": false,
+          "sigma_hex": "0x1.b50dd0c409f8ap-9",
+          "phi": {
+            "shape": [
+              20,
+              20,
+              39
+            ],
+            "dtype": "float64",
+            "sha256": "c582457e0e183f7e1a68ca1df4d75f92114dda49829bea1418dea6d638490116",
+            "min": 0.0,
+            "max": 0.9822404241869218
+          }
+        }
+      },
+      "cg_calls": 1,
+      "warnings": [
+        "Casting complex values to real discards the imaginary part",
+        "Casting complex values to real discards the imaginary part",
+        "Casting complex values to real discards the imaginary part"
+      ]
+    },
+    {
+      "name": "all_rows_removed",
+      "gate": {
+        "accepted": true,
+        "result": true
+      },
+      "solve": {
+        "accepted": true,
+        "result": {
+          "sigma_eff": 0.004141925781633665,
+          "resid": 6.2335439758997235e-15,
+          "n_dof": 8527,
+          "n_through_dof": 8527,
+          "cg_info": 0,
+          "unconverged": false,
+          "sigma_hex": "0x1.0f71fbc64a9a0p-8",
+          "phi": {
+            "shape": [
+              20,
+              20,
+              39
+            ],
+            "dtype": "float64",
+            "sha256": "d13fe9d61574fb6b2bee1184be6cc12da1ee376a115586b81db53561545ea344",
+            "min": 0.0,
+            "max": 0.9779442216417823
+          }
+        }
+      },
+      "cg_calls": 1,
+      "warnings": []
+    }
+  ],
+  "positive_controls": {
+    "cnc_normal": {
+      "gate": true,
+      "film": 152,
+      "cut": 0,
+      "zero_film_rows": 0,
+      "zero_cut_rows": 0,
+      "new": {
+        "sigma_eff": 0.0038116099134384756,
+        "resid": 6.277306161468673e-15,
+        "n_dof": 8527,
+        "n_through_dof": 8527,
+        "cg_info": 0,
+        "unconverged": false,
+        "sigma_hex": "0x1.f39867d8be66ap-9",
+        "phi": {
+          "shape": [
+            20,
+            20,
+            39
+          ],
+          "dtype": "float64",
+          "sha256": "1b0f66d486ad0db0ff59f327c1da457b8fbbf28983213838f0588be740401c7e",
+          "min": 0.0,
+          "max": 0.9797034655629099
+        }
+      },
+      "baseline": {
+        "sigma_eff": 0.0038116099134384756,
+        "resid": 6.277306161468673e-15,
+        "n_dof": 8527,
+        "n_through_dof": 8527,
+        "cg_info": 0,
+        "unconverged": false,
+        "sigma_hex": "0x1.f39867d8be66ap-9",
+        "phi": {
+          "shape": [
+            20,
+            20,
+            39
+          ],
+          "dtype": "float64",
+          "sha256": "1b0f66d486ad0db0ff59f327c1da457b8fbbf28983213838f0588be740401c7e",
+          "min": 0.0,
+          "max": 0.9797034655629099
+        }
+      },
+      "entire_result_identical": true,
+      "matrix_rhs_identical": true
+    },
+    "cnc_registered_zero": {
+      "gate": true,
+      "film": 0,
+      "cut": 0,
+      "zero_film_rows": 0,
+      "zero_cut_rows": 0,
+      "new": {
+        "sigma_eff": 0.004141925781633665,
+        "resid": 6.2335439758997235e-15,
+        "n_dof": 8527,
+        "n_through_dof": 8527,
+        "cg_info": 0,
+        "unconverged": false,
+        "sigma_hex": "0x1.0f71fbc64a9a0p-8",
+        "phi": {
+          "shape": [
+            20,
+            20,
+            39
+          ],
+          "dtype": "float64",
+          "sha256": "d13fe9d61574fb6b2bee1184be6cc12da1ee376a115586b81db53561545ea344",
+          "min": 0.0,
+          "max": 0.9779442216417823
+        }
+      },
+      "baseline": {
+        "sigma_eff": 0.004141925781633665,
+        "resid": 6.2335439758997235e-15,
+        "n_dof": 8527,
+        "n_through_dof": 8527,
+        "cg_info": 0,
+        "unconverged": false,
+        "sigma_hex": "0x1.0f71fbc64a9a0p-8",
+        "phi": {
+          "shape": [
+            20,
+            20,
+            39
+          ],
+          "dtype": "float64",
+          "sha256": "d13fe9d61574fb6b2bee1184be6cc12da1ee376a115586b81db53561545ea344",
+          "min": 0.0,
+          "max": 0.9779442216417823
+        }
+      },
+      "entire_result_identical": true,
+      "matrix_rhs_identical": true
+    },
+    "cnc_doubled_all": {
+      "gate": true,
+      "film": 152,
+      "cut": 0,
+      "zero_film_rows": 0,
+      "zero_cut_rows": 0,
+      "new": {
+        "sigma_eff": 0.0035313954366456347,
+        "resid": 6.264780735418761e-15,
+        "n_dof": 8527,
+        "n_through_dof": 8527,
+        "cg_info": 0,
+        "unconverged": false,
+        "sigma_hex": "0x1.ceddf7d1bbe4dp-9",
+        "phi": {
+          "shape": [
+            20,
+            20,
+            39
+          ],
+          "dtype": "float64",
+          "sha256": "1c188591edbcee7f7a59e7eb69cc95371e650235ac670f047d3a6ef0c90d94d6",
+          "min": 0.0,
+          "max": 0.9811957925159019
+        }
+      },
+      "baseline": {
+        "sigma_eff": 0.0035313954366456347,
+        "resid": 6.264780735418761e-15,
+        "n_dof": 8527,
+        "n_through_dof": 8527,
+        "cg_info": 0,
+        "unconverged": false,
+        "sigma_hex": "0x1.ceddf7d1bbe4dp-9",
+        "phi": {
+          "shape": [
+            20,
+            20,
+            39
+          ],
+          "dtype": "float64",
+          "sha256": "1c188591edbcee7f7a59e7eb69cc95371e650235ac670f047d3a6ef0c90d94d6",
+          "min": 0.0,
+          "max": 0.9811957925159019
+        }
+      },
+      "entire_result_identical": true,
+      "matrix_rhs_identical": true
+    },
+    "rrm_normal": {
+      "gate": true,
+      "film": 67,
+      "cut": 85,
+      "zero_film_rows": 0,
+      "zero_cut_rows": 85,
+      "new": {
+        "sigma_eff": 0.003334457143882423,
+        "resid": 6.6107095948726855e-15,
+        "n_dof": 8527,
+        "n_through_dof": 8527,
+        "cg_info": 0,
+        "unconverged": false,
+        "sigma_hex": "0x1.b50dd0c409f8ap-9",
+        "phi": {
+          "shape": [
+            20,
+            20,
+            39
+          ],
+          "dtype": "float64",
+          "sha256": "c582457e0e183f7e1a68ca1df4d75f92114dda49829bea1418dea6d638490116",
+          "min": 0.0,
+          "max": 0.9822404241869218
+        }
+      },
+      "baseline": {
+        "sigma_eff": 0.003334457143882423,
+        "resid": 6.6107095948726855e-15,
+        "n_dof": 8527,
+        "n_through_dof": 8527,
+        "cg_info": 0,
+        "unconverged": false,
+        "sigma_hex": "0x1.b50dd0c409f8ap-9",
+        "phi": {
+          "shape": [
+            20,
+            20,
+            39
+          ],
+          "dtype": "float64",
+          "sha256": "c582457e0e183f7e1a68ca1df4d75f92114dda49829bea1418dea6d638490116",
+          "min": 0.0,
+          "max": 0.9822404241869218
+        }
+      },
+      "entire_result_identical": true,
+      "matrix_rhs_identical": true,
+      "rrm_check_codes": []
+    },
+    "rrm_registered_zero": {
+      "gate": true,
+      "film": 67,
+      "cut": 85,
+      "zero_film_rows": 67,
+      "zero_cut_rows": 85,
+      "new": {
+        "sigma_eff": 0.0037299595666211234,
+        "resid": 6.2089744354216986e-15,
+        "n_dof": 8527,
+        "n_through_dof": 8527,
+        "cg_info": 0,
+        "unconverged": false,
+        "sigma_hex": "0x1.e8e4acb544bd1p-9",
+        "phi": {
+          "shape": [
+            20,
+            20,
+            39
+          ],
+          "dtype": "float64",
+          "sha256": "c62f28305cd8a7428cfe578908690d91f4b66d006c8a18c8ebf2d3077c03014f",
+          "min": 0.0,
+          "max": 0.9801335163288581
+        }
+      },
+      "baseline": {
+        "sigma_eff": 0.0037299595666211234,
+        "resid": 6.2089744354216986e-15,
+        "n_dof": 8527,
+        "n_through_dof": 8527,
+        "cg_info": 0,
+        "unconverged": false,
+        "sigma_hex": "0x1.e8e4acb544bd1p-9",
+        "phi": {
+          "shape": [
+            20,
+            20,
+            39
+          ],
+          "dtype": "float64",
+          "sha256": "c62f28305cd8a7428cfe578908690d91f4b66d006c8a18c8ebf2d3077c03014f",
+          "min": 0.0,
+          "max": 0.9801335163288581
+        }
+      },
+      "entire_result_identical": true,
+      "matrix_rhs_identical": true,
+      "rrm_check_codes": []
+    },
+    "rrm_doubled_all": {
+      "gate": true,
+      "film": 67,
+      "cut": 85,
+      "zero_film_rows": 0,
+      "zero_cut_rows": 85,
+      "new": {
+        "sigma_eff": 0.0030984308118989293,
+        "resid": 6.5464350130468436e-15,
+        "n_dof": 8527,
+        "n_through_dof": 8527,
+        "cg_info": 0,
+        "unconverged": false,
+        "sigma_hex": "0x1.961e160315a90p-9",
+        "phi": {
+          "shape": [
+            20,
+            20,
+            39
+          ],
+          "dtype": "float64",
+          "sha256": "7f0105dad269965359344c8da06b7bb478cbcf6612a8337c9243715c9d394da0",
+          "min": 0.0,
+          "max": 0.9834973404120309
+        }
+      },
+      "baseline": {
+        "sigma_eff": 0.0030984308118989293,
+        "resid": 6.5464350130468436e-15,
+        "n_dof": 8527,
+        "n_through_dof": 8527,
+        "cg_info": 0,
+        "unconverged": false,
+        "sigma_hex": "0x1.961e160315a90p-9",
+        "phi": {
+          "shape": [
+            20,
+            20,
+            39
+          ],
+          "dtype": "float64",
+          "sha256": "7f0105dad269965359344c8da06b7bb478cbcf6612a8337c9243715c9d394da0",
+          "min": 0.0,
+          "max": 0.9834973404120309
+        }
+      },
+      "entire_result_identical": true,
+      "matrix_rhs_identical": true,
+      "rrm_check_codes": [
+        {
+          "code": "rface_mismatch",
+          "n": 67
+        },
+        {
+          "code": "plan_not_reproducible",
+          "n": 1
+        }
+      ]
+    },
+    "cnc_zero_equals_off": {
+      "sigma_hex": true,
+      "phi_bytes": true
+    }
+  },
+  "off_cases": [
+    {
+      "h": 0.1,
+      "order": [
+        0,
+        1
+      ],
+      "bridge": 0.24,
+      "r1": false,
+      "entire_result_and_raster_byte_equal": true,
+      "new": {
+        "sigma_eff": 0.001772852196537846,
+        "resid": 6.612960435017653e-15,
+        "n_dof": 8416,
+        "n_through_dof": 8416,
+        "cg_info": 0,
+        "unconverged": false,
+        "sigma_hex": "0x1.d0be18d1afb3cp-10",
+        "phi": {
+          "shape": [
+            20,
+            20,
+            39
+          ],
+          "dtype": "float64",
+          "sha256": "8f244894f2689efb600207157b4754da36d9d489f29982bd899655fc1c0e0194",
+          "min": 0.0,
+          "max": 0.9907863272539275
+        }
+      }
+    },
+    {
+      "h": 0.1,
+      "order": [
+        0,
+        1
+      ],
+      "bridge": 0.24,
+      "r1": true,
+      "entire_result_and_raster_byte_equal": true,
+      "new": {
+        "sigma_eff": 0.0016912694814103023,
+        "resid": 6.822906187939268e-15,
+        "n_dof": 8416,
+        "n_through_dof": 8416,
+        "cg_info": 0,
+        "unconverged": false,
+        "sigma_hex": "0x1.bb5b2c720da1ep-10",
+        "phi": {
+          "shape": [
+            20,
+            20,
+            39
+          ],
+          "dtype": "float64",
+          "sha256": "37cc9dbb44d98a00a8e8863045846c84135f1a7908488937b663cb7f1c081478",
+          "min": 0.0,
+          "max": 0.9912103186759307
+        }
+      }
+    },
+    {
+      "h": 0.1,
+      "order": [
+        0,
+        1
+      ],
+      "bridge": null,
+      "r1": false,
+      "entire_result_and_raster_byte_equal": true,
+      "new": {
+        "sigma_eff": 0.0018043891264153157,
+        "resid": 6.7190740641068105e-15,
+        "n_dof": 8416,
+        "n_through_dof": 8416,
+        "cg_info": 0,
+        "unconverged": false,
+        "sigma_hex": "0x1.d90281261ad90p-10",
+        "phi": {
+          "shape": [
+            20,
+            20,
+            39
+          ],
+          "dtype": "float64",
+          "sha256": "0fe961646fb75295a70c0021dfb685b9000a5fe6bcf6fe6e42e1418ef4f5f8e2",
+          "min": 0.0,
+          "max": 0.9906222069185541
+        }
+      }
+    },
+    {
+      "h": 0.1,
+      "order": [
+        0,
+        1
+      ],
+      "bridge": null,
+      "r1": true,
+      "entire_result_and_raster_byte_equal": true,
+      "new": {
+        "sigma_eff": 0.0017046862854855312,
+        "resid": 6.8024891584295175e-15,
+        "n_dof": 8416,
+        "n_through_dof": 8416,
+        "cg_info": 0,
+        "unconverged": false,
+        "sigma_hex": "0x1.bedf8f62680efp-10",
+        "phi": {
+          "shape": [
+            20,
+            20,
+            39
+          ],
+          "dtype": "float64",
+          "sha256": "402d101334dee98fab3d1690152bfac0c51da28d26abfcaa40018ba887c98a5c",
+          "min": 0.0,
+          "max": 0.9911403615340717
+        }
+      }
+    },
+    {
+      "h": 0.1,
+      "order": [
+        1,
+        0
+      ],
+      "bridge": 0.24,
+      "r1": false,
+      "entire_result_and_raster_byte_equal": true,
+      "new": {
+        "sigma_eff": 0.0018568975000462973,
+        "resid": 6.669944559244485e-15,
+        "n_dof": 8416,
+        "n_through_dof": 8416,
+        "cg_info": 0,
+        "unconverged": false,
+        "sigma_hex": "0x1.e6c648238e6d7p-10",
+        "phi": {
+          "shape": [
+            20,
+            20,
+            39
+          ],
+          "dtype": "float64",
+          "sha256": "353930bcd5144e610193a5fc47c9a6a91da57777e0318dbc1bc435e409da5da2",
+          "min": 0.0,
+          "max": 0.9903496437404219
+        }
+      }
+    },
+    {
+      "h": 0.1,
+      "order": [
+        1,
+        0
+      ],
+      "bridge": 0.24,
+      "r1": true,
+      "entire_result_and_raster_byte_equal": true,
+      "new": {
+        "sigma_eff": 0.0017674806012866122,
+        "resid": 6.8793593482317674e-15,
+        "n_dof": 8416,
+        "n_through_dof": 8416,
+        "cg_info": 0,
+        "unconverged": false,
+        "sigma_hex": "0x1.cf559d83eebdep-10",
+        "phi": {
+          "shape": [
+            20,
+            20,
+            39
+          ],
+          "dtype": "float64",
+          "sha256": "0a23677a0f4db5c54b15a17213d24b8d6ae5b1d82be6244e8cb5a2c4cc715642",
+          "min": 0.0,
+          "max": 0.990814419152133
+        }
+      }
+    },
+    {
+      "h": 0.1,
+      "order": [
+        1,
+        0
+      ],
+      "bridge": null,
+      "r1": false,
+      "entire_result_and_raster_byte_equal": true,
+      "new": {
+        "sigma_eff": 0.0019110103650383948,
+        "resid": 6.6938420220618784e-15,
+        "n_dof": 8416,
+        "n_through_dof": 8416,
+        "cg_info": 0,
+        "unconverged": false,
+        "sigma_hex": "0x1.f4f5bc14a4048p-10",
+        "phi": {
+          "shape": [
+            20,
+            20,
+            39
+          ],
+          "dtype": "float64",
+          "sha256": "2d94557e5088ca4130713436bdca828f3667d2d59900a2df8dee8e9c8e624508",
+          "min": 0.0,
+          "max": 0.9900681290376374
+        }
+      }
+    },
+    {
+      "h": 0.1,
+      "order": [
+        1,
+        0
+      ],
+      "bridge": null,
+      "r1": true,
+      "entire_result_and_raster_byte_equal": true,
+      "new": {
+        "sigma_eff": 0.0018004362367371638,
+        "resid": 6.654541052373129e-15,
+        "n_dof": 8416,
+        "n_through_dof": 8416,
+        "cg_info": 0,
+        "unconverged": false,
+        "sigma_hex": "0x1.d7f93b0572751p-10",
+        "phi": {
+          "shape": [
+            20,
+            20,
+            39
+          ],
+          "dtype": "float64",
+          "sha256": "236d3b85cacff3c99b98c30c474c21884abd70b38956ab1e2a9b50159218a66c",
+          "min": 0.0,
+          "max": 0.9906428020391822
+        }
+      }
+    },
+    {
+      "h": 0.2,
+      "order": [
+        0,
+        1
+      ],
+      "bridge": 0.24,
+      "r1": false,
+      "entire_result_and_raster_byte_equal": true,
+      "new": {
+        "sigma_eff": 0.002446668168339983,
+        "resid": 2.5986271093938506e-15,
+        "n_dof": 1088,
+        "n_through_dof": 1088,
+        "cg_info": 0,
+        "unconverged": false,
+        "sigma_hex": "0x1.40b08f88cc667p-9",
+        "phi": {
+          "shape": [
+            10,
+            10,
+            20
+          ],
+          "dtype": "float64",
+          "sha256": "e95e593edcdecbef98e290f2b39480ea56360268e911e64b7bd2001df3946eab",
+          "min": 0.0,
+          "max": 0.9862542895276452
+        }
+      }
+    },
+    {
+      "h": 0.2,
+      "order": [
+        0,
+        1
+      ],
+      "bridge": 0.24,
+      "r1": true,
+      "entire_result_and_raster_byte_equal": true,
+      "new": {
+        "sigma_eff": 0.0023562518556639067,
+        "resid": 2.4447918826791938e-15,
+        "n_dof": 1088,
+        "n_through_dof": 1088,
+        "cg_info": 0,
+        "unconverged": false,
+        "sigma_hex": "0x1.34d6b1528ae05p-9",
+        "phi": {
+          "shape": [
+            10,
+            10,
+            20
+          ],
+          "dtype": "float64",
+          "sha256": "6169baff1b17dc31f362b1dc1c286a71ab7098da6dd3d20846fd289af262a0e0",
+          "min": 0.0,
+          "max": 0.9867625773363647
+        }
+      }
+    },
+    {
+      "h": 0.2,
+      "order": [
+        0,
+        1
+      ],
+      "bridge": null,
+      "r1": false,
+      "entire_result_and_raster_byte_equal": true,
+      "new": {
+        "sigma_eff": 0.002446668168339983,
+        "resid": 2.5986271093938506e-15,
+        "n_dof": 1088,
+        "n_through_dof": 1088,
+        "cg_info": 0,
+        "unconverged": false,
+        "sigma_hex": "0x1.40b08f88cc667p-9",
+        "phi": {
+          "shape": [
+            10,
+            10,
+            20
+          ],
+          "dtype": "float64",
+          "sha256": "e95e593edcdecbef98e290f2b39480ea56360268e911e64b7bd2001df3946eab",
+          "min": 0.0,
+          "max": 0.9862542895276452
+        }
+      }
+    },
+    {
+      "h": 0.2,
+      "order": [
+        0,
+        1
+      ],
+      "bridge": null,
+      "r1": true,
+      "entire_result_and_raster_byte_equal": true,
+      "new": {
+        "sigma_eff": 0.0023562518556639067,
+        "resid": 2.4447918826791938e-15,
+        "n_dof": 1088,
+        "n_through_dof": 1088,
+        "cg_info": 0,
+        "unconverged": false,
+        "sigma_hex": "0x1.34d6b1528ae05p-9",
+        "phi": {
+          "shape": [
+            10,
+            10,
+            20
+          ],
+          "dtype": "float64",
+          "sha256": "6169baff1b17dc31f362b1dc1c286a71ab7098da6dd3d20846fd289af262a0e0",
+          "min": 0.0,
+          "max": 0.9867625773363647
+        }
+      }
+    },
+    {
+      "h": 0.2,
+      "order": [
+        1,
+        0
+      ],
+      "bridge": 0.24,
+      "r1": false,
+      "entire_result_and_raster_byte_equal": true,
+      "new": {
+        "sigma_eff": 0.002446668168339983,
+        "resid": 2.5986271093938506e-15,
+        "n_dof": 1088,
+        "n_through_dof": 1088,
+        "cg_info": 0,
+        "unconverged": false,
+        "sigma_hex": "0x1.40b08f88cc667p-9",
+        "phi": {
+          "shape": [
+            10,
+            10,
+            20
+          ],
+          "dtype": "float64",
+          "sha256": "e95e593edcdecbef98e290f2b39480ea56360268e911e64b7bd2001df3946eab",
+          "min": 0.0,
+          "max": 0.9862542895276452
+        }
+      }
+    },
+    {
+      "h": 0.2,
+      "order": [
+        1,
+        0
+      ],
+      "bridge": 0.24,
+      "r1": true,
+      "entire_result_and_raster_byte_equal": true,
+      "new": {
+        "sigma_eff": 0.0023562518556639067,
+        "resid": 2.4447918826791938e-15,
+        "n_dof": 1088,
+        "n_through_dof": 1088,
+        "cg_info": 0,
+        "unconverged": false,
+        "sigma_hex": "0x1.34d6b1528ae05p-9",
+        "phi": {
+          "shape": [
+            10,
+            10,
+            20
+          ],
+          "dtype": "float64",
+          "sha256": "6169baff1b17dc31f362b1dc1c286a71ab7098da6dd3d20846fd289af262a0e0",
+          "min": 0.0,
+          "max": 0.9867625773363647
+        }
+      }
+    },
+    {
+      "h": 0.2,
+      "order": [
+        1,
+        0
+      ],
+      "bridge": null,
+      "r1": false,
+      "entire_result_and_raster_byte_equal": true,
+      "new": {
+        "sigma_eff": 0.002446668168339983,
+        "resid": 2.5986271093938506e-15,
+        "n_dof": 1088,
+        "n_through_dof": 1088,
+        "cg_info": 0,
+        "unconverged": false,
+        "sigma_hex": "0x1.40b08f88cc667p-9",
+        "phi": {
+          "shape": [
+            10,
+            10,
+            20
+          ],
+          "dtype": "float64",
+          "sha256": "e95e593edcdecbef98e290f2b39480ea56360268e911e64b7bd2001df3946eab",
+          "min": 0.0,
+          "max": 0.9862542895276452
+        }
+      }
+    },
+    {
+      "h": 0.2,
+      "order": [
+        1,
+        0
+      ],
+      "bridge": null,
+      "r1": true,
+      "entire_result_and_raster_byte_equal": true,
+      "new": {
+        "sigma_eff": 0.0023562518556639067,
+        "resid": 2.4447918826791938e-15,
+        "n_dof": 1088,
+        "n_through_dof": 1088,
+        "cg_info": 0,
+        "unconverged": false,
+        "sigma_hex": "0x1.34d6b1528ae05p-9",
+        "phi": {
+          "shape": [
+            10,
+            10,
+            20
+          ],
+          "dtype": "float64",
+          "sha256": "6169baff1b17dc31f362b1dc1c286a71ab7098da6dd3d20846fd289af262a0e0",
+          "min": 0.0,
+          "max": 0.9867625773363647
+        }
+      }
+    }
+  ],
+  "native_cg": {
+    "off": {
+      "new": {
+        "sigma_eff": 0.00414192578163356,
+        "resid": 8.625287435538467e-09,
+        "n_dof": 8527,
+        "n_through_dof": 8527,
+        "cg_info": 0,
+        "unconverged": false,
+        "sigma_hex": "0x1.0f71fbc64a927p-8",
+        "phi": {
+          "shape": [
+            20,
+            20,
+            39
+          ],
+          "dtype": "float64",
+          "sha256": "01ee36d8a4ed1f789ebebf0ba75f25847cd98ff7c1b726e50635b8a7288d5c6c",
+          "min": 0.0,
+          "max": 0.9779442220637868
+        }
+      },
+      "baseline": {
+        "sigma_eff": 0.00414192578163356,
+        "resid": 8.625287435538467e-09,
+        "n_dof": 8527,
+        "n_through_dof": 8527,
+        "cg_info": 0,
+        "unconverged": false,
+        "sigma_hex": "0x1.0f71fbc64a927p-8",
+        "phi": {
+          "shape": [
+            20,
+            20,
+            39
+          ],
+          "dtype": "float64",
+          "sha256": "01ee36d8a4ed1f789ebebf0ba75f25847cd98ff7c1b726e50635b8a7288d5c6c",
+          "min": 0.0,
+          "max": 0.9779442220637868
+        }
+      },
+      "entire_result_identical": true,
+      "matrix_rhs_identical": true
+    },
+    "rrm": {
+      "new": {
+        "sigma_eff": 0.0033344571438822606,
+        "resid": 8.647234507972365e-09,
+        "n_dof": 8527,
+        "n_through_dof": 8527,
+        "cg_info": 0,
+        "unconverged": false,
+        "sigma_hex": "0x1.b50dd0c409e13p-9",
+        "phi": {
+          "shape": [
+            20,
+            20,
+            39
+          ],
+          "dtype": "float64",
+          "sha256": "8394a8b4e26b0eddbb92c95725fd58ca882596b317e32506cd5ddecb14840acc",
+          "min": 0.0,
+          "max": 0.9822404243902031
+        }
+      },
+      "baseline": {
+        "sigma_eff": 0.0033344571438822606,
+        "resid": 8.647234507972365e-09,
+        "n_dof": 8527,
+        "n_through_dof": 8527,
+        "cg_info": 0,
+        "unconverged": false,
+        "sigma_hex": "0x1.b50dd0c409e13p-9",
+        "phi": {
+          "shape": [
+            20,
+            20,
+            39
+          ],
+          "dtype": "float64",
+          "sha256": "8394a8b4e26b0eddbb92c95725fd58ca882596b317e32506cd5ddecb14840acc",
+          "min": 0.0,
+          "max": 0.9822404243902031
+        }
+      },
+      "entire_result_identical": true,
+      "matrix_rhs_identical": true
+    },
+    "rrm_zero": {
+      "new": {
+        "sigma_eff": 0.0037299595666209916,
+        "resid": 8.615966121969019e-09,
+        "n_dof": 8527,
+        "n_through_dof": 8527,
+        "cg_info": 0,
+        "unconverged": false,
+        "sigma_hex": "0x1.e8e4acb544aa1p-9",
+        "phi": {
+          "shape": [
+            20,
+            20,
+            39
+          ],
+          "dtype": "float64",
+          "sha256": "e34fc4d4173a9a79d95cd19d43c096d38bb8c1337fab96f000401f4a6f270b56",
+          "min": 0.0,
+          "max": 0.9801335165192798
+        }
+      },
+      "baseline": {
+        "sigma_eff": 0.0037299595666209916,
+        "resid": 8.615966121969019e-09,
+        "n_dof": 8527,
+        "n_through_dof": 8527,
+        "cg_info": 0,
+        "unconverged": false,
+        "sigma_hex": "0x1.e8e4acb544aa1p-9",
+        "phi": {
+          "shape": [
+            20,
+            20,
+            39
+          ],
+          "dtype": "float64",
+          "sha256": "e34fc4d4173a9a79d95cd19d43c096d38bb8c1337fab96f000401f4a6f270b56",
+          "min": 0.0,
+          "max": 0.9801335165192798
+        }
+      },
+      "entire_result_identical": true,
+      "matrix_rhs_identical": true
+    },
+    "cnc": {
+      "new": {
+        "sigma_eff": 0.0038116099134383784,
+        "resid": 9.187126569499221e-09,
+        "n_dof": 8527,
+        "n_through_dof": 8527,
+        "cg_info": 0,
+        "unconverged": false,
+        "sigma_hex": "0x1.f39867d8be58ap-9",
+        "phi": {
+          "shape": [
+            20,
+            20,
+            39
+          ],
+          "dtype": "float64",
+          "sha256": "fe6071a305768de50cbe2b2408b6ae26511511854b090e6b0ebc97f4d79fccf5",
+          "min": 0.0,
+          "max": 0.9797034655374517
+        }
+      },
+      "baseline": {
+        "sigma_eff": 0.0038116099134383784,
+        "resid": 9.187126569499221e-09,
+        "n_dof": 8527,
+        "n_through_dof": 8527,
+        "cg_info": 0,
+        "unconverged": false,
+        "sigma_hex": "0x1.f39867d8be58ap-9",
+        "phi": {
+          "shape": [
+            20,
+            20,
+            39
+          ],
+          "dtype": "float64",
+          "sha256": "fe6071a305768de50cbe2b2408b6ae26511511854b090e6b0ebc97f4d79fccf5",
+          "min": 0.0,
+          "max": 0.9797034655374517
+        }
+      },
+      "entire_result_identical": true,
+      "matrix_rhs_identical": true
+    }
+  },
+  "summary": {
+    "negative_value_cases": 36,
+    "all_rejected_before_cg": true,
+    "off_byte_identical": 16,
+    "native_cg_comparisons": 4
+  }
+}

@@ -1,0 +1,177 @@
+--- bundle/probes/structure_minimal_replay.py
++++ repro/probes/structure_minimal_replay.py
+@@ -8,6 +8,11 @@
+ import types
+ 
+ ROOT = Path(__file__).resolve().parents[1]
++# [import 10-20] path constants only — current = worktree (review-pin code), prior = git archive dcb97f1ed,
++# prior 10-15 fixtures = bundle originals (read-only).
++WT = Path('/home/user/Yonghoon-DEM-DFT/.claude/worktrees/agent-a43562c127acff2de')
++OLDT = Path('/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/import_rq7_repro/old_dcb97f1ed')
++PRIOR_TMP = Path('/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/import_rq7/x/rint_g2_impl_reverify_20261015/tmp/join_independent')
+ TMP = ROOT / "tmp/structure_minimal"
+ TMP.mkdir(parents=True, exist_ok=True)
+ for key in ("OMP_NUM_THREADS", "OPENBLAS_NUM_THREADS", "MKL_NUM_THREADS",
+@@ -16,7 +21,7 @@
+ for key in ("TEMP", "TMP", "TMPDIR"):
+     os.environ[key] = str(TMP)
+ sys.path[:0] = [
+-    str(ROOT / "source/scripts"),
++    str(WT / "scripts"),
+     str(ROOT.parent / "lhs_coverage_review_20260930/deps"),
+     str(ROOT.parent / "gen2_network_reverify3_20261007/deps"),
+ ]
+@@ -32,7 +37,7 @@
+ import step3_sigma as S
+ 
+ # Prior independent baseline; actual bytes, no submitted fixture helper.
+-D = ROOT.parent / "rint_g2_impl_reverify_20261015/tmp/join_independent"
++D = PRIOR_TMP
+ paths = [D / ("baseline_" + s) for s in ("sc.csv", "atom.dump", "contact.dump")]
+ base = J.am_iface_join(*paths, type_map={1: "AM_P", 2: "SE"})
+ c, r, t = (base["particles"][k] for k in ("c_um", "r_um", "t"))
+--- bundle/probes/structure_probe.py
++++ repro/probes/structure_probe.py
+@@ -18,6 +18,11 @@
+ import warnings
+ 
+ ROOT = Path(__file__).resolve().parents[1]
++# [import 10-20] path constants only — current = worktree (review-pin code), prior = git archive dcb97f1ed,
++# prior 10-15 fixtures = bundle originals (read-only).
++WT = Path('/home/user/Yonghoon-DEM-DFT/.claude/worktrees/agent-a43562c127acff2de')
++OLDT = Path('/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/import_rq7_repro/old_dcb97f1ed')
++PRIOR_TMP = Path('/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/import_rq7/x/rint_g2_impl_reverify_20261015/tmp/join_independent')
+ PRIOR = ROOT.parent / "rint_g2_impl_reverify_20261015"
+ TMP = ROOT / "tmp/structure_fixtures"
+ TMP.mkdir(parents=True, exist_ok=True)
+@@ -27,7 +32,7 @@
+ for key in ("TEMP", "TMP", "TMPDIR"):
+     os.environ[key] = str(TMP)
+ sys.path[:0] = [
+-    str(ROOT / "source/scripts"),
++    str(WT / "scripts"),
+     str(ROOT.parent / "lhs_coverage_review_20260930/deps"),
+     str(ROOT.parent / "gen2_network_reverify3_20261007/deps"),
+ ]
+@@ -44,7 +49,7 @@
+ import step3_sigma as S
+ 
+ spec = importlib.util.spec_from_file_location(
+-    "structure_prior_join", PRIOR / "source/scripts/rint_iface_join.py")
++    "structure_prior_join", OLDT / "scripts/rint_iface_join.py")
+ OLD = importlib.util.module_from_spec(spec)
+ spec.loader.exec_module(OLD)
+ TM = {1: "AM_P", 2: "SE"}
+@@ -178,7 +183,7 @@
+     "count_extra_token", "wellshaped_duplicate_contact_control",
+     "wellshaped_duplicate_atom_control",
+ ):
+-    paths = [PRIOR / "tmp/join_independent" / (tag + "_" + s) for s in SUFFIX]
++    paths = [PRIOR_TMP / (tag + "_" + s) for s in SUFFIX]
+     evaluate("original_" + tag, paths, "pass" if tag == "baseline" else "reject",
+              compare_prior=True, prior_bytes=True)
+ 
+@@ -302,7 +307,7 @@
+      "case15_corner_20261001/contact_v4_1710000.liggghts.gz",
+      {1: "AM_P", 2: "SE"}),
+ ):
+-    data = ROOT / "source/docs/data"
++    data = WT / "docs/data"
+     paths = [data / p for p in (scaffold, atom, contact)]
+     with warnings.catch_warnings(record=True) as caught:
+         join = J.am_iface_join(*paths, type_map=tmap)
+--- bundle/probes/numeric_review.py
++++ repro/probes/numeric_review.py
+@@ -9,9 +9,14 @@
+ import warnings
+ 
+ ROOT = Path(__file__).resolve().parents[1]
++# [import 10-20] path constants only — current = worktree (review-pin code), prior = git archive dcb97f1ed,
++# prior 10-15 fixtures = bundle originals (read-only).
++WT = Path('/home/user/Yonghoon-DEM-DFT/.claude/worktrees/agent-a43562c127acff2de')
++OLDT = Path('/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/import_rq7_repro/old_dcb97f1ed')
++PRIOR_TMP = Path('/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/import_rq7/x/rint_g2_impl_reverify_20261015/tmp/join_independent')
+ WORK = ROOT.parent
+ BASELINE = "--baseline" in sys.argv
+-SRC = (WORK / "rint_g2_impl_reverify_20261015/source") if BASELINE else ROOT / "source"
++SRC = OLDT if BASELINE else WT
+ for key in ("OMP_NUM_THREADS", "OPENBLAS_NUM_THREADS", "MKL_NUM_THREADS", "NUMEXPR_NUM_THREADS"):
+     os.environ[key] = "1"
+ sys.dont_write_bytecode = True
+--- bundle/probes/numeric_overflow_replay.py
++++ repro/probes/numeric_overflow_replay.py
+@@ -10,8 +10,13 @@
+ import warnings
+ 
+ ROOT = Path(__file__).resolve().parents[1]
++# [import 10-20] path constants only — current = worktree (review-pin code), prior = git archive dcb97f1ed,
++# prior 10-15 fixtures = bundle originals (read-only).
++WT = Path('/home/user/Yonghoon-DEM-DFT/.claude/worktrees/agent-a43562c127acff2de')
++OLDT = Path('/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/import_rq7_repro/old_dcb97f1ed')
++PRIOR_TMP = Path('/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/import_rq7/x/rint_g2_impl_reverify_20261015/tmp/join_independent')
+ BASELINE = "--baseline" in sys.argv
+-SRC = ROOT.parent / "rint_g2_impl_reverify_20261015/source" if BASELINE else ROOT / "source"
++SRC = OLDT if BASELINE else WT
+ for key in ("OMP_NUM_THREADS", "OPENBLAS_NUM_THREADS", "MKL_NUM_THREADS", "NUMEXPR_NUM_THREADS"):
+     os.environ[key] = "1"
+ sys.dont_write_bytecode = True
+--- bundle/probes/q7_independent.py
++++ repro/probes/q7_independent.py
+@@ -14,8 +14,13 @@
+     os.environ[key] = "1"
+ sys.dont_write_bytecode = True
+ ROOT = Path(__file__).resolve().parents[1]
+-BASE = ROOT.parent / "rint_g2_impl_reverify_20261015/source/scripts"
+-NEW = ROOT / "source/scripts"
++# [import 10-20] path constants only — current = worktree (review-pin code), prior = git archive dcb97f1ed,
++# prior 10-15 fixtures = bundle originals (read-only).
++WT = Path('/home/user/Yonghoon-DEM-DFT/.claude/worktrees/agent-a43562c127acff2de')
++OLDT = Path('/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/import_rq7_repro/old_dcb97f1ed')
++PRIOR_TMP = Path('/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/import_rq7/x/rint_g2_impl_reverify_20261015/tmp/join_independent')
++BASE = OLDT / "scripts"
++NEW = WT / "scripts"
+ sys.path[:0] = [str(NEW), str(ROOT.parent / "lhs_coverage_review_20260930/deps"),
+                str(ROOT.parent / "gen2_network_reverify3_20261007/deps")]
+ import numpy as np
+--- bundle/probes/run_submitted.py
++++ repro/probes/run_submitted.py
+@@ -2,19 +2,24 @@
+ from pathlib import Path
+ import hashlib,json,os,subprocess,sys,time
+ R=Path(__file__).resolve().parents[1]
+-BASE=R.parent/'rint_g2_impl_reverify_20261015/source'
++# [import 10-20] path constants only — current = worktree (review-pin code), prior = git archive dcb97f1ed,
++# prior 10-15 fixtures = bundle originals (read-only).
++WT = Path('/home/user/Yonghoon-DEM-DFT/.claude/worktrees/agent-a43562c127acff2de')
++OLDT = Path('/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/import_rq7_repro/old_dcb97f1ed')
++PRIOR_TMP = Path('/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/import_rq7/x/rint_g2_impl_reverify_20261015/tmp/join_independent')
++BASE=OLDT
+ mode=sys.argv[1] if len(sys.argv)>1 else 'new'
+ if mode=='exec-old':
+     # Current assertions, old __file__ location/import tree; no old file written.
+     test=sys.argv[2]
+-    text=(R/'source/scripts'/test).read_text(encoding='utf8')
++    text=(WT/'scripts'/test).read_text(encoding='utf8')
+     virtual=BASE/'scripts'/test
+     sys.path.insert(0,str(BASE/'scripts'))
+     sys.argv=[str(virtual)]
+     exec(compile(text,str(virtual),'exec'),dict(__name__='__main__',__file__=str(virtual)))
+     raise SystemExit()
+ 
+-paths=[R/'support',R/'source/scripts',
++paths=[WT/'scripts',
+        R.parent/'lhs_coverage_review_20260930/deps',
+        R.parent/'gen2_network_reverify3_20261007/deps']
+ env=dict(os.environ)
+@@ -36,9 +41,9 @@
+ for args in tasks:
+     cmd=[sys.executable,'-X','utf8','-B']
+     if mode=='old': cmd += [str(Path(__file__).resolve()),'exec-old',args[0]]
+-    else: cmd += [str(R/'source/scripts'/args[0]),*args[1:]]
++    else: cmd += [str(WT/'scripts'/args[0]),*args[1:]]
+     start=time.monotonic()
+-    p=subprocess.run(cmd,cwd=BASE if mode=='old' else R/'source',env=env,capture_output=True,timeout=600)
++    p=subprocess.run(cmd,cwd=BASE if mode=='old' else WT,env=env,capture_output=True,timeout=600)
+     label='_'.join(args).replace('.py','').replace('--','')
+     data=p.stdout+p.stderr
+     (R/'evidence'/f'submitted_{mode}_{label}.log').write_bytes(data)

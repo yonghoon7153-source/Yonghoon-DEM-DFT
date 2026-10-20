@@ -1,0 +1,839 @@
+--- dcb97f1ed942f622d9189eee1a1e9432dc05a655/scripts/rint_iface_join.py
++++ 2b9efa253edbf455c2e1abfef1d60e51818e01f8/scripts/rint_iface_join.py
+@@ -26,14 +26,23 @@
+ scaffold 머리줄에 원 덤프 step 이 없으면 scaffold ↔ 덤프는 **G-geo 까지만** 주장한다 (v3 §6-3).  N1: dilate_z ≠ 1 = 거부 (기하가 DEM 이 아님).
+ 입구 검사 (RIMP-02 · 03 · Codex 10-14 판정문 §3 · §4 · 1저자 Q2 (가) — 봉인 helper 는 그대로 · 이 소비자에서 엄격) — 관문 계산 **전**, 하나라도 걸리면
+   REJECT (관문 계산 생략 · 사유만):
+-  e1  유한 — scaffold x y z r · 원자 x y z radius · 접촉 pos1 pos2 면적 δ 주기 플래그 · 상자 경계 (nan · inf · 못 읽는 토큰 = nonfinite_value)
++  e1  유한 — scaffold x y z r · 원자 x y z radius · 접촉 pos1 pos2 면적 δ 주기 플래그 · 상자 경계 (nan · inf · 못 읽는 토큰 = nonfinite_value).
++      유한 = **실제로 쓰는 float64 값** 기준 (RIMPR-02 — scaffold 고정소수 토큰이 Decimal 로는 유한이어도 float64 로 ±inf 면 (1e309 · ±10^309) 비유한)
++      + scaffold 의 µm 변환값 (×sim_to_um = 내보내는 c_um · r_um) 도 유한 (넘치면 nonfinite_value · `scaffold_um`)
+   e2  양수 — scaffold r · 원자 radius > 0 (nonpositive_radius) · 상자 hi > lo (box_format)
+-  e3  정확 정수 — TIMESTEP · 머리 수 · 원자 id · type · 접촉 id1 · id2 · scaffold type 토큰 = 정수 문자열만 (`2060000.9` · `201.0` · `1e+06` = int_token ·
+-      `int(float(…))` 로 줄이지 않는다)
+-  e4  지원 상자 — 직교 `ITEM: BOX BOUNDS f1 f2 f3` (플래그 [pfsm]² · p 는 pp 만) + 경계 줄 셋 · 줄마다 토큰 둘.  기울어진 머리 (xy xz yz) = box_tilted (지원 밖 ·
+-      tilt 를 버리고 비교하지 않는다) · 그 밖 모양 = box_format.  상자 동일 (f3) = 머리 · 경계 줄 **전 토큰** 비교
++  e3  정확 정수 — TIMESTEP · 머리 수 · 원자 id · type · 접촉 id1 · id2 · scaffold type 토큰 = 정수 문자열 · int64 범위만 (`2060000.9` · `201.0` · `1e+06` ·
++      int64 를 넘는 토큰 = int_token · `int(float(…))` 로 줄이지 않는다 · OverflowError 로 끝나지 않는다).  TIMESTEP · NUMBER OF 절은 몸통 **전체**가
++      정확히 한 토큰 (RIMPR-01 — `100 0.9` · `1 garbage` · 둘째 줄의 뒤 토큰을 버리지 않는다 = int_token)
++  e4  지원 상자 — 직교 `ITEM: BOX BOUNDS f1 f2 f3` (플래그 [pfsm]² · p 는 pp 만) + 경계 줄 정확히 셋 · 줄마다 토큰 둘.  기울어진 머리 (xy xz yz) = box_tilted
++      (지원 밖 · tilt 를 버리고 비교하지 않는다) · 그 밖 모양 (넷째 줄 포함) = box_format.  상자 동일 (f3) = 머리 · 경계 줄 **전 토큰** 비교
+   e5  형식 = **6 유효숫자 `%g` 생산 포맷만** (LIGGGHTS dump 기본 · 토큰 = '%g' % 값) — 다른 정밀도 · 끝 0 · 혼합 포맷 = numeric_format.  면적 포괄
+       helper 는 고정 6 자리 (`lhs_descriptor_harvest.AREA_CHECK_SIGFIG`) 라 지원 형식을 그 가정과 같게 묶는다 (기록 S 를 helper 에 넘기지 않는다 · 봉인 무변경)
++  e6  전수 소비 (RIMPR-01 · Codex 10-15 판정문 §2 — 형식 검사를 적용할 원본을 **온전히** 읽는다 · 파서가 검사 전에 버리는 줄 · 열 · 토큰이 없다):
++      행 절 (ITEM: ATOMS · ENTRIES) 의 비어 있지 않은 **모든** 행을 세고 열 수 ≠ 머리 열 수 = row_width (조용히 빼지 않는다) · 소비하는 필수 열 이름은
++      정확히 한 번 (중복 = header_duplicate — 첫 열만 읽고 뒤 열을 검사 밖에 두지 않는다) · 마지막 프레임의 모든 줄은 아는 절 넷 (TIMESTEP ·
++      NUMBER OF · BOX BOUNDS · 행) 중 하나에 한 번씩 — 모르는 ITEM 절 · 같은 절 두 번 · 첫 프레임 앞 비어 있지 않은 줄 · TIMESTEP · NUMBER OF 머리 줄의
++      뒤 토큰 = frame_layout.  빈 줄 (공백뿐) 처리는 옛 판과 같다 — 행 절 안 · 절 끝의 빈 줄 = 내용 아님 · TIMESTEP · NUMBER OF · BOX BOUNDS
++      절의 내용 앞 · 사이 빈 줄 = 모양 위반 (int_token · box_format)
+   g3 보강 — AM–AM 행의 음수 면적 = area_negative · 포괄 미인증 (d 하한 ≤ 0 · 생산자 오차 상한 없음) = area_uncertified · PASS = 전 AM–AM 행 인증
+       (n_area_tested = n_dem_am_am · `area_all_certified`).  AM–AM 밖 행 (AM–SE · SE–SE) 의 면적은 조인이 인증하지 않는다 (음수 수만 기록 —
+       case15 AM_P–SE 2 행).
+@@ -59,7 +68,7 @@
+ from lhs_contact_audit import SIGFIG_FLOOR, _half_ulp, _sigfigs   # noqa: E402  반폭 규약 (규율 ①)
+ 
+ JOIN_KIND = 'am_iface_join'
+-JOIN_VERSION = 'g_geo_g_frame_v2'           # v2 (RIMP-02 · 03) = 입구 검사 e1–e5 + AM–AM 면적 전 행 인증 · v1 (10-13) = 그 전
++JOIN_VERSION = 'g_geo_g_frame_v3'           # v3 (RIMPR-01 · 02) = e6 전수 소비 · e1 float64 + µm 변환 · e3 절 전체 · int64 / v2 (RIMP-02 · 03) = 입구 검사 e1–e5 + AM–AM 면적 전 행 인증 · v1 (10-13) = 그 전
+ SIM_TO_UM = 1000.0              # LIGGGHTS 상자 단위 → µm (덱 머리 "Scale: r*1000" · real_14 README)
+ AM_KINDS = ('AM_P', 'AM_S')
+ SCAFFOLD_TYPE = {1: 'AM_P', 2: 'AM_S'}                         # scaffold CSV 규약 (머리줄 "AM_P=1,AM_S=2")
+@@ -68,11 +77,14 @@
+ _EPS = float(np.finfo(np.float64).eps)
+ _STEP_RE = re.compile(r'(?:time)?step\s*[=:]?\s*(\d+)', re.I)
+ _INT_RE = re.compile(r'[+-]?\d+')                              # e3 정확 정수 토큰 (소수점 · 지수 · 밑줄 없음)
++_I64_MIN, _I64_MAX = -(1 << 63), (1 << 63) - 1                  # e3 정수 토큰 범위 (id · type 은 int64 배열 · LIGGGHTS step = bigint) — RIMPR-02
+ _BOX_FLAG_RE = re.compile(r'[pfsm]{2}')                        # e4 LAMMPS 경계 플래그 (축마다 lo · hi)
+ _TILT_TOKENS = ('xy', 'xz', 'yz')
+ NUMERIC_FORMAT = 'g6'                                          # e5 — 지원하는 유일한 실수 형식 (6 유효숫자 `%g` · LIGGGHTS dump 기본)
+-ENTRANCE_RULE = ('e1 유한 · e2 양수 (반경 · 상자 길이) · e3 정확 정수 (step · 머리 수 · id · type) · e4 직교 상자만 (기울어진 머리 = 거부) · '
+-                 'e5 6 유효숫자 %g 생산 포맷만 (다른 정밀도 · 혼합 = 거부) — 하나라도 걸리면 관문 계산 없이 REJECT (RIMP-02 · 03)')
++ENTRANCE_RULE = ('e1 유한 (실제로 쓰는 float64 값 · scaffold µm 변환값) · e2 양수 (반경 · 상자 길이) · e3 정확 정수 · int64 (step · 머리 수 · id · '
++                 'type · TIMESTEP · NUMBER OF 절 몸통 전체 = 한 토큰) · e4 직교 상자만 (기울어진 머리 = 거부 · 경계 줄 정확히 셋) · '
++                 'e5 6 유효숫자 %g 생산 포맷만 (다른 정밀도 · 혼합 = 거부) · e6 전수 소비 (행 열 수 · 필수 열 한 번 · 프레임 절 배치 — 버리는 줄 없음) '
++                 '— 하나라도 걸리면 관문 계산 없이 REJECT (RIMP-02 · 03 · RIMPR-01 · 02)')
+ 
+ WHY = {
+     'dilate_z': 'N1 — dilate_z ≠ 1 이면 raster 기하가 DEM 이 아니다 (덤프 면적 · 접촉 집합을 쓸 수 없다)',
+@@ -99,11 +111,20 @@
+     'area_enclosure': 'AM–AM 접촉의 c_cpl[22] 이 lens_geometry(r1, r2, δ_dump) 포괄 구간 밖',
+     'dem_contact_missing': 'scaffold 에서 확실한 AM–AM 접촉 (δ > 폭) 인데 접촉 덤프에 행이 없다',
+     'dem_duplicate_pair': '접촉 덤프에 같은 AM–AM 쌍 두 행',
+-    'nonfinite_value': 'e1 — 비유한 (nan · inf) 또는 못 읽는 수 토큰 (NaN 비교는 어떤 허용폭 검사도 실패시키지 않는다 — 입구에서 거부 · RIMP-02)',
++    'nonfinite_value': ('e1 — 비유한 (nan · inf) 또는 못 읽는 수 토큰 (NaN 비교는 어떤 허용폭 검사도 실패시키지 않는다 — 입구에서 거부 · RIMP-02) · '
++                        '유한 = 실제로 쓰는 float64 값 (Decimal 유한 · float64 ±inf = 비유한) · scaffold µm 변환값 넘침 포함 (RIMPR-02)'),
+     'nonpositive_radius': 'e2 — 반경 ≤ 0 (scaffold 또는 원자 덤프)',
+-    'int_token': 'e3 — 정수여야 할 토큰 (TIMESTEP · 머리 수 · id · type) 이 정확한 정수 문자열이 아니다 (int(float(…)) 로 줄이지 않는다 · RIMP-02)',
++    'int_token': ('e3 — 정수여야 할 토큰 (TIMESTEP · 머리 수 · id · type) 이 정확한 정수 문자열 · int64 범위가 아니다 (int(float(…)) 로 줄이지 않는다 · '
++                  'RIMP-02) · TIMESTEP · NUMBER OF 절 몸통 전체가 정확히 한 토큰이 아니다 (뒤 토큰 · 둘째 줄을 버리지 않는다 · RIMPR-01) · '
++                  'int64 를 넘는 토큰 (OverflowError 대신 · RIMPR-02)'),
+     'box_tilted': 'e4 — 기울어진 상자 머리 (xy xz yz) · 직교 상자만 지원 (tilt 를 버리고 비교하지 않는다 · RIMP-02)',
+-    'box_format': 'e4 — 상자 머리 · 경계 줄 모양이 직교 LAMMPS 꼴이 아니다 (플래그 셋 · 줄마다 토큰 둘 · hi > lo)',
++    'box_format': 'e4 — 상자 머리 · 경계 줄 모양이 직교 LAMMPS 꼴이 아니다 (플래그 셋 · 경계 줄 정확히 셋 · 줄마다 토큰 둘 · hi > lo)',
++    'row_width': ('e6 — 행 절 (ITEM: ATOMS · ENTRIES) 의 비어 있지 않은 행의 열 수 ≠ 머리 열 수 — 조용히 빼면 머리 수 · 형식 · 유한 검사를 받지 않은 채 '
++                  '남은 행만 인증된다 (RIMPR-01)'),
++    'header_duplicate': ('e6 — 소비하는 필수 열 이름이 머리에 두 번 이상 — 첫 열만 읽으면 뒤 열은 검사에서 사라진다 (필수 열은 정확히 한 번 · '
++                         'RIMPR-01)'),
++    'frame_layout': ('e6 — 마지막 프레임의 줄이 아는 절 넷 (TIMESTEP · NUMBER OF · BOX BOUNDS · 행) 에 한 번씩 배정되지 않는다 — 모르는 ITEM 절 · '
++                     '같은 절 두 번 · 첫 프레임 앞 비어 있지 않은 줄 · TIMESTEP · NUMBER OF 머리 줄의 뒤 토큰 (버리지 않고 거부 · RIMPR-01)'),
+     'numeric_format': 'e5 — 실수 토큰이 6 유효숫자 %g 생산 포맷이 아니다 (다른 정밀도 · 끝 0 · 혼합 · 면적 포괄 helper 의 고정 6 자리 가정 밖 · RIMP-03)',
+     'area_negative': 'g3 — AM–AM 접촉의 c_cpl[22] 가 음수 (진단 helper 는 음수 행을 포괄 비교에서 뺀다 — 뺀 것을 인증으로 읽지 않는다 · RIMP-02)',
+     'area_uncertified': 'g3 — AM–AM 접촉의 면적 포괄을 인증할 수 없다 (토큰 상자 위 거리 하한 ≤ 0 · 생산자 오차 상한 없음 — "포괄 밖 0" ≠ "전 행 인증" · RIMP-02)',
+@@ -141,9 +162,15 @@
+ 
+ 
+ def _int_token(tok):
+-    """e3 — 정확한 정수 문자열이면 (int, True) · 아니면 (None, False).  `int(float(…))` 로 줄이지 않는다 (RIMP-02 · Codex `2060000.9`)."""
++    """e3 — 정확한 정수 문자열이고 int64 범위 안이면 (int, True) · 아니면 (None, False).  `int(float(…))` 로 줄이지 않는다 (RIMP-02 · Codex
++    `2060000.9`).  int64 밖 (`9223372036854775808` …) = 정수 아님 — int64 배열에 담다 OverflowError 로 끝나지 않고 입구 int_token 거부 (RIMPR-02) ·
++    자릿수가 int64 보다 긴 토큰은 int() 를 부르기 전에 거른다 (아주 긴 숫자열의 int() 변환 한도 ValueError 도 입구 거부로)."""
+     if isinstance(tok, str) and _INT_RE.fullmatch(tok):
+-        return int(tok), True
++        digits = tok.lstrip('+-').lstrip('0') or '0'          # 앞 0 을 뗀 숫자열 (int() 한도는 앞 0 도 센다)
++        if len(digits) <= 19:                                  # int64 최댓값 9223372036854775807 = 19 자리
++            v = -int(digits) if tok.startswith('-') else int(digits)
++            if _I64_MIN <= v <= _I64_MAX:
++                return v, True
+     return None, False
+ 
+ 
+@@ -197,7 +224,7 @@
+ 
+ 
+ def _box_shape(hdr_tok, lines3):
+-    """e4 — 상자 머리 토큰 · 경계 줄 셋 → (모양 'orthogonal' | 'tilted' | 'malformed', 사유 목록)."""
++    """e4 — 상자 머리 토큰 · 경계 줄 (BOX BOUNDS 절 몸통의 비어 있지 않은 **모든** 줄) → (모양 'orthogonal' | 'tilted' | 'malformed', 사유 목록)."""
+     if any(t in _TILT_TOKENS for t in hdr_tok):
+         return 'tilted', ['xy xz yz 머리 (삼사정계)']
+     why = []
+@@ -206,54 +233,83 @@
+     for f in hdr_tok:
+         if not _BOX_FLAG_RE.fullmatch(f) or (('p' in f) and f != 'pp'):
+             why.append(f'플래그 {f!r}')
++    if len(lines3) != 3:
++        why.append(f'경계 줄 수 {len(lines3)} ≠ 3 (RIMPR-01 — 절 몸통 전수)')
+     for k, b in enumerate(lines3):
+         if len(b) != 2:
+             why.append(f'경계 줄 {k} 토큰 {len(b)} ≠ 2')
+     return ('orthogonal' if not why else 'malformed'), why
+ 
+ 
++def _section_content(body):
++    """절 몸통 → 내용 줄 — **끝**의 빈 줄 (공백뿐) 만 뗀다.  내용 앞 · 사이의 빈 줄은 남겨 모양 검사가 본다 (옛 판의 고정 위치 읽기와 같은 빈 줄
++    결과: 머리 바로 다음 빈 줄 = 위반 · 내용 뒤 빈 줄 = 내용 아님 — 빈 줄 처리를 옛 판보다 느슨하게 하지 않는다)."""
++    k = len(body)
++    while k and not body[k - 1].strip():
++        k -= 1
++    return body[:k]
++
++
++def _scalar_token(body):
++    """TIMESTEP · NUMBER OF 절 몸통 → 토큰 문자열 — 내용 줄을 **전부** 담는다 (줄 앞뒤 공백만 뗀다 · 내용 앞 · 사이 빈 줄은 빈 문자열로 남는다 ·
++    RIMPR-01: 뒤 토큰 · 둘째 줄을 버리지 않는다).  정확히 한 줄 · 한 토큰일 때만 정수 문법에 맞는다 (`100 0.9` · `100\\n0.9` · `\\n100` · 빈 몸통
++    = e3 int_token)."""
++    return '\n'.join(s.strip() for s in _section_content(body))
++
++
+ def _scan_frame(path, count_item, rows_item):
+     """마지막 프레임의 (step · 머리 수 · 상자 플래그 · 상자 토큰 · 열 머리 · 행) + 프레임 수 + 입구 검사 재료 (step · 머리 수 토큰 정수 여부 ·
+-    상자 머리 · 경계 줄 전 토큰 · 상자 모양).  정수가 아닌 step · 머리 수 = None (줄이지 않는다)."""
++    상자 머리 · 경계 줄 전 토큰 · 상자 모양 · e6 전수 소비 재료).  정수가 아닌 step · 머리 수 = None (줄이지 않는다).
++
++    RIMPR-01 (Codex 10-15 판정문 §2) — 마지막 프레임의 **모든 줄**을 절 (`ITEM:` 머리 + 다음 `ITEM:` 전까지의 몸통) 에 배정해 읽는다 (검사 전에 버리는
++    줄 · 토큰이 없다): TIMESTEP · NUMBER OF 절 = 몸통 전체가 한 토큰 (`_scalar_token`) · BOX BOUNDS 절 = 몸통의 내용 줄 전부 (`_box_shape` 가 정확히
++    셋 · 줄마다 토큰 둘을 요구) · 행 절 = 비어 있지 않은 모든 행을 세고 열 수 ≠ 머리 열 수 인 행은 따로 센다 (값으로는 쓰지 않는다 · 입구 row_width) ·
++    모르는 ITEM 절 · 같은 절 두 번 · 첫 프레임 앞 비어 있지 않은 줄 · TIMESTEP · NUMBER OF 머리 줄의 뒤 토큰 = 입구 frame_layout.
++    빈 줄: 행 절 안 · 절 끝 = 내용 아님 (옛 판과 같음) · TIMESTEP · NUMBER OF · BOX BOUNDS 절의 내용 앞 · 사이 = 모양 위반 (옛 판과 같음 · `_section_content`)."""
+     with _open_text(path) as fh:
+         lines = fh.read().splitlines()
+     starts = [i for i, ln in enumerate(lines) if ln.startswith('ITEM: TIMESTEP')]
+     if not starts:
+         raise ValueError(f'{path}: `ITEM: TIMESTEP` 이 없다 — LIGGGHTS 덤프가 아니다')
+-    i = starts[-1]
+-    step_tok = (lines[i + 1].split() or [''])[0] if i + 1 < len(lines) else ''
++    heads = [k for k in range(starts[-1], len(lines)) if lines[k].startswith('ITEM:')]
++    secs, unknown, dup_sec, head_extra = {}, [], [], []
++    for a, b in zip(heads, heads[1:] + [len(lines)]):
++        ln = lines[a]
++        kind = ('step' if ln.startswith('ITEM: TIMESTEP') else 'count' if ln.startswith(count_item)
++                else 'box' if ln.startswith('ITEM: BOX BOUNDS') else 'rows' if ln.startswith(rows_item) else None)
++        if kind is None:
++            unknown.append(ln.strip())
++        elif kind in secs:
++            dup_sec.append(kind)
++        else:
++            secs[kind] = (ln, lines[a + 1:b])
++            want = {'step': 'ITEM: TIMESTEP', 'count': count_item}.get(kind)
++            if want is not None and ln.split() != want.split():  # 머리 줄의 뒤 토큰 (`ITEM: TIMESTEP 0.9`) 도 버리지 않는다
++                head_extra.append(ln.strip())
++    n_pre = sum(1 for ln in lines[:starts[0]] if ln.strip())
++    step_tok = _scalar_token(secs['step'][1])
+     step, step_ok = _int_token(step_tok)
+     n_decl, n_decl_ok, n_decl_tok = None, True, None
+-    flags, btok, bhdr, blines, hdr, rows = None, None, None, None, None, []
+-    i += 2
+-    while i < len(lines):
+-        ln = lines[i]
+-        if ln.startswith('ITEM: TIMESTEP'):
+-            break
+-        if ln.startswith(count_item):
+-            n_decl_tok = (lines[i + 1].split() or [''])[0] if i + 1 < len(lines) else ''
+-            n_decl, n_decl_ok = _int_token(n_decl_tok)
+-            i += 2
++    if 'count' in secs:
++        n_decl_tok = _scalar_token(secs['count'][1])
++        n_decl, n_decl_ok = _int_token(n_decl_tok)
++    if 'rows' not in secs or 'box' not in secs:
++        raise ValueError(f'{path}: `{rows_item}` 또는 `ITEM: BOX BOUNDS` 가 마지막 프레임에 없다')
++    bhdr = secs['box'][0].replace('ITEM: BOX BOUNDS', '').split()
++    flags = tuple(bhdr[-3:]) if len(bhdr) >= 3 else None
++    blines = [s.split() for s in _section_content(secs['box'][1])]     # 내용 앞 · 사이 빈 줄 = 토큰 0 줄 (box_format · 옛 판과 같음)
++    btok = [tuple(b[:2]) for b in (blines + [[], [], []])[:3]]
++    hdr = secs['rows'][0].replace(rows_item, '').split()
++    rows, wbad, n_phys = [], [], 0
++    for s in secs['rows'][1]:
++        v = s.split()
++        if not v:
+             continue
+-        if ln.startswith('ITEM: BOX BOUNDS'):
+-            bhdr = ln.replace('ITEM: BOX BOUNDS', '').split()
+-            flags = tuple(bhdr[-3:]) if len(bhdr) >= 3 else None
+-            blines = [lines[i + 1 + k].split() if i + 1 + k < len(lines) else [] for k in range(3)]
+-            btok = [tuple(b[:2]) for b in blines]
+-            i += 4
+-            continue
+-        if ln.startswith(rows_item):
+-            hdr = ln.replace(rows_item, '').split()
+-            i += 1
+-            while i < len(lines) and not lines[i].startswith('ITEM:'):
+-                v = lines[i].split()
+-                if len(v) == len(hdr):
+-                    rows.append(v)
+-                i += 1
+-            continue
+-        i += 1
+-    if hdr is None or btok is None:
+-        raise ValueError(f'{path}: `{rows_item}` 또는 `ITEM: BOX BOUNDS` 가 마지막 프레임에 없다')
++        if len(v) == len(hdr):
++            rows.append(v)
++        else:
++            wbad.append((n_phys, len(v)))                     # 행 절 안 몇 째 (0 부터 · 빈 줄 제외) · 열 수
++        n_phys += 1
+     bvals, _S, _h, binfo = _numeric_cols([np.array([b[0] if len(b) > 0 else '' for b in btok], dtype=str),
+                                           np.array([b[1] if len(b) > 1 else '' for b in btok], dtype=str)])
+     shape, shape_why = _box_shape(bhdr, blines)
+@@ -265,7 +321,12 @@
+             'entrance': {'step_token': step_tok, 'step_int_ok': step_ok, 'n_declared_token': n_decl_tok, 'n_declared_int_ok': n_decl_ok,
+                          'box_header': list(bhdr), 'box_lines': [list(b) for b in blines], 'box_shape': shape, 'box_shape_why': shape_why,
+                          'box_n_nonfinite': binfo['n_nonfinite'], 'box_n_not_g6': binfo['n_not_g6'],
+-                         'box_examples_not_g6': binfo['examples_not_g6']}}
++                         'box_examples_not_g6': binfo['examples_not_g6'],
++                         #  e6 전수 소비 재료 (RIMPR-01)
++                         'n_rows_physical': int(n_phys), 'n_rows_width_bad': len(wbad),
++                         'examples_width_bad': [f'행 절 {k} 째 열 {w} ≠ 머리 {len(hdr)}' for k, w in wbad[:3]],
++                         'n_preamble_lines': int(n_pre), 'n_unknown_sections': len(unknown), 'unknown_sections': unknown[:3],
++                         'duplicate_sections': dup_sec, 'scalar_header_extra': head_extra}}
+ 
+ 
+ def read_atom_dump_frame(path):
+@@ -277,6 +338,7 @@
+     miss = [c for c in need if c not in hdr]
+     if miss:
+         raise ValueError(f'{path}: 원자 덤프에 열 {miss} 이 없다 (있는 열: {hdr})')
++    F['entrance']['header_duplicate'] = [c for c in need if hdr.count(c) > 1]   # e6 — 필수 열은 정확히 한 번 (RIMPR-01 · 입구 거부)
+     ix = {c: hdr.index(c) for c in need}
+     cols = ('x', 'y', 'z', 'radius')
+     tok = {c: np.array([r[ix[c]] for r in rows], dtype=str) for c in cols}
+@@ -303,6 +365,7 @@
+     miss = [c for c in need if c not in hdr]
+     if miss:
+         raise ValueError(f'{path}: 접촉 덤프에 열 {miss} 이 없다 — pos · id · 면적 · δ 규약을 모르는 채로 조인하지 않는다')
++    F['entrance']['header_duplicate'] = [c for c in need if hdr.count(c) > 1]   # e6 — 필수 열은 정확히 한 번 (RIMPR-01 · 입구 거부)
+     ix = {c: hdr.index(c) for c in need}
+     cols = POS1 + POS2 + (H.COL_AREA, H.COL_DELTA, H.COL_PERIODIC)
+     tok = {c: np.array([r[ix[c]] for r in rows], dtype=str) for c in cols}
+@@ -324,7 +387,9 @@
+ def read_scaffold_csv(path):
+     """AM scaffold CSV (`type,x,y,z,r` · 상자 단위 · 고정 소수) — 반폭 h_s = 0.5·10^(가장 고운 소수 지수) (고정 소수 형식이라 유효숫자가 아니라
+     자릿수로 잰다 · 파일 전체의 가장 고운 자리 = 좁은 쪽 = 덜 통과시키는 쪽).  자릿수는 **유한** 토큰에서만 잰다 (nan · inf · 못 읽는 토큰 =
+-    `n_nonfinite` · type 정수 아님 = `n_int_bad` · r ≤ 0 = `n_nonpositive_r` — 입구 검사 e1–e3 이 거부한다 · 예외로 멈추지 않는다)."""
++    `n_nonfinite` · type 정수 아님 = `n_int_bad` · r ≤ 0 = `n_nonpositive_r` — 입구 검사 e1–e3 이 거부한다 · 예외로 멈추지 않는다).
++    유한 = Decimal 유한 **이고** 실제로 쓰는 float64 값도 유한 (RIMPR-02 — `1e309` · 고정소수 ±10^309 는 Decimal 로는 유한 · float64 로는 ±inf).
++    µm 변환 (×sim_to_um) 뒤 유한은 단위를 아는 입구 검사 (`_entrance` · `scaffold_um`) 가 본다."""
+     header, rows = [], []
+     with _open_text(path) as fh:
+         for ln in fh:
+@@ -344,7 +409,7 @@
+                 d = decimal.Decimal(t)
+             except decimal.InvalidOperation:
+                 d = None
+-            if d is not None and d.is_finite():
++            if d is not None and d.is_finite() and np.isfinite(_safe_float(t)):   # float64 로도 유한 (RIMPR-02)
+                 exps.add(int(d.as_tuple().exponent))
+             else:
+                 n_nf += 1
+@@ -406,15 +471,20 @@
+     return look, dup
+ 
+ 
+-def _entrance(sc, A, Cd, add):
+-    """입구 검사 e1–e5 (RIMP-02 · 03) — 걸린 사유를 `add` 로 더하고 요약 dict 를 돌려준다 (status PASS | REJECT)."""
++def _entrance(sc, A, Cd, add, um):
++    """입구 검사 e1–e6 (RIMP-02 · 03 · RIMPR-01 · 02) — 걸린 사유를 `add` 로 더하고 요약 dict 를 돌려준다 (status PASS | REJECT).
++    um = sim_to_um (scaffold µm 변환값 = 내보내는 c_um · r_um 의 유한 검사 · RIMPR-02)."""
+     ea, ec = A['entrance'], Cd['entrance']
+     n0 = [0]                                                   # 걸린 사유 수
+ 
+     def _add(code, n, detail):
+         n0[0] += 1
+         add(code, 'entrance', n, detail)
+-    nf = {'scaffold': sc['n_nonfinite'], 'atom': ea['n_nonfinite'], 'contact': ec['n_nonfinite'],
++    #  e1 — scaffold µm 변환 (×um) 뒤 비유한 (float64 로는 유한인 값 중 · 예: 10^306 sim × 1000 = inf) — RIMPR-02
++    with np.errstate(over='ignore', invalid='ignore'):
++        sx, srr = np.asarray(sc['xyz'], np.float64), np.asarray(sc['r'], np.float64)
++        n_um = int((np.isfinite(sx) & ~np.isfinite(sx * um)).sum() + (np.isfinite(srr) & ~np.isfinite(srr * um)).sum())
++    nf = {'scaffold': sc['n_nonfinite'], 'scaffold_um': n_um, 'atom': ea['n_nonfinite'], 'contact': ec['n_nonfinite'],
+           'atom_box': ea['box_n_nonfinite'], 'contact_box': ec['box_n_nonfinite']}
+     if sum(nf.values()):
+         _add('nonfinite_value', sum(nf.values()), [f'{k} {v}' for k, v in nf.items() if v]
+@@ -440,9 +510,26 @@
+     if sum(ng.values()):
+         _add('numeric_format', sum(ng.values()), [f'{k} {v}' for k, v in ng.items() if v]
+              + [repr(x) for x in ea['examples_not_g6'] + ec['examples_not_g6'] + ea['box_examples_not_g6'] + ec['box_examples_not_g6']])
++    #  e6 전수 소비 (RIMPR-01) — 열 수 다른 행 · 필수 열 중복 · 절 배치 (파서가 버리던 것) = 거부
++    rw = {'atom': ea['n_rows_width_bad'], 'contact': ec['n_rows_width_bad']}
++    if sum(rw.values()):
++        _add('row_width', sum(rw.values()), [f'{k} {v}' for k, v in rw.items() if v]
++             + [f'atom {x}' for x in ea['examples_width_bad']] + [f'contact {x}' for x in ec['examples_width_bad']])
++    hd = {'atom': list(ea['header_duplicate']), 'contact': list(ec['header_duplicate'])}
++    if any(hd.values()):
++        _add('header_duplicate', sum(len(v) for v in hd.values()), [f'{k} {c}' for k, v in hd.items() for c in v])
++    fl = {f'{nm}_{k}': int(v) for nm, e_ in (('atom', ea), ('contact', ec))
++          for k, v in (('preamble_lines', e_['n_preamble_lines']), ('unknown_sections', e_['n_unknown_sections']),
++                       ('duplicate_sections', len(e_['duplicate_sections'])), ('scalar_header_extra', len(e_['scalar_header_extra'])))}
++    if sum(fl.values()):
++        _add('frame_layout', sum(fl.values()), [f'{k} {v}' for k, v in fl.items() if v]
++             + [f'{nm} {x!r}' for nm, e_ in (('atom', ea), ('contact', ec))
++                for x in e_['unknown_sections'] + e_['duplicate_sections'] + e_['scalar_header_extra']])
+     return {'status': 'PASS' if not n0[0] else 'REJECT', 'rule': ENTRANCE_RULE,
+             'n_nonfinite': int(sum(nf.values())), 'nonfinite': nf, 'n_nonpositive_radius': int(sum(npr.values())),
+             'n_int_token_bad': int(sum(ib.values())), 'int_token_bad': ib,
++            'n_rows_physical': {'atom': int(ea['n_rows_physical']), 'contact': int(ec['n_rows_physical'])},
++            'n_row_width_bad': int(sum(rw.values())), 'row_width_bad': rw, 'header_duplicate': hd, 'frame_layout': fl,
+             'box': shapes,
+             'format': {'rule': NUMERIC_FORMAT, 'atom_ok': ea['n_not_g6'] == 0 and ea['box_n_not_g6'] == 0,
+                        'contact_ok': ec['n_not_g6'] == 0 and ec['box_n_not_g6'] == 0, 'n_not_g6': ng,
+@@ -455,7 +542,9 @@
+     """입구 검사 실패 — 관문 계산 없이 REJECT 기록 (소비자가 읽는 키는 다 있다 · 값은 '계산 안 함')."""
+     ns = int(len(sc['t']))
+     z = np.zeros(0, np.int64)
+-    skip = '입구 검사 실패 — 관문 계산 안 함 (RIMP-02 · 03)'
++    skip = '입구 검사 실패 — 관문 계산 안 함 (RIMP-02 · 03 · RIMPR-01 · 02)'
++    with np.errstate(over='ignore', invalid='ignore'):        # 거부 기록의 입자 µm 값 (넘침 = 거부 사유 · 기록은 그대로 inf)
++        c_um, r_um = sc['xyz'] * um, sc['r'] * um
+     join = {'kind': JOIN_KIND, 'version': JOIN_VERSION, 'status': 'REJECT', 'rejections': rej, 'entrance': ent,
+             'g_geo': {'skipped': skip, 'n_scaffold': ns},
+             'g_frame': {'skipped': skip, 'atom_step': A['step'], 'contact_step': Cd['step'], 'atom_frames': A['n_frames'],
+@@ -463,7 +552,7 @@
+             'geom_reuse': None, 'scaffold_frame_claim': '주장 없음 — 입구 검사 실패',
+             'files': files, 'steps': {'atom': A['step'], 'contact': Cd['step']}, 'sim_to_um': um, 'dilate_z': float(dilate_z),
+             'type_map': {str(k): v for k, v in sorted(tmap.items())},
+-            'particles': {'c_um': sc['xyz'] * um, 'r_um': sc['r'] * um, 't': sc['t'].astype(np.int64)},
++            'particles': {'c_um': c_um, 'r_um': r_um, 't': sc['t'].astype(np.int64)},
+             'atom_id_of_row': np.full(ns, -1, np.int64),
+             'dem_am_am': {'row_a': z, 'row_b': z.copy(), 'delta_um': np.zeros(0), 'area_um2': np.zeros(0), 'seam': np.zeros(0, bool),
+                           'pflag': np.zeros(0)},
+@@ -480,7 +569,7 @@
+     type_map   {덤프 형: 'AM_P' | 'AM_S' | 다른 이름} — **필수** (real_14 = {1: AM_P, 2: AM_S, 3: SE} · case15 = {1: AM_P, 2: SE})
+     geom_reuse 다른 step 기하 재사용 선언 {'atom_step', 'contact_step', 'reason'} (D19 · 기본 None = 같은 step 요구)
+     dilate_z   raster 에 쓴 z 늘림 — ≠ 1 이면 거부 (N1)
+-    입구 검사 (e1–e5 · RIMP-02 · 03) 가 하나라도 걸리면 관문 계산 없이 REJECT (사유만 · `g_geo` · `g_frame` = 'skipped')."""
++    입구 검사 (e1–e6 · RIMP-02 · 03 · RIMPR-01 · 02) 가 하나라도 걸리면 관문 계산 없이 REJECT (사유만 · `g_geo` · `g_frame` = 'skipped')."""
+     tmap = _check_type_map(type_map)
+     reuse = _check_reuse(geom_reuse)
+     um = float(sim_to_um)
+@@ -496,7 +585,7 @@
+     Cd = read_contact_dump_frame(contact_dump)
+     if float(dilate_z) != 1.0:
+         add('dilate_z', 'N1', 1, [float(dilate_z)])
+-    ent = _entrance(sc, A, Cd, add)
++    ent = _entrance(sc, A, Cd, add, um)
+     if ent['status'] != 'PASS':
+         files = {'scaffold': _file_digest(scaffold_csv), 'atom': _file_digest(atom_dump), 'contact': _file_digest(contact_dump)}
+         return _early_reject(rej, ent, sc, A, Cd, files, um, dilate_z, tmap)
+--- dcb97f1ed942f622d9189eee1a1e9432dc05a655/scripts/step3_sigma.py
++++ 2b9efa253edbf455c2e1abfef1d60e51818e01f8/scripts/step3_sigma.py
+@@ -1595,8 +1595,9 @@
+ 
+ 
+ def iface_require_quantitative(plan, sid=None, sigma_of_sid=None, rint=None, periodic_xy=False, vox=None):
+-    """①′ 정량 모드 관문 — 거부 입력이면 ValueError (계획 행 변조 · 원장/계획 거부 사유 · r1 탐침 동시 사용 (N3) · 주기 (N2) ·
+-    다른 격자 (E5) · 다른 물리 격자 간격 (vox · RIMP-05) · 이 채널에서 AM 이 절연 (막이 조용히 무효 — RINT-14 와 같은 부류)).
++    """①′ 정량 모드 관문 — 거부 입력이면 ValueError (계획 행 변조 · 막 값 r_face 비유한 · 음수 (Q7) · 원장/계획 거부 사유 ·
++    r1 탐침 동시 사용 (N3) · 주기 (N2) · 다른 격자 (E5) · 다른 물리 격자 간격 (vox · RIMP-05) · 이 채널에서 AM 이 절연
++    (막이 조용히 무효 — RINT-14 와 같은 부류)).
+     vox  솔버의 격자 간격 [µm] (`solve_sigma_z` 가 늘 넘긴다) — 유한 양수 · 계획 vox (= 계획 원장 vox) 와 **같은 float64** 여야 한다
+          (sid 바이트 지문은 물리 격자 간격을 담지 않는다: 같은 sid · 같은 계획을 h 0.4 로 풀면 막 G 가 기록의 4 배 · Codex 10-14 판정문 §6).
+          None = 검사 안 함 (직접 호출 호환 — 솔버 경로는 None 이 아니다)."""
+@@ -1608,6 +1609,16 @@
+         raise TypeError(f'iface 계획 모양이 틀렸다 (빠진 키 {_miss}) — am_iface_plan 의 결과를 그대로 줄 것')
+     if _iface_rows_fp(plan['axes']) != plan.get('fp_rows'):
+         raise ValueError('①′ 계획의 간선 행이 만든 뒤 바뀌었다 (지문 불일치 · E5)')
++    #  ★ Codex 10-15 재확인 Q7 (1저자 10-20 승인) — 막 값 공통 불변량: 모든 축 행의 r_face 는 유한 · ≥ 0.  지문은 만든 뒤 바뀐 행만 잡고
++    #    (지문을 다시 만든 변이는 통과) 조립은 r_face > 0 면에만 막을 건다 → NaN · 음수 = 막이 조용히 빠지고 +inf = 면 g 0.  r = 0 허용.
++    for _k, _ax in enumerate(plan['axes']):
++        _rf = np.asarray(_ax['rface'], np.float64)
++        _fin = np.isfinite(_rf)
++        _bad = ~(_fin & (_rf >= 0.0))
++        if _bad.any():
++            raise ValueError(f'①′ 계획 축 {_k} 의 막 값 r_face 는 유한한 0 이상 (Ω·cm²) — 어긋난 행 {int(_bad.sum())} '
++                             f'(NaN {int(np.isnan(_rf).sum())} · ±inf {int(np.isinf(_rf).sum())} · 유한 음수 {int((_fin & (_rf < 0.0)).sum())}) — '
++                             f'NaN · 음수 = 막이 조용히 빠지고 +inf = 면이 끊긴다 (Codex 10-15 Q7)')
+     if plan['rejections']:
+         raise ValueError('①′ 정량 모드 거부 — ' + ' · '.join(
+             f"{x['code']}({x.get('test', '')}{'' if not x.get('test') else ' '}n={x.get('n')})" for x in plan['rejections']))
+--- dcb97f1ed942f622d9189eee1a1e9432dc05a655/scripts/test_rint_g2_join.py
++++ 2b9efa253edbf455c2e1abfef1d60e51818e01f8/scripts/test_rint_g2_join.py
+@@ -30,6 +30,14 @@
+   J7  미인증 면적 — `%g` 합성 근동심 쌍 (d 하한 ≤ 0) 의 면적 100 sim² · 참 면적 둘 다 PASS 아님 (area_uncertified) · 양성 합성 PASS
+   J8  소비 경로 — 합성 조인 → 원장 → 계획 (join=…) → 정량 관문: 변이마다 거부 · 양성 통과
+   J9  양성 유지 기록 — real_14 · case15 전 AM–AM 행 인증 (tested = 행 수) · 음수 면적 = AM–AM 밖 행만 (case15 AM_P–SE 2 행 · 인증 대상 밖)
++  ── RIMPR-01 · 02 (Codex 10-15 · 판정문 docs/reviews/codex_review_rint_g2_impl_fix_recheck_20261015.md §2 · §3 — 시험 먼저) ──
++  J10 파서 전수 소비 — Codex 반례 (블록 안 24 열 접촉 행 · 7 열 원자 행 · 블록 끝 짧은 행 · 필수 열 중복 (뒤 열 nan) · step `100 0.9` ·
++      count `1 garbage`) + 같은 뿌리 (TIMESTEP 절 둘째 줄 · 줄 안 VT · 모르는 ITEM 절 · 절 두 번 · BOX BOUNDS 넷째 줄 · 프레임 앞 줄 ·
++      TIMESTEP · NUMBER OF 머리 줄 뒤 토큰) →
++      입구 REJECT · 계획 join_gate_failed · 정량 관문 거부 · 양성 차단 대조 (폭 정상 중복 행 = 그대로 REJECT) · 빈 줄 처리 보존 (옛 판과 같은
++      결과 — 머리 바로 다음 · 경계 줄 사이 빈 줄 = REJECT · 절 끝 · 행 절 안 빈 줄 = PASS) · D19 양성 · real_14 전 행 소비
++  J11 float64 입구 — scaffold 반경 · 좌표 1e309 · 고정소수 ±10^309 (Decimal 유한 · float64 무한) · µm 변환 넘침 · int64 넘는 정수 토큰
++      (id · type · step) → 입구 REJECT (구조화 · 예외 아님) · 계획 · 정량 관문 거부 · int64 최댓값 id = PASS
+ """
+ import argparse
+ import contextlib
+@@ -440,8 +448,9 @@
+     return lines
+ 
+ 
+-def synth(tag, *, fmt='g6', distance=0.0015, area=None, badpos=None, baddelta=None, radius=0.001, tilts=None):
++def synth(tag, *, fmt='g6', distance=0.0015, area=None, badpos=None, baddelta=None, radius=0.001, tilts=None, edit=None):
+     """두 AM_P 구 합성 (Codex `join_synthetic.py` 꼴 · 상자 단위) — fmt 'g6' = `%g` (생산 포맷) · '16' = `%.15e` (16 유효숫자 균일).
++    edit = 쓰기 직전 줄 목록 [scaffold, atom, contact] 을 고치는 함수 (RIMPR-01 · 02 반례 — 파일 줄 단위 변이 · 기본 None = 그대로).
+     → (scaffold, atom, contact) 경로 · 참 면적 (lens_geometry)."""
+     from lens_geometry import intersection_disc_area
+     c = np.array([[0.002, 0.002, 0.002], [0.002 + distance, 0.002, 0.002]])
+@@ -462,6 +471,8 @@
+     if tilts is not None:
+         at, ct = tilt_box(at, (tilts[0], '0', '0')), tilt_box(ct, (tilts[1], '0', '0'))
+     sc = [','.join(['1', *(f'{x:.12f}' for x in [*c[i], radius])]) for i in range(2)]
++    if edit is not None:
++        edit([sc, at, ct])
+     paths = []
+     for suffix, lines in (('sc.csv', sc), ('atom.dump', at), ('contact.dump', ct)):
+         paths.append(write_copy(lines, f'syn_{tag}_{suffix}'))
+@@ -609,6 +620,231 @@
+         and e.get('box') == {'atom': 'orthogonal', 'contact': 'orthogonal'} and (e.get('format') or {}).get('rule') == 'g6', repr(e)[:400])
+ 
+ 
++# ═════════════════════════ RIMPR-01 · 02 (Codex 10-15) ═════════════════════════
++LAW3 = dict(gap_law='cut', unreg_law='cut', ambiguous_arm='cut')
++RT_PP = {'AM_P|AM_P': 1e-3}
++
++
++def consumer_ctx():
++    """합성 기준 조인 → 0.25 µm raster → 원장 (J8 · Codex join_independent 꼴) — 변이 조인을 **같은 원장**의 계획 · 정량 관문에 넣는다."""
++    (sc, at, ct), _ = synth('ctx', fmt='g6')
++    base = J.am_iface_join(sc, at, ct, type_map=TM1)
++    c, r, t = (base['particles'][k] for k in ('c_um', 'r_um', 't'))
++    sid, _pid = quiet(S3.rasterize, c, r, t, None, None, (0, 0, 0), (6, 4, 4), 0.25, bridge_um=0.24)
++    L = S3.am_iface_ledger(c, r, t, sid, sid, (0, 0, 0), 0.25, delta_bound_um=base['g_geo']['delta_bound_um'], bridge_um=0.24)
++    return base, sid, L
++
++
++def try_join(paths, **kw):
++    """조인 실행 — 예외도 결과로 (고치기 전 코드는 일부 반례에서 ValueError · OverflowError 로 끝난다 · 사례 단위로 기록)."""
++    try:
++        return J.am_iface_join(*paths, type_map=TM1, **kw), None
++    except Exception as e:                                  # noqa: BLE001
++        return None, f'{type(e).__name__}: {e}'
++
++
++def entrance_reject(jm, err, want):
++    """조인 = REJECT · 사유 `want` 가 **입구** (관문 계산 전) 에서 · 관문 = 계산 안 함 (skipped)."""
++    if jm is None:
++        return False, err
++    ok = (jm['status'] == 'REJECT' and any(x['code'] == want and x['gate'] == 'entrance' for x in jm['rejections'])
++          and 'skipped' in jm['g_geo'] and 'skipped' in jm['g_frame'])
++    return ok, f"{jm['status']} {[(x['code'], x['gate']) for x in jm['rejections']]}"
++
++
++def consumer_blocks(jm, sid, L):
++    """후속 계획이 조인 REJECT 를 이어받는가 — 계획 join_gate_failed · 정량 관문 (vox 0.25 = 원장 격자) 거부."""
++    if jm is None:
++        return False, '조인 예외 — 계획에 넣을 기록 없음'
++    Pm = S3.am_iface_plan(L, RT_PP, join=jm, **LAW3)
++    ok = 'join_gate_failed' in codes(Pm) and raises(lambda: S3.iface_require_quantitative(Pm, sid=sid, vox=0.25))
++    return ok, repr(codes(Pm))
++
++
++def _dup_col(item_row, col):
++    """열 머리에 이미 있는 필수 열 `col` 을 하나 더 (뒤 열 값 = nan · Codex duplicate_radius_column 꼴)."""
++    def ed(Ls):
++        k = item_row[0]
++        Ls[k][item_row[1]] += ' ' + col
++        for r_ in item_row[2]:
++            Ls[k][r_] += ' nan'
++    return ed
++
++
++def _set(fi, row, val):
++    def ed(Ls):
++        Ls[fi][row] = val
++    return ed
++
++
++def _ins(fi, row, val_of):
++    def ed(Ls):
++        Ls[fi].insert(row, val_of(Ls))
++    return ed
++
++
++@case('J10 조인 파서 전수 소비 — 버린 행 · 열 · 토큰 = 입구 REJECT · 후속 계획 이어받음 (RIMPR-01)')
++def t_parser_complete():
++    print('J10 — 합성 두 구 (r 0.001 · 거리 0.0015 · δ 0.0005 sim) 파일 줄 변이 · 고치기 전 = 전부 PASS / 정량 ACCEPT (판정문 §2)')
++    base, sid, L = consumer_ctx()
++    Pb = S3.am_iface_plan(L, RT_PP, join=base, **LAW3)
++    chk('J10 양성: 합성 기준 조인 PASS · 계획 거부 없음 · 정량 관문 (vox 0.25) 통과',
++        base['status'] == 'PASS' and Pb['rejections'] == [] and S3.iface_require_quantitative(Pb, sid=sid, vox=0.25) is Pb,
++        repr(codes(base)) + repr(codes(Pb)))
++    #  줄 번호 (synth): atom 9 · 10 = 행 · 8 = ATOMS 머리 · 1 = step · 3 = 머리 수 / contact 9 = 행 · 8 = ENTRIES 머리 · 1 · 3 / scaffold 0 · 1
++    codex = (
++        ('접촉 24 열 행을 블록 안 정상 행 앞에 (선언 1 · 실제 2 · Codex)', _ins(2, 9, lambda Ls: Ls[2][9] + ' 0'), 'row_width'),
++        ('원자 7 열 행을 블록 안 정상 행들 앞에 (선언 2 · 실제 3 · Codex)', _ins(1, 9, lambda Ls: Ls[1][9] + ' 0'), 'row_width'),
++        ('접촉 블록 끝에 4 토큰 행 (Codex malformed_extra_contact_row)', lambda Ls: Ls[2].append('0.002 0.002 nan malformed'), 'row_width'),
++        ('원자 블록 끝에 3 토큰 행 (Codex malformed_extra_atom_row)', lambda Ls: Ls[1].append('3 1 nan'), 'row_width'),
++        ('원자 radius 필수 열 중복 (뒤 열 nan · 폭 7 = 7 · Codex)', _dup_col((1, 8, (9, 10)), 'radius'), 'header_duplicate'),
++        ('접촉 c_cpl[22] 필수 열 중복 (뒤 열 nan)', _dup_col((2, 8, (9,)), 'c_cpl[22]'), 'header_duplicate'),
++        ('접촉 step 줄 `100 0.9` (Codex)', _set(2, 1, '100 0.9'), 'int_token'),
++        ('접촉 count 줄 `1 garbage` (Codex)', _set(2, 3, '1 garbage'), 'int_token'),
++        ('원자 step 줄 `100 0.9`', _set(1, 1, '100 0.9'), 'int_token'),
++        ('원자 count 줄 `2 garbage`', _set(1, 3, '2 garbage'), 'int_token'),
++    )
++    same_root = (
++        ('접촉 TIMESTEP 절 둘째 줄 `0.9` (절 몸통 전수)', _ins(2, 2, lambda Ls: '0.9'), 'int_token'),
++        ('접촉 step 줄 `100<VT>0.9` (splitlines 가 줄을 쪼갠다)', _set(2, 1, '100\x0b0.9'), 'int_token'),
++        ('접촉 프레임 안 모르는 ITEM 절 (`ITEM: FOO` · `1 2 3`)', lambda Ls: Ls[2].__setitem__(slice(8, 8), ['ITEM: FOO', '1 2 3']),
++         'frame_layout'),
++        ('접촉 NUMBER OF ENTRIES 절 두 번', lambda Ls: Ls[2].__setitem__(slice(4, 4), ['ITEM: NUMBER OF ENTRIES', '1']), 'frame_layout'),
++        ('접촉 BOX BOUNDS 절 넷째 줄 (`0 0.01`)', _ins(2, 8, lambda Ls: '0 0.01'), 'box_format'),
++        ('접촉 첫 프레임 앞 비어 있지 않은 줄', _ins(2, 0, lambda Ls: 'junk'), 'frame_layout'),
++        ('접촉 TIMESTEP 머리 줄 뒤 토큰 (`ITEM: TIMESTEP 0.9`)', _set(2, 0, 'ITEM: TIMESTEP 0.9'), 'frame_layout'),
++        ('원자 NUMBER OF ATOMS 머리 줄 뒤 토큰 (`ITEM: NUMBER OF ATOMS 7`)', _set(1, 2, 'ITEM: NUMBER OF ATOMS 7'), 'frame_layout'),
++    )
++    for gi, (group, rows) in enumerate((('Codex 반례', codex), ('같은 뿌리 (판정문 밖 · 버리던 줄)', same_root))):
++        for k, (tag, ed, want) in enumerate(rows):
++            (sc, at, ct), _ = synth(f'r1_{gi}_{k}', fmt='g6', edit=ed)
++            jm, err = try_join((sc, at, ct))
++            ok, why = entrance_reject(jm, err, want)
++            chk(f'J10 [{group}] {tag} → 입구 REJECT ({want}) · 관문 계산 안 함', ok, why)
++            ok, why = consumer_blocks(jm, sid, L)
++            chk(f'J10 [{group}] {tag} → 계획 join_gate_failed · 정량 관문 거부 (고치기 전 = 정량 ACCEPT)', ok, why)
++    #  양성 차단 대조 — 폭이 정상인 중복 행은 전부 소비돼 그대로 REJECT (열 수 사유 아님)
++    for k, (tag, ed, want) in enumerate((
++            ('접촉 폭 정상 중복 행 (선언 1 · 실제 2)', _ins(2, 9, lambda Ls: Ls[2][9]), {'count_mismatch', 'dem_duplicate_pair'}),
++            ('원자 폭 정상 중복 행 (선언 2 · 실제 3)', _ins(1, 9, lambda Ls: Ls[1][9]), {'count_mismatch', 'atom_id_duplicate'}))):
++        (sc, at, ct), _ = synth(f'r1_ctl{k}', fmt='g6', edit=ed)
++        jm, err = try_join((sc, at, ct))
++        chk(f'J10 양성 차단 대조: {tag} → REJECT {sorted(want)} 유지 · row_width 아님',
++            jm is not None and jm['status'] == 'REJECT' and want <= set(codes(jm)) and 'row_width' not in codes(jm),
++            err or repr(codes(jm)))
++    #  빈 줄 처리 보존 — 절 전수 소비가 빈 줄을 옛 판 (고정 위치 읽기) 보다 느슨하게 하지 않는다 (고치기 전 · 뒤 모두 같은 결과여야 한다)
++    def blank_ok(Ls):
++        _sc, at_, ct_ = Ls
++        ct_.insert(8, '')                                   # BOX BOUNDS 내용 뒤 (ENTRIES 머리 앞) = 절 끝
++        ct_.insert(2, '   ')                                # TIMESTEP 값 뒤 = 절 끝 (공백뿐)
++        ct_.append('')
++        at_.insert(10, '')                                  # 행 절 안 (두 원자 행 사이)
++        at_.append('  ')
++    for k, (tag, ed, want) in enumerate((
++            ('접촉 TIMESTEP 머리 바로 다음 빈 줄 (값 앞)', _ins(2, 1, lambda Ls: ''), 'int_token'),
++            ('접촉 BOX BOUNDS 경계 줄 사이 빈 줄', _ins(2, 6, lambda Ls: ''), 'box_format'))):
++        (sc, at, ct), _ = synth(f'r1_blank{k}', fmt='g6', edit=ed)
++        jm, err = try_join((sc, at, ct))
++        ok, why = entrance_reject(jm, err, want)
++        chk(f'J10 빈 줄 보존: {tag} → 입구 REJECT ({want}) — 옛 판과 같음', ok, why)
++    (sc, at, ct), _ = synth('r1_blank_ok', fmt='g6', edit=blank_ok)
++    jm, err = try_join((sc, at, ct))
++    chk('J10 빈 줄 보존: 절 끝 · 행 절 안 · 파일 끝 빈 줄 → PASS (내용 아님 — 옛 판과 같음)',
++        jm is not None and jm['status'] == 'PASS' and jm['rejections'] == [], err or repr(codes(jm)))
++    #  양성 — D19 선언된 재사용 (다른 step · 같은 기하)
++    (sc, at, ct), _ = synth('r1_d19', fmt='g6', edit=_set(2, 1, '101'))
++    jd, err = try_join((sc, at, ct), geom_reuse={'atom_step': 100, 'contact_step': 101, 'reason': '시험 — D19 같은 기하'})
++    ok = False
++    if jd is not None:
++        Pd = S3.am_iface_plan(L, RT_PP, join=jd, **LAW3)
++        ok = (jd['status'] == 'PASS' and (jd['geom_reuse'] or {}).get('status') == 'accepted' and Pd['rejections'] == []
++              and S3.iface_require_quantitative(Pd, sid=sid, vox=0.25) is Pd)
++    chk('J10 양성: D19 선언된 재사용 (atom 100 · contact 101) → PASS · 계획 거부 없음 · 정량 관문 통과', ok,
++        err or repr(codes(jd)))
++    #  정상 real_14 기록 — 전 행 소비 (물리 행 = 머리 수) · 열 수 불일치 0 · 필수 열 중복 없음 · 프레임 배치 깨끗
++    e = join_r14().get('entrance') or {}
++    chk('J10 정상 real_14: 물리 행 33,289 · 106,563 (= 머리 수) · 열 수 불일치 0 · 필수 열 중복 없음 · 프레임 배치 위반 0',
++        e.get('n_rows_physical') == {'atom': 33289, 'contact': 106563} and e.get('n_row_width_bad') == 0
++        and e.get('header_duplicate') == {'atom': [], 'contact': []}
++        and isinstance(e.get('frame_layout'), dict) and sum(e['frame_layout'].values()) == 0,
++        repr({k: e.get(k) for k in ('n_rows_physical', 'n_row_width_bad', 'header_duplicate', 'frame_layout')}))
++
++
++@case('J11 float64 유한 · µm 변환 · int64 정수 = 입구 REJECT (RIMPR-02)')
++def t_float64_entrance():
++    print('J11 — scaffold 토큰 = Decimal 유한 · float64 무한 (1e309 · 고정소수 10^309) · µm 변환 넘침 · int64 넘는 정수 토큰')
++    base, sid, L = consumer_ctx()
++    big = '1' + '0' * 309 + '.000000000000'
++
++    def scaf(row, col, val):
++        def ed(Ls):
++            v = Ls[0][row].split(',')
++            v[col] = val
++            Ls[0][row] = ','.join(v)
++        return ed
++
++    def far(Ls):
++        """한 구만 (scaffold x = 10^306 고정소수 · 원자 x `1e+306`) · 접촉 0 행 — float64 유한이지만 µm 변환 (×1000) = inf."""
++        sc, at, ct = Ls
++        del sc[1]
++        v = sc[0].split(',')
++        v[1] = '1' + '0' * 306 + '.000000000000'
++        sc[0] = ','.join(v)
++        del at[10]
++        at[3] = '1'
++        w = at[9].split()
++        w[2] = '1e+306'
++        at[9] = ' '.join(w)
++        del ct[9]
++        ct[3] = '0'
++
++    def ct_tok(col, val):
++        def ed(Ls):
++            v = Ls[2][9].split()
++            v[col] = val
++            Ls[2][9] = ' '.join(v)
++        return ed
++
++    def both_steps(val):
++        def ed(Ls):
++            Ls[1][1] = val
++            Ls[2][1] = val
++        return ed
++
++    i64_over = '9223372036854775808'
++    rows = (
++        ('scaffold 반경 `1e309` (Codex)', scaf(1, 4, '1e309'), 'nonfinite_value', 'scaffold'),
++        ('scaffold 반경 고정소수 10^309 (Codex)', scaf(1, 4, big), 'nonfinite_value', 'scaffold'),
++        ('scaffold 반경 고정소수 −10^309 (Codex)', scaf(1, 4, '-' + big), 'nonfinite_value', 'scaffold'),
++        ('scaffold x 고정소수 10^309 (고치기 전 = cKDTree ValueError)', scaf(1, 1, big), 'nonfinite_value', 'scaffold'),
++        ('scaffold x `-1e309`', scaf(1, 1, '-1e309'), 'nonfinite_value', 'scaffold'),
++        ('µm 변환 넘침 — 한 구 x 10^306 sim (float64 유한 · ×1000 = inf · 고치기 전 = PASS · c_um inf)', far, 'nonfinite_value',
++         'scaffold_um'),
++        ('원자 id int64 넘침 `9223372036854775808` (Codex · 고치기 전 = OverflowError)',
++         lambda Ls: Ls[1].__setitem__(9, i64_over + Ls[1][9][1:]), 'int_token', 'atom_id'),
++        ('접촉 id1 int64 넘침', ct_tok(6, i64_over), 'int_token', 'contact_id1'),
++        ('scaffold type int64 넘침', scaf(0, 0, i64_over), 'int_token', 'scaffold_type'),
++        ('두 덤프 step int64 넘침 (e3 = int64 정수 · 같은 규칙)', both_steps(i64_over), 'int_token', 'atom_step'),
++    )
++    for k, (tag, ed, want, where) in enumerate(rows):
++        (sc, at, ct), _ = synth(f'r2_{k}', fmt='g6', edit=ed)
++        jm, err = try_join((sc, at, ct))
++        ok, why = entrance_reject(jm, err, want)
++        ent = (jm or {}).get('entrance') or {}
++        cnt = (ent.get('nonfinite') or {}) if want == 'nonfinite_value' else (ent.get('int_token_bad') or {})
++        chk(f'J11 {tag} → 입구 REJECT ({want} · {where} ≥ 1) · 관문 계산 안 함', ok and int(cnt.get(where, 0)) >= 1,
++            why + f' {where}={cnt.get(where)!r}')
++        ok, why = consumer_blocks(jm, sid, L)
++        chk(f'J11 {tag} → 계획 join_gate_failed · 정량 관문 거부', ok, why)
++    #  경계 양성 — int64 최댓값 id 는 정확한 정수 (range 검사의 한 끝 · 같은 기하)
++    i64_max = '9223372036854775807'
++    (sc, at, ct), _ = synth('r2_i64max', fmt='g6',
++                            edit=lambda Ls: (Ls[1].__setitem__(9, i64_max + Ls[1][9][1:]), ct_tok(6, i64_max)(Ls)))
++    jm, err = try_join((sc, at, ct))
++    chk('J11 경계 양성: 원자 · 접촉 id = int64 최댓값 9223372036854775807 → PASS (거부 없음)',
++        jm is not None and jm['status'] == 'PASS' and jm['rejections'] == [], err or repr(codes(jm)))
++
++
+ def main():
+     global S3, S3_PATH, J, TMP
+     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
+--- dcb97f1ed942f622d9189eee1a1e9432dc05a655/scripts/test_rint_g2_am_iface.py
++++ 2b9efa253edbf455c2e1abfef1d60e51818e01f8/scripts/test_rint_g2_am_iface.py
+@@ -21,7 +21,10 @@
+   원장      T0-6b ledger_integrity (변조 · 끼워 넣기 거부) · E2 진단이 원장을 읽는다 (AST) · 기록 필드 · PROTOCOL_FIELDS 밖
+   RIMP-05   T0-7 plan_vox_binding (Codex 10-14 판정문 §6 · 수정 계획 Q4 (가)) — 같은 sid · 같은 계획 · 다른 솔버 vox = 조립 전 거부 ·
+             정상 재생성 계획 (중심 · 반경 · h × 2) = 통과 · σ · A · G (Codex 값) · 관문 vox 인자 (iface 끔 = 비트 같음은 T0-5′)
+-  보류      T2 · T3 검증 · D12-V · 직접 R_j 간선 (②) — 이 묶음 밖 (PENDING 줄로 표시) · N9 · RRM = test_rint_g2_rrm.py ·
++  Q7        일반 관문 막 값 불변량 (Codex 10-15 재확인 판정문 §5 Q7 · 1저자 10-20 승인) — 막 행 하나 r_face NaN · 음수 · +inf
++            (지문 다시 만듦) = 관문 ValueError · 조립 전 거부 (CG 0) · RRM r = 0 (막 행 r_face 0) · 정상 RRM · CNC r = 0 · 유한 양수
++            변이 = 통과 (r = 0 보존 · 절단 tombstone 그대로)
++  보류     T2 · T3 검증 · D12-V · 직접 R_j 간선 (②) — 이 묶음 밖 (PENDING 줄로 표시) · N9 · RRM = test_rint_g2_rrm.py ·
+             N1 · N5′ · T4-2 = test_rint_g2_join.py · T4-1 · T4-3 = test_rint_t4_census.py · test_rint_t43_order.py ·
+             T2 개발 = test_rint_t2_dev.py (10-13)
+ """
+@@ -898,6 +901,111 @@
+         raises(lambda: S3.iface_require_quantitative(Pt, sid, vox=2.0 * h)))
+ 
+ 
++# ═════════════════════════════════ Q7 (막 값 공통 불변량) ═════════════════════════════════
++#  Codex 10-15 재확인 판정문 §5 Q7 (docs/reviews/codex_review_rint_g2_impl_fix_recheck_20261015.md) · 1저자 10-20 승인 —
++#  조립은 r_face > 0 인 면에만 막을 건다 → NaN · 음수 = 막이 조용히 빠지고 +inf = 면 g 0.  행 지문 (E5) 은 **만든 뒤 바뀐 것**만
++#  잡으므로 지문을 다시 만든 변이는 옛 관문을 통과했다 (Codex: CNC 0.0038116099134384756 → 0.004141925781633665 S/cm · 잔차 6.2e−15).
++#  RRM_A 픽스처 = test_rint_g2_rrm.py 와 같은 리터럴 (R 1 µm 두 AM_S · δ 0.167 · h 0.1 · 고정 브리지 0.7 · film 67 · cut 85).
++Q7_RRM_C = np.array([[1.03, 0.97, 1.0], [1.03, 0.97, 2.833]])
++Q7_RRM_HI, Q7_RRM_VOX, Q7_RRM_BR = (2.0, 2.0, 3.833), 0.1, 0.7
++Q7_RRM_RT = {'AM_S|AM_S': 1.0e-3, 'AM_S|AM_P': 2.0e-3, 'AM_P|AM_P': 1.5e-3}
++
++
++def rrm_module():
++    """RRM 기준 모듈 (시험 전용) 을 **시험 대상 S3** 에 묶어 읽는다 (test_rint_g2_rrm.py main 과 같은 방식 — 한 모듈만 시험)."""
++    prev = sys.modules.get('step3_sigma')
++    sys.modules['step3_sigma'] = S3
++    try:
++        spec = importlib.util.spec_from_file_location('rint_rrm_reference_q7', os.path.join(SCRIPTS, 'rint_rrm_reference.py'))
++        R = importlib.util.module_from_spec(spec)
++        spec.loader.exec_module(R)
++    finally:
++        if prev is None:
++            sys.modules.pop('step3_sigma', None)
++        else:
++            sys.modules['step3_sigma'] = prev
++    return R
++
++
++def with_rface(P, ax, row, value):
++    """계획 P 의 축 ax · 행 row 의 r_face 하나만 value 로 바꾼 사본 — 행 지문 (fp_rows) 을 **다시 만든다**
++    (지문 · 거부 사유 · vox · 채널 검사로는 못 가르는 변이 · 원장 · 기록은 공유)."""
++    Q = dict(P)
++    axes = [{k: np.array(v, copy=True) for k, v in A.items()} for A in P['axes']]
++    axes[ax]['rface'][row] = value
++    Q['axes'] = tuple(axes)
++    Q['fp_rows'] = S3._iface_rows_fp(Q['axes'])
++    return Q
++
++
++@case('Q7 rface_finite_nonneg (Codex 10-15 재확인 Q7 · 일반 관문 막 값 불변량)')
++def t_q7_rface_guard():
++    print('Q7 — 일반 관문 (iface_require_quantitative) 이 막 값 r_face 를 본다: 유한 · ≥ 0 (r = 0 보존) · 조립 전 거부 · iface 끔 무관')
++    from scipy.sparse.linalg import spsolve
++    h = 0.2
++    c = np.array([[1., 1., 1.], [1., 1., 2.98]]); r = np.ones(2); t = np.array([2, 2])
++    sid, _ = quiet(S3.rasterize, c, r, t, None, None, (0., 0., 0.), (2., 2., 4.), h, bridge_um=1.2 * h)
++    L = S3.am_iface_ledger(c, r, t, sid, sid, (0., 0., 0.), h, delta_bound_um=0., bridge_um=1.2 * h)
++    P = S3.am_iface_plan(L, {'AM_S|AM_S': 1e-3})
++    ax = next(i for i, A in enumerate(P['axes']) if (~A['cut']).any())
++    row = int(np.flatnonzero(~P['axes'][ax]['cut'])[0])
++    r0 = float(P['axes'][ax]['rface'][row])
++    kw = dict(return_field=True, z_bot_um=0.0, z_top_um=20 * h)
++    calls = [0]
++    old = S3._solve_cg
++
++    def spy(L_, b_):
++        calls[0] += 1
++        return spsolve(L_.tocsc(), b_), 0
++    for tag, val in (('NaN', float('nan')), ('음수 (−r_face)', -r0), ('+inf', float('inf'))):
++        Q = with_rface(P, ax, row, val)
++        msg, gate = '', False
++        try:
++            S3.iface_require_quantitative(Q, sid, te(), vox=h)
++        except ValueError as e:
++            gate, msg = True, str(e)
++        n0 = calls[0]
++        S3._solve_cg = spy
++        try:
++            solve = raises(lambda Q=Q: quiet(S3.solve_sigma_z, sid, te(), h, iface=Q, **kw), (ValueError,))
++        finally:
++            S3._solve_cg = old
++        chk(f'Q7 막 행 하나 r_face = {tag} (지문 다시 만듦 = 지문 · 거부 사유 · vox · 채널 검사가 못 본다) → '
++            f'관문 ValueError (r_face 표지) · 솔브 조립 전 거부 (CG 호출 0)',
++            Q['fp_rows'] == S3._iface_rows_fp(Q['axes']) and gate and 'r_face' in msg and solve and calls[0] == n0,
++            f'관문 거부 {gate} · 솔브 거부 {solve} · CG 호출 {calls[0] - n0} · {msg[:80]!r}')
++    #  양성 — r = 0 보존 (RRM r = 0 = 막 행 r_face 0 · CNC r = 0 = 막 행 없음) · 절단 tombstone (r_face 0) 그대로 · 정상 RRM 계획 ·
++    #    같은 꼴의 유한 양수 변이 (r_face × 2 · 지문 다시 만듦) = 통과 · 풀이 → 위 셋을 가르는 것은 새 검사뿐 (옛 검사는 행 값을 못 본다)
++    RRM = rrm_module()
++    tA = np.array([2, 2])
++    sidA, _ = quiet(S3.rasterize, Q7_RRM_C, np.ones(2), tA, None, None, (0., 0., 0.), Q7_RRM_HI, Q7_RRM_VOX, bridge_um=Q7_RRM_BR)
++    LA = S3.am_iface_ledger(Q7_RRM_C, np.ones(2), tA, sidA, sidA, (0., 0., 0.), Q7_RRM_VOX, delta_bound_um=0.0, bridge_um=Q7_RRM_BR)
++    PA = RRM.rrm_plan(LA, Q7_RRM_RT, resolve_k=4.0)
++    PA0 = RRM.rrm_plan(LA, {'AM_S|AM_S': 0.0}, resolve_k=4.0)
++    P0 = S3.am_iface_plan(L, {'AM_S|AM_S': 0.0})
++    Q2 = with_rface(P, ax, row, 2.0 * r0)
++    gates = all(S3.iface_require_quantitative(X, s_, te(), vox=v_) is X
++                for X, s_, v_ in ((PA, sidA, Q7_RRM_VOX), (PA0, sidA, Q7_RRM_VOX), (P0, sid, h), (Q2, sid, h), (P, sid, h)))
++    kwA = dict(return_field=True, z_bot_um=0.0, z_top_um=Q7_RRM_HI[2])
++    with direct_solver():
++        sA = quiet(S3.solve_sigma_z, sidA, te(), Q7_RRM_VOX, iface=PA, **kwA)['sigma_eff']
++        sA0 = quiet(S3.solve_sigma_z, sidA, te(), Q7_RRM_VOX, iface=PA0, **kwA)['sigma_eff']
++        off = quiet(S3.solve_sigma_z, sid, te(), h, **kw)
++        on0 = quiet(S3.solve_sigma_z, sid, te(), h, iface=P0, **kw)
++        on1 = quiet(S3.solve_sigma_z, sid, te(), h, iface=P, **kw)
++        on2 = quiet(S3.solve_sigma_z, sid, te(), h, iface=Q2, **kw)
++    n_zero = sum(int(((A['rface'] == 0.0) & ~A['cut']).sum()) for A in PA0['axes'])
++    n_tomb = sum(int((A['cut'] & (A['rface'] == 0.0)).sum()) for A in PA0['axes'])
++    chk(f'Q7 양성: RRM r = 0 계획 (막 행 r_face 0 = {n_zero} · 절단 tombstone {n_tomb}) σ 0.0037299595666211234 · 정상 RRM 계획 '
++        f'σ 0.003334457143882423 (Codex · 상대 1e−9) · CNC r = 0 계획 (막 행 0) = OFF 비트 같음 · 유한 양수 변이 (r_face × 2 · 지문 다시 만듦) '
++        f'= 관문 통과 · 풀이 (σ 감소)',
++        gates and n_zero > 0 and n_tomb > 0 and P0['n_film_rows'] == 0
++        and abs(sA / 0.003334457143882423 - 1) < 1e-9 and abs(sA0 / 0.0037299595666211234 - 1) < 1e-9
++        and on0['sigma_eff'].hex() == off['sigma_eff'].hex() and np.array_equal(on0['phi'], off['phi'])
++        and on2['sigma_eff'] < on1['sigma_eff'] < off['sigma_eff'],
++        f'관문 {gates} · 막 0 {n_zero} · tombstone {n_tomb} · σ_RRM {sA!r} · σ_RRM0 {sA0!r} · σ {on2["sigma_eff"]!r} < {on1["sigma_eff"]!r} < {off["sigma_eff"]!r}')
++
++
+ @case('PENDING (이 묶음 밖)')
+ def t_pending():
+     print('PENDING — 계약에 있으나 이 묶음 밖 (실패가 아니라 보류 · 원장 · 보고에 남는다):')
+--- dcb97f1ed942f622d9189eee1a1e9432dc05a655/scripts/test_rint_g2_rrm.py
++++ 2b9efa253edbf455c2e1abfef1d60e51818e01f8/scripts/test_rint_g2_rrm.py
+@@ -24,7 +24,8 @@
+   ── RIMP-04 · 06 (Codex 10-14 · 판정문 §5 · §7 · 수정 계획 Q3 (가)) ──
+   N9b    복합 변이 — 원판 밖 cut 행 삭제 + 기록 resolve_k 4→5 · + r 표 비움 · film rface NaN (cut 유지) · 음수 rface · k 만 바꿈 ·
+          RRM 기록 없음 → rrm_check 위반 · rrm_require · rrm_solve 거부 (메타데이터로 검사 집합을 비울 수 없다) · 우회 σ 기록 (Codex 값) ·
+-         양성: 정상 계획 · 등록된 r = 0 계획 = 위반 없음
++         양성: 정상 계획 · 등록된 r = 0 계획 = 위반 없음 · ★ 10-20 Codex Q7: film rface NaN 계획 = 일반 솔버도 거부 (막힌 우회 크기 =
++         같은 조립의 등록 r = 0 계획 σ · cut 삭제 변이 (유한 값) 는 그대로 일반 관문 밖)
+   RRM-7  표준 요약 = 실제 RRM 행 — film 67 · cut 85 · 순수 막 G (행 합 = 접점 기록) · CNC 값 = 별도 이름공간 (`iface_cnc_comparison`) ·
+          반쪽 탄소 변형 (Codex: 행 37 · 42 · G 2.7535056597827278e−6 S ↔ CNC 2.612935414333538e−6 / 5.027420037705035e−6)
+ """
+@@ -447,18 +448,29 @@
+         chk(f'N9b {tag} → rrm_check 위반 > 0 · rrm_require 거부 · rrm_solve 거부 (고치기 전 = 위반 없음 · 풀이)',
+             len(V) > 0 and raises(lambda Q=Q: RRM.rrm_require(Q, L)) and refused, repr([x['code'] for x in V]))
+     #  우회 크기 (기록) — 일반 솔버는 RRM 을 모른다 (설계 · 공개된 범위) · Codex 값 재현
++    #  ★ 10-20 Codex Q7 (10-15 재확인 판정문 §5 · 1저자 10-20 승인) — 일반 관문이 막 값 (유한 · ≥ 0) 은 본다 → film rface NaN 계획은
++    #    일반 솔버도 조립 전에 거부한다 (cut 삭제 변이는 값이 유한해서 그대로 일반 관문 밖 = RRM 원장 검사 몫).  막힌 NaN 우회 크기는
++    #    같은 조립의 등록 r = 0 계획으로 기록한다 — NaN 면 = r_face > 0 아님 = 막 없음 = r 0 면과 같은 행렬 (Codex registered_zero 와 같은 값).
++    P0 = RRM.rrm_plan(L, {'AM_S|AM_S': 0.0}, resolve_k=K_FIX)
+     with direct_solver():
+         s_k = quiet(S3.solve_sigma_z, sid, te(), A_VOX, iface=muts['cut 삭제 + 기록 resolve_k 4→5'], **kw)['sigma_eff']
+-        s_n = quiet(S3.solve_sigma_z, sid, te(), A_VOX, iface=muts['cut 유지 + film 67 행 rface NaN'], **kw)
++        try:
++            quiet(S3.solve_sigma_z, sid, te(), A_VOX, iface=muts['cut 유지 + film 67 행 rface NaN'], **kw)
++            n_refused, n_msg = False, ''
++        except ValueError as e:
++            n_refused, n_msg = True, str(e)
++        s_z = quiet(S3.solve_sigma_z, sid, te(), A_VOX, iface=P0, **kw)
+         s_0 = quiet(RRM.rrm_solve, sid, te(), A_VOX, P, L, **kw)['sigma_eff']
+-    print(f'    기록 (픽스처 · 재료값 아님): σ_RRM {s_0!r} · 우회 (cut 삭제) {s_k!r} · NaN rface {s_n["sigma_eff"]!r} S/cm · '
+-          f'NaN 해 unconverged {s_n["unconverged"]} · 잔차 {s_n["resid"]:.3e}')
+-    chk('N9b 기록: 막아야 할 우회 크기 = Codex 값 (σ_RRM 0.003334457143882423 · 우회 0.0040840140889134725 · NaN 0.0037299595666211234 · 상대 1e−9) '
+-        '— 작은 잔차가 틀린 조립을 구제하지 않는다 (NaN 해 unconverged False)',
+-        abs(s_0 / 0.003334457143882423 - 1) < 1e-9 and abs(s_k / 0.0040840140889134725 - 1) < 1e-9
+-        and abs(s_n['sigma_eff'] / 0.0037299595666211234 - 1) < 1e-9 and s_n['unconverged'] is False, f'{s_0} {s_k} {s_n["sigma_eff"]}')
++    print(f'    기록 (픽스처 · 재료값 아님): σ_RRM {s_0!r} · 우회 (cut 삭제) {s_k!r} · NaN 계획 일반 솔버 거부 {n_refused} · '
++          f'같은 조립 (r = 0) {s_z["sigma_eff"]!r} S/cm · unconverged {s_z["unconverged"]} · 잔차 {s_z["resid"]:.3e}')
++    chk('N9b 기록: 막아야 할 우회 크기 = Codex 값 (σ_RRM 0.003334457143882423 · 우회 (cut 삭제 · 유한 값 = 일반 관문 밖) 0.0040840140889134725 · '
++        '상대 1e−9)',
++        abs(s_0 / 0.003334457143882423 - 1) < 1e-9 and abs(s_k / 0.0040840140889134725 - 1) < 1e-9, f'{s_0} {s_k}')
++    chk('N9b Q7: film rface NaN 계획 → 일반 솔버도 거부 (일반 관문 ValueError · r_face 표지) · 막힌 우회 크기 = 같은 조립의 등록 r = 0 계획 '
++        'σ 0.0037299595666211234 (Codex NaN 값 · 상대 1e−9) — 작은 잔차가 틀린 조립을 구제하지 않는다 (unconverged False)',
++        n_refused and 'r_face' in n_msg and abs(s_z['sigma_eff'] / 0.0037299595666211234 - 1) < 1e-9 and s_z['unconverged'] is False,
++        f'거부 {n_refused} · {n_msg[:80]!r} · {s_z["sigma_eff"]!r}')
+     #  양성 — 등록된 r = 0 경로 (막 행 rface 0 · 절단 남음) 는 허용
+-    P0 = RRM.rrm_plan(L, {'AM_S|AM_S': 0.0}, resolve_k=K_FIX)
+     chk('N9b 양성: 등록된 r = 0 계획 (막 행 rface 0) = 위반 없음 · 정상 계획 = 위반 없음',
+         RRM.rrm_check(P0, L) == [] and RRM.rrm_check(P, L) == [], repr([x['code'] for x in RRM.rrm_check(P0, L)]))
+ 
