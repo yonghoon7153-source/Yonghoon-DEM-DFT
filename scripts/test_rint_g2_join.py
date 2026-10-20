@@ -38,6 +38,18 @@ docs/data/case15_corner_20261001/ (atom · contact 1,710,000 + case15_am_scaffol
       결과 — 머리 바로 다음 · 경계 줄 사이 빈 줄 = REJECT · 절 끝 · 행 절 안 빈 줄 = PASS) · D19 양성 · real_14 전 행 소비
   J11 float64 입구 — scaffold 반경 · 좌표 1e309 · 고정소수 ±10^309 (Decimal 유한 · float64 무한) · µm 변환 넘침 · int64 넘는 정수 토큰
       (id · type · step) → 입구 REJECT (구조화 · 예외 아님) · 계획 · 정량 관문 거부 · int64 최댓값 id = PASS
+  ── RIMPR-R01 · 03 · 04 (Codex 10-20 · 판정문 docs/reviews/codex_review_rint_join_rimpr_q7_recheck_20261020.md §3 · §4 · 수정 계획
+     docs/reviews/rimprr_fix_plan_20261020.md Q2 (가) · Q3 (가) · Q4 (가) — 시험 먼저) ──
+  J12 구역 머리 줄 — Codex 독립 탐침 10 건 (원자 · 접촉: 행 머리 경계 없음 · 상자 머리 경계 없음 · 행 표지 반복 · 상자 표지 반복 · 행 표지 후첨) +
+      판정문 §3 최소 반례 둘 (문자열 그대로) + ② 의 접촉 대응 → 입구 REJECT (경계 없음 · 붙여 쓴 반복 표지 = frame_layout (header_boundary) ·
+      상자 표지 후첨 = box_format · 행 표지 후첨 = row_width) · 계획 join_gate_failed · 정량 관문 거부 (고치기 전 = 전부 PASS / 정량 ACCEPT)
+  J12P 정상 양성 그대로 — 머리 · 행 · 경계 줄의 공백 · 탭 (표지 뒤 탭 · 겹 공백 · 끝 공백) · 쓰지 않는 진단 열 (원자 vx · 접촉 c_cpl[24]) ·
+      접촉 0 행 · gzip · CRLF → PASS (고치기 전 · 뒤 같음)
+  J13 파생값 유한 — 판정문 §4 반례 (정상 AM 둘 + 비-AM 두 구 x 1e160 · 2e160 sim · 상자 0 … 3e160 · 닿을 수 없는데 δ 0.0005) · 한-AM x 1e160
+      (δ 반올림 폭 delta_bound_um = inf) · sim_to_um 1e160 (AM–AM 면적 µm² = inf) → 구조화 REJECT (derived_nonfinite) · 계획 · 정량 관문 거부 ·
+      1e150 대조 = 지금처럼 REJECT (delta_pos_mismatch)
+  J14 정수 토큰 = ASCII 숫자만 — 전각 숫자 (원자 id · type · step · count · 접촉 id1 · id2 · step · count · scaffold type 하나씩 · 전부) · 아라비아-인도
+      숫자 → 입구 REJECT (int_token) · 계획 · 정량 관문 거부 · ASCII 부호 · 앞 0 (`+100` · `000100` · `-0`) = PASS 그대로
 """
 import argparse
 import contextlib
@@ -843,6 +855,265 @@ def t_float64_entrance():
     jm, err = try_join((sc, at, ct))
     chk('J11 경계 양성: 원자 · 접촉 id = int64 최댓값 9223372036854775807 → PASS (거부 없음)',
         jm is not None and jm['status'] == 'PASS' and jm['rejections'] == [], err or repr(codes(jm)))
+
+
+# ═════════════════════════ RIMPR-R01 · 03 · 04 (Codex 10-20) ═════════════════════════
+def gate_reject(jm, err, want, gate):
+    """조인 = REJECT · 사유 `want` 가 관문 `gate` (입구 뒤 산술 단계 — G-frame · G-geo) 에서."""
+    if jm is None:
+        return False, err
+    ok = jm['status'] == 'REJECT' and any(x['code'] == want and x['gate'] == gate for x in jm['rejections'])
+    return ok, f"{jm['status']} {[(x['code'], x['gate']) for x in jm['rejections']]}"
+
+
+def consumer_accepts(jm, sid, L):
+    """정상 양성 — 같은 원장의 계획 거부 없음 · 정량 관문 (vox 0.25) 통과."""
+    if jm is None:
+        return False, '조인 예외'
+    Pm = S3.am_iface_plan(L, RT_PP, join=jm, **LAW3)
+    try:
+        ok = Pm['rejections'] == [] and S3.iface_require_quantitative(Pm, sid=sid, vox=0.25) is Pm
+    except Exception as e:                                  # noqa: BLE001
+        return False, f'{type(e).__name__}: {e}'
+    return ok, repr(codes(Pm))
+
+
+def _hdr(fi, row, old, new):
+    """머리 줄 한 줄 변이 (Codex structure_probe 꼴) — old 가 있으면 첫 출현 하나를 new 로 · 없으면 줄 끝에 new 를 붙인다."""
+    def ed(Ls):
+        Ls[fi][row] = Ls[fi][row].replace(old, new, 1) if old else Ls[fi][row] + new
+    return ed
+
+
+def _verbatim(fi, old, new):
+    """판정문 §3 최소 반례 — 파일 글 전체에서 정확히 한 번 나오는 머리 줄 문자열 old 를 new 로 (Codex structure_minimal_replay 꼴)."""
+    def ed(Ls):
+        text = '\n'.join(Ls[fi])
+        assert text.count(old) == 1, (old, text.count(old))
+        Ls[fi][:] = text.replace(old, new, 1).split('\n')
+    return ed
+
+
+@case('J12 구역 머리 줄 — 정확한 단어 경계 · 표지 한 번 = 입구 REJECT · 후속 계획 이어받음 (RIMPR-R01)')
+def t_section_header():
+    print('J12 — 합성 두 구 머리 줄 한 줄 변이 (Codex 10-20 독립 탐침 10 + 판정문 §3 최소 둘 + 접촉 대응) · 고치기 전 = 전부 PASS / 정량 ACCEPT')
+    base, sid, L = consumer_ctx()
+    #  줄 번호 (synth): 4 = BOX BOUNDS 머리 · 8 = ATOMS / ENTRIES 머리 (Codex independent_lines 와 같은 배치)
+    rows = []
+    for fi, nm, lab, mk in ((1, 'atom', '원자', 'ITEM: ATOMS'), (2, 'contact', '접촉', 'ITEM: ENTRIES')):
+        rows += [
+            (f'{lab} 행 머리 경계 없음 (`{mk}` 와 첫 열 붙임 · Codex {nm}_rows_no_boundary)', _hdr(fi, 8, mk + ' ', mk),
+             'frame_layout', f'{nm}_header_boundary'),
+            (f'{lab} 상자 머리 경계 없음 (`ITEM: BOX BOUNDSff ff ff` · Codex {nm}_box_no_boundary)', _hdr(fi, 4, 'BOUNDS ', 'BOUNDS'),
+             'frame_layout', f'{nm}_header_boundary'),
+            (f'{lab} 행 표지 반복 (`{mk}{mk} …` · Codex {nm}_rows_repeated_marker)', _hdr(fi, 8, mk, mk + mk),
+             'frame_layout', f'{nm}_header_boundary'),
+            (f'{lab} 상자 표지 반복 (`ITEM: BOX BOUNDSITEM: BOX BOUNDS ff ff ff` · Codex {nm}_box_repeated_marker)',
+             _hdr(fi, 4, 'ITEM: BOX BOUNDS', 'ITEM: BOX BOUNDSITEM: BOX BOUNDS'), 'frame_layout', f'{nm}_header_boundary'),
+            (f'{lab} 행 표지 후첨 (`… {mk}` · Codex {nm}_rows_marker_at_end)', _hdr(fi, 8, None, ' ' + mk), 'row_width', None),
+        ]
+    rows += [
+        ('판정문 §3 ① 원자 `ITEM: ATOMS id type x y z radius` → `ITEM: ATOMSid type x y z radius` (문자열 그대로)',
+         _verbatim(1, 'ITEM: ATOMS id type x y z radius', 'ITEM: ATOMSid type x y z radius'), 'frame_layout', 'atom_header_boundary'),
+        ('판정문 §3 ② 원자 `ITEM: BOX BOUNDS ff ff ff` → `ITEM: BOX BOUNDS ff ff ff ITEM: BOX BOUNDS` (문자열 그대로)',
+         _verbatim(1, 'ITEM: BOX BOUNDS ff ff ff', 'ITEM: BOX BOUNDS ff ff ff ITEM: BOX BOUNDS'), 'box_format', None),
+        ('판정문 §3 ② 의 접촉 대응 (접촉 `ITEM: BOX BOUNDS ff ff ff` → `ITEM: BOX BOUNDS ff ff ff ITEM: BOX BOUNDS`)',
+         _verbatim(2, 'ITEM: BOX BOUNDS ff ff ff', 'ITEM: BOX BOUNDS ff ff ff ITEM: BOX BOUNDS'), 'box_format', None),
+    ]
+    for k, (tag, ed, want, sub) in enumerate(rows):
+        (sc, at, ct), _ = synth(f'rr1_{k}', fmt='g6', edit=ed)
+        jm, err = try_join((sc, at, ct))
+        ok, why = entrance_reject(jm, err, want)
+        if sub is not None:
+            fl = ((jm or {}).get('entrance') or {}).get('frame_layout') or {}
+            ok = ok and int(fl.get(sub, 0)) >= 1
+            why += f' {sub}={fl.get(sub)!r}'
+        chk(f'J12 {tag} → 입구 REJECT ({want}' + (f' · {sub} ≥ 1' if sub else '') + ') · 관문 계산 안 함', ok, why)
+        ok, why = consumer_blocks(jm, sid, L)
+        chk(f'J12 {tag} → 계획 join_gate_failed · 정량 관문 거부 (고치기 전 = 정량 ACCEPT)', ok, why)
+
+
+@case('J12P 정상 양성 그대로 — 공백 · 탭 · 쓰지 않는 진단 열 · 접촉 0 행 · gzip · CRLF (RIMPR-R01 · 고치기 전 · 뒤 같음)')
+def t_section_header_positive():
+    print('J12P — 구역 이름 경계 · 표지 한 번 수정이 정상 머리 줄 (공백 · 탭 구분 · 끝 공백 · 진단 열) 을 거짓 거부하지 않는다')
+    base, sid, L = consumer_ctx()
+
+    def ws_tab(Ls):
+        _sc, at, ct = Ls
+        at[0] = 'ITEM: TIMESTEP \t'                           # 머리 끝 공백 · 탭
+        at[2] = 'ITEM: NUMBER OF ATOMS\t'
+        at[4] = 'ITEM: BOX BOUNDS\tff  ff\tff '               # 표지 뒤 탭 · 겹 공백 · 끝 공백
+        at[5] = '0\t0.01'                                    # 경계 줄 탭
+        at[8] = 'ITEM: ATOMS\tid\ttype  x y\tz radius '       # 표지 뒤 탭 · 열 사이 탭 · 겹 공백 · 끝 공백
+        at[9] = at[9].replace(' ', '\t')                      # 행 탭
+        ct[2] = 'ITEM: NUMBER OF ENTRIES  '
+        ct[4] = 'ITEM: BOX BOUNDS ff\tff ff'
+        ct[8] = ct[8].replace('ITEM: ENTRIES ', 'ITEM: ENTRIES\t', 1) + ' \t'
+        ct[9] = ct[9].replace(' ', '  ', 3)
+
+    def diag_cols(Ls):
+        _sc, at, ct = Ls
+        at[8] += ' vx'                                       # 쓰지 않는 진단 열 (값 검사 대상 밖 · 폭은 센다)
+        at[9] += ' 0'
+        at[10] += ' 0'
+        ct[8] += ' c_cpl[24]'
+        ct[9] += ' 0'
+
+    for tag, ed in (('머리 · 행 · 경계 줄의 공백 · 탭 (표지 뒤 탭 · 겹 공백 · 끝 공백)', ws_tab),
+                    ('쓰지 않는 진단 열 (원자 vx · 접촉 c_cpl[24])', diag_cols)):
+        (sc, at, ct), _ = synth('rr1p_' + ed.__name__, fmt='g6', edit=ed)
+        jm, err = try_join((sc, at, ct))
+        chk(f'J12P {tag} → PASS (거부 없음)', jm is not None and jm['status'] == 'PASS' and jm['rejections'] == [],
+            err or repr(codes(jm)))
+        ok, why = consumer_accepts(jm, sid, L)
+        chk(f'J12P {tag} → 계획 거부 없음 · 정량 관문 통과', ok, why)
+
+    def zero_rows(Ls):
+        del Ls[2][9]
+        Ls[2][3] = '0'
+    (sc, at, ct), _ = synth('rr1p_zero', fmt='g6', distance=0.005, edit=zero_rows)
+    jm, err = try_join((sc, at, ct))
+    chk('J12P 접촉 0 행 (두 구 떨어짐 · NUMBER OF ENTRIES 0) → PASS (거부 없음)',
+        jm is not None and jm['status'] == 'PASS' and jm['rejections'] == [], err or repr(codes(jm)))
+    (sc, at, ct), _ = synth('rr1p_store', fmt='g6')
+    gz, crlf = [], []
+    for p in (sc, at, ct):
+        with open(p, 'rb') as fh:
+            raw = fh.read()
+        with gzip.open(p + '.gz', 'wb') as fo:
+            fo.write(raw)
+        with open(p + '_crlf', 'wb') as fo:
+            fo.write(raw.replace(b'\n', b'\r\n'))
+        gz.append(p + '.gz')
+        crlf.append(p + '_crlf')
+    for tag, paths in (('gzip (세 파일 .gz)', gz), ('CRLF 줄 끝 (세 파일)', crlf)):
+        jm, err = try_join(tuple(paths))
+        chk(f'J12P {tag} → PASS (거부 없음)', jm is not None and jm['status'] == 'PASS' and jm['rejections'] == [],
+            err or repr(codes(jm)))
+        ok, why = consumer_accepts(jm, sid, L)
+        chk(f'J12P {tag} → 계획 거부 없음 · 정량 관문 통과', ok, why)
+
+
+@case('J13 파생값 유한 — 유한 입력의 산술 넘침 = 구조화 REJECT (RIMPR-04 부분 · 판정문 §4)')
+def t_derived_finite():
+    print('J13 — 입구 유한 검사 뒤 산술 (거리 · 허용폭 제곱합 · 반올림 폭 · µm² 면적) 넘침 · 고치기 전 = 조인 PASS / 정량 ACCEPT (1e150 대조 = REJECT)')
+    base, sid, L = consumer_ctx()
+
+    def far_se(scale):
+        """판정문 §4 표 — 정상 AM 두 구 · scaffold 그대로 + 비-AM (type 2) 두 구 x = scale · 2·scale sim (r 0.001) · 직교 상자 x 0 … 3·scale ·
+        두 비-AM 구는 닿을 수 없는데 접촉 행 δ 0.0005 (면적 1e-06)."""
+        def ed(Ls):
+            _sc, at, ct = Ls
+            for F in (at, ct):
+                F[5] = f'0 {g6(3.0 * scale)}'
+            at[3] = '4'
+            at.extend([f'3 2 {g6(scale)} 0.002 0.002 0.001', f'4 2 {g6(2.0 * scale)} 0.002 0.002 0.001'])
+            ct[3] = '2'
+            ct.append(f'{g6(scale)} 0.002 0.002 {g6(2.0 * scale)} 0.002 0.002 3 4 0 ' + ' '.join(['0'] * 12) + ' 1e-06 0.0005')
+        return ed
+
+    def detail_of(jm, code):
+        return [d for x in ((jm or {}).get('rejections') or []) if x['code'] == code for d in (x.get('detail') or [])]
+
+    #  ① 판정문 §4 반례 (x 1e160)
+    (sc, at, ct), _ = synth('rr4_1e160', fmt='g6', edit=far_se(1e160))
+    jm, err = try_join((sc, at, ct))
+    ok, why = gate_reject(jm, err, 'derived_nonfinite', 'G-frame')
+    gf = (jm or {}).get('g_frame') or {}
+    chk('J13 ① 판정문 §4 반례 (비-AM 두 구 x 1e160 · 2e160 sim · 상자 0 … 3e160 · δ 0.0005) → REJECT (derived_nonfinite · G-frame f6 1 행) · '
+        'AM 입자 = 정상과 같음 (fp_particles)',
+        ok and gf.get('n_derived_nonfinite') == 1 and jm['fp_particles'] == base['fp_particles'],
+        why + f" n_derived_nonfinite={gf.get('n_derived_nonfinite')!r}")
+    ok, why = consumer_blocks(jm, sid, L)
+    chk('J13 ① → 계획 join_gate_failed · 정량 관문 거부 (고치기 전 = 조인 PASS / 정량 ACCEPT)', ok, why)
+    #  ② 1e150 대조 — 지금처럼 거부 (거리 · 허용폭이 유한 → delta_pos_mismatch)
+    (sc, at, ct), _ = synth('rr4_1e150', fmt='g6', edit=far_se(1e150))
+    jm, err = try_join((sc, at, ct))
+    gf = (jm or {}).get('g_frame') or {}
+    chk('J13 ② 1e150 대조 → REJECT (delta_pos_mismatch · n_delta_pos_mismatch 1) · derived_nonfinite 아님 (고치기 전 · 뒤 같음)',
+        jm is not None and jm['status'] == 'REJECT' and 'delta_pos_mismatch' in codes(jm) and gf.get('n_delta_pos_mismatch') == 1
+        and 'derived_nonfinite' not in codes(jm), err or repr(codes(jm)))
+    ok, why = consumer_blocks(jm, sid, L)
+    chk('J13 ② 1e150 대조 → 계획 join_gate_failed · 정량 관문 거부', ok, why)
+
+    #  ③ 한-AM x 1e160 — δ 반올림 폭 delta_bound_um (원장 후보) 의 제곱합 넘침 = inf
+    def one_am_far(Ls):
+        sc_, at, ct = Ls
+        del sc_[1]
+        v = sc_[0].split(',')
+        v[1] = '1' + '0' * 160 + '.000000000000'
+        sc_[0] = ','.join(v)
+        del at[10]
+        at[3] = '1'
+        w = at[9].split()
+        w[2] = '1e+160'
+        at[9] = ' '.join(w)
+        del ct[9]
+        ct[3] = '0'
+        for F in (at, ct):
+            F[5] = '0 3e+160'
+    (sc, at, ct), _ = synth('rr4_oneam', fmt='g6', edit=one_am_far)
+    jm, err = try_join((sc, at, ct))
+    ok, why = gate_reject(jm, err, 'derived_nonfinite', 'G-geo')
+    det = detail_of(jm, 'derived_nonfinite')
+    chk('J13 ③ 한-AM x 1e160 sim (접촉 0 행) → REJECT (derived_nonfinite · G-geo delta_bound_um)',
+        ok and 'delta_bound_um' in det, why + f' detail={det!r}')
+    ok, why = consumer_blocks(jm, sid, L)
+    chk('J13 ③ → 계획 join_gate_failed · 정량 관문 거부 (고치기 전 = 조인 PASS · delta_bound_um inf)', ok, why)
+    #  ④ sim_to_um 1e160 — 내보내는 AM–AM 면적 (×um²) 넘침 = inf
+    (sc, at, ct), _ = synth('rr4_um', fmt='g6')
+    jm, err = try_join((sc, at, ct), sim_to_um=1e160)
+    ok, why = gate_reject(jm, err, 'derived_nonfinite', 'G-geo')
+    det = detail_of(jm, 'derived_nonfinite')
+    chk('J13 ④ sim_to_um 1e160 → REJECT (derived_nonfinite · G-geo dem_am_am.area_um2)', ok and 'dem_am_am.area_um2' in det,
+        why + f' detail={det!r}')
+    ok, why = consumer_blocks(jm, sid, L)
+    chk('J13 ④ → 계획 join_gate_failed · 정량 관문 거부 (고치기 전 = 조인 PASS · area_um2 inf)', ok, why)
+
+
+@case('J14 정수 토큰 = ASCII 숫자만 — 전각 · 아라비아-인도 숫자 = 입구 int_token (RIMPR-03)')
+def t_ascii_int():
+    print('J14 — e3 정확 정수 위치마다 전각 숫자 (Codex unicode_fullwidth_integers) · 아라비아-인도 숫자 · 고치기 전 = PASS / 정량 ACCEPT')
+    base, sid, L = consumer_ctx()
+    FW = str.maketrans('0123456789', '０１２３４５６７８９')     # 전각 ０ … ９
+    AR = str.maketrans('0123456789', '٠١٢٣٤٥٦٧٨٩')     # 아라비아-인도 ٠ … ٩
+
+    def tok(fi, row, col, tr=FW):
+        def ed(Ls):
+            sep = ',' if fi == 0 else ' '
+            v = Ls[fi][row].split(sep)
+            v[col] = v[col].translate(tr)
+            Ls[fi][row] = sep.join(v)
+        return ed
+
+    #  e3 정수 위치 (synth 줄 번호): 원자 1 step · 3 count · 9 · 10 행 (id 0 · type 1) / 접촉 1 · 3 · 9 행 (id1 6 · id2 7) / scaffold 0 · 1 행 (type 0)
+    pos = (('원자 id', (1, 9, 0), 'atom_id'), ('원자 type', (1, 9, 1), 'atom_type'), ('원자 step', (1, 1, 0), 'atom_step'),
+           ('원자 count', (1, 3, 0), 'atom_count'), ('접촉 id1', (2, 9, 6), 'contact_id1'), ('접촉 id2', (2, 9, 7), 'contact_id2'),
+           ('접촉 step', (2, 1, 0), 'contact_step'), ('접촉 count', (2, 3, 0), 'contact_count'), ('scaffold type', (0, 0, 0), 'scaffold_type'))
+    rows = [(f'전각 {tag}', tok(*where), key) for tag, where, key in pos]
+    rows.append(('아라비아-인도 숫자 원자 id (`١`)', tok(1, 9, 0, AR), 'atom_id'))
+
+    def all_fw(Ls):
+        for _tag, where, _key in pos:
+            tok(*where)(Ls)
+        for where in ((1, 10, 0), (1, 10, 1), (0, 1, 0)):
+            tok(*where)(Ls)
+    rows.append(('전각 정수 전부 (Codex unicode_fullwidth_integers 꼴)', all_fw, 'atom_id'))
+    for k, (tag, ed, key) in enumerate(rows):
+        (sc, at, ct), _ = synth(f'rr3_{k}', fmt='g6', edit=ed)
+        jm, err = try_join((sc, at, ct))
+        ok, why = entrance_reject(jm, err, 'int_token')
+        ib = ((jm or {}).get('entrance') or {}).get('int_token_bad') or {}
+        chk(f'J14 {tag} → 입구 REJECT (int_token · {key} ≥ 1) · 관문 계산 안 함', ok and int(ib.get(key, 0)) >= 1,
+            why + f' {key}={ib.get(key)!r}')
+        ok, why = consumer_blocks(jm, sid, L)
+        chk(f'J14 {tag} → 계획 join_gate_failed · 정량 관문 거부 (고치기 전 = 정량 ACCEPT)', ok, why)
+    #  양성 — ASCII 부호 · 앞 0 은 그대로 정확한 정수 (두 덤프 step 같은 값 · Codex integer_valid_*)
+    for k, s_ in enumerate(('+100', '000100', '-0')):
+        (sc, at, ct), _ = synth(f'rr3_ok{k}', fmt='g6', edit=lambda Ls, s_=s_: (Ls[1].__setitem__(1, s_), Ls[2].__setitem__(1, s_)))
+        jm, err = try_join((sc, at, ct))
+        chk(f'J14 양성: 두 덤프 step `{s_}` (ASCII 부호 · 앞 0) → PASS (거부 없음)',
+            jm is not None and jm['status'] == 'PASS' and jm['rejections'] == [], err or repr(codes(jm)))
 
 
 def main():
