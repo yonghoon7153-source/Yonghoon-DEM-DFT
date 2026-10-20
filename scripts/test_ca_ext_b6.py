@@ -20,10 +20,8 @@
 """
 import argparse
 import contextlib
-import copy
 import io
 import json
-import math
 import os
 import shutil
 import subprocess
@@ -245,8 +243,19 @@ def t_rc():
     #  ── 영수증 (러너 ↔ 매니페스트) — 옛 digest 보존 · 요청 대조 · rtol ──
     _rcpts = [json.load(open(os.path.join(ROOT, 'docs/data', d, 'run_receipt.json'), encoding='utf-8'))
               for d in ('w4_ptfe_centerline_20260827', 'w4b_ptfe_off_20260827')]
-    chk('R10 봉인 코호트 두 영수증의 digest 를 새 함수로 다시 계산 = 저장값 (옛 OUTDIR 이름 보존)',
-        all(RC.receipt_digest(r) == r['receipt_digest'] for r in _rcpts), [RC.receipt_digest(r) for r in _rcpts])
+    import glob
+    import hashlib
+
+    def _base_body_digest(r):                       # 고치기 전 함수 본문 그대로 (선택 칸 없음)
+        body = {k: r.get(k) for k in sorted(set(RC.RECEIPT_AXES) | set(RC.RECEIPT_META))}
+        return hashlib.sha256(json.dumps(body, sort_keys=True, ensure_ascii=False, separators=(',', ':')).encode()).hexdigest()[:12]
+    _all = [json.load(open(f, encoding='utf-8')) for f in sorted(glob.glob(os.path.join(ROOT, 'docs/data/**/run_receipt.json'),
+                                                                         recursive=True))]
+    #  ⚠ 저장된 digest 는 영수증 축이 늘기 전 세대의 것도 있다 (고치기 전 함수로도 27/44 만 재현) — 그래서 불변량은 "선택 칸 없는 영수증의
+    #    digest = 고치기 전 본문의 digest" 다 (--old-scripts 면 B 묶음이 고치기 전 **함수** 와 44/44 를 따로 대조한다).
+    chk(f'R10 커밋된 영수증 {len(_all)} 개 전부 — 새 함수 digest = 고치기 전 본문 digest (선택 칸 없음 = 옛 OUTDIR 이름 보존)',
+        len(_all) >= 40 and all(RC.receipt_digest(r) == _base_body_digest(r) for r in _all),
+        [os.path.basename(str(i)) for i, r in enumerate(_all) if RC.receipt_digest(r) != _base_body_digest(r)][:4])
     base = {k: v for k, v in _rcpts[1].items() if k != 'receipt_digest'}
     req = {'cjunc': dict(CJ_REQ)}
     chk('R10b 요청을 실은 영수증은 digest 가 다르다 (OUTDIR 이 갈린다)',
@@ -498,7 +507,7 @@ def t_payload():
         chk('P5 원장 — instance 1 · 간선 1 · 축약 0 · 풀림 · 접합 간선 1', cnt.get('n_instances') == 1 and cnt.get('n_edge') == 1
             and cnt.get('n_contract') == 0 and (ev.get('solve') or {}).get('solved') is True
             and (ev.get('solve') or {}).get('n_junction_edges') == 1, (cnt, ev.get('solve')))
-        sc, so = s3_of(p_cj), s3_of(p_off)
+        sc = s3_of(p_cj)
         chk('P6 진단 미계산 (E2 · v0) — 소산 분담 None · je 없음 · 진단 표', sc.get('dissipation_share') is None
             and all('je' not in q for q in (p_cj or {}).get('particles', [{}]))
             and (ev.get('diagnostics') or {}).get('je') == 'not_computed', ev.get('diagnostics'))
@@ -601,6 +610,24 @@ def t_bitid():
     if not ARGS.old_scripts:
         print('    (--old-scripts 없음 — 건너뜀 · 커밋 증거는 그 인자로 돌린 기록)')
         return
+    import glob
+    import importlib.util
+    _spec = importlib.util.spec_from_file_location('run_contract_old', os.path.join(ARGS.old_scripts, 'run_contract.py'))
+    _old = importlib.util.module_from_spec(_spec)
+    _spec.loader.exec_module(_old)
+    _all = [json.load(open(f, encoding='utf-8')) for f in sorted(glob.glob(os.path.join(ROOT, 'docs/data/**/run_receipt.json'),
+                                                                         recursive=True))]
+    chk(f'B0 커밋된 영수증 {len(_all)} 개 — 새 receipt_digest = 고치기 전 함수 (OUTDIR 이름 · 코호트 디렉터리 보존)',
+        len(_all) >= 40 and all(RC.receipt_digest(r) == _old.receipt_digest(r) for r in _all))
+    _pairs = []
+    for f in sorted(glob.glob(os.path.join(ROOT, 'docs/data/**/run_receipt.json'), recursive=True)):
+        for p in sorted(glob.glob(os.path.join(os.path.dirname(f), 'p2_*.json')))[:2]:
+            _pj = json.load(open(p, encoding='utf-8'))
+            _mm = ((_pj.get('step3') or (_pj.get('mpm_metrics') or {}).get('step3') or {}).get('manifest'))
+            if isinstance(_mm, dict):
+                _pairs.append((json.load(open(f, encoding='utf-8')), _mm))
+    chk(f'B0b 커밋된 영수증 ↔ 같은 디렉터리 팔 {len(_pairs)} 짝 — receipt_match 판정이 고치기 전과 같다',
+        len(_pairs) > 10 and all(RC.receipt_match(r, m) == _old.receipt_match(r, m) for r, m in _pairs))
     if ARGS.skip_payload:
         return
     td = tempfile.mkdtemp(prefix='b6_b_')

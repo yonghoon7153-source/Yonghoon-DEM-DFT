@@ -115,6 +115,18 @@ CLI_ACCOUNTING = {
     #    범주 `protocol_ext` = 필드명 'ca_ext.<하위 블록>.<protocol 키>' — 규칙 M 이 그 키가 하위 블록 protocol 정본에 있는지 센다.
     '--step3-face-alpha-channel': ('protocol_ext', ('ca_ext.ptfe_face.channels',)),
     '--step3-face-alpha-dia-law': ('protocol_ext', ('ca_ext.ptfe_face.dia_law',)),
+    #  ★ 2026-10-20 (Rint ② B6 · 설계 v1 §4-2 · §5-2 · §7) — S2 탄소 접합 · S3 SDCP 접합 수정자 (`ca_ext.cjunc` · `ca_ext.sdcp_mod`).
+    #    켜는 플래그 = 블록의 모델 판 · 값 플래그 = 그 protocol 칸 (정본 = `ca_ext_cjunc` 의 protocol 키) · PROTOCOL_FIELDS 는 그대로.
+    '--step3-cjunc': ('protocol_ext', ('ca_ext.cjunc.model',)),
+    '--step3-cjunc-rj': ('protocol_ext', ('ca_ext.cjunc.R_j_ohm',)),
+    '--step3-cjunc-len-law': ('protocol_ext', ('ca_ext.cjunc.len_law',)),
+    '--step3-cjunc-unreg-law': ('protocol_ext', ('ca_ext.cjunc.unreg_law',)),
+    '--step3-cjunc-s-min-um': ('protocol_ext', ('ca_ext.cjunc.s_min_um',)),
+    #  tol_ff 하나가 tol_P · tol_sj 를 같이 정한다 (설계 §4-1 — 한 숫자 · SBE 에 SDCP 가 없다)
+    '--step3-cjunc-tol-ff-um': ('protocol_ext', ('ca_ext.cjunc.tol_ff_um', 'ca_ext.cjunc.tol_P_um', 'ca_ext.cjunc.tol_sj_um',
+                                                 'ca_ext.sdcp_mod.tol_sj_um')),
+    '--step3-cjunc-ptfe-jlaw': ('protocol_ext', ('ca_ext.cjunc.ptfe_jlaw',)),
+    '--step3-sdcp-mod-c': ('protocol_ext', ('ca_ext.sdcp_mod.c',)),
     #  ★ `ptfe_zero_dof` = (스탬프 ON) ∧ (σ_PTFE == 0) — 두 옵션이 함께 정한다.
     '--ptfe-stamp': ('protocol', ('ptfe_stamp', 'ptfe_zero_dof')),
     '--sigma-ptfe': ('protocol', ('sigma_ptfe_S_cm', 'ptfe_zero_dof')),
@@ -286,6 +298,11 @@ RECEIPT_META = ('code_sha', 'origins', 'arms', 'expect_backend')
 #    (`_canon_num` 은 dict 를 그대로 비교한다).  선언 안 한 옛 러너는 건너뛴다.
 RECEIPT_AXES_NODIGEST = ('field_requested', 'sigma_am_s_S_cm', 'sigma_sdcp_S_cm',
                          'interface_rint_e_ohm_cm2', 'interface_rint_i_ohm_cm2')
+#: ★ 2026-10-20 (Rint ② B6 · 설계 v1 §7 러너) — 영수증의 **선택 칸** = 다음 세대 요청 (`ca_ext_request` = 접합 · 수정자의 선언 값) ·
+#   정지 rtol (`step3_rtol`).  **있을 때만** digest 본문에 들어간다 — 옛 영수증 (칸 없음) 의 digest = 비트 같음 (커밋된 OUTDIR ·
+#   코호트 디렉터리 이름 보존 · `RECEIPT_AXES` 에 넣으면 `rec.get(k) = None` 이 본문에 들어가 옛 digest 가 전부 바뀐다).
+#   대조는 `receipt_match` 가 매니페스트 블록 (`ca_ext.<하위>.protocol`) · `backend.rtol` 과 한다 (요청 없는 블록 · rtol 도 거부).
+RECEIPT_OPTIONAL = ('ca_ext_request', 'step3_rtol')
 
 
 def expected_origins_for(vox):
@@ -304,6 +321,9 @@ def receipt_digest(rec):
     import hashlib as _h
     import json as _j
     _body = {k: rec.get(k) for k in sorted(set(RECEIPT_AXES) | set(RECEIPT_META))}
+    for _k in RECEIPT_OPTIONAL:                     # ★ B6 — 있을 때만 (옛 영수증 digest 비트 같음)
+        if _k in rec:
+            _body[_k] = rec[_k]
     return _h.sha256(_j.dumps(_body, sort_keys=True, ensure_ascii=False,
                               separators=(',', ':')).encode()).hexdigest()[:12]
 
@@ -345,7 +365,61 @@ def receipt_match(rec, man, origin=None):
         if _o not in _known:
             return False, (f'RCPT|origin|alien| {_o} 는 영수증의 origin 일정에 없다 — '
                            f'{len(_known)}개 중 어느 것도 아니다')
+    _xp = _receipt_ext_problem(rec, man)              # ★ B6 — 다음 세대 요청 · rtol (선택 칸 · 없으면 옛 거동)
+    if _xp:
+        return False, _xp
     return True, None
+
+
+def _same_num(a, b):
+    """선언 ↔ 기록 값 대조 — 수는 **상대** 1e-12 (rtol 1e-12 를 소수 9 자리로 반올림하면 1e-10 과 같아진다) · 그 밖은 같음."""
+    if isinstance(a, bool) or isinstance(b, bool):
+        return type(a) is type(b) and a == b
+    if isinstance(a, (int, float)) and isinstance(b, (int, float)):
+        fa, fb = float(a), float(b)
+        if not (math.isfinite(fa) and math.isfinite(fb)):
+            return False
+        return fa == fb or abs(fa - fb) <= 1e-12 * max(abs(fa), abs(fb))
+    return a == b
+
+
+def _receipt_ext_problem(rec, man):
+    """★ 2026-10-20 (Rint ② B6) — 영수증의 다음 세대 요청 (`ca_ext_request`) ↔ 매니페스트 블록 · `step3_rtol` ↔ `backend.rtol`.
+    선언 없는 영수증인데 팔에 접합 · 수정자 기록 · rtol 이 있으면 거부 (러너가 요청하지 않은 실험 · SKIP 캐시 함정)."""
+    req = rec.get('ca_ext_request')
+    mreq = man.get(CA_EXT_REQUEST_FIELD)
+    _blk = man.get('ca_ext') if isinstance(man.get('ca_ext'), dict) else {}
+    if req is None:
+        if mreq is not None or any(k in _blk for k in CA_EXT_REQUESTABLE):
+            return (f'RCPT|ca_ext|unrequested| 러너는 접합 · 수정자를 요청하지 않았는데 이 팔에는 그 기록이 있다 '
+                    f'({mreq!r}) — 지금 요청한 런의 것이 아니다')
+    else:
+        if not isinstance(req, dict) or not req:
+            return f'RCPT|ca_ext|shape| 영수증의 ca_ext_request = {req!r} (비지 않은 dict)'
+        if mreq != sorted(req):
+            return f'RCPT|ca_ext|differ| 러너 요청 {sorted(req)} ≠ 팔의 요청 칸 {mreq!r}'
+        for sub, kv in sorted(req.items()):
+            prot = (_blk.get(sub) or {}).get('protocol') if isinstance(_blk.get(sub), dict) else None
+            if not isinstance(prot, dict):
+                return f'RCPT|ca_ext.{sub}|missing| 러너가 {sub} 를 요청했는데 매니페스트에 그 블록이 없다'
+            for k, v in sorted((kv or {}).items()):
+                if k not in prot:
+                    return f'RCPT|ca_ext.{sub}.{k}|missing| 블록 protocol 에 칸이 없다'
+                if not _same_num(prot[k], v):
+                    return (f'RCPT|ca_ext.{sub}.{k}|differ| 러너 선언 {v!r} ≠ 결과 {prot[k]!r} — 이 팔은 러너가 의도한 '
+                            f'접합 규약으로 돌지 않았다')
+    rt = rec.get('step3_rtol')
+    _bk = man.get('backend') if isinstance(man.get('backend'), dict) else {}
+    mrt = _bk.get('rtol')
+    if rt is None:
+        if mrt is not None:
+            return (f'RCPT|step3_rtol|unrequested| 러너는 정지 rtol 을 정하지 않았는데 팔의 backend.rtol = {mrt!r} '
+                    f'(수렴 증서 세대가 다른 팔)')
+    elif mrt is None:
+        return f'RCPT|step3_rtol|missing| 러너는 rtol {rt!r} 로 돌라고 했는데 팔에 backend.rtol 이 없다 (증서 없는 옛 꼴)'
+    elif not _same_num(mrt, rt):
+        return f'RCPT|step3_rtol|differ| 러너 {rt!r} ≠ 결과 {mrt!r}'
+    return None
 
 
 def _canon_num(v):
@@ -492,15 +566,44 @@ CA_EXT_UNKNOWN = 'unknown:ca_ext'
 CA_EXT_SUBBLOCKS = {
     'ptfe_face': (lambda m: m.get('ptfe_stamp') == 'face_alpha', 'ptfe_face_alpha', 'ptfe_face_block_problem',
                   'PROTOCOL_KEYS'),
+    #  ★ 2026-10-20 (Rint ② B6) — S2 탄소 접합 · S3 SDCP 접합 수정자.  요청 = 최상위 `ca_ext_requested` (켰을 때만 쓴다 · 끈 매니페스트는
+    #    키 자체가 없다 = 옛 바이트).  검증기 · protocol 정본 = `ca_ext_cjunc` (payload 배선과 같은 모듈 · 사본 없음).
+    'cjunc': (lambda m: 'cjunc' in _ca_ext_req(m), 'ca_ext_cjunc', 'cjunc_block_problem', 'CJUNC_PROTOCOL_KEYS'),
+    'sdcp_mod': (lambda m: 'sdcp_mod' in _ca_ext_req(m), 'ca_ext_cjunc', 'sdcp_mod_block_problem', 'SDCP_MOD_PROTOCOL_KEYS'),
 }
+#: ★ B6 — S2 · S3 의 요청 칸 (최상위 · 정렬 목록 · 중복 없음 · 아래 이름만).  S1 (ptfe_face) 의 요청은 `ptfe_stamp = face_alpha` 그대로.
+CA_EXT_REQUEST_FIELD = 'ca_ext_requested'
+CA_EXT_REQUESTABLE = ('cjunc', 'sdcp_mod')
+
+
+def _ca_ext_req(man):
+    """요청 칸 → 이름 튜플 (모양이 틀리면 빈 튜플 — 그 경우는 `_ca_ext_shape_problem` 이 `unknown:ca_ext` 로 낸다)."""
+    v = man.get(CA_EXT_REQUEST_FIELD) if isinstance(man, dict) else None
+    return tuple(v) if isinstance(v, list) and all(isinstance(x, str) for x in v) else ()
 
 
 def _ca_ext_requested(man):
-    """기능 요청 (블록이 있어야 하는) 매니페스트인가 — 등록된 하위 블록의 요청 술어 중 하나라도 참."""
-    return isinstance(man, dict) and any(pred(man) for pred, _m, _f, _k in CA_EXT_SUBBLOCKS.values())
+    """기능 요청 (블록이 있어야 하는) 매니페스트인가 — 등록된 하위 블록의 요청 술어 중 하나라도 참 · ★ B6 — 요청 칸이 **있기만 해도**
+    (모양이 틀려도) 요청으로 센다 (모양 틀린 칸 + 블록 없음이 옛 p2 id 로 조용히 내려가지 않게 — `unknown:ca_ext`)."""
+    return isinstance(man, dict) and (any(pred(man) for pred, _m, _f, _k in CA_EXT_SUBBLOCKS.values())
+                                      or CA_EXT_REQUEST_FIELD in man)
+
+
+def _ca_ext_request_field_problem(man):
+    if CA_EXT_REQUEST_FIELD not in man:
+        return None
+    v = man[CA_EXT_REQUEST_FIELD]
+    if (not isinstance(v, list) or not v or any(not isinstance(x, str) for x in v) or v != sorted(set(v))
+            or any(x not in CA_EXT_REQUESTABLE for x in v)):
+        return (f'{CA_EXT_REQUEST_FIELD} = {v!r} — 비지 않은 정렬 목록 · 중복 없음 · {CA_EXT_REQUESTABLE} 안 '
+                f'(S1 의 요청은 ptfe_stamp = face_alpha)')
+    return None
 
 
 def _ca_ext_shape_problem(man):
+    _rq = _ca_ext_request_field_problem(man)
+    if _rq:
+        return _rq
     blk = man.get('ca_ext')
     if not isinstance(blk, dict):
         return 'ca_ext 가 dict 가 아니다'
@@ -572,6 +675,97 @@ def ca_ext_record_ok(man):
             return False, f'CAEXT|{k}|unverifiable| {type(e).__name__}: {e}'
         if prob:
             return False, f'CAEXT|{k}| {prob}'
+    return True, None
+
+
+def ca_ext_request_problem(req):
+    """★ 2026-10-20 (Rint ② B6 · 러너 발사 전 계약 검사) — 러너가 선언하는 다음 세대 요청 → 문제 | None.
+    선언 축 = 매니페스트 축: 하위 블록 이름 · 칸 집합 (`ca_ext_cjunc.REQUEST_KEYS_*`) · 칸이 protocol 정본 (`ca_ext_protocol_fields`) 안 ·
+    값 = 그 정본 함수로 다시 만들 수 있다 (정량 · c ∈ {0, 1} · P1 = 지금 거부).  S3 만 = 거부 (S2 없이)."""
+    if not isinstance(req, dict) or not req:
+        return f'요청이 비지 않은 dict 가 아니다 ({req!r})'
+    _bad = sorted(k for k in req if k not in CA_EXT_REQUESTABLE)
+    if _bad:
+        return f'모르는 하위 블록 {_bad} (요청 가능: {CA_EXT_REQUESTABLE})'
+    if 'sdcp_mod' in req and 'cjunc' not in req:
+        return 'S3 SDCP 수정자는 S2 탄소 접합 없이 = 거부 (설계 §5-2)'
+    try:
+        import ca_ext_cjunc as _cw
+        _fields = ca_ext_protocol_fields()
+    except Exception as e:                                       # noqa: BLE001 — 확인 못 한 것을 통과시키지 않는다
+        return f'정본을 못 읽었다 ({type(e).__name__}: {e})'
+    for sub, kv in req.items():
+        keys = _cw.REQUEST_KEYS_CJUNC if sub == 'cjunc' else _cw.REQUEST_KEYS_SDCP
+        if not isinstance(kv, dict) or set(kv) != set(keys):
+            return f'{sub}: 선언 칸 {sorted(kv) if isinstance(kv, dict) else kv!r} ≠ {sorted(keys)}'
+        _off = sorted(f'ca_ext.{sub}.{k}' for k in kv if f'ca_ext.{sub}.{k}' not in _fields)
+        if _off:
+            return f'{sub}: 선언 칸 {_off} 이 매니페스트 protocol 정본에 없다'
+    try:
+        _cw.cjunc_protocol_record(ptfe_stamp='off', **req['cjunc'])
+        if 'sdcp_mod' in req:
+            _cw.sdcp_mod_protocol_record(c=req['sdcp_mod']['c'], tol_sj_um=req['cjunc']['tol_ff_um'])
+    except (ValueError, TypeError) as e:
+        return f'값| {e}'
+    return None
+
+
+def conv_cert_problem(cert, sigma):
+    """★ 2026-10-20 (Rint ② B6 · 설계 v1 §6 · N15) — 다음 세대 판정 해의 **수렴 증서** → 문제 | None.
+    플래그를 믿지 않는다 — 기록된 수 (rtol · 불균형 · 이어 풀기 Δσ · info) 로 ⓐ ⓑ ⓒ 를 다시 판정 · 봉인값 = 이 코드의 상수
+    (`step3_conv_cert`) · 증서 σ = 결과 σ (증서 ↔ 결과 결합 · 상대 1e-9).  칸 없음 = `--step3-rtol` 없이 돈 런 = 미게시."""
+    import step3_conv_cert as _cc
+    if not isinstance(cert, dict):
+        return 'CERT|absent| 수렴 증서 칸이 없다 (--step3-rtol 없이 돈 런 · 다음 세대 판정 = 미게시 팔)'
+    if cert.get('version') != _cc.CERT_VERSION:
+        return f'CERT|version| {cert.get("version")!r} ≠ {_cc.CERT_VERSION!r}'
+    for k in ('ok', 'pass_a', 'pass_b', 'pass_c'):
+        if type(cert.get(k)) is not bool:                        # noqa: E721
+            return f'CERT|type| {k} = {cert.get(k)!r} (bool 이어야 한다)'
+    if cert['ok'] is not (cert['pass_a'] and cert['pass_b'] and cert['pass_c']):
+        return 'CERT|inconsistent| ok ≠ ⓐ ∧ ⓑ ∧ ⓒ'
+    if not cert['ok']:
+        return f"CERT|failed| ⓐ {cert['pass_a']} · ⓑ {cert['pass_b']} · ⓒ {cert['pass_c']}"
+    for k, want in (('rtol_max', _cc.CERT_RTOL_MAX), ('eps_I', _cc.CERT_EPS_I), ('resolve_tol', _cc.CERT_RESOLVE_TOL)):
+        if cert.get(k) != want:
+            return f'CERT|seal| {k} = {cert.get(k)!r} ≠ 이 코드의 봉인 {want!r}'
+
+    def _fin(x):
+        return not isinstance(x, bool) and isinstance(x, (int, float)) and math.isfinite(x)
+    rt, rs = cert.get('rtol_used'), cert.get('resid')
+    if not (_fin(rt) and 0.0 < rt <= _cc.CERT_RTOL_MAX) or type(cert.get('info')) is not int \
+            or cert['info'] != 0 or not _fin(rs):                # noqa: E721
+        return f'CERT|a| rtol {rt!r} · info {cert.get("info")!r} · resid {rs!r} — ⓐ 를 수로 다시 보면 실패'
+    imb = cert.get('imbalance')
+    if not (_fin(imb) and 0.0 <= imb <= _cc.CERT_EPS_I):
+        return f'CERT|b| 판 전류 불균형 {imb!r} > ε_I {_cc.CERT_EPS_I!r} (또는 비유한) — ⓑ 를 수로 다시 보면 실패'
+    ds = cert.get('dsigma_rel')
+    if not (_fin(ds) and 0.0 <= ds <= _cc.CERT_RESOLVE_TOL) or type(cert.get('resolve_info')) is not int \
+            or cert['resolve_info'] != 0:                        # noqa: E721
+        return f'CERT|c| 이어 풀기 Δσ/σ {ds!r} · info {cert.get("resolve_info")!r} — ⓒ 를 수로 다시 보면 실패'
+    s = cert.get('sigma')
+    if not (_fin(s) and _fin(sigma) and sigma > 0.0 and abs(s - sigma) <= 1e-9 * abs(sigma)):
+        return f'CERT|sigma| 증서 σ {s!r} ≠ 결과 σ {sigma!r} — 증서가 이 결과의 것이 아니다'
+    return None
+
+
+def next_gen_cert_ok(step3):
+    """★ 2026-10-20 (Rint ② B6) — 다음 세대 (`ca_ext` 블록 · 요청이 있는) 팔의 **게시 조건** → `(ok, why)`.
+    전자 증서 (`step3.conv_cert`) 필수 · 이온을 계획해 푼 팔은 이온 증서 (`step3.ion_conv_cert`) 도 · 옛 세대 (p2) = 이 규칙 밖 (통과).
+    판정기가 팔 JSON 마다 부른다 — 실패 = 미게시 팔로 센다 (설계 §6 · 지금 생산 술어는 다음 세대 꼴에서 틀린 σ 를 수렴으로 인증한다)."""
+    s = step3 if isinstance(step3, dict) else {}
+    man = s.get('manifest') if isinstance(s.get('manifest'), dict) else {}
+    if not ('ca_ext' in man or _ca_ext_requested(man)):
+        return True, None
+    why = conv_cert_problem(s.get('conv_cert'), s.get('sigma_e_eff_S_cm'))
+    if why:
+        return False, f'NEXTGEN|electronic| {why}'
+    plan = man.get('component_plan') if isinstance(man.get('component_plan'), dict) else {}
+    _ist = ((man.get('components') or {}).get('ionic') or {}).get('status') if isinstance(man.get('components'), dict) else None
+    if plan.get('ionic') is True and _ist != 'not_solvable':
+        why = conv_cert_problem(s.get('ion_conv_cert'), s.get('sigma_ion_eff_S_cm'))
+        if why:
+            return False, f'NEXTGEN|ionic| {why}'
     return True, None
 
 
