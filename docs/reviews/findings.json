@@ -12109,6 +12109,36 @@
         "scripts/test_rint_g2_join.py (J13 머리 출력 — H · `af8d1d501`)",
         "scripts/rint_iface_join.py (`_item_section` 경계 — F · `263c9502b`)"
       ]
+    },
+    {
+      "id": "SELF-100",
+      "severity": "P3",
+      "status": "claimed_fixed",
+      "owner": "claude",
+      "found_by": "1저자 확인 (10-08 · 공극 앵커 출처 질문) — *\"했긴 했는데 문헌이나 그런 거 anchoring 한 건 아니야\"*",
+      "opened_in": "docs/session_20260923_progress.md",
+      "title": "채팅에서 복합 전극 공극 13.5 % (real_9 · 06-06 E 1.35 보정 기록의 표적 · DEM ε_sphere 13.47 %) 를 확인 없이 \"복합 전극 실험 공극률\" 이라고 말했다 — 그 값은 DEM 자기값이다 (`CL-95`)",
+      "note": "근거 = 진행 기록 10-08 \"공극 앵커 출처\" 줄 ① (13.5 % = real_9 06-06 보정 기록 = E 1.35 보정의 표적 · 같은 표 DEM ε_sphere 13.47 % · 09-25 감사 `si_table_response` §9-5 ③ 이 이미 출처 없음으로 열어 둠) · ③ (15.6 % \"실험\" = real_14 DEM ε_sphere · `docs/reviews/fam_platen_prereg_20260812.md` 30 행 출처 칸 \"DEM 정본\").  1저자 10-13 비준 (체크리스트 `docs/checklist_20261013.md` Q3 · 진행 기록 10-13 밤) — 원장 반영이 빠져 있었다 (10-20 용훈 포메이션 조사에서 발견 · 이 항목과 `CL-95` 를 이번에 넣는다).  정정 = 10-08 기록 커밋 (진행 기록 줄 ① · ③ · 모델 검증 요청서 `docs/reviews/codex_model_validation_request_20261008.md` 57 행 \"13.5 · 15.6 % 는 DEM 자기값\").  교훈 = 공극 · σ 값을 \"실험\" 이라 부르기 전에 출처 칸 (측정 · 문헌 · DEM 자기값) 을 확인한다 (규율 ⑥ · `SELF-51` 과 같은 부류).",
+      "evidence_tests": [
+        "docs/session_20260923_progress.md",
+        "docs/reviews/codex_model_validation_request_20261008.md"
+      ],
+      "claimed_fixed_sha": "c94e01dd0"
+    },
+    {
+      "id": "SELF-126",
+      "severity": "P3",
+      "status": "wontfix",
+      "owner": "claude",
+      "found_by": "claude 10-20 (SI Table S2 행 점검 중 · 1저자 지적 *\"100GPa 요거는 원래 바꿔서 진행했어야됐는데 너가 안한거잖아\"*)",
+      "opened_in": "docs/reviews/ms_change_checklist_sdcp_v2_20261019.md",
+      "title": "SI Table S2 (10-20 제출본) 세 행이 시뮬레이션 실제 입력과 다르다 — VGCF E 100 GPa ↔ 두 침대 10 GPa · VGCF 복셀 σ 0.35 \"Calculated\" ↔ 전극별 보정 0.347 / 2.618 · LPSCl σ_ion 7.5 × 10⁻⁴ \"Ref. S10\" ↔ S10 의 복합 σ_eff,ion 0.137 mS/cm 에 맞춘 보정값 7.45 × 10⁻⁴ — 그리고 그림 S17 은 M09 \"같은 σ\" 근거와 다른 판 (SBE 0.347 ↔ DBE 2.618)",
+      "note": "① VGCF Young's modulus 100 GPa (Ref. S8) ↔ 두 침대 모두 10 GPa 로 압밀 (SBE 08-27 = `ADD_E_SET_20260818` 세대 · DBE 10-19 R1 = `--add-e-override VGCF=10` 로 SBE 에 맞춤 · 등록 v2 §7 R0 · R1) — 10-19 재압밀 때 표 ↔ 침대 차이를 1저자에게 올리지 않았다 (내 누락 · 1저자 지적).  민감도 1 ↔ 100 GPa = σ_e ≤ 0.25 % · 기공 0.18 %p (한 침대 · origin 1 팔 · `SELF-50` · `CL-93`).  ② VGCF 복셀 σ 0.35 \"Calculated (diameter-preserving)\" ↔ 실제 = 전극별 DC 분극 보정 SBE 0.347 · DBE 2.618 S/cm (직경 보존 식 값은 78.5 · DBE 값은 표에 없음 · 체크리스트 SI06).  ③ LPSCl σ_ion 7.5 × 10⁻⁴ S/cm \"Ref. S10\" ↔ S10 (Bazzoun 2026) 은 복합 σ_eff,ion 0.137 mS/cm 를 보고 · 입력 7.45 × 10⁻⁴ 는 그 값에 맞춘 보정값 (등록 v2 §3-D · 체크리스트 SI04).  ④ 그림 S17 = SBE 0.347 ↔ DBE 2.618 판 (정규화 막대 ×204) · 본문 M09 \"parallel pathways\" 의 근거는 같은 σ 0.347 비교 (전자 focus_top 91.59 ↔ 87.47) — 그림과 근거 상태가 다르다 · 표 S3 행 8 (27.49 · 26.54) 도 DBE 값만 σ 0.347 판 (체크리스트 \"1저자 반영 · 닫힘\" 절).",
+      "decision_note": "1저자 10-20 결정 = 제출본 그대로 (*\"그냥 써\"* · *\"이걸로 닫을거야\"* · *\"너가 원장에만 적어놔 ㅇㅇ\"* · S17 = *\"이거로 우선 놔두고 Rint 수정되고 추가할거야\"*) — 원고 · SI 를 고치지 않고 원장에만 기록.  다음 세대 (Rint ② 뒤) 에서 맞춘다: 두 침대 VGCF E 100 GPa 재압밀 · VGCF σ 두 전극 같은 값 하나 (직경 보존 7,854 S/cm) · 보정 = R_j,0 하나 (설계 `docs/reviews/rint_carbon_additive_design_v1_20261020.md` §1-5) · S17 · 표 S3 은 그때 다시.",
+      "evidence_tests": [
+        "docs/reviews/ms_change_checklist_sdcp_v2_20261019.md",
+        "docs/reviews/sdcp_sigma_e_dcp_anchor_registration_v2_20261019.md"
+      ]
     }
   ]
 }
