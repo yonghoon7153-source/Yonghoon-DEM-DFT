@@ -23,6 +23,9 @@ G-frame (같은 프레임 · v3 §6-3 "v2 관문 2 개정"):
   f3  BOX BOUNDS (플래그 · 경계 토큰) 같음 · f4 원자 id 유일 · 머리 수 = 행 수 (두 덤프) · 접촉 id 전부 원자 덤프에 (고아 = 거부)
   f5  pos1/pos2 = 원자 위치 (주기 축 정수 영상 허용 · 토큰 반폭 안) — 행 단위 같은 프레임 증거 (RGL Q5: 해시는 프레임 증거가 아니다)
   f6  δ 자기 일관: δ_dump ↔ r1 + r2 − |최소 영상 (pos1 − pos2)| (토큰 반폭 전파) · δ_dump > 0 (접촉 행)
+파생값 유한 (RIMPR-04 **부분** · Codex 10-20 판정문 §4 · 1저자 Q3 (가)) — 입력이 유한이어도 산술이 넘친다 (제곱합 · 곱 — `inf > inf` = 거짓이라
+  허용폭 비교가 조용히 통과한다): f6 의 거리 · 허용폭 · 차 (고아 아닌 행) · G-geo 의 δ 반올림 폭 (delta_bound_um) · 내보내는 AM–AM δ · 면적 µm 값이
+  비유한 = derived_nonfinite (REJECT).  안정한 거리 (hypot) 재작성 · 결과 유한성 전반 검토 = 정량 채택 전 (연기 조건 ④ · 원장 RIMPR-04 open).
 scaffold 머리줄에 원 덤프 step 이 없으면 scaffold ↔ 덤프는 **G-geo 까지만** 주장한다 (v3 §6-3).  N1: dilate_z ≠ 1 = 거부 (기하가 DEM 이 아님).
 입구 검사 (RIMP-02 · 03 · Codex 10-14 판정문 §3 · §4 · 1저자 Q2 (가) — 봉인 helper 는 그대로 · 이 소비자에서 엄격) — 관문 계산 **전**, 하나라도 걸리면
   REJECT (관문 계산 생략 · 사유만):
@@ -32,7 +35,8 @@ scaffold 머리줄에 원 덤프 step 이 없으면 scaffold ↔ 덤프는 **G-g
   e2  양수 — scaffold r · 원자 radius > 0 (nonpositive_radius) · 상자 hi > lo (box_format)
   e3  정확 정수 — TIMESTEP · 머리 수 · 원자 id · type · 접촉 id1 · id2 · scaffold type 토큰 = 정수 문자열 · int64 범위만 (`2060000.9` · `201.0` · `1e+06` ·
       int64 를 넘는 토큰 = int_token · `int(float(…))` 로 줄이지 않는다 · OverflowError 로 끝나지 않는다).  TIMESTEP · NUMBER OF 절은 몸통 **전체**가
-      정확히 한 토큰 (RIMPR-01 — `100 0.9` · `1 garbage` · 둘째 줄의 뒤 토큰을 버리지 않는다 = int_token)
+      정확히 한 토큰 (RIMPR-01 — `100 0.9` · `1 garbage` · 둘째 줄의 뒤 토큰을 버리지 않는다 = int_token) · 숫자 = **ASCII `[0-9]` 만** (RIMPR-03 —
+      전각 `１` · 아라비아-인도 `١` 숫자 = int_token · 생산 덤프는 ASCII `%g`)
   e4  지원 상자 — 직교 `ITEM: BOX BOUNDS f1 f2 f3` (플래그 [pfsm]² · p 는 pp 만) + 경계 줄 정확히 셋 · 줄마다 토큰 둘.  기울어진 머리 (xy xz yz) = box_tilted
       (지원 밖 · tilt 를 버리고 비교하지 않는다) · 그 밖 모양 (넷째 줄 포함) = box_format.  상자 동일 (f3) = 머리 · 경계 줄 **전 토큰** 비교
   e5  형식 = **6 유효숫자 `%g` 생산 포맷만** (LIGGGHTS dump 기본 · 토큰 = '%g' % 값) — 다른 정밀도 · 끝 0 · 혼합 포맷 = numeric_format.  면적 포괄
@@ -42,7 +46,12 @@ scaffold 머리줄에 원 덤프 step 이 없으면 scaffold ↔ 덤프는 **G-g
       정확히 한 번 (중복 = header_duplicate — 첫 열만 읽고 뒤 열을 검사 밖에 두지 않는다) · 마지막 프레임의 모든 줄은 아는 절 넷 (TIMESTEP ·
       NUMBER OF · BOX BOUNDS · 행) 중 하나에 한 번씩 — 모르는 ITEM 절 · 같은 절 두 번 · 첫 프레임 앞 비어 있지 않은 줄 · TIMESTEP · NUMBER OF 머리 줄의
       뒤 토큰 = frame_layout.  빈 줄 (공백뿐) 처리는 옛 판과 같다 — 행 절 안 · 절 끝의 빈 줄 = 내용 아님 · TIMESTEP · NUMBER OF · BOX BOUNDS
-      절의 내용 앞 · 사이 빈 줄 = 모양 위반 (int_token · box_format)
+      절의 내용 앞 · 사이 빈 줄 = 모양 위반 (int_token · box_format).
+      구역 머리 줄 (RIMPR-R01 · Codex 10-20 판정문 §3) — 구역 이름 = **정확한 단어 경계** (표지 `ITEM: TIMESTEP` · `ITEM: NUMBER OF …` ·
+      `ITEM: BOX BOUNDS` · `ITEM: ATOMS` · `ITEM: ENTRIES` 바로 뒤 = 줄 끝 · 공백 · 탭 — `ITEM: ATOMSid …` · `ITEM: BOX BOUNDSff …` ·
+      `ITEM: ATOMSITEM: ATOMS …` = frame_layout (header_boundary)) · 표지는 **앞에서 한 번만** 뗀다 (옛 판의 전역 `replace()` 아님) — 나머지 토큰은
+      그대로 열 · 상자 검사로 (행 표지 후첨 = 머리 열 수 ≠ 행 폭 = row_width · 상자 표지 후첨 = 플래그 셋 아님 = box_format) · 정상 공백 · 탭 구분 ·
+      끝 공백 · 쓰지 않는 진단 열은 그대로 받는다
   g3 보강 — AM–AM 행의 음수 면적 = area_negative · 포괄 미인증 (d 하한 ≤ 0 · 생산자 오차 상한 없음) = area_uncertified · PASS = 전 AM–AM 행 인증
       (n_area_tested = n_dem_am_am · `area_all_certified`).  AM–AM 밖 행 (AM–SE · SE–SE) 의 면적은 조인이 인증하지 않는다 (음수 수만 기록 —
       case15 AM_P–SE 2 행).
@@ -68,7 +77,7 @@ import lhs_descriptor_harvest as H                             # noqa: E402  면
 from lhs_contact_audit import SIGFIG_FLOOR, _half_ulp, _sigfigs   # noqa: E402  반폭 규약 (규율 ①)
 
 JOIN_KIND = 'am_iface_join'
-JOIN_VERSION = 'g_geo_g_frame_v3'           # v3 (RIMPR-01 · 02) = e6 전수 소비 · e1 float64 + µm 변환 · e3 절 전체 · int64 / v2 (RIMP-02 · 03) = 입구 검사 e1–e5 + AM–AM 면적 전 행 인증 · v1 (10-13) = 그 전
+JOIN_VERSION = 'g_geo_g_frame_v4'           # v4 (RIMPR-R01 · 03 · 04 부분) = 구역 이름 단어 경계 · 표지 한 번 · ASCII 정수 · 파생값 유한 / v3 (RIMPR-01 · 02) = e6 전수 소비 · e1 float64 + µm 변환 · e3 절 전체 · int64 / v2 (RIMP-02 · 03) = 입구 검사 e1–e5 + AM–AM 면적 전 행 인증 · v1 (10-13) = 그 전
 SIM_TO_UM = 1000.0              # LIGGGHTS 상자 단위 → µm (덱 머리 "Scale: r*1000" · real_14 README)
 AM_KINDS = ('AM_P', 'AM_S')
 SCAFFOLD_TYPE = {1: 'AM_P', 2: 'AM_S'}                         # scaffold CSV 규약 (머리줄 "AM_P=1,AM_S=2")
@@ -76,15 +85,15 @@ POS1 = ('c_cpl[1]', 'c_cpl[2]', 'c_cpl[3]')                    # pair/gran/local
 POS2 = ('c_cpl[4]', 'c_cpl[5]', 'c_cpl[6]')
 _EPS = float(np.finfo(np.float64).eps)
 _STEP_RE = re.compile(r'(?:time)?step\s*[=:]?\s*(\d+)', re.I)
-_INT_RE = re.compile(r'[+-]?\d+')                              # e3 정확 정수 토큰 (소수점 · 지수 · 밑줄 없음)
+_INT_RE = re.compile(r'[+-]?[0-9]+')                           # e3 정확 정수 토큰 (소수점 · 지수 · 밑줄 없음 · ASCII 숫자만 — `\d` 는 전각 · 아라비아-인도 숫자도 받는다 · RIMPR-03)
 _I64_MIN, _I64_MAX = -(1 << 63), (1 << 63) - 1                  # e3 정수 토큰 범위 (id · type 은 int64 배열 · LIGGGHTS step = bigint) — RIMPR-02
 _BOX_FLAG_RE = re.compile(r'[pfsm]{2}')                        # e4 LAMMPS 경계 플래그 (축마다 lo · hi)
 _TILT_TOKENS = ('xy', 'xz', 'yz')
 NUMERIC_FORMAT = 'g6'                                          # e5 — 지원하는 유일한 실수 형식 (6 유효숫자 `%g` · LIGGGHTS dump 기본)
-ENTRANCE_RULE = ('e1 유한 (실제로 쓰는 float64 값 · scaffold µm 변환값) · e2 양수 (반경 · 상자 길이) · e3 정확 정수 · int64 (step · 머리 수 · id · '
-                 'type · TIMESTEP · NUMBER OF 절 몸통 전체 = 한 토큰) · e4 직교 상자만 (기울어진 머리 = 거부 · 경계 줄 정확히 셋) · '
-                 'e5 6 유효숫자 %g 생산 포맷만 (다른 정밀도 · 혼합 = 거부) · e6 전수 소비 (행 열 수 · 필수 열 한 번 · 프레임 절 배치 — 버리는 줄 없음) '
-                 '— 하나라도 걸리면 관문 계산 없이 REJECT (RIMP-02 · 03 · RIMPR-01 · 02)')
+ENTRANCE_RULE = ('e1 유한 (실제로 쓰는 float64 값 · scaffold µm 변환값) · e2 양수 (반경 · 상자 길이) · e3 정확 정수 · ASCII [0-9] · int64 (step · 머리 수 · '
+                 'id · type · TIMESTEP · NUMBER OF 절 몸통 전체 = 한 토큰) · e4 직교 상자만 (기울어진 머리 = 거부 · 경계 줄 정확히 셋) · '
+                 'e5 6 유효숫자 %g 생산 포맷만 (다른 정밀도 · 혼합 = 거부) · e6 전수 소비 (행 열 수 · 필수 열 한 번 · 프레임 절 배치 · 구역 이름 단어 경계 · '
+                 '표지 앞에서 한 번 — 버리는 줄 · 토큰 없음) — 하나라도 걸리면 관문 계산 없이 REJECT (RIMP-02 · 03 · RIMPR-01 · 02 · R01 · 03)')
 
 WHY = {
     'dilate_z': 'N1 — dilate_z ≠ 1 이면 raster 기하가 DEM 이 아니다 (덤프 면적 · 접촉 집합을 쓸 수 없다)',
@@ -116,7 +125,7 @@ WHY = {
     'nonpositive_radius': 'e2 — 반경 ≤ 0 (scaffold 또는 원자 덤프)',
     'int_token': ('e3 — 정수여야 할 토큰 (TIMESTEP · 머리 수 · id · type) 이 정확한 정수 문자열 · int64 범위가 아니다 (int(float(…)) 로 줄이지 않는다 · '
                   'RIMP-02) · TIMESTEP · NUMBER OF 절 몸통 전체가 정확히 한 토큰이 아니다 (뒤 토큰 · 둘째 줄을 버리지 않는다 · RIMPR-01) · '
-                  'int64 를 넘는 토큰 (OverflowError 대신 · RIMPR-02)'),
+                  'int64 를 넘는 토큰 (OverflowError 대신 · RIMPR-02) · ASCII 숫자 [0-9] 가 아닌 숫자 (전각 · 아라비아-인도 · RIMPR-03)'),
     'box_tilted': 'e4 — 기울어진 상자 머리 (xy xz yz) · 직교 상자만 지원 (tilt 를 버리고 비교하지 않는다 · RIMP-02)',
     'box_format': 'e4 — 상자 머리 · 경계 줄 모양이 직교 LAMMPS 꼴이 아니다 (플래그 셋 · 경계 줄 정확히 셋 · 줄마다 토큰 둘 · hi > lo)',
     'row_width': ('e6 — 행 절 (ITEM: ATOMS · ENTRIES) 의 비어 있지 않은 행의 열 수 ≠ 머리 열 수 — 조용히 빼면 머리 수 · 형식 · 유한 검사를 받지 않은 채 '
@@ -124,10 +133,14 @@ WHY = {
     'header_duplicate': ('e6 — 소비하는 필수 열 이름이 머리에 두 번 이상 — 첫 열만 읽으면 뒤 열은 검사에서 사라진다 (필수 열은 정확히 한 번 · '
                          'RIMPR-01)'),
     'frame_layout': ('e6 — 마지막 프레임의 줄이 아는 절 넷 (TIMESTEP · NUMBER OF · BOX BOUNDS · 행) 에 한 번씩 배정되지 않는다 — 모르는 ITEM 절 · '
-                     '같은 절 두 번 · 첫 프레임 앞 비어 있지 않은 줄 · TIMESTEP · NUMBER OF 머리 줄의 뒤 토큰 (버리지 않고 거부 · RIMPR-01)'),
+                     '같은 절 두 번 · 첫 프레임 앞 비어 있지 않은 줄 · TIMESTEP · NUMBER OF 머리 줄의 뒤 토큰 (버리지 않고 거부 · RIMPR-01) · '
+                     '구역 이름 뒤 단어 경계 없음 (`ITEM: ATOMSid …` · `ITEM: BOX BOUNDSITEM: …` — 정상화하지 않고 거부 · RIMPR-R01)'),
     'numeric_format': 'e5 — 실수 토큰이 6 유효숫자 %g 생산 포맷이 아니다 (다른 정밀도 · 끝 0 · 혼합 · 면적 포괄 helper 의 고정 6 자리 가정 밖 · RIMP-03)',
     'area_negative': 'g3 — AM–AM 접촉의 c_cpl[22] 가 음수 (진단 helper 는 음수 행을 포괄 비교에서 뺀다 — 뺀 것을 인증으로 읽지 않는다 · RIMP-02)',
     'area_uncertified': 'g3 — AM–AM 접촉의 면적 포괄을 인증할 수 없다 (토큰 상자 위 거리 하한 ≤ 0 · 생산자 오차 상한 없음 — "포괄 밖 0" ≠ "전 행 인증" · RIMP-02)',
+    'derived_nonfinite': ('파생값 비유한 — 입력이 유한이어도 산술 (제곱합 · 곱) 이 넘친다: G-frame f6 거리 · 허용폭 · 차 (고아 아닌 행) · G-geo δ 반올림 폭 '
+                          '(delta_bound_um) · 내보내는 AM–AM δ · 면적 µm 값 (`inf > inf` = 거짓이라 허용폭 비교가 조용히 통과한다 · inf 를 인증 값으로 발행하지 '
+                          '않는다 · RIMPR-04 부분 — 안정한 hypot · 결과 유한성 전반 = 정량 채택 전)'),
 }
 
 
@@ -257,6 +270,20 @@ def _scalar_token(body):
     return '\n'.join(s.strip() for s in _section_content(body))
 
 
+def _item_section(ln, items):
+    """`ITEM:` 머리 줄 → (구역 · 표지 뒤 토큰 · 단어 경계 위반) — RIMPR-R01 (Codex 10-20 판정문 §3 최소 해결).
+    items = ((구역, 표지), …) — 표지 (`ITEM: TIMESTEP` · `ITEM: NUMBER OF …` · `ITEM: BOX BOUNDS` · `ITEM: ATOMS` · `ITEM: ENTRIES`) 로 시작하면 그 구역.
+    구역 이름 = **정확한 단어 경계**: 표지 바로 뒤가 줄 끝 · 공백 · 탭이 아니면 (`ITEM: ATOMSid …` · `ITEM: BOX BOUNDSff …` · `ITEM: ATOMSITEM: ATOMS …`)
+    경계 위반 = 입구 frame_layout (header_boundary · 정상화하지 않고 거부 — 그 줄의 절은 그대로 읽어 나머지 검사도 돈다).  표지는 **앞에서 한 번만**
+    뗀다 (옛 판의 전역 `replace()` 아님): 나머지 토큰 (반복 · 후첨 표지 포함) = `split()` 그대로 열 · 상자 검사로 (공백 · 탭 구분 · 쓰지 않는 진단 열은
+    옛 판과 같게 받는다).  어느 표지로도 시작하지 않으면 (None, None, False) = 모르는 절."""
+    for kind, mk in items:
+        if ln.startswith(mk):
+            rest = ln[len(mk):]
+            return kind, rest.split(), bool(rest) and not rest[0].isspace()
+    return None, None, False
+
+
 def _scan_frame(path, count_item, rows_item):
     """마지막 프레임의 (step · 머리 수 · 상자 플래그 · 상자 토큰 · 열 머리 · 행) + 프레임 수 + 입구 검사 재료 (step · 머리 수 토큰 정수 여부 ·
     상자 머리 · 경계 줄 전 토큰 · 상자 모양 · e6 전수 소비 재료).  정수가 아닌 step · 머리 수 = None (줄이지 않는다).
@@ -265,26 +292,29 @@ def _scan_frame(path, count_item, rows_item):
     줄 · 토큰이 없다): TIMESTEP · NUMBER OF 절 = 몸통 전체가 한 토큰 (`_scalar_token`) · BOX BOUNDS 절 = 몸통의 내용 줄 전부 (`_box_shape` 가 정확히
     셋 · 줄마다 토큰 둘을 요구) · 행 절 = 비어 있지 않은 모든 행을 세고 열 수 ≠ 머리 열 수 인 행은 따로 센다 (값으로는 쓰지 않는다 · 입구 row_width) ·
     모르는 ITEM 절 · 같은 절 두 번 · 첫 프레임 앞 비어 있지 않은 줄 · TIMESTEP · NUMBER OF 머리 줄의 뒤 토큰 = 입구 frame_layout.
-    빈 줄: 행 절 안 · 절 끝 = 내용 아님 (옛 판과 같음) · TIMESTEP · NUMBER OF · BOX BOUNDS 절의 내용 앞 · 사이 = 모양 위반 (옛 판과 같음 · `_section_content`)."""
+    빈 줄: 행 절 안 · 절 끝 = 내용 아님 (옛 판과 같음) · TIMESTEP · NUMBER OF · BOX BOUNDS 절의 내용 앞 · 사이 = 모양 위반 (옛 판과 같음 · `_section_content`).
+    RIMPR-R01 (Codex 10-20 판정문 §3) — 구역 분류 = `_item_section` (구역 이름 정확한 단어 경계 · 표지 앞에서 한 번만 떼기): 경계 위반 머리 줄 = 입구
+    frame_layout (header_boundary) · 상자 머리 · 열 머리 = 표지 뒤 토큰 그대로 (반복 · 후첨 표지가 남아 box_format · row_width 가 본다)."""
     with _open_text(path) as fh:
         lines = fh.read().splitlines()
     starts = [i for i, ln in enumerate(lines) if ln.startswith('ITEM: TIMESTEP')]
     if not starts:
         raise ValueError(f'{path}: `ITEM: TIMESTEP` 이 없다 — LIGGGHTS 덤프가 아니다')
     heads = [k for k in range(starts[-1], len(lines)) if lines[k].startswith('ITEM:')]
-    secs, unknown, dup_sec, head_extra = {}, [], [], []
+    items = (('step', 'ITEM: TIMESTEP'), ('count', count_item), ('box', 'ITEM: BOX BOUNDS'), ('rows', rows_item))
+    secs, unknown, dup_sec, head_extra, head_edge = {}, [], [], [], []
     for a, b in zip(heads, heads[1:] + [len(lines)]):
         ln = lines[a]
-        kind = ('step' if ln.startswith('ITEM: TIMESTEP') else 'count' if ln.startswith(count_item)
-                else 'box' if ln.startswith('ITEM: BOX BOUNDS') else 'rows' if ln.startswith(rows_item) else None)
+        kind, toks, edge_bad = _item_section(ln, items)
         if kind is None:
             unknown.append(ln.strip())
         elif kind in secs:
             dup_sec.append(kind)
         else:
-            secs[kind] = (ln, lines[a + 1:b])
-            want = {'step': 'ITEM: TIMESTEP', 'count': count_item}.get(kind)
-            if want is not None and ln.split() != want.split():  # 머리 줄의 뒤 토큰 (`ITEM: TIMESTEP 0.9`) 도 버리지 않는다
+            secs[kind] = (toks, lines[a + 1:b])
+            if edge_bad:                                       # 구역 이름 뒤 단어 경계 없음 (`ITEM: ATOMSid …`) — 정상화하지 않는다 (RIMPR-R01)
+                head_edge.append(ln.strip())
+            if kind in ('step', 'count') and toks:            # 머리 줄의 뒤 토큰 (`ITEM: TIMESTEP 0.9`) 도 버리지 않는다
                 head_extra.append(ln.strip())
     n_pre = sum(1 for ln in lines[:starts[0]] if ln.strip())
     step_tok = _scalar_token(secs['step'][1])
@@ -295,11 +325,11 @@ def _scan_frame(path, count_item, rows_item):
         n_decl, n_decl_ok = _int_token(n_decl_tok)
     if 'rows' not in secs or 'box' not in secs:
         raise ValueError(f'{path}: `{rows_item}` 또는 `ITEM: BOX BOUNDS` 가 마지막 프레임에 없다')
-    bhdr = secs['box'][0].replace('ITEM: BOX BOUNDS', '').split()
+    bhdr = list(secs['box'][0])                                # 표지 뒤 토큰 (앞에서 한 번만 뗐다 · RIMPR-R01)
     flags = tuple(bhdr[-3:]) if len(bhdr) >= 3 else None
     blines = [s.split() for s in _section_content(secs['box'][1])]     # 내용 앞 · 사이 빈 줄 = 토큰 0 줄 (box_format · 옛 판과 같음)
     btok = [tuple(b[:2]) for b in (blines + [[], [], []])[:3]]
-    hdr = secs['rows'][0].replace(rows_item, '').split()
+    hdr = list(secs['rows'][0])                                # 열 머리 = 표지 뒤 토큰 (후첨 표지가 남으면 열 수 ≠ 행 폭 = row_width · RIMPR-R01)
     rows, wbad, n_phys = [], [], 0
     for s in secs['rows'][1]:
         v = s.split()
@@ -326,7 +356,8 @@ def _scan_frame(path, count_item, rows_item):
                          'n_rows_physical': int(n_phys), 'n_rows_width_bad': len(wbad),
                          'examples_width_bad': [f'행 절 {k} 째 열 {w} ≠ 머리 {len(hdr)}' for k, w in wbad[:3]],
                          'n_preamble_lines': int(n_pre), 'n_unknown_sections': len(unknown), 'unknown_sections': unknown[:3],
-                         'duplicate_sections': dup_sec, 'scalar_header_extra': head_extra}}
+                         'duplicate_sections': dup_sec, 'scalar_header_extra': head_extra,
+                         'header_boundary': head_edge}}                 # 구역 이름 뒤 단어 경계 없음 (RIMPR-R01)
 
 
 def read_atom_dump_frame(path):
@@ -520,11 +551,12 @@ def _entrance(sc, A, Cd, add, um):
         _add('header_duplicate', sum(len(v) for v in hd.values()), [f'{k} {c}' for k, v in hd.items() for c in v])
     fl = {f'{nm}_{k}': int(v) for nm, e_ in (('atom', ea), ('contact', ec))
           for k, v in (('preamble_lines', e_['n_preamble_lines']), ('unknown_sections', e_['n_unknown_sections']),
-                       ('duplicate_sections', len(e_['duplicate_sections'])), ('scalar_header_extra', len(e_['scalar_header_extra'])))}
+                       ('duplicate_sections', len(e_['duplicate_sections'])), ('scalar_header_extra', len(e_['scalar_header_extra'])),
+                       ('header_boundary', len(e_['header_boundary'])))}      # 구역 이름 뒤 단어 경계 없음 (RIMPR-R01)
     if sum(fl.values()):
         _add('frame_layout', sum(fl.values()), [f'{k} {v}' for k, v in fl.items() if v]
              + [f'{nm} {x!r}' for nm, e_ in (('atom', ea), ('contact', ec))
-                for x in e_['unknown_sections'] + e_['duplicate_sections'] + e_['scalar_header_extra']])
+                for x in e_['unknown_sections'] + e_['duplicate_sections'] + e_['scalar_header_extra'] + e_['header_boundary']])
     return {'status': 'PASS' if not n0[0] else 'REJECT', 'rule': ENTRANCE_RULE,
             'n_nonfinite': int(sum(nf.values())), 'nonfinite': nf, 'n_nonpositive_radius': int(sum(npr.values())),
             'n_int_token_bad': int(sum(ib.values())), 'int_token_bad': ib,
@@ -542,7 +574,7 @@ def _early_reject(rej, ent, sc, A, Cd, files, um, dilate_z, tmap):
     """입구 검사 실패 — 관문 계산 없이 REJECT 기록 (소비자가 읽는 키는 다 있다 · 값은 '계산 안 함')."""
     ns = int(len(sc['t']))
     z = np.zeros(0, np.int64)
-    skip = '입구 검사 실패 — 관문 계산 안 함 (RIMP-02 · 03 · RIMPR-01 · 02)'
+    skip = '입구 검사 실패 — 관문 계산 안 함 (RIMP-02 · 03 · RIMPR-01 · 02 · R01 · 03)'
     with np.errstate(over='ignore', invalid='ignore'):        # 거부 기록의 입자 µm 값 (넘침 = 거부 사유 · 기록은 그대로 inf)
         c_um, r_um = sc['xyz'] * um, sc['r'] * um
     join = {'kind': JOIN_KIND, 'version': JOIN_VERSION, 'status': 'REJECT', 'rejections': rej, 'entrance': ent,
@@ -637,14 +669,21 @@ def am_iface_join(scaffold_csv, atom_dump, contact_dump, *, type_map, sim_to_um=
     iaz, ibz = np.maximum(ia, 0), np.maximum(ib, 0)
     r1 = np.where(ok, A['r'][iaz] if len(A['r']) else 0.0, np.nan); r2 = np.where(ok, A['r'][ibz] if len(A['r']) else 0.0, np.nan)
     hr1 = np.where(ok, A['hr'][iaz] if len(A['r']) else 0.0, 0.0); hr2 = np.where(ok, A['hr'][ibz] if len(A['r']) else 0.0, 0.0)
-    dv, _k = _min_image(Cd['pos1'] - Cd['pos2'], periodic, L)
-    dist = np.sqrt((dv * dv).sum(axis=1))
-    wd = (np.sqrt(((Cd['h_pos1'] + Cd['h_pos2']) ** 2).sum(axis=1)) + hr1 + hr2 + Cd['h_delta']
-          + 8.0 * _EPS * (np.abs(np.nan_to_num(r1)) + np.abs(np.nan_to_num(r2)) + dist + np.abs(Cd['delta'])))
-    dd = np.abs(Cd['delta'] - (r1 + r2 - dist))
+    with np.errstate(over='ignore', invalid='ignore'):        # 넘침 · inf − inf = 아래 유한 검사가 거부한다 (RIMPR-04 부분)
+        dv, _k = _min_image(Cd['pos1'] - Cd['pos2'], periodic, L)
+        dist = np.sqrt((dv * dv).sum(axis=1))
+        wd = (np.sqrt(((Cd['h_pos1'] + Cd['h_pos2']) ** 2).sum(axis=1)) + hr1 + hr2 + Cd['h_delta']
+              + 8.0 * _EPS * (np.abs(np.nan_to_num(r1)) + np.abs(np.nan_to_num(r2)) + dist + np.abs(Cd['delta'])))
+        dd = np.abs(Cd['delta'] - (r1 + r2 - dist))
     dbad = ok & (dd > wd)
     if dbad.any():
         add('delta_pos_mismatch', 'G-frame', int(dbad.sum()), np.flatnonzero(dbad).tolist())
+    #  RIMPR-04 (부분 · Codex 10-20 판정문 §4) — 입력이 유한이어도 제곱합이 넘치면 거리 · 허용폭 = inf → `inf > inf` = 거짓이라 위 비교가 조용히
+    #  통과한다 (비-AM 두 구 x 1e160 반례) → 파생 거리 · 허용폭 · 차가 비유한인 행 = 거부 (고아 행 제외 — r1 · r2 = NaN 은 orphan_id 몫).
+    #  안정한 hypot 재작성은 하지 않는다 (정량 채택 전 · 연기 조건 ④).
+    dnf = ok & ~(np.isfinite(dist) & np.isfinite(wd) & np.isfinite(dd))
+    if dnf.any():
+        add('derived_nonfinite', 'G-frame', int(dnf.sum()), np.flatnonzero(dnf).tolist())
     nonpos = Cd['delta'] <= 0.0
     if nonpos.any():
         add('delta_nonpositive', 'G-frame', int(nonpos.sum()), np.flatnonzero(nonpos).tolist())
@@ -653,9 +692,11 @@ def am_iface_join(scaffold_csv, atom_dump, contact_dump, *, type_map, sim_to_um=
                'n_orphan_rows': int(orph.sum()), 'n_pos_mismatch': int(pos_bad.sum()), 'max_pos_ratio': max_pos_ratio,
                'n_rows_image_shift': int(shifted.sum()), 'n_rows_image_shift_flag0': int((shifted & (Cd['pflag'] == 0.0)).sum()),
                'n_delta_pos_mismatch': int(dbad.sum()), 'max_delta_pos_ratio': float((dd[ok] / wd[ok]).max()) if ok.any() else None,
+               'n_derived_nonfinite': int(dnf.sum()),
                'n_delta_nonpositive': int(nonpos.sum()), 'atom_sigfig': A['sigfig'], 'contact_sigfig': Cd['sigfig'],
                'rule': ('f1 프레임 각 1 · f2 TIMESTEP 같음 (선언된 재사용만 예외) · f3 상자 같음 (머리 · 경계 줄 전 토큰) · f4 id 유일 · 머리 수 = 행 수 · 고아 0 · '
-                        'f5 pos = 원자 위치 (주기 축 정수 영상 · 토큰 반폭 `_half_ulp` 합) · f6 δ = r1 + r2 − |최소 영상 거리| (반폭 전파) · δ > 0')}
+                        'f5 pos = 원자 위치 (주기 축 정수 영상 · 토큰 반폭 `_half_ulp` 합) · f6 δ = r1 + r2 − |최소 영상 거리| (반폭 전파) · δ > 0 · '
+                        'f6 거리 · 허용폭 · 차 유한 (RIMPR-04 부분)')}
     # ── G-geo ────────────────────────────────────────────────────────────────
     hs = float(sc['half'])
     st, sxyz, sr = sc['t'], sc['xyz'], sc['r']
@@ -764,7 +805,15 @@ def am_iface_join(scaffold_csv, atom_dump, contact_dump, *, type_map, sim_to_um=
     if miss:
         add('dem_contact_missing', 'G-geo', len(miss), miss)
     e_max = hs + (hXd.max(axis=0) if nd else np.zeros(3))
-    dbound = um * float(np.sqrt(((2.0 * e_max) ** 2).sum()) + 2.0 * (hs + (float(hrd.max()) if nd else 0.0)))
+    with np.errstate(over='ignore', invalid='ignore'):        # 넘침 = 아래 유한 검사가 거부한다 (RIMPR-04 부분)
+        dbound = um * float(np.sqrt(((2.0 * e_max) ** 2).sum()) + 2.0 * (hs + (float(hrd.max()) if nd else 0.0)))
+        delta_um, area_um2 = Cd['delta'][q] * um, Cd['area'][q] * um * um
+    #  RIMPR-04 (부분) — 파생 δ 반올림 폭 (원장 delta_bound_um 후보 · 한-AM 좌표 ~1e160 = 제곱합 넘침) · 내보내는 AM–AM δ · 면적 µm 값 (sim_to_um 1e160 =
+    #  ×um² 넘침) 이 비유한 = 거부 — inf 폭 · 면적을 인증된 값으로 발행하지 않는다 (후단 원장 검사에 기대지 않는다)
+    geo_nf = [nm for nm, fin in (('delta_bound_um', bool(np.isfinite(dbound))), ('dem_am_am.delta_um', bool(np.isfinite(delta_um).all())),
+                                 ('dem_am_am.area_um2', bool(np.isfinite(area_um2).all()))) if not fin]
+    if geo_nf:
+        add('derived_nonfinite', 'G-geo', len(geo_nf), geo_nf)
     g_geo = {'n_scaffold': int(ns), 'n_dump_am': int(nd), 'n_matched': int(good.sum()),
              'n_unmatched': int(unm.sum()), 'n_ambiguous': int(amb.sum()),
              'max_pos_ratio': (float(np.nanmax(pos_ratio)) if np.isfinite(pos_ratio).any() else None),
@@ -772,6 +821,7 @@ def am_iface_join(scaffold_csv, atom_dump, contact_dump, *, type_map, sim_to_um=
              'scaffold_half_box': hs, 'scaffold_dec_exp': sc['dec_exp'], 'dump_sigfig': A['sigfig'],
              'delta_bound_um': dbound,
              'delta_bound_rule': 'µm · √Σ(2·(h_s + max h_d))² + 2·(h_s + max h_r) — scaffold δ 의 참값 대비 상한 (원장 delta_bound_um 후보)',
+             'derived_nonfinite': geo_nf,
              'n_dem_am_am': int(len(q)), 'n_dem_am_am_seam': int(seam.sum()),
              'n_delta_scaffold_mismatch': int(dmis.sum()),
              'max_delta_scaffold_ratio': (float((np.abs(Cd['delta'][q] - dsc) / wsc).max()) if len(q) else None),
@@ -795,8 +845,8 @@ def am_iface_join(scaffold_csv, atom_dump, contact_dump, *, type_map, sim_to_um=
             'type_map': {str(k): v for k, v in sorted(tmap.items())},
             'particles': {'c_um': sxyz * um, 'r_um': sr * um, 't': st.astype(np.int64)},
             'atom_id_of_row': atom_id_of_row,
-            'dem_am_am': {'row_a': pa.astype(np.int64), 'row_b': pb.astype(np.int64), 'delta_um': Cd['delta'][q] * um,
-                          'area_um2': Cd['area'][q] * um * um, 'seam': seam.astype(bool), 'pflag': Cd['pflag'][q]},
+            'dem_am_am': {'row_a': pa.astype(np.int64), 'row_b': pb.astype(np.int64), 'delta_um': delta_um,
+                          'area_um2': area_um2, 'seam': seam.astype(bool), 'pflag': Cd['pflag'][q]},
             'status_note': '출처 증명만 — 덤프 경로의 부류 · 면적 (c_cpl[22]) 채택 아님 · ①′ 정량 채택 · 생산 HOLD · 기구 · 시험 전용'}
     join['fp_particles'] = S3._iface_particles_fp(join['particles']['c_um'], join['particles']['r_um'], join['particles']['t'])
     join['fp_join'] = S3.iface_join_fp(join)

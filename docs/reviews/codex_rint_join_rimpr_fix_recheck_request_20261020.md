@@ -12,13 +12,14 @@
 
 - 코드 diff = `git diff dcb97f1ed <리뷰 핀> -- scripts/rint_iface_join.py scripts/test_rint_g2_join.py scripts/step3_sigma.py scripts/test_rint_g2_am_iface.py scripts/test_rint_g2_rrm.py`.
 - 봉인 32 파일 무변경 (`scripts/step3_sigma.py` 는 봉인 밖).  `step3_sigma.py` 변경 = Q7 관문 한 곳뿐 — `iface` 를 넘길 때만 도는 관문이라 iface 끔 경로는 옛 그대로다.  조인은 진단 관문이라 생산 σ 경로에 들어가지 않는다.  ①′ 정량 채택 · 생산 HOLD 그대로.
+  - ⛔ 정정 10-20 (`SELF-124` · Codex 판정문 §7 권장 문장 — 위 줄의 *"봉인 32 파일 무변경"* 은 범위 한정이 빠졌다): *"이번 Rint 수정 두 커밋 (`3b9d51789` · 리뷰 핀 `2b9efa253`) 은 봉인 32 개를 변경하지 않았다. 대조 핀 이후의 다른 트랙 변경까지 포함한 전체 스냅샷의 동일성은 별도다."* — 대조 핀 `dcb97f1ed` → 리뷰 핀 구간 전체에서는 봉인 네 파일 (`scripts/network_conductivity.py` · `scripts/tau_flux.py` · `webapp/app.py` · `webapp/pipeline_service.py` = 다른 트랙 변경) 이 다르다 (판정문 docs/reviews/codex_review_rint_join_rimpr_q7_recheck_20261020.md §7).
 - 새 시뮬레이션 · WSL · 재봉인 없음.
 
 ## 1. 판정문 최소 해결 ↔ 수정
 
 | 원장 | 수정 (RIMPR = `3b9d51789` · Q7 = 리뷰 핀 커밋) | 시험 (고치기 전 → 뒤) |
 |---|---|---|
-| `RIMPR-01` (§2 — 데이터 블록에서 열 수가 다른 행이 조용히 빠짐 · 중복 필수 열은 첫 열만 · step/count 줄 뒤 토큰 무시) | 입구 e6 전수 소비: 행 절 (ITEM: ATOMS · ENTRIES) 의 비어 있지 않은 **모든** 행을 세고 열 수 ≠ 머리 열 수 = `row_width` · 소비하는 필수 열 이름 정확히 한 번 = `header_duplicate` · TIMESTEP · NUMBER OF 절은 몸통 **전체**가 한 정수 토큰 = `int_token` · 거부는 관문 계산 전 → 계획이 `join_gate_failed` 를 받고 정량 관문이 멈춘다 | `scripts/test_rint_g2_join.py` 78/135 → 138/138 (새 반례 57 = J10 37 · J11 20 · 옛 73 그대로 · 판정문 반례 24 열 접촉 행 · 7 열 원자 행 · `radius` 중복 · `100 0.9` · `1 garbage` + 짧은 행 둘) |
+| `RIMPR-01` (§2 — 데이터 블록에서 열 수가 다른 행이 조용히 빠짐 · 중복 필수 열은 첫 열만 · step/count 줄 뒤 토큰 무시) | 입구 e6 전수 소비: 행 절 (ITEM: ATOMS · ENTRIES) 의 비어 있지 않은 **모든** 행을 세고 열 수 ≠ 머리 열 수 = `row_width` · 소비하는 필수 열 이름 정확히 한 번 = `header_duplicate` · TIMESTEP · NUMBER OF 절은 몸통 **전체**가 한 정수 토큰 = `int_token` · 거부는 관문 계산 전 → 계획이 `join_gate_failed` 를 받고 정량 관문이 멈춘다 | `scripts/test_rint_g2_join.py` 78/135 → 138/138 (새 반례 57 = J10 37 · J11 20 · 옛 73 그대로 · 판정문 반례 24 열 접촉 행 · 7 열 원자 행 · `radius` 중복 · `100 0.9` · `1 garbage` + 짧은 행 둘) · ⛔ 정정 10-20 (`SELF-124` · Codex 판정문 §1): 78/135 = 시험 작성 중간 시점 (시험 135 개) · 현재 시험 138 개를 옛 코드에 = 81/138 (57 FAIL) — 두 숫자는 같은 시험 집합이 아니다 |
 | `RIMPR-02` (§3 — Decimal 유한 ↔ float64 무한) | e1 유한 = **실제로 쓰는 float64 값** 기준 (±1e309 고정소수 · 지수 = `nonfinite_value`) · scaffold µm 변환값 (×1000) 도 유한 · int64 밖 정수 토큰 = `int_token` (OverflowError 대신) | 같은 파일 |
 | Q7 권고 (§5 — 행 지문은 만든 뒤 바뀐 행만 잡는다 · 지문을 다시 만든 계획의 막 행 r_face NaN · 음수 = 막이 조용히 빠지고 +inf = 면이 끊긴다 · 조립은 r_face > 0 면에만 막을 건다) | `step3_sigma.iface_require_quantitative` 의 행 지문 검사 바로 뒤 (거부 사유 검사 앞): 모든 축 행의 r_face 가 유한 · ≥ 0 이어야 한다 (r = 0 · 절단 tombstone 0 허용) · 어긋나면 ValueError (축 · 어긋난 행 수 · NaN / ±inf / 유한 음수 개수) → `solve_sigma_z` 가 조립 전에 멈춘다 | `scripts/test_rint_g2_am_iface.py` 새 Q7 (검사 4) 133/136 → 136/136 · `scripts/test_rint_g2_rrm.py` N9b 나눔 54/55 → 55/55 |
 
